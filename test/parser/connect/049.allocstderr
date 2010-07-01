@@ -14,8 +14,8 @@ globID	super		localID	canonical	footprint-frame
 5	(top)	-	5	s.j[0]	
 6	(top)	-	6	s.j[1]	
 [global bool entries]
-1	(top)	-	1	!GND	
-2	(top)	-	2	!Vdd	
+1	(top)	-	1	!GND	 @[ supply_low ]
+2	(top)	-	2	!Vdd	 @[ supply_high ]
 3	(top)	-	3	x[2]	
 4	(top)	-	4	x[0]	
 5	(top)	-	5	x[1]	
@@ -26,3 +26,4 @@ globID	super		localID	canonical	footprint-frame
 10	(top)	-	10	s.c[2]	
 11	(top)	-	11	s.c[3]	
 12	(top)	-	12	a	
+

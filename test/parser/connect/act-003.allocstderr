@@ -10,5 +10,6 @@ globID	super		localID	canonical	footprint-frame
 8	(top)	-	8	N[6]	
 9	(top)	-	9	N[7]	
 [global bool entries]
-1	(top)	-	1	!GND	
-2	(top)	-	2	!Vdd	
+1	(top)	-	1	!GND	 @[ supply_low ]
+2	(top)	-	2	!Vdd	 @[ supply_high ]
+

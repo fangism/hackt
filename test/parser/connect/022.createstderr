@@ -7,7 +7,7 @@ Persistent Object Manager text dump:
 	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
-	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	97
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	105
 	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	9	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
@@ -15,25 +15,41 @@ Persistent Object Manager text dump:
 	11	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	12	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
 	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	footprnt	0	#HEAD#	#TAIL#	302
-	15	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
-	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	17	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	19	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	20	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	21	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	22	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	23	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	24	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
-	25	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
-	26	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	27	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	28	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	29	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	30	##ADDR##	footprnt	0	#HEAD#	#TAIL#	2834
-	31	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	32	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	14	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	15	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	18	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	19	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	22	##ADDR##	footprnt	0	#HEAD#	#TAIL#	306
+	23	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
+	24	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	28	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	31	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	32	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	35	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	36	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	39	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
+	41	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	42	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	43	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	44	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	45	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	46	##ADDR##	footprnt	0	#HEAD#	#TAIL#	2958
+	47	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	48	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -56,13 +72,15 @@ In namespace "", we have: {
           bool<> !GND
           bool<> !Vdd
         )
+        !GND@[supply=0]
+        !Vdd@[supply=1]
       footprint: {
-        !GND = bool^0 = barf<>::!GND (1) 
-        !Vdd = bool^0 = barf<>::!Vdd (2) 
+        !GND = bool^0 = barf<>::!GND (1) @[ supply_low ] 
+        !Vdd = bool^0 = barf<>::!Vdd (2) @[ supply_high ] 
         Created state:
         bool instance pool: (2 ports, 0 local, 0 mapped)
-        1	barf<>::!GND	
-        2	barf<>::!Vdd	
+        1	barf<>::!GND @[ supply_low ]	
+        2	barf<>::!Vdd @[ supply_high ]	
       }
       }
 
@@ -74,132 +92,132 @@ In namespace "", we have: {
 }
 
 footprint: {
-  !GND = bool^0 = !GND (1) 
-  !Vdd = bool^0 = !Vdd (2) 
+  !GND = bool^0 = !GND (1) @[ supply_low ] 
+  !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
   bag = process barf<>^1
     {
       [0] = bag[0] (1) (
-        !GND = bool^0 = !GND (1) 
-        !Vdd = bool^0 = !Vdd (2) 
+        !GND = bool^0 = !GND (1) @[ supply_low ] 
+        !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
       )
       [1] = bag[1] (2) (
-        !GND = bool^0 = !GND (1) 
-        !Vdd = bool^0 = !Vdd (2) 
+        !GND = bool^0 = !GND (1) @[ supply_low ] 
+        !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
       )
       [2] = bag[2] (3) (
-        !GND = bool^0 = !GND (1) 
-        !Vdd = bool^0 = !Vdd (2) 
+        !GND = bool^0 = !GND (1) @[ supply_low ] 
+        !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
       )
       [3] = bag[3] (4) (
-        !GND = bool^0 = !GND (1) 
-        !Vdd = bool^0 = !Vdd (2) 
+        !GND = bool^0 = !GND (1) @[ supply_low ] 
+        !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
       )
       [4] = bag[4] (5) (
-        !GND = bool^0 = !GND (1) 
-        !Vdd = bool^0 = !Vdd (2) 
+        !GND = bool^0 = !GND (1) @[ supply_low ] 
+        !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
       )
     }
   sack = process barf<>^2
     {
       [0][0] = sack[0][0] (6) (
-        !GND = bool^0 = !GND (1) 
-        !Vdd = bool^0 = !Vdd (2) 
+        !GND = bool^0 = !GND (1) @[ supply_low ] 
+        !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
       )
       [0][1] = sack[0][1] (7) (
-        !GND = bool^0 = !GND (1) 
-        !Vdd = bool^0 = !Vdd (2) 
+        !GND = bool^0 = !GND (1) @[ supply_low ] 
+        !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
       )
       [0][2] = sack[0][2] (8) (
-        !GND = bool^0 = !GND (1) 
-        !Vdd = bool^0 = !Vdd (2) 
+        !GND = bool^0 = !GND (1) @[ supply_low ] 
+        !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
       )
       [0][3] = sack[0][3] (9) (
-        !GND = bool^0 = !GND (1) 
-        !Vdd = bool^0 = !Vdd (2) 
+        !GND = bool^0 = !GND (1) @[ supply_low ] 
+        !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
       )
       [0][4] = sack[0][4] (10) (
-        !GND = bool^0 = !GND (1) 
-        !Vdd = bool^0 = !Vdd (2) 
+        !GND = bool^0 = !GND (1) @[ supply_low ] 
+        !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
       )
       [1][0] = sack[1][0] (11) (
-        !GND = bool^0 = !GND (1) 
-        !Vdd = bool^0 = !Vdd (2) 
+        !GND = bool^0 = !GND (1) @[ supply_low ] 
+        !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
       )
       [1][1] = sack[1][1] (12) (
-        !GND = bool^0 = !GND (1) 
-        !Vdd = bool^0 = !Vdd (2) 
+        !GND = bool^0 = !GND (1) @[ supply_low ] 
+        !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
       )
       [1][2] = sack[1][2] (13) (
-        !GND = bool^0 = !GND (1) 
-        !Vdd = bool^0 = !Vdd (2) 
+        !GND = bool^0 = !GND (1) @[ supply_low ] 
+        !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
       )
       [1][3] = sack[1][3] (14) (
-        !GND = bool^0 = !GND (1) 
-        !Vdd = bool^0 = !Vdd (2) 
+        !GND = bool^0 = !GND (1) @[ supply_low ] 
+        !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
       )
       [1][4] = sack[1][4] (15) (
-        !GND = bool^0 = !GND (1) 
-        !Vdd = bool^0 = !Vdd (2) 
+        !GND = bool^0 = !GND (1) @[ supply_low ] 
+        !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
       )
       [2][0] = sack[2][0] (16) (
-        !GND = bool^0 = !GND (1) 
-        !Vdd = bool^0 = !Vdd (2) 
+        !GND = bool^0 = !GND (1) @[ supply_low ] 
+        !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
       )
       [2][1] = sack[2][1] (17) (
-        !GND = bool^0 = !GND (1) 
-        !Vdd = bool^0 = !Vdd (2) 
+        !GND = bool^0 = !GND (1) @[ supply_low ] 
+        !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
       )
       [2][2] = sack[2][2] (18) (
-        !GND = bool^0 = !GND (1) 
-        !Vdd = bool^0 = !Vdd (2) 
+        !GND = bool^0 = !GND (1) @[ supply_low ] 
+        !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
       )
       [2][3] = sack[2][3] (19) (
-        !GND = bool^0 = !GND (1) 
-        !Vdd = bool^0 = !Vdd (2) 
+        !GND = bool^0 = !GND (1) @[ supply_low ] 
+        !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
       )
       [2][4] = sack[2][4] (20) (
-        !GND = bool^0 = !GND (1) 
-        !Vdd = bool^0 = !Vdd (2) 
+        !GND = bool^0 = !GND (1) @[ supply_low ] 
+        !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
       )
       [3][0] = sack[3][0] (21) (
-        !GND = bool^0 = !GND (1) 
-        !Vdd = bool^0 = !Vdd (2) 
+        !GND = bool^0 = !GND (1) @[ supply_low ] 
+        !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
       )
       [3][1] = sack[3][1] (22) (
-        !GND = bool^0 = !GND (1) 
-        !Vdd = bool^0 = !Vdd (2) 
+        !GND = bool^0 = !GND (1) @[ supply_low ] 
+        !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
       )
       [3][2] = sack[3][2] (23) (
-        !GND = bool^0 = !GND (1) 
-        !Vdd = bool^0 = !Vdd (2) 
+        !GND = bool^0 = !GND (1) @[ supply_low ] 
+        !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
       )
       [3][3] = sack[3][3] (24) (
-        !GND = bool^0 = !GND (1) 
-        !Vdd = bool^0 = !Vdd (2) 
+        !GND = bool^0 = !GND (1) @[ supply_low ] 
+        !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
       )
       [3][4] = sack[3][4] (25) (
-        !GND = bool^0 = !GND (1) 
-        !Vdd = bool^0 = !Vdd (2) 
+        !GND = bool^0 = !GND (1) @[ supply_low ] 
+        !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
       )
       [4][0] = bag[0] (1) (
-        !GND = bool^0 = !GND (1) 
-        !Vdd = bool^0 = !Vdd (2) 
+        !GND = bool^0 = !GND (1) @[ supply_low ] 
+        !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
       )
       [4][1] = bag[1] (2) (
-        !GND = bool^0 = !GND (1) 
-        !Vdd = bool^0 = !Vdd (2) 
+        !GND = bool^0 = !GND (1) @[ supply_low ] 
+        !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
       )
       [4][2] = bag[2] (3) (
-        !GND = bool^0 = !GND (1) 
-        !Vdd = bool^0 = !Vdd (2) 
+        !GND = bool^0 = !GND (1) @[ supply_low ] 
+        !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
       )
       [4][3] = bag[3] (4) (
-        !GND = bool^0 = !GND (1) 
-        !Vdd = bool^0 = !Vdd (2) 
+        !GND = bool^0 = !GND (1) @[ supply_low ] 
+        !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
       )
       [4][4] = bag[4] (5) (
-        !GND = bool^0 = !GND (1) 
-        !Vdd = bool^0 = !Vdd (2) 
+        !GND = bool^0 = !GND (1) @[ supply_low ] 
+        !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
       )
     }
   Created state:
@@ -255,6 +273,6 @@ footprint: {
   25	sack[3][4]	barf<>
     bool: 1,2
   bool instance pool: (0 ports, 2 local, 0 mapped)
-  1	!GND	
-  2	!Vdd	
+  1	!GND @[ supply_low ]	
+  2	!Vdd @[ supply_high ]	
 }

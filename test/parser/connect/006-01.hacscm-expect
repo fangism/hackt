@@ -14,8 +14,8 @@ In namespace "", we have: {
 }
 
 footprint: {
-  !GND = bool^0 = !GND (1) 
-  !Vdd = bool^0 = !Vdd (2) 
+  !GND = bool^0 = !GND (1) @[ supply_low ] 
+  !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
   blah = int<32>^0 = blah (1) 
   copier = int<32>^0 = blah (1) 
   sneeze = int<32>^0 = blah (1) 
@@ -23,13 +23,13 @@ footprint: {
   int instance pool: (0 ports, 1 local, 0 mapped)
   1	blah	
   bool instance pool: (0 ports, 2 local, 0 mapped)
-  1	!GND	
-  2	!Vdd	
+  1	!GND @[ supply_low ]	
+  2	!Vdd @[ supply_high ]	
 }
 Globally allocated state:
 globID	super		localID	canonical	footprint-frame
 [global int entries]
 1	(top)	-	1	blah	
 [global bool entries]
-1	(top)	-	1	!GND	
-2	(top)	-	2	!Vdd	
+1	(top)	-	1	!GND	 @[ supply_low ]
+2	(top)	-	2	!Vdd	 @[ supply_high ]

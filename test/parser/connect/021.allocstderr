@@ -13,5 +13,6 @@ globID	super		localID	canonical	footprint-frame
 6	(top)	-	6	this[1][2]	fang<>
 	bool: 1,2
 [global bool entries]
-1	(top)	-	1	!GND	
-2	(top)	-	2	!Vdd	
+1	(top)	-	1	!GND	 @[ supply_low ]
+2	(top)	-	2	!Vdd	 @[ supply_high ]
+

@@ -31,8 +31,8 @@ globID	super		localID	canonical	footprint-frame
 12	process	5	2	goo.p.z	foo<>
 	bool: 1,2,3;8
 [global bool entries]
-1	(top)	-	1	!GND	
-2	(top)	-	2	!Vdd	
+1	(top)	-	1	!GND	 @[ supply_low ]
+2	(top)	-	2	!Vdd	 @[ supply_high ]
 3	(top)	-	3	poo.p.x.a	
 4	process	8	4	poo.q.z.c	
 5	process	9	4	poo.p.z.c	

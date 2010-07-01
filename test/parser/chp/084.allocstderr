@@ -18,5 +18,6 @@ globID	super		localID	canonical	footprint-frame
 3	(top)	-	3	poo.out	chan(int<32>)
 4	(top)	-	4	bar.out	chan(int<32>)
 [global bool entries]
-1	(top)	-	1	!GND	
-2	(top)	-	2	!Vdd	
+1	(top)	-	1	!GND	 @[ supply_low ]
+2	(top)	-	2	!Vdd	 @[ supply_high ]
+

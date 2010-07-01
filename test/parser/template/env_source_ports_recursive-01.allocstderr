@@ -25,8 +25,8 @@ globID	super		localID	canonical	footprint-frame
 	process: 6,7
 	bool: 1,2,13,14,15,16,17
 [global bool entries]
-1	(top)	-	1	!GND	
-2	(top)	-	2	!Vdd	
+1	(top)	-	1	!GND	 @[ supply_low ]
+2	(top)	-	2	!Vdd	 @[ supply_high ]
 3	(top)	-	3	Z.Src[0].rr.d[0]	
 4	(top)	-	4	Z.Src[0].rr.d[1]	
 5	(top)	-	5	Z.Src[0].rr.d[2]	
@@ -42,3 +42,4 @@ globID	super		localID	canonical	footprint-frame
 15	(top)	-	15	Z.Src[2].rr.d[2]	
 16	(top)	-	16	Z.Src[2].rr.e	
 17	(top)	-	17	Z.Src[2]._Reset	
+

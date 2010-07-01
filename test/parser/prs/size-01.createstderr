@@ -6,7 +6,7 @@ Persistent Object Manager text dump:
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
 	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
-	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	122
+	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	130
 	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
@@ -19,24 +19,40 @@ Persistent Object Manager text dump:
 	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	16	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	18	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	36
-	19	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
-	20	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	24
-	21	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	22	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	18	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	19	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	22	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
 	23	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	24	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
-	25	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
-	26	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	24
-	27	##ADDR##	footprnt	0	#HEAD#	#TAIL#	451
-	28	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	29	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	30	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	31	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	32	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	33	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	34	##ADDR##	footprnt	0	#HEAD#	#TAIL#	440
-	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	24	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	26	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	36
+	27	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	28	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	24
+	29	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	31	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	33	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	34	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	24
+	35	##ADDR##	footprnt	0	#HEAD#	#TAIL#	459
+	36	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	37	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	39	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	41	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	42	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	43	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	44	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	45	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	46	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	47	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	48	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	49	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	50	##ADDR##	footprnt	0	#HEAD#	#TAIL#	452
+	51	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -65,20 +81,22 @@ In namespace "", we have: {
           bool<> a
           bool<> b
         )
+        !GND@[supply=0]
+        !Vdd@[supply=1]
       prs:
         {
         a<10> -> b-
         ~a<10> -> b+
         }
       footprint: {
-        !GND = bool^0 = size_test<>::!GND (1) 
-        !Vdd = bool^0 = size_test<>::!Vdd (2) 
+        !GND = bool^0 = size_test<>::!GND (1) @[ supply_low ] 
+        !Vdd = bool^0 = size_test<>::!Vdd (2) @[ supply_high ] 
         a = bool^0 = size_test<>::a (3) 
         b = bool^0 = size_test<>::b (4) 
         Created state:
         bool instance pool: (4 ports, 0 local, 0 mapped)
-        1	size_test<>::!GND	
-        2	size_test<>::!Vdd	
+        1	size_test<>::!GND @[ supply_low ]	
+        2	size_test<>::!Vdd @[ supply_high ]	
         3	size_test<>::a	
         4	size_test<>::b	
         resolved prs:
@@ -96,11 +114,11 @@ In namespace "", we have: {
 }
 
 footprint: {
-  !GND = bool^0 = !GND (1) 
-  !Vdd = bool^0 = !Vdd (2) 
+  !GND = bool^0 = !GND (1) @[ supply_low ] 
+  !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
   x = process size_test<>^0 = x (1) (
-    !GND = bool^0 = !GND (1) 
-    !Vdd = bool^0 = !Vdd (2) 
+    !GND = bool^0 = !GND (1) @[ supply_low ] 
+    !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
     a = bool^0 = x.a (3) 
     b = bool^0 = x.b (4) 
   )
@@ -109,8 +127,8 @@ footprint: {
   1	x	size_test<>
     bool: 1,2,3,4
   bool instance pool: (0 ports, 4 local, 0 mapped)
-  1	!GND	
-  2	!Vdd	
+  1	!GND @[ supply_low ]	
+  2	!Vdd @[ supply_high ]	
   3	x.a	
   4	x.b	
 }

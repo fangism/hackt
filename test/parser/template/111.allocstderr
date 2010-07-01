@@ -16,8 +16,8 @@ globID	super		localID	canonical	footprint-frame
 7	process	1	6	Foo.r[1]	e1of<3>
 	bool: 1,2,24,21,22,23
 [global bool entries]
-1	(top)	-	1	!GND	
-2	(top)	-	2	!Vdd	
+1	(top)	-	1	!GND	 @[ supply_low ]
+2	(top)	-	2	!Vdd	 @[ supply_high ]
 3	(top)	-	3	Foo.rr.rr[0]	
 4	(top)	-	4	Foo.rr.rr[1]	
 5	(top)	-	5	Foo.rr.rr[2]	
@@ -40,3 +40,4 @@ globID	super		localID	canonical	footprint-frame
 22	process	1	22	Foo.r[1].rr[1]	
 23	process	1	23	Foo.r[1].rr[2]	
 24	process	1	24	Foo.r[1].e	
+

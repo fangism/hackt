@@ -7,7 +7,7 @@ Persistent Object Manager text dump:
 	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
-	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	112
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	120
 	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
@@ -20,29 +20,53 @@ Persistent Object Manager text dump:
 	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	17	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	19	##ADDR##	footprnt	0	#HEAD#	#TAIL#	334
-	20	##ADDR##	procdefn	0	#HEAD#	#TAIL#	114
-	21	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
-	22	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
-	23	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	24	##ADDR##	portscop	0	#HEAD#	#TAIL#	24
-	25	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	26	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	27	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	28	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	29	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	30	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
-	31	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
-	32	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	33	##ADDR##	footprnt	0	#HEAD#	#TAIL#	440
-	34	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	19	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	20	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	23	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	24	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	27	##ADDR##	footprnt	0	#HEAD#	#TAIL#	342
+	28	##ADDR##	procdefn	0	#HEAD#	#TAIL#	122
+	29	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	30	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	31	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	32	##ADDR##	portscop	0	#HEAD#	#TAIL#	24
+	33	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	34	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	35	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	36	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	37	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	38	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	39	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	40	##ADDR##	footprnt	0	#HEAD#	#TAIL#	527
-	41	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	36	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	39	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	40	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	41	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	42	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	43	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	44	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	45	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	46	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	47	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
+	48	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	49	##ADDR##	footprnt	0	#HEAD#	#TAIL#	452
+	50	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	51	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	52	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	53	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	54	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	55	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	56	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	57	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	58	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	59	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	60	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	61	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	62	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	63	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	64	##ADDR##	footprnt	0	#HEAD#	#TAIL#	543
+	65	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -71,15 +95,17 @@ In namespace "", we have: {
           bool<> a
           bool<> b
         )
+        !GND@[supply=0]
+        !Vdd@[supply=1]
       footprint: {
-        !GND = bool^0 = inv<>::!GND (1) 
-        !Vdd = bool^0 = inv<>::!Vdd (2) 
+        !GND = bool^0 = inv<>::!GND (1) @[ supply_low ] 
+        !Vdd = bool^0 = inv<>::!Vdd (2) @[ supply_high ] 
         a = bool^0 = inv<>::a (3) 
         b = bool^0 = inv<>::b (4) 
         Created state:
         bool instance pool: (4 ports, 0 local, 0 mapped)
-        1	inv<>::!GND	
-        2	inv<>::!Vdd	
+        1	inv<>::!GND @[ supply_low ]	
+        2	inv<>::!Vdd @[ supply_high ]	
         3	inv<>::a	
         4	inv<>::b	
       }
@@ -101,13 +127,15 @@ In namespace "", we have: {
           bool<> !Vdd
           inv<> x
         )
+        !GND@[supply=0]
+        !Vdd@[supply=1]
         x.a@[iscomb]
       footprint: {
-        !GND = bool^0 = multi_inv<>::!GND (1) 
-        !Vdd = bool^0 = multi_inv<>::!Vdd (2) 
+        !GND = bool^0 = multi_inv<>::!GND (1) @[ supply_low ] 
+        !Vdd = bool^0 = multi_inv<>::!Vdd (2) @[ supply_high ] 
         x = process inv<>^0 = multi_inv<>::x (1) (
-          !GND = bool^0 = multi_inv<>::!GND (1) 
-          !Vdd = bool^0 = multi_inv<>::!Vdd (2) 
+          !GND = bool^0 = multi_inv<>::!GND (1) @[ supply_low ] 
+          !Vdd = bool^0 = multi_inv<>::!Vdd (2) @[ supply_high ] 
           a = bool^0 = multi_inv<>::x.a (3) @[ iscomb ] 
           b = bool^0 = multi_inv<>::x.b (4) 
         )
@@ -116,13 +144,13 @@ In namespace "", we have: {
         1	multi_inv<>::x	inv<>
           bool: 1,2,3,4
         bool instance pool: (4 ports, 0 local, 0 mapped)
-        1	multi_inv<>::!GND	
-        2	multi_inv<>::!Vdd	
+        1	multi_inv<>::!GND @[ supply_low ]	
+        2	multi_inv<>::!Vdd @[ supply_high ]	
         3	multi_inv<>::x.a @[ iscomb ]	
         4	multi_inv<>::x.b	
         bool port aliases:
-        1: multi_inv<>::x.!GND = multi_inv<>::!GND
-        2: multi_inv<>::x.!Vdd = multi_inv<>::!Vdd
+        1: multi_inv<>::x.!GND = multi_inv<>::!GND @[ supply_low ]
+        2: multi_inv<>::x.!Vdd = multi_inv<>::!Vdd @[ supply_high ]
       }
       }
 
@@ -133,14 +161,14 @@ In namespace "", we have: {
 }
 
 footprint: {
-  !GND = bool^0 = !GND (1) 
-  !Vdd = bool^0 = !Vdd (2) 
+  !GND = bool^0 = !GND (1) @[ supply_low ] 
+  !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
   foo = process multi_inv<>^0 = foo (1) (
-    !GND = bool^0 = !GND (1) 
-    !Vdd = bool^0 = !Vdd (2) 
+    !GND = bool^0 = !GND (1) @[ supply_low ] 
+    !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
     x = process inv<>^0 = foo.x (2) (
-      !GND = bool^0 = !GND (1) 
-      !Vdd = bool^0 = !Vdd (2) 
+      !GND = bool^0 = !GND (1) @[ supply_low ] 
+      !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
       a = bool^0 = foo.x.a (3) @[ iscomb ] 
       b = bool^0 = foo.x.b (4) 
     )
@@ -153,8 +181,8 @@ footprint: {
   2	foo.x	inv<>
     bool: 1,2,3,4
   bool instance pool: (0 ports, 4 local, 0 mapped)
-  1	!GND	
-  2	!Vdd	
+  1	!GND @[ supply_low ]	
+  2	!Vdd @[ supply_high ]	
   3	foo.x.a @[ iscomb ]	
   4	foo.x.b	
 }

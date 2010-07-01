@@ -15,22 +15,30 @@ Persistent Object Manager text dump:
 	11	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	12	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
 	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
-	15	##ADDR##	apbmvref	0	#HEAD#	#TAIL#	29
-	16	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	17	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	18	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	19	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	20	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
-	21	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
-	22	##ADDR##	pblogclp	0	#HEAD#	#TAIL#	26
-	23	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
-	24	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
-	25	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
-	26	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
-	27	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	14	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	15	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	18	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	19	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	22	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	apbmvref	0	#HEAD#	#TAIL#	29
+	24	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	25	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	26	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	27	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
 	28	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
-	29	##ADDR##	footprnt	0	#HEAD#	#TAIL#	343
+	29	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	pblogclp	0	#HEAD#	#TAIL#	26
+	31	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	32	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	footprnt	0	#HEAD#	#TAIL#	347
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -48,8 +56,8 @@ In namespace "", we have: {
 }
 
 footprint: {
-  !GND = bool^0 = !GND (1) 
-  !Vdd = bool^0 = !Vdd (2) 
+  !GND = bool^0 = !GND (1) @[ supply_low ] 
+  !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
   W = pbool^1
     unrolled index-value pairs: {
       0 = 1
@@ -60,6 +68,6 @@ footprint: {
   Z = pbool^0 value: 1
   Created state:
   bool instance pool: (0 ports, 2 local, 0 mapped)
-  1	!GND	
-  2	!Vdd	
+  1	!GND @[ supply_low ]	
+  2	!Vdd @[ supply_high ]	
 }

@@ -13,6 +13,8 @@ process-definition (defined) bar(
       bool<> !GND
       bool<> !Vdd
     )
+    !GND@[supply=0]
+    !Vdd@[supply=1]
   }
 
 process-definition (defined) bar(
@@ -28,6 +30,8 @@ process-definition (defined) bar(
       bool<> !GND
       bool<> !Vdd
     )
+    !GND@[supply=0]
+    !Vdd@[supply=1]
   }
 
 concrete_type_ref: bad definition reference "bar"!  ERROR! [16:1..3]

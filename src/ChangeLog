@@ -3,6 +3,20 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-07-01	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-00:
+	  HAC: added new node attribute 'supply'
+		supply=0 indicates a GND-like supply
+		supply=1 indicates a Vdd-like supply
+		Implicit supply ports !GND and !Vdd already come with these.
+		So do globals.
+	  hflat now shows supply attributes
+	  Object format updated:
+		node attribute bool flags now 32b
+	  Attribute documented, tests updated.
+
+
 2010-06-25	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-83-99:

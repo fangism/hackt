@@ -7,7 +7,7 @@ Persistent Object Manager text dump:
 	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	29
-	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	120
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	128
 	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	9	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
@@ -23,19 +23,35 @@ Persistent Object Manager text dump:
 	19	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
 	20	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
 	21	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	22	##ADDR##	chnalias	0	#HEAD#	#TAIL#	20
-	23	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
-	24	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
-	25	##ADDR##	footprnt	0	#HEAD#	#TAIL#	344
-	26	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
-	27	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	28	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	29	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	30	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	31	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	32	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	33	##ADDR##	footprnt	0	#HEAD#	#TAIL#	440
-	34	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	22	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	23	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	26	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	27	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	30	##ADDR##	chnalias	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	footprnt	0	#HEAD#	#TAIL#	352
+	34	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	36	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	39	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	40	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	41	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	42	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	43	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	44	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	45	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	46	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	47	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	48	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	49	##ADDR##	footprnt	0	#HEAD#	#TAIL#	452
+	50	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -64,18 +80,20 @@ In namespace "", we have: {
           chan?(bool<>) x
           chan!(bool<>) y
         )
+        !GND@[supply=0]
+        !Vdd@[supply=1]
         y = x;
       footprint: {
-        !GND = bool^0 = forward<>::!GND (1) 
-        !Vdd = bool^0 = forward<>::!Vdd (2) 
+        !GND = bool^0 = forward<>::!GND (1) @[ supply_low ] 
+        !Vdd = bool^0 = forward<>::!Vdd (2) @[ supply_high ] 
         x = channel chan?(bool<>)^0 = forward<>::x (1) 
         y = channel chan!(bool<>)^0 = forward<>::x (1) 
         Created state:
         channel instance pool: (1 ports, 0 local, 0 mapped)
         1	forward<>::x	
         bool instance pool: (2 ports, 0 local, 0 mapped)
-        1	forward<>::!GND	
-        2	forward<>::!Vdd	
+        1	forward<>::!GND @[ supply_low ]	
+        2	forward<>::!Vdd @[ supply_high ]	
         channel port aliases:
         1: forward<>::x = forward<>::y
       }
@@ -88,11 +106,11 @@ In namespace "", we have: {
 }
 
 footprint: {
-  !GND = bool^0 = !GND (1) 
-  !Vdd = bool^0 = !Vdd (2) 
+  !GND = bool^0 = !GND (1) @[ supply_low ] 
+  !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
   email = process forward<>^0 = email (1) (
-    !GND = bool^0 = !GND (1) 
-    !Vdd = bool^0 = !Vdd (2) 
+    !GND = bool^0 = !GND (1) @[ supply_low ] 
+    !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
     x = channel chan?(bool<>)^0 = email.x (1) 
     y = channel chan!(bool<>)^0 = email.x (1) 
   )
@@ -104,6 +122,6 @@ footprint: {
   channel instance pool: (0 ports, 1 local, 0 mapped)
   1	email.x	
   bool instance pool: (0 ports, 2 local, 0 mapped)
-  1	!GND	
-  2	!Vdd	
+  1	!GND @[ supply_low ]	
+  2	!Vdd @[ supply_high ]	
 }

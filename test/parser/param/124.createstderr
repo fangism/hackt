@@ -16,22 +16,30 @@ Persistent Object Manager text dump:
 	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	13	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
 	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	15	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	16	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	17	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	18	##ADDR##	prassign	0	#HEAD#	#TAIL#	20
-	19	##ADDR##	prarthex	0	#HEAD#	#TAIL#	17
-	20	##ADDR##	cnvtpipr	0	#HEAD#	#TAIL#	12
-	21	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	22	##ADDR##	cnstpr__	0	#HEAD#	#TAIL#	12
-	23	##ADDR##	sprmvref	0	#HEAD#	#TAIL#	16
-	24	##ADDR##	prassign	0	#HEAD#	#TAIL#	20
-	25	##ADDR##	prarthex	0	#HEAD#	#TAIL#	17
-	26	##ADDR##	cnvtpipr	0	#HEAD#	#TAIL#	12
-	27	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	28	##ADDR##	cnstpr__	0	#HEAD#	#TAIL#	12
-	29	##ADDR##	sprmvref	0	#HEAD#	#TAIL#	16
-	30	##ADDR##	footprnt	0	#HEAD#	#TAIL#	344
+	15	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	16	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	18	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	19	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	20	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	23	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	25	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	prassign	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	prarthex	0	#HEAD#	#TAIL#	17
+	28	##ADDR##	cnvtpipr	0	#HEAD#	#TAIL#	12
+	29	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	cnstpr__	0	#HEAD#	#TAIL#	12
+	31	##ADDR##	sprmvref	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	prassign	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	prarthex	0	#HEAD#	#TAIL#	17
+	34	##ADDR##	cnvtpipr	0	#HEAD#	#TAIL#	12
+	35	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	cnstpr__	0	#HEAD#	#TAIL#	12
+	37	##ADDR##	sprmvref	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	footprnt	0	#HEAD#	#TAIL#	348
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -50,13 +58,13 @@ In namespace "", we have: {
 }
 
 footprint: {
-  !GND = bool^0 = !GND (1) 
-  !Vdd = bool^0 = !Vdd (2) 
+  !GND = bool^0 = !GND (1) @[ supply_low ] 
+  !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
   NS = preal^0 value: 4.5
   PS = preal^0 value: 4.5
   WCH = pint^0 value: 3
   Created state:
   bool instance pool: (0 ports, 2 local, 0 mapped)
-  1	!GND	
-  2	!Vdd	
+  1	!GND @[ supply_low ]	
+  2	!Vdd @[ supply_high ]	
 }

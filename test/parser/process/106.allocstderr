@@ -7,8 +7,8 @@ globID	super		localID	canonical	footprint-frame
 3	(top)	-	3	clyde	foo<5>
 	bool: 1,2,8,9,10,11;13
 [global bool entries]
-1	(top)	-	1	!GND	
-2	(top)	-	2	!Vdd	
+1	(top)	-	1	!GND	 @[ supply_low ]
+2	(top)	-	2	!Vdd	 @[ supply_high ]
 3	(top)	-	3	blinky.a[0]	
 4	(top)	-	4	blinky.a[2]	
 5	(top)	-	5	inky.a[0]	
@@ -20,3 +20,4 @@ globID	super		localID	canonical	footprint-frame
 11	(top)	-	11	clyde.a[4]	
 12	process	2	6	inky.q[1]	
 13	process	3	7	clyde.q[1]	
+

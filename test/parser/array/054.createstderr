@@ -19,32 +19,40 @@ Persistent Object Manager text dump:
 	15	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	16	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
 	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	18	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
-	19	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	20	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
-	21	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	22	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	23	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
-	24	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	25	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
-	26	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	27	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	28	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
-	29	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	30	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
-	31	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	32	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	33	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
-	34	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	35	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
-	36	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	37	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	38	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
-	39	##ADDR##	apbmvref	0	#HEAD#	#TAIL#	21
-	40	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
-	41	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
-	42	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
-	43	##ADDR##	footprnt	0	#HEAD#	#TAIL#	394
+	18	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	19	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	22	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	23	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	26	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	28	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	31	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	33	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	36	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	38	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+	39	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	40	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	41	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
+	42	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	43	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+	44	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	45	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	46	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
+	47	##ADDR##	apbmvref	0	#HEAD#	#TAIL#	21
+	48	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+	49	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+	50	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+	51	##ADDR##	footprnt	0	#HEAD#	#TAIL#	398
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -63,8 +71,8 @@ In namespace "", we have: {
 }
 
 footprint: {
-  !GND = bool^0 = !GND (1) 
-  !Vdd = bool^0 = !Vdd (2) 
+  !GND = bool^0 = !GND (1) @[ supply_low ] 
+  !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
   x = pbool^1
     unrolled index-value pairs: {
       0 = 0
@@ -84,6 +92,6 @@ footprint: {
     }
   Created state:
   bool instance pool: (0 ports, 2 local, 0 mapped)
-  1	!GND	
-  2	!Vdd	
+  1	!GND @[ supply_low ]	
+  2	!Vdd @[ supply_high ]	
 }

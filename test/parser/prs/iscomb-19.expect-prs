@@ -6,6 +6,8 @@
 ~"foo.x[2].a" -> "foo.z"+
 "foo.x[3].a" -> "foo.x[3].b"-
 ~"foo.x[3].a" -> "foo.x[3].b"+
+@ "!GND" supply_low
+@ "!Vdd" supply_high
 @ "foo.x[0].a" iscomb
 @ "foo.y" iscomb !autokeeper
 @ "foo.x[2].a" iscomb

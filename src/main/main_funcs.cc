@@ -3,7 +3,7 @@
 	Useful main-level functions to call.
 	Indent to hide most complexity here, exposing a bare-bones
 	set of public callable functions.  
-	$Id: main_funcs.cc,v 1.30 2010/04/27 18:33:19 fang Exp $
+	$Id: main_funcs.cc,v 1.31 2010/07/01 20:20:26 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -352,6 +352,9 @@ parse_and_check(const char* name, const compile_options& opt) {
 	if (!AST) return return_type(NULL);
 	// error message would be nice
 #if IMPLICIT_SUPPLY_PORTS
+	// push in reverse order
+	AST->push_front(get_Vdd_attributes());
+	AST->push_front(get_GND_attributes());
 	AST->push_front(get_implicit_globals());
 #endif
 	return check_AST(*AST, name ? name : dflt, opt.parse_opts);
@@ -386,7 +389,7 @@ try {
 	Increment this whenever format changes.  
  */
 static const size_t
-object_file_format_version = 1;
+object_file_format_version = 2;
 
 //=============================================================================
 /**

@@ -1,3 +1,5 @@
+@ "!GND" supply_low
+@ "!Vdd" supply_high
 @ "b" isrvc1
 @ "c" isrvc2
 @ "d" isrvc3

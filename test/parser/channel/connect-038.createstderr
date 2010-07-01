@@ -6,7 +6,7 @@ Persistent Object Manager text dump:
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
 	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
-	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	123
+	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	131
 	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	8	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
@@ -19,32 +19,48 @@ Persistent Object Manager text dump:
 	15	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
 	16	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
 	17	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	19	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	20	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	21	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
-	22	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	23	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	24	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	25	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
-	26	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	27	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	28	##ADDR##	footprnt	0	#HEAD#	#TAIL#	391
-	29	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
-	30	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	31	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
+	18	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	19	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	22	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	23	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	26	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	30	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
 	32	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	33	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
-	34	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	35	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
-	36	##ADDR##	procplch	0	#HEAD#	#TAIL#	31
-	37	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	38	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	39	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	40	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	41	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	42	##ADDR##	footprnt	0	#HEAD#	#TAIL#	413
-	43	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	33	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	34	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	36	##ADDR##	footprnt	0	#HEAD#	#TAIL#	399
+	37	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	39	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
+	40	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	41	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	42	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	43	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	44	##ADDR##	procplch	0	#HEAD#	#TAIL#	31
+	45	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	46	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	47	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	48	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	49	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	50	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	51	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	52	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	53	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	54	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	55	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	56	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	57	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	58	##ADDR##	footprnt	0	#HEAD#	#TAIL#	423
+	59	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -71,6 +87,8 @@ In namespace "", we have: {
           bool<> !Vdd
           chan(bool<>) B
         )
+        !GND@[supply=0]
+        !Vdd@[supply=1]
         bool<> x
       chp:
         concurrent: {
@@ -82,16 +100,16 @@ In namespace "", we have: {
           ]
         }
       footprint: {
-        !GND = bool^0 = boring<>::!GND (1) 
-        !Vdd = bool^0 = boring<>::!Vdd (2) 
+        !GND = bool^0 = boring<>::!GND (1) @[ supply_low ] 
+        !Vdd = bool^0 = boring<>::!Vdd (2) @[ supply_high ] 
         B = channel chan(bool<>)^0 = boring<>::B (1) 
         x = bool^0 = boring<>::x (3) 
         Created state:
         channel instance pool: (1 ports, 0 local, 0 mapped)
         1	boring<>::B	
         bool instance pool: (2 ports, 1 local, 0 mapped)
-        1	boring<>::!GND	
-        2	boring<>::!Vdd	
+        1	boring<>::!GND @[ supply_low ]	
+        2	boring<>::!Vdd @[ supply_high ]	
         3	boring<>::x	
         resolved concurrent actions:
           *[
@@ -115,11 +133,11 @@ In namespace "", we have: {
 }
 
 footprint: {
-  !GND = bool^0 = !GND (1) 
-  !Vdd = bool^0 = !Vdd (2) 
+  !GND = bool^0 = !GND (1) @[ supply_low ] 
+  !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
   lecture = process boring<>^0 = lecture (1) (
-    !GND = bool^0 = !GND (1) 
-    !Vdd = bool^0 = !Vdd (2) 
+    !GND = bool^0 = !GND (1) @[ supply_low ] 
+    !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
     B = channel chan(bool<>)^0 = lecture.B (1) 
   )
   Created state:
@@ -130,8 +148,8 @@ footprint: {
   channel instance pool: (0 ports, 1 local, 0 mapped)
   1	lecture.B	
   bool instance pool: (0 ports, 2 local, 1 mapped)
-  1	!GND	
-  2	!Vdd	
+  1	!GND @[ supply_low ]	
+  2	!Vdd @[ supply_high ]	
   private sub-bool index map:
     (1 -> 0)
     (2 -> 1)

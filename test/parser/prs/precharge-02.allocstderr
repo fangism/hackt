@@ -5,8 +5,8 @@ globID	super		localID	canonical	footprint-frame
 2	(top)	-	2	bar	pchg_test2<>
 	bool: 1,2,7,8,9,10
 [global bool entries]
-1	(top)	-	1	!GND	
-2	(top)	-	2	!Vdd	
+1	(top)	-	1	!GND	 @[ supply_low ]
+2	(top)	-	2	!Vdd	 @[ supply_high ]
 3	(top)	-	3	foo.a	
 4	(top)	-	4	foo.b	
 5	(top)	-	5	foo.c	
@@ -15,3 +15,4 @@ globID	super		localID	canonical	footprint-frame
 8	(top)	-	8	bar.b	
 9	(top)	-	9	bar.c	
 10	(top)	-	10	bar._en	
+

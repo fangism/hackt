@@ -3,11 +3,12 @@ globID	super		localID	canonical	footprint-frame
 1	(top)	-	1	g	groupie<>
 	bool: 1,2,3,4,5;6..8
 [global bool entries]
-1	(top)	-	1	!GND	
-2	(top)	-	2	!Vdd	
+1	(top)	-	1	!GND	 @[ supply_low ]
+2	(top)	-	2	!Vdd	 @[ supply_high ]
 3	(top)	-	3	g.p	
 4	(top)	-	4	g.q	
 5	(top)	-	5	g.r	
 6	process	1	6	g.x[0]	
 7	process	1	7	g.x[1]	
 8	process	1	8	g.x[2]	
+

@@ -8,7 +8,8 @@ globID	super		localID	canonical	footprint-frame
 3	(top)	-	3	foo.x[1]	inv<>
 	bool: 1,2,4,3
 [global bool entries]
-1	(top)	-	1	!GND	
-2	(top)	-	2	!Vdd	
+1	(top)	-	1	!GND	 @[ supply_low ]
+2	(top)	-	2	!Vdd	 @[ supply_high ]
 3	(top)	-	3	foo.x[0].a	 @[ iscomb !autokeeper ]
 4	(top)	-	4	foo.x[0].b	 @[ iscomb !autokeeper ]
+

@@ -3,8 +3,8 @@ globID	super		localID	canonical	footprint-frame
 1	(top)	-	1	foo	matrix_array<>
 	bool: 1,2,19,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18
 [global bool entries]
-1	(top)	-	1	!GND	
-2	(top)	-	2	!Vdd	
+1	(top)	-	1	!GND	 @[ supply_low ]
+2	(top)	-	2	!Vdd	 @[ supply_high ]
 3	(top)	-	3	foo.in[0][0]	
 4	(top)	-	4	foo.in[0][1]	
 5	(top)	-	5	foo.in[0][2]	
@@ -22,3 +22,4 @@ globID	super		localID	canonical	footprint-frame
 17	(top)	-	17	foo.in[3][2]	
 18	(top)	-	18	foo.in[3][3]	
 19	(top)	-	19	foo._o	
+

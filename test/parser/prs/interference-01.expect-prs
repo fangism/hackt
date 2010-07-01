@@ -1,3 +1,5 @@
+@ "!GND" supply_low
+@ "!Vdd" supply_high
 @ "foo" may_interfere
 @ "bar" may_interfere
 = "foo" "foo2"

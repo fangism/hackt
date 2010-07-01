@@ -45,5 +45,6 @@ globID	super		localID	canonical	footprint-frame
 22	(top)	-	22	sack[4][4]	barf<>
 	bool: 1,2
 [global bool entries]
-1	(top)	-	1	!GND	
-2	(top)	-	2	!Vdd	
+1	(top)	-	1	!GND	 @[ supply_low ]
+2	(top)	-	2	!Vdd	 @[ supply_high ]
+

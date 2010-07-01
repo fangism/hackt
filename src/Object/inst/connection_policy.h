@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/connection_policy.h"
 	Specializations for connections in the HAC language. 
-	$Id: connection_policy.h,v 1.15 2010/05/26 00:46:50 fang Exp $
+	$Id: connection_policy.h,v 1.16 2010/07/01 20:20:25 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CONNECTION_POLICY_H__
@@ -116,23 +116,26 @@ protected:
 		Number of bit fields is constrained by 
 		sizeof(connection_flags_type)
 	 */
-		BOOL_IS_COMBINATIONAL	= 0x0001,
+		BOOL_IS_COMBINATIONAL	= 0x00000001,
 	/**
 		Tells netlist generations tools NOT to automatically
 		add staticizers to dynamic node.  
 	 */
-		BOOL_NO_AUTOKEEPER	= 0x0002,
+		BOOL_NO_AUTOKEEPER	= 0x00000002,
 	/**
 		Attributes added by request.
 	 */
-		BOOL_IS_RVC1		= 0x0004,
-		BOOL_IS_RVC2		= 0x0008,
-		BOOL_IS_RVC3		= 0x0010,
+		BOOL_IS_RVC1		= 0x00000004,
+		BOOL_IS_RVC2		= 0x00000008,
+		BOOL_IS_RVC3		= 0x00000010,
 	/**
 		Set if node's fanin rules are permitted to interfere.
 	 */
-		BOOL_MAY_INTERFERE	= 0x0020,
-		BOOL_MAY_WEAK_INTERFERE	= 0x0040,
+		BOOL_MAY_INTERFERE	= 0x00000020,
+		BOOL_MAY_WEAK_INTERFERE	= 0x00000040,
+	// supply attributes
+		BOOL_SUPPLY_LOW		= 0x00000080,
+		BOOL_SUPPLY_HIGH	= 0x00000100,
 #if BOOL_PRS_CONNECTIVITY_CHECKING
 	/**
 		This is NOT an attribute, is an intrinsic property
@@ -142,7 +145,7 @@ protected:
 		This should be set immediately upon instantiating 
 		a port substructure.
 	 */
-		BOOL_IS_ALIASED_TO_PORT = 0x0080,
+		BOOL_IS_ALIASED_TO_PORT = 0x00800000,
 	/**
 		The first four flags are properties from participation
 		in production rules and propagated from subinstances.
@@ -151,10 +154,10 @@ protected:
 		counterparts.  
 		These are only computed, never set by user directly.
 	 */
-		BOOL_LOCAL_PRS_FANOUT_PULL_DN	= 0x0100,
-		BOOL_LOCAL_PRS_FANOUT_PULL_UP	= 0x0200,
-		BOOL_LOCAL_PRS_FANIN_PULL_DN	= 0x0400,
-		BOOL_LOCAL_PRS_FANIN_PULL_UP	= 0x0800,
+		BOOL_LOCAL_PRS_FANOUT_PULL_DN	= 0x01000000,
+		BOOL_LOCAL_PRS_FANOUT_PULL_UP	= 0x02000000,
+		BOOL_LOCAL_PRS_FANIN_PULL_DN	= 0x04000000,
+		BOOL_LOCAL_PRS_FANIN_PULL_UP	= 0x08000000,
 		/// derived flag: all local prs fields
 		BOOL_LOCAL_PRS_MASK =
 			BOOL_LOCAL_PRS_FANOUT_PULL_DN |
@@ -165,10 +168,10 @@ protected:
 	/**
 		Fanin/fanout inherited properties from substructures.  
 	 */
-		BOOL_SUBSTRUCT_FANOUT_PULL_DN	= 0x1000,
-		BOOL_SUBSTRUCT_FANOUT_PULL_UP	= 0x2000,
-		BOOL_SUBSTRUCT_FANIN_PULL_DN	= 0x4000,
-		BOOL_SUBSTRUCT_FANIN_PULL_UP	= 0x8000,
+		BOOL_SUBSTRUCT_FANOUT_PULL_DN	= 0x10000000,
+		BOOL_SUBSTRUCT_FANOUT_PULL_UP	= 0x20000000,
+		BOOL_SUBSTRUCT_FANIN_PULL_DN	= 0x40000000,
+		BOOL_SUBSTRUCT_FANIN_PULL_UP	= 0x80000000,
 		/// derived flag: all substructure field
 		BOOL_SUBSTRUCT_PRS_MASK =
 			BOOL_SUBSTRUCT_FANOUT_PULL_DN |
@@ -224,9 +227,10 @@ protected:
 			BOOL_LOCAL_PRS_MASK | BOOL_SUBSTRUCT_PRS_MASK,
 #endif	// BOOL_PRS_CONNECTIVITY_CHECKING
 	/// mask for attributes to distinguish from connectivity fields
-		BOOL_ATTRIBUTES_MASK	= 0x007F,
-		BOOL_INIT_ATTRIBUTES_MASK	= 0x007F | BOOL_IS_ALIASED_TO_PORT,
-		BOOL_DEFAULT_ATTRIBUTES = 0x0000
+		BOOL_ATTRIBUTES_MASK	= 0x000001FF,
+		BOOL_INIT_ATTRIBUTES_MASK	=
+			BOOL_ATTRIBUTES_MASK | BOOL_IS_ALIASED_TO_PORT,
+		BOOL_DEFAULT_ATTRIBUTES = 0x00000000
 	};
 	/**
 		Contains both user-attached attributes and
@@ -309,6 +313,9 @@ public:
 	set_is_rvc3(void) {
 		attributes |= BOOL_IS_RVC3;
 	}
+
+	void
+	set_supply(const bool);
 
 #if BOOL_PRS_CONNECTIVITY_CHECKING
 	bool

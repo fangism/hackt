@@ -1,0 +1,19 @@
+// "supply-attrib-02.hac"
+// copy-modified from "supply-attrib-01.hac"
+// @hflat-flags@ -f node-attributes
+// just testing formatting of intermediate representation dump
+// produced netlist is unaffected by supply attributes
+
+defproc globals(bool Vdd, GND) {
+Vdd @ [supply=1];
+GND @ [supply=0];
+}
+
+defproc inv(globals g; bool x, y) {
+prs <g.Vdd, g.GND> {
+	x	=> y-
+}
+}
+
+inv foo;
+

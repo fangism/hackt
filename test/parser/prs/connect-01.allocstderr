@@ -21,8 +21,8 @@ globID	super		localID	canonical	footprint-frame
 8	process	3	2	sh1t.y.d.y	inv<>
 	bool: 1,2,6
 [global bool entries]
-1	(top)	-	1	!GND	
-2	(top)	-	2	!Vdd	
+1	(top)	-	1	!GND	 @[ supply_low ]
+2	(top)	-	2	!Vdd	 @[ supply_high ]
 3	(top)	-	3	sh1t.y.d.x.a	
 4	process	2	4	sh1t.y.e.x.a	
 5	process	5	4	sh1t.y.e.y.a	

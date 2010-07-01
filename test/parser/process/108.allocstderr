@@ -16,11 +16,12 @@ globID	super		localID	canonical	footprint-frame
 6	process	4	2	poo.q.y	foo<>
 	bool: 1,2;7..8
 [global bool entries]
-1	(top)	-	1	!GND	
-2	(top)	-	2	!Vdd	
+1	(top)	-	1	!GND	 @[ supply_low ]
+2	(top)	-	2	!Vdd	 @[ supply_high ]
 3	process	5	3	poo.p.y.a	
 4	process	5	4	poo.p.y.b	
 5	process	3	3	poo.p.x.a	
 6	process	3	4	poo.p.x.b	
 7	process	6	3	poo.q.y.a	
 8	process	6	4	poo.q.y.b	
+

@@ -21,8 +21,8 @@ globID	super		localID	canonical	footprint-frame
 8	(top)	-	8	X[3].rr	e1of<2>
 	bool: 1,2,17,15,16
 [global bool entries]
-1	(top)	-	1	!GND	
-2	(top)	-	2	!Vdd	
+1	(top)	-	1	!GND	 @[ supply_low ]
+2	(top)	-	2	!Vdd	 @[ supply_high ]
 3	(top)	-	3	X[0].rr.d[0]	
 4	(top)	-	4	X[0].rr.d[1]	
 5	(top)	-	5	X[0].rr.e	
@@ -39,3 +39,4 @@ globID	super		localID	canonical	footprint-frame
 16	(top)	-	16	X[3].rr.d[1]	
 17	(top)	-	17	X[3].rr.e	
 18	(top)	-	18	X[3]._Reset	
+

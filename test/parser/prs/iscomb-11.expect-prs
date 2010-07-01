@@ -5,6 +5,8 @@
 "present.k" -> "present.l"-
 ~"present.k" -> "present.l"+
 @ "present.l" iscomb
+@ "!GND" supply_low
+@ "!Vdd" supply_high
 @ "b" iscomb
 @ "c" iscomb
 = "!GND" "present.!GND"

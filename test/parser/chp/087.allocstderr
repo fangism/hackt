@@ -17,5 +17,6 @@ globID	super		localID	canonical	footprint-frame
 1	process	1	1	foo.y	
 2	process	2	1	bar.y	
 [global bool entries]
-1	(top)	-	1	!GND	
-2	(top)	-	2	!Vdd	
+1	(top)	-	1	!GND	 @[ supply_low ]
+2	(top)	-	2	!Vdd	 @[ supply_high ]
+

@@ -6,6 +6,8 @@ weak	"wha.bar" -> "wha.foo"-
 weak	~"wha.bar" -> "wha.foo"+
 weak	"cheezburger.bar" -> "cheezburger.foo"-
 weak	~"cheezburger.bar" -> "cheezburger.foo"+
+@ "!GND" supply_low
+@ "!Vdd" supply_high
 @ "wee.foo" may_interfere
 @ "cheezburger.foo" may_interfere
 @ "cheezburger.bar" may_weak_interfere

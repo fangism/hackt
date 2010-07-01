@@ -5,5 +5,6 @@ globID	super		localID	canonical	footprint-frame
 [global bool entries]
 1	(top)	-	1	FOO.d[0]	
 2	(top)	-	2	FOO.d[1]	
-3	(top)	-	3	!GND	
-4	(top)	-	4	!Vdd	
+3	(top)	-	3	!GND	 @[ supply_low ]
+4	(top)	-	4	!Vdd	 @[ supply_high ]
+

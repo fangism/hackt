@@ -33,8 +33,8 @@ globID	super		localID	canonical	footprint-frame
 	process: 1,5
 	bool: 1,2,12,13,14
 [global bool entries]
-1	(top)	-	1	!GND	
-2	(top)	-	2	!Vdd	
+1	(top)	-	1	!GND	 @[ supply_low ]
+2	(top)	-	2	!Vdd	 @[ supply_high ]
 3	(top)	-	3	l.d[0]	
 4	(top)	-	4	l.d[1]	
 5	(top)	-	5	l.e	
@@ -60,3 +60,4 @@ globID	super		localID	canonical	footprint-frame
 25	(top)	-	25	xw.d[0]	
 26	(top)	-	26	xw.d[1]	
 27	(top)	-	27	xw.e	
+

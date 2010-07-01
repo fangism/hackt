@@ -11,5 +11,6 @@ globID	super		localID	canonical	footprint-frame
 4	(top)	-	4	g.GND_2	
 5	(top)	-	5	foo.x	
 6	(top)	-	6	foo.y	
-7	(top)	-	7	!GND	
-8	(top)	-	8	!Vdd	
+7	(top)	-	7	!GND	 @[ supply_low ]
+8	(top)	-	8	!Vdd	 @[ supply_high ]
+

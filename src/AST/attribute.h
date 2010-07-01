@@ -1,7 +1,7 @@
 /**
 	\file "AST/attribute.h"
 	Generic structure of attributes.  
-	$Id: attribute.h,v 1.1 2008/03/20 00:03:15 fang Exp $
+	$Id: attribute.h,v 1.2 2010/07/01 20:20:23 fang Exp $
  */
 
 #ifndef	__HAC_AST_ATTRIBUTE_H__
@@ -10,13 +10,13 @@
 #include <iosfwd>
 #include "AST/AST_fwd.h"
 #include "lexer/hac_lex.h"
-#include "util/memory/excl_ptr.h"
+#include "util/memory/count_ptr.h"
 
 namespace HAC {
 namespace parser {
 using std::ostream;
 using lexer::line_position;
-using util::memory::excl_ptr;
+using util::memory::count_ptr;
 class token_identifier;
 class expr_list;
 
@@ -26,10 +26,12 @@ class expr_list;
 	Why not just use std::pair?
  */
 struct generic_attribute {
-	const excl_ptr<const token_identifier>		key;
-	const excl_ptr<const expr_list>			values;
+	const count_ptr<const token_identifier>		key;
+	const count_ptr<const expr_list>		values;
 public:
 	generic_attribute(const token_identifier*, const expr_list*);
+	generic_attribute(const count_ptr<const token_identifier>&,
+		const expr_list*);
 	~generic_attribute();
 
 	ostream&

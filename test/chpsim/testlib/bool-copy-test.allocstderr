@@ -8,6 +8,7 @@ globID	super		localID	canonical	footprint-frame
 2	(top)	-	2	HAHA.O[0]	chan(bool<>)
 3	(top)	-	3	HAHA.O[1]	chan(bool<>)
 [global bool entries]
-1	(top)	-	1	!GND	
-2	(top)	-	2	!Vdd	
+1	(top)	-	1	!GND	 @[ supply_low ]
+2	(top)	-	2	!Vdd	 @[ supply_high ]
 3	process	1	3	HAHA.a	
+

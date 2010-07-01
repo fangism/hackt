@@ -1,5 +1,7 @@
 "p" -> "q"-
 ~"p" -> "q"+
+@ "!GND" supply_low
+@ "!Vdd" supply_high
 @ "p" iscomb
 = "!GND" "x.!GND"
 = "!Vdd" "x.!Vdd"

@@ -19,44 +19,52 @@ Persistent Object Manager text dump:
 	15	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	16	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
 	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	19	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	20	##ADDR##	datadefn	0	#HEAD#	#TAIL#	68
-	21	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	22	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	23	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	24	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	25	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	26	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	27	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
-	28	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	29	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	30	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	31	##ADDR##	dialias_	0	#HEAD#	#TAIL#	20
-	32	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
-	33	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	34	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
-	35	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
-	36	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
-	37	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
-	38	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	18	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	19	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	22	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	23	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	26	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	datadefn	0	#HEAD#	#TAIL#	68
+	29	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	31	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	34	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
+	36	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	39	##ADDR##	dialias_	0	#HEAD#	#TAIL#	20
-	40	##ADDR##	adimiref	0	#HEAD#	#TAIL#	21
-	41	##ADDR##	adimiref	0	#HEAD#	#TAIL#	17
-	42	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
-	43	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	44	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	45	##ADDR##	adimiref	0	#HEAD#	#TAIL#	17
-	46	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
-	47	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
-	48	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
-	49	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
-	50	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
-	51	##ADDR##	piassign	0	#HEAD#	#TAIL#	24
+	40	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
+	41	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	42	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	43	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
+	44	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
+	45	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	46	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	47	##ADDR##	dialias_	0	#HEAD#	#TAIL#	20
+	48	##ADDR##	adimiref	0	#HEAD#	#TAIL#	21
+	49	##ADDR##	adimiref	0	#HEAD#	#TAIL#	17
+	50	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
+	51	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
 	52	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	53	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	54	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	55	##ADDR##	footprnt	0	#HEAD#	#TAIL#	594
+	53	##ADDR##	adimiref	0	#HEAD#	#TAIL#	17
+	54	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
+	55	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
+	56	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
+	57	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	58	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	59	##ADDR##	piassign	0	#HEAD#	#TAIL#	24
+	60	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	61	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	62	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	63	##ADDR##	footprnt	0	#HEAD#	#TAIL#	598
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -78,8 +86,8 @@ In namespace "", we have: {
 }
 
 footprint: {
-  !GND = bool^0 = !GND (1) 
-  !Vdd = bool^0 = !Vdd (2) 
+  !GND = bool^0 = !GND (1) @[ supply_low ] 
+  !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
   M = int<32>^2
     {
       [0][0] = N[3] (5) 
@@ -111,6 +119,6 @@ footprint: {
   6	N[6]	
   7	N[7]	
   bool instance pool: (0 ports, 2 local, 0 mapped)
-  1	!GND	
-  2	!Vdd	
+  1	!GND @[ supply_low ]	
+  2	!Vdd @[ supply_high ]	
 }

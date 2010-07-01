@@ -1,3 +1,5 @@
+@ "!GND" supply_low
+@ "!Vdd" supply_high
 @ "bar.x" iscomb
 @ "bar.z" iscomb
 @ "bar.b" iscomb

@@ -1,7 +1,7 @@
 /**
 	\file "AST/globals.cc"
 	Shared AST objects.  
-	$Id: globals.cc,v 1.3 2009/11/04 00:15:59 fang Exp $
+	$Id: globals.cc,v 1.4 2010/07/01 20:20:23 fang Exp $
  */
 
 #define	ENABLE_STATIC_TRACE			0
@@ -13,10 +13,14 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "AST/globals.h"
 #include "AST/formal.h"
 #include "AST/instance.h"
+#include "AST/reference.h"
 #include "AST/type.h"
+#include "AST/attribute.h"
+#include "AST/identifier.h"
 #include "AST/token.h"
 #include "AST/token_string.h"
 #include "util/stacktrace.h"
+#include "util/memory/count_ptr.tcc"
 
 REQUIRES_STACKTRACE_STATIC_INIT
 
@@ -97,6 +101,44 @@ if (!__implicit_globals) {
 }
 	NEVER_NULL(__implicit_globals);
 	return __implicit_globals;
+}
+
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// and attributes on the implicit supplies
+// to return an 'instance_attribute_statement' [hackt-parse.yy.in]
+
+static
+const count_ptr<const token_identifier>
+__supply_tok(void) {
+	static const count_ptr<const token_identifier>
+		ret(new token_identifier("supply"));
+	NEVER_NULL(ret);
+	return ret;
+}
+
+// effectively: !GND @ [supply=0];
+const count_ptr<const type_completion_statement>
+get_GND_attributes(void) {
+	static const count_ptr<const type_completion_statement>
+	__GND_attributes(new type_completion_statement(
+		new id_expr(new qualified_id(__GND())),
+		NULL,
+		new generic_attribute_list(new generic_attribute(
+			__supply_tok(), new expr_list(new token_int(0))))));
+	return __GND_attributes;
+}
+
+// effectively: !Vdd @ [supply=1];
+const count_ptr<const type_completion_statement>
+get_Vdd_attributes(void) {
+	static const count_ptr<const type_completion_statement>
+	__Vdd_attributes(new type_completion_statement(
+		new id_expr(new qualified_id(__Vdd())),
+		NULL,
+		new generic_attribute_list(new generic_attribute(
+			__supply_tok(), new expr_list(new token_int(1))))));
+	return __Vdd_attributes;
 }
 
 //=============================================================================

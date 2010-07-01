@@ -36,7 +36,7 @@ Persistent Object Manager text dump:
 	32	##ADDR##	SPCdrctv	0	#HEAD#	#TAIL#	42
 	33	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	34	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	35	##ADDR##	footprnt	0	#HEAD#	#TAIL#	388
+	35	##ADDR##	footprnt	0	#HEAD#	#TAIL#	398
 	36	##ADDR##	procdefn	0	#HEAD#	#TAIL#	150
 	37	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	38	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
@@ -79,20 +79,28 @@ Persistent Object Manager text dump:
 	75	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	76	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	77	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	78	##ADDR##	footprnt	0	#HEAD#	#TAIL#	460
+	78	##ADDR##	footprnt	0	#HEAD#	#TAIL#	478
 	79	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	80	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	81	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	82	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	83	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	84	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	85	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	86	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	87	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	88	##ADDR##	footprnt	0	#HEAD#	#TAIL#	894
-	89	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	90	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	91	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	82	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	83	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	84	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	85	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	86	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	87	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	88	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	89	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	90	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	91	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	92	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	93	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	94	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	95	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	96	##ADDR##	footprnt	0	#HEAD#	#TAIL#	936
+	97	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	98	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	99	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -217,8 +225,8 @@ In namespace "", we have: {
 }
 
 footprint: {
-  !GND = bool^0 = !GND (12) 
-  !Vdd = bool^0 = !Vdd (13) 
+  !GND = bool^0 = !GND (12) @[ supply_low ] 
+  !Vdd = bool^0 = !Vdd (13) @[ supply_high ] 
   a = process e1of2<>^0 = a (1) (
     d = bool^1
       {
@@ -273,6 +281,6 @@ footprint: {
   9	a4.d[2]	
   10	a4.d[3]	
   11	a4.e	
-  12	!GND	
-  13	!Vdd	
+  12	!GND @[ supply_low ]	
+  13	!Vdd @[ supply_high ]	
 }

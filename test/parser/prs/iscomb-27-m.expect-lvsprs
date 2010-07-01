@@ -1,4 +1,6 @@
 @ "foo.bar.ma.l.e" iscomb
+@ "!GND" supply_low
+@ "!Vdd" supply_high
 connect "!GND" "foo.!GND"
 connect "!GND" "foo.bar.!GND"
 connect "!Vdd" "foo.!Vdd"

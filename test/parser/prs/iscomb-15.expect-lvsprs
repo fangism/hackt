@@ -4,6 +4,8 @@
 ~"x[1].a" -> "x[1].b"+
 "x[2].a" -> "x[2].b"-
 ~"x[2].a" -> "x[2].b"+
+@ "!GND" supply_low
+@ "!Vdd" supply_high
 @ "p" iscomb
 @ "x[2].b" iscomb
 connect "!GND" "x[0].!GND"

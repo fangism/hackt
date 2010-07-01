@@ -3,8 +3,9 @@ globID	super		localID	canonical	footprint-frame
 1	(top)	-	1	c	celem2inv<>
 	bool: 1,2,5,3,4
 [global bool entries]
-1	(top)	-	1	!GND	
-2	(top)	-	2	!Vdd	
+1	(top)	-	1	!GND	 @[ supply_low ]
+2	(top)	-	2	!Vdd	 @[ supply_high ]
 3	(top)	-	3	c.a[0]	
 4	(top)	-	4	c.a[1]	
 5	(top)	-	5	c._o	
+

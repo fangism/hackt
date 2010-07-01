@@ -9,8 +9,8 @@ globID	super		localID	canonical	footprint-frame
 4	(top)	-	4	myass[3]	ass<>
 	bool: 1,2,21,22,23,24,25,26
 [global bool entries]
-1	(top)	-	1	!GND	
-2	(top)	-	2	!Vdd	
+1	(top)	-	1	!GND	 @[ supply_low ]
+2	(top)	-	2	!Vdd	 @[ supply_high ]
 3	(top)	-	3	x[0][0][0]	
 4	(top)	-	4	x[0][0][1]	
 5	(top)	-	5	x[0][1][0]	
@@ -35,3 +35,4 @@ globID	super		localID	canonical	footprint-frame
 24	(top)	-	24	x[3][1][1]	
 25	(top)	-	25	x[3][2][0]	
 26	(top)	-	26	x[3][2][1]	
+

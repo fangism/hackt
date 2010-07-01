@@ -1,5 +1,7 @@
 "wee.foo" -> "wee.bar"-
 ~"wee.foo" -> "wee.bar"+
+@ "!GND" supply_low
+@ "!Vdd" supply_high
 @ "wee.foo" may_interfere
 @ "wee.bar" may_interfere
 = "!GND" "wee.!GND"

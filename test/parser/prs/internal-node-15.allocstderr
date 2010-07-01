@@ -3,11 +3,12 @@ globID	super		localID	canonical	footprint-frame
 1	(top)	-	1	A	bogus<>
 	bool: 1,2,3,4,7,5,6;8
 [global bool entries]
-1	(top)	-	1	!GND	
-2	(top)	-	2	!Vdd	
+1	(top)	-	1	!GND	 @[ supply_low ]
+2	(top)	-	2	!Vdd	 @[ supply_high ]
 3	(top)	-	3	A.x	
 4	(top)	-	4	A.y	
 5	(top)	-	5	A.e[0]	
 6	(top)	-	6	A.e[1]	
 7	(top)	-	7	A.w	
 8	process	1	8	A.en	
+

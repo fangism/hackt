@@ -32,8 +32,8 @@ globID	super		localID	canonical	footprint-frame
 	process: 4,6
 	bool: 1,2,5,6
 [global bool entries]
-1	(top)	-	1	!GND	
-2	(top)	-	2	!Vdd	
+1	(top)	-	1	!GND	 @[ supply_low ]
+2	(top)	-	2	!Vdd	 @[ supply_high ]
 3	(top)	-	3	sh1t.x.s[0].a	 @[ iscomb ]
 4	(top)	-	4	sh1t.x.s[0].b	 @[ !autokeeper ]
 5	(top)	-	5	sh1t.x.s[1].a	 @[ iscomb !autokeeper ]
@@ -46,3 +46,4 @@ globID	super		localID	canonical	footprint-frame
 12	(top)	-	12	sh1t.y.t[0].b	 @[ !autokeeper ]
 13	(top)	-	13	sh1t.y.t[1].a	
 14	(top)	-	14	sh1t.y.t[1].b	 @[ !autokeeper ]
+

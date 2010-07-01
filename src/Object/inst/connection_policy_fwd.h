@@ -3,7 +3,7 @@
 	Specializations for connections in the HAC language. 
 	These are referenced from the meta-type traits classes defined in
 	"Object/traits/....h" headers.
-	$Id: connection_policy_fwd.h,v 1.3 2008/10/05 23:00:11 fang Exp $
+	$Id: connection_policy_fwd.h,v 1.4 2010/07/01 20:20:25 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CONNECTION_POLICY_FWD_H__
@@ -35,7 +35,9 @@ struct channel_connect_policy;
 	defined in directional_connect_policy<channel_tag>.
  */
 // typedef	unsigned char	connection_flags_type;
-typedef	unsigned short	connection_flags_type;
+// typedef	unsigned short	connection_flags_type;
+typedef	unsigned int	connection_flags_type;
+// assumes int is 32! better specify uint32_t instead?
 
 //=============================================================================
 }	// end namesace entity

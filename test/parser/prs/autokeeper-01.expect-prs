@@ -1,1 +1,3 @@
+@ "!GND" supply_low
+@ "!Vdd" supply_high
 @ "y" !autokeeper

@@ -29,41 +29,49 @@ Persistent Object Manager text dump:
 	25	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	26	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
 	27	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	28	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	29	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
-	30	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
-	31	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
-	32	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	33	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	34	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
+	28	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	29	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	32	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	33	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	35	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	36	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	36	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
 	37	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
 	38	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
-	39	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	39	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
 	40	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	41	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
-	42	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	41	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	42	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
 	43	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	44	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	45	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	46	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	47	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
-	48	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
+	44	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	45	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
+	46	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
+	47	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	48	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	49	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
-	50	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	51	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	52	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
-	53	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	50	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	51	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	52	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	53	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
 	54	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	55	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
 	56	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
-	57	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	57	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
 	58	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	59	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
-	60	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	59	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	60	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
 	61	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	62	##ADDR##	footprnt	0	#HEAD#	#TAIL#	602
+	62	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	63	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
+	64	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
+	65	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	66	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	67	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
+	68	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	69	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	70	##ADDR##	footprnt	0	#HEAD#	#TAIL#	606
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -88,8 +96,8 @@ In namespace "", we have: {
 }
 
 footprint: {
-  !GND = bool^0 = !GND (1) 
-  !Vdd = bool^0 = !Vdd (2) 
+  !GND = bool^0 = !GND (1) @[ supply_low ] 
+  !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
   a = pint^0 value: 0
   b = pint^0 value: 1
   c = pint^0 value: 2
@@ -111,6 +119,6 @@ footprint: {
     }
   Created state:
   bool instance pool: (0 ports, 2 local, 0 mapped)
-  1	!GND	
-  2	!Vdd	
+  1	!GND @[ supply_low ]	
+  2	!Vdd @[ supply_high ]	
 }

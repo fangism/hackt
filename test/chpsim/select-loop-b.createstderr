@@ -12,36 +12,44 @@ Persistent Object Manager text dump:
 	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
 	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
-	15	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
-	16	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	17	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	18	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	19	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
-	20	##ADDR##	CHPdetsl	0	#HEAD#	#TAIL#	24
-	21	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
-	22	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	11	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	12	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	13	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	14	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	15	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	16	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	18	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	19	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
 	23	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
 	24	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
 	25	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	26	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
-	27	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
-	28	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	29	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	30	##ADDR##	footprnt	0	#HEAD#	#TAIL#	418
-	31	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
-	32	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
-	33	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
-	34	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	35	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
-	36	##ADDR##	CHPdetsl	0	#HEAD#	#TAIL#	24
-	37	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
-	38	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
-	39	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
-	40	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	28	##ADDR##	CHPdetsl	0	#HEAD#	#TAIL#	24
+	29	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	34	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
+	36	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	38	##ADDR##	footprnt	0	#HEAD#	#TAIL#	426
+	39	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	41	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
+	42	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	43	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	44	##ADDR##	CHPdetsl	0	#HEAD#	#TAIL#	24
+	45	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
+	46	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
+	47	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
+	48	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -73,14 +81,14 @@ top-level chp:
     }
   }
 footprint: {
-  !GND = bool^0 = !GND (1) 
-  !Vdd = bool^0 = !Vdd (2) 
+  !GND = bool^0 = !GND (1) @[ supply_low ] 
+  !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
   a = bool^0 = a (3) 
   b = bool^0 = b (4) 
   Created state:
   bool instance pool: (0 ports, 4 local, 0 mapped)
-  1	!GND	
-  2	!Vdd	
+  1	!GND @[ supply_low ]	
+  2	!Vdd @[ supply_high ]	
   3	a	
   4	b	
   resolved concurrent actions:

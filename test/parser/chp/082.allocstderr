@@ -46,5 +46,6 @@ globID	super		localID	canonical	footprint-frame
 10	(top)	-	10	y6_4.b	chan(int<16>)
 11	(top)	-	11	y6_5.b	chan(int<16>)
 [global bool entries]
-1	(top)	-	1	!GND	
-2	(top)	-	2	!Vdd	
+1	(top)	-	1	!GND	 @[ supply_low ]
+2	(top)	-	2	!Vdd	 @[ supply_high ]
+

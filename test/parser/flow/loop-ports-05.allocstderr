@@ -40,8 +40,8 @@ globID	super		localID	canonical	footprint-frame
 19	process	1	18	l.ce[15]	dcelm<>
 	bool: 1,2,10,6,41,42
 [global bool entries]
-1	(top)	-	1	!GND	
-2	(top)	-	2	!Vdd	
+1	(top)	-	1	!GND	 @[ supply_low ]
+2	(top)	-	2	!Vdd	 @[ supply_high ]
 3	process	1	3	l.ad[0].d[0]	
 4	process	1	4	l.ad[0].d[1]	
 5	process	1	5	l.ad[0].d[2]	
@@ -82,3 +82,4 @@ globID	super		localID	canonical	footprint-frame
 40	process	1	40	l.ce[14].out	
 41	process	1	41	l.ce[15]._out	
 42	process	1	42	l.ce[15].out	
+

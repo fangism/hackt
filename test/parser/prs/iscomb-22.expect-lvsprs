@@ -1,3 +1,5 @@
+@ "!GND" supply_low
+@ "!Vdd" supply_high
 @ "foo.x[0].a" iscomb !autokeeper
 @ "foo.x[0].b" iscomb !autokeeper
 connect "!GND" "foo.!GND"

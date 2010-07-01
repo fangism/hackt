@@ -1,7 +1,7 @@
 /**
 	\file "AST/globals.h"
 	Shared AST objects.  
-	$Id: globals.h,v 1.2 2009/10/02 01:56:35 fang Exp $
+	$Id: globals.h,v 1.3 2010/07/01 20:20:24 fang Exp $
  */
 
 #include "AST/AST_fwd.h"
@@ -20,6 +20,16 @@ get_implicit_ports(void);
 extern
 const count_ptr<const instance_declaration>&
 get_implicit_globals(void);
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+extern
+const count_ptr<const type_completion_statement>
+get_GND_attributes(void);
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+extern
+const count_ptr<const type_completion_statement>
+get_Vdd_attributes(void);
 
 //=============================================================================
 }	// end namespace parser

@@ -18,25 +18,33 @@ Persistent Object Manager text dump:
 	14	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	15	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
 	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	17	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	18	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	19	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	20	##ADDR##	prassign	0	#HEAD#	#TAIL#	20
-	21	##ADDR##	cnstpr__	0	#HEAD#	#TAIL#	12
-	22	##ADDR##	sprmvref	0	#HEAD#	#TAIL#	16
-	23	##ADDR##	prassign	0	#HEAD#	#TAIL#	20
-	24	##ADDR##	prarthex	0	#HEAD#	#TAIL#	17
-	25	##ADDR##	cnvtpipr	0	#HEAD#	#TAIL#	12
-	26	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	27	##ADDR##	sprmvref	0	#HEAD#	#TAIL#	16
-	28	##ADDR##	sprmvref	0	#HEAD#	#TAIL#	16
-	29	##ADDR##	prassign	0	#HEAD#	#TAIL#	20
-	30	##ADDR##	prarthex	0	#HEAD#	#TAIL#	17
-	31	##ADDR##	sprmvref	0	#HEAD#	#TAIL#	16
-	32	##ADDR##	cnvtpipr	0	#HEAD#	#TAIL#	12
-	33	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	34	##ADDR##	sprmvref	0	#HEAD#	#TAIL#	16
-	35	##ADDR##	footprnt	0	#HEAD#	#TAIL#	357
+	17	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	18	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	21	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	22	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	25	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	27	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	prassign	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	cnstpr__	0	#HEAD#	#TAIL#	12
+	30	##ADDR##	sprmvref	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	prassign	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	prarthex	0	#HEAD#	#TAIL#	17
+	33	##ADDR##	cnvtpipr	0	#HEAD#	#TAIL#	12
+	34	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	sprmvref	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	sprmvref	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	prassign	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	prarthex	0	#HEAD#	#TAIL#	17
+	39	##ADDR##	sprmvref	0	#HEAD#	#TAIL#	16
+	40	##ADDR##	cnvtpipr	0	#HEAD#	#TAIL#	12
+	41	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	42	##ADDR##	sprmvref	0	#HEAD#	#TAIL#	16
+	43	##ADDR##	footprnt	0	#HEAD#	#TAIL#	361
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -56,14 +64,14 @@ In namespace "", we have: {
 }
 
 footprint: {
-  !GND = bool^0 = !GND (1) 
-  !Vdd = bool^0 = !Vdd (2) 
+  !GND = bool^0 = !GND (1) @[ supply_low ] 
+  !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
   Z = pint^0 value: 3
   pi = preal^0 value: 3.14159
   pi_three = preal^0 value: 9.42478
   three_pi = preal^0 value: 9.42478
   Created state:
   bool instance pool: (0 ports, 2 local, 0 mapped)
-  1	!GND	
-  2	!Vdd	
+  1	!GND @[ supply_low ]	
+  2	!Vdd @[ supply_high ]	
 }

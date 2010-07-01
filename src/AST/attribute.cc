@@ -1,6 +1,6 @@
 /**
 	\file "AST/attribute.cc"
-	$Id: attribute.cc,v 1.4 2009/10/05 23:09:24 fang Exp $
+	$Id: attribute.cc,v 1.5 2010/07/01 20:20:22 fang Exp $
  */
 
 #include "AST/attribute.h"
@@ -8,7 +8,7 @@
 #include "AST/node_list.tcc"
 #include "AST/token_string.h"
 #include "AST/expr_list.h"
-#include "util/memory//count_ptr.tcc"
+#include "util/memory/count_ptr.tcc"
 
 namespace util {
 namespace memory {
@@ -23,6 +23,15 @@ namespace parser {
 generic_attribute::generic_attribute(
 		const token_identifier* i, const expr_list* e)
 		: key(i), values(e) {
+	INVARIANT(key || values);
+//	NEVER_NULL(key);
+//	NEVER_NULL(values);
+}
+
+generic_attribute::generic_attribute(
+		const count_ptr<const token_identifier>& i,
+		const expr_list* e) :
+		key(i), values(e) {
 	INVARIANT(key || values);
 //	NEVER_NULL(key);
 //	NEVER_NULL(values);

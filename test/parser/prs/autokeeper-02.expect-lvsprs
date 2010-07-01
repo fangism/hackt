@@ -1,2 +1,4 @@
+@ "!GND" supply_low
+@ "!Vdd" supply_high
 @ "x" iscomb !autokeeper
 @ "y" iscomb !autokeeper

@@ -1,0 +1,17 @@
+// "supply-attrib-01.hac"
+// copy-modified from "supply-02.hac"
+// @hflat-flags@ -f node-attributes
+// just testing formatting of intermediate representation dump
+// produced netlist is unaffected by supply attributes
+
+bool myVdd, myGND;
+myVdd @ [supply=1];
+myGND @ [supply=0];
+bool x, y, z;
+prs <myVdd, myGND> {
+	x	=> y-
+}
+prs {
+	y	=> z-
+}
+

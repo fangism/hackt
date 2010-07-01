@@ -75,8 +75,8 @@ globID	super		localID	canonical	footprint-frame
 30	process	7	2	farm[1].poo.p.y	foo<>
 	bool: 1,2,32;33
 [global bool entries]
-1	(top)	-	1	!GND	
-2	(top)	-	2	!Vdd	
+1	(top)	-	1	!GND	 @[ supply_low ]
+2	(top)	-	2	!Vdd	 @[ supply_high ]
 3	(top)	-	3	farm[0].poo.p.x.a	
 4	(top)	-	4	farm[1].poo.p.x.a	
 5	process	1	4	farm[0].who.p.x.a	

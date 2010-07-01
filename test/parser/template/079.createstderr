@@ -8,7 +8,7 @@ Persistent Object Manager text dump:
 	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	31
 	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	31
-	7	##ADDR##	procdefn	0	#HEAD#	#TAIL#	106
+	7	##ADDR##	procdefn	0	#HEAD#	#TAIL#	114
 	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	10	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
@@ -27,229 +27,285 @@ Persistent Object Manager text dump:
 	23	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
 	24	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	25	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	26	##ADDR##	procdefn	0	#HEAD#	#TAIL#	125
-	27	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
-	28	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
-	29	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
-	30	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	31	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	32	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	33	##ADDR##	portscop	0	#HEAD#	#TAIL#	28
-	34	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	35	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	36	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	37	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	38	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	39	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
-	40	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
-	41	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	42	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	43	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	44	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	26	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	27	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	30	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	31	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	34	##ADDR##	procdefn	0	#HEAD#	#TAIL#	133
+	35	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	36	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	37	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	38	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	39	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	40	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	41	##ADDR##	portscop	0	#HEAD#	#TAIL#	28
+	42	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	43	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	44	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	45	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	46	##ADDR##	footprnt	0	#HEAD#	#TAIL#	378
-	47	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	48	##ADDR##	procdefn	0	#HEAD#	#TAIL#	138
-	49	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
-	50	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
-	51	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	52	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	53	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	54	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	55	##ADDR##	portscop	0	#HEAD#	#TAIL#	36
-	56	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	57	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	58	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	59	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	60	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	61	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	62	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	63	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	64	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	65	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	66	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
-	67	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	68	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	69	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	70	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	71	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
-	72	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	73	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	74	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	75	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	76	##ADDR##	footprnt	0	#HEAD#	#TAIL#	386
-	77	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	78	##ADDR##	procdefn	0	#HEAD#	#TAIL#	160
-	79	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
-	80	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
-	81	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	27
-	82	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	27
-	83	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	31
-	84	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	31
-	85	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	27
-	86	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	27
-	87	##ADDR##	portscop	0	#HEAD#	#TAIL#	44
-	88	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	89	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	90	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	91	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	92	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	93	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	94	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	95	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	96	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	97	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	98	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	46	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	47	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	48	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	49	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	50	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	51	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	52	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	53	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	54	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	55	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	56	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	57	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	58	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	59	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	60	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	61	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	62	##ADDR##	footprnt	0	#HEAD#	#TAIL#	388
+	63	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	64	##ADDR##	procdefn	0	#HEAD#	#TAIL#	146
+	65	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	66	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	67	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	68	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	69	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	70	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	71	##ADDR##	portscop	0	#HEAD#	#TAIL#	36
+	72	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	73	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	74	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	75	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	76	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	77	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	78	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	79	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	80	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	81	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	82	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	83	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	84	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	85	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	86	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	87	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	88	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	89	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	90	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	91	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	92	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	93	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	94	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	95	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	96	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	97	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	98	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	99	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	100	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	101	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
-	102	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	103	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	104	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	36
-	105	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
-	106	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
-	107	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
-	108	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	109	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	110	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
-	111	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
-	112	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	113	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	114	##ADDR##	footprnt	0	#HEAD#	#TAIL#	507
-	115	##ADDR##	procdefn	0	#HEAD#	#TAIL#	186
-	116	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
-	117	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
-	118	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	119	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	120	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	121	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
-	122	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
-	123	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	124	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	125	##ADDR##	portscop	0	#HEAD#	#TAIL#	28
-	126	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	127	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	128	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	129	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	130	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	131	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	132	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	133	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	134	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	135	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	136	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	137	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	138	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	139	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	140	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	141	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	142	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	143	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	144	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	145	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	146	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	147	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	148	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	149	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	150	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	151	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	152	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	153	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	154	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	155	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	156	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	157	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	158	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	159	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	160	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	161	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
-	162	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
-	163	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	164	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
-	165	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	166	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
-	167	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
-	168	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	169	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
-	170	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	171	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	172	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	173	##ADDR##	procdefn	0	#HEAD#	#TAIL#	153
-	174	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
-	175	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
-	176	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
-	177	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	178	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
-	179	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	180	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
-	181	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	182	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
-	183	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	100	##ADDR##	footprnt	0	#HEAD#	#TAIL#	400
+	101	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	102	##ADDR##	procdefn	0	#HEAD#	#TAIL#	168
+	103	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	104	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	105	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	27
+	106	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	27
+	107	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	31
+	108	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	31
+	109	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	27
+	110	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	27
+	111	##ADDR##	portscop	0	#HEAD#	#TAIL#	44
+	112	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	113	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	114	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	115	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	116	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	117	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	118	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	119	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	120	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	121	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	122	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	123	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	124	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	125	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	126	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	127	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	128	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	129	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	130	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	131	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	132	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	133	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	134	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	135	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	136	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	36
+	137	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	138	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	139	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	140	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	141	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	142	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	143	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	144	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	145	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	146	##ADDR##	footprnt	0	#HEAD#	#TAIL#	523
+	147	##ADDR##	procdefn	0	#HEAD#	#TAIL#	194
+	148	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	149	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	150	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	151	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	152	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	153	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	154	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	155	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	156	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	157	##ADDR##	portscop	0	#HEAD#	#TAIL#	28
+	158	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	159	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	160	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	161	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	162	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	163	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	164	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	165	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	166	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	167	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	168	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	169	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	170	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	171	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	172	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	173	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	174	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	175	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	176	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	177	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	178	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	179	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	180	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	181	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	182	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	183	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
 	184	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	185	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	186	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	185	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	186	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
 	187	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	188	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	189	##ADDR##	procplch	0	#HEAD#	#TAIL#	26
-	190	##ADDR##	portscop	0	#HEAD#	#TAIL#	28
-	191	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	192	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	193	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	194	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	195	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	196	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	197	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	198	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	199	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	200	##ADDR##	footprnt	0	#HEAD#	#TAIL#	810
-	201	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	202	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	203	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	44
-	204	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	205	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	206	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	207	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	24
-	208	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	209	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	32
+	188	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	189	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	190	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	191	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	192	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	193	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	194	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	195	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	196	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	197	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	198	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	199	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	200	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	201	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	202	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
+	203	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	204	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
+	205	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	206	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	207	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
+	208	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	209	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
 	210	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	211	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	212	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	213	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1492
-	214	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	215	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	216	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	217	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	24
-	218	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
-	219	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	220	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	221	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	222	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	223	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	224	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	225	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	226	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	227	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	228	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	229	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
-	230	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	231	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
-	232	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	211	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	212	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	213	##ADDR##	procdefn	0	#HEAD#	#TAIL#	161
+	214	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	215	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	216	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	217	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	218	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	219	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	220	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	221	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	222	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	223	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	224	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	225	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	226	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	227	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	228	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	229	##ADDR##	procplch	0	#HEAD#	#TAIL#	26
+	230	##ADDR##	portscop	0	#HEAD#	#TAIL#	28
+	231	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	232	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	233	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	234	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	235	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
-	236	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	237	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
-	238	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	239	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	240	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	241	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	32
-	242	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	243	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	244	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	245	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1356
-	246	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	247	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	248	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	234	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	235	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	236	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	237	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	238	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	239	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	240	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	241	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	242	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	243	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	244	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	245	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	246	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	247	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	248	##ADDR##	footprnt	0	#HEAD#	#TAIL#	840
+	249	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	250	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	251	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	44
+	252	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	253	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	254	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	255	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	24
+	256	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	257	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	32
+	258	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	259	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	260	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	261	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1566
+	262	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	263	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	264	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	265	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	24
+	266	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	267	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	268	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	269	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	270	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	271	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	272	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	273	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	274	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	275	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	276	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	277	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	278	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	279	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	280	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	281	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	282	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	283	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	284	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	285	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	286	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	287	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
+	288	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	289	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	290	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	291	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	292	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	293	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
+	294	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	295	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	296	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	297	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	32
+	298	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	299	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	300	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	301	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1428
+	302	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	303	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	304	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -279,6 +335,8 @@ In namespace "", we have: {
           bool<> !Vdd
           bool<> d[0..N-1]
         )
+        !GND@[supply=0]
+        !Vdd@[supply=1]
       }
 
     e1of = process-definition (defined) e1of<
@@ -304,10 +362,12 @@ In namespace "", we have: {
           bool<> d[0..N-1]
           bool<> e
         )
+        !GND@[supply=0]
+        !Vdd@[supply=1]
       footprint collection: {
         <2> {
-          !GND = bool^0 = e1of<2>::!GND (1) 
-          !Vdd = bool^0 = e1of<2>::!Vdd (2) 
+          !GND = bool^0 = e1of<2>::!GND (1) @[ supply_low ] 
+          !Vdd = bool^0 = e1of<2>::!Vdd (2) @[ supply_high ] 
           N = pint^0 value: 2
           d = bool^1
             {
@@ -317,8 +377,8 @@ In namespace "", we have: {
           e = bool^0 = e1of<2>::e (3) 
           Created state:
           bool instance pool: (5 ports, 0 local, 0 mapped)
-          1	e1of<2>::!GND	
-          2	e1of<2>::!Vdd	
+          1	e1of<2>::!GND @[ supply_low ]	
+          2	e1of<2>::!Vdd @[ supply_high ]	
           3	e1of<2>::e	
           4	e1of<2>::d[0]	
           5	e1of<2>::d[1]	
@@ -351,11 +411,13 @@ In namespace "", we have: {
           bool<> f
           bool<> e
         )
+        !GND@[supply=0]
+        !Vdd@[supply=1]
         d[0] = f;
         d[1] = t;
       footprint: {
-        !GND = bool^0 = e1of2<>::!GND (1) 
-        !Vdd = bool^0 = e1of2<>::!Vdd (2) 
+        !GND = bool^0 = e1of2<>::!GND (1) @[ supply_low ] 
+        !Vdd = bool^0 = e1of2<>::!Vdd (2) @[ supply_high ] 
         d = bool^1
           {
             [0] = e1of2<>::f (4) 
@@ -366,8 +428,8 @@ In namespace "", we have: {
         t = bool^0 = e1of2<>::t (3) 
         Created state:
         bool instance pool: (5 ports, 0 local, 0 mapped)
-        1	e1of2<>::!GND	
-        2	e1of2<>::!Vdd	
+        1	e1of2<>::!GND @[ supply_low ]	
+        2	e1of2<>::!Vdd @[ supply_high ]	
         3	e1of2<>::t	
         4	e1of2<>::f	
         5	e1of2<>::e	
@@ -408,6 +470,8 @@ In namespace "", we have: {
           bool<> _pReset
           bool<> _sReset
         )
+        !GND@[supply=0]
+        !Vdd@[supply=1]
         vdd = Vdd;
         GND = gnd;
       prs:
@@ -416,8 +480,8 @@ In namespace "", we have: {
         vdd -> gnd-
         }
       footprint: {
-        !GND = bool^0 = globals<>::!GND (1) 
-        !Vdd = bool^0 = globals<>::!Vdd (2) 
+        !GND = bool^0 = globals<>::!GND (1) @[ supply_low ] 
+        !Vdd = bool^0 = globals<>::!Vdd (2) @[ supply_high ] 
         GND = bool^0 = globals<>::GND (4) 
         Vdd = bool^0 = globals<>::Vdd (3) 
         _pReset = bool^0 = globals<>::_pReset (5) 
@@ -426,8 +490,8 @@ In namespace "", we have: {
         vdd = bool^0 = globals<>::Vdd (3) 
         Created state:
         bool instance pool: (6 ports, 0 local, 0 mapped)
-        1	globals<>::!GND	
-        2	globals<>::!Vdd	
+        1	globals<>::!GND @[ supply_low ]	
+        2	globals<>::!Vdd @[ supply_high ]	
         3	globals<>::Vdd	
         4	globals<>::GND	
         5	globals<>::_pReset	
@@ -466,6 +530,8 @@ In namespace "", we have: {
           globals<> g
           e1of2<> l
         )
+        !GND@[supply=0]
+        !Vdd@[supply=1]
         pint<> v[0..4]
         v[0] = 0;
         v[1] = 1;
@@ -478,11 +544,11 @@ In namespace "", we have: {
         source_e<5, 2, pseudo_rsource_e1of2a::v> src
         src ( , , g, s);
       footprint: {
-        !GND = bool^0 = pseudo_rsource_e1of2a<>::!GND (1) 
-        !Vdd = bool^0 = pseudo_rsource_e1of2a<>::!Vdd (2) 
+        !GND = bool^0 = pseudo_rsource_e1of2a<>::!GND (1) @[ supply_low ] 
+        !Vdd = bool^0 = pseudo_rsource_e1of2a<>::!Vdd (2) @[ supply_high ] 
         g = process globals<>^0 = pseudo_rsource_e1of2a<>::g (1) (
-          !GND = bool^0 = pseudo_rsource_e1of2a<>::!GND (1) 
-          !Vdd = bool^0 = pseudo_rsource_e1of2a<>::!Vdd (2) 
+          !GND = bool^0 = pseudo_rsource_e1of2a<>::!GND (1) @[ supply_low ] 
+          !Vdd = bool^0 = pseudo_rsource_e1of2a<>::!Vdd (2) @[ supply_high ] 
           Vdd = bool^0 = pseudo_rsource_e1of2a<>::g.Vdd (3) 
           GND = bool^0 = pseudo_rsource_e1of2a<>::g.GND (4) 
           vdd = bool^0 = pseudo_rsource_e1of2a<>::g.Vdd (3) 
@@ -491,8 +557,8 @@ In namespace "", we have: {
           _sReset = bool^0 = pseudo_rsource_e1of2a<>::g._sReset (6) 
         )
         l = process e1of2<>^0 = pseudo_rsource_e1of2a<>::l (2) (
-          !GND = bool^0 = pseudo_rsource_e1of2a<>::!GND (1) 
-          !Vdd = bool^0 = pseudo_rsource_e1of2a<>::!Vdd (2) 
+          !GND = bool^0 = pseudo_rsource_e1of2a<>::!GND (1) @[ supply_low ] 
+          !Vdd = bool^0 = pseudo_rsource_e1of2a<>::!Vdd (2) @[ supply_high ] 
           d = bool^1
             {
               [0] = pseudo_rsource_e1of2a<>::l.d[0] (7) 
@@ -503,8 +569,8 @@ In namespace "", we have: {
           e = bool^0 = pseudo_rsource_e1of2a<>::l.e (9) 
         )
         s = process e1of<2>^0 = pseudo_rsource_e1of2a<>::s (3) (
-          !GND = bool^0 = pseudo_rsource_e1of2a<>::!GND (1) 
-          !Vdd = bool^0 = pseudo_rsource_e1of2a<>::!Vdd (2) 
+          !GND = bool^0 = pseudo_rsource_e1of2a<>::!GND (1) @[ supply_low ] 
+          !Vdd = bool^0 = pseudo_rsource_e1of2a<>::!Vdd (2) @[ supply_high ] 
           d = bool^1
             {
               [0] = pseudo_rsource_e1of2a<>::l.d[0] (7) 
@@ -513,11 +579,11 @@ In namespace "", we have: {
           e = bool^0 = pseudo_rsource_e1of2a<>::l.e (9) 
         )
         src = process source_e<5, 2, {0,1,1,0,1}>^0 = pseudo_rsource_e1of2a<>::src (4) (
-          !GND = bool^0 = pseudo_rsource_e1of2a<>::!GND (1) 
-          !Vdd = bool^0 = pseudo_rsource_e1of2a<>::!Vdd (2) 
+          !GND = bool^0 = pseudo_rsource_e1of2a<>::!GND (1) @[ supply_low ] 
+          !Vdd = bool^0 = pseudo_rsource_e1of2a<>::!Vdd (2) @[ supply_high ] 
           g = process globals<>^0 = pseudo_rsource_e1of2a<>::g (1) (
-            !GND = bool^0 = pseudo_rsource_e1of2a<>::!GND (1) 
-            !Vdd = bool^0 = pseudo_rsource_e1of2a<>::!Vdd (2) 
+            !GND = bool^0 = pseudo_rsource_e1of2a<>::!GND (1) @[ supply_low ] 
+            !Vdd = bool^0 = pseudo_rsource_e1of2a<>::!Vdd (2) @[ supply_high ] 
             Vdd = bool^0 = pseudo_rsource_e1of2a<>::g.Vdd (3) 
             GND = bool^0 = pseudo_rsource_e1of2a<>::g.GND (4) 
             vdd = bool^0 = pseudo_rsource_e1of2a<>::g.Vdd (3) 
@@ -526,8 +592,8 @@ In namespace "", we have: {
             _sReset = bool^0 = pseudo_rsource_e1of2a<>::g._sReset (6) 
           )
           rr = process e1of<2>^0 = pseudo_rsource_e1of2a<>::s (3) (
-            !GND = bool^0 = pseudo_rsource_e1of2a<>::!GND (1) 
-            !Vdd = bool^0 = pseudo_rsource_e1of2a<>::!Vdd (2) 
+            !GND = bool^0 = pseudo_rsource_e1of2a<>::!GND (1) @[ supply_low ] 
+            !Vdd = bool^0 = pseudo_rsource_e1of2a<>::!Vdd (2) @[ supply_high ] 
             d = bool^1
               {
                 [0] = pseudo_rsource_e1of2a<>::l.d[0] (7) 
@@ -556,8 +622,8 @@ In namespace "", we have: {
           process: 1,3
           bool: 1,2,3,4,5,6,7,8,9
         bool instance pool: (9 ports, 0 local, 0 mapped)
-        1	pseudo_rsource_e1of2a<>::!GND	
-        2	pseudo_rsource_e1of2a<>::!Vdd	
+        1	pseudo_rsource_e1of2a<>::!GND @[ supply_low ]	
+        2	pseudo_rsource_e1of2a<>::!Vdd @[ supply_high ]	
         3	pseudo_rsource_e1of2a<>::g.Vdd	
         4	pseudo_rsource_e1of2a<>::g.GND	
         5	pseudo_rsource_e1of2a<>::g._pReset	
@@ -566,8 +632,8 @@ In namespace "", we have: {
         8	pseudo_rsource_e1of2a<>::l.d[1]	
         9	pseudo_rsource_e1of2a<>::l.e	
         bool port aliases:
-        1: pseudo_rsource_e1of2a<>::g.!GND = pseudo_rsource_e1of2a<>::l.!GND = pseudo_rsource_e1of2a<>::!GND
-        2: pseudo_rsource_e1of2a<>::g.!Vdd = pseudo_rsource_e1of2a<>::l.!Vdd = pseudo_rsource_e1of2a<>::!Vdd
+        1: pseudo_rsource_e1of2a<>::g.!GND = pseudo_rsource_e1of2a<>::l.!GND = pseudo_rsource_e1of2a<>::!GND @[ supply_low ]
+        2: pseudo_rsource_e1of2a<>::g.!Vdd = pseudo_rsource_e1of2a<>::l.!Vdd = pseudo_rsource_e1of2a<>::!Vdd @[ supply_high ]
         3: pseudo_rsource_e1of2a<>::g.Vdd = pseudo_rsource_e1of2a<>::g.vdd
         4: pseudo_rsource_e1of2a<>::g.GND = pseudo_rsource_e1of2a<>::g.gnd
         7: pseudo_rsource_e1of2a<>::l.d[0] = pseudo_rsource_e1of2a<>::l.f
@@ -602,10 +668,12 @@ In namespace "", we have: {
           globals<> g
           e1of<source_e::M> rr
         )
+        !GND@[supply=0]
+        !Vdd@[supply=1]
       footprint collection: {
         <5, 2, {0,1,1,0,1}> {
-          !GND = bool^0 = source_e<5, 2, {0,1,1,0,1}>::!GND (1) 
-          !Vdd = bool^0 = source_e<5, 2, {0,1,1,0,1}>::!Vdd (2) 
+          !GND = bool^0 = source_e<5, 2, {0,1,1,0,1}>::!GND (1) @[ supply_low ] 
+          !Vdd = bool^0 = source_e<5, 2, {0,1,1,0,1}>::!Vdd (2) @[ supply_high ] 
           M = pint^0 value: 2
           N = pint^0 value: 5
           d = pint^1
@@ -617,8 +685,8 @@ In namespace "", we have: {
               4 = 1
             }
           g = process globals<>^0 = source_e<5, 2, {0,1,1,0,1}>::g (1) (
-            !GND = bool^0 = source_e<5, 2, {0,1,1,0,1}>::!GND (1) 
-            !Vdd = bool^0 = source_e<5, 2, {0,1,1,0,1}>::!Vdd (2) 
+            !GND = bool^0 = source_e<5, 2, {0,1,1,0,1}>::!GND (1) @[ supply_low ] 
+            !Vdd = bool^0 = source_e<5, 2, {0,1,1,0,1}>::!Vdd (2) @[ supply_high ] 
             Vdd = bool^0 = source_e<5, 2, {0,1,1,0,1}>::g.Vdd (3) 
             GND = bool^0 = source_e<5, 2, {0,1,1,0,1}>::g.GND (4) 
             vdd = bool^0 = source_e<5, 2, {0,1,1,0,1}>::g.Vdd (3) 
@@ -627,8 +695,8 @@ In namespace "", we have: {
             _sReset = bool^0 = source_e<5, 2, {0,1,1,0,1}>::g._sReset (6) 
           )
           rr = process e1of<2>^0 = source_e<5, 2, {0,1,1,0,1}>::rr (2) (
-            !GND = bool^0 = source_e<5, 2, {0,1,1,0,1}>::!GND (1) 
-            !Vdd = bool^0 = source_e<5, 2, {0,1,1,0,1}>::!Vdd (2) 
+            !GND = bool^0 = source_e<5, 2, {0,1,1,0,1}>::!GND (1) @[ supply_low ] 
+            !Vdd = bool^0 = source_e<5, 2, {0,1,1,0,1}>::!Vdd (2) @[ supply_high ] 
             d = bool^1
               {
                 [0] = source_e<5, 2, {0,1,1,0,1}>::rr.d[0] (7) 
@@ -643,8 +711,8 @@ In namespace "", we have: {
           2	source_e<5, 2, {0,1,1,0,1}>::rr	e1of<2>
             bool: 1,2,9,7,8
           bool instance pool: (9 ports, 0 local, 0 mapped)
-          1	source_e<5, 2, {0,1,1,0,1}>::!GND	
-          2	source_e<5, 2, {0,1,1,0,1}>::!Vdd	
+          1	source_e<5, 2, {0,1,1,0,1}>::!GND @[ supply_low ]	
+          2	source_e<5, 2, {0,1,1,0,1}>::!Vdd @[ supply_high ]	
           3	source_e<5, 2, {0,1,1,0,1}>::g.Vdd	
           4	source_e<5, 2, {0,1,1,0,1}>::g.GND	
           5	source_e<5, 2, {0,1,1,0,1}>::g._pReset	
@@ -653,8 +721,8 @@ In namespace "", we have: {
           8	source_e<5, 2, {0,1,1,0,1}>::rr.d[1]	
           9	source_e<5, 2, {0,1,1,0,1}>::rr.e	
           bool port aliases:
-          1: source_e<5, 2, {0,1,1,0,1}>::g.!GND = source_e<5, 2, {0,1,1,0,1}>::rr.!GND = source_e<5, 2, {0,1,1,0,1}>::!GND
-          2: source_e<5, 2, {0,1,1,0,1}>::g.!Vdd = source_e<5, 2, {0,1,1,0,1}>::rr.!Vdd = source_e<5, 2, {0,1,1,0,1}>::!Vdd
+          1: source_e<5, 2, {0,1,1,0,1}>::g.!GND = source_e<5, 2, {0,1,1,0,1}>::rr.!GND = source_e<5, 2, {0,1,1,0,1}>::!GND @[ supply_low ]
+          2: source_e<5, 2, {0,1,1,0,1}>::g.!Vdd = source_e<5, 2, {0,1,1,0,1}>::rr.!Vdd = source_e<5, 2, {0,1,1,0,1}>::!Vdd @[ supply_high ]
           3: source_e<5, 2, {0,1,1,0,1}>::g.Vdd = source_e<5, 2, {0,1,1,0,1}>::g.vdd
           4: source_e<5, 2, {0,1,1,0,1}>::g.GND = source_e<5, 2, {0,1,1,0,1}>::g.gnd
         }
@@ -672,13 +740,13 @@ In namespace "", we have: {
 }
 
 footprint: {
-  !GND = bool^0 = !GND (1) 
-  !Vdd = bool^0 = !Vdd (2) 
+  !GND = bool^0 = !GND (1) @[ supply_low ] 
+  !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
   _pReset = bool^0 = _pReset (8) 
   _sReset = bool^0 = _sReset (9) 
   g = process globals<>^0 = g (2) (
-    !GND = bool^0 = !GND (1) 
-    !Vdd = bool^0 = !Vdd (2) 
+    !GND = bool^0 = !GND (1) @[ supply_low ] 
+    !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
     Vdd = bool^0 = g.Vdd (6) 
     GND = bool^0 = g.GND (7) 
     vdd = bool^0 = g.Vdd (6) 
@@ -687,11 +755,11 @@ footprint: {
     _sReset = bool^0 = _sReset (9) 
   )
   src = process pseudo_rsource_e1of2a<>^0 = src (3) (
-    !GND = bool^0 = !GND (1) 
-    !Vdd = bool^0 = !Vdd (2) 
+    !GND = bool^0 = !GND (1) @[ supply_low ] 
+    !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
     g = process globals<>^0 = g (2) (
-      !GND = bool^0 = !GND (1) 
-      !Vdd = bool^0 = !Vdd (2) 
+      !GND = bool^0 = !GND (1) @[ supply_low ] 
+      !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
       Vdd = bool^0 = g.Vdd (6) 
       GND = bool^0 = g.GND (7) 
       vdd = bool^0 = g.Vdd (6) 
@@ -700,8 +768,8 @@ footprint: {
       _sReset = bool^0 = _sReset (9) 
     )
     l = process e1of2<>^0 = x (1) (
-      !GND = bool^0 = !GND (1) 
-      !Vdd = bool^0 = !Vdd (2) 
+      !GND = bool^0 = !GND (1) @[ supply_low ] 
+      !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
       d = bool^1
         {
           [0] = x.d[0] (3) 
@@ -713,8 +781,8 @@ footprint: {
     )
   )
   x = process e1of2<>^0 = x (1) (
-    !GND = bool^0 = !GND (1) 
-    !Vdd = bool^0 = !Vdd (2) 
+    !GND = bool^0 = !GND (1) @[ supply_low ] 
+    !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
     d = bool^1
       {
         [0] = x.d[0] (3) 
@@ -737,8 +805,8 @@ footprint: {
     (3 -> 0)
     (4 -> 2)
   bool instance pool: (0 ports, 9 local, 0 mapped)
-  1	!GND	
-  2	!Vdd	
+  1	!GND @[ supply_low ]	
+  2	!Vdd @[ supply_high ]	
   3	x.d[0]	
   4	x.d[1]	
   5	x.e	

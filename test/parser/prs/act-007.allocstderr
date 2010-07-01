@@ -6,8 +6,8 @@ globID	super		localID	canonical	footprint-frame
 2	process	1	1	x.b	bar<5>
 	bool: 1,2,13,14,15,16,17
 [global bool entries]
-1	(top)	-	1	!GND	
-2	(top)	-	2	!Vdd	
+1	(top)	-	1	!GND	 @[ supply_low ]
+2	(top)	-	2	!Vdd	 @[ supply_high ]
 3	(top)	-	3	x.x[0]	
 4	(top)	-	4	x.x[1]	
 5	(top)	-	5	x.x[2]	
@@ -23,3 +23,4 @@ globID	super		localID	canonical	footprint-frame
 15	process	1	15	x.b.w[2]	
 16	process	1	16	x.b.w[3]	
 17	process	1	17	x.b.w[4]	
+

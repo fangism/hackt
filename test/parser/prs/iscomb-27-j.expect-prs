@@ -1,5 +1,7 @@
 @ "foo.bar.in.a.e" iscomb
 @ "foo.bar.out.a.t" iscomb
+@ "!GND" supply_low
+@ "!Vdd" supply_high
 = "!GND" "foo.!GND"
 = "!GND" "foo.bar.!GND"
 = "!Vdd" "foo.!Vdd"

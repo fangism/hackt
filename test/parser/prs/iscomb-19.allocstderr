@@ -12,8 +12,8 @@ globID	super		localID	canonical	footprint-frame
 5	(top)	-	5	foo.x[3]	inv<>
 	bool: 1,2,9,10
 [global bool entries]
-1	(top)	-	1	!GND	
-2	(top)	-	2	!Vdd	
+1	(top)	-	1	!GND	 @[ supply_low ]
+2	(top)	-	2	!Vdd	 @[ supply_high ]
 3	(top)	-	3	foo.x[0].a	 @[ iscomb ]
 4	(top)	-	4	foo.x[0].b	
 5	(top)	-	5	foo.y	 @[ iscomb !autokeeper ]
@@ -22,3 +22,4 @@ globID	super		localID	canonical	footprint-frame
 8	(top)	-	8	foo.z	 @[ !autokeeper ]
 9	(top)	-	9	foo.x[3].a	 @[ iscomb ]
 10	(top)	-	10	foo.x[3].b	
+

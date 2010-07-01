@@ -5,6 +5,8 @@
 "present.k" -> "present.l"-
 ~"present.k" -> "present.l"+
 @ "present.l" !autokeeper
+@ "!GND" supply_low
+@ "!Vdd" supply_high
 @ "c" !autokeeper
 @ "b" !autokeeper
 connect "!GND" "present.!GND"

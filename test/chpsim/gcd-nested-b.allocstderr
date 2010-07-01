@@ -33,5 +33,6 @@ globID	super		localID	canonical	footprint-frame
 4	process	1	4	X.d	
 5	process	6	1	GS.b	
 [global bool entries]
-1	(top)	-	1	!GND	
-2	(top)	-	2	!Vdd	
+1	(top)	-	1	!GND	 @[ supply_low ]
+2	(top)	-	2	!Vdd	 @[ supply_high ]
+

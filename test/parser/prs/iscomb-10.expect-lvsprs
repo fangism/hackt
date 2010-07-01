@@ -7,6 +7,8 @@
 @ "present.j" iscomb
 @ "present.k" iscomb
 @ "present.l" iscomb
+@ "!GND" supply_low
+@ "!Vdd" supply_high
 connect "!GND" "present.!GND"
 connect "!GND" "present.P.!GND"
 connect "!GND" "present.Q.!GND"

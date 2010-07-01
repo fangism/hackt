@@ -4,7 +4,7 @@
 	which are applied at create-time.  
 	Because these attributes are applied at create-time, 
 	they are back-end independent.  
-	$Id: bool_instance_attribute.cc,v 1.4 2009/02/11 02:35:13 fang Exp $
+	$Id: bool_instance_attribute.cc,v 1.5 2010/07/01 20:20:26 fang Exp $
  */
 
 #include "Object/unroll/instance_attribute_registry.h"
@@ -158,6 +158,7 @@ Nodes are initially @t{isrvc1=false}, @t{isrvc2=false}, @t{isrvc3=false}.
 If @var{b} is true, label this node in a way meaningful for 
 redundant keeper circuits.  
 If unspecified, argument is implicitly true.  
+Exclusivity between these attributes is not yet checked.
 @end defmac
 @end texinfo
 ***/
@@ -179,6 +180,26 @@ DEFINE_ISRVC_ATTRIBUTE(IsRVC2, set_is_rvc2)
 DEFINE_ISRVC_ATTRIBUTE(IsRVC3, set_is_rvc3)
 
 #undef	DEFINE_ISRVC_ATTRIBUTE
+
+//=============================================================================
+/***
+@texinfo attrib/bool-supply.texi
+@defmac supply t
+Declares that the said node is a supply node.
+Supply nodes are treated specially in different back-end tools.  
+@var{t}=0 indicates that supply is GND-like (low).
+@var{t}=1 indicates that supply is Vdd-like (high).
+@end defmac
+@end texinfo
+***/
+DECLARE_AND_DEFINE_BOOL_INSTANCE_ATTRIBUTE_CLASS(Supply, "supply")
+void
+Supply::main(visitor_type& a, const values_type& v) {
+	INVARIANT(v.size());
+	const pint_const& pi(*v[0].is_a<const pint_const>());
+	const pint_value_type b = pi.static_constant_value();
+	a.set_supply(b);
+}
 
 //=============================================================================
 }	// end namespace bool_attributes_impl

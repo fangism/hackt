@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/connection_policy.cc"
-	$Id: connection_policy.cc,v 1.13 2010/05/26 00:46:49 fang Exp $
+	$Id: connection_policy.cc,v 1.14 2010/07/01 20:20:24 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -29,9 +29,9 @@ using util::read_value;
  */
 #define	DUMP_CONNECTIVITY_ATTRIBUTES			0
 #if DUMP_CONNECTIVITY_ATTRIBUTES
-#define	PRINTED_ATTRIBUTES				16
+#define	PRINTED_ATTRIBUTES				32
 #else
-#define	PRINTED_ATTRIBUTES				7
+#define	PRINTED_ATTRIBUTES				9
 #endif
 
 /**
@@ -47,6 +47,24 @@ bool_connect_policy::attribute_names[] = {
 	"isrvc3",
 	"may_interfere",
 	"may_weak_interfere",
+	"supply_low",
+
+	"supply_high",
+	"RESERVED-9",
+	"RESERVED-10",
+	"RESERVED-11",
+	"RESERVED-12",
+	"RESERVED-13",
+	"RESERVED-14",
+	"RESERVED-15",
+
+	"RESERVED-16",
+	"RESERVED-17",
+	"RESERVED-18",
+	"RESERVED-19",
+	"RESERVED-20",
+	"RESERVED-21",
+	"RESERVED-22",
 #if DUMP_CONNECTIVITY_ATTRIBUTES
 	"port-alias",
 
@@ -132,6 +150,30 @@ bool_connect_policy::has_nondefault_attributes(void) const {
 	return attributes & BOOL_ATTRIBUTES_MASK;
 	// if any attribute bits are set
 #endif
+}
+
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: diagnostic with node name please.
+ */
+void
+bool_connect_policy::set_supply(const bool t) {
+	static const char err_msg[] =
+		"Error: a node cannot be both supply-high and supply-low.";
+	if (t) {
+		attributes |= BOOL_SUPPLY_HIGH;
+		if (attributes & BOOL_SUPPLY_LOW) {
+			cerr << err_msg << endl;
+			THROW_EXIT;
+		}
+	} else {
+		attributes |= BOOL_SUPPLY_LOW;
+		if (attributes & BOOL_SUPPLY_HIGH) {
+			cerr << err_msg << endl;
+			THROW_EXIT;
+		}
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

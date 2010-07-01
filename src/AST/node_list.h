@@ -3,7 +3,7 @@
 	Base set of classes for the HAC parser.  
 	Also includes yacc macros for list operations, look like
 	preprocessor macros, but defined as inline functions.
-	$Id: node_list.h,v 1.10 2010/05/18 21:10:18 fang Exp $
+	$Id: node_list.h,v 1.11 2010/07/01 20:20:24 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_node_list.h,v 1.10.12.1 2005/12/11 00:45:08 fang Exp
  */
@@ -283,8 +283,11 @@ template <class P>
 static
 inline
 void
-DELETE_TOKEN(P* tok) {
-	if (tok) delete tok;
+DELETE_TOKEN(P*& tok) {
+	if (tok) {
+		delete tok;
+		tok = NULL;
+	}
 }
 
 template <class L>
@@ -302,7 +305,19 @@ static
 inline
 void
 APPEND_NULL(L* list) {
+	NEVER_NULL(list);
 	list->push_back(NULL);
+}
+
+template <class L>
+static
+inline
+void
+PREPEND_LIST(typename L::value_type::element_type* item, 
+	const node_position* delim, L* list) {
+	NEVER_NULL(list);
+	DELETE_TOKEN(delim);
+	list->push_front(item);
 }
 
 // concatenates right list into left

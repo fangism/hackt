@@ -19,8 +19,8 @@ globID	super		localID	canonical	footprint-frame
 9	(top)	-	9	g	inv<>
 	bool: 7,11,3,14
 [global bool entries]
-1	(top)	-	1	!GND	
-2	(top)	-	2	!Vdd	
+1	(top)	-	1	!GND	 @[ supply_low ]
+2	(top)	-	2	!Vdd	 @[ supply_high ]
 3	(top)	-	3	x	
 4	(top)	-	4	a.y	
 5	(top)	-	5	b.y	
@@ -33,3 +33,4 @@ globID	super		localID	canonical	footprint-frame
 12	(top)	-	12	f.y	
 13	(top)	-	13	f2.y	
 14	(top)	-	14	g.y	
+

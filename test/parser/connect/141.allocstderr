@@ -3,8 +3,8 @@ globID	super		localID	canonical	footprint-frame
 1	(top)	-	1	top	top_type<>
 	bool: 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23
 [global bool entries]
-1	(top)	-	1	!GND	
-2	(top)	-	2	!Vdd	
+1	(top)	-	1	!GND	 @[ supply_low ]
+2	(top)	-	2	!Vdd	 @[ supply_high ]
 3	(top)	-	3	co[0][0][0]	
 4	(top)	-	4	co[0][0][1]	
 5	(top)	-	5	co[0][0][2]	
@@ -26,3 +26,4 @@ globID	super		localID	canonical	footprint-frame
 21	(top)	-	21	co[0][6][0]	
 22	(top)	-	22	co[0][6][1]	
 23	(top)	-	23	co[0][6][2]	
+

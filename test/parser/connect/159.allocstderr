@@ -15,10 +15,11 @@ globID	super		localID	canonical	footprint-frame
 6	process	2	4	trash.foo.c	celem<2>
 	bool: 1,2,4,5,6;7
 [global bool entries]
-1	(top)	-	1	!GND	
-2	(top)	-	2	!Vdd	
+1	(top)	-	1	!GND	 @[ supply_low ]
+2	(top)	-	2	!Vdd	 @[ supply_high ]
 3	process	1	3	trash.foo.I.d	
 4	process	1	4	trash.foo.I.e	
 5	process	1	5	trash.foo.O[0].e	
 6	process	1	6	trash.foo.O[1].e	
 7	process	6	6	trash.foo.c._o	
+

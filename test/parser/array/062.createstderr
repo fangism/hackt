@@ -2,132 +2,132 @@ ERROR: detected negative array indices: [-4]
 	with collection: process dualrail<>^1
   {
     [0] = rotate_right_N_fb<32, 4>::out[0] (
-      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[0].!GND 
-      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[0].!Vdd 
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[0].!GND @[ supply_low ] 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[0].!Vdd @[ supply_high ] 
     )
     [1] = rotate_right_N_fb<32, 4>::out[1] (
-      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[1].!GND 
-      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[1].!Vdd 
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[1].!GND @[ supply_low ] 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[1].!Vdd @[ supply_high ] 
     )
     [2] = rotate_right_N_fb<32, 4>::out[2] (
-      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[2].!GND 
-      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[2].!Vdd 
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[2].!GND @[ supply_low ] 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[2].!Vdd @[ supply_high ] 
     )
     [3] = rotate_right_N_fb<32, 4>::out[3] (
-      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[3].!GND 
-      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[3].!Vdd 
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[3].!GND @[ supply_low ] 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[3].!Vdd @[ supply_high ] 
     )
     [4] = rotate_right_N_fb<32, 4>::out[4] (
-      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[4].!GND 
-      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[4].!Vdd 
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[4].!GND @[ supply_low ] 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[4].!Vdd @[ supply_high ] 
     )
     [5] = rotate_right_N_fb<32, 4>::out[5] (
-      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[5].!GND 
-      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[5].!Vdd 
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[5].!GND @[ supply_low ] 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[5].!Vdd @[ supply_high ] 
     )
     [6] = rotate_right_N_fb<32, 4>::out[6] (
-      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[6].!GND 
-      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[6].!Vdd 
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[6].!GND @[ supply_low ] 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[6].!Vdd @[ supply_high ] 
     )
     [7] = rotate_right_N_fb<32, 4>::out[7] (
-      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[7].!GND 
-      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[7].!Vdd 
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[7].!GND @[ supply_low ] 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[7].!Vdd @[ supply_high ] 
     )
     [8] = rotate_right_N_fb<32, 4>::out[8] (
-      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[8].!GND 
-      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[8].!Vdd 
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[8].!GND @[ supply_low ] 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[8].!Vdd @[ supply_high ] 
     )
     [9] = rotate_right_N_fb<32, 4>::out[9] (
-      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[9].!GND 
-      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[9].!Vdd 
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[9].!GND @[ supply_low ] 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[9].!Vdd @[ supply_high ] 
     )
     [10] = rotate_right_N_fb<32, 4>::out[10] (
-      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[10].!GND 
-      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[10].!Vdd 
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[10].!GND @[ supply_low ] 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[10].!Vdd @[ supply_high ] 
     )
     [11] = rotate_right_N_fb<32, 4>::out[11] (
-      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[11].!GND 
-      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[11].!Vdd 
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[11].!GND @[ supply_low ] 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[11].!Vdd @[ supply_high ] 
     )
     [12] = rotate_right_N_fb<32, 4>::out[12] (
-      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[12].!GND 
-      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[12].!Vdd 
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[12].!GND @[ supply_low ] 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[12].!Vdd @[ supply_high ] 
     )
     [13] = rotate_right_N_fb<32, 4>::out[13] (
-      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[13].!GND 
-      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[13].!Vdd 
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[13].!GND @[ supply_low ] 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[13].!Vdd @[ supply_high ] 
     )
     [14] = rotate_right_N_fb<32, 4>::out[14] (
-      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[14].!GND 
-      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[14].!Vdd 
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[14].!GND @[ supply_low ] 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[14].!Vdd @[ supply_high ] 
     )
     [15] = rotate_right_N_fb<32, 4>::out[15] (
-      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[15].!GND 
-      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[15].!Vdd 
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[15].!GND @[ supply_low ] 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[15].!Vdd @[ supply_high ] 
     )
     [16] = rotate_right_N_fb<32, 4>::out[16] (
-      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[16].!GND 
-      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[16].!Vdd 
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[16].!GND @[ supply_low ] 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[16].!Vdd @[ supply_high ] 
     )
     [17] = rotate_right_N_fb<32, 4>::out[17] (
-      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[17].!GND 
-      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[17].!Vdd 
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[17].!GND @[ supply_low ] 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[17].!Vdd @[ supply_high ] 
     )
     [18] = rotate_right_N_fb<32, 4>::out[18] (
-      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[18].!GND 
-      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[18].!Vdd 
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[18].!GND @[ supply_low ] 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[18].!Vdd @[ supply_high ] 
     )
     [19] = rotate_right_N_fb<32, 4>::out[19] (
-      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[19].!GND 
-      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[19].!Vdd 
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[19].!GND @[ supply_low ] 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[19].!Vdd @[ supply_high ] 
     )
     [20] = rotate_right_N_fb<32, 4>::out[20] (
-      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[20].!GND 
-      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[20].!Vdd 
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[20].!GND @[ supply_low ] 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[20].!Vdd @[ supply_high ] 
     )
     [21] = rotate_right_N_fb<32, 4>::out[21] (
-      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[21].!GND 
-      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[21].!Vdd 
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[21].!GND @[ supply_low ] 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[21].!Vdd @[ supply_high ] 
     )
     [22] = rotate_right_N_fb<32, 4>::out[22] (
-      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[22].!GND 
-      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[22].!Vdd 
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[22].!GND @[ supply_low ] 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[22].!Vdd @[ supply_high ] 
     )
     [23] = rotate_right_N_fb<32, 4>::out[23] (
-      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[23].!GND 
-      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[23].!Vdd 
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[23].!GND @[ supply_low ] 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[23].!Vdd @[ supply_high ] 
     )
     [24] = rotate_right_N_fb<32, 4>::out[24] (
-      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[24].!GND 
-      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[24].!Vdd 
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[24].!GND @[ supply_low ] 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[24].!Vdd @[ supply_high ] 
     )
     [25] = rotate_right_N_fb<32, 4>::out[25] (
-      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[25].!GND 
-      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[25].!Vdd 
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[25].!GND @[ supply_low ] 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[25].!Vdd @[ supply_high ] 
     )
     [26] = rotate_right_N_fb<32, 4>::out[26] (
-      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[26].!GND 
-      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[26].!Vdd 
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[26].!GND @[ supply_low ] 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[26].!Vdd @[ supply_high ] 
     )
     [27] = rotate_right_N_fb<32, 4>::out[27] (
-      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[27].!GND 
-      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[27].!Vdd 
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[27].!GND @[ supply_low ] 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[27].!Vdd @[ supply_high ] 
     )
     [28] = rotate_right_N_fb<32, 4>::out[28] (
-      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[28].!GND 
-      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[28].!Vdd 
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[28].!GND @[ supply_low ] 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[28].!Vdd @[ supply_high ] 
     )
     [29] = rotate_right_N_fb<32, 4>::out[29] (
-      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[29].!GND 
-      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[29].!Vdd 
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[29].!GND @[ supply_low ] 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[29].!Vdd @[ supply_high ] 
     )
     [30] = rotate_right_N_fb<32, 4>::out[30] (
-      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[30].!GND 
-      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[30].!Vdd 
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[30].!GND @[ supply_low ] 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[30].!Vdd @[ supply_high ] 
     )
     [31] = rotate_right_N_fb<32, 4>::out[31] (
-      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[31].!GND 
-      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[31].!Vdd 
+      !GND = bool^0 = rotate_right_N_fb<32, 4>::out[31].!GND @[ supply_low ] 
+      !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[31].!Vdd @[ supply_high ] 
     )
   }
 ERROR: unrolling instance references in process_connection::unroll().

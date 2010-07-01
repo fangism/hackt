@@ -9,10 +9,11 @@ globID	super		localID	canonical	footprint-frame
 4	(top)	-	4	d	checkers<4, 4>
 	bool: 1,2,6,7
 [global bool entries]
-1	(top)	-	1	!GND	
-2	(top)	-	2	!Vdd	
+1	(top)	-	1	!GND	 @[ supply_low ]
+2	(top)	-	2	!Vdd	 @[ supply_high ]
 3	(top)	-	3	a.m[0][0]	
 4	(top)	-	4	b.m[0][0]	
 5	(top)	-	5	c.m[0][0]	
 6	(top)	-	6	d.m[0][0]	
 7	(top)	-	7	d.m[0][1]	
+
