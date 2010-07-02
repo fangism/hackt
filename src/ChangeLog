@@ -5,6 +5,14 @@
 
 2010-07-01	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-84-01:
+	  hflat: added -f supply-nodes option to print voltage supply
+		domain node (like "!Vdd" "!GND") with every rule.
+	  Tests added, documented.
+	  Re-factored some code to lookup voltage supply domain of
+		rules, macros, and internal nodes.  
+
+
 	* HACKT-00-01-04-main-00-84-00:
 	  HAC: added new node attribute 'supply'
 		supply=0 indicates a GND-like supply

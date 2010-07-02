@@ -1,7 +1,7 @@
 /**
 	\file "net/netlist_generator.cc"
 	Implementation of hierarchical netlist generation.
-	$Id: netlist_generator.cc,v 1.20 2010/04/30 18:41:54 fang Exp $
+	$Id: netlist_generator.cc,v 1.21 2010/07/02 00:10:05 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -373,41 +373,12 @@ netlist_generator::visit(const entity::PRS::footprint& r) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PRS_SUPPLY_OVERRIDES
-// for use with std::upper_bound
-static
-bool
-rule_supply_map_compare(const index_type v, 
-		const entity::PRS::footprint::supply_map_type::value_type& i) {
-	return v < i.rules.first;
-}
-
-static
-bool
-macro_supply_map_compare(const index_type v,
-		const entity::PRS::footprint::supply_map_type::value_type& i) {
-	return v < i.macros.first;
-}
-
-static
-bool
-internal_node_supply_map_compare(const index_type v,
-		const entity::PRS::footprint::supply_map_type::value_type& i) {
-	return v < i.int_nodes.first;
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class RP>
 void
 netlist_generator::visit_rule(const RP& rpool, const index_type i) {
 #if PRS_SUPPLY_OVERRIDES
-	const prs_footprint::supply_map_type& m(prs->get_supply_map());
 	typedef	prs_footprint::supply_map_type::const_iterator	const_iterator;
-	const_iterator f(upper_bound(m.begin(), m.end(), i, 
-		&rule_supply_map_compare));
-	INVARIANT(f != m.begin());
-	--f;
+	const const_iterator f(prs->lookup_rule_supply(i));
 	// lookup supply in map
 	const value_saver<index_type>
 		__s1(low_supply, register_named_node(f->GND)),
@@ -426,12 +397,8 @@ template <class MP>
 void
 netlist_generator::visit_macro(const MP& mpool, const index_type i) {
 #if PRS_SUPPLY_OVERRIDES
-	const prs_footprint::supply_map_type& m(prs->get_supply_map());
 	typedef	prs_footprint::supply_map_type::const_iterator	const_iterator;
-	const_iterator f(upper_bound(m.begin(), m.end(), i, 
-		&macro_supply_map_compare));
-	INVARIANT(f != m.begin());
-	--f;
+	const const_iterator f(prs->lookup_macro_supply(i));
 	// lookup supply in map
 	const value_saver<index_type>
 		__s1(low_supply, register_named_node(f->GND)),
@@ -690,12 +657,8 @@ if (!n.used)
 	// else need to define internal node once only
 #if PRS_SUPPLY_OVERRIDES
 	// lookup supply associated with internal node's definition
-	const prs_footprint::supply_map_type& m(prs->get_supply_map());
 	typedef	prs_footprint::supply_map_type::const_iterator	const_iterator;
-	const_iterator f(upper_bound(m.begin(), m.end(), nid, 
-		&internal_node_supply_map_compare));
-	INVARIANT(f != m.begin());
-	--f;
+	const const_iterator f(prs->lookup_internal_node_supply(nid));
 	const index_type gi = register_named_node(f->GND);
 	const index_type vi = register_named_node(f->Vdd);
 #if PRS_SUBSTRATE_OVERRIDES

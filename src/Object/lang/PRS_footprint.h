@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.h"
-	$Id: PRS_footprint.h,v 1.19 2010/04/27 18:33:18 fang Exp $
+	$Id: PRS_footprint.h,v 1.20 2010/07/02 00:10:04 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_FOOTPRINT_H__
@@ -84,6 +84,10 @@ using util::memory::never_ptr;
 class footprint : public cflat_visitee {
 	friend class cflat_visitor;
 public:
+	typedef	size_t				node_index_type;
+	typedef	size_t				expr_index_type;
+	typedef	size_t				rule_index_type;
+	typedef	rule_index_type			macro_index_type;
 	typedef	footprint_expr_node		expr_node;
 	typedef	size_t				invariant_type;
 	typedef	footprint_rule			rule;
@@ -94,13 +98,14 @@ public:
 		first: expression index
 		second: direction
 	 */
-	struct node_expr_type : public pair<size_t, bool> {
-		typedef	pair<size_t, bool>	parent_type;
+	struct node_expr_type : public pair<expr_index_type, bool> {
+		typedef	pair<expr_index_type, bool>	parent_type;
 		// redundant, but relying on copy-on-write memory efficiency
 		string				name;
 
 		node_expr_type() { }	// uninitialized
-		node_expr_type(const size_t i, const bool d, const string& n) :
+		node_expr_type(const expr_index_type i,
+			const bool d, const string& n) :
 			parent_type(i, d), name(n) { }
 
 	};	// end struct node_expr_type
@@ -118,9 +123,10 @@ public:
 		key is same as node_expr_type::name
 		value is index into internal_node_pool
 	 */
-	typedef	map<string, size_t>		internal_node_expr_map_type;
+	typedef	map<string, node_index_type>	internal_node_expr_map_type;
 	/// list of root expression indices
 	typedef	vector<invariant_type>		invariant_pool_type;
+
 	/**
 		This structure keeps a map of which rules/macros (by index)
 		belong to which subcircuit.  
@@ -128,7 +134,8 @@ public:
 		Indices not found in this set are presumed to be in
 		the outer-most level, designated index 0.  
 	 */
-	typedef	std::pair<size_t, size_t>	index_range;
+	typedef	std::pair<rule_index_type, rule_index_type>
+						index_range;
 
 	static
 	ostream&
@@ -207,11 +214,11 @@ public:
 	 */
 	struct supply_override_entry : public resource_map_entry {
 		// never_ptr<const rule_set>		back_ref;
-		size_t				Vdd;
-		size_t				GND;
+		node_index_type			Vdd;
+		node_index_type			GND;
 #if PRS_SUBSTRATE_OVERRIDES
-		size_t				Vdd_substrate;
-		size_t				GND_substrate;
+		node_index_type			Vdd_substrate;
+		node_index_type			GND_substrate;
 #endif
 
 		void
@@ -247,11 +254,11 @@ public:
 		HACK: these members are only used during unroll construction, 
 		and need not persist.
 	 */
-	size_t					current_Vdd;
-	size_t					current_GND;
+	node_index_type				current_Vdd;
+	node_index_type				current_GND;
 #if PRS_SUBSTRATE_OVERRIDES
-	size_t					current_Vdd_substrate;
-	size_t					current_GND_substrate;
+	node_index_type				current_Vdd_substrate;
+	node_index_type				current_GND_substrate;
 #endif
 #endif
 public:
@@ -295,9 +302,10 @@ public:
 public:
 	// a method for registering internal nodes and expressions
 	good_bool
-	register_internal_node_expr(const string&, const size_t, const bool);
+	register_internal_node_expr(const string&, 
+		const expr_index_type, const bool);
 
-	size_t
+	expr_index_type
 	lookup_internal_node_expr(const string&, const bool) const;
 
 	const internal_node_pool_type&
@@ -306,14 +314,14 @@ public:
 	}
 
 	const node_expr_type&
-	get_internal_node(const size_t i) const {
+	get_internal_node(const node_index_type i) const {
 		INVARIANT(i < internal_node_pool.size());
 		return internal_node_pool[i];
 	}
 
 	// returns reference to new expression node
 	expr_node&
-	push_back_expr(const char, const size_t);
+	push_back_expr(const char, const expr_index_type);
 
 	rule&
 	push_back_rule(const int, const int, const bool);
@@ -334,7 +342,7 @@ public:
 		subcircuit_map.push_back(t);
 	}
 
-	size_t
+	expr_index_type
 	current_expr_index(void) const {
 		return expr_pool.size();
 	}
@@ -345,11 +353,44 @@ public:
 
 	supply_map_type&
 	get_supply_map(void) { return supply_map; }
+
+private:
+	// for use with std::upper_bound
+	static
+	bool
+	rule_supply_map_compare(const rule_index_type v,
+			const supply_map_type::value_type& i) {
+		return v < i.rules.first;
+	}
+
+	static
+	bool
+	macro_supply_map_compare(const macro_index_type v,
+			const supply_map_type::value_type& i) {
+		return v < i.macros.first;
+	}
+
+	static
+	bool
+	internal_node_supply_map_compare(const node_index_type v,
+			const supply_map_type::value_type& i) {
+		return v < i.int_nodes.first;
+	}
+
+public:
+	supply_map_type::const_iterator
+	lookup_rule_supply(const rule_index_type) const;
+
+	supply_map_type::const_iterator
+	lookup_macro_supply(const macro_index_type) const;
+
+	supply_map_type::const_iterator
+	lookup_internal_node_supply(const node_index_type) const;
 #endif
 
 	void
-	collect_literal_indices(std::set<size_t>&, // node_index_type
-		const size_t) const;	// should be expr_index_type
+	collect_literal_indices(std::set<node_index_type>&, // node_index_type
+		const expr_index_type) const;	// should be expr_index_type
 
 public:
 	void

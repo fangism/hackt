@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_printer.cc"
 	Implementation of cflattening visitor.
-	$Id: cflat_printer.cc,v 1.28 2010/05/23 21:49:45 fang Exp $
+	$Id: cflat_printer.cc,v 1.29 2010/07/02 00:10:04 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -132,6 +132,18 @@ if (!cfopts.check_prs) {
 	// const size_t j = bfm[r.output_index-1];
 	__dump_canonical_literal(r.output_index);
 	os << (r.dir ? '+' : '-');
+	if (cfopts.show_supply_nodes) {
+		// FINISH ME
+		// ick: computing effective index by address subtraction!
+		const PRS::footprint& pfp(fpf->_footprint->get_prs_footprint());
+		const size_t ri = std::distance(&pfp.get_rule_pool()[0], &r);
+		const PRS::footprint::supply_map_type::const_iterator
+			f(pfp.lookup_rule_supply(ri));
+		const size_t sn = (r.dir ? f->Vdd : f->GND);
+		os << " {";
+		__dump_canonical_literal(sn);
+		os << "}";
+	}
 	if (cfopts.compute_conductances) {
 		// min/mxa_conductance was evaluated from expression
 		os << "\t(G min,one,max = " << min_conductance << ", " <<

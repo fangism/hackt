@@ -1,6 +1,6 @@
 /**
 	\file "main/cflat_options.h"
-	$Id: cflat_options.h,v 1.20 2010/05/11 00:18:12 fang Exp $
+	$Id: cflat_options.h,v 1.21 2010/07/02 00:10:05 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_CFLAT_OPTIONS_H__
@@ -164,6 +164,11 @@ public:
 	 */
 	bool				show_precharges;
 	/**
+		Annotate rules with power supplies.  
+		For voltage domain checking.
+	 */
+	bool				show_supply_nodes;
+	/**
 		Ignore top-level instances and flatten one anonymous
 		instance of a named complete process type.  
 		Flag to do 'cast2lvs'-like behavior.  
@@ -219,6 +224,7 @@ public:
 		size_prs(false), 
 		compute_conductances(false),
 		show_precharges(false), 
+		show_supply_nodes(false),
 		use_referenced_type_instead_of_top_level(false), 
 		named_process_type(), 
 		comp_opt(), 

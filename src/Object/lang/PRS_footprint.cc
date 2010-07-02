@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.cc"
-	$Id: PRS_footprint.cc,v 1.32 2010/04/27 18:33:18 fang Exp $
+	$Id: PRS_footprint.cc,v 1.33 2010/07/02 00:10:04 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -246,7 +246,7 @@ footprint::dump_rule(const rule& r, ostream& o, const node_pool_type& np,
 #endif
 	dump_expr(ep[r.expr_index],
 		o, np, ep, PRS_LITERAL_TYPE_ENUM) << " -> ";
-	const size_t ni = r.output_index -1;	// 0-indexed node_pool
+	const node_index_type ni = r.output_index -1;	// 0-indexed node_pool
 	np[ni].get_back_ref()
 		->dump_hierarchical_name(o, dump_flags::no_definition_owner);
 	o << (r.dir ? '+' : '-');
@@ -343,7 +343,7 @@ if (internal_node_expr_map.size()) {
 	for ( ; i!=e; ++i) {
 		// is this dump format acceptable?
 		const string& name(i->first);
-		const size_t int_node_index = i->second;
+		const node_index_type int_node_index = i->second;
 		const bool dir = internal_node_pool[int_node_index].second;
 		const expr_index_type ex =
 			internal_node_pool[int_node_index].first;
@@ -366,7 +366,7 @@ if (invariant_pool.size()) {
 }
 if (subcircuit_map.size()) {
 	// print name of subcircuit?
-	size_t j = 1;		// 1-indexed
+	rule_index_type j = 1;		// 1-indexed
 	o << auto_indent << "subcircuit (rules, macros, @nodes): " << endl;
 	typedef	subcircuit_map_type::const_iterator	const_iterator;
 	const_iterator i(subcircuit_map.begin()), e(subcircuit_map.end());
@@ -399,7 +399,7 @@ if (supply_map.size()) {
 	\param t the expression type.  
  */
 footprint::expr_node&
-footprint::push_back_expr(const char t, const size_t s) {
+footprint::push_back_expr(const char t, const expr_index_type s) {
 	expr_pool.push_back(expr_node());
 	expr_node& ret(expr_pool.back());
 	ret.set_type(t);
@@ -434,8 +434,8 @@ footprint::push_back_macro(const string& s) {
 	\param ei expression node index to visit.
  */
 void
-footprint::collect_literal_indices(set<size_t>& ret,
-		const size_t ei) const {
+footprint::collect_literal_indices(set<node_index_type>& ret,
+		const expr_index_type ei) const {
 	const footprint_expr_node& e(expr_pool[ei]);
 	if (e.is_literal()) {
 		ret.insert(e.only());
@@ -443,7 +443,7 @@ footprint::collect_literal_indices(set<size_t>& ret,
 		// precharge nodes do not count as fanin/fanout
 	} else {
 		// is some normal expression (NOT, AND, OR)
-		size_t i;
+		expr_index_type i;
 		for (i=1; i<=e.size(); ++i) {
 			collect_literal_indices(ret, e[i]);
 		}
@@ -452,8 +452,8 @@ footprint::collect_literal_indices(set<size_t>& ret,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
-footprint::register_internal_node_expr(const string& k, const size_t eid, 
-		const bool dir) {
+footprint::register_internal_node_expr(const string& k, 
+		const expr_index_type eid, const bool dir) {
 	typedef	internal_node_expr_map_type::const_iterator
 						const_iterator;
 	const_iterator f(internal_node_expr_map.find(k));
@@ -462,7 +462,7 @@ footprint::register_internal_node_expr(const string& k, const size_t eid,
 			"\' already registered." << endl;
 		return good_bool(false);
 	} else {
-		const size_t i = internal_node_pool.size();
+		const node_index_type i = internal_node_pool.size();
 		internal_node_pool.push_back(node_expr_type(eid, dir, k));
 		internal_node_expr_map[k] = i;
 		return good_bool(true);
@@ -474,7 +474,7 @@ footprint::register_internal_node_expr(const string& k, const size_t eid,
 	\return index of expression representing internal node, 
 		or throw exception to signal error or not found.
  */
-size_t
+footprint::expr_index_type
 footprint::lookup_internal_node_expr(const string& k, const bool dir) const {
 	typedef	internal_node_expr_map_type::const_iterator
 						const_iterator;
@@ -495,6 +495,47 @@ footprint::lookup_internal_node_expr(const string& k, const bool dir) const {
 	}
 	return 0;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRS_SUPPLY_OVERRIDES
+/**
+	Routines to lookup voltage supply in rule map.  
+ */
+footprint::supply_map_type::const_iterator
+footprint::lookup_rule_supply(const rule_index_type i) const {
+	const supply_map_type& m(supply_map);
+	typedef supply_map_type::const_iterator  const_iterator;
+	const_iterator f(upper_bound(m.begin(), m.end(), i,
+		&rule_supply_map_compare));
+	INVARIANT(f != m.begin());
+	--f;
+	return f;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+footprint::supply_map_type::const_iterator
+footprint::lookup_macro_supply(const macro_index_type i) const {
+	const supply_map_type& m(supply_map);
+	typedef supply_map_type::const_iterator  const_iterator;
+	const_iterator f(upper_bound(m.begin(), m.end(), i,
+		&macro_supply_map_compare));
+	INVARIANT(f != m.begin());
+	--f;
+	return f;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+footprint::supply_map_type::const_iterator
+footprint::lookup_internal_node_supply(const node_index_type i) const {
+	const supply_map_type& m(supply_map);
+	typedef supply_map_type::const_iterator  const_iterator;
+	const_iterator f(upper_bound(m.begin(), m.end(), i,
+		&internal_node_supply_map_compare));
+	INVARIANT(f != m.begin());
+	--f;
+	return f;
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -550,7 +591,7 @@ footprint::write_object_base(const persistent_object_manager& m,
 	STACKTRACE_PERSISTENT_VERBOSE;
 {
 	typedef	rule_pool_type::const_iterator	const_iterator;
-	const size_t s = rule_pool.size();
+	const rule_index_type s = rule_pool.size();
 	write_value(o, s);
 	const_iterator i(rule_pool.begin());
 	const const_iterator e(rule_pool.end());
@@ -559,7 +600,7 @@ footprint::write_object_base(const persistent_object_manager& m,
 	}
 }{
 	typedef	expr_pool_type::const_iterator	const_iterator;
-	const size_t s = expr_pool.size();
+	const expr_index_type s = expr_pool.size();
 	write_value(o, s);
 	const_iterator i(expr_pool.begin());
 	const const_iterator e(expr_pool.end());
@@ -568,7 +609,7 @@ footprint::write_object_base(const persistent_object_manager& m,
 	}
 }{
 	typedef	macro_pool_type::const_iterator	const_iterator;
-	const size_t s = macro_pool.size();
+	const macro_index_type s = macro_pool.size();
 	write_value(o, s);
 	const_iterator i(macro_pool.begin());
 	const const_iterator e(macro_pool.end());
@@ -606,36 +647,36 @@ void
 footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 	STACKTRACE_PERSISTENT_VERBOSE;
 {
-	size_t s;
+	rule_index_type s;
 	read_value(i, s);
 	rule_pool.reserve(s);
-	size_t j = 0;
+	rule_index_type j = 0;
 	for ( ; j<s; ++j) {
 		rule_pool.push_back(rule());
 		rule_pool.back().load_object_base(m, i);
 	}
 }{
-	size_t s;
+	expr_index_type s;
 	read_value(i, s);
 	expr_pool.reserve(s);
-	size_t j = 0;
+	expr_index_type j = 0;
 	for ( ; j<s; ++j) {
 		expr_pool.push_back(expr_node());
 		expr_pool.back().load_object_base(m, i);
 	}
 }{
-	size_t s;
+	macro_index_type s;
 	read_value(i, s);
 	macro_pool.reserve(s);
-	size_t j = 0;
+	macro_index_type j = 0;
 	for ( ; j<s; ++j) {
 		macro_pool.push_back(macro());
 		macro_pool.back().load_object_base(m, i);
 	}
 }{
-	size_t s;
+	node_index_type s;
 	read_value(i, s);
-	size_t j = 0;
+	node_index_type j = 0;
 	internal_node_pool.reserve(s);
 	for ( ; j<s; ++j) {
 		node_expr_type n;

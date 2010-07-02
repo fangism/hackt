@@ -1,0 +1,5 @@
+// "supply-show-01.hac"
+// @hflat-flags@ -f supply-nodes
+
+import "supply-01.hac";
+

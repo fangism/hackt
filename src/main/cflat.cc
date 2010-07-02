@@ -2,7 +2,7 @@
 	\file "main/cflat.cc"
 	cflat backwards compability module.  
 
-	$Id: cflat.cc,v 1.31 2010/05/13 00:32:02 fang Exp $
+	$Id: cflat.cc,v 1.32 2010/07/02 00:10:05 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -172,6 +172,7 @@ __cflat_prsim(OPTARG_UNUSED cflat::options& cf) {
 	cf.dsim_prs = false;
 	cf.compute_conductances = false;
 	cf.show_precharges = false;
+	cf.show_supply_nodes = false;
 	cf.size_prs = false;
 	cf.use_referenced_type_instead_of_top_level = false;
 	OPTFUN_RETURN
@@ -196,6 +197,7 @@ __cflat_prlint(OPTARG_UNUSED cflat::options& cf) {
 	cf.size_prs = false;
 	cf.compute_conductances = false;
 	cf.show_precharges = false;
+	cf.show_supply_nodes = false;
 	cf.use_referenced_type_instead_of_top_level = false;
 	OPTFUN_RETURN
 }
@@ -221,6 +223,7 @@ __cflat_connect(OPTARG_UNUSED cflat::options& cf) {
 	cf.size_prs = false;
 	cf.compute_conductances = false;
 	cf.show_precharges = false;
+	cf.show_supply_nodes = false;
 	cf.use_referenced_type_instead_of_top_level = false;
 	OPTFUN_RETURN
 }
@@ -249,6 +252,7 @@ __cflat_lvs(OPTARG_UNUSED cflat::options& cf) {
 	cf.size_prs = false;
 	cf.compute_conductances = false;
 	cf.show_precharges = false;	// maybe true?
+	cf.show_supply_nodes = false;
 	cf.use_referenced_type_instead_of_top_level = false;
 	OPTFUN_RETURN
 }
@@ -310,6 +314,7 @@ __cflat_ADspice(OPTARG_UNUSED cflat::options& cf) {
 	cf.size_prs = false;
 	cf.compute_conductances = false;
 	cf.show_precharges = false;
+	cf.show_supply_nodes = false;
 	cf.use_referenced_type_instead_of_top_level = false;
 	OPTFUN_RETURN
 }
@@ -640,6 +645,21 @@ Print or hide precharge expressions.
 DEFINE_BOOL_OPTION_PAIR(show_precharges, "precharges",
 	"show precharge expressions",
 	"hide precharge expressions")
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cflat/opt-supply-nodes.texi
+@defvr {@t{cflat -f} option} supply-nodes
+@defvrx {@t{cflat -f} option} no-supply-nodes
+Print or hide supply-nodes associated with each rule.
+This is mostly useful for checking circuits involving 
+multiple voltage domains.
+@end defvr
+@end texinfo
+***/
+DEFINE_BOOL_OPTION_PAIR(show_supply_nodes, "supply-nodes",
+	"show voltage supply nodes per rule",
+	"hide voltage supply nodes per rule")
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
