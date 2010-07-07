@@ -1,6 +1,6 @@
 /**
 	\file "sim/command_registry.tcc"
-	$Id: command_registry.tcc,v 1.18 2009/11/12 02:58:19 fang Exp $
+	$Id: command_registry.tcc,v 1.19 2010/07/07 23:01:26 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_REGISTRY_TCC__
@@ -27,6 +27,7 @@ namespace SIM {
 using std::cin;
 using std::istream;
 using std::ifstream;
+using std::ofstream;
 using std::ostream_iterator;
 using util::readline_wrapper;
 using util::ifstream_manager;
@@ -69,6 +70,14 @@ command_registry<Command>::aliases;
 template <class Command>
 directory_stack
 command_registry<Command>::dir_stack;
+
+template <class Command>
+typename command_registry<Command>::history_type
+command_registry<Command>::history;
+
+template <class Command>
+bool
+command_registry<Command>::keep_noninteractive_history = false;
 
 /**
 	For block style comments. 
@@ -327,11 +336,16 @@ command_registry<Command>::show_dirs(ostream& o) {
  */
 template <class Command>
 int
-command_registry<Command>::interpret_line(state_type& s, const string& line) {
+command_registry<Command>::interpret_line(state_type& s, const string& line, 
+		const bool record) {
 	const char* cursor = line.c_str();
 	if (*cursor == '!') {
 		++cursor;
 		eat_whitespace(cursor);
+		if (record) {
+			// record system commands too
+			history.push_back(cursor);
+		}
 		const int es = system(cursor);
 		// let status remain as is, for now
 		// TODO: determine exit behavior
@@ -341,6 +355,7 @@ command_registry<Command>::interpret_line(state_type& s, const string& line) {
 		return Command::NORMAL;
 	} else if (*cursor == '#') {
 		// this catches lines like "#blah"
+		// don't record comments
 		return Command::NORMAL;
 	} else {
 		// static const char begin_comment[] = "/*";
@@ -362,6 +377,10 @@ command_registry<Command>::interpret_line(state_type& s, const string& line) {
 #endif
 		}
 	if (!comment_level) {
+		if (record) {
+			// record before expanding alias
+			history.push_back(line);
+		}
 		// check if command is aliased :)
 		if (expand_aliases(toks) != Command::NORMAL) {
 			return Command::BADARG;
@@ -374,6 +393,7 @@ command_registry<Command>::interpret_line(state_type& s, const string& line) {
 			return ret;
 		}
 	}
+		// crude comment detection
 		if (bl >= 2 && back[bl-2] == '*' && back[bl-1] == '/')  {
 			if (comment_level) {
 				--comment_level;
@@ -407,6 +427,7 @@ command_registry<Command>::interpret(state_type& s, istream& _cin,
 		const bool interactive) {
 	static const char noprompt[] = "";
 if (interactive) {
+	// TODO: prompt to include new history line count?
 	readline_wrapper rl(interactive ? prompt.c_str() : noprompt);
 	// do NOT delete this line string, it is already managed.
 	const char* line = NULL;
@@ -420,7 +441,8 @@ if (interactive) {
 #if 0
 		cout << "echo: " << line << endl;
 #endif
-		status = interpret_line(s, line);
+		status = interpret_line(s, line,
+			interactive || keep_noninteractive_history);
 		if (status != Command::NORMAL && status != Command::END) {
 			cerr << "error at line " << lineno << endl;
 		}
@@ -477,7 +499,7 @@ command_registry<Command>::__source(istream& i, state_type& s) {
 #if 0
 		cout << "echo: " << line << endl;
 #endif
-		status = interpret_line(s, line);
+		status = interpret_line(s, line, keep_noninteractive_history);
 	}	// end if
 	} while (i && continue_interpreter(status, false));
 	if ((status == Command::NORMAL) && comment_level) {
@@ -571,6 +593,106 @@ if (s) {
 		return Command::SYNTAX;
 	}
 } else	return Command::NORMAL;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Return a pair of integers in the history range [0,end].
+	Range is interpreted as half-open: [x,y) 
+	If start is negative, count backwards from the end.
+	If end is positive, it is relative to start.
+	If end is negative, it is backwards from the end.
+	Returning [x,x) is a null range.
+ */
+template <class Command>
+std::pair<int, int>
+command_registry<Command>::history_range(const int start, const int end) {
+	const int s = int(history.size());
+	if (start >= s) {
+		cerr << "Warning: reference past end-of-history." << endl;
+		return std::make_pair<int, int>(0, 0);	// don't care
+	}
+	if (s +start <= 0) {
+		cerr << "Warning: reference past beginning-of-history." << endl;
+		return std::make_pair<int, int>(0, 0);	// don't care
+	}
+	const int f = (start < 0 ? s +start -1 : // omit last command, 
+		start < s ? start : s);
+	const int l = (end < 0 ? s +end :
+		(end && (f +end < s) ? f +end: s));
+#if 0
+	const bool r = (l < f);
+	const int ll = r ? l : f;
+	if (r) {
+		cerr <<
+"Warning: history-end-reference is before beginning, taking start." << endl;
+		return std::make_pair(f, f+1);
+	}
+	INVARIANT(ll <= s);
+	INVARIANT(f <= ll);
+#endif
+	INVARIANT(f >= 0);
+	INVARIANT(l <= s);
+	return std::make_pair(f, l);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class Command>
+ostream&
+command_registry<Command>::dump_history(ostream& o, 
+	const int start, const int end) {
+	std::pair<int, int> p(history_range(start, end));
+	int& i(p.first);
+	int& l(p.second);
+	o << "history[" << i << ".." << l-1 << "]:" << endl;
+	for ( ; i<l; ++i) {
+		// print 0-based index
+		o << i << '\t' << history[i] << endl;
+	}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class Command>
+int
+command_registry<Command>::write_history(const string& fn) {
+	ofstream ofs(fn.c_str());
+	if (ofs) {
+		copy(history.begin(), history.end(), 
+			ostream_iterator<string>(ofs, "\n"));
+	} else {
+		cerr << "Error opening file `" << fn << "' for writing." << endl;
+		return Command::BADARG;
+	}
+	return Command::NORMAL;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Be sure to exclude self!
+ */
+template <class Command>
+int
+command_registry<Command>::rerun(state_type& s,
+		const int start, const int end) {
+	std::pair<int, int> p(history_range(start, end));
+	int& i(p.first);
+	const int& l(p.second);
+	// protect against self recursion! 
+	// with upper bound excluding this command!
+//	cout << "history-rerun[" << i << ".." << l-1 << "]:" << endl;
+	INVARIANT(i >= 0);
+	INVARIANT(l <= int(history.size()));
+	for ( ; i<l; ++i) {
+		// don't re-record the rerun lines
+		const int status = interpret_line(s, history[i], false);
+		if (status) {
+			cerr << "*** Stopped re-running after line " << i 
+				<< " due to error." << endl;
+			return status;
+		}
+	}
+	return Command::NORMAL;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

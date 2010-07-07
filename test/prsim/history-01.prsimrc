@@ -1,0 +1,17 @@
+# "history-01.prsimrc"
+# @haco@ inv.haco-c
+# testing basic history commands
+
+history-noninteractive
+history-noninteractive on
+echo FIRST!!!
+history
+history
+history
+history
+echo saving...
+history-save history-recorded-01.prsimrc
+echo HISTORY FILE CONTENTS:
+!cat history-recorded-01.prsimrc
+!rm -f history-recorded-01.prsimrc
+

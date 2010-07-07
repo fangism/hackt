@@ -6,7 +6,7 @@
 	To use, just instantiate template.  
 	TODO: many of these functions only depend on the module
 	and not the state, and could be refactored accordingly.
-	$Id: command_common.h,v 1.13 2009/11/11 00:34:02 fang Exp $
+	$Id: command_common.h,v 1.14 2010/07/07 23:01:25 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_COMMON_H__
@@ -41,6 +41,10 @@ DECLARE_COMMON_COMMAND_CLASS(Aliases)
 DECLARE_COMMON_COMMAND_CLASS(Interpret)
 DECLARE_COMMON_COMMAND_CLASS(EchoCommands)
 DECLARE_COMMON_COMMAND_CLASS(Repeat)
+DECLARE_COMMON_COMMAND_CLASS(History)
+DECLARE_COMMON_COMMAND_CLASS(HistoryNonInteractive)
+DECLARE_COMMON_COMMAND_CLASS(HistorySave)
+DECLARE_COMMON_COMMAND_CLASS(HistoryRerun)
 
 DECLARE_COMMON_COMMAND_CLASS(ChangeDir)
 DECLARE_COMMON_COMMAND_CLASS(PushDir)

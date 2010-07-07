@@ -1,0 +1,25 @@
+history-noninteractive: off
+FIRST!!! 
+history[0..0]:
+0	echo FIRST!!!
+history[0..1]:
+0	echo FIRST!!!
+1	history
+history[0..2]:
+0	echo FIRST!!!
+1	history
+2	history
+history[0..3]:
+0	echo FIRST!!!
+1	history
+2	history
+3	history
+saving... 
+HISTORY FILE CONTENTS: 
+echo FIRST!!!
+history
+history
+history
+history
+echo saving...
+history-save history-recorded-01.prsimrc

@@ -1,13 +1,15 @@
 /**
 	\file "sim/command_registry.h"
-	$Id: command_registry.h,v 1.13 2009/11/14 03:12:11 fang Exp $
+	$Id: command_registry.h,v 1.14 2010/07/07 23:01:26 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_REGISTRY_H__
 #define	__HAC_SIM_COMMAND_REGISTRY_H__
 
 #include <iosfwd>
+#include <vector>
 #include <string>
+#include <utility>
 #include "util/macros.h"
 #include "util/qmap.h"	// TODO: use std::map instead
 #include "util/tokenize_fwd.h"
@@ -125,9 +127,14 @@ private:
 	 */
 	static aliases_map_type		aliases;
 	/**
-		Directory stack state.
+		Directory stack state (to emulate cd, pushd, popd, ...).
 	 */
 	static directory_stack		dir_stack;
+	/**
+		Keep command history.
+	 */
+	typedef	std::vector<string>	history_type;
+	static history_type		history;
 	/**
 		For nested comment blocks, pseudo C-style.
 	 */
@@ -147,6 +154,11 @@ public:
 		TODO: use local switch instead?
 	 */
 	static bool			echo_commands;
+	/**
+		Whether or not to record history of sourced, 
+		non-interactive commands.  
+	 */
+	static bool			keep_noninteractive_history;
 	/**
 		Set to true if co-simulating, and thus, should forbid
 		user from manually advancing time with simulation commands.
@@ -186,7 +198,7 @@ public:
 
 	static
 	int
-	interpret_line(state_type&, const string&);
+	interpret_line(state_type&, const string&, const bool = false);
 
 	static
 	int
@@ -236,6 +248,25 @@ public:
 	void
 	list_aliases(ostream&);
 
+// history commands
+	static
+	std::pair<int, int>
+	history_range(const int, const int);
+
+	static
+	ostream&
+	dump_history(ostream&, const int, const int);
+
+	static
+	int
+	rerun(state_type&, const int, const int);
+
+	// save-to-file
+	static
+	int
+	write_history(const string&);
+
+// directory commands
 	static
 	bool
 	change_dir(const string&);

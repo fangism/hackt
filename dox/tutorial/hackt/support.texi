@@ -1,0 +1,45 @@
+@c "hackt/support.texi"
+@c $Id: support.texi,v 1.1 2010/07/07 23:01:22 fang Exp $
+
+@node Support
+@chapter Support
+
+This chapter describes some support for non-HACKT applications.
+
+@menu
+* Vim Syntax::
+* Emacs Syntax::
+@end menu
+
+@c ----------------------------------------------------------------------------
+@node Vim Syntax
+@section Vim Syntax
+@cindex vim
+@cindex syntax highlighting
+
+A @command{vim} syntax file is provided with HACKT.  
+By default, the syntax file is installed as 
+@file{PREFIX/share/hackt/vim/hac.vim}, 
+and a startup script is installed as 
+@file{PREFIX/share/hackt/vim/hac.vimrc}.
+To use the syntax file automatically, add the following lines in your
+@file{~/.vimrc}.
+
+@example
+filetype on
+syntax on
+source PREFIX/share/hackt/vim/hac.vimrc
+@end example
+
+Improvements to the syntax file are welcome!
+
+@c ----------------------------------------------------------------------------
+@node Emacs Syntax
+@section Emacs Syntax
+@cindex emacs
+@cindex syntax highlighting
+
+Sorry, I don't have an Emacs-lisp support file yet.
+Contributions are welcome!
+
+

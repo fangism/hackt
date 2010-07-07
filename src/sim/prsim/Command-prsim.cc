@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.69 2010/06/29 01:55:03 fang Exp $
+	$Id: Command-prsim.cc,v 1.70 2010/07/07 23:01:28 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -423,6 +423,46 @@ will terminate early with a diagnostic message.
 ***/
 typedef	Repeat<State>				Repeat;
 PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(Repeat, builtin)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/history.texi
+@deffn Command history [start [end]]
+Prints command history.
+If no arguments given, then print entire command history.
+If only @var{start} is given, print to the most recent line.
+If @var{start} is negative, count backwards from last line.
+If @var{end} is positive, count forward from @var{start}.
+If @var{end} is negative, count backward from last line.
+@end deffn
+
+@deffn Command history-noninteractive [on|off]
+Controls the recording of non-interactive commands in the history.
+@end deffn
+
+@deffn Command history-save file
+Writes command line history to file @var{file}.
+@end deffn
+
+@deffn Command history-rerun start [end]
+Reruns a set of previous commands.  
+@var{start} is the first line to rerun.
+If @var{end} is omitted, only one line is rerun.
+If @var{end} is negative, count backwards from the most recent to
+determine the last line to run in the range.
+If @var{end} is positive, take that as the number of lines to
+execute from @var{start}, inclusive.
+@end deffn
+@end texinfo
+***/
+typedef	History<State>				History;
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(History, builtin)
+typedef	HistoryNonInteractive<State>		HistoryNonInteractive;
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(HistoryNonInteractive, builtin)
+typedef	HistorySave<State>			HistorySave;
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(HistorySave, builtin)
+typedef	HistoryRerun<State>			HistoryRerun;
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(HistoryRerun, builtin)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***

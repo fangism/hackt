@@ -1,0 +1,25 @@
+FIRST!!! 
+Second! 
+Third... 
+fourth 
+history[0..3]:
+0	echo FIRST!!!
+1	echo Second!
+2	echo Third...
+3	echo fourth
+------------------------ 
+FIRST!!! 
+------------------------ 
+fourth 
+------------------------ 
+Warning: reference past end-of-history.
+------------------------ 
+FIRST!!! 
+Second! 
+------------------------ 
+Second! 
+Third... 
+------------------------ 
+history[15..15]:
+15	echo ------------------------
+------------------------ 

@@ -2,7 +2,7 @@
 	\file "sim/command_common.tcc"
 	Library of template command implementations, re-usable with
 	different state types.  
-	$Id: command_common.tcc,v 1.20 2010/03/15 17:21:12 fang Exp $
+	$Id: command_common.tcc,v 1.21 2010/07/07 23:01:26 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_COMMON_TCC__
@@ -311,6 +311,165 @@ void
 Repeat<State>::usage(ostream& o) {
 	o << "repeat <int> command...\n";
 	o << "Repeats the given command a fixed number of times." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(History, "history", 
+        "prints enumerated history of commands stdout")
+
+template <class State>
+int
+History<State>::main(state_type&, const string_list& args) {
+	const size_t a = args.size();
+if (a > 3) {
+	usage(cerr << "usage: ");
+	return command_type::SYNTAX;
+}
+	string_list::const_iterator i(++args.begin());
+	int f = 0;
+	int l = -1;
+if (a > 1) {
+	const string& lower(*i);
+	if (string_to_num(lower, f)) {
+		usage(cerr << "usage: ");
+		return command_type::BADARG;
+	}
+if (a > 2) {
+	++i;
+	const string& upper(*i);
+	if (string_to_num(upper, l)) {
+		usage(cerr << "usage: ");
+		return command_type::BADARG;
+	}
+}
+}
+	command_registry_type::dump_history(cout, f, l);
+	return command_type::NORMAL;
+}
+
+template <class State>
+void
+History<State>::usage(ostream& o) {
+	o << "history [start [end]]:\n"
+	"If no arguments given, then print entire command history.\n"
+	"If only START is given, print to the end.\n"
+	"If START is negative, count backwards from last line.\n"
+	"If END is positive, count forward from START,\n"
+	"If END is negative, count backward from last line."
+		<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(HistoryRerun, "history-rerun", 
+        "shortcut for re-running previous commands")
+
+template <class State>
+int
+HistoryRerun<State>::main(state_type& st, const string_list& args) {
+	const size_t a = args.size();
+	string_list::const_iterator i(++args.begin());
+	int f = 0;
+	int l = 1;	// default one line only
+if (a < 2 || a > 3) {
+	usage(cerr << "usage: ");
+	return command_type::SYNTAX;
+} else {
+	INVARIANT(i != args.end());
+	const string& lower(*i);
+	if (string_to_num(lower, f)) {
+		usage(cerr << "usage: ");
+		return command_type::BADARG;
+	}
+if (a == 3) {
+	++i;
+	INVARIANT(i != args.end());
+	const string& upper(*i);
+	if (string_to_num(upper, l)) {
+		usage(cerr << "usage: ");
+		return command_type::BADARG;
+	}
+}
+}
+	return command_registry_type::rerun(st, f, l);
+}
+
+template <class State>
+void
+HistoryRerun<State>::usage(ostream& o) {
+	o << "history-rerun start [end]:\n"
+	"Reruns partial command history.\n"
+	"If START is non-negative, use START as the first line.\n"
+	"If START is negative, count backwards from last line.\n"
+	"If end is omitted, rerun line START only.\n"
+	"If END is positive, count forward from START,\n"
+	"If END is negative, count backward from last line."
+		<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(HistorySave,
+	"history-save", "write command history to file")
+
+template <class State>
+int
+HistorySave<State>::main(state_type&, const string_list& args) {
+	const size_t s = args.size();
+	string_list::const_iterator i(++args.begin());
+if (s != 2) {
+	// error
+	usage(cerr << "usage: ");
+	return command_type::SYNTAX;
+}
+	return command_registry_type::write_history(*i);
+}
+
+template <class State>
+void
+HistorySave<State>::usage(ostream& o) {
+	o << "history-save FILE" << endl;
+	o << "Writes command-line history to file." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(HistoryNonInteractive,
+	"history-noninteractive",
+	"keep history of non-interactive commands")
+
+template <class State>
+int
+HistoryNonInteractive<State>::main(state_type&, const string_list& args) {
+	const size_t s = args.size();
+	string_list::const_iterator i(++args.begin());
+if (s > 2) {
+	// error
+	usage(cerr << "usage: ");
+	return command_type::SYNTAX;
+}
+if (s > 1) {
+	const string& a(*i);
+	if (a == "on") {
+		command_registry_type::keep_noninteractive_history = true;
+	} else if (a == "off") {
+		command_registry_type::keep_noninteractive_history = false;
+	} else {
+		usage(cerr << "usage: ");
+		return command_type::BADARG;
+	}
+} else {
+	// just show
+	cout << "history-noninteractive: " <<
+	(command_registry_type::keep_noninteractive_history ? "on" : "off")
+		<< endl;
+}
+	return command_type::NORMAL;
+}
+
+template <class State>
+void
+HistoryNonInteractive<State>::usage(ostream& o) {
+	o << "history-noninteractive [on|off]" << endl;
+	o << "Turns recording of non-interactive commands on or off." << endl;
+	o << "When no argument is give, just reports the current mode." << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

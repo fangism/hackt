@@ -8,7 +8,7 @@
 @c %**end of header
 
 @c "chpsim.texi"
-@c $Id: hackt.texi,v 1.3 2008/11/28 22:07:07 fang Exp $
+@c $Id: hackt.texi,v 1.4 2010/07/07 23:01:22 fang Exp $
 
 @dircategory Hierarchical Asynchronous Circuit Kompiler Toolkit (HACKT)
 @direntry
@@ -81,6 +81,7 @@ Permission is hereby granted to ...
 @include hackt/shell.texi
 @include hackt/diagnostics.texi
 @include hackt/legacy.texi
+@include hackt/support.texi
 
 @c ****************************** index ***************************************
 @node Command Index

@@ -1,0 +1,103 @@
+FIRST!!! 
+Second! 
+Third... 
+fourth 
+history[0..3]:
+0	echo FIRST!!!
+1	echo Second!
+2	echo Third...
+3	echo fourth
+------------------------ 
+history[0..5]:
+0	echo FIRST!!!
+1	echo Second!
+2	echo Third...
+3	echo fourth
+4	history
+5	echo ------------------------
+history[1..6]:
+1	echo Second!
+2	echo Third...
+3	echo fourth
+4	history
+5	echo ------------------------
+6	history 0
+history[2..7]:
+2	echo Third...
+3	echo fourth
+4	history
+5	echo ------------------------
+6	history 0
+7	history 1
+history[3..8]:
+3	echo fourth
+4	history
+5	echo ------------------------
+6	history 0
+7	history 1
+8	history 2
+------------------------ 
+history[7..10]:
+7	history 1
+8	history 2
+9	history 3
+10	echo ------------------------
+history[8..11]:
+8	history 2
+9	history 3
+10	echo ------------------------
+11	history -4
+history[9..12]:
+9	history 3
+10	echo ------------------------
+11	history -4
+12	history -4
+history[10..13]:
+10	echo ------------------------
+11	history -4
+12	history -4
+13	history -4
+-------- now check for error messages --------- 
+FIRST!!! 
+Second! 
+Third... 
+fourth 
+------------------------ 
+Warning: reference past beginning-of-history.
+history[0..-1]:
+------------------------ 
+Warning: reference past beginning-of-history.
+------------------------ 
+history[0..-178]:
+------------------------ 
+------------------------ 
+Warning: reference past end-of-history.
+history[0..-1]:
+------------------------ 
+Warning: reference past end-of-history.
+------------------------ 
+Warning: reference past end-of-history.
+history[0..-1]:
+------------------------ 
+Warning: reference past end-of-history.
+------------------------ 
+Warning: reference past beginning-of-history.
+history[0..-1]:
+------------------------ 
+Warning: reference past beginning-of-history.
+------------------------ 
+Warning: reference past beginning-of-history.
+history[0..-1]:
+------------------------ 
+Warning: reference past beginning-of-history.
+------------------------ 
+Warning: reference past end-of-history.
+history[0..-1]:
+------------------------ 
+Warning: reference past end-of-history.
+------------------------ 
+Warning: reference past end-of-history.
+history[0..-1]:
+------------------------ 
+Warning: reference past end-of-history.
+------------------------ 
