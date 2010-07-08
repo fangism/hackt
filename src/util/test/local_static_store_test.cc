@@ -8,7 +8,7 @@
 	doesn't seem to be destroyed.  
 	Don't know what the standard says about this behavior...
 
-	$Id: local_static_store_test.cc,v 1.9 2006/07/02 01:18:17 fang Exp $
+	$Id: local_static_store_test.cc,v 1.10 2010/07/08 07:55:56 fang Exp $
  */
 
 #define ENABLE_STACKTRACE		1
@@ -25,7 +25,7 @@ STATIC_TRACE_BEGIN("local_static_store_test.cc")
 // #include <string>
 #include "util/using_ostream.h"
 #include "named_pooled_thing.h"
-#include "util/memory/list_vector_pool.h"
+#include "util/memory/list_vector_pool.tcc"
 #include "util/stacktrace.h"
 #include "util/attributes.h"
 
