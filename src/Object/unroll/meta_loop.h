@@ -1,6 +1,6 @@
 /**
 	\file "Object/unroll/meta_loop.h"
-	$Id: meta_loop.h,v 1.3 2009/10/02 01:57:20 fang Exp $
+	$Id: meta_loop.h,v 1.4 2010/07/09 02:14:14 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_META_LOOP_H__
@@ -33,11 +33,9 @@ struct meta_loop {
 		ostream& (T::implementation_type::*)(ostream&, const C&) const
 			= &T::implementation_type::dump);
 
-	template <class F>
 	static
 	good_bool
-	unroll(const T&, const unroll_context& c, const node_pool_type&, F&, 
-		const char*);
+	unroll(const T&, const unroll_context& c, const char*);
 
 	static
 	void

@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS_base.h"
 	Structures for production rules.
-	$Id: PRS_base.h,v 1.11 2009/10/02 01:57:07 fang Exp $
+	$Id: PRS_base.h,v 1.12 2010/07/09 02:14:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_BASE_H__
@@ -122,8 +122,7 @@ virtual	PRS_EXPAND_COMPLEMENT_PROTO = 0;
  */
 #define	PRS_UNROLL_RULE_PROTO						\
 	good_bool							\
-	unroll(const unroll_context&, const node_pool_type&, 		\
-		PRS::footprint&) const
+	unroll(const unroll_context&) const
 
 virtual	PRS_UNROLL_RULE_PROTO = 0;
 
@@ -238,8 +237,7 @@ virtual	void
 
 #define	PRS_UNROLL_EXPR_PROTO						\
 	size_t								\
-	unroll(const unroll_context&, const node_pool_type&, 		\
-		PRS::footprint&) const
+	unroll(const unroll_context&) const
 
 virtual	PRS_UNROLL_EXPR_PROTO = 0;
 

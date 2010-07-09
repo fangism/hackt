@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.44 2010/07/09 00:03:34 fang Exp $
+	$Id: PRS.cc,v 1.45 2010/07/09 02:14:12 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -197,19 +197,19 @@ struct prs_expr::negation_normalizer {
 };	// end struct negation_normalizer
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	After simplification, could just use bind2nd(argval...)
+ */
 struct prs_expr::unroller {
 	const unroll_context& _context;
-	const node_pool_type& _node_pool;
-	PRS::footprint& _fpf;
 
-	unroller(const unroll_context& c, const node_pool_type& np, 
-		PRS::footprint& fpf) : _context(c), _node_pool(np), _fpf(fpf) {
-	}
+	explicit
+	unroller(const unroll_context& c) : _context(c) { }
 
 	size_t
 	operator () (const prs_expr_ptr_type& e) const {
 		NEVER_NULL(e);
-		return e->unroll(_context, _node_pool, _fpf);
+		return e->unroll(_context);
 	}
 
 };	// end struct unroller
@@ -391,13 +391,12 @@ __lookup_implicit_bool_port(const unroll_context& c, const char* n) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
-rule_set_base::unroll(const unroll_context& c, const node_pool_type& np, 
-		PRS::footprint& pfp) const {
+rule_set_base::unroll(const unroll_context& c) const {
 	STACKTRACE_VERBOSE;
 	const_iterator i(begin());
 	const const_iterator e(end());
 	for ( ; i!=e; i++) {
-		if (!(*i)->unroll(c, np, pfp).good)
+		if (!(*i)->unroll(c).good)
 			return good_bool(false);
 	}
 	return good_bool(true);
@@ -409,9 +408,9 @@ rule_set_base::unroll(const unroll_context& c, const node_pool_type& np,
 	into production rule footprint.  
  */
 good_bool
-rule_set::unroll(const unroll_context& c, const node_pool_type& np, 
-		PRS::footprint& pfp) const {
+rule_set::unroll(const unroll_context& c ) const {
 	STACKTRACE_VERBOSE;
+	PRS::footprint& pfp(c.get_target_footprint().get_prs_footprint());
 #if PRS_SUPPLY_OVERRIDES
 	PRS::footprint::supply_map_type& m(pfp.get_supply_map());
 {
@@ -488,7 +487,7 @@ rule_set::unroll(const unroll_context& c, const node_pool_type& np,
 	INVARIANT(pfp.current_GND_substrate);
 #endif
 #endif	// PRS_SUPPLY_OVERRIDES
-	if (!rule_set_base::unroll(c, np, pfp).good) {
+	if (!rule_set_base::unroll(c).good) {
 		return good_bool(false);
 	}
 #if PRS_SUPPLY_OVERRIDES
@@ -673,11 +672,11 @@ pull_base::check(void) const {
 	\param dir is the direction, true for up, false for down.
  */
 good_bool
-pull_base::unroll_base(const unroll_context& c, const node_pool_type& np, 
-		PRS::footprint& pfp, const bool dir) const {
+pull_base::unroll_base(const unroll_context& c, const bool dir) const {
 	STACKTRACE_VERBOSE;
 	// resolve guard expression
-	const size_t guard_expr_index = guard->unroll(c, np, pfp);
+	PRS::footprint& pfp(c.get_target_footprint().get_prs_footprint());
+	const size_t guard_expr_index = guard->unroll(c);
 	if (!guard_expr_index) {
 		this->dump(cerr << "Error unrolling production rule guard: "
 			<< endl << '\t', rule_dump_context()) << endl;
@@ -844,10 +843,9 @@ pull_up::expand_complement(void) {
 	TODO: check for complement bit
  */
 good_bool
-pull_up::unroll(const unroll_context& c, const node_pool_type& np, 
-		PRS::footprint& pfp) const {
+pull_up::unroll(const unroll_context& c) const {
 	STACKTRACE_VERBOSE;
-	return unroll_base(c, np, pfp, true);
+	return unroll_base(c, true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -932,10 +930,9 @@ pull_dn::expand_complement(void) {
 	TODO: check for complement bit
  */
 good_bool
-pull_dn::unroll(const unroll_context& c, const node_pool_type& np, 
-		PRS::footprint& pfp) const {
+pull_dn::unroll(const unroll_context& c) const {
 	STACKTRACE_VERBOSE;
-	return unroll_base(c, np, pfp, false);
+	return unroll_base(c, false);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -997,8 +994,7 @@ pass::expand_complement(void) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
-pass::unroll(const unroll_context& c, const node_pool_type& np, 
-		PRS::footprint& pfp) const {
+pass::unroll(const unroll_context& c) const {
 	FINISH_ME(Fang);
 	return good_bool(false);
 }
@@ -1057,9 +1053,8 @@ rule_conditional::dump(ostream& o, const rule_dump_context& c) const {
 	Unrolls the rules in the body of guard evaluates true.  
  */
 good_bool
-rule_conditional::unroll(const unroll_context& c, const node_pool_type& np, 
-		PRS::footprint& pfp) const {
-	return meta_conditional_type::unroll(*this, c, np, pfp, "PRS");
+rule_conditional::unroll(const unroll_context& c) const {
+	return meta_conditional_type::unroll(*this, c, "PRS");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1139,17 +1134,17 @@ subcircuit::dump(ostream& o, const rule_dump_context& c) const {
 	Check for non-nestedness with function-local static variable.
  */
 good_bool
-subcircuit::unroll(const unroll_context& c, const node_pool_type& np, 
-		PRS::footprint& pfp) const {
+subcircuit::unroll(const unroll_context& c) const {
 	STACKTRACE_VERBOSE;
 	static bool __lock__ = false;
 if (!__lock__) {
 	const value_saver<bool> __tmp(__lock__, true);
+	PRS::footprint& pfp(c.get_target_footprint().get_prs_footprint());
 	PRS::footprint::subcircuit_map_entry e(this);	// need name?
 	e.rules.first = pfp.get_rule_pool().size();
 	e.macros.first = pfp.get_macro_pool().size();
 	e.int_nodes.first = pfp.get_internal_node_pool().size();
-	const good_bool ret(nested_rules::unroll(c, np, pfp));
+	const good_bool ret(nested_rules::unroll(c));
 	// this works by virtue of tracking changes to the overall
 	// footprint pools and recording the differences as a part
 	// of subcircuit tracking, kinda weird, no?
@@ -1220,9 +1215,8 @@ rule_loop::dump(ostream& o, const rule_dump_context& c) const {
 	Unrolls a set of loop-dependent production rules.  
  */
 good_bool
-rule_loop::unroll(const unroll_context& c, const node_pool_type& np, 
-		PRS::footprint& pfp) const {
-	return meta_loop_type::unroll(*this, c, np, pfp, "production rule");
+rule_loop::unroll(const unroll_context& c) const {
+	return meta_loop_type::unroll(*this, c, "production rule");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1299,9 +1293,10 @@ expr_loop_base::dump(ostream& o, const expr_dump_context& c,
 	TODO: resolve NULL expressions (CAST Defect Report)
  */
 size_t
-expr_loop_base::unroll_base(const unroll_context& c, const node_pool_type& np, 
-		PRS::footprint& pfp, const char type_enum) const {
+expr_loop_base::unroll_base(const unroll_context& c, 
+		const char type_enum) const {
 	// STACKTRACE_VERBOSE;
+	PRS::footprint& pfp(c.get_target_footprint().get_prs_footprint());
 	// first, resolve bounds of the loop range, using current context
 	const_range cr;
 	if (!range->unroll_resolve_range(c, cr).good) {
@@ -1338,7 +1333,7 @@ expr_loop_base::unroll_base(const unroll_context& c, const node_pool_type& np,
 	const unroll_context cc(&f, c);
 	list<size_t> expr_indices;
 	for (p = min; p <= max; ++p) {
-		expr_indices.push_back(body_expr->unroll(cc, np, pfp));
+		expr_indices.push_back(body_expr->unroll(cc));
 	}
 	PRS::footprint::expr_node&
 		new_expr(pfp.push_back_expr(type_enum, expr_indices.size()));
@@ -1399,13 +1394,14 @@ if (expr) {
 	We pass in an expr-index because the previous reference may be stale.
  */
 good_bool
-precharge_expr::unroll(const unroll_context& c, const node_pool_type& np, 
-		PRS::footprint& pfp, const size_t eid, 
+precharge_expr::unroll(const unroll_context& c, 
+		const size_t eid, 
 		const size_t ind) const {
 	STACKTRACE_VERBOSE;
 	NEVER_NULL(expr);
-	const size_t p = expr->unroll(c, np, pfp);
+	const size_t p = expr->unroll(c);
 if (p) {
+	PRS::footprint& pfp(c.get_target_footprint().get_prs_footprint());
 	pfp.get_expr_pool()[eid].push_back_precharge(ind, p, dir);
 	return good_bool(true);
 } else {
@@ -1590,12 +1586,12 @@ and_expr::negation_normalize(void) {
 		else return 0.
  */
 size_t
-and_expr::unroll(const unroll_context& c, const node_pool_type& np, 
-		PRS::footprint& pfp) const {
+and_expr::unroll(const unroll_context& c) const {
 	STACKTRACE_VERBOSE;
 	list<size_t> expr_indices;
 	transform(begin(), end(), back_inserter(expr_indices), 
-		prs_expr::unroller(c, np, pfp));
+		prs_expr::unroller(c));
+	PRS::footprint& pfp(c.get_target_footprint().get_prs_footprint());
 	PRS::footprint::expr_node&
 		new_expr(pfp.push_back_expr(
 			PRS_AND_EXPR_TYPE_ENUM, expr_indices.size()));
@@ -1618,7 +1614,7 @@ and_expr::unroll(const unroll_context& c, const node_pool_type& np,
 	// sorted sparse insert
 	for ( ; i!=e; ++i, ++j) {
 	if (*i) {
-		if (!i->unroll(c, np, pfp, ret, j).good) {
+		if (!i->unroll(c, ret, j).good) {
 			cerr << "Error resolving prechage expression at:"
 				<< endl;
 			return 0;
@@ -1808,10 +1804,9 @@ and_expr_loop::negation_normalize(void) {
 		else return 0.
  */
 size_t
-and_expr_loop::unroll(const unroll_context& c, const node_pool_type& np, 
-		PRS::footprint& pfp) const {
+and_expr_loop::unroll(const unroll_context& c) const {
 	STACKTRACE_VERBOSE;
-	return expr_loop_base::unroll_base(c, np, pfp, PRS_AND_EXPR_TYPE_ENUM);
+	return expr_loop_base::unroll_base(c, PRS_AND_EXPR_TYPE_ENUM);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1922,12 +1917,12 @@ or_expr::negation_normalize(void) {
 	\return index > 0 if successful, else 0.
  */
 size_t
-or_expr::unroll(const unroll_context& c, const node_pool_type& np, 
-		PRS::footprint& pfp) const {
+or_expr::unroll(const unroll_context& c) const {
 	STACKTRACE_VERBOSE;
 	list<size_t> expr_indices;
 	transform(begin(), end(), back_inserter(expr_indices), 
-		prs_expr::unroller(c, np, pfp));
+		prs_expr::unroller(c ));
+	PRS::footprint& pfp(c.get_target_footprint().get_prs_footprint());
 	PRS::footprint::expr_node&
 		new_expr(pfp.push_back_expr(
 			PRS_OR_EXPR_TYPE_ENUM, expr_indices.size()));
@@ -2079,10 +2074,9 @@ or_expr_loop::negation_normalize(void) {
 		else return 0.
  */
 size_t
-or_expr_loop::unroll(const unroll_context& c, const node_pool_type& np, 
-		PRS::footprint& pfp) const {
+or_expr_loop::unroll(const unroll_context& c) const {
 	STACKTRACE_VERBOSE;
-	return expr_loop_base::unroll_base(c, np, pfp, PRS_OR_EXPR_TYPE_ENUM);
+	return expr_loop_base::unroll_base(c, PRS_OR_EXPR_TYPE_ENUM);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2193,15 +2187,16 @@ not_expr::negation_normalize(void) {
 	Unrolls a production rule expression.  
  */
 size_t
-not_expr::unroll(const unroll_context& c, const node_pool_type& np, 
-		PRS::footprint& pfp) const {
+not_expr::unroll(const unroll_context& c
+		) const {
 	STACKTRACE_VERBOSE;
-	const size_t expr_ind = var->unroll(c, np, pfp);
+	const size_t expr_ind = var->unroll(c);
 	if (!expr_ind) {
 		cerr << "Error unrolling production rule expression." << endl;
 		var->dump(cerr << '\t') << endl;
 		return 0;
 	}
+	PRS::footprint& pfp(c.get_target_footprint().get_prs_footprint());
 	PRS::footprint::expr_node&
 		new_expr(pfp.push_back_expr(PRS_NOT_EXPR_TYPE_ENUM, 1));
 	new_expr[1] = expr_ind;
@@ -2371,9 +2366,9 @@ literal::unroll_node(const unroll_context& c) const {
 	TODO: adjust for internal node
  */
 size_t
-literal::unroll(const unroll_context& c, const node_pool_type& np, 
-		PRS::footprint& pfp) const {
+literal::unroll(const unroll_context& c) const {
 	PRS::footprint::expr_node* new_expr = NULL;
+	PRS::footprint& pfp(c.get_target_footprint().get_prs_footprint());
 if (is_internal()) {
 	const node_literal_ptr_type
 		nref(unroll_node_reference(c));
@@ -2541,13 +2536,12 @@ macro::expand_complement(void) {
 	The name is used to lookup a function.  
 	Future: may need an additional context/options argument.  
 	TODO: can insert diagnostic macros too!  meta-programmable.
-	NOTE: don't need node_pool_type.
  */
 good_bool
-macro::unroll(const unroll_context& c, const node_pool_type& np, 
-		PRS::footprint& pfp) const {
+macro::unroll(const unroll_context& c) const {
 	STACKTRACE_VERBOSE;
 	// at least check the instance references first...
+	PRS::footprint& pfp(c.get_target_footprint().get_prs_footprint());
 	PRS::footprint::macro& new_macro_call(pfp.push_back_macro(name));
 	const size_t perr = unroll_params(c, new_macro_call.params);
 	if (perr) {

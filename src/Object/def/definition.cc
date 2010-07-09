@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.51 2010/05/26 00:46:45 fang Exp $
+ 	$Id: definition.cc,v 1.52 2010/07/09 02:14:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -3222,20 +3222,16 @@ process_definition::unroll_lang(const unroll_context& c) const {
 	footprint& f(c.get_target_footprint());
 	// after all aliases have been successfully assigned local IDs
 	// then process the PRS and CHP bodies
-	if ((meta_type == META_TYPE_PROCESS) &&
-		!prs.unroll(c, f.get_instance_pool<bool_tag>(), 
-			f.get_prs_footprint()).good) {
+	if ((meta_type == META_TYPE_PROCESS) && !prs.unroll(c).good) {
 		// already have error message
 		return good_bool(false);
 	}
-	if (!spec.unroll(c, f.get_instance_pool<bool_tag>(), 
-			f.get_spec_footprint()).good) {
+	if (!spec.unroll(c).good) {
 		// already have error message
 		return good_bool(false);
 	}
 	// CHP unrolling also checks channel connectivity now
-	if ((meta_type == META_TYPE_PROCESS) &&
-		!chp.unroll(c, f).good) {
+	if ((meta_type == META_TYPE_PROCESS) && !chp.unroll(c).good) {
 		// already have error message
 		return good_bool(false);
 	}

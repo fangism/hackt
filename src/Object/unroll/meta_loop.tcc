@@ -1,6 +1,6 @@
 /**
 	\file "Object/unroll/meta_loop.tcc"
-	$Id: meta_loop.tcc,v 1.4 2009/10/02 01:57:21 fang Exp $
+	$Id: meta_loop.tcc,v 1.5 2010/07/09 02:14:14 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_META_LOOP_TCC__
@@ -60,10 +60,9 @@ meta_loop<T>::dump(const T& mc, ostream& o, const C& c, const char op,
 	\param str diagnostic string.  
  */
 template <class T>
-template <class F>
 good_bool
 meta_loop<T>::unroll(const T& mc, const unroll_context& c, 
-		const node_pool_type& np, F& sfp, const char* str) {
+		const char* str) {
 	// most of this copied from expr_loop_base::unroll...
 	STACKTRACE_VERBOSE;
 	// first, resolve bounds of the loop range, using current context
@@ -94,7 +93,7 @@ meta_loop<T>::unroll(const T& mc, const unroll_context& c,
 		// acquire direct reference
 	const unroll_context cc(&f, c);
 	for (p = min; p <= max; ++p) {
-	if (!mc.implementation_type::unroll(cc, np, sfp).good) {
+	if (!mc.implementation_type::unroll(cc).good) {
 		cerr << "Error resolving " << str << " in loop:"
 			<< endl;
 		mc.ind_var->dump_qualified_name(cerr, dump_flags::verbose)

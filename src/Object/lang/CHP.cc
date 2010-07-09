@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.32 2010/04/07 00:12:46 fang Exp $
+	$Id: CHP.cc,v 1.33 2010/07/09 02:14:11 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -626,11 +626,11 @@ concurrent_actions::unroll_resolve_copy(const unroll_context& c
 	Called by process_definition::create_complete_type().
  */
 good_bool
-concurrent_actions::unroll(const unroll_context& c,
-		entity::footprint& f) const {
+concurrent_actions::unroll(const unroll_context& c) const {
 	STACKTRACE_VERBOSE;
 if (!empty()) {
-	this_type& t(f.get_chp_footprint());	// allocates on-demand
+	this_type& t(c.get_target_footprint().get_chp_footprint());
+		// allocates on-demand
 	return __unroll(c, t);
 } else {
 	// don't bother if is empty

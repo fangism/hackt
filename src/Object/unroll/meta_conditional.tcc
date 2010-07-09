@@ -1,7 +1,7 @@
 /**
 	\file "Object/unroll/meta_conditional.tcc"
 	Helper functions for repetitive conditional constructs.  
-	$Id: meta_conditional.tcc,v 1.3 2009/10/02 01:57:20 fang Exp $
+	$Id: meta_conditional.tcc,v 1.4 2010/07/09 02:14:14 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_META_CONDITIONAL_TCC__
@@ -87,19 +87,17 @@ meta_conditional<T>::dump(const T& mc, ostream& o, const C& c,
 	\param str the string associated with the host type for diagnostics.  
  */
 template <class T>
-template <class F>
 good_bool
 meta_conditional<T>::unroll(const T& mc,
 		const unroll_context& c,
-		const node_pool_type& np,
-		F& sfp, const char* str) {
+		const char* str) {
 	clause_iterator ci(mc.clauses.begin()), ce(mc.clauses.end());
 	guard_iterator gi(mc.guards_begin()), ge(mc.guards_end());
 for ( ; ci!=ce; ++ci, ++gi) {
 	const meta_conditional_base::guard_ptr_type& guard(*gi);
 	// guards may be NULL-terminated with else clause
 	if (!guard) {
-		if (!ci->unroll(c, np, sfp).good) {
+		if (!ci->unroll(c).good) {
 			cerr << "Error encountered in conditional " << str
 				<< " else-clause." << endl;
 			return good_bool(false);
@@ -116,7 +114,7 @@ for ( ; ci!=ce; ++ci, ++gi) {
 	// no change in context necessary
 	if (g->static_constant_value()) {
 		const element_type& if_clause(*ci);
-		if (!if_clause.unroll(c, np, sfp).good) {
+		if (!if_clause.unroll(c).good) {
 			cerr << "Error encountered in conditional " << str
 				<< " if-clause." << endl;
 			return good_bool(false);

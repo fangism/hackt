@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/SPEC.h"
-	$Id: SPEC.h,v 1.9 2010/07/09 00:03:35 fang Exp $
+	$Id: SPEC.h,v 1.10 2010/07/09 02:14:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_SPEC_H__
@@ -38,8 +38,7 @@ public:
  */
 #define	SPEC_UNROLL_DIRECTIVE_PROTO					\
 	good_bool							\
-	unroll(const unroll_context&, const node_pool_type&, 		\
-		SPEC::footprint&) const
+	unroll(const unroll_context&) const
 
 virtual	SPEC_UNROLL_DIRECTIVE_PROTO = 0;
 

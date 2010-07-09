@@ -3,7 +3,7 @@
 	Helper functions for repetitive conditional constructs.  
 	All functions are static members of a wrapper class
 	for convenient friendship.  
-	$Id: meta_conditional.h,v 1.3 2009/10/02 01:57:19 fang Exp $
+	$Id: meta_conditional.h,v 1.4 2010/07/09 02:14:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_META_CONDITIONAL_H__
@@ -50,11 +50,9 @@ dump(const T&, ostream&, const C&,
 		= &T::clause_list_type::value_type::dump);
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-template <class F>
 static
 good_bool
-unroll(const T&, const unroll_context&,
-		const node_pool_type&, F&, const char*);
+unroll(const T&, const unroll_context&, const char*);
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 static

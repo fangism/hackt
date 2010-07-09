@@ -5,13 +5,22 @@
 
 2010-07-08	David Fang		<fangism@users.sourceforge.net>
 
-	* HACKT-00-01-04-main-00-84-02-a: (replace me)
+	* HACKT-00-01-04-main-00-84-02-b:
+	  Interface simplification.
+		PRS, CHP, SPEC: unroll methods reduced parameters, 
+		as target-footprint and pools can be easily deduced from
+		the unroll_context reference.  (I think this transformation
+		was made possible by the scalability-rewrite from months ago.)
+	  All tests still pass.
+	  Next: introducing PSPEC for process spec directives.
+
+
+	* HACKT-00-01-04-main-00-84-02-a:
 	  Class re-factoring.
 	  Generalized directive base to take template parameter for literal 
 		type, existing spec directives are all bool_literals.  
 		Planning to reuse code for process spec directives.
 		No functional changes, regressions pass.  
-	  Next: simplifying lang::unroll prototypes.
 
 
 2010-07-06	David Fang		<fangism@users.sourceforge.net>

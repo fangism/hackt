@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/SPEC.cc"
-	$Id: SPEC.cc,v 1.7 2010/07/09 00:03:35 fang Exp $
+	$Id: SPEC.cc,v 1.8 2010/07/09 02:14:13 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -13,6 +13,7 @@
 #include "Object/lang/PRS_literal_unroller.h"	// for PRS::literal
 #include "Object/lang/PRS_footprint.h"	// for PRS::literal
 #include "Object/persistent_type_hash.h"
+#include "Object/def/footprint.h"
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
 #include "Object/unroll/meta_conditional.tcc"
@@ -104,10 +105,10 @@ directive::dump(ostream& o, const PRS::rule_dump_context& c) const {
 	Implementation ripped off of PRS::macro::unroll().
  */
 good_bool
-directive::unroll(const unroll_context& c, const node_pool_type&, 
-		footprint& sfp) const {
+directive::unroll(const unroll_context& c) const {
 	STACKTRACE_VERBOSE;
 	// at least check the instance references first...
+	footprint& sfp(c.get_target_footprint().get_spec_footprint());
 	footprint_directive& new_directive(sfp.push_back_directive(name));
 	const size_t perr = unroll_params(c, new_directive.params);
 	if (perr) {
@@ -174,13 +175,15 @@ invariant::dump(ostream& o, const PRS::rule_dump_context& c) const {
 	Kludge: SPEC directive crossing over into PRS body...
  */
 good_bool
-invariant::unroll(const unroll_context& c, const node_pool_type& np, 
-		footprint& sfp) const {
+invariant::unroll(const unroll_context& c) const {
 	STACKTRACE_VERBOSE;
 	// append to PRS footprint of target context
 	// this should work inside conditionals and loops
-	PRS::footprint& pfp(c.get_target_footprint().get_prs_footprint());
-	const size_t n = invar_expr->unroll(c, np, pfp);
+	entity::footprint& fp(c.get_target_footprint());
+	PRS::footprint& pfp(fp.get_prs_footprint());
+	const size_t n = invar_expr->unroll(c
+		// np, pfp
+		);
 	// returns 1-indexed!!! (but expr_pool is also offset-by-1)
 	if (!n) {
 		cerr << "Error resolving invariant expression." << endl;
@@ -232,12 +235,11 @@ directives_set::dump(ostream& o, const rule_dump_context& rdc) const {
 	suitable for complete types.  
  */
 good_bool
-directives_set::unroll(const unroll_context& c, const node_pool_type& np, 
-		footprint& sfp) const {
+directives_set::unroll(const unroll_context& c) const {
 	const_iterator i(begin());
 	const const_iterator e(end());
 	for ( ; i!=e; ++i) {
-		if (!(*i)->unroll(c, np, sfp).good)
+		if (!(*i)->unroll(c).good)
 			return good_bool(false);
 			// will already have error message
 	}
@@ -294,9 +296,8 @@ directives_loop::dump(ostream& o, const rule_dump_context& c) const {
 	Unrolls a set of loop-dependent spec directives.  
  */
 good_bool
-directives_loop::unroll(const unroll_context& c, const node_pool_type& np, 
-		footprint& sfp) const {
-	return meta_loop_type::unroll(*this, c, np, sfp, "spec directive");
+directives_loop::unroll(const unroll_context& c) const {
+	return meta_loop_type::unroll(*this, c, "spec directive");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -355,9 +356,8 @@ directives_conditional::dump(ostream& o, const rule_dump_context& c) const {
 	Unrolls the directives in the body of guard evaluates true.  
  */
 good_bool
-directives_conditional::unroll(const unroll_context& c,
-		const node_pool_type& np, footprint& sfp) const {
-	return meta_conditional_type::unroll(*this, c, np, sfp, "SPEC");
+directives_conditional::unroll(const unroll_context& c) const {
+	return meta_conditional_type::unroll(*this, c, "SPEC");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

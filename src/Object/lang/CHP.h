@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP.h,v 1.22 2007/09/28 05:36:54 fang Exp $
+	$Id: CHP.h,v 1.23 2010/07/09 02:14:12 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_H__
@@ -167,7 +167,7 @@ public:
 	CHP_ACTION_ACCEPT_PROTO;
 
 	good_bool
-	unroll(const unroll_context&, entity::footprint&) const;
+	unroll(const unroll_context&) const;
 
 private:
 	good_bool

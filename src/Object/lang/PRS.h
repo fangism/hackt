@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.h"
 	Structures for production rules.
-	$Id: PRS.h,v 1.32 2010/07/09 00:03:35 fang Exp $
+	$Id: PRS.h,v 1.33 2010/07/09 02:14:12 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_H__
@@ -174,8 +174,8 @@ protected:
 	dump_base(ostream&, const rule_dump_context&, const char) const;
 
 	good_bool
-	unroll_base(const unroll_context&, const node_pool_type&, 
-		PRS::footprint&, const bool) const;
+	unroll_base(const unroll_context&, 
+		const bool) const;
 
 	void
 	collect_transient_info_base(persistent_object_manager&) const;
@@ -517,8 +517,7 @@ protected:
 	dump(ostream&, const expr_dump_context&, const char) const;
 
 	size_t
-	unroll_base(const unroll_context&, const node_pool_type&, 
-		PRS::footprint&, const char) const;
+	unroll_base(const unroll_context&, const char) const;
 
 	void
 	collect_transient_info_base(persistent_object_manager&) const;
@@ -551,9 +550,7 @@ public:
 	operator bool () const { return expr; }
 
 	good_bool
-	unroll(const unroll_context&, const node_pool_type&,
-		PRS::footprint&, const size_t, 
-		const size_t) const;
+	unroll(const unroll_context&, const size_t, const size_t) const;
 
 
 //	PRS_UNROLL_EXPR_PROTO;
