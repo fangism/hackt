@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.h"
 	Structures for production rules.
-	$Id: PRS.h,v 1.31 2010/04/27 18:33:17 fang Exp $
+	$Id: PRS.h,v 1.32 2010/07/09 00:03:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_H__
@@ -829,7 +829,7 @@ public:
 	(not to be confused with AST::parser::PRS::macro)
 	TODO: support parameter values.  
  */
-class macro : public rule, public directive_source {
+class macro : public rule, public bool_directive_source {
 	typedef	macro				this_type;
 	generic_attribute_list_type		attr;
 public:

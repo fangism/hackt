@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/SPEC.h"
-	$Id: SPEC.h,v 1.8 2008/11/23 17:53:56 fang Exp $
+	$Id: SPEC.h,v 1.9 2010/07/09 00:03:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_SPEC_H__
@@ -52,7 +52,7 @@ virtual	ostream&
 /**
 	Directive placeholder.  
  */
-class directive : public directive_abstract, public directive_source {
+class directive : public directive_abstract, public bool_directive_source {
 	typedef	directive				this_type;
 public:
 	directive();

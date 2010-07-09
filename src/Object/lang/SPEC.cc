@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/SPEC.cc"
-	$Id: SPEC.cc,v 1.6 2008/11/23 17:53:55 fang Exp $
+	$Id: SPEC.cc,v 1.7 2010/07/09 00:03:35 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -75,11 +75,11 @@ struct directive_abstract::dumper {
 //=============================================================================
 // class directive method definitions
 
-directive::directive() : directive_abstract(), directive_source() { }
+directive::directive() : directive_abstract(), bool_directive_source() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 directive::directive(const string& n) :
-		directive_abstract(), directive_source(n) { }
+		directive_abstract(), bool_directive_source(n) { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 directive::~directive() { }
@@ -96,7 +96,7 @@ CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(directive)
  */
 ostream&
 directive::dump(ostream& o, const PRS::rule_dump_context& c) const {
-	return directive_source::dump(o, c);
+	return bool_directive_source::dump(o, c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -104,7 +104,7 @@ directive::dump(ostream& o, const PRS::rule_dump_context& c) const {
 	Implementation ripped off of PRS::macro::unroll().
  */
 good_bool
-directive::unroll(const unroll_context& c, const node_pool_type& np, 
+directive::unroll(const unroll_context& c, const node_pool_type&, 
 		footprint& sfp) const {
 	STACKTRACE_VERBOSE;
 	// at least check the instance references first...

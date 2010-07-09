@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/SPEC_fwd.h"
 	Useful forward declarations for SPEC headers.  
-	$Id: SPEC_fwd.h,v 1.5 2008/03/17 23:02:32 fang Exp $
+	$Id: SPEC_fwd.h,v 1.6 2010/07/09 00:03:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_SPEC_FWD_H__
@@ -22,10 +22,12 @@ struct bool_tag;
 class bool_literal;
 template <class> class state_instance;
 
+#if 0
 // source types
 typedef	std::default_vector<bool_literal>::type	directive_source_group_type;
 typedef std::default_vector<directive_source_group_type>::type
 						directive_source_nodes_type;
+#endif
 typedef	std::default_vector<util::memory::count_ptr<const param_expr> >::type	
 						directive_source_params_type;
 // unrolled types (resolved parameters)

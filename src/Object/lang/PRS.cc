@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.43 2010/04/27 18:33:16 fang Exp $
+	$Id: PRS.cc,v 1.44 2010/07/09 00:03:34 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -2289,7 +2289,7 @@ literal::dump(ostream& o, const expr_dump_context& c) const {
 	base_type::dump(o, c);
 if (!params.empty() || !attr.empty()) {
 	o << '<';
-	directive_source::dump_params_bare(params, o, c);
+	bool_directive_source::dump_params_bare(params, o, c);
 	if (!attr.empty()) {
 		attr.dump(o << ';', c);
 	}
@@ -2404,7 +2404,7 @@ if (is_internal()) {
 	(*new_expr)[1] = node_index;
 }	// end if int_node
 	// TODO: should attributes even apply to internal nodes?
-	const size_t perr = directive_source::unroll_params(params, c,
+	const size_t perr = bool_directive_source::unroll_params(params, c,
 			new_expr->params);
 	if (perr) {
 		cerr << "Error resolving rule literal parameter " << perr
@@ -2436,7 +2436,8 @@ literal::unroll_copy(const unroll_context& c,
 	// copied from above
 	directive_base_params_type crpar;
 	literal_params_type rpar;
-	const size_t perr = directive_source::unroll_params(params, c, crpar);
+	const size_t perr =
+		bool_directive_source::unroll_params(params, c, crpar);
 	if (perr) {
 		cerr << "Error resolving rule literal parameter " << perr
 			<< " in rule." << endl;
@@ -2494,10 +2495,10 @@ literal::load_object(const persistent_object_manager& m, istream& i) {
 //=============================================================================
 // class macro method definitions
 
-macro::macro() : rule(), directive_source(), attr() { }
+macro::macro() : rule(), bool_directive_source(), attr() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-macro::macro(const string& n) : rule(), directive_source(n), attr() { }
+macro::macro(const string& n) : rule(), bool_directive_source(n), attr() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 macro::~macro() { }
@@ -2513,7 +2514,7 @@ if (!params.empty() || !attr.empty()
 		) {
 	o << '<';
 	const expr_dump_context edc(c);
-	directive_source::dump_params_bare(params, o, edc);
+	bool_directive_source::dump_params_bare(params, o, edc);
 	if (!attr.empty()) {
 		attr.dump(o << ';', edc);
 	}
