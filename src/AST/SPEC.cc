@@ -1,6 +1,6 @@
 /**
 	\file "AST/SPEC.cc"
-	$Id: SPEC.cc,v 1.15 2010/05/13 00:32:01 fang Exp $
+	$Id: SPEC.cc,v 1.16 2010/07/12 17:46:51 fang Exp $
  */
 
 #include <iostream>
@@ -47,6 +47,7 @@ using std::back_inserter;
 using entity::definition_base;
 using entity::process_definition;
 using entity::user_def_chan;
+using entity::SPEC::bool_directive;
 using std::mem_fun_ref;
 using std::find_if;
 
@@ -101,8 +102,8 @@ directive::check_spec(context& c) const {
 		return;		// skip the rest of this
 	}
 	const entity::SPEC::cflat_spec_definition_entry sde(f->second);
-	const count_ptr<entity::SPEC::directive>
-		ret(new entity::SPEC::directive(*name));
+	const count_ptr<bool_directive>
+		ret(new bool_directive(*name));
 if (params) {
 	if (!sde.check_num_params(params->size()).good) {
 		// already have error message

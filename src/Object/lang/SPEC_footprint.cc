@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/SPEC_footprint.cc"
-	$Id: SPEC_footprint.cc,v 1.7 2010/04/07 00:12:49 fang Exp $
+	$Id: SPEC_footprint.cc,v 1.8 2010/07/12 17:46:57 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -97,9 +97,9 @@ footprint::dump_directive(const footprint_directive& d, ostream& o,
 	const_iterator i(d.nodes.begin());
 	const const_iterator e(d.nodes.end());
 	INVARIANT(i!=e);
-	directive_base::dump_node_group(*i, o, np);
+	bool_directive_base::dump_node_group(*i, o, np);
 	for (++i; i!=e; ++i) {
-		directive_base::dump_node_group(*i, o << ',', np);
+		bool_directive_base::dump_node_group(*i, o << ',', np);
 	}
 	return o << ')';
 }

@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/SPEC_footprint.h"
-	$Id: SPEC_footprint.h,v 1.5 2010/04/07 00:12:49 fang Exp $
+	$Id: SPEC_footprint.h,v 1.6 2010/07/12 17:46:58 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_SPEC_FOOTPRINT_H__
@@ -26,12 +26,12 @@ typedef	PRS::cflat_visitor		spec_visitor;
  */
 class footprint_directive : 
 		public PRS::cflat_visitee, 
-		public directive_base {
+		public bool_directive_base {
 public:
-	footprint_directive() : directive_base() { }
+	footprint_directive() : bool_directive_base() { }
 
 	explicit
-	footprint_directive(const string& k) : directive_base(k) { }
+	footprint_directive(const string& k) : bool_directive_base(k) { }
 
 	// everything else inherited from directive_base
 

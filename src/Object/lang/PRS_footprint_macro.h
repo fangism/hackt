@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint_macro.h"
-	$Id: PRS_footprint_macro.h,v 1.6 2010/04/02 22:18:34 fang Exp $
+	$Id: PRS_footprint_macro.h,v 1.7 2010/07/12 17:46:54 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_FOOTPRINT_MACRO_H__
@@ -17,14 +17,15 @@ namespace PRS {
 /**
 	A named macro taking node indices as arguments.  
  */
-class footprint_macro : public cflat_visitee, public directive_base {
+class footprint_macro : public cflat_visitee, public bool_directive_base {
+	typedef	bool_directive_base		parent_type;
 public:
 	resolved_attribute_list_type		attributes;
 
-	footprint_macro() : directive_base() { }
+	footprint_macro() : bool_directive_base() { }
 
 	explicit
-	footprint_macro(const string& s) : directive_base(s) { }
+	footprint_macro(const string& s) : bool_directive_base(s) { }
 
 	// everything else inherited from directive_base
 

@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/directive_base.h"
-	$Id: directive_base.h,v 1.4 2009/09/14 21:17:05 fang Exp $
+	$Id: directive_base.h,v 1.5 2010/07/12 17:47:00 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_DIRECTIVE_BASE_H__
@@ -29,32 +29,22 @@ using util::persistent_object_manager;
  */
 class directive_base {
 public:
-	/**
-		Valid entries are non-zero.
-	 */
-	typedef	directive_base_nodes_type		nodes_type;
 	typedef	directive_base_params_type		params_type;
-	typedef	SPEC::node_pool_type			node_pool_type;
 // too lazy to privatize for now...
 public:
 	string				name;
 	params_type			params;
-	nodes_type			nodes;
 public:
 	directive_base();
 
 	explicit
-	directive_base(const string& s);
+	directive_base(const string&);
 
 	~directive_base();
 
 	/// \return 1-indexed offset of the first error (if any), else 0
 	size_t
 	first_param_error(void) const;
-
-	/// \return 1-indexed offset of the first error (if any), else 0
-	size_t
-	first_node_error(void) const;
 
 	static
 	ostream&
@@ -67,11 +57,7 @@ public:
 	ostream&
 	dump_params(ostream&) const;
 
-	static
-	ostream&
-	dump_node_group(const directive_node_group_type&, ostream&, 
-		const node_pool_type&);
-
+protected:
 	void
 	collect_transient_info_base(persistent_object_manager&) const;
 
@@ -81,6 +67,46 @@ public:
 	void
 	load_object_base(const persistent_object_manager&, istream&);
 
+};	// end struct directive_base
+
+//-----------------------------------------------------------------------------
+class generic_directive_base : public directive_base {
+public:
+	/**
+		Valid entries are non-zero.
+	 */
+	typedef	directive_base_nodes_type		nodes_type;
+	typedef	SPEC::node_pool_type			node_pool_type;
+	nodes_type			nodes;
+
+	generic_directive_base();
+
+	explicit
+	generic_directive_base(const string&);
+
+	~generic_directive_base();
+
+
+	/// \return 1-indexed offset of the first error (if any), else 0
+	size_t
+	first_node_error(void) const;
+
+	static
+	ostream&
+	dump_node_group(const directive_node_group_type&, ostream&, 
+		const node_pool_type&);
+
+	void
+	collect_transient_info_base(persistent_object_manager&) const;
+
+protected:
+	void
+	write_object_base(const persistent_object_manager&, ostream&) const;
+
+	void
+	load_object_base(const persistent_object_manager&, istream&);
+
+public:
 	void
 	write_object(const persistent_object_manager& m, ostream& o) const {
 		write_object_base(m, o);
@@ -91,7 +117,12 @@ public:
 		load_object_base(m, i);
 	}
 
-};	// end struct footprint_macro
+};	// end class generic_directive_base
+
+//-----------------------------------------------------------------------------
+typedef	generic_directive_base		bool_directive_base;
+//-----------------------------------------------------------------------------
+// coming soon: proc_directive_base
 
 //=============================================================================
 }	// end namespace entity

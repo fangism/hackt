@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/directive_source.cc"
-	$Id: directive_source.cc,v 1.7 2010/07/09 00:03:36 fang Exp $
+	$Id: directive_source.cc,v 1.8 2010/07/12 17:47:01 fang Exp $
  */
 
 #include <iostream>
@@ -273,6 +273,7 @@ directive_source<L>::unroll_nodes(const nodes_type& s, const unroll_context& c,
 				return distance(s.begin(), si) +1;
 			}
 		}
+		INVARIANT(temp.size());
 		// temp is an array of node IDs which may not be unique
 		// we keep only unique ones.  
 		// inserter iterator not quite appropriate...
@@ -283,6 +284,7 @@ directive_source<L>::unroll_nodes(const nodes_type& s, const unroll_context& c,
 			di->insert(*ti);
 			// don't bother warning about ignored duplicates
 		}
+		INVARIANT(di->size());
 	}
 }
 #endif

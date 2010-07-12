@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/directive_base.cc"
-	$Id: directive_base.cc,v 1.6 2010/04/07 00:12:50 fang Exp $
+	$Id: directive_base.cc,v 1.7 2010/07/12 17:47:00 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -36,11 +36,11 @@ using std::mem_fun_ref;
 //=============================================================================
 // class SPEC::directive_base method definitions
 
-directive_base::directive_base() : name(), params(), nodes() { }
+directive_base::directive_base() : name(), params() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 directive_base::directive_base(const string& k) :
-		name(k), params(), nodes() { }
+		name(k), params() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 directive_base::~directive_base() { }
@@ -72,7 +72,7 @@ directive_base::first_param_error(void) const {
 	\return 1-indexed offset of first error if found, else 0.  
  */
 size_t
-directive_base::first_node_error(void) const {
+generic_directive_base::first_node_error(void) const {
 	const size_t s = nodes.size();
 	if (s) {
 		typedef	nodes_type::const_iterator	const_iterator;
@@ -127,7 +127,7 @@ directive_base::dump_params(ostream& o) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-directive_base::dump_node_group(const directive_node_group_type& g,
+generic_directive_base::dump_node_group(const directive_node_group_type& g,
 		ostream& o, const node_pool_type& np) {
 	if (g.size() > 1) {
 		typedef directive_node_group_type::const_iterator
@@ -167,6 +167,39 @@ directive_base::write_object_base(const persistent_object_manager& m,
 	INVARIANT(name.length());
 	write_value(o, name);
 	m.write_pointer_list(o, params);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+directive_base::load_object_base(const persistent_object_manager& m, 
+		istream& i) {
+	read_value(i, name);
+	INVARIANT(name.length());
+	m.read_pointer_list(i, params);
+}
+
+//-----------------------------------------------------------------------------
+generic_directive_base::generic_directive_base() : directive_base(), nodes() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+generic_directive_base::generic_directive_base(const string& k) :
+		directive_base(k), nodes() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+generic_directive_base::~generic_directive_base() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+generic_directive_base::collect_transient_info_base(
+		persistent_object_manager& m) const {
+	directive_base::collect_transient_info_base(m);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+generic_directive_base::write_object_base(const persistent_object_manager& m, 
+		ostream& o) const {
+	directive_base::write_object_base(m, o);
 {
 	write_value(o, nodes.size());
 	typedef	nodes_type::const_iterator	const_iterator;
@@ -179,11 +212,9 @@ directive_base::write_object_base(const persistent_object_manager& m,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-directive_base::load_object_base(const persistent_object_manager& m, 
+generic_directive_base::load_object_base(const persistent_object_manager& m, 
 		istream& i) {
-	read_value(i, name);
-	INVARIANT(name.length());
-	m.read_pointer_list(i, params);
+	directive_base::load_object_base(m, i);
 {
 	size_t s;
 	read_value(i, s);

@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/SPEC.h"
-	$Id: SPEC.h,v 1.10 2010/07/09 02:14:13 fang Exp $
+	$Id: SPEC.h,v 1.11 2010/07/12 17:46:56 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_SPEC_H__
@@ -51,15 +51,15 @@ virtual	ostream&
 /**
 	Directive placeholder.  
  */
-class directive : public directive_abstract, public bool_directive_source {
-	typedef	directive				this_type;
+class bool_directive : public directive_abstract, public bool_directive_source {
+	typedef	bool_directive				this_type;
 public:
-	directive();
+	bool_directive();
 
 	explicit
-	directive(const string&);
+	bool_directive(const string&);
 
-	~directive();
+	~bool_directive();
 
 	SPEC_UNROLL_DIRECTIVE_PROTO;
 

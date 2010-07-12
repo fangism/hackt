@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.cc"
-	$Id: PRS_footprint.cc,v 1.33 2010/07/02 00:10:04 fang Exp $
+	$Id: PRS_footprint.cc,v 1.34 2010/07/12 17:46:52 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -277,9 +277,9 @@ if (m.params.size() || m.attributes.size()) {
 	const_iterator i(m.nodes.begin());
 	const const_iterator e(m.nodes.end());
 	INVARIANT(i!=e);
-	directive_base::dump_node_group(*i, o, np);
+	bool_directive_base::dump_node_group(*i, o, np);
 	for (++i; i!=e; ++i) {
-		directive_base::dump_node_group(*i, o << ',', np);
+		bool_directive_base::dump_node_group(*i, o << ',', np);
 	}
 	return o << ')';
 }
@@ -857,7 +857,7 @@ footprint_macro::accept(cflat_visitor& v) const {
 void
 footprint_macro::collect_transient_info_base(
 		persistent_object_manager& m) const {
-	directive_base::collect_transient_info_base(m);
+	parent_type::collect_transient_info_base(m);
 	attributes.collect_transient_info_base(m);
 }
 
@@ -865,7 +865,7 @@ footprint_macro::collect_transient_info_base(
 void
 footprint_macro::write_object_base(const persistent_object_manager& m, 
 		ostream& o) const {
-	directive_base::write_object_base(m, o);
+	parent_type::write_object_base(m, o);
 	attributes.write_object_base(m, o);
 }
 
@@ -873,7 +873,7 @@ footprint_macro::write_object_base(const persistent_object_manager& m,
 void
 footprint_macro::load_object_base(const persistent_object_manager& m, 
 		istream& i) {
-	directive_base::load_object_base(m, i);
+	parent_type::load_object_base(m, i);
 	attributes.load_object_base(m, i);
 }
 

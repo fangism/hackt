@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-07-09	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-02-c:
+	  Some class renaming to distinguish bool specs from proc specs.
+	  Tests still pass.
+	  Next: introducing PSPEC for process spec directives.
+
+
 2010-07-08	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-02-b:
@@ -12,7 +20,6 @@
 		the unroll_context reference.  (I think this transformation
 		was made possible by the scalability-rewrite from months ago.)
 	  All tests still pass.
-	  Next: introducing PSPEC for process spec directives.
 
 
 	* HACKT-00-01-04-main-00-84-02-a:

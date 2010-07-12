@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/SPEC.cc"
-	$Id: SPEC.cc,v 1.8 2010/07/09 02:14:13 fang Exp $
+	$Id: SPEC.cc,v 1.9 2010/07/12 17:46:56 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -25,14 +25,14 @@
 #include "util/IO_utils.h"
 
 namespace util {
-SPECIALIZE_UTIL_WHAT(HAC::entity::SPEC::directive, "SPEC::directive")
+SPECIALIZE_UTIL_WHAT(HAC::entity::SPEC::bool_directive, "SPEC::bool_directive")
 SPECIALIZE_UTIL_WHAT(HAC::entity::SPEC::invariant, "SPEC::invariant")
-SPECIALIZE_UTIL_WHAT(HAC::entity::SPEC::directives_loop, "SPEC::directive")
+SPECIALIZE_UTIL_WHAT(HAC::entity::SPEC::directives_loop, "SPEC::directives_loop")
 SPECIALIZE_UTIL_WHAT(HAC::entity::SPEC::directives_conditional,
-		"SPEC::directive")
+		"SPEC::directives_cond")
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::SPEC::directive, SPEC_DIRECTIVE_TYPE_KEY, 0)
+	HAC::entity::SPEC::bool_directive, SPEC_DIRECTIVE_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::SPEC::invariant, SPEC_INVARIANT_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
@@ -71,32 +71,33 @@ struct directive_abstract::dumper {
 		NEVER_NULL(p);
 		p->dump(os << auto_indent, rdc) << endl;
 	}
-};	// end struct directive::dumper
+};	// end struct directive_abstract::dumper
 
 //=============================================================================
-// class directive method definitions
+// class bool_directive method definitions
 
-directive::directive() : directive_abstract(), bool_directive_source() { }
+bool_directive::bool_directive() :
+		directive_abstract(), bool_directive_source() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-directive::directive(const string& n) :
+bool_directive::bool_directive(const string& n) :
 		directive_abstract(), bool_directive_source(n) { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-directive::~directive() { }
+bool_directive::~bool_directive() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(directive)
+PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(bool_directive)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(directive)
+CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(bool_directive)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Ripped off PRS::macro::dump().
  */
 ostream&
-directive::dump(ostream& o, const PRS::rule_dump_context& c) const {
+bool_directive::dump(ostream& o, const PRS::rule_dump_context& c) const {
 	return bool_directive_source::dump(o, c);
 }
 
@@ -105,7 +106,7 @@ directive::dump(ostream& o, const PRS::rule_dump_context& c) const {
 	Implementation ripped off of PRS::macro::unroll().
  */
 good_bool
-directive::unroll(const unroll_context& c) const {
+bool_directive::unroll(const unroll_context& c) const {
 	STACKTRACE_VERBOSE;
 	// at least check the instance references first...
 	footprint& sfp(c.get_target_footprint().get_spec_footprint());
@@ -129,7 +130,7 @@ directive::unroll(const unroll_context& c) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-directive::collect_transient_info(persistent_object_manager& m) const {
+bool_directive::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		util::persistent_traits<this_type>::type_key)) {
 	collect_transient_info_base(m);
@@ -138,13 +139,13 @@ if (!m.register_transient_object(this,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-directive::write_object(const persistent_object_manager& m, ostream& o) const {
+bool_directive::write_object(const persistent_object_manager& m, ostream& o) const {
 	write_object_base(m, o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-directive::load_object(const persistent_object_manager& m, istream& i) {
+bool_directive::load_object(const persistent_object_manager& m, istream& i) {
 	load_object_base(m, i);
 }
 
@@ -297,7 +298,7 @@ directives_loop::dump(ostream& o, const rule_dump_context& c) const {
  */
 good_bool
 directives_loop::unroll(const unroll_context& c) const {
-	return meta_loop_type::unroll(*this, c, "spec directive");
+	return meta_loop_type::unroll(*this, c, "spec bool-directive");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
