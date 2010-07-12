@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/cflat_context_visitor.h"
-	$Id: cflat_context_visitor.h,v 1.7 2010/05/11 00:18:09 fang Exp $
+	$Id: cflat_context_visitor.h,v 1.8 2010/07/12 21:49:54 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CFLAT_CONTEXT_VISITOR_H__
@@ -35,20 +35,25 @@ public:
 
 	~cflat_context_visitor() { }
 
-	size_t
-	__lookup_global_bool_id(const size_t) const;
+	using cflat_context::lookup_global_id;
 
+	template <class Tag>
 	void
 	__resolve_unique_literal_group(const directive_node_group_type&, 
 		directive_node_group_type&) const;
 
-	ostream&
-	__dump_canonical_literal(ostream&, const size_t,
-		const dump_flags&) const;
-
+	template <class Tag>
 	ostream&
 	__dump_resolved_canonical_literal(ostream&, const size_t, 
 		const dump_flags&) const;
+
+	template <class Tag>
+	ostream&
+	__dump_canonical_literal(ostream& o, const size_t lni,
+			const dump_flags& df) const {
+		return __dump_resolved_canonical_literal<Tag>(o,
+			lookup_global_id<Tag>(lni), df);
+	}
 
 };	// end class cflat_context_visitor
 

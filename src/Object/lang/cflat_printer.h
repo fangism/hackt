@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_printer.h"
 	Cflat printer functor.  
-	$Id: cflat_printer.h,v 1.16 2010/04/07 00:12:50 fang Exp $
+	$Id: cflat_printer.h,v 1.17 2010/07/12 21:49:54 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CFLAT_PRINTER_H__
@@ -58,28 +58,36 @@ public:
 			os(_os), cfopts(_cfo) { }
 	~cflat_prs_printer();
 
+	template <class Tag>
 	void
 	__dump_canonical_literal(const size_t) const;
 
+	template <class Tag>
 	void
 	__dump_resolved_canonical_literal(const size_t) const;
 
+	template <class Tag>
 	void
 	__dump_canonical_literal(ostream&, const size_t) const;
 
+	template <class Tag>
 	void
 	__dump_resolved_canonical_literal(ostream&, const size_t) const;
 
+	template <class Tag>
 	void
 	__dump_canonical_literal_group(const directive_node_group_type&) const;
 
+	template <class Tag>
 	void
 	__dump_canonical_literal_group(const directive_node_group_type&, 
 		const char* l, const char* d, const char* r) const;
 
+	template <class Tag>
 	void
 	__dump_resolved_literal_group(const directive_node_group_type&) const;
 
+	template <class Tag>
 	void
 	__dump_resolved_literal_group(const directive_node_group_type&, 
 		const char* l, const char* d, const char* r) const;

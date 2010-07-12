@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_context_visitor.cc"
 	Implementation of cflattening visitor.
-	$Id: cflat_context_visitor.cc,v 1.9 2010/05/11 00:18:08 fang Exp $
+	$Id: cflat_context_visitor.cc,v 1.10 2010/07/12 21:49:54 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -21,48 +21,17 @@ namespace entity {
 //=============================================================================
 // class cflat_context_visitor method definitions
 
-/**
-	Can also be pushed to parent class.  
-
-	Frequently used, consider inlining.  
-	The footprint_frame is NOT set in the case of top-level (new supported)
-	visits (b/c type frame is not applicable), in which case, 
-	the referenced node ID *IS* the global index.  
-	\param lni is the *local* node index referenced by this
-		literal reference in this process.
-	\return The local node index is translated into a globally 
-		allocated (bool) node index, using the 
-		footprint_frame_map.  
- */
-size_t
-cflat_context_visitor::__lookup_global_bool_id(const size_t lni) const {
-	STACKTRACE_INDENT_PRINT("lookup_global_bool_id: lni = " << lni << endl);
-	return cflat_context::lookup_global_id<bool_tag>(lni);
-}
-
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\param ni the global node ID, 1-based.  
  */
+template <class Tag>
 ostream&
 cflat_context_visitor::__dump_resolved_canonical_literal(
 		ostream& os, const size_t ni, const dump_flags& df) const {
 	// 0-based
 	INVARIANT(ni);
-	return topfp->dump_canonical_name<bool_tag>(os, ni-1, df);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Translates local node reference to its canonical name.
-	\param lni is the local node id, which needs to be resolved
-		into the globally allocated id.  
- */
-ostream&
-cflat_context_visitor::__dump_canonical_literal(
-		ostream& o, const size_t lni, const dump_flags& df) const {
-	return __dump_resolved_canonical_literal(
-		o, __lookup_global_bool_id(lni), df);
+	return topfp->dump_canonical_name<Tag>(os, ni-1, df);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -72,6 +41,7 @@ cflat_context_visitor::__dump_canonical_literal(
 	aliases are dropped.  
 	Can be replaced with transform : set_inserter
  */
+template <class Tag>
 void
 cflat_context_visitor::__resolve_unique_literal_group(
 		const directive_node_group_type& s,
@@ -80,12 +50,37 @@ cflat_context_visitor::__resolve_unique_literal_group(
 	STACKTRACE_BRIEF;
 	const_iterator i(s.begin()), e(s.end());
 	for ( ; i!=e; ++i) {
-		const size_t j = __lookup_global_bool_id(*i);
+		const size_t j = lookup_global_id<Tag>(*i);
 		STACKTRACE_INDENT_PRINT("j = " << j << endl);
 		INVARIANT(j);
 		d.insert(j);
 	}
 }
+
+//=============================================================================
+// explicit template instantiations
+
+template
+ostream&
+cflat_context_visitor::__dump_resolved_canonical_literal<bool_tag>(
+		ostream&, const size_t, const dump_flags&) const;
+
+template
+ostream&
+cflat_context_visitor::__dump_resolved_canonical_literal<process_tag>(
+		ostream&, const size_t, const dump_flags&) const;
+
+template
+void
+cflat_context_visitor::__resolve_unique_literal_group<bool_tag>(
+		const directive_node_group_type&,
+		directive_node_group_type&) const;
+
+template
+void
+cflat_context_visitor::__resolve_unique_literal_group<process_tag>(
+		const directive_node_group_type&,
+		directive_node_group_type&) const;
 
 //=============================================================================
 }	// end namespace entity

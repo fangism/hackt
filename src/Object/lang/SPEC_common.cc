@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/SPEC_registry.cc"
 	Definitions of spec directives belong here.  
-	$Id: SPEC_common.cc,v 1.8 2009/05/27 19:36:13 fang Exp $
+	$Id: SPEC_common.cc,v 1.9 2010/07/12 21:49:53 fang Exp $
  */
 
 #include <iostream>
@@ -182,19 +182,21 @@ UnAliased::__main(cflat_context_visitor& v, const node_args_type& n) {
 	dest_iterator j(resolved_node_groups.begin());
 	// std::transform pattern
 	for ( ; i!=e; ++i, ++j) {
-		v.__resolve_unique_literal_group(*i, *j);
+		v.__resolve_unique_literal_group<bool_tag>(*i, *j);
 	}
 }
 {
 	source_iterator i(resolved_node_groups.begin()),
 		e(resolved_node_groups.end());
 	// accumulate all nodes in this set
+	// TODO: [algo] can't we just use set_intersection?
 	node_group_type temp(*i);
 	for (++i; i!=e; ++i) {
 		typedef node_group_type::const_iterator set_iterator;
 		set_iterator ii(i->begin()), ie(i->end());
 		for ( ; ii!=ie; ++ii) {
 			if (temp.insert(*ii).second) {
+				// error message?
 				return good_bool(false);
 			}
 		}

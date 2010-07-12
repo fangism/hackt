@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.241 2010/04/27 18:33:10 fang Exp $
+#	$Id: Makefile.am,v 1.242 2010/07/12 21:49:52 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -758,6 +758,7 @@ OBJECT_TCC_FILES = \
 	Object/unroll/port_connection.tcc \
 	Object/unroll/unroll_context.tcc \
 	Object/lang/generic_attribute.tcc \
+	Object/lang/cflat_printer.tcc \
 	Object/lang/PRS_macro_registry.tcc \
 	Object/lang/SPEC_registry.tcc \
 	Object/module.tcc \

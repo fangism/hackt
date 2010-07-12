@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS_macro_registry.cc"
 	Macro definitions belong here.  
-	$Id: PRS_macro_registry.cc,v 1.13 2009/09/14 21:17:03 fang Exp $
+	$Id: PRS_macro_registry.cc,v 1.14 2010/07/12 21:49:52 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -12,7 +12,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include <set>
 #include <map>
 #include "Object/lang/PRS_macro_registry.tcc"
-#include "Object/lang/cflat_printer.h"
+#include "Object/lang/cflat_printer.tcc"
 #include "Object/lang/directive_base.h"
 #include "Object/lang/PRS_macro_common.h"
 #include "main/cflat_options.h"
@@ -115,9 +115,10 @@ print_param_args_list(cflat_prs_printer& p, const param_args_type& params) {
 	\pre each node group/set must have exactly one member.  
 	\param delim the delimiter string between groups.  
  */
+template <class Tag>
 static
 ostream&
-print_node_args_list(cflat_prs_printer& p, const node_args_type& nodes, 
+__print_args_list(cflat_prs_printer& p, const node_args_type& nodes, 
 		const char* delim) {
 	typedef	node_args_type::const_iterator		const_iterator;
 	NEVER_NULL(delim);
@@ -125,12 +126,24 @@ print_node_args_list(cflat_prs_printer& p, const node_args_type& nodes,
 	const_iterator i(nodes.begin());
 	const const_iterator e(nodes.end());
 	INVARIANT(i!=e);
-	p.__dump_canonical_literal_group(*i);
+	p.__dump_canonical_literal_group<Tag>(*i);
 	for (++i; i!=e; ++i) {
 		o << delim;
-		p.__dump_canonical_literal_group(*i);
+		p.__dump_canonical_literal_group<Tag>(*i);
 	}
 	return o;
+}
+
+
+/**
+	PRS macros only deal with bools, no need to worry about 
+	other meta-types.  
+ */
+static
+ostream&
+print_node_args_list(cflat_prs_printer& p, const node_args_type& nodes, 
+		const char* delim) {
+	return __print_args_list<bool_tag>(p, nodes, delim);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -154,10 +167,10 @@ print_grouped_node_args_list(cflat_prs_printer& p, const node_args_type& nodes,
 	const_iterator i(nodes.begin());
 	const const_iterator e(nodes.end());
 	INVARIANT(i!=e);
-	p.__dump_canonical_literal_group(*i, gl, gd, gr);
+	p.__dump_canonical_literal_group<bool_tag>(*i, gl, gd, gr);
 	for (++i; i!=e; ++i) {
 		o << delim;
-		p.__dump_canonical_literal_group(*i, gl, gd, gr);
+		p.__dump_canonical_literal_group<bool_tag>(*i, gl, gd, gr);
 	}
 	return o;
 }
@@ -254,14 +267,14 @@ PassN::main(cflat_prs_printer& p, const param_args_type& params,
 	case cflat_options::TOOL_PRSIM:
 	if (p.cfopts.expand_pass_gates) {
 		o << "after 0\t";
-		p.__dump_canonical_literal(*nodes[0].begin());
+		p.__dump_canonical_literal<bool_tag>(*nodes[0].begin());
 		if (p.cfopts.size_prs && params.front()) {
 			print_param_args_list(p, params);
 		}
 		o << " & ~";
-		p.__dump_canonical_literal(*nodes[1].begin());
+		p.__dump_canonical_literal<bool_tag>(*nodes[1].begin());
 		o << " -> ";
-		p.__dump_canonical_literal(*nodes[2].begin());
+		p.__dump_canonical_literal<bool_tag>(*nodes[2].begin());
 		o << '-' << endl;
 		break;
 	}
@@ -289,14 +302,14 @@ PassP::main(cflat_prs_printer& p, const param_args_type& params,
 	case cflat_options::TOOL_PRSIM:
 	if (p.cfopts.expand_pass_gates) {
 		o << "after 0\t~";
-		p.__dump_canonical_literal(*nodes[0].begin());
+		p.__dump_canonical_literal<bool_tag>(*nodes[0].begin());
 		if (p.cfopts.size_prs && params.front()) {
 			print_param_args_list(p, params);
 		}
 		o << " & ";
-		p.__dump_canonical_literal(*nodes[1].begin());
+		p.__dump_canonical_literal<bool_tag>(*nodes[1].begin());
 		o << " -> ";
-		p.__dump_canonical_literal(*nodes[2].begin());
+		p.__dump_canonical_literal<bool_tag>(*nodes[2].begin());
 		o << '+' << endl;
 		break;
 	}

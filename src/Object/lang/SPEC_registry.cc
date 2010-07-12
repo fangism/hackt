@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/SPEC_registry.cc"
 	Definitions of spec directives belong here.  
-	$Id: SPEC_registry.cc,v 1.22 2009/09/14 21:17:04 fang Exp $
+	$Id: SPEC_registry.cc,v 1.23 2010/07/12 21:49:53 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -16,7 +16,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/lang/SPEC_registry.tcc"
 #include "Object/lang/SPEC_common.h"
 #include "Object/lang/directive_base.h"
-#include "Object/lang/cflat_printer.h"
+#include "Object/lang/cflat_printer.tcc"
 #include "Object/expr/const_param.h"
 #include "Object/expr/const_param_expr_list.h"
 #include "main/cflat_options.h"
@@ -103,9 +103,10 @@ typedef	cflat_spec_definition_entry::param_args_type	param_args_type;
 	\param gd group's inner delimiter
 	\param gr group's right wrapper
  */
+template <class Tag>
 static
 ostream&
-print_node_args_list(cflat_prs_printer& p, const node_args_type& nodes,
+print_args_list(cflat_prs_printer& p, const node_args_type& nodes,
 		const char* delim,
 		const char* gl, const char* gd, const char* gr) {
 	typedef	node_args_type::const_iterator		const_iterator;
@@ -114,12 +115,20 @@ print_node_args_list(cflat_prs_printer& p, const node_args_type& nodes,
 	const_iterator i(nodes.begin());
 	const const_iterator e(nodes.end());
 	INVARIANT(i!=e);
-	p.__dump_canonical_literal_group(*i, gl, gd, gr);
+	p.__dump_canonical_literal_group<Tag>(*i, gl, gd, gr);
 	for (++i; i!=e; ++i) {
 		o << delim;
-		p.__dump_canonical_literal_group(*i, gl, gd, gr);
+		p.__dump_canonical_literal_group<Tag>(*i, gl, gd, gr);
 	}
 	return o;
+}
+
+static
+ostream&
+print_node_args_list(cflat_prs_printer& p, const node_args_type& nodes,
+		const char* delim,
+		const char* gl, const char* gd, const char* gr) {
+	return print_args_list<bool_tag>(p, nodes, delim, gl, gd, gr);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -154,17 +163,25 @@ default_spec_output(cflat_prs_printer& p, const param_args_type& params,
 /**
 	Flattens grouped node arguments into a single flat set.  
  */
+template <class Tag>
 static
 void
-flatten_canonicalized_node_set(cflat_context_visitor& p,
+flatten_canonicalized_set(cflat_context_visitor& p,
 		const node_args_type& nodes, directive_node_group_type& o) {
 	typedef	node_args_type::const_iterator		const_iterator;
 	STACKTRACE_VERBOSE;
 	const_iterator i(nodes.begin());
 	const const_iterator e(nodes.end());
 	for ( ; i!=e; ++i) {
-		p.__resolve_unique_literal_group(*i, o);
+		p.__resolve_unique_literal_group<Tag>(*i, o);
 	}
+}
+
+static
+void
+flatten_canonicalized_node_set(cflat_context_visitor& p,
+		const node_args_type& nodes, directive_node_group_type& o) {
+	flatten_canonicalized_set<bool_tag>(p, nodes, o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -188,7 +205,7 @@ flatten_canonicalized_spec_output(cflat_prs_printer& p,
 		o << T::name;
 		directive_base::dump_params(params, o);
 		o << '(';
-		p.__dump_resolved_literal_group(node_set, "", ",", "");
+		p.__dump_resolved_literal_group<T>(node_set, "", ",", "");
 		o << ')';
 	}
 	return o;
@@ -200,7 +217,7 @@ flatten_canonicalized_spec_output(cflat_prs_printer& p,
 	This variation prints the arguments if the canonical set
 	has size greater than one.  
  */
-template <class T>
+template <class T, class Tag>
 static
 ostream&
 flatten_canonicalized_spec_output_if_more_than_one(cflat_prs_printer& p,
@@ -213,7 +230,7 @@ flatten_canonicalized_spec_output_if_more_than_one(cflat_prs_printer& p,
 		o << T::name;
 		directive_base::dump_params(params, o);
 		o << '(';
-		p.__dump_resolved_literal_group(node_set, "", ", ", "");
+		p.__dump_resolved_literal_group<Tag>(node_set, "", ", ", "");
 		o << ')';
 	}
 	return o;
@@ -225,7 +242,7 @@ flatten_canonicalized_spec_output_if_more_than_one(cflat_prs_printer& p,
 	Automatically separates with newlines.  
 	NOTE: doesn't take any parameters.  
  */
-template <class T>
+template <class T, class Tag>
 static
 ostream&
 default_expand_into_singles_output(cflat_prs_printer& p, 
@@ -236,7 +253,7 @@ default_expand_into_singles_output(cflat_prs_printer& p,
 	const const_iterator e(a.end());
 	for ( ; i!=e; ++i) {
 		o << T::name << '(';
-		p.__dump_canonical_literal_group(*i);
+		p.__dump_canonical_literal_group<Tag>(*i);
 		o << ')' << endl;
 	}
 	return o;
@@ -350,11 +367,8 @@ LVS_exclhi::main(cflat_prs_printer& p, const param_args_type& v,
 	switch (p.cfopts.primary_tool) {
 	case cflat_options::TOOL_LVS:
 		// or other tools
-#if 0
-		default_spec_output<this_type>(p, v, a) << endl;
-#else
-		flatten_canonicalized_spec_output_if_more_than_one<this_type>(p, v, a) << endl;
-#endif
+		flatten_canonicalized_spec_output_if_more_than_one<
+			this_type, bool_tag>(p, v, a) << endl;
 		break;
 	default:
 		break;
@@ -373,11 +387,8 @@ LVS_excllo::main(cflat_prs_printer& p, const param_args_type& v,
 	switch (p.cfopts.primary_tool) {
 	case cflat_options::TOOL_LVS:
 		// or other tools
-#if 0
-		default_spec_output<this_type>(p, v, a) << endl;
-#else
-		flatten_canonicalized_spec_output_if_more_than_one<this_type>(p, v, a) << endl;
-#endif
+		flatten_canonicalized_spec_output_if_more_than_one<
+			this_type, bool_tag>(p, v, a) << endl;
 		break;
 	default:
 		break;
@@ -436,7 +447,7 @@ LVS_unstaticized::main(cflat_prs_printer& p, const param_args_type& v,
 	switch (p.cfopts.primary_tool) {
 	case cflat_options::TOOL_LVS:
 		// or other tools
-		default_expand_into_singles_output<this_type>(p, a);
+		default_expand_into_singles_output<this_type, bool_tag>(p, a);
 		break;
 	default:
 		break;
@@ -501,12 +512,8 @@ SIM_force_exclhi::main(cflat_prs_printer& p, const param_args_type& v,
 	switch (p.cfopts.primary_tool) {
 	case cflat_options::TOOL_PRSIM:
 		// or other simulator tool
-#if 0
-		default_spec_output<this_type>(p, v, a) << endl;
-#else
-		flatten_canonicalized_spec_output_if_more_than_one<this_type>
-			(p, v, a) << endl;
-#endif
+		flatten_canonicalized_spec_output_if_more_than_one<
+			this_type, bool_tag>(p, v, a) << endl;
 		break;
 	default:
 		break;
@@ -525,12 +532,8 @@ SIM_force_excllo::main(cflat_prs_printer& p, const param_args_type& v,
 	switch (p.cfopts.primary_tool) {
 	case cflat_options::TOOL_PRSIM:
 		// or other simulator tool
-#if 0
-		default_spec_output<this_type>(p, v, a) << endl;
-#else
-		flatten_canonicalized_spec_output_if_more_than_one<this_type>
-			(p, v, a) << endl;
-#endif
+		flatten_canonicalized_spec_output_if_more_than_one<
+			this_type, bool_tag>(p, v, a) << endl;
 		break;
 	default:
 		break;

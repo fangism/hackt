@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_printer.cc"
 	Implementation of cflattening visitor.
-	$Id: cflat_printer.cc,v 1.29 2010/07/02 00:10:04 fang Exp $
+	$Id: cflat_printer.cc,v 1.30 2010/07/12 21:49:54 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -12,6 +12,7 @@
 #include <sstream>
 #include <numeric>
 #include "Object/lang/cflat_printer.h"
+#include "Object/lang/cflat_printer.tcc"
 #include "Object/lang/PRS_enum.h"
 #include "Object/lang/PRS_footprint.h"
 #include "Object/lang/PRS_attribute_registry.h"
@@ -25,7 +26,6 @@
 #include "Object/inst/connection_policy.h"
 #include "Object/global_entry.h"
 #include "Object/global_channel_entry.h"
-#include "Object/def/footprint.h"
 #include "Object/traits/bool_traits.h"
 #include "main/cflat_options.h"
 #include "common/ICE.h"
@@ -130,7 +130,7 @@ if (!cfopts.check_prs) {
 	// which needs to be translated to global ID.
 	// bfm[...] refers to a state_instance<bool_tag> (1-indexed)
 	// const size_t j = bfm[r.output_index-1];
-	__dump_canonical_literal(r.output_index);
+	__dump_canonical_literal<bool_tag>(r.output_index);
 	os << (r.dir ? '+' : '-');
 	if (cfopts.show_supply_nodes) {
 		// FINISH ME
@@ -141,7 +141,7 @@ if (!cfopts.check_prs) {
 			f(pfp.lookup_rule_supply(ri));
 		const size_t sn = (r.dir ? f->Vdd : f->GND);
 		os << " {";
-		__dump_canonical_literal(sn);
+		__dump_canonical_literal<bool_tag>(sn);
 		os << "}";
 	}
 	if (cfopts.compute_conductances) {
@@ -152,117 +152,6 @@ if (!cfopts.check_prs) {
 	}
 	os << endl;
 }
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	\param ni the global node ID.  
- */
-void
-cflat_prs_printer::__dump_resolved_canonical_literal(ostream& o, 
-		const size_t ni) const {
-	if (cfopts.enquote_names) { o << '\"'; }
-	parent_type::__dump_resolved_canonical_literal(o, ni,
-		cfopts.__dump_flags);
-	if (cfopts.enquote_names) { o << '\"'; }
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Default, use the member output stream.
- */
-void
-cflat_prs_printer::__dump_resolved_canonical_literal(const size_t ni) const {
-	return __dump_resolved_canonical_literal(os, ni);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Translates local node reference to its canonical name.
-	\param lni is the local node id, which needs to be resolved
-		into the globally allocated id.  
- */
-void
-cflat_prs_printer::__dump_canonical_literal(ostream& o, 
-		const size_t lni) const {
-	__dump_resolved_canonical_literal(o, 
-		parent_type::__lookup_global_bool_id(lni));
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-cflat_prs_printer::__dump_canonical_literal(const size_t lni) const {
-	__dump_resolved_canonical_literal(os, 
-		parent_type::__lookup_global_bool_id(lni));
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Print using default wrapper and delimiter.  
- */
-void
-cflat_prs_printer::__dump_canonical_literal_group(
-		const directive_node_group_type& g) const {
-	__dump_canonical_literal_group(g, "{", ",", "}");
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-cflat_prs_printer::__dump_resolved_literal_group(
-		const directive_node_group_type& g) const {
-	__dump_resolved_literal_group(g, "{", ",", "}");
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	The node list argument contains already unresolved local IDs.  
-	\param g group argument
-	\param l left wrapper, optional
-	\param r right group wrapper, optional
-	\param d group element delimiter
- */
-void
-cflat_prs_printer::__dump_canonical_literal_group(
-		const directive_node_group_type& g, 
-		const char* l, const char* d, const char* r) const {
-	NEVER_NULL(d);
-	// collect resolved (unique) node IDs here:
-	directive_node_group_type s;
-	__resolve_unique_literal_group(g, s);
-	__dump_resolved_literal_group(s, l, d, r);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Prints a group of nodes.  
-	Nodes in argument list are already resolved to global IDs.  
-	By default, single nodes are not wrapped in braces, 
-	and commas are used as delimiters.  
-	Duplicate nodes are also eliminated.  
-	\param g group argument
-	\param l left wrapper, optional
-	\param r right group wrapper, optional
-	\param d group element delimiter
- */
-void
-cflat_prs_printer::__dump_resolved_literal_group(
-		const directive_node_group_type& s, 
-		const char* l, const char* d, const char* r) const {
-	typedef	directive_node_group_type::const_iterator	const_iterator;
-	if (s.size() > 1) {
-		const_iterator i(s.begin()), e(s.end());
-		if (l)	os << l;
-		__dump_resolved_canonical_literal(*i);
-		for (++i; i!=e; ++i) {
-			os << d;
-			__dump_resolved_canonical_literal(*i);
-		}
-		if (r)	os << r;
-	} else {
-		// only one element
-		INVARIANT(!s.empty());
-		__dump_resolved_canonical_literal(*s.begin());
-	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -282,7 +171,7 @@ cflat_prs_printer::visit(const footprint_expr_node& e) {
 	switch (type) {
 		case PRS_LITERAL_TYPE_ENUM: {
 			INVARIANT(sz == 1);
-			__dump_canonical_literal(e.only());
+			__dump_canonical_literal<bool_tag>(e.only());
 			const directive_base_params_type& par(e.params);
 			if (cfopts.size_prs) {
 				directive_base::dump_params(par, os);
@@ -475,7 +364,8 @@ if (cfopts.node_attributes) {
 	const instance_alias_info<bool_tag>& a(*i.get_back_ref());
 if (a.has_nondefault_attributes()) {
 	std::ostringstream oss;
-	__dump_canonical_literal(oss, i.get_back_ref()->instance_index);
+	__dump_canonical_literal<bool_tag>(oss,
+		i.get_back_ref()->instance_index);
 	const string& n(oss.str());
 	if (cfopts.split_instance_attributes) {
 		a.dump_split_attributes(os, n);
