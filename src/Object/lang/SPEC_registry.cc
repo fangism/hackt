@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/SPEC_registry.cc"
 	Definitions of spec directives belong here.  
-	$Id: SPEC_registry.cc,v 1.24 2010/07/14 18:12:34 fang Exp $
+	$Id: SPEC_registry.cc,v 1.25 2010/07/14 18:31:56 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -630,8 +630,8 @@ spec @{
   min_sep<100>(x[0], y[0])
   min_sep<100>(x, y)
   min_sep<100>(@{x[0], y[0]@}, @{x[1], y[1]@})
-  min_sep<50>(P, Q)
-  min_sep<50>(@{P,Q@}, @{A,B@})
+  min_sep_proc<50>(P, Q)
+  min_sep_proc<50>(@{P,Q@}, @{A,B@})
 @}
 @end example
 @end deffn
