@@ -1,0 +1,22 @@
+globID	super		localID	canonical	footprint-frame
+[global process entries]
+1	(top)	-	1	inv_a[0]	inv<>
+	bool: 1,2,3,4
+2	(top)	-	2	inv_a[1]	inv<>
+	bool: 1,2,5,6
+3	(top)	-	3	inv_b[0]	inv<>
+	bool: 1,2,7,8
+4	(top)	-	4	inv_b[1]	inv<>
+	bool: 1,2,9,10
+[global bool entries]
+1	(top)	-	1	!GND	 @[ supply_low ]
+2	(top)	-	2	!Vdd	 @[ supply_high ]
+3	(top)	-	3	inv_a[0].a	
+4	(top)	-	4	inv_a[0].b	
+5	(top)	-	5	inv_a[1].a	
+6	(top)	-	6	inv_a[1].b	
+7	(top)	-	7	inv_b[0].a	
+8	(top)	-	8	inv_b[0].b	
+9	(top)	-	9	inv_b[1].a	
+10	(top)	-	10	inv_b[1].b	
+

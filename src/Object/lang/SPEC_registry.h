@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/SPEC_registry.h"
-	$Id: SPEC_registry.h,v 1.7 2009/09/14 21:17:04 fang Exp $
+	$Id: SPEC_registry.h,v 1.8 2010/07/14 18:12:34 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_SPEC_REGISTRY_H__
@@ -8,6 +8,7 @@
 
 #include "util/STL/map_fwd.h"
 #include "Object/lang/directive_definition.h"
+#include "Object/traits/type_tag_enum.h"
 
 namespace HAC {
 namespace entity {
@@ -17,6 +18,7 @@ class cflat_prs_printer;
 }
 namespace SPEC {
 using PRS::cflat_prs_printer;
+using entity::meta_type_tag_enum;
 using std::string;
 using util::good_bool;
 //=============================================================================
@@ -37,18 +39,22 @@ public:
 	typedef main_type*			main_ptr_type;
 protected:
 	main_ptr_type				_main;
-
 public:
-	spec_visitor_entry() : directive_definition(), _main(NULL) { }
+	const meta_type_tag_enum		type_enum;
+public:
+	spec_visitor_entry() : directive_definition(), _main(NULL), 
+		type_enum(META_TYPE_NONE) { }
 
 	spec_visitor_entry(const string& k,
+		const meta_type_tag_enum t,
 		const main_ptr_type m, 
 		const check_num_args_ptr_type np = NULL,
 		const check_num_args_ptr_type nn = NULL,
 		const check_param_args_ptr_type p = NULL,
 		const check_node_args_ptr_type n = NULL) :
 		directive_definition(k, np, nn, p, n), 
-		_main(m) { }
+		_main(m),
+		type_enum(t) { }
 
 	operator bool () const { return this->_main; }
 
@@ -90,6 +96,7 @@ struct class_name : public entity::SPEC::directives::class_name {	\
 							param_args_type;\
 public:									\
 	static const char			name[];			\
+	using parent_type::type;					\
 	static void main(visitor_type&, const param_args_type&,		\
 		const node_args_type&);					\
 	static good_bool check_num_params(const size_t);		\
@@ -98,7 +105,7 @@ public:									\
 	static good_bool check_node_args(const node_args_type&);	\
 private:								\
 	static const size_t			id;			\
-};									\
+};
 
 /**
 	\param registrar the class registration function for initialization.  

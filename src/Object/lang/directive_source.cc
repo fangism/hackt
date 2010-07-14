@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/directive_source.cc"
-	$Id: directive_source.cc,v 1.8 2010/07/12 17:47:01 fang Exp $
+	$Id: directive_source.cc,v 1.9 2010/07/14 18:12:35 fang Exp $
  */
 
 #include <iostream>
@@ -362,6 +362,7 @@ directive_source<L>::load_object_base(const persistent_object_manager& m,
 //=============================================================================
 // explicit template instantiations
 template class directive_source<bool_literal>;
+template class directive_source<proc_literal>;
 
 //=============================================================================
 }	// end namespace entity

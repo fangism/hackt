@@ -2,7 +2,7 @@
 	\file "Object/traits/proc_traits.h"
 	Traits and policies for processes.  
 	This file used to be "Object/art_object_proc_traits.h".
-	$Id: proc_traits.h,v 1.22 2008/10/24 01:09:02 fang Exp $
+	$Id: proc_traits.h,v 1.23 2010/07/14 18:12:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_PROC_TRAITS_H__
@@ -26,7 +26,8 @@ struct class_traits<process_tag> {
 
 	typedef	process_tag			tag_type;
 	static const char			tag_name[];
-	enum { type_tag_enum_value = META_TYPE_PROCESS };
+//	enum { type_tag_enum_value = META_TYPE_PROCESS };
+	static const meta_type_tag_enum		type_tag_enum_value = META_TYPE_PROCESS;
 	typedef	process_instance		instance_type;
 
 	typedef	process_instance_alias_info	instance_alias_info_type;

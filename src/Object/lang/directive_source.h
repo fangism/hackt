@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/SPEC.h"
 	Common base class for spec-like directives, including PRS macros.  
-	$Id: directive_source.h,v 1.6 2010/07/09 00:03:36 fang Exp $
+	$Id: directive_source.h,v 1.7 2010/07/14 18:12:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_DIRECTIVE_SOURCE_H__
@@ -11,6 +11,7 @@
 #include <string>
 #include <vector>
 #include "Object/lang/SPEC_fwd.h"
+#include "Object/lang/proc_literal.h"
 #include "util/memory/count_ptr.h"
 #include "util/boolean_types.h"
 #include "util/persistent_fwd.h"
@@ -150,6 +151,7 @@ protected:
 
 //=============================================================================
 typedef	directive_source<bool_literal>			bool_directive_source;
+typedef	directive_source<proc_literal>			proc_directive_source;
 
 //=============================================================================
 }	// end namespace entity

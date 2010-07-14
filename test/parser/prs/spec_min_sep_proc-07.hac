@@ -1,0 +1,17 @@
+// "spec_min_sep_proc-07.hac"
+// copy-modified from "spec_min_sep_proc-01.hac"
+// testing min-separation between process instance sets directive
+// expect-fail
+
+defproc inv (bool a, b) {
+prs {
+	a	=> b-
+}
+}
+
+inv inv_a, inv_b;
+
+spec {
+min_sep_proc<20>(inv_a, inv_b.a)	// wrong type (proc vs. bool)
+}
+

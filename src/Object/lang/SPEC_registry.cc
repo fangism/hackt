@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/SPEC_registry.cc"
 	Definitions of spec directives belong here.  
-	$Id: SPEC_registry.cc,v 1.23 2010/07/12 21:49:53 fang Exp $
+	$Id: SPEC_registry.cc,v 1.24 2010/07/14 18:12:34 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -62,7 +62,8 @@ register_cflat_spec_class(void) {
 	typedef	cflat_spec_registry_type::iterator	iterator;
 	typedef	cflat_spec_registry_type::mapped_type	mapped_type;
 	typedef	cflat_spec_registry_type::value_type	value_type;
-	const cflat_spec_definition_entry e(T::name, &T::main,
+	const cflat_spec_definition_entry e(T::name, T::type, 
+		&T::main,
 		&T::check_num_params, &T::check_num_nodes,
 		&T::check_param_args, &T::check_node_args);
 	const value_type k(T::name, e);
@@ -590,7 +591,7 @@ namespace layout {
 /**
 	Default output formatting for layout directives.  
  */
-template <class T>
+template <class T, class Tag>
 static
 ostream&
 default_layout_spec_output(cflat_prs_printer& p, const param_args_type& params, 
@@ -599,7 +600,7 @@ default_layout_spec_output(cflat_prs_printer& p, const param_args_type& params,
 	o << T::name;
 	directive_base::dump_params(params, o);
 	o << '(';
-	print_node_args_list(p, nodes, "; ", NULL, ",", NULL);
+	print_args_list<Tag>(p, nodes, "; ", NULL, ",", NULL);
 	return o << ')';
 }
 
@@ -607,6 +608,7 @@ default_layout_spec_output(cflat_prs_printer& p, const param_args_type& params,
 /***
 @texinfo spec/min_sep.texi
 @deffn Directive min_sep dist nodes...
+@deffnx Directive min_sep_proc dist procs...
 Usage: @samp{min_sep<dist>(nodes...)}
 
 Specify that @var{nodes} should have a miminum physical separation
@@ -615,6 +617,23 @@ of distance @var{dist}.
 for @samp{min_sep(@{a,b@},@{c,d@})}, @t{a} and @t{b} must be separated
 from @t{c} and @t{d}.  
 Affects @command{cflat} for layout and @command{prsim}.  
+
+The @t{min_sep_proc} variation specifies a minimum distance between
+two groups of processes.  
+The referenced process in each group can be of different types.  
+
+@example
+bool x[2], y[2];
+inv1 P, A;
+inv2 Q, B;
+spec @{
+  min_sep<100>(x[0], y[0])
+  min_sep<100>(x, y)
+  min_sep<100>(@{x[0], y[0]@}, @{x[1], y[1]@})
+  min_sep<50>(P, Q)
+  min_sep<50>(@{P,Q@}, @{A,B@})
+@}
+@end example
 @end deffn
 @end texinfo
 ***/
@@ -631,13 +650,43 @@ layout_min_sep::main(cflat_prs_printer& p, const param_args_type& v,
 	STACKTRACE_VERBOSE;
 	switch (p.cfopts.primary_tool) {
 	case cflat_options::TOOL_LAYOUT:
-		default_layout_spec_output<this_type>(p, v, a) << endl;
+		default_layout_spec_output<this_type, bool_tag>(p, v, a)
+			<< endl;
 		break;
 	case cflat_options::TOOL_PRSIM:
 		// but not for old plain prsim
-		if (p.cfopts.with_SEU()) {
-			default_layout_spec_output<this_type>(p, v, a) << endl;
-		}
+	if (p.cfopts.with_SEU()) {
+		default_layout_spec_output<this_type, bool_tag>(p, v, a)
+			<< endl;
+	}
+		break;
+	default:
+		break;
+	}
+}
+
+DECLARE_AND_DEFINE_CFLAT_SPEC_DIRECTIVE_CLASS(layout_min_sep_proc, "min_sep_proc")
+
+/**
+	\param a process arguments are processed in groups, so e.g.
+		min_sep_proc({a,b},{c,d})
+		groups are {a,b} and {c,d}.  
+ */
+void
+layout_min_sep_proc::main(cflat_prs_printer& p, const param_args_type& v, 
+		const node_args_type& a) {
+	STACKTRACE_VERBOSE;
+	switch (p.cfopts.primary_tool) {
+	case cflat_options::TOOL_LAYOUT:
+		default_layout_spec_output<this_type, process_tag>(p, v, a)
+			<< endl;
+		break;
+	case cflat_options::TOOL_PRSIM:
+		// but not for old plain prsim
+	if (p.cfopts.with_SEU()) {
+		default_layout_spec_output<this_type, process_tag>(p, v, a)
+			<< endl;
+	}
 		break;
 	default:
 		break;

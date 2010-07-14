@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr_list.h"
 	Base set of classes parser expression lists.  
-	$Id: expr_list.h,v 1.8 2009/10/02 01:56:31 fang Exp $
+	$Id: expr_list.h,v 1.9 2010/07/14 18:12:30 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr_list.h,v 1.8.34.1 2005/12/11 00:45:06 fang Exp
  */
@@ -116,6 +116,11 @@ public:
 					checked_bool_group_type;
 	typedef	default_vector<inst_ref_expr::checked_bool_group_type>::type
 					checked_bool_groups_type;
+
+	typedef	inst_ref_expr::checked_proc_group_type
+					checked_proc_group_type;
+	typedef	default_vector<inst_ref_expr::checked_proc_group_type>::type
+					checked_proc_groups_type;
 public:
 	inst_ref_expr_list();
 
@@ -145,6 +150,15 @@ public:
 	// results in a single amorphous group
 	bool
 	postorder_check_grouped_bool_refs(checked_bool_group_type&, 
+		const context&) const;
+
+	bool
+	postorder_check_grouped_proc_refs(checked_proc_groups_type&, 
+		const context&) const;
+
+	// results in a single amorphous group
+	bool
+	postorder_check_grouped_proc_refs(checked_proc_group_type&, 
 		const context&) const;
 
 	void

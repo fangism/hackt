@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/SPEC_common.h"
 	Tool independent base-classes for macro definitions.  
-	$Id: SPEC_common.h,v 1.6 2010/04/02 22:18:34 fang Exp $
+	$Id: SPEC_common.h,v 1.7 2010/07/14 18:12:33 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_SPEC_COMMON_H__
@@ -9,6 +9,7 @@
 
 #include "Object/lang/PRS_fwd.h"
 #include "Object/lang/directive_definition.h"
+#include "Object/traits/type_tag_enum.h"
 #include "util/boolean_types.h"
 
 namespace HAC {
@@ -22,6 +23,7 @@ namespace SPEC {
 	These base classes are not registered anywhere.  
  */
 namespace directives {
+using entity::meta_type_tag_enum;
 using util::good_bool;
 typedef directive_definition::node_args_type	node_args_type;
 typedef directive_definition::param_args_type	param_args_type;
@@ -35,6 +37,7 @@ typedef directive_definition::param_args_type	param_args_type;
 struct class_name {							\
 	typedef class_name				this_type;	\
 public:									\
+	static const meta_type_tag_enum			type;		\
 	static good_bool __check_num_params(const char*, const size_t);	\
 	static good_bool __check_num_nodes(const char*, const size_t);	\
 	static good_bool __check_param_args(const char*, 		\
@@ -65,6 +68,9 @@ DECLARE_SPEC_COMMON_STRUCT(LVS_cross_coupled_inverters)
 DECLARE_SPEC_COMMON_STRUCT(SIM_force_exclhi)
 DECLARE_SPEC_COMMON_STRUCT(SIM_force_excllo)
 DECLARE_SPEC_COMMON_STRUCT(layout_min_sep)
+DECLARE_SPEC_COMMON_STRUCT(layout_min_sep_proc)
+
+// intended to denot voltage domain crossing
 DECLARE_SPEC_COMMON_STRUCT(supply_x)
 DECLARE_SPEC_COMMON_STRUCT(RunModeStatic)
 

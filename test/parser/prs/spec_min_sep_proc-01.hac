@@ -1,0 +1,16 @@
+// "spec_min_sep_proc-01.hac"
+// testing min-separation between process instance sets directive
+
+defproc inv (bool a, b) {
+prs {
+	a	=> b-
+}
+}
+
+inv inv_a, inv_b;
+
+spec {
+// min_sep<20>(inv_a.a, inv_b.a)
+min_sep_proc<20>(inv_a, inv_b)
+}
+

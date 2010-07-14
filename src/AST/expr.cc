@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.40 2010/04/30 18:41:42 fang Exp $
+	$Id: expr.cc,v 1.41 2010/07/14 18:12:30 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -70,6 +70,7 @@
 #include "Object/type/template_actuals.h"
 #include "Object/traits/bool_traits.h"
 #include "Object/traits/int_traits.h"
+#include "Object/traits/proc_traits.h"
 #include "Object/inst/param_value_collection.h"
 #include "Object/ref/meta_reference_union.h"
 
@@ -141,6 +142,7 @@ using entity::aggregate_meta_instance_reference_base;
 using entity::meta_instance_reference_base;
 using entity::simple_meta_indexed_reference_base;
 using entity::simple_nonmeta_instance_reference_base;
+using entity::simple_process_meta_instance_reference;
 using entity::int_expr;
 using entity::bool_expr;
 using entity::real_expr;
@@ -354,6 +356,24 @@ inst_ref_expr::check_grouped_literals(checked_bool_group_type& g,
 	} else {
 		cerr << "ERROR: expression at " << where(*this) <<
 			" does not reference a bool." << endl;
+		return true;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+inst_ref_expr::check_grouped_literals(checked_proc_group_type& g, 
+		const context& c) const {
+	const meta_return_type ref(check_meta_reference(c));
+	const count_ptr<const simple_process_meta_instance_reference>
+		proc_ref(ref.inst_ref().is_a<const simple_process_meta_instance_reference>());
+	if (proc_ref) {
+		// skip dimensions check
+		g.push_back(proc_ref);
+		return false;
+	} else {
+		cerr << "ERROR: expression at " << where(*this) <<
+			" does not reference a process." << endl;
 		return true;
 	}
 }
@@ -631,6 +651,7 @@ inst_ref_expr_list::postorder_check_grouped_bool_refs(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Cloned from above.
 	This variant collects all constituent references into a single 
 	group, not a list of groups.  
 	\return true on first error.
@@ -646,6 +667,60 @@ inst_ref_expr_list::postorder_check_grouped_bool_refs(
 		if ((*i)->check_grouped_literals(temp, c)) {
 			// TODO: more specific error message, use std::distance
 			cerr << "Error in bool group reference list in "
+				<< where(*this) << endl;
+			return true;
+		}
+	}
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Cloned from above.
+	Even more specialized: checks amorphous groups of references, 
+	relaxing all dimension and packedness requirements.  
+	Each element of this list is treated as a group.  
+	\return true on first error.  
+ */
+bool
+inst_ref_expr_list::postorder_check_grouped_proc_refs(
+		checked_proc_groups_type& temp, const context& c) const {
+	STACKTRACE_VERBOSE;
+	INVARIANT(temp.empty());
+	const_iterator i(begin());
+	const const_iterator e(end());
+	for ( ; i!=e; i++) {
+		typedef	checked_proc_groups_type::value_type	group_type;
+		temp.push_back(group_type());	// create empty
+		// then append in-place (beats creating and copying)
+		NEVER_NULL(*i);
+		if ((*i)->check_grouped_literals(temp.back(), c)) {
+			// TODO: more specific error message, use std::distance
+			cerr << "Error in proc group reference list in "
+				<< where(*this) << endl;
+			return true;
+		}
+	}
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This variant collects all constituent references into a single 
+	group, not a list of groups.  
+	\return true on first error.
+ */
+bool
+inst_ref_expr_list::postorder_check_grouped_proc_refs(
+		checked_proc_group_type& temp, const context& c) const {
+	STACKTRACE_VERBOSE;
+	const_iterator i(begin());
+	const const_iterator e(end());
+	for ( ; i!=e; i++) {
+		NEVER_NULL(*i);
+		if ((*i)->check_grouped_literals(temp, c)) {
+			// TODO: more specific error message, use std::distance
+			cerr << "Error in proc group reference list in "
 				<< where(*this) << endl;
 			return true;
 		}
@@ -3060,6 +3135,12 @@ bool
 reference_group_construction::check_grouped_literals(
 		checked_bool_group_type& g, const context& c) const {
 	return ex->postorder_check_grouped_bool_refs(g, c);
+}
+
+bool
+reference_group_construction::check_grouped_literals(
+		checked_proc_group_type& g, const context& c) const {
+	return ex->postorder_check_grouped_proc_refs(g, c);
 }
 
 //=============================================================================

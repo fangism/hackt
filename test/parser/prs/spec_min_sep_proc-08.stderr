@@ -1,0 +1,4 @@
+ERROR: expression at [15:18..24] does not reference a process.
+Error in proc group reference list in [15:17..34]
+Error checking spec arguments in [15:17..34]
+ERROR: at least one error in spec body.

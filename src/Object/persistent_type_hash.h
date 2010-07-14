@@ -18,7 +18,7 @@
  *	and specific to each module.  
  *	As a convention, all enumerations are suffixed with _TYPE_KEY.  
  *
- *	$Id: persistent_type_hash.h,v 1.30 2009/10/02 01:56:44 fang Exp $
+ *	$Id: persistent_type_hash.h,v 1.31 2010/07/14 18:12:32 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_PERSISTENT_TYPE_HASH_H__
@@ -291,6 +291,7 @@
 #define	CHP_FUNCTION_CALL_TYPE_KEY				"CHPfcall"
 
 #define	SPEC_DIRECTIVE_TYPE_KEY					"SPCdrctv"
+#define	SPEC_PROC_DIRECTIVE_TYPE_KEY				"SPCprdrc"
 #define	SPEC_INVARIANT_TYPE_KEY					"SPCinvar"
 #define	SPEC_DIRECTIVE_LOOP_TYPE_KEY				"SPCdloop"
 #define	SPEC_DIRECTIVE_CONDITIONAL_TYPE_KEY			"SPCdcond"

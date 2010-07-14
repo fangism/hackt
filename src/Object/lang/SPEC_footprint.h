@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/SPEC_footprint.h"
-	$Id: SPEC_footprint.h,v 1.6 2010/07/12 17:46:58 fang Exp $
+	$Id: SPEC_footprint.h,v 1.7 2010/07/14 18:12:33 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_SPEC_FOOTPRINT_H__
@@ -59,7 +59,7 @@ private:
 	static
 	ostream&
 	dump_directive(const footprint_directive&, ostream&,
-		const node_pool_type&);
+		const entity::footprint&);
 public:
 
 	ostream&

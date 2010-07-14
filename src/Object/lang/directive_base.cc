@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/directive_base.cc"
-	$Id: directive_base.cc,v 1.7 2010/07/12 17:47:00 fang Exp $
+	$Id: directive_base.cc,v 1.8 2010/07/14 18:12:34 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -17,6 +17,9 @@
 #include "Object/inst/bool_instance.h"
 #include "Object/inst/instance_alias_info.h"
 #include "Object/inst/alias_empty.h"
+#include "Object/inst/alias_actuals.h"
+#include "Object/traits/bool_traits.h"
+#include "Object/traits/proc_traits.h"
 
 #include "util/memory/count_ptr.tcc"
 #include "util/persistent_object_manager.tcc"
@@ -126,9 +129,10 @@ directive_base::dump_params(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class PTag>
 ostream&
-generic_directive_base::dump_node_group(const directive_node_group_type& g,
-		ostream& o, const node_pool_type& np) {
+generic_directive_base::dump_group(const directive_node_group_type& g,
+		ostream& o, const PTag& np) {
 	if (g.size() > 1) {
 		typedef directive_node_group_type::const_iterator
 							const_iterator;
@@ -152,6 +156,37 @@ generic_directive_base::dump_node_group(const directive_node_group_type& g,
 	}
 	return o;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class PTag>
+ostream&
+generic_directive_base::dump_groups(ostream& o, const PTag& np) const {
+//	o << '(';
+{
+	typedef nodes_type::const_iterator const_iterator;
+	const_iterator i(nodes.begin());
+	const const_iterator e(nodes.end());
+	INVARIANT(i!=e);
+	dump_group(*i, o, np);
+	for (++i; i!=e; ++i) {
+		dump_group(*i, o << ',', np);
+	}
+}
+//	return o << ')';
+	return o;
+}
+
+// explicit template instantiations
+template 
+ostream&
+generic_directive_base::dump_groups(ostream&,
+	const instance_pool<bool_instance>&) const;
+
+template 
+ostream&
+generic_directive_base::dump_groups(ostream&,
+	const instance_pool<process_instance>&) const;
+
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

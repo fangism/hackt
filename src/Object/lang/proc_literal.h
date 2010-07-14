@@ -1,11 +1,11 @@
 /**
-	\file "Object/lang/bool_literal.h"
+	\file "Object/lang/proc_literal.h"
 	Reusable boolean literal wrapper class.  
-	$Id: bool_literal.h,v 1.6 2010/07/14 18:12:34 fang Exp $
+	$Id: proc_literal.h,v 1.1 2010/07/14 18:12:35 fang Exp $
  */
 
-#ifndef	__HAC_OBJECT_LANG_BOOL_LITERAL_H__
-#define	__HAC_OBJECT_LANG_BOOL_LITERAL_H__
+#ifndef	__HAC_OBJECT_LANG_PROC_LITERAL_H__
+#define	__HAC_OBJECT_LANG_PROC_LITERAL_H__
 
 #include <iosfwd>
 #include "Object/ref/references_fwd.h"
@@ -22,80 +22,59 @@ using std::istream;
 using util::memory::count_ptr;
 using util::persistent_object_manager;
 using util::good_bool;
+struct process_tag;
 class unroll_context;
 struct expr_dump_context;
 
 namespace PRS {
 	// apologies for confusion...
 	struct expr_dump_context;
-	class literal;
+//	class literal;
 }
 
-typedef	count_ptr<const simple_bool_meta_instance_reference>	
-						bool_literal_base_ptr_type;
-
-typedef	count_ptr<const simple_node_meta_instance_reference>
-						node_literal_ptr_type;
+typedef	count_ptr<const simple_process_meta_instance_reference>	
+						proc_literal_base_ptr_type;
 
 //=============================================================================
 /**
-	Base class with minimal functionality for boolean literal reference.  
+	Cloned from bool_literal.
+	Base class with minimal functionality for process literal reference.  
  */
-struct bool_literal {
+class proc_literal {
 public:
 	typedef	std::default_vector<size_t>::type	group_type;
-	typedef	bool_tag				tag_type;
+	typedef	process_tag				tag_type;
 protected:
 	/**
 		The underlying reference to bool, must be scalar for 
 		production rule literals, but may be aggregate for
 		macros and spec directives.
 	 */
-	bool_literal_base_ptr_type			var;
-	/**
-		This pointer is mutually exclusive with the 
-		var bool-ref member.
-		Really, they could go in a tagged union.  
-	 */
-	node_literal_ptr_type			int_node;
-	/**
-		Only applicable to int_node.
-		If true, internal node references the pull-down
-		variant expression, else references the pull-up.
-	 */
-	bool					negated;
+	proc_literal_base_ptr_type			var;
 public:
-	bool_literal();
+	proc_literal();
 
-	// implicit
-	bool_literal(const count_ptr<const PRS::literal>&);
-	bool_literal(const count_ptr<PRS::literal>&);
-
-	explicit
-	bool_literal(const bool_literal_base_ptr_type&);
-
-	explicit
-	bool_literal(const node_literal_ptr_type&);
+	proc_literal(const proc_literal_base_ptr_type&);
 
 	// The following are un-inlined to not have to require complete type
 	// on simple_node_meta_instance_reference:
 
 	// copy-ctor
-	bool_literal(const bool_literal&);
+	proc_literal(const proc_literal&);
 
-	bool_literal&
-	operator = (const bool_literal&);
-
-	bool
-	operator == (const bool_literal&) const;
+	proc_literal&
+	operator = (const proc_literal&);
 
 	bool
-	valid(void) const { return var || int_node; }
+	operator == (const proc_literal&) const;
 
-	~bool_literal();
+	bool
+	valid(void) const { return var; }
 
-	const bool_literal_base_ptr_type&
-	get_bool_var(void) const { return var; }
+	~proc_literal();
+
+	const proc_literal_base_ptr_type&
+	get_proc_var(void) const { return var; }
 
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
@@ -103,28 +82,7 @@ public:
 	ostream&
 	dump(ostream&, const PRS::expr_dump_context&) const;
 
-	bool
-	is_internal(void) const { return int_node; }
-
-	const node_literal_ptr_type&
-	internal_node(void) const { return int_node; }
-
-	void
-	negate_node(void) { negated = true; }
-
-	void
-	unnegate_node(void) { negated = false; }
-
-	void
-	toggle_negate_node(void) { negated = !negated; }
-
-	bool
-	is_negated(void) const { return negated; }
-
-	node_literal_ptr_type
-	unroll_node_reference(const unroll_context&) const;
-
-	bool_literal
+	proc_literal
 	unroll_reference(const unroll_context&) const;
 
 	size_t
@@ -164,16 +122,16 @@ public:
 		unroller(const unroll_context& c) : _context(c) { }
 
 		size_t
-		operator () (const bool_literal& b) const {
+		operator () (const proc_literal& b) const {
 			return b.unroll_base(_context);
 		}
 	};	// end struct unroller
 
-};	// end struct bool_literal
+};	// end struct proc_literal
 
 //=============================================================================
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __HAC_OBJECT_LANG_BOOL_LITERAL_H__
+#endif	// __HAC_OBJECT_LANG_PROC_LITERAL_H__
 

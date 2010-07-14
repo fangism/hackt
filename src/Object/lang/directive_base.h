@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/directive_base.h"
-	$Id: directive_base.h,v 1.5 2010/07/12 17:47:00 fang Exp $
+	$Id: directive_base.h,v 1.6 2010/07/14 18:12:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_DIRECTIVE_BASE_H__
@@ -16,6 +16,7 @@
 namespace HAC {
 namespace entity {
 class const_param;
+template <class> class instance_pool;
 using std::istream;
 using std::ostream;
 using std::string;
@@ -91,10 +92,22 @@ public:
 	size_t
 	first_node_error(void) const;
 
+	template <class PTag>
 	static
 	ostream&
-	dump_node_group(const directive_node_group_type&, ostream&, 
-		const node_pool_type&);
+	dump_group(const directive_node_group_type&, ostream&, 
+		const PTag&);
+
+	template <class PTag>
+	ostream&
+	dump_groups(ostream&, const PTag&) const;
+
+	static
+	ostream&
+	dump_node_group(const directive_node_group_type& g, ostream& o, 
+		const node_pool_type& p) {
+		return dump_group(g, o, p);
+	}
 
 	void
 	collect_transient_info_base(persistent_object_manager&) const;

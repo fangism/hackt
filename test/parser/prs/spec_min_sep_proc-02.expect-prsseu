@@ -1,0 +1,9 @@
+min_sep_proc<20>("inv_a"; "inv_b")
+"inv_a.a" -> "inv_a.b"-
+~"inv_a.a" -> "inv_a.b"+
+"inv_b.p" -> "inv_b.q"-
+~"inv_b.p" -> "inv_b.q"+
+= "!GND" "inv_a.!GND"
+= "!GND" "inv_b.!GND"
+= "!Vdd" "inv_a.!Vdd"
+= "!Vdd" "inv_b.!Vdd"

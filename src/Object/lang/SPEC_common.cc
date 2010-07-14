@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/SPEC_registry.cc"
 	Definitions of spec directives belong here.  
-	$Id: SPEC_common.cc,v 1.9 2010/07/12 21:49:53 fang Exp $
+	$Id: SPEC_common.cc,v 1.10 2010/07/14 18:12:33 fang Exp $
  */
 
 #include <iostream>
@@ -10,6 +10,8 @@
 #include "Object/lang/SPEC_common.h"
 #include "Object/expr/const_param_expr_list.h"
 #include "Object/lang/cflat_context_visitor.h"
+#include "Object/traits/bool_traits.h"
+#include "Object/traits/proc_traits.h"
 
 namespace HAC {
 namespace entity {
@@ -43,6 +45,10 @@ good_bool								\
 class_name::__check_node_args(const char* name, const node_args_type& a) { \
 	return __no_grouped_node_args(name, a);				\
 }
+
+#define	DEFINE_SPEC_DIRECTIVE_META_TYPE(class_name, Tag)		\
+const meta_type_tag_enum class_name::type =				\
+	class_traits<Tag>::type_tag_enum_value;
 
 //-----------------------------------------------------------------------------
 /**
@@ -165,6 +171,7 @@ UnAliased_base::__check_node_args(const char* name, const node_args_type& a) {
 	return good_bool(true);
 }
 
+DEFINE_SPEC_DIRECTIVE_META_TYPE(UnAliased_base, bool_tag)
 /**
 	Checks to make sure that no nodes in different group arguments
 	are aliased to each other.  
@@ -206,6 +213,7 @@ UnAliased::__main(cflat_context_visitor& v, const node_args_type& n) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DEFINE_SPEC_DIRECTIVE_META_TYPE(Assert, bool_tag)
 
 /**
 	Takes any number of parameters, checks that they are all true later.  
@@ -239,6 +247,8 @@ Assert::__check_node_args(const char* name, const node_args_type&) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DEFINE_SPEC_DIRECTIVE_META_TYPE(LVS_exclhi, bool_tag)
+
 good_bool
 LVS_exclhi::__check_num_params(const char* name, const size_t s) {
 	return __takes_no_params(name, s);
@@ -269,6 +279,8 @@ LVS_exclhi::__check_node_args(const char* name, const node_args_type& a) {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DEFINE_SPEC_DIRECTIVE_META_TYPE(LVS_excllo, bool_tag)
+
 good_bool
 LVS_excllo::__check_num_params(const char* name, const size_t s) {
 	return __takes_no_params(name, s);
@@ -299,6 +311,8 @@ LVS_excllo::__check_node_args(const char* name, const node_args_type& a) {
 #endif
 
 //-----------------------------------------------------------------------------
+DEFINE_SPEC_DIRECTIVE_META_TYPE(LVS_BDD_order, bool_tag)
+
 good_bool
 LVS_BDD_order::__check_num_params(const char* name, const size_t s) {
 	return __takes_no_params(name, s);
@@ -314,6 +328,11 @@ DEFINE_DEFAULT_SPEC_DIRECTIVE_CHECK_PARAMS(LVS_BDD_order)
 DEFINE_DEFAULT_SPEC_DIRECTIVE_CHECK_NODES(LVS_BDD_order)
 
 //-----------------------------------------------------------------------------
+/**
+	This should be deprecated in favor of using node attributes.
+ */
+DEFINE_SPEC_DIRECTIVE_META_TYPE(LVS_unstaticized, bool_tag)
+
 good_bool
 LVS_unstaticized::__check_num_params(const char* name, const size_t s) {
 	return __takes_no_params(name, s);
@@ -328,6 +347,8 @@ DEFINE_DEFAULT_SPEC_DIRECTIVE_CHECK_PARAMS(LVS_unstaticized)
 DEFINE_DEFAULT_SPEC_DIRECTIVE_CHECK_NODES(LVS_unstaticized)
 
 //-----------------------------------------------------------------------------
+DEFINE_SPEC_DIRECTIVE_META_TYPE(LVS_cross_coupled_inverters, bool_tag)
+
 good_bool
 LVS_cross_coupled_inverters::__check_num_params(
 		const char* name, const size_t s) {
@@ -344,6 +365,8 @@ DEFINE_DEFAULT_SPEC_DIRECTIVE_CHECK_PARAMS(LVS_cross_coupled_inverters)
 DEFINE_DEFAULT_SPEC_DIRECTIVE_CHECK_NODES(LVS_cross_coupled_inverters)
 
 //-----------------------------------------------------------------------------
+DEFINE_SPEC_DIRECTIVE_META_TYPE(SIM_force_exclhi, bool_tag)
+
 good_bool
 SIM_force_exclhi::__check_num_params(const char* name, const size_t s) {
 	return __takes_no_params(name, s);
@@ -366,6 +389,8 @@ SIM_force_exclhi::__check_node_args(const char* name, const node_args_type& a) {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DEFINE_SPEC_DIRECTIVE_META_TYPE(SIM_force_excllo, bool_tag)
+
 good_bool
 SIM_force_excllo::__check_num_params(const char* name, const size_t s) {
 	return __takes_no_params(name, s);
@@ -388,6 +413,8 @@ SIM_force_excllo::__check_node_args(const char* name, const node_args_type& a) {
 #endif
 
 //-----------------------------------------------------------------------------
+DEFINE_SPEC_DIRECTIVE_META_TYPE(layout_min_sep, bool_tag)
+
 /**
 	Namespace for layout directives.  
  */
@@ -414,7 +441,41 @@ layout_min_sep::__check_node_args(const char* name, const node_args_type& a) {
 }
 
 //-----------------------------------------------------------------------------
+/**
+	Specifies minimum physical separation between two sets of processes.
+ */
+DEFINE_SPEC_DIRECTIVE_META_TYPE(layout_min_sep_proc, process_tag)
+
+/**
+	Namespace for layout directives.  
+ */
+good_bool
+layout_min_sep_proc::__check_num_params(const char* name, const size_t s) {
+	return exact_num_params(name, 1, s);
+}
+
+good_bool
+layout_min_sep_proc::__check_num_nodes(const char* name, const size_t s) {
+//	return min_num_nodes(name, 2, s);
+	return exact_num_nodes(name, 2, s);
+}
+
+DEFINE_DEFAULT_SPEC_DIRECTIVE_CHECK_PARAMS(layout_min_sep_proc)
+
+/**
+	Grouped arguments ARE allowed here.  
+	TODO: could check that same node doesn't appear in different groups...
+ */
+good_bool
+layout_min_sep_proc::__check_node_args(
+		const char* name, const node_args_type& a) {
+	return good_bool(true);
+}
+
+//-----------------------------------------------------------------------------
 // sypply_x method definitions
+
+DEFINE_SPEC_DIRECTIVE_META_TYPE(supply_x, bool_tag)
 
 good_bool
 supply_x::__check_num_params(const char* name, const size_t s) {
@@ -437,7 +498,10 @@ supply_x::__check_node_args(const char* name, const node_args_type& a) {
 }
 
 //-----------------------------------------------------------------------------
-// RunModeState method definitions
+// RunModeStatic method definitions
+
+DEFINE_SPEC_DIRECTIVE_META_TYPE(RunModeStatic, bool_tag)
+
 good_bool
 RunModeStatic::__check_num_params(const char* name, const size_t s) {
 	return exact_num_params(name, 0, s);

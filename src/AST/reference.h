@@ -1,7 +1,7 @@
 /**
 	\file "AST/reference.h"
 	Reference-related parser classes for HAC.
-	$Id: reference.h,v 1.3 2007/10/08 01:21:04 fang Exp $
+	$Id: reference.h,v 1.4 2010/07/14 18:12:31 fang Exp $
  */
 
 #ifndef __HAC_AST_REFERENCE_H__
@@ -197,6 +197,8 @@ public:
 	// overrides inst_ref_expr::check_grouped_literals
 	bool
 	check_grouped_literals(checked_bool_group_type&, const context&) const;
+	bool
+	check_grouped_literals(checked_proc_group_type&, const context&) const;
 
 };	// end class reference_group_construction
 

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
 	Visitor implementation for allocating simulator state structures.  
-	$Id: ExprAlloc.cc,v 1.44 2010/04/07 00:13:08 fang Exp $
+	$Id: ExprAlloc.cc,v 1.45 2010/07/14 18:12:38 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -57,6 +57,7 @@ using entity::bool_tag;
 using entity::process_tag;
 using entity::pint_const;
 using entity::instance_alias_info;
+using entity::meta_type_tag_enum;
 using util::good_bool;
 using util::memory::free_list_acquire;
 using util::memory::free_list_release;
@@ -67,6 +68,7 @@ using util::value_saver;
 #define	REF_RULE_MAP(g,i)		g->rule_pool[g->rule_map[i]]
 
 //=============================================================================
+// currently only supports node attributes
 typedef	entity::PRS::attribute_visitor_entry<ExprAlloc>
 					ExprAlloc_attribute_definition_entry;
 
@@ -178,7 +180,7 @@ register_ExprAlloc_spec_class(void) {
 			"\' has already been registered!" << endl;
 		THROW_EXIT;
 	}
-	m = ExprAlloc_spec_definition_entry(k, &T::main,
+	new (&m) ExprAlloc_spec_definition_entry(k, T::type, &T::main,
 		&T::check_num_params, &T::check_num_nodes, 
 		&T::check_param_args, &T::check_node_args);
 	// oddly, this is needed to force instantiation of the [] const operator
@@ -1514,6 +1516,7 @@ namespace prsim_spec_directives {
 
 /**
 	Convenient macro for declaring prsim SPEC directives.  
+	For now, all PRSIM spec directives are for bool meta-type only.
  */
 #define	DECLARE_AND_DEFINE_PRSIM_SPEC_DIRECTIVE_CLASS(class_name, spec_name) \
 	DECLARE_SPEC_DIRECTIVE_CLASS(class_name, ExprAlloc)		\
@@ -1689,7 +1692,9 @@ SIM_force_excllo::main(visitor_type& v, const param_args_type& params,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// TODO:
 // layout_min_sep -- reserved for SEU prsim... later
+// layout_min_sep_proc -- reserved for SEU prsim... later
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DECLARE_AND_DEFINE_PRSIM_SPEC_DIRECTIVE_CLASS(supply_x, "supply_x")

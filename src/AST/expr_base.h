@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr_base.h"
 	Base set of classes for the HAC parser.  
-	$Id: expr_base.h,v 1.7 2006/04/12 08:53:12 fang Exp $
+	$Id: expr_base.h,v 1.8 2010/07/14 18:12:30 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr_base.h,v 1.7.32.1 2005/12/11 00:45:06 fang Exp
  */
@@ -32,6 +32,7 @@ namespace entity {
 	class meta_reference_union;
 	class const_meta_reference_union;
 	class bool_literal;
+	class proc_literal;
 namespace PRS {
 	class prs_expr;
 	class literal;
@@ -152,6 +153,8 @@ public:
 	typedef	entity::bool_literal		simple_meta_return_type;
 	typedef	std::default_vector<simple_meta_return_type>::type
 					checked_bool_group_type;
+	typedef	std::default_vector<entity::proc_literal>::type
+					checked_proc_group_type;
 
 	inst_ref_expr() : parent_type() { }
 virtual ~inst_ref_expr() { }
@@ -185,6 +188,8 @@ virtual	prs_literal_ptr_type
 	// overridden only by reference_group_construction
 virtual	bool
 	check_grouped_literals(checked_bool_group_type&, const context&) const;
+virtual	bool
+	check_grouped_literals(checked_proc_group_type&, const context&) const;
 
 	CHECK_PRS_EXPR_PROTO;
 	

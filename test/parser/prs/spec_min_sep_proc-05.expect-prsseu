@@ -1,0 +1,17 @@
+min_sep_proc<20>("inv_a[0]","inv_b[0]"; "inv_a[1]","inv_b[1]")
+"inv_a[0].a" -> "inv_a[0].b"-
+~"inv_a[0].a" -> "inv_a[0].b"+
+"inv_a[1].a" -> "inv_a[1].b"-
+~"inv_a[1].a" -> "inv_a[1].b"+
+"inv_b[0].p" -> "inv_b[0].q"-
+~"inv_b[0].p" -> "inv_b[0].q"+
+"inv_b[1].p" -> "inv_b[1].q"-
+~"inv_b[1].p" -> "inv_b[1].q"+
+= "!GND" "inv_a[0].!GND"
+= "!GND" "inv_a[1].!GND"
+= "!GND" "inv_b[0].!GND"
+= "!GND" "inv_b[1].!GND"
+= "!Vdd" "inv_a[0].!Vdd"
+= "!Vdd" "inv_a[1].!Vdd"
+= "!Vdd" "inv_b[0].!Vdd"
+= "!Vdd" "inv_b[1].!Vdd"

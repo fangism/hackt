@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.67 2010/07/13 21:43:12 fang Exp $
+#	$Id: Makefile.am,v 1.68 2010/07/14 18:12:39 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -14,6 +14,7 @@ HACKT_PARSE_TEST_FAILURES = \
 	size-02 size-06 \
 	spec_min_sep-02 spec_min_sep-02b spec_min_sep-02c \
 	spec_min_sep-07 spec_min_sep-08 spec_min_sep-09 \
+	spec_min_sep_proc-07 spec_min_sep_proc-08 \
 	top-level-02 top-level-03 \
 	subckt-02 subckt-03 \
 	precharge-01 \
@@ -60,6 +61,8 @@ HACKT_PARSE_TEST_PASSES = \
 	weak-01 weak-02 weak-03 \
 	spec_min_sep-01 spec_min_sep-03 spec_min_sep-04 spec_min_sep-05 \
 	spec_min_sep-06 spec_min_sep-10 spec_min_sep-11 \
+	spec_min_sep_proc-01 spec_min_sep_proc-02 spec_min_sep_proc-03 \
+	spec_min_sep_proc-04 spec_min_sep_proc-05 spec_min_sep_proc-06 \
 	bug-001 \
 	top-level-01 top-level-04 top-level-05 \
 	flat-type-01 flat-type-02 flat-type-03 \
@@ -145,6 +148,8 @@ HACKT_CREATE_TEST_PASSES = \
 	weak-01 weak-02 weak-03 \
 	spec_min_sep-01 spec_min_sep-03 spec_min_sep-04 spec_min_sep-05 \
 	spec_min_sep-06 spec_min_sep-10 spec_min_sep-11 \
+	spec_min_sep_proc-01 spec_min_sep_proc-02 spec_min_sep_proc-03 \
+	spec_min_sep_proc-04 spec_min_sep_proc-05 spec_min_sep_proc-06 \
 	bug-001 \
 	top-level-01 top-level-04 top-level-05 \
 	flat-type-01 flat-type-02 flat-type-03 \
@@ -319,7 +324,9 @@ HACKT_CFLAT_LVS_TEST_FAILURES = \
 
 HACKT_CFLAT_SEU_TEST_SUBJECTS = \
 	spec_min_sep-01 spec_min_sep-03 spec_min_sep-04 spec_min_sep-05 \
-	spec_min_sep-06 spec_min_sep-10 spec_min_sep-11
+	spec_min_sep-06 spec_min_sep-10 spec_min_sep-11 \
+	spec_min_sep_proc-01 spec_min_sep_proc-02 spec_min_sep_proc-03 \
+	spec_min_sep_proc-04 spec_min_sep_proc-05 spec_min_sep_proc-06
 
 HACKT_ALLOC_TEST_PASSES = \
 	$(HACKT_CFLAT_TEST_SUBJECTS) \

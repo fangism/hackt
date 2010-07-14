@@ -1,6 +1,6 @@
 /**
 	\file "AST/SPEC.cc"
-	$Id: SPEC.cc,v 1.16 2010/07/12 17:46:51 fang Exp $
+	$Id: SPEC.cc,v 1.17 2010/07/14 18:12:28 fang Exp $
  */
 
 #include <iostream>
@@ -48,6 +48,9 @@ using entity::definition_base;
 using entity::process_definition;
 using entity::user_def_chan;
 using entity::SPEC::bool_directive;
+using entity::SPEC::proc_directive;
+using entity::META_TYPE_BOOL;
+using entity::META_TYPE_PROCESS;
 using std::mem_fun_ref;
 using std::find_if;
 
@@ -101,9 +104,24 @@ directive::check_spec(context& c) const {
 	}
 		return;		// skip the rest of this
 	}
-	const entity::SPEC::cflat_spec_definition_entry sde(f->second);
-	const count_ptr<bool_directive>
-		ret(new bool_directive(*name));
+// TODO: create new proc_directive
+	const entity::SPEC::cflat_spec_definition_entry& sde(f->second);
+	count_ptr<bool_directive> bret;
+	count_ptr<proc_directive> pret;
+	count_ptr<entity::directive_source_common> ret;
+switch (sde.type_enum) {
+	case META_TYPE_BOOL:
+		bret = count_ptr<bool_directive>(new bool_directive(*name));
+		ret = bret;
+		break;
+	case META_TYPE_PROCESS:
+		pret = count_ptr<proc_directive>(new proc_directive(*name));
+		ret = pret;
+		break;
+	default:
+	cerr << "Error: unhandled spec meta-type at " << where(*args) << endl;
+	SPEC_THROW_ERROR;
+}
 if (params) {
 	if (!sde.check_num_params(params->size()).good) {
 		// already have error message
@@ -129,17 +147,20 @@ if (params) {
 	cerr << "\tat " << where(*this) << endl;
 	SPEC_THROW_ERROR;
 }
-{
-	typedef	inst_ref_expr_list::checked_bool_groups_type
-						checked_bools_type;
-	typedef	checked_bools_type::const_iterator	const_iterator;
-	typedef	checked_bools_type::value_type		value_type;
+// check instance reference arguments
+// now can be nodes or other types
 	NEVER_NULL(args);
 	if (!sde.check_num_nodes(args->size()).good) {
 		// already have error message
 		cerr << "\tat " << where(*args) << endl;
 		SPEC_THROW_ERROR;
 	}
+switch (sde.type_enum) {
+case META_TYPE_BOOL: {
+	typedef	inst_ref_expr_list::checked_bool_groups_type
+						checked_bools_type;
+	typedef	checked_bools_type::const_iterator	const_iterator;
+	typedef	checked_bools_type::value_type		value_type;
 	checked_bools_type temp;
 	args->postorder_check_grouped_bool_refs(temp, c);
 	const const_iterator i(temp.begin()), e(temp.end());
@@ -149,10 +170,33 @@ if (params) {
 		SPEC_THROW_ERROR;
 	}
 	INVARIANT(temp.size());
-	NEVER_NULL(ret);
-	copy(i, e, back_inserter(ret->get_nodes()));
+	NEVER_NULL(bret);
+	copy(i, e, back_inserter(bret->get_nodes()));
+	c.get_current_spec_body().push_back(bret);
+	break;
 }
-	c.get_current_spec_body().push_back(ret);
+case META_TYPE_PROCESS: {
+	typedef	inst_ref_expr_list::checked_proc_groups_type
+						checked_procs_type;
+	typedef	checked_procs_type::const_iterator	const_iterator;
+	typedef	checked_procs_type::value_type		value_type;
+	checked_procs_type temp;
+	args->postorder_check_grouped_proc_refs(temp, c);
+	const const_iterator i(temp.begin()), e(temp.end());
+	if (find_if(i, e, mem_fun_ref(&value_type::empty)) != e) {
+		cerr << "Error checking spec arguments in " << where(*args)
+			<< endl;
+		SPEC_THROW_ERROR;
+	}
+	INVARIANT(temp.size());
+	NEVER_NULL(pret);
+	copy(i, e, back_inserter(pret->get_nodes()));
+	c.get_current_spec_body().push_back(pret);
+	break;
+}
+default:
+	break;
+}
 }	// end method directive::check_spec
 
 //=============================================================================

@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/SPEC_footprint.cc"
-	$Id: SPEC_footprint.cc,v 1.8 2010/07/12 17:46:57 fang Exp $
+	$Id: SPEC_footprint.cc,v 1.9 2010/07/14 18:12:33 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -11,6 +11,7 @@
 #include "Object/def/footprint.h"
 #include "Object/lang/SPEC_footprint.h"
 #include "Object/lang/cflat_visitor.h"
+#include "Object/lang/SPEC_registry.h"
 #include "Object/inst/instance_pool.h"
 #include "Object/inst/alias_empty.h"
 #include "Object/inst/instance_alias_info.h"
@@ -89,34 +90,38 @@ footprint::~footprint() { }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 footprint::dump_directive(const footprint_directive& d, ostream& o, 
-		const node_pool_type& np) {
+		const entity::footprint& f) {
 	o << d.name;
 	directive_base::dump_params(d.params, o);
+	cflat_spec_registry_type::const_iterator
+		df(cflat_spec_registry.find(d.name));
+	INVARIANT(df != cflat_spec_registry.end());
 	o << '(';
-	typedef	footprint_directive::nodes_type::const_iterator	const_iterator;
-	const_iterator i(d.nodes.begin());
-	const const_iterator e(d.nodes.end());
-	INVARIANT(i!=e);
-	bool_directive_base::dump_node_group(*i, o, np);
-	for (++i; i!=e; ++i) {
-		bool_directive_base::dump_node_group(*i, o << ',', np);
-	}
+switch (df->second.type_enum) {
+case META_TYPE_BOOL:
+	d.dump_groups(o, f.get_instance_pool<bool_tag>());
+	break;
+case META_TYPE_PROCESS:
+	d.dump_groups(o, f.get_instance_pool<process_tag>());
+	break;
+default:
+	DIE;
+}
 	return o << ')';
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	TODO: indent?
+	Prints all unrolled spec directives.
  */
 ostream&
 footprint::dump(ostream& o, const entity::footprint& f) const {
 if (size()) {
-	const node_pool_type& bpool(f.get_instance_pool<bool_tag>());
 	o << auto_indent << "resolved specs:" << endl;
 	const_iterator i(begin());
 	const const_iterator e(end());
 	for ( ; i!=e; ++i) {
-		dump_directive(*i, o << auto_indent, bpool) << endl;
+		dump_directive(*i, o << auto_indent, f) << endl;
 	}
 }
 	return o;

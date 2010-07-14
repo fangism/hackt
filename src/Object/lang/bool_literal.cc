@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/bool_literal.cc"
-	$Id: bool_literal.cc,v 1.7 2007/10/08 01:21:25 fang Exp $
+	$Id: bool_literal.cc,v 1.8 2010/07/14 18:12:34 fang Exp $
  */
 
 #include "Object/lang/bool_literal.h"
@@ -116,7 +116,7 @@ bool_literal::unroll_base(const unroll_context& c) const {
 		return 0;		// INVALID_NODE_INDEX
 	}
 	INVARIANT(!bc.dimensions());    // must be scalar, checked earlier
-	const instance_alias_info<bool_tag>& bi(*bc.front());
+	const instance_alias_info<tag_type>& bi(*bc.front());
 	const size_t node_index = bi.instance_index;
 	INVARIANT(node_index);
 	return node_index;
@@ -172,7 +172,7 @@ bool_literal::unroll_group(const unroll_context& c, group_type& g) const {
 	const_iterator i(bc.begin()), e(bc.end());
 	// could reserve...
 	for ( ; i!=e; ++i) {
-		const instance_alias_info<bool_tag>& bi(**i);
+		const instance_alias_info<tag_type>& bi(**i);
 		const size_t node_index = bi.instance_index;
 		INVARIANT(node_index);
 		g.push_back(node_index);

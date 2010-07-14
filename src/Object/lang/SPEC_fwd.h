@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/SPEC_fwd.h"
 	Useful forward declarations for SPEC headers.  
-	$Id: SPEC_fwd.h,v 1.7 2010/07/12 17:46:59 fang Exp $
+	$Id: SPEC_fwd.h,v 1.8 2010/07/14 18:12:33 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_SPEC_FWD_H__
@@ -20,6 +20,7 @@ class const_param;
 class unroll_context;
 struct bool_tag;
 class bool_literal;
+class proc_literal;
 template <class> class state_instance;
 
 #if 0

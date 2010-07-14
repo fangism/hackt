@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/SPEC.h"
-	$Id: SPEC.h,v 1.11 2010/07/12 17:46:56 fang Exp $
+	$Id: SPEC.h,v 1.12 2010/07/14 18:12:33 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_SPEC_H__
@@ -72,6 +72,29 @@ public:
 	PERSISTENT_METHODS_DECLARATIONS
 	// is pooling really necessary for these?
 	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
+};	// end class directive
+
+//=============================================================================
+// cloned from bool_directive
+class proc_directive : public directive_abstract, public proc_directive_source {
+	typedef	proc_directive				this_type;
+public:
+	proc_directive();
+
+	explicit
+	proc_directive(const string&);
+
+	~proc_directive();
+
+	SPEC_UNROLL_DIRECTIVE_PROTO;
+
+	ostream&
+	what(ostream&) const;
+
+	ostream&
+	dump(ostream&, const PRS::rule_dump_context&) const;
+
+	PERSISTENT_METHODS_DECLARATIONS
 };	// end class directive
 
 //=============================================================================

@@ -3,6 +3,21 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-07-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-03:
+	  SPEC directives can now refer to process instances, 
+		directive definitions have been extended with 
+		a meta-type tag that determines the expected type.  
+		Meta-type is set in "Object/lang/SPEC_common.cc".
+		Front-end and middle-end have all been updated.
+		Object file binary version bumped, new spec-proc directive.
+	  New directive: min_sep_proc<>(...) to specify minimum
+		separation between processes.  
+		hflat output is enabled only with -f SEU.
+		Documented, test cases added.
+
+
 2010-07-12	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-02-d:

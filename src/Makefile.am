@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.242 2010/07/12 21:49:52 fang Exp $
+#	$Id: Makefile.am,v 1.243 2010/07/14 18:12:28 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -694,6 +694,7 @@ OBJECT_CC_FILES = \
 	Object/lang/cflat_context_visitor.cc \
 	Object/lang/cflat_printer.cc \
 	Object/lang/bool_literal.cc \
+	Object/lang/proc_literal.cc \
 	Object/lang/directive_base.cc \
 	Object/lang/directive_definition.cc \
 	Object/lang/directive_source.cc \

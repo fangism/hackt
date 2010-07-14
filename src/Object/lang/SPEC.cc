@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/SPEC.cc"
-	$Id: SPEC.cc,v 1.9 2010/07/12 17:46:56 fang Exp $
+	$Id: SPEC.cc,v 1.10 2010/07/14 18:12:32 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -33,6 +33,8 @@ SPECIALIZE_UTIL_WHAT(HAC::entity::SPEC::directives_conditional,
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::SPEC::bool_directive, SPEC_DIRECTIVE_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	HAC::entity::SPEC::proc_directive, SPEC_PROC_DIRECTIVE_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::SPEC::invariant, SPEC_INVARIANT_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
@@ -146,6 +148,80 @@ bool_directive::write_object(const persistent_object_manager& m, ostream& o) con
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 bool_directive::load_object(const persistent_object_manager& m, istream& i) {
+	load_object_base(m, i);
+}
+
+//-----------------------------------------------------------------------------
+// class proc_directive method definitions
+// cloned from bool_directive
+
+proc_directive::proc_directive() :
+		directive_abstract(), proc_directive_source() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+proc_directive::proc_directive(const string& n) :
+		directive_abstract(), proc_directive_source(n) { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+proc_directive::~proc_directive() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(proc_directive)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Ripped off PRS::macro::dump().
+ */
+ostream&
+proc_directive::dump(ostream& o, const PRS::rule_dump_context& c) const {
+	return proc_directive_source::dump(o, c);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Implementation ripped off of PRS::macro::unroll().
+ */
+good_bool
+proc_directive::unroll(const unroll_context& c) const {
+	STACKTRACE_VERBOSE;
+	// at least check the instance references first...
+	footprint& sfp(c.get_target_footprint().get_spec_footprint());
+	footprint_directive& new_directive(sfp.push_back_directive(name));
+	const size_t perr = unroll_params(c, new_directive.params);
+	if (perr) {
+		cerr << "Error resolving expression at position " << perr
+			<< " of spec directive \'" << name << "\'." << endl;
+		// dump the literal?
+		return good_bool(false);
+	}
+	const size_t nerr = unroll_nodes(c, new_directive.nodes);
+	if (nerr) {
+		cerr << "Error resolving literal node at position " << nerr
+			<< " of spec directive \'" << name << "\'." << endl;
+		// dump the literal?
+		return good_bool(false);
+	}
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+proc_directive::collect_transient_info(persistent_object_manager& m) const {
+if (!m.register_transient_object(this, 
+		util::persistent_traits<this_type>::type_key)) {
+	collect_transient_info_base(m);
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+proc_directive::write_object(const persistent_object_manager& m, ostream& o) const {
+	write_object_base(m, o);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+proc_directive::load_object(const persistent_object_manager& m, istream& i) {
 	load_object_base(m, i);
 }
 
