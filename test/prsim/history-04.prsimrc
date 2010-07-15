@@ -1,0 +1,17 @@
+# "history-04.prsimrc"
+# @haco@ inv.haco-c
+# testing basic history commands
+
+# history-noninteractive off
+history-noninteractive on
+
+source history-echo.prsimrc
+history-save history-04-save.prsimrc
+echo ----- history dump -----
+# spaces intentional
+!     cat history-04-save.prsimrc
+source history-04-save.prsimrc
+!     rm -f history-04-save.prsimrc
+
+history
+

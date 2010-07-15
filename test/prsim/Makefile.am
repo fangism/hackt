@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.99 2010/07/07 23:01:29 fang Exp $
+#	$Id: Makefile.am,v 1.100 2010/07/15 00:29:28 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -295,7 +295,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	after_min_max-01 after_min_max-02 after_min_max-03 \
 	dirs-02 dirs-03 dirs-04 dirs-05 dirs-06 dirs-07 \
 	memstats32-inv memstats64-inv \
-	history-01 history-02 history-03
+	history-01 history-02 history-03 history-04
 
 # subset of prsimrc test that we wish to compare traces against regressions
 HACKT_PRSIMTRACE_TEST_SUBJECTS = \

@@ -22,4 +22,4 @@ history
 history
 history
 echo saving...
-history-save history-recorded-01.prsimrc
+# history-save history-recorded-01.prsimrc

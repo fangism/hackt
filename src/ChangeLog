@@ -5,6 +5,16 @@
 
 2010-07-14	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-84-04:
+	  hacprsim-history: minor history feature tweaks
+		suppress/alter certain commands in the history
+		'source' commands will be commented-out when expanding 
+		contents into history, to avoid duplicate commands.
+		Test case added, updated.
+
+
+2010-07-14	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-84-03:
 	  SPEC directives can now refer to process instances, 
 		directive definitions have been extended with 

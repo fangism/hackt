@@ -1,0 +1,28 @@
+ONE 
+TWO 
+THREE 
+----- history dump ----- 
+# BEGIN source history-echo.prsimrc
+echo ONE
+echo TWO
+echo THREE
+# END source history-echo.prsimrc
+# history-save history-04-save.prsimrc
+ONE 
+TWO 
+THREE 
+history[0..13]:
+0	# BEGIN source history-echo.prsimrc
+1	echo ONE
+2	echo TWO
+3	echo THREE
+4	# END source history-echo.prsimrc
+5	# history-save history-04-save.prsimrc
+6	echo ----- history dump -----
+7	!cat history-04-save.prsimrc
+8	# BEGIN source history-04-save.prsimrc
+9	echo ONE
+10	echo TWO
+11	echo THREE
+12	# END source history-04-save.prsimrc
+13	!rm -f history-04-save.prsimrc

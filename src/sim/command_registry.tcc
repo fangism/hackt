@@ -1,6 +1,6 @@
 /**
 	\file "sim/command_registry.tcc"
-	$Id: command_registry.tcc,v 1.19 2010/07/07 23:01:26 fang Exp $
+	$Id: command_registry.tcc,v 1.20 2010/07/15 00:29:27 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_REGISTRY_TCC__
@@ -344,7 +344,7 @@ command_registry<Command>::interpret_line(state_type& s, const string& line,
 		eat_whitespace(cursor);
 		if (record) {
 			// record system commands too
-			history.push_back(cursor);
+			history.push_back(string("!") +cursor);
 		}
 		const int es = system(cursor);
 		// let status remain as is, for now
@@ -376,10 +376,19 @@ command_registry<Command>::interpret_line(state_type& s, const string& line,
 			}
 #endif
 		}
+		const bool alter_source_cmd = (front == "source") &&
+			keep_noninteractive_history;
 	if (!comment_level) {
 		if (record) {
 			// record before expanding alias
+		if (front == "history-save") {
+			// always ignore this one, as a safety check
+			history.push_back(string("# ") +line);
+		} else if (alter_source_cmd) {
+			history.push_back(string("# BEGIN ") +line);
+		} else {
 			history.push_back(line);
+		}
 		}
 		// check if command is aliased :)
 		if (expand_aliases(toks) != Command::NORMAL) {
@@ -387,6 +396,9 @@ command_registry<Command>::interpret_line(state_type& s, const string& line,
 		} else {
 			// should be CommandStatus
 			const int ret = execute(s, toks);
+			if (record && alter_source_cmd) {
+				history.push_back(string("# END ") +line);
+			}
 			if (ret == Command::INTERACT) {
 				return interpret_stdin(s);
 			}
