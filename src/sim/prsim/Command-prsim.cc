@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.70 2010/07/07 23:01:28 fang Exp $
+	$Id: Command-prsim.cc,v 1.71 2010/08/05 23:21:55 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -660,7 +660,8 @@ if (a.size() > 2) {
 				cout << "\t*** break, " << i <<
 					" steps left: `" << nodename <<
 					"\' became ";
-				n.dump_value(cout) << endl;
+				n.dump_value(cout) <<
+					" at time " << s.time() << endl;
 				return Command::NORMAL;
 				// or Command::BREAK; ?
 			}
@@ -740,7 +741,8 @@ step_event_main(State& s, size_t i) {
 				cout << "\t*** break, " << i <<
 					" steps left: `" << nodename <<
 					"\' became ";
-				n.dump_value(cout) << endl;
+				n.dump_value(cout) <<
+					" at time " << s.time() << endl;
 				return Command::NORMAL;
 				// or Command::BREAK; ?
 			}
@@ -884,7 +886,8 @@ if (a.size() != 1) {
 				// node is plain breakpoint
 				cout << "\t*** break, `" << nodename <<
 					"\' became ";
-				n.dump_value(cout) << endl;
+				n.dump_value(cout) <<
+					" at time " << s.time() << endl;
 				return Command::NORMAL;
 				// or Command::BREAK; ?
 			}

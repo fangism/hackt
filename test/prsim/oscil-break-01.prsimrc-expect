@@ -15,7 +15,7 @@
 breaking on R.x[0] 
 	130	_Reset : 1
 	140	R.x[0] : 0	[by _Reset:=1]
-	*** break, `R.x[0]' became 0
+	*** break, `R.x[0]' became 0 at time 140
 	150	R.x[1] : 1	[by R.x[0]:=0]
 	160	R.x[2] : 0	[by R.x[1]:=1]
 	170	R.x[3] : 1	[by R.x[2]:=0]
@@ -29,7 +29,7 @@ breaking on R.x[0]
 	250	R.x[11] : 1	[by R.x[10]:=0]
 	260	R.x[12] : 0	[by R.x[11]:=1]
 	270	R.x[0] : 1	[by R.x[12]:=0]
-	*** break, `R.x[0]' became 1
+	*** break, `R.x[0]' became 1 at time 270
 	280	R.x[1] : 0	[by R.x[0]:=1]
 	290	R.x[2] : 1	[by R.x[1]:=0]
 	300	R.x[3] : 0	[by R.x[2]:=1]
@@ -43,7 +43,7 @@ breaking on R.x[0]
 	380	R.x[11] : 0	[by R.x[10]:=1]
 	390	R.x[12] : 1	[by R.x[11]:=0]
 	400	R.x[0] : 0	[by R.x[12]:=1]
-	*** break, 7 steps left: `R.x[0]' became 0
+	*** break, 7 steps left: `R.x[0]' became 0 at time 400
 	410	R.x[1] : 1	[by R.x[0]:=0]
 	420	R.x[2] : 0	[by R.x[1]:=1]
 	430	R.x[3] : 1	[by R.x[2]:=0]
@@ -57,7 +57,7 @@ breaking on R.x[0]
 	510	R.x[11] : 1	[by R.x[10]:=0]
 	520	R.x[12] : 0	[by R.x[11]:=1]
 	530	R.x[0] : 1	[by R.x[12]:=0]
-	*** break, 7 steps left: `R.x[0]' became 1
+	*** break, 7 steps left: `R.x[0]' became 1 at time 530
 	540	R.x[1] : 0	[by R.x[0]:=1]
 	550	R.x[2] : 1	[by R.x[1]:=0]
 	560	R.x[3] : 0	[by R.x[2]:=1]
@@ -129,7 +129,7 @@ unbreak R.x[0]
 breaking on R.x[2] and R.x[9] 
 	1190	R.x[1] : 1	[by R.x[0]:=0]
 	1200	R.x[2] : 0	[by R.x[1]:=1]
-	*** break, `R.x[2]' became 0
+	*** break, `R.x[2]' became 0 at time 1200
 	1210	R.x[3] : 1	[by R.x[2]:=0]
 	1220	R.x[4] : 0	[by R.x[3]:=1]
 	1230	R.x[5] : 1	[by R.x[4]:=0]
@@ -137,14 +137,14 @@ breaking on R.x[2] and R.x[9]
 	1250	R.x[7] : 1	[by R.x[6]:=0]
 	1260	R.x[8] : 0	[by R.x[7]:=1]
 	1270	R.x[9] : 1	[by R.x[8]:=0]
-	*** break, `R.x[9]' became 1
+	*** break, `R.x[9]' became 1 at time 1270
 	1280	R.x[10] : 0	[by R.x[9]:=1]
 	1290	R.x[11] : 1	[by R.x[10]:=0]
 	1300	R.x[12] : 0	[by R.x[11]:=1]
 	1310	R.x[0] : 1	[by R.x[12]:=0]
 	1320	R.x[1] : 0	[by R.x[0]:=1]
 	1330	R.x[2] : 1	[by R.x[1]:=0]
-	*** break, 4 steps left: `R.x[2]' became 1
+	*** break, 4 steps left: `R.x[2]' became 1 at time 1330
 	1340	R.x[3] : 0	[by R.x[2]:=1]
 	1350	R.x[4] : 1	[by R.x[3]:=0]
 	1360	R.x[5] : 0	[by R.x[4]:=1]
@@ -152,7 +152,7 @@ breaking on R.x[2] and R.x[9]
 	1380	R.x[7] : 0	[by R.x[6]:=1]
 	1390	R.x[8] : 1	[by R.x[7]:=0]
 	1400	R.x[9] : 0	[by R.x[8]:=1]
-	*** break, 3 steps left: `R.x[9]' became 0
+	*** break, 3 steps left: `R.x[9]' became 0 at time 1400
 	1410	R.x[10] : 1	[by R.x[9]:=0]
 	1420	R.x[11] : 0	[by R.x[10]:=1]
 	1430	R.x[12] : 1	[by R.x[11]:=0]

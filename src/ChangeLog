@@ -3,6 +3,13 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-08-05	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-06:
+	  hacprsim: print time each time breakpoint is tripped.
+	  Updated few test cases.
+
+
 2010-08-04	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-05:

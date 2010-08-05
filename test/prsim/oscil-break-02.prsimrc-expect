@@ -15,7 +15,7 @@
 breaking on R.x[0] 
 	130	_Reset : 1	(2 T)
 	140	R.x[0] : 0	[by _Reset:=1]	(2 T)
-	*** break, `R.x[0]' became 0
+	*** break, `R.x[0]' became 0 at time 140
 R.x[5] : 0	[by R.x[4]:=1]	(1 T)
 	150	R.x[1] : 1	[by R.x[0]:=0]	(2 T)
 	160	R.x[2] : 0	[by R.x[1]:=1]	(2 T)
@@ -30,7 +30,7 @@ R.x[5] : 0	[by R.x[4]:=1]	(1 T)
 	250	R.x[11] : 1	[by R.x[10]:=0]	(2 T)
 	260	R.x[12] : 0	[by R.x[11]:=1]	(2 T)
 	270	R.x[0] : 1	[by R.x[12]:=0]	(3 T)
-	*** break, `R.x[0]' became 1
+	*** break, `R.x[0]' became 1 at time 270
 R.x[5] : 1	[by R.x[4]:=0]	(2 T)
 	280	R.x[1] : 0	[by R.x[0]:=1]	(3 T)
 	290	R.x[2] : 1	[by R.x[1]:=0]	(3 T)
@@ -45,7 +45,7 @@ R.x[5] : 1	[by R.x[4]:=0]	(2 T)
 	380	R.x[11] : 0	[by R.x[10]:=1]	(3 T)
 	390	R.x[12] : 1	[by R.x[11]:=0]	(3 T)
 	400	R.x[0] : 0	[by R.x[12]:=1]	(4 T)
-	*** break, 7 steps left: `R.x[0]' became 0
+	*** break, 7 steps left: `R.x[0]' became 0 at time 400
 R.x[5] : 0	[by R.x[4]:=1]	(3 T)
 	410	R.x[1] : 1	[by R.x[0]:=0]	(4 T)
 	420	R.x[2] : 0	[by R.x[1]:=1]	(4 T)
@@ -60,7 +60,7 @@ R.x[5] : 0	[by R.x[4]:=1]	(3 T)
 	510	R.x[11] : 1	[by R.x[10]:=0]	(4 T)
 	520	R.x[12] : 0	[by R.x[11]:=1]	(4 T)
 	530	R.x[0] : 1	[by R.x[12]:=0]	(5 T)
-	*** break, 7 steps left: `R.x[0]' became 1
+	*** break, 7 steps left: `R.x[0]' became 1 at time 530
 R.x[5] : 1	[by R.x[4]:=0]	(4 T)
 	540	R.x[1] : 0	[by R.x[0]:=1]	(5 T)
 	550	R.x[2] : 1	[by R.x[1]:=0]	(5 T)
@@ -137,7 +137,7 @@ R.x[5] : 0	[by R.x[4]:=1]	(9 T)
 breaking on R.x[2] and R.x[9] 
 	1190	R.x[1] : 1	[by R.x[0]:=0]	(10 T)
 	1200	R.x[2] : 0	[by R.x[1]:=1]	(10 T)
-	*** break, `R.x[2]' became 0
+	*** break, `R.x[2]' became 0 at time 1200
 R.x[5] : 0	[by R.x[4]:=1]	(9 T)
 	1210	R.x[3] : 1	[by R.x[2]:=0]	(10 T)
 	1220	R.x[4] : 0	[by R.x[3]:=1]	(10 T)
@@ -146,7 +146,7 @@ R.x[5] : 0	[by R.x[4]:=1]	(9 T)
 	1250	R.x[7] : 1	[by R.x[6]:=0]	(10 T)
 	1260	R.x[8] : 0	[by R.x[7]:=1]	(10 T)
 	1270	R.x[9] : 1	[by R.x[8]:=0]	(10 T)
-	*** break, `R.x[9]' became 1
+	*** break, `R.x[9]' became 1 at time 1270
 R.x[5] : 1	[by R.x[4]:=0]	(10 T)
 	1280	R.x[10] : 0	[by R.x[9]:=1]	(10 T)
 	1290	R.x[11] : 1	[by R.x[10]:=0]	(10 T)
@@ -154,7 +154,7 @@ R.x[5] : 1	[by R.x[4]:=0]	(10 T)
 	1310	R.x[0] : 1	[by R.x[12]:=0]	(11 T)
 	1320	R.x[1] : 0	[by R.x[0]:=1]	(11 T)
 	1330	R.x[2] : 1	[by R.x[1]:=0]	(11 T)
-	*** break, 4 steps left: `R.x[2]' became 1
+	*** break, 4 steps left: `R.x[2]' became 1 at time 1330
 R.x[5] : 1	[by R.x[4]:=0]	(10 T)
 	1340	R.x[3] : 0	[by R.x[2]:=1]	(11 T)
 	1350	R.x[4] : 1	[by R.x[3]:=0]	(11 T)
@@ -163,7 +163,7 @@ R.x[5] : 1	[by R.x[4]:=0]	(10 T)
 	1380	R.x[7] : 0	[by R.x[6]:=1]	(11 T)
 	1390	R.x[8] : 1	[by R.x[7]:=0]	(11 T)
 	1400	R.x[9] : 0	[by R.x[8]:=1]	(11 T)
-	*** break, 3 steps left: `R.x[9]' became 0
+	*** break, 3 steps left: `R.x[9]' became 0 at time 1400
 R.x[5] : 0	[by R.x[4]:=1]	(11 T)
 	1410	R.x[10] : 1	[by R.x[9]:=0]	(11 T)
 	1420	R.x[11] : 0	[by R.x[10]:=1]	(11 T)
