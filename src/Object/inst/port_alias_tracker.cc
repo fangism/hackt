@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_alias_tracker.cc"
-	$Id: port_alias_tracker.cc,v 1.33 2010/08/05 18:25:28 fang Exp $
+	$Id: port_alias_tracker.cc,v 1.34 2010/08/05 22:35:07 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -295,10 +295,11 @@ alias_reference_set<Tag>::find_any_port_alias(void) const {
 	Non-modifying, finds the shortest alias in the set.  
 	The sorting policy is passed in through global_create_options 
 	global variable.
+	\param port_only true if only port aliases are desired.
  */
 template <class Tag>
 typename alias_reference_set<Tag>::const_iterator
-alias_reference_set<Tag>::find_shortest_alias(void) const {
+alias_reference_set<Tag>::find_shortest_alias(const bool port_only) const {
 	STACKTRACE_VERBOSE;
 	INVARIANT(alias_array.size());
 	const const_iterator b(alias_array.begin()), e(alias_array.end());
@@ -307,6 +308,7 @@ alias_reference_set<Tag>::find_shortest_alias(void) const {
 	const_iterator bi(b);
 //	alias_ptr_type __shortest_alias(*i);
 	size_t shortest_depth = (*i)->hierarchical_depth();
+	bool shortest_is_port = (*i)->is_port_alias();
 //	global_create_options.dump(cerr);
 switch (global_create_options.canonicalize_mode) {
 case SHORTEST_HIER_MIN_LENGTH: {
@@ -318,8 +320,11 @@ case SHORTEST_HIER_MIN_LENGTH: {
 	(*i)->dump_hierarchical_name(oss, df);
 	best_name = oss.str();
 	shortest_length = best_name.length();
+	// first one may not necessarily be a port!
 }
 	for (++i; i!=e; ++i) {
+		const bool pa((*i)->is_port_alias());
+	if (!port_only || pa) {
 		size_t depth = (*i)->hierarchical_depth();
 		string name;
 		size_t length;
@@ -330,16 +335,19 @@ case SHORTEST_HIER_MIN_LENGTH: {
 		length = name.length();
 	}
 		STACKTRACE_INDENT_PRINT("shorten: " << best_name << " vs. " << name << endl);
-		if ((depth < shortest_depth || 
+		const bool z = port_only && !shortest_is_port && pa;
+		if (z || (depth < shortest_depth || 
 			(depth == shortest_depth && length < shortest_length))
 			// && (*i != __shortest_alias)
 			) {
 			// __shortest_alias = *i;
 			shortest_depth = depth;
 			shortest_length = length;
+			shortest_is_port = pa;
 			best_name = name;
 			bi = i;
 		}
+	}
 	}
 	STACKTRACE_INDENT_PRINT("BEST: " << best_name << endl);
 	break;
@@ -349,19 +357,27 @@ case SHORTEST_HIER_NO_LENGTH:
 default:
 {
 	for (++i; i!=e; ++i) {
+		const bool pa((*i)->is_port_alias());
+	if (!port_only || pa) {
 		size_t depth = (*i)->hierarchical_depth();
-		if ((depth < shortest_depth)
+		const bool z = port_only && !shortest_is_port && pa;
+		if (z || (depth < shortest_depth)
 			// && (*i != __shortest_alias)
 			) {
 			// __shortest_alias = *i;
 			shortest_depth = depth;
+			shortest_is_port = pa;
 			bi = i;
 		}
+	}
 	}
 	break;
 }
 }	// end switch
-//	return __shortest_alias;
+	// if called on scope_alias set, may not necessarily find a port alias
+	if (port_only && !shortest_is_port) {
+		return e;
+	}
 	return bi;
 }
 
@@ -379,7 +395,7 @@ default:
 template <class Tag>
 typename alias_reference_set<Tag>::const_alias_ptr_type
 alias_reference_set<Tag>::shortest_alias(void) {
-	const const_iterator __shortest_i(this->find_shortest_alias());
+	const const_iterator __shortest_i(this->find_shortest_alias(false));
 	const alias_ptr_type __shortest_alias(*__shortest_i);
 
 	// manually flatten the union-find structure

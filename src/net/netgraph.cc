@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.cc"
-	$Id: netgraph.cc,v 1.23 2010/08/05 18:25:37 fang Exp $
+	$Id: netgraph.cc,v 1.24 2010/08/05 22:35:08 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -947,8 +947,8 @@ if (asi != ase) {
 	// can't just use union-find() b/c shortest could be local non-port
 	INVARIANT(s.size());
 	const const_iterator
-		ai(s.find_any_port_alias());	// instead of shortest
-//		ai(s.find_shortest_alias());
+//		ai(s.find_any_port_alias());	// instead of shortest
+		ai(s.find_shortest_alias(true));	// ports only
 if (ai != s.end()) {
 	NEVER_NULL(*ai);
 	ostringstream oss;
