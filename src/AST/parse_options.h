@@ -1,16 +1,19 @@
 /**
 	\file "AST/parse_options.h"
-	$Id: parse_options.h,v 1.4 2010/05/13 00:32:01 fang Exp $
+	$Id: parse_options.h,v 1.5 2010/08/05 18:25:23 fang Exp $
  */
 
 #ifndef	__HAC_AST_PARSE_OPTIONS_H__
 #define	__HAC_AST_PARSE_OPTIONS_H__
 
+#include <iosfwd>
 #include "Object/devel_switches.h"
 #include "common/status.h"
 
 namespace HAC {
 namespace parser {
+using std::istream;
+using std::ostream;
 //=============================================================================
 /**
 	User-controllable switches for tuning compilation.  
@@ -46,6 +49,7 @@ struct parse_options {
 	 */
 	error_policy	unknown_spec_policy;
 
+	/// default ctor with default values
 	parse_options() : 
 #if REQUIRE_DEFINITION_EXPORT
 		export_all(false),
@@ -57,6 +61,15 @@ struct parse_options {
 		case_collision_policy(OPTION_WARN),
 		unknown_spec_policy(OPTION_ERROR)
 		{ }
+
+	ostream&
+	dump(ostream&) const;
+
+	void
+	write_object(ostream&) const;
+
+	void
+	load_object(istream&);
 
 };	// end class parse_options
 

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_module.h"
 	Classes that represent a single compilation module, a file.  
-	$Id: module.h,v 1.23 2010/04/07 00:12:30 fang Exp $
+	$Id: module.h,v 1.24 2010/08/05 18:25:24 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_H__
@@ -10,6 +10,7 @@
 #include <string>
 #include "Object/common/util_types.h"
 #include "Object/unroll/sequential_scope.h"
+#include "main/compile_options.h"
 #include "util/persistent.h"
 #include "Object/def/footprint.h"
 #include "Object/def/process_definition.h"
@@ -51,6 +52,8 @@ protected:
 		for definitions, and nested namespaces.  
 	 */
 	excl_ptr<name_space>			global_namespace;
+public:
+	compile_options				compile_opts;
 private:
 	module();
 

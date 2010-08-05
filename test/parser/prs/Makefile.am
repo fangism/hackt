@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.68 2010/07/14 18:12:39 fang Exp $
+#	$Id: Makefile.am,v 1.69 2010/08/05 18:26:09 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -40,7 +40,7 @@ HACKT_PARSE_TEST_PASSES = \
 	nand-01 nand-02 nand-03 nand-04 nand-05 nand-06 nand-07 \
 	nor-01 xor-01 \
 	celem-01 celem-02 celem-03 celem-04 celem-05 celem-06 \
-	wchb-00 wchb-01 wchb-02 wchb-03 wchb-04 wchb-05 wchb-06 \
+	wchb-00 wchb-01 wchb-02 wchb-03 wchb-03b wchb-04 wchb-05 wchb-06 \
 	null-00 null-01 \
 	pal-01 pal-02 pal-03 \
 	loop-00 loop-01 loop-02 loop-03 loop-04 loop-05 loop-06 loop-07 \
@@ -84,18 +84,19 @@ HACKT_PARSE_TEST_PASSES = \
 	iscomb-07 iscomb-08 iscomb-09 iscomb-10 iscomb-11 iscomb-12 \
 	iscomb-13 iscomb-14 iscomb-15 iscomb-16 iscomb-17 iscomb-18 \
 	iscomb-19 iscomb-20 iscomb-21 iscomb-22 iscomb-23 iscomb-24 \
+	iscomb-23-b \
 	iscomb-25 iscomb-26 iscomb-26-a iscomb-26-b \
 	iscomb-27 \
 	iscomb-27-a iscomb-27-b iscomb-27-c iscomb-27-d iscomb-27-e \
 	iscomb-27-f iscomb-27-g iscomb-27-h iscomb-27-i iscomb-27-j \
 	iscomb-27-k iscomb-27-l iscomb-27-m iscomb-27-n iscomb-27-o \
-	iscomb-27-p iscomb-27-q \
+	iscomb-27-p iscomb-27-q iscomb-27-r \
 	keeper-01 \
 	iskeeper-01 iskeeper-02 iskeeper-03 iskeeper-04 \
 	isckeeper-01 isckeeper-02 \
 	autokeeper-01 autokeeper-02 autokeeper-03 autokeeper-04 \
 	isrvc-01 \
-	interference-01 interference-02 interference-03 \
+	interference-01 interference-02 interference-03 interference-03b \
 	prs-param-01 \
 	act-001 act-002 act-003 act-004 act-005 \
 	act-006 act-007 act-009 act-010 \
@@ -130,7 +131,7 @@ HACKT_CREATE_TEST_PASSES = \
 	inv-14 inv-15 inv-16 inv-17 inv-18 \
 	celem-01 celem-02 celem-03 celem-04 celem-05 celem-06 \
 	nand-04 nand-05 nand-06 nand-07 \
-	wchb-00 wchb-01 wchb-02 wchb-03 wchb-04 wchb-05 wchb-06 \
+	wchb-00 wchb-01 wchb-02 wchb-03 wchb-03b wchb-04 wchb-05 wchb-06 \
 	null-00 \
 	pal-01 pal-02 pal-03 \
 	loop-00 loop-04 loop-05 loop-06 loop-07 loop-08 loop-09 \
@@ -169,18 +170,19 @@ HACKT_CREATE_TEST_PASSES = \
 	iscomb-07 iscomb-08 iscomb-09 iscomb-10 iscomb-11 iscomb-12 \
 	iscomb-13 iscomb-14 iscomb-15 iscomb-16 iscomb-17 iscomb-18 \
 	iscomb-19 iscomb-20 iscomb-21 iscomb-22 iscomb-23 iscomb-24 \
+	iscomb-23-b \
 	iscomb-25 iscomb-26 iscomb-26-a iscomb-26-b \
 	iscomb-27 \
 	iscomb-27-a iscomb-27-b iscomb-27-c iscomb-27-d iscomb-27-e \
 	iscomb-27-f iscomb-27-g iscomb-27-h iscomb-27-i iscomb-27-j \
 	iscomb-27-k iscomb-27-l iscomb-27-m iscomb-27-n iscomb-27-o \
-	iscomb-27-p iscomb-27-q \
+	iscomb-27-p iscomb-27-q iscomb-27-r \
 	keeper-01 \
 	iskeeper-01 iskeeper-02 iskeeper-03 iskeeper-04 \
 	isckeeper-01 isckeeper-02 \
 	autokeeper-01 autokeeper-02 autokeeper-03 autokeeper-04 \
 	isrvc-01 \
-	interference-01 interference-02 interference-03 \
+	interference-01 interference-02 interference-03 interference-03b \
 	internal-node-00 internal-node-06 \
 	internal-node-12 internal-node-13 internal-node-14 internal-node-15 \
 	internal-node-17 \
@@ -217,7 +219,7 @@ HACKT_CFLAT_TEST_SUBJECTS = \
 	inv-14 inv-15 inv-16 inv-17 inv-18 \
 	celem-01 celem-02 celem-03 celem-04 celem-05 celem-06 \
 	nand-04 nand-05 nand-06 nand-07 \
-	wchb-00 wchb-01 wchb-02 wchb-03 wchb-04 wchb-05 wchb-06 \
+	wchb-00 wchb-01 wchb-02 wchb-03 wchb-03b wchb-04 wchb-05 wchb-06 \
 	null-00 \
 	pal-01 pal-02 pal-03 \
 	loop-00 loop-04 loop-05 loop-06 loop-07 loop-08 loop-09 \
@@ -246,17 +248,18 @@ HACKT_CFLAT_TEST_SUBJECTS = \
 	iscomb-07 iscomb-08 iscomb-09 iscomb-10 iscomb-11 iscomb-12 \
 	iscomb-13 iscomb-14 iscomb-15 iscomb-16 iscomb-17 iscomb-18 \
 	iscomb-19 iscomb-20 iscomb-21 iscomb-22 iscomb-23 iscomb-24 \
+	iscomb-23-b \
 	iscomb-25 iscomb-26 iscomb-26-a iscomb-26-b \
 	iscomb-27 \
 	iscomb-27-a iscomb-27-b iscomb-27-c iscomb-27-d iscomb-27-e \
 	iscomb-27-f iscomb-27-g iscomb-27-h iscomb-27-i iscomb-27-j \
 	iscomb-27-k iscomb-27-l iscomb-27-m iscomb-27-n iscomb-27-o \
-	iscomb-27-p iscomb-27-q \
+	iscomb-27-p iscomb-27-q iscomb-27-r \
 	keeper-01 \
 	iskeeper-01 iskeeper-02 iskeeper-03 iskeeper-04 \
 	autokeeper-01 autokeeper-02 autokeeper-03 autokeeper-04 \
 	isrvc-01 \
-	interference-01 interference-02 interference-03 \
+	interference-01 interference-02 interference-03 interference-03b \
 	internal-node-00 internal-node-06 \
 	internal-node-12 internal-node-13 internal-node-14 internal-node-15 \
 	internal-node-17 \

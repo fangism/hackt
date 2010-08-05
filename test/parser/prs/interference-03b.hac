@@ -1,0 +1,4 @@
+// "interference-03b.hac"
+// @haco-flags@ -f canonical-shortest-length
+
+import "interference-03.hac";

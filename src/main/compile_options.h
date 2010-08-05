@@ -1,12 +1,16 @@
 /**
 	\file "main/compile_options.h"
 	Common compile options class.  
-	$Id: compile_options.h,v 1.11 2008/07/30 05:26:47 fang Exp $
+	$Id: compile_options.h,v 1.12 2010/08/05 18:25:34 fang Exp $
  */
+
+#ifndef	__HAC_MAIN_COMPILE_OPTIONS_H__
+#define	__HAC_MAIN_COMPILE_OPTIONS_H__
 
 #include <list>
 #include <string>
 #include "AST/parse_options.h"
+#include "main/create_options.h"
 
 namespace HAC {
 using std::list;
@@ -29,6 +33,8 @@ public:
 	bool					dump_include_paths;
 	/// whether or not the persistent object header is dumped
 	bool					dump_object_header;
+
+// The following options should be recorded in the module.
 	/// whether or not to emit make dependencies
 	bool					make_depend;
 	/// true if input is redirected from stdin
@@ -54,6 +60,11 @@ public:
 		User-tweaked options for type checking.  
 	 */
 	parser::parse_options			parse_opts;
+	/**
+		Create-time parameters forwarded to the create phase
+		automatically by the compiler driver.
+	 */
+	create_options				create_opts;
 
 	compile_options() : dump_module(false),
 		dump_include_paths(false), 
@@ -65,7 +76,8 @@ public:
 		source_file(), 
 		target_object(), 
 		include_paths(), 
-		parse_opts()
+		parse_opts(), 
+		create_opts()
 		{ }
 
 	// NOTE: this is defined in "main/main_funcs.cc"
@@ -75,8 +87,18 @@ public:
 	bool
 	have_target(void) const { return target_object.size(); }
 
+	ostream&
+	dump(ostream&) const;
+
+	void
+	write_object(ostream&) const;
+
+	void
+	load_object(istream&);
+
 };	// end class compile_options
 
 //=============================================================================
 }	// end namespace HAC
 
+#endif	// __HAC_MAIN_COMPILE_OPTIONS_H__

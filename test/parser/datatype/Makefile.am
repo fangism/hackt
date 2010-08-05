@@ -1,5 +1,5 @@
 # "test/parser/datatype/Makefile.am"
-#	$Id: Makefile.am,v 1.21 2008/12/16 21:48:14 fang Exp $
+#	$Id: Makefile.am,v 1.22 2010/08/05 18:26:06 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -16,7 +16,8 @@ HACKT_PARSE_TEST_PASSES = \
 	001 002 006 007 008 \
 	013 016 \
 	021 022 023 026 027 028 029 \
-	030 031 037 038 039
+	030 031 037 038 038b 039 \
+	042 043
 # pending: act-00{1,2,3,4,5}
 
 HACKT_CREATE_TEST_FAILURES = \
@@ -26,7 +27,8 @@ HACKT_CREATE_TEST_FAILURES = \
 HACKT_CREATE_TEST_PASSES = \
 	001 002 006 007 008 \
 	023 026 029 \
-	030 031 038 039
+	030 031 038 038b 039 \
+	042 043
 
 # REGRESSION (parse, unroll, create): 032 036 
 # (instantiations of 031 033, respectively)
@@ -39,7 +41,8 @@ HACKT_CREATE_TEST_PASSES = \
 HACKT_ALLOC_TEST_PASSES = $(HACKT_CREATE_TEST_PASSES)
 
 HACKT_CFLAT_TEST_SUBJECTS = \
-	038
+	038 038b \
+	042 043
 
 # more output expectation files for when bison is used
 BISON_OUTPUTS += 015 017 018 019 020 \

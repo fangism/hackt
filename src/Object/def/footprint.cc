@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.56 2010/06/02 02:42:40 fang Exp $
+	$Id: footprint.cc,v 1.57 2010/08/05 18:25:26 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -459,6 +459,7 @@ footprint::dump_with_collections(ostream& o, const dump_flags& df,
 		port_aliases.dump(o);
 #if ENABLE_STACKTRACE
 		// don't bother dumping, unless debugging
+		// kind of want this for top-level footprint printing
 		scope_aliases.dump(o);
 #endif
 		prs_footprint->dump(o, *this);
@@ -1281,10 +1282,12 @@ if (sift) {
 	scope_aliases.dump(cerr << "footprint::scope_aliases (before): " << endl) << endl;
 #endif
 	scope_aliases.shorten_canonical_aliases(*this);
+//	port_aliases.shorten_canonical_aliases(*this);
 	// NOTE: at this point, prs has not yet been processed
 	// for connectivity diagnostics.
 #if ENABLE_STACKTRACE
 	scope_aliases.dump(cerr << "footprint::scope_aliases (after): " << endl) << endl;
+	scope_aliases.dump(cerr << "footprint::port_aliases (after): " << endl) << endl;
 #endif
 }
 

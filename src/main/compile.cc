@@ -3,7 +3,7 @@
 	Converts HAC source code to an object file (pre-unrolled).
 	This file was born from "art++2obj.cc" in earlier revision history.
 
-	$Id: compile.cc,v 1.24 2010/05/13 00:32:02 fang Exp $
+	$Id: compile.cc,v 1.25 2010/08/05 18:25:31 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -129,7 +129,7 @@ public:
 		i.brief = b;
 	}
 } __ATTRIBUTE_UNUSED__;	// end class register_options_modifier
-#endif
+#endif	// COMPILE_USE_OPTPARSE
 
 //=============================================================================
 // compile::options_modifier declarations and definitions
@@ -185,6 +185,9 @@ static const compile::register_options_modifier				\
 #define	DEFINE_PARSE_OPTION2(type2, mem2, key, val, str)		\
 	DEFINE_OPTION2(parse_options, parse_opts, 			\
 		type2, mem2, key, val, str)
+#define	DEFINE_CREATE_OPTION2(type2, mem2, key, val, str)		\
+	DEFINE_OPTION2(create_options, create_opts, 			\
+		type2, mem2, key, val, str)
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -216,6 +219,7 @@ static const compile::register_options_modifier				\
 	compile_opt_mod_no_## mem("no-" key, &__compile_no_ ## mem, falsestr);
 #endif
 
+//-----------------------------------------------------------------------------
 DEFINE_BOOL_OPTION_PAIR(dump_include_paths, "dump-include-paths",
 	"dumps -I include paths as they are processed",
 	"suppress feedback of -I include paths")
@@ -233,6 +237,18 @@ DEFINE_PARSE_OPTION2(bool, export_all, "export-all", true,
 	"treat all definitions as exported")
 DEFINE_PARSE_OPTION2(bool, export_all, "export-strict", false,
 	"only export definitions that are marked as such (default, ACT)")
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// the following are create-phase options forwarded to the create phase
+DEFINE_CREATE_OPTION2(canonicalize_policy, canonicalize_mode,
+	"canonical-shortest-hier", SHORTEST_HIER_NO_LENGTH,
+	"prefer aliases by number of hierarchy levels only (default)")
+DEFINE_CREATE_OPTION2(canonicalize_policy, canonicalize_mode,
+	"canonical-shortest-length", SHORTEST_HIER_MIN_LENGTH,
+	"prefer aliases using overall length as tie-breaker")
+DEFINE_CREATE_OPTION2(canonicalize_policy, canonicalize_mode,
+	"canonical-shortest-stage", SHORTEST_EMULATE_ACT,
+	"prefer aliases using per-member length as tie-breaker (ACT, unimplemented)")
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DEFINE_BOOL_PARSE_OPTION_PAIR(namespace_instances, "namespace-instances",
@@ -459,6 +475,8 @@ like @command{hacobjdump} in @ref{Objdump}.
 	case 'd':
 		opt.dump_module = true;
 		break;
+
+// TODO: summarize ACT-compatibility in form of a table
 /***
 @texinfo compile/option-f.texi
 @defopt -f optname
@@ -500,6 +518,23 @@ Dialect flags (for ACT-compatibility):
 	ACT mode: @option{no-array-internal-nodes}.
 @end itemize
 @option{ACT} is a preset that activates all ACT-mode flags for compatibility.
+
+The following options are forwarded to the create-phase of compilation
+by the driver.  That is, they do not have any affect until the create phase.
+These options must be specified up-front at compile-time and cannot be 
+overriden at create-time on the command line.
+@itemize
+@item @option{canonical-shortest-hier}:
+	Only consider hierarchical depth (number of member-dots) for
+	choosing canonical alias, no further tiebreaker.
+@item @option{canonical-shortest-length}:
+	In addition to minimizing the hierarchy depth, also use overall
+	string length as a tiebreaker.
+@item @option{canonical-shortest-stage}: (unimplemented)
+	Considers length of identifiers stage-by-stage when hierarchical 
+	depths are equal.
+	This is for best compatibility with ACT mode.
+@end itemize
 @end defopt
 @end texinfo
 ***/

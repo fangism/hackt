@@ -1,0 +1,6 @@
+// "supply-instance-11b.hac"
+// @haco-flags@ -f canonical-shortest-length
+// using alternate preferred aliases at create-time
+
+import "supply-instance-11.hac";
+

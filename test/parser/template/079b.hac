@@ -1,0 +1,6 @@
+// "079b.hac"
+// @haco-flags@ -f case-collision=ignore -f canonical-shortest-length
+// testing different aliases
+
+import "079.hac";
+

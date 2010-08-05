@@ -1,5 +1,6 @@
 // "globals.hac"
 // for supply override testing
+// TODO: add @ [supply_high] and [supply_low] attributes
 
 deftype globals <: int<4> (bool Vdd_1, GND_1, Vdd_2, GND_2) { }
 

@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.19 2009/06/30 00:46:30 fang Exp $
+#	$Id: Makefile.am,v 1.20 2010/08/05 18:26:08 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -11,7 +11,7 @@ HACKT_PARSE_TEST_PASSES = \
 	000 001 002 003 004 005 006 007 008 009 \
 	010 011 012 013 014 015 016 017 018 019 \
 	020 021 023 024 025 026 027 \
-	030 031 032 033 \
+	030 031 031b 032 033 \
 	loop-alias-01 loop-alias-02 loop-alias-03 loop-alias-04 loop-alias-05 \
 	loop-alias-06 loop-alias-07 \
 	loop-ports-01 loop-ports-02 loop-ports-03 loop-ports-04 loop-ports-05 \
@@ -37,7 +37,7 @@ HACKT_CREATE_TEST_PASSES = \
 	000 001 002 003 007 008 009 \
 	010 011 012 013 014 015 016 017 018 019 \
 	020 021 023 024 025 026 \
-	030 031 032 033 \
+	030 031 031b 032 033 \
 	loop-alias-01 loop-alias-02 loop-alias-03 loop-alias-04 loop-alias-05 \
 	loop-alias-06 loop-alias-07 \
 	loop-ports-01 loop-ports-02 loop-ports-03 loop-ports-04 loop-ports-05 \

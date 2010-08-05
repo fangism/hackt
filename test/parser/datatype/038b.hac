@@ -1,0 +1,5 @@
+// "038b.hac"
+// @haco-flags@ -f canonical-shortest-length
+
+import "038.hac";
+

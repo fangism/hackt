@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.45 2010/05/26 00:46:44 fang Exp $
+ 	$Id: module.cc,v 1.46 2010/08/05 18:25:23 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_CC__
@@ -45,6 +45,7 @@
 #include "util/memory/count_ptr.tcc"
 #include "util/stacktrace.h"
 #include "util/indent.h"
+#include "util/value_saver.h"
 #include "common/TODO.h"
 
 namespace util {
@@ -68,6 +69,7 @@ using util::read_string;
 using util::persistent_traits;
 using util::auto_indent;
 using util::string_list;
+using util::value_saver;
 
 //=============================================================================
 /**
@@ -85,7 +87,8 @@ const count_ptr<const const_param_expr_list> null_module_params(NULL);
  */
 module::module() :
 		process_definition(), 
-		global_namespace(NULL)
+		global_namespace(NULL), 
+		compile_opts()
 		{
 }
 
@@ -224,6 +227,10 @@ module::is_created(void) const {
  */
 good_bool
 module::create_dependent_types(void) {
+	// pass options globally
+	const value_saver<create_options>
+		_copt_(global_create_options, compile_opts.create_opts);
+//	global_create_options.dump(cerr);
 try {
 	footprint& f(get_footprint());
 	if (!parent_type::__create_complete_type(
@@ -241,8 +248,6 @@ try {
 /**
 	Replays all instantiation statements and allocates unique
 	space to each alias recursively.  
-	Will automatically unroll the object if it hasn't already 
-	been unrolled.  
 	\return 'good' if successful.  
  */
 good_bool
@@ -536,15 +541,29 @@ void
 module::write_object(const persistent_object_manager& m, ostream& f) const {
 	STACKTRACE_PERSISTENT_VERBOSE;
 	m.write_pointer(f, global_namespace);
+	compile_opts.write_object(f);		// record compile options
+	// need options *before* body because reconstruction depends on it
 	parent_type::write_object_base(m, f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Side effect: sets global_create_options
+ */
 void
 module::load_object(const persistent_object_manager& m, istream& f) {
 	STACKTRACE_PERSISTENT_VERBOSE;
 	m.read_pointer(f, global_namespace);
 //	global_namespace->load_object(m);	// not necessary
+	compile_opts.load_object(f);
+	// footprint reconstruction depends on global_create_options
+	// can't use value_saver because footprints are loaded
+	// outside of this scope by the persistent_object_manager
+	// thus, we need to permanently modify it as a side-effect
+	// The module is always the first (top-level) object, 
+	// so this is guaranteed to occur before any other definitions'
+	// footprints are processed.
+	global_create_options = compile_opts.create_opts;
 	parent_type::load_object_base(m, f);
 }
 

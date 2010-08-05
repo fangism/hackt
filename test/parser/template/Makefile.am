@@ -1,5 +1,5 @@
 # "test/parser/template/Makefile.am"
-#	$Id: Makefile.am,v 1.31 2008/11/11 22:30:21 fang Exp $
+#	$Id: Makefile.am,v 1.32 2010/08/05 18:26:20 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -29,7 +29,7 @@ HACKT_PARSE_TEST_PASSES = \
 	040 041 043 044 045 046 049 \
 	053 054 055 056 057 058 059 \
 	061 062 063 064 064a 067 067a 067b 067c 067d 068 \
-	070 071 072 073 073a 074 075 076 077 078 079 \
+	070 071 072 073 073a 074 075 076 077 078 079 079b \
 	080 081 082 083 084 086 087 088 089 \
 	090 091 092 093 094 095 096 097 098 099 \
 	100 101 102 105 106 107 108 109 \
@@ -57,7 +57,7 @@ HACKT_PARSE_TEST_PASSES = \
 	env_source_ports-06 env_source_ports-07 \
 	env_source_ports-08 env_source_ports-09 \
 	env_source_ports-A env_source_ports-A-01 \
-	env_source_ports-B env_source_ports-B-01 \
+	env_source_ports-B env_source_ports-B-01 env_source_ports-B-02 \
 	env_source_ports-C env_source_ports-C-01 \
 	env_source_ports-C-02 env_source_ports-C-03 \
 	env_source_recursive env_source_recursive-01 \
@@ -80,17 +80,6 @@ HACKT_PARSE_TEST_PASSES = \
 BISON_OUTPUTS += 027 028 042 050 103 \
 	act-009
 
-# HACKT_UNROLL_TEST_PASSES = \
-#	001 002 004 006 007 008 009 \
-#	011 012 015 016 017 018 \
-#	021 022 026 029 \
-#	030 031 032 033 035 036 038 \
-#	040 043 044 045 046 049 \
-#	055 056 057 058 059 \
-#	061 062 063 064 064a 068 \
-#	070 073 074 075 076 077 079 \
-#	081 086 087 088 089
-
 HACKT_CREATE_TEST_FAILURES = \
 	008a \
 	033a 034 037 038a 039 \
@@ -108,7 +97,7 @@ HACKT_CREATE_TEST_PASSES = \
 	049 \
 	059 \
 	063 067d 068 \
-	070 073 074 075 076 077 079 \
+	070 073 074 075 076 077 079 079b \
 	081 086 088 \
 	090 091 092 093 095 096 097 099 \
 	100 101 102 106 107 \
@@ -129,7 +118,7 @@ HACKT_CREATE_TEST_PASSES = \
 	env_source_pack-A-01 \
 	env_source_ports-01 env_source_ports-02 env_source_ports-05 \
 	env_source_ports-08 \
-	env_source_ports-B-01 \
+	env_source_ports-B-01 env_source_ports-B-02 \
 	env_source_ports-C-03 \
 	env_source_recursive-01 \
 	env_source_recursive-A-01 \
@@ -173,7 +162,7 @@ HACKT_ALLOC_TEST_PASSES = \
 	038 \
 	049 \
 	063 067d 068 \
-	070 073 074 075 076 077 079 \
+	070 073 074 075 076 077 079 079b \
 	081 086 \
 	090 091 092 093 095 096 097 099 \
 	100 101 102 106 107 \
@@ -205,7 +194,7 @@ HACKT_ALLOC_TEST_PASSES = \
 HACKT_ALLOC_TEST_FAILURES =
 
 HACKT_CFLAT_TEST_SUBJECTS = \
-	074 075 079
+	074 075 079 079b
 
 include $(top_srcdir)/test/Make.test-tail
 

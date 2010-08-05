@@ -1,0 +1,5 @@
+// "iscomb-27-r.hac"
+// @haco-flags@ -f canonical-shortest-length
+
+import "iscomb-27.hac";
+

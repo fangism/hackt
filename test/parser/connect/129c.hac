@@ -1,0 +1,6 @@
+// "129c.hac"
+// @haco-flags@ -f canonical-shortest-length
+// testing alternate aliases
+
+import "129b.hac";
+

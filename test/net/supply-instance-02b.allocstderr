@@ -1,0 +1,44 @@
+globID	super		localID	canonical	footprint-frame
+[global process entries]
+1	(top)	-	1	g	globals<>
+	bool: 1,2,3,4
+2	(top)	-	2	a	inv<>
+	bool: 5,6,7,8
+3	(top)	-	3	b	inv<>
+	bool: 5,6,9,10
+4	(top)	-	4	c	inv<>
+	bool: 5,6,11,12
+5	(top)	-	5	d	inv<>
+	bool: 2,6,13,14
+6	(top)	-	6	d2	inv<>
+	bool: 4,6,15,16
+7	(top)	-	7	e	inv<>
+	bool: 2,6,17,18
+8	(top)	-	8	f	inv<>
+	bool: 5,1,19,20
+9	(top)	-	9	h	inv<>
+	bool: 4,3,21,22
+[global bool entries]
+1	(top)	-	1	f.!Vdd	
+2	(top)	-	2	d.!GND	
+3	(top)	-	3	h.!Vdd	
+4	(top)	-	4	h.!GND	
+5	(top)	-	5	!GND	 @[ supply_low ]
+6	(top)	-	6	!Vdd	 @[ supply_high ]
+7	(top)	-	7	a.x	
+8	(top)	-	8	a.y	
+9	(top)	-	9	b.x	
+10	(top)	-	10	b.y	
+11	(top)	-	11	c.x	
+12	(top)	-	12	c.y	
+13	(top)	-	13	d.x	
+14	(top)	-	14	d.y	
+15	(top)	-	15	d2.x	
+16	(top)	-	16	d2.y	
+17	(top)	-	17	e.x	
+18	(top)	-	18	e.y	
+19	(top)	-	19	f.x	
+20	(top)	-	20	f.y	
+21	(top)	-	21	h.x	
+22	(top)	-	22	h.y	
+

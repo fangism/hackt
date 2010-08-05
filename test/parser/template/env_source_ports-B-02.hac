@@ -1,0 +1,6 @@
+// "env_source_ports-B-02.hac"
+// testing alternate aliases
+// @haco-flags@ -f canonical-shortest-length
+
+import "env_source_ports-B-01.hac";
+

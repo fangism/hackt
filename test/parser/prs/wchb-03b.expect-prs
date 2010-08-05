@@ -1,0 +1,55 @@
+"b._r[0]" -> "R.d[0]"-
+~"b._r[0]" -> "R.d[0]"+
+"b._r[1]" -> "R.d[1]"-
+~"b._r[1]" -> "R.d[1]"+
+"b.rv" -> "L.e"-
+~"b.rv" -> "L.e"+
+"L.d[0]" & "R.e" -> "b._r[0]"-
+~"L.d[0]" & ~"R.e" -> "b._r[0]"+
+"L.d[1]" & "R.e" -> "b._r[1]"-
+~"L.d[1]" & ~"R.e" -> "b._r[1]"+
+"b._r[0]" & "b._r[1]" -> "b.rv"-
+~"b._r[0]" | ~"b._r[1]" -> "b.rv"+
+= "!GND" "L.!GND"
+= "!GND" "R.!GND"
+= "!GND" "b.!GND"
+= "!GND" "b.L.!GND"
+= "!GND" "b.R.!GND"
+= "!GND" "b.l0.!GND"
+= "!GND" "b.l1.!GND"
+= "!GND" "b.la.!GND"
+= "!GND" "b.r0.!GND"
+= "!GND" "b.r1.!GND"
+= "!GND" "b.re.!GND"
+= "!Vdd" "L.!Vdd"
+= "!Vdd" "R.!Vdd"
+= "!Vdd" "b.!Vdd"
+= "!Vdd" "b.L.!Vdd"
+= "!Vdd" "b.R.!Vdd"
+= "!Vdd" "b.l0.!Vdd"
+= "!Vdd" "b.l1.!Vdd"
+= "!Vdd" "b.la.!Vdd"
+= "!Vdd" "b.r0.!Vdd"
+= "!Vdd" "b.r1.!Vdd"
+= "!Vdd" "b.re.!Vdd"
+= "L.d[0]" "b.L.d[0]"
+= "L.d[0]" "b.l0.a"
+= "L.d[1]" "b.L.d[1]"
+= "L.d[1]" "b.l1.a"
+= "L.e" "b.L.e"
+= "L.e" "b.re.b"
+= "R.d[0]" "b.R.d[0]"
+= "R.d[0]" "b.r0.b"
+= "R.d[1]" "b.R.d[1]"
+= "R.d[1]" "b.r1.b"
+= "R.e" "b.R.e"
+= "R.e" "b.l0.b"
+= "R.e" "b.l1.b"
+= "b._r[0]" "b.l0._o"
+= "b._r[0]" "b.la.a"
+= "b._r[0]" "b.r0.a"
+= "b._r[1]" "b.l1._o"
+= "b._r[1]" "b.la.b"
+= "b._r[1]" "b.r1.a"
+= "b.rv" "b.la._o"
+= "b.rv" "b.re.a"

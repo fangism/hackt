@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_options.h"
-	$Id: netlist_options.h,v 1.13 2010/04/07 21:47:30 fang Exp $
+	$Id: netlist_options.h,v 1.14 2010/08/05 18:25:41 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETLIST_OPTIONS_H__
@@ -270,6 +270,9 @@ struct netlist_options {
 
 	bool
 	matches_preferred_name(const string&) const;
+
+	ostream&
+	dump_preferred_names(ostream&) const;
 
 	static
 	ostream&

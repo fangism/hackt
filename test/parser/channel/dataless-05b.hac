@@ -1,0 +1,6 @@
+// "dataless-05b.hac"
+// testing alternate canonical aliases
+// @haco-flags@ -f canonical-shortest-length
+
+import "dataless-05.hac";
+

@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.cc"
-	$Id: netgraph.cc,v 1.22 2010/04/30 18:41:52 fang Exp $
+	$Id: netgraph.cc,v 1.23 2010/08/05 18:25:37 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -909,13 +909,13 @@ netlist::get_original_node_name(const size_t _i,
 	typedef port_alias_tracker_base<bool_tag>::map_type map_type;
 	typedef alias_reference_set<bool_tag>::const_iterator
 					const_iterator;
-	const map_type&
-		pa(fp->get_scope_alias_tracker().get_id_map<bool_tag>());
 // stupid multi-pass implementation
 if (!opt.preferred_names.empty()) {
+	const map_type&
+		sa(fp->get_scope_alias_tracker().get_id_map<bool_tag>());
 	// then scan *all* aliases for the match (slow)
 	const map_type::const_iterator
-		asi(pa.find(_i)), ase(pa.end());
+		asi(sa.find(_i)), ase(sa.end());
 if (asi != ase) {
 	const alias_reference_set<bool_tag>& s(asi->second);
 	const_iterator ai(s.begin()), ae(s.end());
@@ -925,8 +925,10 @@ if (asi != ase) {
 		ostringstream oss;
 		(*ai)->dump_hierarchical_name(oss, opt.__dump_flags);
 		const string& n(oss.str());
+//		STACKTRACE_INDENT_PRINT("is preferred? " << n << endl);
 		if (opt.matches_preferred_name(n)) {
 			// return if matched (exact), accounting for case
+//			STACKTRACE_INDENT_PRINT("using preferred name" << endl);
 			return n;
 		}
 	}
@@ -934,21 +936,26 @@ if (asi != ase) {
 }
 // another pass to check for preferred port aliases
 if (opt.prefer_port_aliases) {
+	const map_type&
+		pa(fp->get_scope_alias_tracker().get_id_map<bool_tag>());
+//		pa(fp->get_port_alias_tracker().get_id_map<bool_tag>());
 	const map_type::const_iterator
 		asi(pa.find(_i)), ase(pa.end());
 if (asi != ase) {
 	const alias_reference_set<bool_tag>& s(asi->second);
-	const_iterator ai(s.begin()), ae(s.end());
-	for ( ; ai != ae; ++ai) {
-	// just take the first one, arbitrary
-		NEVER_NULL(*ai);
-	if ((*ai)->is_port_alias()) {
-		ostringstream oss;
-		(*ai)->dump_hierarchical_name(oss, opt.__dump_flags);
-		return oss.str();
-	}
-	}
-}	// else has no other aliases
+	// use the shortest port alias
+	// can't just use union-find() b/c shortest could be local non-port
+	INVARIANT(s.size());
+	const const_iterator
+		ai(s.find_any_port_alias());	// instead of shortest
+//		ai(s.find_shortest_alias());
+if (ai != s.end()) {
+	NEVER_NULL(*ai);
+	ostringstream oss;
+	(*ai)->dump_hierarchical_name(oss, opt.__dump_flags);
+	return oss.str();
+}
+}	// else has no other port aliases
 }	// end if prefer_port_aliases
 // fallback to using shortest canonical name (first position in set)
 	const state_instance<bool_tag>::pool_type&
@@ -958,6 +965,8 @@ if (asi != ase) {
 	INVARIANT(i < bp.local_entries());
 	const never_ptr<const instance_alias_info<bool_tag> >
 		a(bp[i].get_back_ref());
+	// from port_alias_tracker, 
+	// back_ref points to shortest canonical scope alias
 	NEVER_NULL(a);
 	ostringstream oss;
 	a->dump_hierarchical_name(oss, opt.__dump_flags);
@@ -987,6 +996,7 @@ netlist::register_named_node(const index_type _i, const netlist_options& opt) {
 		// reserve a new slot and update it for subsequent visits
 		node new_named_node(_i, node::logical_node_tag);
 		new_named_node.name = get_original_node_name(_i, opt);
+		STACKTRACE_INDENT_PRINT("registering: " << new_named_node.name << endl);
 		opt.mangle_instance(new_named_node.name);
 		ret = node_pool.size();
 		INVARIANT(ret);
@@ -994,7 +1004,7 @@ netlist::register_named_node(const index_type _i, const netlist_options& opt) {
 		check_name_collisions(new_named_node.name, ret, opt);
 #endif
 		node_pool.push_back(new_named_node);
-#if ENABLE_STACKTRACE
+#if 0 && ENABLE_STACKTRACE
 node_pool.back().dump_raw(STACKTRACE_INDENT_PRINT("new node: ")) << endl;
 #endif
 		// mark new node as used here?

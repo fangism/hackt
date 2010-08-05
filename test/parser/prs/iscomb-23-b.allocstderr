@@ -1,0 +1,49 @@
+globID	super		localID	canonical	footprint-frame
+[global process entries]
+1	(top)	-	1	sh1t	deep<>
+	process: 2,3,4,5,6,7,8,9,10,11;12..13
+	bool: 1,2,3,4,5,6,7,8,9,10,11,12,13,14
+2	(top)	-	2	sh1t.x	multi_inv<>
+	process: 3,4,5,6
+	bool: 1,2,3,4,5,6,3,4,6,5
+3	(top)	-	3	sh1t.x.s[0]	inv<>
+	bool: 1,2,3,4
+4	(top)	-	4	sh1t.x.s[1]	inv<>
+	bool: 1,2,5,6
+5	(top)	-	5	sh1t.x.t[0]	inv2<>
+	bool: 1,2,3,4
+6	(top)	-	6	sh1t.x.t[1]	inv2<>
+	bool: 1,2,6,5
+7	(top)	-	7	sh1t.y	multi_inv<>
+	process: 8,9,10,11
+	bool: 1,2,7,8,9,10,11,12,13,14
+8	(top)	-	8	sh1t.y.s[0]	inv<>
+	bool: 1,2,7,8
+9	(top)	-	9	sh1t.y.s[1]	inv<>
+	bool: 1,2,9,10
+10	(top)	-	10	sh1t.y.t[0]	inv2<>
+	bool: 1,2,11,12
+11	(top)	-	11	sh1t.y.t[1]	inv2<>
+	bool: 1,2,13,14
+12	process	1	11	sh1t.P	smoosh<>
+	process: 3,5
+	bool: 1,2,3,4
+13	process	1	12	sh1t.Q	twist<>
+	process: 4,6
+	bool: 1,2,5,6
+[global bool entries]
+1	(top)	-	1	!GND	 @[ supply_low ]
+2	(top)	-	2	!Vdd	 @[ supply_high ]
+3	(top)	-	3	sh1t.x.s[0].a	 @[ iscomb ]
+4	(top)	-	4	sh1t.x.s[0].b	 @[ !autokeeper ]
+5	(top)	-	5	sh1t.x.s[1].a	 @[ iscomb !autokeeper ]
+6	(top)	-	6	sh1t.x.s[1].b	
+7	(top)	-	7	sh1t.y.s[0].a	 @[ iscomb ]
+8	(top)	-	8	sh1t.y.s[0].b	
+9	(top)	-	9	sh1t.y.s[1].a	 @[ iscomb ]
+10	(top)	-	10	sh1t.y.s[1].b	
+11	(top)	-	11	sh1t.y.t[0].a	
+12	(top)	-	12	sh1t.y.t[0].b	 @[ !autokeeper ]
+13	(top)	-	13	sh1t.y.t[1].a	
+14	(top)	-	14	sh1t.y.t[1].b	 @[ !autokeeper ]
+

@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_alias_tracker.cc"
-	$Id: port_alias_tracker.cc,v 1.32 2010/05/26 00:46:53 fang Exp $
+	$Id: port_alias_tracker.cc,v 1.33 2010/08/05 18:25:28 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -9,6 +9,7 @@
 #include <functional>
 #include <algorithm>
 #include <iterator>
+#include <sstream>
 
 #include "Object/inst/port_alias_tracker.tcc"
 #include "Object/inst/alias_actuals.h"
@@ -26,6 +27,7 @@
 #include "Object/traits/enum_traits.h"
 #include "Object/traits/int_traits.h"
 #include "Object/traits/bool_traits.h"
+#include "main/create_options.h"
 
 #include "util/persistent_object_manager.h"
 #include "util/copy_if.h"
@@ -45,6 +47,7 @@ USING_COPY_IF
 using std::for_each;
 using std::back_inserter;
 using std::not1;
+using std::ostringstream;
 
 //=============================================================================
 #if 0
@@ -270,32 +273,115 @@ alias_reference_set<Tag>::export_alias_strings(set<string>& aliases) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	\return iterator pointing to first port alias found
+ */
+template <class Tag>
+typename alias_reference_set<Tag>::const_iterator
+alias_reference_set<Tag>::find_any_port_alias(void) const {
+	const_iterator ai(this->begin()), ae(this->end());
+	for ( ; ai!=ae; ++ai) {
+		// just take the first one, arbitrary
+		NEVER_NULL(*ai);
+		if ((*ai)->is_port_alias()) {
+			return ai;
+		}
+	}
+//	INVARIANT(ai != ae);		// should not be reached!
+	return ae;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Non-modifying, finds the shortest alias in the set.  
+	The sorting policy is passed in through global_create_options 
+	global variable.
+ */
+template <class Tag>
+typename alias_reference_set<Tag>::const_iterator
+alias_reference_set<Tag>::find_shortest_alias(void) const {
+	STACKTRACE_VERBOSE;
+	INVARIANT(alias_array.size());
+	const const_iterator b(alias_array.begin()), e(alias_array.end());
+	const_iterator i(b);
+	// accumulate to find the index of the shallowest alias
+	const_iterator bi(b);
+//	alias_ptr_type __shortest_alias(*i);
+	size_t shortest_depth = (*i)->hierarchical_depth();
+//	global_create_options.dump(cerr);
+switch (global_create_options.canonicalize_mode) {
+case SHORTEST_HIER_MIN_LENGTH: {
+	size_t shortest_length;
+	string best_name;
+	static const dump_flags& df(dump_flags::no_definition_owner);
+{
+	ostringstream oss;
+	(*i)->dump_hierarchical_name(oss, df);
+	best_name = oss.str();
+	shortest_length = best_name.length();
+}
+	for (++i; i!=e; ++i) {
+		size_t depth = (*i)->hierarchical_depth();
+		string name;
+		size_t length;
+	{
+		ostringstream oss;
+		(*i)->dump_hierarchical_name(oss, df);
+		name = oss.str();
+		length = name.length();
+	}
+		STACKTRACE_INDENT_PRINT("shorten: " << best_name << " vs. " << name << endl);
+		if ((depth < shortest_depth || 
+			(depth == shortest_depth && length < shortest_length))
+			// && (*i != __shortest_alias)
+			) {
+			// __shortest_alias = *i;
+			shortest_depth = depth;
+			shortest_length = length;
+			best_name = name;
+			bi = i;
+		}
+	}
+	STACKTRACE_INDENT_PRINT("BEST: " << best_name << endl);
+	break;
+}
+// TODO: SHORTEST_EMULATE_ACT
+case SHORTEST_HIER_NO_LENGTH:
+default:
+{
+	for (++i; i!=e; ++i) {
+		size_t depth = (*i)->hierarchical_depth();
+		if ((depth < shortest_depth)
+			// && (*i != __shortest_alias)
+			) {
+			// __shortest_alias = *i;
+			shortest_depth = depth;
+			bi = i;
+		}
+	}
+	break;
+}
+}	// end switch
+//	return __shortest_alias;
+	return bi;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Edits the canonical back reference to point to the 
 	shallowest instance.  
 	However, the alias list retains its original order!
 	So the front is not necessarily canonical!
 	Now this also flattens the union-find structure of each alias
 	set by setting all aliases to point to the chosen canonical alias.
+	\param bool slen set true to consider string-length as a tiebreaker.
+	Alter the alias_array to move the shortest canonical node to front?
  */
 template <class Tag>
 typename alias_reference_set<Tag>::const_alias_ptr_type
 alias_reference_set<Tag>::shortest_alias(void) {
-	STACKTRACE_VERBOSE;
-	INVARIANT(alias_array.size());
-	const iterator b(alias_array.begin()), e(alias_array.end());
-	iterator i(b);
-	// accumulate to find the index of the shallowest alias
-	// alias_ptr_type __shortest_alias(&*(*i)->find());
-	alias_ptr_type __shortest_alias(*i);
-	size_t shortest_depth = __shortest_alias->hierarchical_depth();
-	for (++i; i!=e; ++i) {
-		size_t depth = (*i)->hierarchical_depth();
-		if ((depth < shortest_depth) && (*i != __shortest_alias)) {
-			__shortest_alias = *i;
-			shortest_depth = depth;
-		}
-	}
-{
+	const const_iterator __shortest_i(this->find_shortest_alias());
+	const alias_ptr_type __shortest_alias(*__shortest_i);
+
 	// manually flatten the union-find structure
 	// since this alters the union-find we must make sure that connection
 	// flags are kept coherent, because normally they are only
@@ -305,8 +391,8 @@ alias_reference_set<Tag>::shortest_alias(void) {
 	// restructuring the union-find.
 	__shortest_alias->update_direction_flags();
 
+	const iterator b(alias_array.begin()), e(alias_array.end());
 	iterator ii(b);
-	// const iterator ee(alias_array.end());
 	for ( ; ii!=e; ++ii) {
 		(*ii)->finalize_canonicalize(*__shortest_alias);
 	}
@@ -317,7 +403,7 @@ alias_reference_set<Tag>::shortest_alias(void) {
 	}
 	// NOTE: this is currently called before all direction flags
 	// have been updated by definition::unroll_lang() (prs, chp)
-}
+
 	// pardon the const_cast :S, we intend to modify, yes
 	// consider making mutable...
 	return __shortest_alias;
@@ -428,6 +514,7 @@ port_alias_tracker_base<Tag>::dump_map(ostream& o, const dump_flags& df) const {
 if (!_ids.empty()) {
 	o << auto_indent << class_traits<Tag>::tag_name
 		<< " port aliases:" << endl;
+	// this could be "scope aliases" too...
 	const_iterator i(_ids.begin());
 	const const_iterator e(_ids.end());
 	for ( ; i!=e; ++i) {

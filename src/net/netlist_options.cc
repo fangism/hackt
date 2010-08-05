@@ -1,13 +1,15 @@
 /**
 	\file "net/netlist_options.cc"
-	$Id: netlist_options.cc,v 1.17 2010/05/13 00:32:03 fang Exp $
+	$Id: netlist_options.cc,v 1.18 2010/08/05 18:25:40 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
 
 #include <iostream>
 #include <functional>
+#include <algorithm>
 #include <fstream>
+#include <iterator>
 #include <map>
 #include <list>
 #include "net/netlist_options.h"
@@ -18,6 +20,7 @@
 #include "util/assoc_traits.h"
 #include "util/cppcat.h"
 #include "util/optparse.tcc"
+#include "util/assoc_traits.h"
 
 namespace HAC {
 namespace NET {
@@ -25,6 +28,7 @@ namespace NET {
 using std::map;
 using std::pair;
 using std::list;
+using std::ostream_iterator;
 using util::option_value;
 using util::option_value_list;
 using util::strings::string_to_num;
@@ -1283,6 +1287,8 @@ Declare local node names that should always take precedence over
 canonical shortest-names and preferred-port-aliases.
 This is useful for supply nodes that appear in structures, 
 that are passed around globally.  
+The names passed to this list should be pre-mangled, 
+using the default struct-member-separator, @t{$}.
 Default: (blank)
 @end defopt
 @end texinfo
@@ -1390,10 +1396,11 @@ netlist_options::get_default_length(const bool d, const bool k) const {
 bool
 netlist_options::collides_reserved_name(const string& n) const {
 	// check for name collision
+	const string key((case_collision_policy != OPTION_IGNORE) ? 
+		string_tolower(n) : n);
+//	STACKTRACE_INDENT_PRINT("key: " << key << endl);
 	const string_set_type::const_iterator
-		f(reserved_names.find(
-			(case_collision_policy != OPTION_IGNORE) ? 
-				string_tolower(n) : n));
+		f(reserved_names.find(key));
 	return f != reserved_names.end();
 }
 
@@ -1406,6 +1413,15 @@ netlist_options::matches_preferred_name(const string& n) const {
 			(case_collision_policy != OPTION_IGNORE) ? 
 				string_tolower(n) : n));
 	return f != preferred_names.end();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+netlist_options::dump_preferred_names(ostream& o) const {
+	std::transform(preferred_names.begin(), preferred_names.end(), 
+		ostream_iterator<string>(o, ","), 
+		util::assoc_traits<string_set_type>::key_selector());
+	return o;
 }
 
 //=============================================================================

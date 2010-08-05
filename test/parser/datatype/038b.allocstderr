@@ -1,0 +1,10 @@
+globID	super		localID	canonical	footprint-frame
+[global process entries]
+1	(top)	-	1	FOO	ch1of2<>
+	bool: 2,1
+[global bool entries]
+1	(top)	-	1	FOO.f	
+2	(top)	-	2	FOO.t	
+3	(top)	-	3	!GND	 @[ supply_low ]
+4	(top)	-	4	!Vdd	 @[ supply_high ]
+

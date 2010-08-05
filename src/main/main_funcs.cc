@@ -3,7 +3,7 @@
 	Useful main-level functions to call.
 	Indent to hide most complexity here, exposing a bare-bones
 	set of public callable functions.  
-	$Id: main_funcs.cc,v 1.32 2010/07/14 18:12:36 fang Exp $
+	$Id: main_funcs.cc,v 1.33 2010/08/05 18:25:36 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -55,7 +55,6 @@ using util::memory::count_ptr;
 #include "lexer/hacflat-yystype.h"
 #endif
 #include "util/libc.h"			// for remove
-#include "util/dirent.h"		// configured wrapper around <dirent.h>
 
 #if KEEP_PARSE_FUNCS
 /**
@@ -357,7 +356,12 @@ parse_and_check(const char* name, const compile_options& opt) {
 	AST->push_front(get_GND_attributes());
 	AST->push_front(get_implicit_globals());
 #endif
-	return check_AST(*AST, name ? name : dflt, opt.parse_opts);
+	const count_ptr<module>
+		ret(check_AST(*AST, name ? name : dflt, opt.parse_opts));
+	// copy/preserve the options that were used to compile
+	if (ret)
+		ret->compile_opts = opt;
+	return ret;
 }
 #endif	// KEEP_PARSE_FUNCS
 
@@ -387,9 +391,14 @@ try {
 /**
 	Identifies the object file format version.
 	Increment this whenever format changes.  
+log:
+1: [initial version]
+2: node supply attributes, node attribute flags now 32b
+3: spec directives for processes
+4: preserve compile options to module
  */
 static const size_t
-object_file_format_version = 3;
+object_file_format_version = 4;
 
 //=============================================================================
 /**
@@ -415,14 +424,11 @@ save_module(const module& m, const char* name) {
 void
 save_module_debug(const module& m, const char* name, const bool d) {
 	STACKTRACE_VERBOSE;
-	const bool _d = persistent_object_manager::dump_reconstruction_table;
-	const bool _u = persistent::warn_unimplemented;
-	persistent::warn_unimplemented = true;
-	persistent_object_manager::dump_reconstruction_table = d;
+	const value_saver<bool>
+		_d(persistent_object_manager::dump_reconstruction_table, d);
+	const value_saver<bool>
+		_u(persistent::warn_unimplemented, true);
 	save_module(m, name);
-	// these will not be restored if there is an exception
-	persistent_object_manager::dump_reconstruction_table = _d;
-	persistent::warn_unimplemented = _u;
 }
 
 //=============================================================================
@@ -448,8 +454,10 @@ load_module(const char* fname) {
 count_ptr<module>
 load_module_debug(const char* fname) {
 	STACKTRACE_VERBOSE;
-	persistent::warn_unimplemented = true;
-	persistent_object_manager::dump_reconstruction_table = true;
+	const value_saver<bool>
+		_d(persistent_object_manager::dump_reconstruction_table, true);
+	const value_saver<bool>
+		_u(persistent::warn_unimplemented, true);
 	return load_module(fname);
 }
 
@@ -490,31 +498,6 @@ parse_and_create_complete_process_type(const char* _type, const module& m) {
 		return return_type(NULL);
 	}
 	return rpt;
-}
-
-//=============================================================================
-// class compile_options method definitions
-
-void
-compile_options::export_include_paths(file_manager& fm) const {
-	STACKTRACE_VERBOSE;
-	typedef	include_paths_type::const_iterator	const_iterator;
-	const_iterator i(include_paths.begin());
-	const const_iterator e(include_paths.end());
-	for ( ; i!=e; i++) {
-		const string& s(*i);
-		// check if path exists, otherwise, don't bother adding...
-		if (util::dir_exists(s.c_str())) {
-			fm.add_path(s);
-			if (dump_include_paths) {
-				cerr << "Added to search path: " << s << endl;
-			}
-		} else {
-			if (dump_include_paths) {
-				cerr << "Couldn\'t open dir: " << s << endl;
-			}
-		}
-	}
 }
 
 //=============================================================================

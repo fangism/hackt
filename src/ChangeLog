@@ -3,6 +3,21 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-08-04	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-05:
+	  Now preserve compile/create options in module so they can be
+		printed and forwarded to the create-phase of compilation.
+	  haco (compile.cc): added following options...
+	  New create-option: canonical-shortest-*
+		-hier : old policy, no tiebreaker
+		-length : use whole string length as tiebreaker
+		-stage : (unimplemented, intended to emulate ACT)
+	  port_alias_tracker.cc: implemented global-policy based
+		find_shortest_alias() for alias canonicalization.
+	  Many test cases added, feature documented.  
+
+
 2010-07-14	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-04:

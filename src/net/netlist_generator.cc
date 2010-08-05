@@ -1,7 +1,7 @@
 /**
 	\file "net/netlist_generator.cc"
 	Implementation of hierarchical netlist generation.
-	$Id: netlist_generator.cc,v 1.21 2010/07/02 00:10:05 fang Exp $
+	$Id: netlist_generator.cc,v 1.22 2010/08/05 18:25:39 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -168,6 +168,8 @@ if (first_time) {
 #if ENABLE_STACKTRACE
 	STACKTRACE_INDENT_PRINT("processing unique type: ");
 	f.dump_type(STACKTRACE_STREAM) << endl;
+	STACKTRACE_INDENT_PRINT("preferred_names: ");
+	opt.dump_preferred_names(STACKTRACE_STREAM) << endl;
 #endif
 	netlist* nl = &netmap[&f];	// insert default constructed
 if (&f == topfp) {	// at_top()

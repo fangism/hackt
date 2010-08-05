@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.243 2010/07/14 18:12:28 fang Exp $
+#	$Id: Makefile.am,v 1.244 2010/08/05 18:25:21 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -215,11 +215,17 @@ LIBBOGUS5_LA = libbogus5_la
 
 libhacktexec_la_LIBADD = libhacktsim.la libhacknet.la
 
-# pass in a C++ file to coerce --tag=CXX linkage
-libhacktlib_la_SOURCES = \
+HACKTLIB_CC_FILES = \
 	main/main_funcs.cc \
 	main/compile.cc \
-	main/compile.h
+	main/compile_options.cc \
+	main/create_options.cc
+HACKTLIB_H_FILES = \
+	$(HACKTLIB_CC_FILES:.cc=.h)
+
+# pass in a C++ file to coerce --tag=CXX linkage
+libhacktlib_la_SOURCES = \
+	$(HACKTLIB_CC_FILES)
 # want to split-off:  main/parse_funcs.cc
 libhacktlib_la_LIBADD = libhacktparsers.la
 # libhacktexec.la
@@ -422,6 +428,7 @@ libbogus5_la_SOURCES = \
 
 AST_CC_FILES = \
 	AST/node_position.cc \
+	AST/parse_options.cc \
 	AST/attribute.cc \
 	AST/expr.cc \
 	AST/range.cc \
@@ -455,7 +462,6 @@ AST_H_FILES = \
 	AST/HSE_fwd.h \
 	AST/PRS_fwd.h \
 	AST/SPEC_fwd.h \
-	AST/parse_options.h \
 	AST/AST.h \
 	AST/common.h \
 	AST/expr_base.h \
@@ -1069,7 +1075,6 @@ MAIN_EXEC_H_FILES = $(MAIN_EXEC_CC_FILES:.cc=.h) \
 	main/hackt.h \
 	main/hackt_fwd.h \
 	main/cflat_options.h \
-	main/compile_options.h \
 	main/global_options.h \
 	main/chpsim_options.h \
 	main/main_funcs.h
@@ -1220,6 +1225,7 @@ ALL_HEADER_FILES += \
 	$(PARSER_H_FILES) \
 	$(SIM_H_FILES) \
 	$(NET_H_FILES) \
+	$(HACKTLIB_H_FILES) \
 	$(LIBHACKTGUILE_H_FILES) \
 	$(MAIN_EXEC_H_FILES)
 

@@ -1,0 +1,22 @@
+"wee.foo" -> "wee.bar"-
+~"wee.foo" -> "wee.bar"+
+"bukkit.foo" -> "bukkit.bar"-
+~"bukkit.foo" -> "bukkit.bar"+
+weak	"wha.bar" -> "wha.foo"-
+weak	~"wha.bar" -> "wha.foo"+
+weak	"bukkit.bar" -> "bukkit.foo"-
+weak	~"bukkit.bar" -> "bukkit.foo"+
+= "!GND" "bukkit.!GND"
+= "!GND" "cheezburger.!GND"
+= "!GND" "wee.!GND"
+= "!GND" "wha.!GND"
+= "!Vdd" "bukkit.!Vdd"
+= "!Vdd" "cheezburger.!Vdd"
+= "!Vdd" "wee.!Vdd"
+= "!Vdd" "wha.!Vdd"
+= "wee.foo" "wee.foo2"
+= "bukkit.foo" "cheezburger.foo"
+= "bukkit.foo" "cheezburger.foo2"
+= "bukkit.bar" "bukkit.bar2"
+= "bukkit.bar" "cheezburger.bar"
+= "wha.bar" "wha.bar2"

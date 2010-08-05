@@ -1,0 +1,15 @@
+// "042.hac"
+// testing canonical name shortening
+// @haco-flags@ -f canonical-shortest-length
+
+deftype ch_1of2 <: bool (bool d[2]; bool t,f)
+{
+        d[0]=f;
+        d[1]=t;
+        spec { excllo(t,f) }
+        set {}
+        get{}
+}
+
+ch_1of2 foo;
+
