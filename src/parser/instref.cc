@@ -1,6 +1,6 @@
 /**
 	\file "parser/instref.cc"
-	$Id: instref.cc,v 1.22 2010/04/07 00:13:05 fang Exp $
+	$Id: instref.cc,v 1.23 2010/08/07 00:00:02 fang Exp $
  */
 
 #define	DEBUGGING_SHIT			0
@@ -31,8 +31,7 @@
 // #include "Object/common/dump_flags.h"
 #include "Object/common/namespace.h"
 #include "Object/unroll/unroll_context.h"
-#include "Object/traits/bool_traits.h"
-#include "Object/traits/proc_traits.h"
+#include "Object/traits/instance_traits.h"
 #include "Object/expr/expr_dump_context.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
 #include "Object/ref/simple_meta_instance_reference.h"
@@ -95,6 +94,7 @@ using entity::footprint_frame;
 using entity::global_entry_context;
 using entity::global_offset;
 using entity::global_offset_base;
+using entity::global_process_context;
 using std::set;
 using std::vector;
 using std::copy;
@@ -108,6 +108,37 @@ using util::memory::excl_ptr;
 using util::memory::never_ptr;
 using util::directory_stack;
 #include "util/using_ostream.h"
+//=============================================================================
+// class typed_indexed_reference method definitions
+
+#ifndef	INVALID_NODE_INDEX
+#define	INVALID_NODE_INDEX	0
+#endif
+
+template <class Tag>
+typed_indexed_reference<Tag>::typed_indexed_reference(
+		const string& n, const entity::module& m) {
+	typedef	entity::class_traits<Tag>		traits_type;
+	const global_indexed_reference gref(parse_global_reference(n, m));
+	if (gref.first != traits_type::type_tag_enum_value) {
+#if 1
+		cerr << "Error: " << n << " does not reference a " <<
+			traits_type::tag_name << "." << endl;
+#else
+		// silent error, caller catches
+#endif
+		index = INVALID_NODE_INDEX;	// 0
+	} else {
+		index = gref.second;
+	}
+}
+
+template class typed_indexed_reference<bool_tag>;
+template class typed_indexed_reference<int_tag>;
+template class typed_indexed_reference<enum_tag>;
+template class typed_indexed_reference<channel_tag>;
+template class typed_indexed_reference<process_tag>;
+
 //=============================================================================
 #if 0
 /**
@@ -218,75 +249,10 @@ parse_and_check_reference(const char* s, const module& m) {
 		and allocated state_manager.  
 	\return 1-based global bool index, 0 if not found.
  */
-size_t
+bool_index
 parse_node_to_index(const string& n, const module& m) {
-	typedef	inst_ref_expr::meta_return_type		checked_ref_type;
-#ifndef	INVALID_NODE_INDEX
-#define	INVALID_NODE_INDEX	0
-#endif
 	STACKTRACE_VERBOSE;
-	const checked_ref_type r(parse_and_check_reference(n.c_str(), m));
-	if (!r) {
-		return INVALID_NODE_INDEX;
-	}
-	typedef	simple_bool_meta_instance_reference	bool_ref_type;
-	const count_ptr<const entity::meta_instance_reference_base>
-		rr(r.inst_ref());
-	const count_ptr<const bool_ref_type>
-		b(rr.is_a<const bool_ref_type>());
-	if (!b) {
-#if DEBUGGING_SHIT
-		const name_space ss("blank");
-		const bool_ref_type::instance_placeholder_type ph(ss, "fake", 0);
-		const bool_ref_type::instance_placeholder_ptr_type php(&ph);
-		const count_ptr<const entity::meta_instance_reference_base>
-			dp(new bool_ref_type(php));
-		rr->what(cerr << "rr->what(): ") << endl;
-		cerr << "dp @ " << &*dp << endl;
-		dp->what(cerr << "dp->what(): ") << endl;
-{
-		const bool_ref_type* rcdp = AS_A(const bool_ref_type*, &*dp);
-		cerr << "rcdp(static) = " << rcdp << endl;
-}
-		const bool_ref_type* rcdp = IS_A(const bool_ref_type*, &*dp);
-		cerr << "rcdp(dynamic) = " << rcdp << endl;
-		const count_ptr<const bool_ref_type>
-			cdp(dp.is_a<const bool_ref_type>());
-		cerr << "cdp(dynamic) = " << &*cdp << endl;
-		if (cdp) {
-			cdp->what(cerr << "cdp->what(): ") << endl;
-		}
-#if 0
-		rr->what(cerr << "rr->what(): ") << endl;
-		r.inst_ref()->what(cerr << "r.inst_ref()->what(): ") << endl;
-#endif
-		DIE;
-#endif
-		// later: write another procedure
-		// to print *collections* of bools
-		// by prefix matching.
-		cerr << "Error: " << n << " does not reference a bool (node)."
-			<< endl;
-		return INVALID_NODE_INDEX;
-	}
-	// reminder: this is a packed_array_generic
-	// this code uses the allocation information from the 
-	// alloc phase to find the canonical ID number.  
-	const footprint& top(m.get_footprint());
-//	const size_t ret = b->lookup_globally_allocated_index(top);
-	const footprint& topfp(m.get_footprint());
-	footprint_frame tff(topfp);
-	const global_offset g;
-	tff.construct_top_global_context(topfp, g);
-	const global_entry_context gc(tff, g);
-#if ENABLE_STACKTRACE
-	gc.dump_context(STACKTRACE_INDENT_PRINT("context:")) << endl;
-#endif
-	const size_t ret = b->lookup_globally_allocated_index(gc);
-#if 0
-	cerr << "index = " << ret << endl;
-#endif
-	return ret;
+	return bool_index(n, m);
 }
 
 //=============================================================================
@@ -295,36 +261,19 @@ parse_node_to_index(const string& n, const module& m) {
 		which can be 0 to reference the top-level process.
 		-1 signals an error.
  */
-size_t
+process_index
 parse_process_to_index(const string& n, const module& m) {
 	typedef	inst_ref_expr::meta_return_type		checked_ref_type;
 	STACKTRACE_VERBOSE;
 if (n == ".") {
 	// refers to the top-level process
-	return 0;
+	return process_index(0);
 } else {
-	const checked_ref_type r(parse_and_check_reference(n.c_str(), m));
-	if (!r) {
-		return INVALID_PROCESS_INDEX;
-	}
-	typedef	simple_process_meta_instance_reference	proc_ref_type;
-	const count_ptr<const proc_ref_type>
-		b(r.inst_ref().is_a<const proc_ref_type>());
-	if (!b) {
-		cerr << "Error: " << n << " does not reference a process."
-			<< endl;
-		return INVALID_PROCESS_INDEX;
-	}
-	// reminder: this is a packed_array_generic
-	// this code uses the allocation information from the 
-	// alloc phase to find the canonical ID number.  
-	const footprint& topfp(m.get_footprint());
-	footprint_frame tff(topfp);
-	const global_offset g;
-	tff.construct_top_global_context(topfp, g);
-	const global_entry_context gc(tff, g);
-	const size_t ret = b->lookup_globally_allocated_index(gc);
-	return ret;
+	const process_index r(n, m);
+	if (!r.index)	// error
+		return process_index();	// -1
+	// because 0 indicates top-level process
+	else	return r;
 }
 }
 
@@ -621,14 +570,9 @@ parse_name_to_get_subinstances(const global_indexed_reference& gref,
 			pip(covered.insert(gpid));
 	if (pip.second) {
 		STACKTRACE_INDENT_PRINT("gpid = " << gpid << endl);
-
-		footprint_frame tmpf;
-		global_offset tmpg;
-		gc.construct_global_footprint_frame(tmpf, tmpg, gpid);
-#if ENABLE_STACKTRACE
-		STACKTRACE_INDENT_PRINT("offset = " << tmpg << endl);
-		tmpf.dump_frame(STACKTRACE_INDENT_PRINT("frame:")) << endl;
-#endif
+		const global_process_context pc(m, gpid);
+		const footprint_frame& tmpf(pc.frame);
+		const global_offset& tmpg(pc.offset);
 	{
 		// visit public process ports separately through worklist
 		const footprint_frame_map_type&
@@ -672,6 +616,7 @@ parse_name_to_get_subinstances(const global_indexed_reference& gref,
 	} while (!worklist.empty());
 		break;
 	}	// end case META_TYPE_PROCESS
+	// for everything else, just return self
 	case META_TYPE_BOOL:
 		e.get_index_set<bool_tag>().insert(gref.second);
 		break;
@@ -688,7 +633,7 @@ parse_name_to_get_subinstances(const global_indexed_reference& gref,
 		return 1;
 	}	// end switch
 	return 0;
-}	// end parse_name_to_get_subnodes
+}	// end parse_name_to_get_subinstances
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -698,23 +643,20 @@ parse_name_to_get_subinstances(const global_indexed_reference& gref,
 	\return 0 upon success, 1 upon error.  
  */
 int
-parse_name_to_get_subnodes_local(const string& n, const module& m, 
+parse_name_to_get_subnodes_local(
+		const process_index& p,
+//		const string& n,
+		const module& m, 
 		vector<size_t>& v) {
 	typedef	inst_ref_expr::meta_return_type		checked_ref_type;
 	STACKTRACE_VERBOSE;
-	const size_t pid = parse_process_to_index(n, m);
-	if (pid == INVALID_PROCESS_INDEX) {
+	const size_t& pid(p.index);
+	if (!p.valid()) {
 		return 1;
 	}
-	footprint_frame tff(m.get_footprint());
-	global_offset g, tmpg;
-	footprint_frame tmpf;
-	const global_entry_context gc(tff, g);
-	gc.construct_global_footprint_frame(tmpf, tmpg, pid);
-#if ENABLE_STACKTRACE
-	STACKTRACE_INDENT_PRINT("offset: " << tmpg) << endl;
-	tmpf.dump_frame(STACKTRACE_INDENT_PRINT("frame:")) << endl;
-#endif
+	const global_process_context pc(m, pid);
+	const footprint_frame& tmpf(pc.frame);
+//	const global_offset& tmpg(pc.offset);
 	const footprint_frame_map_type&
 		pbf(tmpf.get_frame_map<bool_tag>());
 	// unique sort it
@@ -732,36 +674,49 @@ parse_name_to_get_subnodes_local(const string& n, const module& m,
 	TODO?: rewrite this once footprints have back-references
 		to their base definitions, and can access their
 		port formals.  
+	\param pred (optional) array of predicates that is used to 
+		filter out the set of nodes.  
+	\param v the return set of global bool IDs of the referenced ports
 	\return 0 upon success, 1 upon error.  
  */
 int
-parse_name_to_get_ports(const string& n, const module& m, 
-		vector<size_t>& v) {
+parse_name_to_get_ports(const process_index& p, 
+//		const string& n,
+		const module& m, 
+		vector<size_t>& v, const vector<bool>* pred) {
 	typedef	inst_ref_expr::meta_return_type		checked_ref_type;
 	STACKTRACE_VERBOSE;
-	const size_t pid = parse_process_to_index(n, m);
-	if (pid == INVALID_PROCESS_INDEX) {
+	const size_t& pid(p.index);
+	if (!p.valid()) {
 		return 1;
 	} else if (!pid) {
 		// top-level process has no ports!
 		return 0;
 		// even when using user-specified top-type?
 	}
-	footprint_frame tff(m.get_footprint());
-	global_offset g, tmpg;
-	footprint_frame tmpf;
-	const global_entry_context gc(tff, g);
-	gc.construct_global_footprint_frame(tmpf, tmpg, pid);
-#if ENABLE_STACKTRACE
-	STACKTRACE_INDENT_PRINT("offset: " << tmpg) << endl;
-	tmpf.dump_frame(STACKTRACE_INDENT_PRINT("frame:")) << endl;
-#endif
+	const global_process_context pc(m, pid);
+	const footprint_frame& tmpf(pc.frame);
+//	const global_offset& tmpg(pc.offset);
 	const footprint_frame_map_type&
 		pbf(tmpf.get_frame_map<bool_tag>());
 	const size_t ps = tmpf._footprint->get_instance_pool<bool_tag>()
 		.port_entries();
 	std::set<size_t> s;
-	copy(pbf.begin(), pbf.begin() +ps, set_inserter(s));
+	footprint_frame_map_type::const_iterator
+		pi(pbf.begin()), pe(pbf.begin() +ps);
+if (pred) {
+	// mask out ... want to use something like a mask_array/valarray
+	vector<bool>::const_iterator mi(pred->begin()), me(pred->end());
+	INVARIANT(pred->size() >= ps);
+	for ( ; pi!=pe; ++pi, ++mi) {
+	if (*mi) {
+		s.insert(*pi);
+	}
+	}
+} else {
+	// unpredicated, just take all of them
+	copy(pi, pe, set_inserter(s));
+}
 	copy(s.begin(), s.end(), back_inserter(v));
 	return 0;
 }	// end parse_name_to_get_ports

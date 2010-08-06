@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Channel-prsim.cc"
-	$Id: Channel-prsim.cc,v 1.32 2010/06/08 00:48:42 fang Exp $
+	$Id: Channel-prsim.cc,v 1.33 2010/08/07 00:00:04 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -3121,7 +3121,7 @@ if (i.second) {
 				n << "[" << k << "]";
 			}
 			const node_index_type ni =
-				parse_node_to_index(n.str(), m);
+				parse_node_to_index(n.str(), m).index;
 			if (ni) {
 				c.data[dk] = ni;
 				// flag node for consistency
@@ -3171,7 +3171,7 @@ if (i.second) {
 	// assign ack rail (optional)
 	if (ack_name.length()) {
 		const string a(base + '.' + ack_name);
-		const node_index_type ni = parse_node_to_index(a, m);
+		const node_index_type ni = parse_node_to_index(a, m).index;
 		if (ni) {
 			c.ack_signal = ni;
 			state.__get_node(ni).set_in_channel();
@@ -3201,7 +3201,7 @@ if (i.second) {
 	dk[0] = 0;
 	dk[1] = 0;
 	const string n(base + "." + data_name);
-	const node_index_type ni = parse_node_to_index(n, m);
+	const node_index_type ni = parse_node_to_index(n, m).index;
 	if (ni) {
 		c.data[dk] = ni;
 		// flag node for consistency
@@ -3218,7 +3218,7 @@ if (i.second) {
 }{
 	// assign repeat rail (use validity signal)
 	const string r(base + '.' + repeat_name);
-	const node_index_type ni = parse_node_to_index(r, m);
+	const node_index_type ni = parse_node_to_index(r, m).index;
 	if (ni) {
 		c.valid_signal = ni;	// doubles as repeat signal
 		state.__get_node(ni).set_in_channel();
@@ -3306,7 +3306,7 @@ if (have_ack) {
 	c.set_ack_active(ack_sense);
 	c.set_ack_init(ack_init);
 	const string ack_name(base + (ack_sense ? ".a" : ".e"));
-	const node_index_type ai = parse_node_to_index(ack_name, m);
+	const node_index_type ai = parse_node_to_index(ack_name, m).index;
 	if (!ai) {
 		cerr << "Error: no such node `" << ack_name <<
 			"\' in channel." << endl;
@@ -3323,7 +3323,7 @@ if (have_ack) {
 if (have_validity) {
 	c.set_valid_sense(validity_sense);
 	const string v_name(base + (validity_sense ? ".v" : ".n"));
-	const node_index_type vi = parse_node_to_index(v_name, m);
+	const node_index_type vi = parse_node_to_index(v_name, m).index;
 	if (!vi) {
 		cerr << "Error: no such node `" << v_name <<
 			"\' in channel." << endl;

@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/process_graph.h"
-	$Id: process_graph.h,v 1.3 2010/04/02 22:19:20 fang Exp $
+	$Id: process_graph.h,v 1.4 2010/08/07 00:00:06 fang Exp $
 	Unique process subgraph structure, shared by all process instances
 	of the same type.
  */
@@ -11,13 +11,14 @@
 #include <iosfwd>
 #include <map>
 #include <set>
+#include <valarray>
+
 #include "util/STL/hash_map.h"
 #include "sim/common.h"
 #include "sim/prsim/devel_switches.h"
 #include "sim/prsim/Rule.h"
 #include "sim/prsim/Expr.h"
 #include "Object/common/frame_map.h"
-#include <valarray>
 
 namespace HAC {
 namespace entity {
@@ -52,7 +53,7 @@ typedef	real_time			rule_time_type;
 
 //=============================================================================
 // structures to account for local fanin contribution
-typedef	std::vector<expr_index_type>	fanin_array_type;
+typedef	vector<expr_index_type>		fanin_array_type;
 typedef	fanin_array_type		fanout_array_type;
 
 /**
@@ -237,6 +238,14 @@ struct unique_process_subgraph {
 
 	bool
 	is_rule_expr(const expr_index_type) const;
+
+	// use this to select outputs
+	void
+	has_fanin_map(vector<bool>&) const;
+
+	// use this to select inputs
+	void
+	has_not_fanin_map(vector<bool>&) const;
 
 	ostream&
 	dump_struct(ostream&) const;

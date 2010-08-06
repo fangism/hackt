@@ -2,7 +2,7 @@
 	\file "sim/command_common.tcc"
 	Library of template command implementations, re-usable with
 	different state types.  
-	$Id: command_common.tcc,v 1.21 2010/07/07 23:01:26 fang Exp $
+	$Id: command_common.tcc,v 1.22 2010/08/07 00:00:03 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_COMMON_TCC__
@@ -582,7 +582,7 @@ if (a.size() > 2) {
 		const string newdir(command_registry_type::working_dir());
 		// optional: confirm and print new working dir
 		if (newdir != "" && 
-			parser::parse_process_to_index(newdir, s.get_module()) == INVALID_PROCESS_INDEX) {
+			parser::parse_process_to_index(newdir, s.get_module()).index == INVALID_PROCESS_INDEX) {
 			cerr << "Invalid process/directory: " << newdir << endl;
 			command_registry_type::change_dir_abs(save);
 			return command_type::BADARG;
@@ -625,7 +625,7 @@ if (a.size() != 2) {
 	command_registry_type::push_dir(ac.back());
 	const string newdir(command_registry_type::working_dir());
 	if (newdir != "" && 
-		parser::parse_process_to_index(newdir, s.get_module()) == INVALID_PROCESS_INDEX) {
+		parser::parse_process_to_index(newdir, s.get_module()).index == INVALID_PROCESS_INDEX) {
 		cerr << "Invalid process/directory: " << newdir << endl;
 		command_registry_type::pop_dir();
 		return command_type::BADARG;

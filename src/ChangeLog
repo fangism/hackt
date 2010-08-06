@@ -3,6 +3,19 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-08-06	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-07:
+	  Code cleanup and refactoring.
+	  New class global_process_context (frame-offset pair), 
+		constructed from module and gpid, conveniently calls
+		global_entry_context::construct_global_footprint_frame.
+	  Updated parser/instref.cc interfaces to make better reuse
+		of reference-parse results.
+	  Next: filtering ports lists by input/output, based on fanin.
+	  Regression testsuite clean.
+
+
 2010-08-05	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-06:

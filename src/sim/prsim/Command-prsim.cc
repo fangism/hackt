@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.71 2010/08/05 23:21:55 fang Exp $
+	$Id: Command-prsim.cc,v 1.72 2010/08/07 00:00:05 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -74,6 +74,8 @@ using entity::global_indexed_reference;
 using entity::META_TYPE_PROCESS;
 using entity::META_TYPE_BOOL;
 using entity::META_TYPE_NONE;
+using parser::process_index;
+using parser::bool_index;
 
 //=============================================================================
 // directory features
@@ -105,16 +107,17 @@ nonempty_abs_dir(const string& s) {
 #if AUTO_PREPEND_WORKING_DIR
 // wrap around definitions in "parser/instref.h"
 static
+// bool_index
 size_t
 parse_node_to_index(const string& s, const entity::module& m) {
 	STACKTRACE_VERBOSE;
 	// automatically prepend working directory
 	return parser::parse_node_to_index(
-		CommandRegistry::prepend_working_dir(s), m);
+		CommandRegistry::prepend_working_dir(s), m).index;
 }
 
 static
-size_t
+process_index
 parse_process_to_index(const string& s, const entity::module& m) {
 	STACKTRACE_VERBOSE;
 	// automatically prepend working directory
@@ -152,8 +155,9 @@ int
 parse_name_to_get_subnodes_local(const string& s, const entity::module& m,
 		vector<size_t>& v) {
 	STACKTRACE_VERBOSE;
-	const string t(nonempty_abs_dir(s));
-	return parser::parse_name_to_get_subnodes_local(t, m, v);
+//	const string t(nonempty_abs_dir(s));
+	return parser::parse_name_to_get_subnodes_local(
+		parse_process_to_index(s, m), m, v);
 }
 
 static
@@ -161,8 +165,9 @@ int
 parse_name_to_get_ports(const string& s, const entity::module& m,
 		vector<size_t>& v) {
 	STACKTRACE_VERBOSE;
-	const string t(nonempty_abs_dir(s));
-	return parser::parse_name_to_get_ports(t, m, v);
+//	const string t(nonempty_abs_dir(s));
+	return parser::parse_name_to_get_ports(
+		parse_process_to_index(s, m), m, v);
 }
 
 #else
@@ -4899,7 +4904,7 @@ if (a.size() != 2) {
 	return Command::SYNTAX;
 } else {
 	const process_index_type pid =
-		parse_process_to_index(a.back(), s.get_module());
+		parse_process_to_index(a.back(), s.get_module()).index;
 	if (pid < s.get_num_processes()) {
 		if (pid) {
 			parse_name_to_what(cout, a.back(), s.get_module());

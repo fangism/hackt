@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.67 2010/06/29 01:55:05 fang Exp $
+	$Id: State-prsim.cc,v 1.68 2010/08/07 00:00:05 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -464,8 +464,8 @@ State::__initialize(void) {
 	// alternative is to record fact that every node went to X
 	_channel_manager.initialize();
 #if IMPLICIT_SUPPLY_PORTS
-	const node_index_type gi = parse_node_to_index("!GND", mod);
-	const node_index_type vi = parse_node_to_index("!Vdd", mod);
+	const node_index_type gi = parse_node_to_index("!GND", mod).index;
+	const node_index_type vi = parse_node_to_index("!Vdd", mod).index;
 	INVARIANT(gi);
 	INVARIANT(vi);
 	// Q: should this be done with set_node(), in case setting globals

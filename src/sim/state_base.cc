@@ -1,6 +1,6 @@
 /**
 	\file "sim/state_base.cc"
-	$Id: state_base.cc,v 1.5 2010/04/07 00:13:06 fang Exp $
+	$Id: state_base.cc,v 1.6 2010/08/07 00:00:04 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -9,6 +9,7 @@
 #include <string>
 #include "sim/state_base.h"
 #include "Object/module.h"
+#include "Object/global_entry.h"
 #include "util/stacktrace.h"
 
 namespace HAC {
@@ -18,6 +19,7 @@ namespace SIM {
 using entity::footprint;
 #endif
 using entity::bool_tag;
+using entity::global_process_context;
 
 //=============================================================================
 // class state_base method defintions
@@ -153,14 +155,8 @@ state_base::get_global_context(const size_t pid) const {
 #endif	// HOT_CACHE_FRAMES
 #else
 	// this was not updated to include global_offset
-	footprint_frame ret;
-	global_offset g;
-	const footprint_frame tff(mod.get_footprint());
-	const global_entry_context top_context(tff, g);
-	top_context.construct_global_footprint_frame(ret, g, pid);
-#if ENABLE_STACKTRACE
-//	ret.dump_frame(STACKTRACE_INDENT_PRINT("frame:")) << endl;
-#endif
+	const global_process_context pc(mod, pid);
+	const footprint_frame& ret(pc.frame);
 	return ret.get_frame_map<bool_tag>();	// copy
 #endif	// CACHE_GLOBAL_FOOTPRINT_FRAME
 }

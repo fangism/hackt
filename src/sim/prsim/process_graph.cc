@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/process_graph.cc"
 	Implementation of process graph structure for prsim rules.
-	$Id: process_graph.cc,v 1.6 2010/04/02 22:19:19 fang Exp $
+	$Id: process_graph.cc,v 1.7 2010/08/07 00:00:05 fang Exp $
 	Most of this file was ripped from "sim/prsim/State-prsim.cc"
 	for the sake of cleanup.  
  */
@@ -12,11 +12,13 @@
 
 #include <iostream>
 #include <numeric>			// for accumulate
+#include <functional>
 #include "sim/prsim/State-prsim.h"
 #include "sim/prsim/util.tcc"
 #include "sim/prsim/Rule.tcc"
 #include "sim/ISE.h"
 #include "util/stacktrace.h"
+#include "util/compose.h"
 
 #if	DEBUG_CHECK
 #define	DEBUG_CHECK_PRINT(x)		STACKTRACE_INDENT_PRINT(x)
@@ -36,6 +38,7 @@ namespace HAC {
 namespace SIM {
 namespace PRSIM {
 #include "util/using_ostream.h"
+USING_UTIL_COMPOSE
 
 //=============================================================================
 // class unique_process_subgraph method definitions
@@ -381,6 +384,25 @@ unique_process_subgraph::fan_count(void) const {
 	return std::accumulate(local_faninout_map.begin(), 
 		local_faninout_map.end(), expr_index_type(0), 
 		&faninout_struct_type::add_size);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+unique_process_subgraph::has_fanin_map(vector<bool>& ret) const {
+	ret.reserve(local_faninout_map.size());
+	transform(local_faninout_map.begin(), local_faninout_map.end(), 
+		back_inserter(ret), 
+		std::mem_fun_ref(&faninout_struct_type::has_fanin));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+unique_process_subgraph::has_not_fanin_map(vector<bool>& ret) const {
+	ret.reserve(local_faninout_map.size());
+	transform(local_faninout_map.begin(), local_faninout_map.end(), 
+		back_inserter(ret), 
+		unary_compose(std::logical_not<bool>(),
+			std::mem_fun_ref(&faninout_struct_type::has_fanin)));
 }
 
 //=============================================================================

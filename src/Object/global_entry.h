@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.h"
-	$Id: global_entry.h,v 1.21 2010/04/19 02:45:56 fang Exp $
+	$Id: global_entry.h,v 1.22 2010/08/07 00:00:01 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_H__
@@ -8,7 +8,7 @@
 
 #include <iosfwd>
 #include "util/persistent_fwd.h"
-// #include <valarray>		// may be more efficient
+// #include <valarray>		// may be more efficient, slice/maskable
 #include "Object/traits/type_tag_enum.h"
 #include "Object/common/frame_map.h"
 #include "Object/devel_switches.h"
@@ -26,6 +26,7 @@ namespace PRS {
 	class cflat_visitor;
 }
 
+class module;
 struct dump_flags;
 class global_entry_context_base;
 struct global_entry_dumper;
@@ -541,6 +542,18 @@ public:
 	load_object_base(const persistent_object_manager&, istream&);
 
 };	// end struct global_entry
+
+//=============================================================================
+/**
+	Uses global_entry_context to construct process context.
+ */
+struct global_process_context {
+	footprint_frame				frame;
+	global_offset				offset;
+
+	global_process_context(const module&, const size_t);
+
+};	// end struct global_process_context
 
 //=============================================================================
 }	// end namespace entity

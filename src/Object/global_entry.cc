@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.cc"
-	$Id: global_entry.cc,v 1.15 2010/04/07 00:12:27 fang Exp $
+	$Id: global_entry.cc,v 1.16 2010/08/07 00:00:00 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -11,7 +11,9 @@
 #if BUILTIN_CHANNEL_FOOTPRINTS
 #include "Object/global_channel_entry.h"
 #endif
+#include "Object/global_entry_context.h"
 #include "Object/def/footprint.h"
+#include "Object/module.h"
 #include "Object/traits/bool_traits.h"
 #include "Object/traits/int_traits.h"
 #include "Object/traits/enum_traits.h"
@@ -799,6 +801,21 @@ template class global_entry<int_tag>;
 template class global_entry<enum_tag>;
 template class global_entry<channel_tag>;
 template class global_entry<process_tag>;
+
+//=============================================================================
+// class global_process_context method definitions
+
+global_process_context::global_process_context(const module& m, 
+		const size_t gpid) : frame(), offset() {
+	footprint_frame tff(m.get_footprint());
+	global_offset g;
+	const global_entry_context gc(tff, g);
+	gc.construct_global_footprint_frame(frame, offset, gpid);
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT_PRINT("offset: " << offset) << endl;
+	frame.dump_frame(STACKTRACE_INDENT_PRINT("frame:")) << endl;
+#endif
+}
 
 //=============================================================================
 }	// end namespace entity
