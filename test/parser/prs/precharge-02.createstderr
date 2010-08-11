@@ -139,20 +139,20 @@ In namespace "", we have: {
         a &{+en} b -> c-
         }
       footprint: {
-        !GND = bool^0 = pchg_test<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = pchg_test<>::!Vdd (2) @[ supply_high ] 
-        a = bool^0 = pchg_test<>::a (3) 
-        b = bool^0 = pchg_test<>::b (4) 
-        c = bool^0 = pchg_test<>::c (5) 
-        en = bool^0 = pchg_test<>::en (6) 
+        !GND = bool^0 = pchg_test<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = pchg_test<>::!Vdd (2) @[ supply_high port-alias ] 
+        a = bool^0 = pchg_test<>::a (3) @[ port-alias loc-FO- ] 
+        b = bool^0 = pchg_test<>::b (4) @[ port-alias loc-FO- ] 
+        c = bool^0 = pchg_test<>::c (5) @[ port-alias loc-FI- ] 
+        en = bool^0 = pchg_test<>::en (6) @[ port-alias ] 
         Created state:
         bool instance pool: (6 ports, 0 local, 0 mapped)
-        1	pchg_test<>::!GND @[ supply_low ]	
-        2	pchg_test<>::!Vdd @[ supply_high ]	
-        3	pchg_test<>::a	
-        4	pchg_test<>::b	
-        5	pchg_test<>::c	
-        6	pchg_test<>::en	
+        1	pchg_test<>::!GND @[ supply_low port-alias ]	
+        2	pchg_test<>::!Vdd @[ supply_high port-alias ]	
+        3	pchg_test<>::a @[ port-alias loc-FO- ]	
+        4	pchg_test<>::b @[ port-alias loc-FO- ]	
+        5	pchg_test<>::c @[ port-alias loc-FI- ]	
+        6	pchg_test<>::en @[ port-alias ]	
         resolved prs:
         a &{+en} b -> c-
         rule supply map: (rules, macros, @nodes : Vdd, GND)
@@ -192,20 +192,20 @@ In namespace "", we have: {
         a &{+~_en} b -> c-
         }
       footprint: {
-        !GND = bool^0 = pchg_test2<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = pchg_test2<>::!Vdd (2) @[ supply_high ] 
-        _en = bool^0 = pchg_test2<>::_en (6) 
-        a = bool^0 = pchg_test2<>::a (3) 
-        b = bool^0 = pchg_test2<>::b (4) 
-        c = bool^0 = pchg_test2<>::c (5) 
+        !GND = bool^0 = pchg_test2<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = pchg_test2<>::!Vdd (2) @[ supply_high port-alias ] 
+        _en = bool^0 = pchg_test2<>::_en (6) @[ port-alias ] 
+        a = bool^0 = pchg_test2<>::a (3) @[ port-alias loc-FO- ] 
+        b = bool^0 = pchg_test2<>::b (4) @[ port-alias loc-FO- ] 
+        c = bool^0 = pchg_test2<>::c (5) @[ port-alias loc-FI- ] 
         Created state:
         bool instance pool: (6 ports, 0 local, 0 mapped)
-        1	pchg_test2<>::!GND @[ supply_low ]	
-        2	pchg_test2<>::!Vdd @[ supply_high ]	
-        3	pchg_test2<>::a	
-        4	pchg_test2<>::b	
-        5	pchg_test2<>::c	
-        6	pchg_test2<>::_en	
+        1	pchg_test2<>::!GND @[ supply_low port-alias ]	
+        2	pchg_test2<>::!Vdd @[ supply_high port-alias ]	
+        3	pchg_test2<>::a @[ port-alias loc-FO- ]	
+        4	pchg_test2<>::b @[ port-alias loc-FO- ]	
+        5	pchg_test2<>::c @[ port-alias loc-FI- ]	
+        6	pchg_test2<>::_en @[ port-alias ]	
         resolved prs:
         a &{+~_en} b -> c-
         rule supply map: (rules, macros, @nodes : Vdd, GND)
@@ -226,17 +226,17 @@ footprint: {
   bar = process pchg_test2<>^0 = bar (2) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    a = bool^0 = bar.a (7) 
-    b = bool^0 = bar.b (8) 
-    c = bool^0 = bar.c (9) 
+    a = bool^0 = bar.a (7) @[ sub-FO- ] 
+    b = bool^0 = bar.b (8) @[ sub-FO- ] 
+    c = bool^0 = bar.c (9) @[ sub-FI- ] 
     _en = bool^0 = bar._en (10) 
   )
   foo = process pchg_test<>^0 = foo (1) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    a = bool^0 = foo.a (3) 
-    b = bool^0 = foo.b (4) 
-    c = bool^0 = foo.c (5) 
+    a = bool^0 = foo.a (3) @[ sub-FO- ] 
+    b = bool^0 = foo.b (4) @[ sub-FO- ] 
+    c = bool^0 = foo.c (5) @[ sub-FI- ] 
     en = bool^0 = foo.en (6) 
   )
   Created state:
@@ -248,12 +248,12 @@ footprint: {
   bool instance pool: (0 ports, 10 local, 0 mapped)
   1	!GND @[ supply_low ]	
   2	!Vdd @[ supply_high ]	
-  3	foo.a	
-  4	foo.b	
-  5	foo.c	
+  3	foo.a @[ sub-FO- ]	
+  4	foo.b @[ sub-FO- ]	
+  5	foo.c @[ sub-FI- ]	
   6	foo.en	
-  7	bar.a	
-  8	bar.b	
-  9	bar.c	
+  7	bar.a @[ sub-FO- ]	
+  8	bar.b @[ sub-FO- ]	
+  9	bar.c @[ sub-FI- ]	
   10	bar._en	
 }

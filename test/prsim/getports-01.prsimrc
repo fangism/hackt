@@ -1,0 +1,18 @@
+# "getports-01.prsimrc"
+# @haco@ inv.haco-c
+
+getports I
+getinports I
+getoutports I
+
+getports J
+getinports J
+getoutports J
+
+set a 0
+cycle
+getinports I
+getoutports I
+getinports J
+getoutports J
+

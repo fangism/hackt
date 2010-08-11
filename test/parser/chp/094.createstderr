@@ -208,8 +208,8 @@ In namespace "", we have: {
         }
       footprint collection: {
         <0, 0> {
-          !GND = bool^0 = send_indexed<0, 0>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = send_indexed<0, 0>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = send_indexed<0, 0>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = send_indexed<0, 0>::!Vdd (2) @[ supply_high port-alias ] 
           I = pint^0 value: 0
           J = pint^0 value: 0
           out = channel chan!(int<32>)^2
@@ -226,8 +226,8 @@ In namespace "", we have: {
           3	send_indexed<0, 0>::out[1][0]	
           4	send_indexed<0, 0>::out[1][1]	
           bool instance pool: (2 ports, 0 local, 0 mapped)
-          1	send_indexed<0, 0>::!GND @[ supply_low ]	
-          2	send_indexed<0, 0>::!Vdd @[ supply_high ]	
+          1	send_indexed<0, 0>::!GND @[ supply_low port-alias ]	
+          2	send_indexed<0, 0>::!Vdd @[ supply_high port-alias ]	
           resolved concurrent actions:
             *[
               out[0][0]!(0)
@@ -237,8 +237,8 @@ In namespace "", we have: {
           }
         }
         <0, 1> {
-          !GND = bool^0 = send_indexed<0, 1>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = send_indexed<0, 1>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = send_indexed<0, 1>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = send_indexed<0, 1>::!Vdd (2) @[ supply_high port-alias ] 
           I = pint^0 value: 0
           J = pint^0 value: 1
           out = channel chan!(int<32>)^2
@@ -255,8 +255,8 @@ In namespace "", we have: {
           3	send_indexed<0, 1>::out[1][0]	
           4	send_indexed<0, 1>::out[1][1]	
           bool instance pool: (2 ports, 0 local, 0 mapped)
-          1	send_indexed<0, 1>::!GND @[ supply_low ]	
-          2	send_indexed<0, 1>::!Vdd @[ supply_high ]	
+          1	send_indexed<0, 1>::!GND @[ supply_low port-alias ]	
+          2	send_indexed<0, 1>::!Vdd @[ supply_high port-alias ]	
           resolved concurrent actions:
             *[
               out[0][1]!(1)
@@ -266,8 +266,8 @@ In namespace "", we have: {
           }
         }
         <1, 0> {
-          !GND = bool^0 = send_indexed<1, 0>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = send_indexed<1, 0>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = send_indexed<1, 0>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = send_indexed<1, 0>::!Vdd (2) @[ supply_high port-alias ] 
           I = pint^0 value: 1
           J = pint^0 value: 0
           out = channel chan!(int<32>)^2
@@ -284,8 +284,8 @@ In namespace "", we have: {
           3	send_indexed<1, 0>::out[1][0]	
           4	send_indexed<1, 0>::out[1][1]	
           bool instance pool: (2 ports, 0 local, 0 mapped)
-          1	send_indexed<1, 0>::!GND @[ supply_low ]	
-          2	send_indexed<1, 0>::!Vdd @[ supply_high ]	
+          1	send_indexed<1, 0>::!GND @[ supply_low port-alias ]	
+          2	send_indexed<1, 0>::!Vdd @[ supply_high port-alias ]	
           resolved concurrent actions:
             *[
               out[1][0]!(1)
@@ -295,8 +295,8 @@ In namespace "", we have: {
           }
         }
         <1, 1> {
-          !GND = bool^0 = send_indexed<1, 1>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = send_indexed<1, 1>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = send_indexed<1, 1>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = send_indexed<1, 1>::!Vdd (2) @[ supply_high port-alias ] 
           I = pint^0 value: 1
           J = pint^0 value: 1
           out = channel chan!(int<32>)^2
@@ -313,8 +313,8 @@ In namespace "", we have: {
           3	send_indexed<1, 1>::out[1][0]	
           4	send_indexed<1, 1>::out[1][1]	
           bool instance pool: (2 ports, 0 local, 0 mapped)
-          1	send_indexed<1, 1>::!GND @[ supply_low ]	
-          2	send_indexed<1, 1>::!Vdd @[ supply_high ]	
+          1	send_indexed<1, 1>::!GND @[ supply_low port-alias ]	
+          2	send_indexed<1, 1>::!Vdd @[ supply_high port-alias ]	
           resolved concurrent actions:
             *[
               out[1][1]!(2)

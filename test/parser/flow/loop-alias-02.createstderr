@@ -102,8 +102,8 @@ In namespace "", we have: {
           p[$i] = x;
         )
       footprint: {
-        !GND = bool^0 = lt<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = lt<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = lt<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = lt<>::!Vdd (2) @[ supply_high port-alias ] 
         p = bool^1
           {
             [0] = lt<>::x (3) 
@@ -112,8 +112,8 @@ In namespace "", we have: {
         x = bool^0 = lt<>::x (3) 
         Created state:
         bool instance pool: (2 ports, 1 local, 0 mapped)
-        1	lt<>::!GND @[ supply_low ]	
-        2	lt<>::!Vdd @[ supply_high ]	
+        1	lt<>::!GND @[ supply_low port-alias ]	
+        2	lt<>::!Vdd @[ supply_high port-alias ]	
         3	lt<>::x	
       }
       }

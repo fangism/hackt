@@ -164,18 +164,18 @@ In namespace "", we have: {
         ~_o -> o+
         }
       footprint: {
-        !GND = bool^0 = buf<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = buf<>::!Vdd (2) @[ supply_high ] 
-        _o = bool^0 = buf<>::_o (5) 
-        i = bool^0 = buf<>::i (3) 
-        o = bool^0 = buf<>::o (4) 
+        !GND = bool^0 = buf<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = buf<>::!Vdd (2) @[ supply_high port-alias ] 
+        _o = bool^0 = buf<>::_o (5) @[ loc-FO- loc-FO+ loc-FI- loc-FI+ ] 
+        i = bool^0 = buf<>::i (3) @[ port-alias loc-FO- loc-FO+ ] 
+        o = bool^0 = buf<>::o (4) @[ port-alias loc-FI- loc-FI+ ] 
         Created state:
         bool instance pool: (4 ports, 1 local, 0 mapped)
-        1	buf<>::!GND @[ supply_low ]	
-        2	buf<>::!Vdd @[ supply_high ]	
-        3	buf<>::i	
-        4	buf<>::o	
-        5	buf<>::_o	
+        1	buf<>::!GND @[ supply_low port-alias ]	
+        2	buf<>::!Vdd @[ supply_high port-alias ]	
+        3	buf<>::i @[ port-alias loc-FO- loc-FO+ ]	
+        4	buf<>::o @[ port-alias loc-FI- loc-FI+ ]	
+        5	buf<>::_o @[ loc-FO- loc-FO+ loc-FI- loc-FI+ ]	
         resolved prs:
         i -> _o-
         ~i -> _o+
@@ -200,12 +200,12 @@ In namespace "", we have: {
           bool<> e
         )
       footprint: {
-        d = bool^0 = e1of1<>::d (1) 
-        e = bool^0 = e1of1<>::e (2) 
+        d = bool^0 = e1of1<>::d (1) @[ port-alias ] 
+        e = bool^0 = e1of1<>::e (2) @[ port-alias ] 
         Created state:
         bool instance pool: (2 ports, 0 local, 0 mapped)
-        1	e1of1<>::d	
-        2	e1of1<>::e	
+        1	e1of1<>::d @[ port-alias ]	
+        2	e1of1<>::e @[ port-alias ]	
       }
       }
 
@@ -242,35 +242,35 @@ In namespace "", we have: {
         buf<> c
         c ( , , re, I.e);
       footprint: {
-        !GND = bool^0 = wire_copy_e1of1<>::!GND (5) @[ supply_low ] 
-        !Vdd = bool^0 = wire_copy_e1of1<>::!Vdd (6) @[ supply_high ] 
+        !GND = bool^0 = wire_copy_e1of1<>::!GND (5) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = wire_copy_e1of1<>::!Vdd (6) @[ supply_high port-alias ] 
         I = process e1of1<>^0 = wire_copy_e1of1<>::I (1) (
-          d = bool^0 = wire_copy_e1of1<>::I.d (1) 
-          e = bool^0 = wire_copy_e1of1<>::I.e (2) 
+          d = bool^0 = wire_copy_e1of1<>::I.d (1) @[ port-alias sub-FO- sub-FO+ ] 
+          e = bool^0 = wire_copy_e1of1<>::I.e (2) @[ port-alias sub-FI- sub-FI+ ] 
         )
         O = process e1of1<>^0 = wire_copy_e1of1<>::O (2) (
-          d = bool^0 = wire_copy_e1of1<>::O.d (3) 
-          e = bool^0 = wire_copy_e1of1<>::O.e (4) 
+          d = bool^0 = wire_copy_e1of1<>::O.d (3) @[ port-alias sub-FI- sub-FI+ ] 
+          e = bool^0 = wire_copy_e1of1<>::O.e (4) @[ port-alias sub-FO- sub-FO+ ] 
         )
         a = process buf<>^0 = wire_copy_e1of1<>::a (3) (
-          !GND = bool^0 = wire_copy_e1of1<>::!GND (5) @[ supply_low ] 
-          !Vdd = bool^0 = wire_copy_e1of1<>::!Vdd (6) @[ supply_high ] 
-          i = bool^0 = wire_copy_e1of1<>::O.e (4) 
-          o = bool^0 = wire_copy_e1of1<>::re (7) 
+          !GND = bool^0 = wire_copy_e1of1<>::!GND (5) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = wire_copy_e1of1<>::!Vdd (6) @[ supply_high port-alias ] 
+          i = bool^0 = wire_copy_e1of1<>::O.e (4) @[ port-alias sub-FO- sub-FO+ ] 
+          o = bool^0 = wire_copy_e1of1<>::re (7) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
         )
         b = process buf<>^0 = wire_copy_e1of1<>::b (4) (
-          !GND = bool^0 = wire_copy_e1of1<>::!GND (5) @[ supply_low ] 
-          !Vdd = bool^0 = wire_copy_e1of1<>::!Vdd (6) @[ supply_high ] 
-          i = bool^0 = wire_copy_e1of1<>::I.d (1) 
-          o = bool^0 = wire_copy_e1of1<>::O.d (3) 
+          !GND = bool^0 = wire_copy_e1of1<>::!GND (5) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = wire_copy_e1of1<>::!Vdd (6) @[ supply_high port-alias ] 
+          i = bool^0 = wire_copy_e1of1<>::I.d (1) @[ port-alias sub-FO- sub-FO+ ] 
+          o = bool^0 = wire_copy_e1of1<>::O.d (3) @[ port-alias sub-FI- sub-FI+ ] 
         )
         c = process buf<>^0 = wire_copy_e1of1<>::c (5) (
-          !GND = bool^0 = wire_copy_e1of1<>::!GND (5) @[ supply_low ] 
-          !Vdd = bool^0 = wire_copy_e1of1<>::!Vdd (6) @[ supply_high ] 
-          i = bool^0 = wire_copy_e1of1<>::re (7) 
-          o = bool^0 = wire_copy_e1of1<>::I.e (2) 
+          !GND = bool^0 = wire_copy_e1of1<>::!GND (5) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = wire_copy_e1of1<>::!Vdd (6) @[ supply_high port-alias ] 
+          i = bool^0 = wire_copy_e1of1<>::re (7) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
+          o = bool^0 = wire_copy_e1of1<>::I.e (2) @[ port-alias sub-FI- sub-FI+ ] 
         )
-        re = bool^0 = wire_copy_e1of1<>::re (7) 
+        re = bool^0 = wire_copy_e1of1<>::re (7) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
         Created state:
         process instance pool: (2 ports, 3 local, 0 mapped)
         1	wire_copy_e1of1<>::I	e1of1<>
@@ -284,13 +284,13 @@ In namespace "", we have: {
         5	wire_copy_e1of1<>::c	buf<>
           bool: 5,6,7,2
         bool instance pool: (6 ports, 1 local, 3 mapped)
-        1	wire_copy_e1of1<>::I.d	
-        2	wire_copy_e1of1<>::I.e	
-        3	wire_copy_e1of1<>::O.d	
-        4	wire_copy_e1of1<>::O.e	
-        5	wire_copy_e1of1<>::!GND @[ supply_low ]	
-        6	wire_copy_e1of1<>::!Vdd @[ supply_high ]	
-        7	wire_copy_e1of1<>::re	
+        1	wire_copy_e1of1<>::I.d @[ port-alias sub-FO- sub-FO+ ]	
+        2	wire_copy_e1of1<>::I.e @[ port-alias sub-FI- sub-FI+ ]	
+        3	wire_copy_e1of1<>::O.d @[ port-alias sub-FI- sub-FI+ ]	
+        4	wire_copy_e1of1<>::O.e @[ port-alias sub-FO- sub-FO+ ]	
+        5	wire_copy_e1of1<>::!GND @[ supply_low port-alias ]	
+        6	wire_copy_e1of1<>::!Vdd @[ supply_high port-alias ]	
+        7	wire_copy_e1of1<>::re @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ]	
         private sub-bool index map:
           (3 -> 0)
           (4 -> 1)
@@ -312,12 +312,12 @@ footprint: {
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
     I = process e1of1<>^0 = foo.I (2) (
-      d = bool^0 = foo.I.d (3) 
-      e = bool^0 = foo.I.e (4) 
+      d = bool^0 = foo.I.d (3) @[ sub-FO- sub-FO+ ] 
+      e = bool^0 = foo.I.e (4) @[ sub-FI- sub-FI+ ] 
     )
     O = process e1of1<>^0 = foo.O (3) (
-      d = bool^0 = foo.O.d (5) 
-      e = bool^0 = foo.O.e (6) 
+      d = bool^0 = foo.O.d (5) @[ sub-FI- sub-FI+ ] 
+      e = bool^0 = foo.O.e (6) @[ sub-FO- sub-FO+ ] 
     )
   )
   Created state:
@@ -335,10 +335,10 @@ footprint: {
   bool instance pool: (0 ports, 6 local, 4 mapped)
   1	!GND @[ supply_low ]	
   2	!Vdd @[ supply_high ]	
-  3	foo.I.d	
-  4	foo.I.e	
-  5	foo.O.d	
-  6	foo.O.e	
+  3	foo.I.d @[ sub-FO- sub-FO+ ]	
+  4	foo.I.e @[ sub-FI- sub-FI+ ]	
+  5	foo.O.d @[ sub-FI- sub-FI+ ]	
+  6	foo.O.e @[ sub-FO- sub-FO+ ]	
   private sub-bool index map:
     (1 -> 0)
     (4 -> 4)

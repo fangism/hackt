@@ -235,18 +235,18 @@ In namespace "", we have: {
         e.a = a.e;
       footprint: {
         a = process e1of2<>^0 = alt_e1of2<>::a (1) (
-          t = bool^0 = alt_e1of2<>::a.t (1) 
-          f = bool^0 = alt_e1of2<>::a.f (2) 
-          e = bool^0 = alt_e1of2<>::a.e (3) 
+          t = bool^0 = alt_e1of2<>::a.t (1) @[ port-alias ] 
+          f = bool^0 = alt_e1of2<>::a.f (2) @[ port-alias ] 
+          e = bool^0 = alt_e1of2<>::a.e (3) @[ port-alias ] 
         )
         e = process bp<>^0 = alt_e1of2<>::e (4) (
-          a = bool^0 = alt_e1of2<>::a.e (3) 
+          a = bool^0 = alt_e1of2<>::a.e (3) @[ port-alias ] 
         )
         f = process bp<>^0 = alt_e1of2<>::f (3) (
-          a = bool^0 = alt_e1of2<>::a.f (2) 
+          a = bool^0 = alt_e1of2<>::a.f (2) @[ port-alias ] 
         )
         t = process bp<>^0 = alt_e1of2<>::t (2) (
-          a = bool^0 = alt_e1of2<>::a.t (1) 
+          a = bool^0 = alt_e1of2<>::a.t (1) @[ port-alias ] 
         )
         Created state:
         process instance pool: (4 ports, 0 local, 0 mapped)
@@ -259,13 +259,13 @@ In namespace "", we have: {
         4	alt_e1of2<>::e	bp<>
           bool: 3
         bool instance pool: (3 ports, 0 local, 0 mapped)
-        1	alt_e1of2<>::a.t	
-        2	alt_e1of2<>::a.f	
-        3	alt_e1of2<>::a.e	
+        1	alt_e1of2<>::a.t @[ port-alias ]	
+        2	alt_e1of2<>::a.f @[ port-alias ]	
+        3	alt_e1of2<>::a.e @[ port-alias ]	
         bool port aliases:
-        1: alt_e1of2<>::a.t = alt_e1of2<>::t.a
-        2: alt_e1of2<>::a.f = alt_e1of2<>::f.a
-        3: alt_e1of2<>::a.e = alt_e1of2<>::e.a
+        1: alt_e1of2<>::a.t = alt_e1of2<>::t.a @[ port-alias ]
+        2: alt_e1of2<>::a.f = alt_e1of2<>::f.a @[ port-alias ]
+        3: alt_e1of2<>::a.e = alt_e1of2<>::e.a @[ port-alias ]
       }
       }
 
@@ -292,17 +292,17 @@ In namespace "", we have: {
         !Vdd@[supply=1]
         l.e@[iscomb=1]
       footprint: {
-        !GND = bool^0 = blah1<>::!GND (7) @[ supply_low ] 
-        !Vdd = bool^0 = blah1<>::!Vdd (8) @[ supply_high ] 
+        !GND = bool^0 = blah1<>::!GND (7) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = blah1<>::!Vdd (8) @[ supply_high port-alias ] 
         l = process e1of2<>^0 = blah1<>::l (1) (
-          t = bool^0 = blah1<>::l.t (1) 
-          f = bool^0 = blah1<>::l.f (2) 
-          e = bool^0 = blah1<>::l.e (3) @[ iscomb ] 
+          t = bool^0 = blah1<>::l.t (1) @[ port-alias ] 
+          f = bool^0 = blah1<>::l.f (2) @[ port-alias ] 
+          e = bool^0 = blah1<>::l.e (3) @[ iscomb port-alias ] 
         )
         r = process e1of2<>^0 = blah1<>::r (2) (
-          t = bool^0 = blah1<>::r.t (4) 
-          f = bool^0 = blah1<>::r.f (5) 
-          e = bool^0 = blah1<>::r.e (6) 
+          t = bool^0 = blah1<>::r.t (4) @[ port-alias ] 
+          f = bool^0 = blah1<>::r.f (5) @[ port-alias ] 
+          e = bool^0 = blah1<>::r.e (6) @[ port-alias ] 
         )
         Created state:
         process instance pool: (2 ports, 0 local, 0 mapped)
@@ -311,14 +311,14 @@ In namespace "", we have: {
         2	blah1<>::r	e1of2<>
           bool: 4,5,6
         bool instance pool: (8 ports, 0 local, 0 mapped)
-        1	blah1<>::l.t	
-        2	blah1<>::l.f	
-        3	blah1<>::l.e @[ iscomb ]	
-        4	blah1<>::r.t	
-        5	blah1<>::r.f	
-        6	blah1<>::r.e	
-        7	blah1<>::!GND @[ supply_low ]	
-        8	blah1<>::!Vdd @[ supply_high ]	
+        1	blah1<>::l.t @[ port-alias ]	
+        2	blah1<>::l.f @[ port-alias ]	
+        3	blah1<>::l.e @[ iscomb port-alias ]	
+        4	blah1<>::r.t @[ port-alias ]	
+        5	blah1<>::r.f @[ port-alias ]	
+        6	blah1<>::r.e @[ port-alias ]	
+        7	blah1<>::!GND @[ supply_low port-alias ]	
+        8	blah1<>::!Vdd @[ supply_high port-alias ]	
       }
       }
 
@@ -349,30 +349,30 @@ In namespace "", we have: {
         r.t@[iscomb=1]
         r.f@[iscomb=1]
       footprint: {
-        !GND = bool^0 = blah2<>::!GND (7) @[ supply_low ] 
-        !Vdd = bool^0 = blah2<>::!Vdd (8) @[ supply_high ] 
+        !GND = bool^0 = blah2<>::!GND (7) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = blah2<>::!Vdd (8) @[ supply_high port-alias ] 
         l = process e1of2<>^0 = blah2<>::l (1) (
-          t = bool^0 = blah2<>::l.t (1) 
-          f = bool^0 = blah2<>::l.f (2) 
-          e = bool^0 = blah2<>::l.e (3) @[ iscomb ] 
+          t = bool^0 = blah2<>::l.t (1) @[ port-alias ] 
+          f = bool^0 = blah2<>::l.f (2) @[ port-alias ] 
+          e = bool^0 = blah2<>::l.e (3) @[ iscomb port-alias ] 
         )
         r = process e1of2<>^0 = blah2<>::r (2) (
-          t = bool^0 = blah2<>::r.t (4) @[ iscomb ] 
-          f = bool^0 = blah2<>::r.f (5) @[ iscomb ] 
-          e = bool^0 = blah2<>::r.e (6) 
+          t = bool^0 = blah2<>::r.t (4) @[ iscomb port-alias ] 
+          f = bool^0 = blah2<>::r.f (5) @[ iscomb port-alias ] 
+          e = bool^0 = blah2<>::r.e (6) @[ port-alias ] 
         )
         xx = process blah1<>^0 = blah2<>::xx (3) (
-          !GND = bool^0 = blah2<>::!GND (7) @[ supply_low ] 
-          !Vdd = bool^0 = blah2<>::!Vdd (8) @[ supply_high ] 
+          !GND = bool^0 = blah2<>::!GND (7) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = blah2<>::!Vdd (8) @[ supply_high port-alias ] 
           l = process e1of2<>^0 = blah2<>::l (1) (
-            t = bool^0 = blah2<>::l.t (1) 
-            f = bool^0 = blah2<>::l.f (2) 
-            e = bool^0 = blah2<>::l.e (3) @[ iscomb ] 
+            t = bool^0 = blah2<>::l.t (1) @[ port-alias ] 
+            f = bool^0 = blah2<>::l.f (2) @[ port-alias ] 
+            e = bool^0 = blah2<>::l.e (3) @[ iscomb port-alias ] 
           )
           r = process e1of2<>^0 = blah2<>::r (2) (
-            t = bool^0 = blah2<>::r.t (4) @[ iscomb ] 
-            f = bool^0 = blah2<>::r.f (5) @[ iscomb ] 
-            e = bool^0 = blah2<>::r.e (6) 
+            t = bool^0 = blah2<>::r.t (4) @[ iscomb port-alias ] 
+            f = bool^0 = blah2<>::r.f (5) @[ iscomb port-alias ] 
+            e = bool^0 = blah2<>::r.e (6) @[ port-alias ] 
           )
         )
         Created state:
@@ -385,14 +385,14 @@ In namespace "", we have: {
           process: 1,2
           bool: 1,2,3,4,5,6,7,8
         bool instance pool: (8 ports, 0 local, 0 mapped)
-        1	blah2<>::l.t	
-        2	blah2<>::l.f	
-        3	blah2<>::l.e @[ iscomb ]	
-        4	blah2<>::r.t @[ iscomb ]	
-        5	blah2<>::r.f @[ iscomb ]	
-        6	blah2<>::r.e	
-        7	blah2<>::!GND @[ supply_low ]	
-        8	blah2<>::!Vdd @[ supply_high ]	
+        1	blah2<>::l.t @[ port-alias ]	
+        2	blah2<>::l.f @[ port-alias ]	
+        3	blah2<>::l.e @[ iscomb port-alias ]	
+        4	blah2<>::r.t @[ iscomb port-alias ]	
+        5	blah2<>::r.f @[ iscomb port-alias ]	
+        6	blah2<>::r.e @[ port-alias ]	
+        7	blah2<>::!GND @[ supply_low port-alias ]	
+        8	blah2<>::!Vdd @[ supply_high port-alias ]	
       }
       }
 
@@ -424,57 +424,57 @@ In namespace "", we have: {
         ma ( , , in_a, out.a);
         in_a = in.a;
       footprint: {
-        !GND = bool^0 = blah3<>::!GND (7) @[ supply_low ] 
-        !Vdd = bool^0 = blah3<>::!Vdd (8) @[ supply_high ] 
+        !GND = bool^0 = blah3<>::!GND (7) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = blah3<>::!Vdd (8) @[ supply_high port-alias ] 
         in = process alt_e1of2<>^0 = blah3<>::in (1) (
           a = process e1of2<>^0 = blah3<>::in_a (2) (
-            t = bool^0 = blah3<>::in_a.t (1) 
-            f = bool^0 = blah3<>::in_a.f (2) 
-            e = bool^0 = blah3<>::in_a.e (3) @[ iscomb ] 
+            t = bool^0 = blah3<>::in_a.t (1) @[ port-alias ] 
+            f = bool^0 = blah3<>::in_a.f (2) @[ port-alias ] 
+            e = bool^0 = blah3<>::in_a.e (3) @[ iscomb port-alias ] 
           )
           t = process bp<>^0 = blah3<>::in.t (3) (
-            a = bool^0 = blah3<>::in_a.t (1) 
+            a = bool^0 = blah3<>::in_a.t (1) @[ port-alias ] 
           )
           f = process bp<>^0 = blah3<>::in.f (4) (
-            a = bool^0 = blah3<>::in_a.f (2) 
+            a = bool^0 = blah3<>::in_a.f (2) @[ port-alias ] 
           )
           e = process bp<>^0 = blah3<>::in.e (5) (
-            a = bool^0 = blah3<>::in_a.e (3) @[ iscomb ] 
+            a = bool^0 = blah3<>::in_a.e (3) @[ iscomb port-alias ] 
           )
         )
         in_a = process e1of2<>^0 = blah3<>::in_a (2) (
-          t = bool^0 = blah3<>::in_a.t (1) 
-          f = bool^0 = blah3<>::in_a.f (2) 
-          e = bool^0 = blah3<>::in_a.e (3) @[ iscomb ] 
+          t = bool^0 = blah3<>::in_a.t (1) @[ port-alias ] 
+          f = bool^0 = blah3<>::in_a.f (2) @[ port-alias ] 
+          e = bool^0 = blah3<>::in_a.e (3) @[ iscomb port-alias ] 
         )
         ma = process blah2<>^0 = blah3<>::ma (11) (
-          !GND = bool^0 = blah3<>::!GND (7) @[ supply_low ] 
-          !Vdd = bool^0 = blah3<>::!Vdd (8) @[ supply_high ] 
+          !GND = bool^0 = blah3<>::!GND (7) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = blah3<>::!Vdd (8) @[ supply_high port-alias ] 
           l = process e1of2<>^0 = blah3<>::in_a (2) (
-            t = bool^0 = blah3<>::in_a.t (1) 
-            f = bool^0 = blah3<>::in_a.f (2) 
-            e = bool^0 = blah3<>::in_a.e (3) @[ iscomb ] 
+            t = bool^0 = blah3<>::in_a.t (1) @[ port-alias ] 
+            f = bool^0 = blah3<>::in_a.f (2) @[ port-alias ] 
+            e = bool^0 = blah3<>::in_a.e (3) @[ iscomb port-alias ] 
           )
           r = process e1of2<>^0 = blah3<>::out.a (7) (
-            t = bool^0 = blah3<>::out.a.t (4) @[ iscomb ] 
-            f = bool^0 = blah3<>::out.a.f (5) @[ iscomb ] 
-            e = bool^0 = blah3<>::out.a.e (6) 
+            t = bool^0 = blah3<>::out.a.t (4) @[ iscomb port-alias ] 
+            f = bool^0 = blah3<>::out.a.f (5) @[ iscomb port-alias ] 
+            e = bool^0 = blah3<>::out.a.e (6) @[ port-alias ] 
           )
         )
         out = process alt_e1of2<>^0 = blah3<>::out (6) (
           a = process e1of2<>^0 = blah3<>::out.a (7) (
-            t = bool^0 = blah3<>::out.a.t (4) @[ iscomb ] 
-            f = bool^0 = blah3<>::out.a.f (5) @[ iscomb ] 
-            e = bool^0 = blah3<>::out.a.e (6) 
+            t = bool^0 = blah3<>::out.a.t (4) @[ iscomb port-alias ] 
+            f = bool^0 = blah3<>::out.a.f (5) @[ iscomb port-alias ] 
+            e = bool^0 = blah3<>::out.a.e (6) @[ port-alias ] 
           )
           t = process bp<>^0 = blah3<>::out.t (8) (
-            a = bool^0 = blah3<>::out.a.t (4) @[ iscomb ] 
+            a = bool^0 = blah3<>::out.a.t (4) @[ iscomb port-alias ] 
           )
           f = process bp<>^0 = blah3<>::out.f (9) (
-            a = bool^0 = blah3<>::out.a.f (5) @[ iscomb ] 
+            a = bool^0 = blah3<>::out.a.f (5) @[ iscomb port-alias ] 
           )
           e = process bp<>^0 = blah3<>::out.e (10) (
-            a = bool^0 = blah3<>::out.a.e (6) 
+            a = bool^0 = blah3<>::out.a.e (6) @[ port-alias ] 
           )
         )
         Created state:
@@ -508,21 +508,21 @@ In namespace "", we have: {
           (11 -> 0)
           (12 -> 1)
         bool instance pool: (8 ports, 0 local, 0 mapped)
-        1	blah3<>::in_a.t	
-        2	blah3<>::in_a.f	
-        3	blah3<>::in_a.e @[ iscomb ]	
-        4	blah3<>::out.a.t @[ iscomb ]	
-        5	blah3<>::out.a.f @[ iscomb ]	
-        6	blah3<>::out.a.e	
-        7	blah3<>::!GND @[ supply_low ]	
-        8	blah3<>::!Vdd @[ supply_high ]	
+        1	blah3<>::in_a.t @[ port-alias ]	
+        2	blah3<>::in_a.f @[ port-alias ]	
+        3	blah3<>::in_a.e @[ iscomb port-alias ]	
+        4	blah3<>::out.a.t @[ iscomb port-alias ]	
+        5	blah3<>::out.a.f @[ iscomb port-alias ]	
+        6	blah3<>::out.a.e @[ port-alias ]	
+        7	blah3<>::!GND @[ supply_low port-alias ]	
+        8	blah3<>::!Vdd @[ supply_high port-alias ]	
         bool port aliases:
-        1: blah3<>::in.a.t = blah3<>::in.t.a
-        2: blah3<>::in.a.f = blah3<>::in.f.a
-        3: blah3<>::in.a.e = blah3<>::in.e.a @[ iscomb ]
-        4: blah3<>::out.a.t = blah3<>::out.t.a @[ iscomb ]
-        5: blah3<>::out.a.f = blah3<>::out.f.a @[ iscomb ]
-        6: blah3<>::out.a.e = blah3<>::out.e.a
+        1: blah3<>::in.a.t = blah3<>::in.t.a @[ port-alias ]
+        2: blah3<>::in.a.f = blah3<>::in.f.a @[ port-alias ]
+        3: blah3<>::in.a.e = blah3<>::in.e.a @[ iscomb port-alias ]
+        4: blah3<>::out.a.t = blah3<>::out.t.a @[ iscomb port-alias ]
+        5: blah3<>::out.a.f = blah3<>::out.f.a @[ iscomb port-alias ]
+        6: blah3<>::out.a.e = blah3<>::out.e.a @[ port-alias ]
       }
       }
 
@@ -537,10 +537,10 @@ In namespace "", we have: {
           bool<> a
         )
       footprint: {
-        a = bool^0 = bp<>::a (1) 
+        a = bool^0 = bp<>::a (1) @[ port-alias ] 
         Created state:
         bool instance pool: (1 ports, 0 local, 0 mapped)
-        1	bp<>::a	
+        1	bp<>::a @[ port-alias ]	
       }
       }
 
@@ -561,14 +561,14 @@ In namespace "", we have: {
           bool<> e
         )
       footprint: {
-        e = bool^0 = e1of2<>::e (3) 
-        f = bool^0 = e1of2<>::f (2) 
-        t = bool^0 = e1of2<>::t (1) 
+        e = bool^0 = e1of2<>::e (3) @[ port-alias ] 
+        f = bool^0 = e1of2<>::f (2) @[ port-alias ] 
+        t = bool^0 = e1of2<>::t (1) @[ port-alias ] 
         Created state:
         bool instance pool: (3 ports, 0 local, 0 mapped)
-        1	e1of2<>::t	
-        2	e1of2<>::f	
-        3	e1of2<>::e	
+        1	e1of2<>::t @[ port-alias ]	
+        2	e1of2<>::f @[ port-alias ]	
+        3	e1of2<>::e @[ port-alias ]	
       }
       }
 
@@ -590,11 +590,11 @@ In namespace "", we have: {
         !Vdd@[supply=1]
         blah3<> bar
       footprint: {
-        !GND = bool^0 = obox<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = obox<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = obox<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = obox<>::!Vdd (2) @[ supply_high port-alias ] 
         bar = process blah3<>^0 = obox<>::bar (1) (
-          !GND = bool^0 = obox<>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = obox<>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = obox<>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = obox<>::!Vdd (2) @[ supply_high port-alias ] 
           in = process alt_e1of2<>^0 = obox<>::bar.in (2) (
             a = process e1of2<>^0 = obox<>::bar.in.a (3) (
               t = bool^0 = obox<>::bar.in.a.t (3) 
@@ -659,8 +659,8 @@ In namespace "", we have: {
           (1 -> 0)
           (12 -> 2)
         bool instance pool: (2 ports, 6 local, 0 mapped)
-        1	obox<>::!GND @[ supply_low ]	
-        2	obox<>::!Vdd @[ supply_high ]	
+        1	obox<>::!GND @[ supply_low port-alias ]	
+        2	obox<>::!Vdd @[ supply_high port-alias ]	
         3	obox<>::bar.in.a.t	
         4	obox<>::bar.in.a.f	
         5	obox<>::bar.in.a.e @[ iscomb ]	

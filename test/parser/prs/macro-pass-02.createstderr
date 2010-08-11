@@ -168,18 +168,18 @@ In namespace "", we have: {
         passn(g,s,d)
         }
       footprint: {
-        !GND = bool^0 = passn<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = passn<>::!Vdd (2) @[ supply_high ] 
-        d = bool^0 = passn<>::d (5) 
-        g = bool^0 = passn<>::g (3) 
-        s = bool^0 = passn<>::s (4) 
+        !GND = bool^0 = passn<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = passn<>::!Vdd (2) @[ supply_high port-alias ] 
+        d = bool^0 = passn<>::d (5) @[ port-alias loc-FI- ] 
+        g = bool^0 = passn<>::g (3) @[ port-alias loc-FO- ] 
+        s = bool^0 = passn<>::s (4) @[ port-alias loc-FO- ] 
         Created state:
         bool instance pool: (5 ports, 0 local, 0 mapped)
-        1	passn<>::!GND @[ supply_low ]	
-        2	passn<>::!Vdd @[ supply_high ]	
-        3	passn<>::g	
-        4	passn<>::s	
-        5	passn<>::d	
+        1	passn<>::!GND @[ supply_low port-alias ]	
+        2	passn<>::!Vdd @[ supply_high port-alias ]	
+        3	passn<>::g @[ port-alias loc-FO- ]	
+        4	passn<>::s @[ port-alias loc-FO- ]	
+        5	passn<>::d @[ port-alias loc-FI- ]	
         resolved macros:
         passn(g,s,d)
         rule supply map: (rules, macros, @nodes : Vdd, GND)
@@ -221,26 +221,26 @@ In namespace "", we have: {
         passp<> p
         p ( , , _g, s, d);
       footprint: {
-        !GND = bool^0 = passnp<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = passnp<>::!Vdd (2) @[ supply_high ] 
-        _g = bool^0 = passnp<>::_g (6) 
-        d = bool^0 = passnp<>::d (5) 
-        g = bool^0 = passnp<>::g (3) 
+        !GND = bool^0 = passnp<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = passnp<>::!Vdd (2) @[ supply_high port-alias ] 
+        _g = bool^0 = passnp<>::_g (6) @[ port-alias sub-FO+ ] 
+        d = bool^0 = passnp<>::d (5) @[ port-alias sub-FI- sub-FI+ ] 
+        g = bool^0 = passnp<>::g (3) @[ port-alias sub-FO- ] 
         n = process passn<>^0 = passnp<>::n (1) (
-          !GND = bool^0 = passnp<>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = passnp<>::!Vdd (2) @[ supply_high ] 
-          g = bool^0 = passnp<>::g (3) 
-          s = bool^0 = passnp<>::s (4) 
-          d = bool^0 = passnp<>::d (5) 
+          !GND = bool^0 = passnp<>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = passnp<>::!Vdd (2) @[ supply_high port-alias ] 
+          g = bool^0 = passnp<>::g (3) @[ port-alias sub-FO- ] 
+          s = bool^0 = passnp<>::s (4) @[ port-alias sub-FO- sub-FO+ ] 
+          d = bool^0 = passnp<>::d (5) @[ port-alias sub-FI- sub-FI+ ] 
         )
         p = process passp<>^0 = passnp<>::p (2) (
-          !GND = bool^0 = passnp<>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = passnp<>::!Vdd (2) @[ supply_high ] 
-          g = bool^0 = passnp<>::_g (6) 
-          s = bool^0 = passnp<>::s (4) 
-          d = bool^0 = passnp<>::d (5) 
+          !GND = bool^0 = passnp<>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = passnp<>::!Vdd (2) @[ supply_high port-alias ] 
+          g = bool^0 = passnp<>::_g (6) @[ port-alias sub-FO+ ] 
+          s = bool^0 = passnp<>::s (4) @[ port-alias sub-FO- sub-FO+ ] 
+          d = bool^0 = passnp<>::d (5) @[ port-alias sub-FI- sub-FI+ ] 
         )
-        s = bool^0 = passnp<>::s (4) 
+        s = bool^0 = passnp<>::s (4) @[ port-alias sub-FO- sub-FO+ ] 
         Created state:
         process instance pool: (0 ports, 2 local, 0 mapped)
         1	passnp<>::n	passn<>
@@ -248,12 +248,12 @@ In namespace "", we have: {
         2	passnp<>::p	passp<>
           bool: 1,2,6,4,5
         bool instance pool: (6 ports, 0 local, 0 mapped)
-        1	passnp<>::!GND @[ supply_low ]	
-        2	passnp<>::!Vdd @[ supply_high ]	
-        3	passnp<>::g	
-        4	passnp<>::s	
-        5	passnp<>::d	
-        6	passnp<>::_g	
+        1	passnp<>::!GND @[ supply_low port-alias ]	
+        2	passnp<>::!Vdd @[ supply_high port-alias ]	
+        3	passnp<>::g @[ port-alias sub-FO- ]	
+        4	passnp<>::s @[ port-alias sub-FO- sub-FO+ ]	
+        5	passnp<>::d @[ port-alias sub-FI- sub-FI+ ]	
+        6	passnp<>::_g @[ port-alias sub-FO+ ]	
       }
       }
 
@@ -286,18 +286,18 @@ In namespace "", we have: {
         passp(g,s,d)
         }
       footprint: {
-        !GND = bool^0 = passp<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = passp<>::!Vdd (2) @[ supply_high ] 
-        d = bool^0 = passp<>::d (5) 
-        g = bool^0 = passp<>::g (3) 
-        s = bool^0 = passp<>::s (4) 
+        !GND = bool^0 = passp<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = passp<>::!Vdd (2) @[ supply_high port-alias ] 
+        d = bool^0 = passp<>::d (5) @[ port-alias loc-FI+ ] 
+        g = bool^0 = passp<>::g (3) @[ port-alias loc-FO+ ] 
+        s = bool^0 = passp<>::s (4) @[ port-alias loc-FO+ ] 
         Created state:
         bool instance pool: (5 ports, 0 local, 0 mapped)
-        1	passp<>::!GND @[ supply_low ]	
-        2	passp<>::!Vdd @[ supply_high ]	
-        3	passp<>::g	
-        4	passp<>::s	
-        5	passp<>::d	
+        1	passp<>::!GND @[ supply_low port-alias ]	
+        2	passp<>::!Vdd @[ supply_high port-alias ]	
+        3	passp<>::g @[ port-alias loc-FO+ ]	
+        4	passp<>::s @[ port-alias loc-FO+ ]	
+        5	passp<>::d @[ port-alias loc-FI+ ]	
         resolved macros:
         passp(g,s,d)
         rule supply map: (rules, macros, @nodes : Vdd, GND)
@@ -319,24 +319,24 @@ footprint: {
   _n_ = process passn<>^0 = _n_ (1) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    g = bool^0 = _n_.g (3) 
-    s = bool^0 = _n_.s (4) 
-    d = bool^0 = _n_.d (5) 
+    g = bool^0 = _n_.g (3) @[ sub-FO- ] 
+    s = bool^0 = _n_.s (4) @[ sub-FO- ] 
+    d = bool^0 = _n_.d (5) @[ sub-FI- ] 
   )
   _np_ = process passnp<>^0 = _np_ (3) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    g = bool^0 = _np_.g (9) 
-    _g = bool^0 = _np_._g (10) 
-    s = bool^0 = _np_.s (11) 
-    d = bool^0 = _np_.d (12) 
+    g = bool^0 = _np_.g (9) @[ sub-FO- ] 
+    _g = bool^0 = _np_._g (10) @[ sub-FO+ ] 
+    s = bool^0 = _np_.s (11) @[ sub-FO- sub-FO+ ] 
+    d = bool^0 = _np_.d (12) @[ sub-FI- sub-FI+ ] 
   )
   _p_ = process passp<>^0 = _p_ (2) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    g = bool^0 = _p_.g (6) 
-    s = bool^0 = _p_.s (7) 
-    d = bool^0 = _p_.d (8) 
+    g = bool^0 = _p_.g (6) @[ sub-FO+ ] 
+    s = bool^0 = _p_.s (7) @[ sub-FO+ ] 
+    d = bool^0 = _p_.d (8) @[ sub-FI+ ] 
   )
   Created state:
   process instance pool: (0 ports, 3 local, 2 mapped)
@@ -352,14 +352,14 @@ footprint: {
   bool instance pool: (0 ports, 12 local, 0 mapped)
   1	!GND @[ supply_low ]	
   2	!Vdd @[ supply_high ]	
-  3	_n_.g	
-  4	_n_.s	
-  5	_n_.d	
-  6	_p_.g	
-  7	_p_.s	
-  8	_p_.d	
-  9	_np_.g	
-  10	_np_._g	
-  11	_np_.s	
-  12	_np_.d	
+  3	_n_.g @[ sub-FO- ]	
+  4	_n_.s @[ sub-FO- ]	
+  5	_n_.d @[ sub-FI- ]	
+  6	_p_.g @[ sub-FO+ ]	
+  7	_p_.s @[ sub-FO+ ]	
+  8	_p_.d @[ sub-FI+ ]	
+  9	_np_.g @[ sub-FO- ]	
+  10	_np_._g @[ sub-FO+ ]	
+  11	_np_.s @[ sub-FO- sub-FO+ ]	
+  12	_np_.d @[ sub-FI- sub-FI+ ]	
 }

@@ -92,16 +92,16 @@ In namespace "", we have: {
       spec:
         runmodestatic(x)
       footprint: {
-        !GND = bool^0 = foo<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high ] 
-        x = bool^0 = foo<>::x (3) 
-        y = bool^0 = foo<>::y (4) 
+        !GND = bool^0 = foo<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high port-alias ] 
+        x = bool^0 = foo<>::x (3) @[ port-alias loc-FO- loc-FO+ ] 
+        y = bool^0 = foo<>::y (4) @[ port-alias loc-FI- loc-FI+ ] 
         Created state:
         bool instance pool: (4 ports, 0 local, 0 mapped)
-        1	foo<>::!GND @[ supply_low ]	
-        2	foo<>::!Vdd @[ supply_high ]	
-        3	foo<>::x	
-        4	foo<>::y	
+        1	foo<>::!GND @[ supply_low port-alias ]	
+        2	foo<>::!Vdd @[ supply_high port-alias ]	
+        3	foo<>::x @[ port-alias loc-FO- loc-FO+ ]	
+        4	foo<>::y @[ port-alias loc-FI- loc-FI+ ]	
         resolved prs:
         x -> y-
         ~x -> y+
@@ -124,8 +124,8 @@ footprint: {
   bar = process foo<>^0 = bar (1) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    x = bool^0 = bar.x (3) 
-    y = bool^0 = bar.y (4) 
+    x = bool^0 = bar.x (3) @[ sub-FO- sub-FO+ ] 
+    y = bool^0 = bar.y (4) @[ sub-FI- sub-FI+ ] 
   )
   Created state:
   process instance pool: (0 ports, 1 local, 0 mapped)
@@ -134,6 +134,6 @@ footprint: {
   bool instance pool: (0 ports, 4 local, 0 mapped)
   1	!GND @[ supply_low ]	
   2	!Vdd @[ supply_high ]	
-  3	bar.x	
-  4	bar.y	
+  3	bar.x @[ sub-FO- sub-FO+ ]	
+  4	bar.y @[ sub-FI- sub-FI+ ]	
 }

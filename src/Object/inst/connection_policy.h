@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/connection_policy.h"
 	Specializations for connections in the HAC language. 
-	$Id: connection_policy.h,v 1.16 2010/07/01 20:20:25 fang Exp $
+	$Id: connection_policy.h,v 1.17 2010/08/11 21:54:55 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CONNECTION_POLICY_H__
@@ -18,6 +18,7 @@
 	and direction checking.  
 	Goal: 1
 	Rationale: connectivity summary needed for netlist generation.
+	Status: done, fairly reliable, still testing though...
  */
 #define	BOOL_PRS_CONNECTIVITY_CHECKING		1
 
@@ -85,6 +86,9 @@ public:
 	ostream&
 	dump_attributes(ostream& o) const { return o; }
 
+	ostream&
+	dump_explicit_attributes(ostream& o) const { return o; }
+
 protected:
 	void
 	write_flags(const ostream&) const { }
@@ -136,6 +140,13 @@ protected:
 	// supply attributes
 		BOOL_SUPPLY_LOW		= 0x00000080,
 		BOOL_SUPPLY_HIGH	= 0x00000100,
+	// all attributes that are explicitly written
+		BOOL_EXPLICIT_ATTRIBUTES_MASK =
+			BOOL_IS_COMBINATIONAL |
+			BOOL_NO_AUTOKEEPER |
+			BOOL_IS_RVC1 | BOOL_IS_RVC2 | BOOL_IS_RVC3 |
+			BOOL_MAY_INTERFERE | BOOL_MAY_WEAK_INTERFERE |
+			BOOL_SUPPLY_LOW | BOOL_SUPPLY_HIGH,
 #if BOOL_PRS_CONNECTIVITY_CHECKING
 	/**
 		This is NOT an attribute, is an intrinsic property
@@ -179,6 +190,12 @@ protected:
 			BOOL_SUBSTRUCT_FANIN_PULL_DN |
 			BOOL_SUBSTRUCT_FANIN_PULL_UP,
 		// more derived flags:
+		BOOL_SUBSTRUCT_FANOUT =
+			BOOL_SUBSTRUCT_FANOUT_PULL_DN |
+			BOOL_SUBSTRUCT_FANOUT_PULL_UP,
+		BOOL_SUBSTRUCT_FANIN =
+			BOOL_SUBSTRUCT_FANIN_PULL_DN |
+			BOOL_SUBSTRUCT_FANIN_PULL_UP,
 		BOOL_ANY_FANOUT_PULL_DN =
 			BOOL_LOCAL_PRS_FANOUT_PULL_DN |
 			BOOL_SUBSTRUCT_FANOUT_PULL_DN,
@@ -226,11 +243,22 @@ protected:
 		BOOL_CONNECTIVITY_OR_MASK	=
 			BOOL_LOCAL_PRS_MASK | BOOL_SUBSTRUCT_PRS_MASK,
 #endif	// BOOL_PRS_CONNECTIVITY_CHECKING
+		BOOL_IMPLICIT_ATTRIBUTES_MASK = 
+			BOOL_SUBSTRUCT_FANOUT |
+			BOOL_SUBSTRUCT_FANIN,
 	/// mask for attributes to distinguish from connectivity fields
-		BOOL_ATTRIBUTES_MASK	= 0x000001FF,
+	// both implicit and explicit attributes should be preserved
+		BOOL_ATTRIBUTES_MASK	=
+			BOOL_EXPLICIT_ATTRIBUTES_MASK |
+			BOOL_IMPLICIT_ATTRIBUTES_MASK,
 		BOOL_INIT_ATTRIBUTES_MASK	=
 			BOOL_ATTRIBUTES_MASK | BOOL_IS_ALIASED_TO_PORT,
 		BOOL_DEFAULT_ATTRIBUTES = 0x00000000
+	};
+	enum {
+		BOOL_NUM_EXPLICIT_ATTRIBUTES = 9,
+		// overall number of attributes, explicit and implicit
+		BOOL_NUM_ATTRIBUTES = sizeof(connection_flags_type) << 3
 	};
 	/**
 		Contains both user-attached attributes and
@@ -257,7 +285,12 @@ public:
 	set_connection_flags(const connection_flags_type);
 
 	bool
-	has_nondefault_attributes(void) const;
+	has_nondefault_attributes(const bool i = false) const;
+
+	size_t
+	num_display_attributes(const bool i) const {
+		return i ? BOOL_NUM_ATTRIBUTES : BOOL_NUM_EXPLICIT_ATTRIBUTES;
+	}
 
 	void
 	flag_port(void) {
@@ -371,13 +404,20 @@ public:
 	dump_raw_attributes(ostream&) const;
 
 	ostream&
-	dump_attributes(ostream&) const;
+	dump_attributes(ostream&, const bool implicit = true) const;
 
 	ostream&
-	dump_flat_attributes(ostream&) const;
+	dump_explicit_attributes(ostream& o) const {
+		return dump_attributes(o, false);
+	}
+
 
 	ostream&
-	dump_split_attributes(ostream&, const std::string&) const;
+	dump_flat_attributes(ostream&, const bool i = false) const;
+
+	ostream&
+	dump_split_attributes(ostream&, const std::string&,
+		const bool i = false) const;
 
 protected:
 	void
@@ -563,6 +603,9 @@ public:
 	// nothing yet, TODO: print out summary of connection state?
 	ostream&
 	dump_attributes(ostream& o) const { return o; }
+
+	ostream&
+	dump_explicit_attributes(ostream& o) const { return o; }
 
 	void
 	write_flags(ostream&) const;

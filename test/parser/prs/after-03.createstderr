@@ -103,17 +103,17 @@ In namespace "", we have: {
         }
       footprint collection: {
         <31> {
-          !GND = bool^0 = afterburn<31>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = afterburn<31>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = afterburn<31>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = afterburn<31>::!Vdd (2) @[ supply_high port-alias ] 
           D = pint^0 value: 31
-          a = bool^0 = afterburn<31>::a (3) 
-          b = bool^0 = afterburn<31>::b (4) 
+          a = bool^0 = afterburn<31>::a (3) @[ port-alias loc-FO- loc-FO+ ] 
+          b = bool^0 = afterburn<31>::b (4) @[ port-alias loc-FI- loc-FI+ ] 
           Created state:
           bool instance pool: (4 ports, 0 local, 0 mapped)
-          1	afterburn<31>::!GND @[ supply_low ]	
-          2	afterburn<31>::!Vdd @[ supply_high ]	
-          3	afterburn<31>::a	
-          4	afterburn<31>::b	
+          1	afterburn<31>::!GND @[ supply_low port-alias ]	
+          2	afterburn<31>::!Vdd @[ supply_high port-alias ]	
+          3	afterburn<31>::a @[ port-alias loc-FO- loc-FO+ ]	
+          4	afterburn<31>::b @[ port-alias loc-FI- loc-FI+ ]	
           resolved prs:
           a -> b- [after=31]
           ~a -> b+ [after=31]
@@ -135,8 +135,8 @@ footprint: {
   xyz = process afterburn<31>^0 = xyz (1) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    a = bool^0 = xyz.a (3) 
-    b = bool^0 = xyz.b (4) 
+    a = bool^0 = xyz.a (3) @[ sub-FO- sub-FO+ ] 
+    b = bool^0 = xyz.b (4) @[ sub-FI- sub-FI+ ] 
   )
   Created state:
   process instance pool: (0 ports, 1 local, 0 mapped)
@@ -145,6 +145,6 @@ footprint: {
   bool instance pool: (0 ports, 4 local, 0 mapped)
   1	!GND @[ supply_low ]	
   2	!Vdd @[ supply_high ]	
-  3	xyz.a	
-  4	xyz.b	
+  3	xyz.a @[ sub-FO- sub-FO+ ]	
+  4	xyz.b @[ sub-FI- sub-FI+ ]	
 }

@@ -129,8 +129,8 @@ In namespace "", we have: {
         !Vdd@[supply=1]
       footprint collection: {
         <2, {0,1}> {
-          !GND = bool^0 = bar<2, {0,1}>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = bar<2, {0,1}>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = bar<2, {0,1}>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = bar<2, {0,1}>::!Vdd (2) @[ supply_high port-alias ] 
           D = pint^1
             unrolled index-value pairs: {
               0 = 0
@@ -138,19 +138,19 @@ In namespace "", we have: {
             }
           N = pint^0 value: 2
           x = process foo<4, {0,1,0,1}>^0 = bar<2, {0,1}>::x (1) (
-            !GND = bool^0 = bar<2, {0,1}>::!GND (1) @[ supply_low ] 
-            !Vdd = bool^0 = bar<2, {0,1}>::!Vdd (2) @[ supply_high ] 
+            !GND = bool^0 = bar<2, {0,1}>::!GND (1) @[ supply_low port-alias ] 
+            !Vdd = bool^0 = bar<2, {0,1}>::!Vdd (2) @[ supply_high port-alias ] 
           )
           Created state:
           process instance pool: (1 ports, 0 local, 0 mapped)
           1	bar<2, {0,1}>::x	foo<4, {0,1,0,1}>
             bool: 1,2
           bool instance pool: (2 ports, 0 local, 0 mapped)
-          1	bar<2, {0,1}>::!GND @[ supply_low ]	
-          2	bar<2, {0,1}>::!Vdd @[ supply_high ]	
+          1	bar<2, {0,1}>::!GND @[ supply_low port-alias ]	
+          2	bar<2, {0,1}>::!Vdd @[ supply_high port-alias ]	
           bool port aliases:
-          1: bar<2, {0,1}>::x.!GND = bar<2, {0,1}>::!GND @[ supply_low ]
-          2: bar<2, {0,1}>::x.!Vdd = bar<2, {0,1}>::!Vdd @[ supply_high ]
+          1: bar<2, {0,1}>::x.!GND = bar<2, {0,1}>::!GND @[ supply_low port-alias ]
+          2: bar<2, {0,1}>::x.!Vdd = bar<2, {0,1}>::!Vdd @[ supply_high port-alias ]
         }
       }
       }
@@ -178,8 +178,8 @@ In namespace "", we have: {
         !Vdd@[supply=1]
       footprint collection: {
         <4, {0,1,0,1}> {
-          !GND = bool^0 = foo<4, {0,1,0,1}>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = foo<4, {0,1,0,1}>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = foo<4, {0,1,0,1}>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = foo<4, {0,1,0,1}>::!Vdd (2) @[ supply_high port-alias ] 
           D = pint^1
             unrolled index-value pairs: {
               0 = 0
@@ -190,8 +190,8 @@ In namespace "", we have: {
           N = pint^0 value: 4
           Created state:
           bool instance pool: (2 ports, 0 local, 0 mapped)
-          1	foo<4, {0,1,0,1}>::!GND @[ supply_low ]	
-          2	foo<4, {0,1,0,1}>::!Vdd @[ supply_high ]	
+          1	foo<4, {0,1,0,1}>::!GND @[ supply_low port-alias ]	
+          2	foo<4, {0,1,0,1}>::!Vdd @[ supply_high port-alias ]	
         }
       }
       }

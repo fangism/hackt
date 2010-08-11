@@ -79,20 +79,20 @@ In namespace "", we have: {
         !Vdd@[supply=1]
         a[0] = a[1];
       footprint: {
-        !GND = bool^0 = foo<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = foo<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high port-alias ] 
         a = bool^1
           {
-            [0] = foo<>::a[0] (3) 
-            [1] = foo<>::a[0] (3) 
+            [0] = foo<>::a[0] (3) @[ port-alias ] 
+            [1] = foo<>::a[0] (3) @[ port-alias ] 
           }
         Created state:
         bool instance pool: (3 ports, 0 local, 0 mapped)
-        1	foo<>::!GND @[ supply_low ]	
-        2	foo<>::!Vdd @[ supply_high ]	
-        3	foo<>::a[0]	
+        1	foo<>::!GND @[ supply_low port-alias ]	
+        2	foo<>::!Vdd @[ supply_high port-alias ]	
+        3	foo<>::a[0] @[ port-alias ]	
         bool port aliases:
-        3: foo<>::a[0] = foo<>::a[1]
+        3: foo<>::a[0] = foo<>::a[1] @[ port-alias ]
       }
       }
 

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/process_graph.cc"
 	Implementation of process graph structure for prsim rules.
-	$Id: process_graph.cc,v 1.7 2010/08/07 00:00:05 fang Exp $
+	$Id: process_graph.cc,v 1.8 2010/08/11 21:54:57 fang Exp $
 	Most of this file was ripped from "sim/prsim/State-prsim.cc"
 	for the sake of cleanup.  
  */
@@ -387,8 +387,12 @@ unique_process_subgraph::fan_count(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true for every node that is driven *locally*, 
+		does not account for fanin from subprocesses.  
+ */
 void
-unique_process_subgraph::has_fanin_map(vector<bool>& ret) const {
+unique_process_subgraph::has_local_fanin_map(vector<bool>& ret) const {
 	ret.reserve(local_faninout_map.size());
 	transform(local_faninout_map.begin(), local_faninout_map.end(), 
 		back_inserter(ret), 
@@ -396,8 +400,12 @@ unique_process_subgraph::has_fanin_map(vector<bool>& ret) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true for every node that is not driven *locally*, 
+		does not account for fanin from subprocesses.  
+ */
 void
-unique_process_subgraph::has_not_fanin_map(vector<bool>& ret) const {
+unique_process_subgraph::has_not_local_fanin_map(vector<bool>& ret) const {
 	ret.reserve(local_faninout_map.size());
 	transform(local_faninout_map.begin(), local_faninout_map.end(), 
 		back_inserter(ret), 

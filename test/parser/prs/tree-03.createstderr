@@ -95,18 +95,18 @@ In namespace "", we have: {
         ~y -> z+
         }
       footprint: {
-        !GND = bool^0 = bogus<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = bogus<>::!Vdd (2) @[ supply_high ] 
-        x = bool^0 = bogus<>::x (3) 
-        y = bool^0 = bogus<>::y (4) 
-        z = bool^0 = bogus<>::z (5) 
+        !GND = bool^0 = bogus<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = bogus<>::!Vdd (2) @[ supply_high port-alias ] 
+        x = bool^0 = bogus<>::x (3) @[ port-alias loc-FO- ] 
+        y = bool^0 = bogus<>::y (4) @[ port-alias loc-FO+ loc-FI- ] 
+        z = bool^0 = bogus<>::z (5) @[ port-alias loc-FI+ ] 
         Created state:
         bool instance pool: (5 ports, 0 local, 0 mapped)
-        1	bogus<>::!GND @[ supply_low ]	
-        2	bogus<>::!Vdd @[ supply_high ]	
-        3	bogus<>::x	
-        4	bogus<>::y	
-        5	bogus<>::z	
+        1	bogus<>::!GND @[ supply_low port-alias ]	
+        2	bogus<>::!Vdd @[ supply_high port-alias ]	
+        3	bogus<>::x @[ port-alias loc-FO- ]	
+        4	bogus<>::y @[ port-alias loc-FO+ loc-FI- ]	
+        5	bogus<>::z @[ port-alias loc-FI+ ]	
         resolved prs:
         x -> y-
         ~y -> z+
@@ -127,9 +127,9 @@ footprint: {
   Q = process bogus<>^0 = Q (1) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    x = bool^0 = Q.x (3) 
-    y = bool^0 = Q.y (4) 
-    z = bool^0 = Q.z (5) 
+    x = bool^0 = Q.x (3) @[ sub-FO- ] 
+    y = bool^0 = Q.y (4) @[ sub-FO+ sub-FI- ] 
+    z = bool^0 = Q.z (5) @[ sub-FI+ ] 
   )
   Created state:
   process instance pool: (0 ports, 1 local, 0 mapped)
@@ -138,7 +138,7 @@ footprint: {
   bool instance pool: (0 ports, 5 local, 0 mapped)
   1	!GND @[ supply_low ]	
   2	!Vdd @[ supply_high ]	
-  3	Q.x	
-  4	Q.y	
-  5	Q.z	
+  3	Q.x @[ sub-FO- ]	
+  4	Q.y @[ sub-FO+ sub-FI- ]	
+  5	Q.z @[ sub-FI+ ]	
 }

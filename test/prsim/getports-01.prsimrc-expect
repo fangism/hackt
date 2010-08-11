@@ -1,0 +1,34 @@
+Ports subnodes of 'I':
+!GND : 0
+!Vdd : 1
+a : X
+b : X
+Input ports of 'I':
+!GND : 0
+!Vdd : 1
+a : X
+Output ports of 'I':
+b : X
+Ports subnodes of 'J':
+!GND : 0
+!Vdd : 1
+b : X
+c : X
+Input ports of 'J':
+!GND : 0
+!Vdd : 1
+b : X
+Output ports of 'J':
+c : X
+Input ports of 'I':
+!GND : 0
+!Vdd : 1
+a : 0
+Output ports of 'I':
+b : 1
+Input ports of 'J':
+!GND : 0
+!Vdd : 1
+b : 1
+Output ports of 'J':
+c : 0

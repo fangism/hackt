@@ -1,7 +1,7 @@
 /**
 	\file "buffer_init.hac"
 	Buffers with initial tokens.
-	$Id: buffer_init.hac,v 1.1 2007/08/01 21:07:54 fang Exp $
+	$Id: buffer_init.hac,v 1.2 2010/08/11 21:54:50 fang Exp $
  */
 
 import "channel.hac";
@@ -20,7 +20,7 @@ import "channel.hac";
  */
 template <pint N><pint V>
 defproc wchb_init_fore_e1of(e1of<N> L, R; bool _Reset, Reset) {
-_c1of2 _r;
+_c1of<N> _r;
 bool rv;
 prs {
 (:i:N:
@@ -50,7 +50,7 @@ prs {
  */
 template <pint N>
 defproc wchb_init_aft_e1of(e1of<N> L, R; bool _Reset) {
-_c1of2 _r;
+_c1of<N> _r;
 bool rv;
 prs {
 (:i:N:

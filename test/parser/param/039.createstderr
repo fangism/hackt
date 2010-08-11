@@ -83,8 +83,8 @@ In namespace "", we have: {
         foo = 3;
         pint<> bar[0..foo-1]
       footprint: {
-        !GND = bool^0 = bogus<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = bogus<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = bogus<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = bogus<>::!Vdd (2) @[ supply_high port-alias ] 
         bar = pint^1
           unrolled index-value pairs: {
             0 = ?
@@ -94,8 +94,8 @@ In namespace "", we have: {
         foo = pint^0 value: 3
         Created state:
         bool instance pool: (2 ports, 0 local, 0 mapped)
-        1	bogus<>::!GND @[ supply_low ]	
-        2	bogus<>::!Vdd @[ supply_high ]	
+        1	bogus<>::!GND @[ supply_low port-alias ]	
+        2	bogus<>::!Vdd @[ supply_high port-alias ]	
       }
       }
 

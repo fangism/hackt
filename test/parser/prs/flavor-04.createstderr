@@ -55,16 +55,16 @@ top-level prs:
 footprint: {
   !GND = bool^0 = !GND (1) @[ supply_low ] 
   !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-  d = bool^0 = d (5) 
-  g = bool^0 = g (3) 
-  s = bool^0 = s (4) 
+  d = bool^0 = d (5) @[ loc-FI- ] 
+  g = bool^0 = g (3) @[ loc-FO- ] 
+  s = bool^0 = s (4) @[ loc-FO- ] 
   Created state:
   bool instance pool: (0 ports, 5 local, 0 mapped)
   1	!GND @[ supply_low ]	
   2	!Vdd @[ supply_high ]	
-  3	g	
-  4	s	
-  5	d	
+  3	g @[ loc-FO- ]	
+  4	s @[ loc-FO- ]	
+  5	d @[ loc-FI- ]	
   resolved macros:
   passn<;lvt>(g,s,d)
   rule supply map: (rules, macros, @nodes : Vdd, GND)

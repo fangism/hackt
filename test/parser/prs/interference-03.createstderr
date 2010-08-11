@@ -161,17 +161,17 @@ In namespace "", we have: {
         ~bar -> foo+ [weak=1]
         }
       footprint: {
-        !GND = bool^0 = dyne<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = dyne<>::!Vdd (2) @[ supply_high ] 
-        bar = bool^0 = dyne<>::bar (4) @[ may_weak_interfere ] 
-        bar2 = bool^0 = dyne<>::bar (4) @[ may_weak_interfere ] 
-        foo = bool^0 = dyne<>::foo (3) 
+        !GND = bool^0 = dyne<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = dyne<>::!Vdd (2) @[ supply_high port-alias ] 
+        bar = bool^0 = dyne<>::bar (4) @[ may_weak_interfere port-alias loc-FO- loc-FO+ ] 
+        bar2 = bool^0 = dyne<>::bar (4) @[ may_weak_interfere port-alias loc-FO- loc-FO+ ] 
+        foo = bool^0 = dyne<>::foo (3) @[ port-alias loc-FI- loc-FI+ ] 
         Created state:
         bool instance pool: (4 ports, 0 local, 0 mapped)
-        1	dyne<>::!GND @[ supply_low ]	
-        2	dyne<>::!Vdd @[ supply_high ]	
-        3	dyne<>::foo	
-        4	dyne<>::bar @[ may_weak_interfere ]	
+        1	dyne<>::!GND @[ supply_low port-alias ]	
+        2	dyne<>::!Vdd @[ supply_high port-alias ]	
+        3	dyne<>::foo @[ port-alias loc-FI- loc-FI+ ]	
+        4	dyne<>::bar @[ may_weak_interfere port-alias loc-FO- loc-FO+ ]	
         resolved prs:
         bar -> foo- [weak=1]
         ~bar -> foo+ [weak=1]
@@ -211,17 +211,17 @@ In namespace "", we have: {
         ~foo -> bar+
         }
       footprint: {
-        !GND = bool^0 = yoyo<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = yoyo<>::!Vdd (2) @[ supply_high ] 
-        bar = bool^0 = yoyo<>::bar (4) 
-        foo = bool^0 = yoyo<>::foo (3) @[ may_interfere ] 
-        foo2 = bool^0 = yoyo<>::foo (3) @[ may_interfere ] 
+        !GND = bool^0 = yoyo<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = yoyo<>::!Vdd (2) @[ supply_high port-alias ] 
+        bar = bool^0 = yoyo<>::bar (4) @[ port-alias loc-FI- loc-FI+ ] 
+        foo = bool^0 = yoyo<>::foo (3) @[ may_interfere port-alias loc-FO- loc-FO+ ] 
+        foo2 = bool^0 = yoyo<>::foo (3) @[ may_interfere port-alias loc-FO- loc-FO+ ] 
         Created state:
         bool instance pool: (4 ports, 0 local, 0 mapped)
-        1	yoyo<>::!GND @[ supply_low ]	
-        2	yoyo<>::!Vdd @[ supply_high ]	
-        3	yoyo<>::foo @[ may_interfere ]	
-        4	yoyo<>::bar	
+        1	yoyo<>::!GND @[ supply_low port-alias ]	
+        2	yoyo<>::!Vdd @[ supply_high port-alias ]	
+        3	yoyo<>::foo @[ may_interfere port-alias loc-FO- loc-FO+ ]	
+        4	yoyo<>::bar @[ port-alias loc-FI- loc-FI+ ]	
         resolved prs:
         foo -> bar-
         ~foo -> bar+
@@ -245,26 +245,26 @@ footprint: {
   bukkit = process dyne<>^0 = bukkit (4) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    foo = bool^0 = cheezburger.foo (5) @[ may_interfere ] 
-    bar = bool^0 = cheezburger.bar (6) @[ may_weak_interfere ] 
+    foo = bool^0 = cheezburger.foo (5) @[ may_interfere sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
+    bar = bool^0 = cheezburger.bar (6) @[ may_weak_interfere sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
   )
   cheezburger = process yoyo<>^0 = cheezburger (2) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    foo = bool^0 = cheezburger.foo (5) @[ may_interfere ] 
-    bar = bool^0 = cheezburger.bar (6) @[ may_weak_interfere ] 
+    foo = bool^0 = cheezburger.foo (5) @[ may_interfere sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
+    bar = bool^0 = cheezburger.bar (6) @[ may_weak_interfere sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
   )
   wee = process yoyo<>^0 = wee (1) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    foo = bool^0 = wee.foo (3) @[ may_interfere ] 
-    bar = bool^0 = wee.bar (4) 
+    foo = bool^0 = wee.foo (3) @[ may_interfere sub-FO- sub-FO+ ] 
+    bar = bool^0 = wee.bar (4) @[ sub-FI- sub-FI+ ] 
   )
   wha = process dyne<>^0 = wha (3) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    foo = bool^0 = wha.foo (7) 
-    bar = bool^0 = wha.bar (8) @[ may_weak_interfere ] 
+    foo = bool^0 = wha.foo (7) @[ sub-FI- sub-FI+ ] 
+    bar = bool^0 = wha.bar (8) @[ may_weak_interfere sub-FO- sub-FO+ ] 
   )
   Created state:
   process instance pool: (0 ports, 4 local, 0 mapped)
@@ -279,10 +279,10 @@ footprint: {
   bool instance pool: (0 ports, 8 local, 0 mapped)
   1	!GND @[ supply_low ]	
   2	!Vdd @[ supply_high ]	
-  3	wee.foo @[ may_interfere ]	
-  4	wee.bar	
-  5	cheezburger.foo @[ may_interfere ]	
-  6	cheezburger.bar @[ may_weak_interfere ]	
-  7	wha.foo	
-  8	wha.bar @[ may_weak_interfere ]	
+  3	wee.foo @[ may_interfere sub-FO- sub-FO+ ]	
+  4	wee.bar @[ sub-FI- sub-FI+ ]	
+  5	cheezburger.foo @[ may_interfere sub-FO- sub-FO+ sub-FI- sub-FI+ ]	
+  6	cheezburger.bar @[ may_weak_interfere sub-FO- sub-FO+ sub-FI- sub-FI+ ]	
+  7	wha.foo @[ sub-FI- sub-FI+ ]	
+  8	wha.bar @[ may_weak_interfere sub-FO- sub-FO+ ]	
 }

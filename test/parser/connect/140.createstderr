@@ -101,17 +101,17 @@ In namespace "", we have: {
         !GND@[supply=0]
         !Vdd@[supply=1]
       footprint: {
-        !GND = bool^0 = e1of1<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = e1of1<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = e1of1<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = e1of1<>::!Vdd (2) @[ supply_high port-alias ] 
         d = bool^1
           {
-            [0] = e1of1<>::d[0] (3) 
+            [0] = e1of1<>::d[0] (3) @[ port-alias ] 
           }
         Created state:
         bool instance pool: (3 ports, 0 local, 0 mapped)
-        1	e1of1<>::!GND @[ supply_low ]	
-        2	e1of1<>::!Vdd @[ supply_high ]	
-        3	e1of1<>::d[0]	
+        1	e1of1<>::!GND @[ supply_low port-alias ]	
+        2	e1of1<>::!Vdd @[ supply_high port-alias ]	
+        3	e1of1<>::d[0] @[ port-alias ]	
       }
       }
 
@@ -134,176 +134,176 @@ In namespace "", we have: {
         !GND@[supply=0]
         !Vdd@[supply=1]
       footprint: {
-        !GND = bool^0 = top_type<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = top_type<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = top_type<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = top_type<>::!Vdd (2) @[ supply_high port-alias ] 
         co = process e1of1<>^3
           {
             [0][0][0] = top_type<>::co[0][0][0] (1) (
-              !GND = bool^0 = top_type<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = top_type<>::!Vdd (2) @[ supply_high ] 
+              !GND = bool^0 = top_type<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = top_type<>::!Vdd (2) @[ supply_high port-alias ] 
               d = bool^1
                 {
-                  [0] = top_type<>::co[0][0][0].d[0] (3) 
+                  [0] = top_type<>::co[0][0][0].d[0] (3) @[ port-alias ] 
                 }
             )
             [0][0][1] = top_type<>::co[0][0][1] (2) (
-              !GND = bool^0 = top_type<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = top_type<>::!Vdd (2) @[ supply_high ] 
+              !GND = bool^0 = top_type<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = top_type<>::!Vdd (2) @[ supply_high port-alias ] 
               d = bool^1
                 {
-                  [0] = top_type<>::co[0][0][1].d[0] (4) 
+                  [0] = top_type<>::co[0][0][1].d[0] (4) @[ port-alias ] 
                 }
             )
             [0][0][2] = top_type<>::co[0][0][2] (3) (
-              !GND = bool^0 = top_type<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = top_type<>::!Vdd (2) @[ supply_high ] 
+              !GND = bool^0 = top_type<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = top_type<>::!Vdd (2) @[ supply_high port-alias ] 
               d = bool^1
                 {
-                  [0] = top_type<>::co[0][0][2].d[0] (5) 
+                  [0] = top_type<>::co[0][0][2].d[0] (5) @[ port-alias ] 
                 }
             )
             [0][1][0] = top_type<>::co[0][1][0] (4) (
-              !GND = bool^0 = top_type<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = top_type<>::!Vdd (2) @[ supply_high ] 
+              !GND = bool^0 = top_type<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = top_type<>::!Vdd (2) @[ supply_high port-alias ] 
               d = bool^1
                 {
-                  [0] = top_type<>::co[0][1][0].d[0] (6) 
+                  [0] = top_type<>::co[0][1][0].d[0] (6) @[ port-alias ] 
                 }
             )
             [0][1][1] = top_type<>::co[0][1][1] (5) (
-              !GND = bool^0 = top_type<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = top_type<>::!Vdd (2) @[ supply_high ] 
+              !GND = bool^0 = top_type<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = top_type<>::!Vdd (2) @[ supply_high port-alias ] 
               d = bool^1
                 {
-                  [0] = top_type<>::co[0][1][1].d[0] (7) 
+                  [0] = top_type<>::co[0][1][1].d[0] (7) @[ port-alias ] 
                 }
             )
             [0][1][2] = top_type<>::co[0][1][2] (6) (
-              !GND = bool^0 = top_type<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = top_type<>::!Vdd (2) @[ supply_high ] 
+              !GND = bool^0 = top_type<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = top_type<>::!Vdd (2) @[ supply_high port-alias ] 
               d = bool^1
                 {
-                  [0] = top_type<>::co[0][1][2].d[0] (8) 
+                  [0] = top_type<>::co[0][1][2].d[0] (8) @[ port-alias ] 
                 }
             )
             [0][2][0] = top_type<>::co[0][2][0] (7) (
-              !GND = bool^0 = top_type<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = top_type<>::!Vdd (2) @[ supply_high ] 
+              !GND = bool^0 = top_type<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = top_type<>::!Vdd (2) @[ supply_high port-alias ] 
               d = bool^1
                 {
-                  [0] = top_type<>::co[0][2][0].d[0] (9) 
+                  [0] = top_type<>::co[0][2][0].d[0] (9) @[ port-alias ] 
                 }
             )
             [0][2][1] = top_type<>::co[0][2][1] (8) (
-              !GND = bool^0 = top_type<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = top_type<>::!Vdd (2) @[ supply_high ] 
+              !GND = bool^0 = top_type<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = top_type<>::!Vdd (2) @[ supply_high port-alias ] 
               d = bool^1
                 {
-                  [0] = top_type<>::co[0][2][1].d[0] (10) 
+                  [0] = top_type<>::co[0][2][1].d[0] (10) @[ port-alias ] 
                 }
             )
             [0][2][2] = top_type<>::co[0][2][2] (9) (
-              !GND = bool^0 = top_type<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = top_type<>::!Vdd (2) @[ supply_high ] 
+              !GND = bool^0 = top_type<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = top_type<>::!Vdd (2) @[ supply_high port-alias ] 
               d = bool^1
                 {
-                  [0] = top_type<>::co[0][2][2].d[0] (11) 
+                  [0] = top_type<>::co[0][2][2].d[0] (11) @[ port-alias ] 
                 }
             )
             [0][3][0] = top_type<>::co[0][3][0] (10) (
-              !GND = bool^0 = top_type<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = top_type<>::!Vdd (2) @[ supply_high ] 
+              !GND = bool^0 = top_type<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = top_type<>::!Vdd (2) @[ supply_high port-alias ] 
               d = bool^1
                 {
-                  [0] = top_type<>::co[0][3][0].d[0] (12) 
+                  [0] = top_type<>::co[0][3][0].d[0] (12) @[ port-alias ] 
                 }
             )
             [0][3][1] = top_type<>::co[0][3][1] (11) (
-              !GND = bool^0 = top_type<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = top_type<>::!Vdd (2) @[ supply_high ] 
+              !GND = bool^0 = top_type<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = top_type<>::!Vdd (2) @[ supply_high port-alias ] 
               d = bool^1
                 {
-                  [0] = top_type<>::co[0][3][1].d[0] (13) 
+                  [0] = top_type<>::co[0][3][1].d[0] (13) @[ port-alias ] 
                 }
             )
             [0][3][2] = top_type<>::co[0][3][2] (12) (
-              !GND = bool^0 = top_type<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = top_type<>::!Vdd (2) @[ supply_high ] 
+              !GND = bool^0 = top_type<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = top_type<>::!Vdd (2) @[ supply_high port-alias ] 
               d = bool^1
                 {
-                  [0] = top_type<>::co[0][3][2].d[0] (14) 
+                  [0] = top_type<>::co[0][3][2].d[0] (14) @[ port-alias ] 
                 }
             )
             [0][4][0] = top_type<>::co[0][4][0] (13) (
-              !GND = bool^0 = top_type<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = top_type<>::!Vdd (2) @[ supply_high ] 
+              !GND = bool^0 = top_type<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = top_type<>::!Vdd (2) @[ supply_high port-alias ] 
               d = bool^1
                 {
-                  [0] = top_type<>::co[0][4][0].d[0] (15) 
+                  [0] = top_type<>::co[0][4][0].d[0] (15) @[ port-alias ] 
                 }
             )
             [0][4][1] = top_type<>::co[0][4][1] (14) (
-              !GND = bool^0 = top_type<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = top_type<>::!Vdd (2) @[ supply_high ] 
+              !GND = bool^0 = top_type<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = top_type<>::!Vdd (2) @[ supply_high port-alias ] 
               d = bool^1
                 {
-                  [0] = top_type<>::co[0][4][1].d[0] (16) 
+                  [0] = top_type<>::co[0][4][1].d[0] (16) @[ port-alias ] 
                 }
             )
             [0][4][2] = top_type<>::co[0][4][2] (15) (
-              !GND = bool^0 = top_type<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = top_type<>::!Vdd (2) @[ supply_high ] 
+              !GND = bool^0 = top_type<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = top_type<>::!Vdd (2) @[ supply_high port-alias ] 
               d = bool^1
                 {
-                  [0] = top_type<>::co[0][4][2].d[0] (17) 
+                  [0] = top_type<>::co[0][4][2].d[0] (17) @[ port-alias ] 
                 }
             )
             [0][5][0] = top_type<>::co[0][5][0] (16) (
-              !GND = bool^0 = top_type<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = top_type<>::!Vdd (2) @[ supply_high ] 
+              !GND = bool^0 = top_type<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = top_type<>::!Vdd (2) @[ supply_high port-alias ] 
               d = bool^1
                 {
-                  [0] = top_type<>::co[0][5][0].d[0] (18) 
+                  [0] = top_type<>::co[0][5][0].d[0] (18) @[ port-alias ] 
                 }
             )
             [0][5][1] = top_type<>::co[0][5][1] (17) (
-              !GND = bool^0 = top_type<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = top_type<>::!Vdd (2) @[ supply_high ] 
+              !GND = bool^0 = top_type<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = top_type<>::!Vdd (2) @[ supply_high port-alias ] 
               d = bool^1
                 {
-                  [0] = top_type<>::co[0][5][1].d[0] (19) 
+                  [0] = top_type<>::co[0][5][1].d[0] (19) @[ port-alias ] 
                 }
             )
             [0][5][2] = top_type<>::co[0][5][2] (18) (
-              !GND = bool^0 = top_type<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = top_type<>::!Vdd (2) @[ supply_high ] 
+              !GND = bool^0 = top_type<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = top_type<>::!Vdd (2) @[ supply_high port-alias ] 
               d = bool^1
                 {
-                  [0] = top_type<>::co[0][5][2].d[0] (20) 
+                  [0] = top_type<>::co[0][5][2].d[0] (20) @[ port-alias ] 
                 }
             )
             [0][6][0] = top_type<>::co[0][6][0] (19) (
-              !GND = bool^0 = top_type<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = top_type<>::!Vdd (2) @[ supply_high ] 
+              !GND = bool^0 = top_type<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = top_type<>::!Vdd (2) @[ supply_high port-alias ] 
               d = bool^1
                 {
-                  [0] = top_type<>::co[0][6][0].d[0] (21) 
+                  [0] = top_type<>::co[0][6][0].d[0] (21) @[ port-alias ] 
                 }
             )
             [0][6][1] = top_type<>::co[0][6][1] (20) (
-              !GND = bool^0 = top_type<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = top_type<>::!Vdd (2) @[ supply_high ] 
+              !GND = bool^0 = top_type<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = top_type<>::!Vdd (2) @[ supply_high port-alias ] 
               d = bool^1
                 {
-                  [0] = top_type<>::co[0][6][1].d[0] (22) 
+                  [0] = top_type<>::co[0][6][1].d[0] (22) @[ port-alias ] 
                 }
             )
             [0][6][2] = top_type<>::co[0][6][2] (21) (
-              !GND = bool^0 = top_type<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = top_type<>::!Vdd (2) @[ supply_high ] 
+              !GND = bool^0 = top_type<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = top_type<>::!Vdd (2) @[ supply_high port-alias ] 
               d = bool^1
                 {
-                  [0] = top_type<>::co[0][6][2].d[0] (23) 
+                  [0] = top_type<>::co[0][6][2].d[0] (23) @[ port-alias ] 
                 }
             )
           }
@@ -352,32 +352,32 @@ In namespace "", we have: {
         21	top_type<>::co[0][6][2]	e1of1<>
           bool: 1,2,23
         bool instance pool: (23 ports, 0 local, 0 mapped)
-        1	top_type<>::!GND @[ supply_low ]	
-        2	top_type<>::!Vdd @[ supply_high ]	
-        3	top_type<>::co[0][0][0].d[0]	
-        4	top_type<>::co[0][0][1].d[0]	
-        5	top_type<>::co[0][0][2].d[0]	
-        6	top_type<>::co[0][1][0].d[0]	
-        7	top_type<>::co[0][1][1].d[0]	
-        8	top_type<>::co[0][1][2].d[0]	
-        9	top_type<>::co[0][2][0].d[0]	
-        10	top_type<>::co[0][2][1].d[0]	
-        11	top_type<>::co[0][2][2].d[0]	
-        12	top_type<>::co[0][3][0].d[0]	
-        13	top_type<>::co[0][3][1].d[0]	
-        14	top_type<>::co[0][3][2].d[0]	
-        15	top_type<>::co[0][4][0].d[0]	
-        16	top_type<>::co[0][4][1].d[0]	
-        17	top_type<>::co[0][4][2].d[0]	
-        18	top_type<>::co[0][5][0].d[0]	
-        19	top_type<>::co[0][5][1].d[0]	
-        20	top_type<>::co[0][5][2].d[0]	
-        21	top_type<>::co[0][6][0].d[0]	
-        22	top_type<>::co[0][6][1].d[0]	
-        23	top_type<>::co[0][6][2].d[0]	
+        1	top_type<>::!GND @[ supply_low port-alias ]	
+        2	top_type<>::!Vdd @[ supply_high port-alias ]	
+        3	top_type<>::co[0][0][0].d[0] @[ port-alias ]	
+        4	top_type<>::co[0][0][1].d[0] @[ port-alias ]	
+        5	top_type<>::co[0][0][2].d[0] @[ port-alias ]	
+        6	top_type<>::co[0][1][0].d[0] @[ port-alias ]	
+        7	top_type<>::co[0][1][1].d[0] @[ port-alias ]	
+        8	top_type<>::co[0][1][2].d[0] @[ port-alias ]	
+        9	top_type<>::co[0][2][0].d[0] @[ port-alias ]	
+        10	top_type<>::co[0][2][1].d[0] @[ port-alias ]	
+        11	top_type<>::co[0][2][2].d[0] @[ port-alias ]	
+        12	top_type<>::co[0][3][0].d[0] @[ port-alias ]	
+        13	top_type<>::co[0][3][1].d[0] @[ port-alias ]	
+        14	top_type<>::co[0][3][2].d[0] @[ port-alias ]	
+        15	top_type<>::co[0][4][0].d[0] @[ port-alias ]	
+        16	top_type<>::co[0][4][1].d[0] @[ port-alias ]	
+        17	top_type<>::co[0][4][2].d[0] @[ port-alias ]	
+        18	top_type<>::co[0][5][0].d[0] @[ port-alias ]	
+        19	top_type<>::co[0][5][1].d[0] @[ port-alias ]	
+        20	top_type<>::co[0][5][2].d[0] @[ port-alias ]	
+        21	top_type<>::co[0][6][0].d[0] @[ port-alias ]	
+        22	top_type<>::co[0][6][1].d[0] @[ port-alias ]	
+        23	top_type<>::co[0][6][2].d[0] @[ port-alias ]	
         bool port aliases:
-        1: top_type<>::co[0][0][0].!GND = top_type<>::co[0][0][1].!GND = top_type<>::co[0][0][2].!GND = top_type<>::co[0][1][0].!GND = top_type<>::co[0][1][1].!GND = top_type<>::co[0][1][2].!GND = top_type<>::co[0][2][0].!GND = top_type<>::co[0][2][1].!GND = top_type<>::co[0][2][2].!GND = top_type<>::co[0][3][0].!GND = top_type<>::co[0][3][1].!GND = top_type<>::co[0][3][2].!GND = top_type<>::co[0][4][0].!GND = top_type<>::co[0][4][1].!GND = top_type<>::co[0][4][2].!GND = top_type<>::co[0][5][0].!GND = top_type<>::co[0][5][1].!GND = top_type<>::co[0][5][2].!GND = top_type<>::co[0][6][0].!GND = top_type<>::co[0][6][1].!GND = top_type<>::co[0][6][2].!GND = top_type<>::!GND @[ supply_low ]
-        2: top_type<>::co[0][0][0].!Vdd = top_type<>::co[0][0][1].!Vdd = top_type<>::co[0][0][2].!Vdd = top_type<>::co[0][1][0].!Vdd = top_type<>::co[0][1][1].!Vdd = top_type<>::co[0][1][2].!Vdd = top_type<>::co[0][2][0].!Vdd = top_type<>::co[0][2][1].!Vdd = top_type<>::co[0][2][2].!Vdd = top_type<>::co[0][3][0].!Vdd = top_type<>::co[0][3][1].!Vdd = top_type<>::co[0][3][2].!Vdd = top_type<>::co[0][4][0].!Vdd = top_type<>::co[0][4][1].!Vdd = top_type<>::co[0][4][2].!Vdd = top_type<>::co[0][5][0].!Vdd = top_type<>::co[0][5][1].!Vdd = top_type<>::co[0][5][2].!Vdd = top_type<>::co[0][6][0].!Vdd = top_type<>::co[0][6][1].!Vdd = top_type<>::co[0][6][2].!Vdd = top_type<>::!Vdd @[ supply_high ]
+        1: top_type<>::co[0][0][0].!GND = top_type<>::co[0][0][1].!GND = top_type<>::co[0][0][2].!GND = top_type<>::co[0][1][0].!GND = top_type<>::co[0][1][1].!GND = top_type<>::co[0][1][2].!GND = top_type<>::co[0][2][0].!GND = top_type<>::co[0][2][1].!GND = top_type<>::co[0][2][2].!GND = top_type<>::co[0][3][0].!GND = top_type<>::co[0][3][1].!GND = top_type<>::co[0][3][2].!GND = top_type<>::co[0][4][0].!GND = top_type<>::co[0][4][1].!GND = top_type<>::co[0][4][2].!GND = top_type<>::co[0][5][0].!GND = top_type<>::co[0][5][1].!GND = top_type<>::co[0][5][2].!GND = top_type<>::co[0][6][0].!GND = top_type<>::co[0][6][1].!GND = top_type<>::co[0][6][2].!GND = top_type<>::!GND @[ supply_low port-alias ]
+        2: top_type<>::co[0][0][0].!Vdd = top_type<>::co[0][0][1].!Vdd = top_type<>::co[0][0][2].!Vdd = top_type<>::co[0][1][0].!Vdd = top_type<>::co[0][1][1].!Vdd = top_type<>::co[0][1][2].!Vdd = top_type<>::co[0][2][0].!Vdd = top_type<>::co[0][2][1].!Vdd = top_type<>::co[0][2][2].!Vdd = top_type<>::co[0][3][0].!Vdd = top_type<>::co[0][3][1].!Vdd = top_type<>::co[0][3][2].!Vdd = top_type<>::co[0][4][0].!Vdd = top_type<>::co[0][4][1].!Vdd = top_type<>::co[0][4][2].!Vdd = top_type<>::co[0][5][0].!Vdd = top_type<>::co[0][5][1].!Vdd = top_type<>::co[0][5][2].!Vdd = top_type<>::co[0][6][0].!Vdd = top_type<>::co[0][6][1].!Vdd = top_type<>::co[0][6][2].!Vdd = top_type<>::!Vdd @[ supply_high port-alias ]
       }
       }
 

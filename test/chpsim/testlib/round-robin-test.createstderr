@@ -159,8 +159,8 @@ In namespace "", we have: {
           ]
         }
       footprint: {
-        !GND = bool^0 = round_robin_source<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = round_robin_source<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = round_robin_source<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = round_robin_source<>::!Vdd (2) @[ supply_high port-alias ] 
         Cin = channel chan?()^0 = round_robin_source<>::Cin (1) 
         Cout = channel chan!()^0 = round_robin_source<>::Cout (2) 
         Created state:
@@ -168,8 +168,8 @@ In namespace "", we have: {
         1	round_robin_source<>::Cin	
         2	round_robin_source<>::Cout	
         bool instance pool: (2 ports, 0 local, 0 mapped)
-        1	round_robin_source<>::!GND @[ supply_low ]	
-        2	round_robin_source<>::!Vdd @[ supply_high ]	
+        1	round_robin_source<>::!GND @[ supply_low port-alias ]	
+        2	round_robin_source<>::!Vdd @[ supply_high port-alias ]	
         resolved concurrent actions:
           *[
             sequential: {
@@ -221,8 +221,8 @@ In namespace "", we have: {
         }
       footprint collection: {
         <3> {
-          !GND = bool^0 = round_robin_source_finite<3>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = round_robin_source_finite<3>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = round_robin_source_finite<3>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = round_robin_source_finite<3>::!Vdd (2) @[ supply_high port-alias ] 
           Cin = channel chan?()^0 = round_robin_source_finite<3>::Cin (1) 
           Cout = channel chan!()^0 = round_robin_source_finite<3>::Cout (2) 
           N = pint^0 value: 3
@@ -231,8 +231,8 @@ In namespace "", we have: {
           1	round_robin_source_finite<3>::Cin	
           2	round_robin_source_finite<3>::Cout	
           bool instance pool: (2 ports, 0 local, 0 mapped)
-          1	round_robin_source_finite<3>::!GND @[ supply_low ]	
-          2	round_robin_source_finite<3>::!Vdd @[ supply_high ]	
+          1	round_robin_source_finite<3>::!GND @[ supply_low port-alias ]	
+          2	round_robin_source_finite<3>::!Vdd @[ supply_high port-alias ]	
           resolved concurrent actions:
             sequential: {
               sequential: {

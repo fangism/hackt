@@ -130,19 +130,19 @@ In namespace "", we have: {
         ~x -> z+ [iskeeper=0]
         }
       footprint: {
-        !GND = bool^0 = foo<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = foo<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high port-alias ] 
         w = bool^0 = foo<>::w (6) 
-        x = bool^0 = foo<>::x (3) 
-        y = bool^0 = foo<>::y (4) 
-        z = bool^0 = foo<>::z (5) 
+        x = bool^0 = foo<>::x (3) @[ loc-FO- loc-FO+ ] 
+        y = bool^0 = foo<>::y (4) @[ loc-FO- loc-FO+ ] 
+        z = bool^0 = foo<>::z (5) @[ loc-FI- loc-FI+ ] 
         Created state:
         bool instance pool: (2 ports, 4 local, 0 mapped)
-        1	foo<>::!GND @[ supply_low ]	
-        2	foo<>::!Vdd @[ supply_high ]	
-        3	foo<>::x	
-        4	foo<>::y	
-        5	foo<>::z	
+        1	foo<>::!GND @[ supply_low port-alias ]	
+        2	foo<>::!Vdd @[ supply_high port-alias ]	
+        3	foo<>::x @[ loc-FO- loc-FO+ ]	
+        4	foo<>::y @[ loc-FO- loc-FO+ ]	
+        5	foo<>::z @[ loc-FI- loc-FI+ ]	
         6	foo<>::w	
         resolved prs:
         x & y -> z- [iskeeper=1]

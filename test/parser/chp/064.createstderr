@@ -146,8 +146,8 @@ In namespace "", we have: {
         }
       footprint collection: {
         <12> {
-          !GND = bool^0 = adjacent_diff<12>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = adjacent_diff<12>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = adjacent_diff<12>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = adjacent_diff<12>::!Vdd (2) @[ supply_high port-alias ] 
           L = channel chan?(int<12>)^0 = adjacent_diff<12>::L (1) 
           R = channel chan!(int<12>)^0 = adjacent_diff<12>::R (2) 
           W = pint^0 value: 12
@@ -161,8 +161,8 @@ In namespace "", we have: {
           1	adjacent_diff<12>::x	
           2	adjacent_diff<12>::z	
           bool instance pool: (2 ports, 0 local, 0 mapped)
-          1	adjacent_diff<12>::!GND @[ supply_low ]	
-          2	adjacent_diff<12>::!Vdd @[ supply_high ]	
+          1	adjacent_diff<12>::!GND @[ supply_low port-alias ]	
+          2	adjacent_diff<12>::!Vdd @[ supply_high port-alias ]	
           resolved concurrent actions:
             sequential: {
               L?(x)

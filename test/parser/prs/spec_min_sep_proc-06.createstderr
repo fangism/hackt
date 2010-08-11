@@ -231,42 +231,42 @@ In namespace "", we have: {
         now[0] ( , , { x, x }, { m, m });
         now[1] ( , , { m, m }, { y, y });
       footprint: {
-        !GND = bool^0 = deep<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = deep<>::!Vdd (2) @[ supply_high ] 
-        m = bool^0 = deep<>::m (5) 
+        !GND = bool^0 = deep<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = deep<>::!Vdd (2) @[ supply_high port-alias ] 
+        m = bool^0 = deep<>::m (5) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
         now = process test_me<>^1
           {
             [0] = deep<>::now[0] (1) (
-              !GND = bool^0 = deep<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = deep<>::!Vdd (2) @[ supply_high ] 
+              !GND = bool^0 = deep<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = deep<>::!Vdd (2) @[ supply_high port-alias ] 
               in = bool^1
                 {
-                  [0] = deep<>::x (3) 
-                  [1] = deep<>::x (3) 
+                  [0] = deep<>::x (3) @[ port-alias sub-FO- sub-FO+ ] 
+                  [1] = deep<>::x (3) @[ port-alias sub-FO- sub-FO+ ] 
                 }
               out = bool^1
                 {
-                  [0] = deep<>::m (5) 
-                  [1] = deep<>::m (5) 
+                  [0] = deep<>::m (5) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
+                  [1] = deep<>::m (5) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
                 }
             )
             [1] = deep<>::now[1] (2) (
-              !GND = bool^0 = deep<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = deep<>::!Vdd (2) @[ supply_high ] 
+              !GND = bool^0 = deep<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = deep<>::!Vdd (2) @[ supply_high port-alias ] 
               in = bool^1
                 {
-                  [0] = deep<>::m (5) 
-                  [1] = deep<>::m (5) 
+                  [0] = deep<>::m (5) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
+                  [1] = deep<>::m (5) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
                 }
               out = bool^1
                 {
-                  [0] = deep<>::y (4) 
-                  [1] = deep<>::y (4) 
+                  [0] = deep<>::y (4) @[ port-alias sub-FI- sub-FI+ ] 
+                  [1] = deep<>::y (4) @[ port-alias sub-FI- sub-FI+ ] 
                 }
             )
           }
-        x = bool^0 = deep<>::x (3) 
-        y = bool^0 = deep<>::y (4) 
+        x = bool^0 = deep<>::x (3) @[ port-alias sub-FO- sub-FO+ ] 
+        y = bool^0 = deep<>::y (4) @[ port-alias sub-FI- sub-FI+ ] 
         Created state:
         process instance pool: (0 ports, 2 local, 8 mapped)
         1	deep<>::now[0]	test_me<>
@@ -278,11 +278,11 @@ In namespace "", we have: {
           (2 -> 4)
           (3 -> 8)
         bool instance pool: (4 ports, 1 local, 4 mapped)
-        1	deep<>::!GND @[ supply_low ]	
-        2	deep<>::!Vdd @[ supply_high ]	
-        3	deep<>::x	
-        4	deep<>::y	
-        5	deep<>::m	
+        1	deep<>::!GND @[ supply_low port-alias ]	
+        2	deep<>::!Vdd @[ supply_high port-alias ]	
+        3	deep<>::x @[ port-alias sub-FO- sub-FO+ ]	
+        4	deep<>::y @[ port-alias sub-FI- sub-FI+ ]	
+        5	deep<>::m @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ]	
         private sub-bool index map:
           (1 -> 0)
           (2 -> 2)
@@ -317,16 +317,16 @@ In namespace "", we have: {
         ~a -> b+
         }
       footprint: {
-        !GND = bool^0 = inv1<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = inv1<>::!Vdd (2) @[ supply_high ] 
-        a = bool^0 = inv1<>::a (3) 
-        b = bool^0 = inv1<>::b (4) 
+        !GND = bool^0 = inv1<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = inv1<>::!Vdd (2) @[ supply_high port-alias ] 
+        a = bool^0 = inv1<>::a (3) @[ port-alias loc-FO- loc-FO+ ] 
+        b = bool^0 = inv1<>::b (4) @[ port-alias loc-FI- loc-FI+ ] 
         Created state:
         bool instance pool: (4 ports, 0 local, 0 mapped)
-        1	inv1<>::!GND @[ supply_low ]	
-        2	inv1<>::!Vdd @[ supply_high ]	
-        3	inv1<>::a	
-        4	inv1<>::b	
+        1	inv1<>::!GND @[ supply_low port-alias ]	
+        2	inv1<>::!Vdd @[ supply_high port-alias ]	
+        3	inv1<>::a @[ port-alias loc-FO- loc-FO+ ]	
+        4	inv1<>::b @[ port-alias loc-FI- loc-FI+ ]	
         resolved prs:
         a -> b-
         ~a -> b+
@@ -362,16 +362,16 @@ In namespace "", we have: {
         ~p -> q+
         }
       footprint: {
-        !GND = bool^0 = inv2<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = inv2<>::!Vdd (2) @[ supply_high ] 
-        p = bool^0 = inv2<>::p (3) 
-        q = bool^0 = inv2<>::q (4) 
+        !GND = bool^0 = inv2<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = inv2<>::!Vdd (2) @[ supply_high port-alias ] 
+        p = bool^0 = inv2<>::p (3) @[ port-alias loc-FO- loc-FO+ ] 
+        q = bool^0 = inv2<>::q (4) @[ port-alias loc-FI- loc-FI+ ] 
         Created state:
         bool instance pool: (4 ports, 0 local, 0 mapped)
-        1	inv2<>::!GND @[ supply_low ]	
-        2	inv2<>::!Vdd @[ supply_high ]	
-        3	inv2<>::p	
-        4	inv2<>::q	
+        1	inv2<>::!GND @[ supply_low port-alias ]	
+        2	inv2<>::!Vdd @[ supply_high port-alias ]	
+        3	inv2<>::p @[ port-alias loc-FO- loc-FO+ ]	
+        4	inv2<>::q @[ port-alias loc-FI- loc-FI+ ]	
         resolved prs:
         p -> q-
         ~p -> q+
@@ -414,52 +414,52 @@ In namespace "", we have: {
       spec:
         min_sep_proc<20>(inv_a,inv_b)
       footprint: {
-        !GND = bool^0 = test_me<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = test_me<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = test_me<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = test_me<>::!Vdd (2) @[ supply_high port-alias ] 
         in = bool^1
           {
-            [0] = test_me<>::in[0] (3) 
-            [1] = test_me<>::in[1] (4) 
+            [0] = test_me<>::in[0] (3) @[ port-alias sub-FO- sub-FO+ ] 
+            [1] = test_me<>::in[1] (4) @[ port-alias sub-FO- sub-FO+ ] 
           }
         inv_a = process inv1<>^1
           {
             [0] = test_me<>::inv_a[0] (1) (
-              !GND = bool^0 = test_me<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = test_me<>::!Vdd (2) @[ supply_high ] 
-              a = bool^0 = test_me<>::in[0] (3) 
-              b = bool^0 = test_me<>::mid[0] (7) 
+              !GND = bool^0 = test_me<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = test_me<>::!Vdd (2) @[ supply_high port-alias ] 
+              a = bool^0 = test_me<>::in[0] (3) @[ port-alias sub-FO- sub-FO+ ] 
+              b = bool^0 = test_me<>::mid[0] (7) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
             )
             [1] = test_me<>::inv_a[1] (2) (
-              !GND = bool^0 = test_me<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = test_me<>::!Vdd (2) @[ supply_high ] 
-              a = bool^0 = test_me<>::in[1] (4) 
-              b = bool^0 = test_me<>::mid[1] (8) 
+              !GND = bool^0 = test_me<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = test_me<>::!Vdd (2) @[ supply_high port-alias ] 
+              a = bool^0 = test_me<>::in[1] (4) @[ port-alias sub-FO- sub-FO+ ] 
+              b = bool^0 = test_me<>::mid[1] (8) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
             )
           }
         inv_b = process inv2<>^1
           {
             [0] = test_me<>::inv_b[0] (3) (
-              !GND = bool^0 = test_me<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = test_me<>::!Vdd (2) @[ supply_high ] 
-              p = bool^0 = test_me<>::mid[0] (7) 
-              q = bool^0 = test_me<>::out[0] (5) 
+              !GND = bool^0 = test_me<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = test_me<>::!Vdd (2) @[ supply_high port-alias ] 
+              p = bool^0 = test_me<>::mid[0] (7) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
+              q = bool^0 = test_me<>::out[0] (5) @[ port-alias sub-FI- sub-FI+ ] 
             )
             [1] = test_me<>::inv_b[1] (4) (
-              !GND = bool^0 = test_me<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = test_me<>::!Vdd (2) @[ supply_high ] 
-              p = bool^0 = test_me<>::mid[1] (8) 
-              q = bool^0 = test_me<>::out[1] (6) 
+              !GND = bool^0 = test_me<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = test_me<>::!Vdd (2) @[ supply_high port-alias ] 
+              p = bool^0 = test_me<>::mid[1] (8) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
+              q = bool^0 = test_me<>::out[1] (6) @[ port-alias sub-FI- sub-FI+ ] 
             )
           }
         mid = bool^1
           {
-            [0] = test_me<>::mid[0] (7) 
-            [1] = test_me<>::mid[1] (8) 
+            [0] = test_me<>::mid[0] (7) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
+            [1] = test_me<>::mid[1] (8) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
           }
         out = bool^1
           {
-            [0] = test_me<>::out[0] (5) 
-            [1] = test_me<>::out[1] (6) 
+            [0] = test_me<>::out[0] (5) @[ port-alias sub-FI- sub-FI+ ] 
+            [1] = test_me<>::out[1] (6) @[ port-alias sub-FI- sub-FI+ ] 
           }
         Created state:
         process instance pool: (0 ports, 4 local, 0 mapped)
@@ -472,14 +472,14 @@ In namespace "", we have: {
         4	test_me<>::inv_b[1]	inv2<>
           bool: 1,2,8,6
         bool instance pool: (6 ports, 2 local, 0 mapped)
-        1	test_me<>::!GND @[ supply_low ]	
-        2	test_me<>::!Vdd @[ supply_high ]	
-        3	test_me<>::in[0]	
-        4	test_me<>::in[1]	
-        5	test_me<>::out[0]	
-        6	test_me<>::out[1]	
-        7	test_me<>::mid[0]	
-        8	test_me<>::mid[1]	
+        1	test_me<>::!GND @[ supply_low port-alias ]	
+        2	test_me<>::!Vdd @[ supply_high port-alias ]	
+        3	test_me<>::in[0] @[ port-alias sub-FO- sub-FO+ ]	
+        4	test_me<>::in[1] @[ port-alias sub-FO- sub-FO+ ]	
+        5	test_me<>::out[0] @[ port-alias sub-FI- sub-FI+ ]	
+        6	test_me<>::out[1] @[ port-alias sub-FI- sub-FI+ ]	
+        7	test_me<>::mid[0] @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ]	
+        8	test_me<>::mid[1] @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ]	
         resolved specs:
         min_sep_proc<20>({inv_a[0],inv_a[1]},{inv_b[0],inv_b[1]})
       }
@@ -497,8 +497,8 @@ footprint: {
   doodoo = process deep<>^0 = doodoo (1) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    x = bool^0 = doodoo.x (3) 
-    y = bool^0 = doodoo.y (4) 
+    x = bool^0 = doodoo.x (3) @[ sub-FO- sub-FO+ ] 
+    y = bool^0 = doodoo.y (4) @[ sub-FI- sub-FI+ ] 
   )
   Created state:
   process instance pool: (0 ports, 1 local, 10 mapped)
@@ -510,8 +510,8 @@ footprint: {
   bool instance pool: (0 ports, 4 local, 5 mapped)
   1	!GND @[ supply_low ]	
   2	!Vdd @[ supply_high ]	
-  3	doodoo.x	
-  4	doodoo.y	
+  3	doodoo.x @[ sub-FO- sub-FO+ ]	
+  4	doodoo.y @[ sub-FI- sub-FI+ ]	
   private sub-bool index map:
     (1 -> 0)
     (2 -> 5)

@@ -103,16 +103,16 @@ In namespace "", we have: {
         }
       footprint collection: {
         <3> {
-          !GND = bool^0 = void_source_once<3>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = void_source_once<3>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = void_source_once<3>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = void_source_once<3>::!Vdd (2) @[ supply_high port-alias ] 
           N = pint^0 value: 3
           S = channel chan!()^0 = void_source_once<3>::S (1) 
           Created state:
           channel instance pool: (1 ports, 0 local, 0 mapped)
           1	void_source_once<3>::S	
           bool instance pool: (2 ports, 0 local, 0 mapped)
-          1	void_source_once<3>::!GND @[ supply_low ]	
-          2	void_source_once<3>::!Vdd @[ supply_high ]	
+          1	void_source_once<3>::!GND @[ supply_low port-alias ]	
+          2	void_source_once<3>::!Vdd @[ supply_high port-alias ]	
           resolved concurrent actions:
             sequential: {
               S!

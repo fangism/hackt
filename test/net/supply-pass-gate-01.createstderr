@@ -115,25 +115,25 @@ footprint: {
   !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
   _g = bool^1
     {
-      [0] = _g[0] (5) 
-      [1] = _g[1] (6) 
+      [0] = _g[0] (5) @[ loc-FO+ ] 
+      [1] = _g[1] (6) @[ loc-FO+ ] 
     }
   d = bool^1
     {
-      [0] = d[0] (11) 
-      [1] = d[1] (12) 
+      [0] = d[0] (11) @[ loc-FI- loc-FI+ ] 
+      [1] = d[1] (12) @[ loc-FI- loc-FI+ ] 
     }
   g = bool^1
     {
-      [0] = g[0] (7) 
-      [1] = g[1] (8) 
+      [0] = g[0] (7) @[ loc-FO- ] 
+      [1] = g[1] (8) @[ loc-FO- ] 
     }
   myGND = bool^0 = myGND (4) 
   myVdd = bool^0 = myVdd (3) 
   s = bool^1
     {
-      [0] = s[0] (9) 
-      [1] = s[1] (10) 
+      [0] = s[0] (9) @[ loc-FO- loc-FO+ ] 
+      [1] = s[1] (10) @[ loc-FO- loc-FO+ ] 
     }
   Created state:
   bool instance pool: (0 ports, 12 local, 0 mapped)
@@ -141,14 +141,14 @@ footprint: {
   2	!Vdd @[ supply_high ]	
   3	myVdd	
   4	myGND	
-  5	_g[0]	
-  6	_g[1]	
-  7	g[0]	
-  8	g[1]	
-  9	s[0]	
-  10	s[1]	
-  11	d[0]	
-  12	d[1]	
+  5	_g[0] @[ loc-FO+ ]	
+  6	_g[1] @[ loc-FO+ ]	
+  7	g[0] @[ loc-FO- ]	
+  8	g[1] @[ loc-FO- ]	
+  9	s[0] @[ loc-FO- loc-FO+ ]	
+  10	s[1] @[ loc-FO- loc-FO+ ]	
+  11	d[0] @[ loc-FI- loc-FI+ ]	
+  12	d[1] @[ loc-FI- loc-FI+ ]	
   resolved macros:
   passp(_g[0],s[0],d[0])
   passn(g[0],s[0],d[0])

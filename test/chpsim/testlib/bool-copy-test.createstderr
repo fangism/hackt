@@ -244,8 +244,8 @@ In namespace "", we have: {
         }
       footprint collection: {
         <2> {
-          !GND = bool^0 = bool_copy<2>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = bool_copy<2>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = bool_copy<2>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = bool_copy<2>::!Vdd (2) @[ supply_high port-alias ] 
           A = channel chan?(bool<>)^0 = bool_copy<2>::A (1) 
           N = pint^0 value: 2
           O = channel chan!(bool<>)^1
@@ -260,8 +260,8 @@ In namespace "", we have: {
           2	bool_copy<2>::O[0]	
           3	bool_copy<2>::O[1]	
           bool instance pool: (2 ports, 1 local, 0 mapped)
-          1	bool_copy<2>::!GND @[ supply_low ]	
-          2	bool_copy<2>::!Vdd @[ supply_high ]	
+          1	bool_copy<2>::!GND @[ supply_low port-alias ]	
+          2	bool_copy<2>::!Vdd @[ supply_high port-alias ]	
           3	bool_copy<2>::a	
           resolved concurrent actions:
             *[

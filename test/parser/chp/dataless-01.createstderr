@@ -115,15 +115,15 @@ In namespace "", we have: {
           Y?
         }
       footprint: {
-        !GND = bool^0 = clack<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = clack<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = clack<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = clack<>::!Vdd (2) @[ supply_high port-alias ] 
         Y = channel chan?()^0 = clack<>::Y (1) 
         Created state:
         channel instance pool: (1 ports, 0 local, 0 mapped)
         1	clack<>::Y	
         bool instance pool: (2 ports, 0 local, 0 mapped)
-        1	clack<>::!GND @[ supply_low ]	
-        2	clack<>::!Vdd @[ supply_high ]	
+        1	clack<>::!GND @[ supply_low port-alias ]	
+        2	clack<>::!Vdd @[ supply_high port-alias ]	
         resolved concurrent actions:
           Y?
         chp events: {
@@ -155,15 +155,15 @@ In namespace "", we have: {
           X!
         }
       footprint: {
-        !GND = bool^0 = click<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = click<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = click<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = click<>::!Vdd (2) @[ supply_high port-alias ] 
         X = channel chan!()^0 = click<>::X (1) 
         Created state:
         channel instance pool: (1 ports, 0 local, 0 mapped)
         1	click<>::X	
         bool instance pool: (2 ports, 0 local, 0 mapped)
-        1	click<>::!GND @[ supply_low ]	
-        2	click<>::!Vdd @[ supply_high ]	
+        1	click<>::!GND @[ supply_low port-alias ]	
+        2	click<>::!Vdd @[ supply_high port-alias ]	
         resolved concurrent actions:
           X!
         chp events: {

@@ -90,8 +90,8 @@ In namespace "", we have: {
         !GND@[supply=0]
         !Vdd@[supply=1]
       footprint: {
-        !GND = bool^0 = bar<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = bar<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = bar<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = bar<>::!Vdd (2) @[ supply_high port-alias ] 
         a = int<32>^0 = bar<>::a (1) 
         b = int<32>^0 = bar<>::b (2) 
         Created state:
@@ -99,8 +99,8 @@ In namespace "", we have: {
         1	bar<>::a	
         2	bar<>::b	
         bool instance pool: (2 ports, 0 local, 0 mapped)
-        1	bar<>::!GND @[ supply_low ]	
-        2	bar<>::!Vdd @[ supply_high ]	
+        1	bar<>::!GND @[ supply_low port-alias ]	
+        2	bar<>::!Vdd @[ supply_high port-alias ]	
       }
       }
 

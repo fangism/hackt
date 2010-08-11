@@ -98,16 +98,16 @@ In namespace "", we have: {
         !GND@[supply=0]
         !Vdd@[supply=1]
       footprint: {
-        !GND = bool^0 = inv<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = inv<>::!Vdd (2) @[ supply_high ] 
-        a = bool^0 = inv<>::a (3) 
-        b = bool^0 = inv<>::b (4) 
+        !GND = bool^0 = inv<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = inv<>::!Vdd (2) @[ supply_high port-alias ] 
+        a = bool^0 = inv<>::a (3) @[ port-alias ] 
+        b = bool^0 = inv<>::b (4) @[ port-alias ] 
         Created state:
         bool instance pool: (4 ports, 0 local, 0 mapped)
-        1	inv<>::!GND @[ supply_low ]	
-        2	inv<>::!Vdd @[ supply_high ]	
-        3	inv<>::a	
-        4	inv<>::b	
+        1	inv<>::!GND @[ supply_low port-alias ]	
+        2	inv<>::!Vdd @[ supply_high port-alias ]	
+        3	inv<>::a @[ port-alias ]	
+        4	inv<>::b @[ port-alias ]	
       }
       }
 
@@ -131,26 +131,26 @@ In namespace "", we have: {
         !Vdd@[supply=1]
         x.a@[iscomb]
       footprint: {
-        !GND = bool^0 = multi_inv<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = multi_inv<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = multi_inv<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = multi_inv<>::!Vdd (2) @[ supply_high port-alias ] 
         x = process inv<>^0 = multi_inv<>::x (1) (
-          !GND = bool^0 = multi_inv<>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = multi_inv<>::!Vdd (2) @[ supply_high ] 
-          a = bool^0 = multi_inv<>::x.a (3) @[ iscomb ] 
-          b = bool^0 = multi_inv<>::x.b (4) 
+          !GND = bool^0 = multi_inv<>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = multi_inv<>::!Vdd (2) @[ supply_high port-alias ] 
+          a = bool^0 = multi_inv<>::x.a (3) @[ iscomb port-alias ] 
+          b = bool^0 = multi_inv<>::x.b (4) @[ port-alias ] 
         )
         Created state:
         process instance pool: (1 ports, 0 local, 0 mapped)
         1	multi_inv<>::x	inv<>
           bool: 1,2,3,4
         bool instance pool: (4 ports, 0 local, 0 mapped)
-        1	multi_inv<>::!GND @[ supply_low ]	
-        2	multi_inv<>::!Vdd @[ supply_high ]	
-        3	multi_inv<>::x.a @[ iscomb ]	
-        4	multi_inv<>::x.b	
+        1	multi_inv<>::!GND @[ supply_low port-alias ]	
+        2	multi_inv<>::!Vdd @[ supply_high port-alias ]	
+        3	multi_inv<>::x.a @[ iscomb port-alias ]	
+        4	multi_inv<>::x.b @[ port-alias ]	
         bool port aliases:
-        1: multi_inv<>::x.!GND = multi_inv<>::!GND @[ supply_low ]
-        2: multi_inv<>::x.!Vdd = multi_inv<>::!Vdd @[ supply_high ]
+        1: multi_inv<>::x.!GND = multi_inv<>::!GND @[ supply_low port-alias ]
+        2: multi_inv<>::x.!Vdd = multi_inv<>::!Vdd @[ supply_high port-alias ]
       }
       }
 

@@ -189,8 +189,8 @@ In namespace "", we have: {
         myfoo ( , , x, y);
       footprint collection: {
         <3, {1,0,1}> {
-          !GND = bool^0 = ass<3, {1,0,1}>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = ass<3, {1,0,1}>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = ass<3, {1,0,1}>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = ass<3, {1,0,1}>::!Vdd (2) @[ supply_high port-alias ] 
           N = pint^0 value: 3
           d = pint^1
             unrolled index-value pairs: {
@@ -199,24 +199,24 @@ In namespace "", we have: {
               2 = 1
             }
           myfoo = process foo<3, 3, {1,0,1}>^0 = ass<3, {1,0,1}>::myfoo (1) (
-            !GND = bool^0 = ass<3, {1,0,1}>::!GND (1) @[ supply_low ] 
-            !Vdd = bool^0 = ass<3, {1,0,1}>::!Vdd (2) @[ supply_high ] 
-            r = bool^0 = ass<3, {1,0,1}>::x (3) 
-            s = bool^0 = ass<3, {1,0,1}>::y (4) 
+            !GND = bool^0 = ass<3, {1,0,1}>::!GND (1) @[ supply_low port-alias ] 
+            !Vdd = bool^0 = ass<3, {1,0,1}>::!Vdd (2) @[ supply_high port-alias ] 
+            r = bool^0 = ass<3, {1,0,1}>::x (3) @[ port-alias ] 
+            s = bool^0 = ass<3, {1,0,1}>::y (4) @[ port-alias ] 
           )
-          x = bool^0 = ass<3, {1,0,1}>::x (3) 
-          y = bool^0 = ass<3, {1,0,1}>::y (4) 
-          z = bool^0 = ass<3, {1,0,1}>::z (5) 
+          x = bool^0 = ass<3, {1,0,1}>::x (3) @[ port-alias ] 
+          y = bool^0 = ass<3, {1,0,1}>::y (4) @[ port-alias ] 
+          z = bool^0 = ass<3, {1,0,1}>::z (5) @[ port-alias ] 
           Created state:
           process instance pool: (0 ports, 1 local, 0 mapped)
           1	ass<3, {1,0,1}>::myfoo	foo<3, 3, {1,0,1}>
             bool: 1,2,3,4
           bool instance pool: (5 ports, 0 local, 0 mapped)
-          1	ass<3, {1,0,1}>::!GND @[ supply_low ]	
-          2	ass<3, {1,0,1}>::!Vdd @[ supply_high ]	
-          3	ass<3, {1,0,1}>::x	
-          4	ass<3, {1,0,1}>::y	
-          5	ass<3, {1,0,1}>::z	
+          1	ass<3, {1,0,1}>::!GND @[ supply_low port-alias ]	
+          2	ass<3, {1,0,1}>::!Vdd @[ supply_high port-alias ]	
+          3	ass<3, {1,0,1}>::x @[ port-alias ]	
+          4	ass<3, {1,0,1}>::y @[ port-alias ]	
+          5	ass<3, {1,0,1}>::z @[ port-alias ]	
         }
       }
       }
@@ -252,8 +252,8 @@ In namespace "", we have: {
         !Vdd@[supply=1]
       footprint collection: {
         <3, 3, {1,0,1}> {
-          !GND = bool^0 = foo<3, 3, {1,0,1}>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = foo<3, 3, {1,0,1}>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = foo<3, 3, {1,0,1}>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = foo<3, 3, {1,0,1}>::!Vdd (2) @[ supply_high port-alias ] 
           M = pint^0 value: 3
           N = pint^0 value: 3
           d = pint^1
@@ -262,14 +262,14 @@ In namespace "", we have: {
               1 = 0
               2 = 1
             }
-          r = bool^0 = foo<3, 3, {1,0,1}>::r (3) 
-          s = bool^0 = foo<3, 3, {1,0,1}>::s (4) 
+          r = bool^0 = foo<3, 3, {1,0,1}>::r (3) @[ port-alias ] 
+          s = bool^0 = foo<3, 3, {1,0,1}>::s (4) @[ port-alias ] 
           Created state:
           bool instance pool: (4 ports, 0 local, 0 mapped)
-          1	foo<3, 3, {1,0,1}>::!GND @[ supply_low ]	
-          2	foo<3, 3, {1,0,1}>::!Vdd @[ supply_high ]	
-          3	foo<3, 3, {1,0,1}>::r	
-          4	foo<3, 3, {1,0,1}>::s	
+          1	foo<3, 3, {1,0,1}>::!GND @[ supply_low port-alias ]	
+          2	foo<3, 3, {1,0,1}>::!Vdd @[ supply_high port-alias ]	
+          3	foo<3, 3, {1,0,1}>::r @[ port-alias ]	
+          4	foo<3, 3, {1,0,1}>::s @[ port-alias ]	
         }
       }
       }

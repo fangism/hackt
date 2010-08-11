@@ -120,14 +120,14 @@ In namespace "", we have: {
         !GND@[supply=0]
         !Vdd@[supply=1]
       footprint: {
-        !GND = bool^0 = ch1of1<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = ch1of1<>::!Vdd (2) @[ supply_high ] 
-        d = bool^0 = ch1of1<>::d (3) 
+        !GND = bool^0 = ch1of1<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = ch1of1<>::!Vdd (2) @[ supply_high port-alias ] 
+        d = bool^0 = ch1of1<>::d (3) @[ port-alias ] 
         Created state:
         bool instance pool: (3 ports, 0 local, 0 mapped)
-        1	ch1of1<>::!GND @[ supply_low ]	
-        2	ch1of1<>::!Vdd @[ supply_high ]	
-        3	ch1of1<>::d	
+        1	ch1of1<>::!GND @[ supply_low port-alias ]	
+        2	ch1of1<>::!Vdd @[ supply_high port-alias ]	
+        3	ch1of1<>::d @[ port-alias ]	
       }
       }
 
@@ -150,14 +150,14 @@ In namespace "", we have: {
         !GND@[supply=0]
         !Vdd@[supply=1]
       footprint: {
-        !GND = bool^0 = dcelm<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = dcelm<>::!Vdd (2) @[ supply_high ] 
-        a = bool^0 = dcelm<>::a (3) 
+        !GND = bool^0 = dcelm<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = dcelm<>::!Vdd (2) @[ supply_high port-alias ] 
+        a = bool^0 = dcelm<>::a (3) @[ port-alias ] 
         Created state:
         bool instance pool: (3 ports, 0 local, 0 mapped)
-        1	dcelm<>::!GND @[ supply_low ]	
-        2	dcelm<>::!Vdd @[ supply_high ]	
-        3	dcelm<>::a	
+        1	dcelm<>::!GND @[ supply_low port-alias ]	
+        2	dcelm<>::!Vdd @[ supply_high port-alias ]	
+        3	dcelm<>::a @[ port-alias ]	
       }
       }
 
@@ -184,16 +184,16 @@ In namespace "", we have: {
           ce ( , , ad.d);
         )
       footprint: {
-        !GND = bool^0 = lut<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = lut<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high port-alias ] 
         ad = process ch1of1<>^0 = lut<>::ad (1) (
-          !GND = bool^0 = lut<>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = lut<>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high port-alias ] 
           d = bool^0 = lut<>::ad.d (3) 
         )
         ce = process dcelm<>^0 = lut<>::ce (2) (
-          !GND = bool^0 = lut<>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = lut<>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high port-alias ] 
           a = bool^0 = lut<>::ad.d (3) 
         )
         Created state:
@@ -203,8 +203,8 @@ In namespace "", we have: {
         2	lut<>::ce	dcelm<>
           bool: 1,2,3
         bool instance pool: (2 ports, 1 local, 0 mapped)
-        1	lut<>::!GND @[ supply_low ]	
-        2	lut<>::!Vdd @[ supply_high ]	
+        1	lut<>::!GND @[ supply_low port-alias ]	
+        2	lut<>::!Vdd @[ supply_high port-alias ]	
         3	lut<>::ad.d	
       }
       }

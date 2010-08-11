@@ -83,15 +83,15 @@ In namespace "", we have: {
         !Vdd@[supply=1]
         a = a;
       footprint: {
-        !GND = bool^0 = receivers<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = receivers<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = receivers<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = receivers<>::!Vdd (2) @[ supply_high port-alias ] 
         a = channel chan?(bool<>)^0 = receivers<>::a (1) 
         Created state:
         channel instance pool: (1 ports, 0 local, 0 mapped)
         1	receivers<>::a	
         bool instance pool: (2 ports, 0 local, 0 mapped)
-        1	receivers<>::!GND @[ supply_low ]	
-        2	receivers<>::!Vdd @[ supply_high ]	
+        1	receivers<>::!GND @[ supply_low port-alias ]	
+        2	receivers<>::!Vdd @[ supply_high port-alias ]	
       }
       }
 

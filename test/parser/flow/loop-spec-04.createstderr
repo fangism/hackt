@@ -118,57 +118,57 @@ In namespace "", we have: {
         )
       footprint collection: {
         <5, 5> {
-          !GND = bool^0 = spec_test<5, 5>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = spec_test<5, 5>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = spec_test<5, 5>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = spec_test<5, 5>::!Vdd (2) @[ supply_high port-alias ] 
           M = pint^0 value: 5
           N = pint^0 value: 5
           x = bool^1
             {
-              [0] = spec_test<5, 5>::x[0] (3) 
-              [1] = spec_test<5, 5>::x[1] (4) 
-              [2] = spec_test<5, 5>::x[2] (5) 
-              [3] = spec_test<5, 5>::x[3] (6) 
-              [4] = spec_test<5, 5>::x[4] (7) 
-              [5] = spec_test<5, 5>::x[5] (8) 
-              [6] = spec_test<5, 5>::x[6] (9) 
-              [7] = spec_test<5, 5>::x[7] (10) 
-              [8] = spec_test<5, 5>::x[8] (11) 
-              [9] = spec_test<5, 5>::x[9] (12) 
-              [10] = spec_test<5, 5>::x[10] (13) 
-              [11] = spec_test<5, 5>::x[11] (14) 
-              [12] = spec_test<5, 5>::x[12] (15) 
-              [13] = spec_test<5, 5>::x[13] (16) 
-              [14] = spec_test<5, 5>::x[14] (17) 
-              [15] = spec_test<5, 5>::x[15] (18) 
-              [16] = spec_test<5, 5>::x[16] (19) 
-              [17] = spec_test<5, 5>::x[17] (20) 
-              [18] = spec_test<5, 5>::x[18] (21) 
-              [19] = spec_test<5, 5>::x[19] (22) 
+              [0] = spec_test<5, 5>::x[0] (3) @[ port-alias ] 
+              [1] = spec_test<5, 5>::x[1] (4) @[ port-alias ] 
+              [2] = spec_test<5, 5>::x[2] (5) @[ port-alias ] 
+              [3] = spec_test<5, 5>::x[3] (6) @[ port-alias ] 
+              [4] = spec_test<5, 5>::x[4] (7) @[ port-alias ] 
+              [5] = spec_test<5, 5>::x[5] (8) @[ port-alias ] 
+              [6] = spec_test<5, 5>::x[6] (9) @[ port-alias ] 
+              [7] = spec_test<5, 5>::x[7] (10) @[ port-alias ] 
+              [8] = spec_test<5, 5>::x[8] (11) @[ port-alias ] 
+              [9] = spec_test<5, 5>::x[9] (12) @[ port-alias ] 
+              [10] = spec_test<5, 5>::x[10] (13) @[ port-alias ] 
+              [11] = spec_test<5, 5>::x[11] (14) @[ port-alias ] 
+              [12] = spec_test<5, 5>::x[12] (15) @[ port-alias ] 
+              [13] = spec_test<5, 5>::x[13] (16) @[ port-alias ] 
+              [14] = spec_test<5, 5>::x[14] (17) @[ port-alias ] 
+              [15] = spec_test<5, 5>::x[15] (18) @[ port-alias ] 
+              [16] = spec_test<5, 5>::x[16] (19) @[ port-alias ] 
+              [17] = spec_test<5, 5>::x[17] (20) @[ port-alias ] 
+              [18] = spec_test<5, 5>::x[18] (21) @[ port-alias ] 
+              [19] = spec_test<5, 5>::x[19] (22) @[ port-alias ] 
             }
           Created state:
           bool instance pool: (22 ports, 0 local, 0 mapped)
-          1	spec_test<5, 5>::!GND @[ supply_low ]	
-          2	spec_test<5, 5>::!Vdd @[ supply_high ]	
-          3	spec_test<5, 5>::x[0]	
-          4	spec_test<5, 5>::x[1]	
-          5	spec_test<5, 5>::x[2]	
-          6	spec_test<5, 5>::x[3]	
-          7	spec_test<5, 5>::x[4]	
-          8	spec_test<5, 5>::x[5]	
-          9	spec_test<5, 5>::x[6]	
-          10	spec_test<5, 5>::x[7]	
-          11	spec_test<5, 5>::x[8]	
-          12	spec_test<5, 5>::x[9]	
-          13	spec_test<5, 5>::x[10]	
-          14	spec_test<5, 5>::x[11]	
-          15	spec_test<5, 5>::x[12]	
-          16	spec_test<5, 5>::x[13]	
-          17	spec_test<5, 5>::x[14]	
-          18	spec_test<5, 5>::x[15]	
-          19	spec_test<5, 5>::x[16]	
-          20	spec_test<5, 5>::x[17]	
-          21	spec_test<5, 5>::x[18]	
-          22	spec_test<5, 5>::x[19]	
+          1	spec_test<5, 5>::!GND @[ supply_low port-alias ]	
+          2	spec_test<5, 5>::!Vdd @[ supply_high port-alias ]	
+          3	spec_test<5, 5>::x[0] @[ port-alias ]	
+          4	spec_test<5, 5>::x[1] @[ port-alias ]	
+          5	spec_test<5, 5>::x[2] @[ port-alias ]	
+          6	spec_test<5, 5>::x[3] @[ port-alias ]	
+          7	spec_test<5, 5>::x[4] @[ port-alias ]	
+          8	spec_test<5, 5>::x[5] @[ port-alias ]	
+          9	spec_test<5, 5>::x[6] @[ port-alias ]	
+          10	spec_test<5, 5>::x[7] @[ port-alias ]	
+          11	spec_test<5, 5>::x[8] @[ port-alias ]	
+          12	spec_test<5, 5>::x[9] @[ port-alias ]	
+          13	spec_test<5, 5>::x[10] @[ port-alias ]	
+          14	spec_test<5, 5>::x[11] @[ port-alias ]	
+          15	spec_test<5, 5>::x[12] @[ port-alias ]	
+          16	spec_test<5, 5>::x[13] @[ port-alias ]	
+          17	spec_test<5, 5>::x[14] @[ port-alias ]	
+          18	spec_test<5, 5>::x[15] @[ port-alias ]	
+          19	spec_test<5, 5>::x[16] @[ port-alias ]	
+          20	spec_test<5, 5>::x[17] @[ port-alias ]	
+          21	spec_test<5, 5>::x[18] @[ port-alias ]	
+          22	spec_test<5, 5>::x[19] @[ port-alias ]	
           resolved specs:
           mk_exclhi(x[0],x[1])
           mk_exclhi(x[0],x[2])

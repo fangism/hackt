@@ -102,8 +102,8 @@ In namespace "", we have: {
         x[0] = x[N-1];
       footprint collection: {
         <3, 2> {
-          !GND = bool^0 = bar<3, 2>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = bar<3, 2>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = bar<3, 2>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = bar<3, 2>::!Vdd (2) @[ supply_high port-alias ] 
           M = pint^0 value: 3
           N = pint^0 value: 2
           x = int<3>^1
@@ -115,8 +115,8 @@ In namespace "", we have: {
           int instance pool: (0 ports, 1 local, 0 mapped)
           1	bar<3, 2>::x[0]	
           bool instance pool: (2 ports, 0 local, 0 mapped)
-          1	bar<3, 2>::!GND @[ supply_low ]	
-          2	bar<3, 2>::!Vdd @[ supply_high ]	
+          1	bar<3, 2>::!GND @[ supply_low port-alias ]	
+          2	bar<3, 2>::!Vdd @[ supply_high port-alias ]	
         }
       }
       }

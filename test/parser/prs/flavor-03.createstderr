@@ -113,18 +113,18 @@ In namespace "", we have: {
         ~a<5,2;svt=1> | ~b<10;svt> -> c+
         }
       footprint: {
-        !GND = bool^0 = nand_type<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = nand_type<>::!Vdd (2) @[ supply_high ] 
-        a = bool^0 = nand_type<>::a (3) 
-        b = bool^0 = nand_type<>::b (4) 
-        c = bool^0 = nand_type<>::c (5) 
+        !GND = bool^0 = nand_type<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = nand_type<>::!Vdd (2) @[ supply_high port-alias ] 
+        a = bool^0 = nand_type<>::a (3) @[ port-alias loc-FO- loc-FO+ ] 
+        b = bool^0 = nand_type<>::b (4) @[ port-alias loc-FO- loc-FO+ ] 
+        c = bool^0 = nand_type<>::c (5) @[ port-alias loc-FI- loc-FI+ ] 
         Created state:
         bool instance pool: (5 ports, 0 local, 0 mapped)
-        1	nand_type<>::!GND @[ supply_low ]	
-        2	nand_type<>::!Vdd @[ supply_high ]	
-        3	nand_type<>::a	
-        4	nand_type<>::b	
-        5	nand_type<>::c	
+        1	nand_type<>::!GND @[ supply_low port-alias ]	
+        2	nand_type<>::!Vdd @[ supply_high port-alias ]	
+        3	nand_type<>::a @[ port-alias loc-FO- loc-FO+ ]	
+        4	nand_type<>::b @[ port-alias loc-FO- loc-FO+ ]	
+        5	nand_type<>::c @[ port-alias loc-FI- loc-FI+ ]	
         resolved prs:
         a<10;lvt> & b<10;svt=0> -> c-
         ~a<5,2;svt=1> | ~b<10;svt> -> c+
@@ -145,9 +145,9 @@ footprint: {
   X = process nand_type<>^0 = X (1) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    a = bool^0 = X.a (3) 
-    b = bool^0 = X.b (4) 
-    c = bool^0 = X.c (5) 
+    a = bool^0 = X.a (3) @[ sub-FO- sub-FO+ ] 
+    b = bool^0 = X.b (4) @[ sub-FO- sub-FO+ ] 
+    c = bool^0 = X.c (5) @[ sub-FI- sub-FI+ ] 
   )
   Created state:
   process instance pool: (0 ports, 1 local, 0 mapped)
@@ -156,7 +156,7 @@ footprint: {
   bool instance pool: (0 ports, 5 local, 0 mapped)
   1	!GND @[ supply_low ]	
   2	!Vdd @[ supply_high ]	
-  3	X.a	
-  4	X.b	
-  5	X.c	
+  3	X.a @[ sub-FO- sub-FO+ ]	
+  4	X.b @[ sub-FO- sub-FO+ ]	
+  5	X.c @[ sub-FI- sub-FI+ ]	
 }

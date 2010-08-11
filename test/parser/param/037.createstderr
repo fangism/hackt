@@ -97,16 +97,16 @@ In namespace "", we have: {
         pbool<> b
         b = a;
       footprint: {
-        !GND = bool^0 = bogus<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = bogus<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = bogus<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = bogus<>::!Vdd (2) @[ supply_high port-alias ] 
         M = pint^0 value: 5
         N = pint^0 value: 5
         a = pbool^0 value: 1
         b = pbool^0 value: 1
         Created state:
         bool instance pool: (2 ports, 0 local, 0 mapped)
-        1	bogus<>::!GND @[ supply_low ]	
-        2	bogus<>::!Vdd @[ supply_high ]	
+        1	bogus<>::!GND @[ supply_low port-alias ]	
+        2	bogus<>::!Vdd @[ supply_high port-alias ]	
       }
       }
 

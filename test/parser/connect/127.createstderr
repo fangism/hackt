@@ -139,15 +139,15 @@ In namespace "", we have: {
         bool<> z
         y = z;
       footprint: {
-        !GND = bool^0 = ar<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = ar<>::!Vdd (2) @[ supply_high ] 
-        y = bool^0 = ar<>::y (3) 
-        z = bool^0 = ar<>::y (3) 
+        !GND = bool^0 = ar<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = ar<>::!Vdd (2) @[ supply_high port-alias ] 
+        y = bool^0 = ar<>::y (3) @[ port-alias ] 
+        z = bool^0 = ar<>::y (3) @[ port-alias ] 
         Created state:
         bool instance pool: (3 ports, 0 local, 0 mapped)
-        1	ar<>::!GND @[ supply_low ]	
-        2	ar<>::!Vdd @[ supply_high ]	
-        3	ar<>::y	
+        1	ar<>::!GND @[ supply_low port-alias ]	
+        2	ar<>::!Vdd @[ supply_high port-alias ]	
+        3	ar<>::y @[ port-alias ]	
       }
       }
 
@@ -173,15 +173,15 @@ In namespace "", we have: {
         bool<> composite
         x = composite;
       footprint: {
-        !GND = bool^0 = array<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = array<>::!Vdd (2) @[ supply_high ] 
-        composite = bool^0 = array<>::x (3) 
-        x = bool^0 = array<>::x (3) 
+        !GND = bool^0 = array<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = array<>::!Vdd (2) @[ supply_high port-alias ] 
+        composite = bool^0 = array<>::x (3) @[ port-alias ] 
+        x = bool^0 = array<>::x (3) @[ port-alias ] 
         Created state:
         bool instance pool: (3 ports, 0 local, 0 mapped)
-        1	array<>::!GND @[ supply_low ]	
-        2	array<>::!Vdd @[ supply_high ]	
-        3	array<>::x	
+        1	array<>::!GND @[ supply_low port-alias ]	
+        2	array<>::!Vdd @[ supply_high port-alias ]	
+        3	array<>::x @[ port-alias ]	
       }
       }
 
@@ -207,17 +207,17 @@ In namespace "", we have: {
         array<> k
         k ( , , r.y);
       footprint: {
-        !GND = bool^0 = foo<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = foo<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high port-alias ] 
         k = process array<>^0 = foo<>::k (2) (
-          !GND = bool^0 = foo<>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high ] 
-          x = bool^0 = foo<>::r.y (3) 
+          !GND = bool^0 = foo<>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high port-alias ] 
+          x = bool^0 = foo<>::r.y (3) @[ port-alias ] 
         )
         r = process ar<>^0 = foo<>::r (1) (
-          !GND = bool^0 = foo<>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high ] 
-          y = bool^0 = foo<>::r.y (3) 
+          !GND = bool^0 = foo<>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high port-alias ] 
+          y = bool^0 = foo<>::r.y (3) @[ port-alias ] 
         )
         Created state:
         process instance pool: (1 ports, 1 local, 0 mapped)
@@ -226,12 +226,12 @@ In namespace "", we have: {
         2	foo<>::k	array<>
           bool: 1,2,3
         bool instance pool: (3 ports, 0 local, 0 mapped)
-        1	foo<>::!GND @[ supply_low ]	
-        2	foo<>::!Vdd @[ supply_high ]	
-        3	foo<>::r.y	
+        1	foo<>::!GND @[ supply_low port-alias ]	
+        2	foo<>::!Vdd @[ supply_high port-alias ]	
+        3	foo<>::r.y @[ port-alias ]	
         bool port aliases:
-        1: foo<>::r.!GND = foo<>::!GND @[ supply_low ]
-        2: foo<>::r.!Vdd = foo<>::!Vdd @[ supply_high ]
+        1: foo<>::r.!GND = foo<>::!GND @[ supply_low port-alias ]
+        2: foo<>::r.!Vdd = foo<>::!Vdd @[ supply_high port-alias ]
       }
       }
 

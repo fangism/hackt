@@ -89,8 +89,8 @@ In namespace "", we have: {
         !Vdd@[supply=1]
       footprint collection: {
         <{{{0,1},{2,3}},{{4,5},{6,7}}}> {
-          !GND = bool^0 = foo<{{{0,1},{2,3}},{{4,5},{6,7}}}>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = foo<{{{0,1},{2,3}},{{4,5},{6,7}}}>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = foo<{{{0,1},{2,3}},{{4,5},{6,7}}}>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = foo<{{{0,1},{2,3}},{{4,5},{6,7}}}>::!Vdd (2) @[ supply_high port-alias ] 
           x = pint^3
             unrolled index-value pairs: {
               [0][0][0] = 0
@@ -104,8 +104,8 @@ In namespace "", we have: {
             }
           Created state:
           bool instance pool: (2 ports, 0 local, 0 mapped)
-          1	foo<{{{0,1},{2,3}},{{4,5},{6,7}}}>::!GND @[ supply_low ]	
-          2	foo<{{{0,1},{2,3}},{{4,5},{6,7}}}>::!Vdd @[ supply_high ]	
+          1	foo<{{{0,1},{2,3}},{{4,5},{6,7}}}>::!GND @[ supply_low port-alias ]	
+          2	foo<{{{0,1},{2,3}},{{4,5},{6,7}}}>::!Vdd @[ supply_high port-alias ]	
         }
       }
       }

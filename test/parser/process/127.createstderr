@@ -148,16 +148,16 @@ In namespace "", we have: {
         !Vdd@[supply=1]
         foo<> y
       footprint: {
-        !GND = bool^0 = bar<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = bar<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = bar<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = bar<>::!Vdd (2) @[ supply_high port-alias ] 
         x = process foo<>^0 = bar<>::x (1) (
-          !GND = bool^0 = bar<>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = bar<>::!Vdd (2) @[ supply_high ] 
-          a = bool^0 = bar<>::x.a (3) 
+          !GND = bool^0 = bar<>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = bar<>::!Vdd (2) @[ supply_high port-alias ] 
+          a = bool^0 = bar<>::x.a (3) @[ port-alias ] 
         )
         y = process foo<>^0 = bar<>::y (2) (
-          !GND = bool^0 = bar<>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = bar<>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = bar<>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = bar<>::!Vdd (2) @[ supply_high port-alias ] 
           a = bool^0 = bar<>::y.a (4) 
         )
         Created state:
@@ -167,16 +167,16 @@ In namespace "", we have: {
         2	bar<>::y	foo<>
           bool: 1,2,4
         bool instance pool: (3 ports, 1 local, 1 mapped)
-        1	bar<>::!GND @[ supply_low ]	
-        2	bar<>::!Vdd @[ supply_high ]	
-        3	bar<>::x.a	
+        1	bar<>::!GND @[ supply_low port-alias ]	
+        2	bar<>::!Vdd @[ supply_high port-alias ]	
+        3	bar<>::x.a @[ port-alias ]	
         4	bar<>::y.a	
         private sub-bool index map:
           (2 -> 0)
           (3 -> 1)
         bool port aliases:
-        1: bar<>::x.!GND = bar<>::!GND @[ supply_low ]
-        2: bar<>::x.!Vdd = bar<>::!Vdd @[ supply_high ]
+        1: bar<>::x.!GND = bar<>::!GND @[ supply_low port-alias ]
+        2: bar<>::x.!Vdd = bar<>::!Vdd @[ supply_high port-alias ]
       }
       }
 
@@ -201,15 +201,15 @@ In namespace "", we have: {
         !Vdd@[supply=1]
         bool<> b
       footprint: {
-        !GND = bool^0 = foo<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high ] 
-        a = bool^0 = foo<>::a (3) 
+        !GND = bool^0 = foo<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high port-alias ] 
+        a = bool^0 = foo<>::a (3) @[ port-alias ] 
         b = bool^0 = foo<>::b (4) 
         Created state:
         bool instance pool: (3 ports, 1 local, 0 mapped)
-        1	foo<>::!GND @[ supply_low ]	
-        2	foo<>::!Vdd @[ supply_high ]	
-        3	foo<>::a	
+        1	foo<>::!GND @[ supply_low port-alias ]	
+        2	foo<>::!Vdd @[ supply_high port-alias ]	
+        3	foo<>::a @[ port-alias ]	
         4	foo<>::b	
       }
       }
@@ -235,23 +235,23 @@ In namespace "", we have: {
         !Vdd@[supply=1]
         bar<> q
       footprint: {
-        !GND = bool^0 = ick<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = ick<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = ick<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = ick<>::!Vdd (2) @[ supply_high port-alias ] 
         p = process bar<>^0 = ick<>::p (1) (
-          !GND = bool^0 = ick<>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = ick<>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = ick<>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = ick<>::!Vdd (2) @[ supply_high port-alias ] 
           x = process foo<>^0 = ick<>::p.x (2) (
-            !GND = bool^0 = ick<>::!GND (1) @[ supply_low ] 
-            !Vdd = bool^0 = ick<>::!Vdd (2) @[ supply_high ] 
-            a = bool^0 = ick<>::p.x.a (3) 
+            !GND = bool^0 = ick<>::!GND (1) @[ supply_low port-alias ] 
+            !Vdd = bool^0 = ick<>::!Vdd (2) @[ supply_high port-alias ] 
+            a = bool^0 = ick<>::p.x.a (3) @[ port-alias ] 
           )
         )
         q = process bar<>^0 = ick<>::q (3) (
-          !GND = bool^0 = ick<>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = ick<>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = ick<>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = ick<>::!Vdd (2) @[ supply_high port-alias ] 
           x = process foo<>^0 = ick<>::q.x (4) (
-            !GND = bool^0 = ick<>::!GND (1) @[ supply_low ] 
-            !Vdd = bool^0 = ick<>::!Vdd (2) @[ supply_high ] 
+            !GND = bool^0 = ick<>::!GND (1) @[ supply_low port-alias ] 
+            !Vdd = bool^0 = ick<>::!Vdd (2) @[ supply_high port-alias ] 
             a = bool^0 = ick<>::q.x.a (4) 
           )
         )
@@ -271,17 +271,17 @@ In namespace "", we have: {
           (3 -> 0)
           (5 -> 1)
         bool instance pool: (3 ports, 1 local, 3 mapped)
-        1	ick<>::!GND @[ supply_low ]	
-        2	ick<>::!Vdd @[ supply_high ]	
-        3	ick<>::p.x.a	
+        1	ick<>::!GND @[ supply_low port-alias ]	
+        2	ick<>::!Vdd @[ supply_high port-alias ]	
+        3	ick<>::p.x.a @[ port-alias ]	
         4	ick<>::q.x.a	
         private sub-bool index map:
           (3 -> 0)
           (4 -> 2)
           (5 -> 3)
         bool port aliases:
-        1: ick<>::p.!GND = ick<>::p.x.!GND = ick<>::!GND @[ supply_low ]
-        2: ick<>::p.!Vdd = ick<>::p.x.!Vdd = ick<>::!Vdd @[ supply_high ]
+        1: ick<>::p.!GND = ick<>::p.x.!GND = ick<>::!GND @[ supply_low port-alias ]
+        2: ick<>::p.!Vdd = ick<>::p.x.!Vdd = ick<>::!Vdd @[ supply_high port-alias ]
       }
       }
 
@@ -306,30 +306,30 @@ In namespace "", we have: {
         !Vdd@[supply=1]
         ick<> who
       footprint: {
-        !GND = bool^0 = moo<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = moo<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = moo<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = moo<>::!Vdd (2) @[ supply_high port-alias ] 
         poo = process ick<>^0 = moo<>::poo (1) (
-          !GND = bool^0 = moo<>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = moo<>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = moo<>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = moo<>::!Vdd (2) @[ supply_high port-alias ] 
           p = process bar<>^0 = moo<>::poo.p (2) (
-            !GND = bool^0 = moo<>::!GND (1) @[ supply_low ] 
-            !Vdd = bool^0 = moo<>::!Vdd (2) @[ supply_high ] 
+            !GND = bool^0 = moo<>::!GND (1) @[ supply_low port-alias ] 
+            !Vdd = bool^0 = moo<>::!Vdd (2) @[ supply_high port-alias ] 
             x = process foo<>^0 = moo<>::poo.p.x (3) (
-              !GND = bool^0 = moo<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = moo<>::!Vdd (2) @[ supply_high ] 
-              a = bool^0 = moo<>::poo.p.x.a (3) 
+              !GND = bool^0 = moo<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = moo<>::!Vdd (2) @[ supply_high port-alias ] 
+              a = bool^0 = moo<>::poo.p.x.a (3) @[ port-alias ] 
             )
           )
         )
         who = process ick<>^0 = moo<>::who (4) (
-          !GND = bool^0 = moo<>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = moo<>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = moo<>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = moo<>::!Vdd (2) @[ supply_high port-alias ] 
           p = process bar<>^0 = moo<>::who.p (5) (
-            !GND = bool^0 = moo<>::!GND (1) @[ supply_low ] 
-            !Vdd = bool^0 = moo<>::!Vdd (2) @[ supply_high ] 
+            !GND = bool^0 = moo<>::!GND (1) @[ supply_low port-alias ] 
+            !Vdd = bool^0 = moo<>::!Vdd (2) @[ supply_high port-alias ] 
             x = process foo<>^0 = moo<>::who.p.x (6) (
-              !GND = bool^0 = moo<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = moo<>::!Vdd (2) @[ supply_high ] 
+              !GND = bool^0 = moo<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = moo<>::!Vdd (2) @[ supply_high port-alias ] 
               a = bool^0 = moo<>::who.p.x.a (4) 
             )
           )
@@ -357,9 +357,9 @@ In namespace "", we have: {
           (5 -> 3)
           (7 -> 4)
         bool instance pool: (3 ports, 1 local, 7 mapped)
-        1	moo<>::!GND @[ supply_low ]	
-        2	moo<>::!Vdd @[ supply_high ]	
-        3	moo<>::poo.p.x.a	
+        1	moo<>::!GND @[ supply_low port-alias ]	
+        2	moo<>::!Vdd @[ supply_high port-alias ]	
+        3	moo<>::poo.p.x.a @[ port-alias ]	
         4	moo<>::who.p.x.a	
         private sub-bool index map:
           (4 -> 0)
@@ -367,8 +367,8 @@ In namespace "", we have: {
           (6 -> 6)
           (7 -> 7)
         bool port aliases:
-        1: moo<>::poo.!GND = moo<>::poo.p.!GND = moo<>::poo.p.x.!GND = moo<>::!GND @[ supply_low ]
-        2: moo<>::poo.!Vdd = moo<>::poo.p.!Vdd = moo<>::poo.p.x.!Vdd = moo<>::!Vdd @[ supply_high ]
+        1: moo<>::poo.!GND = moo<>::poo.p.!GND = moo<>::poo.p.x.!GND = moo<>::!GND @[ supply_low port-alias ]
+        2: moo<>::poo.!Vdd = moo<>::poo.p.!Vdd = moo<>::poo.p.x.!Vdd = moo<>::!Vdd @[ supply_high port-alias ]
       }
       }
 

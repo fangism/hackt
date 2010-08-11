@@ -108,34 +108,34 @@ In namespace "", we have: {
         !Vdd@[supply=1]
       footprint collection: {
         <1, 12> {
-          !GND = bool^0 = array2d<1, 12>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = array2d<1, 12>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = array2d<1, 12>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = array2d<1, 12>::!Vdd (2) @[ supply_high port-alias ] 
           M = pint^0 value: 12
           N = pint^0 value: 1
           Created state:
           bool instance pool: (2 ports, 0 local, 0 mapped)
-          1	array2d<1, 12>::!GND @[ supply_low ]	
-          2	array2d<1, 12>::!Vdd @[ supply_high ]	
+          1	array2d<1, 12>::!GND @[ supply_low port-alias ]	
+          2	array2d<1, 12>::!Vdd @[ supply_high port-alias ]	
         }
         <3, 3> {
-          !GND = bool^0 = array2d<3, 3>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = array2d<3, 3>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = array2d<3, 3>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = array2d<3, 3>::!Vdd (2) @[ supply_high port-alias ] 
           M = pint^0 value: 3
           N = pint^0 value: 3
           Created state:
           bool instance pool: (2 ports, 0 local, 0 mapped)
-          1	array2d<3, 3>::!GND @[ supply_low ]	
-          2	array2d<3, 3>::!Vdd @[ supply_high ]	
+          1	array2d<3, 3>::!GND @[ supply_low port-alias ]	
+          2	array2d<3, 3>::!Vdd @[ supply_high port-alias ]	
         }
         <10, 1> {
-          !GND = bool^0 = array2d<10, 1>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = array2d<10, 1>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = array2d<10, 1>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = array2d<10, 1>::!Vdd (2) @[ supply_high port-alias ] 
           M = pint^0 value: 1
           N = pint^0 value: 10
           Created state:
           bool instance pool: (2 ports, 0 local, 0 mapped)
-          1	array2d<10, 1>::!GND @[ supply_low ]	
-          2	array2d<10, 1>::!Vdd @[ supply_high ]	
+          1	array2d<10, 1>::!GND @[ supply_low port-alias ]	
+          2	array2d<10, 1>::!Vdd @[ supply_high port-alias ]	
         }
       }
       }

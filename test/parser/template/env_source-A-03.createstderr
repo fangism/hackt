@@ -150,21 +150,21 @@ In namespace "", we have: {
         !Vdd@[supply=1]
       footprint collection: {
         <2, 2> {
-          !GND = bool^0 = source_e<2, 2>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = source_e<2, 2>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = source_e<2, 2>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = source_e<2, 2>::!Vdd (2) @[ supply_high port-alias ] 
           M = pint^0 value: 2
           N = pint^0 value: 2
           b = bool^1
             {
-              [0] = source_e<2, 2>::b[0] (3) 
-              [1] = source_e<2, 2>::b[1] (4) 
+              [0] = source_e<2, 2>::b[0] (3) @[ port-alias ] 
+              [1] = source_e<2, 2>::b[1] (4) @[ port-alias ] 
             }
           Created state:
           bool instance pool: (4 ports, 0 local, 0 mapped)
-          1	source_e<2, 2>::!GND @[ supply_low ]	
-          2	source_e<2, 2>::!Vdd @[ supply_high ]	
-          3	source_e<2, 2>::b[0]	
-          4	source_e<2, 2>::b[1]	
+          1	source_e<2, 2>::!GND @[ supply_low port-alias ]	
+          2	source_e<2, 2>::!Vdd @[ supply_high port-alias ]	
+          3	source_e<2, 2>::b[0] @[ port-alias ]	
+          4	source_e<2, 2>::b[1] @[ port-alias ]	
         }
       }
       }

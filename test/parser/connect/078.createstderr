@@ -119,15 +119,15 @@ In namespace "", we have: {
         !GND@[supply=0]
         !Vdd@[supply=1]
       footprint: {
-        !GND = bool^0 = portaproc<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = portaproc<>::!Vdd (2) @[ supply_high ] 
-        b = bool^0 = portaproc<>::b (3) 
+        !GND = bool^0 = portaproc<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = portaproc<>::!Vdd (2) @[ supply_high port-alias ] 
+        b = bool^0 = portaproc<>::b (3) @[ port-alias ] 
         c = bool^1
           {
-            [0] = portaproc<>::c[0] (4) 
-            [1] = portaproc<>::c[1] (5) 
-            [2] = portaproc<>::c[2] (6) 
-            [3] = portaproc<>::c[3] (7) 
+            [0] = portaproc<>::c[0] (4) @[ port-alias ] 
+            [1] = portaproc<>::c[1] (5) @[ port-alias ] 
+            [2] = portaproc<>::c[2] (6) @[ port-alias ] 
+            [3] = portaproc<>::c[3] (7) @[ port-alias ] 
           }
         i = int<32>^0 = portaproc<>::i (1) 
         j = int<32>^1
@@ -141,13 +141,13 @@ In namespace "", we have: {
         2	portaproc<>::j[0]	
         3	portaproc<>::j[1]	
         bool instance pool: (7 ports, 0 local, 0 mapped)
-        1	portaproc<>::!GND @[ supply_low ]	
-        2	portaproc<>::!Vdd @[ supply_high ]	
-        3	portaproc<>::b	
-        4	portaproc<>::c[0]	
-        5	portaproc<>::c[1]	
-        6	portaproc<>::c[2]	
-        7	portaproc<>::c[3]	
+        1	portaproc<>::!GND @[ supply_low port-alias ]	
+        2	portaproc<>::!Vdd @[ supply_high port-alias ]	
+        3	portaproc<>::b @[ port-alias ]	
+        4	portaproc<>::c[0] @[ port-alias ]	
+        5	portaproc<>::c[1] @[ port-alias ]	
+        6	portaproc<>::c[2] @[ port-alias ]	
+        7	portaproc<>::c[3] @[ port-alias ]	
       }
       }
 

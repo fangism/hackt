@@ -103,8 +103,8 @@ In namespace "", we have: {
         !Vdd@[supply=1]
       footprint collection: {
         <2, 3> {
-          !GND = bool^0 = bar<2, 3>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = bar<2, 3>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = bar<2, 3>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = bar<2, 3>::!Vdd (2) @[ supply_high port-alias ] 
           X = pint^0 value: 2
           Y = pint^0 value: 3
           a = int<2>^0 = bar<2, 3>::a (1) 
@@ -114,8 +114,8 @@ In namespace "", we have: {
           1	bar<2, 3>::a	
           2	bar<2, 3>::b	
           bool instance pool: (2 ports, 0 local, 0 mapped)
-          1	bar<2, 3>::!GND @[ supply_low ]	
-          2	bar<2, 3>::!Vdd @[ supply_high ]	
+          1	bar<2, 3>::!GND @[ supply_low port-alias ]	
+          2	bar<2, 3>::!Vdd @[ supply_high port-alias ]	
         }
       }
       }

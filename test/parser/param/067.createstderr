@@ -96,8 +96,8 @@ In namespace "", we have: {
             pint<> N[0..Q-1]
             N[0] = 11;
           footprint: {
-            !GND = bool^0 = bar::foo<>::!GND (1) @[ supply_low ] 
-            !Vdd = bool^0 = bar::foo<>::!Vdd (2) @[ supply_high ] 
+            !GND = bool^0 = bar::foo<>::!GND (1) @[ supply_low port-alias ] 
+            !Vdd = bool^0 = bar::foo<>::!Vdd (2) @[ supply_high port-alias ] 
             N = pint^1
               unrolled index-value pairs: {
                 0 = 11
@@ -116,8 +116,8 @@ In namespace "", we have: {
               }
             Created state:
             bool instance pool: (2 ports, 0 local, 0 mapped)
-            1	bar::foo<>::!GND @[ supply_low ]	
-            2	bar::foo<>::!Vdd @[ supply_high ]	
+            1	bar::foo<>::!GND @[ supply_low port-alias ]	
+            2	bar::foo<>::!Vdd @[ supply_high port-alias ]	
           }
           }
 

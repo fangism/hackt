@@ -123,18 +123,18 @@ In namespace "", we have: {
           p[$i].t = x;
         )
       footprint: {
-        !GND = bool^0 = lt<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = lt<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = lt<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = lt<>::!Vdd (2) @[ supply_high port-alias ] 
         p = process pb<>^1
           {
             [0] = lt<>::p[0] (1) (
-              !GND = bool^0 = lt<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = lt<>::!Vdd (2) @[ supply_high ] 
+              !GND = bool^0 = lt<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = lt<>::!Vdd (2) @[ supply_high port-alias ] 
               t = bool^0 = lt<>::x (3) 
             )
             [1] = lt<>::p[1] (2) (
-              !GND = bool^0 = lt<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = lt<>::!Vdd (2) @[ supply_high ] 
+              !GND = bool^0 = lt<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = lt<>::!Vdd (2) @[ supply_high port-alias ] 
               t = bool^0 = lt<>::x (3) 
             )
           }
@@ -146,8 +146,8 @@ In namespace "", we have: {
         2	lt<>::p[1]	pb<>
           bool: 1,2,3
         bool instance pool: (2 ports, 1 local, 0 mapped)
-        1	lt<>::!GND @[ supply_low ]	
-        2	lt<>::!Vdd @[ supply_high ]	
+        1	lt<>::!GND @[ supply_low port-alias ]	
+        2	lt<>::!Vdd @[ supply_high port-alias ]	
         3	lt<>::x	
       }
       }
@@ -171,14 +171,14 @@ In namespace "", we have: {
         !GND@[supply=0]
         !Vdd@[supply=1]
       footprint: {
-        !GND = bool^0 = pb<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = pb<>::!Vdd (2) @[ supply_high ] 
-        t = bool^0 = pb<>::t (3) 
+        !GND = bool^0 = pb<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = pb<>::!Vdd (2) @[ supply_high port-alias ] 
+        t = bool^0 = pb<>::t (3) @[ port-alias ] 
         Created state:
         bool instance pool: (3 ports, 0 local, 0 mapped)
-        1	pb<>::!GND @[ supply_low ]	
-        2	pb<>::!Vdd @[ supply_high ]	
-        3	pb<>::t	
+        1	pb<>::!GND @[ supply_low port-alias ]	
+        2	pb<>::!Vdd @[ supply_high port-alias ]	
+        3	pb<>::t @[ port-alias ]	
       }
       }
 

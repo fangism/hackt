@@ -114,30 +114,30 @@ In namespace "", we have: {
         )
       footprint collection: {
         <0> {
-          !GND = bool^0 = null<0>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = null<0>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = null<0>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = null<0>::!Vdd (2) @[ supply_high port-alias ] 
           N = pint^0 value: 0
           x = bool^0 = null<0>::x (3) 
           y = bool^0 = null<0>::y (4) 
           Created state:
           bool instance pool: (2 ports, 2 local, 0 mapped)
-          1	null<0>::!GND @[ supply_low ]	
-          2	null<0>::!Vdd @[ supply_high ]	
+          1	null<0>::!GND @[ supply_low port-alias ]	
+          2	null<0>::!Vdd @[ supply_high port-alias ]	
           3	null<0>::x	
           4	null<0>::y	
         }
         <3> {
-          !GND = bool^0 = null<3>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = null<3>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = null<3>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = null<3>::!Vdd (2) @[ supply_high port-alias ] 
           N = pint^0 value: 3
-          x = bool^0 = null<3>::x (3) 
-          y = bool^0 = null<3>::y (4) 
+          x = bool^0 = null<3>::x (3) @[ loc-FO- loc-FO+ ] 
+          y = bool^0 = null<3>::y (4) @[ loc-FI- loc-FI+ ] 
           Created state:
           bool instance pool: (2 ports, 2 local, 0 mapped)
-          1	null<3>::!GND @[ supply_low ]	
-          2	null<3>::!Vdd @[ supply_high ]	
-          3	null<3>::x	
-          4	null<3>::y	
+          1	null<3>::!GND @[ supply_low port-alias ]	
+          2	null<3>::!Vdd @[ supply_high port-alias ]	
+          3	null<3>::x @[ loc-FO- loc-FO+ ]	
+          4	null<3>::y @[ loc-FI- loc-FI+ ]	
           resolved prs:
           x -> y-
           ~x -> y+

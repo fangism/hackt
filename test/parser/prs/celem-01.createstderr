@@ -102,18 +102,18 @@ In namespace "", we have: {
         ~a & ~b -> _o+
         }
       footprint: {
-        !GND = bool^0 = celem2inv<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = celem2inv<>::!Vdd (2) @[ supply_high ] 
-        _o = bool^0 = celem2inv<>::_o (5) 
-        a = bool^0 = celem2inv<>::a (3) 
-        b = bool^0 = celem2inv<>::b (4) 
+        !GND = bool^0 = celem2inv<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = celem2inv<>::!Vdd (2) @[ supply_high port-alias ] 
+        _o = bool^0 = celem2inv<>::_o (5) @[ port-alias loc-FI- loc-FI+ ] 
+        a = bool^0 = celem2inv<>::a (3) @[ port-alias loc-FO- loc-FO+ ] 
+        b = bool^0 = celem2inv<>::b (4) @[ port-alias loc-FO- loc-FO+ ] 
         Created state:
         bool instance pool: (5 ports, 0 local, 0 mapped)
-        1	celem2inv<>::!GND @[ supply_low ]	
-        2	celem2inv<>::!Vdd @[ supply_high ]	
-        3	celem2inv<>::a	
-        4	celem2inv<>::b	
-        5	celem2inv<>::_o	
+        1	celem2inv<>::!GND @[ supply_low port-alias ]	
+        2	celem2inv<>::!Vdd @[ supply_high port-alias ]	
+        3	celem2inv<>::a @[ port-alias loc-FO- loc-FO+ ]	
+        4	celem2inv<>::b @[ port-alias loc-FO- loc-FO+ ]	
+        5	celem2inv<>::_o @[ port-alias loc-FI- loc-FI+ ]	
         resolved prs:
         a & b -> _o-
         ~a & ~b -> _o+
@@ -134,9 +134,9 @@ footprint: {
   c = process celem2inv<>^0 = c (1) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    a = bool^0 = c.a (3) 
-    b = bool^0 = c.b (4) 
-    _o = bool^0 = c._o (5) 
+    a = bool^0 = c.a (3) @[ sub-FO- sub-FO+ ] 
+    b = bool^0 = c.b (4) @[ sub-FO- sub-FO+ ] 
+    _o = bool^0 = c._o (5) @[ sub-FI- sub-FI+ ] 
   )
   Created state:
   process instance pool: (0 ports, 1 local, 0 mapped)
@@ -145,7 +145,7 @@ footprint: {
   bool instance pool: (0 ports, 5 local, 0 mapped)
   1	!GND @[ supply_low ]	
   2	!Vdd @[ supply_high ]	
-  3	c.a	
-  4	c.b	
-  5	c._o	
+  3	c.a @[ sub-FO- sub-FO+ ]	
+  4	c.b @[ sub-FO- sub-FO+ ]	
+  5	c._o @[ sub-FI- sub-FI+ ]	
 }

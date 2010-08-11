@@ -305,94 +305,94 @@ In namespace "", we have: {
         ]
       footprint collection: {
         <true> {
-          !GND = bool^0 = doh<true>::!GND (14) @[ supply_low ] 
-          !Vdd = bool^0 = doh<true>::!Vdd (15) @[ supply_high ] 
+          !GND = bool^0 = doh<true>::!GND (14) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = doh<true>::!Vdd (15) @[ supply_high port-alias ] 
           Q = pbool^0 value: 1
           co = process e1of<2>^0 = doh<true>::co (5) (
             d = bool^1
               {
-                [0] = doh<true>::co.d[0] (8) 
-                [1] = doh<true>::co.d[1] (9) 
+                [0] = doh<true>::co.d[0] (8) @[ port-alias ] 
+                [1] = doh<true>::co.d[1] (9) @[ port-alias ] 
               }
-            e = bool^0 = doh<true>::co.e (10) 
+            e = bool^0 = doh<true>::co.e (10) @[ port-alias ] 
           )
           fa0 = process foo<>^0 = doh<true>::fa0 (7) (
-            !GND = bool^0 = doh<true>::!GND (14) @[ supply_low ] 
-            !Vdd = bool^0 = doh<true>::!Vdd (15) @[ supply_high ] 
+            !GND = bool^0 = doh<true>::!GND (14) @[ supply_low port-alias ] 
+            !Vdd = bool^0 = doh<true>::!Vdd (15) @[ supply_high port-alias ] 
             g = process globals<>^0 = doh<true>::g (1) 
             x = process e1of<2>^0 = doh<true>::x (2) (
               d = bool^1
                 {
-                  [0] = doh<true>::x.d[0] (1) 
-                  [1] = doh<true>::x.d[1] (2) 
+                  [0] = doh<true>::x.d[0] (1) @[ port-alias ] 
+                  [1] = doh<true>::x.d[1] (2) @[ port-alias ] 
                 }
-              e = bool^0 = doh<true>::x.e (3) 
+              e = bool^0 = doh<true>::x.e (3) @[ port-alias ] 
             )
             y = process e1of<2>^0 = doh<true>::y (3) (
               d = bool^1
                 {
-                  [0] = doh<true>::y.d[0] (4) 
-                  [1] = doh<true>::y.d[1] (5) 
+                  [0] = doh<true>::y.d[0] (4) @[ port-alias ] 
+                  [1] = doh<true>::y.d[1] (5) @[ port-alias ] 
                 }
-              e = bool^0 = doh<true>::x.e (3) 
+              e = bool^0 = doh<true>::x.e (3) @[ port-alias ] 
             )
             z = process e1of<2>^0 = doh<true>::z (4) (
               d = bool^1
                 {
-                  [0] = doh<true>::z.d[0] (6) 
-                  [1] = doh<true>::z.d[1] (7) 
+                  [0] = doh<true>::z.d[0] (6) @[ port-alias ] 
+                  [1] = doh<true>::z.d[1] (7) @[ port-alias ] 
                 }
-              e = bool^0 = doh<true>::x.e (3) 
+              e = bool^0 = doh<true>::x.e (3) @[ port-alias ] 
             )
             co = process e1of<2>^0 = doh<true>::co (5) (
               d = bool^1
                 {
-                  [0] = doh<true>::co.d[0] (8) 
-                  [1] = doh<true>::co.d[1] (9) 
+                  [0] = doh<true>::co.d[0] (8) @[ port-alias ] 
+                  [1] = doh<true>::co.d[1] (9) @[ port-alias ] 
                 }
-              e = bool^0 = doh<true>::co.e (10) 
+              e = bool^0 = doh<true>::co.e (10) @[ port-alias ] 
             )
             so = process e1of<2>^0 = doh<true>::so (6) (
               d = bool^1
                 {
-                  [0] = doh<true>::so.d[0] (11) 
-                  [1] = doh<true>::so.d[1] (12) 
+                  [0] = doh<true>::so.d[0] (11) @[ port-alias ] 
+                  [1] = doh<true>::so.d[1] (12) @[ port-alias ] 
                 }
-              e = bool^0 = doh<true>::so.e (13) 
+              e = bool^0 = doh<true>::so.e (13) @[ port-alias ] 
             )
           )
           g = process globals<>^0 = doh<true>::g (1) 
           so = process e1of<2>^0 = doh<true>::so (6) (
             d = bool^1
               {
-                [0] = doh<true>::so.d[0] (11) 
-                [1] = doh<true>::so.d[1] (12) 
+                [0] = doh<true>::so.d[0] (11) @[ port-alias ] 
+                [1] = doh<true>::so.d[1] (12) @[ port-alias ] 
               }
-            e = bool^0 = doh<true>::so.e (13) 
+            e = bool^0 = doh<true>::so.e (13) @[ port-alias ] 
           )
           x = process e1of<2>^0 = doh<true>::x (2) (
             d = bool^1
               {
-                [0] = doh<true>::x.d[0] (1) 
-                [1] = doh<true>::x.d[1] (2) 
+                [0] = doh<true>::x.d[0] (1) @[ port-alias ] 
+                [1] = doh<true>::x.d[1] (2) @[ port-alias ] 
               }
-            e = bool^0 = doh<true>::x.e (3) 
+            e = bool^0 = doh<true>::x.e (3) @[ port-alias ] 
           )
           y = process e1of<2>^0 = doh<true>::y (3) (
             d = bool^1
               {
-                [0] = doh<true>::y.d[0] (4) 
-                [1] = doh<true>::y.d[1] (5) 
+                [0] = doh<true>::y.d[0] (4) @[ port-alias ] 
+                [1] = doh<true>::y.d[1] (5) @[ port-alias ] 
               }
-            e = bool^0 = doh<true>::x.e (3) 
+            e = bool^0 = doh<true>::x.e (3) @[ port-alias ] 
           )
           z = process e1of<2>^0 = doh<true>::z (4) (
             d = bool^1
               {
-                [0] = doh<true>::z.d[0] (6) 
-                [1] = doh<true>::z.d[1] (7) 
+                [0] = doh<true>::z.d[0] (6) @[ port-alias ] 
+                [1] = doh<true>::z.d[1] (7) @[ port-alias ] 
               }
-            e = bool^0 = doh<true>::x.e (3) 
+            e = bool^0 = doh<true>::x.e (3) @[ port-alias ] 
           )
           Created state:
           process instance pool: (6 ports, 1 local, 0 mapped)
@@ -411,23 +411,23 @@ In namespace "", we have: {
             process: 1,2,3,4,5,6
             bool: 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
           bool instance pool: (15 ports, 0 local, 0 mapped)
-          1	doh<true>::x.d[0]	
-          2	doh<true>::x.d[1]	
-          3	doh<true>::x.e	
-          4	doh<true>::y.d[0]	
-          5	doh<true>::y.d[1]	
-          6	doh<true>::z.d[0]	
-          7	doh<true>::z.d[1]	
-          8	doh<true>::co.d[0]	
-          9	doh<true>::co.d[1]	
-          10	doh<true>::co.e	
-          11	doh<true>::so.d[0]	
-          12	doh<true>::so.d[1]	
-          13	doh<true>::so.e	
-          14	doh<true>::!GND @[ supply_low ]	
-          15	doh<true>::!Vdd @[ supply_high ]	
+          1	doh<true>::x.d[0] @[ port-alias ]	
+          2	doh<true>::x.d[1] @[ port-alias ]	
+          3	doh<true>::x.e @[ port-alias ]	
+          4	doh<true>::y.d[0] @[ port-alias ]	
+          5	doh<true>::y.d[1] @[ port-alias ]	
+          6	doh<true>::z.d[0] @[ port-alias ]	
+          7	doh<true>::z.d[1] @[ port-alias ]	
+          8	doh<true>::co.d[0] @[ port-alias ]	
+          9	doh<true>::co.d[1] @[ port-alias ]	
+          10	doh<true>::co.e @[ port-alias ]	
+          11	doh<true>::so.d[0] @[ port-alias ]	
+          12	doh<true>::so.d[1] @[ port-alias ]	
+          13	doh<true>::so.e @[ port-alias ]	
+          14	doh<true>::!GND @[ supply_low port-alias ]	
+          15	doh<true>::!Vdd @[ supply_high port-alias ]	
           bool port aliases:
-          3: doh<true>::x.e = doh<true>::y.e = doh<true>::z.e
+          3: doh<true>::x.e = doh<true>::y.e = doh<true>::z.e @[ port-alias ]
         }
       }
       }
@@ -456,15 +456,15 @@ In namespace "", we have: {
           N = pint^0 value: 2
           d = bool^1
             {
-              [0] = e1of<2>::d[0] (2) 
-              [1] = e1of<2>::d[1] (3) 
+              [0] = e1of<2>::d[0] (2) @[ port-alias ] 
+              [1] = e1of<2>::d[1] (3) @[ port-alias ] 
             }
-          e = bool^0 = e1of<2>::e (1) 
+          e = bool^0 = e1of<2>::e (1) @[ port-alias ] 
           Created state:
           bool instance pool: (3 ports, 0 local, 0 mapped)
-          1	e1of<2>::e	
-          2	e1of<2>::d[0]	
-          3	e1of<2>::d[1]	
+          1	e1of<2>::e @[ port-alias ]	
+          2	e1of<2>::d[0] @[ port-alias ]	
+          3	e1of<2>::d[1] @[ port-alias ]	
           resolved specs:
           exclhi({d[0],d[1]})
         }
@@ -508,49 +508,49 @@ In namespace "", we have: {
         bool<> ie
         x.e = y.e = z.e = ie;
       footprint: {
-        !GND = bool^0 = foo<>::!GND (14) @[ supply_low ] 
-        !Vdd = bool^0 = foo<>::!Vdd (15) @[ supply_high ] 
+        !GND = bool^0 = foo<>::!GND (14) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = foo<>::!Vdd (15) @[ supply_high port-alias ] 
         co = process e1of<2>^0 = foo<>::co (5) (
           d = bool^1
             {
-              [0] = foo<>::co.d[0] (8) 
-              [1] = foo<>::co.d[1] (9) 
+              [0] = foo<>::co.d[0] (8) @[ port-alias ] 
+              [1] = foo<>::co.d[1] (9) @[ port-alias ] 
             }
-          e = bool^0 = foo<>::co.e (10) 
+          e = bool^0 = foo<>::co.e (10) @[ port-alias ] 
         )
         g = process globals<>^0 = foo<>::g (1) 
-        ie = bool^0 = foo<>::ie (3) 
+        ie = bool^0 = foo<>::ie (3) @[ port-alias ] 
         so = process e1of<2>^0 = foo<>::so (6) (
           d = bool^1
             {
-              [0] = foo<>::so.d[0] (11) 
-              [1] = foo<>::so.d[1] (12) 
+              [0] = foo<>::so.d[0] (11) @[ port-alias ] 
+              [1] = foo<>::so.d[1] (12) @[ port-alias ] 
             }
-          e = bool^0 = foo<>::so.e (13) 
+          e = bool^0 = foo<>::so.e (13) @[ port-alias ] 
         )
         x = process e1of<2>^0 = foo<>::x (2) (
           d = bool^1
             {
-              [0] = foo<>::x.d[0] (1) 
-              [1] = foo<>::x.d[1] (2) 
+              [0] = foo<>::x.d[0] (1) @[ port-alias ] 
+              [1] = foo<>::x.d[1] (2) @[ port-alias ] 
             }
-          e = bool^0 = foo<>::ie (3) 
+          e = bool^0 = foo<>::ie (3) @[ port-alias ] 
         )
         y = process e1of<2>^0 = foo<>::y (3) (
           d = bool^1
             {
-              [0] = foo<>::y.d[0] (4) 
-              [1] = foo<>::y.d[1] (5) 
+              [0] = foo<>::y.d[0] (4) @[ port-alias ] 
+              [1] = foo<>::y.d[1] (5) @[ port-alias ] 
             }
-          e = bool^0 = foo<>::ie (3) 
+          e = bool^0 = foo<>::ie (3) @[ port-alias ] 
         )
         z = process e1of<2>^0 = foo<>::z (4) (
           d = bool^1
             {
-              [0] = foo<>::z.d[0] (6) 
-              [1] = foo<>::z.d[1] (7) 
+              [0] = foo<>::z.d[0] (6) @[ port-alias ] 
+              [1] = foo<>::z.d[1] (7) @[ port-alias ] 
             }
-          e = bool^0 = foo<>::ie (3) 
+          e = bool^0 = foo<>::ie (3) @[ port-alias ] 
         )
         Created state:
         process instance pool: (6 ports, 0 local, 0 mapped)
@@ -566,23 +566,23 @@ In namespace "", we have: {
         6	foo<>::so	e1of<2>
           bool: 13,11,12
         bool instance pool: (15 ports, 0 local, 0 mapped)
-        1	foo<>::x.d[0]	
-        2	foo<>::x.d[1]	
-        3	foo<>::ie	
-        4	foo<>::y.d[0]	
-        5	foo<>::y.d[1]	
-        6	foo<>::z.d[0]	
-        7	foo<>::z.d[1]	
-        8	foo<>::co.d[0]	
-        9	foo<>::co.d[1]	
-        10	foo<>::co.e	
-        11	foo<>::so.d[0]	
-        12	foo<>::so.d[1]	
-        13	foo<>::so.e	
-        14	foo<>::!GND @[ supply_low ]	
-        15	foo<>::!Vdd @[ supply_high ]	
+        1	foo<>::x.d[0] @[ port-alias ]	
+        2	foo<>::x.d[1] @[ port-alias ]	
+        3	foo<>::ie @[ port-alias ]	
+        4	foo<>::y.d[0] @[ port-alias ]	
+        5	foo<>::y.d[1] @[ port-alias ]	
+        6	foo<>::z.d[0] @[ port-alias ]	
+        7	foo<>::z.d[1] @[ port-alias ]	
+        8	foo<>::co.d[0] @[ port-alias ]	
+        9	foo<>::co.d[1] @[ port-alias ]	
+        10	foo<>::co.e @[ port-alias ]	
+        11	foo<>::so.d[0] @[ port-alias ]	
+        12	foo<>::so.d[1] @[ port-alias ]	
+        13	foo<>::so.e @[ port-alias ]	
+        14	foo<>::!GND @[ supply_low port-alias ]	
+        15	foo<>::!Vdd @[ supply_high port-alias ]	
         bool port aliases:
-        3: foo<>::x.e = foo<>::y.e = foo<>::z.e
+        3: foo<>::x.e = foo<>::y.e = foo<>::z.e @[ port-alias ]
       }
       }
 
@@ -631,93 +631,93 @@ In namespace "", we have: {
         foo<> top_fa
         top_fa ( , , g, x, y, z, co, so);
       footprint: {
-        !GND = bool^0 = top_type<>::!GND (14) @[ supply_low ] 
-        !Vdd = bool^0 = top_type<>::!Vdd (15) @[ supply_high ] 
+        !GND = bool^0 = top_type<>::!GND (14) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = top_type<>::!Vdd (15) @[ supply_high port-alias ] 
         co = process e1of<2>^0 = top_type<>::co (5) (
           d = bool^1
             {
-              [0] = top_type<>::co.d[0] (8) 
-              [1] = top_type<>::co.d[1] (9) 
+              [0] = top_type<>::co.d[0] (8) @[ port-alias ] 
+              [1] = top_type<>::co.d[1] (9) @[ port-alias ] 
             }
-          e = bool^0 = top_type<>::co.e (10) 
+          e = bool^0 = top_type<>::co.e (10) @[ port-alias ] 
         )
         g = process globals<>^0 = top_type<>::g (1) 
         so = process e1of<2>^0 = top_type<>::so (6) (
           d = bool^1
             {
-              [0] = top_type<>::so.d[0] (11) 
-              [1] = top_type<>::so.d[1] (12) 
+              [0] = top_type<>::so.d[0] (11) @[ port-alias ] 
+              [1] = top_type<>::so.d[1] (12) @[ port-alias ] 
             }
-          e = bool^0 = top_type<>::so.e (13) 
+          e = bool^0 = top_type<>::so.e (13) @[ port-alias ] 
         )
         top_fa = process foo<>^0 = top_type<>::top_fa (7) (
-          !GND = bool^0 = top_type<>::!GND (14) @[ supply_low ] 
-          !Vdd = bool^0 = top_type<>::!Vdd (15) @[ supply_high ] 
+          !GND = bool^0 = top_type<>::!GND (14) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = top_type<>::!Vdd (15) @[ supply_high port-alias ] 
           g = process globals<>^0 = top_type<>::g (1) 
           x = process e1of<2>^0 = top_type<>::x (2) (
             d = bool^1
               {
-                [0] = top_type<>::x.d[0] (1) 
-                [1] = top_type<>::x.d[1] (2) 
+                [0] = top_type<>::x.d[0] (1) @[ port-alias ] 
+                [1] = top_type<>::x.d[1] (2) @[ port-alias ] 
               }
-            e = bool^0 = top_type<>::x.e (3) 
+            e = bool^0 = top_type<>::x.e (3) @[ port-alias ] 
           )
           y = process e1of<2>^0 = top_type<>::y (3) (
             d = bool^1
               {
-                [0] = top_type<>::y.d[0] (4) 
-                [1] = top_type<>::y.d[1] (5) 
+                [0] = top_type<>::y.d[0] (4) @[ port-alias ] 
+                [1] = top_type<>::y.d[1] (5) @[ port-alias ] 
               }
-            e = bool^0 = top_type<>::x.e (3) 
+            e = bool^0 = top_type<>::x.e (3) @[ port-alias ] 
           )
           z = process e1of<2>^0 = top_type<>::z (4) (
             d = bool^1
               {
-                [0] = top_type<>::z.d[0] (6) 
-                [1] = top_type<>::z.d[1] (7) 
+                [0] = top_type<>::z.d[0] (6) @[ port-alias ] 
+                [1] = top_type<>::z.d[1] (7) @[ port-alias ] 
               }
-            e = bool^0 = top_type<>::x.e (3) 
+            e = bool^0 = top_type<>::x.e (3) @[ port-alias ] 
           )
           co = process e1of<2>^0 = top_type<>::co (5) (
             d = bool^1
               {
-                [0] = top_type<>::co.d[0] (8) 
-                [1] = top_type<>::co.d[1] (9) 
+                [0] = top_type<>::co.d[0] (8) @[ port-alias ] 
+                [1] = top_type<>::co.d[1] (9) @[ port-alias ] 
               }
-            e = bool^0 = top_type<>::co.e (10) 
+            e = bool^0 = top_type<>::co.e (10) @[ port-alias ] 
           )
           so = process e1of<2>^0 = top_type<>::so (6) (
             d = bool^1
               {
-                [0] = top_type<>::so.d[0] (11) 
-                [1] = top_type<>::so.d[1] (12) 
+                [0] = top_type<>::so.d[0] (11) @[ port-alias ] 
+                [1] = top_type<>::so.d[1] (12) @[ port-alias ] 
               }
-            e = bool^0 = top_type<>::so.e (13) 
+            e = bool^0 = top_type<>::so.e (13) @[ port-alias ] 
           )
         )
         x = process e1of<2>^0 = top_type<>::x (2) (
           d = bool^1
             {
-              [0] = top_type<>::x.d[0] (1) 
-              [1] = top_type<>::x.d[1] (2) 
+              [0] = top_type<>::x.d[0] (1) @[ port-alias ] 
+              [1] = top_type<>::x.d[1] (2) @[ port-alias ] 
             }
-          e = bool^0 = top_type<>::x.e (3) 
+          e = bool^0 = top_type<>::x.e (3) @[ port-alias ] 
         )
         y = process e1of<2>^0 = top_type<>::y (3) (
           d = bool^1
             {
-              [0] = top_type<>::y.d[0] (4) 
-              [1] = top_type<>::y.d[1] (5) 
+              [0] = top_type<>::y.d[0] (4) @[ port-alias ] 
+              [1] = top_type<>::y.d[1] (5) @[ port-alias ] 
             }
-          e = bool^0 = top_type<>::x.e (3) 
+          e = bool^0 = top_type<>::x.e (3) @[ port-alias ] 
         )
         z = process e1of<2>^0 = top_type<>::z (4) (
           d = bool^1
             {
-              [0] = top_type<>::z.d[0] (6) 
-              [1] = top_type<>::z.d[1] (7) 
+              [0] = top_type<>::z.d[0] (6) @[ port-alias ] 
+              [1] = top_type<>::z.d[1] (7) @[ port-alias ] 
             }
-          e = bool^0 = top_type<>::x.e (3) 
+          e = bool^0 = top_type<>::x.e (3) @[ port-alias ] 
         )
         Created state:
         process instance pool: (6 ports, 1 local, 0 mapped)
@@ -736,23 +736,23 @@ In namespace "", we have: {
           process: 1,2,3,4,5,6
           bool: 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
         bool instance pool: (15 ports, 0 local, 0 mapped)
-        1	top_type<>::x.d[0]	
-        2	top_type<>::x.d[1]	
-        3	top_type<>::x.e	
-        4	top_type<>::y.d[0]	
-        5	top_type<>::y.d[1]	
-        6	top_type<>::z.d[0]	
-        7	top_type<>::z.d[1]	
-        8	top_type<>::co.d[0]	
-        9	top_type<>::co.d[1]	
-        10	top_type<>::co.e	
-        11	top_type<>::so.d[0]	
-        12	top_type<>::so.d[1]	
-        13	top_type<>::so.e	
-        14	top_type<>::!GND @[ supply_low ]	
-        15	top_type<>::!Vdd @[ supply_high ]	
+        1	top_type<>::x.d[0] @[ port-alias ]	
+        2	top_type<>::x.d[1] @[ port-alias ]	
+        3	top_type<>::x.e @[ port-alias ]	
+        4	top_type<>::y.d[0] @[ port-alias ]	
+        5	top_type<>::y.d[1] @[ port-alias ]	
+        6	top_type<>::z.d[0] @[ port-alias ]	
+        7	top_type<>::z.d[1] @[ port-alias ]	
+        8	top_type<>::co.d[0] @[ port-alias ]	
+        9	top_type<>::co.d[1] @[ port-alias ]	
+        10	top_type<>::co.e @[ port-alias ]	
+        11	top_type<>::so.d[0] @[ port-alias ]	
+        12	top_type<>::so.d[1] @[ port-alias ]	
+        13	top_type<>::so.e @[ port-alias ]	
+        14	top_type<>::!GND @[ supply_low port-alias ]	
+        15	top_type<>::!Vdd @[ supply_high port-alias ]	
         bool port aliases:
-        3: top_type<>::x.e = top_type<>::y.e = top_type<>::z.e
+        3: top_type<>::x.e = top_type<>::y.e = top_type<>::z.e @[ port-alias ]
       }
       }
 
@@ -794,93 +794,93 @@ In namespace "", we have: {
         top_cpa<true>
         top_cpa ( , , g, x, y, z, co, so);
       footprint: {
-        !GND = bool^0 = top_type2<>::!GND (14) @[ supply_low ] 
-        !Vdd = bool^0 = top_type2<>::!Vdd (15) @[ supply_high ] 
+        !GND = bool^0 = top_type2<>::!GND (14) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = top_type2<>::!Vdd (15) @[ supply_high port-alias ] 
         co = process e1of<2>^0 = top_type2<>::co (5) (
           d = bool^1
             {
-              [0] = top_type2<>::co.d[0] (8) 
-              [1] = top_type2<>::co.d[1] (9) 
+              [0] = top_type2<>::co.d[0] (8) @[ port-alias ] 
+              [1] = top_type2<>::co.d[1] (9) @[ port-alias ] 
             }
-          e = bool^0 = top_type2<>::co.e (10) 
+          e = bool^0 = top_type2<>::co.e (10) @[ port-alias ] 
         )
         g = process globals<>^0 = top_type2<>::g (1) 
         so = process e1of<2>^0 = top_type2<>::so (6) (
           d = bool^1
             {
-              [0] = top_type2<>::so.d[0] (11) 
-              [1] = top_type2<>::so.d[1] (12) 
+              [0] = top_type2<>::so.d[0] (11) @[ port-alias ] 
+              [1] = top_type2<>::so.d[1] (12) @[ port-alias ] 
             }
-          e = bool^0 = top_type2<>::so.e (13) 
+          e = bool^0 = top_type2<>::so.e (13) @[ port-alias ] 
         )
         top_cpa = process doh<>^0<true> = top_type2<>::top_cpa (7) (
-          !GND = bool^0 = top_type2<>::!GND (14) @[ supply_low ] 
-          !Vdd = bool^0 = top_type2<>::!Vdd (15) @[ supply_high ] 
+          !GND = bool^0 = top_type2<>::!GND (14) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = top_type2<>::!Vdd (15) @[ supply_high port-alias ] 
           g = process globals<>^0 = top_type2<>::g (1) 
           x = process e1of<2>^0 = top_type2<>::x (2) (
             d = bool^1
               {
-                [0] = top_type2<>::x.d[0] (1) 
-                [1] = top_type2<>::x.d[1] (2) 
+                [0] = top_type2<>::x.d[0] (1) @[ port-alias ] 
+                [1] = top_type2<>::x.d[1] (2) @[ port-alias ] 
               }
-            e = bool^0 = top_type2<>::x.e (3) 
+            e = bool^0 = top_type2<>::x.e (3) @[ port-alias ] 
           )
           y = process e1of<2>^0 = top_type2<>::y (3) (
             d = bool^1
               {
-                [0] = top_type2<>::y.d[0] (4) 
-                [1] = top_type2<>::y.d[1] (5) 
+                [0] = top_type2<>::y.d[0] (4) @[ port-alias ] 
+                [1] = top_type2<>::y.d[1] (5) @[ port-alias ] 
               }
-            e = bool^0 = top_type2<>::x.e (3) 
+            e = bool^0 = top_type2<>::x.e (3) @[ port-alias ] 
           )
           z = process e1of<2>^0 = top_type2<>::z (4) (
             d = bool^1
               {
-                [0] = top_type2<>::z.d[0] (6) 
-                [1] = top_type2<>::z.d[1] (7) 
+                [0] = top_type2<>::z.d[0] (6) @[ port-alias ] 
+                [1] = top_type2<>::z.d[1] (7) @[ port-alias ] 
               }
-            e = bool^0 = top_type2<>::x.e (3) 
+            e = bool^0 = top_type2<>::x.e (3) @[ port-alias ] 
           )
           co = process e1of<2>^0 = top_type2<>::co (5) (
             d = bool^1
               {
-                [0] = top_type2<>::co.d[0] (8) 
-                [1] = top_type2<>::co.d[1] (9) 
+                [0] = top_type2<>::co.d[0] (8) @[ port-alias ] 
+                [1] = top_type2<>::co.d[1] (9) @[ port-alias ] 
               }
-            e = bool^0 = top_type2<>::co.e (10) 
+            e = bool^0 = top_type2<>::co.e (10) @[ port-alias ] 
           )
           so = process e1of<2>^0 = top_type2<>::so (6) (
             d = bool^1
               {
-                [0] = top_type2<>::so.d[0] (11) 
-                [1] = top_type2<>::so.d[1] (12) 
+                [0] = top_type2<>::so.d[0] (11) @[ port-alias ] 
+                [1] = top_type2<>::so.d[1] (12) @[ port-alias ] 
               }
-            e = bool^0 = top_type2<>::so.e (13) 
+            e = bool^0 = top_type2<>::so.e (13) @[ port-alias ] 
           )
         )
         x = process e1of<2>^0 = top_type2<>::x (2) (
           d = bool^1
             {
-              [0] = top_type2<>::x.d[0] (1) 
-              [1] = top_type2<>::x.d[1] (2) 
+              [0] = top_type2<>::x.d[0] (1) @[ port-alias ] 
+              [1] = top_type2<>::x.d[1] (2) @[ port-alias ] 
             }
-          e = bool^0 = top_type2<>::x.e (3) 
+          e = bool^0 = top_type2<>::x.e (3) @[ port-alias ] 
         )
         y = process e1of<2>^0 = top_type2<>::y (3) (
           d = bool^1
             {
-              [0] = top_type2<>::y.d[0] (4) 
-              [1] = top_type2<>::y.d[1] (5) 
+              [0] = top_type2<>::y.d[0] (4) @[ port-alias ] 
+              [1] = top_type2<>::y.d[1] (5) @[ port-alias ] 
             }
-          e = bool^0 = top_type2<>::x.e (3) 
+          e = bool^0 = top_type2<>::x.e (3) @[ port-alias ] 
         )
         z = process e1of<2>^0 = top_type2<>::z (4) (
           d = bool^1
             {
-              [0] = top_type2<>::z.d[0] (6) 
-              [1] = top_type2<>::z.d[1] (7) 
+              [0] = top_type2<>::z.d[0] (6) @[ port-alias ] 
+              [1] = top_type2<>::z.d[1] (7) @[ port-alias ] 
             }
-          e = bool^0 = top_type2<>::x.e (3) 
+          e = bool^0 = top_type2<>::x.e (3) @[ port-alias ] 
         )
         Created state:
         process instance pool: (6 ports, 1 local, 1 mapped)
@@ -902,23 +902,23 @@ In namespace "", we have: {
           (7 -> 0)
           (8 -> 1)
         bool instance pool: (15 ports, 0 local, 0 mapped)
-        1	top_type2<>::x.d[0]	
-        2	top_type2<>::x.d[1]	
-        3	top_type2<>::x.e	
-        4	top_type2<>::y.d[0]	
-        5	top_type2<>::y.d[1]	
-        6	top_type2<>::z.d[0]	
-        7	top_type2<>::z.d[1]	
-        8	top_type2<>::co.d[0]	
-        9	top_type2<>::co.d[1]	
-        10	top_type2<>::co.e	
-        11	top_type2<>::so.d[0]	
-        12	top_type2<>::so.d[1]	
-        13	top_type2<>::so.e	
-        14	top_type2<>::!GND @[ supply_low ]	
-        15	top_type2<>::!Vdd @[ supply_high ]	
+        1	top_type2<>::x.d[0] @[ port-alias ]	
+        2	top_type2<>::x.d[1] @[ port-alias ]	
+        3	top_type2<>::x.e @[ port-alias ]	
+        4	top_type2<>::y.d[0] @[ port-alias ]	
+        5	top_type2<>::y.d[1] @[ port-alias ]	
+        6	top_type2<>::z.d[0] @[ port-alias ]	
+        7	top_type2<>::z.d[1] @[ port-alias ]	
+        8	top_type2<>::co.d[0] @[ port-alias ]	
+        9	top_type2<>::co.d[1] @[ port-alias ]	
+        10	top_type2<>::co.e @[ port-alias ]	
+        11	top_type2<>::so.d[0] @[ port-alias ]	
+        12	top_type2<>::so.d[1] @[ port-alias ]	
+        13	top_type2<>::so.e @[ port-alias ]	
+        14	top_type2<>::!GND @[ supply_low port-alias ]	
+        15	top_type2<>::!Vdd @[ supply_high port-alias ]	
         bool port aliases:
-        3: top_type2<>::x.e = top_type2<>::y.e = top_type2<>::z.e
+        3: top_type2<>::x.e = top_type2<>::y.e = top_type2<>::z.e @[ port-alias ]
       }
       }
 

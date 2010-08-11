@@ -176,8 +176,8 @@ In namespace "", we have: {
           ]
         }
       footprint: {
-        !GND = bool^0 = send_indexed<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = send_indexed<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = send_indexed<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = send_indexed<>::!Vdd (2) @[ supply_high port-alias ] 
         index = channel chan?(int<1>)^1
           {
             [0] = send_indexed<>::index[0] (2) 
@@ -202,8 +202,8 @@ In namespace "", we have: {
         1	send_indexed<>::y	
         2	send_indexed<>::z	
         bool instance pool: (2 ports, 0 local, 0 mapped)
-        1	send_indexed<>::!GND @[ supply_low ]	
-        2	send_indexed<>::!Vdd @[ supply_high ]	
+        1	send_indexed<>::!GND @[ supply_low port-alias ]	
+        2	send_indexed<>::!Vdd @[ supply_high port-alias ]	
         resolved concurrent actions:
           *[
             sequential: {

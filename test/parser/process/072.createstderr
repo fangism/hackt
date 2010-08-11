@@ -100,8 +100,8 @@ In namespace "", we have: {
         a = b;
       footprint collection: {
         <8> {
-          !GND = bool^0 = foo<8>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = foo<8>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = foo<8>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = foo<8>::!Vdd (2) @[ supply_high port-alias ] 
           N = pint^0 value: 8
           a = int<8>^0 = foo<8>::a (1) 
           b = int<8>^0 = foo<8>::a (1) 
@@ -109,12 +109,12 @@ In namespace "", we have: {
           int instance pool: (1 ports, 0 local, 0 mapped)
           1	foo<8>::a	
           bool instance pool: (2 ports, 0 local, 0 mapped)
-          1	foo<8>::!GND @[ supply_low ]	
-          2	foo<8>::!Vdd @[ supply_high ]	
+          1	foo<8>::!GND @[ supply_low port-alias ]	
+          2	foo<8>::!Vdd @[ supply_high port-alias ]	
         }
         <16> {
-          !GND = bool^0 = foo<16>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = foo<16>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = foo<16>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = foo<16>::!Vdd (2) @[ supply_high port-alias ] 
           N = pint^0 value: 16
           a = int<16>^0 = foo<16>::a (1) 
           b = int<16>^0 = foo<16>::a (1) 
@@ -122,8 +122,8 @@ In namespace "", we have: {
           int instance pool: (1 ports, 0 local, 0 mapped)
           1	foo<16>::a	
           bool instance pool: (2 ports, 0 local, 0 mapped)
-          1	foo<16>::!GND @[ supply_low ]	
-          2	foo<16>::!Vdd @[ supply_high ]	
+          1	foo<16>::!GND @[ supply_low port-alias ]	
+          2	foo<16>::!Vdd @[ supply_high port-alias ]	
         }
       }
       }

@@ -210,8 +210,8 @@ In namespace "", we have: {
         }
       footprint collection: {
         <0> {
-          !GND = bool^0 = send_indexed<0>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = send_indexed<0>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = send_indexed<0>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = send_indexed<0>::!Vdd (2) @[ supply_high port-alias ] 
           I = pint^0 value: 0
           index = channel chan?(int<32>)^0 = send_indexed<0>::index (1) 
           out = channel chan!(int<32>)^0 = send_indexed<0>::out (2) 
@@ -230,8 +230,8 @@ In namespace "", we have: {
           int instance pool: (0 ports, 1 local, 0 mapped)
           1	send_indexed<0>::y	
           bool instance pool: (2 ports, 0 local, 0 mapped)
-          1	send_indexed<0>::!GND @[ supply_low ]	
-          2	send_indexed<0>::!Vdd @[ supply_high ]	
+          1	send_indexed<0>::!GND @[ supply_low port-alias ]	
+          2	send_indexed<0>::!Vdd @[ supply_high port-alias ]	
           resolved concurrent actions:
             *[
               sequential: {
@@ -251,8 +251,8 @@ In namespace "", we have: {
           }
         }
         <1> {
-          !GND = bool^0 = send_indexed<1>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = send_indexed<1>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = send_indexed<1>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = send_indexed<1>::!Vdd (2) @[ supply_high port-alias ] 
           I = pint^0 value: 1
           index = channel chan?(int<32>)^0 = send_indexed<1>::index (1) 
           out = channel chan!(int<32>)^0 = send_indexed<1>::out (2) 
@@ -271,8 +271,8 @@ In namespace "", we have: {
           int instance pool: (0 ports, 1 local, 0 mapped)
           1	send_indexed<1>::y	
           bool instance pool: (2 ports, 0 local, 0 mapped)
-          1	send_indexed<1>::!GND @[ supply_low ]	
-          2	send_indexed<1>::!Vdd @[ supply_high ]	
+          1	send_indexed<1>::!GND @[ supply_low port-alias ]	
+          2	send_indexed<1>::!Vdd @[ supply_high port-alias ]	
           resolved concurrent actions:
             *[
               sequential: {
@@ -292,8 +292,8 @@ In namespace "", we have: {
           }
         }
         <3> {
-          !GND = bool^0 = send_indexed<3>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = send_indexed<3>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = send_indexed<3>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = send_indexed<3>::!Vdd (2) @[ supply_high port-alias ] 
           I = pint^0 value: 3
           index = channel chan?(int<32>)^0 = send_indexed<3>::index (1) 
           out = channel chan!(int<32>)^0 = send_indexed<3>::out (2) 
@@ -312,8 +312,8 @@ In namespace "", we have: {
           int instance pool: (0 ports, 1 local, 0 mapped)
           1	send_indexed<3>::y	
           bool instance pool: (2 ports, 0 local, 0 mapped)
-          1	send_indexed<3>::!GND @[ supply_low ]	
-          2	send_indexed<3>::!Vdd @[ supply_high ]	
+          1	send_indexed<3>::!GND @[ supply_low port-alias ]	
+          2	send_indexed<3>::!Vdd @[ supply_high port-alias ]	
           resolved concurrent actions:
             *[
               sequential: {

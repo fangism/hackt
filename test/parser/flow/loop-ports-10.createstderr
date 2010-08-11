@@ -86,27 +86,27 @@ In namespace "", we have: {
         !GND@[supply=0]
         !Vdd@[supply=1]
       footprint: {
-        !GND = bool^0 = ass<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = ass<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = ass<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = ass<>::!Vdd (2) @[ supply_high port-alias ] 
         q = bool^2
           {
-            [0][0] = ass<>::q[0][0] (3) 
-            [0][1] = ass<>::q[0][1] (4) 
-            [1][0] = ass<>::q[1][0] (5) 
-            [1][1] = ass<>::q[1][1] (6) 
-            [2][0] = ass<>::q[2][0] (7) 
-            [2][1] = ass<>::q[2][1] (8) 
+            [0][0] = ass<>::q[0][0] (3) @[ port-alias ] 
+            [0][1] = ass<>::q[0][1] (4) @[ port-alias ] 
+            [1][0] = ass<>::q[1][0] (5) @[ port-alias ] 
+            [1][1] = ass<>::q[1][1] (6) @[ port-alias ] 
+            [2][0] = ass<>::q[2][0] (7) @[ port-alias ] 
+            [2][1] = ass<>::q[2][1] (8) @[ port-alias ] 
           }
         Created state:
         bool instance pool: (8 ports, 0 local, 0 mapped)
-        1	ass<>::!GND @[ supply_low ]	
-        2	ass<>::!Vdd @[ supply_high ]	
-        3	ass<>::q[0][0]	
-        4	ass<>::q[0][1]	
-        5	ass<>::q[1][0]	
-        6	ass<>::q[1][1]	
-        7	ass<>::q[2][0]	
-        8	ass<>::q[2][1]	
+        1	ass<>::!GND @[ supply_low port-alias ]	
+        2	ass<>::!Vdd @[ supply_high port-alias ]	
+        3	ass<>::q[0][0] @[ port-alias ]	
+        4	ass<>::q[0][1] @[ port-alias ]	
+        5	ass<>::q[1][0] @[ port-alias ]	
+        6	ass<>::q[1][1] @[ port-alias ]	
+        7	ass<>::q[2][0] @[ port-alias ]	
+        8	ass<>::q[2][1] @[ port-alias ]	
       }
       }
 

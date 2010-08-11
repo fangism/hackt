@@ -114,16 +114,16 @@ In namespace "", we have: {
         ~a<30,3> -> b+
         }
       footprint: {
-        !GND = bool^0 = sized_prs<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = sized_prs<>::!Vdd (2) @[ supply_high ] 
-        a = bool^0 = sized_prs<>::a (3) 
-        b = bool^0 = sized_prs<>::b (4) 
+        !GND = bool^0 = sized_prs<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = sized_prs<>::!Vdd (2) @[ supply_high port-alias ] 
+        a = bool^0 = sized_prs<>::a (3) @[ port-alias loc-FO- loc-FO+ ] 
+        b = bool^0 = sized_prs<>::b (4) @[ port-alias loc-FI- loc-FI+ ] 
         Created state:
         bool instance pool: (4 ports, 0 local, 0 mapped)
-        1	sized_prs<>::!GND @[ supply_low ]	
-        2	sized_prs<>::!Vdd @[ supply_high ]	
-        3	sized_prs<>::a	
-        4	sized_prs<>::b	
+        1	sized_prs<>::!GND @[ supply_low port-alias ]	
+        2	sized_prs<>::!Vdd @[ supply_high port-alias ]	
+        3	sized_prs<>::a @[ port-alias loc-FO- loc-FO+ ]	
+        4	sized_prs<>::b @[ port-alias loc-FI- loc-FI+ ]	
         resolved prs:
         a<10> -> b-
         ~a<15> -> b+
@@ -148,8 +148,8 @@ footprint: {
   z = process sized_prs<>^0 = z (1) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    a = bool^0 = z.a (3) 
-    b = bool^0 = z.b (4) 
+    a = bool^0 = z.a (3) @[ sub-FO- sub-FO+ ] 
+    b = bool^0 = z.b (4) @[ sub-FI- sub-FI+ ] 
   )
   Created state:
   process instance pool: (0 ports, 1 local, 0 mapped)
@@ -158,6 +158,6 @@ footprint: {
   bool instance pool: (0 ports, 4 local, 0 mapped)
   1	!GND @[ supply_low ]	
   2	!Vdd @[ supply_high ]	
-  3	z.a	
-  4	z.b	
+  3	z.a @[ sub-FO- sub-FO+ ]	
+  4	z.b @[ sub-FI- sub-FI+ ]	
 }

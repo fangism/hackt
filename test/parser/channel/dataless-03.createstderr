@@ -96,8 +96,8 @@ In namespace "", we have: {
         !GND@[supply=0]
         !Vdd@[supply=1]
       footprint: {
-        !GND = bool^0 = boring<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = boring<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = boring<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = boring<>::!Vdd (2) @[ supply_high port-alias ] 
         in = channel chan?()^0 = boring<>::in (1) 
         out = channel chan!()^0 = boring<>::out (2) 
         peek = channel chan()^0 = boring<>::peek (3) 
@@ -107,8 +107,8 @@ In namespace "", we have: {
         2	boring<>::out	
         3	boring<>::peek	
         bool instance pool: (2 ports, 0 local, 0 mapped)
-        1	boring<>::!GND @[ supply_low ]	
-        2	boring<>::!Vdd @[ supply_high ]	
+        1	boring<>::!GND @[ supply_low port-alias ]	
+        2	boring<>::!Vdd @[ supply_high port-alias ]	
       }
       }
 

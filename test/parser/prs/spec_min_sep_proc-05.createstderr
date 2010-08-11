@@ -137,16 +137,16 @@ In namespace "", we have: {
         ~a -> b+
         }
       footprint: {
-        !GND = bool^0 = inv1<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = inv1<>::!Vdd (2) @[ supply_high ] 
-        a = bool^0 = inv1<>::a (3) 
-        b = bool^0 = inv1<>::b (4) 
+        !GND = bool^0 = inv1<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = inv1<>::!Vdd (2) @[ supply_high port-alias ] 
+        a = bool^0 = inv1<>::a (3) @[ port-alias loc-FO- loc-FO+ ] 
+        b = bool^0 = inv1<>::b (4) @[ port-alias loc-FI- loc-FI+ ] 
         Created state:
         bool instance pool: (4 ports, 0 local, 0 mapped)
-        1	inv1<>::!GND @[ supply_low ]	
-        2	inv1<>::!Vdd @[ supply_high ]	
-        3	inv1<>::a	
-        4	inv1<>::b	
+        1	inv1<>::!GND @[ supply_low port-alias ]	
+        2	inv1<>::!Vdd @[ supply_high port-alias ]	
+        3	inv1<>::a @[ port-alias loc-FO- loc-FO+ ]	
+        4	inv1<>::b @[ port-alias loc-FI- loc-FI+ ]	
         resolved prs:
         a -> b-
         ~a -> b+
@@ -182,16 +182,16 @@ In namespace "", we have: {
         ~p -> q+
         }
       footprint: {
-        !GND = bool^0 = inv2<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = inv2<>::!Vdd (2) @[ supply_high ] 
-        p = bool^0 = inv2<>::p (3) 
-        q = bool^0 = inv2<>::q (4) 
+        !GND = bool^0 = inv2<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = inv2<>::!Vdd (2) @[ supply_high port-alias ] 
+        p = bool^0 = inv2<>::p (3) @[ port-alias loc-FO- loc-FO+ ] 
+        q = bool^0 = inv2<>::q (4) @[ port-alias loc-FI- loc-FI+ ] 
         Created state:
         bool instance pool: (4 ports, 0 local, 0 mapped)
-        1	inv2<>::!GND @[ supply_low ]	
-        2	inv2<>::!Vdd @[ supply_high ]	
-        3	inv2<>::p	
-        4	inv2<>::q	
+        1	inv2<>::!GND @[ supply_low port-alias ]	
+        2	inv2<>::!Vdd @[ supply_high port-alias ]	
+        3	inv2<>::p @[ port-alias loc-FO- loc-FO+ ]	
+        4	inv2<>::q @[ port-alias loc-FI- loc-FI+ ]	
         resolved prs:
         p -> q-
         ~p -> q+
@@ -217,14 +217,14 @@ footprint: {
       [0] = inv_a[0] (1) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        a = bool^0 = inv_a[0].a (3) 
-        b = bool^0 = inv_a[0].b (4) 
+        a = bool^0 = inv_a[0].a (3) @[ sub-FO- sub-FO+ ] 
+        b = bool^0 = inv_a[0].b (4) @[ sub-FI- sub-FI+ ] 
       )
       [1] = inv_a[1] (2) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        a = bool^0 = inv_a[1].a (5) 
-        b = bool^0 = inv_a[1].b (6) 
+        a = bool^0 = inv_a[1].a (5) @[ sub-FO- sub-FO+ ] 
+        b = bool^0 = inv_a[1].b (6) @[ sub-FI- sub-FI+ ] 
       )
     }
   inv_b = process inv2<>^1
@@ -232,14 +232,14 @@ footprint: {
       [0] = inv_b[0] (3) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        p = bool^0 = inv_b[0].p (7) 
-        q = bool^0 = inv_b[0].q (8) 
+        p = bool^0 = inv_b[0].p (7) @[ sub-FO- sub-FO+ ] 
+        q = bool^0 = inv_b[0].q (8) @[ sub-FI- sub-FI+ ] 
       )
       [1] = inv_b[1] (4) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        p = bool^0 = inv_b[1].p (9) 
-        q = bool^0 = inv_b[1].q (10) 
+        p = bool^0 = inv_b[1].p (9) @[ sub-FO- sub-FO+ ] 
+        q = bool^0 = inv_b[1].q (10) @[ sub-FI- sub-FI+ ] 
       )
     }
   Created state:
@@ -255,14 +255,14 @@ footprint: {
   bool instance pool: (0 ports, 10 local, 0 mapped)
   1	!GND @[ supply_low ]	
   2	!Vdd @[ supply_high ]	
-  3	inv_a[0].a	
-  4	inv_a[0].b	
-  5	inv_a[1].a	
-  6	inv_a[1].b	
-  7	inv_b[0].p	
-  8	inv_b[0].q	
-  9	inv_b[1].p	
-  10	inv_b[1].q	
+  3	inv_a[0].a @[ sub-FO- sub-FO+ ]	
+  4	inv_a[0].b @[ sub-FI- sub-FI+ ]	
+  5	inv_a[1].a @[ sub-FO- sub-FO+ ]	
+  6	inv_a[1].b @[ sub-FI- sub-FI+ ]	
+  7	inv_b[0].p @[ sub-FO- sub-FO+ ]	
+  8	inv_b[0].q @[ sub-FI- sub-FI+ ]	
+  9	inv_b[1].p @[ sub-FO- sub-FO+ ]	
+  10	inv_b[1].q @[ sub-FI- sub-FI+ ]	
   resolved specs:
   min_sep_proc<20>({inv_a[0],inv_b[0]},{inv_a[1],inv_b[1]})
 }

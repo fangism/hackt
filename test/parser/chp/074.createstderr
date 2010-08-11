@@ -104,15 +104,15 @@ In namespace "", we have: {
         }
       footprint collection: {
         <false> {
-          !GND = bool^0 = assign_me<false>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = assign_me<false>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = assign_me<false>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = assign_me<false>::!Vdd (2) @[ supply_high port-alias ] 
           B = pbool^0 value: 0
-          b = bool^0 = assign_me<false>::b (3) 
+          b = bool^0 = assign_me<false>::b (3) @[ port-alias ] 
           Created state:
           bool instance pool: (3 ports, 0 local, 0 mapped)
-          1	assign_me<false>::!GND @[ supply_low ]	
-          2	assign_me<false>::!Vdd @[ supply_high ]	
-          3	assign_me<false>::b	
+          1	assign_me<false>::!GND @[ supply_low port-alias ]	
+          2	assign_me<false>::!Vdd @[ supply_high port-alias ]	
+          3	assign_me<false>::b @[ port-alias ]	
           resolved concurrent actions:
             *[
               b := false
@@ -122,15 +122,15 @@ In namespace "", we have: {
           }
         }
         <true> {
-          !GND = bool^0 = assign_me<true>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = assign_me<true>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = assign_me<true>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = assign_me<true>::!Vdd (2) @[ supply_high port-alias ] 
           B = pbool^0 value: 1
-          b = bool^0 = assign_me<true>::b (3) 
+          b = bool^0 = assign_me<true>::b (3) @[ port-alias ] 
           Created state:
           bool instance pool: (3 ports, 0 local, 0 mapped)
-          1	assign_me<true>::!GND @[ supply_low ]	
-          2	assign_me<true>::!Vdd @[ supply_high ]	
-          3	assign_me<true>::b	
+          1	assign_me<true>::!GND @[ supply_low port-alias ]	
+          2	assign_me<true>::!Vdd @[ supply_high port-alias ]	
+          3	assign_me<true>::b @[ port-alias ]	
           resolved concurrent actions:
             *[
               b := true

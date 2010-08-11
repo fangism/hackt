@@ -137,14 +137,14 @@ In namespace "", we have: {
         )
       footprint: {
         a = process e1of2<>^0 = alt_e1of2<>::a (1) (
-          e = bool^0 = alt_e1of2<>::a.e (1) 
+          e = bool^0 = alt_e1of2<>::a.e (1) @[ port-alias ] 
         )
         Created state:
         process instance pool: (1 ports, 0 local, 0 mapped)
         1	alt_e1of2<>::a	e1of2<>
           bool: 1
         bool instance pool: (1 ports, 0 local, 0 mapped)
-        1	alt_e1of2<>::a.e	
+        1	alt_e1of2<>::a.e @[ port-alias ]	
       }
       }
 
@@ -168,19 +168,19 @@ In namespace "", we have: {
         !Vdd@[supply=1]
         l.e@[iscomb=1]
       footprint: {
-        !GND = bool^0 = blah2<>::!GND (2) @[ supply_low ] 
-        !Vdd = bool^0 = blah2<>::!Vdd (3) @[ supply_high ] 
+        !GND = bool^0 = blah2<>::!GND (2) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = blah2<>::!Vdd (3) @[ supply_high port-alias ] 
         l = process e1of2<>^0 = blah2<>::l (1) (
-          e = bool^0 = blah2<>::l.e (1) @[ iscomb ] 
+          e = bool^0 = blah2<>::l.e (1) @[ iscomb port-alias ] 
         )
         Created state:
         process instance pool: (1 ports, 0 local, 0 mapped)
         1	blah2<>::l	e1of2<>
           bool: 1
         bool instance pool: (3 ports, 0 local, 0 mapped)
-        1	blah2<>::l.e @[ iscomb ]	
-        2	blah2<>::!GND @[ supply_low ]	
-        3	blah2<>::!Vdd @[ supply_high ]	
+        1	blah2<>::l.e @[ iscomb port-alias ]	
+        2	blah2<>::!GND @[ supply_low port-alias ]	
+        3	blah2<>::!Vdd @[ supply_high port-alias ]	
       }
       }
 
@@ -209,21 +209,21 @@ In namespace "", we have: {
         blah2<> ma
         ma ( , , in_a);
       footprint: {
-        !GND = bool^0 = blah3<>::!GND (2) @[ supply_low ] 
-        !Vdd = bool^0 = blah3<>::!Vdd (3) @[ supply_high ] 
+        !GND = bool^0 = blah3<>::!GND (2) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = blah3<>::!Vdd (3) @[ supply_high port-alias ] 
         in = process alt_e1of2<>^0 = blah3<>::in (1) (
           a = process e1of2<>^0 = blah3<>::in_a (2) (
-            e = bool^0 = blah3<>::in_a.e (1) @[ iscomb ] 
+            e = bool^0 = blah3<>::in_a.e (1) @[ iscomb port-alias ] 
           )
         )
         in_a = process e1of2<>^0 = blah3<>::in_a (2) (
-          e = bool^0 = blah3<>::in_a.e (1) @[ iscomb ] 
+          e = bool^0 = blah3<>::in_a.e (1) @[ iscomb port-alias ] 
         )
         ma = process blah2<>^0 = blah3<>::ma (3) (
-          !GND = bool^0 = blah3<>::!GND (2) @[ supply_low ] 
-          !Vdd = bool^0 = blah3<>::!Vdd (3) @[ supply_high ] 
+          !GND = bool^0 = blah3<>::!GND (2) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = blah3<>::!Vdd (3) @[ supply_high port-alias ] 
           l = process e1of2<>^0 = blah3<>::in_a (2) (
-            e = bool^0 = blah3<>::in_a.e (1) @[ iscomb ] 
+            e = bool^0 = blah3<>::in_a.e (1) @[ iscomb port-alias ] 
           )
         )
         Created state:
@@ -237,9 +237,9 @@ In namespace "", we have: {
           process: 2
           bool: 1,2,3
         bool instance pool: (3 ports, 0 local, 0 mapped)
-        1	blah3<>::in_a.e @[ iscomb ]	
-        2	blah3<>::!GND @[ supply_low ]	
-        3	blah3<>::!Vdd @[ supply_high ]	
+        1	blah3<>::in_a.e @[ iscomb port-alias ]	
+        2	blah3<>::!GND @[ supply_low port-alias ]	
+        3	blah3<>::!Vdd @[ supply_high port-alias ]	
       }
       }
 
@@ -254,10 +254,10 @@ In namespace "", we have: {
           bool<> e
         )
       footprint: {
-        e = bool^0 = e1of2<>::e (1) 
+        e = bool^0 = e1of2<>::e (1) @[ port-alias ] 
         Created state:
         bool instance pool: (1 ports, 0 local, 0 mapped)
-        1	e1of2<>::e	
+        1	e1of2<>::e @[ port-alias ]	
       }
       }
 
@@ -279,11 +279,11 @@ In namespace "", we have: {
         !Vdd@[supply=1]
         blah3<> bar
       footprint: {
-        !GND = bool^0 = obox<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = obox<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = obox<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = obox<>::!Vdd (2) @[ supply_high port-alias ] 
         bar = process blah3<>^0 = obox<>::bar (1) (
-          !GND = bool^0 = obox<>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = obox<>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = obox<>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = obox<>::!Vdd (2) @[ supply_high port-alias ] 
           in = process alt_e1of2<>^0 = obox<>::bar.in (2) (
             a = process e1of2<>^0 = obox<>::bar.in.a (3) (
               e = bool^0 = obox<>::bar.in.a.e (3) @[ iscomb ] 
@@ -304,8 +304,8 @@ In namespace "", we have: {
           (1 -> 0)
           (4 -> 1)
         bool instance pool: (2 ports, 1 local, 0 mapped)
-        1	obox<>::!GND @[ supply_low ]	
-        2	obox<>::!Vdd @[ supply_high ]	
+        1	obox<>::!GND @[ supply_low port-alias ]	
+        2	obox<>::!Vdd @[ supply_high port-alias ]	
         3	obox<>::bar.in.a.e @[ iscomb ]	
       }
       }

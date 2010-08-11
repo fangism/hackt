@@ -140,22 +140,22 @@ In namespace "", we have: {
         }
       footprint collection: {
         <2> {
-          !GND = bool^0 = nand<2>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = nand<2>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = nand<2>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = nand<2>::!Vdd (2) @[ supply_high port-alias ] 
           N = pint^0 value: 2
           in = bool^1
             {
-              [0] = nand<2>::in[0] (4) 
-              [1] = nand<2>::in[1] (5) 
+              [0] = nand<2>::in[0] (4) @[ port-alias loc-FO- loc-FO+ ] 
+              [1] = nand<2>::in[1] (5) @[ port-alias loc-FO- loc-FO+ ] 
             }
-          out = bool^0 = nand<2>::out (3) 
+          out = bool^0 = nand<2>::out (3) @[ port-alias loc-FI- loc-FI+ ] 
           Created state:
           bool instance pool: (5 ports, 0 local, 0 mapped)
-          1	nand<2>::!GND @[ supply_low ]	
-          2	nand<2>::!Vdd @[ supply_high ]	
-          3	nand<2>::out	
-          4	nand<2>::in[0]	
-          5	nand<2>::in[1]	
+          1	nand<2>::!GND @[ supply_low port-alias ]	
+          2	nand<2>::!Vdd @[ supply_high port-alias ]	
+          3	nand<2>::out @[ port-alias loc-FI- loc-FI+ ]	
+          4	nand<2>::in[0] @[ port-alias loc-FO- loc-FO+ ]	
+          5	nand<2>::in[1] @[ port-alias loc-FO- loc-FO+ ]	
           resolved prs:
           in[0] & in[1] -> out-
           ~in[0] | ~in[1] -> out+
@@ -163,26 +163,26 @@ In namespace "", we have: {
           0..1 none none : 2, 1 | 2, 1
         }
         <4> {
-          !GND = bool^0 = nand<4>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = nand<4>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = nand<4>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = nand<4>::!Vdd (2) @[ supply_high port-alias ] 
           N = pint^0 value: 4
           in = bool^1
             {
-              [0] = nand<4>::in[0] (4) 
-              [1] = nand<4>::in[1] (5) 
-              [2] = nand<4>::in[2] (6) 
-              [3] = nand<4>::in[3] (7) 
+              [0] = nand<4>::in[0] (4) @[ port-alias loc-FO- loc-FO+ ] 
+              [1] = nand<4>::in[1] (5) @[ port-alias loc-FO- loc-FO+ ] 
+              [2] = nand<4>::in[2] (6) @[ port-alias loc-FO- loc-FO+ ] 
+              [3] = nand<4>::in[3] (7) @[ port-alias loc-FO- loc-FO+ ] 
             }
-          out = bool^0 = nand<4>::out (3) 
+          out = bool^0 = nand<4>::out (3) @[ port-alias loc-FI- loc-FI+ ] 
           Created state:
           bool instance pool: (7 ports, 0 local, 0 mapped)
-          1	nand<4>::!GND @[ supply_low ]	
-          2	nand<4>::!Vdd @[ supply_high ]	
-          3	nand<4>::out	
-          4	nand<4>::in[0]	
-          5	nand<4>::in[1]	
-          6	nand<4>::in[2]	
-          7	nand<4>::in[3]	
+          1	nand<4>::!GND @[ supply_low port-alias ]	
+          2	nand<4>::!Vdd @[ supply_high port-alias ]	
+          3	nand<4>::out @[ port-alias loc-FI- loc-FI+ ]	
+          4	nand<4>::in[0] @[ port-alias loc-FO- loc-FO+ ]	
+          5	nand<4>::in[1] @[ port-alias loc-FO- loc-FO+ ]	
+          6	nand<4>::in[2] @[ port-alias loc-FO- loc-FO+ ]	
+          7	nand<4>::in[3] @[ port-alias loc-FO- loc-FO+ ]	
           resolved prs:
           in[0] & in[1] & in[2] & in[3] -> out-
           ~in[0] | ~in[1] | ~in[2] | ~in[3] -> out+
@@ -208,24 +208,24 @@ footprint: {
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
     in = bool^1
       {
-        [0] = a.in[0] (3) 
-        [1] = a.in[1] (4) 
+        [0] = a.in[0] (3) @[ sub-FO- sub-FO+ ] 
+        [1] = a.in[1] (4) @[ sub-FO- sub-FO+ ] 
       }
-    out = bool^0 = z (5) 
+    out = bool^0 = z (5) @[ sub-FI- sub-FI+ ] 
   )
   b = process nand<4>^0 = b (2) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
     in = bool^1
       {
-        [0] = b.in[0] (6) 
-        [1] = b.in[1] (7) 
-        [2] = b.in[2] (8) 
-        [3] = b.in[3] (9) 
+        [0] = b.in[0] (6) @[ sub-FO- sub-FO+ ] 
+        [1] = b.in[1] (7) @[ sub-FO- sub-FO+ ] 
+        [2] = b.in[2] (8) @[ sub-FO- sub-FO+ ] 
+        [3] = b.in[3] (9) @[ sub-FO- sub-FO+ ] 
       }
-    out = bool^0 = z (5) 
+    out = bool^0 = z (5) @[ sub-FI- sub-FI+ ] 
   )
-  z = bool^0 = z (5) 
+  z = bool^0 = z (5) @[ sub-FI- sub-FI+ ] 
   Created state:
   process instance pool: (0 ports, 2 local, 0 mapped)
   1	a	nand<2>
@@ -235,11 +235,11 @@ footprint: {
   bool instance pool: (0 ports, 9 local, 0 mapped)
   1	!GND @[ supply_low ]	
   2	!Vdd @[ supply_high ]	
-  3	a.in[0]	
-  4	a.in[1]	
-  5	z	
-  6	b.in[0]	
-  7	b.in[1]	
-  8	b.in[2]	
-  9	b.in[3]	
+  3	a.in[0] @[ sub-FO- sub-FO+ ]	
+  4	a.in[1] @[ sub-FO- sub-FO+ ]	
+  5	z @[ sub-FI- sub-FI+ ]	
+  6	b.in[0] @[ sub-FO- sub-FO+ ]	
+  7	b.in[1] @[ sub-FO- sub-FO+ ]	
+  8	b.in[2] @[ sub-FO- sub-FO+ ]	
+  9	b.in[3] @[ sub-FO- sub-FO+ ]	
 }

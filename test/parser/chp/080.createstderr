@@ -126,16 +126,16 @@ In namespace "", we have: {
         }
       footprint collection: {
         <123> {
-          !GND = bool^0 = send_me<123>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = send_me<123>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = send_me<123>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = send_me<123>::!Vdd (2) @[ supply_high port-alias ] 
           B = pint^0 value: 123
           b = channel chan!(int<32>)^0 = send_me<123>::b (1) 
           Created state:
           channel instance pool: (1 ports, 0 local, 0 mapped)
           1	send_me<123>::b	
           bool instance pool: (2 ports, 0 local, 0 mapped)
-          1	send_me<123>::!GND @[ supply_low ]	
-          2	send_me<123>::!Vdd @[ supply_high ]	
+          1	send_me<123>::!GND @[ supply_low port-alias ]	
+          2	send_me<123>::!Vdd @[ supply_high port-alias ]	
           resolved concurrent actions:
             *[
               b!(123)
@@ -145,16 +145,16 @@ In namespace "", we have: {
           }
         }
         <456> {
-          !GND = bool^0 = send_me<456>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = send_me<456>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = send_me<456>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = send_me<456>::!Vdd (2) @[ supply_high port-alias ] 
           B = pint^0 value: 456
           b = channel chan!(int<32>)^0 = send_me<456>::b (1) 
           Created state:
           channel instance pool: (1 ports, 0 local, 0 mapped)
           1	send_me<456>::b	
           bool instance pool: (2 ports, 0 local, 0 mapped)
-          1	send_me<456>::!GND @[ supply_low ]	
-          2	send_me<456>::!Vdd @[ supply_high ]	
+          1	send_me<456>::!GND @[ supply_low port-alias ]	
+          2	send_me<456>::!Vdd @[ supply_high port-alias ]	
           resolved concurrent actions:
             *[
               b!(456)
@@ -164,16 +164,16 @@ In namespace "", we have: {
           }
         }
         <789> {
-          !GND = bool^0 = send_me<789>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = send_me<789>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = send_me<789>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = send_me<789>::!Vdd (2) @[ supply_high port-alias ] 
           B = pint^0 value: 789
           b = channel chan!(int<32>)^0 = send_me<789>::b (1) 
           Created state:
           channel instance pool: (1 ports, 0 local, 0 mapped)
           1	send_me<789>::b	
           bool instance pool: (2 ports, 0 local, 0 mapped)
-          1	send_me<789>::!GND @[ supply_low ]	
-          2	send_me<789>::!Vdd @[ supply_high ]	
+          1	send_me<789>::!GND @[ supply_low port-alias ]	
+          2	send_me<789>::!Vdd @[ supply_high port-alias ]	
           resolved concurrent actions:
             *[
               b!(789)

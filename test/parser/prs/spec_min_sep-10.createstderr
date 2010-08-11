@@ -97,18 +97,18 @@ In namespace "", we have: {
       spec:
         min_sep<15>({p,q},r)
       footprint: {
-        !GND = bool^0 = groupie<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = groupie<>::!Vdd (2) @[ supply_high ] 
-        p = bool^0 = groupie<>::p (3) 
-        q = bool^0 = groupie<>::q (4) 
-        r = bool^0 = groupie<>::r (5) 
+        !GND = bool^0 = groupie<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = groupie<>::!Vdd (2) @[ supply_high port-alias ] 
+        p = bool^0 = groupie<>::p (3) @[ port-alias ] 
+        q = bool^0 = groupie<>::q (4) @[ port-alias ] 
+        r = bool^0 = groupie<>::r (5) @[ port-alias ] 
         Created state:
         bool instance pool: (5 ports, 0 local, 0 mapped)
-        1	groupie<>::!GND @[ supply_low ]	
-        2	groupie<>::!Vdd @[ supply_high ]	
-        3	groupie<>::p	
-        4	groupie<>::q	
-        5	groupie<>::r	
+        1	groupie<>::!GND @[ supply_low port-alias ]	
+        2	groupie<>::!Vdd @[ supply_high port-alias ]	
+        3	groupie<>::p @[ port-alias ]	
+        4	groupie<>::q @[ port-alias ]	
+        5	groupie<>::r @[ port-alias ]	
         resolved specs:
         min_sep<15>({p,q},r)
       }

@@ -773,16 +773,16 @@ In namespace "", we have: {
           ]
         }
       footprint: {
-        !GND = bool^0 = bool_sink<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = bool_sink<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = bool_sink<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = bool_sink<>::!Vdd (2) @[ supply_high port-alias ] 
         B = channel chan?(bool<>)^0 = bool_sink<>::B (1) 
         b = bool^0 = bool_sink<>::b (3) 
         Created state:
         channel instance pool: (1 ports, 0 local, 0 mapped)
         1	bool_sink<>::B	
         bool instance pool: (2 ports, 1 local, 0 mapped)
-        1	bool_sink<>::!GND @[ supply_low ]	
-        2	bool_sink<>::!Vdd @[ supply_high ]	
+        1	bool_sink<>::!GND @[ supply_low port-alias ]	
+        2	bool_sink<>::!Vdd @[ supply_high port-alias ]	
         3	bool_sink<>::b	
         resolved concurrent actions:
           *[
@@ -962,8 +962,8 @@ In namespace "", we have: {
         }
       footprint collection: {
         <32, 3, {6,8,9}> {
-          !GND = bool^0 = int_source<32, 3, {6,8,9}>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = int_source<32, 3, {6,8,9}>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = int_source<32, 3, {6,8,9}>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = int_source<32, 3, {6,8,9}>::!Vdd (2) @[ supply_high port-alias ] 
           B = pint^1
             unrolled index-value pairs: {
               0 = 6
@@ -977,8 +977,8 @@ In namespace "", we have: {
           channel instance pool: (1 ports, 0 local, 0 mapped)
           1	int_source<32, 3, {6,8,9}>::S	
           bool instance pool: (2 ports, 0 local, 0 mapped)
-          1	int_source<32, 3, {6,8,9}>::!GND @[ supply_low ]	
-          2	int_source<32, 3, {6,8,9}>::!Vdd @[ supply_high ]	
+          1	int_source<32, 3, {6,8,9}>::!GND @[ supply_low port-alias ]	
+          2	int_source<32, 3, {6,8,9}>::!Vdd @[ supply_high port-alias ]	
           resolved concurrent actions:
             *[
               sequential: {
@@ -994,8 +994,8 @@ In namespace "", we have: {
           }
         }
         <32, 4, {3,4,5,6}> {
-          !GND = bool^0 = int_source<32, 4, {3,4,5,6}>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = int_source<32, 4, {3,4,5,6}>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = int_source<32, 4, {3,4,5,6}>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = int_source<32, 4, {3,4,5,6}>::!Vdd (2) @[ supply_high port-alias ] 
           B = pint^1
             unrolled index-value pairs: {
               0 = 3
@@ -1010,8 +1010,8 @@ In namespace "", we have: {
           channel instance pool: (1 ports, 0 local, 0 mapped)
           1	int_source<32, 4, {3,4,5,6}>::S	
           bool instance pool: (2 ports, 0 local, 0 mapped)
-          1	int_source<32, 4, {3,4,5,6}>::!GND @[ supply_low ]	
-          2	int_source<32, 4, {3,4,5,6}>::!Vdd @[ supply_high ]	
+          1	int_source<32, 4, {3,4,5,6}>::!GND @[ supply_low port-alias ]	
+          2	int_source<32, 4, {3,4,5,6}>::!Vdd @[ supply_high port-alias ]	
           resolved concurrent actions:
             *[
               sequential: {
@@ -1029,8 +1029,8 @@ In namespace "", we have: {
           }
         }
         <32, 5, {4,5,6,7,8}> {
-          !GND = bool^0 = int_source<32, 5, {4,5,6,7,8}>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = int_source<32, 5, {4,5,6,7,8}>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = int_source<32, 5, {4,5,6,7,8}>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = int_source<32, 5, {4,5,6,7,8}>::!Vdd (2) @[ supply_high port-alias ] 
           B = pint^1
             unrolled index-value pairs: {
               0 = 4
@@ -1046,8 +1046,8 @@ In namespace "", we have: {
           channel instance pool: (1 ports, 0 local, 0 mapped)
           1	int_source<32, 5, {4,5,6,7,8}>::S	
           bool instance pool: (2 ports, 0 local, 0 mapped)
-          1	int_source<32, 5, {4,5,6,7,8}>::!GND @[ supply_low ]	
-          2	int_source<32, 5, {4,5,6,7,8}>::!Vdd @[ supply_high ]	
+          1	int_source<32, 5, {4,5,6,7,8}>::!GND @[ supply_low port-alias ]	
+          2	int_source<32, 5, {4,5,6,7,8}>::!Vdd @[ supply_high port-alias ]	
           resolved concurrent actions:
             *[
               sequential: {
@@ -1067,8 +1067,8 @@ In namespace "", we have: {
           }
         }
         <32, 6, {2,5,3,6,4,7}> {
-          !GND = bool^0 = int_source<32, 6, {2,5,3,6,4,7}>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = int_source<32, 6, {2,5,3,6,4,7}>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = int_source<32, 6, {2,5,3,6,4,7}>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = int_source<32, 6, {2,5,3,6,4,7}>::!Vdd (2) @[ supply_high port-alias ] 
           B = pint^1
             unrolled index-value pairs: {
               0 = 2
@@ -1085,8 +1085,8 @@ In namespace "", we have: {
           channel instance pool: (1 ports, 0 local, 0 mapped)
           1	int_source<32, 6, {2,5,3,6,4,7}>::S	
           bool instance pool: (2 ports, 0 local, 0 mapped)
-          1	int_source<32, 6, {2,5,3,6,4,7}>::!GND @[ supply_low ]	
-          2	int_source<32, 6, {2,5,3,6,4,7}>::!Vdd @[ supply_high ]	
+          1	int_source<32, 6, {2,5,3,6,4,7}>::!GND @[ supply_low port-alias ]	
+          2	int_source<32, 6, {2,5,3,6,4,7}>::!Vdd @[ supply_high port-alias ]	
           resolved concurrent actions:
             *[
               sequential: {
@@ -1278,8 +1278,8 @@ In namespace "", we have: {
           ]
         }
       footprint: {
-        !GND = bool^0 = my_foo<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = my_foo<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = my_foo<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = my_foo<>::!Vdd (2) @[ supply_high port-alias ] 
         A = channel chan?(int<32>)^0 = my_foo<>::A (1) 
         B = channel chan?(int<32>)^0 = my_foo<>::B (2) 
         C = channel chan?(int<32>)^0 = my_foo<>::C (3) 
@@ -1302,8 +1302,8 @@ In namespace "", we have: {
         3	my_foo<>::c	
         4	my_foo<>::d	
         bool instance pool: (2 ports, 0 local, 0 mapped)
-        1	my_foo<>::!GND @[ supply_low ]	
-        2	my_foo<>::!Vdd @[ supply_high ]	
+        1	my_foo<>::!GND @[ supply_low port-alias ]	
+        2	my_foo<>::!Vdd @[ supply_high port-alias ]	
         resolved concurrent actions:
           *[
             sequential: {

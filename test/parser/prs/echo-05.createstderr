@@ -135,22 +135,22 @@ In namespace "", we have: {
         ~((p & q) | (r & s)) -> z+
         }
       footprint: {
-        !GND = bool^0 = echo<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = echo<>::!Vdd (2) @[ supply_high ] 
-        p = bool^0 = echo<>::p (3) 
-        q = bool^0 = echo<>::q (4) 
-        r = bool^0 = echo<>::r (5) 
-        s = bool^0 = echo<>::s (6) 
-        z = bool^0 = echo<>::z (7) 
+        !GND = bool^0 = echo<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = echo<>::!Vdd (2) @[ supply_high port-alias ] 
+        p = bool^0 = echo<>::p (3) @[ port-alias loc-FO- loc-FO+ ] 
+        q = bool^0 = echo<>::q (4) @[ port-alias loc-FO- loc-FO+ ] 
+        r = bool^0 = echo<>::r (5) @[ port-alias loc-FO- loc-FO+ ] 
+        s = bool^0 = echo<>::s (6) @[ port-alias loc-FO- loc-FO+ ] 
+        z = bool^0 = echo<>::z (7) @[ port-alias loc-FI- loc-FI+ ] 
         Created state:
         bool instance pool: (7 ports, 0 local, 0 mapped)
-        1	echo<>::!GND @[ supply_low ]	
-        2	echo<>::!Vdd @[ supply_high ]	
-        3	echo<>::p	
-        4	echo<>::q	
-        5	echo<>::r	
-        6	echo<>::s	
-        7	echo<>::z	
+        1	echo<>::!GND @[ supply_low port-alias ]	
+        2	echo<>::!Vdd @[ supply_high port-alias ]	
+        3	echo<>::p @[ port-alias loc-FO- loc-FO+ ]	
+        4	echo<>::q @[ port-alias loc-FO- loc-FO+ ]	
+        5	echo<>::r @[ port-alias loc-FO- loc-FO+ ]	
+        6	echo<>::s @[ port-alias loc-FO- loc-FO+ ]	
+        7	echo<>::z @[ port-alias loc-FI- loc-FI+ ]	
         resolved prs:
         (p & q) | (r & s) -> z-
         ~((p & q) | (r & s)) -> z+
@@ -174,11 +174,11 @@ footprint: {
   E = process echo<>^0 = E (1) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    p = bool^0 = E.p (3) 
-    q = bool^0 = E.q (4) 
-    r = bool^0 = E.r (5) 
-    s = bool^0 = E.s (6) 
-    z = bool^0 = E.z (7) 
+    p = bool^0 = E.p (3) @[ sub-FO- sub-FO+ ] 
+    q = bool^0 = E.q (4) @[ sub-FO- sub-FO+ ] 
+    r = bool^0 = E.r (5) @[ sub-FO- sub-FO+ ] 
+    s = bool^0 = E.s (6) @[ sub-FO- sub-FO+ ] 
+    z = bool^0 = E.z (7) @[ sub-FI- sub-FI+ ] 
   )
   Created state:
   process instance pool: (0 ports, 1 local, 0 mapped)
@@ -187,9 +187,9 @@ footprint: {
   bool instance pool: (0 ports, 7 local, 0 mapped)
   1	!GND @[ supply_low ]	
   2	!Vdd @[ supply_high ]	
-  3	E.p	
-  4	E.q	
-  5	E.r	
-  6	E.s	
-  7	E.z	
+  3	E.p @[ sub-FO- sub-FO+ ]	
+  4	E.q @[ sub-FO- sub-FO+ ]	
+  5	E.r @[ sub-FO- sub-FO+ ]	
+  6	E.s @[ sub-FO- sub-FO+ ]	
+  7	E.z @[ sub-FI- sub-FI+ ]	
 }

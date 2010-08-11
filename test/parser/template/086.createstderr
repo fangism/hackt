@@ -121,8 +121,8 @@ In namespace "", we have: {
         !Vdd@[supply=1]
       footprint collection: {
         <1, {1}> {
-          !GND = bool^0 = internal<1, {1}>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = internal<1, {1}>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = internal<1, {1}>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = internal<1, {1}>::!Vdd (2) @[ supply_high port-alias ] 
           A = pint^1
             unrolled index-value pairs: {
               0 = 1
@@ -130,8 +130,8 @@ In namespace "", we have: {
           N = pint^0 value: 1
           Created state:
           bool instance pool: (2 ports, 0 local, 0 mapped)
-          1	internal<1, {1}>::!GND @[ supply_low ]	
-          2	internal<1, {1}>::!Vdd @[ supply_high ]	
+          1	internal<1, {1}>::!GND @[ supply_low port-alias ]	
+          2	internal<1, {1}>::!Vdd @[ supply_high port-alias ]	
         }
       }
       }
@@ -161,24 +161,24 @@ In namespace "", we have: {
         internal<use_the_source::N, use_the_source::A> s
       footprint collection: {
         <1, {1}> {
-          !GND = bool^0 = use_the_source<1, {1}>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = use_the_source<1, {1}>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = use_the_source<1, {1}>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = use_the_source<1, {1}>::!Vdd (2) @[ supply_high port-alias ] 
           A = pint^1
             unrolled index-value pairs: {
               0 = 1
             }
           N = pint^0 value: 1
           s = process internal<1, {1}>^0 = use_the_source<1, {1}>::s (1) (
-            !GND = bool^0 = use_the_source<1, {1}>::!GND (1) @[ supply_low ] 
-            !Vdd = bool^0 = use_the_source<1, {1}>::!Vdd (2) @[ supply_high ] 
+            !GND = bool^0 = use_the_source<1, {1}>::!GND (1) @[ supply_low port-alias ] 
+            !Vdd = bool^0 = use_the_source<1, {1}>::!Vdd (2) @[ supply_high port-alias ] 
           )
           Created state:
           process instance pool: (0 ports, 1 local, 0 mapped)
           1	use_the_source<1, {1}>::s	internal<1, {1}>
             bool: 1,2
           bool instance pool: (2 ports, 0 local, 0 mapped)
-          1	use_the_source<1, {1}>::!GND @[ supply_low ]	
-          2	use_the_source<1, {1}>::!Vdd @[ supply_high ]	
+          1	use_the_source<1, {1}>::!GND @[ supply_low port-alias ]	
+          2	use_the_source<1, {1}>::!Vdd @[ supply_high port-alias ]	
         }
       }
       }

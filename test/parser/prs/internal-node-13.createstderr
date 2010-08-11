@@ -153,35 +153,35 @@ In namespace "", we have: {
         }
       footprint collection: {
         <3> {
-          !GND = bool^0 = bogus<3>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = bogus<3>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = bogus<3>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = bogus<3>::!Vdd (2) @[ supply_high port-alias ] 
           N = pint^0 value: 3
-          en = bool^0 = bogus<3>::en (10) 
-          w = bool^0 = bogus<3>::w (3) 
+          en = bool^0 = bogus<3>::en (10) @[ loc-FO+ ] 
+          w = bool^0 = bogus<3>::w (3) @[ port-alias loc-FI- loc-FI+ ] 
           x = bool^1
             {
-              [0] = bogus<3>::x[0] (4) 
-              [1] = bogus<3>::x[1] (5) 
-              [2] = bogus<3>::x[2] (6) 
+              [0] = bogus<3>::x[0] (4) @[ port-alias loc-FO- ] 
+              [1] = bogus<3>::x[1] (5) @[ port-alias loc-FO- ] 
+              [2] = bogus<3>::x[2] (6) @[ port-alias loc-FO- ] 
             }
           y = bool^1
             {
-              [0] = bogus<3>::y[0] (7) 
-              [1] = bogus<3>::y[1] (8) 
-              [2] = bogus<3>::y[2] (9) 
+              [0] = bogus<3>::y[0] (7) @[ port-alias loc-FO- ] 
+              [1] = bogus<3>::y[1] (8) @[ port-alias loc-FO- ] 
+              [2] = bogus<3>::y[2] (9) @[ port-alias loc-FO- ] 
             }
           Created state:
           bool instance pool: (9 ports, 1 local, 0 mapped)
-          1	bogus<3>::!GND @[ supply_low ]	
-          2	bogus<3>::!Vdd @[ supply_high ]	
-          3	bogus<3>::w	
-          4	bogus<3>::x[0]	
-          5	bogus<3>::x[1]	
-          6	bogus<3>::x[2]	
-          7	bogus<3>::y[0]	
-          8	bogus<3>::y[1]	
-          9	bogus<3>::y[2]	
-          10	bogus<3>::en	
+          1	bogus<3>::!GND @[ supply_low port-alias ]	
+          2	bogus<3>::!Vdd @[ supply_high port-alias ]	
+          3	bogus<3>::w @[ port-alias loc-FI- loc-FI+ ]	
+          4	bogus<3>::x[0] @[ port-alias loc-FO- ]	
+          5	bogus<3>::x[1] @[ port-alias loc-FO- ]	
+          6	bogus<3>::x[2] @[ port-alias loc-FO- ]	
+          7	bogus<3>::y[0] @[ port-alias loc-FO- ]	
+          8	bogus<3>::y[1] @[ port-alias loc-FO- ]	
+          9	bogus<3>::y[2] @[ port-alias loc-FO- ]	
+          10	bogus<3>::en @[ loc-FO+ ]	
           resolved prs:
           en & x[0] & y[0] -> w-
           en & x[1] & y[1] -> w-
@@ -211,17 +211,17 @@ footprint: {
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
     x = bool^1
       {
-        [0] = A.x[0] (3) 
-        [1] = A.x[1] (4) 
-        [2] = A.x[2] (5) 
+        [0] = A.x[0] (3) @[ sub-FO- ] 
+        [1] = A.x[1] (4) @[ sub-FO- ] 
+        [2] = A.x[2] (5) @[ sub-FO- ] 
       }
     y = bool^1
       {
-        [0] = A.y[0] (6) 
-        [1] = A.y[1] (7) 
-        [2] = A.y[2] (8) 
+        [0] = A.y[0] (6) @[ sub-FO- ] 
+        [1] = A.y[1] (7) @[ sub-FO- ] 
+        [2] = A.y[2] (8) @[ sub-FO- ] 
       }
-    w = bool^0 = A.w (9) 
+    w = bool^0 = A.w (9) @[ sub-FI- sub-FI+ ] 
   )
   Created state:
   process instance pool: (0 ports, 1 local, 0 mapped)
@@ -230,13 +230,13 @@ footprint: {
   bool instance pool: (0 ports, 9 local, 1 mapped)
   1	!GND @[ supply_low ]	
   2	!Vdd @[ supply_high ]	
-  3	A.x[0]	
-  4	A.x[1]	
-  5	A.x[2]	
-  6	A.y[0]	
-  7	A.y[1]	
-  8	A.y[2]	
-  9	A.w	
+  3	A.x[0] @[ sub-FO- ]	
+  4	A.x[1] @[ sub-FO- ]	
+  5	A.x[2] @[ sub-FO- ]	
+  6	A.y[0] @[ sub-FO- ]	
+  7	A.y[1] @[ sub-FO- ]	
+  8	A.y[2] @[ sub-FO- ]	
+  9	A.w @[ sub-FI- sub-FI+ ]	
   private sub-bool index map:
     (1 -> 0)
     (2 -> 1)

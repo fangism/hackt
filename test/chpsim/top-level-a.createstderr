@@ -112,8 +112,8 @@ In namespace "", we have: {
           ]
         }
       footprint: {
-        !GND = bool^0 = wa<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = wa<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = wa<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = wa<>::!Vdd (2) @[ supply_high port-alias ] 
         TX = channel chan(int<32>)^0 = wa<>::TX (1) 
         x = int<32>^0 = wa<>::x (1) 
         Created state:
@@ -122,8 +122,8 @@ In namespace "", we have: {
         int instance pool: (0 ports, 1 local, 0 mapped)
         1	wa<>::x	
         bool instance pool: (2 ports, 0 local, 0 mapped)
-        1	wa<>::!GND @[ supply_low ]	
-        2	wa<>::!Vdd @[ supply_high ]	
+        1	wa<>::!GND @[ supply_low port-alias ]	
+        2	wa<>::!Vdd @[ supply_high port-alias ]	
         resolved concurrent actions:
           *[
             TX!(10)

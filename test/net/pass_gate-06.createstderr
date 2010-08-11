@@ -68,18 +68,18 @@ top-level prs:
 footprint: {
   !GND = bool^0 = !GND (1) @[ supply_low ] 
   !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-  _g = bool^0 = _g (6) 
-  d = bool^0 = d (5) 
-  g = bool^0 = g (3) 
-  s = bool^0 = s (4) 
+  _g = bool^0 = _g (6) @[ loc-FO+ ] 
+  d = bool^0 = d (5) @[ loc-FI- loc-FI+ ] 
+  g = bool^0 = g (3) @[ loc-FO- ] 
+  s = bool^0 = s (4) @[ loc-FO- loc-FO+ ] 
   Created state:
   bool instance pool: (0 ports, 6 local, 0 mapped)
   1	!GND @[ supply_low ]	
   2	!Vdd @[ supply_high ]	
-  3	g	
-  4	s	
-  5	d	
-  6	_g	
+  3	g @[ loc-FO- ]	
+  4	s @[ loc-FO- loc-FO+ ]	
+  5	d @[ loc-FI- loc-FI+ ]	
+  6	_g @[ loc-FO+ ]	
   resolved macros:
   passn<5,2;hvt>(g,s,d)
   passp<10,2;lvt>(_g,s,d)

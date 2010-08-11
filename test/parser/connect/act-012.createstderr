@@ -107,18 +107,18 @@ In namespace "", we have: {
         a & b -> c-
         }
       footprint: {
-        !GND = bool^0 = foo<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high ] 
-        a = bool^0 = foo<>::a (3) 
-        b = bool^0 = foo<>::b (4) 
-        c = bool^0 = foo<>::c (5) 
+        !GND = bool^0 = foo<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high port-alias ] 
+        a = bool^0 = foo<>::a (3) @[ port-alias loc-FO- ] 
+        b = bool^0 = foo<>::b (4) @[ port-alias loc-FO- ] 
+        c = bool^0 = foo<>::c (5) @[ port-alias loc-FI- ] 
         Created state:
         bool instance pool: (5 ports, 0 local, 0 mapped)
-        1	foo<>::!GND @[ supply_low ]	
-        2	foo<>::!Vdd @[ supply_high ]	
-        3	foo<>::a	
-        4	foo<>::b	
-        5	foo<>::c	
+        1	foo<>::!GND @[ supply_low port-alias ]	
+        2	foo<>::!Vdd @[ supply_high port-alias ]	
+        3	foo<>::a @[ port-alias loc-FO- ]	
+        4	foo<>::b @[ port-alias loc-FO- ]	
+        5	foo<>::c @[ port-alias loc-FI- ]	
         resolved prs:
         a & b -> c-
         rule supply map: (rules, macros, @nodes : Vdd, GND)
@@ -143,35 +143,35 @@ footprint: {
       [0] = f[0] (1) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        a = bool^0 = f[0].a (3) 
-        b = bool^0 = f[0].b (4) 
-        c = bool^0 = f[0].c (5) 
+        a = bool^0 = f[0].a (3) @[ sub-FO- ] 
+        b = bool^0 = f[0].b (4) @[ sub-FO- ] 
+        c = bool^0 = f[0].c (5) @[ sub-FI- ] 
       )
       [1] = f[1] (2) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        a = bool^0 = f[1].a (6) 
-        b = bool^0 = f[1].b (7) 
-        c = bool^0 = f[1].c (8) 
+        a = bool^0 = f[1].a (6) @[ sub-FO- ] 
+        b = bool^0 = f[1].b (7) @[ sub-FO- ] 
+        c = bool^0 = f[1].c (8) @[ sub-FI- ] 
       )
       [2] = f[2] (3) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        a = bool^0 = x (9) 
-        b = bool^0 = y (10) 
-        c = bool^0 = z (11) 
+        a = bool^0 = x (9) @[ sub-FO- ] 
+        b = bool^0 = y (10) @[ sub-FO- ] 
+        c = bool^0 = z (11) @[ sub-FI- ] 
       )
       [3] = f[3] (4) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        a = bool^0 = f[3].a (12) 
-        b = bool^0 = f[3].b (13) 
-        c = bool^0 = f[3].c (14) 
+        a = bool^0 = f[3].a (12) @[ sub-FO- ] 
+        b = bool^0 = f[3].b (13) @[ sub-FO- ] 
+        c = bool^0 = f[3].c (14) @[ sub-FI- ] 
       )
     }
-  x = bool^0 = x (9) 
-  y = bool^0 = y (10) 
-  z = bool^0 = z (11) 
+  x = bool^0 = x (9) @[ sub-FO- ] 
+  y = bool^0 = y (10) @[ sub-FO- ] 
+  z = bool^0 = z (11) @[ sub-FI- ] 
   Created state:
   process instance pool: (0 ports, 4 local, 0 mapped)
   1	f[0]	foo<>
@@ -185,16 +185,16 @@ footprint: {
   bool instance pool: (0 ports, 14 local, 0 mapped)
   1	!GND @[ supply_low ]	
   2	!Vdd @[ supply_high ]	
-  3	f[0].a	
-  4	f[0].b	
-  5	f[0].c	
-  6	f[1].a	
-  7	f[1].b	
-  8	f[1].c	
-  9	x	
-  10	y	
-  11	z	
-  12	f[3].a	
-  13	f[3].b	
-  14	f[3].c	
+  3	f[0].a @[ sub-FO- ]	
+  4	f[0].b @[ sub-FO- ]	
+  5	f[0].c @[ sub-FI- ]	
+  6	f[1].a @[ sub-FO- ]	
+  7	f[1].b @[ sub-FO- ]	
+  8	f[1].c @[ sub-FI- ]	
+  9	x @[ sub-FO- ]	
+  10	y @[ sub-FO- ]	
+  11	z @[ sub-FI- ]	
+  12	f[3].a @[ sub-FO- ]	
+  13	f[3].b @[ sub-FO- ]	
+  14	f[3].c @[ sub-FI- ]	
 }

@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/process_graph.h"
-	$Id: process_graph.h,v 1.4 2010/08/07 00:00:06 fang Exp $
+	$Id: process_graph.h,v 1.5 2010/08/11 21:54:57 fang Exp $
 	Unique process subgraph structure, shared by all process instances
 	of the same type.
  */
@@ -239,13 +239,12 @@ struct unique_process_subgraph {
 	bool
 	is_rule_expr(const expr_index_type) const;
 
-	// use this to select outputs
+	// are there local PRS that drive nodes?
 	void
-	has_fanin_map(vector<bool>&) const;
+	has_local_fanin_map(vector<bool>&) const;
 
-	// use this to select inputs
 	void
-	has_not_fanin_map(vector<bool>&) const;
+	has_not_local_fanin_map(vector<bool>&) const;
 
 	ostream&
 	dump_struct(ostream&) const;

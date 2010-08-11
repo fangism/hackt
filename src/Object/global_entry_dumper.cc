@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry_dumper.cc"
-	$Id: global_entry_dumper.cc,v 1.3 2010/06/02 02:42:31 fang Exp $
+	$Id: global_entry_dumper.cc,v 1.4 2010/08/11 21:54:52 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -71,7 +71,7 @@ global_entry_dumper::__default_visit(const state_instance<Tag>& p) {
 	const size_t gid = global_index -1;	// 0-based
 	topfp->template dump_canonical_name<Tag>(
 		os, gid, dump_flags::no_owners) << '\t';
-	p.get_back_ref()->dump_attributes(os);
+	p.get_back_ref()->dump_explicit_attributes(os);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

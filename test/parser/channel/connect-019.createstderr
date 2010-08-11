@@ -101,8 +101,8 @@ In namespace "", we have: {
         a = y;
         x = y;
       footprint: {
-        !GND = bool^0 = senders<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = senders<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = senders<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = senders<>::!Vdd (2) @[ supply_high port-alias ] 
         a = channel chan!(bool<>)^0 = senders<>::a (1) 
         x = channel chan(bool<>)^0 = senders<>::a (1) 
         y = channel chan(bool<>)^0 = senders<>::a (1) 
@@ -110,8 +110,8 @@ In namespace "", we have: {
         channel instance pool: (1 ports, 0 local, 0 mapped)
         1	senders<>::a	
         bool instance pool: (2 ports, 0 local, 0 mapped)
-        1	senders<>::!GND @[ supply_low ]	
-        2	senders<>::!Vdd @[ supply_high ]	
+        1	senders<>::!GND @[ supply_low port-alias ]	
+        2	senders<>::!Vdd @[ supply_high port-alias ]	
       }
       }
 

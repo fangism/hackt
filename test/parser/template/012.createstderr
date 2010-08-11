@@ -91,22 +91,22 @@ In namespace "", we have: {
         !Vdd@[supply=1]
       footprint collection: {
         <6> {
-          !GND = bool^0 = foo<6>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = foo<6>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = foo<6>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = foo<6>::!Vdd (2) @[ supply_high port-alias ] 
           N = pint^0 value: 6
           Created state:
           bool instance pool: (2 ports, 0 local, 0 mapped)
-          1	foo<6>::!GND @[ supply_low ]	
-          2	foo<6>::!Vdd @[ supply_high ]	
+          1	foo<6>::!GND @[ supply_low port-alias ]	
+          2	foo<6>::!Vdd @[ supply_high port-alias ]	
         }
         <7> {
-          !GND = bool^0 = foo<7>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = foo<7>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = foo<7>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = foo<7>::!Vdd (2) @[ supply_high port-alias ] 
           N = pint^0 value: 7
           Created state:
           bool instance pool: (2 ports, 0 local, 0 mapped)
-          1	foo<7>::!GND @[ supply_low ]	
-          2	foo<7>::!Vdd @[ supply_high ]	
+          1	foo<7>::!GND @[ supply_low port-alias ]	
+          2	foo<7>::!Vdd @[ supply_high port-alias ]	
         }
       }
       }

@@ -296,8 +296,8 @@ In namespace "", we have: {
         }
       footprint collection: {
         <2, {0,1}, 0> {
-          !GND = bool^0 = compute_me<2, {0,1}, 0>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = compute_me<2, {0,1}, 0>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = compute_me<2, {0,1}, 0>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = compute_me<2, {0,1}, 0>::!Vdd (2) @[ supply_high port-alias ] 
           B = pint^1
             unrolled index-value pairs: {
               0 = 0
@@ -310,8 +310,8 @@ In namespace "", we have: {
           channel instance pool: (1 ports, 0 local, 0 mapped)
           1	compute_me<2, {0,1}, 0>::b	
           bool instance pool: (2 ports, 0 local, 0 mapped)
-          1	compute_me<2, {0,1}, 0>::!GND @[ supply_low ]	
-          2	compute_me<2, {0,1}, 0>::!Vdd @[ supply_high ]	
+          1	compute_me<2, {0,1}, 0>::!GND @[ supply_low port-alias ]	
+          2	compute_me<2, {0,1}, 0>::!Vdd @[ supply_high port-alias ]	
           resolved concurrent actions:
             *[
               b!(0)
@@ -321,8 +321,8 @@ In namespace "", we have: {
           }
         }
         <2, {0,1}, 1> {
-          !GND = bool^0 = compute_me<2, {0,1}, 1>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = compute_me<2, {0,1}, 1>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = compute_me<2, {0,1}, 1>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = compute_me<2, {0,1}, 1>::!Vdd (2) @[ supply_high port-alias ] 
           B = pint^1
             unrolled index-value pairs: {
               0 = 0
@@ -335,8 +335,8 @@ In namespace "", we have: {
           channel instance pool: (1 ports, 0 local, 0 mapped)
           1	compute_me<2, {0,1}, 1>::b	
           bool instance pool: (2 ports, 0 local, 0 mapped)
-          1	compute_me<2, {0,1}, 1>::!GND @[ supply_low ]	
-          2	compute_me<2, {0,1}, 1>::!Vdd @[ supply_high ]	
+          1	compute_me<2, {0,1}, 1>::!GND @[ supply_low port-alias ]	
+          2	compute_me<2, {0,1}, 1>::!Vdd @[ supply_high port-alias ]	
           resolved concurrent actions:
             *[
               b!(1)
@@ -346,8 +346,8 @@ In namespace "", we have: {
           }
         }
         <3, {4,9,16}, 0> {
-          !GND = bool^0 = compute_me<3, {4,9,16}, 0>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = compute_me<3, {4,9,16}, 0>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = compute_me<3, {4,9,16}, 0>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = compute_me<3, {4,9,16}, 0>::!Vdd (2) @[ supply_high port-alias ] 
           B = pint^1
             unrolled index-value pairs: {
               0 = 4
@@ -361,8 +361,8 @@ In namespace "", we have: {
           channel instance pool: (1 ports, 0 local, 0 mapped)
           1	compute_me<3, {4,9,16}, 0>::b	
           bool instance pool: (2 ports, 0 local, 0 mapped)
-          1	compute_me<3, {4,9,16}, 0>::!GND @[ supply_low ]	
-          2	compute_me<3, {4,9,16}, 0>::!Vdd @[ supply_high ]	
+          1	compute_me<3, {4,9,16}, 0>::!GND @[ supply_low port-alias ]	
+          2	compute_me<3, {4,9,16}, 0>::!Vdd @[ supply_high port-alias ]	
           resolved concurrent actions:
             *[
               b!(4)
@@ -372,8 +372,8 @@ In namespace "", we have: {
           }
         }
         <3, {4,9,16}, 1> {
-          !GND = bool^0 = compute_me<3, {4,9,16}, 1>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = compute_me<3, {4,9,16}, 1>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = compute_me<3, {4,9,16}, 1>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = compute_me<3, {4,9,16}, 1>::!Vdd (2) @[ supply_high port-alias ] 
           B = pint^1
             unrolled index-value pairs: {
               0 = 4
@@ -387,8 +387,8 @@ In namespace "", we have: {
           channel instance pool: (1 ports, 0 local, 0 mapped)
           1	compute_me<3, {4,9,16}, 1>::b	
           bool instance pool: (2 ports, 0 local, 0 mapped)
-          1	compute_me<3, {4,9,16}, 1>::!GND @[ supply_low ]	
-          2	compute_me<3, {4,9,16}, 1>::!Vdd @[ supply_high ]	
+          1	compute_me<3, {4,9,16}, 1>::!GND @[ supply_low port-alias ]	
+          2	compute_me<3, {4,9,16}, 1>::!Vdd @[ supply_high port-alias ]	
           resolved concurrent actions:
             *[
               b!(9)
@@ -398,8 +398,8 @@ In namespace "", we have: {
           }
         }
         <3, {4,9,16}, 2> {
-          !GND = bool^0 = compute_me<3, {4,9,16}, 2>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = compute_me<3, {4,9,16}, 2>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = compute_me<3, {4,9,16}, 2>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = compute_me<3, {4,9,16}, 2>::!Vdd (2) @[ supply_high port-alias ] 
           B = pint^1
             unrolled index-value pairs: {
               0 = 4
@@ -413,8 +413,8 @@ In namespace "", we have: {
           channel instance pool: (1 ports, 0 local, 0 mapped)
           1	compute_me<3, {4,9,16}, 2>::b	
           bool instance pool: (2 ports, 0 local, 0 mapped)
-          1	compute_me<3, {4,9,16}, 2>::!GND @[ supply_low ]	
-          2	compute_me<3, {4,9,16}, 2>::!Vdd @[ supply_high ]	
+          1	compute_me<3, {4,9,16}, 2>::!GND @[ supply_low port-alias ]	
+          2	compute_me<3, {4,9,16}, 2>::!Vdd @[ supply_high port-alias ]	
           resolved concurrent actions:
             *[
               b!(16)
@@ -424,8 +424,8 @@ In namespace "", we have: {
           }
         }
         <6, {0,1,4,9,16,25}, 0> {
-          !GND = bool^0 = compute_me<6, {0,1,4,9,16,25}, 0>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = compute_me<6, {0,1,4,9,16,25}, 0>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = compute_me<6, {0,1,4,9,16,25}, 0>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = compute_me<6, {0,1,4,9,16,25}, 0>::!Vdd (2) @[ supply_high port-alias ] 
           B = pint^1
             unrolled index-value pairs: {
               0 = 0
@@ -442,8 +442,8 @@ In namespace "", we have: {
           channel instance pool: (1 ports, 0 local, 0 mapped)
           1	compute_me<6, {0,1,4,9,16,25}, 0>::b	
           bool instance pool: (2 ports, 0 local, 0 mapped)
-          1	compute_me<6, {0,1,4,9,16,25}, 0>::!GND @[ supply_low ]	
-          2	compute_me<6, {0,1,4,9,16,25}, 0>::!Vdd @[ supply_high ]	
+          1	compute_me<6, {0,1,4,9,16,25}, 0>::!GND @[ supply_low port-alias ]	
+          2	compute_me<6, {0,1,4,9,16,25}, 0>::!Vdd @[ supply_high port-alias ]	
           resolved concurrent actions:
             *[
               b!(0)
@@ -453,8 +453,8 @@ In namespace "", we have: {
           }
         }
         <6, {0,1,4,9,16,25}, 1> {
-          !GND = bool^0 = compute_me<6, {0,1,4,9,16,25}, 1>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = compute_me<6, {0,1,4,9,16,25}, 1>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = compute_me<6, {0,1,4,9,16,25}, 1>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = compute_me<6, {0,1,4,9,16,25}, 1>::!Vdd (2) @[ supply_high port-alias ] 
           B = pint^1
             unrolled index-value pairs: {
               0 = 0
@@ -471,8 +471,8 @@ In namespace "", we have: {
           channel instance pool: (1 ports, 0 local, 0 mapped)
           1	compute_me<6, {0,1,4,9,16,25}, 1>::b	
           bool instance pool: (2 ports, 0 local, 0 mapped)
-          1	compute_me<6, {0,1,4,9,16,25}, 1>::!GND @[ supply_low ]	
-          2	compute_me<6, {0,1,4,9,16,25}, 1>::!Vdd @[ supply_high ]	
+          1	compute_me<6, {0,1,4,9,16,25}, 1>::!GND @[ supply_low port-alias ]	
+          2	compute_me<6, {0,1,4,9,16,25}, 1>::!Vdd @[ supply_high port-alias ]	
           resolved concurrent actions:
             *[
               b!(1)
@@ -482,8 +482,8 @@ In namespace "", we have: {
           }
         }
         <6, {0,1,4,9,16,25}, 2> {
-          !GND = bool^0 = compute_me<6, {0,1,4,9,16,25}, 2>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = compute_me<6, {0,1,4,9,16,25}, 2>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = compute_me<6, {0,1,4,9,16,25}, 2>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = compute_me<6, {0,1,4,9,16,25}, 2>::!Vdd (2) @[ supply_high port-alias ] 
           B = pint^1
             unrolled index-value pairs: {
               0 = 0
@@ -500,8 +500,8 @@ In namespace "", we have: {
           channel instance pool: (1 ports, 0 local, 0 mapped)
           1	compute_me<6, {0,1,4,9,16,25}, 2>::b	
           bool instance pool: (2 ports, 0 local, 0 mapped)
-          1	compute_me<6, {0,1,4,9,16,25}, 2>::!GND @[ supply_low ]	
-          2	compute_me<6, {0,1,4,9,16,25}, 2>::!Vdd @[ supply_high ]	
+          1	compute_me<6, {0,1,4,9,16,25}, 2>::!GND @[ supply_low port-alias ]	
+          2	compute_me<6, {0,1,4,9,16,25}, 2>::!Vdd @[ supply_high port-alias ]	
           resolved concurrent actions:
             *[
               b!(4)
@@ -511,8 +511,8 @@ In namespace "", we have: {
           }
         }
         <6, {0,1,4,9,16,25}, 3> {
-          !GND = bool^0 = compute_me<6, {0,1,4,9,16,25}, 3>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = compute_me<6, {0,1,4,9,16,25}, 3>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = compute_me<6, {0,1,4,9,16,25}, 3>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = compute_me<6, {0,1,4,9,16,25}, 3>::!Vdd (2) @[ supply_high port-alias ] 
           B = pint^1
             unrolled index-value pairs: {
               0 = 0
@@ -529,8 +529,8 @@ In namespace "", we have: {
           channel instance pool: (1 ports, 0 local, 0 mapped)
           1	compute_me<6, {0,1,4,9,16,25}, 3>::b	
           bool instance pool: (2 ports, 0 local, 0 mapped)
-          1	compute_me<6, {0,1,4,9,16,25}, 3>::!GND @[ supply_low ]	
-          2	compute_me<6, {0,1,4,9,16,25}, 3>::!Vdd @[ supply_high ]	
+          1	compute_me<6, {0,1,4,9,16,25}, 3>::!GND @[ supply_low port-alias ]	
+          2	compute_me<6, {0,1,4,9,16,25}, 3>::!Vdd @[ supply_high port-alias ]	
           resolved concurrent actions:
             *[
               b!(9)
@@ -540,8 +540,8 @@ In namespace "", we have: {
           }
         }
         <6, {0,1,4,9,16,25}, 4> {
-          !GND = bool^0 = compute_me<6, {0,1,4,9,16,25}, 4>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = compute_me<6, {0,1,4,9,16,25}, 4>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = compute_me<6, {0,1,4,9,16,25}, 4>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = compute_me<6, {0,1,4,9,16,25}, 4>::!Vdd (2) @[ supply_high port-alias ] 
           B = pint^1
             unrolled index-value pairs: {
               0 = 0
@@ -558,8 +558,8 @@ In namespace "", we have: {
           channel instance pool: (1 ports, 0 local, 0 mapped)
           1	compute_me<6, {0,1,4,9,16,25}, 4>::b	
           bool instance pool: (2 ports, 0 local, 0 mapped)
-          1	compute_me<6, {0,1,4,9,16,25}, 4>::!GND @[ supply_low ]	
-          2	compute_me<6, {0,1,4,9,16,25}, 4>::!Vdd @[ supply_high ]	
+          1	compute_me<6, {0,1,4,9,16,25}, 4>::!GND @[ supply_low port-alias ]	
+          2	compute_me<6, {0,1,4,9,16,25}, 4>::!Vdd @[ supply_high port-alias ]	
           resolved concurrent actions:
             *[
               b!(16)
@@ -569,8 +569,8 @@ In namespace "", we have: {
           }
         }
         <6, {0,1,4,9,16,25}, 5> {
-          !GND = bool^0 = compute_me<6, {0,1,4,9,16,25}, 5>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = compute_me<6, {0,1,4,9,16,25}, 5>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = compute_me<6, {0,1,4,9,16,25}, 5>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = compute_me<6, {0,1,4,9,16,25}, 5>::!Vdd (2) @[ supply_high port-alias ] 
           B = pint^1
             unrolled index-value pairs: {
               0 = 0
@@ -587,8 +587,8 @@ In namespace "", we have: {
           channel instance pool: (1 ports, 0 local, 0 mapped)
           1	compute_me<6, {0,1,4,9,16,25}, 5>::b	
           bool instance pool: (2 ports, 0 local, 0 mapped)
-          1	compute_me<6, {0,1,4,9,16,25}, 5>::!GND @[ supply_low ]	
-          2	compute_me<6, {0,1,4,9,16,25}, 5>::!Vdd @[ supply_high ]	
+          1	compute_me<6, {0,1,4,9,16,25}, 5>::!GND @[ supply_low port-alias ]	
+          2	compute_me<6, {0,1,4,9,16,25}, 5>::!Vdd @[ supply_high port-alias ]	
           resolved concurrent actions:
             *[
               b!(25)

@@ -101,15 +101,15 @@ In namespace "", we have: {
         !Vdd@[supply=1]
       footprint collection: {
         <3> {
-          !GND = bool^0 = e1of<3>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = e1of<3>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = e1of<3>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = e1of<3>::!Vdd (2) @[ supply_high port-alias ] 
           R = pint^0 value: 3
-          e = bool^0 = e1of<3>::e (3) 
+          e = bool^0 = e1of<3>::e (3) @[ port-alias ] 
           Created state:
           bool instance pool: (3 ports, 0 local, 0 mapped)
-          1	e1of<3>::!GND @[ supply_low ]	
-          2	e1of<3>::!Vdd @[ supply_high ]	
-          3	e1of<3>::e	
+          1	e1of<3>::!GND @[ supply_low port-alias ]	
+          2	e1of<3>::!Vdd @[ supply_high port-alias ]	
+          3	e1of<3>::e @[ port-alias ]	
         }
       }
       }

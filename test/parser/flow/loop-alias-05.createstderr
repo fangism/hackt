@@ -128,20 +128,20 @@ In namespace "", we have: {
           p.t = pbint.pb.t;
         )
       footprint: {
-        !GND = bool^0 = lut<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = lut<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high port-alias ] 
         p = process pbit<>^0 = lut<>::p (3) (
-          !GND = bool^0 = lut<>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high ] 
-          t = bool^0 = lut<>::p.t (3) 
+          !GND = bool^0 = lut<>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high port-alias ] 
+          t = bool^0 = lut<>::p.t (3) @[ port-alias ] 
         )
         pbint = process pbitint<>^0 = lut<>::pbint (1) (
-          !GND = bool^0 = lut<>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = lut<>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high port-alias ] 
           pb = process pbit<>^0 = lut<>::pbint.pb (2) (
-            !GND = bool^0 = lut<>::!GND (1) @[ supply_low ] 
-            !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high ] 
-            t = bool^0 = lut<>::p.t (3) 
+            !GND = bool^0 = lut<>::!GND (1) @[ supply_low port-alias ] 
+            !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high port-alias ] 
+            t = bool^0 = lut<>::p.t (3) @[ port-alias ] 
           )
         )
         Created state:
@@ -154,12 +154,12 @@ In namespace "", we have: {
         3	lut<>::p	pbit<>
           bool: 1,2,3
         bool instance pool: (3 ports, 0 local, 0 mapped)
-        1	lut<>::!GND @[ supply_low ]	
-        2	lut<>::!Vdd @[ supply_high ]	
-        3	lut<>::p.t	
+        1	lut<>::!GND @[ supply_low port-alias ]	
+        2	lut<>::!Vdd @[ supply_high port-alias ]	
+        3	lut<>::p.t @[ port-alias ]	
         bool port aliases:
-        1: lut<>::pbint.!GND = lut<>::pbint.pb.!GND = lut<>::!GND @[ supply_low ]
-        2: lut<>::pbint.!Vdd = lut<>::pbint.pb.!Vdd = lut<>::!Vdd @[ supply_high ]
+        1: lut<>::pbint.!GND = lut<>::pbint.pb.!GND = lut<>::!GND @[ supply_low port-alias ]
+        2: lut<>::pbint.!Vdd = lut<>::pbint.pb.!Vdd = lut<>::!Vdd @[ supply_high port-alias ]
       }
       }
 
@@ -182,14 +182,14 @@ In namespace "", we have: {
         !GND@[supply=0]
         !Vdd@[supply=1]
       footprint: {
-        !GND = bool^0 = pbit<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = pbit<>::!Vdd (2) @[ supply_high ] 
-        t = bool^0 = pbit<>::t (3) 
+        !GND = bool^0 = pbit<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = pbit<>::!Vdd (2) @[ supply_high port-alias ] 
+        t = bool^0 = pbit<>::t (3) @[ port-alias ] 
         Created state:
         bool instance pool: (3 ports, 0 local, 0 mapped)
-        1	pbit<>::!GND @[ supply_low ]	
-        2	pbit<>::!Vdd @[ supply_high ]	
-        3	pbit<>::t	
+        1	pbit<>::!GND @[ supply_low port-alias ]	
+        2	pbit<>::!Vdd @[ supply_high port-alias ]	
+        3	pbit<>::t @[ port-alias ]	
       }
       }
 
@@ -212,24 +212,24 @@ In namespace "", we have: {
         !GND@[supply=0]
         !Vdd@[supply=1]
       footprint: {
-        !GND = bool^0 = pbitint<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = pbitint<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = pbitint<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = pbitint<>::!Vdd (2) @[ supply_high port-alias ] 
         pb = process pbit<>^0 = pbitint<>::pb (1) (
-          !GND = bool^0 = pbitint<>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = pbitint<>::!Vdd (2) @[ supply_high ] 
-          t = bool^0 = pbitint<>::pb.t (3) 
+          !GND = bool^0 = pbitint<>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = pbitint<>::!Vdd (2) @[ supply_high port-alias ] 
+          t = bool^0 = pbitint<>::pb.t (3) @[ port-alias ] 
         )
         Created state:
         process instance pool: (1 ports, 0 local, 0 mapped)
         1	pbitint<>::pb	pbit<>
           bool: 1,2,3
         bool instance pool: (3 ports, 0 local, 0 mapped)
-        1	pbitint<>::!GND @[ supply_low ]	
-        2	pbitint<>::!Vdd @[ supply_high ]	
-        3	pbitint<>::pb.t	
+        1	pbitint<>::!GND @[ supply_low port-alias ]	
+        2	pbitint<>::!Vdd @[ supply_high port-alias ]	
+        3	pbitint<>::pb.t @[ port-alias ]	
         bool port aliases:
-        1: pbitint<>::pb.!GND = pbitint<>::!GND @[ supply_low ]
-        2: pbitint<>::pb.!Vdd = pbitint<>::!Vdd @[ supply_high ]
+        1: pbitint<>::pb.!GND = pbitint<>::!GND @[ supply_low port-alias ]
+        2: pbitint<>::pb.!Vdd = pbitint<>::!Vdd @[ supply_high port-alias ]
       }
       }
 

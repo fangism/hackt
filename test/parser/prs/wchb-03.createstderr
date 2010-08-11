@@ -311,18 +311,18 @@ In namespace "", we have: {
         ~a & ~b -> _o+
         }
       footprint: {
-        !GND = bool^0 = celem2inv<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = celem2inv<>::!Vdd (2) @[ supply_high ] 
-        _o = bool^0 = celem2inv<>::_o (5) 
-        a = bool^0 = celem2inv<>::a (3) 
-        b = bool^0 = celem2inv<>::b (4) 
+        !GND = bool^0 = celem2inv<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = celem2inv<>::!Vdd (2) @[ supply_high port-alias ] 
+        _o = bool^0 = celem2inv<>::_o (5) @[ port-alias loc-FI- loc-FI+ ] 
+        a = bool^0 = celem2inv<>::a (3) @[ port-alias loc-FO- loc-FO+ ] 
+        b = bool^0 = celem2inv<>::b (4) @[ port-alias loc-FO- loc-FO+ ] 
         Created state:
         bool instance pool: (5 ports, 0 local, 0 mapped)
-        1	celem2inv<>::!GND @[ supply_low ]	
-        2	celem2inv<>::!Vdd @[ supply_high ]	
-        3	celem2inv<>::a	
-        4	celem2inv<>::b	
-        5	celem2inv<>::_o	
+        1	celem2inv<>::!GND @[ supply_low port-alias ]	
+        2	celem2inv<>::!Vdd @[ supply_high port-alias ]	
+        3	celem2inv<>::a @[ port-alias loc-FO- loc-FO+ ]	
+        4	celem2inv<>::b @[ port-alias loc-FO- loc-FO+ ]	
+        5	celem2inv<>::_o @[ port-alias loc-FI- loc-FI+ ]	
         resolved prs:
         a & b -> _o-
         ~a & ~b -> _o+
@@ -353,21 +353,21 @@ In namespace "", we have: {
         !GND@[supply=0]
         !Vdd@[supply=1]
       footprint: {
-        !GND = bool^0 = e1of2<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = e1of2<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = e1of2<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = e1of2<>::!Vdd (2) @[ supply_high port-alias ] 
         d = bool^1
           {
-            [0] = e1of2<>::d[0] (4) 
-            [1] = e1of2<>::d[1] (5) 
+            [0] = e1of2<>::d[0] (4) @[ port-alias ] 
+            [1] = e1of2<>::d[1] (5) @[ port-alias ] 
           }
-        e = bool^0 = e1of2<>::e (3) 
+        e = bool^0 = e1of2<>::e (3) @[ port-alias ] 
         Created state:
         bool instance pool: (5 ports, 0 local, 0 mapped)
-        1	e1of2<>::!GND @[ supply_low ]	
-        2	e1of2<>::!Vdd @[ supply_high ]	
-        3	e1of2<>::e	
-        4	e1of2<>::d[0]	
-        5	e1of2<>::d[1]	
+        1	e1of2<>::!GND @[ supply_low port-alias ]	
+        2	e1of2<>::!Vdd @[ supply_high port-alias ]	
+        3	e1of2<>::e @[ port-alias ]	
+        4	e1of2<>::d[0] @[ port-alias ]	
+        5	e1of2<>::d[1] @[ port-alias ]	
       }
       }
 
@@ -398,16 +398,16 @@ In namespace "", we have: {
         ~a -> b+
         }
       footprint: {
-        !GND = bool^0 = inv<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = inv<>::!Vdd (2) @[ supply_high ] 
-        a = bool^0 = inv<>::a (3) 
-        b = bool^0 = inv<>::b (4) 
+        !GND = bool^0 = inv<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = inv<>::!Vdd (2) @[ supply_high port-alias ] 
+        a = bool^0 = inv<>::a (3) @[ port-alias loc-FO- loc-FO+ ] 
+        b = bool^0 = inv<>::b (4) @[ port-alias loc-FI- loc-FI+ ] 
         Created state:
         bool instance pool: (4 ports, 0 local, 0 mapped)
-        1	inv<>::!GND @[ supply_low ]	
-        2	inv<>::!Vdd @[ supply_high ]	
-        3	inv<>::a	
-        4	inv<>::b	
+        1	inv<>::!GND @[ supply_low port-alias ]	
+        2	inv<>::!Vdd @[ supply_high port-alias ]	
+        3	inv<>::a @[ port-alias loc-FO- loc-FO+ ]	
+        4	inv<>::b @[ port-alias loc-FI- loc-FI+ ]	
         resolved prs:
         a -> b-
         ~a -> b+
@@ -446,18 +446,18 @@ In namespace "", we have: {
         ~a | ~b -> _o+
         }
       footprint: {
-        !GND = bool^0 = nand2<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = nand2<>::!Vdd (2) @[ supply_high ] 
-        _o = bool^0 = nand2<>::_o (5) 
-        a = bool^0 = nand2<>::a (3) 
-        b = bool^0 = nand2<>::b (4) 
+        !GND = bool^0 = nand2<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = nand2<>::!Vdd (2) @[ supply_high port-alias ] 
+        _o = bool^0 = nand2<>::_o (5) @[ port-alias loc-FI- loc-FI+ ] 
+        a = bool^0 = nand2<>::a (3) @[ port-alias loc-FO- loc-FO+ ] 
+        b = bool^0 = nand2<>::b (4) @[ port-alias loc-FO- loc-FO+ ] 
         Created state:
         bool instance pool: (5 ports, 0 local, 0 mapped)
-        1	nand2<>::!GND @[ supply_low ]	
-        2	nand2<>::!Vdd @[ supply_high ]	
-        3	nand2<>::a	
-        4	nand2<>::b	
-        5	nand2<>::_o	
+        1	nand2<>::!GND @[ supply_low port-alias ]	
+        2	nand2<>::!Vdd @[ supply_high port-alias ]	
+        3	nand2<>::a @[ port-alias loc-FO- loc-FO+ ]	
+        4	nand2<>::b @[ port-alias loc-FO- loc-FO+ ]	
+        5	nand2<>::_o @[ port-alias loc-FI- loc-FI+ ]	
         resolved prs:
         a & b -> _o-
         ~a | ~b -> _o+
@@ -510,73 +510,73 @@ In namespace "", we have: {
         nand2<> la
         la ( , , _r[0], _r[1], rv);
       footprint: {
-        !GND = bool^0 = wchb_e1of2<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = wchb_e1of2<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = wchb_e1of2<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = wchb_e1of2<>::!Vdd (2) @[ supply_high port-alias ] 
         L = process e1of2<>^0 = wchb_e1of2<>::L (1) (
-          !GND = bool^0 = wchb_e1of2<>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = wchb_e1of2<>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = wchb_e1of2<>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = wchb_e1of2<>::!Vdd (2) @[ supply_high port-alias ] 
           d = bool^1
             {
-              [0] = wchb_e1of2<>::L.d[0] (3) 
-              [1] = wchb_e1of2<>::L.d[1] (4) 
+              [0] = wchb_e1of2<>::L.d[0] (3) @[ port-alias sub-FO- sub-FO+ ] 
+              [1] = wchb_e1of2<>::L.d[1] (4) @[ port-alias sub-FO- sub-FO+ ] 
             }
-          e = bool^0 = wchb_e1of2<>::L.e (5) 
+          e = bool^0 = wchb_e1of2<>::L.e (5) @[ port-alias sub-FI- sub-FI+ ] 
         )
         R = process e1of2<>^0 = wchb_e1of2<>::R (2) (
-          !GND = bool^0 = wchb_e1of2<>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = wchb_e1of2<>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = wchb_e1of2<>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = wchb_e1of2<>::!Vdd (2) @[ supply_high port-alias ] 
           d = bool^1
             {
-              [0] = wchb_e1of2<>::R.d[0] (6) 
-              [1] = wchb_e1of2<>::R.d[1] (7) 
+              [0] = wchb_e1of2<>::R.d[0] (6) @[ port-alias sub-FI- sub-FI+ ] 
+              [1] = wchb_e1of2<>::R.d[1] (7) @[ port-alias sub-FI- sub-FI+ ] 
             }
-          e = bool^0 = wchb_e1of2<>::R.e (8) 
+          e = bool^0 = wchb_e1of2<>::R.e (8) @[ port-alias sub-FO- sub-FO+ ] 
         )
         _r = bool^1
           {
-            [0] = wchb_e1of2<>::_r[0] (9) 
-            [1] = wchb_e1of2<>::_r[1] (10) 
+            [0] = wchb_e1of2<>::_r[0] (9) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
+            [1] = wchb_e1of2<>::_r[1] (10) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
           }
         l0 = process celem2inv<>^0 = wchb_e1of2<>::l0 (6) (
-          !GND = bool^0 = wchb_e1of2<>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = wchb_e1of2<>::!Vdd (2) @[ supply_high ] 
-          a = bool^0 = wchb_e1of2<>::L.d[0] (3) 
-          b = bool^0 = wchb_e1of2<>::R.e (8) 
-          _o = bool^0 = wchb_e1of2<>::_r[0] (9) 
+          !GND = bool^0 = wchb_e1of2<>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = wchb_e1of2<>::!Vdd (2) @[ supply_high port-alias ] 
+          a = bool^0 = wchb_e1of2<>::L.d[0] (3) @[ port-alias sub-FO- sub-FO+ ] 
+          b = bool^0 = wchb_e1of2<>::R.e (8) @[ port-alias sub-FO- sub-FO+ ] 
+          _o = bool^0 = wchb_e1of2<>::_r[0] (9) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
         )
         l1 = process celem2inv<>^0 = wchb_e1of2<>::l1 (7) (
-          !GND = bool^0 = wchb_e1of2<>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = wchb_e1of2<>::!Vdd (2) @[ supply_high ] 
-          a = bool^0 = wchb_e1of2<>::L.d[1] (4) 
-          b = bool^0 = wchb_e1of2<>::R.e (8) 
-          _o = bool^0 = wchb_e1of2<>::_r[1] (10) 
+          !GND = bool^0 = wchb_e1of2<>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = wchb_e1of2<>::!Vdd (2) @[ supply_high port-alias ] 
+          a = bool^0 = wchb_e1of2<>::L.d[1] (4) @[ port-alias sub-FO- sub-FO+ ] 
+          b = bool^0 = wchb_e1of2<>::R.e (8) @[ port-alias sub-FO- sub-FO+ ] 
+          _o = bool^0 = wchb_e1of2<>::_r[1] (10) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
         )
         la = process nand2<>^0 = wchb_e1of2<>::la (8) (
-          !GND = bool^0 = wchb_e1of2<>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = wchb_e1of2<>::!Vdd (2) @[ supply_high ] 
-          a = bool^0 = wchb_e1of2<>::_r[0] (9) 
-          b = bool^0 = wchb_e1of2<>::_r[1] (10) 
-          _o = bool^0 = wchb_e1of2<>::rv (11) 
+          !GND = bool^0 = wchb_e1of2<>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = wchb_e1of2<>::!Vdd (2) @[ supply_high port-alias ] 
+          a = bool^0 = wchb_e1of2<>::_r[0] (9) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
+          b = bool^0 = wchb_e1of2<>::_r[1] (10) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
+          _o = bool^0 = wchb_e1of2<>::rv (11) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
         )
         r0 = process inv<>^0 = wchb_e1of2<>::r0 (3) (
-          !GND = bool^0 = wchb_e1of2<>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = wchb_e1of2<>::!Vdd (2) @[ supply_high ] 
-          a = bool^0 = wchb_e1of2<>::_r[0] (9) 
-          b = bool^0 = wchb_e1of2<>::R.d[0] (6) 
+          !GND = bool^0 = wchb_e1of2<>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = wchb_e1of2<>::!Vdd (2) @[ supply_high port-alias ] 
+          a = bool^0 = wchb_e1of2<>::_r[0] (9) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
+          b = bool^0 = wchb_e1of2<>::R.d[0] (6) @[ port-alias sub-FI- sub-FI+ ] 
         )
         r1 = process inv<>^0 = wchb_e1of2<>::r1 (4) (
-          !GND = bool^0 = wchb_e1of2<>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = wchb_e1of2<>::!Vdd (2) @[ supply_high ] 
-          a = bool^0 = wchb_e1of2<>::_r[1] (10) 
-          b = bool^0 = wchb_e1of2<>::R.d[1] (7) 
+          !GND = bool^0 = wchb_e1of2<>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = wchb_e1of2<>::!Vdd (2) @[ supply_high port-alias ] 
+          a = bool^0 = wchb_e1of2<>::_r[1] (10) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
+          b = bool^0 = wchb_e1of2<>::R.d[1] (7) @[ port-alias sub-FI- sub-FI+ ] 
         )
         re = process inv<>^0 = wchb_e1of2<>::re (5) (
-          !GND = bool^0 = wchb_e1of2<>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = wchb_e1of2<>::!Vdd (2) @[ supply_high ] 
-          a = bool^0 = wchb_e1of2<>::rv (11) 
-          b = bool^0 = wchb_e1of2<>::L.e (5) 
+          !GND = bool^0 = wchb_e1of2<>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = wchb_e1of2<>::!Vdd (2) @[ supply_high port-alias ] 
+          a = bool^0 = wchb_e1of2<>::rv (11) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
+          b = bool^0 = wchb_e1of2<>::L.e (5) @[ port-alias sub-FI- sub-FI+ ] 
         )
-        rv = bool^0 = wchb_e1of2<>::rv (11) 
+        rv = bool^0 = wchb_e1of2<>::rv (11) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
         Created state:
         process instance pool: (2 ports, 6 local, 0 mapped)
         1	wchb_e1of2<>::L	e1of2<>
@@ -596,20 +596,20 @@ In namespace "", we have: {
         8	wchb_e1of2<>::la	nand2<>
           bool: 1,2,9,10,11
         bool instance pool: (8 ports, 3 local, 0 mapped)
-        1	wchb_e1of2<>::!GND @[ supply_low ]	
-        2	wchb_e1of2<>::!Vdd @[ supply_high ]	
-        3	wchb_e1of2<>::L.d[0]	
-        4	wchb_e1of2<>::L.d[1]	
-        5	wchb_e1of2<>::L.e	
-        6	wchb_e1of2<>::R.d[0]	
-        7	wchb_e1of2<>::R.d[1]	
-        8	wchb_e1of2<>::R.e	
-        9	wchb_e1of2<>::_r[0]	
-        10	wchb_e1of2<>::_r[1]	
-        11	wchb_e1of2<>::rv	
+        1	wchb_e1of2<>::!GND @[ supply_low port-alias ]	
+        2	wchb_e1of2<>::!Vdd @[ supply_high port-alias ]	
+        3	wchb_e1of2<>::L.d[0] @[ port-alias sub-FO- sub-FO+ ]	
+        4	wchb_e1of2<>::L.d[1] @[ port-alias sub-FO- sub-FO+ ]	
+        5	wchb_e1of2<>::L.e @[ port-alias sub-FI- sub-FI+ ]	
+        6	wchb_e1of2<>::R.d[0] @[ port-alias sub-FI- sub-FI+ ]	
+        7	wchb_e1of2<>::R.d[1] @[ port-alias sub-FI- sub-FI+ ]	
+        8	wchb_e1of2<>::R.e @[ port-alias sub-FO- sub-FO+ ]	
+        9	wchb_e1of2<>::_r[0] @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ]	
+        10	wchb_e1of2<>::_r[1] @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ]	
+        11	wchb_e1of2<>::rv @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ]	
         bool port aliases:
-        1: wchb_e1of2<>::L.!GND = wchb_e1of2<>::R.!GND = wchb_e1of2<>::!GND @[ supply_low ]
-        2: wchb_e1of2<>::L.!Vdd = wchb_e1of2<>::R.!Vdd = wchb_e1of2<>::!Vdd @[ supply_high ]
+        1: wchb_e1of2<>::L.!GND = wchb_e1of2<>::R.!GND = wchb_e1of2<>::!GND @[ supply_low port-alias ]
+        2: wchb_e1of2<>::L.!Vdd = wchb_e1of2<>::R.!Vdd = wchb_e1of2<>::!Vdd @[ supply_high port-alias ]
       }
       }
 
@@ -629,20 +629,20 @@ footprint: {
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
     d = bool^1
       {
-        [0] = L.d[0] (3) 
-        [1] = L.d[1] (4) 
+        [0] = L.d[0] (3) @[ sub-FO- sub-FO+ ] 
+        [1] = L.d[1] (4) @[ sub-FO- sub-FO+ ] 
       }
-    e = bool^0 = L.e (5) 
+    e = bool^0 = L.e (5) @[ sub-FI- sub-FI+ ] 
   )
   R = process e1of2<>^0 = R (2) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
     d = bool^1
       {
-        [0] = R.d[0] (6) 
-        [1] = R.d[1] (7) 
+        [0] = R.d[0] (6) @[ sub-FI- sub-FI+ ] 
+        [1] = R.d[1] (7) @[ sub-FI- sub-FI+ ] 
       }
-    e = bool^0 = R.e (8) 
+    e = bool^0 = R.e (8) @[ sub-FO- sub-FO+ ] 
   )
   b = process wchb_e1of2<>^0 = b (3) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
@@ -652,20 +652,20 @@ footprint: {
       !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
       d = bool^1
         {
-          [0] = L.d[0] (3) 
-          [1] = L.d[1] (4) 
+          [0] = L.d[0] (3) @[ sub-FO- sub-FO+ ] 
+          [1] = L.d[1] (4) @[ sub-FO- sub-FO+ ] 
         }
-      e = bool^0 = L.e (5) 
+      e = bool^0 = L.e (5) @[ sub-FI- sub-FI+ ] 
     )
     R = process e1of2<>^0 = R (2) (
       !GND = bool^0 = !GND (1) @[ supply_low ] 
       !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
       d = bool^1
         {
-          [0] = R.d[0] (6) 
-          [1] = R.d[1] (7) 
+          [0] = R.d[0] (6) @[ sub-FI- sub-FI+ ] 
+          [1] = R.d[1] (7) @[ sub-FI- sub-FI+ ] 
         }
-      e = bool^0 = R.e (8) 
+      e = bool^0 = R.e (8) @[ sub-FO- sub-FO+ ] 
     )
   )
   Created state:
@@ -683,12 +683,12 @@ footprint: {
   bool instance pool: (0 ports, 8 local, 3 mapped)
   1	!GND @[ supply_low ]	
   2	!Vdd @[ supply_high ]	
-  3	L.d[0]	
-  4	L.d[1]	
-  5	L.e	
-  6	R.d[0]	
-  7	R.d[1]	
-  8	R.e	
+  3	L.d[0] @[ sub-FO- sub-FO+ ]	
+  4	L.d[1] @[ sub-FO- sub-FO+ ]	
+  5	L.e @[ sub-FI- sub-FI+ ]	
+  6	R.d[0] @[ sub-FI- sub-FI+ ]	
+  7	R.d[1] @[ sub-FI- sub-FI+ ]	
+  8	R.e @[ sub-FO- sub-FO+ ]	
   private sub-bool index map:
     (3 -> 0)
     (4 -> 3)

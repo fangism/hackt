@@ -116,16 +116,16 @@ In namespace "", we have: {
         a@[iscomb]
         b@[autokeeper=0]
       footprint: {
-        !GND = bool^0 = inv<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = inv<>::!Vdd (2) @[ supply_high ] 
-        a = bool^0 = inv<>::a (3) @[ iscomb ] 
-        b = bool^0 = inv<>::b (4) @[ !autokeeper ] 
+        !GND = bool^0 = inv<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = inv<>::!Vdd (2) @[ supply_high port-alias ] 
+        a = bool^0 = inv<>::a (3) @[ iscomb port-alias ] 
+        b = bool^0 = inv<>::b (4) @[ !autokeeper port-alias ] 
         Created state:
         bool instance pool: (4 ports, 0 local, 0 mapped)
-        1	inv<>::!GND @[ supply_low ]	
-        2	inv<>::!Vdd @[ supply_high ]	
-        3	inv<>::a @[ iscomb ]	
-        4	inv<>::b @[ !autokeeper ]	
+        1	inv<>::!GND @[ supply_low port-alias ]	
+        2	inv<>::!Vdd @[ supply_high port-alias ]	
+        3	inv<>::a @[ iscomb port-alias ]	
+        4	inv<>::b @[ !autokeeper port-alias ]	
       }
       }
 
@@ -149,21 +149,21 @@ In namespace "", we have: {
         !Vdd@[supply=1]
         x[0] ( , , x[1].b, x[1].a);
       footprint: {
-        !GND = bool^0 = multi_inv<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = multi_inv<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = multi_inv<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = multi_inv<>::!Vdd (2) @[ supply_high port-alias ] 
         x = process inv<>^1
           {
             [0] = multi_inv<>::x[0] (1) (
-              !GND = bool^0 = multi_inv<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = multi_inv<>::!Vdd (2) @[ supply_high ] 
-              a = bool^0 = multi_inv<>::x[0].a (3) @[ iscomb !autokeeper ] 
-              b = bool^0 = multi_inv<>::x[0].b (4) @[ iscomb !autokeeper ] 
+              !GND = bool^0 = multi_inv<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = multi_inv<>::!Vdd (2) @[ supply_high port-alias ] 
+              a = bool^0 = multi_inv<>::x[0].a (3) @[ iscomb !autokeeper port-alias ] 
+              b = bool^0 = multi_inv<>::x[0].b (4) @[ iscomb !autokeeper port-alias ] 
             )
             [1] = multi_inv<>::x[1] (2) (
-              !GND = bool^0 = multi_inv<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = multi_inv<>::!Vdd (2) @[ supply_high ] 
-              a = bool^0 = multi_inv<>::x[0].b (4) @[ iscomb !autokeeper ] 
-              b = bool^0 = multi_inv<>::x[0].a (3) @[ iscomb !autokeeper ] 
+              !GND = bool^0 = multi_inv<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = multi_inv<>::!Vdd (2) @[ supply_high port-alias ] 
+              a = bool^0 = multi_inv<>::x[0].b (4) @[ iscomb !autokeeper port-alias ] 
+              b = bool^0 = multi_inv<>::x[0].a (3) @[ iscomb !autokeeper port-alias ] 
             )
           }
         Created state:
@@ -173,15 +173,15 @@ In namespace "", we have: {
         2	multi_inv<>::x[1]	inv<>
           bool: 1,2,4,3
         bool instance pool: (4 ports, 0 local, 0 mapped)
-        1	multi_inv<>::!GND @[ supply_low ]	
-        2	multi_inv<>::!Vdd @[ supply_high ]	
-        3	multi_inv<>::x[0].a @[ iscomb !autokeeper ]	
-        4	multi_inv<>::x[0].b @[ iscomb !autokeeper ]	
+        1	multi_inv<>::!GND @[ supply_low port-alias ]	
+        2	multi_inv<>::!Vdd @[ supply_high port-alias ]	
+        3	multi_inv<>::x[0].a @[ iscomb !autokeeper port-alias ]	
+        4	multi_inv<>::x[0].b @[ iscomb !autokeeper port-alias ]	
         bool port aliases:
-        1: multi_inv<>::x[0].!GND = multi_inv<>::x[1].!GND = multi_inv<>::!GND @[ supply_low ]
-        2: multi_inv<>::x[0].!Vdd = multi_inv<>::x[1].!Vdd = multi_inv<>::!Vdd @[ supply_high ]
-        3: multi_inv<>::x[0].a = multi_inv<>::x[1].b @[ iscomb !autokeeper ]
-        4: multi_inv<>::x[0].b = multi_inv<>::x[1].a @[ iscomb !autokeeper ]
+        1: multi_inv<>::x[0].!GND = multi_inv<>::x[1].!GND = multi_inv<>::!GND @[ supply_low port-alias ]
+        2: multi_inv<>::x[0].!Vdd = multi_inv<>::x[1].!Vdd = multi_inv<>::!Vdd @[ supply_high port-alias ]
+        3: multi_inv<>::x[0].a = multi_inv<>::x[1].b @[ iscomb !autokeeper port-alias ]
+        4: multi_inv<>::x[0].b = multi_inv<>::x[1].a @[ iscomb !autokeeper port-alias ]
       }
       }
 

@@ -137,16 +137,16 @@ In namespace "", we have: {
         ~x -> y+
         }
       footprint: {
-        !GND = bool^0 = inv<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = inv<>::!Vdd (2) @[ supply_high ] 
-        x = bool^0 = inv<>::x (3) 
-        y = bool^0 = inv<>::y (4) 
+        !GND = bool^0 = inv<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = inv<>::!Vdd (2) @[ supply_high port-alias ] 
+        x = bool^0 = inv<>::x (3) @[ port-alias loc-FO- loc-FO+ ] 
+        y = bool^0 = inv<>::y (4) @[ port-alias loc-FI- loc-FI+ ] 
         Created state:
         bool instance pool: (4 ports, 0 local, 0 mapped)
-        1	inv<>::!GND @[ supply_low ]	
-        2	inv<>::!Vdd @[ supply_high ]	
-        3	inv<>::x	
-        4	inv<>::y	
+        1	inv<>::!GND @[ supply_low port-alias ]	
+        2	inv<>::!Vdd @[ supply_high port-alias ]	
+        3	inv<>::x @[ port-alias loc-FO- loc-FO+ ]	
+        4	inv<>::y @[ port-alias loc-FI- loc-FI+ ]	
         resolved prs:
         x -> y-
         ~x -> y+
@@ -176,50 +176,50 @@ footprint: {
   a = process inv<>^0 = a (1) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    x = bool^0 = a.x (3) 
-    y = bool^0 = a.y (4) 
+    x = bool^0 = a.x (3) @[ sub-FO- sub-FO+ ] 
+    y = bool^0 = a.y (4) @[ sub-FI- sub-FI+ ] 
   )
   b = process inv<>^0 = b (2) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    x = bool^0 = b.x (5) 
-    y = bool^0 = b.y (6) 
+    x = bool^0 = b.x (5) @[ sub-FO- sub-FO+ ] 
+    y = bool^0 = b.y (6) @[ sub-FI- sub-FI+ ] 
   )
   c = process inv<>^0 = c (3) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    x = bool^0 = c.x (7) 
-    y = bool^0 = c.y (8) 
+    x = bool^0 = c.x (7) @[ sub-FO- sub-FO+ ] 
+    y = bool^0 = c.y (8) @[ sub-FI- sub-FI+ ] 
   )
   d = process inv<>^0 = d (4) (
     !GND = bool^0 = myGND (9) 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    x = bool^0 = d.x (10) 
-    y = bool^0 = d.y (11) 
+    x = bool^0 = d.x (10) @[ sub-FO- sub-FO+ ] 
+    y = bool^0 = d.y (11) @[ sub-FI- sub-FI+ ] 
   )
   d2 = process inv<>^0 = d2 (5) (
     !GND = bool^0 = myGND (9) 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    x = bool^0 = d2.x (12) 
-    y = bool^0 = d2.y (13) 
+    x = bool^0 = d2.x (12) @[ sub-FO- sub-FO+ ] 
+    y = bool^0 = d2.y (13) @[ sub-FI- sub-FI+ ] 
   )
   e = process inv<>^0 = e (6) (
     !GND = bool^0 = myGND (9) 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    x = bool^0 = e.x (14) 
-    y = bool^0 = e.y (15) 
+    x = bool^0 = e.x (14) @[ sub-FO- sub-FO+ ] 
+    y = bool^0 = e.y (15) @[ sub-FI- sub-FI+ ] 
   )
   f = process inv<>^0 = f (7) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = myVdd (16) 
-    x = bool^0 = f.x (17) 
-    y = bool^0 = f.y (18) 
+    x = bool^0 = f.x (17) @[ sub-FO- sub-FO+ ] 
+    y = bool^0 = f.y (18) @[ sub-FI- sub-FI+ ] 
   )
   g = process inv<>^0 = g (8) (
     !GND = bool^0 = myGND (9) 
     !Vdd = bool^0 = myVdd (16) 
-    x = bool^0 = g.x (19) 
-    y = bool^0 = g.y (20) 
+    x = bool^0 = g.x (19) @[ sub-FO- sub-FO+ ] 
+    y = bool^0 = g.y (20) @[ sub-FI- sub-FI+ ] 
   )
   myGND = bool^0 = myGND (9) 
   myVdd = bool^0 = myVdd (16) 
@@ -244,22 +244,22 @@ footprint: {
   bool instance pool: (0 ports, 20 local, 0 mapped)
   1	!GND @[ supply_low ]	
   2	!Vdd @[ supply_high ]	
-  3	a.x	
-  4	a.y	
-  5	b.x	
-  6	b.y	
-  7	c.x	
-  8	c.y	
+  3	a.x @[ sub-FO- sub-FO+ ]	
+  4	a.y @[ sub-FI- sub-FI+ ]	
+  5	b.x @[ sub-FO- sub-FO+ ]	
+  6	b.y @[ sub-FI- sub-FI+ ]	
+  7	c.x @[ sub-FO- sub-FO+ ]	
+  8	c.y @[ sub-FI- sub-FI+ ]	
   9	myGND	
-  10	d.x	
-  11	d.y	
-  12	d2.x	
-  13	d2.y	
-  14	e.x	
-  15	e.y	
+  10	d.x @[ sub-FO- sub-FO+ ]	
+  11	d.y @[ sub-FI- sub-FI+ ]	
+  12	d2.x @[ sub-FO- sub-FO+ ]	
+  13	d2.y @[ sub-FI- sub-FI+ ]	
+  14	e.x @[ sub-FO- sub-FO+ ]	
+  15	e.y @[ sub-FI- sub-FI+ ]	
   16	myVdd	
-  17	f.x	
-  18	f.y	
-  19	g.x	
-  20	g.y	
+  17	f.x @[ sub-FO- sub-FO+ ]	
+  18	f.y @[ sub-FI- sub-FI+ ]	
+  19	g.x @[ sub-FO- sub-FO+ ]	
+  20	g.y @[ sub-FI- sub-FI+ ]	
 }

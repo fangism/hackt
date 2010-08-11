@@ -65,21 +65,21 @@ footprint: {
   !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
   x = bool^1
     {
-      [0] = x[0] (4) 
-      [1] = x[1] (5) 
-      [2] = x[2] (6) 
-      [3] = x[3] (7) 
+      [0] = x[0] (4) @[ loc-FO- loc-FO+ ] 
+      [1] = x[1] (5) @[ loc-FO- loc-FO+ ] 
+      [2] = x[2] (6) @[ loc-FO- loc-FO+ ] 
+      [3] = x[3] (7) @[ loc-FO- loc-FO+ ] 
     }
-  z = bool^0 = z (3) 
+  z = bool^0 = z (3) @[ loc-FI- loc-FI+ ] 
   Created state:
   bool instance pool: (0 ports, 7 local, 0 mapped)
   1	!GND @[ supply_low ]	
   2	!Vdd @[ supply_high ]	
-  3	z	
-  4	x[0]	
-  5	x[1]	
-  6	x[2]	
-  7	x[3]	
+  3	z @[ loc-FI- loc-FI+ ]	
+  4	x[0] @[ loc-FO- loc-FO+ ]	
+  5	x[1] @[ loc-FO- loc-FO+ ]	
+  6	x[2] @[ loc-FO- loc-FO+ ]	
+  7	x[3] @[ loc-FO- loc-FO+ ]	
   resolved prs:
   x[0] & x[1] & x[2] & x[3] -> z-
   ~x[0] & ~x[1] & ~x[2] & ~x[3] -> z+

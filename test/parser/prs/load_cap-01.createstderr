@@ -114,16 +114,16 @@ In namespace "", we have: {
         ~a -> b+ [loadcap=1;comb=1]
         }
       footprint: {
-        !GND = bool^0 = inv<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = inv<>::!Vdd (2) @[ supply_high ] 
-        a = bool^0 = inv<>::a (3) 
-        b = bool^0 = inv<>::b (4) 
+        !GND = bool^0 = inv<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = inv<>::!Vdd (2) @[ supply_high port-alias ] 
+        a = bool^0 = inv<>::a (3) @[ port-alias loc-FO- loc-FO+ ] 
+        b = bool^0 = inv<>::b (4) @[ port-alias loc-FI- loc-FI+ ] 
         Created state:
         bool instance pool: (4 ports, 0 local, 0 mapped)
-        1	inv<>::!GND @[ supply_low ]	
-        2	inv<>::!Vdd @[ supply_high ]	
-        3	inv<>::a	
-        4	inv<>::b	
+        1	inv<>::!GND @[ supply_low port-alias ]	
+        2	inv<>::!Vdd @[ supply_high port-alias ]	
+        3	inv<>::a @[ port-alias loc-FO- loc-FO+ ]	
+        4	inv<>::b @[ port-alias loc-FI- loc-FI+ ]	
         resolved prs:
         a -> b- [loadcap=2;comb=1]
         ~a -> b+ [loadcap=1;comb=1]
@@ -145,8 +145,8 @@ footprint: {
   i = process inv<>^0 = i (1) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    a = bool^0 = i.a (3) 
-    b = bool^0 = i.b (4) 
+    a = bool^0 = i.a (3) @[ sub-FO- sub-FO+ ] 
+    b = bool^0 = i.b (4) @[ sub-FI- sub-FI+ ] 
   )
   Created state:
   process instance pool: (0 ports, 1 local, 0 mapped)
@@ -155,6 +155,6 @@ footprint: {
   bool instance pool: (0 ports, 4 local, 0 mapped)
   1	!GND @[ supply_low ]	
   2	!Vdd @[ supply_high ]	
-  3	i.a	
-  4	i.b	
+  3	i.a @[ sub-FO- sub-FO+ ]	
+  4	i.b @[ sub-FI- sub-FI+ ]	
 }

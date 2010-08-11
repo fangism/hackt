@@ -110,37 +110,37 @@ In namespace "", we have: {
         !Vdd@[supply=1]
       footprint collection: {
         <12, 13, 26> {
-          !GND = bool^0 = foo<12, 13, 26>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = foo<12, 13, 26>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = foo<12, 13, 26>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = foo<12, 13, 26>::!Vdd (2) @[ supply_high port-alias ] 
           X = pint^0 value: 12
           Y = pint^0 value: 13
           Z = pint^0 value: 26
           Created state:
           bool instance pool: (2 ports, 0 local, 0 mapped)
-          1	foo<12, 13, 26>::!GND @[ supply_low ]	
-          2	foo<12, 13, 26>::!Vdd @[ supply_high ]	
+          1	foo<12, 13, 26>::!GND @[ supply_low port-alias ]	
+          2	foo<12, 13, 26>::!Vdd @[ supply_high port-alias ]	
         }
         <12, 34, 56> {
-          !GND = bool^0 = foo<12, 34, 56>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = foo<12, 34, 56>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = foo<12, 34, 56>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = foo<12, 34, 56>::!Vdd (2) @[ supply_high port-alias ] 
           X = pint^0 value: 12
           Y = pint^0 value: 34
           Z = pint^0 value: 56
           Created state:
           bool instance pool: (2 ports, 0 local, 0 mapped)
-          1	foo<12, 34, 56>::!GND @[ supply_low ]	
-          2	foo<12, 34, 56>::!Vdd @[ supply_high ]	
+          1	foo<12, 34, 56>::!GND @[ supply_low port-alias ]	
+          2	foo<12, 34, 56>::!Vdd @[ supply_high port-alias ]	
         }
         <12, 34, 68> {
-          !GND = bool^0 = foo<12, 34, 68>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = foo<12, 34, 68>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = foo<12, 34, 68>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = foo<12, 34, 68>::!Vdd (2) @[ supply_high port-alias ] 
           X = pint^0 value: 12
           Y = pint^0 value: 34
           Z = pint^0 value: 68
           Created state:
           bool instance pool: (2 ports, 0 local, 0 mapped)
-          1	foo<12, 34, 68>::!GND @[ supply_low ]	
-          2	foo<12, 34, 68>::!Vdd @[ supply_high ]	
+          1	foo<12, 34, 68>::!GND @[ supply_low port-alias ]	
+          2	foo<12, 34, 68>::!Vdd @[ supply_high port-alias ]	
         }
       }
       }

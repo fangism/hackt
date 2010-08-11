@@ -84,16 +84,16 @@ In namespace "", we have: {
         !Vdd@[supply=1]
         x = y;
       footprint: {
-        !GND = bool^0 = forward<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = forward<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = forward<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = forward<>::!Vdd (2) @[ supply_high port-alias ] 
         x = channel chan?(bool<>)^0 = forward<>::x (1) 
         y = channel chan!(bool<>)^0 = forward<>::x (1) 
         Created state:
         channel instance pool: (1 ports, 0 local, 0 mapped)
         1	forward<>::x	
         bool instance pool: (2 ports, 0 local, 0 mapped)
-        1	forward<>::!GND @[ supply_low ]	
-        2	forward<>::!Vdd @[ supply_high ]	
+        1	forward<>::!GND @[ supply_low port-alias ]	
+        2	forward<>::!Vdd @[ supply_high port-alias ]	
         channel port aliases:
         1: forward<>::x = forward<>::y
       }

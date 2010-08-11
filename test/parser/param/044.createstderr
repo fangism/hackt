@@ -89,8 +89,8 @@ In namespace "", we have: {
         M[0] = 3;
       footprint collection: {
         <2> {
-          !GND = bool^0 = bogus<2>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = bogus<2>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = bogus<2>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = bogus<2>::!Vdd (2) @[ supply_high port-alias ] 
           E = pint^0 value: 2
           M = pint^1
             unrolled index-value pairs: {
@@ -99,8 +99,8 @@ In namespace "", we have: {
             }
           Created state:
           bool instance pool: (2 ports, 0 local, 0 mapped)
-          1	bogus<2>::!GND @[ supply_low ]	
-          2	bogus<2>::!Vdd @[ supply_high ]	
+          1	bogus<2>::!GND @[ supply_low port-alias ]	
+          2	bogus<2>::!Vdd @[ supply_high port-alias ]	
         }
       }
       }

@@ -106,15 +106,15 @@ In namespace "", we have: {
           ]
         }
       footprint: {
-        !GND = bool^0 = boring<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = boring<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = boring<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = boring<>::!Vdd (2) @[ supply_high port-alias ] 
         B = channel chan(bool<>)^0 = boring<>::B (1) 
         Created state:
         channel instance pool: (1 ports, 0 local, 0 mapped)
         1	boring<>::B	
         bool instance pool: (2 ports, 0 local, 0 mapped)
-        1	boring<>::!GND @[ supply_low ]	
-        2	boring<>::!Vdd @[ supply_high ]	
+        1	boring<>::!GND @[ supply_low port-alias ]	
+        2	boring<>::!Vdd @[ supply_high port-alias ]	
         resolved concurrent actions:
           *[
             B!(false)

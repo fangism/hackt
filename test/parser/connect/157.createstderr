@@ -232,24 +232,24 @@ In namespace "", we have: {
         }
       footprint collection: {
         <2> {
-          !GND = bool^0 = celem<2>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = celem<2>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = celem<2>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = celem<2>::!Vdd (2) @[ supply_high port-alias ] 
           N = pint^0 value: 2
-          _o = bool^0 = celem<2>::_o (6) 
+          _o = bool^0 = celem<2>::_o (6) @[ loc-FO- loc-FO+ loc-FI- loc-FI+ ] 
           i = bool^1
             {
-              [0] = celem<2>::i[0] (4) 
-              [1] = celem<2>::i[1] (5) 
+              [0] = celem<2>::i[0] (4) @[ port-alias loc-FO- loc-FO+ ] 
+              [1] = celem<2>::i[1] (5) @[ port-alias loc-FO- loc-FO+ ] 
             }
-          o = bool^0 = celem<2>::o (3) 
+          o = bool^0 = celem<2>::o (3) @[ port-alias loc-FO- loc-FO+ loc-FI- loc-FI+ ] 
           Created state:
           bool instance pool: (5 ports, 1 local, 0 mapped)
-          1	celem<2>::!GND @[ supply_low ]	
-          2	celem<2>::!Vdd @[ supply_high ]	
-          3	celem<2>::o	
-          4	celem<2>::i[0]	
-          5	celem<2>::i[1]	
-          6	celem<2>::_o	
+          1	celem<2>::!GND @[ supply_low port-alias ]	
+          2	celem<2>::!Vdd @[ supply_high port-alias ]	
+          3	celem<2>::o @[ port-alias loc-FO- loc-FO+ loc-FI- loc-FI+ ]	
+          4	celem<2>::i[0] @[ port-alias loc-FO- loc-FO+ ]	
+          5	celem<2>::i[1] @[ port-alias loc-FO- loc-FO+ ]	
+          6	celem<2>::_o @[ loc-FO- loc-FO+ loc-FI- loc-FI+ ]	
           resolved prs:
           i[0] & i[1] -> _o-
           ~i[0] & ~i[1] -> _o+
@@ -277,12 +277,12 @@ In namespace "", we have: {
           bool<> e
         )
       footprint: {
-        d = bool^0 = e1of1<>::d (1) 
-        e = bool^0 = e1of1<>::e (2) 
+        d = bool^0 = e1of1<>::d (1) @[ port-alias ] 
+        e = bool^0 = e1of1<>::e (2) @[ port-alias ] 
         Created state:
         bool instance pool: (2 ports, 0 local, 0 mapped)
-        1	e1of1<>::d	
-        2	e1of1<>::e	
+        1	e1of1<>::d @[ port-alias ]	
+        2	e1of1<>::e @[ port-alias ]	
       }
       }
 
@@ -322,38 +322,38 @@ In namespace "", we have: {
         c ( , , re, I.e);
       footprint collection: {
         <2> {
-          !GND = bool^0 = wire_copy_e1of1<2>::!GND (3) @[ supply_low ] 
-          !Vdd = bool^0 = wire_copy_e1of1<2>::!Vdd (4) @[ supply_high ] 
+          !GND = bool^0 = wire_copy_e1of1<2>::!GND (3) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = wire_copy_e1of1<2>::!Vdd (4) @[ supply_high port-alias ] 
           C = pint^0 value: 2
           I = process e1of1<>^0 = wire_copy_e1of1<2>::I (1) (
-            d = bool^0 = wire_copy_e1of1<2>::I.d (1) 
-            e = bool^0 = wire_copy_e1of1<2>::I.e (2) 
+            d = bool^0 = wire_copy_e1of1<2>::I.d (1) @[ port-alias ] 
+            e = bool^0 = wire_copy_e1of1<2>::I.e (2) @[ port-alias sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
           )
           O = process e1of1<>^1
             {
               [0] = wire_copy_e1of1<2>::O[0] (2) (
-                d = bool^0 = wire_copy_e1of1<2>::I.d (1) 
-                e = bool^0 = wire_copy_e1of1<2>::re[0] (5) 
+                d = bool^0 = wire_copy_e1of1<2>::I.d (1) @[ port-alias ] 
+                e = bool^0 = wire_copy_e1of1<2>::re[0] (5) @[ port-alias sub-FO- sub-FO+ ] 
               )
               [1] = wire_copy_e1of1<2>::O[1] (3) (
-                d = bool^0 = wire_copy_e1of1<2>::I.d (1) 
-                e = bool^0 = wire_copy_e1of1<2>::re[1] (6) 
+                d = bool^0 = wire_copy_e1of1<2>::I.d (1) @[ port-alias ] 
+                e = bool^0 = wire_copy_e1of1<2>::re[1] (6) @[ port-alias sub-FO- sub-FO+ ] 
               )
             }
           c = process celem<2>^0 = wire_copy_e1of1<2>::c (4) (
-            !GND = bool^0 = wire_copy_e1of1<2>::!GND (3) @[ supply_low ] 
-            !Vdd = bool^0 = wire_copy_e1of1<2>::!Vdd (4) @[ supply_high ] 
+            !GND = bool^0 = wire_copy_e1of1<2>::!GND (3) @[ supply_low port-alias ] 
+            !Vdd = bool^0 = wire_copy_e1of1<2>::!Vdd (4) @[ supply_high port-alias ] 
             i = bool^1
               {
-                [0] = wire_copy_e1of1<2>::re[0] (5) 
-                [1] = wire_copy_e1of1<2>::re[1] (6) 
+                [0] = wire_copy_e1of1<2>::re[0] (5) @[ port-alias sub-FO- sub-FO+ ] 
+                [1] = wire_copy_e1of1<2>::re[1] (6) @[ port-alias sub-FO- sub-FO+ ] 
               }
-            o = bool^0 = wire_copy_e1of1<2>::I.e (2) 
+            o = bool^0 = wire_copy_e1of1<2>::I.e (2) @[ port-alias sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
           )
           re = bool^1
             {
-              [0] = wire_copy_e1of1<2>::re[0] (5) 
-              [1] = wire_copy_e1of1<2>::re[1] (6) 
+              [0] = wire_copy_e1of1<2>::re[0] (5) @[ port-alias sub-FO- sub-FO+ ] 
+              [1] = wire_copy_e1of1<2>::re[1] (6) @[ port-alias sub-FO- sub-FO+ ] 
             }
           Created state:
           process instance pool: (3 ports, 1 local, 0 mapped)
@@ -366,17 +366,17 @@ In namespace "", we have: {
           4	wire_copy_e1of1<2>::c	celem<2>
             bool: 3,4,2,5,6
           bool instance pool: (6 ports, 0 local, 1 mapped)
-          1	wire_copy_e1of1<2>::I.d	
-          2	wire_copy_e1of1<2>::I.e	
-          3	wire_copy_e1of1<2>::!GND @[ supply_low ]	
-          4	wire_copy_e1of1<2>::!Vdd @[ supply_high ]	
-          5	wire_copy_e1of1<2>::re[0]	
-          6	wire_copy_e1of1<2>::re[1]	
+          1	wire_copy_e1of1<2>::I.d @[ port-alias ]	
+          2	wire_copy_e1of1<2>::I.e @[ port-alias sub-FO- sub-FO+ sub-FI- sub-FI+ ]	
+          3	wire_copy_e1of1<2>::!GND @[ supply_low port-alias ]	
+          4	wire_copy_e1of1<2>::!Vdd @[ supply_high port-alias ]	
+          5	wire_copy_e1of1<2>::re[0] @[ port-alias sub-FO- sub-FO+ ]	
+          6	wire_copy_e1of1<2>::re[1] @[ port-alias sub-FO- sub-FO+ ]	
           private sub-bool index map:
             (4 -> 0)
             (5 -> 1)
           bool port aliases:
-          1: wire_copy_e1of1<2>::I.d = wire_copy_e1of1<2>::O[0].d = wire_copy_e1of1<2>::O[1].d
+          1: wire_copy_e1of1<2>::I.d = wire_copy_e1of1<2>::O[0].d = wire_copy_e1of1<2>::O[1].d @[ port-alias ]
         }
       }
       }
@@ -395,17 +395,17 @@ footprint: {
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
     I = process e1of1<>^0 = foo.I (2) (
       d = bool^0 = foo.I.d (3) 
-      e = bool^0 = foo.I.e (4) 
+      e = bool^0 = foo.I.e (4) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
     )
     O = process e1of1<>^1
       {
         [0] = foo.O[0] (3) (
           d = bool^0 = foo.I.d (3) 
-          e = bool^0 = foo.O[0].e (5) 
+          e = bool^0 = foo.O[0].e (5) @[ sub-FO- sub-FO+ ] 
         )
         [1] = foo.O[1] (4) (
           d = bool^0 = foo.I.d (3) 
-          e = bool^0 = foo.O[1].e (6) 
+          e = bool^0 = foo.O[1].e (6) @[ sub-FO- sub-FO+ ] 
         )
       }
   )
@@ -427,9 +427,9 @@ footprint: {
   1	!GND @[ supply_low ]	
   2	!Vdd @[ supply_high ]	
   3	foo.I.d	
-  4	foo.I.e	
-  5	foo.O[0].e	
-  6	foo.O[1].e	
+  4	foo.I.e @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ]	
+  5	foo.O[0].e @[ sub-FO- sub-FO+ ]	
+  6	foo.O[1].e @[ sub-FO- sub-FO+ ]	
   private sub-bool index map:
     (1 -> 0)
     (5 -> 1)

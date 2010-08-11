@@ -97,16 +97,16 @@ In namespace "", we have: {
         passn(V,G,G)
         }
       footprint: {
-        !GND = bool^0 = foo<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high ] 
-        G = bool^0 = foo<>::G (4) 
-        V = bool^0 = foo<>::V (3) 
+        !GND = bool^0 = foo<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high port-alias ] 
+        G = bool^0 = foo<>::G (4) @[ port-alias loc-FO- loc-FI- ] 
+        V = bool^0 = foo<>::V (3) @[ port-alias loc-FO- ] 
         Created state:
         bool instance pool: (4 ports, 0 local, 0 mapped)
-        1	foo<>::!GND @[ supply_low ]	
-        2	foo<>::!Vdd @[ supply_high ]	
-        3	foo<>::V	
-        4	foo<>::G	
+        1	foo<>::!GND @[ supply_low port-alias ]	
+        2	foo<>::!Vdd @[ supply_high port-alias ]	
+        3	foo<>::V @[ port-alias loc-FO- ]	
+        4	foo<>::G @[ port-alias loc-FO- loc-FI- ]	
         resolved macros:
         passn(V,G,G)
         rule supply map: (rules, macros, @nodes : Vdd, GND)
@@ -124,1550 +124,1550 @@ In namespace "", we have: {
 footprint: {
   !GND = bool^0 = !GND (1) @[ supply_low ] 
   !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-  G = bool^0 = G (4) 
+  G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
   bar = process foo<>^1
     {
       [0] = bar[0] (1) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[0].V (3) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[0].V (3) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [1] = bar[1] (2) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[1].V (5) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[1].V (5) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [2] = bar[2] (3) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[2].V (6) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[2].V (6) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [3] = bar[3] (4) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[3].V (7) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[3].V (7) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [4] = bar[4] (5) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[4].V (8) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[4].V (8) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [5] = bar[5] (6) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[5].V (9) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[5].V (9) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [6] = bar[6] (7) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[6].V (10) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[6].V (10) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [7] = bar[7] (8) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[7].V (11) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[7].V (11) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [8] = bar[8] (9) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[8].V (12) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[8].V (12) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [9] = bar[9] (10) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[9].V (13) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[9].V (13) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [10] = bar[10] (11) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[10].V (14) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[10].V (14) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [11] = bar[11] (12) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[11].V (15) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[11].V (15) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [12] = bar[12] (13) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[12].V (16) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[12].V (16) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [13] = bar[13] (14) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[13].V (17) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[13].V (17) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [14] = bar[14] (15) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[14].V (18) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[14].V (18) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [15] = bar[15] (16) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[15].V (19) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[15].V (19) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [16] = bar[16] (17) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[16].V (20) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[16].V (20) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [17] = bar[17] (18) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[17].V (21) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[17].V (21) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [18] = bar[18] (19) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[18].V (22) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[18].V (22) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [19] = bar[19] (20) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[19].V (23) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[19].V (23) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [20] = bar[20] (21) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[20].V (24) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[20].V (24) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [21] = bar[21] (22) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[21].V (25) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[21].V (25) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [22] = bar[22] (23) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[22].V (26) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[22].V (26) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [23] = bar[23] (24) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[23].V (27) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[23].V (27) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [24] = bar[24] (25) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[24].V (28) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[24].V (28) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [25] = bar[25] (26) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[25].V (29) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[25].V (29) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [26] = bar[26] (27) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[26].V (30) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[26].V (30) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [27] = bar[27] (28) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[27].V (31) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[27].V (31) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [28] = bar[28] (29) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[28].V (32) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[28].V (32) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [29] = bar[29] (30) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[29].V (33) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[29].V (33) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [30] = bar[30] (31) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[30].V (34) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[30].V (34) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [31] = bar[31] (32) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[31].V (35) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[31].V (35) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [32] = bar[32] (33) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[32].V (36) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[32].V (36) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [33] = bar[33] (34) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[33].V (37) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[33].V (37) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [34] = bar[34] (35) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[34].V (38) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[34].V (38) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [35] = bar[35] (36) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[35].V (39) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[35].V (39) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [36] = bar[36] (37) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[36].V (40) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[36].V (40) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [37] = bar[37] (38) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[37].V (41) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[37].V (41) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [38] = bar[38] (39) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[38].V (42) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[38].V (42) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [39] = bar[39] (40) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[39].V (43) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[39].V (43) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [40] = bar[40] (41) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[40].V (44) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[40].V (44) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [41] = bar[41] (42) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[41].V (45) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[41].V (45) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [42] = bar[42] (43) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[42].V (46) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[42].V (46) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [43] = bar[43] (44) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[43].V (47) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[43].V (47) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [44] = bar[44] (45) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[44].V (48) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[44].V (48) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [45] = bar[45] (46) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[45].V (49) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[45].V (49) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [46] = bar[46] (47) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[46].V (50) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[46].V (50) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [47] = bar[47] (48) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[47].V (51) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[47].V (51) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [48] = bar[48] (49) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[48].V (52) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[48].V (52) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [49] = bar[49] (50) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[49].V (53) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[49].V (53) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [50] = bar[50] (51) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[50].V (54) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[50].V (54) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [51] = bar[51] (52) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[51].V (55) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[51].V (55) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [52] = bar[52] (53) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[52].V (56) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[52].V (56) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [53] = bar[53] (54) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[53].V (57) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[53].V (57) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [54] = bar[54] (55) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[54].V (58) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[54].V (58) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [55] = bar[55] (56) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[55].V (59) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[55].V (59) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [56] = bar[56] (57) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[56].V (60) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[56].V (60) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [57] = bar[57] (58) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[57].V (61) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[57].V (61) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [58] = bar[58] (59) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[58].V (62) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[58].V (62) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [59] = bar[59] (60) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[59].V (63) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[59].V (63) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [60] = bar[60] (61) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[60].V (64) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[60].V (64) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [61] = bar[61] (62) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[61].V (65) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[61].V (65) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [62] = bar[62] (63) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[62].V (66) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[62].V (66) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [63] = bar[63] (64) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[63].V (67) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[63].V (67) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [64] = bar[64] (65) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[64].V (68) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[64].V (68) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [65] = bar[65] (66) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[65].V (69) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[65].V (69) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [66] = bar[66] (67) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[66].V (70) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[66].V (70) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [67] = bar[67] (68) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[67].V (71) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[67].V (71) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [68] = bar[68] (69) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[68].V (72) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[68].V (72) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [69] = bar[69] (70) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[69].V (73) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[69].V (73) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [70] = bar[70] (71) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[70].V (74) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[70].V (74) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [71] = bar[71] (72) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[71].V (75) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[71].V (75) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [72] = bar[72] (73) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[72].V (76) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[72].V (76) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [73] = bar[73] (74) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[73].V (77) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[73].V (77) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [74] = bar[74] (75) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[74].V (78) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[74].V (78) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [75] = bar[75] (76) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[75].V (79) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[75].V (79) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [76] = bar[76] (77) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[76].V (80) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[76].V (80) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [77] = bar[77] (78) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[77].V (81) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[77].V (81) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [78] = bar[78] (79) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[78].V (82) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[78].V (82) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [79] = bar[79] (80) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[79].V (83) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[79].V (83) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [80] = bar[80] (81) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[80].V (84) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[80].V (84) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [81] = bar[81] (82) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[81].V (85) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[81].V (85) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [82] = bar[82] (83) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[82].V (86) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[82].V (86) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [83] = bar[83] (84) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[83].V (87) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[83].V (87) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [84] = bar[84] (85) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[84].V (88) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[84].V (88) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [85] = bar[85] (86) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[85].V (89) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[85].V (89) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [86] = bar[86] (87) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[86].V (90) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[86].V (90) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [87] = bar[87] (88) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[87].V (91) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[87].V (91) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [88] = bar[88] (89) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[88].V (92) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[88].V (92) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [89] = bar[89] (90) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[89].V (93) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[89].V (93) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [90] = bar[90] (91) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[90].V (94) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[90].V (94) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [91] = bar[91] (92) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[91].V (95) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[91].V (95) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [92] = bar[92] (93) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[92].V (96) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[92].V (96) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [93] = bar[93] (94) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[93].V (97) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[93].V (97) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [94] = bar[94] (95) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[94].V (98) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[94].V (98) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [95] = bar[95] (96) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[95].V (99) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[95].V (99) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [96] = bar[96] (97) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[96].V (100) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[96].V (100) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [97] = bar[97] (98) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[97].V (101) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[97].V (101) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [98] = bar[98] (99) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[98].V (102) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[98].V (102) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [99] = bar[99] (100) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[99].V (103) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[99].V (103) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [100] = bar[100] (101) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[100].V (104) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[100].V (104) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [101] = bar[101] (102) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[101].V (105) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[101].V (105) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [102] = bar[102] (103) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[102].V (106) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[102].V (106) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [103] = bar[103] (104) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[103].V (107) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[103].V (107) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [104] = bar[104] (105) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[104].V (108) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[104].V (108) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [105] = bar[105] (106) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[105].V (109) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[105].V (109) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [106] = bar[106] (107) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[106].V (110) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[106].V (110) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [107] = bar[107] (108) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[107].V (111) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[107].V (111) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [108] = bar[108] (109) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[108].V (112) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[108].V (112) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [109] = bar[109] (110) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[109].V (113) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[109].V (113) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [110] = bar[110] (111) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[110].V (114) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[110].V (114) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [111] = bar[111] (112) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[111].V (115) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[111].V (115) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [112] = bar[112] (113) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[112].V (116) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[112].V (116) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [113] = bar[113] (114) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[113].V (117) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[113].V (117) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [114] = bar[114] (115) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[114].V (118) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[114].V (118) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [115] = bar[115] (116) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[115].V (119) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[115].V (119) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [116] = bar[116] (117) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[116].V (120) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[116].V (120) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [117] = bar[117] (118) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[117].V (121) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[117].V (121) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [118] = bar[118] (119) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[118].V (122) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[118].V (122) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [119] = bar[119] (120) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[119].V (123) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[119].V (123) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [120] = bar[120] (121) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[120].V (124) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[120].V (124) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [121] = bar[121] (122) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[121].V (125) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[121].V (125) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [122] = bar[122] (123) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[122].V (126) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[122].V (126) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [123] = bar[123] (124) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[123].V (127) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[123].V (127) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [124] = bar[124] (125) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[124].V (128) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[124].V (128) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [125] = bar[125] (126) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[125].V (129) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[125].V (129) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [126] = bar[126] (127) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[126].V (130) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[126].V (130) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [127] = bar[127] (128) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[127].V (131) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[127].V (131) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [128] = bar[128] (129) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[128].V (132) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[128].V (132) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [129] = bar[129] (130) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[129].V (133) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[129].V (133) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [130] = bar[130] (131) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[130].V (134) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[130].V (134) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [131] = bar[131] (132) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[131].V (135) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[131].V (135) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [132] = bar[132] (133) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[132].V (136) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[132].V (136) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [133] = bar[133] (134) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[133].V (137) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[133].V (137) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [134] = bar[134] (135) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[134].V (138) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[134].V (138) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [135] = bar[135] (136) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[135].V (139) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[135].V (139) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [136] = bar[136] (137) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[136].V (140) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[136].V (140) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [137] = bar[137] (138) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[137].V (141) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[137].V (141) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [138] = bar[138] (139) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[138].V (142) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[138].V (142) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [139] = bar[139] (140) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[139].V (143) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[139].V (143) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [140] = bar[140] (141) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[140].V (144) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[140].V (144) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [141] = bar[141] (142) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[141].V (145) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[141].V (145) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [142] = bar[142] (143) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[142].V (146) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[142].V (146) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [143] = bar[143] (144) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[143].V (147) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[143].V (147) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [144] = bar[144] (145) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[144].V (148) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[144].V (148) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [145] = bar[145] (146) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[145].V (149) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[145].V (149) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [146] = bar[146] (147) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[146].V (150) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[146].V (150) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [147] = bar[147] (148) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[147].V (151) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[147].V (151) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [148] = bar[148] (149) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[148].V (152) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[148].V (152) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [149] = bar[149] (150) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[149].V (153) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[149].V (153) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [150] = bar[150] (151) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[150].V (154) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[150].V (154) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [151] = bar[151] (152) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[151].V (155) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[151].V (155) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [152] = bar[152] (153) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[152].V (156) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[152].V (156) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [153] = bar[153] (154) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[153].V (157) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[153].V (157) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [154] = bar[154] (155) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[154].V (158) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[154].V (158) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [155] = bar[155] (156) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[155].V (159) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[155].V (159) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [156] = bar[156] (157) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[156].V (160) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[156].V (160) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [157] = bar[157] (158) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[157].V (161) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[157].V (161) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [158] = bar[158] (159) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[158].V (162) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[158].V (162) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [159] = bar[159] (160) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[159].V (163) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[159].V (163) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [160] = bar[160] (161) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[160].V (164) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[160].V (164) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [161] = bar[161] (162) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[161].V (165) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[161].V (165) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [162] = bar[162] (163) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[162].V (166) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[162].V (166) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [163] = bar[163] (164) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[163].V (167) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[163].V (167) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [164] = bar[164] (165) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[164].V (168) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[164].V (168) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [165] = bar[165] (166) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[165].V (169) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[165].V (169) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [166] = bar[166] (167) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[166].V (170) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[166].V (170) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [167] = bar[167] (168) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[167].V (171) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[167].V (171) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [168] = bar[168] (169) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[168].V (172) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[168].V (172) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [169] = bar[169] (170) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[169].V (173) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[169].V (173) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [170] = bar[170] (171) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[170].V (174) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[170].V (174) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [171] = bar[171] (172) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[171].V (175) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[171].V (175) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [172] = bar[172] (173) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[172].V (176) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[172].V (176) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [173] = bar[173] (174) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[173].V (177) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[173].V (177) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [174] = bar[174] (175) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[174].V (178) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[174].V (178) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [175] = bar[175] (176) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[175].V (179) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[175].V (179) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [176] = bar[176] (177) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[176].V (180) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[176].V (180) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [177] = bar[177] (178) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[177].V (181) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[177].V (181) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [178] = bar[178] (179) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[178].V (182) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[178].V (182) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [179] = bar[179] (180) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[179].V (183) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[179].V (183) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [180] = bar[180] (181) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[180].V (184) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[180].V (184) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [181] = bar[181] (182) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[181].V (185) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[181].V (185) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [182] = bar[182] (183) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[182].V (186) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[182].V (186) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [183] = bar[183] (184) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[183].V (187) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[183].V (187) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [184] = bar[184] (185) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[184].V (188) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[184].V (188) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [185] = bar[185] (186) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[185].V (189) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[185].V (189) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [186] = bar[186] (187) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[186].V (190) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[186].V (190) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [187] = bar[187] (188) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[187].V (191) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[187].V (191) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [188] = bar[188] (189) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[188].V (192) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[188].V (192) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [189] = bar[189] (190) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[189].V (193) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[189].V (193) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [190] = bar[190] (191) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[190].V (194) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[190].V (194) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [191] = bar[191] (192) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[191].V (195) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[191].V (195) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [192] = bar[192] (193) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[192].V (196) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[192].V (196) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [193] = bar[193] (194) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[193].V (197) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[193].V (197) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [194] = bar[194] (195) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[194].V (198) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[194].V (198) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [195] = bar[195] (196) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[195].V (199) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[195].V (199) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [196] = bar[196] (197) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[196].V (200) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[196].V (200) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [197] = bar[197] (198) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[197].V (201) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[197].V (201) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [198] = bar[198] (199) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[198].V (202) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[198].V (202) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [199] = bar[199] (200) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[199].V (203) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[199].V (203) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [200] = bar[200] (201) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[200].V (204) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[200].V (204) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [201] = bar[201] (202) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[201].V (205) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[201].V (205) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [202] = bar[202] (203) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[202].V (206) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[202].V (206) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [203] = bar[203] (204) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[203].V (207) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[203].V (207) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [204] = bar[204] (205) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[204].V (208) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[204].V (208) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [205] = bar[205] (206) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[205].V (209) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[205].V (209) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [206] = bar[206] (207) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[206].V (210) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[206].V (210) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [207] = bar[207] (208) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[207].V (211) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[207].V (211) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [208] = bar[208] (209) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[208].V (212) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[208].V (212) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [209] = bar[209] (210) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[209].V (213) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[209].V (213) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [210] = bar[210] (211) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[210].V (214) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[210].V (214) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [211] = bar[211] (212) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[211].V (215) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[211].V (215) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [212] = bar[212] (213) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[212].V (216) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[212].V (216) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [213] = bar[213] (214) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[213].V (217) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[213].V (217) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [214] = bar[214] (215) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[214].V (218) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[214].V (218) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [215] = bar[215] (216) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[215].V (219) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[215].V (219) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [216] = bar[216] (217) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[216].V (220) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[216].V (220) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [217] = bar[217] (218) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[217].V (221) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[217].V (221) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [218] = bar[218] (219) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[218].V (222) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[218].V (222) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [219] = bar[219] (220) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[219].V (223) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[219].V (223) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [220] = bar[220] (221) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[220].V (224) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[220].V (224) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [221] = bar[221] (222) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[221].V (225) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[221].V (225) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [222] = bar[222] (223) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[222].V (226) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[222].V (226) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [223] = bar[223] (224) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[223].V (227) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[223].V (227) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [224] = bar[224] (225) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[224].V (228) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[224].V (228) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [225] = bar[225] (226) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[225].V (229) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[225].V (229) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [226] = bar[226] (227) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[226].V (230) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[226].V (230) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [227] = bar[227] (228) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[227].V (231) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[227].V (231) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [228] = bar[228] (229) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[228].V (232) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[228].V (232) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [229] = bar[229] (230) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[229].V (233) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[229].V (233) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [230] = bar[230] (231) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[230].V (234) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[230].V (234) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [231] = bar[231] (232) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[231].V (235) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[231].V (235) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [232] = bar[232] (233) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[232].V (236) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[232].V (236) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [233] = bar[233] (234) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[233].V (237) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[233].V (237) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [234] = bar[234] (235) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[234].V (238) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[234].V (238) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [235] = bar[235] (236) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[235].V (239) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[235].V (239) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [236] = bar[236] (237) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[236].V (240) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[236].V (240) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [237] = bar[237] (238) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[237].V (241) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[237].V (241) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [238] = bar[238] (239) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[238].V (242) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[238].V (242) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [239] = bar[239] (240) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[239].V (243) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[239].V (243) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [240] = bar[240] (241) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[240].V (244) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[240].V (244) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [241] = bar[241] (242) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[241].V (245) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[241].V (245) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [242] = bar[242] (243) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[242].V (246) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[242].V (246) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [243] = bar[243] (244) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[243].V (247) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[243].V (247) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [244] = bar[244] (245) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[244].V (248) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[244].V (248) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [245] = bar[245] (246) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[245].V (249) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[245].V (249) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [246] = bar[246] (247) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[246].V (250) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[246].V (250) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [247] = bar[247] (248) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[247].V (251) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[247].V (251) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [248] = bar[248] (249) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[248].V (252) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[248].V (252) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [249] = bar[249] (250) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[249].V (253) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[249].V (253) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [250] = bar[250] (251) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[250].V (254) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[250].V (254) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [251] = bar[251] (252) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[251].V (255) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[251].V (255) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [252] = bar[252] (253) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[252].V (256) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[252].V (256) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [253] = bar[253] (254) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[253].V (257) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[253].V (257) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [254] = bar[254] (255) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[254].V (258) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[254].V (258) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [255] = bar[255] (256) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[255].V (259) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[255].V (259) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
       [256] = bar[256] (257) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        V = bool^0 = bar[256].V (260) 
-        G = bool^0 = G (4) 
+        V = bool^0 = bar[256].V (260) @[ sub-FO- ] 
+        G = bool^0 = G (4) @[ sub-FO- sub-FI- ] 
       )
     }
   Created state:
@@ -2189,262 +2189,262 @@ footprint: {
   bool instance pool: (0 ports, 260 local, 0 mapped)
   1	!GND @[ supply_low ]	
   2	!Vdd @[ supply_high ]	
-  3	bar[0].V	
-  4	G	
-  5	bar[1].V	
-  6	bar[2].V	
-  7	bar[3].V	
-  8	bar[4].V	
-  9	bar[5].V	
-  10	bar[6].V	
-  11	bar[7].V	
-  12	bar[8].V	
-  13	bar[9].V	
-  14	bar[10].V	
-  15	bar[11].V	
-  16	bar[12].V	
-  17	bar[13].V	
-  18	bar[14].V	
-  19	bar[15].V	
-  20	bar[16].V	
-  21	bar[17].V	
-  22	bar[18].V	
-  23	bar[19].V	
-  24	bar[20].V	
-  25	bar[21].V	
-  26	bar[22].V	
-  27	bar[23].V	
-  28	bar[24].V	
-  29	bar[25].V	
-  30	bar[26].V	
-  31	bar[27].V	
-  32	bar[28].V	
-  33	bar[29].V	
-  34	bar[30].V	
-  35	bar[31].V	
-  36	bar[32].V	
-  37	bar[33].V	
-  38	bar[34].V	
-  39	bar[35].V	
-  40	bar[36].V	
-  41	bar[37].V	
-  42	bar[38].V	
-  43	bar[39].V	
-  44	bar[40].V	
-  45	bar[41].V	
-  46	bar[42].V	
-  47	bar[43].V	
-  48	bar[44].V	
-  49	bar[45].V	
-  50	bar[46].V	
-  51	bar[47].V	
-  52	bar[48].V	
-  53	bar[49].V	
-  54	bar[50].V	
-  55	bar[51].V	
-  56	bar[52].V	
-  57	bar[53].V	
-  58	bar[54].V	
-  59	bar[55].V	
-  60	bar[56].V	
-  61	bar[57].V	
-  62	bar[58].V	
-  63	bar[59].V	
-  64	bar[60].V	
-  65	bar[61].V	
-  66	bar[62].V	
-  67	bar[63].V	
-  68	bar[64].V	
-  69	bar[65].V	
-  70	bar[66].V	
-  71	bar[67].V	
-  72	bar[68].V	
-  73	bar[69].V	
-  74	bar[70].V	
-  75	bar[71].V	
-  76	bar[72].V	
-  77	bar[73].V	
-  78	bar[74].V	
-  79	bar[75].V	
-  80	bar[76].V	
-  81	bar[77].V	
-  82	bar[78].V	
-  83	bar[79].V	
-  84	bar[80].V	
-  85	bar[81].V	
-  86	bar[82].V	
-  87	bar[83].V	
-  88	bar[84].V	
-  89	bar[85].V	
-  90	bar[86].V	
-  91	bar[87].V	
-  92	bar[88].V	
-  93	bar[89].V	
-  94	bar[90].V	
-  95	bar[91].V	
-  96	bar[92].V	
-  97	bar[93].V	
-  98	bar[94].V	
-  99	bar[95].V	
-  100	bar[96].V	
-  101	bar[97].V	
-  102	bar[98].V	
-  103	bar[99].V	
-  104	bar[100].V	
-  105	bar[101].V	
-  106	bar[102].V	
-  107	bar[103].V	
-  108	bar[104].V	
-  109	bar[105].V	
-  110	bar[106].V	
-  111	bar[107].V	
-  112	bar[108].V	
-  113	bar[109].V	
-  114	bar[110].V	
-  115	bar[111].V	
-  116	bar[112].V	
-  117	bar[113].V	
-  118	bar[114].V	
-  119	bar[115].V	
-  120	bar[116].V	
-  121	bar[117].V	
-  122	bar[118].V	
-  123	bar[119].V	
-  124	bar[120].V	
-  125	bar[121].V	
-  126	bar[122].V	
-  127	bar[123].V	
-  128	bar[124].V	
-  129	bar[125].V	
-  130	bar[126].V	
-  131	bar[127].V	
-  132	bar[128].V	
-  133	bar[129].V	
-  134	bar[130].V	
-  135	bar[131].V	
-  136	bar[132].V	
-  137	bar[133].V	
-  138	bar[134].V	
-  139	bar[135].V	
-  140	bar[136].V	
-  141	bar[137].V	
-  142	bar[138].V	
-  143	bar[139].V	
-  144	bar[140].V	
-  145	bar[141].V	
-  146	bar[142].V	
-  147	bar[143].V	
-  148	bar[144].V	
-  149	bar[145].V	
-  150	bar[146].V	
-  151	bar[147].V	
-  152	bar[148].V	
-  153	bar[149].V	
-  154	bar[150].V	
-  155	bar[151].V	
-  156	bar[152].V	
-  157	bar[153].V	
-  158	bar[154].V	
-  159	bar[155].V	
-  160	bar[156].V	
-  161	bar[157].V	
-  162	bar[158].V	
-  163	bar[159].V	
-  164	bar[160].V	
-  165	bar[161].V	
-  166	bar[162].V	
-  167	bar[163].V	
-  168	bar[164].V	
-  169	bar[165].V	
-  170	bar[166].V	
-  171	bar[167].V	
-  172	bar[168].V	
-  173	bar[169].V	
-  174	bar[170].V	
-  175	bar[171].V	
-  176	bar[172].V	
-  177	bar[173].V	
-  178	bar[174].V	
-  179	bar[175].V	
-  180	bar[176].V	
-  181	bar[177].V	
-  182	bar[178].V	
-  183	bar[179].V	
-  184	bar[180].V	
-  185	bar[181].V	
-  186	bar[182].V	
-  187	bar[183].V	
-  188	bar[184].V	
-  189	bar[185].V	
-  190	bar[186].V	
-  191	bar[187].V	
-  192	bar[188].V	
-  193	bar[189].V	
-  194	bar[190].V	
-  195	bar[191].V	
-  196	bar[192].V	
-  197	bar[193].V	
-  198	bar[194].V	
-  199	bar[195].V	
-  200	bar[196].V	
-  201	bar[197].V	
-  202	bar[198].V	
-  203	bar[199].V	
-  204	bar[200].V	
-  205	bar[201].V	
-  206	bar[202].V	
-  207	bar[203].V	
-  208	bar[204].V	
-  209	bar[205].V	
-  210	bar[206].V	
-  211	bar[207].V	
-  212	bar[208].V	
-  213	bar[209].V	
-  214	bar[210].V	
-  215	bar[211].V	
-  216	bar[212].V	
-  217	bar[213].V	
-  218	bar[214].V	
-  219	bar[215].V	
-  220	bar[216].V	
-  221	bar[217].V	
-  222	bar[218].V	
-  223	bar[219].V	
-  224	bar[220].V	
-  225	bar[221].V	
-  226	bar[222].V	
-  227	bar[223].V	
-  228	bar[224].V	
-  229	bar[225].V	
-  230	bar[226].V	
-  231	bar[227].V	
-  232	bar[228].V	
-  233	bar[229].V	
-  234	bar[230].V	
-  235	bar[231].V	
-  236	bar[232].V	
-  237	bar[233].V	
-  238	bar[234].V	
-  239	bar[235].V	
-  240	bar[236].V	
-  241	bar[237].V	
-  242	bar[238].V	
-  243	bar[239].V	
-  244	bar[240].V	
-  245	bar[241].V	
-  246	bar[242].V	
-  247	bar[243].V	
-  248	bar[244].V	
-  249	bar[245].V	
-  250	bar[246].V	
-  251	bar[247].V	
-  252	bar[248].V	
-  253	bar[249].V	
-  254	bar[250].V	
-  255	bar[251].V	
-  256	bar[252].V	
-  257	bar[253].V	
-  258	bar[254].V	
-  259	bar[255].V	
-  260	bar[256].V	
+  3	bar[0].V @[ sub-FO- ]	
+  4	G @[ sub-FO- sub-FI- ]	
+  5	bar[1].V @[ sub-FO- ]	
+  6	bar[2].V @[ sub-FO- ]	
+  7	bar[3].V @[ sub-FO- ]	
+  8	bar[4].V @[ sub-FO- ]	
+  9	bar[5].V @[ sub-FO- ]	
+  10	bar[6].V @[ sub-FO- ]	
+  11	bar[7].V @[ sub-FO- ]	
+  12	bar[8].V @[ sub-FO- ]	
+  13	bar[9].V @[ sub-FO- ]	
+  14	bar[10].V @[ sub-FO- ]	
+  15	bar[11].V @[ sub-FO- ]	
+  16	bar[12].V @[ sub-FO- ]	
+  17	bar[13].V @[ sub-FO- ]	
+  18	bar[14].V @[ sub-FO- ]	
+  19	bar[15].V @[ sub-FO- ]	
+  20	bar[16].V @[ sub-FO- ]	
+  21	bar[17].V @[ sub-FO- ]	
+  22	bar[18].V @[ sub-FO- ]	
+  23	bar[19].V @[ sub-FO- ]	
+  24	bar[20].V @[ sub-FO- ]	
+  25	bar[21].V @[ sub-FO- ]	
+  26	bar[22].V @[ sub-FO- ]	
+  27	bar[23].V @[ sub-FO- ]	
+  28	bar[24].V @[ sub-FO- ]	
+  29	bar[25].V @[ sub-FO- ]	
+  30	bar[26].V @[ sub-FO- ]	
+  31	bar[27].V @[ sub-FO- ]	
+  32	bar[28].V @[ sub-FO- ]	
+  33	bar[29].V @[ sub-FO- ]	
+  34	bar[30].V @[ sub-FO- ]	
+  35	bar[31].V @[ sub-FO- ]	
+  36	bar[32].V @[ sub-FO- ]	
+  37	bar[33].V @[ sub-FO- ]	
+  38	bar[34].V @[ sub-FO- ]	
+  39	bar[35].V @[ sub-FO- ]	
+  40	bar[36].V @[ sub-FO- ]	
+  41	bar[37].V @[ sub-FO- ]	
+  42	bar[38].V @[ sub-FO- ]	
+  43	bar[39].V @[ sub-FO- ]	
+  44	bar[40].V @[ sub-FO- ]	
+  45	bar[41].V @[ sub-FO- ]	
+  46	bar[42].V @[ sub-FO- ]	
+  47	bar[43].V @[ sub-FO- ]	
+  48	bar[44].V @[ sub-FO- ]	
+  49	bar[45].V @[ sub-FO- ]	
+  50	bar[46].V @[ sub-FO- ]	
+  51	bar[47].V @[ sub-FO- ]	
+  52	bar[48].V @[ sub-FO- ]	
+  53	bar[49].V @[ sub-FO- ]	
+  54	bar[50].V @[ sub-FO- ]	
+  55	bar[51].V @[ sub-FO- ]	
+  56	bar[52].V @[ sub-FO- ]	
+  57	bar[53].V @[ sub-FO- ]	
+  58	bar[54].V @[ sub-FO- ]	
+  59	bar[55].V @[ sub-FO- ]	
+  60	bar[56].V @[ sub-FO- ]	
+  61	bar[57].V @[ sub-FO- ]	
+  62	bar[58].V @[ sub-FO- ]	
+  63	bar[59].V @[ sub-FO- ]	
+  64	bar[60].V @[ sub-FO- ]	
+  65	bar[61].V @[ sub-FO- ]	
+  66	bar[62].V @[ sub-FO- ]	
+  67	bar[63].V @[ sub-FO- ]	
+  68	bar[64].V @[ sub-FO- ]	
+  69	bar[65].V @[ sub-FO- ]	
+  70	bar[66].V @[ sub-FO- ]	
+  71	bar[67].V @[ sub-FO- ]	
+  72	bar[68].V @[ sub-FO- ]	
+  73	bar[69].V @[ sub-FO- ]	
+  74	bar[70].V @[ sub-FO- ]	
+  75	bar[71].V @[ sub-FO- ]	
+  76	bar[72].V @[ sub-FO- ]	
+  77	bar[73].V @[ sub-FO- ]	
+  78	bar[74].V @[ sub-FO- ]	
+  79	bar[75].V @[ sub-FO- ]	
+  80	bar[76].V @[ sub-FO- ]	
+  81	bar[77].V @[ sub-FO- ]	
+  82	bar[78].V @[ sub-FO- ]	
+  83	bar[79].V @[ sub-FO- ]	
+  84	bar[80].V @[ sub-FO- ]	
+  85	bar[81].V @[ sub-FO- ]	
+  86	bar[82].V @[ sub-FO- ]	
+  87	bar[83].V @[ sub-FO- ]	
+  88	bar[84].V @[ sub-FO- ]	
+  89	bar[85].V @[ sub-FO- ]	
+  90	bar[86].V @[ sub-FO- ]	
+  91	bar[87].V @[ sub-FO- ]	
+  92	bar[88].V @[ sub-FO- ]	
+  93	bar[89].V @[ sub-FO- ]	
+  94	bar[90].V @[ sub-FO- ]	
+  95	bar[91].V @[ sub-FO- ]	
+  96	bar[92].V @[ sub-FO- ]	
+  97	bar[93].V @[ sub-FO- ]	
+  98	bar[94].V @[ sub-FO- ]	
+  99	bar[95].V @[ sub-FO- ]	
+  100	bar[96].V @[ sub-FO- ]	
+  101	bar[97].V @[ sub-FO- ]	
+  102	bar[98].V @[ sub-FO- ]	
+  103	bar[99].V @[ sub-FO- ]	
+  104	bar[100].V @[ sub-FO- ]	
+  105	bar[101].V @[ sub-FO- ]	
+  106	bar[102].V @[ sub-FO- ]	
+  107	bar[103].V @[ sub-FO- ]	
+  108	bar[104].V @[ sub-FO- ]	
+  109	bar[105].V @[ sub-FO- ]	
+  110	bar[106].V @[ sub-FO- ]	
+  111	bar[107].V @[ sub-FO- ]	
+  112	bar[108].V @[ sub-FO- ]	
+  113	bar[109].V @[ sub-FO- ]	
+  114	bar[110].V @[ sub-FO- ]	
+  115	bar[111].V @[ sub-FO- ]	
+  116	bar[112].V @[ sub-FO- ]	
+  117	bar[113].V @[ sub-FO- ]	
+  118	bar[114].V @[ sub-FO- ]	
+  119	bar[115].V @[ sub-FO- ]	
+  120	bar[116].V @[ sub-FO- ]	
+  121	bar[117].V @[ sub-FO- ]	
+  122	bar[118].V @[ sub-FO- ]	
+  123	bar[119].V @[ sub-FO- ]	
+  124	bar[120].V @[ sub-FO- ]	
+  125	bar[121].V @[ sub-FO- ]	
+  126	bar[122].V @[ sub-FO- ]	
+  127	bar[123].V @[ sub-FO- ]	
+  128	bar[124].V @[ sub-FO- ]	
+  129	bar[125].V @[ sub-FO- ]	
+  130	bar[126].V @[ sub-FO- ]	
+  131	bar[127].V @[ sub-FO- ]	
+  132	bar[128].V @[ sub-FO- ]	
+  133	bar[129].V @[ sub-FO- ]	
+  134	bar[130].V @[ sub-FO- ]	
+  135	bar[131].V @[ sub-FO- ]	
+  136	bar[132].V @[ sub-FO- ]	
+  137	bar[133].V @[ sub-FO- ]	
+  138	bar[134].V @[ sub-FO- ]	
+  139	bar[135].V @[ sub-FO- ]	
+  140	bar[136].V @[ sub-FO- ]	
+  141	bar[137].V @[ sub-FO- ]	
+  142	bar[138].V @[ sub-FO- ]	
+  143	bar[139].V @[ sub-FO- ]	
+  144	bar[140].V @[ sub-FO- ]	
+  145	bar[141].V @[ sub-FO- ]	
+  146	bar[142].V @[ sub-FO- ]	
+  147	bar[143].V @[ sub-FO- ]	
+  148	bar[144].V @[ sub-FO- ]	
+  149	bar[145].V @[ sub-FO- ]	
+  150	bar[146].V @[ sub-FO- ]	
+  151	bar[147].V @[ sub-FO- ]	
+  152	bar[148].V @[ sub-FO- ]	
+  153	bar[149].V @[ sub-FO- ]	
+  154	bar[150].V @[ sub-FO- ]	
+  155	bar[151].V @[ sub-FO- ]	
+  156	bar[152].V @[ sub-FO- ]	
+  157	bar[153].V @[ sub-FO- ]	
+  158	bar[154].V @[ sub-FO- ]	
+  159	bar[155].V @[ sub-FO- ]	
+  160	bar[156].V @[ sub-FO- ]	
+  161	bar[157].V @[ sub-FO- ]	
+  162	bar[158].V @[ sub-FO- ]	
+  163	bar[159].V @[ sub-FO- ]	
+  164	bar[160].V @[ sub-FO- ]	
+  165	bar[161].V @[ sub-FO- ]	
+  166	bar[162].V @[ sub-FO- ]	
+  167	bar[163].V @[ sub-FO- ]	
+  168	bar[164].V @[ sub-FO- ]	
+  169	bar[165].V @[ sub-FO- ]	
+  170	bar[166].V @[ sub-FO- ]	
+  171	bar[167].V @[ sub-FO- ]	
+  172	bar[168].V @[ sub-FO- ]	
+  173	bar[169].V @[ sub-FO- ]	
+  174	bar[170].V @[ sub-FO- ]	
+  175	bar[171].V @[ sub-FO- ]	
+  176	bar[172].V @[ sub-FO- ]	
+  177	bar[173].V @[ sub-FO- ]	
+  178	bar[174].V @[ sub-FO- ]	
+  179	bar[175].V @[ sub-FO- ]	
+  180	bar[176].V @[ sub-FO- ]	
+  181	bar[177].V @[ sub-FO- ]	
+  182	bar[178].V @[ sub-FO- ]	
+  183	bar[179].V @[ sub-FO- ]	
+  184	bar[180].V @[ sub-FO- ]	
+  185	bar[181].V @[ sub-FO- ]	
+  186	bar[182].V @[ sub-FO- ]	
+  187	bar[183].V @[ sub-FO- ]	
+  188	bar[184].V @[ sub-FO- ]	
+  189	bar[185].V @[ sub-FO- ]	
+  190	bar[186].V @[ sub-FO- ]	
+  191	bar[187].V @[ sub-FO- ]	
+  192	bar[188].V @[ sub-FO- ]	
+  193	bar[189].V @[ sub-FO- ]	
+  194	bar[190].V @[ sub-FO- ]	
+  195	bar[191].V @[ sub-FO- ]	
+  196	bar[192].V @[ sub-FO- ]	
+  197	bar[193].V @[ sub-FO- ]	
+  198	bar[194].V @[ sub-FO- ]	
+  199	bar[195].V @[ sub-FO- ]	
+  200	bar[196].V @[ sub-FO- ]	
+  201	bar[197].V @[ sub-FO- ]	
+  202	bar[198].V @[ sub-FO- ]	
+  203	bar[199].V @[ sub-FO- ]	
+  204	bar[200].V @[ sub-FO- ]	
+  205	bar[201].V @[ sub-FO- ]	
+  206	bar[202].V @[ sub-FO- ]	
+  207	bar[203].V @[ sub-FO- ]	
+  208	bar[204].V @[ sub-FO- ]	
+  209	bar[205].V @[ sub-FO- ]	
+  210	bar[206].V @[ sub-FO- ]	
+  211	bar[207].V @[ sub-FO- ]	
+  212	bar[208].V @[ sub-FO- ]	
+  213	bar[209].V @[ sub-FO- ]	
+  214	bar[210].V @[ sub-FO- ]	
+  215	bar[211].V @[ sub-FO- ]	
+  216	bar[212].V @[ sub-FO- ]	
+  217	bar[213].V @[ sub-FO- ]	
+  218	bar[214].V @[ sub-FO- ]	
+  219	bar[215].V @[ sub-FO- ]	
+  220	bar[216].V @[ sub-FO- ]	
+  221	bar[217].V @[ sub-FO- ]	
+  222	bar[218].V @[ sub-FO- ]	
+  223	bar[219].V @[ sub-FO- ]	
+  224	bar[220].V @[ sub-FO- ]	
+  225	bar[221].V @[ sub-FO- ]	
+  226	bar[222].V @[ sub-FO- ]	
+  227	bar[223].V @[ sub-FO- ]	
+  228	bar[224].V @[ sub-FO- ]	
+  229	bar[225].V @[ sub-FO- ]	
+  230	bar[226].V @[ sub-FO- ]	
+  231	bar[227].V @[ sub-FO- ]	
+  232	bar[228].V @[ sub-FO- ]	
+  233	bar[229].V @[ sub-FO- ]	
+  234	bar[230].V @[ sub-FO- ]	
+  235	bar[231].V @[ sub-FO- ]	
+  236	bar[232].V @[ sub-FO- ]	
+  237	bar[233].V @[ sub-FO- ]	
+  238	bar[234].V @[ sub-FO- ]	
+  239	bar[235].V @[ sub-FO- ]	
+  240	bar[236].V @[ sub-FO- ]	
+  241	bar[237].V @[ sub-FO- ]	
+  242	bar[238].V @[ sub-FO- ]	
+  243	bar[239].V @[ sub-FO- ]	
+  244	bar[240].V @[ sub-FO- ]	
+  245	bar[241].V @[ sub-FO- ]	
+  246	bar[242].V @[ sub-FO- ]	
+  247	bar[243].V @[ sub-FO- ]	
+  248	bar[244].V @[ sub-FO- ]	
+  249	bar[245].V @[ sub-FO- ]	
+  250	bar[246].V @[ sub-FO- ]	
+  251	bar[247].V @[ sub-FO- ]	
+  252	bar[248].V @[ sub-FO- ]	
+  253	bar[249].V @[ sub-FO- ]	
+  254	bar[250].V @[ sub-FO- ]	
+  255	bar[251].V @[ sub-FO- ]	
+  256	bar[252].V @[ sub-FO- ]	
+  257	bar[253].V @[ sub-FO- ]	
+  258	bar[254].V @[ sub-FO- ]	
+  259	bar[255].V @[ sub-FO- ]	
+  260	bar[256].V @[ sub-FO- ]	
 }

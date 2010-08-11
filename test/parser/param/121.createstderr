@@ -106,19 +106,19 @@ In namespace "", we have: {
             !Vdd@[supply=1]
             bar::ick<bar::Q> zoo
           footprint: {
-            !GND = bool^0 = bar::foo<>::!GND (1) @[ supply_low ] 
-            !Vdd = bool^0 = bar::foo<>::!Vdd (2) @[ supply_high ] 
+            !GND = bool^0 = bar::foo<>::!GND (1) @[ supply_low port-alias ] 
+            !Vdd = bool^0 = bar::foo<>::!Vdd (2) @[ supply_high port-alias ] 
             zoo = process bar::ick<2>^0 = bar::foo<>::zoo (1) (
-              !GND = bool^0 = bar::foo<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = bar::foo<>::!Vdd (2) @[ supply_high ] 
+              !GND = bool^0 = bar::foo<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = bar::foo<>::!Vdd (2) @[ supply_high port-alias ] 
             )
             Created state:
             process instance pool: (0 ports, 1 local, 0 mapped)
             1	bar::foo<>::zoo	bar::ick<2>
               bool: 1,2
             bool instance pool: (2 ports, 0 local, 0 mapped)
-            1	bar::foo<>::!GND @[ supply_low ]	
-            2	bar::foo<>::!Vdd @[ supply_high ]	
+            1	bar::foo<>::!GND @[ supply_low port-alias ]	
+            2	bar::foo<>::!Vdd @[ supply_high port-alias ]	
           }
           }
 
@@ -143,13 +143,13 @@ In namespace "", we have: {
             !Vdd@[supply=1]
           footprint collection: {
             <2> {
-              !GND = bool^0 = bar::ick<2>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = bar::ick<2>::!Vdd (2) @[ supply_high ] 
+              !GND = bool^0 = bar::ick<2>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = bar::ick<2>::!Vdd (2) @[ supply_high port-alias ] 
               X = pint^0 value: 2
               Created state:
               bool instance pool: (2 ports, 0 local, 0 mapped)
-              1	bar::ick<2>::!GND @[ supply_low ]	
-              2	bar::ick<2>::!Vdd @[ supply_high ]	
+              1	bar::ick<2>::!GND @[ supply_low port-alias ]	
+              2	bar::ick<2>::!Vdd @[ supply_high port-alias ]	
             }
           }
           }

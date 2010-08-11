@@ -130,11 +130,11 @@ In namespace "", we have: {
         !GND@[supply=0]
         !Vdd@[supply=1]
       footprint: {
-        !GND = bool^0 = basket<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = basket<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = basket<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = basket<>::!Vdd (2) @[ supply_high port-alias ] 
         egg_array = process egg<>^0 = basket<>::egg_array (1) (
-          !GND = bool^0 = basket<>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = basket<>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = basket<>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = basket<>::!Vdd (2) @[ supply_high port-alias ] 
           yolk = int<32>^0 = basket<>::egg_array.yolk (1) 
         )
         Created state:
@@ -145,11 +145,11 @@ In namespace "", we have: {
         int instance pool: (1 ports, 0 local, 0 mapped)
         1	basket<>::egg_array.yolk	
         bool instance pool: (2 ports, 0 local, 0 mapped)
-        1	basket<>::!GND @[ supply_low ]	
-        2	basket<>::!Vdd @[ supply_high ]	
+        1	basket<>::!GND @[ supply_low port-alias ]	
+        2	basket<>::!Vdd @[ supply_high port-alias ]	
         bool port aliases:
-        1: basket<>::egg_array.!GND = basket<>::!GND @[ supply_low ]
-        2: basket<>::egg_array.!Vdd = basket<>::!Vdd @[ supply_high ]
+        1: basket<>::egg_array.!GND = basket<>::!GND @[ supply_low port-alias ]
+        2: basket<>::egg_array.!Vdd = basket<>::!Vdd @[ supply_high port-alias ]
       }
       }
 
@@ -172,14 +172,14 @@ In namespace "", we have: {
         !GND@[supply=0]
         !Vdd@[supply=1]
       footprint: {
-        !GND = bool^0 = bundle<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = bundle<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = bundle<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = bundle<>::!Vdd (2) @[ supply_high port-alias ] 
         c = process basket<>^0 = bundle<>::c (1) (
-          !GND = bool^0 = bundle<>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = bundle<>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = bundle<>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = bundle<>::!Vdd (2) @[ supply_high port-alias ] 
           egg_array = process egg<>^0 = bundle<>::c.egg_array (2) (
-            !GND = bool^0 = bundle<>::!GND (1) @[ supply_low ] 
-            !Vdd = bool^0 = bundle<>::!Vdd (2) @[ supply_high ] 
+            !GND = bool^0 = bundle<>::!GND (1) @[ supply_low port-alias ] 
+            !Vdd = bool^0 = bundle<>::!Vdd (2) @[ supply_high port-alias ] 
             yolk = int<32>^0 = bundle<>::c.egg_array.yolk (1) 
           )
         )
@@ -195,11 +195,11 @@ In namespace "", we have: {
         int instance pool: (1 ports, 0 local, 0 mapped)
         1	bundle<>::c.egg_array.yolk	
         bool instance pool: (2 ports, 0 local, 0 mapped)
-        1	bundle<>::!GND @[ supply_low ]	
-        2	bundle<>::!Vdd @[ supply_high ]	
+        1	bundle<>::!GND @[ supply_low port-alias ]	
+        2	bundle<>::!Vdd @[ supply_high port-alias ]	
         bool port aliases:
-        1: bundle<>::c.!GND = bundle<>::c.egg_array.!GND = bundle<>::!GND @[ supply_low ]
-        2: bundle<>::c.!Vdd = bundle<>::c.egg_array.!Vdd = bundle<>::!Vdd @[ supply_high ]
+        1: bundle<>::c.!GND = bundle<>::c.egg_array.!GND = bundle<>::!GND @[ supply_low port-alias ]
+        2: bundle<>::c.!Vdd = bundle<>::c.egg_array.!Vdd = bundle<>::!Vdd @[ supply_high port-alias ]
       }
       }
 
@@ -222,15 +222,15 @@ In namespace "", we have: {
         !GND@[supply=0]
         !Vdd@[supply=1]
       footprint: {
-        !GND = bool^0 = egg<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = egg<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = egg<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = egg<>::!Vdd (2) @[ supply_high port-alias ] 
         yolk = int<32>^0 = egg<>::yolk (1) 
         Created state:
         int instance pool: (1 ports, 0 local, 0 mapped)
         1	egg<>::yolk	
         bool instance pool: (2 ports, 0 local, 0 mapped)
-        1	egg<>::!GND @[ supply_low ]	
-        2	egg<>::!Vdd @[ supply_high ]	
+        1	egg<>::!GND @[ supply_low port-alias ]	
+        2	egg<>::!Vdd @[ supply_high port-alias ]	
       }
       }
 

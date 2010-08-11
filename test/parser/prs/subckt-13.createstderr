@@ -102,18 +102,18 @@ In namespace "", we have: {
         }
         }
       footprint: {
-        !GND = bool^0 = foo<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high ] 
-        a = bool^0 = foo<>::a (4) 
-        b = bool^0 = foo<>::b (5) 
-        en = bool^0 = foo<>::en (3) 
+        !GND = bool^0 = foo<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high port-alias ] 
+        a = bool^0 = foo<>::a (4) @[ port-alias loc-FO- ] 
+        b = bool^0 = foo<>::b (5) @[ port-alias loc-FI- ] 
+        en = bool^0 = foo<>::en (3) @[ port-alias ] 
         Created state:
         bool instance pool: (5 ports, 0 local, 0 mapped)
-        1	foo<>::!GND @[ supply_low ]	
-        2	foo<>::!Vdd @[ supply_high ]	
-        3	foo<>::en	
-        4	foo<>::a	
-        5	foo<>::b	
+        1	foo<>::!GND @[ supply_low port-alias ]	
+        2	foo<>::!Vdd @[ supply_high port-alias ]	
+        3	foo<>::en @[ port-alias ]	
+        4	foo<>::a @[ port-alias loc-FO- ]	
+        5	foo<>::b @[ port-alias loc-FI- ]	
         resolved prs:
         en & a -> b-
         internal node exprs: 
@@ -138,8 +138,8 @@ footprint: {
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
     en = bool^0 = bar.en (3) 
-    a = bool^0 = bar.a (4) 
-    b = bool^0 = bar.b (5) 
+    a = bool^0 = bar.a (4) @[ sub-FO- ] 
+    b = bool^0 = bar.b (5) @[ sub-FI- ] 
   )
   Created state:
   process instance pool: (0 ports, 1 local, 0 mapped)
@@ -149,6 +149,6 @@ footprint: {
   1	!GND @[ supply_low ]	
   2	!Vdd @[ supply_high ]	
   3	bar.en	
-  4	bar.a	
-  5	bar.b	
+  4	bar.a @[ sub-FO- ]	
+  5	bar.b @[ sub-FI- ]	
 }

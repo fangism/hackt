@@ -112,17 +112,17 @@ In namespace "", we have: {
         !Vdd@[supply=1]
         foo<> x[0..1]
       footprint: {
-        !GND = bool^0 = bar<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = bar<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = bar<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = bar<>::!Vdd (2) @[ supply_high port-alias ] 
         x = process foo<>^1
           {
             [0] = bar<>::x[0] (1) (
-              !GND = bool^0 = bar<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = bar<>::!Vdd (2) @[ supply_high ] 
+              !GND = bool^0 = bar<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = bar<>::!Vdd (2) @[ supply_high port-alias ] 
             )
             [1] = bar<>::x[1] (2) (
-              !GND = bool^0 = bar<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = bar<>::!Vdd (2) @[ supply_high ] 
+              !GND = bool^0 = bar<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = bar<>::!Vdd (2) @[ supply_high port-alias ] 
             )
           }
         Created state:
@@ -132,8 +132,8 @@ In namespace "", we have: {
         2	bar<>::x[1]	foo<>
           bool: 1,2
         bool instance pool: (2 ports, 0 local, 4 mapped)
-        1	bar<>::!GND @[ supply_low ]	
-        2	bar<>::!Vdd @[ supply_high ]	
+        1	bar<>::!GND @[ supply_low port-alias ]	
+        2	bar<>::!Vdd @[ supply_high port-alias ]	
         private sub-bool index map:
           (1 -> 0)
           (2 -> 2)
@@ -159,8 +159,8 @@ In namespace "", we have: {
         !Vdd@[supply=1]
         bool<> a[0..1]
       footprint: {
-        !GND = bool^0 = foo<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = foo<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high port-alias ] 
         a = bool^1
           {
             [0] = foo<>::a[0] (3) 
@@ -168,8 +168,8 @@ In namespace "", we have: {
           }
         Created state:
         bool instance pool: (2 ports, 2 local, 0 mapped)
-        1	foo<>::!GND @[ supply_low ]	
-        2	foo<>::!Vdd @[ supply_high ]	
+        1	foo<>::!GND @[ supply_low port-alias ]	
+        2	foo<>::!Vdd @[ supply_high port-alias ]	
         3	foo<>::a[0]	
         4	foo<>::a[1]	
       }
@@ -193,17 +193,17 @@ In namespace "", we have: {
         !Vdd@[supply=1]
         bar<> p[0..1]
       footprint: {
-        !GND = bool^0 = ick<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = ick<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = ick<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = ick<>::!Vdd (2) @[ supply_high port-alias ] 
         p = process bar<>^1
           {
             [0] = ick<>::p[0] (1) (
-              !GND = bool^0 = ick<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = ick<>::!Vdd (2) @[ supply_high ] 
+              !GND = bool^0 = ick<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = ick<>::!Vdd (2) @[ supply_high port-alias ] 
             )
             [1] = ick<>::p[1] (2) (
-              !GND = bool^0 = ick<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = ick<>::!Vdd (2) @[ supply_high ] 
+              !GND = bool^0 = ick<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = ick<>::!Vdd (2) @[ supply_high port-alias ] 
             )
           }
         Created state:
@@ -217,8 +217,8 @@ In namespace "", we have: {
           (2 -> 2)
           (3 -> 4)
         bool instance pool: (2 ports, 0 local, 8 mapped)
-        1	ick<>::!GND @[ supply_low ]	
-        2	ick<>::!Vdd @[ supply_high ]	
+        1	ick<>::!GND @[ supply_low port-alias ]	
+        2	ick<>::!Vdd @[ supply_high port-alias ]	
         private sub-bool index map:
           (1 -> 0)
           (2 -> 4)

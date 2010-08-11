@@ -197,32 +197,32 @@ top-level prs:
 footprint: {
   !GND = bool^0 = !GND (1) @[ supply_low ] 
   !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-  a = bool^0 = a (3) 
-  b = bool^0 = b (4) 
-  c = bool^0 = c (5) 
-  d = bool^0 = d (6) 
-  e = bool^0 = e (7) 
-  f = bool^0 = f (8) 
-  o = bool^0 = o (9) 
-  p = bool^0 = p (10) 
-  q = bool^0 = q (11) 
-  r = bool^0 = r (12) 
-  s = bool^0 = s (13) 
+  a = bool^0 = a (3) @[ loc-FO- loc-FO+ ] 
+  b = bool^0 = b (4) @[ loc-FO- loc-FO+ ] 
+  c = bool^0 = c (5) @[ loc-FO- loc-FO+ ] 
+  d = bool^0 = d (6) @[ loc-FO- loc-FO+ ] 
+  e = bool^0 = e (7) @[ loc-FO- loc-FO+ ] 
+  f = bool^0 = f (8) @[ loc-FO- loc-FO+ ] 
+  o = bool^0 = o (9) @[ loc-FI- loc-FI+ ] 
+  p = bool^0 = p (10) @[ loc-FI- loc-FI+ ] 
+  q = bool^0 = q (11) @[ loc-FI- loc-FI+ ] 
+  r = bool^0 = r (12) @[ loc-FI- loc-FI+ ] 
+  s = bool^0 = s (13) @[ loc-FI- loc-FI+ ] 
   Created state:
   bool instance pool: (0 ports, 13 local, 0 mapped)
   1	!GND @[ supply_low ]	
   2	!Vdd @[ supply_high ]	
-  3	a	
-  4	b	
-  5	c	
-  6	d	
-  7	e	
-  8	f	
-  9	o	
-  10	p	
-  11	q	
-  12	r	
-  13	s	
+  3	a @[ loc-FO- loc-FO+ ]	
+  4	b @[ loc-FO- loc-FO+ ]	
+  5	c @[ loc-FO- loc-FO+ ]	
+  6	d @[ loc-FO- loc-FO+ ]	
+  7	e @[ loc-FO- loc-FO+ ]	
+  8	f @[ loc-FO- loc-FO+ ]	
+  9	o @[ loc-FI- loc-FI+ ]	
+  10	p @[ loc-FI- loc-FI+ ]	
+  11	q @[ loc-FI- loc-FI+ ]	
+  12	r @[ loc-FI- loc-FI+ ]	
+  13	s @[ loc-FI- loc-FI+ ]	
   resolved prs:
   a<40> & b<30> & c<20> & d<25> -> o-
   ~a<40> | ~b<30> | ~c<20> | ~d<25> -> o+

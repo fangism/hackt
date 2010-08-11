@@ -86,24 +86,24 @@ In namespace "", we have: {
         !Vdd@[supply=1]
       footprint collection: {
         <12, 12> {
-          !GND = bool^0 = foo<12, 12>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = foo<12, 12>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = foo<12, 12>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = foo<12, 12>::!Vdd (2) @[ supply_high port-alias ] 
           X = pint^0 value: 12
           Y = pint^0 value: 12
           Created state:
           bool instance pool: (2 ports, 0 local, 0 mapped)
-          1	foo<12, 12>::!GND @[ supply_low ]	
-          2	foo<12, 12>::!Vdd @[ supply_high ]	
+          1	foo<12, 12>::!GND @[ supply_low port-alias ]	
+          2	foo<12, 12>::!Vdd @[ supply_high port-alias ]	
         }
         <12, 34> {
-          !GND = bool^0 = foo<12, 34>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = foo<12, 34>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = foo<12, 34>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = foo<12, 34>::!Vdd (2) @[ supply_high port-alias ] 
           X = pint^0 value: 12
           Y = pint^0 value: 34
           Created state:
           bool instance pool: (2 ports, 0 local, 0 mapped)
-          1	foo<12, 34>::!GND @[ supply_low ]	
-          2	foo<12, 34>::!Vdd @[ supply_high ]	
+          1	foo<12, 34>::!GND @[ supply_low port-alias ]	
+          2	foo<12, 34>::!Vdd @[ supply_high port-alias ]	
         }
       }
       }

@@ -234,8 +234,8 @@ In namespace "", we have: {
           ]
         }
       footprint: {
-        !GND = bool^0 = bit_router<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = bit_router<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = bit_router<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = bit_router<>::!Vdd (2) @[ supply_high port-alias ] 
         L = channel chan?(bool<>, bool<>)^1
           {
             [0] = bit_router<>::L[0] (1) 
@@ -259,8 +259,8 @@ In namespace "", we have: {
         int instance pool: (0 ports, 1 local, 0 mapped)
         1	bit_router<>::d	
         bool instance pool: (2 ports, 3 local, 0 mapped)
-        1	bit_router<>::!GND @[ supply_low ]	
-        2	bit_router<>::!Vdd @[ supply_high ]	
+        1	bit_router<>::!GND @[ supply_low port-alias ]	
+        2	bit_router<>::!Vdd @[ supply_high port-alias ]	
         3	bit_router<>::lc	
         4	bit_router<>::ld	
         5	bit_router<>::dir	

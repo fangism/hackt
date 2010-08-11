@@ -118,24 +118,24 @@ In namespace "", we have: {
         !Vdd@[supply=1]
       footprint collection: {
         <3> {
-          !GND = bool^0 = e1of<3>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = e1of<3>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = e1of<3>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = e1of<3>::!Vdd (2) @[ supply_high port-alias ] 
           R = pint^0 value: 3
           d = bool^1
             {
-              [0] = e1of<3>::d[0] (4) 
-              [1] = e1of<3>::d[1] (5) 
-              [2] = e1of<3>::d[2] (6) 
+              [0] = e1of<3>::d[0] (4) @[ port-alias ] 
+              [1] = e1of<3>::d[1] (5) @[ port-alias ] 
+              [2] = e1of<3>::d[2] (6) @[ port-alias ] 
             }
-          e = bool^0 = e1of<3>::e (3) 
+          e = bool^0 = e1of<3>::e (3) @[ port-alias ] 
           Created state:
           bool instance pool: (6 ports, 0 local, 0 mapped)
-          1	e1of<3>::!GND @[ supply_low ]	
-          2	e1of<3>::!Vdd @[ supply_high ]	
-          3	e1of<3>::e	
-          4	e1of<3>::d[0]	
-          5	e1of<3>::d[1]	
-          6	e1of<3>::d[2]	
+          1	e1of<3>::!GND @[ supply_low port-alias ]	
+          2	e1of<3>::!Vdd @[ supply_high port-alias ]	
+          3	e1of<3>::e @[ port-alias ]	
+          4	e1of<3>::d[0] @[ port-alias ]	
+          5	e1of<3>::d[1] @[ port-alias ]	
+          6	e1of<3>::d[2] @[ port-alias ]	
         }
       }
       }

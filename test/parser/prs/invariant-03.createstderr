@@ -128,16 +128,16 @@ In namespace "", we have: {
       spec:
         $(~(w & z))
       footprint: {
-        !GND = bool^0 = bar<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = bar<>::!Vdd (2) @[ supply_high ] 
-        w = bool^0 = bar<>::w (3) 
-        z = bool^0 = bar<>::z (4) 
+        !GND = bool^0 = bar<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = bar<>::!Vdd (2) @[ supply_high port-alias ] 
+        w = bool^0 = bar<>::w (3) @[ port-alias ] 
+        z = bool^0 = bar<>::z (4) @[ port-alias ] 
         Created state:
         bool instance pool: (4 ports, 0 local, 0 mapped)
-        1	bar<>::!GND @[ supply_low ]	
-        2	bar<>::!Vdd @[ supply_high ]	
-        3	bar<>::w	
-        4	bar<>::z	
+        1	bar<>::!GND @[ supply_low port-alias ]	
+        2	bar<>::!Vdd @[ supply_high port-alias ]	
+        3	bar<>::w @[ port-alias ]	
+        4	bar<>::z @[ port-alias ]	
         invariant exprs: 
         $(~(w & z))
       }
@@ -167,16 +167,16 @@ In namespace "", we have: {
       spec:
         $(x | y)
       footprint: {
-        !GND = bool^0 = foo<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high ] 
-        x = bool^0 = foo<>::x (3) 
-        y = bool^0 = foo<>::y (4) 
+        !GND = bool^0 = foo<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high port-alias ] 
+        x = bool^0 = foo<>::x (3) @[ port-alias ] 
+        y = bool^0 = foo<>::y (4) @[ port-alias ] 
         Created state:
         bool instance pool: (4 ports, 0 local, 0 mapped)
-        1	foo<>::!GND @[ supply_low ]	
-        2	foo<>::!Vdd @[ supply_high ]	
-        3	foo<>::x	
-        4	foo<>::y	
+        1	foo<>::!GND @[ supply_low port-alias ]	
+        2	foo<>::!Vdd @[ supply_high port-alias ]	
+        3	foo<>::x @[ port-alias ]	
+        4	foo<>::y @[ port-alias ]	
         invariant exprs: 
         $(x | y)
       }

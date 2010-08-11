@@ -181,79 +181,79 @@ In namespace "", we have: {
         }
       footprint collection: {
         <15, 8> {
-          !GND = bool^0 = div<15, 8>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = div<15, 8>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = div<15, 8>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = div<15, 8>::!Vdd (2) @[ supply_high port-alias ] 
           P = pint^0 value: 15
           Q = pint^0 value: 8
           x = bool^1
             {
-              [1] = div<15, 8>::x[1] (3) 
-              [2] = div<15, 8>::x[2] (4) 
-              [3] = div<15, 8>::x[3] (5) 
-              [4] = div<15, 8>::x[4] (6) 
-              [5] = div<15, 8>::x[5] (7) 
-              [6] = div<15, 8>::x[6] (8) 
-              [7] = div<15, 8>::x[7] (9) 
+              [1] = div<15, 8>::x[1] (3) @[ loc-FO- ] 
+              [2] = div<15, 8>::x[2] (4) @[ loc-FO- ] 
+              [3] = div<15, 8>::x[3] (5) @[ loc-FO- ] 
+              [4] = div<15, 8>::x[4] (6) @[ loc-FO- ] 
+              [5] = div<15, 8>::x[5] (7) @[ loc-FO- ] 
+              [6] = div<15, 8>::x[6] (8) @[ loc-FO- ] 
+              [7] = div<15, 8>::x[7] (9) @[ loc-FO- ] 
             }
           y = bool^1
             {
-              [1] = div<15, 8>::y[1] (10) 
-              [2] = div<15, 8>::y[2] (11) 
-              [3] = div<15, 8>::y[3] (12) 
-              [4] = div<15, 8>::y[4] (13) 
-              [5] = div<15, 8>::y[5] (14) 
-              [6] = div<15, 8>::y[6] (15) 
-              [7] = div<15, 8>::y[7] (16) 
-              [8] = div<15, 8>::y[8] (17) 
-              [9] = div<15, 8>::y[9] (18) 
-              [10] = div<15, 8>::y[10] (19) 
-              [11] = div<15, 8>::y[11] (20) 
-              [12] = div<15, 8>::y[12] (21) 
-              [13] = div<15, 8>::y[13] (22) 
-              [14] = div<15, 8>::y[14] (23) 
+              [1] = div<15, 8>::y[1] (10) @[ loc-FO+ loc-FI- ] 
+              [2] = div<15, 8>::y[2] (11) @[ loc-FO+ loc-FI- ] 
+              [3] = div<15, 8>::y[3] (12) @[ loc-FO+ loc-FI- ] 
+              [4] = div<15, 8>::y[4] (13) @[ loc-FO+ loc-FI- ] 
+              [5] = div<15, 8>::y[5] (14) @[ loc-FO+ loc-FI- ] 
+              [6] = div<15, 8>::y[6] (15) @[ loc-FO+ loc-FI- ] 
+              [7] = div<15, 8>::y[7] (16) @[ loc-FO+ loc-FI- ] 
+              [8] = div<15, 8>::y[8] (17) @[ loc-FO+ loc-FI- ] 
+              [9] = div<15, 8>::y[9] (18) @[ loc-FO+ loc-FI- ] 
+              [10] = div<15, 8>::y[10] (19) @[ loc-FO+ loc-FI- ] 
+              [11] = div<15, 8>::y[11] (20) @[ loc-FO+ loc-FI- ] 
+              [12] = div<15, 8>::y[12] (21) @[ loc-FO+ loc-FI- ] 
+              [13] = div<15, 8>::y[13] (22) @[ loc-FO+ loc-FI- ] 
+              [14] = div<15, 8>::y[14] (23) @[ loc-FO+ loc-FI- ] 
             }
           z = bool^1
             {
               [1] = div<15, 8>::z[1] (24) 
-              [2] = div<15, 8>::z[2] (25) 
-              [3] = div<15, 8>::z[3] (26) 
-              [4] = div<15, 8>::z[4] (27) 
-              [5] = div<15, 8>::z[5] (28) 
-              [6] = div<15, 8>::z[6] (29) 
-              [7] = div<15, 8>::z[7] (30) 
+              [2] = div<15, 8>::z[2] (25) @[ loc-FI+ ] 
+              [3] = div<15, 8>::z[3] (26) @[ loc-FI+ ] 
+              [4] = div<15, 8>::z[4] (27) @[ loc-FI+ ] 
+              [5] = div<15, 8>::z[5] (28) @[ loc-FI+ ] 
+              [6] = div<15, 8>::z[6] (29) @[ loc-FI+ ] 
+              [7] = div<15, 8>::z[7] (30) @[ loc-FI+ ] 
             }
           Created state:
           bool instance pool: (2 ports, 28 local, 0 mapped)
-          1	div<15, 8>::!GND @[ supply_low ]	
-          2	div<15, 8>::!Vdd @[ supply_high ]	
-          3	div<15, 8>::x[1]	
-          4	div<15, 8>::x[2]	
-          5	div<15, 8>::x[3]	
-          6	div<15, 8>::x[4]	
-          7	div<15, 8>::x[5]	
-          8	div<15, 8>::x[6]	
-          9	div<15, 8>::x[7]	
-          10	div<15, 8>::y[1]	
-          11	div<15, 8>::y[2]	
-          12	div<15, 8>::y[3]	
-          13	div<15, 8>::y[4]	
-          14	div<15, 8>::y[5]	
-          15	div<15, 8>::y[6]	
-          16	div<15, 8>::y[7]	
-          17	div<15, 8>::y[8]	
-          18	div<15, 8>::y[9]	
-          19	div<15, 8>::y[10]	
-          20	div<15, 8>::y[11]	
-          21	div<15, 8>::y[12]	
-          22	div<15, 8>::y[13]	
-          23	div<15, 8>::y[14]	
+          1	div<15, 8>::!GND @[ supply_low port-alias ]	
+          2	div<15, 8>::!Vdd @[ supply_high port-alias ]	
+          3	div<15, 8>::x[1] @[ loc-FO- ]	
+          4	div<15, 8>::x[2] @[ loc-FO- ]	
+          5	div<15, 8>::x[3] @[ loc-FO- ]	
+          6	div<15, 8>::x[4] @[ loc-FO- ]	
+          7	div<15, 8>::x[5] @[ loc-FO- ]	
+          8	div<15, 8>::x[6] @[ loc-FO- ]	
+          9	div<15, 8>::x[7] @[ loc-FO- ]	
+          10	div<15, 8>::y[1] @[ loc-FO+ loc-FI- ]	
+          11	div<15, 8>::y[2] @[ loc-FO+ loc-FI- ]	
+          12	div<15, 8>::y[3] @[ loc-FO+ loc-FI- ]	
+          13	div<15, 8>::y[4] @[ loc-FO+ loc-FI- ]	
+          14	div<15, 8>::y[5] @[ loc-FO+ loc-FI- ]	
+          15	div<15, 8>::y[6] @[ loc-FO+ loc-FI- ]	
+          16	div<15, 8>::y[7] @[ loc-FO+ loc-FI- ]	
+          17	div<15, 8>::y[8] @[ loc-FO+ loc-FI- ]	
+          18	div<15, 8>::y[9] @[ loc-FO+ loc-FI- ]	
+          19	div<15, 8>::y[10] @[ loc-FO+ loc-FI- ]	
+          20	div<15, 8>::y[11] @[ loc-FO+ loc-FI- ]	
+          21	div<15, 8>::y[12] @[ loc-FO+ loc-FI- ]	
+          22	div<15, 8>::y[13] @[ loc-FO+ loc-FI- ]	
+          23	div<15, 8>::y[14] @[ loc-FO+ loc-FI- ]	
           24	div<15, 8>::z[1]	
-          25	div<15, 8>::z[2]	
-          26	div<15, 8>::z[3]	
-          27	div<15, 8>::z[4]	
-          28	div<15, 8>::z[5]	
-          29	div<15, 8>::z[6]	
-          30	div<15, 8>::z[7]	
+          25	div<15, 8>::z[2] @[ loc-FI+ ]	
+          26	div<15, 8>::z[3] @[ loc-FI+ ]	
+          27	div<15, 8>::z[4] @[ loc-FI+ ]	
+          28	div<15, 8>::z[5] @[ loc-FI+ ]	
+          29	div<15, 8>::z[6] @[ loc-FI+ ]	
+          30	div<15, 8>::z[7] @[ loc-FI+ ]	
           resolved prs:
           x[1] -> y[1]-
           y[1] -> z[2]+

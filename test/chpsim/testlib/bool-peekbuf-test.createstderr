@@ -166,8 +166,8 @@ In namespace "", we have: {
           ]
         }
       footprint: {
-        !GND = bool^0 = bool_peekbuf<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = bool_peekbuf<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = bool_peekbuf<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = bool_peekbuf<>::!Vdd (2) @[ supply_high port-alias ] 
         L = channel chan?(bool<>)^0 = bool_peekbuf<>::L (1) 
         R = channel chan!(bool<>)^0 = bool_peekbuf<>::R (2) 
         x = bool^0 = bool_peekbuf<>::x (3) 
@@ -176,8 +176,8 @@ In namespace "", we have: {
         1	bool_peekbuf<>::L	
         2	bool_peekbuf<>::R	
         bool instance pool: (2 ports, 1 local, 0 mapped)
-        1	bool_peekbuf<>::!GND @[ supply_low ]	
-        2	bool_peekbuf<>::!Vdd @[ supply_high ]	
+        1	bool_peekbuf<>::!GND @[ supply_low port-alias ]	
+        2	bool_peekbuf<>::!Vdd @[ supply_high port-alias ]	
         3	bool_peekbuf<>::x	
         resolved concurrent actions:
           *[
@@ -231,8 +231,8 @@ In namespace "", we have: {
           ]
         }
       footprint: {
-        !GND = bool^0 = bool_peekbuf_fast<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = bool_peekbuf_fast<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = bool_peekbuf_fast<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = bool_peekbuf_fast<>::!Vdd (2) @[ supply_high port-alias ] 
         L = channel chan?(bool<>)^0 = bool_peekbuf_fast<>::L (1) 
         R = channel chan!(bool<>)^0 = bool_peekbuf_fast<>::R (2) 
         x = bool^0 = bool_peekbuf_fast<>::x (3) 
@@ -241,8 +241,8 @@ In namespace "", we have: {
         1	bool_peekbuf_fast<>::L	
         2	bool_peekbuf_fast<>::R	
         bool instance pool: (2 ports, 1 local, 0 mapped)
-        1	bool_peekbuf_fast<>::!GND @[ supply_low ]	
-        2	bool_peekbuf_fast<>::!Vdd @[ supply_high ]	
+        1	bool_peekbuf_fast<>::!GND @[ supply_low port-alias ]	
+        2	bool_peekbuf_fast<>::!Vdd @[ supply_high port-alias ]	
         3	bool_peekbuf_fast<>::x	
         resolved concurrent actions:
           *[

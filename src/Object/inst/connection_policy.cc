@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/connection_policy.cc"
-	$Id: connection_policy.cc,v 1.14 2010/07/01 20:20:24 fang Exp $
+	$Id: connection_policy.cc,v 1.15 2010/08/11 21:54:54 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -26,13 +26,8 @@ using util::read_value;
 
 /**
 	Mostly for connectivity diagnostics debugging.
+#define	DUMP_CONNECTIVITY_ATTRIBUTES			1
  */
-#define	DUMP_CONNECTIVITY_ATTRIBUTES			0
-#if DUMP_CONNECTIVITY_ATTRIBUTES
-#define	PRINTED_ATTRIBUTES				32
-#else
-#define	PRINTED_ATTRIBUTES				9
-#endif
 
 /**
 	These strings should be ordered according their corresponding
@@ -65,18 +60,17 @@ bool_connect_policy::attribute_names[] = {
 	"RESERVED-20",
 	"RESERVED-21",
 	"RESERVED-22",
-#if DUMP_CONNECTIVITY_ATTRIBUTES
+// this range is reserved for implicit attributes
 	"port-alias",
 
-	"local-fanout-",
-	"local-fanout+",
-	"local-fanin-",
-	"local-fanin+",
-	"sub-fanout-",
-	"sub-fanout+",
-	"sub-fanin-",
-	"sub-fanin+",
-#endif
+	"loc-FO-",
+	"loc-FO+",
+	"loc-FI-",
+	"loc-FI+",
+	"sub-FO-",
+	"sub-FO+",
+	"sub-FI-",
+	"sub-FI+",
 };
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -143,15 +137,11 @@ bool_connect_policy::synchronize_flags(this_type& l, this_type& r) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-bool_connect_policy::has_nondefault_attributes(void) const {
-#if DUMP_CONNECTIVITY_ATTRIBUTES
-	return true;
-#else
-	return attributes & BOOL_ATTRIBUTES_MASK;
+bool_connect_policy::has_nondefault_attributes(const bool implicit) const {
 	// if any attribute bits are set
-#endif
+	return implicit ? attributes // & BOOL_INIT_ATTRIBUTES_MASK
+		: (attributes & BOOL_EXPLICIT_ATTRIBUTES_MASK);
 }
-
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -191,15 +181,19 @@ bool_connect_policy::dump_raw_attributes(ostream& o) const {
 	This is only for object dump debugging purposes, 
 	format is not important.
 	TODO: print direction flags separately?
+	Print implicit attributes too for debugging.
  */
 ostream&
-bool_connect_policy::dump_attributes(ostream& o) const {
+bool_connect_policy::dump_attributes(ostream& o, const bool implicit) const {
 	// maintain order of these strings w.r.t. flag enums
-if (has_nondefault_attributes()) {
+if (has_nondefault_attributes(implicit)) {
 	o << " @[";
-	dump_flat_attributes(o);
+	dump_flat_attributes(o, implicit);
 	o << " ]";
 }
+#if 0
+	dump_raw_attributes(o << ' ');
+#endif
 	return o;
 }
 
@@ -208,10 +202,11 @@ if (has_nondefault_attributes()) {
 	Only applies to hflat, called by cflat_prs_printer()
  */
 ostream&
-bool_connect_policy::dump_flat_attributes(ostream& o) const {
+bool_connect_policy::dump_flat_attributes(ostream& o,
+		const bool implicit) const {
 	connection_flags_type temp = attributes;	// better be unsigned!
 	const char** p = attribute_names;
-while (temp && p < attribute_names +PRINTED_ATTRIBUTES) {
+while (temp && p < attribute_names +num_display_attributes(implicit)) {
 	// b/c upper bits are connectivity
 	if (temp & 1) {
 		o << ' ' << *p;
@@ -227,10 +222,11 @@ while (temp && p < attribute_names +PRINTED_ATTRIBUTES) {
 	Only applies to hflat, called by cflat_prs_printer()
  */
 ostream&
-bool_connect_policy::dump_split_attributes(ostream& o, const string& n) const {
+bool_connect_policy::dump_split_attributes(ostream& o, const string& n, 
+		const bool implicit) const {
 	connection_flags_type temp = attributes;	// better be unsigned!
 	const char** p = attribute_names;
-while (temp && p < attribute_names +PRINTED_ATTRIBUTES) {
+while (temp && p < attribute_names +num_display_attributes(implicit)) {
 	// b/c upper bits are connectivity
 	if (temp & 1) {
 		o << "@ " << n << ' ' << *p << endl;

@@ -105,28 +105,28 @@ In namespace "", we have: {
         )
       footprint collection: {
         <3> {
-          !GND = bool^0 = spec_test<3>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = spec_test<3>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = spec_test<3>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = spec_test<3>::!Vdd (2) @[ supply_high port-alias ] 
           N = pint^0 value: 3
           x = bool^2
             {
-              [0][0] = spec_test<3>::x[0][0] (3) 
-              [0][1] = spec_test<3>::x[0][1] (4) 
-              [1][0] = spec_test<3>::x[1][0] (5) 
-              [1][1] = spec_test<3>::x[1][1] (6) 
-              [2][0] = spec_test<3>::x[2][0] (7) 
-              [2][1] = spec_test<3>::x[2][1] (8) 
+              [0][0] = spec_test<3>::x[0][0] (3) @[ port-alias ] 
+              [0][1] = spec_test<3>::x[0][1] (4) @[ port-alias ] 
+              [1][0] = spec_test<3>::x[1][0] (5) @[ port-alias ] 
+              [1][1] = spec_test<3>::x[1][1] (6) @[ port-alias ] 
+              [2][0] = spec_test<3>::x[2][0] (7) @[ port-alias ] 
+              [2][1] = spec_test<3>::x[2][1] (8) @[ port-alias ] 
             }
           Created state:
           bool instance pool: (8 ports, 0 local, 0 mapped)
-          1	spec_test<3>::!GND @[ supply_low ]	
-          2	spec_test<3>::!Vdd @[ supply_high ]	
-          3	spec_test<3>::x[0][0]	
-          4	spec_test<3>::x[0][1]	
-          5	spec_test<3>::x[1][0]	
-          6	spec_test<3>::x[1][1]	
-          7	spec_test<3>::x[2][0]	
-          8	spec_test<3>::x[2][1]	
+          1	spec_test<3>::!GND @[ supply_low port-alias ]	
+          2	spec_test<3>::!Vdd @[ supply_high port-alias ]	
+          3	spec_test<3>::x[0][0] @[ port-alias ]	
+          4	spec_test<3>::x[0][1] @[ port-alias ]	
+          5	spec_test<3>::x[1][0] @[ port-alias ]	
+          6	spec_test<3>::x[1][1] @[ port-alias ]	
+          7	spec_test<3>::x[2][0] @[ port-alias ]	
+          8	spec_test<3>::x[2][1] @[ port-alias ]	
           resolved specs:
           mk_exclhi({x[0][0],x[0][1]})
           mk_exclhi({x[1][0],x[1][1]})

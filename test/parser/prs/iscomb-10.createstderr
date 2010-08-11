@@ -153,16 +153,16 @@ In namespace "", we have: {
         ~a -> b+
         }
       footprint: {
-        !GND = bool^0 = inv<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = inv<>::!Vdd (2) @[ supply_high ] 
-        a = bool^0 = inv<>::a (3) 
-        b = bool^0 = inv<>::b (4) 
+        !GND = bool^0 = inv<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = inv<>::!Vdd (2) @[ supply_high port-alias ] 
+        a = bool^0 = inv<>::a (3) @[ port-alias loc-FO- loc-FO+ ] 
+        b = bool^0 = inv<>::b (4) @[ port-alias loc-FI- loc-FI+ ] 
         Created state:
         bool instance pool: (4 ports, 0 local, 0 mapped)
-        1	inv<>::!GND @[ supply_low ]	
-        2	inv<>::!Vdd @[ supply_high ]	
-        3	inv<>::a	
-        4	inv<>::b	
+        1	inv<>::!GND @[ supply_low port-alias ]	
+        2	inv<>::!Vdd @[ supply_high port-alias ]	
+        3	inv<>::a @[ port-alias loc-FO- loc-FO+ ]	
+        4	inv<>::b @[ port-alias loc-FI- loc-FI+ ]	
         resolved prs:
         a -> b-
         ~a -> b+
@@ -217,33 +217,33 @@ In namespace "", we have: {
         R ( , , k, l);
         l@[iscomb]
       footprint: {
-        !GND = bool^0 = wrap<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = wrap<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = wrap<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = wrap<>::!Vdd (2) @[ supply_high port-alias ] 
         P = process inv<>^0 = wrap<>::P (1) (
-          !GND = bool^0 = wrap<>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = wrap<>::!Vdd (2) @[ supply_high ] 
-          a = bool^0 = wrap<>::w (3) 
-          b = bool^0 = wrap<>::x (4) 
+          !GND = bool^0 = wrap<>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = wrap<>::!Vdd (2) @[ supply_high port-alias ] 
+          a = bool^0 = wrap<>::w (3) @[ port-alias sub-FO- sub-FO+ ] 
+          b = bool^0 = wrap<>::x (4) @[ port-alias sub-FI- sub-FI+ ] 
         )
         Q = process inv<>^0 = wrap<>::Q (2) (
-          !GND = bool^0 = wrap<>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = wrap<>::!Vdd (2) @[ supply_high ] 
-          a = bool^0 = wrap<>::j (7) @[ iscomb ] 
-          b = bool^0 = wrap<>::k (8) @[ iscomb ] 
+          !GND = bool^0 = wrap<>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = wrap<>::!Vdd (2) @[ supply_high port-alias ] 
+          a = bool^0 = wrap<>::j (7) @[ iscomb sub-FO- sub-FO+ ] 
+          b = bool^0 = wrap<>::k (8) @[ iscomb sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
         )
         R = process inv<>^0 = wrap<>::R (3) (
-          !GND = bool^0 = wrap<>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = wrap<>::!Vdd (2) @[ supply_high ] 
-          a = bool^0 = wrap<>::k (8) @[ iscomb ] 
-          b = bool^0 = wrap<>::l (9) @[ iscomb ] 
+          !GND = bool^0 = wrap<>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = wrap<>::!Vdd (2) @[ supply_high port-alias ] 
+          a = bool^0 = wrap<>::k (8) @[ iscomb sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
+          b = bool^0 = wrap<>::l (9) @[ iscomb sub-FI- sub-FI+ ] 
         )
-        j = bool^0 = wrap<>::j (7) @[ iscomb ] 
-        k = bool^0 = wrap<>::k (8) @[ iscomb ] 
-        l = bool^0 = wrap<>::l (9) @[ iscomb ] 
-        w = bool^0 = wrap<>::w (3) 
-        x = bool^0 = wrap<>::x (4) 
-        y = bool^0 = wrap<>::y (5) 
-        z = bool^0 = wrap<>::z (6) 
+        j = bool^0 = wrap<>::j (7) @[ iscomb sub-FO- sub-FO+ ] 
+        k = bool^0 = wrap<>::k (8) @[ iscomb sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
+        l = bool^0 = wrap<>::l (9) @[ iscomb sub-FI- sub-FI+ ] 
+        w = bool^0 = wrap<>::w (3) @[ port-alias sub-FO- sub-FO+ ] 
+        x = bool^0 = wrap<>::x (4) @[ port-alias sub-FI- sub-FI+ ] 
+        y = bool^0 = wrap<>::y (5) @[ port-alias ] 
+        z = bool^0 = wrap<>::z (6) @[ port-alias ] 
         Created state:
         process instance pool: (0 ports, 3 local, 0 mapped)
         1	wrap<>::P	inv<>
@@ -253,15 +253,15 @@ In namespace "", we have: {
         3	wrap<>::R	inv<>
           bool: 1,2,8,9
         bool instance pool: (6 ports, 3 local, 0 mapped)
-        1	wrap<>::!GND @[ supply_low ]	
-        2	wrap<>::!Vdd @[ supply_high ]	
-        3	wrap<>::w	
-        4	wrap<>::x	
-        5	wrap<>::y	
-        6	wrap<>::z	
-        7	wrap<>::j @[ iscomb ]	
-        8	wrap<>::k @[ iscomb ]	
-        9	wrap<>::l @[ iscomb ]	
+        1	wrap<>::!GND @[ supply_low port-alias ]	
+        2	wrap<>::!Vdd @[ supply_high port-alias ]	
+        3	wrap<>::w @[ port-alias sub-FO- sub-FO+ ]	
+        4	wrap<>::x @[ port-alias sub-FI- sub-FI+ ]	
+        5	wrap<>::y @[ port-alias ]	
+        6	wrap<>::z @[ port-alias ]	
+        7	wrap<>::j @[ iscomb sub-FO- sub-FO+ ]	
+        8	wrap<>::k @[ iscomb sub-FO- sub-FO+ sub-FI- sub-FI+ ]	
+        9	wrap<>::l @[ iscomb sub-FI- sub-FI+ ]	
       }
       }
 
@@ -277,8 +277,8 @@ footprint: {
   present = process wrap<>^0 = present (1) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    w = bool^0 = present.w (3) 
-    x = bool^0 = present.x (4) 
+    w = bool^0 = present.w (3) @[ sub-FO- sub-FO+ ] 
+    x = bool^0 = present.x (4) @[ sub-FI- sub-FI+ ] 
     y = bool^0 = present.y (5) 
     z = bool^0 = present.z (6) 
   )
@@ -292,8 +292,8 @@ footprint: {
   bool instance pool: (0 ports, 6 local, 3 mapped)
   1	!GND @[ supply_low ]	
   2	!Vdd @[ supply_high ]	
-  3	present.w	
-  4	present.x	
+  3	present.w @[ sub-FO- sub-FO+ ]	
+  4	present.x @[ sub-FI- sub-FI+ ]	
   5	present.y	
   6	present.z	
   private sub-bool index map:

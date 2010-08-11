@@ -154,15 +154,15 @@ In namespace "", we have: {
         x[0].a[0] = x[N-1].a[0] = x[0].a[M-1] = x[N-1].a[M-1];
       footprint collection: {
         <3, 3> {
-          !GND = bool^0 = bar<3, 3>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = bar<3, 3>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = bar<3, 3>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = bar<3, 3>::!Vdd (2) @[ supply_high port-alias ] 
           M = pint^0 value: 3
           N = pint^0 value: 3
           x = process foo<3>^1
             {
               [0] = bar<3, 3>::x[0] (1) (
-                !GND = bool^0 = bar<3, 3>::!GND (1) @[ supply_low ] 
-                !Vdd = bool^0 = bar<3, 3>::!Vdd (2) @[ supply_high ] 
+                !GND = bool^0 = bar<3, 3>::!GND (1) @[ supply_low port-alias ] 
+                !Vdd = bool^0 = bar<3, 3>::!Vdd (2) @[ supply_high port-alias ] 
                 a = bool^1
                   {
                     [0] = bar<3, 3>::x[0].a[0] (3) 
@@ -171,8 +171,8 @@ In namespace "", we have: {
                   }
               )
               [1] = bar<3, 3>::x[1] (2) (
-                !GND = bool^0 = bar<3, 3>::!GND (1) @[ supply_low ] 
-                !Vdd = bool^0 = bar<3, 3>::!Vdd (2) @[ supply_high ] 
+                !GND = bool^0 = bar<3, 3>::!GND (1) @[ supply_low port-alias ] 
+                !Vdd = bool^0 = bar<3, 3>::!Vdd (2) @[ supply_high port-alias ] 
                 a = bool^1
                   {
                     [0] = bar<3, 3>::x[1].a[0] (5) 
@@ -181,8 +181,8 @@ In namespace "", we have: {
                   }
               )
               [2] = bar<3, 3>::x[2] (3) (
-                !GND = bool^0 = bar<3, 3>::!GND (1) @[ supply_low ] 
-                !Vdd = bool^0 = bar<3, 3>::!Vdd (2) @[ supply_high ] 
+                !GND = bool^0 = bar<3, 3>::!GND (1) @[ supply_low port-alias ] 
+                !Vdd = bool^0 = bar<3, 3>::!Vdd (2) @[ supply_high port-alias ] 
                 a = bool^1
                   {
                     [0] = bar<3, 3>::x[0].a[0] (3) 
@@ -200,8 +200,8 @@ In namespace "", we have: {
           3	bar<3, 3>::x[2]	foo<3>
             bool: 1,2,3,8,3
           bool instance pool: (2 ports, 6 local, 0 mapped)
-          1	bar<3, 3>::!GND @[ supply_low ]	
-          2	bar<3, 3>::!Vdd @[ supply_high ]	
+          1	bar<3, 3>::!GND @[ supply_low port-alias ]	
+          2	bar<3, 3>::!Vdd @[ supply_high port-alias ]	
           3	bar<3, 3>::x[0].a[0]	
           4	bar<3, 3>::x[0].a[1]	
           5	bar<3, 3>::x[1].a[0]	
@@ -236,22 +236,22 @@ In namespace "", we have: {
         !Vdd@[supply=1]
       footprint collection: {
         <3> {
-          !GND = bool^0 = foo<3>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = foo<3>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = foo<3>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = foo<3>::!Vdd (2) @[ supply_high port-alias ] 
           D = pint^0 value: 3
           a = bool^1
             {
-              [0] = foo<3>::a[0] (3) 
-              [1] = foo<3>::a[1] (4) 
-              [2] = foo<3>::a[2] (5) 
+              [0] = foo<3>::a[0] (3) @[ port-alias ] 
+              [1] = foo<3>::a[1] (4) @[ port-alias ] 
+              [2] = foo<3>::a[2] (5) @[ port-alias ] 
             }
           Created state:
           bool instance pool: (5 ports, 0 local, 0 mapped)
-          1	foo<3>::!GND @[ supply_low ]	
-          2	foo<3>::!Vdd @[ supply_high ]	
-          3	foo<3>::a[0]	
-          4	foo<3>::a[1]	
-          5	foo<3>::a[2]	
+          1	foo<3>::!GND @[ supply_low port-alias ]	
+          2	foo<3>::!Vdd @[ supply_high port-alias ]	
+          3	foo<3>::a[0] @[ port-alias ]	
+          4	foo<3>::a[1] @[ port-alias ]	
+          5	foo<3>::a[2] @[ port-alias ]	
         }
       }
       }

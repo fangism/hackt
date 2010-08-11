@@ -538,16 +538,16 @@ In namespace "", we have: {
           ]
         }
       footprint: {
-        !GND = bool^0 = bool_sink<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = bool_sink<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = bool_sink<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = bool_sink<>::!Vdd (2) @[ supply_high port-alias ] 
         B = channel chan?(bool<>)^0 = bool_sink<>::B (1) 
         b = bool^0 = bool_sink<>::b (3) 
         Created state:
         channel instance pool: (1 ports, 0 local, 0 mapped)
         1	bool_sink<>::B	
         bool instance pool: (2 ports, 1 local, 0 mapped)
-        1	bool_sink<>::!GND @[ supply_low ]	
-        2	bool_sink<>::!Vdd @[ supply_high ]	
+        1	bool_sink<>::!GND @[ supply_low port-alias ]	
+        2	bool_sink<>::!Vdd @[ supply_high port-alias ]	
         3	bool_sink<>::b	
         resolved concurrent actions:
           *[
@@ -725,8 +725,8 @@ In namespace "", we have: {
         }
       footprint collection: {
         <2, {1,0}> {
-          !GND = bool^0 = bool_source<2, {1,0}>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = bool_source<2, {1,0}>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = bool_source<2, {1,0}>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = bool_source<2, {1,0}>::!Vdd (2) @[ supply_high port-alias ] 
           B = pbool^1
             unrolled index-value pairs: {
               0 = 1
@@ -738,8 +738,8 @@ In namespace "", we have: {
           channel instance pool: (1 ports, 0 local, 0 mapped)
           1	bool_source<2, {1,0}>::S	
           bool instance pool: (2 ports, 0 local, 0 mapped)
-          1	bool_source<2, {1,0}>::!GND @[ supply_low ]	
-          2	bool_source<2, {1,0}>::!Vdd @[ supply_high ]	
+          1	bool_source<2, {1,0}>::!GND @[ supply_low port-alias ]	
+          2	bool_source<2, {1,0}>::!Vdd @[ supply_high port-alias ]	
           resolved concurrent actions:
             *[
               sequential: {

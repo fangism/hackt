@@ -255,8 +255,8 @@ In namespace "", we have: {
           ]
         }
       footprint: {
-        !GND = bool^0 = metalooptest<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = metalooptest<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = metalooptest<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = metalooptest<>::!Vdd (2) @[ supply_high port-alias ] 
         L = channel chan?(int<4>)^0 = metalooptest<>::L (1) 
         R = channel chan!(bool<>)^0 = metalooptest<>::R (2) 
         b = bool^1
@@ -286,8 +286,8 @@ In namespace "", we have: {
         int instance pool: (0 ports, 1 local, 0 mapped)
         1	metalooptest<>::l	
         bool instance pool: (2 ports, 16 local, 0 mapped)
-        1	metalooptest<>::!GND @[ supply_low ]	
-        2	metalooptest<>::!Vdd @[ supply_high ]	
+        1	metalooptest<>::!GND @[ supply_low port-alias ]	
+        2	metalooptest<>::!Vdd @[ supply_high port-alias ]	
         3	metalooptest<>::b[0]	
         4	metalooptest<>::b[1]	
         5	metalooptest<>::b[2]	

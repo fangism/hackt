@@ -268,20 +268,20 @@ In namespace "", we have: {
       footprint: {
         d = bool^1
           {
-            [0] = e1of2<>::f (2) 
-            [1] = e1of2<>::t (1) 
+            [0] = e1of2<>::f (2) @[ port-alias ] 
+            [1] = e1of2<>::t (1) @[ port-alias ] 
           }
-        e = bool^0 = e1of2<>::e (3) 
-        f = bool^0 = e1of2<>::f (2) 
-        t = bool^0 = e1of2<>::t (1) 
+        e = bool^0 = e1of2<>::e (3) @[ port-alias ] 
+        f = bool^0 = e1of2<>::f (2) @[ port-alias ] 
+        t = bool^0 = e1of2<>::t (1) @[ port-alias ] 
         Created state:
         bool instance pool: (3 ports, 0 local, 0 mapped)
-        1	e1of2<>::t	
-        2	e1of2<>::f	
-        3	e1of2<>::e	
+        1	e1of2<>::t @[ port-alias ]	
+        2	e1of2<>::f @[ port-alias ]	
+        3	e1of2<>::e @[ port-alias ]	
         bool port aliases:
-        1: e1of2<>::t = e1of2<>::d[1]
-        2: e1of2<>::f = e1of2<>::d[0]
+        1: e1of2<>::t = e1of2<>::d[1] @[ port-alias ]
+        2: e1of2<>::f = e1of2<>::d[0] @[ port-alias ]
       }
       }
 
@@ -324,48 +324,48 @@ In namespace "", we have: {
         !GND@[supply=0]
         !Vdd@[supply=1]
       footprint: {
-        !GND = bool^0 = merge<>::!GND (13) @[ supply_low ] 
-        !Vdd = bool^0 = merge<>::!Vdd (14) @[ supply_high ] 
+        !GND = bool^0 = merge<>::!GND (13) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = merge<>::!Vdd (14) @[ supply_high port-alias ] 
         a = process e1of2<>^0 = merge<>::a (2) (
           d = bool^1
             {
-              [0] = merge<>::a.d[0] (1) 
-              [1] = merge<>::a.d[1] (2) 
+              [0] = merge<>::a.d[0] (1) @[ port-alias ] 
+              [1] = merge<>::a.d[1] (2) @[ port-alias ] 
             }
-          t = bool^0 = merge<>::a.d[1] (2) 
-          f = bool^0 = merge<>::a.d[0] (1) 
-          e = bool^0 = merge<>::a.e (3) 
+          t = bool^0 = merge<>::a.d[1] (2) @[ port-alias ] 
+          f = bool^0 = merge<>::a.d[0] (1) @[ port-alias ] 
+          e = bool^0 = merge<>::a.e (3) @[ port-alias ] 
         )
         b = process e1of2<>^0 = merge<>::b (3) (
           d = bool^1
             {
-              [0] = merge<>::b.d[0] (4) 
-              [1] = merge<>::b.d[1] (5) 
+              [0] = merge<>::b.d[0] (4) @[ port-alias ] 
+              [1] = merge<>::b.d[1] (5) @[ port-alias ] 
             }
-          t = bool^0 = merge<>::b.d[1] (5) 
-          f = bool^0 = merge<>::b.d[0] (4) 
-          e = bool^0 = merge<>::b.e (6) 
+          t = bool^0 = merge<>::b.d[1] (5) @[ port-alias ] 
+          f = bool^0 = merge<>::b.d[0] (4) @[ port-alias ] 
+          e = bool^0 = merge<>::b.e (6) @[ port-alias ] 
         )
         c = process e1of2<>^0 = merge<>::c (4) (
           d = bool^1
             {
-              [0] = merge<>::c.d[0] (7) 
-              [1] = merge<>::c.d[1] (8) 
+              [0] = merge<>::c.d[0] (7) @[ port-alias ] 
+              [1] = merge<>::c.d[1] (8) @[ port-alias ] 
             }
-          t = bool^0 = merge<>::c.d[1] (8) 
-          f = bool^0 = merge<>::c.d[0] (7) 
-          e = bool^0 = merge<>::c.e (9) 
+          t = bool^0 = merge<>::c.d[1] (8) @[ port-alias ] 
+          f = bool^0 = merge<>::c.d[0] (7) @[ port-alias ] 
+          e = bool^0 = merge<>::c.e (9) @[ port-alias ] 
         )
         g = process globals<>^0 = merge<>::g (1) 
         x = process e1of2<>^0 = merge<>::x (5) (
           d = bool^1
             {
-              [0] = merge<>::x.d[0] (10) 
-              [1] = merge<>::x.d[1] (11) 
+              [0] = merge<>::x.d[0] (10) @[ port-alias ] 
+              [1] = merge<>::x.d[1] (11) @[ port-alias ] 
             }
-          t = bool^0 = merge<>::x.d[1] (11) 
-          f = bool^0 = merge<>::x.d[0] (10) 
-          e = bool^0 = merge<>::x.e (12) 
+          t = bool^0 = merge<>::x.d[1] (11) @[ port-alias ] 
+          f = bool^0 = merge<>::x.d[0] (10) @[ port-alias ] 
+          e = bool^0 = merge<>::x.e (12) @[ port-alias ] 
         )
         Created state:
         process instance pool: (5 ports, 0 local, 0 mapped)
@@ -379,29 +379,29 @@ In namespace "", we have: {
         5	merge<>::x	e1of2<>
           bool: 11,10,12
         bool instance pool: (14 ports, 0 local, 0 mapped)
-        1	merge<>::a.d[0]	
-        2	merge<>::a.d[1]	
-        3	merge<>::a.e	
-        4	merge<>::b.d[0]	
-        5	merge<>::b.d[1]	
-        6	merge<>::b.e	
-        7	merge<>::c.d[0]	
-        8	merge<>::c.d[1]	
-        9	merge<>::c.e	
-        10	merge<>::x.d[0]	
-        11	merge<>::x.d[1]	
-        12	merge<>::x.e	
-        13	merge<>::!GND @[ supply_low ]	
-        14	merge<>::!Vdd @[ supply_high ]	
+        1	merge<>::a.d[0] @[ port-alias ]	
+        2	merge<>::a.d[1] @[ port-alias ]	
+        3	merge<>::a.e @[ port-alias ]	
+        4	merge<>::b.d[0] @[ port-alias ]	
+        5	merge<>::b.d[1] @[ port-alias ]	
+        6	merge<>::b.e @[ port-alias ]	
+        7	merge<>::c.d[0] @[ port-alias ]	
+        8	merge<>::c.d[1] @[ port-alias ]	
+        9	merge<>::c.e @[ port-alias ]	
+        10	merge<>::x.d[0] @[ port-alias ]	
+        11	merge<>::x.d[1] @[ port-alias ]	
+        12	merge<>::x.e @[ port-alias ]	
+        13	merge<>::!GND @[ supply_low port-alias ]	
+        14	merge<>::!Vdd @[ supply_high port-alias ]	
         bool port aliases:
-        1: merge<>::a.d[0] = merge<>::a.f
-        2: merge<>::a.d[1] = merge<>::a.t
-        4: merge<>::b.d[0] = merge<>::b.f
-        5: merge<>::b.d[1] = merge<>::b.t
-        7: merge<>::c.d[0] = merge<>::c.f
-        8: merge<>::c.d[1] = merge<>::c.t
-        10: merge<>::x.d[0] = merge<>::x.f
-        11: merge<>::x.d[1] = merge<>::x.t
+        1: merge<>::a.d[0] = merge<>::a.f @[ port-alias ]
+        2: merge<>::a.d[1] = merge<>::a.t @[ port-alias ]
+        4: merge<>::b.d[0] = merge<>::b.f @[ port-alias ]
+        5: merge<>::b.d[1] = merge<>::b.t @[ port-alias ]
+        7: merge<>::c.d[0] = merge<>::c.f @[ port-alias ]
+        8: merge<>::c.d[1] = merge<>::c.t @[ port-alias ]
+        10: merge<>::x.d[0] = merge<>::x.f @[ port-alias ]
+        11: merge<>::x.d[1] = merge<>::x.t @[ port-alias ]
       }
       }
 
@@ -427,18 +427,18 @@ In namespace "", we have: {
         !GND@[supply=0]
         !Vdd@[supply=1]
       footprint: {
-        !GND = bool^0 = source_e1of2_1<>::!GND (4) @[ supply_low ] 
-        !Vdd = bool^0 = source_e1of2_1<>::!Vdd (5) @[ supply_high ] 
+        !GND = bool^0 = source_e1of2_1<>::!GND (4) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = source_e1of2_1<>::!Vdd (5) @[ supply_high port-alias ] 
         g = process globals<>^0 = source_e1of2_1<>::g (1) 
         r = process e1of2<>^0 = source_e1of2_1<>::r (2) (
           d = bool^1
             {
-              [0] = source_e1of2_1<>::r.d[0] (1) 
-              [1] = source_e1of2_1<>::r.d[1] (2) 
+              [0] = source_e1of2_1<>::r.d[0] (1) @[ port-alias ] 
+              [1] = source_e1of2_1<>::r.d[1] (2) @[ port-alias ] 
             }
-          t = bool^0 = source_e1of2_1<>::r.d[1] (2) 
-          f = bool^0 = source_e1of2_1<>::r.d[0] (1) 
-          e = bool^0 = source_e1of2_1<>::r.e (3) 
+          t = bool^0 = source_e1of2_1<>::r.d[1] (2) @[ port-alias ] 
+          f = bool^0 = source_e1of2_1<>::r.d[0] (1) @[ port-alias ] 
+          e = bool^0 = source_e1of2_1<>::r.e (3) @[ port-alias ] 
         )
         Created state:
         process instance pool: (2 ports, 0 local, 0 mapped)
@@ -446,14 +446,14 @@ In namespace "", we have: {
         2	source_e1of2_1<>::r	e1of2<>
           bool: 2,1,3
         bool instance pool: (5 ports, 0 local, 0 mapped)
-        1	source_e1of2_1<>::r.d[0]	
-        2	source_e1of2_1<>::r.d[1]	
-        3	source_e1of2_1<>::r.e	
-        4	source_e1of2_1<>::!GND @[ supply_low ]	
-        5	source_e1of2_1<>::!Vdd @[ supply_high ]	
+        1	source_e1of2_1<>::r.d[0] @[ port-alias ]	
+        2	source_e1of2_1<>::r.d[1] @[ port-alias ]	
+        3	source_e1of2_1<>::r.e @[ port-alias ]	
+        4	source_e1of2_1<>::!GND @[ supply_low port-alias ]	
+        5	source_e1of2_1<>::!Vdd @[ supply_high port-alias ]	
         bool port aliases:
-        1: source_e1of2_1<>::r.d[0] = source_e1of2_1<>::r.f
-        2: source_e1of2_1<>::r.d[1] = source_e1of2_1<>::r.t
+        1: source_e1of2_1<>::r.d[0] = source_e1of2_1<>::r.f @[ port-alias ]
+        2: source_e1of2_1<>::r.d[1] = source_e1of2_1<>::r.t @[ port-alias ]
       }
       }
 
@@ -488,48 +488,48 @@ In namespace "", we have: {
         !GND@[supply=0]
         !Vdd@[supply=1]
       footprint: {
-        !GND = bool^0 = split4<>::!GND (13) @[ supply_low ] 
-        !Vdd = bool^0 = split4<>::!Vdd (14) @[ supply_high ] 
+        !GND = bool^0 = split4<>::!GND (13) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = split4<>::!Vdd (14) @[ supply_high port-alias ] 
         a = process e1of2<>^0 = split4<>::a (4) (
           d = bool^1
             {
-              [0] = split4<>::a.d[0] (7) 
-              [1] = split4<>::a.d[1] (8) 
+              [0] = split4<>::a.d[0] (7) @[ port-alias ] 
+              [1] = split4<>::a.d[1] (8) @[ port-alias ] 
             }
-          t = bool^0 = split4<>::a.d[1] (8) 
-          f = bool^0 = split4<>::a.d[0] (7) 
-          e = bool^0 = split4<>::a.e (9) 
+          t = bool^0 = split4<>::a.d[1] (8) @[ port-alias ] 
+          f = bool^0 = split4<>::a.d[0] (7) @[ port-alias ] 
+          e = bool^0 = split4<>::a.e (9) @[ port-alias ] 
         )
         b = process e1of2<>^0 = split4<>::b (5) (
           d = bool^1
             {
-              [0] = split4<>::b.d[0] (10) 
-              [1] = split4<>::b.d[1] (11) 
+              [0] = split4<>::b.d[0] (10) @[ port-alias ] 
+              [1] = split4<>::b.d[1] (11) @[ port-alias ] 
             }
-          t = bool^0 = split4<>::b.d[1] (11) 
-          f = bool^0 = split4<>::b.d[0] (10) 
-          e = bool^0 = split4<>::b.e (12) 
+          t = bool^0 = split4<>::b.d[1] (11) @[ port-alias ] 
+          f = bool^0 = split4<>::b.d[0] (10) @[ port-alias ] 
+          e = bool^0 = split4<>::b.e (12) @[ port-alias ] 
         )
         c = process e1of2<>^0 = split4<>::c (3) (
           d = bool^1
             {
-              [0] = split4<>::c.d[0] (4) 
-              [1] = split4<>::c.d[1] (5) 
+              [0] = split4<>::c.d[0] (4) @[ port-alias ] 
+              [1] = split4<>::c.d[1] (5) @[ port-alias ] 
             }
-          t = bool^0 = split4<>::c.d[1] (5) 
-          f = bool^0 = split4<>::c.d[0] (4) 
-          e = bool^0 = split4<>::c.e (6) 
+          t = bool^0 = split4<>::c.d[1] (5) @[ port-alias ] 
+          f = bool^0 = split4<>::c.d[0] (4) @[ port-alias ] 
+          e = bool^0 = split4<>::c.e (6) @[ port-alias ] 
         )
         g = process globals<>^0 = split4<>::g (1) 
         l = process e1of2<>^0 = split4<>::l (2) (
           d = bool^1
             {
-              [0] = split4<>::l.d[0] (1) 
-              [1] = split4<>::l.d[1] (2) 
+              [0] = split4<>::l.d[0] (1) @[ port-alias ] 
+              [1] = split4<>::l.d[1] (2) @[ port-alias ] 
             }
-          t = bool^0 = split4<>::l.d[1] (2) 
-          f = bool^0 = split4<>::l.d[0] (1) 
-          e = bool^0 = split4<>::l.e (3) 
+          t = bool^0 = split4<>::l.d[1] (2) @[ port-alias ] 
+          f = bool^0 = split4<>::l.d[0] (1) @[ port-alias ] 
+          e = bool^0 = split4<>::l.e (3) @[ port-alias ] 
         )
         Created state:
         process instance pool: (5 ports, 0 local, 0 mapped)
@@ -543,29 +543,29 @@ In namespace "", we have: {
         5	split4<>::b	e1of2<>
           bool: 11,10,12
         bool instance pool: (14 ports, 0 local, 0 mapped)
-        1	split4<>::l.d[0]	
-        2	split4<>::l.d[1]	
-        3	split4<>::l.e	
-        4	split4<>::c.d[0]	
-        5	split4<>::c.d[1]	
-        6	split4<>::c.e	
-        7	split4<>::a.d[0]	
-        8	split4<>::a.d[1]	
-        9	split4<>::a.e	
-        10	split4<>::b.d[0]	
-        11	split4<>::b.d[1]	
-        12	split4<>::b.e	
-        13	split4<>::!GND @[ supply_low ]	
-        14	split4<>::!Vdd @[ supply_high ]	
+        1	split4<>::l.d[0] @[ port-alias ]	
+        2	split4<>::l.d[1] @[ port-alias ]	
+        3	split4<>::l.e @[ port-alias ]	
+        4	split4<>::c.d[0] @[ port-alias ]	
+        5	split4<>::c.d[1] @[ port-alias ]	
+        6	split4<>::c.e @[ port-alias ]	
+        7	split4<>::a.d[0] @[ port-alias ]	
+        8	split4<>::a.d[1] @[ port-alias ]	
+        9	split4<>::a.e @[ port-alias ]	
+        10	split4<>::b.d[0] @[ port-alias ]	
+        11	split4<>::b.d[1] @[ port-alias ]	
+        12	split4<>::b.e @[ port-alias ]	
+        13	split4<>::!GND @[ supply_low port-alias ]	
+        14	split4<>::!Vdd @[ supply_high port-alias ]	
         bool port aliases:
-        1: split4<>::l.d[0] = split4<>::l.f
-        2: split4<>::l.d[1] = split4<>::l.t
-        4: split4<>::c.d[0] = split4<>::c.f
-        5: split4<>::c.d[1] = split4<>::c.t
-        7: split4<>::a.d[0] = split4<>::a.f
-        8: split4<>::a.d[1] = split4<>::a.t
-        10: split4<>::b.d[0] = split4<>::b.f
-        11: split4<>::b.d[1] = split4<>::b.t
+        1: split4<>::l.d[0] = split4<>::l.f @[ port-alias ]
+        2: split4<>::l.d[1] = split4<>::l.t @[ port-alias ]
+        4: split4<>::c.d[0] = split4<>::c.f @[ port-alias ]
+        5: split4<>::c.d[1] = split4<>::c.t @[ port-alias ]
+        7: split4<>::a.d[0] = split4<>::a.f @[ port-alias ]
+        8: split4<>::a.d[1] = split4<>::a.t @[ port-alias ]
+        10: split4<>::b.d[0] = split4<>::b.f @[ port-alias ]
+        11: split4<>::b.d[1] = split4<>::b.t @[ port-alias ]
       }
       }
 
@@ -592,27 +592,27 @@ In namespace "", we have: {
         !Vdd@[supply=1]
         l.d = r.d;
       footprint: {
-        !GND = bool^0 = upcopy<>::!GND (5) @[ supply_low ] 
-        !Vdd = bool^0 = upcopy<>::!Vdd (6) @[ supply_high ] 
+        !GND = bool^0 = upcopy<>::!GND (5) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = upcopy<>::!Vdd (6) @[ supply_high port-alias ] 
         l = process e1of2<>^0 = upcopy<>::l (1) (
           d = bool^1
             {
-              [0] = upcopy<>::l.d[0] (1) 
-              [1] = upcopy<>::l.d[1] (2) 
+              [0] = upcopy<>::l.d[0] (1) @[ port-alias ] 
+              [1] = upcopy<>::l.d[1] (2) @[ port-alias ] 
             }
-          t = bool^0 = upcopy<>::l.d[1] (2) 
-          f = bool^0 = upcopy<>::l.d[0] (1) 
-          e = bool^0 = upcopy<>::l.e (3) 
+          t = bool^0 = upcopy<>::l.d[1] (2) @[ port-alias ] 
+          f = bool^0 = upcopy<>::l.d[0] (1) @[ port-alias ] 
+          e = bool^0 = upcopy<>::l.e (3) @[ port-alias ] 
         )
         r = process e1of2<>^0 = upcopy<>::r (2) (
           d = bool^1
             {
-              [0] = upcopy<>::l.d[0] (1) 
-              [1] = upcopy<>::l.d[1] (2) 
+              [0] = upcopy<>::l.d[0] (1) @[ port-alias ] 
+              [1] = upcopy<>::l.d[1] (2) @[ port-alias ] 
             }
-          t = bool^0 = upcopy<>::l.d[1] (2) 
-          f = bool^0 = upcopy<>::l.d[0] (1) 
-          e = bool^0 = upcopy<>::r.e (4) 
+          t = bool^0 = upcopy<>::l.d[1] (2) @[ port-alias ] 
+          f = bool^0 = upcopy<>::l.d[0] (1) @[ port-alias ] 
+          e = bool^0 = upcopy<>::r.e (4) @[ port-alias ] 
         )
         Created state:
         process instance pool: (2 ports, 0 local, 0 mapped)
@@ -621,15 +621,15 @@ In namespace "", we have: {
         2	upcopy<>::r	e1of2<>
           bool: 2,1,4
         bool instance pool: (6 ports, 0 local, 0 mapped)
-        1	upcopy<>::l.d[0]	
-        2	upcopy<>::l.d[1]	
-        3	upcopy<>::l.e	
-        4	upcopy<>::r.e	
-        5	upcopy<>::!GND @[ supply_low ]	
-        6	upcopy<>::!Vdd @[ supply_high ]	
+        1	upcopy<>::l.d[0] @[ port-alias ]	
+        2	upcopy<>::l.d[1] @[ port-alias ]	
+        3	upcopy<>::l.e @[ port-alias ]	
+        4	upcopy<>::r.e @[ port-alias ]	
+        5	upcopy<>::!GND @[ supply_low port-alias ]	
+        6	upcopy<>::!Vdd @[ supply_high port-alias ]	
         bool port aliases:
-        1: upcopy<>::l.d[0] = upcopy<>::l.f = upcopy<>::r.d[0] = upcopy<>::r.f
-        2: upcopy<>::l.d[1] = upcopy<>::l.t = upcopy<>::r.d[1] = upcopy<>::r.t
+        1: upcopy<>::l.d[0] = upcopy<>::l.f = upcopy<>::r.d[0] = upcopy<>::r.f @[ port-alias ]
+        2: upcopy<>::l.d[1] = upcopy<>::l.t = upcopy<>::r.d[1] = upcopy<>::r.t @[ port-alias ]
       }
       }
 

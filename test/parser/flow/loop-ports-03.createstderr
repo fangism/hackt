@@ -142,24 +142,24 @@ In namespace "", we have: {
         !Vdd@[supply=1]
       footprint collection: {
         <4> {
-          !GND = bool^0 = ch1of<4>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = ch1of<4>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = ch1of<4>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = ch1of<4>::!Vdd (2) @[ supply_high port-alias ] 
           N = pint^0 value: 4
           d = bool^1
             {
-              [0] = ch1of<4>::d[0] (3) 
-              [1] = ch1of<4>::d[1] (4) 
-              [2] = ch1of<4>::d[2] (5) 
-              [3] = ch1of<4>::d[3] (6) 
+              [0] = ch1of<4>::d[0] (3) @[ port-alias ] 
+              [1] = ch1of<4>::d[1] (4) @[ port-alias ] 
+              [2] = ch1of<4>::d[2] (5) @[ port-alias ] 
+              [3] = ch1of<4>::d[3] (6) @[ port-alias ] 
             }
           Created state:
           bool instance pool: (6 ports, 0 local, 0 mapped)
-          1	ch1of<4>::!GND @[ supply_low ]	
-          2	ch1of<4>::!Vdd @[ supply_high ]	
-          3	ch1of<4>::d[0]	
-          4	ch1of<4>::d[1]	
-          5	ch1of<4>::d[2]	
-          6	ch1of<4>::d[3]	
+          1	ch1of<4>::!GND @[ supply_low port-alias ]	
+          2	ch1of<4>::!Vdd @[ supply_high port-alias ]	
+          3	ch1of<4>::d[0] @[ port-alias ]	
+          4	ch1of<4>::d[1] @[ port-alias ]	
+          5	ch1of<4>::d[2] @[ port-alias ]	
+          6	ch1of<4>::d[3] @[ port-alias ]	
         }
       }
       }
@@ -183,14 +183,14 @@ In namespace "", we have: {
         !GND@[supply=0]
         !Vdd@[supply=1]
       footprint: {
-        !GND = bool^0 = dcelm<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = dcelm<>::!Vdd (2) @[ supply_high ] 
-        a = bool^0 = dcelm<>::a (3) 
+        !GND = bool^0 = dcelm<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = dcelm<>::!Vdd (2) @[ supply_high port-alias ] 
+        a = bool^0 = dcelm<>::a (3) @[ port-alias ] 
         Created state:
         bool instance pool: (3 ports, 0 local, 0 mapped)
-        1	dcelm<>::!GND @[ supply_low ]	
-        2	dcelm<>::!Vdd @[ supply_high ]	
-        3	dcelm<>::a	
+        1	dcelm<>::!GND @[ supply_low port-alias ]	
+        2	dcelm<>::!Vdd @[ supply_high port-alias ]	
+        3	dcelm<>::a @[ port-alias ]	
       }
       }
 
@@ -217,11 +217,11 @@ In namespace "", we have: {
           ce[$b] ( , , ad.d[$b/4]);
         )
       footprint: {
-        !GND = bool^0 = lut<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = lut<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high port-alias ] 
         ad = process ch1of<4>^0 = lut<>::ad (1) (
-          !GND = bool^0 = lut<>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = lut<>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high port-alias ] 
           d = bool^1
             {
               [0] = lut<>::ad.d[0] (3) 
@@ -233,8 +233,8 @@ In namespace "", we have: {
         ce = process dcelm<>^1
           {
             [0] = lut<>::ce[0] (2) (
-              !GND = bool^0 = lut<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high ] 
+              !GND = bool^0 = lut<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high port-alias ] 
               a = bool^0 = lut<>::ad.d[0] (3) 
             )
           }
@@ -245,8 +245,8 @@ In namespace "", we have: {
         2	lut<>::ce[0]	dcelm<>
           bool: 1,2,3
         bool instance pool: (2 ports, 4 local, 0 mapped)
-        1	lut<>::!GND @[ supply_low ]	
-        2	lut<>::!Vdd @[ supply_high ]	
+        1	lut<>::!GND @[ supply_low port-alias ]	
+        2	lut<>::!Vdd @[ supply_high port-alias ]	
         3	lut<>::ad.d[0]	
         4	lut<>::ad.d[1]	
         5	lut<>::ad.d[2]	

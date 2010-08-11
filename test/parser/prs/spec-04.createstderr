@@ -114,20 +114,20 @@ In namespace "", we have: {
         mk_exclhi(p,q,r)
         mk_exclhi(r,s)
       footprint: {
-        !GND = bool^0 = testing<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = testing<>::!Vdd (2) @[ supply_high ] 
-        p = bool^0 = testing<>::p (3) 
-        q = bool^0 = testing<>::q (4) 
+        !GND = bool^0 = testing<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = testing<>::!Vdd (2) @[ supply_high port-alias ] 
+        p = bool^0 = testing<>::p (3) @[ loc-FO- loc-FO+ ] 
+        q = bool^0 = testing<>::q (4) @[ loc-FO- loc-FO+ ] 
         r = bool^0 = testing<>::r (5) 
-        s = bool^0 = testing<>::s (6) 
+        s = bool^0 = testing<>::s (6) @[ loc-FI- loc-FI+ ] 
         Created state:
         bool instance pool: (2 ports, 4 local, 0 mapped)
-        1	testing<>::!GND @[ supply_low ]	
-        2	testing<>::!Vdd @[ supply_high ]	
-        3	testing<>::p	
-        4	testing<>::q	
+        1	testing<>::!GND @[ supply_low port-alias ]	
+        2	testing<>::!Vdd @[ supply_high port-alias ]	
+        3	testing<>::p @[ loc-FO- loc-FO+ ]	
+        4	testing<>::q @[ loc-FO- loc-FO+ ]	
         5	testing<>::r	
-        6	testing<>::s	
+        6	testing<>::s @[ loc-FI- loc-FI+ ]	
         resolved prs:
         p & q -> s-
         ~p | ~q -> s+

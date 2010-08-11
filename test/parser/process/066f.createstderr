@@ -97,28 +97,28 @@ In namespace "", we have: {
         !Vdd@[supply=1]
         a = b;
       footprint: {
-        !GND = bool^0 = foo<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = foo<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high port-alias ] 
         a = process ick<>^0 = foo<>::a (1) (
-          !GND = bool^0 = foo<>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = foo<>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high port-alias ] 
         )
         b = process ick<>^0 = foo<>::a (1) (
-          !GND = bool^0 = foo<>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = foo<>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high port-alias ] 
         )
         Created state:
         process instance pool: (1 ports, 0 local, 0 mapped)
         1	foo<>::a	ick<>
           bool: 1,2
         bool instance pool: (2 ports, 0 local, 0 mapped)
-        1	foo<>::!GND @[ supply_low ]	
-        2	foo<>::!Vdd @[ supply_high ]	
+        1	foo<>::!GND @[ supply_low port-alias ]	
+        2	foo<>::!Vdd @[ supply_high port-alias ]	
         process port aliases:
         1: foo<>::a = foo<>::b
         bool port aliases:
-        1: foo<>::a.!GND = foo<>::b.!GND = foo<>::!GND @[ supply_low ]
-        2: foo<>::a.!Vdd = foo<>::b.!Vdd = foo<>::!Vdd @[ supply_high ]
+        1: foo<>::a.!GND = foo<>::b.!GND = foo<>::!GND @[ supply_low port-alias ]
+        2: foo<>::a.!Vdd = foo<>::b.!Vdd = foo<>::!Vdd @[ supply_high port-alias ]
       }
       }
 
@@ -138,12 +138,12 @@ In namespace "", we have: {
         !GND@[supply=0]
         !Vdd@[supply=1]
       footprint: {
-        !GND = bool^0 = ick<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = ick<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = ick<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = ick<>::!Vdd (2) @[ supply_high port-alias ] 
         Created state:
         bool instance pool: (2 ports, 0 local, 0 mapped)
-        1	ick<>::!GND @[ supply_low ]	
-        2	ick<>::!Vdd @[ supply_high ]	
+        1	ick<>::!GND @[ supply_low port-alias ]	
+        2	ick<>::!Vdd @[ supply_high port-alias ]	
       }
       }
 

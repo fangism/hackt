@@ -145,26 +145,26 @@ In namespace "", we have: {
         passp(p,q,r)
         }
       footprint: {
-        !GND = bool^0 = foo<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high ] 
-        p = bool^0 = foo<>::p (7) 
-        q = bool^0 = foo<>::q (8) 
-        r = bool^0 = foo<>::r (9) 
-        w = bool^0 = foo<>::w (6) 
-        x = bool^0 = foo<>::x (3) 
-        y = bool^0 = foo<>::y (4) 
-        z = bool^0 = foo<>::z (5) 
+        !GND = bool^0 = foo<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high port-alias ] 
+        p = bool^0 = foo<>::p (7) @[ port-alias loc-FO- loc-FO+ ] 
+        q = bool^0 = foo<>::q (8) @[ port-alias loc-FO+ loc-FI- loc-FI+ ] 
+        r = bool^0 = foo<>::r (9) @[ port-alias loc-FI+ ] 
+        w = bool^0 = foo<>::w (6) @[ port-alias loc-FO+ loc-FI- ] 
+        x = bool^0 = foo<>::x (3) @[ port-alias loc-FO- ] 
+        y = bool^0 = foo<>::y (4) @[ port-alias loc-FO- loc-FO+ ] 
+        z = bool^0 = foo<>::z (5) @[ port-alias loc-FO- loc-FO+ loc-FI- loc-FI+ ] 
         Created state:
         bool instance pool: (9 ports, 0 local, 0 mapped)
-        1	foo<>::!GND @[ supply_low ]	
-        2	foo<>::!Vdd @[ supply_high ]	
-        3	foo<>::x	
-        4	foo<>::y	
-        5	foo<>::z	
-        6	foo<>::w	
-        7	foo<>::p	
-        8	foo<>::q	
-        9	foo<>::r	
+        1	foo<>::!GND @[ supply_low port-alias ]	
+        2	foo<>::!Vdd @[ supply_high port-alias ]	
+        3	foo<>::x @[ port-alias loc-FO- ]	
+        4	foo<>::y @[ port-alias loc-FO- loc-FO+ ]	
+        5	foo<>::z @[ port-alias loc-FO- loc-FO+ loc-FI- loc-FI+ ]	
+        6	foo<>::w @[ port-alias loc-FO+ loc-FI- ]	
+        7	foo<>::p @[ port-alias loc-FO- loc-FO+ ]	
+        8	foo<>::q @[ port-alias loc-FO+ loc-FI- loc-FI+ ]	
+        9	foo<>::r @[ port-alias loc-FI+ ]	
         resolved prs:
         ~y -> z+
         z -> w-
@@ -194,13 +194,13 @@ footprint: {
   bar = process foo<>^0 = bar (1) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    x = bool^0 = bar.x (3) 
-    y = bool^0 = bar.y (4) 
-    z = bool^0 = bar.z (5) 
-    w = bool^0 = bar.w (6) 
-    p = bool^0 = bar.p (7) 
-    q = bool^0 = bar.q (8) 
-    r = bool^0 = bar.r (9) 
+    x = bool^0 = bar.x (3) @[ sub-FO- ] 
+    y = bool^0 = bar.y (4) @[ sub-FO- sub-FO+ ] 
+    z = bool^0 = bar.z (5) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
+    w = bool^0 = bar.w (6) @[ sub-FO+ sub-FI- ] 
+    p = bool^0 = bar.p (7) @[ sub-FO- sub-FO+ ] 
+    q = bool^0 = bar.q (8) @[ sub-FO+ sub-FI- sub-FI+ ] 
+    r = bool^0 = bar.r (9) @[ sub-FI+ ] 
   )
   Created state:
   process instance pool: (0 ports, 1 local, 0 mapped)
@@ -209,11 +209,11 @@ footprint: {
   bool instance pool: (0 ports, 9 local, 0 mapped)
   1	!GND @[ supply_low ]	
   2	!Vdd @[ supply_high ]	
-  3	bar.x	
-  4	bar.y	
-  5	bar.z	
-  6	bar.w	
-  7	bar.p	
-  8	bar.q	
-  9	bar.r	
+  3	bar.x @[ sub-FO- ]	
+  4	bar.y @[ sub-FO- sub-FO+ ]	
+  5	bar.z @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ]	
+  6	bar.w @[ sub-FO+ sub-FI- ]	
+  7	bar.p @[ sub-FO- sub-FO+ ]	
+  8	bar.q @[ sub-FO+ sub-FI- sub-FI+ ]	
+  9	bar.r @[ sub-FI+ ]	
 }

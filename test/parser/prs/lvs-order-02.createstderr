@@ -101,14 +101,14 @@ In namespace "", we have: {
         order(b,a)
       footprint collection: {
         <3> {
-          !GND = bool^0 = lvs_order<3>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = lvs_order<3>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = lvs_order<3>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = lvs_order<3>::!Vdd (2) @[ supply_high port-alias ] 
           N = pint^0 value: 3
           a = bool^1
             {
-              [0] = lvs_order<3>::a[0] (3) 
-              [1] = lvs_order<3>::a[1] (4) 
-              [2] = lvs_order<3>::a[2] (5) 
+              [0] = lvs_order<3>::a[0] (3) @[ port-alias ] 
+              [1] = lvs_order<3>::a[1] (4) @[ port-alias ] 
+              [2] = lvs_order<3>::a[2] (5) @[ port-alias ] 
             }
           b = bool^1
             {
@@ -118,11 +118,11 @@ In namespace "", we have: {
             }
           Created state:
           bool instance pool: (5 ports, 3 local, 0 mapped)
-          1	lvs_order<3>::!GND @[ supply_low ]	
-          2	lvs_order<3>::!Vdd @[ supply_high ]	
-          3	lvs_order<3>::a[0]	
-          4	lvs_order<3>::a[1]	
-          5	lvs_order<3>::a[2]	
+          1	lvs_order<3>::!GND @[ supply_low port-alias ]	
+          2	lvs_order<3>::!Vdd @[ supply_high port-alias ]	
+          3	lvs_order<3>::a[0] @[ port-alias ]	
+          4	lvs_order<3>::a[1] @[ port-alias ]	
+          5	lvs_order<3>::a[2] @[ port-alias ]	
           6	lvs_order<3>::b[0]	
           7	lvs_order<3>::b[1]	
           8	lvs_order<3>::b[2]	

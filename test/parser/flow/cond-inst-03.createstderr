@@ -110,8 +110,8 @@ In namespace "", we have: {
         ]
       footprint collection: {
         <2, 4> {
-          !GND = bool^0 = spec_test<2, 4>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = spec_test<2, 4>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = spec_test<2, 4>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = spec_test<2, 4>::!Vdd (2) @[ supply_high port-alias ] 
           M = pint^0 value: 4
           N = pint^0 value: 2
           y = bool^0 = spec_test<2, 4>::y (3) 
@@ -123,21 +123,21 @@ In namespace "", we have: {
             }
           Created state:
           bool instance pool: (2 ports, 3 local, 0 mapped)
-          1	spec_test<2, 4>::!GND @[ supply_low ]	
-          2	spec_test<2, 4>::!Vdd @[ supply_high ]	
+          1	spec_test<2, 4>::!GND @[ supply_low port-alias ]	
+          2	spec_test<2, 4>::!Vdd @[ supply_high port-alias ]	
           3	spec_test<2, 4>::y	
           4	spec_test<2, 4>::z[0]	
           5	spec_test<2, 4>::z[1]	
         }
         <3, 1> {
-          !GND = bool^0 = spec_test<3, 1>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = spec_test<3, 1>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = spec_test<3, 1>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = spec_test<3, 1>::!Vdd (2) @[ supply_high port-alias ] 
           M = pint^0 value: 1
           N = pint^0 value: 3
           Created state:
           bool instance pool: (2 ports, 0 local, 0 mapped)
-          1	spec_test<3, 1>::!GND @[ supply_low ]	
-          2	spec_test<3, 1>::!Vdd @[ supply_high ]	
+          1	spec_test<3, 1>::!GND @[ supply_low port-alias ]	
+          2	spec_test<3, 1>::!Vdd @[ supply_high port-alias ]	
         }
       }
       }

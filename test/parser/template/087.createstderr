@@ -2,7 +2,7 @@ got: bad range: 1..0
 Error during resolution of indexed reference to:
 	collection state: bool^1
   {
-    [0] = e1of<1>::d[0] (4) 
+    [0] = e1of<1>::d[0] (4) @[ port-alias ] 
   }
 Error resolving literal node at position 2 of spec directive 'exclhi'.
 Instantiated from: e1of<1>

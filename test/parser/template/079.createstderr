@@ -366,22 +366,22 @@ In namespace "", we have: {
         !Vdd@[supply=1]
       footprint collection: {
         <2> {
-          !GND = bool^0 = e1of<2>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = e1of<2>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = e1of<2>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = e1of<2>::!Vdd (2) @[ supply_high port-alias ] 
           N = pint^0 value: 2
           d = bool^1
             {
-              [0] = e1of<2>::d[0] (4) 
-              [1] = e1of<2>::d[1] (5) 
+              [0] = e1of<2>::d[0] (4) @[ port-alias ] 
+              [1] = e1of<2>::d[1] (5) @[ port-alias ] 
             }
-          e = bool^0 = e1of<2>::e (3) 
+          e = bool^0 = e1of<2>::e (3) @[ port-alias ] 
           Created state:
           bool instance pool: (5 ports, 0 local, 0 mapped)
-          1	e1of<2>::!GND @[ supply_low ]	
-          2	e1of<2>::!Vdd @[ supply_high ]	
-          3	e1of<2>::e	
-          4	e1of<2>::d[0]	
-          5	e1of<2>::d[1]	
+          1	e1of<2>::!GND @[ supply_low port-alias ]	
+          2	e1of<2>::!Vdd @[ supply_high port-alias ]	
+          3	e1of<2>::e @[ port-alias ]	
+          4	e1of<2>::d[0] @[ port-alias ]	
+          5	e1of<2>::d[1] @[ port-alias ]	
         }
       }
       }
@@ -416,26 +416,26 @@ In namespace "", we have: {
         d[0] = f;
         d[1] = t;
       footprint: {
-        !GND = bool^0 = e1of2<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = e1of2<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = e1of2<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = e1of2<>::!Vdd (2) @[ supply_high port-alias ] 
         d = bool^1
           {
-            [0] = e1of2<>::f (4) 
-            [1] = e1of2<>::t (3) 
+            [0] = e1of2<>::f (4) @[ port-alias ] 
+            [1] = e1of2<>::t (3) @[ port-alias ] 
           }
-        e = bool^0 = e1of2<>::e (5) 
-        f = bool^0 = e1of2<>::f (4) 
-        t = bool^0 = e1of2<>::t (3) 
+        e = bool^0 = e1of2<>::e (5) @[ port-alias ] 
+        f = bool^0 = e1of2<>::f (4) @[ port-alias ] 
+        t = bool^0 = e1of2<>::t (3) @[ port-alias ] 
         Created state:
         bool instance pool: (5 ports, 0 local, 0 mapped)
-        1	e1of2<>::!GND @[ supply_low ]	
-        2	e1of2<>::!Vdd @[ supply_high ]	
-        3	e1of2<>::t	
-        4	e1of2<>::f	
-        5	e1of2<>::e	
+        1	e1of2<>::!GND @[ supply_low port-alias ]	
+        2	e1of2<>::!Vdd @[ supply_high port-alias ]	
+        3	e1of2<>::t @[ port-alias ]	
+        4	e1of2<>::f @[ port-alias ]	
+        5	e1of2<>::e @[ port-alias ]	
         bool port aliases:
-        3: e1of2<>::t = e1of2<>::d[1]
-        4: e1of2<>::f = e1of2<>::d[0]
+        3: e1of2<>::t = e1of2<>::d[1] @[ port-alias ]
+        4: e1of2<>::f = e1of2<>::d[0] @[ port-alias ]
       }
       }
 
@@ -480,25 +480,25 @@ In namespace "", we have: {
         vdd -> gnd-
         }
       footprint: {
-        !GND = bool^0 = globals<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = globals<>::!Vdd (2) @[ supply_high ] 
-        GND = bool^0 = globals<>::GND (4) 
-        Vdd = bool^0 = globals<>::Vdd (3) 
-        _pReset = bool^0 = globals<>::_pReset (5) 
-        _sReset = bool^0 = globals<>::_sReset (6) 
-        gnd = bool^0 = globals<>::GND (4) 
-        vdd = bool^0 = globals<>::Vdd (3) 
+        !GND = bool^0 = globals<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = globals<>::!Vdd (2) @[ supply_high port-alias ] 
+        GND = bool^0 = globals<>::GND (4) @[ port-alias loc-FI- ] 
+        Vdd = bool^0 = globals<>::Vdd (3) @[ port-alias loc-FO- loc-FI+ ] 
+        _pReset = bool^0 = globals<>::_pReset (5) @[ port-alias loc-FO+ ] 
+        _sReset = bool^0 = globals<>::_sReset (6) @[ port-alias ] 
+        gnd = bool^0 = globals<>::GND (4) @[ port-alias loc-FI- ] 
+        vdd = bool^0 = globals<>::Vdd (3) @[ port-alias loc-FO- loc-FI+ ] 
         Created state:
         bool instance pool: (6 ports, 0 local, 0 mapped)
-        1	globals<>::!GND @[ supply_low ]	
-        2	globals<>::!Vdd @[ supply_high ]	
-        3	globals<>::Vdd	
-        4	globals<>::GND	
-        5	globals<>::_pReset	
-        6	globals<>::_sReset	
+        1	globals<>::!GND @[ supply_low port-alias ]	
+        2	globals<>::!Vdd @[ supply_high port-alias ]	
+        3	globals<>::Vdd @[ port-alias loc-FO- loc-FI+ ]	
+        4	globals<>::GND @[ port-alias loc-FI- ]	
+        5	globals<>::_pReset @[ port-alias loc-FO+ ]	
+        6	globals<>::_sReset @[ port-alias ]	
         bool port aliases:
-        3: globals<>::Vdd = globals<>::vdd
-        4: globals<>::GND = globals<>::gnd
+        3: globals<>::Vdd = globals<>::vdd @[ port-alias loc-FO- loc-FI+ ]
+        4: globals<>::GND = globals<>::gnd @[ port-alias loc-FI- ]
         resolved prs:
         ~_pReset -> Vdd+
         Vdd -> GND-
@@ -544,62 +544,62 @@ In namespace "", we have: {
         source_e<5, 2, pseudo_rsource_e1of2a::v> src
         src ( , , g, s);
       footprint: {
-        !GND = bool^0 = pseudo_rsource_e1of2a<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = pseudo_rsource_e1of2a<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = pseudo_rsource_e1of2a<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = pseudo_rsource_e1of2a<>::!Vdd (2) @[ supply_high port-alias ] 
         g = process globals<>^0 = pseudo_rsource_e1of2a<>::g (1) (
-          !GND = bool^0 = pseudo_rsource_e1of2a<>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = pseudo_rsource_e1of2a<>::!Vdd (2) @[ supply_high ] 
-          Vdd = bool^0 = pseudo_rsource_e1of2a<>::g.Vdd (3) 
-          GND = bool^0 = pseudo_rsource_e1of2a<>::g.GND (4) 
-          vdd = bool^0 = pseudo_rsource_e1of2a<>::g.Vdd (3) 
-          gnd = bool^0 = pseudo_rsource_e1of2a<>::g.GND (4) 
-          _pReset = bool^0 = pseudo_rsource_e1of2a<>::g._pReset (5) 
-          _sReset = bool^0 = pseudo_rsource_e1of2a<>::g._sReset (6) 
+          !GND = bool^0 = pseudo_rsource_e1of2a<>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = pseudo_rsource_e1of2a<>::!Vdd (2) @[ supply_high port-alias ] 
+          Vdd = bool^0 = pseudo_rsource_e1of2a<>::g.Vdd (3) @[ port-alias sub-FO- sub-FI+ ] 
+          GND = bool^0 = pseudo_rsource_e1of2a<>::g.GND (4) @[ port-alias sub-FI- ] 
+          vdd = bool^0 = pseudo_rsource_e1of2a<>::g.Vdd (3) @[ port-alias sub-FO- sub-FI+ ] 
+          gnd = bool^0 = pseudo_rsource_e1of2a<>::g.GND (4) @[ port-alias sub-FI- ] 
+          _pReset = bool^0 = pseudo_rsource_e1of2a<>::g._pReset (5) @[ port-alias sub-FO+ ] 
+          _sReset = bool^0 = pseudo_rsource_e1of2a<>::g._sReset (6) @[ port-alias ] 
         )
         l = process e1of2<>^0 = pseudo_rsource_e1of2a<>::l (2) (
-          !GND = bool^0 = pseudo_rsource_e1of2a<>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = pseudo_rsource_e1of2a<>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = pseudo_rsource_e1of2a<>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = pseudo_rsource_e1of2a<>::!Vdd (2) @[ supply_high port-alias ] 
           d = bool^1
             {
-              [0] = pseudo_rsource_e1of2a<>::l.d[0] (7) 
-              [1] = pseudo_rsource_e1of2a<>::l.d[1] (8) 
+              [0] = pseudo_rsource_e1of2a<>::l.d[0] (7) @[ port-alias ] 
+              [1] = pseudo_rsource_e1of2a<>::l.d[1] (8) @[ port-alias ] 
             }
-          t = bool^0 = pseudo_rsource_e1of2a<>::l.d[1] (8) 
-          f = bool^0 = pseudo_rsource_e1of2a<>::l.d[0] (7) 
-          e = bool^0 = pseudo_rsource_e1of2a<>::l.e (9) 
+          t = bool^0 = pseudo_rsource_e1of2a<>::l.d[1] (8) @[ port-alias ] 
+          f = bool^0 = pseudo_rsource_e1of2a<>::l.d[0] (7) @[ port-alias ] 
+          e = bool^0 = pseudo_rsource_e1of2a<>::l.e (9) @[ port-alias ] 
         )
         s = process e1of<2>^0 = pseudo_rsource_e1of2a<>::s (3) (
-          !GND = bool^0 = pseudo_rsource_e1of2a<>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = pseudo_rsource_e1of2a<>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = pseudo_rsource_e1of2a<>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = pseudo_rsource_e1of2a<>::!Vdd (2) @[ supply_high port-alias ] 
           d = bool^1
             {
-              [0] = pseudo_rsource_e1of2a<>::l.d[0] (7) 
-              [1] = pseudo_rsource_e1of2a<>::l.d[1] (8) 
+              [0] = pseudo_rsource_e1of2a<>::l.d[0] (7) @[ port-alias ] 
+              [1] = pseudo_rsource_e1of2a<>::l.d[1] (8) @[ port-alias ] 
             }
-          e = bool^0 = pseudo_rsource_e1of2a<>::l.e (9) 
+          e = bool^0 = pseudo_rsource_e1of2a<>::l.e (9) @[ port-alias ] 
         )
         src = process source_e<5, 2, {0,1,1,0,1}>^0 = pseudo_rsource_e1of2a<>::src (4) (
-          !GND = bool^0 = pseudo_rsource_e1of2a<>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = pseudo_rsource_e1of2a<>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = pseudo_rsource_e1of2a<>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = pseudo_rsource_e1of2a<>::!Vdd (2) @[ supply_high port-alias ] 
           g = process globals<>^0 = pseudo_rsource_e1of2a<>::g (1) (
-            !GND = bool^0 = pseudo_rsource_e1of2a<>::!GND (1) @[ supply_low ] 
-            !Vdd = bool^0 = pseudo_rsource_e1of2a<>::!Vdd (2) @[ supply_high ] 
-            Vdd = bool^0 = pseudo_rsource_e1of2a<>::g.Vdd (3) 
-            GND = bool^0 = pseudo_rsource_e1of2a<>::g.GND (4) 
-            vdd = bool^0 = pseudo_rsource_e1of2a<>::g.Vdd (3) 
-            gnd = bool^0 = pseudo_rsource_e1of2a<>::g.GND (4) 
-            _pReset = bool^0 = pseudo_rsource_e1of2a<>::g._pReset (5) 
-            _sReset = bool^0 = pseudo_rsource_e1of2a<>::g._sReset (6) 
+            !GND = bool^0 = pseudo_rsource_e1of2a<>::!GND (1) @[ supply_low port-alias ] 
+            !Vdd = bool^0 = pseudo_rsource_e1of2a<>::!Vdd (2) @[ supply_high port-alias ] 
+            Vdd = bool^0 = pseudo_rsource_e1of2a<>::g.Vdd (3) @[ port-alias sub-FO- sub-FI+ ] 
+            GND = bool^0 = pseudo_rsource_e1of2a<>::g.GND (4) @[ port-alias sub-FI- ] 
+            vdd = bool^0 = pseudo_rsource_e1of2a<>::g.Vdd (3) @[ port-alias sub-FO- sub-FI+ ] 
+            gnd = bool^0 = pseudo_rsource_e1of2a<>::g.GND (4) @[ port-alias sub-FI- ] 
+            _pReset = bool^0 = pseudo_rsource_e1of2a<>::g._pReset (5) @[ port-alias sub-FO+ ] 
+            _sReset = bool^0 = pseudo_rsource_e1of2a<>::g._sReset (6) @[ port-alias ] 
           )
           rr = process e1of<2>^0 = pseudo_rsource_e1of2a<>::s (3) (
-            !GND = bool^0 = pseudo_rsource_e1of2a<>::!GND (1) @[ supply_low ] 
-            !Vdd = bool^0 = pseudo_rsource_e1of2a<>::!Vdd (2) @[ supply_high ] 
+            !GND = bool^0 = pseudo_rsource_e1of2a<>::!GND (1) @[ supply_low port-alias ] 
+            !Vdd = bool^0 = pseudo_rsource_e1of2a<>::!Vdd (2) @[ supply_high port-alias ] 
             d = bool^1
               {
-                [0] = pseudo_rsource_e1of2a<>::l.d[0] (7) 
-                [1] = pseudo_rsource_e1of2a<>::l.d[1] (8) 
+                [0] = pseudo_rsource_e1of2a<>::l.d[0] (7) @[ port-alias ] 
+                [1] = pseudo_rsource_e1of2a<>::l.d[1] (8) @[ port-alias ] 
               }
-            e = bool^0 = pseudo_rsource_e1of2a<>::l.e (9) 
+            e = bool^0 = pseudo_rsource_e1of2a<>::l.e (9) @[ port-alias ] 
           )
         )
         v = pint^1
@@ -622,22 +622,22 @@ In namespace "", we have: {
           process: 1,3
           bool: 1,2,3,4,5,6,7,8,9
         bool instance pool: (9 ports, 0 local, 0 mapped)
-        1	pseudo_rsource_e1of2a<>::!GND @[ supply_low ]	
-        2	pseudo_rsource_e1of2a<>::!Vdd @[ supply_high ]	
-        3	pseudo_rsource_e1of2a<>::g.Vdd	
-        4	pseudo_rsource_e1of2a<>::g.GND	
-        5	pseudo_rsource_e1of2a<>::g._pReset	
-        6	pseudo_rsource_e1of2a<>::g._sReset	
-        7	pseudo_rsource_e1of2a<>::l.d[0]	
-        8	pseudo_rsource_e1of2a<>::l.d[1]	
-        9	pseudo_rsource_e1of2a<>::l.e	
+        1	pseudo_rsource_e1of2a<>::!GND @[ supply_low port-alias ]	
+        2	pseudo_rsource_e1of2a<>::!Vdd @[ supply_high port-alias ]	
+        3	pseudo_rsource_e1of2a<>::g.Vdd @[ port-alias sub-FO- sub-FI+ ]	
+        4	pseudo_rsource_e1of2a<>::g.GND @[ port-alias sub-FI- ]	
+        5	pseudo_rsource_e1of2a<>::g._pReset @[ port-alias sub-FO+ ]	
+        6	pseudo_rsource_e1of2a<>::g._sReset @[ port-alias ]	
+        7	pseudo_rsource_e1of2a<>::l.d[0] @[ port-alias ]	
+        8	pseudo_rsource_e1of2a<>::l.d[1] @[ port-alias ]	
+        9	pseudo_rsource_e1of2a<>::l.e @[ port-alias ]	
         bool port aliases:
-        1: pseudo_rsource_e1of2a<>::g.!GND = pseudo_rsource_e1of2a<>::l.!GND = pseudo_rsource_e1of2a<>::!GND @[ supply_low ]
-        2: pseudo_rsource_e1of2a<>::g.!Vdd = pseudo_rsource_e1of2a<>::l.!Vdd = pseudo_rsource_e1of2a<>::!Vdd @[ supply_high ]
-        3: pseudo_rsource_e1of2a<>::g.Vdd = pseudo_rsource_e1of2a<>::g.vdd
-        4: pseudo_rsource_e1of2a<>::g.GND = pseudo_rsource_e1of2a<>::g.gnd
-        7: pseudo_rsource_e1of2a<>::l.d[0] = pseudo_rsource_e1of2a<>::l.f
-        8: pseudo_rsource_e1of2a<>::l.d[1] = pseudo_rsource_e1of2a<>::l.t
+        1: pseudo_rsource_e1of2a<>::g.!GND = pseudo_rsource_e1of2a<>::l.!GND = pseudo_rsource_e1of2a<>::!GND @[ supply_low port-alias ]
+        2: pseudo_rsource_e1of2a<>::g.!Vdd = pseudo_rsource_e1of2a<>::l.!Vdd = pseudo_rsource_e1of2a<>::!Vdd @[ supply_high port-alias ]
+        3: pseudo_rsource_e1of2a<>::g.Vdd = pseudo_rsource_e1of2a<>::g.vdd @[ port-alias sub-FO- sub-FI+ ]
+        4: pseudo_rsource_e1of2a<>::g.GND = pseudo_rsource_e1of2a<>::g.gnd @[ port-alias sub-FI- ]
+        7: pseudo_rsource_e1of2a<>::l.d[0] = pseudo_rsource_e1of2a<>::l.f @[ port-alias ]
+        8: pseudo_rsource_e1of2a<>::l.d[1] = pseudo_rsource_e1of2a<>::l.t @[ port-alias ]
       }
       }
 
@@ -672,8 +672,8 @@ In namespace "", we have: {
         !Vdd@[supply=1]
       footprint collection: {
         <5, 2, {0,1,1,0,1}> {
-          !GND = bool^0 = source_e<5, 2, {0,1,1,0,1}>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = source_e<5, 2, {0,1,1,0,1}>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = source_e<5, 2, {0,1,1,0,1}>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = source_e<5, 2, {0,1,1,0,1}>::!Vdd (2) @[ supply_high port-alias ] 
           M = pint^0 value: 2
           N = pint^0 value: 5
           d = pint^1
@@ -685,24 +685,24 @@ In namespace "", we have: {
               4 = 1
             }
           g = process globals<>^0 = source_e<5, 2, {0,1,1,0,1}>::g (1) (
-            !GND = bool^0 = source_e<5, 2, {0,1,1,0,1}>::!GND (1) @[ supply_low ] 
-            !Vdd = bool^0 = source_e<5, 2, {0,1,1,0,1}>::!Vdd (2) @[ supply_high ] 
-            Vdd = bool^0 = source_e<5, 2, {0,1,1,0,1}>::g.Vdd (3) 
-            GND = bool^0 = source_e<5, 2, {0,1,1,0,1}>::g.GND (4) 
-            vdd = bool^0 = source_e<5, 2, {0,1,1,0,1}>::g.Vdd (3) 
-            gnd = bool^0 = source_e<5, 2, {0,1,1,0,1}>::g.GND (4) 
-            _pReset = bool^0 = source_e<5, 2, {0,1,1,0,1}>::g._pReset (5) 
-            _sReset = bool^0 = source_e<5, 2, {0,1,1,0,1}>::g._sReset (6) 
+            !GND = bool^0 = source_e<5, 2, {0,1,1,0,1}>::!GND (1) @[ supply_low port-alias ] 
+            !Vdd = bool^0 = source_e<5, 2, {0,1,1,0,1}>::!Vdd (2) @[ supply_high port-alias ] 
+            Vdd = bool^0 = source_e<5, 2, {0,1,1,0,1}>::g.Vdd (3) @[ port-alias sub-FO- sub-FI+ ] 
+            GND = bool^0 = source_e<5, 2, {0,1,1,0,1}>::g.GND (4) @[ port-alias sub-FI- ] 
+            vdd = bool^0 = source_e<5, 2, {0,1,1,0,1}>::g.Vdd (3) @[ port-alias sub-FO- sub-FI+ ] 
+            gnd = bool^0 = source_e<5, 2, {0,1,1,0,1}>::g.GND (4) @[ port-alias sub-FI- ] 
+            _pReset = bool^0 = source_e<5, 2, {0,1,1,0,1}>::g._pReset (5) @[ port-alias sub-FO+ ] 
+            _sReset = bool^0 = source_e<5, 2, {0,1,1,0,1}>::g._sReset (6) @[ port-alias ] 
           )
           rr = process e1of<2>^0 = source_e<5, 2, {0,1,1,0,1}>::rr (2) (
-            !GND = bool^0 = source_e<5, 2, {0,1,1,0,1}>::!GND (1) @[ supply_low ] 
-            !Vdd = bool^0 = source_e<5, 2, {0,1,1,0,1}>::!Vdd (2) @[ supply_high ] 
+            !GND = bool^0 = source_e<5, 2, {0,1,1,0,1}>::!GND (1) @[ supply_low port-alias ] 
+            !Vdd = bool^0 = source_e<5, 2, {0,1,1,0,1}>::!Vdd (2) @[ supply_high port-alias ] 
             d = bool^1
               {
-                [0] = source_e<5, 2, {0,1,1,0,1}>::rr.d[0] (7) 
-                [1] = source_e<5, 2, {0,1,1,0,1}>::rr.d[1] (8) 
+                [0] = source_e<5, 2, {0,1,1,0,1}>::rr.d[0] (7) @[ port-alias ] 
+                [1] = source_e<5, 2, {0,1,1,0,1}>::rr.d[1] (8) @[ port-alias ] 
               }
-            e = bool^0 = source_e<5, 2, {0,1,1,0,1}>::rr.e (9) 
+            e = bool^0 = source_e<5, 2, {0,1,1,0,1}>::rr.e (9) @[ port-alias ] 
           )
           Created state:
           process instance pool: (2 ports, 0 local, 0 mapped)
@@ -711,20 +711,20 @@ In namespace "", we have: {
           2	source_e<5, 2, {0,1,1,0,1}>::rr	e1of<2>
             bool: 1,2,9,7,8
           bool instance pool: (9 ports, 0 local, 0 mapped)
-          1	source_e<5, 2, {0,1,1,0,1}>::!GND @[ supply_low ]	
-          2	source_e<5, 2, {0,1,1,0,1}>::!Vdd @[ supply_high ]	
-          3	source_e<5, 2, {0,1,1,0,1}>::g.Vdd	
-          4	source_e<5, 2, {0,1,1,0,1}>::g.GND	
-          5	source_e<5, 2, {0,1,1,0,1}>::g._pReset	
-          6	source_e<5, 2, {0,1,1,0,1}>::g._sReset	
-          7	source_e<5, 2, {0,1,1,0,1}>::rr.d[0]	
-          8	source_e<5, 2, {0,1,1,0,1}>::rr.d[1]	
-          9	source_e<5, 2, {0,1,1,0,1}>::rr.e	
+          1	source_e<5, 2, {0,1,1,0,1}>::!GND @[ supply_low port-alias ]	
+          2	source_e<5, 2, {0,1,1,0,1}>::!Vdd @[ supply_high port-alias ]	
+          3	source_e<5, 2, {0,1,1,0,1}>::g.Vdd @[ port-alias sub-FO- sub-FI+ ]	
+          4	source_e<5, 2, {0,1,1,0,1}>::g.GND @[ port-alias sub-FI- ]	
+          5	source_e<5, 2, {0,1,1,0,1}>::g._pReset @[ port-alias sub-FO+ ]	
+          6	source_e<5, 2, {0,1,1,0,1}>::g._sReset @[ port-alias ]	
+          7	source_e<5, 2, {0,1,1,0,1}>::rr.d[0] @[ port-alias ]	
+          8	source_e<5, 2, {0,1,1,0,1}>::rr.d[1] @[ port-alias ]	
+          9	source_e<5, 2, {0,1,1,0,1}>::rr.e @[ port-alias ]	
           bool port aliases:
-          1: source_e<5, 2, {0,1,1,0,1}>::g.!GND = source_e<5, 2, {0,1,1,0,1}>::rr.!GND = source_e<5, 2, {0,1,1,0,1}>::!GND @[ supply_low ]
-          2: source_e<5, 2, {0,1,1,0,1}>::g.!Vdd = source_e<5, 2, {0,1,1,0,1}>::rr.!Vdd = source_e<5, 2, {0,1,1,0,1}>::!Vdd @[ supply_high ]
-          3: source_e<5, 2, {0,1,1,0,1}>::g.Vdd = source_e<5, 2, {0,1,1,0,1}>::g.vdd
-          4: source_e<5, 2, {0,1,1,0,1}>::g.GND = source_e<5, 2, {0,1,1,0,1}>::g.gnd
+          1: source_e<5, 2, {0,1,1,0,1}>::g.!GND = source_e<5, 2, {0,1,1,0,1}>::rr.!GND = source_e<5, 2, {0,1,1,0,1}>::!GND @[ supply_low port-alias ]
+          2: source_e<5, 2, {0,1,1,0,1}>::g.!Vdd = source_e<5, 2, {0,1,1,0,1}>::rr.!Vdd = source_e<5, 2, {0,1,1,0,1}>::!Vdd @[ supply_high port-alias ]
+          3: source_e<5, 2, {0,1,1,0,1}>::g.Vdd = source_e<5, 2, {0,1,1,0,1}>::g.vdd @[ port-alias sub-FO- sub-FI+ ]
+          4: source_e<5, 2, {0,1,1,0,1}>::g.GND = source_e<5, 2, {0,1,1,0,1}>::g.gnd @[ port-alias sub-FI- ]
         }
       }
       }
@@ -742,16 +742,16 @@ In namespace "", we have: {
 footprint: {
   !GND = bool^0 = !GND (1) @[ supply_low ] 
   !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-  _pReset = bool^0 = _pReset (8) 
+  _pReset = bool^0 = _pReset (8) @[ sub-FO+ ] 
   _sReset = bool^0 = _sReset (9) 
   g = process globals<>^0 = g (2) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    Vdd = bool^0 = g.Vdd (6) 
-    GND = bool^0 = g.GND (7) 
-    vdd = bool^0 = g.Vdd (6) 
-    gnd = bool^0 = g.GND (7) 
-    _pReset = bool^0 = _pReset (8) 
+    Vdd = bool^0 = g.Vdd (6) @[ sub-FO- sub-FI+ ] 
+    GND = bool^0 = g.GND (7) @[ sub-FI- ] 
+    vdd = bool^0 = g.Vdd (6) @[ sub-FO- sub-FI+ ] 
+    gnd = bool^0 = g.GND (7) @[ sub-FI- ] 
+    _pReset = bool^0 = _pReset (8) @[ sub-FO+ ] 
     _sReset = bool^0 = _sReset (9) 
   )
   src = process pseudo_rsource_e1of2a<>^0 = src (3) (
@@ -760,11 +760,11 @@ footprint: {
     g = process globals<>^0 = g (2) (
       !GND = bool^0 = !GND (1) @[ supply_low ] 
       !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-      Vdd = bool^0 = g.Vdd (6) 
-      GND = bool^0 = g.GND (7) 
-      vdd = bool^0 = g.Vdd (6) 
-      gnd = bool^0 = g.GND (7) 
-      _pReset = bool^0 = _pReset (8) 
+      Vdd = bool^0 = g.Vdd (6) @[ sub-FO- sub-FI+ ] 
+      GND = bool^0 = g.GND (7) @[ sub-FI- ] 
+      vdd = bool^0 = g.Vdd (6) @[ sub-FO- sub-FI+ ] 
+      gnd = bool^0 = g.GND (7) @[ sub-FI- ] 
+      _pReset = bool^0 = _pReset (8) @[ sub-FO+ ] 
       _sReset = bool^0 = _sReset (9) 
     )
     l = process e1of2<>^0 = x (1) (
@@ -810,8 +810,8 @@ footprint: {
   3	x.d[0]	
   4	x.d[1]	
   5	x.e	
-  6	g.Vdd	
-  7	g.GND	
-  8	_pReset	
+  6	g.Vdd @[ sub-FO- sub-FI+ ]	
+  7	g.GND @[ sub-FI- ]	
+  8	_pReset @[ sub-FO+ ]	
   9	_sReset	
 }

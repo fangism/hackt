@@ -99,15 +99,15 @@ In namespace "", we have: {
         bool<> composite
         x = composite;
       footprint: {
-        !GND = bool^0 = array<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = array<>::!Vdd (2) @[ supply_high ] 
-        composite = bool^0 = array<>::x (3) 
-        x = bool^0 = array<>::x (3) 
+        !GND = bool^0 = array<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = array<>::!Vdd (2) @[ supply_high port-alias ] 
+        composite = bool^0 = array<>::x (3) @[ port-alias ] 
+        x = bool^0 = array<>::x (3) @[ port-alias ] 
         Created state:
         bool instance pool: (3 ports, 0 local, 0 mapped)
-        1	array<>::!GND @[ supply_low ]	
-        2	array<>::!Vdd @[ supply_high ]	
-        3	array<>::x	
+        1	array<>::!GND @[ supply_low port-alias ]	
+        2	array<>::!Vdd @[ supply_high port-alias ]	
+        3	array<>::x @[ port-alias ]	
       }
       }
 
@@ -129,11 +129,11 @@ In namespace "", we have: {
         !Vdd@[supply=1]
         array<> p
       footprint: {
-        !GND = bool^0 = foo<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = foo<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high port-alias ] 
         p = process array<>^0 = foo<>::p (1) (
-          !GND = bool^0 = foo<>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = foo<>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high port-alias ] 
           x = bool^0 = foo<>::p.x (3) 
         )
         Created state:
@@ -141,8 +141,8 @@ In namespace "", we have: {
         1	foo<>::p	array<>
           bool: 1,2,3
         bool instance pool: (2 ports, 1 local, 0 mapped)
-        1	foo<>::!GND @[ supply_low ]	
-        2	foo<>::!Vdd @[ supply_high ]	
+        1	foo<>::!GND @[ supply_low port-alias ]	
+        2	foo<>::!Vdd @[ supply_high port-alias ]	
         3	foo<>::p.x	
       }
       }

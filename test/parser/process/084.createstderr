@@ -84,12 +84,12 @@ In namespace "", we have: {
         int<32> x
         bool<> y
       footprint: {
-        !GND = bool^0 = foo<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = foo<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high port-alias ] 
         r = bool^1
           {
-            [0] = foo<>::r[0] (3) 
-            [1] = foo<>::r[1] (4) 
+            [0] = foo<>::r[0] (3) @[ port-alias ] 
+            [1] = foo<>::r[1] (4) @[ port-alias ] 
           }
         x = int<32>^0 = foo<>::x (1) 
         y = bool^0 = foo<>::y (5) 
@@ -97,10 +97,10 @@ In namespace "", we have: {
         int instance pool: (0 ports, 1 local, 0 mapped)
         1	foo<>::x	
         bool instance pool: (4 ports, 1 local, 0 mapped)
-        1	foo<>::!GND @[ supply_low ]	
-        2	foo<>::!Vdd @[ supply_high ]	
-        3	foo<>::r[0]	
-        4	foo<>::r[1]	
+        1	foo<>::!GND @[ supply_low port-alias ]	
+        2	foo<>::!Vdd @[ supply_high port-alias ]	
+        3	foo<>::r[0] @[ port-alias ]	
+        4	foo<>::r[1] @[ port-alias ]	
         5	foo<>::y	
       }
       }

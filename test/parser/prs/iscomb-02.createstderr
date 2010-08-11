@@ -98,20 +98,20 @@ In namespace "", we have: {
         y@[iscomb=0]
         z@[iscomb=1]
       footprint: {
-        !GND = bool^0 = foo<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high ] 
-        w = bool^0 = foo<>::w (3) 
-        x = bool^0 = foo<>::x (4) @[ iscomb ] 
-        y = bool^0 = foo<>::y (5) 
-        z = bool^0 = foo<>::z (6) @[ iscomb ] 
+        !GND = bool^0 = foo<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high port-alias ] 
+        w = bool^0 = foo<>::w (3) @[ port-alias ] 
+        x = bool^0 = foo<>::x (4) @[ iscomb port-alias ] 
+        y = bool^0 = foo<>::y (5) @[ port-alias ] 
+        z = bool^0 = foo<>::z (6) @[ iscomb port-alias ] 
         Created state:
         bool instance pool: (6 ports, 0 local, 0 mapped)
-        1	foo<>::!GND @[ supply_low ]	
-        2	foo<>::!Vdd @[ supply_high ]	
-        3	foo<>::w	
-        4	foo<>::x @[ iscomb ]	
-        5	foo<>::y	
-        6	foo<>::z @[ iscomb ]	
+        1	foo<>::!GND @[ supply_low port-alias ]	
+        2	foo<>::!Vdd @[ supply_high port-alias ]	
+        3	foo<>::w @[ port-alias ]	
+        4	foo<>::x @[ iscomb port-alias ]	
+        5	foo<>::y @[ port-alias ]	
+        6	foo<>::z @[ iscomb port-alias ]	
       }
       }
 

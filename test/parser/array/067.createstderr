@@ -114,12 +114,12 @@ In namespace "", we have: {
         !GND@[supply=0]
         !Vdd@[supply=1]
       footprint: {
-        !GND = bool^0 = fifo<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = fifo<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = fifo<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = fifo<>::!Vdd (2) @[ supply_high port-alias ] 
         Created state:
         bool instance pool: (2 ports, 0 local, 0 mapped)
-        1	fifo<>::!GND @[ supply_low ]	
-        2	fifo<>::!Vdd @[ supply_high ]	
+        1	fifo<>::!GND @[ supply_low port-alias ]	
+        2	fifo<>::!Vdd @[ supply_high port-alias ]	
       }
       }
 
@@ -147,46 +147,46 @@ In namespace "", we have: {
         fifo<> x[N-1..N-1][1..1]
       footprint collection: {
         <5> {
-          !GND = bool^0 = mult<5>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = mult<5>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = mult<5>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = mult<5>::!Vdd (2) @[ supply_high port-alias ] 
           N = pint^0 value: 5
           x = process fifo<>^2
             {
               [0][0] = mult<5>::x[0][0] (1) (
-                !GND = bool^0 = mult<5>::!GND (1) @[ supply_low ] 
-                !Vdd = bool^0 = mult<5>::!Vdd (2) @[ supply_high ] 
+                !GND = bool^0 = mult<5>::!GND (1) @[ supply_low port-alias ] 
+                !Vdd = bool^0 = mult<5>::!Vdd (2) @[ supply_high port-alias ] 
               )
               [0][1] = mult<5>::x[0][1] (2) (
-                !GND = bool^0 = mult<5>::!GND (1) @[ supply_low ] 
-                !Vdd = bool^0 = mult<5>::!Vdd (2) @[ supply_high ] 
+                !GND = bool^0 = mult<5>::!GND (1) @[ supply_low port-alias ] 
+                !Vdd = bool^0 = mult<5>::!Vdd (2) @[ supply_high port-alias ] 
               )
               [1][0] = mult<5>::x[1][0] (3) (
-                !GND = bool^0 = mult<5>::!GND (1) @[ supply_low ] 
-                !Vdd = bool^0 = mult<5>::!Vdd (2) @[ supply_high ] 
+                !GND = bool^0 = mult<5>::!GND (1) @[ supply_low port-alias ] 
+                !Vdd = bool^0 = mult<5>::!Vdd (2) @[ supply_high port-alias ] 
               )
               [1][1] = mult<5>::x[1][1] (4) (
-                !GND = bool^0 = mult<5>::!GND (1) @[ supply_low ] 
-                !Vdd = bool^0 = mult<5>::!Vdd (2) @[ supply_high ] 
+                !GND = bool^0 = mult<5>::!GND (1) @[ supply_low port-alias ] 
+                !Vdd = bool^0 = mult<5>::!Vdd (2) @[ supply_high port-alias ] 
               )
               [2][0] = mult<5>::x[2][0] (5) (
-                !GND = bool^0 = mult<5>::!GND (1) @[ supply_low ] 
-                !Vdd = bool^0 = mult<5>::!Vdd (2) @[ supply_high ] 
+                !GND = bool^0 = mult<5>::!GND (1) @[ supply_low port-alias ] 
+                !Vdd = bool^0 = mult<5>::!Vdd (2) @[ supply_high port-alias ] 
               )
               [2][1] = mult<5>::x[2][1] (6) (
-                !GND = bool^0 = mult<5>::!GND (1) @[ supply_low ] 
-                !Vdd = bool^0 = mult<5>::!Vdd (2) @[ supply_high ] 
+                !GND = bool^0 = mult<5>::!GND (1) @[ supply_low port-alias ] 
+                !Vdd = bool^0 = mult<5>::!Vdd (2) @[ supply_high port-alias ] 
               )
               [3][0] = mult<5>::x[3][0] (7) (
-                !GND = bool^0 = mult<5>::!GND (1) @[ supply_low ] 
-                !Vdd = bool^0 = mult<5>::!Vdd (2) @[ supply_high ] 
+                !GND = bool^0 = mult<5>::!GND (1) @[ supply_low port-alias ] 
+                !Vdd = bool^0 = mult<5>::!Vdd (2) @[ supply_high port-alias ] 
               )
               [3][1] = mult<5>::x[3][1] (8) (
-                !GND = bool^0 = mult<5>::!GND (1) @[ supply_low ] 
-                !Vdd = bool^0 = mult<5>::!Vdd (2) @[ supply_high ] 
+                !GND = bool^0 = mult<5>::!GND (1) @[ supply_low port-alias ] 
+                !Vdd = bool^0 = mult<5>::!Vdd (2) @[ supply_high port-alias ] 
               )
               [4][1] = mult<5>::x[4][1] (9) (
-                !GND = bool^0 = mult<5>::!GND (1) @[ supply_low ] 
-                !Vdd = bool^0 = mult<5>::!Vdd (2) @[ supply_high ] 
+                !GND = bool^0 = mult<5>::!GND (1) @[ supply_low port-alias ] 
+                !Vdd = bool^0 = mult<5>::!Vdd (2) @[ supply_high port-alias ] 
               )
             }
           Created state:
@@ -210,8 +210,8 @@ In namespace "", we have: {
           9	mult<5>::x[4][1]	fifo<>
             bool: 1,2
           bool instance pool: (2 ports, 0 local, 0 mapped)
-          1	mult<5>::!GND @[ supply_low ]	
-          2	mult<5>::!Vdd @[ supply_high ]	
+          1	mult<5>::!GND @[ supply_low port-alias ]	
+          2	mult<5>::!Vdd @[ supply_high port-alias ]	
         }
       }
       }

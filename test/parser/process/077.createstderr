@@ -121,8 +121,8 @@ In namespace "", we have: {
         a = b;
       footprint collection: {
         <{2,2}> {
-          !GND = bool^0 = foo<{2,2}>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = foo<{2,2}>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = foo<{2,2}>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = foo<{2,2}>::!Vdd (2) @[ supply_high port-alias ] 
           N = pint^1
             unrolled index-value pairs: {
               0 = 2
@@ -130,23 +130,23 @@ In namespace "", we have: {
             }
           a = bool^1
             {
-              [0] = foo<{2,2}>::a[0] (3) 
-              [1] = foo<{2,2}>::a[1] (4) 
+              [0] = foo<{2,2}>::a[0] (3) @[ port-alias ] 
+              [1] = foo<{2,2}>::a[1] (4) @[ port-alias ] 
             }
           b = bool^1
             {
-              [0] = foo<{2,2}>::a[0] (3) 
-              [1] = foo<{2,2}>::a[1] (4) 
+              [0] = foo<{2,2}>::a[0] (3) @[ port-alias ] 
+              [1] = foo<{2,2}>::a[1] (4) @[ port-alias ] 
             }
           Created state:
           bool instance pool: (4 ports, 0 local, 0 mapped)
-          1	foo<{2,2}>::!GND @[ supply_low ]	
-          2	foo<{2,2}>::!Vdd @[ supply_high ]	
-          3	foo<{2,2}>::a[0]	
-          4	foo<{2,2}>::a[1]	
+          1	foo<{2,2}>::!GND @[ supply_low port-alias ]	
+          2	foo<{2,2}>::!Vdd @[ supply_high port-alias ]	
+          3	foo<{2,2}>::a[0] @[ port-alias ]	
+          4	foo<{2,2}>::a[1] @[ port-alias ]	
           bool port aliases:
-          3: foo<{2,2}>::a[0] = foo<{2,2}>::b[0]
-          4: foo<{2,2}>::a[1] = foo<{2,2}>::b[1]
+          3: foo<{2,2}>::a[0] = foo<{2,2}>::b[0] @[ port-alias ]
+          4: foo<{2,2}>::a[1] = foo<{2,2}>::b[1] @[ port-alias ]
         }
       }
       }

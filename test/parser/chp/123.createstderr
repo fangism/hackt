@@ -123,11 +123,11 @@ In namespace "", we have: {
           X#(b)
         }
       footprint: {
-        !GND = bool^0 = bar<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = bar<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = bar<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = bar<>::!Vdd (2) @[ supply_high port-alias ] 
         F = process foo<>^0 = bar<>::F (1) (
-          !GND = bool^0 = bar<>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = bar<>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = bar<>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = bar<>::!Vdd (2) @[ supply_high port-alias ] 
           B = channel chan?(bool<>)^0 = bar<>::X (1) 
         )
         X = channel chan(bool<>)^0 = bar<>::X (1) 
@@ -140,8 +140,8 @@ In namespace "", we have: {
         channel instance pool: (0 ports, 1 local, 0 mapped)
         1	bar<>::X	
         bool instance pool: (2 ports, 1 local, 0 mapped)
-        1	bar<>::!GND @[ supply_low ]	
-        2	bar<>::!Vdd @[ supply_high ]	
+        1	bar<>::!GND @[ supply_low port-alias ]	
+        2	bar<>::!Vdd @[ supply_high port-alias ]	
         3	bar<>::b	
         resolved concurrent actions:
           X#(b)
@@ -174,15 +174,15 @@ In namespace "", we have: {
           B?
         }
       footprint: {
-        !GND = bool^0 = foo<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = foo<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high port-alias ] 
         B = channel chan?(bool<>)^0 = foo<>::B (1) 
         Created state:
         channel instance pool: (1 ports, 0 local, 0 mapped)
         1	foo<>::B	
         bool instance pool: (2 ports, 0 local, 0 mapped)
-        1	foo<>::!GND @[ supply_low ]	
-        2	foo<>::!Vdd @[ supply_high ]	
+        1	foo<>::!GND @[ supply_low port-alias ]	
+        2	foo<>::!Vdd @[ supply_high port-alias ]	
         resolved concurrent actions:
           B?
         chp events: {

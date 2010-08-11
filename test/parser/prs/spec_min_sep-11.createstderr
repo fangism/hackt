@@ -103,17 +103,17 @@ In namespace "", we have: {
       spec:
         min_sep<blah>(a,b)
       footprint: {
-        !GND = bool^0 = ass<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = ass<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = ass<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = ass<>::!Vdd (2) @[ supply_high port-alias ] 
         a = bool^0 = ass<>::a (4) 
         b = bool^0 = ass<>::b (5) 
         c = bool^0 = ass<>::c (6) 
-        q = bool^0 = ass<>::q (3) 
+        q = bool^0 = ass<>::q (3) @[ port-alias ] 
         Created state:
         bool instance pool: (3 ports, 3 local, 0 mapped)
-        1	ass<>::!GND @[ supply_low ]	
-        2	ass<>::!Vdd @[ supply_high ]	
-        3	ass<>::q	
+        1	ass<>::!GND @[ supply_low port-alias ]	
+        2	ass<>::!Vdd @[ supply_high port-alias ]	
+        3	ass<>::q @[ port-alias ]	
         4	ass<>::a	
         5	ass<>::b	
         6	ass<>::c	

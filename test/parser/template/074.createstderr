@@ -133,8 +133,8 @@ In namespace "", we have: {
         !Vdd@[supply=1]
       footprint collection: {
         <3, {1,0,1}> {
-          !GND = bool^0 = ass<3, {1,0,1}>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = ass<3, {1,0,1}>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = ass<3, {1,0,1}>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = ass<3, {1,0,1}>::!Vdd (2) @[ supply_high port-alias ] 
           N = pint^0 value: 3
           d = pint^1
             unrolled index-value pairs: {
@@ -142,16 +142,16 @@ In namespace "", we have: {
               1 = 0
               2 = 1
             }
-          x = bool^0 = ass<3, {1,0,1}>::x (3) 
-          y = bool^0 = ass<3, {1,0,1}>::y (4) 
-          z = bool^0 = ass<3, {1,0,1}>::z (5) 
+          x = bool^0 = ass<3, {1,0,1}>::x (3) @[ port-alias ] 
+          y = bool^0 = ass<3, {1,0,1}>::y (4) @[ port-alias ] 
+          z = bool^0 = ass<3, {1,0,1}>::z (5) @[ port-alias ] 
           Created state:
           bool instance pool: (5 ports, 0 local, 0 mapped)
-          1	ass<3, {1,0,1}>::!GND @[ supply_low ]	
-          2	ass<3, {1,0,1}>::!Vdd @[ supply_high ]	
-          3	ass<3, {1,0,1}>::x	
-          4	ass<3, {1,0,1}>::y	
-          5	ass<3, {1,0,1}>::z	
+          1	ass<3, {1,0,1}>::!GND @[ supply_low port-alias ]	
+          2	ass<3, {1,0,1}>::!Vdd @[ supply_high port-alias ]	
+          3	ass<3, {1,0,1}>::x @[ port-alias ]	
+          4	ass<3, {1,0,1}>::y @[ port-alias ]	
+          5	ass<3, {1,0,1}>::z @[ port-alias ]	
         }
       }
       }

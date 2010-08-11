@@ -98,15 +98,15 @@ In namespace "", we have: {
           X?
         }
       footprint: {
-        !GND = bool^0 = sink<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = sink<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = sink<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = sink<>::!Vdd (2) @[ supply_high port-alias ] 
         X = channel chan??(bool<>)^0 = sink<>::X (1) 
         Created state:
         channel instance pool: (1 ports, 0 local, 0 mapped)
         1	sink<>::X	
         bool instance pool: (2 ports, 0 local, 0 mapped)
-        1	sink<>::!GND @[ supply_low ]	
-        2	sink<>::!Vdd @[ supply_high ]	
+        1	sink<>::!GND @[ supply_low port-alias ]	
+        2	sink<>::!Vdd @[ supply_high port-alias ]	
         resolved concurrent actions:
           X?
         chp events: {

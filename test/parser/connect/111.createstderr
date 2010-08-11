@@ -86,16 +86,16 @@ In namespace "", we have: {
         !GND@[supply=0]
         !Vdd@[supply=1]
       footprint: {
-        !GND = bool^0 = wrap<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = wrap<>::!Vdd (2) @[ supply_high ] 
-        a = bool^0 = wrap<>::a (3) 
-        b = bool^0 = wrap<>::b (4) 
+        !GND = bool^0 = wrap<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = wrap<>::!Vdd (2) @[ supply_high port-alias ] 
+        a = bool^0 = wrap<>::a (3) @[ port-alias ] 
+        b = bool^0 = wrap<>::b (4) @[ port-alias ] 
         Created state:
         bool instance pool: (4 ports, 0 local, 0 mapped)
-        1	wrap<>::!GND @[ supply_low ]	
-        2	wrap<>::!Vdd @[ supply_high ]	
-        3	wrap<>::a	
-        4	wrap<>::b	
+        1	wrap<>::!GND @[ supply_low port-alias ]	
+        2	wrap<>::!Vdd @[ supply_high port-alias ]	
+        3	wrap<>::a @[ port-alias ]	
+        4	wrap<>::b @[ port-alias ]	
       }
       }
 

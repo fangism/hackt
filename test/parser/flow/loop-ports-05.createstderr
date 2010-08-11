@@ -196,24 +196,24 @@ In namespace "", we have: {
         !Vdd@[supply=1]
       footprint collection: {
         <4> {
-          !GND = bool^0 = ch1of<4>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = ch1of<4>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = ch1of<4>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = ch1of<4>::!Vdd (2) @[ supply_high port-alias ] 
           N = pint^0 value: 4
           d = bool^1
             {
-              [0] = ch1of<4>::d[0] (3) 
-              [1] = ch1of<4>::d[1] (4) 
-              [2] = ch1of<4>::d[2] (5) 
-              [3] = ch1of<4>::d[3] (6) 
+              [0] = ch1of<4>::d[0] (3) @[ port-alias ] 
+              [1] = ch1of<4>::d[1] (4) @[ port-alias ] 
+              [2] = ch1of<4>::d[2] (5) @[ port-alias ] 
+              [3] = ch1of<4>::d[3] (6) @[ port-alias ] 
             }
           Created state:
           bool instance pool: (6 ports, 0 local, 0 mapped)
-          1	ch1of<4>::!GND @[ supply_low ]	
-          2	ch1of<4>::!Vdd @[ supply_high ]	
-          3	ch1of<4>::d[0]	
-          4	ch1of<4>::d[1]	
-          5	ch1of<4>::d[2]	
-          6	ch1of<4>::d[3]	
+          1	ch1of<4>::!GND @[ supply_low port-alias ]	
+          2	ch1of<4>::!Vdd @[ supply_high port-alias ]	
+          3	ch1of<4>::d[0] @[ port-alias ]	
+          4	ch1of<4>::d[1] @[ port-alias ]	
+          5	ch1of<4>::d[2] @[ port-alias ]	
+          6	ch1of<4>::d[3] @[ port-alias ]	
         }
       }
       }
@@ -253,20 +253,20 @@ In namespace "", we have: {
         ~_out -> out+
         }
       footprint: {
-        !GND = bool^0 = dcelm<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = dcelm<>::!Vdd (2) @[ supply_high ] 
-        _out = bool^0 = dcelm<>::_out (5) 
-        a = bool^0 = dcelm<>::a (3) 
-        b = bool^0 = dcelm<>::b (4) 
-        out = bool^0 = dcelm<>::out (6) 
+        !GND = bool^0 = dcelm<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = dcelm<>::!Vdd (2) @[ supply_high port-alias ] 
+        _out = bool^0 = dcelm<>::_out (5) @[ port-alias loc-FO- loc-FO+ loc-FI- loc-FI+ ] 
+        a = bool^0 = dcelm<>::a (3) @[ port-alias loc-FO- loc-FO+ ] 
+        b = bool^0 = dcelm<>::b (4) @[ port-alias loc-FO- loc-FO+ ] 
+        out = bool^0 = dcelm<>::out (6) @[ port-alias loc-FI- loc-FI+ ] 
         Created state:
         bool instance pool: (6 ports, 0 local, 0 mapped)
-        1	dcelm<>::!GND @[ supply_low ]	
-        2	dcelm<>::!Vdd @[ supply_high ]	
-        3	dcelm<>::a	
-        4	dcelm<>::b	
-        5	dcelm<>::_out	
-        6	dcelm<>::out	
+        1	dcelm<>::!GND @[ supply_low port-alias ]	
+        2	dcelm<>::!Vdd @[ supply_high port-alias ]	
+        3	dcelm<>::a @[ port-alias loc-FO- loc-FO+ ]	
+        4	dcelm<>::b @[ port-alias loc-FO- loc-FO+ ]	
+        5	dcelm<>::_out @[ port-alias loc-FO- loc-FO+ loc-FI- loc-FI+ ]	
+        6	dcelm<>::out @[ port-alias loc-FI- loc-FI+ ]	
         resolved prs:
         a & b -> _out-
         ~a & ~b -> _out+
@@ -300,162 +300,162 @@ In namespace "", we have: {
           ce[$b] ( , , ad[1].d[$b/4], ad[0].d[$b%4], , );
         )
       footprint: {
-        !GND = bool^0 = lut<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = lut<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high port-alias ] 
         ad = process ch1of<4>^1
           {
             [0] = lut<>::ad[0] (1) (
-              !GND = bool^0 = lut<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high ] 
+              !GND = bool^0 = lut<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high port-alias ] 
               d = bool^1
                 {
-                  [0] = lut<>::ad[0].d[0] (3) 
-                  [1] = lut<>::ad[0].d[1] (4) 
-                  [2] = lut<>::ad[0].d[2] (5) 
-                  [3] = lut<>::ad[0].d[3] (6) 
+                  [0] = lut<>::ad[0].d[0] (3) @[ sub-FO- sub-FO+ ] 
+                  [1] = lut<>::ad[0].d[1] (4) @[ sub-FO- sub-FO+ ] 
+                  [2] = lut<>::ad[0].d[2] (5) @[ sub-FO- sub-FO+ ] 
+                  [3] = lut<>::ad[0].d[3] (6) @[ sub-FO- sub-FO+ ] 
                 }
             )
             [1] = lut<>::ad[1] (2) (
-              !GND = bool^0 = lut<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high ] 
+              !GND = bool^0 = lut<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high port-alias ] 
               d = bool^1
                 {
-                  [0] = lut<>::ad[1].d[0] (7) 
-                  [1] = lut<>::ad[1].d[1] (8) 
-                  [2] = lut<>::ad[1].d[2] (9) 
-                  [3] = lut<>::ad[1].d[3] (10) 
+                  [0] = lut<>::ad[1].d[0] (7) @[ sub-FO- sub-FO+ ] 
+                  [1] = lut<>::ad[1].d[1] (8) @[ sub-FO- sub-FO+ ] 
+                  [2] = lut<>::ad[1].d[2] (9) @[ sub-FO- sub-FO+ ] 
+                  [3] = lut<>::ad[1].d[3] (10) @[ sub-FO- sub-FO+ ] 
                 }
             )
           }
         ce = process dcelm<>^1
           {
             [0] = lut<>::ce[0] (3) (
-              !GND = bool^0 = lut<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high ] 
-              a = bool^0 = lut<>::ad[1].d[0] (7) 
-              b = bool^0 = lut<>::ad[0].d[0] (3) 
-              _out = bool^0 = lut<>::ce[0]._out (11) 
-              out = bool^0 = lut<>::ce[0].out (12) 
+              !GND = bool^0 = lut<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high port-alias ] 
+              a = bool^0 = lut<>::ad[1].d[0] (7) @[ sub-FO- sub-FO+ ] 
+              b = bool^0 = lut<>::ad[0].d[0] (3) @[ sub-FO- sub-FO+ ] 
+              _out = bool^0 = lut<>::ce[0]._out (11) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
+              out = bool^0 = lut<>::ce[0].out (12) @[ sub-FI- sub-FI+ ] 
             )
             [1] = lut<>::ce[1] (4) (
-              !GND = bool^0 = lut<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high ] 
-              a = bool^0 = lut<>::ad[1].d[0] (7) 
-              b = bool^0 = lut<>::ad[0].d[1] (4) 
-              _out = bool^0 = lut<>::ce[1]._out (13) 
-              out = bool^0 = lut<>::ce[1].out (14) 
+              !GND = bool^0 = lut<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high port-alias ] 
+              a = bool^0 = lut<>::ad[1].d[0] (7) @[ sub-FO- sub-FO+ ] 
+              b = bool^0 = lut<>::ad[0].d[1] (4) @[ sub-FO- sub-FO+ ] 
+              _out = bool^0 = lut<>::ce[1]._out (13) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
+              out = bool^0 = lut<>::ce[1].out (14) @[ sub-FI- sub-FI+ ] 
             )
             [2] = lut<>::ce[2] (5) (
-              !GND = bool^0 = lut<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high ] 
-              a = bool^0 = lut<>::ad[1].d[0] (7) 
-              b = bool^0 = lut<>::ad[0].d[2] (5) 
-              _out = bool^0 = lut<>::ce[2]._out (15) 
-              out = bool^0 = lut<>::ce[2].out (16) 
+              !GND = bool^0 = lut<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high port-alias ] 
+              a = bool^0 = lut<>::ad[1].d[0] (7) @[ sub-FO- sub-FO+ ] 
+              b = bool^0 = lut<>::ad[0].d[2] (5) @[ sub-FO- sub-FO+ ] 
+              _out = bool^0 = lut<>::ce[2]._out (15) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
+              out = bool^0 = lut<>::ce[2].out (16) @[ sub-FI- sub-FI+ ] 
             )
             [3] = lut<>::ce[3] (6) (
-              !GND = bool^0 = lut<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high ] 
-              a = bool^0 = lut<>::ad[1].d[0] (7) 
-              b = bool^0 = lut<>::ad[0].d[3] (6) 
-              _out = bool^0 = lut<>::ce[3]._out (17) 
-              out = bool^0 = lut<>::ce[3].out (18) 
+              !GND = bool^0 = lut<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high port-alias ] 
+              a = bool^0 = lut<>::ad[1].d[0] (7) @[ sub-FO- sub-FO+ ] 
+              b = bool^0 = lut<>::ad[0].d[3] (6) @[ sub-FO- sub-FO+ ] 
+              _out = bool^0 = lut<>::ce[3]._out (17) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
+              out = bool^0 = lut<>::ce[3].out (18) @[ sub-FI- sub-FI+ ] 
             )
             [4] = lut<>::ce[4] (7) (
-              !GND = bool^0 = lut<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high ] 
-              a = bool^0 = lut<>::ad[1].d[1] (8) 
-              b = bool^0 = lut<>::ad[0].d[0] (3) 
-              _out = bool^0 = lut<>::ce[4]._out (19) 
-              out = bool^0 = lut<>::ce[4].out (20) 
+              !GND = bool^0 = lut<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high port-alias ] 
+              a = bool^0 = lut<>::ad[1].d[1] (8) @[ sub-FO- sub-FO+ ] 
+              b = bool^0 = lut<>::ad[0].d[0] (3) @[ sub-FO- sub-FO+ ] 
+              _out = bool^0 = lut<>::ce[4]._out (19) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
+              out = bool^0 = lut<>::ce[4].out (20) @[ sub-FI- sub-FI+ ] 
             )
             [5] = lut<>::ce[5] (8) (
-              !GND = bool^0 = lut<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high ] 
-              a = bool^0 = lut<>::ad[1].d[1] (8) 
-              b = bool^0 = lut<>::ad[0].d[1] (4) 
-              _out = bool^0 = lut<>::ce[5]._out (21) 
-              out = bool^0 = lut<>::ce[5].out (22) 
+              !GND = bool^0 = lut<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high port-alias ] 
+              a = bool^0 = lut<>::ad[1].d[1] (8) @[ sub-FO- sub-FO+ ] 
+              b = bool^0 = lut<>::ad[0].d[1] (4) @[ sub-FO- sub-FO+ ] 
+              _out = bool^0 = lut<>::ce[5]._out (21) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
+              out = bool^0 = lut<>::ce[5].out (22) @[ sub-FI- sub-FI+ ] 
             )
             [6] = lut<>::ce[6] (9) (
-              !GND = bool^0 = lut<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high ] 
-              a = bool^0 = lut<>::ad[1].d[1] (8) 
-              b = bool^0 = lut<>::ad[0].d[2] (5) 
-              _out = bool^0 = lut<>::ce[6]._out (23) 
-              out = bool^0 = lut<>::ce[6].out (24) 
+              !GND = bool^0 = lut<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high port-alias ] 
+              a = bool^0 = lut<>::ad[1].d[1] (8) @[ sub-FO- sub-FO+ ] 
+              b = bool^0 = lut<>::ad[0].d[2] (5) @[ sub-FO- sub-FO+ ] 
+              _out = bool^0 = lut<>::ce[6]._out (23) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
+              out = bool^0 = lut<>::ce[6].out (24) @[ sub-FI- sub-FI+ ] 
             )
             [7] = lut<>::ce[7] (10) (
-              !GND = bool^0 = lut<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high ] 
-              a = bool^0 = lut<>::ad[1].d[1] (8) 
-              b = bool^0 = lut<>::ad[0].d[3] (6) 
-              _out = bool^0 = lut<>::ce[7]._out (25) 
-              out = bool^0 = lut<>::ce[7].out (26) 
+              !GND = bool^0 = lut<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high port-alias ] 
+              a = bool^0 = lut<>::ad[1].d[1] (8) @[ sub-FO- sub-FO+ ] 
+              b = bool^0 = lut<>::ad[0].d[3] (6) @[ sub-FO- sub-FO+ ] 
+              _out = bool^0 = lut<>::ce[7]._out (25) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
+              out = bool^0 = lut<>::ce[7].out (26) @[ sub-FI- sub-FI+ ] 
             )
             [8] = lut<>::ce[8] (11) (
-              !GND = bool^0 = lut<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high ] 
-              a = bool^0 = lut<>::ad[1].d[2] (9) 
-              b = bool^0 = lut<>::ad[0].d[0] (3) 
-              _out = bool^0 = lut<>::ce[8]._out (27) 
-              out = bool^0 = lut<>::ce[8].out (28) 
+              !GND = bool^0 = lut<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high port-alias ] 
+              a = bool^0 = lut<>::ad[1].d[2] (9) @[ sub-FO- sub-FO+ ] 
+              b = bool^0 = lut<>::ad[0].d[0] (3) @[ sub-FO- sub-FO+ ] 
+              _out = bool^0 = lut<>::ce[8]._out (27) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
+              out = bool^0 = lut<>::ce[8].out (28) @[ sub-FI- sub-FI+ ] 
             )
             [9] = lut<>::ce[9] (12) (
-              !GND = bool^0 = lut<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high ] 
-              a = bool^0 = lut<>::ad[1].d[2] (9) 
-              b = bool^0 = lut<>::ad[0].d[1] (4) 
-              _out = bool^0 = lut<>::ce[9]._out (29) 
-              out = bool^0 = lut<>::ce[9].out (30) 
+              !GND = bool^0 = lut<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high port-alias ] 
+              a = bool^0 = lut<>::ad[1].d[2] (9) @[ sub-FO- sub-FO+ ] 
+              b = bool^0 = lut<>::ad[0].d[1] (4) @[ sub-FO- sub-FO+ ] 
+              _out = bool^0 = lut<>::ce[9]._out (29) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
+              out = bool^0 = lut<>::ce[9].out (30) @[ sub-FI- sub-FI+ ] 
             )
             [10] = lut<>::ce[10] (13) (
-              !GND = bool^0 = lut<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high ] 
-              a = bool^0 = lut<>::ad[1].d[2] (9) 
-              b = bool^0 = lut<>::ad[0].d[2] (5) 
-              _out = bool^0 = lut<>::ce[10]._out (31) 
-              out = bool^0 = lut<>::ce[10].out (32) 
+              !GND = bool^0 = lut<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high port-alias ] 
+              a = bool^0 = lut<>::ad[1].d[2] (9) @[ sub-FO- sub-FO+ ] 
+              b = bool^0 = lut<>::ad[0].d[2] (5) @[ sub-FO- sub-FO+ ] 
+              _out = bool^0 = lut<>::ce[10]._out (31) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
+              out = bool^0 = lut<>::ce[10].out (32) @[ sub-FI- sub-FI+ ] 
             )
             [11] = lut<>::ce[11] (14) (
-              !GND = bool^0 = lut<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high ] 
-              a = bool^0 = lut<>::ad[1].d[2] (9) 
-              b = bool^0 = lut<>::ad[0].d[3] (6) 
-              _out = bool^0 = lut<>::ce[11]._out (33) 
-              out = bool^0 = lut<>::ce[11].out (34) 
+              !GND = bool^0 = lut<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high port-alias ] 
+              a = bool^0 = lut<>::ad[1].d[2] (9) @[ sub-FO- sub-FO+ ] 
+              b = bool^0 = lut<>::ad[0].d[3] (6) @[ sub-FO- sub-FO+ ] 
+              _out = bool^0 = lut<>::ce[11]._out (33) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
+              out = bool^0 = lut<>::ce[11].out (34) @[ sub-FI- sub-FI+ ] 
             )
             [12] = lut<>::ce[12] (15) (
-              !GND = bool^0 = lut<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high ] 
-              a = bool^0 = lut<>::ad[1].d[3] (10) 
-              b = bool^0 = lut<>::ad[0].d[0] (3) 
-              _out = bool^0 = lut<>::ce[12]._out (35) 
-              out = bool^0 = lut<>::ce[12].out (36) 
+              !GND = bool^0 = lut<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high port-alias ] 
+              a = bool^0 = lut<>::ad[1].d[3] (10) @[ sub-FO- sub-FO+ ] 
+              b = bool^0 = lut<>::ad[0].d[0] (3) @[ sub-FO- sub-FO+ ] 
+              _out = bool^0 = lut<>::ce[12]._out (35) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
+              out = bool^0 = lut<>::ce[12].out (36) @[ sub-FI- sub-FI+ ] 
             )
             [13] = lut<>::ce[13] (16) (
-              !GND = bool^0 = lut<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high ] 
-              a = bool^0 = lut<>::ad[1].d[3] (10) 
-              b = bool^0 = lut<>::ad[0].d[1] (4) 
-              _out = bool^0 = lut<>::ce[13]._out (37) 
-              out = bool^0 = lut<>::ce[13].out (38) 
+              !GND = bool^0 = lut<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high port-alias ] 
+              a = bool^0 = lut<>::ad[1].d[3] (10) @[ sub-FO- sub-FO+ ] 
+              b = bool^0 = lut<>::ad[0].d[1] (4) @[ sub-FO- sub-FO+ ] 
+              _out = bool^0 = lut<>::ce[13]._out (37) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
+              out = bool^0 = lut<>::ce[13].out (38) @[ sub-FI- sub-FI+ ] 
             )
             [14] = lut<>::ce[14] (17) (
-              !GND = bool^0 = lut<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high ] 
-              a = bool^0 = lut<>::ad[1].d[3] (10) 
-              b = bool^0 = lut<>::ad[0].d[2] (5) 
-              _out = bool^0 = lut<>::ce[14]._out (39) 
-              out = bool^0 = lut<>::ce[14].out (40) 
+              !GND = bool^0 = lut<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high port-alias ] 
+              a = bool^0 = lut<>::ad[1].d[3] (10) @[ sub-FO- sub-FO+ ] 
+              b = bool^0 = lut<>::ad[0].d[2] (5) @[ sub-FO- sub-FO+ ] 
+              _out = bool^0 = lut<>::ce[14]._out (39) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
+              out = bool^0 = lut<>::ce[14].out (40) @[ sub-FI- sub-FI+ ] 
             )
             [15] = lut<>::ce[15] (18) (
-              !GND = bool^0 = lut<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high ] 
-              a = bool^0 = lut<>::ad[1].d[3] (10) 
-              b = bool^0 = lut<>::ad[0].d[3] (6) 
-              _out = bool^0 = lut<>::ce[15]._out (41) 
-              out = bool^0 = lut<>::ce[15].out (42) 
+              !GND = bool^0 = lut<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high port-alias ] 
+              a = bool^0 = lut<>::ad[1].d[3] (10) @[ sub-FO- sub-FO+ ] 
+              b = bool^0 = lut<>::ad[0].d[3] (6) @[ sub-FO- sub-FO+ ] 
+              _out = bool^0 = lut<>::ce[15]._out (41) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
+              out = bool^0 = lut<>::ce[15].out (42) @[ sub-FI- sub-FI+ ] 
             )
           }
         Created state:
@@ -497,48 +497,48 @@ In namespace "", we have: {
         18	lut<>::ce[15]	dcelm<>
           bool: 1,2,10,6,41,42
         bool instance pool: (2 ports, 40 local, 0 mapped)
-        1	lut<>::!GND @[ supply_low ]	
-        2	lut<>::!Vdd @[ supply_high ]	
-        3	lut<>::ad[0].d[0]	
-        4	lut<>::ad[0].d[1]	
-        5	lut<>::ad[0].d[2]	
-        6	lut<>::ad[0].d[3]	
-        7	lut<>::ad[1].d[0]	
-        8	lut<>::ad[1].d[1]	
-        9	lut<>::ad[1].d[2]	
-        10	lut<>::ad[1].d[3]	
-        11	lut<>::ce[0]._out	
-        12	lut<>::ce[0].out	
-        13	lut<>::ce[1]._out	
-        14	lut<>::ce[1].out	
-        15	lut<>::ce[2]._out	
-        16	lut<>::ce[2].out	
-        17	lut<>::ce[3]._out	
-        18	lut<>::ce[3].out	
-        19	lut<>::ce[4]._out	
-        20	lut<>::ce[4].out	
-        21	lut<>::ce[5]._out	
-        22	lut<>::ce[5].out	
-        23	lut<>::ce[6]._out	
-        24	lut<>::ce[6].out	
-        25	lut<>::ce[7]._out	
-        26	lut<>::ce[7].out	
-        27	lut<>::ce[8]._out	
-        28	lut<>::ce[8].out	
-        29	lut<>::ce[9]._out	
-        30	lut<>::ce[9].out	
-        31	lut<>::ce[10]._out	
-        32	lut<>::ce[10].out	
-        33	lut<>::ce[11]._out	
-        34	lut<>::ce[11].out	
-        35	lut<>::ce[12]._out	
-        36	lut<>::ce[12].out	
-        37	lut<>::ce[13]._out	
-        38	lut<>::ce[13].out	
-        39	lut<>::ce[14]._out	
-        40	lut<>::ce[14].out	
-        41	lut<>::ce[15]._out	
-        42	lut<>::ce[15].out	
+        1	lut<>::!GND @[ supply_low port-alias ]	
+        2	lut<>::!Vdd @[ supply_high port-alias ]	
+        3	lut<>::ad[0].d[0] @[ sub-FO- sub-FO+ ]	
+        4	lut<>::ad[0].d[1] @[ sub-FO- sub-FO+ ]	
+        5	lut<>::ad[0].d[2] @[ sub-FO- sub-FO+ ]	
+        6	lut<>::ad[0].d[3] @[ sub-FO- sub-FO+ ]	
+        7	lut<>::ad[1].d[0] @[ sub-FO- sub-FO+ ]	
+        8	lut<>::ad[1].d[1] @[ sub-FO- sub-FO+ ]	
+        9	lut<>::ad[1].d[2] @[ sub-FO- sub-FO+ ]	
+        10	lut<>::ad[1].d[3] @[ sub-FO- sub-FO+ ]	
+        11	lut<>::ce[0]._out @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ]	
+        12	lut<>::ce[0].out @[ sub-FI- sub-FI+ ]	
+        13	lut<>::ce[1]._out @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ]	
+        14	lut<>::ce[1].out @[ sub-FI- sub-FI+ ]	
+        15	lut<>::ce[2]._out @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ]	
+        16	lut<>::ce[2].out @[ sub-FI- sub-FI+ ]	
+        17	lut<>::ce[3]._out @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ]	
+        18	lut<>::ce[3].out @[ sub-FI- sub-FI+ ]	
+        19	lut<>::ce[4]._out @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ]	
+        20	lut<>::ce[4].out @[ sub-FI- sub-FI+ ]	
+        21	lut<>::ce[5]._out @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ]	
+        22	lut<>::ce[5].out @[ sub-FI- sub-FI+ ]	
+        23	lut<>::ce[6]._out @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ]	
+        24	lut<>::ce[6].out @[ sub-FI- sub-FI+ ]	
+        25	lut<>::ce[7]._out @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ]	
+        26	lut<>::ce[7].out @[ sub-FI- sub-FI+ ]	
+        27	lut<>::ce[8]._out @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ]	
+        28	lut<>::ce[8].out @[ sub-FI- sub-FI+ ]	
+        29	lut<>::ce[9]._out @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ]	
+        30	lut<>::ce[9].out @[ sub-FI- sub-FI+ ]	
+        31	lut<>::ce[10]._out @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ]	
+        32	lut<>::ce[10].out @[ sub-FI- sub-FI+ ]	
+        33	lut<>::ce[11]._out @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ]	
+        34	lut<>::ce[11].out @[ sub-FI- sub-FI+ ]	
+        35	lut<>::ce[12]._out @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ]	
+        36	lut<>::ce[12].out @[ sub-FI- sub-FI+ ]	
+        37	lut<>::ce[13]._out @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ]	
+        38	lut<>::ce[13].out @[ sub-FI- sub-FI+ ]	
+        39	lut<>::ce[14]._out @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ]	
+        40	lut<>::ce[14].out @[ sub-FI- sub-FI+ ]	
+        41	lut<>::ce[15]._out @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ]	
+        42	lut<>::ce[15].out @[ sub-FI- sub-FI+ ]	
       }
       }
 

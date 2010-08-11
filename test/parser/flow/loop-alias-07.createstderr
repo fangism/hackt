@@ -132,39 +132,39 @@ In namespace "", we have: {
           p[$i] = pbint[$i].pb;
         )
       footprint: {
-        !GND = bool^0 = lut<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = lut<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high port-alias ] 
         p = process pbit<>^1
           {
             [0] = lut<>::p[0] (1) (
-              !GND = bool^0 = lut<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high ] 
-              t = bool^0 = lut<>::p[0].t (3) 
+              !GND = bool^0 = lut<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high port-alias ] 
+              t = bool^0 = lut<>::p[0].t (3) @[ port-alias ] 
             )
             [1] = lut<>::p[1] (2) (
-              !GND = bool^0 = lut<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high ] 
-              t = bool^0 = lut<>::p[1].t (4) 
+              !GND = bool^0 = lut<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high port-alias ] 
+              t = bool^0 = lut<>::p[1].t (4) @[ port-alias ] 
             )
           }
         pbint = process pbitint<>^1
           {
             [0] = lut<>::pbint[0] (3) (
-              !GND = bool^0 = lut<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high ] 
+              !GND = bool^0 = lut<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high port-alias ] 
               pb = process pbit<>^0 = lut<>::p[0] (1) (
-                !GND = bool^0 = lut<>::!GND (1) @[ supply_low ] 
-                !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high ] 
-                t = bool^0 = lut<>::p[0].t (3) 
+                !GND = bool^0 = lut<>::!GND (1) @[ supply_low port-alias ] 
+                !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high port-alias ] 
+                t = bool^0 = lut<>::p[0].t (3) @[ port-alias ] 
               )
             )
             [1] = lut<>::pbint[1] (4) (
-              !GND = bool^0 = lut<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high ] 
+              !GND = bool^0 = lut<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high port-alias ] 
               pb = process pbit<>^0 = lut<>::p[1] (2) (
-                !GND = bool^0 = lut<>::!GND (1) @[ supply_low ] 
-                !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high ] 
-                t = bool^0 = lut<>::p[1].t (4) 
+                !GND = bool^0 = lut<>::!GND (1) @[ supply_low port-alias ] 
+                !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high port-alias ] 
+                t = bool^0 = lut<>::p[1].t (4) @[ port-alias ] 
               )
             )
           }
@@ -181,13 +181,13 @@ In namespace "", we have: {
           process: 2
           bool: 1,2,4
         bool instance pool: (4 ports, 0 local, 0 mapped)
-        1	lut<>::!GND @[ supply_low ]	
-        2	lut<>::!Vdd @[ supply_high ]	
-        3	lut<>::p[0].t	
-        4	lut<>::p[1].t	
+        1	lut<>::!GND @[ supply_low port-alias ]	
+        2	lut<>::!Vdd @[ supply_high port-alias ]	
+        3	lut<>::p[0].t @[ port-alias ]	
+        4	lut<>::p[1].t @[ port-alias ]	
         bool port aliases:
-        1: lut<>::pbint[0].!GND = lut<>::pbint[0].pb.!GND = lut<>::pbint[1].!GND = lut<>::pbint[1].pb.!GND = lut<>::!GND @[ supply_low ]
-        2: lut<>::pbint[0].!Vdd = lut<>::pbint[0].pb.!Vdd = lut<>::pbint[1].!Vdd = lut<>::pbint[1].pb.!Vdd = lut<>::!Vdd @[ supply_high ]
+        1: lut<>::pbint[0].!GND = lut<>::pbint[0].pb.!GND = lut<>::pbint[1].!GND = lut<>::pbint[1].pb.!GND = lut<>::!GND @[ supply_low port-alias ]
+        2: lut<>::pbint[0].!Vdd = lut<>::pbint[0].pb.!Vdd = lut<>::pbint[1].!Vdd = lut<>::pbint[1].pb.!Vdd = lut<>::!Vdd @[ supply_high port-alias ]
       }
       }
 
@@ -210,14 +210,14 @@ In namespace "", we have: {
         !GND@[supply=0]
         !Vdd@[supply=1]
       footprint: {
-        !GND = bool^0 = pbit<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = pbit<>::!Vdd (2) @[ supply_high ] 
-        t = bool^0 = pbit<>::t (3) 
+        !GND = bool^0 = pbit<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = pbit<>::!Vdd (2) @[ supply_high port-alias ] 
+        t = bool^0 = pbit<>::t (3) @[ port-alias ] 
         Created state:
         bool instance pool: (3 ports, 0 local, 0 mapped)
-        1	pbit<>::!GND @[ supply_low ]	
-        2	pbit<>::!Vdd @[ supply_high ]	
-        3	pbit<>::t	
+        1	pbit<>::!GND @[ supply_low port-alias ]	
+        2	pbit<>::!Vdd @[ supply_high port-alias ]	
+        3	pbit<>::t @[ port-alias ]	
       }
       }
 
@@ -240,24 +240,24 @@ In namespace "", we have: {
         !GND@[supply=0]
         !Vdd@[supply=1]
       footprint: {
-        !GND = bool^0 = pbitint<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = pbitint<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = pbitint<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = pbitint<>::!Vdd (2) @[ supply_high port-alias ] 
         pb = process pbit<>^0 = pbitint<>::pb (1) (
-          !GND = bool^0 = pbitint<>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = pbitint<>::!Vdd (2) @[ supply_high ] 
-          t = bool^0 = pbitint<>::pb.t (3) 
+          !GND = bool^0 = pbitint<>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = pbitint<>::!Vdd (2) @[ supply_high port-alias ] 
+          t = bool^0 = pbitint<>::pb.t (3) @[ port-alias ] 
         )
         Created state:
         process instance pool: (1 ports, 0 local, 0 mapped)
         1	pbitint<>::pb	pbit<>
           bool: 1,2,3
         bool instance pool: (3 ports, 0 local, 0 mapped)
-        1	pbitint<>::!GND @[ supply_low ]	
-        2	pbitint<>::!Vdd @[ supply_high ]	
-        3	pbitint<>::pb.t	
+        1	pbitint<>::!GND @[ supply_low port-alias ]	
+        2	pbitint<>::!Vdd @[ supply_high port-alias ]	
+        3	pbitint<>::pb.t @[ port-alias ]	
         bool port aliases:
-        1: pbitint<>::pb.!GND = pbitint<>::!GND @[ supply_low ]
-        2: pbitint<>::pb.!Vdd = pbitint<>::!Vdd @[ supply_high ]
+        1: pbitint<>::pb.!GND = pbitint<>::!GND @[ supply_low port-alias ]
+        2: pbitint<>::pb.!Vdd = pbitint<>::!Vdd @[ supply_high port-alias ]
       }
       }
 

@@ -71,23 +71,23 @@ In namespace "", we have: {
         !GND@[supply=0]
         !Vdd@[supply=1]
       footprint: {
-        !GND = bool^0 = top_type<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = top_type<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = top_type<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = top_type<>::!Vdd (2) @[ supply_high port-alias ] 
         co = bool^4
           {
-            [0][0][0][0] = top_type<>::co[0][0][0][0] (3) 
-            [0][0][0][1] = top_type<>::co[0][0][0][1] (4) 
-            [1][0][0][0] = top_type<>::co[1][0][0][0] (5) 
-            [1][0][0][1] = top_type<>::co[1][0][0][1] (6) 
+            [0][0][0][0] = top_type<>::co[0][0][0][0] (3) @[ port-alias ] 
+            [0][0][0][1] = top_type<>::co[0][0][0][1] (4) @[ port-alias ] 
+            [1][0][0][0] = top_type<>::co[1][0][0][0] (5) @[ port-alias ] 
+            [1][0][0][1] = top_type<>::co[1][0][0][1] (6) @[ port-alias ] 
           }
         Created state:
         bool instance pool: (6 ports, 0 local, 0 mapped)
-        1	top_type<>::!GND @[ supply_low ]	
-        2	top_type<>::!Vdd @[ supply_high ]	
-        3	top_type<>::co[0][0][0][0]	
-        4	top_type<>::co[0][0][0][1]	
-        5	top_type<>::co[1][0][0][0]	
-        6	top_type<>::co[1][0][0][1]	
+        1	top_type<>::!GND @[ supply_low port-alias ]	
+        2	top_type<>::!Vdd @[ supply_high port-alias ]	
+        3	top_type<>::co[0][0][0][0] @[ port-alias ]	
+        4	top_type<>::co[0][0][0][1] @[ port-alias ]	
+        5	top_type<>::co[1][0][0][0] @[ port-alias ]	
+        6	top_type<>::co[1][0][0][1] @[ port-alias ]	
       }
       }
 

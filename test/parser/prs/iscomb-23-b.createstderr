@@ -253,105 +253,105 @@ In namespace "", we have: {
         twist<> Q
         Q ( , , x.s[1], x.t[1]);
       footprint: {
-        !GND = bool^0 = deep<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = deep<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = deep<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = deep<>::!Vdd (2) @[ supply_high port-alias ] 
         P = process smoosh<>^0 = deep<>::P (11) (
-          !GND = bool^0 = deep<>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = deep<>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = deep<>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = deep<>::!Vdd (2) @[ supply_high port-alias ] 
           j = process inv<>^0 = deep<>::P.j (2) (
-            !GND = bool^0 = deep<>::!GND (1) @[ supply_low ] 
-            !Vdd = bool^0 = deep<>::!Vdd (2) @[ supply_high ] 
-            a = bool^0 = deep<>::P.j.a (3) @[ iscomb ] 
-            b = bool^0 = deep<>::P.j.b (4) @[ !autokeeper ] 
+            !GND = bool^0 = deep<>::!GND (1) @[ supply_low port-alias ] 
+            !Vdd = bool^0 = deep<>::!Vdd (2) @[ supply_high port-alias ] 
+            a = bool^0 = deep<>::P.j.a (3) @[ iscomb port-alias ] 
+            b = bool^0 = deep<>::P.j.b (4) @[ !autokeeper port-alias ] 
           )
           k = process inv2<>^0 = deep<>::P.k (4) (
-            !GND = bool^0 = deep<>::!GND (1) @[ supply_low ] 
-            !Vdd = bool^0 = deep<>::!Vdd (2) @[ supply_high ] 
-            a = bool^0 = deep<>::P.j.a (3) @[ iscomb ] 
-            b = bool^0 = deep<>::P.j.b (4) @[ !autokeeper ] 
+            !GND = bool^0 = deep<>::!GND (1) @[ supply_low port-alias ] 
+            !Vdd = bool^0 = deep<>::!Vdd (2) @[ supply_high port-alias ] 
+            a = bool^0 = deep<>::P.j.a (3) @[ iscomb port-alias ] 
+            b = bool^0 = deep<>::P.j.b (4) @[ !autokeeper port-alias ] 
           )
         )
         Q = process twist<>^0 = deep<>::Q (12) (
-          !GND = bool^0 = deep<>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = deep<>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = deep<>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = deep<>::!Vdd (2) @[ supply_high port-alias ] 
           f = process inv<>^0 = deep<>::Q.f (3) (
-            !GND = bool^0 = deep<>::!GND (1) @[ supply_low ] 
-            !Vdd = bool^0 = deep<>::!Vdd (2) @[ supply_high ] 
-            a = bool^0 = deep<>::Q.f.a (5) @[ iscomb !autokeeper ] 
-            b = bool^0 = deep<>::Q.f.b (6) 
+            !GND = bool^0 = deep<>::!GND (1) @[ supply_low port-alias ] 
+            !Vdd = bool^0 = deep<>::!Vdd (2) @[ supply_high port-alias ] 
+            a = bool^0 = deep<>::Q.f.a (5) @[ iscomb !autokeeper port-alias ] 
+            b = bool^0 = deep<>::Q.f.b (6) @[ port-alias ] 
           )
           g = process inv2<>^0 = deep<>::Q.g (5) (
-            !GND = bool^0 = deep<>::!GND (1) @[ supply_low ] 
-            !Vdd = bool^0 = deep<>::!Vdd (2) @[ supply_high ] 
-            a = bool^0 = deep<>::Q.f.b (6) 
-            b = bool^0 = deep<>::Q.f.a (5) @[ iscomb !autokeeper ] 
+            !GND = bool^0 = deep<>::!GND (1) @[ supply_low port-alias ] 
+            !Vdd = bool^0 = deep<>::!Vdd (2) @[ supply_high port-alias ] 
+            a = bool^0 = deep<>::Q.f.b (6) @[ port-alias ] 
+            b = bool^0 = deep<>::Q.f.a (5) @[ iscomb !autokeeper port-alias ] 
           )
         )
         x = process multi_inv<>^0 = deep<>::x (1) (
-          !GND = bool^0 = deep<>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = deep<>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = deep<>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = deep<>::!Vdd (2) @[ supply_high port-alias ] 
           s = process inv<>^1
             {
               [0] = deep<>::P.j (2) (
-                !GND = bool^0 = deep<>::!GND (1) @[ supply_low ] 
-                !Vdd = bool^0 = deep<>::!Vdd (2) @[ supply_high ] 
-                a = bool^0 = deep<>::P.j.a (3) @[ iscomb ] 
-                b = bool^0 = deep<>::P.j.b (4) @[ !autokeeper ] 
+                !GND = bool^0 = deep<>::!GND (1) @[ supply_low port-alias ] 
+                !Vdd = bool^0 = deep<>::!Vdd (2) @[ supply_high port-alias ] 
+                a = bool^0 = deep<>::P.j.a (3) @[ iscomb port-alias ] 
+                b = bool^0 = deep<>::P.j.b (4) @[ !autokeeper port-alias ] 
               )
               [1] = deep<>::Q.f (3) (
-                !GND = bool^0 = deep<>::!GND (1) @[ supply_low ] 
-                !Vdd = bool^0 = deep<>::!Vdd (2) @[ supply_high ] 
-                a = bool^0 = deep<>::Q.f.a (5) @[ iscomb !autokeeper ] 
-                b = bool^0 = deep<>::Q.f.b (6) 
+                !GND = bool^0 = deep<>::!GND (1) @[ supply_low port-alias ] 
+                !Vdd = bool^0 = deep<>::!Vdd (2) @[ supply_high port-alias ] 
+                a = bool^0 = deep<>::Q.f.a (5) @[ iscomb !autokeeper port-alias ] 
+                b = bool^0 = deep<>::Q.f.b (6) @[ port-alias ] 
               )
             }
           t = process inv2<>^1
             {
               [0] = deep<>::P.k (4) (
-                !GND = bool^0 = deep<>::!GND (1) @[ supply_low ] 
-                !Vdd = bool^0 = deep<>::!Vdd (2) @[ supply_high ] 
-                a = bool^0 = deep<>::P.j.a (3) @[ iscomb ] 
-                b = bool^0 = deep<>::P.j.b (4) @[ !autokeeper ] 
+                !GND = bool^0 = deep<>::!GND (1) @[ supply_low port-alias ] 
+                !Vdd = bool^0 = deep<>::!Vdd (2) @[ supply_high port-alias ] 
+                a = bool^0 = deep<>::P.j.a (3) @[ iscomb port-alias ] 
+                b = bool^0 = deep<>::P.j.b (4) @[ !autokeeper port-alias ] 
               )
               [1] = deep<>::Q.g (5) (
-                !GND = bool^0 = deep<>::!GND (1) @[ supply_low ] 
-                !Vdd = bool^0 = deep<>::!Vdd (2) @[ supply_high ] 
-                a = bool^0 = deep<>::Q.f.b (6) 
-                b = bool^0 = deep<>::Q.f.a (5) @[ iscomb !autokeeper ] 
+                !GND = bool^0 = deep<>::!GND (1) @[ supply_low port-alias ] 
+                !Vdd = bool^0 = deep<>::!Vdd (2) @[ supply_high port-alias ] 
+                a = bool^0 = deep<>::Q.f.b (6) @[ port-alias ] 
+                b = bool^0 = deep<>::Q.f.a (5) @[ iscomb !autokeeper port-alias ] 
               )
             }
         )
         y = process multi_inv<>^0 = deep<>::y (6) (
-          !GND = bool^0 = deep<>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = deep<>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = deep<>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = deep<>::!Vdd (2) @[ supply_high port-alias ] 
           s = process inv<>^1
             {
               [0] = deep<>::y.s[0] (7) (
-                !GND = bool^0 = deep<>::!GND (1) @[ supply_low ] 
-                !Vdd = bool^0 = deep<>::!Vdd (2) @[ supply_high ] 
-                a = bool^0 = deep<>::y.s[0].a (7) @[ iscomb ] 
-                b = bool^0 = deep<>::y.s[0].b (8) 
+                !GND = bool^0 = deep<>::!GND (1) @[ supply_low port-alias ] 
+                !Vdd = bool^0 = deep<>::!Vdd (2) @[ supply_high port-alias ] 
+                a = bool^0 = deep<>::y.s[0].a (7) @[ iscomb port-alias ] 
+                b = bool^0 = deep<>::y.s[0].b (8) @[ port-alias ] 
               )
               [1] = deep<>::y.s[1] (8) (
-                !GND = bool^0 = deep<>::!GND (1) @[ supply_low ] 
-                !Vdd = bool^0 = deep<>::!Vdd (2) @[ supply_high ] 
-                a = bool^0 = deep<>::y.s[1].a (9) @[ iscomb ] 
-                b = bool^0 = deep<>::y.s[1].b (10) 
+                !GND = bool^0 = deep<>::!GND (1) @[ supply_low port-alias ] 
+                !Vdd = bool^0 = deep<>::!Vdd (2) @[ supply_high port-alias ] 
+                a = bool^0 = deep<>::y.s[1].a (9) @[ iscomb port-alias ] 
+                b = bool^0 = deep<>::y.s[1].b (10) @[ port-alias ] 
               )
             }
           t = process inv2<>^1
             {
               [0] = deep<>::y.t[0] (9) (
-                !GND = bool^0 = deep<>::!GND (1) @[ supply_low ] 
-                !Vdd = bool^0 = deep<>::!Vdd (2) @[ supply_high ] 
-                a = bool^0 = deep<>::y.t[0].a (11) 
-                b = bool^0 = deep<>::y.t[0].b (12) @[ !autokeeper ] 
+                !GND = bool^0 = deep<>::!GND (1) @[ supply_low port-alias ] 
+                !Vdd = bool^0 = deep<>::!Vdd (2) @[ supply_high port-alias ] 
+                a = bool^0 = deep<>::y.t[0].a (11) @[ port-alias ] 
+                b = bool^0 = deep<>::y.t[0].b (12) @[ !autokeeper port-alias ] 
               )
               [1] = deep<>::y.t[1] (10) (
-                !GND = bool^0 = deep<>::!GND (1) @[ supply_low ] 
-                !Vdd = bool^0 = deep<>::!Vdd (2) @[ supply_high ] 
-                a = bool^0 = deep<>::y.t[1].a (13) 
-                b = bool^0 = deep<>::y.t[1].b (14) @[ !autokeeper ] 
+                !GND = bool^0 = deep<>::!GND (1) @[ supply_low port-alias ] 
+                !Vdd = bool^0 = deep<>::!Vdd (2) @[ supply_high port-alias ] 
+                a = bool^0 = deep<>::y.t[1].a (13) @[ port-alias ] 
+                b = bool^0 = deep<>::y.t[1].b (14) @[ !autokeeper port-alias ] 
               )
             }
         )
@@ -386,27 +386,27 @@ In namespace "", we have: {
           process: 3,5
           bool: 1,2,5,6
         bool instance pool: (14 ports, 0 local, 0 mapped)
-        1	deep<>::!GND @[ supply_low ]	
-        2	deep<>::!Vdd @[ supply_high ]	
-        3	deep<>::P.j.a @[ iscomb ]	
-        4	deep<>::P.j.b @[ !autokeeper ]	
-        5	deep<>::Q.f.a @[ iscomb !autokeeper ]	
-        6	deep<>::Q.f.b	
-        7	deep<>::y.s[0].a @[ iscomb ]	
-        8	deep<>::y.s[0].b	
-        9	deep<>::y.s[1].a @[ iscomb ]	
-        10	deep<>::y.s[1].b	
-        11	deep<>::y.t[0].a	
-        12	deep<>::y.t[0].b @[ !autokeeper ]	
-        13	deep<>::y.t[1].a	
-        14	deep<>::y.t[1].b @[ !autokeeper ]	
+        1	deep<>::!GND @[ supply_low port-alias ]	
+        2	deep<>::!Vdd @[ supply_high port-alias ]	
+        3	deep<>::P.j.a @[ iscomb port-alias ]	
+        4	deep<>::P.j.b @[ !autokeeper port-alias ]	
+        5	deep<>::Q.f.a @[ iscomb !autokeeper port-alias ]	
+        6	deep<>::Q.f.b @[ port-alias ]	
+        7	deep<>::y.s[0].a @[ iscomb port-alias ]	
+        8	deep<>::y.s[0].b @[ port-alias ]	
+        9	deep<>::y.s[1].a @[ iscomb port-alias ]	
+        10	deep<>::y.s[1].b @[ port-alias ]	
+        11	deep<>::y.t[0].a @[ port-alias ]	
+        12	deep<>::y.t[0].b @[ !autokeeper port-alias ]	
+        13	deep<>::y.t[1].a @[ port-alias ]	
+        14	deep<>::y.t[1].b @[ !autokeeper port-alias ]	
         bool port aliases:
-        1: deep<>::x.!GND = deep<>::x.s[0].!GND = deep<>::x.s[1].!GND = deep<>::x.t[0].!GND = deep<>::x.t[1].!GND = deep<>::y.!GND = deep<>::y.s[0].!GND = deep<>::y.s[1].!GND = deep<>::y.t[0].!GND = deep<>::y.t[1].!GND = deep<>::!GND @[ supply_low ]
-        2: deep<>::x.!Vdd = deep<>::x.s[0].!Vdd = deep<>::x.s[1].!Vdd = deep<>::x.t[0].!Vdd = deep<>::x.t[1].!Vdd = deep<>::y.!Vdd = deep<>::y.s[0].!Vdd = deep<>::y.s[1].!Vdd = deep<>::y.t[0].!Vdd = deep<>::y.t[1].!Vdd = deep<>::!Vdd @[ supply_high ]
-        3: deep<>::x.s[0].a = deep<>::x.t[0].a @[ iscomb ]
-        4: deep<>::x.s[0].b = deep<>::x.t[0].b @[ !autokeeper ]
-        5: deep<>::x.s[1].a = deep<>::x.t[1].b @[ iscomb !autokeeper ]
-        6: deep<>::x.s[1].b = deep<>::x.t[1].a
+        1: deep<>::x.!GND = deep<>::x.s[0].!GND = deep<>::x.s[1].!GND = deep<>::x.t[0].!GND = deep<>::x.t[1].!GND = deep<>::y.!GND = deep<>::y.s[0].!GND = deep<>::y.s[1].!GND = deep<>::y.t[0].!GND = deep<>::y.t[1].!GND = deep<>::!GND @[ supply_low port-alias ]
+        2: deep<>::x.!Vdd = deep<>::x.s[0].!Vdd = deep<>::x.s[1].!Vdd = deep<>::x.t[0].!Vdd = deep<>::x.t[1].!Vdd = deep<>::y.!Vdd = deep<>::y.s[0].!Vdd = deep<>::y.s[1].!Vdd = deep<>::y.t[0].!Vdd = deep<>::y.t[1].!Vdd = deep<>::!Vdd @[ supply_high port-alias ]
+        3: deep<>::x.s[0].a = deep<>::x.t[0].a @[ iscomb port-alias ]
+        4: deep<>::x.s[0].b = deep<>::x.t[0].b @[ !autokeeper port-alias ]
+        5: deep<>::x.s[1].a = deep<>::x.t[1].b @[ iscomb !autokeeper port-alias ]
+        6: deep<>::x.s[1].b = deep<>::x.t[1].a @[ port-alias ]
       }
       }
 
@@ -433,16 +433,16 @@ In namespace "", we have: {
         !Vdd@[supply=1]
         a@[iscomb]
       footprint: {
-        !GND = bool^0 = inv<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = inv<>::!Vdd (2) @[ supply_high ] 
-        a = bool^0 = inv<>::a (3) @[ iscomb ] 
-        b = bool^0 = inv<>::b (4) 
+        !GND = bool^0 = inv<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = inv<>::!Vdd (2) @[ supply_high port-alias ] 
+        a = bool^0 = inv<>::a (3) @[ iscomb port-alias ] 
+        b = bool^0 = inv<>::b (4) @[ port-alias ] 
         Created state:
         bool instance pool: (4 ports, 0 local, 0 mapped)
-        1	inv<>::!GND @[ supply_low ]	
-        2	inv<>::!Vdd @[ supply_high ]	
-        3	inv<>::a @[ iscomb ]	
-        4	inv<>::b	
+        1	inv<>::!GND @[ supply_low port-alias ]	
+        2	inv<>::!Vdd @[ supply_high port-alias ]	
+        3	inv<>::a @[ iscomb port-alias ]	
+        4	inv<>::b @[ port-alias ]	
       }
       }
 
@@ -469,16 +469,16 @@ In namespace "", we have: {
         !Vdd@[supply=1]
         b@[autokeeper=0]
       footprint: {
-        !GND = bool^0 = inv2<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = inv2<>::!Vdd (2) @[ supply_high ] 
-        a = bool^0 = inv2<>::a (3) 
-        b = bool^0 = inv2<>::b (4) @[ !autokeeper ] 
+        !GND = bool^0 = inv2<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = inv2<>::!Vdd (2) @[ supply_high port-alias ] 
+        a = bool^0 = inv2<>::a (3) @[ port-alias ] 
+        b = bool^0 = inv2<>::b (4) @[ !autokeeper port-alias ] 
         Created state:
         bool instance pool: (4 ports, 0 local, 0 mapped)
-        1	inv2<>::!GND @[ supply_low ]	
-        2	inv2<>::!Vdd @[ supply_high ]	
-        3	inv2<>::a	
-        4	inv2<>::b @[ !autokeeper ]	
+        1	inv2<>::!GND @[ supply_low port-alias ]	
+        2	inv2<>::!Vdd @[ supply_high port-alias ]	
+        3	inv2<>::a @[ port-alias ]	
+        4	inv2<>::b @[ !autokeeper port-alias ]	
       }
       }
 
@@ -504,36 +504,36 @@ In namespace "", we have: {
         !GND@[supply=0]
         !Vdd@[supply=1]
       footprint: {
-        !GND = bool^0 = multi_inv<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = multi_inv<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = multi_inv<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = multi_inv<>::!Vdd (2) @[ supply_high port-alias ] 
         s = process inv<>^1
           {
             [0] = multi_inv<>::s[0] (1) (
-              !GND = bool^0 = multi_inv<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = multi_inv<>::!Vdd (2) @[ supply_high ] 
-              a = bool^0 = multi_inv<>::s[0].a (3) @[ iscomb ] 
-              b = bool^0 = multi_inv<>::s[0].b (4) 
+              !GND = bool^0 = multi_inv<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = multi_inv<>::!Vdd (2) @[ supply_high port-alias ] 
+              a = bool^0 = multi_inv<>::s[0].a (3) @[ iscomb port-alias ] 
+              b = bool^0 = multi_inv<>::s[0].b (4) @[ port-alias ] 
             )
             [1] = multi_inv<>::s[1] (2) (
-              !GND = bool^0 = multi_inv<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = multi_inv<>::!Vdd (2) @[ supply_high ] 
-              a = bool^0 = multi_inv<>::s[1].a (5) @[ iscomb ] 
-              b = bool^0 = multi_inv<>::s[1].b (6) 
+              !GND = bool^0 = multi_inv<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = multi_inv<>::!Vdd (2) @[ supply_high port-alias ] 
+              a = bool^0 = multi_inv<>::s[1].a (5) @[ iscomb port-alias ] 
+              b = bool^0 = multi_inv<>::s[1].b (6) @[ port-alias ] 
             )
           }
         t = process inv2<>^1
           {
             [0] = multi_inv<>::t[0] (3) (
-              !GND = bool^0 = multi_inv<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = multi_inv<>::!Vdd (2) @[ supply_high ] 
-              a = bool^0 = multi_inv<>::t[0].a (7) 
-              b = bool^0 = multi_inv<>::t[0].b (8) @[ !autokeeper ] 
+              !GND = bool^0 = multi_inv<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = multi_inv<>::!Vdd (2) @[ supply_high port-alias ] 
+              a = bool^0 = multi_inv<>::t[0].a (7) @[ port-alias ] 
+              b = bool^0 = multi_inv<>::t[0].b (8) @[ !autokeeper port-alias ] 
             )
             [1] = multi_inv<>::t[1] (4) (
-              !GND = bool^0 = multi_inv<>::!GND (1) @[ supply_low ] 
-              !Vdd = bool^0 = multi_inv<>::!Vdd (2) @[ supply_high ] 
-              a = bool^0 = multi_inv<>::t[1].a (9) 
-              b = bool^0 = multi_inv<>::t[1].b (10) @[ !autokeeper ] 
+              !GND = bool^0 = multi_inv<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = multi_inv<>::!Vdd (2) @[ supply_high port-alias ] 
+              a = bool^0 = multi_inv<>::t[1].a (9) @[ port-alias ] 
+              b = bool^0 = multi_inv<>::t[1].b (10) @[ !autokeeper port-alias ] 
             )
           }
         Created state:
@@ -547,19 +547,19 @@ In namespace "", we have: {
         4	multi_inv<>::t[1]	inv2<>
           bool: 1,2,9,10
         bool instance pool: (10 ports, 0 local, 0 mapped)
-        1	multi_inv<>::!GND @[ supply_low ]	
-        2	multi_inv<>::!Vdd @[ supply_high ]	
-        3	multi_inv<>::s[0].a @[ iscomb ]	
-        4	multi_inv<>::s[0].b	
-        5	multi_inv<>::s[1].a @[ iscomb ]	
-        6	multi_inv<>::s[1].b	
-        7	multi_inv<>::t[0].a	
-        8	multi_inv<>::t[0].b @[ !autokeeper ]	
-        9	multi_inv<>::t[1].a	
-        10	multi_inv<>::t[1].b @[ !autokeeper ]	
+        1	multi_inv<>::!GND @[ supply_low port-alias ]	
+        2	multi_inv<>::!Vdd @[ supply_high port-alias ]	
+        3	multi_inv<>::s[0].a @[ iscomb port-alias ]	
+        4	multi_inv<>::s[0].b @[ port-alias ]	
+        5	multi_inv<>::s[1].a @[ iscomb port-alias ]	
+        6	multi_inv<>::s[1].b @[ port-alias ]	
+        7	multi_inv<>::t[0].a @[ port-alias ]	
+        8	multi_inv<>::t[0].b @[ !autokeeper port-alias ]	
+        9	multi_inv<>::t[1].a @[ port-alias ]	
+        10	multi_inv<>::t[1].b @[ !autokeeper port-alias ]	
         bool port aliases:
-        1: multi_inv<>::s[0].!GND = multi_inv<>::s[1].!GND = multi_inv<>::t[0].!GND = multi_inv<>::t[1].!GND = multi_inv<>::!GND @[ supply_low ]
-        2: multi_inv<>::s[0].!Vdd = multi_inv<>::s[1].!Vdd = multi_inv<>::t[0].!Vdd = multi_inv<>::t[1].!Vdd = multi_inv<>::!Vdd @[ supply_high ]
+        1: multi_inv<>::s[0].!GND = multi_inv<>::s[1].!GND = multi_inv<>::t[0].!GND = multi_inv<>::t[1].!GND = multi_inv<>::!GND @[ supply_low port-alias ]
+        2: multi_inv<>::s[0].!Vdd = multi_inv<>::s[1].!Vdd = multi_inv<>::t[0].!Vdd = multi_inv<>::t[1].!Vdd = multi_inv<>::!Vdd @[ supply_high port-alias ]
       }
       }
 
@@ -587,19 +587,19 @@ In namespace "", we have: {
         j.a = k.a;
         j.b = k.b;
       footprint: {
-        !GND = bool^0 = smoosh<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = smoosh<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = smoosh<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = smoosh<>::!Vdd (2) @[ supply_high port-alias ] 
         j = process inv<>^0 = smoosh<>::j (1) (
-          !GND = bool^0 = smoosh<>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = smoosh<>::!Vdd (2) @[ supply_high ] 
-          a = bool^0 = smoosh<>::j.a (3) @[ iscomb ] 
-          b = bool^0 = smoosh<>::j.b (4) @[ !autokeeper ] 
+          !GND = bool^0 = smoosh<>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = smoosh<>::!Vdd (2) @[ supply_high port-alias ] 
+          a = bool^0 = smoosh<>::j.a (3) @[ iscomb port-alias ] 
+          b = bool^0 = smoosh<>::j.b (4) @[ !autokeeper port-alias ] 
         )
         k = process inv2<>^0 = smoosh<>::k (2) (
-          !GND = bool^0 = smoosh<>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = smoosh<>::!Vdd (2) @[ supply_high ] 
-          a = bool^0 = smoosh<>::j.a (3) @[ iscomb ] 
-          b = bool^0 = smoosh<>::j.b (4) @[ !autokeeper ] 
+          !GND = bool^0 = smoosh<>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = smoosh<>::!Vdd (2) @[ supply_high port-alias ] 
+          a = bool^0 = smoosh<>::j.a (3) @[ iscomb port-alias ] 
+          b = bool^0 = smoosh<>::j.b (4) @[ !autokeeper port-alias ] 
         )
         Created state:
         process instance pool: (2 ports, 0 local, 0 mapped)
@@ -608,15 +608,15 @@ In namespace "", we have: {
         2	smoosh<>::k	inv2<>
           bool: 1,2,3,4
         bool instance pool: (4 ports, 0 local, 0 mapped)
-        1	smoosh<>::!GND @[ supply_low ]	
-        2	smoosh<>::!Vdd @[ supply_high ]	
-        3	smoosh<>::j.a @[ iscomb ]	
-        4	smoosh<>::j.b @[ !autokeeper ]	
+        1	smoosh<>::!GND @[ supply_low port-alias ]	
+        2	smoosh<>::!Vdd @[ supply_high port-alias ]	
+        3	smoosh<>::j.a @[ iscomb port-alias ]	
+        4	smoosh<>::j.b @[ !autokeeper port-alias ]	
         bool port aliases:
-        1: smoosh<>::j.!GND = smoosh<>::k.!GND = smoosh<>::!GND @[ supply_low ]
-        2: smoosh<>::j.!Vdd = smoosh<>::k.!Vdd = smoosh<>::!Vdd @[ supply_high ]
-        3: smoosh<>::j.a = smoosh<>::k.a @[ iscomb ]
-        4: smoosh<>::j.b = smoosh<>::k.b @[ !autokeeper ]
+        1: smoosh<>::j.!GND = smoosh<>::k.!GND = smoosh<>::!GND @[ supply_low port-alias ]
+        2: smoosh<>::j.!Vdd = smoosh<>::k.!Vdd = smoosh<>::!Vdd @[ supply_high port-alias ]
+        3: smoosh<>::j.a = smoosh<>::k.a @[ iscomb port-alias ]
+        4: smoosh<>::j.b = smoosh<>::k.b @[ !autokeeper port-alias ]
       }
       }
 
@@ -644,19 +644,19 @@ In namespace "", we have: {
         f.a = g.b;
         f.b = g.a;
       footprint: {
-        !GND = bool^0 = twist<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = twist<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = twist<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = twist<>::!Vdd (2) @[ supply_high port-alias ] 
         f = process inv<>^0 = twist<>::f (1) (
-          !GND = bool^0 = twist<>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = twist<>::!Vdd (2) @[ supply_high ] 
-          a = bool^0 = twist<>::f.a (3) @[ iscomb !autokeeper ] 
-          b = bool^0 = twist<>::f.b (4) 
+          !GND = bool^0 = twist<>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = twist<>::!Vdd (2) @[ supply_high port-alias ] 
+          a = bool^0 = twist<>::f.a (3) @[ iscomb !autokeeper port-alias ] 
+          b = bool^0 = twist<>::f.b (4) @[ port-alias ] 
         )
         g = process inv2<>^0 = twist<>::g (2) (
-          !GND = bool^0 = twist<>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = twist<>::!Vdd (2) @[ supply_high ] 
-          a = bool^0 = twist<>::f.b (4) 
-          b = bool^0 = twist<>::f.a (3) @[ iscomb !autokeeper ] 
+          !GND = bool^0 = twist<>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = twist<>::!Vdd (2) @[ supply_high port-alias ] 
+          a = bool^0 = twist<>::f.b (4) @[ port-alias ] 
+          b = bool^0 = twist<>::f.a (3) @[ iscomb !autokeeper port-alias ] 
         )
         Created state:
         process instance pool: (2 ports, 0 local, 0 mapped)
@@ -665,15 +665,15 @@ In namespace "", we have: {
         2	twist<>::g	inv2<>
           bool: 1,2,4,3
         bool instance pool: (4 ports, 0 local, 0 mapped)
-        1	twist<>::!GND @[ supply_low ]	
-        2	twist<>::!Vdd @[ supply_high ]	
-        3	twist<>::f.a @[ iscomb !autokeeper ]	
-        4	twist<>::f.b	
+        1	twist<>::!GND @[ supply_low port-alias ]	
+        2	twist<>::!Vdd @[ supply_high port-alias ]	
+        3	twist<>::f.a @[ iscomb !autokeeper port-alias ]	
+        4	twist<>::f.b @[ port-alias ]	
         bool port aliases:
-        1: twist<>::f.!GND = twist<>::g.!GND = twist<>::!GND @[ supply_low ]
-        2: twist<>::f.!Vdd = twist<>::g.!Vdd = twist<>::!Vdd @[ supply_high ]
-        3: twist<>::f.a = twist<>::g.b @[ iscomb !autokeeper ]
-        4: twist<>::f.b = twist<>::g.a
+        1: twist<>::f.!GND = twist<>::g.!GND = twist<>::!GND @[ supply_low port-alias ]
+        2: twist<>::f.!Vdd = twist<>::g.!Vdd = twist<>::!Vdd @[ supply_high port-alias ]
+        3: twist<>::f.a = twist<>::g.b @[ iscomb !autokeeper port-alias ]
+        4: twist<>::f.b = twist<>::g.a @[ port-alias ]
       }
       }
 

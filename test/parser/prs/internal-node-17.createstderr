@@ -163,19 +163,19 @@ In namespace "", we have: {
         passn(x,x,y)
         }
       footprint: {
-        !GND = bool^0 = foo<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high ] 
-        a = bool^0 = foo<>::a (5) 
-        b = bool^0 = foo<>::b (6) 
-        c = bool^0 = foo<>::c (7) 
-        d = bool^0 = foo<>::d (8) 
-        e = bool^0 = foo<>::e (9) 
+        !GND = bool^0 = foo<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high port-alias ] 
+        a = bool^0 = foo<>::a (5) @[ loc-FO- ] 
+        b = bool^0 = foo<>::b (6) @[ loc-FO- ] 
+        c = bool^0 = foo<>::c (7) @[ loc-FI- ] 
+        d = bool^0 = foo<>::d (8) @[ loc-FI- ] 
+        e = bool^0 = foo<>::e (9) @[ loc-FO- ] 
         w = bool^1
           {
-            [0] = foo<>::w[0] (10) 
-            [1] = foo<>::w[1] (11) 
-            [2] = foo<>::w[2] (12) 
-            [3] = foo<>::w[3] (13) 
+            [0] = foo<>::w[0] (10) @[ loc-FO- ] 
+            [1] = foo<>::w[1] (11) @[ loc-FO- ] 
+            [2] = foo<>::w[2] (12) @[ loc-FO- ] 
+            [3] = foo<>::w[3] (13) @[ loc-FO- ] 
             [4] = foo<>::w[4] (14) 
             [5] = foo<>::w[5] (15) 
             [6] = foo<>::w[6] (16) 
@@ -183,23 +183,23 @@ In namespace "", we have: {
             [8] = foo<>::w[8] (18) 
             [9] = foo<>::w[9] (19) 
           }
-        x = bool^0 = foo<>::x (3) 
-        y = bool^0 = foo<>::y (4) 
+        x = bool^0 = foo<>::x (3) @[ port-alias loc-FO- loc-FI- ] 
+        y = bool^0 = foo<>::y (4) @[ port-alias loc-FI- ] 
         Created state:
         bool instance pool: (4 ports, 15 local, 0 mapped)
-        1	foo<>::!GND @[ supply_low ]	
-        2	foo<>::!Vdd @[ supply_high ]	
-        3	foo<>::x	
-        4	foo<>::y	
-        5	foo<>::a	
-        6	foo<>::b	
-        7	foo<>::c	
-        8	foo<>::d	
-        9	foo<>::e	
-        10	foo<>::w[0]	
-        11	foo<>::w[1]	
-        12	foo<>::w[2]	
-        13	foo<>::w[3]	
+        1	foo<>::!GND @[ supply_low port-alias ]	
+        2	foo<>::!Vdd @[ supply_high port-alias ]	
+        3	foo<>::x @[ port-alias loc-FO- loc-FI- ]	
+        4	foo<>::y @[ port-alias loc-FI- ]	
+        5	foo<>::a @[ loc-FO- ]	
+        6	foo<>::b @[ loc-FO- ]	
+        7	foo<>::c @[ loc-FI- ]	
+        8	foo<>::d @[ loc-FI- ]	
+        9	foo<>::e @[ loc-FO- ]	
+        10	foo<>::w[0] @[ loc-FO- ]	
+        11	foo<>::w[1] @[ loc-FO- ]	
+        12	foo<>::w[2] @[ loc-FO- ]	
+        13	foo<>::w[3] @[ loc-FO- ]	
         14	foo<>::w[4]	
         15	foo<>::w[5]	
         16	foo<>::w[6]	
@@ -235,8 +235,8 @@ footprint: {
   bar = process foo<>^0 = bar (1) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    x = bool^0 = bar.x (3) 
-    y = bool^0 = bar.y (4) 
+    x = bool^0 = bar.x (3) @[ sub-FO- sub-FI- ] 
+    y = bool^0 = bar.y (4) @[ sub-FI- ] 
   )
   Created state:
   process instance pool: (0 ports, 1 local, 0 mapped)
@@ -245,8 +245,8 @@ footprint: {
   bool instance pool: (0 ports, 4 local, 15 mapped)
   1	!GND @[ supply_low ]	
   2	!Vdd @[ supply_high ]	
-  3	bar.x	
-  4	bar.y	
+  3	bar.x @[ sub-FO- sub-FI- ]	
+  4	bar.y @[ sub-FI- ]	
   private sub-bool index map:
     (1 -> 0)
     (2 -> 15)

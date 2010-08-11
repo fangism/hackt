@@ -93,16 +93,16 @@ In namespace "", we have: {
         ~a -> b+ [after=12]
         }
       footprint: {
-        !GND = bool^0 = aftershave<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = aftershave<>::!Vdd (2) @[ supply_high ] 
-        a = bool^0 = aftershave<>::a (3) 
-        b = bool^0 = aftershave<>::b (4) 
+        !GND = bool^0 = aftershave<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = aftershave<>::!Vdd (2) @[ supply_high port-alias ] 
+        a = bool^0 = aftershave<>::a (3) @[ loc-FO- loc-FO+ ] 
+        b = bool^0 = aftershave<>::b (4) @[ loc-FI- loc-FI+ ] 
         Created state:
         bool instance pool: (2 ports, 2 local, 0 mapped)
-        1	aftershave<>::!GND @[ supply_low ]	
-        2	aftershave<>::!Vdd @[ supply_high ]	
-        3	aftershave<>::a	
-        4	aftershave<>::b	
+        1	aftershave<>::!GND @[ supply_low port-alias ]	
+        2	aftershave<>::!Vdd @[ supply_high port-alias ]	
+        3	aftershave<>::a @[ loc-FO- loc-FO+ ]	
+        4	aftershave<>::b @[ loc-FI- loc-FI+ ]	
         resolved prs:
         a -> b- [after=12]
         ~a -> b+ [after=12]

@@ -120,16 +120,16 @@ In namespace "", we have: {
           ]
         }
       footprint: {
-        !GND = bool^0 = boring<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = boring<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = boring<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = boring<>::!Vdd (2) @[ supply_high port-alias ] 
         B = channel chan(bool<>)^0 = boring<>::B (1) 
         x = bool^0 = boring<>::x (3) 
         Created state:
         channel instance pool: (1 ports, 0 local, 0 mapped)
         1	boring<>::B	
         bool instance pool: (2 ports, 1 local, 0 mapped)
-        1	boring<>::!GND @[ supply_low ]	
-        2	boring<>::!Vdd @[ supply_high ]	
+        1	boring<>::!GND @[ supply_low port-alias ]	
+        2	boring<>::!Vdd @[ supply_high port-alias ]	
         3	boring<>::x	
         resolved concurrent actions:
           *[
@@ -164,11 +164,11 @@ In namespace "", we have: {
         !Vdd@[supply=1]
         boring<> lecture
       footprint: {
-        !GND = bool^0 = classroom<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = classroom<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = classroom<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = classroom<>::!Vdd (2) @[ supply_high port-alias ] 
         lecture = process boring<>^0 = classroom<>::lecture (1) (
-          !GND = bool^0 = classroom<>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = classroom<>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = classroom<>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = classroom<>::!Vdd (2) @[ supply_high port-alias ] 
           B = channel chan(bool<>)^0 = classroom<>::lecture.B (1) 
         )
         Created state:
@@ -179,8 +179,8 @@ In namespace "", we have: {
         channel instance pool: (0 ports, 1 local, 0 mapped)
         1	classroom<>::lecture.B	
         bool instance pool: (2 ports, 0 local, 1 mapped)
-        1	classroom<>::!GND @[ supply_low ]	
-        2	classroom<>::!Vdd @[ supply_high ]	
+        1	classroom<>::!GND @[ supply_low port-alias ]	
+        2	classroom<>::!Vdd @[ supply_high port-alias ]	
         private sub-bool index map:
           (1 -> 0)
           (2 -> 1)

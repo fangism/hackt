@@ -150,27 +150,27 @@ In namespace "", we have: {
         ~en -> w+
         }
       footprint: {
-        !GND = bool^0 = bogus<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = bogus<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = bogus<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = bogus<>::!Vdd (2) @[ supply_high port-alias ] 
         e = bool^1
           {
-            [0] = bogus<>::e[0] (6) 
-            [1] = bogus<>::e[1] (7) 
+            [0] = bogus<>::e[0] (6) @[ port-alias ] 
+            [1] = bogus<>::e[1] (7) @[ port-alias ] 
           }
-        en = bool^0 = bogus<>::en (8) 
-        w = bool^0 = bogus<>::w (5) 
-        x = bool^0 = bogus<>::x (3) 
-        y = bool^0 = bogus<>::y (4) 
+        en = bool^0 = bogus<>::en (8) @[ loc-FO+ ] 
+        w = bool^0 = bogus<>::w (5) @[ port-alias loc-FI- loc-FI+ ] 
+        x = bool^0 = bogus<>::x (3) @[ port-alias loc-FO- ] 
+        y = bool^0 = bogus<>::y (4) @[ port-alias loc-FO- ] 
         Created state:
         bool instance pool: (7 ports, 1 local, 0 mapped)
-        1	bogus<>::!GND @[ supply_low ]	
-        2	bogus<>::!Vdd @[ supply_high ]	
-        3	bogus<>::x	
-        4	bogus<>::y	
-        5	bogus<>::w	
-        6	bogus<>::e[0]	
-        7	bogus<>::e[1]	
-        8	bogus<>::en	
+        1	bogus<>::!GND @[ supply_low port-alias ]	
+        2	bogus<>::!Vdd @[ supply_high port-alias ]	
+        3	bogus<>::x @[ port-alias loc-FO- ]	
+        4	bogus<>::y @[ port-alias loc-FO- ]	
+        5	bogus<>::w @[ port-alias loc-FI- loc-FI+ ]	
+        6	bogus<>::e[0] @[ port-alias ]	
+        7	bogus<>::e[1] @[ port-alias ]	
+        8	bogus<>::en @[ loc-FO+ ]	
         resolved prs:
         (en & e[0]) & x -> w-
         (en & e[1]) & y -> w-
@@ -196,14 +196,14 @@ footprint: {
   A = process bogus<>^0 = A (1) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    x = bool^0 = A.x (3) 
-    y = bool^0 = A.y (4) 
+    x = bool^0 = A.x (3) @[ sub-FO- ] 
+    y = bool^0 = A.y (4) @[ sub-FO- ] 
     e = bool^1
       {
         [0] = A.e[0] (5) 
         [1] = A.e[1] (6) 
       }
-    w = bool^0 = A.w (7) 
+    w = bool^0 = A.w (7) @[ sub-FI- sub-FI+ ] 
   )
   Created state:
   process instance pool: (0 ports, 1 local, 0 mapped)
@@ -212,11 +212,11 @@ footprint: {
   bool instance pool: (0 ports, 7 local, 1 mapped)
   1	!GND @[ supply_low ]	
   2	!Vdd @[ supply_high ]	
-  3	A.x	
-  4	A.y	
+  3	A.x @[ sub-FO- ]	
+  4	A.y @[ sub-FO- ]	
   5	A.e[0]	
   6	A.e[1]	
-  7	A.w	
+  7	A.w @[ sub-FI- sub-FI+ ]	
   private sub-bool index map:
     (1 -> 0)
     (2 -> 1)

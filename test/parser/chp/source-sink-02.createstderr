@@ -131,15 +131,15 @@ In namespace "", we have: {
           ]
         }
       footprint: {
-        !GND = bool^0 = chp_bool_sink_alt<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = chp_bool_sink_alt<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = chp_bool_sink_alt<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = chp_bool_sink_alt<>::!Vdd (2) @[ supply_high port-alias ] 
         S = channel chan?(bool<>)^0 = chp_bool_sink_alt<>::S (1) 
         Created state:
         channel instance pool: (1 ports, 0 local, 0 mapped)
         1	chp_bool_sink_alt<>::S	
         bool instance pool: (2 ports, 0 local, 0 mapped)
-        1	chp_bool_sink_alt<>::!GND @[ supply_low ]	
-        2	chp_bool_sink_alt<>::!Vdd @[ supply_high ]	
+        1	chp_bool_sink_alt<>::!GND @[ supply_low port-alias ]	
+        2	chp_bool_sink_alt<>::!Vdd @[ supply_high port-alias ]	
         resolved concurrent actions:
           *[
             S?
@@ -180,16 +180,16 @@ In namespace "", we have: {
         }
       footprint collection: {
         <true> {
-          !GND = bool^0 = chp_bool_source<true>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = chp_bool_source<true>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = chp_bool_source<true>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = chp_bool_source<true>::!Vdd (2) @[ supply_high port-alias ] 
           B = pbool^0 value: 1
           S = channel chan!(bool<>)^0 = chp_bool_source<true>::S (1) 
           Created state:
           channel instance pool: (1 ports, 0 local, 0 mapped)
           1	chp_bool_source<true>::S	
           bool instance pool: (2 ports, 0 local, 0 mapped)
-          1	chp_bool_source<true>::!GND @[ supply_low ]	
-          2	chp_bool_source<true>::!Vdd @[ supply_high ]	
+          1	chp_bool_source<true>::!GND @[ supply_low port-alias ]	
+          2	chp_bool_source<true>::!Vdd @[ supply_high port-alias ]	
           resolved concurrent actions:
             *[
               S!(true)

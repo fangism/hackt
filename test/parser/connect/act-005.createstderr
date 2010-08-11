@@ -91,24 +91,24 @@ In namespace "", we have: {
         bool<> zw
         zw = b[3];
       footprint: {
-        !GND = bool^0 = blah<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = blah<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = blah<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = blah<>::!Vdd (2) @[ supply_high port-alias ] 
         b = bool^1
           {
-            [0] = blah<>::b[0] (4) 
-            [1] = blah<>::b[1] (5) 
-            [2] = blah<>::b[2] (6) 
-            [3] = blah<>::zw (3) 
+            [0] = blah<>::b[0] (4) @[ port-alias ] 
+            [1] = blah<>::b[1] (5) @[ port-alias ] 
+            [2] = blah<>::b[2] (6) @[ port-alias ] 
+            [3] = blah<>::zw (3) @[ port-alias ] 
           }
-        zw = bool^0 = blah<>::zw (3) 
+        zw = bool^0 = blah<>::zw (3) @[ port-alias ] 
         Created state:
         bool instance pool: (6 ports, 0 local, 0 mapped)
-        1	blah<>::!GND @[ supply_low ]	
-        2	blah<>::!Vdd @[ supply_high ]	
-        3	blah<>::zw	
-        4	blah<>::b[0]	
-        5	blah<>::b[1]	
-        6	blah<>::b[2]	
+        1	blah<>::!GND @[ supply_low port-alias ]	
+        2	blah<>::!Vdd @[ supply_high port-alias ]	
+        3	blah<>::zw @[ port-alias ]	
+        4	blah<>::b[0] @[ port-alias ]	
+        5	blah<>::b[1] @[ port-alias ]	
+        6	blah<>::b[2] @[ port-alias ]	
       }
       }
 

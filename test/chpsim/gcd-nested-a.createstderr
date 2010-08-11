@@ -704,8 +704,8 @@ In namespace "", we have: {
         }
       footprint collection: {
         <32> {
-          !GND = bool^0 = int_sink<32>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = int_sink<32>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = int_sink<32>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = int_sink<32>::!Vdd (2) @[ supply_high port-alias ] 
           B = channel chan?(int<32>)^0 = int_sink<32>::B (1) 
           W = pint^0 value: 32
           b = int<32>^0 = int_sink<32>::b (1) 
@@ -715,8 +715,8 @@ In namespace "", we have: {
           int instance pool: (0 ports, 1 local, 0 mapped)
           1	int_sink<32>::b	
           bool instance pool: (2 ports, 0 local, 0 mapped)
-          1	int_sink<32>::!GND @[ supply_low ]	
-          2	int_sink<32>::!Vdd @[ supply_high ]	
+          1	int_sink<32>::!GND @[ supply_low port-alias ]	
+          2	int_sink<32>::!Vdd @[ supply_high port-alias ]	
           resolved concurrent actions:
             *[
               B?(b)
@@ -799,8 +799,8 @@ In namespace "", we have: {
         }
       footprint collection: {
         <32, 3, {15,24,30}> {
-          !GND = bool^0 = int_source<32, 3, {15,24,30}>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = int_source<32, 3, {15,24,30}>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = int_source<32, 3, {15,24,30}>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = int_source<32, 3, {15,24,30}>::!Vdd (2) @[ supply_high port-alias ] 
           B = pint^1
             unrolled index-value pairs: {
               0 = 15
@@ -814,8 +814,8 @@ In namespace "", we have: {
           channel instance pool: (1 ports, 0 local, 0 mapped)
           1	int_source<32, 3, {15,24,30}>::S	
           bool instance pool: (2 ports, 0 local, 0 mapped)
-          1	int_source<32, 3, {15,24,30}>::!GND @[ supply_low ]	
-          2	int_source<32, 3, {15,24,30}>::!Vdd @[ supply_high ]	
+          1	int_source<32, 3, {15,24,30}>::!GND @[ supply_low port-alias ]	
+          2	int_source<32, 3, {15,24,30}>::!Vdd @[ supply_high port-alias ]	
           resolved concurrent actions:
             *[
               sequential: {
@@ -831,8 +831,8 @@ In namespace "", we have: {
           }
         }
         <32, 4, {12,15,17,30}> {
-          !GND = bool^0 = int_source<32, 4, {12,15,17,30}>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = int_source<32, 4, {12,15,17,30}>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = int_source<32, 4, {12,15,17,30}>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = int_source<32, 4, {12,15,17,30}>::!Vdd (2) @[ supply_high port-alias ] 
           B = pint^1
             unrolled index-value pairs: {
               0 = 12
@@ -847,8 +847,8 @@ In namespace "", we have: {
           channel instance pool: (1 ports, 0 local, 0 mapped)
           1	int_source<32, 4, {12,15,17,30}>::S	
           bool instance pool: (2 ports, 0 local, 0 mapped)
-          1	int_source<32, 4, {12,15,17,30}>::!GND @[ supply_low ]	
-          2	int_source<32, 4, {12,15,17,30}>::!Vdd @[ supply_high ]	
+          1	int_source<32, 4, {12,15,17,30}>::!GND @[ supply_low port-alias ]	
+          2	int_source<32, 4, {12,15,17,30}>::!Vdd @[ supply_high port-alias ]	
           resolved concurrent actions:
             *[
               sequential: {
@@ -866,8 +866,8 @@ In namespace "", we have: {
           }
         }
         <32, 5, {9,13,22,27,34}> {
-          !GND = bool^0 = int_source<32, 5, {9,13,22,27,34}>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = int_source<32, 5, {9,13,22,27,34}>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = int_source<32, 5, {9,13,22,27,34}>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = int_source<32, 5, {9,13,22,27,34}>::!Vdd (2) @[ supply_high port-alias ] 
           B = pint^1
             unrolled index-value pairs: {
               0 = 9
@@ -883,8 +883,8 @@ In namespace "", we have: {
           channel instance pool: (1 ports, 0 local, 0 mapped)
           1	int_source<32, 5, {9,13,22,27,34}>::S	
           bool instance pool: (2 ports, 0 local, 0 mapped)
-          1	int_source<32, 5, {9,13,22,27,34}>::!GND @[ supply_low ]	
-          2	int_source<32, 5, {9,13,22,27,34}>::!Vdd @[ supply_high ]	
+          1	int_source<32, 5, {9,13,22,27,34}>::!GND @[ supply_low port-alias ]	
+          2	int_source<32, 5, {9,13,22,27,34}>::!Vdd @[ supply_high port-alias ]	
           resolved concurrent actions:
             *[
               sequential: {
@@ -904,8 +904,8 @@ In namespace "", we have: {
           }
         }
         <32, 6, {16,18,20,32,36,28}> {
-          !GND = bool^0 = int_source<32, 6, {16,18,20,32,36,28}>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = int_source<32, 6, {16,18,20,32,36,28}>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = int_source<32, 6, {16,18,20,32,36,28}>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = int_source<32, 6, {16,18,20,32,36,28}>::!Vdd (2) @[ supply_high port-alias ] 
           B = pint^1
             unrolled index-value pairs: {
               0 = 16
@@ -922,8 +922,8 @@ In namespace "", we have: {
           channel instance pool: (1 ports, 0 local, 0 mapped)
           1	int_source<32, 6, {16,18,20,32,36,28}>::S	
           bool instance pool: (2 ports, 0 local, 0 mapped)
-          1	int_source<32, 6, {16,18,20,32,36,28}>::!GND @[ supply_low ]	
-          2	int_source<32, 6, {16,18,20,32,36,28}>::!Vdd @[ supply_high ]	
+          1	int_source<32, 6, {16,18,20,32,36,28}>::!GND @[ supply_low port-alias ]	
+          2	int_source<32, 6, {16,18,20,32,36,28}>::!Vdd @[ supply_high port-alias ]	
           resolved concurrent actions:
             *[
               sequential: {
@@ -1115,8 +1115,8 @@ In namespace "", we have: {
           ]
         }
       footprint: {
-        !GND = bool^0 = my_gcd<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = my_gcd<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = my_gcd<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = my_gcd<>::!Vdd (2) @[ supply_high port-alias ] 
         A = channel chan?(int<32>)^0 = my_gcd<>::A (1) 
         B = channel chan?(int<32>)^0 = my_gcd<>::B (2) 
         C = channel chan?(int<32>)^0 = my_gcd<>::C (3) 
@@ -1139,8 +1139,8 @@ In namespace "", we have: {
         3	my_gcd<>::c	
         4	my_gcd<>::d	
         bool instance pool: (2 ports, 0 local, 0 mapped)
-        1	my_gcd<>::!GND @[ supply_low ]	
-        2	my_gcd<>::!Vdd @[ supply_high ]	
+        1	my_gcd<>::!GND @[ supply_low port-alias ]	
+        2	my_gcd<>::!Vdd @[ supply_high port-alias ]	
         resolved concurrent actions:
           *[
             sequential: {

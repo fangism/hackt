@@ -127,8 +127,8 @@ In namespace "", we have: {
           ]
         }
       footprint: {
-        !GND = bool^0 = merge<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = merge<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = merge<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = merge<>::!Vdd (2) @[ supply_high port-alias ] 
         B = channel chan?(bool<>)^1
           {
             [0] = merge<>::B[0] (2) 
@@ -145,8 +145,8 @@ In namespace "", we have: {
         int instance pool: (0 ports, 1 local, 0 mapped)
         1	merge<>::s	
         bool instance pool: (2 ports, 1 local, 0 mapped)
-        1	merge<>::!GND @[ supply_low ]	
-        2	merge<>::!Vdd @[ supply_high ]	
+        1	merge<>::!GND @[ supply_low port-alias ]	
+        2	merge<>::!Vdd @[ supply_high port-alias ]	
         3	merge<>::b	
         resolved concurrent actions:
           *[

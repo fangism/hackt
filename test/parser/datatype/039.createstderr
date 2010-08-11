@@ -80,18 +80,18 @@ In namespace "", we have: {
       footprint: {
         d = bool^1
           {
-            [0] = ch1of2<>::f (2) 
-            [1] = ch1of2<>::t (1) 
+            [0] = ch1of2<>::f (2) @[ port-alias ] 
+            [1] = ch1of2<>::t (1) @[ port-alias ] 
           }
-        f = bool^0 = ch1of2<>::f (2) 
-        t = bool^0 = ch1of2<>::t (1) 
+        f = bool^0 = ch1of2<>::f (2) @[ port-alias ] 
+        t = bool^0 = ch1of2<>::t (1) @[ port-alias ] 
         Created state:
         bool instance pool: (2 ports, 0 local, 0 mapped)
-        1	ch1of2<>::t	
-        2	ch1of2<>::f	
+        1	ch1of2<>::t @[ port-alias ]	
+        2	ch1of2<>::f @[ port-alias ]	
         bool port aliases:
-        1: ch1of2<>::t = ch1of2<>::d[1]
-        2: ch1of2<>::f = ch1of2<>::d[0]
+        1: ch1of2<>::t = ch1of2<>::d[1] @[ port-alias ]
+        2: ch1of2<>::f = ch1of2<>::d[0] @[ port-alias ]
         resolved specs:
         exclhi(f,t)
       }

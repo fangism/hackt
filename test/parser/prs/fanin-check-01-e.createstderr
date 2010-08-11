@@ -172,22 +172,22 @@ In namespace "", we have: {
         ~_le -> le+
         }
       footprint: {
-        !GND = bool^0 = aligner<>::!GND (2) @[ supply_low ] 
-        !Vdd = bool^0 = aligner<>::!Vdd (3) @[ supply_high ] 
-        _le = bool^0 = aligner<>::_le (4) 
+        !GND = bool^0 = aligner<>::!GND (2) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = aligner<>::!Vdd (3) @[ supply_high port-alias ] 
+        _le = bool^0 = aligner<>::_le (4) @[ loc-FO- loc-FO+ ] 
         l = process e1of2<>^0 = aligner<>::l (1) (
-          e = bool^0 = aligner<>::le (1) 
+          e = bool^0 = aligner<>::le (1) @[ port-alias loc-FI- loc-FI+ ] 
         )
-        le = bool^0 = aligner<>::le (1) 
+        le = bool^0 = aligner<>::le (1) @[ port-alias loc-FI- loc-FI+ ] 
         Created state:
         process instance pool: (1 ports, 0 local, 0 mapped)
         1	aligner<>::l	e1of2<>
           bool: 1
         bool instance pool: (3 ports, 1 local, 0 mapped)
-        1	aligner<>::le	
-        2	aligner<>::!GND @[ supply_low ]	
-        3	aligner<>::!Vdd @[ supply_high ]	
-        4	aligner<>::_le	
+        1	aligner<>::le @[ port-alias loc-FI- loc-FI+ ]	
+        2	aligner<>::!GND @[ supply_low port-alias ]	
+        3	aligner<>::!Vdd @[ supply_high port-alias ]	
+        4	aligner<>::_le @[ loc-FO- loc-FO+ ]	
         resolved prs:
         _le -> le-
         ~_le -> le+
@@ -222,16 +222,16 @@ In namespace "", we have: {
         ~r -> _r+
         }
       footprint: {
-        !GND = bool^0 = conv<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = conv<>::!Vdd (2) @[ supply_high ] 
-        _r = bool^0 = conv<>::_r (4) 
-        r = bool^0 = conv<>::r (3) 
+        !GND = bool^0 = conv<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = conv<>::!Vdd (2) @[ supply_high port-alias ] 
+        _r = bool^0 = conv<>::_r (4) @[ loc-FI- loc-FI+ ] 
+        r = bool^0 = conv<>::r (3) @[ port-alias loc-FO- loc-FO+ ] 
         Created state:
         bool instance pool: (3 ports, 1 local, 0 mapped)
-        1	conv<>::!GND @[ supply_low ]	
-        2	conv<>::!Vdd @[ supply_high ]	
-        3	conv<>::r	
-        4	conv<>::_r	
+        1	conv<>::!GND @[ supply_low port-alias ]	
+        2	conv<>::!Vdd @[ supply_high port-alias ]	
+        3	conv<>::r @[ port-alias loc-FO- loc-FO+ ]	
+        4	conv<>::_r @[ loc-FI- loc-FI+ ]	
         resolved prs:
         r -> _r-
         ~r -> _r+
@@ -251,10 +251,10 @@ In namespace "", we have: {
           bool<> e
         )
       footprint: {
-        e = bool^0 = e1of2<>::e (1) 
+        e = bool^0 = e1of2<>::e (1) @[ port-alias ] 
         Created state:
         bool instance pool: (1 ports, 0 local, 0 mapped)
-        1	e1of2<>::e	
+        1	e1of2<>::e @[ port-alias ]	
       }
       }
 
@@ -282,22 +282,22 @@ In namespace "", we have: {
         aligner<> align
         align ( , , m);
       footprint: {
-        !GND = bool^0 = top_type<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = top_type<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = top_type<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = top_type<>::!Vdd (2) @[ supply_high port-alias ] 
         align = process aligner<>^0 = top_type<>::align (3) (
-          !GND = bool^0 = top_type<>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = top_type<>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = top_type<>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = top_type<>::!Vdd (2) @[ supply_high port-alias ] 
           l = process e1of2<>^0 = top_type<>::m (1) (
-            e = bool^0 = top_type<>::m.e (3) 
+            e = bool^0 = top_type<>::m.e (3) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
           )
         )
         conv0 = process conv<>^0 = top_type<>::conv0 (2) (
-          !GND = bool^0 = top_type<>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = top_type<>::!Vdd (2) @[ supply_high ] 
-          r = bool^0 = top_type<>::m.e (3) 
+          !GND = bool^0 = top_type<>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = top_type<>::!Vdd (2) @[ supply_high port-alias ] 
+          r = bool^0 = top_type<>::m.e (3) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
         )
         m = process e1of2<>^0 = top_type<>::m (1) (
-          e = bool^0 = top_type<>::m.e (3) 
+          e = bool^0 = top_type<>::m.e (3) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
         )
         Created state:
         process instance pool: (0 ports, 3 local, 0 mapped)
@@ -309,9 +309,9 @@ In namespace "", we have: {
           process: 1
           bool: 3,1,2
         bool instance pool: (2 ports, 1 local, 2 mapped)
-        1	top_type<>::!GND @[ supply_low ]	
-        2	top_type<>::!Vdd @[ supply_high ]	
-        3	top_type<>::m.e	
+        1	top_type<>::!GND @[ supply_low port-alias ]	
+        2	top_type<>::!Vdd @[ supply_high port-alias ]	
+        3	top_type<>::m.e @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ]	
         private sub-bool index map:
           (2 -> 0)
           (3 -> 1)

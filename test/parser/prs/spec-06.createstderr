@@ -87,16 +87,16 @@ In namespace "", we have: {
       spec:
         mk_exclhi(p,q,r)
       footprint: {
-        !GND = bool^0 = testing<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = testing<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = testing<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = testing<>::!Vdd (2) @[ supply_high port-alias ] 
         p = bool^0 = testing<>::p (3) 
         q = bool^0 = testing<>::q (4) 
         r = bool^0 = testing<>::r (5) 
         s = bool^0 = testing<>::s (6) 
         Created state:
         bool instance pool: (2 ports, 4 local, 0 mapped)
-        1	testing<>::!GND @[ supply_low ]	
-        2	testing<>::!Vdd @[ supply_high ]	
+        1	testing<>::!GND @[ supply_low port-alias ]	
+        2	testing<>::!Vdd @[ supply_high port-alias ]	
         3	testing<>::p	
         4	testing<>::q	
         5	testing<>::r	

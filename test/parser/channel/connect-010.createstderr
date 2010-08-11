@@ -126,16 +126,16 @@ In namespace "", we have: {
           a?(z)
         }
       footprint: {
-        !GND = bool^0 = inner<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = inner<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = inner<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = inner<>::!Vdd (2) @[ supply_high port-alias ] 
         a = channel chan?(bool<>)^0 = inner<>::a (1) 
         z = bool^0 = inner<>::z (3) 
         Created state:
         channel instance pool: (1 ports, 0 local, 0 mapped)
         1	inner<>::a	
         bool instance pool: (2 ports, 1 local, 0 mapped)
-        1	inner<>::!GND @[ supply_low ]	
-        2	inner<>::!Vdd @[ supply_high ]	
+        1	inner<>::!GND @[ supply_low port-alias ]	
+        2	inner<>::!Vdd @[ supply_high port-alias ]	
         3	inner<>::z	
         resolved concurrent actions:
           a?(z)
@@ -167,12 +167,12 @@ In namespace "", we have: {
         inner<> y
         y ( , , b);
       footprint: {
-        !GND = bool^0 = one_shot<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = one_shot<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = one_shot<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = one_shot<>::!Vdd (2) @[ supply_high port-alias ] 
         b = channel chan?(bool<>)^0 = one_shot<>::b (1) 
         y = process inner<>^0 = one_shot<>::y (1) (
-          !GND = bool^0 = one_shot<>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = one_shot<>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = one_shot<>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = one_shot<>::!Vdd (2) @[ supply_high port-alias ] 
           a = channel chan?(bool<>)^0 = one_shot<>::b (1) 
         )
         Created state:
@@ -183,8 +183,8 @@ In namespace "", we have: {
         channel instance pool: (1 ports, 0 local, 0 mapped)
         1	one_shot<>::b	
         bool instance pool: (2 ports, 0 local, 1 mapped)
-        1	one_shot<>::!GND @[ supply_low ]	
-        2	one_shot<>::!Vdd @[ supply_high ]	
+        1	one_shot<>::!GND @[ supply_low port-alias ]	
+        2	one_shot<>::!Vdd @[ supply_high port-alias ]	
         private sub-bool index map:
           (1 -> 0)
           (2 -> 1)

@@ -147,16 +147,16 @@ In namespace "", we have: {
           bool<> GND_2
         )
       footprint: {
-        GND_1 = bool^0 = globals<>::GND_1 (2) 
-        GND_2 = bool^0 = globals<>::GND_2 (4) 
-        Vdd_1 = bool^0 = globals<>::Vdd_1 (1) 
-        Vdd_2 = bool^0 = globals<>::Vdd_2 (3) 
+        GND_1 = bool^0 = globals<>::GND_1 (2) @[ port-alias ] 
+        GND_2 = bool^0 = globals<>::GND_2 (4) @[ port-alias ] 
+        Vdd_1 = bool^0 = globals<>::Vdd_1 (1) @[ port-alias ] 
+        Vdd_2 = bool^0 = globals<>::Vdd_2 (3) @[ port-alias ] 
         Created state:
         bool instance pool: (4 ports, 0 local, 0 mapped)
-        1	globals<>::Vdd_1	
-        2	globals<>::GND_1	
-        3	globals<>::Vdd_2	
-        4	globals<>::GND_2	
+        1	globals<>::Vdd_1 @[ port-alias ]	
+        2	globals<>::GND_1 @[ port-alias ]	
+        3	globals<>::Vdd_2 @[ port-alias ]	
+        4	globals<>::GND_2 @[ port-alias ]	
       }
       }
 
@@ -187,16 +187,16 @@ In namespace "", we have: {
         ~x -> y+
         }
       footprint: {
-        !GND = bool^0 = inv<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = inv<>::!Vdd (2) @[ supply_high ] 
-        x = bool^0 = inv<>::x (3) 
-        y = bool^0 = inv<>::y (4) 
+        !GND = bool^0 = inv<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = inv<>::!Vdd (2) @[ supply_high port-alias ] 
+        x = bool^0 = inv<>::x (3) @[ port-alias loc-FO- loc-FO+ ] 
+        y = bool^0 = inv<>::y (4) @[ port-alias loc-FI- loc-FI+ ] 
         Created state:
         bool instance pool: (4 ports, 0 local, 0 mapped)
-        1	inv<>::!GND @[ supply_low ]	
-        2	inv<>::!Vdd @[ supply_high ]	
-        3	inv<>::x	
-        4	inv<>::y	
+        1	inv<>::!GND @[ supply_low port-alias ]	
+        2	inv<>::!Vdd @[ supply_high port-alias ]	
+        3	inv<>::x @[ port-alias loc-FO- loc-FO+ ]	
+        4	inv<>::y @[ port-alias loc-FI- loc-FI+ ]	
         resolved prs:
         x -> y-
         ~x -> y+
@@ -225,44 +225,44 @@ footprint: {
   a = process inv<>^0 = a (2) (
     !GND = bool^0 = !GND (5) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (6) @[ supply_high ] 
-    x = bool^0 = a.x (7) 
-    y = bool^0 = a.y (8) 
+    x = bool^0 = a.x (7) @[ sub-FO- sub-FO+ ] 
+    y = bool^0 = a.y (8) @[ sub-FI- sub-FI+ ] 
   )
   b = process inv<>^0 = b (3) (
     !GND = bool^0 = !GND (5) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (6) @[ supply_high ] 
-    x = bool^0 = b.x (9) 
-    y = bool^0 = b.y (10) 
+    x = bool^0 = b.x (9) @[ sub-FO- sub-FO+ ] 
+    y = bool^0 = b.y (10) @[ sub-FI- sub-FI+ ] 
   )
   c = process inv<>^0 = c (4) (
     !GND = bool^0 = !GND (5) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (6) @[ supply_high ] 
-    x = bool^0 = c.x (11) 
-    y = bool^0 = c.y (12) 
+    x = bool^0 = c.x (11) @[ sub-FO- sub-FO+ ] 
+    y = bool^0 = c.y (12) @[ sub-FI- sub-FI+ ] 
   )
   d = process inv<>^0 = d (5) (
     !GND = bool^0 = g.GND_1 (2) 
     !Vdd = bool^0 = !Vdd (6) @[ supply_high ] 
-    x = bool^0 = d.x (13) 
-    y = bool^0 = d.y (14) 
+    x = bool^0 = d.x (13) @[ sub-FO- sub-FO+ ] 
+    y = bool^0 = d.y (14) @[ sub-FI- sub-FI+ ] 
   )
   d2 = process inv<>^0 = d2 (6) (
     !GND = bool^0 = g.GND_2 (4) 
     !Vdd = bool^0 = !Vdd (6) @[ supply_high ] 
-    x = bool^0 = d2.x (15) 
-    y = bool^0 = d2.y (16) 
+    x = bool^0 = d2.x (15) @[ sub-FO- sub-FO+ ] 
+    y = bool^0 = d2.y (16) @[ sub-FI- sub-FI+ ] 
   )
   e = process inv<>^0 = e (7) (
     !GND = bool^0 = g.GND_1 (2) 
     !Vdd = bool^0 = !Vdd (6) @[ supply_high ] 
-    x = bool^0 = e.x (17) 
-    y = bool^0 = e.y (18) 
+    x = bool^0 = e.x (17) @[ sub-FO- sub-FO+ ] 
+    y = bool^0 = e.y (18) @[ sub-FI- sub-FI+ ] 
   )
   f = process inv<>^0 = f (8) (
     !GND = bool^0 = !GND (5) @[ supply_low ] 
     !Vdd = bool^0 = g.Vdd_1 (1) 
-    x = bool^0 = f.x (19) 
-    y = bool^0 = f.y (20) 
+    x = bool^0 = f.x (19) @[ sub-FO- sub-FO+ ] 
+    y = bool^0 = f.y (20) @[ sub-FI- sub-FI+ ] 
   )
   g = process globals<>^0 = g (1) (
     Vdd_1 = bool^0 = g.Vdd_1 (1) 
@@ -273,8 +273,8 @@ footprint: {
   h = process inv<>^0 = h (9) (
     !GND = bool^0 = g.GND_2 (4) 
     !Vdd = bool^0 = g.Vdd_2 (3) 
-    x = bool^0 = h.x (21) 
-    y = bool^0 = h.y (22) 
+    x = bool^0 = h.x (21) @[ sub-FO- sub-FO+ ] 
+    y = bool^0 = h.y (22) @[ sub-FI- sub-FI+ ] 
   )
   Created state:
   process instance pool: (0 ports, 9 local, 0 mapped)
@@ -303,20 +303,20 @@ footprint: {
   4	g.GND_2	
   5	!GND @[ supply_low ]	
   6	!Vdd @[ supply_high ]	
-  7	a.x	
-  8	a.y	
-  9	b.x	
-  10	b.y	
-  11	c.x	
-  12	c.y	
-  13	d.x	
-  14	d.y	
-  15	d2.x	
-  16	d2.y	
-  17	e.x	
-  18	e.y	
-  19	f.x	
-  20	f.y	
-  21	h.x	
-  22	h.y	
+  7	a.x @[ sub-FO- sub-FO+ ]	
+  8	a.y @[ sub-FI- sub-FI+ ]	
+  9	b.x @[ sub-FO- sub-FO+ ]	
+  10	b.y @[ sub-FI- sub-FI+ ]	
+  11	c.x @[ sub-FO- sub-FO+ ]	
+  12	c.y @[ sub-FI- sub-FI+ ]	
+  13	d.x @[ sub-FO- sub-FO+ ]	
+  14	d.y @[ sub-FI- sub-FI+ ]	
+  15	d2.x @[ sub-FO- sub-FO+ ]	
+  16	d2.y @[ sub-FI- sub-FI+ ]	
+  17	e.x @[ sub-FO- sub-FO+ ]	
+  18	e.y @[ sub-FI- sub-FI+ ]	
+  19	f.x @[ sub-FO- sub-FO+ ]	
+  20	f.y @[ sub-FI- sub-FI+ ]	
+  21	h.x @[ sub-FO- sub-FO+ ]	
+  22	h.y @[ sub-FI- sub-FI+ ]	
 }

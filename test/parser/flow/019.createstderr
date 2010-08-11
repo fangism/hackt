@@ -169,125 +169,125 @@ In namespace "", we have: {
         )
       footprint collection: {
         <3, 3> {
-          !GND = bool^0 = checkers<3, 3>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = checkers<3, 3>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = checkers<3, 3>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = checkers<3, 3>::!Vdd (2) @[ supply_high port-alias ] 
           M = pint^0 value: 3
           N = pint^0 value: 3
           m = bool^2
             {
-              [0][0] = checkers<3, 3>::m[0][0] (3) 
-              [0][1] = checkers<3, 3>::m[0][1] (4) 
-              [0][2] = checkers<3, 3>::m[0][0] (3) 
-              [1][0] = checkers<3, 3>::m[0][1] (4) 
-              [1][1] = checkers<3, 3>::m[0][0] (3) 
-              [1][2] = checkers<3, 3>::m[0][1] (4) 
-              [2][0] = checkers<3, 3>::m[0][0] (3) 
-              [2][1] = checkers<3, 3>::m[0][1] (4) 
-              [2][2] = checkers<3, 3>::m[0][0] (3) 
+              [0][0] = checkers<3, 3>::m[0][0] (3) @[ port-alias ] 
+              [0][1] = checkers<3, 3>::m[0][1] (4) @[ port-alias ] 
+              [0][2] = checkers<3, 3>::m[0][0] (3) @[ port-alias ] 
+              [1][0] = checkers<3, 3>::m[0][1] (4) @[ port-alias ] 
+              [1][1] = checkers<3, 3>::m[0][0] (3) @[ port-alias ] 
+              [1][2] = checkers<3, 3>::m[0][1] (4) @[ port-alias ] 
+              [2][0] = checkers<3, 3>::m[0][0] (3) @[ port-alias ] 
+              [2][1] = checkers<3, 3>::m[0][1] (4) @[ port-alias ] 
+              [2][2] = checkers<3, 3>::m[0][0] (3) @[ port-alias ] 
             }
           Created state:
           bool instance pool: (4 ports, 0 local, 0 mapped)
-          1	checkers<3, 3>::!GND @[ supply_low ]	
-          2	checkers<3, 3>::!Vdd @[ supply_high ]	
-          3	checkers<3, 3>::m[0][0]	
-          4	checkers<3, 3>::m[0][1]	
+          1	checkers<3, 3>::!GND @[ supply_low port-alias ]	
+          2	checkers<3, 3>::!Vdd @[ supply_high port-alias ]	
+          3	checkers<3, 3>::m[0][0] @[ port-alias ]	
+          4	checkers<3, 3>::m[0][1] @[ port-alias ]	
           bool port aliases:
-          3: checkers<3, 3>::m[0][0] = checkers<3, 3>::m[0][2] = checkers<3, 3>::m[1][1] = checkers<3, 3>::m[2][0] = checkers<3, 3>::m[2][2]
-          4: checkers<3, 3>::m[0][1] = checkers<3, 3>::m[1][0] = checkers<3, 3>::m[1][2] = checkers<3, 3>::m[2][1]
+          3: checkers<3, 3>::m[0][0] = checkers<3, 3>::m[0][2] = checkers<3, 3>::m[1][1] = checkers<3, 3>::m[2][0] = checkers<3, 3>::m[2][2] @[ port-alias ]
+          4: checkers<3, 3>::m[0][1] = checkers<3, 3>::m[1][0] = checkers<3, 3>::m[1][2] = checkers<3, 3>::m[2][1] @[ port-alias ]
         }
         <3, 4> {
-          !GND = bool^0 = checkers<3, 4>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = checkers<3, 4>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = checkers<3, 4>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = checkers<3, 4>::!Vdd (2) @[ supply_high port-alias ] 
           M = pint^0 value: 3
           N = pint^0 value: 4
           m = bool^2
             {
-              [0][0] = checkers<3, 4>::m[0][0] (3) 
-              [0][1] = checkers<3, 4>::m[0][1] (4) 
-              [0][2] = checkers<3, 4>::m[0][0] (3) 
-              [0][3] = checkers<3, 4>::m[0][1] (4) 
-              [1][0] = checkers<3, 4>::m[0][1] (4) 
-              [1][1] = checkers<3, 4>::m[0][0] (3) 
-              [1][2] = checkers<3, 4>::m[0][1] (4) 
-              [1][3] = checkers<3, 4>::m[0][0] (3) 
-              [2][0] = checkers<3, 4>::m[0][0] (3) 
-              [2][1] = checkers<3, 4>::m[0][1] (4) 
-              [2][2] = checkers<3, 4>::m[0][0] (3) 
-              [2][3] = checkers<3, 4>::m[0][1] (4) 
+              [0][0] = checkers<3, 4>::m[0][0] (3) @[ port-alias ] 
+              [0][1] = checkers<3, 4>::m[0][1] (4) @[ port-alias ] 
+              [0][2] = checkers<3, 4>::m[0][0] (3) @[ port-alias ] 
+              [0][3] = checkers<3, 4>::m[0][1] (4) @[ port-alias ] 
+              [1][0] = checkers<3, 4>::m[0][1] (4) @[ port-alias ] 
+              [1][1] = checkers<3, 4>::m[0][0] (3) @[ port-alias ] 
+              [1][2] = checkers<3, 4>::m[0][1] (4) @[ port-alias ] 
+              [1][3] = checkers<3, 4>::m[0][0] (3) @[ port-alias ] 
+              [2][0] = checkers<3, 4>::m[0][0] (3) @[ port-alias ] 
+              [2][1] = checkers<3, 4>::m[0][1] (4) @[ port-alias ] 
+              [2][2] = checkers<3, 4>::m[0][0] (3) @[ port-alias ] 
+              [2][3] = checkers<3, 4>::m[0][1] (4) @[ port-alias ] 
             }
           Created state:
           bool instance pool: (4 ports, 0 local, 0 mapped)
-          1	checkers<3, 4>::!GND @[ supply_low ]	
-          2	checkers<3, 4>::!Vdd @[ supply_high ]	
-          3	checkers<3, 4>::m[0][0]	
-          4	checkers<3, 4>::m[0][1]	
+          1	checkers<3, 4>::!GND @[ supply_low port-alias ]	
+          2	checkers<3, 4>::!Vdd @[ supply_high port-alias ]	
+          3	checkers<3, 4>::m[0][0] @[ port-alias ]	
+          4	checkers<3, 4>::m[0][1] @[ port-alias ]	
           bool port aliases:
-          3: checkers<3, 4>::m[0][0] = checkers<3, 4>::m[0][2] = checkers<3, 4>::m[1][1] = checkers<3, 4>::m[1][3] = checkers<3, 4>::m[2][0] = checkers<3, 4>::m[2][2]
-          4: checkers<3, 4>::m[0][1] = checkers<3, 4>::m[0][3] = checkers<3, 4>::m[1][0] = checkers<3, 4>::m[1][2] = checkers<3, 4>::m[2][1] = checkers<3, 4>::m[2][3]
+          3: checkers<3, 4>::m[0][0] = checkers<3, 4>::m[0][2] = checkers<3, 4>::m[1][1] = checkers<3, 4>::m[1][3] = checkers<3, 4>::m[2][0] = checkers<3, 4>::m[2][2] @[ port-alias ]
+          4: checkers<3, 4>::m[0][1] = checkers<3, 4>::m[0][3] = checkers<3, 4>::m[1][0] = checkers<3, 4>::m[1][2] = checkers<3, 4>::m[2][1] = checkers<3, 4>::m[2][3] @[ port-alias ]
         }
         <4, 3> {
-          !GND = bool^0 = checkers<4, 3>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = checkers<4, 3>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = checkers<4, 3>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = checkers<4, 3>::!Vdd (2) @[ supply_high port-alias ] 
           M = pint^0 value: 4
           N = pint^0 value: 3
           m = bool^2
             {
-              [0][0] = checkers<4, 3>::m[0][0] (3) 
-              [0][1] = checkers<4, 3>::m[0][1] (4) 
-              [0][2] = checkers<4, 3>::m[0][0] (3) 
-              [1][0] = checkers<4, 3>::m[0][1] (4) 
-              [1][1] = checkers<4, 3>::m[0][0] (3) 
-              [1][2] = checkers<4, 3>::m[0][1] (4) 
-              [2][0] = checkers<4, 3>::m[0][0] (3) 
-              [2][1] = checkers<4, 3>::m[0][1] (4) 
-              [2][2] = checkers<4, 3>::m[0][0] (3) 
-              [3][0] = checkers<4, 3>::m[0][1] (4) 
-              [3][1] = checkers<4, 3>::m[0][0] (3) 
-              [3][2] = checkers<4, 3>::m[0][1] (4) 
+              [0][0] = checkers<4, 3>::m[0][0] (3) @[ port-alias ] 
+              [0][1] = checkers<4, 3>::m[0][1] (4) @[ port-alias ] 
+              [0][2] = checkers<4, 3>::m[0][0] (3) @[ port-alias ] 
+              [1][0] = checkers<4, 3>::m[0][1] (4) @[ port-alias ] 
+              [1][1] = checkers<4, 3>::m[0][0] (3) @[ port-alias ] 
+              [1][2] = checkers<4, 3>::m[0][1] (4) @[ port-alias ] 
+              [2][0] = checkers<4, 3>::m[0][0] (3) @[ port-alias ] 
+              [2][1] = checkers<4, 3>::m[0][1] (4) @[ port-alias ] 
+              [2][2] = checkers<4, 3>::m[0][0] (3) @[ port-alias ] 
+              [3][0] = checkers<4, 3>::m[0][1] (4) @[ port-alias ] 
+              [3][1] = checkers<4, 3>::m[0][0] (3) @[ port-alias ] 
+              [3][2] = checkers<4, 3>::m[0][1] (4) @[ port-alias ] 
             }
           Created state:
           bool instance pool: (4 ports, 0 local, 0 mapped)
-          1	checkers<4, 3>::!GND @[ supply_low ]	
-          2	checkers<4, 3>::!Vdd @[ supply_high ]	
-          3	checkers<4, 3>::m[0][0]	
-          4	checkers<4, 3>::m[0][1]	
+          1	checkers<4, 3>::!GND @[ supply_low port-alias ]	
+          2	checkers<4, 3>::!Vdd @[ supply_high port-alias ]	
+          3	checkers<4, 3>::m[0][0] @[ port-alias ]	
+          4	checkers<4, 3>::m[0][1] @[ port-alias ]	
           bool port aliases:
-          3: checkers<4, 3>::m[0][0] = checkers<4, 3>::m[0][2] = checkers<4, 3>::m[1][1] = checkers<4, 3>::m[2][0] = checkers<4, 3>::m[2][2] = checkers<4, 3>::m[3][1]
-          4: checkers<4, 3>::m[0][1] = checkers<4, 3>::m[1][0] = checkers<4, 3>::m[1][2] = checkers<4, 3>::m[2][1] = checkers<4, 3>::m[3][0] = checkers<4, 3>::m[3][2]
+          3: checkers<4, 3>::m[0][0] = checkers<4, 3>::m[0][2] = checkers<4, 3>::m[1][1] = checkers<4, 3>::m[2][0] = checkers<4, 3>::m[2][2] = checkers<4, 3>::m[3][1] @[ port-alias ]
+          4: checkers<4, 3>::m[0][1] = checkers<4, 3>::m[1][0] = checkers<4, 3>::m[1][2] = checkers<4, 3>::m[2][1] = checkers<4, 3>::m[3][0] = checkers<4, 3>::m[3][2] @[ port-alias ]
         }
         <4, 4> {
-          !GND = bool^0 = checkers<4, 4>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = checkers<4, 4>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = checkers<4, 4>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = checkers<4, 4>::!Vdd (2) @[ supply_high port-alias ] 
           M = pint^0 value: 4
           N = pint^0 value: 4
           m = bool^2
             {
-              [0][0] = checkers<4, 4>::m[0][0] (3) 
-              [0][1] = checkers<4, 4>::m[0][1] (4) 
-              [0][2] = checkers<4, 4>::m[0][0] (3) 
-              [0][3] = checkers<4, 4>::m[0][1] (4) 
-              [1][0] = checkers<4, 4>::m[0][1] (4) 
-              [1][1] = checkers<4, 4>::m[0][0] (3) 
-              [1][2] = checkers<4, 4>::m[0][1] (4) 
-              [1][3] = checkers<4, 4>::m[0][0] (3) 
-              [2][0] = checkers<4, 4>::m[0][0] (3) 
-              [2][1] = checkers<4, 4>::m[0][1] (4) 
-              [2][2] = checkers<4, 4>::m[0][0] (3) 
-              [2][3] = checkers<4, 4>::m[0][1] (4) 
-              [3][0] = checkers<4, 4>::m[0][1] (4) 
-              [3][1] = checkers<4, 4>::m[0][0] (3) 
-              [3][2] = checkers<4, 4>::m[0][1] (4) 
-              [3][3] = checkers<4, 4>::m[0][0] (3) 
+              [0][0] = checkers<4, 4>::m[0][0] (3) @[ port-alias ] 
+              [0][1] = checkers<4, 4>::m[0][1] (4) @[ port-alias ] 
+              [0][2] = checkers<4, 4>::m[0][0] (3) @[ port-alias ] 
+              [0][3] = checkers<4, 4>::m[0][1] (4) @[ port-alias ] 
+              [1][0] = checkers<4, 4>::m[0][1] (4) @[ port-alias ] 
+              [1][1] = checkers<4, 4>::m[0][0] (3) @[ port-alias ] 
+              [1][2] = checkers<4, 4>::m[0][1] (4) @[ port-alias ] 
+              [1][3] = checkers<4, 4>::m[0][0] (3) @[ port-alias ] 
+              [2][0] = checkers<4, 4>::m[0][0] (3) @[ port-alias ] 
+              [2][1] = checkers<4, 4>::m[0][1] (4) @[ port-alias ] 
+              [2][2] = checkers<4, 4>::m[0][0] (3) @[ port-alias ] 
+              [2][3] = checkers<4, 4>::m[0][1] (4) @[ port-alias ] 
+              [3][0] = checkers<4, 4>::m[0][1] (4) @[ port-alias ] 
+              [3][1] = checkers<4, 4>::m[0][0] (3) @[ port-alias ] 
+              [3][2] = checkers<4, 4>::m[0][1] (4) @[ port-alias ] 
+              [3][3] = checkers<4, 4>::m[0][0] (3) @[ port-alias ] 
             }
           Created state:
           bool instance pool: (4 ports, 0 local, 0 mapped)
-          1	checkers<4, 4>::!GND @[ supply_low ]	
-          2	checkers<4, 4>::!Vdd @[ supply_high ]	
-          3	checkers<4, 4>::m[0][0]	
-          4	checkers<4, 4>::m[0][1]	
+          1	checkers<4, 4>::!GND @[ supply_low port-alias ]	
+          2	checkers<4, 4>::!Vdd @[ supply_high port-alias ]	
+          3	checkers<4, 4>::m[0][0] @[ port-alias ]	
+          4	checkers<4, 4>::m[0][1] @[ port-alias ]	
           bool port aliases:
-          3: checkers<4, 4>::m[0][0] = checkers<4, 4>::m[0][2] = checkers<4, 4>::m[1][1] = checkers<4, 4>::m[1][3] = checkers<4, 4>::m[2][0] = checkers<4, 4>::m[2][2] = checkers<4, 4>::m[3][1] = checkers<4, 4>::m[3][3]
-          4: checkers<4, 4>::m[0][1] = checkers<4, 4>::m[0][3] = checkers<4, 4>::m[1][0] = checkers<4, 4>::m[1][2] = checkers<4, 4>::m[2][1] = checkers<4, 4>::m[2][3] = checkers<4, 4>::m[3][0] = checkers<4, 4>::m[3][2]
+          3: checkers<4, 4>::m[0][0] = checkers<4, 4>::m[0][2] = checkers<4, 4>::m[1][1] = checkers<4, 4>::m[1][3] = checkers<4, 4>::m[2][0] = checkers<4, 4>::m[2][2] = checkers<4, 4>::m[3][1] = checkers<4, 4>::m[3][3] @[ port-alias ]
+          4: checkers<4, 4>::m[0][1] = checkers<4, 4>::m[0][3] = checkers<4, 4>::m[1][0] = checkers<4, 4>::m[1][2] = checkers<4, 4>::m[2][1] = checkers<4, 4>::m[2][3] = checkers<4, 4>::m[3][0] = checkers<4, 4>::m[3][2] @[ port-alias ]
         }
       }
       }

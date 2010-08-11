@@ -164,42 +164,42 @@ In namespace "", we have: {
         !Vdd@[supply=1]
       footprint collection: {
         <2> {
-          !GND = bool^0 = e1of<2>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = e1of<2>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = e1of<2>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = e1of<2>::!Vdd (2) @[ supply_high port-alias ] 
           Z = pint^0 value: 2
-          e = bool^0 = e1of<2>::e (3) 
+          e = bool^0 = e1of<2>::e (3) @[ port-alias ] 
           rr = bool^1
             {
-              [0] = e1of<2>::rr[0] (4) 
-              [1] = e1of<2>::rr[1] (5) 
+              [0] = e1of<2>::rr[0] (4) @[ port-alias ] 
+              [1] = e1of<2>::rr[1] (5) @[ port-alias ] 
             }
           Created state:
           bool instance pool: (5 ports, 0 local, 0 mapped)
-          1	e1of<2>::!GND @[ supply_low ]	
-          2	e1of<2>::!Vdd @[ supply_high ]	
-          3	e1of<2>::e	
-          4	e1of<2>::rr[0]	
-          5	e1of<2>::rr[1]	
+          1	e1of<2>::!GND @[ supply_low port-alias ]	
+          2	e1of<2>::!Vdd @[ supply_high port-alias ]	
+          3	e1of<2>::e @[ port-alias ]	
+          4	e1of<2>::rr[0] @[ port-alias ]	
+          5	e1of<2>::rr[1] @[ port-alias ]	
         }
         <3> {
-          !GND = bool^0 = e1of<3>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = e1of<3>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = e1of<3>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = e1of<3>::!Vdd (2) @[ supply_high port-alias ] 
           Z = pint^0 value: 3
-          e = bool^0 = e1of<3>::e (3) 
+          e = bool^0 = e1of<3>::e (3) @[ port-alias ] 
           rr = bool^1
             {
-              [0] = e1of<3>::rr[0] (4) 
-              [1] = e1of<3>::rr[1] (5) 
-              [2] = e1of<3>::rr[2] (6) 
+              [0] = e1of<3>::rr[0] (4) @[ port-alias ] 
+              [1] = e1of<3>::rr[1] (5) @[ port-alias ] 
+              [2] = e1of<3>::rr[2] (6) @[ port-alias ] 
             }
           Created state:
           bool instance pool: (6 ports, 0 local, 0 mapped)
-          1	e1of<3>::!GND @[ supply_low ]	
-          2	e1of<3>::!Vdd @[ supply_high ]	
-          3	e1of<3>::e	
-          4	e1of<3>::rr[0]	
-          5	e1of<3>::rr[1]	
-          6	e1of<3>::rr[2]	
+          1	e1of<3>::!GND @[ supply_low port-alias ]	
+          2	e1of<3>::!Vdd @[ supply_high port-alias ]	
+          3	e1of<3>::e @[ port-alias ]	
+          4	e1of<3>::rr[0] @[ port-alias ]	
+          5	e1of<3>::rr[1] @[ port-alias ]	
+          6	e1of<3>::rr[2] @[ port-alias ]	
         }
       }
       }
@@ -240,11 +240,11 @@ In namespace "", we have: {
         e1of<source_e::N> s[0..M-1]
       footprint collection: {
         <3, 2, {2,1}> {
-          !GND = bool^0 = source_e<3, 2, {2,1}>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = source_e<3, 2, {2,1}>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = source_e<3, 2, {2,1}>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = source_e<3, 2, {2,1}>::!Vdd (2) @[ supply_high port-alias ] 
           M = pint^0 value: 3
           N = pint^0 value: 2
-          _Reset = bool^0 = source_e<3, 2, {2,1}>::_Reset (7) 
+          _Reset = bool^0 = source_e<3, 2, {2,1}>::_Reset (7) @[ port-alias ] 
           d = pint^1
             unrolled index-value pairs: {
               0 = 2
@@ -253,8 +253,8 @@ In namespace "", we have: {
           r = process e1of<3>^1
             {
               [0] = source_e<3, 2, {2,1}>::r[0] (2) (
-                !GND = bool^0 = source_e<3, 2, {2,1}>::!GND (1) @[ supply_low ] 
-                !Vdd = bool^0 = source_e<3, 2, {2,1}>::!Vdd (2) @[ supply_high ] 
+                !GND = bool^0 = source_e<3, 2, {2,1}>::!GND (1) @[ supply_low port-alias ] 
+                !Vdd = bool^0 = source_e<3, 2, {2,1}>::!Vdd (2) @[ supply_high port-alias ] 
                 rr = bool^1
                   {
                     [0] = source_e<3, 2, {2,1}>::r[0].rr[0] (8) 
@@ -264,8 +264,8 @@ In namespace "", we have: {
                 e = bool^0 = source_e<3, 2, {2,1}>::r[0].e (11) 
               )
               [1] = source_e<3, 2, {2,1}>::r[1] (3) (
-                !GND = bool^0 = source_e<3, 2, {2,1}>::!GND (1) @[ supply_low ] 
-                !Vdd = bool^0 = source_e<3, 2, {2,1}>::!Vdd (2) @[ supply_high ] 
+                !GND = bool^0 = source_e<3, 2, {2,1}>::!GND (1) @[ supply_low port-alias ] 
+                !Vdd = bool^0 = source_e<3, 2, {2,1}>::!Vdd (2) @[ supply_high port-alias ] 
                 rr = bool^1
                   {
                     [0] = source_e<3, 2, {2,1}>::r[1].rr[0] (12) 
@@ -276,21 +276,21 @@ In namespace "", we have: {
               )
             }
           rr = process e1of<3>^0 = source_e<3, 2, {2,1}>::rr (1) (
-            !GND = bool^0 = source_e<3, 2, {2,1}>::!GND (1) @[ supply_low ] 
-            !Vdd = bool^0 = source_e<3, 2, {2,1}>::!Vdd (2) @[ supply_high ] 
+            !GND = bool^0 = source_e<3, 2, {2,1}>::!GND (1) @[ supply_low port-alias ] 
+            !Vdd = bool^0 = source_e<3, 2, {2,1}>::!Vdd (2) @[ supply_high port-alias ] 
             rr = bool^1
               {
-                [0] = source_e<3, 2, {2,1}>::rr.rr[0] (3) 
-                [1] = source_e<3, 2, {2,1}>::rr.rr[1] (4) 
-                [2] = source_e<3, 2, {2,1}>::rr.rr[2] (5) 
+                [0] = source_e<3, 2, {2,1}>::rr.rr[0] (3) @[ port-alias ] 
+                [1] = source_e<3, 2, {2,1}>::rr.rr[1] (4) @[ port-alias ] 
+                [2] = source_e<3, 2, {2,1}>::rr.rr[2] (5) @[ port-alias ] 
               }
-            e = bool^0 = source_e<3, 2, {2,1}>::rr.e (6) 
+            e = bool^0 = source_e<3, 2, {2,1}>::rr.e (6) @[ port-alias ] 
           )
           s = process e1of<2>^1
             {
               [0] = source_e<3, 2, {2,1}>::s[0] (4) (
-                !GND = bool^0 = source_e<3, 2, {2,1}>::!GND (1) @[ supply_low ] 
-                !Vdd = bool^0 = source_e<3, 2, {2,1}>::!Vdd (2) @[ supply_high ] 
+                !GND = bool^0 = source_e<3, 2, {2,1}>::!GND (1) @[ supply_low port-alias ] 
+                !Vdd = bool^0 = source_e<3, 2, {2,1}>::!Vdd (2) @[ supply_high port-alias ] 
                 rr = bool^1
                   {
                     [0] = source_e<3, 2, {2,1}>::s[0].rr[0] (16) 
@@ -299,8 +299,8 @@ In namespace "", we have: {
                 e = bool^0 = source_e<3, 2, {2,1}>::s[0].e (18) 
               )
               [1] = source_e<3, 2, {2,1}>::s[1] (5) (
-                !GND = bool^0 = source_e<3, 2, {2,1}>::!GND (1) @[ supply_low ] 
-                !Vdd = bool^0 = source_e<3, 2, {2,1}>::!Vdd (2) @[ supply_high ] 
+                !GND = bool^0 = source_e<3, 2, {2,1}>::!GND (1) @[ supply_low port-alias ] 
+                !Vdd = bool^0 = source_e<3, 2, {2,1}>::!Vdd (2) @[ supply_high port-alias ] 
                 rr = bool^1
                   {
                     [0] = source_e<3, 2, {2,1}>::s[1].rr[0] (19) 
@@ -309,8 +309,8 @@ In namespace "", we have: {
                 e = bool^0 = source_e<3, 2, {2,1}>::s[1].e (21) 
               )
               [2] = source_e<3, 2, {2,1}>::s[2] (6) (
-                !GND = bool^0 = source_e<3, 2, {2,1}>::!GND (1) @[ supply_low ] 
-                !Vdd = bool^0 = source_e<3, 2, {2,1}>::!Vdd (2) @[ supply_high ] 
+                !GND = bool^0 = source_e<3, 2, {2,1}>::!GND (1) @[ supply_low port-alias ] 
+                !Vdd = bool^0 = source_e<3, 2, {2,1}>::!Vdd (2) @[ supply_high port-alias ] 
                 rr = bool^1
                   {
                     [0] = source_e<3, 2, {2,1}>::s[2].rr[0] (22) 
@@ -334,13 +334,13 @@ In namespace "", we have: {
           6	source_e<3, 2, {2,1}>::s[2]	e1of<2>
             bool: 1,2,24,22,23
           bool instance pool: (7 ports, 17 local, 0 mapped)
-          1	source_e<3, 2, {2,1}>::!GND @[ supply_low ]	
-          2	source_e<3, 2, {2,1}>::!Vdd @[ supply_high ]	
-          3	source_e<3, 2, {2,1}>::rr.rr[0]	
-          4	source_e<3, 2, {2,1}>::rr.rr[1]	
-          5	source_e<3, 2, {2,1}>::rr.rr[2]	
-          6	source_e<3, 2, {2,1}>::rr.e	
-          7	source_e<3, 2, {2,1}>::_Reset	
+          1	source_e<3, 2, {2,1}>::!GND @[ supply_low port-alias ]	
+          2	source_e<3, 2, {2,1}>::!Vdd @[ supply_high port-alias ]	
+          3	source_e<3, 2, {2,1}>::rr.rr[0] @[ port-alias ]	
+          4	source_e<3, 2, {2,1}>::rr.rr[1] @[ port-alias ]	
+          5	source_e<3, 2, {2,1}>::rr.rr[2] @[ port-alias ]	
+          6	source_e<3, 2, {2,1}>::rr.e @[ port-alias ]	
+          7	source_e<3, 2, {2,1}>::_Reset @[ port-alias ]	
           8	source_e<3, 2, {2,1}>::r[0].rr[0]	
           9	source_e<3, 2, {2,1}>::r[0].rr[1]	
           10	source_e<3, 2, {2,1}>::r[0].rr[2]	
@@ -359,8 +359,8 @@ In namespace "", we have: {
           23	source_e<3, 2, {2,1}>::s[2].rr[1]	
           24	source_e<3, 2, {2,1}>::s[2].e	
           bool port aliases:
-          1: source_e<3, 2, {2,1}>::rr.!GND = source_e<3, 2, {2,1}>::!GND @[ supply_low ]
-          2: source_e<3, 2, {2,1}>::rr.!Vdd = source_e<3, 2, {2,1}>::!Vdd @[ supply_high ]
+          1: source_e<3, 2, {2,1}>::rr.!GND = source_e<3, 2, {2,1}>::!GND @[ supply_low port-alias ]
+          2: source_e<3, 2, {2,1}>::rr.!Vdd = source_e<3, 2, {2,1}>::!Vdd @[ supply_high port-alias ]
         }
       }
       }

@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.57 2010/08/05 18:25:26 fang Exp $
+	$Id: footprint.cc,v 1.58 2010/08/11 21:54:53 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -82,6 +82,7 @@
 #include "common/TODO.h"
 #include "main/cflat_options.h"
 
+#include "util/compose.h"
 #include "util/stacktrace.h"
 #include "util/persistent_object_manager.tcc"
 #include "util/memory/count_ptr.tcc"
@@ -101,6 +102,7 @@ using util::read_value;
 using util::auto_indent;
 using std::ostream_iterator;
 using std::copy;
+USING_UTIL_COMPOSE
 
 //=============================================================================
 // class footprint_base method definitions
@@ -1458,6 +1460,59 @@ footprint::set_global_offset_by_process(global_offset& g,
 	__set_global_offset_by_process<enum_tag>(g, i);
 	__set_global_offset_by_process<int_tag>(g, i);
 	__set_global_offset_by_process<bool_tag>(g, i);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+static
+inline
+bool
+bool_has_sub_fanin(const state_instance<bool_tag>& b) {
+	return b.get_back_ref()->has_any_fanin();
+}
+
+static
+inline
+bool
+bool_has_not_sub_fanin(const state_instance<bool_tag>& b) {
+	return !bool_has_sub_fanin(b);
+}
+
+/**
+        \return true for every node that is driven *locally*, 
+                does not account for fanin from subprocesses.  
+ */
+void
+footprint::has_sub_fanin_map(vector<bool>& ret) const {
+	const state_instance<bool_tag>::pool_type&
+		bp(get_instance_pool<bool_tag>());
+        ret.reserve(bp.local_entries());
+        transform(bp.begin(), bp.end(),
+                back_inserter(ret),
+                std::ptr_fun(&bool_has_sub_fanin));
+}
+
+/**
+        \return true for every node that is not driven *locally*, 
+                does not account for fanin from subprocesses.  
+ */
+void
+footprint::has_not_sub_fanin_map(vector<bool>& ret) const {
+	const state_instance<bool_tag>::pool_type&
+		bp(get_instance_pool<bool_tag>());
+        ret.reserve(bp.local_entries());
+        transform(bp.begin(), bp.end(),
+                back_inserter(ret),
+		std::ptr_fun(&bool_has_not_sub_fanin));
+#if 0
+// debug only
+	state_instance<bool_tag>::pool_type::const_iterator
+		i(bp.begin()), e(bp.end());
+	for ( ; i!=e; ++i) {
+		i->dump(cerr);
+		i->get_back_ref()->dump_raw_attributes(cerr << " ") << endl;
+//		i->get_back_ref()->find()->dump_raw_attributes(cerr << " ") << endl;
+	}
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

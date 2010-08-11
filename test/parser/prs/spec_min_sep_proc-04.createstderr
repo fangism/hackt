@@ -107,16 +107,16 @@ In namespace "", we have: {
         ~a -> b+
         }
       footprint: {
-        !GND = bool^0 = inv<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = inv<>::!Vdd (2) @[ supply_high ] 
-        a = bool^0 = inv<>::a (3) 
-        b = bool^0 = inv<>::b (4) 
+        !GND = bool^0 = inv<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = inv<>::!Vdd (2) @[ supply_high port-alias ] 
+        a = bool^0 = inv<>::a (3) @[ port-alias loc-FO- loc-FO+ ] 
+        b = bool^0 = inv<>::b (4) @[ port-alias loc-FI- loc-FI+ ] 
         Created state:
         bool instance pool: (4 ports, 0 local, 0 mapped)
-        1	inv<>::!GND @[ supply_low ]	
-        2	inv<>::!Vdd @[ supply_high ]	
-        3	inv<>::a	
-        4	inv<>::b	
+        1	inv<>::!GND @[ supply_low port-alias ]	
+        2	inv<>::!Vdd @[ supply_high port-alias ]	
+        3	inv<>::a @[ port-alias loc-FO- loc-FO+ ]	
+        4	inv<>::b @[ port-alias loc-FI- loc-FI+ ]	
         resolved prs:
         a -> b-
         ~a -> b+
@@ -142,14 +142,14 @@ footprint: {
       [0] = inv_a[0] (1) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        a = bool^0 = inv_a[0].a (3) 
-        b = bool^0 = inv_a[0].b (4) 
+        a = bool^0 = inv_a[0].a (3) @[ sub-FO- sub-FO+ ] 
+        b = bool^0 = inv_a[0].b (4) @[ sub-FI- sub-FI+ ] 
       )
       [1] = inv_a[1] (2) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        a = bool^0 = inv_a[1].a (5) 
-        b = bool^0 = inv_a[1].b (6) 
+        a = bool^0 = inv_a[1].a (5) @[ sub-FO- sub-FO+ ] 
+        b = bool^0 = inv_a[1].b (6) @[ sub-FI- sub-FI+ ] 
       )
     }
   inv_b = process inv<>^1
@@ -157,14 +157,14 @@ footprint: {
       [0] = inv_b[0] (3) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        a = bool^0 = inv_b[0].a (7) 
-        b = bool^0 = inv_b[0].b (8) 
+        a = bool^0 = inv_b[0].a (7) @[ sub-FO- sub-FO+ ] 
+        b = bool^0 = inv_b[0].b (8) @[ sub-FI- sub-FI+ ] 
       )
       [1] = inv_b[1] (4) (
         !GND = bool^0 = !GND (1) @[ supply_low ] 
         !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-        a = bool^0 = inv_b[1].a (9) 
-        b = bool^0 = inv_b[1].b (10) 
+        a = bool^0 = inv_b[1].a (9) @[ sub-FO- sub-FO+ ] 
+        b = bool^0 = inv_b[1].b (10) @[ sub-FI- sub-FI+ ] 
       )
     }
   Created state:
@@ -180,14 +180,14 @@ footprint: {
   bool instance pool: (0 ports, 10 local, 0 mapped)
   1	!GND @[ supply_low ]	
   2	!Vdd @[ supply_high ]	
-  3	inv_a[0].a	
-  4	inv_a[0].b	
-  5	inv_a[1].a	
-  6	inv_a[1].b	
-  7	inv_b[0].a	
-  8	inv_b[0].b	
-  9	inv_b[1].a	
-  10	inv_b[1].b	
+  3	inv_a[0].a @[ sub-FO- sub-FO+ ]	
+  4	inv_a[0].b @[ sub-FI- sub-FI+ ]	
+  5	inv_a[1].a @[ sub-FO- sub-FO+ ]	
+  6	inv_a[1].b @[ sub-FI- sub-FI+ ]	
+  7	inv_b[0].a @[ sub-FO- sub-FO+ ]	
+  8	inv_b[0].b @[ sub-FI- sub-FI+ ]	
+  9	inv_b[1].a @[ sub-FO- sub-FO+ ]	
+  10	inv_b[1].b @[ sub-FI- sub-FI+ ]	
   resolved specs:
   min_sep_proc<20>({inv_a[0],inv_b[0]},{inv_a[1],inv_b[1]})
 }

@@ -111,30 +111,30 @@ In namespace "", we have: {
         }
       footprint collection: {
         <1> {
-          !GND = bool^0 = ass<1>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = ass<1>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = ass<1>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = ass<1>::!Vdd (2) @[ supply_high port-alias ] 
           N = pint^0 value: 1
           a = bool^0 = ass<1>::a (4) 
           x = bool^0 = ass<1>::x (3) 
           Created state:
           bool instance pool: (2 ports, 2 local, 0 mapped)
-          1	ass<1>::!GND @[ supply_low ]	
-          2	ass<1>::!Vdd @[ supply_high ]	
+          1	ass<1>::!GND @[ supply_low port-alias ]	
+          2	ass<1>::!Vdd @[ supply_high port-alias ]	
           3	ass<1>::x	
           4	ass<1>::a	
         }
         <2> {
-          !GND = bool^0 = ass<2>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = ass<2>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = ass<2>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = ass<2>::!Vdd (2) @[ supply_high port-alias ] 
           N = pint^0 value: 2
-          a = bool^0 = ass<2>::a (4) 
-          x = bool^0 = ass<2>::x (3) 
+          a = bool^0 = ass<2>::a (4) @[ loc-FI- ] 
+          x = bool^0 = ass<2>::x (3) @[ loc-FO- ] 
           Created state:
           bool instance pool: (2 ports, 2 local, 0 mapped)
-          1	ass<2>::!GND @[ supply_low ]	
-          2	ass<2>::!Vdd @[ supply_high ]	
-          3	ass<2>::x	
-          4	ass<2>::a	
+          1	ass<2>::!GND @[ supply_low port-alias ]	
+          2	ass<2>::!Vdd @[ supply_high port-alias ]	
+          3	ass<2>::x @[ loc-FO- ]	
+          4	ass<2>::a @[ loc-FI- ]	
           resolved prs:
           x -> a-
           rule supply map: (rules, macros, @nodes : Vdd, GND)

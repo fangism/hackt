@@ -89,18 +89,18 @@ In namespace "", we have: {
         !GND@[supply=0]
         !Vdd@[supply=1]
       footprint: {
-        !GND = bool^0 = baz<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = baz<>::!Vdd (2) @[ supply_high ] 
-        x = bool^0 = baz<>::x (3) 
-        y = bool^0 = baz<>::y (4) 
-        z = bool^0 = baz<>::z (5) 
+        !GND = bool^0 = baz<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = baz<>::!Vdd (2) @[ supply_high port-alias ] 
+        x = bool^0 = baz<>::x (3) @[ port-alias ] 
+        y = bool^0 = baz<>::y (4) @[ port-alias ] 
+        z = bool^0 = baz<>::z (5) @[ port-alias ] 
         Created state:
         bool instance pool: (5 ports, 0 local, 0 mapped)
-        1	baz<>::!GND @[ supply_low ]	
-        2	baz<>::!Vdd @[ supply_high ]	
-        3	baz<>::x	
-        4	baz<>::y	
-        5	baz<>::z	
+        1	baz<>::!GND @[ supply_low port-alias ]	
+        2	baz<>::!Vdd @[ supply_high port-alias ]	
+        3	baz<>::x @[ port-alias ]	
+        4	baz<>::y @[ port-alias ]	
+        5	baz<>::z @[ port-alias ]	
       }
       }
 

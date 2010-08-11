@@ -125,20 +125,20 @@ In namespace "", we have: {
         ~c -> d+ [after=20;weak=1]
         }
       footprint: {
-        !GND = bool^0 = weakness<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = weakness<>::!Vdd (2) @[ supply_high ] 
-        a = bool^0 = weakness<>::a (3) 
-        b = bool^0 = weakness<>::b (4) 
-        c = bool^0 = weakness<>::c (5) 
-        d = bool^0 = weakness<>::d (6) 
+        !GND = bool^0 = weakness<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = weakness<>::!Vdd (2) @[ supply_high port-alias ] 
+        a = bool^0 = weakness<>::a (3) @[ port-alias loc-FO- loc-FO+ ] 
+        b = bool^0 = weakness<>::b (4) @[ port-alias loc-FI- loc-FI+ ] 
+        c = bool^0 = weakness<>::c (5) @[ loc-FO- loc-FO+ ] 
+        d = bool^0 = weakness<>::d (6) @[ loc-FI- loc-FI+ ] 
         Created state:
         bool instance pool: (4 ports, 2 local, 0 mapped)
-        1	weakness<>::!GND @[ supply_low ]	
-        2	weakness<>::!Vdd @[ supply_high ]	
-        3	weakness<>::a	
-        4	weakness<>::b	
-        5	weakness<>::c	
-        6	weakness<>::d	
+        1	weakness<>::!GND @[ supply_low port-alias ]	
+        2	weakness<>::!Vdd @[ supply_high port-alias ]	
+        3	weakness<>::a @[ port-alias loc-FO- loc-FO+ ]	
+        4	weakness<>::b @[ port-alias loc-FI- loc-FI+ ]	
+        5	weakness<>::c @[ loc-FO- loc-FO+ ]	
+        6	weakness<>::d @[ loc-FI- loc-FI+ ]	
         resolved prs:
         a -> b- [weak=1;after=10]
         ~a -> b+ [weak=1;after=10]
@@ -161,8 +161,8 @@ footprint: {
   xyz = process weakness<>^0 = xyz (1) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    a = bool^0 = xyz.a (3) 
-    b = bool^0 = xyz.b (4) 
+    a = bool^0 = xyz.a (3) @[ sub-FO- sub-FO+ ] 
+    b = bool^0 = xyz.b (4) @[ sub-FI- sub-FI+ ] 
   )
   Created state:
   process instance pool: (0 ports, 1 local, 0 mapped)
@@ -171,8 +171,8 @@ footprint: {
   bool instance pool: (0 ports, 4 local, 2 mapped)
   1	!GND @[ supply_low ]	
   2	!Vdd @[ supply_high ]	
-  3	xyz.a	
-  4	xyz.b	
+  3	xyz.a @[ sub-FO- sub-FO+ ]	
+  4	xyz.b @[ sub-FI- sub-FI+ ]	
   private sub-bool index map:
     (1 -> 0)
     (2 -> 2)

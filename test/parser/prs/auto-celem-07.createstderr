@@ -83,20 +83,20 @@ top-level prs:
 footprint: {
   !GND = bool^0 = !GND (1) @[ supply_low ] 
   !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-  a = bool^0 = a (5) 
-  b = bool^0 = b (6) 
-  x = bool^0 = x (3) 
-  y = bool^0 = y (4) 
-  z = bool^0 = z (7) 
+  a = bool^0 = a (5) @[ loc-FO- loc-FO+ ] 
+  b = bool^0 = b (6) @[ loc-FO- loc-FO+ ] 
+  x = bool^0 = x (3) @[ loc-FO- loc-FO+ ] 
+  y = bool^0 = y (4) @[ loc-FO- loc-FO+ ] 
+  z = bool^0 = z (7) @[ loc-FI- loc-FI+ ] 
   Created state:
   bool instance pool: (0 ports, 7 local, 0 mapped)
   1	!GND @[ supply_low ]	
   2	!Vdd @[ supply_high ]	
-  3	x	
-  4	y	
-  5	a	
-  6	b	
-  7	z	
+  3	x @[ loc-FO- loc-FO+ ]	
+  4	y @[ loc-FO- loc-FO+ ]	
+  5	a @[ loc-FO- loc-FO+ ]	
+  6	b @[ loc-FO- loc-FO+ ]	
+  7	z @[ loc-FI- loc-FI+ ]	
   resolved prs:
   (~x & ~y) | (a & b) -> z+
   (x & y) | (~a & ~b) -> z-

@@ -188,8 +188,8 @@ In namespace "", we have: {
           ]
         }
       footprint: {
-        !GND = bool^0 = foo<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = foo<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high port-alias ] 
         A = channel chan?(int<32>)^0 = foo<>::A (1) 
         B = channel chan?(int<32>)^0 = foo<>::B (2) 
         C = channel chan!(int<32>)^0 = foo<>::C (3) 
@@ -212,8 +212,8 @@ In namespace "", we have: {
         2	foo<>::b	
         3	foo<>::z	
         bool instance pool: (2 ports, 0 local, 0 mapped)
-        1	foo<>::!GND @[ supply_low ]	
-        2	foo<>::!Vdd @[ supply_high ]	
+        1	foo<>::!GND @[ supply_low port-alias ]	
+        2	foo<>::!Vdd @[ supply_high port-alias ]	
         resolved concurrent actions:
           *[
             sequential: {

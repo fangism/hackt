@@ -108,36 +108,36 @@ In namespace "", we have: {
         )
       footprint collection: {
         <2> {
-          !GND = bool^0 = foo<2>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = foo<2>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = foo<2>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = foo<2>::!Vdd (2) @[ supply_high port-alias ] 
           N = pint^0 value: 2
           x = bool^1
             {
-              [0] = foo<2>::x[0] (3) 
-              [1] = foo<2>::x[1] (4) 
-              [2] = foo<2>::x[2] (5) 
-              [3] = foo<2>::x[3] (6) 
-              [4] = foo<2>::x[4] (7) 
-              [5] = foo<2>::x[5] (8) 
+              [0] = foo<2>::x[0] (3) @[ port-alias ] 
+              [1] = foo<2>::x[1] (4) @[ port-alias ] 
+              [2] = foo<2>::x[2] (5) @[ port-alias ] 
+              [3] = foo<2>::x[3] (6) @[ port-alias ] 
+              [4] = foo<2>::x[4] (7) @[ port-alias ] 
+              [5] = foo<2>::x[5] (8) @[ port-alias ] 
             }
           y = bool^1
             {
-              [0] = foo<2>::x[2] (5) 
-              [1] = foo<2>::x[3] (6) 
+              [0] = foo<2>::x[2] (5) @[ port-alias ] 
+              [1] = foo<2>::x[3] (6) @[ port-alias ] 
             }
           Created state:
           bool instance pool: (8 ports, 0 local, 0 mapped)
-          1	foo<2>::!GND @[ supply_low ]	
-          2	foo<2>::!Vdd @[ supply_high ]	
-          3	foo<2>::x[0]	
-          4	foo<2>::x[1]	
-          5	foo<2>::x[2]	
-          6	foo<2>::x[3]	
-          7	foo<2>::x[4]	
-          8	foo<2>::x[5]	
+          1	foo<2>::!GND @[ supply_low port-alias ]	
+          2	foo<2>::!Vdd @[ supply_high port-alias ]	
+          3	foo<2>::x[0] @[ port-alias ]	
+          4	foo<2>::x[1] @[ port-alias ]	
+          5	foo<2>::x[2] @[ port-alias ]	
+          6	foo<2>::x[3] @[ port-alias ]	
+          7	foo<2>::x[4] @[ port-alias ]	
+          8	foo<2>::x[5] @[ port-alias ]	
           bool port aliases:
-          5: foo<2>::x[2] = foo<2>::y[0]
-          6: foo<2>::x[3] = foo<2>::y[1]
+          5: foo<2>::x[2] = foo<2>::y[0] @[ port-alias ]
+          6: foo<2>::x[3] = foo<2>::y[1] @[ port-alias ]
         }
       }
       }

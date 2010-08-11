@@ -88,16 +88,16 @@ In namespace "", we have: {
         exclhi(x,y)
         excllo(x,y)
       footprint: {
-        !GND = bool^0 = xcpl_inv<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = xcpl_inv<>::!Vdd (2) @[ supply_high ] 
-        x = bool^0 = xcpl_inv<>::x (3) 
-        y = bool^0 = xcpl_inv<>::y (4) 
+        !GND = bool^0 = xcpl_inv<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = xcpl_inv<>::!Vdd (2) @[ supply_high port-alias ] 
+        x = bool^0 = xcpl_inv<>::x (3) @[ port-alias ] 
+        y = bool^0 = xcpl_inv<>::y (4) @[ port-alias ] 
         Created state:
         bool instance pool: (4 ports, 0 local, 0 mapped)
-        1	xcpl_inv<>::!GND @[ supply_low ]	
-        2	xcpl_inv<>::!Vdd @[ supply_high ]	
-        3	xcpl_inv<>::x	
-        4	xcpl_inv<>::y	
+        1	xcpl_inv<>::!GND @[ supply_low port-alias ]	
+        2	xcpl_inv<>::!Vdd @[ supply_high port-alias ]	
+        3	xcpl_inv<>::x @[ port-alias ]	
+        4	xcpl_inv<>::y @[ port-alias ]	
         resolved specs:
         cross_coupled_inverters(x,y)
         exclhi(x,y)

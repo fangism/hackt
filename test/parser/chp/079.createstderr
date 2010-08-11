@@ -111,16 +111,16 @@ In namespace "", we have: {
         }
       footprint collection: {
         <false> {
-          !GND = bool^0 = send_me<false>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = send_me<false>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = send_me<false>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = send_me<false>::!Vdd (2) @[ supply_high port-alias ] 
           B = pbool^0 value: 0
           b = channel chan!(bool<>)^0 = send_me<false>::b (1) 
           Created state:
           channel instance pool: (1 ports, 0 local, 0 mapped)
           1	send_me<false>::b	
           bool instance pool: (2 ports, 0 local, 0 mapped)
-          1	send_me<false>::!GND @[ supply_low ]	
-          2	send_me<false>::!Vdd @[ supply_high ]	
+          1	send_me<false>::!GND @[ supply_low port-alias ]	
+          2	send_me<false>::!Vdd @[ supply_high port-alias ]	
           resolved concurrent actions:
             *[
               b!(false)
@@ -130,16 +130,16 @@ In namespace "", we have: {
           }
         }
         <true> {
-          !GND = bool^0 = send_me<true>::!GND (1) @[ supply_low ] 
-          !Vdd = bool^0 = send_me<true>::!Vdd (2) @[ supply_high ] 
+          !GND = bool^0 = send_me<true>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = send_me<true>::!Vdd (2) @[ supply_high port-alias ] 
           B = pbool^0 value: 1
           b = channel chan!(bool<>)^0 = send_me<true>::b (1) 
           Created state:
           channel instance pool: (1 ports, 0 local, 0 mapped)
           1	send_me<true>::b	
           bool instance pool: (2 ports, 0 local, 0 mapped)
-          1	send_me<true>::!GND @[ supply_low ]	
-          2	send_me<true>::!Vdd @[ supply_high ]	
+          1	send_me<true>::!GND @[ supply_low port-alias ]	
+          2	send_me<true>::!Vdd @[ supply_high port-alias ]	
           resolved concurrent actions:
             *[
               b!(true)

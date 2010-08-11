@@ -198,20 +198,20 @@ In namespace "", we have: {
         ~a -> b+
         }
       footprint: {
-        !GND = bool^0 = foo1<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = foo1<>::!Vdd (2) @[ supply_high ] 
-        a = bool^0 = foo1<>::a (6) 
-        b = bool^0 = foo1<>::b (5) 
-        g = bool^0 = foo1<>::g (3) 
-        s = bool^0 = foo1<>::s (4) 
+        !GND = bool^0 = foo1<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = foo1<>::!Vdd (2) @[ supply_high port-alias ] 
+        a = bool^0 = foo1<>::a (6) @[ loc-FO- loc-FO+ loc-FI- ] 
+        b = bool^0 = foo1<>::b (5) @[ port-alias loc-FI- loc-FI+ ] 
+        g = bool^0 = foo1<>::g (3) @[ port-alias loc-FO- ] 
+        s = bool^0 = foo1<>::s (4) @[ port-alias loc-FO- ] 
         Created state:
         bool instance pool: (5 ports, 1 local, 0 mapped)
-        1	foo1<>::!GND @[ supply_low ]	
-        2	foo1<>::!Vdd @[ supply_high ]	
-        3	foo1<>::g	
-        4	foo1<>::s	
-        5	foo1<>::b	
-        6	foo1<>::a	
+        1	foo1<>::!GND @[ supply_low port-alias ]	
+        2	foo1<>::!Vdd @[ supply_high port-alias ]	
+        3	foo1<>::g @[ port-alias loc-FO- ]	
+        4	foo1<>::s @[ port-alias loc-FO- ]	
+        5	foo1<>::b @[ port-alias loc-FI- loc-FI+ ]	
+        6	foo1<>::a @[ loc-FO- loc-FO+ loc-FI- ]	
         resolved prs:
         a -> b-
         ~a -> b+
@@ -255,20 +255,20 @@ In namespace "", we have: {
         ~a -> b+
         }
       footprint: {
-        !GND = bool^0 = foo2<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = foo2<>::!Vdd (2) @[ supply_high ] 
-        _g = bool^0 = foo2<>::_g (3) 
-        a = bool^0 = foo2<>::a (6) 
-        b = bool^0 = foo2<>::b (5) 
-        s = bool^0 = foo2<>::s (4) 
+        !GND = bool^0 = foo2<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = foo2<>::!Vdd (2) @[ supply_high port-alias ] 
+        _g = bool^0 = foo2<>::_g (3) @[ port-alias loc-FO+ ] 
+        a = bool^0 = foo2<>::a (6) @[ loc-FO- loc-FO+ loc-FI+ ] 
+        b = bool^0 = foo2<>::b (5) @[ port-alias loc-FI- loc-FI+ ] 
+        s = bool^0 = foo2<>::s (4) @[ port-alias loc-FO+ ] 
         Created state:
         bool instance pool: (5 ports, 1 local, 0 mapped)
-        1	foo2<>::!GND @[ supply_low ]	
-        2	foo2<>::!Vdd @[ supply_high ]	
-        3	foo2<>::_g	
-        4	foo2<>::s	
-        5	foo2<>::b	
-        6	foo2<>::a	
+        1	foo2<>::!GND @[ supply_low port-alias ]	
+        2	foo2<>::!Vdd @[ supply_high port-alias ]	
+        3	foo2<>::_g @[ port-alias loc-FO+ ]	
+        4	foo2<>::s @[ port-alias loc-FO+ ]	
+        5	foo2<>::b @[ port-alias loc-FI- loc-FI+ ]	
+        6	foo2<>::a @[ loc-FO- loc-FO+ loc-FI+ ]	
         resolved prs:
         a -> b-
         ~a -> b+
@@ -316,22 +316,22 @@ In namespace "", we have: {
         ~a -> b+
         }
       footprint: {
-        !GND = bool^0 = foo3<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = foo3<>::!Vdd (2) @[ supply_high ] 
-        _g = bool^0 = foo3<>::_g (4) 
-        a = bool^0 = foo3<>::a (7) 
-        b = bool^0 = foo3<>::b (6) 
-        g = bool^0 = foo3<>::g (3) 
-        s = bool^0 = foo3<>::s (5) 
+        !GND = bool^0 = foo3<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = foo3<>::!Vdd (2) @[ supply_high port-alias ] 
+        _g = bool^0 = foo3<>::_g (4) @[ port-alias loc-FO+ ] 
+        a = bool^0 = foo3<>::a (7) @[ loc-FO- loc-FO+ loc-FI- loc-FI+ ] 
+        b = bool^0 = foo3<>::b (6) @[ port-alias loc-FI- loc-FI+ ] 
+        g = bool^0 = foo3<>::g (3) @[ port-alias loc-FO- ] 
+        s = bool^0 = foo3<>::s (5) @[ port-alias loc-FO- loc-FO+ ] 
         Created state:
         bool instance pool: (6 ports, 1 local, 0 mapped)
-        1	foo3<>::!GND @[ supply_low ]	
-        2	foo3<>::!Vdd @[ supply_high ]	
-        3	foo3<>::g	
-        4	foo3<>::_g	
-        5	foo3<>::s	
-        6	foo3<>::b	
-        7	foo3<>::a	
+        1	foo3<>::!GND @[ supply_low port-alias ]	
+        2	foo3<>::!Vdd @[ supply_high port-alias ]	
+        3	foo3<>::g @[ port-alias loc-FO- ]	
+        4	foo3<>::_g @[ port-alias loc-FO+ ]	
+        5	foo3<>::s @[ port-alias loc-FO- loc-FO+ ]	
+        6	foo3<>::b @[ port-alias loc-FI- loc-FI+ ]	
+        7	foo3<>::a @[ loc-FO- loc-FO+ loc-FI- loc-FI+ ]	
         resolved prs:
         a -> b-
         ~a -> b+
@@ -357,24 +357,24 @@ footprint: {
   bar1 = process foo1<>^0 = bar1 (1) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    g = bool^0 = bar1.g (3) 
-    s = bool^0 = bar1.s (4) 
-    b = bool^0 = bar1.b (5) 
+    g = bool^0 = bar1.g (3) @[ sub-FO- ] 
+    s = bool^0 = bar1.s (4) @[ sub-FO- ] 
+    b = bool^0 = bar1.b (5) @[ sub-FI- sub-FI+ ] 
   )
   bar2 = process foo2<>^0 = bar2 (2) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    _g = bool^0 = bar2._g (6) 
-    s = bool^0 = bar2.s (7) 
-    b = bool^0 = bar2.b (8) 
+    _g = bool^0 = bar2._g (6) @[ sub-FO+ ] 
+    s = bool^0 = bar2.s (7) @[ sub-FO+ ] 
+    b = bool^0 = bar2.b (8) @[ sub-FI- sub-FI+ ] 
   )
   bar3 = process foo3<>^0 = bar3 (3) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    g = bool^0 = bar3.g (9) 
-    _g = bool^0 = bar3._g (10) 
-    s = bool^0 = bar3.s (11) 
-    b = bool^0 = bar3.b (12) 
+    g = bool^0 = bar3.g (9) @[ sub-FO- ] 
+    _g = bool^0 = bar3._g (10) @[ sub-FO+ ] 
+    s = bool^0 = bar3.s (11) @[ sub-FO- sub-FO+ ] 
+    b = bool^0 = bar3.b (12) @[ sub-FI- sub-FI+ ] 
   )
   Created state:
   process instance pool: (0 ports, 3 local, 0 mapped)
@@ -387,16 +387,16 @@ footprint: {
   bool instance pool: (0 ports, 12 local, 3 mapped)
   1	!GND @[ supply_low ]	
   2	!Vdd @[ supply_high ]	
-  3	bar1.g	
-  4	bar1.s	
-  5	bar1.b	
-  6	bar2._g	
-  7	bar2.s	
-  8	bar2.b	
-  9	bar3.g	
-  10	bar3._g	
-  11	bar3.s	
-  12	bar3.b	
+  3	bar1.g @[ sub-FO- ]	
+  4	bar1.s @[ sub-FO- ]	
+  5	bar1.b @[ sub-FI- sub-FI+ ]	
+  6	bar2._g @[ sub-FO+ ]	
+  7	bar2.s @[ sub-FO+ ]	
+  8	bar2.b @[ sub-FI- sub-FI+ ]	
+  9	bar3.g @[ sub-FO- ]	
+  10	bar3._g @[ sub-FO+ ]	
+  11	bar3.s @[ sub-FO- sub-FO+ ]	
+  12	bar3.b @[ sub-FI- sub-FI+ ]	
   private sub-bool index map:
     (1 -> 0)
     (2 -> 1)

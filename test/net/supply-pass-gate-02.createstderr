@@ -125,16 +125,16 @@ In namespace "", we have: {
           bool<> GND_2
         )
       footprint: {
-        GND_1 = bool^0 = globals<>::GND_1 (2) 
-        GND_2 = bool^0 = globals<>::GND_2 (4) 
-        Vdd_1 = bool^0 = globals<>::Vdd_1 (1) 
-        Vdd_2 = bool^0 = globals<>::Vdd_2 (3) 
+        GND_1 = bool^0 = globals<>::GND_1 (2) @[ port-alias ] 
+        GND_2 = bool^0 = globals<>::GND_2 (4) @[ port-alias ] 
+        Vdd_1 = bool^0 = globals<>::Vdd_1 (1) @[ port-alias ] 
+        Vdd_2 = bool^0 = globals<>::Vdd_2 (3) @[ port-alias ] 
         Created state:
         bool instance pool: (4 ports, 0 local, 0 mapped)
-        1	globals<>::Vdd_1	
-        2	globals<>::GND_1	
-        3	globals<>::Vdd_2	
-        4	globals<>::GND_2	
+        1	globals<>::Vdd_1 @[ port-alias ]	
+        2	globals<>::GND_1 @[ port-alias ]	
+        3	globals<>::Vdd_2 @[ port-alias ]	
+        4	globals<>::GND_2 @[ port-alias ]	
       }
       }
 
@@ -163,18 +163,18 @@ footprint: {
   !Vdd = bool^0 = !Vdd (6) @[ supply_high ] 
   _g = bool^1
     {
-      [0] = _g[0] (7) 
-      [1] = _g[1] (8) 
+      [0] = _g[0] (7) @[ loc-FO+ ] 
+      [1] = _g[1] (8) @[ loc-FO+ ] 
     }
   d = bool^1
     {
-      [0] = d[0] (13) 
-      [1] = d[1] (14) 
+      [0] = d[0] (13) @[ loc-FI- loc-FI+ ] 
+      [1] = d[1] (14) @[ loc-FI- loc-FI+ ] 
     }
   g = bool^1
     {
-      [0] = g[0] (9) 
-      [1] = g[1] (10) 
+      [0] = g[0] (9) @[ loc-FO- ] 
+      [1] = g[1] (10) @[ loc-FO- ] 
     }
   gl = process globals<>^0 = gl (1) (
     Vdd_1 = bool^0 = gl.Vdd_1 (1) 
@@ -184,8 +184,8 @@ footprint: {
   )
   s = bool^1
     {
-      [0] = s[0] (11) 
-      [1] = s[1] (12) 
+      [0] = s[0] (11) @[ loc-FO- loc-FO+ ] 
+      [1] = s[1] (12) @[ loc-FO- loc-FO+ ] 
     }
   Created state:
   process instance pool: (0 ports, 1 local, 0 mapped)
@@ -198,14 +198,14 @@ footprint: {
   4	gl.GND_2	
   5	!GND @[ supply_low ]	
   6	!Vdd @[ supply_high ]	
-  7	_g[0]	
-  8	_g[1]	
-  9	g[0]	
-  10	g[1]	
-  11	s[0]	
-  12	s[1]	
-  13	d[0]	
-  14	d[1]	
+  7	_g[0] @[ loc-FO+ ]	
+  8	_g[1] @[ loc-FO+ ]	
+  9	g[0] @[ loc-FO- ]	
+  10	g[1] @[ loc-FO- ]	
+  11	s[0] @[ loc-FO- loc-FO+ ]	
+  12	s[1] @[ loc-FO- loc-FO+ ]	
+  13	d[0] @[ loc-FI- loc-FI+ ]	
+  14	d[1] @[ loc-FI- loc-FI+ ]	
   resolved macros:
   passp(_g[0],s[0],d[0])
   passn(g[0],s[0],d[0])

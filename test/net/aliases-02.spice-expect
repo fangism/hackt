@@ -1,10 +1,10 @@
 .subckt inv<> !GND !Vdd x y
 * BEGIN node aliases
 * 	bool port aliases:
-* 	1: !GND @[ supply_low ]
-* 	2: !Vdd @[ supply_high ]
-* 	3: x
-* 	4: y
+* 	1: !GND @[ supply_low port-alias ]
+* 	2: !Vdd @[ supply_high port-alias ]
+* 	3: x @[ port-alias loc-FO- loc-FO+ ]
+* 	4: y @[ port-alias loc-FI- loc-FI+ ]
 * END node aliases
 My:dn:0 !GND x y !GND nch W=5u L=2u
 My:up:0 !Vdd x y !Vdd pch W=5u L=2u
@@ -14,8 +14,8 @@ My:up:0 !Vdd x y !Vdd pch W=5u L=2u
 * 	bool port aliases:
 * 	1: x.!GND = !GND @[ supply_low ]
 * 	2: x.!Vdd = !Vdd @[ supply_high ]
-* 	3: x.x = a = c
-* 	4: x.y = b = d
+* 	3: x.x = a = c @[ sub-FO- sub-FO+ ]
+* 	4: x.y = b = d @[ sub-FI- sub-FI+ ]
 * END node aliases
 xx !GND !Vdd a b inv<>
 

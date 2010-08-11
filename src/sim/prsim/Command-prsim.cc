@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.72 2010/08/07 00:00:05 fang Exp $
+	$Id: Command-prsim.cc,v 1.73 2010/08/11 21:54:56 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -39,6 +39,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "sim/command_macros.tcc"
 #include "sim/command_common.tcc"
 #include "parser/instref.h"
+#include "Object/def/footprint.h"
 
 #include "common/TODO.h"
 #include "util/libc.h"
@@ -160,14 +161,24 @@ parse_name_to_get_subnodes_local(const string& s, const entity::module& m,
 		parse_process_to_index(s, m), m, v);
 }
 
+#if 0
+static
+int
+parse_name_to_get_ports(const process_index& p, const entity::module& m,
+		vector<size_t>& v, const vector<bool>* pred = NULL) {
+	STACKTRACE_VERBOSE;
+	return parser::parse_name_to_get_ports(p, m, v, pred);
+}
+#endif
+
 static
 int
 parse_name_to_get_ports(const string& s, const entity::module& m,
-		vector<size_t>& v) {
+		vector<size_t>& v, const vector<bool>* pred = NULL) {
 	STACKTRACE_VERBOSE;
 //	const string t(nonempty_abs_dir(s));
 	return parser::parse_name_to_get_ports(
-		parse_process_to_index(s, m), m, v);
+		parse_process_to_index(s, m), m, v, pred);
 }
 
 #else
@@ -1920,14 +1931,28 @@ GetDriven::usage(ostream& o) {
 /***
 @texinfo cmd/getports.texi
 @deffn Command getports struct
+@deffnx Command getinports struct
+@deffnx Command getoutports struct
 Print the state of all port nodes of @var{struct}.  
 Useful for observing boundaries of channels and processes.  
+@command{getinports} and @command{getoutports} partition 
+the set of ports into inputs and outputs.  
+Directionality of inputs/outputs is inferred by the presence of
+fanin local to the @var{struct} process instance (its type).  
 @end deffn
 @end texinfo
 ***/
 PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(GetPorts, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(GetPorts, "getports", info,
 	"print values of ports of structure")
+
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(GetInPorts, instance_completer)
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(GetInPorts, "getinports", info,
+	"print values of input ports of structure")
+
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(GetOutPorts, instance_completer)
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(GetOutPorts, "getoutports", info,
+	"print values of output ports of structure")
 
 int
 GetPorts::main(State& s, const string_list& a) {
@@ -1954,11 +1979,95 @@ if (a.size() != 2) {
 }
 }
 
+int
+GetInPorts::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	typedef	vector<node_index_type>		nodes_id_list_type;
+	const string& objname(a.back());
+	const module& m(s.get_module());
+	const process_index p(parse_process_to_index(objname, m));
+	if (!p.valid()) {
+		// already got error message?
+		return Command::BADARG;
+	}
+	nodes_id_list_type nodes;
+	vector<bool> input_mask;
+//	s.get_process_state(p.index).type().has_not_local_fanin_map(input_mask);
+	s.get_footprint_frame(p.index)._footprint
+		->has_not_sub_fanin_map(input_mask);
+	if (parser::parse_name_to_get_ports(p, m, nodes, &input_mask)) {
+		return Command::BADARG;
+	} else {
+		typedef	nodes_id_list_type::const_iterator	const_iterator;
+		cout << "Input ports of \'" << 
+			nonempty_abs_dir(objname) << "\':" << endl;
+		const_iterator i(nodes.begin()), e(nodes.end());
+		for ( ; i!=e; ++i) {
+			s.dump_node_value(cout, *i) << endl;
+		}
+		return Command::NORMAL;
+	}
+}
+}
+
+int
+GetOutPorts::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	typedef	vector<node_index_type>		nodes_id_list_type;
+	const string& objname(a.back());
+	const module& m(s.get_module());
+	const process_index p(parse_process_to_index(objname, m));
+	if (!p.valid()) {
+		// already got error message?
+		return Command::BADARG;
+	}
+	nodes_id_list_type nodes;
+	vector<bool> output_mask;
+//	s.get_process_state(p.index).type().has_local_fanin_map(output_mask);
+	s.get_footprint_frame(p.index)._footprint
+		->has_sub_fanin_map(output_mask);
+	if (parser::parse_name_to_get_ports(p, m, nodes, &output_mask)) {
+		return Command::BADARG;
+	} else {
+		typedef	nodes_id_list_type::const_iterator	const_iterator;
+		cout << "Output ports of \'" << 
+			nonempty_abs_dir(objname) << "\':" << endl;
+		const_iterator i(nodes.begin()), e(nodes.end());
+		for ( ; i!=e; ++i) {
+			s.dump_node_value(cout, *i) << endl;
+		}
+		return Command::NORMAL;
+	}
+}
+}
+
 void
 GetPorts::usage(ostream& o) {
 	o << name << " <name>" << endl;
 	o <<
 "prints the current values of public ports of the structure"
+		<< endl;
+}
+
+void
+GetInPorts::usage(ostream& o) {
+	o << name << " <name>" << endl;
+	o <<
+"prints the current values of input ports of the structure"
+		<< endl;
+}
+
+void
+GetOutPorts::usage(ostream& o) {
+	o << name << " <name>" << endl;
+	o <<
+"prints the current values of output ports of the structure"
 		<< endl;
 }
 

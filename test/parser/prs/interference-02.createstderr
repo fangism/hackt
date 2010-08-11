@@ -114,18 +114,18 @@ In namespace "", we have: {
         ~foo -> bar+
         }
       footprint: {
-        !GND = bool^0 = yoyodyne<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = yoyodyne<>::!Vdd (2) @[ supply_high ] 
-        bar = bool^0 = yoyodyne<>::bar (4) @[ may_interfere ] 
-        bar2 = bool^0 = yoyodyne<>::bar (4) @[ may_interfere ] 
-        foo = bool^0 = yoyodyne<>::foo (3) @[ may_interfere ] 
-        foo2 = bool^0 = yoyodyne<>::foo (3) @[ may_interfere ] 
+        !GND = bool^0 = yoyodyne<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = yoyodyne<>::!Vdd (2) @[ supply_high port-alias ] 
+        bar = bool^0 = yoyodyne<>::bar (4) @[ may_interfere port-alias loc-FI- loc-FI+ ] 
+        bar2 = bool^0 = yoyodyne<>::bar (4) @[ may_interfere port-alias loc-FI- loc-FI+ ] 
+        foo = bool^0 = yoyodyne<>::foo (3) @[ may_interfere port-alias loc-FO- loc-FO+ ] 
+        foo2 = bool^0 = yoyodyne<>::foo (3) @[ may_interfere port-alias loc-FO- loc-FO+ ] 
         Created state:
         bool instance pool: (4 ports, 0 local, 0 mapped)
-        1	yoyodyne<>::!GND @[ supply_low ]	
-        2	yoyodyne<>::!Vdd @[ supply_high ]	
-        3	yoyodyne<>::foo @[ may_interfere ]	
-        4	yoyodyne<>::bar @[ may_interfere ]	
+        1	yoyodyne<>::!GND @[ supply_low port-alias ]	
+        2	yoyodyne<>::!Vdd @[ supply_high port-alias ]	
+        3	yoyodyne<>::foo @[ may_interfere port-alias loc-FO- loc-FO+ ]	
+        4	yoyodyne<>::bar @[ may_interfere port-alias loc-FI- loc-FI+ ]	
         resolved prs:
         foo -> bar-
         ~foo -> bar+
@@ -146,8 +146,8 @@ footprint: {
   wee = process yoyodyne<>^0 = wee (1) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    foo = bool^0 = wee.foo (3) @[ may_interfere ] 
-    bar = bool^0 = wee.bar (4) @[ may_interfere ] 
+    foo = bool^0 = wee.foo (3) @[ may_interfere sub-FO- sub-FO+ ] 
+    bar = bool^0 = wee.bar (4) @[ may_interfere sub-FI- sub-FI+ ] 
   )
   Created state:
   process instance pool: (0 ports, 1 local, 0 mapped)
@@ -156,6 +156,6 @@ footprint: {
   bool instance pool: (0 ports, 4 local, 0 mapped)
   1	!GND @[ supply_low ]	
   2	!Vdd @[ supply_high ]	
-  3	wee.foo @[ may_interfere ]	
-  4	wee.bar @[ may_interfere ]	
+  3	wee.foo @[ may_interfere sub-FO- sub-FO+ ]	
+  4	wee.bar @[ may_interfere sub-FI- sub-FI+ ]	
 }

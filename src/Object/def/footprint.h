@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.37 2010/05/26 00:46:48 fang Exp $
+	$Id: footprint.h,v 1.38 2010/08/11 21:54:54 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
@@ -426,6 +426,12 @@ public:
 	void
 	register_collection_map_entry(const string&, 
 		const collection_map_entry_type&);
+
+	void
+	has_sub_fanin_map(vector<bool>&) const;
+
+	void
+	has_not_sub_fanin_map(vector<bool>&) const;
 
 	good_bool
 	create_dependent_types(const unroll_context&);

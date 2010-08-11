@@ -106,8 +106,8 @@ In namespace "", we have: {
           ]
         }
       footprint: {
-        !GND = bool^0 = foo<>::!GND (1) @[ supply_low ] 
-        !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high ] 
+        !GND = bool^0 = foo<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high port-alias ] 
         w = int<32>^0 = foo<>::w (4) 
         x = int<32>^0 = foo<>::x (1) 
         y = int<32>^0 = foo<>::y (2) 
@@ -119,8 +119,8 @@ In namespace "", we have: {
         3	foo<>::z	
         4	foo<>::w	
         bool instance pool: (2 ports, 0 local, 0 mapped)
-        1	foo<>::!GND @[ supply_low ]	
-        2	foo<>::!Vdd @[ supply_high ]	
+        1	foo<>::!GND @[ supply_low port-alias ]	
+        2	foo<>::!Vdd @[ supply_high port-alias ]	
         resolved concurrent actions:
           *[
             concurrent: {
