@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-08-12	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-09:
+	  BUG FIX: relaxed type completion statements were not properly
+		importing attribute/properties from formal footprint.
+		Existing tests failed to cover this,
+		new test cases added to demonstrate the fix.  
+	  Now hacprsim commands getinports/getoutports work as expected.
+
+
 2010-08-11	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-08:

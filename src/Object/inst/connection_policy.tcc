@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/connection_policy.tcc"
-	$Id: connection_policy.tcc,v 1.12 2010/05/26 00:46:51 fang Exp $
+	$Id: connection_policy.tcc,v 1.13 2010/08/12 23:51:43 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CONNECTION_POLICY_TCC__
@@ -473,7 +473,7 @@ process_connect_policy::initialize_direction(AliasType& a,
 						canonical_definition_type;
 	// ordering issue: cannot complete type actuals if collection
 	// was declared relaxed, so this work will have to be punted
- if (!a.container->get_canonical_collection().__get_raw_type().is_relaxed()) {
+if (a.has_complete_type()) {
 	const complete_type_type
 		_type(a.complete_type_actuals(*a.container));
 	INVARIANT(_type);

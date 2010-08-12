@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.58 2010/08/11 21:54:53 fang Exp $
+	$Id: footprint.cc,v 1.59 2010/08/12 23:51:42 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -473,6 +473,12 @@ footprint::dump_with_collections(ostream& o, const dump_flags& df,
 	}	// end if is_created
 	}	// end if collection_map is not empty
 	return o;
+}
+
+ostream&
+footprint::dump_with_collections(ostream& o) const {
+	return dump_with_collections(o, dump_flags::default_value, 
+		expr_dump_context::default_value);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

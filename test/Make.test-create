@@ -1,6 +1,6 @@
 # "Make.test-create"
 #	vi: ft=automake
-#	$Id: Make.test-create,v 1.12 2007/08/17 00:36:34 fang Exp $
+#	$Id: Make.test-create,v 1.13 2010/08/12 23:51:45 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -10,6 +10,7 @@
 HACKT_CREATE_SUFFIXES = \
 	.haco-c .createdump .createdump-filter .createstderr .creatediff \
 	.createfaildump .createfaildiff .haco-c-dump .haco-c-err \
+	.haco-c-err-filter \
 	.haco-c-from-haco .haco-c-from-haco-err .create-from-haco-dump \
 	.create-from-haco-dump-filter .create-from-haco-diff
 
@@ -24,6 +25,7 @@ HACKT_CREATE_CLEAN_IGNORE_PATTERNS = \
 	"*.hacktcreatefromhacotest" \
 	"*.haco-c" \
 	"*.haco-c-err" \
+	"*.haco-c-err-filter" \
 	"*.createdump" \
 	"*.creatediff" \
 	"*.creatediff-orig" \
@@ -56,6 +58,7 @@ CREATE_OBJDUMP_SCRIPT = \
 .createdump.haco-c-dump:
 	@$(CP) $? $@
 
+# using HEX_ADDRESS_FILTER when debugging
 .createdump.createdump-filter:
 	@$(CAT) $< | $(HACKT_OBJ_DIFF_FILTER) > $@ ; \
 	$(ECHO_FILTERED)
@@ -180,6 +183,8 @@ createfailtest.autodepend: Makefile
 .haco-c.haco-c-err:
 	@:
 
+.haco-c-err.haco-c-err-filter:
+	$(HEX_ADDRESS_FILTER) $< > $@
 
 AUTO_DEPENDS += createtest.autodepend \
 	createfailtest.autodepend

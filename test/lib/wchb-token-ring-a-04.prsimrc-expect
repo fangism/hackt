@@ -1,0 +1,89 @@
+testing getinports and getoutports ... 
+Ports subnodes of 'X':
+L.d[0] : X
+L.d[1] : X
+L.e : X
+R.d[0] : X
+R.d[1] : X
+R.e : X
+!GND : 0
+!Vdd : 1
+_Reset : X
+Reset : X
+Ports subnodes of 'C':
+L.d[0] : X
+L.d[1] : X
+L.e : X
+R.d[0] : X
+R.d[1] : X
+R.e : X
+!GND : 0
+!Vdd : 1
+_Reset : X
+Ports subnodes of 'X.fore':
+L.d[0] : X
+L.d[1] : X
+L.e : X
+!GND : 0
+!Vdd : 1
+_Reset : X
+Reset : X
+X.M.d[0] : X
+X.M.d[1] : X
+X.M.e : X
+Input ports of 'X.fore':
+L.d[0] : X
+L.d[1] : X
+!GND : 0
+!Vdd : 1
+_Reset : X
+Reset : X
+X.M.e : X
+Output ports of 'X.fore':
+L.e : X
+X.M.d[0] : X
+X.M.d[1] : X
+Ports subnodes of 'X.aft':
+R.d[0] : X
+R.d[1] : X
+R.e : X
+!GND : 0
+!Vdd : 1
+_Reset : X
+X.M.d[0] : X
+X.M.d[1] : X
+X.M.e : X
+Input ports of 'X.aft':
+R.e : X
+!GND : 0
+!Vdd : 1
+_Reset : X
+X.M.d[0] : X
+X.M.d[1] : X
+Output ports of 'X.aft':
+R.d[0] : X
+R.d[1] : X
+X.M.e : X
+Input ports of 'X':
+L.d[0] : X
+L.d[1] : X
+R.e : X
+!GND : 0
+!Vdd : 1
+_Reset : X
+Reset : X
+Output ports of 'X':
+L.e : X
+R.d[0] : X
+R.d[1] : X
+Input ports of 'C':
+L.e : X
+R.d[0] : X
+R.d[1] : X
+!GND : 0
+!Vdd : 1
+_Reset : X
+Output ports of 'C':
+L.d[0] : X
+L.d[1] : X
+R.e : X

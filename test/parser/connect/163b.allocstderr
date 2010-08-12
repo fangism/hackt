@@ -1,0 +1,40 @@
+globID	super		localID	canonical	footprint-frame
+[global process entries]
+1	(top)	-	1	L	e1of<2>
+	bool: 3,1,2
+2	(top)	-	2	R	e1of<2>
+	bool: 6,4,5
+3	(top)	-	3	X	wchb2_init_e1of<2><0>
+	process: 1,2;4..6 {7..8}
+	bool: 1,2,3,4,5,6,7,8;9..11 {12..17}
+4	process	3	3	X.M	e1of<2>
+	bool: 11,9,10
+5	process	3	4	X.fore	wchb_init_fore_e1of<2>
+	process: 1,4;7
+	bool: 1,2,3,9,10,11,7,8;12..14
+6	process	3	5	X.aft	wchb_init_aft_e1of<2>
+	process: 4,2;8
+	bool: 9,10,11,4,5,6,7,8;15..17
+7	process	5	3	X.fore._r	_c1of<2>
+	bool: 12,13
+8	process	6	3	X.aft._r	_c1of<2>
+	bool: 15,16
+[global bool entries]
+1	(top)	-	1	L.d[0]	
+2	(top)	-	2	L.d[1]	
+3	(top)	-	3	L.e	
+4	(top)	-	4	R.d[0]	
+5	(top)	-	5	R.d[1]	
+6	(top)	-	6	R.e	
+7	(top)	-	7	!GND	 @[ supply_low ]
+8	(top)	-	8	!Vdd	 @[ supply_high ]
+9	process	3	9	X.M.d[0]	
+10	process	3	10	X.M.d[1]	
+11	process	3	11	X.M.e	
+12	process	5	9	X.fore._r.d[0]	
+13	process	5	10	X.fore._r.d[1]	
+14	process	5	11	X.fore.rv	
+15	process	6	9	X.aft._r.d[0]	
+16	process	6	10	X.aft._r.d[1]	
+17	process	6	11	X.aft.rv	
+

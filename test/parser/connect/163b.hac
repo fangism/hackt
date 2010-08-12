@@ -1,0 +1,74 @@
+// "163b.hac" -- a debugging test case
+// copy-modified from "163a.hac"
+
+template <pint N>
+defchan e1of <: chan(int) (bool d[N], e) {
+spec {
+	exclhi(d)		// all nodes: d[0..N-1]
+}
+}
+
+typedef e1of<1> e1of1;
+typedef e1of<2> e1of2;
+
+template <pint N>
+deftype _c1of <: int (bool d[N]) {
+spec {
+	excllo(d)		// all nodes: d[0..N-1]
+}
+}
+
+typedef _c1of<1> _c1of1;
+typedef _c1of<2> _c1of2;
+
+
+//=============================================================================
+template <pint N>
+defproc wchb_init_fore_e1of(e1of<N> L, R) {
+_c1of<N> _r;
+bool rv;
+prs {
+// faking it...
+(:i:N:
+	L.d[i]			=> _r.d[i]-
+	_r.d[i]			=> R.d[i]-
+)
+	R.e			=> rv-
+	rv			=> L.e-
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <pint N>
+defproc wchb_init_aft_e1of(e1of<N> L, R) {
+_c1of<N> _r;
+bool rv;
+prs {
+// faking it...
+(:i:N:
+	L.d[i]			=> _r.d[i]-
+	_r.d[i]			=> R.d[i]-
+)
+	R.e			=> rv-
+	rv			=> L.e-
+}
+}
+
+//=============================================================================
+template <pint N><pint V>
+defproc wchb2_init_e1of(e1of<N> L, R) {
+e1of<N> M;
+// wchb_init_fore_e1of<N> fore<V>(L, M);
+wchb_init_fore_e1of<N> fore(L, M);	// !!!
+
+wchb_init_aft_e1of<N> aft(M, R);	// !!!
+}
+
+//=============================================================================
+
+template <><pint V>
+typedef wchb2_init_e1of<2>	wchb2_init_e1of2;
+
+e1of2 L, R;
+wchb2_init_e1of2	X<0>(L, R);
+

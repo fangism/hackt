@@ -1,0 +1,22 @@
+# "wchb-token-ring-a-04.prsimrc"
+# @haco@ wchb-token-ring-a.haco-c
+
+echo testing getinports and getoutports ...
+
+getports X
+getports C
+
+getports X.fore
+getinports X.fore
+getoutports X.fore
+
+getports X.aft
+getinports X.aft
+getoutports X.aft
+
+getinports X
+getoutports X
+
+getinports C
+getoutports C
+

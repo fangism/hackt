@@ -2,7 +2,7 @@
 	\file "Object/unroll/instance_management_base.cc"
 	Method definitions for basic sequential instance management.  
 	This file was moved from "Object/art_object_instance_management_base.cc"
- 	$Id: instance_management_base.cc,v 1.18 2008/03/17 23:02:36 fang Exp $
+ 	$Id: instance_management_base.cc,v 1.19 2010/08/12 23:51:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANCE_MANAGEMENT_BASE_CC__
@@ -33,6 +33,12 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "util/stacktrace.h"
 #include "util/indent.h"
 
+#define	DEBUG_BETWEEN_STATEMENTS		(0 && ENABLE_STACKTRACE)
+
+#if DEBUG_BETWEEN_STATEMENTS
+#include "Object/def/footprint.h"
+#include "Object/unroll/unroll_context.h"
+#endif
 
 namespace HAC {
 namespace entity {
@@ -99,6 +105,10 @@ sequential_scope::unroll(const unroll_context& c) const {
 		if (!(*i)->unroll(c).good) {
 			return good_bool(false);
 		}
+#if DEBUG_BETWEEN_STATEMENTS
+		c.get_target_footprint().dump_with_collections(
+			cerr << "AFTER ONE UNROLL: {\n") << "}" << endl;
+#endif
 	}
 #endif
 	return good_bool(true);
