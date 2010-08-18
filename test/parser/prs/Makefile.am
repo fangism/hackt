@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.69 2010/08/05 18:26:09 fang Exp $
+#	$Id: Makefile.am,v 1.69.2.1 2010/08/18 23:40:12 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -24,7 +24,8 @@ HACKT_PARSE_TEST_FAILURES = \
 	internal-node-18 \
 	runmodestatic-02 \
 	flavor-02 \
-	supply-07 supply-08 supply-09 supply-10 supply-11 supply-12
+	supply-07 supply-08 supply-09 supply-10 supply-11 supply-12 \
+	bad-literal-01
 
 HACKT_PARSE_TEST_WARNINGS = \
 	macro-attrib-01 macro-attrib-02 \
@@ -63,6 +64,8 @@ HACKT_PARSE_TEST_PASSES = \
 	spec_min_sep-06 spec_min_sep-10 spec_min_sep-11 \
 	spec_min_sep_proc-01 spec_min_sep_proc-02 spec_min_sep_proc-03 \
 	spec_min_sep_proc-04 spec_min_sep_proc-05 spec_min_sep_proc-06 \
+	spec_min_sep_proc-09 spec_min_sep_proc-10 spec_min_sep_proc-11 \
+	spec_min_sep_proc-12 \
 	bug-001 \
 	top-level-01 top-level-04 top-level-05 \
 	flat-type-01 flat-type-02 flat-type-03 \
@@ -151,6 +154,8 @@ HACKT_CREATE_TEST_PASSES = \
 	spec_min_sep-06 spec_min_sep-10 spec_min_sep-11 \
 	spec_min_sep_proc-01 spec_min_sep_proc-02 spec_min_sep_proc-03 \
 	spec_min_sep_proc-04 spec_min_sep_proc-05 spec_min_sep_proc-06 \
+	spec_min_sep_proc-09 spec_min_sep_proc-10 spec_min_sep_proc-11 \
+	spec_min_sep_proc-12 \
 	bug-001 \
 	top-level-01 top-level-04 top-level-05 \
 	flat-type-01 flat-type-02 flat-type-03 \
@@ -329,7 +334,9 @@ HACKT_CFLAT_SEU_TEST_SUBJECTS = \
 	spec_min_sep-01 spec_min_sep-03 spec_min_sep-04 spec_min_sep-05 \
 	spec_min_sep-06 spec_min_sep-10 spec_min_sep-11 \
 	spec_min_sep_proc-01 spec_min_sep_proc-02 spec_min_sep_proc-03 \
-	spec_min_sep_proc-04 spec_min_sep_proc-05 spec_min_sep_proc-06
+	spec_min_sep_proc-04 spec_min_sep_proc-05 spec_min_sep_proc-06 \
+	spec_min_sep_proc-09 spec_min_sep_proc-10 spec_min_sep_proc-11 \
+	spec_min_sep_proc-12
 
 HACKT_ALLOC_TEST_PASSES = \
 	$(HACKT_CFLAT_TEST_SUBJECTS) \
@@ -352,6 +359,9 @@ HACKT_PRSIMEXPR_TEST_SUBJECTS = inv-14 \
 EMPTY_CFLAT_PRS_TESTS += \
 	cond-08 cond-10 cond-11 cond-15 \
 	macro-pass-01
+
+HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
+	spec_min_sep_proc-12
 
 HACKNET_TEST_SCRIPTS_PASSES = \
 	wchb-06 \

@@ -1,7 +1,9 @@
 /**
 	\file "Object/lang/directive_source.cc"
-	$Id: directive_source.cc,v 1.9 2010/07/14 18:12:35 fang Exp $
+	$Id: directive_source.cc,v 1.9.2.1 2010/08/18 23:39:43 fang Exp $
  */
+
+#define	ENABLE_STACKTRACE				0
 
 #include <iostream>
 #include <algorithm>

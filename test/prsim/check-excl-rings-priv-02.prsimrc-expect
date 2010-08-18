@@ -1,0 +1,36 @@
+checked exclhi rings:
+{ z1.x1.x, z2.x1.x }
+checked excllo rings:
+checked exclhi rings of which `z1.x1.x' is a member:
+{ z1.x1.x, z2.x1.x }
+checked excllo rings of which `z1.x1.x' is a member:
+checked exclhi rings of which `z1.x1.y' is a member:
+checked excllo rings of which `z1.x1.y' is a member:
+	0	a : 1
+	0	b : 1
+	10	z1.x1.x : 0	[by a:=1]
+	10	z1.x2.x : 0	[by a:=1]
+	10	z2.x1.x : 0	[by a:=1]
+	10	z2.x2.x : 0	[by a:=1]
+	10	z1.x1.y : 0	[by b:=1]
+	10	z1.x2.y : 0	[by b:=1]
+	10	z2.x1.y : 0	[by b:=1]
+	10	z2.x2.y : 0	[by b:=1]
+	10	b : 0
+	20	z1.x1.y : 1	[by b:=0]
+	20	z1.x2.y : 1	[by b:=0]
+	20	z2.x1.y : 1	[by b:=0]
+	20	z2.x2.y : 1	[by b:=0]
+	20	a : 0
+	30	z1.x1.x : 1	[by a:=0]
+	30	z1.x2.x : 1	[by a:=0]
+ERROR: exclhi violation detected!
+ring-state:
+	z1.x1.x : 1
+	z2.x1.x : 0
+but node `z2.x1.x' tried to become 1.
+The simulator's excl-check-lock state is no longer coherent; do not bother trying to continue the simulation, but you may further inspect the state.
+You probably want to disable excl-checking with `nocheckexcl' if you wish to continue the simulation.
+... at line 16
+Error encountered during source #FILE#.
+... at line 7

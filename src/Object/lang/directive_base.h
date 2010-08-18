@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/directive_base.h"
-	$Id: directive_base.h,v 1.6 2010/07/14 18:12:35 fang Exp $
+	$Id: directive_base.h,v 1.6.2.1 2010/08/18 23:39:43 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_DIRECTIVE_BASE_H__
@@ -10,12 +10,14 @@
 #include <string>
 #include <vector>
 #include "Object/lang/SPEC_fwd.h"
+#include "Object/devel_switches.h"
 #include "util/memory/count_ptr.h"
 #include "util/persistent_fwd.h"
 
 namespace HAC {
 namespace entity {
 class const_param;
+class footprint;
 template <class> class instance_pool;
 using std::istream;
 using std::ostream;
@@ -101,6 +103,18 @@ public:
 	template <class PTag>
 	ostream&
 	dump_groups(ostream&, const PTag&) const;
+
+#if PRIVATE_MEMBER_REFERENCES
+	template <class Tag>
+	static
+	ostream&
+	dump_group(const directive_node_group_type&, ostream&, 
+		const footprint&);
+
+	template <class Tag>
+	ostream&
+	dump_groups(ostream&, const footprint&) const;
+#endif
 
 	static
 	ostream&

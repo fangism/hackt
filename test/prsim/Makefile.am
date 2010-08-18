@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.101 2010/08/11 21:57:53 fang Exp $
+#	$Id: Makefile.am,v 1.101.2.1 2010/08/18 23:40:25 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -22,6 +22,7 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	check-excl-rings-def check-excl-rings \
 	check-excl-rings-chan-def check-excl-rings-chan \
 	check-excl-fail \
+	check-excl-rings-priv \
 	logic-defs logic-defs-a logic-defs-b \
 	and nand or nor \
 	array array-b \
@@ -494,6 +495,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
 	aliases-05 aliases-06 aliases-07 \
 	check-excl-rings-01 check-excl-rings-03 \
 	check-excl-rings-chan-01 check-excl-rings-chan-03 \
+	check-excl-rings-priv-01 check-excl-rings-priv-02 \
 	weak-feedback-a-02 weak-feedback-b-02 \
 	celem-fb-02 \
 	channel-test-a-10 channel-test-a-10b channel-test-a-12 \

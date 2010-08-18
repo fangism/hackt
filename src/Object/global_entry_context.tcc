@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry_context.tcc"
-	$Id: global_entry_context.tcc,v 1.7 2010/04/19 02:45:57 fang Exp $
+	$Id: global_entry_context.tcc,v 1.7.2.1 2010/08/18 23:39:39 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_CONTEXT_TCC__
@@ -58,9 +58,10 @@ if (lni <= ports) {
 template <class Tag>
 size_t
 global_entry_context::lookup_meta_reference_global_index(
-		const simple_meta_instance_reference<Tag>& r) const {
+		const simple_meta_instance_reference<Tag>& r, 
+		const unroll_context* u) const {
 	STACKTRACE_VERBOSE;
-	return r.lookup_globally_allocated_index(*this);
+	return r.lookup_globally_allocated_index(*this, u);
 }
 
 //=============================================================================

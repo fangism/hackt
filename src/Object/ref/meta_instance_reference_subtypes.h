@@ -2,7 +2,7 @@
 	\file "Object/ref/meta_instance_reference_subtypes.h"
 	Subtype classification for meta-instance-reference base classes.
 	This file was reincarnated from "Object/art_object_inst_ref_subtypes.h".
-	$Id: meta_instance_reference_subtypes.h,v 1.18 2010/04/07 00:12:54 fang Exp $
+	$Id: meta_instance_reference_subtypes.h,v 1.18.2.1 2010/08/18 23:39:48 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_H__
@@ -14,15 +14,25 @@
 #include "util/boolean_types.h"
 #include "util/STL/vector_fwd.h"
 
+#include "Object/devel_switches.h"
+#if PRIVATE_MEMBER_REFERENCES
+#include "Object/expr/types.h"		// for pint_value_type
+#include "util/packed_array_fwd.h"
+#endif
+
 namespace HAC {
 namespace entity {
 class unroll_context;
+class global_entry_context;
 class nonmeta_expr_visitor;
 template <class> class simple_meta_instance_reference;
 template <class> class aggregate_meta_instance_reference;
 template <class> class collection_interface;
 using util::good_bool;
 using util::bad_bool;
+#if PRIVATE_MEMBER_REFERENCES
+using util::packed_array_generic;
+#endif
 
 //=============================================================================
 
@@ -42,6 +52,11 @@ public:
 					const_instance_alias_info_ptr_type;
 	typedef	typename traits_type::alias_collection_type
 						alias_collection_type;
+#if PRIVATE_MEMBER_REFERENCES
+	// must use pint_value_type, not size_t, 
+	// to match key_type of alias_collection_type
+	typedef	index_array_reference		subindex_collection_type;
+#endif
 	typedef	typename traits_type::alias_connection_type
 						alias_connection_type;
 	/// the instance collection base type
@@ -73,6 +88,13 @@ virtual	count_ptr<const fundamental_type_reference>
 virtual bad_bool
 	unroll_references_packed(const unroll_context&,
 		alias_collection_type&) const = 0;
+
+#if PRIVATE_MEMBER_REFERENCES
+virtual bad_bool
+	unroll_subindices_packed(const global_entry_context&,
+		const unroll_context&, 
+		subindex_collection_type&) const = 0;
+#endif
 
 	bool
 	may_be_type_equivalent(const meta_instance_reference_base&) const;

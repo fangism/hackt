@@ -1,6 +1,6 @@
 /**
 	\file "AST/SPEC.cc"
-	$Id: SPEC.cc,v 1.17 2010/07/14 18:12:28 fang Exp $
+	$Id: SPEC.cc,v 1.17.2.1 2010/08/18 23:39:36 fang Exp $
  */
 
 #include <iostream>
@@ -104,7 +104,6 @@ directive::check_spec(context& c) const {
 	}
 		return;		// skip the rest of this
 	}
-// TODO: create new proc_directive
 	const entity::SPEC::cflat_spec_definition_entry& sde(f->second);
 	count_ptr<bool_directive> bret;
 	count_ptr<proc_directive> pret;
@@ -301,6 +300,10 @@ body::check_build(context& c) const {
 		THROW_EXIT;
 	}
 if (directives) {
+	// TODO: access to private members should be granted per directive
+	const context::private_member_accessor _priv_(c, true);
+	// this line should be relocated eventually
+
 	if (!__check_specs(c)) {
 		cerr << "ERROR: at least one error in spec body." << endl;
 		THROW_EXIT;

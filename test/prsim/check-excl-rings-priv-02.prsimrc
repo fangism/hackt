@@ -1,0 +1,8 @@
+# "check-excl-rings-priv-02.prsimrc"
+# @haco@ check-excl-rings-priv.haco-c
+# expect fail
+
+mode fatal
+
+source check-excl-rings-priv-01.prsimrc
+

@@ -2,7 +2,7 @@
 	\file "Object/ref/member_meta_instance_reference.h"
 	Base class family for instance references in HAC.  
 	This file was reincarnated from "Object/art_object_member_inst_ref.h"
-	$Id: member_meta_instance_reference.h,v 1.20 2010/04/07 00:12:53 fang Exp $
+	$Id: member_meta_instance_reference.h,v 1.20.2.1 2010/08/18 23:39:47 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_MEMBER_META_INSTANCE_REFERENCE_H__
@@ -90,7 +90,16 @@ public:
 
 	// overrides parent's implementation.  
 	bad_bool
-	unroll_references_packed(const unroll_context&, alias_collection_type&) const;
+	unroll_references_packed(const unroll_context&,
+		alias_collection_type&) const;
+
+#if PRIVATE_MEMBER_REFERENCES
+	// overrides parent's implementation.  
+	bad_bool
+	unroll_subindices_packed(const global_entry_context&,
+		const unroll_context&, 
+		index_array_reference&) const;
+#endif
 
 	// overrides simple_meta...
 	UNROLL_SCALAR_SUBSTRUCTURE_REFERENCE_PROTO;
@@ -111,7 +120,8 @@ public:
 
 	// overrides simple_meta...
 	size_t
-	lookup_globally_allocated_index(const global_entry_context&) const;
+	lookup_globally_allocated_index(const global_entry_context&, 
+		const unroll_context* = NULL) const;
 
 	// overrides simple_meta...
 	size_t

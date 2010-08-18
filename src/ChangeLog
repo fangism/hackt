@@ -3,6 +3,30 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-08-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-09-privateref-01-01:
+	  Branch: for introducing private-member-references to front-end
+		and middle-end, motivated by need to write spec directives
+		that descend through process hierarchy.
+	  AST/parse_context.h: support for changing mode to allow 
+		private member references.
+	  *_meta_instance_reference: implemented unroll_subindices_packed
+		as a direct lookup to local subinstances without
+		going through publicly reachable aliases.  
+	  Now using global index lookups at create-time after 
+		local footprint has been allocated and mapped.
+	  global_entry_context::lookup_meta_reference_global_index:
+		added optional unroll_context argument to properly
+		handle loop-induction variables.
+	  lang/*_literal.cc: now use direct hierarchical index lookup
+		instead of going through locally accessible aliases.  
+	  TODO: control whether or not each spec directive allows
+		private references?  Right now, all allow it.
+	  Added bunch of test cases, no regressions.  
+	  This feature is not yet documented, but should be.
+
+
 2010-08-12	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-09:

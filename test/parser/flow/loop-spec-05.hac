@@ -1,0 +1,18 @@
+// "loop-spec-05.hac"
+// copy-modified from "loop-spec-02.hac"
+// testing spec directives inside loops
+// testing private references
+
+pint N = 4;
+defproc foo() {
+bool x[2];
+}
+
+foo bar[N];
+
+(;i:N:
+	spec {
+		mk_exclhi(bar[i].x)	// aggregate reference
+	}
+)
+

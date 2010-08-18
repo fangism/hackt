@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/SPEC_footprint.cc"
-	$Id: SPEC_footprint.cc,v 1.9 2010/07/14 18:12:33 fang Exp $
+	$Id: SPEC_footprint.cc,v 1.9.2.1 2010/08/18 23:39:41 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -99,10 +99,18 @@ footprint::dump_directive(const footprint_directive& d, ostream& o,
 	o << '(';
 switch (df->second.type_enum) {
 case META_TYPE_BOOL:
+#if PRIVATE_MEMBER_REFERENCES
+	d.dump_groups<bool_tag>(o, f);
+#else
 	d.dump_groups(o, f.get_instance_pool<bool_tag>());
+#endif
 	break;
 case META_TYPE_PROCESS:
+#if PRIVATE_MEMBER_REFERENCES
+	d.dump_groups<process_tag>(o, f);
+#else
 	d.dump_groups(o, f.get_instance_pool<process_tag>());
+#endif
 	break;
 default:
 	DIE;

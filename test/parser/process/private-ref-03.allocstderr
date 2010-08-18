@@ -1,0 +1,21 @@
+globID	super		localID	canonical	footprint-frame
+[global process entries]
+1	(top)	-	1	bam	baz<>
+	process: ;2..3 {4..5}
+	bool: 1,2;- {3..4}
+2	process	1	1	bam.p	bar<>
+	process: ;4
+	bool: 1,2;- {3}
+3	process	1	2	bam.q	bar<>
+	process: ;5
+	bool: 1,2;- {4}
+4	process	2	1	bam.p.f	foo<>
+	bool: 1,2;3
+5	process	3	1	bam.q.f	foo<>
+	bool: 1,2;4
+[global bool entries]
+1	(top)	-	1	!GND	 @[ supply_low ]
+2	(top)	-	2	!Vdd	 @[ supply_high ]
+3	process	4	3	bam.p.f.priv	
+4	process	5	3	bam.q.f.priv	
+

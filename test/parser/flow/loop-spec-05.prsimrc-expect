@@ -1,0 +1,9 @@
+testing prsim loading rings from private member references 
+checked exclhi rings:
+checked excllo rings:
+forced exclhi rings:
+{ bar[0].x[0], bar[0].x[1] }
+{ bar[1].x[0], bar[1].x[1] }
+{ bar[2].x[0], bar[2].x[1] }
+{ bar[3].x[0], bar[3].x[1] }
+forced excllo rings:

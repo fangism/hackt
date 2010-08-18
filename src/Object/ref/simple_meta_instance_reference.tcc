@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.36 2010/04/19 02:46:01 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.36.2.1 2010/08/18 23:39:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -220,14 +220,16 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::attach_indices(indices_ptr_arg_type i) {
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 size_t
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_index(
-		const global_entry_context& gc) const {
+		const global_entry_context& gc, 
+		const unroll_context* ucp) const {
 	STACKTRACE_VERBOSE;
 	const footprint& top(gc.get_top_footprint());
 	const footprint_frame* const fpf = gc.get_footprint_frame();
 	const unroll_context uc(fpf ? fpf->_footprint : &top, &top);
+	const unroll_context* cp = ucp ? ucp : &uc;
 	// should not be virtual call (one hopes)
 	// translate local index to global
-	const size_t lid = this->lookup_locally_allocated_index(uc);
+	const size_t lid = this->lookup_locally_allocated_index(*cp);
 	if (lid) {
 		return gc.template lookup_global_id<Tag>(lid);
 	} else {
@@ -366,6 +368,47 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::unroll_references_packed(
 	return unroll_references_packed_helper(c, *this->inst_collection_ref,
 		this->array_indices, a);
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+good_bool
+SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_global_reference_indices(
+		const global_entry_context& gc, 
+		typed_index_array_reference& ret,
+		const unroll_context* uc) const {
+	ret.first = traits_type::type_tag_enum_value;
+	if (this->unroll_subindices_packed(gc, *uc, ret.second).bad) {
+		ret.first = META_TYPE_NONE;
+		return good_bool(false);
+	}
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRIVATE_MEMBER_REFERENCES
+/**
+	Since this is not a member reference, it is relative to the 
+	current scope/lookup_footprint.  
+ */
+SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+bad_bool
+SIMPLE_META_INSTANCE_REFERENCE_CLASS::unroll_subindices_packed(
+		const global_entry_context&,
+		const unroll_context& u,
+		index_array_reference& a) const {
+	STACKTRACE_VERBOSE;
+	// doesn't work with private member references
+	alias_collection_type aliases;
+	// does this need global_entry_context at all?
+	if (this->unroll_references_packed(u, aliases).bad) {
+		return bad_bool(true);
+	}
+	a.resize(aliases.size());
+	transform(aliases.begin(), aliases.end(), a.begin(), 
+		instance_index_extractor());
+	return bad_bool(false);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
