@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Channel-prsim.cc"
-	$Id: Channel-prsim.cc,v 1.33 2010/08/07 00:00:04 fang Exp $
+	$Id: Channel-prsim.cc,v 1.33.2.1 2010/08/23 18:38:48 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -992,6 +992,7 @@ channel::max_value(void) const {
 	case CHANNEL_TYPE_SINGLE_TRACK:
 	case CHANNEL_TYPE_1ofN:
 #endif
+		// FIXME: should be radix() << bundles();
 		return bundles() * radix();
 #if PRSIM_CHANNEL_LEDR
 	case CHANNEL_TYPE_LEDR:

@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/directive_base.cc"
-	$Id: directive_base.cc,v 1.8.2.1 2010/08/18 23:39:42 fang Exp $
+	$Id: directive_base.cc,v 1.8.2.2 2010/08/23 18:38:45 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -181,6 +181,12 @@ ostream&
 generic_directive_base::dump_group(const directive_node_group_type& g,
 		ostream& o, const footprint& f) {
 	const dump_flags& df(dump_flags::no_definition_owner);
+	const bool is_top = true;	// ?
+#if 0
+	o << '[';
+	copy(g.begin(), g.end(), std::ostream_iterator<size_t>(o, ","));
+	o << ']';
+#endif
 	if (g.size() > 1) {
 		typedef directive_node_group_type::const_iterator
 							const_iterator;
@@ -188,16 +194,16 @@ generic_directive_base::dump_group(const directive_node_group_type& g,
 		const const_iterator e(g.end());
 		o << '{';
 		size_t ni = *i -1;	// node-pool is 0-indexed
-		f.dump_canonical_name<Tag>(o, ni, df);	// is_top?
+		f.dump_canonical_name<Tag>(o, ni, df, is_top);
 		for (++i; i!=e; ++i) {
 			ni = *i -1;	// node-pool is 0-indexed
-			f.dump_canonical_name<Tag>(o << ',', ni, df);
+			f.dump_canonical_name<Tag>(o << ',', ni, df, is_top);
 		}
 		o << '}';
 	} else if (g.size() == 1) {
 		const size_t nip1 = *g.begin();
 		const size_t ni = nip1 -1;	// pool is 0-indexed
-		f.dump_canonical_name<Tag>(o, ni, df);
+		f.dump_canonical_name<Tag>(o, ni, df, is_top);
 	} else {
 		// during debugging, during reference resolution, 
 		// might print a spec directive before its references 

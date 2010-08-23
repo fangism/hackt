@@ -1,0 +1,20 @@
+// "spec_min_sep_proc-14.hac"
+// copy-modified from "spec_min_sep_proc-13.hac"
+
+defproc foo() { }
+defproc bar() {
+	bool f;
+}
+
+defproc oo (
+	bool g       // this was causing an offset in PIDs
+)
+{
+	bar a, b;
+	spec {
+		min_sep<22>(a.f, b.f)
+	}
+}
+
+oo ooo;
+

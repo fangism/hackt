@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry_context.cc"
-	$Id: global_entry_context.cc,v 1.7 2010/06/02 02:42:31 fang Exp $
+	$Id: global_entry_context.cc,v 1.7.2.1 2010/08/23 18:38:42 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -299,7 +299,8 @@ size_t
 global_entry_context::construct_global_footprint_frame(
 		footprint_frame& owner, 
 		footprint_frame& ret, global_offset& g, 
-		const meta_instance_reference_base& pr) const {
+		const meta_instance_reference_base& pr, 
+		const unroll_context& uc) const {
 	STACKTRACE_VERBOSE;
 	typedef	process_tag			Tag;
 	typedef	simple_meta_instance_reference<Tag>	simple_ref;
@@ -326,7 +327,7 @@ global_entry_context::construct_global_footprint_frame(
 		// in a sub-process, sets ret, owner and g
 		const size_t ppid =
 			construct_global_footprint_frame(owner, ret, g,
-				*mpr->get_base_ref());
+				*mpr->get_base_ref(), uc);
 		if (!ppid) {
 			// have some error
 			return 0;
@@ -335,9 +336,11 @@ global_entry_context::construct_global_footprint_frame(
 		mpr->dump(STACKTRACE_INDENT_PRINT("back to member-ref: "), 
 			expr_dump_context::default_value) << endl;
 #endif
-		const unroll_context uc(ret._footprint, topfp);
+		// want footprint of the member-owner, not the context passed in
+		const unroll_context tc(ret._footprint, topfp);
 		// yes, use base-class method, not virtual override
-		const size_t lpid = mpr->simple_ref::lookup_locally_allocated_index(uc);
+		const size_t lpid =
+			mpr->simple_ref::lookup_locally_allocated_index(tc);
 		STACKTRACE_INDENT_PRINT("ppid = " << ppid << endl);
 		const footprint& rfp(*ret._footprint);
 		const footprint& ofp(*owner._footprint);
@@ -469,7 +472,9 @@ global_entry_context::construct_global_footprint_frame(
 #if ENABLE_STACKTRACE
 		owner.dump_frame(STACKTRACE_STREAM << "owner:") << endl;
 #endif
+#if 0
 		const unroll_context uc(topfp, topfp);
+#endif
 		const size_t gpid = spr->lookup_locally_allocated_index(uc);
 		STACKTRACE_INDENT_PRINT("gpid = " << gpid << endl);
 		const footprint& ofp(*owner._footprint);

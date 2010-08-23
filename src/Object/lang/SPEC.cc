@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/SPEC.cc"
-	$Id: SPEC.cc,v 1.10 2010/07/14 18:12:32 fang Exp $
+	$Id: SPEC.cc,v 1.10.2.1 2010/08/23 18:38:44 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -45,6 +45,12 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 
 namespace HAC {
 namespace entity {
+//=============================================================================
+// global variables
+bool
+allow_private_member_references = false;
+
+//=============================================================================
 namespace SPEC {
 using std::for_each;
 using std::back_inserter;
@@ -313,6 +319,9 @@ directives_set::dump(ostream& o, const rule_dump_context& rdc) const {
  */
 good_bool
 directives_set::unroll(const unroll_context& c) const {
+	// in SPEC context, allow private member references
+	const util::value_saver<bool>
+		_tmp_(allow_private_member_references, true);
 	const_iterator i(begin());
 	const const_iterator e(end());
 	for ( ; i!=e; ++i) {

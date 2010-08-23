@@ -1,5 +1,5 @@
 @c "chapters/SPEC.texi"
-@c $Id: SPEC.texi,v 1.5 2009/05/27 19:36:11 fang Exp $
+@c $Id: SPEC.texi,v 1.5.16.1 2010/08/23 18:38:38 fang Exp $
 
 @node SPEC Directives
 @chapter SPEC Directives
@@ -9,6 +9,10 @@ This chapter describes the various directives available
 in the @t{spec} sub-language.  
 The following documentation is extracted from source file
 @file{Object/lang/SPEC_registry.cc}.  
+
+@strong{NEW:} SPEC directives allow references to instances deep in the 
+subinstance hierarchy, not just through public ports, 
+but through private members as well.
 
 @ignore
 @itemize

@@ -1,5 +1,5 @@
 @c "chapters/connections.texi"
-@c $Id: connections.texi,v 1.3 2009/11/04 00:15:56 fang Exp $
+@c $Id: connections.texi,v 1.3.6.1 2010/08/23 18:38:39 fang Exp $
 
 @node Connections
 @chapter Connections
@@ -10,20 +10,32 @@ Connections are a relation between @emph{instance references}.
 of compilation; they are determined at compile-time only.)
 
 @menu
+* Instance References:: referring to instances
 * Aliases:: merging objects
 * Port Connections:: equivalent connections
 * Implicit Ports:: automatic supply ports
 @end menu
 
 @c ----------------------------------------------------------------------------
-@node Aliases
-@section Aliases
+@node Instance References
+@section Instance References
+@cindex instance references
 
 Instance references refer to specific entities at unroll-time.  
 Instance references fall into two categories: implicit and explicit.  
 @xref{Arrays}.  
 Implicit references infer sizes of the entire array or partial array, 
 whereas explicit references fully specify the dimensions.
+
+@cindex hierarchical references
+Under most circumstances, only hierarchical instance references through 
+public port members is permitted.  
+The exception to this rule is in a subset of SPEC directives.
+@xref{SPEC Directives}.
+
+@c ----------------------------------------------------------------------------
+@node Aliases
+@section Aliases
 
 @cindex aliases
 Connections between instance references create @emph{aliases}.  

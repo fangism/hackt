@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.28.2.1 2010/08/18 23:39:40 fang Exp $
+	$Id: substructure_alias_base.h,v 1.28.2.2 2010/08/23 18:38:43 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -205,6 +205,7 @@ struct instance_index_extractor {
 	template <class AliasPtr>
 	size_t
 	operator () (const AliasPtr& alias_ptr) const {
+		NEVER_NULL(alias_ptr);
 		return alias_ptr->instance_index;
 	}
 };	// end struct instance_index_extractor

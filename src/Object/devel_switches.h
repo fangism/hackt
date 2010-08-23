@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.60.2.1 2010/08/18 23:39:38 fang Exp $
+	$Id: devel_switches.h,v 1.60.2.2 2010/08/23 18:38:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -327,8 +327,8 @@
 	Define to 1 to enable implementation of private member references.
 	Rationale: some spec directives wish to reference non-public
 		members of processes without modifying them.
-	Goal: 1?
-	Status: just begun
+	Goal: 1
+	Status: done, somewhat tested
  */
 #define	PRIVATE_MEMBER_REFERENCES		1
 

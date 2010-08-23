@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.69.2.1 2010/08/18 23:40:12 fang Exp $
+#	$Id: Makefile.am,v 1.69.2.2 2010/08/23 18:38:49 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -65,7 +65,8 @@ HACKT_PARSE_TEST_PASSES = \
 	spec_min_sep_proc-01 spec_min_sep_proc-02 spec_min_sep_proc-03 \
 	spec_min_sep_proc-04 spec_min_sep_proc-05 spec_min_sep_proc-06 \
 	spec_min_sep_proc-09 spec_min_sep_proc-10 spec_min_sep_proc-11 \
-	spec_min_sep_proc-12 \
+	spec_min_sep_proc-12 spec_min_sep_proc-13 spec_min_sep_proc-14 \
+	spec_min_sep_proc-15 spec_min_sep_proc-16 \
 	bug-001 \
 	top-level-01 top-level-04 top-level-05 \
 	flat-type-01 flat-type-02 flat-type-03 \
@@ -155,7 +156,8 @@ HACKT_CREATE_TEST_PASSES = \
 	spec_min_sep_proc-01 spec_min_sep_proc-02 spec_min_sep_proc-03 \
 	spec_min_sep_proc-04 spec_min_sep_proc-05 spec_min_sep_proc-06 \
 	spec_min_sep_proc-09 spec_min_sep_proc-10 spec_min_sep_proc-11 \
-	spec_min_sep_proc-12 \
+	spec_min_sep_proc-12 spec_min_sep_proc-13 spec_min_sep_proc-14 \
+	spec_min_sep_proc-15 spec_min_sep_proc-16 \
 	bug-001 \
 	top-level-01 top-level-04 top-level-05 \
 	flat-type-01 flat-type-02 flat-type-03 \
@@ -336,7 +338,8 @@ HACKT_CFLAT_SEU_TEST_SUBJECTS = \
 	spec_min_sep_proc-01 spec_min_sep_proc-02 spec_min_sep_proc-03 \
 	spec_min_sep_proc-04 spec_min_sep_proc-05 spec_min_sep_proc-06 \
 	spec_min_sep_proc-09 spec_min_sep_proc-10 spec_min_sep_proc-11 \
-	spec_min_sep_proc-12
+	spec_min_sep_proc-12 spec_min_sep_proc-13 spec_min_sep_proc-14 \
+	spec_min_sep_proc-15 spec_min_sep_proc-16
 
 HACKT_ALLOC_TEST_PASSES = \
 	$(HACKT_CFLAT_TEST_SUBJECTS) \

@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/bool_literal.cc"
-	$Id: bool_literal.cc,v 1.8.2.1 2010/08/18 23:39:42 fang Exp $
+	$Id: bool_literal.cc,v 1.8.2.2 2010/08/23 18:38:45 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -15,11 +15,9 @@
 #include "Object/expr/expr_dump_context.h"
 #include "Object/traits/node_traits.h"
 #include "Object/ref/simple_meta_dummy_reference.h"
-#if PRIVATE_MEMBER_REFERENCES
 #include "Object/global_entry.h"
 #include "Object/global_entry_context.h"
 #include "Object/unroll/unroll_context.h"
-#endif
 #include "util/memory/count_ptr.tcc"
 #include "util/persistent_object_manager.tcc"
 #include "util/packed_array.h"
@@ -29,6 +27,12 @@ namespace HAC {
 namespace entity {
 using util::write_value;
 using util::read_value;
+
+//=============================================================================
+// from "Object/lang/SPEC.cc"
+extern
+bool
+allow_private_member_references;
 
 //=============================================================================
 // class bool_literal method definitions
@@ -166,7 +170,6 @@ if (var) {
  */
 good_bool
 bool_literal::unroll_group(const unroll_context& c, group_type& g) const {
-//	typedef bool_literal_base_ptr_type::element_type	reference_type;
 	typedef	simple_meta_instance_reference<tag_type>	reference_type;
 	typedef reference_type::alias_collection_type
 					bool_instance_alias_collection_type;
@@ -174,7 +177,7 @@ bool_literal::unroll_group(const unroll_context& c, group_type& g) const {
 					bool_subindex_collection_type;
 	STACKTRACE_VERBOSE;
 	NEVER_NULL(var);
-#if PRIVATE_MEMBER_REFERENCES
+if (allow_private_member_references) {
 	// direct translation to indices, allowing references to 
 	// private sub-members in the hierarchy.
 	bool_subindex_collection_type pbi;
@@ -185,22 +188,14 @@ bool_literal::unroll_group(const unroll_context& c, group_type& g) const {
 		return good_bool(false);
 	}
 	copy(pbi.begin(), pbi.end(), back_inserter(g));
-#else
+} else {
 	bool_instance_alias_collection_type bc;
 	if (var->unroll_references_packed(c, bc).bad) {
 		return good_bool(false);
 	}
-	typedef	bool_instance_alias_collection_type::const_iterator
-					const_iterator;
-	const_iterator i(bc.begin()), e(bc.end());
-	// could reserve...
-	for ( ; i!=e; ++i) {
-		const instance_alias_info<tag_type>& bi(**i);
-		const size_t node_index = bi.instance_index;
-		INVARIANT(node_index);
-		g.push_back(node_index);
-	}
-#endif
+	transform(bc.begin(), bc.end(), back_inserter(g), 
+		instance_index_extractor());
+}
 	return good_bool(true);
 }
 
