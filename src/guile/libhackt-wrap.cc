@@ -1,6 +1,6 @@
 /**
 	\file "guile/libhackt-wrap.cc"
-	$Id: libhackt-wrap.cc,v 1.10 2010/05/11 00:18:09 fang Exp $
+	$Id: libhackt-wrap.cc,v 1.11 2010/08/24 18:08:40 fang Exp $
 	TODO: consider replacing or supplementing print functions 
 		with to-string functions, in case we want to process 
 		the strings.
@@ -248,7 +248,8 @@ HAC_GUILE_DEFINE(wrap_lookup_reference_aliases, FUNC_NAME, 1, 0, 0, (SCM rpair),
 	switch (type) {
 #define	CASE_TYPE(Tag)							\
 	case class_traits<Tag>::type_tag_enum_value: {			\
-		topfp.collect_aliases_recursive<Tag>(index-1, aliases);	\
+		topfp.collect_aliases_recursive<Tag>(index-1, 		\
+			dump_flags::no_owners, aliases);		\
 		break;							\
 	}
 	CASE_TYPE(bool_tag)

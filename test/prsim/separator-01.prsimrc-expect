@@ -1,0 +1,16 @@
+All subnodes of '.':
+!GND : 0
+!Vdd : 1
+a : X
+b : X
+c : X
+aliases of "b":
+I/b
+J/a
+b
+
+c:X, pull up/dn are both X
+  b:X, pull up/dn are both X
+    a:X, pull up/dn undriven, no fanin
+    a:X, (visited before, see above)
+  b:X, (visited before, see above)

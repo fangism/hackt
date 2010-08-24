@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.tcc"
 	Exported template implementation of footprint base class. 
-	$Id: footprint.tcc,v 1.7 2010/05/11 00:18:07 fang Exp $
+	$Id: footprint.tcc,v 1.8 2010/08/24 18:08:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_TCC__
@@ -102,8 +102,8 @@ footprint::dump_canonical_name(ostream& o, const size_t gi,
 	if (gi < local) {
 		// enumeration skips over ports
 		// TODO: what if top-level has ports!?!?
-		p[gi +ports].get_back_ref()->dump_hierarchical_name(o, 
-			dump_flags::no_definition_owner);
+		p[gi +ports].get_back_ref()->dump_hierarchical_name(o, df);
+			// dump_flags::no_definition_owner
 	} else {
 		const size_t si = gi -local;
 		// si is 0-based residue index
@@ -119,18 +119,18 @@ footprint::dump_canonical_name(ostream& o, const size_t gi,
 //		STACKTRACE_INDENT_PRINT("<e.second=" << e.second << '>' << endl);
 		INVARIANT(e.first <= m);
 		const state_instance<process_tag>& sp(ppool[e.first -1]);
-		sp.get_back_ref()->dump_hierarchical_name(o, 
-			df
-			// dump_flags::no_definition_owner
-			)
-				<< df.process_member_separator;
+		sp.get_back_ref()->dump_hierarchical_name(o, df)
+				// dump_flags::no_definition_owner
+			<< (sp._frame._footprint->get_meta_type() == META_TYPE_PROCESS ?
+				df.process_member_separator :
+				df.struct_member_separator);
 		// TODO: pass in dump_flags to honor hierarchical separator
 		// e.second is the offset to subtract
 		sp._frame._footprint->dump_canonical_name<Tag>(
 			o, si -e.second, df, false);
 	}
 	return o;
-}
+}	// end method footprint::dump_canonical_name
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -141,6 +141,7 @@ footprint::dump_canonical_name(ostream& o, const size_t gi,
 template <class Tag>
 void
 footprint::collect_aliases_recursive(const size_t index,
+		const dump_flags& df, 
 		set<string>& aliases, const bool is_top) const {
 	STACKTRACE_VERBOSE;
 	STACKTRACE_INDENT_PRINT("rel-id(0) = " << index << endl);
@@ -157,7 +158,7 @@ if (index < local) {
 	STACKTRACE_INDENT_PRINT("local reference" << endl);
 	// is locally owned or covered by port, 
 	// traverse all local processes in which it is found
-	this->collect_port_aliases<Tag>(index +ports, aliases);
+	this->collect_port_aliases<Tag>(index +ports, df, aliases);
 } else {
 	STACKTRACE_INDENT_PRINT("private reference" << endl);
 	// is privately owned by subprocess
@@ -175,8 +176,9 @@ if (index < local) {
 	STACKTRACE_INDENT_PRINT("found in lpid(1) " << lpid << endl);
 	set<string> private_aliases;
 	// recurse first, then prepend resulting aliases
-	ppool[lpid -1]._frame._footprint
-		->collect_aliases_recursive<Tag>(si -e.second,
+	const state_instance<process_tag>& ppi(ppool[lpid -1]);
+	ppi._frame._footprint
+		->collect_aliases_recursive<Tag>(si -e.second, df, 
 			private_aliases, false);
 #if ENABLE_STACKTRACE
 	copy(private_aliases.begin(), private_aliases.end(),
@@ -186,8 +188,15 @@ if (index < local) {
 #endif
 	// collect all aliases of that process
 	set<string> local_aliases;
-	scope_aliases.template get_id_map<process_tag>().find(lpid)->second
-		.export_alias_strings(local_aliases);
+	const alias_reference_set<process_tag>&
+		pref_set(scope_aliases.
+			template get_id_map<process_tag>().find(lpid)->second);
+	pref_set.export_alias_strings(df, local_aliases);
+	const string& sep(ppi._frame._footprint->get_meta_type()
+			== META_TYPE_PROCESS ?
+		df.process_member_separator : df.struct_member_separator);
+		// TODO: pass dump_flags to format struct separator
+		// for now local aliases are always through public ports
 	// to form cross-product of aliases
 	set<string>::const_iterator
 		pi(local_aliases.begin()), pe(local_aliases.end());
@@ -201,11 +210,11 @@ if (index < local) {
 		set<string>::const_iterator
 			ai(private_aliases.begin()), ae(private_aliases.end());
 		for ( ; ai!=ae; ++ai) {
-			aliases.insert(*pi +'.' +*ai);
+			aliases.insert(*pi +sep +*ai);
 		}
 	}
 }
-}
+}	// end method footprint::collect_aliases_recursive
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -217,7 +226,8 @@ if (index < local) {
  */
 template <class Tag>
 void
-footprint::collect_port_aliases(const size_t ltid, set<string>& aliases) const {
+footprint::collect_port_aliases(const size_t ltid, 
+		const dump_flags& df, set<string>& aliases) const {
 	STACKTRACE_VERBOSE;
 	STACKTRACE_INDENT_PRINT("ltid(0) = " << ltid << endl);
 #if ENABLE_STACKTRACE
@@ -229,7 +239,7 @@ footprint::collect_port_aliases(const size_t ltid, set<string>& aliases) const {
 	const typename port_alias_tracker_base<Tag>::map_type&
 		lpa(scope_aliases.template get_id_map<Tag>());
 	const alias_reference_set<Tag>& lrs(lpa.find(ltid+1)->second);
-	lrs.export_alias_strings(aliases);
+	lrs.export_alias_strings(df, aliases);
 #if ENABLE_STACKTRACE
 	copy(aliases.begin(), aliases.end(), 
 		ostream_iterator<string>(
@@ -248,7 +258,7 @@ for (; lpid <= lpm; ++lpid) {
 	STACKTRACE_INDENT_PRINT("in lpid " << lpid << endl);
 	const alias_reference_set<process_tag>& ppr(lpps.find(lpid)->second);
 	set<string> parent_aliases;
-	ppr.export_alias_strings(parent_aliases);
+	ppr.export_alias_strings(df, parent_aliases);
 #if ENABLE_STACKTRACE
 	copy(parent_aliases.begin(), parent_aliases.end(), 
 		ostream_iterator<string>(
@@ -261,6 +271,8 @@ for (; lpid <= lpm; ++lpid) {
 	const state_instance<process_tag>& sp(lpp[lpid-1]);
 	const footprint_frame& spf(sp._frame);
 	const footprint& sfp(*spf._footprint);
+	const string& sep(sfp.get_meta_type() == META_TYPE_PROCESS ?
+		df.process_member_separator : df.struct_member_separator);
 	const footprint_frame_map_type&
 		ppts(spf.template get_frame_map<Tag>());
 	const size_t pps = ppts.size();
@@ -275,7 +287,7 @@ for (; lpid <= lpm; ++lpid) {
 		STACKTRACE_INDENT_PRINT(tag_name << "-port["
 			<< ppi+1 << "] -> local-" << tag_name
 			<< " " << app << endl);
-		sfp.collect_port_aliases<Tag>(ppi, mem_aliases);
+		sfp.collect_port_aliases<Tag>(ppi, df, mem_aliases);
 		// recursion!
 	}
 	}
@@ -292,13 +304,13 @@ for (; lpid <= lpm; ++lpid) {
 		set<string>::const_iterator
 			p(mem_aliases.begin()), q(mem_aliases.end());
 	for ( ; p!=q; ++p) {
-		const string c(*j + '.' + *p);
+		const string c(*j +sep +*p);	// '.'
 		aliases.insert(c);
 		// will be inserted uniquely
 	}
 	}
 }
-}
+}	// end method footprint::collect_port_aliases
 
 //=============================================================================
 }	// end namespace entity

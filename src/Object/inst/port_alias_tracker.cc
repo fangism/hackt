@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_alias_tracker.cc"
-	$Id: port_alias_tracker.cc,v 1.34 2010/08/05 22:35:07 fang Exp $
+	$Id: port_alias_tracker.cc,v 1.35 2010/08/24 18:08:39 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -261,12 +261,15 @@ if (f != e) {
  */
 template <class Tag>
 void
-alias_reference_set<Tag>::export_alias_strings(set<string>& aliases) const {
+alias_reference_set<Tag>::export_alias_strings(
+		const dump_flags& df, 
+		set<string>& aliases) const {
 	const_iterator i(this->begin()), e(this->end());
 	for ( ; i!=e; ++i) {
 		const instance_alias_info<Tag>& a(**i);
 		std::ostringstream alias;
-		a.dump_hierarchical_name(alias, dump_flags::no_leading_scope);
+		a.dump_hierarchical_name(alias, df);
+			// was dump_flags::no_leading_scope
 		aliases.insert(alias.str());
 	}
 }

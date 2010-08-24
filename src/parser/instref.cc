@@ -1,6 +1,6 @@
 /**
 	\file "parser/instref.cc"
-	$Id: instref.cc,v 1.23 2010/08/07 00:00:02 fang Exp $
+	$Id: instref.cc,v 1.24 2010/08/24 18:08:41 fang Exp $
  */
 
 #define	DEBUGGING_SHIT			0
@@ -734,6 +734,7 @@ if (pred) {
  */
 int
 parse_name_to_aliases(ostream& o, const string& n, const module& m, 
+		const dump_flags& df, 
 		const char* _sep) {
 	typedef	inst_ref_expr::meta_return_type		checked_ref_type;
 	STACKTRACE_VERBOSE;
@@ -757,7 +758,7 @@ parse_name_to_aliases(ostream& o, const string& n, const module& m,
 			gref(r.inst_ref()->lookup_top_level_reference(gc));
 		STACKTRACE_INDENT_PRINT("gref.index = " << gref.second << endl);
 		if (gref.first && gref.second) {
-			topfp.collect_aliases_recursive(gref, aliases);
+			topfp.collect_aliases_recursive(gref, df, aliases);
 		} else {
 			return 1;
 		}

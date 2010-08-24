@@ -1,0 +1,19 @@
+All subnodes of '.':
+!GND : 0
+!Vdd : 1
+a : X
+b : X
+c : X
+Z/_c : X
+aliases of "a":
+Z/a
+a
+
+aliases of "b":
+Z/b
+b
+
+aliases of "c":
+Z/c
+c
+

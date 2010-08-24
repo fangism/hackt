@@ -1,0 +1,20 @@
+// "deep3.hac"
+// copy-modified from "deep2.hac"
+// for the purpose of testing prsim's info commands.  
+
+deftype foo <: int<1> (bool a, b) {
+	a = b;
+}
+
+defproc bar(foo x) {
+	foo y;
+	x = y;
+}
+
+defproc ick(bar p) {
+	bar q;
+	p = q;
+}
+
+ick poo;
+

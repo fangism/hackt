@@ -1,0 +1,14 @@
+All subnodes of '.':
+!GND : 0
+!Vdd : 1
+poo/p/x.a : X
+aliases of "poo.p.x.a":
+poo/p/x.a
+poo/p/x.b
+poo/p/y.a
+poo/p/y.b
+poo/q/x.a
+poo/q/x.b
+poo/q/y.a
+poo/q/y.b
+

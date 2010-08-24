@@ -1,0 +1,20 @@
+# "wchb-token-ring-a-05.prsimrc"
+# @haco@ wchb-token-ring-a.haco-c
+
+echo testing process-member-separator
+process-member-separator
+process-member-separator /
+process-member-separator
+
+getports X
+getports C
+getports X.fore
+getports X.aft
+
+who-newline L.d[0]
+who-newline L.e
+who-newline R.d[0]
+who-newline R.e
+
+getall .
+

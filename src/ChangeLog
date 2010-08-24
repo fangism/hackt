@@ -3,6 +3,20 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-08-24	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-10:
+	  Made dump_flags a save-able object.
+	  Added dump_flags member to prsim/chpsim state classes, 
+		to control the way that hierarchical names are printed, 
+		specifically for the purpose of controlling the
+		process-member-separator of output names.  
+	  prsim command: process-member-separator (does the above)
+	  pass dump_flags through many more procedures that print
+		node and instance names (alias collection).  
+	  hacprsim: added checkpoint version check
+
+
 2010-08-12	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-09:

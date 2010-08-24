@@ -2,7 +2,7 @@
 	\file "sim/command_common.tcc"
 	Library of template command implementations, re-usable with
 	different state types.  
-	$Id: command_common.tcc,v 1.22 2010/08/07 00:00:03 fang Exp $
+	$Id: command_common.tcc,v 1.23 2010/08/24 18:08:42 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_COMMON_TCC__
@@ -795,7 +795,8 @@ if (a.size() != 2) {
 } else {
 	const string r(command_registry_type::prepend_working_dir(a.back()));
 	cout << "aliases of \"" << r << "\":" << endl;
-	if (parser::parse_name_to_aliases(cout, r, s.get_module(), " ")) {
+	if (parser::parse_name_to_aliases(cout, r, s.get_module(), 
+			s._dump_flags, " ")) {
 		return command_type::BADARG;
 	} else {
 		cout << endl;
@@ -826,7 +827,8 @@ if (a.size() != 2) {
 } else {
 	const string r(command_registry_type::prepend_working_dir(a.back()));
 	cout << "aliases of \"" << r << "\":" << endl;
-	if (parser::parse_name_to_aliases(cout, r, s.get_module(), "\n")) {
+	if (parser::parse_name_to_aliases(cout, r, s.get_module(), 
+			s._dump_flags, "\n")) {
 		return command_type::BADARG;
 	} else {
 		cout << endl;

@@ -1,0 +1,93 @@
+testing process-member-separator 
+process-member-separator: .
+process-member-separator: /
+Ports subnodes of 'X':
+L.d[0] : X
+L.d[1] : X
+L.e : X
+R.d[0] : X
+R.d[1] : X
+R.e : X
+!GND : 0
+!Vdd : 1
+_Reset : X
+Reset : X
+Ports subnodes of 'C':
+L.d[0] : X
+L.d[1] : X
+L.e : X
+R.d[0] : X
+R.d[1] : X
+R.e : X
+!GND : 0
+!Vdd : 1
+_Reset : X
+Ports subnodes of 'X.fore':
+L.d[0] : X
+L.d[1] : X
+L.e : X
+!GND : 0
+!Vdd : 1
+_Reset : X
+Reset : X
+X/M.d[0] : X
+X/M.d[1] : X
+X/M.e : X
+Ports subnodes of 'X.aft':
+R.d[0] : X
+R.d[1] : X
+R.e : X
+!GND : 0
+!Vdd : 1
+_Reset : X
+X/M.d[0] : X
+X/M.d[1] : X
+X/M.e : X
+aliases of "L.d[0]":
+C/RR.d[0]
+C/R[0].d[0]
+L.d[0]
+X/L.d[0]
+X/fore/L.d[0]
+
+aliases of "L.e":
+C/R[0].e
+L.e
+X/L.e
+X/fore/L.e
+
+aliases of "R.d[0]":
+C/L.d[0]
+R.d[0]
+X/R.d[0]
+X/aft/R.d[0]
+
+aliases of "R.e":
+C/L.e
+R.e
+X/R.e
+X/aft/R.e
+
+All subnodes of '.':
+L.d[0] : X
+L.d[1] : X
+L.e : X
+R.d[0] : X
+R.d[1] : X
+R.e : X
+!GND : 0
+!Vdd : 1
+_Reset : X
+Reset : X
+X/M.d[0] : X
+X/M.d[1] : X
+X/M.e : X
+X/fore/_r.d[0] : X
+X/fore/_r.d[1] : X
+X/fore/rv : X
+X/aft/_r.d[0] : X
+X/aft/_r.d[1] : X
+X/aft/rv : X
+C/_r.d[0] : X
+C/_r.d[1] : X
+C/_le : X

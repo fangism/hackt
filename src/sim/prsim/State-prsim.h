@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.40 2010/06/29 01:55:05 fang Exp $
+	$Id: State-prsim.h,v 1.41 2010/08/24 18:08:46 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -30,6 +30,7 @@
 #include "sim/prsim/process_state.h"
 #include "sim/command_error_codes.h"
 #include "Object/lang/PRS_enum.h"	// for expression parenthesization
+#include "Object/common/dump_flags.h"
 #include "util/string_fwd.h"
 #include "util/named_ifstream_manager.h"
 #include "util/tokenize_fwd.h"
@@ -53,6 +54,7 @@ using util::memory::never_ptr;
 using SIM::INVALID_TRACE_INDEX;
 #endif
 using std::map;
+using entity::dump_flags;
 
 
 //=============================================================================
@@ -555,6 +557,10 @@ private:
 	/// timing mode
 	uchar					timing_mode;
 	// loadable random seed?
+public:
+	// save flags used for printing
+	dump_flags				_dump_flags;
+private:
 	/**
 		set by the SIGINT signal handler
 		(is this redundant with the STOP flag?)

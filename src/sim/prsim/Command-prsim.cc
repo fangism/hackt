@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.73 2010/08/11 21:54:56 fang Exp $
+	$Id: Command-prsim.cc,v 1.74 2010/08/24 18:08:45 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -568,6 +568,43 @@ Print the list of paths searched for source scripts.
 ***/
 typedef	Paths<State>				Paths;
 PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(Paths, general)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/process-member-separator.texi
+@deffn process-member-separator [sep]
+Sets the process hierarchy delimiter to @var{sep} instead of the
+default '@t{.}' (period).
+This can be useful for printing names for use with other tools.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ProcessMemberSep,
+	"process-member-separator", general,
+	"output separator for process members")
+
+int
+ProcessMemberSep::main(State& s, const string_list& a) {
+if (a.size() > 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else if (a.size() == 2) {
+	s._dump_flags.process_member_separator = a.back();
+} else {
+	// just print current separator
+	cout << "process-member-separator: " <<
+		s._dump_flags.process_member_separator << endl;
+}
+	return Command::NORMAL;
+}
+
+void
+ProcessMemberSep::usage(ostream& o) {
+	o << name << " [sep]" << endl;
+	o <<
+"Sets the process member separator used for printing hierarchical names."
+	<< endl;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***

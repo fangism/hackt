@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.24 2010/05/11 00:18:16 fang Exp $
+	$Id: State.cc,v 1.25 2010/08/24 18:08:43 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -33,7 +33,6 @@
 #include "Object/lang/CHP_footprint.h"
 #include "Object/inst/state_instance.h"
 #include "Object/inst/instance_pool.h"
-#include "Object/common/dump_flags.h"
 
 #include "common/TODO.h"
 #include "sim/ISE.h"
@@ -324,7 +323,8 @@ State::State(const module& m) :
 		trace_manager(), 
 		trace_flush_interval(1L<<16),
 		checkpoint_name("autosave.chpsimckpt"),
-		checkpoint_interval(1000000)
+		checkpoint_interval(1000000), 
+		_dump_flags(dump_flags::no_owners)	// fixed for now
 		{
 	// perform initializations here
 	event_pool.reserve(256);	// pre-allocate some
@@ -1301,7 +1301,7 @@ State::make_process_dump_context(const node_index_type pid) const {
 		top_context.get_top_footprint().
 			dump_canonical_name<process_tag>(
 				canonical_name, pid -1, 
-				dump_flags::no_owners);
+				_dump_flags);
 		return expr_dump_context(canonical_name.str());
 	} else {
 		return expr_dump_context::default_value;
@@ -1598,7 +1598,7 @@ for ( ; pid < mp; ++pid) {
 		o << "subgraph cluster" << pid << " {" << endl;
 		std::ostringstream oss;
 		topfp.dump_canonical_name<process_tag>(oss, pid-1, 
-				dump_flags::no_owners);
+				_dump_flags);
 		o << "label=\"pid=" << pid << ": " << oss.str() << "\";"
 			<< endl;
 	} else {
@@ -1662,7 +1662,7 @@ if (g.show_channels) {
 		// get channel name
 		std::ostringstream oss;
 		topfp.dump_canonical_name<channel_tag>(oss, i-1, 
-				dump_flags::no_owners);
+				_dump_flags);
 		// emit a node if there are multiple senders or receivers
 		// also if sender/receiver set is empty
 		if (ss.size() != 1 || rs.size() != 1) {
@@ -1718,7 +1718,7 @@ ostream&
 State::print_instance_name_value(ostream& o,
 		const global_indexed_reference& g) const {
 	const entity::footprint& topfp(mod.get_footprint());
-	const dump_flags& df(dump_flags::no_owners);
+	const dump_flags& df(_dump_flags);
 	INVARIANT(g.second);
 	const size_t id0 = g.second -1;
 	switch (g.first) {
@@ -1772,7 +1772,7 @@ ostream&
 State::print_instance_name_subscribers(ostream& o,
 		const global_indexed_reference& g) const {
 	const entity::footprint& topfp(mod.get_footprint());
-	const dump_flags& df(dump_flags::no_owners);
+	const dump_flags& df(_dump_flags);
 	INVARIANT(g.second);
 	const size_t id0 = g.second-1;
 	switch (g.first) {

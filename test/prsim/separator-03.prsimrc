@@ -1,0 +1,9 @@
+# "separator-03.prsimrc"
+# @haco@ celem-fb.haco-c
+
+process-member-separator /
+getall .
+who-newline a
+who-newline b
+who-newline c
+

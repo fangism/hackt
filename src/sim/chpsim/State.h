@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.17 2009/02/11 02:35:16 fang Exp $
+	$Id: State.h,v 1.18 2010/08/24 18:08:44 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -21,6 +21,7 @@
 #include "Object/nonmeta_state.h"
 #include "Object/ref/reference_set.h"
 #include "Object/lang/CHP_event.h"	// for global_root event
+#include "Object/common/dump_flags.h"
 #include "util/macros.h"
 #include "util/tokenize_fwd.h"
 #include "util/memory/excl_ptr.h"
@@ -49,6 +50,7 @@ using util::memory::excl_ptr;
 using util::memory::never_ptr;
 using entity::global_references_set;
 using entity::CHP::local_event_footprint;
+using entity::dump_flags;
 
 //=============================================================================
 /**
@@ -379,6 +381,9 @@ private:
 		(inverse) frequency of checkpointing.  
 	 */
 	time_t					checkpoint_interval;
+public:
+	// save flags used for printing
+	dump_flags				_dump_flags;
 public:
 	explicit
 	State(const module&);

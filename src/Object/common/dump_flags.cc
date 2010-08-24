@@ -1,13 +1,19 @@
 /**
 	\file "Object/common/dump_flags.cc"
 	Global static initializer for default.  
-	$Id: dump_flags.cc,v 1.6 2009/09/14 21:16:47 fang Exp $
+	$Id: dump_flags.cc,v 1.7 2010/08/24 18:08:35 fang Exp $
  */
 
+#include <iostream>
 #include "Object/common/dump_flags.h"
+#include "util/IO_utils.h"
 
 namespace HAC {
 namespace entity {
+using util::write_value;
+using util::read_value;
+#include "util/using_ostream.h"
+
 //=============================================================================
 // class dump_flags method and static member definitions
 
@@ -51,6 +57,40 @@ dump_flags::dump_flags(const bool _show_def_owner,
 		process_member_separator("."),
 		struct_member_separator(".")
 { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+dump_flags::dump(ostream& o) const {
+	o << (show_definition_owner ? "show" : "hide") <<
+		" definition owner" << endl;
+	o << (show_namespace_owner ? "show" : "hide") <<
+		" namespace owner" << endl;
+	o << (show_leading_scope ? "show" : "hide") <<
+		" leading scope" << endl;
+	o << "process member separatorr: " << process_member_separator << endl;
+	o << "struct member separatorr: " << struct_member_separator << endl;
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+dump_flags::write_object(ostream& o) const {
+	write_value(o, show_definition_owner);
+	write_value(o, show_namespace_owner);
+	write_value(o, show_leading_scope);
+	write_value(o, process_member_separator);
+	write_value(o, struct_member_separator);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+dump_flags::load_object(istream& i) {
+	read_value(i, show_definition_owner);
+	read_value(i, show_namespace_owner);
+	read_value(i, show_leading_scope);
+	read_value(i, process_member_separator);
+	read_value(i, struct_member_separator);
+}
 
 //=============================================================================
 }	// end namespace entity

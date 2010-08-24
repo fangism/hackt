@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.68 2010/08/07 00:00:05 fang Exp $
+	$Id: State-prsim.cc,v 1.69 2010/08/24 18:08:45 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -39,7 +39,6 @@
 #include "Object/inst/alias_empty.h"
 #include "Object/traits/proc_traits.h"	// for diagnostic
 #include "Object/global_entry.h"
-#include "Object/common/dump_flags.h"
 #if IMPLICIT_SUPPLY_PORTS
 #include "parser/instref.h"
 #endif
@@ -133,7 +132,6 @@ using util::bind2nd_argval_void;
 using util::auto_indent;
 using util::indent;
 using util::tokenize_char;
-using entity::dump_flags;
 using entity::state_manager;
 using entity::global_entry_pool;
 using entity::bool_tag;
@@ -344,6 +342,7 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 #undef	E
 		autosave_name("autosave.prsimckpt"),
 		timing_mode(TIMING_DEFAULT),
+		_dump_flags(dump_flags::no_owners), 
 		__shuffle_indices(0) {
 	const footprint& topfp(mod.get_footprint());
 	const size_t s = topfp.get_instance_pool<bool_tag>().total_entries() +1;
@@ -384,7 +383,7 @@ try {
 	cerr << "Error with process instance: ";
 	// ALERT: could be top-level
 	topfp.dump_canonical_name<process_tag>(cerr, e.pid, 
-		dump_flags::no_owners) << endl;
+		_dump_flags) << endl;
 	THROW_EXIT;	// re-throw
 }
 	// recommend caller to invoke ::initialize() immediately after ctor
@@ -4339,7 +4338,7 @@ State::check_structure(void) const {
 ostream&
 State::dump_node_canonical_name(ostream& o, const node_index_type i) const {
 	return mod.get_footprint().dump_canonical_name<bool_tag>(o, i-1, 
-		dump_flags::no_owners);
+		_dump_flags);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -4365,7 +4364,7 @@ if (i) {
 	ISE_INVARIANT(i < process_state_array.size());
 	// footprint::dump_canonical_name expects 0-based index.
 	return mod.get_footprint().dump_canonical_name<process_tag>(o, i-1, 
-		dump_flags::no_owners);
+		_dump_flags);
 } else {
 	return o << "[top-level]";
 }
@@ -6069,6 +6068,13 @@ State::autosave(const bool b, const string& n) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Bump this when checkpoint binary version changes (compatibility).
+ */
+static
+const size_t	checkpoint_version = 1;
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	TODO: need to check consistency with module.  
 	Write out a header for safety checks.  
 	TODO: save state only? without structure?
@@ -6085,6 +6091,7 @@ State::save_checkpoint(ostream& o) const {
 #endif
 	check_event_queue();		// internal structure consistency
 	write_value(o, magic_string);
+	write_value(o, checkpoint_version);
 {
 	// save the random seed
 	ushort seed[3] = {0, 0, 0};
@@ -6165,6 +6172,7 @@ State::save_checkpoint(ostream& o) const {
 	write_value(o, excl_check_fail_policy);
 //	write_value(o, autosave_name);		// don't preserve
 	write_value(o, timing_mode);
+	_dump_flags.write_object(o);
 	if (_channel_manager.save_checkpoint(o)) return true;
 	// interrupted flag, just ignore
 	// ifstreams? don't bother managing input stream stack.
@@ -6199,6 +6207,14 @@ try {
 	read_value(i, header_check);
 	if (header_check != magic_string) {
 		cerr << bad_ckpt << endl;
+		return true;
+	}
+	size_t version_check;
+	read_value(i, version_check);
+	if (version_check != checkpoint_version) {
+		cerr << "Expecting checkpoint compatibility version " <<
+			checkpoint_version << ", but got " <<
+			version_check << "." << endl;
 		return true;
 	}
 } catch (...) {
@@ -6352,6 +6368,7 @@ try {
 	read_value(i, excl_check_fail_policy);
 //	read_value(i, autosave_name);	// ignore the name of checkpoint
 	read_value(i, timing_mode);
+	_dump_flags.load_object(i);
 	// interrupted flag, just ignore
 	// ifstreams? don't bother managing input stream stack.
 	// __scratch_expr_trace -- never needed, ignore
@@ -6402,6 +6419,15 @@ State::dump_checkpoint(ostream& o, istream& i) {
 	string header_check;
 	read_value(i, header_check);
 	o << "header string: " << header_check << endl;
+{
+	size_t version_check;
+	read_value(i, version_check);
+	o << "checkpoint version: " << version_check << endl;
+	if (version_check != checkpoint_version) {
+		cerr << "WARNING: checkpoint version mismatch!\n"
+		"Attempting to continue, but this could get ugly..." << endl;
+	}
+}
 {
 	// show random seed
 	ushort seed[3];
@@ -6509,6 +6535,11 @@ State::dump_checkpoint(ostream& o, istream& i) {
 	char timing_mode;
 	read_value(i, timing_mode);
 	o << "timing mode: " << size_t(timing_mode) << endl;
+{
+	dump_flags tmp;
+	tmp.load_object(i);
+	tmp.dump(o << "dump flags: {\n") << "}" << endl;
+}
 {
 	channel_manager tmp;
 	tmp.load_checkpoint(i);

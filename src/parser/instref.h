@@ -1,7 +1,7 @@
 /**
 	\file "parser/instref.h"
 	Interface to reference-parsing.
-	$Id: instref.h,v 1.11 2010/08/07 00:00:02 fang Exp $
+	$Id: instref.h,v 1.12 2010/08/24 18:08:41 fang Exp $
 	This file originated from "sim/prsim/Reference.h"
 	Id: Reference.h,v 1.5 2006/07/30 05:50:13 fang Exp
  */
@@ -27,6 +27,7 @@ namespace entity {
 class module;
 class meta_reference_union;
 struct entry_collection;
+struct dump_flags;
 }
 using util::memory::excl_ptr;
 
@@ -37,6 +38,7 @@ using entity::module;
 using entity::bool_tag;
 using entity::channel_tag;
 using entity::process_tag;
+using entity::dump_flags;
 class inst_ref_expr;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -157,7 +159,7 @@ parse_name_to_get_ports(
 extern
 int
 parse_name_to_aliases(std::ostream&, const string&, 
-	const module&, const char* sep);
+	const module&, const dump_flags&, const char* sep);
 
 extern
 void

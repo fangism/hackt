@@ -1,18 +1,20 @@
 /**
 	\file "Object/common/dump_flags.h"
 	Dump attributes class.  
-	$Id: dump_flags.h,v 1.7 2009/09/14 21:16:48 fang Exp $
+	$Id: dump_flags.h,v 1.8 2010/08/24 18:08:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_DUMP_FLAGS_H__
 #define	__HAC_OBJECT_COMMON_DUMP_FLAGS_H__
 
-// #include "util/string_fwd.h"
+#include <iosfwd>
 #include <string>
 
 namespace HAC {
 namespace entity {
 using std::string;
+using std::ostream;
+using std::istream;
 
 /**
 	Common dump flags used to tweak output formatting and style.  
@@ -88,6 +90,17 @@ public:
 		Show everything verbosely.  
 	 */
 	static const dump_flags			verbose;
+
+	ostream&
+	dump(ostream&) const;
+
+	// because we want to save/restore flags in some cases...
+	void
+	write_object(ostream&) const;
+
+	void
+	load_object(istream&);
+
 };	// end class dump_flags
 
 }	// end namespace entity

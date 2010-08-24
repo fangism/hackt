@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.102 2010/08/23 21:20:30 fang Exp $
+#	$Id: Makefile.am,v 1.103 2010/08/24 18:08:47 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -8,7 +8,9 @@ SUBDIRS = . vpi
 
 # .hac inputs
 HACKT_PRSIMRC_TEST_SUBJECTS = \
-	celem inv oscillator half-celem deep tree interference \
+	celem inv oscillator half-celem \
+	deep deep2 deep3 \
+	tree interference \
 	invs inv-invariant \
 	invariant-a invariant-b invariant-c invariant-d invariant-e \
 	invariant-not-X \
@@ -296,7 +298,9 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	after_min_max-01 after_min_max-02 after_min_max-03 \
 	dirs-02 dirs-03 dirs-04 dirs-05 dirs-06 dirs-07 \
 	memstats32-inv memstats64-inv \
-	history-01 history-02 history-03 history-04
+	history-01 history-02 history-03 history-04 \
+	separator-01 separator-02 separator-03 separator-04 \
+	separator-05 separator-06
 
 # subset of prsimrc test that we wish to compare traces against regressions
 HACKT_PRSIMTRACE_TEST_SUBJECTS = \

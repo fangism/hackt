@@ -1,0 +1,8 @@
+# "separator-04.prsimrc"
+# @haco@ channel-test-b.haco-c
+
+process-member-separator /
+getall .
+who-newline L.e
+who-newline R.e
+

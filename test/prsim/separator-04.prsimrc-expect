@@ -1,0 +1,17 @@
+All subnodes of '.':
+L.d[0] : X
+L.d[1] : X
+L.e : X
+R.d[0] : X
+R.d[1] : X
+R.e : X
+!GND : 0
+!Vdd : 1
+_r[0] : X
+_r[1] : X
+aliases of "L.e":
+L.e
+
+aliases of "R.e":
+R.e
+

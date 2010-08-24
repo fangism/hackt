@@ -1,0 +1,7 @@
+# "separator-05.prsimrc"
+# @haco@ deep2.haco-c
+
+process-member-separator /
+getall .
+who-newline poo.p.x.a
+
