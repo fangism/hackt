@@ -1,0 +1,23 @@
+// "reset-05.hac"
+// copy-modified from "reset-02.hac"
+// testing reset attributes
+// @hflat-flags@ -f node-attributes
+
+deftype globals <: int<2> (bool Reset; bool _Reset) {
+Reset @ [reset=1];
+_Reset @ [reset=0];
+}
+
+defproc foo(globals g; bool x, y) {
+prs {
+	g._Reset & x		=> y-
+}
+}
+
+globals g;
+bool _Reset, Reset;
+_Reset = g._Reset;
+Reset = g.Reset;
+bool a, b;
+foo bar(g, a, b);
+

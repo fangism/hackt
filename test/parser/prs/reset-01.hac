@@ -1,0 +1,14 @@
+// "reset-01.hac"
+// testing reset attributes
+// @hflat-flags@ -f node-attributes
+
+bool Reset;
+bool _Reset;
+
+prs {
+	_Reset		=> Reset-
+}
+
+Reset @ [reset=1];
+_Reset @ [reset=0];
+

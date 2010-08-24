@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/connection_policy.h"
 	Specializations for connections in the HAC language. 
-	$Id: connection_policy.h,v 1.17 2010/08/11 21:54:55 fang Exp $
+	$Id: connection_policy.h,v 1.18 2010/08/24 22:52:03 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CONNECTION_POLICY_H__
@@ -140,13 +140,17 @@ protected:
 	// supply attributes
 		BOOL_SUPPLY_LOW		= 0x00000080,
 		BOOL_SUPPLY_HIGH	= 0x00000100,
+	// reset attributes
+		BOOL_RESET_LOW		= 0x00000200,
+		BOOL_RESET_HIGH		= 0x00000400,
 	// all attributes that are explicitly written
 		BOOL_EXPLICIT_ATTRIBUTES_MASK =
 			BOOL_IS_COMBINATIONAL |
 			BOOL_NO_AUTOKEEPER |
 			BOOL_IS_RVC1 | BOOL_IS_RVC2 | BOOL_IS_RVC3 |
 			BOOL_MAY_INTERFERE | BOOL_MAY_WEAK_INTERFERE |
-			BOOL_SUPPLY_LOW | BOOL_SUPPLY_HIGH,
+			BOOL_SUPPLY_LOW | BOOL_SUPPLY_HIGH |
+			BOOL_RESET_LOW | BOOL_RESET_HIGH,
 #if BOOL_PRS_CONNECTIVITY_CHECKING
 	/**
 		This is NOT an attribute, is an intrinsic property
@@ -256,7 +260,8 @@ protected:
 		BOOL_DEFAULT_ATTRIBUTES = 0x00000000
 	};
 	enum {
-		BOOL_NUM_EXPLICIT_ATTRIBUTES = 9,
+		// TODO: keep this in sync with above list!
+		BOOL_NUM_EXPLICIT_ATTRIBUTES = 11,
 		// overall number of attributes, explicit and implicit
 		BOOL_NUM_ATTRIBUTES = sizeof(connection_flags_type) << 3
 	};
@@ -349,6 +354,9 @@ public:
 
 	void
 	set_supply(const bool);
+
+	void
+	set_reset(const bool);
 
 #if BOOL_PRS_CONNECTIVITY_CHECKING
 	bool

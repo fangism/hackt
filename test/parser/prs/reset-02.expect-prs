@@ -1,0 +1,8 @@
+"R._Reset" -> "R.Reset"-
+~"R._Reset" -> "R.Reset"+
+@ "!GND" supply_low
+@ "!Vdd" supply_high
+@ "R.Reset" reset_high
+@ "R._Reset" reset_low
+= "!GND" "R.!GND"
+= "!Vdd" "R.!Vdd"

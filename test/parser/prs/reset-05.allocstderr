@@ -1,0 +1,15 @@
+globID	super		localID	canonical	footprint-frame
+[global process entries]
+1	(top)	-	1	g	globals<>
+	bool: 1,2
+2	(top)	-	2	bar	foo<>
+	process: 1
+	bool: 1,2,3,4,5,6
+[global bool entries]
+1	(top)	-	1	Reset	 @[ reset_high ]
+2	(top)	-	2	_Reset	 @[ reset_low ]
+3	(top)	-	3	!GND	 @[ supply_low ]
+4	(top)	-	4	!Vdd	 @[ supply_high ]
+5	(top)	-	5	a	
+6	(top)	-	6	b	
+

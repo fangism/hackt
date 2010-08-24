@@ -1,5 +1,5 @@
 @c "chapters/attributes.texi"
-@c $Id: attributes.texi,v 1.4 2010/07/01 20:20:20 fang Exp $
+@c $Id: attributes.texi,v 1.5 2010/08/24 22:52:00 fang Exp $
 
 @node Attributes
 @chapter Attributes
@@ -33,6 +33,7 @@ Keep this in mind when deciding at which level of hierarchy to
 attach attributes.  
 
 @include attrib/bool-supply.texi
+@include attrib/bool-reset.texi
 @include attrib/bool-iscomb.texi
 @include attrib/bool-autokeeper.texi
 @include attrib/bool-isrvc.texi

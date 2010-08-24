@@ -1,0 +1,14 @@
+"_Reset" & "a" -> "b"-
+~"_Reset" | ~"a" -> "b"+
+@ "Reset" reset_high
+@ "_Reset" reset_low
+@ "!GND" supply_low
+@ "!Vdd" supply_high
+= "Reset" "bar.g.Reset"
+= "Reset" "g.Reset"
+= "_Reset" "bar.g._Reset"
+= "_Reset" "g._Reset"
+= "!GND" "bar.!GND"
+= "!Vdd" "bar.!Vdd"
+= "a" "bar.x"
+= "b" "bar.y"

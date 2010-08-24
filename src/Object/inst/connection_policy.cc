@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/connection_policy.cc"
-	$Id: connection_policy.cc,v 1.15 2010/08/11 21:54:54 fang Exp $
+	$Id: connection_policy.cc,v 1.16 2010/08/24 22:52:02 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -45,8 +45,8 @@ bool_connect_policy::attribute_names[] = {
 	"supply_low",
 
 	"supply_high",
-	"RESERVED-9",
-	"RESERVED-10",
+	"reset_low",
+	"reset_high",
 	"RESERVED-11",
 	"RESERVED-12",
 	"RESERVED-13",
@@ -160,6 +160,29 @@ bool_connect_policy::set_supply(const bool t) {
 	} else {
 		attributes |= BOOL_SUPPLY_LOW;
 		if (attributes & BOOL_SUPPLY_HIGH) {
+			cerr << err_msg << endl;
+			THROW_EXIT;
+		}
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: diagnostic with node name please.
+ */
+void
+bool_connect_policy::set_reset(const bool t) {
+	static const char err_msg[] =
+		"Error: a node cannot be both reset-high and reset-low.";
+	if (t) {
+		attributes |= BOOL_RESET_HIGH;
+		if (attributes & BOOL_RESET_LOW) {
+			cerr << err_msg << endl;
+			THROW_EXIT;
+		}
+	} else {
+		attributes |= BOOL_RESET_LOW;
+		if (attributes & BOOL_RESET_HIGH) {
 			cerr << err_msg << endl;
 			THROW_EXIT;
 		}

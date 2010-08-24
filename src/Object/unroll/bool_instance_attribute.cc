@@ -4,7 +4,7 @@
 	which are applied at create-time.  
 	Because these attributes are applied at create-time, 
 	they are back-end independent.  
-	$Id: bool_instance_attribute.cc,v 1.5 2010/07/01 20:20:26 fang Exp $
+	$Id: bool_instance_attribute.cc,v 1.6 2010/08/24 22:52:05 fang Exp $
  */
 
 #include "Object/unroll/instance_attribute_registry.h"
@@ -199,6 +199,26 @@ Supply::main(visitor_type& a, const values_type& v) {
 	const pint_const& pi(*v[0].is_a<const pint_const>());
 	const pint_value_type b = pi.static_constant_value();
 	a.set_supply(b);
+}
+
+//=============================================================================
+/***
+@texinfo attrib/bool-reset.texi
+@defmac reset init
+Declares that the said node is a reset node with initial value @var{init}.
+Reset nodes are treated specially in different back-end tools.  
+@var{init}=0 indicates that supply is active-low.
+@var{init}=1 indicates that supply is active-high.
+@end defmac
+@end texinfo
+***/
+DECLARE_AND_DEFINE_BOOL_INSTANCE_ATTRIBUTE_CLASS(Reset, "reset")
+void
+Reset::main(visitor_type& a, const values_type& v) {
+	INVARIANT(v.size());
+	const pint_const& pi(*v[0].is_a<const pint_const>());
+	const pint_value_type b = pi.static_constant_value();
+	a.set_reset(b);
 }
 
 //=============================================================================

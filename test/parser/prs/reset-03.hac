@@ -1,0 +1,16 @@
+// "reset-03.hac"
+// copy-modified from "reset-02.hac"
+// testing reset attributes
+// @hflat-flags@ -f node-attributes
+
+defproc rs(bool Reset; bool _Reset) {
+prs {
+	_Reset		=> Reset-
+}
+}
+
+rs R;
+
+R.Reset @ [reset=1];
+R._Reset @ [reset=0];
+
