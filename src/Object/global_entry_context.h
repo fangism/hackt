@@ -2,7 +2,7 @@
 	\file "Object/global_entry_context.h"
 	Structure containing all the minimal information
 	needed for a global_entry traversal over instances.  
-	$Id: global_entry_context.h,v 1.9 2010/04/19 02:45:57 fang Exp $
+	$Id: global_entry_context.h,v 1.10 2010/08/24 21:05:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_CONTEXT_H__
@@ -25,6 +25,7 @@ class tree_cache;
 namespace HAC {
 namespace entity {
 class module;
+class unroll_context;
 class footprint;
 class footprint_frame;
 class state_manager;
@@ -154,7 +155,8 @@ virtual	void
 	template <class Tag>
 	size_t
 	lookup_meta_reference_global_index(
-		const simple_meta_instance_reference<Tag>&) const;
+		const simple_meta_instance_reference<Tag>&, 
+		const unroll_context* = NULL) const;
 
 	typedef	std::pair<footprint_frame, global_offset>
 					cache_entry_type;
@@ -173,7 +175,8 @@ virtual	void
 	size_t
 	construct_global_footprint_frame(footprint_frame&, 
 		footprint_frame&, 
-		global_offset&, const meta_instance_reference_base&) const;
+		global_offset&, const meta_instance_reference_base&, 
+		const unroll_context&) const;
 
 	// e.g. use this after a cache-lookup
 	void

@@ -1,0 +1,20 @@
+# "check-excl-rings-priv-01.prsimrc"
+# @haco@ check-excl-rings-priv.haco-c
+# expect fail
+
+allrings-chk
+rings-chk z1.x1.x
+rings-chk z1.x1.y
+
+watchall
+set a 1
+set b 1
+cycle
+set b 0
+cycle
+set a 0
+cycle
+echo NOT REACHED!!!
+echo expect to error on excl violation here.
+
+

@@ -1,0 +1,13 @@
+min_sep<22>("ooo.a.f.x"; "ooo.b.f.x")
+= "!GND" "ooo.!GND"
+= "!GND" "ooo.a.!GND"
+= "!GND" "ooo.b.!GND"
+= "!GND" "ooo.g.!GND"
+= "!Vdd" "ooo.!Vdd"
+= "!Vdd" "ooo.a.!Vdd"
+= "!Vdd" "ooo.b.!Vdd"
+= "!Vdd" "ooo.g.!Vdd"
+= "!GND" "ooo.a.f.!GND"
+= "!GND" "ooo.b.f.!GND"
+= "!Vdd" "ooo.a.f.!Vdd"
+= "!Vdd" "ooo.b.f.!Vdd"

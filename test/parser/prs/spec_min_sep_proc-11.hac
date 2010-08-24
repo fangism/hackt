@@ -1,0 +1,39 @@
+// "spec_min_sep_proc-11.hac"
+// copy-modified from "spec_min_sep_proc-10.hac"
+// testing min-separation between process instance sets directive
+
+defproc inv1 (bool a, b) {
+prs {
+	a	=> b-
+}
+}
+
+defproc inv2 (bool p, q) {
+prs {
+	p	=> q-
+}
+}
+
+defproc test_me(bool in[2], out[2]) {
+bool mid[2];
+inv1 inv_a[2];
+inv2 inv_b[2];
+(;i:2:
+	inv_a[i](in[i], mid[i]);
+	inv_b[i](mid[i], out[i]);
+)
+}
+
+defproc deep(bool x, y) {
+bool m;
+test_me now[2];
+now[0]({x, x}, {m, m}); 
+now[1]({m, m}, {y, y}); 
+spec {
+min_sep_proc<20>({now[0].inv_a, now[1].inv_a}, 
+	{now[0].inv_b, now[1].inv_b})
+}
+}
+
+deep doodoo;
+

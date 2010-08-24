@@ -1,0 +1,13 @@
+// "bad-literal-01.hac"
+// should reject deep member references in PRS
+
+defproc foo() {
+bool x;
+}
+
+foo bar, baz;
+
+prs {
+	bar.x	=> baz.x-
+}
+

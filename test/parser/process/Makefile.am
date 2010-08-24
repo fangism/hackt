@@ -1,5 +1,5 @@
 # "test/parser/process/Makefile.am"
-#	$Id: Makefile.am,v 1.24 2010/04/02 22:26:31 fang Exp $
+#	$Id: Makefile.am,v 1.25 2010/08/24 21:06:01 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -29,6 +29,8 @@ HACKT_PARSE_TEST_PASSES = \
 	110 111 112 113 114 115 116 117 118 \
 	121 122 123 124 125 125-act 126 127 128 129 \
 	130 131 132 133 134 135 \
+	private-ref-00 \
+	private-ref-01 private-ref-02 private-ref-03 private-ref-04 \
 	act-001 act-002a
 
 # 107,109: known bugs in progress
@@ -53,7 +55,8 @@ HACKT_PARSE_TEST_PASSES = \
 HACKT_CREATE_TEST_FAILURES = \
 	071 073 074 076 078 \
 	114 116 \
-	123 124
+	123 124 \
+	private-ref-04
 
 # the omitted unroll tests either have no instances, 
 # fail unrolling, or are just uninteresting
@@ -70,7 +73,8 @@ HACKT_CREATE_TEST_PASSES = \
 	100 101 102 103 104 105 106 107 108 109 \
 	110 111 112 113 115 117 118 \
 	126 127 128 129 \
-	130 131 132 133 134 135
+	130 131 132 133 134 135 \
+	private-ref-00 private-ref-01 private-ref-02 private-ref-03
 
 # should be a subset of $(HACKT_CREATE_TEST_SUBJECTS)
 HACKT_ALLOC_TEST_PASSES = \
@@ -86,7 +90,8 @@ HACKT_ALLOC_TEST_PASSES = \
 	100 101 102 103 104 105 106 107 108 109 \
 	110 111 112 113 115 117 118 \
 	126 127 128 129 \
-	130 131 132 133 134 135
+	130 131 132 133 134 135 \
+	private-ref-00 private-ref-03
 
 HACKT_CFLAT_TEST_SUBJECTS = \
 	054 055 057 058 059 \
@@ -100,9 +105,13 @@ HACKT_CFLAT_TEST_SUBJECTS = \
 	100 101 102 103 104 105 106 107 108 109 \
 	110 111 112 113 115 117 118 \
 	126 127 128 129 \
-	130 131 132 133 134 135
+	130 131 132 133 134 135 \
+	private-ref-01 private-ref-02 private-ref-03
 
 # EMPTY_CFLAT_PRS_TESTS +=
+
+HACKT_CFLAT_LVS_TEST_PASSES = \
+	private-ref-01 private-ref-02 private-ref-03
 
 # more output expectation files for when bison is used
 BISON_OUTPUTS += 001 002 003 004 005 006 007 008 009 010 \

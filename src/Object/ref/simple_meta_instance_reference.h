@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.h"
 	Class family for instance references in HAC.  
 	This file was reincarnated from "Object/art_object_inst_ref.h".
-	$Id: simple_meta_instance_reference.h,v 1.24 2010/04/07 00:12:55 fang Exp $
+	$Id: simple_meta_instance_reference.h,v 1.25 2010/08/24 21:05:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_H__
@@ -14,6 +14,7 @@
 #include "Object/traits/class_traits_fwd.h"
 #include "util/packed_array_fwd.h"
 #include "Object/ref/inst_ref_implementation_fwd.h"
+#include "Object/devel_switches.h"
 #include "util/STL/vector_fwd.h"
 
 namespace HAC {
@@ -138,7 +139,15 @@ protected:
 public:
 	// overridden by member_meta_instance_reference
 virtual	bad_bool
-	unroll_references_packed(const unroll_context&, alias_collection_type&) const;
+	unroll_references_packed(const unroll_context&,
+		alias_collection_type&) const;
+
+#if PRIVATE_MEMBER_REFERENCES
+virtual	bad_bool
+	unroll_subindices_packed(const global_entry_context&,
+		const unroll_context&, 
+		index_array_reference&) const;
+#endif
 
 virtual	UNROLL_SCALAR_SUBSTRUCTURE_REFERENCE_PROTO;
 
@@ -153,9 +162,13 @@ virtual	count_ptr<const this_type>
 
 	LOOKUP_TOP_LEVEL_REFERENCE_PROTO;
 	LOOKUP_TOP_LEVEL_REFERENCES_PROTO;
+#if PRIVATE_MEMBER_REFERENCES
+	LOOKUP_GLOBAL_REFERENCE_INDICES_PROTO;
+#endif
 
 virtual	size_t
-	lookup_globally_allocated_index(const global_entry_context&) const;
+	lookup_globally_allocated_index(const global_entry_context&, 
+		const unroll_context* = NULL) const;
 
 virtual	size_t
 	lookup_locally_allocated_index(const unroll_context&) const;

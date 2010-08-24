@@ -1,0 +1,23 @@
+// "private-ref-03.hac"
+// copy-modified from "private-ref-02.hac"
+// testing references to private members
+// @hflat-flags@ -f self-aliases
+
+defproc foo() {
+bool priv;
+}
+
+defproc bar() {
+foo f;
+}
+
+defproc baz() {
+bar p, q;
+spec {
+// min_sep<10>(p.priv, q.priv)
+exclhi(p.f.priv, q.f.priv)
+}
+}
+
+baz bam;
+

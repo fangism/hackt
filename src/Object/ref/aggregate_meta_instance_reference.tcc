@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_instance_reference.tcc"
 	Implementation of aggregate_meta_instance_reference class.  
-	$Id: aggregate_meta_instance_reference.tcc,v 1.15 2010/04/07 00:12:52 fang Exp $
+	$Id: aggregate_meta_instance_reference.tcc,v 1.16 2010/08/24 21:05:48 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_INSTANCE_REFERENCE_TCC__
@@ -170,6 +170,17 @@ AGGREGATE_META_INSTANCE_REFERENCE_CLASS::lookup_top_level_references(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+AGGREGATE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+good_bool
+AGGREGATE_META_INSTANCE_REFERENCE_CLASS::lookup_global_reference_indices(
+		const global_entry_context&, 
+		typed_index_array_reference&,
+		const unroll_context*) const {
+	FINISH_ME(Fang);
+	return good_bool(false);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Shamelessly copy-modified from aggregate_meta_value_reference.  
 	\param a is returned by reference as a constructed packed array
@@ -260,6 +271,22 @@ AGGREGATE_META_INSTANCE_REFERENCE_CLASS::unroll_references_packed(
 	}
 	return bad_bool(err);
 }	// end method unroll_references_packed
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRIVATE_MEMBER_REFERENCES
+/**
+	Implement this when we need it.
+ */
+AGGREGATE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+bad_bool
+AGGREGATE_META_INSTANCE_REFERENCE_CLASS::unroll_subindices_packed(
+		const global_entry_context& c,
+		const unroll_context& u, 
+		subindex_collection_type& a) const {
+	FINISH_ME(Fang);
+	return bad_bool(true);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 AGGREGATE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE

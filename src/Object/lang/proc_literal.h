@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/proc_literal.h"
 	Reusable boolean literal wrapper class.  
-	$Id: proc_literal.h,v 1.1 2010/07/14 18:12:35 fang Exp $
+	$Id: proc_literal.h,v 1.2 2010/08/24 21:05:47 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PROC_LITERAL_H__
@@ -29,7 +29,6 @@ struct expr_dump_context;
 namespace PRS {
 	// apologies for confusion...
 	struct expr_dump_context;
-//	class literal;
 }
 
 typedef	count_ptr<const simple_process_meta_instance_reference>	

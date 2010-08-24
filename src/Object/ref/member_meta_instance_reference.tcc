@@ -2,7 +2,7 @@
 	\file "Object/ref/member_meta_instance_reference.tcc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_member_inst_ref.tcc"
- 	$Id: member_meta_instance_reference.tcc,v 1.30 2010/04/07 00:12:53 fang Exp $
+ 	$Id: member_meta_instance_reference.tcc,v 1.31 2010/08/24 21:05:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_MEMBER_META_INSTANCE_REFERENCE_TCC__
@@ -166,15 +166,18 @@ MEMBER_INSTANCE_REFERENCE_CLASS::resolve_parent_member_helper(
 	\pre this MUST be a top-level instance reference.  
 	FIXME: this looks identical to simple_meta_instance_reference's
 	\return 1-based global index, 0 for error.
+	Need unroll context in case index is induction variable in loop.
  */
 MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 size_t
 MEMBER_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_index(
-		const global_entry_context& gc) const {
+		const global_entry_context& gc, 
+		const unroll_context* ucp) const {
 	STACKTRACE_VERBOSE;
 	const footprint& top(gc.get_top_footprint());
 	const unroll_context uc(&top, &top);
-	return this->lookup_locally_allocated_index(uc);
+	const unroll_context* cp = ucp ? ucp : &uc;
+	return this->lookup_locally_allocated_index(*cp);
 }	// end method lookup_globally_allocated_index
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -204,7 +207,8 @@ MEMBER_INSTANCE_REFERENCE_CLASS::lookup_locally_allocated_index(
 	const footprint_frame pff(top);
 	global_offset g;
 	const global_entry_context gc(pff, g);
-	if (!gc.construct_global_footprint_frame(owner, tmp, g, _parent_inst_ref)) {
+	if (!gc.construct_global_footprint_frame(owner, tmp, g,
+			_parent_inst_ref, uc)) {
 		STACKTRACE_INDENT_PRINT("member::lookup_local error." << endl);
 		return 0;
 	}
@@ -263,13 +267,13 @@ MEMBER_INSTANCE_REFERENCE_CLASS::lookup_locally_allocated_index(
 MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 good_bool
 MEMBER_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_indices(
-//		const state_manager& sm,
 		const footprint& top,
 		vector<size_t>& indices) const {
 	STACKTRACE_VERBOSE;
 	typedef vector<size_t>				indices_type;
 	typedef typename alias_collection_type::const_iterator  const_iterator;
 	alias_collection_type aliases;
+	const unroll_context lookup_c(&top, &top);	// any loop variables?
 	const footprint_frame tff(top);
 	const global_offset g;
 	const global_entry_context gc(tff, g);
@@ -277,19 +281,14 @@ MEMBER_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_indices(
 	footprint_frame tmpo, tmpf;
 	const size_t gpid =
 		gc.construct_global_footprint_frame(tmpo, tmpf, tmpg,
-		*this->base_inst_ref);
+			*this->base_inst_ref, lookup_c);
 	if (!gpid) {
 		return good_bool(false);
 	}
 	const unroll_context dummy(tmpf._footprint, &top);
 	// reminder: call to unroll_references_packed is virtual
-#if 0
-	if (this->unroll_references_packed(dummy, aliases).bad)
-#else
 	if (unroll_references_packed_helper(dummy, *this->inst_collection_ref,
-			this->array_indices, aliases).bad)
-#endif
-	{
+			this->array_indices, aliases).bad) {
 		cerr << "Error resolving collection of aliases." << endl;
 		return good_bool(false);
 	}
@@ -390,6 +389,74 @@ MEMBER_INSTANCE_REFERENCE_CLASS::unroll_references_packed(
 	return unroll_references_packed_helper_no_lookup(
 		cc, *inst_base, this->array_indices, a);
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+#if PRIVATE_MEMBER_REFERENCES
+/**
+	Need unroll_context for possible loop/induction variables.
+ */
+MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+bad_bool
+MEMBER_INSTANCE_REFERENCE_CLASS::unroll_subindices_packed(
+		const global_entry_context& c,
+		const unroll_context& u,
+		index_array_reference& a) const {
+	STACKTRACE_VERBOSE;
+#if ENABLE_STACKTRACE
+	this->dump(STACKTRACE_STREAM, expr_dump_context::default_value) << endl;
+#endif
+	// resolve parent references first
+	global_offset go;
+	footprint_frame tmpo, ff;
+	const size_t ppid =
+		c.construct_global_footprint_frame(tmpo, ff, go,
+			*this->base_inst_ref, u);
+	if (!ppid) {
+		return bad_bool(true);
+	}
+#if ENABLE_STACKTRACE
+	// looks wrong
+	c.dump_context(STACKTRACE_STREAM << "global_entry_context c:" << endl)
+		<< endl;
+	ff.dump_frame(STACKTRACE_STREAM) << endl;
+	STACKTRACE_STREAM << go << endl;
+#endif
+	alias_collection_type local_aliases;
+	NEVER_NULL(ff._footprint);
+	const footprint& pfp(*ff._footprint);
+	// lookup footprint-local aliases
+	const unroll_context tmpc(&pfp, &pfp);
+//	tmpc.chain_context(u);
+#if ENABLE_STACKTRACE
+	tmpc.dump(STACKTRACE_STREAM << "tmpc:") << endl;
+#endif
+	// from meta_instance_reference<>::unroll_reference_packed_helper
+	const never_ptr<const physical_instance_collection>
+		inst_p(tmpc.lookup_instance_collection(
+			*this->inst_collection_ref));
+	NEVER_NULL(inst_p);
+        const collection_interface_type&
+                inst(IS_A(const collection_interface_type&, *inst_p));
+	// FIXME:
+	// member lookup should be tmpc footprint
+	// but induction variable lookups should be in u
+        if (unroll_references_packed_helper_no_lookup(u, inst,
+			this->array_indices, local_aliases).bad) {
+		return bad_bool(true);
+	}
+	STACKTRACE_INDENT_PRINT("got local aliases." << endl);
+	// translate to local indices
+	a.resize(local_aliases.size());
+	transform(local_aliases.begin(), local_aliases.end(), a.begin(), 
+		instance_index_extractor());
+	STACKTRACE_INDENT_PRINT("got local indices." << endl);
+	// translate to global indices using parent footprint frame
+	transform(a.begin(), a.end(), a.begin(), 
+		footprint_frame_transformer(ff.get_frame_map<Tag>()));
+	STACKTRACE_INDENT_PRINT("got global indices." << endl);
+	return bad_bool(false);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE

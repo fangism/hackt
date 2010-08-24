@@ -1,0 +1,2 @@
+ERROR: process-definition foo has no public member named "x" at [11:6]
+ERROR: at least one error in PRS body.

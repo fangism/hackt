@@ -5,6 +5,18 @@
 
 2010-08-24	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-84-11-merged-privateref-01-02:
+	  Branch merge.
+	  Allow spec directives to reference subinstances deep in
+		hierarchy through non-public members.  
+	  Added unroll_contexts to global index lookup functions, 
+		now used at create-time, after allocation, 
+		during spec processing.
+	  Tested, documented.
+
+
+2010-08-24	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-84-10:
 	  Made dump_flags a save-able object.
 	  Added dump_flags member to prsim/chpsim state classes, 
@@ -15,6 +27,41 @@
 	  pass dump_flags through many more procedures that print
 		node and instance names (alias collection).  
 	  hacprsim: added checkpoint version check
+
+
+2010-08-20	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-09-privateref-01-02:
+	  BUG FIXES: private member lookup offsets were incorrect, 
+		failing to account for port offsets.
+		Reference lookups now always need to forward an 
+		unroll_context to be able to resolve induction variables.
+		Test cases added, some documentation added.
+	  End of branch, merge to trunk.
+
+
+2010-08-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-09-privateref-01-01:
+	  Branch: for introducing private-member-references to front-end
+		and middle-end, motivated by need to write spec directives
+		that descend through process hierarchy.
+	  AST/parse_context.h: support for changing mode to allow 
+		private member references.
+	  *_meta_instance_reference: implemented unroll_subindices_packed
+		as a direct lookup to local subinstances without
+		going through publicly reachable aliases.  
+	  Now using global index lookups at create-time after 
+		local footprint has been allocated and mapped.
+	  global_entry_context::lookup_meta_reference_global_index:
+		added optional unroll_context argument to properly
+		handle loop-induction variables.
+	  lang/*_literal.cc: now use direct hierarchical index lookup
+		instead of going through locally accessible aliases.  
+	  TODO: control whether or not each spec directive allows
+		private references?  Right now, all allow it.
+	  Added bunch of test cases, no regressions.  
+	  This feature is not yet documented, but should be.
 
 
 2010-08-12	David Fang		<fangism@users.sourceforge.net>

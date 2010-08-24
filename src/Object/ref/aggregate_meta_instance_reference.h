@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_instance_reference.h"
 	This is going to be exciting...
-	$Id: aggregate_meta_instance_reference.h,v 1.11 2010/04/07 00:12:51 fang Exp $
+	$Id: aggregate_meta_instance_reference.h,v 1.12 2010/08/24 21:05:47 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_INSTANCE_REFERENCE_H__
@@ -42,6 +42,10 @@ class aggregate_meta_instance_reference :
 public:
 	typedef	typename traits_type::alias_collection_type
 							alias_collection_type;
+#if PRIVATE_MEMBER_REFERENCES
+	typedef	typename parent_type::subindex_collection_type
+						subindex_collection_type;
+#endif
 	typedef	typename traits_type::instance_collection_generic_type
 					instance_collection_generic_type;
 	typedef	typename parent_type::collection_interface_type
@@ -85,9 +89,20 @@ public:
 
 	LOOKUP_TOP_LEVEL_REFERENCE_PROTO;
 	LOOKUP_TOP_LEVEL_REFERENCES_PROTO;
+#if PRIVATE_MEMBER_REFERENCES
+	LOOKUP_GLOBAL_REFERENCE_INDICES_PROTO;
+#endif
 
 	bad_bool
-	unroll_references_packed(const unroll_context&, alias_collection_type&) const;
+	unroll_references_packed(const unroll_context&,
+		alias_collection_type&) const;
+
+#if PRIVATE_MEMBER_REFERENCES
+	bad_bool
+	unroll_subindices_packed(const global_entry_context&,
+		const unroll_context&, 
+		subindex_collection_type&) const;
+#endif
 
 	UNROLL_RESOLVE_COPY_REFERENCE_PROTO;
 

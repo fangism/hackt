@@ -3,7 +3,7 @@
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
 	This file came from "Object/art_context.h" in a previous life.  
-	$Id: parse_context.h,v 1.25 2010/04/30 18:41:48 fang Exp $
+	$Id: parse_context.h,v 1.26 2010/08/24 21:05:38 fang Exp $
  */
 
 #ifndef __AST_PARSE_CONTEXT_H__
@@ -254,6 +254,8 @@ private:
 		which is useful for other tools that need to read 
 		the pre-compiled objects.  
 		Default: false, enforcing port visibility only.  
+		Some compile-time checks however, do allow
+		private member references, so we allow such exceptions.
 	 */
 	bool					view_all_publicly;
 public:
@@ -287,6 +289,14 @@ public:
 		namespace_frame(context&, const token_identifier&);
 		~namespace_frame();
 	} __ATTRIBUTE_UNUSED__;
+
+	/**
+		As an exception, allow private member references
+		in certain cases.  
+	 */
+	typedef	util::member_saver<context, 
+		bool, &context::view_all_publicly>
+						private_member_accessor;
 
 private:
 	void

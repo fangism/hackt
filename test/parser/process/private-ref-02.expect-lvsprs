@@ -1,0 +1,13 @@
+exclhi("p.f.priv", "q.f.priv")
+connect "!GND" "!GND"
+connect "!GND" "p.!GND"
+connect "!GND" "p.f.!GND"
+connect "!GND" "q.!GND"
+connect "!GND" "q.f.!GND"
+connect "!Vdd" "!Vdd"
+connect "!Vdd" "p.!Vdd"
+connect "!Vdd" "p.f.!Vdd"
+connect "!Vdd" "q.!Vdd"
+connect "!Vdd" "q.f.!Vdd"
+connect "p.f.priv" "p.f.priv"
+connect "q.f.priv" "q.f.priv"

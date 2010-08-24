@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_dummy_reference.h"
 	Class family for instance references in HAC.  
 	This file was reincarnated from "Object/art_object_inst_ref.h".
-	$Id: simple_meta_dummy_reference.h,v 1.5 2010/04/07 00:12:55 fang Exp $
+	$Id: simple_meta_dummy_reference.h,v 1.6 2010/08/24 21:05:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_DUMMY_REFERENCE_H__
@@ -130,6 +130,9 @@ public:
 
 	LOOKUP_TOP_LEVEL_REFERENCE_PROTO;
 	LOOKUP_TOP_LEVEL_REFERENCES_PROTO;
+#if PRIVATE_MEMBER_REFERENCES
+	LOOKUP_GLOBAL_REFERENCE_INDICES_PROTO;
+#endif
 
 private:
 	port_connection_ptr_type

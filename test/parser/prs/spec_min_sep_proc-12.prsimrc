@@ -1,0 +1,5 @@
+# "spec_min_sep_proc-12.prsimrc"
+# @haco@ spec_min_sep_proc-12.haco-c
+echo just make sure hacprsim launches
+ls doodoo
+

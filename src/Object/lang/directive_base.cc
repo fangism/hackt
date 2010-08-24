@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/directive_base.cc"
-	$Id: directive_base.cc,v 1.8 2010/07/14 18:12:34 fang Exp $
+	$Id: directive_base.cc,v 1.9 2010/08/24 21:05:44 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -12,6 +12,9 @@
 
 #include "Object/lang/directive_base.h"
 #include "Object/expr/const_param.h"
+#if PRIVATE_MEMBER_REFERENCES
+#include "Object/def/footprint.h"
+#endif
 #include "Object/common/dump_flags.h"
 #include "Object/inst/instance_pool.h"
 #include "Object/inst/bool_instance.h"
@@ -129,10 +132,61 @@ directive_base::dump_params(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This variant is limited to locally publicly accessible instances.
+ */
 template <class PTag>
 ostream&
 generic_directive_base::dump_group(const directive_node_group_type& g,
 		ostream& o, const PTag& np) {
+	const size_t lim = np.local_entries();
+	const dump_flags& df(dump_flags::no_definition_owner);
+	if (g.size() > 1) {
+		typedef directive_node_group_type::const_iterator
+							const_iterator;
+		const_iterator i(g.begin());
+		const const_iterator e(g.end());
+		o << '{';
+		INVARIANT(*i <= lim);
+		size_t ni = *i -1;	// node-pool is 0-indexed
+		np[ni].get_back_ref()->dump_hierarchical_name(o, df);
+		for (++i; i!=e; ++i) {
+			INVARIANT(*i <= lim);
+			ni = *i -1;	// node-pool is 0-indexed
+			np[ni].get_back_ref()->dump_hierarchical_name(
+				o << ',', df);
+		}
+		o << '}';
+	} else if (g.size() == 1) {
+		const size_t nip1 = *g.begin();
+		INVARIANT(nip1 <= lim);
+		const size_t ni = nip1 -1;	// pool is 0-indexed
+		np[ni].get_back_ref()->dump_hierarchical_name(o, df);
+	} else {
+		// during debugging, during reference resolution, 
+		// might print a spec directive before its references 
+		// have been resolved.
+		o << '?';
+	}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRIVATE_MEMBER_REFERENCES
+/**
+	This variant works for deep subinstance references.
+ */
+template <class Tag>
+ostream&
+generic_directive_base::dump_group(const directive_node_group_type& g,
+		ostream& o, const footprint& f) {
+	const dump_flags& df(dump_flags::no_definition_owner);
+	const bool is_top = true;	// ?
+#if 0
+	o << '[';
+	copy(g.begin(), g.end(), std::ostream_iterator<size_t>(o, ","));
+	o << ']';
+#endif
 	if (g.size() > 1) {
 		typedef directive_node_group_type::const_iterator
 							const_iterator;
@@ -140,28 +194,30 @@ generic_directive_base::dump_group(const directive_node_group_type& g,
 		const const_iterator e(g.end());
 		o << '{';
 		size_t ni = *i -1;	// node-pool is 0-indexed
-		np[ni].get_back_ref()->dump_hierarchical_name(o,
-			dump_flags::no_definition_owner);
+		f.dump_canonical_name<Tag>(o, ni, df, is_top);
 		for (++i; i!=e; ++i) {
 			ni = *i -1;	// node-pool is 0-indexed
-			np[ni].get_back_ref()->dump_hierarchical_name(
-				o << ',', dump_flags::no_definition_owner);
+			f.dump_canonical_name<Tag>(o << ',', ni, df, is_top);
 		}
 		o << '}';
+	} else if (g.size() == 1) {
+		const size_t nip1 = *g.begin();
+		const size_t ni = nip1 -1;	// pool is 0-indexed
+		f.dump_canonical_name<Tag>(o, ni, df, is_top);
 	} else {
-		INVARIANT(g.size() == 1);
-		const size_t ni = *g.begin() -1;	// pool is 0-indexed
-		np[ni].get_back_ref()->dump_hierarchical_name(o,
-			dump_flags::no_definition_owner);
+		// during debugging, during reference resolution, 
+		// might print a spec directive before its references 
+		// have been resolved.
+		o << '?';
 	}
 	return o;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class PTag>
 ostream&
 generic_directive_base::dump_groups(ostream& o, const PTag& np) const {
-//	o << '(';
 {
 	typedef nodes_type::const_iterator const_iterator;
 	const_iterator i(nodes.begin());
@@ -172,10 +228,29 @@ generic_directive_base::dump_groups(ostream& o, const PTag& np) const {
 		dump_group(*i, o << ',', np);
 	}
 }
-//	return o << ')';
 	return o;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRIVATE_MEMBER_REFERENCES
+template <class Tag>
+ostream&
+generic_directive_base::dump_groups(ostream& o, const footprint& f) const {
+{
+	typedef nodes_type::const_iterator const_iterator;
+	const_iterator i(nodes.begin());
+	const const_iterator e(nodes.end());
+	INVARIANT(i!=e);
+	dump_group<Tag>(*i, o, f);
+	for (++i; i!=e; ++i) {
+		dump_group<Tag>(*i, o << ',', f);
+	}
+}
+	return o;
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // explicit template instantiations
 template 
 ostream&
@@ -187,6 +262,17 @@ ostream&
 generic_directive_base::dump_groups(ostream&,
 	const instance_pool<process_instance>&) const;
 
+#if PRIVATE_MEMBER_REFERENCES
+template 
+ostream&
+generic_directive_base::dump_groups<bool_tag>(
+	ostream&, const footprint&) const;
+
+template 
+ostream&
+generic_directive_base::dump_groups<process_tag>(
+	ostream&, const footprint&) const;
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

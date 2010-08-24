@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/reference_enum.h"
 	Forward declarations and typedefs for indexed/enumerated references.  
-	$Id: reference_enum.h,v 1.3 2010/04/02 22:18:46 fang Exp $
+	$Id: reference_enum.h,v 1.4 2010/08/24 21:05:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_REFERENCE_ENUM_H__
@@ -9,6 +9,8 @@
 
 #include "Object/traits/type_tag_enum.h"
 #include <utility>
+#include "Object/expr/types.h"
+#include "util/packed_array_fwd.h"
 #include "util/STL/vector_fwd.h"
 #include "util/size_t.h"
 
@@ -22,12 +24,24 @@ namespace entity {
  */
 typedef	std::pair<size_t, size_t>	global_indexed_reference;
 
+/**
+	Return type for references to dense array collections.
+ */
+typedef	util::packed_array_generic<pint_value_type, size_t>
+					index_array_reference;
+/**
+	Same, but paired with meta-type tag.
+ */
+typedef	std::pair<size_t, index_array_reference>
+					typed_index_array_reference;
+
 static
 inline
 global_indexed_reference
 make_global_reference(const size_t f, const size_t s) {
 	return global_indexed_reference(f, s);
 }
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Array container of reference.  

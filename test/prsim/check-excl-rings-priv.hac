@@ -1,0 +1,21 @@
+// "check-excl-rings-priv.hac"
+
+defproc foo(bool a, b) {
+bool x, y;
+prs {
+	a	=> x-
+	b	=> y-
+}
+}
+
+defproc bar(bool p, q) {
+foo x1(p, q), x2(p, q);
+}
+
+bool a, b;
+bar z1(a, b), z2(a, b);
+
+spec {
+exclhi(z1.x1.x, z2.x1.x)
+}
+

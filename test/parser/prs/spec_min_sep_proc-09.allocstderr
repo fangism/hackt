@@ -1,0 +1,38 @@
+globID	super		localID	canonical	footprint-frame
+[global process entries]
+1	(top)	-	1	doodoo	deep<>
+	process: ;2..3 {4..11}
+	bool: 1,2,3,4;5 {6..9}
+2	process	1	1	doodoo.now[0]	test_me<>
+	process: ;4..7
+	bool: 1,2,3,3,5,5;6..7
+3	process	1	2	doodoo.now[1]	test_me<>
+	process: ;8..11
+	bool: 1,2,5,5,4,4;8..9
+4	process	2	1	doodoo.now[0].inv_a[0]	inv1<>
+	bool: 1,2,3,6
+5	process	2	2	doodoo.now[0].inv_a[1]	inv1<>
+	bool: 1,2,3,7
+6	process	2	3	doodoo.now[0].inv_b[0]	inv2<>
+	bool: 1,2,6,5
+7	process	2	4	doodoo.now[0].inv_b[1]	inv2<>
+	bool: 1,2,7,5
+8	process	3	1	doodoo.now[1].inv_a[0]	inv1<>
+	bool: 1,2,5,8
+9	process	3	2	doodoo.now[1].inv_a[1]	inv1<>
+	bool: 1,2,5,9
+10	process	3	3	doodoo.now[1].inv_b[0]	inv2<>
+	bool: 1,2,8,4
+11	process	3	4	doodoo.now[1].inv_b[1]	inv2<>
+	bool: 1,2,9,4
+[global bool entries]
+1	(top)	-	1	!GND	 @[ supply_low ]
+2	(top)	-	2	!Vdd	 @[ supply_high ]
+3	(top)	-	3	doodoo.x	
+4	(top)	-	4	doodoo.y	
+5	process	1	5	doodoo.m	
+6	process	2	7	doodoo.now[0].mid[0]	
+7	process	2	8	doodoo.now[0].mid[1]	
+8	process	3	7	doodoo.now[1].mid[0]	
+9	process	3	8	doodoo.now[1].mid[1]	
+

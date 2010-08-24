@@ -1,0 +1,536 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	48
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	153
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	9	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	10	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	11	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	12	##ADDR##	portscop	0	#HEAD#	#TAIL#	28
+	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	21	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	24	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	25	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	28	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	procdefn	0	#HEAD#	#TAIL#	152
+	33	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	34	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	35	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
+	36	##ADDR##	procplch	0	#HEAD#	#TAIL#	29
+	37	##ADDR##	procplch	0	#HEAD#	#TAIL#	29
+	38	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	27
+	39	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	27
+	40	##ADDR##	portscop	0	#HEAD#	#TAIL#	28
+	41	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	42	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	43	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	44	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	45	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	46	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	47	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	48	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	49	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	50	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	51	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	52	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	53	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	54	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	55	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	56	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	57	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	58	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	59	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	60	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	61	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	62	##ADDR##	procdefn	0	#HEAD#	#TAIL#	125
+	63	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	64	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	65	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	66	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	67	##ADDR##	portscop	0	#HEAD#	#TAIL#	28
+	68	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	69	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	70	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	71	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	72	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	73	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	74	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	75	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	76	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	77	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	78	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	79	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	80	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	81	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	82	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	36
+	83	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	84	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	85	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	86	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	87	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	88	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	89	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	90	##ADDR##	footprnt	0	#HEAD#	#TAIL#	451
+	91	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	92	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	93	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	94	##ADDR##	procdefn	0	#HEAD#	#TAIL#	125
+	95	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	96	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	97	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	98	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	99	##ADDR##	portscop	0	#HEAD#	#TAIL#	28
+	100	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	101	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	102	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	103	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	104	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	105	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	106	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	107	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	108	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	109	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	110	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	111	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	112	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	113	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	114	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	36
+	115	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	116	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	117	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	118	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	119	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	120	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	121	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	122	##ADDR##	footprnt	0	#HEAD#	#TAIL#	451
+	123	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	124	##ADDR##	loopscop	0	#HEAD#	#TAIL#	28
+	125	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	126	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	127	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	32
+	128	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	129	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	130	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	131	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	132	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	133	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	134	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	135	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	136	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	137	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	32
+	138	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	139	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	140	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	141	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	142	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	143	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	144	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	145	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	146	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	147	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1086
+	148	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	149	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	150	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	151	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	32
+	152	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	153	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	154	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	155	##ADDR##	adbmiref	0	#HEAD#	#TAIL#	21
+	156	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	157	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	158	##ADDR##	adbmiref	0	#HEAD#	#TAIL#	21
+	159	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	160	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	161	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	32
+	162	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	163	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	164	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	165	##ADDR##	adbmiref	0	#HEAD#	#TAIL#	21
+	166	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	167	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	168	##ADDR##	adbmiref	0	#HEAD#	#TAIL#	21
+	169	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	170	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	171	##ADDR##	SPCprdrc	0	#HEAD#	#TAIL#	52
+	172	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	173	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
+	174	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	175	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	176	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	177	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
+	178	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	179	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	180	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	181	##ADDR##	SPCprdrc	0	#HEAD#	#TAIL#	52
+	182	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	183	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
+	184	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	185	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	186	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	187	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
+	188	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	189	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	190	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	191	##ADDR##	footprnt	0	#HEAD#	#TAIL#	820
+	192	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	193	##ADDR##	procplch	0	#HEAD#	#TAIL#	30
+	194	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	195	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	196	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	197	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	198	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	199	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	200	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	201	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	202	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	203	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	204	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	205	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	206	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	207	##ADDR##	footprnt	0	#HEAD#	#TAIL#	452
+	208	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  3 instantiation-collections
+  0 sub-namespaces
+  4 definitions
+  0 typedefs
+  Definitions:
+    deep = process-definition (defined) deep(
+        bool<> !GND
+        bool<> !Vdd
+        bool<> x
+        bool<> y
+      )
+      In definition "deep", we have: {
+      Instances:
+        !GND = bool<> deep::!GND
+        !Vdd = bool<> deep::!Vdd
+        m = bool<> deep::m
+        now = test_me<> deep::now^1
+        x = bool<> deep::x
+        y = bool<> deep::y
+      unroll sequence: 
+        ports: (
+          bool<> !GND
+          bool<> !Vdd
+          bool<> x
+          bool<> y
+        )
+        !GND@[supply=0]
+        !Vdd@[supply=1]
+        bool<> m
+        test_me<> now[0..1]
+        now[0] ( , , { x, x }, { m, m });
+        now[1] ( , , { m, m }, { y, y });
+      spec:
+        min_sep_proc<20>(now[0].inv_a,now[0].inv_b)
+        min_sep_proc<20>(now[1].inv_a,now[1].inv_b)
+      footprint: {
+        !GND = bool^0 = deep<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = deep<>::!Vdd (2) @[ supply_high port-alias ] 
+        m = bool^0 = deep<>::m (5) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
+        now = process test_me<>^1
+          {
+            [0] = deep<>::now[0] (1) (
+              !GND = bool^0 = deep<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = deep<>::!Vdd (2) @[ supply_high port-alias ] 
+              in = bool^1
+                {
+                  [0] = deep<>::x (3) @[ port-alias sub-FO- sub-FO+ ] 
+                  [1] = deep<>::x (3) @[ port-alias sub-FO- sub-FO+ ] 
+                }
+              out = bool^1
+                {
+                  [0] = deep<>::m (5) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
+                  [1] = deep<>::m (5) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
+                }
+            )
+            [1] = deep<>::now[1] (2) (
+              !GND = bool^0 = deep<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = deep<>::!Vdd (2) @[ supply_high port-alias ] 
+              in = bool^1
+                {
+                  [0] = deep<>::m (5) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
+                  [1] = deep<>::m (5) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
+                }
+              out = bool^1
+                {
+                  [0] = deep<>::y (4) @[ port-alias sub-FI- sub-FI+ ] 
+                  [1] = deep<>::y (4) @[ port-alias sub-FI- sub-FI+ ] 
+                }
+            )
+          }
+        x = bool^0 = deep<>::x (3) @[ port-alias sub-FO- sub-FO+ ] 
+        y = bool^0 = deep<>::y (4) @[ port-alias sub-FI- sub-FI+ ] 
+        Created state:
+        process instance pool: (0 ports, 2 local, 8 mapped)
+        1	deep<>::now[0]	test_me<>
+          bool: 1,2,3,3,5,5
+        2	deep<>::now[1]	test_me<>
+          bool: 1,2,5,5,4,4
+        private sub-process index map:
+          (1 -> 0)
+          (2 -> 4)
+          (3 -> 8)
+        bool instance pool: (4 ports, 1 local, 4 mapped)
+        1	deep<>::!GND @[ supply_low port-alias ]	
+        2	deep<>::!Vdd @[ supply_high port-alias ]	
+        3	deep<>::x @[ port-alias sub-FO- sub-FO+ ]	
+        4	deep<>::y @[ port-alias sub-FI- sub-FI+ ]	
+        5	deep<>::m @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ]	
+        private sub-bool index map:
+          (1 -> 0)
+          (2 -> 2)
+          (3 -> 4)
+        resolved specs:
+        min_sep_proc<20>({now[0].inv_a[0],now[0].inv_a[1]},{now[0].inv_b[0],now[0].inv_b[1]})
+        min_sep_proc<20>({now[1].inv_a[0],now[1].inv_a[1]},{now[1].inv_b[0],now[1].inv_b[1]})
+      }
+      }
+
+    inv1 = process-definition (defined) inv1(
+        bool<> !GND
+        bool<> !Vdd
+        bool<> a
+        bool<> b
+      )
+      In definition "inv1", we have: {
+      Instances:
+        !GND = bool<> inv1::!GND
+        !Vdd = bool<> inv1::!Vdd
+        a = bool<> inv1::a
+        b = bool<> inv1::b
+      unroll sequence: 
+        ports: (
+          bool<> !GND
+          bool<> !Vdd
+          bool<> a
+          bool<> b
+        )
+        !GND@[supply=0]
+        !Vdd@[supply=1]
+      prs:
+        {
+        a -> b-
+        ~a -> b+
+        }
+      footprint: {
+        !GND = bool^0 = inv1<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = inv1<>::!Vdd (2) @[ supply_high port-alias ] 
+        a = bool^0 = inv1<>::a (3) @[ port-alias loc-FO- loc-FO+ ] 
+        b = bool^0 = inv1<>::b (4) @[ port-alias loc-FI- loc-FI+ ] 
+        Created state:
+        bool instance pool: (4 ports, 0 local, 0 mapped)
+        1	inv1<>::!GND @[ supply_low port-alias ]	
+        2	inv1<>::!Vdd @[ supply_high port-alias ]	
+        3	inv1<>::a @[ port-alias loc-FO- loc-FO+ ]	
+        4	inv1<>::b @[ port-alias loc-FI- loc-FI+ ]	
+        resolved prs:
+        a -> b-
+        ~a -> b+
+        rule supply map: (rules, macros, @nodes : Vdd, GND)
+        0..1 none none : 2, 1 | 2, 1
+      }
+      }
+
+    inv2 = process-definition (defined) inv2(
+        bool<> !GND
+        bool<> !Vdd
+        bool<> p
+        bool<> q
+      )
+      In definition "inv2", we have: {
+      Instances:
+        !GND = bool<> inv2::!GND
+        !Vdd = bool<> inv2::!Vdd
+        p = bool<> inv2::p
+        q = bool<> inv2::q
+      unroll sequence: 
+        ports: (
+          bool<> !GND
+          bool<> !Vdd
+          bool<> p
+          bool<> q
+        )
+        !GND@[supply=0]
+        !Vdd@[supply=1]
+      prs:
+        {
+        p -> q-
+        ~p -> q+
+        }
+      footprint: {
+        !GND = bool^0 = inv2<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = inv2<>::!Vdd (2) @[ supply_high port-alias ] 
+        p = bool^0 = inv2<>::p (3) @[ port-alias loc-FO- loc-FO+ ] 
+        q = bool^0 = inv2<>::q (4) @[ port-alias loc-FI- loc-FI+ ] 
+        Created state:
+        bool instance pool: (4 ports, 0 local, 0 mapped)
+        1	inv2<>::!GND @[ supply_low port-alias ]	
+        2	inv2<>::!Vdd @[ supply_high port-alias ]	
+        3	inv2<>::p @[ port-alias loc-FO- loc-FO+ ]	
+        4	inv2<>::q @[ port-alias loc-FI- loc-FI+ ]	
+        resolved prs:
+        p -> q-
+        ~p -> q+
+        rule supply map: (rules, macros, @nodes : Vdd, GND)
+        0..1 none none : 2, 1 | 2, 1
+      }
+      }
+
+    test_me = process-definition (defined) test_me(
+        bool<> !GND
+        bool<> !Vdd
+        bool<> in[0..1]
+        bool<> out[0..1]
+      )
+      In definition "test_me", we have: {
+      Instances:
+        !GND = bool<> test_me::!GND
+        !Vdd = bool<> test_me::!Vdd
+        in = bool<> test_me::in^1
+        inv_a = inv1<> test_me::inv_a^1
+        inv_b = inv2<> test_me::inv_b^1
+        mid = bool<> test_me::mid^1
+        out = bool<> test_me::out^1
+      unroll sequence: 
+        ports: (
+          bool<> !GND
+          bool<> !Vdd
+          bool<> in[0..1]
+          bool<> out[0..1]
+        )
+        !GND@[supply=0]
+        !Vdd@[supply=1]
+        bool<> mid[0..1]
+        inv1<> inv_a[0..1]
+        inv2<> inv_b[0..1]
+        (;i:[0..1]:
+          inv_a[$i] ( , , in[$i], mid[$i]);
+          inv_b[$i] ( , , mid[$i], out[$i]);
+        )
+      footprint: {
+        !GND = bool^0 = test_me<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = test_me<>::!Vdd (2) @[ supply_high port-alias ] 
+        in = bool^1
+          {
+            [0] = test_me<>::in[0] (3) @[ port-alias sub-FO- sub-FO+ ] 
+            [1] = test_me<>::in[1] (4) @[ port-alias sub-FO- sub-FO+ ] 
+          }
+        inv_a = process inv1<>^1
+          {
+            [0] = test_me<>::inv_a[0] (1) (
+              !GND = bool^0 = test_me<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = test_me<>::!Vdd (2) @[ supply_high port-alias ] 
+              a = bool^0 = test_me<>::in[0] (3) @[ port-alias sub-FO- sub-FO+ ] 
+              b = bool^0 = test_me<>::mid[0] (7) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
+            )
+            [1] = test_me<>::inv_a[1] (2) (
+              !GND = bool^0 = test_me<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = test_me<>::!Vdd (2) @[ supply_high port-alias ] 
+              a = bool^0 = test_me<>::in[1] (4) @[ port-alias sub-FO- sub-FO+ ] 
+              b = bool^0 = test_me<>::mid[1] (8) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
+            )
+          }
+        inv_b = process inv2<>^1
+          {
+            [0] = test_me<>::inv_b[0] (3) (
+              !GND = bool^0 = test_me<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = test_me<>::!Vdd (2) @[ supply_high port-alias ] 
+              p = bool^0 = test_me<>::mid[0] (7) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
+              q = bool^0 = test_me<>::out[0] (5) @[ port-alias sub-FI- sub-FI+ ] 
+            )
+            [1] = test_me<>::inv_b[1] (4) (
+              !GND = bool^0 = test_me<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = test_me<>::!Vdd (2) @[ supply_high port-alias ] 
+              p = bool^0 = test_me<>::mid[1] (8) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
+              q = bool^0 = test_me<>::out[1] (6) @[ port-alias sub-FI- sub-FI+ ] 
+            )
+          }
+        mid = bool^1
+          {
+            [0] = test_me<>::mid[0] (7) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
+            [1] = test_me<>::mid[1] (8) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
+          }
+        out = bool^1
+          {
+            [0] = test_me<>::out[0] (5) @[ port-alias sub-FI- sub-FI+ ] 
+            [1] = test_me<>::out[1] (6) @[ port-alias sub-FI- sub-FI+ ] 
+          }
+        Created state:
+        process instance pool: (0 ports, 4 local, 0 mapped)
+        1	test_me<>::inv_a[0]	inv1<>
+          bool: 1,2,3,7
+        2	test_me<>::inv_a[1]	inv1<>
+          bool: 1,2,4,8
+        3	test_me<>::inv_b[0]	inv2<>
+          bool: 1,2,7,5
+        4	test_me<>::inv_b[1]	inv2<>
+          bool: 1,2,8,6
+        bool instance pool: (6 ports, 2 local, 0 mapped)
+        1	test_me<>::!GND @[ supply_low port-alias ]	
+        2	test_me<>::!Vdd @[ supply_high port-alias ]	
+        3	test_me<>::in[0] @[ port-alias sub-FO- sub-FO+ ]	
+        4	test_me<>::in[1] @[ port-alias sub-FO- sub-FO+ ]	
+        5	test_me<>::out[0] @[ port-alias sub-FI- sub-FI+ ]	
+        6	test_me<>::out[1] @[ port-alias sub-FI- sub-FI+ ]	
+        7	test_me<>::mid[0] @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ]	
+        8	test_me<>::mid[1] @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ]	
+      }
+      }
+
+  Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
+    doodoo = deep<> doodoo
+}
+
+footprint: {
+  !GND = bool^0 = !GND (1) @[ supply_low ] 
+  !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
+  doodoo = process deep<>^0 = doodoo (1) (
+    !GND = bool^0 = !GND (1) @[ supply_low ] 
+    !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
+    x = bool^0 = doodoo.x (3) @[ sub-FO- sub-FO+ ] 
+    y = bool^0 = doodoo.y (4) @[ sub-FI- sub-FI+ ] 
+  )
+  Created state:
+  process instance pool: (0 ports, 1 local, 10 mapped)
+  1	doodoo	deep<>
+    bool: 1,2,3,4
+  private sub-process index map:
+    (1 -> 0)
+    (2 -> 10)
+  bool instance pool: (0 ports, 4 local, 5 mapped)
+  1	!GND @[ supply_low ]	
+  2	!Vdd @[ supply_high ]	
+  3	doodoo.x @[ sub-FO- sub-FO+ ]	
+  4	doodoo.y @[ sub-FI- sub-FI+ ]	
+  private sub-bool index map:
+    (1 -> 0)
+    (2 -> 5)
+}

@@ -4,7 +4,7 @@
 	by the object-related library.  
 	This file was "Object/common/extern_templates.cc"
 		in its previous life.  
-	$Id: extern_templates.cc,v 1.12 2007/03/01 03:58:53 fang Exp $
+	$Id: extern_templates.cc,v 1.13 2010/08/24 21:05:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_EXTERN_TEMPLATES_CC__
@@ -57,6 +57,11 @@ template multikey<3, pint_value_type>::multikey(
 template multikey<4, pint_value_type>::multikey(
 	const multikey_generator_generic<pint_value_type>&, pint_value_type);
 
+// for passing around and collecting subindices
+// see "Object/ref/meta_instance_reference_subtypes.h": subindex_collection_type
+template class packed_array_generic<pint_value_type, size_t>;
+
+// for passing around dense arrays/collections of values
 template class packed_array_generic<pint_value_type, pint_value_type>;
 template class packed_array_generic<pint_value_type, pbool_value_type>;
 template class packed_array_generic<pint_value_type, preal_value_type>;

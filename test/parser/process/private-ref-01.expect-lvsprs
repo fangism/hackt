@@ -1,0 +1,9 @@
+exclhi("p.priv", "q.priv")
+connect "!GND" "!GND"
+connect "!GND" "p.!GND"
+connect "!GND" "q.!GND"
+connect "!Vdd" "!Vdd"
+connect "!Vdd" "p.!Vdd"
+connect "!Vdd" "q.!Vdd"
+connect "p.priv" "p.priv"
+connect "q.priv" "q.priv"

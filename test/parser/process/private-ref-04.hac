@@ -1,0 +1,16 @@
+// "private-ref-04.hac"
+// copy-modified from "private-ref-01.hac"
+// testing references to private members
+// expect FAIL create
+// @hflat-flags@ -f self-aliases
+
+defproc foo() {
+bool priv[2];
+}
+
+foo p, q;
+
+spec {
+exclhi(p.priv[1], q.priv[2])
+}
+

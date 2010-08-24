@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.28 2010/04/07 00:12:46 fang Exp $
+	$Id: substructure_alias_base.h,v 1.29 2010/08/24 21:05:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -198,6 +198,17 @@ protected:
 	load_object_base(const footprint&, const istream&) const { }
 
 };	// end class substructure_alias_base<false>
+
+//=============================================================================
+struct instance_index_extractor {
+
+	template <class AliasPtr>
+	size_t
+	operator () (const AliasPtr& alias_ptr) const {
+		NEVER_NULL(alias_ptr);
+		return alias_ptr->instance_index;
+	}
+};	// end struct instance_index_extractor
 
 //=============================================================================
 }	// end namespace entity

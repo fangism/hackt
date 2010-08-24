@@ -1,0 +1,5 @@
+FATAL: reference to uninstantiated bool index [2]
+ERROR: unrolling aliases.
+Error resolving literal node at position 2 of spec directive 'exclhi'.
+Error encountered during module::create.
+ERROR in creating.  Aborting.

@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_dummy_reference.cc"
 	Method definitions for the meta_dummy_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_dummy_reference.tcc,v 1.6 2010/04/07 00:12:55 fang Exp $
+ 	$Id: simple_meta_dummy_reference.tcc,v 1.7 2010/08/24 21:05:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_DUMMY_REFERENCE_TCC__
@@ -228,6 +228,19 @@ SIMPLE_META_DUMMY_REFERENCE_CLASS::lookup_top_level_references(
 	ICE_NEVER_CALL(cerr);
 	return good_bool(false);
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRIVATE_MEMBER_REFERENCES
+SIMPLE_META_DUMMY_REFERENCE_TEMPLATE_SIGNATURE
+good_bool
+SIMPLE_META_DUMMY_REFERENCE_CLASS::lookup_global_reference_indices(
+		const global_entry_context&, 
+		typed_index_array_reference&,
+		const unroll_context*) const {
+	ICE_NEVER_CALL(cerr);
+	return good_bool(false);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SIMPLE_META_DUMMY_REFERENCE_TEMPLATE_SIGNATURE

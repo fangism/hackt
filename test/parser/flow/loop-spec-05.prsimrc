@@ -1,0 +1,7 @@
+# "loop-spec-05.prsimrc"
+# @haco@ loop-spec-05.haco-c
+
+echo testing prsim loading rings from private member references
+allrings-chk
+allrings-mk
+

@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/inst_ref_implementation.h"
 	Implementation details of instance references.  
- 	$Id: inst_ref_implementation.h,v 1.24 2010/04/07 00:12:53 fang Exp $
+ 	$Id: inst_ref_implementation.h,v 1.25 2010/08/24 21:05:48 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INST_REF_IMPLEMENTATION_H__
@@ -104,58 +104,6 @@ simple_unroll_generic_scalar_substructure_reference(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Appropriate for substructured types only.  
-	Do NOT call this from member_instance_references, because
-		this uses the instance_index directly, instead
-		of a footprint_frame_map to retrieve the footprint_frame*.  
-	TODO: optional, accept a context argument passed from the 
-		top-level scope -- for meta-expression evaluation.  
- */
-template <class Tag>
-static
-const footprint_frame*
-simple_lookup_footprint_frame(
-		const typename instance_placeholder_type<Tag>::type& inst, 
-		index_list_ptr_arg_type ind,
-		const footprint& top) {
-	STACKTRACE_VERBOSE;
-	const unroll_context uc(&top, &top);
-	const never_ptr<substructure_alias>
-		alias(unroll_generic_scalar_substructure_reference<Tag>(
-			inst, ind, uc));
-	if (!alias) {
-		cerr << "Error resolving a single instance alias." << endl;
-		return NULL;
-	}
-	const size_t id = alias->instance_index;
-	STACKTRACE_INDENT_PRINT("id = " << id << endl);
-	INVARIANT(id);
-	return &top.template get_instance<Tag>(id)._frame;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	\param sm the allocated state manager.
-	\param top top-level footprint.
- */
-template <class Tag>
-static
-const footprint_frame*
-member_lookup_footprint_frame(
-		const member_meta_instance_reference<Tag>& _this, 
-		const footprint& top) {
-	STACKTRACE_VERBOSE;
-	const size_t id = _this.lookup_globally_allocated_index(top);
-	STACKTRACE_INDENT_PRINT("id = " << id << endl);
-	if (!id) {
-		// already have error message
-		return NULL;
-	}
-	return &top.template get_instance<Tag>(id)._frame;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class Tag>
 static
 meta_instance_reference_base::port_connection_ptr_type
@@ -228,37 +176,6 @@ simple_unroll_generic_scalar_substructure_reference(
 		const unroll_context&) {
 	STACKTRACE_VERBOSE;
 	return never_ptr<substructure_alias>(NULL);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Substructure-less types have no footprint frame.  
-	This really should never be called.  
- */
-template <class Tag>
-static
-const footprint_frame*
-simple_lookup_footprint_frame(
-		const typename instance_placeholder_type<Tag>::type&, 
-		index_list_ptr_arg_type,
-		const footprint& /* top */) {
-	// ICE?
-	return NULL;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Should never be asking for a footprint_frame of a substructureless
-	entity.  
- */
-template <class Tag>
-static
-const footprint_frame*
-member_lookup_footprint_frame(
-		const member_meta_instance_reference<Tag>&, 
-		const footprint&) {
-	// ICE?
-	return NULL;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

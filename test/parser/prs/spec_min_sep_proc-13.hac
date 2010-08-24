@@ -1,0 +1,21 @@
+// "spec_min_sep_proc-13.hac"
+// reduced test case from original by Pankaj Golani (while on branch)
+
+defproc goo() { }
+defproc foo() { }
+defproc bar() {
+	foo f;
+}
+
+defproc oo (
+	goo g       // this was causing an offset in PIDs
+)
+{
+	bar a, b;
+	spec {
+		min_sep_proc<22>(a.f, b.f)
+	}
+}
+
+oo ooo;
+

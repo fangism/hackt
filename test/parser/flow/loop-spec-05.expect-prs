@@ -1,0 +1,12 @@
+mk_exclhi("bar[0].x[0]", "bar[0].x[1]")
+mk_exclhi("bar[1].x[0]", "bar[1].x[1]")
+mk_exclhi("bar[2].x[0]", "bar[2].x[1]")
+mk_exclhi("bar[3].x[0]", "bar[3].x[1]")
+= "!GND" "bar[0].!GND"
+= "!GND" "bar[1].!GND"
+= "!GND" "bar[2].!GND"
+= "!GND" "bar[3].!GND"
+= "!Vdd" "bar[0].!Vdd"
+= "!Vdd" "bar[1].!Vdd"
+= "!Vdd" "bar[2].!Vdd"
+= "!Vdd" "bar[3].!Vdd"

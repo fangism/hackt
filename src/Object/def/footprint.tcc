@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.tcc"
 	Exported template implementation of footprint base class. 
-	$Id: footprint.tcc,v 1.8 2010/08/24 18:08:38 fang Exp $
+	$Id: footprint.tcc,v 1.9 2010/08/24 21:05:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_TCC__
@@ -124,7 +124,6 @@ footprint::dump_canonical_name(ostream& o, const size_t gi,
 			<< (sp._frame._footprint->get_meta_type() == META_TYPE_PROCESS ?
 				df.process_member_separator :
 				df.struct_member_separator);
-		// TODO: pass in dump_flags to honor hierarchical separator
 		// e.second is the offset to subtract
 		sp._frame._footprint->dump_canonical_name<Tag>(
 			o, si -e.second, df, false);
@@ -195,7 +194,6 @@ if (index < local) {
 	const string& sep(ppi._frame._footprint->get_meta_type()
 			== META_TYPE_PROCESS ?
 		df.process_member_separator : df.struct_member_separator);
-		// TODO: pass dump_flags to format struct separator
 		// for now local aliases are always through public ports
 	// to form cross-product of aliases
 	set<string>::const_iterator
