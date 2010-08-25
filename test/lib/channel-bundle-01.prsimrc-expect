@@ -1,8 +1,2 @@
-Warning: value 61453 exceeds the maximum value encoded, 32.
-Higher significant bits may be ignored.
-Warning: value 57005 exceeds the maximum value encoded, 32.
-Higher significant bits may be ignored.
-Warning: value 48879 exceeds the maximum value encoded, 32.
-Higher significant bits may be ignored.
 channels:
 C : .e(init:0)  8x1of4 expect {0,1,3,2,61453,57005,48879,} @0
