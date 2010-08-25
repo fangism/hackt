@@ -1,0 +1,8 @@
+// "channel-test-j.hac"
+//	$Id: channel-test-j.hac,v 1.1 2010/08/25 00:02:52 fang Exp $
+
+import "../../lib/channel.hac";
+
+// odd-ball radix and bundles
+eMx1ofN<7,3> X;
+

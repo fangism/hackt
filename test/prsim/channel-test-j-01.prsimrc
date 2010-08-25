@@ -1,0 +1,7 @@
+# "channel-test-j-01.prsimrc"
+# @haco@ channel-test-j.haco-c
+
+echo testing bundled channels
+channel X e:1 b:3 d:7
+channel-report-time on
+

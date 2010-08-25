@@ -5,6 +5,14 @@
 
 2010-08-24	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-84-13:
+	  hacprsim bug fix: incorrect diagnostic on bundled channel
+		max value and range, now fixed.
+	  Added test cases.  
+
+
+2010-08-24	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-84-12:
 	  Added new bool attributes for indicating special active-high
 		or active-low reset nodes.  [reset=1] [reset=0].

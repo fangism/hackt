@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Channel-prsim.cc"
-	$Id: Channel-prsim.cc,v 1.34 2010/08/24 21:05:51 fang Exp $
+	$Id: Channel-prsim.cc,v 1.35 2010/08/25 00:02:49 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -930,7 +930,7 @@ read_values_from_list(const string_list& s, const channel::value_type max,
 				"max(unsigned value_type)/2, which may screw "
 				"up ldiv() when translating to rails." << endl;
 		}
-		if (i >= max) {
+		if (i > max) {
 			cerr <<
 "Warning: value " << i << " exceeds the maximum value encoded, " << max << ".\n"
 "Higher significant bits may be ignored." << endl;
@@ -992,12 +992,12 @@ channel::max_value(void) const {
 	case CHANNEL_TYPE_SINGLE_TRACK:
 	case CHANNEL_TYPE_1ofN:
 #endif
-		// FIXME: should be radix() << bundles();
-		return bundles() * radix();
+		// can't assume radix is 2
+		return value_type(pow(radix(), bundles())) -1;
 #if PRSIM_CHANNEL_LEDR
 	case CHANNEL_TYPE_LEDR:
 	default:
-		return 2;
+		return 1;	// 0 or 1
 	}
 #endif
 }

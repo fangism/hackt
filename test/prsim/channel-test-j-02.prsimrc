@@ -1,0 +1,9 @@
+# "channel-test-j-02.prsimrc"
+# @haco@ channel-test-j.haco-c
+
+source channel-test-j-01.prsimrc
+
+echo expecting value range diagonstics...
+channel-source-args X 0 13 67 145 297 412 875 342 343
+echo maximum value should be 343
+

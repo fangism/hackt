@@ -1,0 +1,10 @@
+testing bundled channels 
+expecting value range diagonstics... 
+Warning: channel acknowledge `X.e' has no fanin!
+Warning: value 412 exceeds the maximum value encoded, 342.
+Higher significant bits may be ignored.
+Warning: value 875 exceeds the maximum value encoded, 342.
+Higher significant bits may be ignored.
+Warning: value 343 exceeds the maximum value encoded, 342.
+Higher significant bits may be ignored.
+maximum value should be 343 
