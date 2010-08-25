@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/vpi-prsim.cc"
-	$Id: vpi-prsim.cc,v 1.27 2010/08/07 00:00:06 fang Exp $
+	$Id: vpi-prsim.cc,v 1.28 2010/08/25 18:53:46 fang Exp $
 	Thanks to Rajit for figuring out how to do this and providing
 	a reference implementation, which was yanked from:
  */
@@ -403,16 +403,22 @@ static void __advance_prsim (const Time_t& vcstime, const int context)
 	}
 	cout << "prsim time: " << prsim_time << endl;
 #endif
-	if (prsim_state->watching_all_nodes()) {
+	if (prsim_state->watching_all_nodes()
+#if USE_WATCHPOINT_FLAG
+			|| prsim_state->is_watching_node(GET_NODE(nr))
+#endif
+			) {
 		print_watched_node(cout << "prsim:\t" << prsim_time << '\t', 
 			*prsim_state, nr);
 	}
     if (n.is_breakpoint()) {
+#if !USE_WATCHPOINT_FLAG
 	if (prsim_state->is_watching_node(GET_NODE(nr)) &&
 			!prsim_state->watching_all_nodes()) {
 		print_watched_node(cout << "prsim:\t" << prsim_time << '\t', 
 			*prsim_state, nr);
 	}
+#endif
     if (n_space != n_end) {
 	STACKTRACE("breakpt && registered");
       s_vpi_time tm;
@@ -1091,6 +1097,9 @@ require_prsim_state(__FUNCTION__);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This is really superceded by $prsim_cmd("watch ...");
+ */
 static PLI_INT32 prsim_watch (PLI_BYTE8* args)
 {
   STACKTRACE_VERBOSE;

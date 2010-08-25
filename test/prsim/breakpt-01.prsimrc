@@ -1,0 +1,12 @@
+# "breakpt-01.prsimrc"
+# @haco@ inv.haco-c
+
+echo bug fix test cases for breakpoints
+watch c
+breakpt c
+breaks
+echo expect c to be in breakpoints
+
+set a 1
+cycle
+

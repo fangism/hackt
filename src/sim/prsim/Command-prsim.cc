@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.74 2010/08/24 18:08:45 fang Exp $
+	$Id: Command-prsim.cc,v 1.75 2010/08/25 18:53:45 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -693,14 +693,17 @@ if (a.size() > 2) {
 			Cycle::main() and Advance::main().
 			tracing stuff here later...
 		***/
-		if (s.watching_all_nodes()) {
+		if (s.watching_all_nodes()
+#if USE_WATCHPOINT_FLAG
+			|| n.is_watchpoint()
+#endif
+			) {
 			print_watched_node(cout << '\t' << ct << '\t', s, ni);
 		}
 		if (n.is_breakpoint()) {
+#if !USE_WATCHPOINT_FLAG
 			// this includes watchpoints
 			const bool w = s.is_watching_node(GET_NODE(ni));
-			const string nodename(
-				s.get_node_canonical_name(GET_NODE(ni)));
 			if (w) {
 			if (!s.watching_all_nodes()) {
 				print_watched_node(cout << '\t' << ct << '\t',
@@ -709,6 +712,9 @@ if (a.size() > 2) {
 			}
 			// channel support
 			if (!w) {
+#endif
+				const string nodename(
+					s.get_node_canonical_name(GET_NODE(ni)));
 				// node is plain breakpoint
 				cout << "\t*** break, " << i <<
 					" steps left: `" << nodename <<
@@ -717,7 +723,9 @@ if (a.size() > 2) {
 					" at time " << s.time() << endl;
 				return Command::NORMAL;
 				// or Command::BREAK; ?
+#if !USE_WATCHPOINT_FLAG
 			}
+#endif
 		}
 	}	// end while
 	} catch (const step_exception& exex) {
@@ -774,14 +782,17 @@ step_event_main(State& s, size_t i) {
 			Cycle::main() and Advance::main().
 			tracing stuff here later...
 		***/
-		if (s.watching_all_nodes()) {
+		if (s.watching_all_nodes()
+#if USE_WATCHPOINT_FLAG
+			|| n.is_watchpoint()
+#endif
+				) {
 			print_watched_node(cout << '\t' << ct << '\t', s, ni);
 		}
 		if (n.is_breakpoint()) {
+#if !USE_WATCHPOINT_FLAG
 			// this includes watchpoints
 			const bool w = s.is_watching_node(GET_NODE(ni));
-			const string nodename(
-				s.get_node_canonical_name(GET_NODE(ni)));
 			if (w) {
 			if (!s.watching_all_nodes()) {
 				print_watched_node(cout << '\t' << ct << '\t',
@@ -790,6 +801,9 @@ step_event_main(State& s, size_t i) {
 			}
 			// channel support
 			if (!w) {
+#endif
+				const string nodename(
+					s.get_node_canonical_name(GET_NODE(ni)));
 				// node is plain breakpoint
 				cout << "\t*** break, " << i <<
 					" steps left: `" << nodename <<
@@ -798,7 +812,9 @@ step_event_main(State& s, size_t i) {
 					" at time " << s.time() << endl;
 				return Command::NORMAL;
 				// or Command::BREAK; ?
+#if !USE_WATCHPOINT_FLAG
 			}
+#endif
 		}
 	}	// end while
 	} catch (const step_exception& exex) {
@@ -919,15 +935,18 @@ if (a.size() != 1) {
 			The following code should be consistent with
 			Step::main() and Advance::main().
 		***/
-		if (s.watching_all_nodes()) {
+		if (s.watching_all_nodes()
+#if USE_WATCHPOINT_FLAG
+			|| n.is_watchpoint()
+#endif
+				) {
 			print_watched_node(cout << '\t' << s.time() <<
 				'\t', s, ni);
 		}
 		if (n.is_breakpoint()) {
+#if !USE_WATCHPOINT_FLAG
 			// this includes watchpoints
 			const bool w = s.is_watching_node(GET_NODE(ni));
-			const string nodename(s.get_node_canonical_name(
-				GET_NODE(ni)));
 			if (w) {
 			if (!s.watching_all_nodes()) {
 				print_watched_node(cout << '\t' <<
@@ -936,6 +955,9 @@ if (a.size() != 1) {
 			}
 			// channel support
 			if (!w) {
+#endif
+				const string nodename(s.get_node_canonical_name(
+					GET_NODE(ni)));
 				// node is plain breakpoint
 				cout << "\t*** break, `" << nodename <<
 					"\' became ";
@@ -943,7 +965,9 @@ if (a.size() != 1) {
 					" at time " << s.time() << endl;
 				return Command::NORMAL;
 				// or Command::BREAK; ?
+#if !USE_WATCHPOINT_FLAG
 			}
+#endif
 		}
 	}	// end while (!s.stopped())
 	} catch (const step_exception& exex) {

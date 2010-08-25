@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.41 2010/08/24 18:08:46 fang Exp $
+	$Id: State-prsim.h,v 1.42 2010/08/25 18:53:46 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -58,6 +58,7 @@ using entity::dump_flags;
 
 
 //=============================================================================
+#if !USE_WATCHPOINT_FLAG
 /**
 	Watch list entry.  
 	Node index not included because it will be the first
@@ -80,6 +81,7 @@ struct watch_entry {
 	dump_checkpoint_state(ostream&, istream&);
 
 } __ATTRIBUTE_ALIGNED__ ;
+#endif
 
 //=============================================================================
 /**
@@ -126,8 +128,9 @@ public:
 	typedef	EventPlaceholder<time_type>	event_placeholder_type;
 	typedef	EventQueue<event_placeholder_type>	event_queue_type;
 	typedef	vector<node_type>		node_pool_type;
-
+#if !USE_WATCHPOINT_FLAG
 	typedef	map<node_index_type, watch_entry>	watch_list_type;
+#endif
 	/**
 		The first node index is the one that just changed, 
 		the second index refers to the node that caused it, 
@@ -511,8 +514,10 @@ public:	// too lazy to write accessors
 	// for random timing only, default upper bound of delay
 	time_type				default_after_max;
 private:
+#if !USE_WATCHPOINT_FLAG
 	// watched nodes
 	watch_list_type				watch_list;
+#endif
 	// vectors
 	/**
 		Extension to manage channel environments and actions. 
@@ -618,6 +623,9 @@ public:
 public:
 	ostream&
 	dump_node_canonical_name(ostream&, const node_index_type) const;
+
+	ostream&
+	dump_node_canonical_name(ostream&, const node_type&) const;
 
 	string
 	get_node_canonical_name(const node_index_type) const;

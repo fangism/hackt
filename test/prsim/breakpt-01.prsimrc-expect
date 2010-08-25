@@ -1,0 +1,5 @@
+bug fix test cases for breakpoints 
+breakpoints: c 
+expect c to be in breakpoints 
+	20	c : 1	[by b:=0]
+	*** break, `c' became 1 at time 20

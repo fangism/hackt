@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Command-prsim-export.cc"
-	$Id: Command-prsim-export.cc,v 1.3 2008/11/27 11:09:35 fang Exp $
+	$Id: Command-prsim-export.cc,v 1.4 2010/08/25 18:53:44 fang Exp $
 	Useful functions to be exported to elsewhere.  
  */
 
@@ -88,14 +88,17 @@ while (!s.stopped() && s.pending_events() &&
 		Cycle::main() and Step::main().
 		TODO: factor this out for maintainability.  
 	***/
-	if (s.watching_all_nodes()) {
+	if (s.watching_all_nodes()
+#if USE_WATCHPOINT_FLAG
+		|| n.is_watchpoint()
+#endif
+			) {
 		print_watched_node(cout << '\t' << s.time() << '\t', s, ni);
 	}
 	if (n.is_breakpoint()) {
+#if !USE_WATCHPOINT_FLAG
 		// this includes watchpoints
 		const bool w = s.is_watching_node(GET_NODE(ni));
-		const string nodename(s.get_node_canonical_name(
-			GET_NODE(ni)));
 		if (w) {
 		if (!s.watching_all_nodes()) {
 			print_watched_node(cout << '\t' <<
@@ -104,15 +107,20 @@ while (!s.stopped() && s.pending_events() &&
 		}
 		// channel support
 		if (!w) {
+#endif
 			// node is plain breakpoint
 		if (show_break) {
+			const string nodename(s.get_node_canonical_name(
+				GET_NODE(ni)));
 			cout << "\t*** break, " << stop_time -s.time() <<
 				" time left: `" << nodename << "\' became ";
 			n.dump_value(cout) << endl;
 		}
 			return Command::NORMAL;
 			// or Command::BREAK; ?
+#if !USE_WATCHPOINT_FLAG
 		}
+#endif
 	}
 }	// end while
 } catch (const step_exception& exex) {

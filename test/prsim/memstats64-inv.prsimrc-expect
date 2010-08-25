@@ -26,4 +26,3 @@ chk-exclhi-rings: (0 * 64 B/ring) = 0 B
 chk-exclhi::nodes: (0 * 8 B/node) = 0 B
 chk-excllo-rings: (0 * 64 B/ring) = 0 B
 chk-excllo::nodes: (0 * 8 B/node) = 0 B
-watch-list: (0 * 64 B/node) = 0 B

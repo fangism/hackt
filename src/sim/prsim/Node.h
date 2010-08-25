@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.h"
 	Structure of basic PRS node.  
-	$Id: Node.h,v 1.24 2010/06/29 01:55:04 fang Exp $
+	$Id: Node.h,v 1.25 2010/08/25 18:53:45 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_NODE_H__
@@ -17,6 +17,12 @@
 #include "sim/prsim/enums.h"
 #include "sim/prsim/Cause.h"
 #include <valarray>
+
+/**
+	Define to 1 to give NodeState its own dedicated watchpoint
+	flag, instead of overloading it with the breakpoint flag.
+ */
+#define	USE_WATCHPOINT_FLAG		1
 
 namespace HAC {
 namespace entity {
@@ -301,10 +307,12 @@ public:
 			This includes watching state.  
 		 */
 		NODE_BREAKPOINT = 0x01,
+#if USE_WATCHPOINT_FLAG
 		/**
-			Auxiliary flag for general purpose visit tracking.
+			Flag is set true if this node is being watched.
 		 */
-		NODE_FLAG = 0x02,
+		NODE_WATCHPOINT = 0x02,
+#endif
 		/**
 			Whether or not this node is currently in
 			one of the exclusive ring queues.  
@@ -313,6 +321,11 @@ public:
 
 		/// true if this node participates in any registered channel
 		NODE_IN_CHANNEL = 0x08,
+		/**
+			Auxiliary flag for general purpose visit tracking.
+			Is this used anywhere?
+		 */
+		NODE_FLAG = 0x10,
 #if 0
 		// THESE OVERFLOW uchar!!!
 		NODE_CHANNEL_VALID = 0x10,
@@ -433,6 +446,17 @@ public:
 
 	void
 	clear_event(void) { event_index = INVALID_EVENT_INDEX; }
+
+#if USE_WATCHPOINT_FLAG
+	bool
+	is_watchpoint(void) const { return state_flags & NODE_WATCHPOINT; }
+
+	void
+	set_watchpoint(void) { state_flags |= NODE_WATCHPOINT; }
+
+	void
+	clear_watchpoint(void) { state_flags &= ~NODE_WATCHPOINT; }
+#endif
 
 	bool
 	is_breakpoint(void) const { return state_flags & NODE_BREAKPOINT; }
