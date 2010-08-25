@@ -1,0 +1,181 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	dintplch	0	#HEAD#	#TAIL#	27
+	7	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	12	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	13	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	14	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	15	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	16	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	18	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	19	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	21	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	datadefn	0	#HEAD#	#TAIL#	68
+	23	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	25	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	29	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	CHPlopac	0	#HEAD#	#TAIL#	25
+	31	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	32	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	34	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	38	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	39	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	40	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	41	##ADDR##	CHPlopsl	0	#HEAD#	#TAIL#	25
+	42	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	43	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	44	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
+	45	##ADDR##	nrelatex	0	#HEAD#	#TAIL#	22
+	46	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	47	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
+	48	##ADDR##	CHPfcall	0	#HEAD#	#TAIL#	12
+	49	##ADDR##	nfuncexp	0	#HEAD#	#TAIL#	20
+	50	##ADDR##	nexplist	0	#HEAD#	#TAIL#	20
+	51	##ADDR##	stringex	0	#HEAD#	#TAIL#	14
+	52	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
+	53	##ADDR##	footprnt	0	#HEAD#	#TAIL#	555
+	54	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
+	55	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	56	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
+	57	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	58	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	32
+	59	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	60	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	61	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	62	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	63	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	64	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	65	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	66	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	67	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	68	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	69	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	70	##ADDR##	CHPdetsl	0	#HEAD#	#TAIL#	32
+	71	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
+	72	##ADDR##	nrelatex	0	#HEAD#	#TAIL#	22
+	73	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	74	##ADDR##	CHPfcall	0	#HEAD#	#TAIL#	12
+	75	##ADDR##	nfuncexp	0	#HEAD#	#TAIL#	20
+	76	##ADDR##	nexplist	0	#HEAD#	#TAIL#	20
+	77	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	78	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
+	79	##ADDR##	nrelatex	0	#HEAD#	#TAIL#	22
+	80	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	81	##ADDR##	CHPfcall	0	#HEAD#	#TAIL#	12
+	82	##ADDR##	nfuncexp	0	#HEAD#	#TAIL#	20
+	83	##ADDR##	nexplist	0	#HEAD#	#TAIL#	20
+	84	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	85	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
+	86	##ADDR##	nrelatex	0	#HEAD#	#TAIL#	22
+	87	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	88	##ADDR##	CHPfcall	0	#HEAD#	#TAIL#	12
+	89	##ADDR##	nfuncexp	0	#HEAD#	#TAIL#	20
+	90	##ADDR##	nexplist	0	#HEAD#	#TAIL#	20
+	91	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	92	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
+	93	##ADDR##	nrelatex	0	#HEAD#	#TAIL#	22
+	94	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	95	##ADDR##	CHPfcall	0	#HEAD#	#TAIL#	12
+	96	##ADDR##	nfuncexp	0	#HEAD#	#TAIL#	20
+	97	##ADDR##	nexplist	0	#HEAD#	#TAIL#	20
+	98	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  4 instantiation-collections
+  0 sub-namespaces
+  0 definitions
+  0 typedefs
+  Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
+    X = chan(int<2>) X
+    _x_ = int<2> _x_
+}
+
+top-level chp:
+  concurrent: {
+    *[
+      concurrent i:[0..3]: {
+        X!($i)
+      }
+    ]
+    *[
+      sequential: {
+        X?(_x_)
+        deterministic i:[0..3]: {
+          _x_==$i -> echo("i=",$i)
+        }
+      }
+    ]
+  }
+footprint: {
+  !GND = bool^0 = !GND (1) @[ supply_low ] 
+  !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
+  X = channel chan(int<2>)^0 = X (1) 
+  _x_ = int<2>^0 = _x_ (1) 
+  Created state:
+  channel instance pool: (0 ports, 1 local, 0 mapped)
+  1	X	
+  int instance pool: (0 ports, 1 local, 0 mapped)
+  1	_x_	
+  bool instance pool: (0 ports, 2 local, 0 mapped)
+  1	!GND @[ supply_low ]	
+  2	!Vdd @[ supply_high ]	
+  resolved concurrent actions:
+    *[
+      sequential: {
+        X!(0)
+        X!(1)
+        X!(2)
+        X!(3)
+      }
+    ]
+    *[
+      sequential: {
+        X?(_x_)
+        deterministic: {
+          _x_==0 -> echo("i=",0)
+          _x_==1 -> echo("i=",1)
+          _x_==2 -> echo("i=",2)
+          _x_==3 -> echo("i=",3)
+        }
+      }
+    ]
+  chp events: {
+    event[0]: fork: , #pred: 1, succ: 5 1 
+    event[1]: receive: X?(_x_), #pred: 1, succ: 11 
+    event[2]: send: X!(3), #pred: 1, succ: 5 
+    event[3]: send: X!(2), #pred: 1, succ: 2 
+    event[4]: send: X!(1), #pred: 1, succ: 3 
+    event[5]: send: X!(0), #pred: 1, succ: 4 
+    event[6]: null: null, #pred: 1, succ: 1 
+    event[7]: call: echo("i=",0), #pred: 1, succ: 6 
+    event[8]: call: echo("i=",1), #pred: 1, succ: 6 
+    event[9]: call: echo("i=",2), #pred: 1, succ: 6 
+    event[10]: call: echo("i=",3), #pred: 1, succ: 6 
+    event[11]: select: [ _x_==0 -> ... [] _x_==1 -> ... [] _x_==2 -> ... [] _x_==3 -> ... ], #pred: 1, succ: 7 8 9 10 
+  }
+}

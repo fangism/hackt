@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP_base.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP_base.h,v 1.13 2007/09/28 05:36:54 fang Exp $
+	$Id: CHP_base.h,v 1.14 2010/08/25 23:26:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_BASE_H__
@@ -23,7 +23,7 @@
 		argument anymore!
 	Goal: 1
 	Rationale: to graduate!
-	Status: just begun
+	Status: done, tested (since Sept. 2007)
  */
 #define	CHP_ACTION_PARENT_LINK		1
 

@@ -1,0 +1,19 @@
+// "echo-loop-a.hac"
+// 'echo' comes from stdchpfn library
+// bug fix test case, reported by Carlos Tadeo Ortega Otero
+
+chan(int<2>) X;
+
+chp {
+*[
+	{;i:4: X!(i) }
+]
+}
+
+int<2> _x_;
+chp {
+*[
+X?(_x_);
+[[]i:4: _x_ == i -> echo("i=", i) ]
+]
+}

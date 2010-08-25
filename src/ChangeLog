@@ -5,6 +5,19 @@
 
 2010-08-25	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-84-15:
+	  bug fix in nonmeta_func_call::unroll_resolve_copy, 
+		passed the wrong function arguments in the 
+		returned and resolved copy.
+		Bug was caught when passing a meta-loop variable to
+		an echo() call in chp and chpsim.
+		Reported by Carlos Tadeo Ortega Otero.
+		Closes ACX-PR-5772.
+	  Added test case.
+
+
+2010-08-25	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-84-14:
 	  hacprsim bug fix: watch points masking out breakpoints, due to
 		inherited poor implementation.  Fixed by simplifying

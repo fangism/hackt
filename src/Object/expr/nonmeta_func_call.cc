@@ -1,6 +1,6 @@
 /**
 	\file "Object/expr/nonmeta_func_call.cc"
-	$Id: nonmeta_func_call.cc,v 1.5 2007/09/27 02:03:42 fang Exp $
+	$Id: nonmeta_func_call.cc,v 1.6 2010/08/25 23:26:38 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -144,7 +144,7 @@ nonmeta_func_call::__unroll_resolve_copy(const unroll_context& c,
 		return p;
 	} else {
 		const count_ptr<const this_type>
-			ret(new this_type(fname, fargs));
+			ret(new this_type(fname, rf));
 		return ret;
 	}
 }

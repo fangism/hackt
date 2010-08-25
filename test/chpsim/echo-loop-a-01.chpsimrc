@@ -1,0 +1,11 @@
+# "echo-loop-a-01.chpsimrc"
+#	$Id: echo-loop-a-01.chpsimrc,v 1.1 2010/08/25 23:26:40 fang Exp $
+# Yes, use THIS object file
+# @haco@ echo-loop-a.haco-c
+# @module@ -fno-ack-loaded-fns -L$(top_builddir)/lib -lstdchpfn
+
+watchall-events
+step 50
+time
+assert-queue
+
