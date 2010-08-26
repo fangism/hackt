@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Channel-prsim.cc"
-	$Id: Channel-prsim.cc,v 1.35 2010/08/25 00:02:49 fang Exp $
+	$Id: Channel-prsim.cc,v 1.36 2010/08/26 21:00:48 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -3078,6 +3078,15 @@ channel_manager::new_channel(State& state, const string& base,
 		const string& rail_name, const size_t _num_rails, 
 		const bool active_low) {
 	STACKTRACE_VERBOSE;
+	// TODO: this does not account for working directory prefix
+	// make sure base is a legitmate scalar channel name first
+	const entity::module& m(state.get_module());
+	const entity::global_indexed_reference
+		g(parser::parse_global_reference(base, m));
+	if (g.first != entity::META_TYPE_PROCESS || !g.second) {
+		cerr << "Error: base reference is not a valid channel." << endl;
+		return true;
+	}
 	// 0 indicates that bundle/rail is scalar, not array
 	// in any case, size should be at least 1
 	const size_t num_bundles = _num_bundles ? _num_bundles : 1;
@@ -3101,7 +3110,6 @@ if (i.second) {
 	dk[0] = num_bundles;
 	dk[1] = num_rails;
 	c.data.resize(dk);
-	const entity::module& m(state.get_module());
 	// lookup and assign node-indices
 	dk[0] = 0;
 	size_t& j = dk[0];

@@ -1,0 +1,6 @@
+# "channel-array-a-01.prsimrc"
+# @haco@ channel-array-a.haco-c
+
+channel bar.L e:0 :0 d:2
+channel-show-all
+

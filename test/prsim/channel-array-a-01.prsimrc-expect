@@ -1,0 +1,3 @@
+Error: expecting scalar reference, but got 1-dimensional array reference.
+Error: base reference is not a valid channel.
+... at line 4

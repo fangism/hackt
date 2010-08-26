@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.37 2010/08/24 21:05:50 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.38 2010/08/26 21:00:47 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -248,6 +248,12 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_top_level_reference(
 	return global_indexed_reference(traits_type::type_tag_enum_value, 
 		this->lookup_globally_allocated_index(gc));
 #else
+	const size_t d = this->dimensions();
+	if (d) {
+		cerr << "Error: expecting scalar reference, but got " <<
+			d << "-dimensional array reference." << endl;
+		return global_indexed_reference(META_TYPE_NONE, 0);
+	}
 	global_reference_array_type tmp;
 	if (lookup_top_level_references(gc, tmp).good) {
 		return tmp.front();

@@ -1,0 +1,17 @@
+// "channel-array-a.hac"
+
+import "../../lib/channel.hac";
+
+defproc foo(e1of2 L[4], R[4]) {
+prs {
+(:i:4:
+	L[i].d[0]		=> R[i].d[0]+
+	L[i].d[1]		=> R[i].d[1]+
+	R[i].e			=> L[i].e+
+)
+}
+}
+
+foo bar;
+
+
