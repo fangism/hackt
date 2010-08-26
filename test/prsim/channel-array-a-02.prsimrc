@@ -1,0 +1,7 @@
+# "channel-array-a-02.prsimrc"
+# @haco@ channel-array-a.haco-c
+# expect fail on bad channel reference
+
+channel bar.L[13] e:0 :0 d:2
+channel-show-all
+
