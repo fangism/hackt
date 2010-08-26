@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.42 2010/08/25 18:53:46 fang Exp $
+	$Id: State-prsim.h,v 1.43 2010/08/26 23:48:26 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -1044,7 +1044,7 @@ public:
 	status_interference(ostream&, const bool) const;
 
 	ostream&
-	status_driven(ostream&, const pull_enum) const;
+	status_driven(ostream&, const pull_enum, const bool) const;
 
 	bool
 	dequeue_unstable_events(void) const {
@@ -1379,6 +1379,24 @@ public:
 	dump_node_why_not(ostream&, const node_index_type, 
 		const size_t, const bool, const bool, const bool) const;
 
+	/**
+		\param F function or functor is a unary predicate, 
+			whose argument type is const node_type&.
+	 */
+	template <class F>
+	void
+	find_nodes(vector<node_index_type>& ret, F f) const {
+	const node_index_type ns = node_pool.size();
+	node_index_type i = INVALID_NODE_INDEX +1;
+	for ( ; i<ns; ++i) {
+		const node_type& n(node_pool[i]);
+		if (f(n)) {
+			ret.push_back(i);
+		}
+	}
+	}
+
+#if 0
 	void
 	find_nodes(vector<node_index_type>&,
 		bool (*)(const node_type&)) const;
@@ -1386,6 +1404,7 @@ public:
 	void
 	find_nodes(vector<node_index_type>&,
 		bool (node_type::*)(void) const) const;
+#endif
 
 	void
 	find_nodes(vector<node_index_type>&,
@@ -1394,6 +1413,10 @@ public:
 	void
 	find_nodes(vector<node_index_type>&,
 		bool (*)(const State&, const node_index_type)) const;
+
+	template <class F>
+	void
+	filter_nodes(vector<index_type>& ret, F f) const;
 
 	ostream&
 	print_nodes(ostream&, const vector<node_index_type>&,

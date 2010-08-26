@@ -5,6 +5,14 @@
 
 2010-08-26	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-84-17:
+	  hacprsim: added command variant
+		status-driven-fanin [01X]: filters out nodes with no
+			fanin, which are always undriven.
+	  Documented, test case added.
+	  Closes ACX-PR-5776.
+
+
 	* HACKT-00-01-04-main-00-84-16:
 	  Minor bug fix:
 		simple_meta_instance_reference::lookup_top_level_reference

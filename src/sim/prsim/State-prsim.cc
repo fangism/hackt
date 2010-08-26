@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.70 2010/08/25 18:53:45 fang Exp $
+	$Id: State-prsim.cc,v 1.71 2010/08/26 23:48:25 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -4234,7 +4234,7 @@ State::status_nodes(ostream& o, const value_enum val, const bool nl) const {
 	default: break;
 	}
 	vector<node_index_type> nodes;
-	find_nodes(nodes, f);
+	find_nodes(nodes, f);		// std::ptr_fun
 	print_nodes(o, nodes, nl ? "\n" : " ");
 	return o << endl;	// TODO: only if !nl, else flush
 }
@@ -4249,7 +4249,9 @@ State::status_interference(ostream& o, const bool w) const {
 	vector<node_index_type> nodes;
 	o << "Nodes with " << (w ? "weak-" : "") << "interference:" << endl;
 	find_nodes(nodes,
-		w ? &node_type::weak_interfering : &node_type::interfering);
+		mem_fun_ref(w ?
+			&node_type::weak_interfering :
+			&node_type::interfering));
 	print_nodes(o, nodes, "\n");
 	return o << std::flush;
 }
@@ -4258,9 +4260,12 @@ State::status_interference(ostream& o, const bool w) const {
 /**
 	Looks at the state of pull up/dn, not current value.
 	Interfering nodes are driven.
+	\param p the pull_state to match.
+	\param fanin_only true to only report nodes with fanin.
  */
 ostream&
-State::status_driven(ostream& o, const pull_enum p) const {
+State::status_driven(ostream& o, const pull_enum p,
+		const bool fanin_only) const {
 	vector<node_index_type> nodes;
 switch (p) {
 case PULL_OFF:
@@ -4275,9 +4280,13 @@ default:
 	break;
 }
 	find_nodes(nodes,
+		mem_fun_ref(
 		(p == PULL_OFF) ? &node_type::undriven :
 		(p == PULL_WEAK) ? &node_type::x_driven :
-			&node_type::driven);
+			&node_type::driven));
+	if (fanin_only) {
+		filter_nodes(nodes, mem_fun_ref(&node_type::has_fanin));
+	}
 	print_nodes(o, nodes, "\n");
 	return o << std::flush;
 }
@@ -5335,6 +5344,7 @@ for ( ; i!=e; ++i) {		// for all processes
 }	// end __root_expr_why_X
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Generic traversal to find all nodes meeting a certain criterion.  
  */
@@ -5365,6 +5375,9 @@ State::find_nodes(vector<node_index_type>& ret,
 		}
 	}
 }
+#else
+// use std::ptr_fun or std::mem_fun_ref, embrace functional-style
+#endif
 
 // pointer-to-state member function
 void
@@ -5389,6 +5402,24 @@ State::find_nodes(vector<node_index_type>& ret,
 		if ((*p)(*this, i)) {
 			ret.push_back(i);
 		}
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Filter a set of node indices, using a predicate.  
+	\param f is a functor that expects a const node_type&
+ */
+template <class F>
+void
+State::filter_nodes(vector<node_index_type>& ret, F f) const {
+	vector<node_index_type> tmp;
+	tmp.swap(ret);
+	vector<node_index_type>::const_iterator i(tmp.begin()), e(tmp.end());
+	for ( ; i!=e; ++i) {
+	if (f(node_pool[*i])) {
+		ret.push_back(*i);
+	}
 	}
 }
 

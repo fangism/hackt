@@ -1,0 +1,44 @@
+Nodes driven:
+Nodes undriven (state-holding):
+Nodes driven by X:
+c
+c pulled up:X dn:X weak-up:0 weak-dn:0
+	0	a : 1
+	0	b : 0
+Nodes driven:
+Nodes undriven (state-holding):
+c
+Nodes driven by X:
+c pulled up:0 dn:0 weak-up:0 weak-dn:0
+	0	b : 1
+	10	c : 0	[by b:=1]
+Nodes driven:
+c
+Nodes undriven (state-holding):
+Nodes driven by X:
+c pulled up:0 dn:1 weak-up:0 weak-dn:0
+	10	b : 0
+	10	a : 0
+	20	c : 1	[by a:=0]
+Nodes driven:
+c
+Nodes undriven (state-holding):
+Nodes driven by X:
+c pulled up:1 dn:0 weak-up:0 weak-dn:0
+	20	a : 1
+Nodes driven:
+Nodes undriven (state-holding):
+c
+Nodes driven by X:
+c pulled up:0 dn:0 weak-up:0 weak-dn:0
+testing for interference 
+expecting interference from guard 
+	20	a : 0
+WARNING: interference `c'
+>> cause: `b' (val: 1)
+	20	b : 1
+Nodes driven:
+c
+Nodes undriven (state-holding):
+Nodes driven by X:
+c pulled up:1 dn:1 weak-up:0 weak-dn:0

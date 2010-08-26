@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.75 2010/08/25 18:53:45 fang Exp $
+	$Id: Command-prsim.cc,v 1.76 2010/08/26 23:48:25 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -2367,19 +2367,27 @@ StatusWeakInterfere::usage(ostream& o) {
 /***
 @texinfo cmd/status-driven.texi
 @deffn Command status-driven val
+@deffnx Command status-driven-fanin val
 Reports all nodes that are in a particular drive-state.
 The drive-state of a node is the strongest pull in any direction.  
 The current value of the node is not considered.
 @var{val} is 0 for undriven nodes, X for X-driven nodes, and 1 for 
 driven nodes (which may include interfering nodes).  
+The @command{status-driven-fanin} variant filters out nodes with no
+fanin (inputs), which are always undriven.  
 @end deffn
 @end texinfo
 ***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(StatusDriven, "status-driven", info, 
 	"show all nodes that are currently driven or undriven")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(StatusDrivenFanin,
+	"status-driven-fanin", info, 
+	"show all nodes with fanin that match a drive-state")
 
+static
 int
-StatusDriven::main(State& s, const string_list& a) {
+__status_driven(State& s, const string_list& a,
+		void (*usage)(ostream&), const bool fanin_only) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
@@ -2397,18 +2405,38 @@ if (a.size() != 2) {
 			<< endl;
 		return Command::BADARG;
 	}
-	s.status_driven(cout, p);
+	s.status_driven(cout, p, fanin_only);
 	return Command::NORMAL;
 }
+}
+
+int
+StatusDriven::main(State& s, const string_list& a) {
+	return __status_driven(s, a, usage, false);
+}
+
+int
+StatusDrivenFanin::main(State& s, const string_list& a) {
+	return __status_driven(s, a, usage, true);
 }
 
 void
 StatusDriven::usage(ostream& o) {
 	o << name << " [01Xx]" << endl;
 	o << 
-"status-driven 0: reports nodes that are undriven\n"
-"status-driven 1: reports nodes that are driven (including interference)\n"
-"status-driven X: reports nodes that are only driven by X"
+name << " 0: reports nodes that are undriven\n" <<
+name << " 1: reports nodes that are driven (including interference)\n" <<
+name << " X: reports nodes that are only driven by X"
+	<< endl;
+}
+
+void
+StatusDrivenFanin::usage(ostream& o) {
+	o << name << " [01Xx]" << endl;
+	o << 
+name << " 0: reports nodes with fanin that are undriven\n" <<
+name << " 1: reports nodes with fanin that are driven (incl. interference)\n" <<
+name << " X: reports nodes with fanin that are only driven by X"
 	<< endl;
 }
 
