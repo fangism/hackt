@@ -1,0 +1,32 @@
+a is weak pull-up to c 
+weak-rules disabled from firing, but still count as driven 
+Nodes undriven (state-holding):
+!GND
+!Vdd
+a
+b
+c
+Nodes driven by X:
+c
+Fanins of node `c':
+(from [top-level]):
+[after 10]	b:0 -> c-:X
+[after 10, weak]	~a:0 -> c+:X
+Nodes driven:
+c
+Nodes driven:
+c
+Nodes driven:
+c
+Nodes driven:
+c
+Nodes driven by X:
+c
+Nodes driven by X:
+c
+Nodes undriven (state-holding):
+!GND
+!Vdd
+a
+b
+c
