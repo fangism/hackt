@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.76 2010/08/26 23:48:25 fang Exp $
+	$Id: Command-prsim.cc,v 1.77 2010/08/27 23:04:52 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -4563,7 +4563,7 @@ is generated with uniform distribution between the bounds.
 If only a lower bound is specified, its value is added to the 
 exponentially distribtued random delay.  
 
-TIming random also takes additional optional arguments for 
+Timing @option{random} also takes additional optional arguments for 
 default min and max delays for @emph{unspecified rules};
 user-written values from the source will always take precedence.
 A max delay value of 0 is interpreted as being unbounded.
@@ -4575,9 +4575,14 @@ A max delay value of 0 is interpreted as being unbounded.
 @item @samp{timing random X:Y} sets the default min and max delays
 @end itemize
 
-In the future, we may consider distributions that favor the bounds, 
-(e.g. 50% chance of min or max) to stress the limits of the specified delays
-in testing and timing closure.  
+Timing @option{binary} randomly chooses between a min and max delay value
+with a specified probability, like a skewer coin-flip.
+This mode completely disregards any user-specified delay attributes
+in the source, including delay @option{after=0}.
+@itemize
+@item @samp{timing binary 10:90 0.5}
+@item @samp{timing binary 10:50 0.95}
+@end itemize
 @end deffn
 @end texinfo
 ***/

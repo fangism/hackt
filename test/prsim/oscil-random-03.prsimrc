@@ -1,0 +1,13 @@
+# "oscil-random-03.prsimrc"
+#	$Id: oscil-random-03.prsimrc,v 1.1 2010/08/27 23:04:54 fang Exp $
+# @haco@ oscillator.haco-c
+# Testing timing features
+
+watchall
+set _Reset 0
+cycle
+set _Reset 1
+echo now with binary random delays
+timing binary 10:100 .5
+step 80
+assert-queue

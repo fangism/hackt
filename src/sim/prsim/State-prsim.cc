@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.71 2010/08/26 23:48:25 fang Exp $
+	$Id: State-prsim.cc,v 1.72 2010/08/27 23:04:53 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -318,6 +318,7 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 		uniform_delay(time_traits::default_delay), 
 		default_after_min(time_traits::zero), 
 		default_after_max(time_traits::zero), 
+		timing_probability(0.5),
 #if !USE_WATCHPOINT_FLAG
 		watch_list(), 
 #endif
@@ -1657,6 +1658,10 @@ switch (timing_mode) {
 		o << "uniform (" << uniform_delay << ")";
 		break;
 	case TIMING_AFTER:	o << "after";	break;
+	case TIMING_BINARY:	o << "binary [" << default_after_min << ','
+			<< default_after_max << "] ("
+			<< timing_probability << ')';
+		break;
 	default:		o << "unknown";
 }
 	return o << endl;
@@ -1720,6 +1725,7 @@ State::set_timing(const string& m, const string_list& a) {
 	static const string __random("random");
 	static const string __uniform("uniform");
 	static const string __after("after");
+	static const string __binary("binary");
 	if (m == __random) {
 		timing_mode = TIMING_RANDOM;
 		switch (a.size()) {
@@ -1750,9 +1756,26 @@ State::set_timing(const string& m, const string_list& a) {
 	} else if (m == __after) {
 		timing_mode = TIMING_AFTER;
 		return a.size();
-	} else {
-		return true;
+	} else if (m == __binary) {
+		// syntax: min:max
+		timing_mode = TIMING_BINARY;
+		if (a.size() == 2) {
+			if (parse_min_max_delay(a.front(),
+				default_after_min, default_after_max)) {
+				cerr << "Error parsing min:max." << endl;
+					return true;
+			}
+			if (string_to_num(a.back(), timing_probability)) {
+				cerr << "Error lexing probability." << endl;
+				return true;
+			}
+			return false;
+		} else {
+			cerr << "Expecting min:max prob arguments." << endl;
+		}
 	}
+	// else
+	return true;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1760,6 +1783,7 @@ ostream&
 State::help_timing(ostream& o) {
 	o << "available timing modes:" << endl;
 	o << "\trandom [[min]:[max]]" << endl;
+	o << "\tbinary [min]:[max] prob" << endl;
 	o << "\tuniform [delay]" << endl;
 	o << "\tafter" << endl;
 	o <<
@@ -1770,8 +1794,11 @@ State::help_timing(ostream& o) {
 "A max value of 0 is interpreted as being unbounded.\n"
 "Uniform mode ignores all after-delay annotations and uses a fixed delay "
 "for all events, which can be used to count transitions.\n"
-"After mode uses fixed after-annotated delays for timing, and assumes "
+"After mode uses fixed after-annotated delays for timing, and assumes\n"
 "default delays where none are given.\n"
+"Binary mode chooses between the min and max values only with the given\n"
+"probability p of choosing min, and also ignores all specified rule delays,\n"
+"including after=0 delays.\n"
 "Use \'seed48\' to set a random number seed." << endl;
 	return o;
 }
@@ -1785,6 +1812,9 @@ State::exponential_random_delay(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\returns a value [0,1)
+ */
 State::time_type
 State::uniform_random_delay(void) {
 	typedef	random_time<random_time_limit<time_type>::type>
@@ -1853,6 +1883,9 @@ if (e.cause_rule) {
 		}
 #endif
 		}
+	} else if (timing_mode == TIMING_BINARY) {
+		delta = (uniform_random_delay() < timing_probability)
+			? default_after_min : default_after_max;
 	} else {
 	// timing_mode == TIMING_AFTER
 		delta = r ? r->after : time_traits::zero;
@@ -6229,6 +6262,7 @@ State::save_checkpoint(ostream& o) const {
 	write_value(o, uniform_delay);
 	write_value(o, default_after_min);
 	write_value(o, default_after_max);
+	write_value(o, timing_probability);
 	WRITE_ALIGN_MARKER
 {
 #if !USE_WATCHPOINT_FLAG
@@ -6414,6 +6448,7 @@ try {
 	read_value(i, uniform_delay);
 	read_value(i, default_after_min);
 	read_value(i, default_after_max);
+	read_value(i, timing_probability);
 	READ_ALIGN_MARKER
 {
 #if !USE_WATCHPOINT_FLAG
@@ -6563,15 +6598,17 @@ State::dump_checkpoint(ostream& o, istream& i) {
 }
 	READ_ALIGN_MARKER		// sanity alignment check
 	time_type current_time, uniform_delay,
-		default_after_min, default_after_max;
+		default_after_min, default_after_max, timing_probability;
 	read_value(i, current_time);
 	read_value(i, uniform_delay);
 	read_value(i, default_after_min);
 	read_value(i, default_after_max);
+	read_value(i, timing_probability);
 	o << "current time: " << current_time << endl;
 	o << "uniform delay: " << uniform_delay << endl;
 	o << "default after min: " << default_after_min << endl;
 	o << "default after max: " << default_after_max << endl;
+	o << "binary timing probability: " << timing_probability << endl;
 	READ_ALIGN_MARKER
 {
 #if !USE_WATCHPOINT_FLAG

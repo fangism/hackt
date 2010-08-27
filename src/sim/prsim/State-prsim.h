@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.43 2010/08/26 23:48:26 fang Exp $
+	$Id: State-prsim.h,v 1.44 2010/08/27 23:04:53 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -30,6 +30,7 @@
 #include "sim/prsim/process_state.h"
 #include "sim/command_error_codes.h"
 #include "Object/lang/PRS_enum.h"	// for expression parenthesization
+#include "Object/expr/types.h"		// for preal_value_type
 #include "Object/common/dump_flags.h"
 #include "util/string_fwd.h"
 #include "util/named_ifstream_manager.h"
@@ -55,7 +56,7 @@ using SIM::INVALID_TRACE_INDEX;
 #endif
 using std::map;
 using entity::dump_flags;
-
+using entity::preal_value_type;
 
 //=============================================================================
 #if !USE_WATCHPOINT_FLAG
@@ -351,6 +352,13 @@ private:
 		 */
 		TIMING_RANDOM = 2,
 		/**
+			Mode in which delay is one of two exact values, 
+			tests bounded delay assumptions, and 
+			scalable delay assumptions.  
+			Ignores all after= delay values. 
+		 */
+		TIMING_BINARY = 3,
+		/**
 			The mode on start-up.  
 		 */
 		TIMING_DEFAULT = TIMING_UNIFORM
@@ -509,10 +517,16 @@ private:
 	time_type				current_time;
 	time_type				uniform_delay;
 public:	// too lazy to write accessors
+	// these values are also used for timing binary
 	// for random timing only, default lower bound of delay
 	time_type				default_after_min;
 	// for random timing only, default upper bound of delay
 	time_type				default_after_max;
+	/**
+		For timing binary only, sets the probability of
+		choosing the first of two delay values.  
+	 */
+	preal_value_type			timing_probability;
 private:
 #if !USE_WATCHPOINT_FLAG
 	// watched nodes
