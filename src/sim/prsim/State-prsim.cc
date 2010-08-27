@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.72 2010/08/27 23:04:53 fang Exp $
+	$Id: State-prsim.cc,v 1.73 2010/08/27 23:21:39 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -6183,9 +6183,10 @@ State::autosave(const bool b, const string& n) {
 	Bump this when checkpoint binary version changes (compatibility).
 1: initial version
 2: removed watch_list in lieu of using simpler watchpoint flag
+3: added timing binary support
  */
 static
-const size_t	checkpoint_version = 2;
+const size_t	checkpoint_version = 3;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
