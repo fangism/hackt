@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.111 2010/08/27 23:04:54 fang Exp $
+#	$Id: Makefile.am,v 1.112 2010/08/30 23:51:50 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -19,6 +19,7 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	allow_interference allow_weak_interference \
 	inv-alt unused \
 	celem-share after-celem-def after-celem after-celem-more \
+	celem-keeper \
 	pass-gates-def pass-gates excl-rings-def excl-rings \
 	bad-pass-gate-a bad-pass-gate-b \
 	check-excl-rings-def check-excl-rings \
@@ -198,8 +199,9 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	SRAM-c-01 SRAM-c-02 SRAM-c-03 \
 	SRAM-d-01 SRAM-d-02 \
 	keeper-a-01 \
-	iskeeper-a-01 \
+	iskeeper-a-01 iskeeper-a-02 \
 	isckeeper-a-01 \
+	celem-keeper-01 celem-keeper-02 \
 	autosave-02 \
 	channel-test-a-01 channel-test-a-02 channel-test-a-03 \
 	channel-test-a-04 channel-test-a-05 channel-test-a-06 \

@@ -1,10 +1,12 @@
 /**
 	\file "sim/prsim/ExprAllocFlags.h"
-	$Id: ExprAllocFlags.h,v 1.2 2006/05/06 04:18:54 fang Exp $
+	$Id: ExprAllocFlags.h,v 1.3 2010/08/30 23:51:50 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPRALLOCFLAGS_H__
 #define	__HAC_SIM_PRSIM_EXPRALLOCFLAGS_H__
+
+#include "sim/prsim/devel_switches.h"		// for PRSIM_WEAK_RULES
 
 namespace HAC {
 namespace SIM {
@@ -27,8 +29,20 @@ struct ExprAllocFlags {
 	};
 
 	unsigned char			flags;
+#if PRSIM_WEAK_RULES
+	/**
+		Set to true to interpret iskeeper rules as 
+		weak and fast (after=0).
+		Otherwise, by default, they are simply dropped and ignored.  
+	 */
+	bool				fast_weak_keepers;
+#endif
 
-	ExprAllocFlags() : flags(DEFAULT_FLAGS) { }
+	ExprAllocFlags() : flags(DEFAULT_FLAGS)
+#if PRSIM_WEAK_RULES
+		, fast_weak_keepers(false)
+#endif
+		{ }
 
 	bool
 	is_fold_literals(void) const { return flags & FOLD_LITERALS; }

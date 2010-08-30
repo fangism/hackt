@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/ExprAlloc.h"
-	$Id: ExprAlloc.h,v 1.17 2010/04/07 00:13:09 fang Exp $
+	$Id: ExprAlloc.h,v 1.18 2010/08/30 23:51:50 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPRALLOC_H__
@@ -121,6 +121,9 @@ public:
 
 	rule_type&
 	get_temp_rule(void) const { NEVER_NULL(temp_rule); return *temp_rule; }
+
+	const ExprAllocFlags&
+	get_flags(void) const { return flags; }
 
 	State&
 	get_state(void) { return state; }

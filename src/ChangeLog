@@ -3,6 +3,15 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-08-30	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-19:
+	  hacprsim: option to re-instante old behavior of iskeeper, 
+		treating such rules as weak=1, after=0.
+		Pass -f fast-weak-keepers or no-weak-keepers.
+		Documented, test cases added.
+
+
 2010-08-27	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-18:

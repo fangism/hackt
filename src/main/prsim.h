@@ -1,7 +1,7 @@
 /**
 	\file "main/prsim.h"
 	Interface header for prsim module.  
-	$Id: prsim.h,v 1.4 2006/05/06 04:18:43 fang Exp $
+	$Id: prsim.h,v 1.5 2010/08/30 23:51:49 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_PRSIM_H__
@@ -56,7 +56,8 @@ private:
 		_check_structure, _no_check_structure,
 		_dump_dot_struct, _no_dump_dot_struct,
 		_fold_literals, _no_fold_literals,
-		_denormalize_negations, _no_denormalize_negations;
+		_denormalize_negations, _no_denormalize_negations,
+		_fast_weak_keepers, _no_weak_keepers;
 
 };	// end class prsim
 

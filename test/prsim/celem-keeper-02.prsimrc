@@ -1,0 +1,6 @@
+# "celem-keeper-02.prsimrc"
+# @haco@ celem-keeper.haco-c
+# @hacprsim-flags@ -f fast-weak-keepers
+
+source celem-keeper-01.prsimrc
+

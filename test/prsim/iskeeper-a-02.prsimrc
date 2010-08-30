@@ -1,0 +1,10 @@
+# "iskeeper-a-02.prsimrc"
+# @haco@ iskeeper-a.haco-c
+# testing fast-weak-keepers option
+# @hacprsim-flags@ -f fast-weak-keepers
+
+weak-rules on
+weak-rules show
+rules .
+
+fanin z

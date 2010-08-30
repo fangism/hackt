@@ -1,0 +1,20 @@
+[top-level]
+rules:
+[after 0, weak]	a -> z-
+[after 0, weak]	~b -> z+
+[after 10]	c -> z-
+[after 10, weak]	~d -> z+
+[after 10]	e -> z-
+[after 10, weak]	~f -> z+
+[after 0]	g -> z-
+[after 0, weak]	~g -> z+
+Fanins of node `z':
+(from [top-level]):
+[after 10]	c -> z-
+[after 10]	e -> z-
+[after 0]	g -> z-
+[after 0, weak]	~b -> z+
+[after 10, weak]	~d -> z+
+[after 10, weak]	~f -> z+
+[after 0, weak]	~g -> z+
+[after 0, weak]	a -> z-

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
 	Visitor implementation for allocating simulator state structures.  
-	$Id: ExprAlloc.cc,v 1.45 2010/07/14 18:12:38 fang Exp $
+	$Id: ExprAlloc.cc,v 1.46 2010/08/30 23:51:49 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -729,6 +729,7 @@ try {
 	}
 }
 if (suppress_keeper_rule) {
+	// do nothing, suppress rule
 	suppress_keeper_rule = false;	// reset it for next rule
 } else {
 #if ENABLE_STACKTRACE
@@ -1333,6 +1334,8 @@ DECLARE_AND_DEFINE_PRSIM_RULE_ATTRIBUTE_CLASS(IsKeeper, "iskeeper")
 /**
 	Since prsim does not actually simulate staticizers (keepers), 
 	this tells prsim to completely ignore these rules.  
+	The exception is to honor the fast-weak-keepers mode, 
+	and treat such rules as a weak and fast.  
  */
 void
 IsKeeper::main(visitor_type& v, const values_type& a) {
@@ -1345,6 +1348,16 @@ IsKeeper::main(visitor_type& v, const values_type& a) {
 		v.suppress_keeper_rule = 
 			k.is_a<const pint_const>()->static_constant_value();
 	}
+#if PRSIM_WEAK_RULES
+	if (v.suppress_keeper_rule && v.get_flags().fast_weak_keepers) {
+	// in this mode, interpret iskeeper rules as weak=1,after=0
+		typedef	visitor_type::rule_type	rule_type;
+		rule_type& r(v.get_temp_rule());
+		r.set_weak();
+		r.set_delay(State::time_traits::zero);
+		v.suppress_keeper_rule = false;
+	}
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

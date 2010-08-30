@@ -1,0 +1,17 @@
+// "celem-keeper.hac"
+// copy modified from "celem-fb.hac"
+// explicitly weak staticized C-element
+// normally not simulated
+
+defproc celem(bool a, b, c) {
+bool _c;
+prs {
+	a & b		#> _c-
+	_c		=> c-
+[iskeeper=1]	c	=> _c-
+}
+}
+
+bool a, b, c;
+celem Z(a, b, c);
+

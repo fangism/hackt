@@ -1,0 +1,14 @@
+	0	a : 0
+	0	b : 0
+	10	Z._c : 1	[by b:=0]
+	20	c : 0	[by Z._c:=1]
+Fanouts of node `c':
+(to Z):
+[after 0, weak]	c -> Z._c-
+[after 0, weak]	~c -> Z._c+
+Fanins of node `Z._c':
+(from Z):
+[after 10]	~a & ~b -> Z._c+
+[after 10]	a & b -> Z._c-
+[after 0, weak]	~c -> Z._c+
+[after 0, weak]	c -> Z._c-

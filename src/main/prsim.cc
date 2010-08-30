@@ -3,7 +3,7 @@
 	Traditional production rule simulator. 
 	This source file is processed by extract_texinfo.awk for 
 	command-line option documentation.  
-	$Id: prsim.cc,v 1.29 2010/04/07 00:13:02 fang Exp $
+	$Id: prsim.cc,v 1.30 2010/08/30 23:51:47 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -541,6 +541,8 @@ prsim::usage(void) {
 
 //-----------------------------------------------------------------------------
 // prsim_option modifier functions and their flag registrations
+// TODO: several of these options could be exposed to vpi-prsim.cc!
+
 static void __prsim_default(prsim_options& o) { o = prsim_options(); }
 static void __prsim_run(prsim_options& o) { o.run = true; }
 static void __prsim_no_run(prsim_options& o) { o.run = false; }
@@ -564,6 +566,11 @@ static void __prsim_denormalize_negations(prsim_options& o)
 	{ o.expr_alloc_flags.denormalize_negations(); }
 static void __prsim_no_denormalize_negations(prsim_options& o)
 	{ o.expr_alloc_flags.no_denormalize_negations(); }
+
+static void __prsim_fast_weak_keepers(prsim_options& o)
+	{ o.expr_alloc_flags.fast_weak_keepers = true; }
+static void __prsim_no_weak_keepers(prsim_options& o)
+	{ o.expr_alloc_flags.fast_weak_keepers = false; }
 
 const prsim::register_options_modifier
 /***
@@ -670,7 +677,29 @@ Enabled at level @option{-O 1} and above.
 		"[OPT] apply DeMorgan\'s transformations"), 
 	prsim::_no_denormalize_negations(
 		"no-denormalize-negations", &__prsim_no_denormalize_negations,
-		"[OPT] disable denormalize-negations");
+		"[OPT] disable denormalize-negations"),
+
+
+/***
+@texinfo opt/fast-weak-keepers.texi
+@defopt {-f fast-weak-keepers}
+@defoptx {-f no-weak-keepers}
+By default, @option{iskeeper=1} rules are omitted entire from simulation
+because undriven nodes are assumed to be state-holding, 
+and do not change value.
+With this option turned on, rules marked @option{iskeeper} are enabled, 
+but interpreted as having attributes @option{weak=1} and @option{after=0}, 
+i.e. weak and delay-less.  
+@end defopt
+@end texinfo
+***/
+	prsim::_fast_weak_keepers(
+		"fast-weak-keepers", &__prsim_fast_weak_keepers,
+		"interpret iskeeper=1 rules as weak=1,after=0"), 
+	prsim::_no_weak_keepers(
+		"no-weak-keepers", &__prsim_no_weak_keepers,
+		"suppress all iskeeper=1 rules [default]");
+
 
 //=============================================================================
 }	// end namespace HAC
