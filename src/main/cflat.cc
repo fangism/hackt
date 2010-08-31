@@ -2,7 +2,7 @@
 	\file "main/cflat.cc"
 	cflat backwards compability module.  
 
-	$Id: cflat.cc,v 1.32 2010/07/02 00:10:05 fang Exp $
+	$Id: cflat.cc,v 1.33 2010/08/31 23:48:04 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -266,6 +266,7 @@ __cflat_java_lvs(OPTARG cflat::options& cf) {
 	__cflat_lvs(OPTARG_FWD cf);
 	cf.node_attributes = true;
 	cf.split_instance_attributes = true;
+	cf.literal_attributes = false;	// new, tool may not be ready for yet
 	cf.expand_pass_gates = false;
 	OPTFUN_RETURN
 }
@@ -710,6 +711,19 @@ or one attribute per line:
 DEFINE_BOOL_OPTION_PAIR(split_instance_attributes, "join-instance-attributes",
 	"print one attribute per line",
 	"group instance attributes in a single line")
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cflat/opt-literal-attributes.texi
+@defvr {@t{cflat -f} option} literal-attributes
+@defvrx {@t{cflat -f} option} no-literal-attributes
+Whether or not to print node literal attributes within rules.  
+@end defvr
+@end texinfo
+***/
+DEFINE_BOOL_OPTION_PAIR(literal_attributes, "literal-attributes",
+	"print rule literal attributes",
+	"suppress rule literal attributes")
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***

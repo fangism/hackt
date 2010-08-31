@@ -1,0 +1,3 @@
+(("bar.en"<44> & "bar.w"[lvt])[hvt=1] & "bar.x"<56>)[lvt=1] & "bar.y" -> "bar._z"-
+= "!GND" "bar.!GND"
+= "!Vdd" "bar.!Vdd"

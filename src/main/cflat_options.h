@@ -1,6 +1,6 @@
 /**
 	\file "main/cflat_options.h"
-	$Id: cflat_options.h,v 1.21 2010/07/02 00:10:05 fang Exp $
+	$Id: cflat_options.h,v 1.22 2010/08/31 23:48:05 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_CFLAT_OPTIONS_H__
@@ -102,6 +102,11 @@ public:
 		Print instance attributes one-per-line.  Default=false.
 	 */
 	bool				split_instance_attributes;
+	/**
+		Print additional non-size attributes of node literals 
+		in rules.  Default=false.
+	 */
+	bool				literal_attributes;
 	/**
 		Whether or not to expand passn/passp directives
 		to their equivalent (uni-directional) production rules.

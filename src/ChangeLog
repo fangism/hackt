@@ -3,6 +3,20 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-08-31	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-20:
+	  Added front and middle-end support for internal node attributes.
+		After some experimentation, decided to attach them
+		to the node structs rather than the associated expressions.  
+	  Updated PRS::footprint::dump_* routines to be member functions.
+	  hacprsim options: -f literal-attributes to print literal attrs.
+	  Updated binary object format slightly, version bumped.
+		Updated create-dump expects for parser/prs tests.
+	  Documented, added bunch of hflat test cases with literal-attributes.
+	  Next: hacknet updates for internal node attribute usage.
+
+
 2010-08-30	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-19:

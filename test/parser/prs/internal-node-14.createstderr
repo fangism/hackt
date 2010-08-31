@@ -87,7 +87,7 @@ Persistent Object Manager text dump:
 	80	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	81	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	82	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	83	##ADDR##	footprnt	0	#HEAD#	#TAIL#	792
+	83	##ADDR##	footprnt	0	#HEAD#	#TAIL#	800
 	84	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	85	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	86	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
@@ -181,8 +181,8 @@ In namespace "", we have: {
           7	bogus<2>::y[1] @[ port-alias loc-FO+ ]	
           8	bogus<2>::en @[ loc-FO- ]	
           resolved prs:
-          ~en & ~x[0] & ~y[0] -> w+
-          ~en & ~x[1] & ~y[1] -> w+
+          @z[0] & ~x[0] & ~y[0] -> w+
+          @z[1] & ~x[1] & ~y[1] -> w+
           en -> w-
           internal node exprs: 
           @z[0]+ <- ~en

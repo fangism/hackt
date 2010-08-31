@@ -1,5 +1,5 @@
 @c "hackt/legacy.texi"
-@c $Id: legacy.texi,v 1.9 2010/07/02 00:10:01 fang Exp $
+@c $Id: legacy.texi,v 1.10 2010/08/31 23:47:59 fang Exp $
 
 @node Legacy Compatibility
 @chapter Legacy Compatibility
@@ -121,6 +121,7 @@ The following @option{-f} flags are supported:
 @include cflat/opt-quote-names.texi
 @include cflat/opt-node-attributes.texi
 @include cflat/opt-split-instance-attributes.texi
+@include cflat/opt-literal-attributes.texi
 @include cflat/opt-SEU.texi
 @include cflat/opt-check-mode.texi
 @include cflat/opt-wire-mode.texi

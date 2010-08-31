@@ -1,0 +1,4 @@
+"bar.en"[hvt=1] & "bar.x" -> "bar._y"-
+hvt	"bar.en"[hvt=1] & "bar.x" -> "bar._z"-
+connect "!GND" "bar.!GND"
+connect "!Vdd" "bar.!Vdd"

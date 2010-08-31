@@ -45,7 +45,7 @@ Persistent Object Manager text dump:
 	41	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	42	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	43	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	44	##ADDR##	footprnt	0	#HEAD#	#TAIL#	539
+	44	##ADDR##	footprnt	0	#HEAD#	#TAIL#	543
 	45	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	46	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	47	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
@@ -118,7 +118,7 @@ In namespace "", we have: {
         4	foo<>::a @[ port-alias loc-FO- ]	
         5	foo<>::b @[ port-alias loc-FI- ]	
         resolved prs:
-        en & a -> b-
+        @x & a -> b-
         internal node exprs: 
         @x- <- en
         subcircuit (rules, macros, @nodes): 

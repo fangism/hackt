@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_printer.cc"
 	Implementation of cflattening visitor.
-	$Id: cflat_printer.cc,v 1.30 2010/07/12 21:49:54 fang Exp $
+	$Id: cflat_printer.cc,v 1.31 2010/08/31 23:48:03 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -96,6 +96,27 @@ cflat_prs_printer::visit(const PRS::footprint& p) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Process attributes through the rule-attribute registry.
+ */
+static
+void
+__print_prefix_rule_attributes(const resolved_attribute_list_type& attrs, 
+		cflat_prs_printer& v) {
+	typedef	resolved_attribute_list_type::const_iterator
+					const_iterator;
+	const_iterator i(attrs.begin());
+	const const_iterator e(attrs.end());
+	resolved_attribute::values_type empty;
+	for ( ; i!=e; ++i) {
+		// already checked registered
+		cflat_rule_attribute_registry.find(i->key)->second
+			.main(v, (i->values ? *i->values : empty));
+		// fake an empty list if necessary
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Prints out the entire rule.  
 	Adapted from footprint::cflat_rule().  
 	Q1: why is the expression outside of the conditional?
@@ -108,19 +129,7 @@ cflat_prs_printer::visit(const footprint_rule& r) {
 	const expr_type_setter tmp(*this, PRS_LITERAL_TYPE_ENUM);
 if (!cfopts.check_prs) {
 	if (r.attributes.size()) {
-		typedef	footprint_rule::attributes_list_type
-						attributes_list_type;
-		typedef	attributes_list_type::const_iterator
-						const_iterator;
-		const_iterator i(r.attributes.begin());
-		const const_iterator e(r.attributes.end());
-		resolved_attribute::values_type empty;
-		for ( ; i!=e; ++i) {
-			// already checked registered
-			cflat_rule_attribute_registry.find(i->key)->second
-				.main(*this, (i->values ? *i->values : empty));
-			// fake an empty list if necessary
-		}
+		__print_prefix_rule_attributes(r.attributes, *this);
 	}
 	const PRS_footprint_expr_pool_type* const expr_pool = 
 		&get_current_footprint().get_prs_footprint().get_expr_pool();
@@ -162,12 +171,13 @@ if (!cfopts.check_prs) {
 void
 cflat_prs_printer::visit(const footprint_expr_node& e) {
 	STACKTRACE_VERBOSE;
+	const footprint& pfp(get_current_footprint().get_prs_footprint());
 	const size_t sz = e.size();
 	const char type = e.get_type();
 	const char ptype = parent_expr_type;
 	const expr_type_setter __tmp(*this, type);
 	const PRS_footprint_expr_pool_type* const expr_pool = 
-		&get_current_footprint().get_prs_footprint().get_expr_pool();
+		&pfp.get_expr_pool();
 	switch (type) {
 		case PRS_LITERAL_TYPE_ENUM: {
 			INVARIANT(sz == 1);
@@ -175,6 +185,13 @@ cflat_prs_printer::visit(const footprint_expr_node& e) {
 			const directive_base_params_type& par(e.params);
 			if (cfopts.size_prs) {
 				directive_base::dump_params(par, os);
+			}
+			// PRS literal attributes
+			if (cfopts.literal_attributes) {
+	// NOTE: this is inconsistent with __print_prefix_rule_attributes
+			if (e.attributes.size()) {
+				e.attributes.dump(os << '[') << ']';
+			}
 			}
 			// computing conductances
 			preal_value_type width = 0.0;
@@ -294,12 +311,43 @@ cflat_prs_printer::visit(const footprint_expr_node& e) {
 			if (paren) os << ')';
 			break;
 		}
-		case PRS_NODE_TYPE_ENUM:
+		case PRS_NODE_TYPE_ENUM: {
 			// we've already matched the direction of the rule
 			// so we should just be able to print the expression.
 			INVARIANT(sz == 1);
-			(*expr_pool)[e.only()].accept(*this);
+			const footprint_expr_node& en((*expr_pool)[e.only()]);
+			// if there are any attributes associated with the
+			// internal node, then parenthesize and post-fix
+			// the list of attributes.
+#if PRS_INTERNAL_NODE_ATTRIBUTES
+#if PRS_INTERNAL_NODE_ATTRIBUTES_AT_NODE
+			const footprint::internal_node_pool_type&
+				inp(pfp.get_internal_node_pool());
+			const footprint::internal_node_pool_type::const_iterator
+				f(pfp.find_internal_node(e.only()));
+			INVARIANT(f != inp.end());
+			const resolved_attribute_list_type& att(f->attributes);
+#elif PRS_INTERNAL_NODE_ATTRIBUTES_AT_EXPR
+			const resolved_attribute_list_type& att(en.attributes);
+#endif
+			const bool wrap = cfopts.literal_attributes &&
+				att.size();
+			const bool leaf =
+				en.get_type() == PRS_LITERAL_TYPE_ENUM;
+			// leaf literals will want to be parenthesized
+			if (wrap && leaf) os << '(';
+#endif
+			en.accept(*this);
+#if PRS_INTERNAL_NODE_ATTRIBUTES
+	// NOTE: this is inconsistent with __print_prefix_rule_attributes
+			if (wrap) {
+				if (leaf) os << ')';
+				att.dump(os << '[') << ']';
+			}
+#endif
+			// other normal expression types do not bear attributes
 			break;
+		}
 		default:
 			ICE(cerr,
 			cerr << "Invalid PRS expr type enumeration: "

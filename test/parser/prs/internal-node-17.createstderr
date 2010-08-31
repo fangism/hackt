@@ -92,7 +92,7 @@ Persistent Object Manager text dump:
 	79	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	80	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	81	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	82	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1042
+	82	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1046
 	83	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	84	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	85	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
@@ -213,7 +213,7 @@ In namespace "", we have: {
         w[2] -> x-
         w[3] -> x-
         a & b -> c-
-        d & e -> d-
+        @l & e -> d-
         resolved macros:
         passn(x,x,y)
         internal node exprs: 

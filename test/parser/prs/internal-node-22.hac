@@ -1,0 +1,17 @@
+// "internal-node-22.hac"
+// copy-modified from "internal-node-21.hac"
+// expect fail
+// now allow attributes on internal nodes, like rules
+// @hflat-flags@ -f literal-attributes
+
+defproc foo(bool en, w, x, y, _z) {
+_z @ [autokeeper=0];
+prs {
+[hvt=1]	en<44> & w<;lvt>	-> @a-
+[lvt=1]	~@a & x<56>		-> @_y-
+[svt=1]	~@_y & y		-> _z-
+}
+}
+
+foo bar;
+

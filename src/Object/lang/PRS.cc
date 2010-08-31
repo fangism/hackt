@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.45 2010/07/09 02:14:12 fang Exp $
+	$Id: PRS.cc,v 1.46 2010/08/31 23:48:02 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -683,14 +683,25 @@ pull_base::unroll_base(const unroll_context& c, const bool dir) const {
 		// dump context too?
 		return good_bool(false);
 	}
+#if PRS_INTERNAL_NODE_ATTRIBUTES
+	// check attributes first, separately, unconditionally
+	resolved_attribute_list_type r_attr;
+	if (!unroll_check_attributes(attributes, r_attr, c, 
+			cflat_rule_attribute_registry).good) {
+		// already have some error message
+		return good_bool(false);
+	}
+#endif
 if (output.is_internal()) {
 	// we have an internal-node definition
 	// rule-attributes are ignored for internal-node definitions
+#if !PRS_INTERNAL_NODE_ATTRIBUTES
 	if (attributes.size()) {
 		cerr <<
 	"Warning: internal node definitions ignore rule attributes.  "
 			<< endl;
 	}
+#endif
 	// resolve indices (if any) to constant.
 	const node_literal_ptr_type
 		nref(output.unroll_node_reference(c));
@@ -702,8 +713,27 @@ if (output.is_internal()) {
 	// register guard expression
 	std::ostringstream oss;
 	nref->dump_local(oss);
-	return pfp.register_internal_node_expr(
-		oss.str(), guard_expr_index, dir);
+	if (!pfp.register_internal_node_expr(
+			oss.str(), guard_expr_index, dir).good) {
+		return good_bool(false);
+	}
+#if PRS_INTERNAL_NODE_ATTRIBUTES
+	// attach attributes to the expression associated with
+	// the last internal node added
+	footprint::node_expr_type& n(pfp.get_internal_node_pool().back());
+#if PRS_INTERNAL_NODE_ATTRIBUTES_AT_NODE
+	n.attributes.swap(r_attr);
+#elif PRS_INTERNAL_NODE_ATTRIBUTES_AT_EXPR
+	footprint_expr_node& e(pfp.get_expr_pool()[n.first]);
+	INVARIANT(e.attributes.empty());
+//	INVARIANT(e.get_type() != PRS_LITERAL_TYPE_ENUM);	// want this
+	e.attributes.swap(r_attr);
+	// CAVEAT: don't want to attach attributes directly to a literal node
+	// expression, as it may have it's own attributes.  
+	// would have to modify register_internal_node_expr to guarantee
+	// the type of its return value.
+#endif
+#endif
 } else {
 	// rule is a standard pull-up/dn
 	const size_t output_node_index = output.unroll_base(c);
@@ -739,14 +769,18 @@ if (output.is_internal()) {
 #endif
 	footprint_rule&
 		r(pfp.push_back_rule(guard_expr_index, output_node_index, dir));
+#if PRS_INTERNAL_NODE_ATTRIBUTES
+	r.attributes.swap(r_attr);
+#else
 	if (!unroll_check_attributes(attributes, r.attributes, c, 
 			cflat_rule_attribute_registry).good) {
 		// already have some error message
 		return good_bool(false);
 	}
+#endif
 }	// end if output.is_internal()
 	return good_bool(true);
-}
+}	// end pull_base::unroll_base
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

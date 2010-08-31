@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.h"
-	$Id: PRS_footprint.h,v 1.20 2010/07/02 00:10:04 fang Exp $
+	$Id: PRS_footprint.h,v 1.21 2010/08/31 23:48:03 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_FOOTPRINT_H__
@@ -11,10 +11,35 @@
 #include <map>
 #include <set>		// for collecting unique node indices
 #include <string>
+
+/**
+	Define to 1 to support internal node attributes.
+	Goal: 1
+	Status: beginning
+	Rationale: for correct propagation of attributes when 
+		expanding internal nodes.  
+ */
+#define	PRS_INTERNAL_NODE_ATTRIBUTES		1
+/**
+	The flag determines *where* internal node attributes are kept.
+	If 0, store the attributes with the internal_node_pool nodes.
+	If 1, store the attributes with the associated *expression*, 
+		which already has attribute support.  
+	Goal: 0 (_AT_NODE)
+	0 (at node) is probably cleaner because it avoids the scenario of
+	attaching internal expression attributes to a singleton
+	literal that already has attributes specified.
+ */
+#define	PRS_INTERNAL_NODE_ATTRIBUTES_AT_EXPR	(0 && PRS_INTERNAL_NODE_ATTRIBUTES)
+#define	PRS_INTERNAL_NODE_ATTRIBUTES_AT_NODE	(1 && PRS_INTERNAL_NODE_ATTRIBUTES)
+
 #include "Object/inst/instance_pool_fwd.h"
 #include "Object/lang/PRS_footprint_expr.h"
 #include "Object/lang/PRS_footprint_rule.h"
 #include "Object/lang/PRS_footprint_macro.h"
+#if PRS_INTERNAL_NODE_ATTRIBUTES
+#include "Object/lang/generic_attribute.h"
+#endif
 #include "Object/lang/PRS_footprint_expr_pool_fwd.h"
 #include "Object/devel_switches.h"
 #include "util/macros.h"
@@ -92,6 +117,9 @@ public:
 	typedef	size_t				invariant_type;
 	typedef	footprint_rule			rule;
 	typedef	footprint_macro			macro;
+#if PRS_INTERNAL_NODE_ATTRIBUTES_AT_NODE
+	typedef	resolved_attribute_list_type	attributes_list_type;
+#endif
 	/**
 		Expression pull direction for internal node.
 		pull-up is true, pull-down if false.
@@ -102,12 +130,35 @@ public:
 		typedef	pair<expr_index_type, bool>	parent_type;
 		// redundant, but relying on copy-on-write memory efficiency
 		string				name;
+#if PRS_INTERNAL_NODE_ATTRIBUTES_AT_NODE
+		// TODO: could just use the attributes in footprint_expr_node
+		// that which is indexed by the 'first' key.
+		// but there are fewer of these, less memory overhead?
+		attributes_list_type		attributes;
+#endif
 
 		node_expr_type() { }	// uninitialized
 		node_expr_type(const expr_index_type i,
 			const bool d, const string& n) :
-			parent_type(i, d), name(n) { }
+			parent_type(i, d), name(n)
+#if PRS_INTERNAL_NODE_ATTRIBUTES_AT_NODE
+			, attributes()
+#endif
+			{ }
 
+#if PRS_INTERNAL_NODE_ATTRIBUTES
+			void
+			collect_transient_info_base(
+				persistent_object_manager&) const;
+#endif
+
+			void
+			write_object_base(const persistent_object_manager&, 
+				ostream&) const;
+
+			void
+			load_object_base(const persistent_object_manager&,
+				istream&);
 	};	// end struct node_expr_type
 	typedef	vector<node_expr_type>		internal_node_pool_type;
 	/**
@@ -285,19 +336,15 @@ public:
 
 // private:
 public:
-	static
 	ostream&
-	dump_expr(const expr_node&, ostream&, const node_pool_type&,
-		const expr_pool_type&, const char);
+	dump_expr(const expr_node&, ostream&, 
+		const entity::footprint&, const char) const;
 
-	static
 	ostream&
-	dump_rule(const rule&, ostream&, const node_pool_type&, 
-		const expr_pool_type&);
+	dump_rule(const rule&, ostream&, const entity::footprint&) const;
 
-	static
 	ostream&
-	dump_macro(const macro&, ostream&, const node_pool_type&);
+	dump_macro(const macro&, ostream&, const entity::footprint&) const;
 
 public:
 	// a method for registering internal nodes and expressions
@@ -307,6 +354,15 @@ public:
 
 	expr_index_type
 	lookup_internal_node_expr(const string&, const bool) const;
+
+	// ALERT: O(n) linear search
+	internal_node_pool_type::const_iterator
+	find_internal_node(const expr_index_type) const;
+
+	internal_node_pool_type&
+	get_internal_node_pool(void) {
+		return internal_node_pool;
+	}
 
 	const internal_node_pool_type&
 	get_internal_node_pool(void) const {

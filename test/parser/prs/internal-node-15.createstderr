@@ -83,7 +83,7 @@ Persistent Object Manager text dump:
 	76	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	77	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	78	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	79	##ADDR##	footprnt	0	#HEAD#	#TAIL#	756
+	79	##ADDR##	footprnt	0	#HEAD#	#TAIL#	768
 	80	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	81	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	82	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
@@ -172,12 +172,12 @@ In namespace "", we have: {
         7	bogus<>::e[1] @[ port-alias ]	
         8	bogus<>::en @[ loc-FO+ ]	
         resolved prs:
-        (en & e[0]) & x -> w-
-        (en & e[1]) & y -> w-
+        @q[0] & x -> w-
+        @q[1] & y -> w-
         ~en -> w+
         internal node exprs: 
-        @q[0]- <- en & e[0]
-        @q[1]- <- en & e[1]
+        @q[0]- <- @z & e[0]
+        @q[1]- <- @z & e[1]
         @z- <- en
         rule supply map: (rules, macros, @nodes : Vdd, GND)
         0..2 none 0..2 : 2, 1 | 2, 1

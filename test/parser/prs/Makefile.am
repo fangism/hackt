@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.71 2010/08/24 22:52:06 fang Exp $
+#	$Id: Makefile.am,v 1.72 2010/08/31 23:48:06 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -108,6 +108,7 @@ HACKT_PARSE_TEST_PASSES = \
 	internal-node-00 internal-node-06 internal-node-07 internal-node-09 \
 	internal-node-10 internal-node-12 internal-node-13 internal-node-14 \
 	internal-node-15 internal-node-17 \
+	internal-node-19 internal-node-20 internal-node-21 internal-node-22 \
 	auto-celem-00 auto-celem-01 auto-celem-02 auto-celem-03 auto-celem-04 \
 	auto-celem-05 auto-celem-06 auto-celem-07 auto-celem-08 auto-celem-09 \
 	auto-celem-10 auto-celem-11 auto-celem-12 auto-celem-13 \
@@ -194,6 +195,7 @@ HACKT_CREATE_TEST_PASSES = \
 	internal-node-00 internal-node-06 \
 	internal-node-12 internal-node-13 internal-node-14 internal-node-15 \
 	internal-node-17 \
+	internal-node-19 internal-node-20 internal-node-21 internal-node-22 \
 	act-001 act-002 act-003 act-004 act-005 act-006 act-007 act-010 \
 	connect-01 connect-02 connect-03 \
 	auto-celem-00 auto-celem-01 auto-celem-02 auto-celem-03 auto-celem-04 \
@@ -272,6 +274,7 @@ HACKT_CFLAT_TEST_SUBJECTS = \
 	internal-node-00 internal-node-06 \
 	internal-node-12 internal-node-13 internal-node-14 internal-node-15 \
 	internal-node-17 \
+	internal-node-19 internal-node-20 internal-node-21 internal-node-22 \
 	strengths-01 strengths-02 \
 	invariant-01 invariant-02 invariant-03 invariant-04 \
 	connect-01 connect-02 connect-03 \
@@ -313,7 +316,8 @@ HACKT_CFLAT_LVS_TEST_PASSES = \
 	runmodestatic-01 runmodestatic-03 runmodestatic-04 runmodestatic-05 \
 	isrvc-01 \
 	iskeeper-01 iskeeper-02 iskeeper-03 iskeeper-04 \
-	isckeeper-01 isckeeper-02
+	isckeeper-01 isckeeper-02 \
+	internal-node-19 internal-node-20 internal-node-21 internal-node-22
 
 # some custom rules: create these prs from pre-created object file
 wchb-06.prs: wchb-06.haco
@@ -353,6 +357,7 @@ HACKT_CFLAT_SPRS_TEST_SUBJECTS = \
 	size-01 size-03 size-04 size-05 \
 	strengths-01 strengths-02 \
 	macro-pass-03 macro-pass-05 macro-pass-07 \
+	internal-node-19 internal-node-20 internal-node-21 internal-node-22 \
 	act-005 act-010
 # pending: act-004
 
