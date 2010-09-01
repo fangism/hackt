@@ -1,5 +1,5 @@
 # "test/net/Makefile.am"
-#	$Id: Makefile.am,v 1.21 2010/09/01 01:49:05 fang Exp $
+#	$Id: Makefile.am,v 1.22 2010/09/01 22:14:21 fang Exp $
 # Test auto-Makefile for hacknet.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -128,7 +128,9 @@ HACKT_PARSE_TEST_PASSES = \
 	fet-type-26 fet-type-27 fet-type-28 \
 	pass_gate-05 pass_gate-06 \
 	precharge-07 precharge-08 \
-	mangle-04
+	mangle-04 \
+	rule-sizes-01 rule-sizes-02 rule-sizes-03 rule-sizes-04 \
+	rule-sizes-05 rule-sizes-06
 
 HACKTNET_TEST_SCRIPTS_PASSES =
 
@@ -154,7 +156,9 @@ HACKT_CREATE_TEST_PASSES = \
 	supply-instance-16 supply-instance-17 supply-instance-18 \
 	supply-instance-02b supply-instance-11b \
 	substrate-01 substrate-02 substrate-03 \
-	substrate-04 substrate-05 substrate-06
+	substrate-04 substrate-05 substrate-06 \
+	rule-sizes-01 rule-sizes-02 rule-sizes-03 rule-sizes-04 \
+	rule-sizes-05 rule-sizes-06
 
 HACKT_CREATE_TEST_FAILURES = \
 	non-CMOS-06 subckt-02
@@ -169,6 +173,10 @@ HACKT_ALLOC_TEST_PASSES = \
 	supply-instance-02b supply-instance-11b
 
 HACKT_CFLAT_TEST_SUBJECTS =
+
+HACKT_CFLAT_SPRS_TEST_SUBJECTS = \
+	rule-sizes-01 rule-sizes-02 rule-sizes-03 rule-sizes-04 \
+	rule-sizes-05 rule-sizes-06
 
 include $(top_srcdir)/test/Make.test-tail
 

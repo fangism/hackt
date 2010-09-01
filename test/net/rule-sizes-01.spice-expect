@@ -1,0 +1,5 @@
+Mz:dn:0 !GND x #0 !GND nch W=20u L=2u
+Mz:dn:1 #0 y z !GND nch W=20u L=2u
+Mz:up:0 !Vdd x #1 !Vdd pch W=20u L=2u
+Mz:up:1 #1 y z !Vdd pch W=20u L=2u
+

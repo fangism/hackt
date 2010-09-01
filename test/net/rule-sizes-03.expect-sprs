@@ -1,0 +1,10 @@
+W=5	"bar.x" & "bar.y" -> "bar.z[0]"-
+W=5	~"bar.x" & ~"bar.y" -> "bar.z[0]"+
+W=10	"bar.x" & "bar.y" -> "bar.z[1]"-
+W=10	~"bar.x" & ~"bar.y" -> "bar.z[1]"+
+W=15	"bar.x" & "bar.y" -> "bar.z[2]"-
+W=15	~"bar.x" & ~"bar.y" -> "bar.z[2]"+
+W=20	"bar.x" & "bar.y" -> "bar.z[3]"-
+W=20	~"bar.x" & ~"bar.y" -> "bar.z[3]"+
+= "!GND" "bar.!GND"
+= "!Vdd" "bar.!Vdd"

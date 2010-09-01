@@ -2,7 +2,7 @@
 	\file "Object/lang/PRS_attribute_common.h"
 	Contains base classes for all tool-independent implementations
 	of PRS rule attribute classes.  
-	$Id: PRS_attribute_common.h,v 1.13 2010/02/22 07:34:15 fang Exp $
+	$Id: PRS_attribute_common.h,v 1.14 2010/09/01 22:14:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_RULE_ATTRIBUTE_COMMON_H__
@@ -60,6 +60,11 @@ DECLARE_PRS_RULE_ATTRIBUTE_COMMON_STRUCT(Weak)
 		and also silence instability diagnostics on the rule.
  */
 DECLARE_PRS_RULE_ATTRIBUTE_COMMON_STRUCT(Unstab)
+
+//-----------------------------------------------------------------------------
+// transistor sizing attributes
+DECLARE_PRS_RULE_ATTRIBUTE_COMMON_STRUCT(Width)
+DECLARE_PRS_RULE_ATTRIBUTE_COMMON_STRUCT(Length)
 
 //-----------------------------------------------------------------------------
 /**

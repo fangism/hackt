@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS_attribute_registry.cc"
 	This defines the attribute actions for the cflat visitor.  
-	$Id: PRS_attribute_registry.cc,v 1.20 2010/02/22 07:34:16 fang Exp $
+	$Id: PRS_attribute_registry.cc,v 1.21 2010/09/01 22:14:20 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -13,6 +13,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/lang/cflat_printer.h"
 #include "Object/expr/const_param_expr_list.h"
 #include "Object/expr/pint_const.h"
+#include "Object/expr/preal_const.h"
 #include "Object/expr/expr_dump_context.h"
 #include "Object/lang/PRS_attribute_common.h"
 #include "main/cflat_options.h"
@@ -143,6 +144,43 @@ if (p.cfopts.primary_tool == cflat_options::TOOL_PRSIM) {
 
 //-----------------------------------------------------------------------------
 /***
+@texinfo prs/attribute-rule-sizing.texi
+@defmac W width
+Specify the default transistor width for this rule.
+For uniformly sized stacks, writing this makes the rule much less cluttered
+than repeating sizes per literal.
+Widths can always be overridden per literal.
+@end defmac
+
+@defmac L length
+Specify the default transistor length for this rule.
+Lengths can always be overridden per literal.
+@end defmac
+@end texinfo
+***/
+DECLARE_AND_DEFINE_CFLAT_PRS_ATTRIBUTE_CLASS(Width, "W")
+DECLARE_AND_DEFINE_CFLAT_PRS_ATTRIBUTE_CLASS(Length, "L")
+
+void
+Width::main(visitor_type& p, const values_type& v) {
+if (p.cfopts.size_prs) {
+	INVARIANT(v.size() == 1);
+	const preal_value_type s = v.front()->to_real_const();
+	p.os << "W=" << s << '\t';
+}
+}
+
+void
+Length::main(visitor_type& p, const values_type& v) {
+if (p.cfopts.size_prs) {
+	INVARIANT(v.size() == 1);
+	const preal_value_type s = v.front()->to_real_const();
+	p.os << "L=" << s << '\t';
+}
+}
+
+//-----------------------------------------------------------------------------
+/***
 @texinfo prs/attribute-vt.texi
 @defmac hvt
 @defmacx lvt
@@ -151,7 +189,7 @@ If @option{hvt} is set, then emit all devices with in this particular
 rule with hvt (high voltage threshold), unless explicitly overridden
 in a node literal.
 If @option{lvt} is set, then emit all devices with in this particular 
-rule with hvt (high voltage threshold), unless overridden.
+rule with lvt (low voltage threshold), unless overridden.
 @option{svt} restores back to standard Vt as the default.
 When no parameter value is given, implicit value is 1.
 When multiple settings are given, the last one should take precedence.  

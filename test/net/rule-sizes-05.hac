@@ -1,0 +1,12 @@
+// "rule-sizes-05.hac"
+// copy-modified from "rule-sizes-04.hac"
+// testing rule sizing attributes
+
+bool w, x, y, z[2];
+prs {
+[L=4]		w & x & y<10,2>	#> z[0]-
+[W=20;L=3]	w & x<20,2> & y	#> z[1]-	// still propagates
+}
+
+// TODO: allow blank parameters to change only length without changing width
+

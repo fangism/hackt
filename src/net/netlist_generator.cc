@@ -1,7 +1,7 @@
 /**
 	\file "net/netlist_generator.cc"
 	Implementation of hierarchical netlist generation.
-	$Id: netlist_generator.cc,v 1.23 2010/09/01 01:49:04 fang Exp $
+	$Id: netlist_generator.cc,v 1.24 2010/09/01 22:14:20 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -17,6 +17,7 @@
 #include "Object/global_entry_context.h"
 #include "Object/def/footprint.h"
 #include "Object/expr/pint_const.h"
+#include "Object/expr/preal_const.h"
 #include "Object/expr/string_expr.h"
 #include "Object/inst/instance_pool.h"
 #include "Object/inst/state_instance.h"
@@ -37,6 +38,8 @@ using entity::bool_tag;
 using entity::state_instance;
 using entity::pint_value_type;
 using entity::pint_const;
+using entity::preal_value_type;
+using entity::preal_const;
 using std::ostringstream;
 using std::ostream_iterator;
 using std::upper_bound;
@@ -444,6 +447,11 @@ __attr_iskeeper(netlist_generator& g, const attr_values_ptr_type& v) {
 	}
 	if (b) {
 		g.fet_attr |= transistor::IS_STANDARD_KEEPER;
+		// also reset the current length/widths accordingly
+		g.set_current_width(g.opt.get_default_width(
+			g.current_assoc_dir, true));
+		g.set_current_length(g.opt.get_default_length(
+			g.current_assoc_dir, true));
 	}
 }
 
@@ -511,6 +519,20 @@ __attr_svt(netlist_generator& g, const attr_values_ptr_type& v) {
 }
 
 static
+void
+__attr_width(netlist_generator& g, const attr_values_ptr_type& v) {
+	INVARIANT(v && v->size());
+	g.set_current_width(v->front()->to_real_const());
+}
+
+static
+void
+__attr_length(netlist_generator& g, const attr_values_ptr_type& v) {
+	INVARIANT(v && v->size());
+	g.set_current_length(v->front()->to_real_const());
+}
+
+static
 int
 init_rule_attribute_map(void) {
 	__rule_attribute_map["iskeeper"] = &__attr_iskeeper;
@@ -518,6 +540,8 @@ init_rule_attribute_map(void) {
 	__rule_attribute_map["hvt"] = &__attr_hvt;
 	__rule_attribute_map["svt"] = &__attr_svt;
 	__rule_attribute_map["lvt"] = &__attr_lvt;
+	__rule_attribute_map["W"] = &__attr_width;
+	__rule_attribute_map["L"] = &__attr_length;
 	return 0;
 }
 
@@ -549,6 +573,13 @@ netlist_generator::visit(const entity::PRS::footprint_rule& r) {
 	const value_saver<index_type> __ta1(current_assoc_node, output_node);
 	const value_saver<bool> __ta2(current_assoc_dir, r.dir);
 #endif
+	const value_saver<real_type> __t5(current_width), __t6(current_length);
+{
+	// initialize some default values for sizes
+	const bool is_keeper = fet_attr & transistor::IS_STANDARD_KEEPER;
+	set_current_width(opt.get_default_width(r.dir, is_keeper));
+	set_current_length(opt.get_default_length(r.dir, is_keeper));
+}
 	// apply rule attributes: iskeeper, etc...
 	const rule::attributes_list_type& rats(r.attributes);
 	rule::attributes_list_type::const_iterator
@@ -561,10 +592,6 @@ for ( ; i!=e; ++i) {
 	}
 	// ignore unknown attributes silently
 }
-	const value_saver<real_type> __t5(current_width), __t6(current_length);
-	const bool is_keeper = fet_attr & transistor::IS_STANDARD_KEEPER;
-	set_current_width(opt.get_default_width(r.dir, is_keeper));
-	set_current_length(opt.get_default_length(r.dir, is_keeper));
 try {
 	const prs_footprint::expr_pool_type& ep(prs->get_expr_pool());
 	ep[r.expr_index].accept(*this);

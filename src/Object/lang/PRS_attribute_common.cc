@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_attribute_common.cc"
-	$Id: PRS_attribute_common.cc,v 1.11 2010/02/22 07:34:15 fang Exp $
+	$Id: PRS_attribute_common.cc,v 1.12 2010/09/01 22:14:19 fang Exp $
  */
 
 #include <iostream>
@@ -37,6 +37,17 @@ AfterMin::__check_vals(const char* name, const values_type& v) {
 good_bool
 AfterMax::__check_vals(const char* name, const values_type& v) {
         return check_delay_value(name, v);
+}
+
+//=============================================================================
+good_bool
+Width::__check_vals(const char* name, const values_type& v) {
+	return check_single_real(name, v);
+}
+
+good_bool
+Length::__check_vals(const char* name, const values_type& v) {
+	return check_single_real(name, v);
 }
 
 //=============================================================================

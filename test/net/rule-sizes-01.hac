@@ -1,0 +1,8 @@
+// "rule-sizes-01.hac"
+// testing rule sizing attributes
+
+bool x, y, z;
+prs {
+[W=20]	x & y		#> z-
+}
+

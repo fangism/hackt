@@ -1,0 +1,10 @@
+// "rule-sizes-06.hac"
+// copy-modified from "rule-sizes-04.hac"
+// testing rule sizing attributes, with iskeeper
+
+bool x, y, z[2];
+prs {
+[L=4;iskeeper=1]	x & y		#> z[0]-	// use keeper length
+[iskeeper=1;L=5]	x & y		#> z[1]-	// L is overridden
+}
+

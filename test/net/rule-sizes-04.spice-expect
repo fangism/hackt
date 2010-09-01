@@ -1,0 +1,9 @@
+Mz[0]:dn:0 !GND x #0 !GND nch W=5u L=4u
+Mz[0]:dn:1 #0 y z[0] !GND nch W=5u L=4u
+Mz[0]:up:0 !Vdd x #1 !Vdd pch W=5u L=4u
+Mz[0]:up:1 #1 y z[0] !Vdd pch W=5u L=4u
+Mz[1]:dn:0 !GND x #2 !GND nch W=20u L=3u
+Mz[1]:dn:1 #2 y z[1] !GND nch W=20u L=3u
+Mz[1]:up:0 !Vdd x #3 !Vdd pch W=20u L=3u
+Mz[1]:up:1 #3 y z[1] !Vdd pch W=20u L=3u
+

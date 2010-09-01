@@ -1,0 +1,9 @@
+Mz[0]:dn:0:keeper !GND x #0 !GND nch W=4u L=20u
+Mz[0]:dn:1:keeper #0 y z[0] !GND nch W=4u L=20u
+Mz[0]:up:0:keeper !Vdd x #1 !Vdd pch W=4u L=10u
+Mz[0]:up:1:keeper #1 y z[0] !Vdd pch W=4u L=10u
+Mz[1]:dn:0:keeper !GND x #2 !GND nch W=4u L=5u
+Mz[1]:dn:1:keeper #2 y z[1] !GND nch W=4u L=5u
+Mz[1]:up:0:keeper !Vdd x #3 !Vdd pch W=4u L=5u
+Mz[1]:up:1:keeper #3 y z[1] !Vdd pch W=4u L=5u
+

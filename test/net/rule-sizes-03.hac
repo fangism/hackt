@@ -1,0 +1,15 @@
+// "rule-sizes-03.hac"
+// copy-modified from "rule-sizes-02.hac"
+// testing rule sizing attributes
+
+template <pint N><pint K>
+defproc foo(bool x, y, z[N]) {
+(;i:N:
+prs {
+[W=(i+1)*K]	x & y		#> z[i]-
+}
+)
+}
+
+foo<4> bar<5>;
+

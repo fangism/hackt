@@ -1,0 +1,4 @@
+L=4	iskeeper	"x" & "y" -> "z[0]"-
+L=4	iskeeper	~"x" & ~"y" -> "z[0]"+
+iskeeper	L=5	"x" & "y" -> "z[1]"-
+iskeeper	L=5	~"x" & ~"y" -> "z[1]"+
