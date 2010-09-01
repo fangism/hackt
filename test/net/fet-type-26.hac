@@ -1,0 +1,15 @@
+// "fet-type-26.hac"
+// copy-modified from "fet-type-25.hac"
+// testing rule-attributes for setting Vt flavors, with internal node
+// note: complement rule follows same per-literal vt
+
+defproc foo(bool x, y, z, w, w2) {
+prs {
+[hvt]	x<;svt>			-> @_int-	// svt, but mode is hvt
+	~@_int & y<;lvt> & z	-> w-		// no lvt effect
+	~@_int & z<;svt> & y	-> w2-		// remains hvt
+}
+}
+
+foo bar;
+

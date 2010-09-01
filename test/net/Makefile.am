@@ -1,5 +1,5 @@
 # "test/net/Makefile.am"
-#	$Id: Makefile.am,v 1.20 2010/08/05 18:25:42 fang Exp $
+#	$Id: Makefile.am,v 1.21 2010/09/01 01:49:05 fang Exp $
 # Test auto-Makefile for hacknet.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -58,7 +58,9 @@ HACKNET_TEST_SCRIPTS_PASSES = \
 	fet-type-05 fet-type-06 fet-type-07 fet-type-08 \
 	fet-type-09 fet-type-10 fet-type-11 fet-type-12 \
 	fet-type-13 fet-type-14 fet-type-15 fet-type-16 \
-	fet-type-17 \
+	fet-type-17 fet-type-18 fet-type-19 fet-type-20 \
+	fet-type-21 fet-type-22 fet-type-23 fet-type-24 \
+	fet-type-25 fet-type-26 fet-type-27 fet-type-28 \
 	parasitics-01 \
 	aliases-01 aliases-02 aliases-03 aliases-04 \
 	mangle-01 mangle-02 mangle-03 mangle-04 mangle-04b mangle-05 \
@@ -86,10 +88,6 @@ HACKNET_TEST_SCRIPTS_PASSES = \
 	reserved-01 reserved-02 reserved-03 reserved-04 \
 	preferred_names-01 preferred_names-02 preferred_names-03 \
 	preferred_names-04 preferred_names-05 preferred_names-06
-
-# TODO: after attaching proper attributes to internal node definitions
-#	fet-type-18 fet-type-19 fet-type-20
-#	fet-type-21 fet-type-22 fet-type-23 fet-type-24
 
 # TODO: implement string manipulation to modify rename-04,05
 
@@ -125,6 +123,9 @@ HACKT_PARSE_TEST_PASSES = \
 	non-CMOS-06 subckt-02 \
 	fet-type-01 fet-type-02 fet-type-03 fet-type-04 \
 	fet-type-05 fet-type-06 fet-type-07 fet-type-08 \
+	fet-type-18 fet-type-19 fet-type-20 fet-type-21 \
+	fet-type-22 fet-type-23 fet-type-24 fet-type-25 \
+	fet-type-26 fet-type-27 fet-type-28 \
 	pass_gate-05 pass_gate-06 \
 	precharge-07 precharge-08 \
 	mangle-04
@@ -138,6 +139,9 @@ EXTRA_DIST +=
 HACKT_CREATE_TEST_PASSES = \
 	fet-type-01 fet-type-02 fet-type-03 fet-type-04 \
 	fet-type-05 fet-type-06 fet-type-07 fet-type-08 \
+	fet-type-18 fet-type-19 fet-type-20 fet-type-21 \
+	fet-type-22 fet-type-23 fet-type-24 fet-type-25 \
+	fet-type-26 fet-type-27 fet-type-28 \
 	pass_gate-05 pass_gate-06 \
 	precharge-07 precharge-08 \
 	mangle-04 \

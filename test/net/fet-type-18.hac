@@ -2,10 +2,11 @@
 // testing rule-attributes for setting Vt flavors, with internal node
 // note: complement rule follows same per-literal vt
 
-bool x, y, z, w;
+bool x, y, z, w, w2;
 
 prs {
 [hvt]	x			-> @_int-	// no effect
 	~@_int & y & z		-> w-
+	~@_int & z & y		-> w2-
 }
 

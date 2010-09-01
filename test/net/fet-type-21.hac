@@ -6,8 +6,8 @@
 bool x, y, z, w, a, b;
 
 prs {
-	x			-> @_int-
+	x			-> @_int-	// sets svt
 	~@_int & y & z		-> w-	// first use sets type of x<>
-[lvt=1]	~@_int & a		-> b-
+[lvt=1]	~@_int & a		-> b-	// remains svt
 }
 

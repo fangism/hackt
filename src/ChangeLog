@@ -5,6 +5,16 @@
 
 2010-08-31	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-84-21:
+	  hacknet: now honor internal node attributes for FET types;
+		the FET type attributes of a rule are dominated by those
+		of the internal node used.
+		No old official regression tests were affected.
+	  Test cases added.  Could use some documentation though...
+
+
+2010-08-31	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-84-20:
 	  Added front and middle-end support for internal node attributes.
 		After some experimentation, decided to attach them

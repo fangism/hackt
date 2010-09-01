@@ -1,7 +1,7 @@
 /**
 	\file "net/netlist_generator.cc"
 	Implementation of hierarchical netlist generation.
-	$Id: netlist_generator.cc,v 1.22 2010/08/05 18:25:39 fang Exp $
+	$Id: netlist_generator.cc,v 1.23 2010/09/01 01:49:04 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -289,7 +289,7 @@ netlist_generator::visit(const entity::PRS::footprint& r) {
 		// where pair:first is expr-index and second is direction
 		// using footprint's internal_node_pool
 		// as basis for subcircuits internal_node_map
-		const index_type& expr = i->first;
+		const index_type& expr(i->first);
 		// direction and name can be looked up later
 		const index_type new_int =
 			current_netlist->create_internal_node(j, expr, opt);
@@ -626,6 +626,39 @@ const bool err = opt.internal_node_supply_mismatch_policy == OPTION_ERROR;
 }
 }
 #endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This only handles a limited set of attributes.  
+	Some node attributes are also rule attributes, like vt.
+ */
+static
+void
+process_transistor_attributes(transistor& t, 
+		const resolved_attribute_list_type& a, 
+		netlist& nl) {
+	resolved_attribute_list_type::const_iterator
+		ai(a.begin()), ae(a.end());
+	// TODO: write an actual attribute function map for altering transistor
+	for ( ; ai!=ae; ++ai) {
+		// this is just a quick hack for now
+		if (ai->key == "label")
+			t.name = ai->values->front().is_a<const string_expr>()
+				->static_constant_value();
+		else if (ai->key == "lvt")
+			t.set_lvt();
+		else if (ai->key == "svt")
+			t.set_svt();
+		else if (ai->key == "hvt")
+			t.set_hvt();
+		else {
+			cerr << "Warning: unknown literal attribute \'" <<
+				ai->key << "\' ignored." << endl;
+			++nl.warning_count;
+		}
+	}
+}
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Recursive, generate on-demand internal nodes as they are visited.
@@ -634,6 +667,8 @@ const bool err = opt.internal_node_supply_mismatch_policy == OPTION_ERROR;
 	\param nid is the footprint-local internal node index (0-indexed).
 	\return netlist-local node index representing the internal node.
 	\invariant no cyclic definitions of internal nodes possible.
+	Side effect: now takes on the FET attributes of the internal node, 
+		modifying the current active FET attribute set.
  */
 index_type
 netlist_generator::register_internal_node(const index_type nid) {
@@ -648,6 +683,17 @@ netlist_generator::register_internal_node(const index_type nid) {
 	const index_type& node_ind = r.first;
 	const index_type& node_own = r.second;	// home
 	node& n(current_netlist->node_pool[node_ind]);
+#if PRS_INTERNAL_NODE_ATTRIBUTES_AT_NODE
+{
+	// side-effect of modifying the current set of fet attributes (sticky)
+	// this happens when the internal node is *used* as well as defined
+	transistor dummy;
+	dummy.attributes = fet_attr;
+	dummy.set_svt();	// interpret no-attribute as svt!
+	process_transistor_attributes(dummy, ret.attributes, *current_netlist);
+	fet_attr = dummy.attributes;
+}
+#endif
 #if NETLIST_CHECK_CONNECTIVITY
 if (!n.driven)	// define-once
 #else
@@ -724,7 +770,7 @@ if (!n.used)
 	}
 }	// end if !n.driven
 	return node_ind;
-}
+}	// end netlist_generator::register_internal_node
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -761,34 +807,6 @@ netlist_generator::visit(const footprint_expr_node::precharge_pull_type& p) {
 	set_current_length(opt.get_default_length(dir, false));
 	// use the same output node
 	ep[pchgex].accept(*this);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-static
-void
-process_transistor_attributes(transistor& t, 
-		const resolved_attribute_list_type& a, 
-		netlist& nl) {
-	resolved_attribute_list_type::const_iterator
-		ai(a.begin()), ae(a.end());
-	// TODO: write an actual attribute function map for altering transistor
-	for ( ; ai!=ae; ++ai) {
-		// this is just a quick hack for now
-		if (ai->key == "label")
-			t.name = ai->values->front().is_a<const string_expr>()
-				->static_constant_value();
-		else if (ai->key == "lvt")
-			t.set_lvt();
-		else if (ai->key == "svt")
-			t.set_svt();
-		else if (ai->key == "hvt")
-			t.set_hvt();
-		else {
-			cerr << "Warning: unknown literal attribute \'" <<
-				ai->key << "\' ignored." << endl;
-			++nl.warning_count;
-		}
-	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -869,7 +887,7 @@ case PRS_LITERAL_TYPE_ENUM: {
 	NEVER_NULL(current_local_netlist);
 	current_local_netlist->add_transistor(t);
 	break;
-}
+}	// end case PRS_LITERAL_TYPE_ENUM
 case PRS_NOT_EXPR_TYPE_ENUM: {
 	STACKTRACE_INDENT_PRINT("expr is negation" << endl);
 	// automatically negation normalize

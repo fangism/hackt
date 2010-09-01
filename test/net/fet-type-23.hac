@@ -6,8 +6,8 @@
 bool x, y, z, w, a, b;
 
 prs {
-	x				-> @_int-
-[hvt=1]	~@_int &{+~x} y & z		-> w-	// first use sets type of x<>
-	~@_int &{+~x<;hvt>} a		-> b-
+	x				-> @_int-	// sets svt
+[hvt=1]	~@_int &{+~x} y & z		-> w-	// remains svt
+	~@_int &{+~x<;hvt>} a		-> b-	// svt, except precharge
 }
 
