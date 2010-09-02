@@ -2,7 +2,7 @@
 	\file "util/numeric/inttype_traits.h"
 	Integer type traits.  
 	For synthsizing larger integers, see "util/numeric/bigger_ints.h".
-	$Id: inttype_traits.h,v 1.6 2007/09/28 18:34:04 fang Exp $
+	$Id: inttype_traits.h,v 1.7 2010/09/02 00:34:46 fang Exp $
  */
 
 #ifndef	__UTIL_NUMERIC_INTTYPE_TRAITS_H__
@@ -68,8 +68,11 @@ template <> struct half_type<int64> {		typedef	int32	type;	};
 
 template <> struct half_type<uint16> {		typedef	uint8	type;	};
 template <> struct half_type<uint32> {		typedef	uint16	type;	};
-#if !TYPE_EQUIV_SIZE_T_UNSIGNED_LONG && !TYPE_EQUIV_UINT32_UNSIGNED_LONG
+#if !TYPE_EQUIV_UINT32_UNSIGNED_LONG
 template <> struct half_type<unsigned long> {	typedef	uint16	type;	};
+#endif
+#if !TYPE_EQUIV_UINT32_SIZE_T && !TYPE_EQUIV_SIZE_T_UNSIGNED_LONG
+template <> struct half_type<size_t> {		typedef	uint16	type;	};
 #endif
 #ifdef	HAVE_UINT64_TYPE
 template <> struct half_type<uint64> {		typedef	uint32	type;	};

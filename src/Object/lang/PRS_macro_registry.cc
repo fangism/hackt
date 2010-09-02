@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS_macro_registry.cc"
 	Macro definitions belong here.  
-	$Id: PRS_macro_registry.cc,v 1.14 2010/07/12 21:49:52 fang Exp $
+	$Id: PRS_macro_registry.cc,v 1.15 2010/09/02 00:34:38 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -126,10 +126,10 @@ __print_args_list(cflat_prs_printer& p, const node_args_type& nodes,
 	const_iterator i(nodes.begin());
 	const const_iterator e(nodes.end());
 	INVARIANT(i!=e);
-	p.__dump_canonical_literal_group<Tag>(*i);
+	p.template __dump_canonical_literal_group<Tag>(*i);
 	for (++i; i!=e; ++i) {
 		o << delim;
-		p.__dump_canonical_literal_group<Tag>(*i);
+		p.template __dump_canonical_literal_group<Tag>(*i);
 	}
 	return o;
 }

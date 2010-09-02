@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/directive_base.cc"
-	$Id: directive_base.cc,v 1.9 2010/08/24 21:05:44 fang Exp $
+	$Id: directive_base.cc,v 1.10 2010/09/02 00:34:40 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -194,16 +194,17 @@ generic_directive_base::dump_group(const directive_node_group_type& g,
 		const const_iterator e(g.end());
 		o << '{';
 		size_t ni = *i -1;	// node-pool is 0-indexed
-		f.dump_canonical_name<Tag>(o, ni, df, is_top);
+		f.template dump_canonical_name<Tag>(o, ni, df, is_top);
 		for (++i; i!=e; ++i) {
 			ni = *i -1;	// node-pool is 0-indexed
-			f.dump_canonical_name<Tag>(o << ',', ni, df, is_top);
+			f.template dump_canonical_name<Tag>(
+				o << ',', ni, df, is_top);
 		}
 		o << '}';
 	} else if (g.size() == 1) {
 		const size_t nip1 = *g.begin();
 		const size_t ni = nip1 -1;	// pool is 0-indexed
-		f.dump_canonical_name<Tag>(o, ni, df, is_top);
+		f.template dump_canonical_name<Tag>(o, ni, df, is_top);
 	} else {
 		// during debugging, during reference resolution, 
 		// might print a spec directive before its references 

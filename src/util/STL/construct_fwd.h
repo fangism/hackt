@@ -1,7 +1,7 @@
 /**
 	\file "util/STL/construct_fwd.h"
 	Forward declaration of std::_Construct, and std::_Destroy.
-	$Id: construct_fwd.h,v 1.6 2008/11/23 17:55:12 fang Exp $
+	$Id: construct_fwd.h,v 1.7 2010/09/02 00:34:44 fang Exp $
  */
 
 #ifndef	__UTIL_STL_CONSTRUCT_FWD_H__
@@ -62,6 +62,20 @@ inline
 void
 _Construct(_T1* __p) {
 	::new(static_cast<void*>(__p)) _T1();
+}
+}
+#endif
+
+#if	!defined(HAVE_STL_CONSTRUCT_COPY)
+/**
+	This copy construct-or might have disappeared with C++0x...
+ */
+namespace std {
+template <class _T1, class _T2>
+inline
+void
+_Construct(_T1* __p, const _T2& __v) {
+	::new(static_cast<void*>(__p)) _T1(__v);
 }
 }
 #endif

@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/bool_literal.cc"
-	$Id: bool_literal.cc,v 1.9 2010/08/24 21:05:44 fang Exp $
+	$Id: bool_literal.cc,v 1.10 2010/09/02 00:34:39 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -91,6 +91,13 @@ bool_literal::operator == (const bool_literal& r) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool_literal::~bool_literal() { }
+
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+bool_literal::valid(void) const {
+	return var || int_node;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&

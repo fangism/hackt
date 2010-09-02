@@ -1,7 +1,7 @@
 /**
 	\file "AST/instance.cc"
 	Class method definitions for HAC::parser for instance-related classes.
-	$Id: instance.cc,v 1.36 2010/04/15 01:29:22 fang Exp $
+	$Id: instance.cc,v 1.37 2010/09/02 00:34:33 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_instance.cc,v 1.31.10.1 2005/12/11 00:45:08 fang Exp
  */
@@ -105,6 +105,7 @@ template class count_ptr<const guarded_instance_management>;
 template class count_ptr<const instance_management>;
 template class count_ptr<const instance_base>;
 template class count_ptr<const instance_declaration>;
+template class count_ptr<const type_completion_statement>;
 
 }	// end namespace memory
 }	// end namespace util

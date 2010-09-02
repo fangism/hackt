@@ -1,5 +1,16 @@
 "ChangeLog"
-#	$Id: ChangeLog,v 1.245 2010/04/09 17:17:57 fang Exp $
+#	$Id: ChangeLog,v 1.246 2010/09/02 00:34:28 fang Exp $
+
+2010-09-01	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-23:
+	  Portability fixes, tested on powerpc-apple-darwin8
+		against gcc-3.3 and gcc-4.0.
+	  configure.ac: don't AC_CHECK_PROG echo before LT_INIT
+	  config/cc.m4: check whether uint32_t and size_t are identical
+	  config/cxx_STL.m4: check for std::_Construct copy-ctor
+	  see also src/ChangeLog, lib/ChangeLog
+
 
 2010-04-09	David Fang	<fangism@users.sourceforge.net>
 

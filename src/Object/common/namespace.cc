@@ -3,7 +3,7 @@
 	Method definitions for base classes for semantic objects.  
 	This file was "Object/common/namespace.cc"
 		in a previous lifetime.  
- 	$Id: namespace.cc,v 1.35 2009/10/29 00:20:15 fang Exp $
+ 	$Id: namespace.cc,v 1.36 2010/09/02 00:34:34 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_NAMESPACE_CC__
@@ -57,7 +57,9 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/persistent_type_hash.h"
 
 #include "util/memory/count_ptr.tcc"
+#if POOL_ALLOCATE_NAMESPACE
 #include "util/memory/list_vector_pool.tcc"
+#endif
 #include "util/indent.h"
 #include "util/string.h"
 #include "util/stacktrace.h"
@@ -946,7 +948,9 @@ scopespace::const_bin_sort::stats(ostream& o) const {
 //=============================================================================
 // class name_space method definitions
 
+#if POOL_ALLOCATE_NAMESPACE
 LIST_VECTOR_POOL_DEFAULT_STATIC_DEFINITION(name_space, 8)
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const never_ptr<const name_space>

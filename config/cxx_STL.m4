@@ -1,5 +1,5 @@
 dnl "config/cxx_STL.m4"
-dnl	$Id: cxx_STL.m4,v 1.14 2009/04/29 05:33:20 fang Exp $
+dnl	$Id: cxx_STL.m4,v 1.15 2010/09/02 00:34:30 fang Exp $
 dnl Autoconf macros for detecting variations in C++ STL for any given compiler.
 dnl
 
@@ -87,6 +87,49 @@ AC_COMPILE_IFELSE(
 if test "$fang_cv_cxx_stl_construct_default" = "yes" ; then
 AC_DEFINE(HAVE_STL_CONSTRUCT_DEFAULT, [],
 	[True if STL header defines std::_Construct(T*) default ctor])
+fi
+])dnl
+	
+
+dnl @synopsis FANG_CXX_STL_CONSTRUCT_COPY
+dnl
+dnl Check for certain declarations of libstdc++ internal function
+dnl std::_Construct, which may have changed.
+dnl
+dnl @category Cxx
+dnl @version 2010-08-15
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
+dnl
+AC_DEFUN([FANG_CXX_STL_CONSTRUCT_COPY],
+[AC_REQUIRE([AC_PROG_CXX])
+AC_CACHE_CHECK(
+	[whether libstdc++ (STL) contains std::_Construct(T*, const T&) copy-ctor],
+[fang_cv_cxx_stl_construct_copy],
+[AC_LANG_PUSH(C++)
+AC_COMPILE_IFELSE(
+	AC_LANG_PROGRAM([[
+		#include <vector>
+		#ifdef	HAVE_BITS_STL_CONSTRUCT_H
+		#include <bits/stl_construct.h>
+		#endif
+		namespace std {
+		template <class _T1, class _T2>
+		inline
+		void
+		_Construct(_T1* __p, const _T2& __v) {
+			::new(static_cast<void*>(__p)) _T1(__v);
+		}
+		}
+		]], []
+	),
+	[fang_cv_cxx_stl_construct_copy=no],
+	[fang_cv_cxx_stl_construct_copy=yes]
+)
+])
+if test "$fang_cv_cxx_stl_construct_copy" = "yes" ; then
+AC_DEFINE(HAVE_STL_CONSTRUCT_COPY, [],
+	[True if STL header defines std::_Construct(T*, const T&) copy-ctor])
 fi
 ])dnl
 	

@@ -1,5 +1,14 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.115 2010/05/11 00:18:18 fang Exp $
+#	$Id: ChangeLog,v 1.116 2010/09/02 00:34:42 fang Exp $
+
+2010-09-01	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-23:
+	  util/STL/construct_fwd.h: check for copy constructor
+	  util/numeric/inttype_traits.h: use configure result of
+		comparing types size_t vs. unsigned long
+		before specializing.
+
 
 2010-05-10	David Fang		<fangism@users.sourceforge.net>
 

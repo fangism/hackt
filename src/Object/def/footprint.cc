@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.61 2010/08/31 23:48:02 fang Exp $
+	$Id: footprint.cc,v 1.62 2010/09/02 00:34:35 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -1494,6 +1494,7 @@ footprint::has_sub_fanin_map(vector<bool>& ret) const {
         ret.reserve(bp.local_entries());
         transform(bp.begin(), bp.end(),
                 back_inserter(ret),
+	// g++/libstdc++ 4.4.4 c++0x mode chokes on back_inserter [PR 44963]
                 std::ptr_fun(&bool_has_sub_fanin));
 }
 
@@ -1508,6 +1509,7 @@ footprint::has_not_sub_fanin_map(vector<bool>& ret) const {
         ret.reserve(bp.local_entries());
         transform(bp.begin(), bp.end(),
                 back_inserter(ret),
+	// g++/libstdc++ 4.4.4 c++0x mode chokes on back_inserter [PR 44963]
 		std::ptr_fun(&bool_has_not_sub_fanin));
 #if 0
 // debug only

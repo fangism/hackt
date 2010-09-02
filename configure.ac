@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.220 2010/04/28 03:03:38 fang Exp $
+#	$Id: configure.ac,v 1.221 2010/09/02 00:34:29 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -61,7 +61,6 @@ AC_CHECK_PROG([PATCH], patch, patch)
 AC_CHECK_PROG([FIND], find, find)
 AC_CHECK_PROG([GREP], grep, grep)
 AC_CHECK_PROG([HEXDUMP], hexdump, hexdump)
-AC_CHECK_PROG([ECHO], echo, echo)
 AC_CHECK_PROG([PRINTF], printf, printf)
 AC_CHECK_PROG([SORT], sort, sort)
 AC_CHECK_PROG([CUT], cut, cut)
@@ -181,6 +180,11 @@ LTDL_OBJDIR=$libltdl_cv_objdir
 AC_SUBST(LTDL_OBJDIR)
 
 dnl ----------------------- end LIBTOOL SECTION -------------------------------
+dnl we move this down here b/c libtool.m4:LT_INIT redefines ECHO with 
+dnl its own improperly quoted "printf '%s\n'", which comes out wrong
+dnl in Makefiles after substitution, due to quote stripping.  
+ECHO=
+AC_CHECK_PROG([ECHO], echo, echo)
 
 dnl AM_CONDITIONAL(NEED_SHLIBPATH_VAR, test -n "$LTDL_SHLIBPATH_VAR")
 dnl case $build_os in
@@ -279,6 +283,7 @@ FANG_CXX_STL_FUNCTIONAL_SELECT
 FANG_CXX_STL_REVERSE_ITERATOR_COMPARISONS
 FANG_CXX_STL_COPY_IF
 FANG_CXX_STL_CONSTRUCT
+FANG_CXX_STL_CONSTRUCT_COPY
 FANG_CXX_STL_TREE
 FANG_CXX_STD_IFSTREAM_DEV_STDIN
 FANG_CXX_STD_OFSTREAM_DEV_STDOUT
@@ -430,6 +435,7 @@ FANG_TYPE_QUAD_T_ARITHMETIC
 FANG_TYPE_U_QUAD_T_ARITHMETIC
 FANG_TYPE_EQUIV_SIZE_T_UNSIGNED_LONG
 FANG_TYPE_EQUIV_UINT32_UNSIGNED_LONG
+FANG_TYPE_EQUIV_UINT32_SIZE_T
 AC_LANG_POP(C++)
 
 dnl test whether or not we're expecting 32b binari interface

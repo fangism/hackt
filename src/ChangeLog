@@ -5,6 +5,16 @@
 
 2010-09-01	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-84-23:
+	  Mostly portability patches for gcc-3.3 and gcc-4.0, 
+		some for gcc-4.4 and gcc-4.5!
+		For 3.3: inserted 'template' member function disambiguators
+	  Object/common/namespace: no longer pool-allocate
+	  see util/ChangeLog
+
+
+2010-09-01	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-84-22:
 	  lang, hacknet, hflat: implemented rule-attributes for device
 		length and width, so that rules can be written much more

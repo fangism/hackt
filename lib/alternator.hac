@@ -9,7 +9,7 @@
 
 	TODO: e1ofN alterators.
 
-	$Id: alternator.hac,v 1.16 2010/01/30 03:33:14 fang Exp $
+	$Id: alternator.hac,v 1.17 2010/09/02 00:34:32 fang Exp $
  */
 
 import "channel.hac";
@@ -1016,7 +1016,7 @@ wchb_alternator_eater_2_e1of<N> e[S];
 /**
 	Buffer that produces two sequential output tokens, per input token.  
 	Application: on-chip token burst generation.  
-	HSE: [[Re&Ld];Rd+;Le-;[~Re];Rd-;Le+;[Ld];Rd+;[~Re&~Ld];Rd-;Le+]
+	HSE: [[Re&Ld];Rd+;Le-;[~Re];Rd-;[Ld];Rd+;[~Re&~Ld];Rd-;Le+]
 	Latency: L -> R (2T), when token is passed through.  
 	Reset: 
 	Tests:

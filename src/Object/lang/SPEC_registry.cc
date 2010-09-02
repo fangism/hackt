@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/SPEC_registry.cc"
 	Definitions of spec directives belong here.  
-	$Id: SPEC_registry.cc,v 1.25 2010/07/14 18:31:56 fang Exp $
+	$Id: SPEC_registry.cc,v 1.26 2010/09/02 00:34:38 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -116,10 +116,10 @@ print_args_list(cflat_prs_printer& p, const node_args_type& nodes,
 	const_iterator i(nodes.begin());
 	const const_iterator e(nodes.end());
 	INVARIANT(i!=e);
-	p.__dump_canonical_literal_group<Tag>(*i, gl, gd, gr);
+	p.template __dump_canonical_literal_group<Tag>(*i, gl, gd, gr);
 	for (++i; i!=e; ++i) {
 		o << delim;
-		p.__dump_canonical_literal_group<Tag>(*i, gl, gd, gr);
+		p.template __dump_canonical_literal_group<Tag>(*i, gl, gd, gr);
 	}
 	return o;
 }
@@ -174,7 +174,7 @@ flatten_canonicalized_set(cflat_context_visitor& p,
 	const_iterator i(nodes.begin());
 	const const_iterator e(nodes.end());
 	for ( ; i!=e; ++i) {
-		p.__resolve_unique_literal_group<Tag>(*i, o);
+		p.template __resolve_unique_literal_group<Tag>(*i, o);
 	}
 }
 
@@ -231,7 +231,8 @@ flatten_canonicalized_spec_output_if_more_than_one(cflat_prs_printer& p,
 		o << T::name;
 		directive_base::dump_params(params, o);
 		o << '(';
-		p.__dump_resolved_literal_group<Tag>(node_set, "", ", ", "");
+		p.template __dump_resolved_literal_group<Tag>(
+			node_set, "", ", ", "");
 		o << ')';
 	}
 	return o;
@@ -254,7 +255,7 @@ default_expand_into_singles_output(cflat_prs_printer& p,
 	const const_iterator e(a.end());
 	for ( ; i!=e; ++i) {
 		o << T::name << '(';
-		p.__dump_canonical_literal_group<Tag>(*i);
+		p.template __dump_canonical_literal_group<Tag>(*i);
 		o << ')' << endl;
 	}
 	return o;

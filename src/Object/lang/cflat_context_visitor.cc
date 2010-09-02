@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_context_visitor.cc"
 	Implementation of cflattening visitor.
-	$Id: cflat_context_visitor.cc,v 1.10 2010/07/12 21:49:54 fang Exp $
+	$Id: cflat_context_visitor.cc,v 1.11 2010/09/02 00:34:39 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -31,7 +31,7 @@ cflat_context_visitor::__dump_resolved_canonical_literal(
 		ostream& os, const size_t ni, const dump_flags& df) const {
 	// 0-based
 	INVARIANT(ni);
-	return topfp->dump_canonical_name<Tag>(os, ni-1, df);
+	return topfp->template dump_canonical_name<Tag>(os, ni-1, df);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/bool_literal.h"
 	Reusable boolean literal wrapper class.  
-	$Id: bool_literal.h,v 1.6 2010/07/14 18:12:34 fang Exp $
+	$Id: bool_literal.h,v 1.7 2010/09/02 00:34:39 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_BOOL_LITERAL_H__
@@ -90,7 +90,7 @@ public:
 	operator == (const bool_literal&) const;
 
 	bool
-	valid(void) const { return var || int_node; }
+	valid(void) const;
 
 	~bool_literal();
 

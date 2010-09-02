@@ -1,5 +1,12 @@
 # "lib/ChangeLog"
-#	$Id: ChangeLog,v 1.65 2010/05/21 23:19:25 fang Exp $
+#	$Id: ChangeLog,v 1.66 2010/09/02 00:34:31 fang Exp $
+
+2010-09-01	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-23:
+	  alternator.hac: comment fix of an HSE, 
+		thanks to Carlos Tadeo Ortega Otero.
+
 
 2010-05-19	David Fang	<fangism@users.sourceforge.net>
 

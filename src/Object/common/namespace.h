@@ -3,7 +3,7 @@
 	Classes for scoped objects including namespaces.  
 	This file came from "Object/common/namespace.h"
 		in its previous life.  
-	$Id: namespace.h,v 1.8 2009/02/18 00:22:29 fang Exp $
+	$Id: namespace.h,v 1.9 2010/09/02 00:34:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_NAMESPACE_H__
@@ -13,7 +13,12 @@
 #include "Object/common/object_base.h"
 #include "Object/common/util_types.h"
 
+// not worth pool-allocating these, so few objects
+#define	POOL_ALLOCATE_NAMESPACE			0
+#if POOL_ALLOCATE_NAMESPACE
 #include "util/memory/list_vector_pool_fwd.h"
+#include "util/STL/construct_fwd.h"
+#endif
 
 //=============================================================================
 namespace HAC {
@@ -221,8 +226,10 @@ public:
 public:
 	static const never_ptr<const name_space>	null;
 
+#if POOL_ALLOCATE_NAMESPACE
 	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
 	LIST_VECTOR_POOL_DEFAULT_STATIC_DECLARATIONS
+#endif
 
 };	// end class name_space
 

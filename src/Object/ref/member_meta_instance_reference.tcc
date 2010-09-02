@@ -2,7 +2,7 @@
 	\file "Object/ref/member_meta_instance_reference.tcc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_member_inst_ref.tcc"
- 	$Id: member_meta_instance_reference.tcc,v 1.31 2010/08/24 21:05:49 fang Exp $
+ 	$Id: member_meta_instance_reference.tcc,v 1.32 2010/09/02 00:34:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_MEMBER_META_INSTANCE_REFERENCE_TCC__
@@ -431,15 +431,14 @@ MEMBER_INSTANCE_REFERENCE_CLASS::unroll_subindices_packed(
 	tmpc.dump(STACKTRACE_STREAM << "tmpc:") << endl;
 #endif
 	// from meta_instance_reference<>::unroll_reference_packed_helper
+	// member lookup should be tmpc footprint ...
 	const never_ptr<const physical_instance_collection>
 		inst_p(tmpc.lookup_instance_collection(
 			*this->inst_collection_ref));
 	NEVER_NULL(inst_p);
         const collection_interface_type&
                 inst(IS_A(const collection_interface_type&, *inst_p));
-	// FIXME:
-	// member lookup should be tmpc footprint
-	// but induction variable lookups should be in u
+	// ... but induction variable lookups should be in u
         if (unroll_references_packed_helper_no_lookup(u, inst,
 			this->array_indices, local_aliases).bad) {
 		return bad_bool(true);
@@ -452,7 +451,7 @@ MEMBER_INSTANCE_REFERENCE_CLASS::unroll_subindices_packed(
 	STACKTRACE_INDENT_PRINT("got local indices." << endl);
 	// translate to global indices using parent footprint frame
 	transform(a.begin(), a.end(), a.begin(), 
-		footprint_frame_transformer(ff.get_frame_map<Tag>()));
+		footprint_frame_transformer(ff.template get_frame_map<Tag>()));
 	STACKTRACE_INDENT_PRINT("got global indices." << endl);
 	return bad_bool(false);
 }

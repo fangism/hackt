@@ -1,5 +1,5 @@
 # "src/Make.hchk-tail.am"
-#	$Id: Make.hchk-tail.am,v 1.19 2007/11/19 07:49:17 fang Exp $
+#	$Id: Make.hchk-tail.am,v 1.20 2010/09/02 00:34:33 fang Exp $
 #	vi: ft=automake
 # Makefile footer for enforcing header checks.  
 # Counterpart is "src/Make.hchk-head.am"
@@ -59,14 +59,14 @@ FAKE_DEP_FILTER = $(GREP) "^#" | $(GREP) -v '\"/' | $(GREP) -v '\"<' | \
 H_CHECK_TEST_SCRIPT =
 if am__fastdepCXX
 H_CHECK_TEST_SCRIPT += \
-	$(SED_srcdir_strip_setup) ; \
-	src=`$(ECHO) $< | $(SED_srcdir_strip_fast)` ; \
-	depbase=`$(ECHO) $@ | $(SED) 's|[^/]*$$|$(DEPDIR)/&|;s|\.hchk$$||'`; \
+	$(SED_srcdir_strip_setup) && \
+	src=`$(ECHO) $< | $(SED_srcdir_strip_fast)` && \
+	depbase=`$(ECHO) $@ | $(SED) 's|[^/]*$$|$(DEPDIR)/&|;s|\.hchk$$||'` && \
 	if $(CXXCOMPILE) -I$(srcdir) $$more_hchk_flags -include $$src \
 		$(FAST_MAKEDEP_FLAGS) "$$depbase.Thd" \
-		-c $(EMPTY_SOURCE) -o $@; \
+		-c $(EMPTY_SOURCE) -o $@ ; \
 	then $(CAT) "$$depbase.Thd" | $(FILTER_HEADER_DEPS) | \
-		$(PROMOTE_HEADER_DEPS) > "$$depbase.hchkd"; \
+		$(PROMOTE_HEADER_DEPS) > "$$depbase.hchkd" ; \
 		$(RM) "$$depbase.Thd" ; \
 	else $(RM) "$$depbase.Thd"; exit 1; fi
 else
@@ -83,14 +83,14 @@ endif
 HH_CHECK_TEST_SCRIPT =
 if am__fastdepCXX
 HH_CHECK_TEST_SCRIPT += \
-	$(SED_srcdir_strip_setup) ; \
-	src=`$(ECHO) $< | $(SED_srcdir_strip_fast)` ; \
-	depbase=`$(ECHO) $@ | $(SED) 's|[^/]*$$|$(DEPDIR)/&|;s|\.hhchk$$||'`; \
+	$(SED_srcdir_strip_setup) && \
+	src=`$(ECHO) $< | $(SED_srcdir_strip_fast)` && \
+	depbase=`$(ECHO) $@ | $(SED) 's|[^/]*$$|$(DEPDIR)/&|;s|\.hhchk$$||'` && \
 	if $(CXXCOMPILE) -I$(srcdir) $$more_hchk_flags -include $$src \
 		$(FAST_MAKEDEP_FLAGS) "$$depbase.Thhd" \
-		-c $(EMPTY_SOURCE) -o $@; \
+		-c $(EMPTY_SOURCE) -o $@ ; \
 	then $(CAT) "$$depbase.Thhd" | $(FILTER_HEADER_DEPS) | \
-		$(PROMOTE_HEADER_DEPS) > "$$depbase.hhchkd"; \
+		$(PROMOTE_HEADER_DEPS) > "$$depbase.hhchkd" ; \
 		$(RM) "$$depbase.Thhd" ; \
 	else $(RM) "$$depbase.Thhd"; exit 1; fi
 else
@@ -106,14 +106,14 @@ endif
 TCC_CHECK_TEST_SCRIPT =
 if am__fastdepCXX
 TCC_CHECK_TEST_SCRIPT += \
-	$(SED_srcdir_strip_setup) ; \
-	src=`$(ECHO) $< | $(SED_srcdir_strip_fast)` ; \
-	depbase=`$(ECHO) $@ | $(SED) 's|[^/]*$$|$(DEPDIR)/&|;s|\.tccchk$$||'`; \
+	$(SED_srcdir_strip_setup) && \
+	src=`$(ECHO) $< | $(SED_srcdir_strip_fast)` && \
+	depbase=`$(ECHO) $@ | $(SED) 's|[^/]*$$|$(DEPDIR)/&|;s|\.tccchk$$||'` && \
 	if $(CXXCOMPILE) -I$(srcdir) $$more_hchk_flags -include $$src \
 		$(FAST_MAKEDEP_FLAGS) "$$depbase.Ttccd" \
-		-c $(EMPTY_SOURCE) -o $@; \
+		-c $(EMPTY_SOURCE) -o $@ ; \
 	then $(CAT) "$$depbase.Ttccd" | $(FILTER_HEADER_DEPS) | \
-		$(PROMOTE_HEADER_DEPS) > "$$depbase.tccchkd"; \
+		$(PROMOTE_HEADER_DEPS) > "$$depbase.tccchkd" ; \
 		$(RM) "$$depbase.Ttccd" ; \
 	else $(RM) "$$depbase.Ttccd"; exit 1; fi
 else
@@ -145,7 +145,7 @@ HEADER_TCC_DEPBASES = \
 	$(ALL_TCC_FILES:.tcc=.tccchkd)
 
 check-headers: $(HEADER_TCC_TESTS)
-	@$(ECHO) All header tests passed.
+	@$(ECHO) "All header tests passed."
 
 AUTOMAKE_INCLUDE_AWK = scripts/automake_include.awk
 
