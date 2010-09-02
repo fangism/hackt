@@ -1,5 +1,5 @@
 "ChangeLog"
-#	$Id: ChangeLog,v 1.246 2010/09/02 00:34:28 fang Exp $
+#	$Id: ChangeLog,v 1.247 2010/09/02 20:21:24 fang Exp $
 
 2010-09-01	David Fang	<fangism@users.sourceforge.net>
 
@@ -7,7 +7,10 @@
 	  Portability fixes, tested on powerpc-apple-darwin8
 		against gcc-3.3 and gcc-4.0.
 	  configure.ac: don't AC_CHECK_PROG echo before LT_INIT
+		date bumped.
 	  config/cc.m4: check whether uint32_t and size_t are identical
+		also compare against uint32_t and uint64_t
+		result used in util/numeric/inttype_traits.h
 	  config/cxx_STL.m4: check for std::_Construct copy-ctor
 	  see also src/ChangeLog, lib/ChangeLog
 

@@ -1,5 +1,5 @@
 dnl "config/cc.m4"
-dnl	$Id: cc.m4,v 1.9 2010/09/02 00:34:29 fang Exp $
+dnl	$Id: cc.m4,v 1.10 2010/09/02 20:21:25 fang Exp $
 dnl General configure macros for detecting characteristics of the C compiler.
 dnl
 
@@ -377,6 +377,54 @@ else
 fi
 ])dnl AC_DEFUN
 
+dnl @synopsis FANG_TYPE_EQUIV_UINT64_UNSIGNED_LONG
+dnl
+dnl On cygwin-g++3.4 defect, detect that uint64_t is
+dnl the exact same as unsigned long.
+dnl AC_DEFINEs TYPE_EQUIV_UINT64_UNSIGNED_LONG to 0 or 1.
+dnl This result is used in util/numeric/inttype_traits.h.
+dnl
+AC_DEFUN([FANG_TYPE_EQUIV_UINT64_UNSIGNED_LONG],
+[AC_CHECK_SIZEOF(uint64_t)
+AC_CHECK_SIZEOF(unsigned long)
+test "$ac_cv_sizeof_uint64_t" != 0 && \
+	test "$ac_cv_sizeof_unsigned_long" != 0 || \
+	AC_MSG_ERROR([uint64 and unsigned long are not both defined types!])
+AC_CACHE_CHECK([whether C++ considers uint64_t and unsigned long the same],
+	[fang_cv_type_equiv_uint64_unsigned_long],
+	[save_CPPFLAGS=$CPPFLAGS
+	CPPFLAGS="$CPPFLAGS -I $srcdir/src"
+	AC_COMPILE_IFELSE(
+		AC_LANG_PROGRAM([
+#ifdef	HAVE_STDINT_H
+#include <stdint.h>
+#endif
+#ifdef	HAVE_INTTYPES_H
+#include <inttypes.h>
+#endif
+#include "util/static_assert.h"
+#include "util/type_traits.h"
+		],[[
+        UTIL_STATIC_ASSERT((util::is_same<uint64_t, uint64_t>::value));
+        UTIL_STATIC_ASSERT((util::is_same<uint64_t, unsigned long>::value));
+		]]),
+		[fang_cv_type_equiv_uint64_unsigned_long=yes],
+		[fang_cv_type_equiv_uint64_unsigned_long=no]
+	)dnl AC_COMPILE_IFELSE
+
+	CPPFLAGS=$save_CPPFLAGS
+	]
+)dnl AC_CACHE_CHECK
+
+if test "$fang_cv_type_equiv_uint64_unsigned_long" = yes ; then
+	AC_DEFINE(TYPE_EQUIV_UINT64_UNSIGNED_LONG, 1,
+		[Define to 1 if uint64_t is identical to unsigned long (C++).])
+else
+	AC_DEFINE(TYPE_EQUIV_UINT64_UNSIGNED_LONG, 0,
+		[Define to 1 if uint64_t is identical to unsigned long (C++).])
+fi
+])dnl AC_DEFUN
+
 dnl @synopsis FANG_TYPE_EQUIV_UINT32_SIZE_T
 dnl
 dnl Detect that uint32_t is the exact same as size_t
@@ -422,6 +470,54 @@ if test "$fang_cv_type_equiv_uint32_size_t" = yes ; then
 else
 	AC_DEFINE(TYPE_EQUIV_UINT32_SIZE_T, 0,
 		[Define to 1 if uint32_t is identical to size_t (C++).])
+fi
+])dnl AC_DEFUN
+
+dnl @synopsis FANG_TYPE_EQUIV_UINT64_SIZE_T
+dnl
+dnl Detect that uint64_t is the exact same as size_t
+dnl AC_DEFINEs TYPE_EQUIV_UINT64_SIZE_T to 0 or 1.
+dnl This result is used in util/numeric/inttype_traits.h.
+dnl
+AC_DEFUN([FANG_TYPE_EQUIV_UINT64_SIZE_T],
+[AC_CHECK_SIZEOF(uint64_t)
+AC_CHECK_SIZEOF(size_t)
+test "$ac_cv_sizeof_uint64_t" != 0 && \
+	test "$ac_cv_sizeof_size_t" != 0 || \
+	AC_MSG_ERROR([uint64 and size_t are not both defined types!])
+AC_CACHE_CHECK([whether C++ considers uint64_t and size_t the same],
+	[fang_cv_type_equiv_uint64_size_t],
+	[save_CPPFLAGS=$CPPFLAGS
+	CPPFLAGS="$CPPFLAGS -I $srcdir/src"
+	AC_COMPILE_IFELSE(
+		AC_LANG_PROGRAM([
+#ifdef	HAVE_STDINT_H
+#include <stdint.h>
+#endif
+#ifdef	HAVE_INTTYPES_H
+#include <inttypes.h>
+#endif
+#include "util/size_t.h"
+#include "util/static_assert.h"
+#include "util/type_traits.h"
+		],[[
+        UTIL_STATIC_ASSERT((util::is_same<uint64_t, uint64_t>::value));
+        UTIL_STATIC_ASSERT((util::is_same<uint64_t, size_t>::value));
+		]]),
+		[fang_cv_type_equiv_uint64_size_t=yes],
+		[fang_cv_type_equiv_uint64_size_t=no]
+	)dnl AC_COMPILE_IFELSE
+
+	CPPFLAGS=$save_CPPFLAGS
+	]
+)dnl AC_CACHE_CHECK
+
+if test "$fang_cv_type_equiv_uint64_size_t" = yes ; then
+	AC_DEFINE(TYPE_EQUIV_UINT64_SIZE_T, 1,
+		[Define to 1 if uint64_t is identical to size_t (C++).])
+else
+	AC_DEFINE(TYPE_EQUIV_UINT64_SIZE_T, 0,
+		[Define to 1 if uint64_t is identical to size_t (C++).])
 fi
 ])dnl AC_DEFUN
 

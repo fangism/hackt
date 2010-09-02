@@ -3,14 +3,14 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.221 2010/09/02 00:34:29 fang Exp $
+#	$Id: configure.ac,v 1.222 2010/09/02 20:21:24 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
 
 AC_PREREQ(2.59)
 dnl also works with autoconf 2.60 now
-AC_INIT(hackt, 0.1.4-devel-20100427, fangism@users.sourceforge.net)
+AC_INIT(hackt, 0.1.4-devel-20100902, fangism@users.sourceforge.net)
 dnl prefer to push this into src directory, 
 dnl and have "src/config.h" wrap around this.  
 AC_CONFIG_HEADERS([src/__config__.h])
@@ -436,9 +436,11 @@ FANG_TYPE_U_QUAD_T_ARITHMETIC
 FANG_TYPE_EQUIV_SIZE_T_UNSIGNED_LONG
 FANG_TYPE_EQUIV_UINT32_UNSIGNED_LONG
 FANG_TYPE_EQUIV_UINT32_SIZE_T
+FANG_TYPE_EQUIV_UINT64_UNSIGNED_LONG
+FANG_TYPE_EQUIV_UINT64_SIZE_T
 AC_LANG_POP(C++)
 
-dnl test whether or not we're expecting 32b binari interface
+dnl test whether or not we're expecting 32b binary interface
 dnl this is used to expect binary differences on non-LP32 platforms.
 AM_CONDITIONAL(ABI_ILP32, test "$ac_cv_sizeof_size_t" = "4")
 AM_CONDITIONAL(ABI_ILP64, test "$ac_cv_sizeof_size_t" = "8")
