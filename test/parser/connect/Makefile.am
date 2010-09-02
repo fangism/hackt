@@ -1,5 +1,5 @@
 # "test/parser/connect/Makefile.am"
-#	$Id: Makefile.am,v 1.41 2010/08/12 23:51:48 fang Exp $
+#	$Id: Makefile.am,v 1.42 2010/09/02 22:07:06 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -33,7 +33,7 @@ srcdir_EXTRA_DIST += globals-09.hac globals-10.hac
 HACKT_PARSE_TEST_PASSES = \
 	001 006 006b 007 \
 	010 011 012 013 014 015 017 018 019 \
-	020 020a 021 022 023 023a 024 025 025b 027 027b \
+	020 020a 021 022 023 023a 024 025 025b 025c 027 027b \
 	030 030b 031 031a 031b 034 037 038 \
 	046 047 049 \
 	051 052 053 057 058 059 \
