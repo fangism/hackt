@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.244 2010/08/05 18:25:21 fang Exp $
+#	$Id: Makefile.am,v 1.245 2010/09/02 21:47:26 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -225,7 +225,8 @@ HACKTLIB_H_FILES = \
 
 # pass in a C++ file to coerce --tag=CXX linkage
 libhacktlib_la_SOURCES = \
-	$(HACKTLIB_CC_FILES)
+	$(HACKTLIB_CC_FILES) \
+	$(HACKTLIB_H_FILES)
 # want to split-off:  main/parse_funcs.cc
 libhacktlib_la_LIBADD = libhacktparsers.la
 # libhacktexec.la
