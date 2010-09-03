@@ -1,0 +1,6 @@
+FATAL: reference to uninstantiated process bar<> index [666]
+ERROR: unrolling aliases.
+Error resolving collection of aliases.
+Error: X[666] does not reference a process.
+Invalid process/directory: X[666]
+... at line 5
