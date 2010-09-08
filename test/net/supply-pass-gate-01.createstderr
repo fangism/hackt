@@ -80,7 +80,7 @@ Persistent Object Manager text dump:
 	76	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
 	77	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	78	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	79	##ADDR##	footprnt	0	#HEAD#	#TAIL#	810
+	79	##ADDR##	footprnt	0	#HEAD#	#TAIL#	830
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

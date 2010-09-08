@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: pbool_const.h,v 1.20 2007/11/26 08:27:36 fang Exp $
+	$Id: pbool_const.h,v 1.20.40.1 2010/09/08 21:14:21 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PBOOL_CONST_H__
@@ -31,6 +31,9 @@ private:
 public:
 	typedef	pbool_value_type	value_type;
 	static const value_type		default_value = false;
+	static
+	value_type
+	safe_default_value(void) { return default_value; }
 protected:
 	// removed const-ness for assignability
 	value_type		val;

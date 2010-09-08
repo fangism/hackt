@@ -1,7 +1,7 @@
 /**
 	\file "Object/expr/expr_visitor.h"
 	Expression visitor interface.  
-	$Id: expr_visitor.h,v 1.7 2007/08/28 04:54:10 fang Exp $
+	$Id: expr_visitor.h,v 1.7.54.1 2010/09/08 21:14:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_EXPR_VISITOR_H__
@@ -43,7 +43,6 @@ virtual	VISIT_PROTO(data_expr);
 virtual	VISIT_PROTO(enum_expr) = 0;
 virtual	VISIT_PROTO(struct_expr) = 0;
 #endif
-virtual	VISIT_PROTO(string_expr) = 0;
 virtual	VISIT_PROTO(nonmeta_index_expr_base);
 virtual	VISIT_PROTO(nonmeta_range_expr_base);
 virtual	VISIT_PROTO(param_expr);
@@ -102,6 +101,7 @@ virtual	VISIT_PROTO(const_index) = 0;
 virtual	VISIT_PROTO(pint_const) = 0;
 virtual	VISIT_PROTO(pbool_const) = 0;
 virtual	VISIT_PROTO(preal_const) = 0;
+virtual	VISIT_PROTO(pstring_const) = 0;
 virtual	VISIT_PROTO(pint_unary_expr) = 0;
 virtual	VISIT_PROTO(pbool_unary_expr) = 0;
 virtual	VISIT_PROTO(preal_unary_expr) = 0;
@@ -127,6 +127,7 @@ virtual	VISIT_PROTO(dynamic_meta_index_list);	// defaulting list traversal
 virtual	VISIT_PROTO(pint_const_collection) = 0;
 virtual	VISIT_PROTO(pbool_const_collection) = 0;
 virtual	VISIT_PROTO(preal_const_collection) = 0;
+virtual	VISIT_PROTO(pstring_const_collection) = 0;
 
 
 #if 1
@@ -142,6 +143,7 @@ virtual	VISIT_PROTO(simple_datastruct_nonmeta_instance_reference) = 0;
 virtual	VISIT_PROTO(simple_pbool_nonmeta_instance_reference) = 0;
 virtual	VISIT_PROTO(simple_pint_nonmeta_instance_reference) = 0;
 virtual	VISIT_PROTO(simple_preal_nonmeta_instance_reference) = 0;
+virtual	VISIT_PROTO(simple_pstring_nonmeta_instance_reference) = 0;
 
 virtual	VISIT_PROTO(simple_channel_meta_instance_reference) = 0;
 virtual	VISIT_PROTO(simple_process_meta_instance_reference) = 0;
@@ -168,10 +170,12 @@ virtual	VISIT_PROTO(int_member_meta_instance_reference) = 0;
 virtual	VISIT_PROTO(simple_pint_meta_value_reference) = 0;
 virtual	VISIT_PROTO(simple_pbool_meta_value_reference) = 0;
 virtual	VISIT_PROTO(simple_preal_meta_value_reference) = 0;
+virtual	VISIT_PROTO(simple_pstring_meta_value_reference) = 0;
 
 virtual	VISIT_PROTO(aggregate_pint_meta_value_reference) = 0;
 virtual	VISIT_PROTO(aggregate_pbool_meta_value_reference) = 0;
 virtual	VISIT_PROTO(aggregate_preal_meta_value_reference) = 0;
+virtual	VISIT_PROTO(aggregate_pstring_meta_value_reference) = 0;
 
 #if 0
 virtual	VISIT_PROTO(simple_int_nonmeta_value_reference) = 0;

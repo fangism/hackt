@@ -36,7 +36,7 @@ Persistent Object Manager text dump:
 	18	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
 	19	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	21
 	20	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
-	21	##ADDR##	footprnt	0	#HEAD#	#TAIL#	475
+	21	##ADDR##	footprnt	0	#HEAD#	#TAIL#	495
 	22	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)

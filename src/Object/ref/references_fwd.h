@@ -2,7 +2,7 @@
 	\file "Object/ref/references_fwd.h"
 	Foward declarations of all reference related classes, 
 	instances, values, meta, nonmeta, simple, member, aggregate...
-	$Id: references_fwd.h,v 1.6 2007/10/08 01:21:35 fang Exp $
+	$Id: references_fwd.h,v 1.6.46.1 2010/09/08 21:14:28 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_REFERENCES_FWD_H__
@@ -57,6 +57,8 @@ typedef meta_value_reference<pint_tag>
 	pint_meta_value_reference_base;
 typedef meta_value_reference<preal_tag>
 	preal_meta_value_reference_base;
+typedef meta_value_reference<pstring_tag>
+	pstring_meta_value_reference_base;
 
 template <class>
 class simple_meta_instance_reference;
@@ -101,6 +103,10 @@ typedef simple_nonmeta_value_reference<pint_tag>
 	simple_pint_nonmeta_instance_reference;
 typedef	simple_pint_nonmeta_instance_reference
 	simple_pint_nonmeta_value_reference;
+typedef simple_nonmeta_value_reference<pstring_tag>
+	simple_pstring_nonmeta_instance_reference;
+typedef	simple_pstring_nonmeta_instance_reference
+	simple_pstring_nonmeta_value_reference;
 // not supported officially:
 typedef simple_nonmeta_value_reference<preal_tag>
 	simple_preal_nonmeta_instance_reference;
@@ -167,6 +173,8 @@ typedef simple_meta_value_reference<pbool_tag>
 	simple_pbool_meta_value_reference;
 typedef simple_meta_value_reference<preal_tag>
 	simple_preal_meta_value_reference;
+typedef simple_meta_value_reference<pstring_tag>
+	simple_pstring_meta_value_reference;
 
 typedef aggregate_meta_value_reference<pint_tag>
 	aggregate_pint_meta_value_reference;
@@ -174,6 +182,8 @@ typedef aggregate_meta_value_reference<pbool_tag>
 	aggregate_pbool_meta_value_reference;
 typedef aggregate_meta_value_reference<preal_tag>
 	aggregate_preal_meta_value_reference;
+typedef aggregate_meta_value_reference<pstring_tag>
+	aggregate_pstring_meta_value_reference;
 
 template <class>
 class simple_nonmeta_value_reference;
@@ -185,6 +195,8 @@ typedef simple_nonmeta_value_reference<enum_tag>
 	simple_enum_nonmeta_value_reference;
 typedef simple_nonmeta_value_reference<real_tag>
 	simple_real_nonmeta_value_reference;
+typedef simple_nonmeta_value_reference<string_tag>
+	simple_string_nonmeta_value_reference;
 typedef simple_nonmeta_value_reference<datastruct_tag>
 	simple_struct_nonmeta_value_reference;
 

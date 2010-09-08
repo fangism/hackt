@@ -199,7 +199,7 @@ Persistent Object Manager text dump:
 	195	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
 	196	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
 	197	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
-	198	##ADDR##	footprnt	0	#HEAD#	#TAIL#	315
+	198	##ADDR##	footprnt	0	#HEAD#	#TAIL#	335
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

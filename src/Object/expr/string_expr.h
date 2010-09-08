@@ -1,21 +1,21 @@
 /**
 	\file "Object/expr/string_expr.h"
-	$Id: string_expr.h,v 1.2 2007/08/28 04:54:13 fang Exp $
+	$Id: string_expr.h,v 1.2.54.1 2010/09/08 21:14:24 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_STRING_EXPR_H__
 #define	__HAC_OBJECT_EXPR_STRING_EXPR_H__
 
-#include <string>
 #include "Object/expr/data_expr.h"
-#include "Object/expr/const_param.h"
-#include "Object/expr/types.h"
+#include "util/memory/pointer_classes_fwd.h"
 
 namespace HAC {
 namespace entity {
 using std::string;
 using std::istream;
 using util::persistent_object_manager;
+class pstring_const;
+class const_param;
 
 //=============================================================================
 /**
@@ -24,85 +24,41 @@ using util::persistent_object_manager;
 	Thus, they are only used as arguments to functions, 
 	since string lvalues don't exist... yet.  
  */
-class string_expr : public data_expr, public const_param
-{
+class string_expr : public data_expr {
 	typedef	string_expr			this_type;
+	typedef	data_expr			parent_type;
+protected:
+	string_expr() { }
 public:
-	typedef	string_value_type		value_type;
-private:
-	string				_string;
-	// any need to keep line information?
-public:
-	string_expr();
-	// implicit OK
-	string_expr(const string&);
-	~string_expr();
+virtual	~string_expr() { }
 
-	ostream&
-	what(ostream&) const;
+#define	UNROLL_RESOLVE_COPY_STRING_PROTO				\
+	count_ptr<const string_expr>					\
+	unroll_resolve_copy(const unroll_context&,			\
+		const count_ptr<const string_expr>&) const
 
-	ostream&
-	dump(ostream&, const expr_dump_context&) const;
+virtual	UNROLL_RESOLVE_COPY_STRING_PROTO = 0;
 
-	ostream&
-	dump_nonmeta(ostream&) const;
+#define	NONMETA_RESOLVE_COPY_STRING_PROTO				\
+	count_ptr<const const_param>					\
+	nonmeta_resolve_copy(const nonmeta_context_base&,		\
+		const count_ptr<const string_expr>&) const
 
-	size_t
-	dimensions(void) const;
+#define	NONMETA_RESOLVE_RVALUE_STRING_PROTO				\
+	count_ptr<const pstring_const>					\
+	__nonmeta_resolve_rvalue(const nonmeta_context_base&,		\
+		const count_ptr<const string_expr>&) const
 
-	GET_UNRESOLVED_DATA_TYPE_REF_PROTO;
-	GET_RESOLVED_DATA_TYPE_REF_PROTO;
-//	DATA_EXPR_MAY_EQUIVALENCE_PROTO;
-	UNROLL_RESOLVE_COPY_DATA_PROTO;
+virtual NONMETA_RESOLVE_RVALUE_STRING_PROTO = 0;
+virtual NONMETA_RESOLVE_COPY_STRING_PROTO = 0;
+
 	NONMETA_RESOLVE_COPY_DATA_PROTO;
 	EVALUATE_WRITE_PROTO;
-	EXPR_ACCEPT_VISITOR_PROTO;
 
-// from const_param, param_expr:
-	bool
-	is_true(void) const;
+virtual EXPR_ACCEPT_VISITOR_PROTO = 0;
 
-	bool
-	has_static_constant_dimensions(void) const;
-
-	// value_type
-	const value_type&
-	static_constant_value(void) const { return _string; }
-
-	const_range_list
-	static_constant_dimensions(void) const;
-
-	count_ptr<const const_param>
-	static_constant_param(void) const;
-
-	LESS_OPERATOR_PROTO;
-
-	bool
-	may_be_equivalent_generic(const param_expr&) const;
-
-	bool
-	must_be_equivalent_generic(const param_expr&) const;
-
-	bool
-	is_relaxed_formal_dependent(void) const;
-
-	count_ptr<const const_param>
-	unroll_resolve_rvalues(const unroll_context&,
-		const count_ptr<const param_expr>&) const;
-
-	SUBSTITUTE_DEFAULT_PARAMETERS_PROTO;
-	MAKE_PARAM_EXPRESSION_ASSIGNMENT_PROTO;
-	MAKE_AGGREGATE_META_VALUE_REFERENCE_PROTO;
-
-// from util::persistent:
-	void
-	collect_transient_info(persistent_object_manager&) const;
-
-	void
-	write_object(const persistent_object_manager&, ostream&) const;
-
-	void
-	load_object(const persistent_object_manager&, istream&);
+protected:
+	UNROLL_RESOLVE_COPY_DATA_PROTO;
 
 };	// end class string_expr
 

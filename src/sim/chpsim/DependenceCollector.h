@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/DependenceCollector.h"
-	$Id: DependenceCollector.h,v 1.10 2010/04/07 00:13:07 fang Exp $
+	$Id: DependenceCollector.h,v 1.10.4.1 2010/09/08 21:14:39 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_DEPENDENCECOLLECTOR_H__
@@ -43,6 +43,7 @@ using entity::const_index;
 using entity::pint_const;
 using entity::pbool_const;
 using entity::preal_const;
+using entity::pstring_const;
 using entity::int_negation_expr;
 using entity::bool_negation_expr;
 // using entity::real_negation_expr;
@@ -55,7 +56,6 @@ using entity::int_arith_loop_expr;
 using entity::bool_logical_loop_expr;
 using entity::channel_probe;
 // using entity::real_arith_loop_expr;
-using entity::string_expr;
 using entity::pint_unary_expr;
 using entity::pbool_unary_expr;
 using entity::preal_unary_expr;
@@ -79,6 +79,7 @@ using entity::dynamic_meta_index_list;
 using entity::pint_const_collection;
 using entity::pbool_const_collection;
 using entity::preal_const_collection;
+using entity::pstring_const_collection;
 using entity::simple_channel_nonmeta_instance_reference;
 using entity::simple_process_nonmeta_instance_reference;
 using entity::simple_int_nonmeta_instance_reference;
@@ -88,9 +89,11 @@ using entity::simple_datastruct_nonmeta_instance_reference;
 using entity::simple_pbool_nonmeta_instance_reference;
 using entity::simple_pint_nonmeta_instance_reference;
 using entity::simple_preal_nonmeta_instance_reference;
+using entity::simple_pstring_nonmeta_instance_reference;
 using entity::simple_pbool_nonmeta_value_reference;
 using entity::simple_pint_nonmeta_value_reference;
 using entity::simple_preal_nonmeta_value_reference;
+using entity::simple_pstring_nonmeta_value_reference;
 using entity::simple_bool_meta_instance_reference;
 using entity::simple_int_meta_instance_reference;
 using entity::simple_channel_meta_instance_reference;
@@ -112,9 +115,11 @@ using entity::datastruct_member_meta_instance_reference;
 using entity::simple_pint_meta_value_reference;
 using entity::simple_pbool_meta_value_reference;
 using entity::simple_preal_meta_value_reference;
+using entity::simple_pstring_meta_value_reference;
 using entity::aggregate_pint_meta_value_reference;
 using entity::aggregate_pbool_meta_value_reference;
 using entity::aggregate_preal_meta_value_reference;
+using entity::aggregate_pstring_meta_value_reference;
 
 //=============================================================================
 typedef	std::set<node_index_type>	dependence_index_set_type;
@@ -178,7 +183,6 @@ public:
 	VISIT_PROTO(bool_logical_loop_expr);
 	VISIT_PROTO(channel_probe);
 //	VISIT_PROTO(real_arith_loop_expr);
-	VISIT_PROTO(string_expr);
 	VISIT_PROTO(int_range_expr);
 	VISIT_PROTO(nonmeta_func_call);
 //	VISIT_PROTO(nonmeta_expr_list);
@@ -190,6 +194,7 @@ public:
 	VISIT_PROTO(pint_const);
 	VISIT_PROTO(pbool_const);
 	VISIT_PROTO(preal_const);
+	VISIT_PROTO(pstring_const);
 	VISIT_PROTO(pint_unary_expr);
 	VISIT_PROTO(pbool_unary_expr);
 	VISIT_PROTO(preal_unary_expr);
@@ -214,6 +219,7 @@ public:
 	VISIT_PROTO(pint_const_collection);
 	VISIT_PROTO(pbool_const_collection);
 	VISIT_PROTO(preal_const_collection);
+	VISIT_PROTO(pstring_const_collection);
 
 	VISIT_PROTO(simple_channel_nonmeta_instance_reference);
 	VISIT_PROTO(simple_process_nonmeta_instance_reference);
@@ -226,6 +232,7 @@ public:
 	VISIT_PROTO(simple_pbool_nonmeta_instance_reference);
 	VISIT_PROTO(simple_pint_nonmeta_instance_reference);
 	VISIT_PROTO(simple_preal_nonmeta_instance_reference);
+	VISIT_PROTO(simple_pstring_nonmeta_instance_reference);
 
 	VISIT_PROTO(simple_channel_meta_instance_reference);
 	VISIT_PROTO(simple_process_meta_instance_reference);
@@ -252,10 +259,12 @@ public:
 	VISIT_PROTO(simple_pint_meta_value_reference);
 	VISIT_PROTO(simple_pbool_meta_value_reference);
 	VISIT_PROTO(simple_preal_meta_value_reference);
+	VISIT_PROTO(simple_pstring_meta_value_reference);
 
 	VISIT_PROTO(aggregate_pint_meta_value_reference);
 	VISIT_PROTO(aggregate_pbool_meta_value_reference);
 	VISIT_PROTO(aggregate_preal_meta_value_reference);
+	VISIT_PROTO(aggregate_pstring_meta_value_reference);
 
 #undef	VISIT_PROTO
 };	// end class DependenceSetCollector

@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.62 2010/09/02 00:34:35 fang Exp $
+	$Id: footprint.cc,v 1.62.2.1 2010/09/08 21:14:16 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -41,13 +41,12 @@
 #include "Object/inst/value_array.h"
 #include "Object/inst/value_scalar.h"
 #include "Object/traits/instance_traits.h"
-#include "Object/traits/pbool_traits.h"
-#include "Object/traits/pint_traits.h"
-#include "Object/traits/preal_traits.h"
+#include "Object/traits/value_traits.h"
 #include "Object/expr/const_collection.h"
 #include "Object/expr/pbool_const.h"
 #include "Object/expr/pint_const.h"
 #include "Object/expr/preal_const.h"
+#include "Object/expr/pstring_const.h"
 #include "Object/def/user_def_datatype.h"
 #include "Object/def/process_definition.h"
 #if IMPLICIT_SUPPLY_PORTS
@@ -69,6 +68,7 @@
 #include "Object/inst/pbool_instance.h"
 #include "Object/inst/pint_instance.h"
 #include "Object/inst/preal_instance.h"
+#include "Object/inst/pstring_instance.h"
 #include "Object/lang/PRS_footprint.h"
 #include "Object/lang/SPEC_footprint.h"
 #include "Object/lang/CHP.h"
@@ -251,6 +251,7 @@ footprint::footprint() :
 	value_footprint_base<pbool_tag>(), 
 	value_footprint_base<pint_tag>(), 
 	value_footprint_base<preal_tag>(), 
+	value_footprint_base<pstring_tag>(), 
 	prs_footprint(new PRS::footprint), 
 	spec_footprint(new SPEC::footprint),
 	warning_count(0), 
@@ -275,6 +276,7 @@ footprint::footprint(const const_param_expr_list& p,
 	value_footprint_base<pbool_tag>(x), 
 	value_footprint_base<pint_tag>(x), 
 	value_footprint_base<preal_tag>(x), 
+	value_footprint_base<pstring_tag>(x), 
 	param_key(p) {
 	// still leaves two calls to port_alias_tracker's default ctor
 }
@@ -309,6 +311,7 @@ footprint::footprint(const const_param_expr_list& p,
 	value_footprint_base<pbool_tag>(), 
 	value_footprint_base<pint_tag>(), 
 	value_footprint_base<preal_tag>(), 
+	value_footprint_base<pstring_tag>(), 
 	param_key(p), 
 	owner_def(&d),
 	created(false),
@@ -344,6 +347,7 @@ footprint::footprint(const temp_footprint_tag_type&) :
 	value_footprint_base<pbool_tag>(), 
 	value_footprint_base<pint_tag>(), 
 	value_footprint_base<preal_tag>(), 
+	value_footprint_base<pstring_tag>(), 
 	prs_footprint(new PRS::footprint), 
 	spec_footprint(new SPEC::footprint),
 	lock_state(false) { }
@@ -367,6 +371,7 @@ footprint::footprint(const footprint& t) :
 	value_footprint_base<pbool_tag>(), 
 	value_footprint_base<pint_tag>(), 
 	value_footprint_base<preal_tag>(), 
+	value_footprint_base<pstring_tag>(), 
 	param_key(t.param_key), 
 	owner_def(t.owner_def),
 	created(false),
@@ -641,6 +646,9 @@ footprint::operator [] (const collection_map_entry_type& e) const {
 		collection_pool_bundle->lookup_collection(e.pool_type, e.index);
 	case META_TYPE_PREAL:
 		return value_footprint_base<meta_type_map<META_TYPE_PREAL>::type>::
+		collection_pool_bundle->lookup_collection(e.pool_type, e.index);
+	case META_TYPE_PSTRING:
+		return value_footprint_base<meta_type_map<META_TYPE_PSTRING>::type>::
 		collection_pool_bundle->lookup_collection(e.pool_type, e.index);
 	default:
 		return instance_collection_ptr_type(NULL);
@@ -969,6 +977,7 @@ for ( ; i!=e; ++i) {
 	case META_TYPE_PBOOL:
 	case META_TYPE_PINT:
 	case META_TYPE_PREAL:
+	case META_TYPE_PSTRING:
 		// dissociate, rather than destroy
 		instance_collection_map.erase(mf);
 		break;
@@ -1733,6 +1742,7 @@ footprint::write_object_base(const persistent_object_manager& m,
 	value_footprint_base<pbool_tag>::write_object_base(m, o);
 	value_footprint_base<pint_tag>::write_object_base(m, o);
 	value_footprint_base<preal_tag>::write_object_base(m, o);
+	value_footprint_base<pstring_tag>::write_object_base(m, o);
 
 #if !AUTO_CACHE_FOOTPRINT_SCOPE_ALIASES
 	port_aliases.write_object_base(*this, o);
@@ -1811,6 +1821,7 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 	value_footprint_base<pbool_tag>::load_object_base(m, i);
 	value_footprint_base<pint_tag>::load_object_base(m, i);
 	value_footprint_base<preal_tag>::load_object_base(m, i);
+	value_footprint_base<pstring_tag>::load_object_base(m, i);
 	// \pre placeholders have aleady been loaded
 
 #if AUTO_CACHE_FOOTPRINT_SCOPE_ALIASES

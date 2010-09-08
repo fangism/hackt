@@ -4,7 +4,7 @@
 	Like references to arrays of constants with run-time index values.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: nonmeta_param_value_reference.cc,v 1.14 2007/08/15 02:49:01 fang Exp $
+ 	$Id: nonmeta_param_value_reference.cc,v 1.14.56.1 2010/09/08 21:14:21 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_NONMETA_PARAM_VALUE_REFERENCE_CC__
@@ -25,9 +25,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/common/extern_templates.h"
 #include "Object/ref/simple_nonmeta_value_reference.tcc"
 #include "Object/traits/classification_tags.h"
-#include "Object/traits/pint_traits.h"
-#include "Object/traits/pbool_traits.h"
-#include "Object/traits/preal_traits.h"
+#include "Object/traits/value_traits.h"
 #include "Object/traits/bool_traits.h"
 #include "Object/traits/int_traits.h"
 #include "Object/traits/enum_traits.h"
@@ -37,15 +35,14 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/persistent_type_hash.h"
 #include "Object/expr/struct_expr.h"	// why? (nonmeta_expr_visitor)
 #include "Object/expr/enum_expr.h"	// why? (nonmeta_expr_visitor)
-#include "Object/expr/int_expr.h"
-#include "Object/expr/bool_expr.h"
-#include "Object/expr/real_expr.h"
 #include "Object/expr/pint_const.h"
 #include "Object/expr/pbool_const.h"
 #include "Object/expr/preal_const.h"
+#include "Object/expr/pstring_const.h"
 #include "Object/inst/pint_instance.h"
 #include "Object/inst/pbool_instance.h"
 #include "Object/inst/preal_instance.h"
+#include "Object/inst/pstring_instance.h"
 #include "Object/type/canonical_generic_datatype.h"
 #include "common/TODO.h"
 #include "util/stacktrace.h"
@@ -53,22 +50,32 @@ DEFAULT_STATIC_TRACE_BEGIN
 
 //=============================================================================
 namespace util {
-SPECIALIZE_UTIL_WHAT(HAC::entity::simple_pbool_nonmeta_instance_reference,
+using HAC::entity::simple_pbool_nonmeta_instance_reference;
+using HAC::entity::simple_pint_nonmeta_instance_reference;
+using HAC::entity::simple_preal_nonmeta_instance_reference;
+using HAC::entity::simple_pstring_nonmeta_instance_reference;
+
+SPECIALIZE_UTIL_WHAT(simple_pbool_nonmeta_instance_reference,
 		"nonmeta-pbool-inst-ref")
-SPECIALIZE_UTIL_WHAT(HAC::entity::simple_pint_nonmeta_instance_reference,
+SPECIALIZE_UTIL_WHAT(simple_pint_nonmeta_instance_reference,
 		"nonmeta-pint-inst-ref")
-SPECIALIZE_UTIL_WHAT(HAC::entity::simple_preal_nonmeta_instance_reference,
+SPECIALIZE_UTIL_WHAT(simple_preal_nonmeta_instance_reference,
 		"nonmeta-preal-inst-ref")
+SPECIALIZE_UTIL_WHAT(simple_pstring_nonmeta_instance_reference,
+		"nonmeta-pstring-inst-ref")
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::simple_pbool_nonmeta_instance_reference, 
+	simple_pbool_nonmeta_instance_reference, 
 		SIMPLE_PBOOL_NONMETA_INSTANCE_REFERENCE_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::simple_pint_nonmeta_instance_reference, 
+	simple_pint_nonmeta_instance_reference, 
 		SIMPLE_PINT_NONMETA_INSTANCE_REFERENCE_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::simple_preal_nonmeta_instance_reference, 
+	simple_preal_nonmeta_instance_reference, 
 		SIMPLE_PREAL_NONMETA_INSTANCE_REFERENCE_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	simple_pstring_nonmeta_instance_reference, 
+		SIMPLE_PSTRING_NONMETA_INSTANCE_REFERENCE_TYPE_KEY, 0)
 }	// end namespace util
 
 //=============================================================================
@@ -170,6 +177,38 @@ struct data_type_resolver<preal_tag> {
 };      // end struct data_type_resolver
 
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <>
+struct data_type_resolver<pstring_tag> {
+	typedef	class_traits<pstring_tag>		traits_type;
+	typedef	traits_type::simple_nonmeta_instance_reference_type
+						data_value_reference_type;
+	count_ptr<const data_type_reference>
+	operator () (const data_value_reference_type&) const {
+#if 0
+		return string_traits::built_in_type_ptr;
+#else
+#if 1
+		FINISH_ME(Fang);
+		return count_ptr<const data_type_reference>(NULL);
+#else
+		// equivalent, but consistent and programmatic
+		return class_traits<traits_type::nonmeta_tag_type
+			>::nonmeta_data_type_ptr;
+#endif
+#endif
+	}
+
+	canonical_generic_datatype
+	operator () (const data_value_reference_type&, 
+			const unroll_context&) const {
+		FINISH_ME(Fang);
+		return canonical_generic_datatype();
+	}
+
+};      // end struct data_type_resolver
+
+
 //=============================================================================
 // explicit template instantiations
 
@@ -177,6 +216,7 @@ struct data_type_resolver<preal_tag> {
 template class simple_nonmeta_value_reference<pint_tag>;
 template class simple_nonmeta_value_reference<pbool_tag>;
 template class simple_nonmeta_value_reference<preal_tag>;
+template class simple_nonmeta_value_reference<pstring_tag>;
 // used to be simple_nonmeta_instance_reference<...>
 
 //=============================================================================

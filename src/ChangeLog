@@ -3,6 +3,21 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-09-08	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-23-string-01-01:
+	  Branch for adding string types to HAC.
+	  This revision adds pstring parameter types to the middle-end.
+		Affected files: traits, expr/*string*, persistent types, 
+		value-collection, references, instantiations, footprint,
+		const-collection, expression visitors.  
+	  Tests updated for object dumps only.
+	  Next: front-end support.
+	  On this branch: string operations, compile-time, run-time, 
+		chpsim support for string values and variables,
+		string template parameters.
+
+
 2010-09-01	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-23:

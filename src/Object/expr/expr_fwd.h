@@ -1,7 +1,7 @@
 /**
 	\file "Object/expr/expr_fwd.h"
 	Forward declarations of all expression-related classes.  
-	$Id: expr_fwd.h,v 1.8 2007/08/28 04:54:07 fang Exp $
+	$Id: expr_fwd.h,v 1.8.54.1 2010/09/08 21:14:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_EXPR_FWD_H__
@@ -48,9 +48,11 @@ namespace entity {
 	class pbool_expr;
 	class pint_expr;
 	class preal_expr;
+	class pstring_expr;
 	class pint_const;
 	class pbool_const;
 	class preal_const;
+	class pstring_const;
 //	class param_unary_expr;
 	class pint_unary_expr;
 	class pbool_unary_expr;
@@ -83,6 +85,8 @@ namespace entity {
 		pbool_const_collection;
 	typedef const_collection<preal_tag>
 		preal_const_collection;
+	typedef const_collection<pstring_tag>
+		pstring_const_collection;
 
 	// from "Object/expr/loop_meta_expr.h"
 	template <class>

@@ -1,8 +1,7 @@
 /**
 	\file "Object/traits/string_traits.h"
-	Traits and policies for stringean data types.  
-	This file used to be "Object/art_object_string_traits.h".
-	$Id: string_traits.h,v 1.2 2007/08/28 04:54:21 fang Exp $
+	Traits and policies for string data types.  
+	$Id: string_traits.h,v 1.2.54.1 2010/09/08 21:14:34 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_STRING_TRAITS_H__
@@ -21,7 +20,7 @@ struct class_traits<string_tag> {
 
 	typedef	string_tag			tag_type;
 	/// inherits some traits from corresponding meta-type
-	typedef	string_tag			meta_tag_type;
+	typedef	pstring_tag			meta_tag_type;
 	typedef	class_traits<meta_tag_type>	meta_traits_type;
 	enum { type_tag_enum_value = META_TYPE_STRING };
 	static const char			tag_name[];

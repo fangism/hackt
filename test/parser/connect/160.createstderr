@@ -48,7 +48,7 @@ Persistent Object Manager text dump:
 	41	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
 	42	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	43	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
-	44	##ADDR##	footprnt	0	#HEAD#	#TAIL#	538
+	44	##ADDR##	footprnt	0	#HEAD#	#TAIL#	558
 	45	##ADDR##	procdefn	0	#HEAD#	#TAIL#	98
 	46	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	47	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
@@ -56,7 +56,7 @@ Persistent Object Manager text dump:
 	49	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	50	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	51	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	52	##ADDR##	footprnt	0	#HEAD#	#TAIL#	306
+	52	##ADDR##	footprnt	0	#HEAD#	#TAIL#	326
 	53	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
 	54	##ADDR##	procdefn	0	#HEAD#	#TAIL#	156
 	55	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
@@ -94,7 +94,7 @@ Persistent Object Manager text dump:
 	87	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	88	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
 	89	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	90	##ADDR##	footprnt	0	#HEAD#	#TAIL#	646
+	90	##ADDR##	footprnt	0	#HEAD#	#TAIL#	666
 	91	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	92	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	93	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
@@ -111,7 +111,7 @@ Persistent Object Manager text dump:
 	104	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	105	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	106	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	107	##ADDR##	footprnt	0	#HEAD#	#TAIL#	576
+	107	##ADDR##	footprnt	0	#HEAD#	#TAIL#	596
 	108	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)

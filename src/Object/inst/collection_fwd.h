@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/collection_fwd.h"
 	Forward declarations for all instance and value collection classes.  
-	$Id: collection_fwd.h,v 1.8 2007/10/08 01:21:11 fang Exp $
+	$Id: collection_fwd.h,v 1.8.46.1 2010/09/08 21:14:25 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_COLLECTION_FWD_H__
@@ -113,6 +113,8 @@ typedef value_collection<pbool_tag>
 	pbool_instance_collection;
 typedef value_collection<preal_tag>
 	preal_instance_collection;
+typedef value_collection<pstring_tag>
+	pstring_instance_collection;
 
 template <class>
 class value_placeholder;
@@ -123,6 +125,8 @@ typedef value_placeholder<pbool_tag>
 	pbool_value_placeholder;
 typedef value_placeholder<preal_tag>
 	preal_value_placeholder;
+typedef value_placeholder<pstring_tag>
+	pstring_value_placeholder;
 
 }	// end namespace entity
 }	// end namespace HAC

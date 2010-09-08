@@ -3,7 +3,7 @@
 	Class instantiations for const collections.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: param_const_collection.cc,v 1.8 2006/03/15 04:38:16 fang Exp $
+ 	$Id: param_const_collection.cc,v 1.8.138.1 2010/09/08 21:14:21 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_PARAM_CONST_COLLECTION_CC__
@@ -26,9 +26,11 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/traits/pint_traits.h"
 #include "Object/traits/pbool_traits.h"
 #include "Object/traits/preal_traits.h"
+#include "Object/traits/pstring_traits.h"
 #include "Object/expr/pint_const.h"
 #include "Object/expr/pbool_const.h"
 #include "Object/expr/preal_const.h"
+#include "Object/expr/pstring_const.h"
 #include "Object/expr/const_index.h"
 #include "Object/expr/const_index_list.h"
 #include "Object/expr/const_range.h"
@@ -41,12 +43,19 @@ DEFAULT_STATIC_TRACE_BEGIN
 
 //=============================================================================
 namespace util {
-SPECIALIZE_UTIL_WHAT(HAC::entity::pint_const_collection,
+using HAC::entity::pint_const_collection;
+using HAC::entity::pbool_const_collection;
+using HAC::entity::preal_const_collection;
+using HAC::entity::pstring_const_collection;
+
+SPECIALIZE_UTIL_WHAT(pint_const_collection,
 		"pint-const-collection")
-SPECIALIZE_UTIL_WHAT(HAC::entity::pbool_const_collection,
+SPECIALIZE_UTIL_WHAT(pbool_const_collection,
 		"pbool-const-collection")
-SPECIALIZE_UTIL_WHAT(HAC::entity::preal_const_collection,
+SPECIALIZE_UTIL_WHAT(preal_const_collection,
 		"preal-const-collection")
+SPECIALIZE_UTIL_WHAT(pstring_const_collection,
+		"pstring-const-collection")
 
 // pint_const_collection requires special treatment:
 // it has no empty constructor and requires an int argument
@@ -60,6 +69,8 @@ SPECIALIZE_PERSISTENT_TRAITS_CONST_COLLECTION_FULL_DEFINITION(
 	HAC::entity::pbool_tag, CONST_PBOOL_COLLECTION_TYPE_KEY)
 SPECIALIZE_PERSISTENT_TRAITS_CONST_COLLECTION_FULL_DEFINITION(
 	HAC::entity::preal_tag, CONST_PREAL_COLLECTION_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_CONST_COLLECTION_FULL_DEFINITION(
+	HAC::entity::pstring_tag, CONST_PSTRING_COLLECTION_TYPE_KEY)
 
 }	// end namespace util
 
@@ -72,6 +83,7 @@ namespace entity {
 template class const_collection<pint_tag>;
 template class const_collection<pbool_tag>;
 template class const_collection<preal_tag>;
+template class const_collection<pstring_tag>;
 
 //=============================================================================
 }	// end namepace entity

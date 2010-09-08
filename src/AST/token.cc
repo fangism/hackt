@@ -1,7 +1,7 @@
 /**
 	\file "AST/token.cc"
 	Class method definitions for HAC::parser, related to terminal tokens.
-	$Id: token.cc,v 1.15 2009/10/02 01:56:39 fang Exp $
+	$Id: token.cc,v 1.15.8.1 2010/09/08 21:14:14 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_token.cc,v 1.36.4.1 2005/12/11 00:45:11 fang Exp
  */
@@ -35,7 +35,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/pint_const.h"
 #include "Object/expr/pbool_const.h"
 #include "Object/expr/preal_const.h"
-#include "Object/expr/string_expr.h"
+#include "Object/expr/pstring_const.h"
 #include "Object/type/param_type_reference.h"
 #include "Object/traits/pint_traits.h"
 #include "Object/traits/pbool_traits.h"
@@ -105,7 +105,7 @@ using entity::bool_traits;
 using entity::int_traits;
 using entity::physical_instance_placeholder;
 using entity::param_value_placeholder;
-using entity::string_expr;
+using entity::pstring_const;
 
 //=============================================================================
 // class terminal definitions
@@ -545,12 +545,12 @@ token_quoted_string::check_build(context& c) const {
 
 expr::meta_return_type
 token_quoted_string::check_meta_expr(const context& c) const {
-	return meta_return_type(new string_expr(*this));
+	return meta_return_type(new pstring_const(*this));
 }
 
 expr::nonmeta_return_type
 token_quoted_string::check_nonmeta_expr(const context& c) const {
-	return nonmeta_return_type(new string_expr(*this));
+	return nonmeta_return_type(new pstring_const(*this));
 }
 
 //=============================================================================

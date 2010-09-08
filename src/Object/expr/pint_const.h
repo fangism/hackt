@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: pint_const.h,v 1.20 2009/08/28 20:44:51 fang Exp $
+	$Id: pint_const.h,v 1.20.14.1 2010/09/08 21:14:22 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PINT_CONST_H__
@@ -33,6 +33,9 @@ private:
 public:
 	typedef pint_expr::value_type	value_type;
 	static const value_type		default_value = 0;
+	static
+	value_type
+	safe_default_value(void) { return default_value; }
 protected:
 	// removed constness for assignability
 	value_type			val;

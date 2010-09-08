@@ -4,7 +4,7 @@
 	by the object-related library.  
 	This file was "Object/common/extern_templates.cc"
 		in its previous life.  
-	$Id: extern_templates.cc,v 1.13 2010/08/24 21:05:40 fang Exp $
+	$Id: extern_templates.cc,v 1.13.2.1 2010/09/08 21:14:15 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_EXTERN_TEMPLATES_CC__
@@ -22,6 +22,7 @@ namespace util {
 using HAC::entity::pint_value_type;
 using HAC::entity::pbool_value_type;
 using HAC::entity::preal_value_type;
+using HAC::entity::pstring_value_type;
 using std::list;
 using std::istream;
 using std::ostream;
@@ -65,6 +66,7 @@ template class packed_array_generic<pint_value_type, size_t>;
 template class packed_array_generic<pint_value_type, pint_value_type>;
 template class packed_array_generic<pint_value_type, pbool_value_type>;
 template class packed_array_generic<pint_value_type, preal_value_type>;
+template class packed_array_generic<pint_value_type, pstring_value_type>;
 
 // some of these are needed for higher optimizations that
 // drop inline instantiations...

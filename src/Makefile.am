@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.245 2010/09/02 21:47:26 fang Exp $
+#	$Id: Makefile.am,v 1.245.2.1 2010/09/08 21:14:13 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -492,6 +492,7 @@ OBJECT_INST_CC_FILES = \
 	Object/inst/pbool_value_collection.cc \
 	Object/inst/pint_value_collection.cc \
 	Object/inst/preal_value_collection.cc \
+	Object/inst/pstring_value_collection.cc \
 	Object/inst/bool_instance_collection.cc \
 	Object/inst/node_instance_collection.cc \
 	Object/inst/int_instance_collection.cc \
@@ -582,7 +583,8 @@ OBJECT_INST_H_FILES = $(OBJECT_INST_CC_FILES:.cc=.h) \
 	Object/inst/channel_instance.h \
 	Object/inst/pbool_instance.h \
 	Object/inst/pint_instance.h \
-	Object/inst/preal_instance.h
+	Object/inst/preal_instance.h \
+	Object/inst/pstring_instance.h
 
 OBJECT_REF_CC_FILES = \
 	Object/ref/instance_reference.cc \
@@ -793,6 +795,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/traits/pint_traits.h \
 	Object/traits/pbool_traits.h \
 	Object/traits/preal_traits.h \
+	Object/traits/pstring_traits.h \
 	Object/traits/int_traits.h \
 	Object/traits/bool_traits.h \
 	Object/traits/enum_traits.h \
@@ -879,6 +882,8 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/expr/preal_relational_expr.h \
 	Object/expr/preal_unary_expr.h \
 	Object/expr/string_expr.h \
+	Object/expr/pstring_expr.h \
+	Object/expr/pstring_const.h \
 	Object/expr/struct_expr.h \
 	Object/expr/types.h \
 	Object/lang/generic_attribute_fwd.h \

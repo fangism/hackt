@@ -68,7 +68,7 @@ Persistent Object Manager text dump:
 	60	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	37
 	61	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	62	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
-	63	##ADDR##	footprnt	0	#HEAD#	#TAIL#	798
+	63	##ADDR##	footprnt	0	#HEAD#	#TAIL#	818
 	64	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	65	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	66	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
@@ -86,7 +86,7 @@ Persistent Object Manager text dump:
 	78	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	79	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	80	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	81	##ADDR##	footprnt	0	#HEAD#	#TAIL#	394
+	81	##ADDR##	footprnt	0	#HEAD#	#TAIL#	414
 	82	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)

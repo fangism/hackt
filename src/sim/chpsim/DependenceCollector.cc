@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/DependenceCollector.cc"
-	$Id: DependenceCollector.cc,v 1.12 2010/04/08 23:04:14 fang Exp $
+	$Id: DependenceCollector.cc,v 1.12.4.1 2010/09/08 21:14:39 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -20,6 +20,7 @@
 #include "Object/expr/loop_nonmeta_expr.h"
 #include "Object/expr/enum_expr.h"
 #include "Object/expr/real_expr.h"
+#include "Object/expr/string_expr.h"
 // #include "Object/expr/real_negation_expr.h"
 // #include "Object/expr/real_arith_expr.h"
 // #include "Object/expr/real_relational_expr.h"
@@ -42,6 +43,7 @@
 #include "Object/traits/bool_traits.h"
 #include "Object/traits/int_traits.h"
 #include "Object/traits/enum_traits.h"
+#include "Object/traits/string_traits.h"
 #include "Object/traits/chan_traits.h"
 #include "Object/traits/proc_traits.h"
 #include "Object/traits/value_traits.h"
@@ -152,10 +154,11 @@ DEFINE_TRIVIAL_VISIT(const_index)
 DEFINE_TRIVIAL_VISIT(const_range)
 DEFINE_TRIVIAL_VISIT(pbool_const)
 DEFINE_TRIVIAL_VISIT(preal_const)
+DEFINE_TRIVIAL_VISIT(pstring_const)
 DEFINE_TRIVIAL_VISIT(pint_const_collection)
 DEFINE_TRIVIAL_VISIT(pbool_const_collection)
 DEFINE_TRIVIAL_VISIT(preal_const_collection)
-DEFINE_TRIVIAL_VISIT(string_expr)
+DEFINE_TRIVIAL_VISIT(pstring_const_collection)
 DEFINE_NEVER_VISIT(int_range_expr)
 
 DEFINE_NEVER_VISIT(pint_arith_expr)
@@ -367,6 +370,13 @@ DependenceSetCollector::visit(const simple_preal_nonmeta_value_reference& r) {
 	if (ind) { ind->accept(*this); }
 }
 
+void
+DependenceSetCollector::visit(const simple_pstring_nonmeta_value_reference& r) {
+	STACKTRACE_VERBOSE;
+	const never_ptr<const nonmeta_index_list> ind(r.get_indices());
+	if (ind) { ind->accept(*this); }
+}
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // meta value references never change, and thus do not need to be
 // added to any dependence sets -- they are constant.
@@ -374,9 +384,11 @@ DependenceSetCollector::visit(const simple_preal_nonmeta_value_reference& r) {
 DEFINE_TRIVIAL_VISIT(simple_pint_meta_value_reference)
 DEFINE_TRIVIAL_VISIT(simple_pbool_meta_value_reference)
 DEFINE_TRIVIAL_VISIT(simple_preal_meta_value_reference)
+DEFINE_TRIVIAL_VISIT(simple_pstring_meta_value_reference)
 DEFINE_TRIVIAL_VISIT(aggregate_pint_meta_value_reference)
 DEFINE_TRIVIAL_VISIT(aggregate_pbool_meta_value_reference)
 DEFINE_TRIVIAL_VISIT(aggregate_preal_meta_value_reference)
+DEFINE_TRIVIAL_VISIT(aggregate_pstring_meta_value_reference)
 
 // enums and structs are so far unsupported, so we ICE for now
 DEFINE_NEVER_VISIT(simple_process_meta_instance_reference)

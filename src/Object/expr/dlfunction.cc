@@ -1,6 +1,6 @@
 /**
 	\file "Object/expr/dlfunction.cc"
-	$Id: dlfunction.cc,v 1.4 2007/08/28 04:54:04 fang Exp $
+	$Id: dlfunction.cc,v 1.4.54.1 2010/09/08 21:14:20 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE	0
@@ -12,7 +12,7 @@
 #include "Object/expr/pint_const.h"
 #include "Object/expr/pbool_const.h"
 #include "Object/expr/preal_const.h"
-#include "Object/expr/string_expr.h"
+#include "Object/expr/pstring_const.h"
 // #include "Object/expr/const_collection.h"
 #include "common/ltdl-wrap.h"
 #include "util/macros.h"
@@ -80,7 +80,7 @@ try {
 string_value_type
 extract_string(const const_param& p) {
 try {
-	return IS_A(const string_expr&, p).static_constant_value();
+	return IS_A(const pstring_const&, p).static_constant_value();
 } catch (std::bad_cast& e) {
 	p.what(cerr << "Run-time error: expecting string, but got ") << endl;
 	throw;		// re-throw
@@ -155,7 +155,7 @@ make_chp_value(const real_value_type v) {
 chp_function_return_type
 make_chp_value(const string_value_type& v) {
 	STACKTRACE_VERBOSE;
-	return chp_function_return_type(new string_expr(v));
+	return chp_function_return_type(new pstring_const(v));
 }
 
 //=============================================================================
