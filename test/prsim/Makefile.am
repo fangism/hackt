@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.113 2010/09/03 00:19:17 fang Exp $
+#	$Id: Makefile.am,v 1.114 2010/09/08 00:03:00 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -417,6 +417,14 @@ default-after-02.prsimtest: default-after-02.prsimrc
 default-after-03.prsimtest: default-after-03.prsimrc
 	$(SKIP_TEST_SCRIPT)
 default-after-04.prsimtest: default-after-04.prsimrc
+	$(SKIP_TEST_SCRIPT)
+eledr-buffer-b-03.prsimtest: eledr-buffer-b-03.prsimrc
+	$(SKIP_TEST_SCRIPT)
+eledr-buffer-b-04.prsimtest: eledr-buffer-b-04.prsimrc
+	$(SKIP_TEST_SCRIPT)
+eledr-buffer-b-06.prsimtest: eledr-buffer-b-06.prsimrc
+	$(SKIP_TEST_SCRIPT)
+eledr-buffer-b-07.prsimtest: eledr-buffer-b-07.prsimrc
 	$(SKIP_TEST_SCRIPT)
 endif
 
