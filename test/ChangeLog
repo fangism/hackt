@@ -1,6 +1,12 @@
 # "test/ChangeLog"
-#	$Id: ChangeLog,v 1.105 2010/04/05 23:59:44 fang Exp $
+#	$Id: ChangeLog,v 1.105.4.1 2010/09/08 21:06:28 fang Exp $
 # ChangeLog for test directory.
+
+2010-09-08	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-23-string-01-01:
+	  Make.test-compile: made cpp parse test objects depend on haco
+
 
 2010-04-05	David Fang		<fangism@users.sourceforge.net>
 
