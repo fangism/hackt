@@ -1,0 +1,8 @@
+// "070b.hac"
+// copy-reduced from "070.hac"
+
+pint expr[2];
+// expr = {0,1};
+bool x, y;
+x = y[expr];	// index expression should be scalar!
+

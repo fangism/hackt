@@ -1,0 +1,22 @@
+Input ports of '_np_':
+!GND : 0
+!Vdd : 1
+_np_.g : X
+_np_._g : X
+_np_.s : X
+Output ports of '_np_':
+_np_.d : X
+Input ports of '_n_':
+!GND : 0
+!Vdd : 1
+_n_.g : X
+_n_.s : X
+Output ports of '_n_':
+_n_.d : X
+Input ports of '_p_':
+!GND : 0
+!Vdd : 1
+_p_.g : X
+_p_.s : X
+Output ports of '_p_':
+_p_.d : X

@@ -1,0 +1,10 @@
+# "macro-pass-02.prsimrc"
+# @haco@ macro-pass-02.haco-c
+
+getinports _np_
+getoutports _np_
+getinports _n_
+getoutports _n_
+getinports _p_
+getoutports _p_
+

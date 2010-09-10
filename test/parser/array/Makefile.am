@@ -1,5 +1,5 @@
 # "test/parser/array/Makefile.am"
-#	$Id: Makefile.am,v 1.25 2009/10/27 18:21:55 fang Exp $
+#	$Id: Makefile.am,v 1.26 2010/09/10 22:57:21 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -8,7 +8,9 @@ HACKT_PARSE_TEST_FAILURES = \
 	011 012 014 \
 	032 \
 	042 045 048 049 \
-	051 052 053 057
+	051 052 053 057 \
+	068 069 \
+	070 070b
 
 BISON_OUTPUTS += 042 049 057
 

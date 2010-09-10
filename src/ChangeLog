@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-09-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-24:
+	  AST/range.cc: check that dimensions of index is 0 (scalar)
+		before continuing check (fixes ICE-on-invalid, ACX-PR-5807).
+		Test case contributed by Ilya Ganusov added.
+
+
 2010-09-01	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-23:

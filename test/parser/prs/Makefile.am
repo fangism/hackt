@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.72 2010/08/31 23:48:06 fang Exp $
+#	$Id: Makefile.am,v 1.73 2010/09/10 22:57:21 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -372,7 +372,8 @@ EMPTY_CFLAT_PRS_TESTS += \
 	macro-pass-01
 
 HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
-	spec_min_sep_proc-12
+	spec_min_sep_proc-12 \
+	macro-pass-02
 
 HACKNET_TEST_SCRIPTS_PASSES = \
 	wchb-06 \

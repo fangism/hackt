@@ -1,0 +1,14 @@
+// "070.hac"
+// test case contributed by Ilya Ganusov
+
+defproc e1of16() { }
+e1of16 d;
+pint expr[4][8];
+bool sum_d[4][8];
+
+(;i:4: 
+	(;j:8:                           
+		sum_d[i][j] = d[i][expr[i]];  
+	)
+)
+

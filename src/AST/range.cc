@@ -2,9 +2,9 @@
 	\file "AST/range.cc"
 	Class method definitions for HAC::parser, 
 	related to ranges and range lists.  
-	$Id: range.cc,v 1.13 2008/11/23 17:53:30 fang Exp $
+	$Id: range.cc,v 1.14 2010/09/10 22:57:19 fang Exp $
 	This file used to be the following before it was renamed:
-	$Id: range.cc,v 1.13 2008/11/23 17:53:30 fang Exp $
+	$Id: range.cc,v 1.14 2010/09/10 22:57:19 fang Exp $
  */
 
 #ifndef	__HAC_AST_RANGE_CC__
@@ -396,9 +396,17 @@ range_list::check_meta_indices(const context& c) const {
 		dyn_ret(new dynamic_meta_index_list(size()));
 	NEVER_NULL(dyn_ret);
 	bool is_const = true;
-	check_type::const_iterator i(temp.begin());
-	const check_type::const_iterator e(temp.end());
-	for ( ; i!=e; i++) {
+	const_iterator si(this->begin());
+	const check_type::const_iterator b(temp.begin()), e(temp.end());
+	check_type::const_iterator i(b);
+	for ( ; i!=e; ++i, ++si) {
+		const size_t d = (*i)->dimensions();
+		if (d) {
+			cerr << "Error: index must be a scalar, but got "
+				<< d << "-dim. array.  "
+				<< where(**si) << endl;
+			return return_type(NULL);
+		}
 		dyn_ret->push_back(*i);
 		if (!i->is_a<entity::const_index>()) {
 			is_const = false;
