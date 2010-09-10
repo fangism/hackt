@@ -1,0 +1,11 @@
+.subckt foo<"bar"> !GND x y
+M:bar !GND x y !GND nch W=5u L=2u
+.ends
+
+.subckt foo<"BAM"> !GND x y
+M:BAM !GND x y !GND nch W=5u L=2u
+.ends
+
+xbaz !GND baz.x baz.y foo<"bar">
+xburp !GND burp.x burp.y foo<"BAM">
+

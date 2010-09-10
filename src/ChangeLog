@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-09-09	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-23-string-01-02:
+	  Added front-end support for pstring parameter types.
+		Modified: lexer/parser, AST classes, built-in type 
+		references, instantiation_statement.
+		Middle-end and back-ends just work!
+	  Added lots of test cases.
+	  Next: string manipulation operations
+
+
 2010-09-08	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-23-string-01-01:

@@ -1,0 +1,11 @@
+// "125.hac"
+// copy-modified from "123.hac"
+// testing string template parameters
+// expect-fail
+
+template <pstring tag>
+defproc foo() {
+}
+
+foo<33> bar;
+

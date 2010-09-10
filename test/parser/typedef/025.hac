@@ -1,0 +1,14 @@
+// "025.hac"
+// testing string parameters in typedefs
+
+template <pstring N>
+defproc foo() { }
+
+typedef	foo<"l">	fool;
+typedef	foo<"k">	fook;
+typedef	foo<"n">	foon;
+
+fool you;
+fook you2;
+foon buf;
+

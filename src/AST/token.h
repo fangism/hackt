@@ -1,7 +1,7 @@
 /**
 	\file "AST/token.h"
 	Token-specific parser classes for HAC.  
-	$Id: token.h,v 1.8 2007/08/28 04:53:58 fang Exp $
+	$Id: token.h,v 1.8.54.1 2010/09/10 01:12:44 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_token.h,v 1.17.34.1 2005/12/11 00:45:11 fang Exp
  */
@@ -19,6 +19,7 @@ namespace parser {
 using entity::pint_value_type;
 using entity::pbool_value_type;
 using entity::preal_value_type;
+using entity::pstring_value_type;
 
 //=============================================================================
 // forward declarations in this namespace appear in "AST/AST_fwd.h"
@@ -150,6 +151,7 @@ class token_quoted_string : public token_string, public expr {
 public:
 	explicit
 	token_quoted_string(const string& s);
+	// pstring_value_type
 
 	~token_quoted_string();
 
@@ -324,6 +326,24 @@ public:
 	token_preal_type(const char* dt);
 
 	~token_preal_type();
+
+	return_type
+	check_type(const context&) const;
+
+	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
+};	// end class token_preal_type
+
+//-----------------------------------------------------------------------------
+/**
+	Class for built-in "pstring" parameter type.
+ */
+class token_pstring_type : public token_paramtype {
+	typedef	token_pstring_type		this_type;
+public:
+	explicit
+	token_pstring_type(const char* dt);
+
+	~token_pstring_type();
 
 	return_type
 	check_type(const context&) const;

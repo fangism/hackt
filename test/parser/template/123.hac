@@ -1,0 +1,9 @@
+// "123.hac"
+// testing string template parameters
+
+template <pstring tag>
+defproc foo() {
+}
+
+foo<"Simon"> bar;
+

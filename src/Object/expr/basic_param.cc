@@ -3,7 +3,7 @@
 	Class definitions for basic parameter expression types.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: basic_param.cc,v 1.30.14.1 2010/09/08 21:14:18 fang Exp $
+ 	$Id: basic_param.cc,v 1.30.14.2 2010/09/10 01:12:45 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_BASIC_PARAM_CC_
@@ -1565,8 +1565,7 @@ pstring_const::substitute_default_positional_parameters(
 param_expr::assignment_ptr_type
 pstring_const::make_param_expression_assignment_private(
 		const count_ptr<const param_expr>& p) const {
-	FINISH_ME(Fang);
-	return assignment_ptr_type(NULL);
+	return pstring_expr::make_param_expression_assignment_private(p);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

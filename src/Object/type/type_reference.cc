@@ -3,7 +3,7 @@
 	Type-reference class method definitions.  
 	This file originally came from "Object/art_object_type_ref.cc"
 		in a previous life.  
- 	$Id: type_reference.cc,v 1.31 2008/11/12 03:00:25 fang Exp $
+ 	$Id: type_reference.cc,v 1.31.30.1 2010/09/10 01:12:46 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_TYPE_REFERENCE_CC__
@@ -2030,8 +2030,10 @@ param_type_reference::make_instantiation_statement_private(
 		pbool_type_ptr(pbool_traits::built_in_type_ptr);
 	static const pint_traits::type_ref_ptr_type&
 		pint_type_ptr(pint_traits::built_in_type_ptr);
-	static const pint_traits::type_ref_ptr_type&
+	static const preal_traits::type_ref_ptr_type&
 		preal_type_ptr(preal_traits::built_in_type_ptr);
+	static const pstring_traits::type_ref_ptr_type&
+		pstring_type_ptr(pstring_traits::built_in_type_ptr);
 	INVARIANT(t == this);
 	if (must_be_type_equivalent(*pbool_type_ptr)) {
 		return return_type(new pbool_instantiation_statement(
@@ -2042,11 +2044,16 @@ param_type_reference::make_instantiation_statement_private(
 	} else if (must_be_type_equivalent(*preal_type_ptr)) {
 		return return_type(new preal_instantiation_statement(
 			preal_type_ptr, d));
+	} else if (must_be_type_equivalent(*pstring_type_ptr)) {
+		return return_type(new pstring_instantiation_statement(
+			pstring_type_ptr, d));
 	} else {
+		// candidates are:
 	ICE(cerr, 
 		pbool_type_ptr->dump(cerr) << " at " << &*pbool_type_ptr << endl;
 		pint_type_ptr->dump(cerr) << " at " << &*pint_type_ptr << endl;
 		preal_type_ptr->dump(cerr) << " at " << &*preal_type_ptr << endl;
+		pstring_type_ptr->dump(cerr) << " at " << &*pstring_type_ptr << endl;
 		dump(cerr << "this: ") << " at " << this << endl;
 	);
 		return return_type(NULL);
@@ -2073,17 +2080,22 @@ param_type_reference::make_instance_collection(
 		pint_type_ptr(pint_traits::built_in_type_ptr);
 	static const preal_traits::type_ref_ptr_type&
 		preal_type_ptr(preal_traits::built_in_type_ptr);
+	static const pstring_traits::type_ref_ptr_type&
+		pstring_type_ptr(pstring_traits::built_in_type_ptr);
 	if (must_be_type_equivalent(*pbool_type_ptr))
 		return return_type(new pbool_value_placeholder(*s, id, d));
 	else if (must_be_type_equivalent(*pint_type_ptr))
 		return return_type(new pint_value_placeholder(*s, id, d));
 	else if (must_be_type_equivalent(*preal_type_ptr))
 		return return_type(new preal_value_placeholder(*s, id, d));
+	else if (must_be_type_equivalent(*pstring_type_ptr))
+		return return_type(new pstring_value_placeholder(*s, id, d));
 	else {
 	ICE(cerr, 
 		pbool_type_ptr->dump(cerr) << " at " << &*pbool_type_ptr << endl;
 		pint_type_ptr->dump(cerr) << " at " << &*pint_type_ptr << endl;
 		preal_type_ptr->dump(cerr) << " at " << &*preal_type_ptr << endl;
+		pstring_type_ptr->dump(cerr) << " at " << &*pstring_type_ptr << endl;
 		dump(cerr << "this: ") << " at " << this << endl;
 	);
 		return return_type(NULL);

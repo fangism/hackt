@@ -1,0 +1,7 @@
+ERROR: attempted to connect instances with conflicting relaxed parameters!
+	got: "Simon"
+	and: "Garfunkel"
+	from: bar[0]
+	and:  bar[1]
+Error encountered during module::create.
+ERROR in creating.  Aborting.

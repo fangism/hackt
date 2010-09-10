@@ -2,7 +2,7 @@
  *	\file "lexer/hackt-lex.ll"
  *	vi: ft=lex
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: hackt-lex.ll,v 1.31 2010/04/30 00:21:44 fang Exp $
+ *	$Id: hackt-lex.ll,v 1.31.4.1 2010/09/10 01:12:48 fang Exp $
  *	This file was originally:
  *	Id: art++-lex.ll,v 1.17 2005/06/21 21:26:35 fang Exp
  *	in prehistory.  
@@ -280,6 +280,12 @@ PREAL_TYPE_UPDATE(YYSTYPE& hackt_lval, const lexer_state& foo) {
 	TOKEN_UPDATE(foo);
 }
 
+static inline void
+PSTRING_TYPE_UPDATE(YYSTYPE& hackt_lval, const lexer_state& foo) {
+	hackt_lval._token_pstring_type = new token_pstring_type(yytext);
+	TOKEN_UPDATE(foo);
+}
+
 /***
 static inline void
 MULTICHAR_UPDATE(const lexer_state& foo) {
@@ -444,6 +450,7 @@ BOOL_TYPE	"bool"
 PINT_TYPE	"pint"
 PBOOL_TYPE	"pbool"
 PREAL_TYPE	"preal"
+PSTRING_TYPE	"pstring"
 CHANNEL		"chan"
 TRUE		"true"
 FALSE		"false"
@@ -694,6 +701,7 @@ EMBEDFILE	^#FILE
 {PINT_TYPE}	{ PINT_TYPE_UPDATE(*hackt_lval, foo); return PINT_TYPE; }
 {PBOOL_TYPE}	{ PBOOL_TYPE_UPDATE(*hackt_lval, foo); return PBOOL_TYPE; }
 {PREAL_TYPE}	{ PREAL_TYPE_UPDATE(*hackt_lval, foo); return PREAL_TYPE; }
+{PSTRING_TYPE}	{ PSTRING_TYPE_UPDATE(*hackt_lval, foo); return PSTRING_TYPE; }
 {TRUE}		{ BOOL_UPDATE(*hackt_lval, foo); return BOOL_TRUE; }
 {FALSE}		{ BOOL_UPDATE(*hackt_lval, foo); return BOOL_FALSE; }
 {EXTERN}	{ LINKAGE_UPDATE(*hackt_lval, foo); return EXTERN; }

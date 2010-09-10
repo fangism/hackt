@@ -1,0 +1,15 @@
+// "133.hac"
+// copy-modified from "132.hac"
+// testing string template parameters
+
+pstring names[2][2];
+names = {{"Wayne", "Xavier"}, {"Yvonne", "Zoey"}};
+
+template <><pstring tag[2]>
+defproc foo() {
+}
+
+foo bar[2];
+bar[0]<names[0]>;
+bar[1]<names[1]>;
+

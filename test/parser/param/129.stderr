@@ -1,0 +1,5 @@
+Can't append a pstring-const to a agg.-pint-val-ref.  
+Error appending aggregate value reference at position 2.
+Error building aggregate value reference.  [7:8..22]
+Error in source expression.
+HALT: at least one error in the assignment list.  [7:1..22]

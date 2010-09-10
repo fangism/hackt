@@ -1,0 +1,4 @@
+// "pstring-01.hac"
+
+pstring greeting = "Hello, world!";
+

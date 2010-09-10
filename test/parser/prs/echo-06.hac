@@ -1,0 +1,15 @@
+// "echo-06.hac"
+// copy-modified from "echo-05.hac"
+// cflat this
+
+defproc echo(bool p, q, r, s, z) {
+prs {
+	echo<3,2,1,"zero">(p, q)
+	echo<"can has ","cheezburger">(r, s)	// string parameter
+	(p & q) | (r & s)	-> z-
+	~((p & q) | (r & s))	-> z+
+}
+}
+
+echo	E;
+

@@ -1,0 +1,8 @@
+// "126.hac"
+// testing string parameters
+
+pint foo[2];
+foo = {13,14};
+pstring bar[2];
+bar = {"Hello, ", "world!" };
+

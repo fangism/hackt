@@ -1,0 +1,15 @@
+// "rename-14.hac"
+// copy-modified from "rename-13.hac"
+// testing template string parameter forwarding
+
+template <><pstring name>
+defproc foo(bool x, y) {
+prs {
+	x<;label=name> -> y-	// disambiguated
+	// spice FET should be named M:bar
+}
+}
+
+foo baz<"bar">;
+foo burp<"BAM">;
+

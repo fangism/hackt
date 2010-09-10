@@ -1,0 +1,13 @@
+// "rename-13.hac"
+// testing template string parameter forwarding
+
+template <><pstring name>
+defproc foo(bool x, y) {
+prs {
+	x<;name> -> y-	// interprets 'name' as an attribute key... ambiguity
+	// expect compile-fail
+}
+}
+
+foo baz<"bar">;
+
