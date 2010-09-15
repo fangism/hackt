@@ -3,7 +3,7 @@
 	Definitions and instantiations for built-ins of the HAC language.  
 	Includes static globals.  
 	This file used to be "Object/art_built_ins.cc".
- 	$Id: class_traits_types.cc,v 1.21.46.1 2010/09/08 21:14:32 fang Exp $
+ 	$Id: class_traits_types.cc,v 1.21.46.2 2010/09/15 00:57:56 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_CLASS_TRAITS_TYPES_CC__
@@ -34,6 +34,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/traits/value_traits.h"
 #include "Object/traits/bool_traits.h"
 #include "Object/traits/int_traits.h"
+#include "Object/traits/real_traits.h"
 #include "Object/traits/string_traits.h"
 #include "Object/traits/node_traits.h"
 
@@ -127,6 +128,10 @@ const built_in_datatype_def
 int_traits::built_in_definition = built_in_datatype_def(
 	never_ptr<const name_space>(&built_in_namespace), "int");
 
+const built_in_datatype_def
+real_traits::built_in_definition = built_in_datatype_def(
+	never_ptr<const name_space>(&built_in_namespace), "real");
+
 
 static const count_ptr<const pint_const>
 int_def_width_default(new pint_const(32));
@@ -211,6 +216,13 @@ int_traits::magic_int_type_ptr(data_type_reference::make_quick_int_type_ref(0));
 
 const count_ptr<const data_type_reference>&
 int_traits::nonmeta_data_type_ptr(magic_int_type_ptr);
+
+const real_traits::type_ref_ptr_type
+real_traits::built_in_type_ptr(new data_type_reference(
+	never_ptr<const built_in_datatype_def>(&built_in_definition)));
+
+const real_traits::type_ref_ptr_type&
+real_traits::nonmeta_data_type_ptr(built_in_type_ptr);
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const built_in_datatype_def

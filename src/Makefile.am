@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.245.2.1 2010/09/08 21:14:13 fang Exp $
+#	$Id: Makefile.am,v 1.245.2.2 2010/09/15 00:57:46 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -663,6 +663,9 @@ OBJECT_CC_FILES = \
 	Object/expr/channel_probe.cc \
 	Object/expr/dlfunction.cc \
 	Object/expr/nonmeta_func_call.cc \
+	Object/expr/meta_func_call.cc \
+	Object/expr/meta_func_lib.cc \
+	Object/expr/meta_call_traits.cc \
 	Object/def/template_formals_manager.cc \
 	Object/def/port_formals_manager.cc \
 	Object/def/footprint.cc \
@@ -1097,6 +1100,7 @@ nobase_pkginclude_HEADERS += \
 	Object/expr/types.h \
 	Object/expr/dlfunction_fwd.h \
 	Object/expr/dlfunction.h \
+	Object/expr/meta_call_traits.h \
 	sim/chpsim/chpsim_dlfunction.h
 
 guile/libhackt-wrap.hchk: guile/libhackt-wrap.h

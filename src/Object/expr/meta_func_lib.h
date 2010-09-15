@@ -1,26 +1,28 @@
 /**
-	\file "Object/expr/dlfunction.h"
-	Header that defines API for linking chpsim to external,
-	dynamically loaded functions.  
-	This header should be installed.  
-	Since these symbols are bound in the executable 
-	(or its shared libraries), the executable needs to be linked 
-	-export-dynamic.  
-	$Id: dlfunction.h,v 1.4.54.1 2010/09/15 00:57:50 fang Exp $
+	\file "Object/expr/meta_func_lib.h"
+	Meta-functions can be dynamically added.
+	This header should be installed (eventually).  
+	$Id: meta_func_lib.h,v 1.1.2.1 2010/09/15 00:57:54 fang Exp $
  */
 
-#ifndef	__HAC_OBJECT_EXPR_DLFUNCTION_H__
-#define	__HAC_OBJECT_EXPR_DLFUNCTION_H__
+#ifndef	__HAC_OBJECT_EXPR_META_FUNC_LIB_H__
+#define	__HAC_OBJECT_EXPR_META_FUNC_LIB_H__
 
 #include <iosfwd>
 #include <string>
-// installed development headers should ideally not require any "config.h"
 #include "Object/expr/dlfunction_fwd.h"
+	// eventually reduce this include to forward declarations and typedefs
 #include "Object/expr/types.h"
-// #include "util/attributes.h"		// bah!
+
+/**
+	Until we support adding functionality through plug-in modules, 
+	we privatize this interface.
+ */
+#define	LOADABLE_META_FUNCTIONS			0
 
 namespace HAC {
 namespace entity {
+#if LOADABLE_META_FUNCTIONS
 /**
 	This binds names to function symbols from dlopened modules.  
 	Loaders should call this in their init() routines, 
@@ -29,7 +31,8 @@ namespace entity {
  */
 extern
 int
-register_chpsim_function(const std::string&, const chp_dlfunction_ptr_type);
+register_meta_function(const std::string&, const meta_function_ptr_type);
+#endif
 
 // Q: do we ever want to un-register functions?
 
@@ -38,18 +41,18 @@ register_chpsim_function(const std::string&, const chp_dlfunction_ptr_type);
 	Helper class for automatically registering function
 	upon dlopening of a module.  
  */
-class chp_function_registrar {
+class meta_function_registrar {
 public:
 	/**
 		\throw exception on failure.
 	 */
-	chp_function_registrar(const std::string&, 
-		const chp_dlfunction_ptr_type);
+	meta_function_registrar(const std::string&, 
+		const meta_function_ptr_type);
 
-	chp_function_registrar(const std::string&, 
-		chp_dlfunction_type* const);
+	meta_function_registrar(const std::string&, 
+		meta_function_type* const);
 
-	~chp_function_registrar();
+	~meta_function_registrar();
 
 } /* __ATTRIBUTE_UNUSED__ */ ;
 
@@ -60,20 +63,22 @@ public:
 	The lookup counterpart.  
  */
 extern
-chp_dlfunction_ptr_type
-lookup_chpsim_function(const std::string&);
+meta_function_ptr_type
+lookup_meta_function(const std::string&);
 
 extern
 void
-list_chpsim_functions(std::ostream&);
+list_meta_functions(std::ostream&);
 
+#if 0
 extern
 bool
 ack_loaded_functions;
+#endif
 
 //=============================================================================
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __HAC_OBJECT_EXPR_DLFUNCTION_H__
+#endif	// __HAC_OBJECT_EXPR_META_FUNC_LIB_H__
 

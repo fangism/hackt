@@ -1,7 +1,7 @@
 /**
 	\file "Object/expr/expr_fwd.h"
 	Forward declarations of all expression-related classes.  
-	$Id: expr_fwd.h,v 1.8.54.1 2010/09/08 21:14:20 fang Exp $
+	$Id: expr_fwd.h,v 1.8.54.2 2010/09/15 00:57:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_EXPR_FWD_H__
@@ -121,8 +121,10 @@ namespace entity {
 		bool_return_cast_expr;
 	typedef	nonmeta_cast_expr<int_expr, nonmeta_func_call>
 		int_return_cast_expr;
-//	typedef	nonmeta_cast_expr<real_expr, nonmeta_func_call>
-//		real_return_cast_expr;
+	typedef	nonmeta_cast_expr<real_expr, nonmeta_func_call>
+		real_return_cast_expr;
+	typedef	nonmeta_cast_expr<string_expr, nonmeta_func_call>
+		string_return_cast_expr;
 
 }	// end namespace entity
 }	// end namespace HAC

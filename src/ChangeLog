@@ -3,6 +3,23 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-09-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-23-string-01-03:
+	  Actually implemented meta-functions in extendable library, 
+		Object/expr/meta_func_lib.cc.  Function wrappers are 
+		practically identical to existing CHP function interface.
+	  Object/persistent_type_hash.h: added META_FUNCTION_CALL
+		and STRING_RETURN_CAST_EXPR.
+	  Added missing class_traits for real_tag and string_tag.
+	  Re-factored code from Object/expr/dlfunction.h and 
+		sim/chpsim/chpsim_dlfunction.h into 
+		Object/expr/meta_call_traits.*
+		renamed some former chp utilities to meta* utilities.
+	  Regression tests are clean!  No new tests.
+	  Next: finish meta_func_call::make_param_expression_assignment().
+
+
 2010-09-09	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-23-string-01-02:

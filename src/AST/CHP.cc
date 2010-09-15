@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.cc"
 	Class method definitions for CHP parser classes.
-	$Id: CHP.cc,v 1.28 2010/04/30 18:41:36 fang Exp $
+	$Id: CHP.cc,v 1.28.4.1 2010/09/15 00:57:48 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_chp.cc,v 1.21.20.1 2005/12/11 00:45:03 fang Exp
  */
@@ -34,9 +34,11 @@
 #include "Object/expr/channel_probe.h"
 #include "Object/expr/preal_expr.h"
 #include "Object/expr/convert_expr.h"
+#include "Object/expr/meta_func_call.h"
 #include "Object/expr/nonmeta_func_call.h"
 #include "Object/expr/nonmeta_cast_expr.h"
 #include "Object/expr/nonmeta_expr_list.h"
+#include "Object/expr/dynamic_param_expr_list.h"
 #include "Object/ref/data_nonmeta_instance_reference.h"
 #include "Object/ref/nonmeta_instance_reference_subtypes.h"
 #include "Object/traits/bool_traits.h"
@@ -120,8 +122,10 @@ using entity::data_type_reference;
 using entity::pint_scalar;
 using entity::meta_loop_base;
 using entity::convert_pint_to_preal_expr;
+using entity::dynamic_param_expr_list;
 using entity::nonmeta_expr_list;
 using entity::nonmeta_func_call;
+using entity::meta_func_call;
 
 //=============================================================================
 // class probe_expr method definitions
@@ -1605,14 +1609,37 @@ function_call_expr::__check_action(context& c) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Meta-parameter function.
  */
 expr::meta_return_type
 function_call_expr::check_meta_expr(const context& c) const {
+#if 0
 	ICE_NEVER_CALL(cerr);
 	return expr::meta_return_type(NULL);
+#else
+	// check function name against registry
+	const qualified_id& id(*fname->get_id());
+	INVARIANT(!id.empty());
+	std::ostringstream fname_str;
+	fname_str << id;
+	const string& fn(fname_str.str());
+	// construct bottom-up
+	expr_list::checked_meta_exprs_type tmp;
+	args->postorder_check_meta_exprs(tmp, c);
+	expr_list::checked_meta_exprs_type::const_iterator
+		i(tmp.begin()), e(tmp.end());
+	count_ptr<dynamic_param_expr_list>
+		ra(new dynamic_param_expr_list);
+	copy(i, e, back_inserter(*ra));
+	const expr::meta_return_type ret(new meta_func_call(fn, ra));
+	return ret;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This would have to be a macro-function expansion.
+ */
 prs_expr_return_type
 function_call_expr::check_prs_expr(context& c) const {
 	ICE_NEVER_CALL(cerr);

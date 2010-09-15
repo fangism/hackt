@@ -1,6 +1,6 @@
 /**
 	\file "Object/expr/dlfunction.cc"
-	$Id: dlfunction.cc,v 1.4.54.1 2010/09/08 21:14:20 fang Exp $
+	$Id: dlfunction.cc,v 1.4.54.2 2010/09/15 00:57:50 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE	0
@@ -14,10 +14,9 @@
 #include "Object/expr/preal_const.h"
 #include "Object/expr/pstring_const.h"
 // #include "Object/expr/const_collection.h"
-#include "common/ltdl-wrap.h"
+#include "common/ltdl-wrap.h"	// not actually needed
 #include "util/macros.h"
 #include "util/memory/count_ptr.h"
-// #include "util/memory/count_ptr.tcc"
 #include "util/memory/excl_ptr.h"
 #include "util/stacktrace.h"
 
@@ -43,120 +42,6 @@ chp_func_map_type			chp_function_map;
 bool
 ack_loaded_functions = true;
 
-//=============================================================================
-/**
-	\throw a bad_cast on type-check failure.
- */
-int_value_type
-extract_int(const const_param& p) {
-try {
-	return IS_A(const pint_const&, p).static_constant_value();
-} catch (std::bad_cast& e) {
-	p.what(cerr << "Run-time error: expecting int, but got ") << endl;
-	throw;		// re-throw
-}
-}
-
-bool_value_type
-extract_bool(const const_param& p) {
-try {
-	return IS_A(const pbool_const&, p).static_constant_value();
-} catch (std::bad_cast& e) {
-	p.what(cerr << "Run-time error: expecting bool, but got ") << endl;
-	throw;		// re-throw
-}
-}
-
-real_value_type
-extract_real(const const_param& p) {
-try {
-	return IS_A(const preal_const&, p).static_constant_value();
-} catch (std::bad_cast& e) {
-	p.what(cerr << "Run-time error: expecting real, but got ") << endl;
-	throw;		// re-throw
-}
-}
-
-string_value_type
-extract_string(const const_param& p) {
-try {
-	return IS_A(const pstring_const&, p).static_constant_value();
-} catch (std::bad_cast& e) {
-	p.what(cerr << "Run-time error: expecting string, but got ") << endl;
-	throw;		// re-throw
-}
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-template <>
-int_value_type
-extract_chp_value<int_value_type>(const chp_function_const_argument_type& v) {
-	if (v)
-		return extract_int(*v);
-	else {
-		cerr << "Error extracting int from NULL argument." << endl;
-		THROW_EXIT;
-	}
-}
-
-template <>
-bool_value_type
-extract_chp_value<bool_value_type>(const chp_function_const_argument_type& v) {
-	if (v)
-		return extract_bool(*v);
-	else {
-		cerr << "Error extracting bool from NULL argument." << endl;
-		THROW_EXIT;
-	}
-}
-
-template <>
-real_value_type
-extract_chp_value<real_value_type>(const chp_function_const_argument_type& v) {
-	if (v)
-		return extract_real(*v);
-	else {
-		cerr << "Error extracting real from NULL argument." << endl;
-		THROW_EXIT;
-	}
-}
-
-template <>
-string_value_type
-extract_chp_value<string_value_type>(
-		const chp_function_const_argument_type& v) {
-	if (v)
-		return extract_string(*v);
-	else {
-		cerr << "Error extracting string from NULL argument." << endl;
-		THROW_EXIT;
-	}
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-chp_function_return_type
-make_chp_value(const int_value_type v) {
-	STACKTRACE_VERBOSE;
-	return chp_function_return_type(new pint_const(v));
-}
-
-chp_function_return_type
-make_chp_value(const bool_value_type v) {
-	STACKTRACE_VERBOSE;
-	return chp_function_return_type(new pbool_const(v));
-}
-
-chp_function_return_type
-make_chp_value(const real_value_type v) {
-	STACKTRACE_VERBOSE;
-	return chp_function_return_type(new preal_const(v));
-}
-
-chp_function_return_type
-make_chp_value(const string_value_type& v) {
-	STACKTRACE_VERBOSE;
-	return chp_function_return_type(new pstring_const(v));
-}
 
 //=============================================================================
 chp_function_registrar::chp_function_registrar(

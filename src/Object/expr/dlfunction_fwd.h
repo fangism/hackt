@@ -1,7 +1,7 @@
 /**
 	\file "Object/expr/dlfunction_fwd.h"
 	Forward declarations of types. 
-	$Id: dlfunction_fwd.h,v 1.2 2007/08/28 04:54:06 fang Exp $
+	$Id: dlfunction_fwd.h,v 1.2.54.1 2010/09/15 00:57:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_DLFUNCTION_FWD_H__
@@ -18,23 +18,28 @@ using util::memory::never_ptr;
 class const_param;
 class const_param_expr_list;
 
-typedef	count_ptr<const_param>		chp_function_argument_type;
-typedef	count_ptr<const const_param>	chp_function_const_argument_type;
-typedef	count_ptr<const const_param>	chp_function_return_type;
-typedef	const_param_expr_list		chp_function_argument_list_type;
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+typedef	count_ptr<const_param>		meta_function_argument_type;
+typedef	count_ptr<const const_param>	meta_function_const_argument_type;
+typedef	count_ptr<const const_param>	meta_function_return_type;
 
-typedef
-chp_function_return_type
-(chp_dlfunction_type) (const chp_function_argument_list_type&);
-
+// functions are evaluated after their arguments have been resolved to consts
+typedef	const_param_expr_list		meta_function_argument_list_type;
+typedef	meta_function_return_type
+        (meta_function_type)(const meta_function_argument_list_type&);
 // using pointer-class will guarantee that value is at least NULL-initialized
-// typedef	chp_dlfunction_type*		chp_dlfunction_ptr_type;
-typedef	never_ptr<chp_dlfunction_type>		chp_dlfunction_ptr_type;
+typedef	never_ptr<const meta_function_type>	meta_function_ptr_type;
 
-class chp_function_registrar;
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// CHP functions use the exact same
 
-template <class T>
-struct chp_call_traits;
+typedef	meta_function_argument_type		chp_function_argument_type;
+typedef	meta_function_const_argument_type	chp_function_const_argument_type;
+typedef	meta_function_return_type		chp_function_return_type;
+typedef	meta_function_argument_list_type	chp_function_argument_list_type;
+
+typedef meta_function_type			chp_dlfunction_type;
+typedef meta_function_ptr_type			chp_dlfunction_ptr_type;
 
 //=============================================================================
 }	// end namespace entity

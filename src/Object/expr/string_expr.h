@@ -1,6 +1,6 @@
 /**
 	\file "Object/expr/string_expr.h"
-	$Id: string_expr.h,v 1.2.54.1 2010/09/08 21:14:24 fang Exp $
+	$Id: string_expr.h,v 1.2.54.2 2010/09/15 00:57:54 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_STRING_EXPR_H__
@@ -27,6 +27,8 @@ class const_param;
 class string_expr : public data_expr {
 	typedef	string_expr			this_type;
 	typedef	data_expr			parent_type;
+public:
+	typedef	pstring_const			const_expr_type;
 protected:
 	string_expr() { }
 public:

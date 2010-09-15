@@ -2,7 +2,7 @@
 	\file "Object/expr/data_expr.cc"
 	Implementation of data expression classes.  
 	NOTE: file was moved from "Object/art_object_data_expr.cc"
-	$Id: data_expr.cc,v 1.19.54.1 2010/09/08 21:14:19 fang Exp $
+	$Id: data_expr.cc,v 1.19.54.2 2010/09/15 00:57:49 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -20,6 +20,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/int_range_expr.h"
 #include "Object/expr/real_expr.h"
 #include "Object/expr/enum_expr.h"
+#include "Object/expr/string_expr.h"
 #include "Object/expr/struct_expr.h"
 #include "Object/expr/nonmeta_expr_functor.h"
 #include "Object/expr/nonmeta_expr_list.h"
@@ -32,7 +33,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/pint_const.h"
 #include "Object/expr/pbool_const.h"
 #include "Object/expr/preal_const.h"
-#include "Object/expr/string_expr.h"
+#include "Object/expr/pstring_const.h"
 #include "Object/expr/loop_nonmeta_expr.tcc"
 #include "Object/expr/nonmeta_cast_expr.tcc"
 #include "Object/expr/nonmeta_func_call.h"
@@ -44,6 +45,8 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/type/canonical_generic_datatype.h"
 #include "Object/traits/bool_traits.h"
 #include "Object/traits/int_traits.h"
+#include "Object/traits/real_traits.h"
+#include "Object/traits/string_traits.h"
 
 #include "common/TODO.h"
 
@@ -69,6 +72,8 @@ using HAC::entity::int_arith_loop_expr;
 using HAC::entity::bool_logical_loop_expr;
 using HAC::entity::bool_return_cast_expr;
 using HAC::entity::int_return_cast_expr;
+using HAC::entity::real_return_cast_expr;
+using HAC::entity::string_return_cast_expr;
 
 	SPECIALIZE_UTIL_WHAT(int_arith_expr, "int-arith-expr")
 	SPECIALIZE_UTIL_WHAT(int_relational_expr, "int-relatonal-expr")
@@ -107,6 +112,10 @@ using HAC::entity::int_return_cast_expr;
 		bool_return_cast_expr, BOOL_RETURN_CAST_EXPR_TYPE_KEY, 0)
 	SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 		int_return_cast_expr, INT_RETURN_CAST_EXPR_TYPE_KEY, 0)
+	SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+		real_return_cast_expr, REAL_RETURN_CAST_EXPR_TYPE_KEY, 0)
+	SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+		string_return_cast_expr, STRING_RETURN_CAST_EXPR_TYPE_KEY, 0)
 }	// end namespace util
 
 namespace HAC {
@@ -1745,6 +1754,8 @@ template class loop_nonmeta_expr<bool_logical_expr>;
 
 template class nonmeta_cast_expr<int_expr, nonmeta_func_call>;
 template class nonmeta_cast_expr<bool_expr, nonmeta_func_call>;
+template class nonmeta_cast_expr<real_expr, nonmeta_func_call>;
+template class nonmeta_cast_expr<string_expr, nonmeta_func_call>;
 
 //=============================================================================
 }	// end namespace entity

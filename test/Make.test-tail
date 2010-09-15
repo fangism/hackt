@@ -3,7 +3,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.100 2010/05/13 21:47:56 fang Exp $
+#	$Id: Make.test-tail,v 1.100.4.1 2010/09/15 00:58:02 fang Exp $
 
 # for test that depend on pre-install plug-ins
 # don't forget to pass -dlopen to assist searching for pre-install dependencies
@@ -46,9 +46,7 @@ EXTRACT_DLOPEN_EXTRA_SCRIPT = \
 	  if { $(ECHO) $$d | $(GREP) -q "\.la" ;} ; then \
 	    dlopen_extra="$$dlopen_extra -dlopen $$d" ; \
 	  fi ; \
-	  dlopen_extra=`$(ECHO) "$$dlopen_extra" | $(SED) \
-	    -e 's|\$$(top_builddir)|$(top_builddir)|g' \
-	    -e 's|\$$(builddir)|$(builddir)|g'` ; \
+	  dlopen_extra=`$(ECHO) "$$dlopen_extra" | $(BUILDDIR_SUBST)` ; \
 	done
 # also substitutes a few $(variables)
 

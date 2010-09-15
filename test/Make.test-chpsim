@@ -1,6 +1,6 @@
 # "Make.test-chpsim"
 #	vi: ft=automake
-#	$Id: Make.test-chpsim,v 1.29 2010/04/07 00:13:10 fang Exp $
+#	$Id: Make.test-chpsim,v 1.29.4.1 2010/09/15 00:58:02 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -17,7 +17,8 @@ CHPSIMCKPT_LOAD_TEMPLATE_SCRIPT = $(TEST_SRCDIR)/chpsimckpt-load-template.chpsim
 
 # pipe for extracting dlopen modules and paths from chpsimrc script
 # these arguments are passed to chpsim
-EXTRACT_CHPSIM_MODULES_PIPE = $(GREP) "@module@" | $(SED) 's/^.*@module@//g'
+EXTRACT_CHPSIM_MODULES_PIPE = $(GREP) "@module@" | $(SED) 's/^.*@module@//g' | \
+	$(BUILDDIR_SUBST)
 EXTRACT_HACCHPSIM_FLAGS_PIPE = $(GREP) "@hacchpsim-flags@" | $(HEAD) -n1 | \
 	$(SED) 's/^.*@hacchpsim-flags@[ ]*//g'
 
@@ -132,19 +133,19 @@ AUTO_DEPENDS += chpsimalloctest.autodepend
 # for extracting libs to pre-dlopen, use @deps@ instead of @modules@
 # because @deps@ references by path.  seems to be needed on darwin10
 CHPSIMRC_TEST_SCRIPT = \
-	obj=`$(CAT) $< | $(EXTRACT_HACO_PIPE)` ; \
-	mods=`$(CAT) $< | $(EXTRACT_CHPSIM_MODULES_PIPE)` ; \
-	deps=`$(CAT) $< | $(EXTRACT_DEPS_PIPE)` ; \
-	flags=`$(CAT) $< | $(EXTRACT_HACCHPSIM_FLAGS_PIPE)` ; \
-	ckpt=`$(ECHO) $@ | $(SED) 's/\.chpsim.*$$/.chpsimckpt/g'` ; \
-	trace=`$(ECHO) $@ | $(SED) 's/\.chpsim.*$$/.chpsimtrace/g'` ; \
-	$(RM) $$ckpt $$trace ; \
-	$(EXTRACT_DLOPEN_EXTRA_SCRIPT) ; \
-	autotrace=1 ; \
+	obj=`$(CAT) $< | $(EXTRACT_HACO_PIPE)` && \
+	mods=`$(CAT) $< | $(EXTRACT_CHPSIM_MODULES_PIPE)` && \
+	deps=`$(CAT) $< | $(EXTRACT_DEPS_PIPE)` && \
+	flags=`$(CAT) $< | $(EXTRACT_HACCHPSIM_FLAGS_PIPE)` && \
+	ckpt=`$(ECHO) $@ | $(SED) 's/\.chpsim.*$$/.chpsimckpt/g'` && \
+	trace=`$(ECHO) $@ | $(SED) 's/\.chpsim.*$$/.chpsimtrace/g'` && \
+	$(RM) $$ckpt $$trace && \
+	$(EXTRACT_DLOPEN_EXTRA_SCRIPT) && \
+	autotrace=1 && \
 	$(CHPSIMRC_AUTOTRACE_DISABLE_HOOK) \
 	if test "$$autotrace" = 1 ; then traceflag="-r $$trace" ; fi ; \
-	cmd="$(HACKT_CHPSIM_EXE) -b $(AM_HACCHPSIM_FLAGS) -a $$ckpt $$traceflag $$flags $$mods $$obj" ; \
-	$(ECHO) "ckpt: $$cmd < $<" ; \
+	cmd="$(HACKT_CHPSIM_EXE) -b $(AM_HACCHPSIM_FLAGS) -a $$ckpt $$traceflag $$flags $$mods $$obj" && \
+	$(ECHO) "ckpt: $$cmd < $<" && \
 	$(SED) 's|SOURCE|$<|g' $(CHPSIMCKPT_TEMPLATE_SCRIPT) | \
 	  $$cmd > $@ 2>&1 && \
 	test -f $$ckpt || $(ECHO) "Warning: $$ckpt not produced." ; \
@@ -154,13 +155,13 @@ CHPSIMRC_TEST_SCRIPT = \
 
 # the same until we add checkpointing to the pass test
 CHPSIMRC_FAIL_TEST_SCRIPT = \
-	obj=`$(CAT) $< | $(EXTRACT_HACO_PIPE)` ; \
-	mods=`$(CAT) $< | $(EXTRACT_CHPSIM_MODULES_PIPE)` ; \
-	deps=`$(CAT) $< | $(EXTRACT_DEPS_PIPE)` ; \
-	flags=`$(CAT) $< | $(EXTRACT_HACCHPSIM_FLAGS_PIPE)` ; \
-	$(EXTRACT_DLOPEN_EXTRA_SCRIPT) ; \
-	cmd="$(HACKT_CHPSIM_EXE) -b $(AM_HACCHPSIM_FLAGS) $$flags $$mods $$obj" ; \
-	$(ECHO) "$$cmd < $<" ; \
+	obj=`$(CAT) $< | $(EXTRACT_HACO_PIPE)` && \
+	mods=`$(CAT) $< | $(EXTRACT_CHPSIM_MODULES_PIPE)` && \
+	deps=`$(CAT) $< | $(EXTRACT_DEPS_PIPE)` && \
+	flags=`$(CAT) $< | $(EXTRACT_HACCHPSIM_FLAGS_PIPE)` && \
+	$(EXTRACT_DLOPEN_EXTRA_SCRIPT) && \
+	cmd="$(HACKT_CHPSIM_EXE) -b $(AM_HACCHPSIM_FLAGS) $$flags $$mods $$obj" && \
+	$(ECHO) "$$cmd < $<" && \
 	$$cmd < $< > $@ 2>&1
 
 # without generating checkpoint

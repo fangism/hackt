@@ -1,7 +1,7 @@
 /**
 	\file "Object/traits/real_traits.h"
 	Traits and policies for data type reals.  
-	$Id: real_traits.h,v 1.3 2008/10/05 23:00:32 fang Exp $
+	$Id: real_traits.h,v 1.3.30.1 2010/09/15 00:57:57 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_REAL_TRAITS_H__
@@ -107,18 +107,8 @@ struct class_traits<real_tag> {
 		as integers are instantiated.
 	 */
 	static const built_in_datatype_def	built_in_definition;
-
-	/**
-		One hard-coded copy of the default integer pointer type.  
-		This built-in type pointer is not a substitute
-		for 'built_in_type_ptr' because the definition is a template.  
-	 */
-	static const type_ref_ptr_type		int32_type_ptr;
-
-	/**
-		Unresolved data type.
-	 */
-	static const type_ref_ptr_type		nonmeta_data_type_ptr;
+	static const type_ref_ptr_type		built_in_type_ptr;
+	static const type_ref_ptr_type&		nonmeta_data_type_ptr;
 };	// end struct class_traits<real_tag>
 
 //=============================================================================

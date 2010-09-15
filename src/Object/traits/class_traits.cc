@@ -2,7 +2,7 @@
 	\file "Object/traits/class_traits.cc"
 	Traits and policy classes for instances.  
 	This file used to be "Object/art_object_classification_details.cc".
-	$Id: class_traits.cc,v 1.11.46.1 2010/09/08 21:14:29 fang Exp $
+	$Id: class_traits.cc,v 1.11.46.2 2010/09/15 00:57:55 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_CLASS_TRAITS_CC__
@@ -27,6 +27,12 @@ class_traits<bool_tag>::tag_name[] = "bool";
 
 const char
 class_traits<enum_tag>::tag_name[] = "enum";
+
+const char
+class_traits<real_tag>::tag_name[] = "real";
+
+const char
+class_traits<string_tag>::tag_name[] = "string";
 
 const char
 class_traits<datastruct_tag>::tag_name[] = "struct";

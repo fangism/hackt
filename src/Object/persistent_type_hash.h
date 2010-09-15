@@ -18,7 +18,9 @@
  *	and specific to each module.  
  *	As a convention, all enumerations are suffixed with _TYPE_KEY.  
  *
- *	$Id: persistent_type_hash.h,v 1.31.4.1 2010/09/08 21:14:14 fang Exp $
+ *	TODO: optionally, use gperf to generate a fast perfect hash.
+ *
+ *	$Id: persistent_type_hash.h,v 1.31.4.2 2010/09/15 00:57:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_PERSISTENT_TYPE_HASH_H__
@@ -195,6 +197,7 @@
 #define	PINT_ARITH_LOOP_EXPR_TYPE_KEY				"piarthlp"
 #define	PBOOL_LOGICAL_LOOP_EXPR_TYPE_KEY			"pblogclp"
 #define	PREAL_ARITH_LOOP_EXPR_TYPE_KEY				"prarthlp"
+#define	META_FUNCTION_CALL_TYPE_KEY				"pmfuncex"
 
 	// convert expressions
 #define	CONVERT_PINT_TO_PREAL_EXPR_TYPE_KEY			"cnvtpipr"
@@ -202,6 +205,7 @@
 #define	BOOL_RETURN_CAST_EXPR_TYPE_KEY				"bretcast"
 #define	INT_RETURN_CAST_EXPR_TYPE_KEY				"iretcast"
 #define	REAL_RETURN_CAST_EXPR_TYPE_KEY				"rretcast"
+#define	STRING_RETURN_CAST_EXPR_TYPE_KEY			"sretcast"
 
 // nonmeta expressions
 #define	NONMETA_INT_ARITH_EXPR_TYPE_KEY				"narithex"
