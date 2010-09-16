@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.40 2010/08/24 18:08:38 fang Exp $
+	$Id: footprint.h,v 1.41 2010/09/16 06:31:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
@@ -378,7 +378,7 @@ public:
 	// index is 0-based
 	template <class Tag>
 	const state_instance<Tag>&
-	get_instance(const size_t, const bool t = true) const;
+	get_instance(const size_t) const;
 
 #if 0
 	good_bool
@@ -494,6 +494,10 @@ public:
 	void
 	set_global_offset_by_process(global_offset&, const size_t) const;
 
+	// zero-out the count of top-level ports
+	void
+	zero_top_level_ports(void);
+
 private:
 	good_bool
 	expand_unique_subinstances(void);
@@ -523,8 +527,7 @@ public:
 	void
 	collect_aliases_recursive(const size_t, 
 		const dump_flags&, 
-		set<string>&, 
-		const bool is_top = true) const;
+		set<string>&) const;
 
 	void
 	collect_aliases_recursive(const global_indexed_reference&,

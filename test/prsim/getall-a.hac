@@ -1,0 +1,7 @@
+// "getall-a.hac"
+// bug test case
+
+import "getall-a-def.hac";
+
+wrapper foo;
+

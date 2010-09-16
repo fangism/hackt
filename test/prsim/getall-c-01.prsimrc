@@ -1,0 +1,9 @@
+# "getall-c-01.prsimrc"
+# should be same as getall-a-02.prsimrc
+# @haco@ getall-c.haco-c
+
+ls .
+ls left
+getall left
+getall right
+

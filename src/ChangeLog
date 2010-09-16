@@ -3,6 +3,24 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-09-15	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-25:
+	  Critical bug fix: hacprsim 'getall' command returned
+		incorrect lists when invoked with -t TYPE option.
+		This was fixed by forcibly zero-ing out the number
+		of ports in the footprint of the chosen type, 
+		so the definitions's port formals are effectively
+		treated as top-level locals.  
+		This greatly simplifies code in many places
+		of global_entry_context that used to special-case
+		actions depending on whether or not context was 
+		at the top-level footprint.  Now, the top level actions
+		are indistinguishable from non-top level hierarchy.
+	  Added some test cases to prsim, using getall with -t TYPE.
+	  Closes ACX-PR-5810.
+
+
 2010-09-10	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-24:

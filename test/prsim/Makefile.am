@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.114 2010/09/08 00:03:00 fang Exp $
+#	$Id: Makefile.am,v 1.115 2010/09/16 06:31:46 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -73,7 +73,8 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	non-CMOS-a non-CMOS-b \
 	always_random-a \
 	relaxed-a relaxed-b \
-	completion_test
+	completion_test \
+	getall-a getall-a-def getall-b getall-c
 
 # TODO: more cross-coupled test cases
 # SRAM cell
@@ -94,6 +95,9 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	relaxed-a-01 \
 	relaxed-b-01 \
 	getlocal-01 getlocal-02 getlocal-03 \
+	getall-a-01 getall-a-02 \
+	getall-b-01 \
+	getall-c-01 \
 	getports-01 \
 	seed48-01 seed48-02 seed48-03 \
 	celem-01 celem-02 celem-03 celem-04 \
@@ -492,10 +496,14 @@ EXTRA_DIST += cbit_test_stat-01.prsimrc gen_cbit_test.awk
 # NOTE: expr-limit-a-01 should fail before limit was increased beyond 255
 
 HACKT_CREATE_TEST_PASSES = \
+	getall-a getall-b getall-c \
 	large_OR_fanin
 
 HACKT_CREATE_TEST_FAILURES = \
 	expr-limit-b
+
+HACKT_ALLOC_TEST_PASSES = \
+	getall-a getall-b getall-c
 
 HACKT_CFLAT_TEST_SUBJECTS = \
 	large_OR_fanin

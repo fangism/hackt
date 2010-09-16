@@ -1,0 +1,6 @@
+# "getall-b-01.prsimrc"
+# @haco@ getall-b.haco-c
+
+getall wheat.left
+getall wheat.right
+

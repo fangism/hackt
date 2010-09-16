@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry_context.cc"
-	$Id: global_entry_context.cc,v 1.8 2010/08/24 21:05:40 fang Exp $
+	$Id: global_entry_context.cc,v 1.9 2010/09/16 06:31:42 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -74,7 +74,6 @@ bool
 global_entry_context::at_top(void) const {
 	return (topfp == fpf->_footprint);
 }
-
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -197,7 +196,7 @@ if (gpid) {
 	g = delta;
 }
 	// else refers to top-level
-}
+}	// end global_entry_context::construct_global_footprint_frame
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -534,7 +533,6 @@ global_entry_context::visit_local(const footprint& f,
 #endif
 	const typename state_instance<Tag>::pool_type&
 		_pool(f.template get_instance_pool<Tag>());
-	const bool is_top = at_top();
 	// construct context (footprint_frame)
 	footprint_frame lff;
 	global_offset sgo(*parent_offset, f, add_local_private_tag());
@@ -542,12 +540,7 @@ global_entry_context::visit_local(const footprint& f,
 // this setup is done twice, also for visit_recursive
 // possible to re-factor and setup once?
 // something different for the top-level with ports...
-if (is_top) {
-	lff.construct_top_global_context(f, *parent_offset);
-	sgo = global_offset(*parent_offset, f, add_all_local_tag());
-} else {
 	lff.construct_global_context(f, *fpf, *parent_offset);
-}
 	// print local, non-port entries, since ports belong to 'parent'
 	// for processes duplicate work computing global offsets twice
 	const value_saver<global_offset*> __gs__(g_offset, &sgo);
@@ -595,7 +588,7 @@ global_entry_context::visit(const state_instance<bool_tag>& p) { }
 /**
 	Recursively traverses processes, setting up footprint frame context 
 	at each level.
-	TODO: parameter for include_ports.
+	TODO: parameter for include_ports.  not needed?
  */
 void
 global_entry_context::visit_recursive(const footprint& f) {
@@ -609,22 +602,16 @@ global_entry_context::visit_recursive(const footprint& f) {
 	// recurse through processes and print
 	const state_instance<process_tag>::pool_type&
 		lpp(f.get_instance_pool<process_tag>());
-	const bool is_top = at_top();
 	// TODO: alternatively, construct lookup table of lpid->gpid ahead
 	// must skip processes that are in ports
 	NEVER_NULL(parent_offset);
 	global_offset sgo(*parent_offset, f, add_local_private_tag());
 	footprint_frame lff;
-if (is_top) {
-	lff.construct_top_global_context(f, *parent_offset);
-	sgo = global_offset(*parent_offset, f, add_all_local_tag());
-} else {
 	lff.construct_global_context(f, *fpf, *parent_offset);
-}
 	// copy and increment with each local process
 	const size_t pe = lpp.local_entries();
 	// but for the top-level only, we want start with ports (process?)
-	size_t pi = is_top ? 0 : lpp.port_entries();
+	size_t pi = lpp.port_entries();
 	const value_saver<const global_offset*> __gs__(parent_offset, &sgo);
 	for ( ; pi<pe; ++pi) {
 		const state_instance<process_tag>& sp(lpp[pi]);

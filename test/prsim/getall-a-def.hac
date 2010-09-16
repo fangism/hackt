@@ -1,0 +1,17 @@
+// "getall-a-def.hac"
+// bug test case
+
+defproc half(bool p, q, r) {
+bool pv, qv, rv;
+}
+
+defproc whole(bool p1, p2, r1, r2) {
+bool q1, q2;
+half left(p1, q1, r1);
+half right(p2, q2, r2);
+}
+
+defproc wrapper(bool a[2], b[2]) {
+whole wheat(a[0], a[1], b[0], b[1]);
+}
+

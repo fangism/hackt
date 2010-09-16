@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.62 2010/09/02 00:34:35 fang Exp $
+	$Id: footprint.cc,v 1.63 2010/09/16 06:31:43 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -816,19 +816,19 @@ footprint::collect_aliases_recursive(const global_indexed_reference& r,
 	const size_t i = r.second -1;	// adjust to 0-based
 switch (r.first) {
 	case META_TYPE_PROCESS:
-		collect_aliases_recursive<process_tag>(i, df, aliases, true); break;
+		collect_aliases_recursive<process_tag>(i, df, aliases); break;
 	case META_TYPE_CHANNEL:
-		collect_aliases_recursive<channel_tag>(i, df, aliases, true); break;
+		collect_aliases_recursive<channel_tag>(i, df, aliases); break;
 #if ENABLE_DATASTRUCTS
 	case META_TYPE_STRUCT:
-		collect_aliases_recursive<datastruct_tag>(i, df, aliases, true); break;
+		collect_aliases_recursive<datastruct_tag>(i, df, aliases); break;
 #endif
 	case META_TYPE_BOOL:
-		collect_aliases_recursive<bool_tag>(i, df, aliases, true); break;
+		collect_aliases_recursive<bool_tag>(i, df, aliases); break;
 	case META_TYPE_INT:
-		collect_aliases_recursive<int_tag>(i, df, aliases, true); break;
+		collect_aliases_recursive<int_tag>(i, df, aliases); break;
 	case META_TYPE_ENUM:
-		collect_aliases_recursive<enum_tag>(i, df, aliases, true); break;
+		collect_aliases_recursive<enum_tag>(i, df, aliases); break;
 	default:	cerr << "<Unhandled-TAG>";
 }
 }
@@ -942,6 +942,25 @@ footprint::append_private_map_entry(const footprint& sf, const size_t i) {
 	footprint_base<enum_tag>::__append_private_map_entry(sf, i);
 	footprint_base<int_tag>::__append_private_map_entry(sf, i);
 	footprint_base<bool_tag>::__append_private_map_entry(sf, i);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This forcibly zeros out the count of top-level ports, 
+	which should eliminated the need for any special cases
+	at the top-level.  
+	Only the top-level module should ever call this.
+ */
+void
+footprint::zero_top_level_ports(void) {
+	get_instance_pool<process_tag>()._port_entries = 0;
+	get_instance_pool<channel_tag>()._port_entries = 0;
+#if ENABLE_DATASTRUCTS
+	get_instance_pool<datastruct_tag>()._port_entries = 0;
+#endif
+	get_instance_pool<enum_tag>()._port_entries = 0;
+	get_instance_pool<int_tag>()._port_entries = 0;
+	get_instance_pool<bool_tag>()._port_entries = 0;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1818,6 +1837,8 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 	if (created) {
 		evaluate_scope_aliases(false);
 		partition_local_instance_pool();
+		// top-level process should call zero_top_level_ports
+		// after this reconstruction
 		expand_unique_subinstances();
 		construct_private_entry_map();
 	}
@@ -1845,19 +1866,19 @@ footprint::load_object(const persistent_object_manager& m, istream& i) {
 
 template
 const state_instance<channel_tag>&
-footprint::get_instance<channel_tag>(const size_t, const bool) const;
+footprint::get_instance<channel_tag>(const size_t) const;
 template
 const state_instance<process_tag>&
-footprint::get_instance<process_tag>(const size_t, const bool) const;
+footprint::get_instance<process_tag>(const size_t) const;
 template
 const state_instance<bool_tag>&
-footprint::get_instance<bool_tag>(const size_t, const bool) const;
+footprint::get_instance<bool_tag>(const size_t) const;
 template
 const state_instance<int_tag>&
-footprint::get_instance<int_tag>(const size_t, const bool) const;
+footprint::get_instance<int_tag>(const size_t) const;
 template
 const state_instance<enum_tag>&
-footprint::get_instance<enum_tag>(const size_t, const bool) const;
+footprint::get_instance<enum_tag>(const size_t) const;
 
 template
 ostream&

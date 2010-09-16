@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.46 2010/08/05 18:25:23 fang Exp $
+ 	$Id: module.cc,v 1.47 2010/09/16 06:31:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_CC__
@@ -237,6 +237,9 @@ try {
 			null_module_params, f, f).good) {
 		return good_bool(false);
 	}
+	// this is actually not necessary because the top-level footprint
+	// doesn't register !Vdd and !GND as ports.  
+	f.zero_top_level_ports();
 	return good_bool(true);
 } catch (...) {
 	// generic error message
@@ -350,6 +353,7 @@ module::allocate_unique_process_type(const process_type_reference& pt,
 		cerr << "Error creating complete process type." << endl;
 		return good_bool(false);
 	} else {
+		_footprint.zero_top_level_ports();
 #if ENABLE_STACKTRACE
 		_footprint.dump(cerr << "footprint:" << endl) << endl;
 #endif
@@ -565,6 +569,9 @@ module::load_object(const persistent_object_manager& m, istream& f) {
 	// footprints are processed.
 	global_create_options = compile_opts.create_opts;
 	parent_type::load_object_base(m, f);
+	// since instance pools are reconstructed,
+	// we need to override the top-level module to have no ports
+	get_footprint().zero_top_level_ports();
 }
 
 //=============================================================================

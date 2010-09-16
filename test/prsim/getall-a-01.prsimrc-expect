@@ -1,0 +1,9 @@
+All subnodes of 'foo.wheat.left':
+!GND : 0
+!Vdd : 1
+foo.a[0] : X
+foo.b[0] : X
+foo.wheat.q1 : X
+foo.wheat.left.pv : X
+foo.wheat.left.qv : X
+foo.wheat.left.rv : X

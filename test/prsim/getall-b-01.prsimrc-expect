@@ -1,0 +1,18 @@
+All subnodes of 'wheat.left':
+!GND : 0
+!Vdd : 1
+wheat.p1 : X
+wheat.r1 : X
+wheat.q1 : X
+wheat.left.pv : X
+wheat.left.qv : X
+wheat.left.rv : X
+All subnodes of 'wheat.right':
+!GND : 0
+!Vdd : 1
+wheat.p2 : X
+wheat.r2 : X
+wheat.q2 : X
+wheat.right.pv : X
+wheat.right.qv : X
+wheat.right.rv : X

@@ -1,0 +1,22 @@
+globID	super		localID	canonical	footprint-frame
+[global process entries]
+1	(top)	-	1	left	half<>
+	bool: 1,2,3,4,5;9..11
+2	(top)	-	2	right	half<>
+	bool: 1,2,6,7,8;12..14
+[global bool entries]
+1	(top)	-	1	!GND	 @[ supply_low ]
+2	(top)	-	2	!Vdd	 @[ supply_high ]
+3	(top)	-	3	p1	
+4	(top)	-	4	q1	
+5	(top)	-	5	r1	
+6	(top)	-	6	p2	
+7	(top)	-	7	q2	
+8	(top)	-	8	r2	
+9	process	1	6	left.pv	
+10	process	1	7	left.qv	
+11	process	1	8	left.rv	
+12	process	2	6	right.pv	
+13	process	2	7	right.qv	
+14	process	2	8	right.rv	
+

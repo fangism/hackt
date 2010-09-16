@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.tcc"
 	Exported template implementation of footprint base class. 
-	$Id: footprint.tcc,v 1.9 2010/08/24 21:05:41 fang Exp $
+	$Id: footprint.tcc,v 1.10 2010/09/16 06:31:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_TCC__
@@ -46,19 +46,17 @@ footprint_base<Tag>::~footprint_base() { }
 	that represents the type information.  
 	\param Tag is the meta-type tag.
 	\param gi is the global index being referenced.  0-based.
-	\param is_top is true if is top-level, should be compile-time param.
 	Implementation follows footprint::dump_canonical_name().
 	TODO: re-write non-recursively
  */
 template <class Tag>
 const state_instance<Tag>&
-footprint::get_instance(const size_t gi, const bool is_top) const {
+footprint::get_instance(const size_t gi) const {
 	typedef	typename state_instance<Tag>::pool_type	pool_type;
 //	STACKTRACE_VERBOSE;
 	const pool_type& p(get_instance_pool<Tag>());
-	const size_t ports = is_top ? 0 : p.port_entries();
-	const size_t local = is_top ? p.local_entries()
-		: p.local_private_entries();	// skip ports
+	const size_t ports = p.port_entries();
+	const size_t local = p.local_private_entries();	// skip ports
 	if (gi < local) {
 		return p[gi +ports];
 	} else {
@@ -73,7 +71,7 @@ footprint::get_instance(const size_t gi, const bool is_top) const {
 		const state_instance<process_tag>& sp(ppool[e.first -1]);
 		// e.second is the offset to subtract
 		return sp._frame._footprint->get_instance<Tag>(
-			si -e.second, false);
+			si -e.second);
 	}
 }
 
@@ -83,12 +81,13 @@ footprint::get_instance(const size_t gi, const bool is_top) const {
 	\param Tag is the meta-type tag.
 	\param gi is the global index being referenced.  0-based.
 	\param is_top is true if is top-level, should be compile-time param.
+		Might also pass true to print local canonical name, 
+		not just for global canonical names.  
  */
 template <class Tag>
 ostream&
 footprint::dump_canonical_name(ostream& o, const size_t gi, 
-		const dump_flags& df, 
-		const bool is_top) const {
+		const dump_flags& df, const bool is_top) const {
 //	STACKTRACE_VERBOSE;
 #if 0 && ENABLE_STACKTRACE
 	dump_type(o << "type:") << endl;
@@ -141,7 +140,7 @@ template <class Tag>
 void
 footprint::collect_aliases_recursive(const size_t index,
 		const dump_flags& df, 
-		set<string>& aliases, const bool is_top) const {
+		set<string>& aliases) const {
 	STACKTRACE_VERBOSE;
 	STACKTRACE_INDENT_PRINT("rel-id(0) = " << index << endl);
 	// based on current index, decide how to recurse
@@ -149,9 +148,8 @@ footprint::collect_aliases_recursive(const size_t index,
 	// visit all processes that contain local id
 	const typename state_instance<Tag>::pool_type&
 		lp(get_instance_pool<Tag>());
-	const size_t ports = is_top ? 0 : lp.port_entries();
-	const size_t local = is_top ? lp.local_entries()
-		: lp.local_private_entries();
+	const size_t ports = lp.port_entries();
+	const size_t local = lp.local_private_entries();
 	STACKTRACE_INDENT_PRINT("local entries: " << local << endl);
 if (index < local) { 
 	STACKTRACE_INDENT_PRINT("local reference" << endl);
@@ -178,7 +176,7 @@ if (index < local) {
 	const state_instance<process_tag>& ppi(ppool[lpid -1]);
 	ppi._frame._footprint
 		->collect_aliases_recursive<Tag>(si -e.second, df, 
-			private_aliases, false);
+			private_aliases);
 #if ENABLE_STACKTRACE
 	copy(private_aliases.begin(), private_aliases.end(),
 		ostream_iterator<string>(

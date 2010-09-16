@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/alias_printer.cc"
-	$Id: alias_printer.cc,v 1.12 2010/05/11 00:18:07 fang Exp $
+	$Id: alias_printer.cc,v 1.13 2010/09/16 06:31:44 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -99,11 +99,10 @@ alias_printer::visit_recursive(const footprint& f) {
 #endif
 	const state_instance<Tag>::pool_type&
 		lpp(f.get_instance_pool<Tag>());
-	const bool is_top = at_top();
 	// copy and increment with each local process
 	const size_t pe = lpp.local_entries();
 	// but for the top-level only, we start with ports (process too?)
-	const size_t pb = is_top ? 0 : lpp.port_entries();
+	const size_t pb = lpp.port_entries();
 //	const value_saver<const global_offset*> __gs__(parent_offset, &sgo);
 
 // TODO: cache alias sets per footprint! (easy speed-up)

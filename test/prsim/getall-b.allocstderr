@@ -1,0 +1,25 @@
+globID	super		localID	canonical	footprint-frame
+[global process entries]
+1	(top)	-	1	wheat	whole<>
+	process: ;2..3
+	bool: 1,2,3,5,4,6;7..8 {9..14}
+2	process	1	1	wheat.left	half<>
+	bool: 1,2,3,7,5;9..11
+3	process	1	2	wheat.right	half<>
+	bool: 1,2,4,8,6;12..14
+[global bool entries]
+1	(top)	-	1	!GND	 @[ supply_low ]
+2	(top)	-	2	!Vdd	 @[ supply_high ]
+3	(top)	-	3	wheat.p1	
+4	(top)	-	4	wheat.p2	
+5	(top)	-	5	wheat.r1	
+6	(top)	-	6	wheat.r2	
+7	process	1	7	wheat.q1	
+8	process	1	8	wheat.q2	
+9	process	2	6	wheat.left.pv	
+10	process	2	7	wheat.left.qv	
+11	process	2	8	wheat.left.rv	
+12	process	3	6	wheat.right.pv	
+13	process	3	7	wheat.right.qv	
+14	process	3	8	wheat.right.rv	
+

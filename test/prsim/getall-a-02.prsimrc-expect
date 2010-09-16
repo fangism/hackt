@@ -1,0 +1,40 @@
+top-level instances: 
+Instances:
+  !GND = bool<> whole::!GND
+  !Vdd = bool<> whole::!Vdd
+  left = half<> whole::left
+  p1 = bool<> whole::p1
+  p2 = bool<> whole::p2
+  q1 = bool<> whole::q1
+  q2 = bool<> whole::q2
+  r1 = bool<> whole::r1
+  r2 = bool<> whole::r2
+  right = half<> whole::right
+left (type: half<>) has members: 
+Instances:
+  !GND = bool
+  !Vdd = bool
+  p = bool
+  pv = bool
+  q = bool
+  qv = bool
+  r = bool
+  rv = bool
+All subnodes of 'left':
+!GND : 0
+!Vdd : 1
+p1 : X
+r1 : X
+q1 : X
+left.pv : X
+left.qv : X
+left.rv : X
+All subnodes of 'right':
+!GND : 0
+!Vdd : 1
+p2 : X
+r2 : X
+q2 : X
+right.pv : X
+right.qv : X
+right.rv : X

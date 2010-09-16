@@ -1,0 +1,13 @@
+// "getall-c.hac"
+// copy-modified from "getall-a-def.hac"
+// bug test case
+
+defproc half(bool p, q, r) {
+bool pv, qv, rv;
+}
+
+bool p1, p2, r1, r2;
+bool q1, q2;
+half left(p1, q1, r1);
+half right(p2, q2, r2);
+

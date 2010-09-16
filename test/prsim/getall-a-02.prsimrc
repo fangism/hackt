@@ -1,0 +1,9 @@
+# "getall-a-01.prsimrc"
+# @haco@ getall-a.haco-c
+# @hacprsim-flags@ -t whole
+
+ls .
+ls left
+getall left
+getall right
+

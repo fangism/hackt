@@ -1,6 +1,6 @@
 /**
 	\file "parser/instref.cc"
-	$Id: instref.cc,v 1.24 2010/08/24 18:08:41 fang Exp $
+	$Id: instref.cc,v 1.25 2010/09/16 06:31:45 fang Exp $
  */
 
 #define	DEBUGGING_SHIT			0
@@ -453,6 +453,7 @@ if (n == ".") {
 int
 parse_name_to_get_subnodes(const string& n, const module& m, 
 		vector<size_t>& v) {
+	STACKTRACE_VERBOSE;
 	entry_collection e;
 	const int ret = parse_name_to_get_subinstances(n, m, e);
 	if (ret) {
@@ -551,6 +552,7 @@ if (!r || !r.inst_ref()) {
 int
 parse_name_to_get_subinstances(const global_indexed_reference& gref,
 		const module& m, entry_collection& e) {
+	STACKTRACE_VERBOSE;
 	const footprint& topfp(m.get_footprint());
 	switch (gref.first) {
 	case META_TYPE_PROCESS: {
@@ -559,9 +561,6 @@ parse_name_to_get_subinstances(const global_indexed_reference& gref,
 		// coverage of process ports
 		index_set_type& covered(e.get_index_set<process_tag>());
 		worklist.insert(gref.second);
-		const footprint_frame tff(topfp);
-		const global_offset g;
-		const global_entry_context gc(tff, g);
 	do {
 		const index_set_type::iterator next_pi(worklist.begin());
 		const size_t gpid = *next_pi;
