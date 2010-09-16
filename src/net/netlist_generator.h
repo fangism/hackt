@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_generator.h"
-	$Id: netlist_generator.h,v 1.11 2010/04/29 01:02:21 fang Exp $
+	$Id: netlist_generator.h,v 1.12 2010/09/16 23:17:10 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETLIST_GENERATOR_H__
@@ -28,6 +28,7 @@ using entity::state_instance;
 using entity::bool_tag;
 using entity::process_tag;
 using entity::PRS::footprint_expr_node;
+using entity::resolved_attribute_list_type;
 
 /**
 	Define to 1 to check for type-name collisions.
@@ -61,6 +62,7 @@ class netlist_generator :
 	typedef	entity::PRS::footprint	prs_footprint;
 private:
 	struct rule_attribute_functions;
+	struct literal_attribute_functions;
 #if POST_MANGLE_TYPE_NAME_COLLISIONS
 	typedef	std::map<string, const netlist*>
 					typename_map_type;
@@ -152,14 +154,6 @@ private:
 		CMOS-implementability checking.  
 	 */
 	bool				negated;
-	/**
-		The last specified device width, for automatic propagation.  
-	 */
-	real_type			last_width;
-	/**
-		The last specified device length, for automatic propagation.  
-	 */
-	real_type			last_length;
 public:
 	netlist_generator(
 		const footprint_frame&, 
@@ -218,6 +212,9 @@ private:
 
 	index_type
 	register_named_node(const index_type);
+
+	void
+	inherit_transistor_attributes(const resolved_attribute_list_type&);
 
 };	// end class netlist_generator
 

@@ -1,0 +1,16 @@
+// "fet-type-29.hac"
+// copy-modified from "fet-type-28.hac"
+// testing rule-attributes for sizing
+// note: complement rule follows same per-literal vt
+
+defproc foo(bool x, y, z, w, w2, w3) {
+prs {
+[W=40]	x			-> @_int-	// this width should dominate
+[W=99]	~@_int & y<20> & z	-> w-	// no effect on width
+[W=77]	~@_int & z & y		-> w2-	// no effect on width
+	~@_int & y & z<30>	-> w3-	// use width 40 first
+}
+}
+
+foo bar;
+

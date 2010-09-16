@@ -1,0 +1,16 @@
+// "fet-type-32.hac"
+// copy-modified from "fet-type-31.hac"
+// testing rule-attributes for sizing, with Vt type, with precharges
+// note: complement rule follows same per-literal vt
+
+defproc foo(bool en, x, y, z, w, a, b, c) {
+prs {
+[svt;W=40;L=4]	x		-> @_int-	// this width should dominate
+[L=2]	~@_int & y<20,2> & z	-> a-	// no effect on length
+[L=3]	~@_int &{+~en} z & w		-> b-	// no effect on length
+	~@_int & w & z<30,2;svt> & y	-> c-	// use width 40 first
+}
+}
+
+foo bar;
+

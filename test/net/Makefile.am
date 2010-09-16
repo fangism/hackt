@@ -1,5 +1,5 @@
 # "test/net/Makefile.am"
-#	$Id: Makefile.am,v 1.22 2010/09/01 22:14:21 fang Exp $
+#	$Id: Makefile.am,v 1.23 2010/09/16 23:17:11 fang Exp $
 # Test auto-Makefile for hacknet.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -61,6 +61,8 @@ HACKNET_TEST_SCRIPTS_PASSES = \
 	fet-type-17 fet-type-18 fet-type-19 fet-type-20 \
 	fet-type-21 fet-type-22 fet-type-23 fet-type-24 \
 	fet-type-25 fet-type-26 fet-type-27 fet-type-28 \
+	fet-type-29 fet-type-30 fet-type-31 fet-type-32 \
+	fet-type-33 fet-type-34 fet-type-35 fet-type-36 \
 	parasitics-01 \
 	aliases-01 aliases-02 aliases-03 aliases-04 \
 	mangle-01 mangle-02 mangle-03 mangle-04 mangle-04b mangle-05 \
@@ -126,6 +128,8 @@ HACKT_PARSE_TEST_PASSES = \
 	fet-type-18 fet-type-19 fet-type-20 fet-type-21 \
 	fet-type-22 fet-type-23 fet-type-24 fet-type-25 \
 	fet-type-26 fet-type-27 fet-type-28 \
+	fet-type-29 fet-type-30 fet-type-31 fet-type-32 \
+	fet-type-33 fet-type-34 fet-type-35 fet-type-36 \
 	pass_gate-05 pass_gate-06 \
 	precharge-07 precharge-08 \
 	mangle-04 \
@@ -144,6 +148,8 @@ HACKT_CREATE_TEST_PASSES = \
 	fet-type-18 fet-type-19 fet-type-20 fet-type-21 \
 	fet-type-22 fet-type-23 fet-type-24 fet-type-25 \
 	fet-type-26 fet-type-27 fet-type-28 \
+	fet-type-29 fet-type-30 fet-type-31 fet-type-32 \
+	fet-type-33 fet-type-34 fet-type-35 fet-type-36 \
 	pass_gate-05 pass_gate-06 \
 	precharge-07 precharge-08 \
 	mangle-04 \

@@ -1,0 +1,14 @@
+.subckt foo<> !GND !Vdd en x y z w a b c
+M@_int:dn:0 !GND x @_int !GND nch W=40u L=4u
+Ma:dn:0 @_int y #0 !GND nch W=20u L=2u
+Ma:dn:1 #0 z a !GND nch W=20u L=2u
+Mb:dn:0:pchg !Vdd en @_int !Vdd pch W=5u L=2u
+Mb:dn:1 @_int z #1 !GND nch W=40u L=4u
+Mb:dn:2 #1 w b !GND nch W=40u L=4u
+Mc:dn:0 @_int w #2 !GND nch W=40u L=4u
+Mc:dn:1 #2 z #3 !GND nch W=30u L=2u
+Mc:dn:2 #3 y c !GND nch W=30u L=2u
+.ends
+
+xbar !GND !Vdd bar.en bar.x bar.y bar.z bar.w bar.a bar.b bar.c foo<>
+

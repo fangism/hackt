@@ -1,8 +1,12 @@
 /**
 	\file "net/netlist_generator.cc"
 	Implementation of hierarchical netlist generation.
-	$Id: netlist_generator.cc,v 1.24 2010/09/01 22:14:20 fang Exp $
+	$Id: netlist_generator.cc,v 1.25 2010/09/16 23:17:09 fang Exp $
  */
+
+#define	ENABLE_STATIC_TRACE		0
+#include "util/static_trace.h"
+DEFAULT_STATIC_TRACE_BEGIN
 
 #define	ENABLE_STACKTRACE		0
 
@@ -83,10 +87,8 @@ netlist_generator::netlist_generator(
 		current_length(0.0),
 		fet_type(transistor::NFET_TYPE), 	// don't care
 		fet_attr(transistor::DEFAULT_ATTRIBUTE),
-		negated(false),
-		// TODO: set these to technology defaults
-		last_width(0.0), 
-		last_length(0.0) { }
+		negated(false)
+		{ }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 netlist_generator::~netlist_generator() { }
@@ -310,9 +312,6 @@ netlist_generator::visit(const entity::PRS::footprint& r) {
 			current_netlist->internal_node_map[k].second = j;
 		}
 	}
-#if 0 && ENABLE_STACKTRACE
-	current_netlist->dump_raw(STACKTRACE_STREAM) << endl;
-#endif
 }
 	// traverse subcircuits
 	// ALERT: if we ever want to perform other operations before emitting
@@ -424,16 +423,26 @@ typedef	PRS_rule::attributes_list_type::value_type	rule_attribute;
 typedef	rule_attribute::values_ptr_type		attr_values_ptr_type;
 typedef	rule_attribute::values_type		attr_values_type;
 typedef	void rule_attribute_fun(netlist_generator&, const attr_values_ptr_type&);
+typedef	void literal_attribute_fun(transistor&, const attr_values_ptr_type&);
 typedef	rule_attribute_fun*	rule_attribute_fun_ptr;
+typedef	literal_attribute_fun*	literal_attribute_fun_ptr;
 typedef	map<string, rule_attribute_fun_ptr>	rule_attribute_map_type;
+typedef	map<string, literal_attribute_fun_ptr>	literal_attribute_map_type;
 
 // initializable
 static
 rule_attribute_map_type		__rule_attribute_map;
+static
+literal_attribute_map_type	__literal_attribute_map;
 
 // non-modifiable
 static
-const rule_attribute_map_type&	rule_attribute_map(__rule_attribute_map);
+const rule_attribute_map_type&
+rule_attribute_map(__rule_attribute_map);
+
+static
+const literal_attribute_map_type&
+literal_attribute_map(__literal_attribute_map);
 
 struct netlist_generator::rule_attribute_functions {
 static
@@ -554,6 +563,97 @@ const int netlist_generator::rule_attribute_functions::__init__ =
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Transistor attribute mutators.  
+ */
+struct netlist_generator::literal_attribute_functions {
+
+static
+void
+__attr_hvt(transistor& t, const attr_values_ptr_type& v) {
+	pint_value_type b = 1;
+	if (v && v->size()) {
+		const pint_const&
+			pi(*(*v)[0].is_a<const pint_const>());
+		b = pi.static_constant_value();
+	}
+	if (b) {
+		t.set_hvt();
+	}
+}
+
+static
+void
+__attr_lvt(transistor& t, const attr_values_ptr_type& v) {
+	pint_value_type b = 1;
+	if (v && v->size()) {
+		const pint_const&
+			pi(*(*v)[0].is_a<const pint_const>());
+		b = pi.static_constant_value();
+	}
+	if (b) {
+		t.set_lvt();
+	}
+}
+
+static
+void
+__attr_svt(transistor& t, const attr_values_ptr_type& v) {
+	pint_value_type b = 1;
+	if (v && v->size()) {
+		const pint_const&
+			pi(*(*v)[0].is_a<const pint_const>());
+		b = pi.static_constant_value();
+	}
+	if (b) {
+		t.set_svt();
+	}
+}
+
+static
+void
+__attr_width(transistor& t, const attr_values_ptr_type& v) {
+	INVARIANT(v && v->size());
+	t.width = v->front()->to_real_const();
+}
+
+static
+void
+__attr_length(transistor& t, const attr_values_ptr_type& v) {
+	INVARIANT(v && v->size());
+	t.length = v->front()->to_real_const();
+}
+
+static
+void
+__attr_label(transistor& t, const attr_values_ptr_type& v) {
+	INVARIANT(v && v->size());
+	t.name = v->front().is_a<const string_expr>()
+			// should be pstring_const after branch merge
+		->static_constant_value();
+}
+
+static
+int
+init_literal_attribute_map(void) {
+	__literal_attribute_map["label"] = &__attr_label;
+//	__literal_attribute_map["iskeeper"] = &__attr_iskeeper;
+//	__literal_attribute_map["isckeeper"] = &__attr_isckeeper;
+	__literal_attribute_map["hvt"] = &__attr_hvt;
+	__literal_attribute_map["svt"] = &__attr_svt;
+	__literal_attribute_map["lvt"] = &__attr_lvt;
+	__literal_attribute_map["W"] = &__attr_width;
+	__literal_attribute_map["L"] = &__attr_length;
+	return 0;
+}
+
+static const int __init__;
+};	// end struct literal_attribute_functions
+
+const int netlist_generator::literal_attribute_functions::__init__ =
+netlist_generator::literal_attribute_functions::init_literal_attribute_map();
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Construct subgraph from LHS expression, and connect final
 	output(s) to output node.
 	\pre current_netlist is set
@@ -666,24 +766,44 @@ process_transistor_attributes(transistor& t,
 		netlist& nl) {
 	resolved_attribute_list_type::const_iterator
 		ai(a.begin()), ae(a.end());
-	// TODO: write an actual attribute function map for altering transistor
-	for ( ; ai!=ae; ++ai) {
-		// this is just a quick hack for now
-		if (ai->key == "label")
-			t.name = ai->values->front().is_a<const string_expr>()
-				->static_constant_value();
-		else if (ai->key == "lvt")
-			t.set_lvt();
-		else if (ai->key == "svt")
-			t.set_svt();
-		else if (ai->key == "hvt")
-			t.set_hvt();
-		else {
-			cerr << "Warning: unknown literal attribute \'" <<
-				ai->key << "\' ignored." << endl;
-			++nl.warning_count;
-		}
+	const literal_attribute_map_type::const_iterator
+		e(literal_attribute_map.end());
+for ( ; ai!=ae; ++ai) {
+	// lookup function attribute map
+	const literal_attribute_map_type::const_iterator
+		f(literal_attribute_map.find(ai->key));
+	if (f != e) {
+		NEVER_NULL(f->second);
+		(*f->second)(t, ai->values);
+	} else {
+		cerr << "Warning: unknown literal attribute \'" <<
+			ai->key << "\' ignored." << endl;
+		++nl.warning_count;
 	}
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Make transistor attributes stick.
+ */
+void
+netlist_generator::inherit_transistor_attributes(
+		const resolved_attribute_list_type& a) {
+	// side-effect of modifying the current set of fet attributes (sticky)
+	// this happens when the internal node is *used* as well as defined
+	transistor dummy;
+	dummy.width = current_width;
+	dummy.length = current_length;
+	dummy.attributes = fet_attr;
+	dummy.set_svt();	// interpret no-attribute as svt!
+	process_transistor_attributes(dummy, a, *current_netlist);
+	fet_attr = dummy.attributes;
+	// also inherit width and length
+	set_current_width(dummy.width);
+	set_current_length(dummy.length);
+	STACKTRACE_INDENT_PRINT("@L = " << current_length << endl);
+	STACKTRACE_INDENT_PRINT("@W = " << current_width << endl);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -711,15 +831,9 @@ netlist_generator::register_internal_node(const index_type nid) {
 	const index_type& node_own = r.second;	// home
 	node& n(current_netlist->node_pool[node_ind]);
 #if PRS_INTERNAL_NODE_ATTRIBUTES_AT_NODE
-{
-	// side-effect of modifying the current set of fet attributes (sticky)
-	// this happens when the internal node is *used* as well as defined
-	transistor dummy;
-	dummy.attributes = fet_attr;
-	dummy.set_svt();	// interpret no-attribute as svt!
-	process_transistor_attributes(dummy, ret.attributes, *current_netlist);
-	fet_attr = dummy.attributes;
-}
+	// make attributes stick for the use of the interal node, 
+	// before the value_savers below
+	inherit_transistor_attributes(ret.attributes);
 #endif
 #if NETLIST_CHECK_CONNECTIVITY
 if (!n.driven)	// define-once
@@ -772,6 +886,10 @@ if (!n.used)
 	// if so, then we need attributes for internal node definitions (rules)
 	set_current_width(opt.get_default_width(dir, false));
 	set_current_length(opt.get_default_length(dir, false));
+#if PRS_INTERNAL_NODE_ATTRIBUTES_AT_NODE
+	// second call is to take effect for the definition
+	inherit_transistor_attributes(ret.attributes);
+#endif
 #if NETLIST_CHECK_CONNECTIVITY
 	n.driven = true;
 #endif
@@ -1072,3 +1190,4 @@ netlist_generator::visit(const entity::SPEC::footprint_directive&) {
 }	// end namespace NET
 }	// end namespace HAC
 
+DEFAULT_STATIC_TRACE_END
