@@ -1,7 +1,7 @@
 /**
 	\file "Object/expr/expr_fwd.h"
 	Forward declarations of all expression-related classes.  
-	$Id: expr_fwd.h,v 1.8.54.2 2010/09/15 00:57:51 fang Exp $
+	$Id: expr_fwd.h,v 1.8.54.3 2010/09/20 18:37:25 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_EXPR_FWD_H__
@@ -27,6 +27,8 @@ namespace entity {
 	class nonmeta_range_list;
 	class nonmeta_expr_list;
 	class nonmeta_func_call;
+	template <class>
+	class meta_func_call;
 
 	class int_arith_expr;
 	class int_negation_expr;
@@ -125,6 +127,12 @@ namespace entity {
 		real_return_cast_expr;
 	typedef	nonmeta_cast_expr<string_expr, nonmeta_func_call>
 		string_return_cast_expr;
+
+	typedef meta_func_call<pint_expr>		pint_meta_func_call;
+	typedef meta_func_call<pbool_expr>		pbool_meta_func_call;
+	typedef meta_func_call<preal_expr>		preal_meta_func_call;
+	typedef meta_func_call<pstring_expr>		pstring_meta_func_call;
+
 
 }	// end namespace entity
 }	// end namespace HAC

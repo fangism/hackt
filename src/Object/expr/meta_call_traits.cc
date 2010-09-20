@@ -1,7 +1,7 @@
 /**
 	\file "Object/expr/meta_call_traits.cc"
 	stolen from "Object/expr/dlfunction.cc"
-	$Id: meta_call_traits.cc,v 1.1.2.1 2010/09/15 00:57:51 fang Exp $
+	$Id: meta_call_traits.cc,v 1.1.2.2 2010/09/20 18:37:26 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE	0
@@ -137,6 +137,16 @@ meta_function_return_type
 make_meta_value(const pstring_value_type& v) {
 	STACKTRACE_VERBOSE;
 	return meta_function_return_type(new pstring_const(v));
+}
+
+//=============================================================================
+void
+verify_wrapped_args(const size_t a, const size_t f) {
+	if (a != f) {
+		cerr << "Error: got " << a << " function arguments, "
+			"but expecting " << f << "." << endl;
+		THROW_EXIT;
+	}
 }
 
 //=============================================================================

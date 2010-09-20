@@ -1,0 +1,11 @@
+// "string-fun-01.hac"
+
+pstring one = strcat(1);
+pstring food1 = strcat("meat", "balls");
+pstring line = sprint(1, " is the loneliest number");
+pstring uno = strcat(strtoz("1"));
+pstring eins = strcat(strtoz(one));
+pint eleven = strtoz(strcat(one, one));
+preal more_than_one = strtor(strcat(one, ".", one));
+pbool troo = strtob("1");
+pbool falsch = strtob("0");

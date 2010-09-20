@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.h"
 	CHP-specific syntax tree classes.  
-	$Id: CHP.h,v 1.12 2008/03/20 00:03:12 fang Exp $
+	$Id: CHP.h,v 1.12.32.1 2010/09/20 18:37:21 fang Exp $
 	Used to be the following before rename:
 	Id: art_parser_chp.h,v 1.13.40.1 2005/12/11 00:45:03 fang Exp
  */
@@ -630,6 +630,7 @@ public:
 };	// end class do_until
 
 //=============================================================================
+#if OLD_CHP_LOG
 /**
 	CHP log statement.
 	NOTE: I want to deprecate this legacy feature from the original chpsim.
@@ -654,6 +655,7 @@ public:
 
 	CHP_CHECK_STMT_PROTO;
 };	// end class log
+#endif
 
 //=============================================================================
 /**

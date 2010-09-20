@@ -1,7 +1,7 @@
 /**
 	\file "Object/expr/expr_visitor.h"
 	Expression visitor interface.  
-	$Id: expr_visitor.h,v 1.7.54.1 2010/09/08 21:14:20 fang Exp $
+	$Id: expr_visitor.h,v 1.7.54.2 2010/09/20 18:37:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_EXPR_VISITOR_H__
@@ -128,6 +128,11 @@ virtual	VISIT_PROTO(pint_const_collection) = 0;
 virtual	VISIT_PROTO(pbool_const_collection) = 0;
 virtual	VISIT_PROTO(preal_const_collection) = 0;
 virtual	VISIT_PROTO(pstring_const_collection) = 0;
+
+virtual	VISIT_PROTO(pint_meta_func_call) = 0;
+virtual	VISIT_PROTO(pbool_meta_func_call) = 0;
+virtual	VISIT_PROTO(preal_meta_func_call) = 0;
+virtual	VISIT_PROTO(pstring_meta_func_call) = 0;
 
 
 #if 1

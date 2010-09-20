@@ -6,9 +6,7 @@
 
 USING_CHPSIM_DLFUNCTION_PROLOGUE
 
-// wrong number of arguments -- run-time error?
-// actually additional arguments are just dropped!
-// doesn't result in run-time error
+// wrong number of arguments -- run-time error
 static
 int_value_type
 gcd(const int_value_type a) {

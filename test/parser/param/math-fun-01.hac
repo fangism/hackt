@@ -1,0 +1,19 @@
+// "132.hac"
+// testing out floating point meta-functions
+
+// preal pos = abs(-1);	// pint_const doesn't pass for preal_expr
+preal pos = abs(-1.0);
+preal one_1 = log(exp(1.0));
+preal one_2 = exp(log(1.0));
+preal two_1 = log10(pow(10.0, 2.0));
+preal two_2 = pow(10.0, log10(2.0));
+preal ceil = ceil(4.5);
+preal floor = floor(4.5);
+preal three_1 = sqrt(pow(3.0, 2.0));
+preal three_2 = pow(sqrt(3.0), 2.0);
+preal half_0 = sin(asin(0.5));
+preal half_1 = asin(sin(0.5));
+preal half_2 = cos(acos(0.5));
+preal half_3 = acos(cos(0.5));
+preal half_4 = tan(atan(0.5));
+preal half_5 = atan(tan(0.5));

@@ -2,7 +2,7 @@
 	\file "Object/expr/meta_call_traits.h"
 	Meta-functions can be dynamically added.
 	This header should be installed (eventually).  
-	$Id: meta_call_traits.h,v 1.1.2.1 2010/09/15 00:57:52 fang Exp $
+	$Id: meta_call_traits.h,v 1.1.2.2 2010/09/20 18:37:27 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_CALL_TRAITS_H__
@@ -10,6 +10,7 @@
 
 #include <iosfwd>
 #include <string>
+#include <stdexcept>
 #include "util/memory/count_ptr.h"
 #include "Object/expr/types.h"
 #include "Object/expr/dlfunction_fwd.h"
@@ -171,20 +172,36 @@ make_meta_value(const pstring_value_type&);	// pass-by-reference
 //=============================================================================
 // wrapped and type-checked automatic argument forwarding to native functions
 
+// could use function_traits::arity...
+#define	VERIFY_WRAPPED_ARGS(vec, sz)					\
+	verify_wrapped_args(vec.size(), sz)
+
+/**
+	\throw exception if there is a mismatch of formals to actuals.
+ */
+extern
+void
+verify_wrapped_args(const size_t a, const size_t f);
+
+
 // should these be inlined? or given static linkage?
 // TODO: provide declaration macros
 // TODO: use something like boost::function
 
 template <typename R>
 meta_function_return_type
-auto_wrap_dlfunction(R (*f)(void), const meta_function_argument_list_type&) {
+auto_wrap_dlfunction(R (*f)(void),
+		const meta_function_argument_list_type& a) {
+	VERIFY_WRAPPED_ARGS(a, 0);
 	return make_meta_value((*f)());
 }
 
 static
 inline
 meta_function_return_type
-auto_wrap_dlfunction(void (*f)(void), const meta_function_argument_list_type&) {
+auto_wrap_dlfunction(void (*f)(void),
+		const meta_function_argument_list_type& a) {
+	VERIFY_WRAPPED_ARGS(a, 0);
 	(*f)();
 	return meta_function_return_type(NULL);
 }
@@ -192,12 +209,15 @@ auto_wrap_dlfunction(void (*f)(void), const meta_function_argument_list_type&) {
 template <typename R, typename A0>
 meta_function_return_type
 auto_wrap_dlfunction(R (*f)(A0), const meta_function_argument_list_type& a) {
+	VERIFY_WRAPPED_ARGS(a, 1);
 	return make_meta_value((*f)(extract_meta_value<A0>(a[0])));
 }
 
 template <typename A0>
 meta_function_return_type
-auto_wrap_dlfunction(void (*f)(A0), const meta_function_argument_list_type& a) {
+auto_wrap_dlfunction(void (*f)(A0),
+		const meta_function_argument_list_type& a) {
+	VERIFY_WRAPPED_ARGS(a, 1);
 	(*f)(extract_meta_value<A0>(a[0]));
 	return meta_function_return_type(NULL);
 }
@@ -223,7 +243,9 @@ auto_wrap_dlfunction(void (*f)(const meta_function_argument_list_type&),
 
 template <typename R, typename A0, typename A1>
 meta_function_return_type
-auto_wrap_dlfunction(R (*f)(A0, A1), const meta_function_argument_list_type& a) {
+auto_wrap_dlfunction(R (*f)(A0, A1),
+		const meta_function_argument_list_type& a) {
+	VERIFY_WRAPPED_ARGS(a, 2);
 	return make_meta_value((*f)(
 		extract_meta_value<A0>(a[0]),
 		extract_meta_value<A1>(a[1])
@@ -232,7 +254,9 @@ auto_wrap_dlfunction(R (*f)(A0, A1), const meta_function_argument_list_type& a) 
 
 template <typename A0, typename A1>
 meta_function_return_type
-auto_wrap_dlfunction(void (*f)(A0, A1), const meta_function_argument_list_type& a) {
+auto_wrap_dlfunction(void (*f)(A0, A1),
+		const meta_function_argument_list_type& a) {
+	VERIFY_WRAPPED_ARGS(a, 2);
 	(*f)(
 		extract_meta_value<A0>(a[0]),
 		extract_meta_value<A1>(a[1])
@@ -242,7 +266,9 @@ auto_wrap_dlfunction(void (*f)(A0, A1), const meta_function_argument_list_type& 
 
 template <typename R, typename A0, typename A1, typename A2>
 meta_function_return_type
-auto_wrap_dlfunction(R (*f)(A0, A1, A2), const meta_function_argument_list_type& a) {
+auto_wrap_dlfunction(R (*f)(A0, A1, A2),
+		const meta_function_argument_list_type& a) {
+	VERIFY_WRAPPED_ARGS(a, 3);
 	return make_meta_value((*f)(
 		extract_meta_value<A0>(a[0]),
 		extract_meta_value<A1>(a[1]),
@@ -252,7 +278,9 @@ auto_wrap_dlfunction(R (*f)(A0, A1, A2), const meta_function_argument_list_type&
 
 template <typename A0, typename A1, typename A2>
 meta_function_return_type
-auto_wrap_dlfunction(void (*f)(A0, A1, A2), const meta_function_argument_list_type& a) {
+auto_wrap_dlfunction(void (*f)(A0, A1, A2),
+		const meta_function_argument_list_type& a) {
+	VERIFY_WRAPPED_ARGS(a, 3);
 	(*f)(
 		extract_meta_value<A0>(a[0]),
 		extract_meta_value<A1>(a[1]),
@@ -265,6 +293,7 @@ template <typename R, typename A0, typename A1, typename A2, typename A3>
 meta_function_return_type
 auto_wrap_dlfunction(R (*f)(A0, A1, A2, A3),
 		const meta_function_argument_list_type& a) {
+	VERIFY_WRAPPED_ARGS(a, 4);
 	return make_meta_value((*f)(
 		extract_meta_value<A0>(a[0]),
 		extract_meta_value<A1>(a[1]),
@@ -277,6 +306,7 @@ template <typename A0, typename A1, typename A2, typename A3>
 meta_function_return_type
 auto_wrap_dlfunction(void (*f)(A0, A1, A2, A3),
 		const meta_function_argument_list_type& a) {
+	VERIFY_WRAPPED_ARGS(a, 4);
 	(*f)(
 		extract_meta_value<A0>(a[0]),
 		extract_meta_value<A1>(a[1]),
@@ -291,6 +321,7 @@ template <typename R,
 meta_function_return_type
 auto_wrap_dlfunction(R (*f)(A0, A1, A2, A3, A4),
 		const meta_function_argument_list_type& a) {
+	VERIFY_WRAPPED_ARGS(a, 5);
 	return make_meta_value((*f)(
 		extract_meta_value<A0>(a[0]),
 		extract_meta_value<A1>(a[1]),
@@ -304,6 +335,7 @@ template <typename A0, typename A1, typename A2, typename A3, typename A4>
 meta_function_return_type
 auto_wrap_dlfunction(void (*f)(A0, A1, A2, A3, A4),
 		const meta_function_argument_list_type& a) {
+	VERIFY_WRAPPED_ARGS(a, 5);
 	(*f)(
 		extract_meta_value<A0>(a[0]),
 		extract_meta_value<A1>(a[1]),
@@ -320,6 +352,7 @@ template <typename R,
 meta_function_return_type
 auto_wrap_dlfunction(R (*f)(A0, A1, A2, A3, A4, A5),
 		const meta_function_argument_list_type& a) {
+	VERIFY_WRAPPED_ARGS(a, 6);
 	return make_meta_value((*f)(
 		extract_meta_value<A0>(a[0]),
 		extract_meta_value<A1>(a[1]),
@@ -335,6 +368,7 @@ template <typename A0, typename A1, typename A2, typename A3,
 meta_function_return_type
 auto_wrap_dlfunction(void (*f)(A0, A1, A2, A3, A4, A5),
 		const meta_function_argument_list_type& a) {
+	VERIFY_WRAPPED_ARGS(a, 6);
 	(*f)(
 		extract_meta_value<A0>(a[0]),
 		extract_meta_value<A1>(a[1]),
@@ -352,6 +386,7 @@ template <typename R,
 meta_function_return_type
 auto_wrap_dlfunction(R (*f)(A0, A1, A2, A3, A4, A5, A6),
 		const meta_function_argument_list_type& a) {
+	VERIFY_WRAPPED_ARGS(a, 7);
 	return make_meta_value((*f)(
 		extract_meta_value<A0>(a[0]),
 		extract_meta_value<A1>(a[1]),
@@ -368,6 +403,7 @@ template <typename A0, typename A1, typename A2, typename A3,
 meta_function_return_type
 auto_wrap_dlfunction(void (*f)(A0, A1, A2, A3, A4, A5, A6),
 		const meta_function_argument_list_type& a) {
+	VERIFY_WRAPPED_ARGS(a, 7);
 	(*f)(
 		extract_meta_value<A0>(a[0]),
 		extract_meta_value<A1>(a[1]),
@@ -386,6 +422,7 @@ template <typename R,
 meta_function_return_type
 auto_wrap_dlfunction(R (*f)(A0, A1, A2, A3, A4, A5, A6, A7),
 		const meta_function_argument_list_type& a) {
+	VERIFY_WRAPPED_ARGS(a, 8);
 	return make_meta_value((*f)(
 		extract_meta_value<A0>(a[0]),
 		extract_meta_value<A1>(a[1]),
@@ -403,6 +440,7 @@ template <typename A0, typename A1, typename A2, typename A3,
 meta_function_return_type
 auto_wrap_dlfunction(void (*f)(A0, A1, A2, A3, A4, A5, A6, A7),
 		const meta_function_argument_list_type& a) {
+	VERIFY_WRAPPED_ARGS(a, 8);
 	(*f)(
 		extract_meta_value<A0>(a[0]),
 		extract_meta_value<A1>(a[1]),

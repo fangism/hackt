@@ -21,4 +21,4 @@ core.*
 *.gesnarfed
 dummy.cc
 stamp-h*
-
+ignore

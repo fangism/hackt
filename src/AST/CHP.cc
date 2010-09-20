@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.cc"
 	Class method definitions for CHP parser classes.
-	$Id: CHP.cc,v 1.28.4.1 2010/09/15 00:57:48 fang Exp $
+	$Id: CHP.cc,v 1.28.4.2 2010/09/20 18:37:19 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_chp.cc,v 1.21.20.1 2005/12/11 00:45:03 fang Exp
  */
@@ -82,7 +82,9 @@ SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::metaloop_selection, "(chp-metaloop-sel)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::metaloop_statement, "(chp-metaloop-stmt)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::loop, "(chp-loop)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::do_until, "(chp-do-until)")
+#if OLD_CHP_LOG
 SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::log, "(chp-log)")
+#endif
 SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::function_call_expr, "(chp-func-call)")
 
 namespace memory {
@@ -126,6 +128,7 @@ using entity::dynamic_param_expr_list;
 using entity::nonmeta_expr_list;
 using entity::nonmeta_func_call;
 using entity::meta_func_call;
+using entity::meta_func_call_base;
 
 //=============================================================================
 // class probe_expr method definitions
@@ -1520,6 +1523,7 @@ statement::check_chp_attribute(const generic_attribute& a, context& c) {
 }
 
 //=============================================================================
+#if OLD_CHP_LOG
 // class log method definitions
 
 CONSTRUCTOR_INLINE
@@ -1554,6 +1558,7 @@ log::__check_action(context& c) const {
 "library as the math function for natural-logarithm."  << endl;
 	return statement::return_type(NULL);
 }
+#endif
 
 //=============================================================================
 // class function_call_expr method definitions
@@ -1631,7 +1636,8 @@ function_call_expr::check_meta_expr(const context& c) const {
 	count_ptr<dynamic_param_expr_list>
 		ra(new dynamic_param_expr_list);
 	copy(i, e, back_inserter(*ra));
-	const expr::meta_return_type ret(new meta_func_call(fn, ra));
+	const expr::meta_return_type
+		ret(meta_func_call_base::make_meta_func_call(fn, ra));
 	return ret;
 #endif
 }

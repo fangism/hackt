@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.57.4.1 2010/09/10 01:12:49 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.57.4.2 2010/09/20 18:37:33 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -335,7 +335,9 @@ extern const char* const yyrule[];
 	CHP::stmt_list*		_chp_stmt_list;
 	CHP::statement*		_chp_stmt;
 	CHP::skip*		_chp_skip;
+/** deprecated **
 	CHP::log*		_chp_log;
+**/
 	CHP::loop*		_chp_loop;
 	CHP::do_until*		_chp_do_until;
 	CHP::wait*		_chp_wait;
@@ -488,7 +490,8 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %token	<_keyword_position>	AS
 %token	<_keyword_position>	CHP_LANG HSE_LANG PRS_LANG SPEC_LANG
 %token	<_keyword_position>	TREE_LANG SUBCKT_LANG
-%token	<_keyword_position>	SKIP LOG
+%token	<_keyword_position>	SKIP
+/* %token	<_keyword_position>	LOG	(deprecated) */
 %token	<_keyword_position>	DEFINE DEFPROC DEFCHAN DEFTYPE
 %token	<_keyword_position>	TYPEDEF
 %token	<_keyword_position>	SET GET SEND RECV
@@ -1885,8 +1888,10 @@ chp_statement
 	| chp_recv { $$ = $1; }
 	| chp_peek { $$ = $1; }
 	/* log() is likely to be deprecated */
+/** deprecated **
 	| LOG expr_list_in_parens
 		{ $$ = new CHP::log($1, $2); }
+**/
 	| chp_metaloop_selection { $$ = $1; }
 	| chp_metaloop_statement { $$ = $1; }
 	| function_call_expr { $$ = $1; }

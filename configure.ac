@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.222 2010/09/02 20:21:24 fang Exp $
+#	$Id: configure.ac,v 1.222.2.1 2010/09/20 18:37:10 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -231,7 +231,13 @@ dnl define WORDS_BIGENDIAN if is big endian
 dnl not actually needed in this project yet
 AC_C_BIGENDIAN
 
+dnl check for __typeof__ operator, or equivalent
+AC_C_TYPEOF
+
 AC_PROG_CXX
+
+dnl check for decltype operator, like typeof.
+FANG_CXX_DECLTYPE
 
 dnl from "config/cxx.m4"
 FANG_CXX_VERSION

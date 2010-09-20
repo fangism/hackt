@@ -20,7 +20,7 @@
  *
  *	TODO: optionally, use gperf to generate a fast perfect hash.
  *
- *	$Id: persistent_type_hash.h,v 1.31.4.2 2010/09/15 00:57:49 fang Exp $
+ *	$Id: persistent_type_hash.h,v 1.31.4.3 2010/09/20 18:37:23 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_PERSISTENT_TYPE_HASH_H__
@@ -197,7 +197,10 @@
 #define	PINT_ARITH_LOOP_EXPR_TYPE_KEY				"piarthlp"
 #define	PBOOL_LOGICAL_LOOP_EXPR_TYPE_KEY			"pblogclp"
 #define	PREAL_ARITH_LOOP_EXPR_TYPE_KEY				"prarthlp"
-#define	META_FUNCTION_CALL_TYPE_KEY				"pmfuncex"
+#define	PINT_META_FUNCTION_CALL_TYPE_KEY			"pimfunex"
+#define	PBOOL_META_FUNCTION_CALL_TYPE_KEY			"pbmfunex"
+#define	PREAL_META_FUNCTION_CALL_TYPE_KEY			"prmfunex"
+#define	PSTRING_META_FUNCTION_CALL_TYPE_KEY			"psmfunex"
 
 	// convert expressions
 #define	CONVERT_PINT_TO_PREAL_EXPR_TYPE_KEY			"cnvtpipr"

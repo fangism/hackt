@@ -2,7 +2,7 @@
 	\file "Object/expr/meta_func_lib.h"
 	Meta-functions can be dynamically added.
 	This header should be installed (eventually).  
-	$Id: meta_func_lib.h,v 1.1.2.1 2010/09/15 00:57:54 fang Exp $
+	$Id: meta_func_lib.h,v 1.1.2.2 2010/09/20 18:37:29 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_FUNC_LIB_H__
@@ -10,6 +10,7 @@
 
 #include <iosfwd>
 #include <string>
+#include <utility>			// for std::pair
 #include "Object/expr/dlfunction_fwd.h"
 	// eventually reduce this include to forward declarations and typedefs
 #include "Object/expr/types.h"
@@ -22,6 +23,10 @@
 
 namespace HAC {
 namespace entity {
+#define	REGISTER_META_FUNCTION_PROTO					\
+int register_meta_function(const std::string&, 				\
+	const meta_function_ptr_type, const char)
+
 #if LOADABLE_META_FUNCTIONS
 /**
 	This binds names to function symbols from dlopened modules.  
@@ -30,31 +35,17 @@ namespace entity {
 	Recommend using the automatic registration class interface instead.
  */
 extern
-int
-register_meta_function(const std::string&, const meta_function_ptr_type);
+REGISTER_META_FUNCTION_PROTO;
 #endif
 
 // Q: do we ever want to un-register functions?
+typedef	meta_function_ptr_type		meta_mapped_func_ptr_type;
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Helper class for automatically registering function
-	upon dlopening of a module.  
+	second: char is actually a meta_type_tag_enum from class_traits.
  */
-class meta_function_registrar {
-public:
-	/**
-		\throw exception on failure.
-	 */
-	meta_function_registrar(const std::string&, 
-		const meta_function_ptr_type);
-
-	meta_function_registrar(const std::string&, 
-		meta_function_type* const);
-
-	~meta_function_registrar();
-
-} /* __ATTRIBUTE_UNUSED__ */ ;
+typedef std::pair<meta_mapped_func_ptr_type, char>
+					mapped_func_entry_type;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // the following functions are only needed for internal compiling
@@ -63,8 +54,12 @@ public:
 	The lookup counterpart.  
  */
 extern
-meta_function_ptr_type
+const mapped_func_entry_type&
 lookup_meta_function(const std::string&);
+
+extern
+char
+lookup_meta_function_return_tag(const std::string&);
 
 extern
 void

@@ -3,6 +3,25 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-09-17	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-23-string-01-04:
+	  Differentiated meta-func-calls to subtypes by statically known
+		return type, that is automatically inferred and stored in 
+		the generic meta-func-lib function map. 
+		Implmented as a class template and explicitly instantiated.
+	  Removed the long-time deprecated log() function from the CHP lang,
+		to allow for math log() function.
+	  Initial set of functions:
+		string manipulation, format, concat, conditionals, 
+		floating-point math functions
+	  meta_call_traits' auto_wrap_dlfunctions now detect errors
+		in passing the wrong number of arguments.
+	  some util library additions, see util/ChangeLog.
+	  Added handful of function test cases to test/param.  
+	  Ending work on branch, merging to trunk.
+
+
 2010-09-14	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-23-string-01-03:

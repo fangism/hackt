@@ -1,5 +1,12 @@
 "ChangeLog"
-#	$Id: ChangeLog,v 1.247.2.1 2010/09/15 00:57:37 fang Exp $
+#	$Id: ChangeLog,v 1.247.2.2 2010/09/20 18:37:09 fang Exp $
+
+2010-09-15	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-23-string-01-04:
+	  configure.ac, config/cxx.m4: check for typeof, __typeof__,
+		and decltype operators.  
+
 
 2010-09-14	David Fang	<fangism@users.sourceforge.net>
 

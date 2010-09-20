@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/DependenceCollector.h"
-	$Id: DependenceCollector.h,v 1.10.4.1 2010/09/08 21:14:39 fang Exp $
+	$Id: DependenceCollector.h,v 1.10.4.2 2010/09/20 18:37:35 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_DEPENDENCECOLLECTOR_H__
@@ -80,6 +80,10 @@ using entity::pint_const_collection;
 using entity::pbool_const_collection;
 using entity::preal_const_collection;
 using entity::pstring_const_collection;
+using entity::pint_meta_func_call;
+using entity::pbool_meta_func_call;
+using entity::preal_meta_func_call;
+using entity::pstring_meta_func_call;
 using entity::simple_channel_nonmeta_instance_reference;
 using entity::simple_process_nonmeta_instance_reference;
 using entity::simple_int_nonmeta_instance_reference;
@@ -220,6 +224,11 @@ public:
 	VISIT_PROTO(pbool_const_collection);
 	VISIT_PROTO(preal_const_collection);
 	VISIT_PROTO(pstring_const_collection);
+
+	VISIT_PROTO(pint_meta_func_call);
+	VISIT_PROTO(pbool_meta_func_call);
+	VISIT_PROTO(preal_meta_func_call);
+	VISIT_PROTO(pstring_meta_func_call);
 
 	VISIT_PROTO(simple_channel_nonmeta_instance_reference);
 	VISIT_PROTO(simple_process_nonmeta_instance_reference);
