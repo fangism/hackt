@@ -1,0 +1,63 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	pstrplch	0	#HEAD#	#TAIL#	31
+	6	##ADDR##	pstrinst	0	#HEAD#	#TAIL#	16
+	7	##ADDR##	pstrplch	0	#HEAD#	#TAIL#	31
+	8	##ADDR##	pstrinst	0	#HEAD#	#TAIL#	16
+	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	14	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	15	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	17	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	18	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	21	##ADDR##	psassign	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	psmfunex	0	#HEAD#	#TAIL#	22
+	23	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	cnstps__	0	#HEAD#	#TAIL#	19
+	25	##ADDR##	cnstps__	0	#HEAD#	#TAIL#	18
+	26	##ADDR##	spsmvref	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	psassign	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	psmfunex	0	#HEAD#	#TAIL#	22
+	29	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	31	##ADDR##	cnstps__	0	#HEAD#	#TAIL#	26
+	32	##ADDR##	spsmvref	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	footprnt	0	#HEAD#	#TAIL#	383
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  2 parameter-collections
+  2 instantiation-collections
+  0 sub-namespaces
+  0 definitions
+  0 typedefs
+  Parameters:
+    bar = pstring<> bar
+    foo = pstring<> foo
+  Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
+}
+
+footprint: {
+  !GND = bool^0 = !GND (1) @[ supply_low ] 
+  !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
+  bar = pstring^0 value: 2001 Space Odessey
+  foo = pstring^0 value: hello, world!
+  Created state:
+  bool instance pool: (0 ports, 2 local, 0 mapped)
+  1	!GND @[ supply_low ]	
+  2	!Vdd @[ supply_high ]	
+}

@@ -18,7 +18,9 @@
  *	and specific to each module.  
  *	As a convention, all enumerations are suffixed with _TYPE_KEY.  
  *
- *	$Id: persistent_type_hash.h,v 1.31 2010/07/14 18:12:32 fang Exp $
+ *	TODO: optionally, use gperf to generate a fast perfect hash.
+ *
+ *	$Id: persistent_type_hash.h,v 1.32 2010/09/21 00:18:09 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_PERSISTENT_TYPE_HASH_H__
@@ -69,6 +71,7 @@
 #define	PBOOL_VALUE_PLACEHOLDER_TYPE_KEY			"pboolplh"
 #define	PINT_VALUE_PLACEHOLDER_TYPE_KEY				"pintplch"
 #define	PREAL_VALUE_PLACEHOLDER_TYPE_KEY			"prealplh"
+#define	PSTRING_VALUE_PLACEHOLDER_TYPE_KEY			"pstrplch"
 
 #if 0
 // OBSOLETE: after footprints took charge of managing instance collections
@@ -116,6 +119,7 @@
 #define	SIMPLE_PBOOL_META_VALUE_REFERENCE_TYPE_KEY		"spbmvref"
 #define	SIMPLE_PINT_META_VALUE_REFERENCE_TYPE_KEY		"spimvref"
 #define	SIMPLE_PREAL_META_VALUE_REFERENCE_TYPE_KEY		"sprmvref"
+#define	SIMPLE_PSTRING_META_VALUE_REFERENCE_TYPE_KEY		"spsmvref"
 
 	// simple non-meta instance references
 #define	SIMPLE_PROCESS_NONMETA_INSTANCE_REFERENCE_TYPE_KEY	"sprcnref"
@@ -127,6 +131,7 @@
 #define	SIMPLE_PBOOL_NONMETA_INSTANCE_REFERENCE_TYPE_KEY	"spbnref"
 #define	SIMPLE_PINT_NONMETA_INSTANCE_REFERENCE_TYPE_KEY		"spinref"
 #define	SIMPLE_PREAL_NONMETA_INSTANCE_REFERENCE_TYPE_KEY	"sprnref"
+#define	SIMPLE_PSTRING_NONMETA_INSTANCE_REFERENCE_TYPE_KEY	"spsnref"
 
 	// aggregates are complex compositions / concatenations of arrays
 #define	AGGREGATE_PROCESS_META_INSTANCE_REFERENCE_TYPE_KEY	"aprcmref"
@@ -138,6 +143,7 @@
 #define	AGGREGATE_PBOOL_META_VALUE_REFERENCE_TYPE_KEY		"apbmvref"
 #define	AGGREGATE_PINT_META_VALUE_REFERENCE_TYPE_KEY		"apimvref"
 #define	AGGREGATE_PREAL_META_VALUE_REFERENCE_TYPE_KEY		"aprmvref"
+#define	AGGREGATE_PSTRING_META_VALUE_REFERENCE_TYPE_KEY		"apsmvref"
 
 	// member references of the form x.y, (x may be indexed / member ref.)
 #define	MEMBER_PROCESS_INSTANCE_REFERENCE_TYPE_KEY		"mprocref"
@@ -157,13 +163,15 @@
 	// When in doubt, it is safe to use the dynamic flavor.  
 
 // value scalars
-#define	CONST_PBOOL_TYPE_KEY					"cnstpb"
-#define	CONST_PINT_TYPE_KEY					"cnstpi"
-#define	CONST_PREAL_TYPE_KEY					"cnstpr"
+#define	CONST_PBOOL_TYPE_KEY					"cnstpb__"
+#define	CONST_PINT_TYPE_KEY					"cnstpi__"
+#define	CONST_PREAL_TYPE_KEY					"cnstpr__"
+#define	CONST_PSTRING_TYPE_KEY					"cnstps__"
 // value collections
 #define	CONST_PBOOL_COLLECTION_TYPE_KEY				"cnstpbc"
 #define	CONST_PINT_COLLECTION_TYPE_KEY				"cnstpic"
 #define	CONST_PREAL_COLLECTION_TYPE_KEY				"cnstprc"
+#define	CONST_PSTRING_COLLECTION_TYPE_KEY			"cnstpsc"
 
 #define	CONST_RANGE_TYPE_KEY					"cnstrng"
 #define	DYNAMIC_RANGE_TYPE_KEY					"dynrng"
@@ -189,7 +197,10 @@
 #define	PINT_ARITH_LOOP_EXPR_TYPE_KEY				"piarthlp"
 #define	PBOOL_LOGICAL_LOOP_EXPR_TYPE_KEY			"pblogclp"
 #define	PREAL_ARITH_LOOP_EXPR_TYPE_KEY				"prarthlp"
-#define	STRING_EXPR_TYPE_KEY					"stringex"
+#define	PINT_META_FUNCTION_CALL_TYPE_KEY			"pimfunex"
+#define	PBOOL_META_FUNCTION_CALL_TYPE_KEY			"pbmfunex"
+#define	PREAL_META_FUNCTION_CALL_TYPE_KEY			"prmfunex"
+#define	PSTRING_META_FUNCTION_CALL_TYPE_KEY			"psmfunex"
 
 	// convert expressions
 #define	CONVERT_PINT_TO_PREAL_EXPR_TYPE_KEY			"cnvtpipr"
@@ -197,6 +208,7 @@
 #define	BOOL_RETURN_CAST_EXPR_TYPE_KEY				"bretcast"
 #define	INT_RETURN_CAST_EXPR_TYPE_KEY				"iretcast"
 #define	REAL_RETURN_CAST_EXPR_TYPE_KEY				"rretcast"
+#define	STRING_RETURN_CAST_EXPR_TYPE_KEY			"sretcast"
 
 // nonmeta expressions
 #define	NONMETA_INT_ARITH_EXPR_TYPE_KEY				"narithex"
@@ -225,6 +237,7 @@
 #define	PBOOL_INSTANTIATION_STATEMENT_TYPE_KEY			"pboolins"
 #define	PINT_INSTANTIATION_STATEMENT_TYPE_KEY			"pintinst"
 #define	PREAL_INSTANTIATION_STATEMENT_TYPE_KEY			"prealins"
+#define	PSTRING_INSTANTIATION_STATEMENT_TYPE_KEY		"pstrinst"
 
 #define	PROCESS_TEMPLATE_TYPE_COMPLETION_TYPE_KEY		"proctpcp"
 
@@ -238,6 +251,7 @@
 #define	PBOOL_EXPR_ASSIGNMENT_TYPE_KEY				"pbassign"
 #define	PINT_EXPR_ASSIGNMENT_TYPE_KEY				"piassign"
 #define	PREAL_EXPR_ASSIGNMENT_TYPE_KEY				"prassign"
+#define	PSTRING_EXPR_ASSIGNMENT_TYPE_KEY			"psassign"
 
 // will be obsolete if it is subclassed into the following
 #define	ALIAS_CONNECTION_TYPE_KEY				"aliascon"

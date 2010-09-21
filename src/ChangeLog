@@ -3,6 +3,33 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-09-20	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-27-merged-string-01-04:
+	  Branch merge.  Introducing string parameters 'pstring', 
+		and compile-time library functions, including
+		string formatting and manipulation, math functions.
+
+
+2010-09-17	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-23-string-01-04:
+	  Differentiated meta-func-calls to subtypes by statically known
+		return type, that is automatically inferred and stored in 
+		the generic meta-func-lib function map. 
+		Implmented as a class template and explicitly instantiated.
+	  Removed the long-time deprecated log() function from the CHP lang,
+		to allow for math log() function.
+	  Initial set of functions:
+		string manipulation, format, concat, conditionals, 
+		floating-point math functions
+	  meta_call_traits' auto_wrap_dlfunctions now detect errors
+		in passing the wrong number of arguments.
+	  some util library additions, see util/ChangeLog.
+	  Added handful of function test cases to test/param.  
+	  Ending work on branch, merging to trunk.
+
+
 2010-09-16	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-26:
@@ -29,12 +56,55 @@
 	  Closes ACX-PR-5810.
 
 
+2010-09-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-23-string-01-03:
+	  Actually implemented meta-functions in extendable library, 
+		Object/expr/meta_func_lib.cc.  Function wrappers are 
+		practically identical to existing CHP function interface.
+	  Object/persistent_type_hash.h: added META_FUNCTION_CALL
+		and STRING_RETURN_CAST_EXPR.
+	  Added missing class_traits for real_tag and string_tag.
+	  Re-factored code from Object/expr/dlfunction.h and 
+		sim/chpsim/chpsim_dlfunction.h into 
+		Object/expr/meta_call_traits.*
+		renamed some former chp utilities to meta* utilities.
+	  Regression tests are clean!  No new tests.
+	  Next: finish meta_func_call::make_param_expression_assignment().
+
+
 2010-09-10	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-24:
 	  AST/range.cc: check that dimensions of index is 0 (scalar)
 		before continuing check (fixes ICE-on-invalid, ACX-PR-5807).
 		Test case contributed by Ilya Ganusov added.
+
+
+2010-09-09	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-23-string-01-02:
+	  Added front-end support for pstring parameter types.
+		Modified: lexer/parser, AST classes, built-in type 
+		references, instantiation_statement.
+		Middle-end and back-ends just work!
+	  Added lots of test cases.
+	  Next: string manipulation operations
+
+
+2010-09-08	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-23-string-01-01:
+	  Branch for adding string types to HAC.
+	  This revision adds pstring parameter types to the middle-end.
+		Affected files: traits, expr/*string*, persistent types, 
+		value-collection, references, instantiations, footprint,
+		const-collection, expression visitors.  
+	  Tests updated for object dumps only.
+	  Next: front-end support.
+	  On this branch: string operations, compile-time, run-time, 
+		chpsim support for string values and variables,
+		string template parameters.
 
 
 2010-09-01	David Fang		<fangism@users.sourceforge.net>

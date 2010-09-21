@@ -1,5 +1,5 @@
 # "test/parser/template/Makefile.am"
-#	$Id: Makefile.am,v 1.32 2010/08/05 18:26:20 fang Exp $
+#	$Id: Makefile.am,v 1.33 2010/09/21 00:24:28 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -13,6 +13,7 @@ HACKT_PARSE_TEST_FAILURES = \
 	085 \
 	103 104 \
 	112 113 114 \
+	125 126 \
 	env_source_typedef-01a \
 	env_source_typedef-01d \
 	env_source_typedef-03 \
@@ -34,7 +35,8 @@ HACKT_PARSE_TEST_PASSES = \
 	090 091 092 093 094 095 096 097 098 099 \
 	100 101 102 105 106 107 108 109 \
 	110 111 115 116 116b 117 117b 118 119 \
-	120 121 122 \
+	120 121 122 123 124 127 128 129 \
+	130 131 132 133 \
 	env_source \
 	env_source-01 env_source-01a env_source-01b \
 	env_source-02 env_source-03 env_source-04 \
@@ -86,7 +88,8 @@ HACKT_CREATE_TEST_FAILURES = \
 	041 \
 	067 067a \
 	071 072 073a 078 \
-	080 082 083 084
+	080 082 083 084 \
+	129
 
 # omitted tests are just uninteresting
 HACKT_CREATE_TEST_PASSES = \
@@ -102,7 +105,8 @@ HACKT_CREATE_TEST_PASSES = \
 	090 091 092 093 095 096 097 099 \
 	100 101 102 106 107 \
 	110 111 116 116b 117 117b 118 119 \
-	120 122 \
+	120 122 123 124 127 128 \
+	130 131 132 133 \
 	env_source-01 env_source-01a \
 	env_source-02 env_source-03 \
 	env_source-05 env_source-06 env_source-08 \
@@ -167,7 +171,8 @@ HACKT_ALLOC_TEST_PASSES = \
 	090 091 092 093 095 096 097 099 \
 	100 101 102 106 107 \
 	110 111 116 116b 117 117b 118 119 \
-	120 122 \
+	120 122 123 124 127 128 \
+	130 131 132 133 \
 	env_source-01 env_source-01a \
 	env_source-02 env_source-03 \
 	env_source-05 env_source-06 \

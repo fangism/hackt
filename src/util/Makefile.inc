@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.inc,v 1.45 2010/05/11 00:18:19 fang Exp $
+#	$Id: Makefile.inc,v 1.46 2010/09/21 00:18:41 fang Exp $
 
 # TODO: consider moving guile support down to subdirectory, like lang/guile
 #	vi: ft=automake
@@ -112,6 +112,7 @@ UTIL_HEADER_FILES = \
 	util/file_status.h \
 	util/for_all.h \
 	util/format_IO.h \
+	util/function_traits.h \
 	util/free.h \
 	util/getopt_portable.h \
 	util/hash_qmap_fwd.h \
@@ -202,6 +203,7 @@ UTIL_HEADER_FILES = \
 	util/swap_saver.h \
 	util/tagged_subtype.h \
 	util/template.h \
+	util/typeof.h \
 	util/tokenize_fwd.h \
 	util/tokenize.h \
 	util/type_traits.h \

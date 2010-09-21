@@ -4,7 +4,7 @@
 	Possibly factor out implementations into another file?
 	This file came from "Object/art_object_inst_stmt_param.h"
 		in a previous life.  
-	$Id: param_instantiation_statement.h,v 1.16 2008/11/12 03:00:37 fang Exp $
+	$Id: param_instantiation_statement.h,v 1.17 2010/09/21 00:18:32 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_PARAM_INSTANTIATION_STATEMENT_H__
@@ -17,6 +17,7 @@
 #include "Object/traits/pint_traits.h"
 #include "Object/traits/pbool_traits.h"
 #include "Object/traits/preal_traits.h"
+#include "Object/traits/pstring_traits.h"
 #include "Object/type/param_type_reference.h"
 #include "Object/expr/const_param_expr_list.h"
 #include "Object/expr/dynamic_param_expr_list.h"
@@ -183,6 +184,80 @@ protected:
 	/**
 		Argument is ignored, but could assert that it is the
 		same as pbool_type_ptr.
+	 */
+	explicit
+	instantiation_statement_type_ref_base(const type_ref_ptr_type&) { }
+
+	// just ignore the parameters
+	instantiation_statement_type_ref_base(const type_ref_ptr_type&, 
+		const const_relaxed_args_type&) { }
+
+	~instantiation_statement_type_ref_base() { }
+
+	template <class InstStmtType>
+	static
+	void
+	attach_initial_instantiation_statement(
+		instance_placeholder_type& v,
+		const count_ptr<const InstStmtType>& i) {
+		v.attach_initial_instantiation_statement(i);
+	}
+
+	const type_ref_ptr_type&
+	get_type(void) const { return built_in_type_ptr; }
+
+	const type_ref_ptr_type&
+	unroll_type_reference(const unroll_context&) const {
+		// trivial unrolling, context independent
+		return built_in_type_ptr;
+	}
+
+	static
+	good_bool
+	commit_type_check(const value_collection_generic_type&, 
+			const instance_collection_parameter_type&, 
+			const footprint& /* top */) {
+		// no need to type-check
+		return good_bool(true);
+	}
+
+	static
+	good_bool
+	commit_type_first_time(value_collection_generic_type&, 
+			const instance_collection_parameter_type&, 
+			const footprint& /* top */) {
+		// no-op
+		return good_bool(true);
+	}
+
+	static
+	good_bool
+	instantiate_indices_with_actuals(value_collection_generic_type& v,
+			const const_range_list& crl,
+			const unroll_context&) {
+		return v.instantiate_indices(crl);
+	}
+
+};      // end class instantiation_statement_type_ref_base
+
+//=============================================================================
+/**
+	Specialization of type-reference for parameter string.  
+ */
+class class_traits<pstring_tag>::instantiation_statement_type_ref_base :
+	public empty_instantiation_statement_type_ref_base {
+	typedef	class_traits<pstring_tag>			traits_type;
+	// has no type member!
+	// consider importing built-in type ref as a static member
+public:
+	typedef	traits_type::instance_collection_parameter_type
+					instance_collection_parameter_type;
+protected:
+	instantiation_statement_type_ref_base() { }
+
+	/**
+		Argument is ignored, but could assert that it is the
+		same as pstring_type_ptr.
 	 */
 	explicit
 	instantiation_statement_type_ref_base(const type_ref_ptr_type&) { }

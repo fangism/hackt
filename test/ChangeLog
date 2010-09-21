@@ -1,6 +1,22 @@
 # "test/ChangeLog"
-#	$Id: ChangeLog,v 1.105 2010/04/05 23:59:44 fang Exp $
+#	$Id: ChangeLog,v 1.106 2010/09/21 00:18:43 fang Exp $
 # ChangeLog for test directory.
+
+2010-09-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-23-string-01-03:
+	  Make.test-tail: use BUIDLDIR_SUBST (sed) for dlopen_extra
+	  Make.test-chpsim: fixed chpsimrc-out compile script to properly
+		substitute $(builddir) and $(top_buildddir).
+		Without this, dyld was incorrectly looking in installed 
+		directory for built plug-ins.
+
+
+2010-09-08	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-23-string-01-01:
+	  Make.test-compile: made cpp parse test objects depend on haco
+
 
 2010-04-05	David Fang		<fangism@users.sourceforge.net>
 

@@ -70,7 +70,7 @@ Persistent Object Manager text dump:
 	66	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	67	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	68	##ADDR##	cnstpr__	0	#HEAD#	#TAIL#	12
-	69	##ADDR##	footprnt	0	#HEAD#	#TAIL#	736
+	69	##ADDR##	footprnt	0	#HEAD#	#TAIL#	756
 	70	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	71	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 

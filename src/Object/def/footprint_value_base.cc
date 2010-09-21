@@ -2,7 +2,7 @@
 	\file "Object/inst/footprint_value_base.cc"
 	Explicit template instantiations of footprint_bases
 	that manage value-collections.  
-	$Id: footprint_value_base.cc,v 1.3 2006/11/11 02:20:11 fang Exp $
+	$Id: footprint_value_base.cc,v 1.4 2010/09/21 00:18:11 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -18,9 +18,11 @@
 #include "Object/expr/pbool_const.h"
 #include "Object/expr/pint_const.h"
 #include "Object/expr/preal_const.h"
+#include "Object/expr/pstring_const.h"
 #include "Object/inst/pbool_instance.h"
 #include "Object/inst/pint_instance.h"
 #include "Object/inst/preal_instance.h"
+#include "Object/inst/pstring_instance.h"
 #include "util/multikey_map.tcc"	// for destructor, when symbol optimized
 
 namespace HAC {
@@ -29,10 +31,12 @@ namespace entity {
 template class value_collection_pool_bundle<pbool_tag>;
 template class value_collection_pool_bundle<pint_tag>;
 template class value_collection_pool_bundle<preal_tag>;
+template class value_collection_pool_bundle<pstring_tag>;
 
 template class value_footprint_base<pbool_tag>;
 template class value_footprint_base<pint_tag>;
 template class value_footprint_base<preal_tag>;
+template class value_footprint_base<pstring_tag>;
 
 }	// end namespace entity
 }	// end namespace HAC

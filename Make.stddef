@@ -3,7 +3,7 @@
 # make-independent definitions
 # This Makefile fragment should be included as early as possible
 # by other makefiles.  
-#	$Id: Make.stddef,v 1.30 2010/04/02 22:17:23 fang Exp $
+#	$Id: Make.stddef,v 1.31 2010/09/21 00:17:53 fang Exp $
 
 # force use of the ancient canonical bourne shell, 
 # else configure may pick up bash as the shell interpreter.  
@@ -70,6 +70,11 @@ EXTRA_DIST =
 TESTS =
 # EXTRA_DIST files that should only be searched from the srcdir
 srcdir_EXTRA_DIST =
+
+# support for referencing $(builddir) and $(top_builddir) in shell variables
+# via Makefile variable substitution
+BUILDDIR_SUBST = $(SED) -e 's|\$$(top_builddir)|$(top_builddir)|g' \
+	-e 's|\$$(builddir)|$(builddir)|g'
 
 # pipe to strip out srcdir from a name
 # NOTE: this was ripped from $(am__vpath_adj_setup)

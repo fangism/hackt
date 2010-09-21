@@ -1,0 +1,8 @@
+// "128.hac"
+// copy-modified from "126.hac"
+// testing string parameters
+// expect fail
+
+pstring bar[2];
+bar = {"Hello, ", 123 };
+

@@ -1,0 +1,12 @@
+// "028.hac"
+// copy-modified from "027.hac"
+// testing string parameters in typedefs
+
+template <><pint N>
+defproc foo() { }
+
+// can't pass a blank strict template parameter
+typedef	foo<><14>	fool;
+
+fool you;
+

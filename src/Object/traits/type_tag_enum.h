@@ -1,7 +1,7 @@
 /**
 	\file "Object/traits/type_tag_enum.h"
 	Global enumerations pertaining to meta types.  
-	$Id: type_tag_enum.h,v 1.8 2007/08/28 04:54:22 fang Exp $
+	$Id: type_tag_enum.h,v 1.9 2010/09/21 00:18:29 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_TYPE_TAG_ENUM_H__
@@ -27,7 +27,8 @@ typedef	enum {
 	META_TYPE_PBOOL = 8,
 	META_TYPE_PINT = 9,
 	META_TYPE_PREAL = 10,
-	META_TYPES_ALL = 11		// use as a MAX size
+	META_TYPE_PSTRING = 11,
+	META_TYPES_ALL = 12		// use as a MAX size
 }	meta_type_tag_enum;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -68,6 +69,10 @@ struct meta_type_map<META_TYPE_PINT> { typedef	pint_tag	type; };
 
 template <>
 struct meta_type_map<META_TYPE_PREAL> { typedef	preal_tag	type; };
+
+template <>
+struct meta_type_map<META_TYPE_PSTRING> { typedef pstring_tag	type; };
+
 
 //-----------------------------------------------------------------------------
 /**

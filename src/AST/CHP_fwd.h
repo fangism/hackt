@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP_fwd.h"
 	Forward declarations for the CHP namespace.  
-	$Id: CHP_fwd.h,v 1.8 2008/03/20 00:03:12 fang Exp $
+	$Id: CHP_fwd.h,v 1.9 2010/09/21 00:18:06 fang Exp $
 	This file used ot be the following before rename:
 	Id: art_parser_chp_fwd.h,v 1.4.42.1 2005/12/11 00:45:04 fang Exp
  */
@@ -10,6 +10,12 @@
 #define	__HAC_AST_CHP_FWD_H__
 
 #include "AST/AST_fwd.h"
+
+/**
+	Ancient CHP support log() statments, which have now been deprecated,
+	in favor of a log() function meta-function-call.
+ */
+#define	OLD_CHP_LOG				0
 
 namespace HAC {
 namespace parser {
@@ -23,7 +29,9 @@ class statement;
 typedef	node_list<const statement>		stmt_list_base;
 class stmt_list;
 class skip;
+#if OLD_CHP_LOG
 class log;
+#endif
 class loop;
 class do_until;
 class wait;

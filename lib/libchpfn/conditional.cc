@@ -1,6 +1,6 @@
 /**
 	\file "libchpfn/conditional.cc"
-	$Id: conditional.cc,v 1.3 2007/08/28 04:53:47 fang Exp $
+	$Id: conditional.cc,v 1.4 2010/09/21 00:18:00 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -8,7 +8,7 @@
 #include "libchpfn/conditional.h"
 #include "Object/expr/const_param_expr_list.h"
 #include "Object/expr/const_param.h"
-#include "Object/expr/dlfunction.h"
+#include "sim/chpsim/chpsim_dlfunction.h"
 #include "util/memory/count_ptr.h"
 #include "util/stacktrace.h"
 
@@ -20,6 +20,7 @@
 
 namespace HAC {
 namespace CHP {
+USING_CHPSIM_DLFUNCTION_PROLOGUE
 //=============================================================================
 
 template <class T>
@@ -75,6 +76,22 @@ are evaluated @emph{unconditionally}.
 real_value_type
 rcond(const bool_value_type z,
 		const real_value_type a, const real_value_type b) {
+	return _cond(z, a, b);
+}
+
+/**
+@texinfo fn/strcond.texi
+@deffn Function strcond z a b
+Conditional expression, for string rvalues.  
+If @var{z} is true, return @var{a}, else return @var{b}.
+NOTE: both expressions @var{a} and @var{b} 
+are evaluated @emph{unconditionally}.
+@end deffn
+@end texinfo
+ */
+string_value_type
+strcond(const bool_value_type z,
+		const string_value_type a, const string_value_type b) {
 	return _cond(z, a, b);
 }
 

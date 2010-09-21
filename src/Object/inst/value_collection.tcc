@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_collection.tcc"
 		in a previous life.  
- 	$Id: value_collection.tcc,v 1.26 2007/04/15 05:52:20 fang Exp $
+ 	$Id: value_collection.tcc,v 1.27 2010/09/21 00:18:24 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_TCC__
@@ -564,7 +564,8 @@ VALUE_SCALAR_TEMPLATE_SIGNATURE
 VALUE_SCALAR_CLASS::value_array() :
 		parent_type(), 
 		the_instance(),
-		cached_value(const_expr_type::default_value), 
+		// ALERT: depends on global initialization
+		cached_value(const_expr_type::safe_default_value()), 
 		cache_validity(false) {
 }
 
@@ -572,7 +573,8 @@ VALUE_SCALAR_CLASS::value_array() :
 VALUE_SCALAR_TEMPLATE_SIGNATURE
 VALUE_SCALAR_CLASS::value_array(const value_placeholder_ptr_type p) :
 		parent_type(p), the_instance(), 
-		cached_value(const_expr_type::default_value),
+		// ALERT: depends on global initialization
+		cached_value(const_expr_type::safe_default_value()),
 		cache_validity(false) {
 }
 

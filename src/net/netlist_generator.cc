@@ -1,7 +1,7 @@
 /**
 	\file "net/netlist_generator.cc"
 	Implementation of hierarchical netlist generation.
-	$Id: netlist_generator.cc,v 1.25 2010/09/16 23:17:09 fang Exp $
+	$Id: netlist_generator.cc,v 1.26 2010/09/21 00:18:35 fang Exp $
  */
 
 #define	ENABLE_STATIC_TRACE		0
@@ -22,7 +22,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/def/footprint.h"
 #include "Object/expr/pint_const.h"
 #include "Object/expr/preal_const.h"
-#include "Object/expr/string_expr.h"
+#include "Object/expr/pstring_const.h"
 #include "Object/inst/instance_pool.h"
 #include "Object/inst/state_instance.h"
 #include "Object/inst/instance_alias_info.h"
@@ -48,7 +48,7 @@ using std::ostringstream;
 using std::ostream_iterator;
 using std::upper_bound;
 using util::value_saver;
-using entity::string_expr;
+using entity::pstring_const;
 using entity::PRS::PRS_LITERAL_TYPE_ENUM;
 using entity::PRS::PRS_NOT_EXPR_TYPE_ENUM;
 using entity::PRS::PRS_AND_EXPR_TYPE_ENUM;
@@ -627,8 +627,7 @@ static
 void
 __attr_label(transistor& t, const attr_values_ptr_type& v) {
 	INVARIANT(v && v->size());
-	t.name = v->front().is_a<const string_expr>()
-			// should be pstring_const after branch merge
+	t.name = v->front().is_a<const pstring_const>()
 		->static_constant_value();
 }
 

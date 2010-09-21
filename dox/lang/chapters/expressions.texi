@@ -1,5 +1,5 @@
 @c "chapters/expressions.texi"
-@c $Id: expressions.texi,v 1.1 2007/08/20 00:02:47 fang Exp $
+@c $Id: expressions.texi,v 1.2 2010/09/21 00:17:57 fang Exp $
 
 @node Expressions
 @chapter Expressions
@@ -13,8 +13,13 @@ Boolean.
 
 Integer.
 
+Real.
+
+String.
+
 @menu
 * Range expressions::
+* Function expressions::
 @end menu
 
 @c ----------------------------------------------------------------------------
@@ -37,4 +42,17 @@ Compile-time (meta-language) interpretation.
 See chapter on compile-time flow-control (loops and conditionals).  
 
 
+@c ----------------------------------------------------------------------------
+@node Function expressions
+@section Function expressions
+@cindex function expressions
+
+The @HAC{} language supports function calls in expressions.
+Supported argument types and return types include integer, boolean, 
+real (float, double), and strings.  
+
+@include fn/strcat.texi
+@include fn/cond.texi
+@include fn/strtox.texi
+@include fn/math.texi
 

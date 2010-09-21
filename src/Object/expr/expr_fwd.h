@@ -1,7 +1,7 @@
 /**
 	\file "Object/expr/expr_fwd.h"
 	Forward declarations of all expression-related classes.  
-	$Id: expr_fwd.h,v 1.8 2007/08/28 04:54:07 fang Exp $
+	$Id: expr_fwd.h,v 1.9 2010/09/21 00:18:15 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_EXPR_FWD_H__
@@ -27,6 +27,8 @@ namespace entity {
 	class nonmeta_range_list;
 	class nonmeta_expr_list;
 	class nonmeta_func_call;
+	template <class>
+	class meta_func_call;
 
 	class int_arith_expr;
 	class int_negation_expr;
@@ -48,9 +50,11 @@ namespace entity {
 	class pbool_expr;
 	class pint_expr;
 	class preal_expr;
+	class pstring_expr;
 	class pint_const;
 	class pbool_const;
 	class preal_const;
+	class pstring_const;
 //	class param_unary_expr;
 	class pint_unary_expr;
 	class pbool_unary_expr;
@@ -83,6 +87,8 @@ namespace entity {
 		pbool_const_collection;
 	typedef const_collection<preal_tag>
 		preal_const_collection;
+	typedef const_collection<pstring_tag>
+		pstring_const_collection;
 
 	// from "Object/expr/loop_meta_expr.h"
 	template <class>
@@ -117,8 +123,16 @@ namespace entity {
 		bool_return_cast_expr;
 	typedef	nonmeta_cast_expr<int_expr, nonmeta_func_call>
 		int_return_cast_expr;
-//	typedef	nonmeta_cast_expr<real_expr, nonmeta_func_call>
-//		real_return_cast_expr;
+	typedef	nonmeta_cast_expr<real_expr, nonmeta_func_call>
+		real_return_cast_expr;
+	typedef	nonmeta_cast_expr<string_expr, nonmeta_func_call>
+		string_return_cast_expr;
+
+	typedef meta_func_call<pint_expr>		pint_meta_func_call;
+	typedef meta_func_call<pbool_expr>		pbool_meta_func_call;
+	typedef meta_func_call<preal_expr>		preal_meta_func_call;
+	typedef meta_func_call<pstring_expr>		pstring_meta_func_call;
+
 
 }	// end namespace entity
 }	// end namespace HAC

@@ -1,5 +1,15 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.116 2010/09/02 00:34:42 fang Exp $
+#	$Id: ChangeLog,v 1.117 2010/09/21 00:18:41 fang Exp $
+
+2010-09-15	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-23-string-01-04:
+	  Added util/typeof.h that uses __typeof__ or decltype if available,
+		also paired with autoconf macro checks.
+	  Added util/function_traits.h: to automatically infer
+		arity and return type, and arg types.  
+		Inspired by boost::function and friends.
+
 
 2010-09-01	David Fang		<fangism@users.sourceforge.net>
 

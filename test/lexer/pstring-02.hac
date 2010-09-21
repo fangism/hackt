@@ -1,0 +1,5 @@
+// "pstring-02.hac"
+// testing string concatenation
+
+pstring greeting = "Hell""o, "
+"world" "!";

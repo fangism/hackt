@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.42 2010/04/30 18:41:39 fang Exp $
+	$Id: PRS.cc,v 1.43 2010/09/21 00:18:07 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -34,7 +34,7 @@
 #include "Object/expr/param_expr.h"
 #include "Object/expr/dynamic_param_expr_list.h"
 #include "Object/expr/data_expr.h"
-#include "Object/expr/string_expr.h"
+#include "Object/expr/pstring_expr.h"
 #include "Object/expr/meta_range_expr.h"
 #include "Object/expr/meta_index_list.h"
 #include "Object/lang/PRS.h"
@@ -895,8 +895,8 @@ if (params) {
 	params->postorder_check_meta_exprs(e, c);
 	if (e.size() == 1) {
 		// e.front()->what(cout << "s = ") << endl;
-		const count_ptr<const entity::string_expr>
-			s(e.front().is_a<const entity::string_expr>());
+		const count_ptr<const entity::pstring_expr>
+			s(e.front().is_a<const entity::pstring_expr>());
 		if (s) {
 			name = s->static_constant_value();
 			err = false;

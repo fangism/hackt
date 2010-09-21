@@ -1,7 +1,7 @@
 /**
 	\file "Object/unroll/unroll_fwd.h"
 	Forward declarations for all unroll-related classes.
-	$Id: unroll_fwd.h,v 1.4 2008/10/05 23:00:36 fang Exp $
+	$Id: unroll_fwd.h,v 1.5 2010/09/21 00:18:33 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_FWD_H__
@@ -22,6 +22,8 @@ typedef expression_assignment<pint_tag>
 	pint_expression_assignment;
 typedef expression_assignment<preal_tag>
 	preal_expression_assignment;
+typedef expression_assignment<pstring_tag>
+	pstring_expression_assignment;
 
 // defined in "Object/unroll/*connection*.h"
 class meta_instance_reference_connection;
@@ -58,6 +60,8 @@ typedef instantiation_statement<pint_tag>
 	pint_instantiation_statement;
 typedef instantiation_statement<preal_tag>
 	preal_instantiation_statement;
+typedef instantiation_statement<pstring_tag>
+	pstring_instantiation_statement;
 typedef instantiation_statement<bool_tag>
 	bool_instantiation_statement;
 typedef instantiation_statement<int_tag>

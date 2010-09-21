@@ -14,3 +14,4 @@ acceptable tokens are:
 	PINT_TYPE (shift)
 	PBOOL_TYPE (shift)
 	PREAL_TYPE (shift)
+	PSTRING_TYPE (shift)

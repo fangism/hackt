@@ -4,7 +4,7 @@
 	This relies on the executable being built with -export-dynamic
 	for proper dynamic linking.  
 	TODO: binary I/O modes
-	$Id: io.cc,v 1.5 2008/11/23 17:53:21 fang Exp $
+	$Id: io.cc,v 1.6 2010/09/21 00:18:01 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -16,6 +16,7 @@
 #include "util/memory/count_ptr.h"	// .tcc
 #include "util/format_IO.h"
 #include "Object/expr/dlfunction.h"
+#include "Object/expr/meta_call_traits.h"
 // #include "util/string.tcc"		// for string_to_num
 #include "util/stacktrace.h"
 
@@ -32,7 +33,7 @@ using std::cin;
 using std::ios_base;
 using std::ofstream;
 using std::ifstream;
-using entity::extract_chp_value;
+using entity::extract_meta_value;
 using util::memory::count_ptr;
 using std::ostringstream;
 
@@ -402,7 +403,7 @@ chp_function_return_type
 fprint(const chp_function_argument_list_type& args) {
 	STACKTRACE_VERBOSE;
 	const string_value_type&
-		fn(extract_chp_value<string_value_type>(args[0]));
+		fn(extract_meta_value<string_value_type>(args[0]));
 	count_ptr<ofstream>& fp(ofstream_map[fn]);
 	if (!fp) {
 		fp = count_ptr<ofstream>(

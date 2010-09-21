@@ -1,6 +1,6 @@
 #!/usr/bin/awk -f
 # "spice-wrap.awk"
-#	$Id: spice-wrap.awk,v 1.1 2009/09/16 20:00:01 fang Exp $
+#	$Id: spice-wrap.awk,v 1.2 2010/09/21 00:18:01 fang Exp $
 # automatically wrap long line of spice files (or any file!)
 # usage:
 #	spice-wrap.awk [options] < in.spice > out.spice
@@ -18,7 +18,7 @@ BEGIN {
 	if (!length(continuation)) {
 		continuation = "\n+ ";
 	}
-	# to be precise abotu line length
+	# to be precise about line length
 	conttail = continuation;
 	conthead = continuation;
 	sub(".*\\n", "", conttail);
@@ -27,6 +27,7 @@ BEGIN {
 	lhead = length(conthead);
 }
 
+# for all lines
 {
 if (length($0) > wrap && wrap > 0) {
 	len = 0;

@@ -1,6 +1,6 @@
 # "Make.test-alloc"
 #	vi: ft=automake
-#	$Id: Make.test-alloc,v 1.12 2010/04/05 23:59:45 fang Exp $
+#	$Id: Make.test-alloc,v 1.13 2010/09/21 00:18:44 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -208,10 +208,11 @@ TESTS += \
 endif
 
 ALLOC_BUILD_CHECK_LOCAL = \
-	$(HACKT_ALLOC_TEST_PASSES:=.haco-a) \
 	$(HACKT_ALLOC_TEST_PASSES:=.allocdump) \
 	$(HACKT_ALLOC_TEST_PASSES:=.allocdump-filter) \
 	$(HACKT_ALLOC_TEST_PASSES:=.allocdiff)
+# .haco-a is deprecated
+#	$(HACKT_ALLOC_TEST_PASSES:=.haco-a)
 #	$(HACKT_ALLOC_TEST_FAILURES:=.allocfaildump) \
 #	$(HACKT_ALLOC_TEST_FAILURES:=.allocfaildiff)
 #	$(HACKT_ALLOC_TEST_PASSES:=.haco-a-from-haco) \

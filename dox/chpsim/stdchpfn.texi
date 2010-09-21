@@ -59,6 +59,7 @@ available from the standard @command{chpsim} library.
 @include fn/bcond.texi
 @include fn/zcond.texi
 @include fn/rcond.texi
+@include fn/strcond.texi
 @include fn/select.texi
 
 @node String Library

@@ -1,5 +1,11 @@
 # "lib/ChangeLog"
-#	$Id: ChangeLog,v 1.66 2010/09/02 00:34:31 fang Exp $
+#	$Id: ChangeLog,v 1.67 2010/09/21 00:17:58 fang Exp $
+
+2010-09-14	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-23-string-01-03:
+	  libchpfn/conditional.cc: added strcond, documented in texinfo.
+
 
 2010-09-01	David Fang	<fangism@users.sourceforge.net>
 

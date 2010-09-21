@@ -1,5 +1,5 @@
 dnl "config/cxx.m4"
-dnl	$Id: cxx.m4,v 1.12 2007/06/15 20:28:41 fang Exp $
+dnl	$Id: cxx.m4,v 1.13 2010/09/21 00:17:54 fang Exp $
 dnl autoconf macros for detecting characteristics of the C++ compiler.
 dnl
 
@@ -452,6 +452,38 @@ fi
 AM_CONDITIONAL(HAVE_ICC, echo "$CXX_VERSION" | grep ICC)
 ])
 
+
+dnl @synopsis FANG_CXX_DECLTYPE
+dnl
+dnl Checks for compiler support for decltype().
+dnl NOTE: This check uses the C++ language mode.  
+dnl Defines HAVE_DECLTYPE if operator is supported.
+dnl
+dnl @category Cxx
+dnl @version 2010-09-15
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
+dnl
+AC_DEFUN([FANG_CXX_DECLTYPE],
+[AC_REQUIRE([FANG_ANAL_COMPILE_FLAGS])
+AC_CACHE_CHECK([whether compiler accepts decltype() operator],
+[fang_cv_cxx_decltype],
+[AC_LANG_PUSH(C++)
+	AC_COMPILE_IFELSE(
+	AC_LANG_PROGRAM([],[const int foo = 0; 
+		const decltype(foo) bar = foo;
+		return bar;]),
+		[fang_cv_cxx_decltype=yes],
+		[fang_cv_cxx_decltype=no]
+	)
+AC_LANG_POP(C++)
+])
+dnl AC_MSG_RESULT([$ac_cx_cxx_attribute_unused])
+if test "$fang_cv_cxx_decltype" = "yes"; then
+	AC_DEFINE(HAVE_DECLTYPE, [], 
+		[True if compiler supports decltype() operator])
+fi
+])dnl
 
 dnl @synopsis FANG_CXX_ATTRIBUTE_UNUSED
 dnl

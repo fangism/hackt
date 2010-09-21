@@ -1,0 +1,137 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	64
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	pstrplch	0	#HEAD#	#TAIL#	32
+	6	##ADDR##	pstrinst	0	#HEAD#	#TAIL#	16
+	7	##ADDR##	pintplch	0	#HEAD#	#TAIL#	34
+	8	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	9	##ADDR##	pboolplh	0	#HEAD#	#TAIL#	34
+	10	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
+	11	##ADDR##	pstrplch	0	#HEAD#	#TAIL#	33
+	12	##ADDR##	pstrinst	0	#HEAD#	#TAIL#	16
+	13	##ADDR##	pstrplch	0	#HEAD#	#TAIL#	32
+	14	##ADDR##	pstrinst	0	#HEAD#	#TAIL#	16
+	15	##ADDR##	prealplh	0	#HEAD#	#TAIL#	41
+	16	##ADDR##	prealins	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	pstrplch	0	#HEAD#	#TAIL#	31
+	18	##ADDR##	pstrinst	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	pboolplh	0	#HEAD#	#TAIL#	32
+	20	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	pstrplch	0	#HEAD#	#TAIL#	31
+	22	##ADDR##	pstrinst	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	26	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	28	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	31	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	32	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	35	##ADDR##	psassign	0	#HEAD#	#TAIL#	20
+	36	##ADDR##	psmfunex	0	#HEAD#	#TAIL#	22
+	37	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	39	##ADDR##	spsmvref	0	#HEAD#	#TAIL#	16
+	40	##ADDR##	psassign	0	#HEAD#	#TAIL#	20
+	41	##ADDR##	psmfunex	0	#HEAD#	#TAIL#	22
+	42	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
+	43	##ADDR##	cnstps__	0	#HEAD#	#TAIL#	16
+	44	##ADDR##	cnstps__	0	#HEAD#	#TAIL#	17
+	45	##ADDR##	spsmvref	0	#HEAD#	#TAIL#	16
+	46	##ADDR##	psassign	0	#HEAD#	#TAIL#	20
+	47	##ADDR##	psmfunex	0	#HEAD#	#TAIL#	22
+	48	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
+	49	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	50	##ADDR##	cnstps__	0	#HEAD#	#TAIL#	36
+	51	##ADDR##	spsmvref	0	#HEAD#	#TAIL#	16
+	52	##ADDR##	psassign	0	#HEAD#	#TAIL#	20
+	53	##ADDR##	psmfunex	0	#HEAD#	#TAIL#	22
+	54	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	55	##ADDR##	pimfunex	0	#HEAD#	#TAIL#	22
+	56	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	57	##ADDR##	cnstps__	0	#HEAD#	#TAIL#	13
+	58	##ADDR##	spsmvref	0	#HEAD#	#TAIL#	16
+	59	##ADDR##	psassign	0	#HEAD#	#TAIL#	20
+	60	##ADDR##	psmfunex	0	#HEAD#	#TAIL#	22
+	61	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	62	##ADDR##	pimfunex	0	#HEAD#	#TAIL#	22
+	63	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	64	##ADDR##	spsmvref	0	#HEAD#	#TAIL#	16
+	65	##ADDR##	spsmvref	0	#HEAD#	#TAIL#	16
+	66	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	67	##ADDR##	pimfunex	0	#HEAD#	#TAIL#	22
+	68	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	69	##ADDR##	psmfunex	0	#HEAD#	#TAIL#	22
+	70	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
+	71	##ADDR##	spsmvref	0	#HEAD#	#TAIL#	16
+	72	##ADDR##	spsmvref	0	#HEAD#	#TAIL#	16
+	73	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	74	##ADDR##	prassign	0	#HEAD#	#TAIL#	20
+	75	##ADDR##	prmfunex	0	#HEAD#	#TAIL#	22
+	76	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	77	##ADDR##	psmfunex	0	#HEAD#	#TAIL#	22
+	78	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	24
+	79	##ADDR##	spsmvref	0	#HEAD#	#TAIL#	16
+	80	##ADDR##	cnstps__	0	#HEAD#	#TAIL#	13
+	81	##ADDR##	spsmvref	0	#HEAD#	#TAIL#	16
+	82	##ADDR##	sprmvref	0	#HEAD#	#TAIL#	16
+	83	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
+	84	##ADDR##	pbmfunex	0	#HEAD#	#TAIL#	22
+	85	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	86	##ADDR##	cnstps__	0	#HEAD#	#TAIL#	13
+	87	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+	88	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
+	89	##ADDR##	pbmfunex	0	#HEAD#	#TAIL#	22
+	90	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	91	##ADDR##	cnstps__	0	#HEAD#	#TAIL#	13
+	92	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+	93	##ADDR##	footprnt	0	#HEAD#	#TAIL#	475
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  9 parameter-collections
+  2 instantiation-collections
+  0 sub-namespaces
+  0 definitions
+  0 typedefs
+  Parameters:
+    eins = pstring<> eins
+    eleven = pint<> eleven
+    falsch = pbool<> falsch
+    food1 = pstring<> food1
+    line = pstring<> line
+    more_than_one = preal<> more_than_one
+    one = pstring<> one
+    troo = pbool<> troo
+    uno = pstring<> uno
+  Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
+}
+
+footprint: {
+  !GND = bool^0 = !GND (1) @[ supply_low ] 
+  !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
+  eins = pstring^0 value: 1
+  eleven = pint^0 value: 11
+  falsch = pbool^0 value: 0
+  food1 = pstring^0 value: meatballs
+  line = pstring^0 value: 1 is the loneliest number
+  more_than_one = preal^0 value: 1.1
+  one = pstring^0 value: 1
+  troo = pbool^0 value: 1
+  uno = pstring^0 value: 1
+  Created state:
+  bool instance pool: (0 ports, 2 local, 0 mapped)
+  1	!GND @[ supply_low ]	
+  2	!Vdd @[ supply_high ]	
+}

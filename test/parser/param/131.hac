@@ -1,0 +1,11 @@
+// "131.hac"
+// testing meta-functions
+
+template <pint A, B; pstring EQ>
+defproc add_me() {
+pint C = A+B;
+pstring s = strcat(A, "+", B, EQ, C);
+}
+
+add_me<11,22,"="> please;
+

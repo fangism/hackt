@@ -1,0 +1,12 @@
+// "127.hac"
+// testing string parameters
+
+defproc blah() {
+pint foo[2];
+foo = {13,14};
+pstring bar[2];
+bar = {"Hello, ", "world!" };
+}
+
+blah bityblah;
+

@@ -3,7 +3,7 @@
 	Class definitions for basic parameter expression types.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: basic_param.cc,v 1.30 2009/08/28 20:44:50 fang Exp $
+ 	$Id: basic_param.cc,v 1.31 2010/09/21 00:18:12 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_BASIC_PARAM_CC_
@@ -24,6 +24,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/pint_const.h"
 #include "Object/expr/pbool_const.h"
 #include "Object/expr/preal_const.h"
+#include "Object/expr/pstring_const.h"
 #include "Object/expr/const_index.h"
 #include "Object/expr/const_index_list.h"
 #include "Object/expr/const_range.h"
@@ -34,9 +35,11 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/inst/param_value_collection.h"
 #include "Object/traits/bool_traits.h"
 #include "Object/traits/int_traits.h"
+#include "Object/traits/string_traits.h"
 #include "Object/traits/pint_traits.h"	// needed for assign
 #include "Object/traits/pbool_traits.h"	// needed for assign
 #include "Object/traits/preal_traits.h"	// needed for assign
+#include "Object/traits/pstring_traits.h"
 #include "Object/type/data_type_reference.h"
 #include "Object/unroll/expression_assignment.h"
 #include "Object/persistent_type_hash.h"
@@ -59,31 +62,47 @@ DEFAULT_STATIC_TRACE_BEGIN
 
 //=============================================================================
 namespace util {
-SPECIALIZE_UTIL_WHAT(HAC::entity::pint_const, "pint-const")
-SPECIALIZE_UTIL_WHAT(HAC::entity::pbool_const, "pbool-const")
-SPECIALIZE_UTIL_WHAT(HAC::entity::preal_const, "preal-const")
+using HAC::entity::pint_const;
+using HAC::entity::pbool_const;
+using HAC::entity::preal_const;
+using HAC::entity::pstring_const;
+
+SPECIALIZE_UTIL_WHAT(pint_const, "pint-const")
+SPECIALIZE_UTIL_WHAT(pbool_const, "pbool-const")
+SPECIALIZE_UTIL_WHAT(preal_const, "preal-const")
+SPECIALIZE_UTIL_WHAT(pstring_const, "pstring-const")
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::pint_const, CONST_PINT_TYPE_KEY, 0)
+	pint_const, CONST_PINT_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::pbool_const, CONST_PBOOL_TYPE_KEY, 0)
+	pbool_const, CONST_PBOOL_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::preal_const, CONST_PREAL_TYPE_KEY, 0)
+	preal_const, CONST_PREAL_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	pstring_const, CONST_PSTRING_TYPE_KEY, 0)
 
 namespace memory {
+using HAC::entity::const_param;
+using HAC::entity::pint_expr;
+using HAC::entity::pbool_expr;
+using HAC::entity::preal_expr;
+using HAC::entity::pstring_expr;
 	// pool-allocator managed types that are safe to destroy lazily
 	LIST_VECTOR_POOL_LAZY_DESTRUCTION(HAC::entity::pbool_const)
 	LIST_VECTOR_POOL_LAZY_DESTRUCTION(HAC::entity::pint_const)
 	LIST_VECTOR_POOL_LAZY_DESTRUCTION(HAC::entity::preal_const)
+	LIST_VECTOR_POOL_LAZY_DESTRUCTION(HAC::entity::pstring_const)
 
 // explicit template instantiations, needed for -O3
-template class count_ptr<const HAC::entity::pint_expr>;
-template class count_ptr<const HAC::entity::pbool_expr>;
-template class count_ptr<const HAC::entity::preal_expr>;
-template class count_ptr<const HAC::entity::pint_const>;
-template class count_ptr<const HAC::entity::pbool_const>;
-template class count_ptr<const HAC::entity::preal_const>;
-template class count_ptr<const HAC::entity::const_param>;
+template class count_ptr<const pint_expr>;
+template class count_ptr<const pbool_expr>;
+template class count_ptr<const preal_expr>;
+template class count_ptr<const pint_const>;
+template class count_ptr<const pbool_const>;
+template class count_ptr<const preal_const>;
+template class count_ptr<const const_param>;
+template class count_ptr<const pstring_expr>;
+template class count_ptr<const pstring_const>;
 }	// end namespace memory
 }	// end namespace util
 
@@ -453,7 +472,7 @@ pint_expr::make_param_expression_assignment_private(
 	typedef	assignment_ptr_type		return_type;
 	INVARIANT(p == this);
 	return return_type(
-		new pint_expression_assignment(p.is_a<const pint_expr>()));
+		new pint_expression_assignment(p.is_a<const this_type>()));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -610,7 +629,7 @@ preal_expr::make_param_expression_assignment_private(
 	typedef	assignment_ptr_type		return_type;
 	INVARIANT(p == this);
 	return return_type(
-		new preal_expression_assignment(p.is_a<const preal_expr>()));
+		new preal_expression_assignment(p.is_a<const this_type>()));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -657,6 +676,142 @@ param_expr_collective::hash_string(void) const {
 	return ret;
 }
 #endif
+
+//-----------------------------------------------------------------------------
+// class pstring_expr method definitions
+
+#if 0
+pstring_expr::~pstring_expr() {
+	STACKTRACE_DTOR("~pstring_expr()");
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	When pint is interpreted as an int, in non-meta language...
+ */
+count_ptr<const data_type_reference>
+pstring_expr::get_unresolved_data_type_ref(void) const {
+	return string_traits::nonmeta_data_type_ptr;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+canonical_generic_datatype
+pstring_expr::get_resolved_data_type_ref(const unroll_context&) const {
+	return string_traits::nonmeta_data_type_ptr->make_canonical_type();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+pstring_expr::may_be_equivalent_generic(const param_expr& p) const {
+	STACKTRACE("pstring_expr::may_be_equivalent_generic()");
+	const pstring_expr* b = IS_A(const pstring_expr*, &p);
+	if (b) {
+		if (is_static_constant() && b->is_static_constant())
+			return static_constant_value() ==
+				b->static_constant_value();
+		else	return true;
+	}
+	else	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+pstring_expr::must_be_equivalent_generic(const param_expr& p) const {
+	STACKTRACE("pstring_expr::must_be_equivalent_generic()");
+	const pstring_expr* b = IS_A(const pstring_expr*, &p);
+	if (b) {
+#if 0
+		if (is_static_constant() && b->is_static_constant())
+			return static_constant_value() ==
+				b->static_constant_value();
+		// else check template formals?  more cases needed
+		else	return false;
+#else
+		return must_be_equivalent(*b);
+#endif
+	}
+	else	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Precondition: must satisfy is_static_constant.  
+	For use with const_param_expr_list.  
+ */
+count_ptr<const const_param>
+pstring_expr::static_constant_param(void) const {
+	return count_ptr<const const_param>(
+		new pstring_const(static_constant_value()));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const const_param>
+pstring_expr::unroll_resolve_rvalues(const unroll_context& c, 
+		const count_ptr<const param_expr>& b) const {
+	return unroll_resolve_rvalues(c, b.is_a<const this_type>());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Don't expect to be called, meta-expressions should've been
+	resolved and substituted by create phase.  
+ */
+count_ptr<const const_param>
+pstring_expr::nonmeta_resolve_copy(const nonmeta_context_base& c, 
+		const count_ptr<const string_expr>& b) const {
+	return __nonmeta_resolve_rvalue(c, b);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const pstring_const>
+pstring_expr::__nonmeta_resolve_rvalue(const nonmeta_context_base& c, 
+		const count_ptr<const string_expr>& b) const {
+	const unroll_context uc(c);
+	return __unroll_resolve_rvalue(uc, b.is_a<const this_type>());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const string_expr>
+pstring_expr::unroll_resolve_copy(const unroll_context& c, 
+		const count_ptr<const string_expr>& b) const {
+	return unroll_resolve_copy(c, b.is_a<const this_type>());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Forwarding function.  
+ */
+count_ptr<const param_expr>
+pstring_expr::substitute_default_positional_parameters(
+		const template_formals_manager& f, 
+		const dynamic_param_expr_list& e, 
+		const count_ptr<const param_expr>& p) const {
+	return substitute_default_positional_parameters(f, e, 
+		p.is_a<const this_type>());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<param_expression_assignment>
+pstring_expr::make_param_expression_assignment_private(
+		const count_ptr<const param_expr>& p) const {
+	typedef	assignment_ptr_type		return_type;
+	INVARIANT(p == this);
+	return return_type(
+		new pstring_expression_assignment(p.is_a<const this_type>()));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<aggregate_meta_value_reference_base>
+pstring_expr::make_aggregate_meta_value_reference_private(
+		const count_ptr<const param_expr>& p) const {
+	const count_ptr<const this_type> pb(p.is_a<const this_type>());
+	NEVER_NULL(pb);
+	const count_ptr<aggregate_meta_value_reference<tag_type> >
+		ret(new aggregate_meta_value_reference<tag_type>);
+	ret->append_meta_value_reference(pb);
+	return ret;
+}
 
 //=============================================================================
 // class pint_const method definitions
@@ -812,7 +967,7 @@ count_ptr<const pint_const>
 pint_const::__unroll_resolve_rvalue(const unroll_context&, 
 		const count_ptr<const pint_expr>& p) const {
 	INVARIANT(p == this);
-	return p.is_a<const pint_const>();
+	return p.is_a<const this_type>();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -820,7 +975,7 @@ count_ptr<const const_param>
 pint_const::unroll_resolve_rvalues(const unroll_context&, 
 		const count_ptr<const pint_expr>& p) const {
 	INVARIANT(p == this);
-	return p.is_a<const pint_const>();	// must be true: this
+	return p.is_a<const this_type>();	// must be true: this
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -993,7 +1148,7 @@ count_ptr<const pbool_const>
 pbool_const::__unroll_resolve_rvalue(const unroll_context&, 
 		const count_ptr<const pbool_expr>& p) const {
 	INVARIANT(p == this);
-	return p.is_a<const pbool_const>();
+	return p.is_a<const this_type>();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1001,7 +1156,7 @@ count_ptr<const const_param>
 pbool_const::unroll_resolve_rvalues(const unroll_context& c, 
 		const count_ptr<const pbool_expr>& p) const {
 	INVARIANT(p == this);
-	return p.is_a<const pbool_const>();
+	return p.is_a<const this_type>();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1171,7 +1326,7 @@ count_ptr<const preal_const>
 preal_const::__unroll_resolve_rvalue(const unroll_context&, 
 		const count_ptr<const preal_expr>& p) const {
 	INVARIANT(p == this);
-	return p.is_a<const preal_const>();
+	return p.is_a<const this_type>();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1179,7 +1334,7 @@ count_ptr<const const_param>
 preal_const::unroll_resolve_rvalues(const unroll_context& c, 
 		const count_ptr<const preal_expr>& p) const {
 	INVARIANT(p == this);
-	return p.is_a<const preal_const>();
+	return p.is_a<const this_type>();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1257,6 +1412,188 @@ preal_const::write_object(const persistent_object_manager& m,
 void
 preal_const::load_object(const persistent_object_manager& m, istream& f) {
 	read_value(f, val);
+}
+
+//=============================================================================
+// class pstring_const method definitions
+
+pstring_const::pstring_const() : pstring_expr(), const_param(), val() { }
+
+pstring_const::pstring_const(const string& s) : 
+	pstring_expr(), const_param(), val(s) { }
+
+pstring_const::~pstring_const() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	For static global initialization order safety, return a persistent
+	function-local static reference.  
+ */
+const pstring_const::value_type&
+pstring_const::safe_default_value(void) {
+	static const pstring_const::value_type ret("");
+	return ret;
+}
+
+const pstring_const::value_type&
+pstring_const::default_value(safe_default_value());
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+CHUNK_MAP_POOL_ROBUST_STATIC_DEFINITION(pstring_const)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pstring_const)
+
+ostream&
+pstring_const::dump(ostream& o, const expr_dump_context&) const {
+	return o << '\"' << val << '\"';
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+pstring_const::dump_nonmeta(ostream& o) const {
+	return o << val;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	No array support for strings yet.  
+ */
+size_t
+pstring_const::dimensions(void) const {
+	return 0;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+pstring_const::is_true(void) const {
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+pstring_const::is_relaxed_formal_dependent(void) const {
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+pstring_const::has_static_constant_dimensions(void) const {
+	return true;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const const_param>
+pstring_const::static_constant_param(void) const {
+	return count_ptr<const this_type>(new this_type(*this));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const_range_list
+pstring_const::static_constant_dimensions(void) const {
+	return const_range_list();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Could only conceivable be called during template parameter comparison.
+ */
+bool
+pstring_const::operator < (const const_param& r) const {
+	const this_type* const pp = IS_A(const this_type*, &r);
+	if (pp) {
+		// string comparison
+		return val < pp->val;
+	} else {
+		// string collections don't exist yet
+		THROW_EXIT;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+pstring_const::must_be_equivalent(const pstring_expr& b) const {
+	return b.is_static_constant() && (val == b.static_constant_value());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const pstring_const>
+pstring_const::__unroll_resolve_rvalue(const unroll_context&, 
+		const count_ptr<const pstring_expr>& p) const {
+	INVARIANT(p == this);
+	return p.is_a<const this_type>();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+pstring_const::unroll_resolve_value(const unroll_context&, value_type& i) const {
+	i = val;
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const pstring_expr>
+pstring_const::unroll_resolve_copy(const unroll_context&, 
+		const count_ptr<const pstring_expr>& p) const {
+	INVARIANT(p == this);
+	return p;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const const_param>
+pstring_const::unroll_resolve_rvalues(const unroll_context& c, 
+		const count_ptr<const pstring_expr>& p) const {
+	INVARIANT(p == this);
+	return p.is_a<const this_type>();	// should static_cast
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const pstring_expr>
+pstring_const::substitute_default_positional_parameters(
+		const template_formals_manager&,
+		const dynamic_param_expr_list&,
+		const count_ptr<const pstring_expr>& p) const {
+	INVARIANT(p == this);
+	return p;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Unreachable until strings are referenceable as rvalues
+	in the meta language.
+ */
+param_expr::assignment_ptr_type
+pstring_const::make_param_expression_assignment_private(
+		const count_ptr<const param_expr>& p) const {
+	return pstring_expr::make_param_expression_assignment_private(p);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+pstring_const::accept(nonmeta_expr_visitor& v) const {
+	v.visit(*this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+pstring_const::collect_transient_info(persistent_object_manager& m) const {
+if (!m.register_transient_object(this,
+		persistent_traits<this_type>::type_key)) {
+	// no pointers to visit
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+pstring_const::write_object(const persistent_object_manager& m,
+		ostream& o) const {
+	write_value(o, val);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+pstring_const::load_object(const persistent_object_manager& m, istream& i) {
+	read_value(i, val);
 }
 
 //=============================================================================

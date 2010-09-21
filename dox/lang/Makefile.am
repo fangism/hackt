@@ -1,5 +1,5 @@
 # "dox/lang/Makefile.am"
-#	$Id: Makefile.am,v 1.36 2010/04/02 22:17:27 fang Exp $
+#	$Id: Makefile.am,v 1.37 2010/09/21 00:17:56 fang Exp $
 
 include $(top_srcdir)/dox/Make.dox-head
 
@@ -71,15 +71,23 @@ $(srcdir)/spec.mk: chapters/SPEC.texi
 	$(ECHO) "" ; \
 	$(ECHO) "" ;} > $@
 
+$(srcdir)/metafuncs.mk: chapters/expressions.texi
+	{ $(PRINTF) "META_FUNCTIONS_TEXI = " ; \
+	$(CAT) $< | $(EXTRACT_TEXI_INCLUDES) ; \
+	$(ECHO) "" ; \
+	$(ECHO) "" ;} > $@
+
 $(srcdir)/attribs.mk: Makefile.in
 $(srcdir)/prsmacros.mk: Makefile.in
 $(srcdir)/spec.mk: Makefile.in
+$(srcdir)/metafuncs.mk: Makefile.in
 
 -include $(srcdir)/attribs.mk
 -include $(srcdir)/prsmacros.mk
 -include $(srcdir)/spec.mk
+-include $(srcdir)/metafuncs.mk
 
-AUTO_TEXINFO_DEPS += attribs.mk prsmacros.mk spec.mk
+AUTO_TEXINFO_DEPS += attribs.mk prsmacros.mk spec.mk metafuncs.mk
 
 $(INSTANCE_ATTRIBUTES_TEXI): \
 		$(top_srcdir)/src/Object/unroll/bool_instance_attribute.cc \
@@ -98,6 +106,9 @@ $(PRS_MACROS_TEXI): \
 $(SPEC_DIRECTIVES_TEXI): $(top_srcdir)/src/Object/lang/SPEC_registry.cc
 	$(EXTRACT_TEXINFO_SRCDIR_BATCH_SCRIPT)
 
+$(META_FUNCTIONS_TEXI): $(top_srcdir)/src/Object/expr/meta_func_lib.cc
+	$(EXTRACT_TEXINFO_SRCDIR_BATCH_SCRIPT)
+
 # don't make true dependency becaues srcdir depending on built file
 # will break distribution, forcing docs to always be rebuilt.
 # $(srcdir)/$(GRAMMAR_TEXI): $(GRAMMAR_SOURCE)
@@ -113,12 +124,14 @@ hac_info_DEPS = \
 	$(hac_info_INCLUDES) \
 	$(INSTANCE_ATTRIBUTES_TEXI) \
 	$(PRS_MACROS_TEXI) \
-	$(SPEC_DIRECTIVES_TEXI)
+	$(SPEC_DIRECTIVES_TEXI) \
+	$(META_FUNCTIONS_TEXI)
 
 TEXI_CLEANFILES += \
 	$(INSTANCE_ATTRIBUTES_TEXI) \
 	$(PRS_MACROS_TEXI) \
 	$(SPEC_DIRECTIVES_TEXI) \
+	$(META_FUNCTIONS_TEXI) \
 	$(srcdir)/$(GRAMMAR_TEXI)
 
 hac.pdf hac.dvi hac.html $(srcdir)/hac.info: $(hac_info_DEPS)

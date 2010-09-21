@@ -138,8 +138,8 @@ syn match	cOperator	display "&\||\|\~"
 syn match	cOperator	display "\.\."
 
 " syn keyword	cOperator	sizeof
-syn keyword	cType  		chan pint pbool preal
-syn keyword	cType  		int bool real
+syn keyword	cType  		chan pint pbool preal pstring
+syn keyword	cType  		int bool real string
 " syn keyword	cOperator	typeof
 " syn keyword	cType		char void
 " syn keyword	cType		signed unsigned float double

@@ -4,7 +4,7 @@
 	This is the ONE file that needs to be touched to change the 
 	precisions of meta-parameter (and simulation) values globally.  
 	NOTE: this file was moved from "Object/art_object_expr_types.h"
-	$Id: types.h,v 1.7 2007/08/28 04:54:13 fang Exp $
+	$Id: types.h,v 1.8 2010/09/21 00:18:21 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_TYPES_H__
@@ -35,6 +35,11 @@ namespace entity {
 		Real-value parameters, default to single-precision.  
 	 */
 	typedef	float		preal_value_type;
+	/**
+		Native string type.  
+	 */
+	typedef	std::string		pstring_value_type;
+
 
 // non-parameter value types
 	/**
@@ -59,7 +64,7 @@ namespace entity {
 	/**
 		Native string type.  
 	 */
-	typedef	std::string		string_value_type;
+	typedef	pstring_value_type	string_value_type;
 
 	/**
 		For now, limiting to 256 enumerations.  
@@ -67,6 +72,7 @@ namespace entity {
 	typedef	char		enum_value_type;
 
 #if 1
+	// not yet defined
 	class			struct_value_type;
 #else
 	/**

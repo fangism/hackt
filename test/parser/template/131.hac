@@ -1,0 +1,6 @@
+// "131.hac"
+// legal connection
+
+import "130.hac";
+
+bar[0] = bar[1];

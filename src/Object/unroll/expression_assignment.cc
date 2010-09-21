@@ -2,7 +2,7 @@
 	\file "Object/unroll/expression_assignment.cc"
 	Method definitions pertaining to connections and assignments.  
 	This file was moved from "Object/art_object_assign.cc".
- 	$Id: expression_assignment.cc,v 1.9 2006/10/18 07:39:46 fang Exp $
+ 	$Id: expression_assignment.cc,v 1.10 2010/09/21 00:18:31 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_EXPRESSION_ASSIGNMENT_CC__
@@ -19,9 +19,11 @@
 #include "Object/inst/pbool_instance.h"
 #include "Object/inst/pint_instance.h"
 #include "Object/inst/preal_instance.h"
+#include "Object/inst/pstring_instance.h"
 #include "Object/expr/pint_const.h"
 #include "Object/expr/pbool_const.h"
 #include "Object/expr/preal_const.h"
+#include "Object/expr/pstring_const.h"
 #include "Object/expr/const_index.h"
 #include "Object/expr/const_index_list.h"
 #include "Object/expr/const_collection.h"
@@ -29,27 +31,34 @@
 #include "Object/traits/pint_traits.h"
 #include "Object/traits/pbool_traits.h"
 #include "Object/traits/preal_traits.h"
+#include "Object/traits/pstring_traits.h"
 #include "Object/persistent_type_hash.h"
 #include "Object/ref/meta_value_reference_base.h"
 
 //=============================================================================
 namespace util {
-SPECIALIZE_UTIL_WHAT(HAC::entity::pint_expression_assignment, 
+using HAC::entity::pint_expression_assignment;
+using HAC::entity::pbool_expression_assignment;
+using HAC::entity::preal_expression_assignment;
+using HAC::entity::pstring_expression_assignment;
+
+SPECIALIZE_UTIL_WHAT(pint_expression_assignment, 
 		"pint-expression-assignment")
-SPECIALIZE_UTIL_WHAT(HAC::entity::pbool_expression_assignment, 
+SPECIALIZE_UTIL_WHAT(pbool_expression_assignment, 
 		"pbool-expression-assignment")
-SPECIALIZE_UTIL_WHAT(HAC::entity::preal_expression_assignment, 
+SPECIALIZE_UTIL_WHAT(preal_expression_assignment, 
 		"preal-expression-assignment")
+SPECIALIZE_UTIL_WHAT(pstring_expression_assignment, 
+		"pstring-expression-assignment")
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::pbool_expression_assignment,
-		PBOOL_EXPR_ASSIGNMENT_TYPE_KEY, 0)
+	pbool_expression_assignment, PBOOL_EXPR_ASSIGNMENT_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::pint_expression_assignment,
-		PINT_EXPR_ASSIGNMENT_TYPE_KEY, 0)
+	pint_expression_assignment, PINT_EXPR_ASSIGNMENT_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::preal_expression_assignment,
-		PREAL_EXPR_ASSIGNMENT_TYPE_KEY, 0)
+	preal_expression_assignment, PREAL_EXPR_ASSIGNMENT_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	pstring_expression_assignment, PSTRING_EXPR_ASSIGNMENT_TYPE_KEY, 0)
 }	// end namespace util
 
 //=============================================================================
@@ -117,6 +126,7 @@ param_expression_assignment::validate_dimensions_match(
 template class expression_assignment<pbool_tag>;
 template class expression_assignment<pint_tag>;
 template class expression_assignment<preal_tag>;
+template class expression_assignment<pstring_tag>;
 
 //=============================================================================
 }	// end namespace entity

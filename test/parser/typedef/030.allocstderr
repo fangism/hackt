@@ -1,0 +1,12 @@
+globID	super		localID	canonical	footprint-frame
+[global process entries]
+1	(top)	-	1	pair[0]	foo<{twin,twin}>
+	bool: 1,2
+2	(top)	-	2	pair[1]	foo<{twin,twin}>
+	bool: 1,2
+3	(top)	-	3	alias[0]	foo<{twin,twin}>
+	bool: 1,2
+[global bool entries]
+1	(top)	-	1	!GND	 @[ supply_low ]
+2	(top)	-	2	!Vdd	 @[ supply_high ]
+

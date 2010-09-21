@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.41 2010/09/16 06:31:44 fang Exp $
+	$Id: footprint.h,v 1.42 2010/09/21 00:18:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
@@ -100,7 +100,8 @@ class footprint :
 	private	footprint_base<bool_tag>, 
 	private	value_footprint_base<pbool_tag>, 
 	private	value_footprint_base<pint_tag>, 
-	private	value_footprint_base<preal_tag> {
+	private	value_footprint_base<preal_tag>,
+	private	value_footprint_base<pstring_tag> {
 // make accessible to base class
 template <class> friend class footprint_base;
 template <class> friend class value_footprint_base;

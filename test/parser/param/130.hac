@@ -1,0 +1,6 @@
+// "130.hac"
+// testing meta-functions
+
+pstring foo = strcat("hello, ", "world!");
+pstring bar = sprint(2001, " Space Odessey");
+

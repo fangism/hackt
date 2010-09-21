@@ -47,5 +47,6 @@ acceptable tokens are:
 	PINT_TYPE (shift)
 	PBOOL_TYPE (shift)
 	PREAL_TYPE (shift)
+	PSTRING_TYPE (shift)
 From: "017.hac":4:
 Caught exception from lexer, aborting parsing.

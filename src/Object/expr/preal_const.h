@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: preal_const.h,v 1.15 2009/08/28 20:44:52 fang Exp $
+	$Id: preal_const.h,v 1.16 2010/09/21 00:18:20 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PREAL_CONST_H__
@@ -32,6 +32,9 @@ public:
 	typedef	preal_value_type	value_type;
 	/// cannont initialize non-integer static consts in-class
 	static const value_type		default_value;
+	static
+	const value_type&
+	safe_default_value(void) { return default_value; }
 protected:
 	// removed const-ness for assignability
 	value_type		val;

@@ -1,0 +1,15 @@
+// "026.hac"
+// copy-modified from "025.hac"
+// testing string parameters in typedefs
+
+template <pint D><pstring N>
+defproc foo() { }
+
+typedef	foo<1><"l">	fool;
+typedef	foo<2><"k">	fook;
+typedef	foo<3><"n">	foon;
+
+fool you;
+fook you2;
+foon buf;
+

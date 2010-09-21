@@ -3,7 +3,7 @@
 	Definitions and instantiations for built-ins of the HAC language.  
 	Includes static globals.  
 	This file used to be "Object/art_built_ins.cc".
- 	$Id: class_traits_types.cc,v 1.21 2007/10/08 01:21:41 fang Exp $
+ 	$Id: class_traits_types.cc,v 1.22 2010/09/21 00:18:27 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_CLASS_TRAITS_TYPES_CC__
@@ -31,11 +31,10 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/inst/pint_value_collection.h"
 #include "Object/inst/value_scalar.h"
 #include "Object/expr/pint_const.h"
-#include "Object/traits/pint_traits.h"
-#include "Object/traits/pbool_traits.h"
-#include "Object/traits/preal_traits.h"
+#include "Object/traits/value_traits.h"
 #include "Object/traits/bool_traits.h"
 #include "Object/traits/int_traits.h"
+#include "Object/traits/real_traits.h"
 #include "Object/traits/string_traits.h"
 #include "Object/traits/node_traits.h"
 
@@ -86,6 +85,10 @@ const built_in_param_def
 preal_traits::built_in_definition = built_in_param_def(
 	never_ptr<const name_space>(&built_in_namespace), "preal");
 
+const built_in_param_def
+pstring_traits::built_in_definition = built_in_param_def(
+	never_ptr<const name_space>(&built_in_namespace), "pstring");
+
 // will need to pool param_type_reference?
 
 /** built-in parameter pbool type reference */
@@ -106,6 +109,11 @@ preal_traits::built_in_type_ptr =
 	count_ptr<const param_type_reference>(new param_type_reference(
 		never_ptr<const built_in_param_def>(&built_in_definition)));
 
+const pstring_traits::type_ref_ptr_type
+pstring_traits::built_in_type_ptr =
+	count_ptr<const param_type_reference>(new param_type_reference(
+		never_ptr<const built_in_param_def>(&built_in_definition)));
+
 //-----------------------------------------------------------------------------
 
 /** built-in data bool type definition initialization */
@@ -119,6 +127,10 @@ bool_traits::built_in_definition = built_in_datatype_def(
 const built_in_datatype_def
 int_traits::built_in_definition = built_in_datatype_def(
 	never_ptr<const name_space>(&built_in_namespace), "int");
+
+const built_in_datatype_def
+real_traits::built_in_definition = built_in_datatype_def(
+	never_ptr<const name_space>(&built_in_namespace), "real");
 
 
 static const count_ptr<const pint_const>
@@ -204,6 +216,13 @@ int_traits::magic_int_type_ptr(data_type_reference::make_quick_int_type_ref(0));
 
 const count_ptr<const data_type_reference>&
 int_traits::nonmeta_data_type_ptr(magic_int_type_ptr);
+
+const real_traits::type_ref_ptr_type
+real_traits::built_in_type_ptr(new data_type_reference(
+	never_ptr<const built_in_datatype_def>(&built_in_definition)));
+
+const real_traits::type_ref_ptr_type&
+real_traits::nonmeta_data_type_ptr(built_in_type_ptr);
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const built_in_datatype_def

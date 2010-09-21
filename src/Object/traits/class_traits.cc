@@ -2,7 +2,7 @@
 	\file "Object/traits/class_traits.cc"
 	Traits and policy classes for instances.  
 	This file used to be "Object/art_object_classification_details.cc".
-	$Id: class_traits.cc,v 1.11 2007/10/08 01:21:39 fang Exp $
+	$Id: class_traits.cc,v 1.12 2010/09/21 00:18:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_CLASS_TRAITS_CC__
@@ -11,9 +11,7 @@
 #include "Object/traits/instance_traits.h"
 #include "Object/traits/data_traits.h"
 #include "Object/traits/param_traits.h"
-#include "Object/traits/pbool_traits.h"
-#include "Object/traits/pint_traits.h"
-#include "Object/traits/preal_traits.h"
+#include "Object/traits/value_traits.h"
 #include "Object/traits/node_traits.h"
 #include "Object/unroll/unroll_context.h"
 #include "Object/unroll/empty_instantiation_statement_type_ref_base.h"
@@ -29,6 +27,12 @@ class_traits<bool_tag>::tag_name[] = "bool";
 
 const char
 class_traits<enum_tag>::tag_name[] = "enum";
+
+const char
+class_traits<real_tag>::tag_name[] = "real";
+
+const char
+class_traits<string_tag>::tag_name[] = "string";
 
 const char
 class_traits<datastruct_tag>::tag_name[] = "struct";
@@ -56,6 +60,12 @@ class_traits<preal_tag>::tag_name[] = "preal";
 
 const char
 class_traits<preal_tag>::value_type_name[] = "real-value";
+
+const char
+class_traits<pstring_tag>::tag_name[] = "pstring";
+
+const char
+class_traits<pstring_tag>::value_type_name[] = "string-value";
 
 const char
 class_traits<node_tag>::tag_name[] = "node";

@@ -1,0 +1,10 @@
+// "126.hac"
+// copy-modified from "123.hac"
+// testing string template parameters
+
+template <pint tag>
+defproc foo() {
+}
+
+foo<"Simon"> bar;
+

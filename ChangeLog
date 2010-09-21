@@ -1,5 +1,26 @@
 "ChangeLog"
-#	$Id: ChangeLog,v 1.247 2010/09/02 20:21:24 fang Exp $
+#	$Id: ChangeLog,v 1.248 2010/09/21 00:17:53 fang Exp $
+
+2010-09-20	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-27-merged--string-01-04:
+	  Branch merge, introducing string parameters, 
+		string manipulations, compile-time functions.
+
+
+2010-09-15	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-23-string-01-04:
+	  configure.ac, config/cxx.m4: check for typeof, __typeof__,
+		and decltype operators.  
+
+
+2010-09-14	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-23-string-01-03:
+	  Make.stddef: useful sed command for substituting some directory
+		variables $(builddir) and $(top_builddir)
+
 
 2010-09-01	David Fang	<fangism@users.sourceforge.net>
 

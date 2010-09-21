@@ -1,0 +1,12 @@
+// "128.hac"
+// copy-modified from "127.hac"
+// testing string template parameters
+
+template <><pstring tag>
+defproc foo() {
+}
+
+foo bar[2];
+bar[0]<"Simon">;
+bar[1]<"Garfunkel">;
+

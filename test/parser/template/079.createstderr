@@ -63,7 +63,7 @@ Persistent Object Manager text dump:
 	59	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	60	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	61	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	62	##ADDR##	footprnt	0	#HEAD#	#TAIL#	388
+	62	##ADDR##	footprnt	0	#HEAD#	#TAIL#	408
 	63	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	64	##ADDR##	procdefn	0	#HEAD#	#TAIL#	146
 	65	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
@@ -101,7 +101,7 @@ Persistent Object Manager text dump:
 	97	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
 	98	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	99	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	100	##ADDR##	footprnt	0	#HEAD#	#TAIL#	400
+	100	##ADDR##	footprnt	0	#HEAD#	#TAIL#	420
 	101	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	102	##ADDR##	procdefn	0	#HEAD#	#TAIL#	168
 	103	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
@@ -147,7 +147,7 @@ Persistent Object Manager text dump:
 	143	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	144	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	145	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	146	##ADDR##	footprnt	0	#HEAD#	#TAIL#	523
+	146	##ADDR##	footprnt	0	#HEAD#	#TAIL#	543
 	147	##ADDR##	procdefn	0	#HEAD#	#TAIL#	194
 	148	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	149	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
@@ -249,7 +249,7 @@ Persistent Object Manager text dump:
 	245	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	246	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	247	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	248	##ADDR##	footprnt	0	#HEAD#	#TAIL#	840
+	248	##ADDR##	footprnt	0	#HEAD#	#TAIL#	860
 	249	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	250	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	251	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	44
@@ -262,7 +262,7 @@ Persistent Object Manager text dump:
 	258	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	259	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	260	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	261	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1566
+	261	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1586
 	262	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	263	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	264	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
@@ -302,7 +302,7 @@ Persistent Object Manager text dump:
 	298	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	299	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	300	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	301	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1428
+	301	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1448
 	302	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	303	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	304	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12

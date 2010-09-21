@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.40 2010/08/25 23:26:39 fang Exp $
+#	$Id: Makefile.am,v 1.41 2010/09/21 00:18:45 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -246,7 +246,7 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	mux-test-flat-01 \
 	source-sink-void-a-01 source-sink-void-a-02 \
 	gcd-func-a-01 gcd-func-b-01 gcd-func-c-01 \
-	gcd-func-a-05 gcd-func-a-06 gcd-func-a-08 gcd-func-a-09 \
+	gcd-func-a-06 gcd-func-a-08 gcd-func-a-09 \
 	gcd-func-a-10 gcd-func-a-12 gcd-func-a-13 gcd-func-a-14 \
 	greeting_func-a-01 greeting_func-a-02 \
 	greeting_func-a-03 greeting_func-a-04 \
@@ -269,14 +269,12 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	lib-fzscan_loop-test-b-01 \
 	lib-parity-test-a-01 lib-parity-test-b-01 lib-parity-test-c-01 \
 	lib-sprint-test-a-01 \
-	lib-strtoz-test-a-01 lib-strtoz-test-b-01 \
+	lib-strtoz-test-a-01 \
 	lib-strtob-test-a-01 \
 	lib-fxzscan-test-a-01 \
 	lib-fxzscan_loop-test-a-01 \
 	round-robin-source-test-01-a round-robin-source-test-02-a \
 	round-robin-sink-test-01-a round-robin-sink-test-02-a
-# accept invalid? -- excess arguments dropped
-#	gcd-func-a-05
 
 # TODO: parallel-fifo test cases
 
@@ -292,6 +290,7 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_FAILURES = \
 	missing_func-a-01 missing_func-b-01 \
 	missing_func-c-01 missing_func-d-01 \
 	gcd-func-a-03 gcd-func-a-04 gcd-func-a-07 gcd-func-a-11 \
+	gcd-func-a-05 \
 	gcd-nested-a-02 gcd-nested-b-02 \
 	logical-func-a-01 logical-func-a-02 \
 	logical-func-b-01 \
@@ -304,6 +303,7 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_FAILURES = \
 	lib-bscan-test-a-01 lib-bscan-test-a-02 \
 	lib-sscan-test-a-01 lib-sscan-test-b-01 \
 	lib-fzscan-test-b-01 \
+	lib-strtoz-test-b-01 \
 	lib-strtoz-test-c-01 lib-strtoz-test-d-01 \
 	lib-strtob-test-b-01 lib-strtob-test-c-01 \
 	lib-bzscan-test-a-01 lib-bzscan-test-a-02 lib-bzscan-test-a-03 \

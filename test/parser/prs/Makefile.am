@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.73 2010/09/10 22:57:21 fang Exp $
+#	$Id: Makefile.am,v 1.74 2010/09/21 00:22:52 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -51,7 +51,7 @@ HACKT_PARSE_TEST_PASSES = \
 	cond-08 cond-09 cond-10 cond-11 cond-12 cond-13 cond-14 \
 	cond-15 cond-16 cond-17 cond-18 \
 	short-01 short-02 short-03 short-04 short-05 \
-	echo-01 echo-05 \
+	echo-01 echo-05 echo-06 \
 	macro-pass-01 macro-pass-02 macro-pass-03 macro-pass-05 macro-pass-07 \
 	macro-pass-05b macro-pass-07b \
 	macro-pass-05c macro-pass-07c \
@@ -146,7 +146,7 @@ HACKT_CREATE_TEST_PASSES = \
 	cond-08 cond-09 cond-10 cond-11 cond-12 cond-13 cond-14 \
 	cond-15 cond-16 cond-17 cond-18 \
 	short-01 short-02 short-03 short-04 short-05 \
-	echo-01 echo-05 \
+	echo-01 echo-05 echo-06 \
 	macro-pass-01 macro-pass-02 macro-pass-03 macro-pass-05 macro-pass-07 \
 	macro-pass-08 macro-pass-09 \
 	after-02 after-03 \
@@ -239,7 +239,7 @@ HACKT_CFLAT_TEST_SUBJECTS = \
 	cond-08 cond-09 cond-10 cond-11 cond-12 cond-13 cond-14 \
 	cond-15 cond-16 cond-17 cond-18 \
 	short-01 short-02 short-03 short-04 short-05 \
-	echo-01 echo-05 \
+	echo-01 echo-05 echo-06 \
 	macro-pass-01 macro-pass-02 macro-pass-03 macro-pass-05 macro-pass-07 \
 	macro-pass-05b macro-pass-07b \
 	macro-pass-05c macro-pass-07c \

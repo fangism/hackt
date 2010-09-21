@@ -2,7 +2,7 @@
 	\file "Object/unroll/instantiation_statement.cc"
 	Method definitions for instantiation statement classes.  
 	This file was moved from "Object/art_object_inst_stmt.cc".
- 	$Id: instantiation_statement.cc,v 1.20 2008/11/28 22:07:08 fang Exp $
+ 	$Id: instantiation_statement.cc,v 1.21 2010/09/21 00:18:32 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_CC__
@@ -64,72 +64,74 @@ DEFAULT_STATIC_TRACE_BEGIN
 // Alternatively, explicit specialization here guarantees that the
 // static initialization occurs in the correct order in this module.  
 namespace util {
-using HAC::entity::pbool_tag;
-using HAC::entity::pint_tag;
-using HAC::entity::preal_tag;
-using HAC::entity::process_tag;
+using namespace HAC::entity;
 
-SPECIALIZE_UTIL_WHAT(HAC::entity::data_instantiation_statement,
+SPECIALIZE_UTIL_WHAT(data_instantiation_statement,
 	"data_instantiation_statement")
-SPECIALIZE_UTIL_WHAT(HAC::entity::pint_instantiation_statement,
+SPECIALIZE_UTIL_WHAT(pint_instantiation_statement,
 	"pint_instantiation_statement")
-SPECIALIZE_UTIL_WHAT(HAC::entity::pbool_instantiation_statement,
+SPECIALIZE_UTIL_WHAT(pbool_instantiation_statement,
 	"pbool_instantiation_statement")
-SPECIALIZE_UTIL_WHAT(HAC::entity::preal_instantiation_statement,
+SPECIALIZE_UTIL_WHAT(preal_instantiation_statement,
 	"preal_instantiation_statement")
-SPECIALIZE_UTIL_WHAT(HAC::entity::process_instantiation_statement,
+SPECIALIZE_UTIL_WHAT(pstring_instantiation_statement,
+	"pstring_instantiation_statement")
+SPECIALIZE_UTIL_WHAT(process_instantiation_statement,
 	"process_instantiation_statement")
-SPECIALIZE_UTIL_WHAT(HAC::entity::channel_instantiation_statement,
+SPECIALIZE_UTIL_WHAT(channel_instantiation_statement,
 	"channel_instantiation_statement")
-SPECIALIZE_UTIL_WHAT(HAC::entity::process_template_type_completion,
+SPECIALIZE_UTIL_WHAT(process_template_type_completion,
 	"process_template_type_completion")
-SPECIALIZE_UTIL_WHAT(HAC::entity::process_instance_attribute,
+SPECIALIZE_UTIL_WHAT(process_instance_attribute,
 	"process_instance_attribute")
-SPECIALIZE_UTIL_WHAT(HAC::entity::channel_instance_attribute,
+SPECIALIZE_UTIL_WHAT(channel_instance_attribute,
 	"channel_instance_attribute")
-SPECIALIZE_UTIL_WHAT(HAC::entity::bool_instance_attribute,
+SPECIALIZE_UTIL_WHAT(bool_instance_attribute,
 	"bool_instance_attribute")
-SPECIALIZE_UTIL_WHAT(HAC::entity::int_instance_attribute,
+SPECIALIZE_UTIL_WHAT(int_instance_attribute,
 	"int_instance_attribute")
-SPECIALIZE_UTIL_WHAT(HAC::entity::enum_instance_attribute,
+SPECIALIZE_UTIL_WHAT(enum_instance_attribute,
 	"enum_instance_attribute")
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::pbool_instantiation_statement, 
+	pbool_instantiation_statement, 
 		PBOOL_INSTANTIATION_STATEMENT_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::pint_instantiation_statement, 
+	pint_instantiation_statement, 
 		PINT_INSTANTIATION_STATEMENT_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::preal_instantiation_statement, 
+	preal_instantiation_statement, 
 		PREAL_INSTANTIATION_STATEMENT_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::process_instantiation_statement, 
+	pstring_instantiation_statement, 
+		PSTRING_INSTANTIATION_STATEMENT_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	process_instantiation_statement, 
 		PROCESS_INSTANTIATION_STATEMENT_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::channel_instantiation_statement, 
+	channel_instantiation_statement, 
 		CHANNEL_INSTANTIATION_STATEMENT_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::data_instantiation_statement, 
+	data_instantiation_statement, 
 		DATA_INSTANTIATION_STATEMENT_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::process_template_type_completion, 
+	process_template_type_completion, 
 		PROCESS_TEMPLATE_TYPE_COMPLETION_TYPE_KEY, 0)
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::bool_instance_attribute, 
+	bool_instance_attribute, 
 		DBOOL_INSTANCE_ATTRIBUTE_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::int_instance_attribute, 
+	int_instance_attribute, 
 		DINT_INSTANCE_ATTRIBUTE_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::enum_instance_attribute, 
+	enum_instance_attribute, 
 		ENUM_INSTANCE_ATTRIBUTE_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::channel_instance_attribute, 
+	channel_instance_attribute, 
 		CHANNEL_INSTANCE_ATTRIBUTE_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::process_instance_attribute, 
+	process_instance_attribute, 
 		PROCESS_INSTANCE_ATTRIBUTE_TYPE_KEY, 0)
 
 }	// end namespace util
@@ -317,6 +319,7 @@ instantiation_statement_base::load_object_base(
 template class instantiation_statement<pbool_tag>;
 template class instantiation_statement<pint_tag>;
 template class instantiation_statement<preal_tag>;
+template class instantiation_statement<pstring_tag>;
 template class instantiation_statement<datatype_tag>;
 template class instantiation_statement<channel_tag>;
 template class instantiation_statement<process_tag>;

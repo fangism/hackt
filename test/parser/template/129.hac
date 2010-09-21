@@ -1,0 +1,7 @@
+// "129.hac"
+// expect fail on connect
+
+import "128.hac";
+
+bar[0] = bar[1];	// mismatched types
+

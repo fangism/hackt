@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/instance_fwd.h"
 	Forward declarations for all instance and alias classes.  
-	$Id: instance_fwd.h,v 1.4 2007/08/15 02:49:04 fang Exp $
+	$Id: instance_fwd.h,v 1.5 2010/09/21 00:18:22 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_FWD_H__
@@ -19,6 +19,7 @@ class state_instance;
 class pint_instance;	// should be value
 class pbool_instance;	// should be value
 class preal_instance;	// should be value
+class pstring_instance;	// should be value
 typedef state_instance<int_tag>		int_instance;
 typedef state_instance<bool_tag>	bool_instance;
 typedef state_instance<enum_tag>	enum_instance;

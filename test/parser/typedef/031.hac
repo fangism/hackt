@@ -1,0 +1,13 @@
+// "030.hac"
+// testing string template parameter forwarding and type equivalence
+
+template <pstring foo[2]>
+defproc foo() { }
+
+template <pstring xyz>
+typedef	foo<{xyz, xyz}>		bar;
+
+typedef	bar<"moo">		baz;
+
+baz boom;
+

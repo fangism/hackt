@@ -1,7 +1,7 @@
 /**
 	\file "AST/token.cc"
 	Class method definitions for HAC::parser, related to terminal tokens.
-	$Id: token.cc,v 1.15 2009/10/02 01:56:39 fang Exp $
+	$Id: token.cc,v 1.16 2010/09/21 00:18:08 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_token.cc,v 1.36.4.1 2005/12/11 00:45:11 fang Exp
  */
@@ -35,11 +35,9 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/pint_const.h"
 #include "Object/expr/pbool_const.h"
 #include "Object/expr/preal_const.h"
-#include "Object/expr/string_expr.h"
+#include "Object/expr/pstring_const.h"
 #include "Object/type/param_type_reference.h"
-#include "Object/traits/pint_traits.h"
-#include "Object/traits/pbool_traits.h"
-#include "Object/traits/preal_traits.h"
+#include "Object/traits/value_traits.h"
 #include "Object/traits/int_traits.h"
 #include "Object/traits/bool_traits.h"
 
@@ -101,11 +99,12 @@ using entity::preal_const;
 using entity::pbool_traits;
 using entity::pint_traits;
 using entity::preal_traits;
+using entity::pstring_traits;
 using entity::bool_traits;
 using entity::int_traits;
 using entity::physical_instance_placeholder;
 using entity::param_value_placeholder;
-using entity::string_expr;
+using entity::pstring_const;
 
 //=============================================================================
 // class terminal definitions
@@ -545,12 +544,12 @@ token_quoted_string::check_build(context& c) const {
 
 expr::meta_return_type
 token_quoted_string::check_meta_expr(const context& c) const {
-	return meta_return_type(new string_expr(*this));
+	return meta_return_type(new pstring_const(*this));
 }
 
 expr::nonmeta_return_type
 token_quoted_string::check_nonmeta_expr(const context& c) const {
-	return nonmeta_return_type(new string_expr(*this));
+	return nonmeta_return_type(new pstring_const(*this));
 }
 
 //=============================================================================
@@ -703,6 +702,26 @@ CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_preal_type)
 concrete_type_ref::return_type
 token_preal_type::check_type(const context&) const {
 	return preal_traits::built_in_type_ptr;
+}
+
+//=============================================================================
+// class token_pstring_type method definitions
+
+CONSTRUCTOR_INLINE
+token_pstring_type::token_pstring_type(const char* dt) : token_paramtype(dt) { }
+
+DESTRUCTOR_INLINE
+token_pstring_type::~token_pstring_type() { }
+
+CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_pstring_type)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Return built-in parameter integer type reference.
+ */
+concrete_type_ref::return_type
+token_pstring_type::check_type(const context&) const {
+	return pstring_traits::built_in_type_ptr;
 }
 
 //=============================================================================

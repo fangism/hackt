@@ -3,7 +3,7 @@
 	Useful main-level functions to call.
 	Indent to hide most complexity here, exposing a bare-bones
 	set of public callable functions.  
-	$Id: main_funcs.cc,v 1.34 2010/08/31 23:48:05 fang Exp $
+	$Id: main_funcs.cc,v 1.35 2010/09/21 00:18:34 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -397,9 +397,12 @@ log:
 3: spec directives for processes
 4: preserve compile options to module
 5: PRS internal nodes now take attributes
+6a: pstring_const and pstring assignment/expression operations
+6b: more string/real expression variants
+6c: split meta_func_call into different types, one for each meta-expr type
  */
 static const size_t
-object_file_format_version = 5;
+object_file_format_version = 6;
 
 //=============================================================================
 /**

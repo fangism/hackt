@@ -2,7 +2,7 @@
 	\file "Object/traits/class_traits_fwd.h"
 	Forward declaration of entity::class_traits.
 	This file used to be "Object/art_object_classification_fwd.h".
-	$Id: class_traits_fwd.h,v 1.9 2007/10/08 01:21:40 fang Exp $
+	$Id: class_traits_fwd.h,v 1.10 2010/09/21 00:18:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_CLASS_TRAITS_FWD_H__
@@ -29,6 +29,7 @@ template <> struct class_traits<string_tag>;
 template <> struct class_traits<pbool_tag>;
 template <> struct class_traits<pint_tag>;
 template <> struct class_traits<preal_tag>;
+template <> struct class_traits<pstring_tag>;
 
 // These are defined in "Object/traits/*_traits.h" as specializations.  
 typedef	class_traits<bool_tag>		bool_traits;
@@ -42,6 +43,7 @@ typedef	class_traits<channel_tag>	channel_traits;
 typedef	class_traits<pbool_tag>		pbool_traits;
 typedef	class_traits<pint_tag>		pint_traits;
 typedef	class_traits<preal_tag>		preal_traits;
+typedef	class_traits<pstring_tag>	pstring_traits;
 
 }	// end namespace entity
 }	// end namespace HAC
