@@ -1,0 +1,13 @@
+# "freeze-02.prsimrc"
+# @haco@ inv.haco-c
+
+watchall
+frozen-verbose on
+freeze a
+set a 1
+echo error here, need setf
+
+cycle
+setf a 1
+cycle
+

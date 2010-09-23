@@ -1,0 +1,33 @@
+Nodes frozen:
+freezing b 
+Nodes frozen:
+b
+Firing for frozen node `b' suppressed.
+	0	a : 0
+Firing for frozen node `b' suppressed.
+	0	a : 1
+event queue:
+	10	b : 0
+Nodes frozen:
+released b 
+	10	b : 0
+	20	c : 1	[by b:=0]
+	20	a : 0
+	30	b : 1	[by a:=0]
+	40	c : 0	[by b:=1]
+	40	a : 1
+	50	b : 0	[by a:=1]
+	60	c : 1	[by b:=0]
+freezing b 
+Firing for frozen node `b' suppressed.
+	60	a : 0
+Nodes frozen:
+b
+c:1
+. b:0, frozen
+released b 
+	70	b : 1
+	80	c : 0	[by b:=1]
+c:0
+. ~b:1
+. ~. a:0, input

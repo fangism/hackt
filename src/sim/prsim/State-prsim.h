@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.44 2010/08/27 23:04:53 fang Exp $
+	$Id: State-prsim.h,v 1.45 2010/09/23 00:19:54 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -283,6 +283,13 @@ private:
 			confirmed with a message. 
 		 */
 		FLAG_CONFIRM_ASSERTS = 0x2000,
+#if PRSIM_UPSET_NODES
+		/**
+			When set, print more verbose information
+			when interacting with frozen nodes.  
+		 */
+		FLAG_FROZEN_VERBOSE = 0x4000,
+#endif
 #if PRSIM_TRACE_GENERATION
 		/**
 			Set to true when events are being traced.
@@ -939,6 +946,9 @@ public:
 	time_type
 	next_event_time(void) const;
 
+	value_enum
+	node_to_value(const string&, const node_index_type) const;
+
 	int
 	set_node_time(const node_index_type, const value_enum val, 
 		const time_type t, const bool f);
@@ -960,6 +970,22 @@ public:
 
 	void
 	unset_all_nodes(void);
+
+#if PRSIM_UPSET_NODES
+	void
+	set_frozen_verbose(const bool b) {
+		if (b)	flags |= FLAG_FROZEN_VERBOSE;
+		else	flags &= ~FLAG_FROZEN_VERBOSE;
+	}
+
+	bool
+	is_frozen_verbose(void) const {
+		return flags & FLAG_FROZEN_VERBOSE;
+	}
+
+	void
+	freeze_node(const node_index_type);
+#endif
 
 	void
 	set_node_breakpoint(const node_index_type);
@@ -1060,6 +1086,11 @@ public:
 	ostream&
 	status_driven(ostream&, const pull_enum, const bool) const;
 
+#if PRSIM_UPSET_NODES
+	ostream&
+	status_frozen(ostream&) const;
+#endif
+
 	bool
 	dequeue_unstable_events(void) const {
 		return flags & FLAG_UNSTABLE_DEQUEUE;
@@ -1141,10 +1172,11 @@ private:
 	event_index_type
 	__allocate_event(node_type&, const node_index_type n,
 		cause_arg_type,	// this is the causing node/event
-		const rule_index_type, const value_enum
+		const rule_index_type, const value_enum,
 #if PRSIM_WEAK_RULES
-		, const bool weak
+		const bool weak,
 #endif
+		const bool force = false
 		);
 
 	event_index_type
@@ -1187,6 +1219,9 @@ private:
 	enqueue_event(const time_type, const event_index_type);
 
 public:
+	bool
+	deschedule_event(const node_index_type);
+
 	bool
 	reschedule_event_now(const node_index_type);
 

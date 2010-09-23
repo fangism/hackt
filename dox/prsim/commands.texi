@@ -1,5 +1,5 @@
 @c "hacprsim/commands.texi"
-@c $Id: commands.texi,v 1.33 2010/06/29 01:55:00 fang Exp $
+@c $Id: commands.texi,v 1.34 2010/09/23 00:19:49 fang Exp $
 
 @node Commands
 @chapter Commands
@@ -96,6 +96,11 @@ Coercively setting values.
 @include cmd/unset.texi
 @include cmd/unsetall.texi
 
+Freezing switching and simulating event upsets.
+
+@include cmd/freeze.texi
+@include cmd/upset.texi
+
 Breakpoints.  
 
 @include cmd/breakpt.texi
@@ -103,8 +108,9 @@ Breakpoints.
 @include cmd/nobreakpt.texi
 @include cmd/nobreakptall.texi
 
-Rescheduling events.
+Rescheduling and cancelling pending events.
 
+@include cmd/dequeue.texi
 @include cmd/reschedule.texi
 @include cmd/execute.texi
 
@@ -366,6 +372,7 @@ simulator and the simulated production rules.
 @include cmd/get-driven.texi
 @include cmd/status-interference.texi
 @include cmd/status-driven.texi
+@include cmd/status-frozen.texi
 @include cmd/time.texi
 @include cmd/unused-nodes.texi
 @include cmd/unknown-inputs.texi

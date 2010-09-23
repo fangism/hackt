@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.77 2010/08/27 23:04:52 fang Exp $
+	$Id: Command-prsim.cc,v 1.78 2010/09/23 00:19:52 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -1001,6 +1001,8 @@ PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(Queue, info)
 @texinfo cmd/set.texi
 @deffn Command set node val [delay]
 Set @var{node} to @var{val}.  
+@var{val} can be @t{0}, @t{1}, @t{X}, 
+or @t{~} which means "opposite-of-the-current-value".
 If @var{delay} is omitted, the set event is inserted `now' at 
 the current time, at the head of the event queue.
 If @var{delay} is given with a @t{+} prefix, time is added relative to
@@ -1033,15 +1035,15 @@ if (asz < 3 || asz > 4) {
 	string_list::const_iterator ai(++a.begin());
 	const string& objname(*ai++);	// node name
 	const string& _val(*ai++);	// node value
-	// valid values are 0, 1, 2(X)
-	const value_enum val = node_type::string_to_value(_val);
-	if (!node_type::is_valid_value(val)) {
-		cerr << "Invalid logic value: " << _val << endl;
-		return Command::SYNTAX;
-	}
 	const node_index_type ni = parse_node_to_index(objname, s.get_module());
 	if (ni) {
 		int err;
+		// valid values are 0, 1, 2(X)
+		const value_enum val = s.node_to_value(_val, ni);
+		if (!node_type::is_valid_value(val)) {
+			cerr << "Invalid logic value: " << _val << endl;
+			return Command::SYNTAX;
+		}
 		if (ai != a.end()) {
 			// extract time
 			const string& d(*ai);
@@ -1084,12 +1086,13 @@ Set::main(State& s, const string_list& a) {
 
 void
 Set::usage(ostream& o) {
-	o << "set <node> <0|F|1|T|X|U> [+delay | time]" << endl;
+	o << "set <node> <0|F|1|T|X|U|~> [+delay | time]" << endl;
 	o <<
 "\tWithout delay, node is set immediately.  Relative delay into future\n"
 "\tis given by +delay, whereas an absolute time is given without \'+\'.\n"
 "\tIf there is a pending event on the node, this command is ignored with a\n"
-"\twarning.  See also \'setf\'."
+"\twarning.  The value '~' means opposite-of-the-current-value.\n"
+"See also \'setf\'."
 	<< endl;
 }
 
@@ -1235,15 +1238,15 @@ if (asz != 3) {
 	// now I'm wishing string_list was string_vector... :) can do!
 	string_list::const_iterator ai(++a.begin());
 	const string& objname(*ai++);	// node name
-	const string& _val(*ai++);	// node value
-	// valid values are 0, 1, 2(X)
-	const value_enum val = node_type::string_to_value(_val);
-	if (!node_type::is_valid_value(val)) {
-		cerr << "Invalid logic value: " << _val << endl;
-		return Command::SYNTAX;
-	}
 	const node_index_type ni = parse_node_to_index(objname, s.get_module());
 	if (ni) {
+		const string& _val(*ai++);	// node value
+		// valid values are 0, 1, 2(X)
+		const value_enum val = s.node_to_value(_val, ni);
+		if (!node_type::is_valid_value(val)) {
+			cerr << "Invalid logic value: " << _val << endl;
+			return Command::SYNTAX;
+		}
 		const int err = s.set_node_after(ni, val,
 			State::exponential_random_delay(), force);
 		return (err < 1) ? Command::NORMAL : Command::BADARG;
@@ -1267,6 +1270,185 @@ Setr::usage(ostream& o) {
 "\tThis variation yields to pending events on the node, if any."
 	<< endl;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_UPSET_NODES
+/***
+@texinfo cmd/freeze.texi
+@deffn Command freeze node
+Prevents @var{node} from switching cause by updates on its fanins.
+Any pending events that are already in the event queue will remain
+in the queue and fire when they reach the head.  
+Q: How does this affect channels?
+@end deffn
+
+@deffn Command thaw node
+Aliases to the @command{unset}, removes the frozen state to allow 
+transition events, and also re-evaluates fanin to automatically 
+enqueue an event when it should fire.
+@end deffn
+@end texinfo
+***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(Freeze, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(Thaw, instance_completer)
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Freeze, "freeze", simulation,
+	"freeze node, preventing further switching activity")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Thaw, "thaw", simulation,
+	"allow node to resume switching (same as unset)")
+
+int
+Freeze::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	const string& objname(a.back());
+	const node_index_type ni = parse_node_to_index(objname, s.get_module());
+	if (ni) {
+		s.freeze_node(ni);
+		return Command::NORMAL;
+	} else {
+		cerr << "No such node found: " <<
+			nonempty_abs_dir(objname) << endl;
+		return Command::BADARG;
+	}
+}
+}
+
+void
+Freeze::usage(ostream& o) {
+	o << name << " node" << endl;
+	o << "Prevent all switching activity on node.\n"
+"Events that are already pending in the event queue will remain in the queue\n"
+"until they are executed." << endl;
+}
+
+int
+Thaw::main(State& s, const string_list& a) {
+	return UnSet::main(s, a);
+}
+
+void
+Thaw::usage(ostream& o) {
+	UnSet::usage(o);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/frozen-verbose.texi
+@deffn Command frozen-verbose [01]
+Controls verbosity of simulator events concerning frozen nodes.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(FrozenVerbose, "frozen-verbose", view,
+	"print additional information relevant to frozen nodes")
+
+int
+FrozenVerbose::main(State& s, const string_list& a) {
+switch (a.size()) {
+case 1: {
+	cout << "frozen-verbose ";
+	if (s.is_frozen_verbose()) {
+		cout << "on";
+	} else {
+		cout << "off";
+	}
+	cout << endl;
+	return Command::NORMAL;
+}
+case 2: {
+	const string& arg(a.back());
+	bool m = false;
+	if (arg == "on") {
+		m = true;
+	} else if (arg == "off") {
+		m = false;
+	} else {
+		cerr << "Bad argument." << endl;
+		usage(cerr);
+		return Command::BADARG;
+	}
+	s.set_frozen_verbose(m);
+	return Command::NORMAL;
+}
+default:
+	usage(cerr << "usage: ");
+	return Command::BADARG;
+}
+}
+
+void
+FrozenVerbose::usage(ostream& o) {
+	o << name << " [on|off]" << endl;
+	o <<
+"When enabled, prints additional information about events involving frozen "
+"nodes." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/upset.texi
+@deffn Command upset node [val]
+Forces @var{node} to remain stuck at its current value or @var{val} (if given)
+until it is explicitly restored by the @command{unset} command.
+@command{upset} is a combination of @command{setf} and @command{freeze}.
+@end deffn
+@end texinfo
+***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(Upset, instance_completer)
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Upset, "upset", simulation,
+	"freeze node to value until it is explicitly restored")
+
+/**
+	This should be equivalent to { setf; freeze; }.  
+**/
+int
+Upset::main(State& s, const string_list& a) {
+const size_t sz = a.size();
+if (sz < 2 || sz > 3) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	string_list::const_iterator ai(++a.begin());
+	const string& objname(*ai++);	// node name
+	const node_index_type ni = parse_node_to_index(objname, s.get_module());
+	if (ni) {
+		// default: use current value
+		value_enum val = s.get_node(ni).current_value();
+	if (sz == 3) {
+		const string& _val(*ai++);	// node value
+		val = s.node_to_value(_val, ni);
+		if (!node_type::is_valid_value(val)) {
+			cerr << "Invalid logic value: " << _val << endl;
+			return Command::SYNTAX;
+		}
+	}
+//		s.upset_node(ni, val);
+		// setf ...
+		const int err = s.set_node(ni, val, true);	// forced
+		if (err) return err;
+		// freeze ...
+		s.freeze_node(ni);
+		return Command::NORMAL;
+	} else {
+		cerr << "No such node found." << endl;
+		return Command::BADARG;
+	}
+}
+}
+
+void
+Upset::usage(ostream& o) {
+	o << name << " node [val]" << endl;
+o <<
+"Freezes node to a given value (or current value if non specified) until\n"
+"node is explicitly unfrozen by an 'unset' command." << endl;
+o << "A frozen node does not react to any fanin switching activity,\n"
+"but may respond to user actions." << endl;
+
+}
+#endif	// PRSIM_UPSET_NODES
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -1299,6 +1481,48 @@ SetrF::usage(ostream& o) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // DECLARE_AND_INITIALIZE_COMMAND_CLASS(Setrwhen, "setrwhen", simulation,
 //	"set node with random delay after event")
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/dequeue.texi
+@deffn Command dequeue node
+Cancels any pending event on @var{node} from the event queue.
+This can result in the circuit getting stuck in a state until the
+killed node is explicitly re-evaluated 
+(e.g. with an @command{unset} command).
+No error condition is returned if there is no pending event associated
+with the named @var{node}.
+@end deffn
+@end texinfo
+***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(Dequeue, instance_completer)
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Dequeue, "dequeue", simulation,
+	"cancel event on a node from the event queue")
+
+int
+Dequeue::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	const string& objname(a.back());
+	const node_index_type ni = parse_node_to_index(objname, s.get_module());
+	if (ni) {
+		s.deschedule_event(ni);
+		return Command::NORMAL;
+	} else {
+		cerr << "No such node found: " <<
+			nonempty_abs_dir(objname) << endl;
+		return Command::BADARG;
+	}
+}
+}
+
+void
+Dequeue::usage(ostream& o) {
+o << name << " node" << endl;
+o << "Cancels any pending event on the given node." << endl;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -2438,6 +2662,34 @@ name << " 0: reports nodes with fanin that are undriven\n" <<
 name << " 1: reports nodes with fanin that are driven (incl. interference)\n" <<
 name << " X: reports nodes with fanin that are only driven by X"
 	<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/status-frozen.texi
+@deffn Command status-frozen
+Print all nodes that have been frozen (switching suppressed).
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(StatusFrozen, "status-frozen", info, 
+	"show all nodes that are frozen from switching")
+
+int
+StatusFrozen::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.status_frozen(cout);
+	return Command::NORMAL;
+}
+}
+
+void
+StatusFrozen::usage(ostream& o) {
+	o << name << endl;
+	o << brief << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

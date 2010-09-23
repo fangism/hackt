@@ -1,5 +1,5 @@
 # "test/lib/Makefile.am"
-#	$Id: Makefile.am,v 1.38 2010/08/24 18:08:46 fang Exp $
+#	$Id: Makefile.am,v 1.39 2010/09/23 00:19:54 fang Exp $
 # Test auto-Makefile for prsim library.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -172,6 +172,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	init-source-sink-c-01 init-source-sink-c-02 \
 	wchb-token-ring-a-01 wchb-token-ring-a-02 wchb-token-ring-a-03 \
 	wchb-token-ring-a-04 wchb-token-ring-a-05 \
+	wchb-token-ring-a-06 wchb-token-ring-a-07 wchb-token-ring-a-08 \
 	wchb-token-ring-b-02 wchb-token-ring-b-03 \
 	wchb-token-ring-c-01 wchb-token-ring-c-02 wchb-token-ring-c-03 \
 	wchb-token-ring-c-04 wchb-token-ring-c-05 wchb-token-ring-c-06 \

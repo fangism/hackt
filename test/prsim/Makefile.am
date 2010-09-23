@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.115 2010/09/16 06:31:46 fang Exp $
+#	$Id: Makefile.am,v 1.116 2010/09/23 00:19:56 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -105,7 +105,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	inv-00 inv-01 inv-02 inv-03 inv-04 inv-05 inv-07 inv-08 inv-09 \
 	inv-11 inv-12 inv-13 inv-14 inv-15 inv-16 inv-17 \
 	inv-18 inv-19 inv-20 inv-20a inv-21 inv-21a inv-22 inv-23 \
-	inv-24 inv-25 inv-26 inv-27 \
+	inv-24 inv-25 inv-26 inv-27 inv-29 inv-30 \
 	inv-alt-01 inv-alt-02 inv-alt-03 inv-alt-04 inv-alt-05 inv-alt-06 \
 	inv-alt-07 inv-alt-08 inv-alt-09 inv-alt-10 \
 	inv-why-01 inv-why-02 \
@@ -152,6 +152,8 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	oscil-status-01 \
 	oscil-why-01 oscil-why-02 \
 	oscil-wrong-why-01 \
+	oscil-freeze-01 \
+	oscil-upset-01 oscil-upset-02 \
 	celem-rules \
 	half-celem-01 \
 	celem-share-01 celem-share-02 \
@@ -313,7 +315,11 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	memstats32-inv memstats64-inv \
 	history-01 history-02 history-03 history-04 \
 	separator-01 separator-02 separator-03 separator-04 \
-	separator-05 separator-06
+	separator-05 separator-06 \
+	dequeue-01 dequeue-02 \
+	freeze-01 freeze-03 freeze-04 \
+	upset-01
+	
 
 # subset of prsimrc test that we wish to compare traces against regressions
 HACKT_PRSIMTRACE_TEST_SUBJECTS = \
@@ -563,7 +569,8 @@ HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
 	reschedule-01 reschedule-02 reschedule-03 reschedule-04 reschedule-05 \
 	reschedule-06 reschedule-18 \
 	oscil-trace-01 oscil-trace-02 \
-	dirs-01
+	dirs-01 \
+	freeze-02
 
 # KNOWN BUG (fails, but should not): cross-pulldown-01
 

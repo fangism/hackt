@@ -1,0 +1,16 @@
+# "freeze-03.prsimrc"
+# @haco@ inv.haco-c
+
+watchall
+frozen-verbose on
+freeze a
+setf a 1
+cycle
+status-frozen
+
+unsetall
+status-frozen
+# thaw a
+set a 0
+cycle
+

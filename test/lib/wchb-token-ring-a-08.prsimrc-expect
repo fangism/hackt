@@ -1,0 +1,218 @@
+testing freeze/upset 
+	60	L.e : 0	[by X.fore.rv:=1]
+X nodes:
+
+All subnodes of '.':
+L.d[0] : 0
+L.d[1] : 0
+L.e : 0
+R.d[0] : 0
+R.d[1] : 0
+R.e : 1
+!GND : 0
+!Vdd : 1
+_Reset : 0
+Reset : 1
+X.M.d[0] : 1
+X.M.d[1] : 0
+X.M.e : 1
+X.fore._r.d[0] : 0
+X.fore._r.d[1] : 1
+X.fore.rv : 1
+X.aft._r.d[0] : 1
+X.aft._r.d[1] : 1
+X.aft.rv : 0
+C._r.d[0] : 1
+C._r.d[1] : 1
+C._le : 0
+	120	L.e : 1	[by X.fore.rv:=0]
+	210	L.e : 0	[by X.fore.rv:=1]
+	300	L.e : 1	[by X.fore.rv:=0]
+	390	L.e : 0	[by X.fore.rv:=1]
+	480	L.e : 1	[by X.fore.rv:=0]
+	570	L.e : 0	[by X.fore.rv:=1]
+	660	L.e : 1	[by X.fore.rv:=0]
+	750	L.e : 0	[by X.fore.rv:=1]
+	840	L.e : 1	[by X.fore.rv:=0]
+Firing for frozen node `C._r.d[1]' suppressed.
+	930	L.e : 0	[by X.fore.rv:=1]
+	1020	L.e : 1	[by X.fore.rv:=0]
+Firing for frozen node `C._r.d[1]' suppressed.
+	1110	L.e : 0	[by X.fore.rv:=1]
+	1200	L.e : 1	[by X.fore.rv:=0]
+Firing for frozen node `C._r.d[1]' suppressed.
+	1290	L.e : 0	[by X.fore.rv:=1]
+	1380	L.e : 1	[by X.fore.rv:=0]
+Firing for frozen node `C._r.d[1]' suppressed.
+	1470	L.e : 0	[by X.fore.rv:=1]
+	1560	L.e : 1	[by X.fore.rv:=0]
+Firing for frozen node `C._r.d[1]' suppressed.
+	1650	L.e : 0	[by X.fore.rv:=1]
+	1740	L.e : 1	[by X.fore.rv:=0]
+Firing for frozen node `C._r.d[1]' suppressed.
+	1830	L.e : 0	[by X.fore.rv:=1]
+	1920	L.e : 1	[by X.fore.rv:=0]
+Firing for frozen node `C._r.d[1]' suppressed.
+	2010	L.e : 0	[by X.fore.rv:=1]
+	2100	L.e : 1	[by X.fore.rv:=0]
+Firing for frozen node `C._r.d[1]' suppressed.
+	2190	L.e : 0	[by X.fore.rv:=1]
+	2280	L.e : 1	[by X.fore.rv:=0]
+Firing for frozen node `C._r.d[0]' suppressed.
+Firing for frozen node `C._r.d[1]' suppressed.
+	2370	L.e : 0	[by X.fore.rv:=1]
+R.d[0]:0
+  X.aft._r.d[0]:1
+    R.e:0
+      C._le:1
+        C._r.d[0]:0, frozen
+L.e:0
+  X.fore.rv:1
+    X.fore._r.d[0]:0
+      X.M.e:1
+        X.aft.rv:0
+          X.aft._r.d[0]:1
+            R.e:0
+              C._le:1
+                C._r.d[0]:0, frozen
+          X.aft._r.d[1]:1
+            R.e:0, (visited before, see above)
+            X.M.d[1]:0
+              X.fore._r.d[1]:1
+                L.d[1]:0
+                  C._r.d[1]:1, frozen
+      L.d[0]:1
+        C._r.d[0]:0, (visited before, see above)
+	2460	L.e : 1	[by X.fore.rv:=0]
+Firing for frozen node `C._r.d[1]' suppressed.
+	2550	L.e : 0	[by X.fore.rv:=1]
+	2640	L.e : 1	[by X.fore.rv:=0]
+Firing for frozen node `C._r.d[1]' suppressed.
+	2730	L.e : 0	[by X.fore.rv:=1]
+	2820	L.e : 1	[by X.fore.rv:=0]
+Firing for frozen node `C._r.d[1]' suppressed.
+	2910	L.e : 0	[by X.fore.rv:=1]
+	3000	L.e : 1	[by X.fore.rv:=0]
+Firing for frozen node `C._r.d[1]' suppressed.
+	3090	L.e : 0	[by X.fore.rv:=1]
+	3180	L.e : 1	[by X.fore.rv:=0]
+Firing for frozen node `C._r.d[1]' suppressed.
+	3270	L.e : 0	[by X.fore.rv:=1]
+	3360	L.e : 1	[by X.fore.rv:=0]
+Firing for frozen node `C._r.d[1]' suppressed.
+	3450	L.e : 0	[by X.fore.rv:=1]
+	3540	L.e : 1	[by X.fore.rv:=0]
+Firing for frozen node `C._r.d[1]' suppressed.
+	3630	L.e : 0	[by X.fore.rv:=1]
+	3720	L.e : 1	[by X.fore.rv:=0]
+Firing for frozen node `C._r.d[1]' suppressed.
+	3810	L.e : 0	[by X.fore.rv:=1]
+	3900	L.e : 1	[by X.fore.rv:=0]
+Firing for frozen node `C._r.d[1]' suppressed.
+	3990	L.e : 0	[by X.fore.rv:=1]
+	4080	L.e : 1	[by X.fore.rv:=0]
+Firing for frozen node `C._r.d[1]' suppressed.
+	4170	L.e : 0	[by X.fore.rv:=1]
+	4260	L.e : 1	[by X.fore.rv:=0]
+Firing for frozen node `C._r.d[1]' suppressed.
+	4350	L.e : 0	[by X.fore.rv:=1]
+	4440	L.e : 1	[by X.fore.rv:=0]
+Firing for frozen node `C._r.d[1]' suppressed.
+	4530	L.e : 0	[by X.fore.rv:=1]
+	4620	L.e : 1	[by X.fore.rv:=0]
+Firing for frozen node `C._r.d[1]' suppressed.
+	4710	L.e : 0	[by X.fore.rv:=1]
+	4800	L.e : 1	[by X.fore.rv:=0]
+Firing for frozen node `C._r.d[1]' suppressed.
+	4890	L.e : 0	[by X.fore.rv:=1]
+	4980	L.e : 1	[by X.fore.rv:=0]
+Firing for frozen node `C._r.d[1]' suppressed.
+	5070	L.e : 0	[by X.fore.rv:=1]
+	5160	L.e : 1	[by X.fore.rv:=0]
+Firing for frozen node `C._r.d[1]' suppressed.
+	5250	L.e : 0	[by X.fore.rv:=1]
+	5340	L.e : 1	[by X.fore.rv:=0]
+Firing for frozen node `L.e' suppressed.
+R.e:0
+  C._le:1
+    C._r.d[0]:0
+      _Reset:1, input
+      L.e:1, frozen
+R.d[1]:0
+  X.aft._r.d[1]:1
+    R.e:0
+      C._le:1
+        C._r.d[0]:0
+          _Reset:1, input
+          L.e:1, frozen
+    X.M.d[1]:0
+      X.fore._r.d[1]:1
+        L.d[1]:0
+          C._r.d[1]:1, frozen
+Firing for frozen node `C._r.d[1]' suppressed.
+	5420	L.e : 0
+Firing for frozen node `L.e' suppressed.
+R.e:1
+  C._le:0
+    C._r.d[0]:1
+      L.e:0, frozen
+    C._r.d[1]:1, frozen
+R.d[1]:0
+  X.aft._r.d[1]:1
+    X.M.d[1]:0
+      X.fore._r.d[1]:1
+        X.M.e:0
+          X.aft.rv:1
+            X.aft._r.d[0]:0
+              R.e:1
+                C._le:0
+                  C._r.d[0]:1
+                    L.e:0, frozen
+                  C._r.d[1]:1, frozen
+              _Reset:1, input
+        L.d[1]:0
+          C._r.d[1]:1, (visited before, see above)
+	5500	L.e : 1
+Firing for frozen node `L.e' suppressed.
+	5590	L.e : 0
+	5680	L.e : 1	[by X.fore.rv:=0]
+	5770	L.e : 0	[by X.fore.rv:=1]
+	5860	L.e : 1	[by X.fore.rv:=0]
+	5950	L.e : 0	[by X.fore.rv:=1]
+	6040	L.e : 1	[by X.fore.rv:=0]
+	6130	L.e : 0	[by X.fore.rv:=1]
+	6220	L.e : 1	[by X.fore.rv:=0]
+	6310	L.e : 0	[by X.fore.rv:=1]
+	6400	L.e : 1	[by X.fore.rv:=0]
+	6490	L.e : 0	[by X.fore.rv:=1]
+	6580	L.e : 1	[by X.fore.rv:=0]
+	6670	L.e : 0	[by X.fore.rv:=1]
+	6760	L.e : 1	[by X.fore.rv:=0]
+	6850	L.e : 0	[by X.fore.rv:=1]
+	6940	L.e : 1	[by X.fore.rv:=0]
+	7030	L.e : 0	[by X.fore.rv:=1]
+	7120	L.e : 1	[by X.fore.rv:=0]
+	7210	L.e : 0	[by X.fore.rv:=1]
+	7300	L.e : 1	[by X.fore.rv:=0]
+	7390	L.e : 0	[by X.fore.rv:=1]
+	7480	L.e : 1	[by X.fore.rv:=0]
+	7570	L.e : 0	[by X.fore.rv:=1]
+	7660	L.e : 1	[by X.fore.rv:=0]
+	7750	L.e : 0	[by X.fore.rv:=1]
+	7840	L.e : 1	[by X.fore.rv:=0]
+	7930	L.e : 0	[by X.fore.rv:=1]
+	8020	L.e : 1	[by X.fore.rv:=0]
+	8110	L.e : 0	[by X.fore.rv:=1]
+	8200	L.e : 1	[by X.fore.rv:=0]
+	8290	L.e : 0	[by X.fore.rv:=1]
+	8380	L.e : 1	[by X.fore.rv:=0]
+	8470	L.e : 0	[by X.fore.rv:=1]
+	8560	L.e : 1	[by X.fore.rv:=0]
+	8650	L.e : 0	[by X.fore.rv:=1]
+	8740	L.e : 1	[by X.fore.rv:=0]
+	8830	L.e : 0	[by X.fore.rv:=1]
+	8920	L.e : 1	[by X.fore.rv:=0]
+	9010	L.e : 0	[by X.fore.rv:=1]
+	9100	L.e : 1	[by X.fore.rv:=0]
+	9190	L.e : 0	[by X.fore.rv:=1]
+	9280	L.e : 1	[by X.fore.rv:=0]

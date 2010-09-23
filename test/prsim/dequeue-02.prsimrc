@@ -1,0 +1,29 @@
+# "dequeue-02.prsimrc"
+# @haco@ inv.haco-c
+# make sure that forced events can be dequeued too
+
+watchall
+setf a 0
+queue
+dequeue a
+queue
+assertn-queue
+setf a 0
+cycle
+
+setf a 1
+advance 5
+queue
+assert-pending b
+dequeue a
+# nothing to dequeue
+dequeue b
+assertn-pending b
+assertn-queue
+getall .
+
+# thaw == unset
+thaw b
+assert-pending b
+cycle
+

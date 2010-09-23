@@ -154,6 +154,7 @@ syn keyword	cConstant	true false
 " Accept %: for # (C99)
 syn region	cPreCondit	start="^\s*\(%:\|#\)\s*\(if\|ifdef\|ifndef\|elif\)\>" skip="\\$" end="$" end="//"me=s-1 contains=cComment,cCppString,cCharacter,cCppParen,cParenError,cNumbers,cCommentError,cSpaceError
 syn match	cPreCondit	display "^\s*\(%:\|#\)\s*\(else\|endif\)\>"
+syn match	hacRuleAttrib	display "^\s*\[.\{-}\]"
 if !exists("c_no_if0")
   syn region	cCppOut		start="^\s*\(%:\|#\)\s*if\s\+0\+\>" end=".\@=\|$" contains=cCppOut2
   syn region	cCppOut2	contained start="0" end="^\s*\(%:\|#\)\s*\(endif\>\|else\>\|elif\>\)" contains=cSpaceError,cCppSkip
@@ -238,6 +239,7 @@ if version >= 508 || !exists("did_c_syn_inits")
   HiLink cError			Error
   HiLink cStatement		Statement
   HiLink cPreCondit		PreCondit
+  HiLink hacRuleAttrib		cLabel
   HiLink cType			Type
   HiLink cConstant		Constant
   HiLink cCommentString		cString

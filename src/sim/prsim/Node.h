@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.h"
 	Structure of basic PRS node.  
-	$Id: Node.h,v 1.25 2010/08/25 18:53:45 fang Exp $
+	$Id: Node.h,v 1.26 2010/09/23 00:19:53 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_NODE_H__
@@ -19,8 +19,19 @@
 #include <valarray>
 
 /**
+	Define to 1 to enable implementation of node event upsets, 
+	for force/freeze nodes to certain values.  
+	Goal: 1
+	Rationale: simulate single event upsets.
+	Status: begun
+ */
+#define	PRSIM_UPSET_NODES		1
+/**
 	Define to 1 to give NodeState its own dedicated watchpoint
 	flag, instead of overloading it with the breakpoint flag.
+	Goal: 1
+	Rationale: fixes bug where breakpoints are masked by watchpoints.
+	Status: done, tested, should be permanent.
  */
 #define	USE_WATCHPOINT_FLAG		1
 
@@ -321,11 +332,18 @@ public:
 
 		/// true if this node participates in any registered channel
 		NODE_IN_CHANNEL = 0x08,
+#if PRSIM_UPSET_NODES
+		/**
+			Activity on this node ceases.
+			Used to simulate event upsets.
+		 */
+		NODE_FROZEN = 0x10,
+#endif
 		/**
 			Auxiliary flag for general purpose visit tracking.
 			Is this used anywhere?
 		 */
-		NODE_FLAG = 0x10,
+		NODE_FLAG = 0x80,
 #if 0
 		// THESE OVERFLOW uchar!!!
 		NODE_CHANNEL_VALID = 0x10,
@@ -357,10 +375,17 @@ protected:
 	/**
 		Current enqueued event index associated with this node.
 		INVALID_EVENT_INDEX (0) means no pending event.  
+		If we ever need to squeeze for memory, this field 
+		could conceivably be eliminated because the information
+		should be redundant with events in the event queue, 
+		but require a slower search operation.
 	 */
 	event_index_type			event_index;
 	/**
 		Structure for tracking last cause, by node and value.  
+		This substructure is a huge memory hog, and could
+		be eliminated in favor of saving memory, 
+		at a loss of some cause-tracking capabilities.  
 	 */
 	LastCause				causes;
 
@@ -368,6 +393,7 @@ public:
 	/**
 		Transition counts.  
 		Not critical to simulation, unless we want statistics.  
+		This could also be elimiated in a memory-lite version.
 	 */
 	size_t					tcount;
 	/**
@@ -484,6 +510,25 @@ public:
 
 	bool
 	in_channel(void) const { return state_flags & NODE_IN_CHANNEL; }
+
+#if PRSIM_UPSET_NODES
+	// forces a node to stick to a value
+	void
+	freeze(void) { state_flags |= NODE_FROZEN; }
+
+	// releases a node from stuck state
+	void
+	restore(void) { state_flags &= ~NODE_FROZEN; }
+#endif
+
+	bool
+	is_frozen(void) const {
+#if PRSIM_UPSET_NODES
+		return state_flags & NODE_FROZEN;
+#else
+		return false;
+#endif
+	}
 
 	value_enum
 	current_value(void) const { return value; }

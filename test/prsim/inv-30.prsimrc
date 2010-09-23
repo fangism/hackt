@@ -1,0 +1,27 @@
+# "inv-30.prsimrc"
+# @haco@ inv.haco-c
+# testing set node ~
+
+watchall
+assert a X
+setf a ~
+queue
+echo opposite of X is still X
+cycle
+assert a X
+setf a 0
+set a ~
+echo second set is ignored
+cycle
+echo start to toggle a
+setf a ~
+cycle
+setf a ~
+cycle
+setf a ~
+cycle
+setf a ~
+cycle
+setf a ~
+cycle
+

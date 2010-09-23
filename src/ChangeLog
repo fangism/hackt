@@ -3,6 +3,21 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-09-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-28:
+	  hacprsim: added support for simulating event upsets, 
+		and freezing nodes, thawing nodes, killing events.
+		new commands:
+		dequeue node -- uesr kill of event in event queue
+		freeze node -- halts switching activity on node
+		thaw node -- resume switching activity, same as 'unset'
+		upset node val -- same as setf; freeze
+		frozen-verbose -- controls verbosity of events on frozen nodes
+		status-frozen -- list frozen nodes
+	  Documented, added test cases.
+
+
 2010-09-20	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-27-merged-string-01-04:

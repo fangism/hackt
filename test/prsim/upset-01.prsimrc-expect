@@ -1,0 +1,74 @@
+------------- 
+Nodes frozen:
+b
+	0	b : 1
+	10	c : 0	[by b:=1]
+Firing for frozen node `b' suppressed.
+	10	a : 0
+Firing for frozen node `b' suppressed.
+	10	a : 1
+	20	b : 0
+	30	c : 1	[by b:=0]
+Nodes frozen:
+------------- 
+upsetting user-set node in queue 
+WARNING: weak-interference `b'
+>> cause: `a' (val: X)
+	30	a : X
+WARNING: weak-interference `c'
+>> cause: `b' (val: X)
+	40	b : X	[by a:=X]
+	50	c : X	[by b:=X]
+event queue:
+	50	a : 0
+WARNING: pending event for node `a' was overridden.
+event queue:
+	50	a : 1
+	50	a : 1
+	60	b : 0	[by a:=1]
+	70	c : 1	[by b:=0]
+Nodes frozen:
+------------- 
+upsetting propagated node in queue 
+	70	a : 0
+event queue:
+	80	b : 1	[from a:=0]
+WARNING: pending event for node `b' was overridden.
+event queue:
+	70	b : 0
+b : 0	[by a:=0]
+keeping vacuous, forced event 
+	70	b : 0
+event queue:
+	80	b : 1
+	90	c : 0	[by b:=1]
+	90	a : 1
+	100	b : 0	[by a:=1]
+	110	c : 1	[by b:=0]
+------------- 
+upsetting node early (1) 
+event queue:
+	110	b : 1
+	120	c : 0	[by b:=1]
+------------- 
+upsetting node early (2) 
+Firing for frozen node `b' suppressed.
+Firing for frozen node `b' suppressed.
+	120	a : X
+	120	b : 0
+	130	c : 1	[by b:=0]
+Nodes frozen:
+b
+------------- 
+WARNING: weak-interference `c'
+>> cause: `b' (val: X)
+	130	b : X
+	140	c : X	[by b:=X]
+------------- 
+Firing for frozen node `b' suppressed.
+	140	a : 1
+thawing b... 
+Firing for frozen node `c' suppressed.
+	150	b : 0
+thawing c... 
+	160	c : 1

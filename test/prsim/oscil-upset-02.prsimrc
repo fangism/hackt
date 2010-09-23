@@ -1,0 +1,50 @@
+# "oscil-upset-02.prsimrc"
+# copy-modified from "oscil-upset-01.prsimrc"
+# but output should be identical
+#	$Id: oscil-upset-02.prsimrc,v 1.1 2010/09/23 00:20:01 fang Exp $
+# @haco@ oscillator.haco-c
+# Testing freeze/upset features.
+
+frozen-verbose on
+watchall
+set _Reset 0
+cycle
+set _Reset 1
+echo upset R.x[6] 0
+upset R.x[6] 0
+cycle
+status-frozen
+why-not R.x[5]
+thaw R.x[6]
+step-event 23
+
+echo upset R.x[0] ~
+upset R.x[0] ~
+# pending R.x[0]
+cycle
+why-not R.x[9]
+status-frozen
+echo upset R.x[5] ~
+upset R.x[5] ~
+thaw R.x[0]
+cycle
+status-frozen
+why-not R.x[0]
+unsetall
+step-event 15
+
+echo upset R.x[5] ~
+upset R.x[5] ~
+cycle
+
+echo upset R.x[5] ~
+upset R.x[5] ~
+cycle
+
+echo upset R.x[5] ~
+upset R.x[5] ~
+cycle
+
+assertn-queue
+status-frozen
+

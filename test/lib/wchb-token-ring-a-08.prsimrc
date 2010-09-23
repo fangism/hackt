@@ -1,0 +1,56 @@
+# "wchb-token-ring-a-08.prsimrc"
+# @haco@ wchb-token-ring-a.haco-c
+
+echo testing freeze/upset
+# watch L.d[0] L.d[1] L.e
+
+frozen-verbose on
+watch L.e
+# timing random
+mode reset
+set _Reset 0
+set Reset 1
+cycle
+status X
+mode run
+
+getall .
+
+set Reset 0
+set _Reset 1
+step-event 100
+assert-queue
+
+# initial value is 0, this won't affect
+upset C._r.d[1]
+step-event 200
+assert-queue
+
+upset C._r.d[0]
+cycle
+assertn-queue
+why-not R.d[0]
+why-not L.e
+
+thaw C._r.d[0]
+step-event 400
+assert-queue
+
+freeze L.e
+cycle
+assertn-queue
+why-not R.e
+why-not R.d[1]
+upset L.e ~
+cycle
+
+assertn-queue
+why-not R.e
+why-not R.d[1]
+upset L.e ~
+cycle
+
+unsetall
+step-event 500
+assert-queue
+

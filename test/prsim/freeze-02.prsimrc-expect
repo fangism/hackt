@@ -1,0 +1,3 @@
+WARNING: Attempt to set frozen node `a' ignored.
+To override, either use setf or thaw the node first.
+... at line 7

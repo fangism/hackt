@@ -1,0 +1,91 @@
+testing freeze/upset 
+X nodes:
+
+All subnodes of '.':
+L.d[0] : 0
+L.d[1] : 0
+L.e : 0
+R.d[0] : 0
+R.d[1] : 0
+R.e : 1
+!GND : 0
+!Vdd : 1
+_Reset : 0
+Reset : 1
+X.M.d[0] : 1
+X.M.d[1] : 0
+X.M.e : 1
+X.fore._r.d[0] : 0
+X.fore._r.d[1] : 1
+X.fore.rv : 1
+X.aft._r.d[0] : 1
+X.aft._r.d[1] : 1
+X.aft.rv : 0
+C._r.d[0] : 1
+C._r.d[1] : 1
+C._le : 0
+Firing for frozen node `C._r.d[1]' suppressed.
+Firing for frozen node `C._r.d[1]' suppressed.
+Firing for frozen node `C._r.d[1]' suppressed.
+Firing for frozen node `C._r.d[1]' suppressed.
+Firing for frozen node `C._r.d[1]' suppressed.
+Firing for frozen node `C._r.d[1]' suppressed.
+Firing for frozen node `C._r.d[1]' suppressed.
+Firing for frozen node `C._r.d[1]' suppressed.
+Firing for frozen node `C._r.d[0]' suppressed.
+Firing for frozen node `C._r.d[1]' suppressed.
+R.d[0]:0
+  X.aft._r.d[0]:1
+    R.e:0
+      C._le:1
+        C._r.d[0]:0, frozen
+L.e:0
+  X.fore.rv:1
+    X.fore._r.d[0]:0
+      X.M.e:1
+        X.aft.rv:0
+          X.aft._r.d[0]:1
+            R.e:0
+              C._le:1
+                C._r.d[0]:0, frozen
+          X.aft._r.d[1]:1
+            R.e:0, (visited before, see above)
+            X.M.d[1]:0
+              X.fore._r.d[1]:1
+                L.d[1]:0
+                  C._r.d[1]:1, frozen
+      L.d[0]:1
+        C._r.d[0]:0, (visited before, see above)
+Firing for frozen node `C._r.d[1]' suppressed.
+Firing for frozen node `C._r.d[1]' suppressed.
+Firing for frozen node `C._r.d[1]' suppressed.
+Firing for frozen node `C._r.d[1]' suppressed.
+Firing for frozen node `C._r.d[1]' suppressed.
+Firing for frozen node `C._r.d[1]' suppressed.
+Firing for frozen node `C._r.d[1]' suppressed.
+Firing for frozen node `C._r.d[1]' suppressed.
+Firing for frozen node `C._r.d[1]' suppressed.
+Firing for frozen node `C._r.d[1]' suppressed.
+Firing for frozen node `C._r.d[1]' suppressed.
+Firing for frozen node `C._r.d[1]' suppressed.
+Firing for frozen node `C._r.d[1]' suppressed.
+Firing for frozen node `C._r.d[1]' suppressed.
+Firing for frozen node `C._r.d[1]' suppressed.
+Firing for frozen node `C._r.d[1]' suppressed.
+Firing for frozen node `L.e' suppressed.
+R.e:0
+  C._le:1
+    C._r.d[0]:0
+      _Reset:1, input
+      L.e:1, frozen
+R.d[1]:0
+  X.aft._r.d[1]:1
+    R.e:0
+      C._le:1
+        C._r.d[0]:0
+          _Reset:1, input
+          L.e:1, frozen
+    X.M.d[1]:0
+      X.fore._r.d[1]:1
+        L.d[1]:0
+          C._r.d[1]:1, frozen

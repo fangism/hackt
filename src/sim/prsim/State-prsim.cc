@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.73 2010/08/27 23:21:39 fang Exp $
+	$Id: State-prsim.cc,v 1.74 2010/09/23 00:19:53 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -550,6 +550,9 @@ State::node_drives_any_channel(const node_index_type ni) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Q: is this the best place to handle this?
 /**
+	Q: should node activity coming from channels honor the
+	node's frozen state?
+	A: I don't think so, that's what channel-stop is for.
 	\return true if there is an event exception
  */
 State::break_type
@@ -575,6 +578,8 @@ State::flush_channel_events(const vector<env_event_type>& env_events,
 		const value_enum _v = i->second;
 #endif
 		node_type& _n(__get_node(ni));
+		// frozen nodes should never enter the temporary queues
+		ISE_INVARIANT(!_n.is_frozen());
 		const event_index_type pe = _n.get_event();
 		// check for pending events regardless of value-change
 		// to detect cancelled events and instabilities.
@@ -598,7 +603,6 @@ State::flush_channel_events(const vector<env_event_type>& env_events,
 		}
 
 		if (_n.current_value() != _v) {
-		// __allocate_event
 		const event_index_type pn =
 			__allocate_event(_n, ni, c,
 				INVALID_RULE_INDEX, _v
@@ -630,7 +634,7 @@ State::flush_channel_events(const vector<env_event_type>& env_events,
 		} // else filter out vacuous events
 	}
 	return err;
-}
+}	// end method State::flush_channel_events
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -936,27 +940,32 @@ State::__copy_event(const event_type& e) {
 	\param val the future value of the node.
 	\pre n must not already have a pending event.
 	\pre n must be the node corresponding to node index ni
+	\return index into event pool for newly created event.
  */
+// inline
 event_index_type
 State::__allocate_event(node_type& n,
 		const node_index_type ni,
 		cause_arg_type c, 
 		const rule_index_type ri,
-		const value_enum val
+		const value_enum val,
 #if PRSIM_WEAK_RULES
-		, const bool weak
+		const bool weak,
 #endif
+		const bool force
 		) {
 	STACKTRACE_VERBOSE;
 	ISE_INVARIANT(!n.pending_event());
-	const event_type e(ni, c, ri, val
+	event_type e(ni, c, ri, val
 #if PRSIM_WEAK_RULES
 		, weak
 #endif
 		);
+	if (force) e.force();
 #if DEBUG_STEP
 	e.dump_raw(STACKTRACE_INDENT_PRINT("")) << endl;
 #endif
+	ISE_INVARIANT(!n.is_frozen() || force);
 	n.set_event(event_pool.allocate(e));
 	// n.set_cause_node(ci);	// now assign *after* dequeue_event
 	return n.get_event();
@@ -1154,6 +1163,26 @@ State::enqueue_event(const time_type t, const event_index_type ei) {
 	const node_type& n(get_node(ni));
 	ISE_INVARIANT(n.pending_event());
 	ISE_INVARIANT(n.get_event() == ei);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	User action to explicitly kill an event from the queue, 
+	referenced by node.
+ */
+bool
+State::deschedule_event(const node_index_type ni) {
+	node_type& n(__get_node(ni));
+	const event_index_type ei = n.get_event();
+	if (ei) {
+		kill_event(ei, ni);
+		return false;
+	} else {
+		dump_node_canonical_name(
+			cerr << "There is no pending event on node `", 
+			ni) << "\'" << endl;
+		return true;
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1366,6 +1395,17 @@ State::next_event_time(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Allows '~' to be interpreted as "opposite of current value".
+ */
+value_enum
+State::node_to_value(const string& v, const node_index_type ni) const {
+	return (v == "~") ?
+		node_type::invert_value[get_node(ni).current_value()] :
+		node_type::string_to_value(v);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	\param ni the canonically allocated global index of the bool node.
 	\param val the new value to set the node.
 	\param t the time at which the event should occur.  
@@ -1416,26 +1456,51 @@ if (pending) {
 	return ENQUEUE_ACCEPT;
 }
 	// otherwise, allocate and enqueue the event.  
+if (!n.is_frozen() || f) {
 	const event_index_type ei =
 		// node cause to assign, since this is externally set
 		__allocate_event(n, ni, 
 			EMPTY_CAUSE,
-			INVALID_RULE_INDEX, val
+			INVALID_RULE_INDEX, val,
 #if PRSIM_WEAK_RULES
-			, NORMAL_RULE	// normal strength of 'set'
+			NORMAL_RULE,	// normal strength of 'set'
 #endif
-			);
+			f);	// forced events can only come from user
 #if 0
 	const event_type& e(get_event(ei));
 	STACKTRACE_INDENT_PRINT("new event: (node,val)" << endl);
 #endif
+#if 0
 	if (f) {	// what if nothing was pending?
 		// mark event as forced
 		get_event(ei).force();
 	}
+#endif
 	enqueue_event(t, ei);
 	return ENQUEUE_ACCEPT;
+} else {
+	// is frozen and not forced
+	const string objname(get_node_canonical_name(ni));
+	cout << "WARNING: Attempt to set frozen node `" << objname <<
+		"\' ignored.\n"
+		"To override, either use setf or thaw the node first."
+		<< endl;
+	return ENQUEUE_WARNING;
 }
+}	// end State::set_node_time
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_UPSET_NODES
+/**
+	Flags a node as frozen, preventing further activity.
+	Already pending events will stay in queue, and eventually fire.
+ */
+void
+State::freeze_node(const node_index_type ni) {
+	// Q: should nodes driven by channels be allowed to freeze?
+	__get_node(ni).freeze();
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1453,6 +1518,10 @@ void
 State::unset_node(const node_index_type ni) {
 	STACKTRACE_VERBOSE;
 	node_type& n(__get_node(ni));
+#if PRSIM_UPSET_NODES
+	n.restore();	// unstuck the node
+	INVARIANT(!n.is_frozen());
+#endif
 	const event_index_type pending = n.get_event();
 #if PRSIM_WEAK_RULES
 	// strong events take precedence over weak ones
@@ -2452,6 +2521,10 @@ for ( ; i!=e; ++i) {
 		if (ii!=si) {
 			const node_index_type eri = *ii;
 			node_type& er(__get_node(eri));
+			// frozen nodes are not considered
+			if (er.is_frozen()) {
+				continue;
+			}
 			// strong rules only
 			const pull_enum pei =
 				er.pull_up_state STR_INDEX(NORMAL_RULE).pull();
@@ -2508,7 +2581,11 @@ for ( ; i!=e; ++i) {
 		if (ii!=si) {
 			const node_index_type eri = *ii;
 			node_type& er(__get_node(eri));
-				// strong rules only
+			// frozen nodes are not considered
+			if (er.is_frozen()) {
+				continue;
+			}
+			// strong rules only
 			const pull_enum pei =
 				er.pull_dn_state STR_INDEX(NORMAL_RULE).pull();
 			if (!er.pending_event() &&
@@ -3338,7 +3415,6 @@ State::translate_to_global_node(const process_index_type pid,
 		Locally, this is used as the index of the affected node.  
 		NOW, THIS IS A LOCAL EXPRESSION INDEX, relative to pid
 	\param exi is the global expression index to update.  
-	\param pid process index.
 	\param prev the former value of the node/subexpression
 	\param next the new value of the node/subexpression.
 		Locally, this is used as index of the root expression, 
@@ -3391,6 +3467,19 @@ State::propagate_evaluation(
 #if DEBUG_STEP
 	if (ei) dump_event(cerr << "pending:\t", ei, 0.0) << endl;
 #endif
+	// frozen nodes will not switch when expressions propagate to their root
+	break_type err = ERROR_NONE;
+#if PRSIM_UPSET_NODES
+	if (n.is_frozen()) {
+		// even if new pull_state is off
+		if (is_frozen_verbose() && (next != PULL_OFF)) {
+			cout << "Firing for frozen node `" <<
+				get_node_canonical_name(ui) <<
+				"\' suppressed." << endl;
+		}
+		return err;
+	}
+#endif
 	const pull_enum up_pull = n.pull_up_state STR_INDEX(NORMAL_RULE).pull();
 	const pull_enum dn_pull = n.pull_dn_state STR_INDEX(NORMAL_RULE).pull();
 #if PRSIM_WEAK_RULES
@@ -3399,7 +3488,6 @@ State::propagate_evaluation(
 	const pull_enum wup_pull = weak_rules_enabled() ?
 		n.pull_up_state STR_INDEX(WEAK_RULE).pull() : PULL_OFF;
 #endif	// PRSIM_WEAK_RULES
-	break_type err = ERROR_NONE;
 #if PRSIM_WEAK_RULES
 	// weak rule pre-filtering
 if (weak_rules_enabled()) {
@@ -4325,6 +4413,21 @@ default:
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_UPSET_NODES
+/**
+	Print all nodes that are frozen (no activity).
+ */
+ostream&
+State::status_frozen(ostream& o) const {
+	vector<node_index_type> nodes;
+	find_nodes(nodes, mem_fun_ref(&node_type::is_frozen));
+	o << "Nodes frozen:" << endl;
+	print_nodes(o, nodes, "\n");
+	return o << std::flush;
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Verify event-to-node consistency.
 	invariant: every node can be referenced at most once 
@@ -5108,6 +5211,10 @@ if (y.second) {
 	// inserted uniquely
 	// inspect pull state (and event queue)
 	const event_index_type pe = n.get_event();
+	const bool frozen = n.is_frozen();
+	if (frozen) {
+		o << ", frozen";
+	}
 	if (pe) {
 		// if there is pending event, don't recurse
 		o << ", pending event -> " <<
@@ -5149,6 +5256,7 @@ if (y.second) {
 		// INDENT_SCOPE(o);
 		// can't use pi, wpi
 		// unroll fanin rules: iterate over all relevant rules
+		if (!frozen) {
 		if (ps == pull_query) {
 			__root_expr_why_not(o, ni, dir, NORMAL_RULE, limit, why_not, verbose, u, v);
 		}
@@ -5162,6 +5270,7 @@ if (y.second) {
 			_channel_manager.__node_why_not(*this, o, 
 				ni, limit, dir, why_not, verbose, u, v);
 		}
+		}	// end if !frozen
 		} else {	// recursion limit
 		o << ", (more ...)" << endl;
 		}

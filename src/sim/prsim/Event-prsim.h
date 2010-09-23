@@ -2,7 +2,7 @@
 	\file "sim/prsim/Event.h"
 	A firing event, and the queue associated therewith.  
 	NOTE: EventQueue and EventPlaceholder have moved to "sim/event.h"
-	$Id: Event-prsim.h,v 1.5 2009/02/01 07:21:37 fang Exp $
+	$Id: Event-prsim.h,v 1.6 2010/09/23 00:19:53 fang Exp $
 
 	NOTE: file was renamed from:
 	Id: Event.h,v 1.8 2007/01/21 06:00:59 fang Exp
@@ -318,6 +318,7 @@ public:
 			const event_index_type ret =
 				free_list_acquire(free_indices);
 			event_pool[ret] = e;
+			INVARIANT(ret);
 			return ret;
 		}
 	}

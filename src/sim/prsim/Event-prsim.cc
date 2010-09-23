@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Event-prsim.cc"
 	Implementation of prsim event structures.  
-	$Id: Event-prsim.cc,v 1.4 2008/11/05 23:03:48 fang Exp $
+	$Id: Event-prsim.cc,v 1.5 2010/09/23 00:19:53 fang Exp $
 
 	NOTE: file was renamed from:
 	Id: Event.cc,v 1.8 2007/01/21 06:00:58 fang Exp
@@ -144,6 +144,7 @@ EventPool::EventPool() : event_pool(), free_indices() {
 	const event_index_type zero __ATTRIBUTE_UNUSED__ =
 		event_pool.allocate();
 	INVARIANT(!zero);
+	// never add 0 to the free-list
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -196,12 +197,14 @@ EventPool::clear(void) {
 	const event_index_type zero __ATTRIBUTE_UNUSED__ =
 		event_pool.allocate();
 	INVARIANT(!zero);
+	// never add 0 to the free-list
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if DEBUG_EVENT_POOL_ALLOC
 /**
 	Keep this consistent with the inline definition.  
+	\return index to new event entry, never 0.
  */
 event_index_type
 EventPool::allocate(const event_type& e) {
@@ -215,13 +218,16 @@ EventPool::allocate(const event_type& e) {
 	} else {                        // LIKELY
 		const event_index_type ret = free_list_acquire(free_indices);
 		event_pool[ret] = e;
-		STACKTRACE_INDENT_PRINT("allocating entry: " << ret << endl);
+	STACKTRACE_INDENT_PRINT("allocating entry: " << ret << endl);
+		INVARIANT(ret);
 		return ret;
 	}
 }
-#endif
 
-#if DEBUG_EVENT_POOL_ALLOC
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param i event index to reclaim, never 0.
+ */
 void
 EventPool::deallocate(const event_index_type i) {
 	STACKTRACE_VERBOSE;

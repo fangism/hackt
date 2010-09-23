@@ -1,0 +1,27 @@
+# "dequeue-01.prsimrc"
+# @haco@ inv.haco-c
+
+watchall
+set a 0
+queue
+dequeue a
+queue
+assertn-queue
+set a 0
+cycle
+
+set a 1
+advance 5
+queue
+assert-pending b
+dequeue a
+# nothing to dequeue
+dequeue b
+assertn-pending b
+assertn-queue
+getall .
+
+unset b
+assert-pending b
+cycle
+

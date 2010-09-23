@@ -1,0 +1,22 @@
+event queue:
+opposite of X is still X 
+second set is ignored 
+	0	a : 0
+	10	b : 1	[by a:=0]
+	20	c : 0	[by b:=1]
+start to toggle a 
+	20	a : 1
+	30	b : 0	[by a:=1]
+	40	c : 1	[by b:=0]
+	40	a : 0
+	50	b : 1	[by a:=0]
+	60	c : 0	[by b:=1]
+	60	a : 1
+	70	b : 0	[by a:=1]
+	80	c : 1	[by b:=0]
+	80	a : 0
+	90	b : 1	[by a:=0]
+	100	c : 0	[by b:=1]
+	100	a : 1
+	110	b : 0	[by a:=1]
+	120	c : 1	[by b:=0]

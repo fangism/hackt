@@ -1,0 +1,35 @@
+# "oscil-freeze-01.prsimrc"
+#	$Id: oscil-freeze-01.prsimrc,v 1.1 2010/09/23 00:20:00 fang Exp $
+# @haco@ oscillator.haco-c
+# Testing freeze/upset features.
+
+frozen-verbose on
+watchall
+set _Reset 0
+cycle
+set _Reset 1
+echo freeze R.x[6]
+freeze R.x[6]
+cycle
+status-frozen
+why-not R.x[5]
+thaw R.x[6]
+step-event 20
+
+echo freeze R.x[0]
+freeze R.x[0]
+pending R.x[0]
+cycle
+why-not R.x[9]
+status-frozen
+echo freeze R.x[5]
+freeze R.x[5]
+thaw R.x[0]
+cycle
+status-frozen
+why-not R.x[0]
+unsetall
+step-event 15
+
+assert-queue
+

@@ -1,0 +1,75 @@
+# "upset-01.prsimrc"
+# @haco@ inv.haco-c
+
+watchall
+frozen-verbose on
+echo -------------
+upset b 1
+status-frozen
+cycle
+
+set a 0
+cycle
+set a 1
+cycle
+unset b
+cycle
+status-frozen
+
+echo -------------
+echo upsetting user-set node in queue
+set a X
+cycle
+set a 0
+queue
+upset a 1
+queue
+cycle
+thaw a
+status-frozen
+
+echo -------------
+echo upsetting propagated node in queue
+set a 0
+step-event
+queue
+upset b 0
+queue
+get b
+echo keeping vacuous, forced event
+cycle
+queue
+unsetall
+cycle
+set a 1
+cycle
+
+echo -------------
+echo upsetting node early (1)
+queue
+upset b ~
+cycle
+
+echo -------------
+echo upsetting node early (2)
+set a X
+upset b ~
+cycle
+status-frozen
+
+echo -------------
+unset b
+cycle
+
+echo -------------
+freeze b
+freeze c
+set a 1
+cycle
+echo thawing b...
+thaw b
+cycle
+echo thawing c...
+thaw c
+cycle
+
