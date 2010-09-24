@@ -1,0 +1,11 @@
+// "rename-15.hac"
+// copy-modified from "rename-04.hac"
+// now support strcat() and formatting
+
+bool x, y, _z[2];
+(;i:2:
+prs {
+	x & y<;label=strcat("OHAI",i)>		-> _z[i]-
+	~x<;label=strcat("uh",i+6,"-oh",2*i)> & ~y	-> _z[i]+
+}
+)

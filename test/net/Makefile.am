@@ -1,5 +1,5 @@
 # "test/net/Makefile.am"
-#	$Id: Makefile.am,v 1.25 2010/09/24 21:47:01 fang Exp $
+#	$Id: Makefile.am,v 1.26 2010/09/24 22:28:59 fang Exp $
 # Test auto-Makefile for hacknet.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -95,7 +95,7 @@ HACKNET_TEST_SCRIPTS_PASSES = \
 	spectre-substrate-05 \
 	rename-01 rename-02 rename-03 rename-06 \
 	rename-07 rename-08 rename-09 rename-10 rename-11 rename-12 \
-	rename-14 \
+	rename-14 rename-15 \
 	reserved-01 reserved-02 reserved-03 reserved-04 \
 	preferred_names-01 preferred_names-02 preferred_names-03 \
 	preferred_names-04 preferred_names-05 preferred_names-06
