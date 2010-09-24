@@ -1,0 +1,5 @@
+// "spectre-subckt-03.hac"
+// @hacknet-flags@ -f nested_subcircuits=1 -f output_format=spectre
+
+import "subckt-03.hac";
+

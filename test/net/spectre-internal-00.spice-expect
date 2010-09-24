@@ -1,0 +1,7 @@
+subckt foo<> !GND en x _y
+Q@a:dn:0 ( !GND en @a !GND ) nch W=5u L=2u
+Q_y:dn:0 ( @a x _y !GND ) nch W=5u L=2u
+ends foo<>
+
+bar ( !GND bar.en bar.x bar._y ) foo<>
+

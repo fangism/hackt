@@ -1,0 +1,5 @@
+// "spectre-inv-13.hac"
+// @hacknet-flags@ -T inv -f output_format=spectre
+
+import "inv-13.hac";
+

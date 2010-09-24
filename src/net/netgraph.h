@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.h"
-	$Id: netgraph.h,v 1.18 2010/05/23 07:56:57 fang Exp $
+	$Id: netgraph.h,v 1.19 2010/09/24 21:47:00 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETGRAPH_H__
@@ -411,6 +411,7 @@ struct node {
 /**
 	Generic 2-terminal device.
 	Capacitor, resistor, or inductor.
+	All of these devices only take a single parameter.
  */
 struct passive_device {
 	/**
@@ -420,6 +421,8 @@ struct passive_device {
 	// enum type: (R) resistor, (L) inductor, (C) capacitor
 	// (D) diode should be separate as it can be tied to a model
 	char				type;
+	// name?
+	real_type			parameter_value;
 };	// end struct device
 
 //-----------------------------------------------------------------------------
@@ -479,9 +482,14 @@ struct netlist_common : public device_group {
 	 */
 	typedef	vector<passive_device>	passive_device_pool_type;
 	passive_device_pool_type	passive_device_pool;
+	// TODO: keep running count of C, L, R for auto-naming/enumeration?
 
 	bool
 	is_empty(void) const;
+
+	ostream&
+	emit_passive_devices(ostream&, const node_pool_type&, const footprint&, 
+		const netlist_options&) const;
 
 	ostream&
 	emit_devices(ostream&, const node_pool_type&, const footprint&, 

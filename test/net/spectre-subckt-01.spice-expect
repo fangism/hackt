@@ -1,0 +1,19 @@
+subckt inv_c<>::first !GND !Vdd _x a x
+Q_x:dn:0 ( !GND a _x !GND ) nch W=5u L=2u
+Q_x:up:0 ( !Vdd a _x !Vdd ) pch W=5u L=2u
+Qx:dn:0 ( !GND _x x !GND ) nch W=5u L=2u
+Qx:up:0 ( !Vdd _x x !Vdd ) pch W=5u L=2u
+ends inv_c<>::first
+subckt inv_c<>::second !GND !Vdd x _y b
+Q_y:dn:0 ( !GND x _y !GND ) nch W=5u L=2u
+Q_y:up:0 ( !Vdd x _y !Vdd ) pch W=5u L=2u
+Qb:dn:0 ( !GND _y b !GND ) nch W=5u L=2u
+Qb:up:0 ( !Vdd _y b !Vdd ) pch W=5u L=2u
+ends inv_c<>::second
+subckt inv_c<> !GND !Vdd a b
+first:inst ( !GND !Vdd _x a x ) inv_c<>::first
+second:inst ( !GND !Vdd x _y b ) inv_c<>::second
+ends inv_c<>
+
+foo ( !GND !Vdd foo.a foo.b ) inv_c<>
+

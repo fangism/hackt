@@ -3,6 +3,21 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-09-24	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-29:
+	  hacknet:
+		added support for spectre formatting
+			use -f output_format=spectre command-line option,
+			also config-file option.
+		added ability to emit passive devices (untested)
+			also configuratble electrical units for
+			resistance, capacitance, inductance.
+		now configurable: 'x' card for subckt instances, 
+			'M' card for transistors and modeled devices.
+		Texinfo documented and tested, with new test cases added.
+
+
 2010-09-21	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-28:

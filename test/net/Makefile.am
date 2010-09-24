@@ -1,5 +1,5 @@
 # "test/net/Makefile.am"
-#	$Id: Makefile.am,v 1.24 2010/09/21 00:19:13 fang Exp $
+#	$Id: Makefile.am,v 1.25 2010/09/24 21:47:01 fang Exp $
 # Test auto-Makefile for hacknet.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -11,6 +11,8 @@ HACKNET_TEST_SCRIPTS_PASSES = \
 	inv-00 inv-01 inv-02 inv-03 inv-04 inv-05 inv-06 inv-07 \
 	inv-08 inv-09 inv-10 inv-11 inv-12 \
 	inv-13 inv-14 inv-15 inv-16 \
+	spectre-inv-01 spectre-inv-02 spectre-inv-04 spectre-inv-08 \
+	spectre-inv-13 \
 	nand-01 nand-02 nand-03 \
 	celem-01 celem-02 celem-03 celem-04 celem-05 celem-06 \
 	celem-07 celem-08 \
@@ -36,7 +38,9 @@ HACKNET_TEST_SCRIPTS_PASSES = \
 	half-pull-01 half-pull-02 \
 	pass_gate-01 pass_gate-02 pass_gate-03 pass_gate-04 \
 	pass_gate-05 pass_gate-06 \
+	spectre-pass_gate-02 \
 	subckt-01 subckt-03 subckt-04 subckt-05 \
+	spectre-subckt-01 spectre-subckt-03 \
 	channel-member-01 channel-member-02 channel-member-03 \
 	array-01 \
 	iskeeper-01 iskeeper-02 \
@@ -72,9 +76,11 @@ HACKNET_TEST_SCRIPTS_PASSES = \
 	supply-07 supply-08 \
 	supply-subckt-01 supply-subckt-02 supply-subckt-03 \
 	supply-subckt-04 supply-subckt-05 \
+	spectre-supply-subckt-01 \
 	supply-internal-01 supply-internal-02 supply-internal-03 \
 	supply-precharge-01 supply-precharge-02 supply-precharge-03 \
 	supply-precharge-04 \
+	spectre-precharge-04 \
 	supply-pass-gate-01 supply-pass-gate-02 \
 	supply-instance-01 supply-instance-02 supply-instance-03 \
 	supply-instance-04 supply-instance-05 supply-instance-06 \
@@ -83,8 +89,10 @@ HACKNET_TEST_SCRIPTS_PASSES = \
 	supply-instance-13 supply-instance-14 supply-instance-15 \
 	supply-instance-16 supply-instance-17 supply-instance-18 \
 	supply-instance-02b supply-instance-11b \
+	spectre-supply-instance-01 \
 	substrate-01 substrate-02 substrate-03 \
 	substrate-04 substrate-05 substrate-06 \
+	spectre-substrate-05 \
 	rename-01 rename-02 rename-03 rename-06 \
 	rename-07 rename-08 rename-09 rename-10 rename-11 rename-12 \
 	rename-14 \

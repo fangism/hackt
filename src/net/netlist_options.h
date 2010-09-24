@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_options.h"
-	$Id: netlist_options.h,v 1.14 2010/08/05 18:25:41 fang Exp $
+	$Id: netlist_options.h,v 1.15 2010/09/24 21:47:00 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETLIST_OPTIONS_H__
@@ -14,6 +14,12 @@
 #include "util/optparse.h"
 #include "util/named_ifstream_manager.h"
 #include "Object/common/dump_flags.h"
+
+/**
+	Define to 1 to enable Cadence Spectre output format support.
+	Goal: 1
+ */
+#define	SPECTRE_SUPPORT			1
 
 namespace HAC {
 namespace NET {
@@ -61,6 +67,17 @@ struct netlist_options {
 	ifstream_manager		file_manager;
 	dump_flags			__dump_flags;
 	misc_options_map_type		misc_options_map;
+#if SPECTRE_SUPPORT
+	/**
+		Output format style options.
+		The styles can be mixed and matched, 
+		not just preset bundled options. 
+	 */
+	typedef	enum {
+		STYLE_SPICE,
+		STYLE_SPECTRE
+	} style_enum;
+#endif
 	option_error_policy		unknown_option_policy;
 	option_error_policy		internal_node_supply_mismatch_policy;
 	option_error_policy		undriven_node_policy;
@@ -96,6 +113,9 @@ struct netlist_options {
 		Use needs to keep this consistent with length unit!
 	 */
 	string				area_unit;
+	string				capacitance_unit;
+	string				resistance_unit;
+	string				inductance_unit;
 	/**
 		String to emit between levels of instance hierarchy, 
 		usually '.' or '/'.
@@ -119,6 +139,15 @@ struct netlist_options {
 	string				mangle_implicit_bang;
 
 	/**
+		Typically the card name for transistors, 'M' in spice.
+	 */
+	string				transistor_prefix;
+	/**
+		Typically the card name for subcircuits, 'x' in spice.
+	 */
+	string				subckt_instance_prefix;
+
+	/**
 		String to emit before newline of a continued line.
 	 */
 	string				pre_line_continue;
@@ -128,6 +157,7 @@ struct netlist_options {
 	string				post_line_continue;
 	/**
 		String to emit for comments.  Default "* ".
+		Spectre uses "// ".
 	 */
 	string				comment_prefix;
 	/**
@@ -198,6 +228,16 @@ struct netlist_options {
 		footprint.
 	 */
 	bool				top_type_ports;
+#if SPECTRE_SUPPORT
+	/**
+		Subckt definition style.
+	 */
+	style_enum			subckt_def_style;
+	/**
+		Style of printing instance ports.  
+	 */
+	style_enum			instance_port_style;
+#endif
 	/**
 		If true, emit top-level instances and rules, otherwise, 
 		emit only subcircuit definitions (library-only).
@@ -214,6 +254,7 @@ struct netlist_options {
 	 */
 	bool				emit_mangle_map;
 
+
 	netlist_options();
 
 	/**
@@ -225,6 +266,11 @@ struct netlist_options {
 
 	bool
 	set_options(const option_value_list&);
+
+#if SPECTRE_SUPPORT
+	bool
+	preset_output_format(const option_value&);
+#endif
 
 	real_type
 	get_default_width(const bool d, const bool k) const;

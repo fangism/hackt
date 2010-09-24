@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_options.cc"
-	$Id: netlist_options.cc,v 1.18 2010/08/05 18:25:40 fang Exp $
+	$Id: netlist_options.cc,v 1.19 2010/09/24 21:47:00 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -64,6 +64,9 @@ netlist_options::netlist_options() :
 		stat_p_length(10.0),
 		length_unit("u"),
 		area_unit("p"),
+		capacitance_unit(""),	// fF?
+		resistance_unit(""),	// uOhm?
+		inductance_unit(""),	// uH?
 	// mangle options
 		mangle_process_member_separator("."),
 		mangle_struct_member_separator("."),
@@ -83,7 +86,9 @@ netlist_options::netlist_options() :
 		mangle_auxiliary_pound("#"),
 		mangle_implicit_bang("!"),
 	// format options
-		pre_line_continue(),
+		transistor_prefix("M"),
+		subckt_instance_prefix("x"),
+		pre_line_continue(""),
 		post_line_continue("+"),	// spice-style
 		comment_prefix("* "),
 
@@ -101,6 +106,10 @@ netlist_options::netlist_options() :
 		unused_ports(false),
 		prefer_port_aliases(false),
 		top_type_ports(false), 
+#if SPECTRE_SUPPORT
+		subckt_def_style(STYLE_SPICE),
+		instance_port_style(STYLE_SPICE),
+#endif
 		emit_top(true), 
 		emit_node_aliases(false),
 		emit_mangle_map(false)
@@ -123,6 +132,39 @@ netlist_options::netlist_options() :
 // a default copy for reference
 // so the help can print default values
 const netlist_options	netlist_options::default_value;
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Controls a group of options relevant to output format.
+	TODO: units?
+ */
+bool
+netlist_options::preset_output_format(const option_value& v) {
+if (v.values.size()) {
+	const string& f(v.values.front());
+	if (f == "spice") {
+		transistor_prefix = "M";
+		subckt_instance_prefix = "x";
+		pre_line_continue = "";
+		post_line_continue = "+";
+		comment_prefix = "* ";
+		subckt_def_style = STYLE_SPICE;
+		instance_port_style = STYLE_SPICE;
+	} else if (f == "spectre") {
+		transistor_prefix = "Q";	// any convention?
+		subckt_instance_prefix = "";
+		pre_line_continue = "\\";	// or is it '&'?
+		post_line_continue = "";
+		comment_prefix = "// ";
+		subckt_def_style = STYLE_SPECTRE;
+		instance_port_style = STYLE_SPECTRE;
+	} else {
+		cerr << "Unknown output format: " << f << endl;
+		return true;
+	}
+}	// else do nothing
+	return false;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -442,7 +484,7 @@ if (s.size()) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// translate a policy string into an enumeration
+// translate a error policy string into an enumeration
 static
 bool
 __set_policy_member(const option_value& opt, 
@@ -464,6 +506,32 @@ __set_policy_member(const option_value& opt,
 		} else {
 			cerr << "Error: error policy values for option " <<
 				opt.key << " are [ignore|warn|error]." << endl;
+			return true;
+		}
+	}
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+static
+bool
+__set_style_member(const option_value& opt, 
+		netlist_options& n_opt, 
+		netlist_options::style_enum netlist_options::*mem) {
+	const size_t s = opt.values.size();
+	if (s >= 1) {
+		if (s > 1) {
+		cerr << "Warning: extra arguments passed to \'" << opt.key
+			<< "\' option ignored." << endl;
+		}
+		const string& p(opt.values.front());
+		if (p == "spice") {
+			n_opt.*mem = netlist_options::STYLE_SPICE;
+		} else if (p == "spectre") {
+			n_opt.*mem = netlist_options::STYLE_SPECTRE;
+		} else {
+			cerr << "Error: style values for option " <<
+				opt.key << " are [spice|spectre]." << endl;
 			return true;
 		}
 	}
@@ -512,6 +580,13 @@ __set_member_default(const option_value& opt,
 bool
 __set_member_default(const option_value& opt, 
 		netlist_options& n_opt,
+		netlist_options::style_enum netlist_options::*mem) {
+	return __set_style_member(opt, n_opt, mem);
+}
+
+bool
+__set_member_default(const option_value& opt, 
+		netlist_options& n_opt,
 		string_set_type netlist_options::*mem) {
 	return __set_member_string_set(opt, n_opt, mem);
 }
@@ -550,6 +625,8 @@ const string&
 __string_type_of(string netlist_options::*) { return __str_type__; }
 const string&
 __string_type_of(option_error_policy netlist_options::*) { return __str_type__; }
+const string&
+__string_type_of(netlist_options::style_enum netlist_options::*) { return __str_type__; }
 const string&
 __string_type_of(string_set_type netlist_options::*) { return __strs_type__; }
 
@@ -624,6 +701,22 @@ switch (n_opt.*mem) {
 	case OPTION_IGNORE:	o << "ignore"; break;
 	case OPTION_WARN:	o << "warn"; break;
 	case OPTION_ERROR:	o << "error"; break;
+	default:		o << "???";
+}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Specialization for style enumeration.
+ */
+template <>
+ostream&
+__print_member_default(ostream& o, const netlist_options& n_opt,
+		netlist_options::style_enum netlist_options::*mem) {
+switch (n_opt.*mem) {
+	case netlist_options::STYLE_SPICE:	o << "spice"; break;
+	case netlist_options::STYLE_SPECTRE:	o << "spectre"; break;
 	default:		o << "???";
 }
 	return o;
@@ -737,6 +830,10 @@ __ATTRIBUTE_UNUSED_CTOR__((netlist_option_map[STRINGIFY(key)] =		\
 	DEFINE_PRINT_MISC_OPTION(key)					\
 	REGISTER_MISC_OPTION(key, help)
 
+#define	DEFINE_PRESET_OPTION(memfun, key, help)				\
+	DEFINE_OPTION_MEMFUN(memfun, key, help)
+
+
 /***
 @texinfo config/diagnostic_policies.texi
 
@@ -827,7 +924,7 @@ DEFINE_OPTION_DEFAULT(length_unit, "length_unit",
 /***
 @texinfo config/area_unit.texi
 @defopt area_unit (string)
-Suffix-string to append to emitted area valiues.  
+Suffix-string to append to emitted area values.  
 Can be a unit such as "p" (for pico), or exponent such as "e-6" or "e-12".
 @strong{Alert:} this must be set consistently with respect to @var{length_unit}.
 Default: p (pico, micron-squared)
@@ -835,7 +932,33 @@ Default: p (pico, micron-squared)
 @end texinfo
 ***/
 DEFINE_OPTION_DEFAULT(area_unit, "area_unit",
-	"suffix appended to areas values")
+	"suffix appended to area values")
+
+/***
+@texinfo config/electrical_units.texi
+@defopt capacitance_unit (string)
+Suffix-string to capacitance values.  
+Can be a unit such as "p" (for pico), or exponent such as "e-6" or "e-12".
+Default: (blank)
+@end defopt
+
+@defopt resistance_unit (string)
+Suffix-string to resistance values.  
+Default: (blank)
+@end defopt
+
+@defopt inductance_unit (string)
+Suffix-string to inductance values.  
+Default: (blank)
+@end defopt
+@end texinfo
+***/
+DEFINE_OPTION_DEFAULT(capacitance_unit, "capacitance_unit",
+	"suffix appended to capacitance values")
+DEFINE_OPTION_DEFAULT(resistance_unit, "resistance_unit",
+	"suffix appended to resistance values")
+DEFINE_OPTION_DEFAULT(inductance_unit, "inductance_unit",
+	"suffix appended to inductance values")
 
 /***
 @texinfo config/mangle.texi
@@ -949,6 +1072,66 @@ DEFINE_OPTION_DEFAULT(mangle_implicit_bang,
 	"mangle_implicit_bang", "mangle: ! replacement")
 DEFINE_OPTION_MEMFUN(no_mangling,
 	"no_mangling", "disable name-mangling")
+
+/***
+@texinfo config/output_format.texi
+@defopt output_format style
+Pseudo-option: preset bundle of options for formatting output.
+Valid choices of @var{style} are: @t{spice}, @t{spectre}.
+@end defopt
+@end texinfo
+***/
+DEFINE_PRESET_OPTION(preset_output_format, "output_format",
+	"output format style (preset)")
+
+/***
+@texinfo config/subcircuit_definition_style.texi
+@defopt subcircuit_definition_style style
+@itemize
+@item @t{spice} - @t{.subckt CKT ... .ends}
+@item @t{spectre} - @t{subckt CKT ... ends CKT}
+@end itemize
+@end defopt
+@end texinfo
+***/
+DEFINE_OPTION_DEFAULT(subckt_def_style, "subcircuit_definition_style",
+	"subcircuit header/footer style [spice|spectre]")
+/***
+@texinfo config/instance_port_style.texi
+@defopt instance_port_style style
+@itemize
+@item @t{spice} - @t{inst ports ... type}
+@item @t{spectre} - @t{inst (ports ...) type}
+@end itemize
+@end defopt
+@end texinfo
+***/
+DEFINE_OPTION_DEFAULT(instance_port_style, "instance_port_style",
+	"instance port style [spice|spectre]")
+
+/***
+@texinfo config/transistor_prefix.texi
+@defopt transistor_prefix (string)
+String to print at the beginning of a transistor instance.
+For spice, this is usually the @t{M} card.
+Default: M
+@end defopt
+@end texinfo
+***/
+DEFINE_OPTION_DEFAULT(transistor_prefix, "transistor_prefix",
+	"transistor name prefix")
+
+/***
+@texinfo config/subcircuit_instance_prefix.texi
+@defopt subckt_instance_prefix (string)
+String to print at the beginning of a subcircuit instance.
+For spice, this is usually the @t{x} card.
+Default: x
+@end defopt
+@end texinfo
+***/
+DEFINE_OPTION_DEFAULT(subckt_instance_prefix, "subcircuit_instance_prefix",
+	"subcircuit instance name prefix")
 
 /***
 @texinfo config/pre_line_continue.texi

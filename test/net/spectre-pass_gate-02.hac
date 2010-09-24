@@ -1,0 +1,5 @@
+// "spectre-pass_gate-02.hac"
+// @hacknet-flags@ -f output_format=spectre
+
+import "pass_gate-02.hac";
+

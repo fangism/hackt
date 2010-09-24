@@ -1,0 +1,5 @@
+// "spectre-supply-instance-01.hac"
+// @hacknet-flags@ -f output_format=spectre
+
+import "supply-instance-01.hac";
+

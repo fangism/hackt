@@ -1,0 +1,11 @@
+subckt foo<> !GND !Vdd myVdd myGND x w
+Qy:dn:0 ( !GND x y !GND ) nch W=5u L=2u
+Qy:up:0 ( myVdd x y myVdd ) pch W=5u L=2u
+Qz:dn:0 ( myGND y z myGND ) nch W=5u L=2u
+Qz:up:0 ( myVdd y z myVdd ) pch W=5u L=2u
+Qw:dn:0 ( !GND z w !GND ) nch W=5u L=2u
+Qw:up:0 ( !Vdd z w !Vdd ) pch W=5u L=2u
+ends foo<>
+
+bar ( !GND !Vdd bar.myVdd bar.myGND bar.x bar.w ) foo<>
+

@@ -1,0 +1,5 @@
+// "spectre-supply-subckt-01.hac"
+// @hacknet-flags@ -f output_format=spectre
+
+import "supply-subckt-01.hac";
+

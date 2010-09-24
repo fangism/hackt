@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.cc"
-	$Id: netgraph.cc,v 1.24 2010/08/05 22:35:08 fang Exp $
+	$Id: netgraph.cc,v 1.25 2010/09/24 21:46:59 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -133,9 +133,89 @@ netlist_common::emit_devices(ostream& o, const node_pool_type& node_pool,
 	for ( ; i!=e; ++i, ++j) {
 		i->emit(o, j, node_pool, fp, nopt) << endl;
 	}
-	// TODO: emit passive devices
+	emit_passive_devices(o, node_pool, fp, nopt);
 	return o;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	NOTE: this code is *untested*, until we have some language hook
+	for adding capacitors and passive components.  
+ */
+ostream&
+netlist_common::emit_passive_devices(ostream& o,
+		const node_pool_type& node_pool,
+		const footprint& fp, const netlist_options& nopt) const {
+	typedef	passive_device_pool_type::const_iterator	const_iterator;
+	const_iterator i(passive_device_pool.begin()),
+		e(passive_device_pool.end());
+	size_t C_count = 0;
+	size_t R_count = 0;
+	size_t L_count = 0;
+	size_t other_count = 0;	// what other device is there?
+	const bool paren =
+		(nopt.instance_port_style == netlist_options::STYLE_SPECTRE);
+for ( ; i!=e; ++i) {
+	o << i->type;
+	// default names of devices?
+	switch (i->type) {
+	case 'c':
+	case 'C':
+		o << C_count++; break;
+	case 'r':
+	case 'R':
+		o << R_count++; break;
+	case 'l':
+	case 'L':
+		o << L_count++; break;
+	default:
+		o << other_count++;
+	}
+	// terminals
+	if (paren) o << " (";
+	const node& n0(node_pool[i->t[0]]);
+	const node& n1(node_pool[i->t[1]]);
+	n0.emit(o << ' ', nopt);
+	n1.emit(o << ' ', nopt);
+	if (paren) {
+		o << " ) ";
+		// for spectre, also print model name
+		switch (i->type) {
+		case 'c':
+		case 'C':
+			o << "capacitor"; break;
+		case 'r':
+		case 'R':
+			o << "resistor"; break;
+		case 'l':
+		case 'L':
+			o << "inductor"; break;
+		default:
+			o << "unknown-" << i->type;
+		}
+	}
+	o << ' ';
+	if (paren) {
+		o << i->type << '=';
+	}
+	o << i->parameter_value;
+	switch (i->type) {
+		case 'c':
+		case 'C':
+			o << nopt.capacitance_unit; break;
+		case 'r':
+		case 'R':
+			o << nopt.resistance_unit; break;
+		case 'l':
+		case 'L':
+			o << nopt.inductance_unit; break;
+		default:
+			o << "?unit?";
+	}
+	o << endl;
+}	// end for
+	return o;
+}	// end emit_passive_devices
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -188,12 +268,22 @@ local_netlist::dump_raw(ostream& o, const netlist& n) const {
 ostream&
 local_netlist::emit_definition(ostream& o, const netlist& n,
 		const netlist_options& nopt) const {
+{
+switch (nopt.subckt_def_style) {
+case netlist_options::STYLE_SPECTRE: 
+	o << "subckt ";
+	break;
+default:
+// case netlist_options::STYLE_SPICE: 
 	o << ".subckt ";
+}	// end switch
 if (!nopt.nested_subcircuits) {
 	// then use fully qualified type name, mangled
 	o << n.get_name() << nopt.emit_scope();;
 }
 	o << name;
+}
+	// TODO: parameters would go here
 {
 	// ports, formals
 	ostringstream oss;
@@ -213,7 +303,20 @@ if (!nopt.nested_subcircuits) {
 	// TODO: emit mangle map? only if not nested format?
 	// TODO: emit port-info comments
 	emit_devices(o, n.node_pool, *n.fp, nopt);
+	// end subcircuit
+switch (nopt.subckt_def_style) {
+case netlist_options::STYLE_SPECTRE: 
+	o << "ends ";
+if (!nopt.nested_subcircuits) {
+	// then use fully qualified type name, mangled
+	o << n.get_name() << nopt.emit_scope();;
+}
+	o << name << endl;
+	break;
+default:
+// case netlist_options::STYLE_SPICE: 
 	o << ".ends" << endl;
+}	// end switch
 	return o;
 }
 
@@ -224,10 +327,18 @@ if (!nopt.nested_subcircuits) {
 ostream&
 local_netlist::emit_instance(ostream& o, const netlist& n,
 		const netlist_options& nopt) const {
-	o << 'x';
+	o << nopt.subckt_instance_prefix;
 	o << name << nopt.emit_colon() << "inst";
 {
 	// actuals
+switch (nopt.instance_port_style) {
+case netlist_options::STYLE_SPECTRE:
+	o << " (";	// spectre wraps ports in parentheses
+	break;
+default:
+// case netlist_options::STYLE_SPICE:
+	break;
+}	// end switch
 	ostringstream oss;
 	typedef	node_index_map_type::const_iterator	const_iterator;
 	const_iterator i(node_index_map.begin()), e(node_index_map.end());
@@ -243,6 +354,14 @@ local_netlist::emit_instance(ostream& o, const netlist& n,
 	// already mangled during name caching
 	// type name is already mangled
 	o << line;
+switch (nopt.instance_port_style) {
+case netlist_options::STYLE_SPECTRE:
+	o << ") ";	// spectre wraps ports in parentheses
+	break;
+default:
+// case netlist_options::STYLE_SPICE:
+	break;
+}	// end switch
 }
 if (!nopt.nested_subcircuits) {
 	// then use fully qualified type name
@@ -384,11 +503,14 @@ if (nopt.emit_mangle_map) {
 	o << nopt.comment_prefix << "instance: " << type->get_unmangled_name()
 		<< ' ' << pname << endl;
 }
-	o << 'x';
+	o << nopt.subckt_instance_prefix;
 	nopt.mangle_instance(pname);
 	o << pname;
 {
 	// actuals
+	const bool paren =
+		(nopt.instance_port_style == netlist_options::STYLE_SPECTRE);
+	if (paren) o << " (";
 	ostringstream oss;
 	actuals_list_type::const_iterator
 		i(actuals.begin()), e(actuals.end());
@@ -398,6 +520,7 @@ if (nopt.emit_mangle_map) {
 	string line(oss.str());
 	// already mangled during name caching
 	o << line;
+	if (paren) o << " )";
 }
 	// type name is already mangled
 	o << ' ' << type->get_name();	// endl
@@ -446,7 +569,7 @@ transistor::emit(ostream& o, const index_type di,
 	const node& n(node_pool[assoc_node]);
 	INVARIANT(!n.is_auxiliary_node());
 	index_type& c(n.device_count[size_t(assoc_dir)]);
-	o << 'M';	// spice card
+	o << nopt.transistor_prefix;	// spice card
 	if (name.length()) {
 		o << nopt.emit_colon() << name;
 		// override name of device, entire basename
@@ -460,16 +583,19 @@ transistor::emit(ostream& o, const index_type di,
 	}
 	++c;	// unconditionally
 #else
-	o << 'M' << di << '_';
+	o << nopt.transistor_prefix << di << '_';
 #endif
 	// attribute suffixes cannot be overridden
 	emit_attribute_suffixes(o, nopt) << ' ';
 
+	const bool paren = 
+		(nopt.instance_port_style == netlist_options::STYLE_SPECTRE);
 	const node& s(node_pool[source]);
 	const node& g(node_pool[gate]);
 	const node& d(node_pool[drain]);
 	const node& b(node_pool[body]);
 {
+	if (paren) o << "( ";
 	// perform name-mangling
 	ostringstream oss;
 	s.emit(oss, nopt) << ' ';
@@ -479,6 +605,7 @@ transistor::emit(ostream& o, const index_type di,
 	string nodes(oss.str());
 	// all nodes already mangled
 	o << nodes;
+	if (paren) o << ") ";
 }
 	string ftype("");
 	switch (type) {
@@ -797,7 +924,7 @@ netlist::append_instance(const state_instance<process_tag>& subp,
 	np.dump_raw(STACKTRACE_INDENT_PRINT("new instance: ")) << endl;
 #endif
 	INVARIANT(np.actuals.size() == subnet.port_list.size());
-}
+}	// end netgraph::append_instance
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1090,7 +1217,17 @@ if (nopt.emit_mangle_map) {
 	o << nopt.comment_prefix << "typename_mangle(\"";
 	fp->dump_type(o) << "\") = " << name << endl;
 }
-	o << ".subckt " << name;
+{
+switch (nopt.subckt_def_style) {
+case netlist_options::STYLE_SPECTRE: 
+	o << "subckt ";
+	break;
+default:
+// case netlist_options::STYLE_SPICE: 
+	o << ".subckt ";
+}	// end switch
+	o << name;
+}
 	typedef	port_list_type::const_iterator		const_iterator;
 	const_iterator i(port_list.begin()), e(port_list.end());
 	ostringstream oss;		// stage for name mangling
@@ -1101,7 +1238,7 @@ if (nopt.emit_mangle_map) {
 	// already mangled during name caching
 	o << formals << endl;
 	// TODO: emit port-info comments
-}
+}	// end if sub
 if (sub || nopt.emit_top) {
 	// option to suppress top-level instances and rules
 if (nopt.emit_mangle_map)
@@ -1146,8 +1283,15 @@ if (nopt.emit_node_aliases) {
 	emit_devices(o, node_pool, *fp, nopt);
 }
 if (sub) {
+switch (nopt.subckt_def_style) {
+case netlist_options::STYLE_SPECTRE: 
+	o << "ends " << name << endl;
+	break;
+default:
+// case netlist_options::STYLE_SPICE: 
 	o << ".ends" << endl;
-}
+}	// end switch
+}	// end if sub
 	return o;
 }
 

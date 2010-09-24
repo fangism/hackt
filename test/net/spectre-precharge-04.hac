@@ -1,0 +1,5 @@
+// "spectre-precharge-04.hac"
+// @hacknet-flags@ -f output_format=spectre
+
+import "precharge-04.hac";
+

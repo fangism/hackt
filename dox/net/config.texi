@@ -1,5 +1,5 @@
 @c "config.texi"
-@c $Id: config.texi,v 1.10 2010/04/07 21:47:26 fang Exp $
+@c $Id: config.texi,v 1.11 2010/09/24 21:46:58 fang Exp $
 
 @c ****************************************************************************
 @node Configuration Options
@@ -33,6 +33,7 @@ The following parameters affect emitted device sizes and units.
 @include config/lambda.texi
 @include config/length_unit.texi
 @include config/area_unit.texi
+@include config/electrical_units.texi
 @include config/std_widths.texi
 @include config/stat_widths.texi
 @include config/min_width.texi
@@ -52,15 +53,21 @@ The following options are related to transistor parasitics.
 emitted output (because not all SPICEs are created alike).
 @cindex formatting
 @cindex SPICE-formatting
+@cindex Spectre-formatting
 
+@include config/output_format.texi
 @include config/emit_top.texi
 @include config/nested_subcircuits.texi
 @include config/empty_subcircuits.texi
+@include config/subcircuit_definition_style.texi
+@include config/instance_port_style.texi
 @include config/unused_ports.texi
 @include config/prefer_port_aliases.texi
 @include config/preferred_names.texi
 @include config/emit_node_aliases.texi
 @c @include config/top_type_ports.texi
+@include config/transistor_prefix.texi
+@include config/subcircuit_instance_prefix.texi
 @include config/pre_line_continue.texi
 @include config/post_line_continue.texi
 @include config/comment_prefix.texi

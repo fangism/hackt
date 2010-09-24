@@ -1,0 +1,6 @@
+subckt inv<> !GND !Vdd x y
+Qy:dn:0 ( !GND x y !GND ) nch W=5u L=2u
+Qy:up:0 ( !Vdd x y !Vdd ) pch W=5u L=2u
+ends inv<>
+
+

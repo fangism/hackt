@@ -1,0 +1,5 @@
+// "spectre-substrate-05.hac"
+// @hacknet-flags@ -f output_format=spectre
+
+import "substrate-05.hac";
+
