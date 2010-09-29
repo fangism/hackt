@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/process_graph.h"
-	$Id: process_graph.h,v 1.5 2010/08/11 21:54:57 fang Exp $
+	$Id: process_graph.h,v 1.6 2010/09/29 00:13:43 fang Exp $
 	Unique process subgraph structure, shared by all process instances
 	of the same type.
  */
@@ -172,6 +172,11 @@ struct unique_process_subgraph {
 	 */
 	typedef	hash_map<expr_index_type, rule_index_type>
 						rule_map_type;
+	/**
+		key: graph's local expression index
+		value: source-footprint's invariant index (pool)
+	 */
+	typedef	map<expr_index_type, size_t>	invariant_map_type;
 #if PRSIM_HIERARCHICAL_RINGS
 	/**
 		Instead of using circular linked lists with pointers, 
@@ -189,10 +194,17 @@ struct unique_process_subgraph {
 	 */
 	typedef	set<node_index_type>		node_set_type;
 
+	/**
+		For convenience of lookup, this points to the original
+		footprint from which this process graph was constructed.
+	 */
+	const entity::footprint*		_footprint;
+
 	expr_pool_type				expr_pool;
 	expr_graph_node_pool_type		expr_graph_node_pool;
 	rule_pool_type				rule_pool;
 	rule_map_type				rule_map;
+	invariant_map_type			invariant_map;
 
 	/**
 		Member functions interpret this as a node for 
@@ -245,6 +257,10 @@ struct unique_process_subgraph {
 
 	void
 	has_not_local_fanin_map(vector<bool>&) const;
+
+	ostream&
+	dump_invariant_message(ostream&, const expr_index_type, 
+		const char*, const char*) const;
 
 	ostream&
 	dump_struct(ostream&) const;

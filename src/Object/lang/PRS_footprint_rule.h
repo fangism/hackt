@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.h"
-	$Id: PRS_footprint_rule.h,v 1.8 2010/04/07 00:12:49 fang Exp $
+	$Id: PRS_footprint_rule.h,v 1.9 2010/09/29 00:13:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_FOOTPRINT_RULE_H__
@@ -78,7 +78,17 @@ struct footprint_rule : public cflat_visitee {
 	write_object_base(const persistent_object_manager&, ostream&) const;
 
 	void
+	write_object(const persistent_object_manager& m, ostream& o) const {
+		write_object_base(m, o);
+	}
+
+	void
 	load_object_base(const persistent_object_manager&, istream&);
+
+	void
+	load_object(const persistent_object_manager& m, istream& i) {
+		load_object_base(m, i);
+	}
 
 	void
 	accept(cflat_visitor&) const;

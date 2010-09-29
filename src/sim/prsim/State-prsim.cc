@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.74 2010/09/23 00:19:53 fang Exp $
+	$Id: State-prsim.cc,v 1.75 2010/09/29 00:13:42 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -3251,7 +3251,7 @@ if (!r.is_invariant()) {
 	return evaluate_return_type(oni, STRUCT, next,
 		&r, ps.global_expr_index(ri));
 } else {
-	// then this rule doesn't actually pull a node
+	// then this rule doesn't actually pull a node, is an invariant
 	const bool fail = (next == PULL_OFF);
 	const bool maybe = (next == PULL_WEAK);
 	const error_policy_enum err = fail ? invariant_fail_policy :
@@ -3265,7 +3265,8 @@ if (!r.is_invariant()) {
 			"invariant violation in " << pn << ": (";
 		ps.dump_subexpr(cerr, ri, *this, true);	// always verbose
 		dump_node_canonical_name(cerr << ") by node ", ni) << ':' <<
-			node_type::value_to_char[size_t(node_val)] << endl;
+			node_type::value_to_char[size_t(node_val)];
+		pg.dump_invariant_message(cerr, ri, ", \"", "\"") << endl;
 		return evaluate_return_type(err);
 	}
 	return evaluate_return_type();	// continue
@@ -4839,7 +4840,17 @@ State::dump_node_fanout(ostream& o, const node_index_type ni,
 	// if we want invariants printed
 	if ((r->is_invariant())) {
 	if (si) {
-		dump_subexpr(o << "$(", *ri, v) << ')' << endl;
+		const expr_index_type& gei = *ri;
+		const unique_process_subgraph& pg(ps.type());
+		const expr_index_type lei = ps.local_expr_index(gei);
+#if 0
+		const expr_index_type ei =
+			ps.global_expr_index(pg.local_root_expr(lei));
+		// adding offset translates back to global expression id
+#endif
+		dump_subexpr(o << "$(", gei, v);
+		pg.dump_invariant_message(o, lei, ", \"", "\"");
+		o << ')' << endl;
 	}
 	} else if (w) {
 	if (sr) {

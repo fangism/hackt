@@ -1,0 +1,17 @@
+// "invariant-f.hac"
+
+defproc foo(bool a, c) {
+bool b;
+spec {
+	$(a | b | c, "To be or not to be, " "that is the invariant.")
+	$(c | b | a, "Wherefore art thou invariant?")
+}
+prs {
+	a	=> b-
+	b	=> c-
+}
+}
+
+bool a, c, e;
+foo bar(a, c), bq(c, e);
+

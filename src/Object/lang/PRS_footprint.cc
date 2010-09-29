@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.cc"
-	$Id: PRS_footprint.cc,v 1.35 2010/08/31 23:48:03 fang Exp $
+	$Id: PRS_footprint.cc,v 1.36 2010/09/29 00:13:37 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -11,6 +11,7 @@
 #include <iostream>
 #include "Object/lang/PRS_footprint.h"
 #include "Object/lang/PRS.h"
+#include "Object/lang/SPEC.h"		// for invariant
 #include "Object/def/footprint.h"
 #include "Object/inst/alias_empty.h"
 #include "Object/inst/instance_alias_info.h"
@@ -420,7 +421,12 @@ if (invariant_pool.size()) {
 	const_iterator i(invariant_pool.begin()), e(invariant_pool.end());
 	for ( ; i!=e; ++i) {
 		o << auto_indent << "$(";
+#if INVARIANT_BACK_REFS
+		dump_expr(expr_pool[i->first], o, f, PRS_LITERAL_TYPE_ENUM);
+#else
 		dump_expr(expr_pool[*i], o, f, PRS_LITERAL_TYPE_ENUM);
+#endif
+	// TODO: print the associated string if any
 		o << ')' << endl;
 	}
 }
@@ -629,7 +635,7 @@ footprint::collect_transient_info_base(persistent_object_manager& m) const {
 	c(subcircuit_map);
 	// the expr_pool doesn't need persistence management yet
 	// the internal_node_expr_map doesn't contain pointers
-	// invariant_pool contains no pointers
+	// invariant_pool contains only never_ptr pointers
 	// supply_map contains no pointers
 }
 
@@ -671,6 +677,7 @@ footprint::write_object_base(const persistent_object_manager& m,
 		ostream& o) const {
 	STACKTRACE_PERSISTENT_VERBOSE;
 {
+#if 0
 	typedef	rule_pool_type::const_iterator	const_iterator;
 	const rule_index_type s = rule_pool.size();
 	write_value(o, s);
@@ -679,7 +686,11 @@ footprint::write_object_base(const persistent_object_manager& m,
 	for ( ; i!=e; ++i) {
 		i->write_object_base(m, o);
 	}
+#else
+	util::write_persistent_sequence(m, o, rule_pool);
+#endif
 }{
+#if 0
 	typedef	expr_pool_type::const_iterator	const_iterator;
 	const expr_index_type s = expr_pool.size();
 	write_value(o, s);
@@ -688,7 +699,11 @@ footprint::write_object_base(const persistent_object_manager& m,
 	for ( ; i!=e; ++i) {
 		i->write_object_base(m, o);
 	}
+#else
+	util::write_persistent_sequence(m, o, expr_pool);
+#endif
 }{
+#if 0
 	typedef	macro_pool_type::const_iterator	const_iterator;
 	const macro_index_type s = macro_pool.size();
 	write_value(o, s);
@@ -697,8 +712,12 @@ footprint::write_object_base(const persistent_object_manager& m,
 	for ( ; i!=e; ++i) {
 		i->write_object_base(m, o);
 	}
+#else
+	util::write_persistent_sequence(m, o, macro_pool);
+#endif
 }{
 	// only save non-redundant information from pool
+#if 0
 	typedef internal_node_pool_type::const_iterator		const_iterator;
 	write_value(o, internal_node_pool.size());
 	const_iterator i(internal_node_pool.begin()),
@@ -706,9 +725,16 @@ footprint::write_object_base(const persistent_object_manager& m,
 	for ( ; i!=e; ++i) {
 		i->write_object_base(m, o);
 	}
+#else
+	util::write_persistent_sequence(m, o, internal_node_pool);
+#endif
 	// ignore internal_node_expr_map, restore later...
 }{
+#if INVARIANT_BACK_REFS
+	util::write_persistent_sequence(m, o, invariant_pool);
+#else
 	util::write_sequence(o, invariant_pool);
+#endif
 	util::write_persistent_sequence(m, o, subcircuit_map);
 #if PRS_SUPPLY_OVERRIDES
 	util::write_persistent_sequence(m, o, supply_map);
@@ -726,6 +752,7 @@ void
 footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 	STACKTRACE_PERSISTENT_VERBOSE;
 {
+#if 0
 	rule_index_type s;
 	read_value(i, s);
 	rule_pool.reserve(s);
@@ -734,7 +761,11 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 		rule_pool.push_back(rule());
 		rule_pool.back().load_object_base(m, i);
 	}
+#else
+	util::read_persistent_sequence_back_insert(m, i, rule_pool);
+#endif
 }{
+#if 0
 	expr_index_type s;
 	read_value(i, s);
 	expr_pool.reserve(s);
@@ -743,7 +774,11 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 		expr_pool.push_back(expr_node());
 		expr_pool.back().load_object_base(m, i);
 	}
+#else
+	util::read_persistent_sequence_back_insert(m, i, expr_pool);
+#endif
 }{
+#if 0
 	macro_index_type s;
 	read_value(i, s);
 	macro_pool.reserve(s);
@@ -752,7 +787,11 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 		macro_pool.push_back(macro());
 		macro_pool.back().load_object_base(m, i);
 	}
+#else
+	util::read_persistent_sequence_back_insert(m, i, macro_pool);
+#endif
 }{
+#if 0
 	node_index_type s;
 	read_value(i, s);
 	node_index_type j = 0;
@@ -763,9 +802,22 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 		internal_node_pool.push_back(n);
 		internal_node_expr_map[n.name] = j;	// reverse-map
 	}
+#else
+	util::read_persistent_sequence_back_insert(m, i, internal_node_pool);
+	const node_index_type s = internal_node_pool.size();
+	// reconstruct reverse-map
+	size_t j = 0;
+	for ( ; j<s; ++j) {
+		internal_node_expr_map[internal_node_pool[j].name] = j;
+	}
+#endif
 	INVARIANT(internal_node_expr_map.size() == s);
 }{
+#if INVARIANT_BACK_REFS
+	util::read_persistent_sequence_resize(m, i, invariant_pool);
+#else
 	util::read_sequence_resize(i, invariant_pool);
+#endif
 	util::read_persistent_sequence_resize(m, i, subcircuit_map);
 #if PRS_SUPPLY_OVERRIDES
 	util::read_persistent_sequence_resize(m, i, supply_map);
@@ -893,6 +945,34 @@ void
 footprint_expr_node::accept(cflat_visitor& v) const {
 	v.visit(*this);
 }
+
+//=============================================================================
+#if INVARIANT_BACK_REFS
+// class footprint::invariant_type method definitions
+
+#if 0
+void
+footprint::invariant_type::collect_transient_info(
+		persistent_object_manager&) const {
+}
+#endif
+
+void
+footprint::invariant_type::write_object_base(
+		const persistent_object_manager& m, ostream& o) const {
+	write_value(o, first);
+	NEVER_NULL(second);
+	m.write_pointer(o, second);
+}
+
+void
+footprint::invariant_type::load_object_base(
+		const persistent_object_manager& m, istream& i) {
+	read_value(i, first);
+	m.read_pointer(i, second);
+	NEVER_NULL(second);
+}
+#endif
 
 //=============================================================================
 // class footprint_rule method defintions

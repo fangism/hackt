@@ -1,7 +1,7 @@
 /**
 	\file "util/persistent_functor.tcc"
 	This is a terrible name for a file...
-	$Id: persistent_functor.tcc,v 1.7 2010/04/02 22:19:22 fang Exp $
+	$Id: persistent_functor.tcc,v 1.8 2010/09/29 00:13:43 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_FUNCTOR_TCC__
@@ -12,6 +12,7 @@
 #include "util/persistent_functor.h"
 #include "util/macros.h"
 #include "util/size_t.h"
+#include "util/reserve.h"
 #include "util/IO_utils.h"
 // #include "util/persistent_object_manager.h"
 
@@ -124,6 +125,7 @@ read_persistent_sequence_back_insert(const P& m, istream& i, T& t) {
 	typedef	typename T::value_type		value_type;
 	size_t s;
 	read_value(i, s);
+	reserve(t, s);		// util::reserve if is T vector
 	size_t k = 0;
 	const foreign_persistent_loader_ref<P> l(m, i);
 	for ( ; k < s; ++k) {

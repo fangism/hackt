@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/ExprAlloc.h"
-	$Id: ExprAlloc.h,v 1.18 2010/08/30 23:51:50 fang Exp $
+	$Id: ExprAlloc.h,v 1.19 2010/09/29 00:13:42 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPRALLOC_H__
@@ -194,7 +194,7 @@ public:
 	// macro/directive/attribute visitor classes...
 protected:
 	void
-	link_invariant_expr(const expr_index_type);
+	link_invariant_expr(const expr_index_type, const size_t);
 
 public:
 	void

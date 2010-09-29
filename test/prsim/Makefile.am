@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.116 2010/09/23 00:19:56 fang Exp $
+#	$Id: Makefile.am,v 1.117 2010/09/29 00:13:47 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -13,6 +13,7 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	tree interference \
 	invs inv-invariant \
 	invariant-a invariant-b invariant-c invariant-d invariant-e \
+	invariant-f \
 	invariant-not-X \
 	oscillator-wrong \
 	interference-a interference-b \
@@ -302,6 +303,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	invariant-c-01 invariant-c-02 invariant-c-03 \
 	invariant-d-01 invariant-d-02 invariant-d-03 \
 	invariant-e-01 \
+	invariant-f-01 invariant-f-02 invariant-f-03 \
 	inv-invariant-01 inv-invariant-02 inv-invariant-03 inv-invariant-04 \
 	invariant-not-X-01 \
 	non-CMOS-a-01 non-CMOS-a-02 \

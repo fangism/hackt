@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.58 2010/09/21 00:18:37 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.59 2010/09/29 00:13:40 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -745,7 +745,8 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_incdec_stmt>	unary_assignment
 %type	<_expr_list>	optional_template_arguments_in_angles
 %type	<_template_argument_list_pair>	strict_relaxed_template_arguments
-%type	<_expr_list>	expr_list_in_parens expr_list
+%type	<_expr_list>	expr_list
+/* %type	<_expr_list>	expr_list_in_parens	*/
 /* %type	<_range_list>	optional_range_list_in_brackets */
 /* %type	<_range_list>	range_list_in_brackets */
 /* %type	<_range_list>	range_list */
@@ -2561,8 +2562,13 @@ spec_item
 
 spec_invariant
 	: '$' '(' prs_expr ')'
-		{ $$ = new SPEC::invariant($3); 
+		{ $$ = new SPEC::invariant($3, NULL); 
 		DELETE_TOKEN($1); DELETE_TOKEN($2); DELETE_TOKEN($4); }
+	/* does string ever need to be a more general string expr? */
+	| '$' '(' prs_expr ',' string ')'
+		{ $$ = new SPEC::invariant($3, $5); 
+		DELETE_TOKEN($1); DELETE_TOKEN($2); DELETE_TOKEN($4);
+		DELETE_TOKEN($6); }
 	;
 
 /* identical to prs_macro, but we call it a directive */
@@ -3066,10 +3072,12 @@ member_index_expr_list_in_angles
 		  DELETE_TOKEN($4); }
 	;
 
+/**
 expr_list_in_parens
 	: '(' expr_list ')'
 		{ $$ = $2; WRAP_LIST($1, $2, $3); }
 	;
+**/
 
 expr_list
 	: expr_list ',' expr 

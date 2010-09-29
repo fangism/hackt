@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-09-28	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-30:
+	  HAC: now supports optional string message with SPEC invariants, 
+		e.g.: $(x | y, "one of these must be true at all times!")
+		parser, AST, middle-end updated, object version bumped.
+	  hacprsim: prints all invariant-related diagnostics
+		with the optional invariant strings.
+	  Test cases added.
+
+
 2010-09-24	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-29:

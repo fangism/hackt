@@ -3,7 +3,7 @@
 	Useful main-level functions to call.
 	Indent to hide most complexity here, exposing a bare-bones
 	set of public callable functions.  
-	$Id: main_funcs.cc,v 1.35 2010/09/21 00:18:34 fang Exp $
+	$Id: main_funcs.cc,v 1.36 2010/09/29 00:13:39 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -400,9 +400,10 @@ log:
 6a: pstring_const and pstring assignment/expression operations
 6b: more string/real expression variants
 6c: split meta_func_call into different types, one for each meta-expr type
+7: spec invariants added optional strings for assert messages
  */
 static const size_t
-object_file_format_version = 6;
+object_file_format_version = 7;
 
 //=============================================================================
 /**

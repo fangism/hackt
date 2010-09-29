@@ -1,4 +1,4 @@
-// "invariant-c.hac"
+// "invariant-d.hac"
 
 defproc foo(bool a, c) {
 bool b;

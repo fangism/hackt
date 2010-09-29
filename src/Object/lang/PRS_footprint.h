@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.h"
-	$Id: PRS_footprint.h,v 1.21 2010/08/31 23:48:03 fang Exp $
+	$Id: PRS_footprint.h,v 1.22 2010/09/29 00:13:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_FOOTPRINT_H__
@@ -69,6 +69,15 @@
  */
 // #define	PRS_INTERNAL_NODE_POOL			1
 
+/**
+	Define to 1 to have invariant expression entries point back
+	to their source.
+	Rationale: source has assert-fail string message now.
+	Goal: 1
+	Status: done, tested
+ */
+#define	INVARIANT_BACK_REFS				1
+
 namespace HAC {
 struct cflat_options;
 
@@ -83,6 +92,10 @@ class state_instance;
 template <class Tag>
 class footprint_frame_map;
 
+namespace SPEC {
+class invariant;
+}
+
 namespace PRS {
 class subcircuit;
 using std::ostream;
@@ -93,6 +106,7 @@ using std::map;
 using std::pair;
 using std::string;
 using util::memory::never_ptr;
+using SPEC::invariant;
 
 //=============================================================================
 /**
@@ -114,7 +128,41 @@ public:
 	typedef	size_t				rule_index_type;
 	typedef	rule_index_type			macro_index_type;
 	typedef	footprint_expr_node		expr_node;
-	typedef	size_t				invariant_type;
+#if INVARIANT_BACK_REFS
+	// now contains a weak-back-ref pointer
+	typedef	never_ptr<const invariant>	invariant_source_ptr_type;
+	typedef	pair<expr_index_type, invariant_source_ptr_type>
+						invariant_base;
+
+	struct invariant_type : public invariant_base {
+		invariant_type() { }	// default ctor: uninitialized
+
+		invariant_type(const expr_index_type e, 
+			const invariant* _this) : invariant_base(e,
+				never_ptr<const invariant>(_this)) { }
+		void
+		collect_transient_info_base(persistent_object_manager&) const {
+		}
+
+		void
+		write_object_base(const persistent_object_manager&,
+			ostream&) const;
+		void
+		write_object(const persistent_object_manager& m,
+				ostream& o) const {
+			write_object_base(m, o);
+		}
+		void
+		load_object_base(const persistent_object_manager&, istream&);
+		void
+		load_object(const persistent_object_manager& m, istream& i) {
+			load_object_base(m, i);
+		}
+
+	};	// end struct invariant_type
+#else
+	typedef	expr_index_type			invariant_type;
+#endif
 	typedef	footprint_rule			rule;
 	typedef	footprint_macro			macro;
 #if PRS_INTERNAL_NODE_ATTRIBUTES_AT_NODE
@@ -157,8 +205,20 @@ public:
 				ostream&) const;
 
 			void
+			write_object(const persistent_object_manager& m, 
+					ostream& o) const {
+				write_object_base(m, o);
+			}
+
+			void
 			load_object_base(const persistent_object_manager&,
 				istream&);
+
+			void
+			load_object(const persistent_object_manager& m,
+					istream& i) {
+				load_object_base(m, i);
+			}
 	};	// end struct node_expr_type
 	typedef	vector<node_expr_type>		internal_node_pool_type;
 	/**
@@ -386,7 +446,7 @@ public:
 	push_back_macro(const string&);
 
 	void
-	push_back_invariant(const invariant_type t) {
+	push_back_invariant(const invariant_type& t) {
 		invariant_pool.push_back(t);
 	}
 

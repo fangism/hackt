@@ -23,14 +23,14 @@ Persistent Object Manager text dump:
 	19	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	20	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	21	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	22	##ADDR##	SPCinvar	0	#HEAD#	#TAIL#	12
+	22	##ADDR##	SPCinvar	0	#HEAD#	#TAIL#	16
 	23	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	24	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	24
 	25	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	26	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	27	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
 	28	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	29	##ADDR##	footprnt	0	#HEAD#	#TAIL#	426
+	29	##ADDR##	footprnt	0	#HEAD#	#TAIL#	430
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

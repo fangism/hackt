@@ -1,0 +1,27 @@
+testing invariants on node names: 
+Invariants involving node `a':
+(to bar):
+$(a | bar.b | c, "To be or not to be, that is the invariant.")
+$(c | bar.b | a, "Wherefore art thou invariant?")
+Invariants involving node `c':
+(to bar):
+$(a | bar.b | c, "To be or not to be, that is the invariant.")
+$(c | bar.b | a, "Wherefore art thou invariant?")
+(to bq):
+$(c | bq.b | e, "To be or not to be, that is the invariant.")
+$(e | bq.b | c, "Wherefore art thou invariant?")
+Invariants involving node `e':
+(to bq):
+$(c | bq.b | e, "To be or not to be, that is the invariant.")
+$(e | bq.b | c, "Wherefore art thou invariant?")
+Invariants involving node `c':
+(to bar):
+$(a:X | bar.b:X | c:X<X>, "To be or not to be, that is the invariant.")
+$(c:X | bar.b:X | a:X<X>, "Wherefore art thou invariant?")
+(to bq):
+$(c:X | bq.b:X | e:X<X>, "To be or not to be, that is the invariant.")
+$(e:X | bq.b:X | c:X<X>, "Wherefore art thou invariant?")
+Invariants involving node `bar.b':
+(to bar):
+$(a:X | bar.b:X | c:X<X>, "To be or not to be, that is the invariant.")
+$(c:X | bar.b:X | a:X<X>, "Wherefore art thou invariant?")

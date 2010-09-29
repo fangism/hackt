@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/SPEC.cc"
-	$Id: SPEC.cc,v 1.11 2010/08/24 21:05:43 fang Exp $
+	$Id: SPEC.cc,v 1.12 2010/09/29 00:13:38 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -234,10 +234,11 @@ proc_directive::load_object(const persistent_object_manager& m, istream& i) {
 //=============================================================================
 // class invariant method definitions
 
-invariant::invariant() : directive_abstract(), invar_expr() { }
+invariant::invariant() : directive_abstract(), invar_expr(), message() { }
 
-invariant::invariant(const count_ptr<const prs_expr>& e) :
-		directive_abstract(), invar_expr(e) {
+invariant::invariant(const count_ptr<const prs_expr>& e, 
+		const string& m) :
+		directive_abstract(), invar_expr(e), message(m) {
 	NEVER_NULL(invar_expr);
 }
 
@@ -264,15 +265,19 @@ invariant::unroll(const unroll_context& c) const {
 	// this should work inside conditionals and loops
 	entity::footprint& fp(c.get_target_footprint());
 	PRS::footprint& pfp(fp.get_prs_footprint());
-	const size_t n = invar_expr->unroll(c
-		// np, pfp
-		);
+	const size_t n = invar_expr->unroll(c);
 	// returns 1-indexed!!! (but expr_pool is also offset-by-1)
 	if (!n) {
 		cerr << "Error resolving invariant expression." << endl;
 		return good_bool(false);
 	}
-	pfp.push_back_invariant(n);
+	pfp.push_back_invariant(
+#if INVARIANT_BACK_REFS
+		PRS::footprint::invariant_type(n, this)
+#else
+		n
+#endif
+		);
 	return good_bool(true);
 }
 
@@ -289,12 +294,14 @@ if (!m.register_transient_object(this,
 void
 invariant::write_object(const persistent_object_manager& m, ostream& o) const {
 	m.write_pointer(o, invar_expr);
+	write_value(o, message);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 invariant::load_object(const persistent_object_manager& m, istream& i) {
 	m.read_pointer(i, invar_expr);
+	read_value(i, message);
 }
 
 //=============================================================================

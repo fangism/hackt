@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_printer.cc"
 	Implementation of cflattening visitor.
-	$Id: cflat_printer.cc,v 1.31 2010/08/31 23:48:03 fang Exp $
+	$Id: cflat_printer.cc,v 1.32 2010/09/29 00:13:39 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -88,7 +88,11 @@ cflat_prs_printer::visit(const PRS::footprint& p) {
 	for ( ; i!=e; ++i) {
 		os << "invariant ";
 		// ep[*i].accept(*this);
+#if INVARIANT_BACK_REFS
+		visit(ep[i->first]);
+#else
 		visit(ep[*i]);
+#endif
 		os << endl;
 	}
 // }

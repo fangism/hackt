@@ -1,6 +1,6 @@
 /**
 	\file "AST/SPEC.h"
-	$Id: SPEC.h,v 1.6 2008/10/31 02:11:40 fang Exp $
+	$Id: SPEC.h,v 1.7 2010/09/29 00:13:37 fang Exp $
  */
 
 #ifndef	__HAC_AST_SPEC_H__
@@ -21,6 +21,7 @@ namespace SPEC {
 
 namespace parser {
 class expr;		// used for PRS-expr
+class token_string;
 namespace SPEC {
 //=============================================================================
 /**
@@ -76,10 +77,11 @@ public:
  */
 class invariant : public directive_base {
 	const excl_ptr<const expr>			_expr;
+	const excl_ptr<const token_string>		_msg;
 public:
 	typedef	directive_base::return_type		return_type;
 
-	invariant(const expr* const);
+	invariant(const expr* const, const token_string* const);
 	~invariant();
 
 	ostream&

@@ -1,5 +1,5 @@
 @c "chapters/SPEC.texi"
-@c $Id: SPEC.texi,v 1.6 2010/08/24 21:05:36 fang Exp $
+@c $Id: SPEC.texi,v 1.7 2010/09/29 00:13:34 fang Exp $
 
 @node SPEC Directives
 @chapter SPEC Directives
@@ -50,15 +50,19 @@ be made about circuits.
 @t{exclhi} and @t{excllo} are examples of invariants that use 
 the normal directive syntax.  
 
-@deffn Directive $ PRS-expr
+@deffn Directive $ PRS-expr [message]
 This declares a run-time invariant expression that is emits
 invariant directives to back-end tools and also tells 
 simulators to check and report violations of violations, 
 similar to @t{exclhi} and @t{excllo}. 
-@var{PRS-expr} is a production rule guard that should #@emph{always} be true.  
+@var{PRS-expr} is a production rule guard that should @emph{always} be true.  
+Invariants also accept an optional argument after the expression
+for a more informative description string.  
+These strings can be printed by back-end tools that understand invariants.
 @example
 spec @{
   $(~(x & y))
+  $(~(x & y), "at least one of these should be false at all times")
 @}
 @end example
 @noindent

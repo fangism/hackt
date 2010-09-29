@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint_expr.h"
-	$Id: PRS_footprint_expr.h,v 1.10 2010/04/07 00:12:48 fang Exp $
+	$Id: PRS_footprint_expr.h,v 1.11 2010/09/29 00:13:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_FOOTPRINT_EXPR_H__
@@ -236,7 +236,17 @@ public:
 	write_object_base(const persistent_object_manager&, ostream&) const;
 
 	void
+	write_object(const persistent_object_manager& m, ostream& o) const {
+		write_object_base(m, o);
+	}
+
+	void
 	load_object_base(const persistent_object_manager&, istream&);
+
+	void
+	load_object(const persistent_object_manager& m, istream& i) {
+		load_object_base(m, i);
+	}
 
 	void
 	accept(cflat_visitor&) const;

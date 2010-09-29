@@ -1,6 +1,6 @@
 /**
 	\file "AST/SPEC.cc"
-	$Id: SPEC.cc,v 1.18 2010/08/24 21:05:38 fang Exp $
+	$Id: SPEC.cc,v 1.19 2010/09/29 00:13:36 fang Exp $
  */
 
 #include <iostream>
@@ -201,9 +201,10 @@ default:
 //=============================================================================
 // class invariant method definitions
 
-invariant::invariant(const expr* const e) :
-		directive_base(), _expr(e) {
+invariant::invariant(const expr* const e, const token_string* const m) :
+		directive_base(), _expr(e), _msg(m) {
 	NEVER_NULL(_expr);
+	// _msg is optional
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -218,7 +219,10 @@ invariant::leftmost(void) const { return _expr->leftmost(); }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 line_position
-invariant::rightmost(void) const { return _expr->rightmost(); }
+invariant::rightmost(void) const {
+	if (_msg)	return _msg->rightmost();
+	else		return _expr->rightmost();
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 invariant::return_type
@@ -229,8 +233,12 @@ invariant::check_spec(context& c) const {
 			<< where(*_expr) << endl;
 		SPEC_THROW_ERROR;
 	}
+	string m;
+	if (_msg) {
+		m = *_msg;	// optional message string
+	}
 	const count_ptr<entity::SPEC::invariant>
-		ret(new entity::SPEC::invariant(p));
+		ret(new entity::SPEC::invariant(p, m));
 	c.get_current_spec_body().push_back(ret);
 }
 

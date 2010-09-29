@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/process_state.cc"
 	Implementation of process graph structure for prsim rules.
-	$Id: process_state.cc,v 1.5 2010/04/02 22:19:20 fang Exp $
+	$Id: process_state.cc,v 1.6 2010/09/29 00:13:43 fang Exp $
 	Most of this file was ripped from "sim/prsim/State-prsim.cc"
 	for the sake of cleanup.  
  */
@@ -172,12 +172,16 @@ process_sim_state::check_invariants(ostream& o, const State& st) const {
 		case PULL_OFF:
 			ret |= true;
 			o << "Error: invariant violation in " << pn << ": (";
-			dump_subexpr(o, lei, st, true) << ')' << endl;
+			dump_subexpr(o, lei, st, true);
+			pg.dump_invariant_message(o, lei, ", \"", "\"");
+			o << ')' << endl;
 			break;
 		case PULL_WEAK:
 			o << "Warning: possible invariant violation in "
 				<< pn << ": (";
-			dump_subexpr(o, lei, st, true) << ')' << endl;
+			dump_subexpr(o, lei, st, true);
+			pg.dump_invariant_message(o, lei, ", \"", "\"");
+			o << ')' << endl;
 			break;
 		default: break;
 		}
@@ -220,7 +224,9 @@ process_sim_state::dump_invariants(ostream& o, const State& st,
 	for ( ; i!=e; ++i) {
 		const rule_type& r(pg.rule_pool[i->second]);
 	if (r.is_invariant()) {
-		dump_subexpr(o << "$(", i->first, st, v) << ')' << endl;
+		dump_subexpr(o << "$(", i->first, st, v);
+		pg.dump_invariant_message(o, i->first, ", \"", "\"")
+			<< ')' << endl;
 	}
 	}
 	return o;

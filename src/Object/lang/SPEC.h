@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/SPEC.h"
-	$Id: SPEC.h,v 1.12 2010/07/14 18:12:33 fang Exp $
+	$Id: SPEC.h,v 1.13 2010/09/29 00:13:39 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_SPEC_H__
@@ -104,15 +104,19 @@ public:
 class invariant : public directive_abstract {
 	typedef	invariant				this_type;
 	const count_ptr<const prs_expr>			invar_expr;
+	string						message;
 public:
 	invariant();
 
 	explicit
-	invariant(const count_ptr<const prs_expr>&);
+	invariant(const count_ptr<const prs_expr>&, const string&);
 
 	~invariant();
 
 	SPEC_UNROLL_DIRECTIVE_PROTO;
+
+	const string&
+	get_message(void) const { return message; }
 
 	ostream&
 	what(ostream&) const;

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
 	Visitor implementation for allocating simulator state structures.  
-	$Id: ExprAlloc.cc,v 1.46 2010/08/30 23:51:49 fang Exp $
+	$Id: ExprAlloc.cc,v 1.47 2010/09/29 00:13:41 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -331,11 +331,16 @@ ExprAlloc::visit(const entity::PRS::footprint& pfp) {
 	const footprint::invariant_pool_type& ip(pfp.get_invariant_pool());
 	const PRS_footprint_expr_pool_type& ep(pfp.get_expr_pool());
 	const_iterator i(ip.begin()), e(ip.end());
-	for ( ; i!=e; ++i) {
+	size_t j = 0;	// footprint's invariant_pool index
+	for ( ; i!=e; ++i, ++j) {
 		// construct invariant expression
 	//	ep[*i].accept(*this);
+#if INVARIANT_BACK_REFS
+		visit(ep[i->first]);
+#else
 		visit(ep[*i]);
-		link_invariant_expr(ret_ex_index);
+#endif
+		link_invariant_expr(ret_ex_index, j);
 	}
 	}
 #if 0
@@ -390,6 +395,7 @@ if (f == process_footprint_map.end()) {
 	STACKTRACE_INDENT_PRINT("node_pool_size = " << node_pool_size << endl);
 		state.unique_process_pool.push_back(unique_process_subgraph());
 	unique_process_subgraph& u(state.unique_process_pool.back());
+	u._footprint = &gpfp;
 	const util::value_saver<unique_process_subgraph*> tmp(g, &u);
 	// resize the faninout_struct array as if it were local nodes
 	// kludgy way of inferring the correct footprint
@@ -1118,9 +1124,12 @@ if (d) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Fake a rule as an invariant that doesn't really pull any node.
+	\param top_ex_index local graph's expression index that was allocated.
+	\param src_inv_index footprint's invariant index.  
  */
 void
-ExprAlloc::link_invariant_expr(const expr_index_type top_ex_index) {
+ExprAlloc::link_invariant_expr(const expr_index_type top_ex_index, 
+		const size_t src_inv_index) {
 	expr_type& ne(g->expr_pool[top_ex_index]);
 //	graph_node_type& ng(g->expr_graph_node_pool[top_ex_index]);
 	rule_type dummy;
@@ -1128,6 +1137,7 @@ ExprAlloc::link_invariant_expr(const expr_index_type top_ex_index) {
 //	ng.offset = fin.size();	
 	ne.invariant_root();
 	g->rule_map[top_ex_index] = g->rule_pool.size();	// map
+	g->invariant_map[top_ex_index] = src_inv_index;
 	g->rule_pool.push_back(dummy);
 }
 

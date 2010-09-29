@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/process_graph.cc"
 	Implementation of process graph structure for prsim rules.
-	$Id: process_graph.cc,v 1.8 2010/08/11 21:54:57 fang Exp $
+	$Id: process_graph.cc,v 1.9 2010/09/29 00:13:43 fang Exp $
 	Most of this file was ripped from "sim/prsim/State-prsim.cc"
 	for the sake of cleanup.  
  */
@@ -17,6 +17,9 @@
 #include "sim/prsim/util.tcc"
 #include "sim/prsim/Rule.tcc"
 #include "sim/ISE.h"
+#include "Object/def/footprint.h"
+#include "Object/lang/PRS_footprint.h"
+#include "Object/lang/SPEC.h"
 #include "util/stacktrace.h"
 #include "util/compose.h"
 
@@ -44,7 +47,7 @@ USING_UTIL_COMPOSE
 // class unique_process_subgraph method definitions
 unique_process_subgraph::unique_process_subgraph() :
 		expr_pool(), expr_graph_node_pool(),
-		rule_pool(), rule_map(),
+		rule_pool(), rule_map(), invariant_map(), 
 		local_faninout_map() {
 	// local types are allowed to start at 0 index
 }
@@ -281,6 +284,36 @@ unique_process_subgraph::check_structure(void) const {
 		check_node(i);
 	}
 }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Prints invariant message if any.
+	\param ri root expression index.
+ */
+ostream&
+unique_process_subgraph::dump_invariant_message(ostream& o, 
+		const expr_index_type ri, 
+		const char* pre, const char* post) const {
+#if INVARIANT_BACK_REFS
+	// also print optional message string
+	// needs to use pg (unique_process_graph)
+	const entity::PRS::footprint&
+		pfp(_footprint->get_prs_footprint());
+#if 0
+	const entity::PRS::footprint::invariant_source_ptr_type
+		ivs(pfp.lookup_invariant_source(ri));
+#endif
+	const never_ptr<const entity::SPEC::invariant>
+		ivs(pfp.get_invariant_pool()[invariant_map.find(ri)
+			->second].second);
+	NEVER_NULL(ivs);
+	const string& invstr(ivs->get_message());
+	if (invstr.length()) {
+		o << pre << invstr << post;
+	}
+#endif
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

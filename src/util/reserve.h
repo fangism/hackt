@@ -1,7 +1,7 @@
 /**
 	\file "util/reserve.h"
 	Utility for optionally reserving space in a sequence container.  
-	$Id: reserve.h,v 1.2 2005/07/20 21:01:01 fang Exp $
+	$Id: reserve.h,v 1.3 2010/09/29 00:13:44 fang Exp $
  */
 
 #ifndef	__UTIL_RESERVE_H__
@@ -29,7 +29,7 @@ struct reserver {
 	 */
 	static
 	void
-	reserve(T&, const size_t) { }
+	reserve(const sequence_type&, const size_t) { }
 };	// end struct reserver
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

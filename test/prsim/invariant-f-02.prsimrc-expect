@@ -1,0 +1,89 @@
+RULES: 
+[top-level]
+rules:
+bar refers to process-inst-ref foo<>
+rules:
+[after 10]	a -> bar.b-
+[after 10]	~a -> bar.b+
+[after 10]	bar.b -> c-
+[after 10]	~bar.b -> c+
+bq refers to process-inst-ref foo<>
+rules:
+[after 10]	c -> bq.b-
+[after 10]	~c -> bq.b+
+[after 10]	bq.b -> e-
+[after 10]	~bq.b -> e+
+INVARIANTS: 
+[top-level]
+invariants:
+bar refers to process-inst-ref foo<>
+invariants:
+$(a | bar.b | c, "To be or not to be, that is the invariant.")
+$(c | bar.b | a, "Wherefore art thou invariant?")
+RULES: 
+process: bar
+[after 10]	a -> bar.b-
+[after 10]	~a -> bar.b+
+[after 10]	bar.b -> c-
+[after 10]	~bar.b -> c+
+process: bq
+[after 10]	c -> bq.b-
+[after 10]	~c -> bq.b+
+[after 10]	bq.b -> e-
+[after 10]	~bq.b -> e+
+INVARIANTS: 
+process: bar
+$(a | bar.b | c, "To be or not to be, that is the invariant.")
+$(c | bar.b | a, "Wherefore art thou invariant?")
+process: bq
+$(c | bq.b | e, "To be or not to be, that is the invariant.")
+$(e | bq.b | c, "Wherefore art thou invariant?")
+--------------------- 
+[top-level]
+rules:
+bar refers to process-inst-ref foo<>
+rules:
+[after 10]	a:0<0> -> bar.b-:1
+[after 10]	~a:0<1> -> bar.b+:1
+[after 10]	bar.b:1<1> -> c-:0
+[after 10]	~bar.b:1<0> -> c+:0
+bq refers to process-inst-ref foo<>
+rules:
+[after 10]	c:0<0> -> bq.b-:1
+[after 10]	~c:0<1> -> bq.b+:1
+[after 10]	bq.b:1<1> -> e-:0
+[after 10]	~bq.b:1<0> -> e+:0
+--------------------- 
+process: bar
+[after 10]	a:1<1> -> bar.b-:0
+[after 10]	~a:1<0> -> bar.b+:0
+[after 10]	bar.b:0<0> -> c-:1
+[after 10]	~bar.b:0<1> -> c+:1
+process: bq
+[after 10]	c:1<1> -> bq.b-:0
+[after 10]	~c:1<0> -> bq.b+:0
+[after 10]	bq.b:0<0> -> e-:1
+[after 10]	~bq.b:0<1> -> e+:1
+--------------------- 
+WARNING: weak-interference `bar.b'
+>> cause: `a' (val: X)
+WARNING: weak-interference `c'
+>> cause: `bar.b' (val: X)
+Warning: possible invariant violation in bar: (a:X | bar.b:X | c:X<X>) by node c:X, "To be or not to be, that is the invariant."
+Warning: possible invariant violation in bar: (c:X | bar.b:X | a:X<X>) by node c:X, "Wherefore art thou invariant?"
+WARNING: weak-interference `bq.b'
+>> cause: `c' (val: X)
+WARNING: weak-interference `e'
+>> cause: `bq.b' (val: X)
+Warning: possible invariant violation in bq: (c:X | bq.b:X | e:X<X>) by node e:X, "To be or not to be, that is the invariant."
+Warning: possible invariant violation in bq: (e:X | bq.b:X | c:X<X>) by node e:X, "Wherefore art thou invariant?"
+Warning: possible invariant violation in bar: (a:X | bar.b:X | c:X<X>, "To be or not to be, that is the invariant.")
+Warning: possible invariant violation in bar: (c:X | bar.b:X | a:X<X>, "Wherefore art thou invariant?")
+Warning: possible invariant violation in bq: (c:X | bq.b:X | e:X<X>, "To be or not to be, that is the invariant.")
+Warning: possible invariant violation in bq: (e:X | bq.b:X | c:X<X>, "Wherefore art thou invariant?")
+process: bar
+$(a:X | bar.b:X | c:X<X>, "To be or not to be, that is the invariant.")
+$(c:X | bar.b:X | a:X<X>, "Wherefore art thou invariant?")
+process: bq
+$(c:X | bq.b:X | e:X<X>, "To be or not to be, that is the invariant.")
+$(e:X | bq.b:X | c:X<X>, "Wherefore art thou invariant?")

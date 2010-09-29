@@ -20,6 +20,7 @@ acceptable tokens are:
 	'(' (reduce)
 	')' (reduce)
 	'+' (reduce)
+	',' (reduce)
 	'-' (reduce)
 	'.' (shift)
 	'<' (reduce)
