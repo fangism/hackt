@@ -106,10 +106,10 @@ In namespace "", we have: {
           !GND = bool^0 = void_source_once<3>::!GND (1) @[ supply_low port-alias ] 
           !Vdd = bool^0 = void_source_once<3>::!Vdd (2) @[ supply_high port-alias ] 
           N = pint^0 value: 3
-          S = channel chan!()^0 = void_source_once<3>::S (1) 
+          S = channel chan!()^0 = void_source_once<3>::S (1) @[ chp! meta! port? meta? ] 
           Created state:
           channel instance pool: (1 ports, 0 local, 0 mapped)
-          1	void_source_once<3>::S	
+          1	void_source_once<3>::S @[ chp! meta! port? meta? ]	
           bool instance pool: (2 ports, 0 local, 0 mapped)
           1	void_source_once<3>::!GND @[ supply_low port-alias ]	
           2	void_source_once<3>::!Vdd @[ supply_high port-alias ]	
@@ -140,7 +140,7 @@ footprint: {
   Z = process void_source_once<3>^0 = Z (1) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    S = channel chan!()^0 = Z.S (1) 
+    S = channel chan!()^0 = Z.S (1) @[ sub! chp! meta! ] 
   )
   Created state:
   process instance pool: (0 ports, 1 local, 0 mapped)
@@ -148,7 +148,7 @@ footprint: {
     channel: 1
     bool: 1,2
   channel instance pool: (0 ports, 1 local, 0 mapped)
-  1	Z.S	
+  1	Z.S @[ sub! chp! meta! ]	
   bool instance pool: (0 ports, 2 local, 0 mapped)
   1	!GND @[ supply_low ]	
   2	!Vdd @[ supply_high ]	

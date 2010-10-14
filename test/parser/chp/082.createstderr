@@ -305,10 +305,10 @@ In namespace "", we have: {
             }
           M = pint^0 value: 0
           N = pint^0 value: 2
-          b = channel chan!(int<16>)^0 = compute_me<2, {0,1}, 0>::b (1) 
+          b = channel chan!(int<16>)^0 = compute_me<2, {0,1}, 0>::b (1) @[ chp! meta! port? meta? ] 
           Created state:
           channel instance pool: (1 ports, 0 local, 0 mapped)
-          1	compute_me<2, {0,1}, 0>::b	
+          1	compute_me<2, {0,1}, 0>::b @[ chp! meta! port? meta? ]	
           bool instance pool: (2 ports, 0 local, 0 mapped)
           1	compute_me<2, {0,1}, 0>::!GND @[ supply_low port-alias ]	
           2	compute_me<2, {0,1}, 0>::!Vdd @[ supply_high port-alias ]	
@@ -330,10 +330,10 @@ In namespace "", we have: {
             }
           M = pint^0 value: 1
           N = pint^0 value: 2
-          b = channel chan!(int<16>)^0 = compute_me<2, {0,1}, 1>::b (1) 
+          b = channel chan!(int<16>)^0 = compute_me<2, {0,1}, 1>::b (1) @[ chp! meta! port? meta? ] 
           Created state:
           channel instance pool: (1 ports, 0 local, 0 mapped)
-          1	compute_me<2, {0,1}, 1>::b	
+          1	compute_me<2, {0,1}, 1>::b @[ chp! meta! port? meta? ]	
           bool instance pool: (2 ports, 0 local, 0 mapped)
           1	compute_me<2, {0,1}, 1>::!GND @[ supply_low port-alias ]	
           2	compute_me<2, {0,1}, 1>::!Vdd @[ supply_high port-alias ]	
@@ -356,10 +356,10 @@ In namespace "", we have: {
             }
           M = pint^0 value: 0
           N = pint^0 value: 3
-          b = channel chan!(int<16>)^0 = compute_me<3, {4,9,16}, 0>::b (1) 
+          b = channel chan!(int<16>)^0 = compute_me<3, {4,9,16}, 0>::b (1) @[ chp! meta! port? meta? ] 
           Created state:
           channel instance pool: (1 ports, 0 local, 0 mapped)
-          1	compute_me<3, {4,9,16}, 0>::b	
+          1	compute_me<3, {4,9,16}, 0>::b @[ chp! meta! port? meta? ]	
           bool instance pool: (2 ports, 0 local, 0 mapped)
           1	compute_me<3, {4,9,16}, 0>::!GND @[ supply_low port-alias ]	
           2	compute_me<3, {4,9,16}, 0>::!Vdd @[ supply_high port-alias ]	
@@ -382,10 +382,10 @@ In namespace "", we have: {
             }
           M = pint^0 value: 1
           N = pint^0 value: 3
-          b = channel chan!(int<16>)^0 = compute_me<3, {4,9,16}, 1>::b (1) 
+          b = channel chan!(int<16>)^0 = compute_me<3, {4,9,16}, 1>::b (1) @[ chp! meta! port? meta? ] 
           Created state:
           channel instance pool: (1 ports, 0 local, 0 mapped)
-          1	compute_me<3, {4,9,16}, 1>::b	
+          1	compute_me<3, {4,9,16}, 1>::b @[ chp! meta! port? meta? ]	
           bool instance pool: (2 ports, 0 local, 0 mapped)
           1	compute_me<3, {4,9,16}, 1>::!GND @[ supply_low port-alias ]	
           2	compute_me<3, {4,9,16}, 1>::!Vdd @[ supply_high port-alias ]	
@@ -408,10 +408,10 @@ In namespace "", we have: {
             }
           M = pint^0 value: 2
           N = pint^0 value: 3
-          b = channel chan!(int<16>)^0 = compute_me<3, {4,9,16}, 2>::b (1) 
+          b = channel chan!(int<16>)^0 = compute_me<3, {4,9,16}, 2>::b (1) @[ chp! meta! port? meta? ] 
           Created state:
           channel instance pool: (1 ports, 0 local, 0 mapped)
-          1	compute_me<3, {4,9,16}, 2>::b	
+          1	compute_me<3, {4,9,16}, 2>::b @[ chp! meta! port? meta? ]	
           bool instance pool: (2 ports, 0 local, 0 mapped)
           1	compute_me<3, {4,9,16}, 2>::!GND @[ supply_low port-alias ]	
           2	compute_me<3, {4,9,16}, 2>::!Vdd @[ supply_high port-alias ]	
@@ -437,10 +437,10 @@ In namespace "", we have: {
             }
           M = pint^0 value: 0
           N = pint^0 value: 6
-          b = channel chan!(int<16>)^0 = compute_me<6, {0,1,4,9,16,25}, 0>::b (1) 
+          b = channel chan!(int<16>)^0 = compute_me<6, {0,1,4,9,16,25}, 0>::b (1) @[ chp! meta! port? meta? ] 
           Created state:
           channel instance pool: (1 ports, 0 local, 0 mapped)
-          1	compute_me<6, {0,1,4,9,16,25}, 0>::b	
+          1	compute_me<6, {0,1,4,9,16,25}, 0>::b @[ chp! meta! port? meta? ]	
           bool instance pool: (2 ports, 0 local, 0 mapped)
           1	compute_me<6, {0,1,4,9,16,25}, 0>::!GND @[ supply_low port-alias ]	
           2	compute_me<6, {0,1,4,9,16,25}, 0>::!Vdd @[ supply_high port-alias ]	
@@ -466,10 +466,10 @@ In namespace "", we have: {
             }
           M = pint^0 value: 1
           N = pint^0 value: 6
-          b = channel chan!(int<16>)^0 = compute_me<6, {0,1,4,9,16,25}, 1>::b (1) 
+          b = channel chan!(int<16>)^0 = compute_me<6, {0,1,4,9,16,25}, 1>::b (1) @[ chp! meta! port? meta? ] 
           Created state:
           channel instance pool: (1 ports, 0 local, 0 mapped)
-          1	compute_me<6, {0,1,4,9,16,25}, 1>::b	
+          1	compute_me<6, {0,1,4,9,16,25}, 1>::b @[ chp! meta! port? meta? ]	
           bool instance pool: (2 ports, 0 local, 0 mapped)
           1	compute_me<6, {0,1,4,9,16,25}, 1>::!GND @[ supply_low port-alias ]	
           2	compute_me<6, {0,1,4,9,16,25}, 1>::!Vdd @[ supply_high port-alias ]	
@@ -495,10 +495,10 @@ In namespace "", we have: {
             }
           M = pint^0 value: 2
           N = pint^0 value: 6
-          b = channel chan!(int<16>)^0 = compute_me<6, {0,1,4,9,16,25}, 2>::b (1) 
+          b = channel chan!(int<16>)^0 = compute_me<6, {0,1,4,9,16,25}, 2>::b (1) @[ chp! meta! port? meta? ] 
           Created state:
           channel instance pool: (1 ports, 0 local, 0 mapped)
-          1	compute_me<6, {0,1,4,9,16,25}, 2>::b	
+          1	compute_me<6, {0,1,4,9,16,25}, 2>::b @[ chp! meta! port? meta? ]	
           bool instance pool: (2 ports, 0 local, 0 mapped)
           1	compute_me<6, {0,1,4,9,16,25}, 2>::!GND @[ supply_low port-alias ]	
           2	compute_me<6, {0,1,4,9,16,25}, 2>::!Vdd @[ supply_high port-alias ]	
@@ -524,10 +524,10 @@ In namespace "", we have: {
             }
           M = pint^0 value: 3
           N = pint^0 value: 6
-          b = channel chan!(int<16>)^0 = compute_me<6, {0,1,4,9,16,25}, 3>::b (1) 
+          b = channel chan!(int<16>)^0 = compute_me<6, {0,1,4,9,16,25}, 3>::b (1) @[ chp! meta! port? meta? ] 
           Created state:
           channel instance pool: (1 ports, 0 local, 0 mapped)
-          1	compute_me<6, {0,1,4,9,16,25}, 3>::b	
+          1	compute_me<6, {0,1,4,9,16,25}, 3>::b @[ chp! meta! port? meta? ]	
           bool instance pool: (2 ports, 0 local, 0 mapped)
           1	compute_me<6, {0,1,4,9,16,25}, 3>::!GND @[ supply_low port-alias ]	
           2	compute_me<6, {0,1,4,9,16,25}, 3>::!Vdd @[ supply_high port-alias ]	
@@ -553,10 +553,10 @@ In namespace "", we have: {
             }
           M = pint^0 value: 4
           N = pint^0 value: 6
-          b = channel chan!(int<16>)^0 = compute_me<6, {0,1,4,9,16,25}, 4>::b (1) 
+          b = channel chan!(int<16>)^0 = compute_me<6, {0,1,4,9,16,25}, 4>::b (1) @[ chp! meta! port? meta? ] 
           Created state:
           channel instance pool: (1 ports, 0 local, 0 mapped)
-          1	compute_me<6, {0,1,4,9,16,25}, 4>::b	
+          1	compute_me<6, {0,1,4,9,16,25}, 4>::b @[ chp! meta! port? meta? ]	
           bool instance pool: (2 ports, 0 local, 0 mapped)
           1	compute_me<6, {0,1,4,9,16,25}, 4>::!GND @[ supply_low port-alias ]	
           2	compute_me<6, {0,1,4,9,16,25}, 4>::!Vdd @[ supply_high port-alias ]	
@@ -582,10 +582,10 @@ In namespace "", we have: {
             }
           M = pint^0 value: 5
           N = pint^0 value: 6
-          b = channel chan!(int<16>)^0 = compute_me<6, {0,1,4,9,16,25}, 5>::b (1) 
+          b = channel chan!(int<16>)^0 = compute_me<6, {0,1,4,9,16,25}, 5>::b (1) @[ chp! meta! port? meta? ] 
           Created state:
           channel instance pool: (1 ports, 0 local, 0 mapped)
-          1	compute_me<6, {0,1,4,9,16,25}, 5>::b	
+          1	compute_me<6, {0,1,4,9,16,25}, 5>::b @[ chp! meta! port? meta? ]	
           bool instance pool: (2 ports, 0 local, 0 mapped)
           1	compute_me<6, {0,1,4,9,16,25}, 5>::!GND @[ supply_low port-alias ]	
           2	compute_me<6, {0,1,4,9,16,25}, 5>::!Vdd @[ supply_high port-alias ]	
@@ -631,57 +631,57 @@ footprint: {
   y2_0 = process compute_me<2, {0,1}, 0>^0 = y2_0 (1) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    b = channel chan!(int<16>)^0 = y2_0.b (1) 
+    b = channel chan!(int<16>)^0 = y2_0.b (1) @[ sub! chp! meta! ] 
   )
   y2_1 = process compute_me<2, {0,1}, 1>^0 = y2_1 (2) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    b = channel chan!(int<16>)^0 = y2_1.b (2) 
+    b = channel chan!(int<16>)^0 = y2_1.b (2) @[ sub! chp! meta! ] 
   )
   y3_0 = process compute_me<3, {4,9,16}, 0>^0 = y3_0 (3) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    b = channel chan!(int<16>)^0 = y3_0.b (3) 
+    b = channel chan!(int<16>)^0 = y3_0.b (3) @[ sub! chp! meta! ] 
   )
   y3_1 = process compute_me<3, {4,9,16}, 1>^0 = y3_1 (4) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    b = channel chan!(int<16>)^0 = y3_1.b (4) 
+    b = channel chan!(int<16>)^0 = y3_1.b (4) @[ sub! chp! meta! ] 
   )
   y3_2 = process compute_me<3, {4,9,16}, 2>^0 = y3_2 (5) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    b = channel chan!(int<16>)^0 = y3_2.b (5) 
+    b = channel chan!(int<16>)^0 = y3_2.b (5) @[ sub! chp! meta! ] 
   )
   y6_0 = process compute_me<6, {0,1,4,9,16,25}, 0>^0 = y6_0 (6) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    b = channel chan!(int<16>)^0 = y6_0.b (6) 
+    b = channel chan!(int<16>)^0 = y6_0.b (6) @[ sub! chp! meta! ] 
   )
   y6_1 = process compute_me<6, {0,1,4,9,16,25}, 1>^0 = y6_1 (7) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    b = channel chan!(int<16>)^0 = y6_1.b (7) 
+    b = channel chan!(int<16>)^0 = y6_1.b (7) @[ sub! chp! meta! ] 
   )
   y6_2 = process compute_me<6, {0,1,4,9,16,25}, 2>^0 = y6_2 (8) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    b = channel chan!(int<16>)^0 = y6_2.b (8) 
+    b = channel chan!(int<16>)^0 = y6_2.b (8) @[ sub! chp! meta! ] 
   )
   y6_3 = process compute_me<6, {0,1,4,9,16,25}, 3>^0 = y6_3 (9) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    b = channel chan!(int<16>)^0 = y6_3.b (9) 
+    b = channel chan!(int<16>)^0 = y6_3.b (9) @[ sub! chp! meta! ] 
   )
   y6_4 = process compute_me<6, {0,1,4,9,16,25}, 4>^0 = y6_4 (10) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    b = channel chan!(int<16>)^0 = y6_4.b (10) 
+    b = channel chan!(int<16>)^0 = y6_4.b (10) @[ sub! chp! meta! ] 
   )
   y6_5 = process compute_me<6, {0,1,4,9,16,25}, 5>^0 = y6_5 (11) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    b = channel chan!(int<16>)^0 = y6_5.b (11) 
+    b = channel chan!(int<16>)^0 = y6_5.b (11) @[ sub! chp! meta! ] 
   )
   Created state:
   process instance pool: (0 ports, 11 local, 0 mapped)
@@ -719,17 +719,17 @@ footprint: {
     channel: 11
     bool: 1,2
   channel instance pool: (0 ports, 11 local, 0 mapped)
-  1	y2_0.b	
-  2	y2_1.b	
-  3	y3_0.b	
-  4	y3_1.b	
-  5	y3_2.b	
-  6	y6_0.b	
-  7	y6_1.b	
-  8	y6_2.b	
-  9	y6_3.b	
-  10	y6_4.b	
-  11	y6_5.b	
+  1	y2_0.b @[ sub! chp! meta! ]	
+  2	y2_1.b @[ sub! chp! meta! ]	
+  3	y3_0.b @[ sub! chp! meta! ]	
+  4	y3_1.b @[ sub! chp! meta! ]	
+  5	y3_2.b @[ sub! chp! meta! ]	
+  6	y6_0.b @[ sub! chp! meta! ]	
+  7	y6_1.b @[ sub! chp! meta! ]	
+  8	y6_2.b @[ sub! chp! meta! ]	
+  9	y6_3.b @[ sub! chp! meta! ]	
+  10	y6_4.b @[ sub! chp! meta! ]	
+  11	y6_5.b @[ sub! chp! meta! ]	
   bool instance pool: (0 ports, 2 local, 0 mapped)
   1	!GND @[ supply_low ]	
   2	!Vdd @[ supply_high ]	

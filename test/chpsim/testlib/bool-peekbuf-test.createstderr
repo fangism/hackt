@@ -168,13 +168,13 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = bool_peekbuf<>::!GND (1) @[ supply_low port-alias ] 
         !Vdd = bool^0 = bool_peekbuf<>::!Vdd (2) @[ supply_high port-alias ] 
-        L = channel chan?(bool<>)^0 = bool_peekbuf<>::L (1) 
-        R = channel chan!(bool<>)^0 = bool_peekbuf<>::R (2) 
+        L = channel chan?(bool<>)^0 = bool_peekbuf<>::L (1) @[ port! meta! chp? meta? ] 
+        R = channel chan!(bool<>)^0 = bool_peekbuf<>::R (2) @[ chp! meta! port? meta? ] 
         x = bool^0 = bool_peekbuf<>::x (3) 
         Created state:
         channel instance pool: (2 ports, 0 local, 0 mapped)
-        1	bool_peekbuf<>::L	
-        2	bool_peekbuf<>::R	
+        1	bool_peekbuf<>::L @[ port! meta! chp? meta? ]	
+        2	bool_peekbuf<>::R @[ chp! meta! port? meta? ]	
         bool instance pool: (2 ports, 1 local, 0 mapped)
         1	bool_peekbuf<>::!GND @[ supply_low port-alias ]	
         2	bool_peekbuf<>::!Vdd @[ supply_high port-alias ]	
@@ -233,13 +233,13 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = bool_peekbuf_fast<>::!GND (1) @[ supply_low port-alias ] 
         !Vdd = bool^0 = bool_peekbuf_fast<>::!Vdd (2) @[ supply_high port-alias ] 
-        L = channel chan?(bool<>)^0 = bool_peekbuf_fast<>::L (1) 
-        R = channel chan!(bool<>)^0 = bool_peekbuf_fast<>::R (2) 
+        L = channel chan?(bool<>)^0 = bool_peekbuf_fast<>::L (1) @[ port! meta! chp? meta? ] 
+        R = channel chan!(bool<>)^0 = bool_peekbuf_fast<>::R (2) @[ chp! meta! port? meta? ] 
         x = bool^0 = bool_peekbuf_fast<>::x (3) 
         Created state:
         channel instance pool: (2 ports, 0 local, 0 mapped)
-        1	bool_peekbuf_fast<>::L	
-        2	bool_peekbuf_fast<>::R	
+        1	bool_peekbuf_fast<>::L @[ port! meta! chp? meta? ]	
+        2	bool_peekbuf_fast<>::R @[ chp! meta! port? meta? ]	
         bool instance pool: (2 ports, 1 local, 0 mapped)
         1	bool_peekbuf_fast<>::!GND @[ supply_low port-alias ]	
         2	bool_peekbuf_fast<>::!Vdd @[ supply_high port-alias ]	
@@ -277,14 +277,14 @@ footprint: {
   A = process bool_peekbuf<>^0 = A (1) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    L = channel chan?(bool<>)^0 = A.L (1) 
-    R = channel chan!(bool<>)^0 = A.R (2) 
+    L = channel chan?(bool<>)^0 = A.L (1) @[ sub? chp? meta? ] 
+    R = channel chan!(bool<>)^0 = A.R (2) @[ sub! chp! meta! ] 
   )
   B = process bool_peekbuf_fast<>^0 = B (2) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    L = channel chan?(bool<>)^0 = B.L (3) 
-    R = channel chan!(bool<>)^0 = B.R (4) 
+    L = channel chan?(bool<>)^0 = B.L (3) @[ sub? chp? meta? ] 
+    R = channel chan!(bool<>)^0 = B.R (4) @[ sub! chp! meta! ] 
   )
   Created state:
   process instance pool: (0 ports, 2 local, 0 mapped)
@@ -295,10 +295,10 @@ footprint: {
     channel: 3,4
     bool: 1,2
   channel instance pool: (0 ports, 4 local, 0 mapped)
-  1	A.L	
-  2	A.R	
-  3	B.L	
-  4	B.R	
+  1	A.L @[ sub? chp? meta? ]	
+  2	A.R @[ sub! chp! meta! ]	
+  3	B.L @[ sub? chp? meta? ]	
+  4	B.R @[ sub! chp! meta! ]	
   bool instance pool: (0 ports, 2 local, 2 mapped)
   1	!GND @[ supply_low ]	
   2	!Vdd @[ supply_high ]	

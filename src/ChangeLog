@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-10-13	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-31:
+	  Create dumps now print implicit attributes for channels,
+		needed for debugging new diagnostic bug.
+		No functional change this revision.  Test cases updated.
+
+
 2010-09-28	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-30:

@@ -83,12 +83,12 @@ top-level chp:
 footprint: {
   !GND = bool^0 = !GND (1) @[ supply_low ] 
   !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-  X = channel chan(bool<>)^0 = X (1) 
+  X = channel chan(bool<>)^0 = X (1) @[ chp! meta! chp? meta? ] 
   x = bool^0 = x (3) 
   y = bool^0 = y (4) 
   Created state:
   channel instance pool: (0 ports, 1 local, 0 mapped)
-  1	X	
+  1	X @[ chp! meta! chp? meta? ]	
   bool instance pool: (0 ports, 4 local, 0 mapped)
   1	!GND @[ supply_low ]	
   2	!Vdd @[ supply_high ]	

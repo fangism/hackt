@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/connection_policy.cc"
-	$Id: connection_policy.cc,v 1.16 2010/08/24 22:52:02 fang Exp $
+	$Id: connection_policy.cc,v 1.17 2010/10/14 00:19:28 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -274,6 +274,30 @@ bool_connect_policy::read_flags(istream& i) {
 
 //=============================================================================
 // channel_connect_policy method definitions
+
+const char*
+channel_connect_policy::attribute_names[] = {
+	// producer flags
+	"port!",
+	"!!",
+	"sub!",
+	"chp!",
+	"meta!",
+	"~meta!",
+	"RESERVED-06",
+	"RESERVED-07",
+	// consumer flags
+	"port?",
+	"??",
+	"sub?",
+	"chp?",
+	"meta?",
+	"~meta?",
+	"RESERVED-14",
+	"RESERVED-15",
+};
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Check for conflicting flags.  
 	Won't bother templating this method unless something else other
@@ -336,6 +360,36 @@ channel_connect_policy::check_meta_nonmeta_usage(
 		good = false;
 	}
 	return good_bool(good);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Only applies to hflat, called by cflat_prs_printer()
+ */
+ostream&
+channel_connect_policy::dump_flat_attributes(ostream& o) const {
+	connection_flags_type temp = direction_flags;	// better be unsigned!
+	const char** p = attribute_names;
+while (temp && p < attribute_names +16) {
+	// b/c upper bits are connectivity
+	if (temp & 1) {
+		o << ' ' << *p;
+	}
+	++p;
+	temp >>= 1;
+}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+channel_connect_policy::dump_attributes(ostream& o) const {
+if (has_nondefault_attributes()) {
+	o << " @[";
+	dump_flat_attributes(o);
+	o << " ]";
+}
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

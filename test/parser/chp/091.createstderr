@@ -182,11 +182,11 @@ In namespace "", we have: {
           !GND = bool^0 = send_indexed<0>::!GND (1) @[ supply_low port-alias ] 
           !Vdd = bool^0 = send_indexed<0>::!Vdd (2) @[ supply_high port-alias ] 
           I = pint^0 value: 0
-          index = channel chan?(int<1>)^0 = send_indexed<0>::index (1) 
+          index = channel chan?(int<1>)^0 = send_indexed<0>::index (1) @[ port! meta! chp? meta? ] 
           out = channel chan!(int<32>)^1
             {
-              [0] = send_indexed<0>::out[0] (2) 
-              [1] = send_indexed<0>::out[1] (3) 
+              [0] = send_indexed<0>::out[0] (2) @[ chp! meta! port? meta? ] 
+              [1] = send_indexed<0>::out[1] (3) @[ port? meta? ] 
             }
           x = pint^1
             unrolled index-value pairs: {
@@ -196,9 +196,9 @@ In namespace "", we have: {
           y = int<1>^0 = send_indexed<0>::y (1) 
           Created state:
           channel instance pool: (3 ports, 0 local, 0 mapped)
-          1	send_indexed<0>::index	
-          2	send_indexed<0>::out[0]	
-          3	send_indexed<0>::out[1]	
+          1	send_indexed<0>::index @[ port! meta! chp? meta? ]	
+          2	send_indexed<0>::out[0] @[ chp! meta! port? meta? ]	
+          3	send_indexed<0>::out[1] @[ port? meta? ]	
           int instance pool: (0 ports, 1 local, 0 mapped)
           1	send_indexed<0>::y	
           bool instance pool: (2 ports, 0 local, 0 mapped)
@@ -220,11 +220,11 @@ In namespace "", we have: {
           !GND = bool^0 = send_indexed<1>::!GND (1) @[ supply_low port-alias ] 
           !Vdd = bool^0 = send_indexed<1>::!Vdd (2) @[ supply_high port-alias ] 
           I = pint^0 value: 1
-          index = channel chan?(int<1>)^0 = send_indexed<1>::index (1) 
+          index = channel chan?(int<1>)^0 = send_indexed<1>::index (1) @[ port! meta! chp? meta? ] 
           out = channel chan!(int<32>)^1
             {
-              [0] = send_indexed<1>::out[0] (2) 
-              [1] = send_indexed<1>::out[1] (3) 
+              [0] = send_indexed<1>::out[0] (2) @[ port? meta? ] 
+              [1] = send_indexed<1>::out[1] (3) @[ chp! meta! port? meta? ] 
             }
           x = pint^1
             unrolled index-value pairs: {
@@ -234,9 +234,9 @@ In namespace "", we have: {
           y = int<1>^0 = send_indexed<1>::y (1) 
           Created state:
           channel instance pool: (3 ports, 0 local, 0 mapped)
-          1	send_indexed<1>::index	
-          2	send_indexed<1>::out[0]	
-          3	send_indexed<1>::out[1]	
+          1	send_indexed<1>::index @[ port! meta! chp? meta? ]	
+          2	send_indexed<1>::out[0] @[ port? meta? ]	
+          3	send_indexed<1>::out[1] @[ chp! meta! port? meta? ]	
           int instance pool: (0 ports, 1 local, 0 mapped)
           1	send_indexed<1>::y	
           bool instance pool: (2 ports, 0 local, 0 mapped)
@@ -270,20 +270,20 @@ footprint: {
   bar = process send_indexed<1>^0 = bar (2) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    index = channel chan?(int<1>)^0 = bar.index (4) 
+    index = channel chan?(int<1>)^0 = bar.index (4) @[ sub? chp? meta? ] 
     out = channel chan!(int<32>)^1
       {
         [0] = bar.out[0] (5) 
-        [1] = bar.out[1] (6) 
+        [1] = bar.out[1] (6) @[ sub! chp! meta! ] 
       }
   )
   foo = process send_indexed<0>^0 = foo (1) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    index = channel chan?(int<1>)^0 = foo.index (1) 
+    index = channel chan?(int<1>)^0 = foo.index (1) @[ sub? chp? meta? ] 
     out = channel chan!(int<32>)^1
       {
-        [0] = foo.out[0] (2) 
+        [0] = foo.out[0] (2) @[ sub! chp! meta! ] 
         [1] = foo.out[1] (3) 
       }
   )
@@ -296,12 +296,12 @@ footprint: {
     channel: 4,5,6
     bool: 1,2
   channel instance pool: (0 ports, 6 local, 0 mapped)
-  1	foo.index	
-  2	foo.out[0]	
+  1	foo.index @[ sub? chp? meta? ]	
+  2	foo.out[0] @[ sub! chp! meta! ]	
   3	foo.out[1]	
-  4	bar.index	
+  4	bar.index @[ sub? chp? meta? ]	
   5	bar.out[0]	
-  6	bar.out[1]	
+  6	bar.out[1] @[ sub! chp! meta! ]	
   private sub-int index map:
     (1 -> 0)
     (2 -> 1)

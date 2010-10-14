@@ -134,10 +134,10 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = sink<>::!GND (1) @[ supply_low port-alias ] 
         !Vdd = bool^0 = sink<>::!Vdd (2) @[ supply_high port-alias ] 
-        X = channel chan??(bool<>)^0 = sink<>::X (1) 
+        X = channel chan??(bool<>)^0 = sink<>::X (1) @[ port! !! meta! chp? meta? ] 
         Created state:
         channel instance pool: (1 ports, 0 local, 0 mapped)
-        1	sink<>::X	
+        1	sink<>::X @[ port! !! meta! chp? meta? ]	
         bool instance pool: (2 ports, 0 local, 0 mapped)
         1	sink<>::!GND @[ supply_low port-alias ]	
         2	sink<>::!Vdd @[ supply_high port-alias ]	
@@ -174,10 +174,10 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = source<>::!GND (1) @[ supply_low port-alias ] 
         !Vdd = bool^0 = source<>::!Vdd (2) @[ supply_high port-alias ] 
-        X = channel chan!!(bool<>)^0 = source<>::X (1) 
+        X = channel chan!!(bool<>)^0 = source<>::X (1) @[ chp! meta! port? ?? meta? ] 
         Created state:
         channel instance pool: (1 ports, 0 local, 0 mapped)
-        1	source<>::X	
+        1	source<>::X @[ chp! meta! port? ?? meta? ]	
         bool instance pool: (2 ports, 0 local, 0 mapped)
         1	source<>::!GND @[ supply_low port-alias ]	
         2	source<>::!Vdd @[ supply_high port-alias ]	
@@ -202,26 +202,26 @@ In namespace "", we have: {
 footprint: {
   !GND = bool^0 = !GND (1) @[ supply_low ] 
   !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-  B = channel chan(bool<>)^0 = B (1) 
+  B = channel chan(bool<>)^0 = B (1) @[ !! sub! chp! meta! ?? sub? chp? meta? ] 
   S = process source<>^0 = S (1) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    X = channel chan!!(bool<>)^0 = B (1) 
+    X = channel chan!!(bool<>)^0 = B (1) @[ !! sub! chp! meta! ?? sub? chp? meta? ] 
   )
   T = process source<>^0 = T (2) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    X = channel chan!!(bool<>)^0 = B (1) 
+    X = channel chan!!(bool<>)^0 = B (1) @[ !! sub! chp! meta! ?? sub? chp? meta? ] 
   )
   Y = process sink<>^0 = Y (3) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    X = channel chan??(bool<>)^0 = B (1) 
+    X = channel chan??(bool<>)^0 = B (1) @[ !! sub! chp! meta! ?? sub? chp? meta? ] 
   )
   Z = process sink<>^0 = Z (4) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    X = channel chan??(bool<>)^0 = B (1) 
+    X = channel chan??(bool<>)^0 = B (1) @[ !! sub! chp! meta! ?? sub? chp? meta? ] 
   )
   Created state:
   process instance pool: (0 ports, 4 local, 0 mapped)
@@ -238,7 +238,7 @@ footprint: {
     channel: 1
     bool: 1,2
   channel instance pool: (0 ports, 1 local, 0 mapped)
-  1	B	
+  1	B @[ !! sub! chp! meta! ?? sub? chp? meta? ]	
   bool instance pool: (0 ports, 2 local, 0 mapped)
   1	!GND @[ supply_low ]	
   2	!Vdd @[ supply_high ]	

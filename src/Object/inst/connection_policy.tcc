@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/connection_policy.tcc"
-	$Id: connection_policy.tcc,v 1.13 2010/08/12 23:51:43 fang Exp $
+	$Id: connection_policy.tcc,v 1.14 2010/10/14 00:19:29 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CONNECTION_POLICY_TCC__
@@ -305,7 +305,8 @@ channel_connect_policy::initialize_direction(const AliasType& a,
 		ICE(cerr, cerr << "Invalid direction: " << d << endl;)
 	}
 #if ENABLE_STACKTRACE
-	c.dump_hierarchical_name(STACKTRACE_INDENT << "collection: ") << endl;
+	c.dump_hierarchical_name(STACKTRACE_INDENT << "collection: ", 
+		dump_flags::default_value) << endl;
 	STACKTRACE_INDENT_PRINT("direction_flags = 0x" <<
 		std::hex << size_t(direction_flags) << endl);
 #endif
@@ -387,7 +388,8 @@ channel_connect_policy::initialize_actual_direction(
 #if ENABLE_STACKTRACE
 	STACKTRACE_INDENT_PRINT("a.direction_flags = 0x" <<
 		std::hex << size_t(a.direction_flags) << endl);
-	c.dump_hierarchical_name(STACKTRACE_INDENT << "collection: ") << endl;
+	c.dump_hierarchical_name(STACKTRACE_INDENT << "collection: ",
+		dump_flags::default_value) << endl;
 	STACKTRACE_INDENT_PRINT("direction_flags = 0x" <<
 		std::hex << size_t(direction_flags) << endl);
 #endif
@@ -405,6 +407,7 @@ template <class AliasType>
 error_count
 channel_connect_policy::__check_connection(const AliasType& a) {
 	typedef	typename AliasType::traits_type		traits_type;
+	STACKTRACE_VERBOSE;
 	error_count ret;
 	const connection_flags_type f = a.direction_flags;
 	if (!(f & CONNECTED_TO_ANY_PRODUCER)) {

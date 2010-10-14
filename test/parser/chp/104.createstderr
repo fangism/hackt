@@ -190,23 +190,23 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = foo<>::!GND (1) @[ supply_low port-alias ] 
         !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high port-alias ] 
-        A = channel chan?(int<32>)^0 = foo<>::A (1) 
-        B = channel chan?(int<32>)^0 = foo<>::B (2) 
-        C = channel chan!(int<32>)^0 = foo<>::C (3) 
-        D = channel chan!(int<32>)^0 = foo<>::D (4) 
-        E = channel chan!(int<32>)^0 = foo<>::E (5) 
-        F = channel chan!(int<32>)^0 = foo<>::F (6) 
+        A = channel chan?(int<32>)^0 = foo<>::A (1) @[ port! meta! chp? meta? ] 
+        B = channel chan?(int<32>)^0 = foo<>::B (2) @[ port! meta! chp? meta? ] 
+        C = channel chan!(int<32>)^0 = foo<>::C (3) @[ chp! meta! port? meta? ] 
+        D = channel chan!(int<32>)^0 = foo<>::D (4) @[ chp! meta! port? meta? ] 
+        E = channel chan!(int<32>)^0 = foo<>::E (5) @[ chp! meta! port? meta? ] 
+        F = channel chan!(int<32>)^0 = foo<>::F (6) @[ chp! meta! port? meta? ] 
         a = int<32>^0 = foo<>::a (1) 
         b = int<32>^0 = foo<>::b (2) 
         z = int<32>^0 = foo<>::z (3) 
         Created state:
         channel instance pool: (6 ports, 0 local, 0 mapped)
-        1	foo<>::A	
-        2	foo<>::B	
-        3	foo<>::C	
-        4	foo<>::D	
-        5	foo<>::E	
-        6	foo<>::F	
+        1	foo<>::A @[ port! meta! chp? meta? ]	
+        2	foo<>::B @[ port! meta! chp? meta? ]	
+        3	foo<>::C @[ chp! meta! port? meta? ]	
+        4	foo<>::D @[ chp! meta! port? meta? ]	
+        5	foo<>::E @[ chp! meta! port? meta? ]	
+        6	foo<>::F @[ chp! meta! port? meta? ]	
         int instance pool: (0 ports, 3 local, 0 mapped)
         1	foo<>::a	
         2	foo<>::b	
@@ -258,12 +258,12 @@ footprint: {
   bar = process foo<>^0 = bar (1) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    A = channel chan?(int<32>)^0 = bar.A (1) 
-    B = channel chan?(int<32>)^0 = bar.B (2) 
-    C = channel chan!(int<32>)^0 = bar.C (3) 
-    D = channel chan!(int<32>)^0 = bar.D (4) 
-    E = channel chan!(int<32>)^0 = bar.E (5) 
-    F = channel chan!(int<32>)^0 = bar.F (6) 
+    A = channel chan?(int<32>)^0 = bar.A (1) @[ sub? chp? meta? ] 
+    B = channel chan?(int<32>)^0 = bar.B (2) @[ sub? chp? meta? ] 
+    C = channel chan!(int<32>)^0 = bar.C (3) @[ sub! chp! meta! ] 
+    D = channel chan!(int<32>)^0 = bar.D (4) @[ sub! chp! meta! ] 
+    E = channel chan!(int<32>)^0 = bar.E (5) @[ sub! chp! meta! ] 
+    F = channel chan!(int<32>)^0 = bar.F (6) @[ sub! chp! meta! ] 
   )
   Created state:
   process instance pool: (0 ports, 1 local, 0 mapped)
@@ -271,12 +271,12 @@ footprint: {
     channel: 1,2,3,4,5,6
     bool: 1,2
   channel instance pool: (0 ports, 6 local, 0 mapped)
-  1	bar.A	
-  2	bar.B	
-  3	bar.C	
-  4	bar.D	
-  5	bar.E	
-  6	bar.F	
+  1	bar.A @[ sub? chp? meta? ]	
+  2	bar.B @[ sub? chp? meta? ]	
+  3	bar.C @[ sub! chp! meta! ]	
+  4	bar.D @[ sub! chp! meta! ]	
+  5	bar.E @[ sub! chp! meta! ]	
+  6	bar.F @[ sub! chp! meta! ]	
   private sub-int index map:
     (1 -> 0)
     (2 -> 3)

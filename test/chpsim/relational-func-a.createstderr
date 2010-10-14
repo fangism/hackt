@@ -784,11 +784,11 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = bool_sink<>::!GND (1) @[ supply_low port-alias ] 
         !Vdd = bool^0 = bool_sink<>::!Vdd (2) @[ supply_high port-alias ] 
-        B = channel chan?(bool<>)^0 = bool_sink<>::B (1) 
+        B = channel chan?(bool<>)^0 = bool_sink<>::B (1) @[ port! meta! chp? meta? ] 
         b = bool^0 = bool_sink<>::b (3) 
         Created state:
         channel instance pool: (1 ports, 0 local, 0 mapped)
-        1	bool_sink<>::B	
+        1	bool_sink<>::B @[ port! meta! chp? meta? ]	
         bool instance pool: (2 ports, 1 local, 0 mapped)
         1	bool_sink<>::!GND @[ supply_low port-alias ]	
         2	bool_sink<>::!Vdd @[ supply_high port-alias ]	
@@ -980,11 +980,11 @@ In namespace "", we have: {
               2 = 30
             }
           N = pint^0 value: 3
-          S = channel chan!(int<32>)^0 = int_source<32, 3, {15,24,30}>::S (1) 
+          S = channel chan!(int<32>)^0 = int_source<32, 3, {15,24,30}>::S (1) @[ chp! meta! port? meta? ] 
           W = pint^0 value: 32
           Created state:
           channel instance pool: (1 ports, 0 local, 0 mapped)
-          1	int_source<32, 3, {15,24,30}>::S	
+          1	int_source<32, 3, {15,24,30}>::S @[ chp! meta! port? meta? ]	
           bool instance pool: (2 ports, 0 local, 0 mapped)
           1	int_source<32, 3, {15,24,30}>::!GND @[ supply_low port-alias ]	
           2	int_source<32, 3, {15,24,30}>::!Vdd @[ supply_high port-alias ]	
@@ -1013,11 +1013,11 @@ In namespace "", we have: {
               3 = 30
             }
           N = pint^0 value: 4
-          S = channel chan!(int<32>)^0 = int_source<32, 4, {12,15,17,30}>::S (1) 
+          S = channel chan!(int<32>)^0 = int_source<32, 4, {12,15,17,30}>::S (1) @[ chp! meta! port? meta? ] 
           W = pint^0 value: 32
           Created state:
           channel instance pool: (1 ports, 0 local, 0 mapped)
-          1	int_source<32, 4, {12,15,17,30}>::S	
+          1	int_source<32, 4, {12,15,17,30}>::S @[ chp! meta! port? meta? ]	
           bool instance pool: (2 ports, 0 local, 0 mapped)
           1	int_source<32, 4, {12,15,17,30}>::!GND @[ supply_low port-alias ]	
           2	int_source<32, 4, {12,15,17,30}>::!Vdd @[ supply_high port-alias ]	
@@ -1049,11 +1049,11 @@ In namespace "", we have: {
               4 = 34
             }
           N = pint^0 value: 5
-          S = channel chan!(int<32>)^0 = int_source<32, 5, {9,13,22,27,34}>::S (1) 
+          S = channel chan!(int<32>)^0 = int_source<32, 5, {9,13,22,27,34}>::S (1) @[ chp! meta! port? meta? ] 
           W = pint^0 value: 32
           Created state:
           channel instance pool: (1 ports, 0 local, 0 mapped)
-          1	int_source<32, 5, {9,13,22,27,34}>::S	
+          1	int_source<32, 5, {9,13,22,27,34}>::S @[ chp! meta! port? meta? ]	
           bool instance pool: (2 ports, 0 local, 0 mapped)
           1	int_source<32, 5, {9,13,22,27,34}>::!GND @[ supply_low port-alias ]	
           2	int_source<32, 5, {9,13,22,27,34}>::!Vdd @[ supply_high port-alias ]	
@@ -1088,11 +1088,11 @@ In namespace "", we have: {
               5 = 28
             }
           N = pint^0 value: 6
-          S = channel chan!(int<32>)^0 = int_source<32, 6, {16,18,20,32,36,28}>::S (1) 
+          S = channel chan!(int<32>)^0 = int_source<32, 6, {16,18,20,32,36,28}>::S (1) @[ chp! meta! port? meta? ] 
           W = pint^0 value: 32
           Created state:
           channel instance pool: (1 ports, 0 local, 0 mapped)
-          1	int_source<32, 6, {16,18,20,32,36,28}>::S	
+          1	int_source<32, 6, {16,18,20,32,36,28}>::S @[ chp! meta! port? meta? ]	
           bool instance pool: (2 ports, 0 local, 0 mapped)
           1	int_source<32, 6, {16,18,20,32,36,28}>::!GND @[ supply_low port-alias ]	
           2	int_source<32, 6, {16,18,20,32,36,28}>::!Vdd @[ supply_high port-alias ]	
@@ -1289,22 +1289,22 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = my_gcd<>::!GND (1) @[ supply_low port-alias ] 
         !Vdd = bool^0 = my_gcd<>::!Vdd (2) @[ supply_high port-alias ] 
-        A = channel chan?(int<32>)^0 = my_gcd<>::A (1) 
-        B = channel chan?(int<32>)^0 = my_gcd<>::B (2) 
-        C = channel chan?(int<32>)^0 = my_gcd<>::C (3) 
-        D = channel chan?(int<32>)^0 = my_gcd<>::D (4) 
-        G = channel chan!(bool<>)^0 = my_gcd<>::G (5) 
+        A = channel chan?(int<32>)^0 = my_gcd<>::A (1) @[ port! meta! chp? meta? ] 
+        B = channel chan?(int<32>)^0 = my_gcd<>::B (2) @[ port! meta! chp? meta? ] 
+        C = channel chan?(int<32>)^0 = my_gcd<>::C (3) @[ port! meta! chp? meta? ] 
+        D = channel chan?(int<32>)^0 = my_gcd<>::D (4) @[ port! meta! chp? meta? ] 
+        G = channel chan!(bool<>)^0 = my_gcd<>::G (5) @[ chp! meta! port? meta? ] 
         a = int<32>^0 = my_gcd<>::a (1) 
         b = int<32>^0 = my_gcd<>::b (2) 
         c = int<32>^0 = my_gcd<>::c (3) 
         d = int<32>^0 = my_gcd<>::d (4) 
         Created state:
         channel instance pool: (5 ports, 0 local, 0 mapped)
-        1	my_gcd<>::A	
-        2	my_gcd<>::B	
-        3	my_gcd<>::C	
-        4	my_gcd<>::D	
-        5	my_gcd<>::G	
+        1	my_gcd<>::A @[ port! meta! chp? meta? ]	
+        2	my_gcd<>::B @[ port! meta! chp? meta? ]	
+        3	my_gcd<>::C @[ port! meta! chp? meta? ]	
+        4	my_gcd<>::D @[ port! meta! chp? meta? ]	
+        5	my_gcd<>::G @[ chp! meta! port? meta? ]	
         int instance pool: (0 ports, 4 local, 0 mapped)
         1	my_gcd<>::a	
         2	my_gcd<>::b	
@@ -1452,44 +1452,44 @@ In namespace "", we have: {
 footprint: {
   !GND = bool^0 = !GND (1) @[ supply_low ] 
   !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-  A = channel chan(int<32>)^0 = A (1) 
+  A = channel chan(int<32>)^0 = A (1) @[ sub! chp! meta! sub? chp? meta? ] 
   AS = process int_source<32>^0<4, {12,15,17,30}> = AS (2) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    S = channel chan!(int<32>)^0 = A (1) 
+    S = channel chan!(int<32>)^0 = A (1) @[ sub! chp! meta! sub? chp? meta? ] 
   )
-  B = channel chan(int<32>)^0 = B (2) 
+  B = channel chan(int<32>)^0 = B (2) @[ sub! chp! meta! sub? chp? meta? ] 
   BS = process int_source<32>^0<5, {9,13,22,27,34}> = BS (3) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    S = channel chan!(int<32>)^0 = B (2) 
+    S = channel chan!(int<32>)^0 = B (2) @[ sub! chp! meta! sub? chp? meta? ] 
   )
-  C = channel chan(int<32>)^0 = C (3) 
+  C = channel chan(int<32>)^0 = C (3) @[ sub! chp! meta! sub? chp? meta? ] 
   CS = process int_source<32>^0<3, {15,24,30}> = CS (4) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    S = channel chan!(int<32>)^0 = C (3) 
+    S = channel chan!(int<32>)^0 = C (3) @[ sub! chp! meta! sub? chp? meta? ] 
   )
-  D = channel chan(int<32>)^0 = D (4) 
+  D = channel chan(int<32>)^0 = D (4) @[ sub! chp! meta! sub? chp? meta? ] 
   DS = process int_source<32>^0<6, {16,18,20,32,36,28}> = DS (5) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    S = channel chan!(int<32>)^0 = D (4) 
+    S = channel chan!(int<32>)^0 = D (4) @[ sub! chp! meta! sub? chp? meta? ] 
   )
-  G = channel chan(bool<>)^0 = G (5) 
+  G = channel chan(bool<>)^0 = G (5) @[ sub! chp! meta! sub? chp? meta? ] 
   GS = process bool_sink<>^0 = GS (6) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    B = channel chan?(bool<>)^0 = G (5) 
+    B = channel chan?(bool<>)^0 = G (5) @[ sub! chp! meta! sub? chp? meta? ] 
   )
   X = process my_gcd<>^0 = X (1) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    A = channel chan?(int<32>)^0 = A (1) 
-    B = channel chan?(int<32>)^0 = B (2) 
-    C = channel chan?(int<32>)^0 = C (3) 
-    D = channel chan?(int<32>)^0 = D (4) 
-    G = channel chan!(bool<>)^0 = G (5) 
+    A = channel chan?(int<32>)^0 = A (1) @[ sub! chp! meta! sub? chp? meta? ] 
+    B = channel chan?(int<32>)^0 = B (2) @[ sub! chp! meta! sub? chp? meta? ] 
+    C = channel chan?(int<32>)^0 = C (3) @[ sub! chp! meta! sub? chp? meta? ] 
+    D = channel chan?(int<32>)^0 = D (4) @[ sub! chp! meta! sub? chp? meta? ] 
+    G = channel chan!(bool<>)^0 = G (5) @[ sub! chp! meta! sub? chp? meta? ] 
   )
   Created state:
   process instance pool: (0 ports, 6 local, 0 mapped)
@@ -1512,11 +1512,11 @@ footprint: {
     channel: 5
     bool: 1,2
   channel instance pool: (0 ports, 5 local, 0 mapped)
-  1	A	
-  2	B	
-  3	C	
-  4	D	
-  5	G	
+  1	A @[ sub! chp! meta! sub? chp? meta? ]	
+  2	B @[ sub! chp! meta! sub? chp? meta? ]	
+  3	C @[ sub! chp! meta! sub? chp? meta? ]	
+  4	D @[ sub! chp! meta! sub? chp? meta? ]	
+  5	G @[ sub! chp! meta! sub? chp? meta? ]	
   private sub-int index map:
     (1 -> 0)
     (7 -> 4)

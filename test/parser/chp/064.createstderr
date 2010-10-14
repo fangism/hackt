@@ -148,15 +148,15 @@ In namespace "", we have: {
         <12> {
           !GND = bool^0 = adjacent_diff<12>::!GND (1) @[ supply_low port-alias ] 
           !Vdd = bool^0 = adjacent_diff<12>::!Vdd (2) @[ supply_high port-alias ] 
-          L = channel chan?(int<12>)^0 = adjacent_diff<12>::L (1) 
-          R = channel chan!(int<12>)^0 = adjacent_diff<12>::R (2) 
+          L = channel chan?(int<12>)^0 = adjacent_diff<12>::L (1) @[ port! meta! chp? meta? ] 
+          R = channel chan!(int<12>)^0 = adjacent_diff<12>::R (2) @[ chp! meta! port? meta? ] 
           W = pint^0 value: 12
           x = int<12>^0 = adjacent_diff<12>::x (1) 
           z = int<12>^0 = adjacent_diff<12>::z (2) 
           Created state:
           channel instance pool: (2 ports, 0 local, 0 mapped)
-          1	adjacent_diff<12>::L	
-          2	adjacent_diff<12>::R	
+          1	adjacent_diff<12>::L @[ port! meta! chp? meta? ]	
+          2	adjacent_diff<12>::R @[ chp! meta! port? meta? ]	
           int instance pool: (0 ports, 2 local, 0 mapped)
           1	adjacent_diff<12>::x	
           2	adjacent_diff<12>::z	
@@ -189,13 +189,13 @@ In namespace "", we have: {
 footprint: {
   !GND = bool^0 = !GND (1) @[ supply_low ] 
   !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-  A = channel chan(int<12>)^0 = A (1) 
-  B = channel chan(int<12>)^0 = B (2) 
+  A = channel chan(int<12>)^0 = A (1) @[ sub? chp? meta? ] 
+  B = channel chan(int<12>)^0 = B (2) @[ sub! chp! meta! ] 
   differ = process adjacent_diff<12>^0 = differ (1) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    L = channel chan?(int<12>)^0 = A (1) 
-    R = channel chan!(int<12>)^0 = B (2) 
+    L = channel chan?(int<12>)^0 = A (1) @[ sub? chp? meta? ] 
+    R = channel chan!(int<12>)^0 = B (2) @[ sub! chp! meta! ] 
   )
   Created state:
   process instance pool: (0 ports, 1 local, 0 mapped)
@@ -203,8 +203,8 @@ footprint: {
     channel: 1,2
     bool: 1,2
   channel instance pool: (0 ports, 2 local, 0 mapped)
-  1	A	
-  2	B	
+  1	A @[ sub? chp? meta? ]	
+  2	B @[ sub! chp! meta! ]	
   private sub-int index map:
     (1 -> 0)
     (2 -> 2)

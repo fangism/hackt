@@ -175,7 +175,7 @@ In namespace "", we have: {
           !Vdd = bool^0 = send_indexed<0, 0>::!Vdd (2) @[ supply_high port-alias ] 
           I = pint^0 value: 0
           J = pint^0 value: 0
-          out = channel chan!(int<32>)^0 = send_indexed<0, 0>::out (1) 
+          out = channel chan!(int<32>)^0 = send_indexed<0, 0>::out (1) @[ chp! meta! port? meta? ] 
           x = pint^1
             unrolled index-value pairs: {
               0 = 1
@@ -183,7 +183,7 @@ In namespace "", we have: {
             }
           Created state:
           channel instance pool: (1 ports, 0 local, 0 mapped)
-          1	send_indexed<0, 0>::out	
+          1	send_indexed<0, 0>::out @[ chp! meta! port? meta? ]	
           bool instance pool: (2 ports, 0 local, 0 mapped)
           1	send_indexed<0, 0>::!GND @[ supply_low port-alias ]	
           2	send_indexed<0, 0>::!Vdd @[ supply_high port-alias ]	
@@ -200,7 +200,7 @@ In namespace "", we have: {
           !Vdd = bool^0 = send_indexed<0, 1>::!Vdd (2) @[ supply_high port-alias ] 
           I = pint^0 value: 0
           J = pint^0 value: 1
-          out = channel chan!(int<32>)^0 = send_indexed<0, 1>::out (1) 
+          out = channel chan!(int<32>)^0 = send_indexed<0, 1>::out (1) @[ chp! meta! port? meta? ] 
           x = pint^1
             unrolled index-value pairs: {
               0 = 1
@@ -208,7 +208,7 @@ In namespace "", we have: {
             }
           Created state:
           channel instance pool: (1 ports, 0 local, 0 mapped)
-          1	send_indexed<0, 1>::out	
+          1	send_indexed<0, 1>::out @[ chp! meta! port? meta? ]	
           bool instance pool: (2 ports, 0 local, 0 mapped)
           1	send_indexed<0, 1>::!GND @[ supply_low port-alias ]	
           2	send_indexed<0, 1>::!Vdd @[ supply_high port-alias ]	
@@ -225,7 +225,7 @@ In namespace "", we have: {
           !Vdd = bool^0 = send_indexed<1, 0>::!Vdd (2) @[ supply_high port-alias ] 
           I = pint^0 value: 1
           J = pint^0 value: 0
-          out = channel chan!(int<32>)^0 = send_indexed<1, 0>::out (1) 
+          out = channel chan!(int<32>)^0 = send_indexed<1, 0>::out (1) @[ chp! meta! port? meta? ] 
           x = pint^1
             unrolled index-value pairs: {
               0 = 1
@@ -233,7 +233,7 @@ In namespace "", we have: {
             }
           Created state:
           channel instance pool: (1 ports, 0 local, 0 mapped)
-          1	send_indexed<1, 0>::out	
+          1	send_indexed<1, 0>::out @[ chp! meta! port? meta? ]	
           bool instance pool: (2 ports, 0 local, 0 mapped)
           1	send_indexed<1, 0>::!GND @[ supply_low port-alias ]	
           2	send_indexed<1, 0>::!Vdd @[ supply_high port-alias ]	
@@ -250,7 +250,7 @@ In namespace "", we have: {
           !Vdd = bool^0 = send_indexed<1, 1>::!Vdd (2) @[ supply_high port-alias ] 
           I = pint^0 value: 1
           J = pint^0 value: 1
-          out = channel chan!(int<32>)^0 = send_indexed<1, 1>::out (1) 
+          out = channel chan!(int<32>)^0 = send_indexed<1, 1>::out (1) @[ chp! meta! port? meta? ] 
           x = pint^1
             unrolled index-value pairs: {
               0 = 1
@@ -258,7 +258,7 @@ In namespace "", we have: {
             }
           Created state:
           channel instance pool: (1 ports, 0 local, 0 mapped)
-          1	send_indexed<1, 1>::out	
+          1	send_indexed<1, 1>::out @[ chp! meta! port? meta? ]	
           bool instance pool: (2 ports, 0 local, 0 mapped)
           1	send_indexed<1, 1>::!GND @[ supply_low port-alias ]	
           2	send_indexed<1, 1>::!Vdd @[ supply_high port-alias ]	
@@ -288,22 +288,22 @@ footprint: {
   bar = process send_indexed<1, 1>^0 = bar (4) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    out = channel chan!(int<32>)^0 = bar.out (4) 
+    out = channel chan!(int<32>)^0 = bar.out (4) @[ sub! chp! meta! ] 
   )
   foo = process send_indexed<0, 0>^0 = foo (1) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    out = channel chan!(int<32>)^0 = foo.out (1) 
+    out = channel chan!(int<32>)^0 = foo.out (1) @[ sub! chp! meta! ] 
   )
   ick = process send_indexed<0, 1>^0 = ick (2) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    out = channel chan!(int<32>)^0 = ick.out (2) 
+    out = channel chan!(int<32>)^0 = ick.out (2) @[ sub! chp! meta! ] 
   )
   poo = process send_indexed<1, 0>^0 = poo (3) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    out = channel chan!(int<32>)^0 = poo.out (3) 
+    out = channel chan!(int<32>)^0 = poo.out (3) @[ sub! chp! meta! ] 
   )
   Created state:
   process instance pool: (0 ports, 4 local, 0 mapped)
@@ -320,10 +320,10 @@ footprint: {
     channel: 4
     bool: 1,2
   channel instance pool: (0 ports, 4 local, 0 mapped)
-  1	foo.out	
-  2	ick.out	
-  3	poo.out	
-  4	bar.out	
+  1	foo.out @[ sub! chp! meta! ]	
+  2	ick.out @[ sub! chp! meta! ]	
+  3	poo.out @[ sub! chp! meta! ]	
+  4	bar.out @[ sub! chp! meta! ]	
   bool instance pool: (0 ports, 2 local, 0 mapped)
   1	!GND @[ supply_low ]	
   2	!Vdd @[ supply_high ]	

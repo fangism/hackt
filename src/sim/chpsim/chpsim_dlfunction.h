@@ -3,7 +3,7 @@
 	This is the primary header to include for linking chpsim
 	to dlopened libraries.  
 	Try not to include other headers explicitly.  
-	$Id: chpsim_dlfunction.h,v 1.5 2010/09/21 00:18:40 fang Exp $
+	$Id: chpsim_dlfunction.h,v 1.6 2010/10/14 00:19:29 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_CHPSIM_DLFUNCTION_H__
@@ -35,6 +35,7 @@ using HAC::entity::make_meta_value;
 	Declare an object that auto-loads the named function on construction.
 	The function name is retained, not wrapped.  
 	Part of public interface for 'advanced' users.
+	This is most useful for declaring variadic functions, like printf.
  */
 #define	REGISTER_DLFUNCTION_RAW(key, fname)				\
 static const chp_function_registrar					\

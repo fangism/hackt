@@ -139,11 +139,11 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = chp_bool_sink<>::!GND (1) @[ supply_low port-alias ] 
         !Vdd = bool^0 = chp_bool_sink<>::!Vdd (2) @[ supply_high port-alias ] 
-        S = channel chan?(bool<>)^0 = chp_bool_sink<>::S (1) 
+        S = channel chan?(bool<>)^0 = chp_bool_sink<>::S (1) @[ port! meta! chp? meta? ] 
         x = bool^0 = chp_bool_sink<>::x (3) 
         Created state:
         channel instance pool: (1 ports, 0 local, 0 mapped)
-        1	chp_bool_sink<>::S	
+        1	chp_bool_sink<>::S @[ port! meta! chp? meta? ]	
         bool instance pool: (2 ports, 1 local, 0 mapped)
         1	chp_bool_sink<>::!GND @[ supply_low port-alias ]	
         2	chp_bool_sink<>::!Vdd @[ supply_high port-alias ]	
@@ -191,10 +191,10 @@ In namespace "", we have: {
           !GND = bool^0 = chp_bool_source<true>::!GND (1) @[ supply_low port-alias ] 
           !Vdd = bool^0 = chp_bool_source<true>::!Vdd (2) @[ supply_high port-alias ] 
           B = pbool^0 value: 1
-          S = channel chan!(bool<>)^0 = chp_bool_source<true>::S (1) 
+          S = channel chan!(bool<>)^0 = chp_bool_source<true>::S (1) @[ chp! meta! port? meta? ] 
           Created state:
           channel instance pool: (1 ports, 0 local, 0 mapped)
-          1	chp_bool_source<true>::S	
+          1	chp_bool_source<true>::S @[ chp! meta! port? meta? ]	
           bool instance pool: (2 ports, 0 local, 0 mapped)
           1	chp_bool_source<true>::!GND @[ supply_low port-alias ]	
           2	chp_bool_source<true>::!Vdd @[ supply_high port-alias ]	
@@ -220,16 +220,16 @@ In namespace "", we have: {
 footprint: {
   !GND = bool^0 = !GND (1) @[ supply_low ] 
   !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-  B = channel chan(bool<>)^0 = B (1) 
+  B = channel chan(bool<>)^0 = B (1) @[ sub! chp! meta! sub? chp? meta? ] 
   b = process chp_bool_sink<>^0 = b (2) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    S = channel chan?(bool<>)^0 = B (1) 
+    S = channel chan?(bool<>)^0 = B (1) @[ sub! chp! meta! sub? chp? meta? ] 
   )
   s = process chp_bool_source<true>^0 = s (1) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    S = channel chan!(bool<>)^0 = B (1) 
+    S = channel chan!(bool<>)^0 = B (1) @[ sub! chp! meta! sub? chp? meta? ] 
   )
   Created state:
   process instance pool: (0 ports, 2 local, 0 mapped)
@@ -240,7 +240,7 @@ footprint: {
     channel: 1
     bool: 1,2
   channel instance pool: (0 ports, 1 local, 0 mapped)
-  1	B	
+  1	B @[ sub! chp! meta! sub? chp? meta? ]	
   bool instance pool: (0 ports, 2 local, 1 mapped)
   1	!GND @[ supply_low ]	
   2	!Vdd @[ supply_high ]	

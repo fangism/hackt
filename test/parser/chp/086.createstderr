@@ -180,10 +180,10 @@ In namespace "", we have: {
         !Vdd = bool^0 = send_indexed<>::!Vdd (2) @[ supply_high port-alias ] 
         index = channel chan?(int<1>)^1
           {
-            [0] = send_indexed<>::index[0] (2) 
-            [1] = send_indexed<>::index[1] (3) 
+            [0] = send_indexed<>::index[0] (2) @[ port! meta! chp? meta? ] 
+            [1] = send_indexed<>::index[1] (3) @[ port! meta! chp? meta? ] 
           }
-        out = channel chan!(int<32>)^0 = send_indexed<>::out (1) 
+        out = channel chan!(int<32>)^0 = send_indexed<>::out (1) @[ chp! meta! port? meta? ] 
         x = pint^2
           unrolled index-value pairs: {
             [0][0] = 1
@@ -195,9 +195,9 @@ In namespace "", we have: {
         z = int<1>^0 = send_indexed<>::z (2) 
         Created state:
         channel instance pool: (3 ports, 0 local, 0 mapped)
-        1	send_indexed<>::out	
-        2	send_indexed<>::index[0]	
-        3	send_indexed<>::index[1]	
+        1	send_indexed<>::out @[ chp! meta! port? meta? ]	
+        2	send_indexed<>::index[0] @[ port! meta! chp? meta? ]	
+        3	send_indexed<>::index[1] @[ port! meta! chp? meta? ]	
         int instance pool: (0 ports, 2 local, 0 mapped)
         1	send_indexed<>::y	
         2	send_indexed<>::z	
@@ -238,10 +238,10 @@ footprint: {
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
     index = channel chan?(int<1>)^1
       {
-        [0] = foo.index[0] (1) 
-        [1] = foo.index[1] (2) 
+        [0] = foo.index[0] (1) @[ sub? chp? meta? ] 
+        [1] = foo.index[1] (2) @[ sub? chp? meta? ] 
       }
-    out = channel chan!(int<32>)^0 = foo.out (3) 
+    out = channel chan!(int<32>)^0 = foo.out (3) @[ sub! chp! meta! ] 
   )
   Created state:
   process instance pool: (0 ports, 1 local, 0 mapped)
@@ -249,9 +249,9 @@ footprint: {
     channel: 3,1,2
     bool: 1,2
   channel instance pool: (0 ports, 3 local, 0 mapped)
-  1	foo.index[0]	
-  2	foo.index[1]	
-  3	foo.out	
+  1	foo.index[0] @[ sub? chp? meta? ]	
+  2	foo.index[1] @[ sub? chp? meta? ]	
+  3	foo.out @[ sub! chp! meta! ]	
   private sub-int index map:
     (1 -> 0)
     (2 -> 2)

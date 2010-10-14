@@ -102,11 +102,11 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = boring<>::!GND (1) @[ supply_low port-alias ] 
         !Vdd = bool^0 = boring<>::!Vdd (2) @[ supply_high port-alias ] 
-        B = channel chan(bool<>)^0 = boring<>::B (1) 
+        B = channel chan(bool<>)^0 = boring<>::B (1) @[ chp! meta! chp? meta? ] 
         x = bool^0 = boring<>::x (3) 
         Created state:
         channel instance pool: (1 ports, 0 local, 0 mapped)
-        1	boring<>::B	
+        1	boring<>::B @[ chp! meta! chp? meta? ]	
         bool instance pool: (2 ports, 1 local, 0 mapped)
         1	boring<>::!GND @[ supply_low port-alias ]	
         2	boring<>::!Vdd @[ supply_high port-alias ]	
@@ -138,7 +138,7 @@ footprint: {
   lecture = process boring<>^0 = lecture (1) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    B = channel chan(bool<>)^0 = lecture.B (1) 
+    B = channel chan(bool<>)^0 = lecture.B (1) @[ chp! meta! chp? meta? ] 
   )
   Created state:
   process instance pool: (0 ports, 1 local, 0 mapped)
@@ -146,7 +146,7 @@ footprint: {
     channel: 1
     bool: 1,2
   channel instance pool: (0 ports, 1 local, 0 mapped)
-  1	lecture.B	
+  1	lecture.B @[ chp! meta! chp? meta? ]	
   bool instance pool: (0 ports, 2 local, 1 mapped)
   1	!GND @[ supply_low ]	
   2	!Vdd @[ supply_high ]	

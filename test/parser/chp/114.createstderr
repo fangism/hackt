@@ -162,18 +162,18 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = split_bool_soup<>::!GND (1) @[ supply_low port-alias ] 
         !Vdd = bool^0 = split_bool_soup<>::!Vdd (2) @[ supply_high port-alias ] 
-        A = channel chan?(bool<>)^0 = split_bool_soup<>::A (1) 
-        B = channel chan?(bool<>)^0 = split_bool_soup<>::B (2) 
-        G = channel chan?(bool<>)^0 = split_bool_soup<>::G (3) 
-        Z = channel chan!(bool<>)^0 = split_bool_soup<>::Z (4) 
+        A = channel chan?(bool<>)^0 = split_bool_soup<>::A (1) @[ port! meta! chp? meta? ] 
+        B = channel chan?(bool<>)^0 = split_bool_soup<>::B (2) @[ port! meta! chp? meta? ] 
+        G = channel chan?(bool<>)^0 = split_bool_soup<>::G (3) @[ port! meta! chp? meta? ] 
+        Z = channel chan!(bool<>)^0 = split_bool_soup<>::Z (4) @[ chp! meta! port? meta? ] 
         g = bool^0 = split_bool_soup<>::g (3) 
         x = bool^0 = split_bool_soup<>::x (4) 
         Created state:
         channel instance pool: (4 ports, 0 local, 0 mapped)
-        1	split_bool_soup<>::A	
-        2	split_bool_soup<>::B	
-        3	split_bool_soup<>::G	
-        4	split_bool_soup<>::Z	
+        1	split_bool_soup<>::A @[ port! meta! chp? meta? ]	
+        2	split_bool_soup<>::B @[ port! meta! chp? meta? ]	
+        3	split_bool_soup<>::G @[ port! meta! chp? meta? ]	
+        4	split_bool_soup<>::Z @[ chp! meta! port? meta? ]	
         bool instance pool: (2 ports, 2 local, 0 mapped)
         1	split_bool_soup<>::!GND @[ supply_low port-alias ]	
         2	split_bool_soup<>::!Vdd @[ supply_high port-alias ]	
@@ -221,10 +221,10 @@ footprint: {
   Z = process split_bool_soup<>^0 = Z (1) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    A = channel chan?(bool<>)^0 = Z.A (1) 
-    B = channel chan?(bool<>)^0 = Z.B (2) 
-    G = channel chan?(bool<>)^0 = Z.G (3) 
-    Z = channel chan!(bool<>)^0 = Z.Z (4) 
+    A = channel chan?(bool<>)^0 = Z.A (1) @[ sub? chp? meta? ] 
+    B = channel chan?(bool<>)^0 = Z.B (2) @[ sub? chp? meta? ] 
+    G = channel chan?(bool<>)^0 = Z.G (3) @[ sub? chp? meta? ] 
+    Z = channel chan!(bool<>)^0 = Z.Z (4) @[ sub! chp! meta! ] 
   )
   Created state:
   process instance pool: (0 ports, 1 local, 0 mapped)
@@ -232,10 +232,10 @@ footprint: {
     channel: 1,2,3,4
     bool: 1,2
   channel instance pool: (0 ports, 4 local, 0 mapped)
-  1	Z.A	
-  2	Z.B	
-  3	Z.G	
-  4	Z.Z	
+  1	Z.A @[ sub? chp? meta? ]	
+  2	Z.B @[ sub? chp? meta? ]	
+  3	Z.G @[ sub? chp? meta? ]	
+  4	Z.Z @[ sub! chp! meta! ]	
   bool instance pool: (0 ports, 2 local, 2 mapped)
   1	!GND @[ supply_low ]	
   2	!Vdd @[ supply_high ]	

@@ -115,22 +115,22 @@ footprint: {
   !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
   X = channel chan(bool<>)^1
     {
-      [0] = X[0] (3) 
-      [1] = X[1] (4) 
-      [2] = X[2] (5) 
-      [3] = X[0] (3) 
+      [0] = X[0] (3) @[ chp? ~meta? ] 
+      [1] = X[1] (4) @[ chp? ~meta? ] 
+      [2] = X[2] (5) @[ chp? ~meta? ] 
+      [3] = X[0] (3) @[ chp? ~meta? ] 
     }
-  Y = channel chan(bool<>)^0 = Y (1) 
-  Z = channel chan(int<2>)^0 = Z (2) 
+  Y = channel chan(bool<>)^0 = Y (1) @[ chp? meta? ] 
+  Z = channel chan(int<2>)^0 = Z (2) @[ chp? meta? ] 
   b = bool^0 = b (3) 
   i = int<2>^0 = i (1) 
   Created state:
   channel instance pool: (0 ports, 5 local, 0 mapped)
-  1	Y	
-  2	Z	
-  3	X[0]	
-  4	X[1]	
-  5	X[2]	
+  1	Y @[ chp? meta? ]	
+  2	Z @[ chp? meta? ]	
+  3	X[0] @[ chp? ~meta? ]	
+  4	X[1] @[ chp? ~meta? ]	
+  5	X[2] @[ chp? ~meta? ]	
   int instance pool: (0 ports, 1 local, 0 mapped)
   1	i	
   bool instance pool: (0 ports, 3 local, 0 mapped)

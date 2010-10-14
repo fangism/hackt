@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/connection_policy.h"
 	Specializations for connections in the HAC language. 
-	$Id: connection_policy.h,v 1.18 2010/08/24 22:52:03 fang Exp $
+	$Id: connection_policy.h,v 1.19 2010/10/14 00:19:28 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CONNECTION_POLICY_H__
@@ -551,6 +551,7 @@ public:
 		DEFAULT_CONNECT_FLAGS = 0x0000
 	};
 protected:
+	static const char*			attribute_names[];
 	connection_flags_type		direction_flags;
 public:
 	channel_connect_policy() :
@@ -608,9 +609,16 @@ public:
 	// only for non-directional channels?
 	// forward_local_to_external_flags(...);
 
-	// nothing yet, TODO: print out summary of connection state?
+	bool
+	has_nondefault_attributes(void) const {
+		return direction_flags != DEFAULT_CONNECT_FLAGS;
+	}
+
 	ostream&
-	dump_attributes(ostream& o) const { return o; }
+	dump_flat_attributes(ostream&) const;
+
+	ostream&
+	dump_attributes(ostream&) const;
 
 	ostream&
 	dump_explicit_attributes(ostream& o) const { return o; }

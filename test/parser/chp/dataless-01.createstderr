@@ -117,10 +117,10 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = clack<>::!GND (1) @[ supply_low port-alias ] 
         !Vdd = bool^0 = clack<>::!Vdd (2) @[ supply_high port-alias ] 
-        Y = channel chan?()^0 = clack<>::Y (1) 
+        Y = channel chan?()^0 = clack<>::Y (1) @[ port! meta! chp? meta? ] 
         Created state:
         channel instance pool: (1 ports, 0 local, 0 mapped)
-        1	clack<>::Y	
+        1	clack<>::Y @[ port! meta! chp? meta? ]	
         bool instance pool: (2 ports, 0 local, 0 mapped)
         1	clack<>::!GND @[ supply_low port-alias ]	
         2	clack<>::!Vdd @[ supply_high port-alias ]	
@@ -157,10 +157,10 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = click<>::!GND (1) @[ supply_low port-alias ] 
         !Vdd = bool^0 = click<>::!Vdd (2) @[ supply_high port-alias ] 
-        X = channel chan!()^0 = click<>::X (1) 
+        X = channel chan!()^0 = click<>::X (1) @[ chp! meta! port? meta? ] 
         Created state:
         channel instance pool: (1 ports, 0 local, 0 mapped)
-        1	click<>::X	
+        1	click<>::X @[ chp! meta! port? meta? ]	
         bool instance pool: (2 ports, 0 local, 0 mapped)
         1	click<>::!GND @[ supply_low port-alias ]	
         2	click<>::!Vdd @[ supply_high port-alias ]	
@@ -186,14 +186,14 @@ footprint: {
   A = process click<>^0 = A (1) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    X = channel chan!()^0 = Z (1) 
+    X = channel chan!()^0 = Z (1) @[ sub! chp! meta! sub? chp? meta? ] 
   )
   B = process clack<>^0 = B (2) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    Y = channel chan?()^0 = Z (1) 
+    Y = channel chan?()^0 = Z (1) @[ sub! chp! meta! sub? chp? meta? ] 
   )
-  Z = channel chan()^0 = Z (1) 
+  Z = channel chan()^0 = Z (1) @[ sub! chp! meta! sub? chp? meta? ] 
   Created state:
   process instance pool: (0 ports, 2 local, 0 mapped)
   1	A	click<>
@@ -203,7 +203,7 @@ footprint: {
     channel: 1
     bool: 1,2
   channel instance pool: (0 ports, 1 local, 0 mapped)
-  1	Z	
+  1	Z @[ sub! chp! meta! sub? chp? meta? ]	
   bool instance pool: (0 ports, 2 local, 0 mapped)
   1	!GND @[ supply_low ]	
   2	!Vdd @[ supply_high ]	

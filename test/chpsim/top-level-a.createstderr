@@ -114,11 +114,11 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = wa<>::!GND (1) @[ supply_low port-alias ] 
         !Vdd = bool^0 = wa<>::!Vdd (2) @[ supply_high port-alias ] 
-        TX = channel chan(int<32>)^0 = wa<>::TX (1) 
+        TX = channel chan(int<32>)^0 = wa<>::TX (1) @[ chp! meta! chp? meta? ] 
         x = int<32>^0 = wa<>::x (1) 
         Created state:
         channel instance pool: (1 ports, 0 local, 0 mapped)
-        1	wa<>::TX	
+        1	wa<>::TX @[ chp! meta! chp? meta? ]	
         int instance pool: (0 ports, 1 local, 0 mapped)
         1	wa<>::x	
         bool instance pool: (2 ports, 0 local, 0 mapped)
@@ -152,7 +152,7 @@ footprint: {
   w = process wa<>^0 = w (1) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    TX = channel chan(int<32>)^0 = w.TX (1) 
+    TX = channel chan(int<32>)^0 = w.TX (1) @[ chp! meta! chp? meta? ] 
   )
   Created state:
   process instance pool: (0 ports, 1 local, 0 mapped)
@@ -160,7 +160,7 @@ footprint: {
     channel: 1
     bool: 1,2
   channel instance pool: (0 ports, 1 local, 0 mapped)
-  1	w.TX	
+  1	w.TX @[ chp! meta! chp? meta? ]	
   private sub-int index map:
     (1 -> 0)
     (2 -> 1)

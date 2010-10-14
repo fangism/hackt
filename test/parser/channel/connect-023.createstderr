@@ -86,16 +86,16 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = forward<>::!GND (1) @[ supply_low port-alias ] 
         !Vdd = bool^0 = forward<>::!Vdd (2) @[ supply_high port-alias ] 
-        x = channel chan?(bool<>)^0 = forward<>::x (1) 
-        y = channel chan!(bool<>)^0 = forward<>::x (1) 
+        x = channel chan?(bool<>)^0 = forward<>::x (1) @[ port! meta! port? meta? ] 
+        y = channel chan!(bool<>)^0 = forward<>::x (1) @[ port! meta! port? meta? ] 
         Created state:
         channel instance pool: (1 ports, 0 local, 0 mapped)
-        1	forward<>::x	
+        1	forward<>::x @[ port! meta! port? meta? ]	
         bool instance pool: (2 ports, 0 local, 0 mapped)
         1	forward<>::!GND @[ supply_low port-alias ]	
         2	forward<>::!Vdd @[ supply_high port-alias ]	
         channel port aliases:
-        1: forward<>::x = forward<>::y
+        1: forward<>::x = forward<>::y @[ port! meta! port? meta? ]
       }
       }
 
@@ -111,8 +111,8 @@ footprint: {
   march = process forward<>^0 = march (1) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    x = channel chan?(bool<>)^0 = march.x (1) 
-    y = channel chan!(bool<>)^0 = march.x (1) 
+    x = channel chan?(bool<>)^0 = march.x (1) @[ port! sub! meta! port? sub? meta? ] 
+    y = channel chan!(bool<>)^0 = march.x (1) @[ port! sub! meta! port? sub? meta? ] 
   )
   Created state:
   process instance pool: (0 ports, 1 local, 0 mapped)
@@ -120,7 +120,7 @@ footprint: {
     channel: 1
     bool: 1,2
   channel instance pool: (0 ports, 1 local, 0 mapped)
-  1	march.x	
+  1	march.x @[ port! sub! meta! port? sub? meta? ]	
   bool instance pool: (0 ports, 2 local, 0 mapped)
   1	!GND @[ supply_low ]	
   2	!Vdd @[ supply_high ]	
