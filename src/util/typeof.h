@@ -1,7 +1,7 @@
 /**
 	\file "util/typeof.h"
 	Hopefully-portable wrapper to use typeof() operator.
-	$Id: typeof.h,v 1.2 2010/09/21 00:18:42 fang Exp $
+	$Id: typeof.h,v 1.3 2010/10/23 23:49:01 fang Exp $
  */
 #ifndef	__UTIL_TYPEOF_H__
 #define	__UTIL_TYPEOF_H__
@@ -15,7 +15,7 @@
 #elif	defined(HAVE_DECLTYPE)
 #define	TYPEOF				decltype
 #else
-#error	"Unable to find support for a typeof-like opeartor."
+#error	"Unable to find support for a typeof-like operator."
 #endif
 
 #endif	// __UTIL_TYPEOF_H__

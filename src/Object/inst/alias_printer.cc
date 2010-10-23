@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/alias_printer.cc"
-	$Id: alias_printer.cc,v 1.13 2010/09/16 06:31:44 fang Exp $
+	$Id: alias_printer.cc,v 1.14 2010/10/23 23:49:00 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -196,11 +196,11 @@ if (!cf.check_prs) {
 	// exclude local bool private aliases that are aliased to port
 	if (// accept_deep_alias(a, f)
 		is_top || 
-		!a.get_supermost_collection()->get_placeholder_base()->is_port_formal()
+		(!a.get_supermost_collection()->get_placeholder_base()->is_port_formal()
 		&& (!((a.instance_index <=
 			f.get_instance_pool<bool_tag>().port_entries())
 				&& !a.is_port_alias())
-			|| any_hierarchical_parent_is_aliased_to_port(a, f))
+			|| any_hierarchical_parent_is_aliased_to_port(a, f)))
 		) {
 		ostringstream ass;
 		a.dump_hierarchical_name(ass, cf.__dump_flags);

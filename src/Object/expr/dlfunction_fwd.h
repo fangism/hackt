@@ -1,7 +1,7 @@
 /**
 	\file "Object/expr/dlfunction_fwd.h"
 	Forward declarations of types. 
-	$Id: dlfunction_fwd.h,v 1.3 2010/09/21 00:18:14 fang Exp $
+	$Id: dlfunction_fwd.h,v 1.4 2010/10/23 23:49:00 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_DLFUNCTION_FWD_H__
@@ -28,7 +28,7 @@ typedef	const_param_expr_list		meta_function_argument_list_type;
 typedef	meta_function_return_type
         (meta_function_type)(const meta_function_argument_list_type&);
 // using pointer-class will guarantee that value is at least NULL-initialized
-typedef	never_ptr<const meta_function_type>	meta_function_ptr_type;
+typedef	never_ptr<meta_function_type>	meta_function_ptr_type;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // CHP functions use the exact same
