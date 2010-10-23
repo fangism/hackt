@@ -1,0 +1,6 @@
+Warning: channel acknowledge `Z.e' has no fanin!
+Warning: channel validity `Z.v' has no fanout, but is being sourced.
+Warning: channel validity `Z.v' has no fanin.
+X nodes:
+
+channel Z: data is neutral, waiting for receiver to neg-ack

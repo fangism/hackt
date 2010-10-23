@@ -1,0 +1,7 @@
+// "channel-test-l.hac"
+import "channel-test-k.hac";
+
+// rail aliasing between bundles!
+Z.b[0] = Z.b[2];
+// hacprsim won't like this
+

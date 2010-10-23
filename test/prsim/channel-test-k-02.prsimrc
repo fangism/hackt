@@ -1,0 +1,12 @@
+# "channel-test-k-02.prsimrc"
+# @haco@ channel-test-k.haco-c
+
+source channel-test-k-01.prsimrc
+channel-source-args Z 5 4 3 2 1 0
+channel-sink Z
+
+channel-reset-all
+cycle
+status X
+channel-get Z
+

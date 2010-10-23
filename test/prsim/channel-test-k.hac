@@ -1,0 +1,7 @@
+// "channel-test-k.hac"
+import "../../lib/channel.hac";
+
+typedef	evMx1ofN<2,3>	ev3x1of2;
+
+ev3x1of2 Z;
+

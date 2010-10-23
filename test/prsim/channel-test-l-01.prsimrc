@@ -1,0 +1,6 @@
+# "channel-test-l-01.prsimrc"
+# @haco@ channel-test-l.haco-c
+
+echo expect channel rail alias error...
+source channel-test-k-01.prsimrc
+

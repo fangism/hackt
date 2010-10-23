@@ -1,0 +1,6 @@
+expect channel rail alias error... 
+Error: channels rails are forbidden from aliasing (implementation limitation).
+Aliased channel rail: Z.b[2].d[0]
+... at line 4
+Error encountered during source #FILE#.
+... at line 5

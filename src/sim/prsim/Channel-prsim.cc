@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Channel-prsim.cc"
-	$Id: Channel-prsim.cc,v 1.36 2010/08/26 21:00:48 fang Exp $
+	$Id: Channel-prsim.cc,v 1.37 2010/10/23 00:24:21 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -2390,6 +2390,9 @@ if (ack_signal) {
 	\param new_events is where new events from the environment
 		should be staged.  
 	\throw exception if there is an expected value mismatch.
+	TODO: we current forbid aliases between rails, 
+	but it is conceivable to process each node for every repeated 
+	occurrence in the rail set (future).  
  */
 void
 channel::process_node(const State& s, const node_index_type ni, 
@@ -3106,6 +3109,7 @@ if (i.second) {
 	c.set_data_sense(active_low);
 #endif
 	// allocate data rail references:
+	set<size_t> rail_aliases;
 	channel::data_rail_index_type dk;
 	dk[0] = num_bundles;
 	dk[1] = num_rails;
@@ -3138,6 +3142,15 @@ if (i.second) {
 				c.__node_to_rail[ni] = dk;
 				// lookup from node to channels
 				node_channels_map[ni].insert(key);
+				// check for rail uniqueness
+				if (!rail_aliases.insert(ni).second) {
+					cerr <<
+"Error: channels rails are forbidden from aliasing (implementation limitation)."
+						<< endl;
+					cerr << "Aliased channel rail: "
+						<< n.str() << endl;
+					return true;
+				}
 			} else {
 				cerr << "Error: no such node `" << n.str() <<
 					"\' in channel." << endl;

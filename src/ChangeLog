@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-10-22	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-32:
+	  hacprsim: safeguard against ill-effects of aliasing data-rails
+		in prsim channels by rejecting them with a diagnostic.
+	  Added test cases.
+
+
 2010-10-13	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-31:
