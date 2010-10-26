@@ -1,5 +1,5 @@
 dnl "config/hackt.m4"
-dnl	$Id: hackt.m4,v 1.18 2010/03/11 18:39:14 fang Exp $
+dnl	$Id: hackt.m4,v 1.19 2010/10/26 04:24:02 fang Exp $
 dnl
 dnl This file is for autoconf macros specific to HACKT.
 dnl General-purpose macros should be based in other m4 files.  
@@ -337,6 +337,9 @@ dnl which is expected to contain subdirs include/, lib/
 dnl Often times, this will be some architecture-dependent path.
 dnl Also checks for vcs compiler
 dnl
+dnl TODO: make a different version for each vpi interface to build against
+dnl e.g. vcs, ultrasim, iverilog, etc...
+dnl
 dnl @category ProjectSpecific
 dnl @version 2007-12-17
 dnl @author David Fang
@@ -345,6 +348,8 @@ dnl
 AC_DEFUN([HACKT_ARG_WITH_VPI],
 [AC_ARG_WITH(vpi,
 [[  --with-vpi[=PATH]       Verilog HDL PLI library]])
+if test -n "$with_vpi"
+then
 vpi_include="-I$with_vpi/include"
 vpi_ldpath="-L$with_vpi/lib"
 saved_CPPFLAGS="$CPPFLAGS"
@@ -355,6 +360,8 @@ if test x"$ac_cv_header_vpi_user_h" = "xyes"
 then
 	VPI_INCLUDE="$vpi_include"
 	VPI_LDPATH="$vpi_ldpath"
+fi
+dnl else don't bother checking for vpi_user.h
 fi
 AM_CONDITIONAL(HAVE_VPI, test "$VPI_INCLUDE")
 AC_SUBST(VPI_INCLUDE)
