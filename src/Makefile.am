@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.246 2010/09/21 00:18:05 fang Exp $
+#	$Id: Makefile.am,v 1.247 2010/10/27 00:43:22 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -86,7 +86,7 @@ private_PROGRAMS = cast_test
 
 cast_test_SOURCES = test/cast_test.cc 
 cast_test_CXXFLAGS = -Wno-long-long
-cast_test_LDADD = libhacktsim.la
+cast_test_LDADD = libhacktlib.la
 
 cast_test_static_SOURCES = $(cast_test_SOURCES)
 cast_test_static_CXXFLAGS = $(cast_test_CXXFLAGS)
