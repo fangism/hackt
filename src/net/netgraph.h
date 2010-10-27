@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.h"
-	$Id: netgraph.h,v 1.19 2010/09/24 21:47:00 fang Exp $
+	$Id: netgraph.h,v 1.20 2010/10/27 00:16:53 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETGRAPH_H__
@@ -378,12 +378,23 @@ struct node {
 	bool
 	is_logical_node(void) const { return type == NODE_TYPE_LOGICAL; }
 
+	// named internal node
 	bool
 	is_internal_node(void) const { return type == NODE_TYPE_INTERNAL; }
 
 	// true if ndoe is automatically generated
 	bool
 	is_auxiliary_node(void) const { return type == NODE_TYPE_AUXILIARY; }
+
+	// at the end of a transistor stack
+	bool
+	is_stack_end_node(void) const {
+		return is_logical_node() || is_internal_node();
+	}
+	bool
+	is_stack_int_node(void) const {
+		return !is_stack_end_node();
+	}
 
 	bool
 	is_supply_node(void) const {

@@ -2,7 +2,7 @@
 	"channel.hac"
 	Standard channel definitions in HAC.  
 	Q: place these in some namespace?  std::channel?
-	$Id: channel.hac,v 1.11 2008/12/23 01:51:30 fang Exp $
+	$Id: channel.hac,v 1.12 2010/10/27 00:16:50 fang Exp $
  */
 
 /*** e1of<N> definitions ********************************/
@@ -161,8 +161,8 @@ typedef	ev1of<8>	ev1of8;
 	Active-low acknowledge is e.  
 	Active-low request (completion) is n.
  */
-template <pint N>
-defchan en1of <: chan(int) (bool d[N], e, n)
+template <pint R>
+defchan en1of <: chan(int) (bool d[R], e, n)
 {
 spec {
 	exclhi(d)
@@ -205,8 +205,8 @@ typedef	av1of<8>	av1of8;
 	Active-high acknowledge is a.  
 	Active-low request (completion) is n.
  */
-template <pint N>
-defchan an1of <: chan(int) (bool d[N], a, n)
+template <pint R>
+defchan an1of <: chan(int) (bool d[R], a, n)
 {
 spec {
 	exclhi(d)
@@ -226,13 +226,33 @@ typedef	an1of<8>	an1of8;
 
 
 /*** <M>x1of<N> definitions ********************************/
-template <pint N,M>
-defchan eMx1ofN <: chan(int) (c1of<N> b[M]; bool e)
+template <pint R,M>
+defchan eMx1ofN <: chan(int) (c1of<R> b[M]; bool e)
 {
 }
 
-template <pint N,M>
-defchan aMx1ofN <: chan(int) (c1of<N> b[M]; bool a)
+template <pint R,M>
+defchan aMx1ofN <: chan(int) (c1of<R> b[M]; bool a)
+{
+}
+
+template <pint R,M>
+defchan evMx1ofN <: chan(int) (c1of<R> b[M]; bool e, v)
+{
+}
+
+template <pint R,M>
+defchan avMx1ofN <: chan(int) (c1of<R> b[M]; bool a, v)
+{
+}
+
+template <pint R,M>
+defchan enMx1ofN <: chan(int) (c1of<R> b[M]; bool e, n)
+{
+}
+
+template <pint R,M>
+defchan anMx1ofN <: chan(int) (c1of<R> b[M]; bool a, n)
 {
 }
 

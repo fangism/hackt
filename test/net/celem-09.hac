@@ -1,0 +1,9 @@
+// "celem-09.hac"
+// @hacknet-flags@ -f unknown_option=ignore -C tsmc65-equiv.netgen-conf -f emit_parasitics=1 -f fet_perimeter_gate_edge=0
+// @deps@ tsmc65-equiv.netgen-conf
+// without gate edge in parasitic perimeters
+
+import "celem-07.hac";
+
+celem foo;
+

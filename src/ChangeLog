@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2010-10-26	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-33:
+	  hacknet: added support for more optimistic parasitic perimiter
+		values, subtracting out gate edges.
+		option: -f fet_perimeter_gate_edge
+			default: 1, override: 0
+	  Added new test case.  Updated documentation.
+
+
 2010-10-22	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-32:

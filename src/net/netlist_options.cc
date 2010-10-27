@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_options.cc"
-	$Id: netlist_options.cc,v 1.19 2010/09/24 21:47:00 fang Exp $
+	$Id: netlist_options.cc,v 1.20 2010/10/27 00:16:54 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -101,6 +101,7 @@ netlist_options::netlist_options() :
 		fet_spacing_diffonly(4.0),
 		reserved_names(), 
 		emit_parasitics(false),
+		fet_perimeter_gate_edge(true),
 		nested_subcircuits(false),
 		empty_subcircuits(false),
 		unused_ports(false),
@@ -1403,6 +1404,8 @@ DEFINE_OPTION_DEFAULT(emit_parasitics, "emit_parasitics",
 @defopt fet_diff_overhang (real)
 When computing parasitics, this is the length of diffusion overhang 
 past the end of the drawn transistor, in lambda.
+Typically, this value comes from the minimum diffusion overhang rule
+in your process's DRC rule deck.  
 Default: 6.0
 @end defopt
 @end texinfo
@@ -1415,12 +1418,31 @@ DEFINE_OPTION_DEFAULT(fet_diff_overhang, "fet_diff_overhang",
 @defopt fet_spacing_diffonly (real)
 When computing parasitics, this is the length of diffusion between
 adjoining transistors, in lambda.  
+For the purpose of computing parasitic capacitances on shared nodes, 
+this value should actually be @emph{half} of the minimum spacing between 
+stacked transistors according to your technology's DRC rule deck.
+This effectively assigns half of the diffusion area to the
+device on either side.  
 Default: 4.0
 @end defopt
 @end texinfo
 ***/
 DEFINE_OPTION_DEFAULT(fet_spacing_diffonly, "fet_spacing_diffonly",
 	"diffusion spacing between gates in lambda")
+
+/***
+@texinfo config/fet_perimeter_gate_edge.texi
+@defopt fet_perimeter_gate_edge (bool)
+When estimating parasitics, when this is true, include the
+gate edge of the rectangle when estimating perimeter values
+for parasitic capacitances.  Including the gate edge length
+results in increased capacitance, which can be pessimistic.
+Default: 1
+@end defopt
+@end texinfo
+***/
+DEFINE_OPTION_DEFAULT(fet_perimeter_gate_edge, "fet_perimeter_gate_edge",
+	"in/exclude gate edge length in parasitic perimeters")
 
 /***
 @texinfo config/config_file.texi

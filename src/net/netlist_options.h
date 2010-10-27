@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_options.h"
-	$Id: netlist_options.h,v 1.15 2010/09/24 21:47:00 fang Exp $
+	$Id: netlist_options.h,v 1.16 2010/10/27 00:16:54 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETLIST_OPTIONS_H__
@@ -195,6 +195,12 @@ struct netlist_options {
 		If true, emit area/perimeter of source/drain diffusions.
 	 */
 	bool				emit_parasitics;
+	/**
+		If true, parasitic perimieter estimation includes gate-edge, 
+		otherwise, subtracts out.  
+		Default true, for compatibility with netgen.
+	 */
+	bool				fet_perimeter_gate_edge;
 	/**
 		Emit nested subcircuits.
 		If true, print internal subcircuits locally to

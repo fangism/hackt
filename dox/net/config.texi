@@ -1,5 +1,5 @@
 @c "config.texi"
-@c $Id: config.texi,v 1.11 2010/09/24 21:46:58 fang Exp $
+@c $Id: config.texi,v 1.12 2010/10/27 00:16:50 fang Exp $
 
 @c ****************************************************************************
 @node Configuration Options
@@ -46,6 +46,7 @@ The following options are related to transistor parasitics.
 @cindex parasitics
 
 @include config/emit_parasitics.texi
+@include config/fet_perimeter_gate_edge.texi
 @include config/fet_diff_overhang.texi
 @include config/fet_spacing_diffonly.texi
 

@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.cc"
-	$Id: netgraph.cc,v 1.25 2010/09/24 21:46:59 fang Exp $
+	$Id: netgraph.cc,v 1.26 2010/10/27 00:16:53 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -634,17 +634,29 @@ transistor::emit(ostream& o, const index_type di,
 	o << " W=" << width *nopt.lambda << nopt.length_unit <<
 		" L=" << length *nopt.lambda << nopt.length_unit;
 	if (nopt.emit_parasitics) {
+		// compute and emit parasitic area/perimeter values
+		const bool pge = nopt.fet_perimeter_gate_edge;
 		const real_type lsq = nopt.lambda * nopt.lambda;
 		const real_type l2 = nopt.lambda * 2.0;
-		const real_type& sl(s.is_logical_node() || s.is_supply_node() ?
+		const bool s_ext = s.is_stack_end_node();
+		const bool d_ext = d.is_stack_end_node();
+		const real_type& sl(s_ext ?
 			nopt.fet_diff_overhang : nopt.fet_spacing_diffonly);
-		const real_type& dl(d.is_logical_node() || d.is_supply_node() ?
+		const real_type& dl(d_ext ?
 			nopt.fet_diff_overhang : nopt.fet_spacing_diffonly);
 		nopt.line_continue(o);
-		o <<	" AS=" << width * sl * lsq << nopt.area_unit <<
-			" PS=" << (width + sl) *l2 << nopt.length_unit <<
-			" AD=" << width * dl * lsq << nopt.area_unit <<
-			" PD=" << (width + dl) *l2 << nopt.length_unit;
+		const real_type asv = width * sl * lsq;
+		const real_type psv = pge ? (width + sl) *l2 :	// all sides
+			(s_ext ? (width*nopt.lambda + sl*l2)	// 3 sides
+				: (sl * l2));			// 2 sides
+		const real_type adv = width * dl * lsq;
+		const real_type pdv = pge ? (width + dl) *l2 :	// all sides
+			(d_ext ? (width*nopt.lambda + dl*l2)	// 3 sides
+				: (dl * l2));			// 2 sides
+		o <<	" AS=" << asv << nopt.area_unit <<
+			" PS=" << psv << nopt.length_unit <<
+			" AD=" << adv << nopt.area_unit <<
+			" PD=" << pdv << nopt.length_unit;
 	}
 	return o;
 }
