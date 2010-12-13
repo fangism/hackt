@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.78 2010/09/23 00:19:52 fang Exp $
+	$Id: Command-prsim.cc,v 1.79 2010/12/13 23:26:28 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -6366,6 +6366,62 @@ if (a.size() != 1) {
 	return Command::NORMAL;
 }
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_CHANNEL_SIGNED
+/***
+@texinfo cmd/channel-signed.texi
+@deffn Command channel-signed chan
+@deffnx Command channel-unsigned chan
+By default, bundled channels are interpreted as unsigned numbers.
+@command{channel-signed} indicates that @var{chan} should be interpreted
+and displayed as signed values.  
+Signedness is only applicable to binary (radix-2) channels with more 
+than one bit; 
+non-radix-2 channels are always interpreted as unsigned, 
+and single bit channels are always unsigned (0 or 1).  
+It is generally recommended to declare the signedness of a channel
+immedately after declaring it, and before any values are interpreted.
+@end deffn
+@end texinfo
+***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(ChannelSigned, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(ChannelUnsigned, instance_completer)
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelSigned, "channel-signed", 
+	channels, "interpret data rails as signed (radix-2 only)")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelUnsigned, "channel-unsigned", 
+	channels, "interpret data rails as unsigned")
+
+int
+ChannelSigned::main(State& s, const string_list& a) {
+	return standard_channel_command_main(s, a,
+		&channel::set_signed, usage);
+}
+
+int
+ChannelUnsigned::main(State& s, const string_list& a) {
+	return standard_channel_command_main(s, a,
+		&channel::set_unsigned, usage);
+}
+
+void
+ChannelSigned::usage(ostream& o) {
+	o << name << " <channel>" << endl;
+	o <<
+"Configures a channel to display and interpret data rails as signed binary \n"
+"integer values.  Only applicable to radix-2 channels."
+		<< endl;
+}
+
+void
+ChannelUnsigned::usage(ostream& o) {
+	o << name << " <channel>" << endl;
+	o <<
+"Configures a channel to display and interpret data rails as unsigned binary \n"
+"integer values."
+		<< endl;
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***

@@ -1,0 +1,41 @@
+testing bundled channels 
+X : .e(init:1)  2x1of2 signed off
+	count: 0, unknowns: 4
+All subnodes of 'X':
+X.b[0].d[0] : 0
+X.b[0].d[1] : 0
+X.b[1].d[0] : 0
+X.b[1].d[1] : 0
+X.e : 1
+	10	X.b[0].d[0] : 1
+channel	X (.data) : 0 @ 10
+channel X has value 0, as expected.
+	10	X.b[1].d[0] : 1
+	20	X.e : 0	[by X.b[1].d[0]:=1]
+	20	X.b[0].d[0] : 0
+	20	X.b[1].d[0] : 0
+	30	X.e : 1	[by X.b[1].d[0]:=0]
+	30	X.b[0].d[1] : 1
+channel	X (.data) : 1 @ 30
+channel X has value 1, as expected.
+	30	X.b[1].d[0] : 1
+	40	X.e : 0	[by X.b[1].d[0]:=1]
+	40	X.b[0].d[1] : 0
+	40	X.b[1].d[0] : 0
+	50	X.e : 1	[by X.b[1].d[0]:=0]
+	50	X.b[0].d[1] : 1
+channel	X (.data) : -1 @ 50
+channel X has value -1, as expected.
+	50	X.b[1].d[1] : 1
+	60	X.e : 0	[by X.b[1].d[1]:=1]
+	60	X.b[0].d[1] : 0
+	60	X.b[1].d[1] : 0
+	70	X.e : 1	[by X.b[1].d[1]:=0]
+	70	X.b[0].d[0] : 1
+channel	X (.data) : -2 @ 70
+channel X has value -2, as expected.
+	70	X.b[1].d[1] : 1
+	80	X.e : 0	[by X.b[1].d[1]:=1]
+	80	X.b[0].d[0] : 0
+	80	X.b[1].d[1] : 0
+	90	X.e : 1	[by X.b[1].d[1]:=0]

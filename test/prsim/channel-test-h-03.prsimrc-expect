@@ -1,0 +1,6 @@
+testing bundled channels 
+X : .e(init:1)  2x1of2 signed off
+	count: 0, unknowns: 4
+Warning: channel acknowledge `X.e' has no fanin!
+X : .e(init:1)  2x1of2 signed source, timing: global {0,1,-1,-2,1,1,0,-2,-1,} @0
+	count: 0, unknowns: 4

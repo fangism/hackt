@@ -1,0 +1,9 @@
+# "channel-test-h-06.prsimrc"
+# @haco@ channel-test-h.haco-c
+
+# should print warning about signedness
+source channel-test-h-02.prsimrc
+channel-source-args X -4 -3 -2 -1 0 1 2 3 4 5
+# expect to warn: values out of range
+channel-show X
+

@@ -1,0 +1,9 @@
+testing bundled channels 
+X : .e(init:1)  2x1of2 unsigned off
+	count: 0, unknowns: 4
+Warning: value 5 exceeds the maximum value encoded, 3.
+Higher significant bits may be ignored.
+Warning: value 4 exceeds the maximum value encoded, 3.
+Higher significant bits may be ignored.
+Error: invalid value: -1.
+... at line 6

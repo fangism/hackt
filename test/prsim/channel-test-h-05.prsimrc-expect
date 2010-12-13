@@ -1,0 +1,5 @@
+testing bundled channels 
+X : .e(init:1)  2x1of2 unsigned off
+	count: 0, unknowns: 4
+X : .e(init:1)  2x1of2 unsigned expect {0,1,2,3,3,1,2,3,0,1,1,0,2,} @0
+	count: 0, unknowns: 4

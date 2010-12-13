@@ -1,0 +1,10 @@
+channels:
+X : .e(init:0)  1x1of2 off
+Y : .e(init:1)  1x1of4 off
+Z : .a(init:0)  1x1of3 off
+Warning: ignoring attempt to treat non-radix-2 values as signed,
+instead leaving as unsigned.  (Only wide radix-2 channels can be signed.)
+Warning: ignoring attempt to treat non-radix-2 values as signed,
+instead leaving as unsigned.  (Only wide radix-2 channels can be signed.)
+Warning: ignoring attempt to treat non-radix-2 values as signed,
+instead leaving as unsigned.  (Only wide radix-2 channels can be signed.)

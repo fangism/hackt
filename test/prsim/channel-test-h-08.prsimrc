@@ -1,0 +1,48 @@
+# "channel-test-h-08.prsimrc"
+# @haco@ channel-test-h.haco-c
+
+# should print warning about signedness
+source channel-test-h-03.prsimrc
+set X.e 1
+channel-reset-all
+cycle
+
+getall X
+channel-release-all
+watchall
+channel-watchall
+cycle
+set X.e 0
+cycle
+set X.e 1
+cycle
+set X.e 0
+cycle
+set X.e 1
+cycle
+set X.e 0
+cycle
+set X.e 1
+cycle
+set X.e 0
+cycle
+set X.e 1
+cycle
+set X.e 0
+cycle
+set X.e 1
+cycle
+set X.e 0
+cycle
+set X.e 1
+cycle
+set X.e 0
+cycle
+set X.e 1
+cycle
+set X.e 0
+cycle
+set X.e 1
+cycle
+set X.e 0
+cycle

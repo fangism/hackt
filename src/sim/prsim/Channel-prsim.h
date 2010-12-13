@@ -6,7 +6,7 @@
 	Define a channel type map to make automatic!
 	auto-channel (based on consumer/producer connectivity), 
 	top-level only!
-	$Id: Channel-prsim.h,v 1.25 2010/06/08 00:48:42 fang Exp $
+	$Id: Channel-prsim.h,v 1.26 2010/12/13 23:26:28 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_CHANNEL_H__
@@ -75,8 +75,17 @@
 	The first new channel type we support is LEDR.
 	Next could be single-track.
 	Goal: 1
+	Status: done for LEDR channels, just not bundled
  */
 #define	PRSIM_CHANNEL_LEDR			1
+
+/**
+	Define to 1 to interpret channel values as signed.
+	Each channel can be independently configured as signed or unsigned.
+	Goal: 1
+	Status: done, somewhat tested
+ */
+#define	PRSIM_CHANNEL_SIGNED			1
 
 namespace HAC {
 namespace SIM {
@@ -217,11 +226,15 @@ public:
 		to translate values to rails without worrying about negatives.  
 	 */
 	typedef	util::numeric::unsigned_type<int_value_type>::type
-						value_type;
+						unsigned_value_type;
+	typedef	util::numeric::signed_type<int_value_type>::type
+						signed_value_type;
+	typedef	unsigned_value_type			value_type;
 	/**
 		Values kept by the array.  
 		Pair implementation to support don't cares.  
 		Second member bool is true means don't care for expects.  
+		Signage doesn't matter for storing values, cast-OK.  
 		Define to struct to be able to overload ostream& operator <<
 	 */
 	struct array_value_type : public std::pair<value_type, bool> { };
@@ -308,6 +321,14 @@ private:
 			as values are exhausted.
 		 */
 		CHANNEL_STOP_ON_EMPTY = 	0x1000,
+#if PRSIM_CHANNEL_SIGNED
+		/**
+			Set to true to interpret and report channel
+			values as signed.
+			By default, values are unsigned.
+		 */
+		CHANNEL_SIGNED =		0x2000,
+#endif
 		/// default initial value
 		CHANNEL_DEFAULT_FLAGS = 	0x0000
 	};
@@ -437,6 +458,11 @@ public:
 
 	value_type
 	max_value(void) const;
+
+#if PRSIM_CHANNEL_SIGNED
+	signed_value_type
+	min_value(void) const;
+#endif
 
 private:
 	bool
@@ -677,6 +703,26 @@ public:
 		return flags & CHANNEL_STOP_ON_EMPTY;
 	}
 
+#if PRSIM_CHANNEL_SIGNED
+	bool
+	can_be_signed(void) const {
+		return (radix() == 2) && (bundles() > 1);
+	}
+
+	void
+	set_signed(void);
+
+	void
+	set_unsigned(void) {
+		flags &= ~CHANNEL_SIGNED;
+	}
+
+	bool
+	is_signed(void) const {
+		return flags & CHANNEL_SIGNED;
+	}
+#endif
+
 private:
 	bool
 	__configure_source(const State&, const bool);
@@ -684,6 +730,11 @@ private:
 	void
 	__configure_expect(const bool);
 
+	bool
+	read_values_from_list(const string_list&);
+
+	bool
+	read_values_from_file(const string&);
 
 public:
 	bool
@@ -736,6 +787,10 @@ public:
 
 	value_type
 	data_rails_value(const State&) const;
+
+	// handles signed case
+	ostream&
+	print_data_value(ostream&, const value_type) const;
 
 	bool
 	may_drive_node(const node_index_type) const;
@@ -830,6 +885,10 @@ private:
 private:
 // don't bother passing ostream& to these assert functions for now
 	bool
+	__assert_channel_value(const value_type& expect, 
+		const value_type& got, const bool confirm) const;
+
+	bool
 	__assert_value(const status_summary&, const value_type&, 
 		const bool) const;
 
@@ -858,8 +917,10 @@ private:
 
 };	// end class channel
 
+#if !PRSIM_CHANNEL_SIGNED
 ostream&
 operator << (ostream&, const channel::array_value_type&);
+#endif
 
 //=============================================================================
 // wrap these into a channel_manager?

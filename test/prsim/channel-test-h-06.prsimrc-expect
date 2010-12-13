@@ -1,0 +1,18 @@
+testing bundled channels 
+X : .e(init:1)  2x1of2 signed off
+	count: 0, unknowns: 4
+Warning: channel acknowledge `X.e' has no fanin!
+Warning: value -4 exceeds the minimum value encoded, -2.
+Higher significant bits may be ignored.
+Warning: value -3 exceeds the minimum value encoded, -2.
+Higher significant bits may be ignored.
+Warning: value 2 exceeds the maximum value encoded, 1.
+Higher significant bits may be ignored.
+Warning: value 3 exceeds the maximum value encoded, 1.
+Higher significant bits may be ignored.
+Warning: value 4 exceeds the maximum value encoded, 1.
+Higher significant bits may be ignored.
+Warning: value 5 exceeds the maximum value encoded, 1.
+Higher significant bits may be ignored.
+X : .e(init:1)  2x1of2 signed source, timing: global {-4,-3,-2,-1,0,1,2,3,4,5,} @0
+	count: 0, unknowns: 4

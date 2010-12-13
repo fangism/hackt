@@ -1,0 +1,8 @@
+# "channel-test-h-05.prsimrc"
+# @haco@ channel-test-h.haco-c
+
+# should print warning about signedness
+source channel-test-h-04.prsimrc
+channel-expect-args X 5 4 3 2 1 0 -1 -2 -3 -4
+channel-show X
+

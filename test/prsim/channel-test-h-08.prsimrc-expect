@@ -1,0 +1,74 @@
+testing bundled channels 
+X : .e(init:1)  2x1of2 signed off
+	count: 0, unknowns: 4
+Warning: channel acknowledge `X.e' has no fanin!
+X : .e(init:1)  2x1of2 signed source, timing: global {0,1,-1,-2,1,1,0,-2,-1,} @0
+	count: 0, unknowns: 4
+All subnodes of 'X':
+X.b[0].d[0] : 0
+X.b[0].d[1] : 0
+X.b[1].d[0] : 0
+X.b[1].d[1] : 0
+X.e : 1
+	20	X.b[0].d[0] : 1
+channel	X (.data) : 0 @ 20
+	20	X.b[1].d[0] : 1
+	20	X.e : 0
+	30	X.b[0].d[0] : 0	[by X.e:=0]
+	30	X.b[1].d[0] : 0	[by X.e:=0]
+	30	X.e : 1
+	40	X.b[0].d[1] : 1	[by X.e:=1]
+channel	X (.data) : 1 @ 40
+	40	X.b[1].d[0] : 1	[by X.e:=1]
+	40	X.e : 0
+	50	X.b[0].d[1] : 0	[by X.e:=0]
+	50	X.b[1].d[0] : 0	[by X.e:=0]
+	50	X.e : 1
+	60	X.b[0].d[1] : 1	[by X.e:=1]
+channel	X (.data) : -1 @ 60
+	60	X.b[1].d[1] : 1	[by X.e:=1]
+	60	X.e : 0
+	70	X.b[0].d[1] : 0	[by X.e:=0]
+	70	X.b[1].d[1] : 0	[by X.e:=0]
+	70	X.e : 1
+	80	X.b[0].d[0] : 1	[by X.e:=1]
+channel	X (.data) : -2 @ 80
+	80	X.b[1].d[1] : 1	[by X.e:=1]
+	80	X.e : 0
+	90	X.b[0].d[0] : 0	[by X.e:=0]
+	90	X.b[1].d[1] : 0	[by X.e:=0]
+	90	X.e : 1
+	100	X.b[0].d[1] : 1	[by X.e:=1]
+channel	X (.data) : 1 @ 100
+	100	X.b[1].d[0] : 1	[by X.e:=1]
+	100	X.e : 0
+	110	X.b[0].d[1] : 0	[by X.e:=0]
+	110	X.b[1].d[0] : 0	[by X.e:=0]
+	110	X.e : 1
+	120	X.b[0].d[1] : 1	[by X.e:=1]
+channel	X (.data) : 1 @ 120
+	120	X.b[1].d[0] : 1	[by X.e:=1]
+	120	X.e : 0
+	130	X.b[0].d[1] : 0	[by X.e:=0]
+	130	X.b[1].d[0] : 0	[by X.e:=0]
+	130	X.e : 1
+	140	X.b[0].d[0] : 1	[by X.e:=1]
+channel	X (.data) : 0 @ 140
+	140	X.b[1].d[0] : 1	[by X.e:=1]
+	140	X.e : 0
+	150	X.b[0].d[0] : 0	[by X.e:=0]
+	150	X.b[1].d[0] : 0	[by X.e:=0]
+	150	X.e : 1
+	160	X.b[0].d[0] : 1	[by X.e:=1]
+channel	X (.data) : -2 @ 160
+	160	X.b[1].d[1] : 1	[by X.e:=1]
+	160	X.e : 0
+	170	X.b[0].d[0] : 0	[by X.e:=0]
+	170	X.b[1].d[1] : 0	[by X.e:=0]
+	170	X.e : 1
+	180	X.b[0].d[1] : 1	[by X.e:=1]
+channel	X (.data) : -1 @ 180
+	180	X.b[1].d[1] : 1	[by X.e:=1]
+	180	X.e : 0
+	190	X.b[0].d[1] : 0	[by X.e:=0]
+	190	X.b[1].d[1] : 0	[by X.e:=0]

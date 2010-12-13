@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.118 2010/10/23 00:24:22 fang Exp $
+#	$Id: Makefile.am,v 1.119 2010/12/13 23:26:29 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -225,6 +225,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	channel-test-a-39 channel-test-a-40 \
 	channel-test-a-41 channel-test-a-42 \
 	channel-test-a-43 channel-test-a-44 channel-test-a-45 \
+	channel-test-a-46 \
 	channel-test-b-01 channel-test-b-02 channel-test-b-03 \
 	channel-test-b-04 channel-test-b-05 channel-test-b-06 \
 	channel-test-b-07 channel-test-b-08 \
@@ -261,7 +262,9 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	channel-test-g-01 channel-test-g-02 channel-test-g-03 \
 	channel-test-g-04 channel-test-g-05 channel-test-g-06 \
 	channel-test-g-07 \
-	channel-test-h-01 \
+	channel-test-h-01 channel-test-h-02 channel-test-h-03 \
+	channel-test-h-04 channel-test-h-05 channel-test-h-06 \
+	channel-test-h-08 channel-test-h-09 \
 	channel-test-i-01 channel-test-i-02 \
 	channel-test-j-01 channel-test-j-02 \
 	channel-test-k-01 channel-test-k-02 \
@@ -545,6 +548,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
 	channel-test-d-21 \
 	channel-test-e-03 channel-test-e-04 \
 	channel-test-f-03 channel-test-f-04 \
+	channel-test-h-07 \
 	channel-test-l-01 \
 	channel-test-non-QDI-a-02 \
 	channel-assert-a-02 channel-assert-a-03 channel-assert-a-04 \

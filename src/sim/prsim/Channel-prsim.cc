@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Channel-prsim.cc"
-	$Id: Channel-prsim.cc,v 1.37 2010/10/23 00:24:21 fang Exp $
+	$Id: Channel-prsim.cc,v 1.38 2010/12/13 23:26:28 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -168,7 +168,8 @@ channel_exception::inspect(const State& s, ostream& o) const {
 		// chan->current_iteration(); // may have already advanced
 	}
 	o << "]." << endl;
-	o << "\texpected: " << expect << ", got: " << got << endl;
+	chan->print_data_value(o << "\texpected: ", expect);
+	chan->print_data_value(o << ", got: ", got) << endl;
 	return s.get_channel_expect_fail_policy();
 }
 
@@ -301,6 +302,10 @@ channel::alias_data_rails(const node_index_type ni) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !PRSIM_CHANNEL_SIGNED
+/**
+	This printer is always unsigned.
+ */
 ostream&
 operator << (ostream& o, const channel::array_value_type& p) {
 	if (p.second) {
@@ -309,6 +314,36 @@ operator << (ostream& o, const channel::array_value_type& p) {
 		return o << p.first;
 	}
 }
+#endif
+
+#if PRSIM_CHANNEL_SIGNED
+class channel_data_dumper {
+//	public std::iterator<std::output_iterator_tag, void, void, void, void>
+	typedef	channel_data_dumper		this_type;
+	ostream&		os;
+	const bool		is_signed;
+	const char*		delim;
+
+public:
+	channel_data_dumper(ostream& o, bool s, const char* d) :
+		os(o), is_signed(s), delim(d) { }
+
+	ostream&
+	operator () (const channel::array_value_type& p) {
+		if (p.second) {
+			os << 'X';
+		} else {
+			if (is_signed) {
+				os << channel::signed_value_type(p.first);
+			} else {
+				os << p.first;
+			}
+		}
+		return os << delim;
+	}
+
+};	// end struct channel_data_dumper
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -355,6 +390,13 @@ default:
 	DIE;
 }	// end switch
 #endif	// PRSIM_CHANNEL_LEDR
+#if PRSIM_CHANNEL_SIGNED
+	if (can_be_signed()) {
+		if (is_signed())
+			o << " signed";
+		else	o << " unsigned";
+	}
+#endif
 	// print internal node IDs? names?
 	bool something = false;
 	o << ' ';
@@ -400,8 +442,13 @@ if (is_sinking() || is_sourcing()) {
 	if (have_value() &&
 			((is_sourcing() && !is_random()) || is_expecting())) {
 		o << " {";
-		copy(values.begin(), values.end(), 
+#if PRSIM_CHANNEL_SIGNED
+		for_each(values.begin(), values.end(),
+			channel_data_dumper(o, is_signed(), ","));
+#else
+		copy(values.begin(), values.end(),
 			ostream_iterator<array_value_type>(o, ","));
+#endif
 		o << '}';
 		if (is_looping()) o << '*';
 		o << " @" << value_index;
@@ -636,20 +683,20 @@ default: break;
 	but up to caller how to handle.  
 	\return false if assertion fails.  
  */
-static
 bool
-__assert_channel_value(const channel::value_type& expect, 
+channel::__assert_channel_value(const channel::value_type& expect, 
 		const channel::value_type& got,
-		const string& name, const bool confirm) {
+		const bool confirm) const {
 	static const char cmd[] = "channel-assert";
 	if (expect != got) {
-		cerr << cmd << ": value assertion failed on channel " <<
-			name << ", expected: " << expect <<
-			", but got: " << got << endl;
+		print_data_value(cerr << cmd <<
+			": value assertion failed on channel " <<
+			name << ", expected: ", expect);
+		print_data_value(cerr << ", but got: ", got) << endl;
 		return false;
 	} else if (confirm) {
-		cout << "channel " << name << " has value " <<
-			expect << ", as expected." << endl;
+		print_data_value(cout << "channel " << name << " has value ", 
+			expect) << ", as expected." << endl;
 	}
 	return true;
 }
@@ -668,7 +715,7 @@ case CHANNEL_TYPE_1ofN: {
 #endif
 	if (counter_state == bundles()) {
 		if (!__assert_channel_value(expect, stat.current_value,
-				name, confirm))
+				confirm))
 			return false;
 	} else {
 		cerr << cmd << ": cannot assert value on channel " <<
@@ -685,7 +732,7 @@ case CHANNEL_TYPE_LEDR: {
 	// full/empty
 	if (stat.full) {
 		if (!__assert_channel_value(expect, stat.current_value,
-				name, confirm))
+				confirm))
 			return false;
 	} else {
 		cerr << cmd << ": cannot assert value on channel " <<
@@ -695,7 +742,7 @@ case CHANNEL_TYPE_LEDR: {
 	} else {
 	// 1-phase (ackless)
 		if (!__assert_channel_value(expect, stat.current_value,
-				name, confirm))
+				confirm))
 			return false;
 	}
 	break;
@@ -901,31 +948,77 @@ if (!string_to_num(v, expect)) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	\param T signed or unsigned number type
+ */
+template <class T>
+static
+bool
+lex_channel_value(const string& tok, T& val, bool& x) {
+	val = 0;
+	x = false;
+	if (tok == "X" || tok == "x") {
+		x = true;
+	} else if (string_to_num(tok, val)) {
+		// passing a negative number to an unsigned will error, nice!
+		cerr << "Error: invalid value: " << tok << "." << endl;
+		return true;
+	}
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+static
+bool
+__scan_value()
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	\param max, if value exceeds max, issue a warning.
 	\return true on error.
  */
-static
 bool
-read_values_from_list(const string_list& s, const channel::value_type max,
-		vector<channel::array_value_type>& v) {
+channel::read_values_from_list(const string_list& s) {
+//		const channel::value_type max,
+//		vector<channel::array_value_type>& v
 	STACKTRACE_VERBOSE;
-	v.reserve(s.size());
+	static const value_type half_max =
+		std::numeric_limits<value_type>::max() >> 1;
+	const value_type max = max_value();
+	const signed_value_type smax = signed_value_type(max);
+	const signed_value_type smin = min_value();
+//	const value_type min = value_type(smin);
+	values.reserve(s.size());
 	string_list::const_iterator j(s.begin()), e(s.end());
 	for ( ; j!=e; ++j) {
 		const string& tok(*j);
-		channel::array_value_type p;
-		channel::value_type& i(p.first);
-		p.first = 0;
-		p.second = false;
-		if (tok == "X" || tok == "x") {
-			p.second = true;
-		} else
-		if (string_to_num(tok, i)) {
-			cerr << "Error: invalid value \"" << tok <<
-				"\"." << endl;
+		array_value_type p;
+		value_type& i(p.first);
+#if PRSIM_CHANNEL_SIGNED
+		// type-punned alias
+	if (is_signed()) {
+		signed_value_type&
+			si(reinterpret_cast<signed_value_type&>(i));
+		if (lex_channel_value(tok, si, p.second)) {
 			return true;
-		} else
-		if (i > std::numeric_limits<channel::value_type>::max() >> 1) {
+		}
+		if (si > smax) {
+			cerr <<
+"Warning: value " << si << " exceeds the maximum value encoded, " << smax << ".\n"
+"Higher significant bits may be ignored." << endl;
+		}
+		if (si < smin) {
+			cerr <<
+"Warning: value " << si << " exceeds the minimum value encoded, " << smin << ".\n"
+"Higher significant bits may be ignored." << endl;
+		}
+	} else {	// unsigned
+#endif
+		if (lex_channel_value(tok, i, p.second)) {
+			return true;
+		}
+		if (i > half_max) {
 			cerr << "Warning: value " << i << " is greater than "
 				"max(unsigned value_type)/2, which may screw "
 				"up ldiv() when translating to rails." << endl;
@@ -935,7 +1028,11 @@ read_values_from_list(const string_list& s, const channel::value_type max,
 "Warning: value " << i << " exceeds the maximum value encoded, " << max << ".\n"
 "Higher significant bits may be ignored." << endl;
 		}
-		v.push_back(p);
+		// minimum is 0
+#if PRSIM_CHANNEL_SIGNED
+	}	// end if signed
+#endif
+		values.push_back(p);
 	}
 	return false;
 }
@@ -948,12 +1045,12 @@ read_values_from_list(const string_list& s, const channel::value_type max,
 	TODO: actual lexing?
 	TODO: accept values in various formats.
  */
-static
 bool
-read_values_from_file(const string& fn, const channel::value_type max, 
-		vector<channel::array_value_type>& v) {
+channel::read_values_from_file(const string& fn) {
+//		const channel::value_type max, 
+//		vector<channel::array_value_type>& v
 	STACKTRACE_VERBOSE;
-	v.clear();
+	values.clear();
 	ifstream f(fn.c_str());
 	if (!f) {
 		cerr << "Error opening file \"" << fn << "\" for reading."
@@ -981,8 +1078,23 @@ while (1) {
 	}
 	++i;
 }
-	return read_values_from_list(s, max, v);
+	return read_values_from_list(s);
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_CHANNEL_SIGNED
+void
+channel::set_signed(void) {
+	if (can_be_signed()) {
+		flags |= CHANNEL_SIGNED;
+	} else {
+		cerr <<
+"Warning: ignoring attempt to treat non-radix-2 values as signed,\n"
+"instead leaving as unsigned.  (Only wide radix-2 channels can be signed.)"
+		<< endl;
+	}
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 channel::value_type
@@ -993,7 +1105,12 @@ channel::max_value(void) const {
 	case CHANNEL_TYPE_1ofN:
 #endif
 		// can't assume radix is 2
-		return value_type(pow(radix(), bundles())) -1;
+		if (is_signed()) {
+			INVARIANT(radix() == 2);
+			return value_type((1 << (bundles() -1)) -1);
+		} else {
+			return value_type(pow(radix(), bundles())) -1;
+		}
 #if PRSIM_CHANNEL_LEDR
 	case CHANNEL_TYPE_LEDR:
 	default:
@@ -1001,6 +1118,33 @@ channel::max_value(void) const {
 	}
 #endif
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_CHANNEL_SIGNED
+/**
+	Returns smallest value encoded by data rails.
+ */
+channel::signed_value_type
+channel::min_value(void) const {
+#if PRSIM_CHANNEL_LEDR
+	switch (type) {
+	case CHANNEL_TYPE_SINGLE_TRACK:
+	case CHANNEL_TYPE_1ofN:
+#endif
+		if (is_signed()) {
+			INVARIANT(radix() == 2);
+			return signed_value_type(-1 << (bundles() -1));
+		} else {
+			return 0;
+		}
+#if PRSIM_CHANNEL_LEDR
+	case CHANNEL_TYPE_LEDR:
+	default:
+		return 1;	// 0 or 1
+	}
+#endif
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1013,7 +1157,7 @@ channel::set_source_file(const State& s, const string& file_name,
 	STACKTRACE_VERBOSE;
 	if (__configure_source(s, loop))	return true;
 	value_index = 0;	// TODO: optional offset or initial position
-	if (read_values_from_file(file_name, max_value(), values)) return true;
+	if (read_values_from_file(file_name)) return true;
 	if (!values.size()) {
 		cerr << "Warning: no values found in file \"" << file_name
 			<< "\", channel will remain neutral."
@@ -1037,7 +1181,9 @@ channel::set_source_args(const State& s, const string_list& v,
 	STACKTRACE_VERBOSE;
 	if (__configure_source(s, loop))	return true;
 	value_index = 0;	// TODO: optional offset or initial position
-	read_values_from_list(v, max_value(), values);
+	if (read_values_from_list(v)) {
+		return true;
+	}
 	if (!values.size()) {
 		cerr << "Warning: no values given, channel will remain neutral."
 			<< endl;
@@ -1249,7 +1395,7 @@ channel::set_expect_file(const string& fn, const bool loop) {
 		break;
 	}
 #endif
-	if (read_values_from_file(fn, max_value(), values)) return true;
+	if (read_values_from_file(fn)) return true;
 	if (values.size()) {
 		inject_expect_file = fn;	// save name
 	} else {
@@ -1271,7 +1417,9 @@ channel::set_expect_args(const string_list& v, const bool loop) {
 	__configure_expect(loop);
 	value_index = 0;
 	values.clear();
-	read_values_from_list(v, max_value(), values);
+	if (read_values_from_list(v)) {
+		return true;
+	}
 	if (!values.size()) {
 		cerr <<
 	"Warning: no values found in expect file, ignoring expect."
@@ -1763,10 +1911,30 @@ case CHANNEL_TYPE_1ofN: {
 #endif
 	const int_value_type rdx = radix();
 	// NOTE: div is *signed*
+	data_rail_index_type k;
+if (rdx == 2) {
+	// optimize for binary, and handle signedness
+	k[0] = 0;
+	value_type v = DATA_VALUE(current_value());
+	for (k[0]=0; k[0]<bundles(); ++k[0]) {
+		k[1] = 0;
+		const node_index_type ni0 = data[k];	// node index
+		k[1] = 1;
+		const node_index_type ni1 = data[k];	// node index
+		const value_enum b =
+			((v & 0x1) ^ get_data_sense()) ? LOGIC_HIGH : LOGIC_LOW;
+		const value_enum nb = node_type::invert_value[size_t(b)];
+		// TODO: should neutralize data-rail first?
+		// to prevent momentary violation of exclusion?
+		// don't need to worry for RTZ protocols
+		r.push_back(ENV_EVENT(ni0, nb));
+		r.push_back(ENV_EVENT(ni1, b));
+		v >>= 1;
+	}
+} else {
 	div_type<int_value_type>::return_type qr;
 	qr.quot = DATA_VALUE(current_value());
 	qr.rem = 0;	// unused
-	data_rail_index_type k;
 	k[0] = 0;
 	for ( ; k[0] < bundles(); ++k[0]) {
 		qr = div(qr.quot, rdx);
@@ -1779,6 +1947,7 @@ case CHANNEL_TYPE_1ofN: {
 			r.push_back(ENV_EVENT(ni, v));
 		}
 	}
+}
 #if PRSIM_CHANNEL_LEDR
 	break;
 }
@@ -1928,7 +2097,30 @@ case CHANNEL_TYPE_LEDR:
 default: DIE;
 }	// end switch
 #endif
+#if PRSIM_CHANNEL_SIGNED
+	// possible sign extension
+	if (is_signed()) {
+		INVARIANT(radix() == 2);
+		// detect sign bit
+		const bool sign = ret & (1 << (bundles() -1));
+		if (sign) {
+			// then sign extend negative number
+			ret |= (int_value_type(-1) << bundles());
+		}
+	}
+#endif
 	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+channel::print_data_value(ostream& o, const value_type v) const {
+#if PRSIM_CHANNEL_SIGNED
+	if (is_signed()) {
+		return o << signed_value_type(v);
+	} else
+#endif
+		return o << v;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2690,7 +2882,7 @@ channel::process_data(const State& s) throw (channel_exception) {
 		// even if channel is ignored?
 		cout << "channel\t" << name << " (.data) : ";
 		if (v) {
-			cout << data_rails_value(s);
+			print_data_value(cout, data_rails_value(s));
 		} else {	// data is in invalid state
 			cout << 'X';
 		}
@@ -2701,7 +2893,7 @@ channel::process_data(const State& s) throw (channel_exception) {
 		// TODO: format me, hex, dec, bin, etc...
 		// should be able to just setbase()
 		if (v) {
-		(*dumplog.stream) << data_rails_value(s);
+		print_data_value(*dumplog.stream, data_rails_value(s));
 		} else {
 		(*dumplog.stream) << 'X';
 		}
@@ -2732,8 +2924,9 @@ channel::process_data(const State& s) throw (channel_exception) {
 				throw ex;
 			}
 		} else if (s.confirm_asserts()) {
-			cout << "channel " << name << " has value " <<
-				DATA_VALUE(expect) << ", as expected." << endl;
+			print_data_value(cout << "channel " << name <<
+				" has value ", DATA_VALUE(expect)) <<
+				", as expected." << endl;
 		}
 		} else {	// cannot expect invalid value
 			const channel_exception

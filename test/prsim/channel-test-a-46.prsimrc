@@ -1,0 +1,9 @@
+# "channel-test-a-46.prsimrc"
+# @haco@ channel-test-a.haco-c
+
+# should print warning about signedness
+source channel-test-a-01.prsimrc
+channel-signed X
+channel-signed Y
+channel-signed Z
+
