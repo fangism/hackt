@@ -1,0 +1,6 @@
+WARNING: weak-interference `b'
+>> cause: `a' (val: X)
+expect fail here: 
+Assertion failed: there are input nodes at X
+a
+... at line 15

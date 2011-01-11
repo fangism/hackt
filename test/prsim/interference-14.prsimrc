@@ -1,0 +1,13 @@
+# "interference-14.prsimrc"
+# @haco@ interference.haco-c
+
+
+no-status-interfere
+set a 0
+cycle
+set b 1
+cycle
+
+echo expect fail here:
+no-status-interfere
+

@@ -1,0 +1,8 @@
+WARNING: weak-interference `b'
+>> cause: `a' (val: X)
+WARNING: weak-interference `c'
+>> cause: `b' (val: X)
+expect fail: 
+Assertion failed: there are output nodes at X
+c
+... at line 14

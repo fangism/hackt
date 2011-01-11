@@ -3,6 +3,19 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-01-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-35:
+	  Added new family of commands to assert the absence of nodes
+		with specific statuses/criteria (always fatal error).
+		new commands:
+		no-status, no-status-interference, no-unused-nodes,
+		no-unknown-inputs, no-unknown-inputs-fanout, 
+		no-unknown-undriven-fanin, no-unknown-outputs,
+		no-unknown-fanout.
+	  Documented, test cases added.
+
+
 2010-12-13	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-34:

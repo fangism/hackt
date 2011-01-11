@@ -1,0 +1,5 @@
+expect fail: !Vdd and !GND are unused 
+Assertion failed: there are unused nodes
+!GND
+!Vdd
+... at line 5

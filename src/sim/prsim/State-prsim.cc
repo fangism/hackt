@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.75 2010/09/29 00:13:42 fang Exp $
+	$Id: State-prsim.cc,v 1.76 2011/01/11 01:13:24 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -4345,20 +4345,38 @@ node_is_X(const State::node_type& n) {
 	\param val LOGIC_{LOW,HIGH,OTHER}.  
 	\param nl use newline delimiter instead of space.
  */
-ostream&
-State::status_nodes(ostream& o, const value_enum val, const bool nl) const {
+void
+State::status_nodes(const value_enum val, 
+		vector<node_index_type>& nodes) const {
 	ISE_INVARIANT(node_type::is_valid_value(val));
-	o << node_type::value_to_char[size_t(val)] << " nodes:" << endl;
 	bool (*f)(const node_type&) = &node_is_X;
 	switch (val) {
 	case LOGIC_LOW: f = &node_is_0; break;
 	case LOGIC_HIGH: f = &node_is_1; break;
 	default: break;
 	}
-	vector<node_index_type> nodes;
 	find_nodes(nodes, f);		// std::ptr_fun
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+State::print_status_nodes(ostream& o, const value_enum val,
+		const bool nl) const {
+	vector<node_index_type> nodes;
+	o << node_type::value_to_char[size_t(val)] << " nodes:" << endl;
+	status_nodes(val, nodes);
 	print_nodes(o, nodes, nl ? "\n" : " ");
 	return o << endl;	// TODO: only if !nl, else flush
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+State::status_interference(const bool w, 
+		vector<node_index_type>& nodes) const {
+	find_nodes(nodes,
+		mem_fun_ref(w ?
+			&node_type::weak_interfering :
+			&node_type::interfering));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -4367,13 +4385,10 @@ State::status_nodes(ostream& o, const value_enum val, const bool nl) const {
 		strong interference.  
  */
 ostream&
-State::status_interference(ostream& o, const bool w) const {
+State::print_status_interference(ostream& o, const bool w) const {
 	vector<node_index_type> nodes;
 	o << "Nodes with " << (w ? "weak-" : "") << "interference:" << endl;
-	find_nodes(nodes,
-		mem_fun_ref(w ?
-			&node_type::weak_interfering :
-			&node_type::interfering));
+	status_interference(w, nodes);
 	print_nodes(o, nodes, "\n");
 	return o << std::flush;
 }
@@ -4385,10 +4400,24 @@ State::status_interference(ostream& o, const bool w) const {
 	\param p the pull_state to match.
 	\param fanin_only true to only report nodes with fanin.
  */
+void
+State::status_driven(const pull_enum p,
+		const bool fanin_only, 
+		vector<node_index_type>& nodes) const {
+	find_nodes(nodes,
+		mem_fun_ref(
+		(p == PULL_OFF) ? &node_type::undriven :
+		(p == PULL_WEAK) ? &node_type::x_driven :
+			&node_type::driven));
+	if (fanin_only) {
+		filter_nodes(nodes, mem_fun_ref(&node_type::has_fanin));
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-State::status_driven(ostream& o, const pull_enum p,
+State::print_status_driven(ostream& o, const pull_enum p,
 		const bool fanin_only) const {
-	vector<node_index_type> nodes;
 switch (p) {
 case PULL_OFF:
 	o << "Nodes undriven (state-holding):" << endl;
@@ -4401,27 +4430,28 @@ default:
 	o << "Nodes driven:" << endl;
 	break;
 }
-	find_nodes(nodes,
-		mem_fun_ref(
-		(p == PULL_OFF) ? &node_type::undriven :
-		(p == PULL_WEAK) ? &node_type::x_driven :
-			&node_type::driven));
-	if (fanin_only) {
-		filter_nodes(nodes, mem_fun_ref(&node_type::has_fanin));
-	}
+	vector<node_index_type> nodes;
+	status_driven(p, fanin_only, nodes);
 	print_nodes(o, nodes, "\n");
 	return o << std::flush;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if PRSIM_UPSET_NODES
+
+void
+State::status_frozen(vector<node_index_type>& nodes) const {
+	find_nodes(nodes, mem_fun_ref(&node_type::is_frozen));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Print all nodes that are frozen (no activity).
  */
 ostream&
-State::status_frozen(ostream& o) const {
+State::print_status_frozen(ostream& o) const {
 	vector<node_index_type> nodes;
-	find_nodes(nodes, mem_fun_ref(&node_type::is_frozen));
+	status_frozen(nodes);
 	o << "Nodes frozen:" << endl;
 	print_nodes(o, nodes, "\n");
 	return o << std::flush;
@@ -5717,11 +5747,16 @@ do {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+State::unused_nodes(vector<node_index_type>& nodes) const {
+	find_nodes(nodes, &node_is_unused);
+}
+
 ostream&
 State::dump_unused_nodes(ostream& o) const {
 	o << "Nodes with no fanin, no fanout:" << endl;
 	vector<node_index_type> nodes;
-	find_nodes(nodes, &node_is_unused);
+	unused_nodes(nodes);
 	print_nodes(o, nodes, "\n");
 	return o << std::flush;
 }
@@ -5732,6 +5767,13 @@ State::dump_unused_nodes(ostream& o) const {
 	This won't find X cycles, however.  
 	\param b true to include node with no fanout
  */
+void
+State::dangling_unknown_nodes(const bool b, 
+		vector<node_index_type>& nodes) const {
+	find_nodes(nodes,
+		b ? &node_is_X_no_driver : &node_is_X_no_driver_with_fanout);
+}
+
 ostream&
 State::dump_dangling_unknown_nodes(ostream& o, const bool b) const {
 	o << "X nodes with no fanin";
@@ -5740,8 +5782,7 @@ State::dump_dangling_unknown_nodes(ostream& o, const bool b) const {
 	}
 	o << ":" << endl;
 	vector<node_index_type> nodes;
-	find_nodes(nodes,
-		b ? &node_is_X_no_driver : &node_is_X_no_driver_with_fanout);
+	dangling_unknown_nodes(b, nodes);
 	print_nodes(o, nodes, "\n");
 	return o << std::flush;
 }
@@ -5750,11 +5791,16 @@ State::dump_dangling_unknown_nodes(ostream& o, const bool b) const {
 /**
 	Print all nodes with no fanout, presumed to be outputs.
  */
+void
+State::output_nodes(vector<node_index_type>& nodes) const {
+	find_nodes(nodes, &this_type::node_is_not_used);
+}
+
 ostream&
 State::dump_output_nodes(ostream& o) const {
 	o << "nodes with no fanout (unused): " << endl;
 	vector<node_index_type> nodes;
-	find_nodes(nodes, &this_type::node_is_not_used);
+	output_nodes(nodes);
 	print_nodes(o, nodes, "\n");
 	return o << std::flush;
 }
@@ -5763,11 +5809,16 @@ State::dump_output_nodes(ostream& o) const {
 /**
 	Status X intersected with nodes with no fanout (not used).
  */
+void
+State::output_unknown_nodes(vector<node_index_type>& nodes) const {
+	find_nodes(nodes, &node_is_X_not_used);
+}
+
 ostream&
 State::dump_output_unknown_nodes(ostream& o) const {
 	o << "X nodes with no fanout (unused): " << endl;
 	vector<node_index_type> nodes;
-	find_nodes(nodes, &node_is_X_not_used);
+	output_unknown_nodes(nodes);
 	print_nodes(o, nodes, "\n");
 	return o << std::flush;
 }
@@ -5776,11 +5827,16 @@ State::dump_output_unknown_nodes(ostream& o) const {
 /**
 	Status X intersected with nodes with fanout (used).
  */
+void
+State::unknown_nodes_fanout(vector<node_index_type>& nodes) const {
+	find_nodes(nodes, &node_is_X_used);
+}
+
 ostream&
 State::dump_unknown_nodes_fanout(ostream& o) const {
 	o << "X nodes with fanout: " << endl;
 	vector<node_index_type> nodes;
-	find_nodes(nodes, &node_is_X_used);
+	unknown_nodes_fanout(nodes);
 	print_nodes(o, nodes, "\n");
 	return o << std::flush;
 }
@@ -5789,11 +5845,16 @@ State::dump_unknown_nodes_fanout(ostream& o) const {
 /**
 	Status X node with fanin, whose pull-up/dn state is off.
  */
+void
+State::unknown_nodes_fanin_off(vector<node_index_type>& nodes) const {
+	find_nodes(nodes, &node_is_X_has_fanin_off);
+}
+
 ostream&
 State::dump_unknown_nodes_fanin_off(ostream& o) const {
 	o << "X nodes with fanins pull-off: " << endl;
 	vector<node_index_type> nodes;
-	find_nodes(nodes, &node_is_X_has_fanin_off);
+	unknown_nodes_fanin_off(nodes);
 	print_nodes(o, nodes, "\n");
 	return o << std::flush;
 }

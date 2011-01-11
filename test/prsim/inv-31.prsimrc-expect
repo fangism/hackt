@@ -1,0 +1,10 @@
+WARNING: weak-interference `b'
+>> cause: `a' (val: X)
+WARNING: weak-interference `c'
+>> cause: `b' (val: X)
+expect fail here: 
+Assertion failed: there are nodes at value X
+a
+b
+c
+... at line 14

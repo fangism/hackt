@@ -1,0 +1,6 @@
+WARNING: weak-interference `c'
+>> cause: `a' (val: 0)
+expect fail here: 
+Assertion failed: there are nodes with weak-interference
+c
+... at line 13

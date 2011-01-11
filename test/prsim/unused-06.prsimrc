@@ -1,0 +1,13 @@
+# "unused-06.prsimrc"
+# @haco@ interference.haco-c
+
+watchall
+# no-unknown-undriven-fanin
+set a 1
+set b 0
+cycle
+# status X
+
+echo expect fail here:
+no-unknown-undriven-fanin
+

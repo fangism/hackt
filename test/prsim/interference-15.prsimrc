@@ -1,0 +1,14 @@
+# "interference-15.prsimrc"
+# @haco@ interference.haco-c
+
+
+set a 0
+cycle
+set b X
+cycle
+
+# there's no strong interference
+no-status-interfere
+echo expect fail here:
+no-status-weak-interfere
+

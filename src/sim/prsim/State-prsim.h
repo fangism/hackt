@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.45 2010/09/23 00:19:54 fang Exp $
+	$Id: State-prsim.h,v 1.46 2011/01/11 01:13:25 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -1077,18 +1077,33 @@ public:
 	ostream&
 	dump_watched_nodes(ostream&) const;
 
-	ostream&
-	status_nodes(ostream&, const value_enum, const bool) const;
+	void
+	status_nodes(const value_enum, vector<node_index_type>&) const;
+
+	void
+	status_interference(const bool, vector<node_index_type>&) const;
+
+	void
+	status_driven(const pull_enum, const bool, 
+		vector<node_index_type>&) const;
+
+#if PRSIM_UPSET_NODES
+	void
+	status_frozen(vector<node_index_type>&) const;
+#endif
 
 	ostream&
-	status_interference(ostream&, const bool) const;
+	print_status_nodes(ostream&, const value_enum, const bool) const;
 
 	ostream&
-	status_driven(ostream&, const pull_enum, const bool) const;
+	print_status_interference(ostream&, const bool) const;
+
+	ostream&
+	print_status_driven(ostream&, const pull_enum, const bool) const;
 
 #if PRSIM_UPSET_NODES
 	ostream&
-	status_frozen(ostream&) const;
+	print_status_frozen(ostream&) const;
 #endif
 
 	bool
@@ -1471,20 +1486,38 @@ public:
 	print_nodes(ostream&, const vector<node_index_type>&,
 		const char*) const;
 
+	void
+	dangling_unknown_nodes(const bool, vector<node_index_type>&) const;
+
 	ostream&
 	dump_dangling_unknown_nodes(ostream&, const bool) const;
+
+	void
+	unused_nodes(vector<node_index_type>&) const;
 
 	ostream&
 	dump_unused_nodes(ostream&) const;
 
+	void
+	output_nodes(vector<node_index_type>&) const;
+
 	ostream&
 	dump_output_nodes(ostream&) const;
+
+	void
+	output_unknown_nodes(vector<node_index_type>&) const;
 
 	ostream&
 	dump_output_unknown_nodes(ostream&) const;
 
+	void
+	unknown_nodes_fanout(vector<node_index_type>&) const;
+
 	ostream&
 	dump_unknown_nodes_fanout(ostream&) const;
+
+	void
+	unknown_nodes_fanin_off(vector<node_index_type>&) const;
 
 	ostream&
 	dump_unknown_nodes_fanin_off(ostream&) const;

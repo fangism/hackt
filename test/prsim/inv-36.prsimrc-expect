@@ -1,0 +1,9 @@
+WARNING: weak-interference `b'
+>> cause: `a' (val: X)
+WARNING: weak-interference `c'
+>> cause: `b' (val: X)
+expect fail: 
+Assertion failed: there are nodes with fanout at X
+a
+b
+... at line 14

@@ -1,0 +1,6 @@
+	0	a : 1
+	0	b : 0
+expect fail here: 
+Assertion failed: there are input nodes at X that have fanin but are undriven
+c
+... at line 12

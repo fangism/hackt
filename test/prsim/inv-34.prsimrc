@@ -1,0 +1,16 @@
+# "inv-34.prsimrc"
+# @haco@ inv.haco-c
+
+# no-status 0
+# no-status 1
+
+set a 0
+cycle
+no-unknown-inputs-fanout
+
+set a X
+step-event
+
+echo expect fail here:
+no-unknown-inputs-fanout
+

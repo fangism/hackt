@@ -1,0 +1,6 @@
+# "inv-32.prsimrc"
+# @haco@ inv.haco-c
+
+echo expect fail: !Vdd and !GND are unused
+no-unused-nodes
+

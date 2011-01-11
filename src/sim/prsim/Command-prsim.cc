@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.79 2010/12/13 23:26:28 fang Exp $
+	$Id: Command-prsim.cc,v 1.80 2011/01/11 01:13:23 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -2474,7 +2474,7 @@ for readability.
 @end deffn
 @end texinfo
 ***/
-PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(Status, instance_completer)
+// PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(Status, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Status, "status", info, 
 	"show all nodes matching a state value")
 
@@ -2487,7 +2487,7 @@ if (a.size() != 2) {
 	typedef	State::node_type		node_type;
 	const value_enum v = node_type::string_to_value(a.back());
 	if (node_type::is_valid_value(v)) {
-		s.status_nodes(cout, v, false);
+		s.print_status_nodes(cout, v, false);
 		return Command::NORMAL;
 	} else {
 		cerr << "Bad status value." << endl;
@@ -2516,7 +2516,7 @@ if (a.size() != 2) {
 	typedef	State::node_type		node_type;
 	const value_enum v = node_type::string_to_value(a.back());
 	if (node_type::is_valid_value(v)) {
-		s.status_nodes(cout, v, true);
+		s.print_status_nodes(cout, v, true);
 		return Command::NORMAL;
 	} else {
 		cerr << "Bad status value." << endl;
@@ -2530,6 +2530,52 @@ void
 StatusNewline::usage(ostream& o) {
 	o << "status-newline <[0fF1tTxXuU]>" << endl;
 	o << "list all nodes with the matching current value" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/no-status.texi
+@deffn Command no-status val
+Asserts that there are no nodes at value @var{val}.
+@end deffn
+@end texinfo
+***/
+// PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(NoStatus, instance_completer)
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoStatus, "no-status", info, 
+	"assert that there are no nodes at a specified value")
+
+int
+NoStatus::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	vector<node_index_type> nodes;
+	typedef	State::node_type		node_type;
+	const value_enum v = node_type::string_to_value(a.back());
+	if (node_type::is_valid_value(v)) {
+		s.status_nodes(v, nodes);
+		if (nodes.empty()) {
+			return Command::NORMAL;
+		} else {
+			cout << "Assertion failed: " <<
+				"there are nodes at value " << a.back() << endl;
+			s.print_nodes(cout, nodes, "\n") << std::flush;
+			return Command::FATAL;
+		}
+	} else {
+		cerr << "Bad status value." << endl;
+		usage(cerr);
+		return Command::BADARG;
+	}
+}
+}
+
+
+void
+NoStatus::usage(ostream& o) {
+	o << name << " [01X]" << endl;
+	o << brief << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2558,7 +2604,7 @@ if (a.size() != 1) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
-	s.status_interference(cout, false);
+	s.print_status_interference(cout, false);
 	return Command::NORMAL;
 }
 }
@@ -2575,7 +2621,7 @@ if (a.size() != 1) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
-	s.status_interference(cout, true);
+	s.print_status_interference(cout, true);
 	return Command::NORMAL;
 }
 }
@@ -2586,6 +2632,71 @@ StatusWeakInterfere::usage(ostream& o) {
 	o << brief << endl;
 }
 
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/no-status-interference.texi
+@deffn Command no-status-interference
+@deffnx Command no-status-weak-interference
+Asserts that there are no nodes with interfering (or weak-interfering) fanins.
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoStatusInterfere, "no-status-interfere",
+	info, "assert that there are no nodes with interference")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoStatusWeakInterfere,
+	"no-status-weak-interfere",
+	info, "assert that there are no nodes with weak-interference")
+
+int
+NoStatusInterfere::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	vector<node_index_type> nodes;
+	s.status_interference(false, nodes);
+	if (nodes.empty()) {
+		return Command::NORMAL;
+	} else {
+		cout << "Assertion failed: " <<
+			"there are nodes with interference" << endl;
+		s.print_nodes(cout, nodes, "\n") << std::flush;
+		return Command::FATAL;
+	}
+}
+}
+
+int
+NoStatusWeakInterfere::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	vector<node_index_type> nodes;
+	s.status_interference(true, nodes);
+	if (nodes.empty()) {
+		return Command::NORMAL;
+	} else {
+		cout << "Assertion failed: " <<
+			"there are nodes with weak-interference" << endl;
+		s.print_nodes(cout, nodes, "\n") << std::flush;
+		return Command::FATAL;
+	}
+}
+}
+
+void
+NoStatusInterfere::usage(ostream& o) {
+	o << name << endl;
+	o << brief << endl;
+}
+
+void
+NoStatusWeakInterfere::usage(ostream& o) {
+	o << name << endl;
+	o << brief << endl;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -2629,7 +2740,7 @@ if (a.size() != 2) {
 			<< endl;
 		return Command::BADARG;
 	}
-	s.status_driven(cout, p, fanin_only);
+	s.print_status_driven(cout, p, fanin_only);
 	return Command::NORMAL;
 }
 }
@@ -2665,6 +2776,7 @@ name << " X: reports nodes with fanin that are only driven by X"
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_UPSET_NODES
 /***
 @texinfo cmd/status-frozen.texi
 @deffn Command status-frozen
@@ -2681,7 +2793,7 @@ if (a.size() != 1) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
-	s.status_frozen(cout);
+	s.print_status_frozen(cout);
 	return Command::NORMAL;
 }
 }
@@ -2691,6 +2803,7 @@ StatusFrozen::usage(ostream& o) {
 	o << name << endl;
 	o << brief << endl;
 }
+#endif	// PRSIM_UPSET_NODES
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -2720,6 +2833,42 @@ void
 UnusedNodes::usage(ostream& o) {
 	o << name << " -- " << brief << endl;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/no-unused-nodes.texi
+@deffn Command no-unused-nodes
+Assert that there are no unused nodes (those without fanout).
+This is mostly useful for checking closed systems that do not
+required interaction with any environment.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoUnusedNodes, "no-unused-nodes", info, 
+	"assert that all nodes are used (have fanout)")
+int
+NoUnusedNodes::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	vector<node_index_type> nodes;
+	s.unused_nodes(nodes);
+	if (nodes.empty()) {
+		return Command::NORMAL;
+	} else {
+		cout << "Assertion failed: there are unused nodes" << endl;
+		s.print_nodes(cout, nodes, "\n") << std::flush;
+		return Command::FATAL;
+	}
+}
+}
+
+void
+NoUnusedNodes::usage(ostream& o) {
+	o << name << " -- " << brief << endl;
+}
+
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -2788,6 +2937,76 @@ UnknownInputsFanout::usage(ostream& o) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
+@texinfo cmd/no-unknown-inputs.texi
+@deffn Command no-unknown-inputs
+Assert that there are no inputs nodes at X.
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoUnknownInputs,
+	"no-unknown-inputs", info, 
+	"assert that no input nodes are X")
+int
+NoUnknownInputs::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	vector<node_index_type> nodes;
+	s.dangling_unknown_nodes(true, nodes);
+	if (nodes.empty()) {
+		return Command::NORMAL;
+	} else {
+		cout << "Assertion failed: there are input nodes at X" << endl;
+		s.print_nodes(cout, nodes, "\n") << std::flush;
+		return Command::FATAL;
+	}
+}
+}
+
+void
+NoUnknownInputs::usage(ostream& o) {
+	o << name << " -- " << brief << endl;
+}
+
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/no-unknown-inputs-fanout.texi
+@deffn Command no-unknown-inputs-fanout
+Assert that there are no inputs nodes with fanout at X.
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoUnknownInputsFanout,
+	"no-unknown-inputs-fanout", info, 
+	"assert that no input nodes with fanout are X")
+int
+NoUnknownInputsFanout::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	vector<node_index_type> nodes;
+	s.dangling_unknown_nodes(false, nodes);
+	if (nodes.empty()) {
+		return Command::NORMAL;
+	} else {
+		cout << "Assertion failed: there are input nodes with fanout at X" << endl;
+		s.print_nodes(cout, nodes, "\n") << std::flush;
+		return Command::FATAL;
+	}
+}
+}
+
+void
+NoUnknownInputsFanout::usage(ostream& o) {
+	o << name << " -- " << brief << endl;
+}
+
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
 @texinfo cmd/unknown-undriven-fanin.texi
 @deffn Command unknown-undriven-fanin
 Print all nodes with value X that have fanins, but are not being pulled.
@@ -2817,6 +3036,41 @@ UnknownUndrivenFanin::usage(ostream& o) {
 	" -- list X nodes with no fanin, with fanout (channels counted)."
 	<< endl;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/no-unknown-undriven-fanin.texi
+@deffn Command no-unknown-undriven-fanin
+Assert that there are no nodes at X with fanins and are being undriven.
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoUnknownUndrivenFanin,
+	"no-unknown-undriven-fanin", info, 
+	"assert that no undriven input nodes with fanin are X")
+int
+NoUnknownUndrivenFanin::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	vector<node_index_type> nodes;
+	s.unknown_nodes_fanin_off(nodes);
+	if (nodes.empty()) {
+		return Command::NORMAL;
+	} else {
+		cout << "Assertion failed: there are input nodes at X that have fanin but are undriven" << endl;
+		s.print_nodes(cout, nodes, "\n") << std::flush;
+		return Command::FATAL;
+	}
+}
+}
+
+void
+NoUnknownUndrivenFanin::usage(ostream& o) {
+	o << name << " -- " << brief << endl;
+}
+
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -2853,6 +3107,41 @@ UnknownOutputs::usage(ostream& o) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
+@texinfo cmd/no-unknown-outputs.texi
+@deffn Command no-unknown-outputs
+Assert that there are no outputs nodes at X.
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoUnknownOutputs,
+	"no-unknown-outputs", info, 
+	"assert that no output nodes are X")
+int
+NoUnknownOutputs::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	vector<node_index_type> nodes;
+	s.output_unknown_nodes(nodes);
+	if (nodes.empty()) {
+		return Command::NORMAL;
+	} else {
+		cout << "Assertion failed: there are output nodes at X" << endl;
+		s.print_nodes(cout, nodes, "\n") << std::flush;
+		return Command::FATAL;
+	}
+}
+}
+
+void
+NoUnknownOutputs::usage(ostream& o) {
+	o << name << " -- " << brief << endl;
+}
+
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
 @texinfo cmd/unknown-fanout.texi
 @deffn Command unknown-fanout
 Print all nodes with value X that have fanouts.
@@ -2881,6 +3170,41 @@ UnknownFanout::usage(ostream& o) {
 	o << name << " -- list X nodes with fanout (channels counted)."
 		<< endl;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/no-unknown-fanout.texi
+@deffn Command no-unknown-fanout
+Assert that there are no nodes with fanout at X.
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoUnknownFanout,
+	"no-unknown-fanout", info, 
+	"assert that no nodes with fanout are X")
+int
+NoUnknownFanout::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	vector<node_index_type> nodes;
+	s.unknown_nodes_fanout(nodes);
+	if (nodes.empty()) {
+		return Command::NORMAL;
+	} else {
+		cout << "Assertion failed: there are nodes with fanout at X" << endl;
+		s.print_nodes(cout, nodes, "\n") << std::flush;
+		return Command::FATAL;
+	}
+}
+}
+
+void
+NoUnknownFanout::usage(ostream& o) {
+	o << name << " -- " << brief << endl;
+}
+
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***

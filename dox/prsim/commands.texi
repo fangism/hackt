@@ -1,5 +1,5 @@
 @c "hacprsim/commands.texi"
-@c $Id: commands.texi,v 1.35 2010/12/13 23:26:26 fang Exp $
+@c $Id: commands.texi,v 1.36 2011/01/11 01:13:20 fang Exp $
 
 @node Commands
 @chapter Commands
@@ -350,6 +350,13 @@ simulated production rules and contain no stateful information.
 
 The following commands give information about the state of the 
 simulator and the simulated production rules.  
+The @command{assert-*} commands exit with fatal error
+if the specified condition of a given node is not true.
+The @command{no-*} commands exit with fatal error
+if there exist any nodes that match the specified criteria.
+(Currently, the @command{no-*} commands do not honor
+the @command{assert-fail} diagnostic overrides;
+errors are always treated as fatal.)
 
 @include cmd/get.texi
 @include cmd/getports.texi
@@ -370,17 +377,25 @@ simulator and the simulated production rules.
 @include cmd/why.texi
 @include cmd/why-not.texi
 @include cmd/status.texi
+@include cmd/no-status.texi
 @include cmd/get-driven.texi
 @include cmd/status-interference.texi
+@include cmd/no-status-interference.texi
 @include cmd/status-driven.texi
 @include cmd/status-frozen.texi
 @include cmd/time.texi
 @include cmd/unused-nodes.texi
+@include cmd/no-unused-nodes.texi
 @include cmd/unknown-inputs.texi
 @include cmd/unknown-inputs-fanout.texi
+@include cmd/no-unknown-inputs.texi
+@include cmd/no-unknown-inputs-fanout.texi
 @include cmd/unknown-outputs.texi
+@include cmd/no-unknown-outputs.texi
 @include cmd/unknown-fanout.texi
+@include cmd/no-unknown-fanout.texi
 @include cmd/unknown-undriven-fanin.texi
+@include cmd/no-unknown-undriven-fanin.texi
 
 @c ----------------------------------------------------------------------------
 @node View Commands

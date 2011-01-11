@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/vpi-prsim.cc"
-	$Id: vpi-prsim.cc,v 1.28 2010/08/25 18:53:46 fang Exp $
+	$Id: vpi-prsim.cc,v 1.29 2011/01/11 01:13:25 fang Exp $
 	Thanks to Rajit for figuring out how to do this and providing
 	a reference implementation, which was yanked from:
  */
@@ -1333,7 +1333,7 @@ static PLI_INT32 prsim_status_x (PLI_BYTE8 *args)
   //}
 #else
 	// arg.value.char? .str[0]?
-	prsim_state->status_nodes(cout, LOGIC_OTHER, false);
+	prsim_state->print_status_nodes(cout, LOGIC_OTHER, false);
 #endif
   return 1;
 }
