@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.80 2011/01/11 01:13:23 fang Exp $
+	$Id: Command-prsim.cc,v 1.81 2011/01/13 22:19:09 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -1029,8 +1029,6 @@ if (asz < 3 || asz > 4) {
 	return Command::SYNTAX;
 } else {
 	typedef	State::node_type		node_type;
-	typedef	State::event_type		event_type;
-	typedef	State::event_placeholder_type	event_placeholder_type;
 	// now I'm wishing string_list was string_vector... :) can do!
 	string_list::const_iterator ai(++a.begin());
 	const string& objname(*ai++);	// node name
@@ -1086,14 +1084,65 @@ Set::main(State& s, const string_list& a) {
 
 void
 Set::usage(ostream& o) {
-	o << "set <node> <0|F|1|T|X|U|~> [+delay | time]" << endl;
+	o << "set <node> <0|F|1|T|X|U|~|?> [+delay | time]" << endl;
 	o <<
 "\tWithout delay, node is set immediately.  Relative delay into future\n"
 "\tis given by +delay, whereas an absolute time is given without \'+\'.\n"
 "\tIf there is a pending event on the node, this command is ignored with a\n"
 "\twarning.  The value '~' means opposite-of-the-current-value.\n"
+"\tThe value '?' means any non-X value (0 or 1, random).\n"
 "See also \'setf\'."
 	<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/set-pair-random.texi
+@deffn Command set-pair-random node1 node2
+Sets a pair of nodes to random, opposite values.
+@end deffn
+@end texinfo
+***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(SetPairRandom, instance_completer)
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(SetPairRandom, "set-pair-random", 
+	simulation, "sets a pair of nodes to random, opposite values")
+
+int
+SetPairRandom::main(State& s, const string_list& a) {
+	const size_t asz = a.size();
+if (asz != 3) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	typedef	State::node_type		node_type;
+	string_list::const_iterator ai(++a.begin());
+	const string& objname1(*ai++);	// node name
+	const string& objname2(*ai++);	// node value
+	const node_index_type ni1 =
+		parse_node_to_index(objname1, s.get_module());
+	const node_index_type ni2 =
+		parse_node_to_index(objname2, s.get_module());
+	if (!ni1) {
+		cerr << "No such node found: " << objname1 << endl;
+		return Command::BADARG;
+	}
+	if (!ni2) {
+		cerr << "No such node found: " << objname2 << endl;
+		return Command::BADARG;
+	}
+	const value_enum val = node_type::char_to_value('?');
+	const value_enum nval = node_type::invert_value[val];
+	const bool force = false;
+	int err1 = s.set_node(ni1, val, force);
+	int err2 = s.set_node(ni2, nval, force);
+	return (err1 || err2) ? Command::BADARG : Command::NORMAL;
+}
+}
+
+void
+SetPairRandom::usage(ostream& o) {
+	o << name << " <node1> <node2>" << endl;
+	o << brief << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1233,8 +1282,6 @@ if (asz != 3) {
 	return Command::SYNTAX;
 } else {
 	typedef	State::node_type		node_type;
-	typedef	State::event_type		event_type;
-	typedef	State::event_placeholder_type	event_placeholder_type;
 	// now I'm wishing string_list was string_vector... :) can do!
 	string_list::const_iterator ai(++a.begin());
 	const string& objname(*ai++);	// node name

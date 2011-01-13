@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.120 2011/01/11 01:13:27 fang Exp $
+#	$Id: Makefile.am,v 1.121 2011/01/13 22:19:11 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -107,6 +107,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	inv-11 inv-12 inv-13 inv-14 inv-15 inv-16 inv-17 \
 	inv-18 inv-19 inv-20 inv-20a inv-21 inv-21a inv-22 inv-23 \
 	inv-24 inv-25 inv-26 inv-27 inv-29 inv-30 \
+	inv-37 \
 	inv-alt-01 inv-alt-02 inv-alt-03 inv-alt-04 inv-alt-05 inv-alt-06 \
 	inv-alt-07 inv-alt-08 inv-alt-09 inv-alt-10 \
 	inv-why-01 inv-why-02 \
@@ -191,7 +192,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	half-keeper-a-01 half-keeper-a-02 \
 	cross-coupled-01 cross-coupled-weak-01 \
 	cross-coupled-why-01 \
-	cbit-01 cbit-02 cbit-03 cbit-04 cbit-05 cbit-06 cbit-07 \
+	cbit-01 cbit-02 cbit-03 cbit-04 cbit-05 cbit-06 cbit-07 cbit-08 \
 	cbit_test_stat-01 \
 	cbit_test_stat_alt-01 \
 	cross-pull-a-01 cross-pull-a-02 \
@@ -441,6 +442,11 @@ eledr-buffer-b-04.prsimtest: eledr-buffer-b-04.prsimrc
 eledr-buffer-b-06.prsimtest: eledr-buffer-b-06.prsimrc
 	$(SKIP_TEST_SCRIPT)
 eledr-buffer-b-07.prsimtest: eledr-buffer-b-07.prsimrc
+	$(SKIP_TEST_SCRIPT)
+# set random values:
+inv-37.prsimtest: inv-37.prsimrc
+	$(SKIP_TEST_SCRIPT)
+cbit-08.prsimtest: cbit-08.prsimrc
 	$(SKIP_TEST_SCRIPT)
 endif
 

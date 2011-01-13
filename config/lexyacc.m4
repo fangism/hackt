@@ -1,5 +1,5 @@
 dnl "config/lexyacc.m4"
-dnl	$Id: lexyacc.m4,v 1.9 2008/12/02 07:59:04 fang Exp $
+dnl	$Id: lexyacc.m4,v 1.10 2011/01/13 22:19:06 fang Exp $
 dnl This file contains autoconf macros related to lex and yacc, 
 dnl including bison.  
 dnl These may be slightly more specific to the HACKT project.
@@ -157,6 +157,7 @@ dnl test 3: find name of preprocessor symbol for MAXTOK
 dnl is YYMAXTOKEN for yacc, YYMAXUTOK for bison
 
 dnl test 4: what is the real underlying parser generator?
+dnl FIXME: grep -q is not portable in Solaris
 ac_for_real_yacc=
 if grep -q YYBISON $ac_cv_prog_yacc_root.c ; then
 	ac_for_real_yacc=bison

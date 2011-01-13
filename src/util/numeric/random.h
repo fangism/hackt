@@ -2,7 +2,7 @@
 	\file "util/numeric/random.h"
 	Template specializations for random numbers, 
 	wrapper interface to stdlib *rand48 functions.  
-	$Id: random.h,v 1.3 2008/03/17 23:03:14 fang Exp $
+	$Id: random.h,v 1.4 2011/01/13 22:19:10 fang Exp $
  */
 
 #ifndef	__UTIL_NUMERIC_RANDOM_H__
@@ -113,6 +113,25 @@ struct rand48<long> {
 
 };	// end struct rand48
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	50/50 coin flip random boolean generator.
+ */
+template <>
+struct rand48<bool> {
+	typedef	rand48<long>		base_rand;
+
+	bool
+	operator () (void) const {
+		return base_rand()() & 0x1;	// or any bit
+	}
+
+	bool
+	operator () (base_rand::seed_type& s) const {
+		return base_rand()(s) & 0x1;	// or any bit
+	}
+
+};	// end struct rand48
 
 //=============================================================================
 }	// end namespace numeric

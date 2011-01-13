@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.cc"
 	Implementation of PRS node.  
-	$Id: Node.cc,v 1.19 2010/06/29 01:55:04 fang Exp $
+	$Id: Node.cc,v 1.20 2011/01/13 22:19:09 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -14,6 +14,7 @@
 #include "util/macros.h"
 #include "util/stacktrace.h"
 #include "util/IO_utils.tcc"
+#include "util/numeric/random.h"
 #include "util/STL/valarray_iterator.h"
 #include "sim/prsim/process_graph.h"	// for faninout_struct_type
 #include "Object/inst/connection_policy.h"	// for bool_connect_policy
@@ -232,11 +233,16 @@ NodeState::char_to_value(const char v) {
 	case 'U':	// fall-through
 	case 'u':	// fall-through
 		return LOGIC_OTHER;
+	case '?': {
+		util::numeric::rand48<bool> r;
+		return r() ? LOGIC_HIGH : LOGIC_LOW;
+	}
 	default:
 		return LOGIC_INVALID;
 	}
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pull_enum
 NodeState::char_to_pull(const char v) {
 	switch (v) {

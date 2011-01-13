@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-01-13	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-36:
+	  hacprsim: new commands:
+		set <node> ? -- sets node to 0 or 1 randomly
+		set-pair-random node1 node2 -- sets pair of nodes
+			to opposite values randomly.
+	  Documented, test cases added (random).
+
+
 2011-01-10	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-35:

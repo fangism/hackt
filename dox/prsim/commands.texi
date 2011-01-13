@@ -1,5 +1,5 @@
 @c "hacprsim/commands.texi"
-@c $Id: commands.texi,v 1.36 2011/01/11 01:13:20 fang Exp $
+@c $Id: commands.texi,v 1.37 2011/01/13 22:19:06 fang Exp $
 
 @node Commands
 @chapter Commands
@@ -95,6 +95,7 @@ Coercively setting values.
 @include cmd/setrf.texi
 @include cmd/unset.texi
 @include cmd/unsetall.texi
+@include cmd/set-pair-random.texi
 
 Freezing switching and simulating event upsets.
 

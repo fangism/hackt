@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.76 2011/01/11 01:13:24 fang Exp $
+	$Id: State-prsim.cc,v 1.77 2011/01/13 22:19:09 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -1396,9 +1396,11 @@ State::next_event_time(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Allows '~' to be interpreted as "opposite of current value".
+	Allows '?' to be interpreted as 0 or 1 (random).
  */
 value_enum
 State::node_to_value(const string& v, const node_index_type ni) const {
+	const rand48<long> r();
 	return (v == "~") ?
 		node_type::invert_value[get_node(ni).current_value()] :
 		node_type::string_to_value(v);
