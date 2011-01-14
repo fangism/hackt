@@ -3,7 +3,7 @@
 	Base class related to lists of meta expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: pint_expr.h,v 1.18 2007/02/08 02:11:08 fang Exp $
+	$Id: pint_expr.h,v 1.19 2011/01/14 01:32:57 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PINT_EXPR_H__
@@ -131,6 +131,8 @@ virtual UNROLL_RESOLVE_COPY_PINT_PROTO = 0;
 	SUBSTITUTE_DEFAULT_PARAMETERS_META_INDEX_PROTO;
 
 virtual	SUBSTITUTE_DEFAULT_PARAMETERS_PINT_PROTO = 0;
+
+virtual	EXPR_ACCEPT_VISITOR_PROTO = 0;
 
 protected:
 	using nonmeta_parent_type::unroll_resolve_copy;

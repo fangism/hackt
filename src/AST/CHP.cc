@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.cc"
 	Class method definitions for CHP parser classes.
-	$Id: CHP.cc,v 1.29 2010/09/21 00:18:06 fang Exp $
+	$Id: CHP.cc,v 1.30 2011/01/14 01:32:55 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_chp.cc,v 1.21.20.1 2005/12/11 00:45:03 fang Exp
  */
@@ -343,7 +343,8 @@ if (size() == 1) {
 	} else {
 		cerr << "ERROR in CHP statement(s) at " <<
 			where(*this) << endl;
-		return return_type(NULL);
+		THROW_EXIT;
+		return return_type(NULL);	// this is interpreted as skip!
 	}
 }	// endif size() == 1
 }	// end stmt_list::__check_action

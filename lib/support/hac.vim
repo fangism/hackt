@@ -1,7 +1,7 @@
 " Vim syntax file
 " Language:	HAC
 " Maintainer:	CARLOS TADEO ORTEGA OTERO, DAVID FANG
-" Last Change:	2009-03-03
+" Last Change:	2010-01-13
 
 
 " A bunch of useful C keywords
@@ -13,7 +13,7 @@ syn keyword	cStatement  	template export open
 " syn keyword	cLabel		case default
 syn keyword	cLabel		defproc deftype defchan namespace
 syn keyword	cLabel		spec chp prs hse
-syn keyword	cConditional	else
+syn keyword	cConditional	else skip
 "syn keyword	cConditional	if else switch
 "syn keyword	cRepeat	  	for while	
 

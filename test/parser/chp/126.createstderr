@@ -1,0 +1,312 @@
+WARNING: channel bar.in[0] lacks connection to a producer.
+WARNING: channel bar.in[1] lacks connection to a producer.
+WARNING: channel bar.in2[0] lacks connection to a producer.
+WARNING: channel bar.in2[1] lacks connection to a producer.
+WARNING: channel bar.out lacks connection to a consumer.
+WARNING: channel bar.out2 lacks connection to a consumer.
+Warnings found (6) while creating complete type <top-level>.
+---- END CREATE WARNINGS ---
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	164
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	9	##ADDR##	chanplch	0	#HEAD#	#TAIL#	26
+	10	##ADDR##	chanplch	0	#HEAD#	#TAIL#	27
+	11	##ADDR##	chanplch	0	#HEAD#	#TAIL#	27
+	12	##ADDR##	chanplch	0	#HEAD#	#TAIL#	28
+	13	##ADDR##	dintplch	0	#HEAD#	#TAIL#	27
+	14	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	15	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	16	##ADDR##	portscop	0	#HEAD#	#TAIL#	40
+	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	20	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	datadefn	0	#HEAD#	#TAIL#	68
+	24	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	26	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	28	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	34	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	36	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	37	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	39	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	40	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	41	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	42	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	43	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	44	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	45	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	46	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	47	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	28
+	48	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
+	49	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	50	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	51	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
+	52	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	53	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	54	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
+	55	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	56	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	57	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	58	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	59	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
+	60	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	61	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	62	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	63	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	64	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	65	##ADDR##	CHPdetsl	0	#HEAD#	#TAIL#	24
+	66	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
+	67	##ADDR##	nrelatex	0	#HEAD#	#TAIL#	22
+	68	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	69	##ADDR##	nnegatex	0	#HEAD#	#TAIL#	13
+	70	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	71	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
+	72	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	73	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	74	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	75	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	76	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
+	77	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	78	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	79	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	80	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	81	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	82	##ADDR##	footprnt	0	#HEAD#	#TAIL#	696
+	83	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
+	84	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	85	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	86	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	28
+	87	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
+	88	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
+	89	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
+	90	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	91	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	92	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	93	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	94	##ADDR##	CHPdetsl	0	#HEAD#	#TAIL#	24
+	95	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
+	96	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
+	97	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	98	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	99	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	100	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	101	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	102	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	103	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	104	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	105	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	106	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	107	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	108	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	109	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	110	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	111	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	112	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	113	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	114	##ADDR##	footprnt	0	#HEAD#	#TAIL#	599
+	115	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  3 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    foo = process-definition (defined) foo(
+        bool<> !GND
+        bool<> !Vdd
+        int<32> sel
+        chan?(bool<>) in[0..1]
+        chan?(bool<>) in2[0..1]
+        chan!(bool<>) out
+        chan!(bool<>) out2
+      )
+      In definition "foo", we have: {
+      Instances:
+        !GND = bool<> foo::!GND
+        !Vdd = bool<> foo::!Vdd
+        in = chan?(bool<>) foo::in^1
+        in2 = chan?(bool<>) foo::in2^1
+        out = chan!(bool<>) foo::out
+        out2 = chan!(bool<>) foo::out2
+        sel = int<32> foo::sel
+        x = bool<> foo::x
+        y = bool<> foo::y
+      unroll sequence: 
+        ports: (
+          bool<> !GND
+          bool<> !Vdd
+          int<32> sel
+          chan?(bool<>) in[0..1]
+          chan?(bool<>) in2[0..1]
+          chan!(bool<>) out
+          chan!(bool<>) out2
+        )
+        !GND@[supply=0]
+        !Vdd@[supply=1]
+        bool<> x
+        bool<> y
+      chp:
+        concurrent: {
+          sequential: {
+            x := false
+            y := false
+            concurrent: {
+              *[
+                sequential: {
+                  in[sel]?(x)
+                  out!(x)
+                }
+              ]
+              deterministic: {
+                sel==-1 -> skip
+                else -> *[
+                  sequential: {
+                    in2[sel]?(y)
+                    out2!(y)
+                  }
+                ]
+              }
+            }
+          }
+        }
+      footprint: {
+        !GND = bool^0 = foo<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high port-alias ] 
+        in = channel chan?(bool<>)^1
+          {
+            [0] = foo<>::in[0] (3) @[ port! meta! chp? ~meta? ] 
+            [1] = foo<>::in[1] (4) @[ port! meta! chp? ~meta? ] 
+          }
+        in2 = channel chan?(bool<>)^1
+          {
+            [0] = foo<>::in2[0] (5) @[ port! meta! chp? ~meta? ] 
+            [1] = foo<>::in2[1] (6) @[ port! meta! chp? ~meta? ] 
+          }
+        out = channel chan!(bool<>)^0 = foo<>::out (1) @[ chp! meta! port? meta? ] 
+        out2 = channel chan!(bool<>)^0 = foo<>::out2 (2) @[ chp! meta! port? meta? ] 
+        sel = int<32>^0 = foo<>::sel (1) 
+        x = bool^0 = foo<>::x (3) 
+        y = bool^0 = foo<>::y (4) 
+        Created state:
+        channel instance pool: (6 ports, 0 local, 0 mapped)
+        1	foo<>::out @[ chp! meta! port? meta? ]	
+        2	foo<>::out2 @[ chp! meta! port? meta? ]	
+        3	foo<>::in[0] @[ port! meta! chp? ~meta? ]	
+        4	foo<>::in[1] @[ port! meta! chp? ~meta? ]	
+        5	foo<>::in2[0] @[ port! meta! chp? ~meta? ]	
+        6	foo<>::in2[1] @[ port! meta! chp? ~meta? ]	
+        int instance pool: (1 ports, 0 local, 0 mapped)
+        1	foo<>::sel	
+        bool instance pool: (2 ports, 2 local, 0 mapped)
+        1	foo<>::!GND @[ supply_low port-alias ]	
+        2	foo<>::!Vdd @[ supply_high port-alias ]	
+        3	foo<>::x	
+        4	foo<>::y	
+        resolved concurrent actions:
+          sequential: {
+            x := false
+            y := false
+            concurrent: {
+              *[
+                sequential: {
+                  in[sel]?(x)
+                  out!(x)
+                }
+              ]
+              deterministic: {
+                sel==-1 -> skip
+                else -> *[
+                  sequential: {
+                    in2[sel]?(y)
+                    out2!(y)
+                  }
+                ]
+              }
+            }
+          }
+        chp events: {
+          event[0]: assign: x := false, #pred: 1, succ: 8 
+          event[1]: null: null, #pred: 1, succ: 9 
+          event[2]: send: out!(x), #pred: 1, succ: 3 
+          event[3]: receive: in[sel]?(x), #pred: 1, succ: 2 
+          event[4]: select: [ sel==-1 -> ... [] else -> ... ], #pred: 1, succ: 1 6 
+          event[5]: send: out2!(y), #pred: 1, succ: 6 
+          event[6]: receive: in2[sel]?(y), #pred: 1, succ: 5 
+          event[7]: fork: , #pred: 1, succ: 3 4 
+          event[8]: assign: y := false, #pred: 1, succ: 7 
+          event[9]: join: , #pred: 2, succ: 
+        }
+      }
+      }
+
+  Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
+    bar = foo<> bar
+}
+
+footprint: {
+  !GND = bool^0 = !GND (1) @[ supply_low ] 
+  !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
+  bar = process foo<>^0 = bar (1) (
+    !GND = bool^0 = !GND (1) @[ supply_low ] 
+    !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
+    sel = int<32>^0 = bar.sel (1) 
+    in = channel chan?(bool<>)^1
+      {
+        [0] = bar.in[0] (1) @[ sub? chp? ~meta? ] 
+        [1] = bar.in[1] (2) @[ sub? chp? ~meta? ] 
+      }
+    in2 = channel chan?(bool<>)^1
+      {
+        [0] = bar.in2[0] (3) @[ sub? chp? ~meta? ] 
+        [1] = bar.in2[1] (4) @[ sub? chp? ~meta? ] 
+      }
+    out = channel chan!(bool<>)^0 = bar.out (5) @[ sub! chp! meta! ] 
+    out2 = channel chan!(bool<>)^0 = bar.out2 (6) @[ sub! chp! meta! ] 
+  )
+  Created state:
+  process instance pool: (0 ports, 1 local, 0 mapped)
+  1	bar	foo<>
+    channel: 5,6,1,2,3,4
+    int: 1
+    bool: 1,2
+  channel instance pool: (0 ports, 6 local, 0 mapped)
+  1	bar.in[0] @[ sub? chp? ~meta? ]	
+  2	bar.in[1] @[ sub? chp? ~meta? ]	
+  3	bar.in2[0] @[ sub? chp? ~meta? ]	
+  4	bar.in2[1] @[ sub? chp? ~meta? ]	
+  5	bar.out @[ sub! chp! meta! ]	
+  6	bar.out2 @[ sub! chp! meta! ]	
+  int instance pool: (0 ports, 1 local, 0 mapped)
+  1	bar.sel	
+  bool instance pool: (0 ports, 2 local, 2 mapped)
+  1	!GND @[ supply_low ]	
+  2	!Vdd @[ supply_high ]	
+  private sub-bool index map:
+    (1 -> 0)
+    (2 -> 2)
+}

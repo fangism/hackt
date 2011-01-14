@@ -7,5 +7,3 @@ Type mismatch in expression 1 of send expression list.
 	expected: int<32>
 At least one type error in expr-list in [6:14..16]
 ERROR in CHP statement(s) at [6:2..18]
-ERROR in one of the actions in [6:2..18]
-ERROR: at least one error in CHP body.

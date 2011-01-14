@@ -1,5 +1,7 @@
 // "log-01.hac"
 // expect fail with helpful error message
+// can't error out anymore, log() is implemented as a math function
+// will have a run-time type error instead
 
 chp {
 	log("Hello, world!\n")

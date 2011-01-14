@@ -1,7 +1,7 @@
 /**
 	\file "Object/expr/meta_func_lib.cc"
 	stolen from "Object/expr/dlfunction.cc"
-	$Id: meta_func_lib.cc,v 1.2 2010/09/21 00:18:17 fang Exp $
+	$Id: meta_func_lib.cc,v 1.3 2011/01/14 01:32:57 fang Exp $
  */
 
 #define	ENABLE_STATIC_TRACE				0
@@ -513,6 +513,7 @@ META_FUNCTION_LOAD_DEFAULT("cosh", cosh)
 PORT_STD_MATH_FUNCTION_REAL1(tanh)
 META_FUNCTION_LOAD_DEFAULT("tanh", tanh)
 
+#if 0
 void
 foo(void) {
 	string foon;
@@ -520,6 +521,7 @@ foo(void) {
 	TYPEOF(foon) bar;
 	typedef RESULT_OF(sqrt) something;
 }
+#endif
 
 //=============================================================================
 }	// end namespace entity

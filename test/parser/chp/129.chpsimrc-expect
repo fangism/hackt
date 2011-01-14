@@ -1,0 +1,28 @@
+
+# process[1]:
+event[1]: assign: {
+  bar.x := false;
+  ...
+}
+event[2]: [null]
+event[3]: receive: {
+  ...;
+  *[[
+    bar.sel==1 -> bar.in?(bar.x) []
+    ... -> ...
+  ]]
+}
+event[4]: assign: {
+  ...;
+  *[[
+    ... -> ... []
+    else -> bar.x := ~bar.x
+  ]]
+}
+event[5]: select: {
+  ...;
+  *[[
+    bar.sel==1 -> bar.in?(bar.x) []
+    else -> bar.x := ~bar.x
+  ]]
+}

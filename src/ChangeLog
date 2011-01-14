@@ -5,6 +5,20 @@
 
 2011-01-13	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-84-37:
+	  CHP front end fixes:
+		in some CHP statement error conditions, throw exception
+		instead of returning NULL, b/c NULL is interpreted as
+		a 'skip' action.  This fixes various accept-invalid bugs.
+	  Object/expr/int_expr.h:
+		re-declare abstract virtual override for accept(visitor&),
+		fixes self-recursion bug exhbited by 
+		int_negation_expr::accept.
+	  Test cases added and updated.
+
+
+2011-01-13	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-84-36:
 	  hacprsim: new commands:
 		set <node> ? -- sets node to 0 or 1 randomly

@@ -1,0 +1,16 @@
+// "128.hac"
+// crashes hacchpsim on negative number
+
+defproc foo(int sel; chan?(bool) in[2]; chan!(bool) out) {
+bool x;
+
+chp {
+x := false;
+*[[ (sel == -2) -> in[sel]?(x); out!(x)
+[] else -> skip
+]]
+}
+}
+
+foo bar;
+

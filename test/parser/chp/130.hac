@@ -1,0 +1,22 @@
+// "130.hac"
+// looks ok
+
+defproc foo(int sel; chan?(bool) in; chan!(bool) out) {
+bool x;
+
+chp {
+x := false;
+*[
+// x := ~x;
+[ (sel == 1) -> x:=true
+[] else  -> x:=false
+]]
+}
+}
+
+foo bar;
+/**
+int sel;
+chan(bool) z;
+foo bar(sel, z, z);
+**/

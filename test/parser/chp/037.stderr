@@ -3,4 +3,3 @@ Type mismatch in reference 1 of receive list.
 	expected: int<6>
 At least one type error in expr-list in [7:5..7]
 ERROR in CHP statement(s) at [7:2..15]
-ERROR: at least one error in CHP body.

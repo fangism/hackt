@@ -2,7 +2,7 @@
 	\file "Object/expr/data_expr.cc"
 	Implementation of data expression classes.  
 	NOTE: file was moved from "Object/art_object_data_expr.cc"
-	$Id: data_expr.cc,v 1.20 2010/09/21 00:18:13 fang Exp $
+	$Id: data_expr.cc,v 1.21 2011/01/14 01:32:56 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -1106,7 +1106,9 @@ int_negation_expr::get_resolved_data_type_ref(const unroll_context& c) const {
 void
 int_negation_expr::accept(nonmeta_expr_visitor& v) const {
 	// cast diambiguates between data_expr and nonmeta_index_expr_base
-	v.visit(static_cast<const data_expr&>(*this));
+	// v.visit(static_cast<const data_expr&>(*this));
+	// v.visit(static_cast<const nonmeta_index_expr_base&>(*this));
+	v.visit(*this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

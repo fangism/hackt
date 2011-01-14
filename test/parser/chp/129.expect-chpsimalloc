@@ -1,0 +1,19 @@
+Variables: 
+bool[1]: "!GND" 
+bool[2]: "!Vdd" 
+bool[3]: "bar.x" 
+int[1]: "bar.sel" 
+chan[1]: "bar.in" 
+chan[2]: "bar.out" 
+
+Event graph: 
+event[0]: fork: null, #pred: 0, succ: 1 
+
+# process[1]:
+event[1]: assign: bar.x := false, pid: 1, #pred: 1, succ: 5 
+event[2]: null: null, pid: 1, #pred: 1, succ: 5 
+event[3]: receive: bar.in?(bar.x), pid: 1, #pred: 1, succ: 2 
+channel deps: 1 
+event[4]: assign: bar.x := ~bar.x, pid: 1, #pred: 1, succ: 2 
+event[5]: select: [ bar.sel==1 -> ... [] else -> ... ], pid: 1, #pred: 1, succ: 3 4 
+

@@ -1,0 +1,37 @@
+
+# process[1]:
+event[1]: assign: {
+  bar.x := false;
+  ...
+}
+event[2]: [null]
+event[3]: send: {
+  ...;
+  *[[
+    bar.sel==-2 -> {
+      ...;
+      bar.out!(bar.x)
+    } []
+    ... -> ...
+  ]]
+}
+event[4]: receive: {
+  ...;
+  *[[
+    bar.sel==-2 -> {
+      bar.in[bar.sel]?(bar.x);
+      ...
+    } []
+    ... -> ...
+  ]]
+}
+event[5]: select: {
+  ...;
+  *[[
+    bar.sel==-2 -> {
+      bar.in[bar.sel]?(bar.x);
+      bar.out!(bar.x)
+    } []
+    else -> skip
+  ]]
+}

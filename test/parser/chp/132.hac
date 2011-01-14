@@ -1,0 +1,18 @@
+// "132.hac"
+// accepts-invalid bug
+
+defproc foo(int sel; chan?(bool) in[2]; chan!(bool) out) {
+bool x;
+
+chp {
+x := true;
+*[
+[ x ->
+	in?(x);	// should reject invalid!
+	out!(x)
+[] else  -> skip
+]]
+}
+}
+
+foo bar;

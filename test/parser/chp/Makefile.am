@@ -1,5 +1,5 @@
 # "test/parser/chp/Makefile.am"
-#	$Id: Makefile.am,v 1.29 2010/09/21 00:20:39 fang Exp $
+#	$Id: Makefile.am,v 1.30 2011/01/14 01:33:03 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -18,6 +18,7 @@ HACKT_PARSE_TEST_FAILURES = \
 	107 \
 	119 \
 	120 124 \
+	131 132 \
 	wrong-source \
 	wrong-sink wrong-sink-02 \
 	dataless-02 dataless-04 dataless-05 \
@@ -43,7 +44,8 @@ HACKT_PARSE_TEST_PASSES = \
 	090 091 092 093 094 097 098 099 \
 	100 102 104 105 106 108 109 \
 	110 111 112 113 114 115 116 117 118 \
-	121 122 123 125 \
+	121 122 123 125 126 127 128 129 \
+	130 \
 	top-level-01 top-level-02 top-level-03 \
 	bool-source bool-sink bool-sink-alt \
 	source-sink-01 \
@@ -64,7 +66,7 @@ HACKT_CREATE_TEST_PASSES = \
 	090 091 092 093 094 097 098 099 \
 	100 101 102 103 104 105 106 108 109 \
 	110 111 112 113 114 115 116 117 118 \
-	123 125 \
+	123 125 126 127 128 129 130 \
 	top-level-01 top-level-02 top-level-03 \
 	bool-source bool-sink \
 	source-sink-01 \
@@ -97,6 +99,7 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	097-a 098-a 099-a \
 	104-a \
 	114-a 116-a 117-a 118-a \
+	126 127 128 129 \
 	dataless-01-a \
 	source-sink-delay-01-a \
 	top-level-02-a
@@ -105,7 +108,7 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 BISON_OUTPUTS += 001 004 019b \
 	035 055 056 059 062 107
 
-srcdir_EXTRA_DIST +=
+srcdir_EXTRA_DIST += log-01.hac
 
 include $(top_srcdir)/test/Make.test-tail
 

@@ -1,0 +1,20 @@
+// "126.hac"
+// test case for infinite loop
+// should have compile-time diagnostic
+// crashes hacchpsim... ACX-PR-5998
+
+defproc foo(int sel; chan?(bool) in[2], in2[2]; chan!(bool) out, out2) {
+bool x, y;
+
+chp {
+x := false;
+y := false;
+*[in[sel]?(x); out!(x)],
+[ (sel == -1) -> skip
+[] else  -> *[in2[sel]?(y); out2!(y)]
+]
+}
+}
+
+foo bar;
+

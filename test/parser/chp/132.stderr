@@ -1,0 +1,2 @@
+ERROR expecting a scalar channel reference, but got a 1-dim reference.  [11:2..3]
+ERROR in CHP statement(s) at [11:2--12:8]

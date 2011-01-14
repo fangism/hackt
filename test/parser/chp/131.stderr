@@ -1,0 +1,3 @@
+ERROR: instance collection in is 0-dimensional, and thus, cannot be indexed 1-dimensionally!  [11:5..7]
+ERROR resolving instance reference at [11:2..7]
+ERROR in CHP statement(s) at [11:2--12:8]
