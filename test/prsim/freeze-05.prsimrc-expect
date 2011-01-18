@@ -1,0 +1,9 @@
+Nodes frozen:
+Nodes frozen:
+a
+initialize should clear frozen nodes 
+Nodes frozen:
+Nodes frozen:
+b
+reset should clear frozen nodes 
+Nodes frozen:

@@ -1,0 +1,21 @@
+# "freeze-05.prsimrc"
+# @haco@ inv.haco-c
+# make sure that reset and initialize unfreezes nodes
+
+status-frozen
+freeze a
+status-frozen
+initialize
+echo initialize should clear frozen nodes
+status-frozen
+
+freeze b
+status-frozen
+reset
+echo reset should clear frozen nodes
+status-frozen
+
+# resetting clears the autocheckpoint
+save freeze-05.prsimckpt
+save freeze-05.prsimckpt-O1
+

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.h"
 	Structure of basic PRS node.  
-	$Id: Node.h,v 1.26 2010/09/23 00:19:53 fang Exp $
+	$Id: Node.h,v 1.27 2011/01/18 00:00:01 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_NODE_H__
@@ -355,6 +355,9 @@ public:
 		/// AND-mask (negated) for initialization
 		NODE_INITIALIZE_CLEAR_MASK =
 			NODE_FLAG | NODE_EX_QUEUE
+#if PRSIM_UPSET_NODES
+			| NODE_FROZEN
+#endif
 	} state_flags_enum;
 
 public:
