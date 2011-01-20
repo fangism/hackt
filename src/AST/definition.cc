@@ -2,7 +2,7 @@
 	\file "AST/definition.cc"
 	Class method definitions for HAC::parser definition-related classes.
 	Organized for definition-related branches of the parse-tree classes.
-	$Id: definition.cc,v 1.14 2010/04/30 18:41:41 fang Exp $
+	$Id: definition.cc,v 1.15 2011/01/20 00:09:44 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_definition.cc,v 1.29.10.1 2005/12/11 00:45:04 fang Exp
  */
@@ -1013,6 +1013,10 @@ if (base_not_chan->get_temp_spec()) {
 	const never_ptr<const object>
 		obj(c.add_declaration(c.get_current_prototype()));
 		// also resets current_prototype, *after* checking type ref
+	if (!obj) {
+		cerr << "(or is duplicate) " << where(*this) << endl;
+		THROW_EXIT;
+	}
 	INVARIANT(!c.get_current_prototype());
 	// useless return value NULL, check current_fundamental_type
 	if (!ftr) {

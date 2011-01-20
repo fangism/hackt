@@ -1,0 +1,8 @@
+// "033.hac"
+// test case for ICE-on-invalid
+
+template <pint N>
+defproc foo() { }
+
+typedef	foo<2>		bar1;
+typedef	foo<321>	bar1;	// re-def

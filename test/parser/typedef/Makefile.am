@@ -1,12 +1,13 @@
 # "test/parser/typedef/Makefile.am"
-#	$Id: Makefile.am,v 1.16 2010/09/21 00:24:51 fang Exp $
+#	$Id: Makefile.am,v 1.17 2011/01/20 00:09:45 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
 HACKT_PARSE_TEST_FAILURES = \
 	    001 006 007 008 009 \
 	010 016 017 \
-	021 022 023 027 028 029
+	021 022 023 027 028 029 \
+	032 033
 
 HACKT_PARSE_TEST_PASSES = \
 	002 003 004 005 \
