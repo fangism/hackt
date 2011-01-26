@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-01-26	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-40:
+	  hacprsim: better error handling when delcaring channel with
+		out-of-range references to bundles/rails.
+	  Test case added: channel-test-k-03 (expect-fail).
+
+
 2011-01-19	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-39:

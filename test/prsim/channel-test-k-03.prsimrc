@@ -1,0 +1,6 @@
+# "channel-test-k-03.prsimrc"
+# @haco@ channel-test-k.haco-c
+
+# expect fail: out of range
+channel Z ev:0 b:4 d:2
+

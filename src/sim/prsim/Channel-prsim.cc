@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Channel-prsim.cc"
-	$Id: Channel-prsim.cc,v 1.38 2010/12/13 23:26:28 fang Exp $
+	$Id: Channel-prsim.cc,v 1.39 2011/01/26 22:49:07 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -3310,6 +3310,7 @@ if (i.second) {
 	// lookup and assign node-indices
 	dk[0] = 0;
 	size_t& j = dk[0];
+try {
 	for ( ; j<num_bundles; ++j) {
 		ostringstream bundle_segment;
 		if (bundle_name.length()) {
@@ -3326,6 +3327,7 @@ if (i.second) {
 			if (_num_rails) {
 				n << "[" << k << "]";
 			}
+			// may throw exception
 			const node_index_type ni =
 				parse_node_to_index(n.str(), m).index;
 			if (ni) {
@@ -3354,6 +3356,11 @@ if (i.second) {
 	// initialize data-rail state counters from current values
 	c.initialize_data_counter(state);
 	return false;
+} catch (...) {
+	cerr << "Error referencing channel `" << base
+		<< "\' structure members." << endl;
+	return true;
+}
 } else {
 	return true;
 }
