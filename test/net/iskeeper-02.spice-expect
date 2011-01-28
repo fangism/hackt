@@ -1,12 +1,12 @@
 .subckt foo<> !GND !Vdd en a b o
 M_o:dn:0 !GND en #0 !GND nch W=0.15U L=0.06U
-+ AS=0.045P PS=0.9U AD=0.036P PD=0.78U
++ AS=0.045P PS=0.9U AD=0.018P PD=0.24U
 M_o:dn:1:pchg !Vdd en #0 !Vdd pch W=0.3U L=0.06U
-+ AS=0.09P PS=1.2U AD=0.072P PD=1.08U
++ AS=0.09P PS=1.2U AD=0.036P PD=0.24U
 M_o:dn:2 #0 a #1 !GND nch W=0.15U L=0.06U
-+ AS=0.036P PS=0.78U AD=0.036P PD=0.78U
++ AS=0.018P PS=0.24U AD=0.018P PD=0.24U
 M_o:dn:3 #1 b _o !GND nch W=0.15U L=0.06U
-+ AS=0.036P PS=0.78U AD=0.045P PD=0.9U
++ AS=0.018P PS=0.24U AD=0.045P PD=0.9U
 M_o:up:0 !Vdd en _o !Vdd pch W=0.3U L=0.06U
 + AS=0.09P PS=1.2U AD=0.09P PD=1.2U
 Mo:dn:0 !GND _o o !GND nch W=0.15U L=0.06U

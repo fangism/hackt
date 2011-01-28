@@ -3,7 +3,7 @@
 	Simple template container-based memory pool.  
 	Basically allocates a large chunk at a time.  
 
-	$Id: list_vector_pool.h,v 1.18 2006/05/07 20:56:10 fang Exp $
+	$Id: list_vector_pool.h,v 1.19 2011/01/28 02:23:31 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_LIST_VECTOR_POOL_H__
@@ -231,7 +231,7 @@ template <>
 class list_vector_pool<void> {
 public:
 	typedef size_t		size_type;
-	typedef ptrdiff_t	difference_type;
+	typedef std::ptrdiff_t	difference_type;
 	typedef void*		pointer;
 	typedef const void*	const_pointer;
 	typedef void		value_type;
@@ -251,7 +251,7 @@ class list_vector_pool<T*, Threaded> {
 public:
 	typedef	T*				value_type;
 	typedef	size_t				size_type;
-	typedef	ptrdiff_t			difference_type;
+	typedef	std::ptrdiff_t			difference_type;
 	typedef	value_type*			pointer;
 	typedef	const value_type*		const_pointer;
 	typedef	value_type&			reference;
@@ -285,7 +285,7 @@ class list_vector_pool {
 public:
 	typedef	T				value_type;
 	typedef	size_t				size_type;
-	typedef	ptrdiff_t			difference_type;
+	typedef	std::ptrdiff_t			difference_type;
 	typedef	T*				pointer;
 	typedef	const T*			const_pointer;
 	typedef	T&				reference;

@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.cc"
-	$Id: netgraph.cc,v 1.26 2010/10/27 00:16:53 fang Exp $
+	$Id: netgraph.cc,v 1.27 2011/01/28 02:23:30 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -640,19 +640,33 @@ transistor::emit(ostream& o, const index_type di,
 		const real_type l2 = nopt.lambda * 2.0;
 		const bool s_ext = s.is_stack_end_node();
 		const bool d_ext = d.is_stack_end_node();
+		const real_type half_spacing = nopt.fet_spacing_diffonly / 2.0;
 		const real_type& sl(s_ext ?
-			nopt.fet_diff_overhang : nopt.fet_spacing_diffonly);
+			nopt.fet_diff_overhang : half_spacing);
 		const real_type& dl(d_ext ?
-			nopt.fet_diff_overhang : nopt.fet_spacing_diffonly);
-		nopt.line_continue(o);
+			nopt.fet_diff_overhang : half_spacing);
+		// areas of internal stack nodes are halved to 
+		// assume internal sharing, split to each sharer.
 		const real_type asv = width * sl * lsq;
-		const real_type psv = pge ? (width + sl) *l2 :	// all sides
+		const real_type psv = pge ? 
+			(s_ext ? (width + sl) *l2		// width +side
+				: sl*l2) :			// sides only
 			(s_ext ? (width*nopt.lambda + sl*l2)	// 3 sides
 				: (sl * l2));			// 2 sides
 		const real_type adv = width * dl * lsq;
-		const real_type pdv = pge ? (width + dl) *l2 :	// all sides
+		const real_type pdv = pge ?
+			(d_ext ? (width + dl) *l2		// width +side
+				: dl*l2) :			// sides only
 			(d_ext ? (width*nopt.lambda + dl*l2)	// 3 sides
 				: (dl * l2));			// 2 sides
+#if 0
+		// debugging
+		nopt.line_continue(o);
+		o << "lambda=" << nopt.lambda <<
+			" sl=" << sl <<
+			" dl=" << dl;
+#endif
+		nopt.line_continue(o);
 		o <<	" AS=" << asv << nopt.area_unit <<
 			" PS=" << psv << nopt.length_unit <<
 			" AD=" << adv << nopt.area_unit <<

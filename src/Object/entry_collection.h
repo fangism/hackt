@@ -1,13 +1,14 @@
 /**
 	\file "Object/entry_collection.h"
 	Handy class for accumulating all reachable subinstances.  
-	$Id: entry_collection.h,v 1.3 2007/03/15 06:11:03 fang Exp $
+	$Id: entry_collection.h,v 1.4 2011/01/28 02:23:29 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_ENTRY_COLLECTION_H__
 #define	__HAC_OBJECT_ENTRY_COLLECTION_H__
 
 #include <set>
+#include "util/size_t.h"
 #include "Object/traits/classification_tags.h"
 #include "Object/devel_switches.h"
 

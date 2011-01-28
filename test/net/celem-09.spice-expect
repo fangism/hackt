@@ -1,28 +1,28 @@
 .subckt celem<> !GND !Vdd a b o
 M_o:dn:0 !GND a #0 !GND nch W=0.15U L=0.06U
-+ AS=0.045P PS=0.75U AD=0.036P PD=0.48U
++ AS=0.045P PS=0.75U AD=0.018P PD=0.24U
 M_o:dn:1 #0 b _o !GND nch W=0.15U L=0.06U
-+ AS=0.036P PS=0.48U AD=0.045P PD=0.75U
++ AS=0.018P PS=0.24U AD=0.045P PD=0.75U
 M_o:up:0 !Vdd a #1 !Vdd pch W=0.3U L=0.06U
-+ AS=0.09P PS=0.9U AD=0.072P PD=0.48U
++ AS=0.09P PS=0.9U AD=0.036P PD=0.24U
 M_o:up:1 #1 b _o !Vdd pch W=0.3U L=0.06U
-+ AS=0.072P PS=0.48U AD=0.09P PD=0.9U
++ AS=0.036P PS=0.24U AD=0.09P PD=0.9U
 Mo:dn:0 !GND _o o !GND nch W=0.15U L=0.06U
 + AS=0.045P PS=0.75U AD=0.045P PD=0.75U
 Mo:up:0 !Vdd _o o !Vdd pch W=0.3U L=0.06U
 + AS=0.09P PS=0.9U AD=0.09P PD=0.9U
 M_o:dn:2:ckeeper !GND a #2 !GND nch W=0.15U L=0.06U
-+ AS=0.045P PS=0.75U AD=0.036P PD=0.48U
++ AS=0.045P PS=0.75U AD=0.018P PD=0.24U
 M_o:dn:3:ckeeper !GND b #2 !GND nch W=0.15U L=0.06U
-+ AS=0.045P PS=0.75U AD=0.036P PD=0.48U
++ AS=0.045P PS=0.75U AD=0.018P PD=0.24U
 M_o:dn:4:ckeeper #2 o _o !GND nch W=0.15U L=0.06U
-+ AS=0.036P PS=0.48U AD=0.045P PD=0.75U
++ AS=0.018P PS=0.24U AD=0.045P PD=0.75U
 M_o:up:2:ckeeper !Vdd a #3 !Vdd pch W=0.3U L=0.06U
-+ AS=0.09P PS=0.9U AD=0.072P PD=0.48U
++ AS=0.09P PS=0.9U AD=0.036P PD=0.24U
 M_o:up:3:ckeeper !Vdd b #3 !Vdd pch W=0.3U L=0.06U
-+ AS=0.09P PS=0.9U AD=0.072P PD=0.48U
++ AS=0.09P PS=0.9U AD=0.036P PD=0.24U
 M_o:up:4:ckeeper #3 o _o !Vdd pch W=0.3U L=0.06U
-+ AS=0.072P PS=0.48U AD=0.09P PD=0.9U
++ AS=0.036P PS=0.24U AD=0.09P PD=0.9U
 .ends
 
 xfoo !GND !Vdd foo.a foo.b foo.o celem<>

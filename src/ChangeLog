@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-01-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-41:
+	  hacknet: area/perimeter estimation has been too pessimistic
+		for a while, internal diffusion area were not overlapped.
+		Now, internal areas are halved per sharer, and 
+		overlapping gate edge width is subtracted.
+		NOTE: this will break from matching the behavior of netgen.
+	  Test cases updated.
+
+
 2011-01-26	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-40:

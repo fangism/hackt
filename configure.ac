@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.223 2010/09/21 00:17:53 fang Exp $
+#	$Id: configure.ac,v 1.224 2011/01/28 02:23:28 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -354,6 +354,7 @@ dnl temporarily override ac_compile and ac_link to force checking in C++ mode
 dnl language mode doesn't really matter because these test by linking
 AC_LANG_PUSH(C++)
 AC_CHECK_TYPES([ptrdiff_t])
+AC_CHECK_TYPES([std::ptrdiff_t])
 AC_CHECK_TYPES([pid_t])
 dnl AC_CHECK_FUNCS([sqrt])
 FANG_FUNC_SQRT
