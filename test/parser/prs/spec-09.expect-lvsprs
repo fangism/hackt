@@ -1,0 +1,10 @@
+"bar1.x" -> "bar1.y"-
+~"bar1.x" -> "bar1.y"+
+"bar3.x" -> "bar3.y"-
+~"bar3.x" -> "bar3.y"+
+ERROR: assert spec directive failed.
+Error with spec directive.
+Instantiated from type: foo<3>
+Instantiated from -TOP-: 
+Caught exception during cflat PRS.
+Error during cflat.

@@ -1,0 +1,14 @@
+// "spec-08.hac"
+// testing out assert directive
+
+template <pint N>
+defproc foo(bool x, y) {
+spec {
+	assert<N <= 2>()
+}
+prs {
+	x		=> y-
+}
+}
+
+foo<1> bar1;

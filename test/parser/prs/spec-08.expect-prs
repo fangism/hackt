@@ -1,0 +1,4 @@
+"bar1.x" -> "bar1.y"-
+~"bar1.x" -> "bar1.y"+
+= "!GND" "bar1.!GND"
+= "!Vdd" "bar1.!Vdd"

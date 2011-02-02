@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.74 2010/09/21 00:22:52 fang Exp $
+#	$Id: Makefile.am,v 1.75 2011/02/02 23:54:24 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -57,7 +57,7 @@ HACKT_PARSE_TEST_PASSES = \
 	macro-pass-05c macro-pass-07c \
 	macro-pass-08 macro-pass-09 \
 	after-02 after-03 \
-	spec-02 spec-04 spec-06 spec-07 \
+	spec-02 spec-04 spec-06 spec-07 spec-08 spec-09 \
 	size-01 size-03 size-04 size-05 \
 	weak-01 weak-02 weak-03 \
 	spec_min_sep-01 spec_min_sep-03 spec_min_sep-04 spec_min_sep-05 \
@@ -150,7 +150,7 @@ HACKT_CREATE_TEST_PASSES = \
 	macro-pass-01 macro-pass-02 macro-pass-03 macro-pass-05 macro-pass-07 \
 	macro-pass-08 macro-pass-09 \
 	after-02 after-03 \
-	spec-02 spec-04 spec-06 spec-07 \
+	spec-02 spec-04 spec-06 spec-07 spec-08 spec-09 \
 	size-01 size-03 size-04 size-05 \
 	weak-01 weak-02 weak-03 \
 	spec_min_sep-01 spec_min_sep-03 spec_min_sep-04 spec_min_sep-05 \
@@ -244,7 +244,7 @@ HACKT_CFLAT_TEST_SUBJECTS = \
 	macro-pass-05b macro-pass-07b \
 	macro-pass-05c macro-pass-07c \
 	after-02 after-03 \
-	spec-02 spec-04 spec-06 spec-07 \
+	spec-02 spec-04 spec-06 spec-07 spec-08 \
 	size-01 size-03 size-04 size-05 \
 	weak-01 weak-02 weak-03 \
 	bug-001 \
@@ -296,6 +296,7 @@ HACKT_CFLAT_LVS_TEST_PASSES = \
 	nand-04 nand-08 nand-09 \
 	lvs-order-01 lvs-order-03 \
 	lvs-xcpl-inv-01 \
+	spec-08 \
 	macro-pass-02 macro-pass-03 macro-pass-05 macro-pass-07 \
 	macro-pass-05b macro-pass-07b \
 	weak-03 \
@@ -337,7 +338,8 @@ top-level-06.spice: top-level-06.haco
 	@$(HACKNET_TEST_SCRIPT)
 
 HACKT_CFLAT_LVS_TEST_FAILURES = \
-	lvs-order-02
+	lvs-order-02 \
+	spec-09
 
 HACKT_CFLAT_SEU_TEST_SUBJECTS = \
 	spec_min_sep-01 spec_min_sep-03 spec_min_sep-04 spec_min_sep-05 \

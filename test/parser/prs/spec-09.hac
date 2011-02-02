@@ -1,0 +1,7 @@
+// "spec-09.hac"
+// expect create fail
+
+import "spec-08.hac";
+
+foo<3> bar3;
+

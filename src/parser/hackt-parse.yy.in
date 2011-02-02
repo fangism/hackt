@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.59 2010/09/29 00:13:40 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.60 2011/02/02 23:54:22 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -717,6 +717,7 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_inst_ref_expr_list>	implicit_global_connections
 %type	<_inst_ref_expr_list>	optional_implicit_global_connections
 %type	<_inst_ref_expr_list>	grouped_reference_list
+%type	<_inst_ref_expr_list>	grouped_reference_list_optional
 %type	<_inst_ref_expr_list>	grouped_reference_list_in_parens
 /* %type	<_expr_list>	complex_expr_list complex_expr_list_in_angles */
 %type	<_expr_list>	complex_expr_optional_list complex_expr_optional_list_in_angles
@@ -2579,8 +2580,13 @@ spec_directive
 	;
 
 grouped_reference_list_in_parens
-	: '(' grouped_reference_list ')'
+	: '(' grouped_reference_list_optional ')'
 		{ $$ = $2; WRAP_LIST($1, $2, $3); }
+	;
+
+grouped_reference_list_optional
+	: grouped_reference_list { $$ = $1; }
+	| { $$ = new inst_ref_expr_list(); }
 	;
 
 grouped_reference_list

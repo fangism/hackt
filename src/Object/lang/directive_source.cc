@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/directive_source.cc"
-	$Id: directive_source.cc,v 1.10 2010/08/24 21:05:46 fang Exp $
+	$Id: directive_source.cc,v 1.11 2011/02/02 23:54:22 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -219,13 +219,14 @@ directive_source<L>::dump_nodes(ostream& o,
 		const PRS::rule_dump_context& c) const {
 	o << '(';
 	typedef typename nodes_type::const_iterator	const_iterator;
-	INVARIANT(nodes.size());
+if (nodes.size()) {
 	const_iterator i(nodes.begin());
 	const const_iterator e(nodes.end());
 	dump_group(*i, o, c);
 	for (++i; i!=e; ++i) {
 		dump_group(*i, o << ',', c);
 	}
+}
 	return o << ')';
 }
 

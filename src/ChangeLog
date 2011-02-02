@@ -5,6 +5,14 @@
 
 2011-02-02	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-84-43:
+	  SPEC directives: allow empty instance reference arguments, 
+		so that assert directive works as expected.
+	  Test cases added.
+
+
+2011-02-02	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-84-42:
 	  hacprsim: new command getcommonports p1 p2
 		prints values for ports shared by two processes.

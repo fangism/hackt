@@ -1,6 +1,6 @@
 /**
 	\file "AST/SPEC.cc"
-	$Id: SPEC.cc,v 1.19 2010/09/29 00:13:36 fang Exp $
+	$Id: SPEC.cc,v 1.20 2011/02/02 23:54:20 fang Exp $
  */
 
 #include <iostream>
@@ -168,7 +168,7 @@ case META_TYPE_BOOL: {
 			<< endl;
 		SPEC_THROW_ERROR;
 	}
-	INVARIANT(temp.size());
+//	INVARIANT(temp.size());	// can be empty for some directives
 	NEVER_NULL(bret);
 	copy(i, e, back_inserter(bret->get_nodes()));
 	c.get_current_spec_body().push_back(bret);

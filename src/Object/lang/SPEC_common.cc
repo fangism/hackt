@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/SPEC_registry.cc"
 	Definitions of spec directives belong here.  
-	$Id: SPEC_common.cc,v 1.10 2010/07/14 18:12:33 fang Exp $
+	$Id: SPEC_common.cc,v 1.11 2011/02/02 23:54:21 fang Exp $
  */
 
 #include <iostream>
@@ -238,7 +238,13 @@ Assert::__check_num_nodes(const char* name, const size_t s) {
  */
 good_bool
 Assert::__check_param_args(const char* name, const param_args_type& a) {
-	return good_bool(const_param_expr_list::is_all_true(a));
+	const bool t = const_param_expr_list::is_all_true(a);
+	if (!t) {
+		cerr << "ERROR: " << name << " spec directive failed." << endl;
+		// already resolved to constant at this point
+		// TODO: back-reference to source
+	}
+	return good_bool(t);
 }
 
 good_bool

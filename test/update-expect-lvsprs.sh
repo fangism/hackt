@@ -23,7 +23,16 @@ done
 
 for i
 do
-	cp -f $i.lvsprs $srcdir/$i.expect-lvsprs
-	echo "Updated $srcdir/$i.expect-lvsprs"
+	if test -f $i.lvsprs
+	then
+		cp -f $i.lvsprs $srcdir/$i.expect-lvsprs
+		echo "Updated $srcdir/$i.expect-lvsprs"
+	elif test -f $i.lvsfail
+	then
+		cp -f $i.lvsfail $srcdir/$i.expect-lvsprs
+		echo "Updated $srcdir/$i.expect-lvsprs"
+	else
+		echo "$i.lvsprs or $i.lvsfail required but missing."
+	fi
 done
 

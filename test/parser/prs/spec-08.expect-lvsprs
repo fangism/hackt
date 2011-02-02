@@ -1,0 +1,4 @@
+"bar1.x" -> "bar1.y"-
+~"bar1.x" -> "bar1.y"+
+connect "!GND" "bar1.!GND"
+connect "!Vdd" "bar1.!Vdd"

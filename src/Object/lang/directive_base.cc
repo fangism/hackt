@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/directive_base.cc"
-	$Id: directive_base.cc,v 1.10 2010/09/02 00:34:40 fang Exp $
+	$Id: directive_base.cc,v 1.11 2011/02/02 23:54:22 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -223,11 +223,12 @@ generic_directive_base::dump_groups(ostream& o, const PTag& np) const {
 	typedef nodes_type::const_iterator const_iterator;
 	const_iterator i(nodes.begin());
 	const const_iterator e(nodes.end());
-	INVARIANT(i!=e);
+if (i!=e) {
 	dump_group(*i, o, np);
 	for (++i; i!=e; ++i) {
 		dump_group(*i, o << ',', np);
 	}
+}
 }
 	return o;
 }
@@ -241,11 +242,12 @@ generic_directive_base::dump_groups(ostream& o, const footprint& f) const {
 	typedef nodes_type::const_iterator const_iterator;
 	const_iterator i(nodes.begin());
 	const const_iterator e(nodes.end());
-	INVARIANT(i!=e);
+if (i!=e) {
 	dump_group<Tag>(*i, o, f);
 	for (++i; i!=e; ++i) {
 		dump_group<Tag>(*i, o << ',', f);
 	}
+}
 }
 	return o;
 }
