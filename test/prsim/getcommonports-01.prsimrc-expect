@@ -1,0 +1,11 @@
+Ports common to '.' and '.':
+Ports common to '.' and 'I':
+Ports common to 'J' and '.':
+Ports common to 'I' and 'J':
+!GND : 0
+!Vdd : 1
+b : X
+Ports common to 'J' and 'I':
+!GND : 0
+!Vdd : 1
+b : X

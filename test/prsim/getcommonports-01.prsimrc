@@ -1,0 +1,12 @@
+# "getcommonports-01.prsimrc"
+# @haco@ inv.haco-c
+
+# TODO: more tests, more hierarchy
+
+# . has no ports, not even GND, Vdd
+getcommonports . .
+getcommonports . I
+getcommonports J .
+getcommonports I J
+getcommonports J I
+

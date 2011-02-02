@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.81 2011/01/13 22:19:09 fang Exp $
+	$Id: Command-prsim.cc,v 1.82 2011/02/02 19:31:44 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -2272,6 +2272,10 @@ the set of ports into inputs and outputs.
 Directionality of inputs/outputs is inferred by the presence of
 fanin local to the @var{struct} process instance (its type).  
 @end deffn
+
+@deffn Command getcommonports struct1 struct2
+Prints the state of nodes that are common to @var{struct1} and @var{struct2}.
+@end deffn
 @end texinfo
 ***/
 PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(GetPorts, instance_completer)
@@ -2285,6 +2289,11 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(GetInPorts, "getinports", info,
 PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(GetOutPorts, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(GetOutPorts, "getoutports", info,
 	"print values of output ports of structure")
+
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(GetCommonPorts, instance_completer)
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(GetCommonPorts, "getcommonports", info,
+	"print values of ports shared by two structures")
+
 
 int
 GetPorts::main(State& s, const string_list& a) {
@@ -2379,6 +2388,43 @@ if (a.size() != 2) {
 }
 }
 
+int
+GetCommonPorts::main(State& s, const string_list& a) {
+if (a.size() != 3) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	typedef	vector<node_index_type>		nodes_id_list_type;
+	string_list::const_iterator ai(a.begin());
+	const string& objname1(*++ai);
+	const string& objname2(*++ai);
+	nodes_id_list_type nodes1, nodes2;
+	if (parse_name_to_get_ports(objname1, s.get_module(), nodes1)) {
+		// already got error message?
+		return Command::BADARG;
+	}
+	if (parse_name_to_get_ports(objname2, s.get_module(), nodes2)) {
+		// already got error message?
+		return Command::BADARG;
+	}
+	sort(nodes1.begin(), nodes1.end());
+	sort(nodes2.begin(), nodes2.end());
+	nodes_id_list_type common;
+	common.reserve(std::min(nodes1.size(), nodes2.size()));
+	set_intersection(nodes1.begin(), nodes1.end(), 
+		nodes2.begin(), nodes2.end(), back_inserter(common));
+	typedef	nodes_id_list_type::const_iterator	const_iterator;
+	cout << "Ports common to \'" << 
+		nonempty_abs_dir(objname1) << "\' and \'" <<
+		nonempty_abs_dir(objname2) << "\':" << endl;
+	const_iterator i(common.begin()), e(common.end());
+	for ( ; i!=e; ++i) {
+		s.dump_node_value(cout, *i) << endl;
+	}
+	return Command::NORMAL;
+}
+}
+
 void
 GetPorts::usage(ostream& o) {
 	o << name << " <name>" << endl;
@@ -2400,6 +2446,14 @@ GetOutPorts::usage(ostream& o) {
 	o << name << " <name>" << endl;
 	o <<
 "prints the current values of output ports of the structure"
+		<< endl;
+}
+
+void
+GetCommonPorts::usage(ostream& o) {
+	o << name << " <name1> <name2>" << endl;
+	o <<
+"prints the current values of ports common to both structures"
 		<< endl;
 }
 
