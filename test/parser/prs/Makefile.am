@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.75 2011/02/02 23:54:24 fang Exp $
+#	$Id: Makefile.am,v 1.76 2011/02/03 02:23:28 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -57,7 +57,7 @@ HACKT_PARSE_TEST_PASSES = \
 	macro-pass-05c macro-pass-07c \
 	macro-pass-08 macro-pass-09 \
 	after-02 after-03 \
-	spec-02 spec-04 spec-06 spec-07 spec-08 spec-09 \
+	spec-02 spec-04 spec-06 spec-07 spec-08 spec-09 spec-10 \
 	size-01 size-03 size-04 size-05 \
 	weak-01 weak-02 weak-03 \
 	spec_min_sep-01 spec_min_sep-03 spec_min_sep-04 spec_min_sep-05 \
@@ -150,7 +150,7 @@ HACKT_CREATE_TEST_PASSES = \
 	macro-pass-01 macro-pass-02 macro-pass-03 macro-pass-05 macro-pass-07 \
 	macro-pass-08 macro-pass-09 \
 	after-02 after-03 \
-	spec-02 spec-04 spec-06 spec-07 spec-08 spec-09 \
+	spec-02 spec-04 spec-06 spec-07 spec-08 spec-09 spec-10 \
 	size-01 size-03 size-04 size-05 \
 	weak-01 weak-02 weak-03 \
 	spec_min_sep-01 spec_min_sep-03 spec_min_sep-04 spec_min_sep-05 \
@@ -339,7 +339,8 @@ top-level-06.spice: top-level-06.haco
 
 HACKT_CFLAT_LVS_TEST_FAILURES = \
 	lvs-order-02 \
-	spec-09
+	spec-09 \
+	spec-10
 
 HACKT_CFLAT_SEU_TEST_SUBJECTS = \
 	spec_min_sep-01 spec_min_sep-03 spec_min_sep-04 spec_min_sep-05 \
@@ -376,6 +377,9 @@ EMPTY_CFLAT_PRS_TESTS += \
 HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	spec_min_sep_proc-12 \
 	macro-pass-02
+
+HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
+	spec-09 spec-10
 
 HACKNET_TEST_SCRIPTS_PASSES = \
 	wchb-06 \

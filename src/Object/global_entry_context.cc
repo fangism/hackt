@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry_context.cc"
-	$Id: global_entry_context.cc,v 1.9 2010/09/16 06:31:42 fang Exp $
+	$Id: global_entry_context.cc,v 1.10 2011/02/03 02:23:20 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -645,6 +645,21 @@ global_entry_context::visit(const footprint& f) {
 	STACKTRACE_VERBOSE;
 //	visit_local<Tag>(f);		// no Tag available in this context
 	visit_recursive(f);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Call this to report error.
+	Caller is responsible for throw-ing or re-throwing exceptions.
+ */
+void
+global_entry_context::report_instantiation_error(ostream& o) const {
+	if (at_top()) {
+		cerr << "Instantiated from -TOP-: " << endl;
+	} else {
+		get_current_footprint().dump_type(
+			cerr << "Instantiated from type: ") << endl;
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

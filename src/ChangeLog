@@ -8,6 +8,8 @@
 	* HACKT-00-01-04-main-00-84-43:
 	  SPEC directives: allow empty instance reference arguments, 
 		so that assert directive works as expected.
+	  Also added instantiation stack trace error-printing
+		to footprint::accept().
 	  Test cases added.
 
 

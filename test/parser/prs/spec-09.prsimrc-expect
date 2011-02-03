@@ -1,0 +1,5 @@
+ERROR: assert spec directive failed.
+Error with SPEC directive.
+Instantiated from type: foo<3>
+Instantiated from -TOP-: 
+Caught exception during construction of simulator state.

@@ -1,7 +1,7 @@
 /**
 	\file "net/netlist_generator.cc"
 	Implementation of hierarchical netlist generation.
-	$Id: netlist_generator.cc,v 1.26 2010/09/21 00:18:35 fang Exp $
+	$Id: netlist_generator.cc,v 1.27 2011/02/03 02:23:22 fang Exp $
  */
 
 #define	ENABLE_STATIC_TRACE		0
@@ -182,7 +182,6 @@ if (&f == topfp) {	// at_top()
 } else {
 	nl->bind_footprint(f, opt);
 }
-try {
 #if POST_MANGLE_TYPE_NAME_COLLISIONS
 	// check for type name collisions, not configurable yet
 	const string nmn(opt.case_collision_policy != OPTION_IGNORE ?
@@ -239,10 +238,6 @@ try {
 			"Warnings found in producing netlist for " <<
 			nl->name << '.' << endl;
 	}
-} catch (...) {
-	cerr << "ERROR producing netlist for " << nl->name << endl;
-	throw;
-}
 #if ENABLE_STACKTRACE
 	nl->dump_raw(cerr);	// DEBUG point
 #endif
@@ -253,7 +248,7 @@ if (opt.empty_subcircuits || !nl->is_empty()) {
 		<< nl->name << " is empty.\n" << endl;
 }
 }
-}
+}	// end visit(const footprint&)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

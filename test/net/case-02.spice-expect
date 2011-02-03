@@ -1,6 +1,6 @@
 Error: Post-mangled node name `oops' collides with another node `Oops'.
 ERROR in production rule.
 	oops -> Oops-
-ERROR producing netlist for foo<>
-ERROR producing netlist for <top-level>
+Instantiated from type: foo<>
+Instantiated from -TOP-: 
 Caught exception during netlist generation.

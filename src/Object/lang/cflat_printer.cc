@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_printer.cc"
 	Implementation of cflattening visitor.
-	$Id: cflat_printer.cc,v 1.32 2010/09/29 00:13:39 fang Exp $
+	$Id: cflat_printer.cc,v 1.33 2011/02/03 02:23:22 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -54,21 +54,13 @@ cflat_prs_printer::~cflat_prs_printer() { }
 void
 cflat_prs_printer::visit(const entity::footprint& f) {
 	STACKTRACE_VERBOSE;
-try {
 	// visit rules and spec directives, locally
 	f.get_prs_footprint().accept(*this);
 	f.get_spec_footprint().accept(*this);
 	// f.get_chp_footprint().accept(*this);
 	parent_type::visit(f);	// visit_recursive
 	visit_local<bool_tag>(f, at_top());	// for bool attributes
-} catch (...) {
-	if (at_top()) {
-		cerr << "Instantiated from -TOP-: " << endl;
-	} else {
-		f.dump_type(cerr << "Instantiated from type: ") << endl;
-	}
-	throw;	// re-throw
-}
+	// exception printing handled by caller
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
 	Visitor implementation for allocating simulator state structures.  
-	$Id: ExprAlloc.cc,v 1.47 2010/09/29 00:13:41 fang Exp $
+	$Id: ExprAlloc.cc,v 1.48 2011/02/03 02:23:23 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -284,8 +284,13 @@ ExprAlloc::operator () (void) {
 		fpf->_footprint->get_instance_pool<bool_tag>().local_entries();
 	update_expr_maps(ptemplate, node_pool_size, bmap, ps.get_offset());
 	// problem: spec directives are still global, not per-process
+try {
 	const entity::SPEC::footprint& sfp(topfp->get_spec_footprint());
 	sfp.accept(*this);
+} catch (...) {
+	report_instantiation_error(cerr);
+	throw;
+}
 
 	topfp->accept(AS_A(global_entry_context&, *this));
 	state.finish_process_type_map();	// finalize indices to pointers
@@ -499,9 +504,14 @@ ExprAlloc::visit(const state_instance<process_tag>& gp) {
 	STACKTRACE_STREAM << endl;
 #endif
 	update_expr_maps(ptemplate, node_pool_size, bmap, ps.get_offset());
+try {
 	// problem: spec directives are still global, not per-process
 	const entity::SPEC::footprint& sfp(fp->get_spec_footprint());
 	sfp.accept(*this);
+} catch (...) {
+	report_instantiation_error(cerr);
+	throw;
+}
 	*g_offset = c;
 }	// end method visit(const state_instance<process_tag>&);
 

@@ -1,0 +1,5 @@
+# "spec-10.prsimrc"
+# @haco@ spec-10.haco-c
+
+echo expect to fail on startup
+

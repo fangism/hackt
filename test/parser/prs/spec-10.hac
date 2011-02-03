@@ -1,0 +1,10 @@
+// "spec-10.hac"
+// expect-fail eventually
+
+import "spec-08.hac";
+
+defproc baz(bool a, b) {
+	foo<4> bar(a, b);
+}
+
+baz bam;

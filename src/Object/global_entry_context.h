@@ -2,7 +2,7 @@
 	\file "Object/global_entry_context.h"
 	Structure containing all the minimal information
 	needed for a global_entry traversal over instances.  
-	$Id: global_entry_context.h,v 1.10 2010/08/24 21:05:40 fang Exp $
+	$Id: global_entry_context.h,v 1.11 2011/02/03 02:23:21 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_CONTEXT_H__
@@ -181,6 +181,9 @@ virtual	void
 	// e.g. use this after a cache-lookup
 	void
 	set_global_context(const cache_entry_type& c);
+
+	void
+	report_instantiation_error(ostream&) const;
 
 };	// end struct global_entry_context
 

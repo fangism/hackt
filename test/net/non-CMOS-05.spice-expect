@@ -1,6 +1,6 @@
 ERROR: precharge is not fully-restoring.
 ERROR in production rule.
 	en &{-~en} a & b -> _o-
-ERROR producing netlist for foo<>
-ERROR producing netlist for <top-level>
+Instantiated from type: foo<>
+Instantiated from -TOP-: 
 Caught exception during netlist generation.

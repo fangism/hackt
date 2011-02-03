@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.64 2010/09/21 00:18:10 fang Exp $
+	$Id: footprint.cc,v 1.65 2011/02/03 02:23:21 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -1671,7 +1671,13 @@ footprint::accept(alias_visitor& v) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 footprint::accept(global_entry_context& v) const {
+try {
 	v.visit(*this);
+} catch (...) {
+	// print stack trace of instantiations
+	v.report_instantiation_error(cerr);
+	throw;
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

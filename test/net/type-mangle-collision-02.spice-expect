@@ -1,6 +1,6 @@
 Error: detected name collision between mangled subcircuit names.
 prev. type: FoO<1> -> FoO_1_
 new   type: foo_1_<> -> foo_1_
-ERROR producing netlist for foo_1_
-ERROR producing netlist for <top-level>
+Instantiated from type: foo_1_<>
+Instantiated from -TOP-: 
 Caught exception during netlist generation.
