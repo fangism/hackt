@@ -1,6 +1,6 @@
 /**
 	\file "sim/trace_common.cc"
-	$Id: trace_common.cc,v 1.3 2009/04/29 05:33:33 fang Exp $
+	$Id: trace_common.cc,v 1.4 2011/02/04 02:23:36 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -402,9 +402,11 @@ if (good()) {
 	NEVER_NULL(header_ostream);
 	contents.write(*header_ostream);
 	// align to natural boundary? maybe sanity check code.
+#if ENABLE_STACKTRACE
 	const streampos start_of_objects = header_ostream->tellp();
 	STACKTRACE_INDENT_PRINT("header written up to offset: "
 		<< start_of_objects << endl);
+#endif
 #if TRACE_ALIGNMENT_MARKERS
 	static const size_t marker = 0xFFFFFFFF;
 	write_value(*header_ostream, marker);
@@ -428,9 +430,11 @@ if (good()) {
 	// cleanup
 	trace_ostream->read(buf, trace_end);
 	header_ostream->write(buf, trace_end);
+#if ENABLE_STACKTRACE
 	const streampos end_of_objects = header_ostream->tellp();
 	STACKTRACE_INDENT_PRINT("payload finished at offset: " <<
 		end_of_objects << endl);
+#endif
 }
 	trace_ostream = excl_ptr<fstream>(NULL);
 	header_ostream = excl_ptr<ofstream>(NULL);

@@ -1,11 +1,12 @@
 /**
 	\file "friend_function_formal_bug.cc"
 	Example of a major bug in gcc-3.3, and its workaround.  
-	$Id: friend_function_formal_bug.cc,v 1.5 2006/05/07 20:56:11 fang Exp $
+	$Id: friend_function_formal_bug.cc,v 1.6 2011/02/04 02:23:44 fang Exp $
  */
 
 #include <vector>
 #include "util/macros.h"
+#include "util/size_t.h"
 
 #if 0
 // forward declarations

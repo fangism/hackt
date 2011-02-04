@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.52 2010/07/09 02:14:10 fang Exp $
+ 	$Id: definition.cc,v 1.53 2011/02/04 02:23:34 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -1511,8 +1511,6 @@ built_in_datatype_def::create_complete_type(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 meta_type_tag_enum
 built_in_datatype_def::get_meta_type(void) const {
-	typedef	class_traits<bool_tag>		bool_traits;
-	typedef	class_traits<int_tag>		int_traits;
 	if (this == &bool_traits::built_in_definition) {
 		// return bool_traits::type_tag_enum_value;
 		return META_TYPE_BOOL;
@@ -1535,8 +1533,6 @@ built_in_datatype_def::get_meta_type(void) const {
 void
 built_in_datatype_def::count_channel_member(
 		fundamental_channel_footprint& f) const {
-	typedef	class_traits<bool_tag>		bool_traits;
-	typedef	class_traits<int_tag>		int_traits;
 	if (this == &bool_traits::built_in_definition) {
 		++f.size<bool_tag>();
 	}
@@ -1552,8 +1548,6 @@ built_in_datatype_def::count_channel_member(
 ostream&
 built_in_datatype_def::dump_channel_field_iterate(ostream& o, 
 		channel_data_reader& r) const {
-	typedef	class_traits<bool_tag>		bool_traits;
-	typedef	class_traits<int_tag>		int_traits;
 	if (this == &bool_traits::built_in_definition) {
 		o << size_t(*r.iter_ref<bool_tag>()++);
 	}

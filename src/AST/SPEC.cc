@@ -1,6 +1,6 @@
 /**
 	\file "AST/SPEC.cc"
-	$Id: SPEC.cc,v 1.20 2011/02/02 23:54:20 fang Exp $
+	$Id: SPEC.cc,v 1.21 2011/02/04 02:23:34 fang Exp $
  */
 
 #include <iostream>
@@ -286,7 +286,7 @@ never_ptr<const object>
 body::check_build(context& c) const {
 	STACKTRACE_VERBOSE;
 	const never_ptr<definition_base> d(c.get_current_open_definition());
-	entity::SPEC::directives_set* dss;
+//	entity::SPEC::directives_set* dss;	// no longer used?
 	const never_ptr<process_definition> pd(d.is_a<process_definition>());
 	const never_ptr<user_def_chan> cd(d.is_a<user_def_chan>());
 	if (pd) {
@@ -298,9 +298,9 @@ body::check_build(context& c) const {
 				<< endl;
 			THROW_EXIT;
 		}
-		dss = &pd->get_spec_directives_set();
+//		dss = &pd->get_spec_directives_set();
 	} else if (cd) {
-		dss = &cd->get_spec_directives_set();
+//		dss = &cd->get_spec_directives_set();
 	} else {
 		cerr << "ERROR: spec body can only be used in "
 "process definitions or user-defined channels.  ";

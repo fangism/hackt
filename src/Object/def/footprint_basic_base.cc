@@ -2,7 +2,7 @@
 	\file "Object/inst/footprint_basic_base.cc"
 	Explicit template instantiations of footprint_bases
 	that manage non-structured meta-types.  
-	$Id: footprint_basic_base.cc,v 1.2 2006/11/07 06:34:23 fang Exp $
+	$Id: footprint_basic_base.cc,v 1.3 2011/02/04 02:23:35 fang Exp $
  */
 
 
@@ -14,6 +14,7 @@
 #include "Object/def/user_def_datatype.h"
 #include "Object/inst/instance_alias_info.h"
 #include "Object/inst/alias_empty.h"
+#include "Object/inst/datatype_instance_placeholder.h"
 #include "Object/inst/datatype_instance_collection.h"
 #include "Object/inst/parameterless_collection_type_manager.h"
 #include "Object/inst/int_collection_type_manager.h"
@@ -24,6 +25,7 @@
 #include "Object/inst/instance_scalar.h"
 #include "Object/inst/instance_array.h"
 #include "Object/inst/instance_collection_pool_bundle.tcc"
+#include "Object/traits/instance_traits.h"
 
 namespace HAC {
 namespace entity {

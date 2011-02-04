@@ -1,13 +1,14 @@
 /**
 	\file "util/memory/deallocation_policy.h"
 	Definition of frequently used deallocation policies.  
-	$Id: deallocation_policy.h,v 1.3 2006/11/15 00:09:15 fang Exp $
+	$Id: deallocation_policy.h,v 1.4 2011/02/04 02:23:42 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_DEALLOCATION_POLICY_H__
 #define	__UTIL_MEMORY_DEALLOCATION_POLICY_H__
 
 #include <cassert>
+#include <iosfwd>
 #include "util/memory/deallocation_policy_fwd.h"
 #include "util/FILE_fwd.h"
 #include "util/free.h"
@@ -17,6 +18,13 @@ BEGIN_C_DECLS
 extern	int fclose(FILE*);
 extern	int pclose(FILE*);
 END_C_DECLS
+
+// forward declarations
+namespace std {
+extern istream cin;
+extern ostream cout;
+extern ostream cerr;
+}
 
 namespace util {
 namespace memory {
@@ -96,6 +104,20 @@ struct pclose_tag {
 };	// end struct FILE_tag
 
 //-----------------------------------------------------------------------------
+struct istream_tag {
+	void
+	operator () (std::istream*) const;
+};
+
+//-----------------------------------------------------------------------------
+struct ostream_tag {
+	void
+	operator () (std::ostream*) const;
+};
+
+//-----------------------------------------------------------------------------
+#if 0
+// iostreams are already closed upon destruction
 /**
 	Close a stream opened by .open().
 	Can be anything with a close() member function.
@@ -108,6 +130,7 @@ struct iostream_tag {
 		t->close();
 	}
 };	//  end iostream_tag
+#endif
 
 //-----------------------------------------------------------------------------
 /**

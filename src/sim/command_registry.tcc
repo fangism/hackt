@@ -1,6 +1,6 @@
 /**
 	\file "sim/command_registry.tcc"
-	$Id: command_registry.tcc,v 1.20 2010/07/15 00:29:27 fang Exp $
+	$Id: command_registry.tcc,v 1.21 2011/02/04 02:23:36 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_REGISTRY_TCC__
@@ -488,6 +488,7 @@ command_registry<Command>::interpret_stdin(state_type& s) {
 	prompt += ' ';
 	// re-open stdin, don't use cin
 	ifstream i(DEV_STDIN);
+	// WARNING: not necessarily portable
 	return interpret(s, i, true);
 }
 

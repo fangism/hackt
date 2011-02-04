@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.82 2011/02/02 19:31:44 fang Exp $
+	$Id: Command-prsim.cc,v 1.83 2011/02/04 02:23:37 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -661,8 +661,6 @@ if (a.size() > 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
-	typedef	State::time_type		time_type;
-	typedef	State::node_type		node_type;
 	size_t i;		// the number of discrete time steps
 		// not necessarily == the number of discrete events
 	State::step_return_type ni;	// also stores the cause of the event
@@ -830,8 +828,6 @@ if (a.size() > 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
-	typedef	State::time_type		time_type;
-	typedef	State::node_type		node_type;
 	size_t i;		// the number of discrete time steps
 		// not necessarily == the number of discrete events
 	if (a.size() == 2) {
@@ -876,8 +872,6 @@ if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
-	typedef	State::time_type		time_type;
-	typedef	State::node_type		node_type;
 	time_type add;		// time to add
 	if (string_to_num(a.back(), add)) {
 		cerr << "Error parsing time." << endl;
@@ -923,7 +917,6 @@ if (a.size() != 1) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
-	typedef	State::node_type		node_type;
 	State::step_return_type ni;
 	s.resume();	// clear STOP flag
 	try {
@@ -1028,7 +1021,6 @@ if (asz < 3 || asz > 4) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
-	typedef	State::node_type		node_type;
 	// now I'm wishing string_list was string_vector... :) can do!
 	string_list::const_iterator ai(++a.begin());
 	const string& objname(*ai++);	// node name
@@ -1114,7 +1106,6 @@ if (asz != 3) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
-	typedef	State::node_type		node_type;
 	string_list::const_iterator ai(++a.begin());
 	const string& objname1(*ai++);	// node name
 	const string& objname2(*ai++);	// node value
@@ -1281,7 +1272,6 @@ if (asz != 3) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
-	typedef	State::node_type		node_type;
 	// now I'm wishing string_list was string_vector... :) can do!
 	string_list::const_iterator ai(++a.begin());
 	const string& objname(*ai++);	// node name
@@ -2585,7 +2575,6 @@ if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
-	typedef	State::node_type		node_type;
 	const value_enum v = node_type::string_to_value(a.back());
 	if (node_type::is_valid_value(v)) {
 		s.print_status_nodes(cout, v, false);
@@ -2614,7 +2603,6 @@ if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
-	typedef	State::node_type		node_type;
 	const value_enum v = node_type::string_to_value(a.back());
 	if (node_type::is_valid_value(v)) {
 		s.print_status_nodes(cout, v, true);
@@ -2652,7 +2640,6 @@ if (a.size() != 2) {
 	return Command::SYNTAX;
 } else {
 	vector<node_index_type> nodes;
-	typedef	State::node_type		node_type;
 	const value_enum v = node_type::string_to_value(a.back());
 	if (node_type::is_valid_value(v)) {
 		s.status_nodes(v, nodes);
@@ -3681,7 +3668,6 @@ if (a.size() != 3) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
-	typedef	State::node_type		node_type;
 	const string& objname(*++a.begin());
 	const node_index_type ni = parse_node_to_index(objname, s.get_module());
 	if (ni) {
@@ -3751,7 +3737,6 @@ if (a.size() != 3) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
-	typedef	State::node_type		node_type;
 	const string& objname(*++a.begin());
 	const node_index_type ni = parse_node_to_index(objname, s.get_module());
 	if (ni) {
@@ -3823,7 +3808,6 @@ if (a.size() != 3) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
-	typedef	State::node_type		node_type;
 	const string& objname(*++a.begin());
 	const node_index_type ni = parse_node_to_index(objname, s.get_module());
 	if (ni) {
@@ -3891,7 +3875,6 @@ if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
-	typedef	State::node_type		node_type;
 	const string& objname(*++a.begin());
 	const node_index_type ni = parse_node_to_index(objname, s.get_module());
 	if (ni) {
@@ -3944,7 +3927,6 @@ if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
-	typedef	State::node_type		node_type;
 	const string& objname(*++a.begin());
 	const node_index_type ni = parse_node_to_index(objname, s.get_module());
 	if (ni) {
@@ -4377,7 +4359,6 @@ if (ni) {
 			return Command::BADARG;
 		}
 	} else {
-		typedef	State::node_type	node_type;
 		switch (s.get_node(ni).current_value()) {
 		case LOGIC_LOW:
 			v = why_not;

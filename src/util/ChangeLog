@@ -1,5 +1,16 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.117 2010/09/21 00:18:41 fang Exp $
+#	$Id: ChangeLog,v 1.118 2011/02/04 02:23:38 fang Exp $
+
+2011-02-03	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-44:
+	  numerous g++-4.6 portability fixes:
+		named_ifstream_manager: implement as ptr<istream>
+			instead of ifstream, to be able to use std::cin
+			without relying on opening "/dev/stdin".
+		Added istream deallocation_policy: delete-if-not-cin
+	  still doesn't completely build yet though, but much closer.
+
 
 2010-09-15	David Fang		<fangism@users.sourceforge.net>
 

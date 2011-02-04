@@ -1,5 +1,5 @@
 # "src/util/test/Makefile.am"
-#	$Id: Makefile.am,v 1.67 2010/04/05 20:14:59 fang Exp $
+#	$Id: Makefile.am,v 1.68 2011/02/04 02:23:43 fang Exp $
 # NOTE: none of the tests in this directory should depend on ANY
 # external package libraries or headers, so we coercively set
 # LIBS and LDFLAGS to empty, which is normally bad policy for the
@@ -193,6 +193,7 @@ string_test_LDADD = libfangutil.la
 link_test_SOURCES = link_test.cc
 link_test_LDADD = liblinktest.la libbogusutil.la
 list_vector_test_SOURCES = list_vector_test.cc
+list_vector_test_LDADD = libfangutil.la
 list_vector_pool_test_SOURCES = list_vector_pool_test.cc
 list_vector_pool_test_LDADD = libfangutil.la
 chunk_map_pool_test_SOURCES = chunk_map_pool_test.cc
@@ -210,6 +211,7 @@ maplikeset_test_SOURCES = maplikeset_test.cc
 multikey_qmap_test_SOURCES = multikey_qmap_test.cc
 multikey_generator_test_SOURCES = multikey_generator_test.cc
 multikey_qmap_slice_test_SOURCES = multikey_qmap_slice_test.cc cube_slice.h plane_slice.h
+multikey_qmap_slice_test_LDADD = libfangutil.la
 multikey_set_test_SOURCES = multikey_set_test.cc
 multikey_set_derived_test_SOURCES = multikey_set_derived_test.cc
 integer_traits_test_SOURCES = integer_traits_test.cc
@@ -226,6 +228,7 @@ throw_test_LDADD = libfangutil.la
 stacktrace_test_SOURCES = stacktrace_test.cc
 stacktrace_test_LDADD = libfangutil.la
 what_test_SOURCES = what_test.cc
+what_test_LDADD = libfangutil.la
 pretty_function_test_SOURCES = pretty_function_test.cc
 local_static_store_test_SOURCES = local_static_store_test.cc \
 	named_pooled_thing.cc named_pooled_thing.h

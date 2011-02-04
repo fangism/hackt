@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.inc,v 1.46 2010/09/21 00:18:41 fang Exp $
+#	$Id: Makefile.inc,v 1.47 2011/02/04 02:23:39 fang Exp $
 
 # TODO: consider moving guile support down to subdirectory, like lang/guile
 #	vi: ft=automake
@@ -244,6 +244,7 @@ UTIL_CC_FILES = \
 	util/tokenize.cc \
 	util/stream_ptr.cc \
 	util/uninitialized.cc \
+	util/memory/deallocation_policy.cc \
 	util/memory/thread_lock.cc \
 	util/memory/ref_count_pool.cc \
 	util/numeric/nibble_tables.cc \

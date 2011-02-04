@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.25 2010/08/24 18:08:43 fang Exp $
+	$Id: State.cc,v 1.26 2011/02/04 02:23:37 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -12,6 +12,7 @@
 #include <iterator>
 #include <functional>
 #include <sstream>
+#include <fstream>
 
 #include "sim/chpsim/State.h"
 #include "sim/chpsim/StateConstructor.h"

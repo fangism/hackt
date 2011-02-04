@@ -2,14 +2,14 @@
 	\file "util/named_ifstream_manager.h"
 	Common file management facilities for including, search paths...
 	Consider making this a general util for the library.  
-	$Id: named_ifstream_manager.h,v 1.6 2009/09/14 21:17:16 fang Exp $
+	$Id: named_ifstream_manager.h,v 1.7 2011/02/04 02:23:41 fang Exp $
  */
 
 #ifndef	__UTIL_NAMED_IFSTREAM_MANAGER_H__
 #define	__UTIL_NAMED_IFSTREAM_MANAGER_H__
 
 #include <iosfwd>
-#include <fstream>
+// #include <fstream>
 #include <string>
 #include <list>
 #include <stack>
@@ -23,14 +23,33 @@
 #include "util/macros.h"
 #include "util/attributes.h"
 #include "util/file_status.h"
+#include "util/memory/excl_ptr.h"
+#include "util/memory/deallocation_policy.h"
 
+/**
+	Define to 1 to use an istream pointer instead of
+	an ifstream object that opens /dev/stdin.
+	For best portability.
+	Goal: 1
+	Status: tested
+ */
+#define	NAMED_IFSTREAM_USE_ISTREAM_PTR		1
+
+#if	!NAMED_IFSTREAM_USE_ISTREAM_PTR
 #if !defined(HAVE_STD_IFSTREAM_DEV_STDIN)
 #warn "Support without std::ifstream("/dev/stdin") is yet untested."
+#endif
 #endif
 
 namespace util {
 using std::ostream;
+#if NAMED_IFSTREAM_USE_ISTREAM_PTR
+using std::istream;
+using util::memory::excl_ptr;
+using util::memory::istream_tag;
+#else
 using std::ifstream;
+#endif
 using std::string;
 // using util::unique_list;
 // using util::file_status;
@@ -49,20 +68,33 @@ typedef	unique_list<string>		search_paths;
 	Consider deriving from ifstream and including the name.  
 	nifstream -- named ifstream.  
  */
-class named_ifstream : public std::ifstream {
-	typedef	std::ifstream			parent_type;
+class named_ifstream
+#if !NAMED_IFSTREAM_USE_ISTREAM_PTR
+	: public std::ifstream
+#endif
+{
 	typedef	named_ifstream			this_type;
+#if !NAMED_IFSTREAM_USE_ISTREAM_PTR
+	typedef	std::ifstream			parent_type;
 public:
 	static const string			dev_stdin;
+#endif
 private:
 	/**
 		store the (full-path) name of the file here 
 		redundantly for convenience
 	 */
-	string				_name;
-
+	string					_name;
+#if NAMED_IFSTREAM_USE_ISTREAM_PTR
+	typedef	excl_ptr<istream, istream_tag>	istream_ptr_type;
+	istream_ptr_type			stream;
+#endif
 public:
-	named_ifstream() : _name() { }
+	named_ifstream() : _name()
+#if NAMED_IFSTREAM_USE_ISTREAM_PTR
+		, stream()
+#endif
+		{ }
 
 	explicit
 	named_ifstream(const string&);
@@ -74,11 +106,20 @@ public:
 	const string&
 	name(void) const { return _name; }
 
-	bool
-	open(const string& s) {
-		parent_type::open(s.c_str());
-		return *this;
+#if NAMED_IFSTREAM_USE_ISTREAM_PTR
+	operator bool () const;
+
+	operator std::istream& () const {
+		NEVER_NULL(stream);
+		return *stream;
 	}
+
+	bool
+	open(void);
+#endif
+
+	bool
+	open(const string&);
 
 #if 0
 private:
@@ -93,7 +134,14 @@ private:
 	// needed to be able to extend list (push_back)
 	explicit
 	named_ifstream(const this_type&) :
-		std::ios(), std::ifstream(), _name() { }
+#if !NAMED_IFSTREAM_USE_ISTREAM_PTR
+		std::ios(), std::ifstream(),
+#endif
+		_name()
+#if NAMED_IFSTREAM_USE_ISTREAM_PTR
+		, stream()
+#endif
+		{ }
 
 private:
 	// not assignable

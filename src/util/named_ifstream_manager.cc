@@ -1,9 +1,11 @@
 /**
-	\file "lexer/ifstream_manager.cc"
-	$Id: named_ifstream_manager.cc,v 1.5 2009/04/29 05:33:46 fang Exp $
+	\file "util/named_ifstream_manager.cc"
+	Adapted from "lexer/ifstream_manager.cc"
+	$Id: named_ifstream_manager.cc,v 1.6 2011/02/04 02:23:40 fang Exp $
  */
 
 #include <iostream>
+#include <fstream>
 #include "config.h"
 #include "util/named_ifstream_manager.h"
 #include "util/unique_list.tcc"
@@ -12,12 +14,47 @@
 #include "util/stacktrace.h"
 
 namespace util {
+using std::ifstream;
 #include "util/using_ostream.h"
-//=============================================================================
-// class named_ifstream_stack method definitions
 
+//=============================================================================
+// class named_ifstream method definitions
+
+#if !NAMED_IFSTREAM_USE_ISTREAM_PTR
 const string
 named_ifstream::dev_stdin(DEV_STDIN);
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if NAMED_IFSTREAM_USE_ISTREAM_PTR
+named_ifstream::operator bool () const {
+	return stream && *stream;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	With no file name, open stdin/cin
+ */
+bool
+named_ifstream::open(void) {
+	stream = istream_ptr_type(&std::cin);	// ptr type will not delete
+	return stream && *stream;
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+named_ifstream::open(const string& s) {
+#if NAMED_IFSTREAM_USE_ISTREAM_PTR
+	stream = istream_ptr_type(new ifstream(s.c_str()));
+#else
+	parent_type::open(s.c_str());
+#endif
+	return *this;
+}
+
+//=============================================================================
+// class named_ifstream_stack method definitions
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 named_ifstream_stack::named_ifstream_stack() : _registry(), _files() { }
@@ -39,17 +76,21 @@ named_ifstream_stack::~named_ifstream_stack() {
  */
 bool
 named_ifstream_stack::push(const string& fp) {
+#if !NAMED_IFSTREAM_USE_ISTREAM_PTR
 	INVARIANT(fp.length());
 if ((fp != named_ifstream::dev_stdin)) {
+#endif
 	const bool ret = _registry.push(fp);
 	const named_ifstream dummy;
 	_files.push_back(dummy);	// uses fake copy ctor
 	_files.back().open(fp);
 	INVARIANT(_files.back());
 	return ret;
+#if !NAMED_IFSTREAM_USE_ISTREAM_PTR
 } else {
 	return false;
 }
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -160,8 +201,13 @@ ifstream_manager::__open_ifstream(const string& fs) {
 	const bool cyc = _names.push_back(fs.length() ? fs : _stdin_);
 #else
 	const bool cyc =
-		(fs != named_ifstream::dev_stdin ?
-			_names.push_back(fs) : false);
+		(
+#if NAMED_IFSTREAM_USE_ISTREAM_PTR
+		fs.size()
+#else
+		fs != named_ifstream::dev_stdin
+#endif
+			? _names.push_back(fs) : false);
 #endif
 	// don't register stdin with a file name in the named_ifstream_stack
 	// but is ok to register it with the cycle-detection _names stack.

@@ -2,7 +2,7 @@
 	\file "util/memory/deallocation_policy_fwd.h"
 	Forward declarations of names of deallocation policies.  
 	Their definitions appear in "util/memory/deallocation_policy.h".
-	$Id: deallocation_policy_fwd.h,v 1.5 2007/03/13 02:37:50 fang Exp $
+	$Id: deallocation_policy_fwd.h,v 1.6 2011/02/04 02:23:42 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_DEALLOCATION_POLICY_FWD_H__
@@ -119,7 +119,9 @@ typedef	fclose_tag	FILE_tag;
 struct pclose_tag;
 typedef	pclose_tag	process_tag;
 
-struct iostream_tag;
+struct istream_tag;
+struct ostream_tag;
+// struct iostream_tag;
 
 template <class T, void (*f)(T*)>
 struct custom_ptr_fun_tag;
