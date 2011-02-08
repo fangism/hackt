@@ -1,5 +1,11 @@
 "ChangeLog"
-#	$Id: ChangeLog,v 1.248 2010/09/21 00:17:53 fang Exp $
+#	$Id: ChangeLog,v 1.249 2011/02/08 20:45:48 fang Exp $
+
+2011-02-08	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-46:
+	  config/lexyacc.m4: more general check for yacc skeleton version.
+
 
 2010-09-20	David Fang	<fangism@users.sourceforge.net>
 

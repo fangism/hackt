@@ -1,5 +1,5 @@
 dnl "config/lexyacc.m4"
-dnl	$Id: lexyacc.m4,v 1.10 2011/01/13 22:19:06 fang Exp $
+dnl	$Id: lexyacc.m4,v 1.11 2011/02/08 20:45:49 fang Exp $
 dnl This file contains autoconf macros related to lex and yacc, 
 dnl including bison.  
 dnl These may be slightly more specific to the HACKT project.
@@ -115,8 +115,10 @@ dnl Note: automake-1.10+ already provides YACC variable
 dnl This macro now runs some test to detect certain traits
 dnl of the parser generator.
 dnl
+dnl 2011-02-07: updated yacc version detection with grep of skeleton
+dnl
 dnl @category InstalledPackages
-dnl @version 2008-03-14
+dnl @version 2011-02-07
 dnl @author David Fang <fangism@users.sourceforge.net>
 dnl @license AllPermissive
 dnl
@@ -147,11 +149,15 @@ fi
 YACC_FIRST_TOKEN_ENUM=`grep "^#define.*FIRST_TOK" $ac_cv_prog_yacc_root.h | cut -d\  -f3`
 fi
 AC_SUBST(YACC_FIRST_TOKEN_ENUM)
+dnl cp $ac_cv_prog_yacc_root.c saved.$ac_cv_prog_yacc_root.c
 
 dnl test 2: if yacc, get the version string of the skeleton
 dnl eventually pass this into YACC_VERSION
-yacc_skeleton_version=`grep "skeleton" $ac_cv_prog_yacc_root.c | \
-	cut -d\" -f2 | sed 's/[$]//g'`
+dnl silly m4 quoting...
+yacc_skeleton_version=`grep -e "yy[[a-z]]*id" $ac_cv_prog_yacc_root.c | \
+	cut -d\" -f2`
+dnl | sed 's/[$]//g'`
+test "$yacc_skeleton_version" || AC_MSG_ERROR(unable to determine $YACC version!)
 
 dnl test 3: find name of preprocessor symbol for MAXTOK
 dnl is YYMAXTOKEN for yacc, YYMAXUTOK for bison
@@ -194,6 +200,7 @@ bison )
 dnl (
 *)	YACC_VERSION="$yacc_skeleton_version" ;;
 esac
+AC_MSG_NOTICE(parser generator/skeleton version: $YACC_VERSION)
 AC_SUBST(YACC_VERSION)
 
 dnl TODO: run more tests
