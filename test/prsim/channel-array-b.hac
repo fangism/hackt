@@ -1,0 +1,8 @@
+// "channel-array-b.hac"
+//	$Id: channel-array-b.hac,v 1.1 2011/02/08 02:06:52 fang Exp $
+
+import "../../lib/channel.hac";
+
+e1of2 X[4];
+e1of4 Y[2];
+

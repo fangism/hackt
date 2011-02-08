@@ -1,18 +1,19 @@
 /**
 	\file "AST/range.h"
 	Expression-related parser classes for HAC.
-	$Id: range_list.h,v 1.5 2007/10/08 01:21:04 fang Exp $
+	$Id: range_list.h,v 1.6 2011/02/08 02:06:46 fang Exp $
 	This file used to be the following before it was renamed:
-	$Id: range_list.h,v 1.5 2007/10/08 01:21:04 fang Exp $
+	$Id: range_list.h,v 1.6 2011/02/08 02:06:46 fang Exp $
  */
 
 #ifndef __HAC_AST_RANGE_LIST_H__
 #define __HAC_AST_RANGE_LIST_H__
 
+#include <iosfwd>
+#include <vector>
 #include "AST/range.h"
 #include "AST/node_list.h"
 #include "util/boolean_types.h"
-#include "util/STL/vector_fwd.h"
 
 namespace HAC {
 namespace entity {
@@ -23,7 +24,8 @@ namespace entity {
 }	// end namespace entity
 namespace parser {
 using util::good_bool;
-using std::default_vector;
+using std::vector;
+using std::ostream;
 class dense_range_list;
 
 //=============================================================================
@@ -38,6 +40,7 @@ typedef node_list<const range>		range_list_base;
 	2) instance_array: to declare dense arrays
  */
 class range_list : public range_list_base {
+	typedef	range_list				this_type;
 public:
 	typedef	range_list_meta_return_type	checked_meta_indices_type;
 	typedef	count_ptr<entity::meta_range_list>
@@ -45,6 +48,7 @@ public:
 	typedef	range_list_nonmeta_return_type	checked_nonmeta_indices_type;
 	typedef	count_ptr<entity::int_range_list>
 						checked_nonmeta_ranges_type;
+	typedef	vector<count_ptr<range_list> >	range_list_list_type;
 protected:
 	typedef	range_list_base				parent_type;
 	// no additional members
@@ -57,6 +61,9 @@ public:
 	range_list(const dense_range_list&);
 
 	~range_list();
+
+	ostream&
+	dump(ostream&) const;
 
 	checked_meta_indices_type
 	check_meta_indices(const context& c) const;
@@ -73,11 +80,12 @@ public:
 	range_list*
 	make_explicit_ranges(void) const;
 
+	good_bool
+	expand_const_indices(range_list_list_type&) const;
+
 private:
-	typedef	default_vector<range::meta_return_type>::type
-							meta_check_type;
-	typedef	default_vector<range::nonmeta_return_type>::type
-							nonmeta_check_type;
+	typedef	vector<range::meta_return_type>		meta_check_type;
+	typedef	vector<range::nonmeta_return_type>	nonmeta_check_type;
 
 	/**
 		Intermediate check.  
@@ -118,9 +126,8 @@ public:
 	check_formal_dense_ranges(const context& c) const;
 
 private:
-	typedef	default_vector<expr::meta_return_type>::type
-						meta_check_type;
-	typedef	default_vector<expr::nonmeta_return_type>::type
+	typedef	vector<expr::meta_return_type>	meta_check_type;
+	typedef	vector<expr::nonmeta_return_type>
 						nonmeta_check_type;
 	
 	/**

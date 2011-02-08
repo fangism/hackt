@@ -1,7 +1,7 @@
 /**
 	\file "AST/range.h"
 	Expression-related parser classes for HAC.
-	$Id: range.h,v 1.6 2007/10/08 01:21:03 fang Exp $
+	$Id: range.h,v 1.7 2011/02/08 02:06:46 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_range.h,v 1.6.42.1 2005/12/11 00:45:10 fang Exp
  */
@@ -9,6 +9,7 @@
 #ifndef __HAC_AST_RANGE_H__
 #define __HAC_AST_RANGE_H__
 
+#include <vector>
 #include "AST/expr_base.h"
 #include "util/what_fwd.h"
 #include "util/memory/count_ptr.h"
@@ -19,6 +20,8 @@ namespace entity {
 	class nonmeta_index_expr_base;
 }	// end namespace entity
 namespace parser {
+class token_int;
+
 //=============================================================================
 /**
 	Can describe either a range of integers (inclusive) or a 
@@ -28,10 +31,13 @@ namespace parser {
 	Class is final, no subclasses.  
  */
 class range {
+	typedef	range					this_type;
 public:
 	typedef	count_ptr<entity::meta_index_expr>	meta_return_type;
 	typedef	count_ptr<entity::nonmeta_index_expr_base>
 							nonmeta_return_type;
+	typedef	count_ptr<const token_int>		const_int_type;
+	typedef	std::vector<const_int_type>		expanded_range_type;
 protected:
 	// using ref-count ptr for copy-convenience
 	const count_ptr<const expr>	lower;	///< inclusive lower bound
@@ -58,6 +64,9 @@ public:
 	ostream&
 	what(ostream& o) const;
 
+	ostream&
+	dump(ostream&) const;
+
 	line_position
 	leftmost(void) const;
 
@@ -73,6 +82,10 @@ public:
 	static
 	count_ptr<const range>
 	make_explicit_range(const count_ptr<const range>&);
+
+	int
+	expand_const_indices(const count_ptr<const this_type>&, 
+		expanded_range_type&) const;
 
 };	// end class range
 

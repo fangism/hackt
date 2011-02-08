@@ -1,0 +1,9 @@
+channels:
+bar.L[0] : .e(init:0)  1x1of2 off
+bar.L[1] : .e(init:0)  1x1of2 off
+bar.L[2] : .e(init:0)  1x1of2 off
+bar.L[3] : .e(init:0)  1x1of2 off
+bar.R[0] : .e(init:0)  1x1of2 off
+bar.R[1] : .e(init:0)  1x1of2 off
+bar.R[2] : .e(init:0)  1x1of2 off
+bar.R[3] : .e(init:0)  1x1of2 off

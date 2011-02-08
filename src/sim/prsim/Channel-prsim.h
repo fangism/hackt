@@ -6,7 +6,7 @@
 	Define a channel type map to make automatic!
 	auto-channel (based on consumer/producer connectivity), 
 	top-level only!
-	$Id: Channel-prsim.h,v 1.26 2010/12/13 23:26:28 fang Exp $
+	$Id: Channel-prsim.h,v 1.27 2011/02/08 02:06:50 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_CHANNEL_H__
@@ -962,12 +962,15 @@ public:
 	bool
 	new_channel(State&, const string&, 
 		const string& bn, const size_t b,
-		const string& rn, const size_t r, const bool al);
+		const string& rn, const size_t r, const bool al, 
+		const bool, const bool, const bool, const bool, const bool);
 
+private:
 	bool
 	set_channel_ack_valid(State&, const string&, 
 		const bool, const bool, const bool, const bool, const bool);
 
+public:
 #if PRSIM_CHANNEL_LEDR
 	bool
 	new_channel_ledr(State&, const string&, 

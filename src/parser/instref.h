@@ -1,7 +1,7 @@
 /**
 	\file "parser/instref.h"
 	Interface to reference-parsing.
-	$Id: instref.h,v 1.12 2010/08/24 18:08:41 fang Exp $
+	$Id: instref.h,v 1.13 2011/02/08 02:06:49 fang Exp $
 	This file originated from "sim/prsim/Reference.h"
 	Id: Reference.h,v 1.5 2006/07/30 05:50:13 fang Exp
  */
@@ -10,11 +10,12 @@
 #define	__HAC_PARSER_INSTREF_H__
 
 #include <iosfwd>
+#include <utility>		// for std::pair
 #include <vector>
 #include "Object/ref/reference_enum.h"
 #include "Object/traits/class_traits_fwd.h"
 #include "util/string_fwd.h"
-#include "util/memory/excl_ptr.h"
+#include "util/memory/count_ptr.h"
 
 #define	INVALID_PROCESS_INDEX			size_t(-1)
 
@@ -29,7 +30,7 @@ class meta_reference_union;
 struct entry_collection;
 struct dump_flags;
 }
-using util::memory::excl_ptr;
+using util::memory::count_ptr;
 
 namespace parser {
 using std::vector;
@@ -39,7 +40,20 @@ using entity::bool_tag;
 using entity::channel_tag;
 using entity::process_tag;
 using entity::dump_flags;
+using entity::meta_reference_union;
+using entity::global_reference_array_type;
+using entity::global_indexed_reference;
+
 class inst_ref_expr;
+
+// from "AST/expr_base.h: inst_ref_expr::reference_array_type
+typedef count_ptr<const inst_ref_expr>	AST_reference_ptr;
+typedef	vector<AST_reference_ptr>	reference_array_type;
+
+typedef std::pair<AST_reference_ptr, global_indexed_reference>
+					expanded_global_reference;
+typedef vector<expanded_global_reference>
+					expanded_global_references_type;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class Tag>
@@ -83,16 +97,26 @@ typedef	typed_indexed_reference<process_tag>		process_index;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 extern
-excl_ptr<inst_ref_expr>
+count_ptr<inst_ref_expr>
 parse_reference(const char*);
 
 extern
-entity::meta_reference_union
+meta_reference_union
 check_reference(const inst_ref_expr&, const module&);
 
 extern
-entity::meta_reference_union
+int
+expand_reference(const count_ptr<const inst_ref_expr>&, 
+	reference_array_type&);
+
+extern
+meta_reference_union
 parse_and_check_reference(const char*, const module&);
+
+extern
+bool
+expand_global_references(const string&, const module&, 
+	expanded_global_references_type&);
 
 extern
 bool_index
@@ -103,13 +127,23 @@ process_index
 parse_process_to_index(const string&, const module&);
 
 extern
-entity::global_indexed_reference
+global_indexed_reference
 parse_global_reference(const string&, const module&);
 
 extern
-entity::global_indexed_reference
-parse_global_reference(const entity::meta_reference_union&,
+global_indexed_reference
+parse_global_reference(const meta_reference_union&,
 	const module&);
+
+extern
+int
+parse_global_references(const string&, const module&,
+	global_reference_array_type&);
+
+extern
+int
+parse_global_references(const meta_reference_union&,
+	const module&, global_reference_array_type&);
 
 extern
 int
@@ -129,7 +163,7 @@ parse_name_to_get_subinstances(
 extern
 int
 parse_name_to_get_subinstances(
-	const entity::global_indexed_reference&, const module&, 
+	const global_indexed_reference&, const module&, 
 	entity::entry_collection&);
 
 extern

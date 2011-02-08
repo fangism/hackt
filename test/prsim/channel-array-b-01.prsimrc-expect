@@ -1,0 +1,7 @@
+channels:
+X[0] : .e(init:0)  1x1of2 off
+X[1] : .e(init:0)  1x1of2 off
+X[2] : .e(init:0)  1x1of2 off
+X[3] : .e(init:0)  1x1of2 off
+Y[0] : .e(init:0)  1x1of4 off
+Y[1] : .e(init:0)  1x1of4 off

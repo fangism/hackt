@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.83 2011/02/04 02:23:37 fang Exp $
+	$Id: Command-prsim.cc,v 1.84 2011/02/08 02:06:50 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -72,6 +72,7 @@ using util::tokenize_char;
 using util::excl_malloc_ptr;
 using util::strings::string_to_num;
 using entity::global_indexed_reference;
+using entity::global_reference_array_type;
 using entity::META_TYPE_PROCESS;
 using entity::META_TYPE_BOOL;
 using entity::META_TYPE_NONE;
@@ -142,6 +143,18 @@ parse_global_reference(const string& s, const entity::module& m) {
 		CommandRegistry::prepend_working_dir(s), m);
 }
 
+#if 0
+// use this for many commands!
+static
+int
+parse_global_references(const string& s, const entity::module& m, 
+		global_reference_array_type& a) {
+	STACKTRACE_VERBOSE;
+	return parser::parse_global_references(
+		CommandRegistry::prepend_working_dir(s), m, a);
+}
+#endif
+
 static
 int
 parse_name_to_get_subnodes(const string& s, const entity::module& m,
@@ -186,6 +199,7 @@ parse_name_to_get_ports(const string& s, const entity::module& m,
 using parser::parse_node_to_index;
 using parser::parse_process_to_index;
 using parser::parse_global_reference;
+using parser::parse_global_references;
 using parser::parse_name_to_what;
 using parser::parse_name_to_get_subnodes;
 using parser::parse_name_to_get_subnodes_local;
@@ -6279,10 +6293,9 @@ if (a.size() != 5) {
 	}
 	channel_manager& cm(s.get_channel_manager());
 	if (cm.new_channel(s, chan_name, bundle_name, bundle_size, 
-			rail_name, rail_size, data_sense) ||
-			cm.set_channel_ack_valid(s, chan_name, 
-				have_ack, ack_sense, ack_init, 
-				have_valid, valid_sense)) {
+			rail_name, rail_size, data_sense, 
+			have_ack, ack_sense, ack_init, 
+			have_valid, valid_sense)) {
 		return Command::BADARG;
 	}
 	return Command::NORMAL;

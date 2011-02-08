@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr_base.h"
 	Base set of classes for the HAC parser.  
-	$Id: expr_base.h,v 1.8 2010/07/14 18:12:30 fang Exp $
+	$Id: expr_base.h,v 1.9 2011/02/08 02:06:45 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr_base.h,v 1.7.32.1 2005/12/11 00:45:06 fang Exp
  */
@@ -88,6 +88,9 @@ virtual ~expr() { }
 virtual ostream&
 	what(ostream& o) const = 0;
 
+virtual ostream&
+	dump(ostream&) const = 0;
+
 virtual line_position
 	leftmost(void) const = 0;
 
@@ -155,6 +158,8 @@ public:
 					checked_bool_group_type;
 	typedef	std::default_vector<entity::proc_literal>::type
 					checked_proc_group_type;
+	typedef	std::default_vector<count_ptr<const inst_ref_expr> >::type
+					reference_array_type;
 
 	inst_ref_expr() : parent_type() { }
 virtual ~inst_ref_expr() { }
@@ -192,7 +197,14 @@ virtual	bool
 	check_grouped_literals(checked_proc_group_type&, const context&) const;
 
 	CHECK_PRS_EXPR_PROTO;
-	
+
+#define	EXPAND_CONST_REFERENCE_PROTO					\
+	int								\
+	expand_const_reference(const count_ptr<const inst_ref_expr>&,	\
+		reference_array_type&) const
+
+virtual	EXPAND_CONST_REFERENCE_PROTO = 0;
+
 };      // end class inst_ref_expr
 
 //=============================================================================

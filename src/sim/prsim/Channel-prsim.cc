@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Channel-prsim.cc"
-	$Id: Channel-prsim.cc,v 1.39 2011/01/26 22:49:07 fang Exp $
+	$Id: Channel-prsim.cc,v 1.40 2011/02/08 02:06:49 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -14,6 +14,8 @@
 #include "sim/prsim/Channel-prsim.h"
 #include "sim/prsim/State-prsim.h"
 #include "parser/instref.h"
+#include "AST/expr_base.h"
+#include "Object/ref/meta_reference_union.h"
 #include "util/iterator_more.h"		// for set_inserter
 #include "util/copy_if.h"
 #include "util/memory/count_ptr.tcc"
@@ -66,6 +68,7 @@ namespace HAC {
 namespace SIM {
 namespace PRSIM {
 using parser::parse_node_to_index;
+using parser::inst_ref_expr;
 using std::set;
 using std::ios_base;
 using std::ifstream;
@@ -88,6 +91,7 @@ using util::strings::string_to_num;
 using util::numeric::div;
 using util::numeric::div_type;
 using util::numeric::rand48;
+using entity::global_indexed_reference;
 
 //=============================================================================
 #if PRSIM_CHANNEL_TIMING
@@ -3265,20 +3269,38 @@ channel_manager::~channel_manager() { }
 /**
 	Creates a channel, but leaves the acknowledgement and validity
 	rails uninitialized.  
-	Should probably call set_channel_ack_valid after this.
+	TODO: this does not account for working directory prefix (ACX-PR-5414)
 	\return true on error.
  */
 bool
-channel_manager::new_channel(State& state, const string& base, 
+channel_manager::new_channel(State& state, const string& _base, 
 		const string& bundle_name, const size_t _num_bundles, 
 		const string& rail_name, const size_t _num_rails, 
-		const bool active_low) {
+		const bool active_low, 
+		const bool have_ack, const bool ack_sense, const bool ack_init, 
+		const bool have_validity, const bool validity_sense) {
 	STACKTRACE_VERBOSE;
-	// TODO: this does not account for working directory prefix
 	// make sure base is a legitmate scalar channel name first
 	const entity::module& m(state.get_module());
+#if 1
+	parser::expanded_global_references_type refs;
+	if (parser::expand_global_references(_base, m, refs)) {
+		return true;
+	}
+	parser::expanded_global_references_type::const_iterator
+		ri(refs.begin()), re(refs.end());
+for ( ; ri!=re; ++ri) {
+	const entity::global_indexed_reference& g(ri->second);
+	ostringstream oss;
+//	cr.inst_ref()->dump(oss, expr_dump_context::default_value);
+	ri->first->dump(oss);
+	// base name needs to expanded to scalar reference strings...
+	const string& base(oss.str());
+#else
+	const string& base(_base);
 	const entity::global_indexed_reference
 		g(parser::parse_global_reference(base, m));
+#endif
 	if (g.first != entity::META_TYPE_PROCESS || !g.second) {
 		cerr << "Error: base reference is not a valid channel." << endl;
 		return true;
@@ -3291,7 +3313,11 @@ channel_manager::new_channel(State& state, const string& base,
 	const size_t key = channel_pool.size();
 	const pair<channel_set_type::iterator, bool>
 		i(channel_index_set.insert(make_pair(base, key)));
-if (i.second) {
+	if (!i.second) {
+		cerr << "Error: channel " << base <<
+			" already registered." << endl;
+		return true;
+	}
 	channel_pool.resize(key +1);	// default construct
 	channel& c(channel_pool.back());
 #if PRSIM_CHANNEL_LEDR
@@ -3351,19 +3377,26 @@ try {
 					"\' in channel." << endl;
 				return true;
 			}
-		}
-	}
+		}	// end for each rail
+	}	// end for each bundle
 	// initialize data-rail state counters from current values
 	c.initialize_data_counter(state);
-	return false;
+	// now setup ack and validity
+	// really shouldn't have to lookup channel again here...
+	if (set_channel_ack_valid(state, base, 
+			have_ack, ack_sense, ack_init, 
+			have_validity, validity_sense)) {
+		return true;
+	}
 } catch (...) {
 	cerr << "Error referencing channel `" << base
 		<< "\' structure members." << endl;
 	return true;
 }
-} else {
-	return true;
-}
+#if 1
+}	// end for all references
+#endif
+	return false;
 }	// end new_channel
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3522,11 +3555,13 @@ channel_manager::set_channel_ack_valid(State& state, const string& base,
 		const bool have_ack, const bool ack_sense, const bool ack_init, 
 		const bool have_validity, const bool validity_sense) {
 	STACKTRACE_VERBOSE;
+	// TODO: should just pass in channel from caller instead of lookup
 	GET_NAMED_CHANNEL(c, base)
 	const entity::module& m(state.get_module());
 if (have_ack) {
 	c.set_ack_active(ack_sense);
 	c.set_ack_init(ack_init);
+	// ack and enable rail names are hard-coded for now :(
 	const string ack_name(base + (ack_sense ? ".a" : ".e"));
 	const node_index_type ai = parse_node_to_index(ack_name, m).index;
 	if (!ai) {

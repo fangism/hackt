@@ -2,9 +2,9 @@
 	\file "AST/token_string.h"
 	Base set of classes for the HAC parser.  
 	These classes are implemented in "AST/token.cc"
-	$Id: token_string.h,v 1.3 2007/08/28 04:53:58 fang Exp $
+	$Id: token_string.h,v 1.4 2011/02/08 02:06:47 fang Exp $
 	This file used to be the following before it was renamed:
-	$Id: token_string.h,v 1.3 2007/08/28 04:53:58 fang Exp $
+	$Id: token_string.h,v 1.4 2011/02/08 02:06:47 fang Exp $
  */
 
 #ifndef __HAC_AST_TOKEN_STRING_H__
@@ -73,6 +73,9 @@ public:
 	ostream&
 	what(ostream& o) const;
 
+	ostream&
+	dump(ostream&) const;
+
 	line_position
 	leftmost(void) const;
 
@@ -81,6 +84,7 @@ public:
 
 	CHECK_META_REFERENCE_PROTO;
 	CHECK_NONMETA_REFERENCE_PROTO;
+	EXPAND_CONST_REFERENCE_PROTO;
 
 	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
 };      // end class token_identifier
@@ -96,6 +100,10 @@ virtual ~token_keyword() { }
 
 virtual ostream&
 	what(ostream& o) const;
+
+virtual ostream&
+	dump(ostream&) const;
+
 };	// end class token_keyword
 
 //=============================================================================

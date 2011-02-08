@@ -2,9 +2,9 @@
 	\file "AST/range.cc"
 	Class method definitions for HAC::parser, 
 	related to ranges and range lists.  
-	$Id: range.cc,v 1.14 2010/09/10 22:57:19 fang Exp $
+	$Id: range.cc,v 1.15 2011/02/08 02:06:45 fang Exp $
 	This file used to be the following before it was renamed:
-	$Id: range.cc,v 1.14 2010/09/10 22:57:19 fang Exp $
+	$Id: range.cc,v 1.15 2011/02/08 02:06:45 fang Exp $
  */
 
 #ifndef	__HAC_AST_RANGE_CC__
@@ -110,6 +110,15 @@ DESTRUCTOR_INLINE
 range::~range() { }
 
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(range)
+
+ostream&
+range::dump(ostream& o) const {
+	lower->dump(o << '[');
+	if (upper) {
+		upper->dump(o << "..");
+	}
+	return o << ']';
+}
 
 line_position
 range::leftmost(void) const {
@@ -271,6 +280,43 @@ range::check_nonmeta_index(const context& c) const {
 	}
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Expand constant ranges.
+ */
+int
+range::expand_const_indices(const count_ptr<const range>& _this, 
+		expanded_range_type& a) const {
+	INVARIANT(_this == this);
+	// resolve lower to constant
+	const count_ptr<const token_int> i(lower.is_a<const token_int>());
+	if (!i) {
+		cerr << "Error: index at " << where(*lower) <<
+			" needs to be a constant int." << endl;
+		return 1;
+	}
+	a.push_back(i);
+if (upper) {
+	const count_ptr<const token_int>
+		u(upper.is_a<const token_int>());
+	if (!u) {
+		cerr << "Error: index at " << where(*upper) <<
+			" needs to be a constant int." << endl;
+		return 1;
+	}
+	pint_value_type j = i->value() +1;
+	for ( ; j < u->value(); ++j) {
+		const count_ptr<const token_int> x(new token_int(j));
+		a.push_back(x);
+	}
+	// upper bound is inclusive
+	if (u->value() > i->value()) {
+		a.push_back(u);
+	}
+}
+	return 0;
+}
+
 //=============================================================================
 // class range_list method definitions
 
@@ -284,6 +330,16 @@ range_list::range_list(const dense_range_list& r) : parent_type() {
 range_list::range_list(const range* r) : parent_type(r) { }
 
 range_list::~range_list() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+range_list::dump(ostream& o) const {
+	const_iterator i(begin()), e(end());
+	for ( ; i!=e; ++i) {
+		(*i)->dump(o);
+	}
+	return o;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -608,6 +664,65 @@ range_list::check_meta_ranges(const context& c) const {
 			<< endl;
 		return return_type(NULL);
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	expands range.
+	e.g. [0..1][0..2] -> [0][0], [0][1], [0][2], [1][0], [1][1], [1][2]
+ */
+good_bool
+range_list::expand_const_indices(range_list_list_type& a) const {
+	const_iterator i(begin()), e(end());
+	// iteratively modify array 'a' in-place
+for ( ; i!=e; ++i) {
+	const range& r(**i);
+	// make sure range is constant
+	range::expanded_range_type rtmp;
+	if (r.expand_const_indices(*i, rtmp)) {
+		// have error message
+		return good_bool(false);
+	}
+	// share count-pointers to save memory
+	typedef	vector<count_ptr<const range> > const_range_array_type;
+	const_range_array_type cr;
+{
+	range::expanded_range_type::const_iterator
+		ri(rtmp.begin()), re(rtmp.end());
+	for ( ; ri!=re; ++ri) {
+		const count_ptr<const range> nr(new range(*ri));
+		cr.push_back(nr);
+	}
+}
+	if (a.empty()) {
+		// first index
+		const_range_array_type::const_iterator
+			ri(cr.begin()), re(cr.end());
+		for ( ; ri!=re; ++ri) {
+			const count_ptr<range_list> rl(new range_list);
+			rl->push_back(*ri);
+			a.push_back(rl);
+		}
+	} else {
+		// subsequent indices
+		range_list_list_type tmp;
+		range_list_list_type::iterator
+			ai(a.begin()), ae(a.end());
+		for ( ; ai!=ae; ++ai) {
+			const range_list& b(**ai);	// base
+		const_range_array_type::const_iterator
+			ri(cr.begin()), re(cr.end());	// suffix
+		for ( ; ri!=re; ++ri) {
+			// copy base, and append
+			const count_ptr<range_list> nrl(new range_list(b));
+			nrl->push_back(*ri);
+			tmp.push_back(nrl);
+		}
+		}
+		a.swap(tmp);
+	}
+}	// end for
+	return good_bool(true);
 }
 
 //=============================================================================

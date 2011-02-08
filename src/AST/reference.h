@@ -1,7 +1,7 @@
 /**
 	\file "AST/reference.h"
 	Reference-related parser classes for HAC.
-	$Id: reference.h,v 1.4 2010/07/14 18:12:31 fang Exp $
+	$Id: reference.h,v 1.5 2011/02/08 02:06:46 fang Exp $
  */
 
 #ifndef __HAC_AST_REFERENCE_H__
@@ -52,6 +52,9 @@ public:
 	ostream&
 	what(ostream& o) const;
 
+	ostream&
+	dump(ostream&) const;
+
 	line_position
 	leftmost(void) const;
 
@@ -60,6 +63,7 @@ public:
 
 	CHECK_META_REFERENCE_PROTO;
 	CHECK_NONMETA_REFERENCE_PROTO;
+	EXPAND_CONST_REFERENCE_PROTO;
 
 	never_ptr<const qualified_id>
 	get_id(void) const { return qid; }
@@ -89,17 +93,21 @@ public:
 
 //=============================================================================
 /// class for member (of user-defined type) expressions
+// reference counting member pointers for sharing opportunities
 // is not really unary, derive directly from expr?
 // final class?
 class member_expr : public inst_ref_expr {
+	typedef	member_expr		this_type;
 protected:
 	typedef	inst_ref_expr		parent_type;
 protected:
-	const excl_ptr<const inst_ref_expr>	owner;	///< the argument expr
+	const count_ptr<const inst_ref_expr>	owner;	///< the argument expr
 	/// the member name
-	const excl_ptr<const token_identifier>	member;
+	const count_ptr<const token_identifier>	member;
 public:
 	member_expr(const inst_ref_expr* l, const token_identifier* m);
+	member_expr(const count_ptr<const inst_ref_expr>&,
+		const count_ptr<const token_identifier>&);
 
 	// non-default copy-constructor?
 
@@ -108,6 +116,9 @@ public:
 	ostream&
 	what(ostream& o) const;
 
+	ostream&
+	dump(ostream&) const;
+
 	line_position
 	leftmost(void) const;
 
@@ -116,23 +127,30 @@ public:
 
 	CHECK_META_REFERENCE_PROTO;
 	CHECK_NONMETA_REFERENCE_PROTO;
+	EXPAND_CONST_REFERENCE_PROTO;
 };	// end class member_expr
 
 //-----------------------------------------------------------------------------
 /// class for array indexing, with support for multiple dimensions and ranges
 class index_expr : public inst_ref_expr {
+	typedef	index_expr			this_type;
 protected:
 	typedef	inst_ref_expr			parent_type;
 protected:
-	const excl_ptr<const inst_ref_expr>	base;	///< the argument expr
-	const excl_ptr<const range_list>	ranges;	///< index
+	const count_ptr<const inst_ref_expr>	base;	///< the argument expr
+	const count_ptr<const range_list>	ranges;	///< index
 public:
 	index_expr(const inst_ref_expr* l, const range_list* i);
+	index_expr(const count_ptr<const inst_ref_expr>&, 
+		const count_ptr<const range_list>&);
 
 	~index_expr();
 
 	ostream&
 	what(ostream& o) const;
+
+	ostream&
+	dump(ostream&) const;
 
 	line_position
 	leftmost(void) const;
@@ -140,10 +158,10 @@ public:
 	line_position
 	rightmost(void) const;
 
-	never_ptr<const inst_ref_expr>
+	const count_ptr<const inst_ref_expr>&
 	get_base(void) const { return base; }
 
-	never_ptr<const range_list>
+	const count_ptr<const range_list>&
 	get_indices(void) const { return ranges; }
 
 	size_t
@@ -151,6 +169,7 @@ public:
 
 	CHECK_META_REFERENCE_PROTO;
 	CHECK_NONMETA_REFERENCE_PROTO;
+	EXPAND_CONST_REFERENCE_PROTO;
 
 private:
 	range_list_meta_return_type
@@ -185,6 +204,9 @@ public:
 	ostream&
 	what(ostream& o) const;
 
+	ostream&
+	dump(ostream&) const;
+
 	line_position
 	leftmost(void) const;
 
@@ -193,6 +215,7 @@ public:
 
 	CHECK_META_REFERENCE_PROTO;
 	CHECK_NONMETA_REFERENCE_PROTO;		// unimplemented
+	EXPAND_CONST_REFERENCE_PROTO;
 
 	// overrides inst_ref_expr::check_grouped_literals
 	bool

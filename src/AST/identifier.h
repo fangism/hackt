@@ -1,7 +1,7 @@
 /**
 	\file "AST/identifier.h"
 	Base set of classes for the HAC parser.  
-	$Id: identifier.h,v 1.6 2007/07/18 23:28:15 fang Exp $
+	$Id: identifier.h,v 1.7 2011/02/08 02:06:45 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_identifier.h,v 1.7.12.1 2005/12/11 00:45:07 fang Exp
  */
@@ -68,6 +68,9 @@ public:
 
 	ostream&
 	what(ostream& o) const;
+
+	ostream&
+	dump(ostream&) const;
 
 	line_position
 	leftmost(void) const;

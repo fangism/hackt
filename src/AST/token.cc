@@ -1,7 +1,7 @@
 /**
 	\file "AST/token.cc"
 	Class method definitions for HAC::parser, related to terminal tokens.
-	$Id: token.cc,v 1.16 2010/09/21 00:18:08 fang Exp $
+	$Id: token.cc,v 1.17 2011/02/08 02:06:46 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_token.cc,v 1.36.4.1 2005/12/11 00:45:11 fang Exp
  */
@@ -197,6 +197,11 @@ token_int::what(ostream& o) const {
 	return o << "int: " << val;
 }
 
+ostream&
+token_int::dump(ostream& o) const {
+	return o << val;
+}
+
 line_position
 token_int::leftmost(void) const {
 	return terminal::leftmost();
@@ -237,6 +242,11 @@ token_float::string_compare(const char* d) const {
 ostream&
 token_float::what(ostream& o) const {
 	return o << "float: " << val;
+}
+
+ostream&
+token_float::dump(ostream& o) const {
+	return o << val;
 }
 
 line_position
@@ -307,6 +317,11 @@ CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_identifier)
 ostream&
 token_identifier::what(ostream& o) const {
 	return o << "identifier: " << AS_A(const string&, *this);
+}
+
+ostream&
+token_identifier::dump(ostream& o) const {
+	return o << AS_A(const string&, *this);
 }
 
 line_position
@@ -401,6 +416,20 @@ token_identifier::check_nonmeta_reference(const context& c) const {
 	}
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+int
+token_identifier::expand_const_reference(
+		const count_ptr<const inst_ref_expr>& _this, 
+		reference_array_type& a) const {
+	STACKTRACE_VERBOSE;
+	INVARIANT(_this == this);
+	INVARIANT(a.empty());
+	a.push_back(_this);
+	return 0;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// non-member functions
 //=============================================================================
 // class token_keyword method definitions
 
@@ -415,6 +444,11 @@ token_keyword::~token_keyword() { }
 ostream& 
 token_keyword::what(ostream& o) const {
 	return o << "keyword: " << AS_A(const string&, *this);
+}
+
+ostream& 
+token_keyword::dump(ostream& o) const {
+	return o << AS_A(const string&, *this);
 }
 
 //=============================================================================
@@ -438,6 +472,11 @@ CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_bool)
 ostream&
 token_bool::what(ostream& o) const {
 	return o << "bool: " << AS_A(const string&, *this);
+}
+
+ostream&
+token_bool::dump(ostream& o) const {
+	return token_keyword::dump(o);
 }
 
 line_position
@@ -475,6 +514,12 @@ CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_else)
 ostream&
 token_else::what(ostream& o) const {
 	return token_keyword::what(o);
+}
+
+ostream&
+token_else::dump(ostream& o) const {
+	FINISH_ME(Fang);
+	return o;
 }
 
 line_position
@@ -519,8 +564,13 @@ token_quoted_string::what(ostream& o) const {
 //		o << "string: \"") << "\"";
 //	return token_string::what(o << "string: \"") << "\"";
 	o << "string: \"";
-	o << static_cast<const string&>(*this);
+	o << AS_A(const string&, *this);
 	return o << "\"";
+}
+
+ostream&
+token_quoted_string::dump(ostream& o) const {
+	return o << '\"' << AS_A(const string&, *this) << '\"';
 }
 
 line_position

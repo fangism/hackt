@@ -1,0 +1,5 @@
+FATAL: reference to uninstantiated process e1of<2> index [4]
+ERROR: unrolling aliases.
+Error resolving collection of aliases.
+Error: base reference is not a valid channel.
+... at line 7

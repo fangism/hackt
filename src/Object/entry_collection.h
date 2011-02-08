@@ -1,7 +1,7 @@
 /**
 	\file "Object/entry_collection.h"
 	Handy class for accumulating all reachable subinstances.  
-	$Id: entry_collection.h,v 1.4 2011/01/28 02:23:29 fang Exp $
+	$Id: entry_collection.h,v 1.5 2011/02/08 02:06:47 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_ENTRY_COLLECTION_H__
@@ -10,6 +10,7 @@
 #include <set>
 #include "util/size_t.h"
 #include "Object/traits/classification_tags.h"
+// #include "Object/ref/refernces_enum.h"
 #include "Object/devel_switches.h"
 
 namespace HAC {
@@ -32,6 +33,7 @@ struct entry_collection_base {
 /**
 	Is this class replaceable with global_references_set
 	from "Object/ref/reference_set.h"?
+	TODO: import from global_references_array.
  */
 struct entry_collection :
 	public entry_collection_base<bool_tag>, 

@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.43 2010/09/21 00:18:07 fang Exp $
+	$Id: PRS.cc,v 1.44 2011/02/08 02:06:44 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -53,6 +53,7 @@
 #include "Object/ref/references_fwd.h"
 #include "Object/traits/node_traits.h"
 
+#include "common/ICE.h"
 #include "common/TODO.h"
 
 #include "util/what.h"
@@ -126,6 +127,12 @@ literal::literal(inst_ref_expr* r) :
 literal::~literal() { }
 
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(literal)
+
+ostream&
+literal::dump(ostream& o) const {
+	FINISH_ME(Fang);
+	return o;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -235,16 +242,17 @@ if (internal) {
 	STACKTRACE_INDENT_PRINT("internal node setup" << endl);
 	const never_ptr<const index_expr>
 		ir(ref.is_a<const index_expr>());
-	never_ptr<const token_identifier> dr;
-	never_ptr<const range_list> ind;
+	never_ptr<const token_identifier> dr;	// local-only
+	count_ptr<const range_list> ind;
 	if (ir) {
 		if (!c.parse_opts.array_internal_nodes) {
 			cerr << "Error: internal node arrays are unsupported "
 				"in ACT mode.  " << where(*this) << endl;
 			return prs_literal_ptr_type(NULL);
 		}
-		const never_ptr<const inst_ref_expr> b(ir->get_base());
-		dr = b.is_a<const token_identifier>();
+		const count_ptr<const inst_ref_expr>& b(ir->get_base());
+		dr = never_ptr<const token_identifier>(
+			&*b.is_a<const token_identifier>());
 		NEVER_NULL(b && dr);
 		ind = ir->get_indices();
 	} else {
@@ -348,8 +356,8 @@ if (internal) {
 			return prs_literal_ptr_type(NULL);
 		}
 		// extract base and index dimensions
-		const never_ptr<const inst_ref_expr> b(ir->get_base());
-		const never_ptr<const token_identifier>
+		const count_ptr<const inst_ref_expr>& b(ir->get_base());
+		const count_ptr<const token_identifier>
 			bd(b.is_a<const token_identifier>());
 		NEVER_NULL(b && bd);
 		nd = c.add_internal_node(*bd, 
@@ -393,6 +401,14 @@ inst_ref_expr::nonmeta_return_type
 literal::check_nonmeta_reference(const context& c) const {
 	// return ref->check_nonmeta_reference(c);
 	return nonmeta_return_type(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+int
+literal::expand_const_reference(const count_ptr<const inst_ref_expr>&,
+		reference_array_type&) const {
+	ICE_NEVER_CALL(cerr);
+	return 1;
 }
 
 //=============================================================================
@@ -956,6 +972,12 @@ ostream&
 op_loop::what(ostream& o) const {
 	o << '(' << util::what<op_loop>::name() << ' ';
 	return op->what(o) << ")";
+}
+
+ostream&
+op_loop::dump(ostream& o) const {
+	FINISH_ME(Fang);
+	return o;
 }
 
 line_position

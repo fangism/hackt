@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.cc"
 	Class method definitions for CHP parser classes.
-	$Id: CHP.cc,v 1.30 2011/01/14 01:32:55 fang Exp $
+	$Id: CHP.cc,v 1.31 2011/02/08 02:06:43 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_chp.cc,v 1.21.20.1 2005/12/11 00:45:03 fang Exp
  */
@@ -141,6 +141,12 @@ probe_expr::probe_expr(const char_punctuation_type* o,
 probe_expr::~probe_expr() { }
 
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(probe_expr)
+
+ostream&
+probe_expr::dump(ostream& o) const {
+	FINISH_ME(Fang);
+	return o;
+}
 
 line_position
 probe_expr::leftmost(void) const {
@@ -1590,6 +1596,12 @@ function_call_expr::function_call_expr(
 function_call_expr::~function_call_expr() { }
 
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(function_call_expr)
+
+ostream&
+function_call_expr::dump(ostream& o) const {
+	FINISH_ME(Fang);
+	return o;
+}
 
 line_position
 function_call_expr::leftmost(void) const {

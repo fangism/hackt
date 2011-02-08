@@ -1,0 +1,10 @@
+# "channel-array-b-02.prsimrc"
+# @haco@ channel-array-b.haco-c
+
+# testing declaring whole array of channels
+# echo-commands on
+# expect fail: out of range
+channel X[0..4] e:0 :0 d:2
+echo never reached!!!
+channel-show-all
+

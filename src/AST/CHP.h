@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.h"
 	CHP-specific syntax tree classes.  
-	$Id: CHP.h,v 1.13 2010/09/21 00:18:06 fang Exp $
+	$Id: CHP.h,v 1.14 2011/02/08 02:06:44 fang Exp $
 	Used to be the following before rename:
 	Id: art_parser_chp.h,v 1.13.40.1 2005/12/11 00:45:03 fang Exp
  */
@@ -58,6 +58,9 @@ public:
 
 	ostream&
 	what(ostream& o) const;
+
+	ostream&
+	dump(ostream&) const;
 
 	line_position
 	leftmost(void) const;
@@ -672,6 +675,9 @@ public:
 
 	ostream&
 	what(ostream& o) const;
+
+	ostream&
+	dump(ostream&) const;
 
 	line_position
 	leftmost(void) const;

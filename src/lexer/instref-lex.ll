@@ -2,7 +2,7 @@
  *	\file "lexer/instref-lex.ll"
  *	vi: ft=lex
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: instref-lex.ll,v 1.7 2009/10/02 01:57:25 fang Exp $
+ *	$Id: instref-lex.ll,v 1.8 2011/02/08 02:06:47 fang Exp $
  */
 
 /****** DEFINITIONS **********************************************************/
@@ -151,6 +151,7 @@ RANGE		".."
 <INITIAL>{
 
 {SCOPE}		{ NODE_POSITION_UPDATE(*yylval __YYLEX_ARG); return SCOPE; }
+{RANGE}		{ NODE_POSITION_UPDATE(*yylval __YYLEX_ARG); return RANGE; }
 
 {POSITIONTOKEN} { NODE_POSITION_UPDATE(*yylval __YYLEX_ARG); return yytext[0]; }
 

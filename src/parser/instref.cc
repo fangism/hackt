@@ -1,6 +1,6 @@
 /**
 	\file "parser/instref.cc"
-	$Id: instref.cc,v 1.25 2010/09/16 06:31:45 fang Exp $
+	$Id: instref.cc,v 1.26 2011/02/08 02:06:49 fang Exp $
  */
 
 #define	DEBUGGING_SHIT			0
@@ -54,7 +54,7 @@
 #include "util/tokenize_fwd.h"		// for string_list
 #include "util/value_saver.h"
 #include "util/directory.h"
-#include "util/memory/excl_ptr.h"
+#include "util/memory/count_ptr.tcc"
 #include "util/packed_array.h"		// for alias_collection_type
 #include "util/member_select.h"
 #include "util/copy_if.h"		// for transform_if algo
@@ -84,6 +84,7 @@ using entity::substructure_alias;
 using entity::entry_collection;
 using entity::index_set_type;
 using entity::global_indexed_reference;
+using entity::global_reference_array_type;
 using entity::META_TYPE_NONE;
 using entity::META_TYPE_PROCESS;
 using entity::META_TYPE_INT;
@@ -157,9 +158,9 @@ const directory_stack* dir_stack = NULL;
 	TODO: let this handle directory-like references, for the sake of
 		directory tab-completion.
  */
-excl_ptr<parser::inst_ref_expr>
+count_ptr<parser::inst_ref_expr>
 parse_reference(const char* s) {
-	typedef	excl_ptr<parser::inst_ref_expr>	return_type;
+	typedef	count_ptr<parser::inst_ref_expr>	return_type;
 	STACKTRACE_VERBOSE;
 	NEVER_NULL(s);
 	YYSTYPE lval;
@@ -175,6 +176,18 @@ parse_reference(const char* s) {
 	return return_type(lval._inst_ref_expr);
 }
 
+//-----------------------------------------------------------------------------
+/**
+	Expands array and ranged references.  
+ */
+extern
+int
+expand_reference(const count_ptr<const inst_ref_expr>& r, 
+	reference_array_type& a) {
+	NEVER_NULL(r);
+	return r->expand_const_reference(r, a);
+}
+
 //=============================================================================
 /**
 	NOTE: parse::context can only accept a modifiable module&
@@ -187,10 +200,10 @@ parse_reference(const char* s) {
 		we are restricted to using the context const-ly.  
 	\return resolved IR of reference.  
  */
-entity::meta_reference_union
+meta_reference_union
 check_reference(const parser::inst_ref_expr& ref_tree,
 		const entity::module& m) {
-	typedef	entity::meta_reference_union		return_type;
+	typedef	meta_reference_union		return_type;
 	STACKTRACE_VERBOSE;
 /***
 	And now for a slice of compiler pie:
@@ -227,10 +240,10 @@ check_reference(const parser::inst_ref_expr& ref_tree,
 	Composition of parse_reference and check_reference.  
 	Some error message already given.  
  */
-entity::meta_reference_union
+meta_reference_union
 parse_and_check_reference(const char* s, const module& m) {
-	typedef	entity::meta_reference_union		return_type;
-	typedef	excl_ptr<parser::inst_ref_expr>		lval_ptr_type;
+	typedef	meta_reference_union		return_type;
+	typedef	count_ptr<parser::inst_ref_expr>	lval_ptr_type;
 	STACKTRACE_VERBOSE;
 	const lval_ptr_type ref_tree = parse_reference(s);
 	if (!ref_tree) {
@@ -238,6 +251,44 @@ parse_and_check_reference(const char* s, const module& m) {
 	}
 	return check_reference(*ref_tree, m);
 }
+
+//=============================================================================
+/**
+	Expands to an array of checked references.
+	\return true on error.
+ */
+bool
+expand_global_references(const string& _base, const module& m, 
+		expanded_global_references_type& ret) {
+	STACKTRACE_VERBOSE;
+	// we have to expand this the hard way because we need
+	// the original expanded reference names.
+	const AST_reference_ptr r(parser::parse_reference(_base.c_str()));
+	if (!r) {
+		cerr << "Error in instance reference." << endl;
+		return true;
+	}
+	parser::reference_array_type st_refs;
+	if (parser::expand_reference(r, st_refs)) {
+		cerr << "Error in expanding instance reference." << endl;
+		return true;
+	}
+	ret.reserve(st_refs.size());
+	parser::reference_array_type::const_iterator
+		ri(st_refs.begin()), re(st_refs.end());
+for ( ; ri!=re; ++ri) {
+	NEVER_NULL(*ri);
+	const meta_reference_union cr(parser::check_reference(**ri, m));
+	if (!cr) {
+		cerr << "Error in instance reference." << endl;
+		return true;
+	}
+	const global_indexed_reference
+		g(parser::parse_global_reference(cr, m));
+	ret.push_back(expanded_global_reference(*ri, g));
+}	// end for all expanded references
+	return false;
+}	// end expand_global_references
 
 //=============================================================================
 /**
@@ -297,7 +348,7 @@ parse_global_reference(const string& n, const module& m) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 global_indexed_reference
-parse_global_reference(const entity::meta_reference_union& r, const module& m) {
+parse_global_reference(const meta_reference_union& r, const module& m) {
 	INVARIANT(r.inst_ref());
 	const footprint& topfp(m.get_footprint());
 	footprint_frame tff(topfp);
@@ -305,6 +356,37 @@ parse_global_reference(const entity::meta_reference_union& r, const module& m) {
 	tff.construct_top_global_context(topfp, g);
 	const global_entry_context gc(tff, g);
 	return r.inst_ref()->lookup_top_level_reference(gc);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+int
+parse_global_references(const string& n, 
+		const module& m, global_reference_array_type& a) {
+	typedef	inst_ref_expr::meta_return_type		checked_ref_type;
+	STACKTRACE_VERBOSE;
+	const checked_ref_type r(parse_and_check_reference(n.c_str(), m));
+	if (!r.inst_ref()) {
+		return 1;
+	}
+	return parse_global_references(r, m, a);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Parses an aggregate reference into a collection.
+	\return non-zero on error
+ */
+int
+parse_global_references(const meta_reference_union& r, 
+		const module& m, global_reference_array_type& a) {
+	INVARIANT(r.inst_ref());
+	const footprint& topfp(m.get_footprint());
+	footprint_frame tff(topfp);
+	const global_offset g;
+	tff.construct_top_global_context(topfp, g);
+	const global_entry_context gc(tff, g);
+	const good_bool b(r.inst_ref()->lookup_top_level_references(gc, a));
+	return b.good ? 0 : 1;
 }
 
 //=============================================================================

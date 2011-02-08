@@ -1,7 +1,7 @@
 /**
 	\file "AST/node_position.h"
 	Node whose sole purpose is to record a position of a token.  
-	$Id: node_position.h,v 1.2 2005/12/13 04:15:11 fang Exp $
+	$Id: node_position.h,v 1.3 2011/02/08 02:06:45 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_node_position.h,v 1.6.42.1 2005/12/11 00:45:09 fang Exp
  */
@@ -57,6 +57,11 @@ public:
 
 	ostream&
 	what(ostream&) const;
+
+	ostream&
+	dump(ostream& o) const {
+		return what(o);
+	}
 
 	line_position
 	leftmost(void) const;

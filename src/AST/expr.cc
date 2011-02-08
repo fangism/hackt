@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.41 2010/07/14 18:12:30 fang Exp $
+	$Id: expr.cc,v 1.42 2011/02/08 02:06:45 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -1002,6 +1002,17 @@ qualified_id::force_absolute(const string_punctuation_type* s) {
 
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(qualified_id)
 
+ostream&
+qualified_id::dump(ostream& o) const {
+	const_iterator i(begin()), e(end());
+	INVARIANT(i!=e);
+	(*i)->dump(o);
+	for (++i ; i!=e; ++i) {
+		(*i)->dump(o << scope);
+	}
+	return o;
+}
+
 line_position
 qualified_id::leftmost(void) const {
 	return qualified_id_base::leftmost();
@@ -1155,6 +1166,11 @@ id_expr::what(ostream& o) const {
         return o << util::what<id_expr>::name() << ": " << *qid;
 }
 
+ostream&
+id_expr::dump(ostream& o) const {
+	return qid->dump(o);
+}
+
 line_position     
 id_expr::leftmost(void) const {
         return qid->leftmost();
@@ -1290,6 +1306,21 @@ if (o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This seeds the return array with a base identifier.
+ */
+int
+id_expr::expand_const_reference(
+		const count_ptr<const inst_ref_expr>& _this, 
+		reference_array_type& a) const {
+	STACKTRACE_VERBOSE;
+	INVARIANT(_this == this);
+	INVARIANT(a.empty());
+	a.push_back(_this);
+	return 0;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // non-member functions
 ostream& operator << (ostream& o, const id_expr& id) {
 	return o << *id.qid;
@@ -1326,6 +1357,13 @@ DESTRUCTOR_INLINE
 prefix_expr::~prefix_expr() { }
 
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(prefix_expr)
+
+ostream&
+prefix_expr::dump(ostream& o) const {
+	op->dump(o);
+	e->dump(o);
+	return o;
+}
 
 line_position
 prefix_expr::leftmost(void) const {
@@ -1552,10 +1590,24 @@ member_expr::member_expr(const inst_ref_expr* l,
 	NEVER_NULL(member);
 }
 
+member_expr::member_expr(const count_ptr<const inst_ref_expr>& l,
+		const count_ptr<const token_identifier>& m) :
+		parent_type(), owner(l), member(m) {
+	NEVER_NULL(owner);
+	NEVER_NULL(member);
+}
+
 DESTRUCTOR_INLINE
 member_expr::~member_expr() { }
 
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(member_expr)
+
+ostream&
+member_expr::dump(ostream& o) const {
+	owner->dump(o) << '.';
+	member->dump(o);
+	return o;
+}
 
 line_position
 member_expr::leftmost(void) const {
@@ -1710,6 +1762,33 @@ member_expr::check_nonmeta_reference(const context& c) const {
 #endif
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+int
+member_expr::expand_const_reference(
+		const count_ptr<const inst_ref_expr>& _this, 
+		reference_array_type& a) const {
+	STACKTRACE_VERBOSE;
+	INVARIANT(_this == this);
+	if (owner->expand_const_reference(owner, a)) {
+		return 1;	// error
+	}
+	if (a.size() == 1) {
+		// singleton, quick return
+		a.front() = _this;
+		return 0;
+	}
+	// else have more than 1
+	reference_array_type::iterator i(a.begin()), e(a.end());
+	for ( ; i!=e; ++i) {
+		*i = count_ptr<const inst_ref_expr>(
+			new this_type(*i, member));
+#if 0
+			(*i)->dump(cerr << "expanded-member: ") << endl;
+#endif
+	}
+	return 0;
+}
+
 //=============================================================================
 // class index_expr method definitions
 
@@ -1720,10 +1799,24 @@ index_expr::index_expr(const inst_ref_expr* l, const range_list* i) :
 	NEVER_NULL(ranges);
 }
 
+index_expr::index_expr(const count_ptr<const inst_ref_expr>& l,
+		const count_ptr<const range_list>& i) :
+		parent_type(), base(l), ranges(i) {
+	NEVER_NULL(base);
+	NEVER_NULL(ranges);
+}
+
 DESTRUCTOR_INLINE
 index_expr::~index_expr() { }
 
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(index_expr)
+
+ostream&
+index_expr::dump(ostream& o) const {
+	base->dump(o);
+	ranges->dump(o);
+	return o;
+}
 
 line_position
 index_expr::leftmost(void) const {
@@ -1889,6 +1982,41 @@ index_expr::check_nonmeta_reference(const context& c) const {
 	return base_inst.is_a<return_type::element_type>();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+int
+index_expr::expand_const_reference(
+		const count_ptr<const inst_ref_expr>& _this, 
+		reference_array_type& a) const {
+	STACKTRACE_VERBOSE;
+	INVARIANT(_this == this);
+	if (base->expand_const_reference(base, a)) {
+		return 1;	// error
+	}
+	// expand const indices
+	range_list::range_list_list_type rtmp;
+	if (!ranges->expand_const_indices(rtmp).good) {
+		return 1;	// error
+	}
+	// cross-product
+	reference_array_type ret;
+	ret.reserve(a.size() * rtmp.size());
+	reference_array_type::const_iterator i(a.begin()), e(a.end());
+	for ( ; i!=e; ++i) {
+		range_list::range_list_list_type::const_iterator
+			ri(rtmp.begin()), re(rtmp.end());
+		for (; ri!=re; ++ri) {
+			const count_ptr<const index_expr>
+				n(new index_expr(*i, *ri));
+			ret.push_back(n);
+#if 0
+			n->dump(cerr << "expanded-index: ") << endl;
+#endif
+		}
+	}
+	a.swap(ret);
+	return 0;
+}
+
 //=============================================================================
 // class binary_expr method definitions
 
@@ -1908,6 +2036,17 @@ binary_expr::binary_expr(const count_ptr<const expr>& left,
 
 DESTRUCTOR_INLINE
 binary_expr::~binary_expr() {
+}
+
+/**
+	Caveat: Is not smart about parenthesization.
+ */
+ostream&
+binary_expr::dump(ostream& o) const {
+	l->dump(o);
+	op->dump(o);
+	l->dump(o);
+	return o;
 }
 
 line_position
@@ -2620,6 +2759,13 @@ loop_operation::~loop_operation() { }
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(loop_operation)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+loop_operation::dump(ostream& o) const {
+	FINISH_ME(Fang);
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 line_position
 loop_operation::leftmost(void) const {
 	if (lp)
@@ -2840,6 +2986,12 @@ array_concatenation::~array_concatenation() {
 
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(array_concatenation)
 
+ostream&
+array_concatenation::dump(ostream& o) const {
+	FINISH_ME(Fang);
+	return o;
+}
+
 line_position
 array_concatenation::leftmost(void) const {
 	return parent_type::leftmost();
@@ -2910,6 +3062,12 @@ loop_concatenation::~loop_concatenation() {
 
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(loop_concatenation)
 
+ostream&
+loop_concatenation::dump(ostream& o) const {
+	FINISH_ME(Fang);
+	return o;
+}
+
 line_position
 loop_concatenation::leftmost(void) const {
 	if (lp)		return lp->leftmost();
@@ -2953,6 +3111,12 @@ array_construction::array_construction(const char_punctuation_type* l,
 }
 
 array_construction::~array_construction() {
+}
+
+ostream&
+array_construction::dump(ostream& o) const {
+	FINISH_ME(Fang);
+	return o;
 }
 
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(array_construction)
@@ -3078,6 +3242,12 @@ reference_group_construction::~reference_group_construction() {
 
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(reference_group_construction)
 
+ostream&
+reference_group_construction::dump(ostream& o) const {
+	FINISH_ME(Fang);
+	return o;
+}
+
 line_position
 reference_group_construction::leftmost(void) const {
 	if (lb)		return lb->leftmost();
@@ -3141,6 +3311,21 @@ bool
 reference_group_construction::check_grouped_literals(
 		checked_proc_group_type& g, const context& c) const {
 	return ex->postorder_check_grouped_proc_refs(g, c);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Not yet implemented.
+ */
+int
+reference_group_construction::expand_const_reference(
+		const count_ptr<const inst_ref_expr>& _this, 
+		reference_array_type& a) const {
+	STACKTRACE_VERBOSE;
+	INVARIANT(_this == this);
+	FINISH_ME(Fang);
+	a.clear();
+	return 1;
 }
 
 //=============================================================================

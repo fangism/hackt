@@ -1,0 +1,9 @@
+# "channel-array-b-01.prsimrc"
+# @haco@ channel-array-b.haco-c
+
+# testing declaring whole array of channels
+# echo-commands on
+channel X[0..3] e:0 :0 d:2
+channel Y[0..1] e:0 :0 d:4
+channel-show-all
+

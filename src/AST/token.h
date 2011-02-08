@@ -1,7 +1,7 @@
 /**
 	\file "AST/token.h"
 	Token-specific parser classes for HAC.  
-	$Id: token.h,v 1.9 2010/09/21 00:18:08 fang Exp $
+	$Id: token.h,v 1.10 2011/02/08 02:06:46 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_token.h,v 1.17.34.1 2005/12/11 00:45:11 fang Exp
  */
@@ -52,6 +52,9 @@ public:
 	ostream&
 	what(ostream& o) const;
 
+	ostream&
+	dump(ostream&) const;
+
 	line_position
 	leftmost(void) const;
 
@@ -83,6 +86,9 @@ public:
 	ostream&
 	what(ostream& o) const;
 
+	ostream&
+	dump(ostream&) const;
+
 	line_position
 	leftmost(void) const;
 
@@ -107,6 +113,9 @@ public:
 	ostream&
 	what(ostream& o) const;
 
+	ostream&
+	dump(ostream&) const;
+
 	line_position
 	leftmost(void) const;
 
@@ -130,6 +139,9 @@ public:
 
 	ostream&
 	what(ostream& o) const;
+
+	ostream&
+	dump(ostream&) const;
 
 	line_position
 	leftmost(void) const;
@@ -157,6 +169,9 @@ public:
 
 	ostream&
 	what(ostream& o) const;
+
+	ostream&
+	dump(ostream&) const;
 
 	line_position
 	leftmost(void) const;

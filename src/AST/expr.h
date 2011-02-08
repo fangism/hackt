@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.h"
 	Expression-related parser classes for HAC.
-	$Id: expr.h,v 1.11 2009/06/05 16:28:05 fang Exp $
+	$Id: expr.h,v 1.12 2011/02/08 02:06:45 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.h,v 1.15.42.1 2005/12/11 00:45:05 fang Exp
  */
@@ -56,6 +56,9 @@ public:
 	ostream&
 	what(ostream& o) const;
 
+	ostream&
+	dump(ostream&) const;
+
 	line_position
 	leftmost(void) const;
 
@@ -89,6 +92,9 @@ virtual	~binary_expr();
 
 virtual	ostream&
 	what(ostream& o) const = 0;
+
+	ostream&
+	dump(ostream&) const;
 
 	line_position
 	leftmost(void) const;
@@ -187,6 +193,9 @@ public:
 	ostream&
 	what(ostream& o) const;
 
+	ostream&
+	dump(ostream&) const;
+
 	line_position
 	leftmost(void) const;
 
@@ -222,6 +231,9 @@ public:
 
 	ostream&
 	what(ostream& o) const;
+
+	ostream&
+	dump(ostream&) const;
 
 	line_position
 	leftmost(void) const;
@@ -259,6 +271,9 @@ public:
 	ostream&
 	what(ostream& o) const;
 
+	ostream&
+	dump(ostream&) const;
+
 	line_position
 	leftmost(void) const;
 
@@ -292,6 +307,9 @@ public:
 
 	ostream&
 	what(ostream& o) const;
+
+	ostream&
+	dump(ostream&) const;
 
 	line_position
 	leftmost(void) const;

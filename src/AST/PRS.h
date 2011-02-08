@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.h"
 	PRS-specific syntax tree classes.
-	$Id: PRS.h,v 1.14 2009/10/02 01:56:28 fang Exp $
+	$Id: PRS.h,v 1.15 2011/02/08 02:06:44 fang Exp $
 	This used to be the following before it was renamed:
 	Id: art_parser_prs.h,v 1.15.12.1 2005/12/11 00:45:09 fang Exp
  */
@@ -125,6 +125,9 @@ public:
 	ostream&
 	what(ostream&) const;
 
+	ostream&
+	dump(ostream&) const;
+
 	line_position
 	leftmost(void) const;
 
@@ -135,6 +138,7 @@ public:
 	CHECK_META_REFERENCE_PROTO;
 	/// this is not actually used
 	CHECK_NONMETA_REFERENCE_PROTO;
+	EXPAND_CONST_REFERENCE_PROTO;
 
 	// overrides base
 	prs_literal_ptr_type
@@ -423,6 +427,9 @@ public:
 
 	ostream&
 	what(ostream& o) const;
+
+	ostream&
+	dump(ostream&) const;
 
 	line_position
 	leftmost(void) const;
