@@ -1,12 +1,14 @@
 /**
 	\file "Object/unroll/meta_loop.tcc"
-	$Id: meta_loop.tcc,v 1.5 2010/07/09 02:14:14 fang Exp $
+	$Id: meta_loop.tcc,v 1.6 2011/02/08 22:32:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_META_LOOP_TCC__
 #define	__HAC_OBJECT_UNROLL_META_LOOP_TCC__
 
 #include <iostream>
+#include <vector>
+
 #include "Object/unroll/meta_loop.h"
 #include "Object/unroll/unroll_context.h"
 #include "Object/common/dump_flags.h"

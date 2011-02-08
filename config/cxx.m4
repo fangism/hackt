@@ -1,5 +1,5 @@
 dnl "config/cxx.m4"
-dnl	$Id: cxx.m4,v 1.13 2010/09/21 00:17:54 fang Exp $
+dnl	$Id: cxx.m4,v 1.14 2011/02/08 22:32:44 fang Exp $
 dnl autoconf macros for detecting characteristics of the C++ compiler.
 dnl
 
@@ -243,7 +243,8 @@ elif test "$ac_cv_cxx_compiler_gnu" = yes ; then
 	TRY_WARN_CFLAGS="-Wmissing-prototypes -Wstrict-prototypes"
 	TRY_WARN_CFLAGS="$TRY_WARN_CFLAGS -Wbad-function-cast -Wnested-externs"
 	TRY_WARN_CXXFLAGS="-Wold-style-cast -Woverloaded-virtual"
-	TRY_NOWARN_FLAGS="-Wno-unused -Wno-shadow -Wno-cast-qual -Wno-long-double"
+dnl	TRY_NOWARN_FLAGS="-Wno-unused -Wno-shadow -Wno-cast-qual -Wno-long-double"
+	TRY_NOWARN_FLAGS="-Wno-unused -Wno-shadow -Wno-cast-qual"
 	TRY_NOWARN_CFLAGS="-Wno-strict-prototypes -Wno-missing-prototypes"
 	TRY_NOWARN_CXXFLAGS="-Wno-overloaded-virtual"
 else

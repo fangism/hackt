@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/instance_placeholder.tcc"
-	$Id: instance_placeholder.tcc,v 1.9 2010/05/26 00:46:52 fang Exp $
+	$Id: instance_placeholder.tcc,v 1.10 2011/02/08 22:32:48 fang Exp $
 	TODO: trim includes
  */
 
@@ -19,6 +19,7 @@
 #include <iostream>
 #include <algorithm>
 #include <functional>
+#include <vector>
 
 // experimental: suppressing automatic template instantiation
 #include "Object/common/extern_templates.h"

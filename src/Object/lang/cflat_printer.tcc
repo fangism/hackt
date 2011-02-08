@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_printer.tcc"
 	Implementation of cflattening visitor.
-	$Id: cflat_printer.tcc,v 1.1 2010/07/12 21:49:54 fang Exp $
+	$Id: cflat_printer.tcc,v 1.2 2011/02/08 22:32:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CFLAT_PRINTER_TCC__
@@ -12,6 +12,7 @@
 #include <set>
 #include <sstream>
 #include <numeric>
+#include <vector>
 #include "Object/lang/cflat_printer.h"
 #include "Object/def/footprint.h"
 #include "main/cflat_options.h"

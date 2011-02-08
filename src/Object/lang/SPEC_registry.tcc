@@ -1,11 +1,12 @@
 /**
 	\file "Object/lang/SPEC_registry.tcc"
-	$Id: SPEC_registry.tcc,v 1.3 2009/04/29 05:33:29 fang Exp $
+	$Id: SPEC_registry.tcc,v 1.4 2011/02/08 22:32:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_SPEC_REGISTRY_TCC__
 #define	__HAC_OBJECT_LANG_SPEC_REGISTRY_TCC__
 
+#include <vector>
 #include "Object/lang/SPEC_registry.h"
 #include "Object/expr/const_param_expr_list.h"
 #include "util/macros.h"

@@ -1,16 +1,17 @@
 /**
 	\file "util/persistent_object_manager.h"
 	Clases related to serial, persistent object management.  
-	$Id: persistent_object_manager.h,v 1.31 2010/04/27 18:33:24 fang Exp $
+	$Id: persistent_object_manager.h,v 1.32 2011/02/08 22:32:52 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_OBJECT_MANAGER_H__
 #define	__UTIL_PERSISTENT_OBJECT_MANAGER_H__
 
 #include <iosfwd>			// include stringstream
-#include "util/list_vector.h"
 #include <list>
+#include <vector>
 #include <map>
+#include "util/list_vector.h"
 #include "util/persistent.h"
 
 #include "util/nullary_function_fwd.h"

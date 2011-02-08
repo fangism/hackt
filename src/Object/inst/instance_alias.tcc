@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.43 2010/05/26 00:46:52 fang Exp $
+	$Id: instance_alias.tcc,v 1.44 2011/02/08 22:32:48 fang Exp $
 	TODO: trim includes
  */
 
@@ -26,6 +26,7 @@
 #include <exception>
 #include <iostream>
 #include <algorithm>
+#include <vector>
 
 // experimental: suppressing automatic template instantiation
 #include "Object/common/extern_templates.h"
@@ -50,6 +51,7 @@
 #include "Object/ref/simple_nonmeta_instance_reference.h"
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/unroll/instantiation_statement_base.h"
+#include "Object/unroll/unroll_context.h"
 #include "Object/def/footprint.h"
 #include "Object/global_entry.h"
 #include "Object/common/dump_flags.h"

@@ -1,13 +1,14 @@
 /**
 	\file "Object/type/canonical_type.tcc"
 	Implementation of canonical_type template class.  
-	$Id: canonical_type.tcc,v 1.17 2010/04/02 22:18:52 fang Exp $
+	$Id: canonical_type.tcc,v 1.18 2011/02/08 22:32:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CANONICAL_TYPE_TCC__
 #define	__HAC_OBJECT_TYPE_CANONICAL_TYPE_TCC__
 
 #include <iostream>
+#include <vector>
 #include "Object/type/canonical_type.h"
 #include "Object/traits/class_traits_fwd.h"
 #include "Object/def/typedef_base.h"

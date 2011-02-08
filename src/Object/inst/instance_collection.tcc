@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.54 2010/04/19 02:46:00 fang Exp $
+	$Id: instance_collection.tcc,v 1.55 2011/02/08 22:32:48 fang Exp $
 	TODO: trim includes
  */
 
@@ -24,6 +24,8 @@
 #include <iostream>
 #include <algorithm>
 #include <functional>
+#include <vector>
+#include <list>
 
 // experimental: suppressing automatic template instantiation
 #include "Object/common/extern_templates.h"

@@ -3,18 +3,17 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: const_range.h,v 1.17 2010/09/02 00:34:37 fang Exp $
+	$Id: const_range.h,v 1.18 2011/02/08 22:32:47 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_CONST_RANGE_H__
 #define __HAC_OBJECT_EXPR_CONST_RANGE_H__
 
-#include "util/macros.h"
 #include <utility>
+#include "util/macros.h"
+#include "util/memory/list_vector_pool_fwd.h"
 #include "Object/expr/meta_range_expr.h"
 #include "Object/expr/const_index.h"
-#include "util/memory/list_vector_pool_fwd.h"
-#include "util/STL/construct_fwd.h"
 
 //=============================================================================
 // switches

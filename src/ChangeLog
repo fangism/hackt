@@ -3,6 +3,15 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-02-08	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-46:
+	  Added various #include for standard headers in sources,
+		to better appease clang++ (2.8).  
+		Currently header checks fail on friend _Construct
+		declarations used in pool-allocator macros.
+
+
 2011-02-07	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-45:

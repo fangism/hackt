@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_collection.tcc"
 		in a previous life.  
- 	$Id: value_collection.tcc,v 1.27 2010/09/21 00:18:24 fang Exp $
+ 	$Id: value_collection.tcc,v 1.28 2011/02/08 22:32:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_TCC__
@@ -24,6 +24,7 @@
 #include <exception>
 #include <iostream>
 #include <algorithm>
+#include <list>
 
 #include "Object/common/extern_templates.h"
 // #define EXTERN_TEMPLATE_UTIL_PACKED_ARRAY

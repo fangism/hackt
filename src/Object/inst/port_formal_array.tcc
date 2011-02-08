@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_formal_array.h"
-	$Id: port_formal_array.tcc,v 1.13 2010/04/07 00:12:44 fang Exp $
+	$Id: port_formal_array.tcc,v 1.14 2011/02/08 22:32:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_FORMAL_ARRAY_TCC__
@@ -13,6 +13,7 @@
 #include <iostream>
 #include <iterator>
 #include <algorithm>
+#include <list>
 
 #include "Object/inst/port_formal_array.h"
 #include "Object/inst/instance_alias_info.h"

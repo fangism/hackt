@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_actual_collection.tcc"
-	$Id: port_actual_collection.tcc,v 1.13 2010/04/07 00:12:44 fang Exp $
+	$Id: port_actual_collection.tcc,v 1.14 2011/02/08 22:32:48 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_ACTUAL_COLLECTION_TCC__
@@ -13,6 +13,8 @@
 #include <iterator>
 #include <iostream>
 #include <algorithm>
+#include <list>
+
 #include "Object/inst/port_actual_collection.h"
 #include "Object/inst/instance_collection.h"
 #include "Object/inst/instance_alias_info.h"

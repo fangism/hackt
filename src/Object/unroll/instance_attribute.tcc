@@ -1,12 +1,13 @@
 /**
 	\file "Object/unroll/instance_attribute.tcc"
 	Implementation of generic attribute statements.  
-	$Id: instance_attribute.tcc,v 1.4 2009/09/14 21:17:08 fang Exp $
+	$Id: instance_attribute.tcc,v 1.5 2011/02/08 22:32:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANCE_ATTRIBUTE_TCC__
 #define	__HAC_OBJECT_UNROLL_INSTANCE_ATTRIBUTE_TCC__
 
+#include <vector>
 #include "Object/unroll/instance_attribute.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
 #include "Object/expr/const_param_expr_list.h"

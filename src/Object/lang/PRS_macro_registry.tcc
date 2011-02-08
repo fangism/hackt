@@ -1,11 +1,12 @@
 /**
 	\file "Object/lang/PRS_macro_registry.tcc"
-	$Id: PRS_macro_registry.tcc,v 1.3 2009/09/14 21:17:03 fang Exp $
+	$Id: PRS_macro_registry.tcc,v 1.4 2011/02/08 22:32:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_MACRO_REGISTRY_TCC__
 #define	__HAC_OBJECT_LANG_PRS_MACRO_REGISTRY_TCC__
 
+#include <vector>
 #include "Object/lang/PRS_macro_registry.h"
 #include "Object/expr/const_param_expr_list.h"
 #include "util/macros.h"

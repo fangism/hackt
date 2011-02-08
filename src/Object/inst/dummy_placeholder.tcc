@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/dummy_placeholder.tcc"
-	$Id: dummy_placeholder.tcc,v 1.2 2007/10/08 01:21:14 fang Exp $
+	$Id: dummy_placeholder.tcc,v 1.3 2011/02/08 22:32:47 fang Exp $
 	TODO: trim includes
  */
 
@@ -15,34 +15,17 @@
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// #include <exception>
 #include <iostream>
-// #include <algorithm>
-// #include <functional>
+#include <vector>
 
 // experimental: suppressing automatic template instantiation
 #include "Object/common/extern_templates.h"
 
 #include "Object/inst/dummy_placeholder.h"
-// #include "Object/inst/instance_collection.h"
-// #include "Object/expr/expr_dump_context.h"
-// #include "Object/expr/const_index.h"
-// #include "Object/expr/const_range.h"
-// #include "Object/expr/const_param_expr_list.h"	// for debug only
-// #include "Object/expr/const_index_list.h"
 #include "Object/expr/const_range_list.h"
-// #include "Object/def/definition_base.h"
-// #include "Object/def/footprint.h"
-// #include "Object/type/canonical_type.h"
 #include "Object/ref/meta_instance_reference_base.h"
 #include "Object/ref/nonmeta_instance_reference_base.h"
-// #include "Object/ref/simple_nonmeta_instance_reference.h"
-// #include "Object/ref/simple_meta_dummy_reference.h"
-// #include "Object/unroll/instantiation_statement_base.h"
-// #include "Object/unroll/instantiation_statement.h"
-// #include "Object/unroll/unroll_context.h"
-// #include "Object/inst/port_actual_collection.h"
-// #include "Object/inst/instance_collection_pool_bundle.tcc"	// for allocate
+
 #include "common/TODO.h"
 #include "common/ICE.h"
 

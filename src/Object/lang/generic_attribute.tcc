@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/generic_attribute.tcc"
-	$Id: generic_attribute.tcc,v 1.2 2009/09/14 21:17:06 fang Exp $
+	$Id: generic_attribute.tcc,v 1.3 2011/02/08 22:32:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_GENERIC_ATTRIBUTE_TCC__
@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include "Object/lang/generic_attribute.h"
+#include "Object/expr/const_param_expr_list.h"
 #include "util/memory/count_ptr.tcc"
 #include "util/stacktrace.h"
 

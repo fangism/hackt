@@ -1,5 +1,5 @@
 dnl "config/cxx_STL.m4"
-dnl	$Id: cxx_STL.m4,v 1.15 2010/09/02 00:34:30 fang Exp $
+dnl	$Id: cxx_STL.m4,v 1.16 2011/02/08 22:32:45 fang Exp $
 dnl Autoconf macros for detecting variations in C++ STL for any given compiler.
 dnl
 
@@ -53,8 +53,10 @@ dnl
 dnl Check for certain declarations of libstdc++ internal function
 dnl std::_Construct, which may have changed.
 dnl
+dnl 2011-02-08: requires <iterator> header for iterator_traits
+dnl
 dnl @category Cxx
-dnl @version 2008-11-20
+dnl @version 2011-02-08
 dnl @author David Fang <fangism@users.sourceforge.net>
 dnl @license AllPermissive
 dnl
@@ -66,7 +68,7 @@ AC_CACHE_CHECK(
 [AC_LANG_PUSH(C++)
 AC_COMPILE_IFELSE(
 	AC_LANG_PROGRAM([[
-		#include <vector>
+		#include <iterator>
 		#ifdef	HAVE_BITS_STL_CONSTRUCT_H
 		#include <bits/stl_construct.h>
 		#endif
@@ -96,8 +98,10 @@ dnl
 dnl Check for certain declarations of libstdc++ internal function
 dnl std::_Construct, which may have changed.
 dnl
+dnl 2011-02-08: requires <iterator> header for iterator_traits
+dnl
 dnl @category Cxx
-dnl @version 2010-08-15
+dnl @version 2011-02-08
 dnl @author David Fang <fangism@users.sourceforge.net>
 dnl @license AllPermissive
 dnl
@@ -109,7 +113,7 @@ AC_CACHE_CHECK(
 [AC_LANG_PUSH(C++)
 AC_COMPILE_IFELSE(
 	AC_LANG_PROGRAM([[
-		#include <vector>
+		#include <iterator>
 		#ifdef	HAVE_BITS_STL_CONSTRUCT_H
 		#include <bits/stl_construct.h>
 		#endif
@@ -353,6 +357,7 @@ dnl used mainly in "src/util/hash_specializations.h"
 dnl used in "src/util/string_fwd.h"
 	[bits/stringfwd.h \]
 	[bits/concept_check.h \]
+dnl bits/stl_contruct.h requires <iterator> for iterator traits
 	[bits/stl_construct.h \]
 	[type_traits bits/type_traits.h \]
 	[tr1/type_traits tr1/type_traits_fwd.h type_traits.h \]

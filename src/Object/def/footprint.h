@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.42 2010/09/21 00:18:11 fang Exp $
+	$Id: footprint.h,v 1.43 2011/02/08 22:32:46 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
@@ -9,6 +9,7 @@
 
 #include <iosfwd>
 #include <set>
+#include <vector>
 #include "Object/devel_switches.h"
 #include "Object/def/footprint_base.h"
 #include "Object/inst/port_alias_tracker.h"
