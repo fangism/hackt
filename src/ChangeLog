@@ -5,6 +5,15 @@
 
 2011-02-08	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-84-47:
+	  hacprsim channel commands now implicitly expand channel
+		array references to apply command to all referenced
+		channels, much easier to script now.
+	  Added test cases, no regressions.
+
+
+2011-02-08	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-84-46:
 	  Added various #include for standard headers in sources,
 		to better appease clang++ (2.8).  

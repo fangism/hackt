@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.77 2011/01/13 22:19:09 fang Exp $
+	$Id: State-prsim.cc,v 1.78 2011/02/09 03:34:43 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -643,6 +643,16 @@ State::flush_channel_events(const vector<env_event_type>& env_events,
 	NB: flush_channel_events may result in instabilities!
 	\return ?
  */
+#if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
+bool
+State::reset_channel(channel& chan) {
+	vector<env_event_type> temp;
+	chan.reset(temp);
+	const event_cause_type c(INVALID_NODE_INDEX, LOGIC_OTHER);
+	flush_channel_events(temp, c);
+	return false;
+}
+#else
 bool
 State::reset_channel(const string& cn) {
 	vector<env_event_type> temp;
@@ -651,6 +661,7 @@ State::reset_channel(const string& cn) {
 	flush_channel_events(temp, c);
 	return false;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -671,6 +682,16 @@ State::reset_all_channels(void) {
 	Set a single channel into reset state.  
 	NB: flush_channel_events may result in instabilities!
  */
+#if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
+bool
+State::resume_channel(channel& chan) {
+	vector<env_event_type> temp;
+	chan.resume(*this, temp);
+	const event_cause_type c(INVALID_NODE_INDEX, LOGIC_OTHER);
+	flush_channel_events(temp, c);
+	return false;
+}
+#else
 bool
 State::resume_channel(const string& cn) {
 	vector<env_event_type> temp;
@@ -679,6 +700,7 @@ State::resume_channel(const string& cn) {
 	flush_channel_events(temp, c);
 	return false;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

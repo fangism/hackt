@@ -6,7 +6,7 @@
 	Define a channel type map to make automatic!
 	auto-channel (based on consumer/producer connectivity), 
 	top-level only!
-	$Id: Channel-prsim.h,v 1.27 2011/02/08 02:06:50 fang Exp $
+	$Id: Channel-prsim.h,v 1.28 2011/02/09 03:34:43 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_CHANNEL_H__
@@ -87,7 +87,18 @@
  */
 #define	PRSIM_CHANNEL_SIGNED			1
 
+/**
+	Define to 1 to allow commands to take array references
+	and automatically apply the command to the expanded list.  
+	Goal: 1
+	Status: done, basically tested.  can probably perm soon.
+ */
+#define	PRSIM_CHANNEL_AGGREGATE_ARGUMENTS	1
+
 namespace HAC {
+namespace entity {
+class module;
+}
 namespace SIM {
 namespace PRSIM {
 using std::vector;
@@ -96,6 +107,7 @@ using std::ostream;
 using std::istream;
 using std::ofstream;
 using entity::int_value_type;
+using entity::module;
 using util::memory::count_ptr;
 using util::packed_array;
 using util::string_list;
@@ -991,6 +1003,7 @@ public:
 		return __dump(o, false);
 	}
 
+#if !PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
 	bool
 	dump_channel(ostream& o, const State&, const string& c) const {
 		return __dump_channel(o, c, true);
@@ -998,12 +1011,20 @@ public:
 
 	bool
 	dump_channel_state(ostream&, const State&, const string&) const;
+#endif
 
 private:
-	bool
-	check_source(const channel& c, const string&) const;
+	channel_index_type
+	get_channel_index(const channel&) const;
 
 public:
+	bool
+	check_source(const channel& c) const;
+
+	bool
+	check_sink(const channel& c) const;
+
+#if !PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
 	// most of these functions differ in only the channel method called
 	bool
 	source_channel_file(const State&, const string&, 
@@ -1024,6 +1045,7 @@ public:
 
 	bool
 	expect_channel_args(const string&, const string_list&, const bool);
+#endif
 
 	bool
 	log_channel(const string&, const string&);
@@ -1035,8 +1057,20 @@ public:
 	const channel*
 	lookup(const string&) const;
 
+#if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
+	bool
+	lookup_expand(const string&, const module&,
+		vector<const channel*>&) const;
+
+	bool
+	lookup_expand(const string&, const module&,
+		vector<channel*>&);
+#endif
+
+#if !PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
 	bool
 	apply_one(const string&, void (channel::*)(void));
+#endif
 
 	void
 	apply_all(void (channel::*)(void));

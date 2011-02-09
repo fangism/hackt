@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.46 2011/01/11 01:13:25 fang Exp $
+	$Id: State-prsim.h,v 1.47 2011/02/09 03:34:43 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -825,14 +825,22 @@ private:
 	flush_channel_events(const vector<env_event_type>&, cause_arg_type);
 
 public:
+#if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
+	bool
+	reset_channel(channel&);
+
+	bool
+	resume_channel(channel&);
+#else
 	bool
 	reset_channel(const string&);
 
-	void
-	reset_all_channels(void);
-
 	bool
 	resume_channel(const string&);
+#endif
+
+	void
+	reset_all_channels(void);
 
 	void
 	resume_all_channels(void);
@@ -1535,20 +1543,24 @@ public:
 			expr_struct_type::EXPR_ROOT, true);
 	}
 
+#if !PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
 	bool
 	dump_channel(ostream& o, const string& s) const {
 		return _channel_manager.dump_channel(o, *this, s);
 	}
+#endif
 
 	ostream&
 	dump_channels(ostream& o) const {
 		return _channel_manager.dump(o, *this);
 	}
 
+#if !PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
 	bool
 	dump_channel_state(ostream& o, const string& s) const {
 		return _channel_manager.dump_channel_state(o, *this, s);
 	}
+#endif
 
 	bool
 	node_is_driven_by_channel(const node_index_type) const;

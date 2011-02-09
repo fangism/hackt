@@ -1,0 +1,114 @@
+channels:
+bar.L[0] : .e(init:0)  1x1of2 off
+bar.L[1] : .e(init:0)  1x1of2 off
+bar.L[2] : .e(init:0)  1x1of2 off
+bar.L[3] : .e(init:0)  1x1of2 off
+bar.R[0] : .e(init:0)  1x1of2 off
+bar.R[1] : .e(init:0)  1x1of2 off
+bar.R[2] : .e(init:0)  1x1of2 off
+bar.R[3] : .e(init:0)  1x1of2 off
+channels:
+bar.L[0] : .e(init:0)  1x1of2 source, timing: global {0,1,1,0,} @0
+bar.L[1] : .e(init:0)  1x1of2 source, timing: global {0,1,1,0,} @0
+bar.L[2] : .e(init:0)  1x1of2 source, timing: global {0,1,1,0,} @0
+bar.L[3] : .e(init:0)  1x1of2 source, timing: global {0,1,1,0,} @0
+bar.R[0] : .e(init:0)  1x1of2 sink,expect, timing: global {0,1,1,0,} @0
+bar.R[1] : .e(init:0)  1x1of2 sink,expect, timing: global {0,1,1,0,} @0
+bar.R[2] : .e(init:0)  1x1of2 sink,expect, timing: global {0,1,1,0,} @0
+bar.R[3] : .e(init:0)  1x1of2 sink,expect, timing: global {0,1,1,0,} @0
+	10	bar.L[1].d[0] : 0
+	10	bar.L[1].d[1] : 0
+	10	bar.L[2].d[0] : 0
+	10	bar.L[2].d[1] : 0
+	10	bar.R[1].e : 0
+	10	bar.R[2].e : 0
+	20	bar.R[1].d[0] : 0	[by bar.L[1].d[0]:=0]
+	20	bar.R[1].d[1] : 0	[by bar.L[1].d[1]:=0]
+	20	bar.R[2].d[0] : 0	[by bar.L[2].d[0]:=0]
+	20	bar.R[2].d[1] : 0	[by bar.L[2].d[1]:=0]
+	20	bar.L[1].e : 0	[by bar.R[1].e:=0]
+	20	bar.L[2].e : 0	[by bar.R[2].e:=0]
+	30	bar.R[1].e : 1
+	30	bar.R[2].e : 1
+	40	bar.L[1].e : 1	[by bar.R[1].e:=1]
+	40	bar.L[2].e : 1	[by bar.R[2].e:=1]
+channel	bar.L[1] (.data) : 0
+	50	bar.L[1].d[0] : 1	[by bar.L[1].e:=1]
+channel	bar.L[2] (.data) : 0
+	50	bar.L[2].d[0] : 1	[by bar.L[2].e:=1]
+channel	bar.R[1] (.data) : 0
+	60	bar.R[1].d[0] : 1	[by bar.L[1].d[0]:=1]
+channel	bar.R[2] (.data) : 0
+	60	bar.R[2].d[0] : 1	[by bar.L[2].d[0]:=1]
+	70	bar.R[1].e : 0	[by bar.R[1].d[0]:=1]
+	70	bar.R[2].e : 0	[by bar.R[2].d[0]:=1]
+	80	bar.L[1].e : 0	[by bar.R[1].e:=0]
+	80	bar.L[2].e : 0	[by bar.R[2].e:=0]
+	90	bar.L[1].d[0] : 0	[by bar.L[1].e:=0]
+	90	bar.L[2].d[0] : 0	[by bar.L[2].e:=0]
+	100	bar.R[1].d[0] : 0	[by bar.L[1].d[0]:=0]
+	100	bar.R[2].d[0] : 0	[by bar.L[2].d[0]:=0]
+	110	bar.R[1].e : 1	[by bar.R[1].d[0]:=0]
+	110	bar.R[2].e : 1	[by bar.R[2].d[0]:=0]
+	120	bar.L[1].e : 1	[by bar.R[1].e:=1]
+	120	bar.L[2].e : 1	[by bar.R[2].e:=1]
+channel	bar.L[1] (.data) : 1
+	130	bar.L[1].d[1] : 1	[by bar.L[1].e:=1]
+channel	bar.L[2] (.data) : 1
+	130	bar.L[2].d[1] : 1	[by bar.L[2].e:=1]
+channel	bar.R[1] (.data) : 1
+	140	bar.R[1].d[1] : 1	[by bar.L[1].d[1]:=1]
+channel	bar.R[2] (.data) : 1
+	140	bar.R[2].d[1] : 1	[by bar.L[2].d[1]:=1]
+	150	bar.R[1].e : 0	[by bar.R[1].d[1]:=1]
+	150	bar.R[2].e : 0	[by bar.R[2].d[1]:=1]
+	160	bar.L[1].e : 0	[by bar.R[1].e:=0]
+	160	bar.L[2].e : 0	[by bar.R[2].e:=0]
+	170	bar.L[1].d[1] : 0	[by bar.L[1].e:=0]
+	170	bar.L[2].d[1] : 0	[by bar.L[2].e:=0]
+	180	bar.R[1].d[1] : 0	[by bar.L[1].d[1]:=0]
+	180	bar.R[2].d[1] : 0	[by bar.L[2].d[1]:=0]
+	190	bar.R[1].e : 1	[by bar.R[1].d[1]:=0]
+	190	bar.R[2].e : 1	[by bar.R[2].d[1]:=0]
+	200	bar.L[1].e : 1	[by bar.R[1].e:=1]
+	200	bar.L[2].e : 1	[by bar.R[2].e:=1]
+channel	bar.L[1] (.data) : 1
+	210	bar.L[1].d[1] : 1	[by bar.L[1].e:=1]
+channel	bar.L[2] (.data) : 1
+	210	bar.L[2].d[1] : 1	[by bar.L[2].e:=1]
+channel	bar.R[1] (.data) : 1
+	220	bar.R[1].d[1] : 1	[by bar.L[1].d[1]:=1]
+channel	bar.R[2] (.data) : 1
+	220	bar.R[2].d[1] : 1	[by bar.L[2].d[1]:=1]
+	230	bar.R[1].e : 0	[by bar.R[1].d[1]:=1]
+	230	bar.R[2].e : 0	[by bar.R[2].d[1]:=1]
+	240	bar.L[1].e : 0	[by bar.R[1].e:=0]
+	240	bar.L[2].e : 0	[by bar.R[2].e:=0]
+	250	bar.L[1].d[1] : 0	[by bar.L[1].e:=0]
+	250	bar.L[2].d[1] : 0	[by bar.L[2].e:=0]
+	260	bar.R[1].d[1] : 0	[by bar.L[1].d[1]:=0]
+	260	bar.R[2].d[1] : 0	[by bar.L[2].d[1]:=0]
+	270	bar.R[1].e : 1	[by bar.R[1].d[1]:=0]
+	270	bar.R[2].e : 1	[by bar.R[2].d[1]:=0]
+	280	bar.L[1].e : 1	[by bar.R[1].e:=1]
+	280	bar.L[2].e : 1	[by bar.R[2].e:=1]
+channel	bar.L[1] (.data) : 0
+	290	bar.L[1].d[0] : 1	[by bar.L[1].e:=1]
+channel	bar.L[2] (.data) : 0
+	290	bar.L[2].d[0] : 1	[by bar.L[2].e:=1]
+channel	bar.R[1] (.data) : 0
+	300	bar.R[1].d[0] : 1	[by bar.L[1].d[0]:=1]
+channel	bar.R[2] (.data) : 0
+	300	bar.R[2].d[0] : 1	[by bar.L[2].d[0]:=1]
+	310	bar.R[1].e : 0	[by bar.R[1].d[0]:=1]
+	310	bar.R[2].e : 0	[by bar.R[2].d[0]:=1]
+	320	bar.L[1].e : 0	[by bar.R[1].e:=0]
+	320	bar.L[2].e : 0	[by bar.R[2].e:=0]
+	330	bar.L[1].d[0] : 0	[by bar.L[1].e:=0]
+	330	bar.L[2].d[0] : 0	[by bar.L[2].e:=0]
+	340	bar.R[1].d[0] : 0	[by bar.L[1].d[0]:=0]
+	340	bar.R[2].d[0] : 0	[by bar.L[2].d[0]:=0]
+	350	bar.R[1].e : 1	[by bar.R[1].d[0]:=0]
+	350	bar.R[2].e : 1	[by bar.R[2].d[0]:=0]
+	360	bar.L[1].e : 1	[by bar.R[1].e:=1]
+	360	bar.L[2].e : 1	[by bar.R[2].e:=1]

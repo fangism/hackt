@@ -1,0 +1,22 @@
+# "channel-array-a-04.prsimrc"
+# @haco@ channel-array-a.haco-c
+
+source channel-array-a-03.prsimrc
+channel-source-args bar.L[0..3] 0 1 1 0
+channel-expect-args bar.R[0..3] 0 1 1 0
+channel-sink bar.R[0..3]
+channel-show-all
+
+watchall
+channel-watch bar.L[0..3]
+channel-watch bar.R[0..3]
+channel-reset bar.L[1..2]
+channel-reset bar.R[1..2]
+cycle
+channel-release bar.L[1..2]
+channel-release bar.R[1..2]
+cycle
+
+channel-assert-value-queue bar.L[1..2] 0
+channel-assert-value-queue bar.R[1..2] 0
+

@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.84 2011/02/08 02:06:50 fang Exp $
+	$Id: Command-prsim.cc,v 1.85 2011/02/09 03:34:43 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -6549,6 +6549,23 @@ ChannelReportTime::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
+/**
+	Produce i as an iterator referring to a channel-pointer.
+	\param type is channel or const channel.
+	\param name is the name of the channel(s).
+ */
+#define	CHANNEL_FOR_EACH(T, name)					\
+	channel_manager& cm(s.get_channel_manager());			\
+	vector<T*> __tmp;						\
+	if (cm.lookup_expand(name, s.get_module(), __tmp))		\
+		{ return Command::BADARG; }				\
+	vector<T*>::const_iterator					\
+		i(__tmp.begin()), e(__tmp.end());			\
+	for ( ; i!=e; ++i)
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
 @texinfo cmd/channel-show.texi
 @deffn Command channel-show chan
@@ -6573,9 +6590,19 @@ if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
-	if (s.dump_channel(cout, a.back())) {
+	const string& ref(a.back());
+#if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
+	CHANNEL_FOR_EACH(const channel, ref) {
+		const channel& c(**i);
+		// from channel_manager::__dump_channel
+		c.dump(cout) << endl;
+		c.dump_state(cout << '\t') << endl;
+	}
+#else
+	if (s.dump_channel(cout, ref)) {
 		return Command::BADARG;
 	}
+#endif
 	return Command::NORMAL;
 }
 }
@@ -6607,9 +6634,18 @@ if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
-	if (s.dump_channel_state(cout, a.back())) {
+	const string& ref(a.back());
+#if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
+	CHANNEL_FOR_EACH(const channel, ref) {
+		const channel& c(**i);
+		c.dump_status(cout << "channel "
+			<< c.get_name() << ": ", s) << endl;
+	}
+#else
+	if (s.dump_channel_state(cout, ref)) {
 		return Command::BADARG;
 	}
+#endif
 	return Command::NORMAL;
 }
 }
@@ -6764,8 +6800,17 @@ if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
-	return s.get_channel_manager().apply_one(a.back(), memfn) ?
+	const string& ref(a.back());
+#if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
+	CHANNEL_FOR_EACH(channel, ref) {
+		channel& c(**i);
+		(c.*memfn)();
+	}
+	return Command::NORMAL;
+#else
+	return s.get_channel_manager().apply_one(ref, memfn) ?
 		Command::BADARG : Command::NORMAL;
+#endif
 }
 }
 
@@ -7055,8 +7100,16 @@ if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
-	if (s.reset_channel(a.back()))
+	const string& ref(a.back());
+#if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
+	CHANNEL_FOR_EACH(channel, ref) {
+		channel& c(**i);
+		s.reset_channel(c);	// includes flush_channel_events
+	}
+#else
+	if (s.reset_channel(ref))
 		return Command::BADARG;
+#endif
 	return Command::NORMAL;
 }
 }
@@ -7214,8 +7267,16 @@ if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
-	if (s.resume_channel(a.back()))
+	const string& ref(a.back());
+#if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
+	CHANNEL_FOR_EACH(channel, ref) {
+		channel& c(**i);
+		s.resume_channel(c);	// includes flush_channel_events
+	}
+#else
+	if (s.resume_channel(ref))
 		return Command::BADARG;
+#endif
 	return Command::NORMAL;
 }
 }
@@ -7340,9 +7401,19 @@ if (a.size() != 3) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
-	if (s.get_channel_manager().source_channel_file(s, 
-			*++a.begin(), a.back(), false))
+	const string& ref(*++a.begin());
+	const string& fn(a.back());
+#if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
+	CHANNEL_FOR_EACH(channel, ref) {
+		channel& c(**i);
+		// from channel_manager::source_channel_file
+		if (c.set_source_file(s, fn, false) || cm.check_source(c))
+			return Command::BADARG;
+	}
+#else
+	if (s.get_channel_manager().source_channel_file(s, ref, fn, false))
 		return Command::BADARG;
+#endif
 	return Command::NORMAL;
 }
 }
@@ -7389,9 +7460,19 @@ if (a.size() != 3) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
-	if (s.get_channel_manager().source_channel_file(s, 
-			*++a.begin(), a.back(), true))
+	const string& ref(*++a.begin());
+	const string& fn(a.back());
+#if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
+	CHANNEL_FOR_EACH(channel, ref) {
+		channel& c(**i);
+		// from channel_manager::source_channel_file
+		if (c.set_source_file(s, fn, true) || cm.check_source(c))
+			return Command::BADARG;
+	}
+#else
+	if (s.get_channel_manager().source_channel_file(s, ref, fn, true))
 		return Command::BADARG;
+#endif
 	return Command::NORMAL;
 }
 }
@@ -7438,11 +7519,20 @@ if (a.size() < 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
+	const string& ref(*++a.begin());
 	string_list v;
 	copy(++++a.begin(), a.end(), back_inserter(v));
-	if (s.get_channel_manager().source_channel_args(s, 
-			*++a.begin(), v, false))
+#if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
+	CHANNEL_FOR_EACH(channel, ref) {
+		channel& c(**i);
+		// from channel_manager::source_channel_args
+		if (c.set_source_args(s, v, false) || cm.check_source(c))
+			return Command::BADARG;
+	}
+#else
+	if (s.get_channel_manager().source_channel_args(s, ref, v, false))
 		return Command::BADARG;
+#endif
 	return Command::NORMAL;
 }
 }
@@ -7480,11 +7570,20 @@ if (a.size() < 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
+	const string& ref(*++a.begin());
 	string_list v;
 	copy(++++a.begin(), a.end(), back_inserter(v));
-	if (s.get_channel_manager().source_channel_args(s, 
-			*++a.begin(), v, true))
+#if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
+	CHANNEL_FOR_EACH(channel, ref) {
+		channel& c(**i);
+		// from channel_manager::source_channel_args
+		if (c.set_source_args(s, v, true) || cm.check_source(c))
+			return Command::BADARG;
+	}
+#else
+	if (s.get_channel_manager().source_channel_args(s, ref, v, true))
 		return Command::BADARG;
+#endif
 	return Command::NORMAL;
 }
 }
@@ -7517,8 +7616,18 @@ if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
-	if (s.get_channel_manager().rsource_channel(s, a.back()))
+	const string& ref(a.back());
+#if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
+	CHANNEL_FOR_EACH(channel, ref) {
+		channel& c(**i);
+		// from channel_manager::rsource_channel
+		if (c.set_rsource(s) || cm.check_source(c))
+			return Command::BADARG;
+	}
+#else
+	if (s.get_channel_manager().rsource_channel(s, ref))
 		return Command::BADARG;
+#endif
 	return Command::NORMAL;
 }
 }
@@ -7552,8 +7661,18 @@ if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
-	if (s.get_channel_manager().sink_channel(s, a.back()))
+	const string& ref(a.back());
+#if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
+	CHANNEL_FOR_EACH(channel, ref) {
+		channel& c(**i);
+		if (c.set_sink(s) || cm.check_sink(c))
+			return Command::BADARG;
+	}
+#else
+	channel_manager& cm(s.get_channel_manager());
+	if (cm.sink_channel(s, ref))
 		return Command::BADARG;
+#endif
 	return Command::NORMAL;
 }
 }
@@ -7586,7 +7705,9 @@ if (a.size() != 3) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
-	if (s.get_channel_manager().log_channel(*++a.begin(), a.back()))
+	const string& ref(*++a.begin());
+	const string& fn(a.back());
+	if (s.get_channel_manager().log_channel(ref, fn))
 		return Command::BADARG;
 	return Command::NORMAL;
 }
@@ -7628,9 +7749,18 @@ if (a.size() != 3) {
 	return Command::SYNTAX;
 } else {
 	const string& chan_name(*++a.begin());
+	const string& fn(a.back());
+#if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
+	CHANNEL_FOR_EACH(channel, chan_name) {
+		channel& c(**i);
+		if (c.set_expect_file(fn, false))
+			return Command::BADARG;
+	}
+#else
 	channel_manager& cm(s.get_channel_manager());
-	if (cm.expect_channel_file(chan_name, a.back(), false))
+	if (cm.expect_channel_file(chan_name, fn, false))
 		return Command::BADARG;
+#endif
 	return Command::NORMAL;
 }
 }
@@ -7679,9 +7809,18 @@ if (a.size() != 3) {
 	return Command::SYNTAX;
 } else {
 	const string& chan_name(*++a.begin());
+	const string& fn(a.back());
+#if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
+	CHANNEL_FOR_EACH(channel, chan_name) {
+		channel& c(**i);
+		if (c.set_expect_file(fn, true))
+			return Command::BADARG;
+	}
+#else
 	channel_manager& cm(s.get_channel_manager());
-	if (cm.expect_channel_file(chan_name, a.back(), true))
+	if (cm.expect_channel_file(chan_name, fn, true))
 		return Command::BADARG;
+#endif
 	return Command::NORMAL;
 }
 }
@@ -7728,9 +7867,17 @@ if (a.size() < 3) {
 	const string& chan_name(*++a.begin());
 	string_list v;
 	copy(++++a.begin(), a.end(), back_inserter(v));
+#if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
+	CHANNEL_FOR_EACH(channel, chan_name) {
+		channel& c(**i);
+		if (c.set_expect_args(v, false))
+			return Command::BADARG;
+	}
+#else
 	channel_manager& cm(s.get_channel_manager());
 	if (cm.expect_channel_args(chan_name, v, false))
 		return Command::BADARG;
+#endif
 	return Command::NORMAL;
 }
 }
@@ -7767,9 +7914,17 @@ if (a.size() < 3) {
 	const string& chan_name(*++a.begin());
 	string_list v;
 	copy(++++a.begin(), a.end(), back_inserter(v));
+#if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
+	CHANNEL_FOR_EACH(channel, chan_name) {
+		channel& c(**i);
+		if (c.set_expect_args(v, true))
+			return Command::BADARG;
+	}
+#else
 	channel_manager& cm(s.get_channel_manager());
 	if (cm.expect_channel_args(chan_name, v, true))
 		return Command::BADARG;
+#endif
 	return Command::NORMAL;
 }
 }
@@ -7808,12 +7963,17 @@ if (a.size() != 3) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
-	string_list::const_iterator i(++a.begin());
-	const string& cn(*i);
-	channel* const c = s.get_channel_manager().lookup(cn);
+	string_list::const_iterator ai(++a.begin());
+	const string& cn(*ai);
+	const string& v(*++ai);
+#if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
+	CHANNEL_FOR_EACH(const channel, cn) {
+		const channel& c(**i);
+#else
+	const channel* const _c = s.get_channel_manager().lookup(cn);
 	if (c) {
-		++i;
-		const string& v(*i);
+		const channel& c(*_c);
+#endif
 		int x;
 		if (string_to_num(v, x)) {
 			cerr << "Error: expecting 0 or 1 to assert." << endl;
@@ -7821,13 +7981,13 @@ if (a.size() != 3) {
 			return Command::BADARG;
 		}
 		// TODO: generalize argument to number of values remaining?
-		if (c->have_value()) {
+		if (c.have_value()) {
 			if (!x) {
 				cerr << "Expecting no more channel values on "
 					<< cn << ", but found some." << endl;
 				return Command::FATAL;
 			} else if (s.confirm_asserts()) {
-				cout << "channel " << cn <<
+				cout << "channel " << c.get_name() <<
 					" has more values, as expected."
 					<< endl;
 			}
@@ -7837,13 +7997,18 @@ if (a.size() != 3) {
 					<< cn << ", but found none." << endl;
 				return Command::FATAL;
 			} else if (s.confirm_asserts()) {
-				cout << "channel " << cn <<
+				cout << "channel " << c.get_name() <<
 					" has no more values, as expected."
 					<< endl;
 			}
 		}
+#if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
+	}	// end for each
+	return Command::NORMAL;
+#else
 		return Command::NORMAL;
 	} else	return Command::BADARG;
+#endif
 }
 }
 
@@ -7887,11 +8052,22 @@ if (a.size() < 2) {
 	return Command::SYNTAX;
 } else if (a.size() == 2) {
 	const string& cn(*++a.begin());
-	channel* const c = s.get_channel_manager().lookup(cn);
+#if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
+	CHANNEL_FOR_EACH(const channel, cn) {
+		const channel& c(**i);
+#else
+	const channel* const _c = s.get_channel_manager().lookup(cn);
 	if (c) {
-		c->dump_timing(cout << "channel " << cn << ": ") << endl;
+		const channel& c(*_c);
+#endif
+		c.dump_timing(cout << "channel " << cn << ": ") << endl;
+#if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
+	}	// end for each
+	return Command::NORMAL;
+#else
 		return Command::NORMAL;
 	} else	return Command::BADARG;	// have error message
+#endif
 } else {
 	string_list b(a);
 	b.pop_front();
@@ -7899,11 +8075,21 @@ if (a.size() < 2) {
 	b.pop_front();
 	const string m(b.front());
 	b.pop_front();
+#if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
+	CHANNEL_FOR_EACH(channel, cn) {
+		channel& c(**i);
+		if (c.set_timing(m, b)) {
+			usage(cerr << "usage: ");
+			return Command::BADARG;
+		}
+	}
+#else
 	channel* const c = s.get_channel_manager().lookup(cn);
 	if (c && c->set_timing(m, b)) {
 		usage(cerr << "usage: ");
 		return Command::BADARG;
 	}
+#endif
 	return Command::NORMAL;
 }
 }

@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Channel-prsim.cc"
-	$Id: Channel-prsim.cc,v 1.40 2011/02/08 02:06:49 fang Exp $
+	$Id: Channel-prsim.cc,v 1.41 2011/02/09 03:34:42 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -3282,7 +3282,7 @@ channel_manager::new_channel(State& state, const string& _base,
 	STACKTRACE_VERBOSE;
 	// make sure base is a legitmate scalar channel name first
 	const entity::module& m(state.get_module());
-#if 1
+#if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
 	parser::expanded_global_references_type refs;
 	if (parser::expand_global_references(_base, m, refs)) {
 		return true;
@@ -3393,7 +3393,7 @@ try {
 		<< "\' structure members." << endl;
 	return true;
 }
-#if 1
+#if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
 }	// end for all references
 #endif
 	return false;
@@ -3406,12 +3406,30 @@ try {
 	\return true on error.
  */
 bool
-channel_manager::new_channel_ledr(State& state, const string& base, 
+channel_manager::new_channel_ledr(State& state, const string& _base, 
 		const string& ack_name, const bool ack_init, 
 		const string& bundle_name, const size_t _num_bundles, 
 		const string& data_name, const bool data_init, 
 		const string& repeat_name, const bool repeat_init) {
 	STACKTRACE_VERBOSE;
+	const entity::module& m(state.get_module());
+#if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
+	parser::expanded_global_references_type refs;
+	if (parser::expand_global_references(_base, m, refs)) {
+		return true;
+	}
+	parser::expanded_global_references_type::const_iterator
+		ri(refs.begin()), re(refs.end());
+for ( ; ri!=re; ++ri) {
+//	const entity::global_indexed_reference& g(ri->second);
+	ostringstream oss;
+//	cr.inst_ref()->dump(oss, expr_dump_context::default_value);
+	ri->first->dump(oss);
+	// base name needs to expanded to scalar reference strings...
+	const string& base(oss.str());
+#else
+	const string& base(_base);
+#endif
 //	const size_t num_bundles = _num_bundles ? _num_bundles : 1;
 	const size_t key = channel_pool.size();
 	const pair<channel_set_type::iterator, bool>
@@ -3421,7 +3439,6 @@ if (i.second) {
 	channel& c(channel_pool.back());
 	c.type = channel::CHANNEL_TYPE_LEDR;
 	c.name = base;
-	const entity::module& m(state.get_module());
 {
 	// assign ack rail (optional)
 	if (ack_name.length()) {
@@ -3487,14 +3504,27 @@ if (i.second) {
 }
 	// initialize data-rail state counters from current values
 	c.initialize_data_counter(state);
-	return false;
 } else {
+	// channel not successfully inserted; already exists
 	return true;
 }
+#if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
+}	// end for each
+#endif
+	return false;
 }	// end new_channel
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+channel_index_type
+channel_manager::get_channel_index(const channel& c) const {
+	return std::distance(&channel_pool[0], &c);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\returns a modify-able pointer to the named channel.
+ */
 channel*
 channel_manager::lookup(const string& name) {
 	const channel_set_type::const_iterator
@@ -3508,6 +3538,9 @@ channel_manager::lookup(const string& name) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\returns a read-only pointer to the named channel.
+ */
 const channel*
 channel_manager::lookup(const string& name) const {
 	const channel_set_type::const_iterator
@@ -3521,8 +3554,68 @@ channel_manager::lookup(const string& name) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
+/**
+	Does an expanded lookup on the name, which can be an array reference.
+	\return true on error
+ */
+bool
+channel_manager::lookup_expand(const string& _base, const module& m, 
+		vector<const channel*>& ret) const {
+	parser::expanded_global_references_type refs;
+	if (parser::expand_global_references(_base, m, refs)) {
+		return true;
+	}
+	parser::expanded_global_references_type::const_iterator
+		ri(refs.begin()), re(refs.end());
+for ( ; ri!=re; ++ri) {
+	ostringstream oss;
+	ri->first->dump(oss);
+	const string& base(oss.str());
+	const channel* const c = lookup(base);	// re-parse :S
+	if (c) {
+		ret.push_back(c);
+	} else {
+		// already have error message
+		return true;
+	}
+}
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return ret array of modify-able channel pointers.  
+ */
+bool
+channel_manager::lookup_expand(const string& _base, const module& m, 
+		vector<channel*>& ret) {
+	parser::expanded_global_references_type refs;
+	if (parser::expand_global_references(_base, m, refs)) {
+		return true;
+	}
+	parser::expanded_global_references_type::const_iterator
+		ri(refs.begin()), re(refs.end());
+for ( ; ri!=re; ++ri) {
+	ostringstream oss;
+	ri->first->dump(oss);
+	const string& base(oss.str());
+	channel* const c = lookup(base);	// re-parse :S
+	if (c) {
+		ret.push_back(c);
+	} else {
+		// already have error message
+		return true;
+	}
+}
+	return false;
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // convenient macro to reduce copy-pasting...
 
+#if 0
 /**
 	Results in a channel reference named 'chan'.
 	TODO: use lookup() instead.
@@ -3544,6 +3637,17 @@ channel_manager::lookup(const string& name) const {
 #define	GET_NAMED_CHANNEL_CONST(chan, name)				\
 	__GET_NAMED_CHANNEL(name)					\
 	const channel& chan(channel_pool[f->second]);
+#else
+#define	GET_NAMED_CHANNEL(chan, name)					\
+	channel* c_ptr = lookup(name);					\
+	if (!c_ptr) return true;					\
+	channel& chan(*c_ptr);
+
+#define	GET_NAMED_CHANNEL_CONST(chan, name)				\
+	const channel* c_ptr = lookup(name);				\
+	if (!c_ptr) return true;					\
+	const channel& chan(*c_ptr);
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -3557,6 +3661,11 @@ channel_manager::set_channel_ack_valid(State& state, const string& base,
 	STACKTRACE_VERBOSE;
 	// TODO: should just pass in channel from caller instead of lookup
 	GET_NAMED_CHANNEL(c, base)
+#if 0
+	const channel_index_type ci = f->second;
+#else
+	const channel_index_type ci = get_channel_index(c);
+#endif
 	const entity::module& m(state.get_module());
 if (have_ack) {
 	c.set_ack_active(ack_sense);
@@ -3575,7 +3684,8 @@ if (have_ack) {
 		return true;
 	}
 	state.__get_node(ai).set_in_channel();		// flag in channel
-	node_channels_map[ai].insert(f->second);	// reverse lookup
+	// reverse lookup
+	node_channels_map[ai].insert(ci);
 }
 if (have_validity) {
 	c.set_valid_sense(validity_sense);
@@ -3597,12 +3707,29 @@ if (have_validity) {
 		return true;
 	}
 	state.__get_node(vi).set_in_channel();		// flag in channel
-	node_channels_map[vi].insert(f->second);	// reverse lookup
+	node_channels_map[vi].insert(ci);
 }
 	return false;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
+/**
+	Produce i as an iterator referring to a channel-pointer.
+	\param type is channel or const channel.
+	\param name is the name of the channel(s).
+ */
+#define	CHANNEL_FOR_EACH(T, name)					\
+	vector<T*> __tmp;						\
+	if (lookup_expand(name, s.get_module(), __tmp))			\
+		{ return true; }					\
+	vector<T*>::const_iterator					\
+		i(__tmp.begin()), e(__tmp.end());			\
+	for ( ; i!=e; ++i)
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
 /**
 	Configure a registered channel to source values from a file.
  */
@@ -3611,9 +3738,18 @@ channel_manager::source_channel_file(const State& s,
 		const string& channel_name, 
 		const string& file_name, const bool loop) {
 	STACKTRACE_VERBOSE;
+#if 0 && PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
+CHANNEL_FOR_EACH(channel, channel_name) {
+	channel& c(**i);
+	if (c.set_source_file(s, file_name, loop)) return true;
+	if (check_source(c)) return true;
+}
+	return false;
+#else
 	GET_NAMED_CHANNEL(c, channel_name)
 	if (c.set_source_file(s, file_name, loop)) return true;
-	return check_source(c, channel_name);
+	return check_source(c);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3625,9 +3761,18 @@ channel_manager::source_channel_args(const State& s,
 		const string& channel_name, 
 		const string_list& values, const bool loop) {
 	STACKTRACE_VERBOSE;
+#if 0 && PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
+CHANNEL_FOR_EACH(channel, channel_name) {
+	channel& c(**i);
+	if (c.set_source_args(s, values, loop)) return true;
+	if (check_source(c)) return true;
+}
+	return false;
+#else
 	GET_NAMED_CHANNEL(c, channel_name)
 	if (c.set_source_args(s, values, loop)) return true;
-	return check_source(c, channel_name);
+	return check_source(c);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3638,29 +3783,46 @@ channel_manager::source_channel_args(const State& s,
 bool
 channel_manager::rsource_channel(const State& s, const string& channel_name) {
 	STACKTRACE_VERBOSE;
+#if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
+CHANNEL_FOR_EACH(channel, channel_name) {
+	channel& c(**i);
+	if (c.set_rsource(s)) return true;
+	if (check_source(c)) return true;
+}
+	return false;
+#else
 	GET_NAMED_CHANNEL(c, channel_name)
 	if (c.set_rsource(s)) return true;
-	return check_source(c, channel_name);
+	return check_source(c);
+#endif
 }
+#endif // !PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\return true if there is any connection error.
  */
 bool
-channel_manager::check_source(const channel& c, const string& chan_name) const {
+channel_manager::check_source(const channel& c
+//		, const string& chan_name
+		) const {
 	// warn if channel happens to be connected in wrong direction
 	// TODO: check that data/validity are not driven by other sources!
 if (c.valid_signal) {
 	STACKTRACE_VERBOSE;
+#if 0
 	__GET_NAMED_CHANNEL(chan_name)
+	const channel_index_type ci = f->second;
+#else
+	const channel_index_type ci = get_channel_index(c);
+#endif
 	node_channels_map_type::const_iterator
 		m(node_channels_map.find(c.valid_signal));
 	INVARIANT(m != node_channels_map.end());
 	set<channel_index_type>::const_iterator
 		ti(m->second.begin()), te(m->second.end());
 	for ( ; ti!=te; ++ti) {
-	if (*ti != f->second) {
+	if (*ti != ci) {
 		const channel& ch(channel_pool[*ti]);
 		if (ch.is_sourcing() && (ch.valid_signal == c.valid_signal)) {
 			cerr << "Warning: channel validity is already "
@@ -3675,18 +3837,9 @@ if (c.valid_signal) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Configure a registered channel to sink values, 
-	with an optional file of expected values.
-	\param loop is only applicable if file_name refers to a file of values.
- */
 bool
-channel_manager::sink_channel(const State& s, const string& channel_name) {
-	STACKTRACE_VERBOSE;
-	GET_NAMED_CHANNEL(c, channel_name)
-	if (c.set_sink(s)) return true; // does many checks
-	// already asserts(ack_signal)
-
+channel_manager::check_sink(const channel& c) const {
+	const channel_index_type ci = get_channel_index(c);
 	// check if signal is registered with other sinking channels?
 	node_channels_map_type::const_iterator
 		m(node_channels_map.find(c.ack_signal));
@@ -3695,7 +3848,7 @@ channel_manager::sink_channel(const State& s, const string& channel_name) {
 	set<channel_index_type>::const_iterator
 		ti(m->second.begin()), te(m->second.end());
 	for ( ; ti!=te; ++ti) {
-	if (*ti != f->second) {
+	if (*ti != ci) {
 		const channel& ch(channel_pool[*ti]);
 		if (ch.is_sinking() && (ch.ack_signal == c.ack_signal)) {
 			cerr << "Warning: channel acknowledge is already "
@@ -3708,6 +3861,35 @@ channel_manager::sink_channel(const State& s, const string& channel_name) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
+/**
+	Configure a registered channel to sink values, 
+	with an optional file of expected values.
+	\param loop is only applicable if file_name refers to a file of values.
+ */
+bool
+channel_manager::sink_channel(const State& s, const string& channel_name) {
+	STACKTRACE_VERBOSE;
+#if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
+CHANNEL_FOR_EACH(channel, channel_name) {
+	channel& c(**i);
+#else
+	GET_NAMED_CHANNEL(c, channel_name)
+#endif
+	if (c.set_sink(s)) return true; // does many checks
+	if (check_sink(c)) return true;
+#if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
+}	// end for each
+#endif
+	return false;
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Do not aggregate arguments for logs because multiple channels
+	would then write to the same file name!
+ */
 bool
 channel_manager::log_channel(const string& channel_name, 
 		const string& file_name) {
@@ -3717,12 +3899,21 @@ channel_manager::log_channel(const string& channel_name,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
 bool
 channel_manager::expect_channel_file(const string& channel_name, 
 		const string& file_name, const bool loop) {
 	STACKTRACE_VERBOSE;
+#if 0 && PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
+CHANNEL_FOR_EACH(channel, channel_name) {
+	channel& c(**i);
+	if (c.set_expect_file(file_name, loop)) return true;
+}
+	return false;
+#else
 	GET_NAMED_CHANNEL(c, channel_name)
 	return c.set_expect_file(file_name, loop);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3730,11 +3921,21 @@ bool
 channel_manager::expect_channel_args(const string& channel_name, 
 		const string_list& values, const bool loop) {
 	STACKTRACE_VERBOSE;
+#if 0 && PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
+CHANNEL_FOR_EACH(channel, channel_name) {
+	channel& c(**i);
+	if (c.set_expect_args(values, loop)) return true;
+}
+	return false;
+#else
 	GET_NAMED_CHANNEL(c, channel_name)
 	return c.set_expect_args(values, loop);
+#endif
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
 bool
 channel_manager::apply_one(const string& channel_name,
 		void (channel::*f)(void)) {
@@ -3745,6 +3946,7 @@ channel_manager::apply_one(const string& channel_name,
 		return false;
 	} else	return true;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -3754,16 +3956,29 @@ channel_manager::apply_all(void (channel::*f)(void)) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Caller should also State::flush_channel_events() after this!
+ */
 bool
 channel_manager::resume_channel(const State& s, const string& channel_name, 
 		vector<env_event_type>& events) {
 	STACKTRACE_VERBOSE;
+#if 0 && PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
+CHANNEL_FOR_EACH(channel, channel_name) {
+	channel& c(**i);
+	c.resume(s, events);
+}
+#else
 	GET_NAMED_CHANNEL(c, channel_name)
 	c.resume(s, events);
+#endif
 	return false;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Caller should also State::flush_channel_events() after this!
+ */
 void
 channel_manager::resume_all_channels(const State& s,
 		vector<env_event_type>& events) {
@@ -3776,16 +3991,29 @@ channel_manager::resume_all_channels(const State& s,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Caller should also State::flush_channel_events() after this!
+ */
 bool
 channel_manager::reset_channel(const string& channel_name, 
 		vector<env_event_type>& events) {
 	STACKTRACE_VERBOSE;
+#if 0 && PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
+CHANNEL_FOR_EACH(channel, channel_name) {
+	channel& c(**i);
+	c.reset(events);
+}
+#else
 	GET_NAMED_CHANNEL(c, channel_name)
 	c.reset(events);
+#endif
 	return false;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Caller should also State::flush_channel_events() after this!
+ */
 void
 channel_manager::reset_all_channels(vector<env_event_type>& events) {
 	STACKTRACE_VERBOSE;
@@ -4031,22 +4259,40 @@ for ( ; i!=e; ++i) {
 bool
 channel_manager::__dump_channel(ostream& o, const string& channel_name, 
 		const bool state) const {
+#if 0 && PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
+CHANNEL_FOR_EACH(const channel, channel_name) {
+	const channel& c(**i);
+#else
 	GET_NAMED_CHANNEL_CONST(c, channel_name)
+#endif
 	c.dump(o) << endl;		// contains channel name
 	if (state) {
 		c.dump_state(o << '\t') << endl;
 	}
+#if 0 && PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
+}	// end for each
+#endif
 	return false;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
 bool
 channel_manager::dump_channel_state(ostream& o, const State& s, 
 		const string& channel_name) const {
+#if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
+CHANNEL_FOR_EACH(const channel, channel_name) {
+	const channel& c(**i);
+#else
 	GET_NAMED_CHANNEL_CONST(c, channel_name)
+#endif
 	c.dump_status(o << "channel " << c.name << ": ", s) << endl;
+#if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
+}	// end for each
+#endif
 	return false;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -4104,7 +4350,7 @@ for ( ; j<s; ++j) {
 
 //=============================================================================
 #undef	ENV_EVENT
-#undef	__GET_NAMED_CHANNEL
+// #undef	__GET_NAMED_CHANNEL
 #undef	GET_NAMED_CHANNEL
 #undef	GET_NAMED_CHANNEL_CONST
 #undef	DATA_VALUE
