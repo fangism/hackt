@@ -2,7 +2,7 @@
  *	\file "lexer/instref-lex.ll"
  *	vi: ft=lex
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: instref-lex.ll,v 1.8 2011/02/08 02:06:47 fang Exp $
+ *	$Id: instref-lex.ll,v 1.9 2011/02/10 22:32:38 fang Exp $
  */
 
 /****** DEFINITIONS **********************************************************/
@@ -108,10 +108,12 @@ HEXDIGIT	[0-9A-Fa-f]
 IDHEAD		[a-zA-Z_]
 IDBODY		[a-zA-Z0-9_]
 INT		{DIGIT}+
+/**
 SIGN_INT	[+-]?{INT}
 EXP		[eE]{SIGN_INT}
 FRACTIONAL	"."{INT}
 FLOAT		({INT}{FRACTIONAL}{EXP}?)|({INT}{FRACTIONAL}?{EXP})
+**/
 HEX		0x{HEXDIGIT}+
 
 /* note: '-' signed ints are lexed as two tokens and combined in the parser
@@ -125,7 +127,10 @@ IDENTIFIER	{IDHEAD}{IDBODY}*
 	extended ID allows references to designated globals, prefixed with '!'
 ***/
 ID		[!]?{IDENTIFIER}
+/**
 BADID		({INT}{ID})|({FLOAT}{ID})
+**/
+BADID		{INT}{ID}
 BADHEX		{HEX}{ID}
 WHITESPACE	[ \t]+
 NEWLINE		"\n"

@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-02-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-48:
+	  hacprsim, parser/instref: added support for most commands on nodes
+		to automatically expand array references and apply 
+		the same command to all referenced nodes.  
+		DISABLED!  because of bad interaction with 
+			working-directory expansion, confusion on ".."
+			being expanded.  TODO: fix me.
+
+
 2011-02-08	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-47:

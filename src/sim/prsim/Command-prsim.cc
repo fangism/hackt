@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.85 2011/02/09 03:34:43 fang Exp $
+	$Id: Command-prsim.cc,v 1.86 2011/02/10 22:32:40 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -52,6 +52,38 @@ DEFAULT_STATIC_TRACE_BEGIN
 	(NOTE: the alias command can always effectively re-enable it.)
  */
 #define	WANT_OLD_RANDOM_COMMANDS			1
+
+/**
+	Define to 1 to allow some commands to take aggregate array
+	references to nodes.  
+	Goal: 1
+	Status: buggy because dir-stack expansion transforms the 
+		range operator ".." into a working directory/path.
+		The path substitutor is not smart enough yet;
+		needs to become a full path-reference parser.
+		TODO: enhance instref parser to handle paths.
+	Note: the reason why channels work is because they
+		don't use the working directory (yet),
+		known outstanding issue.
+ */
+#define	PRSIM_NODE_AGGREGATE_ARGUMENTS			0
+/**
+	Same idea for process references.
+	Not worth the trouble.
+ */
+#define	PRSIM_PROCESS_AGGREGATE_ARGUMENTS		0
+
+#if PRSIM_NODE_AGGREGATE_ARGUMENTS
+#define	NODE_FOR_EACH(ref)						\
+	vector<node_index_type> _tmp;					\
+	if (parse_nodes_to_indices(ref, s.get_module(), _tmp)) {	\
+		cerr << "No such node found: " << ref << '.' << endl;	\
+		return Command::BADARG;					\
+	}								\
+	vector<node_index_type>::const_iterator				\
+		niter(_tmp.begin()), nend(_tmp.end());			\
+	for ( ; niter!=nend; ++niter)
+#endif
 
 namespace HAC {
 namespace SIM {
@@ -110,13 +142,24 @@ nonempty_abs_dir(const string& s) {
 // wrap around definitions in "parser/instref.h"
 static
 // bool_index
-size_t
+node_index_type
 parse_node_to_index(const string& s, const entity::module& m) {
 	STACKTRACE_VERBOSE;
+	STACKTRACE_INDENT_PRINT("Parsing node(s): " << s << endl);
 	// automatically prepend working directory
 	return parser::parse_node_to_index(
 		CommandRegistry::prepend_working_dir(s), m).index;
 }
+
+#if PRSIM_NODE_AGGREGATE_ARGUMENTS
+static
+bool
+parse_nodes_to_indices(const string& s, const entity::module& m, 
+		vector<node_index_type>& r) {
+	return parser::parse_nodes_to_indices(
+		CommandRegistry::prepend_working_dir(s), m, r);
+}
+#endif
 
 static
 process_index
@@ -126,6 +169,16 @@ parse_process_to_index(const string& s, const entity::module& m) {
 	const string t(nonempty_abs_dir(s));
 	return parser::parse_process_to_index(t, m);
 }
+
+#if PRSIM_PROCESS_AGGREGATE_ARGUMENTS
+static
+bool
+parse_processes_to_indices(const string& s, const entity::module& m, 
+		vector<process_index_type>& r) {
+	return parser::parse_processes_to_indices(
+		CommandRegistry::prepend_working_dir(s), m, r);
+}
+#endif
 
 static
 int
@@ -197,7 +250,13 @@ parse_name_to_get_ports(const string& s, const entity::module& m,
 #else
 // just use original functions
 using parser::parse_node_to_index;
+#if PRSIM_NODE_AGGREGATE_ARGUMENTS
+using parser::parse_nodes_to_indices;
+#endif
 using parser::parse_process_to_index;
+#if PRSIM_PROCESS_AGGREGATE_ARGUMENTS
+using parser::parse_processes_to_indices;
+#endif
 using parser::parse_global_reference;
 using parser::parse_global_references;
 using parser::parse_name_to_what;
@@ -1036,12 +1095,20 @@ if (asz < 3 || asz > 4) {
 	return Command::SYNTAX;
 } else {
 	// now I'm wishing string_list was string_vector... :) can do!
+	int err = 0;
 	string_list::const_iterator ai(++a.begin());
 	const string& objname(*ai++);	// node name
 	const string& _val(*ai++);	// node value
+#if PRSIM_NODE_AGGREGATE_ARGUMENTS
+	NODE_FOR_EACH(objname) {
+		const node_index_type& ni(*niter);
+#else
 	const node_index_type ni = parse_node_to_index(objname, s.get_module());
-	if (ni) {
-		int err;
+	if (!ni) {
+		cerr << "No such node found." << endl;
+		return Command::BADARG;
+	} // else
+#endif
 		// valid values are 0, 1, 2(X)
 		const value_enum val = s.node_to_value(_val, ni);
 		if (!node_type::is_valid_value(val)) {
@@ -1075,11 +1142,10 @@ if (asz < 3 || asz > 4) {
 		} else {
 			err = s.set_node(ni, val, force);
 		}
-		return (err < 1) ? Command::NORMAL : Command::BADARG;
-	} else {
-		cerr << "No such node found." << endl;
-		return Command::BADARG;
-	}
+#if PRSIM_NODE_AGGREGATE_ARGUMENTS
+	}	// end for each node
+#endif
+	return (err < 1) ? Command::NORMAL : Command::BADARG;
 }
 }	// end Set::main
 
@@ -1204,14 +1270,21 @@ if (a.size() != 2) {
 	return Command::SYNTAX;
 } else {
 	const string& objname(a.back());
+#if PRSIM_NODE_AGGREGATE_ARGUMENTS
+	NODE_FOR_EACH(objname) {
+		const node_index_type& ni(*niter);
+#else
 	const node_index_type ni = parse_node_to_index(objname, s.get_module());
-	if (ni) {
-		s.unset_node(ni);
-		return Command::NORMAL;
-	} else {
+	if (!ni) {
 		cerr << "No such node found." << endl;
 		return Command::BADARG;
 	}
+#endif
+	s.unset_node(ni);
+#if PRSIM_NODE_AGGREGATE_ARGUMENTS
+	}	// end for each node
+#endif
+	return Command::NORMAL;
 }
 }
 
@@ -1289,8 +1362,17 @@ if (asz != 3) {
 	// now I'm wishing string_list was string_vector... :) can do!
 	string_list::const_iterator ai(++a.begin());
 	const string& objname(*ai++);	// node name
+	int err = 0;
+#if PRSIM_NODE_AGGREGATE_ARGUMENTS
+	NODE_FOR_EACH(objname) {
+		const node_index_type& ni(*niter);
+#else
 	const node_index_type ni = parse_node_to_index(objname, s.get_module());
-	if (ni) {
+	if (!ni) {
+		cerr << "No such node found." << endl;
+		return Command::BADARG;
+	}
+#endif
 		const string& _val(*ai++);	// node value
 		// valid values are 0, 1, 2(X)
 		const value_enum val = s.node_to_value(_val, ni);
@@ -1298,13 +1380,12 @@ if (asz != 3) {
 			cerr << "Invalid logic value: " << _val << endl;
 			return Command::SYNTAX;
 		}
-		const int err = s.set_node_after(ni, val,
+		err = s.set_node_after(ni, val,
 			State::exponential_random_delay(), force);
-		return (err < 1) ? Command::NORMAL : Command::BADARG;
-	} else {
-		cerr << "No such node found." << endl;
-		return Command::BADARG;
-	}
+#if PRSIM_NODE_AGGREGATE_ARGUMENTS
+	}	// end for each node
+#endif
+	return (err < 1) ? Command::NORMAL : Command::BADARG;
 }
 }	// end Setr::main
 
@@ -1354,15 +1435,22 @@ if (a.size() != 2) {
 	return Command::SYNTAX;
 } else {
 	const string& objname(a.back());
+#if PRSIM_NODE_AGGREGATE_ARGUMENTS
+	NODE_FOR_EACH(objname) {
+		const node_index_type& ni(*niter);
+#else
 	const node_index_type ni = parse_node_to_index(objname, s.get_module());
-	if (ni) {
-		s.freeze_node(ni);
-		return Command::NORMAL;
-	} else {
+	if (!ni) {
 		cerr << "No such node found: " <<
 			nonempty_abs_dir(objname) << endl;
 		return Command::BADARG;
 	}
+#endif
+		s.freeze_node(ni);
+#if PRSIM_NODE_AGGREGATE_ARGUMENTS
+	}	// end for each node
+#endif
+	return Command::NORMAL;
 }
 }
 
@@ -1463,29 +1551,37 @@ if (sz < 2 || sz > 3) {
 } else {
 	string_list::const_iterator ai(++a.begin());
 	const string& objname(*ai++);	// node name
+	string _val;
+	if (sz == 3) {
+		_val = *ai++;	// node value
+	}
+#if PRSIM_NODE_AGGREGATE_ARGUMENTS
+	NODE_FOR_EACH(objname) {
+		const node_index_type& ni(*niter);
+#else
 	const node_index_type ni = parse_node_to_index(objname, s.get_module());
-	if (ni) {
+	if (!ni) {
+		cerr << "No such node found." << endl;
+		return Command::BADARG;
+	}
+#endif
 		// default: use current value
 		value_enum val = s.get_node(ni).current_value();
 	if (sz == 3) {
-		const string& _val(*ai++);	// node value
 		val = s.node_to_value(_val, ni);
 		if (!node_type::is_valid_value(val)) {
 			cerr << "Invalid logic value: " << _val << endl;
 			return Command::SYNTAX;
 		}
 	}
-//		s.upset_node(ni, val);
-		// setf ...
 		const int err = s.set_node(ni, val, true);	// forced
 		if (err) return err;
 		// freeze ...
 		s.freeze_node(ni);
-		return Command::NORMAL;
-	} else {
-		cerr << "No such node found." << endl;
-		return Command::BADARG;
-	}
+#if PRSIM_NODE_AGGREGATE_ARGUMENTS
+	}	// end for each node
+#endif
+	return Command::NORMAL;
 }
 }
 
@@ -1557,15 +1653,22 @@ if (a.size() != 2) {
 	return Command::SYNTAX;
 } else {
 	const string& objname(a.back());
+#if PRSIM_NODE_AGGREGATE_ARGUMENTS
+	NODE_FOR_EACH(objname) {
+		const node_index_type& ni(*niter);
+#else
 	const node_index_type ni = parse_node_to_index(objname, s.get_module());
-	if (ni) {
-		s.deschedule_event(ni);
-		return Command::NORMAL;
-	} else {
+	if (!ni) {
 		cerr << "No such node found: " <<
 			nonempty_abs_dir(objname) << endl;
 		return Command::BADARG;
 	}
+#endif
+		s.deschedule_event(ni);
+#if PRSIM_NODE_AGGREGATE_ARGUMENTS
+	}	// end for each node
+#endif
+	return Command::NORMAL;
 }
 }
 
@@ -1625,22 +1728,29 @@ if (a.size() != 3) {
 	return Command::SYNTAX;
 } else {
 	const string& objname(*++a.begin());
-	const node_index_type ni = parse_node_to_index(objname, s.get_module());
-if (ni) {
 	time_type t;
 	if (string_to_num(a.back(), t)) {
 		cerr << "Error: invalid time argument." << endl;
 		return Command::BADARG;
 	}
+#if PRSIM_NODE_AGGREGATE_ARGUMENTS
+	NODE_FOR_EACH(objname) {
+		const node_index_type& ni(*niter);
+#else
+	const node_index_type ni = parse_node_to_index(objname, s.get_module());
+if (!ni) {
+	cerr << "No such node found: " << nonempty_abs_dir(objname) << endl;
+	return Command::BADARG;
+}
+#endif
 	if ((s.*smf)(ni, t)) {
 		// already have error message
 		return Command::BADARG;
 	}
+#if PRSIM_NODE_AGGREGATE_ARGUMENTS
+}	// end for each node
+#endif
 	return Command::NORMAL;
-} else {
-	cerr << "No such node found: " << nonempty_abs_dir(objname) << endl;
-	return Command::BADARG;
-}
 }
 }
 
@@ -1651,17 +1761,24 @@ if (a.size() != 2) {
 	return Command::SYNTAX;
 } else {
 	const string& objname(a.back());
+#if PRSIM_NODE_AGGREGATE_ARGUMENTS
+	NODE_FOR_EACH(objname) {
+		const node_index_type& ni(*niter);
+#else
 	const node_index_type ni = parse_node_to_index(objname, s.get_module());
-if (ni) {
+if (!ni) {
+	cerr << "No such node found: " << nonempty_abs_dir(objname) << endl;
+	return Command::BADARG;
+}
+#endif
 	if (s.reschedule_event_now(ni)) {
 		// already have error message
 		return Command::BADARG;
 	}
+#if PRSIM_NODE_AGGREGATE_ARGUMENTS
+}	// end for each node
+#endif
 	return Command::NORMAL;
-} else {
-	cerr << "No such node found: " << nonempty_abs_dir(objname) << endl;
-	return Command::BADARG;
-}
 }
 }
 
@@ -1776,15 +1893,22 @@ if (a.size() < 2) {
 	bool badarg = false;
 	for ( ; i!=e; ++i) {
 		const string& objname(*i);
+#if PRSIM_NODE_AGGREGATE_ARGUMENTS
+		NODE_FOR_EACH(objname) {
+			const node_index_type& ni(*niter);
+#else
 		const node_index_type ni =
 			parse_node_to_index(objname, s.get_module());
-		if (ni) {
-			s.set_node_breakpoint(ni);
-		} else {
+		if (!ni) {
 			cerr << "No such node found: " <<
 				nonempty_abs_dir(objname) << endl;
 			badarg = true;
 		}
+#endif
+		s.set_node_breakpoint(ni);
+#if PRSIM_NODE_AGGREGATE_ARGUMENTS
+		}	// end node for each
+#endif
 	}
 	return badarg ? Command::BADARG : Command::NORMAL;
 }
@@ -1822,15 +1946,22 @@ if (a.size() < 2) {
 	bool badarg = false;
 	for ( ; i!=e; ++i) {
 		const string& objname(*i);
+#if PRSIM_NODE_AGGREGATE_ARGUMENTS
+		NODE_FOR_EACH(objname) {
+			const node_index_type& ni(*niter);
+#else
 		const node_index_type ni =
 			parse_node_to_index(objname, s.get_module());
-		if (ni) {
-			s.clear_node_breakpoint(ni);
-		} else {
+		if (!ni) {
 			cerr << "No such node found: " <<
 				nonempty_abs_dir(objname) << endl;
 			badarg = true;
 		}
+#endif
+			s.clear_node_breakpoint(ni);
+#if PRSIM_NODE_AGGREGATE_ARGUMENTS
+		}	// end for each node
+#endif
 	}
 	return badarg ? Command::BADARG : Command::NORMAL;
 }
@@ -2181,17 +2312,24 @@ if (a.size() != 2) {
 	return Command::SYNTAX;
 } else {
 	const string& objname(a.back());
+#if PRSIM_NODE_AGGREGATE_ARGUMENTS
+	NODE_FOR_EACH(objname) {
+		const node_index_type& ni(*niter);
+#else
 	const node_index_type ni = parse_node_to_index(objname, s.get_module());
-	if (ni) {
-		// we have ni = the canonically allocated index of the bool node
-		// just look it up in the node_pool
-		print_watched_node(cout, s, ni, objname);
-		return Command::NORMAL;
-	} else {
+	if (!ni) {
 		cerr << "No such node found: " <<
 			nonempty_abs_dir(objname) << endl;
 		return Command::BADARG;
 	}
+#endif
+		// we have ni = the canonically allocated index of the bool node
+		// just look it up in the node_pool
+		print_watched_node(cout, s, ni, objname);
+#if PRSIM_NODE_AGGREGATE_ARGUMENTS
+	}	// end for each node
+#endif
+	return Command::NORMAL;
 }
 }
 
@@ -2227,8 +2365,17 @@ if (a.size() != 2) {
 	return Command::SYNTAX;
 } else {
 	const string& objname(a.back());
+#if PRSIM_NODE_AGGREGATE_ARGUMENTS
+	NODE_FOR_EACH(objname) {
+		const node_index_type& ni(*niter);
+#else
 	const node_index_type ni = parse_node_to_index(objname, s.get_module());
-	if (ni) {
+	if (!ni) {
+		cerr << "No such node found: " <<
+			nonempty_abs_dir(objname) << endl;
+		return Command::BADARG;
+	}
+#endif
 		const node_type& n(s.get_node(ni));
 		const pull_enum u = n.get_pull_struct(true, NORMAL_RULE).pull();
 		const pull_enum d = n.get_pull_struct(false, NORMAL_RULE).pull();
@@ -2244,12 +2391,10 @@ if (a.size() != 2) {
 			" weak-dn:" << node_type::value_to_char[wd] <<
 #endif
 				endl;
-		return Command::NORMAL;
-	} else {
-		cerr << "No such node found: " <<
-			nonempty_abs_dir(objname) << endl;
-		return Command::BADARG;
-	}
+#if PRSIM_NODE_AGGREGATE_ARGUMENTS
+	}	// end for each node
+#endif
+	return Command::NORMAL;
 }
 }
 
@@ -3327,17 +3472,24 @@ if (a.size() != 2) {
 	return Command::SYNTAX;
 } else {
 	const string& objname(a.back());
+#if PRSIM_NODE_AGGREGATE_ARGUMENTS
+	NODE_FOR_EACH(objname) {
+		const node_index_type& ni(*niter);
+#else
 	const node_index_type ni = parse_node_to_index(objname, s.get_module());
-	if (ni) {
+	if (!ni) {
+		cerr << "No such node found." << endl;
+		return Command::BADARG;
+	}
+#endif
 		// const State::node_type& n(s.get_node(ni));
 		cout << "Fanins of node `" << 
 			nonempty_abs_dir(objname) << "\':" << endl;
 		s.dump_node_fanin(cout, ni, false);
-		return Command::NORMAL;
-	} else {
-		cerr << "No such node found." << endl;
-		return Command::BADARG;
-	}
+#if PRSIM_NODE_AGGREGATE_ARGUMENTS
+	}	// end for each node
+#endif
+	return Command::NORMAL;
 }
 }
 
@@ -3369,17 +3521,24 @@ if (a.size() != 2) {
 	return Command::SYNTAX;
 } else {
 	const string& objname(a.back());
+#if PRSIM_NODE_AGGREGATE_ARGUMENTS
+	NODE_FOR_EACH(objname) {
+		const node_index_type& ni(*niter);
+#else
 	const node_index_type ni = parse_node_to_index(objname, s.get_module());
-	if (ni) {
+	if (!ni) {
+		cerr << "No such node found." << endl;
+		return Command::BADARG;
+	}
+#endif
 		// const State::node_type& n(s.get_node(ni));
 		cout << "Fanins of node `" <<
 			nonempty_abs_dir(objname) << "\':" << endl;
 		s.dump_node_fanin(cout, ni, true);
-		return Command::NORMAL;
-	} else {
-		cerr << "No such node found." << endl;
-		return Command::BADARG;
-	}
+#if PRSIM_NODE_AGGREGATE_ARGUMENTS
+	}	// end for each node
+#endif
+	return Command::NORMAL;
 }
 }
 
@@ -3412,17 +3571,24 @@ if (a.size() != 2) {
 	return Command::SYNTAX;
 } else {
 	const string& objname(a.back());
+#if PRSIM_NODE_AGGREGATE_ARGUMENTS
+	NODE_FOR_EACH(objname) {
+		const node_index_type& ni(*niter);
+#else
 	const node_index_type ni = parse_node_to_index(objname, s.get_module());
-	if (ni) {
+	if (!ni) {
+		cerr << "No such node found." << endl;
+		return Command::BADARG;
+	}
+#endif
 		// const State::node_type& n(s.get_node(ni));
 		cout << "Fanouts of node `" << 
 			nonempty_abs_dir(objname) << "\':" << endl;
 		s.dump_node_fanout(cout, ni, true, false, false);
-		return Command::NORMAL;
-	} else {
-		cerr << "No such node found." << endl;
-		return Command::BADARG;
-	}
+#if PRSIM_NODE_AGGREGATE_ARGUMENTS
+	}	// end for each node
+#endif
+	return Command::NORMAL;
 }
 }
 
@@ -3453,17 +3619,24 @@ if (a.size() != 2) {
 	return Command::SYNTAX;
 } else {
 	const string& objname(a.back());
+#if PRSIM_NODE_AGGREGATE_ARGUMENTS
+	NODE_FOR_EACH(objname) {
+		const node_index_type& ni(*niter);
+#else
 	const node_index_type ni = parse_node_to_index(objname, s.get_module());
-	if (ni) {
+	if (!ni) {
+		cerr << "No such node found." << endl;
+		return Command::BADARG;
+	}
+#endif
 		// const State::node_type& n(s.get_node(ni));
 		cout << "Fanouts of node `" << 
 			nonempty_abs_dir(objname) << "\':" << endl;
 		s.dump_node_fanout(cout, ni, true, false, true);
-		return Command::NORMAL;
-	} else {
-		cerr << "No such node found." << endl;
-		return Command::BADARG;
+#if PRSIM_NODE_AGGREGATE_ARGUMENTS
 	}
+#endif
+	return Command::NORMAL;
 }
 }
 
@@ -3634,19 +3807,26 @@ if (a.size() != 2) {
 	return Command::SYNTAX;
 } else {
 	const string& objname(a.back());
+#if PRSIM_NODE_AGGREGATE_ARGUMENTS
+	NODE_FOR_EACH(objname) {
+		const node_index_type& ni(*niter);
+#else
 	const node_index_type ni = parse_node_to_index(objname, s.get_module());
-	if (ni) {
+	if (!ni) {
+		cerr << "No such node found: " <<
+			nonempty_abs_dir(objname) << endl;
+		return Command::BADARG;
+	}
+#endif
 		// we have ni = the canonically allocated index of the bool node
 		// just look it up in the node_pool
 		s.dump_node_canonical_name(cout << "Node ", ni)
 			<< " attributes:";
 		s.get_node(ni).dump_attributes(cout) << endl;
-		return Command::NORMAL;
-	} else {
-		cerr << "No such node found: " <<
-			nonempty_abs_dir(objname) << endl;
-		return Command::BADARG;
-	}
+#if PRSIM_NODE_AGGREGATE_ARGUMENTS
+	}	// end for each node
+#endif
+	return Command::NORMAL;
 }
 }
 
@@ -3683,16 +3863,25 @@ if (a.size() != 3) {
 	return Command::SYNTAX;
 } else {
 	const string& objname(*++a.begin());
-	const node_index_type ni = parse_node_to_index(objname, s.get_module());
-	if (ni) {
-		const node_type& n(s.get_node(ni));
-		const string& _val(a.back());	// node value
+	const string& _val(a.back());	// node value
 		// valid values are 0, 1, 2(X)
-		const value_enum val = node_type::string_to_value(_val);
-		if (!node_type::is_valid_value(val)) {
-			cerr << "Invalid logic value: " << _val << endl;
-			return Command::SYNTAX;
-		}
+	const value_enum val = node_type::string_to_value(_val);
+	if (!node_type::is_valid_value(val)) {
+		cerr << "Invalid logic value: " << _val << endl;
+		return Command::SYNTAX;
+	}
+#if PRSIM_NODE_AGGREGATE_ARGUMENTS
+	NODE_FOR_EACH(objname) {
+		const node_index_type& ni(*niter);
+#else
+	const node_index_type ni = parse_node_to_index(objname, s.get_module());
+	if (!ni) {
+		cerr << "No such node found: " <<
+			nonempty_abs_dir(objname) << endl;
+		return Command::BADARG;
+	}
+#endif
+		const node_type& n(s.get_node(ni));
 		const value_enum actual = n.current_value();
 		if (actual != val) {
 			const error_policy_enum e(s.get_assert_fail_policy());
@@ -3705,18 +3894,17 @@ if (a.size() != 3) {
 			n.dump_value(cout) << "." << endl;
 			}	// yes, actually allow suppression
 			return error_policy_to_status(e);
+			// stops on first error
 		} else if (s.confirm_asserts()) {
 			cout << "node `" << nonempty_abs_dir(objname)
 				<< "\' is " <<
 				node_type::value_to_char[size_t(val)] <<
 				", as expected." << endl;
 		}
-		return Command::NORMAL;
-	} else {
-		cerr << "No such node found: " <<
-			nonempty_abs_dir(objname) << endl;
-		return Command::BADARG;
-	}
+#if PRSIM_NODE_AGGREGATE_ARGUMENTS
+	}	// end for each node
+#endif
+	return Command::NORMAL;
 }
 }
 
@@ -3752,16 +3940,25 @@ if (a.size() != 3) {
 	return Command::SYNTAX;
 } else {
 	const string& objname(*++a.begin());
+	const string& _val(a.back());	// node value
+	// valid values are 0, 1, 2(X)
+	const value_enum val = node_type::string_to_value(_val);
+	if (!node_type::is_valid_value(val)) {
+		cerr << "Invalid logic value: " << _val << endl;
+		return Command::SYNTAX;
+	}
+#if PRSIM_NODE_AGGREGATE_ARGUMENTS
+	NODE_FOR_EACH(objname) {
+		const node_index_type& ni(*niter);
+#else
 	const node_index_type ni = parse_node_to_index(objname, s.get_module());
-	if (ni) {
+	if (!ni) {
+		cerr << "No such node found: " <<
+			nonempty_abs_dir(objname) << endl;
+		return Command::BADARG;
+	}
+#endif
 		const node_type& n(s.get_node(ni));
-		const string& _val(a.back());	// node value
-		// valid values are 0, 1, 2(X)
-		const value_enum val = node_type::string_to_value(_val);
-		if (!node_type::is_valid_value(val)) {
-			cerr << "Invalid logic value: " << _val << endl;
-			return Command::SYNTAX;
-		}
 		const value_enum actual = n.current_value();
 		if (actual == val) {
 			const error_policy_enum e(s.get_assert_fail_policy());
@@ -3774,18 +3971,17 @@ if (a.size() != 3) {
 			n.dump_value(cout) << "." << endl;
 			}
 			return error_policy_to_status(e);
+			// stops on first error
 		} else if (s.confirm_asserts()) {
 			cout << "node `" << nonempty_abs_dir(objname)
 				<< "\' is not " <<
 				node_type::value_to_char[size_t(val)] <<
 				", as expected." << endl;
 		}
-		return Command::NORMAL;
-	} else {
-		cerr << "No such node found: " <<
-			nonempty_abs_dir(objname) << endl;
-		return Command::BADARG;
-	}
+#if PRSIM_NODE_AGGREGATE_ARGUMENTS
+	}	// end for each node
+#endif
+	return Command::NORMAL;
 }
 }
 
@@ -3823,16 +4019,25 @@ if (a.size() != 3) {
 	return Command::SYNTAX;
 } else {
 	const string& objname(*++a.begin());
+	const string& _val(a.back());	// node value
+	// valid values are 0, 1, 2(X)
+	const pull_enum val = node_type::string_to_pull(_val);
+	if (!node_type::is_valid_pull(val)) {
+		cerr << "Invalid pull value: " << _val << endl;
+		return Command::SYNTAX;
+	}
+#if PRSIM_NODE_AGGREGATE_ARGUMENTS
+	NODE_FOR_EACH(objname) {
+		const node_index_type& ni(*niter);
+#else
 	const node_index_type ni = parse_node_to_index(objname, s.get_module());
-	if (ni) {
+	if (!ni) {
+		cerr << "No such node found: " <<
+			nonempty_abs_dir(objname) << endl;
+		return Command::BADARG;
+	}
+#endif
 		const node_type& n(s.get_node(ni));
-		const string& _val(a.back());	// node value
-		// valid values are 0, 1, 2(X)
-		const pull_enum val = node_type::string_to_pull(_val);
-		if (!node_type::is_valid_pull(val)) {
-			cerr << "Invalid pull value: " << _val << endl;
-			return Command::SYNTAX;
-		}
 		const pull_enum actual = n.drive_state();
 		if (actual != val) {
 			const error_policy_enum e(s.get_assert_fail_policy());
@@ -3852,12 +4057,10 @@ if (a.size() != 3) {
 				node_type::value_to_char[size_t(val)] <<
 				", as expected." << endl;
 		}
-		return Command::NORMAL;
-	} else {
-		cerr << "No such node found: " <<
-			nonempty_abs_dir(objname) << endl;
-		return Command::BADARG;
-	}
+#if PRSIM_NODE_AGGREGATE_ARGUMENTS
+	}	// end for each node
+#endif
+	return Command::NORMAL;
 }
 }
 
@@ -3890,8 +4093,17 @@ if (a.size() != 2) {
 	return Command::SYNTAX;
 } else {
 	const string& objname(*++a.begin());
+#if PRSIM_NODE_AGGREGATE_ARGUMENTS
+	NODE_FOR_EACH(objname) {
+		const node_index_type& ni(*niter);
+#else
 	const node_index_type ni = parse_node_to_index(objname, s.get_module());
-	if (ni) {
+	if (!ni) {
+		cerr << "No such node found: " <<
+			nonempty_abs_dir(objname) << endl;
+		return Command::BADARG;
+	}
+#endif
 		const node_type& n(s.get_node(ni));
 		if (!n.pending_event()) {
 			const error_policy_enum e(s.get_assert_fail_policy());
@@ -3906,12 +4118,10 @@ if (a.size() != 2) {
 			cout << "node `" << nonempty_abs_dir(objname) <<
 				"\' has a pending event, as expected." << endl;
 		}
-		return Command::NORMAL;
-	} else {
-		cerr << "No such node found: " <<
-			nonempty_abs_dir(objname) << endl;
-		return Command::BADARG;
-	}
+#if PRSIM_NODE_AGGREGATE_ARGUMENTS
+	}	// end for each node
+#endif
+	return Command::NORMAL;
 }
 }
 
@@ -3942,8 +4152,17 @@ if (a.size() != 2) {
 	return Command::SYNTAX;
 } else {
 	const string& objname(*++a.begin());
+#if PRSIM_NODE_AGGREGATE_ARGUMENTS
+	NODE_FOR_EACH(objname) {
+		const node_index_type& ni(*niter);
+#else
 	const node_index_type ni = parse_node_to_index(objname, s.get_module());
-	if (ni) {
+	if (!ni) {
+		cerr << "No such node found: " <<
+			nonempty_abs_dir(objname) << endl;
+		return Command::BADARG;
+	}
+#endif
 		const node_type& n(s.get_node(ni));
 		if (n.pending_event()) {
 			const error_policy_enum e(s.get_assert_fail_policy());
@@ -3958,12 +4177,10 @@ if (a.size() != 2) {
 			cout << "node `" << nonempty_abs_dir(objname) <<
 				"\' has no pending event, as expected." << endl;
 		}
-		return Command::NORMAL;
-	} else {
-		cerr << "No such node found: " <<
-			nonempty_abs_dir(objname) << endl;
-		return Command::BADARG;
-	}
+#if PRSIM_NODE_AGGREGATE_ARGUMENTS
+	}	// end for each node
+#endif
+	return Command::NORMAL;
 }
 }
 
@@ -4651,16 +4868,23 @@ if (a.size() < 2) {
 	bool badarg = false;
 	for ( ; i!=e; ++i) {
 		const string& objname(*i);
+#if PRSIM_NODE_AGGREGATE_ARGUMENTS
+	NODE_FOR_EACH(objname) {
+		const node_index_type& ni(*niter);
+#else
 		const node_index_type ni =
 			parse_node_to_index(objname, s.get_module());
-		if (ni) {
-			s.watch_node(ni);
-		} else {
+		if (!ni) {
 			cerr << "No such node found: " << 
 				nonempty_abs_dir(objname) << endl;
 			badarg = true;
 		}
-	}
+#endif
+			s.watch_node(ni);
+#if PRSIM_NODE_AGGREGATE_ARGUMENTS
+		}	// end for each node
+#endif
+	}	// end for each reference
 	return badarg ? Command::BADARG : Command::NORMAL;
 }
 }
@@ -4698,15 +4922,22 @@ if (a.size() < 2) {
 	bool badarg = false;
 	for ( ; i!=e; ++i) {
 		const string& objname(*i);
+#if PRSIM_NODE_AGGREGATE_ARGUMENTS
+	NODE_FOR_EACH(objname) {
+		const node_index_type& ni(*niter);
+#else
 		const node_index_type ni =
 			parse_node_to_index(objname, s.get_module());
-		if (ni) {
-			s.unwatch_node(ni);
-		} else {
+		if (!ni) {
 			cerr << "No such node found: " << 
 				nonempty_abs_dir(objname) << endl;
 			badarg = true;
 		}
+#endif
+			s.unwatch_node(ni);
+#if PRSIM_NODE_AGGREGATE_ARGUMENTS
+		}	// end for each node
+#endif
 	}
 	return badarg ? Command::BADARG : Command::NORMAL;
 }
@@ -4935,10 +5166,23 @@ if (a.size() != 2) {
 	return Command::SYNTAX;
 } else {
 	const string& objname(a.back());
+#if PRSIM_NODE_AGGREGATE_ARGUMENTS
+	NODE_FOR_EACH(objname) {
+		const node_index_type& ni(*niter);
+#else
 	const node_index_type ni =
 		parse_node_to_index(objname, s.get_module());
+	if (!ni) {
+		cerr << "No such node found: " << 
+			nonempty_abs_dir(objname) << endl;
+		return Command::BADARG;
+	}
+#endif
 	cout << s.get_node_canonical_name(ni) << " : [" <<
 		s.get_node(ni).tcount << " T]" << endl;
+#if PRSIM_NODE_AGGREGATE_ARGUMENTS
+	}	// end for each node
+#endif
 	return Command::NORMAL;
 }
 }

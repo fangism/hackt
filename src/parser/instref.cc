@@ -1,6 +1,6 @@
 /**
 	\file "parser/instref.cc"
-	$Id: instref.cc,v 1.26 2011/02/08 02:06:49 fang Exp $
+	$Id: instref.cc,v 1.27 2011/02/10 22:32:39 fang Exp $
  */
 
 #define	DEBUGGING_SHIT			0
@@ -140,6 +140,44 @@ template class typed_indexed_reference<enum_tag>;
 template class typed_indexed_reference<channel_tag>;
 template class typed_indexed_reference<process_tag>;
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	If the result indices array is empty, that signals an error.
+ */
+template <class Tag>
+typed_indexed_references<Tag>::typed_indexed_references(
+		const string& n, const entity::module& m) {
+	typedef	entity::class_traits<Tag>		traits_type;
+	expanded_global_references_type temp;
+	if (expand_global_references(n, m, temp))
+		return;
+	indices.reserve(temp.size());
+	expanded_global_references_type::const_iterator
+		i(temp.begin()), e(temp.end());
+for ( ; i!=e; ++i) {
+	const global_indexed_reference& gref(i->second);
+	if (gref.first != traits_type::type_tag_enum_value) {
+#if 1
+		// really should use expanded name
+		cerr << "Error: " << n << " does not reference a " <<
+			traits_type::tag_name << "." << endl;
+#else
+		// silent error, caller catches
+#endif
+		indices.clear();
+		return;
+	}
+	INVARIANT(gref.second);
+	indices.push_back(gref.second);
+}	// end for each reference
+}
+
+template class typed_indexed_references<bool_tag>;
+template class typed_indexed_references<int_tag>;
+template class typed_indexed_references<enum_tag>;
+template class typed_indexed_references<channel_tag>;
+template class typed_indexed_references<process_tag>;
+
 //=============================================================================
 #if 0
 /**
@@ -163,6 +201,7 @@ parse_reference(const char* s) {
 	typedef	count_ptr<parser::inst_ref_expr>	return_type;
 	STACKTRACE_VERBOSE;
 	NEVER_NULL(s);
+	STACKTRACE_INDENT_PRINT("Parsing: " << s << endl);
 	YYSTYPE lval;
 	try {
 		flex::lexer_state f(s);	// can now pass string to parse!
@@ -263,7 +302,7 @@ expand_global_references(const string& _base, const module& m,
 	STACKTRACE_VERBOSE;
 	// we have to expand this the hard way because we need
 	// the original expanded reference names.
-	const AST_reference_ptr r(parser::parse_reference(_base.c_str()));
+	const AST_reference_ptr r(parse_reference(_base.c_str()));
 	if (!r) {
 		cerr << "Error in instance reference." << endl;
 		return true;
@@ -306,6 +345,16 @@ parse_node_to_index(const string& n, const module& m) {
 	return bool_index(n, m);
 }
 
+bool
+parse_nodes_to_indices(const string& n, const module& m,
+		vector<size_t>& b) {
+	STACKTRACE_VERBOSE;
+	STACKTRACE_INDENT_PRINT("Parsing node(s): " << n << endl);
+	bool_indices tmp(n, m);
+	tmp.indices.swap(b);
+	return b.empty();
+}
+
 //=============================================================================
 /**
 	\return globally allocated index of a named process, 
@@ -325,6 +374,22 @@ if (n == ".") {
 		return process_index();	// -1
 	// because 0 indicates top-level process
 	else	return r;
+}
+}
+
+bool
+parse_processes_to_indices(const string& n, const module& m, 
+		vector<size_t>& p) {
+	typedef	inst_ref_expr::meta_return_type		checked_ref_type;
+	STACKTRACE_VERBOSE;
+if (n == ".") {
+	// refers to the top-level process
+	p.push_back(0);
+	return false;
+} else {
+	process_indices tmp(n, m);
+	tmp.indices.swap(p);
+	return p.empty();
 }
 }
 

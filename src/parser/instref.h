@@ -1,7 +1,7 @@
 /**
 	\file "parser/instref.h"
 	Interface to reference-parsing.
-	$Id: instref.h,v 1.13 2011/02/08 02:06:49 fang Exp $
+	$Id: instref.h,v 1.14 2011/02/10 22:32:40 fang Exp $
 	This file originated from "sim/prsim/Reference.h"
 	Id: Reference.h,v 1.5 2006/07/30 05:50:13 fang Exp
  */
@@ -56,6 +56,8 @@ typedef vector<expanded_global_reference>
 					expanded_global_references_type;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// helper types for organizing global indices
+
 template <class Tag>
 struct invalid_index {
 	enum { value = 0 };	// INVALID_NODE_INDEX
@@ -95,6 +97,29 @@ typedef	typed_indexed_reference<bool_tag>		bool_index;
 typedef	typed_indexed_reference<channel_tag>		channel_index;
 typedef	typed_indexed_reference<process_tag>		process_index;
 
+/**
+	For looking up collections.  
+ */
+template <class Tag>
+struct typed_indexed_references {
+	vector<size_t>					indices;
+
+	// default value is invalid
+	typed_indexed_references() : indices() { }
+
+	typed_indexed_references(const string&, const module&);
+
+	bool
+	valid(void) const {
+		return !indices.empty();
+	}
+
+};	// end class generic_reference
+
+typedef	typed_indexed_references<bool_tag>		bool_indices;
+typedef	typed_indexed_references<channel_tag>		channel_indices;
+typedef	typed_indexed_references<process_tag>		process_indices;
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 extern
 count_ptr<inst_ref_expr>
@@ -119,8 +144,16 @@ expand_global_references(const string&, const module&,
 	expanded_global_references_type&);
 
 extern
+bool
+parse_nodes_to_indices(const string&, const module&, vector<size_t>&);
+
+extern
 bool_index
 parse_node_to_index(const string&, const module&);
+
+extern
+bool
+parse_processes_to_indices(const string&, const module&, vector<size_t>&);
 
 extern
 process_index
