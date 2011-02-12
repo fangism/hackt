@@ -8,8 +8,9 @@
 	Splits and merges useful for constructing tree-fifos.  
 
 	TODO: e1ofN alterators.
+	TODO: annotate ports with directions
 
-	$Id: alternator.hac,v 1.17 2010/09/02 00:34:32 fang Exp $
+	$Id: alternator.hac,v 1.18 2011/02/12 02:54:08 fang Exp $
  */
 
 import "channel.hac";
@@ -22,9 +23,10 @@ import "channel.hac";
 	two adjacent stages s[i-1] & s[i] to form a one-hot code.  
 	This basic cell is written this way to allow for general uses
 	of the state bits.  
-	\param inc the increment/advance signal, 
+	\param incs the increment/advance signal, 
 		may be considered an active low acknowledge 
 		or active high request into the cell.  
+	\param incr is for resetting this element.
 	\param _si state-bit from i-2 stage.
 	\param sj state-bit from i-1 stage.
 	\param _sk this state-bit.
@@ -33,7 +35,7 @@ import "channel.hac";
 	\param _Reset reset this state-bit to inactive.
  */
 defproc onehot_stage(
-		bool inc, 
+		bool inc,
 		_si, sj, _sk, sk, _sl, 
 		_Reset) {
 	prs {
@@ -53,13 +55,53 @@ defproc onehot_stage(
 	\param Reset resets the state-bit to active.  
  */
 defproc onehot_stage_init(
-		bool inc, 
+		bool inc,
 		_si, sj, _sk, sk, _sl, 
 		Reset) {
 	prs {
 		inc & sj & _si				-> _sk-
 		~_sk					-> sk+
 		~inc & ~_sl				-> _sk+ // no ~sj
+		_sk					-> sk-
+		Reset					-> _sk-
+	}
+}
+
+//-----------------------------------------------------------------------------
+/**
+	Same parameters as onehot_stage, with the additional:
+	\param incr separate reset neg-ack.
+	\param incsp additional guard to wait for previous 
+		element to be completely finished before proceeding.  
+ */
+defproc onehot_seq_element(
+		bool incs, incsp, incr,
+		_si, sj, _sk, sk, _sl, 
+		_Reset) {
+	prs {
+		// unfortunately need _Reset
+		_Reset & incs & incsp & sj & _si	-> _sk-
+		~_sk					-> sk+
+		~incr & ~_sl				-> _sk+	// no ~sj
+		_sk					-> sk-
+		~_Reset					-> _sk+
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Variant of onehot_stage that initializes with the token.  
+	Same parameters.  
+	\param Reset resets the state-bit to active.  
+ */
+defproc onehot_seq_element_init(
+		bool incs, incsp, incr,
+		_si, sj, _sk, sk, _sl, 
+		Reset) {
+	prs {
+		incsp & incs & sj & _si			-> _sk-
+		~_sk					-> sk+
+		~incr & ~_sl				-> _sk+ // no ~sj
 		_sk					-> sk-
 		Reset					-> _sk-
 	}
@@ -634,6 +676,27 @@ defproc alternator_bucket_passive_e1of1(e1of1 L[N]; bool _Reset, Reset) {
 
 //-----------------------------------------------------------------------------
 /**
+	Exposes the one-hot, two-hot array, s.
+ */
+template <pint N>
+defproc onehot_bare_ring(bool inc; bool s[N]; bool _Reset, Reset) {
+spec { assert< N>=3 >() }
+(;i:N:
+spec {	exclhi(s[i], s[(i+2)%N]) }
+)
+bool _s[N];
+// note: element j is set by j-1, but reset by j
+onehot_stage_init i0(inc,
+	_s[N-2], s[N-1], _s[0], s[0], _s[1], Reset);
+onehot_stage i[1..N-1];
+(;j:1..N-1:
+	i[j](inc, _s[(N+j-2)%N], s[j-1],
+		_s[j], s[j], _s[(j+1)%N], _Reset);
+)
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Weak-condition onehot counter, cycles through 1ofN rails.  
 	Example of use of onehot_stages to form a counter.  
 	reset: inc may be either active or inactive on reset.  
@@ -651,13 +714,8 @@ defproc	onehot_counter(
 		c1of<N> o;		// for exclhi
 		bool _Reset, Reset) {
 [(N > 2) ->
-	bool _s[N], s[N], _o[N];
-	onehot_stage_init i0(inc, _s[N-2], s[N-1], _s[0], s[0], _s[1], Reset);
-	onehot_stage i[1..N-1];
-	(;j:1..N-1:
-		i[j](inc, _s[(N+j-2)%N], s[j-1],
-			_s[j], s[j], _s[(j+1)%N], _Reset);
-	)
+	bool s[N], _o[N];
+	onehot_bare_ring<N> r(inc, s, _Reset, Reset);
 [] N == 2 ->
 	// special case alternator
 	alternator_source_1of2 a(inc, o, _Reset, Reset);
@@ -693,6 +751,51 @@ typedef	onehot_counter<5>		onehot_counter5;
 typedef	onehot_counter<6>		onehot_counter6;
 typedef	onehot_counter<7>		onehot_counter7;
 typedef	onehot_counter<8>		onehot_counter8;
+
+//-----------------------------------------------------------------------------
+/**
+	Exposes the one-hot, two-hot array, s.
+ */
+template <pint N>
+defproc onehot_seq_bare_ring(bool inc[N]; bool s[N]; bool _Reset, Reset) {
+spec { assert< N>=3 >() }
+(;i:N:
+spec {	exclhi(s[i], s[(i+2)%N]) }
+)
+bool _s[N];
+// note: element j is set by j-1, but reset by j
+onehot_seq_element_init i0(inc[N-1], inc[N-2], inc[0], 
+	_s[N-2], s[N-1], _s[0], s[0], _s[1], Reset);
+onehot_seq_element i[1..N-1];
+(;j:1..N-1:
+	i[j](inc[(j+N-1)%N], inc[(j+N-2)%N], inc[j], 
+		_s[(N+j-2)%N], s[j-1],
+		_s[j], s[j], _s[(j+1)%N], _Reset);
+)
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Instead of a single output channel, a sequence of 
+	synchronization channels.
+	Each channel waits for the previous to complete its reset
+	before starting, so the control channels remain mutually exclusive.
+	Q: is there a simpler way to do this without one-hot elements?
+ */
+template <pint N>
+defproc onehot_sequencer(e1of1 O[N]; bool _Reset, Reset) {
+spec { assert< N>=3 >() }
+bool _o[N], s[N];
+bool inca[N];
+(;j:N:	inca[j] = O[j].e;	)
+onehot_seq_bare_ring<N> r(inca, s, _Reset, Reset);
+prs {
+	(:j:N:
+		s[j] & s[(j+1)%N]		=> _o[j]-
+		_o[j]				=> O[j].d[0]-
+	)
+}
+}
 
 //-----------------------------------------------------------------------------
 // TODO: onehot_lock

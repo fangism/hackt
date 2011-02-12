@@ -1,5 +1,13 @@
 # "lib/ChangeLog"
-#	$Id: ChangeLog,v 1.67 2010/09/21 00:17:58 fang Exp $
+#	$Id: ChangeLog,v 1.68 2011/02/12 02:54:07 fang Exp $
+
+2011-02-11	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-49:
+	  alternator.hac: added onehot_sequencer that sequences
+		an array of e1of1 channels, exclusively.
+		Test case added.
+
 
 2010-09-14	David Fang	<fangism@users.sourceforge.net>
 

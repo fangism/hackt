@@ -1,5 +1,5 @@
 # "test/lib/Makefile.am"
-#	$Id: Makefile.am,v 1.39 2010/09/23 00:19:54 fang Exp $
+#	$Id: Makefile.am,v 1.40 2011/02/12 02:54:09 fang Exp $
 # Test auto-Makefile for prsim library.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -44,6 +44,7 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	alternator-onehot_counter-01 alternator-onehot_counter-02 \
 	alternator-onehot_counter-03 alternator-onehot_counter-04 \
 	alternator-onehot_counter-05 alternator-onehot_counter-06 \
+	alternator-onehot_sequencer-01 \
 	env-cmos-source-sink-e-01 env-cmos-source-sink-e-02 \
 	env-cmos-source-sink-e-03 env-cmos-source-sink-e-04 \
 	env-cmos-source-sink-e-05 env-cmos-source-sink-e-06 \
@@ -112,6 +113,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	alternator-onehot_counter-01 alternator-onehot_counter-02 \
 	alternator-onehot_counter-03 alternator-onehot_counter-04 \
 	alternator-onehot_counter-05 alternator-onehot_counter-06 \
+	alternator-onehot_sequencer-01 \
 	env-cmos-source-sink-e-01 env-cmos-source-sink-e-02 \
 	env-cmos-source-sink-e-03 env-cmos-source-sink-e-04 \
 	env-cmos-source-sink-e-05 env-cmos-source-sink-e-06 \

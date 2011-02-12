@@ -1,0 +1,14 @@
+// "alternator-onehot_sequencer-01.hac"
+
+import "alternator.hac";
+import "env.hac";
+
+bool _Reset, Reset;
+pint N = 4;
+e1of1 X[N];
+onehot_sequencer<N> S(X, _Reset, Reset);
+inactive_reset_bitbucket_e1of1 B[N];
+(;i:N:
+	B[i](X[i], _Reset);
+)
+

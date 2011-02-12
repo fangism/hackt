@@ -3,7 +3,7 @@
 	Useful main-level functions to call.
 	Indent to hide most complexity here, exposing a bare-bones
 	set of public callable functions.  
-	$Id: main_funcs.cc,v 1.36 2010/09/29 00:13:39 fang Exp $
+	$Id: main_funcs.cc,v 1.37 2011/02/12 02:54:08 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -158,7 +158,12 @@ check_file_writeable(const char* fname) {
 		// OK to remove file before closing stream?
 		const int err __ATTRIBUTE_UNUSED__ = remove(fname);
 		// remove() is from <stdio.h>
-		assert(!err);
+		if (err) {
+			cerr << "Error removing file \"" << fname
+				<< "\"." << endl;
+			return good_bool(false);
+			assert(!err);
+		}
 	}
 	outf.close();
 	return good_bool(true);

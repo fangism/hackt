@@ -1,0 +1,8 @@
+# "alternator-onehot_sequencer-01.prsimrc"
+#	$Id: alternator-onehot_sequencer-01.prsimrc,v 1.1 2011/02/12 02:54:09 fang Exp $
+# @haco@ alternator-onehot_sequencer-01.haco-c
+# testing stability of source-sink pair
+
+source stable-test-medium.prsimrc
+source reset-test-medium.prsimrc
+
