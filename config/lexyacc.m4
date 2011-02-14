@@ -1,5 +1,5 @@
 dnl "config/lexyacc.m4"
-dnl	$Id: lexyacc.m4,v 1.12 2011/02/14 08:03:18 fang Exp $
+dnl	$Id: lexyacc.m4,v 1.13 2011/02/14 08:49:20 fang Exp $
 dnl This file contains autoconf macros related to lex and yacc, 
 dnl including bison.  
 dnl These may be slightly more specific to the HACKT project.
@@ -250,9 +250,6 @@ esac
 LEX_VERSION=`$LEX --version | head -n 1`
 dnl known bad version
 lex_version_number=`echo "$LEX_VERSION" | $AWK '{n=split($''0,t); print t[[n]];}'`
-		;;
-	*) ;;
-esac
 AC_SUBST(LEX_VERSION)
 ])dnl
 
