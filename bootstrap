@@ -2,7 +2,7 @@
 # "bootstrap" 
 # Maintainer script for regenerating Makefiles and configure scripts.
 # (also known as autogen.sh in some conventions)
-#	$Id: bootstrap,v 1.9 2009/09/28 06:56:50 fang Exp $
+#	$Id: bootstrap,v 1.10 2011/02/14 08:03:16 fang Exp $
 # picks up AUTOCONF, AUTOMAKE, etc. from environment, which is used
 # to override the default program names.
 
@@ -113,6 +113,7 @@ $AUTOCONF $ACLOCAL_FLAGS
 regen () {
 printf "In directory: "
 pwd
+rm -rf autom4te.cache
 run_aclocal
 run_autoheader
 run_automake

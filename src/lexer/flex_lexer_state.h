@@ -1,13 +1,13 @@
 /**
 	\file "lexer/flex_lexer_state.h"
 	Structure holding all of the flex scanner's stateful information.  
-	$Id: flex_lexer_state.h,v 1.8 2008/03/21 00:20:14 fang Exp $
+	$Id: flex_lexer_state.h,v 1.9 2011/02/14 08:03:24 fang Exp $
  */
 
 #ifndef	__LEXER_FLEX_LEXER_STATE_H__
 #define	__LEXER_FLEX_LEXER_STATE_H__
 
-// #include "config.h"
+#include "config.h"
 #include "util/FILE_fwd.h"
 #include "util/NULL.h"
 #include "util/size_t.h"
@@ -99,10 +99,14 @@ struct lexer_state {
 	/**
 		Default constructor initializes the values faithfully
 		from the flex boilerplate code.  
+		NOTE: yy_init changed values between versions of flex!
+		Use autoconf test to detect!
 	 */
 	lexer_state() : yyin(NULL), yyout(NULL),
 			yy_current_buffer(NULL), 
-			yy_c_buf_p(NULL), yy_init(1), yy_start(0), 
+			yy_c_buf_p(NULL),
+			yy_init(LEXER_YY_INIT_VALUE),
+			yy_start(0), 
 			yy_more_flag(0), yy_more_len(0), 
 			yy_flex_debug(0)
 			FLEX_LEXER_CTOR_EXTRA_INIT
@@ -111,7 +115,9 @@ struct lexer_state {
 	explicit
 	lexer_state(FILE* _yyin) : yyin(_yyin), yyout(NULL),
 			yy_current_buffer(NULL), 
-			yy_c_buf_p(NULL), yy_init(1), yy_start(0), 
+			yy_c_buf_p(NULL),
+			yy_init(LEXER_YY_INIT_VALUE),
+			yy_start(0), 
 			yy_more_flag(0), yy_more_len(0), 
 			yy_flex_debug(0)
 			FLEX_LEXER_CTOR_EXTRA_INIT

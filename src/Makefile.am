@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.247 2010/10/27 00:43:22 fang Exp $
+#	$Id: Makefile.am,v 1.248 2011/02/14 08:03:22 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -1353,10 +1353,13 @@ EXTRA_DIST += $(FLEX_COMMON_PATCH)
 # keep only common symbols, give them external linkage
 EXTRACT_FLEX_COMMON_PIPE = \
 	$(AWK) -f $(srcdir)/lexer/grab-cpp-if.awk -v marker=KEEP_FLEX_COMMON | \
-	$(SED) -e '/^[ ]*static/s/^[ ]*static[ ]*//' | \
+	$(SED) -e '/^[ ]*static/s/^[ ]*static[ ]*//' \
+	  -e '/\#ifndef.*YY_INPUT/,/\#endif/s|size_t n;|int n;|' | \
 	$(GREP) -v '^\#include.*prefix\.h'
 #	  -e '/for.*max_size/s/max_size/size_t(max_size)/'
-# last subsitution works around signed comparison warning from flex 2.5.33
+# first sed substitution turns global static variables into class members
+# second sed substitution works around signed comparison warning 
+# from flex >= 2.5.33
 
 # rules for the prefix-transformed versions of generated lexer/parser sources
 # make these conditional on yacc vs. bison

@@ -1,5 +1,5 @@
 dnl "config/lexyacc.m4"
-dnl	$Id: lexyacc.m4,v 1.11 2011/02/08 20:45:49 fang Exp $
+dnl	$Id: lexyacc.m4,v 1.12 2011/02/14 08:03:18 fang Exp $
 dnl This file contains autoconf macros related to lex and yacc, 
 dnl including bison.  
 dnl These may be slightly more specific to the HACKT project.
@@ -8,9 +8,13 @@ dnl
 dnl @synopsis HACKT_ARG_VAR_LEX
 dnl
 dnl Enables LEX as a configurable variable.  
+dnl Also tests various properties of lexer-generator skeleton code.
+dnl 
+dnl 2011-02-13: added check for yy_init value, 
+dnl which changed sometime >= 2.5.33.  Grrrr...
 dnl
 dnl @category InstalledPackages
-dnl @version 2007-11-01
+dnl @version 2011-02-13
 dnl @author David Fang <fangism@users.sourceforge.net>
 dnl @license AllPermissive
 dnl
@@ -97,6 +101,15 @@ AC_CACHE_CHECK([whether generated lexer has yylex_destroy],
 	then
 	AC_DEFINE(LEXER_HAS_YYLEX_DESTROY, 1, [Define to 1 of lexer has yylex_destroy.])
 	fi
+
+dnl HERE
+dnl check for yy_init initial value
+AC_CACHE_CHECK([the initial value of yy_init], 
+[fang_cv_lex_yy_init_value], [
+fang_cv_lex_yy_init_value=`grep "int.*\<yy_init\>" $ac_cv_prog_lex_root.c | cut -d= -f2 | cut -d\; -f1`
+])
+AC_DEFINE_UNQUOTED(LEXER_YY_INIT_VALUE, $fang_cv_lex_yy_init_value,
+	[Define to lexer yy_init value.])
 else
 	AC_MSG_NOTICE([lex (compile) doesn't seem to work!])
 fi
@@ -151,13 +164,7 @@ fi
 AC_SUBST(YACC_FIRST_TOKEN_ENUM)
 dnl cp $ac_cv_prog_yacc_root.c saved.$ac_cv_prog_yacc_root.c
 
-dnl test 2: if yacc, get the version string of the skeleton
-dnl eventually pass this into YACC_VERSION
-dnl silly m4 quoting...
-yacc_skeleton_version=`grep -e "yy[[a-z]]*id" $ac_cv_prog_yacc_root.c | \
-	cut -d\" -f2`
-dnl | sed 's/[$]//g'`
-test "$yacc_skeleton_version" || AC_MSG_ERROR(unable to determine $YACC version!)
+dnl test 2; folded into test 6 below for version detection
 
 dnl test 3: find name of preprocessor symbol for MAXTOK
 dnl is YYMAXTOKEN for yacc, YYMAXUTOK for bison
@@ -198,7 +205,14 @@ bison )
 	[BISON_VERSION=`echo x$YACC_VERSION | sed 's/[^.0-9]//g'`]
 	AC_MSG_NOTICE([found bison version $BISON_VERSION.]) ;;
 dnl (
-*)	YACC_VERSION="$yacc_skeleton_version" ;;
+*)
+	dnl silly m4 quoting...
+	yacc_skeleton_version=`grep -e "yy[[a-z]]*id" $ac_cv_prog_yacc_root.c | \
+		cut -d\" -f2`
+	dnl | sed 's/[$]//g'`
+	test "$yacc_skeleton_version" ||
+		AC_MSG_ERROR(unable to determine $YACC version!)
+	YACC_VERSION="$yacc_skeleton_version" ;;
 esac
 AC_MSG_NOTICE(parser generator/skeleton version: $YACC_VERSION)
 AC_SUBST(YACC_VERSION)
@@ -212,10 +226,10 @@ dnl for use in Makefile
 dnl @synopsis HACKT_LEX_VERSION
 dnl
 dnl Detects and records the LEX version as LEX_VERSION.  
-dnl Warns about known bad version of flex.  
+dnl Currently, no known bad versions of flex (2011-02-13).
 dnl
 dnl @category InstalledPackages
-dnl @version 2008-03-11
+dnl @version 2011-02-13
 dnl @author David Fang <fangism@users.sourceforge.net>
 dnl @license AllPermissive
 dnl
@@ -236,10 +250,6 @@ esac
 LEX_VERSION=`$LEX --version | head -n 1`
 dnl known bad version
 lex_version_number=`echo "$LEX_VERSION" | $AWK '{n=split($''0,t); print t[[n]];}'`
-case "$lex_version_number" in
-	2.5.33 | 2.5.34 | 2.5.35 )
-AC_MSG_WARN([flex $lex_version_number is known to FAIL with this project.])
-AC_MSG_WARN([See the README.  Proceed at your own risk.])
 		;;
 	*) ;;
 esac

@@ -1,5 +1,15 @@
 "ChangeLog"
-#	$Id: ChangeLog,v 1.250 2011/02/08 22:32:44 fang Exp $
+#	$Id: ChangeLog,v 1.251 2011/02/14 08:03:14 fang Exp $
+
+2011-02-13	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-49:
+	  config/lexyacc.m4: added a test to detect the initial value
+		of yy_init in the generated skeleton, and pass to our 
+		machinery that re-factor lexer boilerplate code.
+		This finally allows our lex files to work with
+		newer versions of flex (>= 2.5.33).
+
 
 2011-02-08	David Fang	<fangism@users.sourceforge.net>
 

@@ -1,5 +1,5 @@
 "README"
-	$Id: README,v 1.30 2008/12/02 07:59:03 fang Exp $
+	$Id: README,v 1.31 2011/02/14 08:03:16 fang Exp $
 
 Welcome to HACKT (Hierarchical Asynchronous Circuit Kompiler Toolkit),
 a compiler suite for asynchronous system design!  
@@ -72,18 +72,19 @@ LEX configure variable.
 	do not account for this deviation.  
 
 Supported versions of bison: 1.35, 1.875, 2.0, 2.1, 2.3
-Supported versions of flex: 2.5.4, 2.5.31
+Supported versions of flex: 2.5.4, 2.5.31, 2.5.33, 2.5.35
 	2.5.31's skeleton may cause some warnings which may require -Wno-error
+	2.5.33+ work after portability fix after version:
+		CVS Tag: HACKT-00-01-04-main-00-84-49
 Supported revisions of Berkeley yacc skeletons: 1.14, 1.28, 1.37
 	(can be seen from generated y.tab.cc)
 
 Unsupported versions of bison:
 	1.28 -- see comment *1
-Unsupported versions of flex:
+Known flex issues:
 	2.5.33 -- fails -Wundef (__STDC_VERSION__) and -Werror (signed comp.)
 		workaround: pass -Wno-error to CXXFLAGS at configure-time
 		but WORST of all, after workarounds, lexing crashes horribly.
-	2.5.35 -- after workarounds, crashes on normal input
 Unsupported versions of yacc (skeleton): 1.9 (1993)
 
 Other required tools:
