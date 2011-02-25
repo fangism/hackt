@@ -1,6 +1,6 @@
 /**
 	\file "Object/nonmeta_context.tcc"
-	$Id: nonmeta_context.tcc,v 1.2 2007/01/21 05:58:29 fang Exp $
+	$Id: nonmeta_context.tcc,v 1.3 2011/02/25 23:19:29 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_NONMETA_CONTEXT_TCC__
@@ -35,9 +35,11 @@ nonmeta_context_base::lookup_nonmeta_reference_global_index(
 	typedef	typename traits_type::tag_type		Tag;
 	typedef	typename traits_type::instance_collection_generic_type
 					instance_collection_generic_type;
-	typedef	simple_meta_instance_reference<Tag>	meta_reference_type;
-
+	// FIXME: this assumes is not a member reference!
 	STACKTRACE_VERBOSE;
+#if !NONMETA_MEMBER_REFERENCES
+	typedef	simple_meta_instance_reference<Tag>
+					meta_reference_type;
 	const never_ptr<const nonmeta_index_list> r_ind(r.get_indices());
 	meta_reference_type cr(r.get_inst_base_subtype());
 	if (r_ind) {
@@ -51,6 +53,15 @@ nonmeta_context_base::lookup_nonmeta_reference_global_index(
 		cr.attach_indices(cil);
 	}
 	// else is scalar
+#else
+	typedef	typename reference_type::meta_reference_type
+					meta_reference_type;
+	const count_ptr<meta_reference_type>
+		tmp(r.resolve_meta_reference(*this));
+	NEVER_NULL(tmp);		// TODO: error handle
+	const meta_reference_type&
+		cr(IS_A(const meta_reference_type&, *tmp));
+#endif
 	return this->lookup_meta_reference_global_index(cr);
 }
 

@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.30 2009/09/14 21:16:54 fang Exp $
+ 	$Id: instance_collection.cc,v 1.31 2011/02/25 23:19:30 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -880,6 +880,25 @@ param_value_placeholder::make_member_meta_instance_reference(
 	ICE_NEVER_CALL(cerr);
 	return return_type(NULL);
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if NONMETA_MEMBER_REFERENCES
+/**
+	NOTE: we will allow this, once we open up nested types and values.
+	1) Parameters cannot be in public ports.  
+	2) Thus they cannot even be referenced.  
+	3) This is just a placeholder that should never be called.  
+ */
+param_value_placeholder::member_nonmeta_ref_ptr_type
+param_value_placeholder::make_member_nonmeta_instance_reference(
+		const nonmeta_ref_ptr_type& b) const {
+	typedef	member_nonmeta_ref_ptr_type	return_type;
+	NEVER_NULL(b);
+	cerr << "Referencing parameter members is strictly forbidden!" << endl;
+	ICE_NEVER_CALL(cerr);
+	return return_type(NULL);
+}
+#endif
 
 //=============================================================================
 // class physical_instance_placeholder method definitions

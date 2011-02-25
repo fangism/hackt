@@ -2,7 +2,7 @@
 	\file "Object/ref/references_fwd.h"
 	Foward declarations of all reference related classes, 
 	instances, values, meta, nonmeta, simple, member, aggregate...
-	$Id: references_fwd.h,v 1.7 2010/09/21 00:18:25 fang Exp $
+	$Id: references_fwd.h,v 1.8 2011/02/25 23:19:34 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_REFERENCES_FWD_H__
@@ -94,6 +94,27 @@ typedef simple_nonmeta_value_reference<real_tag>
 	simple_real_nonmeta_instance_reference;
 typedef simple_nonmeta_value_reference<datastruct_tag>
 	simple_datastruct_nonmeta_instance_reference;
+
+#if 0
+template <class>
+class member_nonmeta_instance_reference;
+typedef member_nonmeta_instance_reference<process_tag>
+	member_process_nonmeta_instance_reference;
+typedef member_nonmeta_instance_reference<channel_tag>
+	member_channel_nonmeta_instance_reference;
+typedef member_nonmeta_instance_reference<int_tag>
+	member_int_nonmeta_instance_reference;
+typedef member_nonmeta_instance_reference<bool_tag>
+	member_bool_nonmeta_instance_reference;
+typedef member_nonmeta_instance_reference<enum_tag>
+	member_enum_nonmeta_instance_reference;
+typedef member_nonmeta_instance_reference<real_tag>
+	member_real_nonmeta_instance_reference;
+#if 0
+typedef member_nonmeta_instance_reference<datastruct_tag>
+	member_datastruct_nonmeta_instance_reference;
+#endif
+#endif
 
 typedef simple_nonmeta_value_reference<pbool_tag>
 	simple_pbool_nonmeta_instance_reference;

@@ -3,7 +3,7 @@
 	Class template for nonmeta instance references in HAC.  
 	This file originated from "Object/art_object_nonmeta_inst_ref.h"
 		in a previous life.  
-	$Id: simple_nonmeta_instance_reference.h,v 1.12 2007/01/21 05:59:36 fang Exp $
+	$Id: simple_nonmeta_instance_reference.h,v 1.13 2011/02/25 23:19:34 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_H__
@@ -12,6 +12,7 @@
 #include "Object/ref/simple_nonmeta_instance_reference_base.h"
 #include "Object/inst/instance_collection_base.h"
 #include "Object/traits/class_traits_fwd.h"
+#include "Object/devel_switches.h"
 #include "util/packed_array_fwd.h"
 #include "util/STL/vector_fwd.h"
 
@@ -46,6 +47,7 @@ simple_nonmeta_instance_reference<Tag>
 		otherwise changed.  
 	NOTE: we may need to support nonmeta member references soon, 
 		in which case, the contents of this class may be refactored.  
+	Q: does this ever have subtypes for member references?
  */
 SIMPLE_NONMETA_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 class simple_nonmeta_instance_reference :
@@ -54,6 +56,10 @@ class simple_nonmeta_instance_reference :
 	typedef	SIMPLE_NONMETA_INSTANCE_REFERENCE_CLASS	this_type;
 public:
 	typedef	class_traits<Tag>		traits_type;
+#if NONMETA_MEMBER_REFERENCES
+	typedef	simple_meta_instance_reference<Tag>
+						meta_reference_type;
+#endif
 protected:
 	typedef	simple_nonmeta_instance_reference_base
 						common_base_type;
@@ -80,16 +86,19 @@ public:
 	explicit
 	simple_nonmeta_instance_reference(const instance_placeholder_ptr_type);
 
-	~simple_nonmeta_instance_reference();
+virtual	~simple_nonmeta_instance_reference();
 
 	size_t
 	dimensions(void) const;
 
-	ostream&
+virtual	ostream&
 	what(ostream&) const;
 
-	ostream&
+virtual	ostream&
 	dump(ostream&, const expr_dump_context&) const;
+
+	never_ptr<const definition_base>
+	get_base_def(void) const;
 
 	instance_placeholder_ptr_type
 	get_inst_base_subtype(void) const {
@@ -99,20 +108,25 @@ public:
 	good_bool
 	attach_indices(excl_ptr<index_list_type>&);
 
-	count_ptr<const this_type>
+virtual	count_ptr<const this_type>
 	unroll_resolve_copy(const unroll_context&, 
 		const count_ptr<const this_type>&) const;
 
 	// wrap arguments in nonmeta_context_base instead?
-	good_bool
+virtual	good_bool
 	lookup_may_reference_global_indices(
 		const global_entry_context&, 
 		std::default_vector<size_t>::type&) const;
 
-	size_t
+virtual	size_t
 	lookup_nonmeta_global_index(const nonmeta_context_base&) const;
 
-	void
+#if NONMETA_MEMBER_REFERENCES
+virtual	count_ptr<meta_reference_type>
+	resolve_meta_reference(const nonmeta_context_base&) const;
+#endif
+
+virtual	void
 	accept(nonmeta_expr_visitor&) const;
 public:
 	FRIEND_PERSISTENT_TRAITS

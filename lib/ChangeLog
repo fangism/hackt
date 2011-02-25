@@ -1,5 +1,11 @@
 # "lib/ChangeLog"
-#	$Id: ChangeLog,v 1.68 2011/02/12 02:54:07 fang Exp $
+#	$Id: ChangeLog,v 1.69 2011/02/25 23:19:25 fang Exp $
+
+2011-02-16	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-49b:
+	  scripts/spice-wrap.awk: continue long comments with comment
+
 
 2011-02-11	David Fang	<fangism@users.sourceforge.net>
 

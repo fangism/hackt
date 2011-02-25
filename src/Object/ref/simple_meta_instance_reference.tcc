@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.38 2010/08/26 21:00:47 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.39 2011/02/25 23:19:34 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -12,6 +12,7 @@
 #include <vector>
 
 #include "Object/ref/simple_meta_instance_reference.h"
+#include "Object/ref/meta_value_reference.h"
 #include "Object/expr/const_range_list.h"
 #include "Object/expr/meta_index_list.h"
 #include "Object/expr/expr_dump_context.h"

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.78 2011/02/09 03:34:43 fang Exp $
+	$Id: State-prsim.cc,v 1.79 2011/02/25 23:19:38 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -1949,6 +1949,7 @@ if (e.cause_rule) {
 	} else if (timing_mode == TIMING_RANDOM ||
 			(r && r->is_always_random())) {
 		const bool after_zero = r && time_traits::is_zero(r->after);
+		// after=0 always takes precedence in random mode
 		if (after_zero) {
 			delta = time_traits::zero;
 		} else {
@@ -1959,7 +1960,6 @@ if (e.cause_rule) {
 			__get_delay(r, &rule_type::after_max, default_after_max);
 		const bool have_min = r && !time_traits::is_zero(min_val);
 		const bool have_max = r && !time_traits::is_zero(max_val);
-		// FIXME: global after min/max wrongly overrules after=0!
 		if (have_max) {
 			if (have_min) {
 				delta = min_val +
@@ -1977,6 +1977,8 @@ if (e.cause_rule) {
 #endif
 		}
 	} else if (timing_mode == TIMING_BINARY) {
+		// timing binary does NOT honor after=0
+		// b/c want to verify race ratios
 		delta = (uniform_random_delay() < timing_probability)
 			? default_after_min : default_after_max;
 	} else {

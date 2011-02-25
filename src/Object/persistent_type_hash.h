@@ -20,7 +20,7 @@
  *
  *	TODO: optionally, use gperf to generate a fast perfect hash.
  *
- *	$Id: persistent_type_hash.h,v 1.32 2010/09/21 00:18:09 fang Exp $
+ *	$Id: persistent_type_hash.h,v 1.33 2011/02/25 23:19:29 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_PERSISTENT_TYPE_HASH_H__
@@ -132,6 +132,19 @@
 #define	SIMPLE_PINT_NONMETA_INSTANCE_REFERENCE_TYPE_KEY		"spinref"
 #define	SIMPLE_PREAL_NONMETA_INSTANCE_REFERENCE_TYPE_KEY	"sprnref"
 #define	SIMPLE_PSTRING_NONMETA_INSTANCE_REFERENCE_TYPE_KEY	"spsnref"
+	// member non-meta instance references
+#define	MEMBER_PROCESS_NONMETA_INSTANCE_REFERENCE_TYPE_KEY	"mprcnref"
+#define	MEMBER_CHANNEL_NONMETA_INSTANCE_REFERENCE_TYPE_KEY	"mchnnref"
+#define	MEMBER_DBOOL_NONMETA_INSTANCE_REFERENCE_TYPE_KEY	"mdbnref"
+#define	MEMBER_DINT_NONMETA_INSTANCE_REFERENCE_TYPE_KEY		"mdinref"
+#define	MEMBER_ENUM_NONMETA_INSTANCE_REFERENCE_TYPE_KEY		"mdenref"
+#define	MEMBER_STRUCT_NONMETA_INSTANCE_REFERENCE_TYPE_KEY	"mdsnref"
+/**
+#define	MEMBER_PBOOL_NONMETA_VALUE_REFERENCE_TYPE_KEY		"mpbnref"
+#define	MEMBER_PINT_NONMETA_VALUE_REFERENCE_TYPE_KEY		"mpinref"
+#define	MEMBER_PREAL_NONMETA_VALUE_REFERENCE_TYPE_KEY		"mprnref"
+#define	MEMBER_PSTRING_NONMETA_VALUE_REFERENCE_TYPE_KEY		"mpsnref"
+**/
 
 	// aggregates are complex compositions / concatenations of arrays
 #define	AGGREGATE_PROCESS_META_INSTANCE_REFERENCE_TYPE_KEY	"aprcmref"
@@ -146,6 +159,7 @@
 #define	AGGREGATE_PSTRING_META_VALUE_REFERENCE_TYPE_KEY		"apsmvref"
 
 	// member references of the form x.y, (x may be indexed / member ref.)
+	// compile-time member meta references
 #define	MEMBER_PROCESS_INSTANCE_REFERENCE_TYPE_KEY		"mprocref"
 #define	MEMBER_CHANNEL_INSTANCE_REFERENCE_TYPE_KEY		"mchanref"
 #define	MEMBER_DBOOL_INSTANCE_REFERENCE_TYPE_KEY		"mdbolref"

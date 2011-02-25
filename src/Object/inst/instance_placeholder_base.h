@@ -3,7 +3,7 @@
 	Base classes for instance and instance collection objects.  
 	This file was "Object/art_object_instance_base.h"
 		in a previous life.  
-	$Id: instance_placeholder_base.h,v 1.5 2006/11/07 06:34:50 fang Exp $
+	$Id: instance_placeholder_base.h,v 1.6 2011/02/25 23:19:31 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_PLACEHOLDER_BASE_H__
@@ -15,6 +15,7 @@
 #include "Object/common/object_base.h"
 #include "Object/common/util_types.h"
 #include "Object/inst/substructure_alias_fwd.h"
+#include "Object/devel_switches.h"	// for NONMETA_MEMBER_REFERENCES
 #include "util/persistent.h"		// for persistent object interface
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
@@ -84,6 +85,12 @@ public:
 	// needs to be of a type that can be pushed onto object stack
 	typedef	count_ptr<meta_instance_reference_base>
 						member_inst_ref_ptr_type;
+#if NONMETA_MEMBER_REFERENCES
+	typedef	count_ptr<const nonmeta_instance_reference_base>
+						nonmeta_ref_ptr_type;
+	typedef	count_ptr<nonmeta_instance_reference_base>
+						member_nonmeta_ref_ptr_type;
+#endif
 	typedef	count_ptr<const const_param_expr_list>
 						instance_relaxed_actuals_type;
 	typedef	never_ptr<const substructure_alias>
@@ -271,6 +278,12 @@ virtual	count_ptr<nonmeta_instance_reference_base>
 virtual	member_inst_ref_ptr_type
 	make_member_meta_instance_reference(
 		const inst_ref_ptr_type& b) const = 0;
+
+#if NONMETA_MEMBER_REFERENCES
+virtual	member_nonmeta_ref_ptr_type
+	make_member_nonmeta_instance_reference(
+		const nonmeta_ref_ptr_type& b) const = 0;
+#endif
 
 private:
 	// utility functions for handling index collection (inlined)

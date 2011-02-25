@@ -2,7 +2,7 @@
 	\file "Object/inst/instance_placeholder.h"
 	Instance placeholders are used to represent instantiated collections
 	that actually reside in footprints and other allocated locations.  
-	$Id: instance_placeholder.h,v 1.6 2007/10/08 01:21:15 fang Exp $
+	$Id: instance_placeholder.h,v 1.7 2011/02/25 23:19:30 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_PLACEHOLDER_H__
@@ -64,6 +64,10 @@ public:
 					simple_nonmeta_instance_reference_type;
 	typedef	typename traits_type::member_simple_meta_instance_reference_type
 				member_simple_meta_instance_reference_type;
+#if 0
+	typedef	typename traits_type::member_nonmeta_instance_reference_type
+				member_nonmeta_instance_reference_type;
+#endif
 	typedef	typename traits_type::instance_collection_generic_type
 					instance_collection_generic_type;
 	typedef	instance_collection_pool_bundle<Tag>
@@ -72,6 +76,12 @@ protected:
 	typedef	typename parent_type::inst_ref_ptr_type	inst_ref_ptr_type;
 	typedef	typename parent_type::member_inst_ref_ptr_type
 						member_inst_ref_ptr_type;
+#if NONMETA_MEMBER_REFERENCES
+	typedef	typename parent_type::nonmeta_ref_ptr_type
+						nonmeta_ref_ptr_type;
+	typedef	typename parent_type::member_nonmeta_ref_ptr_type
+						member_nonmeta_ref_ptr_type;
+#endif
 public:
 	typedef	typename traits_type::instantiation_statement_type
 					initial_instantiation_statement_type;
@@ -147,6 +157,12 @@ public:
 
 	member_inst_ref_ptr_type
 	make_member_meta_instance_reference(const inst_ref_ptr_type&) const;
+
+#if NONMETA_MEMBER_REFERENCES
+	member_nonmeta_ref_ptr_type
+	make_member_nonmeta_instance_reference(
+		const nonmeta_ref_ptr_type&) const;
+#endif
 
 	UNROLL_PORT_ONLY_PROTO;
 

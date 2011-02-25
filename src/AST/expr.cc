@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.42 2011/02/08 02:06:45 fang Exp $
+	$Id: expr.cc,v 1.43 2011/02/25 23:19:28 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -1711,7 +1711,13 @@ if (c.is_publicly_viewable()) {
 inst_ref_expr::nonmeta_return_type
 member_expr::check_nonmeta_reference(const context& c) const {
 	typedef	inst_ref_expr::nonmeta_return_type	return_type;
-#if 0
+#if !NONMETA_MEMBER_REFERENCES
+	cerr << "Not enabled yet: member_nonmeta_instance_references, "
+		"bug Fang about it." << endl;
+	cerr << "Suggested workaround: create local aliases to member references."
+		<< endl;
+	return return_type(NULL);
+#else
 	const return_type o(owner->check_nonmeta_reference(c));
 	// expect simple_nonmeta_instance_reference_base returned
 	if (!o) {
@@ -1719,8 +1725,7 @@ member_expr::check_nonmeta_reference(const context& c) const {
 			"member expr at " << where(*owner) << endl;
 		THROW_EXIT;
 	}
-	const count_ptr<const simple_nonmeta_instance_reference_base>
-		inst_ref(o.is_a<const simple_nonmeta_instance_reference_base>());
+	const return_type inst_ref(o);
 	INVARIANT(inst_ref);
 	if (inst_ref->dimensions()) {
 		cerr << "ERROR: cannot take the member of a " <<
@@ -1738,9 +1743,29 @@ member_expr::check_nonmeta_reference(const context& c) const {
 	// and make sure it has a member m, lookup ports only in the 
 	// current_definition_reference, don't lookup anywhere else!
 
+// copied from check_meta_reference(), above
 	// don't use context's general lookup
-	const never_ptr<const instance_collection_base>
-		member_inst(base_def->lookup_port_formal(*member));
+	never_ptr<const instance_placeholder_base> member_inst;
+	// NOTE: what about typedefs?  they should lookup using
+	// canonical definitions' scopespaces... is this happening?
+if (c.is_publicly_viewable()) {
+	// FINISH_ME(Fang);
+	const never_ptr<const object>
+		probe(base_def->lookup_nonparameter_member(*member));
+	member_inst = probe.is_a<const instance_placeholder_base>();
+	if (!member_inst) {
+		base_def->what(cerr << "ERROR: ") << " " <<
+			base_def->get_qualified_name() << 
+			" has no subinstance member named \"" << *member <<
+			"\" at " << where(*member) << endl;
+		if (probe) {
+			cerr << '(' << *member << " is a ";
+			probe->what(cerr) << ')' << endl;
+		}
+		THROW_EXIT;
+	}
+} else {
+	member_inst = base_def->lookup_port_formal(*member);
 	// LATER: check and make sure definition is signed, 
 	//	after we introduce forward template declarations
 	if (!member_inst) {
@@ -1750,15 +1775,11 @@ member_expr::check_nonmeta_reference(const context& c) const {
 			"\" at " << where(*member) << endl;
 		THROW_EXIT;
 	}
-
+}
 	const nonmeta_return_type
 	ret_inst_ref(member_inst->make_member_nonmeta_instance_reference(
 		inst_ref));
 	return ret_inst_ref;
-#else
-	cerr << "Not enabled yet: member_nonmeta_instance_references, "
-		"bug Fang about it." << endl;
-	return return_type(NULL);
 #endif
 }
 

@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_nonmeta_instance_reference.tcc"
 	This file was "Object/art_object_nonmeta_inst_ref.tcc"
 		in a previous life.  
-	$Id: simple_nonmeta_instance_reference.tcc,v 1.16 2007/09/27 02:03:42 fang Exp $
+	$Id: simple_nonmeta_instance_reference.tcc,v 1.17 2011/02/25 23:19:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_TCC__
@@ -77,6 +77,13 @@ SIMPLE_NONMETA_INSTANCE_REFERENCE_CLASS::dimensions(void) const {
 		return dim -c;
 	}
 	else return dim;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+SIMPLE_NONMETA_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+never_ptr<const definition_base>
+SIMPLE_NONMETA_INSTANCE_REFERENCE_CLASS::get_base_def(void) const {
+	return this->inst_collection_ref->get_base_def();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -227,6 +234,37 @@ SIMPLE_NONMETA_INSTANCE_REFERENCE_CLASS::lookup_nonmeta_global_index(
 		const nonmeta_context_base& c) const {
 	return __nonmeta_instance_global_lookup_impl(*this, c, Tag());
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+/**
+	Resolves a nonmeta reference to a constant-meta reference
+	using the nonmeta context of variables.
+	\return resolved reference or NULL on error.
+ */
+SIMPLE_NONMETA_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+count_ptr<typename SIMPLE_NONMETA_INSTANCE_REFERENCE_CLASS::meta_reference_type>
+SIMPLE_NONMETA_INSTANCE_REFERENCE_CLASS::resolve_meta_reference(
+		const nonmeta_context_base& c) const {
+	typedef count_ptr<meta_reference_type>		return_type;
+	const return_type
+		ret(new meta_reference_type(inst_collection_ref));
+	NEVER_NULL(ret);
+	const never_ptr<const nonmeta_index_list> r_ind(this->get_indices());
+	if (r_ind) {
+		const count_ptr<const const_index_list>
+			cil(r_ind->nonmeta_resolve_copy(c));
+		if (!cil) {
+			cerr << "Run-time error resolving nonmeta indices."
+				<< endl;
+			// TODO: more useful reference message?
+			return return_type(NULL);
+		}
+		ret->attach_indices(cil);
+	}
+	return ret;
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SIMPLE_NONMETA_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE

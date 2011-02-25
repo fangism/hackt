@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	This file was reincarnated from 
 		"Object/art_object_nonmeta_value_reference.cc"
- 	$Id: simple_nonmeta_value_reference.tcc,v 1.29 2010/04/02 22:18:48 fang Exp $
+ 	$Id: simple_nonmeta_value_reference.tcc,v 1.30 2011/02/25 23:19:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_TCC__
@@ -23,6 +23,9 @@
 #include <algorithm>
 
 #include "Object/ref/simple_nonmeta_value_reference.h"
+#if NONMETA_MEMBER_REFERENCES
+#include "Object/ref/simple_meta_value_reference.h"
+#endif
 #include "Object/traits/class_traits.h"
 #include "Object/ref/nonmeta_instance_reference_subtypes.h"
 #include "Object/type/data_type_reference.h"
@@ -515,6 +518,14 @@ SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::get_inst_base_subtype(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
+never_ptr<const definition_base>
+SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::get_base_def(void) const {
+	return value_collection_ref->get_unresolved_type_ref()
+		->get_base_def();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 ostream&
 SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::what(ostream& o) const {
 	return o << util::what<this_type>::name();
@@ -795,6 +806,32 @@ SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::lookup_nonmeta_global_index(
 		const nonmeta_context_base& c) const {
 	return __nonmeta_instance_global_lookup_impl(*this, c, Tag());
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if NONMETA_MEMBER_REFERENCES
+SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
+count_ptr<typename SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::meta_reference_type>
+SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::resolve_meta_reference(
+		const nonmeta_context_base& c) const {
+	typedef count_ptr<meta_reference_type>          return_type;
+	const return_type
+		ret(new meta_reference_type(value_collection_ref));
+	NEVER_NULL(ret);
+	const never_ptr<const nonmeta_index_list> r_ind(this->get_indices());
+	if (r_ind) {
+		const count_ptr<const const_index_list>
+			cil(r_ind->nonmeta_resolve_copy(c));
+		if (!cil) {
+			cerr << "Run-time error resolving nonmeta indices."
+				<< endl;
+			// TODO: more useful reference message?
+			return return_type(NULL);
+		}
+		ret->attach_indices(cil);
+	}
+	return ret;
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

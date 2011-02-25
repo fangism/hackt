@@ -1,0 +1,14 @@
+// "133.hac"
+// testing nonmeta references to struct members
+
+deftype mystruct <: int<2> (bool a, b) { }
+
+defproc foo(chan?(bool) Q; mystruct x) {
+bool b;
+chp {
+[x.a];
+Q?(b);
+x.b := true
+}
+}
+

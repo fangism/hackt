@@ -3,13 +3,14 @@
 	Most general non-meta instance references.  
 	This file was "Object/art_object_nonmeta_inst_ref_base.h"
 		in its previous life.  
-	$Id: simple_nonmeta_instance_reference_base.h,v 1.8 2006/11/21 22:39:03 fang Exp $
+	$Id: simple_nonmeta_instance_reference_base.h,v 1.9 2011/02/25 23:19:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_BASE_H__
 #define	__HAC_OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_BASE_H__
 
 #include "Object/ref/nonmeta_instance_reference_base.h"
+#include "Object/devel_switches.h"
 #include "util/memory/excl_ptr.h"
 #include "util/boolean_types.h"
 
@@ -18,6 +19,7 @@ namespace entity {
 class scopespace;
 class nonmeta_index_list;
 class instance_collection_base;
+class definition_base;
 using util::good_bool;
 using util::persistent_object_manager;
 using util::memory::never_ptr;
@@ -28,6 +30,7 @@ using util::memory::never_ptr;
 /**
 	A simple non-meta instance reference may have nonmeta
 	expressions and instance references in the index list.  
+	TODO: This should really be renamed nonmeta_instance_reference_base.
  */
 class simple_nonmeta_instance_reference_base {
 	typedef	simple_nonmeta_instance_reference_base	this_type;
@@ -48,6 +51,14 @@ public:
 	simple_nonmeta_instance_reference_base(excl_ptr<index_list_type>&);
 
 virtual	~simple_nonmeta_instance_reference_base();
+
+#if NONMETA_MEMBER_REFERENCES
+virtual	size_t
+	dimensions(void) const = 0;
+
+virtual	never_ptr<const definition_base>
+	get_base_def(void) const = 0;
+#endif
 
 	ostream&
 	dump_indices(ostream&, const expr_dump_context&) const;

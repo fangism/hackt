@@ -3,7 +3,7 @@
 	Classes related to nonmeta (data) instance reference expressions. 
 	This file was reincarnated from
 		"Object/art_object_nonmeta_value_reference.h"
-	$Id: simple_nonmeta_value_reference.h,v 1.15 2007/02/26 22:00:53 fang Exp $
+	$Id: simple_nonmeta_value_reference.h,v 1.16 2011/02/25 23:19:36 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_H__
@@ -15,6 +15,7 @@
 #include "Object/ref/simple_nonmeta_instance_reference_base.h"
 #include "Object/ref/data_nonmeta_instance_reference.h"
 #include "Object/traits/class_traits_fwd.h"
+#include "Object/devel_switches.h"
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
 #include "util/STL/vector_fwd.h"
@@ -31,6 +32,10 @@ class state_manager;
 class footprint;
 class footprint_frame;
 class const_param;
+#if NONMETA_MEMBER_REFERENCES
+class meta_value_reference_base;
+template <class> class simple_meta_value_reference;
+#endif
 using std::ostream;
 using util::good_bool;
 using util::bad_bool;
@@ -100,6 +105,10 @@ friend struct nonmeta_unroll_resolve_copy_policy<Tag, typename Tag::parent_tag>;
 	typedef	data_expr_base_type			interface_type;
 	typedef	typename parent_type::assign_update_arg_type
 							assign_update_arg_type;
+#if NONMETA_MEMBER_REFERENCES
+public:
+	typedef	simple_meta_value_reference<Tag>	meta_reference_type;
+#endif
 protected:
 	typedef	typename traits_type::instance_placeholder_type
 							value_collection_type;
@@ -107,7 +116,7 @@ protected:
 	typedef	never_ptr<const value_collection_type>
 						value_collection_ptr_type;
 	value_collection_ptr_type			value_collection_ref;
-private:
+protected:
 	simple_nonmeta_value_reference();
 public:
 	explicit
@@ -116,13 +125,17 @@ public:
 	simple_nonmeta_value_reference(const value_collection_ptr_type, 
 		excl_ptr<index_list_type>&);
 
-	~simple_nonmeta_value_reference();
+virtual	~simple_nonmeta_value_reference();
 
-	ostream&
+virtual	ostream&
 	what(ostream&) const;
 
-	ostream&
+virtual	ostream&
 	dump(ostream&, const expr_dump_context&) const;
+
+// doesn't need to be virtual
+	never_ptr<const definition_base>
+	get_base_def(void) const;
 
 	value_collection_ptr_type
 	get_inst_base_subtype(void) const;
@@ -142,11 +155,11 @@ public:
 	bool
 	must_be_equivalent(const interface_type& ) const;
 
-	count_ptr<const data_expr_base_type>
+virtual	count_ptr<const data_expr_base_type>
 	unroll_resolve_copy(const unroll_context&, 
 		const count_ptr<const data_expr_base_type>&) const;
 
-	count_ptr<const const_param>
+virtual	count_ptr<const const_param>
 	nonmeta_resolve_copy(const nonmeta_context_base&, 
 		const count_ptr<const data_expr_base_type>&) const;
 
@@ -154,18 +167,23 @@ public:
 	__nonmeta_resolve_rvalue(const nonmeta_context_base&, 
 		const count_ptr<const data_expr_base_type>&) const;
 
-	good_bool
+virtual	good_bool
 	lookup_may_reference_global_indices(
 		const global_entry_context&, 
 		std::default_vector<size_t>::type&) const;
 
-	size_t
+virtual	size_t
 	lookup_nonmeta_global_index(const nonmeta_context_base&) const;
 
-	NONMETA_ASSIGN_PROTO;
-	DIRECT_ASSIGN_PROTO;
+#if NONMETA_MEMBER_REFERENCES
+virtual count_ptr<meta_reference_type>
+        resolve_meta_reference(const nonmeta_context_base&) const;
+#endif
 
-	void
+virtual	NONMETA_ASSIGN_PROTO;
+virtual	DIRECT_ASSIGN_PROTO;
+
+virtual	void
 	accept(nonmeta_expr_visitor&) const;
 
 protected:

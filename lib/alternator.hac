@@ -10,7 +10,7 @@
 	TODO: e1ofN alterators.
 	TODO: annotate ports with directions
 
-	$Id: alternator.hac,v 1.18 2011/02/12 02:54:08 fang Exp $
+	$Id: alternator.hac,v 1.19 2011/02/25 23:19:25 fang Exp $
  */
 
 import "channel.hac";
@@ -786,9 +786,17 @@ template <pint N>
 defproc onehot_sequencer(e1of1 O[N]; bool _Reset, Reset) {
 spec { assert< N>=3 >() }
 bool _o[N], s[N];
-bool inca[N];
-(;j:N:	inca[j] = O[j].e;	)
+bool inca[N], od[N];
+(;j:N:
+	inca[j] = O[j].e;
+	od[j] = O[j].d[0];
+)
+spec {
+	excllo(inca)
+	exclhi(od)
+}
 onehot_seq_bare_ring<N> r(inca, s, _Reset, Reset);
+// AND the s state elements to produce one-hot output
 prs {
 	(:j:N:
 		s[j] & s[(j+1)%N]		=> _o[j]-

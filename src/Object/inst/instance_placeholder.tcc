@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/instance_placeholder.tcc"
-	$Id: instance_placeholder.tcc,v 1.10 2011/02/08 22:32:48 fang Exp $
+	$Id: instance_placeholder.tcc,v 1.11 2011/02/25 23:19:31 fang Exp $
 	TODO: trim includes
  */
 
@@ -38,6 +38,7 @@
 #include "Object/ref/meta_instance_reference_subtypes.h"
 #include "Object/ref/nonmeta_instance_reference_subtypes.h"
 #include "Object/ref/simple_nonmeta_instance_reference.h"
+#include "Object/ref/member_nonmeta_instance_reference.h"
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/unroll/instantiation_statement_base.h"
 #include "Object/unroll/instantiation_statement.h"
@@ -295,6 +296,23 @@ INSTANCE_PLACEHOLDER_CLASS::make_member_meta_instance_reference(
 		new member_simple_meta_instance_reference_type(
 			b, never_ptr<const this_type>(this)));
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if NONMETA_MEMBER_REFERENCES
+/**
+	Does exactly what it says.  
+ */
+INSTANCE_PLACEHOLDER_TEMPLATE_SIGNATURE
+typename INSTANCE_PLACEHOLDER_CLASS::member_nonmeta_ref_ptr_type
+INSTANCE_PLACEHOLDER_CLASS::make_member_nonmeta_instance_reference(
+		const nonmeta_ref_ptr_type& b) const {
+	NEVER_NULL(b);
+	return member_nonmeta_ref_ptr_type(
+//		new member_nonmeta_instance_reference_type
+		new member_nonmeta_instance_reference<Tag>
+			(b, never_ptr<const this_type>(this)));
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

@@ -1,5 +1,5 @@
 # "test/parser/chp/Makefile.am"
-#	$Id: Makefile.am,v 1.30 2011/01/14 01:33:03 fang Exp $
+#	$Id: Makefile.am,v 1.31 2011/02/25 23:19:39 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -18,7 +18,7 @@ HACKT_PARSE_TEST_FAILURES = \
 	107 \
 	119 \
 	120 124 \
-	131 132 \
+	131 132 133 \
 	wrong-source \
 	wrong-sink wrong-sink-02 \
 	dataless-02 dataless-04 dataless-05 \
@@ -30,6 +30,8 @@ HACKT_PARSE_TEST_FAILURES = \
 
 # TODO: add support for null lvalues in channel receive fields
 # affects: dataless-02
+
+# TODO: 133.hac -- nonmeta-member references yet unsupported
 
 HACKT_PARSE_TEST_PASSES = \
 	000 002 003 005 \

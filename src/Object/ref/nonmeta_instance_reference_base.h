@@ -3,23 +3,37 @@
 	Most general non-meta instance references.  
 	This file was "Object/art_object_nonmeta_inst_ref_base.h"
 		in its previous life.  
-	$Id: nonmeta_instance_reference_base.h,v 1.7 2010/01/03 01:34:43 fang Exp $
+	$Id: nonmeta_instance_reference_base.h,v 1.8 2011/02/25 23:19:34 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_NONMETA_INSTANCE_REFERENCE_BASE_H__
 #define	__HAC_OBJECT_REF_NONMETA_INSTANCE_REFERENCE_BASE_H__
 
 #include "util/persistent.h"
+#if 0
+#include "util/memory/excl_ptr.h"
+#include "util/memory/count_ptr.h"
+#endif
 
 namespace HAC {
 namespace entity {
 struct expr_dump_context;
+class definition_base;
+#if 0
+class meta_instance_reference_base;
+class nonmeta_context_base;
+#endif
 using std::istream;
 using std::ostream;
 using util::persistent;
+#if 0
+using util::memory::never_ptr;
+using util::memory::count_ptr;
+#endif
 
 //=============================================================================
 /**
+	TODO: should this be fused with simple_nonmeta_instance_reference_base?
 	The most general instance reference.  
 	Non-meta means that reference may depend on non-meta (non parameter)
 	values, such as datatypes, in the CHP context.  
@@ -40,6 +54,14 @@ virtual	ostream&
 
 virtual	size_t
 	dimensions(void) const = 0;
+
+#if 0
+virtual	never_ptr<const definition_base>
+	get_base_def(void) const = 0;
+
+virtual	count_ptr<meta_instance_reference_base>
+	resolve_meta_reference(const nonmeta_context_base&) const = 0;
+#endif
 
 };	// end class nonmeta_instance_reference_base
 

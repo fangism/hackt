@@ -2,7 +2,7 @@
 	\file "Object/ref/instance_reference_datatype.cc"
 	Method definitions for datatype instance reference classes.
 	This file was reincarnated from "Object/art_object_inst_ref_data.cc".
-	$Id: instance_reference_datatype.cc,v 1.17 2010/09/21 00:18:24 fang Exp $
+	$Id: instance_reference_datatype.cc,v 1.18 2011/02/25 23:19:33 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INSTANCE_REFERENCE_DATATYPE_CC__
@@ -15,6 +15,7 @@
 #include "Object/ref/simple_nonmeta_instance_reference.tcc"
 #include "Object/ref/member_meta_instance_reference.tcc"
 #include "Object/ref/simple_nonmeta_value_reference.tcc"
+#include "Object/ref/member_nonmeta_instance_reference.tcc"
 #include "Object/ref/aggregate_meta_instance_reference.tcc"
 #include "Object/inst/alias_empty.h"
 #include "Object/inst/bool_instance_collection.h"
@@ -29,8 +30,10 @@
 #include "Object/inst/pint_instance.h"
 #include "Object/expr/pbool_const.h"
 #include "Object/expr/pint_const.h"
+#include "Object/expr/preal_const.h"
 // #include "Object/expr/enum_const.h"		// much later...
 // #include "Object/expr/struct_const.h"	// much later...
+#include "Object/expr/pstring_expr.h"
 
 #include "Object/unroll/alias_connection.h"
 #include "Object/unroll/data_alias_connection_base.h"
@@ -52,6 +55,7 @@
 #include "Object/persistent_type_hash.h"
 #include "util/persistent_object_manager.tcc"
 #include "Object/traits/class_traits.h"
+#include "Object/traits/instance_traits.h"
 #include "Object/traits/value_traits.h"	// why? (nonmeta_expr_visitor)
 #include "Object/inst/general_collection_type_manager.h"
 #include "Object/inst/null_collection_type_manager.h"
@@ -93,6 +97,23 @@ SPECIALIZE_UTIL_WHAT(
 SPECIALIZE_UTIL_WHAT(
 	HAC::entity::simple_datastruct_nonmeta_instance_reference,
 		"struct-nonmeta-inst-ref")
+#endif
+
+#if NONMETA_MEMBER_REFERENCES
+SPECIALIZE_UTIL_WHAT(
+	HAC::entity::member_int_nonmeta_instance_reference,
+		"int-nonmeta-member-ref")
+SPECIALIZE_UTIL_WHAT(
+	HAC::entity::member_bool_nonmeta_instance_reference,
+		"bool-nonmeta-member-ref")
+SPECIALIZE_UTIL_WHAT(
+	HAC::entity::member_enum_nonmeta_instance_reference,
+		"enum-nonmeta-member-ref")
+#if ENABLE_DATASTRUCTS
+SPECIALIZE_UTIL_WHAT(
+	HAC::entity::member_datastruct_nonmeta_instance_reference,
+		"struct-nonmeta-member-ref")
+#endif
 #endif
 
 SPECIALIZE_UTIL_WHAT(
@@ -158,6 +179,23 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::simple_datastruct_nonmeta_instance_reference, 
 		SIMPLE_STRUCT_NONMETA_INSTANCE_REFERENCE_TYPE_KEY, 0)
+#endif
+
+#if NONMETA_MEMBER_REFERENCES
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	HAC::entity::member_int_nonmeta_instance_reference, 
+		MEMBER_DINT_NONMETA_INSTANCE_REFERENCE_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	HAC::entity::member_bool_nonmeta_instance_reference, 
+		MEMBER_DBOOL_NONMETA_INSTANCE_REFERENCE_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	HAC::entity::member_enum_nonmeta_instance_reference, 
+		MEMBER_ENUM_NONMETA_INSTANCE_REFERENCE_TYPE_KEY, 0)
+#if ENABLE_DATASTRUCTS
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	HAC::entity::member_datastruct_nonmeta_instance_reference, 
+		MEMBER_STRUCT_NONMETA_INSTANCE_REFERENCE_TYPE_KEY, 0)
+#endif
 #endif
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(

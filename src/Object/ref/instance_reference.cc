@@ -2,7 +2,7 @@
 	\file "Object/ref/instance_reference.cc"
 	Class instantiations for the meta_instance_reference family of objects.
 	Thie file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: instance_reference.cc,v 1.23 2010/01/03 01:34:41 fang Exp $
+ 	$Id: instance_reference.cc,v 1.24 2011/02/25 23:19:33 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INSTANCE_REFERENCE_CC__
@@ -18,6 +18,7 @@
 #include "Object/ref/simple_meta_instance_reference.tcc"
 #include "Object/ref/simple_nonmeta_instance_reference.tcc"
 #include "Object/ref/member_meta_instance_reference.tcc"
+#include "Object/ref/member_nonmeta_instance_reference.tcc"
 #include "Object/ref/aggregate_meta_instance_reference.tcc"
 #include "Object/type/fundamental_type_reference.h"
 #include "Object/type/canonical_type.h"
@@ -31,15 +32,12 @@
 #include "Object/expr/dynamic_meta_index_list.h"
 #include "Object/expr/dynamic_meta_range_list.h"
 #include "Object/expr/nonmeta_index_list.h"
+#include "Object/expr/pstring_expr.h"
 #include "Object/unroll/instantiation_statement_base.h"
 #include "Object/unroll/loop_scope.h"
 #include "Object/unroll/alias_connection.h"
 #include "Object/persistent_type_hash.h"
-#include "Object/traits/proc_traits.h"
-#include "Object/traits/chan_traits.h"
-#include "Object/traits/int_traits.h"	// dunno why... (nonmeta_expr_visitor)
-#include "Object/traits/bool_traits.h"	// dunno why... (nonmeta_expr_visitor)
-#include "Object/traits/enum_traits.h"	// dunno why... (nonmeta_expr_visitor)
+#include "Object/traits/instance_traits.h"
 #include "Object/inst/instance_collection.h"
 #include "Object/inst/general_collection_type_manager.h"
 #include "Object/unroll/port_connection_base.h"
@@ -70,6 +68,12 @@ SPECIALIZE_UTIL_WHAT(HAC::entity::simple_process_nonmeta_instance_reference,
 		"process-nonmeta-inst-ref")
 SPECIALIZE_UTIL_WHAT(HAC::entity::simple_channel_nonmeta_instance_reference, 
 		"channel-nonmeta-inst-ref")
+#if NONMETA_MEMBER_REFERENCES
+SPECIALIZE_UTIL_WHAT(HAC::entity::member_process_nonmeta_instance_reference, 
+		"process-nonmeta-member-ref")
+SPECIALIZE_UTIL_WHAT(HAC::entity::member_channel_nonmeta_instance_reference, 
+		"channel-nonmeta-member-ref")
+#endif
 SPECIALIZE_UTIL_WHAT(HAC::entity::process_member_meta_instance_reference, 
 		"process-member-inst-ref")
 SPECIALIZE_UTIL_WHAT(HAC::entity::channel_member_meta_instance_reference, 
@@ -91,6 +95,14 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::simple_channel_nonmeta_instance_reference, 
 		SIMPLE_CHANNEL_NONMETA_INSTANCE_REFERENCE_TYPE_KEY, 0)
+#if NONMETA_MEMBER_REFERENCES
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	HAC::entity::member_process_nonmeta_instance_reference, 
+		MEMBER_PROCESS_NONMETA_INSTANCE_REFERENCE_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	HAC::entity::member_channel_nonmeta_instance_reference, 
+		MEMBER_CHANNEL_NONMETA_INSTANCE_REFERENCE_TYPE_KEY, 0)
+#endif
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::process_member_meta_instance_reference, 
 		MEMBER_PROCESS_INSTANCE_REFERENCE_TYPE_KEY, 0)

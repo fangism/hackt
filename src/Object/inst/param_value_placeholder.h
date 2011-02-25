@@ -3,7 +3,7 @@
 	Parameter instance placeholder classes for HAC.  
 	This file came from "Object/art_object_instance_param.h"
 		in a previous life.  
-	$Id: param_value_placeholder.h,v 1.5 2006/10/18 21:38:44 fang Exp $
+	$Id: param_value_placeholder.h,v 1.6 2011/02/25 23:19:31 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PARAM_VALUE_PLACEHOLDER_H__
@@ -38,6 +38,11 @@ public:
 	typedef	parent_type::inst_ref_ptr_type	inst_ref_ptr_type;
 	typedef	parent_type::member_inst_ref_ptr_type
 						member_inst_ref_ptr_type;
+#if NONMETA_MEMBER_REFERENCES
+	typedef	parent_type::nonmeta_ref_ptr_type	nonmeta_ref_ptr_type;
+	typedef	parent_type::member_nonmeta_ref_ptr_type
+						member_nonmeta_ref_ptr_type;
+#endif
 
 protected:
 	param_value_placeholder() : parent_type() { }
@@ -86,6 +91,12 @@ public:
 	/** should just assert fail, forbid reference to param members */
 	member_inst_ref_ptr_type
 	make_member_meta_instance_reference(const inst_ref_ptr_type& b) const;
+
+#if NONMETA_MEMBER_REFERENCES
+	member_nonmeta_ref_ptr_type
+	make_member_nonmeta_instance_reference(
+		const nonmeta_ref_ptr_type& b) const;
+#endif
 
 	/** appropriate for the context of a template parameter formal */
 virtual	count_ptr<const param_expr>

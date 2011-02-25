@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.61 2010/08/24 21:05:39 fang Exp $
+	$Id: devel_switches.h,v 1.62 2011/02/25 23:19:29 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -278,6 +278,13 @@
 	Status: tested
  */
 #define	REVERSE_INSTANCE_SUPPLY_OVERRIDES	(1 && INSTANCE_SUPPLY_OVERRIDES)
+
+/**
+	Define to 1 to enable nonmeta-member instance/value references.
+	Goal: 1
+	Rationale: without this, requires using aliases to work-around
+ */
+#define	NONMETA_MEMBER_REFERENCES		0
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

@@ -1,0 +1,7 @@
+Not enabled yet: member_nonmeta_instance_references, bug Fang about it.
+Suggested workaround: create local aliases to member references.
+ERROR in wait condition expression at [9:2..4]
+Not enabled yet: member_nonmeta_instance_references, bug Fang about it.
+Suggested workaround: create local aliases to member references.
+Error resolving lvalue of assignment at [11:1..3]
+ERROR: at least one error in CHP body.

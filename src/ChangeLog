@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-02-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-49b:
+	  Failed attempt to implement nonmeta member references.
+	  Commented out with switch NONMETA_MEMBER_REFERENCES
+		in Object/devel_switches.h
+	  No functional changes, no regressions.
+		Placeholder test case added (expect-fail for now)
+
+
 2011-02-13	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-49:

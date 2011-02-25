@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/data_nonmeta_instance_reference.h"
-	$Id: data_nonmeta_instance_reference.h,v 1.9 2010/01/03 01:34:41 fang Exp $
+	$Id: data_nonmeta_instance_reference.h,v 1.10 2011/02/25 23:19:32 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_DATA_NONMETA_INSTANCE_REFERENCE_H__
@@ -18,6 +18,7 @@ class data_type_reference;
 class unroll_context;
 class nonmeta_context_base;
 class channel_data_reader;	// from "Object/nonmeta_channel_manipulator.h"
+class meta_instance_reference_base;
 using util::memory::count_ptr;
 
 //=============================================================================
@@ -66,6 +67,11 @@ virtual	bool
 
 virtual	NONMETA_ASSIGN_PROTO = 0;
 virtual	DIRECT_ASSIGN_PROTO = 0;
+
+#if 0 && NONMETA_MEMBER_REFERENCES
+virtual count_ptr<meta_instance_reference_base>
+	resolve_meta_reference(const nonmeta_context_base&) const = 0;
+#endif
 
 };	// end class data_nonmeta_instance_reference
 
