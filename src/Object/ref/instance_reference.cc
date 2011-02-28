@@ -2,7 +2,7 @@
 	\file "Object/ref/instance_reference.cc"
 	Class instantiations for the meta_instance_reference family of objects.
 	Thie file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: instance_reference.cc,v 1.24 2011/02/25 23:19:33 fang Exp $
+ 	$Id: instance_reference.cc,v 1.25 2011/02/28 09:37:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INSTANCE_REFERENCE_CC__
@@ -18,7 +18,9 @@
 #include "Object/ref/simple_meta_instance_reference.tcc"
 #include "Object/ref/simple_nonmeta_instance_reference.tcc"
 #include "Object/ref/member_meta_instance_reference.tcc"
+#if NONMETA_MEMBER_REFERENCES
 #include "Object/ref/member_nonmeta_instance_reference.tcc"
+#endif
 #include "Object/ref/aggregate_meta_instance_reference.tcc"
 #include "Object/type/fundamental_type_reference.h"
 #include "Object/type/canonical_type.h"

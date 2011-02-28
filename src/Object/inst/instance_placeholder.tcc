@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/instance_placeholder.tcc"
-	$Id: instance_placeholder.tcc,v 1.11 2011/02/25 23:19:31 fang Exp $
+	$Id: instance_placeholder.tcc,v 1.12 2011/02/28 09:37:43 fang Exp $
 	TODO: trim includes
  */
 
@@ -38,7 +38,9 @@
 #include "Object/ref/meta_instance_reference_subtypes.h"
 #include "Object/ref/nonmeta_instance_reference_subtypes.h"
 #include "Object/ref/simple_nonmeta_instance_reference.h"
+#if NONMETA_MEMBER_REFERENCES
 #include "Object/ref/member_nonmeta_instance_reference.h"
+#endif
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/unroll/instantiation_statement_base.h"
 #include "Object/unroll/instantiation_statement.h"

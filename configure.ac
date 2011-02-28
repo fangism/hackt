@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.224 2011/01/28 02:23:28 fang Exp $
+#	$Id: configure.ac,v 1.225 2011/02/28 09:37:38 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -15,6 +15,7 @@ dnl prefer to push this into src directory,
 dnl and have "src/config.h" wrap around this.  
 AC_CONFIG_HEADERS([src/__config__.h])
 AC_CONFIG_AUX_DIR(config)
+AC_CONFIG_MACRO_DIR([config])	dnl wish these were in config/m4 instead
 dnl AM_CONFIG_HEADER(config.h)	dnl obsolete macro
 AC_CONFIG_SRCDIR([src/main/main_funcs.cc])
 

@@ -1,5 +1,19 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.118 2011/02/04 02:23:38 fang Exp $
+#	$Id: ChangeLog,v 1.119 2011/02/28 09:37:47 fang Exp $
+
+2011-02-28	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-50:
+	  util/guile_STL.h, util/libguile.h:
+		initial support for guile-2.0, coordinated with 
+		autoconf macro updates in config/.
+		Many functions in the guile-1.8 API are no longer
+		detected by AC_CHECK_FUNCS because they are now
+		macro definitions, and thus fail link checks.
+		Now rely on them being defined().
+		Maintain compatibility with guile-1.8.
+	  Wrap a new typedef (conditionally) scm_t_subr, appeared in 2.0.
+
 
 2011-02-03	David Fang		<fangism@users.sourceforge.net>
 

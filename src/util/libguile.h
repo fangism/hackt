@@ -1,6 +1,6 @@
 /**
 	\file "util/libguile.h"
-	$Id: libguile.h,v 1.8 2010/04/05 23:48:36 fang Exp $
+	$Id: libguile.h,v 1.9 2011/02/28 09:37:49 fang Exp $
 	Include wrapper for guile headers.  
 	Also provide some convenient wrappers of our own.  
  */
@@ -30,6 +30,13 @@
 // really only need <libguile/tags.h> for the SCM type
 
 //=============================================================================
+/**
+	This typedef appeared in guile 2.0.
+	We define this in the global namespace, where it is provided.
+ */
+#if	!defined(HAVE_SCM_T_SUBR)
+typedef	SCM (*scm_t_subr)();
+#endif
 
 namespace util {
 namespace guile {

@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-02-28	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-50:
+	  guile-2.0 compatibility, see also util/ChangeLog
+		SCM function define wrapper macro uses scm_t_subr
+		ctor-style type wrap, but guile-2.0 still build-fails
+		with warning about converting from pointer-function
+		to pointer-object, as defined to void* in header.
+
+
 2011-02-25	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-49b:

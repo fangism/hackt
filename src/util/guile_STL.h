@@ -2,7 +2,7 @@
 	\file "util/guile_STL.h"
 	Interfaces for translating back-and-forth between
 	certain containers and scheme SCM types.  
-	$Id: guile_STL.h,v 1.7 2010/04/02 22:19:21 fang Exp $
+	$Id: guile_STL.h,v 1.8 2011/02/28 09:37:48 fang Exp $
  */
 
 #ifndef	__UTIL_GUILE_STL_H__
@@ -37,9 +37,10 @@
 	Would rather let configure detect per used function.  
 	The 1.6 API is missing many convenient interfaces.  
 	We'll configure-wrap these later...
+	The following flags are mutually exclusive.
  */
+#define	FORCE_GUILE_API_2_0			0
 #define	FORCE_GUILE_API_1_8			0
-/// Mutually exclusive with other FORCE_GUILE macros
 #define FORCE_GUILE_API_1_6			0
 
 namespace util {
@@ -294,7 +295,7 @@ template <>
 struct scm_builder<short> : public unary_function<short, SCM> {
 	SCM
 	operator () (const argument_type s) {
-#if FORCE_GUILE_API_1_8 || defined(HAVE_SCM_FROM_SHORT)
+#if FORCE_GUILE_API_1_8 || defined(HAVE_SCM_FROM_SHORT) || defined(scm_from_short)
 		return scm_from_short(s);
 #elif FORCE_GUILE_API_1_6 || defined(HAVE_SCM_SHORT2NUM)
 		return scm_short2num(s);
@@ -308,7 +309,7 @@ template <>
 struct scm_extractor<short> {
 	good_bool
 	operator () (const SCM& s, short& i) {
-#if FORCE_GUILE_API_1_8 || defined(HAVE_SCM_TO_SHORT)
+#if FORCE_GUILE_API_1_8 || defined(HAVE_SCM_TO_SHORT) || defined(scm_to_short)
 		i = scm_to_short(s);	// got error handling?
 #elif FORCE_GUILE_API_1_6 || defined(HAVE_SCM_NUM2SHORT)
 		i = scm_num2short(s, 0, "unknown caller");
@@ -326,7 +327,7 @@ struct scm_builder<unsigned short> : public unary_function<unsigned short, SCM> 
 	SCM
 	operator () (const argument_type s) {
 // assume unsigned operations comes with signed counterparts
-#if FORCE_GUILE_API_1_8 || defined(HAVE_SCM_FROM_SHORT)
+#if FORCE_GUILE_API_1_8 || defined(HAVE_SCM_FROM_SHORT) || defined(scm_from_ushort)
 		return scm_from_ushort(s);
 #elif FORCE_GUILE_API_1_6 || defined(HAVE_SCM_SHORT2NUM)
 		return scm_ushort2num(s);
@@ -341,7 +342,7 @@ template <>
 struct scm_extractor<unsigned short> {
 	good_bool
 	operator () (const SCM& s, unsigned short& i) {
-#if FORCE_GUILE_API_1_8
+#if FORCE_GUILE_API_1_8 || defined(scm_to_ushort)
 		i = scm_to_ushort(s);	// got error handling?
 #elif FORCE_GUILE_API_1_6 || defined(HAVE_SCM_NUM2SHORT)
 		i = scm_num2ushort(s, 0, "unknown caller");
@@ -358,7 +359,7 @@ template <>
 struct scm_builder<int> : public unary_function<int, SCM> {
 	SCM
 	operator () (const argument_type s) {
-#if FORCE_GUILE_API_1_8 || defined(HAVE_SCM_FROM_INT)
+#if FORCE_GUILE_API_1_8 || defined(HAVE_SCM_FROM_INT) || defined(scm_from_int)
 		return scm_from_int(s);
 #elif FORCE_GUILE_API_1_6 || defined(HAVE_SCM_INT2NUM)
 		return scm_int2num(s);
@@ -373,7 +374,7 @@ template <>
 struct scm_extractor<int> {
 	good_bool
 	operator () (const SCM& s, int& i) {
-#if FORCE_GUILE_API_1_8 || defined(HAVE_SCM_TO_INT)
+#if FORCE_GUILE_API_1_8 || defined(HAVE_SCM_TO_INT) || defined(scm_to_int)
 		i = scm_to_int(s);	// got error handling?
 #elif FORCE_GUILE_API_1_6 || defined(HAVE_SCM_NUM2INT)
 		i = scm_num2int(s, 0, "unknown caller");
@@ -390,7 +391,7 @@ struct scm_builder<unsigned int> : public unary_function<unsigned int, SCM> {
 	SCM
 	operator () (const argument_type s) {
 // assuming unsigned interface is consistent with signed
-#if FORCE_GUILE_API_1_8 || defined(HAVE_SCM_FROM_INT)
+#if FORCE_GUILE_API_1_8 || defined(HAVE_SCM_FROM_INT) || defined(scm_from_uint)
 		return scm_from_uint(s);
 #elif FORCE_GUILE_API_1_6 || defined(HAVE_SCM_INT2NUM)
 		return scm_uint2num(s);
@@ -405,7 +406,7 @@ struct scm_extractor<unsigned int> {
 	good_bool
 	operator () (const SCM& s, unsigned int& i) {
 // assuming unsigned interface is consistent with signed
-#if FORCE_GUILE_API_1_8 || defined(HAVE_SCM_TO_INT)
+#if FORCE_GUILE_API_1_8 || defined(HAVE_SCM_TO_INT) || defined(scm_to_uint)
 		i = scm_to_uint(s);	// got error handling?
 #elif FORCE_GUILE_API_1_6 || defined(HAVE_SCM_NUM2INT)
 		i = scm_num2uint(s, 0, "unknown caller");
@@ -421,7 +422,7 @@ template <>
 struct scm_builder<long> : public unary_function<long, SCM> {
 	SCM
 	operator () (const argument_type& s) {
-#if FORCE_GUILE_API_1_8 || defined(HAVE_SCM_FROM_LONG)
+#if FORCE_GUILE_API_1_8 || defined(HAVE_SCM_FROM_LONG) || defined(scm_from_long)
 		return scm_from_long(s);
 #elif FORCE_GUILE_API_1_6 || defined(HAVE_SCM_LONG2NUM)
 		return scm_long2num(s);
@@ -435,7 +436,7 @@ template <>
 struct scm_extractor<long> {
 	good_bool
 	operator () (const SCM& s, long& i) {
-#if FORCE_GUILE_API_1_8 || defined(HAVE_SCM_TO_LONG)
+#if FORCE_GUILE_API_1_8 || defined(HAVE_SCM_TO_LONG) || defined(scm_to_long)
 		i = scm_to_long(s);	// got error handling?
 #elif FORCE_GUILE_API_1_6 || defined(HAVE_SCM_NUM2LONG)
 		i = scm_num2long(s, 0, "unknown caller");
@@ -451,7 +452,7 @@ template <>
 struct scm_builder<unsigned long> : public unary_function<unsigned long, SCM> {
 	SCM
 	operator () (const argument_type& s) {
-#if FORCE_GUILE_API_1_8 || defined(HAVE_SCM_FROM_LONG)
+#if FORCE_GUILE_API_1_8 || defined(HAVE_SCM_FROM_LONG) || defined(scm_from_ulong)
 		return scm_from_ulong(s);
 #elif FORCE_GUILE_API_1_6 || defined(HAVE_SCM_LONG2NUM)
 		return scm_ulong2num(s);
@@ -466,7 +467,7 @@ template <>
 struct scm_extractor<unsigned long> {
 	good_bool
 	operator () (const SCM& s, unsigned long& i) {
-#if FORCE_GUILE_API_1_8 || defined(HAVE_SCM_TO_LONG)
+#if FORCE_GUILE_API_1_8 || defined(HAVE_SCM_TO_LONG) || defined(scm_to_ulong)
 		i = scm_to_ulong(s);	// got error handling?
 #elif FORCE_GUILE_API_1_6 || defined(HAVE_SCM_NUM2LONG)
 		i = scm_num2ulong(s, 0, "unknown caller");

@@ -1,6 +1,6 @@
 /**
 	\file "util/libguile.cc"
-	$Id: libguile.cc,v 1.3 2007/06/10 02:58:09 fang Exp $
+	$Id: libguile.cc,v 1.4 2011/02/28 09:37:49 fang Exp $
 	Include wrapper for guile headers.  
 	Also provide some convenient wrappers of our own.  
  */
@@ -20,7 +20,7 @@ namespace guile {
 SCM
 scm_c_define_gsubr_exported(const char* fn, const int req, const int opt, 
 		const int rest, scm_gsubr_type f) {
-	const SCM ret = scm_c_define_gsubr(fn, req, opt, rest, f);
+	const SCM ret = scm_c_define_gsubr(fn, req, opt, rest, scm_t_subr(f));
 	scm_c_export(fn, NULL);
 	return ret;
 }

@@ -1,6 +1,6 @@
 dnl
 dnl "config/guile.m4"
-dnl	$Id: guile.m4,v 1.17 2009/02/23 09:11:10 fang Exp $
+dnl	$Id: guile.m4,v 1.18 2011/02/28 09:37:39 fang Exp $
 dnl Guile-related autoconf macros
 
 
@@ -10,6 +10,8 @@ dnl
 dnl AC_SUBST's the following variables
 dnl	GUILE_CPPFLAGS (include path to headers)
 dnl	GUILE_LDFLAGS (link path to libraries)
+dnl
+dnl 2011-02-27: added support for guile-2.0
 dnl
 AC_DEFUN([FANG_GUILE], 
 [
@@ -51,6 +53,8 @@ if test -x "$GUILE_CONFIG" ; then
   AC_MSG_CHECKING([guile link flags])
   GUILE_LDFLAGS="`$GUILE_CONFIG link`"
   AC_MSG_RESULT($GUILE_LDFLAGS)
+  GUILE_LIBNAME=`echo "$GUILE_LDFLAGS" | tr ' ' '\n' | grep "lguile" | sed 's|-l||'`
+  AC_MSG_NOTICE([guile library name is "$GUILE_LIBNAME" (lib$GUILE_LIBNAME.\$LIBEXT)])
 fi
 
 dnl is it required or optional?
@@ -65,14 +69,17 @@ LDFLAGS="$GUILE_LDFLAGS $LDFLAGS"
 AC_CHECK_HEADERS([libguile.h guile/gh.h])
 dnl <guile/gh.h> is deprecated but may have some interfaces for compatibility
 if test "$ac_cv_header_libguile_h" = "yes" ; then
-AC_CHECK_LIB(guile, scm_boot_guile)
-AC_CHECK_LIB(guile, scm_init_guile)
+dnl guile library name changed to guile-2.0
+AC_CHECK_LIB(${GUILE_LIBNAME}, scm_boot_guile)
+as_ac_Lib_scm_boot_guile=$as_ac_Lib
+AC_CHECK_LIB(${GUILE_LIBNAME}, scm_init_guile)
 
 guile_save_CPPFLAGS="$CPPFLAGS"
 dnl gmp.h (guile-1.8+) needs std::FILE
 CPPFLAGS="$CPPFLAGS -include cstdio -include libguile.h"
 AC_CHECK_TYPES(scm_t_bits)
 AC_CHECK_TYPES(scm_bits_t)
+AC_CHECK_TYPES(scm_t_subr)	dnl new in 2.0, SCM (*)()
 CPPFLAGS="$guile_save_CPPFLAGS"
 
 dnl what does the following test for?
@@ -89,26 +96,26 @@ AC_CHECK_FUNCS(scm_from_locale_symbol)
 AC_CHECK_FUNCS(scm_str2symbol)	dnl from 1.6 API
 AC_CHECK_FUNCS(scm_from_char)
 AC_CHECK_FUNCS(scm_to_char)
-AC_CHECK_FUNCS(scm_from_short)
-AC_CHECK_FUNCS(scm_to_short)
+AC_CHECK_FUNCS(scm_from_short) dnl macro-defined in 2.0
+AC_CHECK_FUNCS(scm_to_short) dnl macro-defined in 2.0
 AC_CHECK_FUNCS(scm_num2short) dnl from 1.6 API
 AC_CHECK_FUNCS(scm_short2num) dnl from 1.6 API
-AC_CHECK_FUNCS(scm_from_int)
-AC_CHECK_FUNCS(scm_to_int)
+AC_CHECK_FUNCS(scm_from_int) dnl macro-defined in 2.0
+AC_CHECK_FUNCS(scm_to_int) dnl macro-defined in 2.0
 AC_CHECK_FUNCS(scm_num2int) dnl from 1.6 API
 AC_CHECK_FUNCS(scm_int2num) dnl from 1.6 API
-AC_CHECK_FUNCS(scm_from_long)
-AC_CHECK_FUNCS(scm_to_long)
+AC_CHECK_FUNCS(scm_from_long) dnl macro-defined in 2.0
+AC_CHECK_FUNCS(scm_to_long) dnl macro-defined in 2.0
 AC_CHECK_FUNCS(scm_num2long) dnl from 1.6 API
 AC_CHECK_FUNCS(scm_long2num) dnl from 1.6 API
-AC_CHECK_FUNCS(scm_from_double)
-AC_CHECK_FUNCS(scm_to_double)
+AC_CHECK_FUNCS(scm_from_double) dnl macro-defined in 2.0
+AC_CHECK_FUNCS(scm_to_double) dnl macro-defined in 2.0
 AC_CHECK_FUNCS(scm_num2float) dnl from 1.6 API
 AC_CHECK_FUNCS(scm_float2num) dnl from 1.6 API
 AC_CHECK_FUNCS(scm_num2double) dnl from 1.6 API
 AC_CHECK_FUNCS(scm_double2num) dnl from 1.6 API
-AC_CHECK_FUNCS(scm_from_long_long)
-AC_CHECK_FUNCS(scm_to_long_long)
+AC_CHECK_FUNCS(scm_from_long_long) dnl macro-defined in 2.0
+AC_CHECK_FUNCS(scm_to_long_long) dnl macro-defined in 2.0
 AC_CHECK_FUNCS(scm_num2long_long) dnl from 1.6 API
 AC_CHECK_FUNCS(scm_long_long2num) dnl from 1.6 API
 AC_CHECK_FUNCS(scm_from_locale_string)
@@ -127,7 +134,11 @@ fi
 fi
 fi dnl test $with_guile_config
 
-AM_CONDITIONAL(HAVE_LIBGUILE, test "$ac_cv_lib_guile_scm_boot_guile" = "yes")
+dnl conditionally enable LIBGUILE tests in Makefile
+dnl for scm_boot_guile symbol in lib
+dnl AC_MSG_NOTICE([using cache variable: $as_ac_Lib_scm_boot_guile])
+eval found_scm_boot_guile=\$$as_ac_Lib_scm_boot_guile
+AM_CONDITIONAL(HAVE_LIBGUILE, test "$found_scm_boot_guile" = "yes")
 
 dnl AM_CONDITIONAL(HAVE_LIBGUILE, test "$ac_cv_func_scm_is_pair" = "yes")
 dnl if test "$ac_cv_func_scm_is_pair" != "yes" ; then

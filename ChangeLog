@@ -1,5 +1,21 @@
 "ChangeLog"
-#	$Id: ChangeLog,v 1.251 2011/02/14 08:03:14 fang Exp $
+#	$Id: ChangeLog,v 1.252 2011/02/28 09:37:38 fang Exp $
+
+2011-02-28	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-50:
+	  config/guile.m4: added support for guile-2.0.
+		modified detection of guile lib basename, 
+		and scm_boot_guile symbols.
+		detect scm_t_subr typedef.
+		Many guile API symbol checks fail b/c they
+		are now defined to macros, but not to fret, 
+		they still work, as macro definitions are now
+		detected and used in src/util/guile_STL.h.
+	  configure.ac: now specify AC_CONFIG_MACRO_DIR([config])
+		to where our m4 macros live.  Wish they were in 
+		config/m4, oh well.
+
 
 2011-02-13	David Fang	<fangism@users.sourceforge.net>
 

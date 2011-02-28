@@ -2,7 +2,7 @@
 	\file "Object/ref/instance_reference_datatype.cc"
 	Method definitions for datatype instance reference classes.
 	This file was reincarnated from "Object/art_object_inst_ref_data.cc".
-	$Id: instance_reference_datatype.cc,v 1.18 2011/02/25 23:19:33 fang Exp $
+	$Id: instance_reference_datatype.cc,v 1.19 2011/02/28 09:37:45 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INSTANCE_REFERENCE_DATATYPE_CC__
@@ -15,7 +15,9 @@
 #include "Object/ref/simple_nonmeta_instance_reference.tcc"
 #include "Object/ref/member_meta_instance_reference.tcc"
 #include "Object/ref/simple_nonmeta_value_reference.tcc"
+#if NONMETA_MEMBER_REFERENCES
 #include "Object/ref/member_nonmeta_instance_reference.tcc"
+#endif
 #include "Object/ref/aggregate_meta_instance_reference.tcc"
 #include "Object/inst/alias_empty.h"
 #include "Object/inst/bool_instance_collection.h"

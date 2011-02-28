@@ -1,6 +1,6 @@
 # "Make.test-cflat"
 #	vi: ft=automake
-#	$Id: Make.test-cflat,v 1.19 2010/04/05 23:59:45 fang Exp $
+#	$Id: Make.test-cflat,v 1.20 2011/02/28 09:37:50 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -87,8 +87,8 @@ HACKT_CFLAT_PRSIM_SCRIPT = \
 	$(DEDUCE_HFLAT_VARIANT) ; \
 	cmd="$(HACKT_CFLAT_PRSIM_EXE) $$flags $<" ; \
 	$(ECHO) "$$cmd > $@" ; \
-	$$cmd > $@
-	@$(TOUCH) $@
+	$$cmd > $@ ; \
+	$(TOUCH) $@
 
 .haco-c.prs:
 	@$(HACKT_CFLAT_PRSIM_SCRIPT)

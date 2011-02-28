@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.249 2011/02/25 23:19:28 fang Exp $
+#	$Id: Makefile.am,v 1.250 2011/02/28 09:37:41 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -602,10 +602,10 @@ OBJECT_REF_TCC_FILES = \
 	Object/ref/simple_nonmeta_instance_reference.tcc \
 	Object/ref/simple_meta_dummy_reference.tcc \
 	Object/ref/member_meta_instance_reference.tcc \
-	Object/ref/member_nonmeta_value_reference.tcc \
 	Object/ref/simple_meta_value_reference.tcc \
 	Object/ref/simple_nonmeta_value_reference.tcc \
 	Object/ref/nonmeta_ref_implementation.tcc
+#	Object/ref/member_nonmeta_value_reference.tcc
 
 OBJECT_REF_H_FILES = \
 	Object/ref/reference_enum.h \
@@ -618,7 +618,6 @@ OBJECT_REF_H_FILES = \
 	Object/ref/aggregate_meta_value_reference_base.h \
 	Object/ref/aggregate_meta_value_reference.h \
 	Object/ref/member_meta_instance_reference.h \
-	Object/ref/member_nonmeta_value_reference.h \
 	Object/ref/meta_index_list_fwd.h \
 	Object/ref/meta_instance_reference_base.h \
 	Object/ref/meta_instance_reference_subtypes.h \
@@ -637,6 +636,7 @@ OBJECT_REF_H_FILES = \
 	Object/ref/inst_ref_implementation_fwd.h \
 	Object/ref/inst_ref_implementation.h \
 	Object/ref/nonmeta_ref_implementation.h
+#	Object/ref/member_nonmeta_value_reference.h
 
 # all these must have corresponding .h file
 OBJECT_COMMON_CC_FILES = \
