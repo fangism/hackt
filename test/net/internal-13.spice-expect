@@ -1,0 +1,16 @@
+.subckt hc<> !GND !Vdd ld re rd
+M@re_up:up:0 !Vdd re @re_up !Vdd pch W=5u L=2u
+M_rd:up:0 @re_up ld _rd !Vdd pch W=5u L=2u
+M@ld_up:up:0 !Vdd ld @ld_up !Vdd pch W=5u L=2u
+M@ld_up:up:1 @re_up rd @ld_up !Vdd pch W=5u L=2u
+M_rd:up:1 @ld_up re _rd !Vdd pch W=5u L=2u
+M@re_dn:dn:0 !GND re @re_dn !GND nch W=5u L=2u
+M_rd:dn:0 @re_dn ld _rd !GND nch W=5u L=2u
+M@ld_dn:dn:0 !GND ld @ld_dn !GND nch W=5u L=2u
+M@ld_dn:dn:1 @re_dn rd @ld_dn !GND nch W=5u L=2u
+M_rd:dn:1 @ld_dn re _rd !GND nch W=5u L=2u
+Mrd:dn:0 !GND _rd rd !GND nch W=5u L=2u
+Mrd:up:0 !Vdd _rd rd !Vdd pch W=5u L=2u
+.ends
+
+

@@ -1,0 +1,22 @@
+// "internal-13.hac"
+// @hacknet-flags@ -T hc
+
+// an H-topology C-element
+
+defproc hc(bool? ld, re; bool! rd) {
+bool _rd;
+prs {
+	~re			-> @re_up+
+	~ld | @re_up & ~rd	-> @ld_up+
+	@re_up & ~ld		-> _rd+
+	@ld_up & ~re		-> _rd+
+
+	re			-> @re_dn-
+	ld | ~@re_dn & rd	-> @ld_dn-
+	~@re_dn & ld		-> _rd-
+	~@ld_dn & re		-> _rd-
+
+	_rd			=> rd-
+}
+}
+
