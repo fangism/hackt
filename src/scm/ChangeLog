@@ -1,5 +1,16 @@
 "scm/ChangeLog"
 
+2010-03-01	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-50:
+	  scheme conformity to R6RS, with guile-2.0.
+	  hackt/rb-tree.scm: push conditional definition
+		inside definition of without-interrupts.
+		Fix let-syntax and calls to rb-tree/insert!.
+	  hackt/hackt-primitives.scm:
+		conditional definition replace-prompt!
+
+
 2008-05-07	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-16:

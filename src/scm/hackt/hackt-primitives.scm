@@ -5,6 +5,9 @@
 (define-module (hackt hackt-primitives))
 (use-modules (ice-9 getopt-long))
 
+; (use-modules (system repl common))	; new in guile-2.0
+(catch #t (lambda () (use-modules (system repl common))) (lambda (key . args) #t))
+
 (load-extension "hackt-guile" "libhackt_guile_init")
 ;; user needs to immediately load a HAC object file
 ;; with (hac:load-object OBJFILE)
@@ -37,6 +40,13 @@ options:
 (define (display-nl x) (display x) (newline))
 (define (obj-reminder) (display-nl "Don't forget: (hac:load-object OBJFILE)"))
 
+(define replace-prompt!
+  (if (defined? 'repl-default-prompt-set!)
+    repl-default-prompt-set!
+    set-repl-prompt!
+  )	; end if
+) ; end define
+
 ; typically pass (command-line)
 (define-public (hacguile:parse-command-line args)
   (let* (
@@ -46,12 +56,12 @@ options:
     (__interactive (option-ref options 'interactive #t))
     (batch (or __batch (not __interactive)))
     (non-option-args (option-ref options '() '()))
-    )
+    ) ; end let-bindings
     (if help-wanted (hacguile:usage))
     (if (not (null? non-option-args))
       (hac:load-object (car non-option-args)))
     (if (not (hac:have-object?)) (obj-reminder))
-    (set-repl-prompt! (if batch "" "hacguile> "))
+    (replace-prompt! (if batch "" "hacguile> "))
   ) ; end let
 ) ; end define
 

@@ -1,7 +1,7 @@
 ; "hackt/rb-tree.scm"
 ; Adapted from MIT-Scheme-7.7.1 implementation "rbtree.scm".  
 
-; $Id: rb-tree.scm,v 1.5 2008/05/08 04:34:26 fang Exp $
+; $Id: rb-tree.scm,v 1.6 2011/03/01 17:36:10 fang Exp $
 
 ; Copyright (c) 1993-2000 Massachusetts Institute of Technology
 
@@ -140,6 +140,19 @@
 (define (red! n) (set-node-color! n 'RED))
 (define (black! n) (set-node-color! n 'BLACK))
 
+; disable interrupts to prevent structure corruption
+(define (without-interrupts thunk)
+  (if (defined? 'call-with-blocked-asyncs)
+    (call-with-blocked-asyncs thunk)
+; else try older deprecated API
+    (begin
+      (mask-signals)
+      (thunk)
+      (unmask-signals)
+    ) ; end begin
+  ) ; end if
+) ; end define
+
 (define (inserter! tree key value mutator!)
 "@var{mutator!} is a function that operates on a (node, value), 
 e.g. set-node-value!."
@@ -219,17 +232,6 @@ otherwise returns void (unspecified)."
 ) ; end define
 
 ; TODO: stream->rb-tree
-
-; disable interrupts to prevent structure corruption
-(if (defined? 'call-with-blocked-asyncs)
-(define without-interrupts call-with-blocked-asyncs)
-; else try older deprecated API
-(define (without-interrupts thunk)
-  (mask-signals)
-  (thunk)
-  (unmask-signals)
-) ; end define
-) ; end if
 
 (define-public (rb-tree/delete! tree key)
 "Dissociates key-value pair associated with @var{key}."
@@ -477,7 +479,7 @@ Apply combine-value on two values when their keys match."
         (key<? (tree-key<? x)))
     (and (eq? key=? (tree-key=? y))
       (eq? key<? (tree-key<? y))
-      (let (ret (make-rb-tree key=? key<?))
+      (let ((ret (make-rb-tree key=? key<?)))
 	(let loop ((nx (min-node x)) (ny (min-node y)))
 	  (cond
 	    ((and nx ny)
@@ -487,8 +489,8 @@ Apply combine-value on two values when their keys match."
                    (loop (next-node nx) ny))
                 ((key=? (node-key nx) (node-key ny))
                    (rb-tree/insert! ret (node-key nx)
-                     (combine-value (node-value nx) (node-value ny))
-                   (loop (next-node nx) (next-node ny))))
+                     (combine-value (node-value nx) (node-value ny)))
+                   (loop (next-node nx) (next-node ny)))
 	        (else ; (key<? (node-key ny) (node-key nx))
                    (copy-insert-node ny ret)
                    (loop nx (next-node ny)))
@@ -514,7 +516,7 @@ Apply combine-value on two values when their keys match."
         (key<? (tree-key<? x)))
     (and (eq? key=? (tree-key=? y))
       (eq? key<? (tree-key<? y))
-      (let (ret (make-rb-tree key=? key<?))
+      (let ((ret (make-rb-tree key=? key<?)))
 	(let loop ((nx (min-node x)) (ny (min-node y)))
 	    (if (and nx ny)
               (cond
@@ -522,8 +524,8 @@ Apply combine-value on two values when their keys match."
                    (loop (next-node nx) ny))
                 ((key=? (node-key nx) (node-key ny))
                    (rb-tree/insert! ret (node-key nx)
-                     (combine-value (node-value nx) (node-value ny))
-                   (loop (next-node nx) (next-node ny))))
+                     (combine-value (node-value nx) (node-value ny)))
+                   (loop (next-node nx) (next-node ny)))
 	        (else ; (key<? (node-key ny) (node-key nx))
                    (loop nx (next-node ny)))
               ) ; end cond

@@ -11,6 +11,7 @@
 		ctor-style type wrap, but guile-2.0 still build-fails
 		with warning about converting from pointer-function
 		to pointer-object, as defined to void* in header.
+	  see guile-2.0 fixes in scm/ChangeLog
 
 
 2011-02-25	David Fang		<fangism@users.sourceforge.net>
