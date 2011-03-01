@@ -1,6 +1,6 @@
 /**
 	\file "guile/hackt-documentation.cc"
-	$Id: hackt-documentation.cc,v 1.2 2007/04/20 18:25:56 fang Exp $
+	$Id: hackt-documentation.cc,v 1.3 2011/03/01 01:57:44 fang Exp $
  */
 
 #include "guile/hackt-documentation.h"
@@ -48,13 +48,13 @@ if (strlen(docstring)) {
 		doc_hash_table = scm_permanent_object(
 			scm_c_make_hash_table(97));	// pick a prime, any
 		doc_symbol = scm_permanent_object(
-			scm_str2symbol("documentation"));
+			scm_from_locale_symbol("documentation"));
 	}
 	std::string s(" - HACKT procedure: ");
 	s = s + fname + " " + arglist + "\n" + docstring;
 	scm_set_procedure_property_x(func, doc_symbol, make_scm(s));
 	const SCM entry = scm_cons(make_scm(arglist), make_scm(docstring));
-	scm_hashq_set_x(doc_hash_table, scm_str2symbol(fname), entry);
+	scm_hashq_set_x(doc_hash_table, scm_from_locale_symbol(fname), entry);
 }
 // else nothing to document
 }
