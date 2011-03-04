@@ -1,5 +1,5 @@
 @c "chapters/expressions.texi"
-@c $Id: expressions.texi,v 1.2 2010/09/21 00:17:57 fang Exp $
+@c $Id: expressions.texi,v 1.3 2011/03/04 20:29:34 fang Exp $
 
 @node Expressions
 @chapter Expressions
@@ -54,5 +54,7 @@ real (float, double), and strings.
 @include fn/strcat.texi
 @include fn/cond.texi
 @include fn/strtox.texi
+@include fn/rtoz.texi
+@include fn/ztor.texi
 @include fn/math.texi
 

@@ -1,7 +1,7 @@
 /**
 	\file "Object/expr/meta_func_lib.cc"
 	stolen from "Object/expr/dlfunction.cc"
-	$Id: meta_func_lib.cc,v 1.3 2011/01/14 01:32:57 fang Exp $
+	$Id: meta_func_lib.cc,v 1.4 2011/03/04 20:29:35 fang Exp $
  */
 
 #define	ENABLE_STATIC_TRACE				0
@@ -411,6 +411,36 @@ strtor(const string_value_type& str) {
 META_FUNCTION_LOAD_DEFAULT("strtoz", strtoz)
 META_FUNCTION_LOAD_DEFAULT("strtob", strtob)
 META_FUNCTION_LOAD_DEFAULT("strtor", strtor)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo fn/rtoz.texi
+@deffn Function rtoz real
+Convert/cast real-value into integer value.
+Recommend calling @t{ceil} or @t{floor} before passing to this function.
+@end deffn
+@end texinfo
+
+@texinfo fn/ztor.texi
+@deffn Function ztor real
+Convert/cast integer-value into real value.
+@end deffn
+@end texinfo
+***/
+static
+int_value_type
+rtoz(const real_value_type r) {
+	return int_value_type(r);	// conversion
+}
+
+static
+real_value_type
+ztor(const int_value_type r) {
+	return real_value_type(r);	// conversion
+}
+
+META_FUNCTION_LOAD_DEFAULT("rtoz", rtoz)
+META_FUNCTION_LOAD_DEFAULT("ztor", ztor)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // libm <math.h> <cmath> functions

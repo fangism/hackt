@@ -6,7 +6,7 @@
 (use-modules (ice-9 getopt-long))
 
 ; (use-modules (system repl common))	; new in guile-2.0
-(catch #t (lambda () (use-modules (system repl common))) (lambda (key . args) #t))
+; (catch #t (lambda () (use-modules (system repl common))) (lambda (key . args) #t))
 
 (load-extension "hackt-guile" "libhackt_guile_init")
 ;; user needs to immediately load a HAC object file
