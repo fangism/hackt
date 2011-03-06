@@ -1,0 +1,12 @@
+.subckt foo<> !GND !Vdd a[0] a[1] a[2] a[3] b[0] b[1] b[2] b[3]
+Mb[0]:up:0 !Vdd a[0] b[0] !Vdd pch W=12u L=2u
+Mb[0]:dn:0 !GND a[0] b[0] !GND nch W=12u L=2u
+Mb[1]:up:0 !Vdd a[1] b[1] !Vdd pch W=12u L=2u
+Mb[1]:dn:0 !GND a[1] b[1] !GND nch W=13u L=2u
+Mb[2]:up:0 !Vdd a[2] b[2] !Vdd pch W=13u L=2u
+Mb[2]:dn:0 !GND a[2] b[2] !GND nch W=14u L=2u
+Mb[3]:up:0 !Vdd a[3] b[3] !Vdd pch W=13u L=2u
+Mb[3]:dn:0 !GND a[3] b[3] !GND nch W=15u L=2u
+.ends
+
+

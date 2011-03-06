@@ -1,7 +1,7 @@
 /**
 	\file "net/netlist_generator.cc"
 	Implementation of hierarchical netlist generation.
-	$Id: netlist_generator.cc,v 1.27 2011/02/03 02:23:22 fang Exp $
+	$Id: netlist_generator.cc,v 1.28 2011/03/06 21:02:37 fang Exp $
  */
 
 #define	ENABLE_STATIC_TRACE		0
@@ -525,6 +525,7 @@ __attr_svt(netlist_generator& g, const attr_values_ptr_type& v) {
 static
 void
 __attr_width(netlist_generator& g, const attr_values_ptr_type& v) {
+	STACKTRACE_VERBOSE;
 	INVARIANT(v && v->size());
 	g.set_current_width(v->front()->to_real_const());
 }
@@ -532,6 +533,7 @@ __attr_width(netlist_generator& g, const attr_values_ptr_type& v) {
 static
 void
 __attr_length(netlist_generator& g, const attr_values_ptr_type& v) {
+	STACKTRACE_VERBOSE;
 	INVARIANT(v && v->size());
 	g.set_current_length(v->front()->to_real_const());
 }
@@ -679,6 +681,7 @@ netlist_generator::visit(const entity::PRS::footprint_rule& r) {
 	rule::attributes_list_type::const_iterator
 		i(rats.begin()), e(rats.end());
 for ( ; i!=e; ++i) {
+	STACKTRACE("for each rule attribute");
 	rule_attribute_map_type::const_iterator
 		f(rule_attribute_map.find(i->key));
 	if (f != rule_attribute_map.end()) {
@@ -703,12 +706,15 @@ try {
  */
 void
 netlist_generator::set_current_width(const real_type w) {
+	STACKTRACE_VERBOSE;
+	STACKTRACE_INDENT_PRINT("w = " << w << endl);
 	const bool dir = (fet_type == transistor::PFET_TYPE);
 //	const bool is_keeper = fet_attr & transistor::IS_STANDARD_KEEPER;
 	real_type max_width = (dir ? opt.max_p_width : opt.max_n_width);
 	real_type new_width = std::max(opt.min_width, w);
 	if (max_width > 0.0)	// ignore max when 0.0
 		new_width = std::min(max_width, new_width);
+	STACKTRACE_INDENT_PRINT("new_width = " << new_width << endl);
 	current_width = new_width;
 }
 

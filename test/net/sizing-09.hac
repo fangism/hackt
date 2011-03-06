@@ -1,0 +1,18 @@
+// "sizing-09.hac"
+// @hacknet-flags@ -T foo
+
+defproc foo(bool a[4], b[4]) {
+   pint sizes_n[4];
+   pint sizes_p[4];
+   sizes_n = {12,13,14,15};
+   sizes_p = {12,12,13,13};
+   prs {
+      (:i:4:
+         [W=sizes_p[i]] ~a[i]	-> b[i]+
+         [W=sizes_n[i]]  a[i]	-> b[i]-
+      )
+   }
+}
+
+foo bar;	// trigger expansion at create-time
+

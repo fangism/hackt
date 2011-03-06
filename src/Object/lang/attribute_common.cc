@@ -1,20 +1,25 @@
 /**
 	\file "Object/lang/attribute_common.cc"
-	$Id: attribute_common.cc,v 1.4 2009/10/05 23:09:27 fang Exp $
+	$Id: attribute_common.cc,v 1.5 2011/03/06 21:02:36 fang Exp $
  */
 
 #include <iostream>
+#include "Object/expr/expr_fwd.h"
 #include "Object/lang/attribute_common.h"
+#include "Object/expr/const_collection.h"
 #include "Object/expr/pint_const.h"
 #include "Object/expr/preal_const.h"
 #include "Object/expr/string_expr.h"
 #include "Object/expr/const_param_expr_list.h"
+#include "Object/traits/value_traits.h"
 #include "util/memory/count_ptr.h"
 
 namespace HAC {
 namespace entity {
 namespace attributes {
 #include "util/using_ostream.h"
+
+// NOTE: pint_const can also come in the form of pint_const_collection, scalar
 
 //=============================================================================
 // define re-usable, common checking functions here
@@ -32,7 +37,10 @@ check_no_value(const char* name, const attribute_values_type& v) {
 good_bool
 check_optional_integer(const char* name, const attribute_values_type& v) {
 	if (v.size() > 1 ||
-		(v.size() && !v[0].is_a<const pint_const>())) {
+		(v.size() &&
+			!v[0].is_a<const pint_const>() &&
+			!v[0].is_a<const pint_const_collection>()
+			)) {
 		cerr << "The \'" << name << "\' attribute requires accepts "
 			"one optional pint (integer) argument." << endl;
 		return good_bool(false);
@@ -42,7 +50,10 @@ check_optional_integer(const char* name, const attribute_values_type& v) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
 check_single_integer(const char* name, const attribute_values_type& v) {
-	if (v.size() != 1 || !v[0].is_a<const pint_const>()) {
+	if (v.size() != 1 ||
+			(!v[0].is_a<const pint_const>() &&
+			!v[0].is_a<const pint_const_collection>())
+			) {
 		cerr << "The \'" << name << "\' attribute requires exactly "
 			"one pint (integer) expression argument." << endl;
 		return good_bool(false);
@@ -52,10 +63,19 @@ check_single_integer(const char* name, const attribute_values_type& v) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
 check_single_real(const char* name, const attribute_values_type& v) {
-	if (v.size() != 1 || (!v[0].is_a<const preal_const>() && !v[0].is_a<const pint_const>()) ) {
+	if (v.size() != 1 ||
+			(!v[0].is_a<const preal_const>() &&
+			!v[0].is_a<const preal_const_collection>() &&
+			!v[0].is_a<const pint_const>() &&
+			!v[0].is_a<const pint_const_collection>())
+			) {
 		cerr << "The \'" << name << "\' attribute requires exactly "
 			"one preal (floating-point) expression argument."
 			<< endl;
+		if (v.size() == 1) {
+			v[0]->what(cerr << "got: ") << endl;
+			v[0]->dump(cerr << "value: ") << endl;
+		}
 		return good_bool(false);
 	} else  return good_bool(true);
 }
@@ -64,10 +84,14 @@ check_single_real(const char* name, const attribute_values_type& v) {
 /**
 	Value must be non-negative integer.
 	TODO: accept real-values
+	FIXME: body should also allow scalar pint_const_collection
  */
 good_bool
 check_delay_value(const char* name, const attribute_values_type& v) {
-	if (v.size() != 1 || !v[0].is_a<const pint_const>()) {
+	if (v.size() != 1 || 
+			(!v[0].is_a<const pint_const>() &&
+			!v[0].is_a<const pint_const_collection>())
+			) {
 		cerr << "The \'" << name << "\' attribute requires exactly "
 			"one pint (integer) expression argument." << endl;
 		return good_bool(false);

@@ -2,7 +2,7 @@
 	\file "Object/expr/const_collection.tcc"
 	Class implementation of collections of expression constants.  
 	This file was moved from "Object/expr/const_collection.cc"
- 	$Id: const_collection.tcc,v 1.22 2007/04/15 05:52:15 fang Exp $
+ 	$Id: const_collection.tcc,v 1.23 2011/03/06 21:02:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_CONST_COLLECTION_TCC__
@@ -40,6 +40,7 @@
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_range_list.h"
 #include "Object/expr/expr_visitor.h"
+#include "common/ICE.h"
 
 #include "util/persistent_object_manager.h"
 #include "util/multikey.h"
@@ -104,6 +105,25 @@ using util::persistent_traits;
 REQUIRES_STACKTRACE_STATIC_INIT
 // the robust list_vector_pool requires this.  
 #endif
+
+template <class T>
+preal_value_type
+convert_scalar_const_to_real(const T) {
+	ICE_NEVER_CALL(cerr);
+	return 0.0;
+}
+
+template <>
+preal_value_type
+convert_scalar_const_to_real(const pint_value_type z) {
+	return preal_value_type(z);
+}
+
+template <>
+preal_value_type
+convert_scalar_const_to_real(const preal_value_type z) {
+	return z;
+}
 
 //=============================================================================
 // class const_collection method definitions
@@ -506,6 +526,18 @@ try {
 	throw std::range_error("indices contain bad range.");
 }
 }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Converts scalar value to real_const.
+	FIXME: should only be allowed for pints and preals, not pbools.
+ */
+CONST_COLLECTION_TEMPLATE_SIGNATURE
+preal_value_type
+CONST_COLLECTION_CLASS::to_real_const(void) const {
+	INVARIANT(!this->dimensions());
+	return convert_scalar_const_to_real(this->front());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

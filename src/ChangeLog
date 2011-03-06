@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-03-06	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-51:
+	  middle-end, hacknet: fixied passing of int/real-valued 
+		array-references to sizing parameters for width.
+	  Test case added.
+
+
 2011-03-01	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-50b:
