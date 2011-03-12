@@ -1,0 +1,75 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	44
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	prealplh	0	#HEAD#	#TAIL#	30
+	6	##ADDR##	prealins	0	#HEAD#	#TAIL#	16
+	7	##ADDR##	prealplh	0	#HEAD#	#TAIL#	30
+	8	##ADDR##	prealins	0	#HEAD#	#TAIL#	16
+	9	##ADDR##	pintplch	0	#HEAD#	#TAIL#	30
+	10	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	11	##ADDR##	pintplch	0	#HEAD#	#TAIL#	30
+	12	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	18	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	21	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	22	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	25	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	27	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	prassign	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	cnstpr__	0	#HEAD#	#TAIL#	12
+	30	##ADDR##	sprmvref	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	prassign	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	prmfunex	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	sprmvref	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	pimfunex	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	39	##ADDR##	sprmvref	0	#HEAD#	#TAIL#	16
+	40	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	41	##ADDR##	footprnt	0	#HEAD#	#TAIL#	384
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  4 parameter-collections
+  2 instantiation-collections
+  0 sub-namespaces
+  0 definitions
+  0 typedefs
+  Parameters:
+    RR = preal<> RR
+    RZ = preal<> RZ
+    ZA = pint<> ZA
+    ZZ = pint<> ZZ
+  Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
+}
+
+footprint: {
+  !GND = bool^0 = !GND (1) @[ supply_low ] 
+  !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
+  RR = preal^0 value: 3.14159
+  RZ = preal^0 value: 5
+  ZA = pint^0 value: 3
+  ZZ = pint^0 value: 5
+  Created state:
+  bool instance pool: (0 ports, 2 local, 0 mapped)
+  1	!GND @[ supply_low ]	
+  2	!Vdd @[ supply_high ]	
+}

@@ -6,7 +6,7 @@
 2011-03-06	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-51:
-	  middle-end, hacknet: fixied passing of int/real-valued 
+	  middle-end, hacknet: fixed passing of int/real-valued 
 		array-references to sizing parameters for width.
 	  Test case added.
 
@@ -16,7 +16,7 @@
 	* HACKT-00-01-04-main-00-84-50b:
 	  Added to Object/expr/meta_func_lib.cc: ztor, rtoz
 		for converting/casting between ints and reals.
-	  Documented, but no test cases yet.
+	  Documented, test case added (param/math-fun-02).
 
 
 2011-02-28	David Fang		<fangism@users.sourceforge.net>
