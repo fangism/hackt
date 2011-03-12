@@ -1,6 +1,6 @@
 /**
 	\file "parser/instref.cc"
-	$Id: instref.cc,v 1.27 2011/02/10 22:32:39 fang Exp $
+	$Id: instref.cc,v 1.28 2011/03/12 07:46:18 fang Exp $
  */
 
 #define	DEBUGGING_SHIT			0
@@ -109,6 +109,8 @@ using util::memory::excl_ptr;
 using util::memory::never_ptr;
 using util::directory_stack;
 #include "util/using_ostream.h"
+
+typedef	inst_ref_expr::meta_return_type		checked_ref_type;
 //=============================================================================
 // class typed_indexed_reference method definitions
 
@@ -363,7 +365,6 @@ parse_nodes_to_indices(const string& n, const module& m,
  */
 process_index
 parse_process_to_index(const string& n, const module& m) {
-	typedef	inst_ref_expr::meta_return_type		checked_ref_type;
 	STACKTRACE_VERBOSE;
 if (n == ".") {
 	// refers to the top-level process
@@ -380,7 +381,6 @@ if (n == ".") {
 bool
 parse_processes_to_indices(const string& n, const module& m, 
 		vector<size_t>& p) {
-	typedef	inst_ref_expr::meta_return_type		checked_ref_type;
 	STACKTRACE_VERBOSE;
 if (n == ".") {
 	// refers to the top-level process
@@ -394,21 +394,45 @@ if (n == ".") {
 }
 
 //=============================================================================
+static
+bool
+must_be_scalar_inst(const checked_ref_type& r, ostream* o) {
+	if (!r.inst_ref()) {
+		return false;
+	} else if (r.inst_ref()->dimensions()) {
+	if (o) {
+		*o << "Error: referenced instance must be a single (scalar)."
+			<< endl;
+	}
+		return false;
+	}
+	return true;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\returns a (type, index)-pair that references the globally
 	allocated index.  
+	Optional error stream allows suppression of diagnostics.  
 	TODO: handle meta value references?
  */
 global_indexed_reference
-parse_global_reference(const string& n, const module& m) {
-	typedef	inst_ref_expr::meta_return_type		checked_ref_type;
+parse_global_reference(const string& n, const module& m, ostream* o) {
 	STACKTRACE_VERBOSE;
+	static const global_indexed_reference
+		err(META_TYPE_NONE, INVALID_NODE_INDEX);
 	const checked_ref_type r(parse_and_check_reference(n.c_str(), m));
-	if (!r.inst_ref()) {
-		return global_indexed_reference(META_TYPE_NONE, 
-			INVALID_NODE_INDEX);
-	}
+	if (!must_be_scalar_inst(r, o)) { return err; }
 	return parse_global_reference(r, m);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Default to passing cerr stream.
+ */
+global_indexed_reference
+parse_global_reference(const string& n, const module& m) {
+	return parse_global_reference(n, m, &std::cerr);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -427,12 +451,12 @@ parse_global_reference(const meta_reference_union& r, const module& m) {
 int
 parse_global_references(const string& n, 
 		const module& m, global_reference_array_type& a) {
-	typedef	inst_ref_expr::meta_return_type		checked_ref_type;
 	STACKTRACE_VERBOSE;
 	const checked_ref_type r(parse_and_check_reference(n.c_str(), m));
 	if (!r.inst_ref()) {
 		return 1;
 	}
+	// allow array references
 	return parse_global_references(r, m, a);
 }
 
@@ -485,7 +509,6 @@ if (pid) {
  */
 int
 parse_name_to_what(ostream& o, const string& n, const module& m) {
-	typedef	inst_ref_expr::meta_return_type		checked_ref_type;
 	STACKTRACE_VERBOSE;
 	const checked_ref_type r(parse_and_check_reference(n.c_str(), m));
 	const count_ptr<const entity::meta_instance_reference_base>&
@@ -503,6 +526,7 @@ parse_name_to_what(ostream& o, const string& n, const module& m) {
 		return 0;
 	}
 	// else is scalar
+	// TODO: re-write to avoid double-parsing
 	const global_indexed_reference gref(parse_global_reference(n, m));
 	// wasteful to parse again, I know...
 	if (!gref.second) {
@@ -533,7 +557,6 @@ parse_name_to_what(ostream& o, const string& n, const module& m) {
  */
 int
 parse_name_to_members(ostream& o, const string& n, const module& m) {
-	typedef	inst_ref_expr::meta_return_type		checked_ref_type;
 	STACKTRACE_VERBOSE;
 	// scopespace::const_map_iterator i, e;
 if (n == ".") {
@@ -543,37 +566,25 @@ if (n == ".") {
 	// TODO: use module's top_footprint
 } else {
 	const checked_ref_type r(parse_and_check_reference(n.c_str(), m));
-	if (!r || !r.inst_ref()) {
+	if (!must_be_scalar_inst(r, &cerr)) { return 1; }
+	const global_indexed_reference
+		gref(parse_global_reference(r, m));
+	if (!gref.second) {
+		o << "Error resolving instance reference: "
+			<< n << endl;
 		return 1;
-	} else if (r.inst_ref()->dimensions()) {
-		o << "Error: referenced instance must be a single (scalar)."
-			<< endl;
-		return 1;
-	} else {
-		// check for valid reference first
-		const footprint& topfp(m.get_footprint());
-		footprint_frame tff(topfp);
-		const global_offset g;
-		tff.construct_top_global_context(topfp, g);
-		const global_entry_context gc(tff, g);
-		const global_indexed_reference
-			gref(r.inst_ref()->lookup_top_level_reference(gc));
-		if (!gref.second) {
-			o << "Error resolving instance reference: "
-				<< n << endl;
-			return 1;
-		}
-		const footprint* f = NULL;
-		o << n << " (type: ";
-		switch (gref.first) {
-		case entity::META_TYPE_PROCESS:
-			f = get_process_footprint(gref.second, m);
-			f->dump_type(o);
-			break;
-		default:
-			r.inst_ref()->dump_type_size(o);
-		}
-		o << ") has members: " << endl;
+	}
+	const footprint* f = NULL;
+	o << n << " (type: ";
+	switch (gref.first) {
+	case entity::META_TYPE_PROCESS:
+		f = get_process_footprint(gref.second, m);
+		f->dump_type(o);
+		break;
+	default:
+		r.inst_ref()->dump_type_size(o);
+	}
+	o << ") has members: " << endl;
 	if (f) {
 		f->dump_member_list(o);
 	} else {
@@ -584,7 +595,6 @@ if (n == ".") {
 			mscope(def->get_scopespace());
 		// mscope->dump_instance_members(o) << endl;
 		mscope->dump_for_definitions(o);
-	}
 	}
 }
 	return 0;
@@ -620,7 +630,6 @@ parse_name_to_get_subnodes(const string& n, const module& m,
 int
 parse_name_to_get_subinstances(const string& n, const module& m, 
 		entry_collection& e) {
-	typedef	inst_ref_expr::meta_return_type		checked_ref_type;
 	STACKTRACE_VERBOSE;
 	const footprint& topfp(m.get_footprint());
 if (n == ".") {
@@ -678,7 +687,7 @@ if (!r || !r.inst_ref()) {
 	return 0;
 #endif
 } else {
-	// wasteful double-parsing...
+	// wasteful double-parsing... TODO: rewrite
 	// much easier with continuous ranges in memory mapping
 	const global_indexed_reference
 		gref(parse_global_reference(n, m));
@@ -794,7 +803,6 @@ parse_name_to_get_subnodes_local(
 //		const string& n,
 		const module& m, 
 		vector<size_t>& v) {
-	typedef	inst_ref_expr::meta_return_type		checked_ref_type;
 	STACKTRACE_VERBOSE;
 	const size_t& pid(p.index);
 	if (!p.valid()) {
@@ -830,7 +838,6 @@ parse_name_to_get_ports(const process_index& p,
 //		const string& n,
 		const module& m, 
 		vector<size_t>& v, const vector<bool>* pred) {
-	typedef	inst_ref_expr::meta_return_type		checked_ref_type;
 	STACKTRACE_VERBOSE;
 	const size_t& pid(p.index);
 	if (!p.valid()) {
@@ -869,6 +876,29 @@ if (pred) {
 
 //=============================================================================
 /**
+	Construct set of aliases.
+	\param n the name of the instance, whose aliases are to be sought.
+	\param m top-level module.
+	\return 0 upon success, 1 upon error.  
+ */
+int
+parse_name_to_aliases(string_set& aliases, const string& n, const module& m,
+		const dump_flags& df) {
+	STACKTRACE_VERBOSE;
+	const footprint& topfp(m.get_footprint());
+	const global_indexed_reference
+		gref(parse_global_reference(n, m));
+	STACKTRACE_INDENT_PRINT("gref.index = " << gref.second << endl);
+	if (gref.first && gref.second) {
+		topfp.collect_aliases_recursive(gref, df, aliases);
+	} else {
+		return 1;
+	}
+	return 0;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Prints reference identity information. 
 	TODO: check non-instance-references:
 		namespaces, definitions, typedefs, value-references.
@@ -882,36 +912,16 @@ int
 parse_name_to_aliases(ostream& o, const string& n, const module& m, 
 		const dump_flags& df, 
 		const char* _sep) {
-	typedef	inst_ref_expr::meta_return_type		checked_ref_type;
 	STACKTRACE_VERBOSE;
 	const char* sep = _sep ? _sep : " ";
 	NEVER_NULL(sep);
-	const checked_ref_type r(parse_and_check_reference(n.c_str(), m));
-	if (!r || !r.inst_ref()) {
+	string_set aliases;
+	if (parse_name_to_aliases(aliases, n, m, df)) {
 		return 1;
-	} else if (r.inst_ref()->dimensions()) {
-		o << "Error: referenced instance must be a single (scalar)."
-			<< endl;
-		return 1;
-	} else {
-		set<string> aliases;
-		const footprint& topfp(m.get_footprint());
-		footprint_frame tff(topfp);
-		const global_offset g;
-		tff.construct_top_global_context(topfp, g);
-		const global_entry_context gc(tff, g);
-		const global_indexed_reference
-			gref(r.inst_ref()->lookup_top_level_reference(gc));
-		STACKTRACE_INDENT_PRINT("gref.index = " << gref.second << endl);
-		if (gref.first && gref.second) {
-			topfp.collect_aliases_recursive(gref, df, aliases);
-		} else {
-			return 1;
-		}
-		ostream_iterator<string> osi(o, sep);
-		copy(aliases.begin(), aliases.end(), osi);
-		return 0;
 	}
+	ostream_iterator<string> osi(o, sep);
+	copy(aliases.begin(), aliases.end(), osi);
+	return 0;
 }
 
 //=============================================================================
@@ -980,21 +990,10 @@ complete_instance_names(const char* _text, const module& m,
 	if (!parent.length()) {
 		f = &m.get_footprint();
 	} else {			// split up string
-		typedef	inst_ref_expr::meta_return_type	checked_ref_type;
 		// parse the parent to get context
-		const checked_ref_type
-			r(parse_and_check_reference(parent.c_str(), m));
-		if (!r || !r.inst_ref()) { return; }
-			// no error message
-		if (r.inst_ref()->dimensions()) { return; }
-			// no error message
-		const footprint& topfp(m.get_footprint());
-		footprint_frame tff(topfp);
-		const global_offset g;
-		tff.construct_top_global_context(topfp, g);
-		const global_entry_context gc(tff, g);
 		const global_indexed_reference
-			gref(r.inst_ref()->lookup_top_level_reference(gc));
+			gref(parse_global_reference(parent, m, NULL));
+		// silence bad references diagnostics
 		if (!gref.second) { return; }
 		if (gref.first != entity::META_TYPE_PROCESS) { return; }
 		// until non-process types have subinstances...

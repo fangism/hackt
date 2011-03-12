@@ -1,4 +1,4 @@
-Error: expecting scalar reference, but got 1-dimensional array reference.
+Error: referenced instance must be a single (scalar).
 Error: X does not reference a process.
 Invalid process/directory: X
 ... at line 5

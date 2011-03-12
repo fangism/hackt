@@ -1,7 +1,7 @@
 /**
 	\file "parser/instref.h"
 	Interface to reference-parsing.
-	$Id: instref.h,v 1.14 2011/02/10 22:32:40 fang Exp $
+	$Id: instref.h,v 1.15 2011/03/12 07:46:19 fang Exp $
 	This file originated from "sim/prsim/Reference.h"
 	Id: Reference.h,v 1.5 2006/07/30 05:50:13 fang Exp
  */
@@ -12,6 +12,7 @@
 #include <iosfwd>
 #include <utility>		// for std::pair
 #include <vector>
+#include <set>			// for set<string>
 #include "Object/ref/reference_enum.h"
 #include "Object/traits/class_traits_fwd.h"
 #include "util/string_fwd.h"
@@ -33,6 +34,7 @@ struct dump_flags;
 using util::memory::count_ptr;
 
 namespace parser {
+using std::ostream;
 using std::vector;
 using std::string;
 using entity::module;
@@ -45,6 +47,8 @@ using entity::global_reference_array_type;
 using entity::global_indexed_reference;
 
 class inst_ref_expr;
+
+typedef	std::set<string>		string_set;
 
 // from "AST/expr_base.h: inst_ref_expr::reference_array_type
 typedef count_ptr<const inst_ref_expr>	AST_reference_ptr;
@@ -161,6 +165,10 @@ parse_process_to_index(const string&, const module&);
 
 extern
 global_indexed_reference
+parse_global_reference(const string&, const module&, ostream*);
+
+extern
+global_indexed_reference
 parse_global_reference(const string&, const module&);
 
 extern
@@ -180,11 +188,11 @@ parse_global_references(const meta_reference_union&,
 
 extern
 int
-parse_name_to_what(std::ostream&, const string&, const module&);
+parse_name_to_what(ostream&, const string&, const module&);
 
 extern
 int
-parse_name_to_members(std::ostream&,
+parse_name_to_members(ostream&,
 	const string&, const module&);
 
 extern
@@ -225,7 +233,12 @@ parse_name_to_get_ports(
 
 extern
 int
-parse_name_to_aliases(std::ostream&, const string&, 
+parse_name_to_aliases(string_set&, const string&, 
+	const module&, const dump_flags&);
+
+extern
+int
+parse_name_to_aliases(ostream&, const string&, 
 	const module&, const dump_flags&, const char* sep);
 
 extern
