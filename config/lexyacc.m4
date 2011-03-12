@@ -1,5 +1,5 @@
 dnl "config/lexyacc.m4"
-dnl	$Id: lexyacc.m4,v 1.13 2011/02/14 08:49:20 fang Exp $
+dnl	$Id: lexyacc.m4,v 1.14 2011/03/12 02:38:44 fang Exp $
 dnl This file contains autoconf macros related to lex and yacc, 
 dnl including bison.  
 dnl These may be slightly more specific to the HACKT project.
@@ -208,7 +208,7 @@ dnl (
 *)
 	dnl silly m4 quoting...
 	yacc_skeleton_version=`grep -e "yy[[a-z]]*id" $ac_cv_prog_yacc_root.c | \
-		cut -d\" -f2`
+		tail -n1 | cut -d\" -f2`
 	dnl | sed 's/[$]//g'`
 	test "$yacc_skeleton_version" ||
 		AC_MSG_ERROR(unable to determine $YACC version!)
