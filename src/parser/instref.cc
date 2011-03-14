@@ -1,6 +1,6 @@
 /**
 	\file "parser/instref.cc"
-	$Id: instref.cc,v 1.28 2011/03/12 07:46:18 fang Exp $
+	$Id: instref.cc,v 1.29 2011/03/14 20:33:21 fang Exp $
  */
 
 #define	DEBUGGING_SHIT			0
@@ -198,9 +198,9 @@ const directory_stack* dir_stack = NULL;
 	TODO: let this handle directory-like references, for the sake of
 		directory tab-completion.
  */
-count_ptr<parser::inst_ref_expr>
+count_ptr<inst_ref_expr>
 parse_reference(const char* s) {
-	typedef	count_ptr<parser::inst_ref_expr>	return_type;
+	typedef	count_ptr<inst_ref_expr>	return_type;
 	STACKTRACE_VERBOSE;
 	NEVER_NULL(s);
 	STACKTRACE_INDENT_PRINT("Parsing: " << s << endl);
@@ -242,7 +242,7 @@ expand_reference(const count_ptr<const inst_ref_expr>& r,
 	\return resolved IR of reference.  
  */
 meta_reference_union
-check_reference(const parser::inst_ref_expr& ref_tree,
+check_reference(const inst_ref_expr& ref_tree,
 		const entity::module& m) {
 	typedef	meta_reference_union		return_type;
 	STACKTRACE_VERBOSE;
@@ -284,7 +284,7 @@ check_reference(const parser::inst_ref_expr& ref_tree,
 meta_reference_union
 parse_and_check_reference(const char* s, const module& m) {
 	typedef	meta_reference_union		return_type;
-	typedef	count_ptr<parser::inst_ref_expr>	lval_ptr_type;
+	typedef	count_ptr<inst_ref_expr>	lval_ptr_type;
 	STACKTRACE_VERBOSE;
 	const lval_ptr_type ref_tree = parse_reference(s);
 	if (!ref_tree) {
@@ -309,23 +309,23 @@ expand_global_references(const string& _base, const module& m,
 		cerr << "Error in instance reference." << endl;
 		return true;
 	}
-	parser::reference_array_type st_refs;
-	if (parser::expand_reference(r, st_refs)) {
+	reference_array_type st_refs;
+	if (expand_reference(r, st_refs)) {
 		cerr << "Error in expanding instance reference." << endl;
 		return true;
 	}
 	ret.reserve(st_refs.size());
-	parser::reference_array_type::const_iterator
+	reference_array_type::const_iterator
 		ri(st_refs.begin()), re(st_refs.end());
 for ( ; ri!=re; ++ri) {
 	NEVER_NULL(*ri);
-	const meta_reference_union cr(parser::check_reference(**ri, m));
+	const meta_reference_union cr(check_reference(**ri, m));
 	if (!cr) {
 		cerr << "Error in instance reference." << endl;
 		return true;
 	}
 	const global_indexed_reference
-		g(parser::parse_global_reference(cr, m));
+		g(parse_global_reference(cr, m));
 	ret.push_back(expanded_global_reference(*ri, g));
 }	// end for all expanded references
 	return false;
