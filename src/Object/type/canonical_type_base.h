@@ -1,6 +1,6 @@
 /**
 	\file "Object/type/canonical_type_base.h"
-	$Id: canonical_type_base.h,v 1.5 2006/10/18 01:19:59 fang Exp $
+	$Id: canonical_type_base.h,v 1.5.100.1 2011/03/16 00:20:17 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CANONICAL_TYPE_BASE_H__
@@ -9,6 +9,11 @@
 #include <iosfwd>
 #include "util/persistent_fwd.h"
 #include "util/memory/count_ptr.h"
+#include "Object/devel_switches.h"	// for PROCESS_CONNECTIVITY_CHECKING
+
+#if PROCESS_CONNECTIVITY_CHECKING
+#include "Object/type/channel_direction_enum.h"
+#endif
 
 namespace HAC {
 namespace entity {
@@ -45,6 +50,9 @@ public:
 						param_list_ptr_type;
 protected:
 	const_param_list_ptr_type			param_list_ptr;
+#if PROCESS_CONNECTIVITY_CHECKING
+	direction_type			direction;
+#endif
 public:
 	canonical_type_base();
 
@@ -57,6 +65,15 @@ public:
 	// default copy-constructor suffices
 
 	~canonical_type_base();
+
+#if PROCESS_CONNECTIVITY_CHECKING
+	/// \param d is '!' or '?' or other
+	void
+	set_direction(const direction_type d) { direction = d; }
+
+	direction_type
+	get_direction(void) const { return direction; }
+#endif
 
 	const const_param_list_ptr_type&
 	get_raw_template_params(void) const { return param_list_ptr; }

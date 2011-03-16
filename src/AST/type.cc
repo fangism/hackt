@@ -1,7 +1,7 @@
 /**
 	\file "AST/type.cc"
 	Class method definitions for type specifier classes.  
-	$Id: type.cc,v 1.13 2010/05/13 21:47:55 fang Exp $
+	$Id: type.cc,v 1.13.6.1 2011/03/16 00:20:08 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_base.cc,v 1.29.10.1 2005/12/11 00:45:02 fang Exp
  */
@@ -25,6 +25,9 @@
 #include "Object/type/data_type_reference.h"
 #include "Object/type/builtin_channel_type_reference.h"
 #include "Object/type/channel_type_reference.h"
+#if PROCESS_CONNECTIVITY_CHECKING
+#include "Object/type/process_type_reference.h"
+#endif
 #include "Object/expr/dynamic_param_expr_list.h"
 
 #include "util/indent.h"
@@ -62,6 +65,7 @@ namespace parser {
 using entity::dynamic_param_expr_list;
 using entity::data_type_reference;
 using entity::channel_type_reference;
+using entity::process_type_reference;
 using entity::user_def_chan;
 #include "util/using_ostream.h"
 using util::indent;
@@ -321,31 +325,30 @@ generic_type_ref::check_type(const context& c) const {
 			type_ref = d->make_fundamental_type_reference();
 		}
 	}
-	if (chan_dir) {
-		STACKTRACE("have channel direction");
-		const count_ptr<channel_type_reference>
-			ctr(type_ref.is_a<channel_type_reference>());
-		if (!ctr) {
-#if 0
-			cerr << "ERROR: only channel types "
-				"have directionality.  "
-				<< where(*chan_dir) << endl;
-			return return_type(NULL);
-#else
-			// TODO: use direction spec for other types
-			return type_ref;
-#endif
-		}
-		const char dir(chan_dir->text[0]);
-		INVARIANT(dir == '!' || dir == '?');
-		ctr->set_direction(
-			token_to_direction_type(dir, chan_dir->text[1]));
-	}
 	if (!type_ref) {
 		cerr << "ERROR making complete type reference.  "
 			<< where(*this) << endl;
 		return return_type(NULL);
-	} else	return type_ref;
+	}
+	if (chan_dir) {
+		STACKTRACE("have channel direction");
+		const count_ptr<channel_type_reference>
+			ctr(type_ref.is_a<channel_type_reference>());
+#if PROCESS_CONNECTIVITY_CHECKING
+		const count_ptr<process_type_reference>
+			ptr(type_ref.is_a<process_type_reference>());
+#endif
+		const char dir(chan_dir->text[0]);
+		INVARIANT(dir == '!' || dir == '?');
+	if (ctr) {
+		ctr->set_direction(
+			token_to_direction_type(dir, chan_dir->text[1]));
+	} else if (ptr) {
+		ptr->set_direction(
+			token_to_direction_type(dir, chan_dir->text[1]));
+	}
+	}	// end if chan_dir
+	return type_ref;
 }	// generic_type_ref::check_type()
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

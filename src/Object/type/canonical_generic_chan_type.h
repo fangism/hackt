@@ -1,6 +1,6 @@
 /**
 	\file "Object/type/canonical_generic_chan_type.h"
-	$Id: canonical_generic_chan_type.h,v 1.13 2010/04/02 22:18:50 fang Exp $
+	$Id: canonical_generic_chan_type.h,v 1.13.6.1 2011/03/16 00:20:16 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CANONICAL_GENERIC_CHAN_TYPE_H__
@@ -64,8 +64,10 @@ private:
 		are mutually exclusive.  
 	 */
 	datatype_list_type			datatype_list;
+#if !PROCESS_CONNECTIVITY_CHECKING
 	/// the channel direction
 	direction_type				direction;
+#endif
 public:
 	/// only called to signal an error
 	canonical_type();
@@ -106,12 +108,14 @@ public:
 	ostream&
 	dump(ostream&) const;
 
+#if !PROCESS_CONNECTIVITY_CHECKING
 	/// \param d is '!' or '?' or other
 	void
 	set_direction(const direction_type d) { direction = d; }
 
 	direction_type
 	get_direction(void) const { return direction; }
+#endif
 
 	count_ptr<const type_reference_type>
 	make_type_reference(void) const;

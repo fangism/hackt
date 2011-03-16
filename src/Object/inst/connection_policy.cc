@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/connection_policy.cc"
-	$Id: connection_policy.cc,v 1.17 2010/10/14 00:19:28 fang Exp $
+	$Id: connection_policy.cc,v 1.17.2.1 2011/03/16 00:20:11 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -409,6 +409,82 @@ void
 channel_connect_policy::read_flags(istream& i) {
 	read_value(i, direction_flags);
 }
+
+//=============================================================================
+// class process_connect_policy method definitions
+
+#if PROCESS_CONNECTIVITY_CHECKING
+const char*
+process_connect_policy::attribute_names[] = {
+	"port!",
+	"port?",
+	"RESERVED-2",
+	"RESERVED-3",
+	"sub!",
+	"sub?",
+	"RESERVED-6",
+	"RESERVED-7"
+};
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Check for conflicting flags.  
+	Won't bother templating this method unless something else other
+	than channels is directional.  
+	Is this only called by CHP visits?
+	Checks can be a lot more sophisticated, depending on desired semantics.
+ */
+good_bool
+process_connect_policy::set_connection_flags(
+		const connection_flags_type f) {
+	STACKTRACE_VERBOSE;
+	const connection_flags_type _or = f | direction_flags;
+	direction_flags |= _or;
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Only applies to hflat, called by cflat_prs_printer()
+ */
+ostream&
+process_connect_policy::dump_flat_attributes(ostream& o) const {
+	connection_flags_type temp = direction_flags;	// better be unsigned!
+	const char** p = attribute_names;
+while (temp && p < attribute_names +8) {
+	// b/c upper bits are connectivity
+	if (temp & 1) {
+		o << ' ' << *p;
+	}
+	++p;
+	temp >>= 1;
+}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+process_connect_policy::dump_attributes(ostream& o) const {
+if (has_nondefault_attributes()) {
+	o << " @[";
+	dump_flat_attributes(o);
+	o << " ]";
+}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+process_connect_policy::write_flags(ostream& o) const {
+	write_value(o, direction_flags);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+process_connect_policy::read_flags(istream& i) {
+	read_value(i, direction_flags);
+}
+#endif	// PROCESS_CONNECTIVITY_CHECKING
 
 //=============================================================================
 }	// end namespace entity

@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.62 2011/02/25 23:19:29 fang Exp $
+	$Id: devel_switches.h,v 1.62.2.1 2011/03/16 00:20:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -328,6 +328,16 @@
 	This still feels dirty, but that's the way some like it.
  */
 #define	DEFTYPE_LIKE_PROCESS			1
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Define to 1 to enable process (user-defined channel)
+	directionality flags.
+	Goal: 1
+	Priority: HIGH
+	Rationale: many back-end tools need this.
+ */
+#define	PROCESS_CONNECTIVITY_CHECKING		1
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

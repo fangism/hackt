@@ -4,7 +4,7 @@
 	TODO: must pool-allocate these, they're created frequently!
 	This file originated from "Object/art_object_type_ref.h"
 		in a previous life.  
- 	$Id: channel_type_reference_base.h,v 1.10 2007/10/12 22:43:57 fang Exp $
+ 	$Id: channel_type_reference_base.h,v 1.10.46.1 2011/03/16 00:20:18 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CHANNEL_TYPE_REFERENCE_BASE_H__
@@ -38,7 +38,7 @@ protected:
 	direction_type					direction;
 protected:
 	channel_type_reference_base() : 
-		parent_type(), direction(CHANNEL_TYPE_BIDIRECTIONAL) { }
+		parent_type(), direction(CHANNEL_DIRECTION_DEFAULT) { }
 
 	explicit
 	channel_type_reference_base(const template_actuals&);
