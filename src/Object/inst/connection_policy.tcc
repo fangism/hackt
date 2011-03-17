@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/connection_policy.tcc"
-	$Id: connection_policy.tcc,v 1.14.2.1 2011/03/16 00:20:13 fang Exp $
+	$Id: connection_policy.tcc,v 1.14.2.2 2011/03/17 04:09:05 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CONNECTION_POLICY_TCC__
@@ -15,6 +15,9 @@
 #include "Object/type/channel_direction_enum.h"	// for direction enum
 #include "Object/unroll/unroll_context.h"
 #include "Object/type/canonical_type.h"
+#if	defined(ENABLE_STACKTRACE) && ENABLE_STACKTRACE
+#include "Object/type/channel_type_reference_base.h"
+#endif
 #include "Object/common/dump_flags.h"		// debug only
 #include "common/ICE.h"
 
@@ -524,6 +527,11 @@ process_connect_policy::initialize_actual_direction(
 		c(a.container->get_canonical_collection());
 	const direction_type d = c.__get_raw_type().get_direction();
 	// with bit fields, could just twiddle the consumer/producer halves...
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT_PRINT("direction (int:type): (" << d << ":");
+	channel_type_reference_base::dump_direction(STACKTRACE_STREAM, d)
+		<< ')' << endl;
+#endif
 	switch (d) {
 	case CHANNEL_TYPE_NULL:
 		break;
@@ -531,18 +539,26 @@ process_connect_policy::initialize_actual_direction(
 		direction_flags = a.direction_flags;
 		break;
 	case CHANNEL_TYPE_RECEIVE:
+#if 0
 		direction_flags =
 			(a.direction_flags & ~CONNECTED_PORT_FORMAL_PRODUCER);
 		if (a.direction_flags & CONNECTED_TO_ANY_CONSUMER) {
+#endif
 			direction_flags |= CONNECTED_TO_SUBSTRUCT_CONSUMER;
+#if 0
 		}
+#endif
 		break;
 	case CHANNEL_TYPE_SEND:
+#if 0
 		direction_flags =
 			(a.direction_flags & ~CONNECTED_PORT_FORMAL_CONSUMER);
 		if (a.direction_flags & CONNECTED_TO_ANY_PRODUCER) {
+#endif
 			direction_flags |= CONNECTED_TO_SUBSTRUCT_PRODUCER;
+#if 0
 		}
+#endif
 		break;
 #if 0 && ENABLE_SHARED_CHANNELS
 	case CHANNEL_TYPE_RECEIVE_SHARED:

@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/connection_policy.h"
 	Specializations for connections in the HAC language. 
-	$Id: connection_policy.h,v 1.19.2.1 2011/03/16 00:20:13 fang Exp $
+	$Id: connection_policy.h,v 1.19.2.2 2011/03/17 04:09:05 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CONNECTION_POLICY_H__
@@ -668,6 +668,15 @@ public:
 			Analogous to CONNECTED_TO_SUBSTRUCT_PRODUCER.
 		 */
 		CONNECTED_TO_SUBSTRUCT_CONSUMER = 0x20,
+		/**
+			These flags are set when the local
+			process instance is connected (by PRS)
+			to an end-consumer, or end-producer.
+			For now, such an attribute needs to be
+			explicitly declared, until it can be inferred.
+		 */
+		CONNECTED_PRS_PRODUCER = 0x04,
+		CONNECTED_PRS_CONSUMER = 0x40,
 #if 0
 		/**
 			Set if this channel is allowed to be connected

@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/connection_policy.cc"
-	$Id: connection_policy.cc,v 1.17.2.1 2011/03/16 00:20:11 fang Exp $
+	$Id: connection_policy.cc,v 1.17.2.2 2011/03/17 04:09:05 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -417,10 +417,10 @@ channel_connect_policy::read_flags(istream& i) {
 const char*
 process_connect_policy::attribute_names[] = {
 	"port!",
-	"port?",
+	"sub!",
 	"RESERVED-2",
 	"RESERVED-3",
-	"sub!",
+	"port?",
 	"sub?",
 	"RESERVED-6",
 	"RESERVED-7"
@@ -465,6 +465,7 @@ while (temp && p < attribute_names +8) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 process_connect_policy::dump_attributes(ostream& o) const {
+	o << " OHAI";
 if (has_nondefault_attributes()) {
 	o << " @[";
 	dump_flat_attributes(o);
