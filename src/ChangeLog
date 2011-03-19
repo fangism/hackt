@@ -3,6 +3,25 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-03-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-52-portdir-01-02:
+	  parser/hackt-parse.yy.in: updated grammar to distinguish between
+		type declarations that are legal in ports and
+		those that may be used to declare in definition scopes.  
+		Added support for direction-declaration statement:
+			instance?; or instance!;
+		This is intended to declare that this process
+		is responsible for driving a channel (port) as
+		a producer or consumer (middle-end not finished yet)
+		middle-end support for direction_declaration added
+			but not complete (new serialization objects).
+	  Fixed minor bug where error value returned by 
+		lookup_locally_allocated_index was not checked/propagated.
+	  Test cases updated, no regressions.
+	  Next: define process direction flag update semnatics and constraints.
+
+
 2011-03-15	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-52-portdir-01-01:

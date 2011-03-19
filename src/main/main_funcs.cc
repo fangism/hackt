@@ -3,7 +3,7 @@
 	Useful main-level functions to call.
 	Indent to hide most complexity here, exposing a bare-bones
 	set of public callable functions.  
-	$Id: main_funcs.cc,v 1.38.2.1 2011/03/16 00:20:19 fang Exp $
+	$Id: main_funcs.cc,v 1.38.2.2 2011/03/19 00:57:27 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -406,7 +406,7 @@ log:
 6b: more string/real expression variants
 6c: split meta_func_call into different types, one for each meta-expr type
 7: spec invariants added optional strings for assert messages
-8: process directionality flags
+8: process directionality flags, direction_declaration types
 ?: support for member nonmeta instance/value references
  */
 static const size_t

@@ -1,7 +1,7 @@
 /**
 	\file "AST/AST_fwd.h"
 	Forward declarations for classes in HAC::parser.
-	$Id: AST_fwd.h,v 1.12 2010/09/21 00:18:06 fang Exp $
+	$Id: AST_fwd.h,v 1.12.2.1 2011/03/19 00:57:14 fang Exp $
  */
 
 #ifndef	__HAC_AST_AST_FWD_H__
@@ -141,6 +141,7 @@ class guarded_instance_management;
 typedef	node_list<const guarded_instance_management>
 				 guarded_instance_management_list;
 class conditional_instantiation;
+class direction_statement;
 class type_completion_statement;
 class type_completion_connection_statement;
 

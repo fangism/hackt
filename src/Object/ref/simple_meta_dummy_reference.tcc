@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_dummy_reference.cc"
 	Method definitions for the meta_dummy_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_dummy_reference.tcc,v 1.7 2010/08/24 21:05:50 fang Exp $
+ 	$Id: simple_meta_dummy_reference.tcc,v 1.7.4.1 2011/03/19 00:57:22 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_DUMMY_REFERENCE_TCC__
@@ -248,6 +248,16 @@ count_ptr<const instance_management_base>
 SIMPLE_META_DUMMY_REFERENCE_CLASS::create_instance_attribute(
 		const count_ptr<const meta_instance_reference_base>&, 
 		const generic_attribute_list_type&) const {
+	ICE_NEVER_CALL(cerr);
+	return count_ptr<const instance_management_base>(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+SIMPLE_META_DUMMY_REFERENCE_TEMPLATE_SIGNATURE
+count_ptr<const instance_management_base>
+SIMPLE_META_DUMMY_REFERENCE_CLASS::create_direction_declaration(
+		const count_ptr<const meta_instance_reference_base>&, 
+		const direction_type) const {
 	ICE_NEVER_CALL(cerr);
 	return count_ptr<const instance_management_base>(NULL);
 }

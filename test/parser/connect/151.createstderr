@@ -44,11 +44,11 @@ Persistent Object Manager text dump:
 	40	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	41	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
 	42	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	43	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	43	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
 	44	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	28
 	45	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	46	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	47	##ADDR##	footprnt	0	#HEAD#	#TAIL#	725
+	47	##ADDR##	footprnt	0	#HEAD#	#TAIL#	730
 	48	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)

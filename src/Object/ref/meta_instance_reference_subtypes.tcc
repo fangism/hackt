@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/meta_instance_reference_subtypes.tcc"
-	$Id: meta_instance_reference_subtypes.tcc,v 1.31 2010/04/07 00:12:54 fang Exp $
+	$Id: meta_instance_reference_subtypes.tcc,v 1.31.6.1 2011/03/19 00:57:21 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_TCC__
@@ -15,6 +15,7 @@
 #include "Object/unroll/alias_connection.h"
 #include "Object/unroll/unroll_context.h"
 #include "Object/unroll/instance_attribute.h"
+#include "Object/unroll/direction_declaration.h"
 #include "Object/def/footprint.h"
 #include "Object/type/fundamental_type_reference.h"
 #include "Object/inst/physical_instance_collection.h"
@@ -304,6 +305,24 @@ META_INSTANCE_REFERENCE_CLASS::create_instance_attribute(
 		}
 	}
 	return return_type(new instance_attribute<Tag>(p, a));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Create an instance attribute statement that associates
+	Also should check per-meta-class instance attribute registry.  
+ */
+META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+count_ptr<const instance_management_base>
+META_INSTANCE_REFERENCE_CLASS::create_direction_declaration(
+		const count_ptr<const meta_instance_reference_base>& _this, 
+		const direction_type d) const {
+	typedef	count_ptr<const instance_management_base>	return_type;
+	INVARIANT(_this == this);
+	const count_ptr<const this_type>
+		p(_this.template is_a<const this_type>());
+	NEVER_NULL(p);
+	return return_type(new direction_declaration<Tag>(p, d));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

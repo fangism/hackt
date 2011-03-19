@@ -44,15 +44,15 @@ Persistent Object Manager text dump:
 	40	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	41	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	42	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	43	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	43	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
 	44	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	45	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	45	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
 	46	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
 	47	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
 	48	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	49	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
 	50	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	51	##ADDR##	footprnt	0	#HEAD#	#TAIL#	676
+	51	##ADDR##	footprnt	0	#HEAD#	#TAIL#	686
 	52	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	53	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 

@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.250 2011/02/28 09:37:41 fang Exp $
+#	$Id: Makefile.am,v 1.250.2.1 2011/03/19 00:57:13 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -764,6 +764,7 @@ OBJECT_TCC_FILES = \
 	Object/def/footprint_base.tcc \
 	Object/type/canonical_type.tcc \
 	Object/unroll/alias_connection.tcc \
+	Object/unroll/direction_declaration.tcc \
 	Object/unroll/expression_assignment.tcc \
 	Object/unroll/instantiation_statement.tcc \
 	Object/unroll/instance_attribute.tcc \
@@ -917,6 +918,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/unroll/channel_instantiation_statement.h \
 	Object/unroll/data_alias_connection_base.h \
 	Object/unroll/datatype_instantiation_statement.h \
+	Object/unroll/direction_declaration.h \
 	Object/unroll/empty_instantiation_statement_type_ref_base.h \
 	Object/unroll/instance_management_base.h \
 	Object/unroll/instance_attribute_registry.h \

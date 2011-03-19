@@ -41,14 +41,14 @@ Persistent Object Manager text dump:
 	37	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	38	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	39	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	40	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
 	41	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	42	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	43	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	44	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
 	45	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	46	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	47	##ADDR##	footprnt	0	#HEAD#	#TAIL#	590
+	47	##ADDR##	footprnt	0	#HEAD#	#TAIL#	605
 	48	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	49	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	50	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16

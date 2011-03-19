@@ -1,7 +1,7 @@
 /**
 	\file "AST/type.cc"
 	Class method definitions for type specifier classes.  
-	$Id: type.cc,v 1.13.6.1 2011/03/16 00:20:08 fang Exp $
+	$Id: type.cc,v 1.13.6.2 2011/03/19 00:57:16 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_base.cc,v 1.29.10.1 2005/12/11 00:45:02 fang Exp
  */
@@ -73,10 +73,10 @@ using util::auto_indent;
 
 //=============================================================================
 /**
-	Second character is used to flag a channel as shared.  
+	\param c1 primary direction
+	\param c2 flag a channel as shared.  
 	\return enumeration in "Object/type/channel_direction_enum.h"
  */
-static
 entity::direction_type
 token_to_direction_type(const char c1, const char c2) {
 switch (c1) {
@@ -276,6 +276,11 @@ generic_type_ref::get_base_def(void) const {
 never_ptr<const generic_type_ref::template_args_type>
 generic_type_ref::get_temp_spec(void) const {
 	return temp_spec;
+}
+
+void
+generic_type_ref::set_chan_dir(const char_punctuation_type* d) {
+	chan_dir = excl_ptr<const char_punctuation_type>(d);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

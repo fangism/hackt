@@ -4,7 +4,7 @@
 import "testlib/void-source.hac";
 import "testlib/void-sink.hac";
 
-chan!() void_chan;
+chan() void_chan;
 void_source A(void_chan);
 void_sink B(void_chan);
 

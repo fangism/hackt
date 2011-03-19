@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/connection_policy.cc"
-	$Id: connection_policy.cc,v 1.17.2.2 2011/03/17 04:09:05 fang Exp $
+	$Id: connection_policy.cc,v 1.17.2.3 2011/03/19 00:57:19 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -438,6 +438,7 @@ good_bool
 process_connect_policy::set_connection_flags(
 		const connection_flags_type f) {
 	STACKTRACE_VERBOSE;
+	// TODO: rewrite me
 	const connection_flags_type _or = f | direction_flags;
 	direction_flags |= _or;
 	return good_bool(true);
@@ -465,7 +466,7 @@ while (temp && p < attribute_names +8) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 process_connect_policy::dump_attributes(ostream& o) const {
-	o << " OHAI";
+//	o << " OHAI";
 if (has_nondefault_attributes()) {
 	o << " @[";
 	dump_flat_attributes(o);

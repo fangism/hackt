@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry_context.cc"
-	$Id: global_entry_context.cc,v 1.10 2011/02/03 02:23:20 fang Exp $
+	$Id: global_entry_context.cc,v 1.10.2.1 2011/03/19 00:57:17 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -348,6 +348,10 @@ global_entry_context::construct_global_footprint_frame(
 		const size_t ports = pp.port_entries();
 		STACKTRACE_INDENT_PRINT("lpid = " << lpid << " (" << ports
 			<< " ports)" << endl);
+		if (!lpid) {
+			// have error
+			return 0;
+		}
 		if (lpid >= ports) {
 			// then is local private
 			// change both ret frame and owner, and global offset
@@ -476,6 +480,9 @@ global_entry_context::construct_global_footprint_frame(
 #endif
 		const size_t gpid = spr->lookup_locally_allocated_index(uc);
 		STACKTRACE_INDENT_PRINT("gpid = " << gpid << endl);
+		if (!gpid) {
+			return 0;	// have error message already
+		}
 		const footprint& ofp(*owner._footprint);
 		const state_instance<process_tag>::pool_type&
 			pp(ofp.get_instance_pool<process_tag>());

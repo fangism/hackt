@@ -46,12 +46,12 @@ Persistent Object Manager text dump:
 	42	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	43	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	44	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	45	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	45	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
 	46	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
 	47	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	48	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	48	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
 	49	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
-	50	##ADDR##	footprnt	0	#HEAD#	#TAIL#	502
+	50	##ADDR##	footprnt	0	#HEAD#	#TAIL#	512
 	51	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
 	52	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
 

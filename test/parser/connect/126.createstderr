@@ -74,16 +74,16 @@ Persistent Object Manager text dump:
 	70	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	71	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	72	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	73	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	73	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
 	74	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	28
 	75	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	76	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	77	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	78	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	78	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
 	79	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	28
 	80	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	81	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	82	##ADDR##	footprnt	0	#HEAD#	#TAIL#	578
+	82	##ADDR##	footprnt	0	#HEAD#	#TAIL#	588
 	83	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	84	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 

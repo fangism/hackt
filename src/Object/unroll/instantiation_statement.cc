@@ -2,7 +2,7 @@
 	\file "Object/unroll/instantiation_statement.cc"
 	Method definitions for instantiation statement classes.  
 	This file was moved from "Object/art_object_inst_stmt.cc".
- 	$Id: instantiation_statement.cc,v 1.21 2010/09/21 00:18:32 fang Exp $
+ 	$Id: instantiation_statement.cc,v 1.21.2.1 2011/03/19 00:57:24 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_CC__
@@ -52,6 +52,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 // #include "Object/traits/proc_traits.h"
 #include "Object/unroll/template_type_completion.tcc"
 #include "Object/unroll/instance_attribute.tcc"
+#include "Object/unroll/direction_declaration.tcc"
 #include "Object/inst/internal_aliases_policy.tcc"
 
 #include "common/ICE.h"
@@ -92,6 +93,16 @@ SPECIALIZE_UTIL_WHAT(int_instance_attribute,
 	"int_instance_attribute")
 SPECIALIZE_UTIL_WHAT(enum_instance_attribute,
 	"enum_instance_attribute")
+SPECIALIZE_UTIL_WHAT(process_direction_declaration,
+	"process_direction_declaration")
+SPECIALIZE_UTIL_WHAT(channel_direction_declaration,
+	"channel_direction_declaration")
+SPECIALIZE_UTIL_WHAT(bool_direction_declaration,
+	"bool_direction_declaration")
+SPECIALIZE_UTIL_WHAT(int_direction_declaration,
+	"int_direction_declaration")
+SPECIALIZE_UTIL_WHAT(enum_direction_declaration,
+	"enum_direction_declaration")
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	pbool_instantiation_statement, 
@@ -133,6 +144,22 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	process_instance_attribute, 
 		PROCESS_INSTANCE_ATTRIBUTE_TYPE_KEY, 0)
+
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	bool_direction_declaration, 
+		DBOOL_DIRECTION_DECLARATION_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	int_direction_declaration, 
+		DINT_DIRECTION_DECLARATION_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	enum_direction_declaration, 
+		ENUM_DIRECTION_DECLARATION_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	channel_direction_declaration, 
+		CHANNEL_DIRECTION_DECLARATION_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	process_direction_declaration, 
+		PROCESS_DIRECTION_DECLARATION_TYPE_KEY, 0)
 
 }	// end namespace util
 
@@ -329,6 +356,11 @@ template class instance_attribute<int_tag>;
 template class instance_attribute<enum_tag>;
 template class instance_attribute<channel_tag>;
 template class instance_attribute<process_tag>;
+template class direction_declaration<bool_tag>;
+template class direction_declaration<int_tag>;
+template class direction_declaration<enum_tag>;
+template class direction_declaration<channel_tag>;
+template class direction_declaration<process_tag>;
 
 //=============================================================================
 }	// end namespace entity

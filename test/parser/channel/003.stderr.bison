@@ -8,7 +8,7 @@ state	value
 #STATE#	keyword: defchan [3:1..7]
 #STATE#	identifier: mychan [3:9..14]
 #STATE#	<: [3:16]
-#STATE#	(chan-type) [3:19..22]
+#STATE#	keyword: chan [3:19..22]
 #STATE#	( [3:23]
 #STATE#	list<(type-ref)>: ... [0:0]
 #STATE#	paramtype: pbool [3:24..28]

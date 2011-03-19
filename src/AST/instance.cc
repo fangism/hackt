@@ -1,7 +1,7 @@
 /**
 	\file "AST/instance.cc"
 	Class method definitions for HAC::parser for instance-related classes.
-	$Id: instance.cc,v 1.37 2010/09/02 00:34:33 fang Exp $
+	$Id: instance.cc,v 1.37.4.1 2011/03/19 00:57:15 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_instance.cc,v 1.31.10.1 2005/12/11 00:45:08 fang Exp
  */
@@ -97,6 +97,8 @@ SPECIALIZE_UTIL_WHAT(HAC::parser::type_completion_statement,
 	"(type-completion)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::type_completion_connection_statement, 
 	"(type-completion-connection)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::direction_statement, 
+	"(direction-statement)")
 
 namespace memory {
 // explicit template instantiations
@@ -106,6 +108,7 @@ template class count_ptr<const instance_management>;
 template class count_ptr<const instance_base>;
 template class count_ptr<const instance_declaration>;
 template class count_ptr<const type_completion_statement>;
+template class count_ptr<const direction_statement>;
 
 }	// end namespace memory
 }	// end namespace util
@@ -1520,6 +1523,65 @@ type_completion_connection_statement::check_build(context& c) const {
 	if (!actuals_base::add_instance_port_connections(iref, c).good) {
 		THROW_EXIT;
 	}
+	return c.top_namespace();
+}
+
+//=============================================================================
+// class direction_statement method definitions
+
+direction_statement::direction_statement(const inst_ref_expr* ir, 
+		const char_punctuation_type* d) :
+		instance_management(), 
+		inst_ref(ir), chan_dir(d) {
+	NEVER_NULL(inst_ref);
+	NEVER_NULL(chan_dir);
+}
+
+direction_statement::~direction_statement() { }
+
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(direction_statement)
+
+line_position
+direction_statement::leftmost(void) const {
+	return inst_ref->leftmost();
+}
+
+line_position
+direction_statement::rightmost(void) const {
+	return chan_dir->rightmost();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Note: Reference may be aggregate.
+ */
+never_ptr<const object>
+direction_statement::check_build(context& c) const {
+	STACKTRACE_VERBOSE;
+	// add an auxiliary type_completion statement
+	const inst_ref_expr::meta_return_type
+		ref(inst_ref->check_meta_reference(c));
+	if (!ref) {
+		cerr << "Error checking reference at " << where(*inst_ref)
+			<< endl;
+		THROW_EXIT;
+	}
+	// specify channel direction
+	if (ref.value_ref()) {
+		cerr << "Error: values do not take directions.  " 
+			<< where(*chan_dir) << endl;
+		THROW_EXIT;
+	}
+	const count_ptr<meta_instance_reference_base>
+		iref(ref.inst_ref());
+	NEVER_NULL(iref);
+	const count_ptr<const instance_management_base>
+		ia(iref->create_direction_declaration(iref,
+			token_to_direction_type(
+				chan_dir->text[0], chan_dir->text[1])));
+	NEVER_NULL(ia);
+	c.add_instance_management(ia);
+	// additional error handling?
 	return c.top_namespace();
 }
 

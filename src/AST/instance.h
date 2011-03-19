@@ -1,7 +1,7 @@
 /**
 	\file "AST/instance.h"
 	Instance-related parser classes for HAC.  
-	$Id: instance.h,v 1.13 2009/10/02 01:56:37 fang Exp $
+	$Id: instance.h,v 1.13.10.1 2011/03/19 00:57:16 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_instance.h,v 1.16.34.1 2005/12/11 00:45:08 fang Exp
  */
@@ -465,6 +465,35 @@ public:
 
 	ROOT_CHECK_PROTO;
 };	// end class type_completion_statement
+
+//-----------------------------------------------------------------------------
+class direction_statement : public instance_management {
+protected:
+	const excl_ptr<const inst_ref_expr>	inst_ref;
+	const excl_ptr<const char_punctuation_type>	chan_dir;
+public:
+	direction_statement(const inst_ref_expr*,
+		const char_punctuation_type*);
+virtual	~direction_statement();
+
+virtual	ostream&
+	what(ostream& o) const;
+
+virtual	line_position
+	leftmost(void) const;
+
+virtual	line_position
+	rightmost(void) const;
+
+virtual	ROOT_CHECK_PROTO;
+
+#if 0
+	static
+	count_ptr<const entity::instance_management_base>
+	create_direction_statement(const inst_ref_expr::meta_return_type&, 
+		const expr_list::checked_meta_exprs_type&);
+#endif
+};	// end class direction_statement
 
 //=============================================================================
 
