@@ -1,0 +1,17 @@
+// "039.hac"
+// copy-modified from "035.hac"
+
+import "026.hac";
+
+defproc thingy(e1of2? I; e1of2! O) {
+I?;
+O!;
+}
+
+defproc container(e1of2? A; e1of2! B) {
+e1of2 M;
+thingy bob(A, M), joe(M, B);
+}
+
+container box;
+

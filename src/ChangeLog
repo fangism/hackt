@@ -3,6 +3,23 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-03-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-52-portdir-01-03:
+	  Drafted middle-end support for process direction declarations, 
+		handful of test cases added.  
+		Direction declarations are not supported for other
+		meta-types.  
+		Before branch is complete, should document language.
+	  Currently don't have a way to check that a process is 
+		aliased to port, like bools (explicit flag).  
+	  TODO: distinguish between datatypes and channels, 
+		channels should only be point-to-point, 
+		datatypes are allowed to be read-shared.  
+	  hacknet: some ideas for supporting process ports
+		for potential use in emitting verilog.
+
+
 2011-03-18	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-52-portdir-01-02:

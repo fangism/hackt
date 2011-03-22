@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/connection_policy.cc"
-	$Id: connection_policy.cc,v 1.17.2.3 2011/03/19 00:57:19 fang Exp $
+	$Id: connection_policy.cc,v 1.17.2.4 2011/03/22 00:51:21 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -10,6 +10,7 @@
 #include <string>
 #include "Object/inst/connection_policy.h"
 #include "Object/devel_switches.h"
+#include "common/TODO.h"
 #include "util/IO_utils.tcc"
 #include "util/stacktrace.h"
 
@@ -116,6 +117,15 @@ bool_connect_policy::set_connection_flags(const connection_flags_type f) {
 	// no possible conflicts yet
 	// maybe later with connectivity constraints
 	attributes |= f;
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+bool_connect_policy::declare_direction(const direction_type) const {
+	cerr <<
+"Warning: direction declaration on bools are ignored (inferred from PRS only)."
+		<< endl;
 	return good_bool(true);
 }
 
@@ -335,6 +345,15 @@ channel_connect_policy::set_connection_flags(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+channel_connect_policy::declare_direction(const direction_type) const {
+	cerr <<
+"Warning: direction declaration on channels ignored (inferred from CHP only)."
+		<< endl;
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Checks to make sure a producer/consumer isn't referenced both
 	by meta (constant) and nonmeta means.  
@@ -418,11 +437,11 @@ const char*
 process_connect_policy::attribute_names[] = {
 	"port!",
 	"sub!",
-	"RESERVED-2",
+	"PRS!",
 	"RESERVED-3",
 	"port?",
 	"sub?",
-	"RESERVED-6",
+	"PRS?",
 	"RESERVED-7"
 };
 
@@ -441,6 +460,27 @@ process_connect_policy::set_connection_flags(
 	// TODO: rewrite me
 	const connection_flags_type _or = f | direction_flags;
 	direction_flags |= _or;
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Declare that a process is sourced or sinked locally.
+ */
+good_bool
+process_connect_policy::declare_direction(const direction_type d) {
+	// should we check whether or not is already connected?
+	switch (d) {
+	case CHANNEL_TYPE_SEND:
+		direction_flags |= CONNECTED_PRS_PRODUCER;
+		break;
+	case CHANNEL_TYPE_RECEIVE:
+		direction_flags |= CONNECTED_PRS_CONSUMER;
+		break;
+	default:
+		cerr << "Error: unsupported direction_type: " << int(d) << endl;
+		return good_bool(false);
+	}
 	return good_bool(true);
 }
 

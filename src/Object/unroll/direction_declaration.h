@@ -1,11 +1,11 @@
 /**
 	\file "Object/unroll/direction_declaration.h"
 	Definition of generic attribute statements.  
-	$Id: direction_declaration.h,v 1.1.2.1 2011/03/19 00:57:22 fang Exp $
+	$Id: direction_declaration.h,v 1.1.2.2 2011/03/22 00:51:24 fang Exp $
  */
 
-#ifndef	__HAC_OBJECT_UNROLL_DIRECTION_DECLARATIONS_H__
-#define	__HAC_OBJECT_UNROLL_DIRECTION_DECLARATIONS_H__
+#ifndef	__HAC_OBJECT_UNROLL_DIRECTION_DECLARATION_H__
+#define	__HAC_OBJECT_UNROLL_DIRECTION_DECLARATION_H__
 
 #include <iosfwd>
 #include <map>
@@ -87,5 +87,5 @@ public:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __HAC_OBJECT_UNROLL_DIRECTION_DECLARATIONS_H__
+#endif	// __HAC_OBJECT_UNROLL_DIRECTION_DECLARATION_H__
 

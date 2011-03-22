@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_options.h"
-	$Id: netlist_options.h,v 1.16 2010/10/27 00:16:54 fang Exp $
+	$Id: netlist_options.h,v 1.16.2.1 2011/03/22 00:51:27 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETLIST_OPTIONS_H__
@@ -75,7 +75,8 @@ struct netlist_options {
 	 */
 	typedef	enum {
 		STYLE_SPICE,
-		STYLE_SPECTRE
+		STYLE_SPECTRE,
+		STYLE_VERILOG
 	} style_enum;
 #endif
 	option_error_policy		unknown_option_policy;

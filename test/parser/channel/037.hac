@@ -1,0 +1,14 @@
+// "037.hac"
+// copy-modified from "036.hac"
+
+import "026.hac";
+
+defproc thingy(e1of2? I; e1of2! O) { }
+
+defproc loop() {
+thingy bob, joe;
+bob.O = joe.I;
+bob.I = joe.O;
+}
+
+loop deloop;

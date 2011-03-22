@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.cc"
-	$Id: netgraph.cc,v 1.27 2011/01/28 02:23:30 fang Exp $
+	$Id: netgraph.cc,v 1.27.2.1 2011/03/22 00:51:26 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -748,7 +748,10 @@ netlist::netlist() : netlist_common(), name(),
 		name_collision_map(), 
 #endif
 		local_subcircuits(), 
-		port_list(), 
+		node_port_list(), 
+#if NETLIST_VERILOG
+		proc_port_list(),
+#endif
 		empty(false), 	// is cached
 		aux_count(0),
 		subs_count(0),
@@ -866,8 +869,9 @@ netlist::append_instance(const state_instance<process_tag>& subp,
 		lp(*fp->get_instance_pool<process_tag>()[lpid -1]
 			.get_back_ref());
 	// ALERT: translates to global index, not what we want!
-	netlist::port_list_type::const_iterator
-		fi(subnet.port_list.begin()), fe(subnet.port_list.end());
+	netlist::node_port_list_type::const_iterator
+		fi(subnet.node_port_list.begin()),
+		fe(subnet.node_port_list.end());
 	for ( ; fi!=fe; ++fi) {
 		STACKTRACE_INDENT_PRINT("formal node = " << *fi << endl);
 		const node& fn(subnet.node_pool[*fi]);	// formal node
@@ -945,11 +949,11 @@ netlist::append_instance(const state_instance<process_tag>& subp,
 			THROW_EXIT;
 		}
 		// else skip for now
-	}
+	}	// end for each node port
 #if ENABLE_STACKTRACE
 	np.dump_raw(STACKTRACE_INDENT_PRINT("new instance: ")) << endl;
 #endif
-	INVARIANT(np.actuals.size() == subnet.port_list.size());
+	INVARIANT(np.actuals.size() == subnet.node_port_list.size());
 }	// end netgraph::append_instance
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1254,8 +1258,8 @@ default:
 }	// end switch
 	o << name;
 }
-	typedef	port_list_type::const_iterator		const_iterator;
-	const_iterator i(port_list.begin()), e(port_list.end());
+	typedef	node_port_list_type::const_iterator		const_iterator;
+	const_iterator i(node_port_list.begin()), e(node_port_list.end());
 	ostringstream oss;		// stage for name mangling
 	for ( ; i!=e; ++i) {
 		node_pool[*i].emit(oss << ' ', nopt);
@@ -1349,7 +1353,7 @@ netlist::dump_raw(ostream& o) const {
 	}
 }{
 	o << "ports (node indices): ";
-	copy(port_list.begin(), port_list.end(), osi);
+	copy(node_port_list.begin(), node_port_list.end(), osi);
 	o << endl;
 }{
 	o << "named node map (footprint-index -> netlist-node-index):" << endl;
@@ -1427,10 +1431,10 @@ netlist::summarize_ports(const netlist_options& opt) {
 	// could mark_used_nodes here instead?
 #if !PRS_SUPPLY_OVERRIDES
 	if (node_pool[GND_index].used) {
-		port_list.push_back(GND_index);
+		node_port_list.push_back(GND_index);
 	}
 	if (node_pool[Vdd_index].used) {
-		port_list.push_back(Vdd_index);
+		node_port_list.push_back(Vdd_index);
 	}
 #endif
 {
@@ -1447,7 +1451,7 @@ netlist::summarize_ports(const netlist_options& opt) {
 	}
 	port_index_list_type::const_iterator
 		i(V.bool_indices.begin()), e(V.bool_indices.end());
-	port_list.reserve(V.bool_indices.size() +2);	// for supplies
+	node_port_list.reserve(V.bool_indices.size() +2);	// for supplies
 	for ( ; i!=e; ++i) {
 		// 1-indexed local id to 0-indexed named_node_map
 		INVARIANT(*i);
@@ -1467,7 +1471,7 @@ netlist::summarize_ports(const netlist_options& opt) {
 	{
 		INVARIANT(n.is_logical_node());
 		INVARIANT(n.index == *i);	// self-reference
-		port_list.push_back(ni);
+		node_port_list.push_back(ni);
 		// sorted_ports[local_ind] = ni;
 	}
 	}	// end for
@@ -1509,7 +1513,8 @@ if (opt.undriven_node_policy != OPTION_IGNORE) {
 	// set to test for port membership
 	typedef	set<index_type>	port_set_type;
 	port_set_type port_set;
-	copy(port_list.begin(), port_list.end(), util::set_inserter(port_set));
+	copy(node_port_list.begin(), node_port_list.end(),
+		util::set_inserter(port_set));
 	const port_set_type::const_iterator pe(port_set.end());
 	typedef	node_pool_type::const_iterator	const_iterator;
 	const_iterator i(node_pool.begin()), e(node_pool.end());

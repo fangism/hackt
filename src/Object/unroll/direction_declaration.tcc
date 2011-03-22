@@ -1,7 +1,7 @@
 /**
 	\file "Object/unroll/direction_declaration.tcc"
 	Implementation of generic attribute statements.  
-	$Id: direction_declaration.tcc,v 1.1.2.1 2011/03/19 00:57:24 fang Exp $
+	$Id: direction_declaration.tcc,v 1.1.2.2 2011/03/22 00:51:25 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_DIRECTION_DECLARATION_TCC__
@@ -73,19 +73,20 @@ DIRECTION_DECLARATION_CLASS::unroll(const unroll_context& c) const {
 			<< endl;
 		return good_bool(false);
 	}
-	FINISH_ME(Fang);
 	// apply to all aliases
 	typedef	typename alias_collection_type::const_iterator
 					alias_iterator;
 	alias_iterator ai(aliases.begin()), ae(aliases.end());
+	bool good = true;
 	for ( ; ai!=ae; ++ai) {
 		NEVER_NULL(*ai);
 		// apply attribute to *canonical* alias
-		// TODO: finish me
-		// (*ai)->find()->set_direction(dir);
-		// error handling?
+		if (!(*ai)->find()->declare_direction(dir).good) {
+			// have error message
+			good = false;
+		}
 	}
-	return good_bool(true);
+	return good_bool(good);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

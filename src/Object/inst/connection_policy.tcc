@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/connection_policy.tcc"
-	$Id: connection_policy.tcc,v 1.14.2.2 2011/03/17 04:09:05 fang Exp $
+	$Id: connection_policy.tcc,v 1.14.2.3 2011/03/22 00:51:23 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CONNECTION_POLICY_TCC__
@@ -260,14 +260,14 @@ template <class AliasType>
 void
 channel_connect_policy::initialize_direction(const AliasType& a, 
 		const unroll_context&) {
-	typedef	typename AliasType::container_type	ContainerType;
-	typedef	ContainerType		collection_interface_type;
+	typedef	typename AliasType::container_type	container_type;
+	typedef	container_type		collection_interface_type;
 	typedef	typename collection_interface_type::traits_type
 					traits_type;
 	typedef	typename traits_type::tag_type		tag_type;
 	typedef	instance_collection<tag_type>	instance_collection_type;
 	STACKTRACE_VERBOSE;
-	const ContainerType& p(*a.container);
+	const container_type& p(*a.container);
 	const bool f = p.is_formal();
 	const instance_collection_type& c(p.get_canonical_collection());
 	const direction_type d = c.__get_raw_type().get_direction();
@@ -502,8 +502,50 @@ if (a.has_complete_type()) {
 	STACKTRACE_INDENT_PRINT("after inheriting alias properties: " << endl);
 	a.dump_ports(cerr, dump_flags::default_value) << endl;
 #endif
-}
+#if PROCESS_CONNECTIVITY_CHECKING
+	// now apply declared port directions, type need not be complete!
+	const container_type& p(*a.container);
+	const bool formal = p.is_formal();
+	const direction_type d = _type.get_direction();
+	switch (d) {
+	case PROCESS_DIRECTION_DEFAULT: break;
+		// leave as initial value
+#if 0 && ENABLE_SHARED_CHANNELS
+	case CHANNEL_TYPE_RECEIVE_SHARED:
+		if (formal) {
+			direction_flags |= CONNECTED_PRODUCER_IS_SHARED;
+			direction_flags |= CONNECTED_PORT_FORMAL_PRODUCER;
+		} else {
+			direction_flags |= CONNECTED_CONSUMER_IS_SHARED;
+		}
+		break;
+#endif
+	case CHANNEL_TYPE_RECEIVE:
+		if (formal) {
+			direction_flags |= CONNECTED_PORT_FORMAL_PRODUCER;
+		}
+		break;
+#if 0 && ENABLE_SHARED_CHANNELS
+	case CHANNEL_TYPE_SEND_SHARED:
+		if (formal) {
+			direction_flags |= CONNECTED_CONSUMER_IS_SHARED;
+			direction_flags |= CONNECTED_PORT_FORMAL_CONSUMER;
+		} else {
+			direction_flags |= CONNECTED_PRODUCER_IS_SHARED;
+		}
+		break;
+#endif
+	case CHANNEL_TYPE_SEND:
+		if (formal) {
+			direction_flags |= CONNECTED_PORT_FORMAL_CONSUMER;
+		}
+		break;
+	default:
+		ICE(cerr, cerr << "Invalid direction: " << d << endl;)
+	}	// end switch
+#endif	// PROCESS_CONNECTIVITY_CHECKING
 	// else type is relaxed, skip this until type is complete
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -609,21 +651,27 @@ process_connect_policy::__check_connection(const AliasType& a) {
 	typedef	typename AliasType::traits_type		traits_type;
 	STACKTRACE_VERBOSE;
 	error_count ret;
+// if (!a.is_aliased_to_port()) {
 	const connection_flags_type f = a.direction_flags;
 // if is user-defined channel
-	if (!(f & CONNECTED_TO_ANY_PRODUCER)) {
+	const bool have_prod = (f & CONNECTED_TO_ANY_PRODUCER);
+	const bool have_cons = (f & CONNECTED_TO_ANY_CONSUMER);
+	if (have_cons && !have_prod) {
 		a.dump_hierarchical_name(
 			cerr << "WARNING: " << traits_type::tag_name << " ")
 			<< " lacks connection to a producer." << endl;
 		++ret.warnings;
 	}
-	if (!(f & CONNECTED_TO_ANY_CONSUMER)) {
+	if (have_prod && !have_cons) {
 		a.dump_hierarchical_name(
 			cerr << "WARNING: " << traits_type::tag_name << " ")
 			<< " lacks connection to a consumer." << endl;
 		++ret.warnings;
 	}
+	// if (!have_prod && !have_cons) // we don't care
+	// or better yet check the type, whether is actually user-defined chan
 // end if
+// }	// !aliased_to_port()
 	return ret;
 }
 

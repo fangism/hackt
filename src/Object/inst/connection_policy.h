@@ -1,14 +1,14 @@
 /**
 	\file "Object/inst/connection_policy.h"
 	Specializations for connections in the HAC language. 
-	$Id: connection_policy.h,v 1.19.2.2 2011/03/17 04:09:05 fang Exp $
+	$Id: connection_policy.h,v 1.19.2.3 2011/03/22 00:51:22 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CONNECTION_POLICY_H__
 #define	__HAC_OBJECT_INST_CONNECTION_POLICY_H__
 
 #include "Object/inst/connection_policy_fwd.h"
-#include "Object/devel_switches.h"	// for PROCESS_CONNECTIVITY_CHECKING
+#include "Object/type/channel_direction_enum.h"
 #include <iosfwd>
 #include "common/status.h"		// for error_count
 #include "util/string_fwd.h"
@@ -56,6 +56,11 @@ protected:
 public:
 	good_bool
 	set_connection_flags(const connection_flags_type) const {
+		return good_bool(true);
+	}
+
+	good_bool
+	declare_direction(const direction_type) const {
 		return good_bool(true);
 	}
 
@@ -289,6 +294,10 @@ protected:
 public:
 	good_bool
 	set_connection_flags(const connection_flags_type);
+
+	// really should let PRS determine this
+	good_bool
+	declare_direction(const direction_type) const;
 
 	bool
 	has_nondefault_attributes(const bool i = false) const;
@@ -571,6 +580,9 @@ public:
 	good_bool
 	set_connection_flags(const connection_flags_type);
 
+	good_bool
+	declare_direction(const direction_type) const;
+
 	static
 	good_bool
 	check_meta_nonmeta_usage(const connection_flags_type, const char*);
@@ -697,9 +709,11 @@ public:
 			CONNECTED_TO_LOCAL_CONSUMER,
 		CONNECTED_TO_ANY_PRODUCER = 
 			CONNECTED_TO_LOCAL_PRODUCER |
+			CONNECTED_PRS_PRODUCER |
 			CONNECTED_TO_SUBSTRUCT_PRODUCER,
 		CONNECTED_TO_ANY_CONSUMER = 
 			CONNECTED_TO_LOCAL_CONSUMER |
+			CONNECTED_PRS_CONSUMER |
 			CONNECTED_TO_SUBSTRUCT_CONSUMER,
 		/// default value
 		DEFAULT_CONNECT_FLAGS = 0x00
@@ -734,6 +748,9 @@ protected:
 public:
 	good_bool
 	set_connection_flags(const connection_flags_type);
+
+	good_bool
+	declare_direction(const direction_type);
 
 	bool
 	has_nondefault_attributes(void) const {
