@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-03-22	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-52-portdir-01-05:
+	  Updated connectivity checking to allow multiple consumers
+		shared on datatypes.  Test cases added to datatype.
+	  Work on branch is complete, merge to trunk.
+	  Punting for another time: bool connectivity specification
+		checking w.r.t. PRS fanin/fanouts.
+		Let ! denote that it must be locally driven, 
+		and ? denote that a node may NOT be driven...
+
+
 2011-03-21	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-52-portdir-01-04:

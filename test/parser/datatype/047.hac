@@ -1,0 +1,14 @@
+// "047.hac"
+// copy-modified from "046.hac"
+// testing datatype connectivity checking
+
+deftype pair <: bool (bool t, f) { }
+
+defproc driver(pair! globals) {
+globals!;
+}
+
+pair shoes;
+driver ruple(shoes), tuple(shoes);
+// datatypes cannot share producers -- expect fail
+

@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/connection_policy.tcc"
-	$Id: connection_policy.tcc,v 1.14.2.3 2011/03/22 00:51:23 fang Exp $
+	$Id: connection_policy.tcc,v 1.14.2.4 2011/03/22 23:18:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CONNECTION_POLICY_TCC__
@@ -699,6 +699,10 @@ good_bool
 process_connect_policy::synchronize_flags(
 		AliasType& l, AliasType& r) {
 	typedef	typename AliasType::traits_type		traits_type;
+	typedef	typename AliasType::container_type
+						container_type;
+	typedef	typename traits_type::tag_type		tag_type;
+	typedef	instance_collection<tag_type>	instance_collection_type;
 	STACKTRACE_VERBOSE;
 	if (&l == &r) {
 		// permit self-aliases, of course
@@ -744,6 +748,13 @@ process_connect_policy::synchronize_flags(
 			(rrd & CONNECTED_TO_ANY_CONSUMER))
 	{
 		// multiple consumers
+		// allow datatypes to always share consumers
+		// but not channels
+		const container_type& p(*l.container);
+		const instance_collection_type& c(p.get_canonical_collection());
+		const meta_type_tag_enum
+			t(c.__get_raw_type().get_base_def()->get_meta_type());
+		if (t != META_TYPE_STRUCT) {
 #if 0
 		if (!(_and & CONNECTED_CONSUMER_IS_SHARED)) {
 			// at least one of them not sharing
@@ -755,6 +766,7 @@ process_connect_policy::synchronize_flags(
 #if 0
 		}
 #endif
+		}
 	}
 #if 0
 	if (!check_meta_nonmeta_usage(_or, traits_type::tag_name).good) {
