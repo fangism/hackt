@@ -1,5 +1,5 @@
 # "test/parser/channel/Makefile.am"
-#	$Id: Makefile.am,v 1.22.6.2 2011/03/22 02:44:13 fang Exp $
+#	$Id: Makefile.am,v 1.22.6.3 2011/03/22 21:11:12 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -114,7 +114,8 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 
 # more output expectation files for when bison is used
 BISON_OUTPUTS += 000 003 004 006 007 \
-	013
+	013 \
+	local-01 local-02 local-03 local-04
 
 srcdir_EXTRA_DIST += \
 	nonmeta-bool-merge.hac nonmeta-bool-split.hac \
