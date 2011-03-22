@@ -1,0 +1,12 @@
+// "046.hac"
+
+import "source-sink.hac";
+
+defproc thingy() {
+e1of2 A;
+A!;
+sinky sink(A);
+}
+
+thingy bob;
+

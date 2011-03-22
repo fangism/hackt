@@ -1,0 +1,11 @@
+// "045.hac"
+// testing connectivity checking
+
+import "026.hac";
+
+defproc thingy(e1of2? I; e1of2! O) { }
+
+e1of2 B;
+thingy bob(, B), joe(, B);	// cannot share
+
+

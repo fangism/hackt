@@ -1,0 +1,4 @@
+Error: cannot receive on a send-only port.
+Instantiated from: thingy<>
+Error encountered during module::create.
+ERROR in creating.  Aborting.

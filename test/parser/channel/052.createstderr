@@ -1,0 +1,6 @@
+Error: cannot alias two non-sharing producers of type process.
+	got: thingy<>::A
+	and: thingy<>::source.O
+Instantiated from: thingy<>
+Error encountered during module::create.
+ERROR in creating.  Aborting.

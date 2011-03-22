@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/connection_policy.cc"
-	$Id: connection_policy.cc,v 1.17.2.4 2011/03/22 00:51:21 fang Exp $
+	$Id: connection_policy.cc,v 1.17.2.5 2011/03/22 02:43:52 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -472,9 +472,29 @@ process_connect_policy::declare_direction(const direction_type d) {
 	// should we check whether or not is already connected?
 	switch (d) {
 	case CHANNEL_TYPE_SEND:
+		if (direction_flags & CONNECTED_TO_NONPORT_PRODUCER) {
+		cerr << "Error: channel is already connected to a producer."
+			<< endl;
+			return good_bool(false);
+		}
+		if (direction_flags & CONNECTED_PORT_FORMAL_PRODUCER) {
+			cerr << "Error: cannot send on a receive-only port."
+				<< endl;
+			return good_bool(false);
+		}
 		direction_flags |= CONNECTED_PRS_PRODUCER;
 		break;
 	case CHANNEL_TYPE_RECEIVE:
+		if (direction_flags & CONNECTED_TO_NONPORT_CONSUMER) {
+		cerr << "Error: channel is already connected to a consumer."
+			<< endl;
+			return good_bool(false);
+		}
+		if (direction_flags & CONNECTED_PORT_FORMAL_CONSUMER) {
+			cerr << "Error: cannot receive on a send-only port."
+				<< endl;
+			return good_bool(false);
+		}
 		direction_flags |= CONNECTED_PRS_CONSUMER;
 		break;
 	default:

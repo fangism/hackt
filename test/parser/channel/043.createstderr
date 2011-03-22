@@ -1,0 +1,4 @@
+Error: channel is already connected to a producer.
+Instantiated from: thingy<>
+Error encountered during module::create.
+ERROR in creating.  Aborting.

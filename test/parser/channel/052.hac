@@ -1,0 +1,13 @@
+// "052.hac"
+// copy-modified form "048.hac"
+
+import "source-sink.hac";
+
+defproc thingy() {
+e1of2 A;
+A!;
+sourcy source(A);
+}
+
+thingy bob;
+

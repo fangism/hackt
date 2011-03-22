@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.h"
-	$Id: netgraph.h,v 1.20.2.1 2011/03/22 00:51:27 fang Exp $
+	$Id: netgraph.h,v 1.20.2.2 2011/03/22 02:43:55 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETGRAPH_H__
@@ -53,7 +53,7 @@
 	Unsupported: template parameters.
 	Goal: 1
  */
-#define	NETLIST_VERILOG				1
+#define	NETLIST_VERILOG				0
 
 namespace HAC {
 namespace entity {

@@ -1,0 +1,12 @@
+// "041.hac"
+// testing connectivity checking
+
+import "026.hac";
+
+defproc thingy(e1of2? I; e1of2! O) {
+O?;	// wrong direction
+}
+
+thingy bob;
+
+
