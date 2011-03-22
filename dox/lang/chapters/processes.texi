@@ -1,5 +1,5 @@
 @c "chapters/processes.tex"
-@c $Id: processes.texi,v 1.1.58.1 2011/03/22 23:18:18 fang Exp $
+@c $Id: processes.texi,v 1.1.58.2 2011/03/22 23:35:50 fang Exp $
 
 @node Processes
 @chapter Processes
@@ -61,7 +61,7 @@ Process port types can also be further qualified with direction
 annotations to indicate whether a port is an input or output.
 
 @example
-defproc foo(bool? in; bool! out) { ... }
+defproc foo(bool? in; bool! out) @{ ... @}
 @end example
 
 The connectivity rules for bools, channels and datatstructs vary slightly.  
