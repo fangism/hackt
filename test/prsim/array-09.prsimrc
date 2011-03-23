@@ -1,0 +1,6 @@
+# "array-09.prsimrc"
+# @haco@ array.haco-c
+# expect fail with diagnostic message, not crash
+
+watch X[1].w
+

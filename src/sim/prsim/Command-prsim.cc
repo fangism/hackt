@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.87 2011/03/23 18:47:35 fang Exp $
+	$Id: Command-prsim.cc,v 1.88 2011/03/23 19:49:30 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -4874,13 +4874,14 @@ if (a.size() < 2) {
 #else
 		const node_index_type ni =
 			parse_node_to_index(objname, s.get_module());
+#endif
 		if (!ni) {
 			cerr << "No such node found: " << 
 				nonempty_abs_dir(objname) << endl;
 			badarg = true;
-		}
-#endif
+		} else {
 			s.watch_node(ni);
+		}
 #if PRSIM_NODE_AGGREGATE_ARGUMENTS
 		}	// end for each node
 #endif
