@@ -1,0 +1,14 @@
+// "046.hac"
+// copy-modified from "045.hac"
+// testing datatype connectivity checking
+
+deftype pair <: bool (bool t, f) { }
+
+defproc quad(pair? globals) {
+globals?;
+}
+
+pair shoes;
+quad ruple(shoes), tuple(shoes);
+// datatypes should be shareable
+

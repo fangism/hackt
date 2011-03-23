@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_options.cc"
-	$Id: netlist_options.cc,v 1.20 2010/10/27 00:16:54 fang Exp $
+	$Id: netlist_options.cc,v 1.21 2011/03/23 00:36:23 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -159,6 +159,14 @@ if (v.values.size()) {
 		comment_prefix = "// ";
 		subckt_def_style = STYLE_SPECTRE;
 		instance_port_style = STYLE_SPECTRE;
+	} else if (f == "verilog") {
+		transistor_prefix = "#FET:";	// primitive
+		subckt_instance_prefix = "";
+		pre_line_continue = " \\";
+		post_line_continue = "";
+		comment_prefix = "// ";
+		subckt_def_style = STYLE_VERILOG;
+		instance_port_style = STYLE_VERILOG;
 	} else {
 		cerr << "Unknown output format: " << f << endl;
 		return true;
@@ -530,9 +538,12 @@ __set_style_member(const option_value& opt,
 			n_opt.*mem = netlist_options::STYLE_SPICE;
 		} else if (p == "spectre") {
 			n_opt.*mem = netlist_options::STYLE_SPECTRE;
+		} else if (p == "verilog") {
+			n_opt.*mem = netlist_options::STYLE_VERILOG;
 		} else {
 			cerr << "Error: style values for option " <<
-				opt.key << " are [spice|spectre]." << endl;
+				opt.key << " are [spice|spectre|verilog]."
+				<< endl;
 			return true;
 		}
 	}
@@ -718,6 +729,7 @@ __print_member_default(ostream& o, const netlist_options& n_opt,
 switch (n_opt.*mem) {
 	case netlist_options::STYLE_SPICE:	o << "spice"; break;
 	case netlist_options::STYLE_SPECTRE:	o << "spectre"; break;
+	case netlist_options::STYLE_VERILOG:	o << "verilog"; break;
 	default:		o << "???";
 }
 	return o;

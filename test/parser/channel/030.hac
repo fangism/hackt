@@ -1,0 +1,10 @@
+// "030.hac"
+// for comparison with "028.hac"
+
+import "026.hac";
+
+defproc thingy(e1of2 I; e1of2 O) { }
+
+thingy bob;
+
+

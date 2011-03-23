@@ -51,9 +51,9 @@ Persistent Object Manager text dump:
 	42	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
 	43	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
 	44	##ADDR##	footprnt	0	#HEAD#	#TAIL#	456
-	45	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
+	45	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	21
 	46	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	47	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
+	47	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	21
 	48	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	49	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
 	50	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16

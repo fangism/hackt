@@ -1,13 +1,14 @@
 /**
 	\file "Object/inst/connection_policy.h"
 	Specializations for connections in the HAC language. 
-	$Id: connection_policy.h,v 1.19 2010/10/14 00:19:28 fang Exp $
+	$Id: connection_policy.h,v 1.20 2011/03/23 00:36:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CONNECTION_POLICY_H__
 #define	__HAC_OBJECT_INST_CONNECTION_POLICY_H__
 
 #include "Object/inst/connection_policy_fwd.h"
+#include "Object/type/channel_direction_enum.h"
 #include <iosfwd>
 #include "common/status.h"		// for error_count
 #include "util/string_fwd.h"
@@ -55,6 +56,11 @@ protected:
 public:
 	good_bool
 	set_connection_flags(const connection_flags_type) const {
+		return good_bool(true);
+	}
+
+	good_bool
+	declare_direction(const direction_type) const {
 		return good_bool(true);
 	}
 
@@ -288,6 +294,10 @@ protected:
 public:
 	good_bool
 	set_connection_flags(const connection_flags_type);
+
+	// really should let PRS determine this
+	good_bool
+	declare_direction(const direction_type) const;
 
 	bool
 	has_nondefault_attributes(const bool i = false) const;
@@ -570,6 +580,9 @@ public:
 	good_bool
 	set_connection_flags(const connection_flags_type);
 
+	good_bool
+	declare_direction(const direction_type) const;
+
 	static
 	good_bool
 	check_meta_nonmeta_usage(const connection_flags_type, const char*);
@@ -603,7 +616,7 @@ public:
 
 		template <class AliasType>
 		void
-		operator () (AliasType& a);
+		operator () (AliasType&);
 	};	// end struct connection_flag_setter
 
 	// only for non-directional channels?
@@ -635,20 +648,160 @@ public:
 /**
 	Mostly just redirects many calls to substructure, for recursion.
  */
-struct process_connect_policy : public null_connect_policy {
+struct process_connect_policy
+#if !PROCESS_CONNECTIVITY_CHECKING
+	: public null_connect_policy
+#endif
+{
 // parent type is temporary as we gradually implement this...
 private:
 	typedef	process_connect_policy		this_type;
 public:
-	// default ctor
+#if PROCESS_CONNECTIVITY_CHECKING
+	enum direction_flags {
+		/**
+			Set if connected to a local port producer.  
+			Mutually exclusive with 
+			CONNECTED_TO_SUBSTRUCT_PRODUCER
+			Setting this means either connected to port formal.
+		 */
+		CONNECTED_TO_LOCAL_PRODUCER = 0x01,
+		/**
+			Analogous to CONNECTED_TO_LOCAL_CONSUMER.
+		 */
+		CONNECTED_TO_LOCAL_CONSUMER = 0x10,
+		/**
+			Connection state inferred from hierarchy
+			when substructure is instantiated, 
+			propagated from formal to actual.  
+		 */
+		CONNECTED_TO_SUBSTRUCT_PRODUCER = 0x02,
+		/**
+			Analogous to CONNECTED_TO_SUBSTRUCT_PRODUCER.
+		 */
+		CONNECTED_TO_SUBSTRUCT_CONSUMER = 0x20,
+		/**
+			These flags are set when the local
+			process instance is connected (by PRS)
+			to an end-consumer, or end-producer.
+			For now, such an attribute needs to be
+			explicitly declared, until it can be inferred.
+		 */
+		CONNECTED_PRS_PRODUCER = 0x04,
+		CONNECTED_PRS_CONSUMER = 0x40,
+#if 0
+		/**
+			Set if this channel is allowed to be connected
+			to other shared producers.  
+			Requires ALL participants
+			in an alias set to be shared to be legal.  
+		 */
+		CONNECTED_PRODUCER_IS_SHARED = 0x02,
+		/**
+			Analogous to CONNECTED_CONSUMER_IS_SHARED.
+		 */
+		CONNECTED_CONSUMER_IS_SHARED = 0x20,
+#endif
+		// derived values
+		CONNECTED_PORT_FORMAL_PRODUCER =
+			CONNECTED_TO_LOCAL_PRODUCER,
+		CONNECTED_PORT_FORMAL_CONSUMER =
+			CONNECTED_TO_LOCAL_CONSUMER,
+		CONNECTED_TO_NONPORT_PRODUCER = 
+			CONNECTED_PRS_PRODUCER |
+			CONNECTED_TO_SUBSTRUCT_PRODUCER,
+		CONNECTED_TO_NONPORT_CONSUMER = 
+			CONNECTED_PRS_CONSUMER |
+			CONNECTED_TO_SUBSTRUCT_CONSUMER,
+		CONNECTED_TO_ANY_PRODUCER = 
+			CONNECTED_TO_LOCAL_PRODUCER |
+			CONNECTED_TO_NONPORT_PRODUCER,
+		CONNECTED_TO_ANY_CONSUMER = 
+			CONNECTED_TO_LOCAL_CONSUMER |
+			CONNECTED_TO_NONPORT_CONSUMER,
+		/// default value
+		DEFAULT_CONNECT_FLAGS = 0x00
+	};
+protected:
+	static const char*			attribute_names[];
+	connection_flags_type		direction_flags;
+public:
+	process_connect_policy() : direction_flags(DEFAULT_CONNECT_FLAGS) { }
+#endif	// PROCESS_CONNECTIVITY_CHECKING
 private:
+#if !PROCESS_CONNECTIVITY_CHECKING
 	using null_connect_policy::initialize_direction;
-
+#endif
 protected:
 
 	template <class AliasType>
 	void
 	initialize_direction(AliasType&, const unroll_context&);
+
+#if PROCESS_CONNECTIVITY_CHECKING
+protected:
+	template <class AliasType>
+	static
+	good_bool
+	synchronize_flags(AliasType&, AliasType&);
+
+	template <class AliasType>
+	void
+	initialize_actual_direction(const AliasType&);
+
+public:
+	good_bool
+	set_connection_flags(const connection_flags_type);
+
+	good_bool
+	declare_direction(const direction_type);
+
+	bool
+	has_nondefault_attributes(void) const {
+		return direction_flags != DEFAULT_CONNECT_FLAGS;
+	}
+
+protected:
+	template <class AliasType>
+	void
+	__update_flags(AliasType&);
+
+	template <class AliasType>
+	static
+	error_count
+	__check_connection(const AliasType&);
+
+public:
+	struct connection_flag_setter {
+		good_bool		status;
+		const connection_flags_type	update;
+
+		explicit
+		connection_flag_setter(const connection_flags_type f) :
+			status(true), update(f) { }
+
+		template <class AliasType>
+		void
+		operator () (AliasType&);
+	};	// end struct collection_connection_flag_setter
+
+	ostream&
+	dump_flat_attributes(ostream&) const;
+
+	ostream&
+	dump_attributes(ostream& o) const;
+
+	ostream&
+	dump_explicit_attributes(ostream& o) const { return o; }
+
+protected:
+	void
+	write_flags(ostream&) const;
+
+	void
+	read_flags(istream&);
+
+#endif	// PROCESS_CONNECTIVITY_CHECKING
 
 };	// end struct process_connect_policy
 

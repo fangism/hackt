@@ -1,7 +1,7 @@
 /**
 	\file "Object/unroll/unroll_fwd.h"
 	Forward declarations for all unroll-related classes.
-	$Id: unroll_fwd.h,v 1.5 2010/09/21 00:18:33 fang Exp $
+	$Id: unroll_fwd.h,v 1.6 2011/03/23 00:36:21 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_FWD_H__
@@ -92,6 +92,19 @@ typedef	instance_attribute<channel_tag>
 	channel_instance_attribute;
 typedef	instance_attribute<process_tag>
 	process_instance_attribute;
+
+// from "Object/unroll/direction_declaration.h"
+template <class> class direction_declaration;
+typedef	direction_declaration<bool_tag>
+	bool_direction_declaration;
+typedef	direction_declaration<int_tag>
+	int_direction_declaration;
+typedef	direction_declaration<enum_tag>
+	enum_direction_declaration;
+typedef	direction_declaration<channel_tag>
+	channel_direction_declaration;
+typedef	direction_declaration<process_tag>
+	process_direction_declaration;
 
 class unroll_context;
 

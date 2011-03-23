@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/connection_policy.cc"
-	$Id: connection_policy.cc,v 1.17 2010/10/14 00:19:28 fang Exp $
+	$Id: connection_policy.cc,v 1.18 2011/03/23 00:36:10 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -10,6 +10,7 @@
 #include <string>
 #include "Object/inst/connection_policy.h"
 #include "Object/devel_switches.h"
+#include "common/TODO.h"
 #include "util/IO_utils.tcc"
 #include "util/stacktrace.h"
 
@@ -116,6 +117,15 @@ bool_connect_policy::set_connection_flags(const connection_flags_type f) {
 	// no possible conflicts yet
 	// maybe later with connectivity constraints
 	attributes |= f;
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+bool_connect_policy::declare_direction(const direction_type) const {
+	cerr <<
+"Warning: direction declaration on bools are ignored (inferred from PRS only)."
+		<< endl;
 	return good_bool(true);
 }
 
@@ -335,6 +345,15 @@ channel_connect_policy::set_connection_flags(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+channel_connect_policy::declare_direction(const direction_type) const {
+	cerr <<
+"Warning: direction declaration on channels ignored (inferred from CHP only)."
+		<< endl;
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Checks to make sure a producer/consumer isn't referenced both
 	by meta (constant) and nonmeta means.  
@@ -409,6 +428,125 @@ void
 channel_connect_policy::read_flags(istream& i) {
 	read_value(i, direction_flags);
 }
+
+//=============================================================================
+// class process_connect_policy method definitions
+
+#if PROCESS_CONNECTIVITY_CHECKING
+const char*
+process_connect_policy::attribute_names[] = {
+	"port!",
+	"sub!",
+	"PRS!",
+	"RESERVED-3",
+	"port?",
+	"sub?",
+	"PRS?",
+	"RESERVED-7"
+};
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Check for conflicting flags.  
+	Won't bother templating this method unless something else other
+	than channels is directional.  
+	Is this only called by CHP visits?
+	Checks can be a lot more sophisticated, depending on desired semantics.
+ */
+good_bool
+process_connect_policy::set_connection_flags(
+		const connection_flags_type f) {
+	STACKTRACE_VERBOSE;
+	// TODO: rewrite me
+	const connection_flags_type _or = f | direction_flags;
+	direction_flags |= _or;
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Declare that a process is sourced or sinked locally.
+ */
+good_bool
+process_connect_policy::declare_direction(const direction_type d) {
+	// should we check whether or not is already connected?
+	switch (d) {
+	case CHANNEL_TYPE_SEND:
+		if (direction_flags & CONNECTED_TO_NONPORT_PRODUCER) {
+		cerr << "Error: channel is already connected to a producer."
+			<< endl;
+			return good_bool(false);
+		}
+		if (direction_flags & CONNECTED_PORT_FORMAL_PRODUCER) {
+			cerr << "Error: cannot send on a receive-only port."
+				<< endl;
+			return good_bool(false);
+		}
+		direction_flags |= CONNECTED_PRS_PRODUCER;
+		break;
+	case CHANNEL_TYPE_RECEIVE:
+		if (direction_flags & CONNECTED_TO_NONPORT_CONSUMER) {
+		cerr << "Error: channel is already connected to a consumer."
+			<< endl;
+			return good_bool(false);
+		}
+		if (direction_flags & CONNECTED_PORT_FORMAL_CONSUMER) {
+			cerr << "Error: cannot receive on a send-only port."
+				<< endl;
+			return good_bool(false);
+		}
+		direction_flags |= CONNECTED_PRS_CONSUMER;
+		break;
+	default:
+		cerr << "Error: unsupported direction_type: " << int(d) << endl;
+		return good_bool(false);
+	}
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Only applies to hflat, called by cflat_prs_printer()
+ */
+ostream&
+process_connect_policy::dump_flat_attributes(ostream& o) const {
+	connection_flags_type temp = direction_flags;	// better be unsigned!
+	const char** p = attribute_names;
+while (temp && p < attribute_names +8) {
+	// b/c upper bits are connectivity
+	if (temp & 1) {
+		o << ' ' << *p;
+	}
+	++p;
+	temp >>= 1;
+}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+process_connect_policy::dump_attributes(ostream& o) const {
+//	o << " OHAI";
+if (has_nondefault_attributes()) {
+	o << " @[";
+	dump_flat_attributes(o);
+	o << " ]";
+}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+process_connect_policy::write_flags(ostream& o) const {
+	write_value(o, direction_flags);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+process_connect_policy::read_flags(istream& i) {
+	read_value(i, direction_flags);
+}
+#endif	// PROCESS_CONNECTIVITY_CHECKING
 
 //=============================================================================
 }	// end namespace entity

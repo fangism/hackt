@@ -1,6 +1,6 @@
 /**
 	\file "Object/type/canonical_fundamental_chan_type.cc"
-	$Id: canonical_fundamental_chan_type.cc,v 1.5 2007/11/01 23:59:41 fang Exp $
+	$Id: canonical_fundamental_chan_type.cc,v 1.6 2011/03/23 00:36:17 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -174,7 +174,7 @@ if (i!=e) {
  */
 ostream&
 canonical_fundamental_chan_type_base::dump(ostream& o) const {
-	return dump(o, CHANNEL_TYPE_BIDIRECTIONAL);
+	return dump(o, CHANNEL_DIRECTION_DEFAULT);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -406,14 +406,14 @@ canonical_fundamental_chan_type_base::load_object(
 // class canonical_fundamental_chan_type method definitions
 
 canonical_fundamental_chan_type::canonical_fundamental_chan_type() :
-		base_chan_type(), direction(CHANNEL_TYPE_BIDIRECTIONAL) {
+		base_chan_type(), direction(CHANNEL_DIRECTION_DEFAULT) {
 	STACKTRACE_CTOR_VERBOSE;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 canonical_fundamental_chan_type::canonical_fundamental_chan_type(
 		const base_chan_ptr_type& c) :
-		base_chan_type(c), direction(CHANNEL_TYPE_BIDIRECTIONAL) {
+		base_chan_type(c), direction(CHANNEL_DIRECTION_DEFAULT) {
 	STACKTRACE_CTOR_VERBOSE;
 	NEVER_NULL(base_chan_type);
 }

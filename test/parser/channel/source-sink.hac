@@ -1,0 +1,9 @@
+// "source-sink.hac"
+// testing connectivity checking
+
+import "026.hac";
+
+defproc sourcy(e1of2! O) { O!; }
+defproc sinky(e1of2? I) { I?; }
+defproc buffy(e1of2? I; e1of2! O) { I?; O!; }
+

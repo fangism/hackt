@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_alias_tracker.cc"
-	$Id: port_alias_tracker.cc,v 1.35 2010/08/24 18:08:39 fang Exp $
+	$Id: port_alias_tracker.cc,v 1.36 2011/03/23 00:36:11 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -996,11 +996,13 @@ if (has_internal_aliases) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 error_count
 port_alias_tracker::check_bool_connections(void) const {
-#if BOOL_PRS_CONNECTIVITY_CHECKING
 	return port_alias_tracker_base<bool_tag>::check_connections();
-#else
-	return error_count();
-#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+error_count
+port_alias_tracker::check_process_connections(void) const {
+	return port_alias_tracker_base<process_tag>::check_connections();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

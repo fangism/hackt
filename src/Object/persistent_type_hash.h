@@ -20,7 +20,7 @@
  *
  *	TODO: optionally, use gperf to generate a fast perfect hash.
  *
- *	$Id: persistent_type_hash.h,v 1.33 2011/02/25 23:19:29 fang Exp $
+ *	$Id: persistent_type_hash.h,v 1.34 2011/03/23 00:36:09 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_PERSISTENT_TYPE_HASH_H__
@@ -261,6 +261,13 @@
 #define	DBOOL_INSTANCE_ATTRIBUTE_TYPE_KEY			"dboolatt"
 #define	DINT_INSTANCE_ATTRIBUTE_TYPE_KEY			"dintattr"
 #define	ENUM_INSTANCE_ATTRIBUTE_TYPE_KEY			"enumattr"
+
+#define	PROCESS_DIRECTION_DECLARATION_TYPE_KEY			"procdird"
+#define	CHANNEL_DIRECTION_DECLARATION_TYPE_KEY			"chandird"
+#define	DATA_DIRECTION_DECLARATION_TYPE_KEY			"datadird"
+#define	DBOOL_DIRECTION_DECLARATION_TYPE_KEY			"dbooldir"
+#define	DINT_DIRECTION_DECLARATION_TYPE_KEY			"dintdird"
+#define	ENUM_DIRECTION_DECLARATION_TYPE_KEY			"enumdird"
 
 #define	PBOOL_EXPR_ASSIGNMENT_TYPE_KEY				"pbassign"
 #define	PINT_EXPR_ASSIGNMENT_TYPE_KEY				"piassign"

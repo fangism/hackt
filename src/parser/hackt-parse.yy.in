@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.60 2011/02/02 23:54:22 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.61 2011/03/23 00:36:24 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -328,6 +328,7 @@ extern const char* const yyrule[];
 	array_concatenation*	_array_concatenation;
 	loop_concatenation*	_loop_concatenation;
 	array_construction*	_array_construction;
+	direction_statement*	_direction_statement;
 	type_completion_statement*	_type_completion_statement;
 	type_completion_connection_statement*	_type_completion_connection_statement;
 
@@ -552,14 +553,16 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_port_formal_decl>	port_formal_decl
 %type	<_port_formal_id_list>	port_formal_id_list
 %type	<_port_formal_id>	port_formal_id
-%type	<_concrete_type_ref>	physical_type_ref
-%type	<_generic_type_ref>	generic_type_ref
-%type	<_concrete_type_ref>	data_type_ref base_data_type_ref
+%type	<_concrete_type_ref>	physical_type_ref port_physical_type_ref
+%type	<_generic_type_ref>	generic_type_ref port_generic_type_ref
+%type	<_generic_type_ref>	base_data_type_ref port_base_data_type_ref
+%type	<_concrete_type_ref>	data_type_ref
 %type	<_concrete_type_ref>	type_id
 /* %type	<_data_type_base>	base_param_type */
 %type	<_token_paramtype>	base_param_type
-%type	<_chan_type>	base_chan_type chan_or_port
-%type	<_node_position>	optional_chan_dir
+%type	<_chan_type>	chan_or_port
+%type	<_chan_type>	base_chan_type port_base_chan_type
+%type	<_node_position>	optional_chan_dir chan_dir
 %type	<_data_type_ref_list>	data_type_ref_list_optional_in_parens
 %type	<_data_type_ref_list>	data_type_ref_list_optional data_type_ref_list
 %type	<_token_datatype>	base_data_type
@@ -603,6 +606,7 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_instance_id_list>	instance_id_list
 %type	<_instance_base>	instance_id_item
 %type	<_connection_statement>	connection_statement
+%type	<_direction_statement>	instance_direction_statement
 %type	<_type_completion_statement>	instance_type_completion_statement
 %type	<_type_completion_statement>	instance_attribute_statement
 %type	<_type_completion_connection_statement>	instance_type_completion_connection_statement
@@ -1138,7 +1142,7 @@ port_formal_decl_list
 
 port_formal_decl
 	/* must switch to C-style formals, eliminate id_list */
-	: physical_type_ref port_formal_id_list
+	: port_physical_type_ref port_formal_id_list
 		{ $$ = new port_formal_decl($1, $2); }
 	;
 
@@ -1156,28 +1160,44 @@ port_formal_id
 		{ $$ = new port_formal_id($1, $2); }
 	;
 
+port_generic_type_ref
+	: generic_type_ref optional_chan_dir
+		{ $$ = $1; $$->set_chan_dir($2); }
+	;
+
 generic_type_ref
-	: generic_id strict_relaxed_template_arguments optional_chan_dir
-		{ $$ = new generic_type_ref(new type_id($1), $2, $3); }
+	: generic_id strict_relaxed_template_arguments
+		{ $$ = new generic_type_ref(new type_id($1), $2); }
 		/* for userdef or chan type, and templating */
 /*
 	: generic_id complex_expr_optional_list_in_angles
-		optional_template_arguments_in_angles optional_chan_dir
+		optional_template_arguments_in_angles
 		{ $$ = new generic_type_ref(new type_id($1), 
-			new template_argument_list_pair($2, $3),
-			$4); }
+			new template_argument_list_pair($2, $3)); }
 */
 	;
 
 optional_chan_dir
+	: chan_dir
+	| { $$ = NULL; }
+	;
+
+chan_dir
 	: '?'
 	| '!'
 	/* new: explicit shared channel annotation */
 	| '?' '?' { $$ = $1; $$->text[1] = $2->text[0]; DELETE_TOKEN($2); }
 	| '!' '!' { $$ = $1; $$->text[1] = $2->text[0]; DELETE_TOKEN($2); }
-	| { $$ = NULL; }
 	;
 
+/* allow direction annotations on ports only */
+port_physical_type_ref
+	: port_generic_type_ref { $$ = $1; }
+	| port_base_chan_type
+		{ $$ = $1; }
+	| port_base_data_type_ref
+		{ $$ = $1; }
+	;
 physical_type_ref
 	: generic_type_ref { $$ = $1; }
 	| base_chan_type
@@ -1188,10 +1208,14 @@ physical_type_ref
 		{ $$ = $1; }
 	;
 
+port_base_data_type_ref
+	: base_data_type_ref optional_chan_dir
+		{ $$ = $1; $$->set_chan_dir($2); }
+	;
+
 base_data_type_ref
-	: base_data_type strict_relaxed_template_arguments optional_chan_dir
-		{ $$ = new generic_type_ref($1, $2); DELETE_TOKEN($3); }
-		/* TODO: use direction argument */
+	: base_data_type strict_relaxed_template_arguments
+		{ $$ = new generic_type_ref($1, $2); }
 	;
 
 /** because general data types may be user-defined **/
@@ -1224,11 +1248,17 @@ base_param_type
 		{ $$ = $1; }
 	;
 
-/* channel type: channel, inport, outport, and data types */
-base_chan_type
+port_base_chan_type
 	/* eliminate defaulting? (to int?), use <template> style? */
 	: chan_or_port data_type_ref_list_optional_in_parens
 		{ $$ = $1; $$->attach_data_types($2); }
+	;
+
+/* channel type: channel, inport, outport, and data types */
+base_chan_type
+	/* eliminate defaulting? (to int?), use <template> style? */
+	: CHANNEL data_type_ref_list_optional_in_parens
+		{ $$ = new chan_type($1, NULL); $$->attach_data_types($2); }
 	;
 
 /* NOTE: now directions are only allowed to be associated with ports, 
@@ -1510,6 +1540,7 @@ connection_body_item_base
 	/* covers alias connection and parameter assignments */
 	| nonempty_alias_list ';'
 		{ $$ = $1; DELETE_TOKEN($2); }
+	| instance_direction_statement { $$ = $1; }
 	| instance_type_completion_statement { $$ = $1; }
 	| instance_type_completion_connection_statement { $$ = $1; }
 	| instance_attribute_statement { $$ = $1; }
@@ -1689,6 +1720,18 @@ instance_type_completion_statement
 	| generic_id complex_expr_optional_list_in_angles ';'
 		{ $$ = new type_completion_statement(new id_expr($1), $2);
 		  DELETE_TOKEN($3); }
+	;
+
+instance_direction_statement
+	: member_index_expr chan_dir ';'
+		{ $$ = new direction_statement($1, $2); DELETE_TOKEN($3); }
+/**
+	: index_expr chan_dir ';'
+		{ $$ = new direction_statement(new id_expr($1), $2);
+		  DELETE_TOKEN($3); }
+	| generic_id chan_dir ';'
+		{ $$ = new direction_statement($1, $2); DELETE_TOKEN($3); }
+**/
 	;
 
 /* note: lvalue allows member references */

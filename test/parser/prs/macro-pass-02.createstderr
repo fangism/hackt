@@ -65,14 +65,14 @@ Persistent Object Manager text dump:
 	61	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	62	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	63	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	64	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	64	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
 	65	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	36
 	66	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	67	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	68	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	69	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	70	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	71	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	71	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
 	72	##ADDR##	procdefn	0	#HEAD#	#TAIL#	134
 	73	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	74	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
@@ -106,7 +106,7 @@ Persistent Object Manager text dump:
 	102	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	103	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	104	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	105	##ADDR##	footprnt	0	#HEAD#	#TAIL#	748
+	105	##ADDR##	footprnt	0	#HEAD#	#TAIL#	758
 	106	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	107	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	108	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
@@ -121,12 +121,12 @@ Persistent Object Manager text dump:
 	117	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	118	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	119	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	120	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	120	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
 	121	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	122	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	122	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
 	123	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	124	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	125	##ADDR##	footprnt	0	#HEAD#	#TAIL#	880
+	124	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	125	##ADDR##	footprnt	0	#HEAD#	#TAIL#	895
 	126	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	127	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	128	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12

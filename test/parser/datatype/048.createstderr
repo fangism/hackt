@@ -1,0 +1,264 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	56
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	119
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	9	##ADDR##	procplch	0	#HEAD#	#TAIL#	31
+	10	##ADDR##	portscop	0	#HEAD#	#TAIL#	24
+	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	17	##ADDR##	procdefn	0	#HEAD#	#TAIL#	97
+	18	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	19	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	20	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	footprnt	0	#HEAD#	#TAIL#	326
+	25	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	26	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	29	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	30	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	33	##ADDR##	procdird	0	#HEAD#	#TAIL#	13
+	34	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	footprnt	0	#HEAD#	#TAIL#	419
+	36	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	37	##ADDR##	procdefn	0	#HEAD#	#TAIL#	117
+	38	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	39	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	40	##ADDR##	procplch	0	#HEAD#	#TAIL#	31
+	41	##ADDR##	portscop	0	#HEAD#	#TAIL#	24
+	42	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	43	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	44	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	45	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	46	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	47	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	48	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	49	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	50	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	51	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	52	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	53	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	54	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	55	##ADDR##	procdird	0	#HEAD#	#TAIL#	13
+	56	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	57	##ADDR##	footprnt	0	#HEAD#	#TAIL#	419
+	58	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	59	##ADDR##	procplch	0	#HEAD#	#TAIL#	29
+	60	##ADDR##	procplch	0	#HEAD#	#TAIL#	29
+	61	##ADDR##	procplch	0	#HEAD#	#TAIL#	29
+	62	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	63	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	64	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	65	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	66	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	67	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	68	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	69	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	70	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	71	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	72	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	73	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	74	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	75	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	76	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	77	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	28
+	78	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	79	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	80	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	81	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	82	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	28
+	83	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	84	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	85	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	86	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	28
+	87	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	88	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	89	##ADDR##	footprnt	0	#HEAD#	#TAIL#	983
+	90	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	91	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	92	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	93	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  6 instantiation-collections
+  0 sub-namespaces
+  3 definitions
+  0 typedefs
+  Definitions:
+    driver = process-definition (defined) driver(
+        bool<> !GND
+        bool<> !Vdd
+        pair<>! globals
+      )
+      In definition "driver", we have: {
+      Instances:
+        !GND = bool<> driver::!GND
+        !Vdd = bool<> driver::!Vdd
+        globals = pair<>! driver::globals
+      unroll sequence: 
+        ports: (
+          bool<> !GND
+          bool<> !Vdd
+          pair<>! globals
+        )
+        !GND@[supply=0]
+        !Vdd@[supply=1]
+        globals!
+      footprint: {
+        !GND = bool^0 = driver<>::!GND (3) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = driver<>::!Vdd (4) @[ supply_high port-alias ] 
+        globals = process pair<>^0 = driver<>::globals (1) @[ PRS! port? ] (
+          t = bool^0 = driver<>::globals.t (1) @[ port-alias ] 
+          f = bool^0 = driver<>::globals.f (2) @[ port-alias ] 
+        )
+        Created state:
+        process instance pool: (1 ports, 0 local, 0 mapped)
+        1	driver<>::globals @[ PRS! port? ]	pair<>
+          bool: 1,2
+        bool instance pool: (4 ports, 0 local, 0 mapped)
+        1	driver<>::globals.t @[ port-alias ]	
+        2	driver<>::globals.f @[ port-alias ]	
+        3	driver<>::!GND @[ supply_low port-alias ]	
+        4	driver<>::!Vdd @[ supply_high port-alias ]	
+      }
+      }
+
+    pair = process-definition (defined) pair(
+        bool<> t
+        bool<> f
+      )
+      In definition "pair", we have: {
+      Instances:
+        f = bool<> pair::f
+        t = bool<> pair::t
+      unroll sequence: 
+        ports: (
+          bool<> t
+          bool<> f
+        )
+      footprint: {
+        f = bool^0 = pair<>::f (2) @[ port-alias ] 
+        t = bool^0 = pair<>::t (1) @[ port-alias ] 
+        Created state:
+        bool instance pool: (2 ports, 0 local, 0 mapped)
+        1	pair<>::t @[ port-alias ]	
+        2	pair<>::f @[ port-alias ]	
+      }
+      }
+
+    quad = process-definition (defined) quad(
+        bool<> !GND
+        bool<> !Vdd
+        pair<>? globals
+      )
+      In definition "quad", we have: {
+      Instances:
+        !GND = bool<> quad::!GND
+        !Vdd = bool<> quad::!Vdd
+        globals = pair<>? quad::globals
+      unroll sequence: 
+        ports: (
+          bool<> !GND
+          bool<> !Vdd
+          pair<>? globals
+        )
+        !GND@[supply=0]
+        !Vdd@[supply=1]
+        globals?
+      footprint: {
+        !GND = bool^0 = quad<>::!GND (3) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = quad<>::!Vdd (4) @[ supply_high port-alias ] 
+        globals = process pair<>^0 = quad<>::globals (1) @[ port! PRS? ] (
+          t = bool^0 = quad<>::globals.t (1) @[ port-alias ] 
+          f = bool^0 = quad<>::globals.f (2) @[ port-alias ] 
+        )
+        Created state:
+        process instance pool: (1 ports, 0 local, 0 mapped)
+        1	quad<>::globals @[ port! PRS? ]	pair<>
+          bool: 1,2
+        bool instance pool: (4 ports, 0 local, 0 mapped)
+        1	quad<>::globals.t @[ port-alias ]	
+        2	quad<>::globals.f @[ port-alias ]	
+        3	quad<>::!GND @[ supply_low port-alias ]	
+        4	quad<>::!Vdd @[ supply_high port-alias ]	
+      }
+      }
+
+  Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
+    d = driver<> d
+    ruple = quad<> ruple
+    shoes = pair<> shoes
+    tuple = quad<> tuple
+}
+
+footprint: {
+  !GND = bool^0 = !GND (3) @[ supply_low ] 
+  !Vdd = bool^0 = !Vdd (4) @[ supply_high ] 
+  d = process driver<>^0 = d (2) (
+    !GND = bool^0 = !GND (3) @[ supply_low ] 
+    !Vdd = bool^0 = !Vdd (4) @[ supply_high ] 
+    globals = process pair<>^0 = shoes (1) @[ sub! sub? ] (
+      t = bool^0 = shoes.t (1) 
+      f = bool^0 = shoes.f (2) 
+    )
+  )
+  ruple = process quad<>^0 = ruple (3) (
+    !GND = bool^0 = !GND (3) @[ supply_low ] 
+    !Vdd = bool^0 = !Vdd (4) @[ supply_high ] 
+    globals = process pair<>^0 = shoes (1) @[ sub! sub? ] (
+      t = bool^0 = shoes.t (1) 
+      f = bool^0 = shoes.f (2) 
+    )
+  )
+  shoes = process pair<>^0 = shoes (1) @[ sub! sub? ] (
+    t = bool^0 = shoes.t (1) 
+    f = bool^0 = shoes.f (2) 
+  )
+  tuple = process quad<>^0 = tuple (4) (
+    !GND = bool^0 = !GND (3) @[ supply_low ] 
+    !Vdd = bool^0 = !Vdd (4) @[ supply_high ] 
+    globals = process pair<>^0 = shoes (1) @[ sub! sub? ] (
+      t = bool^0 = shoes.t (1) 
+      f = bool^0 = shoes.f (2) 
+    )
+  )
+  Created state:
+  process instance pool: (0 ports, 4 local, 0 mapped)
+  1	shoes @[ sub! sub? ]	pair<>
+    bool: 1,2
+  2	d	driver<>
+    process: 1
+    bool: 1,2,3,4
+  3	ruple	quad<>
+    process: 1
+    bool: 1,2,3,4
+  4	tuple	quad<>
+    process: 1
+    bool: 1,2,3,4
+  bool instance pool: (0 ports, 4 local, 0 mapped)
+  1	shoes.t	
+  2	shoes.f	
+  3	!GND @[ supply_low ]	
+  4	!Vdd @[ supply_high ]	
+}

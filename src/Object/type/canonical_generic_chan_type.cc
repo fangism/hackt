@@ -1,7 +1,7 @@
 /**
 	\file "Object/type/canonical_generic_type.tcc"
 	Implementation of canonical_type template class.  
-	$Id: canonical_generic_chan_type.cc,v 1.11 2010/04/02 22:18:48 fang Exp $
+	$Id: canonical_generic_chan_type.cc,v 1.12 2011/03/23 00:36:17 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CANONICAL_GENERIC_CHAN_TYPE_CC__
@@ -40,7 +40,11 @@ using util::read_value;
 
 canonical_generic_chan_type::canonical_type() :
 		base_type(), canonical_definition_ptr(NULL), 
-		datatype_list(), direction() {
+		datatype_list()
+#if !PROCESS_CONNECTIVITY_CHECKING
+		, direction()
+#endif
+		{
 	// what is direction? don't care
 }
 
@@ -48,10 +52,16 @@ canonical_generic_chan_type::canonical_type() :
 canonical_generic_chan_type::canonical_type(
 		const canonical_definition_ptr_type d, 
 		const direction_type dir) :
-		base_type(), canonical_definition_ptr(d), datatype_list(), 
-		direction(dir) {
+		base_type(), canonical_definition_ptr(d), datatype_list()
+#if !PROCESS_CONNECTIVITY_CHECKING
+		, direction(dir)
+#endif
+		{
 	NEVER_NULL(canonical_definition_ptr);
 	INVARIANT(!canonical_definition_ptr.is_a<const typedef_base>());
+#if PROCESS_CONNECTIVITY_CHECKING
+	set_direction(dir);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -59,18 +69,27 @@ canonical_generic_chan_type::canonical_type(
 		const canonical_definition_ptr_type d,
 		const param_list_ptr_type& p, 
 		const direction_type dir) :
-		base_type(p), canonical_definition_ptr(d), datatype_list(), 
-		direction(dir) {
+		base_type(p), canonical_definition_ptr(d), datatype_list()
+#if !PROCESS_CONNECTIVITY_CHECKING
+		, direction(dir)
+#endif
+		{
 	NEVER_NULL(canonical_definition_ptr);
 	INVARIANT(!canonical_definition_ptr.is_a<const typedef_base>());
+#if PROCESS_CONNECTIVITY_CHECKING
+	set_direction(dir);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 canonical_generic_chan_type::canonical_type(
 		const this_type& d,
 		const const_param_list_ptr_type& p) :
-		base_type(), canonical_definition_ptr(), datatype_list(), 
-		direction() {
+		base_type(), canonical_definition_ptr(), datatype_list()
+#if !PROCESS_CONNECTIVITY_CHECKING
+		, direction()
+#endif
+		{
 	ICE_NEVER_CALL(cerr);
 }
 
@@ -81,9 +100,16 @@ canonical_generic_chan_type::canonical_type(
 		const direction_type dir) :
 		base_type(p.make_const_param_list()),
 		canonical_definition_ptr(d),
-		datatype_list(), direction(dir) {
+		datatype_list()
+#if !PROCESS_CONNECTIVITY_CHECKING
+		, direction(dir)
+#endif
+		{
 	NEVER_NULL(canonical_definition_ptr);
 	INVARIANT(!canonical_definition_ptr.is_a<const typedef_base>());
+#if PROCESS_CONNECTIVITY_CHECKING
+	set_direction(dir);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

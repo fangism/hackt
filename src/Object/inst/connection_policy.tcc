@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/connection_policy.tcc"
-	$Id: connection_policy.tcc,v 1.14 2010/10/14 00:19:29 fang Exp $
+	$Id: connection_policy.tcc,v 1.15 2011/03/23 00:36:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CONNECTION_POLICY_TCC__
@@ -15,6 +15,9 @@
 #include "Object/type/channel_direction_enum.h"	// for direction enum
 #include "Object/unroll/unroll_context.h"
 #include "Object/type/canonical_type.h"
+#if	defined(ENABLE_STACKTRACE) && ENABLE_STACKTRACE
+#include "Object/type/channel_type_reference_base.h"
+#endif
 #include "Object/common/dump_flags.h"		// debug only
 #include "common/ICE.h"
 
@@ -257,14 +260,14 @@ template <class AliasType>
 void
 channel_connect_policy::initialize_direction(const AliasType& a, 
 		const unroll_context&) {
-	typedef	typename AliasType::container_type	ContainerType;
-	typedef	ContainerType		collection_interface_type;
+	typedef	typename AliasType::container_type	container_type;
+	typedef	container_type		collection_interface_type;
 	typedef	typename collection_interface_type::traits_type
 					traits_type;
 	typedef	typename traits_type::tag_type		tag_type;
 	typedef	instance_collection<tag_type>	instance_collection_type;
 	STACKTRACE_VERBOSE;
-	const ContainerType& p(*a.container);
+	const container_type& p(*a.container);
 	const bool f = p.is_formal();
 	const instance_collection_type& c(p.get_canonical_collection());
 	const direction_type d = c.__get_raw_type().get_direction();
@@ -338,7 +341,7 @@ channel_connect_policy::initialize_actual_direction(
 	// const instance_collection_type& c(p.get_canonical_collection());
 	const instance_collection_type&
 		c(a.container->get_canonical_collection());
-	const char d = c.__get_raw_type().get_direction();
+	const direction_type d = c.__get_raw_type().get_direction();
 	// with bit fields, could just twiddle the consumer/producer halves...
 	switch (d) {
 	case CHANNEL_TYPE_BIDIRECTIONAL:
@@ -499,9 +502,290 @@ if (a.has_complete_type()) {
 	STACKTRACE_INDENT_PRINT("after inheriting alias properties: " << endl);
 	a.dump_ports(cerr, dump_flags::default_value) << endl;
 #endif
-}
+#if PROCESS_CONNECTIVITY_CHECKING
+	// now apply declared port directions, type need not be complete!
+	const container_type& p(*a.container);
+	const bool formal = p.is_formal();
+	const direction_type d = _type.get_direction();
+	switch (d) {
+	case PROCESS_DIRECTION_DEFAULT: break;
+		// leave as initial value
+#if 0 && ENABLE_SHARED_CHANNELS
+	case CHANNEL_TYPE_RECEIVE_SHARED:
+		if (formal) {
+			direction_flags |= CONNECTED_PRODUCER_IS_SHARED;
+			direction_flags |= CONNECTED_PORT_FORMAL_PRODUCER;
+		} else {
+			direction_flags |= CONNECTED_CONSUMER_IS_SHARED;
+		}
+		break;
+#endif
+	case CHANNEL_TYPE_RECEIVE:
+		if (formal) {
+			direction_flags |= CONNECTED_PORT_FORMAL_PRODUCER;
+		}
+		break;
+#if 0 && ENABLE_SHARED_CHANNELS
+	case CHANNEL_TYPE_SEND_SHARED:
+		if (formal) {
+			direction_flags |= CONNECTED_CONSUMER_IS_SHARED;
+			direction_flags |= CONNECTED_PORT_FORMAL_CONSUMER;
+		} else {
+			direction_flags |= CONNECTED_PRODUCER_IS_SHARED;
+		}
+		break;
+#endif
+	case CHANNEL_TYPE_SEND:
+		if (formal) {
+			direction_flags |= CONNECTED_PORT_FORMAL_CONSUMER;
+		}
+		break;
+	default:
+		ICE(cerr, cerr << "Invalid direction: " << d << endl;)
+	}	// end switch
+#endif	// PROCESS_CONNECTIVITY_CHECKING
 	// else type is relaxed, skip this until type is complete
 }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PROCESS_CONNECTIVITY_CHECKING
+/**
+	Initialize flags based on attributes inherited from substructure.  
+ */
+template <class AliasType>
+void
+process_connect_policy::initialize_actual_direction(
+		const AliasType& a) {
+	typedef	typename AliasType::container_type	collection_interface_type;
+	typedef	typename collection_interface_type::traits_type
+					traits_type;
+	typedef	typename traits_type::tag_type		tag_type;
+	typedef	instance_collection<tag_type>	instance_collection_type;
+	STACKTRACE_VERBOSE;
+	// const bool f = p.is_formal();
+	// const instance_collection_type& c(p.get_canonical_collection());
+	const instance_collection_type&
+		c(a.container->get_canonical_collection());
+	const direction_type d = c.__get_raw_type().get_direction();
+	// with bit fields, could just twiddle the consumer/producer halves...
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT_PRINT("direction (int:type): (" << d << ":");
+	channel_type_reference_base::dump_direction(STACKTRACE_STREAM, d)
+		<< ')' << endl;
+#endif
+	switch (d) {
+	case CHANNEL_TYPE_NULL:
+		break;
+	case CHANNEL_TYPE_BIDIRECTIONAL:
+		direction_flags = a.direction_flags;
+		break;
+	case CHANNEL_TYPE_RECEIVE:
+#if 0
+		direction_flags =
+			(a.direction_flags & ~CONNECTED_PORT_FORMAL_PRODUCER);
+		if (a.direction_flags & CONNECTED_TO_ANY_CONSUMER) {
+#endif
+			direction_flags |= CONNECTED_TO_SUBSTRUCT_CONSUMER;
+#if 0
+		}
+#endif
+		break;
+	case CHANNEL_TYPE_SEND:
+#if 0
+		direction_flags =
+			(a.direction_flags & ~CONNECTED_PORT_FORMAL_CONSUMER);
+		if (a.direction_flags & CONNECTED_TO_ANY_PRODUCER) {
+#endif
+			direction_flags |= CONNECTED_TO_SUBSTRUCT_PRODUCER;
+#if 0
+		}
+#endif
+		break;
+#if 0 && ENABLE_SHARED_CHANNELS
+	case CHANNEL_TYPE_RECEIVE_SHARED:
+		// note: this clears out the META flag as well
+		direction_flags =
+			(a.direction_flags &
+				~(CONNECTED_PORT_FORMAL_PRODUCER | CONNECTED_PRODUCER_IS_SHARED));
+		if (a.direction_flags & CONNECTED_TO_ANY_CONSUMER) {
+			direction_flags |= CONNECTED_TO_SUBSTRUCT_CONSUMER;
+			direction_flags |= CONNECTED_CONSUMER_IS_SHARED;
+		}
+		break;
+	case CHANNEL_TYPE_SEND_SHARED:
+		// note: this clears out the META flag as well
+		direction_flags =
+			(a.direction_flags &
+				~(CONNECTED_PORT_FORMAL_CONSUMER | CONNECTED_CONSUMER_IS_SHARED));
+		if (a.direction_flags & CONNECTED_TO_ANY_PRODUCER) {
+			direction_flags |= CONNECTED_TO_SUBSTRUCT_PRODUCER;
+			direction_flags |= CONNECTED_PRODUCER_IS_SHARED;
+		}
+		break;
+#endif
+	default:
+		ICE(cerr, cerr << "Invalid direction: " << d << endl;)
+	}
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT_PRINT("a.direction_flags = 0x" <<
+		std::hex << size_t(a.direction_flags) << endl);
+	c.dump_hierarchical_name(STACKTRACE_INDENT << "collection: ",
+		dump_flags::default_value) << endl;
+	STACKTRACE_INDENT_PRINT("direction_flags = 0x" <<
+		std::hex << size_t(direction_flags) << endl);
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	For user-defined channels only.
+	Diagnostic if channel is only connected to produce
+	or a consumer exclusively.  
+	Most users may not bother with any directional annotations, 
+	so those should be forgiven.  
+ */
+template <class AliasType>
+error_count
+process_connect_policy::__check_connection(const AliasType& a) {
+	typedef	typename AliasType::traits_type		traits_type;
+	STACKTRACE_VERBOSE;
+	error_count ret;
+// if (!a.is_aliased_to_port()) {
+	const connection_flags_type f = a.direction_flags;
+// if is user-defined channel
+	const bool have_prod = (f & CONNECTED_TO_ANY_PRODUCER);
+	const bool have_cons = (f & CONNECTED_TO_ANY_CONSUMER);
+	if (have_cons && !have_prod) {
+		a.dump_hierarchical_name(
+			cerr << "WARNING: " << traits_type::tag_name << " ")
+			<< " lacks connection to a producer." << endl;
+		++ret.warnings;
+	}
+	if (have_prod && !have_cons) {
+		a.dump_hierarchical_name(
+			cerr << "WARNING: " << traits_type::tag_name << " ")
+			<< " lacks connection to a consumer." << endl;
+		++ret.warnings;
+	}
+	// if (!have_prod && !have_cons) // we don't care
+	// or better yet check the type, whether is actually user-defined chan
+// end if
+// }	// !aliased_to_port()
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class AliasType>
+void
+process_connect_policy::connection_flag_setter::operator () (
+		AliasType& a) {
+	// important that this is done with the *canoncical* node
+	if (!a.find()->set_connection_flags(update).good) {
+		status.good = false;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class AliasType>
+void
+process_connect_policy::__update_flags(AliasType& a) {
+	this->direction_flags = a.find()->direction_flags;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class AliasType>
+good_bool
+process_connect_policy::synchronize_flags(
+		AliasType& l, AliasType& r) {
+	typedef	typename AliasType::traits_type		traits_type;
+	typedef	typename AliasType::container_type
+						container_type;
+	typedef	typename traits_type::tag_type		tag_type;
+	typedef	instance_collection<tag_type>	instance_collection_type;
+	STACKTRACE_VERBOSE;
+	if (&l == &r) {
+		// permit self-aliases, of course
+		return good_bool(true);
+	}
+	this_type& ll(l);	// static_cast
+	this_type& rr(r);	// static_cast
+	const connection_flags_type& lld(ll.direction_flags);
+	const connection_flags_type& rrd(rr.direction_flags);
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT_PRINT("ll.flags = 0x" <<
+		std::hex << size_t(lld) << endl);
+	STACKTRACE_INDENT_PRINT("rr.flags = 0x" <<
+		std::hex << size_t(rrd) << endl);
+	l.dump_hierarchical_name(STACKTRACE_INDENT << "l: ") << endl;
+	r.dump_hierarchical_name(STACKTRACE_INDENT << "r: ") << endl;
+#endif
+	// convenience aliases
+#if 0
+	const connection_flags_type _and = lld & rrd;
+#endif
+	const connection_flags_type _or = lld | rrd;
+	bool good = true;
+	if ((lld & CONNECTED_TO_ANY_PRODUCER) &&
+			(rrd & CONNECTED_TO_ANY_PRODUCER))
+	{
+		// multiple producers
+		// TODO: strengthen condition?
+		// shared, but connection must also be consistent?
+#if 0
+		if (!(_and & CONNECTED_PRODUCER_IS_SHARED)) {
+			// at least one of them not sharing
+#endif
+			cerr << "Error: cannot alias two "
+				"non-sharing producers of type " <<
+				traits_type::tag_name << "." << endl;
+			good = false;
+#if 0
+		}
+#endif
+	}
+	if ((lld & CONNECTED_TO_ANY_CONSUMER) &&
+			(rrd & CONNECTED_TO_ANY_CONSUMER))
+	{
+		// multiple consumers
+		// allow datatypes to always share consumers
+		// but not channels
+		const container_type& p(*l.container);
+		const instance_collection_type& c(p.get_canonical_collection());
+		const meta_type_tag_enum
+			t(c.__get_raw_type().get_base_def()->get_meta_type());
+		if (t != META_TYPE_STRUCT) {
+#if 0
+		if (!(_and & CONNECTED_CONSUMER_IS_SHARED)) {
+			// at least one of them not sharing
+#endif
+			cerr << "Error: cannot alias two "
+				"non-sharing consumers of type " <<
+				traits_type::tag_name << "." << endl;
+			good = false;
+#if 0
+		}
+#endif
+		}
+	}
+#if 0
+	if (!check_meta_nonmeta_usage(_or, traits_type::tag_name).good) {
+		// already have error message
+		good = false;
+	}
+#endif
+	if (!good) {
+		l.dump_hierarchical_name(cerr << "\tgot: ") << endl;
+		r.dump_hierarchical_name(cerr << "\tand: ") << endl;
+	} else {
+		STACKTRACE_INDENT_PRINT("new flags = " << size_t(_or) << endl);
+		ll.direction_flags = _or;
+		rr.direction_flags = _or;
+	}
+	return good_bool(good);
+}	// end process_connect_policy::synchronize_flags
+
+#endif	// PROCESS_CONNECTIVITY_CHECKING
 
 //=============================================================================
 }	// end namespace entity

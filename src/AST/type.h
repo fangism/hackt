@@ -1,9 +1,9 @@
 /**
 	\file "AST/type.h"
 	Base set of classes for the HAC parser.  
-	$Id: type.h,v 1.5 2007/07/31 23:23:05 fang Exp $
+	$Id: type.h,v 1.6 2011/03/23 00:36:07 fang Exp $
 	This file used to be the following before it was renamed:
-	$Id: type.h,v 1.5 2007/07/31 23:23:05 fang Exp $
+	$Id: type.h,v 1.6 2011/03/23 00:36:07 fang Exp $
  */
 
 #ifndef __HAC_AST_TYPE_H__
@@ -13,6 +13,7 @@
 #include "AST/node_list.h"
 #include "util/memory/excl_ptr.h"
 #include "util/boolean_types.h"
+#include "Object/type/channel_direction_enum.h"
 
 namespace HAC {
 namespace entity {
@@ -25,6 +26,11 @@ using entity::builtin_channel_type_reference;
 class expr_list;
 class qualified_id;
 class template_argument_list_pair;
+
+//-----------------------------------------------------------------------------
+extern
+entity::direction_type
+token_to_direction_type(const char, const char);
 
 //-----------------------------------------------------------------------------
 /**
@@ -116,7 +122,7 @@ protected:
 	/**
 		Optional channel direction, only applies to channels.  
 	 */
-	const excl_ptr<const char_punctuation_type>	chan_dir;
+	excl_ptr<const char_punctuation_type>		chan_dir;
 public:
 	explicit
 	generic_type_ref(const type_base* n,
@@ -130,6 +136,9 @@ public:
 
 	never_ptr<const template_args_type>
 	get_temp_spec(void) const;
+
+	void
+	set_chan_dir(const char_punctuation_type*);
 
 	ostream&
 	what(ostream& o) const;

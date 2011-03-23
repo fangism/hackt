@@ -1,5 +1,11 @@
 "ChangeLog"
-#	$Id: ChangeLog,v 1.252 2011/02/28 09:37:38 fang Exp $
+#	$Id: ChangeLog,v 1.253 2011/03/23 00:36:01 fang Exp $
+
+2011-03-22	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-53-merged-portdir-01-05:
+	  Branch merge.  Checking channel/datatype connectivity.
+
 
 2011-02-28	David Fang	<fangism@users.sourceforge.net>
 

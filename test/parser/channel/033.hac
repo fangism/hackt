@@ -1,0 +1,14 @@
+// "033.hac"
+// copy-modified from "032.hac"
+
+import "026.hac";
+
+defproc thingy(e1of2? I; e1of2! O) { }
+
+// defproc doohickey(chan?(bool) A; chan!(bool) B) { }
+
+e1of2 M;
+thingy bob(, M), joe(M, );
+
+// doohickey jig;
+

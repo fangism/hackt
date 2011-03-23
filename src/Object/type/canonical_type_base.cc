@@ -1,6 +1,6 @@
 /**
 	\file "Object/type/canonical_type_base.h"
-	$Id: canonical_type_base.cc,v 1.8 2007/07/18 23:28:52 fang Exp $
+	$Id: canonical_type_base.cc,v 1.9 2011/03/23 00:36:18 fang Exp $
  */
 
 #include <algorithm>
@@ -20,11 +20,19 @@ using std::back_inserter;
 //=============================================================================
 // class canonical_type_base method definitions
 
-canonical_type_base::canonical_type_base() : param_list_ptr(NULL) { }
+canonical_type_base::canonical_type_base() : param_list_ptr(NULL)
+#if PROCESS_CONNECTIVITY_CHECKING
+		, direction(CHANNEL_DIRECTION_DEFAULT)	// not NULL
+#endif
+	{ }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - _
 canonical_type_base::canonical_type_base(const const_param_list_ptr_type& p) :
-		param_list_ptr(p) { }
+		param_list_ptr(p)
+#if PROCESS_CONNECTIVITY_CHECKING
+		, direction(CHANNEL_DIRECTION_DEFAULT)	// not NULL
+#endif
+	{ }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - _
 /**
@@ -32,7 +40,11 @@ canonical_type_base::canonical_type_base(const const_param_list_ptr_type& p) :
  */
 canonical_type_base::canonical_type_base(const const_param_list_ptr_type& p, 
 		const const_param_list_ptr_type& r) :
-		param_list_ptr(p) {
+		param_list_ptr(p)
+#if PROCESS_CONNECTIVITY_CHECKING
+		, direction(CHANNEL_DIRECTION_DEFAULT)	// not NULL
+#endif
+		{
 	if (p && r) {
 		const param_list_ptr_type
 			temp(new const_param_expr_list(*param_list_ptr));

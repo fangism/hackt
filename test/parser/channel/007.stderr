@@ -13,6 +13,9 @@ state	value
 #STATE#	(type-ref) [3:31..33]
 #STATE#	) [3:34]
 in state #STATE#, possible rules are:
-	port_formal_decl : physical_type_ref . port_formal_id_list  (#RULE#)
+	port_base_data_type_ref : base_data_type_ref . optional_chan_dir  (#RULE#)
+	optional_chan_dir : .  (#RULE#)
 acceptable tokens are: 
-	ID (shift)
+	'!' (shift)
+	'?' (shift)
+	ID (reduce)

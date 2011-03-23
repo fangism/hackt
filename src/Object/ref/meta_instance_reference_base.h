@@ -3,7 +3,7 @@
 	Base class family for instance references in HAC.  
 	This file was "Object/art_object_inst_ref_base.h"
 		in a previous life.  
-	$Id: meta_instance_reference_base.h,v 1.22 2010/08/24 21:05:49 fang Exp $
+	$Id: meta_instance_reference_base.h,v 1.23 2011/03/23 00:36:12 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_BASE_H__
@@ -16,6 +16,7 @@
 #include "Object/lang/generic_attribute_fwd.h"
 #include "Object/ref/reference_enum.h"
 #include "Object/devel_switches.h"
+#include "Object/type/channel_direction_enum.h"
 #include "util/boolean_types.h"
 #include "util/tokenize_fwd.h"		// for util::string_list
 
@@ -154,6 +155,14 @@ virtual	LOOKUP_TOP_LEVEL_REFERENCES_PROTO = 0;
 #if PRIVATE_MEMBER_REFERENCES
 virtual	LOOKUP_GLOBAL_REFERENCE_INDICES_PROTO = 0;
 #endif
+
+#define	CREATE_DIRECTION_DECLARATION_PROTO				\
+	count_ptr<const instance_management_base>			\
+	create_direction_declaration(					\
+		const count_ptr<const meta_instance_reference_base>&, 	\
+		const direction_type) const
+
+virtual	CREATE_DIRECTION_DECLARATION_PROTO = 0;
 
 #define	CREATE_INSTANCE_ATTRIBUTE_PROTO					\
 	count_ptr<const instance_management_base>			\

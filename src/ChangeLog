@@ -3,6 +3,87 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-03-22	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-53-merged-portdir-01-05:
+	  Merged branch to add support for checking direction annotations
+		on channels and data-types in the middle-end, during 
+		create phase.  Not done for bools.  
+		Channels must stick to point-to-point src/dest 
+		connections, data-types may have higher fanout.
+
+
+2011-03-22	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-52-portdir-01-05:
+	  Updated connectivity checking to allow multiple consumers
+		shared on datatypes.  Test cases added to datatype.
+	  Work on branch is complete, merge to trunk.
+	  Punting for another time: bool connectivity specification
+		checking w.r.t. PRS fanin/fanouts.
+		Let ! denote that it must be locally driven, 
+		and ? denote that a node may NOT be driven...
+
+
+2011-03-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-52-portdir-01-04:
+	  Added process/channel port connectivity checking:
+		wrong direction, send/receive collision, in local scope
+		and across hierarchy, array references of direction decls,
+		hierarchy port forwarding.
+		Added test caes for all of the above.
+	  TODO: distinguish between datatypes and channels, 
+		channels should only be point-to-point, 
+		datatypes are allowed to be read-shared.  
+
+
+2011-03-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-52-portdir-01-03:
+	  Drafted middle-end support for process direction declarations, 
+		handful of test cases added.  
+		Direction declarations are not supported for other
+		meta-types.  
+		Before branch is complete, should document language.
+	  Currently don't have a way to check that a process is 
+		aliased to port, like bools (explicit flag).  
+	  hacknet: some ideas for supporting process ports
+		for potential use in emitting verilog.
+
+
+2011-03-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-52-portdir-01-02:
+	  parser/hackt-parse.yy.in: updated grammar to distinguish between
+		type declarations that are legal in ports and
+		those that may be used to declare in definition scopes.  
+		Added support for direction-declaration statement:
+			instance?; or instance!;
+		This is intended to declare that this process
+		is responsible for driving a channel (port) as
+		a producer or consumer (middle-end not finished yet)
+		middle-end support for direction_declaration added
+			but not complete (new serialization objects).
+	  Fixed minor bug where error value returned by 
+		lookup_locally_allocated_index was not checked/propagated.
+	  Test cases updated, no regressions.
+	  Next: define process direction flag update semnatics and constraints.
+
+
+2011-03-15	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-52-portdir-01-01:
+	  This branch is for adding port directionality on
+		process ports and user-defined channel/data ports.
+	  First revision adds middle-end support for direction attributes
+		to processes, but it is not fully debugged yet.
+		Next: trace through propagation of flags from
+		placeholder port formals to actuals.  
+	  Regression tests show mostly binary object file differences
+		due to newly added info.
+
+
 2011-03-11	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-52:

@@ -1,0 +1,19 @@
+// "048.hac"
+// copy-modified from "047.hac"
+// testing datatype connectivity checking
+
+deftype pair <: bool (bool t, f) { }
+
+defproc driver(pair! globals) {
+globals!;
+}
+
+defproc quad(pair? globals) {
+globals?;
+}
+
+pair shoes;
+driver d(shoes);
+quad ruple(shoes), tuple(shoes);
+// datatypes can share consumers
+

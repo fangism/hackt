@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.65 2011/02/03 02:23:21 fang Exp $
+	$Id: footprint.cc,v 1.66 2011/03/23 00:36:09 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -1401,7 +1401,12 @@ error_count
 footprint::connection_diagnostics(const bool top) const {
 	error_count ret(scope_aliases.check_channel_connections());
 	if (!top) {
+#if BOOL_PRS_CONNECTIVITY_CHECKING
 		ret += scope_aliases.check_bool_connections();
+#endif
+#if PROCESS_CONNECTIVITY_CHECKING
+		ret += scope_aliases.check_process_connections();
+#endif
 	}
 	warning_count += ret.warnings;
 	return ret;

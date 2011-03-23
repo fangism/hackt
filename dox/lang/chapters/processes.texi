@@ -1,5 +1,5 @@
 @c "chapters/processes.tex"
-@c $Id: processes.texi,v 1.1 2007/08/20 00:02:48 fang Exp $
+@c $Id: processes.texi,v 1.2 2011/03/23 00:36:01 fang Exp $
 
 @node Processes
 @chapter Processes
@@ -55,6 +55,22 @@ before the process is defined.
 Unlike normal instantiations found in a namespace or definition body, 
 formal instance arrays may not be extended with re-declarations.  
 Since they may only be declared once, they must be densely packed.  
+
+@cindex port direction
+Process port types can also be further qualified with direction
+annotations to indicate whether a port is an input or output.
+
+@example
+defproc foo(bool? in; bool! out) @{ ... @}
+@end example
+
+The connectivity rules for bools, channels and datatstructs vary slightly.  
+For bools, direction constraints are checked against production rule set (PRS)
+blocks.
+Channels obey a point-to-point connection rule: they must be connected to
+no more than one producer, and no more than one consumer.  
+Data-structs may have driven by one producer, but may fanout (share)
+to an arbitrary number of (read-only) consumers.  
 
 @c - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 @node Process forward declarations

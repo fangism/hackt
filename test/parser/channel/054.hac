@@ -1,0 +1,12 @@
+// "054.hac"
+// testing connectivity checking, array references
+
+import "026.hac";
+
+defproc thingy(e1of2? I[2]; e1of2! O[2]) {
+I?;
+O!;
+}
+
+thingy bob;
+

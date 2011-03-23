@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.h"
-	$Id: netgraph.h,v 1.20 2010/10/27 00:16:53 fang Exp $
+	$Id: netgraph.h,v 1.21 2011/03/23 00:36:23 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETGRAPH_H__
@@ -46,6 +46,14 @@
 	Status: done, used for a while.
  */
 #define	NETLIST_CHECK_NAME_COLLISIONS		1
+
+/**
+	Define to 1 to support experimental verilog export mode.
+	This will have structured ports in the netlist.
+	Unsupported: template parameters.
+	Goal: 1
+ */
+#define	NETLIST_VERILOG				0
 
 namespace HAC {
 namespace entity {
@@ -245,6 +253,8 @@ public:
 };	// end struct device_group
 
 //-----------------------------------------------------------------------------
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Extension of (local) node information.  
 	Corresponds to an electrical node in the netlist. 
@@ -629,7 +639,13 @@ friend class netlist_generator;
 		May include Vdd, GND.
 		Internal nodes cannot be ports.  
 	 */
-	typedef	vector<index_type>	port_list_type;
+	typedef	vector<index_type>	node_port_list_type;
+#if NETLIST_VERILOG
+	/**
+		Local indices of processes (channels) for structured ports.
+	 */
+	typedef	vector<index_type>	proc_port_list_type;
+#endif
 private:
 	/**
 		Name can be inferred from the hierarchical name 
@@ -659,7 +675,13 @@ private:
 		NOTE: there cannot be any aliases in the ports.  
 		Does not include GND and Vdd, which are handled separately.
 	 */
-	port_list_type			port_list;
+	node_port_list_type		node_port_list;
+#if NETLIST_VERILOG
+	/**
+		List of local process indices.  
+	 */
+	proc_port_list_type		proc_port_list;
+#endif
 	/**
 		If this definition is empty, don't bother emitting it
 		or instances of it.  

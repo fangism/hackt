@@ -4,7 +4,7 @@
 	TODO: must pool-allocate these, they're created frequently!
 	This file originated from "Object/art_object_type_ref.h"
 		in a previous life.  
- 	$Id: process_type_reference.h,v 1.13 2008/11/12 03:00:23 fang Exp $
+ 	$Id: process_type_reference.h,v 1.14 2011/03/23 00:36:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_PROCESS_TYPE_REFERENCE_H__
@@ -12,6 +12,10 @@
 
 #include "Object/type/fundamental_type_reference.h"
 #include "Object/type/canonical_type_fwd.h"
+#include "Object/devel_switches.h"
+#if PROCESS_CONNECTIVITY_CHECKING
+#include "Object/type/channel_direction_enum.h"
+#endif
 
 namespace HAC {
 namespace entity {
@@ -34,6 +38,12 @@ protected:
 // should be const?  reference to base definition shouldn't change...
 	typedef	never_ptr<const definition_type>	base_definition_ptr_type;
 	never_ptr<const process_definition_base>	base_proc_def;
+#if PROCESS_CONNECTIVITY_CHECKING
+	/**
+		Meaning is defined by the direction_type enumeration.  
+	 */
+	direction_type					direction;
+#endif
 private:
 	process_type_reference();
 public:
@@ -51,6 +61,23 @@ public:
 
 	ostream&
 	what(ostream& o) const;
+
+#if PROCESS_CONNECTIVITY_CHECKING
+	ostream&
+	dump(ostream&) const;
+
+	void
+	set_direction(const direction_type c) { direction = c; }
+
+	direction_type
+	get_direction(void) const { return direction; }
+
+#if 0
+	static
+	ostream&
+	dump_direction(ostream&, const direction_type);
+#endif
+#endif
 
 	never_ptr<const definition_base>
 	get_base_def(void) const;
