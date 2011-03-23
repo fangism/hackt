@@ -1,0 +1,10 @@
+# "channel-ledr-c-01.prsimrc"
+# @haco@ channel-ledr-c.haco-c
+
+channel-ledr C : :0 ~_d:1 r:0
+channel-ledr D e:0 :0 ~_d:1 r:0
+# channel-ledr B e:0 b:2 d:0 r:0
+
+channel-show-all
+channel-report-time on
+

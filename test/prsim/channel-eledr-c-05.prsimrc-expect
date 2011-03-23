@@ -1,0 +1,61 @@
+channels:
+C : LEDR (init .~d:1 .r:0) off
+D : LEDR (init .e:0 .~d:1 .r:0) off
+testing two-phase sink on D 
+Warning: channel validity `D.n' has no fanin.
+resetting D.d/r to match full-parity 
+D : LEDR (init .e:0 .~d:1 .r:0) sink,expect,stopped,ignored, timing: global {1,0,1,0,0,1,0,1,1,0,0,} @0
+	count: 0, unknowns: 2
+channel D: timing: global
+	0	D._d : 1
+	0	D.r : 1
+	10	D.e : 0
+releasing D 
+D : LEDR (init .e:0 .~d:1 .r:0) sink,expect,watch, timing: global {1,0,1,0,0,1,0,1,1,0,0,} @0
+	count: 0, unknowns: 0
+release!!! 
+	20	D.e : 1
+expect ack above (channel was full). 
+channel	D (.data) : 1 @ 20
+	20	D._d : 0
+	30	D.e : 0	[by D._d:=0]
+channel	D (.data) : 0 @ 30
+	30	D._d : 1
+	40	D.e : 1	[by D._d:=1]
+channel	D (.data) : 1 @ 40
+	40	D._d : 0
+	50	D.e : 0	[by D._d:=0]
+channel	D (.data) : 0 @ 50
+	50	D._d : 1
+	60	D.e : 1	[by D._d:=1]
+channel	D (.data) : 0 @ 60
+	60	D.r : 0
+	70	D.e : 0	[by D.r:=0]
+channel	D (.data) : 1 @ 70
+	70	D._d : 0
+	80	D.e : 1	[by D._d:=0]
+D : LEDR (init .e:0 .~d:1 .r:0) sink,expect,watch, timing: global {1,0,1,0,0,1,0,1,1,0,0,} @6
+	count: 0, unknowns: 0
+channel	D (.data) : 0 @ 80
+	80	D._d : 1
+	90	D.e : 0	[by D._d:=1]
+channel	D (.data) : 1 @ 90
+	90	D._d : 0
+	100	D.e : 1	[by D._d:=0]
+channel	D (.data) : 1 @ 100
+	100	D.r : 1
+	110	D.e : 0	[by D.r:=1]
+channel	D (.data) : 0 @ 110
+	110	D._d : 1
+	120	D.e : 1	[by D._d:=1]
+channel	D (.data) : 0 @ 120
+	120	D.r : 0
+	130	D.e : 0	[by D.r:=0]
+channel	D (.data) : 1 @ 130
+	130	D._d : 0
+	140	D.e : 1	[by D._d:=0]
+channel	D (.data) : 0 @ 140
+	140	D._d : 1
+	150	D.e : 0	[by D._d:=1]
+D : LEDR (init .e:0 .~d:1 .r:0) sink,watch, timing: global
+	count: 0, unknowns: 0

@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-03-23	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-54:
+	  hacprsim: support active-low-data ledr/eledr channels
+		declaration: channel-ledr NAME e:0 : ~d:1 r:0
+	  Test cases added.
+
+
 2011-03-22	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-53-merged-portdir-01-05:

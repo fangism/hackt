@@ -1,0 +1,106 @@
+channels:
+C : LEDR (init .~d:1 .r:0) off
+D : LEDR (init .e:0 .~d:1 .r:0) off
+testing two-phase source on D 
+Warning: channel acknowledge `D.a' has no fanin!
+resetting D.e to 0 to match empty-parity 
+D : LEDR (init .e:0 .~d:1 .r:0) source,stopped, timing: global {0,0,0,1,1,1,0,0,0,1,1,1,0,0,1,1,0,0,1,1,} @0
+	count: 0, unknowns: 2
+channel D: timing: global
+	0	D.e : 0
+	10	D._d : 1
+	10	D.r : 0
+channel D: channel is empty, waiting for sender
+thawing D 
+D : LEDR (init .e:0 .~d:1 .r:0) source, timing: global {0,0,0,1,1,1,0,0,0,1,1,1,0,0,1,1,0,0,1,1,} @1
+	count: 0, unknowns: 0
+release!!! 
+	20	D.r : 1
+channel D: channel is full (0), waiting for receiver ack
+expect a token above. 
+	20	D.e : 1
+channel D: channel is empty, waiting for sender
+	30	D.r : 0	[by D.e:=1]
+channel D: channel is full (0), waiting for receiver ack
+	30	D.e : 0
+channel D: channel is empty, waiting for sender
+	40	D.r : 1	[by D.e:=0]
+channel D: channel is full (0), waiting for receiver ack
+	40	D.e : 1
+channel D: channel is empty, waiting for sender
+	50	D._d : 0	[by D.e:=1]
+channel D: channel is full (1), waiting for receiver ack
+	50	D.e : 0
+channel D: channel is empty, waiting for sender
+	60	D.r : 0	[by D.e:=0]
+channel D: channel is full (1), waiting for receiver ack
+	60	D.e : 1
+channel D: channel is empty, waiting for sender
+	70	D.r : 1	[by D.e:=1]
+channel D: channel is full (1), waiting for receiver ack
+	70	D.e : 0
+channel D: channel is empty, waiting for sender
+	80	D._d : 1	[by D.e:=0]
+channel D: channel is full (0), waiting for receiver ack
+	80	D.e : 1
+channel D: channel is empty, waiting for sender
+	90	D.r : 0	[by D.e:=1]
+channel D: channel is full (0), waiting for receiver ack
+	90	D.e : 0
+channel D: channel is empty, waiting for sender
+	100	D.r : 1	[by D.e:=0]
+channel D: channel is full (0), waiting for receiver ack
+	100	D.e : 1
+channel D: channel is empty, waiting for sender
+	110	D._d : 0	[by D.e:=1]
+channel D: channel is full (1), waiting for receiver ack
+	110	D.e : 0
+channel D: channel is empty, waiting for sender
+	120	D.r : 0	[by D.e:=0]
+channel D: channel is full (1), waiting for receiver ack
+	120	D.e : 1
+channel D: channel is empty, waiting for sender
+	130	D.r : 1	[by D.e:=1]
+channel D: channel is full (1), waiting for receiver ack
+	130	D.e : 0
+channel D: channel is empty, waiting for sender
+	140	D._d : 1	[by D.e:=0]
+channel D: channel is full (0), waiting for receiver ack
+	140	D.e : 1
+channel D: channel is empty, waiting for sender
+	150	D.r : 0	[by D.e:=1]
+channel D: channel is full (0), waiting for receiver ack
+	150	D.e : 0
+channel D: channel is empty, waiting for sender
+	160	D._d : 0	[by D.e:=0]
+channel D: channel is full (1), waiting for receiver ack
+D : LEDR (init .e:0 .~d:1 .r:0) source, timing: global {0,0,0,1,1,1,0,0,0,1,1,1,0,0,1,1,0,0,1,1,} @15
+	count: 0, unknowns: 0
+	160	D.e : 1
+channel D: channel is empty, waiting for sender
+	170	D.r : 1	[by D.e:=1]
+channel D: channel is full (1), waiting for receiver ack
+	170	D.e : 0
+channel D: channel is empty, waiting for sender
+	180	D._d : 1	[by D.e:=0]
+channel D: channel is full (0), waiting for receiver ack
+	180	D.e : 1
+channel D: channel is empty, waiting for sender
+	190	D.r : 0	[by D.e:=1]
+channel D: channel is full (0), waiting for receiver ack
+	190	D.e : 0
+channel D: channel is empty, waiting for sender
+	200	D._d : 0	[by D.e:=0]
+channel D: channel is full (1), waiting for receiver ack
+	200	D.e : 1
+channel D: channel is empty, waiting for sender
+	210	D.r : 1	[by D.e:=1]
+channel D: channel is full (1), waiting for receiver ack
+	210	D.e : 0
+channel D: channel is empty, waiting for sender
+channel D: channel is empty, waiting for sender
+	210	D.e : 1
+channel D: channel is full (1), waiting for receiver ack
+channel D: channel is full (1), waiting for receiver ack
+D : LEDR (init .e:0 .~d:1 .r:0) off
+	count: 0, unknowns: 0

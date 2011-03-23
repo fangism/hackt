@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.126 2011/02/09 03:34:44 fang Exp $
+#	$Id: Makefile.am,v 1.127 2011/03/23 18:47:36 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -66,6 +66,7 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	channel-test-i channel-test-j channel-test-k channel-test-l \
 	channel-ledr-a \
 	channel-ledr-b \
+	channel-ledr-c \
 	channel-array-a channel-array-b channel-array-c \
 	eledr-buffer eledr-buffer-a eledr-buffer-b \
 	type-test-a type-test-b type-test-c type-test-d \
@@ -278,7 +279,12 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	channel-eledr-a-01 channel-eledr-a-02 channel-eledr-a-03 \
 	channel-eledr-a-04 channel-eledr-a-05 \
 	channel-eledr-a-07 channel-eledr-a-08 \
+	channel-eledr-c-01 channel-eledr-c-02 channel-eledr-c-03 \
+	channel-eledr-c-04 channel-eledr-c-05 \
+	channel-eledr-c-07 channel-eledr-c-08 \
 	channel-ledr-b-01 \
+	channel-ledr-c-01 channel-ledr-c-02 channel-ledr-c-03 \
+	channel-ledr-c-05 \
 	channel-status-a-01 channel-status-a-02 channel-status-a-03 \
 	channel-status-c-01 \
 	channel-status-f-01 \
@@ -578,7 +584,9 @@ HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
 	channel-eledr-assert-a-02 \
 	precharge-g-01 \
 	channel-ledr-a-06 \
+	channel-ledr-c-06 \
 	channel-eledr-a-06 \
+	channel-eledr-c-06 \
 	channel-array-a-01 channel-array-a-02 \
 	channel-array-b-02 \
 	interference-11 \

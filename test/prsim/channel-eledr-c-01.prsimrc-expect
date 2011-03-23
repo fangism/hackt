@@ -1,0 +1,47 @@
+channels:
+C : LEDR (init .~d:1 .r:0) off
+D : LEDR (init .e:0 .~d:1 .r:0) off
+freezing D 
+	0	D._d : 1
+	0	D.r : 0
+	0	D.e : 0
+thawing D 
+repeat 3 values 
+channel	D (.data) : 0 @ 0
+	0	D.r : 1
+	0	D.e : 1
+channel	D (.data) : 0 @ 0
+	0	D.r : 0
+	0	D.e : 0
+channel	D (.data) : 0 @ 0
+	0	D.r : 1
+	0	D.e : 1
+toggle 3 values 
+channel	D (.data) : 1 @ 0
+	0	D._d : 0
+	0	D.e : 0
+channel	D (.data) : 0 @ 0
+	0	D._d : 1
+	0	D.e : 1
+channel	D (.data) : 1 @ 0
+	0	D._d : 0
+	0	D.e : 0
+repeat 3 values 
+channel	D (.data) : 1 @ 0
+	0	D.r : 0
+	0	D.e : 1
+channel	D (.data) : 1 @ 0
+	0	D.r : 1
+	0	D.e : 0
+channel	D (.data) : 1 @ 0
+	0	D.r : 0
+	0	D.e : 1
+toggle 3 values 
+channel	D (.data) : 0 @ 0
+	0	D._d : 1
+	0	D.e : 0
+channel	D (.data) : 1 @ 0
+	0	D._d : 0
+	0	D.e : 1
+channel	D (.data) : 0 @ 0
+	0	D._d : 1

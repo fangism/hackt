@@ -6,7 +6,7 @@
 	Define a channel type map to make automatic!
 	auto-channel (based on consumer/producer connectivity), 
 	top-level only!
-	$Id: Channel-prsim.h,v 1.28 2011/02/09 03:34:43 fang Exp $
+	$Id: Channel-prsim.h,v 1.29 2011/03/23 18:47:35 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_CHANNEL_H__
@@ -582,14 +582,15 @@ public:
 	const node_index_type&
 	repeat_rail(void) const { return valid_signal; }
 
+	// ALERT: ack_active is overloaded as reset/initial_value
 	void
 	set_data_init(const bool a) {
-		set_data_sense(a);
+		set_ack_active(a);
 	}
 
 	bool
 	get_data_init(void) const {
-		return get_data_sense();
+		return get_ack_active();
 	}
 
 	// validity rail is overloaded to function as repeat rail
@@ -988,7 +989,7 @@ public:
 	new_channel_ledr(State&, const string&, 
 		const string& an, const bool ai,
 		const string& bn, const size_t, 
-		const string& dn, const bool di,
+		const string& dn, const bool di, const bool ds,
 		const string& rn, const bool ri);
 #endif
 

@@ -1,0 +1,60 @@
+# "channel-ledr-c-06.prsimrc"
+# @haco@ channel-ledr-c.haco-c
+# testing channel-sink for 2-phase ledr
+# expect-fail
+
+source channel-ledr-c-01.prsimrc
+
+watchall
+echo testing two-phase sink on D
+channel-sink D
+channel-expect-args D 1 0 1 0 0 1 0 0 1 0 0 
+channel-reset D
+channel-ignore D
+echo resetting D.d/r to match empty-parity
+set D._d 1
+set D.r 0
+channel-show D
+channel-timing D
+cycle
+assert D.e 0
+echo releasing D
+channel-release D
+channel-heed D
+channel-watch D
+channel-show D
+echo release!!!
+cycle
+echo expect NO ack above (channel is empty).
+
+set D._d 0
+cycle
+set D._d 1
+cycle
+set D._d 0
+cycle
+set D._d 1
+cycle
+set D.r 1
+cycle
+set D._d 0
+cycle
+channel-show D
+
+set D._d 1
+cycle
+set D._d 0
+cycle
+set D.r 0
+cycle
+set D._d 1
+cycle
+set D.r 1
+cycle
+set D._d 0
+cycle
+set D._d 1
+cycle
+
+channel-show D
+

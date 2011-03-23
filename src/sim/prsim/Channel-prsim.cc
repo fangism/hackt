@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Channel-prsim.cc"
-	$Id: Channel-prsim.cc,v 1.41 2011/02/09 03:34:42 fang Exp $
+	$Id: Channel-prsim.cc,v 1.42 2011/03/23 18:47:34 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -384,7 +384,12 @@ case CHANNEL_TYPE_LEDR:
 	if (ack_signal) {
 		o << " .e:" << (get_ack_init() ? '1' : '0');
 	}
-	o << " .d:" << (get_data_init() ? '1' : '0');
+	o << " .";
+#if PRSIM_CHANNEL_RAILS_INVERTED
+	if (get_data_sense()) { o << '~'; }
+	// else { o << "+"; }
+#endif
+	o << "d:" << (get_data_init() ? '1' : '0');
 	o << " .r:" << (get_repeat_init() ? '1' : '0');
 	// empty-parity?
 	o << ")";
@@ -1958,7 +1963,12 @@ if (rdx == 2) {
 case CHANNEL_TYPE_LEDR: {
 	// FIXME: eventually support wider bundled ledr values
 	const node_index_type& dn(ledr_data_rail());
+#if PRSIM_CHANNEL_RAILS_INVERTED
+	// LSB
+	const bool v = (DATA_VALUE(current_value()) & 0x01) ^ get_data_sense();
+#else
 	const bool v = DATA_VALUE(current_value()) & 0x01;	// LSB
+#endif
 	switch (s.get_node(dn).current_value()) {
 	case LOGIC_LOW:
 		if (v) {
@@ -2096,7 +2106,11 @@ case CHANNEL_TYPE_1ofN: {
 }
 case CHANNEL_TYPE_LEDR:
 	// value is that of just the data rail
-	ret = ((s.get_node(ledr_data_rail()).current_value()) == LOGIC_LOW ? 0 : 1);
+#if PRSIM_CHANNEL_RAILS_INVERTED
+	ret = ((s.get_node(ledr_data_rail()).current_value() == LOGIC_LOW) ^ get_data_sense() ? 0 : 1);
+#else
+	ret = ((s.get_node(ledr_data_rail()).current_value() == LOGIC_LOW) ? 0 : 1);
+#endif
 	break;
 default: DIE;
 }	// end switch
@@ -2114,7 +2128,7 @@ default: DIE;
 	}
 #endif
 	return ret;
-}
+}	// end channel::data_rails_value()
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -2333,6 +2347,7 @@ if (stopped()) {
 /**
 	Asks why the data rails are/not in their present state.
 	This analysis will depend on the sense of the data signals.  
+	4-phase only for now.
 	\param ni is the node in question, e.g. validity signal, 
 		or acknowledge signal.  
 	\param is the active sense of the ni signal.  
@@ -2432,6 +2447,7 @@ channel::__node_why_not_data_rails(const State& s, ostream& o,
 	Report why node in question is not driven in direction dir. 
 	Is mutually recursive with State::__node_why_not().
 	If channel is stopped, do not report.  
+	4-phase only for now.
 	TODO: test eMx1ofN channels
  */
 ostream&
@@ -2485,6 +2501,7 @@ if (stopped()) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Generic query on why data rails are causing X.  
+	4-phase only for now.
  */
 ostream&
 channel::__node_why_X_data_rails(const State& s, ostream& o, 
@@ -2549,6 +2566,7 @@ if (ack_signal) {
 		return LOGIC_OTHER;
 	}
 }
+	// parity is unaffected by sense of data rail
 	switch (s.get_node(ledr_data_rail()).current_value()) {
 	case LOGIC_HIGH:
 		parity = !parity;
@@ -2798,7 +2816,7 @@ if (ack_signal && (ni == ack_signal)) {
 }
 #if PRSIM_CHANNEL_LEDR
 	break;
-}	// end case CAHNNEL_TYPE_1ofN
+}	// end case CHANNEL_TYPE_1ofN
 case CHANNEL_TYPE_LEDR: {
 	const bool ep = empty_parity();
 if (ack_signal && (ni == ack_signal)) {
@@ -3410,6 +3428,7 @@ channel_manager::new_channel_ledr(State& state, const string& _base,
 		const string& ack_name, const bool ack_init, 
 		const string& bundle_name, const size_t _num_bundles, 
 		const string& data_name, const bool data_init, 
+		const bool active_low,
 		const string& repeat_name, const bool repeat_init) {
 	STACKTRACE_VERBOSE;
 	const entity::module& m(state.get_module());
@@ -3439,6 +3458,9 @@ if (i.second) {
 	channel& c(channel_pool.back());
 	c.type = channel::CHANNEL_TYPE_LEDR;
 	c.name = base;
+#if PRSIM_CHANNEL_RAILS_INVERTED
+	c.set_data_sense(active_low);
+#endif
 {
 	// assign ack rail (optional)
 	if (ack_name.length()) {
@@ -3486,7 +3508,11 @@ if (i.second) {
 			"\' in channel." << endl;
 		return true;
 	}
+#if PRSIM_CHANNEL_RAILS_INVERTED
+	c.set_data_init(active_low);
+#else
 	c.set_data_init(data_init);
+#endif
 }{
 	// assign repeat rail (use validity signal)
 	const string r(base + '.' + repeat_name);

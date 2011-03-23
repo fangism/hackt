@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.86 2011/02/10 22:32:40 fang Exp $
+	$Id: Command-prsim.cc,v 1.87 2011/03/23 18:47:35 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -6522,7 +6522,6 @@ if (a.size() != 5) {
 			THROW_EXIT;
 		}
 #if PRSIM_CHANNEL_RAILS_INVERTED
-		// TODO: finish me
 		data_sense = (rail[0] == '~');		// active low
 #endif
 		const string::const_iterator b(rail.begin());
@@ -6642,6 +6641,7 @@ if (a.size() != 6) {
 	// could confirm that 'name' exists as a process/channel/datatype?
 	bool ack_init = false;
 	bool data_init = false;
+	bool data_sense = false;
 	bool repeat_init = false;
 	size_t num_bundles = 0;
 	string ack_name, bundle_name, data_name, repeat_name;
@@ -6677,14 +6677,24 @@ if (a.size() != 6) {
 		}
 	}{
 		// parse data
+		size_t c = data.find(':');
+		if (c == string::npos || (c == data.length() -1)) {
+			THROW_EXIT;
+		}
 		string_list tmp;
 		tokenize_char(data, tmp, ':');
 		if (tmp.size() != 2) {
-			cerr << "Error: data must be of the form id:init."
+			cerr << "Error: data must be of the form [~]id:init."
 				<< endl;
 			return Command::SYNTAX;
 		}
 		data_name = tmp.front();
+#if PRSIM_CHANNEL_RAILS_INVERTED
+		data_sense = (data_name[0] == '~');		// active low
+#endif
+		const string::const_iterator b(data_name.begin());
+		data_name.assign(b +size_t(data_sense), b+c);
+		if (!data_name.length()) { THROW_EXIT; }
 		if (string_to_num(tmp.back(), data_init)) {
 			cerr << "Error: parsing initial value of data." << endl;
 			return Command::SYNTAX;
@@ -6708,7 +6718,8 @@ if (a.size() != 6) {
 	channel_manager& cm(s.get_channel_manager());
 	if (cm.new_channel_ledr(s, chan_name, ack_name, ack_init, 
 			bundle_name, num_bundles, 
-			data_name, data_init, repeat_name, repeat_init)) {
+			data_name, data_init, data_sense, 
+			repeat_name, repeat_init)) {
 		return Command::BADARG;
 	}
 	return Command::NORMAL;

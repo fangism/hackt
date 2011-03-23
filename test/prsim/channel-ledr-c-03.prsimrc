@@ -1,0 +1,20 @@
+# "channel-ledr-c-03.prsimrc"
+# @haco@ channel-ledr-c.haco-c
+
+source channel-ledr-c-01.prsimrc
+
+watchall
+echo freezing C
+echo testing acknowledgeless continuous source on C
+channel-source-args C 0 0 0 1 1 1 0 0 0 1 1 1 0 0 1 1 0 0 1 1
+channel-reset C
+channel-show C
+channel-timing C
+cycle
+echo thawing C
+channel-release C
+channel-watch C
+channel-show C
+cycle
+channel-show C
+

@@ -1,0 +1,55 @@
+channels:
+C : LEDR (init .~d:1 .r:0) off
+D : LEDR (init .e:0 .~d:1 .r:0) off
+freezing C 
+testing acknowledgeless continuous source on C 
+C : LEDR (init .~d:1 .r:0) source,stopped, timing: global {0,0,0,1,1,1,0,0,0,1,1,1,0,0,1,1,0,0,1,1,} @0
+	count: 0, unknowns: 2
+channel C: timing: global
+	10	C._d : 1
+	10	C.r : 0
+thawing C 
+C : LEDR (init .~d:1 .r:0) source,watch, timing: global {0,0,0,1,1,1,0,0,0,1,1,1,0,0,1,1,0,0,1,1,} @1
+	count: 0, unknowns: 0
+channel	C (.data) : 0 @ 20
+	20	C.r : 1
+channel	C (.data) : 0 @ 30
+	30	C.r : 0	[by C.r:=0]
+channel	C (.data) : 0 @ 40
+	40	C.r : 1	[by C.r:=1]
+channel	C (.data) : 1 @ 50
+	50	C._d : 0	[by C.r:=1]
+channel	C (.data) : 1 @ 60
+	60	C.r : 0	[by C._d:=0]
+channel	C (.data) : 1 @ 70
+	70	C.r : 1	[by C.r:=1]
+channel	C (.data) : 0 @ 80
+	80	C._d : 1	[by C.r:=1]
+channel	C (.data) : 0 @ 90
+	90	C.r : 0	[by C._d:=1]
+channel	C (.data) : 0 @ 100
+	100	C.r : 1	[by C.r:=1]
+channel	C (.data) : 1 @ 110
+	110	C._d : 0	[by C.r:=1]
+channel	C (.data) : 1 @ 120
+	120	C.r : 0	[by C._d:=0]
+channel	C (.data) : 1 @ 130
+	130	C.r : 1	[by C.r:=1]
+channel	C (.data) : 0 @ 140
+	140	C._d : 1	[by C.r:=1]
+channel	C (.data) : 0 @ 150
+	150	C.r : 0	[by C._d:=1]
+channel	C (.data) : 1 @ 160
+	160	C._d : 0	[by C.r:=0]
+channel	C (.data) : 1 @ 170
+	170	C.r : 1	[by C._d:=0]
+channel	C (.data) : 0 @ 180
+	180	C._d : 1	[by C.r:=1]
+channel	C (.data) : 0 @ 190
+	190	C.r : 0	[by C._d:=1]
+channel	C (.data) : 1 @ 200
+	200	C._d : 0	[by C.r:=0]
+channel	C (.data) : 1 @ 210
+	210	C.r : 1	[by C._d:=0]
+C : LEDR (init .~d:1 .r:0) watch
+	count: 0, unknowns: 0
