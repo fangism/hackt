@@ -5,6 +5,15 @@
 
 2011-03-24	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-84-56:
+	  hacprsim bug fix: from active-low ~ledr support, botched up
+		setting of initial data rail value, should be
+		independent of active-sense.
+		Test case added.
+
+
+2011-03-24	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-84-55:
 	  Bug fix from portdir-01 branch merge:
 		wire-buffers were giving false-positive connection diagnostics.

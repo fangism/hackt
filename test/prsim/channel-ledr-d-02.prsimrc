@@ -1,0 +1,10 @@
+# "channel-ledr-d-02.prsimrc"
+# @haco@ channel-ledr-a.haco-c
+
+source channel-ledr-d-01.prsimrc
+channel-source-args C 0 0 1 1 0
+
+watchall
+channel-reset-all
+cycle
+

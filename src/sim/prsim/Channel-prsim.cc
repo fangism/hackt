@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Channel-prsim.cc"
-	$Id: Channel-prsim.cc,v 1.42 2011/03/23 18:47:34 fang Exp $
+	$Id: Channel-prsim.cc,v 1.43 2011/03/24 22:13:40 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -3508,11 +3508,7 @@ if (i.second) {
 			"\' in channel." << endl;
 		return true;
 	}
-#if PRSIM_CHANNEL_RAILS_INVERTED
-	c.set_data_init(active_low);
-#else
 	c.set_data_init(data_init);
-#endif
 }{
 	// assign repeat rail (use validity signal)
 	const string r(base + '.' + repeat_name);

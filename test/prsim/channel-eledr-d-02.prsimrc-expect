@@ -1,0 +1,7 @@
+channels:
+C : LEDR (init .d:1 .r:1) off
+D : LEDR (init .e:1 .d:1 .r:1) off
+Warning: channel acknowledge `D.a' has no fanin!
+	0	D.e : 1
+	10	D.d : 1
+	10	D.r : 1

@@ -1,0 +1,11 @@
+# "channel-ledr-d-01.prsimrc"
+# @haco@ channel-ledr-a.haco-c
+# different initial values/empty parity
+
+channel-ledr C : :0 d:1 r:1
+channel-ledr D e:1 :0 d:1 r:1
+# channel-ledr B e:1 b:2 d:1 r:1
+
+channel-show-all
+channel-report-time on
+
