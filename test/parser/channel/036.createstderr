@@ -225,7 +225,7 @@ footprint: {
   bob = process thingy<>^0 = bob (1) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    I = process e1of2<>^0 = bob.I (2) @[ sub! sub? ] (
+    I = process e1of2<>^0 = bob.I (2) (
       d = bool^1
         {
           [0] = bob.I.d[0] (3) 
@@ -235,7 +235,7 @@ footprint: {
       f = bool^0 = bob.I.d[0] (3) 
       e = bool^0 = bob.I.e (5) 
     )
-    O = process e1of2<>^0 = bob.O (3) @[ sub! sub? ] (
+    O = process e1of2<>^0 = bob.O (3) (
       d = bool^1
         {
           [0] = bob.O.d[0] (6) 
@@ -249,7 +249,7 @@ footprint: {
   joe = process thingy<>^0 = joe (4) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    I = process e1of2<>^0 = bob.O (3) @[ sub! sub? ] (
+    I = process e1of2<>^0 = bob.O (3) (
       d = bool^1
         {
           [0] = bob.O.d[0] (6) 
@@ -259,7 +259,7 @@ footprint: {
       f = bool^0 = bob.O.d[0] (6) 
       e = bool^0 = bob.O.e (8) 
     )
-    O = process e1of2<>^0 = bob.I (2) @[ sub! sub? ] (
+    O = process e1of2<>^0 = bob.I (2) (
       d = bool^1
         {
           [0] = bob.I.d[0] (3) 
@@ -275,9 +275,9 @@ footprint: {
   1	bob	thingy<>
     process: 2,3
     bool: 3,4,5,6,7,8,1,2
-  2	bob.I @[ sub! sub? ]	e1of2<>
+  2	bob.I	e1of2<>
     bool: 4,3,5
-  3	bob.O @[ sub! sub? ]	e1of2<>
+  3	bob.O	e1of2<>
     bool: 7,6,8
   4	joe	thingy<>
     process: 3,2

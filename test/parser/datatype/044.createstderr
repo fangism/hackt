@@ -135,7 +135,7 @@ footprint: {
   ruple = process quad<>^0 = ruple (1) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    globals = process pair<>^0 = ruple.globals (2) @[ sub? ] (
+    globals = process pair<>^0 = ruple.globals (2) (
       t = bool^0 = ruple.globals.t (3) 
       f = bool^0 = ruple.globals.f (4) 
     )
@@ -145,7 +145,7 @@ footprint: {
   1	ruple	quad<>
     process: 2
     bool: 3,4,1,2
-  2	ruple.globals @[ sub? ]	pair<>
+  2	ruple.globals	pair<>
     bool: 3,4
   bool instance pool: (0 ports, 4 local, 0 mapped)
   1	!GND @[ supply_low ]	

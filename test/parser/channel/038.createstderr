@@ -414,7 +414,7 @@ footprint: {
   box = process container<>^0 = box (1) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    A = process e1of2<>^0 = box.A (2) @[ sub? ] (
+    A = process e1of2<>^0 = box.A (2) (
       d = bool^1
         {
           [0] = box.A.d[0] (3) 
@@ -424,7 +424,7 @@ footprint: {
       f = bool^0 = box.A.d[0] (3) 
       e = bool^0 = box.A.e (5) 
     )
-    B = process e1of2<>^0 = box.B (3) @[ sub! ] (
+    B = process e1of2<>^0 = box.B (3) (
       d = bool^1
         {
           [0] = box.B.d[0] (6) 
@@ -440,9 +440,9 @@ footprint: {
   1	box	container<>
     process: 2,3
     bool: 3,4,5,6,7,8,1,2
-  2	box.A @[ sub? ]	e1of2<>
+  2	box.A	e1of2<>
     bool: 4,3,5
-  3	box.B @[ sub! ]	e1of2<>
+  3	box.B	e1of2<>
     bool: 7,6,8
   private sub-process index map:
     (1 -> 0)

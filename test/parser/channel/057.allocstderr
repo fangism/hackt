@@ -1,0 +1,20 @@
+globID	super		localID	canonical	footprint-frame
+[global process entries]
+1	(top)	-	1	A	e1of2<>
+	bool: 2,1,3
+2	(top)	-	2	src	source<>
+	process: 1
+	bool: 1,2,3,4,5
+3	(top)	-	3	x	wirebuf<>
+	process: 1
+	bool: 1,2,3,4,5
+4	(top)	-	4	snk	sink<>
+	process: 1
+	bool: 1,2,3,4,5
+[global bool entries]
+1	(top)	-	1	A.d[0]	
+2	(top)	-	2	A.d[1]	
+3	(top)	-	3	A.e	
+4	(top)	-	4	!GND	 @[ supply_low ]
+5	(top)	-	5	!Vdd	 @[ supply_high ]
+

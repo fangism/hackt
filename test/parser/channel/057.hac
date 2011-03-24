@@ -1,0 +1,16 @@
+// "056.hac"
+// wire buf example
+
+import "026.hac";
+
+defproc source(e1of2! O) { O!; }
+defproc sink(e1of2? I) { I?; }
+defproc wirebuf(e1of2? I; e1of2! O) {
+I = O;
+}
+
+e1of2 A, B;
+source src(A);
+wirebuf x(A, B);
+sink snk(B);
+

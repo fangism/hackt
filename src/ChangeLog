@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-03-24	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-55:
+	  Bug fix from portdir-01 branch merge:
+		wire-buffers were giving false-positive connection diagnostics.
+		port !? connections should NOT count has having been 
+		connected, they only restrict what may be connected.
+		This fix should be applied to built-in channel types
+		as well (ACX-PR-5876)!  Test cases added.
+
+
 2011-03-23	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-54:

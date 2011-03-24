@@ -192,7 +192,7 @@ In namespace "", we have: {
         bob = process thingy<>^0 = loop<>::bob (1) (
           !GND = bool^0 = loop<>::!GND (1) @[ supply_low port-alias ] 
           !Vdd = bool^0 = loop<>::!Vdd (2) @[ supply_high port-alias ] 
-          I = process e1of2<>^0 = loop<>::bob.I (2) @[ sub! sub? ] (
+          I = process e1of2<>^0 = loop<>::bob.I (2) (
             d = bool^1
               {
                 [0] = loop<>::bob.I.d[0] (3) 
@@ -202,7 +202,7 @@ In namespace "", we have: {
             f = bool^0 = loop<>::bob.I.d[0] (3) 
             e = bool^0 = loop<>::bob.I.e (5) 
           )
-          O = process e1of2<>^0 = loop<>::bob.O (3) @[ sub! sub? ] (
+          O = process e1of2<>^0 = loop<>::bob.O (3) (
             d = bool^1
               {
                 [0] = loop<>::bob.O.d[0] (6) 
@@ -216,7 +216,7 @@ In namespace "", we have: {
         joe = process thingy<>^0 = loop<>::joe (4) (
           !GND = bool^0 = loop<>::!GND (1) @[ supply_low port-alias ] 
           !Vdd = bool^0 = loop<>::!Vdd (2) @[ supply_high port-alias ] 
-          I = process e1of2<>^0 = loop<>::bob.O (3) @[ sub! sub? ] (
+          I = process e1of2<>^0 = loop<>::bob.O (3) (
             d = bool^1
               {
                 [0] = loop<>::bob.O.d[0] (6) 
@@ -226,7 +226,7 @@ In namespace "", we have: {
             f = bool^0 = loop<>::bob.O.d[0] (6) 
             e = bool^0 = loop<>::bob.O.e (8) 
           )
-          O = process e1of2<>^0 = loop<>::bob.I (2) @[ sub! sub? ] (
+          O = process e1of2<>^0 = loop<>::bob.I (2) (
             d = bool^1
               {
                 [0] = loop<>::bob.I.d[0] (3) 
@@ -242,9 +242,9 @@ In namespace "", we have: {
         1	loop<>::bob	thingy<>
           process: 2,3
           bool: 3,4,5,6,7,8,1,2
-        2	loop<>::bob.I @[ sub! sub? ]	e1of2<>
+        2	loop<>::bob.I	e1of2<>
           bool: 4,3,5
-        3	loop<>::bob.O @[ sub! sub? ]	e1of2<>
+        3	loop<>::bob.O	e1of2<>
           bool: 7,6,8
         4	loop<>::joe	thingy<>
           process: 3,2

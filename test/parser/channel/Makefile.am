@@ -1,5 +1,5 @@
 # "test/parser/channel/Makefile.am"
-#	$Id: Makefile.am,v 1.23 2011/03/23 00:37:29 fang Exp $
+#	$Id: Makefile.am,v 1.24 2011/03/24 19:44:53 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -18,7 +18,7 @@ HACKT_PARSE_TEST_PASSES = \
 	020 021 024 025 026 027 027b 028 029 \
 	030 031 032 033 034 035 036 037 038 039 \
 	040 041 042 043 044 045 046 047 048 049 \
-	050 051 052 053 054 055 \
+	050 051 052 053 054 055 056 057 \
 	connect-001 connect-002 connect-003 connect-004 connect-005 \
 	connect-006 connect-007 connect-008 connect-009 connect-010 \
 	connect-011 connect-012 \
@@ -70,8 +70,8 @@ HACKT_CHPSIM_ALLOC_TEST_SUBJECTS = \
 HACKT_CREATE_TEST_PASSES = $(HACKT_CHPSIM_ALLOC_TEST_SUBJECTS) \
 	027 027b 028 029 \
 	030 031 032 033 034 035 036 037 038 039 \
-	046 047 048 049 \
-	054 055 \
+	044 045 046 047 048 049 \
+	054 055 056 057 \
 	shared-01 shared-02 shared-03 shared-04 \
 	shared-05 shared-06 shared-07 shared-08 shared-13
 # pending: act-003
@@ -80,7 +80,7 @@ HACKT_CREATE_TEST_PASSES = $(HACKT_CHPSIM_ALLOC_TEST_SUBJECTS) \
 
 HACKT_CREATE_TEST_FAILURES = \
 	024 \
-	040 041 042 043 044 045 \
+	040 041 042 043 \
 	050 051 052 053 \
 	connect-003 connect-004 connect-007 connect-008 \
 	connect-011 connect-012 \

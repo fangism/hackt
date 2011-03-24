@@ -1,6 +1,9 @@
 WARNING: process thingy<>::I lacks connection to a consumer.
 WARNING: process thingy<>::O lacks connection to a producer.
 Warnings found (2) while creating complete type thingy<>.
+WARNING: process container<>::A lacks connection to a consumer.
+WARNING: process container<>::B lacks connection to a producer.
+Warnings found (2) while creating complete type container<>.
 ---- END CREATE WARNINGS ---
 
 Persistent Object Manager text dump: 
@@ -162,7 +165,7 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = container<>::!GND (7) @[ supply_low port-alias ] 
         !Vdd = bool^0 = container<>::!Vdd (8) @[ supply_high port-alias ] 
-        A = process e1of2<>^0 = container<>::A (1) @[ port! sub? ] (
+        A = process e1of2<>^0 = container<>::A (1) @[ port! ] (
           d = bool^1
             {
               [0] = container<>::A.d[0] (1) @[ port-alias ] 
@@ -172,7 +175,7 @@ In namespace "", we have: {
           f = bool^0 = container<>::A.d[0] (1) @[ port-alias ] 
           e = bool^0 = container<>::A.e (3) @[ port-alias ] 
         )
-        B = process e1of2<>^0 = container<>::B (2) @[ sub! port? ] (
+        B = process e1of2<>^0 = container<>::B (2) @[ port? ] (
           d = bool^1
             {
               [0] = container<>::B.d[0] (4) @[ port-alias ] 
@@ -182,7 +185,7 @@ In namespace "", we have: {
           f = bool^0 = container<>::B.d[0] (4) @[ port-alias ] 
           e = bool^0 = container<>::B.e (6) @[ port-alias ] 
         )
-        M = process e1of2<>^0 = container<>::M (3) @[ sub! sub? ] (
+        M = process e1of2<>^0 = container<>::M (3) (
           d = bool^1
             {
               [0] = container<>::M.d[0] (9) 
@@ -195,7 +198,7 @@ In namespace "", we have: {
         bob = process thingy<>^0 = container<>::bob (4) (
           !GND = bool^0 = container<>::!GND (7) @[ supply_low port-alias ] 
           !Vdd = bool^0 = container<>::!Vdd (8) @[ supply_high port-alias ] 
-          I = process e1of2<>^0 = container<>::A (1) @[ port! sub? ] (
+          I = process e1of2<>^0 = container<>::A (1) @[ port! ] (
             d = bool^1
               {
                 [0] = container<>::A.d[0] (1) @[ port-alias ] 
@@ -205,7 +208,7 @@ In namespace "", we have: {
             f = bool^0 = container<>::A.d[0] (1) @[ port-alias ] 
             e = bool^0 = container<>::A.e (3) @[ port-alias ] 
           )
-          O = process e1of2<>^0 = container<>::M (3) @[ sub! sub? ] (
+          O = process e1of2<>^0 = container<>::M (3) (
             d = bool^1
               {
                 [0] = container<>::M.d[0] (9) 
@@ -219,7 +222,7 @@ In namespace "", we have: {
         joe = process thingy<>^0 = container<>::joe (5) (
           !GND = bool^0 = container<>::!GND (7) @[ supply_low port-alias ] 
           !Vdd = bool^0 = container<>::!Vdd (8) @[ supply_high port-alias ] 
-          I = process e1of2<>^0 = container<>::M (3) @[ sub! sub? ] (
+          I = process e1of2<>^0 = container<>::M (3) (
             d = bool^1
               {
                 [0] = container<>::M.d[0] (9) 
@@ -229,7 +232,7 @@ In namespace "", we have: {
             f = bool^0 = container<>::M.d[0] (9) 
             e = bool^0 = container<>::M.e (11) 
           )
-          O = process e1of2<>^0 = container<>::B (2) @[ sub! port? ] (
+          O = process e1of2<>^0 = container<>::B (2) @[ port? ] (
             d = bool^1
               {
                 [0] = container<>::B.d[0] (4) @[ port-alias ] 
@@ -242,11 +245,11 @@ In namespace "", we have: {
         )
         Created state:
         process instance pool: (2 ports, 3 local, 0 mapped)
-        1	container<>::A @[ port! sub? ]	e1of2<>
+        1	container<>::A @[ port! ]	e1of2<>
           bool: 2,1,3
-        2	container<>::B @[ sub! port? ]	e1of2<>
+        2	container<>::B @[ port? ]	e1of2<>
           bool: 5,4,6
-        3	container<>::M @[ sub! sub? ]	e1of2<>
+        3	container<>::M	e1of2<>
           bool: 10,9,11
         4	container<>::bob	thingy<>
           process: 1,3
@@ -398,7 +401,7 @@ footprint: {
   box = process container<>^0 = box (1) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    A = process e1of2<>^0 = box.A (2) @[ sub? ] (
+    A = process e1of2<>^0 = box.A (2) (
       d = bool^1
         {
           [0] = box.A.d[0] (3) 
@@ -408,7 +411,7 @@ footprint: {
       f = bool^0 = box.A.d[0] (3) 
       e = bool^0 = box.A.e (5) 
     )
-    B = process e1of2<>^0 = box.B (3) @[ sub! ] (
+    B = process e1of2<>^0 = box.B (3) (
       d = bool^1
         {
           [0] = box.B.d[0] (6) 
@@ -424,9 +427,9 @@ footprint: {
   1	box	container<>
     process: 2,3
     bool: 3,4,5,6,7,8,1,2
-  2	box.A @[ sub? ]	e1of2<>
+  2	box.A	e1of2<>
     bool: 4,3,5
-  3	box.B @[ sub! ]	e1of2<>
+  3	box.B	e1of2<>
     bool: 7,6,8
   private sub-process index map:
     (1 -> 0)
