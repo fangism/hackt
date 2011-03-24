@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.cc"
-	$Id: netgraph.cc,v 1.28 2011/03/23 00:36:23 fang Exp $
+	$Id: netgraph.cc,v 1.29 2011/03/24 15:20:52 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -472,8 +472,8 @@ node::check_connectivity(const netlist_options& opt) const {
 void
 instance::mark_used_nodes(node_pool_type& node_pool) const {
 #if !NETLIST_CHECK_CONNECTIVITY
-	actuals_list_type::const_iterator
-		i(actuals.begin()), e(actuals.end());
+	node_actuals_list_type::const_iterator
+		i(node_actuals.begin()), e(node_actuals.end());
 	for ( ; i!=e; ++i) {
 		node_pool[*i].used = true;
 	}
@@ -512,8 +512,8 @@ if (nopt.emit_mangle_map) {
 		(nopt.instance_port_style == netlist_options::STYLE_SPECTRE);
 	if (paren) o << " (";
 	ostringstream oss;
-	actuals_list_type::const_iterator
-		i(actuals.begin()), e(actuals.end());
+	node_actuals_list_type::const_iterator
+		i(node_actuals.begin()), e(node_actuals.end());
 	for ( ; i!=e; ++i) {
 		node_pool[*i].emit(oss << ' ', nopt);
 	}
@@ -531,7 +531,7 @@ if (nopt.emit_mangle_map) {
 ostream&
 instance::dump_raw(ostream& o) const {
 	o << '[' << pid << "]: " << type->get_name() << ": (";
-	copy(actuals.begin(), actuals.end(),
+	copy(node_actuals.begin(), node_actuals.end(),
 		ostream_iterator<index_type>(o, ","));
 	return o << ')';
 }
@@ -883,9 +883,9 @@ netlist::append_instance(const state_instance<process_tag>& subp,
 #if !PRS_SUPPLY_OVERRIDES
 		if (fn.is_supply_node()) {
 			if (*fi == GND_index) {
-				np.actuals.push_back(GND_index);
+				np.node_actuals.push_back(GND_index);
 			} else if (*fi == Vdd_index) {
-				np.actuals.push_back(Vdd_index);
+				np.node_actuals.push_back(Vdd_index);
 			} else {
 				cerr << "ERROR: unknown supply port." << endl;
 				THROW_EXIT;
@@ -935,7 +935,7 @@ netlist::append_instance(const state_instance<process_tag>& subp,
 			const index_type actual_node =
 				register_named_node(actual_id, opt);
 			STACKTRACE_INDENT_PRINT("actual node = " << actual_node << endl);
-			np.actuals.push_back(actual_node);
+			np.node_actuals.push_back(actual_node);
 #if NETLIST_CHECK_CONNECTIVITY
 			// inherit used/drive properties from formals to actuals
 			if (fn.used)
@@ -953,7 +953,7 @@ netlist::append_instance(const state_instance<process_tag>& subp,
 #if ENABLE_STACKTRACE
 	np.dump_raw(STACKTRACE_INDENT_PRINT("new instance: ")) << endl;
 #endif
-	INVARIANT(np.actuals.size() == subnet.node_port_list.size());
+	INVARIANT(np.node_actuals.size() == subnet.node_port_list.size());
 }	// end netgraph::append_instance
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
