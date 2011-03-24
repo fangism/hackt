@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/connection_policy.tcc"
-	$Id: connection_policy.tcc,v 1.16 2011/03/24 19:44:49 fang Exp $
+	$Id: connection_policy.tcc,v 1.17 2011/03/24 20:47:32 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CONNECTION_POLICY_TCC__
@@ -578,6 +578,9 @@ process_connect_policy::initialize_actual_direction(const AliasType& a) {
 	For user-defined channels only.
 	Diagnostic if channel is only connected to produce
 	or a consumer exclusively.  
+	Channels should check for single-source/single-destination
+	connectivity.
+	Datatypes need not have any consumer-destination.
 	Most users may not bother with any directional annotations, 
 	so those should be forgiven.  
  */
@@ -590,8 +593,13 @@ process_connect_policy::__check_connection(const AliasType& a) {
 // if (!a.is_aliased_to_port()) {
 	const connection_flags_type f = a.direction_flags;
 // if is user-defined channel
+#if 0
+	const bool local_prod = (f & CONNECTED_TO_NONPORT_PRODUCER);
+	const bool local_cons = (f & CONNECTED_TO_NONPORT_CONSUMER);
+#endif
 	const bool have_prod = (f & CONNECTED_TO_ANY_PRODUCER);
 	const bool have_cons = (f & CONNECTED_TO_ANY_CONSUMER);
+	// TODO: tag_name should reflect actualy meta-type
 	if (have_cons && !have_prod) {
 		a.dump_hierarchical_name(
 			cerr << "WARNING: " << traits_type::tag_name << " ")
@@ -599,10 +607,22 @@ process_connect_policy::__check_connection(const AliasType& a) {
 		++ret.warnings;
 	}
 	if (have_prod && !have_cons) {
+		typedef	typename AliasType::container_type
+							container_type;
+		typedef	typename traits_type::tag_type	tag_type;
+		typedef	instance_collection<tag_type>
+						instance_collection_type;
+		const container_type& p(*a.container);
+		const instance_collection_type& c(p.get_canonical_collection());
+		const meta_type_tag_enum
+			t(c.__get_raw_type().get_base_def()->get_meta_type());
+		if (t == META_TYPE_CHANNEL) {
 		a.dump_hierarchical_name(
 			cerr << "WARNING: " << traits_type::tag_name << " ")
 			<< " lacks connection to a consumer." << endl;
 		++ret.warnings;
+		}
+		// else structs are allowed to have no consumer
 	}
 	// if (!have_prod && !have_cons) // we don't care
 	// or better yet check the type, whether is actually user-defined chan

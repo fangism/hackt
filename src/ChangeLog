@@ -12,6 +12,8 @@
 		connected, they only restrict what may be connected.
 		This fix should be applied to built-in channel types
 		as well (ACX-PR-5876)!  Test cases added.
+	  Also fixed false-positive diagnostic on missing consumers
+		on read-only ports for datatypes (should be optional).  
 
 
 2011-03-23	David Fang		<fangism@users.sourceforge.net>
