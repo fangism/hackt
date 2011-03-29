@@ -1,0 +1,13 @@
+// "003.hac"
+// copy modified from "001.hac"
+// @hacknet-flags@ -T buf
+
+import "channel.hac";
+
+defproc buf(e1of2? I; e1of2! O) {
+I?;
+O!;
+}
+
+buf b;
+

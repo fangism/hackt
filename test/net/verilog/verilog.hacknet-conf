@@ -1,0 +1,14 @@
+# "default.hacknet-conf"
+
+output_format=verilog
+
+empty_subcircuits=1
+
+mangle_struct_member_separator=-
+mangle_scope=__
+mangle_colon=_
+mangle_template_empty=
+mangle_template_open=_
+mangle_template_close=_
+mangle_parameter_separator=_
+

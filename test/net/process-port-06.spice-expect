@@ -1,9 +1,9 @@
+.subckt pair<> a b
+.ends
+
 .subckt foo<> !GND !Vdd p.a p.b z
 Mz:dn:0 !GND p.b z !GND nch W=5u L=2u
 Mz:up:0 !Vdd p.b z !Vdd pch W=5u L=2u
-.ends
-
-.subckt pair<> a b
 .ends
 
 xbar !GND !Vdd bar.p.a bar.p.b bar.z foo<>

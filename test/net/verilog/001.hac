@@ -1,0 +1,10 @@
+// "001.hac"
+// @hacknet-flags@ -T buf
+
+import "channel.hac";
+
+defproc buf(e1of2? I; e1of2! O) {
+}
+
+buf b;
+

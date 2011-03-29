@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.cc"
-	$Id: netgraph.cc,v 1.29 2011/03/24 15:20:52 fang Exp $
+	$Id: netgraph.cc,v 1.30 2011/03/29 04:34:37 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -26,6 +26,10 @@
 #include "Object/inst/bool_port_collector.tcc"
 #include "Object/inst/state_instance.h"
 #include "Object/inst/instance_pool.h"
+#if NETLIST_VERILOG
+#include "Object/inst/collection_interface.h"
+#include "Object/type/canonical_type.h"
+#endif
 #include "util/iterator_more.h"		// for set_inserter
 #include "util/unique_list.tcc"
 #include "util/string.h"		// for strgsub
@@ -38,6 +42,7 @@ namespace NET {
 using entity::footprint_frame_map_type;
 using entity::bool_port_collector;
 using entity::instance_alias_info;
+using entity::class_traits;
 using entity::bool_tag;
 using entity::port_formals_manager;
 using entity::process_definition;
@@ -372,6 +377,15 @@ if (!nopt.nested_subcircuits) {
 }
 
 //=============================================================================
+#if NETLIST_VERILOG
+// class proc method definitions
+ostream&
+proc::emit(ostream& o) const {
+	return o << name;
+}
+#endif
+
+//=============================================================================
 // class node method definitions
 
 /**
@@ -498,34 +512,73 @@ instance::emit(ostream& o, const node_pool_type& node_pool,
 	fp.get_instance_pool<process_tag>()[pid -1].get_back_ref()
 		->dump_hierarchical_name(oss, nopt.__dump_flags);
 	pname = oss.str();
-}
 if (nopt.emit_mangle_map) {
 	o << nopt.comment_prefix << "instance: " << type->get_unmangled_name()
 		<< ' ' << pname << endl;
 }
 	o << nopt.subckt_instance_prefix;
 	nopt.mangle_instance(pname);
-	o << pname;
+}
+	vector<string> _actuals;
+// if include wire ports
 {
-	// actuals
-	const bool paren =
-		(nopt.instance_port_style == netlist_options::STYLE_SPECTRE);
-	if (paren) o << " (";
-	ostringstream oss;
 	node_actuals_list_type::const_iterator
 		i(node_actuals.begin()), e(node_actuals.end());
 	for ( ; i!=e; ++i) {
-		node_pool[*i].emit(oss << ' ', nopt);
+		ostringstream oss;
+		node_pool[*i].emit(oss, nopt);
+		_actuals.push_back(oss.str());
 	}
-	string line(oss.str());
+}
+// if include struct ports
+#if 0
+{
+	proc_actuals_list_type::const_iterator
+		i(proc_actuals.begin()), e(proc_actuals.end());
+	for ( ; i!=e; ++i) {
+		ostringstream oss;
+		proc_pool[*i].emit(oss, nopt);
+//		_node_p.push_back(oss.str());
+		_actuals.push_back(oss.str());
+	}
+}
+#endif
+	const bool paren =
+		(nopt.instance_port_style == netlist_options::STYLE_SPECTRE);
+switch (nopt.instance_port_style) {
+case netlist_options::STYLE_SPICE:
+case netlist_options::STYLE_SPECTRE:
+	o << pname;
+{
+	// actuals
+	if (paren) o << " (";
+{
+	vector<string>::const_iterator i(_actuals.begin()), e(_actuals.end());
+	for ( ; i!=e; ++i) {
+		o << ' ' << *i;
+	}
+}
 	// already mangled during name caching
-	o << line;
 	if (paren) o << " )";
 }
 	// type name is already mangled
 	o << ' ' << type->get_name();	// endl
-	return o;
+	break;
+case netlist_options::STYLE_VERILOG:
+	o << type->get_name();
+	o << ' ' << pname << " (";
+if (_actuals.size()) {
+	vector<string>::const_iterator i(_actuals.begin()), e(_actuals.end());
+	o << *i;
+	for (++i; i!=e; ++i) {
+		o << ", " << *i;
+	}
 }
+	o << ");";
+	break;
+}
+	return o;
+}	// end instance::emit()
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -741,7 +794,11 @@ netlist::void_index = 0
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 netlist::netlist() : netlist_common(), name(), 
-		named_node_map(), node_pool(),
+		named_node_map(),
+#if NETLIST_VERILOG
+		named_proc_map(),
+#endif
+		node_pool(),
 		instance_pool(), internal_node_map(), 
 		internal_expr_map(), 
 #if NETLIST_CHECK_NAME_COLLISIONS
@@ -832,11 +889,67 @@ netlist::bind_footprint(const footprint& f, const string& n) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+netlist::is_channel_or_struct(void) const {
+	return fp->get_meta_type() != entity::META_TYPE_PROCESS;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 string
 netlist::get_unmangled_name(void) const {
 	ostringstream oss;
 	fp->dump_type(oss);
 	return oss.str();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+template <class Tag>
+static
+inline
+void
+__resolve_port_pre_invariant(const instance_alias_info<Tag>& a) { }
+
+static
+inline
+void
+__resolve_port_pre_invariant(const instance_alias_info<bool_tag>& a) {
+	INVARIANT(a.is_aliased_to_port());
+}
+
+/**
+	Re-factored out.
+	This subroutine could be pushed to footprint as a member function.
+ */
+template <class Tag>
+static
+const instance_alias_info<Tag>*
+__resolve_port_actual_alias(const index_type fid,
+		const footprint& subfp) {
+	const instance_alias_info<Tag>&
+		fb(*subfp.get_instance_pool<Tag>()[fid -1].get_back_ref());
+	__resolve_port_pre_invariant(fb);
+if (!fb.is_port_alias()) {
+	// HACK ALERT!
+	// well, damn it, FIND me a suitable alias!
+	typedef typename port_alias_tracker_base<Tag>::map_type
+				alias_map_type;
+	const alias_map_type&
+		pat(subfp.get_scope_alias_tracker().template get_id_map<Tag>());
+	typename alias_map_type::const_iterator
+		f(pat.find(fid)), e(pat.end());
+	INVARIANT(f != e);
+	const alias_reference_set<Tag>& rs(f->second);
+	typename alias_reference_set<Tag>::const_iterator
+		ai(rs.begin()), ae(rs.end());
+	for ( ; ai!=ae; ++ai) {
+	if ((*ai)->is_port_alias()) {
+		return &**ai;
+	}
+	}
+	INVARIANT(ai != ae);	// should never be reached!
+}
+// else
+	return &fb;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -895,41 +1008,11 @@ netlist::append_instance(const state_instance<process_tag>& subp,
 		if (fn.is_logical_node()) {
 			const index_type fid = fn.index;
 			STACKTRACE_INDENT_PRINT("formal id = " << fid << endl);
-
-			const instance_alias_info<bool_tag>&
-				fb(*subnet.fp->get_instance_pool<bool_tag>()
-					[fid -1].get_back_ref());
-			INVARIANT(fb.is_aliased_to_port());
-			index_type actual_id = 0;
-			// ALERT: fb might pick a non-port alias!!!
-			// picking *any* port-alias should suffice because
-			// formal port-aliases have been replayed.
-		if (!fb.is_port_alias()) {
-			// HACK ALERT!
-			// well, damn it, FIND me a suitable alias!
-			typedef port_alias_tracker_base<bool_tag>::map_type
-						alias_map_type;
-			const alias_map_type&
-				pat(subfp->get_scope_alias_tracker()
-					.get_id_map<bool_tag>());
-			alias_map_type::const_iterator
-				f(pat.find(fid)), e(pat.end());
-			INVARIANT(f != e);
-			const alias_reference_set<bool_tag>& rs(f->second);
-			alias_reference_set<bool_tag>::const_iterator
-				ai(rs.begin()), ae(rs.end());
-			for ( ; ai!=ae; ++ai) {
-			if ((*ai)->is_port_alias()) {
-				actual_id = (*ai)->trace_alias(lp).instance_index;
-				break;
-			}
-			}
-			INVARIANT(ai != ae);
-		} else {
-			const instance_alias_info<bool_tag>&
-				ab(fb.trace_alias(lp));
-			actual_id = ab.instance_index;
-		}
+			const instance_alias_info<bool_tag>* ab =
+				__resolve_port_actual_alias<bool_tag>(fid, *subfp);
+			NEVER_NULL(ab);
+			const index_type actual_id =
+				ab->trace_alias(lp).instance_index;
 			INVARIANT(actual_id);
 			STACKTRACE_INDENT_PRINT("LOCAL actual id = " << actual_id << endl);
 			const index_type actual_node =
@@ -950,6 +1033,37 @@ netlist::append_instance(const state_instance<process_tag>& subp,
 		}
 		// else skip for now
 	}	// end for each node port
+#if NETLIST_VERILOG
+	// for each structure/process/channel port
+	// after all traversals, this covers all used channels
+	netlist::proc_port_list_type::const_iterator
+		pi(subnet.proc_port_list.begin()),
+		pe(subnet.proc_port_list.end());
+	for ( ; pi!=pe; ++pi) {
+		STACKTRACE_INDENT_PRINT("formal struct = " << *fi << endl);
+		const proc& fn(subnet.proc_pool[*pi]);	// formal struct
+		const index_type fid = fn.index;
+		STACKTRACE_INDENT_PRINT("formal id = " << fid << endl);
+		const instance_alias_info<process_tag>* ab =
+			__resolve_port_actual_alias<process_tag>(fid, *subfp);
+		NEVER_NULL(ab);
+		const index_type actual_id =
+			ab->trace_alias(lp).instance_index;
+		INVARIANT(actual_id);
+		STACKTRACE_INDENT_PRINT("LOCAL actual id = " << actual_id << endl);
+		const index_type actual_proc =
+			register_named_proc(actual_id, opt);
+		STACKTRACE_INDENT_PRINT("actual proc = " << actual_proc << endl);
+		np.proc_actuals.push_back(actual_proc);
+#if 0 && NETLIST_CHECK_CONNECTIVITY
+		// inherit used/drive properties from formals to actuals
+		if (fn.used)
+			instance_pool[actual_proc].used = true;
+		if (fn.driven)
+			instance_pool[actual_proc].driven = true;
+#endif
+	}	// end for each structure port
+#endif	// NETLIST_VERILOG
 #if ENABLE_STACKTRACE
 	np.dump_raw(STACKTRACE_INDENT_PRINT("new instance: ")) << endl;
 #endif
@@ -1059,22 +1173,24 @@ netlist::lookup_internal_node(const index_type ei) const {
 	\param _i is the footprint's local node index, 1-based, never 0.
 	\return designated (un-mangled) alias of the indexed local node.
  */
+template <class Tag>
 string
 netlist::get_original_node_name(const size_t _i, 
 		const netlist_options& opt) const {
 	STACKTRACE_VERBOSE;
-	typedef port_alias_tracker_base<bool_tag>::map_type map_type;
-	typedef alias_reference_set<bool_tag>::const_iterator
+//	typedef	bool_tag		Tag;
+	typedef typename port_alias_tracker_base<Tag>::map_type map_type;
+	typedef typename alias_reference_set<Tag>::const_iterator
 					const_iterator;
 // stupid multi-pass implementation
 if (!opt.preferred_names.empty()) {
 	const map_type&
-		sa(fp->get_scope_alias_tracker().get_id_map<bool_tag>());
+		sa(fp->get_scope_alias_tracker().template get_id_map<Tag>());
 	// then scan *all* aliases for the match (slow)
-	const map_type::const_iterator
+	const typename map_type::const_iterator
 		asi(sa.find(_i)), ase(sa.end());
 if (asi != ase) {
-	const alias_reference_set<bool_tag>& s(asi->second);
+	const alias_reference_set<Tag>& s(asi->second);
 	const_iterator ai(s.begin()), ae(s.end());
 	for ( ; ai != ae; ++ai) {
 		// check for match against preferred name set
@@ -1094,12 +1210,12 @@ if (asi != ase) {
 // another pass to check for preferred port aliases
 if (opt.prefer_port_aliases) {
 	const map_type&
-		pa(fp->get_scope_alias_tracker().get_id_map<bool_tag>());
-//		pa(fp->get_port_alias_tracker().get_id_map<bool_tag>());
-	const map_type::const_iterator
+		pa(fp->get_scope_alias_tracker().template get_id_map<Tag>());
+//		pa(fp->get_port_alias_tracker().template get_id_map<Tag>());
+	const typename map_type::const_iterator
 		asi(pa.find(_i)), ase(pa.end());
 if (asi != ase) {
-	const alias_reference_set<bool_tag>& s(asi->second);
+	const alias_reference_set<Tag>& s(asi->second);
 	// use the shortest port alias
 	// can't just use union-find() b/c shortest could be local non-port
 	INVARIANT(s.size());
@@ -1115,12 +1231,12 @@ if (ai != s.end()) {
 }	// else has no other port aliases
 }	// end if prefer_port_aliases
 // fallback to using shortest canonical name (first position in set)
-	const state_instance<bool_tag>::pool_type&
-		bp(fp->get_instance_pool<bool_tag>());
+	const typename state_instance<Tag>::pool_type&
+		bp(fp->get_instance_pool<Tag>());
 	const size_t i = _i -1;		// pool is 0-based
 	STACKTRACE_INDENT_PRINT("bp.size = " << bp.local_entries() << endl);
 	INVARIANT(i < bp.local_entries());
-	const never_ptr<const instance_alias_info<bool_tag> >
+	const never_ptr<const instance_alias_info<Tag> >
 		a(bp[i].get_back_ref());
 	// from port_alias_tracker, 
 	// back_ref points to shortest canonical scope alias
@@ -1128,7 +1244,7 @@ if (ai != s.end()) {
 	ostringstream oss;
 	a->dump_hierarchical_name(oss, opt.__dump_flags);
 	return oss.str();
-}
+}	// end netlist::get_original_node_name()
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1152,7 +1268,7 @@ netlist::register_named_node(const index_type _i, const netlist_options& opt) {
 	if (!ret) {
 		// reserve a new slot and update it for subsequent visits
 		node new_named_node(_i, node::logical_node_tag);
-		new_named_node.name = get_original_node_name(_i, opt);
+		new_named_node.name = get_original_node_name<bool_tag>(_i, opt);
 		STACKTRACE_INDENT_PRINT("registering: " << new_named_node.name << endl);
 		opt.mangle_instance(new_named_node.name);
 		ret = node_pool.size();
@@ -1168,6 +1284,41 @@ node_pool.back().dump_raw(STACKTRACE_INDENT_PRINT("new node: ")) << endl;
 	}	// else already mapped
 	return ret;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if NETLIST_VERILOG
+/**
+	For structures and processes that are passed as ports.  
+ */
+index_type
+netlist::register_named_proc(const index_type _i, const netlist_options& opt) {
+	STACKTRACE_VERBOSE;
+	STACKTRACE_INDENT_PRINT("local id (+1) = " << _i << endl);
+	INVARIANT(_i);
+	const index_type i = _i -1;	// locally 0-indexed, no gap
+	INVARIANT(i < named_proc_map.size());
+	index_type& ret(named_proc_map[i]);
+	if (!ret) {
+		// reserve a new slot and update it for subsequent visits
+		proc new_named_proc(_i);
+		new_named_proc.name =
+			get_original_node_name<process_tag>(_i, opt);
+		STACKTRACE_INDENT_PRINT("registering: " << new_named_proc.name << endl);
+		opt.mangle_instance(new_named_proc.name);
+		ret = proc_pool.size();
+		INVARIANT(ret);
+#if NETLIST_CHECK_NAME_COLLISIONS
+		check_name_collisions(new_named_proc.name, ret, opt);
+#endif
+		proc_pool.push_back(new_named_proc);
+#if 0 && ENABLE_STACKTRACE
+proc_pool.back().dump_raw(STACKTRACE_INDENT_PRINT("new proc: ")) << endl;
+#endif
+		// mark new node as used here?
+	}	// else already mapped
+	return ret;
+}
+#endif	// NETLIST_VERILOG
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1216,12 +1367,219 @@ netlist::emit_mangle_map(ostream& o, const netlist_options& nopt) const {
 	for ( ; i!=e; ++i) {
 	if (i->is_logical_node()) {	// includes implicit supply nodes
 		const size_t nid = i->index;
-		const string oname = get_original_node_name(nid, nopt);
+		const string oname =
+			get_original_node_name<bool_tag>(nid, nopt);
 		o << nopt.comment_prefix << "\t" << i->name << " : " << oname << endl;
 	}
 	}
 	return o << nopt.comment_prefix << "END node name mangle map" << endl;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+netlist::emit_spice_ports(ostream& o, const netlist_options& nopt) const {
+	typedef	node_port_list_type::const_iterator		const_iterator;
+	const_iterator i(node_port_list.begin()), e(node_port_list.end());
+	ostringstream oss;		// stage for name mangling
+	for ( ; i!=e; ++i) {
+		// TODO: for verilog, emit 'wire' and 'direction'
+		const node& nd(node_pool[*i]);
+		nd.emit(oss << ' ', nopt);
+	}
+	const string& formals(oss.str());
+	// already mangled during name caching
+	return o << formals;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+netlist::emit_subinstances(ostream& o, const netlist_options& nopt) const {
+	// emit subinstances
+#if ENABLE_STACKTRACE
+	o << nopt.comment_prefix << "instances:" << endl;
+#endif
+	typedef	instance_pool_type::const_iterator	const_iterator;
+	size_t j = 0;	// DEBUG
+	const_iterator i(instance_pool.begin()), e(instance_pool.end());
+	for ( ; i!=e; ++i, ++j) {
+		STACKTRACE_INDENT_PRINT("j = " << j << endl);
+//	if ((nopt.empty_subcircuits || !i->is_empty()) && !i->type->is_channel_or_struct())
+	if (nopt.empty_subcircuits || !i->is_empty())
+	{
+		i->emit(o, node_pool, *fp, nopt) << endl;
+	}
+	}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+netlist::emit_local_subcircuits(ostream& o, const netlist_options& nopt) const {
+#if ENABLE_STACKTRACE
+	// nested subcircuits?
+	o << nopt.comment_prefix << "local subcircuits:" << endl;
+#endif
+	// print definition
+	// print singleton instance
+	typedef	local_subcircuit_list_type::const_iterator	const_iterator;
+	const_iterator i(local_subcircuits.begin()), e(local_subcircuits.end());
+	for ( ; i!=e; ++i) {
+	if (nopt.nested_subcircuits) {
+		i->emit_definition(o, *this, nopt);	// definition
+	}
+		i->emit_instance(o, *this, nopt);	// instance
+	}
+	// alternately, emit subcircuits outside, not nested
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if NETLIST_VERILOG
+ostream&
+netlist::emit_verilog_ports(ostream& o, const netlist_options& nopt) const {
+#if 0
+	typedef	proc_port_list_type::const_iterator		const_iterator;
+	const_iterator i(proc_port_list.begin()), e(proc_port_list.end());
+	ostringstream oss;		// stage for name mangling
+	for ( ; i!=e; ++i) {
+		// just comma-separate list of names
+		const proc& nd(proc_pool[*i]);
+		nd.emit(oss << ' ');
+	}
+	const string& formals(oss.str());
+	// already mangled during name caching
+	return o << formals << endl;
+	// emit ports
+#else
+	// emit local channel declarations, including ports
+	// just use footprint directly
+	typedef	process_tag			tag_type;
+	typedef	class_traits<tag_type>		traits_type;
+	typedef	traits_type::instance_collection_parameter_type
+						type_type;
+	typedef	instance_alias_info<tag_type>	alias_type;
+	typedef	entity::collection_interface<tag_type>
+						collection_type;
+	typedef	alias_type::container_type	container_type;
+	typedef	state_instance<tag_type>	instance_type;
+	typedef	state_instance<tag_type>::pool_type
+						pool_type;
+//	const port_alias_tracker& scope(fp->get_scope_alias_tracker());
+	const pool_type&
+		ppool(fp->get_instance_pool<tag_type>());
+	vector<string> ports;
+	ports.reserve(ppool.port_entries());
+	pool_type::const_iterator pi(ppool.begin()), pe(ppool.end());
+	for ( ; pi!=pe; ++pi) {
+		const instance_type& p(*pi);
+		const never_ptr<const alias_type> pref(p.get_back_ref());
+		const alias_type& _pref(*pref);
+		const type_type
+			ct(_pref.complete_type_actuals(*_pref.container));
+		const entity::meta_type_tag_enum
+			t(ct.get_base_def()->get_meta_type());
+		if (t != entity::META_TYPE_PROCESS) {
+			// then is a channel or datastruct
+			// print direction
+			const bool inny = _pref.is_input_port();
+			const bool outy = _pref.is_output_port();
+		if (inny || outy) {
+			ostringstream oss;
+			_pref.dump_hierarchical_name(oss, nopt.__dump_flags);
+			ports.push_back(oss.str());
+		}
+		}
+		// else skip processes -- they are sub module instances
+	}
+	if (ports.size()) {
+		vector<string>::const_iterator i(ports.begin()), e(ports.end());
+		o << *i;
+		for ( ++i; i!=e; ++i) {
+			o << ", " << *i;
+		}
+	}
+	return o;
+#endif
+}	// end netlist::emit_verilog_ports
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+netlist::emit_verilog_locals(ostream& o, const netlist_options& nopt) const {
+	STACKTRACE_VERBOSE;
+	// emit local channel declarations, including ports
+	// just use footprint directly
+	typedef	process_tag			tag_type;
+	typedef	class_traits<tag_type>		traits_type;
+	typedef	traits_type::instance_collection_parameter_type
+						type_type;
+	typedef	instance_alias_info<tag_type>	alias_type;
+	typedef	entity::collection_interface<tag_type>
+						collection_type;
+	typedef	alias_type::container_type	container_type;
+	typedef	state_instance<tag_type>	instance_type;
+	typedef	state_instance<tag_type>::pool_type
+						pool_type;
+//	const port_alias_tracker& scope(fp->get_scope_alias_tracker());
+	const pool_type&
+		ppool(fp->get_instance_pool<tag_type>());
+#if 0
+	pool_type::const_iterator pi(ppool.begin()), pe(ppool.end());
+#else
+	instance_pool_type::const_iterator
+		pi(instance_pool.begin()), pe(instance_pool.end());
+	STACKTRACE_INDENT_PRINT("subinstances: " << instance_pool.size() << endl);
+#endif
+	for ( ; pi!=pe; ++pi) {
+#if 0
+		const instance_type& p(*pi);
+#else
+		const index_type lpid = pi->pid;
+		STACKTRACE_INDENT_PRINT("lpid = " << lpid << endl);
+		const instance_type& p(ppool[lpid -1]);
+#endif
+		const never_ptr<const alias_type> pref(p.get_back_ref());
+		const alias_type& _pref(*pref);
+#if 0
+		const type_type
+			ct(_pref.complete_type_actuals(*_pref.container));
+		const entity::meta_type_tag_enum
+			t(ct.get_base_def()->get_meta_type());
+#else
+		const netlist* type = pi->type;
+		NEVER_NULL(type);
+		NEVER_NULL(type->fp);
+		const entity::meta_type_tag_enum
+			t(type->fp->get_meta_type());
+#endif
+		if (t != entity::META_TYPE_PROCESS) {
+			// then is a channel or datastruct
+			// print direction
+			const bool inny = _pref.is_input_port();
+			const bool outy = _pref.is_output_port();
+			if (inny) {
+				if (outy) {
+					o << "inout ";
+				} else {
+					o << "input ";
+				}
+			} else if (outy) {
+				o << "output ";
+			}
+			// print type -- possible need to mangle
+#if 0
+			ct.dump(o) << ' ';
+#else
+			o << type->get_name() << ' ';
+#endif
+			// print name
+			_pref.dump_hierarchical_name(o, nopt.__dump_flags);
+			o << ';' << endl;
+		}
+		// else skip processes -- they are sub module instances
+	}	// end for each local instance
+	return o;
+}	// end netlist::emit_verilog_locals
+#endif	// NETLIST_VERILOG
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1252,21 +1610,27 @@ switch (nopt.subckt_def_style) {
 case netlist_options::STYLE_SPECTRE: 
 	o << "subckt ";
 	break;
-default:
-// case netlist_options::STYLE_SPICE: 
+case netlist_options::STYLE_SPICE: 
 	o << ".subckt ";
+	break;
+case netlist_options::STYLE_VERILOG:
+	o << "module ";
+	break;
+default:
+	o << "define-subcircuit ";
+	break;
 }	// end switch
 	o << name;
+if (nopt.subckt_def_style == netlist_options::STYLE_VERILOG) {
+#if NETLIST_VERILOG
+	// name every port, K&R-style
+	emit_verilog_ports(o << '(', nopt) << ')';
+#endif
+	o << ';' << endl;
+} else {
+	emit_spice_ports(o, nopt) << endl;
 }
-	typedef	node_port_list_type::const_iterator		const_iterator;
-	const_iterator i(node_port_list.begin()), e(node_port_list.end());
-	ostringstream oss;		// stage for name mangling
-	for ( ; i!=e; ++i) {
-		node_pool[*i].emit(oss << ' ', nopt);
-	}
-	string formals(oss.str());
-	// already mangled during name caching
-	o << formals << endl;
+}
 	// TODO: emit port-info comments
 }	// end if sub
 if (sub || nopt.emit_top) {
@@ -1279,37 +1643,14 @@ if (nopt.emit_node_aliases) {
 	fp->get_scope_alias_tracker().dump_local_bool_aliases(o);
 	o << nopt.comment_prefix << "END node aliases" << endl;
 }
-{
-	// emit subinstances
-#if ENABLE_STACKTRACE
-	o << nopt.comment_prefix << "instances:" << endl;
-#endif
-	typedef	instance_pool_type::const_iterator	const_iterator;
-	size_t j = 0;	// DEBUG
-	const_iterator i(instance_pool.begin()), e(instance_pool.end());
-	for ( ; i!=e; ++i, ++j) {
-		STACKTRACE_INDENT_PRINT("j = " << j << endl);
-	if (nopt.empty_subcircuits || !i->is_empty()) {
-		i->emit(o, node_pool, *fp, nopt) << endl;
-	}
-	}
-}{
-#if ENABLE_STACKTRACE
-	// nested subcircuits?
-	o << nopt.comment_prefix << "local subcircuits:" << endl;
-#endif
-	// print definition
-	// print singleton instance
-	typedef	local_subcircuit_list_type::const_iterator	const_iterator;
-	const_iterator i(local_subcircuits.begin()), e(local_subcircuits.end());
-	for ( ; i!=e; ++i) {
-	if (nopt.nested_subcircuits) {
-		i->emit_definition(o, *this, nopt);	// definition
-	}
-		i->emit_instance(o, *this, nopt);	// instance
-	}
-	// alternately, emit subcircuits outside, not nested
-}
+	// TODO: optional .connect alias statements
+#if NETLIST_VERILOG
+if (nopt.subckt_def_style == netlist_options::STYLE_VERILOG) {
+	emit_verilog_locals(o, nopt);
+}	// end if verilog mode
+#endif	// NETLIST_VERILOG
+	emit_subinstances(o, nopt);
+	emit_local_subcircuits(o, nopt);
 	emit_devices(o, node_pool, *fp, nopt);
 }
 if (sub) {
@@ -1317,13 +1658,19 @@ switch (nopt.subckt_def_style) {
 case netlist_options::STYLE_SPECTRE: 
 	o << "ends " << name << endl;
 	break;
-default:
-// case netlist_options::STYLE_SPICE: 
+case netlist_options::STYLE_SPICE: 
 	o << ".ends" << endl;
+	break;
+case netlist_options::STYLE_VERILOG: 
+	o << "endmodule" << endl;	// name?
+	break;
+default:
+	o << "end-subcircuit " << name << endl;
+	break;
 }	// end switch
 }	// end if sub
 	return o;
-}
+}	// end netlist::emit()
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

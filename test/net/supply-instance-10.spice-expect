@@ -1,3 +1,5 @@
+* subcircuit globals<> is empty.
+
 .subckt inv<> !GND !Vdd x y
 My:dn:0 !GND x y !GND nch W=5u L=2u
 My:up:0 !Vdd x y !Vdd pch W=5u L=2u
@@ -10,8 +12,6 @@ xa myGND myVdd in out inv<>
 .subckt bar<> g.Vdd_1 g.GND_1 a b
 xf g.Vdd_1 g.GND_1 a b foo<>
 .ends
-
-* subcircuit globals<> is empty.
 
 xbq bq.g.Vdd_1 bq.g.GND_1 bq.a bq.b bar<>
 

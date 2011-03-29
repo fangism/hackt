@@ -1,6 +1,6 @@
 # "Make.test-net"
 #	vi: ft=automake
-#	$Id: Make.test-net,v 1.6 2010/04/05 23:59:49 fang Exp $
+#	$Id: Make.test-net,v 1.7 2011/03/29 04:34:39 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -12,9 +12,12 @@
 AM_HACKNET_FLAGS = -I$(srcdir)
 # to search for config files in source directory
 
+# new: .hv for verilog targets
 HACKNET_SUFFIXES = .spice .spice-diff .spice-fail .spice-fail-diff
+HACKNET_SUFFIXES += .hv .hv-diff .hv-fail .hv-fail-diff
 
 HACKNET_TEST_SUFFIXES = .hacknettest .hacknetfailtest
+HACKNET_TEST_SUFFIXES += .hvtest .hvfailtest
 
 SUFFIXES += $(HACKNET_SUFFIXES) $(HACKNET_TEST_SUFFIXES)
 BOGUS_SUFFIX_TARGETS += $(HACKNET_SUFFIXES)
@@ -28,7 +31,17 @@ HACKNET_CLEAN_IGNORE_PATTERNS = \
 	"*.hacknettest" \
 	"*.hacknetfailtest"
 
+HACVERILOG_CLEAN_IGNORE_PATTERNS = \
+	"*.hv" \
+	"*.hv-err" \
+	"*.hv-diff" \
+	"*.hv-fail" \
+	"*.hv-fail-diff" \
+	"*.hvtest" \
+	"*.hvfailtest"
+
 AUTO_IGNORE += $(HACKNET_CLEAN_IGNORE_PATTERNS)
+AUTO_IGNORE += $(HACVERILOG_CLEAN_IGNORE_PATTERNS)
 
 # also substitute $srcdir
 EXTRACT_HACKNET_FLAGS_PIPE = $(GREP) "@hacknet-flags@" | $(HEAD) -n1 | \
@@ -48,6 +61,11 @@ HACKNET_TEST_SCRIPT = \
 
 HACKNET_FAIL_TEST_SCRIPT = $(HACKNET_TEST_SCRIPT)
 
+# always add -f output_format=verilog
+HACVERILOG_TEST_SCRIPT = $(HACKNET_TEST_SCRIPT)
+
+HACVERILOG_FAIL_TEST_SCRIPT = $(HACVERILOG_TEST_SCRIPT)
+
 .haco-c.spice:
 	@$(HACKNET_TEST_SCRIPT) && \
 	{ test ! -s $@-err || \
@@ -55,6 +73,18 @@ HACKNET_FAIL_TEST_SCRIPT = $(HACKNET_TEST_SCRIPT)
 
 .haco-c.spice-fail:
 	-@$(HACKNET_FAIL_TEST_SCRIPT) ; \
+	stat=$$? ; \
+	$(MV) $@-err $@ ; \
+	$(CAT) $@ ; \
+	exit $$stat
+
+.haco-c.hv:
+	@$(HACVERILOG_TEST_SCRIPT) && \
+	{ test ! -s $@-err || \
+	  { $(ECHO) "* --- WARNINGS ---" ; $(CAT) $@-err ;} | $(TEE) -a $@ ;}
+
+.haco-c.hv-fail:
+	-@$(HACVERILOG_FAIL_TEST_SCRIPT) ; \
 	stat=$$? ; \
 	$(MV) $@-err $@ ; \
 	$(CAT) $@ ; \
@@ -92,6 +122,26 @@ hacknet.autodepend: Makefile
 
 -include hacknet.autodepend
 
+hacverilog.autodepend: Makefile
+	@$(ECHO) "Generating dependencies $@" ; \
+	$(RM) $@ ; \
+	{ list='$(HACVERILOG_TEST_SCRIPTS_BASES)' ; \
+	exts='hv hv-fail' ; \
+	test -z "$$list" || \
+	for d in $$list ; do \
+	  src=$(srcdir)/$$d.hac ; \
+	  obj=`$(CAT) "$$src" | $(EXTRACT_HACO_PIPE)` ; \
+	  deps=`$(CAT) "$$src" | $(EXTRACT_DEPS_PIPE)` ; \
+	  for e in $$exts ; do \
+	    target=$$d.$$e ; \
+	    $(PRINTF) "$$target " ; \
+	  done ; \
+	  $(ECHO) ": $$obj $$deps" ; \
+	done ;} > $@ ; \
+	$(TOUCH) $@
+
+-include hacverilog.autodepend
+
 HACKNET_TEST_DIFF = $(DIFF) -bu
 
 if VERBOSE_CHECK
@@ -100,8 +150,7 @@ else
 ECHO_HACKNET_DIFF_COMMAND = :
 endif
 
-.spice.spice-diff:
-	@stderr=`$(ECHO) $@ | $(SED) 's/\.spice-diff$$/.spice-expect/g'` ; \
+HACKNET_COMMON_DIFF_SCRIPT = \
 	expect=$(srcdir)/$$stderr ; \
 	$(RM) $@ ; \
 	if test -f "$$expect" ; then \
@@ -114,19 +163,21 @@ endif
 	fi ; \
 	$(TOUCH) $@
 
+.spice.spice-diff:
+	@stderr=`$(ECHO) $@ | $(SED) 's/\.spice-diff$$/.spice-expect/g'` ; \
+	$(HACKNET_COMMON_DIFF_SCRIPT)
+
 .spice-fail.spice-fail-diff:
 	@stderr=`$(ECHO) $@ | $(SED) 's/\.spice-fail-diff$$/.spice-expect/g'` ; \
-	expect=$(srcdir)/$$stderr ; \
-	$(RM) $@ ; \
-	if test -f "$$expect" ; then \
-	  $(ECHO_HACKNET_DIFF_COMMAND) ; \
-	  $(DIFF) -bu "$$expect" $< > $@ 2>&1 ; \
-	  if test -s $@ ; then \
-	    $(ECHO) "$@ is non-empty!" ; \
-	  fi ; \
-	else $(ECHO) "Missing $$expect." | $(TEE) $@ ; \
-	fi ; \
-	$(TOUCH) $@
+	$(HACKNET_COMMON_DIFF_SCRIPT)
+
+.hv.hv-diff:
+	@stderr=`$(ECHO) $@ | $(SED) 's/\.hv-diff$$/.hv-expect/g'` ; \
+	$(HACKNET_COMMON_DIFF_SCRIPT)
+
+.hv-fail.hv-fail-diff:
+	@stderr=`$(ECHO) $@ | $(SED) 's/\.hv-fail-diff$$/.hv-expect/g'` ; \
+	$(HACKNET_COMMON_DIFF_SCRIPT)
 
 .spice-diff.hacknettest:
 	@$(DEFAULT_DIFF_TEST_SCRIPT)
@@ -134,10 +185,22 @@ endif
 .spice-fail-diff.hacknetfailtest:
 	@$(DEFAULT_DIFF_TEST_SCRIPT)
 
+.hv-diff.hvtest:
+	@$(DEFAULT_DIFF_TEST_SCRIPT)
+
+.hv-fail-diff.hvfailtest:
+	@$(DEFAULT_DIFF_TEST_SCRIPT)
+
 .hacknettest:
 	@$(DUMMY_TEST_SCRIPT)
 
 .hacknetfailtest:
+	@$(DUMMY_TEST_SCRIPT)
+
+.hvtest:
+	@$(DUMMY_TEST_SCRIPT)
+
+.hvfailtest:
 	@$(DUMMY_TEST_SCRIPT)
 
 # for both passes and failures
@@ -158,16 +221,37 @@ hacknetfailtest.autodepend: Makefile
 -include hacknettest.autodepend
 -include hacknetfailtest.autodepend
 
+hvtest.autodepend: Makefile
+	@$(ECHO) "Generating dependencies $@" ; \
+	$(ECHO) "$(HACVERILOG_TEST_SCRIPTS_PASSES)" | \
+	  $(SPACES_TO_NEWLINE) | $(SORT) -u | \
+	  $(AWK) '/.+/ {print $$1 ".hv-diff: $$(srcdir)/" $$1 ".hv-expect"; }' > $@ ; \
+	$(TOUCH) $@
+
+hvfailtest.autodepend: Makefile
+	@$(ECHO) "Generating dependencies $@" ; \
+	$(ECHO) "$(HACVERILOG_TEST_SCRIPTS_FAILURES)" | \
+	  $(SPACES_TO_NEWLINE) | $(SORT) -u | \
+	  $(AWK) '/.+/ {print $$1 ".hv-fail-diff: $$(srcdir)/" $$1 ".hv-expect"; }' > $@ ; \
+	$(TOUCH) $@
+
+-include hvtest.autodepend
+-include hvfailtest.autodepend
+
 AUTO_DEPENDS += \
 	hacknet.autodepend \
 	hacknettest.autodepend \
-	hacknetfailtest.autodepend
-
+	hacknetfailtest.autodepend \
+	hacverilog.autodepend \
+	hvtest.autodepend \
+	hvfailtest.autodepend
 
 BOGUS_TESTS += \
-	.hacknettest .hacknetfailtest
+	.hacknettest .hacknetfailtest \
+	.hvtest .hvfailtest
 
-CHECK_SUMMARIES += hacknetdiffs hacknetfaildiffs
+CHECK_SUMMARIES += hacknetdiffs hacknetfaildiffs \
+	hvdiffs hvfaildiffs
 
 hacknetdiffs: force
 	-$(CAT) *.spice-diff > $@
@@ -175,20 +259,32 @@ hacknetdiffs: force
 hacknetfaildiffs: force
 	-$(CAT) *.spice-fail-diff > $@
 
+hvdiffs: force
+	-$(CAT) *.hv-diff > $@
+
+hvfaildiffs: force
+	-$(CAT) *.hv-fail-diff > $@
+
 HACKNET_TEST_SCRIPTS_BASES = \
 	$(HACKNET_TEST_SCRIPTS_PASSES) \
 	$(HACKNET_TEST_SCRIPTS_FAILURES)
 
+HACVERILOG_TEST_SCRIPTS_BASES = \
+	$(HACVERILOG_TEST_SCRIPTS_PASSES) \
+	$(HACVERILOG_TEST_SCRIPTS_FAILURES)
+
 srcdir_EXTRA_DIST += \
 	$(HACKNET_TEST_SCRIPTS_BASES:=.hac) \
-	$(HACKNET_TEST_SCRIPTS_BASES:=.spice-expect)
-#	$(HACKNET_TEST_SUBJECTS:=.hac) \
-#	$(HACKNET_TEST_SUBJECTS:=.spice-expect)
+	$(HACKNET_TEST_SCRIPTS_BASES:=.spice-expect) \
+	$(HACVERILOG_TEST_SCRIPTS_BASES:=.hac) \
+	$(HACVERILOG_TEST_SCRIPTS_BASES:=.hv-expect)
 
 if CHECK_TESTS
 TESTS += \
 	$(HACKNET_TEST_SCRIPTS_PASSES:=.hacknettest) \
-	$(HACKNET_TEST_SCRIPTS_FAILURES:=.hacknetfailtest)
+	$(HACKNET_TEST_SCRIPTS_FAILURES:=.hacknetfailtest) \
+	$(HACVERILOG_TEST_SCRIPTS_PASSES:=.hvtest) \
+	$(HACVERILOG_TEST_SCRIPTS_FAILURES:=.hvfailtest)
 endif
 
 HAC_COMPILE_OBJECT_TARGETS += $(HACKNET_TEST_SCRIPTS_BASES:=.haco)
@@ -197,7 +293,9 @@ HAC_CREATE_OBJECT_TARGETS += $(HACKNET_TEST_SCRIPTS_BASES:=.haco-c)
 
 HACKNET_PRODUCTS = \
 	$(HACKNET_TEST_SCRIPTS_PASSES:=.spice) \
-	$(HACKNET_TEST_SCRIPTS_FAILURES:=.spice-fail)
+	$(HACKNET_TEST_SCRIPTS_FAILURES:=.spice-fail) \
+	$(HACVERILOG_TEST_SCRIPTS_PASSES:=.hv) \
+	$(HACVERILOG_TEST_SCRIPTS_FAILURES:=.hv-fail)
 
 $(HACKNET_PRODUCTS): $(HACKNET_EXE)
 
@@ -206,7 +304,11 @@ build-check-local: \
 	$(HACKNET_TEST_SCRIPTS_PASSES:=.spice) \
 	$(HACKNET_TEST_SCRIPTS_PASSES:=.spice-diff) \
 	$(HACKNET_TEST_SCRIPTS_FAILURES:=.spice-fail) \
-	$(HACKNET_TEST_SCRIPTS_FAILURES:=.spice-fail-diff)
+	$(HACKNET_TEST_SCRIPTS_FAILURES:=.spice-fail-diff) \
+	$(HACVERILOG_TEST_SCRIPTS_PASSES:=.hv) \
+	$(HACVERILOG_TEST_SCRIPTS_PASSES:=.hv-diff) \
+	$(HACVERILOG_TEST_SCRIPTS_FAILURES:=.hv-fail) \
+	$(HACVERILOG_TEST_SCRIPTS_FAILURES:=.hv-fail-diff)
 
 echo-hacknet-passes: force
 	@$(ECHO) $(HACKNET_TEST_SCRIPTS_PASSES)
@@ -217,6 +319,15 @@ echo-hacknet-failures: force
 echo-hacknet-tests: force
 	@$(ECHO) $(HACKNET_TEST_SCRIPTS_BASES)
 
+echo-hacverilog-passes: force
+	@$(ECHO) $(HACVERILOG_TEST_SCRIPTS_PASSES)
+
+echo-hacverilog-failures: force
+	@$(ECHO) $(HACVERILOG_TEST_SCRIPTS_FAILURES)
+
+echo-hacverilog-tests: force
+	@$(ECHO) $(HACVERILOG_TEST_SCRIPTS_BASES)
+
 clean-hacknettests:
 	patternlist='$(HACKNET_CLEAN_IGNORE_PATTERNS)' ; \
 	for p in $$patternlist ; do \
@@ -224,7 +335,14 @@ clean-hacknettests:
 	  $(RM_PATTERN) "$$pp" ; \
 	done
 
-clean-local: clean-hacknettests
+clean-hacverilogtests:
+	patternlist='$(HACVERILOG_CLEAN_IGNORE_PATTERNS)' ; \
+	for p in $$patternlist ; do \
+	  pp=`$(ECHO) $$p | $(SED) 's/"//g'` ; \
+	  $(RM_PATTERN) "$$pp" ; \
+	done
 
-.PHONY: clean-hacknettests
+clean-local: clean-hacknettests clean-hacverilogtests
+
+.PHONY: clean-hacknettests clean-hacverilogtests
 

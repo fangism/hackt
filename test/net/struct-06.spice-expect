@@ -1,8 +1,8 @@
-* subcircuit pick is empty.
+* subcircuit pfoo is empty.
 
 * subcircuit pbar is empty.
 
-* subcircuit pfoo is empty.
+* subcircuit pick is empty.
 
 .subckt invert__it !GND !Vdd p.b/b/b q.a/a/a q.a/b/a q.b/a/b
 Mx:dn:0 !GND p.b/b/b x !GND nch W=5u L=2u

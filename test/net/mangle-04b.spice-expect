@@ -1,3 +1,5 @@
+* subcircuit e1of<2> is empty.
+
 .subckt std::logic::celem<2,10> !GND !Vdd in[0] in[1] o
 M_o:dn:0 !GND in[0] #0 !GND nch W=5u L=2u
 M_o:dn:1 #0 in[1] _o !GND nch W=5u L=2u
@@ -10,8 +12,6 @@ Mo:up:0 !Vdd _o o !Vdd pch W=10u L=2u
 .subckt foo::wire_copy<2> !GND !Vdd in.e oe[0] oe[1]
 xcomp !GND !Vdd oe[0] oe[1] in.e std::logic::celem<2,10>
 .ends
-
-* subcircuit e1of<2> is empty.
 
 .subckt std::logic::celem<3,10> !GND !Vdd in[0] in[1] in[2] o
 M_o:dn:0 !GND in[0] #0 !GND nch W=5u L=2u

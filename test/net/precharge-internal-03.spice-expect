@@ -1,3 +1,5 @@
+* subcircuit c1of2<> is empty.
+
 .subckt add<> !GND !Vdd en a.d[0] a.d[1] b.d[0] b.d[1] c.d[0] c.d[1] s.d[0] s.d[1]
 M@foot:dn:0 !GND en @foot !GND nch W=5u L=2u
 M@odd_a:dn:0:pchg !Vdd en @foot !Vdd pch W=5u L=2u
@@ -22,8 +24,6 @@ Ms.d[0]:up:0 !Vdd _s[0] s.d[0] !Vdd pch W=5u L=2u
 Ms.d[1]:dn:0 !GND _s[1] s.d[1] !GND nch W=5u L=2u
 Ms.d[1]:up:0 !Vdd _s[1] s.d[1] !Vdd pch W=5u L=2u
 .ends
-
-* subcircuit c1of2<> is empty.
 
 xup !GND !Vdd up.en up.a.d[0] up.a.d[1] up.b.d[0] up.b.d[1] up.c.d[0] up.c.d[1] up.s.d[0] up.s.d[1] add<>
 

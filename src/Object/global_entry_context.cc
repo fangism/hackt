@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry_context.cc"
-	$Id: global_entry_context.cc,v 1.11 2011/03/23 00:36:09 fang Exp $
+	$Id: global_entry_context.cc,v 1.12 2011/03/29 04:34:36 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -561,7 +561,44 @@ global_entry_context::visit_local(const footprint& f,
 		inst.accept(*this);
 		// visitor will increment g_offset
 	}
-}
+}	// end global_entry_context::visit_local
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This visits only public port instances, skipping the locals.
+	Copy-modified from visit_local(), above.
+ */
+template <class Tag>
+void
+global_entry_context::visit_ports(const footprint& f) {
+	STACKTRACE_VERBOSE;
+#if ENABLE_STACKTRACE
+	f.dump_type(STACKTRACE_STREAM << "type: ") << endl;
+#endif
+	const typename state_instance<Tag>::pool_type&
+		_pool(f.template get_instance_pool<Tag>());
+	// construct context (footprint_frame)
+	footprint_frame lff;
+	global_offset sgo(*parent_offset, f, add_local_private_tag());
+	NEVER_NULL(parent_offset);
+// this setup is done twice, also for visit_recursive
+// possible to re-factor and setup once?
+// something different for the top-level with ports...
+	lff.construct_global_context(f, *fpf, *parent_offset);
+	// print local, non-port entries, since ports belong to 'parent'
+	// for processes duplicate work computing global offsets twice
+	const value_saver<global_offset*> __gs__(g_offset, &sgo);
+	const footprint_frame_setter __ffs__(fpf, &lff);	// local actuals
+	const size_t l = _pool.port_entries();
+	// but for the top-level only, we want start with ports
+	size_t i = 0;
+	for ( ; i<l; ++i) {
+		// global and local index can be deduced
+		const state_instance<Tag>& inst(_pool[i]);
+		inst.accept(*this);
+		// visitor will increment g_offset
+	}
+}	// end global_entry_context::visit_ports
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
@@ -642,6 +679,37 @@ global_entry_context::visit_recursive(const footprint& f) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Recursively traverses processes *without* actual context, 
+	for the purposes of visiting all types post-order.
+	Since only types are visited, the frames and offsets
+	remain unused in this pass.
+ */
+void
+global_entry_context::visit_types(const footprint& f) {
+        STACKTRACE_VERBOSE;
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT_PRINT("in process type: ");
+	f.dump_type(STACKTRACE_STREAM) << endl;
+#endif
+	// recurse through processes and print
+	const state_instance<process_tag>::pool_type&
+		lpp(f.get_instance_pool<process_tag>());
+	// copy and increment with each local process
+	size_t pi = 0;
+	const size_t pe = lpp.local_entries();
+	for ( ; pi<pe; ++pi) {
+		STACKTRACE_INDENT_PRINT("lpid = " << pi << endl);
+		const state_instance<process_tag>& sp(lpp[pi]);
+		const footprint_frame& spf(sp._frame);
+		NEVER_NULL(spf._footprint);
+		const footprint& sfp(*spf._footprint);
+		const footprint_frame_setter ffs(fpf, &spf);
+		sfp.accept(*this);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	By default, visit locally before visiting recursively.
 	This doesn't do very much, other than walk the hierarchy.
 	This doesn't visit any local instances.  
@@ -671,6 +739,12 @@ global_entry_context::report_instantiation_error(ostream& o) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // explicit template instantiations
+template void global_entry_context::visit_ports<process_tag>(const footprint&);
+template void global_entry_context::visit_ports<channel_tag>(const footprint&);
+template void global_entry_context::visit_ports<enum_tag>(const footprint&);
+template void global_entry_context::visit_ports<int_tag>(const footprint&);
+template void global_entry_context::visit_ports<bool_tag>(const footprint&);
+
 template void global_entry_context::visit_local<process_tag>(const footprint&, const bool);
 template void global_entry_context::visit_local<channel_tag>(const footprint&, const bool);
 template void global_entry_context::visit_local<enum_tag>(const footprint&, const bool);

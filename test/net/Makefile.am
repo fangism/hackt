@@ -1,10 +1,10 @@
 # "test/net/Makefile.am"
-#	$Id: Makefile.am,v 1.29 2011/03/06 21:02:38 fang Exp $
+#	$Id: Makefile.am,v 1.30 2011/03/29 04:34:39 fang Exp $
 # Test auto-Makefile for hacknet.  
 
 include $(top_srcdir)/test/Make.test-head
 
-# SUBDIRS =
+SUBDIRS = . verilog
 
 # .hac inputs
 HACKNET_TEST_SCRIPTS_PASSES = \
@@ -149,8 +149,6 @@ HACKT_PARSE_TEST_PASSES = \
 
 HACKT_PARSE_TEST_FAILURES = \
 	rename-13
-
-HACKTNET_TEST_SCRIPTS_PASSES =
 
 CLEANFILES +=
 AUTO_IGNORE +=

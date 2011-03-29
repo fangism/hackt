@@ -1,0 +1,24 @@
+/**
+	"channel.hac"
+	copy-reduced from "$(top_srcdir)/lib/channel.hac"
+ */
+
+/*** e1of<N> definitions ********************************/
+
+/**
+	Data rails are d[]. 
+	Active-low acknowledge is e.  
+ */
+template <pint N>
+defchan e1of <: chan(int) (bool d[N], e)
+{
+spec {
+	exclhi(d)		// all nodes: d[0..N-1]
+}
+}
+
+typedef e1of<1> e1of1;
+typedef e1of<2> e1of2;
+typedef e1of<3> e1of3;
+typedef e1of<4> e1of4;
+

@@ -1,0 +1,26 @@
+// "004.hac"
+// copy modified from "003.hac"
+// @hacknet-flags@ -T fifo<2>
+
+import "channel.hac";
+
+defproc buf(e1of2? I; e1of2! O) {
+I?;
+O!;
+}
+
+template <pint N>
+defproc fifo(e1of2? I; e1of2! O) {
+[ N >= 1 ->
+e1of2 M[N+1];
+M[0] = I;
+M[N] = O;
+buf b[N];
+(;j:N:
+	b[j](M[j], M[j+1]);
+)
+]
+}
+
+fifo<2> f;
+

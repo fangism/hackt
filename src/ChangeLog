@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-03-28	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-57:
+	  hacknet: adding verilog format output mode, features not yet complete.
+		Need options for including node ports, struct ports.
+		New test cases not complete (fail on missing files).
+	  hacknet: speed up recursive traversal with
+		global_entry_context::visit_types, with no need to setup 
+		frames and context per instance, also visit ports.
+		Some test case outputs slightly reordered.
+
+
 2011-03-24	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-56:

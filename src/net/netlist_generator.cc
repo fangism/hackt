@@ -1,7 +1,7 @@
 /**
 	\file "net/netlist_generator.cc"
 	Implementation of hierarchical netlist generation.
-	$Id: netlist_generator.cc,v 1.28 2011/03/06 21:02:37 fang Exp $
+	$Id: netlist_generator.cc,v 1.29 2011/03/29 04:34:38 fang Exp $
  */
 
 #define	ENABLE_STATIC_TRACE		0
@@ -216,8 +216,12 @@ if (&f == topfp) {	// at_top()
 	// process ports belong to parents
 	STACKTRACE_INDENT_PRINT("|procs| = " << ps << endl);
 	nl->instance_pool.reserve(ps);	// prevent reallocation!!!
-
-	visit_recursive(f);	// process dependent types depth-first
+	// process dependent types depth-first
+#if 0
+	visit_recursive(f);
+#else
+	visit_types(f);		// faster, and covers ports' types first
+#endif
 	visit_local<process_tag>(f, top_level);
 //	visit_local<bool_tag>(f, top_level);
 	f.get_prs_footprint().accept(*this);
@@ -242,12 +246,13 @@ if (&f == topfp) {	// at_top()
 	nl->dump_raw(cerr);	// DEBUG point
 #endif
 if (opt.empty_subcircuits || !nl->is_empty()) {
+	// TODO: emit verilog modules
 	nl->emit(os, !top_level || opt.top_type_ports, opt) << endl;
 } else {
 	os << opt.comment_prefix << "subcircuit "
 		<< nl->name << " is empty.\n" << endl;
 }
-}
+}	// end if first_time
 }	// end visit(const footprint&)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

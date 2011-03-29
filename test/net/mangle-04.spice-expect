@@ -1,3 +1,5 @@
+* subcircuit e1of_TEMP2LATE_ is empty.
+
 * typename_mangle("std::logic::celem<2, 10>") = std_SCP_logic_SCP_celem_TEMP2_COM_10LATE_
 .subckt std_SCP_logic_SCP_celem_TEMP2_COM_10LATE_ _BANG_GND _BANG_Vdd in_IND0EX_ in_IND1EX_ o
 * BEGIN node name mangle map
@@ -28,8 +30,6 @@ Mo_COL_up_COL_0 _BANG_Vdd ____o o _BANG_Vdd pch W=10u L=2u
 * instance: std::logic::celem<2, 10> comp
 xcomp _BANG_GND _BANG_Vdd oe_IND0EX_ oe_IND1EX_ in_DOT_e std_SCP_logic_SCP_celem_TEMP2_COM_10LATE_
 .ends
-
-* subcircuit e1of_TEMP2LATE_ is empty.
 
 * typename_mangle("std::logic::celem<3, 10>") = std_SCP_logic_SCP_celem_TEMP3_COM_10LATE_
 .subckt std_SCP_logic_SCP_celem_TEMP3_COM_10LATE_ _BANG_GND _BANG_Vdd in_IND0EX_ in_IND1EX_ in_IND2EX_ o

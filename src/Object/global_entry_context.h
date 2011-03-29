@@ -2,7 +2,7 @@
 	\file "Object/global_entry_context.h"
 	Structure containing all the minimal information
 	needed for a global_entry traversal over instances.  
-	$Id: global_entry_context.h,v 1.11 2011/02/03 02:23:21 fang Exp $
+	$Id: global_entry_context.h,v 1.12 2011/03/29 04:34:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_CONTEXT_H__
@@ -106,12 +106,19 @@ virtual	~global_entry_context();
 
 	template <class Tag>
 	void
+	visit_ports(const footprint&);
+
+	template <class Tag>
+	void
 	visit_local(const footprint&, const bool);
 
 #if 0
 	void
 	visit_aliases(const footprint&);
 #endif
+
+	void
+	visit_types(const footprint&);
 
 	void
 	visit_recursive(const footprint&);

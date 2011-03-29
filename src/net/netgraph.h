@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.h"
-	$Id: netgraph.h,v 1.22 2011/03/24 15:20:52 fang Exp $
+	$Id: netgraph.h,v 1.23 2011/03/29 04:34:38 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETGRAPH_H__
@@ -53,7 +53,7 @@
 	Unsupported: template parameters.
 	Goal: 1
  */
-#define	NETLIST_VERILOG				0
+#define	NETLIST_VERILOG				1
 
 namespace HAC {
 namespace entity {
@@ -76,6 +76,9 @@ using entity::PRS::footprint_expr_node;
 typedef	size_t		index_type;
 typedef	double		real_type;
 class node;
+#if NETLIST_VERILOG
+class proc;
+#endif
 class netlist;
 class local_netlist;
 class netlist_generator;
@@ -85,6 +88,9 @@ struct netlist_options;
 	internal nodes, or auxiliary nodes, or supply nodes.  
  */
 typedef	vector<node>			node_pool_type;
+#if NETLIST_VERILOG
+typedef	vector<proc>			proc_pool_type;
+#endif
 
 // 0-indexed nodes or 1-indexed?
 // extern const index_type	base_index = 1;
@@ -253,32 +259,10 @@ public:
 };	// end struct device_group
 
 //-----------------------------------------------------------------------------
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Extension of (local) node information.  
-	Corresponds to an electrical node in the netlist. 
-	Bother with redundant connectivity list?
-	Re: device grouping by output node:
-	Decided not to derive/contain device group because 
-	rules associated with a single node may come from different 
-	subcircuit, thus making it difficult to group by node.  
-	Thus, we resort to tagging every device with a node index, 
-	and maintaining an auxiliary mutable counter.  
+	Information common to unique instance objects.  
  */
-struct node {
-	struct __logical_node_tag { };
-#if !PRS_SUPPLY_OVERRIDES
-	struct __supply_node_tag { };
-#endif
-	struct __internal_node_tag { };
-	struct __auxiliary_node_tag { };
-#if !PRS_SUPPLY_OVERRIDES
-	static const __supply_node_tag		supply_node_tag;
-#endif
-	static const __logical_node_tag		logical_node_tag;
-	static const __internal_node_tag	internal_node_tag;
-	static const __auxiliary_node_tag	auxiliary_node_tag;
+struct unique_common {
 	/**
 		Index may correspond to index in local bool instance pool.
 		For internal nodes, they correspond to the footprint's
@@ -295,6 +279,64 @@ struct node {
 		from their footprint.  
 	 */
 	string				name;
+
+	unique_common() : index(0), name() { }
+
+	explicit
+	unique_common(const index_type i) : index(i), name() { }
+
+	unique_common(const index_type i, const string& n) :
+		index(i), name(n) { }
+
+	explicit
+	unique_common(const string& n) :
+		index(0), name(n) { }
+
+};	// end struct unique_common
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if NETLIST_VERILOG
+/**
+	An instance of channel or data-struct that is passed around 
+	through ports.  
+ */
+struct proc : public unique_common {
+//	bool				used;
+
+	explicit
+	proc(const index_type i) : unique_common(i) { }
+
+	ostream&
+	emit(ostream&) const;
+
+};	// end struct proc
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Extension of (local) node information.  
+	Corresponds to an electrical node in the netlist. 
+	Bother with redundant connectivity list?
+	Re: device grouping by output node:
+	Decided not to derive/contain device group because 
+	rules associated with a single node may come from different 
+	subcircuit, thus making it difficult to group by node.  
+	Thus, we resort to tagging every device with a node index, 
+	and maintaining an auxiliary mutable counter.  
+ */
+struct node : public unique_common {
+	struct __logical_node_tag { };
+#if !PRS_SUPPLY_OVERRIDES
+	struct __supply_node_tag { };
+#endif
+	struct __internal_node_tag { };
+	struct __auxiliary_node_tag { };
+#if !PRS_SUPPLY_OVERRIDES
+	static const __supply_node_tag		supply_node_tag;
+#endif
+	static const __logical_node_tag		logical_node_tag;
+	static const __internal_node_tag	internal_node_tag;
+	static const __auxiliary_node_tag	auxiliary_node_tag;
 	/**
 		Logical nodes are those named in the original source.
 		Internal nodes are special named nodes used to
@@ -357,29 +399,35 @@ struct node {
 
 #if !PRS_SUPPLY_OVERRIDES
 	node(const string& s, const __supply_node_tag&) : 
-		index(0), name(s), type(NODE_TYPE_SUPPLY), used(false) 
+		unique_common(s), 
+		type(NODE_TYPE_SUPPLY), used(false) 
 		INIT_DRIVEN	// shouldn't supplies be considered driven?
 		{ INIT_DEVICE_COUNT }
 #endif
 	node(const index_type i, const __logical_node_tag&) : 
-		index(i), name(), type(NODE_TYPE_LOGICAL), used(false)
+		unique_common(i),
+		type(NODE_TYPE_LOGICAL), used(false)
 		INIT_DRIVEN
 		{ INIT_DEVICE_COUNT }
 	node(const index_type i, const __internal_node_tag&) : 
-		index(i), name(), type(NODE_TYPE_INTERNAL), used(false)
+		unique_common(i),
+		type(NODE_TYPE_INTERNAL), used(false)
 		INIT_DRIVEN
 		{ INIT_DEVICE_COUNT }
 	node(const __auxiliary_node_tag&) : 
-		index(0), name(), type(NODE_TYPE_AUXILIARY), used(false)
+		unique_common(), 
+		type(NODE_TYPE_AUXILIARY), used(false)
 		INIT_DRIVEN
 		{ INIT_DEVICE_COUNT }
 	// only for VOID node
 	node(const char* s, const __auxiliary_node_tag&) : 
-		index(0), name(s), type(NODE_TYPE_AUXILIARY), used(false)
+		unique_common(s),
+		type(NODE_TYPE_AUXILIARY), used(false)
 		INIT_DRIVEN
 		{ INIT_DEVICE_COUNT }
 	node(const index_type a, const __auxiliary_node_tag&) : 
-		index(a), name(), type(NODE_TYPE_AUXILIARY), used(false)
+		unique_common(a),
+		type(NODE_TYPE_AUXILIARY), used(false)
 		INIT_DRIVEN
 		{ INIT_DEVICE_COUNT }
 #undef	INIT_DEVICE_COUNT
@@ -466,10 +514,13 @@ struct instance {
 	 */
 	index_type			pid;
 	/**
-		Port connections.
+		Port node connections.
 	 */
 	typedef	vector<index_type>	node_actuals_list_type;
 #if NETLIST_VERILOG
+	/**
+		Port structure connections.
+	 */
 	typedef	vector<index_type>	proc_actuals_list_type;
 #endif
 
@@ -625,6 +676,9 @@ friend class netlist_generator;
 		0-value means node has not been used yet.  
 	 */
 	typedef	vector<index_type>	named_node_map_type;
+#if NETLIST_VERILOG
+	typedef	vector<index_type>	named_proc_map_type;
+#endif
 #if NETLIST_CHECK_NAME_COLLISIONS
 	/**
 		Reverse map from mangled name to node index.  
@@ -664,6 +718,9 @@ private:
 	 */
 	string				name;
 	named_node_map_type		named_node_map;
+#if NETLIST_VERILOG
+	named_proc_map_type		named_proc_map;
+#endif
 	/**
 		All local nodes, including ports and internal nodes.
 		This is only stored in the primary netlist, 
@@ -671,6 +728,12 @@ private:
 		references to parents' nodes.  
 	 */
 	node_pool_type			node_pool;
+#if NETLIST_VERILOG
+	/**
+		Collection of channels and datastructs.  
+	 */
+	proc_pool_type			proc_pool;
+#endif
 	instance_pool_type		instance_pool;
 	internal_node_map_type		internal_node_map;
 	internal_expr_map_type		internal_expr_map;
@@ -733,6 +796,9 @@ public:
 	bool
 	is_empty(void) const { return empty; }
 
+	bool
+	is_channel_or_struct(void) const;
+
 	index_type
 	create_auxiliary_node(void);
 
@@ -745,6 +811,11 @@ public:
 
 	index_type
 	register_named_node(const index_type, const netlist_options&);
+
+#if NETLIST_VERILOG
+	index_type
+	register_named_proc(const index_type, const netlist_options&);
+#endif
 
 #if 0
 	bool
@@ -779,6 +850,7 @@ private:
 	void
 	__bind_footprint(const footprint&, const netlist_options&);
 
+	template <class Tag>
 	string
 	get_original_node_name(const size_t, const netlist_options&) const;
 
@@ -786,6 +858,23 @@ private:
 	void
 	check_name_collisions(const string&, const index_type, 
 		const netlist_options&);
+#endif
+
+	ostream&
+	emit_spice_ports(ostream&, const netlist_options&) const;
+
+	ostream&
+	emit_subinstances(ostream&, const netlist_options&) const;
+
+	ostream&
+	emit_local_subcircuits(ostream&, const netlist_options&) const;
+
+#if NETLIST_VERILOG
+	ostream&
+	emit_verilog_ports(ostream&, const netlist_options&) const;
+
+	ostream&
+	emit_verilog_locals(ostream&, const netlist_options&) const;
 #endif
 
 };	// end class netlist
