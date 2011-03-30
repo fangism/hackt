@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.h"
-	$Id: netgraph.h,v 1.23 2011/03/29 04:34:38 fang Exp $
+	$Id: netgraph.h,v 1.24 2011/03/30 04:19:01 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETGRAPH_H__
@@ -301,13 +301,16 @@ struct unique_common {
 	through ports.  
  */
 struct proc : public unique_common {
-//	bool				used;
+	bool				used;
 
 	explicit
-	proc(const index_type i) : unique_common(i) { }
+	proc(const index_type i) : unique_common(i), used(false) { }
 
 	ostream&
 	emit(ostream&) const;
+
+	ostream&
+	dump_raw(ostream&) const;
 
 };	// end struct proc
 #endif
@@ -542,8 +545,11 @@ struct instance {
 	is_empty(void) const;
 
 	ostream&
-	emit(ostream&, const node_pool_type&, const footprint&, 
-		const netlist_options&) const;
+	emit(ostream&, const node_pool_type&,
+#if NETLIST_VERILOG
+		const proc_pool_type&,
+#endif
+		const footprint&, const netlist_options&) const;
 
 	void
 	mark_used_nodes(node_pool_type&) const;
@@ -638,6 +644,9 @@ public:
 #if !PRS_SUPPLY_OVERRIDES
 	static const node GND_node;
 	static const node Vdd_node;
+#endif
+#if NETLIST_VERILOG
+	static const proc void_proc;
 #endif
 
 	// these should correspond with the order of insertion in netlist's ctor
@@ -860,8 +869,8 @@ private:
 		const netlist_options&);
 #endif
 
-	ostream&
-	emit_spice_ports(ostream&, const netlist_options&) const;
+	void
+	collect_node_ports(vector<string>&, const netlist_options&) const;
 
 	ostream&
 	emit_subinstances(ostream&, const netlist_options&) const;
@@ -870,12 +879,15 @@ private:
 	emit_local_subcircuits(ostream&, const netlist_options&) const;
 
 #if NETLIST_VERILOG
-	ostream&
-	emit_verilog_ports(ostream&, const netlist_options&) const;
+	void
+	collect_struct_ports(vector<string>&, const netlist_options&) const;
 
 	ostream&
 	emit_verilog_locals(ostream&, const netlist_options&) const;
 #endif
+
+	ostream&
+	emit_header(ostream&, const netlist_options&) const;
 
 };	// end class netlist
 

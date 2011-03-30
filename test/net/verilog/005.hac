@@ -1,0 +1,21 @@
+// "005.hac"
+// copy modified from "003.hac"
+// @hacknet-flags@ -T array<2>
+
+import "channel.hac";
+
+defproc buffer(e1of2? I; e1of2! O) {
+I?;
+O!;
+}
+
+template <pint N>
+defproc array(e1of2? I[N]; e1of2! O[N]) {
+buffer b[N];
+(;j:N:
+	b[j](I[j], O[j]);
+)
+}
+
+array<2> a;
+

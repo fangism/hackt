@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_options.cc"
-	$Id: netlist_options.cc,v 1.21 2011/03/23 00:36:23 fang Exp $
+	$Id: netlist_options.cc,v 1.22 2011/03/30 04:19:02 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -107,6 +107,8 @@ netlist_options::netlist_options() :
 		unused_ports(false),
 		prefer_port_aliases(false),
 		top_type_ports(false), 
+		node_ports(true),
+		struct_ports(false),
 #if SPECTRE_SUPPORT
 		subckt_def_style(STYLE_SPICE),
 		instance_port_style(STYLE_SPICE),
@@ -144,6 +146,8 @@ netlist_options::preset_output_format(const option_value& v) {
 if (v.values.size()) {
 	const string& f(v.values.front());
 	if (f == "spice") {
+		node_ports = true;
+		struct_ports = false;
 		transistor_prefix = "M";
 		subckt_instance_prefix = "x";
 		pre_line_continue = "";
@@ -152,6 +156,8 @@ if (v.values.size()) {
 		subckt_def_style = STYLE_SPICE;
 		instance_port_style = STYLE_SPICE;
 	} else if (f == "spectre") {
+		node_ports = true;
+		struct_ports = false;
 		transistor_prefix = "Q";	// any convention?
 		subckt_instance_prefix = "";
 		pre_line_continue = "\\";	// or is it '&'?
@@ -160,6 +166,8 @@ if (v.values.size()) {
 		subckt_def_style = STYLE_SPECTRE;
 		instance_port_style = STYLE_SPECTRE;
 	} else if (f == "verilog") {
+		node_ports = true;
+		struct_ports = true;		// include structs
 		transistor_prefix = "#FET:";	// primitive
 		subckt_instance_prefix = "";
 		pre_line_continue = " \\";
@@ -1346,6 +1354,32 @@ Default: 0
 ***/
 DEFINE_OPTION_DEFAULT(prefer_port_aliases, "prefer_port_aliases",
 	"use port name for aliases (if available) as canonical name")
+
+/***
+@texinfo config/node_ports.texi
+@defopt node_ports (bool)
+If set to 1, include bools (nodes, wires) in port lists
+for subcircuit definitions and instances.  
+This is enabled with @option{output_format=spice,spectre}.
+Default: 1
+@end defopt
+@end texinfo
+***/
+DEFINE_OPTION_DEFAULT(node_ports, "node_ports",
+	"if true, include nodes in ports of subcircuits")
+
+/***
+@texinfo config/struct_ports.texi
+@defopt struct_ports (bool)
+If set to 1, include user-defined structs and channels in port lists
+for subcircuit definitions and instances.  
+This is enabled with @option{output_format=verilog}.
+Default: 0
+@end defopt
+@end texinfo
+***/
+DEFINE_OPTION_DEFAULT(struct_ports, "struct_ports",
+	"if true, include user-defined structs/channels in ports")
 
 /***
 @texinfo config/emit_top.texi

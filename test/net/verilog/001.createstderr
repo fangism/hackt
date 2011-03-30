@@ -1,0 +1,250 @@
+WARNING: process buffer<>::I lacks connection to a consumer.
+WARNING: process buffer<>::O lacks connection to a producer.
+Warnings found (2) while creating complete type buffer<>.
+---- END CREATE WARNINGS ---
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	56
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	123
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	9	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	10	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	11	##ADDR##	portscop	0	#HEAD#	#TAIL#	28
+	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	18	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	42
+	19	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	20	##ADDR##	procdefn	0	#HEAD#	#TAIL#	113
+	21	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	22	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	24	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	25	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	31	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	32	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	34	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	SPCdrctv	0	#HEAD#	#TAIL#	34
+	36	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	footprnt	0	#HEAD#	#TAIL#	402
+	38	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	39	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	40	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	41	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	42	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	43	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	44	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	45	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	46	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	47	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	48	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	49	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	50	##ADDR##	footprnt	0	#HEAD#	#TAIL#	556
+	51	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	52	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	53	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	42
+	54	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	55	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	56	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	57	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	42
+	58	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	59	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	60	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	61	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	42
+	62	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	63	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	64	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	65	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	66	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	67	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	68	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	69	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	70	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	71	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	72	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	73	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	74	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	75	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	76	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	77	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	78	##ADDR##	footprnt	0	#HEAD#	#TAIL#	653
+	79	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  3 instantiation-collections
+  0 sub-namespaces
+  2 definitions
+  4 typedefs
+  Definitions:
+    buffer = process-definition (defined) buffer(
+        bool<> !GND
+        bool<> !Vdd
+        e1of2<>? I
+        e1of2<>! O
+      )
+      In definition "buffer", we have: {
+      Instances:
+        !GND = bool<> buffer::!GND
+        !Vdd = bool<> buffer::!Vdd
+        I = e1of2<>? buffer::I
+        O = e1of2<>! buffer::O
+      unroll sequence: 
+        ports: (
+          bool<> !GND
+          bool<> !Vdd
+          e1of2<>? I
+          e1of2<>! O
+        )
+        !GND@[supply=0]
+        !Vdd@[supply=1]
+      footprint: {
+        !GND = bool^0 = buffer<>::!GND (7) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = buffer<>::!Vdd (8) @[ supply_high port-alias ] 
+        I = process e1of<2>^0 = buffer<>::I (1) @[ port! ] (
+          d = bool^1
+            {
+              [0] = buffer<>::I.d[0] (1) @[ port-alias ] 
+              [1] = buffer<>::I.d[1] (2) @[ port-alias ] 
+            }
+          e = bool^0 = buffer<>::I.e (3) @[ port-alias ] 
+        )
+        O = process e1of<2>^0 = buffer<>::O (2) @[ port? ] (
+          d = bool^1
+            {
+              [0] = buffer<>::O.d[0] (4) @[ port-alias ] 
+              [1] = buffer<>::O.d[1] (5) @[ port-alias ] 
+            }
+          e = bool^0 = buffer<>::O.e (6) @[ port-alias ] 
+        )
+        Created state:
+        process instance pool: (2 ports, 0 local, 0 mapped)
+        1	buffer<>::I @[ port! ]	e1of<2>
+          bool: 3,1,2
+        2	buffer<>::O @[ port? ]	e1of<2>
+          bool: 6,4,5
+        bool instance pool: (8 ports, 0 local, 0 mapped)
+        1	buffer<>::I.d[0] @[ port-alias ]	
+        2	buffer<>::I.d[1] @[ port-alias ]	
+        3	buffer<>::I.e @[ port-alias ]	
+        4	buffer<>::O.d[0] @[ port-alias ]	
+        5	buffer<>::O.d[1] @[ port-alias ]	
+        6	buffer<>::O.e @[ port-alias ]	
+        7	buffer<>::!GND @[ supply_low port-alias ]	
+        8	buffer<>::!Vdd @[ supply_high port-alias ]	
+      }
+      }
+
+    e1of = process-definition (defined) e1of<
+      pint<> N
+      >(
+        bool<> d[0..N-1]
+        bool<> e
+      )
+      In definition "e1of", we have: {
+      Parameters:
+        N = pint<> e1of::N
+      Instances:
+        d = bool<> e1of::d^1
+        e = bool<> e1of::e
+      unroll sequence: 
+        ports: (
+          bool<> d[0..N-1]
+          bool<> e
+        )
+      spec:
+        exclhi(d)
+      footprint collection: {
+        <2> {
+          N = pint^0 value: 2
+          d = bool^1
+            {
+              [0] = e1of<2>::d[0] (2) @[ port-alias ] 
+              [1] = e1of<2>::d[1] (3) @[ port-alias ] 
+            }
+          e = bool^0 = e1of<2>::e (1) @[ port-alias ] 
+          Created state:
+          bool instance pool: (3 ports, 0 local, 0 mapped)
+          1	e1of<2>::e @[ port-alias ]	
+          2	e1of<2>::d[0] @[ port-alias ]	
+          3	e1of<2>::d[1] @[ port-alias ]	
+          resolved specs:
+          exclhi({d[0],d[1]})
+        }
+      }
+      }
+
+  Typedefs:
+    e1of1 = process-definition-alias: e1of1
+      = e1of<1>
+    e1of2 = process-definition-alias: e1of2
+      = e1of<2>
+    e1of3 = process-definition-alias: e1of3
+      = e1of<3>
+    e1of4 = process-definition-alias: e1of4
+      = e1of<4>
+  Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
+    b = buffer<> b
+}
+
+footprint: {
+  !GND = bool^0 = !GND (1) @[ supply_low ] 
+  !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
+  b = process buffer<>^0 = b (1) (
+    !GND = bool^0 = !GND (1) @[ supply_low ] 
+    !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
+    I = process e1of<2>^0 = b.I (2) (
+      d = bool^1
+        {
+          [0] = b.I.d[0] (3) 
+          [1] = b.I.d[1] (4) 
+        }
+      e = bool^0 = b.I.e (5) 
+    )
+    O = process e1of<2>^0 = b.O (3) (
+      d = bool^1
+        {
+          [0] = b.O.d[0] (6) 
+          [1] = b.O.d[1] (7) 
+        }
+      e = bool^0 = b.O.e (8) 
+    )
+  )
+  Created state:
+  process instance pool: (0 ports, 3 local, 0 mapped)
+  1	b	buffer<>
+    process: 2,3
+    bool: 3,4,5,6,7,8,1,2
+  2	b.I	e1of<2>
+    bool: 5,3,4
+  3	b.O	e1of<2>
+    bool: 8,6,7
+  bool instance pool: (0 ports, 8 local, 0 mapped)
+  1	!GND @[ supply_low ]	
+  2	!Vdd @[ supply_high ]	
+  3	b.I.d[0]	
+  4	b.I.d[1]	
+  5	b.I.e	
+  6	b.O.d[0]	
+  7	b.O.d[1]	
+  8	b.O.e	
+}

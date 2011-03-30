@@ -1,12 +1,12 @@
 // "002.hac"
 // copy-modified from "001.hac"
-// @hacknet-flags@ -T buf
+// @hacknet-flags@ -T buffer
 
 import "channel.hac";
 
-defproc buf(e1of2? I; e1of2! O) {
+defproc buffer(e1of2? I; e1of2! O) {
 e1of2 M;
 }
 
-buf b;
+buffer b;
 

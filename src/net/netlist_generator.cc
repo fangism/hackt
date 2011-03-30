@@ -1,7 +1,7 @@
 /**
 	\file "net/netlist_generator.cc"
 	Implementation of hierarchical netlist generation.
-	$Id: netlist_generator.cc,v 1.29 2011/03/29 04:34:38 fang Exp $
+	$Id: netlist_generator.cc,v 1.30 2011/03/30 04:19:02 fang Exp $
  */
 
 #define	ENABLE_STATIC_TRACE		0
@@ -206,16 +206,7 @@ if (&f == topfp) {	// at_top()
 	// should not invalidate existing iterators
 	const value_saver<netlist*> __tmp(current_netlist, nl);
 	const value_saver<netlist_common*> __tmp2(current_local_netlist, nl);
-	const size_t bs = f.get_instance_pool<bool_tag>().local_entries();
-	nl->named_node_map.resize(bs, netlist::void_index);
-	// 0-fill
-	// resize(f.get_instance_pool<bool_tag>().size()) ???
-	STACKTRACE_INDENT_PRINT("|bools| = " << bs << endl);
-	const size_t ps = f.get_instance_pool<process_tag>().local_entries();
-	// really should be local_private_entries(), excluding process ports
-	// process ports belong to parents
-	STACKTRACE_INDENT_PRINT("|procs| = " << ps << endl);
-	nl->instance_pool.reserve(ps);	// prevent reallocation!!!
+	// sizing of node_pool, proc_pool pushed into netlist::bind_footprint
 	// process dependent types depth-first
 #if 0
 	visit_recursive(f);

@@ -1,0 +1,17 @@
+module e1of_2_ ();
+endmodule
+
+module buffer (I, O);
+input e1of_2_ I;
+output e1of_2_ O;
+endmodule
+
+module fifo_2_ (I, O);
+input e1of_2_ I;
+output e1of_2_ O;
+e1of_2_ M[1];
+buffer b[0] (I, M[1]);
+buffer b[1] (M[1], O);
+endmodule
+
+

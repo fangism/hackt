@@ -4,7 +4,7 @@
 
 import "channel.hac";
 
-defproc buf(e1of2? I; e1of2! O) {
+defproc buffer(e1of2? I; e1of2! O) {
 I?;
 O!;
 }
@@ -15,10 +15,12 @@ defproc fifo(e1of2? I; e1of2! O) {
 e1of2 M[N+1];
 M[0] = I;
 M[N] = O;
-buf b[N];
+buffer b[N];
 (;j:N:
 	b[j](M[j], M[j+1]);
 )
+[] else ->
+I = O;
 ]
 }
 

@@ -1,7 +1,10 @@
 /**
-	\file "Object/inst/bool_port_collector.cc"
-	$Id: bool_port_collector.tcc,v 1.2 2009/08/28 20:44:54 fang Exp $
+	\file "Object/inst/bool_port_collector.tcc"
+	$Id: bool_port_collector.tcc,v 1.3 2011/03/30 04:19:01 fang Exp $
  */
+
+#ifndef	__HAC_OBJECT_INST_BOOL_PORT_COLLECTOR_TCC__
+#define	__HAC_OBJECT_INST_BOOL_PORT_COLLECTOR_TCC__
 
 #include "Object/inst/bool_port_collector.h"
 #include "Object/inst/instance_alias_info.h"
@@ -11,19 +14,21 @@
 namespace HAC {
 namespace entity {
 //=============================================================================
-// class bool_port_collector method definitions
+// class meta_type_port_collector method definitions
 
-template <class Container>
-bool_port_collector<Container>::~bool_port_collector() { }
+template <class Tag, class Container>
+meta_type_port_collector<Tag,Container>::~meta_type_port_collector() { }
 
-template <class Container>
+template <class Tag, class Container>
 void
-bool_port_collector<Container>::visit(
-		const instance_alias_info<bool_tag>& a) {
-	this->bool_indices.insert(a.instance_index);
+meta_type_port_collector<Tag,Container>::visit(
+		const instance_alias_info<Tag>& a) {
+	this->indices.insert(a.instance_index);
 }
 
 //=============================================================================
 }	// end namespace entity
 }	// end namespace HAC
+
+#endif	// __HAC_OBJECT_INST_BOOL_PORT_COLLECTOR_TCC__
 

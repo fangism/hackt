@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_options.h"
-	$Id: netlist_options.h,v 1.17 2011/03/23 00:36:23 fang Exp $
+	$Id: netlist_options.h,v 1.18 2011/03/30 04:19:02 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETLIST_OPTIONS_H__
@@ -235,6 +235,17 @@ struct netlist_options {
 		footprint.
 	 */
 	bool				top_type_ports;
+	/**
+		If true, includes bools (nodes) in ports lists.
+		Default: true
+	 */
+	bool				node_ports;
+	/**
+		If true, include user-defined channels and structs
+		in ports lists.
+		Default: false, typically only enable for verilog.
+	 */
+	bool				struct_ports;
 #if SPECTRE_SUPPORT
 	/**
 		Subckt definition style.

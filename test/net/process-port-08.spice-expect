@@ -7,5 +7,4 @@ Mz:up:0 !Vdd p/b z !Vdd pch W=5u L=2u
 .ends
 
 xbar !GND !Vdd bar.p/a bar.p/b bar.z foo
-xbar.p bar.p/a bar.p/b pair
 

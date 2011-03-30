@@ -3,6 +3,24 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-03-29	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-58:
+	  hacknet: continued work on outputting verilog, added struct/proc
+		ports to subcircuit and instances (flagged always used).
+		checking for is_aliased_to_port() is now using
+		comparison against number of port entries, instead of
+		a function provided by connection_policy base,
+		which is more consistent, less hacky.  
+		More 'similar' function re-factoring.
+	  updated bool_port_collector to be generalized using template
+		class meta_type_port_collector.
+	  hacknet: added independent options for enabling node-ports
+		and struct-ports, each defaulting depending on
+		output_format (spice,spectre,verilog), documented.
+	  Added/updated test cases, net/verilog should pass now.
+
+
 2011-03-28	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-57:

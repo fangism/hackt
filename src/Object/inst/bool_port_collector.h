@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/bool_port_collector.h"
-	$Id: bool_port_collector.h,v 1.2 2009/08/28 20:44:54 fang Exp $
+	$Id: bool_port_collector.h,v 1.3 2011/03/30 04:19:00 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_BOOL_PORT_COLLECTOR_H__
@@ -10,28 +10,39 @@
 
 namespace HAC {
 namespace entity {
-
+//=============================================================================
 /**
+	Intended for traversing collections of port formals
+	in declaration order.
 	Compatible container types: set::set, util::unique_list
 	anything that uses keyed value insertion.
+	TODO: possible to template this?
  */
-template <class Container>
-struct bool_port_collector : public port_visitor {
+template <class Tag, class Container>
+struct meta_type_port_collector : public port_visitor {
 	typedef	Container		container_type;
 	/**
-		Value type must be integral (bool indices)
+		Value type must be integral (indices)
 	 */
 	typedef	typename container_type::value_type	value_type;
-	container_type			bool_indices;
+	container_type			indices;
 
-	~bool_port_collector();
+	~meta_type_port_collector();
 
-	VISIT_INSTANCE_ALIAS_INFO_PROTO(bool_tag);
+	VISIT_INSTANCE_ALIAS_INFO_PROTO(Tag);
 
 	using port_visitor::visit;
 
-};	// end struct bool_port_collector
+};	// end struct meta_type_port_collector
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// typedef template
+template <class Container>
+struct bool_port_collector {
+	typedef	meta_type_port_collector<bool_tag, Container>	type;
+};
+
+//=============================================================================
 }	// end namespace entity
 }	// end namespace HAC
 

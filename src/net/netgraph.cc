@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.cc"
-	$Id: netgraph.cc,v 1.30 2011/03/29 04:34:37 fang Exp $
+	$Id: netgraph.cc,v 1.31 2011/03/30 04:19:01 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -40,7 +40,7 @@ namespace HAC {
 namespace NET {
 #include "util/using_ostream.h"
 using entity::footprint_frame_map_type;
-using entity::bool_port_collector;
+using entity::meta_type_port_collector;
 using entity::instance_alias_info;
 using entity::class_traits;
 using entity::bool_tag;
@@ -270,6 +270,9 @@ local_netlist::dump_raw(ostream& o, const netlist& n) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Always emit these definitions' node ports.  
+ */
 ostream&
 local_netlist::emit_definition(ostream& o, const netlist& n,
 		const netlist_options& nopt) const {
@@ -328,6 +331,7 @@ default:
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Instantiation uses the same names as the original ports.
+	Always emit these instances' node ports.  
  */
 ostream&
 local_netlist::emit_instance(ostream& o, const netlist& n,
@@ -382,6 +386,13 @@ if (!nopt.nested_subcircuits) {
 ostream&
 proc::emit(ostream& o) const {
 	return o << name;
+}
+
+ostream&
+proc::dump_raw(ostream& o) const {
+	o << ':' << index;
+	if (!used) o << " (unused)";
+	return o;
 }
 #endif
 
@@ -504,6 +515,9 @@ instance::is_empty(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 instance::emit(ostream& o, const node_pool_type& node_pool, 
+#if NETLIST_VERILOG
+		const proc_pool_type& proc_pool,
+#endif
 		const footprint& fp, const netlist_options& nopt) const {
 	string pname;
 {
@@ -521,7 +535,7 @@ if (nopt.emit_mangle_map) {
 }
 	vector<string> _actuals;
 // if include wire ports
-{
+if (nopt.node_ports) {
 	node_actuals_list_type::const_iterator
 		i(node_actuals.begin()), e(node_actuals.end());
 	for ( ; i!=e; ++i) {
@@ -531,20 +545,22 @@ if (nopt.emit_mangle_map) {
 	}
 }
 // if include struct ports
-#if 0
-{
+#if NETLIST_VERILOG
+if (nopt.struct_ports) {
+	STACKTRACE_INDENT_PRINT("proc_actuals.size() = " <<
+		proc_actuals.size() << endl);
 	proc_actuals_list_type::const_iterator
 		i(proc_actuals.begin()), e(proc_actuals.end());
 	for ( ; i!=e; ++i) {
 		ostringstream oss;
-		proc_pool[*i].emit(oss, nopt);
-//		_node_p.push_back(oss.str());
+		proc_pool[*i].emit(oss);	// nopt
 		_actuals.push_back(oss.str());
 	}
 }
 #endif
 	const bool paren =
 		(nopt.instance_port_style == netlist_options::STYLE_SPECTRE);
+	vector<string>::const_iterator i(_actuals.begin()), e(_actuals.end());
 switch (nopt.instance_port_style) {
 case netlist_options::STYLE_SPICE:
 case netlist_options::STYLE_SPECTRE:
@@ -553,7 +569,6 @@ case netlist_options::STYLE_SPECTRE:
 	// actuals
 	if (paren) o << " (";
 {
-	vector<string>::const_iterator i(_actuals.begin()), e(_actuals.end());
 	for ( ; i!=e; ++i) {
 		o << ' ' << *i;
 	}
@@ -567,8 +582,8 @@ case netlist_options::STYLE_SPECTRE:
 case netlist_options::STYLE_VERILOG:
 	o << type->get_name();
 	o << ' ' << pname << " (";
+//	o << '[' << _actuals.size() << ']';
 if (_actuals.size()) {
-	vector<string>::const_iterator i(_actuals.begin()), e(_actuals.end());
 	o << *i;
 	for (++i; i!=e; ++i) {
 		o << ", " << *i;
@@ -780,6 +795,11 @@ netlist::void_node("__VOID__", node::auxiliary_node_tag)
 #endif
 ;
 
+#if NETLIST_VERILOG
+const proc
+netlist::void_proc(0);
+#endif
+
 // universal node indices to every subcircuit
 // these should correspond with the order of insertion in netlist's ctor
 const	index_type
@@ -821,6 +841,9 @@ netlist::netlist() : netlist_common(), name(),
 	node_pool.push_back(GND_node);
 	node_pool.push_back(Vdd_node);
 #endif
+#if NETLIST_VERILOG
+	proc_pool.push_back(void_proc);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -859,8 +882,13 @@ netlist::__bind_footprint(const footprint& f, const netlist_options& nopt) {
 			++subs_count;
 		}
 	}
-	// TODO: pre-size instance_pool based on proceses
-	// TODO: pre-size named_node_map based on bools
+	const size_t bs = f.get_instance_pool<bool_tag>().local_entries();
+	const size_t ps = f.get_instance_pool<process_tag>().local_entries();
+	named_node_map.resize(bs);
+	instance_pool.reserve(ps);
+#if NETLIST_VERILOG
+	named_proc_map.resize(ps);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1036,6 +1064,8 @@ netlist::append_instance(const state_instance<process_tag>& subp,
 #if NETLIST_VERILOG
 	// for each structure/process/channel port
 	// after all traversals, this covers all used channels
+	STACKTRACE_INDENT_PRINT("subnet.proc_port_list.size() = "
+		<< subnet.proc_port_list.size() << endl);
 	netlist::proc_port_list_type::const_iterator
 		pi(subnet.proc_port_list.begin()),
 		pe(subnet.proc_port_list.end());
@@ -1055,12 +1085,8 @@ netlist::append_instance(const state_instance<process_tag>& subp,
 			register_named_proc(actual_id, opt);
 		STACKTRACE_INDENT_PRINT("actual proc = " << actual_proc << endl);
 		np.proc_actuals.push_back(actual_proc);
-#if 0 && NETLIST_CHECK_CONNECTIVITY
-		// inherit used/drive properties from formals to actuals
-		if (fn.used)
-			instance_pool[actual_proc].used = true;
-		if (fn.driven)
-			instance_pool[actual_proc].driven = true;
+#if NETLIST_CHECK_CONNECTIVITY
+		proc_pool[actual_proc].used = true;
 #endif
 	}	// end for each structure port
 #endif	// NETLIST_VERILOG
@@ -1359,6 +1385,9 @@ netlist::named_node_is_used(const index_type ni) const {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: mangle_map for structs
+ */
 ostream&
 netlist::emit_mangle_map(ostream& o, const netlist_options& nopt) const {
 	o << nopt.comment_prefix << "BEGIN node name mangle map" << endl;
@@ -1376,19 +1405,19 @@ netlist::emit_mangle_map(ostream& o, const netlist_options& nopt) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ostream&
-netlist::emit_spice_ports(ostream& o, const netlist_options& nopt) const {
+void
+netlist::collect_node_ports(vector<string>& o,
+		const netlist_options& nopt) const {
 	typedef	node_port_list_type::const_iterator		const_iterator;
 	const_iterator i(node_port_list.begin()), e(node_port_list.end());
-	ostringstream oss;		// stage for name mangling
 	for ( ; i!=e; ++i) {
+		ostringstream oss;		// stage for name mangling
 		// TODO: for verilog, emit 'wire' and 'direction'
 		const node& nd(node_pool[*i]);
-		nd.emit(oss << ' ', nopt);
+		nd.emit(oss, nopt);
+		// already mangled during name caching
+		o.push_back(oss.str());
 	}
-	const string& formals(oss.str());
-	// already mangled during name caching
-	return o << formals;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1403,10 +1432,13 @@ netlist::emit_subinstances(ostream& o, const netlist_options& nopt) const {
 	const_iterator i(instance_pool.begin()), e(instance_pool.end());
 	for ( ; i!=e; ++i, ++j) {
 		STACKTRACE_INDENT_PRINT("j = " << j << endl);
-//	if ((nopt.empty_subcircuits || !i->is_empty()) && !i->type->is_channel_or_struct())
-	if (nopt.empty_subcircuits || !i->is_empty())
-	{
-		i->emit(o, node_pool, *fp, nopt) << endl;
+	if ((nopt.empty_subcircuits || !i->is_empty())
+			&& !i->type->is_channel_or_struct()) {
+		i->emit(o, node_pool, 
+#if NETLIST_VERILOG
+			proc_pool,
+#endif
+			*fp, nopt) << endl;
 	}
 	}
 	return o;
@@ -1435,8 +1467,9 @@ netlist::emit_local_subcircuits(ostream& o, const netlist_options& nopt) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if NETLIST_VERILOG
-ostream&
-netlist::emit_verilog_ports(ostream& o, const netlist_options& nopt) const {
+void
+netlist::collect_struct_ports(vector<string>& ports,
+		const netlist_options& nopt) const {
 #if 0
 	typedef	proc_port_list_type::const_iterator		const_iterator;
 	const_iterator i(proc_port_list.begin()), e(proc_port_list.end());
@@ -1467,8 +1500,7 @@ netlist::emit_verilog_ports(ostream& o, const netlist_options& nopt) const {
 //	const port_alias_tracker& scope(fp->get_scope_alias_tracker());
 	const pool_type&
 		ppool(fp->get_instance_pool<tag_type>());
-	vector<string> ports;
-	ports.reserve(ppool.port_entries());
+	ports.reserve(ppool.port_entries() +ports.size());
 	pool_type::const_iterator pi(ppool.begin()), pe(ppool.end());
 	for ( ; pi!=pe; ++pi) {
 		const instance_type& p(*pi);
@@ -1491,18 +1523,15 @@ netlist::emit_verilog_ports(ostream& o, const netlist_options& nopt) const {
 		}
 		// else skip processes -- they are sub module instances
 	}
-	if (ports.size()) {
-		vector<string>::const_iterator i(ports.begin()), e(ports.end());
-		o << *i;
-		for ( ++i; i!=e; ++i) {
-			o << ", " << *i;
-		}
-	}
-	return o;
 #endif
-}	// end netlist::emit_verilog_ports
+}	// end netlist::collect_struct_ports
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Using the local instance pool instead of the footprint's instance
+	pool misses out on port structs.  
+ */
+#define	USE_FOOTPRINT_POOL	1
 ostream&
 netlist::emit_verilog_locals(ostream& o, const netlist_options& nopt) const {
 	STACKTRACE_VERBOSE;
@@ -1522,7 +1551,7 @@ netlist::emit_verilog_locals(ostream& o, const netlist_options& nopt) const {
 //	const port_alias_tracker& scope(fp->get_scope_alias_tracker());
 	const pool_type&
 		ppool(fp->get_instance_pool<tag_type>());
-#if 0
+#if USE_FOOTPRINT_POOL
 	pool_type::const_iterator pi(ppool.begin()), pe(ppool.end());
 #else
 	instance_pool_type::const_iterator
@@ -1530,7 +1559,7 @@ netlist::emit_verilog_locals(ostream& o, const netlist_options& nopt) const {
 	STACKTRACE_INDENT_PRINT("subinstances: " << instance_pool.size() << endl);
 #endif
 	for ( ; pi!=pe; ++pi) {
-#if 0
+#if USE_FOOTPRINT_POOL
 		const instance_type& p(*pi);
 #else
 		const index_type lpid = pi->pid;
@@ -1539,7 +1568,7 @@ netlist::emit_verilog_locals(ostream& o, const netlist_options& nopt) const {
 #endif
 		const never_ptr<const alias_type> pref(p.get_back_ref());
 		const alias_type& _pref(*pref);
-#if 0
+#if USE_FOOTPRINT_POOL
 		const type_type
 			ct(_pref.complete_type_actuals(*_pref.container));
 		const entity::meta_type_tag_enum
@@ -1566,8 +1595,12 @@ netlist::emit_verilog_locals(ostream& o, const netlist_options& nopt) const {
 				o << "output ";
 			}
 			// print type -- possible need to mangle
-#if 0
-			ct.dump(o) << ' ';
+#if USE_FOOTPRINT_POOL
+			ostringstream oss;
+			ct.dump(oss);
+			string ts(oss.str());
+			nopt.mangle_type(ts);
+			o << ts << ' ';
 #else
 			o << type->get_name() << ' ';
 #endif
@@ -1579,7 +1612,59 @@ netlist::emit_verilog_locals(ostream& o, const netlist_options& nopt) const {
 	}	// end for each local instance
 	return o;
 }	// end netlist::emit_verilog_locals
+#undef	USE_FOOTPRINT_POOL
 #endif	// NETLIST_VERILOG
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+netlist::emit_header(ostream& o, const netlist_options& nopt) const {
+switch (nopt.subckt_def_style) {
+case netlist_options::STYLE_SPECTRE: 
+	o << "subckt ";
+	break;
+case netlist_options::STYLE_SPICE: 
+	o << ".subckt ";
+	break;
+case netlist_options::STYLE_VERILOG:
+	o << "module ";
+	break;
+default:
+	o << "define-subcircuit ";
+	break;
+}	// end switch
+	o << name;
+
+	vector<string> ports;
+if (nopt.node_ports) {
+	collect_node_ports(ports, nopt);
+}
+#if NETLIST_VERILOG
+if (nopt.struct_ports) {
+	// name every port, K&R-style
+	collect_struct_ports(ports, nopt);
+}
+#endif
+	vector<string>::const_iterator i(ports.begin()), e(ports.end());
+switch (nopt.subckt_def_style) {
+case netlist_options::STYLE_SPICE:
+case netlist_options::STYLE_SPECTRE:
+	for (; i!=e; ++i) {
+		o << ' ' << *i;
+	}
+	break;
+case netlist_options::STYLE_VERILOG:
+	o << " (";
+if (ports.size()) {
+	o << *i;
+	for ( ++i; i!=e; ++i) {
+		o << ", " << *i;
+	}
+}
+	o << ");";
+}	// end switch
+	return o << endl;
+	// TODO: emit port-info comments
+}	// end declaration with ports
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1605,38 +1690,13 @@ if (nopt.emit_mangle_map) {
 	o << nopt.comment_prefix << "typename_mangle(\"";
 	fp->dump_type(o) << "\") = " << name << endl;
 }
-{
-switch (nopt.subckt_def_style) {
-case netlist_options::STYLE_SPECTRE: 
-	o << "subckt ";
-	break;
-case netlist_options::STYLE_SPICE: 
-	o << ".subckt ";
-	break;
-case netlist_options::STYLE_VERILOG:
-	o << "module ";
-	break;
-default:
-	o << "define-subcircuit ";
-	break;
-}	// end switch
-	o << name;
-if (nopt.subckt_def_style == netlist_options::STYLE_VERILOG) {
-#if NETLIST_VERILOG
-	// name every port, K&R-style
-	emit_verilog_ports(o << '(', nopt) << ')';
-#endif
-	o << ';' << endl;
-} else {
-	emit_spice_ports(o, nopt) << endl;
-}
-}
-	// TODO: emit port-info comments
+	emit_header(o, nopt);
 }	// end if sub
 if (sub || nopt.emit_top) {
 	// option to suppress top-level instances and rules
-if (nopt.emit_mangle_map)
+if (nopt.emit_mangle_map) {
 	emit_mangle_map(o, nopt);
+}
 if (nopt.emit_node_aliases) {
 	const util::indent _temp_(o, nopt.comment_prefix + "\t");
 	o << nopt.comment_prefix << "BEGIN node aliases" << endl;
@@ -1683,8 +1743,8 @@ netlist::dump_raw(ostream& o) const {
 	o << "type: " << name << endl;
 	o << "footprint @ " << fp << endl;
 	fp->dump(o) << endl;
-	o << "node pool:" << endl;
 {
+	o << "node pool:" << endl;
 	size_t j = 0;
 	for ( ; j<node_pool.size(); ++j) {
 		o << "  [" << j << "]: ";
@@ -1699,15 +1759,45 @@ netlist::dump_raw(ostream& o) const {
 		o << endl;
 	}
 }{
+#if NETLIST_VERILOG
+	o << "struct pool:" << endl;
+	size_t j = 0;
+	for ( ; j<proc_pool.size(); ++j) {
+		o << "  [" << j << "]: ";
+		const proc& n(proc_pool[j]);
+		n.dump_raw(o) << " = ";
+#if 1
+		n.emit(o);
+		// may have to comment out for debug
+#else
+		o << "...";
+#endif
+		o << endl;
+	}
+#endif
+}{
 	o << "ports (node indices): ";
 	copy(node_port_list.begin(), node_port_list.end(), osi);
 	o << endl;
+#if NETLIST_VERILOG
+	o << "ports (struct indices): ";
+	copy(proc_port_list.begin(), proc_port_list.end(), osi);
+	o << endl;
+#endif
 }{
 	o << "named node map (footprint-index -> netlist-node-index):" << endl;
 	size_t j = 0;
 	for ( ; j<named_node_map.size(); ++j) {
 		o << "  :" << j+1 << " -> [" << named_node_map[j] << ']' << endl;
 	}
+}{
+#if NETLIST_VERILOG
+	o << "struct map (footprint-index -> netlist-node-index):" << endl;
+	size_t j = 0;
+	for ( ; j<named_proc_map.size(); ++j) {
+		o << "  :" << j+1 << " -> [" << named_proc_map[j] << ']' << endl;
+	}
+#endif
 }{
 	o << "internal node map (footprint-index -> netlist-node-index):" << endl;
 	typedef	internal_node_map_type::const_iterator	const_iterator;
@@ -1749,20 +1839,57 @@ netlist::dump_raw(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-struct bool_port_alias_collector :
-		public bool_port_collector<unique_list<index_type> > {
-	typedef	bool_port_collector<unique_list<index_type> >
-						parent_type;
-	VISIT_INSTANCE_ALIAS_INFO_PROTO(bool_tag);
-	using parent_type::visit;
-};
+typedef	unique_list<index_type>	port_index_list_type;
 
+/** 
+	Unfortunately, need this to preserve port formal decl ordering.
+ */
+template <class Tag>
+class port_alias_collector :
+		public meta_type_port_collector<Tag, port_index_list_type> {
+	typedef	meta_type_port_collector<Tag, port_index_list_type>
+						parent_type;
+	const footprint&			fp;
+	const size_t				n_ports;
+public:
+	explicit
+	port_alias_collector(const footprint& f) :
+		parent_type(), fp(f),
+		n_ports(fp.get_instance_pool<Tag>().port_entries()) { }
+
+protected:
+	VISIT_INSTANCE_ALIAS_INFO_PROTO(Tag);
+	using parent_type::visit;
+
+public:
+	void
+	operator () (void) {
+		const port_formals_manager&
+			fm(fp.get_owner_def()
+				.template is_a<const process_definition>()
+				->get_port_formals());
+		port_formals_manager::const_list_iterator
+			pi(fm.begin()), pe(fm.end());
+		for ( ; pi!=pe; ++pi) {
+			fp[(*pi)->get_name()]
+				.template is_a<const physical_instance_collection>()
+					->accept(*this);
+		}
+	}
+};	// end class
+
+template <class Tag>
 void
-bool_port_alias_collector::visit(const instance_alias_info<bool_tag>& a) {
-	if (a.is_aliased_to_port()) {
+port_alias_collector<Tag>::visit(const instance_alias_info<Tag>& a) {
+	// since ports are sorted before locals, we can compare indices
+	if (a.instance_index <= n_ports) {	// 1-based index
 		parent_type::visit(a);
 	}
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+typedef	port_alias_collector<bool_tag>		bool_port_alias_collector;
+typedef	port_alias_collector<process_tag>	process_port_alias_collector;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1785,28 +1912,24 @@ netlist::summarize_ports(const netlist_options& opt) {
 	}
 #endif
 {
-	typedef	unique_list<index_type>	port_index_list_type;
-	bool_port_alias_collector V;
 	// this ordering is based on port_formal_manager, declaration order
-	const port_formals_manager&
-		fm(fp->get_owner_def().is_a<const process_definition>()
-			->get_port_formals());
-	port_formals_manager::const_list_iterator pi(fm.begin()), pe(fm.end());
-	for ( ; pi!=pe; ++pi) {
-		(*fp)[(*pi)->get_name()]
-			.is_a<const physical_instance_collection>()->accept(V);
-	}
+	bool_port_alias_collector V(*fp);
+	V();
+	STACKTRACE_INDENT_PRINT("named_node_map.size() = " << named_node_map.size() << endl);
 	port_index_list_type::const_iterator
-		i(V.bool_indices.begin()), e(V.bool_indices.end());
-	node_port_list.reserve(V.bool_indices.size() +2);	// for supplies
+		i(V.indices.begin()), e(V.indices.end());
+	node_port_list.reserve(V.indices.size() +2);	// for supplies
 	for ( ; i!=e; ++i) {
 		// 1-indexed local id to 0-indexed named_node_map
 		INVARIANT(*i);
-		const index_type local_ind = *i -1;
+		const index_type& j(*i);
+		const index_type local_ind = j -1;
+		STACKTRACE_INDENT_PRINT("(bool) local_ind = " << local_ind << endl);
+		INVARIANT(local_ind < named_node_map.size());
 		index_type ni = named_node_map[local_ind];
 	if (!ni && opt.unused_ports) {
 		// the consider all ports used, even if unconnected
-		ni = register_named_node(*i, opt);
+		ni = register_named_node(j, opt);
 		node_pool[ni].used = true;
 	}
 		const node& n(node_pool[ni]);
@@ -1817,11 +1940,42 @@ netlist::summarize_ports(const netlist_options& opt) {
 #endif
 	{
 		INVARIANT(n.is_logical_node());
-		INVARIANT(n.index == *i);	// self-reference
+		INVARIANT(n.index == j);	// self-reference
 		node_port_list.push_back(ni);
 		// sorted_ports[local_ind] = ni;
 	}
 	}	// end for
+}{
+#if NETLIST_VERILOG
+	STACKTRACE_INDENT_PRINT("process ports..." << endl);
+	// this ordering is based on port_formal_manager, declaration order
+	process_port_alias_collector V(*fp);
+	V();
+	STACKTRACE_INDENT_PRINT("collected." << endl);
+	STACKTRACE_INDENT_PRINT("named_proc_map.size() = " << named_proc_map.size() << endl);
+	port_index_list_type::const_iterator
+		i(V.indices.begin()), e(V.indices.end());
+	proc_port_list.reserve(V.indices.size() +2);	// for supplies
+	for ( ; i!=e; ++i) {
+		// 1-indexed local id to 0-indexed named_proc_map
+		INVARIANT(*i);
+		const index_type& j(*i);
+		const index_type local_ind = j -1;
+		STACKTRACE_INDENT_PRINT("(proc) local_ind = " << local_ind << endl);
+		INVARIANT(local_ind < named_proc_map.size());
+		index_type ni = named_proc_map[local_ind];
+	if (!ni) {
+		// the consider all ports used, even if unconnected
+		ni = register_named_proc(j, opt);
+		proc_pool[ni].used = true;
+	}
+		const proc& p(proc_pool[ni]);
+	if (ni && p.used) {
+		INVARIANT(p.index == j);	// self-reference
+		proc_port_list.push_back(ni);
+	}
+	}	// end for
+#endif	// NETLIST_VERILOG
 }
 	// empty is initially false
 	bool MT = true;
