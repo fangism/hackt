@@ -1,5 +1,17 @@
 "ChangeLog"
-#	$Id: ChangeLog,v 1.253 2011/03/23 00:36:01 fang Exp $
+#	$Id: ChangeLog,v 1.254 2011/03/30 20:59:21 fang Exp $
+
+2011-03-30	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-59:
+	  config/cxx_STL.m4: new test for whether or not
+		std::istream properly fails when reading
+		a negative input to an unsigned value type.
+		http://gcc.gnu.org/bugzilla/show_bug.cgi?id=39802
+		Fails for i386-gcc-3.4.6, oddly.
+	  configure.ac: call FANG_CXX_ISTREAM_NEGATIVE_UNSIGNED
+	  use this new test result in util/strings.tcc:string_to_num.
+
 
 2011-03-22	David Fang	<fangism@users.sourceforge.net>
 

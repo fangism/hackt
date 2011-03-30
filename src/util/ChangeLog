@@ -1,5 +1,14 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.119 2011/02/28 09:37:47 fang Exp $
+#	$Id: ChangeLog,v 1.120 2011/03/30 20:59:25 fang Exp $
+
+2011-03-30	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-59:
+	  util/strings.tcc: use configure result from 
+		FANG_CXX_ISTREAM_NEGATIVE_UNSIGNED to workaround
+		libstdc++ bug: failure to fail on reading
+		negative number to unsigned type.
+
 
 2011-02-28	David Fang		<fangism@users.sourceforge.net>
 

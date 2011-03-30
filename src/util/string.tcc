@@ -1,7 +1,7 @@
 /**
 	\file "util/string.tcc"
 	Implementations of some useful string functions.  
-	$Id: string.tcc,v 1.5 2009/10/29 00:20:20 fang Exp $
+	$Id: string.tcc,v 1.6 2011/03/30 20:59:26 fang Exp $
  */
 
 #ifndef	__UTIL_STRING_TCC__
@@ -13,6 +13,8 @@
 #include "util/string.h"
 #include "util/sstream.h"
 
+#include "util/numeric/sign_traits.h"
+
 namespace util {
 namespace strings {
 using std::string;
@@ -21,10 +23,37 @@ using std::istringstream;
 using std::ostringstream;
 //=============================================================================
 /**
+	\param S true if type is signed
+	\return true if rejected.
+ */
+template <bool S>
+inline
+bool
+__reject_unsigned_negative(const char) {
+	// negatives are allowed for signed, of course
+	return false;
+}
+
+/**
+	Specialization for unsigned, reject negatives.
+ */
+template <>
+inline
+bool
+__reject_unsigned_negative<false>(const char f) {
+	return f == '-';
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Helper function for converting string to int.  
 	Just a wrapper around using stringstream to convert to int.  
 	\param I some integer type.  
 	\return true on error.  
+
+	See: http://gcc.gnu.org/bugzilla/show_bug.cgi?id=39802
+	In older versions, parsing -1 into an unsigned type
+	would fail-to-fail.  
  */
 template <class I>
 bool
@@ -35,6 +64,12 @@ string_to_num(const string& s, I& i) {
 		str >> std::hex;
 	}
 	str >> i;
+#if !defined(CXX_ISTREAM_NEGATIVE_UNSIGNED_FAILS)
+	// workaround compiler/library bug
+	if (s.length() && __reject_unsigned_negative<
+			util::numeric::is_signed<I>::value>(s[0]))
+		return true;
+#endif
 	return str.fail();
 }
 

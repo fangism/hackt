@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Channel-prsim.cc"
-	$Id: Channel-prsim.cc,v 1.43 2011/03/24 22:13:40 fang Exp $
+	$Id: Channel-prsim.cc,v 1.44 2011/03/30 20:59:25 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -27,6 +27,7 @@
 #include "util/numeric/div.h"
 #include "util/numeric/random.h"	// for rand48 family
 #include "util/stacktrace.h"
+#include "util/wtf.h"
 #include "common/TODO.h"
 
 namespace util {
@@ -958,6 +959,9 @@ if (!string_to_num(v, expect)) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\param T signed or unsigned number type
+	See: http://gcc.gnu.org/bugzilla/show_bug.cgi?id=39802
+	In older versions, parsing -1 into an unsigned type
+	would fail-to-fail.  
  */
 template <class T>
 static

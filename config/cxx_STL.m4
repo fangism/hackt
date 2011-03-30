@@ -1,5 +1,5 @@
 dnl "config/cxx_STL.m4"
-dnl	$Id: cxx_STL.m4,v 1.16 2011/02/08 22:32:45 fang Exp $
+dnl	$Id: cxx_STL.m4,v 1.17 2011/03/30 20:59:22 fang Exp $
 dnl Autoconf macros for detecting variations in C++ STL for any given compiler.
 dnl
 
@@ -850,6 +850,53 @@ AC_LANG_POP(C++)
 if test "$fang_cv_cxx_stl_copy_if" = "yes" ; then
 AC_DEFINE(HAVE_STL_COPY_IF, [],
 	[True if STL <algorithm> header defines copy_if algorithm])
+fi
+])dnl
+
+
+dnl @synopsis FANG_CXX_ISTREAM_NEGATIVE_UNSIGNED
+dnl
+dnl Checks to see if parsing -1 to an unsigned type sets the 
+dnl istream's fail() bit.  
+dnl This detects a bug in older libstdc++:
+dnl	http://gcc.gnu.org/bugzilla/show_bug.cgi?id=39802
+dnl
+dnl Defines CXX_ISTREAM_NEGATIVE_UNSIGNED_FAILS if successful.  
+dnl
+dnl Test is known to fail for i386-gcc-3.4.x, but works for x86_64-gcc-3.4.x.
+dnl
+dnl @category Cxx
+dnl @version 2011-03-30
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
+dnl
+AC_DEFUN([FANG_CXX_ISTREAM_NEGATIVE_UNSIGNED],
+[AC_REQUIRE([AC_PROG_CXX])
+AC_CACHE_CHECK(
+	[whether std::istream >> (unsigned) fails on negative numbers],
+	[fang_cv_cxx_std_istream_negative_unsigned_fail],
+[AC_LANG_PUSH(C++)
+dnl default: assume standard-confirming behavior when cross-compiling
+AC_RUN_IFELSE(
+	AC_LANG_PROGRAM([[
+		#include <iostream>
+		#include <sstream>
+		using namespace std;
+	]], [[
+		istringstream iss("-1");
+		unsigned int ui;
+		iss >> ui;
+		return !iss.fail();
+	]]),
+	[fang_cv_cxx_std_istream_negative_unsigned_fail=yes],
+	[fang_cv_cxx_std_istream_negative_unsigned_fail=no],
+	[fang_cv_cxx_std_istream_negative_unsigned_fail=yes]
+)
+AC_LANG_POP(C++)
+])
+if test "$fang_cv_cxx_std_istream_negative_unsigned_fail" = yes ; then
+AC_DEFINE(CXX_ISTREAM_NEGATIVE_UNSIGNED_FAILS, [],
+	[Define if std::istream properly fails with reading -1 to an unsigned])
 fi
 ])dnl
 

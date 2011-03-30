@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.226 2011/03/29 04:34:34 fang Exp $
+#	$Id: configure.ac,v 1.227 2011/03/30 20:59:22 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -295,6 +295,7 @@ FANG_CXX_STL_TREE
 FANG_CXX_STD_IFSTREAM_DEV_STDIN
 FANG_CXX_STD_OFSTREAM_DEV_STDOUT
 FANG_CXX_STD_OFSTREAM_DEV_STDERR
+FANG_CXX_ISTREAM_NEGATIVE_UNSIGNED
 FANG_CXX_STL_BITSET_EXTENSIONS
 dnl check for compiler's built-in functions
 FANG_C_BUILTIN_EXPECT

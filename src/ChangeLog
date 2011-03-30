@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-03-30	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-59:
+	  util/ChangeLog: workaround unsigned negative number parsing
+		bug in libstdc++ with configure-detection.
+		This fixes one test case: test/prsim/channel-test-h-07
+
+
 2011-03-29	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-58:
