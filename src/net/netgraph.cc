@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.cc"
-	$Id: netgraph.cc,v 1.31 2011/03/30 04:19:01 fang Exp $
+	$Id: netgraph.cc,v 1.32 2011/03/31 01:21:48 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -121,7 +121,7 @@ netlist_common::emit_devices(ostream& o, const node_pool_type& node_pool,
 	__s.resize(node_pool.size());
 	node_pool_type::const_iterator ni(node_pool.begin());
 	saves_type::iterator i(__s.begin()), e(__s.end());
-	for ( ; i!=e; ++i, ++ni) {
+	for (++i; i!=e; ++i, ++ni) {
 		index_type& c0(ni->device_count[0]);
 		index_type& c1(ni->device_count[1]);
 		i->first.bind(c0);
@@ -581,8 +581,7 @@ case netlist_options::STYLE_SPECTRE:
 	break;
 case netlist_options::STYLE_VERILOG:
 	o << type->get_name();
-	o << ' ' << pname << " (";
-//	o << '[' << _actuals.size() << ']';
+	o << ' ' << pname << '(';
 if (_actuals.size()) {
 	o << *i;
 	for (++i; i!=e; ++i) {
@@ -797,7 +796,7 @@ netlist::void_node("__VOID__", node::auxiliary_node_tag)
 
 #if NETLIST_VERILOG
 const proc
-netlist::void_proc(0);
+netlist::void_proc(0, NULL);
 #endif
 
 // universal node indices to every subcircuit
@@ -994,6 +993,9 @@ if (!fb.is_port_alias()) {
 void
 netlist::append_instance(const state_instance<process_tag>& subp,
 		const netlist& subnet, const index_type lpid,
+#if NETLIST_VERILOG
+		const netlist_map_type& netmap,
+#endif
 		const netlist_options& opt) {
 	STACKTRACE_VERBOSE;
 	const footprint* subfp = subp._frame._footprint;
@@ -1006,9 +1008,10 @@ netlist::append_instance(const state_instance<process_tag>& subp,
 	instance_pool.push_back(instance(subnet, lpid));
 	instance& np(instance_pool.back());
 	// local process instance needed to find local port actual id
+	const state_instance<process_tag>::pool_type&
+		appool(fp->get_instance_pool<process_tag>());
 	const instance_alias_info<process_tag>&
-		lp(*fp->get_instance_pool<process_tag>()[lpid -1]
-			.get_back_ref());
+		lp(*appool[lpid -1].get_back_ref());
 	// ALERT: translates to global index, not what we want!
 	netlist::node_port_list_type::const_iterator
 		fi(subnet.node_port_list.begin()),
@@ -1081,8 +1084,10 @@ netlist::append_instance(const state_instance<process_tag>& subp,
 			ab->trace_alias(lp).instance_index;
 		INVARIANT(actual_id);
 		STACKTRACE_INDENT_PRINT("LOCAL actual id = " << actual_id << endl);
+		const footprint* afp = appool[actual_id -1]._frame._footprint;
+		const netlist& anl(netmap.find(afp)->second);
 		const index_type actual_proc =
-			register_named_proc(actual_id, opt);
+			register_named_proc(actual_id, &anl, opt);
 		STACKTRACE_INDENT_PRINT("actual proc = " << actual_proc << endl);
 		np.proc_actuals.push_back(actual_proc);
 #if NETLIST_CHECK_CONNECTIVITY
@@ -1317,7 +1322,8 @@ node_pool.back().dump_raw(STACKTRACE_INDENT_PRINT("new node: ")) << endl;
 	For structures and processes that are passed as ports.  
  */
 index_type
-netlist::register_named_proc(const index_type _i, const netlist_options& opt) {
+netlist::register_named_proc(const index_type _i, 
+		const netlist* type, const netlist_options& opt) {
 	STACKTRACE_VERBOSE;
 	STACKTRACE_INDENT_PRINT("local id (+1) = " << _i << endl);
 	INVARIANT(_i);
@@ -1326,7 +1332,7 @@ netlist::register_named_proc(const index_type _i, const netlist_options& opt) {
 	index_type& ret(named_proc_map[i]);
 	if (!ret) {
 		// reserve a new slot and update it for subsequent visits
-		proc new_named_proc(_i);
+		proc new_named_proc(_i, type);
 		new_named_proc.name =
 			get_original_node_name<process_tag>(_i, opt);
 		STACKTRACE_INDENT_PRINT("registering: " << new_named_proc.name << endl);
@@ -1393,7 +1399,7 @@ netlist::emit_mangle_map(ostream& o, const netlist_options& nopt) const {
 	o << nopt.comment_prefix << "BEGIN node name mangle map" << endl;
 	typedef	node_pool_type::const_iterator	const_iterator;
 	const_iterator i(node_pool.begin()), e(node_pool.end());
-	for ( ; i!=e; ++i) {
+	for (++i ; i!=e; ++i) {
 	if (i->is_logical_node()) {	// includes implicit supply nodes
 		const size_t nid = i->index;
 		const string oname =
@@ -1470,60 +1476,16 @@ netlist::emit_local_subcircuits(ostream& o, const netlist_options& nopt) const {
 void
 netlist::collect_struct_ports(vector<string>& ports,
 		const netlist_options& nopt) const {
-#if 0
 	typedef	proc_port_list_type::const_iterator		const_iterator;
 	const_iterator i(proc_port_list.begin()), e(proc_port_list.end());
-	ostringstream oss;		// stage for name mangling
 	for ( ; i!=e; ++i) {
+		ostringstream oss;		// stage for name mangling
 		// just comma-separate list of names
 		const proc& nd(proc_pool[*i]);
-		nd.emit(oss << ' ');
+		nd.emit(oss);
+		// already mangled during name caching
+		ports.push_back(oss.str());
 	}
-	const string& formals(oss.str());
-	// already mangled during name caching
-	return o << formals << endl;
-	// emit ports
-#else
-	// emit local channel declarations, including ports
-	// just use footprint directly
-	typedef	process_tag			tag_type;
-	typedef	class_traits<tag_type>		traits_type;
-	typedef	traits_type::instance_collection_parameter_type
-						type_type;
-	typedef	instance_alias_info<tag_type>	alias_type;
-	typedef	entity::collection_interface<tag_type>
-						collection_type;
-	typedef	alias_type::container_type	container_type;
-	typedef	state_instance<tag_type>	instance_type;
-	typedef	state_instance<tag_type>::pool_type
-						pool_type;
-//	const port_alias_tracker& scope(fp->get_scope_alias_tracker());
-	const pool_type&
-		ppool(fp->get_instance_pool<tag_type>());
-	ports.reserve(ppool.port_entries() +ports.size());
-	pool_type::const_iterator pi(ppool.begin()), pe(ppool.end());
-	for ( ; pi!=pe; ++pi) {
-		const instance_type& p(*pi);
-		const never_ptr<const alias_type> pref(p.get_back_ref());
-		const alias_type& _pref(*pref);
-		const type_type
-			ct(_pref.complete_type_actuals(*_pref.container));
-		const entity::meta_type_tag_enum
-			t(ct.get_base_def()->get_meta_type());
-		if (t != entity::META_TYPE_PROCESS) {
-			// then is a channel or datastruct
-			// print direction
-			const bool inny = _pref.is_input_port();
-			const bool outy = _pref.is_output_port();
-		if (inny || outy) {
-			ostringstream oss;
-			_pref.dump_hierarchical_name(oss, nopt.__dump_flags);
-			ports.push_back(oss.str());
-		}
-		}
-		// else skip processes -- they are sub module instances
-	}
-#endif
 }	// end netlist::collect_struct_ports
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1531,7 +1493,6 @@ netlist::collect_struct_ports(vector<string>& ports,
 	Using the local instance pool instead of the footprint's instance
 	pool misses out on port structs.  
  */
-#define	USE_FOOTPRINT_POOL	1
 ostream&
 netlist::emit_verilog_locals(ostream& o, const netlist_options& nopt) const {
 	STACKTRACE_VERBOSE;
@@ -1548,38 +1509,24 @@ netlist::emit_verilog_locals(ostream& o, const netlist_options& nopt) const {
 	typedef	state_instance<tag_type>	instance_type;
 	typedef	state_instance<tag_type>::pool_type
 						pool_type;
-//	const port_alias_tracker& scope(fp->get_scope_alias_tracker());
+#if ENABLE_STACKTRACE
+	o << nopt.comment_prefix << "local structs:" << endl;
+#endif
 	const pool_type&
 		ppool(fp->get_instance_pool<tag_type>());
-#if USE_FOOTPRINT_POOL
-	pool_type::const_iterator pi(ppool.begin()), pe(ppool.end());
-#else
-	instance_pool_type::const_iterator
-		pi(instance_pool.begin()), pe(instance_pool.end());
-	STACKTRACE_INDENT_PRINT("subinstances: " << instance_pool.size() << endl);
-#endif
+	proc_pool_type::const_iterator
+		pi(++proc_pool.begin()), pe(proc_pool.end());
+	STACKTRACE_INDENT_PRINT("proc_pool.size() = " << proc_pool.size() << endl);
 	for ( ; pi!=pe; ++pi) {
-#if USE_FOOTPRINT_POOL
-		const instance_type& p(*pi);
-#else
-		const index_type lpid = pi->pid;
-		STACKTRACE_INDENT_PRINT("lpid = " << lpid << endl);
+		const index_type lpid = pi->index;
 		const instance_type& p(ppool[lpid -1]);
-#endif
 		const never_ptr<const alias_type> pref(p.get_back_ref());
 		const alias_type& _pref(*pref);
-#if USE_FOOTPRINT_POOL
-		const type_type
-			ct(_pref.complete_type_actuals(*_pref.container));
-		const entity::meta_type_tag_enum
-			t(ct.get_base_def()->get_meta_type());
-#else
 		const netlist* type = pi->type;
 		NEVER_NULL(type);
 		NEVER_NULL(type->fp);
 		const entity::meta_type_tag_enum
 			t(type->fp->get_meta_type());
-#endif
 		if (t != entity::META_TYPE_PROCESS) {
 			// then is a channel or datastruct
 			// print direction
@@ -1594,25 +1541,16 @@ netlist::emit_verilog_locals(ostream& o, const netlist_options& nopt) const {
 			} else if (outy) {
 				o << "output ";
 			}
-			// print type -- possible need to mangle
-#if USE_FOOTPRINT_POOL
-			ostringstream oss;
-			ct.dump(oss);
-			string ts(oss.str());
-			nopt.mangle_type(ts);
-			o << ts << ' ';
-#else
+			// print type -- already mangled
 			o << type->get_name() << ' ';
-#endif
-			// print name
-			_pref.dump_hierarchical_name(o, nopt.__dump_flags);
+			// print name -- already mangled
+			o << pi->name;
 			o << ';' << endl;
 		}
 		// else skip processes -- they are sub module instances
 	}	// end for each local instance
 	return o;
 }	// end netlist::emit_verilog_locals
-#undef	USE_FOOTPRINT_POOL
 #endif	// NETLIST_VERILOG
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1900,7 +1838,11 @@ typedef	port_alias_collector<process_tag>	process_port_alias_collector;
 	\param opt for netlist generation configuration
  */
 void
-netlist::summarize_ports(const netlist_options& opt) {
+netlist::summarize_ports(
+#if NETLIST_VERILOG
+		const netlist_map_type& netmap,
+#endif
+		const netlist_options& opt) {
 	STACKTRACE_VERBOSE;
 	// could mark_used_nodes here instead?
 #if !PRS_SUPPLY_OVERRIDES
@@ -1953,6 +1895,8 @@ netlist::summarize_ports(const netlist_options& opt) {
 	V();
 	STACKTRACE_INDENT_PRINT("collected." << endl);
 	STACKTRACE_INDENT_PRINT("named_proc_map.size() = " << named_proc_map.size() << endl);
+	const state_instance<process_tag>::pool_type& 
+		lppool(fp->get_instance_pool<process_tag>());
 	port_index_list_type::const_iterator
 		i(V.indices.begin()), e(V.indices.end());
 	proc_port_list.reserve(V.indices.size() +2);	// for supplies
@@ -1966,7 +1910,10 @@ netlist::summarize_ports(const netlist_options& opt) {
 		index_type ni = named_proc_map[local_ind];
 	if (!ni) {
 		// the consider all ports used, even if unconnected
-		ni = register_named_proc(j, opt);
+		const state_instance<process_tag>& p(lppool[local_ind]);
+		const footprint* pf = p._frame._footprint;
+		const netlist& nl(netmap.find(pf)->second);
+		ni = register_named_proc(j, &nl, opt);
 		proc_pool[ni].used = true;
 	}
 		const proc& p(proc_pool[ni]);
@@ -2000,7 +1947,7 @@ netlist::summarize_ports(const netlist_options& opt) {
 	}
 }
 	empty = MT;
-}
+}	// end netlist::summarize_ports
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if NETLIST_CHECK_CONNECTIVITY

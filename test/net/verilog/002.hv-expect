@@ -4,7 +4,6 @@ endmodule
 module buffer (I, O);
 input e1of_2_ I;
 output e1of_2_ O;
-e1of_2_ M;
 endmodule
 
 

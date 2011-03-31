@@ -1,0 +1,9 @@
+module e1of_2_ ();
+endmodule
+
+module buffer (I_X, O_Y);
+input e1of_2_ I_X;
+output e1of_2_ O_Y;
+endmodule
+
+

@@ -1,7 +1,7 @@
 /**
 	\file "net/netlist_generator.cc"
 	Implementation of hierarchical netlist generation.
-	$Id: netlist_generator.cc,v 1.30 2011/03/30 04:19:02 fang Exp $
+	$Id: netlist_generator.cc,v 1.31 2011/03/31 01:21:49 fang Exp $
  */
 
 #define	ENABLE_STATIC_TRACE		0
@@ -152,14 +152,17 @@ netlist_generator::visit(const state_instance<process_tag>& p) {
 	// don't need to temporarily set the footprint_frame
 	// because algorithm is completely hierarchical, no flattening
 	// will need p._frame when emitting subinstances
-		const state_instance<process_tag>& subp(p);
-		const size_t lpid = subp.get_back_ref()->instance_index;
-		// guarantee that dependent type is processed with netlist
-		// find out how local nodes are passed to *local* instance
-		const footprint* subfp = subp._frame._footprint;
-		const netlist& subnet(netmap.find(subfp)->second);
-		current_netlist->append_instance(subp, subnet, lpid, opt);
-	// if this is not top-level, wrap emit in .subckt/.ends
+	const state_instance<process_tag>& subp(p);
+	const size_t lpid = subp.get_back_ref()->instance_index;
+	// guarantee that dependent type is processed with netlist
+	// find out how local nodes are passed to *local* instance
+	const footprint* subfp = subp._frame._footprint;
+	const netlist& subnet(netmap.find(subfp)->second);
+	current_netlist->append_instance(subp, subnet, lpid,
+#if NETLIST_VERILOG
+		netmap,
+#endif
+		opt);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -219,7 +222,11 @@ if (&f == topfp) {	// at_top()
 //	f.get_spec_footprint().accept(*this);	// ?
 
 	if (!top_level || opt.top_type_ports) {
-		nl->summarize_ports(opt);
+		nl->summarize_ports(
+#if NETLIST_VERILOG
+			netmap,
+#endif
+			opt);
 #if NETLIST_CHECK_CONNECTIVITY
 		// don't bother checking top-level
 		if (nl->check_node_connectivity(opt) == STATUS_ERROR) {

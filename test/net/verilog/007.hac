@@ -1,0 +1,16 @@
+// "007.hac"
+// copy modified from "006.hac"
+// @hacknet-flags@ -T fefifo
+
+import "fifo.hac";
+
+defproc fefifo(e1of2? A[2]; e1of2! B[2]) {
+fifo<0> f[2];
+fifo<2> x(A[0], f[0].I);
+f[0](, B[0]);
+f[1](A[1], );
+fifo<2> y(f[1].O, B[1]);
+}
+
+fefifo fum;
+

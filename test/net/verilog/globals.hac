@@ -1,0 +1,14 @@
+/**
+	"globals.hac"
+ */
+
+/**
+	Global reset signals.
+ */
+deftype globals <: int (bool _pReset, _sReset)
+{
+spec {
+	$(~(~_pReset & _sReset))
+}
+}
+

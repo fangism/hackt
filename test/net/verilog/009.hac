@@ -1,0 +1,29 @@
+// "009.hac"
+// @hacknet-flags@ -T stooges
+
+import "globals.hac";
+import "fifo.hac";
+
+defproc larry(globals? g; e1of2? I; e1of2! O) {
+fifo<1> f(I, O);
+}
+
+defproc moe(globals? g; e1of2? A; e1of2! B) {
+fifo<2> gee;
+gee.I = A;
+gee.O = B;
+}
+
+defproc curly(globals? g; e1of2? F__D; e1of2! B__R) {
+fifo<3> h(F__D, B__R);
+}
+
+defproc stooges(globals? g; e1of2? N[2]; e1of2! P[2]) {
+e1of2 Z;
+larry L(g, N[0], Z);
+moe M(g, Z, P[0]);
+curly C(g, N[1], P[1]);
+}
+
+stooges three;
+

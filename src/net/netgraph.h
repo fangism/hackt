@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.h"
-	$Id: netgraph.h,v 1.24 2011/03/30 04:19:01 fang Exp $
+	$Id: netgraph.h,v 1.25 2011/03/31 01:21:49 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETGRAPH_H__
@@ -94,6 +94,15 @@ typedef	vector<proc>			proc_pool_type;
 
 // 0-indexed nodes or 1-indexed?
 // extern const index_type	base_index = 1;
+
+/**
+	Primary structure for maintaining prerequisite ordering
+	of emitting dependent subcircuits before they are used.
+	Don't actually know if spice requires subcircuits
+	to be defined before used, but this is safe.
+	This way, only circuits that are used are emitted.
+ */
+typedef	std::map<const footprint*, netlist>		netlist_map_type;
 
 //=============================================================================
 /**
@@ -301,10 +310,12 @@ struct unique_common {
 	through ports.  
  */
 struct proc : public unique_common {
+	const netlist*			type;
 	bool				used;
 
 	explicit
-	proc(const index_type i) : unique_common(i), used(false) { }
+	proc(const index_type i, const netlist* t) :
+		unique_common(i), type(t), used(false) { }
 
 	ostream&
 	emit(ostream&) const;
@@ -823,7 +834,8 @@ public:
 
 #if NETLIST_VERILOG
 	index_type
-	register_named_proc(const index_type, const netlist_options&);
+	register_named_proc(const index_type, const netlist*, 
+		const netlist_options&);
 #endif
 
 #if 0
@@ -833,10 +845,18 @@ public:
 
 	void
 	append_instance(const state_instance<process_tag>&, const netlist&, 
-		const index_type, const netlist_options&);
+		const index_type, 
+#if NETLIST_VERILOG
+		const netlist_map_type&,
+#endif
+		const netlist_options&);
 
 	void
-	summarize_ports(const netlist_options&);
+	summarize_ports(
+#if NETLIST_VERILOG
+		const netlist_map_type&,
+#endif
+		const netlist_options&);
 
 #if NETLIST_CHECK_CONNECTIVITY
 	error_status

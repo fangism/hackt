@@ -5,6 +5,20 @@
 
 2011-03-30	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-84-60:
+	  hacknet[verilog]: added options to automatically escape
+		identifiers with non-identifier characters:
+		mangle_escape_instance_identifiers,
+		mangle_escape_type_identifiers
+		Already complying identifier will not be mangled.
+		Options documented.  
+	  Unused channels/datastructs are omitted from locals list and ports.
+	  Test cases updated and added.
+	  This version of hac-to-verilog is ready for prime time.
+
+
+2011-03-30	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-84-59:
 	  util/ChangeLog: workaround unsigned negative number parsing
 		bug in libstdc++ with configure-detection.

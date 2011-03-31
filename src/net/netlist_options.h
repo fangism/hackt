@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_options.h"
-	$Id: netlist_options.h,v 1.18 2011/03/30 04:19:02 fang Exp $
+	$Id: netlist_options.h,v 1.19 2011/03/31 01:21:50 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETLIST_OPTIONS_H__
@@ -138,6 +138,16 @@ struct netlist_options {
 	string				mangle_internal_at;
 	string				mangle_auxiliary_pound;
 	string				mangle_implicit_bang;
+	/**
+		Set to true to wrap all instance identifiers with \ and space,
+		verilog-compatible style.
+	 */
+	bool				mangle_escaped_instance_identifiers;
+	/**
+		Set to true to wrap all type identifiers with \ and space,
+		verilog-compatible style.
+	 */
+	bool				mangle_escaped_type_identifiers;
 
 	/**
 		Typically the card name for transistors, 'M' in spice.

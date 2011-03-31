@@ -1,0 +1,24 @@
+// "fifo.hac"
+
+import "channel.hac";
+
+defproc buffer(e1of2? I; e1of2! O) {
+I?;
+O!;
+}
+
+template <pint N>
+defproc fifo(e1of2? I; e1of2! O) {
+[ N >= 1 ->
+e1of2 M[N+1];
+M[0] = I;
+M[N] = O;
+buffer b[N];
+(;j:N:
+	b[j](M[j], M[j+1]);
+)
+[] else ->
+I = O;
+]
+}
+

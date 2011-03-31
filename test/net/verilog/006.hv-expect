@@ -1,0 +1,8 @@
+module e1of_2_ ();
+endmodule
+
+module fifo_0_ (I);
+inout e1of_2_ I;
+endmodule
+
+

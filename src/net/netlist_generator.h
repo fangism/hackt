@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_generator.h"
-	$Id: netlist_generator.h,v 1.12 2010/09/16 23:17:10 fang Exp $
+	$Id: netlist_generator.h,v 1.13 2011/03/31 01:21:49 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETLIST_GENERATOR_H__
@@ -50,15 +50,6 @@ class netlist_generator :
 	public global_entry_context,
 	public cflat_visitor
 {
-	/**
-		Primary structure for maintaining prerequisite ordering
-		of emitting dependent subcircuits before they are used.
-		Don't actually know if spice requires subcircuits
-		to be defined before used, but this is safe.
-		This way, only circuits that are used are emitted.
-	 */
-	typedef	std::map<const footprint*, netlist>
-					netlist_map_type;
 	typedef	entity::PRS::footprint	prs_footprint;
 private:
 	struct rule_attribute_functions;

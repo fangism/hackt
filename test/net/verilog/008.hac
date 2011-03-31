@@ -1,0 +1,14 @@
+// "008.hac"
+// copy modified from "003.hac"
+// @hacknet-flags@ -T buffer
+// allow underscores without mangling
+
+import "channel.hac";
+
+defproc buffer(e1of2? I_X; e1of2! O_Y) {
+I_X?;
+O_Y!;
+}
+
+buffer b;
+

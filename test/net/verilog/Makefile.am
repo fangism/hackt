@@ -1,5 +1,5 @@
 # "test/net/verilog/Makefile.am"
-#	$Id: Makefile.am,v 1.2 2011/03/30 04:19:10 fang Exp $
+#	$Id: Makefile.am,v 1.3 2011/03/31 01:21:54 fang Exp $
 # Test auto-Makefile for hacknet -f output_format=verilog.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -8,12 +8,12 @@ include $(top_srcdir)/test/Make.test-head
 
 # .hac inputs
 HACVERILOG_TEST_SCRIPTS_PASSES = \
-	001 002 003 004 005
+	001 002 003 004 005 006 007 008 009
 
 HACVERILOG_TEST_SCRIPTS_FAILURES =
 
 HACKT_PARSE_TEST_PASSES = \
-	001 002 003 004 005
+	001 002 003 004 005 006 007 008 009
 
 HACKT_PARSE_TEST_FAILURES =
 
@@ -22,7 +22,7 @@ HACKT_PARSE_TEST_FAILURES =
 # EXTRA_DIST +=
 
 HACKT_CREATE_TEST_PASSES = \
-	001 002 003 004 005
+	001 002 003 004 005 006 007 008 009
 
 HACKT_CREATE_TEST_FAILURES =
 
@@ -34,5 +34,6 @@ include $(top_srcdir)/test/Make.test-tail
 
 # this directory: hacknet verilog mode only
 AM_HACKNET_FLAGS += -c verilog.hacknet-conf
-srcdir_EXTRA_DIST += verilog.hacknet-conf channel.hac
+srcdir_EXTRA_DIST += verilog.hacknet-conf
+srcdir_EXTRA_DIST += channel.hac globals.hac fifo.hac
 

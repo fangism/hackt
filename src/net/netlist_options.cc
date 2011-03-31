@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_options.cc"
-	$Id: netlist_options.cc,v 1.22 2011/03/30 04:19:02 fang Exp $
+	$Id: netlist_options.cc,v 1.23 2011/03/31 01:21:49 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -85,6 +85,8 @@ netlist_options::netlist_options() :
 		mangle_internal_at("@"),
 		mangle_auxiliary_pound("#"),
 		mangle_implicit_bang("!"),
+		mangle_escaped_instance_identifiers(false),
+		mangle_escaped_type_identifiers(false),
 	// format options
 		transistor_prefix("M"),
 		subckt_instance_prefix("x"),
@@ -153,6 +155,8 @@ if (v.values.size()) {
 		pre_line_continue = "";
 		post_line_continue = "+";
 		comment_prefix = "* ";
+		mangle_escaped_instance_identifiers = false;
+		mangle_escaped_type_identifiers = false;
 		subckt_def_style = STYLE_SPICE;
 		instance_port_style = STYLE_SPICE;
 	} else if (f == "spectre") {
@@ -163,6 +167,8 @@ if (v.values.size()) {
 		pre_line_continue = "\\";	// or is it '&'?
 		post_line_continue = "";
 		comment_prefix = "// ";
+		mangle_escaped_instance_identifiers = false;
+		mangle_escaped_type_identifiers = false;
 		subckt_def_style = STYLE_SPECTRE;
 		instance_port_style = STYLE_SPECTRE;
 	} else if (f == "verilog") {
@@ -173,6 +179,8 @@ if (v.values.size()) {
 		pre_line_continue = " \\";
 		post_line_continue = "";
 		comment_prefix = "// ";
+		mangle_escaped_instance_identifiers = true;
+		mangle_escaped_type_identifiers = false;
 		subckt_def_style = STYLE_VERILOG;
 		instance_port_style = STYLE_VERILOG;
 	} else {
@@ -207,7 +215,21 @@ netlist_options::no_mangling(const option_value&) {
 	mangle_internal_at = d.mangle_internal_at;
 	mangle_auxiliary_pound = d.mangle_auxiliary_pound;
 	mangle_implicit_bang = d.mangle_implicit_bang;
+	mangle_escaped_instance_identifiers = false;
+	mangle_escaped_type_identifiers = false;
 	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true if input is not an identifier character.
+	Underscore is allowed.
+ */
+static
+inline
+bool
+isnot_idchar(const char i) {
+	return !(isalnum(i) || i == '_');
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -233,6 +255,11 @@ netlist_options::mangle_instance(string& n) const {
 	strgsub(n, ":", mangle_colon);	// appears in transistor names
 	// @,# mangling happens in node::emit instead
 	strgsub(n, "!", mangle_implicit_bang);
+	if (mangle_escaped_instance_identifiers) {
+	if (find_if(n.begin(), n.end(), &isnot_idchar) != n.end()) {
+		n = string("\\") +n + ' ';
+	}
+	}
 	return n;
 }
 
@@ -254,6 +281,11 @@ netlist_options::mangle_type(string& n) const {
 	strgsub(n, "::", mangle_scope);
 	// colon must be mangled *after* scope "::"
 //	strgsub(n, ":", mangle_colon);
+	if (mangle_escaped_type_identifiers) {
+	if (find_if(n.begin(), n.end(), &isnot_idchar) != n.end()) {
+		n = string("\\") +n + ' ';
+	}
+	}
 	return n;
 }
 
@@ -1095,6 +1127,34 @@ DEFINE_OPTION_MEMFUN(no_mangling,
 	"no_mangling", "disable name-mangling")
 
 /***
+@texinfo config/mangle_escaped_identifiers.texi
+@cindex escaped identifiers
+@defopt mangle_escaped_instance_identifiers (bool)
+Verilog-style escaped identifiers.
+Wrap all instance names with slash and a space, e.g. @t{\foo[0] }.
+This is enabled for @option{output_style=verilog} by default.
+Default: 0
+@end defopt
+
+@defopt mangle_escaped_type_identifiers (bool)
+Verilog-style escaped identifiers.
+Wrap all type names with slash and a space, e.g. @t{\foo[0] }.
+This is disabled for @option{output_style=verilog} by default.
+Default: 0
+@end defopt
+@end texinfo
+***/
+DEFINE_OPTION_DEFAULT(mangle_escaped_instance_identifiers,
+	"mangle_escaped_instance_identifiers",
+	"print verilog-style escaped identifiers for instances")
+DEFINE_OPTION_DEFAULT(mangle_escaped_type_identifiers,
+	"mangle_escaped_type_identifiers",
+	"print verilog-style escaped identifiers for types")
+
+
+/***
+@cindex Spectre
+@cindex Verilog
 @texinfo config/output_format.texi
 @defopt output_format style
 Pseudo-option: preset bundle of options for formatting output.
