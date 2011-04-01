@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.cc"
-	$Id: global_entry.cc,v 1.16 2010/08/07 00:00:00 fang Exp $
+	$Id: global_entry.cc,v 1.17 2011/04/01 01:20:36 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -795,6 +795,12 @@ global_entry_substructure_base<true>::load_object_base(
 //=============================================================================
 // explicit template instantiations
 // sometimes needed with aggressive optimizations
+
+template class footprint_frame_map<bool_tag>;
+template class footprint_frame_map<int_tag>;
+template class footprint_frame_map<enum_tag>;
+template class footprint_frame_map<channel_tag>;
+template class footprint_frame_map<process_tag>;
 
 template class global_entry<bool_tag>;
 template class global_entry<int_tag>;

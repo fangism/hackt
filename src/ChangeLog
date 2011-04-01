@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-03-31	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-61:
+	  global_entry.cc: explicitly instantiate footprint_frame_maps
+		to fix undefined reference to dtor.
+	  Verified against g++-4.6.
+
+
 2011-03-30	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-60:

@@ -1,5 +1,13 @@
 "ChangeLog"
-#	$Id: ChangeLog,v 1.254 2011/03/30 20:59:21 fang Exp $
+#	$Id: ChangeLog,v 1.255 2011/04/01 01:20:34 fang Exp $
+
+2011-03-31	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-61:
+	  config/cxx_STL.m4: fix std::_Construct tests to try calling
+		the functions of interest instead of attempting to redefine.
+	  Verified against g++-4.6.
+
 
 2011-03-30	David Fang	<fangism@users.sourceforge.net>
 

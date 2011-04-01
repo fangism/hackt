@@ -1,5 +1,5 @@
 dnl "config/cxx_STL.m4"
-dnl	$Id: cxx_STL.m4,v 1.17 2011/03/30 20:59:22 fang Exp $
+dnl	$Id: cxx_STL.m4,v 1.18 2011/04/01 01:20:34 fang Exp $
 dnl Autoconf macros for detecting variations in C++ STL for any given compiler.
 dnl
 
@@ -53,6 +53,8 @@ dnl
 dnl Check for certain declarations of libstdc++ internal function
 dnl std::_Construct, which may have changed.
 dnl
+dnl 2011-03-31: just use <memory>, test calling std::_Construct
+dnl	instead of re-defining it
 dnl 2011-02-08: requires <iterator> header for iterator_traits
 dnl
 dnl @category Cxx
@@ -68,22 +70,15 @@ AC_CACHE_CHECK(
 [AC_LANG_PUSH(C++)
 AC_COMPILE_IFELSE(
 	AC_LANG_PROGRAM([[
-		#include <iterator>
-		#ifdef	HAVE_BITS_STL_CONSTRUCT_H
-		#include <bits/stl_construct.h>
-		#endif
-		namespace std {
-		template <class _T1>
-		inline
-		void
-		_Construct(_T1* __p) {
-			::new(static_cast<void*>(__p)) _T1();
-		}
-		}
-		]], []
+		#include <memory>
+		struct foo { int bar; foo() : bar(0) { } };
+		]], [
+		foo x;
+		std::_Construct(&x);
+		]
 	),
-	[fang_cv_cxx_stl_construct_default=no],
-	[fang_cv_cxx_stl_construct_default=yes]
+	[fang_cv_cxx_stl_construct_default=yes],
+	[fang_cv_cxx_stl_construct_default=no]
 )
 ])
 if test "$fang_cv_cxx_stl_construct_default" = "yes" ; then
@@ -98,6 +93,8 @@ dnl
 dnl Check for certain declarations of libstdc++ internal function
 dnl std::_Construct, which may have changed.
 dnl
+dnl 2011-03-31: just use <memory>, test calling std::_Construct
+dnl	instead of re-defining it
 dnl 2011-02-08: requires <iterator> header for iterator_traits
 dnl
 dnl @category Cxx
@@ -113,22 +110,15 @@ AC_CACHE_CHECK(
 [AC_LANG_PUSH(C++)
 AC_COMPILE_IFELSE(
 	AC_LANG_PROGRAM([[
-		#include <iterator>
-		#ifdef	HAVE_BITS_STL_CONSTRUCT_H
-		#include <bits/stl_construct.h>
-		#endif
-		namespace std {
-		template <class _T1, class _T2>
-		inline
-		void
-		_Construct(_T1* __p, const _T2& __v) {
-			::new(static_cast<void*>(__p)) _T1(__v);
-		}
-		}
-		]], []
+		#include <memory>
+		struct foo { int bar; foo() : bar(0) { } };
+		]], [[
+		foo x, y;
+		std::_Construct(&x, y);
+		]]
 	),
-	[fang_cv_cxx_stl_construct_copy=no],
-	[fang_cv_cxx_stl_construct_copy=yes]
+	[fang_cv_cxx_stl_construct_copy=yes],
+	[fang_cv_cxx_stl_construct_copy=no]
 )
 ])
 if test "$fang_cv_cxx_stl_construct_copy" = "yes" ; then
