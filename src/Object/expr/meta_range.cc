@@ -3,11 +3,8 @@
 	Meta range expression class definitions.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_range.cc,v 1.21 2008/05/17 04:38:48 fang Exp $
+ 	$Id: meta_range.cc,v 1.22 2011/04/02 01:45:59 fang Exp $
  */
-
-#ifndef	__HAC_OBJECT_EXPR_META_RANGE_CC__
-#define	__HAC_OBJECT_EXPR_META_RANGE_CC__
 
 // flags for controlling conditional compilation, mostly for debugging
 #define	DEBUG_LIST_VECTOR_POOL				0
@@ -340,6 +337,7 @@ pint_range::must_be_formal_size_equivalent(const meta_range_expr& re) const {
 void
 pint_range::collect_transient_info(
 		persistent_object_manager& m) const {
+	STACKTRACE_PERSISTENT_VERBOSE;
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
 	lower->collect_transient_info(m);
@@ -350,6 +348,7 @@ if (!m.register_transient_object(this,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 pint_range::write_object(const persistent_object_manager& m, ostream& f) const {
+	STACKTRACE_PERSISTENT_VERBOSE;
 	m.write_pointer(f, lower);
 	m.write_pointer(f, upper);
 }
@@ -357,6 +356,7 @@ pint_range::write_object(const persistent_object_manager& m, ostream& f) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 pint_range::load_object(const persistent_object_manager& m, istream& f) {
+	STACKTRACE_PERSISTENT_VERBOSE;
 	m.read_pointer(f, lower);
 	m.read_pointer(f, upper);
 }
@@ -701,6 +701,4 @@ DEFAULT_STATIC_TRACE_END
 #undef	STACKTRACE_PERSISTENT
 #undef	STACKTRACE_DESTRUCTORS
 #undef	STACKTRACE_DTOR
-
-#endif	// __HAC_OBJECT_EXPR_META_RANGE_CC__
 

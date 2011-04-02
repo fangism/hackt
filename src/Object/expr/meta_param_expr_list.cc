@@ -3,11 +3,8 @@
 	Definitions for meta parameter expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_param_expr_list.cc,v 1.30 2010/03/11 18:39:21 fang Exp $
+ 	$Id: meta_param_expr_list.cc,v 1.31 2011/04/02 01:45:58 fang Exp $
  */
-
-#ifndef	__HAC_OBJECT_EXPR_META_PARAM_EXPR_LIST_CC__
-#define	__HAC_OBJECT_EXPR_META_PARAM_EXPR_LIST_CC__
 
 // flags for controlling conditional compilation, mostly for debugging
 #define	ENABLE_STACKTRACE				0
@@ -519,12 +516,8 @@ const_param_expr_list::operator < (const this_type& t) const {
 void
 const_param_expr_list::collect_transient_info_base(
 		persistent_object_manager& m) const {
-	const_iterator i(begin());
-	const const_iterator e(end());
-	for ( ; i!=e; i++) {
-		const count_ptr<const const_param> ip(*i);
-		ip->collect_transient_info(m);
-	}
+	STACKTRACE_PERSISTENT_VERBOSE;
+	m.collect_pointer_list(*this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -551,13 +544,8 @@ if (!m.register_transient_object(this,
 void
 const_param_expr_list::write_object(const persistent_object_manager& m, 
 		ostream& f) const {
-	write_value(f, size());		// how many exprs to expect?
-	const_iterator i(begin());
-	const const_iterator e(end());
-	for ( ; i!=e; i++) {
-		const count_ptr<const const_param> ip(*i);
-		m.write_pointer(f, ip);
-	}
+	STACKTRACE_PERSISTENT_VERBOSE;
+	m.write_pointer_list(f, AS_A(const parent_type&, *this));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -568,18 +556,9 @@ const_param_expr_list::write_object(const persistent_object_manager& m,
 void
 const_param_expr_list::load_object(const persistent_object_manager& m, 
 		istream& f) {
-	STACKTRACE_PERSISTENT("const_param_expr_list::load_object()");
-	size_t s, i=0;
-	read_value(f, s);		// how many exprs to expect?
-	for ( ; i<s; i++) {
-		count_ptr<const_param> ip;
-		m.read_pointer(f, ip);
-#if 1
-		if (ip)
-			m.load_object_once(ip);
-#endif
-		push_back(ip);
-	}
+	STACKTRACE_PERSISTENT_VERBOSE;
+	m.read_pointer_list(f, AS_A(parent_type&, *this));
+	m.load_once_pointer_list(*this);
 }
 
 //=============================================================================
@@ -1039,14 +1018,10 @@ dynamic_param_expr_list::unroll_assign_formal_parameters(
 void
 dynamic_param_expr_list::collect_transient_info(
 		persistent_object_manager& m) const {
+	STACKTRACE_PERSISTENT_VERBOSE;
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
-	const_iterator i(begin());
-	const const_iterator e(end());
-	for ( ; i!=e; i++) {
-		const count_ptr<const param_expr> ip(*i);
-		ip->collect_transient_info(m);
-	}
+	m.collect_pointer_list(*this);
 }
 // else already visited
 }
@@ -1059,13 +1034,8 @@ if (!m.register_transient_object(this,
 void
 dynamic_param_expr_list::write_object(
 		const persistent_object_manager& m, ostream& f) const {
-	write_value(f, size());		// how many exprs to expect?
-	const_iterator i(begin());
-	const const_iterator e(end());
-	for ( ; i!=e; i++) {
-		const count_ptr<const param_expr> ip(*i);
-		m.write_pointer(f, ip);
-	}
+	STACKTRACE_PERSISTENT_VERBOSE;
+	m.write_pointer_list(f, *this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1076,18 +1046,9 @@ dynamic_param_expr_list::write_object(
 void
 dynamic_param_expr_list::load_object(const persistent_object_manager& m, 
 		istream& f) {
-	STACKTRACE_PERSISTENT("dyn_param_expr_list::load_object()");
-	size_t s, i=0;
-	read_value(f, s);		// how many exprs to expect?
-	for ( ; i<s; i++) {
-		count_ptr<param_expr> ip;
-		m.read_pointer(f, ip);
-#if 1
-		if (ip)
-			m.load_object_once(ip);
-#endif
-		push_back(ip);
-	}
+	STACKTRACE_PERSISTENT_VERBOSE;
+	m.read_pointer_list(f, *this);
+	m.load_once_pointer_list(*this);
 }
 
 //=============================================================================
@@ -1104,6 +1065,4 @@ DEFAULT_STATIC_TRACE_END
 #undef	STACKTRACE_PERSISTENT
 #undef	STACKTRACE_DESTRUCTORS
 #undef	STACKTRACE_DTOR
-
-#endif	// __HAC_OBJECT_EXPR_META_PARAM_EXPR_LIST_CC__
 

@@ -4,11 +4,8 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file originated from "Object/art_object_instance_enum.cc"
 		in a previous life.  
-	$Id: enum_instance_collection.cc,v 1.12 2006/11/07 06:34:42 fang Exp $
+	$Id: enum_instance_collection.cc,v 1.13 2011/04/02 01:46:01 fang Exp $
  */
-
-#ifndef	__HAC_OBJECT_INST_ENUM_INSTANCE_COLLECTION_CC__
-#define	__HAC_OBJECT_INST_ENUM_INSTANCE_COLLECTION_CC__
 
 #include <exception>
 #include <iostream>
@@ -70,6 +67,4 @@ template class port_actual_collection<enum_tag>;
 //=============================================================================
 }	// end namespace entity
 }	// end namespace HAC
-
-#endif	// __HAC_OBJECT_INST_ENUM_INSTANCE_COLLECTION_CC__
 

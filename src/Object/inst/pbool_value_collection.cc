@@ -3,11 +3,8 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_instance_pbool.cc"
 		in a previous life.  
- 	$Id: pbool_value_collection.cc,v 1.9 2006/11/07 06:34:54 fang Exp $
+ 	$Id: pbool_value_collection.cc,v 1.10 2011/04/02 01:46:02 fang Exp $
  */
-
-#ifndef	__HAC_OBJECT_INST_PBOOL_VALUE_COLLECTION_CC__
-#define	__HAC_OBJECT_INST_PBOOL_VALUE_COLLECTION_CC__
 
 //=============================================================================
 // start of static initializations
@@ -146,6 +143,4 @@ template class value_array<pbool_tag,4>;
 }	// end namespace HAC
 
 DEFAULT_STATIC_TRACE_END
-
-#endif	// __HAC_OBJECT_INST_PBOOL_VALUE_COLLECTION_CC__
 

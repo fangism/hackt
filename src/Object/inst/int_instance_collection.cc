@@ -4,11 +4,8 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file came from "Object/art_object_instance_int.cc"
 		in a previous life.  
-	$Id: int_instance_collection.cc,v 1.13 2006/11/07 06:34:52 fang Exp $
+	$Id: int_instance_collection.cc,v 1.14 2011/04/02 01:46:01 fang Exp $
  */
-
-#ifndef	__HAC_OBJECT_INST_INT_INSTANCE_COLLECTION_CC__
-#define	__HAC_OBJECT_INST_INT_INSTANCE_COLLECTION_CC__
 
 #define	ENABLE_STACKTRACE		0
 #define	STACKTRACE_DESTRUCTORS		(0 && ENABLE_STACKTRACE)
@@ -90,6 +87,4 @@ template class port_actual_collection<int_tag>;
 }	// end namespace HAC
 
 DEFAULT_STATIC_TRACE_END
-
-#endif	// __HAC_OBJECT_INST_INT_INSTANCE_COLLECTION_CC__
 

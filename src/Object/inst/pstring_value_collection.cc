@@ -3,11 +3,8 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_instance_pstring.cc"
 		in a previous life.  
- 	$Id: pstring_value_collection.cc,v 1.2 2010/09/21 00:18:23 fang Exp $
+ 	$Id: pstring_value_collection.cc,v 1.3 2011/04/02 01:46:03 fang Exp $
  */
-
-#ifndef	__HAC_OBJECT_INST_PSTRING_VALUE_COLLECTION_CC__
-#define	__HAC_OBJECT_INST_PSTRING_VALUE_COLLECTION_CC__
 
 //=============================================================================
 // start of static initializations
@@ -144,6 +141,4 @@ template class value_array<pstring_tag,4>;
 }	// end namespace HAC
 
 DEFAULT_STATIC_TRACE_END
-
-#endif	// __HAC_OBJECT_INST_PSTRING_VALUE_COLLECTION_CC__
 

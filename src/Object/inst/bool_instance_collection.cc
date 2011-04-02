@@ -3,11 +3,8 @@
 	Method definitions for boolean data type instance classes.
 	This file came from "Object/art_object_instance_bool.cc"
 		in a previous life.  
-	$Id: bool_instance_collection.cc,v 1.16 2008/10/05 23:00:09 fang Exp $
+	$Id: bool_instance_collection.cc,v 1.17 2011/04/02 01:46:00 fang Exp $
  */
-
-#ifndef	__HAC_OBJECT_INST_BOOL_INSTANCE_COLLECTION_CC__
-#define	__HAC_OBJECT_INST_BOOL_INSTANCE_COLLECTION_CC__
 
 #define	DEBUG_LIST_VECTOR_POOL				0
 #define	DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE		0
@@ -99,6 +96,4 @@ template class port_actual_collection<bool_tag>;
 }	// end namespace HAC
 
 DEFAULT_STATIC_TRACE_END
-
-#endif	// __HAC_OBJECT_INST_BOOL_INSTANCE_COLLECTION_CC__
 

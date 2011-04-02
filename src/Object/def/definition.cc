@@ -2,11 +2,8 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.53 2011/02/04 02:23:34 fang Exp $
+ 	$Id: definition.cc,v 1.54 2011/04/02 01:45:55 fang Exp $
  */
-
-#ifndef	__HAC_OBJECT_DEFINITION_CC__
-#define	__HAC_OBJECT_DEFINITION_CC__
 
 #define ENABLE_STACKTRACE		0
 #define	STACKTRACE_DUMPS		(0 && ENABLE_STACKTRACE)
@@ -3669,6 +3666,4 @@ process_definition_alias::load_used_id_map_object(excl_ptr<persistent>& o) {
 }	// end namespace HAC
 
 DEFAULT_STATIC_TRACE_END
-
-#endif	// __HAC_OBJECT_DEFINITION_CC__
 

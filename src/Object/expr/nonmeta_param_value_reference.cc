@@ -4,11 +4,8 @@
 	Like references to arrays of constants with run-time index values.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: nonmeta_param_value_reference.cc,v 1.15 2010/09/21 00:18:19 fang Exp $
+ 	$Id: nonmeta_param_value_reference.cc,v 1.16 2011/04/02 01:45:59 fang Exp $
  */
-
-#ifndef	__HAC_OBJECT_EXPR_NONMETA_PARAM_VALUE_REFERENCE_CC__
-#define	__HAC_OBJECT_EXPR_NONMETA_PARAM_VALUE_REFERENCE_CC__
 
 // flags for controlling conditional compilation, mostly for debugging
 #define	DEBUG_LIST_VECTOR_POOL				0
@@ -235,6 +232,4 @@ DEFAULT_STATIC_TRACE_END
 #undef	STACKTRACE_PERSISTENT
 #undef	STACKTRACE_DESTRUCTORS
 #undef	STACKTRACE_DTOR
-
-#endif	// __HAC_OBJECT_EXPR_NONMETA_PARAM_VALUE_REFERENCE_CC__
 

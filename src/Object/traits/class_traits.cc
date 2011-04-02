@@ -2,11 +2,8 @@
 	\file "Object/traits/class_traits.cc"
 	Traits and policy classes for instances.  
 	This file used to be "Object/art_object_classification_details.cc".
-	$Id: class_traits.cc,v 1.12 2010/09/21 00:18:26 fang Exp $
+	$Id: class_traits.cc,v 1.13 2011/04/02 01:46:07 fang Exp $
  */
-
-#ifndef	__HAC_OBJECT_TRAITS_CLASS_TRAITS_CC__
-#define	__HAC_OBJECT_TRAITS_CLASS_TRAITS_CC__
 
 #include "Object/traits/instance_traits.h"
 #include "Object/traits/data_traits.h"
@@ -85,6 +82,4 @@ null_parameter_type::make_unroll_context(void) const {
 //=============================================================================
 }	// end namespace entity
 }	// end namespace HAC
-
-#endif	// __HAC_OBJECT_TRAITS_CLASS_TRAITS_CC__
 

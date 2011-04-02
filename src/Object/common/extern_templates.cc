@@ -4,11 +4,8 @@
 	by the object-related library.  
 	This file was "Object/common/extern_templates.cc"
 		in its previous life.  
-	$Id: extern_templates.cc,v 1.14 2010/09/21 00:18:10 fang Exp $
+	$Id: extern_templates.cc,v 1.15 2011/04/02 01:45:54 fang Exp $
  */
-
-#ifndef	__HAC_OBJECT_COMMON_EXTERN_TEMPLATES_CC__
-#define	__HAC_OBJECT_COMMON_EXTERN_TEMPLATES_CC__
 
 #include <list>
 #include <iostream>
@@ -81,6 +78,4 @@ template void read_value(istream&, double&);
 template void write_value(ostream&, const double&);
 
 }	// end namespace util
-
-#endif	// __HAC_OBJECT_COMMON_EXTERN_TEMPLATES_CC__
 

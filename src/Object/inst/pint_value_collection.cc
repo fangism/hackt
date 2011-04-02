@@ -3,11 +3,8 @@
 	Method definitions for parameter instance collection classes.
 	This file used to be "Object/art_object_instance_pint.cc"
 		in a previous life.  
- 	$Id: pint_value_collection.cc,v 1.11 2006/11/07 06:34:56 fang Exp $
+ 	$Id: pint_value_collection.cc,v 1.12 2011/04/02 01:46:02 fang Exp $
  */
-
-#ifndef	__HAC_OBJECT_INST_PINT_VALUE_COLLECTION_CC__
-#define	__HAC_OBJECT_INST_PINT_VALUE_COLLECTION_CC__
 
 #define ENABLE_STACKTRACE				0
 #define	DEBUG_LIST_VECTOR_POOL				0
@@ -114,6 +111,4 @@ template class value_array<pint_tag,4>;
 }	// end namespace HAC
 
 DEFAULT_STATIC_TRACE_END
-
-#endif	// __HAC_OBJECT_INST_PINT_VALUE_COLLECTION_CC__
 

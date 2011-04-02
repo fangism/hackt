@@ -3,11 +3,8 @@
 	Method definitions for port_formals_manager.
 	This file was "Object/def/port_formals_manager.cc"
 		in a former life.  
- 	$Id: port_formals_manager.cc,v 1.17 2010/02/02 21:57:52 fang Exp $
+ 	$Id: port_formals_manager.cc,v 1.18 2011/04/02 01:45:57 fang Exp $
  */
-
-#ifndef	__HAC_OBJECT_DEF_PORT_FORMALS_MANAGER_CC__
-#define	__HAC_OBJECT_DEF_PORT_FORMALS_MANAGER_CC__
 
 #define ENABLE_STACKTRACE		0
 
@@ -347,6 +344,4 @@ port_formals_manager::load_object_base(
 }	// end namespace HAC
 
 DEFAULT_STATIC_TRACE_END
-
-#endif	// __HAC_OBJECT_DEF_PORT_FORMALS_MANAGER_CC__
 

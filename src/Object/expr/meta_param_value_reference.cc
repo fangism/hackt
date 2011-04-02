@@ -3,11 +3,8 @@
 	Template instantiations of meta value references.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_param_value_reference.cc,v 1.13 2010/09/21 00:18:18 fang Exp $
+ 	$Id: meta_param_value_reference.cc,v 1.14 2011/04/02 01:45:58 fang Exp $
  */
-
-#ifndef	__HAC_OBJECT_EXPR_META_PARAM_VALUE_REFERENCE_CC__
-#define	__HAC_OBJECT_EXPR_META_PARAM_VALUE_REFERENCE_CC__
 
 // flags for controlling conditional compilation, mostly for debugging
 #define	ENABLE_STACKTRACE				0
@@ -126,6 +123,4 @@ DEFAULT_STATIC_TRACE_END
 #undef	STACKTRACE_PERSISTENT
 #undef	STACKTRACE_DESTRUCTORS
 #undef	STACKTRACE_DTOR
-
-#endif	// __HAC_OBJECT_EXPR_META_PARAM_VALUE_REFERENCE_CC__
 

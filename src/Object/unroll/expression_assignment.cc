@@ -2,11 +2,8 @@
 	\file "Object/unroll/expression_assignment.cc"
 	Method definitions pertaining to connections and assignments.  
 	This file was moved from "Object/art_object_assign.cc".
- 	$Id: expression_assignment.cc,v 1.10 2010/09/21 00:18:31 fang Exp $
+ 	$Id: expression_assignment.cc,v 1.11 2011/04/02 01:46:12 fang Exp $
  */
-
-#ifndef	__HAC_OBJECT_UNROLL_EXPRESSION_ASSIGNMENT_CC__
-#define	__HAC_OBJECT_UNROLL_EXPRESSION_ASSIGNMENT_CC__
 
 #define	ENABLE_STACKTRACE		0
 #define	DEBUG_LIST_VECTOR_POOL		0
@@ -131,6 +128,4 @@ template class expression_assignment<pstring_tag>;
 //=============================================================================
 }	// end namespace entity
 }	// end namespace HAC
-
-#endif	// __HAC_OBJECT_UNROLL_EXPRESSION_ASSIGNMENT_CC__
 

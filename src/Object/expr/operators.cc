@@ -5,11 +5,8 @@
 		This NEEDS to be templated somehow...
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: operators.cc,v 1.24 2007/02/26 22:00:48 fang Exp $
+ 	$Id: operators.cc,v 1.25 2011/04/02 01:45:59 fang Exp $
  */
-
-#ifndef	__HAC_OBJECT_EXPR_OPERATORS_CC__
-#define	__HAC_OBJECT_EXPR_OPERATORS_CC__
 
 // flags for controlling conditional compilation, mostly for debugging
 #define	DEBUG_LIST_VECTOR_POOL				0
@@ -2308,6 +2305,4 @@ DEFAULT_STATIC_TRACE_END
 #undef	STACKTRACE_PERSISTENT
 #undef	STACKTRACE_DESTRUCTORS
 #undef	STACKTRACE_DTOR
-
-#endif	// __HAC_OBJECT_EXPR_OPERATORS_CC__
 

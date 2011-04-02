@@ -2,11 +2,8 @@
 	\file "Object/unroll/meta_instance_reference_connection.cc"
 	Method definitions pertaining to connections and assignments.  
 	This file was moved from "Object/art_object_connect.cc".
- 	$Id: meta_instance_reference_connection.cc,v 1.14 2007/01/21 06:00:03 fang Exp $
+ 	$Id: meta_instance_reference_connection.cc,v 1.15 2011/04/02 01:46:14 fang Exp $
  */
-
-#ifndef	__HAC_OBJECT_UNROLL_META_INSTANCE_REFERENCE_CONNECTION_CC__
-#define	__HAC_OBJECT_UNROLL_META_INSTANCE_REFERENCE_CONNECTION_CC__
 
 // compilation switches for debugging
 #define	ENABLE_STACKTRACE		0
@@ -230,6 +227,4 @@ template class port_connection<process_tag>;
 //=============================================================================
 }	// end namespace entity
 }	// end namespace HAC
-
-#endif	// __HAC_OBJECT_UNROLL_META_INSTANCE_REFERENCE_CONNECTION_CC__
 

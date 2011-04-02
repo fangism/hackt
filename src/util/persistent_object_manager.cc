@@ -1,7 +1,7 @@
 /**
 	\file "util/persistent_object_manager.cc"
 	Method definitions for serial object manager.  
-	$Id: persistent_object_manager.cc,v 1.38 2010/04/27 18:33:23 fang Exp $
+	$Id: persistent_object_manager.cc,v 1.39 2011/04/02 01:46:15 fang Exp $
  */
 
 // flags and switches
@@ -1296,6 +1296,7 @@ persistent_object_manager::load_objects(void) {
  */
 count_ptr<persistent>
 persistent_object_manager::load_object_from_file(const string& s) {
+	STACKTRACE("pom::load_object_from_file()");
 	ifstream f(s.c_str(), ios_base::binary);
 	persistent_object_manager pom;
 	// don't initialize_null, will be loaded in from table
@@ -1317,6 +1318,7 @@ persistent_object_manager::load_object_from_file(const string& s) {
 void
 persistent_object_manager::save_object_to_file(const string& s, 
 		const persistent& m) {
+	STACKTRACE("pom::save_object_to_file()");
 	ofstream f(s.c_str(), ios_base::binary | ios_base::trunc);
 	INVARIANT(f.good());
 	persistent_object_manager pom;
@@ -1401,6 +1403,7 @@ persistent_object_manager::self_test_no_file(const persistent& m) {
  */
 count_ptr<persistent>
 persistent_object_manager::self_test(const string& s, const persistent& m) {
+	STACKTRACE("pom::self_test()");
 	save_object_to_file(s, m);
 	return load_object_from_file(s);
 }

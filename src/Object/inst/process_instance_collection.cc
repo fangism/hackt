@@ -4,11 +4,8 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file came from "Object/art_object_instance_proc.cc"
 		in a previous life.  
-	$Id: process_instance_collection.cc,v 1.18 2010/04/02 22:18:26 fang Exp $
+	$Id: process_instance_collection.cc,v 1.19 2011/04/02 01:46:03 fang Exp $
  */
-
-#ifndef	__HAC_OBJECT_INST_PROCESS_INSTANCE_COLLECTION_CC__
-#define	__HAC_OBJECT_INST_PROCESS_INSTANCE_COLLECTION_CC__
 
 #define	ENABLE_STACKTRACE		0
 #define	STACKTRACE_PERSISTENTS		(0 && ENABLE_STACKTRACE)
@@ -81,6 +78,4 @@ template class port_actual_collection<process_tag>;
 }	// end namespace HAC
 
 #undef	ENABLE_STACKTRACE
-
-#endif	// __HAC_OBJECT_INST_PROCESS_INSTANCE_COLLECTION_CC__
 

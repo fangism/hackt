@@ -1,11 +1,8 @@
 /**
 	\file "Object/unroll/port_scope.cc"
 	Control-flow related class method definitions.  
- 	$Id: port_scope.cc,v 1.1 2009/07/02 23:22:50 fang Exp $
+ 	$Id: port_scope.cc,v 1.2 2011/04/02 01:46:15 fang Exp $
  */
-
-#ifndef	__HAC_OBJECT_UNROLL_PORT_SCOPE_CC__
-#define	__HAC_OBJECT_UNROLL_PORT_SCOPE_CC__
 
 #define	ENABLE_STACKTRACE		0
 
@@ -158,6 +155,4 @@ port_scope::load_object(const persistent_object_manager& m, istream& i) {
 //=============================================================================
 } 	// end namespace entity
 }	// end namespace HAC
-
-#endif	// __HAC_OBJECT_UNROLL_PORT_SCOPE_CC__
 

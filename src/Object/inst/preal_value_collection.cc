@@ -3,11 +3,8 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_instance_preal.cc"
 		in a previous life.  
- 	$Id: preal_value_collection.cc,v 1.6 2006/11/07 06:34:59 fang Exp $
+ 	$Id: preal_value_collection.cc,v 1.7 2011/04/02 01:46:03 fang Exp $
  */
-
-#ifndef	__HAC_OBJECT_INST_PREAL_VALUE_COLLECTION_CC__
-#define	__HAC_OBJECT_INST_PREAL_VALUE_COLLECTION_CC__
 
 //=============================================================================
 // start of static initializations
@@ -144,6 +141,4 @@ template class value_array<preal_tag,4>;
 }	// end namespace HAC
 
 DEFAULT_STATIC_TRACE_END
-
-#endif	// __HAC_OBJECT_INST_PREAL_VALUE_COLLECTION_CC__
 

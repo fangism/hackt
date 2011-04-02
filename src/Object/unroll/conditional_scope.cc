@@ -1,11 +1,8 @@
 /**
 	\file "Object/unroll/conditional_scope.cc"
 	Control-flow related class method definitions.  
- 	$Id: conditional_scope.cc,v 1.10 2008/11/23 17:53:59 fang Exp $
+ 	$Id: conditional_scope.cc,v 1.11 2011/04/02 01:46:11 fang Exp $
  */
-
-#ifndef	__HAC_OBJECT_UNROLL_CONDITIONAL_SCOPE_CC__
-#define	__HAC_OBJECT_UNROLL_CONDITIONAL_SCOPE_CC__
 
 #include "Object/unroll/conditional_scope.h"
 #include "Object/unroll/meta_conditional.tcc"
@@ -126,6 +123,4 @@ conditional_scope::load_object(const persistent_object_manager& m, istream& i) {
 //=============================================================================
 } 	// end namespace entity
 }	// end namespace HAC
-
-#endif	// __HAC_OBJECT_UNROLL_CONDITIONAL_SCOPE_CC__
 

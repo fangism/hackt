@@ -3,11 +3,8 @@
 	Method definitions for base classes for semantic objects.  
 	This file was "Object/common/namespace.cc"
 		in a previous lifetime.  
- 	$Id: namespace.cc,v 1.36 2010/09/02 00:34:34 fang Exp $
+ 	$Id: namespace.cc,v 1.37 2011/04/02 01:45:54 fang Exp $
  */
-
-#ifndef	__HAC_OBJECT_COMMON_NAMESPACE_CC__
-#define	__HAC_OBJECT_COMMON_NAMESPACE_CC__
 
 #define	ENABLE_STACKTRACE		0
 #define	STACKTRACE_CONSTRUCTORS		(0 && ENABLE_STACKTRACE)
@@ -90,9 +87,10 @@ DEFAULT_STATIC_TRACE_BEGIN
 	Rationale: enforce consistency of object ordering between ILP32 and
 		non-LP32 platforms, which result in different hash-table
 		orderings.  
-	Status:
+	Status: done, but obsolete, now that we use std::map
+		This can be removed.
  */
-#define	SORT_SCOPESPACE_PERSISTENT_COLLECTION		1
+#define	SORT_SCOPESPACE_PERSISTENT_COLLECTION		(1 && !USE_SCOPESPACE_STD_MAP)
 
 //=============================================================================
 namespace util {
@@ -1990,6 +1988,4 @@ name_space::load_used_id_map_object(excl_ptr<persistent>& o) {
 }	// end namespace HAC
 
 DEFAULT_STATIC_TRACE_END
-
-#endif	// __HAC_OBJECT_COMMON_NAMESPACE_CC__
 

@@ -3,11 +3,8 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.31 2011/02/25 23:19:30 fang Exp $
+ 	$Id: instance_collection.cc,v 1.32 2011/04/02 01:46:01 fang Exp $
  */
-
-#ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_CC__
-#define	__HAC_OBJECT_INST_INSTANCE_COLLECTION_CC__
 
 #define	ENABLE_STACKTRACE		0
 #define	STACKTRACE_DESTRUCTORS		(0 && ENABLE_STACKTRACE)
@@ -982,6 +979,4 @@ datatype_instance_placeholder::make_collection(footprint& f) const {
 //=============================================================================
 }	// end namespace entity
 }	// end namespace HAC
-
-#endif	// __HAC_OBJECT_INST_INSTANCE_COLLECTION_CC__
 

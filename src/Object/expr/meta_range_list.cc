@@ -3,11 +3,8 @@
 	Class method definitions for semantic expression.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_range_list.cc,v 1.20 2007/07/18 23:28:34 fang Exp $
+ 	$Id: meta_range_list.cc,v 1.21 2011/04/02 01:45:59 fang Exp $
  */
-
-#ifndef	__HAC_OBJECT_EXPR_META_RANGE_LIST_CC__
-#define	__HAC_OBJECT_EXPR_META_RANGE_LIST_CC__
 
 // flags for controlling conditional compilation, mostly for debugging
 #define	DEBUG_LIST_VECTOR_POOL				0
@@ -516,6 +513,7 @@ const_range_list::resolve_sizes(void) const throw (bad_range) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 const_range_list::collect_transient_info(persistent_object_manager& m) const {
+	STACKTRACE_PERSISTENT_VERBOSE;
 	m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key);
 }
@@ -528,6 +526,7 @@ const_range_list::collect_transient_info(persistent_object_manager& m) const {
 void
 const_range_list::write_object(const persistent_object_manager& m, 
 		ostream& f) const {
+	STACKTRACE_PERSISTENT_VERBOSE;
 	write_value(f, size());		// how many exprs to expect?
 	const_iterator i(begin());
 	const const_iterator e(end());
@@ -545,6 +544,7 @@ const_range_list::write_object(const persistent_object_manager& m,
  */
 void
 const_range_list::load_object(const persistent_object_manager& m, istream& f) {
+	STACKTRACE_PERSISTENT_VERBOSE;
 	size_t s, i=0;
 	read_value(f, s);		// how many exprs to expect?
 	for ( ; i<s; i++) {
@@ -726,14 +726,10 @@ dynamic_meta_range_list::make_explicit_range_list(
 void
 dynamic_meta_range_list::collect_transient_info(
 		persistent_object_manager& m) const {
+	STACKTRACE_PERSISTENT_VERBOSE;
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
-	const_iterator i(begin());
-	const const_iterator e(end());
-	for ( ; i!=e; i++) {
-		const count_ptr<const pint_range> ip(*i);
-		ip->collect_transient_info(m);
-	}
+	m.collect_pointer_list(*this);
 }
 // else already visited
 }
@@ -746,13 +742,8 @@ if (!m.register_transient_object(this,
 void
 dynamic_meta_range_list::write_object(const persistent_object_manager& m, 
 		ostream& f) const {
-	write_value(f, size());		// how many exprs to expect?
-	const_iterator i(begin());
-	const const_iterator e(end());
-	for ( ; i!=e; i++) {
-		const count_ptr<const pint_range> ip(*i);
-		m.write_pointer(f, ip);
-	}
+	STACKTRACE_PERSISTENT_VERBOSE;
+	m.write_pointer_list(f, *this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -763,17 +754,9 @@ dynamic_meta_range_list::write_object(const persistent_object_manager& m,
 void
 dynamic_meta_range_list::load_object(const persistent_object_manager& m, 
 		istream& f) {
-	size_t s, i=0;
-	read_value(f, s);		// how many exprs to expect?
-	for ( ; i<s; i++) {
-		count_ptr<pint_range> ip;
-		m.read_pointer(f, ip);
-#if 1
-		if (ip)
-			m.load_object_once(ip);
-#endif
-		push_back(ip);
-	}
+	STACKTRACE_PERSISTENT_VERBOSE;
+	m.read_pointer_list(f, *this);
+	m.load_once_pointer_list(*this);
 }
 
 //=============================================================================
@@ -792,6 +775,4 @@ DEFAULT_STATIC_TRACE_END
 #undef	STACKTRACE_PERSISTENT
 #undef	STACKTRACE_DESTRUCTORS
 #undef	STACKTRACE_DTOR
-
-#endif	// __HAC_OBJECT_AEXPR_META_RANGE_LIST_CC__
 

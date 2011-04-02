@@ -3,11 +3,9 @@
 	Class instantiations for const collections.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: param_const_collection.cc,v 1.9 2010/09/21 00:18:19 fang Exp $
+ 	$Id: param_const_collection.cc,v 1.10 2011/04/02 01:46:00 fang Exp $
  */
 
-#ifndef	__HAC_OBJECT_EXPR_PARAM_CONST_COLLECTION_CC__
-#define	__HAC_OBJECT_EXPR_PARAM_CONST_COLLECTION_CC__
 
 // flags for controlling conditional compilation, mostly for debugging
 #define	DEBUG_LIST_VECTOR_POOL				0
@@ -101,6 +99,4 @@ DEFAULT_STATIC_TRACE_END
 #undef	STACKTRACE_PERSISTENT
 #undef	STACKTRACE_DESTRUCTORS
 #undef	STACKTRACE_DTOR
-
-#endif	// __HAC_OBJECT_EXPR_PARAM_CONST_COLLECTION_CC__
 

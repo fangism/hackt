@@ -2,11 +2,8 @@
 	\file "Object/ref/instance_reference.cc"
 	Class instantiations for the meta_instance_reference family of objects.
 	Thie file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: instance_reference.cc,v 1.25 2011/02/28 09:37:44 fang Exp $
+ 	$Id: instance_reference.cc,v 1.26 2011/04/02 01:46:05 fang Exp $
  */
-
-#ifndef	__HAC_OBJECT_REF_INSTANCE_REFERENCE_CC__
-#define	__HAC_OBJECT_REF_INSTANCE_REFERENCE_CC__
 
 #define	ENABLE_STACKTRACE			0
 
@@ -470,6 +467,4 @@ template class aggregate_meta_instance_reference<process_tag>;
 //=============================================================================
 }	// end namespace entity
 }	// end namespace HAC
-
-#endif	// __HAC_OBJECT_REF_INSTANCE_REFERENCE_CC__
 

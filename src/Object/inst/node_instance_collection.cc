@@ -3,11 +3,8 @@
 	Method definitions for boolean data type instance classes.
 	This file came from "Object/art_object_instance_bool.cc"
 		in a previous life.  
-	$Id: node_instance_collection.cc,v 1.2 2007/10/08 01:21:15 fang Exp $
+	$Id: node_instance_collection.cc,v 1.3 2011/04/02 01:46:01 fang Exp $
  */
-
-#ifndef	__HAC_OBJECT_INST_NODE_INSTANCE_COLLECTION_CC__
-#define	__HAC_OBJECT_INST_NODE_INSTANCE_COLLECTION_CC__
 
 #define	DEBUG_LIST_VECTOR_POOL				0
 #define	DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE		0
@@ -89,6 +86,4 @@ template class instance_array<node_tag, 4>;
 }	// end namespace HAC
 
 DEFAULT_STATIC_TRACE_END
-
-#endif	// __HAC_OBJECT_INST_NODE_INSTANCE_COLLECTION_CC__
 

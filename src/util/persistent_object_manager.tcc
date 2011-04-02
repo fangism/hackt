@@ -1,7 +1,7 @@
 /**
 	\file "util/persistent_object_manager.tcc"
 	Template methods for persistent_object_manager class.
-	$Id: persistent_object_manager.tcc,v 1.28 2007/09/28 05:37:19 fang Exp $
+	$Id: persistent_object_manager.tcc,v 1.29 2011/04/02 01:46:16 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_OBJECT_MANAGER_TCC__
@@ -341,6 +341,7 @@ if (p) {
 template <class L>
 void
 persistent_object_manager::collect_pointer_list(const L& l) {
+	STACKTRACE_PERSISTENT("pom::collect_pointer_list()");
 	// concept requirements:
 	// L is a sequence-type container, has begin and end
 	// L must have public const_iterator type
@@ -349,8 +350,12 @@ persistent_object_manager::collect_pointer_list(const L& l) {
 	const_iterator i = l.begin();
 	const const_iterator e = l.end();
 	for ( ; i!=e; i++) {
-		if (*i)
+		if (*i) {
+#if STACKTRACE_PERSISTENTS
+			(*i)->what(STACKTRACE_INDENT_PRINT("")) << endl;
+#endif
 			(*i)->collect_transient_info(*this);
+		}
 		// else skip
 	}
 }
@@ -363,6 +368,7 @@ persistent_object_manager::collect_pointer_list(const L& l) {
 template <class L>
 void
 persistent_object_manager::write_pointer_list(ostream& f, const L& l) const {
+	STACKTRACE_PERSISTENT("pom::write_pointer_list()");
 	// concept requirements:
 	// L is a sequence-type container, has begin and end
 	// pointer_traits<L::value_type> is raw_pointer or pointer class
@@ -403,7 +409,7 @@ persistent_object_manager::read_pointer_list(istream& f, L& l) const {
 template <class L>
 void
 persistent_object_manager::load_once_pointer_list(const L& l) const {
-//	typedef	typename L::const_iterator	const_iterator;
+	STACKTRACE_PERSISTENT("pom::load_once_pointer_list()");
 	for_each(l.begin(), l.end(), pointer_loader(*this));
 }
 

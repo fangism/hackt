@@ -3,11 +3,8 @@
 	Definition of meta index expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_index_expr_list.cc,v 1.21 2007/11/26 20:11:13 fang Exp $
+ 	$Id: meta_index_expr_list.cc,v 1.22 2011/04/02 01:45:58 fang Exp $
  */
-
-#ifndef	__HAC_OBJECT_EXPR_META_INDEX_EXPR_LIST_CC__
-#define	__HAC_OBJECT_EXPR_META_INDEX_EXPR_LIST_CC__
 
 // flags for controlling conditional compilation, mostly for debugging
 #define	DEBUG_LIST_VECTOR_POOL				0
@@ -435,12 +432,7 @@ const_index_list::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
-	const_iterator i(begin());
-	const const_iterator e(end());
-	for ( ; i!=e; i++) {
-		const count_ptr<const const_index> ip(*i);
-		ip->collect_transient_info(m);
-	}
+	m.collect_pointer_list(*this);
 }
 // else already visited
 }
@@ -453,13 +445,7 @@ if (!m.register_transient_object(this,
 void
 const_index_list::write_object(const persistent_object_manager& m, 
 		ostream& f) const {
-	write_value(f, size());		// how many exprs to expect?
-	const_iterator i(begin());
-	const const_iterator e(end());
-	for ( ; i!=e; i++) {
-		const count_ptr<const const_index> ip(*i);
-		m.write_pointer(f, ip);
-	}
+	m.write_pointer_list(f, AS_A(const parent_type&, *this));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -470,17 +456,8 @@ const_index_list::write_object(const persistent_object_manager& m,
 void
 const_index_list::load_object(const persistent_object_manager& m, 
 		istream& f) {
-	size_t s, i=0;
-	read_value(f, s);		// how many exprs to expect?
-	for ( ; i<s; i++) {
-		count_ptr<const_index> ip;
-		m.read_pointer(f, ip);
-#if 1
-		if (ip)
-			m.load_object_once(ip);
-#endif
-		push_back(ip);
-	}
+	m.read_pointer_list(f, AS_A(parent_type&, *this));
+	m.load_once_pointer_list(*this);
 }
 
 //=============================================================================
@@ -738,12 +715,7 @@ dynamic_meta_index_list::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
-	const_iterator i(begin());
-	const const_iterator e(end());
-	for ( ; i!=e; i++) {
-		const count_ptr<const meta_index_expr> ip(*i);
-		ip->collect_transient_info(m);
-	}
+	m.collect_pointer_list(*this);
 }
 // else already visited
 }
@@ -756,13 +728,7 @@ if (!m.register_transient_object(this,
 void
 dynamic_meta_index_list::write_object(const persistent_object_manager& m, 
 		ostream& f) const {
-	write_value(f, size());		// how many exprs to expect?
-	const_iterator i(begin());
-	const const_iterator e(end());
-	for ( ; i!=e; i++) {
-		const count_ptr<const meta_index_expr> ip(*i);
-		m.write_pointer(f, ip);
-	}
+	m.write_pointer_list(f, AS_A(const parent_type&, *this));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -773,16 +739,8 @@ dynamic_meta_index_list::write_object(const persistent_object_manager& m,
 void
 dynamic_meta_index_list::load_object(const persistent_object_manager& m, 
 		istream& f) {
-	size_t s, i=0;
-	read_value(f, s);		// how many exprs to expect?
-	for ( ; i<s; i++) {
-		count_ptr<meta_index_expr> ip;
-		m.read_pointer(f, ip);
-		if (ip)
-			m.load_object_once(ip);
-		// need to load to know dimensions
-		push_back(ip);
-	}
+	m.read_pointer_list(f, AS_A(parent_type&, *this));
+	m.load_once_pointer_list(*this);
 }
 
 //=============================================================================
@@ -801,6 +759,4 @@ DEFAULT_STATIC_TRACE_END
 #undef	STACKTRACE_PERSISTENT
 #undef	STACKTRACE_DESTRUCTORS
 #undef	STACKTRACE_DTOR
-
-#endif	// __HAC_OBJECT_EXPR_META_INDEX_EXPR_LIST_CC__
 

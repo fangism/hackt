@@ -4,11 +4,8 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file came from "Object/art_object_instance_struct.cc"
 		in a previous life.  
-	$Id: struct_instance_collection.cc,v 1.14 2007/01/21 05:59:14 fang Exp $
+	$Id: struct_instance_collection.cc,v 1.15 2011/04/02 01:46:03 fang Exp $
  */
-
-#ifndef	__HAC_OBJECT_INST_STRUCT_INSTANCE_COLLECTION_CC__
-#define	__HAC_OBJECT_INST_STRUCT_INSTANCE_COLLECTION_CC__
 
 #include <exception>
 #include <iostream>
@@ -72,6 +69,4 @@ template class port_actual_collection<datastruct_tag>;
 }	// end namespace entity
 }	// end namespace HAC
 #endif
-
-#endif	// __HAC_OBJECT_INST_STRUCT_INSTANCE_COLLECTION_CC__
 

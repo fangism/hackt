@@ -1,11 +1,8 @@
 /**
 	\file "Object/unroll/loop_scope.cc"
 	Control-flow related class method definitions.  
- 	$Id: loop_scope.cc,v 1.17 2009/03/09 07:30:58 fang Exp $
+ 	$Id: loop_scope.cc,v 1.18 2011/04/02 01:46:14 fang Exp $
  */
-
-#ifndef	__HAC_OBJECT_UNROLL_LOOP_SCOPE_CC__
-#define	__HAC_OBJECT_UNROLL_LOOP_SCOPE_CC__
 
 #define	ENABLE_STACKTRACE		0
 
@@ -126,6 +123,4 @@ loop_scope::load_object(const persistent_object_manager& m, istream& i) {
 //=============================================================================
 } 	// end namespace entity
 }	// end namespace HAC
-
-#endif	// __HAC_OBJECT_UNROLL_LOOP_SCOPE_CC__
 
