@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-04-01	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-62:
+	  Source cleanup: removed extraneous #ifndef guards in .cc files
+		replaced persistent_object_manager calls in
+		Object/expr/*_list.cc for ease of maintenance
+		and comprehensibility, calling collect_pointer_list,
+		write_pointer_list, read_pointer_list, load_once_pointer_list.
+	  No regressions.
+
+
 2011-03-31	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-61:
