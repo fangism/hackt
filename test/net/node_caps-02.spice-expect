@@ -1,0 +1,21 @@
+.subckt inv<> !GND !Vdd x y
+* BEGIN node caps
+* 	!GND [diff_perim=22u, diff_area=30p, gate_area=0p, wire_area=0p]
+* 	!Vdd [diff_perim=22u, diff_area=30p, gate_area=0p, wire_area=0p]
+* 	y [diff_perim=44u, diff_area=60p, gate_area=0p, wire_area=0p]
+* 	x [diff_perim=0u, diff_area=0p, gate_area=20p, wire_area=0p]
+* END node caps
+My:dn:0 !GND x y !GND nch W=5u L=2u
+My:up:0 !Vdd x y !Vdd pch W=5u L=2u
+.ends
+
+* BEGIN node caps
+* 	!GND [diff_perim=44u, diff_area=60p, gate_area=0p, wire_area=0p]
+* 	!Vdd [diff_perim=44u, diff_area=60p, gate_area=0p, wire_area=0p]
+* 	a [diff_perim=0u, diff_area=0p, gate_area=20p, wire_area=0p]
+* 	b [diff_perim=44u, diff_area=60p, gate_area=20p, wire_area=0p]
+* 	c [diff_perim=44u, diff_area=60p, gate_area=0p, wire_area=0p]
+* END node caps
+xx !GND !Vdd a b inv<>
+xy !GND !Vdd b c inv<>
+

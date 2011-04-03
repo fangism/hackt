@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.h"
-	$Id: netgraph.h,v 1.25 2011/03/31 01:21:49 fang Exp $
+	$Id: netgraph.h,v 1.26 2011/04/03 22:31:21 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETGRAPH_H__
@@ -52,8 +52,27 @@
 	This will have structured ports in the netlist.
 	Unsupported: template parameters.
 	Goal: 1
+	Status: complete, minimally tested.
  */
 #define	NETLIST_VERILOG				1
+
+/**
+	Define to 1 to store computed parasitic values for each 
+	devices, instead of just computing on-demand when printing.
+	Costs a little more memory to keep around, but saves from recomputing.
+	Goal: 1
+ */
+#define NETLIST_CACHE_PARASITICS		1
+
+/**
+	Define to 1 to accumulate capacitances on nodes.
+	Capacitance components: 
+		diffusion area, diffusion perimeter, gate area.  
+	Rationale: load estimation.
+	Goal: 1
+	Status: just beginning.
+ */
+#define	NETLIST_NODE_CAPS		(1 && NETLIST_CACHE_PARASITICS)
 
 namespace HAC {
 namespace entity {
@@ -105,6 +124,7 @@ typedef	vector<proc>			proc_pool_type;
 typedef	std::map<const footprint*, netlist>		netlist_map_type;
 
 //=============================================================================
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Standard 4-terminal device for transistor.
 	Consider for attributes: pointing to original unrolled literal
@@ -116,6 +136,35 @@ struct transistor {
 		NFET_TYPE,
 		PFET_TYPE
 	};
+	/**
+		Cache of parasitic area/perimeter values.
+	 */
+	struct parasitics {
+		real_type			source_area;
+		real_type			source_perimeter;
+		real_type			drain_area;
+		real_type			drain_perimeter;
+
+		parasitics() :
+			source_area(0.0), source_perimeter(0.0),
+			drain_area(0.0), drain_perimeter(0.0) { }
+
+		parasitics(const real_type w, const real_type l,
+			const bool s_ext, const bool d_ext,
+			const netlist_options&);
+
+		void
+		__update(const real_type w, const real_type l,
+			const bool s_ext, const bool d_ext,
+			const netlist_options&);
+
+		void
+		update(const transistor&,
+			const bool s_ext, const bool d_ext,
+			const netlist_options&);
+
+	};	// end struct parasitics
+
 	/**
 		Devices are somehow named after the rules from which
 		they are derived.  
@@ -167,6 +216,10 @@ struct transistor {
 	typedef	char			attributes_type;
 	attributes_type			attributes;
 
+#if NETLIST_CACHE_PARASITICS
+	parasitics			parasitic_values;
+#endif
+
 	void
 	set_lvt(void) {
 		attributes |= IS_LOW_VT;
@@ -193,6 +246,9 @@ struct transistor {
 	is_pass(void) const {
 		return attributes & IS_PASS;
 	}
+
+	real_type
+	gate_area(void) const { return width *length; }
 
 	void
 	mark_used_nodes(node_pool_type&) const;
@@ -327,6 +383,52 @@ struct proc : public unique_common {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if NETLIST_NODE_CAPS
+struct node_caps {
+	/**
+		total perimeter value of connected sources and drains
+	 */
+	real_type			diff_perimeter;
+	/**
+		total area value of connected sources and drains
+	 */
+	real_type			diff_area;
+	/**
+		total area value of connected gates
+	 */
+	real_type			gate_area;
+	/**
+		total wire area, typically only comes from post-extraction
+		and back-annotation
+	 */
+	real_type			wire_area;
+
+	node_caps() :
+		diff_perimeter(0.0),
+		diff_area(0.0),
+		gate_area(0.0),
+		wire_area(0.0) { }
+
+	node_caps&
+	operator += (const node_caps& r) {
+		diff_perimeter += r.diff_perimeter;
+		diff_area += r.diff_area;
+		gate_area += r.gate_area;
+		wire_area += r.wire_area;
+		return *this;
+	}
+
+	node_caps
+	operator + (const node_caps& r) const {
+		node_caps ret(*this);
+		ret += r;
+		return ret;
+	}
+
+};	// end struct node_caps
+#endif	// NETLIST_NODE_CAPS
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Extension of (local) node information.  
 	Corresponds to an electrical node in the netlist. 
@@ -372,6 +474,9 @@ struct node : public unique_common {
 	// is_named -- if this was a named node in original source, 
 	//	otherwise is internal, auxiliary node.
 	char				type;
+#if NETLIST_NODE_CAPS
+	node_caps			cap;
+#endif
 	/**
 		set to true if node participates in any device 
 		(i.e. has any electrical connectivity whatsoever), 
@@ -858,6 +963,11 @@ public:
 #endif
 		const netlist_options&);
 
+#if NETLIST_CACHE_PARASITICS
+	void
+	summarize_parasitics(const netlist_options&);
+#endif
+
 #if NETLIST_CHECK_CONNECTIVITY
 	error_status
 	check_node_connectivity(const netlist_options&) const;
@@ -908,6 +1018,11 @@ private:
 
 	ostream&
 	emit_header(ostream&, const netlist_options&) const;
+
+#if NETLIST_NODE_CAPS
+	ostream&
+	emit_node_caps(ostream&, const netlist_options&) const;
+#endif
 
 };	// end class netlist
 

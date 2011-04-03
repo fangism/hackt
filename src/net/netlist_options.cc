@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_options.cc"
-	$Id: netlist_options.cc,v 1.23 2011/03/31 01:21:49 fang Exp $
+	$Id: netlist_options.cc,v 1.24 2011/04/03 22:31:21 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -117,6 +117,7 @@ netlist_options::netlist_options() :
 #endif
 		emit_top(true), 
 		emit_node_aliases(false),
+		emit_node_caps(false),
 		emit_mangle_map(false)
 		{
 	// delayed mangling
@@ -1465,6 +1466,19 @@ Default: 0
 ***/
 DEFINE_OPTION_DEFAULT(emit_node_aliases, "emit_node_aliases",
 	"if true, emit node alias sets in subcircuit comments")
+
+/***
+@texinfo config/emit_node_caps.texi
+@defopt emit_node_caps (bool)
+If set to 1, print a cumulative capaticance components for every local node.
+Components include: total diffusion perimeter length, total diffusion
+area, total gate area, and total wire area.  
+Default: 0
+@end defopt
+@end texinfo
+***/
+DEFINE_OPTION_DEFAULT(emit_node_caps, "emit_node_caps",
+	"if true, emit node capacitance table")
 
 /***
 @texinfo config/emit_mangle_map.texi

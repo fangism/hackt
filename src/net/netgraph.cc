@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.cc"
-	$Id: netgraph.cc,v 1.32 2011/03/31 01:21:48 fang Exp $
+	$Id: netgraph.cc,v 1.33 2011/04/03 22:31:20 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -701,31 +701,14 @@ transistor::emit(ostream& o, const index_type di,
 	o << " W=" << width *nopt.lambda << nopt.length_unit <<
 		" L=" << length *nopt.lambda << nopt.length_unit;
 	if (nopt.emit_parasitics) {
-		// compute and emit parasitic area/perimeter values
-		const bool pge = nopt.fet_perimeter_gate_edge;
-		const real_type lsq = nopt.lambda * nopt.lambda;
-		const real_type l2 = nopt.lambda * 2.0;
-		const bool s_ext = s.is_stack_end_node();
-		const bool d_ext = d.is_stack_end_node();
-		const real_type half_spacing = nopt.fet_spacing_diffonly / 2.0;
-		const real_type& sl(s_ext ?
-			nopt.fet_diff_overhang : half_spacing);
-		const real_type& dl(d_ext ?
-			nopt.fet_diff_overhang : half_spacing);
-		// areas of internal stack nodes are halved to 
-		// assume internal sharing, split to each sharer.
-		const real_type asv = width * sl * lsq;
-		const real_type psv = pge ? 
-			(s_ext ? (width + sl) *l2		// width +side
-				: sl*l2) :			// sides only
-			(s_ext ? (width*nopt.lambda + sl*l2)	// 3 sides
-				: (sl * l2));			// 2 sides
-		const real_type adv = width * dl * lsq;
-		const real_type pdv = pge ?
-			(d_ext ? (width + dl) *l2		// width +side
-				: dl*l2) :			// sides only
-			(d_ext ? (width*nopt.lambda + dl*l2)	// 3 sides
-				: (dl * l2));			// 2 sides
+#if !NETLIST_CACHE_PARASITICS
+		const parasitics parasitic_values(*this,
+			s.is_stack_end_node(), d.is_stack_end_node(), nopt);
+#endif
+		const real_type& asv(parasitic_values.source_area);
+		const real_type& psv(parasitic_values.source_perimeter);
+		const real_type& adv(parasitic_values.drain_area);
+		const real_type& pdv(parasitic_values.drain_perimeter);
 #if 0
 		// debugging
 		nopt.line_continue(o);
@@ -740,7 +723,7 @@ transistor::emit(ostream& o, const index_type di,
 			" PD=" << pdv << nopt.length_unit;
 	}
 	return o;
-}
+}	// end transistor::emit()
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -772,6 +755,62 @@ transistor::dump_raw(ostream& o) const {
 	// unitless
 	emit_attribute_suffixes(o << " ", netlist_options::default_value);
 	return o;
+}
+
+//-----------------------------------------------------------------------------
+// class transistor::parasitics method definitions
+
+transistor::parasitics::parasitics(
+		const real_type width, const real_type length,
+		const bool s_ext, const bool d_ext,
+		const netlist_options& nopt) {
+	__update(width, length, s_ext, d_ext, nopt);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param width device width
+	\param length device length
+	\param s_ext true if source is at end of device stack (external)
+	\param d_ext true if drain is at end of device stack (external)
+	\param nopt global netlist parameters and constants
+ */
+void
+transistor::parasitics::__update(
+		const real_type width, const real_type length,
+		const bool s_ext, const bool d_ext,
+		const netlist_options& nopt) {
+	// compute and emit parasitic area/perimeter values
+	const bool pge = nopt.fet_perimeter_gate_edge;
+	const real_type lsq = nopt.lambda * nopt.lambda;
+	const real_type l2 = nopt.lambda * 2.0;
+	const real_type half_spacing = nopt.fet_spacing_diffonly / 2.0;
+	const real_type& sl(s_ext ?
+		nopt.fet_diff_overhang : half_spacing);
+	const real_type& dl(d_ext ?
+		nopt.fet_diff_overhang : half_spacing);
+	// areas of internal stack nodes are halved to 
+	// assume internal sharing, split to each sharer.
+	source_area = width * sl * lsq;
+	source_perimeter = pge ? 
+		(s_ext ? (width + sl) *l2		// width +side
+			: sl*l2) :			// sides only
+		(s_ext ? (width*nopt.lambda + sl*l2)	// 3 sides
+			: (sl * l2));			// 2 sides
+	drain_area = width * dl * lsq;
+	drain_perimeter = pge ?
+		(d_ext ? (width + dl) *l2		// width +side
+			: dl*l2) :			// sides only
+		(d_ext ? (width*nopt.lambda + dl*l2)	// 3 sides
+			: (dl * l2));			// 2 sides
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+transistor::parasitics::update(const transistor& t, 
+		const bool s_ext, const bool d_ext,
+		const netlist_options& nopt) {
+	__update(t.width, t.length, s_ext, d_ext, nopt);
 }
 
 //=============================================================================
@@ -1028,8 +1067,14 @@ netlist::append_instance(const state_instance<process_tag>& subp,
 		if (fn.is_supply_node()) {
 			if (*fi == GND_index) {
 				np.node_actuals.push_back(GND_index);
+#if NETLIST_NODE_CAPS
+				node_pool[GND_index].cap += fn.cap;
+#endif
 			} else if (*fi == Vdd_index) {
 				np.node_actuals.push_back(Vdd_index);
+#if NETLIST_NODE_CAPS
+				node_pool[Vdd_index].cap += fn.cap;
+#endif
 			} else {
 				cerr << "ERROR: unknown supply port." << endl;
 				THROW_EXIT;
@@ -1050,12 +1095,16 @@ netlist::append_instance(const state_instance<process_tag>& subp,
 				register_named_node(actual_id, opt);
 			STACKTRACE_INDENT_PRINT("actual node = " << actual_node << endl);
 			np.node_actuals.push_back(actual_node);
+			node& an(node_pool[actual_node]);
 #if NETLIST_CHECK_CONNECTIVITY
 			// inherit used/drive properties from formals to actuals
 			if (fn.used)
-				node_pool[actual_node].used = true;
+				an.used = true;
 			if (fn.driven)
-				node_pool[actual_node].driven = true;
+				an.driven = true;
+#endif
+#if NETLIST_NODE_CAPS
+			an.cap += fn.cap;
 #endif
 		} else {
 			cerr << "ERROR: unhandled instance port node type."
@@ -1605,6 +1654,29 @@ if (ports.size()) {
 }	// end declaration with ports
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if NETLIST_NODE_CAPS
+ostream&
+netlist::emit_node_caps(ostream& o, const netlist_options& nopt) const {
+	o << nopt.comment_prefix << "BEGIN node caps" << endl;
+	typedef	node_pool_type::const_iterator	const_iterator;
+	const_iterator i(node_pool.begin()), e(node_pool.end());
+for (++i ; i!=e; ++i) {
+if (i->is_logical_node()) {	// includes implicit supply nodes
+	// const size_t nid = i->index;
+	const node_caps& c(i->cap);
+	o << nopt.comment_prefix << "\t" << i->name <<
+		" [diff_perim=" << c.diff_perimeter << nopt.length_unit <<
+		", diff_area=" << c.diff_area << nopt.area_unit <<
+		", gate_area=" << c.gate_area << nopt.area_unit <<
+		", wire_area=" << c.wire_area << nopt.area_unit <<
+		']' << endl;
+}
+}
+	return o << nopt.comment_prefix << "END node caps" << endl;
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\pre all dependent subinstances have been processed.
 		This should really only be called from netlist_generator.
@@ -1642,6 +1714,11 @@ if (nopt.emit_node_aliases) {
 	o << nopt.comment_prefix << "END node aliases" << endl;
 }
 	// TODO: optional .connect alias statements
+#if NETLIST_NODE_CAPS
+if (nopt.emit_node_caps) {
+	emit_node_caps(o, nopt);
+}
+#endif
 #if NETLIST_VERILOG
 if (nopt.subckt_def_style == netlist_options::STYLE_VERILOG) {
 	emit_verilog_locals(o, nopt);
@@ -1948,6 +2025,35 @@ netlist::summarize_ports(
 }
 	empty = MT;
 }	// end netlist::summarize_ports
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if NETLIST_CACHE_PARASITICS
+/**
+	Only after netlist subgraph is complete, can parasitics be
+	accurately evaluated.  Need to know which nodes are end nodes.
+ */
+void
+netlist::summarize_parasitics(const netlist_options& nopt) {
+	typedef	transistor_pool_type::iterator	iterator;
+	iterator i(transistor_pool.begin()), e(transistor_pool.end());
+	for ( ; i!=e; ++i) {
+		node& s(node_pool[i->source]);
+		node& d(node_pool[i->drain]);
+		const bool s_ext = s.is_stack_end_node();
+		const bool d_ext = d.is_stack_end_node();
+		i->parasitic_values.update(*i, s_ext, d_ext, nopt);
+#if NETLIST_NODE_CAPS
+		node& g(node_pool[i->gate]);
+		const transistor::parasitics& p(i->parasitic_values);
+		g.cap.gate_area += i->gate_area();
+		s.cap.diff_area += p.source_area;
+		s.cap.diff_perimeter += p.source_perimeter;
+		d.cap.diff_area += p.drain_area;
+		d.cap.diff_perimeter += p.drain_perimeter;
+#endif
+	}
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if NETLIST_CHECK_CONNECTIVITY

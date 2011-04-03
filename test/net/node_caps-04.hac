@@ -1,0 +1,21 @@
+// "node_caps-04.hac"
+// @hacknet-flags@ -f emit_node_caps=1
+
+import "inv-01.hac";
+
+defproc fo2(bool a, b, c) {
+inv x(a, b), y(a, c);
+}
+
+defproc fi2(bool a, b, c) {
+inv x(a, c), y(a, c);
+}
+
+defproc diamond(bool i, o) {
+bool x, y;
+fo2 p(i, x, y);
+fi2 q(x, y, o);
+}
+
+diamond ring;
+

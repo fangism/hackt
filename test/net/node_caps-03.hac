@@ -1,0 +1,8 @@
+// "node_caps-03.hac"
+// @hacknet-flags@ -f emit_node_caps=1
+
+import "inv-01.hac";
+
+bool a, b, c;
+inv x(a, b), y(a, c);
+

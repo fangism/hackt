@@ -1,0 +1,55 @@
+.subckt inv<> !GND !Vdd x y
+* BEGIN node caps
+* 	!GND [diff_perim=22u, diff_area=30p, gate_area=0p, wire_area=0p]
+* 	!Vdd [diff_perim=22u, diff_area=30p, gate_area=0p, wire_area=0p]
+* 	y [diff_perim=44u, diff_area=60p, gate_area=0p, wire_area=0p]
+* 	x [diff_perim=0u, diff_area=0p, gate_area=20p, wire_area=0p]
+* END node caps
+My:dn:0 !GND x y !GND nch W=5u L=2u
+My:up:0 !Vdd x y !Vdd pch W=5u L=2u
+.ends
+
+.subckt fo2<> !GND !Vdd a b c
+* BEGIN node caps
+* 	!GND [diff_perim=44u, diff_area=60p, gate_area=0p, wire_area=0p]
+* 	!Vdd [diff_perim=44u, diff_area=60p, gate_area=0p, wire_area=0p]
+* 	a [diff_perim=0u, diff_area=0p, gate_area=40p, wire_area=0p]
+* 	b [diff_perim=44u, diff_area=60p, gate_area=0p, wire_area=0p]
+* 	c [diff_perim=44u, diff_area=60p, gate_area=0p, wire_area=0p]
+* END node caps
+xx !GND !Vdd a b inv<>
+xy !GND !Vdd a c inv<>
+.ends
+
+.subckt fi2<> !GND !Vdd a c
+* BEGIN node caps
+* 	!GND [diff_perim=44u, diff_area=60p, gate_area=0p, wire_area=0p]
+* 	!Vdd [diff_perim=44u, diff_area=60p, gate_area=0p, wire_area=0p]
+* 	a [diff_perim=0u, diff_area=0p, gate_area=40p, wire_area=0p]
+* 	c [diff_perim=88u, diff_area=120p, gate_area=0p, wire_area=0p]
+* END node caps
+xx !GND !Vdd a c inv<>
+xy !GND !Vdd a c inv<>
+.ends
+
+.subckt diamond<> !GND !Vdd i o
+* BEGIN node caps
+* 	!GND [diff_perim=88u, diff_area=120p, gate_area=0p, wire_area=0p]
+* 	!Vdd [diff_perim=88u, diff_area=120p, gate_area=0p, wire_area=0p]
+* 	i [diff_perim=0u, diff_area=0p, gate_area=40p, wire_area=0p]
+* 	x [diff_perim=44u, diff_area=60p, gate_area=40p, wire_area=0p]
+* 	y [diff_perim=44u, diff_area=60p, gate_area=0p, wire_area=0p]
+* 	o [diff_perim=88u, diff_area=120p, gate_area=0p, wire_area=0p]
+* END node caps
+xp !GND !Vdd i x y fo2<>
+xq !GND !Vdd x o fi2<>
+.ends
+
+* BEGIN node caps
+* 	!GND [diff_perim=88u, diff_area=120p, gate_area=0p, wire_area=0p]
+* 	!Vdd [diff_perim=88u, diff_area=120p, gate_area=0p, wire_area=0p]
+* 	ring.i [diff_perim=0u, diff_area=0p, gate_area=40p, wire_area=0p]
+* 	ring.o [diff_perim=88u, diff_area=120p, gate_area=0p, wire_area=0p]
+* END node caps
+xring !GND !Vdd ring.i ring.o diamond<>
+

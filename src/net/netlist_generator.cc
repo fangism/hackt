@@ -1,7 +1,7 @@
 /**
 	\file "net/netlist_generator.cc"
 	Implementation of hierarchical netlist generation.
-	$Id: netlist_generator.cc,v 1.31 2011/03/31 01:21:49 fang Exp $
+	$Id: netlist_generator.cc,v 1.32 2011/04/03 22:31:21 fang Exp $
  */
 
 #define	ENABLE_STATIC_TRACE		0
@@ -220,6 +220,10 @@ if (&f == topfp) {	// at_top()
 //	visit_local<bool_tag>(f, top_level);
 	f.get_prs_footprint().accept(*this);
 //	f.get_spec_footprint().accept(*this);	// ?
+
+#if NETLIST_CACHE_PARASITICS
+	nl->summarize_parasitics(opt);
+#endif
 
 	if (!top_level || opt.top_type_ports) {
 		nl->summarize_ports(

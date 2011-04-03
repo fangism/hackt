@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_options.h"
-	$Id: netlist_options.h,v 1.19 2011/03/31 01:21:50 fang Exp $
+	$Id: netlist_options.h,v 1.20 2011/04/03 22:31:21 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETLIST_OPTIONS_H__
@@ -276,6 +276,10 @@ struct netlist_options {
 		Should these names be mangled?
 	 */
 	bool				emit_node_aliases;
+	/**
+		If true, emit node capacitance components.  
+	 */
+	bool				emit_node_caps;
 	/**
 		If true, emit mapping between mangled and unmangled names
 		in comments.
