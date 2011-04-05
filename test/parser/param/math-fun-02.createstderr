@@ -3,7 +3,7 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	44
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	60
 	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	5	##ADDR##	prealplh	0	#HEAD#	#TAIL#	30
@@ -14,39 +14,71 @@ Persistent Object Manager text dump:
 	10	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	11	##ADDR##	pintplch	0	#HEAD#	#TAIL#	30
 	12	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	15	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	17	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
-	18	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	19	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	20	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	21	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
-	22	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	23	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	25	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	26	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	27	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	28	##ADDR##	prassign	0	#HEAD#	#TAIL#	20
-	29	##ADDR##	cnstpr__	0	#HEAD#	#TAIL#	12
-	30	##ADDR##	sprmvref	0	#HEAD#	#TAIL#	16
-	31	##ADDR##	prassign	0	#HEAD#	#TAIL#	20
-	32	##ADDR##	prmfunex	0	#HEAD#	#TAIL#	20
-	33	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	34	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	35	##ADDR##	sprmvref	0	#HEAD#	#TAIL#	16
-	36	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	37	##ADDR##	pimfunex	0	#HEAD#	#TAIL#	20
-	38	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	39	##ADDR##	sprmvref	0	#HEAD#	#TAIL#	16
-	40	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	41	##ADDR##	footprnt	0	#HEAD#	#TAIL#	384
+	13	##ADDR##	prealplh	0	#HEAD#	#TAIL#	31
+	14	##ADDR##	prealins	0	#HEAD#	#TAIL#	16
+	15	##ADDR##	prealplh	0	#HEAD#	#TAIL#	31
+	16	##ADDR##	prealins	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	pintplch	0	#HEAD#	#TAIL#	31
+	18	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	pintplch	0	#HEAD#	#TAIL#	31
+	20	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	24	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	26	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	29	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	30	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	33	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	34	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	35	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	prassign	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	cnstpr__	0	#HEAD#	#TAIL#	12
+	38	##ADDR##	sprmvref	0	#HEAD#	#TAIL#	16
+	39	##ADDR##	prassign	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	prmfunex	0	#HEAD#	#TAIL#	20
+	41	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	42	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	43	##ADDR##	sprmvref	0	#HEAD#	#TAIL#	16
+	44	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	45	##ADDR##	pimfunex	0	#HEAD#	#TAIL#	20
+	46	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	47	##ADDR##	sprmvref	0	#HEAD#	#TAIL#	16
+	48	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	49	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	50	##ADDR##	pimfunex	0	#HEAD#	#TAIL#	20
+	51	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
+	52	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	53	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	54	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	55	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	56	##ADDR##	pimfunex	0	#HEAD#	#TAIL#	20
+	57	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
+	58	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	59	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	60	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	61	##ADDR##	prassign	0	#HEAD#	#TAIL#	20
+	62	##ADDR##	prmfunex	0	#HEAD#	#TAIL#	20
+	63	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
+	64	##ADDR##	sprmvref	0	#HEAD#	#TAIL#	16
+	65	##ADDR##	sprmvref	0	#HEAD#	#TAIL#	16
+	66	##ADDR##	sprmvref	0	#HEAD#	#TAIL#	16
+	67	##ADDR##	prassign	0	#HEAD#	#TAIL#	20
+	68	##ADDR##	prmfunex	0	#HEAD#	#TAIL#	20
+	69	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
+	70	##ADDR##	sprmvref	0	#HEAD#	#TAIL#	16
+	71	##ADDR##	sprmvref	0	#HEAD#	#TAIL#	16
+	72	##ADDR##	sprmvref	0	#HEAD#	#TAIL#	16
+	73	##ADDR##	footprnt	0	#HEAD#	#TAIL#	442
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
-  4 parameter-collections
+  8 parameter-collections
   2 instantiation-collections
   0 sub-namespaces
   0 definitions
@@ -56,6 +88,10 @@ In namespace "", we have: {
     RZ = preal<> RZ
     ZA = pint<> ZA
     ZZ = pint<> ZZ
+    rmn = preal<> rmn
+    rmx = preal<> rmx
+    zmn = pint<> zmn
+    zmx = pint<> zmx
   Instances:
     !GND = bool<> !GND
     !Vdd = bool<> !Vdd
@@ -68,6 +104,10 @@ footprint: {
   RZ = preal^0 value: 5
   ZA = pint^0 value: 3
   ZZ = pint^0 value: 5
+  rmn = preal^0 value: 3.14159
+  rmx = preal^0 value: 5
+  zmn = pint^0 value: 3
+  zmx = pint^0 value: 5
   Created state:
   bool instance pool: (0 ports, 2 local, 0 mapped)
   1	!GND @[ supply_low ]	

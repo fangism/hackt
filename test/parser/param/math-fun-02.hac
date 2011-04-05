@@ -6,3 +6,10 @@ preal RR = 3.1415926;
 preal RZ = ztor(ZZ);
 pint ZA = rtoz(RR);
 
+pint zmx = zmax(ZZ, ZA);
+pint zmn = zmin(ZZ, ZA);
+
+preal rmx = rmax(RR, RZ);
+preal rmn = rmin(RR, RZ);
+
+

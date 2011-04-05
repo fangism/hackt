@@ -1,7 +1,7 @@
 /**
 	\file "Object/expr/meta_func_lib.cc"
 	stolen from "Object/expr/dlfunction.cc"
-	$Id: meta_func_lib.cc,v 1.4 2011/03/04 20:29:35 fang Exp $
+	$Id: meta_func_lib.cc,v 1.5 2011/04/05 18:26:21 fang Exp $
  */
 
 #define	ENABLE_STATIC_TRACE				0
@@ -362,6 +362,64 @@ META_FUNCTION_LOAD_DEFAULT("zcond", zcond)
 META_FUNCTION_LOAD_DEFAULT("rcond", rcond)
 META_FUNCTION_LOAD_DEFAULT("strcond", strcond)
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+@texinfo fn/minmax.texi
+@deffn Function zmin a b
+@deffnx Function zmax a b
+@deffnx Function rmin a b
+@deffnx Function rmax a b
+Returns the minimum or maximum of two values.
+@t{zmin} and @t{zmax} take and return integers.
+@t{rmin} and @t{rmax} take and return reals.
+@end deffn
+@end texinfo
+ */
+// min/max functions
+template <class T>
+static
+T
+_min(const T a, const T b) {
+	return a < b ? a : b;
+}
+
+template <class T>
+static
+T
+_max(const T a, const T b) {
+	return a > b ? a : b;
+}
+
+static
+int_value_type
+zmin(const int_value_type a, const int_value_type b) {
+	return _min(a, b);
+}
+
+static
+int_value_type
+zmax(const int_value_type a, const int_value_type b) {
+	return _max(a, b);
+}
+
+static
+real_value_type
+rmin(const real_value_type a, const real_value_type b) {
+	return _min(a, b);
+}
+
+static
+real_value_type
+rmax(const real_value_type a, const real_value_type b) {
+	return _max(a, b);
+}
+
+META_FUNCTION_LOAD_DEFAULT("zmin", zmin)
+META_FUNCTION_LOAD_DEFAULT("zmax", zmax)
+META_FUNCTION_LOAD_DEFAULT("rmin", rmin)
+META_FUNCTION_LOAD_DEFAULT("rmax", rmax)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // conversion functions
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <typename T>
