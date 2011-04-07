@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.251.2.1 2011/04/07 23:07:00 fang Exp $
+#	$Id: Makefile.am,v 1.251.2.2 2011/04/07 23:39:25 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -235,7 +235,7 @@ libhacktlib_la_LIBADD = libhacktparsers.la
 
 libhacknet_la_LIBADD = libhacktlib.la
 
-# libhacktsim_la_LIBADD = libhacktlib.la
+libhacktsim_la_LIBADD = $(LIBFANGUTIL)
 
 libhacktparsers_la_LIBADD = libhacktast.la
 
