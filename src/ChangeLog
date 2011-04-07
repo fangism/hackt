@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-04-07	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-64-pr-01-00:
+	  This branch is for development of a physics-driven
+		place-and-route engine, with interactive simulator.  
+	  Split up libhacktsim into libhacktprsim, libhacktchpsim, 
+		so that new simulator can use generic sim library.
+		libhacktsim is no longer tied to the rest of HACKT.  
+
+
 2011-04-04	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-64:
