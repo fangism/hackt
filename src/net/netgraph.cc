@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.cc"
-	$Id: netgraph.cc,v 1.33 2011/04/03 22:31:20 fang Exp $
+	$Id: netgraph.cc,v 1.33.2.1 2011/04/11 18:38:45 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -780,6 +780,7 @@ transistor::parasitics::__update(
 		const real_type width, const real_type length,
 		const bool s_ext, const bool d_ext,
 		const netlist_options& nopt) {
+	STACKTRACE_VERBOSE;
 	// compute and emit parasitic area/perimeter values
 	const bool pge = nopt.fet_perimeter_gate_edge;
 	const real_type lsq = nopt.lambda * nopt.lambda;

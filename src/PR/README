@@ -1,0 +1,63 @@
+"PR/README"
+This directory is for placement/routing tool classes.
+Ideally, this tool should be somewhat HAC-independent.
+
+Parameters:
+
+channels, channel types, connections:
+spring_coefficient
+
+objects and object types:
+fixed (boolean)
+size?
+mass
+repulsion_coefficient
+
+connections:
+
+obstacles:
+
+=============================================================================
+interactive command-line interface:
+
+"Fang's Interactive Physics-driven Placement Engine" [FIPPlE]
+
+Wikipedia defines:
+"A fipple is a constricted mouthpiece common to many end-blown woodwind 
+instruments, such as the tin whistle and the recorder."
+
+when an attribute is type=NUM, inherit properties from channel-type[NUM]
+type="string" will reference type by name
+type=NUM will reference by index
+
+graph setup:
+
+channel-type attrs...
+object-type attrs...
+object attrs...
+connection obj-indices... attrs...
+
+simulation:
+
+position-tolerance
+speed-tolerance
+force-tolerance
+temperature [NUM]
+time-step [NUM|auto]
+advance [NUM]
+converge
+
+manual object manipulation:
+move object position
+throw object velocity
+
+output:
+
+export xfig, raw-coordinates, X11?, gtk?
+redraw
+
+===============================================================================
+Router program:
+
+"Fang's Interactive Grid-based Router Engine" [FIGRE]
+

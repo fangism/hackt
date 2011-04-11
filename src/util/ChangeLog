@@ -1,5 +1,13 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.120 2011/03/30 20:59:25 fang Exp $
+#	$Id: ChangeLog,v 1.120.2.1 2011/04/11 18:38:45 fang Exp $
+
+2011-04-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-64-pr-01-01:
+	  Added util/vector_ops.h: define and overload valarray/vector 
+		operations through a single interface.
+	  util/array.h: added size() member function.
+
 
 2011-03-30	David Fang		<fangism@users.sourceforge.net>
 

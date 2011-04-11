@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.251.2.2 2011/04/07 23:39:25 fang Exp $
+#	$Id: Makefile.am,v 1.251.2.3 2011/04/11 18:38:32 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -53,7 +53,9 @@ endif
 ########################### main dependencies #################################
 
 bin_PROGRAMS = hackt haco haccreate \
-	hacobjdump hflat hacpp hacprsim hacchpsim hacknet
+	hacobjdump hflat hacpp hacprsim hacchpsim hacknet \
+	ipple
+# coming soon: igre
 
 bin_SCRIPTS = scripts/init_hackt.csh scripts/init_hackt.sh \
 	scripts/hackt-env scripts/hacalloc hacinstdump hac-cpp
@@ -113,7 +115,8 @@ pkglib_LTLIBRARIES = \
 	libhacktsim.la \
 	libhacktprsim.la \
 	libhacktchpsim.la \
-	libhacknet.la
+	libhacknet.la \
+	libhacktpr.la
 # lib_LTLIBRARIES = libhacktlib.la
 if HAVE_LIBGUILE
 pkglib_LTLIBRARIES += libhacktguile.la
@@ -181,6 +184,8 @@ hacknet_SOURCES = main/hacknet.cc
 hacknet_CPPFLAGS = -DWITH_MAIN
 hacknet_LDADD = libhacknet.la
 
+ipple_SOURCES = main/ipple.cc PR/pr-command.cc
+ipple_LDADD = libhacktpr.la libhacktsim.la
 
 main/hacchpsim-chpsim.o main/hacprsim-prsim.o: install_paths.h
 main/chpsim.lo main/chpsim.o: install_paths.h
@@ -234,8 +239,6 @@ libhacktlib_la_LIBADD = libhacktparsers.la
 # libhacktexec.la
 
 libhacknet_la_LIBADD = libhacktlib.la
-
-libhacktsim_la_LIBADD = $(LIBFANGUTIL)
 
 libhacktparsers_la_LIBADD = libhacktast.la
 
@@ -1074,6 +1077,18 @@ NET_H_FILES = \
 	$(NET_CC_FILES:.cc=.h) \
 	net/common.h
 
+PR_CC_FILES = \
+	PR/numerics.cc \
+	PR/pcanvas.cc \
+	PR/placement_engine.cc
+
+PR_H_FILES = $(PR_CC_FILES:.cc=.h) \
+	PR/obstacle.h \
+	PR/pr-command.h \
+	PR/rcanvas.h \
+	PR/tile_type.h \
+	PR/tile_instance.h
+
 # libhacktexec sources
 MAIN_EXEC_CC_FILES = \
 	main/force_load.cc \
@@ -1181,14 +1196,17 @@ echo-libhacktexec-sources:
 libhacktexec_la_LIBADD += $(LIBMISCFUN)
 
 libhacktsim_la_SOURCES = $(SIM_CC_FILES) $(SIM_TCC_FILES) $(SIM_H_FILES)
+libhacktsim_la_LIBADD = libhacktlib.la
 
 libhacktprsim_la_SOURCES = $(PRSIM_CC_FILES) $(PRSIM_TCC_FILES) $(PRSIM_H_FILES)
-libhacktprsim_la_LIBADD = libhacktsim.la libhacktlib.la
+libhacktprsim_la_LIBADD = libhacktsim.la
 
 libhacktchpsim_la_SOURCES = $(CHPSIM_CC_FILES) $(CHPSIM_H_FILES)
-libhacktchpsim_la_LIBADD = libhacktsim.la libhacktlib.la
+libhacktchpsim_la_LIBADD = libhacktsim.la
 
 libhacknet_la_SOURCES = $(NET_CC_FILES) $(NET_TCC_FILES) $(NET_H_FILES)
+
+libhacktpr_la_SOURCES = $(PR_CC_FILES) $(PR_H_FILES)
 
 # any other files that depend on automatically generated headers
 # should have explicit dependencies.  
@@ -1260,6 +1278,7 @@ ALL_HEADER_FILES += \
 	$(PRSIM_H_FILES) \
 	$(CHPSIM_H_FILES) \
 	$(NET_H_FILES) \
+	$(PR_H_FILES) \
 	$(HACKTLIB_H_FILES) \
 	$(LIBHACKTGUILE_H_FILES) \
 	$(MAIN_EXEC_H_FILES)
