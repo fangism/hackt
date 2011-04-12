@@ -1,0 +1,17 @@
+* BEGIN node caps
+* 	@en_ [diff_perim=88u, diff_area=120p, gate_area=0p, wire_area=0p]
+* 	!GND [diff_perim=22u, diff_area=30p, gate_area=0p, wire_area=0p]
+* 	!Vdd [diff_perim=66u, diff_area=90p, gate_area=0p, wire_area=0p]
+* 	_o[0] [diff_perim=44u, diff_area=60p, gate_area=0p, wire_area=0p]
+* 	en [diff_perim=0u, diff_area=0p, gate_area=40p, wire_area=0p]
+* 	i[0] [diff_perim=0u, diff_area=0p, gate_area=10p, wire_area=0p]
+* 	_o[1] [diff_perim=44u, diff_area=60p, gate_area=0p, wire_area=0p]
+* 	i[1] [diff_perim=0u, diff_area=0p, gate_area=10p, wire_area=0p]
+* END node caps
+M@en_:dn:0 !GND en @en_ !GND nch W=5u L=2u
+M_o[0]:dn:0:pchg !Vdd en @en_ !Vdd pch W=5u L=2u
+M_o[0]:dn:1 @en_ i[0] _o[0] !GND nch W=5u L=2u
+M_o[1]:dn:0 @en_ i[1] _o[1] !GND nch W=5u L=2u
+M_o[0]:up:0 !Vdd en _o[0] !Vdd pch W=5u L=2u
+M_o[1]:up:0 !Vdd en _o[1] !Vdd pch W=5u L=2u
+

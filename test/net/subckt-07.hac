@@ -1,0 +1,27 @@
+// "subckt-07.hac"
+// copy-modified from "subckt-01.hac"
+// test for behavior of netgen w.r.t. subcircuits
+// @hacknet-flags@ -f emit_parasitics=1 -f emit_node_caps=1
+
+import "inv-01.hac";
+
+defproc inv_c(bool a, b) {
+bool _x, x1, x2, _y;
+prs {
+subckt<"first"> {
+	a	=> _x-
+	_x	=> x1-
+	
+}
+}
+inv K(x1, x2);
+prs {
+subckt<"second"> {
+	x2	=> _y-
+	_y	=> b-
+}
+}
+}
+
+inv_c foo;
+

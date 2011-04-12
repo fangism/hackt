@@ -1,0 +1,25 @@
+* BEGIN node caps
+* 	!GND [diff_perim=88u, diff_area=120p, gate_area=0p, wire_area=0p]
+* 	!Vdd [diff_perim=88u, diff_area=120p, gate_area=0p, wire_area=0p]
+* 	_o [diff_perim=88u, diff_area=120p, gate_area=20p, wire_area=0p]
+* 	#0 [diff_perim=8u, diff_area=20p, gate_area=0p, wire_area=0p]
+* 	a [diff_perim=0u, diff_area=0p, gate_area=40p, wire_area=0p]
+* 	b [diff_perim=0u, diff_area=0p, gate_area=40p, wire_area=0p]
+* 	#1 [diff_perim=8u, diff_area=20p, gate_area=0p, wire_area=0p]
+* 	o [diff_perim=44u, diff_area=60p, gate_area=20p, wire_area=0p]
+* 	#2 [diff_perim=12u, diff_area=30p, gate_area=0p, wire_area=0p]
+* 	#3 [diff_perim=12u, diff_area=30p, gate_area=0p, wire_area=0p]
+* END node caps
+M_o:dn:0 !GND a #0 !GND nch W=5u L=2u
+M_o:dn:1 #0 b _o !GND nch W=5u L=2u
+M_o:up:0 !Vdd a #1 !Vdd pch W=5u L=2u
+M_o:up:1 #1 b _o !Vdd pch W=5u L=2u
+Mo:dn:0 !GND _o o !GND nch W=5u L=2u
+Mo:up:0 !Vdd _o o !Vdd pch W=5u L=2u
+M_o:dn:2:ckeeper !GND a #2 !GND nch W=5u L=2u
+M_o:dn:3:ckeeper !GND b #2 !GND nch W=5u L=2u
+M_o:dn:4:ckeeper #2 o _o !GND nch W=5u L=2u
+M_o:up:2:ckeeper !Vdd a #3 !Vdd pch W=5u L=2u
+M_o:up:3:ckeeper !Vdd b #3 !Vdd pch W=5u L=2u
+M_o:up:4:ckeeper #3 o _o !Vdd pch W=5u L=2u
+

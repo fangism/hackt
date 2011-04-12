@@ -1,0 +1,21 @@
+// "celem-10.hac"
+// H-topology style C-element [van Berkel]
+// prs written as-is is good for both simulation and netlist generation
+// @hacknet-flags@ -t celem2_H -f emit_node_caps=1
+
+defproc celem2_H(bool? i[2]; bool! _o, o) {
+bool a = i[0];
+bool b = i[1];
+prs {
+	a                       -> @ad-
+	~@ad & o | b            -> @bd-
+	~@ad & b | ~@bd & a     -> _o-
+	~a                      -> @au+
+	@au & ~o | ~b           -> @bu+
+	@au & ~b | @bu & ~a     -> _o+
+[W=10]	_o			=> o-
+}
+}
+
+celem2_H c;
+

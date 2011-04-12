@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-04-12	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-65:
+	  hacknet: fix broken parasitics in local subcircuits
+		re-wrote some local_subcircuit code to make it more like
+		a netlist class, with own private node pool, so that
+		parasitics may be computed locally and accumulated.  
+		Added test cases.  
+
+
 2011-04-04	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-64:

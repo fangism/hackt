@@ -1,0 +1,25 @@
+* BEGIN node caps
+* 	@ad [diff_perim=66u, diff_area=90p, gate_area=0p, wire_area=0p]
+* 	@bd [diff_perim=66u, diff_area=90p, gate_area=0p, wire_area=0p]
+* 	@au [diff_perim=66u, diff_area=90p, gate_area=0p, wire_area=0p]
+* 	@bu [diff_perim=66u, diff_area=90p, gate_area=0p, wire_area=0p]
+* 	!GND [diff_perim=76u, diff_area=120p, gate_area=0p, wire_area=0p]
+* 	!Vdd [diff_perim=76u, diff_area=120p, gate_area=0p, wire_area=0p]
+* 	_o [diff_perim=88u, diff_area=120p, gate_area=40p, wire_area=0p]
+* 	a [diff_perim=0u, diff_area=0p, gate_area=40p, wire_area=0p]
+* 	b [diff_perim=0u, diff_area=0p, gate_area=40p, wire_area=0p]
+* 	o [diff_perim=64u, diff_area=120p, gate_area=20p, wire_area=0p]
+* END node caps
+M@ad:dn:0 !GND a @ad !GND nch W=5u L=2u
+M_o:dn:0 @ad b _o !GND nch W=5u L=2u
+M@bd:dn:0 @ad o @bd !GND nch W=5u L=2u
+M@bd:dn:1 !GND b @bd !GND nch W=5u L=2u
+M_o:dn:1 @bd a _o !GND nch W=5u L=2u
+M@au:up:0 !Vdd a @au !Vdd pch W=5u L=2u
+M_o:up:0 @au b _o !Vdd pch W=5u L=2u
+M@bu:up:0 @au o @bu !Vdd pch W=5u L=2u
+M@bu:up:1 !Vdd b @bu !Vdd pch W=5u L=2u
+M_o:up:1 @bu a _o !Vdd pch W=5u L=2u
+Mo:dn:0 !GND _o o !GND nch W=10u L=2u
+Mo:up:0 !Vdd _o o !Vdd pch W=10u L=2u
+

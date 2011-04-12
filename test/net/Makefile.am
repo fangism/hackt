@@ -1,5 +1,5 @@
 # "test/net/Makefile.am"
-#	$Id: Makefile.am,v 1.31 2011/04/03 22:31:22 fang Exp $
+#	$Id: Makefile.am,v 1.32 2011/04/12 21:52:33 fang Exp $
 # Test auto-Makefile for hacknet.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -15,7 +15,7 @@ HACKNET_TEST_SCRIPTS_PASSES = \
 	spectre-inv-13 \
 	nand-01 nand-02 nand-03 \
 	celem-01 celem-02 celem-03 celem-04 celem-05 celem-06 \
-	celem-07 celem-08 celem-09 \
+	celem-07 celem-08 celem-09 celem-10 \
 	logic-01 logic-02 \
 	ladder-01 ladder-02 \
 	mux-01 mux-02 mux-03 mux-04 mux-05 mux-06 \
@@ -40,7 +40,7 @@ HACKNET_TEST_SCRIPTS_PASSES = \
 	pass_gate-01 pass_gate-02 pass_gate-03 pass_gate-04 \
 	pass_gate-05 pass_gate-06 \
 	spectre-pass_gate-02 \
-	subckt-01 subckt-03 subckt-04 subckt-05 \
+	subckt-01 subckt-03 subckt-04 subckt-05 subckt-06 subckt-07 subckt-08 \
 	spectre-subckt-01 spectre-subckt-03 \
 	channel-member-01 channel-member-02 channel-member-03 \
 	array-01 \
@@ -71,6 +71,7 @@ HACKNET_TEST_SCRIPTS_PASSES = \
 	parasitics-01 \
 	aliases-01 aliases-02 aliases-03 aliases-04 \
 	node_caps-01 node_caps-02 node_caps-03 node_caps-04 \
+	node_caps-05 node_caps-06 \
 	mangle-01 mangle-02 mangle-03 mangle-04 mangle-04b mangle-05 \
 	mangle-06 mangle-07 mangle-08 mangle-09 \
 	struct-01 struct-02 struct-03 struct-04 struct-05 struct-06 \
@@ -133,7 +134,7 @@ srcdir_EXTRA_DIST += \
 	tsmc65-equiv.netgen-conf
 
 HACKT_PARSE_TEST_PASSES = \
-	non-CMOS-06 subckt-02 \
+	non-CMOS-06 subckt-02 subckt-08 \
 	fet-type-01 fet-type-02 fet-type-03 fet-type-04 \
 	fet-type-05 fet-type-06 fet-type-07 fet-type-08 \
 	fet-type-18 fet-type-19 fet-type-20 fet-type-21 \
@@ -166,6 +167,7 @@ HACKT_CREATE_TEST_PASSES = \
 	pass_gate-05 pass_gate-06 \
 	precharge-07 precharge-08 \
 	mangle-04 \
+	subckt-08 \
 	supply-pass-gate-01 supply-pass-gate-02 \
 	supply-instance-01 supply-instance-02 supply-instance-03 \
 	supply-instance-04 supply-instance-05 supply-instance-06 \

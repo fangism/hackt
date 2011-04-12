@@ -1,0 +1,56 @@
+.subckt inv_c<>::first !GND !Vdd _x a x
+* BEGIN node caps
+* 	!GND [diff_perim=44u, diff_area=60p, gate_area=0p, wire_area=0p]
+* 	!Vdd [diff_perim=44u, diff_area=60p, gate_area=0p, wire_area=0p]
+* 	_x [diff_perim=44u, diff_area=60p, gate_area=20p, wire_area=0p]
+* 	a [diff_perim=0u, diff_area=0p, gate_area=20p, wire_area=0p]
+* 	x [diff_perim=44u, diff_area=60p, gate_area=0p, wire_area=0p]
+* END node caps
+M_x:dn:0 !GND a _x !GND nch W=5u L=2u
++ AS=30p PS=22u AD=30p PD=22u
+M_x:up:0 !Vdd a _x !Vdd pch W=5u L=2u
++ AS=30p PS=22u AD=30p PD=22u
+Mx:dn:0 !GND _x x !GND nch W=5u L=2u
++ AS=30p PS=22u AD=30p PD=22u
+Mx:up:0 !Vdd _x x !Vdd pch W=5u L=2u
++ AS=30p PS=22u AD=30p PD=22u
+.ends
+.subckt inv_c<>::second !GND !Vdd x _y b
+* BEGIN node caps
+* 	!GND [diff_perim=44u, diff_area=60p, gate_area=0p, wire_area=0p]
+* 	!Vdd [diff_perim=44u, diff_area=60p, gate_area=0p, wire_area=0p]
+* 	x [diff_perim=0u, diff_area=0p, gate_area=20p, wire_area=0p]
+* 	_y [diff_perim=44u, diff_area=60p, gate_area=20p, wire_area=0p]
+* 	b [diff_perim=44u, diff_area=60p, gate_area=0p, wire_area=0p]
+* END node caps
+M_y:dn:0 !GND x _y !GND nch W=5u L=2u
++ AS=30p PS=22u AD=30p PD=22u
+M_y:up:0 !Vdd x _y !Vdd pch W=5u L=2u
++ AS=30p PS=22u AD=30p PD=22u
+Mb:dn:0 !GND _y b !GND nch W=5u L=2u
++ AS=30p PS=22u AD=30p PD=22u
+Mb:up:0 !Vdd _y b !Vdd pch W=5u L=2u
++ AS=30p PS=22u AD=30p PD=22u
+.ends
+.subckt inv_c<> !GND !Vdd a b
+* BEGIN node caps
+* 	!GND [diff_perim=88u, diff_area=120p, gate_area=0p, wire_area=0p]
+* 	!Vdd [diff_perim=88u, diff_area=120p, gate_area=0p, wire_area=0p]
+* 	_x [diff_perim=44u, diff_area=60p, gate_area=20p, wire_area=0p]
+* 	a [diff_perim=0u, diff_area=0p, gate_area=20p, wire_area=0p]
+* 	x [diff_perim=44u, diff_area=60p, gate_area=20p, wire_area=0p]
+* 	_y [diff_perim=44u, diff_area=60p, gate_area=20p, wire_area=0p]
+* 	b [diff_perim=44u, diff_area=60p, gate_area=0p, wire_area=0p]
+* END node caps
+xfirst:inst !GND !Vdd _x a x inv_c<>::first
+xsecond:inst !GND !Vdd x _y b inv_c<>::second
+.ends
+
+* BEGIN node caps
+* 	!GND [diff_perim=88u, diff_area=120p, gate_area=0p, wire_area=0p]
+* 	!Vdd [diff_perim=88u, diff_area=120p, gate_area=0p, wire_area=0p]
+* 	foo.a [diff_perim=0u, diff_area=0p, gate_area=20p, wire_area=0p]
+* 	foo.b [diff_perim=44u, diff_area=60p, gate_area=0p, wire_area=0p]
+* END node caps
+xfoo !GND !Vdd foo.a foo.b inv_c<>
+

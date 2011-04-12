@@ -1,0 +1,19 @@
+// "node_caps-05.hac"
+// @hacknet-flags@ -f emit_node_caps=1 -t pchg_bufrail_group<2>
+
+template <pint N>
+defproc pchg_bufrail_group(bool? en, i[N]; bool! _o[N]) {
+prs {
+      en                              -> @en_-
+      ~@en_ &{+~en} i[0]              -> _o[0]-       // shared precharge
+(:r:1..N-1:
+      ~@en_ & i[r]                    -> _o[r]-
+)
+(:r:N:
+      ~en                             -> _o[r]+
+)
+}
+}
+
+pchg_bufrail_group<2> PBRG;
+

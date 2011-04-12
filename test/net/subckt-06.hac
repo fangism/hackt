@@ -1,0 +1,7 @@
+// "subckt-06.hac"
+// copy-modified from "subckt-03.hac"
+// testing nested definition option
+// @hacknet-flags@ -f emit_parasitics=1 -f emit_node_caps=1
+
+import "subckt-01.hac";
+

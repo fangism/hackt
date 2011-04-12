@@ -1,0 +1,6 @@
+// "node_caps-06.hac"
+// @hacknet-flags@ -t celem -f emit_node_caps=1
+
+import "celem-07.hac";
+
+
