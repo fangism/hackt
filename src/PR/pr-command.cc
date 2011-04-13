@@ -2,8 +2,14 @@
 	\file "PR/pr-command.cc"
 	Command-line feature for PR simulator.
 	TODO: scheme interface
-	$Id: pr-command.cc,v 1.1.2.1 2011/04/11 18:38:39 fang Exp $
+	$Id: pr-command.cc,v 1.1.2.2 2011/04/13 00:40:21 fang Exp $
  */
+
+#define	ENABLE_STATIC_TRACE		0
+#define	ENABLE_STACKTRACE		0
+
+#include "util/static_trace.h"
+DEFAULT_STATIC_TRACE_BEGIN
 
 #include <iostream>
 #include "PR/pr-command.h"
@@ -12,7 +18,7 @@
 #include "sim/command_category.tcc"
 #include "sim/command_registry.tcc"
 #include "sim/command_macros.tcc"
-#include "sim/command_common.h"
+#include "sim/command_common.tcc"
 #include "util/optparse.h"
 
 //=============================================================================
@@ -119,7 +125,6 @@ Help on command or category @var{cmd}.
 @end deffn
 @end texinfo
 ***/
-typedef	Help<State>				Help;
 PR_INSTANTIATE_TRIVIAL_COMMAND_CLASS(Help, builtin)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -370,4 +375,6 @@ PR_INSTANTIATE_TRIVIAL_COMMAND_CLASS(Reset, simulation)
 
 //=============================================================================
 }	// end namespace PR
+
+DEFAULT_STATIC_TRACE_BEGIN
 

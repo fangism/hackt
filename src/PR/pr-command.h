@@ -1,6 +1,6 @@
 /**
 	\file "PR/pr-command.h"
-	$Id: pr-command.h,v 1.1.2.1 2011/04/11 18:38:40 fang Exp $
+	$Id: pr-command.h,v 1.1.2.2 2011/04/13 00:40:22 fang Exp $
  */
 
 #ifndef	__HAC_PR_PR_COMMAND_H__
@@ -14,6 +14,13 @@
 #include "sim/command_category.h"
 #include "sim/command_registry.h"
 #include "sim/command_macros.h"
+
+// forward declaration
+namespace HAC {
+namespace SIM {
+template <class> class Help;
+}
+}
 
 namespace PR {
 class placement_engine;
@@ -73,12 +80,10 @@ private:								\
 	static const size_t		receipt_id;			\
 };
 
-#if 0
 /**
 	public help class.  
  */
 typedef	HAC::SIM::Help<State>			Help;
-#endif
 
 //=============================================================================
 }	// end namespace PR

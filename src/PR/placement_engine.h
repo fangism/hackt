@@ -1,16 +1,18 @@
 /**
 	\file "PR/placement_engine.h"
 	Physics simulator.
-	$Id: placement_engine.h,v 1.1.2.1 2011/04/11 18:38:39 fang Exp $
+	$Id: placement_engine.h,v 1.1.2.2 2011/04/13 00:40:21 fang Exp $
  */
 
 #ifndef	__HAC_PR_PLACEMENT_ENGINE_H__
 #define	__HAC_PR_PLACEMENT_ENGINE_H__
 
+#include <string>
 #include "PR/pcanvas.h"
 #include "util/named_ifstream_manager.h"	// needed by interpreter
 
 namespace PR {
+using std::string;
 using util::ifstream_manager;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -52,7 +54,7 @@ protected:
 		Interpreter state for the input stream.
 		This is not checkpointed.  
 	 */
-	ifstream_manager				ifstreams;
+	ifstream_manager		ifstreams;
 
 public:
 	// these parameters may be publicly tweaked at any time
@@ -72,8 +74,15 @@ public:
 
 	~placement_engine();
 
+// begin stuff for command_registry
 	ifstream_manager&
 	get_stream_manager(void) { return ifstreams; }
+
+	void
+	add_source_path(const string& s) {
+		ifstreams.add_path(s);
+	}
+// end stuff for command_registry
 
 	void
 	auto_proximity_radius(void);

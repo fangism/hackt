@@ -1,7 +1,7 @@
 /**
 	\file "PR/pcanvas.h"
 	Medium on which placement is solved with physics.
-	$Id: pcanvas.h,v 1.1.2.1 2011/04/11 18:38:38 fang Exp $
+	$Id: pcanvas.h,v 1.1.2.2 2011/04/13 00:40:20 fang Exp $
  */
 
 #ifndef	__HAC_PR_PCANVAS_H__
@@ -19,7 +19,7 @@ struct pcanvas {
 	/**
 		Yes, we can do physics in higher dimensions!
 	 */
-	size_t				dimensions;
+	const size_t			dimensions;
 //	position_type			bounds;
 
 	vector<channel_type>		channel_types;
