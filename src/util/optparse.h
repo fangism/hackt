@@ -4,16 +4,15 @@
 	Simply tokenizes into string sets, which is then handed off
 	elsewhere for processing.
 	Options can come from file or command-line argv.
-	$Id: optparse.h,v 1.5 2010/05/13 00:32:03 fang Exp $
+	$Id: optparse.h,v 1.5.8.1 2011/04/15 00:52:07 fang Exp $
  */
 
 #ifndef	__UTIL_OPTPARSE_H__
 #define	__UTIL_OPTPARSE_H__
 
 #include <iosfwd>
-#include <string>
-#include <list>
 #include <map>
+#include "util/optparse_fwd.h"
 
 namespace util {
 using std::string;
@@ -23,20 +22,6 @@ using std::istream;
 using std::map;
 
 //=============================================================================
-/**
-	Storage structure for options.
- */
-struct option_value {
-	string		key;
-	list<string>	values;
-
-	bool
-	empty(void) const { return key.empty(); }
-};	// end struct option_value
-
-typedef	list<option_value>		option_value_list;
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 operator << (ostream&, const option_value&);
 
@@ -47,6 +32,8 @@ operator << (ostream&, const option_value_list&);
 /**
 	Parses a single option of the form:
 	key=value,value,...
+	TODO: support grouping characters to allow separator nesting
+		within parentheses, braces, brackets...
  */
 extern
 option_value

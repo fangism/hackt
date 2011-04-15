@@ -1,43 +1,79 @@
 /**
 	\file "PR/tile_type.h"
-	$Id: tile_type.h,v 1.1.2.1 2011/04/11 18:38:43 fang Exp $
+	Object types.
+	$Id: tile_type.h,v 1.1.2.2 2011/04/15 00:52:04 fang Exp $
  */
 
 #ifndef	__HAC_PR_TILE_TYPE_H__
 #define	__HAC_PR_TILE_TYPE_H__
 
-#include <vector>
-#include "PR/channel.h"
-#include "util/vector_ops.h"
+#include <iosfwd>
+// #include <vector>
+#include <string>
+#include "PR/numerics.h"
+// #include "PR/channel.h"
+
+/**
+	Define to 1 to enable pin information on tiles.
+	Number of pins not relevant until we are doing routing.
+ */
+#define	PR_TILE_PINS			0
+
+/**
+	Define to 1 to enable non-uniform mass.
+	Otherwise treat all tile objects as unit mass (1.0).  
+	Rationale for disabling: mass does not affect equilibrium, 
+		only transient behavior.
+ */
+#define	PR_TILE_MASS			0
 
 namespace PR {
+// using std::vector;
+using std::string;
+using std::ostream;
 
 //=============================================================================
 /**
 	Physical properties of tile type.
+	Objects are modeled as point masses.
 	Dimensions are integer because they will eventually be grid-aligned.
  */
 struct tile_properties {
 	/// dimension in number of 'tracks'
 	position_type			size;		// height, width, depth
+#if PR_TILE_MASS
 	/**
 		Weight is for momentum/acceleration calculations.  
 	 */
-	real_type			default_mass;
+	real_type			mass;
+#endif
 	/**
 		Bounce factor for collisions.
 	 */
 //	real_type			coeff_restitution;
 //	bool				rotatable;
+// pin_info?
+
+	tile_properties();
+
+	~tile_properties();
 
 	real_type
-	maximum_dimension(void) const {
-		return util::vector_ops::max(size);
-	}
+	maximum_dimension(void) const;
+
+	bool
+	parse_property(const string&);
+
+	bool
+	parse_property(const option_value&);
+
+	ostream&
+	dump(ostream&) const;
 
 };	// end struct tile_properties
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PR_TILE_PINS
 #if 1
 struct pin_location {
 	int_type			x;
@@ -53,13 +89,23 @@ struct tile_pin {
 	int_type			index;
 	pin_location			loc;
 };
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+/**
+	Object type information.
+ */
 struct tile_type {
 	tile_properties			properties;
+#if PR_TILE_PINS
 	vector<tile_pin>		pins;
+#endif
 	// local blockage, routing information
 };	// end class tile_type
+#else
+typedef	tile_properties			tile_type;
+#endif
 
 //=============================================================================
 }	// end namespace PR

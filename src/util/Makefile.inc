@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.inc,v 1.47.4.1 2011/04/11 18:38:46 fang Exp $
+#	$Id: Makefile.inc,v 1.47.4.2 2011/04/15 00:52:07 fang Exp $
 
 # TODO: consider moving guile support down to subdirectory, like lang/guile
 #	vi: ft=automake
@@ -162,6 +162,7 @@ UTIL_HEADER_FILES = \
 	util/nullary_function_fwd.h \
 	util/nullary_function.h \
 	util/null_construct.h \
+	util/numeric/abs.h \
 	util/numeric/bigger_ints.h \
 	util/numeric/clz.h \
 	util/numeric/ctz.h \
@@ -175,9 +176,11 @@ UTIL_HEADER_FILES = \
 	util/numeric/popcount.h \
 	util/numeric/random.h \
 	util/numeric/sign_traits.h \
+	util/numeric/zero.h \
 	util/numeric/zerodiv_detect.h \
 	util/offset_array.h \
 	util/operators.h \
+	util/optparse_fwd.h \
 	util/optparse.h \
 	util/packed_array_fwd.h \
 	util/persistent_fwd.h \

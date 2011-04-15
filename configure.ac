@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.227 2011/03/30 20:59:22 fang Exp $
+#	$Id: configure.ac,v 1.227.2.1 2011/04/15 00:51:55 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -375,6 +375,7 @@ dnl <ctype.h>
 	[isascii isspace isdigit isalpha isalnum islower isupper \]
 	[iscntrl isgraph ishexnumber isideogram isnumber isphonogram \]
 	[isspecial isprint ispunct isrune isxdigit tolower toupper \]
+	[abs labs llabs fabs fabsf fabsl \]
 	[drand48 erand48 lrand48 nrand48 \]
 	[mrand48 jrand48 srand48 seed48 lcong48 \]
 	[system exec \]

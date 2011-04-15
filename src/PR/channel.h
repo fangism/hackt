@@ -1,21 +1,47 @@
 /**
 	\file "PR/channel.h"
-	$Id: channel.h,v 1.1.2.1 2011/04/11 18:38:34 fang Exp $
+	$Id: channel.h,v 1.1.2.2 2011/04/15 00:52:01 fang Exp $
  */
 #ifndef	__HAC_PR_CHANNEL_H__
 #define	__HAC_PR_CHANNEL_H__
 
 #include <iosfwd>
+#include <string>
 #include <vector>
 #include "PR/numerics.h"
 
 namespace PR {
 using std::vector;
 using std::ostream;
+using std::string;
 
+/**
+	Define to 1 to have channels represented as collection of wires.
+	No real need wire-details for the placer.  
+ */
+#define	PL_CHANNEL_WIRES		0
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PL_CHANNEL_WIRES
 struct wire {
 	// name of wires?
 };	// end struct wire
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	For multi-terminal nets.  
+ */
+struct net_properties {
+	// optimizing configurations:
+	// some of these choices affect only routing or placement
+	enum {
+		NET_MIN_SPANNING_TREE,
+		NET_MIN_STEINER_TREE,	// rectilinear Steiner tree
+		NET_MIN_DEPTH,		// single-source
+		NET_MESH		// redundant connections
+	};
+};	// end struct net_properties
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -23,14 +49,17 @@ struct wire {
 	Channels are by definition point-to-point connections
 		with single source, single destination, 
 		and are hence modeled as springs.  
-	TODO: support for turning, twisting, braiding, to reduce coupling cap.
+	TODO: support for turning, twisting, braiding, to reduce coupling 
+		cap. for the router.
  */
 struct channel_type {
+#if PL_CHANNEL_WIRES
 	/**
 		Collection of wires in channel, 
 		or may be single wire.
 	 */
 	vector<wire>			wires;
+#endif
 #if 0
 	/**
 		If true, channel/wire must have exactly one source and 
@@ -44,9 +73,24 @@ struct channel_type {
 		This is just a default value, actual channel instances
 		may be overridden.  
 	 */
-	real_type			default_spring_coeff;
+	real_type			spring_coeff;
+
+	channel_type();
+
+	~channel_type();
+
+	bool
+	parse_property(const string&);
+
+	bool
+	parse_property(const option_value&);
+
+	ostream&
+	dump(ostream&) const;
 
 };	// end class channel_type
+
+typedef	channel_type			channel_properties;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -66,19 +110,36 @@ struct net_instance {
 	TODO: alignment: favor vertical or horizontal direction.
  */
 struct channel_instance {
-	const channel_type*		type;
-	int_type			global_index;	// HAC global ID
-	int_type			source;
-	int_type			destination;
+//	const channel_type*		type;
+	channel_type			properties;
+//	int_type			global_index;	// HAC global ID
+	/**
+		Terminals are object indices.
+	 */
+	size_t				source;
+	size_t				destination;
+#if 0
 	/**
 		Important, timing-critical channels can be given
 		higher spring coefficients to shorten their distances.
 	 */
 	real_type			spring_coeff;
+#endif
 	/**
-		Force on spring.
+		Force on spring, computed and cached.
 	 */
 	real_type			tension;
+
+	channel_instance();
+
+	explicit
+	channel_instance(const channel_type&);
+
+	~channel_instance();
+
+	ostream&
+	dump(ostream&) const;
+
 };	// end struct channel instance
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

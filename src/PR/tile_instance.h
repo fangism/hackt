@@ -4,12 +4,11 @@
 #define	__HAC_PR_TILE_INSTANCE_H__
 
 #include <set>
-#include "PR/numerics.h"
+#include "PR/tile_type.h"
 #include "util/vector_ops.h"
 
 namespace PR {
 using std::set;
-struct tile_type;
 
 //=============================================================================
 /**
@@ -23,6 +22,7 @@ struct tile_instance {
 		Current position of object.
 	 */
 	position_type			position;
+	position_type			previous_position;
 	/**
 		Non-zero if simulating with object momentum.
 	 */
@@ -34,19 +34,18 @@ struct tile_instance {
 	acceleration_type		acceleration;
 
 	/**
-		Object type.
+		Object type, copied, not linked.
 	 */
-	const tile_type*		type;
+	tile_type			properties;
 	/**
-		Sparse 2d matrix of objects that are sufficiently close to 
+		Sparse graph of objects that are sufficiently close to 
 		one another.  This matrix is dynamic and is constantly updated 
 		with multidimensional sliding windows (intersection thereof).
 	 */
 	set<int_type>			proximity_cache;
 
-	real_type			mass;
-
 #if 0
+	// only matters for routing
 	/**
 		If true, cell is vertically flipped.
 	 */
@@ -67,6 +66,11 @@ public:
 	 */
 	explicit
 	tile_instance(const size_t d);
+
+	explicit
+	tile_instance(const tile_type&);
+
+	~tile_instance();
 
 	void
 	zero_force(void) {
@@ -89,6 +93,14 @@ public:
 		fixed = false;
 	}
 
+	void
+	place(const real_vector& v) {
+		position = v;
+		previous_position = v;
+	}
+
+	ostream&
+	dump(ostream&) const;
 
 };	// end struct tile_instance
 

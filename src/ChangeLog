@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-04-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-64-pr-01-03:
+	  Makefile.am: now install libfangutil.la and libguileutil.la
+		not sure why these were never installed before
+	  ipple: implemented basic setup commands to drive the
+		placement_engine.
+	  TODO: test cases and infrastructure, finish rudimentary engine
+
+
 2011-04-12	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-64-pr-01-02:

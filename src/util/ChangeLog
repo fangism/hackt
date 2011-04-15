@@ -1,5 +1,15 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.120.2.1 2011/04/11 18:38:45 fang Exp $
+#	$Id: ChangeLog,v 1.120.2.2 2011/04/15 00:52:06 fang Exp $
+
+2011-04-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-64-pr-01-03:
+	  util/optparse.h: split out util/optparse_fwd.h for type decl. only
+	  util/vector_ops.h: added new functions
+		apply, min_swap_element, min/max_clamp_elements
+	  util/numeric/abs.h: new wrapper for abs() absolute value
+	  util/numeric/zero.h: wrapper for type-based 0 value
+
 
 2011-04-11	David Fang		<fangism@users.sourceforge.net>
 

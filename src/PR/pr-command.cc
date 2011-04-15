@@ -2,7 +2,7 @@
 	\file "PR/pr-command.cc"
 	Command-line feature for PR simulator.
 	TODO: scheme interface
-	$Id: pr-command.cc,v 1.1.2.2 2011/04/13 00:40:21 fang Exp $
+	$Id: pr-command.cc,v 1.1.2.3 2011/04/15 00:52:03 fang Exp $
  */
 
 #define	ENABLE_STATIC_TRACE		0
@@ -19,7 +19,12 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "sim/command_registry.tcc"
 #include "sim/command_macros.tcc"
 #include "sim/command_common.tcc"
+#include "common/TODO.h"
 #include "util/optparse.h"
+#include "util/STL/container_iterator.h"
+#if PR_VARIABLE_DIMENSIONS
+#include "util/STL/valarray_iterator.h"
+#endif
 
 //=============================================================================
 // explicit instantiations
@@ -44,10 +49,13 @@ CommandCategory
 	builtin("builtin", "built-in commands"),
 	general("general", "general commands"),
 	debug("debug", "debugging internals"),
+	setup("setup", "constructing the constrained system"),
 	simulation("simulation", "simulation commands"),
-	objects("objects", "object creation/manipulation commands"),
+//	objects("objects", "object creation/manipulation commands"),
 	info("info", "information about objects"),
-	parameters("parameters", "physical parameters");
+//	physics("physics", "physical properties of the system"),
+//	parameters("parameters", "simulation control parameters"),
+	tracing("tracing", "checkpointing and tracing features");
 
 //=============================================================================
 // command-line completion features
@@ -372,6 +380,505 @@ This also resets the random number generator seed used with @command{seed48}.
 typedef	Reset<State>				Reset;
 PR_INSTANTIATE_TRIVIAL_COMMAND_CLASS(Reset, simulation)
 #endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+/***
+@texinfo cmd/save.texi
+@deffn Command save ckpt
+Saves the current state of the production rules and nodes into 
+a checkpoint file @var{ckpt}.  The checkpoint file can be loaded to 
+resume or replay a simulation later.  
+@end deffn
+@end texinfo
+***/
+typedef	Save<State>				Save;
+PR_INSTANTIATE_TRIVIAL_COMMAND_CLASS(Save, tracing)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/load.texi
+@deffn Command load ckpt
+Loads a @command{hacprsim} checkpoint file into the simulator state.
+Loading a checkpoint will not overwrite the current status of
+the auto-save file, the previous autosave command will keep effect.  
+Loading a checkpoint, however, will close any open tracing streams.  
+@end deffn
+@end texinfo
+***/
+typedef	Load<State>				Load;
+PR_INSTANTIATE_TRIVIAL_COMMAND_CLASS(Load, tracing)
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+/***
+@texinfo cmd/autosave.texi
+@deffn Command autosave [on|off [file]]
+Automatically save checkpoint upon end of simulation, 
+regardless of exit status.
+The @command{reset} command will turn off auto-save;
+to re-enable it with the same file name, just @kbd{autosave on}.
+The @option{-a} command line option is another way of enabling and specifying 
+the autosave checkpoint name.  
+@end deffn
+@end texinfo
+***/
+typedef	AutoSave<State>				AutoSave;
+PR_INSTANTIATE_TRIVIAL_COMMAND_CLASS(AutoSave, tracing)
+#endif
+
+//-----------------------------------------------------------------------------
+#if 0
+/***
+@texinfo cmd/trace.texi
+@deffn Command trace file
+Record events to tracefile @var{file}.  
+Overwrites @var{file} if it already exists.  
+A trace stream is automatically closed when the @command{initialize}
+or @command{reset} commands are invoked.  
+See the @option{-r} option for starting up the simulator
+with a newly opened trace stream.
+@end deffn
+@end texinfo
+***/
+typedef	Trace<State>				Trace;
+PR_INSTANTIATE_TRIVIAL_COMMAND_CLASS(Trace, tracing)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/trace-file.texi
+@deffn Command trace-file
+Print the name of the currently opened trace file.  
+@end deffn
+@end texinfo
+***/
+typedef	TraceFile<State>			TraceFile;
+PR_INSTANTIATE_TRIVIAL_COMMAND_CLASS(TraceFile, tracing)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/trace-close.texi
+@deffn Command trace-close
+Finish writing the currently opened trace file by flushing out the last epoch
+and concatenating the header with the stream body.  
+Trace is automatically closed when the simulator exits.  
+@end deffn
+@end texinfo
+***/
+typedef	TraceClose<State>			TraceClose;
+PR_INSTANTIATE_TRIVIAL_COMMAND_CLASS(TraceClose, tracing)
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+/***
+@texinfo cmd/trace-flush-notify.texi
+@deffn Command trace-flush-notify [0|1]
+Enable (1) or disable (0) notifications when trace epochs are flushed.  
+@end deffn
+@end texinfo
+***/
+typedef	TraceFlushNotify<State>			TraceFlushNotify;
+PR_INSTANTIATE_TRIVIAL_COMMAND_CLASS(TraceFlushNotify, tracing)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/trace-flush-interval.texi
+@deffn Command trace-flush-interval steps
+If @var{steps} is given, set the size of each epoch according to the
+number of events executed, otherwise report the current epoch size.  
+This regulates the granularity of saving traces in a space-time tradeoff.  
+@end deffn
+@end texinfo
+***/
+typedef	TraceFlushInterval<State>		TraceFlushInterval;
+PR_INSTANTIATE_TRIVIAL_COMMAND_CLASS(TraceFlushInterval, tracing)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/trace-dump.texi
+@deffn Command trace-dump file
+Produce textual dump of trace file contents in @var{file}.
+@end deffn
+@end texinfo
+***/
+typedef	TraceDump<State>			TraceDump;
+PR_INSTANTIATE_TRIVIAL_COMMAND_CLASS(TraceDump, tracing)
+#endif
+
+//=============================================================================
+// handy macros
+
+#define	REQUIRE_EXACT_ARGS(a, N)					\
+if (a.size() != N) {							\
+	usage(cerr << "usage: ");					\
+	return Command::SYNTAX;						\
+}
+
+#define	REQUIRE_MIN_ARGS(a, N)						\
+if (a.size() < N) {							\
+	usage(cerr << "usage: ");					\
+	return Command::SYNTAX;						\
+}
+
+#define	LEX_INDEX(i, ref)						\
+	if (string_to_num(ref, i)) {					\
+		cerr << "Error lexing object index." << endl;		\
+		return Command::BADARG;					\
+	}
+
+#define	LEX_VECTOR(v, ref)						\
+	if (parse_real_vector(ref, v)) {				\
+		cerr << "Error parsing vector." << endl;		\
+		return Command::BADARG;					\
+	}
+
+//=============================================================================
+// constraints commands
+
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Geometry, "geometry", setup,
+        "sets coordinate bounds of the system")
+
+int
+Geometry::main(State& s, const string_list& a) {
+	REQUIRE_EXACT_ARGS(a, 3)
+	string_list::const_iterator i(++a.begin());
+	const string& s1(*i++);
+	const string& s2(*i++);
+	real_vector v1, v2;
+	LEX_VECTOR(v1, s1)
+	LEX_VECTOR(v2, s2)
+	// minswap elements
+	util::vector_ops::min_swap_elements(v1, v2);
+	s.lower_bound = v1;
+	s.upper_bound = v2;
+	return Command::NORMAL;
+}
+
+void
+Geometry::usage(ostream& o) {
+	o << name << " <VEC1> <VEC2>" << endl;
+	o <<
+"Sets the rectangular bounds of the space using coordinates of VEC1 and VEC2."
+	<< endl;
+}
+
+//=============================================================================
+// setup commands
+
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ObjectType, "object-type", setup,
+        "declare an object type")
+
+int
+ObjectType::main(State& s, const string_list& a) {
+	string_list::const_iterator i(++a.begin()), e(a.end());
+	bool err = false;
+	tile_type t;
+	for ( ; i!=e; ++i) {
+		if (t.parse_property(*i)) { err = true; }
+	}
+	if (err) {
+		return Command::BADARG;
+	}
+	s.add_object_type(t);
+	return Command::NORMAL;
+}
+
+void
+ObjectType::usage(ostream& o) {
+	o << name << " [KEY=VALUE ...]" << endl;
+	o <<
+"Defines an object type template with a specified set of attributes.\n"
+"Unspecified attributes get assigned default values."
+	<< endl;
+}
+
+//-----------------------------------------------------------------------------
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(AddObject, "add-object", setup,
+        "adds an object (node)")
+
+int
+AddObject::main(State& s, const string_list& a) {
+	string_list::const_iterator i(++a.begin()), e(a.end());
+	bool err = false;
+	tile_instance t(s.space.dimensions);
+	for ( ; i!=e; ++i) {
+		option_value v(optparse(*i));
+		if (v.key == "type") {
+			if (v.values.empty()) {
+				cerr << "Error: expecting type index" << endl;
+				err = true;
+			}
+			size_t j;
+			if (string_to_num(v.values.front(), j)) {
+				cerr << "Error lexing type index" << endl;
+				err = true;
+			}
+			if (j >= s.object_types.size()) {
+				cerr << "Error: invalid type index" << endl;
+				err = true;
+			}
+			// inherit all attributes and properties
+			t.properties = s.object_types[j];
+		} else if (t.properties.parse_property(v)) { err = true; }
+		// else no error, continue
+	}
+	if (err) {
+		return Command::BADARG;
+	}
+	s.add_object(t);
+	return Command::NORMAL;
+}
+
+void
+AddObject::usage(ostream& o) {
+	o << name << " [KEY=VALUE ...]" << endl;
+	o <<
+"Creates an object with the specified attributes.\n"
+"If \'type=#' is specified as an attribute, inherit the properties from the \n"
+"referenced type."
+	<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(AddPin, "add-pin", setup,
+        "adds an immovable object")
+// same as AddObject with fixed set to true
+#endif
+
+//-----------------------------------------------------------------------------
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelType, "channel-type", setup,
+        "declare an channel type")
+
+int
+ChannelType::main(State& s, const string_list& a) {
+	string_list::const_iterator i(++a.begin()), e(a.end());
+	bool err = false;
+	channel_type t;
+	for ( ; i!=e; ++i) {
+		if (t.parse_property(*i)) { err = true; }
+	}
+	if (err) {
+		return Command::BADARG;
+	}
+	s.add_channel_type(t);
+	return Command::NORMAL;
+}
+
+void
+ChannelType::usage(ostream& o) {
+	o << name << " [KEY=VALUE ...]" << endl;
+	o <<
+"Defines a channel type template with a specified set of attributes."
+	<< endl;
+}
+
+//-----------------------------------------------------------------------------
+#if 0
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(NetType, "net-type", setup,
+        "declare an multi-terminal net type")
+#endif
+//-----------------------------------------------------------------------------
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(AddChannel, "add-channel", setup,
+        "adds a channel (spring) object")
+
+int
+AddChannel::main(State& s, const string_list& a) {
+	REQUIRE_MIN_ARGS(a, 3)
+	string_list::const_iterator i(++a.begin()), e(a.end());
+	channel_instance t;
+	LEX_INDEX(t.source, *i)
+	++i;
+	LEX_INDEX(t.destination, *i)
+	++i;
+	bool err = false;
+	for ( ; i!=e; ++i) {
+		option_value v(optparse(*i));
+		if (v.key == "type") {
+			if (v.values.empty()) {
+				cerr << "Error: expecting type index" << endl;
+				err = true;
+			}
+			size_t j;
+			if (string_to_num(v.values.front(), j)) {
+				cerr << "Error lexing type index" << endl;
+				err = true;
+			}
+			if (j >= s.channel_types.size()) {
+				cerr << "Error: invalid type index" << endl;
+				err = true;
+			}
+			// inherit all attributes and properties
+			t.properties = s.channel_types[j];
+		} else if (t.properties.parse_property(v)) { err = true; }
+		// else no error, continue
+	}
+	if (err) {
+		return Command::BADARG;
+	}
+	s.add_channel(t);
+	return Command::NORMAL;
+}
+
+void
+AddChannel::usage(ostream& o) {
+	o << name << " SOURCE DESTINATION [KEY=VALUE ...]" << endl;
+	o <<
+"Creates a channel with the specified attributes.\n"
+"If \'type=#' is specified as an attribute, inherit the properties from the \n"
+"referenced type."
+	<< endl;
+}
+
+//-----------------------------------------------------------------------------
+#if 0
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(AddNet, "add-net", setup,
+        "adds a multi-terminal net")
+#endif
+
+//=============================================================================
+// physics commands
+
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Parameter, "parameter", setup,
+        "sets/gets a physical parameter of the system")
+
+int
+Parameter::main(State& s, const string_list& a) {
+	string_list::const_iterator i(++a.begin()), e(a.end());
+	bool err = false;
+	for ( ; i!=e; ++i) {
+		if (s.parse_parameter(*i)) { err = true; }
+	}
+	return err ? Command::BADARG : Command::NORMAL;
+}
+
+// properties of placement_engine: temperature, friction
+void
+Parameter::usage(ostream& o) {
+	o << name << " [KEY[=VALUE] ...]" << endl;
+	o <<
+"Controls parameters for the simulation, including physics.\n";
+	placement_engine::list_parameters(o) << endl;
+}
+
+//=============================================================================
+// info commands
+
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(DumpState, "dump-state", setup,
+        "print current coordinates and state of objects")
+
+int
+DumpState::main(State& s, const string_list& a) {
+	REQUIRE_EXACT_ARGS(a, 1)
+	s.dump(cout);
+	return Command::NORMAL;
+}
+
+void
+DumpState::usage(ostream& o) {
+	o << name << endl;
+	o <<
+"Prints out the state of the entire simulated system."
+	<< endl;
+}
+
+//=============================================================================
+// simulation commands
+
+// could just call this 'place'
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Position, "position", simulation,
+        "manually place an object")
+
+int
+Position::main(State& s, const string_list& a) {
+	REQUIRE_EXACT_ARGS(a, 3)
+	string_list::const_iterator j(++a.begin());
+	size_t i;
+	LEX_INDEX(i, *j)
+	real_vector v;
+	++j;
+	LEX_VECTOR(v, *j);
+	if (s.place_object(i, v)) {
+		return Command::BADARG;
+	}
+	return Command::NORMAL;
+}
+
+void
+Position::usage(ostream& o) {
+	o << name << " OBJECT <POSITION>" << endl;
+o <<
+"Manually relocates an object to the specified position.\n"
+"NOTE: This does not fix the location of the object (see \'pin\' command)."
+	<< endl;
+}
+
+//-----------------------------------------------------------------------------
+#if 0
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Throw, "throw", simulation,
+        "impart a impulse velocity on an object")
+#endif
+
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Pin, "pin", simulation,
+        "fix location of object to present or specified location")
+
+int
+Pin::main(State& s, const string_list& a) {
+	REQUIRE_EXACT_ARGS(a, 2)
+	size_t i;
+	LEX_INDEX(i, a.back())
+	if (s.pin_object(i)) {
+		return Command::BADARG;
+	}
+	return Command::NORMAL;
+}
+
+void
+Pin::usage(ostream& o) {
+//	o << name << " OBJECT [<VEC>]" << endl;
+	o << name << " OBJECT" << endl;
+	o << brief << endl;
+}
+
+//-----------------------------------------------------------------------------
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnPin, "unpin", simulation,
+        "allow object to move freely")
+
+int
+UnPin::main(State& s, const string_list& a) {
+	REQUIRE_EXACT_ARGS(a, 2)
+	size_t i;
+	LEX_INDEX(i, a.back())
+	if (s.unpin_object(i)) {
+		return Command::BADARG;
+	}
+	return Command::NORMAL;
+}
+
+void
+UnPin::usage(ostream& o) {
+	o << name << " OBJECT" << endl;
+	o << brief << endl;
+}
+
+//-----------------------------------------------------------------------------
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Scatter, "scatter", simulation,
+        "randomize location of all un-pinned objects")
+
+int
+Scatter::main(State& s, const string_list& a) {
+	REQUIRE_EXACT_ARGS(a, 1)
+	s.scatter();
+	return Command::NORMAL;
+}
+
+void
+Scatter::usage(ostream& o) {
+	o << name << endl;
+	o << brief << endl;
+}
 
 //=============================================================================
 }	// end namespace PR

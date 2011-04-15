@@ -4,13 +4,20 @@
 	Also contains some time macros and inline functions.  
 	TODO: use mpz_t for really long integers.  
 	TODO: use mpfr for really long integers.  
-	$Id: time.h,v 1.6 2010/06/14 00:22:32 fang Exp $
+	$Id: time.h,v 1.6.8.1 2011/04/15 00:52:04 fang Exp $
  */
 
 #ifndef	__HAC_SIM_TIME_H__
 #define	__HAC_SIM_TIME_H__
 
 #include <limits>
+
+#define	USE_DELAY_POLICY_ZERO		1
+
+// TODO: replace ::zero with util::numeric::zero<T>()
+#if !USE_DELAY_POLICY_ZERO
+#include "util/numeric/zero.h"
+#endif
 
 namespace HAC {
 namespace SIM {

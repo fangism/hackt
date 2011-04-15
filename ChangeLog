@@ -1,5 +1,11 @@
 "ChangeLog"
-#	$Id: ChangeLog,v 1.255 2011/04/01 01:20:34 fang Exp $
+#	$Id: ChangeLog,v 1.255.2.1 2011/04/15 00:51:55 fang Exp $
+
+2011-04-12	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-64-pr-01-03:
+	  configure.ac: check for abs(), fabs() family of cmath functions.
+
 
 2011-03-31	David Fang	<fangism@users.sourceforge.net>
 

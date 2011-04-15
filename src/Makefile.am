@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.251.2.3 2011/04/11 18:38:32 fang Exp $
+#	$Id: Makefile.am,v 1.251.2.4 2011/04/15 00:51:58 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -97,7 +97,7 @@ cast_test_static_LDADD = $(cast_test_LDADD)
 # convenience libraries
 # want to install libhackt.la next... but causes undefined symbols...
 noinst_LTLIBRARIES = libhackt.la \
-	$(UTILLIBS) libhacktexec.la libhacktinstref.la \
+	libhacktexec.la libhacktinstref.la \
 	libhacktcommon.la $(FUNLIBS)
 
 # don't actually want to build these, but have the rules for them
@@ -109,6 +109,7 @@ EXTRA_LTLIBRARIES += \
 # Wish automake would automatically order these properly.
 # Just topological sort libraries based on LIBADD deps.
 pkglib_LTLIBRARIES = \
+	$(UTILLIBS) \
 	libhacktast.la \
 	libhacktparsers.la \
 	libhacktlib.la \
@@ -1078,16 +1079,17 @@ NET_H_FILES = \
 	net/common.h
 
 PR_CC_FILES = \
+	PR/channel.cc \
 	PR/numerics.cc \
 	PR/pcanvas.cc \
-	PR/placement_engine.cc
+	PR/placement_engine.cc \
+	PR/tile_instance.cc
 
 PR_H_FILES = $(PR_CC_FILES:.cc=.h) \
 	PR/obstacle.h \
 	PR/pr-command.h \
 	PR/rcanvas.h \
-	PR/tile_type.h \
-	PR/tile_instance.h
+	PR/tile_type.h
 
 # libhacktexec sources
 MAIN_EXEC_CC_FILES = \

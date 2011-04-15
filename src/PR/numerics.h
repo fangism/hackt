@@ -1,7 +1,7 @@
 /**
 	\file "PR/numerics.h"
 	Defines some global types.
-	$Id: numerics.h,v 1.1.2.1 2011/04/11 18:38:36 fang Exp $
+	$Id: numerics.h,v 1.1.2.2 2011/04/15 00:52:01 fang Exp $
  */
 
 #ifndef	__HAC_PR_NUMERICS_H__
@@ -11,36 +11,65 @@
 	Define to 1 to allow variable number of dimensions of space.
 	If 0, fix to 3D.
 	For now: fix to 3D.
+	TODO: investigate compiler __vector types.
+	http://gcc.gnu.org/onlinedocs/gcc/Vector-Extensions.html
  */
-#define	VARIABLE_DIMENSIONS			0
+#define	PR_VARIABLE_DIMENSIONS			0
 
-#if VARIABLE_DIMENSIONS
+#include <iosfwd>
+#include <string>
+#if PR_VARIABLE_DIMENSIONS
 #include <valarray>
 #else
 #include "util/array.h"
 #endif
 #include "util/size_t.h"
+#include "util/optparse_fwd.h"
 
 namespace PR {
+using std::string;
+using util::option_value;
+using std::ostream;
 
 typedef	ssize_t		int_type;
 typedef	float		real_type;
 typedef	float		time_type;
 
-#if VARIABLE_DIMENSIONS
+#if PR_VARIABLE_DIMENSIONS
 typedef	valarray<int_type>		int_vector;
 typedef	valarray<real_type>		real_vector;
+#else
+#if defined(HAVE_COMPILER_VECTOR_EXTENSIONS)
+enum {	PR_DIMENSIONS = 4 };
+typedef	int_type v4si __attribute__ ((vector_size (PR_DIMENSIONS*sizeof(int_type))));
+typedef	real_type v4f __attribute__ ((vector_size (PR_DIMENSIONS*sizeof(real_type))));
+typedef	v4si			int_vector;
+typedef	v4f			real_vector;
 #else
 enum {	PR_DIMENSIONS = 3 };
 using util::array;
 typedef	array<int_type, PR_DIMENSIONS>	int_vector;
 typedef	array<real_type, PR_DIMENSIONS>	real_vector;
 #endif
+#endif
 
 typedef	real_vector		position_type;
 typedef	real_vector		velocity_type;
 typedef	real_vector		acceleration_type;
 typedef	real_vector		force_type;
+
+extern
+ostream&
+operator << (ostream&, const real_vector&);
+
+/// overrides the default implementation in util
+extern
+option_value
+optparse(const string&);
+
+extern
+int
+parse_real_vector(const string&, real_vector&);
 
 #if 0
 extern
@@ -70,6 +99,14 @@ normsq(const real_vector&);
 extern
 real_type
 norm(const real_vector&);
+
+/**
+	Sum of delta-x, delta-y, ... which reflects orthogonal wire length.
+	rectilinear a.k.a. Manhattan distance
+ */
+extern
+real_type
+rectilinear_distance(const real_vector&, const real_vector&);
 
 /**
 	\returns the vector between two nearest points.
