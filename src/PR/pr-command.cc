@@ -2,7 +2,7 @@
 	\file "PR/pr-command.cc"
 	Command-line feature for PR simulator.
 	TODO: scheme interface
-	$Id: pr-command.cc,v 1.1.2.3 2011/04/15 00:52:03 fang Exp $
+	$Id: pr-command.cc,v 1.1.2.4 2011/04/16 01:51:54 fang Exp $
  */
 
 #define	ENABLE_STATIC_TRACE		0
@@ -382,7 +382,6 @@ PR_INSTANTIATE_TRIVIAL_COMMAND_CLASS(Reset, simulation)
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
 /***
 @texinfo cmd/save.texi
 @deffn Command save ckpt
@@ -408,7 +407,6 @@ Loading a checkpoint, however, will close any open tracing streams.
 ***/
 typedef	Load<State>				Load;
 PR_INSTANTIATE_TRIVIAL_COMMAND_CLASS(Load, tracing)
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
@@ -602,7 +600,8 @@ int
 AddObject::main(State& s, const string_list& a) {
 	string_list::const_iterator i(++a.begin()), e(a.end());
 	bool err = false;
-	tile_instance t(s.space.dimensions);
+	tile_instance t;
+//	tile_instance t(s.space.dimensions);
 	for ( ; i!=e; ++i) {
 		option_value v(optparse(*i));
 		if (v.key == "type") {
@@ -642,11 +641,26 @@ AddObject::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(AddPin, "add-pin", setup,
         "adds an immovable object")
-// same as AddObject with fixed set to true
-#endif
+
+int
+AddPin::main(State& s, const string_list& a) {
+	const int ret = AddObject::main(s, a);
+	if (ret) {
+		return ret;
+	}
+	s.pin_object(s.num_objects() -1);	// never fails
+	return Command::NORMAL;
+}
+
+void
+AddPin::usage(ostream& o) {
+	o <<
+"same as 'add-object', also fixes the position of the new object"
+	<< endl;
+	
+}
 
 //-----------------------------------------------------------------------------
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelType, "channel-type", setup,
@@ -766,7 +780,7 @@ Parameter::usage(ostream& o) {
 //=============================================================================
 // info commands
 
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(DumpState, "dump-state", setup,
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(DumpState, "dump-state", info,
         "print current coordinates and state of objects")
 
 int
@@ -788,11 +802,11 @@ DumpState::usage(ostream& o) {
 // simulation commands
 
 // could just call this 'place'
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(Position, "position", simulation,
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Place, "place", simulation,
         "manually place an object")
 
 int
-Position::main(State& s, const string_list& a) {
+Place::main(State& s, const string_list& a) {
 	REQUIRE_EXACT_ARGS(a, 3)
 	string_list::const_iterator j(++a.begin());
 	size_t i;
@@ -807,7 +821,7 @@ Position::main(State& s, const string_list& a) {
 }
 
 void
-Position::usage(ostream& o) {
+Place::usage(ostream& o) {
 	o << name << " OBJECT <POSITION>" << endl;
 o <<
 "Manually relocates an object to the specified position.\n"

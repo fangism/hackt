@@ -1,6 +1,6 @@
 /**
 	\file "PR/numerics.cc"
-	$Id: numerics.cc,v 1.1.2.2 2011/04/15 00:52:01 fang Exp $
+	$Id: numerics.cc,v 1.1.2.3 2011/04/16 01:51:52 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -17,11 +17,43 @@
 #include "util/tokenize.h"
 #include "util/string.tcc"
 #include "util/optparse.h"
+#include "util/IO_utils.tcc"
 #include "util/STL/container_iterator.h"
 #if PR_VARIABLE_DIMENSIONS
 #include "util/STL/valarray_iterator.h"
 #endif
 #include "util/stacktrace.h"
+
+namespace util {
+using std::ostream;
+using std::istream;
+using PR::real_vector;
+
+/**
+	Fixed size array for now.
+	In general, could use fixed size array overloads for IO.
+ */
+void
+write_value(ostream& o, const real_vector& v) {
+#if PR_VARIABLE_DIMENSIONS
+#error	"Unhandled case."
+#else
+	write_value(o, v[0]);
+	write_value(o, v[1]);
+	write_value(o, v[2]);
+//	write_value(o, v[3]);
+#endif
+}
+
+void
+read_value(istream& i, real_vector& v) {
+	read_value(i, v[0]);
+	read_value(i, v[1]);
+	read_value(i, v[2]);
+//	read_value(i, v[3]);
+}
+
+}	// end namespace util
 
 namespace PR {
 #include "util/using_ostream.h"

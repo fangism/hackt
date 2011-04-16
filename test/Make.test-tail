@@ -3,7 +3,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.101 2010/09/21 00:18:45 fang Exp $
+#	$Id: Make.test-tail,v 1.101.4.1 2011/04/16 01:52:04 fang Exp $
 
 # for test that depend on pre-install plug-ins
 # don't forget to pass -dlopen to assist searching for pre-install dependencies
@@ -28,6 +28,7 @@ HACKT_CHPSIM_RAW_EXE = $(top_builddir)/src/hacchpsim
 HACKT_CHPSIM_EXE = $(LIBTOOL_EXEC) -dlopen $(top_builddir)/lib/stdchpfn.la $$dlopen_extra $(HACKT_CHPSIM_RAW_EXE)
 # because chpsim loads plug-ins for function libraries
 HACKNET_EXE = $(top_builddir)/src/hacknet
+HACKT_IPPLE_EXE = $(top_builddir)/src/ipple
 
 # guile-based and plug-in tests will need a modified environment, 
 # see Make.test-guile

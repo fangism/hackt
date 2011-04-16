@@ -61,11 +61,7 @@ struct tile_instance {
 	bool				fixed;
 
 public:
-	/**
-		\param d number of dimensions.
-	 */
-	explicit
-	tile_instance(const size_t d);
+	tile_instance();
 
 	explicit
 	tile_instance(const tile_type&);
@@ -101,6 +97,16 @@ public:
 
 	ostream&
 	dump(ostream&) const;
+
+	bool
+	save_checkpoint(ostream&) const;
+
+	bool
+	load_checkpoint(istream&);
+
+	static
+	ostream&
+	dump_checkpoint(ostream&, istream&);
 
 };	// end struct tile_instance
 

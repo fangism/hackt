@@ -1,0 +1,348 @@
+# "Make.test-ipl"
+#	vi: ft=automake
+#	$Id: Make.test-ipl,v 1.1.2.1 2011/04/16 01:52:04 fang Exp $
+# Test infrastructure for the interactive placer 'ipple'.
+# This is just a portion of the Make.test-tail template included by
+# Makefile.am's in the test/ directory subtree.  
+# This depends on variables defined in Make.test-tail, and thus, 
+# should not be included by itself.  
+
+AM_IPPLE_FLAGS = -I$(srcdir)
+
+HACKT_IPPLE_SUFFIXES = \
+	.iplrc .iplrc-out .iplrc-out-filter .iplrc-diff \
+	.iplrcfail-out .iplrcfail-out-filter .iplrcfail-diff \
+	.iplckpt .iplckpt-dump .iplckpt-indump .iplckpt-outdump .iplckpt-diff \
+	.iplckpt-dupe .iplckpt-dupe-dump
+
+HACKT_IPPLE_TEST_SUFFIXES = .ipltest .iplfailtest .iplckpttest
+SUFFIXES += $(HACKT_IPPLE_SUFFIXES) $(HACKT_IPPLE_TEST_SUFFIXES)
+BOGUS_SUFFIX_TARGETS += $(HACKT_IPPLE_SUFFIXES)
+
+HACKT_IPPLE_CLEAN_IGNORE_PATTERNS = \
+	"*.ipltest" \
+	"*.iplrc-out" \
+	"*.iplrc-out-filter" \
+	"*.iplrc-diff" \
+	"*.iplfailtest" \
+	"*.iplrcfail-out" \
+	"*.iplrcfail-out-filter" \
+	"*.iplrcfail-diff" \
+	"*.iplckpt" \
+	"*.iplckpttest" \
+	"*.iplckpt-dump" \
+	"*.iplckpt-dupe" \
+	"*.iplckpt-dupe-dump" \
+	"*.iplckpt-outdump" \
+	"*.iplckpt-indump" \
+	"*.iplckpt-diff"
+
+AUTO_IGNORE += $(HACKT_IPPLE_CLEAN_IGNORE_PATTERNS)
+
+EXTRACE_IPPLE_FLAGS_PIPE = $(GREP) "@ipple-flags@" | $(HEAD) -n1 | \
+	$(SED) 's/^.*@ipple-flags@[ ]*//g'
+
+IPLRC_TEST_SCRIPT = \
+	flags=`$(CAT) $< | $(EXTRACE_IPPLE_FLAGS_PIPE)` ; \
+	ckpt=`$(ECHO) $@ | $(SED) 's/\.ipl.*$$/.iplckpt/g'` ; \
+	$(RM) $$ckpt ; \
+	cmd="$(HACKT_IPPLE_EXE) -b -a $$ckpt $(AM_IPPLE_FLAGS) $$flags" ; \
+	$(ECHO) "ckpt: $$cmd < $<" ; \
+	$$cmd < $< > $@ 2>&1 ; \
+	test -f $$ckpt || $(ECHO) "Warning: $$ckpt not produced." ; \
+	$(TOUCH) $@
+
+# fail test will not attempt to checkpoint
+IPLRC_FAIL_TEST_SCRIPT = \
+	flags=`$(CAT) $< | $(EXTRACE_IPPLE_FLAGS_PIPE)` ; \
+	cmd="$(HACKT_IPPLE_EXE) -b $(AM_IPPLE_FLAGS) $$flags" ; \
+	$(ECHO) "$$cmd < $<" ; \
+	$$cmd < $< > $@ 2>&1
+
+.iplrc.iplrc-out:
+	@$(IPLRC_TEST_SCRIPT)
+
+# expect failure, ignore error
+.iplrc.iplrcfail-out:
+	-@$(IPLRC_FAIL_TEST_SCRIPT)
+
+# this reuses the same dependency for checkpoints
+iplrc-out.autodepend: Makefile
+	@$(ECHO) "Generating dependencies $@" ; \
+	$(RM) $@ ; \
+	{ list='$(HACKT_IPPLERC_TEST_SCRIPTS_PASSES)' ; \
+	exts='iplrc-out' ; \
+	test -z "$$list" || \
+	for d in $$list ; do \
+	  src=$(srcdir)/$$d.iplrc ; \
+	  deps=`$(CAT) "$$src" | $(EXTRACT_DEPS_PIPE)` ; \
+	  for e in $$exts ; do \
+	    target=$$d.$$e ; \
+	    $(PRINTF) "$$target " ; \
+	  done ; \
+	  $(ECHO) ": $$deps" ; \
+	  antideps=`$(CAT) "$$src" | $(EXTRACT_ANTIDEPS_PIPE)` ; \
+	  if test "$$antideps" ; then \
+	    $(ECHO) "$$antideps: $$d.iplrc-out" ; \
+	    $(ECHO) "	@:" ; \
+	    $(ECHO) "CLEANFILES += $$antideps" ; \
+	    $(ECHO) "AUTO_IGNORE += $$antideps" ; \
+	  fi ; \
+	done ;} > $@ ; \
+	$(TOUCH) $@
+
+iplrcfail-out.autodepend: Makefile
+	@$(ECHO) "Generating dependencies $@" ; \
+	$(RM) $@ ; \
+	{ list='$(HACKT_IPPLERC_TEST_SCRIPTS_FAILURES)' ; \
+	test -z "$$list" || \
+	for d in $$list ; do \
+	  src=$(srcdir)/$$d.iplrc ; \
+	  target=$$d.iplrcfail-out ; \
+	  deps=`$(CAT) "$$src" | $(EXTRACT_DEPS_PIPE)` ; \
+	  antideps=`$(CAT) "$$src" | $(EXTRACT_ANTIDEPS_PIPE)` ; \
+	  $(ECHO) "$$target: $$deps" ; \
+	  test -z "$$antideps" || $(ECHO) "$$antideps: $$target" ; \
+	done ;} > $@ ; \
+	$(TOUCH) $@
+
+-include iplrc-out.autodepend
+-include iplrcfail-out.autodepend
+
+# semi-hackish way to conditionally filter random timing
+IPLRC_TEST_FILTER_SCRIPT = \
+	$(SED) -e '/DELETE FROM HERE/d' -e '/DELETE TO HERE/,$$d' $< > $@ ; \
+	$(ECHO_FILTERED)
+
+.iplrc-out.iplrc-out-filter:
+	@$(IPLRC_TEST_FILTER_SCRIPT)
+
+.iplrcfail-out.iplrcfail-out-filter:
+	$(CP) $< $@
+#	$(SED) '/^parser stacks:/,$$d' $< > $@
+
+HACKT_IPPLERC_TEST_DIFF = $(DIFF) -bu
+
+if VERBOSE_CHECK
+ECHO_IPLRC_DIFF_COMMAND = $(ECHO) "$(HACKT_IPPLERC_TEST_DIFF) $$expect $<"
+else
+ECHO_IPLRC_DIFF_COMMAND = :
+endif
+
+.iplrc-out-filter.iplrc-diff:
+	@stderr=`$(ECHO) $@ | $(SED) 's/\.iplrc-diff$$/.iplrc-expect/g'` ; \
+	expect=$(srcdir)/$$stderr ; \
+	$(RM) $@ ; \
+	if test -f "$$expect" ; then \
+	  $(ECHO_IPLRC_DIFF_COMMAND) ; \
+	  $(DIFF) -bu "$$expect" $< > $@ 2>&1 ; \
+	  if test -s $@ ; then \
+	    $(ECHO) "$@ is non-empty!" ; \
+	  fi ; \
+	else $(ECHO) "Missing $$expect." | $(TEE) $@ ; \
+	fi ; \
+	$(TOUCH) $@
+
+.iplrcfail-out-filter.iplrcfail-diff:
+	@stderr=`$(ECHO) $@ | $(SED) 's/\.iplrcfail-diff$$/.iplrc-expect/g'` ; \
+	expect=$(srcdir)/$$stderr ; \
+	$(RM) $@ ; \
+	if test -f "$$expect" ; then \
+	  $(ECHO_IPLRC_DIFF_COMMAND) ; \
+	  $(DIFF) -bu "$$expect" $< > $@ 2>&1 ; \
+	  if test -s $@ ; then \
+	    $(ECHO) "$@ is non-empty!" ; \
+	  fi ; \
+	else $(ECHO) "Missing $$expect." | $(TEE) $@ ; \
+	fi ; \
+	$(TOUCH) $@
+
+.iplrc-diff.ipltest:
+	@$(DEFAULT_DIFF_TEST_SCRIPT)
+
+.iplrcfail-diff.iplfailtest:
+	@$(DEFAULT_DIFF_TEST_SCRIPT)
+
+.ipltest:
+	@$(DUMMY_TEST_SCRIPT)
+
+.iplfailtest:
+	@$(DUMMY_TEST_SCRIPT)
+
+ipltest.autodepend: Makefile
+	@$(ECHO) "Generating dependencies $@" ; \
+	$(ECHO) "$(HACKT_IPPLERC_TEST_SCRIPTS_PASSES)" | \
+	  $(SPACES_TO_NEWLINE) | $(SORT) -u | \
+	  $(AWK) '/.+/ {print $$1 ".iplrc-diff: $$(srcdir)/" $$1 ".iplrc-expect"; }' > $@ ; \
+	$(TOUCH) $@
+
+iplfailtest.autodepend: Makefile
+	@$(ECHO) "Generating dependencies $@" ; \
+	$(ECHO) "$(HACKT_IPPLERC_TEST_SCRIPTS_FAILURES)" | \
+	  $(SPACES_TO_NEWLINE) | $(SORT) -u | \
+	  $(AWK) '/.+/ {print $$1 ".iplrcfail-diff: $$(srcdir)/" $$1 ".iplrc-expect"; }' > $@ ; \
+	$(TOUCH) $@
+
+-include ipltest.autodepend
+-include iplfailtest.autodepend
+
+NO_OP_SCRIPT = test -f $< && test -f $@
+
+.iplrc-out.iplckpt-outdump:
+	@$(SED) '/DELETE FROM HERE/,/DELETE TO HERE/d' $< > $@
+
+# no-op: simultaneously produced target
+.iplrc-out.iplckpt:
+	@$(NO_OP_SCRIPT)
+
+IPPLE_CHECKPOINT_DUMP_SCRIPT = $(HACKT_IPPLE_EXE) -d $< > $@
+
+.iplckpt.iplckpt-dump:
+	$(IPPLE_CHECKPOINT_DUMP_SCRIPT)
+
+.iplckpt.iplckpt-indump:
+	@rc=$(srcdir)/`$(ECHO) $< | $(SED) 's/\.iplckpt$$/.iplrc/g'` ; \
+	flags=`$(CAT) "$$rc" | $(EXTRACE_IPPLE_FLAGS_PIPE)` ; \
+	ckpt=`$(ECHO) $@ | $(SED) 's/-indump$$/-dupe/g'` ; \
+	cmd="$(HACKT_IPPLE_EXE) -b $(AM_IPPLE_FLAGS) $$flags" ; \
+	$(ECHO) "load: $$cmd" ; \
+	{ $(ECHO) "load $<" ; $(ECHO) "save $$ckpt" ; } | \
+	  $$cmd > $@ 2>&1
+
+# no-op: simultaneously produced target
+.iplckpt-indump.iplckpt-dupe:
+	@$(NO_OP_SCRIPT)
+
+.iplckpt-dupe.iplckpt-dupe-dump:
+	$(IPPLE_CHECKPOINT_DUMP_SCRIPT)
+
+if VERBOSE_CHECK
+ECHO_IPLCKPT_DIFF_COMMAND = $(ECHO) "$(DIFF) -u $$expect $<"
+else
+ECHO_IPLCKPT_DIFF_COMMAND = :
+endif
+
+.iplckpt-outdump.iplckpt-diff:
+	@expect=`$(ECHO) $@ | $(SED) 's/\.iplckpt-diff$$/.iplckpt-indump/g'` ; \
+	$(RM) $@ ; \
+	if test -f "$$expect" ; then \
+	  $(ECHO_IPLCKPT_DIFF_COMMAND) ; \
+	  $(DIFF) -u "$$expect" $< > $@ 2>&1 ; \
+	  ca=`$(ECHO) $@ | $(SED) 's/-diff$$//g'` ; \
+	  cb=`$(ECHO) $@ | $(SED) 's/-diff$$/-dupe/g'` ; \
+	  if test -s $@ ; then \
+	    $(ECHO) "$@ is non-empty!" ; \
+	  elif $(DIFF) -q "$$ca" "$$cb" ; then : ; \
+	  else $(MAKE) "$$ca"-dump "$$cb"-dump && \
+	    $(DIFF) -u "$$ca"-dump "$$cb"-dump > $@ ; \
+	    $(ECHO) "$@ is non-empty! (checkpoint binaries differ)" ; \
+	  fi ; \
+	else $(ECHO) "Missing $$expect." | $(TEE) $@ ; \
+	fi ; \
+	$(TOUCH) $@
+
+.iplckpt-diff.iplckpttest:
+	@$(DEFAULT_DIFF_TEST_SCRIPT)
+
+.iplckpttest:
+	@$(DUMMY_TEST_SCRIPT)
+
+iplckpttest.autodepend: Makefile
+	@$(ECHO) "Generating dependencies $@" ; \
+	$(ECHO) "$(HACKT_IPPLE_CKPT_TEST_SCRIPTS_BASES)" | \
+	  $(SPACES_TO_NEWLINE) | $(SORT) -u | \
+	  $(AWK) '/.+/ {print $$1 ".iplckpt-diff: " $$1 ".iplckpt-indump"; }' > $@ ; \
+	$(TOUCH) $@
+
+-include iplckpttest.autodepend
+
+
+AUTO_DEPENDS += \
+	iplrc-out.autodepend \
+	iplrcfail-out.autodepend \
+	ipltest.autodepend \
+	iplfailtest.autodepend \
+	iplckpttest.autodepend
+
+
+BOGUS_TESTS += .ipltest .iplfailtest .iplckpttest
+
+CHECK_SUMMARIES += iplrcdiffs iplrcfaildiffs iplckptdiffs
+
+
+iplrcdiffs: force
+	-$(CAT) *.iplrc-diff > $@
+
+iplrcfaildiffs: force
+	-$(CAT) *.iplrcfail-diff > $@
+
+iplckptdiffs: force
+	-$(CAT) *.iplckpt-diff > $@
+
+HACKT_IPPLERC_TEST_SCRIPTS_BASES = \
+	$(HACKT_IPPLERC_TEST_SCRIPTS_PASSES) \
+	$(HACKT_IPPLERC_TEST_SCRIPTS_FAILURES)
+
+srcdir_EXTRA_DIST += \
+	$(HACKT_IPPLERC_TEST_SUBJECTS:=.hac) \
+	$(HACKT_IPPLERC_TEST_SCRIPTS_BASES:=.iplrc) \
+	$(HACKT_IPPLERC_TEST_SCRIPTS_BASES:=.iplrc-expect)
+
+
+if CHECK_TESTS
+TESTS += \
+	$(HACKT_IPPLERC_TEST_SCRIPTS_PASSES:=.ipltest) \
+	$(HACKT_IPPLERC_TEST_SCRIPTS_FAILURES:=.iplfailtest) \
+	$(HACKT_IPPLE_CKPT_TEST_SCRIPTS_BASES:=.iplckpttest)
+endif
+
+# this should really only reference the root products of ipple,
+# derivative files (.iplckpt) could be omitted
+HACKT_IPPLE_PRODUCTS = \
+	$(HACKT_IPPLERC_TEST_SCRIPTS_PASSES:=.iplrc-out) \
+	$(HACKT_IPPLERC_TEST_SCRIPTS_PASSES:=.iplckpt) \
+	$(HACKT_IPPLERC_TEST_SCRIPTS_FAILURES:=.iplrcfail-out) \
+	$(HACKT_IPPLE_CKPT_TEST_SCRIPTS_BASES:=.iplckpt) \
+	$(HACKT_IPPLE_CKPT_TEST_SCRIPTS_BASES:=.iplckpt-outdump)
+
+$(HACKT_IPPLE_PRODUCTS): $(HACKT_IPPLE_EXE)
+
+build-check-local: \
+	$(HACKT_IPPLERC_TEST_SCRIPTS_PASSES:=.iplckpt) \
+	$(HACKT_IPPLERC_TEST_SCRIPTS_PASSES:=.iplrc-out) \
+	$(HACKT_IPPLERC_TEST_SCRIPTS_PASSES:=.iplrc-out-filter) \
+	$(HACKT_IPPLERC_TEST_SCRIPTS_PASSES:=.iplrc-diff) \
+	$(HACKT_IPPLERC_TEST_SCRIPTS_FAILURES:=.iplrcfail-out) \
+	$(HACKT_IPPLERC_TEST_SCRIPTS_FAILURES:=.iplrcfail-out-filter) \
+	$(HACKT_IPPLERC_TEST_SCRIPTS_FAILURES:=.iplrcfail-diff) \
+	$(HACKT_IPPLE_CKPT_TEST_SCRIPTS_BASES:=.iplckpt) \
+	$(HACKT_IPPLE_CKPT_TEST_SCRIPTS_BASES:=.iplckpt-outdump) \
+	$(HACKT_IPPLE_CKPT_TEST_SCRIPTS_BASES:=.iplckpt-dupe) \
+	$(HACKT_IPPLE_CKPT_TEST_SCRIPTS_BASES:=.iplckpt-indump) \
+	$(HACKT_IPPLE_CKPT_TEST_SCRIPTS_BASES:=.iplckpt-diff)
+
+
+echo-iplrc-passes: force
+	@$(ECHO) $(HACKT_IPPLERC_TEST_SCRIPTS_PASSES)
+
+echo-iplrc-failures: force
+	@$(ECHO) $(HACKT_IPPLERC_TEST_SCRIPTS_FAILURES)
+
+echo-iplrc-tests: force
+	@$(ECHO) $(HACKT_IPPLERC_TEST_SCRIPTS_BASES)
+
+echo-iplckpt-tests: force
+	@$(ECHO) $(HACKT_IPPLE_CKPT_TEST_SCRIPTS_BASES)
+
+
+clean-ipltests:
+	patternlist='$(HACKT_IPPLE_CLEAN_IGNORE_PATTERNS)' ; \
+	for p in $$patternlist ; do \
+	  pp=`$(ECHO) $$p | $(SED) 's/"//g'` ; \
+	  $(RM_PATTERN) "$$pp" ; \
+	done
+
+clean-local: clean-ipltests
+
+.PHONY: clean-ipltests
+

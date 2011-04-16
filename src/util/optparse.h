@@ -4,7 +4,7 @@
 	Simply tokenizes into string sets, which is then handed off
 	elsewhere for processing.
 	Options can come from file or command-line argv.
-	$Id: optparse.h,v 1.5.8.1 2011/04/15 00:52:07 fang Exp $
+	$Id: optparse.h,v 1.5.8.2 2011/04/16 01:51:59 fang Exp $
  */
 
 #ifndef	__UTIL_OPTPARSE_H__
@@ -215,6 +215,40 @@ struct options_map_impl {
 	help(ostream&, const bool t = true, const bool d = true) const;
 
 };	// end class options_map
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Sets a value of a structure member according to first value
+	associated with option.  
+	Such functions should be re-usable in util library.  
+	\param T is value type, can be deduced from arguments!  
+	\param opt key=values option value association.  
+	\param mem is a pointer-to-member of type T.
+ */
+template <class O, typename T>
+// static
+inline
+bool
+set_option_member_single_numeric_value(const option_value& opt,
+		O& n_opt,
+		T O::*mem) {
+	// simply forwards to a default reasonable implementation
+	return options_map_impl<O>::set_member_single_numeric_value(
+			opt, n_opt, mem);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class O>
+// static
+inline
+bool
+set_option_member_single_string(const option_value& opt,
+                O& n_opt,
+		string O::*mem) {
+	// simply forwards to a default reasonable implementation
+	return options_map_impl<O>::set_member_single_string(
+			opt, n_opt, mem);
+}
 
 //=============================================================================
 }	// end namespace util

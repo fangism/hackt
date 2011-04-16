@@ -1,6 +1,6 @@
 # "Make.test-prsim"
 #	vi: ft=automake
-#	$Id: Make.test-prsim,v 1.21 2010/04/05 23:59:49 fang Exp $
+#	$Id: Make.test-prsim,v 1.21.8.1 2011/04/16 01:52:04 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -17,7 +17,7 @@ HACKT_PRSIM_SUFFIXES = \
 	.prsimckpt-indump .prsimckpt-outdump .prsimckpt-diff \
 	.prsimckpt-dupe .prsimckpt-dupe-dump \
 	.prsimckpt-O1 .prsimckpt-O1-err \
-	.prsimckpt-01-dump .prsimopt-diff \
+	.prsimckpt-O1-dump .prsimopt-diff \
 	.prsimtrace .prsimtrace-O1 \
 	.prsimtrace-dump .prsimtrace-O1-dump .prsimtrace-diff \
 	.prsimtrace-dump-filter .prsimtrace-O1-dump-filter

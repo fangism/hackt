@@ -1,7 +1,7 @@
 /**
 	\file "PR/pcanvas.h"
 	Medium on which placement is solved with physics.
-	$Id: pcanvas.h,v 1.1.2.3 2011/04/15 00:52:02 fang Exp $
+	$Id: pcanvas.h,v 1.1.2.4 2011/04/16 01:51:53 fang Exp $
  */
 
 #ifndef	__HAC_PR_PCANVAS_H__
@@ -9,6 +9,12 @@
 
 #include "PR/channel.h"
 #include "PR/tile_instance.h"
+
+/**
+	Define to 1 to enable multi-terminal net physics.
+	Don't really need this yet.
+ */
+#define	PR_MULTINETS				0
 
 namespace PR {
 /**
@@ -23,7 +29,9 @@ struct pcanvas {
 
 	vector<tile_instance>		objects;
 	vector<channel_instance>	springs;
+#if PR_MULTINETS
 	vector<net_instance>		nets;
+#endif
 
 	// fixed ports
 
@@ -46,6 +54,16 @@ public:
 
 	ostream&
 	dump(ostream&) const;
+
+	bool
+	save_checkpoint(ostream&) const;
+
+	bool
+	load_checkpoint(istream&);
+
+	static
+	ostream&
+	dump_checkpoint(ostream&, istream&);
 
 };	// end class pcanvas
 

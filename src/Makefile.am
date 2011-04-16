@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.251.2.4 2011/04/15 00:51:58 fang Exp $
+#	$Id: Makefile.am,v 1.251.2.5 2011/04/16 01:51:50 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -1089,7 +1089,8 @@ PR_H_FILES = $(PR_CC_FILES:.cc=.h) \
 	PR/obstacle.h \
 	PR/pr-command.h \
 	PR/rcanvas.h \
-	PR/tile_type.h
+	PR/tile_type.h \
+	PR/pr_utils.h
 
 # libhacktexec sources
 MAIN_EXEC_CC_FILES = \

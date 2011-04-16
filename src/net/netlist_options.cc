@@ -1,6 +1,6 @@
 /**
 	\file "net/netlist_options.cc"
-	$Id: netlist_options.cc,v 1.24 2011/04/03 22:31:21 fang Exp $
+	$Id: netlist_options.cc,v 1.24.2.1 2011/04/16 01:51:56 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -415,37 +415,6 @@ static	opt_map_type&	netlist_option_map(options_map_wrapper.options_map);
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Sets a value of a structure member according to first value
-	associated with option.  
-	Such functions should be re-usable in util library.  
-	\param T is value type, can be deduced from arguments!  
-	\param opt key=values option value association.  
-	\param mem is a pointer-to-member of type T.
- */
-template <typename T>
-static
-bool
-__set_member_single_numeric_value(const option_value& opt, 
-		netlist_options& n_opt, 
-		T netlist_options::*mem) {
-	// simply forwards to a default reasonable implementation
-	return options_map_impl_type::set_member_single_numeric_value(
-			opt, n_opt, mem);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-static
-bool
-__set_member_single_string(const option_value& opt, 
-		netlist_options& n_opt, 
-		string netlist_options::*mem) {
-	// simply forwards to a default reasonable implementation
-	return options_map_impl_type::set_member_single_string(
-			opt, n_opt, mem);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
 	Inspired by "util/iterator_more.h".
 	Could avoid writing this by using compose and bind...
  */
@@ -598,31 +567,36 @@ __set_style_member(const option_value& opt,
 	TODO: pass mem as a template parameter instead of function parameter.
  */
 template <typename T>
+static
 bool
 __set_member_default(const option_value& opt, 
 		netlist_options& n_opt, T netlist_options::*mem);
 
 // specialize for bool
+static
 bool
 __set_member_default(const option_value& opt, 
 		netlist_options& n_opt, bool netlist_options::*mem) {
-	return __set_member_single_numeric_value(opt, n_opt, mem);
+	return util::set_option_member_single_numeric_value(opt, n_opt, mem);
 }
 
 // specialize for real_type
+static
 bool
 __set_member_default(const option_value& opt, 
 		netlist_options& n_opt, real_type netlist_options::*mem) {
-	return __set_member_single_numeric_value(opt, n_opt, mem);
+	return util::set_option_member_single_numeric_value(opt, n_opt, mem);
 }
 
 // specialize for string
+static
 bool
 __set_member_default(const option_value& opt, 
 		netlist_options& n_opt, string netlist_options::*mem) {
-	return __set_member_single_string(opt, n_opt, mem);
+	return util::set_option_member_single_string(opt, n_opt, mem);
 }
 
+static
 bool
 __set_member_default(const option_value& opt, 
 		netlist_options& n_opt,
@@ -630,6 +604,7 @@ __set_member_default(const option_value& opt,
 	return __set_policy_member(opt, n_opt, mem);
 }
 
+static
 bool
 __set_member_default(const option_value& opt, 
 		netlist_options& n_opt,
@@ -637,6 +612,7 @@ __set_member_default(const option_value& opt,
 	return __set_style_member(opt, n_opt, mem);
 }
 
+static
 bool
 __set_member_default(const option_value& opt, 
 		netlist_options& n_opt,
@@ -647,6 +623,7 @@ __set_member_default(const option_value& opt,
 /**
 	Take option list, convert to option set.  
  */
+static
 bool
 __set_misc_option(const option_value& opt, 
 		netlist_options& n_opt) {
@@ -665,26 +642,29 @@ __str_type__("string"),
 __strs_type__("strings");
 
 template <typename T>
-const string&
+static const string&
 __string_type_of(T netlist_options::*);
 
-const string&
+static const string&
 __string_type_of(bool netlist_options::*) { return __bool_type__; }
-const string&
+#if 0
+static const string&
 __string_type_of(size_t netlist_options::*) { return __int_type__; }
-const string&
+#endif
+static const string&
 __string_type_of(real_type netlist_options::*) { return __real_type__; }
-const string&
+static const string&
 __string_type_of(string netlist_options::*) { return __str_type__; }
-const string&
+static const string&
 __string_type_of(option_error_policy netlist_options::*) { return __str_type__; }
-const string&
+static const string&
 __string_type_of(netlist_options::style_enum netlist_options::*) { return __str_type__; }
-const string&
+static const string&
 __string_type_of(string_set_type netlist_options::*) { return __strs_type__; }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <typename T>
+static
 ostream&
 __print_member_default(ostream& o, const netlist_options& n_opt,
 		T netlist_options::*mem) {
@@ -697,6 +677,7 @@ __print_member_default(ostream& o, const netlist_options& n_opt,
 	case-collisions.
  */
 // specialization
+static
 ostream&
 __print_member_sequence(ostream& o, const netlist_options& n_opt,
 		string_set_type netlist_options::*mem) {
@@ -719,6 +700,7 @@ __print_member_sequence(ostream& o, const netlist_options& n_opt,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <typename T>
+static
 ostream&
 __print_member_sequence(ostream& o, const netlist_options& n_opt,
 		T netlist_options::*mem) {
@@ -727,6 +709,7 @@ __print_member_sequence(ostream& o, const netlist_options& n_opt,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+static
 ostream&
 __print_misc_option(ostream& o, const netlist_options& n_opt, 
 		const string& k) {
@@ -747,6 +730,7 @@ __print_misc_option(ostream& o, const netlist_options& n_opt,
 	Specialization for error policy enumeration.
  */
 template <>
+static
 ostream&
 __print_member_default(ostream& o, const netlist_options& n_opt,
 		option_error_policy netlist_options::*mem) {
@@ -764,6 +748,7 @@ switch (n_opt.*mem) {
 	Specialization for style enumeration.
  */
 template <>
+static
 ostream&
 __print_member_default(ostream& o, const netlist_options& n_opt,
 		netlist_options::style_enum netlist_options::*mem) {

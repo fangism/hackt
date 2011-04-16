@@ -1,5 +1,12 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.120.2.2 2011/04/15 00:52:06 fang Exp $
+#	$Id: ChangeLog,v 1.120.2.3 2011/04/16 01:51:59 fang Exp $
+
+2011-04-15	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-64-pr-01-04:
+	  util/optparse.h: inherited some re-usable functions.
+	  util/numeric/random.{h,cc}: added write_seed48 and read_seed48.
+
 
 2011-04-14	David Fang		<fangism@users.sourceforge.net>
 

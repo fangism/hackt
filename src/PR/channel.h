@@ -1,6 +1,6 @@
 /**
 	\file "PR/channel.h"
-	$Id: channel.h,v 1.1.2.2 2011/04/15 00:52:01 fang Exp $
+	$Id: channel.h,v 1.1.2.3 2011/04/16 01:51:52 fang Exp $
  */
 #ifndef	__HAC_PR_CHANNEL_H__
 #define	__HAC_PR_CHANNEL_H__
@@ -13,6 +13,7 @@
 namespace PR {
 using std::vector;
 using std::ostream;
+using std::istream;
 using std::string;
 
 /**
@@ -88,6 +89,16 @@ struct channel_type {
 	ostream&
 	dump(ostream&) const;
 
+	bool
+	save_checkpoint(ostream&) const;
+
+	bool
+	load_checkpoint(istream&);
+
+	static
+	ostream&
+	dump_checkpoint(ostream&, istream&);
+
 };	// end class channel_type
 
 typedef	channel_type			channel_properties;
@@ -139,6 +150,16 @@ struct channel_instance {
 
 	ostream&
 	dump(ostream&) const;
+
+	bool
+	save_checkpoint(ostream&) const;
+
+	bool
+	load_checkpoint(istream&);
+
+	static
+	ostream&
+	dump_checkpoint(ostream&, istream&);
 
 };	// end struct channel instance
 

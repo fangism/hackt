@@ -2,15 +2,24 @@
 	\file "PR/pcanvas.cc"
  */
 
+#include <iostream>
 #include "PR/pcanvas.h"
 #include "PR/tile_type.h"
+#include "PR/pr_utils.h"
 #include "util/macros.h"
 
 namespace PR {
+#include "util/using_ostream.h"
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//=============================================================================
+// class pcanvas method definitions
+
 pcanvas::pcanvas(const size_t d) :
-		dimensions(d), objects(), springs(), nets() {
+		dimensions(d), objects(), springs()
+#if PR_MULTINETS
+		, nets()
+#endif
+		{
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -33,5 +42,34 @@ pcanvas::auto_proximity_radius(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+pcanvas::save_checkpoint(ostream& o) const {
+	write_value(o, dimensions);
+	save_array(o, objects);
+	save_array(o, springs);
+#if PR_MULTINETS
+#error	"FINISH ME!"
+#endif
+	return !o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+pcanvas::load_checkpoint(istream& i) {
+	size_t d;
+	read_value(i, d);
+	if (d != dimensions) {
+		cerr << "Error: number of dimensions mismatch!" << endl;
+		return true;
+	}
+	load_array(i, objects);
+	load_array(i, springs);
+#if PR_MULTINETS
+#error	"FINISH ME!"
+#endif
+	return !i;
+}
+
+//=============================================================================
 }	// end namespace PR
 

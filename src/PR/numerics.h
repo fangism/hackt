@@ -1,7 +1,8 @@
 /**
 	\file "PR/numerics.h"
-	Defines some global types.
-	$Id: numerics.h,v 1.1.2.2 2011/04/15 00:52:01 fang Exp $
+	Defines some global types and operations on vectors.
+	Some of this could eventually be migrated to util/vector_ops.h
+	$Id: numerics.h,v 1.1.2.3 2011/04/16 01:51:53 fang Exp $
  */
 
 #ifndef	__HAC_PR_NUMERICS_H__
@@ -25,6 +26,7 @@
 #endif
 #include "util/size_t.h"
 #include "util/optparse_fwd.h"
+#include "util/IO_utils_fwd.h"
 
 namespace PR {
 using std::string;
@@ -40,7 +42,7 @@ typedef	valarray<int_type>		int_vector;
 typedef	valarray<real_type>		real_vector;
 #else
 #if defined(HAVE_COMPILER_VECTOR_EXTENSIONS)
-enum {	PR_DIMENSIONS = 4 };
+enum {	PR_DIMENSIONS = 4 };	// smallest power of 2 >= 3
 typedef	int_type v4si __attribute__ ((vector_size (PR_DIMENSIONS*sizeof(int_type))));
 typedef	real_type v4f __attribute__ ((vector_size (PR_DIMENSIONS*sizeof(real_type))));
 typedef	v4si			int_vector;
@@ -120,6 +122,18 @@ minimum_distance_between_ellipsoids(
 	const real_vector&, const real_vector&);
 
 }	// end namespace PR
+
+// specializations for vector
+namespace util {
+extern
+void
+write_value(std::ostream&, const PR::real_vector&);
+
+extern
+void
+read_value(std::istream&, PR::real_vector&);
+
+}	// end namespace util
 
 #endif	// __HAC_PR_NUMERICS_H__
 

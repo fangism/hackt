@@ -1,21 +1,24 @@
 /**
 	\file "PR/placement_engine.cc"
-	$Id: placement_engine.cc,v 1.1.2.2 2011/04/15 00:52:02 fang Exp $
+	$Id: placement_engine.cc,v 1.1.2.3 2011/04/16 01:51:53 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
 
 #include <iostream>
+#include <fstream>
 #include <algorithm>
 #include <functional>
 #include "PR/placement_engine.h"
 #include "PR/tile_type.h"
+#include "PR/pr_utils.h"
 #include "common/TODO.h"
 #include "util/vector_ops.h"
 #include "util/array.tcc"
 #include "util/indent.h"
 #include "util/string.h"
 #include "util/numeric/random.h"
+#include "util/IO_utils.tcc"
 #include "util/stacktrace.h"
 
 namespace PR {
@@ -23,7 +26,9 @@ using std::for_each;
 using util::auto_indent;
 using util::strings::string_to_num;
 using util::numeric::rand48;
-using namespace util::vector_ops;		// for overloads
+using util::write_value;
+using util::read_value;
+using namespace util::vector_ops;		// for many operator overloads
 #include "util/using_ostream.h"
 
 //=============================================================================
@@ -41,19 +46,33 @@ placement_engine::placement_engine(const size_t d) :
 		temperature(0.0),	// brrrr-r-r-r!!!!
 		viscous_damping(0.1),	// gooey
 		proximity_radius(0.0),	// keep-away!
-		space(d),
 		lower_bound(__default_lower_bound),
 		upper_bound(__default_upper_bound),
-		ifstreams(),
 		time_step(1e-3),
 		pos_tol(1e-3),
 		vel_tol(1e-3),
-		accel_tol(1e-3) {
+		accel_tol(1e-3),
+		space(d),
+		ifstreams(),
+		autosave_name() {
 	initialize_default_types();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 placement_engine::~placement_engine() {
+if (autosave_name.size()) {
+	std::ofstream o(autosave_name.c_str());
+	if (o) {
+	try {
+		save_checkpoint(o);
+	} catch (...) {
+		cerr << "Fatal error during checkpoint save." << endl;
+	}
+	} else {
+		cerr << "Error opening \'" << autosave_name <<
+			"\' for saving checkpoint." << endl;
+	}
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -168,8 +187,13 @@ placement_engine::list_parameters(ostream& o) {
 ostream&
 placement_engine::dump_parameters(ostream& o) const {
 	o << "parameters:\n";
+	o << "  bounds=" << lower_bound << ','  << upper_bound << endl;
 	o << "  damping=" << viscous_damping << endl;
 	o << "  temperature=" << temperature << endl;
+	o << "  time_step=" << time_step << endl;
+	o << "  position_tolerance=" << pos_tol << endl;
+	o << "  velocity_tolerance=" << vel_tol << endl;
+	o << "  acceleration_tolerance=" << vel_tol << endl;
 	return o;
 }
 
@@ -398,6 +422,100 @@ placement_engine::dump(ostream& o) const {
 	dump_channels(o);
 	return o;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// identifier string for checkpoints
+static
+const string magic_string("hackt-ipple-ckpt");
+
+// bump this whenever file format is updated
+static
+const size_t	checkpoint_version = 0;
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Saves entire session to be restored later (checkpoint).
+ */
+bool
+placement_engine::save_checkpoint(ostream& o) const {
+	write_value(o, magic_string);
+	write_value(o, checkpoint_version);
+	util::numeric::write_seed48(o);
+// write global parameters
+	write_value(o, temperature);
+	write_value(o, viscous_damping);
+	write_value(o, proximity_radius);
+	write_value(o, lower_bound);
+	write_value(o, upper_bound);
+	write_value(o, time_step);
+	write_value(o, pos_tol);
+	write_value(o, vel_tol);
+	write_value(o, accel_tol);
+// write object types
+	save_array(o, object_types);
+// write channel types
+	save_array(o, channel_types);
+// write objects and channels
+	space.save_checkpoint(o);
+
+	write_value(o, magic_string);
+	return !o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+placement_engine::load_checkpoint(istream& i) {
+	static const char bad_ckpt[] =
+		"ERROR: not a valid ipple checkpoint file.";
+try {
+	string header_check;
+	read_value(i, header_check);
+	if (header_check != magic_string) {
+		cerr << bad_ckpt << endl;
+		return true;
+	}
+	size_t version_check;
+	read_value(i, version_check);
+	if (version_check != checkpoint_version) {
+		cerr << "Expecting checkpoint compatibility version " <<
+			checkpoint_version << ", but got " <<
+			version_check << "." << endl;
+		return true;
+	}
+} catch (...) {
+	cerr << bad_ckpt << endl;
+	return true;
+}
+	util::numeric::read_seed48(i);
+// read global parameters
+	read_value(i, temperature);
+	read_value(i, viscous_damping);
+	read_value(i, proximity_radius);
+	read_value(i, lower_bound);
+	read_value(i, upper_bound);
+	read_value(i, time_step);
+	read_value(i, pos_tol);
+	read_value(i, vel_tol);
+	read_value(i, accel_tol);
+// read object types
+	load_array(i, object_types);
+// read channel types
+	load_array(i, channel_types);
+// read objects and channels
+	space.load_checkpoint(i);
+
+{
+	string temp;
+	read_value(i, temp);
+	if (temp != magic_string) {
+		cerr << "ERROR: detected checkpoint misalignment!" << endl;
+		return true;
+	}
+}
+	return !i;
+}
+
+// TODO: dump_checkpoint
 
 //=============================================================================
 }	// end namespace PR

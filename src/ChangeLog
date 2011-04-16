@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-04-15	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-64-pr-01-04:
+	  ipple: added preliminary support for session save/restoring,
+		implementation taken from prsim checkpointing.  Untested.
+	  PR/pr-command.cc: added add-pin command to create pinned object.
+	  net/netlist_options.cc: moved some code to util/optparse.h,
+		declare local functions and variables as static.
+
+
 2011-04-14	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-64-pr-01-03:

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.79 2011/02/25 23:19:38 fang Exp $
+	$Id: State-prsim.cc,v 1.79.4.1 2011/04/16 01:51:57 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -6414,19 +6414,7 @@ State::save_checkpoint(ostream& o) const {
 	check_event_queue();		// internal structure consistency
 	write_value(o, magic_string);
 	write_value(o, checkpoint_version);
-{
-	// save the random seed
-	ushort seed[3] = {0, 0, 0};
-	const ushort* old_seed = seed48(seed);	// libc
-	seed[0] = old_seed[0];
-	seed[1] = old_seed[1];
-	seed[2] = old_seed[2];
-	// put it back
-	seed48(seed);
-	write_value(o, seed[0]);
-	write_value(o, seed[1]);
-	write_value(o, seed[2]);
-}
+	util::numeric::write_seed48(o);
 {
 	// node_pool
 	write_value(o, node_pool.size());
@@ -6545,14 +6533,9 @@ try {
 } catch (...) {
 	cerr << bad_ckpt << endl;
 	return true;
-}{
-	// restore random seed
-	ushort seed[3];
-	read_value(i, seed[0]);
-	read_value(i, seed[1]);
-	read_value(i, seed[2]);
-	seed48(seed);
-}{
+}
+	util::numeric::read_seed48(i);
+{
 	// node_pool
 	size_t s;
 	read_value(i, s);

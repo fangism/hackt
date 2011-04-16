@@ -1,7 +1,7 @@
 /**
 	\file "PR/tile_type.h"
 	Object types.
-	$Id: tile_type.h,v 1.1.2.2 2011/04/15 00:52:04 fang Exp $
+	$Id: tile_type.h,v 1.1.2.3 2011/04/16 01:51:55 fang Exp $
  */
 
 #ifndef	__HAC_PR_TILE_TYPE_H__
@@ -31,6 +31,7 @@ namespace PR {
 // using std::vector;
 using std::string;
 using std::ostream;
+using std::istream;
 
 //=============================================================================
 /**
@@ -69,6 +70,16 @@ struct tile_properties {
 
 	ostream&
 	dump(ostream&) const;
+
+	bool
+	save_checkpoint(ostream&) const;
+
+	bool
+	load_checkpoint(istream&);
+
+	static
+	ostream&
+	dump_checkpoint(ostream&, istream&);
 
 };	// end struct tile_properties
 

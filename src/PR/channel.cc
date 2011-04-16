@@ -1,15 +1,18 @@
 /**
 	\file "PR/channel.cc"
-	$Id: channel.cc,v 1.1.2.1 2011/04/15 00:52:00 fang Exp $
+	$Id: channel.cc,v 1.1.2.2 2011/04/16 01:51:51 fang Exp $
  */
 
 #include <iostream>
 #include "PR/channel.h"
 #include "util/string.h"
+#include "util/IO_utils.tcc"
 
 namespace PR {
 #include "util/using_ostream.h"
 using util::strings::string_to_num;
+using util::write_value;
+using util::read_value;
 
 //=============================================================================
 // class channel_type method definitions
@@ -65,6 +68,20 @@ channel_type::dump(ostream& o) const {
 	return o;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+channel_type::save_checkpoint(ostream& o) const {
+	write_value(o, spring_coeff);
+	return !o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+channel_type::load_checkpoint(istream& i) {
+	read_value(i, spring_coeff);
+	return !i;
+}
+
 //=============================================================================
 // class channel_instance method definitions
 
@@ -87,6 +104,26 @@ channel_instance::dump(ostream& o) const {
 	o << "tension=" << tension << ' ';
 	properties.dump(o << '[') << ']';
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+channel_instance::save_checkpoint(ostream& o) const {
+	write_value(o, source);
+	write_value(o, destination);
+	// tension should be recalculated
+	properties.save_checkpoint(o);
+	return !o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+channel_instance::load_checkpoint(istream& i) {
+	read_value(i, source);
+	read_value(i, destination);
+	// tension should be recalculated
+	properties.load_checkpoint(i);
+	return !i;
 }
 
 //=============================================================================

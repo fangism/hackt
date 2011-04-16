@@ -2,7 +2,7 @@
 	\file "util/numeric/random.h"
 	Template specializations for random numbers, 
 	wrapper interface to stdlib *rand48 functions.  
-	$Id: random.h,v 1.4 2011/01/13 22:19:10 fang Exp $
+	$Id: random.h,v 1.4.4.1 2011/04/16 01:52:01 fang Exp $
  */
 
 #ifndef	__UTIL_NUMERIC_RANDOM_H__
@@ -10,6 +10,7 @@
 
 #include "util/libc.h"
 #include <cstdlib>
+#include <iosfwd>
 
 namespace util {
 namespace numeric {
@@ -132,6 +133,15 @@ struct rand48<bool> {
 	}
 
 };	// end struct rand48
+
+//=============================================================================
+extern
+void
+write_seed48(std::ostream&);
+
+extern
+void
+read_seed48(std::istream&);
 
 //=============================================================================
 }	// end namespace numeric

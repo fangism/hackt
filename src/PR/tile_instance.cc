@@ -1,6 +1,6 @@
 /**
 	\file "PR/tile_instance.cc"
-	$Id: tile_instance.cc,v 1.1.2.1 2011/04/15 00:52:03 fang Exp $
+	$Id: tile_instance.cc,v 1.1.2.2 2011/04/16 01:51:54 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -10,11 +10,14 @@
 #include "util/vector_ops.h"
 #include "util/optparse.h"
 // #include "util/optparse.tcc"
+#include "util/IO_utils.tcc"
 #include "util/stacktrace.h"
 
 namespace PR {
 // using PR::optparse;
 using util::option_value;
+using util::read_value;
+using util::write_value;
 #include "util/using_ostream.h"
 
 //=============================================================================
@@ -87,13 +90,33 @@ tile_properties::dump(ostream& o) const {
 	return o;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+tile_properties::save_checkpoint(ostream& o) const {
+	write_value(o, size);
+#if PR_TILE_MASS
+	write_value(o, mass);
+#endif
+	return !o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+tile_properties::load_checkpoint(istream& i) {
+	read_value(i, size);
+#if PR_TILE_MASS
+	read_value(i, mass);
+#endif
+	return !i;
+}
+
 //=============================================================================
 // class tile_instance method definitions
 
 static
 const real_type __zero[] = {0.0, 0.0, 0.0};
 
-tile_instance::tile_instance(const size_t) :
+tile_instance::tile_instance() :
 		position(__zero), previous_position(__zero), 
 		velocity(__zero), acceleration(__zero), 
 		properties(),
@@ -126,6 +149,32 @@ tile_instance::dump(ostream& o) const {
 	}
 	properties.dump(o << " [") << ']';
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+tile_instance::save_checkpoint(ostream& o) const {
+	write_value(o, position);
+	write_value(o, previous_position);
+	write_value(o, velocity);
+	write_value(o, acceleration);
+	properties.save_checkpoint(o);
+	write_value(o, fixed);
+	// proximity cache should be regenerated
+	return !o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+tile_instance::load_checkpoint(istream& i) {
+	read_value(i, position);
+	read_value(i, previous_position);
+	read_value(i, velocity);
+	read_value(i, acceleration);
+	properties.load_checkpoint(i);
+	read_value(i, fixed);
+	// proximity cache should be regenerated
+	return !i;
 }
 
 //=============================================================================

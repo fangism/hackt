@@ -1,7 +1,7 @@
 /**
 	\file "PR/placement_engine.h"
 	Physics simulator.
-	$Id: placement_engine.h,v 1.1.2.3 2011/04/15 00:52:02 fang Exp $
+	$Id: placement_engine.h,v 1.1.2.4 2011/04/16 01:51:53 fang Exp $
  */
 
 #ifndef	__HAC_PR_PLACEMENT_ENGINE_H__
@@ -61,23 +61,11 @@ public:
 	 */
 //	bool				hard_collisions;
 	/**
-		The objects and coordinates to solve in.
-	 */
-	pcanvas				space;
-	/**
 		Bounds for positions.  
 	 */
 	position_type			lower_bound;
 	position_type			upper_bound;
-protected:
-	/**
-		Only needed to satisfy SIM::state_base interface.
-		Interpreter state for the input stream.
-		This is not checkpointed.  
-	 */
-	ifstream_manager		ifstreams;
 
-public:
 	// these parameters may be publicly tweaked at any time
 
 	/// time step
@@ -88,6 +76,20 @@ public:
 	real_type			vel_tol;
 	/// acceleration-change tolerance for determining convergence
 	real_type			accel_tol;
+	/**
+		The objects and coordinates to solve in.
+	 */
+	pcanvas				space;
+protected:
+	/**
+		Only needed to satisfy SIM::state_base interface.
+		Interpreter state for the input stream.
+		This is not checkpointed.  
+	 */
+	ifstream_manager		ifstreams;
+
+	string				autosave_name;
+
 public:
 
 	explicit
@@ -123,6 +125,11 @@ public:
 	void
 	scatter(void);
 
+	size_t
+	num_objects(void) const {
+		return space.objects.size();
+	}
+
 	bool
 	pin_object(const size_t);
 
@@ -144,6 +151,9 @@ public:
 
 	ostream&
 	dump_parameters(ostream&) const;
+
+	void
+	autosave(const string& s) { autosave_name = s; }
 
 	void
 	iterate(void);

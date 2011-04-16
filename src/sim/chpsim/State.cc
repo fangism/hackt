@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.26 2011/02/04 02:23:37 fang Exp $
+	$Id: State.cc,v 1.26.4.1 2011/04/16 01:51:57 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -1852,19 +1852,7 @@ State::autosave(const bool b, const string& n) {
  */
 bool
 State::save_checkpoint(ostream& o) const {
-{
-	// save the random seed
-	ushort seed[3] = {0, 0, 0};
-	const ushort* old_seed = seed48(seed);	// libc
-	seed[0] = old_seed[0];
-	seed[1] = old_seed[1];
-	seed[2] = old_seed[2];
-	// put it back
-	seed48(seed);
-	write_value(o, seed[0]);
-	write_value(o, seed[1]);
-	write_value(o, seed[2]);
-}
+	util::numeric::write_seed48(o);
 // save some flags?
 	// save the state of all instances
 	if (instances.save_checkpoint(o)) {
@@ -1918,14 +1906,7 @@ State::save_checkpoint(ostream& o) const {
  */
 bool
 State::load_checkpoint(istream& i) {
-{
-	// restore random seed
-	ushort seed[3];
-	read_value(i, seed[0]);
-	read_value(i, seed[1]);
-	read_value(i, seed[2]);
-	seed48(seed);
-}
+	util::numeric::read_seed48(i);
 	// restore data/channel/variable state
 	if (instances.load_checkpoint(i)) {
 		return true;

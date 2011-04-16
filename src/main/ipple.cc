@@ -2,7 +2,7 @@
 	\file "main/ipple.cc"
 	Main program for Fang's Interactive Physics-driven Placement Engine
 	Could be named "fipple"?
-	$Id: ipple.cc,v 1.1.2.2 2011/04/13 00:40:23 fang Exp $
+	$Id: ipple.cc,v 1.1.2.3 2011/04/16 01:51:55 fang Exp $
  */
 
 #include <iostream>
@@ -15,6 +15,7 @@
 #include "util/using_ostream.h"
 using std::cin;
 using PR::CommandRegistry;
+using std::string;
 
 //=============================================================================
 namespace PR {
@@ -22,12 +23,16 @@ struct ipple_options {
 	bool				help_only;
 	bool				command_help_only;
 	bool				interactive;
+	bool				autosave;
 	size_t				dimensions;
+	string				autosave_name;
 	// output
 	ipple_options() : help_only(false), 
 		command_help_only(false),
 		interactive(true),
-		dimensions(PR_DIMENSIONS) { }
+		autosave(false),
+		dimensions(PR_DIMENSIONS),
+		autosave_name("autosave.iplckpt") { }
 };	// end struct ipple_options
 }	// end namespace PR
 
@@ -68,6 +73,7 @@ ipple::usage(void) {
 	cerr << "usage: " << name << " [options]" << endl;
 	cerr << "An Interactive Physics-driven Placement Engine" << endl;
 	cerr << "options:\n"
+"\t-a <file> : auto-save session upon exit\n"
 "\t-b : batch-mode, non-interactive (promptless)\n"
 "\t-d <int> : set number of dimensions of space (default: "
 		<< PR::PR_DIMENSIONS << ")\n"
@@ -82,10 +88,14 @@ ipple::usage(void) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 int
 ipple::parse_command_options(const int argc, char* argv[], options& o) {
-	static const char optstring[] = "+bd:hHiv";
+	static const char optstring[] = "+a:bd:hHiv";
 	int c;
 while ((c = getopt(argc, argv, optstring)) != -1) {
 switch (c) {
+	case 'a':
+		o.autosave = true;
+		o.autosave_name = optarg;
+		break;
 	case 'b':
 		o.interactive = false;
 		break;
@@ -144,6 +154,9 @@ ipple::main(const int argc, char* argv[]) {
 	// output file name?
 
 	PR::placement_engine P(opt.dimensions);	// fixed: 3D
+	if (opt.autosave) {
+		P.autosave(opt.autosave_name);
+	}
 	CommandRegistry::prompt = "fipple> ";
 	const CommandRegistry::readline_init __rl__;
 	const int ret = CommandRegistry::interpret(P, cin, opt.interactive);
