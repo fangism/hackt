@@ -1,5 +1,13 @@
 "ChangeLog"
-#	$Id: ChangeLog,v 1.255.2.1 2011/04/15 00:51:55 fang Exp $
+#	$Id: ChangeLog,v 1.255.2.2 2011/04/19 22:31:14 fang Exp $
+
+2011-04-19	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-64-pr-01-06:
+	  configure.ac: check for sincos family of match functions,
+		which compute both sin() and cos() at the same time
+		for efficiency.
+
 
 2011-04-12	David Fang	<fangism@users.sourceforge.net>
 

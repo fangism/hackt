@@ -1,5 +1,13 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.120.2.5 2011/04/19 03:51:51 fang Exp $
+#	$Id: ChangeLog,v 1.120.2.6 2011/04/19 22:31:20 fang Exp $
+
+2011-04-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-64-pr-01-07:
+	  util/random.h: added default empty constructors
+	  Added util/numeric/constants.h for popular math constants.
+	  Added util/numeric/trigonometry.h for sincos function.
+
 
 2011-04-18	David Fang		<fangism@users.sourceforge.net>
 

@@ -1,6 +1,6 @@
 /**
 	\file "PR/tile_instance.cc"
-	$Id: tile_instance.cc,v 1.1.2.4 2011/04/19 03:51:49 fang Exp $
+	$Id: tile_instance.cc,v 1.1.2.5 2011/04/19 22:31:19 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -167,13 +167,16 @@ tile_instance::dump(ostream& o) const {
 /**
 	Numerical integration assuming momentarily constant acceleration.
 	Optimize by passing dt^2?
+	\param dt is the time step
+	\param v is the viscous damping coefficient
  */
 void
-tile_instance::update(const time_type& dt) {
+tile_instance::update(const time_type& dt, const real_type& v) {
 	previous_position = position;
 	previous_velocity = velocity;
-	velocity += acceleration *dt;
-	position += previous_velocity *dt + acceleration *(dt*dt*0.5);
+	velocity += (acceleration -previous_velocity *v) *dt;
+//	position += previous_velocity *dt + acceleration *(dt*dt*0.5);
+	position += (previous_velocity + acceleration *(dt*0.5)) *dt;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -109,7 +109,7 @@ public:
 	}
 
 	void
-	update(const time_type&);
+	update(const time_type&, const real_type&);
 
 	ostream&
 	dump(ostream&) const;

@@ -2,7 +2,7 @@
 	\file "PR/pr-command.cc"
 	Command-line feature for PR simulator.
 	TODO: scheme interface
-	$Id: pr-command.cc,v 1.1.2.6 2011/04/19 03:51:49 fang Exp $
+	$Id: pr-command.cc,v 1.1.2.7 2011/04/19 22:31:19 fang Exp $
  */
 
 #define	ENABLE_STATIC_TRACE		0
@@ -504,6 +504,22 @@ Produce textual dump of trace file contents in @var{file}.
 typedef	TraceDump<State>			TraceDump;
 PR_INSTANTIATE_TRIVIAL_COMMAND_CLASS(TraceDump, tracing)
 #endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/seed48.texi
+@deffn Command seed48 [int int int]
+Corresponds to libc's seed48 function.  
+With no argument, print the current values of the internal random number seed.
+With three (unsigned short) integers, sets the random number seed.
+Note: the seed is automatically saved and restored in checkpoints.  
+The seed value is reset to 0 0 0 with the @command{reset} command, 
+but not with the @command{initialize} command.
+@end deffn
+@end texinfo
+***/
+typedef	Seed48<State>			Seed48;
+PR_INSTANTIATE_TRIVIAL_COMMAND_CLASS(Seed48, simulation)
 
 //=============================================================================
 // handy macros

@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.227.2.2 2011/04/19 01:08:37 fang Exp $
+#	$Id: configure.ac,v 1.227.2.3 2011/04/19 22:31:15 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -378,6 +378,7 @@ dnl <ctype.h>
 	[abs labs llabs fabs fabsf fabsl \]
 	[drand48 erand48 lrand48 nrand48 \]
 	[mrand48 jrand48 srand48 seed48 lcong48 \]
+	[sincos fsincos sincosf sincosl \]
 	[system exec \]
 	[atexit \]
 	[getenv setenv putenv unsetenv \]

@@ -1,6 +1,6 @@
 /**
 	\file "PR/numerics.cc"
-	$Id: numerics.cc,v 1.1.2.3 2011/04/16 01:51:52 fang Exp $
+	$Id: numerics.cc,v 1.1.2.4 2011/04/19 22:31:17 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -18,6 +18,9 @@
 #include "util/string.tcc"
 #include "util/optparse.h"
 #include "util/IO_utils.tcc"
+#include "util/numeric/random.h"
+#include "util/numeric/constants.h"
+#include "util/numeric/trigonometry.h"
 #include "util/STL/container_iterator.h"
 #if PR_VARIABLE_DIMENSIONS
 #include "util/STL/valarray_iterator.h"
@@ -64,6 +67,8 @@ using namespace util::vector_ops;
 using util::tokenize_char;
 using util::string_list;
 using util::strings::string_to_num;
+using util::numeric::rand48;
+using util::numeric::sincos;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -134,6 +139,31 @@ parse_real_vector(const string& s, real_vector& v) {
 	}
 #endif
 	return 0;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Returns a uniformly oriented random vector.
+ */
+real_vector
+random_unit_vector(void) {
+	STACKTRACE_VERBOSE;
+	typedef	rand48<double>			random_generator;
+	const random_generator g;
+	// trust compiler to fold these constants...
+	const real_type phi = g() * M_PI;	// angle from north pole
+	const real_type theta = g() * M_PI*2.0;	// longitude
+	STACKTRACE_INDENT_PRINT("phi= " << phi*(180.0/M_PI) <<
+		", theta=" << theta*(180.0/M_PI) << endl);
+	real_type sinphi, sth, cth;
+	real_vector ret;
+	// optimized trig. calls!
+	sincos(phi, sinphi, ret[2]);
+	sincos(theta, sth, cth);
+	ret[0] = sinphi *cth;
+	ret[1] = sinphi *sth;
+	STACKTRACE_INDENT_PRINT("rand-vec: " << ret << endl);
+	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

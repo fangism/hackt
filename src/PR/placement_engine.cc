@@ -1,6 +1,6 @@
 /**
 	\file "PR/placement_engine.cc"
-	$Id: placement_engine.cc,v 1.1.2.5 2011/04/19 03:51:48 fang Exp $
+	$Id: placement_engine.cc,v 1.1.2.6 2011/04/19 22:31:18 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -53,7 +53,7 @@ const real_type __default_upper_corner[] = {100.0, 100.0, 50.0};
 
 placer_options::placer_options() :
 		temperature(0.0),	// brrrr-r-r-r!!!!
-		viscous_damping(0.1),	// gooey
+		viscous_damping(0.1),	// gooiness (> 0)
 		proximity_radius(0.0),	// for collision scanning
 		repulsion_coeff(1.0),
 		lower_corner(__default_lower_corner),
@@ -486,7 +486,7 @@ placement_engine::scatter(void) {
 	STACKTRACE_VERBOSE;
 	const real_vector box_size(opt.upper_corner -opt.lower_corner);
 	typedef	rand48<double>			random_generator;
-	random_generator g;
+	const random_generator g;
 	vector<tile_instance>::iterator
 		i(space.objects.begin()), e(space.objects.end());
 	for ( ; i!=e; ++i) {
@@ -871,16 +871,31 @@ placement_engine::compute_collision_forces(void) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	TODO: return maximum delta for chekcing for convergence.
+	TODO: return maximum delta for checking for convergence.
+	From kinetic theory of molecules (gas):
+		mv^2/2 = 3kT/2
  */
 void
 placement_engine::update_velocity_and_position(void) {
 	STACKTRACE_VERBOSE;
 	typedef	vector<tile_instance>::iterator		iterator;
 	iterator i(space.objects.begin()), e(space.objects.end());
+	const real_type tt = opt.temperature *opt.time_step;
+#if !PR_TILE_MASS
+	const real_type sqrttt(sqrt(tt));
+#endif
 	for ( ; i!=e; ++i) {
 	if (!i->is_fixed()) {
-		i->update(opt.time_step);
+		i->update(opt.time_step, opt.viscous_damping);
+		if (opt.temperature > 0.0) {
+			// alter position or velocity?
+			i->position += random_unit_vector() *
+#if PR_TILE_MASS
+				sqrt(tt / i->properties.mass);
+#else
+				sqrttt;
+#endif
+		}
 	}
 	}
 	elapsed_time += opt.time_step;

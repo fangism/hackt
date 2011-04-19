@@ -1,7 +1,7 @@
 parameters:
   bounds=<0,0,-50>;<100,100,50>
   @time=0
-  damping=0.1
+  damping=0
   position_tolerance=0.001
   precision=4
   repulsion_coeff=1

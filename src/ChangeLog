@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-04-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-64-pr-01-07:
+	  ipple, placement_engine: implemented damping in update, 
+		also implemented temperature for random displacement
+		for simulated annealing.
+	  PR/pr-command.cc: added seed48 for seed control.
+	  PR/pr-numeric.cc: implemented random_unit_vector().
+
+
 2011-04-18	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-64-pr-01-06:
