@@ -1,6 +1,6 @@
 # "Make.test-ipl"
 #	vi: ft=automake
-#	$Id: Make.test-ipl,v 1.1.2.1 2011/04/16 01:52:04 fang Exp $
+#	$Id: Make.test-ipl,v 1.1.2.2 2011/04/19 01:08:51 fang Exp $
 # Test infrastructure for the interactive placer 'ipple'.
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
@@ -185,8 +185,6 @@ iplfailtest.autodepend: Makefile
 
 -include ipltest.autodepend
 -include iplfailtest.autodepend
-
-NO_OP_SCRIPT = test -f $< && test -f $@
 
 .iplrc-out.iplckpt-outdump:
 	@$(SED) '/DELETE FROM HERE/,/DELETE TO HERE/d' $< > $@

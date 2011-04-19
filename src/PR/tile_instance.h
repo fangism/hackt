@@ -27,11 +27,13 @@ struct tile_instance {
 		Non-zero if simulating with object momentum.
 	 */
 	velocity_type			velocity;
+	velocity_type			previous_velocity;
 	/**
 		mutable, to be updated/accumulated, recomputed with 
 		every interation.
 	 */
 	acceleration_type		acceleration;
+//	force_type			force;
 
 	/**
 		Object type, copied, not linked.
@@ -95,8 +97,14 @@ public:
 		previous_position = v;
 	}
 
+	void
+	update(const time_type&);
+
 	ostream&
 	dump(ostream&) const;
+
+	void
+	clear_proximity_cache(void) { proximity_cache.clear(); }
 
 	bool
 	save_checkpoint(ostream&) const;

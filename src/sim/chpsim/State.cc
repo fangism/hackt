@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.26.4.1 2011/04/16 01:51:57 fang Exp $
+	$Id: State.cc,v 1.26.4.2 2011/04/19 01:08:46 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -298,7 +298,7 @@ State::dump_event_table_header(ostream& o) {
 	Will throw exception upon error.  
  */
 State::State(const module& m) : 
-		state_base(m, "chpsim> "), 
+		module_state_base(m, "chpsim> "), 
 		instances(m.get_footprint()), 
 		event_pool(), 
 		global_root_event(NULL, entity::CHP::EVENT_CONCURRENT_FORK),

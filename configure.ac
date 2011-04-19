@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.227.2.1 2011/04/15 00:51:55 fang Exp $
+#	$Id: configure.ac,v 1.227.2.2 2011/04/19 01:08:37 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -609,6 +609,7 @@ AC_CONFIG_FILES([
 	test/net/Makefile
 	test/net/verilog/Makefile
 	test/lib/Makefile
+	test/PR/Makefile
 	test/benchmarks/Makefile
 	test/quarantine/Makefile
 	dox/Makefile

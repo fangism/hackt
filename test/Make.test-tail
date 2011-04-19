@@ -3,7 +3,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.101.4.1 2011/04/16 01:52:04 fang Exp $
+#	$Id: Make.test-tail,v 1.101.4.2 2011/04/19 01:08:53 fang Exp $
 
 # for test that depend on pre-install plug-ins
 # don't forget to pass -dlopen to assist searching for pre-install dependencies
@@ -91,6 +91,8 @@ HAC_DEPEND_FILTER = $(SED) -e '/haco:/s|^$(srcdir)\/||g' \
 
 # arg, need to escape the friggin' hash!
 SHELL_INTERPRETER = "\#!$(SHELL)"
+
+NO_OP_SCRIPT = test -f $< && test -f $@
 
 DEFAULT_DIFF_TEST_SCRIPT = \
 	$(ECHO) "Summarizing $@ ..." ; \
@@ -182,6 +184,7 @@ include $(top_srcdir)/test/Make.test-vpi
 include $(top_srcdir)/test/Make.test-chpsim
 include $(top_srcdir)/test/Make.test-guile
 include $(top_srcdir)/test/Make.test-net
+include $(top_srcdir)/test/Make.test-ipl
 
 BOGUS_TESTS +=
 

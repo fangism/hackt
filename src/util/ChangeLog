@@ -1,5 +1,12 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.120.2.3 2011/04/16 01:51:59 fang Exp $
+#	$Id: ChangeLog,v 1.120.2.4 2011/04/19 01:08:49 fang Exp $
+
+2011-04-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-64-pr-01-05:
+	  Added util/iomanip.h for changing and saving ios_base
+		parameters like precision, width.
+
 
 2011-04-15	David Fang		<fangism@users.sourceforge.net>
 

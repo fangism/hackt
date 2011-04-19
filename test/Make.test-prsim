@@ -1,6 +1,6 @@
 # "Make.test-prsim"
 #	vi: ft=automake
-#	$Id: Make.test-prsim,v 1.21.8.1 2011/04/16 01:52:04 fang Exp $
+#	$Id: Make.test-prsim,v 1.21.8.2 2011/04/19 01:08:52 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -350,8 +350,6 @@ prsimfailtest.autodepend: Makefile
 
 -include prsimtest.autodepend
 -include prsimfailtest.autodepend
-
-NO_OP_SCRIPT = test -f $< && test -f $@
 
 .prsimrc-out.prsimckpt-outdump:
 	@$(SED) '/DELETE FROM HERE/,/DELETE TO HERE/d' $< > $@

@@ -3,6 +3,25 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-04-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-64-pr-01-05:
+	  ipple: implemented concept of equilibrium_distance between
+		objects, the point at which attraction (and repulsion) 
+		is 0, which represents the ideal distance.
+		Eliminated channel::tension for now.
+		added precision control for output.
+		placement_engine: force computation split into 2 phases:
+			attraction-phase, repulsion-phase, followed by update.
+			implemented refresh of proximity_cache, which could
+			be further improved with an incremental algorithm.
+	  Basic attraction/repulsion test cases added.
+	  sim/state_base.{h,cc}: split-off module_state_base for
+		HACKT-dependent simulators, so that ipple can derive from
+		a leaner base class.
+	  TODO: option_value registry for placement_engine parameters.
+
+
 2011-04-15	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-64-pr-01-04:

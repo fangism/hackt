@@ -1,6 +1,6 @@
 /**
 	\file "PR/channel.cc"
-	$Id: channel.cc,v 1.1.2.2 2011/04/16 01:51:51 fang Exp $
+	$Id: channel.cc,v 1.1.2.3 2011/04/19 01:08:40 fang Exp $
  */
 
 #include <iostream>
@@ -24,7 +24,9 @@ channel_type::channel_type() :
 #if PL_CHANNEL_WIRES
 		wires(),
 #endif
-		spring_coeff(1.0) {
+		spring_coeff(1.0),
+		equilibrium_distance(0.0)	// garbage, to be calculated
+		{
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -65,6 +67,7 @@ channel_type::parse_property(const option_value& o) {
 ostream&
 channel_type::dump(ostream& o) const {
 	o << "spring_coeff=" << spring_coeff;
+	o << " equilibrium=" << equilibrium_distance << ' ';
 	return o;
 }
 
@@ -72,6 +75,7 @@ channel_type::dump(ostream& o) const {
 bool
 channel_type::save_checkpoint(ostream& o) const {
 	write_value(o, spring_coeff);
+	write_value(o, equilibrium_distance);
 	return !o;
 }
 
@@ -79,6 +83,7 @@ channel_type::save_checkpoint(ostream& o) const {
 bool
 channel_type::load_checkpoint(istream& i) {
 	read_value(i, spring_coeff);
+	read_value(i, equilibrium_distance);
 	return !i;
 }
 
@@ -86,12 +91,20 @@ channel_type::load_checkpoint(istream& i) {
 // class channel_instance method definitions
 
 channel_instance::channel_instance() :
-		properties(), source(0), destination(0), tension(0.0) {
+		properties(), source(0), destination(0)
+#if PR_CHANNEL_TENSION
+		, tension(0.0)
+#endif
+		{
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 channel_instance::channel_instance(const channel_type& t) :
-		properties(t), source(0), destination(0), tension(0.0) {
+		properties(t), source(0), destination(0)
+#if PR_CHANNEL_TENSION
+		, tension(0.0)
+#endif
+		{
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -101,7 +114,9 @@ channel_instance::~channel_instance() { }
 ostream&
 channel_instance::dump(ostream& o) const {
 	o << '(' << source << ',' << destination << ") ";
+#if PR_CHANNEL_TENSION
 	o << "tension=" << tension << ' ';
+#endif
 	properties.dump(o << '[') << ']';
 	return o;
 }
@@ -111,7 +126,10 @@ bool
 channel_instance::save_checkpoint(ostream& o) const {
 	write_value(o, source);
 	write_value(o, destination);
+#if PR_CHANNEL_TENSION
 	// tension should be recalculated
+#endif
+	// equilibrium_distance could be recalculated
 	properties.save_checkpoint(o);
 	return !o;
 }
@@ -121,7 +139,10 @@ bool
 channel_instance::load_checkpoint(istream& i) {
 	read_value(i, source);
 	read_value(i, destination);
+#if PR_CHANNEL_TENSION
 	// tension should be recalculated
+#endif
+	// equilibrium_distance could be recalculated
 	properties.load_checkpoint(i);
 	return !i;
 }

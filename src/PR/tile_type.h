@@ -1,7 +1,7 @@
 /**
 	\file "PR/tile_type.h"
 	Object types.
-	$Id: tile_type.h,v 1.1.2.3 2011/04/16 01:51:55 fang Exp $
+	$Id: tile_type.h,v 1.1.2.4 2011/04/19 01:08:43 fang Exp $
  */
 
 #ifndef	__HAC_PR_TILE_TYPE_H__
@@ -48,6 +48,10 @@ struct tile_properties {
 	 */
 	real_type			mass;
 #endif
+	/**
+		Spring constant for repelling near-collision neighbors.  
+	 */
+//	real_type			repulsion_constant;
 	/**
 		Bounce factor for collisions.
 	 */

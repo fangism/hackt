@@ -1,7 +1,7 @@
 /**
 	\file "PR/placement_engine.h"
 	Physics simulator.
-	$Id: placement_engine.h,v 1.1.2.4 2011/04/16 01:51:53 fang Exp $
+	$Id: placement_engine.h,v 1.1.2.5 2011/04/19 01:08:42 fang Exp $
  */
 
 #ifndef	__HAC_PR_PLACEMENT_ENGINE_H__
@@ -9,6 +9,7 @@
 
 #include <string>
 #include "PR/pcanvas.h"
+#include "sim/state_base.h"
 #include "util/named_ifstream_manager.h"	// needed by interpreter
 
 namespace PR {
@@ -21,7 +22,7 @@ using util::ifstream_manager;
 	For solving placement.
 	Physics, force-driven, with annealing.
  */
-class placement_engine {
+class placement_engine : public HAC::SIM::state_base {
 public:
 	vector<tile_type>		object_types;
 	vector<channel_type>		channel_types;
@@ -55,6 +56,10 @@ public:
 	 */
 	real_type			proximity_radius;
 	/**
+		Repulsive spring coefficient, global.
+	 */
+	real_type			repulsion_coeff;
+	/**
 		Object collisions are hard constraints, 
 		otherwise, allow overlap and use corrective forces.  
 		Default: false (soft) is easier to compute.
@@ -63,8 +68,8 @@ public:
 	/**
 		Bounds for positions.  
 	 */
-	position_type			lower_bound;
-	position_type			upper_bound;
+	position_type			lower_corner;
+	position_type			upper_corner;
 
 	// these parameters may be publicly tweaked at any time
 
@@ -74,20 +79,23 @@ public:
 	real_type			pos_tol;
 	/// speed-change tolerance for determining convergence
 	real_type			vel_tol;
+#if 0
 	/// acceleration-change tolerance for determining convergence
 	real_type			accel_tol;
+#endif
+	/**
+		Precision for displaying numbers.
+	 */
+	int_type			precision;
+	/**
+		If true, print object coordinates after every iterate()
+	 */
+	bool				watch_objects;
 	/**
 		The objects and coordinates to solve in.
 	 */
 	pcanvas				space;
 protected:
-	/**
-		Only needed to satisfy SIM::state_base interface.
-		Interpreter state for the input stream.
-		This is not checkpointed.  
-	 */
-	ifstream_manager		ifstreams;
-
 	string				autosave_name;
 
 public:
@@ -96,16 +104,6 @@ public:
 	placement_engine(const size_t d);
 
 	~placement_engine();
-
-// begin stuff for command_registry
-	ifstream_manager&
-	get_stream_manager(void) { return ifstreams; }
-
-	void
-	add_source_path(const string& s) {
-		ifstreams.add_path(s);
-	}
-// end stuff for command_registry
 
 	void
 	auto_proximity_radius(void);
@@ -200,6 +198,43 @@ private:
 
 	void
 	clamp_position(real_vector&) const;
+
+	void
+	zero_forces(void);
+
+	static
+	void
+	apply_attraction_forces(tile_instance&, tile_instance&,
+#if PR_CHANNEL_TENSION
+		const channel_properties&
+#else
+		channel_instance&
+#endif
+		);
+
+	static
+	void
+	apply_repulsion_forces(tile_instance&, tile_instance&,
+		const channel_properties&);
+
+	void
+	compute_spring_forces(void);
+
+	void
+	refresh_proximity_cache(void);
+
+	// incrementally update
+	void
+	update_proximity_cache(void);
+
+	void
+	clear_proximity_cache(void);
+
+	void
+	compute_collision_forces(void);
+
+	void
+	update_velocity_and_position(void);
 
 };	// end class placement_engine
 

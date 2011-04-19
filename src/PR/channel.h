@@ -1,6 +1,6 @@
 /**
 	\file "PR/channel.h"
-	$Id: channel.h,v 1.1.2.3 2011/04/16 01:51:52 fang Exp $
+	$Id: channel.h,v 1.1.2.4 2011/04/19 01:08:41 fang Exp $
  */
 #ifndef	__HAC_PR_CHANNEL_H__
 #define	__HAC_PR_CHANNEL_H__
@@ -21,6 +21,12 @@ using std::string;
 	No real need wire-details for the placer.  
  */
 #define	PL_CHANNEL_WIRES		0
+
+/**
+	Define to 1 to cache tension per spring/channel.
+	Don't really need it.
+ */
+#define	PR_CHANNEL_TENSION		0
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if PL_CHANNEL_WIRES
@@ -75,6 +81,14 @@ struct channel_type {
 		may be overridden.  
 	 */
 	real_type			spring_coeff;
+	/**
+		Sum of two radii of the end-objects, 
+		the ideal 0-energy distance, computed automatically.
+		This is calculated, not set.
+	 */
+	real_type			equilibrium_distance;
+
+//	real_type			repulsion_coeff;
 
 	channel_type();
 
@@ -136,11 +150,12 @@ struct channel_instance {
 	 */
 	real_type			spring_coeff;
 #endif
+#if PR_CHANNEL_TENSION
 	/**
 		Force on spring, computed and cached.
 	 */
 	real_type			tension;
-
+#endif
 	channel_instance();
 
 	explicit

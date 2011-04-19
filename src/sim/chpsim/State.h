@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.18 2010/08/24 18:08:44 fang Exp $
+	$Id: State.h,v 1.18.6.1 2011/04/19 01:08:47 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -60,7 +60,7 @@ using entity::dump_flags;
 	TODO: think about hooks for profiling.
 	TODO: how to estimate energy and delay.
  */
-class State : public state_base {
+class State : public module_state_base {
 friend class StateConstructor;
 friend class nonmeta_context;
 	typedef	State				this_type;

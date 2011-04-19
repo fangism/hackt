@@ -1,0 +1,10 @@
+# "002.iplrc"
+
+object-type size=<1,1,1>
+add-object type=0
+repeat 2 add-object type=1
+channel-type spring_coeff=0.5
+add-channel 0 1 type=0
+add-channel 1 2 type=1
+dump-state
+

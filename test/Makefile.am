@@ -1,10 +1,10 @@
 # "test/Makefile.am"
-#	$Id: Makefile.am,v 1.51 2011/03/30 04:19:02 fang Exp $
+#	$Id: Makefile.am,v 1.51.2.1 2011/04/19 01:08:53 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
 # this directory first, to clean the test-report
-SUBDIRS = . lexer parser prsim chpsim guile net lib benchmarks quarantine
+SUBDIRS = . lexer parser prsim chpsim guile net lib PR benchmarks quarantine
 
 # bogus test
 TESTS +=
@@ -38,6 +38,7 @@ NONCONFIGURED_UPDATESCRIPTS = \
 	update-expect-vpi.sh \
 	update-expect-chpsimalloc.sh \
 	update-expect-chpsimrc.sh \
+	update-expect-ipl.sh \
 	update-expect-hacscm.sh \
 	update-expect-hacchpsimscm.sh
 

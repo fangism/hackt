@@ -2,7 +2,7 @@
 	\file "PR/pr-command.cc"
 	Command-line feature for PR simulator.
 	TODO: scheme interface
-	$Id: pr-command.cc,v 1.1.2.4 2011/04/16 01:51:54 fang Exp $
+	$Id: pr-command.cc,v 1.1.2.5 2011/04/19 01:08:42 fang Exp $
  */
 
 #define	ENABLE_STATIC_TRACE		0
@@ -549,8 +549,8 @@ Geometry::main(State& s, const string_list& a) {
 	LEX_VECTOR(v2, s2)
 	// minswap elements
 	util::vector_ops::min_swap_elements(v1, v2);
-	s.lower_bound = v1;
-	s.upper_bound = v2;
+	s.lower_corner = v1;
+	s.upper_corner = v2;
 	return Command::NORMAL;
 }
 
@@ -777,11 +777,43 @@ Parameter::usage(ostream& o) {
 	placement_engine::list_parameters(o) << endl;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(WatchObjects, "watch-objects", setup,
+        "print coordinates of objects after each iteration")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoWatchObjects, "nowatch-objects", setup,
+        "suppress coordinates of objects after each iteration")
+
+int
+WatchObjects::main(State& s, const string_list& a) {
+	REQUIRE_EXACT_ARGS(a, 1)
+	s.watch_objects = true;
+	return Command::NORMAL;
+}
+
+void
+WatchObjects::usage(ostream& o) {
+	o << name << endl;
+	o << brief << endl;
+}
+
+int
+NoWatchObjects::main(State& s, const string_list& a) {
+	REQUIRE_EXACT_ARGS(a, 1)
+	s.watch_objects = false;
+	return Command::NORMAL;
+}
+
+void
+NoWatchObjects::usage(ostream& o) {
+	o << name << endl;
+	o << brief << endl;
+}
+
 //=============================================================================
 // info commands
 
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(DumpState, "dump-state", info,
-        "print current coordinates and state of objects")
+        "print entire state of simulation")
 
 int
 DumpState::main(State& s, const string_list& a) {
@@ -795,6 +827,25 @@ DumpState::usage(ostream& o) {
 	o << name << endl;
 	o <<
 "Prints out the state of the entire simulated system."
+	<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(DumpObjects, "dump-objects", info,
+        "print current coordinates and state of objects")
+
+int
+DumpObjects::main(State& s, const string_list& a) {
+	REQUIRE_EXACT_ARGS(a, 1)
+	s.dump_objects(cout);
+	return Command::NORMAL;
+}
+
+void
+DumpObjects::usage(ostream& o) {
+	o << name << endl;
+	o <<
+"Prints out the current location of all objects."
 	<< endl;
 }
 
@@ -890,6 +941,23 @@ Scatter::main(State& s, const string_list& a) {
 
 void
 Scatter::usage(ostream& o) {
+	o << name << endl;
+	o << brief << endl;
+}
+
+//-----------------------------------------------------------------------------
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Step, "step", simulation,
+        "advances simulation one iteration")
+
+int
+Step::main(State& s, const string_list& a) {
+	REQUIRE_EXACT_ARGS(a, 1)
+	s.iterate();
+	return Command::NORMAL;
+}
+
+void
+Step::usage(ostream& o) {
 	o << name << endl;
 	o << brief << endl;
 }

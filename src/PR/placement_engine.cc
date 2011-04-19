@@ -1,6 +1,6 @@
 /**
 	\file "PR/placement_engine.cc"
-	$Id: placement_engine.cc,v 1.1.2.3 2011/04/16 01:51:53 fang Exp $
+	$Id: placement_engine.cc,v 1.1.2.4 2011/04/19 01:08:42 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -19,11 +19,19 @@
 #include "util/string.h"
 #include "util/numeric/random.h"
 #include "util/IO_utils.tcc"
+#include "util/iterator_more.h"
+#include "util/iomanip.h"
 #include "util/stacktrace.h"
 
 namespace PR {
 using std::for_each;
+using std::transform;
+using std::lower_bound;
+using std::upper_bound;
+using std::sort;
+using std::distance;
 using util::auto_indent;
+using util::save_precision;
 using util::strings::string_to_num;
 using util::numeric::rand48;
 using util::write_value;
@@ -33,27 +41,30 @@ using namespace util::vector_ops;		// for many operator overloads
 
 //=============================================================================
 static
-const real_type __default_lower_bound[] = {0.0, 0.0, -50.0};
+const real_type __default_lower_corner[] = {0.0, 0.0, -50.0};
 static
-const real_type __default_upper_bound[] = {100.0, 100.0, 50.0};
+const real_type __default_upper_corner[] = {100.0, 100.0, 50.0};
 
 //=============================================================================
 // class placement_engine method definitions
 
 placement_engine::placement_engine(const size_t d) :
+		state_base(), 
 		object_types(),
 		channel_types(),
 		temperature(0.0),	// brrrr-r-r-r!!!!
 		viscous_damping(0.1),	// gooey
-		proximity_radius(0.0),	// keep-away!
-		lower_bound(__default_lower_bound),
-		upper_bound(__default_upper_bound),
+		proximity_radius(0.0),	// for collision scanning
+		repulsion_coeff(1.0),
+		lower_corner(__default_lower_corner),
+		upper_corner(__default_upper_corner),
 		time_step(1e-3),
 		pos_tol(1e-3),
 		vel_tol(1e-3),
-		accel_tol(1e-3),
+//		accel_tol(1e-3),
+		precision(4),
+		watch_objects(false),
 		space(d),
-		ifstreams(),
 		autosave_name() {
 	initialize_default_types();
 }
@@ -108,6 +119,11 @@ placement_engine::add_channel_type(const channel_type& t) {
 void
 placement_engine::add_object(const tile_instance& o) {
 	space.objects.push_back(o);
+	// automatically update proximity radius
+	const real_type rad =
+		space.objects.back().properties.maximum_dimension();
+	if (rad > proximity_radius)
+		proximity_radius = rad;
 }
 
 #define	CHECK_OBJECT_INDEX(i)						\
@@ -125,7 +141,14 @@ bool
 placement_engine::add_channel(const channel_instance& c) {
 	CHECK_OBJECT_INDEX(c.source)
 	CHECK_OBJECT_INDEX(c.destination)
+	const tile_instance& s(space.objects[c.source]);
+	const tile_instance& d(space.objects[c.destination]);
+	// uses spherical approximation of objects for now,
+	// could be ellipsoid vector...
 	space.springs.push_back(c);
+	space.springs.back().properties.equilibrium_distance =
+		(s.properties.maximum_dimension() +
+			d.properties.maximum_dimension()) * 0.5;
 	return false;
 }
 
@@ -151,8 +174,8 @@ placement_engine::unpin_object(const size_t i) {
  */
 void
 placement_engine::clamp_position(real_vector& v) const {
-	min_clamp_elements(v, lower_bound);
-	max_clamp_elements(v, upper_bound);
+	min_clamp_elements(v, lower_corner);
+	max_clamp_elements(v, upper_corner);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -179,29 +202,36 @@ ostream&
 placement_engine::list_parameters(ostream& o) {
 	o << "parameters:\n"
 "  damping\n"
-"  temperature";
+"  repulsion_coeff\n"
+"  position_tolerance\n"
+"  velocity_tolerance\n"
+"  precision\n"
+"  temperature\n"
+"  time_step";
 	return o << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 placement_engine::dump_parameters(ostream& o) const {
+	const save_precision p(o, precision);
 	o << "parameters:\n";
-	o << "  bounds=" << lower_bound << ','  << upper_bound << endl;
+	o << "  bounds=" << lower_corner << ','  << upper_corner << endl;
 	o << "  damping=" << viscous_damping << endl;
 	o << "  temperature=" << temperature << endl;
+	o << "  proximity_radius=" << proximity_radius << endl;
+	o << "  repulsion_coeff=" << repulsion_coeff << endl;
 	o << "  time_step=" << time_step << endl;
+	o << "  precision=" << precision << endl;
 	o << "  position_tolerance=" << pos_tol << endl;
 	o << "  velocity_tolerance=" << vel_tol << endl;
-	o << "  acceleration_tolerance=" << vel_tol << endl;
+//	o << "  acceleration_tolerance=" << accel_tol << endl;
 	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 placement_engine::parse_parameter(const option_value& o) {
-	// viscous_damping
-	// temperature
 	if (o.key == "damping") {
 		if (o.values.empty()) {
 			cerr << "physics.property.parse: missing value"
@@ -210,6 +240,34 @@ placement_engine::parse_parameter(const option_value& o) {
 			return true;
 		}
 		if (string_to_num(o.values.front(), viscous_damping)) {
+			cerr << "physics.property.parse: bad value"
+				<< endl;
+			return true;
+		}
+		return false;
+	}
+	else if (o.key == "precision") {
+		if (o.values.empty()) {
+			cerr << "physics.property.parse: missing value"
+				<< endl;
+			// or print current value
+			return true;
+		}
+		if (string_to_num(o.values.front(), precision)) {
+			cerr << "physics.property.parse: bad value"
+				<< endl;
+			return true;
+		}
+		return false;
+	}
+	else if (o.key == "repulsion_coeff") {
+		if (o.values.empty()) {
+			cerr << "physics.property.parse: missing value"
+				<< endl;
+			// or print current value
+			return true;
+		}
+		if (string_to_num(o.values.front(), repulsion_coeff)) {
 			cerr << "physics.property.parse: bad value"
 				<< endl;
 			return true;
@@ -230,6 +288,20 @@ placement_engine::parse_parameter(const option_value& o) {
 		}
 		return false;
 	}
+	else if (o.key == "time_step") {
+		if (o.values.empty()) {
+			cerr << "physics.property.parse: missing value"
+				<< endl;
+			// or print current value
+			return true;
+		}
+		if (string_to_num(o.values.front(), time_step)) {
+			cerr << "physics.property.parse: bad value"
+				<< endl;
+			return true;
+		}
+		return false;
+	}
 	return true;
 }
 
@@ -239,7 +311,8 @@ placement_engine::parse_parameter(const option_value& o) {
  */
 void
 placement_engine::scatter(void) {
-	const real_vector box_size(upper_bound -lower_bound);
+	STACKTRACE_VERBOSE;
+	const real_vector box_size(upper_corner -lower_corner);
 	typedef	rand48<double>			random_generator;
 	random_generator g;
 	vector<tile_instance>::iterator
@@ -252,61 +325,62 @@ placement_engine::scatter(void) {
 		r[1] = g();
 		r[2] = g();
 		r *= box_size;
-		r += lower_bound;
+		r += lower_corner;
 		i->place(r);
 	}
 	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Should return some information about this step for 
-	determining convergence.
-	TODO: compute effective force vector, accumulate per object
-	TODO: support different spring types
- */
 void
-placement_engine::iterate(void) {
-//	const time_type& dt(time_step);
-	// first, zero out forces on objects
+placement_engine::zero_forces(void) {
 	for_each(space.objects.begin(), space.objects.end(), 
 		std::mem_fun_ref(&tile_instance::zero_force));
-{
-	// compute spring tensions (attraction)
-	typedef	vector<channel_instance>::iterator	iterator;
-	iterator i(space.springs.begin()), e(space.springs.end());
-for ( ; i!=e; ++i) {
-	const int_type& si(i->source);
-	const int_type& di(i->destination);
-	tile_instance& sobj(space.objects[si]);
-	tile_instance& dobj(space.objects[di]);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Pair-wise attractive-only force.
+	Only need channel_instance to be modifiable for the sake of
+	updating tension.  
+ */
+void
+placement_engine::apply_attraction_forces(
+		tile_instance& sobj, tile_instance& dobj,
+#if PR_CHANNEL_TENSION
+		const channel_properties& cp
+#else
+		channel_instance& ch
+#endif
+		) {
+	STACKTRACE_VERBOSE;
 	const bool sf = sobj.is_fixed();
 	const bool df = dobj.is_fixed();
-#if PR_TILE_MASS
-	const tile_type& sp(sobj.properties);
-	const tile_type& dp(dobj.properties);
-#endif
-	if (!(sf && df)) {
-		// at least one end not fixed
-		// TODO: optimize away number of mathematical operations
-		// TODO: use delta - sizeof(objects)
-		//	or distance between ellipsoids
-		const position_type delta(dobj.position -sobj.position);
-		const force_type force_vec(delta * i->properties.spring_coeff);
-		const real_type dist = norm(delta);
-		// TODO: use rectilinear distance as an option
-		const real_type dthresh = (sobj.properties.maximum_dimension()
-			+dobj.properties.maximum_dimension()) / 2.0;
-		if (dist > dthresh) {
-		const real_type ffrac = (dist -dthresh) / dist;
-#if 0
-		position_type ndel(delta);
-		ndel /= dist;
-		const real_type tension = i->spring_coeff * dist;
+if (!(sf && df)) {
+	// at least one end not fixed
+	// TODO: optimize away number of mathematical operations
+	// TODO: use delta - sizeof(objects)
+	//	or distance between ellipsoids
+	const position_type delta(dobj.position -sobj.position);
+#if PR_CHANNEL_TENSION
+	const force_type force_vec(delta * cp.spring_coeff);
+	const real_type& dthresh(cp.equilibrium_distance);
 #else
-		const real_type tension = norm(force_vec) * ffrac;
+	const force_type force_vec(delta * ch.properties.spring_coeff);
+	const real_type& dthresh(ch.properties.equilibrium_distance);
 #endif
-		i->tension = tension;
+	const real_type dist = norm(delta);
+	// TODO: use rectilinear distance as an option
+	if (dist > dthresh) {
+#if PR_TILE_MASS
+		const tile_type& sp(sobj.properties);
+		const tile_type& dp(dobj.properties);
+#endif
+		const real_type ffrac = (dist -dthresh) / dist;
+#if PR_CHANNEL_TENSION
+		const real_type tension = norm(force_vec) * ffrac;
+		ch.tension = tension;
+#endif
 		if (sf) {
 			// only source is fixed
 			dobj.acceleration -= force_vec *
@@ -324,36 +398,331 @@ for ( ; i!=e; ++i) {
 				ffrac;
 #endif
 		} else {
-			// neither fixed
+			// neither fixed, account for mass ratio
 #if PR_TILE_MASS
-			const real_type massfrac = dp.mass / (dp.mass + sp.mass);
+			const real_type massfrac = dp.mass / (dp.mass +sp.mass);
 #else
 			static const real_type massfrac = 0.5;
+			const real_type hf = ffrac * massfrac;
 #endif
 			sobj.acceleration +=
 #if PR_TILE_MASS
 				force_vec * (ffrac * massfrac / sp.mass);
 #else
-				force_vec * (ffrac * massfrac);
+				force_vec * hf;
 #endif
-			dobj.acceleration +=
+			dobj.acceleration -=
 #if PR_TILE_MASS
 				force_vec * (ffrac * (1.0 -massfrac) / dp.mass);
 #else
-				force_vec * (ffrac * massfrac);
+				force_vec * hf;
 #endif
 		}
-		}	// else objects too close to attract
+	}	// else objects too close to attract
+	// let repulsion forces be computed in different phase
+}	// else don't bother computing if both ends are fixed
+}	// end placement_engine::apply_object_forces()
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Pair-wise repulsion-only force.
+ */
+void
+placement_engine::apply_repulsion_forces(
+		tile_instance& sobj, tile_instance& dobj,
+		const channel_properties& cp
+		) {
+	STACKTRACE_VERBOSE;
+	const bool sf = sobj.is_fixed();
+	const bool df = dobj.is_fixed();
+if (!(sf && df)) {
+	// at least one end not fixed
+	// TODO: optimize away number of mathematical operations
+	// TODO: use delta - sizeof(objects)
+	//	or distance between ellipsoids
+	const position_type delta(dobj.position -sobj.position);
+	const force_type force_vec(delta * cp.spring_coeff);
+	const real_type& dthresh(cp.equilibrium_distance);
+	const real_type dist = norm(delta);
+	// TODO: use rectilinear distance as an option
+	if (dist < dthresh) {
+#if PR_TILE_MASS
+		const tile_type& sp(sobj.properties);
+		const tile_type& dp(dobj.properties);
+#endif
+		const real_type ffrac = (dist -dthresh) / dist;
+		if (sf) {
+			// only source is fixed
+			dobj.acceleration -= force_vec *
+#if PR_TILE_MASS
+				(ffrac / dp.mass);
+#else
+				ffrac;
+#endif
+		} else if (df) {
+			// only dest is fixed
+			sobj.acceleration += force_vec *
+#if PR_TILE_MASS
+				(ffrac / sp.mass);
+#else
+				ffrac;
+#endif
+		} else {
+			// neither fixed, account for mass ratio
+#if PR_TILE_MASS
+			const real_type massfrac = dp.mass / (dp.mass +sp.mass);
+#else
+			static const real_type massfrac = 0.5;
+			const real_type hf = ffrac * massfrac;
+#endif
+			sobj.acceleration +=
+#if PR_TILE_MASS
+				force_vec * (ffrac * massfrac / sp.mass);
+#else
+				force_vec * hf;
+#endif
+			dobj.acceleration -=
+#if PR_TILE_MASS
+				force_vec * (ffrac * (1.0 -massfrac) / dp.mass);
+#else
+				force_vec * hf;
+#endif
+		}
+	}	// else objects too close to attract
+	// let repulsion forces be computed in different phase
+}	// else don't bother computing if both ends are fixed
+}	// end placement_engine::apply_object_forces()
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Should return some information about this step for 
+	determining convergence.
+	TODO: compute effective force vector, accumulate per object
+	TODO: support different spring types
+ */
+void
+placement_engine::compute_spring_forces(void) {
+	STACKTRACE_VERBOSE;
+	// compute spring tensions (attraction)
+	typedef	vector<channel_instance>::iterator	iterator;
+	iterator i(space.springs.begin()), e(space.springs.end());
+	for ( ; i!=e; ++i) {
+		const int_type& si(i->source);
+		const int_type& di(i->destination);
+		tile_instance& sobj(space.objects[si]);
+		tile_instance& dobj(space.objects[di]);
+		apply_attraction_forces(sobj, dobj, *i);
+	}	// end for each spring
+}	// end compute_spring_forces
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <size_t D>
+static
+bool
+dim_less(const vector<tile_instance>::const_iterator l,
+		const vector<tile_instance>::const_iterator r) {
+	return l->position[D] < r->position[D];
+}
+
+template <size_t D>
+static
+bool
+dim_comp(const vector<tile_instance>::const_iterator l, const real_type& r) {
+	return l->position[D] < r;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This could go to util lib.
+	\param T is an iterator type, preferably random_access.
+ */
+template <class T>
+struct array_offset {
+	typedef	T		iterator_type;
+	const iterator_type		begin;
+
+	explicit
+	array_offset(const T i) : begin(i) { }
+
+	size_t
+	operator () (const T i) const {
+		return distance(begin, i);
 	}
-	// else don't bother computing if both ends are fixed
-}	// end for each spring
-}{
-	// compute proximity repulsions, using proximity cache
+
+};	// end struct array_offset
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Really want to avoid this.
+ */
+void
+placement_engine::clear_proximity_cache(void) {
+	for_each(space.objects.begin(), space.objects.end(),
+		std::mem_fun_ref(&tile_instance::clear_proximity_cache));
 }
-	// update position and velocity
-{
-	// update proximity cache
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Update dynamic graph of near-neighbors.  
+	Use a sliding-window cube in each dimension.
+	TODO: maintain order as object positions are updated
+		and only *incrementally* sort.
+	Or do sector binning, near constant time!
+ */
+void
+placement_engine::refresh_proximity_cache(void) {
+	STACKTRACE_VERBOSE;
+	clear_proximity_cache();		// wipe before recomputing
+	// sort by each dimension/index
+	typedef	vector<tile_instance>::iterator		iterator;
+	vector<iterator> obj_x;
+	obj_x.reserve(space.objects.size());
+	iterator i(space.objects.begin()), e(space.objects.end());
+	for ( ; i!=e; ++i) {
+		obj_x.push_back(i);
+	}
+	// perform in-place sort on each
+	// first, sorted by x-coordinates only
+	sort(obj_x.begin(), obj_x.end(), &dim_less<0>);
+//	sort(obj_z.begin(), obj_z.end(), &dim_less<2>);
+	// use proximity_radius to find sets of objects in the same window
+	vector<iterator>::iterator xb(obj_x.begin()), xe(obj_x.end());
+	// Q: is binary search worth it? linear-incremental may suffice
+	// A: linear! b/c overall cost O(N) vs. O(N lg N)
+	vector<iterator>::iterator xu(xb);
+//		xu(lower_bound(xb, xe, x+proximity_radius, &dim_comp<0>));
+	// [xb, xu] define a sliding window along the x-dimension
+	const array_offset<iterator> vo(space.objects.begin());
+	const size_t i1 = vo(*xb);
+#if 0
+	std::set<size_t> window_set_x;	// a queue is good enough?
+	transform(xb, xu, util::set_inserter(window_set_x), vo);
+ 	INVARIANT(window_set_x.size() >= 1);
+#endif
+	// x-sweep
+for ( ; xb!=xe; ++xb) {
+	const real_type x = (*xb)->position[0];
+	// linear scan overall costs less than repeated (lg N) binary searches
+	while (xu!=xe && (*xu)->position[0] < x+proximity_radius) {
+		++xu;
+	}
+const size_t xw_size = distance(xb, xu);
+if (xw_size > 1) {
+	STACKTRACE_INDENT_PRINT("have " << xw_size <<
+		" x-collision candidates." << endl);
+	// recurse in y-dimension, z-dimensions
+	// reduce size of window_set in each dimension
+	// copy range of iterators, and re-sort by y-dimension
+	vector<iterator> obj_y(xb, xu);
+	sort(obj_y.begin(), obj_y.end(), &dim_less<1>);
+	const real_type& y_ref((*xb)->position[1]);
+	const vector<iterator>::iterator
+		yb(obj_y.begin()), ye(obj_y.end());
+	const vector<iterator>::iterator
+		yl(lower_bound(yb, ye, y_ref-proximity_radius, &dim_comp<1>)),
+		yu(lower_bound(yl, ye, y_ref+proximity_radius, &dim_comp<1>));
+	const size_t yw_size = distance(yl, yu);
+	if (yw_size > 1) {
+		STACKTRACE_INDENT_PRINT("have " << yw_size <<
+			" xy-collision candidates." << endl);
+		// copy range of iterators, re-sort by z-dimension
+		vector<iterator> obj_z(yl, yu);
+		sort(obj_z.begin(), obj_z.end(), &dim_less<2>);
+		const real_type& z_ref((*xb)->position[2]);
+		const vector<iterator>::iterator
+			zb(obj_y.begin()), ze(obj_y.end());
+		const vector<iterator>::iterator
+			zl(lower_bound(zb, ze, z_ref-proximity_radius,
+				&dim_comp<2>)),
+			zu(lower_bound(zl, ze, z_ref+proximity_radius,
+				&dim_comp<2>));
+		const size_t zw_size = distance(zl, zu);
+		if (zw_size > 1) {
+			STACKTRACE_INDENT_PRINT("have " << zw_size <<
+				" xyz-collision candidates." << endl);
+			// then we are within proximity
+			vector<iterator>::iterator zi(zl);
+			for ( ; zi!=zu; ++zi) {
+			if (*zi != *xb) {
+				const size_t i2 = vo(*zi);
+				STACKTRACE_INDENT_PRINT(
+					"caching collision candidate pair ("
+					<< i1 << ',' << i2 << ")." << endl);
+				// debug print
+				space.objects[i1].proximity_cache.insert(i2);
+				space.objects[i2].proximity_cache.insert(i1);
+			}
+			}
+		}
+	}
+}	// else no collision candidates
+}	// end for each x-ordered object
+}	// end placement_engine::refresh_proximity_cache
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Compute repulsive forces between near-neighbors.  
+ */
+void
+placement_engine::compute_collision_forces(void) {
+	STACKTRACE_VERBOSE;
+	typedef	vector<tile_instance>::iterator		iterator;
+	iterator i(space.objects.begin()), e(space.objects.end());
+	const array_offset<iterator> vo(i);
+	for ( ; i!=e; ++i) {
+		const size_t j1 = vo(i);
+		set<int_type>::const_iterator
+			ci(i->proximity_cache.begin()),
+			ce(i->proximity_cache.end());
+		for ( ; ci!=ce; ++ci) {
+			const size_t j2 = *ci;
+			// avoid double counting
+			if (j1 < j2) {
+				STACKTRACE_INDENT_PRINT("repelling objects " <<
+					j1 << " and " << j2 << endl);
+				tile_instance& o1(space.objects[j1]);
+				tile_instance& o2(space.objects[j2]);
+				channel_properties dummy;
+				// TODO: configure later
+				dummy.spring_coeff = repulsion_coeff;
+				dummy.equilibrium_distance =
+					(o2.properties.maximum_dimension()
+					+o1.properties.maximum_dimension()) *0.5;
+				apply_repulsion_forces(o1, o2, dummy);
+			}
+		}
+	}
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: return maximum delta for chekcing for convergence.
+ */
+void
+placement_engine::update_velocity_and_position(void) {
+	STACKTRACE_VERBOSE;
+	typedef	vector<tile_instance>::iterator		iterator;
+	iterator i(space.objects.begin()), e(space.objects.end());
+	for ( ; i!=e; ++i) {
+	if (!i->is_fixed()) {
+		i->update(time_step);
+	}
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+placement_engine::iterate(void) {
+	STACKTRACE_VERBOSE;
+	zero_forces();		// reset forces
+	compute_spring_forces();
+	// compute proximity repulsions on 'close' objects
+	refresh_proximity_cache();
+	compute_collision_forces();
+	update_velocity_and_position();
+	if (watch_objects) {
+		dump_objects(cout);
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -387,6 +756,7 @@ __dump_array(ostream& o, const T& a) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 placement_engine::dump_object_types(ostream& o) const {
+	const save_precision p(o, precision);
 	o << "object types:" << endl;
 	return __dump_array(o, object_types);
 }
@@ -394,6 +764,7 @@ placement_engine::dump_object_types(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 placement_engine::dump_channel_types(ostream& o) const {
+	const save_precision p(o, precision);
 	o << "channel types:" << endl;
 	return __dump_array(o, channel_types);
 }
@@ -401,6 +772,7 @@ placement_engine::dump_channel_types(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 placement_engine::dump_objects(ostream& o) const {
+	const save_precision p(o, precision);
 	o << "objects:" << endl;
 	return __dump_array(o, space.objects);
 }
@@ -408,6 +780,7 @@ placement_engine::dump_objects(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 placement_engine::dump_channels(ostream& o) const {
+	const save_precision p(o, precision);
 	o << "channels:" << endl;
 	return __dump_array(o, space.springs);
 }
@@ -415,6 +788,7 @@ placement_engine::dump_channels(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 placement_engine::dump(ostream& o) const {
+	const save_precision p(o, precision);
 	dump_parameters(o);
 	dump_object_types(o);
 	dump_channel_types(o);
@@ -445,12 +819,13 @@ placement_engine::save_checkpoint(ostream& o) const {
 	write_value(o, temperature);
 	write_value(o, viscous_damping);
 	write_value(o, proximity_radius);
-	write_value(o, lower_bound);
-	write_value(o, upper_bound);
+	write_value(o, repulsion_coeff);
+	write_value(o, lower_corner);
+	write_value(o, upper_corner);
 	write_value(o, time_step);
 	write_value(o, pos_tol);
 	write_value(o, vel_tol);
-	write_value(o, accel_tol);
+//	write_value(o, accel_tol);
 // write object types
 	save_array(o, object_types);
 // write channel types
@@ -491,12 +866,13 @@ try {
 	read_value(i, temperature);
 	read_value(i, viscous_damping);
 	read_value(i, proximity_radius);
-	read_value(i, lower_bound);
-	read_value(i, upper_bound);
+	read_value(i, repulsion_coeff);
+	read_value(i, lower_corner);
+	read_value(i, upper_corner);
 	read_value(i, time_step);
 	read_value(i, pos_tol);
 	read_value(i, vel_tol);
-	read_value(i, accel_tol);
+//	read_value(i, accel_tol);
 // read object types
 	load_array(i, object_types);
 // read channel types

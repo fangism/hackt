@@ -2,10 +2,11 @@
 	\file "main/ipple.cc"
 	Main program for Fang's Interactive Physics-driven Placement Engine
 	Could be named "fipple"?
-	$Id: ipple.cc,v 1.1.2.3 2011/04/16 01:51:55 fang Exp $
+	$Id: ipple.cc,v 1.1.2.4 2011/04/19 01:08:43 fang Exp $
  */
 
 #include <iostream>
+#include <list>
 #include "PR/placement_engine.h"
 #include "PR/pr-command.h"
 #include "sim/command_common.h"
@@ -26,13 +27,17 @@ struct ipple_options {
 	bool				autosave;
 	size_t				dimensions;
 	string				autosave_name;
+	typedef	std::list<string>	source_paths_type;
+	/// include search paths for sources
+	source_paths_type	source_paths;
 	// output
 	ipple_options() : help_only(false), 
 		command_help_only(false),
 		interactive(true),
 		autosave(false),
 		dimensions(PR_DIMENSIONS),
-		autosave_name("autosave.iplckpt") { }
+		autosave_name(), 
+		source_paths() { }
 };	// end struct ipple_options
 }	// end namespace PR
 
@@ -88,7 +93,7 @@ ipple::usage(void) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 int
 ipple::parse_command_options(const int argc, char* argv[], options& o) {
-	static const char optstring[] = "+a:bd:hHiv";
+	static const char optstring[] = "+a:bd:hHiI:v";
 	int c;
 while ((c = getopt(argc, argv, optstring)) != -1) {
 switch (c) {
@@ -111,6 +116,9 @@ switch (c) {
 		break;
 	case 'i':
 		o.interactive = true;
+		break;
+	case 'I':
+		o.source_paths.push_back(optarg);
 		break;
 	case 'v':
 		config::dump_all(cout);
@@ -157,7 +165,8 @@ ipple::main(const int argc, char* argv[]) {
 	if (opt.autosave) {
 		P.autosave(opt.autosave_name);
 	}
-	CommandRegistry::prompt = "fipple> ";
+	P.import_source_paths(opt.source_paths);
+	CommandRegistry::prompt = "ipple> ";
 	const CommandRegistry::readline_init __rl__;
 	const int ret = CommandRegistry::interpret(P, cin, opt.interactive);
 	if (ret) {

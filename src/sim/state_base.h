@@ -1,7 +1,7 @@
 /**
 	\file "sim/state_base.h"
 	Facilities common to all simulator states.  (Recommended)
-	$Id: state_base.h,v 1.5 2010/04/07 00:13:06 fang Exp $
+	$Id: state_base.h,v 1.5.8.1 2011/04/19 01:08:46 fang Exp $
  */
 
 #ifndef	__HAC_SIM_STATE_BASE_H__
@@ -55,6 +55,60 @@ using entity::global_entry_context;
 class state_base {
 protected:
 	/**
+		Interpreter prompt string.
+	 */
+	string						prompt;
+
+	/**
+		Interpreter state for the input stream.
+		This is not checkpointed.  
+	 */
+	ifstream_manager				ifstreams;
+private:
+	/// private, undefined copy-ctor (non-copyable)
+	state_base(const state_base&);
+
+public:
+	state_base();
+
+	explicit
+	state_base(const string&);
+
+	~state_base();
+
+	ifstream_manager&
+	get_stream_manager(void) { return ifstreams; }
+
+	const string&
+	get_prompt(void) const { return prompt; }
+
+	template <class L>
+	void
+	import_source_paths(const L& l) {
+		typedef	typename L::const_iterator	const_iterator;
+		const_iterator i(l.begin()), e(l.end());
+		for ( ; i!=e; ++i) {
+			ifstreams.add_path(*i);
+		}
+	}
+
+	void
+	add_source_path(const string& s) {
+		ifstreams.add_path(s);
+	}
+
+	ostream&
+	dump_source_paths(ostream&) const;
+
+};	// end class state_base
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	For simulators that use a hac module.
+ */
+class module_state_base : public state_base {
+protected:
+	/**
 		Attachment to the source object that contains
 		whole program hierarchical and allocation information.  
 		TODO: reduce this to just the top_footprint, now that
@@ -78,49 +132,12 @@ private:
 	mutable size_t					cache_lru;
 #endif
 #endif
-protected:
-	/**
-		Interpreter prompt string.
-	 */
-	string						prompt;
-
-	/**
-		Interpreter state for the input stream.
-		This is not checkpointed.  
-	 */
-	ifstream_manager				ifstreams;
-private:
-	/// private, undefined copy-ctor (non-copyable)
-	state_base(const state_base&);
-
 public:
-	state_base(const module&, const string&);
-	~state_base();
+	module_state_base(const module&, const string&);
+	~module_state_base();
 
 	const module&
 	get_module(void) const { return mod; }
-
-	ifstream_manager&
-	get_stream_manager(void) { return ifstreams; }
-
-	const string&
-	get_prompt(void) const { return prompt; }
-
-
-	template <class L>
-	void
-	import_source_paths(const L& l) {
-		typedef	typename L::const_iterator	const_iterator;
-		const_iterator i(l.begin()), e(l.end());
-		for ( ; i!=e; ++i) {
-			ifstreams.add_path(*i);
-		}
-	}
-
-	void
-	add_source_path(const string& s) {
-		ifstreams.add_path(s);
-	}
 
 #if !CACHE_GLOBAL_FOOTPRINT_FRAMES
 	footprint_frame
@@ -144,12 +161,9 @@ public:
 #endif
 
 	ostream&
-	dump_source_paths(ostream&) const;
-
-	ostream&
 	dump_memory_usage(ostream&) const;
 
-};	// end class state_base
+};	// end class module_state_base
 
 //=============================================================================
 }	// end namespace SIM

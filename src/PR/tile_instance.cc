@@ -1,6 +1,6 @@
 /**
 	\file "PR/tile_instance.cc"
-	$Id: tile_instance.cc,v 1.1.2.2 2011/04/16 01:51:54 fang Exp $
+	$Id: tile_instance.cc,v 1.1.2.3 2011/04/19 01:08:43 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -15,6 +15,7 @@
 
 namespace PR {
 // using PR::optparse;
+using namespace util::vector_ops;
 using util::option_value;
 using util::read_value;
 using util::write_value;
@@ -118,7 +119,8 @@ const real_type __zero[] = {0.0, 0.0, 0.0};
 
 tile_instance::tile_instance() :
 		position(__zero), previous_position(__zero), 
-		velocity(__zero), acceleration(__zero), 
+		velocity(__zero), previous_velocity(__zero),
+		acceleration(__zero), 
 		properties(),
 		proximity_cache(),
 		fixed(false) {
@@ -127,7 +129,8 @@ tile_instance::tile_instance() :
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 tile_instance::tile_instance(const tile_type& t) :
 		position(__zero), previous_position(__zero), 
-		velocity(__zero), acceleration(__zero), 
+		velocity(__zero), previous_velocity(__zero),
+		acceleration(__zero), 
 		properties(t),
 		proximity_cache(),
 		fixed(false) {
@@ -152,11 +155,25 @@ tile_instance::dump(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Numerical integration assuming momentarily constant acceleration.
+	Optimize by passing dt^2?
+ */
+void
+tile_instance::update(const time_type& dt) {
+	previous_position = position;
+	previous_velocity = velocity;
+	velocity += acceleration *dt;
+	position += previous_velocity *dt + acceleration *(dt*dt*0.5);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 tile_instance::save_checkpoint(ostream& o) const {
 	write_value(o, position);
 	write_value(o, previous_position);
 	write_value(o, velocity);
+	write_value(o, previous_velocity);
 	write_value(o, acceleration);
 	properties.save_checkpoint(o);
 	write_value(o, fixed);
@@ -170,6 +187,7 @@ tile_instance::load_checkpoint(istream& i) {
 	read_value(i, position);
 	read_value(i, previous_position);
 	read_value(i, velocity);
+	read_value(i, previous_velocity);
 	read_value(i, acceleration);
 	properties.load_checkpoint(i);
 	read_value(i, fixed);
