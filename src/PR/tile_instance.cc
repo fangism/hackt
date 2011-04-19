@@ -1,6 +1,6 @@
 /**
 	\file "PR/tile_instance.cc"
-	$Id: tile_instance.cc,v 1.1.2.3 2011/04/19 01:08:43 fang Exp $
+	$Id: tile_instance.cc,v 1.1.2.4 2011/04/19 03:51:49 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -117,12 +117,17 @@ tile_properties::load_checkpoint(istream& i) {
 static
 const real_type __zero[] = {0.0, 0.0, 0.0};
 
+bool tile_instance::dump_properties = true;
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 tile_instance::tile_instance() :
 		position(__zero), previous_position(__zero), 
 		velocity(__zero), previous_velocity(__zero),
 		acceleration(__zero), 
 		properties(),
+#if PR_LOCAL_PROXIMITY_CACHE
 		proximity_cache(),
+#endif
 		fixed(false) {
 }
 
@@ -132,7 +137,9 @@ tile_instance::tile_instance(const tile_type& t) :
 		velocity(__zero), previous_velocity(__zero),
 		acceleration(__zero), 
 		properties(t),
+#if PR_LOCAL_PROXIMITY_CACHE
 		proximity_cache(),
+#endif
 		fixed(false) {
 }
 
@@ -150,7 +157,9 @@ tile_instance::dump(ostream& o) const {
 		o << " @'=" << velocity;
 		o << " @\"=" << acceleration;
 	}
-	properties.dump(o << " [") << ']';
+	if (dump_properties) {
+		properties.dump(o << " [") << ']';
+	}
 	return o;
 }
 

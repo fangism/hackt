@@ -3,12 +3,20 @@
 #ifndef	__HAC_PR_TILE_INSTANCE_H__
 #define	__HAC_PR_TILE_INSTANCE_H__
 
+/**
+	Define to 1 to have each tile_instance contain its own 
+	proximity_cache to neighbors.  
+	If defined to 0, proximity_cache is kept globally elsewhere.
+ */
+#define	PR_LOCAL_PROXIMITY_CACHE			0
+
+#if PR_LOCAL_PROXIMITY_CACHE
 #include <set>
+#endif
 #include "PR/tile_type.h"
 #include "util/vector_ops.h"
 
 namespace PR {
-using std::set;
 
 //=============================================================================
 /**
@@ -39,13 +47,14 @@ struct tile_instance {
 		Object type, copied, not linked.
 	 */
 	tile_type			properties;
+#if PR_LOCAL_PROXIMITY_CACHE
 	/**
 		Sparse graph of objects that are sufficiently close to 
 		one another.  This matrix is dynamic and is constantly updated 
 		with multidimensional sliding windows (intersection thereof).
 	 */
-	set<int_type>			proximity_cache;
-
+	std::set<int_type>		proximity_cache;
+#endif
 #if 0
 	// only matters for routing
 	/**
@@ -61,6 +70,8 @@ struct tile_instance {
 		If true, prevent this from moving.
 	 */
 	bool				fixed;
+
+	static bool			dump_properties;
 
 public:
 	tile_instance();
@@ -103,8 +114,10 @@ public:
 	ostream&
 	dump(ostream&) const;
 
+#if PR_LOCAL_PROXIMITY_CACHE
 	void
 	clear_proximity_cache(void) { proximity_cache.clear(); }
+#endif
 
 	bool
 	save_checkpoint(ostream&) const;

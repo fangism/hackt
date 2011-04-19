@@ -3,7 +3,20 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
-2011-04-19	David Fang		<fangism@users.sourceforge.net>
+2011-04-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-64-pr-01-06:
+	  ipple: placement_engine split out placer_options class for
+		use with options_map_impl, now used for handling parameters.
+		proximity_cache moved from instances to placement_engine.
+		updated default output when watch_objects during iterate().
+		Removed unnecessary ffrac (force fraction) factor from
+			force calculation (now purely linear).
+		Factored out apply_pairwise_force().
+		Test cases updated.
+
+
+2011-04-18	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-64-pr-01-05:
 	  ipple: implemented concept of equilibrium_distance between

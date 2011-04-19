@@ -1,12 +1,12 @@
 parameters:
-  bounds=<0,0,-50>,<100,100,50>
+  bounds=<0,0,-50>;<100,100,50>
+  @time=0
   damping=0.1
-  temperature=0
-  proximity_radius=2
-  repulsion_coeff=1
-  time_step=0.001
-  precision=4
   position_tolerance=0.001
+  precision=4
+  repulsion_coeff=1
+  temperature=0
+  time_step=0.001
   velocity_tolerance=0.001
 object types:
   [0]: size=<2,2,2>

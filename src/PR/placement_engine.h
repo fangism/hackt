@@ -1,7 +1,7 @@
 /**
 	\file "PR/placement_engine.h"
 	Physics simulator.
-	$Id: placement_engine.h,v 1.1.2.5 2011/04/19 01:08:42 fang Exp $
+	$Id: placement_engine.h,v 1.1.2.6 2011/04/19 03:51:48 fang Exp $
  */
 
 #ifndef	__HAC_PR_PLACEMENT_ENGINE_H__
@@ -18,15 +18,7 @@ using std::string;
 using util::ifstream_manager;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	For solving placement.
-	Physics, force-driven, with annealing.
- */
-class placement_engine : public HAC::SIM::state_base {
-public:
-	vector<tile_type>		object_types;
-	vector<channel_type>		channel_types;
-
+struct placer_options {
 	/**
 		High temperature: greater magnitude of random velocity vector
 		added to each iteration.
@@ -91,10 +83,39 @@ public:
 		If true, print object coordinates after every iterate()
 	 */
 	bool				watch_objects;
+
+	placer_options();
+#if 0
+	~placer_options();
+#endif
+
+	void
+	save_checkpoint(ostream&) const;
+
+	void
+	load_checkpoint(istream&);
+
+};	// end struct placer_options
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	For solving placement.
+	Physics, force-driven, with annealing.
+ */
+class placement_engine : public HAC::SIM::state_base {
+public:
+	vector<tile_type>		object_types;
+	vector<channel_type>		channel_types;
+	placer_options			opt;
 	/**
 		The objects and coordinates to solve in.
 	 */
 	pcanvas				space;
+#if !PR_LOCAL_PROXIMITY_CACHE
+	typedef	std::pair<size_t, size_t>	proximity_edge;
+	vector<proximity_edge>		proximity_cache;
+#endif
+	time_type			elapsed_time;
 protected:
 	string				autosave_name;
 
@@ -201,6 +222,11 @@ private:
 
 	void
 	zero_forces(void);
+
+	static
+	void
+	apply_pairwise_force(tile_instance&, tile_instance&,
+		const force_type&);
 
 	static
 	void

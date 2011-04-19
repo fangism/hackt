@@ -2,7 +2,7 @@
 	\file "PR/pr-command.cc"
 	Command-line feature for PR simulator.
 	TODO: scheme interface
-	$Id: pr-command.cc,v 1.1.2.5 2011/04/19 01:08:42 fang Exp $
+	$Id: pr-command.cc,v 1.1.2.6 2011/04/19 03:51:49 fang Exp $
  */
 
 #define	ENABLE_STATIC_TRACE		0
@@ -549,8 +549,8 @@ Geometry::main(State& s, const string_list& a) {
 	LEX_VECTOR(v2, s2)
 	// minswap elements
 	util::vector_ops::min_swap_elements(v1, v2);
-	s.lower_corner = v1;
-	s.upper_corner = v2;
+	s.opt.lower_corner = v1;
+	s.opt.upper_corner = v2;
 	return Command::NORMAL;
 }
 
@@ -786,7 +786,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoWatchObjects, "nowatch-objects", setup,
 int
 WatchObjects::main(State& s, const string_list& a) {
 	REQUIRE_EXACT_ARGS(a, 1)
-	s.watch_objects = true;
+	s.opt.watch_objects = true;
 	return Command::NORMAL;
 }
 
@@ -799,7 +799,7 @@ WatchObjects::usage(ostream& o) {
 int
 NoWatchObjects::main(State& s, const string_list& a) {
 	REQUIRE_EXACT_ARGS(a, 1)
-	s.watch_objects = false;
+	s.opt.watch_objects = false;
 	return Command::NORMAL;
 }
 
