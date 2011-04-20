@@ -1,6 +1,6 @@
 /**
 	\file "PR/placement_engine.cc"
-	$Id: placement_engine.cc,v 1.1.2.6 2011/04/19 22:31:18 fang Exp $
+	$Id: placement_engine.cc,v 1.1.2.7 2011/04/20 01:09:38 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -17,7 +17,6 @@
 #include "util/array.tcc"
 #include "util/indent.h"
 #include "util/string.h"
-#include "util/optparse.tcc"
 #include "util/numeric/random.h"
 #include "util/IO_utils.tcc"
 #include "util/iterator_more.h"
@@ -43,63 +42,6 @@ using namespace util::vector_ops;		// for many operator overloads
 #include "util/using_ostream.h"
 
 //=============================================================================
-static
-const real_type __default_lower_corner[] = {0.0, 0.0, -50.0};
-static
-const real_type __default_upper_corner[] = {100.0, 100.0, 50.0};
-
-//=============================================================================
-// class placer_options method definitions
-
-placer_options::placer_options() :
-		temperature(0.0),	// brrrr-r-r-r!!!!
-		viscous_damping(0.1),	// gooiness (> 0)
-		proximity_radius(0.0),	// for collision scanning
-		repulsion_coeff(1.0),
-		lower_corner(__default_lower_corner),
-		upper_corner(__default_upper_corner),
-		time_step(1e-3),
-		pos_tol(1e-3),
-		vel_tol(1e-3),
-//		accel_tol(1e-3),
-		precision(4),
-		watch_objects(false)
-{
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-placer_options::save_checkpoint(ostream& o) const {
-// write global parameters
-	write_value(o, temperature);
-	write_value(o, viscous_damping);
-	write_value(o, proximity_radius);
-	write_value(o, repulsion_coeff);
-	write_value(o, lower_corner);
-	write_value(o, upper_corner);
-	write_value(o, time_step);
-	write_value(o, pos_tol);
-	write_value(o, vel_tol);
-//	write_value(o, accel_tol);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-placer_options::load_checkpoint(istream& i) {
-// read global parameters
-	read_value(i, temperature);
-	read_value(i, viscous_damping);
-	read_value(i, proximity_radius);
-	read_value(i, repulsion_coeff);
-	read_value(i, lower_corner);
-	read_value(i, upper_corner);
-	read_value(i, time_step);
-	read_value(i, pos_tol);
-	read_value(i, vel_tol);
-//	read_value(i, accel_tol);
-}
-
-//=============================================================================
 // class placement_engine method definitions
 
 placement_engine::placement_engine(const size_t d) :
@@ -112,6 +54,8 @@ placement_engine::placement_engine(const size_t d) :
 		proximity_cache(),
 #endif
 		elapsed_time(0.0), 
+		max_delta_position(0.0),
+		max_delta_velocity(0.0),
 		autosave_name() {
 	initialize_default_types();
 #if !PR_LOCAL_PROXIMITY_CACHE
@@ -238,186 +182,7 @@ placement_engine::place_object(const size_t i, const real_vector& v) {
 	return false;
 }
 
-//------------------------------------------------------------------------------
-// options map setup
-typedef	placer_options				options_struct_type;
-typedef	util::options_map_impl<options_struct_type>	options_map_impl_type;
-typedef	options_map_impl_type::opt_func			opt_func;
-typedef	options_map_impl_type::opt_entry		opt_entry;
-typedef	options_map_impl_type::opt_map_type		opt_map_type;
-static	options_map_impl_type				options_map_wrapper;
-static	opt_map_type&	PE_option_map(options_map_wrapper.options_map);
-
-template <typename T>
-static
-bool
-__set_member_default(const option_value& opt,
-		options_struct_type& PE, T options_struct_type::*mem) {
-	return util::set_option_member_single_numeric_value(opt, PE, mem);
-}
-static
-const
-string
-__bool_type__("bool"),
-__int_type__("int"),
-__real_type__("real"),
-__str_type__("string");
-
-template <typename T>
-static const string&
-__string_type_of(T options_struct_type::*);
-
-#if 0
-static const string&
-__string_type_of(bool options_struct_type::*) { return __bool_type__; }
-static const string&
-__string_type_of(size_t options_struct_type::*) { return __int_type__; }
-#endif
-static const string&
-__string_type_of(int_type options_struct_type::*) { return __int_type__; }
-static const string&
-__string_type_of(real_type options_struct_type::*) { return __real_type__; }
-#if 0
-static const string&
-__string_type_of(string options_struct_type::*) { return __str_type__; }
-#endif
-
-template <typename T>
-static
-ostream&
-__print_member_default(ostream& o, const options_struct_type& n_opt,
-		T options_struct_type::*mem) {
-	return options_map_impl_type::print_member_default(o, n_opt, mem);
-}
-
-
-// macros for registering options
-
-#define	DEFINE_SET_MEMBER(member)					\
-static									\
-bool									\
-__set_ ## member (const option_value& v, options_struct_type& o) {	\
-	return __set_member_default(v, o, &options_struct_type::member);	\
-}
-
-#define	DEFINE_CALL_MEMBER_FUNCTION(memfun)				\
-static									\
-bool									\
-__set_ ## memfun (const option_value& v, options_struct_type& o) {	\
-	o.memfun(v);							\
-	return false;							\
-}
-
-#define	DEFINE_PRINT_MEMBER(member)					\
-static									\
-ostream&								\
-__print_ ## member (ostream& o, const options_struct_type& n) {		\
-	return __print_member_default(o, n, &options_struct_type::member); \
-}
-
-#if 0
-#define	DEFINE_PRINT_MEMBER_SEQUENCE(member)				\
-static									\
-ostream&								\
-__print_ ## member (ostream& o, const options_struct_type& n) {		\
-	return __print_member_sequence(o, n, &options_struct_type::member); \
-}
-
-#define	DEFINE_PRINT_POLICY_MEMBER(member)				\
-	DEFINE_PRINT_MEMBER(member ## _policy)
-
-#define	DEFINE_PRINT_MISC_OPTION(key)					\
-static									\
-ostream&								\
-__print_ ## key (ostream& o, const options_struct_type& n) {		\
-	static const string k(STRINGIFY(key));				\
-	return __print_misc_option(o, n, k);				\
-}
-#endif
-
-#define	DEFINE_TYPE_MEMBER(member)					\
-static									\
-const string&								\
-__type_ ## member (void) {						\
-	return __string_type_of(&options_struct_type::member);		\
-}
-
-#if 0
-#define	DEFINE_TYPE_POLICY_MEMBER(member)				\
-	DEFINE_TYPE_MEMBER(member ## _policy)
-#endif
-
-#define	REGISTER_OPTION_DEFAULT(member, key, help)			\
-static const opt_entry& __receipt ## member				\
-__ATTRIBUTE_UNUSED_CTOR__((PE_option_map[key] =				\
-	opt_entry(& __set_ ## member, &__print_ ## member, 		\
-	&__type_ ## member(), help)));
-
-#if 0
-#define	REGISTER_OPTION_POLICY(member, key, help)			\
-	REGISTER_OPTION_DEFAULT(member ## _policy, key, help)
-#endif
-
-#define	REGISTER_PSEUDO_OPTION(memfun, key, help)			\
-static const opt_entry& __receipt ## memfun				\
-__ATTRIBUTE_UNUSED_CTOR__((PE_option_map[key] =				\
-	opt_entry(& __set_ ## memfun, NULL, NULL, help)));
-
-#if 0
-#define	REGISTER_MISC_OPTION(key, help)					\
-static const opt_entry& __receipt ## key				\
-__ATTRIBUTE_UNUSED_CTOR__((PE_option_map[STRINGIFY(key)] =		\
-	opt_entry(&__set_misc_option, &__print_ ## key,	 		\
-	&__str_type__, help)));
-#endif
-
-// define option functions
-#define	DEFINE_OPTION_DEFAULT(member, key, help)			\
-	DEFINE_SET_MEMBER(member)					\
-	DEFINE_PRINT_MEMBER(member)					\
-	DEFINE_TYPE_MEMBER(member)					\
-	REGISTER_OPTION_DEFAULT(member, key, help)
-
-#if 0
-#define	DEFINE_OPTION_SEQUENCE(member, key, help)			\
-	DEFINE_SET_MEMBER(member)					\
-	DEFINE_PRINT_MEMBER_SEQUENCE(member)				\
-	DEFINE_TYPE_MEMBER(member)					\
-	REGISTER_OPTION_DEFAULT(member, key, help)
-#endif
-
-// for member function calls
-
-// for member function calls
-#define	DEFINE_OPTION_MEMFUN(memfun, key, help)				\
-	DEFINE_CALL_MEMBER_FUNCTION(memfun)				\
-	REGISTER_PSEUDO_OPTION(memfun, key, help)
-
-// for policy members
-#define	DEFINE_MISC_OPTION(key, help)					\
-	DEFINE_PRINT_MISC_OPTION(key)					\
-	REGISTER_MISC_OPTION(key, help)
-
-#define	DEFINE_PRESET_OPTION(memfun, key, help)				\
-	DEFINE_OPTION_MEMFUN(memfun, key, help)
-
-
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DEFINE_OPTION_DEFAULT(viscous_damping, "damping", 
-	"viscous damping coefficient, linear with velocity")
-DEFINE_OPTION_DEFAULT(temperature, "temperature", 
-	"annealing temperature, for additive random velocity")
-DEFINE_OPTION_DEFAULT(repulsion_coeff, "repulsion_coeff", 
-	"repulsive spring coefficient for (near-)colliding objects")
-DEFINE_OPTION_DEFAULT(precision, "precision", 
-	"time interval over which to integrate per iteration")
-DEFINE_OPTION_DEFAULT(time_step, "time_step", 
-	"time interval over which to integrate per iteration")
-DEFINE_OPTION_DEFAULT(pos_tol, "position_tolerance", 
-	"position change tolerance for convergence")
-DEFINE_OPTION_DEFAULT(vel_tol, "velocity_tolerance", 
-	"velocity change tolerance for convergence")
-
 #if 0
 DEFINE_OPTION_MEMFUN(parse_corners, "geometry", 
 	"set bounds/corners of simulation space")
@@ -429,53 +194,19 @@ placement_engine::parse_corners(const option_value& v) {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
-placement_engine::parse_parameter(const string& s) {
-	return parse_parameter(optparse(s));
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	TODO: list keys from option_map
- */
-ostream&
-placement_engine::list_parameters(ostream& o) {
-	o << "parameters [default values]:" << endl;
-	return options_map_wrapper.help(o);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 placement_engine::dump_parameters(ostream& o) const {
 	const save_precision p(o, opt.precision);
 	o << "parameters:\n";
 	INDENT_SECTION(o);
-	o << auto_indent << "bounds=" <<
-		opt.lower_corner << ';' << opt.upper_corner << endl;
 	o << auto_indent << "@time=" << elapsed_time << endl;
-	options_map_wrapper.dump(o, opt);
+	opt.dump_parameters(o);
+#if 0
+	o << auto_indent << "max_delta_position=" << max_delta_position << endl;
+	o << auto_indent << "max_delta_velocity=" << max_delta_velocity << endl;
+#endif
 	return o;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
-placement_engine::parse_parameter(const option_value& o) {
-if (o.key.length()) {
-	typedef opt_map_type::const_iterator    map_iterator;
-	const map_iterator me(PE_option_map.end());
-	const map_iterator mf(PE_option_map.find(o.key));
-	if (mf != me) {
-		if ((*mf->second.func)(o, opt)) {
-			return true;
-		}
-	} else {
-		cerr << "Error: unknown option \'"
-			<< o.key << "\'." << endl;
-		return true;
-	}
-}
-	return false;
-}	// end placement_engine::parse_parameter
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -871,13 +602,15 @@ placement_engine::compute_collision_forces(void) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	TODO: return maximum delta for checking for convergence.
+	Change in position/velocity are recorded and updated. 
 	From kinetic theory of molecules (gas):
 		mv^2/2 = 3kT/2
  */
 void
 placement_engine::update_velocity_and_position(void) {
 	STACKTRACE_VERBOSE;
+	max_delta_position = 0.0;
+	max_delta_velocity = 0.0;
 	typedef	vector<tile_instance>::iterator		iterator;
 	iterator i(space.objects.begin()), e(space.objects.end());
 	const real_type tt = opt.temperature *opt.time_step;
@@ -886,7 +619,19 @@ placement_engine::update_velocity_and_position(void) {
 #endif
 	for ( ; i!=e; ++i) {
 	if (!i->is_fixed()) {
+		// apply force and momentum
 		i->update(opt.time_step, opt.viscous_damping);
+		// enforce bounds
+		clamp_position(i->position);
+		// record maximum change, not counting randomness
+		// don't bother with euclidean distance
+		// rectilinear or maximum_dimension shall suffice
+		const real_type rdx(i->rectilinear_delta_position());
+		const real_type rdv(i->rectilinear_delta_velocity());
+		if (rdx > max_delta_position)
+			max_delta_position = rdx;
+		if (rdv > max_delta_velocity)
+			max_delta_velocity = rdv;
 		if (opt.temperature > 0.0) {
 			// alter position or velocity?
 			i->position += random_unit_vector() *
@@ -896,6 +641,7 @@ placement_engine::update_velocity_and_position(void) {
 				sqrttt;
 #endif
 		}
+//		clamp_position(i->position);
 	}
 	}
 	elapsed_time += opt.time_step;
@@ -918,7 +664,18 @@ placement_engine::iterate(void) {
 		cout << "@time=" << elapsed_time << endl;
 		dump_objects(cout);
 	}
+	if (opt.watch_deltas) {
+		cout << "delta-position=" << max_delta_position <<
+			", delta-velocity=" << max_delta_velocity << endl;
+	}
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+void
+placement_engine::simple_converge(void) {
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
@@ -1011,12 +768,16 @@ placement_engine::save_checkpoint(ostream& o) const {
 	write_value(o, checkpoint_version);
 	util::numeric::write_seed48(o);
 	opt.save_checkpoint(o);
+	write_value(o, elapsed_time);
 // write object types
 	save_array(o, object_types);
 // write channel types
 	save_array(o, channel_types);
 // write objects and channels
 	space.save_checkpoint(o);
+
+	write_value(o, max_delta_position);
+	write_value(o, max_delta_velocity);
 
 	write_value(o, magic_string);
 	return !o;
@@ -1048,6 +809,7 @@ try {
 }
 	util::numeric::read_seed48(i);
 	opt.load_checkpoint(i);
+	read_value(i, elapsed_time);
 // read object types
 	load_array(i, object_types);
 // read channel types
@@ -1055,6 +817,8 @@ try {
 // read objects and channels
 	space.load_checkpoint(i);
 
+	read_value(i, max_delta_position);
+	read_value(i, max_delta_velocity);
 {
 	string temp;
 	read_value(i, temp);

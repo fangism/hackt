@@ -2,7 +2,7 @@
 	\file "PR/pr-command.cc"
 	Command-line feature for PR simulator.
 	TODO: scheme interface
-	$Id: pr-command.cc,v 1.1.2.7 2011/04/19 22:31:19 fang Exp $
+	$Id: pr-command.cc,v 1.1.2.8 2011/04/20 01:09:42 fang Exp $
  */
 
 #define	ENABLE_STATIC_TRACE		0
@@ -790,7 +790,17 @@ Parameter::usage(ostream& o) {
 	o << name << " [KEY[=VALUE] ...]" << endl;
 	o <<
 "Controls parameters for the simulation, including physics.\n";
-	placement_engine::list_parameters(o) << endl;
+	placer_options::list_parameters(o) << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <bool placer_options::*bmem, bool V>
+static
+int
+set_boolean_option(State& s, const string_list& a, void usage(ostream&)) {
+	REQUIRE_EXACT_ARGS(a, 1)
+	s.opt.*bmem = V;
+	return Command::NORMAL;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -801,9 +811,8 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoWatchObjects, "nowatch-objects", setup,
 
 int
 WatchObjects::main(State& s, const string_list& a) {
-	REQUIRE_EXACT_ARGS(a, 1)
-	s.opt.watch_objects = true;
-	return Command::NORMAL;
+	return set_boolean_option<&placer_options::watch_objects, true>
+		(s, a, usage);
 }
 
 void
@@ -814,13 +823,42 @@ WatchObjects::usage(ostream& o) {
 
 int
 NoWatchObjects::main(State& s, const string_list& a) {
-	REQUIRE_EXACT_ARGS(a, 1)
-	s.opt.watch_objects = false;
-	return Command::NORMAL;
+	return set_boolean_option<&placer_options::watch_objects, false>
+		(s, a, usage);
 }
 
 void
 NoWatchObjects::usage(ostream& o) {
+	o << name << endl;
+	o << brief << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(WatchDeltas, "watch-deltas", setup,
+        "print change in position/velocity after each iteration")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoWatchDeltas, "nowatch-deltas", setup,
+        "suppress change in position/velocity after each iteration")
+
+int
+WatchDeltas::main(State& s, const string_list& a) {
+	return set_boolean_option<&placer_options::watch_deltas, true>
+		(s, a, usage);
+}
+
+void
+WatchDeltas::usage(ostream& o) {
+	o << name << endl;
+	o << brief << endl;
+}
+
+int
+NoWatchDeltas::main(State& s, const string_list& a) {
+	return set_boolean_option<&placer_options::watch_deltas, false>
+		(s, a, usage);
+}
+
+void
+NoWatchDeltas::usage(ostream& o) {
 	o << name << endl;
 	o << brief << endl;
 }

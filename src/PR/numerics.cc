@@ -1,6 +1,6 @@
 /**
 	\file "PR/numerics.cc"
-	$Id: numerics.cc,v 1.1.2.4 2011/04/19 22:31:17 fang Exp $
+	$Id: numerics.cc,v 1.1.2.5 2011/04/20 01:09:37 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -192,6 +192,7 @@ rectilinear_distance(const real_vector& r1, const real_vector& r2) {
 	real_vector d(r2 -r1);
 	return sum(apply(d, abs<real_type>));
 }
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 }	// end namespace PR
 

@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.251.2.5 2011/04/16 01:51:50 fang Exp $
+#	$Id: Makefile.am,v 1.251.2.6 2011/04/20 01:09:36 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -1083,6 +1083,7 @@ PR_CC_FILES = \
 	PR/numerics.cc \
 	PR/pcanvas.cc \
 	PR/placement_engine.cc \
+	PR/placer_options.cc \
 	PR/tile_instance.cc
 
 PR_H_FILES = $(PR_CC_FILES:.cc=.h) \

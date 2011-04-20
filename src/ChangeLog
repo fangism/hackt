@@ -5,6 +5,16 @@
 
 2011-04-19	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-84-64-pr-01-08:
+	  ipple: re-organized placer_options into own class, 
+		object_state contains the position/velocity/accel
+		coordinates now inherited in tile_instance.
+		placement_engine: now keeps track of max_delta_{pos,vel},
+			and clamps positions within bounds.
+		enabled iplrc-checkpoint testing.
+	  TODO next: simple_converge() using fixed time_step
+
+
 	* HACKT-00-01-04-main-00-84-64-pr-01-07:
 	  ipple, placement_engine: implemented damping in update, 
 		also implemented temperature for random displacement

@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.1.2.2 2011/04/19 22:31:32 fang Exp $
+#	$Id: Makefile.am,v 1.1.2.3 2011/04/20 01:09:46 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -15,6 +15,8 @@ else
 006.ipltest: 006.iplrc
 	$(SKIP_TEST_SCRIPT)
 endif
+
+HACKT_IPPLE_CKPT_TEST_SCRIPTS_BASES = $(HACKT_IPPLERC_TEST_SCRIPTS_PASSES)
 
 include $(top_srcdir)/test/Make.test-tail
 

@@ -1,6 +1,6 @@
 parameters:
-  bounds=<0,0,-50>;<100,100,50>
   @time=0
+  bounds=<0,0,-50>;<100,100,50>
   damping=0.1
   position_tolerance=0.001
   precision=4
@@ -8,6 +8,8 @@ parameters:
   temperature=0
   time_step=0.01
   velocity_tolerance=0.001
+  watch_deltas=0
+  watch_objects=0
 object types:
   [0]: size=<2,2,2>
 channel types:

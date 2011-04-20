@@ -1,7 +1,7 @@
 /**
 	\file "PR/placement_engine.h"
 	Physics simulator.
-	$Id: placement_engine.h,v 1.1.2.6 2011/04/19 03:51:48 fang Exp $
+	$Id: placement_engine.h,v 1.1.2.7 2011/04/20 01:09:38 fang Exp $
  */
 
 #ifndef	__HAC_PR_PLACEMENT_ENGINE_H__
@@ -9,6 +9,7 @@
 
 #include <string>
 #include "PR/pcanvas.h"
+#include "PR/placer_options.h"
 #include "sim/state_base.h"
 #include "util/named_ifstream_manager.h"	// needed by interpreter
 
@@ -16,86 +17,6 @@ namespace PR {
 using std::istream;
 using std::string;
 using util::ifstream_manager;
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-struct placer_options {
-	/**
-		High temperature: greater magnitude of random velocity vector
-		added to each iteration.
-		Vary the temperature in different phases to simulate annealing.
-	 */
-	real_type			temperature;
-#if 0
-	/**
-		Constant dampening factor (positive).
-		A constant force that is always opposite the direction 
-		of motion.
-	 */
-	real_type			friction;
-#endif
-	/**
-		Viscous damping coefficient.
-		A speed-dependent force in the opposite direction.
-		Linear dampening factor.
-	 */
-	real_type			viscous_damping;
-	/**
-		Threshold distance to cache nearby-objects for collision
-		and repulsion calculations.
-		For this purpose, a cube zone is used.  
-		A good value for this would be the maximum of any tile's 
-		height or width.  
-	 */
-	real_type			proximity_radius;
-	/**
-		Repulsive spring coefficient, global.
-	 */
-	real_type			repulsion_coeff;
-	/**
-		Object collisions are hard constraints, 
-		otherwise, allow overlap and use corrective forces.  
-		Default: false (soft) is easier to compute.
-	 */
-//	bool				hard_collisions;
-	/**
-		Bounds for positions.  
-	 */
-	position_type			lower_corner;
-	position_type			upper_corner;
-
-	// these parameters may be publicly tweaked at any time
-
-	/// time step
-	time_type			time_step;
-	/// position-change tolerance for determining convergence
-	real_type			pos_tol;
-	/// speed-change tolerance for determining convergence
-	real_type			vel_tol;
-#if 0
-	/// acceleration-change tolerance for determining convergence
-	real_type			accel_tol;
-#endif
-	/**
-		Precision for displaying numbers.
-	 */
-	int_type			precision;
-	/**
-		If true, print object coordinates after every iterate()
-	 */
-	bool				watch_objects;
-
-	placer_options();
-#if 0
-	~placer_options();
-#endif
-
-	void
-	save_checkpoint(ostream&) const;
-
-	void
-	load_checkpoint(istream&);
-
-};	// end struct placer_options
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -116,6 +37,16 @@ public:
 	vector<proximity_edge>		proximity_cache;
 #endif
 	time_type			elapsed_time;
+	/**
+		The maximum distance changed by any single object
+		in the previous iteration.
+	 */
+	real_type			max_delta_position;
+	/**
+		The maximum velocity changed by any single object
+		in the previous iteration.
+	 */
+	real_type			max_delta_velocity;
 protected:
 	string				autosave_name;
 
@@ -159,14 +90,14 @@ public:
 	place_object(const size_t, const real_vector&);
 
 	bool
-	parse_parameter(const string&);
+	parse_parameter(const string& s) {
+		return opt.parse_parameter(s);
+	}
 
 	bool
-	parse_parameter(const option_value&);
-
-	static
-	ostream&
-	list_parameters(ostream&);
+	parse_parameter(const option_value& o) {
+		return opt.parse_parameter(o);
+	}
 
 	ostream&
 	dump_parameters(ostream&) const;
@@ -177,8 +108,8 @@ public:
 	void
 	iterate(void);
 
-	int_type
-	solve(void);
+	void
+	simple_converge(void);
 
 	ostream&
 	dump_object_types(ostream&) const;

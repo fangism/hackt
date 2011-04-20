@@ -19,13 +19,7 @@
 namespace PR {
 
 //=============================================================================
-/**
-	An object to place.
-	TODO: Q: Is it more efficient to have undirected edges here
-		for channel/springs?  (lower-triangle sparse)
-	TODO: support grid-alignment and gravity forces
- */
-struct tile_instance {
+struct object_state {
 	/**
 		Current position of object.
 	 */
@@ -41,6 +35,52 @@ struct tile_instance {
 		every interation.
 	 */
 	acceleration_type		acceleration;
+
+	object_state();
+
+	void
+	zero_force(void) {
+		util::vector_ops::fill(acceleration, 0.0);
+	}
+
+	void
+	place(const real_vector& v) {
+		position = v;
+		previous_position = v;
+	}
+
+	void
+	update(const time_type&, const real_type&);
+
+	real_type
+	rectilinear_delta_position(void) const {
+		return rectilinear_distance(previous_position, position);
+	}
+
+	real_type
+	rectilinear_delta_velocity(void) const {
+		return rectilinear_distance(previous_velocity, velocity);
+	}
+
+	ostream&
+	dump(ostream&) const;
+
+	bool
+	save_checkpoint(ostream&) const;
+
+	bool
+	load_checkpoint(istream&);
+
+};	// end struct object_state
+
+//-----------------------------------------------------------------------------
+/**
+	An object to place.
+	TODO: Q: Is it more efficient to have undirected edges here
+		for channel/springs?  (lower-triangle sparse)
+	TODO: support grid-alignment and gravity forces
+ */
+struct tile_instance : public object_state {
 //	force_type			force;
 
 	/**
@@ -81,11 +121,6 @@ public:
 
 	~tile_instance();
 
-	void
-	zero_force(void) {
-		util::vector_ops::fill(acceleration, 0.0);
-	}
-
 	bool
 	is_fixed(void) const {
 		return fixed;
@@ -95,6 +130,7 @@ public:
 	fix(void) {
 		fixed = true;
 		util::vector_ops::fill(velocity, 0.0);
+		previous_velocity = velocity;
 	}
 
 	void
@@ -102,14 +138,17 @@ public:
 		fixed = false;
 	}
 
-	void
-	place(const real_vector& v) {
-		position = v;
-		previous_position = v;
+#if 0
+	real_vector
+	delta_position(void) const {
+		return position -previous_position;
 	}
 
-	void
-	update(const time_type&, const real_type&);
+	real_vector
+	delta_velocity(void) const {
+		return velocity -previous_velocity;
+	}
+#endif
 
 	ostream&
 	dump(ostream&) const;
