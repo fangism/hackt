@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.1.2.3 2011/04/20 01:09:46 fang Exp $
+#	$Id: Makefile.am,v 1.1.2.4 2011/04/20 01:50:13 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -7,7 +7,7 @@ include $(top_srcdir)/test/Make.test-head
 # SUBDIRS = .
 
 HACKT_IPPLERC_TEST_SCRIPTS_PASSES = \
-	001 002 003 003b 004 004b 005 006
+	001 002 003 003b 004 004b 005 005b 006 006b
 
 # random tests have non-zero temperature for randomness
 if RANDOM_TESTS
