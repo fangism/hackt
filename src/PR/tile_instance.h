@@ -14,6 +14,7 @@
 #include <set>
 #endif
 #include "PR/tile_type.h"
+#include "PR/channel_type.h"
 #include "util/vector_ops.h"
 
 namespace PR {
@@ -36,6 +37,8 @@ struct object_state {
 	 */
 	acceleration_type		acceleration;
 
+
+public:
 	object_state();
 
 	void
@@ -106,11 +109,18 @@ struct tile_instance : public object_state {
 	 */
 	bool				hflip;
 #endif
+private:
 	/**
 		If true, prevent this from moving.
 	 */
 	bool				fixed;
+	/**
+		Kinetic energy is computed by update.
+		without factor of 1/2.
+	 */
+	real_type			_kinetic_energy_2;
 
+public:
 	static bool			dump_properties;
 
 public:
@@ -137,6 +147,27 @@ public:
 	unfix(void) {
 		fixed = false;
 	}
+
+	static
+	void
+	apply_pairwise_force(tile_instance&, tile_instance&, const force_type&);
+
+	static
+	real_type
+	apply_attraction_forces(tile_instance&, tile_instance&,
+		const channel_properties&);
+
+	static
+	real_type
+	apply_repulsion_forces(tile_instance&, tile_instance&,
+		const channel_properties&);
+
+
+	const real_type&
+	update_kinetic_energy_2(void);
+
+	const real_type&
+	kinetic_energy_2(void) const { return _kinetic_energy_2; }
 
 #if 0
 	real_vector

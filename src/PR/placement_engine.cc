@@ -1,6 +1,6 @@
 /**
 	\file "PR/placement_engine.cc"
-	$Id: placement_engine.cc,v 1.1.2.7 2011/04/20 01:09:38 fang Exp $
+	$Id: placement_engine.cc,v 1.1.2.8 2011/04/21 01:32:13 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -54,8 +54,10 @@ placement_engine::placement_engine(const size_t d) :
 		proximity_cache(),
 #endif
 		elapsed_time(0.0), 
+#if 0
 		max_delta_position(0.0),
 		max_delta_velocity(0.0),
+#endif
 		autosave_name() {
 	initialize_default_types();
 #if !PR_LOCAL_PROXIMITY_CACHE
@@ -163,35 +165,16 @@ placement_engine::unpin_object(const size_t i) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Enforce bounds on position.
- */
-void
-placement_engine::clamp_position(real_vector& v) const {
-	min_clamp_elements(v, opt.lower_corner);
-	max_clamp_elements(v, opt.upper_corner);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 placement_engine::place_object(const size_t i, const real_vector& v) {
 	CHECK_OBJECT_INDEX(i)
 	real_vector p(v);
-	clamp_position(p);
+	opt.clamp_position(p);
 	space.objects[i].place(p);
 	return false;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-DEFINE_OPTION_MEMFUN(parse_corners, "geometry", 
-	"set bounds/corners of simulation space")
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
-placement_engine::parse_corners(const option_value& v) {
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -242,136 +225,7 @@ placement_engine::zero_forces(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-placement_engine::apply_pairwise_force(
-		tile_instance& sobj, tile_instance& dobj, 
-		const force_type& force_vec) {
-	const bool sf = sobj.is_fixed();
-	const bool df = dobj.is_fixed();
-#if PR_TILE_MASS
-	const tile_type& sp(sobj.properties);
-	const tile_type& dp(dobj.properties);
-#endif
 #if 0
-	const real_type ffrac = (dist -dthresh) / dist;
-#else
-	static const real_type ffrac = 1.0;
-#endif
-#if 0
-	const real_type tension = norm(force_vec) * ffrac;
-	ch.tension = tension;
-#endif
-	if (sf && !df) {
-		// only source is fixed
-		dobj.acceleration -= force_vec *
-#if PR_TILE_MASS
-			(ffrac / dp.mass);
-#else
-			ffrac;
-#endif
-	} else if (df && !sf) {
-		// only dest is fixed
-		sobj.acceleration += force_vec *
-#if PR_TILE_MASS
-			(ffrac / sp.mass);
-#else
-			ffrac;
-#endif
-	} else if (!sf && !df) {
-		// neither fixed, account for mass ratio
-#if PR_TILE_MASS
-		const real_type massfrac = dp.mass / (dp.mass +sp.mass);
-#else
-		static const real_type massfrac = 0.5;
-		const real_type hf = ffrac * massfrac;
-#endif
-		sobj.acceleration +=
-#if PR_TILE_MASS
-			force_vec * (ffrac * massfrac / sp.mass);
-#else
-			force_vec * hf;
-#endif
-		dobj.acceleration -=
-#if PR_TILE_MASS
-			force_vec * (ffrac * (1.0 -massfrac) / dp.mass);
-#else
-			force_vec * hf;
-#endif
-	}
-	// else both fixed, do nothing
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Pair-wise attractive-only force.
-	Only need channel_instance to be modifiable for the sake of
-	updating tension.  
- */
-void
-placement_engine::apply_attraction_forces(
-		tile_instance& sobj, tile_instance& dobj,
-#if PR_CHANNEL_TENSION
-		const channel_properties& cp
-#else
-		channel_instance& ch
-#endif
-		) {
-	STACKTRACE_VERBOSE;
-	const bool sf = sobj.is_fixed();
-	const bool df = dobj.is_fixed();
-if (!(sf && df)) {
-	// at least one end not fixed
-	// TODO: optimize away number of mathematical operations
-	// TODO: use delta - sizeof(objects)
-	//	or distance between ellipsoids
-	const position_type delta(dobj.position -sobj.position);
-#if PR_CHANNEL_TENSION
-	const force_type force_vec(delta * cp.spring_coeff);
-	const real_type& dthresh(cp.equilibrium_distance);
-#else
-	const force_type force_vec(delta * ch.properties.spring_coeff);
-	const real_type& dthresh(ch.properties.equilibrium_distance);
-#endif
-	const real_type dist = norm(delta);
-	// TODO: use rectilinear distance as an option
-	if (dist > dthresh) {
-		apply_pairwise_force(sobj, dobj, force_vec);
-	}	// else objects too close to attract
-	// let repulsion forces be computed in different phase
-}	// else don't bother computing if both ends are fixed
-}	// end placement_engine::apply_object_forces()
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Pair-wise repulsion-only force.
-	Identical to above, but with flipped threshold.
- */
-void
-placement_engine::apply_repulsion_forces(
-		tile_instance& sobj, tile_instance& dobj,
-		const channel_properties& cp
-		) {
-	STACKTRACE_VERBOSE;
-	const bool sf = sobj.is_fixed();
-	const bool df = dobj.is_fixed();
-if (!(sf && df)) {
-	// at least one end not fixed
-	// TODO: optimize away number of mathematical operations
-	// TODO: use delta - sizeof(objects)
-	//	or distance between ellipsoids
-	const position_type delta(dobj.position -sobj.position);
-	const force_type force_vec(delta * cp.spring_coeff);
-	const real_type& dthresh(cp.equilibrium_distance);
-	const real_type dist = norm(delta);
-	// TODO: use rectilinear distance as an option
-	if (dist < dthresh) {
-		apply_pairwise_force(sobj, dobj, force_vec);
-	}	// else objects too close to attract
-	// let repulsion forces be computed in different phase
-}	// else don't bother computing if both ends are fixed
-}	// end placement_engine::apply_object_forces()
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Should return some information about this step for 
 	determining convergence.
@@ -389,9 +243,12 @@ placement_engine::compute_spring_forces(void) {
 		const int_type& di(i->destination);
 		tile_instance& sobj(space.objects[si]);
 		tile_instance& dobj(space.objects[di]);
-		apply_attraction_forces(sobj, dobj, *i);
+		i->potential_energy =
+			tile_instance::apply_attraction_forces(
+				sobj, dobj, i->properties);
 	}	// end for each spring
 }	// end compute_spring_forces
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <size_t D>
@@ -473,6 +330,7 @@ placement_engine::refresh_proximity_cache(void) {
 	vector<iterator>::iterator xu(xb);
 	const array_offset<iterator> vo(space.objects.begin());
 	const size_t i1 = vo(*xb);
+	const tile_instance& o1(space.objects[i1]);
 #if 0
 	std::set<size_t> window_set_x;	// a queue is good enough?
 	transform(xb, xu, util::set_inserter(window_set_x), vo);
@@ -525,6 +383,7 @@ if (xw_size > 1) {
 			for ( ; zi!=zu; ++zi) {
 			if (*zi != *xb) {
 				const size_t i2 = vo(*zi);
+				const tile_instance& o2(space.objects[i2]);
 				STACKTRACE_INDENT_PRINT(
 					"caching collision candidate pair ("
 					<< i1 << ',' << i2 << ")." << endl);
@@ -532,9 +391,9 @@ if (xw_size > 1) {
 				// avoid double counting with index ordering
 #if PR_LOCAL_PROXIMITY_CACHE
 				if (i1 < i2) {
-				space.objects[i1].proximity_cache.insert(i2);
+					o1.proximity_cache.insert(i2);
 				} else {
-				space.objects[i2].proximity_cache.insert(i1);
+					o2.proximity_cache.insert(i1);
 				}
 #else
 				if (i1 < i2) {
@@ -544,11 +403,18 @@ if (xw_size > 1) {
 					proximity_cache.push_back(
 						proximity_edge(i2, i1));
 				}
+				channel_instance& pe(proximity_cache.back());
+				pe.properties.spring_coeff =
+					opt.repulsion_coeff;
+				pe.properties.equilibrium_distance = 
+					(o2.properties.maximum_dimension()
+					+o1.properties.maximum_dimension())
+					*0.5;
 #endif
-				}
 			}
-		}
-	}
+			}	// end for xyz-slice candidates
+		}	// end if z-window
+	}	// end if y-window
 }	// else no collision candidates
 }	// end for each x-ordered object
 }	// end placement_engine::refresh_proximity_cache
@@ -560,6 +426,7 @@ if (xw_size > 1) {
 void
 placement_engine::compute_collision_forces(void) {
 	STACKTRACE_VERBOSE;
+	proximity_potential_energy = 0.0;
 	typedef	vector<tile_instance>::iterator		iterator;
 	iterator i(space.objects.begin()), e(space.objects.end());
 	const array_offset<iterator> vo(i);
@@ -573,11 +440,11 @@ placement_engine::compute_collision_forces(void) {
 		for ( ; ci!=ce; ++ci) {
 			const size_t j2 = *ci;
 #else
-	vector<proximity_edge>::const_iterator
+	vector<proximity_edge>::iterator
 		pi(proximity_cache.begin()), pe(proximity_cache.end());
 	for ( ; pi!=pe; ++pi) {
-		const size_t& j1(pi->first);
-		const size_t& j2(pi->second);
+		const size_t& j1(pi->source);
+		const size_t& j2(pi->destination);
 			tile_instance& o1(space.objects[j1]);
 #endif
 			// avoid double counting
@@ -585,66 +452,17 @@ placement_engine::compute_collision_forces(void) {
 			STACKTRACE_INDENT_PRINT("repelling objects " <<
 				j1 << " and " << j2 << endl);
 			tile_instance& o2(space.objects[j2]);
-			channel_properties dummy;
-			// TODO: configure later
-			dummy.spring_coeff = opt.repulsion_coeff;
-			dummy.equilibrium_distance =
-				(o2.properties.maximum_dimension()
-				+o1.properties.maximum_dimension()) *0.5;
-			apply_repulsion_forces(o1, o2, dummy);
+			pi->potential_energy =
+				tile_instance::apply_repulsion_forces(
+					o1, o2, pi->properties);
+			proximity_potential_energy += pi->potential_energy;
 #if PR_LOCAL_PROXIMITY_CACHE
 		}	// end for each outgoing edge in local cache
 	}	// end for each object/instance
 #else
 	}	// end for each proximity_edge
 #endif
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Change in position/velocity are recorded and updated. 
-	From kinetic theory of molecules (gas):
-		mv^2/2 = 3kT/2
- */
-void
-placement_engine::update_velocity_and_position(void) {
-	STACKTRACE_VERBOSE;
-	max_delta_position = 0.0;
-	max_delta_velocity = 0.0;
-	typedef	vector<tile_instance>::iterator		iterator;
-	iterator i(space.objects.begin()), e(space.objects.end());
-	const real_type tt = opt.temperature *opt.time_step;
-#if !PR_TILE_MASS
-	const real_type sqrttt(sqrt(tt));
-#endif
-	for ( ; i!=e; ++i) {
-	if (!i->is_fixed()) {
-		// apply force and momentum
-		i->update(opt.time_step, opt.viscous_damping);
-		// enforce bounds
-		clamp_position(i->position);
-		// record maximum change, not counting randomness
-		// don't bother with euclidean distance
-		// rectilinear or maximum_dimension shall suffice
-		const real_type rdx(i->rectilinear_delta_position());
-		const real_type rdv(i->rectilinear_delta_velocity());
-		if (rdx > max_delta_position)
-			max_delta_position = rdx;
-		if (rdv > max_delta_velocity)
-			max_delta_velocity = rdv;
-		if (opt.temperature > 0.0) {
-			// alter position or velocity?
-			i->position += random_unit_vector() *
-#if PR_TILE_MASS
-				sqrt(tt / i->properties.mass);
-#else
-				sqrttt;
-#endif
-		}
-//		clamp_position(i->position);
-	}
-	}
-	elapsed_time += opt.time_step;
+	proximity_potential_energy *= 0.5;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -652,30 +470,50 @@ void
 placement_engine::iterate(void) {
 	STACKTRACE_VERBOSE;
 	zero_forces();		// reset forces
-	compute_spring_forces();
-	// compute proximity repulsions on 'close' objects
+// begin parallel
 	refresh_proximity_cache();
+	space.compute_spring_forces();
+// end parallel
+	// compute proximity repulsions on 'close' objects
 	compute_collision_forces();
-	update_velocity_and_position();
+	// after all forces applied, update position
+	space.update_objects(opt);
 	// TODO: enforce bounds on object positions: clamp_position
+	// energy reported is for *previous* iteration
+	if (opt.watch_energy) {
+		const real_type T = kinetic_energy();
+		const real_type V = potential_energy();
+		cout << "T=" << T << ", V=" << V <<
+			", E=" << T+V << ", L=" << T-V << '\n' << endl;
+		// total energy, Lagrangian
+	}
+	elapsed_time += opt.time_step;	// increment time
+	if (opt.watch_anything()) {
+		cout << "@time=" << elapsed_time << endl;
+	}
 	if (opt.watch_objects) {
 		const value_saver<bool>
 			_x_(tile_instance::dump_properties, false);
-		cout << "@time=" << elapsed_time << endl;
 		dump_objects(cout);
 	}
 	if (opt.watch_deltas) {
+#if 0
 		cout << "delta-position=" << max_delta_position <<
 			", delta-velocity=" << max_delta_velocity << endl;
+#endif
 	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
+/**
+	Maintaining a constant time_step, 
+	iterate until one of the following is true:
+	1) change in position/velocity falls below convergence thresholds.
+	2) no forward progess has been made for some number of iterations.
+ */
 void
 placement_engine::simple_converge(void) {
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
@@ -776,8 +614,10 @@ placement_engine::save_checkpoint(ostream& o) const {
 // write objects and channels
 	space.save_checkpoint(o);
 
+#if 0
 	write_value(o, max_delta_position);
 	write_value(o, max_delta_velocity);
+#endif
 
 	write_value(o, magic_string);
 	return !o;
@@ -817,8 +657,10 @@ try {
 // read objects and channels
 	space.load_checkpoint(i);
 
+#if 0
 	read_value(i, max_delta_position);
 	read_value(i, max_delta_velocity);
+#endif
 {
 	string temp;
 	read_value(i, temp);

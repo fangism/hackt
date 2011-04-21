@@ -1,7 +1,7 @@
 /**
 	\file "PR/pcanvas.h"
 	Medium on which placement is solved with physics.
-	$Id: pcanvas.h,v 1.1.2.4 2011/04/16 01:51:53 fang Exp $
+	$Id: pcanvas.h,v 1.1.2.5 2011/04/21 01:32:12 fang Exp $
  */
 
 #ifndef	__HAC_PR_PCANVAS_H__
@@ -17,6 +17,8 @@
 #define	PR_MULTINETS				0
 
 namespace PR {
+struct placer_options;
+
 /**
 	For placement solving.  
 	Coordinates are real-valued.
@@ -33,7 +35,20 @@ struct pcanvas {
 	vector<net_instance>		nets;
 #endif
 
-	// fixed ports
+private:
+	/**
+		The maximum distance changed by any single object
+		in the previous iteration.
+	 */
+	real_type			_max_delta_position;
+	/**
+		The maximum velocity changed by any single object
+		in the previous iteration.
+	 */
+	real_type			_max_delta_velocity;
+	// energy values
+	real_type			object_kinetic_energy;
+	real_type			spring_potential_energy;
 
 public:
 
@@ -45,12 +60,21 @@ public:
 	real_type
 	auto_proximity_radius(void) const;
 
-	real_type
-	kinetic_energy(void) const;
+	const real_type&
+	kinetic_energy(void) const {
+		return object_kinetic_energy;
+	}
 
-	real_type
-	potential_energy(void) const;
+	const real_type&
+	potential_energy(void) const {
+		return spring_potential_energy;
+	}
 
+	void
+	compute_spring_forces(void);
+
+	void
+	update_objects(const placer_options&);
 
 	ostream&
 	dump(ostream&) const;

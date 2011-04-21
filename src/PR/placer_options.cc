@@ -1,6 +1,6 @@
 /**
 	\file "PR/placer_options.cc"
-	$Id: placer_options.cc,v 1.1.2.1 2011/04/20 01:09:40 fang Exp $
+	$Id: placer_options.cc,v 1.1.2.2 2011/04/21 01:32:13 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -11,6 +11,7 @@
 #include "util/string.h"
 #include "util/optparse.tcc"
 #include "util/IO_utils.tcc"
+#include "util/vector_ops.h"
 #include "util/stacktrace.h"
 
 namespace PR {
@@ -42,7 +43,8 @@ placer_options::placer_options() :
 //		accel_tol(1e-3),
 		precision(4),
 		watch_objects(false),
-		watch_deltas(false)
+		watch_deltas(false),
+		watch_energy(false)
 {
 }
 
@@ -63,6 +65,7 @@ placer_options::save_checkpoint(ostream& o) const {
 	write_value(o, precision);
 	write_value(o, watch_objects);
 	write_value(o, watch_deltas);
+	write_value(o, watch_energy);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -82,6 +85,7 @@ placer_options::load_checkpoint(istream& i) {
 	read_value(i, precision);
 	read_value(i, watch_objects);
 	read_value(i, watch_deltas);
+	read_value(i, watch_energy);
 }
 
 //------------------------------------------------------------------------------
@@ -268,6 +272,18 @@ DEFINE_OPTION_DEFAULT(watch_objects, "watch_objects",
 	"print coordinates of objects after each iteration")
 DEFINE_OPTION_DEFAULT(watch_deltas, "watch_deltas", 
 	"report changes in position and velocity after each iteration")
+DEFINE_OPTION_DEFAULT(watch_energy, "watch_energy", 
+	"report kinetic and potential energy after each iteration")
+
+#if 0
+DEFINE_OPTION_MEMFUN(parse_corners, "geometry", 
+	"set bounds/corners of simulation space")
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+placer_options::parse_corners(const option_value& v) {
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
@@ -312,6 +328,13 @@ placer_options::dump_parameters(ostream& o) const {
 		lower_corner << ';' << upper_corner << endl;
 	options_map_wrapper.dump(o, *this);
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+placer_options::clamp_position(real_vector& v) const {
+	util::vector_ops::min_clamp_elements(v, lower_corner);
+	util::vector_ops::max_clamp_elements(v, upper_corner);
 }
 
 //=============================================================================

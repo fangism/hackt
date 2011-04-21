@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-04-20	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-64-pr-01-09:
+	  ipple: corrected force calculation to use stretch distance from
+		equilibrium instead of the distance between objects' centers.
+		Moved some kernel functions into more suitable files.  
+		Now compute energy instead of delta position/velocity.
+	  Test cases update.
+	  TODO next: simple_converge() using fixed time_step
+
+
 2011-04-19	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-64-pr-01-08:
@@ -12,7 +23,6 @@
 		placement_engine: now keeps track of max_delta_{pos,vel},
 			and clamps positions within bounds.
 		enabled iplrc-checkpoint testing.
-	  TODO next: simple_converge() using fixed time_step
 
 
 	* HACKT-00-01-04-main-00-84-64-pr-01-07:

@@ -10,5 +10,6 @@ parameter damping=0.0
 parameter time_step=0.01
 dump-state
 watch-objects
+watch-energy
 echo Begin simulation...
 repeat 20 step

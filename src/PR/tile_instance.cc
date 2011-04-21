@@ -1,6 +1,6 @@
 /**
 	\file "PR/tile_instance.cc"
-	$Id: tile_instance.cc,v 1.1.2.6 2011/04/20 01:09:42 fang Exp $
+	$Id: tile_instance.cc,v 1.1.2.7 2011/04/21 01:32:16 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -201,6 +201,164 @@ tile_instance::~tile_instance() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Applies a force vector on two connected objects, 
+	where force can be attractive or repulsive.
+ */
+void
+tile_instance::apply_pairwise_force(
+		tile_instance& sobj, tile_instance& dobj,
+		const force_type& force_vec) {
+	const bool sf = sobj.is_fixed();
+	const bool df = dobj.is_fixed();
+#if PR_TILE_MASS
+	const tile_type& sp(sobj.properties);
+	const tile_type& dp(dobj.properties);
+#endif
+#if 0
+	const real_type ffrac = (dist -dthresh) / dist;
+#else
+	static const real_type ffrac = 1.0;
+#endif
+#if 0
+	const real_type tension = norm(force_vec) * ffrac;
+	ch.tension = tension;
+#endif
+	if (sf && !df) {
+		// only source is fixed
+		dobj.acceleration -= force_vec *
+#if PR_TILE_MASS
+			(ffrac / dp.mass);
+#else
+			ffrac;
+#endif
+	} else if (df && !sf) {
+		// only dest is fixed
+		sobj.acceleration += force_vec *
+#if PR_TILE_MASS
+			(ffrac / sp.mass);
+#else
+			ffrac;
+#endif
+	} else if (!sf && !df) {
+		// neither fixed, account for mass ratio
+#if PR_TILE_MASS
+		const real_type massfrac = dp.mass / (dp.mass +sp.mass);
+#else
+		static const real_type massfrac = 0.5;
+		const real_type hf = ffrac * massfrac;
+#endif
+		sobj.acceleration +=
+#if PR_TILE_MASS
+			force_vec * (ffrac * massfrac / sp.mass);
+#else
+			force_vec * hf;
+#endif
+		dobj.acceleration -=
+#if PR_TILE_MASS
+			force_vec * (ffrac * (1.0 -massfrac) / dp.mass);
+#else
+			force_vec * hf;
+#endif
+	}
+	// else both fixed, do nothing
+}	// end apply_pairwise_force
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Pair-wise attractive-only force.
+	Only need channel_instance to be modifiable for the sake of
+	updating tension.  
+	NOTE: this is the potential energy *before* position updates.
+	\returns the potential energy in the spring (x2).
+		If both ends are fixed, return 0 energy (don't count).
+ */
+real_type
+tile_instance::apply_attraction_forces(
+		tile_instance& sobj, tile_instance& dobj,
+		const channel_properties& cp) {
+	STACKTRACE_VERBOSE;
+	const bool sf = sobj.is_fixed();
+	const bool df = dobj.is_fixed();
+if (!(sf && df)) {
+	// at least one end not fixed
+	// TODO: optimize away number of mathematical operations
+	// TODO: use delta - sizeof(objects)
+	//	or distance between ellipsoids
+	const position_type delta(dobj.position -sobj.position);
+	// optimization: compare square of distances to avoid sqrt() call?
+	const real_type dist = norm(delta);	// distance between centers
+	const real_type stretch = dist -cp.equilibrium_distance;
+	// TODO: use rectilinear distance as an option
+	if (stretch > 0.0) {
+		const force_type force_vec(delta *
+			(cp.spring_coeff *stretch / dist));
+		apply_pairwise_force(sobj, dobj, force_vec);
+		return stretch * stretch *cp.spring_coeff;
+	}       // else objects too close to attract
+	// let repulsion forces be computed in different phase
+}       // else don't bother computing if both ends are fixed
+	return 0.0;
+}       // end placement_engine::apply_attraction_forces()
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Pair-wise repulsion-only force.
+	Identical to above, but with flipped threshold.
+	NOTE: this is the potential energy *before* position updates.
+	\returns potential energy of repulsive spring (x2), 
+		which is 0 if spring is not active.
+ */
+real_type
+tile_instance::apply_repulsion_forces(
+		tile_instance& sobj, tile_instance& dobj,
+		const channel_properties& cp) {
+	STACKTRACE_VERBOSE;
+	const bool sf = sobj.is_fixed();
+	const bool df = dobj.is_fixed();
+if (!(sf && df)) {
+	// at least one end not fixed
+	// TODO: optimize away number of mathematical operations
+	// TODO: use delta - sizeof(objects)
+	//      or distance between ellipsoids
+	const position_type delta(dobj.position -sobj.position);
+	// optimization: compare square of distances to avoid sqrt() call?
+	const real_type dist = norm(delta);	// distance between centers
+	const real_type stretch = dist -cp.equilibrium_distance;
+	// TODO: use rectilinear distance as an option
+	if (stretch < 0.0) {
+		const force_type force_vec(delta *
+			(cp.spring_coeff *stretch / dist));
+		apply_pairwise_force(sobj, dobj, force_vec);
+		return stretch *stretch *cp.spring_coeff;
+	}       // else objects too close to attract
+	// let repulsion forces be computed in different phase
+}       // else don't bother computing if both ends are fixed
+	return 0.0;
+}       // end placement_engine::apply_repulsion_forces()
+
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Updates kinetic energy to mv^2 (missing factor of 1/2).
+	To be consistent with old-potential energy, use previous_velocity
+ */
+const real_type&
+tile_instance::update_kinetic_energy_2(void) {
+	const real_vector& v(previous_velocity);
+//	const real_vector& v(velocity);
+#if PR_TILE_MASS
+	_kinetic_energy_2 = properties.mass * normsq(v);
+#else
+	_kinetic_energy_2 = normsq(v);
+#endif
+	return _kinetic_energy_2;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: dump kinetic energy?
+ */
 ostream&
 tile_instance::dump(ostream& o) const {
 	if (fixed) {
@@ -221,6 +379,7 @@ tile_instance::save_checkpoint(ostream& o) const {
 	properties.save_checkpoint(o);
 	write_value(o, fixed);
 	// proximity cache should be regenerated
+	// kinetic_energy recalculated
 	return !o;
 }
 
@@ -231,6 +390,7 @@ tile_instance::load_checkpoint(istream& i) {
 	properties.load_checkpoint(i);
 	read_value(i, fixed);
 	// proximity cache should be regenerated
+	update_kinetic_energy_2();
 	return !i;
 }
 

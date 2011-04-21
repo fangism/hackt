@@ -9,6 +9,7 @@ parameters:
   time_step=0.001
   velocity_tolerance=0.001
   watch_deltas=0
+  watch_energy=0
   watch_objects=0
 object types:
   [0]: size=<2,2,2>

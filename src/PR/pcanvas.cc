@@ -2,14 +2,20 @@
 	\file "PR/pcanvas.cc"
  */
 
+#define	ENABLE_STACKTRACE				0
+
 #include <iostream>
 #include "PR/pcanvas.h"
 #include "PR/tile_type.h"
+#include "PR/placer_options.h"
 #include "PR/pr_utils.h"
+#include "util/vector_ops.h"
 #include "util/macros.h"
+#include "util/stacktrace.h"
 
 namespace PR {
 #include "util/using_ostream.h"
+using namespace util::vector_ops;
 
 //=============================================================================
 // class pcanvas method definitions
@@ -39,6 +45,89 @@ pcanvas::auto_proximity_radius(void) const {
 			ret = d;
 	}
 	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Should return some information about this step for 
+	determining convergence.
+	TODO: compute effective force vector, accumulate per object
+	TODO: support different spring types
+ */
+void
+pcanvas::compute_spring_forces(void) {
+	STACKTRACE_VERBOSE;
+	spring_potential_energy = 0.0;
+	// compute spring tensions (attraction)
+	typedef	vector<channel_instance>::iterator	iterator;
+	iterator i(springs.begin()), e(springs.end());
+	for ( ; i!=e; ++i) {
+		const int_type& si(i->source);
+		const int_type& di(i->destination);
+		tile_instance& sobj(objects[si]);
+		tile_instance& dobj(objects[di]);
+		// this is *pre-update* potential energy
+		i->potential_energy =
+			tile_instance::apply_attraction_forces(
+				sobj, dobj, i->properties);
+		spring_potential_energy += i->potential_energy;
+	}	// end for each spring
+	spring_potential_energy *= 0.5;
+}	// end compute_spring_forces
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+        Change in position/velocity are recorded and updated. 
+        From kinetic theory of molecules (gas):
+                mv^2/2 = 3kT/2
+ */
+void
+pcanvas::update_objects(const placer_options& opt) {
+	STACKTRACE_VERBOSE;
+#if 0
+	_max_delta_position = 0.0;
+	_max_delta_velocity = 0.0;
+#endif
+	object_kinetic_energy = 0.0;
+	typedef vector<tile_instance>::iterator		iterator;
+	iterator i(objects.begin()), e(objects.end());
+	const real_type tt = opt.temperature *opt.time_step;
+#if !PR_TILE_MASS
+	const real_type sqrttt(sqrt(tt));
+#endif
+	for ( ; i!=e; ++i) {
+	if (!i->is_fixed()) {
+		// apply force and momentum, update kinetic energy
+		i->update(opt.time_step, opt.viscous_damping);
+		// enforce bounds
+		opt.clamp_position(i->position);
+		// record maximum change, not counting randomness
+		// don't bother with euclidean distance
+		// rectilinear or maximum_dimension shall suffice
+#if 0
+		const real_type rdx(i->rectilinear_delta_position());
+		const real_type rdv(i->rectilinear_delta_velocity());
+		if (rdx > _max_delta_position)
+			_max_delta_position = rdx;
+		if (rdv > _max_delta_velocity)
+			_max_delta_velocity = rdv;
+#endif
+		// We do NOT include thermal displacement in the 
+		// kinetic energy calculation!
+		if (opt.temperature > 0.0) {
+			// alter position or velocity?
+			i->position += random_unit_vector() *
+#if PR_TILE_MASS
+				sqrt(tt / i->properties.mass);
+#else
+				sqrttt;
+#endif
+		}
+		object_kinetic_energy += i->update_kinetic_energy_2();
+	}
+	}	// end for all objects
+	// finally correct factor of 1.2
+	object_kinetic_energy *= 0.5;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

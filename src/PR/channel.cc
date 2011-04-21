@@ -1,6 +1,6 @@
 /**
 	\file "PR/channel.cc"
-	$Id: channel.cc,v 1.1.2.3 2011/04/19 01:08:40 fang Exp $
+	$Id: channel.cc,v 1.1.2.4 2011/04/21 01:32:11 fang Exp $
  */
 
 #include <iostream>
@@ -92,18 +92,18 @@ channel_type::load_checkpoint(istream& i) {
 
 channel_instance::channel_instance() :
 		properties(), source(0), destination(0)
-#if PR_CHANNEL_TENSION
-		, tension(0.0)
-#endif
+		{
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+channel_instance::channel_instance(const size_t s, const size_t d) :
+		properties(), source(s), destination(d)
 		{
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 channel_instance::channel_instance(const channel_type& t) :
 		properties(t), source(0), destination(0)
-#if PR_CHANNEL_TENSION
-		, tension(0.0)
-#endif
 		{
 }
 
@@ -114,9 +114,6 @@ channel_instance::~channel_instance() { }
 ostream&
 channel_instance::dump(ostream& o) const {
 	o << '(' << source << ',' << destination << ") ";
-#if PR_CHANNEL_TENSION
-	o << "tension=" << tension << ' ';
-#endif
 	properties.dump(o << '[') << ']';
 	return o;
 }
@@ -126,11 +123,9 @@ bool
 channel_instance::save_checkpoint(ostream& o) const {
 	write_value(o, source);
 	write_value(o, destination);
-#if PR_CHANNEL_TENSION
-	// tension should be recalculated
-#endif
 	// equilibrium_distance could be recalculated
 	properties.save_checkpoint(o);
+	write_value(o, potential_energy);
 	return !o;
 }
 
@@ -139,11 +134,9 @@ bool
 channel_instance::load_checkpoint(istream& i) {
 	read_value(i, source);
 	read_value(i, destination);
-#if PR_CHANNEL_TENSION
-	// tension should be recalculated
-#endif
 	// equilibrium_distance could be recalculated
 	properties.load_checkpoint(i);
+	read_value(i, potential_energy);
 	return !i;
 }
 

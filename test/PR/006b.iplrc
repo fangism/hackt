@@ -2,6 +2,6 @@
 # testing random walk
 # expect no force-driven change in position/energy
 
-watch-deltas
+watch-energy
 source 006.iplrc
 

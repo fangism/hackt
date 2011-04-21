@@ -1,7 +1,7 @@
 /**
 	\file "PR/placement_engine.h"
 	Physics simulator.
-	$Id: placement_engine.h,v 1.1.2.7 2011/04/20 01:09:38 fang Exp $
+	$Id: placement_engine.h,v 1.1.2.8 2011/04/21 01:32:13 fang Exp $
  */
 
 #ifndef	__HAC_PR_PLACEMENT_ENGINE_H__
@@ -33,20 +33,19 @@ public:
 	 */
 	pcanvas				space;
 #if !PR_LOCAL_PROXIMITY_CACHE
-	typedef	std::pair<size_t, size_t>	proximity_edge;
+//	typedef	std::pair<size_t, size_t>	proximity_edge;
+	typedef	channel_instance		proximity_edge;
+	/**
+		Proximity cache is just a collection of
+		repulsion springs that are generated on-the-fly.
+	 */
 	vector<proximity_edge>		proximity_cache;
 #endif
 	time_type			elapsed_time;
-	/**
-		The maximum distance changed by any single object
-		in the previous iteration.
-	 */
-	real_type			max_delta_position;
-	/**
-		The maximum velocity changed by any single object
-		in the previous iteration.
-	 */
-	real_type			max_delta_velocity;
+protected:
+	// run-time updates values
+	real_type			proximity_potential_energy;
+
 protected:
 	string				autosave_name;
 
@@ -111,6 +110,19 @@ public:
 	void
 	simple_converge(void);
 
+	void
+	adaptive_converge(void);
+
+	real_type
+	kinetic_energy(void) const {
+		return space.kinetic_energy();
+	}
+
+	real_type
+	potential_energy(void) const {
+		return space.potential_energy() +proximity_potential_energy;
+	}
+
 	ostream&
 	dump_object_types(ostream&) const;
 
@@ -149,33 +161,7 @@ private:
 	initialize_default_types(void);
 
 	void
-	clamp_position(real_vector&) const;
-
-	void
 	zero_forces(void);
-
-	static
-	void
-	apply_pairwise_force(tile_instance&, tile_instance&,
-		const force_type&);
-
-	static
-	void
-	apply_attraction_forces(tile_instance&, tile_instance&,
-#if PR_CHANNEL_TENSION
-		const channel_properties&
-#else
-		channel_instance&
-#endif
-		);
-
-	static
-	void
-	apply_repulsion_forces(tile_instance&, tile_instance&,
-		const channel_properties&);
-
-	void
-	compute_spring_forces(void);
 
 	void
 	refresh_proximity_cache(void);
@@ -189,9 +175,6 @@ private:
 
 	void
 	compute_collision_forces(void);
-
-	void
-	update_velocity_and_position(void);
 
 };	// end class placement_engine
 

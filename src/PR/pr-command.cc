@@ -2,7 +2,7 @@
 	\file "PR/pr-command.cc"
 	Command-line feature for PR simulator.
 	TODO: scheme interface
-	$Id: pr-command.cc,v 1.1.2.8 2011/04/20 01:09:42 fang Exp $
+	$Id: pr-command.cc,v 1.1.2.9 2011/04/21 01:32:15 fang Exp $
  */
 
 #define	ENABLE_STATIC_TRACE		0
@@ -859,6 +859,36 @@ NoWatchDeltas::main(State& s, const string_list& a) {
 
 void
 NoWatchDeltas::usage(ostream& o) {
+	o << name << endl;
+	o << brief << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(WatchEnergy, "watch-energy", setup,
+        "print energy after each iteration")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoWatchEnergy, "nowatch-energy", setup,
+        "suppress energy after each iteration")
+
+int
+WatchEnergy::main(State& s, const string_list& a) {
+	return set_boolean_option<&placer_options::watch_energy, true>
+		(s, a, usage);
+}
+
+void
+WatchEnergy::usage(ostream& o) {
+	o << name << endl;
+	o << brief << endl;
+}
+
+int
+NoWatchEnergy::main(State& s, const string_list& a) {
+	return set_boolean_option<&placer_options::watch_energy, false>
+		(s, a, usage);
+}
+
+void
+NoWatchEnergy::usage(ostream& o) {
 	o << name << endl;
 	o << brief << endl;
 }

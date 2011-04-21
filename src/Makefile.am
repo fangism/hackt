@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.251.2.6 2011/04/20 01:09:36 fang Exp $
+#	$Id: Makefile.am,v 1.251.2.7 2011/04/21 01:32:10 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -1087,6 +1087,7 @@ PR_CC_FILES = \
 	PR/tile_instance.cc
 
 PR_H_FILES = $(PR_CC_FILES:.cc=.h) \
+	PR/channel_type.h \
 	PR/obstacle.h \
 	PR/pr-command.h \
 	PR/rcanvas.h \

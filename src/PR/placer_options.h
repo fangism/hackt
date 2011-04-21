@@ -1,7 +1,7 @@
 /**
 	\file "PR/placer_options.h"
 	Physics simulator.
-	$Id: placer_options.h,v 1.1.2.1 2011/04/20 01:09:41 fang Exp $
+	$Id: placer_options.h,v 1.1.2.2 2011/04/21 01:32:14 fang Exp $
  */
 
 #ifndef	__HAC_PR_PLACER_OPTIONS_H__
@@ -73,11 +73,20 @@ struct placer_options {
 	 */
 	bool				watch_objects;
 	bool				watch_deltas;
+	bool				watch_energy;
 
 	placer_options();
 #if 0
 	~placer_options();
 #endif
+
+	void
+	clamp_position(real_vector&) const;
+
+	bool
+	watch_anything(void) const {
+		return watch_objects || watch_deltas || watch_energy;
+	}
 
 	static
 	ostream&
