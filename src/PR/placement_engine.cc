@@ -1,6 +1,6 @@
 /**
 	\file "PR/placement_engine.cc"
-	$Id: placement_engine.cc,v 1.1.2.9 2011/04/22 01:28:20 fang Exp $
+	$Id: placement_engine.cc,v 1.1.2.10 2011/04/22 23:16:33 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -468,6 +468,34 @@ placement_engine::compute_collision_forces(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const real_type&
+placement_engine::update_proximity_potential_energy(void) {
+	STACKTRACE_VERBOSE;
+	proximity_potential_energy = 0.0;
+	typedef	vector<tile_instance>::iterator		iterator;
+	iterator i(space.objects.begin()), e(space.objects.end());
+	const array_offset<iterator> vo(i);
+	vector<proximity_edge>::iterator
+		pi(proximity_cache.begin()), pe(proximity_cache.end());
+	for ( ; pi!=pe; ++pi) {
+		const size_t& j1(pi->source);
+		const size_t& j2(pi->destination);
+		const tile_instance& o1(space.objects[j1]);
+		// avoid double counting
+		INVARIANT(j1 < j2);
+		STACKTRACE_INDENT_PRINT("repelling objects " <<
+			j1 << " and " << j2 << endl);
+		const tile_instance& o2(space.objects[j2]);
+		pi->potential_energy =
+			tile_instance::current_repulsion_potential_energy(
+				o1, o2, pi->properties);
+		proximity_potential_energy += pi->potential_energy;
+	}	// end for each proximity_edge
+	proximity_potential_energy *= 0.5;
+	return proximity_potential_energy;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Single iteration of a simulation-based approach.
  */
@@ -507,6 +535,72 @@ placement_engine::iterate(void) {
 			", delta-velocity=" << max_delta_velocity << endl;
 #endif
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This is like iterate except that forces are computed only once
+	and then a linear search is performed along the same direction
+	for local potential energy minimum.  
+	This ignores viscous damping.
+ */
+real_type
+placement_engine::__gradient_slide(void) {
+	STACKTRACE_VERBOSE;
+	const value_saver<real_type> _vd_(opt.viscous_damping, 0.0);
+// start with one iteration
+	size_t it_count = 1;
+	const time_type start_time = elapsed_time;
+	kill_momentum();
+	iterate();
+	real_type oldV = potential_energy();
+	pcanvas best(space);		// backup copy
+	do {
+		space.update_objects(opt);
+		const real_type newV = update_potential_energy();
+#if 0
+	// TODO: enforce bounds on object positions: clamp_position
+	// energy reported is for *previous* iteration
+	if (opt.watch_energy) {
+		const real_type T = kinetic_energy();
+		const real_type V = potential_energy();
+		cout << "T=" << T << ", V=" << V <<
+			", E=" << T+V << ", L=" << T-V << '\n' << endl;
+		// total energy, Lagrangian
+	}
+#endif
+		++it_count;
+		elapsed_time += opt.time_step;	// increment time
+#if 0
+	if (opt.watch_anything()) {
+		cout << "@time=" << elapsed_time << endl;
+	}
+	if (opt.watch_objects) {
+		const value_saver<bool>
+			_x_(tile_instance::dump_properties, false);
+		dump_objects(cout);
+	}
+	if (opt.watch_deltas) {
+#if 0
+		cout << "delta-position=" << max_delta_position <<
+			", delta-velocity=" << max_delta_velocity << endl;
+#endif
+	}
+#endif
+		if (newV > oldV) {
+			break;
+		}
+		best = space;
+		oldV = newV;
+	} while (1);
+	if (opt.report_iterations) {
+		const save_precision p(cout, opt.precision);
+		cout << "gradient-slide: ran " << it_count <<
+			" iterations from time " << start_time <<
+			" to " << elapsed_time <<
+			" (V=" << oldV << ')' << endl;
+	}
+	return oldV;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -613,15 +707,17 @@ placement_engine::__descend_potential_energy(void) {
 /**
 	Repeat until energy no longer changes by threshold.
  */
+template <real_type (placement_engine::*MF)(void)>
 void
-placement_engine::repeat_descend_potential_energy(void) {
+placement_engine::__repeat_until_converge(
+		const char* caller, const char* callee) {
 	size_t it_count = 0;
 	const time_type start_time = elapsed_time;
-	kill_momentum();
+//	pcanvas best(space);		// backup copy
 	iterate();	// first iteration just to get initial potential energy
 	real_type oldV = potential_energy();
 	do {
-		const real_type newV = __descend_potential_energy();
+		const real_type newV = (this->*MF)();
 		++it_count;
 		kill_momentum();
 		const real_type dV = abs(newV -oldV);
@@ -629,14 +725,37 @@ placement_engine::repeat_descend_potential_energy(void) {
 		if (dV <= opt.energy_tol) {
 			break;
 		}
+//		best = space;
 	} while (1);
+	// restore the previous best
+//	space = best;
 	if (opt.report_iterations) {
 		const save_precision p(cout, opt.precision);
-		cout << "descend-potential-converge: ran " << it_count <<
-			" descend-potential from time " << start_time <<
+		cout << caller << ": ran " << it_count <<
+			" " << callee << " from time " << start_time <<
 			" to " << elapsed_time <<
 			" (V=" << oldV << ')' << endl;
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+placement_engine::repeat_gradient_slide(void) {
+	kill_momentum();
+//	iterate();	// first iteration just to get initial potential energy
+	__repeat_until_converge<&this_type::__gradient_slide>(
+		"gradient-slide-converge", "gradient-slide");
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Repeat until energy no longer changes by threshold.
+ */
+void
+placement_engine::repeat_descend_potential_energy(void) {
+	kill_momentum();
+	__repeat_until_converge<&this_type::__descend_potential_energy>(
+		"descend-potential-converge", "descend-potential");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

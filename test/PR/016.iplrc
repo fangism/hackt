@@ -1,0 +1,42 @@
+# "016.iplrc"
+# cube topology
+
+repeat 8 add-object
+add-channel 0 1
+add-channel 0 2
+add-channel 0 4
+add-channel 1 3
+add-channel 1 5
+add-channel 2 3
+add-channel 2 6
+add-channel 3 7
+add-channel 4 5
+add-channel 4 6
+add-channel 5 7
+add-channel 6 7
+repeat 4 add-pin
+channel-type spring_coeff=0.25
+place 8 <30,30,0>
+place 9 <30,70,0>
+place 10 <70,70,0>
+place 11 <70,30,0>
+add-channel 0 8 type=1
+add-channel 3 9 type=1
+add-channel 5 10 type=1
+add-channel 6 11 type=1
+dump-parameters
+echo randomly place free objects
+scatter
+parameter time_step=0.1
+parameter damping=0.0
+# watch-energy
+# watch-objects
+
+descend-potential-converge
+dump-positions
+
+parameter damping=5.0
+parameter time_step=0.2
+simple-converge
+dump-positions
+

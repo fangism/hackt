@@ -157,13 +157,16 @@ public:
 		fixed = false;
 	}
 
-#if 0
 	static
 	real_type
 	current_attraction_potential_energy(
 		const tile_instance&, const tile_instance&,
 		const channel_properties&);
-#endif
+	static
+	real_type
+	current_repulsion_potential_energy(
+		const tile_instance&, const tile_instance&,
+		const channel_properties&);
 
 	static
 	void

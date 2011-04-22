@@ -53,7 +53,6 @@ pcanvas::auto_proximity_radius(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
 /**
 	Updates potential energy without applying forces to nodes.  
  */
@@ -78,7 +77,6 @@ pcanvas::update_potential_energy(void) {
 	spring_potential_energy *= 0.5;
 	return spring_potential_energy;
 }	// end update_potential_energy
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

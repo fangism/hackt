@@ -1,7 +1,7 @@
 /**
 	\file "PR/placement_engine.h"
 	Physics simulator.
-	$Id: placement_engine.h,v 1.1.2.9 2011/04/22 01:28:22 fang Exp $
+	$Id: placement_engine.h,v 1.1.2.10 2011/04/22 23:16:34 fang Exp $
  */
 
 #ifndef	__HAC_PR_PLACEMENT_ENGINE_H__
@@ -24,6 +24,7 @@ using util::ifstream_manager;
 	Physics, force-driven, with annealing.
  */
 class placement_engine : public HAC::SIM::state_base {
+	typedef	placement_engine	this_type;
 public:
 	vector<tile_type>		object_types;
 	vector<channel_type>		channel_types;
@@ -110,11 +111,23 @@ public:
 		space.kill_momentum();
 	}
 
+	template <real_type (this_type::*MF)(void)>
+	void
+	__repeat_until_converge(const char*, const char*);
+
 	void
 	iterate(void);
 
+	real_type
+	__gradient_slide(void);
+
 	void
-	gradient_search(void);
+	gradient_slide(void) {
+		__gradient_slide();
+	}
+
+	void
+	repeat_gradient_slide(void);
 
 	void
 	simple_converge(void);
@@ -142,6 +155,12 @@ public:
 	real_type
 	potential_energy(void) const {
 		return space.potential_energy() +proximity_potential_energy;
+	}
+
+	real_type
+	update_potential_energy(void) {
+		return space.update_potential_energy()
+			+update_proximity_potential_energy();
 	}
 
 	ostream&
@@ -199,6 +218,9 @@ private:
 
 	void
 	compute_collision_forces(void);
+
+	const real_type&
+	update_proximity_potential_energy(void);
 
 };	// end class placement_engine
 

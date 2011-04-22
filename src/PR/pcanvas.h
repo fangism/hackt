@@ -1,7 +1,7 @@
 /**
 	\file "PR/pcanvas.h"
 	Medium on which placement is solved with physics.
-	$Id: pcanvas.h,v 1.1.2.6 2011/04/22 01:28:20 fang Exp $
+	$Id: pcanvas.h,v 1.1.2.7 2011/04/22 23:16:33 fang Exp $
  */
 
 #ifndef	__HAC_PR_PCANVAS_H__
@@ -71,10 +71,8 @@ public:
 		return spring_potential_energy;
 	}
 
-#if 0
 	const real_type&
 	update_potential_energy(void);
-#endif
 
 	void
 	kill_momentum(void);

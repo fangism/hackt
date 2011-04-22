@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-04-22	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-64-pr-01-11:
+	  ipple, placement_engine: implemented basic conjugate-gradient
+		method, with a constant acceleration linear search for
+		each local minimum (gradient_slide).
+		Commands: descend-gradient, repeat-descend-gradient.
+	  Added a few test cases.
+
+
 2011-04-21	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-64-pr-01-10:

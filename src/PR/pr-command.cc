@@ -2,7 +2,7 @@
 	\file "PR/pr-command.cc"
 	Command-line feature for PR simulator.
 	TODO: scheme interface
-	$Id: pr-command.cc,v 1.1.2.10 2011/04/22 01:28:23 fang Exp $
+	$Id: pr-command.cc,v 1.1.2.11 2011/04/22 23:16:34 fang Exp $
  */
 
 #define	ENABLE_STATIC_TRACE		0
@@ -1134,6 +1134,41 @@ SimpleConverge::main(State& s, const string_list& a) {
 
 void
 SimpleConverge::usage(ostream& o) {
+	o << name << endl;
+	o << brief << endl;
+}
+
+//-----------------------------------------------------------------------------
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(DescendGradient, "descend-gradient", 
+	simulation,
+        "iterate linear direction until potential energy increases")
+
+int
+DescendGradient::main(State& s, const string_list& a) {
+	return simple_engine_command(s, a,
+		&State::gradient_slide, usage);
+}
+
+void
+DescendGradient::usage(ostream& o) {
+	o << name << endl;
+	o << brief << endl;
+}
+
+//-----------------------------------------------------------------------------
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(DescendGradientConverge,
+	"descend-gradient-converge", 
+	simulation,
+        "repeatedly descend gradients (conjugate-gradient)")
+
+int
+DescendGradientConverge::main(State& s, const string_list& a) {
+	return simple_engine_command(s, a,
+		&State::repeat_gradient_slide, usage);
+}
+
+void
+DescendGradientConverge::usage(ostream& o) {
 	o << name << endl;
 	o << brief << endl;
 }

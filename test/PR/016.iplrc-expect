@@ -1,0 +1,54 @@
+parameters:
+  @time=0
+  bounds=<0,0,-50>;<100,100,50>
+  damping=0.1
+  energy_tolerance=0.001
+  min_iterations=10
+  position_tolerance=0.001
+  precision=4
+  report_iterations=1
+  repulsion_coeff=1
+  temperature=0
+  time_step=0.001
+  velocity_tolerance=0.001
+  watch_deltas=0
+  watch_energy=0
+  watch_objects=0
+randomly place free objects 
+descend-potential: ran 11 iterations from time 0.1 to 1.2 (V=3404)
+descend-potential: ran 13 iterations from time 1.2 to 2.5 (V=819.8)
+descend-potential: ran 12 iterations from time 2.5 to 3.7 (V=460.9)
+descend-potential: ran 32 iterations from time 3.7 to 6.9 (V=351.4)
+descend-potential: ran 19 iterations from time 6.9 to 8.8 (V=304.2)
+descend-potential: ran 8 iterations from time 8.8 to 9.6 (V=303.1)
+descend-potential: ran 5 iterations from time 9.6 to 10.1 (V=303.1)
+descend-potential: ran 4 iterations from time 10.1 to 10.5 (V=303.1)
+descend-potential: ran 4 iterations from time 10.5 to 10.9 (V=303.1)
+descend-potential-converge: ran 9 descend-potential from time 0 to 10.9 (V=303.1)
+object-positions:
+  [0]: @=<40.27,44.57,-2.031>
+  [1]: @=<42.6,49.94,-2.286>
+  [2]: @=<42.59,47.36,-2.51>
+  [3]: @=<40.43,52.88,-2.257>
+  [4]: @=<45.51,47.57,-2.388>
+  [5]: @=<48.38,52.86,-2.286>
+  [6]: @=<48.68,44.84,-2.135>
+  [7]: @=<45.26,50.26,-2.294>
+  [8]: @=<30,30,0>
+  [9]: @=<30,70,0>
+  [10]: @=<70,70,0>
+  [11]: @=<70,30,0>
+simple-converge: ran 422 iterations from time 10.9 to 95.3 (V=286.1)
+object-positions:
+  [0]: @=<45.52,45.76,-0.1401>
+  [1]: @=<48.49,51.1,-0.1581>
+  [2]: @=<48.49,48.76,-0.1581>
+  [3]: @=<45.52,54.11,-0.1401>
+  [4]: @=<50.84,48.75,-0.1581>
+  [5]: @=<53.87,54.11,-0.1401>
+  [6]: @=<53.87,45.77,-0.1401>
+  [7]: @=<50.84,51.11,-0.1581>
+  [8]: @=<30,30,0>
+  [9]: @=<30,70,0>
+  [10]: @=<70,70,0>
+  [11]: @=<70,30,0>
