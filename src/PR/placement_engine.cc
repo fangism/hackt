@@ -1,6 +1,6 @@
 /**
 	\file "PR/placement_engine.cc"
-	$Id: placement_engine.cc,v 1.1.2.8 2011/04/21 01:32:13 fang Exp $
+	$Id: placement_engine.cc,v 1.1.2.9 2011/04/22 01:28:20 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -18,6 +18,7 @@
 #include "util/indent.h"
 #include "util/string.h"
 #include "util/numeric/random.h"
+#include "util/numeric/abs.h"
 #include "util/IO_utils.tcc"
 #include "util/iterator_more.h"
 #include "util/iomanip.h"
@@ -39,6 +40,7 @@ using util::write_value;
 using util::read_value;
 using util::value_saver;
 using namespace util::vector_ops;		// for many operator overloads
+using util::numeric::abs;
 #include "util/using_ostream.h"
 
 //=============================================================================
@@ -466,6 +468,9 @@ placement_engine::compute_collision_forces(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Single iteration of a simulation-based approach.
+ */
 void
 placement_engine::iterate(void) {
 	STACKTRACE_VERBOSE;
@@ -513,6 +518,125 @@ placement_engine::iterate(void) {
  */
 void
 placement_engine::simple_converge(void) {
+	size_t it_count = 0;
+	const time_type start_time = elapsed_time;
+	size_t repcount = 0;
+	real_type oldV = potential_energy();
+	real_type oldT = kinetic_energy();
+	real_type oldE = oldV +oldT;
+	do {
+		iterate();
+		++it_count;
+		const real_type newV = potential_energy();
+		const real_type newT = kinetic_energy();
+		const real_type newE = newV +newT;
+		// check progress
+		// absolute change
+		const real_type dV = abs(newV -oldV);
+		const real_type dE = abs(newE -oldE);
+#if 0
+		// relative change (fractional)
+		const real_type rdV = dV/oldV;
+		const real_type rdE = dE/oldE;
+#endif
+		oldT = newT;
+		oldV = newV;
+		oldE = newE;
+		// somehow time_step should be accounted for...
+		if (dV > opt.energy_tol || dE > opt.energy_tol) {
+			repcount = 0;
+		} else {
+			++repcount;
+		}
+	} while (repcount < opt.min_iterations);
+	if (opt.report_iterations) {
+		const save_precision p(cout, opt.precision);
+		cout << "simple-converge: ran " << it_count <<
+			" iterations from time " << start_time <<
+			" to " << elapsed_time <<
+			" (V=" << oldV << ')' << endl;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+/**
+	Mathematical, but non-physics-based approach.
+	Compute instantaneous forces on every object to construct
+	direction of best descent (gradient).
+	Search along that direction for minimum potential energy.
+	Collisions may make the search non-linear.
+	Search can be by bissection or golden section.
+	Change resolution with option.
+ */
+void
+placement_engine::gradient_search(void) {
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Iterate while potential energy monotonically decreases.
+	Basically stops at the first encountered local minimum.
+	Then user may elect to "kill-momentum" and restart descent.
+ */
+real_type
+placement_engine::__descend_potential_energy(void) {
+	size_t it_count = 1;
+	const time_type start_time = elapsed_time;
+	pcanvas best(space);		// backup copy
+	iterate();	// first iteration just to get initial potential energy
+	real_type oldV = potential_energy();
+	do {
+		iterate();
+		++it_count;
+		const real_type newV = potential_energy();
+		if (newV >= oldV) {
+			space = best;	// rollback to previous state
+			break;
+		}
+		// else is improving
+		best = space;		// copy over best state (expensive?)
+		oldV = newV;
+	} while (1);
+	if (opt.report_iterations) {
+		const save_precision p(cout, opt.precision);
+		cout << "descend-potential: ran " << it_count <<
+			" iterations from time " << start_time <<
+			" to " << elapsed_time <<
+			" (V=" << oldV << ')' << endl;
+	}
+	return oldV;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Repeat until energy no longer changes by threshold.
+ */
+void
+placement_engine::repeat_descend_potential_energy(void) {
+	size_t it_count = 0;
+	const time_type start_time = elapsed_time;
+	kill_momentum();
+	iterate();	// first iteration just to get initial potential energy
+	real_type oldV = potential_energy();
+	do {
+		const real_type newV = __descend_potential_energy();
+		++it_count;
+		kill_momentum();
+		const real_type dV = abs(newV -oldV);
+		oldV = newV;
+		if (dV <= opt.energy_tol) {
+			break;
+		}
+	} while (1);
+	if (opt.report_iterations) {
+		const save_precision p(cout, opt.precision);
+		cout << "descend-potential-converge: ran " << it_count <<
+			" descend-potential from time " << start_time <<
+			" to " << elapsed_time <<
+			" (V=" << oldV << ')' << endl;
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -532,15 +656,22 @@ placement_engine::solve(void) {
 template <class T>
 static
 ostream&
-__dump_array(ostream& o, const T& a) {
+__dump_array(ostream& o, const T& a, ostream& (T::value_type::*mf)(ostream&) const) {
 	typedef	typename T::const_iterator	const_iterator;
 	INDENT_SECTION(o);
 	const_iterator i(a.begin()), e(a.end());
 	size_t j;
 	for (j=0; i!=e; ++i, ++j) {
-		i->dump(o << auto_indent << '[' << j << "]: ") << endl;
+		(*i.*mf)(o << auto_indent << '[' << j << "]: ") << endl;
 	}
 	return o;
+}
+
+template <class T>
+static
+ostream&
+__dump_array(ostream& o, const T& a) {
+	return __dump_array(o, a, &T::value_type::dump);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -565,6 +696,14 @@ placement_engine::dump_objects(ostream& o) const {
 	const save_precision p(o, opt.precision);
 	o << "objects:" << endl;
 	return __dump_array(o, space.objects);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+placement_engine::dump_positions(ostream& o) const {
+	const save_precision p(o, opt.precision);
+	o << "object-positions:" << endl;
+	return __dump_array(o, space.objects, &tile_instance::dump_position);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

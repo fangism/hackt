@@ -1,0 +1,22 @@
+# "008.iplrc"
+# auto-convergence of slingshot demo with damping
+
+echo dampened slingshot demonstration
+object-type size=<4,4,4>
+repeat 2 add-pin type=0
+add-object type=1
+add-channel 0 2 type=0
+add-channel 1 2 type=0
+place 0 <10,20,0>
+place 1 <20,10,0>
+place 2 <5,5,0>
+# echo higher damping
+parameter time_step=0.1
+parameter damping=0.5
+dump-state
+watch-objects
+watch-energy
+echo Beginning simulation...
+descend-potential-converge
+dump-positions
+

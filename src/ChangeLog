@@ -3,6 +3,21 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-04-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-64-pr-01-10:
+	  ipple, placement_engine: implemented a few simple-but-effective
+		convergence/relaxation routines.
+		added kill_momentum() to zero out velocities.
+		descend-potential-converge followed by simple-converge
+			works very well.
+		added more control parameters to support convergence.
+		most convergence is based on change in energy.
+		might want some convergence to be based on 
+			delta position/velocity.
+	  Added handful of test cases.  
+
+
 2011-04-20	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-64-pr-01-09:

@@ -1,7 +1,7 @@
 /**
 	\file "PR/pcanvas.h"
 	Medium on which placement is solved with physics.
-	$Id: pcanvas.h,v 1.1.2.5 2011/04/21 01:32:12 fang Exp $
+	$Id: pcanvas.h,v 1.1.2.6 2011/04/22 01:28:20 fang Exp $
  */
 
 #ifndef	__HAC_PR_PCANVAS_H__
@@ -24,11 +24,12 @@ struct placer_options;
 	Coordinates are real-valued.
  */
 struct pcanvas {
+#if PR_VARIABLE_DIMENSIONS
 	/**
 		Yes, we can do physics in higher dimensions!
 	 */
 	const size_t			dimensions;
-
+#endif
 	vector<tile_instance>		objects;
 	vector<channel_instance>	springs;
 #if PR_MULTINETS
@@ -69,6 +70,14 @@ public:
 	potential_energy(void) const {
 		return spring_potential_energy;
 	}
+
+#if 0
+	const real_type&
+	update_potential_energy(void);
+#endif
+
+	void
+	kill_momentum(void);
 
 	void
 	compute_spring_forces(void);

@@ -1,6 +1,6 @@
 /**
 	\file "PR/placer_options.cc"
-	$Id: placer_options.cc,v 1.1.2.2 2011/04/21 01:32:13 fang Exp $
+	$Id: placer_options.cc,v 1.1.2.3 2011/04/22 01:28:22 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -41,10 +41,13 @@ placer_options::placer_options() :
 		pos_tol(1e-3),
 		vel_tol(1e-3),
 //		accel_tol(1e-3),
+		energy_tol(1e-3),
+		min_iterations(10),
 		precision(4),
 		watch_objects(false),
 		watch_deltas(false),
-		watch_energy(false)
+		watch_energy(false),
+		report_iterations(true)
 {
 }
 
@@ -62,10 +65,13 @@ placer_options::save_checkpoint(ostream& o) const {
 	write_value(o, pos_tol);
 	write_value(o, vel_tol);
 //	write_value(o, accel_tol);
+	write_value(o, energy_tol);
+	write_value(o, min_iterations);
 	write_value(o, precision);
 	write_value(o, watch_objects);
 	write_value(o, watch_deltas);
 	write_value(o, watch_energy);
+	write_value(o, report_iterations);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -82,10 +88,13 @@ placer_options::load_checkpoint(istream& i) {
 	read_value(i, pos_tol);
 	read_value(i, vel_tol);
 //	read_value(i, accel_tol);
+	read_value(i, energy_tol);
+	read_value(i, min_iterations);
 	read_value(i, precision);
 	read_value(i, watch_objects);
 	read_value(i, watch_deltas);
 	read_value(i, watch_energy);
+	read_value(i, report_iterations);
 }
 
 //------------------------------------------------------------------------------
@@ -119,10 +128,8 @@ __string_type_of(T options_struct_type::*);
 
 static const string&
 __string_type_of(bool options_struct_type::*) { return __bool_type__; }
-#if 0
 static const string&
 __string_type_of(size_t options_struct_type::*) { return __int_type__; }
-#endif
 static const string&
 __string_type_of(int_type options_struct_type::*) { return __int_type__; }
 static const string&
@@ -267,6 +274,10 @@ DEFINE_OPTION_DEFAULT(pos_tol, "position_tolerance",
 	"position change tolerance for convergence")
 DEFINE_OPTION_DEFAULT(vel_tol, "velocity_tolerance", 
 	"velocity change tolerance for convergence")
+DEFINE_OPTION_DEFAULT(energy_tol, "energy_tolerance", 
+	"energy change tolerance for convergence")
+DEFINE_OPTION_DEFAULT(min_iterations, "min_iterations", 
+	"minimum number of iterations before halting")
 
 DEFINE_OPTION_DEFAULT(watch_objects, "watch_objects", 
 	"print coordinates of objects after each iteration")
@@ -274,6 +285,8 @@ DEFINE_OPTION_DEFAULT(watch_deltas, "watch_deltas",
 	"report changes in position and velocity after each iteration")
 DEFINE_OPTION_DEFAULT(watch_energy, "watch_energy", 
 	"report kinetic and potential energy after each iteration")
+DEFINE_OPTION_DEFAULT(report_iterations, "report_iterations", 
+	"report iteration counts")
 
 #if 0
 DEFINE_OPTION_MEMFUN(parse_corners, "geometry", 

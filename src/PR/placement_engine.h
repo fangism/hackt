@@ -1,7 +1,7 @@
 /**
 	\file "PR/placement_engine.h"
 	Physics simulator.
-	$Id: placement_engine.h,v 1.1.2.8 2011/04/21 01:32:13 fang Exp $
+	$Id: placement_engine.h,v 1.1.2.9 2011/04/22 01:28:22 fang Exp $
  */
 
 #ifndef	__HAC_PR_PLACEMENT_ENGINE_H__
@@ -104,8 +104,17 @@ public:
 	void
 	autosave(const string& s) { autosave_name = s; }
 
+// simulation
+	void
+	kill_momentum(void) {
+		space.kill_momentum();
+	}
+
 	void
 	iterate(void);
+
+	void
+	gradient_search(void);
 
 	void
 	simple_converge(void);
@@ -113,6 +122,18 @@ public:
 	void
 	adaptive_converge(void);
 
+	real_type
+	__descend_potential_energy(void);
+
+	void
+	descend_potential_energy(void) {
+		__descend_potential_energy();
+	}
+
+	void
+	repeat_descend_potential_energy(void);
+
+// energy
 	real_type
 	kinetic_energy(void) const {
 		return space.kinetic_energy();
@@ -128,6 +149,9 @@ public:
 
 	ostream&
 	dump_channel_types(ostream&) const;
+
+	ostream&
+	dump_positions(ostream&) const;
 
 	ostream&
 	dump_objects(ostream&) const;

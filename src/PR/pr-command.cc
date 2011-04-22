@@ -2,7 +2,7 @@
 	\file "PR/pr-command.cc"
 	Command-line feature for PR simulator.
 	TODO: scheme interface
-	$Id: pr-command.cc,v 1.1.2.9 2011/04/21 01:32:15 fang Exp $
+	$Id: pr-command.cc,v 1.1.2.10 2011/04/22 01:28:23 fang Exp $
  */
 
 #define	ENABLE_STATIC_TRACE		0
@@ -893,6 +893,38 @@ NoWatchEnergy::usage(ostream& o) {
 	o << brief << endl;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ReportIterations, "report-iterations",
+	setup,
+        "print energy after each iteration")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoReportIterations, "noreport-iterations",
+	setup,
+        "suppress energy after each iteration")
+
+int
+ReportIterations::main(State& s, const string_list& a) {
+	return set_boolean_option<&placer_options::report_iterations, true>
+		(s, a, usage);
+}
+
+void
+ReportIterations::usage(ostream& o) {
+	o << name << endl;
+	o << brief << endl;
+}
+
+int
+NoReportIterations::main(State& s, const string_list& a) {
+	return set_boolean_option<&placer_options::report_iterations, false>
+		(s, a, usage);
+}
+
+void
+NoReportIterations::usage(ostream& o) {
+	o << name << endl;
+	o << brief << endl;
+}
+
 //=============================================================================
 // info commands
 
@@ -915,6 +947,25 @@ DumpState::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(DumpParameters, "dump-parameters", info,
+        "print set of parameters")
+
+int
+DumpParameters::main(State& s, const string_list& a) {
+	REQUIRE_EXACT_ARGS(a, 1)
+	s.dump_parameters(cout);
+	return Command::NORMAL;
+}
+
+void
+DumpParameters::usage(ostream& o) {
+	o << name << endl;
+	o <<
+"Prints out the current simulation and solver parameters."
+	<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(DumpObjects, "dump-objects", info,
         "print current coordinates and state of objects")
 
@@ -927,6 +978,25 @@ DumpObjects::main(State& s, const string_list& a) {
 
 void
 DumpObjects::usage(ostream& o) {
+	o << name << endl;
+	o <<
+"Prints out the current location and state of all objects."
+	<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(DumpPositions, "dump-positions", info,
+        "print only current coordinates of objects")
+
+int
+DumpPositions::main(State& s, const string_list& a) {
+	REQUIRE_EXACT_ARGS(a, 1)
+	s.dump_positions(cout);
+	return Command::NORMAL;
+}
+
+void
+DumpPositions::usage(ostream& o) {
 	o << name << endl;
 	o <<
 "Prints out the current location of all objects."
@@ -1012,15 +1082,23 @@ UnPin::usage(ostream& o) {
 	o << brief << endl;
 }
 
+//=============================================================================
+static
+int
+simple_engine_command(State& s, const string_list& a,
+		void (State::*mf)(void), void usage(ostream&)) {
+	REQUIRE_EXACT_ARGS(a, 1)
+	(s.*mf)();
+	return Command::NORMAL;
+}
+
 //-----------------------------------------------------------------------------
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Scatter, "scatter", simulation,
         "randomize location of all un-pinned objects")
 
 int
 Scatter::main(State& s, const string_list& a) {
-	REQUIRE_EXACT_ARGS(a, 1)
-	s.scatter();
-	return Command::NORMAL;
+	return simple_engine_command(s, a, &State::scatter, usage);
 }
 
 void
@@ -1035,13 +1113,79 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(Step, "step", simulation,
 
 int
 Step::main(State& s, const string_list& a) {
-	REQUIRE_EXACT_ARGS(a, 1)
-	s.iterate();
-	return Command::NORMAL;
+	return simple_engine_command(s, a, &State::iterate, usage);
 }
 
 void
 Step::usage(ostream& o) {
+	o << name << endl;
+	o << brief << endl;
+}
+
+//-----------------------------------------------------------------------------
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(SimpleConverge, "simple-converge", 
+	simulation,
+        "iterate with constant time_step until convergence")
+
+int
+SimpleConverge::main(State& s, const string_list& a) {
+	return simple_engine_command(s, a, &State::simple_converge, usage);
+}
+
+void
+SimpleConverge::usage(ostream& o) {
+	o << name << endl;
+	o << brief << endl;
+}
+
+//-----------------------------------------------------------------------------
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(DescendPotential, "descend-potential", 
+	simulation,
+        "iterate with constant time_step until potential energy increases")
+
+int
+DescendPotential::main(State& s, const string_list& a) {
+	return simple_engine_command(s, a,
+		&State::descend_potential_energy, usage);
+}
+
+void
+DescendPotential::usage(ostream& o) {
+	o << name << endl;
+	o << brief << endl;
+}
+
+//-----------------------------------------------------------------------------
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(DescendPotentialConverge,
+	"descend-potential-converge", 
+	simulation,
+        "alternate descend-potential and kill-momentum until convergence")
+
+int
+DescendPotentialConverge::main(State& s, const string_list& a) {
+	return simple_engine_command(s, a,
+		&State::repeat_descend_potential_energy, usage);
+}
+
+void
+DescendPotentialConverge::usage(ostream& o) {
+	o << name << endl;
+	o << brief << endl;
+}
+
+//-----------------------------------------------------------------------------
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(KillMomentum, "kill-momentum", 
+	simulation,
+        "zero out all object velocities")
+
+int
+KillMomentum::main(State& s, const string_list& a) {
+	return simple_engine_command(s, a,
+		&State::kill_momentum, usage);
+}
+
+void
+KillMomentum::usage(ostream& o) {
 	o << name << endl;
 	o << brief << endl;
 }

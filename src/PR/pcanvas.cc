@@ -5,6 +5,7 @@
 #define	ENABLE_STACKTRACE				0
 
 #include <iostream>
+#include <functional>
 #include "PR/pcanvas.h"
 #include "PR/tile_type.h"
 #include "PR/placer_options.h"
@@ -16,12 +17,16 @@
 namespace PR {
 #include "util/using_ostream.h"
 using namespace util::vector_ops;
+using std::mem_fun_ref;
 
 //=============================================================================
 // class pcanvas method definitions
 
 pcanvas::pcanvas(const size_t d) :
-		dimensions(d), objects(), springs()
+#if PR_VARIABLE_DIMENSIONS
+		dimensions(d),
+#endif
+		objects(), springs()
 #if PR_MULTINETS
 		, nets()
 #endif
@@ -46,6 +51,34 @@ pcanvas::auto_proximity_radius(void) const {
 	}
 	return ret;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+/**
+	Updates potential energy without applying forces to nodes.  
+ */
+const real_type&
+pcanvas::update_potential_energy(void) {
+	STACKTRACE_VERBOSE;
+	spring_potential_energy = 0.0;
+	// compute spring tensions (attraction)
+	typedef	vector<channel_instance>::iterator	iterator;
+	iterator i(springs.begin()), e(springs.end());
+	for ( ; i!=e; ++i) {
+		const int_type& si(i->source);
+		const int_type& di(i->destination);
+		const tile_instance& sobj(objects[si]);
+		const tile_instance& dobj(objects[di]);
+		// this is *pre-update* potential energy
+		i->potential_energy =
+			tile_instance::current_attraction_potential_energy(
+				sobj, dobj, i->properties);
+		spring_potential_energy += i->potential_energy;
+	}	// end for each spring
+	spring_potential_energy *= 0.5;
+	return spring_potential_energy;
+}	// end update_potential_energy
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -131,9 +164,19 @@ pcanvas::update_objects(const placer_options& opt) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+pcanvas::kill_momentum(void) {
+	for_each(objects.begin(), objects.end(),
+		mem_fun_ref(&tile_instance::kill_momentum));
+	object_kinetic_energy = 0.0;	// easy calculation!
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pcanvas::save_checkpoint(ostream& o) const {
+#if PR_VARIABLE_DIMENSIONS
 	write_value(o, dimensions);
+#endif
 	save_array(o, objects);
 	save_array(o, springs);
 #if PR_MULTINETS
@@ -145,12 +188,14 @@ pcanvas::save_checkpoint(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pcanvas::load_checkpoint(istream& i) {
+#if PR_VARIABLE_DIMENSIONS
 	size_t d;
 	read_value(i, d);
 	if (d != dimensions) {
 		cerr << "Error: number of dimensions mismatch!" << endl;
 		return true;
 	}
+#endif
 	load_array(i, objects);
 	load_array(i, springs);
 #if PR_MULTINETS

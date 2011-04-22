@@ -2,8 +2,11 @@ parameters:
   @time=0
   bounds=<0,0,-50>;<100,100,50>
   damping=0
+  energy_tolerance=0.001
+  min_iterations=10
   position_tolerance=0.001
   precision=4
+  report_iterations=1
   repulsion_coeff=1
   temperature=0
   time_step=0.1

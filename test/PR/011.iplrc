@@ -1,0 +1,25 @@
+# "011.iplrc"
+# triangle problem
+
+repeat 3 add-pin
+place 0 <50,40,0>
+place 1 <34,40,0>
+place 2 <42,52,0>
+repeat 3 add-object
+add-channel 0 3
+add-channel 1 4
+add-channel 2 5
+add-channel 3 4
+add-channel 4 5
+add-channel 3 5
+dump-parameters
+echo randomly place free objects
+scatter
+parameter time_step=0.1
+parameter damping=0.3
+# watch-energy
+# watch-objects
+
+descend-potential-converge
+dump-positions
+

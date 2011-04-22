@@ -1,7 +1,7 @@
 /**
 	\file "PR/placer_options.h"
 	Physics simulator.
-	$Id: placer_options.h,v 1.1.2.2 2011/04/21 01:32:14 fang Exp $
+	$Id: placer_options.h,v 1.1.2.3 2011/04/22 01:28:22 fang Exp $
  */
 
 #ifndef	__HAC_PR_PLACER_OPTIONS_H__
@@ -28,6 +28,16 @@ struct placer_options {
 		Linear dampening factor.
 	 */
 	real_type			viscous_damping;
+#if 0
+	/**
+		Threshold of acceleration to move.
+	 */
+	real_type			static_friction;
+	/**
+		Constant negative force against direction of motion.
+	 */
+	real_type			kinetic_friction;
+#endif
 	/**
 		Threshold distance to cache nearby-objects for collision
 		and repulsion calculations.
@@ -64,6 +74,8 @@ struct placer_options {
 	/// acceleration-change tolerance for determining convergence
 	real_type			accel_tol;
 #endif
+	real_type			energy_tol;
+	size_t				min_iterations;
 	/**
 		Precision for displaying numbers.
 	 */
@@ -74,6 +86,7 @@ struct placer_options {
 	bool				watch_objects;
 	bool				watch_deltas;
 	bool				watch_energy;
+	bool				report_iterations;
 
 	placer_options();
 #if 0

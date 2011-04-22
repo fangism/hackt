@@ -68,6 +68,9 @@ public:
 	ostream&
 	dump(ostream&) const;
 
+	ostream&
+	dump_position(ostream&) const;
+
 	bool
 	save_checkpoint(ostream&) const;
 
@@ -131,6 +134,13 @@ public:
 
 	~tile_instance();
 
+	void
+	kill_momentum(void) {
+		util::vector_ops::fill(velocity, 0.0);
+		previous_velocity = velocity;
+		_kinetic_energy_2 = 0.0;
+	}
+
 	bool
 	is_fixed(void) const {
 		return fixed;
@@ -139,14 +149,21 @@ public:
 	void
 	fix(void) {
 		fixed = true;
-		util::vector_ops::fill(velocity, 0.0);
-		previous_velocity = velocity;
+		kill_momentum();
 	}
 
 	void
 	unfix(void) {
 		fixed = false;
 	}
+
+#if 0
+	static
+	real_type
+	current_attraction_potential_energy(
+		const tile_instance&, const tile_instance&,
+		const channel_properties&);
+#endif
 
 	static
 	void

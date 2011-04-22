@@ -1,0 +1,33 @@
+parameters:
+  @time=0
+  bounds=<0,0,-50>;<100,100,50>
+  damping=0.1
+  energy_tolerance=0.001
+  min_iterations=10
+  position_tolerance=0.001
+  precision=4
+  report_iterations=1
+  repulsion_coeff=1
+  temperature=0
+  time_step=0.001
+  velocity_tolerance=0.001
+  watch_deltas=0
+  watch_energy=0
+  watch_objects=0
+randomly place free objects 
+descend-potential: ran 13 iterations from time 0.1 to 1.4 (V=769.1)
+descend-potential: ran 14 iterations from time 1.4 to 2.8 (V=119.7)
+descend-potential: ran 16 iterations from time 2.8 to 4.4 (V=51.48)
+descend-potential: ran 15 iterations from time 4.4 to 5.9 (V=39.01)
+descend-potential: ran 13 iterations from time 5.9 to 7.2 (V=38.46)
+descend-potential: ran 23 iterations from time 7.2 to 9.5 (V=37.87)
+descend-potential: ran 2 iterations from time 9.5 to 9.7 (V=37.87)
+descend-potential: ran 2 iterations from time 9.7 to 9.9 (V=37.87)
+descend-potential-converge: ran 8 descend-potential from time 0 to 9.9 (V=37.87)
+object-positions:
+  [0]: @=<50,40,0>
+  [1]: @=<34,40,0>
+  [2]: @=<42,52,0>
+  [3]: @=<45.11,42.38,0.001444>
+  [4]: @=<38.98,42.36,0.007256>
+  [5]: @=<42.05,47.05,-0.01634>

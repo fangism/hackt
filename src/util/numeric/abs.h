@@ -4,7 +4,7 @@
 	This allows use of abs instead of fabs for real types.
 	This might not be necessary if std::abs already provides
 	overloads.
-	$Id: abs.h,v 1.1.2.1 2011/04/15 00:52:09 fang Exp $
+	$Id: abs.h,v 1.1.2.2 2011/04/22 01:28:24 fang Exp $
  */
 
 #ifndef	__UTIL_NUMERIC_ABS_H__
@@ -44,6 +44,7 @@ abs(const T& t) {
 #if SIZEOF_LONG
 // && defined(HAVE_LABS)
 template <>
+inline
 long
 abs(const long& t) {
 	return labs(t);	// already overloaded for long
@@ -53,6 +54,7 @@ abs(const long& t) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if SIZEOF_LONG_LONG && defined(HAVE_LLABS)
 template <>
+inline
 long long
 abs(const long long& t) {
 	return llabs(t);
@@ -64,6 +66,7 @@ abs(const long long& t) {
 
 #if SIZEOF_FLOAT && defined(HAVE_FABSF)
 template <>
+inline
 float
 abs(const float& t) {
 	return fabsf(t);
@@ -73,6 +76,7 @@ abs(const float& t) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if SIZEOF_DOUBLE && defined(HAVE_FABS)
 template <>
+inline
 double
 abs(const double& t) {
 	return fabs(t);
@@ -82,6 +86,7 @@ abs(const double& t) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if SIZEOF_LONG_DOUBLE && defined(HAVE_FABSL)
 template <>
+inline
 long double
 abs(const long double& t) {
 	return fabsl(t);

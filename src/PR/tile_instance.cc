@@ -1,6 +1,6 @@
 /**
 	\file "PR/tile_instance.cc"
-	$Id: tile_instance.cc,v 1.1.2.7 2011/04/21 01:32:16 fang Exp $
+	$Id: tile_instance.cc,v 1.1.2.8 2011/04/22 01:28:23 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -141,6 +141,12 @@ object_state::update(const time_type& dt, const real_type& v) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
+object_state::dump_position(ostream& o) const {
+	return o << "@=" << position;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
 object_state::dump(ostream& o) const {
 	o << "@=" << position;
 	o << " @'=" << velocity;
@@ -263,6 +269,32 @@ tile_instance::apply_pairwise_force(
 	}
 	// else both fixed, do nothing
 }	// end apply_pairwise_force
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+/**
+	Computes potential_energy using the *current* position
+	instead of the previous_position.
+ */
+real_type
+tile_instance::current_attraction_potential_energy(
+		const tile_instance& sobj, const tile_instance& dobj,
+		const channel_properties& cp) {
+	const bool sf = sobj.is_fixed();
+	const bool df = dobj.is_fixed();
+if (!(sf && df)) {
+	const position_type delta(dobj.position -sobj.position);
+	// optimization: compare square of distances to avoid sqrt() call?
+	const real_type dist = norm(delta);	// distance between centers
+	const real_type stretch = dist -cp.equilibrium_distance;
+	// TODO: use rectilinear distance as an option?
+	if (stretch > 0.0) {
+		return stretch * stretch *cp.spring_coeff;
+	}       // else objects too close to attract
+}
+	return 0.0;
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
