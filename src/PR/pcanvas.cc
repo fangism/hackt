@@ -131,7 +131,7 @@ pcanvas::update_objects(const placer_options& opt) {
 		// apply force and momentum, update kinetic energy
 		i->update(opt.time_step, opt.viscous_damping);
 		// enforce bounds
-		opt.clamp_position(i->position);
+		opt.clamp_position(i->current.position);
 		// record maximum change, not counting randomness
 		// don't bother with euclidean distance
 		// rectilinear or maximum_dimension shall suffice
@@ -147,7 +147,7 @@ pcanvas::update_objects(const placer_options& opt) {
 		// kinetic energy calculation!
 		if (opt.temperature > 0.0) {
 			// alter position or velocity?
-			i->position += random_unit_vector() *
+			i->current.position += random_unit_vector() *
 #if PR_TILE_MASS
 				sqrt(tt / i->properties.mass);
 #else

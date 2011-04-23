@@ -1,6 +1,6 @@
 /**
 	\file "PR/channel.cc"
-	$Id: channel.cc,v 1.1.2.4 2011/04/21 01:32:11 fang Exp $
+	$Id: channel.cc,v 1.1.2.5 2011/04/23 22:56:40 fang Exp $
  */
 
 #include <iostream>
@@ -88,6 +88,22 @@ channel_type::load_checkpoint(istream& i) {
 }
 
 //=============================================================================
+// class channel_state method definitions
+
+bool
+channel_state::save_checkpoint(ostream& o) const {
+	write_value(o, potential_energy);
+	return !o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+channel_state::load_checkpoint(istream& i) {
+	read_value(i, potential_energy);
+	return !i;
+}
+
+//=============================================================================
 // class channel_instance method definitions
 
 channel_instance::channel_instance() :
@@ -125,7 +141,7 @@ channel_instance::save_checkpoint(ostream& o) const {
 	write_value(o, destination);
 	// equilibrium_distance could be recalculated
 	properties.save_checkpoint(o);
-	write_value(o, potential_energy);
+	channel_state::save_checkpoint(o);
 	return !o;
 }
 
@@ -136,7 +152,7 @@ channel_instance::load_checkpoint(istream& i) {
 	read_value(i, destination);
 	// equilibrium_distance could be recalculated
 	properties.load_checkpoint(i);
-	read_value(i, potential_energy);
+	channel_state::load_checkpoint(i);
 	return !i;
 }
 

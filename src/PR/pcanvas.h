@@ -1,7 +1,7 @@
 /**
 	\file "PR/pcanvas.h"
 	Medium on which placement is solved with physics.
-	$Id: pcanvas.h,v 1.1.2.7 2011/04/22 23:16:33 fang Exp $
+	$Id: pcanvas.h,v 1.1.2.8 2011/04/23 22:56:42 fang Exp $
  */
 
 #ifndef	__HAC_PR_PCANVAS_H__
@@ -35,7 +35,11 @@ struct pcanvas {
 #if PR_MULTINETS
 	vector<net_instance>		nets;
 #endif
-
+#if 0
+	// implement with separate state array for efficient
+	// state swapping (vector)
+	vector<object_state>		coordinates;
+#endif
 private:
 	/**
 		The maximum distance changed by any single object

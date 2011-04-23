@@ -3,6 +3,13 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-04-23	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-64-pr-01-11b:
+	  PR/tile_instance: split out object_state into a contained
+		substruct, one for current, one for previous.
+
+
 2011-04-22	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-64-pr-01-11:

@@ -1,6 +1,6 @@
 /**
 	\file "PR/placement_engine.cc"
-	$Id: placement_engine.cc,v 1.1.2.10 2011/04/22 23:16:33 fang Exp $
+	$Id: placement_engine.cc,v 1.1.2.11 2011/04/23 22:56:42 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -258,14 +258,14 @@ static
 bool
 dim_less(const vector<tile_instance>::const_iterator l,
 		const vector<tile_instance>::const_iterator r) {
-	return l->position[D] < r->position[D];
+	return l->current.position[D] < r->current.position[D];
 }
 
 template <size_t D>
 static
 bool
 dim_comp(const vector<tile_instance>::const_iterator l, const real_type& r) {
-	return l->position[D] < r;
+	return l->current.position[D] < r;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -340,10 +340,10 @@ placement_engine::refresh_proximity_cache(void) {
 #endif
 	// x-sweep
 for ( ; xb!=xe; ++xb) {
-	const real_type x = (*xb)->position[0];
+	const real_type x = (*xb)->current.position[0];
 	// [xb, xu] defines a sliding window along the x-dimension
 	// linear scan overall costs less than repeated (lg N) binary searches
-	while (xu!=xe && (*xu)->position[0] < x+opt.proximity_radius) {
+	while (xu!=xe && (*xu)->current.position[0] < x+opt.proximity_radius) {
 		++xu;
 	}
 const size_t xw_size = distance(xb, xu);
@@ -355,7 +355,7 @@ if (xw_size > 1) {
 	// copy range of iterators, and re-sort by y-dimension
 	vector<iterator> obj_y(xb, xu);
 	sort(obj_y.begin(), obj_y.end(), &dim_less<1>);
-	const real_type& y_ref((*xb)->position[1]);
+	const real_type& y_ref((*xb)->current.position[1]);
 	const vector<iterator>::iterator
 		yb(obj_y.begin()), ye(obj_y.end());
 	const vector<iterator>::iterator
@@ -368,7 +368,7 @@ if (xw_size > 1) {
 		// copy range of iterators, re-sort by z-dimension
 		vector<iterator> obj_z(yl, yu);
 		sort(obj_z.begin(), obj_z.end(), &dim_less<2>);
-		const real_type& z_ref((*xb)->position[2]);
+		const real_type& z_ref((*xb)->current.position[2]);
 		const vector<iterator>::iterator
 			zb(obj_y.begin()), ze(obj_y.end());
 		const vector<iterator>::iterator

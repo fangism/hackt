@@ -25,12 +25,12 @@ struct object_state {
 		Current position of object.
 	 */
 	position_type			position;
-	position_type			previous_position;
+//	position_type			previous_position;
 	/**
 		Non-zero if simulating with object momentum.
 	 */
 	velocity_type			velocity;
-	velocity_type			previous_velocity;
+//	velocity_type			previous_velocity;
 	/**
 		mutable, to be updated/accumulated, recomputed with 
 		every interation.
@@ -49,21 +49,25 @@ public:
 	void
 	place(const real_vector& v) {
 		position = v;
-		previous_position = v;
 	}
 
 	void
 	update(const time_type&, const real_type&);
 
+	void
+	update(const time_type&, const real_type&, const object_state&);
+
+#if 0
 	real_type
 	rectilinear_delta_position(void) const {
-		return rectilinear_distance(previous_position, position);
+		return rectilinear_distance(previous.position, current.position);
 	}
 
 	real_type
 	rectilinear_delta_velocity(void) const {
-		return rectilinear_distance(previous_velocity, velocity);
+		return rectilinear_distance(previous.velocity, current.velocity);
 	}
+#endif
 
 	ostream&
 	dump(ostream&) const;
@@ -86,7 +90,7 @@ public:
 		for channel/springs?  (lower-triangle sparse)
 	TODO: support grid-alignment and gravity forces
  */
-struct tile_instance : public object_state {
+struct tile_instance {
 //	force_type			force;
 
 	/**
@@ -117,6 +121,10 @@ private:
 		If true, prevent this from moving.
 	 */
 	bool				fixed;
+public:
+	object_state			current;
+	object_state			previous;
+private:
 	/**
 		Kinetic energy is computed by update.
 		without factor of 1/2.
@@ -136,9 +144,21 @@ public:
 
 	void
 	kill_momentum(void) {
-		util::vector_ops::fill(velocity, 0.0);
-		previous_velocity = velocity;
+		util::vector_ops::fill(current.velocity, 0.0);
+		previous.velocity = current.velocity;
 		_kinetic_energy_2 = 0.0;
+	}
+
+	void
+	place(const real_vector& v) {
+		current.position = v;
+//		previous.position = v;
+	}
+
+	void
+	zero_force(void) {
+		current.zero_force();
+//		previous.zero_force();
 	}
 
 	bool
@@ -155,6 +175,12 @@ public:
 	void
 	unfix(void) {
 		fixed = false;
+	}
+
+	void
+	update(const time_type& t, const real_type& k) {
+		previous = current;
+		current.update(t, k);
 	}
 
 	static
@@ -203,6 +229,12 @@ public:
 
 	ostream&
 	dump(ostream&) const;
+
+	ostream&
+	dump_position(ostream& o) const {
+		return current.dump_position(o);
+	}
+
 
 #if PR_LOCAL_PROXIMITY_CACHE
 	void

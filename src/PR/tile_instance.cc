@@ -1,6 +1,6 @@
 /**
 	\file "PR/tile_instance.cc"
-	$Id: tile_instance.cc,v 1.1.2.9 2011/04/22 23:16:34 fang Exp $
+	$Id: tile_instance.cc,v 1.1.2.10 2011/04/23 22:56:43 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -118,8 +118,8 @@ static
 const real_type __zero[] = {0.0, 0.0, 0.0};
 
 object_state::object_state() :
-		position(__zero), previous_position(__zero), 
-		velocity(__zero), previous_velocity(__zero),
+		position(__zero), 
+		velocity(__zero), 
 		acceleration(__zero) {
 }
 
@@ -132,11 +132,19 @@ object_state::object_state() :
  */
 void
 object_state::update(const time_type& dt, const real_type& v) {
-	previous_position = position;
-	previous_velocity = velocity;
-	velocity += (acceleration -previous_velocity *v) *dt;
 //	position += previous_velocity *dt + acceleration *(dt*dt*0.5);
-	position += (previous_velocity + acceleration *(dt*0.5)) *dt;
+	position += (velocity + acceleration *(dt*0.5)) *dt;
+	velocity += (acceleration -velocity *v) *dt;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+object_state::update(const time_type& dt, const real_type& v,
+		const object_state& previous) {
+	velocity = previous.velocity
+		+(acceleration -previous.velocity *v) *dt;
+	position = previous.position
+		+(previous.velocity + acceleration *(dt*0.5)) *dt;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -158,9 +166,7 @@ object_state::dump(ostream& o) const {
 bool
 object_state::save_checkpoint(ostream& o) const {
 	write_value(o, position);
-	write_value(o, previous_position);
 	write_value(o, velocity);
-	write_value(o, previous_velocity);
 	write_value(o, acceleration);
 	return !o;
 }
@@ -169,9 +175,7 @@ object_state::save_checkpoint(ostream& o) const {
 bool
 object_state::load_checkpoint(istream& i) {
 	read_value(i, position);
-	read_value(i, previous_position);
 	read_value(i, velocity);
-	read_value(i, previous_velocity);
 	read_value(i, acceleration);
 	return !i;
 }
@@ -184,22 +188,22 @@ bool tile_instance::dump_properties = true;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 tile_instance::tile_instance() :
-		object_state(), 
 		properties(),
 #if PR_LOCAL_PROXIMITY_CACHE
 		proximity_cache(),
 #endif
-		fixed(false) {
+		fixed(false), 
+		current(), previous() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 tile_instance::tile_instance(const tile_type& t) :
-		object_state(), 
 		properties(t),
 #if PR_LOCAL_PROXIMITY_CACHE
 		proximity_cache(),
 #endif
-		fixed(false) {
+		fixed(false), 
+		current(), previous() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -232,7 +236,7 @@ tile_instance::apply_pairwise_force(
 #endif
 	if (sf && !df) {
 		// only source is fixed
-		dobj.acceleration -= force_vec *
+		dobj.current.acceleration -= force_vec *
 #if PR_TILE_MASS
 			(ffrac / dp.mass);
 #else
@@ -240,7 +244,7 @@ tile_instance::apply_pairwise_force(
 #endif
 	} else if (df && !sf) {
 		// only dest is fixed
-		sobj.acceleration += force_vec *
+		sobj.current.acceleration += force_vec *
 #if PR_TILE_MASS
 			(ffrac / sp.mass);
 #else
@@ -254,13 +258,13 @@ tile_instance::apply_pairwise_force(
 		static const real_type massfrac = 0.5;
 		const real_type hf = ffrac * massfrac;
 #endif
-		sobj.acceleration +=
+		sobj.current.acceleration +=
 #if PR_TILE_MASS
 			force_vec * (ffrac * massfrac / sp.mass);
 #else
 			force_vec * hf;
 #endif
-		dobj.acceleration -=
+		dobj.current.acceleration -=
 #if PR_TILE_MASS
 			force_vec * (ffrac * (1.0 -massfrac) / dp.mass);
 #else
@@ -282,7 +286,7 @@ tile_instance::current_attraction_potential_energy(
 	const bool sf = sobj.is_fixed();
 	const bool df = dobj.is_fixed();
 if (!(sf && df)) {
-	const position_type delta(dobj.position -sobj.position);
+	const position_type delta(dobj.current.position -sobj.current.position);
 	const real_type dist = norm(delta);	// distance between centers
 	const real_type stretch = dist -cp.equilibrium_distance;
 	// TODO: use rectilinear distance as an option?
@@ -305,7 +309,7 @@ tile_instance::current_repulsion_potential_energy(
 	const bool sf = sobj.is_fixed();
 	const bool df = dobj.is_fixed();
 if (!(sf && df)) {
-	const position_type delta(dobj.position -sobj.position);
+	const position_type delta(dobj.current.position -sobj.current.position);
 	const real_type dist = norm(delta);	// distance between centers
 	const real_type stretch = dist -cp.equilibrium_distance;
 	// TODO: use rectilinear distance as an option?
@@ -337,7 +341,7 @@ if (!(sf && df)) {
 	// TODO: optimize away number of mathematical operations
 	// TODO: use delta - sizeof(objects)
 	//	or distance between ellipsoids
-	const position_type delta(dobj.position -sobj.position);
+	const position_type delta(dobj.current.position -sobj.current.position);
 	// optimization: compare square of distances to avoid sqrt() call?
 	const real_type dist = norm(delta);	// distance between centers
 	const real_type stretch = dist -cp.equilibrium_distance;
@@ -373,7 +377,7 @@ if (!(sf && df)) {
 	// TODO: optimize away number of mathematical operations
 	// TODO: use delta - sizeof(objects)
 	//      or distance between ellipsoids
-	const position_type delta(dobj.position -sobj.position);
+	const position_type delta(dobj.current.position -sobj.current.position);
 	// optimization: compare square of distances to avoid sqrt() call?
 	const real_type dist = norm(delta);	// distance between centers
 	const real_type stretch = dist -cp.equilibrium_distance;
@@ -397,7 +401,7 @@ if (!(sf && df)) {
  */
 const real_type&
 tile_instance::update_kinetic_energy_2(void) {
-	const real_vector& v(previous_velocity);
+	const real_vector& v(previous.velocity);
 //	const real_vector& v(velocity);
 #if PR_TILE_MASS
 	_kinetic_energy_2 = properties.mass * normsq(v);
@@ -414,9 +418,9 @@ tile_instance::update_kinetic_energy_2(void) {
 ostream&
 tile_instance::dump(ostream& o) const {
 	if (fixed) {
-		o << "@=" << position << " (fixed)";
+		o << "@=" << current.position << " (fixed)";
 	} else {
-		object_state::dump(o);
+		current.dump(o);
 	}
 	if (dump_properties) {
 		properties.dump(o << " [") << ']';
@@ -427,9 +431,10 @@ tile_instance::dump(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 tile_instance::save_checkpoint(ostream& o) const {
-	object_state::save_checkpoint(o);
 	properties.save_checkpoint(o);
 	write_value(o, fixed);
+	current.save_checkpoint(o);
+	previous.save_checkpoint(o);
 	// proximity cache should be regenerated
 	// kinetic_energy recalculated
 	return !o;
@@ -438,9 +443,10 @@ tile_instance::save_checkpoint(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 tile_instance::load_checkpoint(istream& i) {
-	object_state::load_checkpoint(i);
 	properties.load_checkpoint(i);
 	read_value(i, fixed);
+	current.load_checkpoint(i);
+	previous.load_checkpoint(i);
 	// proximity cache should be regenerated
 	update_kinetic_energy_2();
 	return !i;

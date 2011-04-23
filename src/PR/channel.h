@@ -1,6 +1,6 @@
 /**
 	\file "PR/channel.h"
-	$Id: channel.h,v 1.1.2.5 2011/04/21 01:32:11 fang Exp $
+	$Id: channel.h,v 1.1.2.6 2011/04/23 22:56:41 fang Exp $
  */
 #ifndef	__HAC_PR_CHANNEL_H__
 #define	__HAC_PR_CHANNEL_H__
@@ -31,10 +31,28 @@ struct net_instance {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Stateful information for every channel.
+ */
+struct channel_state {
+	/**
+		A cached-only value computed separately.
+	 */
+	real_type			potential_energy;
+
+	bool
+	save_checkpoint(ostream&) const;
+
+	bool
+	load_checkpoint(istream&);
+
+};	// end struct channel_state
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Instance of spring-model point-to-point channel.
 	TODO: alignment: favor vertical or horizontal direction.
  */
-struct channel_instance {
+struct channel_instance : public channel_state {
 //	const channel_type*		type;
 	channel_type			properties;
 //	int_type			global_index;	// HAC global ID
@@ -50,10 +68,6 @@ struct channel_instance {
 	 */
 	real_type			spring_coeff;
 #endif
-	/**
-		A cached-only value computed separately.
-	 */
-	real_type			potential_energy;
 
 	channel_instance();
 
