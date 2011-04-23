@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.cc"
-	$Id: netgraph.cc,v 1.34 2011/04/12 21:52:31 fang Exp $
+	$Id: netgraph.cc,v 1.35 2011/04/23 00:22:02 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -114,10 +114,21 @@ device_group::summarize_parasitics(node_pool_type& node_pool,
 		node& g(node_pool[i->gate]);
 		const transistor::parasitics& p(i->parasitic_values);
 		g.cap.gate_area += i->gate_area();
-		s.cap.diff_area += p.source_area;
-		s.cap.diff_perimeter += p.source_perimeter;
-		d.cap.diff_area += p.drain_area;
-		d.cap.diff_perimeter += p.drain_perimeter;
+		++g.cap.gate_terms;
+		const bool N = (i->type == transistor::NFET_TYPE);
+		if (N) {
+			s.cap.ndiff_area += p.source_area;
+			s.cap.ndiff_perimeter += p.source_perimeter;
+			d.cap.ndiff_area += p.drain_area;
+			d.cap.ndiff_perimeter += p.drain_perimeter;
+			++d.cap.ndrain_terms;
+		} else {
+			s.cap.pdiff_area += p.source_area;
+			s.cap.pdiff_perimeter += p.source_perimeter;
+			d.cap.pdiff_area += p.drain_area;
+			d.cap.pdiff_perimeter += p.drain_perimeter;
+			++d.cap.pdrain_terms;
+		}
 #endif
 	}
 }
@@ -662,9 +673,14 @@ node::check_connectivity(const netlist_options& opt) const {
 ostream&
 node_caps::emit(ostream& o, const netlist_options& nopt) const {
 	return o <<
-		"[diff_perim=" << diff_perimeter << nopt.length_unit <<
-		", diff_area=" << diff_area << nopt.area_unit <<
+		"[ndiff_perim=" << ndiff_perimeter << nopt.length_unit <<
+		", ndiff_area=" << ndiff_area << nopt.area_unit <<
+		", ndrain_terms=" << ndrain_terms <<
+		", pdiff_perim=" << pdiff_perimeter << nopt.length_unit <<
+		", pdiff_area=" << pdiff_area << nopt.area_unit <<
+		", pdrain_terms=" << pdrain_terms <<
 		", gate_area=" << gate_area << nopt.area_unit <<
+		", gate_terms=" << gate_terms <<
 		", wire_area=" << wire_area << nopt.area_unit <<
 		']';
 }

@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.h"
-	$Id: netgraph.h,v 1.27 2011/04/12 21:52:32 fang Exp $
+	$Id: netgraph.h,v 1.28 2011/04/23 00:22:02 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETGRAPH_H__
@@ -399,37 +399,70 @@ struct proc : public unique_common {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if NETLIST_NODE_CAPS
+/**
+	Per node accumulated information, grabbed from device terminals.
+ */
 struct node_caps {
 	/**
-		total perimeter value of connected sources and drains
+		total perimeter value of connected sources and drains (NFET)
 	 */
-	real_type			diff_perimeter;
+	real_type			ndiff_perimeter;
 	/**
-		total area value of connected sources and drains
+		total area value of connected sources and drains (NFET)
 	 */
-	real_type			diff_area;
+	real_type			ndiff_area;
+	/**
+		total perimeter value of connected sources and drains (PFET)
+	 */
+	real_type			pdiff_perimeter;
+	/**
+		total area value of connected sources and drains (PFET)
+	 */
+	real_type			pdiff_area;
 	/**
 		total area value of connected gates
 	 */
 	real_type			gate_area;
 	/**
 		total wire area, typically only comes from post-extraction
-		and back-annotation
+		and back-annotation, or may be estimated with some model.
 	 */
 	real_type			wire_area;
+	/**
+		Number of terminals at NFET drains.
+	 */
+	size_t				ndrain_terms;
+	/**
+		Number of terminals at PFET drains.
+	 */
+	size_t				pdrain_terms;
+	/**
+		Number of gate-connected terminals.  
+	 */
+	size_t				gate_terms;
 
 	node_caps() :
-		diff_perimeter(0.0),
-		diff_area(0.0),
+		ndiff_perimeter(0.0),
+		ndiff_area(0.0),
+		pdiff_perimeter(0.0),
+		pdiff_area(0.0),
 		gate_area(0.0),
-		wire_area(0.0) { }
+		wire_area(0.0),
+		ndrain_terms(0),
+		pdrain_terms(0),
+		gate_terms(0) { }
 
 	node_caps&
 	operator += (const node_caps& r) {
-		diff_perimeter += r.diff_perimeter;
-		diff_area += r.diff_area;
+		ndiff_perimeter += r.ndiff_perimeter;
+		ndiff_area += r.ndiff_area;
+		pdiff_perimeter += r.pdiff_perimeter;
+		pdiff_area += r.pdiff_area;
 		gate_area += r.gate_area;
 		wire_area += r.wire_area;
+		ndrain_terms += r.ndrain_terms;
+		pdrain_terms += r.pdrain_terms;
+		gate_terms += r.gate_terms;
 		return *this;
 	}
 

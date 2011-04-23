@@ -1,14 +1,14 @@
 * BEGIN node caps
-* 	@ad [diff_perim=66u, diff_area=90p, gate_area=0p, wire_area=0p]
-* 	@bd [diff_perim=66u, diff_area=90p, gate_area=0p, wire_area=0p]
-* 	@au [diff_perim=66u, diff_area=90p, gate_area=0p, wire_area=0p]
-* 	@bu [diff_perim=66u, diff_area=90p, gate_area=0p, wire_area=0p]
-* 	!GND [diff_perim=76u, diff_area=120p, gate_area=0p, wire_area=0p]
-* 	!Vdd [diff_perim=76u, diff_area=120p, gate_area=0p, wire_area=0p]
-* 	_o [diff_perim=88u, diff_area=120p, gate_area=40p, wire_area=0p]
-* 	a [diff_perim=0u, diff_area=0p, gate_area=40p, wire_area=0p]
-* 	b [diff_perim=0u, diff_area=0p, gate_area=40p, wire_area=0p]
-* 	o [diff_perim=64u, diff_area=120p, gate_area=20p, wire_area=0p]
+* 	@ad [ndiff_perim=66u, ndiff_area=90p, ndrain_terms=1, pdiff_perim=0u, pdiff_area=0p, pdrain_terms=0, gate_area=0p, gate_terms=0, wire_area=0p]
+* 	@bd [ndiff_perim=66u, ndiff_area=90p, ndrain_terms=2, pdiff_perim=0u, pdiff_area=0p, pdrain_terms=0, gate_area=0p, gate_terms=0, wire_area=0p]
+* 	@au [ndiff_perim=0u, ndiff_area=0p, ndrain_terms=0, pdiff_perim=66u, pdiff_area=90p, pdrain_terms=1, gate_area=0p, gate_terms=0, wire_area=0p]
+* 	@bu [ndiff_perim=0u, ndiff_area=0p, ndrain_terms=0, pdiff_perim=66u, pdiff_area=90p, pdrain_terms=2, gate_area=0p, gate_terms=0, wire_area=0p]
+* 	!GND [ndiff_perim=76u, ndiff_area=120p, ndrain_terms=0, pdiff_perim=0u, pdiff_area=0p, pdrain_terms=0, gate_area=0p, gate_terms=0, wire_area=0p]
+* 	!Vdd [ndiff_perim=0u, ndiff_area=0p, ndrain_terms=0, pdiff_perim=76u, pdiff_area=120p, pdrain_terms=0, gate_area=0p, gate_terms=0, wire_area=0p]
+* 	_o [ndiff_perim=44u, ndiff_area=60p, ndrain_terms=2, pdiff_perim=44u, pdiff_area=60p, pdrain_terms=2, gate_area=40p, gate_terms=2, wire_area=0p]
+* 	a [ndiff_perim=0u, ndiff_area=0p, ndrain_terms=0, pdiff_perim=0u, pdiff_area=0p, pdrain_terms=0, gate_area=40p, gate_terms=4, wire_area=0p]
+* 	b [ndiff_perim=0u, ndiff_area=0p, ndrain_terms=0, pdiff_perim=0u, pdiff_area=0p, pdrain_terms=0, gate_area=40p, gate_terms=4, wire_area=0p]
+* 	o [ndiff_perim=32u, ndiff_area=60p, ndrain_terms=1, pdiff_perim=32u, pdiff_area=60p, pdrain_terms=1, gate_area=20p, gate_terms=2, wire_area=0p]
 * END node caps
 M@ad:dn:0 !GND a @ad !GND nch W=5u L=2u
 M_o:dn:0 @ad b _o !GND nch W=5u L=2u

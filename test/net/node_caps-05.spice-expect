@@ -1,12 +1,12 @@
 * BEGIN node caps
-* 	@en_ [diff_perim=88u, diff_area=120p, gate_area=0p, wire_area=0p]
-* 	!GND [diff_perim=22u, diff_area=30p, gate_area=0p, wire_area=0p]
-* 	!Vdd [diff_perim=66u, diff_area=90p, gate_area=0p, wire_area=0p]
-* 	_o[0] [diff_perim=44u, diff_area=60p, gate_area=0p, wire_area=0p]
-* 	en [diff_perim=0u, diff_area=0p, gate_area=40p, wire_area=0p]
-* 	i[0] [diff_perim=0u, diff_area=0p, gate_area=10p, wire_area=0p]
-* 	_o[1] [diff_perim=44u, diff_area=60p, gate_area=0p, wire_area=0p]
-* 	i[1] [diff_perim=0u, diff_area=0p, gate_area=10p, wire_area=0p]
+* 	@en_ [ndiff_perim=66u, ndiff_area=90p, ndrain_terms=1, pdiff_perim=22u, pdiff_area=30p, pdrain_terms=1, gate_area=0p, gate_terms=0, wire_area=0p]
+* 	!GND [ndiff_perim=22u, ndiff_area=30p, ndrain_terms=0, pdiff_perim=0u, pdiff_area=0p, pdrain_terms=0, gate_area=0p, gate_terms=0, wire_area=0p]
+* 	!Vdd [ndiff_perim=0u, ndiff_area=0p, ndrain_terms=0, pdiff_perim=66u, pdiff_area=90p, pdrain_terms=0, gate_area=0p, gate_terms=0, wire_area=0p]
+* 	_o[0] [ndiff_perim=22u, ndiff_area=30p, ndrain_terms=1, pdiff_perim=22u, pdiff_area=30p, pdrain_terms=1, gate_area=0p, gate_terms=0, wire_area=0p]
+* 	en [ndiff_perim=0u, ndiff_area=0p, ndrain_terms=0, pdiff_perim=0u, pdiff_area=0p, pdrain_terms=0, gate_area=40p, gate_terms=4, wire_area=0p]
+* 	i[0] [ndiff_perim=0u, ndiff_area=0p, ndrain_terms=0, pdiff_perim=0u, pdiff_area=0p, pdrain_terms=0, gate_area=10p, gate_terms=1, wire_area=0p]
+* 	_o[1] [ndiff_perim=22u, ndiff_area=30p, ndrain_terms=1, pdiff_perim=22u, pdiff_area=30p, pdrain_terms=1, gate_area=0p, gate_terms=0, wire_area=0p]
+* 	i[1] [ndiff_perim=0u, ndiff_area=0p, ndrain_terms=0, pdiff_perim=0u, pdiff_area=0p, pdrain_terms=0, gate_area=10p, gate_terms=1, wire_area=0p]
 * END node caps
 M@en_:dn:0 !GND en @en_ !GND nch W=5u L=2u
 M_o[0]:dn:0:pchg !Vdd en @en_ !Vdd pch W=5u L=2u

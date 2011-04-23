@@ -3,6 +3,15 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-04-22	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-66:
+	  hacknet: emit_node_caps updated to distinguish ndiff from pdiff
+		and also count the number of ndrain/pdrain/gate terminals, 
+		which can then be used to estimate wire loads downstream.
+	  Test cases updated.
+
+
 2011-04-12	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-65:
