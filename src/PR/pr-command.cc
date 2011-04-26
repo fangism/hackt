@@ -2,7 +2,7 @@
 	\file "PR/pr-command.cc"
 	Command-line feature for PR simulator.
 	TODO: scheme interface
-	$Id: pr-command.cc,v 1.1.2.11 2011/04/22 23:16:34 fang Exp $
+	$Id: pr-command.cc,v 1.1.2.12 2011/04/26 01:03:14 fang Exp $
  */
 
 #define	ENABLE_STATIC_TRACE		0
@@ -630,12 +630,12 @@ AddObject::main(State& s, const string_list& a) {
 				cerr << "Error lexing type index" << endl;
 				err = true;
 			}
-			if (j >= s.object_types.size()) {
+			if (j >= s.num_object_types()) {
 				cerr << "Error: invalid type index" << endl;
 				err = true;
 			}
 			// inherit all attributes and properties
-			t.properties = s.object_types[j];
+			t.properties = s.get_object_type(j);
 		} else if (t.properties.parse_property(v)) { err = true; }
 		// else no error, continue
 	}
@@ -736,12 +736,12 @@ AddChannel::main(State& s, const string_list& a) {
 				cerr << "Error lexing type index" << endl;
 				err = true;
 			}
-			if (j >= s.channel_types.size()) {
+			if (j >= s.num_channel_types()) {
 				cerr << "Error: invalid type index" << endl;
 				err = true;
 			}
 			// inherit all attributes and properties
-			t.properties = s.channel_types[j];
+			t.properties = s.get_channel_type(j);
 		} else if (t.properties.parse_property(v)) { err = true; }
 		// else no error, continue
 	}

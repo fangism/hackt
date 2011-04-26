@@ -1,6 +1,6 @@
 /**
 	\file "PR/channel.h"
-	$Id: channel.h,v 1.1.2.6 2011/04/23 22:56:41 fang Exp $
+	$Id: channel.h,v 1.1.2.7 2011/04/26 01:03:12 fang Exp $
  */
 #ifndef	__HAC_PR_CHANNEL_H__
 #define	__HAC_PR_CHANNEL_H__
@@ -58,6 +58,8 @@ struct channel_instance : public channel_state {
 //	int_type			global_index;	// HAC global ID
 	/**
 		Terminals are object indices.
+		Don't use pointers because of possible need to 
+		swap sets of object states/positions.
 	 */
 	size_t				source;
 	size_t				destination;

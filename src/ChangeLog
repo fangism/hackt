@@ -5,6 +5,12 @@
 
 2011-04-25	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-84-64-pr-01-12a:
+	  ipple: perm'd PR_LOCAL_PROXIMITY_CACHE=0.
+
+
+2011-04-25	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-84-64-pr-01-12:
 	  ipple: moved object position/state into separate struct, 
 		so that is is readily swappable/restorable with a

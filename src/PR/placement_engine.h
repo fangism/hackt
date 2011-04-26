@@ -1,7 +1,7 @@
 /**
 	\file "PR/placement_engine.h"
 	Physics simulator.
-	$Id: placement_engine.h,v 1.1.2.11 2011/04/26 00:30:52 fang Exp $
+	$Id: placement_engine.h,v 1.1.2.12 2011/04/26 01:03:13 fang Exp $
  */
 
 #ifndef	__HAC_PR_PLACEMENT_ENGINE_H__
@@ -25,25 +25,26 @@ using util::ifstream_manager;
  */
 class placement_engine : public HAC::SIM::state_base {
 	typedef	placement_engine	this_type;
-public:
+protected:
 	vector<tile_type>		object_types;
 	vector<channel_type>		channel_types;
+public:
 	placer_options			opt;
 	/**
 		The objects and coordinates to solve in.
 	 */
 	pcanvas				space;
-#if !PR_LOCAL_PROXIMITY_CACHE
-//	typedef	std::pair<size_t, size_t>	proximity_edge;
+protected:
 	typedef	channel_instance		proximity_edge;
 	/**
 		Proximity cache is just a collection of
 		repulsion springs that are generated on-the-fly.
 	 */
 	vector<proximity_edge>		proximity_cache;
-#endif
+	/**
+		Current simulation time.
+	 */
 	time_type			elapsed_time;
-protected:
 	// run-time updates values
 	real_type			proximity_potential_energy;
 	/**
@@ -79,6 +80,26 @@ public:
 
 	void
 	scatter(void);
+
+	size_t
+	num_object_types(void) const {
+		return object_types.size();
+	}
+
+	size_t
+	num_channel_types(void) const {
+		return channel_types.size();
+	}
+
+	const tile_type&
+	get_object_type(const size_t i) const {
+		return object_types[i];
+	}
+
+	const channel_type&
+	get_channel_type(const size_t i) const {
+		return channel_types[i];
+	}
 
 	size_t
 	num_objects(void) const {

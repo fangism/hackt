@@ -1,6 +1,6 @@
 /**
 	\file "PR/placement_engine.cc"
-	$Id: placement_engine.cc,v 1.1.2.12 2011/04/26 00:30:51 fang Exp $
+	$Id: placement_engine.cc,v 1.1.2.13 2011/04/26 01:03:13 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -52,9 +52,7 @@ placement_engine::placement_engine(const size_t d) :
 		channel_types(),
 		opt(),
 		space(d),
-#if !PR_LOCAL_PROXIMITY_CACHE
 		proximity_cache(),
-#endif
 		elapsed_time(0.0), 
 #if 0
 		max_delta_position(0.0),
@@ -63,9 +61,7 @@ placement_engine::placement_engine(const size_t d) :
 		autosave_name(),
 		need_force_recalc(true) {
 	initialize_default_types();
-#if !PR_LOCAL_PROXIMITY_CACHE
 	proximity_cache.reserve(64);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -306,12 +302,7 @@ struct array_offset {
  */
 void
 placement_engine::clear_proximity_cache(void) {
-#if PR_LOCAL_PROXIMITY_CACHE
-	for_each(space.objects.begin(), space.objects.end(),
-		std::mem_fun_ref(&tile_instance::clear_proximity_cache));
-#else
 	proximity_cache.clear();
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -429,13 +420,6 @@ if (xw_size > 1) {
 					<< i1 << ',' << i2 << ")." << endl);
 				INVARIANT(i1 != i2);
 				// avoid double counting with index ordering
-#if PR_LOCAL_PROXIMITY_CACHE
-				if (i1 < i2) {
-					o1.proximity_cache.insert(i2);
-				} else {
-					o2.proximity_cache.insert(i1);
-				}
-#else
 				if (i1 < i2) {
 					proximity_cache.push_back(
 						proximity_edge(i1, i2));
@@ -450,7 +434,6 @@ if (xw_size > 1) {
 					(o2.properties.maximum_dimension()
 					+o1.properties.maximum_dimension())
 					*0.5;
-#endif
 			}
 			}	// end for xyz-slice candidates
 		}	// end if z-window
@@ -470,16 +453,6 @@ placement_engine::compute_collision_forces(void) {
 	typedef	vector<tile_instance>::iterator		iterator;
 	iterator i(space.objects.begin()), e(space.objects.end());
 	const array_offset<iterator> vo(i);
-#if PR_LOCAL_PROXIMITY_CACHE
-	for ( ; i!=e; ++i) {
-		const size_t j1 = vo(i);
-		set<int_type>::const_iterator
-			ci(i->proximity_cache.begin()),
-			ce(i->proximity_cache.end());
-		tile_instance& o1(space.objects[j1]);
-		for ( ; ci!=ce; ++ci) {
-			const size_t j2 = *ci;
-#else
 	vector<proximity_edge>::iterator
 		pi(proximity_cache.begin()), pe(proximity_cache.end());
 	for ( ; pi!=pe; ++pi) {
@@ -490,7 +463,6 @@ placement_engine::compute_collision_forces(void) {
 #else
 			const tile_instance& o1(space.objects[j1]);
 			object_state& s1(space.current[j1]);
-#endif
 #endif
 			// avoid double counting
 			INVARIANT(j1 < j2);
@@ -510,12 +482,7 @@ placement_engine::compute_collision_forces(void) {
 #endif
 					);
 			proximity_potential_energy += pi->potential_energy;
-#if PR_LOCAL_PROXIMITY_CACHE
-		}	// end for each outgoing edge in local cache
-	}	// end for each object/instance
-#else
 	}	// end for each proximity_edge
-#endif
 	proximity_potential_energy *= 0.5;
 }
 

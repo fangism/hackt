@@ -7,12 +7,9 @@
 	Define to 1 to have each tile_instance contain its own 
 	proximity_cache to neighbors.  
 	If defined to 0, proximity_cache is kept globally elsewhere.
- */
 #define	PR_LOCAL_PROXIMITY_CACHE			0
+ */
 
-#if PR_LOCAL_PROXIMITY_CACHE
-#include <set>
-#endif
 #include "PR/tile_type.h"
 #include "PR/channel_type.h"
 #include "util/vector_ops.h"
@@ -110,14 +107,6 @@ struct tile_instance {
 		Object type, copied, not linked.
 	 */
 	tile_type			properties;
-#if PR_LOCAL_PROXIMITY_CACHE
-	/**
-		Sparse graph of objects that are sufficiently close to 
-		one another.  This matrix is dynamic and is constantly updated 
-		with multidimensional sliding windows (intersection thereof).
-	 */
-	std::set<int_type>		proximity_cache;
-#endif
 #if 0
 	// only matters for routing
 	/**
@@ -288,11 +277,6 @@ public:
 	dump_position(ostream& o) const {
 		return current.dump_position(o);
 	}
-#endif
-
-#if PR_LOCAL_PROXIMITY_CACHE
-	void
-	clear_proximity_cache(void) { proximity_cache.clear(); }
 #endif
 
 	bool

@@ -1,6 +1,6 @@
 /**
 	\file "PR/tile_instance.cc"
-	$Id: tile_instance.cc,v 1.1.2.11 2011/04/26 00:30:52 fang Exp $
+	$Id: tile_instance.cc,v 1.1.2.12 2011/04/26 01:03:14 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -189,9 +189,6 @@ bool tile_instance::dump_properties = true;
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 tile_instance::tile_instance() :
 		properties(),
-#if PR_LOCAL_PROXIMITY_CACHE
-		proximity_cache(),
-#endif
 		fixed(false)
 #if PR_STATE_IN_TILE
 		, current(), previous()
@@ -202,9 +199,6 @@ tile_instance::tile_instance() :
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 tile_instance::tile_instance(const tile_type& t) :
 		properties(t),
-#if PR_LOCAL_PROXIMITY_CACHE
-		proximity_cache(),
-#endif
 		fixed(false)
 #if PR_STATE_IN_TILE
 		, current(), previous()
