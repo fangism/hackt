@@ -1,0 +1,23 @@
+# "005c.iplrc"
+# testing kill-momentum
+
+echo dampened slingshot demonstration
+object-type size=<4,4,4>
+repeat 2 add-pin type=0
+add-object type=1
+add-channel 0 2 type=0
+add-channel 1 2 type=0
+place 0 <10,20,0>
+place 1 <20,10,0>
+place 2 <5,5,0>
+# echo higher damping
+parameter time_step=0.1 damping=0.5
+dump-state
+watch-objects
+echo Beginning simulation...
+repeat 10 step
+
+echo expecting velocities=0 after kill-momentum
+kill-momentum
+dump-objects
+

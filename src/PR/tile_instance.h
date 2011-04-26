@@ -17,6 +17,13 @@
 #include "PR/channel_type.h"
 #include "util/vector_ops.h"
 
+/**
+	Define to 1 to keep current coordinate state within tile_instance.
+	Otherwise, keep in a separate array/struct.  
+	Goal: 0 for efficient swapping.
+ */
+#define	PR_STATE_IN_TILE			0
+
 namespace PR {
 
 //=============================================================================
@@ -45,6 +52,12 @@ public:
 	zero_force(void) {
 		util::vector_ops::fill(acceleration, 0.0);
 	}
+
+	void
+	kill_momentum(void) {
+		util::vector_ops::fill(velocity, 0.0);
+	}
+
 
 	void
 	place(const real_vector& v) {
@@ -121,9 +134,11 @@ private:
 		If true, prevent this from moving.
 	 */
 	bool				fixed;
+#if PR_STATE_IN_TILE
 public:
 	object_state			current;
 	object_state			previous;
+#endif
 private:
 	/**
 		Kinetic energy is computed by update.
@@ -144,11 +159,14 @@ public:
 
 	void
 	kill_momentum(void) {
+#if PR_STATE_IN_TILE
 		util::vector_ops::fill(current.velocity, 0.0);
 		previous.velocity = current.velocity;
+#endif
 		_kinetic_energy_2 = 0.0;
 	}
 
+#if PR_STATE_IN_TILE
 	void
 	place(const real_vector& v) {
 		current.position = v;
@@ -160,6 +178,7 @@ public:
 		current.zero_force();
 //		previous.zero_force();
 	}
+#endif
 
 	bool
 	is_fixed(void) const {
@@ -177,23 +196,35 @@ public:
 		fixed = false;
 	}
 
+#if PR_STATE_IN_TILE
 	void
 	update(const time_type& t, const real_type& k) {
 		previous = current;
 		current.update(t, k);
 	}
+#endif
 
 	static
 	real_type
 	current_attraction_potential_energy(
 		const tile_instance&, const tile_instance&,
-		const channel_properties&);
+		const channel_properties&
+#if !PR_STATE_IN_TILE
+		, const object_state&, const object_state&
+#endif
+		);
+
 	static
 	real_type
 	current_repulsion_potential_energy(
 		const tile_instance&, const tile_instance&,
-		const channel_properties&);
+		const channel_properties&
+#if !PR_STATE_IN_TILE
+		, const object_state&, const object_state&
+#endif
+		);
 
+#if PR_STATE_IN_TILE
 	static
 	void
 	apply_pairwise_force(tile_instance&, tile_instance&, const force_type&);
@@ -207,10 +238,32 @@ public:
 	real_type
 	apply_repulsion_forces(tile_instance&, tile_instance&,
 		const channel_properties&);
+#else
+	static
+	void
+	apply_pairwise_force(const tile_instance&, const tile_instance&,
+		const force_type&, object_state&, object_state&);
 
+	static
+	real_type
+	apply_attraction_forces(const tile_instance&, const tile_instance&,
+		const channel_properties&, 
+		object_state&, object_state&);
 
+	static
+	real_type
+	apply_repulsion_forces(const tile_instance&, const tile_instance&,
+		const channel_properties&, 
+		object_state&, object_state&);
+#endif
+
+#if PR_STATE_IN_TILE
 	const real_type&
 	update_kinetic_energy_2(void);
+#else
+	const real_type&
+	update_kinetic_energy_2(const velocity_type&);
+#endif
 
 	const real_type&
 	kinetic_energy_2(void) const { return _kinetic_energy_2; }
@@ -230,11 +283,12 @@ public:
 	ostream&
 	dump(ostream&) const;
 
+#if PR_STATE_IN_TILE
 	ostream&
 	dump_position(ostream& o) const {
 		return current.dump_position(o);
 	}
-
+#endif
 
 #if PR_LOCAL_PROXIMITY_CACHE
 	void

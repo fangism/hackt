@@ -19,20 +19,19 @@ object types:
 channel types:
   [0]: spring_coeff=1 equilibrium=0 
 objects:
-  [0]: @=<10,10,0> (fixed) [size=<2,2,2>]
+  [0]: @=<10,10,0> @'=<0,0,0> @"=<0,0,0> (fixed) [size=<2,2,2>]
   [1]: @=<2,6,0> @'=<0,0,0> @"=<0,0,0> [size=<2,2,2>]
   [2]: @=<6,2,0> @'=<0,0,0> @"=<0,0,0> [size=<2,2,2>]
 channels:
   [0]: (0,1) [spring_coeff=1 equilibrium=2 ]
   [1]: (0,2) [spring_coeff=1 equilibrium=2 ]
   [2]: (1,2) [spring_coeff=1 equilibrium=2 ]
-descend-potential: ran 18 iterations from time 0.1 to 1.9 (V=0.2684)
-descend-potential: ran 12 iterations from time 1.9 to 3.1 (V=0.05885)
-descend-potential: ran 25 iterations from time 3.1 to 5.6 (V=0.004058)
-descend-potential: ran 13 iterations from time 5.6 to 6.9 (V=0.0001349)
-descend-potential: ran 17 iterations from time 6.9 to 8.6 (V=6.515e-05)
-descend-potential-converge: ran 5 descend-potential from time 0 to 8.6 (V=6.515e-05)
+descend-potential: ran 19 iterations from time 0 to 1.7 (V=0.2684)
+descend-potential: ran 14 iterations from time 1.7 to 2.9 (V=0.009239)
+descend-potential: ran 24 iterations from time 2.9 to 5.1 (V=0.0001582)
+descend-potential: ran 13 iterations from time 5.1 to 6.2 (V=2.974e-06)
+descend-potential-converge: ran 4 descend-potential from time 0 to 6.2 (V=2.974e-06)
 object-positions:
-  [0]: @=<10,10,0>
-  [1]: @=<9.734,8.8,0>
-  [2]: @=<8.009,9.788,0>
+  [0]: @=<10,10,0> @'=<0,0,0> @"=<0,0,0>
+  [1]: @=<9.598,8.233,0> @'=<0.003597,-0.002997,0> @"=<0.0008036,-0.0006664,0>
+  [2]: @=<8.06,9.508,0> @'=<-0.01346,0.0004844,0> @"=<0.0004183,0.0009764,0>

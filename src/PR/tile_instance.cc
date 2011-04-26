@@ -1,6 +1,6 @@
 /**
 	\file "PR/tile_instance.cc"
-	$Id: tile_instance.cc,v 1.1.2.10 2011/04/23 22:56:43 fang Exp $
+	$Id: tile_instance.cc,v 1.1.2.11 2011/04/26 00:30:52 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -192,8 +192,11 @@ tile_instance::tile_instance() :
 #if PR_LOCAL_PROXIMITY_CACHE
 		proximity_cache(),
 #endif
-		fixed(false), 
-		current(), previous() {
+		fixed(false)
+#if PR_STATE_IN_TILE
+		, current(), previous()
+#endif
+		{
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -202,8 +205,11 @@ tile_instance::tile_instance(const tile_type& t) :
 #if PR_LOCAL_PROXIMITY_CACHE
 		proximity_cache(),
 #endif
-		fixed(false), 
-		current(), previous() {
+		fixed(false)
+#if PR_STATE_IN_TILE
+		, current(), previous()
+#endif
+		{
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -217,58 +223,59 @@ tile_instance::~tile_instance() {
  */
 void
 tile_instance::apply_pairwise_force(
+#if PR_STATE_IN_TILE
 		tile_instance& sobj, tile_instance& dobj,
-		const force_type& force_vec) {
+		const force_type& force_vec
+#else
+		const tile_instance& sobj, const tile_instance& dobj,
+		const force_type& force_vec,
+		object_state& ss, object_state& ds
+#endif
+		) {
 	const bool sf = sobj.is_fixed();
 	const bool df = dobj.is_fixed();
+#if PR_STATE_IN_TILE
+	object_state& ss(sobj.current);
+	object_state& ds(dobj.current);
+#endif
 #if PR_TILE_MASS
 	const tile_type& sp(sobj.properties);
 	const tile_type& dp(dobj.properties);
 #endif
-#if 0
-	const real_type ffrac = (dist -dthresh) / dist;
-#else
-	static const real_type ffrac = 1.0;
-#endif
-#if 0
-	const real_type tension = norm(force_vec) * ffrac;
-	ch.tension = tension;
-#endif
+//	static const real_type ffrac = 1.0;
 	if (sf && !df) {
 		// only source is fixed
-		dobj.current.acceleration -= force_vec *
+		ds.acceleration -= force_vec
 #if PR_TILE_MASS
-			(ffrac / dp.mass);
-#else
-			ffrac;
+			/ dp.mass
 #endif
+			;
 	} else if (df && !sf) {
 		// only dest is fixed
-		sobj.current.acceleration += force_vec *
+		ss.acceleration += force_vec
 #if PR_TILE_MASS
-			(ffrac / sp.mass);
-#else
-			ffrac;
+			/ sp.mass
 #endif
+			;
 	} else if (!sf && !df) {
 		// neither fixed, account for mass ratio
 #if PR_TILE_MASS
 		const real_type massfrac = dp.mass / (dp.mass +sp.mass);
 #else
 		static const real_type massfrac = 0.5;
-		const real_type hf = ffrac * massfrac;
+		const force_type half_force = force_vec * massfrac;
 #endif
-		sobj.current.acceleration +=
+		ss.acceleration +=
 #if PR_TILE_MASS
-			force_vec * (ffrac * massfrac / sp.mass);
+			force_vec * (massfrac / sp.mass);
 #else
-			force_vec * hf;
+			half_force;
 #endif
-		dobj.current.acceleration -=
+		ds.acceleration -=
 #if PR_TILE_MASS
-			force_vec * (ffrac * (1.0 -massfrac) / dp.mass);
+			force_vec * ((1.0 -massfrac) / dp.mass);
 #else
-			force_vec * hf;
+			half_force;
 #endif
 	}
 	// else both fixed, do nothing
@@ -282,11 +289,19 @@ tile_instance::apply_pairwise_force(
 real_type
 tile_instance::current_attraction_potential_energy(
 		const tile_instance& sobj, const tile_instance& dobj,
-		const channel_properties& cp) {
+		const channel_properties& cp
+#if !PR_STATE_IN_TILE
+		, const object_state& ss, const object_state& ds
+#endif
+		) {
 	const bool sf = sobj.is_fixed();
 	const bool df = dobj.is_fixed();
+#if PR_STATE_IN_TILE
+	const object_state& ss(sobj.current);
+	const object_state& ds(dobj.current);
+#endif
 if (!(sf && df)) {
-	const position_type delta(dobj.current.position -sobj.current.position);
+	const position_type delta(ds.position -ss.position);
 	const real_type dist = norm(delta);	// distance between centers
 	const real_type stretch = dist -cp.equilibrium_distance;
 	// TODO: use rectilinear distance as an option?
@@ -305,11 +320,19 @@ if (!(sf && df)) {
 real_type
 tile_instance::current_repulsion_potential_energy(
 		const tile_instance& sobj, const tile_instance& dobj,
-		const channel_properties& cp) {
+		const channel_properties& cp
+#if !PR_STATE_IN_TILE
+		, const object_state& ss, const object_state& ds
+#endif
+		) {
 	const bool sf = sobj.is_fixed();
 	const bool df = dobj.is_fixed();
+#if PR_STATE_IN_TILE
+	const object_state& ss(sobj.current);
+	const object_state& ds(dobj.current);
+#endif
 if (!(sf && df)) {
-	const position_type delta(dobj.current.position -sobj.current.position);
+	const position_type delta(ds.position -ss.position);
 	const real_type dist = norm(delta);	// distance between centers
 	const real_type stretch = dist -cp.equilibrium_distance;
 	// TODO: use rectilinear distance as an option?
@@ -331,17 +354,28 @@ if (!(sf && df)) {
  */
 real_type
 tile_instance::apply_attraction_forces(
+#if PR_STATE_IN_TILE
 		tile_instance& sobj, tile_instance& dobj,
-		const channel_properties& cp) {
+		const channel_properties& cp
+#else
+		const tile_instance& sobj, const tile_instance& dobj,
+		const channel_properties& cp,
+		object_state& ss, object_state& ds
+#endif
+		) {
 	STACKTRACE_VERBOSE;
 	const bool sf = sobj.is_fixed();
 	const bool df = dobj.is_fixed();
+#if PR_STATE_IN_TILE
+	object_state& ss(sobj.current);
+	object_state& ds(dobj.current);
+#endif
 if (!(sf && df)) {
 	// at least one end not fixed
 	// TODO: optimize away number of mathematical operations
 	// TODO: use delta - sizeof(objects)
 	//	or distance between ellipsoids
-	const position_type delta(dobj.current.position -sobj.current.position);
+	const position_type delta(ds.position -ss.position);
 	// optimization: compare square of distances to avoid sqrt() call?
 	const real_type dist = norm(delta);	// distance between centers
 	const real_type stretch = dist -cp.equilibrium_distance;
@@ -349,7 +383,11 @@ if (!(sf && df)) {
 	if (stretch > 0.0) {
 		const force_type force_vec(delta *
 			(cp.spring_coeff *stretch / dist));
+#if PR_STATE_IN_TILE
 		apply_pairwise_force(sobj, dobj, force_vec);
+#else
+		apply_pairwise_force(sobj, dobj, force_vec, ss, ds);
+#endif
 		return stretch * stretch *cp.spring_coeff;
 	}       // else objects too close to attract
 	// let repulsion forces be computed in different phase
@@ -367,17 +405,28 @@ if (!(sf && df)) {
  */
 real_type
 tile_instance::apply_repulsion_forces(
+#if PR_STATE_IN_TILE
 		tile_instance& sobj, tile_instance& dobj,
-		const channel_properties& cp) {
+		const channel_properties& cp
+#else
+		const tile_instance& sobj, const tile_instance& dobj,
+		const channel_properties& cp,
+		object_state& ss, object_state& ds
+#endif
+		) {
 	STACKTRACE_VERBOSE;
 	const bool sf = sobj.is_fixed();
 	const bool df = dobj.is_fixed();
+#if PR_STATE_IN_TILE
+	object_state& ss(sobj.current);
+	object_state& ds(dobj.current);
+#endif
 if (!(sf && df)) {
 	// at least one end not fixed
 	// TODO: optimize away number of mathematical operations
 	// TODO: use delta - sizeof(objects)
 	//      or distance between ellipsoids
-	const position_type delta(dobj.current.position -sobj.current.position);
+	const position_type delta(ds.position -ss.position);
 	// optimization: compare square of distances to avoid sqrt() call?
 	const real_type dist = norm(delta);	// distance between centers
 	const real_type stretch = dist -cp.equilibrium_distance;
@@ -385,7 +434,11 @@ if (!(sf && df)) {
 	if (stretch < 0.0) {
 		const force_type force_vec(delta *
 			(cp.spring_coeff *stretch / dist));
+#if PR_STATE_IN_TILE
 		apply_pairwise_force(sobj, dobj, force_vec);
+#else
+		apply_pairwise_force(sobj, dobj, force_vec, ss, ds);
+#endif
 		return stretch *stretch *cp.spring_coeff;
 	}       // else objects too close to attract
 	// let repulsion forces be computed in different phase
@@ -400,9 +453,17 @@ if (!(sf && df)) {
 	To be consistent with old-potential energy, use previous_velocity
  */
 const real_type&
-tile_instance::update_kinetic_energy_2(void) {
+tile_instance::update_kinetic_energy_2(
+#if PR_STATE_IN_TILE
+		void
+#else
+		const velocity_type& v
+#endif
+		) {
+#if PR_STATE_IN_TILE
 	const real_vector& v(previous.velocity);
 //	const real_vector& v(velocity);
+#endif
 #if PR_TILE_MASS
 	_kinetic_energy_2 = properties.mass * normsq(v);
 #else
@@ -417,11 +478,17 @@ tile_instance::update_kinetic_energy_2(void) {
  */
 ostream&
 tile_instance::dump(ostream& o) const {
+#if PR_STATE_IN_TILE
 	if (fixed) {
 		o << "@=" << current.position << " (fixed)";
 	} else {
 		current.dump(o);
 	}
+#else
+	if (fixed) {
+		o << " (fixed)";
+	}
+#endif
 	if (dump_properties) {
 		properties.dump(o << " [") << ']';
 	}
@@ -433,10 +500,16 @@ bool
 tile_instance::save_checkpoint(ostream& o) const {
 	properties.save_checkpoint(o);
 	write_value(o, fixed);
+#if PR_STATE_IN_TILE
 	current.save_checkpoint(o);
 	previous.save_checkpoint(o);
+#endif
 	// proximity cache should be regenerated
+#if PR_STATE_IN_TILE
 	// kinetic_energy recalculated
+#else
+	write_value(o, _kinetic_energy_2);
+#endif
 	return !o;
 }
 
@@ -445,10 +518,16 @@ bool
 tile_instance::load_checkpoint(istream& i) {
 	properties.load_checkpoint(i);
 	read_value(i, fixed);
+#if PR_STATE_IN_TILE
 	current.load_checkpoint(i);
 	previous.load_checkpoint(i);
+#endif
 	// proximity cache should be regenerated
+#if PR_STATE_IN_TILE
 	update_kinetic_energy_2();
+#else
+	read_value(i, _kinetic_energy_2);
+#endif
 	return !i;
 }
 

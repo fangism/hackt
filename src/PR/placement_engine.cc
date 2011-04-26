@@ -1,6 +1,6 @@
 /**
 	\file "PR/placement_engine.cc"
-	$Id: placement_engine.cc,v 1.1.2.11 2011/04/23 22:56:42 fang Exp $
+	$Id: placement_engine.cc,v 1.1.2.12 2011/04/26 00:30:51 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -60,7 +60,8 @@ placement_engine::placement_engine(const size_t d) :
 		max_delta_position(0.0),
 		max_delta_velocity(0.0),
 #endif
-		autosave_name() {
+		autosave_name(),
+		need_force_recalc(true) {
 	initialize_default_types();
 #if !PR_LOCAL_PROXIMITY_CACHE
 	proximity_cache.reserve(64);
@@ -117,6 +118,9 @@ placement_engine::add_channel_type(const channel_type& t) {
 void
 placement_engine::add_object(const tile_instance& o) {
 	space.objects.push_back(o);
+#if !PR_STATE_IN_TILE
+	space.current.push_back(object_state());
+#endif
 	// automatically update proximity radius
 	const real_type rad =
 		space.objects.back().properties.maximum_dimension();
@@ -172,7 +176,11 @@ placement_engine::place_object(const size_t i, const real_vector& v) {
 	CHECK_OBJECT_INDEX(i)
 	real_vector p(v);
 	opt.clamp_position(p);
+#if PR_STATE_IN_TILE
 	space.objects[i].place(p);
+#else
+	space.current[i].place(p);
+#endif
 	return false;
 }
 
@@ -203,18 +211,30 @@ placement_engine::scatter(void) {
 	const real_vector box_size(opt.upper_corner -opt.lower_corner);
 	typedef	rand48<double>			random_generator;
 	const random_generator g;
+#if PR_STATE_IN_TILE
 	vector<tile_instance>::iterator
 		i(space.objects.begin()), e(space.objects.end());
-	for ( ; i!=e; ++i) {
+#else
+	vector<tile_instance>::const_iterator
+		i(space.objects.begin()), e(space.objects.end());
+	vector<object_state>::iterator
+		j(space.current.begin());
+#endif
+	for ( ; i!=e; ++i, ++j) {
 	if (!i->is_fixed()) {
 		real_vector r;
 		// fixed for 3D
+		// uniformly random values in each dimension
 		r[0] = g();
 		r[1] = g();
 		r[2] = g();
 		r *= box_size;
 		r += opt.lower_corner;
+#if PR_STATE_IN_TILE
 		i->place(r);
+#else
+		j->place(r);
+#endif
 	}
 	}
 }
@@ -222,50 +242,42 @@ placement_engine::scatter(void) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 placement_engine::zero_forces(void) {
+#if PR_STATE_IN_TILE
 	for_each(space.objects.begin(), space.objects.end(), 
 		std::mem_fun_ref(&tile_instance::zero_force));
+#else
+	for_each(space.current.begin(), space.current.end(), 
+		std::mem_fun_ref(&object_state::zero_force));
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	Should return some information about this step for 
-	determining convergence.
-	TODO: compute effective force vector, accumulate per object
-	TODO: support different spring types
- */
-void
-placement_engine::compute_spring_forces(void) {
-	STACKTRACE_VERBOSE;
-	// compute spring tensions (attraction)
-	typedef	vector<channel_instance>::iterator	iterator;
-	iterator i(space.springs.begin()), e(space.springs.end());
-	for ( ; i!=e; ++i) {
-		const int_type& si(i->source);
-		const int_type& di(i->destination);
-		tile_instance& sobj(space.objects[si]);
-		tile_instance& dobj(space.objects[di]);
-		i->potential_energy =
-			tile_instance::apply_attraction_forces(
-				sobj, dobj, i->properties);
-	}	// end for each spring
-}	// end compute_spring_forces
+#if PR_STATE_IN_TILE
+typedef	vector<tile_instance>::const_iterator		position_iterator;
+#else
+typedef	vector<object_state>::const_iterator		position_iterator;
 #endif
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <size_t D>
 static
 bool
-dim_less(const vector<tile_instance>::const_iterator l,
-		const vector<tile_instance>::const_iterator r) {
+dim_less(const position_iterator l, const position_iterator r) {
+#if PR_STATE_IN_TILE
 	return l->current.position[D] < r->current.position[D];
+#else
+	return l->position[D] < r->position[D];
+#endif
 }
 
 template <size_t D>
 static
 bool
-dim_comp(const vector<tile_instance>::const_iterator l, const real_type& r) {
+dim_comp(const position_iterator l, const real_type& r) {
+#if PR_STATE_IN_TILE
 	return l->current.position[D] < r;
+#else
+	return l->position[D] < r;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -315,10 +327,19 @@ placement_engine::refresh_proximity_cache(void) {
 	STACKTRACE_VERBOSE;
 	clear_proximity_cache();		// wipe before recomputing
 	// sort by each dimension/index
+#if PR_STATE_IN_TILE
 	typedef	vector<tile_instance>::iterator		iterator;
+#else
+	typedef	vector<object_state>::const_iterator	iterator;
+#endif
 	vector<iterator> obj_x;
+//	cout << "SPACE size = " << space.objects.size() << endl;
 	obj_x.reserve(space.objects.size());
+#if PR_STATE_IN_TILE
 	iterator i(space.objects.begin()), e(space.objects.end());
+#else
+	iterator i(space.current.begin()), e(space.current.end());
+#endif
 	for ( ; i!=e; ++i) {
 		obj_x.push_back(i);
 	}
@@ -330,7 +351,11 @@ placement_engine::refresh_proximity_cache(void) {
 	// Q: is binary search worth it? linear-incremental may suffice
 	// A: linear! b/c overall cost O(N) vs. O(N lg N)
 	vector<iterator>::iterator xu(xb);
+#if PR_STATE_IN_TILE
 	const array_offset<iterator> vo(space.objects.begin());
+#else
+	const array_offset<iterator> vo(space.current.begin());
+#endif
 	const size_t i1 = vo(*xb);
 	const tile_instance& o1(space.objects[i1]);
 #if 0
@@ -340,10 +365,15 @@ placement_engine::refresh_proximity_cache(void) {
 #endif
 	// x-sweep
 for ( ; xb!=xe; ++xb) {
+#if PR_STATE_IN_TILE
 	const real_type x = (*xb)->current.position[0];
+#else
+	const real_type x = (*xb)->position[0];
+#endif
 	// [xb, xu] defines a sliding window along the x-dimension
 	// linear scan overall costs less than repeated (lg N) binary searches
-	while (xu!=xe && (*xu)->current.position[0] < x+opt.proximity_radius) {
+	while (xu!=xe && (*xu)->position[0] < x+opt.proximity_radius) {
+			// ->current.position
 		++xu;
 	}
 const size_t xw_size = distance(xb, xu);
@@ -355,7 +385,11 @@ if (xw_size > 1) {
 	// copy range of iterators, and re-sort by y-dimension
 	vector<iterator> obj_y(xb, xu);
 	sort(obj_y.begin(), obj_y.end(), &dim_less<1>);
+#if PR_STATE_IN_TILE
 	const real_type& y_ref((*xb)->current.position[1]);
+#else
+	const real_type& y_ref((*xb)->position[1]);
+#endif
 	const vector<iterator>::iterator
 		yb(obj_y.begin()), ye(obj_y.end());
 	const vector<iterator>::iterator
@@ -368,7 +402,11 @@ if (xw_size > 1) {
 		// copy range of iterators, re-sort by z-dimension
 		vector<iterator> obj_z(yl, yu);
 		sort(obj_z.begin(), obj_z.end(), &dim_less<2>);
+#if PR_STATE_IN_TILE
 		const real_type& z_ref((*xb)->current.position[2]);
+#else
+		const real_type& z_ref((*xb)->position[2]);
+#endif
 		const vector<iterator>::iterator
 			zb(obj_y.begin()), ze(obj_y.end());
 		const vector<iterator>::iterator
@@ -447,16 +485,30 @@ placement_engine::compute_collision_forces(void) {
 	for ( ; pi!=pe; ++pi) {
 		const size_t& j1(pi->source);
 		const size_t& j2(pi->destination);
+#if PR_STATE_IN_TILE
 			tile_instance& o1(space.objects[j1]);
+#else
+			const tile_instance& o1(space.objects[j1]);
+			object_state& s1(space.current[j1]);
+#endif
 #endif
 			// avoid double counting
 			INVARIANT(j1 < j2);
 			STACKTRACE_INDENT_PRINT("repelling objects " <<
 				j1 << " and " << j2 << endl);
+#if PR_STATE_IN_TILE
 			tile_instance& o2(space.objects[j2]);
+#else
+			const tile_instance& o2(space.objects[j2]);
+			object_state& s2(space.current[j2]);
+#endif
 			pi->potential_energy =
 				tile_instance::apply_repulsion_forces(
-					o1, o2, pi->properties);
+					o1, o2, pi->properties
+#if !PR_STATE_IN_TILE
+					, s1, s2
+#endif
+					);
 			proximity_potential_energy += pi->potential_energy;
 #if PR_LOCAL_PROXIMITY_CACHE
 		}	// end for each outgoing edge in local cache
@@ -480,19 +532,78 @@ placement_engine::update_proximity_potential_energy(void) {
 	for ( ; pi!=pe; ++pi) {
 		const size_t& j1(pi->source);
 		const size_t& j2(pi->destination);
-		const tile_instance& o1(space.objects[j1]);
 		// avoid double counting
 		INVARIANT(j1 < j2);
+		const tile_instance& o1(space.objects[j1]);
+		const tile_instance& o2(space.objects[j2]);
+#if !PR_STATE_IN_TILE
+		const object_state& s1(space.current[j1]);
+		const object_state& s2(space.current[j2]);
+#endif
 		STACKTRACE_INDENT_PRINT("repelling objects " <<
 			j1 << " and " << j2 << endl);
-		const tile_instance& o2(space.objects[j2]);
 		pi->potential_energy =
 			tile_instance::current_repulsion_potential_energy(
-				o1, o2, pi->properties);
+				o1, o2, pi->properties
+#if !PR_STATE_IN_TILE
+				, s1, s2
+#endif
+				);
 		proximity_potential_energy += pi->potential_energy;
 	}	// end for each proximity_edge
 	proximity_potential_energy *= 0.5;
 	return proximity_potential_energy;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// inline
+void
+placement_engine::kill_momentum(void) {
+	STACKTRACE_VERBOSE;
+	space.kill_momentum();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Update acceleration of objects without moving them yet.
+ */
+void
+placement_engine::calculate_forces(void) {
+	STACKTRACE_VERBOSE;
+	zero_forces();		// reset forces
+	// attractive forces
+	space.compute_spring_forces();
+	// compute proximity repulsions on 'close' objects
+	refresh_proximity_cache();	// depends on positions only
+	compute_collision_forces();
+	need_force_recalc = false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Jump starts the simulation by computing the spring forces
+	in advance.  This is only needed for the very first time.  
+ */
+void
+placement_engine::bootstrap_forces(void) {
+	STACKTRACE_VERBOSE;
+	if (need_force_recalc) {
+		// very first time, spring forces not pre-computed
+		calculate_forces();
+		watch_iterate(cout);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	After updating object position/state, indicate that 
+	forces and potential energy needs to be recalculated.
+ */
+void
+placement_engine::update_positions(void) {
+	STACKTRACE_VERBOSE;
+	space.update_objects(opt);
+	need_force_recalc = true;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -502,39 +613,52 @@ placement_engine::update_proximity_potential_energy(void) {
 void
 placement_engine::iterate(void) {
 	STACKTRACE_VERBOSE;
-	zero_forces();		// reset forces
-// begin parallel
-	refresh_proximity_cache();
-	space.compute_spring_forces();
-// end parallel
-	// compute proximity repulsions on 'close' objects
-	compute_collision_forces();
+	bootstrap_forces();	// after first iteration, this becomes no-op
 	// after all forces applied, update position
-	space.update_objects(opt);
+	update_positions();
 	// TODO: enforce bounds on object positions: clamp_position
-	// energy reported is for *previous* iteration
-	if (opt.watch_energy) {
-		const real_type T = kinetic_energy();
-		const real_type V = potential_energy();
-		cout << "T=" << T << ", V=" << V <<
-			", E=" << T+V << ", L=" << T-V << '\n' << endl;
-		// total energy, Lagrangian
-	}
+#if 0
+	watch_iterate(cout);
+#else
+	// pre-compute for next iteration
+	calculate_forces();
+#endif
 	elapsed_time += opt.time_step;	// increment time
+	watch_iterate(cout);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+placement_engine::watch_iterate(ostream& o) const {
 	if (opt.watch_anything()) {
-		cout << "@time=" << elapsed_time << endl;
+		o << endl;
+		o << "@time=" << elapsed_time << endl;
 	}
 	if (opt.watch_objects) {
+#if 0
 		const value_saver<bool>
 			_x_(tile_instance::dump_properties, false);
-		dump_objects(cout);
+		dump_objects(o);
+#else
+		dump_positions(o);
+#endif
 	}
 	if (opt.watch_deltas) {
 #if 0
-		cout << "delta-position=" << max_delta_position <<
+		o << "delta-position=" << max_delta_position <<
 			", delta-velocity=" << max_delta_velocity << endl;
 #endif
 	}
+#if 1
+	if (opt.watch_energy) {
+		const real_type T = kinetic_energy();
+		const real_type V = potential_energy();
+		o << "T=" << T << ", V=" << V <<
+			", E=" << T+V << ", L=" << T-V << endl;
+		// total energy, Lagrangian
+	}
+#endif
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -552,47 +676,31 @@ placement_engine::__gradient_slide(void) {
 	size_t it_count = 1;
 	const time_type start_time = elapsed_time;
 	kill_momentum();
+//	watch_iterate(cout);
+	vector<object_state> best(space.current);		// backup copy
+#if 0
 	iterate();
+#else
+	bootstrap_forces();		// calculate forces and potential energy
+#endif
 	real_type oldV = potential_energy();
-	pcanvas best(space);		// backup copy
 	do {
-		space.update_objects(opt);
+		update_positions();
+		// update potential energy without re-applying force
 		const real_type newV = update_potential_energy();
-#if 0
-	// TODO: enforce bounds on object positions: clamp_position
-	// energy reported is for *previous* iteration
-	if (opt.watch_energy) {
-		const real_type T = kinetic_energy();
-		const real_type V = potential_energy();
-		cout << "T=" << T << ", V=" << V <<
-			", E=" << T+V << ", L=" << T-V << '\n' << endl;
-		// total energy, Lagrangian
-	}
-#endif
-		++it_count;
 		elapsed_time += opt.time_step;	// increment time
-#if 0
-	if (opt.watch_anything()) {
-		cout << "@time=" << elapsed_time << endl;
-	}
-	if (opt.watch_objects) {
-		const value_saver<bool>
-			_x_(tile_instance::dump_properties, false);
-		dump_objects(cout);
-	}
-	if (opt.watch_deltas) {
-#if 0
-		cout << "delta-position=" << max_delta_position <<
-			", delta-velocity=" << max_delta_velocity << endl;
-#endif
-	}
-#endif
 		if (newV > oldV) {
+			// rollback to best state
+			best.swap(space.current);
+			elapsed_time -= opt.time_step;	// increment time
 			break;
 		}
-		best = space;
+		++it_count;
+		watch_iterate(cout);
+		best = space.current;
 		oldV = newV;
 	} while (1);
+
 	if (opt.report_iterations) {
 		const save_precision p(cout, opt.precision);
 		cout << "gradient-slide: ran " << it_count <<
@@ -606,12 +714,15 @@ placement_engine::__gradient_slide(void) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Maintaining a constant time_step, 
-	iterate until one of the following is true:
+	simulate/iterate until one of the following is true:
 	1) change in position/velocity falls below convergence thresholds.
 	2) no forward progess has been made for some number of iterations.
+	NOTE: this does not always improve/reduce potential energy, 
+	it only terminates when deltas are sufficiently small. 
  */
 void
 placement_engine::simple_converge(void) {
+	STACKTRACE_VERBOSE;
 	size_t it_count = 0;
 	const time_type start_time = elapsed_time;
 	size_t repcount = 0;
@@ -676,21 +787,25 @@ placement_engine::gradient_search(void) {
  */
 real_type
 placement_engine::__descend_potential_energy(void) {
+	STACKTRACE_VERBOSE;
 	size_t it_count = 1;
 	const time_type start_time = elapsed_time;
-	pcanvas best(space);		// backup copy
-	iterate();	// first iteration just to get initial potential energy
+	kill_momentum();
+	vector<object_state> best(space.current);		// backup copy
+	bootstrap_forces();	// first iteration: initial potential energy
 	real_type oldV = potential_energy();
 	do {
 		iterate();
 		++it_count;
 		const real_type newV = potential_energy();
 		if (newV >= oldV) {
-			space = best;	// rollback to previous state
+			// rollback to best state
+			best.swap(space.current);
+			elapsed_time -= opt.time_step;	// increment time
 			break;
 		}
 		// else is improving
-		best = space;		// copy over best state (expensive?)
+		best = space.current;	// copy over best state (expensive?)
 		oldV = newV;
 	} while (1);
 	if (opt.report_iterations) {
@@ -711,15 +826,20 @@ template <real_type (placement_engine::*MF)(void)>
 void
 placement_engine::__repeat_until_converge(
 		const char* caller, const char* callee) {
+	STACKTRACE_VERBOSE;
 	size_t it_count = 0;
 	const time_type start_time = elapsed_time;
 //	pcanvas best(space);		// backup copy
+#if 0
 	iterate();	// first iteration just to get initial potential energy
+#else
+	bootstrap_forces();
+#endif
 	real_type oldV = potential_energy();
 	do {
 		const real_type newV = (this->*MF)();
 		++it_count;
-		kill_momentum();
+//		kill_momentum();
 		const real_type dV = abs(newV -oldV);
 		oldV = newV;
 		if (dV <= opt.energy_tol) {
@@ -741,7 +861,8 @@ placement_engine::__repeat_until_converge(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 placement_engine::repeat_gradient_slide(void) {
-	kill_momentum();
+	STACKTRACE_VERBOSE;
+//	kill_momentum();
 //	iterate();	// first iteration just to get initial potential energy
 	__repeat_until_converge<&this_type::__gradient_slide>(
 		"gradient-slide-converge", "gradient-slide");
@@ -753,7 +874,8 @@ placement_engine::repeat_gradient_slide(void) {
  */
 void
 placement_engine::repeat_descend_potential_energy(void) {
-	kill_momentum();
+	STACKTRACE_VERBOSE;
+//	kill_momentum();
 	__repeat_until_converge<&this_type::__descend_potential_energy>(
 		"descend-potential-converge", "descend-potential");
 }
@@ -794,6 +916,38 @@ __dump_array(ostream& o, const T& a) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Dump same element of parallel arrays.
+ */
+template <class T1, class T2>
+static
+ostream&
+__dump_array2(ostream& o, const T1& a, const T2& b,
+		ostream& (T1::value_type::*mf)(ostream&) const,
+		ostream& (T2::value_type::*mf2)(ostream&) const) {
+	typedef	typename T1::const_iterator	const_iterator;
+	typedef	typename T2::const_iterator	const_iterator2;
+	INDENT_SECTION(o);
+	const_iterator i(a.begin()), e(a.end());
+	const_iterator2 i2(b.begin()), e2(b.end());
+	size_t j;
+	for (j=0; i!=e; ++i, ++i2, ++j) {
+		o << auto_indent << '[' << j << "]: ";
+		(*i.*mf)(o);
+		(*i2.*mf2)(o) << endl;
+	}
+	return o;
+}
+
+template <class T1, class T2>
+static
+ostream&
+__dump_array2(ostream& o, const T1& a, const T2& b) {
+	return __dump_array2(o, a, b,
+		&T1::value_type::dump, &T2::value_type::dump);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 placement_engine::dump_object_types(ostream& o) const {
 	const save_precision p(o, opt.precision);
@@ -814,7 +968,7 @@ ostream&
 placement_engine::dump_objects(ostream& o) const {
 	const save_precision p(o, opt.precision);
 	o << "objects:" << endl;
-	return __dump_array(o, space.objects);
+	return __dump_array2(o, space.current, space.objects);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -822,7 +976,12 @@ ostream&
 placement_engine::dump_positions(ostream& o) const {
 	const save_precision p(o, opt.precision);
 	o << "object-positions:" << endl;
+#if PR_STATE_IN_TILE
 	return __dump_array(o, space.objects, &tile_instance::dump_position);
+#else
+	return __dump_array(o, space.current, &object_state::dump);
+//	return __dump_array(o, space.current, &object_state::dump_position);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

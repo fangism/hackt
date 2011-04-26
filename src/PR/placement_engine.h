@@ -1,7 +1,7 @@
 /**
 	\file "PR/placement_engine.h"
 	Physics simulator.
-	$Id: placement_engine.h,v 1.1.2.10 2011/04/22 23:16:34 fang Exp $
+	$Id: placement_engine.h,v 1.1.2.11 2011/04/26 00:30:52 fang Exp $
  */
 
 #ifndef	__HAC_PR_PLACEMENT_ENGINE_H__
@@ -46,10 +46,15 @@ public:
 protected:
 	// run-time updates values
 	real_type			proximity_potential_energy;
-
-protected:
+	/**
+		Name of auto-saved checkpoint.
+	 */
 	string				autosave_name;
-
+	/**
+		Signals that forces have not been updated.
+		This should be set every time positions are updated.
+	 */
+	bool				need_force_recalc;
 public:
 
 	explicit
@@ -107,9 +112,7 @@ public:
 
 // simulation
 	void
-	kill_momentum(void) {
-		space.kill_momentum();
-	}
+	kill_momentum(void);
 
 	template <real_type (this_type::*MF)(void)>
 	void
@@ -117,6 +120,9 @@ public:
 
 	void
 	iterate(void);
+
+	ostream&
+	watch_iterate(ostream&) const;
 
 	real_type
 	__gradient_slide(void);
@@ -201,10 +207,19 @@ public:
 
 private:
 	void
+	bootstrap_forces(void);
+
+	void
 	initialize_default_types(void);
 
 	void
 	zero_forces(void);
+
+	void
+	calculate_forces(void);
+
+	void
+	update_positions(void);
 
 	void
 	refresh_proximity_cache(void);

@@ -15,67 +15,48 @@ parameters:
   watch_energy=0
   watch_objects=0
 randomly place free objects 
-gradient-slide: ran 10 iterations from time 0.1 to 1.1 (V=4246)
-gradient-slide: ran 10 iterations from time 1.1 to 2.1 (V=1103)
-gradient-slide: ran 10 iterations from time 2.1 to 3.1 (V=572.2)
-gradient-slide: ran 12 iterations from time 3.1 to 4.3 (V=428.1)
-gradient-slide: ran 10 iterations from time 4.3 to 5.3 (V=393.7)
-gradient-slide: ran 14 iterations from time 5.3 to 6.7 (V=370.8)
-gradient-slide: ran 10 iterations from time 6.7 to 7.7 (V=359.7)
-gradient-slide: ran 17 iterations from time 7.7 to 9.4 (V=340.7)
-gradient-slide: ran 9 iterations from time 9.4 to 10.3 (V=331.3)
-gradient-slide: ran 30 iterations from time 10.3 to 13.3 (V=306.9)
-gradient-slide: ran 9 iterations from time 13.3 to 14.2 (V=296.5)
-gradient-slide: ran 21 iterations from time 14.2 to 16.3 (V=293.1)
-gradient-slide: ran 9 iterations from time 16.3 to 17.2 (V=291.2)
-gradient-slide: ran 25 iterations from time 17.2 to 19.7 (V=289.3)
-gradient-slide: ran 10 iterations from time 19.7 to 20.7 (V=288.1)
-gradient-slide: ran 13 iterations from time 20.7 to 22 (V=287.7)
-gradient-slide: ran 10 iterations from time 22 to 23 (V=287.5)
-gradient-slide: ran 18 iterations from time 23 to 24.8 (V=287.1)
-gradient-slide: ran 9 iterations from time 24.8 to 25.7 (V=286.9)
-gradient-slide: ran 28 iterations from time 25.7 to 28.5 (V=286.5)
-gradient-slide: ran 10 iterations from time 28.5 to 29.5 (V=286.3)
-gradient-slide: ran 12 iterations from time 29.5 to 30.7 (V=286.2)
-gradient-slide: ran 10 iterations from time 30.7 to 31.7 (V=286.2)
-gradient-slide: ran 18 iterations from time 31.7 to 33.5 (V=286.2)
-gradient-slide: ran 9 iterations from time 33.5 to 34.4 (V=286.1)
-gradient-slide: ran 29 iterations from time 34.4 to 37.3 (V=286.1)
-gradient-slide: ran 10 iterations from time 37.3 to 38.3 (V=286)
-gradient-slide: ran 12 iterations from time 38.3 to 39.5 (V=286)
-gradient-slide: ran 10 iterations from time 39.5 to 40.5 (V=286)
-gradient-slide: ran 17 iterations from time 40.5 to 42.2 (V=286)
-gradient-slide: ran 10 iterations from time 42.2 to 43.2 (V=286)
-gradient-slide: ran 16 iterations from time 43.2 to 44.8 (V=286)
-gradient-slide: ran 9 iterations from time 44.8 to 45.7 (V=286)
-gradient-slide: ran 30 iterations from time 45.7 to 48.7 (V=286)
-gradient-slide: ran 10 iterations from time 48.7 to 49.7 (V=286)
-gradient-slide: ran 12 iterations from time 49.7 to 50.9 (V=286)
-gradient-slide-converge: ran 36 gradient-slide from time 0 to 50.9 (V=286)
+gradient-slide: ran 10 iterations from time 0 to 0.9 (V=4301)
+gradient-slide: ran 12 iterations from time 0.9 to 2 (V=1054)
+gradient-slide: ran 10 iterations from time 2 to 2.9 (V=563.2)
+gradient-slide: ran 16 iterations from time 2.9 to 4.4 (V=390.9)
+gradient-slide: ran 9 iterations from time 4.4 to 5.2 (V=377.6)
+gradient-slide: ran 17 iterations from time 5.2 to 6.8 (V=368.3)
+gradient-slide: ran 16 iterations from time 6.8 to 8.3 (V=340.4)
+gradient-slide: ran 9 iterations from time 8.3 to 9.1 (V=333.3)
+gradient-slide: ran 15 iterations from time 9.1 to 10.5 (V=330.3)
+gradient-slide: ran 19 iterations from time 10.5 to 12.3 (V=312.8)
+gradient-slide: ran 8 iterations from time 12.3 to 13 (V=308.3)
+gradient-slide: ran 7 iterations from time 13 to 13.6 (V=308)
+gradient-slide: ran 10 iterations from time 13.6 to 14.5 (V=307.7)
+gradient-slide: ran 37 iterations from time 14.5 to 18.1 (V=293.3)
+gradient-slide: ran 15 iterations from time 18.1 to 19.5 (V=285.8)
+gradient-slide: ran 7 iterations from time 19.5 to 20.1 (V=285.5)
+gradient-slide: ran 1 iterations from time 20.1 to 20.1 (V=285.5)
+gradient-slide-converge: ran 17 gradient-slide from time 0 to 20.1 (V=285.5)
 object-positions:
-  [0]: @=<45.78,45.81,-0.02601>
-  [1]: @=<48.77,51.17,-0.02937>
-  [2]: @=<48.77,48.82,-0.02937>
-  [3]: @=<45.78,54.16,-0.02602>
-  [4]: @=<51.12,48.82,-0.02937>
-  [5]: @=<54.12,54.16,-0.02602>
-  [6]: @=<54.12,45.82,-0.02602>
-  [7]: @=<51.12,51.17,-0.02936>
-  [8]: @=<30,30,0>
-  [9]: @=<30,70,0>
-  [10]: @=<70,70,0>
-  [11]: @=<70,30,0>
-simple-converge: ran 10 iterations from time 50.9 to 52.9 (V=286)
+  [0]: @=<44.68,45.82,-0.6736> @'=<0,0,0> @"=<-0.8238,-1.151,0.2227>
+  [1]: @=<47.15,50.76,-0.6465> @'=<0,0,0> @"=<0.7964,0.6037,-0.08064>
+  [2]: @=<47.3,48.4,-0.6599> @'=<0,0,0> @"=<0.3668,0.6163,-0.05301>
+  [3]: @=<44.49,53.84,-0.6708> @'=<0,0,0> @"=<0.0229,-0.03243,0.2312>
+  [4]: @=<49.57,48.28,-0.6503> @'=<0,0,0> @"=<0.5886,0.9133,-0.07451>
+  [5]: @=<52.88,53.95,-0.6839> @'=<0,0,0> @"=<-0.3542,-0.5686,0.2652>
+  [6]: @=<52.68,45.7,-0.6687> @'=<0,0,0> @"=<0.5005,-0.5871,0.226>
+  [7]: @=<49.72,50.88,-0.6434> @'=<0,0,0> @"=<0.1272,0.2618,-0.0837>
+  [8]: @=<30,30,0> @'=<0,0,0> @"=<0,0,0>
+  [9]: @=<30,70,0> @'=<0,0,0> @"=<0,0,0>
+  [10]: @=<70,70,0> @'=<0,0,0> @"=<0,0,0>
+  [11]: @=<70,30,0> @'=<0,0,0> @"=<0,0,0>
+simple-converge: ran 222 iterations from time 20.1 to 64.5 (V=286.1)
 object-positions:
-  [0]: @=<45.78,45.82,-0.02449>
-  [1]: @=<48.78,51.17,-0.02765>
-  [2]: @=<48.78,48.82,-0.02765>
-  [3]: @=<45.78,54.16,-0.02449>
-  [4]: @=<51.13,48.81,-0.02765>
-  [5]: @=<54.13,54.16,-0.0245>
-  [6]: @=<54.13,45.82,-0.02449>
-  [7]: @=<51.13,51.17,-0.02765>
-  [8]: @=<30,30,0>
-  [9]: @=<30,70,0>
-  [10]: @=<70,70,0>
-  [11]: @=<70,30,0>
+  [0]: @=<45.53,45.76,-0.148> @'=<0.006872,0.001513,0.003187> @"=<0.03413,0.007509,0.01583>
+  [1]: @=<48.49,51.11,-0.1671> @'=<0.007587,0.001596,0.003598> @"=<0.03768,0.007928,0.01787>
+  [2]: @=<48.49,48.76,-0.1671> @'=<0.007576,0.001549,0.003598> @"=<0.03762,0.007696,0.01787>
+  [3]: @=<45.53,54.11,-0.148> @'=<0.006836,0.001334,0.003187> @"=<0.03395,0.006628,0.01583>
+  [4]: @=<50.84,48.76,-0.1671> @'=<0.007582,0.001595,0.003596> @"=<0.03765,0.007924,0.01787>
+  [5]: @=<53.87,54.11,-0.148> @'=<0.006873,0.001514,0.003187> @"=<0.03413,0.007518,0.01583>
+  [6]: @=<53.87,45.77,-0.148> @'=<0.006836,0.001333,0.003187> @"=<0.03395,0.006623,0.01583>
+  [7]: @=<50.84,51.11,-0.1671> @'=<0.007574,0.001553,0.003596> @"=<0.03761,0.007708,0.01786>
+  [8]: @=<30,30,0> @'=<0,0,0> @"=<0,0,0>
+  [9]: @=<30,70,0> @'=<0,0,0> @"=<0,0,0>
+  [10]: @=<70,70,0> @'=<0,0,0> @"=<0,0,0>
+  [11]: @=<70,30,0> @'=<0,0,0> @"=<0,0,0>

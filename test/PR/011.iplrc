@@ -15,6 +15,7 @@ add-channel 3 5
 dump-parameters
 echo randomly place free objects
 scatter
+# dump-positions
 parameter time_step=0.1
 parameter damping=0.3
 # watch-energy
@@ -22,4 +23,8 @@ parameter damping=0.3
 
 descend-potential-converge
 dump-positions
+
+# watch-energy
+# simple-converge
+# dump-positions
 

@@ -1,5 +1,6 @@
 # "015.iplrc"
-# quad problem, copy-modiifed from 012.iplrc
+# quad problem, copy-modified from 012.iplrc
+# using conjugate gradient
 
 repeat 4 add-pin
 place 0 <30,50,0>
@@ -21,6 +22,7 @@ echo randomly place free objects
 scatter
 parameter time_step=0.2
 parameter damping=0.0
+
 # watch-energy
 # watch-objects
 

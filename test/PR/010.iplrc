@@ -1,5 +1,5 @@
 # "010.iplrc"
-# three-body problem
+# three-body problem, 1-fixed
 
 repeat 3 add-object
 place 0 <10,10,0>
@@ -17,4 +17,7 @@ parameter damping=0.2
 
 descend-potential-converge
 dump-positions
+
+# simple-converge
+# dump-positions
 

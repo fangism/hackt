@@ -15,37 +15,30 @@ parameters:
   watch_energy=0
   watch_objects=0
 randomly place free objects 
-descend-potential: ran 7 iterations from time 0.2 to 1.6 (V=1088)
-descend-potential: ran 8 iterations from time 1.6 to 3.2 (V=479.1)
-descend-potential: ran 8 iterations from time 3.2 to 4.8 (V=326.9)
-descend-potential: ran 19 iterations from time 4.8 to 8.6 (V=137.2)
-descend-potential: ran 8 iterations from time 8.6 to 10.2 (V=136.4)
-descend-potential: ran 9 iterations from time 10.2 to 12 (V=134.4)
-descend-potential: ran 9 iterations from time 12 to 13.8 (V=133.2)
-descend-potential: ran 9 iterations from time 13.8 to 15.6 (V=132.7)
-descend-potential: ran 9 iterations from time 15.6 to 17.4 (V=132.4)
-descend-potential: ran 9 iterations from time 17.4 to 19.2 (V=132.2)
-descend-potential: ran 8 iterations from time 19.2 to 20.8 (V=132.1)
-descend-potential: ran 19 iterations from time 20.8 to 24.6 (V=132)
-descend-potential: ran 8 iterations from time 24.6 to 26.2 (V=132)
-descend-potential: ran 9 iterations from time 26.2 to 28 (V=132)
-descend-potential-converge: ran 14 descend-potential from time 0 to 28 (V=132)
+descend-potential: ran 8 iterations from time 0 to 1.2 (V=1088)
+descend-potential: ran 9 iterations from time 1.2 to 2.6 (V=496.9)
+descend-potential: ran 19 iterations from time 2.6 to 6 (V=142)
+descend-potential: ran 19 iterations from time 6 to 9.4 (V=130.7)
+descend-potential: ran 4 iterations from time 9.4 to 9.8 (V=130.6)
+descend-potential: ran 3 iterations from time 9.8 to 10 (V=130.6)
+descend-potential: ran 3 iterations from time 10 to 10.2 (V=130.6)
+descend-potential-converge: ran 7 descend-potential from time 0 to 10.2 (V=130.6)
 object-positions:
-  [0]: @=<30,50,0>
-  [1]: @=<50,70,0>
-  [2]: @=<70,50,0>
-  [3]: @=<50,30,0>
-  [4]: @=<45.23,49.97,-0.009239>
-  [5]: @=<49.97,54.71,-0.009224>
-  [6]: @=<54.69,49.97,-0.009237>
-  [7]: @=<49.97,45.25,-0.009226>
-simple-converge: ran 10 iterations from time 28 to 30 (V=132)
+  [0]: @=<30,50,0> @'=<0,0,0> @"=<0,0,0>
+  [1]: @=<50,70,0> @'=<0,0,0> @"=<0,0,0>
+  [2]: @=<70,50,0> @'=<0,0,0> @"=<0,0,0>
+  [3]: @=<50,30,0> @'=<0,0,0> @"=<0,0,0>
+  [4]: @=<45.29,49.59,-0.8622> @'=<-0.04462,0.05919,0.182> @"=<-0.2174,0.2915,0.8898>
+  [5]: @=<49.66,54.3,-0.4616> @'=<0.03711,0.07684,0.05549> @"=<0.1829,0.376,0.2767>
+  [6]: @=<54.36,50.14,0.4555> @'=<0.05668,-0.04459,-0.06087> @"=<0.2773,-0.2185,-0.303>
+  [7]: @=<49.95,45.46,0.7757> @'=<-0.01469,-0.06804,-0.1727> @"=<-0.07119,-0.3325,-0.8436>
+simple-converge: ran 78 iterations from time 10.2 to 25.8 (V=132)
 object-positions:
-  [0]: @=<30,50,0>
-  [1]: @=<50,70,0>
-  [2]: @=<70,50,0>
-  [3]: @=<50,30,0>
-  [4]: @=<45.24,49.98,-0.008163>
-  [5]: @=<49.97,54.71,-0.008156>
-  [6]: @=<54.7,49.98,-0.008161>
-  [7]: @=<49.97,45.25,-0.008158>
+  [0]: @=<30,50,0> @'=<0,0,0> @"=<0,0,0>
+  [1]: @=<50,70,0> @'=<0,0,0> @"=<0,0,0>
+  [2]: @=<70,50,0> @'=<0,0,0> @"=<0,0,0>
+  [3]: @=<50,30,0> @'=<0,0,0> @"=<0,0,0>
+  [4]: @=<45.21,49.96,-0.015> @'=<0.002836,0.002445,0.001682> @"=<0.014,0.01195,0.008004>
+  [5]: @=<49.94,54.69,-0.01451> @'=<0.003285,0.002165,0.001577> @"=<0.01612,0.01061,0.007514>
+  [6]: @=<54.67,49.96,-0.001596> @'=<0.002884,0.001517,-0.0009292> @"=<0.0142,0.007584,-0.004302>
+  [7]: @=<49.94,45.23,-0.001938> @'=<0.002546,0.00172,-0.0008742> @"=<0.01262,0.008541,-0.004037>

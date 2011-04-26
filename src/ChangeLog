@@ -3,6 +3,23 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-04-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-64-pr-01-12:
+	  ipple: moved object position/state into separate struct, 
+		so that is is readily swappable/restorable with a
+		single array/pointer swap.
+		placement_engine: compute forces one-iteration ahead
+			to obtain accurate present potential energy.
+			uses flag to determine whether forces need
+			to be updated (after position updates).
+			iteration proceeds in alternation.
+		iterative routines that check for monotonic decrease
+			now roll-back one iteration before termination
+			condition is met to stop at local minimum.
+		Test cases updated.
+
+
 2011-04-23	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-64-pr-01-11b:

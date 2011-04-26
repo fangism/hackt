@@ -1,7 +1,7 @@
 /**
 	\file "PR/pcanvas.h"
 	Medium on which placement is solved with physics.
-	$Id: pcanvas.h,v 1.1.2.8 2011/04/23 22:56:42 fang Exp $
+	$Id: pcanvas.h,v 1.1.2.9 2011/04/26 00:30:51 fang Exp $
  */
 
 #ifndef	__HAC_PR_PCANVAS_H__
@@ -35,10 +35,14 @@ struct pcanvas {
 #if PR_MULTINETS
 	vector<net_instance>		nets;
 #endif
-#if 0
-	// implement with separate state array for efficient
-	// state swapping (vector)
-	vector<object_state>		coordinates;
+#if !PR_STATE_IN_TILE
+	/**
+		Current set of coordinates: position, velocity...
+		implement with separate state array for efficient
+		state swapping (vector)
+		Let previous value be maintained outside.
+	 */
+	vector<object_state>		current;
 #endif
 private:
 	/**
