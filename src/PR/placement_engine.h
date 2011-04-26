@@ -1,7 +1,7 @@
 /**
 	\file "PR/placement_engine.h"
 	Physics simulator.
-	$Id: placement_engine.h,v 1.1.2.12 2011/04/26 01:03:13 fang Exp $
+	$Id: placement_engine.h,v 1.1.2.13 2011/04/26 02:21:16 fang Exp $
  */
 
 #ifndef	__HAC_PR_PLACEMENT_ENGINE_H__
@@ -139,8 +139,13 @@ public:
 	void
 	__repeat_until_converge(const char*, const char*);
 
-	void
+	delta_type
 	iterate(void);
+
+	void
+	iterate_no_delta(void) {
+		iterate();
+	}
 
 	ostream&
 	watch_iterate(ostream&) const;
@@ -239,7 +244,7 @@ private:
 	void
 	calculate_forces(void);
 
-	void
+	delta_type
 	update_positions(void);
 
 	void

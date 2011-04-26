@@ -1,7 +1,7 @@
 /**
 	\file "PR/pcanvas.h"
 	Medium on which placement is solved with physics.
-	$Id: pcanvas.h,v 1.1.2.10 2011/04/26 01:20:28 fang Exp $
+	$Id: pcanvas.h,v 1.1.2.11 2011/04/26 02:21:15 fang Exp $
  */
 
 #ifndef	__HAC_PR_PCANVAS_H__
@@ -83,7 +83,7 @@ public:
 	void
 	compute_spring_forces(void);
 
-	void
+	delta_type
 	update_objects(const placer_options&);
 
 	ostream&

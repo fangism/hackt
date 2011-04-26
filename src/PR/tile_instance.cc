@@ -1,6 +1,6 @@
 /**
 	\file "PR/tile_instance.cc"
-	$Id: tile_instance.cc,v 1.1.2.13 2011/04/26 01:20:29 fang Exp $
+	$Id: tile_instance.cc,v 1.1.2.14 2011/04/26 02:21:17 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -130,14 +130,19 @@ object_state::object_state() :
 	\param dt is the time step
 	\param v is the viscous damping coefficient
  */
+// delta_type
 void
 object_state::update(const time_type& dt, const real_type& v) {
+	const position_type dp((velocity + acceleration *(dt*0.5)) *dt);
+	const velocity_type dv((acceleration -velocity *v) *dt);
 //	position += previous_velocity *dt + acceleration *(dt*dt*0.5);
-	position += (velocity + acceleration *(dt*0.5)) *dt;
-	velocity += (acceleration -velocity *v) *dt;
+	position += dp;
+	velocity += dv;
+//	return delta_type(sum_abs(dp), sum_abs(dv));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 void
 object_state::update(const time_type& dt, const real_type& v,
 		const object_state& previous) {
@@ -146,6 +151,7 @@ object_state::update(const time_type& dt, const real_type& v,
 	position = previous.position
 		+(previous.velocity + acceleration *(dt*0.5)) *dt;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&

@@ -2,7 +2,7 @@
 	\file "PR/numerics.h"
 	Defines some global types and operations on vectors.
 	Some of this could eventually be migrated to util/vector_ops.h
-	$Id: numerics.h,v 1.1.2.5 2011/04/22 23:16:32 fang Exp $
+	$Id: numerics.h,v 1.1.2.6 2011/04/26 02:21:13 fang Exp $
  */
 
 #ifndef	__HAC_PR_NUMERICS_H__
@@ -106,6 +106,13 @@ normsq(const real_vector&);
 extern
 real_type
 norm(const real_vector&);
+
+/**
+	\return sum of absolute values of elements
+ */
+extern
+real_type
+sum_abs(const real_vector&);
 
 /**
 	Sum of delta-x, delta-y, ... which reflects orthogonal wire length.

@@ -24,6 +24,11 @@
 namespace PR {
 
 //=============================================================================
+/**
+	Type used to return changes in position/velocity.
+ */
+typedef	std::pair<real_type, real_type>		delta_type;
+
 struct object_state {
 	/**
 		Current position of object.
@@ -61,11 +66,14 @@ public:
 		position = v;
 	}
 
+	// delta_type
 	void
 	update(const time_type&, const real_type&);
 
+#if 0
 	void
 	update(const time_type&, const real_type&, const object_state&);
+#endif
 
 #if 0
 	real_type

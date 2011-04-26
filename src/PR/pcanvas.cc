@@ -114,13 +114,10 @@ pcanvas::compute_spring_forces(void) {
         From kinetic theory of molecules (gas):
                 mv^2/2 = 3kT/2
  */
-void
+delta_type
 pcanvas::update_objects(const placer_options& opt) {
 	STACKTRACE_VERBOSE;
-#if 0
-	_max_delta_position = 0.0;
-	_max_delta_velocity = 0.0;
-#endif
+	delta_type delta(0.0, 0.0);
 	object_kinetic_energy = 0.0;
 	typedef	vector<object_state>::iterator		state_iterator;
 	state_iterator j(current.begin());
@@ -133,20 +130,20 @@ pcanvas::update_objects(const placer_options& opt) {
 	for ( ; i!=e; ++i, ++j) {
 	if (!i->is_fixed()) {
 		// apply force and momentum, update kinetic energy
+		const position_type prev_p(j->position);
+		const velocity_type prev_v(j->velocity);
 		j->update(opt.time_step, opt.viscous_damping);
 		// enforce bounds
 		opt.clamp_position(j->position);
 		// record maximum change, not counting randomness
 		// don't bother with euclidean distance
 		// rectilinear or maximum_dimension shall suffice
-#if 0
-		const real_type rdx(i->rectilinear_delta_position());
-		const real_type rdv(i->rectilinear_delta_velocity());
-		if (rdx > _max_delta_position)
-			_max_delta_position = rdx;
-		if (rdv > _max_delta_velocity)
-			_max_delta_velocity = rdv;
-#endif
+		const real_type rdx(rectilinear_distance(prev_p, j->position));
+		const real_type rdv(rectilinear_distance(prev_v, j->velocity));
+		if (rdx > delta.first)
+			delta.first = rdx;
+		if (rdv > delta.second)
+			delta.second = rdv;
 		// We do NOT include thermal displacement in the 
 		// kinetic energy calculation!
 		if (opt.temperature > 0.0) {
@@ -165,6 +162,7 @@ pcanvas::update_objects(const placer_options& opt) {
 	}	// end for all objects
 	// finally correct factor of 1.2
 	object_kinetic_energy *= 0.5;
+	return delta;
 }	// end pcanvas::update_objects
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,6 +1,6 @@
 /**
 	\file "PR/numerics.cc"
-	$Id: numerics.cc,v 1.1.2.5 2011/04/20 01:09:37 fang Exp $
+	$Id: numerics.cc,v 1.1.2.6 2011/04/26 02:21:12 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -188,9 +188,15 @@ norm(const position_type& p) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 real_type
+sum_abs(const real_vector& r) {
+	real_vector rc(r);
+	return sum(apply(rc, abs<real_type>));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+real_type
 rectilinear_distance(const real_vector& r1, const real_vector& r2) {
-	real_vector d(r2 -r1);
-	return sum(apply(d, abs<real_type>));
+	return sum_abs(r2 -r1);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

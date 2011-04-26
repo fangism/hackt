@@ -2,7 +2,7 @@
 	\file "PR/pr-command.cc"
 	Command-line feature for PR simulator.
 	TODO: scheme interface
-	$Id: pr-command.cc,v 1.1.2.12 2011/04/26 01:03:14 fang Exp $
+	$Id: pr-command.cc,v 1.1.2.13 2011/04/26 02:21:16 fang Exp $
  */
 
 #define	ENABLE_STATIC_TRACE		0
@@ -1113,7 +1113,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(Step, "step", simulation,
 
 int
 Step::main(State& s, const string_list& a) {
-	return simple_engine_command(s, a, &State::iterate, usage);
+	return simple_engine_command(s, a, &State::iterate_no_delta, usage);
 }
 
 void
@@ -1136,6 +1136,10 @@ void
 SimpleConverge::usage(ostream& o) {
 	o << name << endl;
 	o << brief << endl;
+o <<
+"Transient simulation converges when greatest change in position and velocity\n"
+"fall below the respective tolerances in a given time-step."
+	<< endl;
 }
 
 //-----------------------------------------------------------------------------
@@ -1153,13 +1157,18 @@ void
 DescendGradient::usage(ostream& o) {
 	o << name << endl;
 	o << brief << endl;
+o <<
+"Initially resets velocities to zero, killing momentum.\n"
+"Computes instantaneous force vector, and accelerates in that direction\n"
+"(with constant acceleration) while potential energy monotonically decreases."
+	<< endl;
 }
 
 //-----------------------------------------------------------------------------
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(DescendGradientConverge,
 	"descend-gradient-converge", 
 	simulation,
-        "repeatedly descend gradients (conjugate-gradient)")
+        "repeat descend-gradient (conjugate-gradient)")
 
 int
 DescendGradientConverge::main(State& s, const string_list& a) {
@@ -1171,6 +1180,9 @@ void
 DescendGradientConverge::usage(ostream& o) {
 	o << name << endl;
 	o << brief << endl;
+o <<
+"Repeated descend-gradient while potential energy decreases monotonically."
+	<< endl;
 }
 
 //-----------------------------------------------------------------------------
@@ -1188,6 +1200,11 @@ void
 DescendPotential::usage(ostream& o) {
 	o << name << endl;
 	o << brief << endl;
+o <<
+"Initially sets velocities to zero, killing all momentum."
+"Advances simulation with continuous force updates while potential energy\n"
+"monotonically decreases."
+	<< endl;
 }
 
 //-----------------------------------------------------------------------------
@@ -1206,12 +1223,15 @@ void
 DescendPotentialConverge::usage(ostream& o) {
 	o << name << endl;
 	o << brief << endl;
+o <<
+"Repeats descend-potential while potential energy montonically decreases."
+	<< endl;
 }
 
 //-----------------------------------------------------------------------------
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(KillMomentum, "kill-momentum", 
 	simulation,
-        "zero out all object velocities")
+        "zero out all object velocities, killing momentum")
 
 int
 KillMomentum::main(State& s, const string_list& a) {

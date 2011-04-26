@@ -1,6 +1,6 @@
 /**
 	\file "PR/placement_engine.cc"
-	$Id: placement_engine.cc,v 1.1.2.14 2011/04/26 01:20:29 fang Exp $
+	$Id: placement_engine.cc,v 1.1.2.15 2011/04/26 02:21:16 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -499,23 +499,24 @@ placement_engine::bootstrap_forces(void) {
 	After updating object position/state, indicate that 
 	forces and potential energy needs to be recalculated.
  */
-void
+delta_type
 placement_engine::update_positions(void) {
 	STACKTRACE_VERBOSE;
-	space.update_objects(opt);
+	const delta_type ret(space.update_objects(opt));
 	need_force_recalc = true;
+	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Single iteration of a simulation-based approach.
  */
-void
+delta_type
 placement_engine::iterate(void) {
 	STACKTRACE_VERBOSE;
 	bootstrap_forces();	// after first iteration, this becomes no-op
 	// after all forces applied, update position
-	update_positions();
+	const delta_type ret(update_positions());
 	// TODO: enforce bounds on object positions: clamp_position
 #if 0
 	watch_iterate(cout);
@@ -525,6 +526,7 @@ placement_engine::iterate(void) {
 #endif
 	elapsed_time += opt.time_step;	// increment time
 	watch_iterate(cout);
+	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -535,13 +537,7 @@ placement_engine::watch_iterate(ostream& o) const {
 		o << "@time=" << elapsed_time << endl;
 	}
 	if (opt.watch_objects) {
-#if 0
-		const value_saver<bool>
-			_x_(tile_instance::dump_properties, false);
-		dump_objects(o);
-#else
 		dump_positions(o);
-#endif
 	}
 	if (opt.watch_deltas) {
 #if 0
@@ -578,11 +574,7 @@ placement_engine::__gradient_slide(void) {
 	kill_momentum();
 //	watch_iterate(cout);
 	vector<object_state> best(space.current);		// backup copy
-#if 0
-	iterate();
-#else
 	bootstrap_forces();		// calculate forces and potential energy
-#endif
 	real_type oldV = potential_energy();
 	do {
 		update_positions();
@@ -619,19 +611,25 @@ placement_engine::__gradient_slide(void) {
 	2) no forward progess has been made for some number of iterations.
 	NOTE: this does not always improve/reduce potential energy, 
 	it only terminates when deltas are sufficiently small. 
+	Uses delta position/velocity to determine convergence.
  */
 void
 placement_engine::simple_converge(void) {
 	STACKTRACE_VERBOSE;
 	size_t it_count = 0;
 	const time_type start_time = elapsed_time;
-	size_t repcount = 0;
+//	size_t repcount = 0;
+#if 0
 	real_type oldV = potential_energy();
 	real_type oldT = kinetic_energy();
 	real_type oldE = oldV +oldT;
+#else
+	delta_type diff;
+#endif
 	do {
-		iterate();
+		diff = iterate();
 		++it_count;
+#if 0
 		const real_type newV = potential_energy();
 		const real_type newT = kinetic_energy();
 		const real_type newE = newV +newT;
@@ -647,19 +645,30 @@ placement_engine::simple_converge(void) {
 		oldT = newT;
 		oldV = newV;
 		oldE = newE;
+		const bool reset =
+			(dV > opt.energy_tol || dE > opt.energy_tol);
+#else
+		const bool reset =
+			(diff.first > opt.pos_tol || diff.second > opt.vel_tol);
+#endif
 		// somehow time_step should be accounted for...
-		if (dV > opt.energy_tol || dE > opt.energy_tol) {
+#if 0
+		if (reset) {
 			repcount = 0;
 		} else {
 			++repcount;
 		}
-	} while (repcount < opt.min_iterations);
+#else
+		if (!reset)
+			break;
+#endif
+	} while (1);	// (repcount < opt.min_iterations);
 	if (opt.report_iterations) {
 		const save_precision p(cout, opt.precision);
 		cout << "simple-converge: ran " << it_count <<
 			" iterations from time " << start_time <<
 			" to " << elapsed_time <<
-			" (V=" << oldV << ')' << endl;
+			" (V=" << potential_energy() << ')' << endl;
 	}
 }
 
@@ -730,16 +739,11 @@ placement_engine::__repeat_until_converge(
 	size_t it_count = 0;
 	const time_type start_time = elapsed_time;
 //	pcanvas best(space);		// backup copy
-#if 0
-	iterate();	// first iteration just to get initial potential energy
-#else
 	bootstrap_forces();
-#endif
 	real_type oldV = potential_energy();
 	do {
 		const real_type newV = (this->*MF)();
 		++it_count;
-//		kill_momentum();
 		const real_type dV = abs(newV -oldV);
 		oldV = newV;
 		if (dV <= opt.energy_tol) {
@@ -762,8 +766,6 @@ placement_engine::__repeat_until_converge(
 void
 placement_engine::repeat_gradient_slide(void) {
 	STACKTRACE_VERBOSE;
-//	kill_momentum();
-//	iterate();	// first iteration just to get initial potential energy
 	__repeat_until_converge<&this_type::__gradient_slide>(
 		"gradient-slide-converge", "gradient-slide");
 }
@@ -775,7 +777,6 @@ placement_engine::repeat_gradient_slide(void) {
 void
 placement_engine::repeat_descend_potential_energy(void) {
 	STACKTRACE_VERBOSE;
-//	kill_momentum();
 	__repeat_until_converge<&this_type::__descend_potential_energy>(
 		"descend-potential-converge", "descend-potential");
 }
