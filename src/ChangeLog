@@ -5,6 +5,10 @@
 
 2011-04-25	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-84-64-pr-01-12b:
+	  ipple: perm'd PR_STATE_IN_TILE=0, PR_MULTINETS=0.
+
+
 	* HACKT-00-01-04-main-00-84-64-pr-01-12a:
 	  ipple: perm'd PR_LOCAL_PROXIMITY_CACHE=0.
 

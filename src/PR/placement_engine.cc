@@ -1,6 +1,6 @@
 /**
 	\file "PR/placement_engine.cc"
-	$Id: placement_engine.cc,v 1.1.2.13 2011/04/26 01:03:13 fang Exp $
+	$Id: placement_engine.cc,v 1.1.2.14 2011/04/26 01:20:29 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -114,14 +114,14 @@ placement_engine::add_channel_type(const channel_type& t) {
 void
 placement_engine::add_object(const tile_instance& o) {
 	space.objects.push_back(o);
-#if !PR_STATE_IN_TILE
 	space.current.push_back(object_state());
-#endif
 	// automatically update proximity radius
 	const real_type rad =
 		space.objects.back().properties.maximum_dimension();
-	if (rad > opt.proximity_radius)
+	if (rad > opt.proximity_radius) {
 		opt.proximity_radius = rad;
+	}
+	need_force_recalc = true;
 }
 
 #define	CHECK_OBJECT_INDEX(i)						\
@@ -147,6 +147,7 @@ placement_engine::add_channel(const channel_instance& c) {
 	space.springs.back().properties.equilibrium_distance =
 		(s.properties.maximum_dimension() +
 			d.properties.maximum_dimension()) * 0.5;
+	need_force_recalc = true;
 	return false;
 }
 
@@ -155,6 +156,7 @@ bool
 placement_engine::pin_object(const size_t i) {
 	CHECK_OBJECT_INDEX(i)
 	space.objects[i].fix();
+	need_force_recalc = true;
 	return false;
 }
 
@@ -163,6 +165,7 @@ bool
 placement_engine::unpin_object(const size_t i) {
 	CHECK_OBJECT_INDEX(i)
 	space.objects[i].unfix();
+	need_force_recalc = true;
 	return false;
 }
 
@@ -172,11 +175,8 @@ placement_engine::place_object(const size_t i, const real_vector& v) {
 	CHECK_OBJECT_INDEX(i)
 	real_vector p(v);
 	opt.clamp_position(p);
-#if PR_STATE_IN_TILE
-	space.objects[i].place(p);
-#else
 	space.current[i].place(p);
-#endif
+	need_force_recalc = true;
 	return false;
 }
 
@@ -207,15 +207,10 @@ placement_engine::scatter(void) {
 	const real_vector box_size(opt.upper_corner -opt.lower_corner);
 	typedef	rand48<double>			random_generator;
 	const random_generator g;
-#if PR_STATE_IN_TILE
-	vector<tile_instance>::iterator
-		i(space.objects.begin()), e(space.objects.end());
-#else
 	vector<tile_instance>::const_iterator
 		i(space.objects.begin()), e(space.objects.end());
 	vector<object_state>::iterator
 		j(space.current.begin());
-#endif
 	for ( ; i!=e; ++i, ++j) {
 	if (!i->is_fixed()) {
 		real_vector r;
@@ -226,54 +221,34 @@ placement_engine::scatter(void) {
 		r[2] = g();
 		r *= box_size;
 		r += opt.lower_corner;
-#if PR_STATE_IN_TILE
-		i->place(r);
-#else
 		j->place(r);
-#endif
 	}
 	}
+	need_force_recalc = true;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 placement_engine::zero_forces(void) {
-#if PR_STATE_IN_TILE
-	for_each(space.objects.begin(), space.objects.end(), 
-		std::mem_fun_ref(&tile_instance::zero_force));
-#else
 	for_each(space.current.begin(), space.current.end(), 
 		std::mem_fun_ref(&object_state::zero_force));
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PR_STATE_IN_TILE
-typedef	vector<tile_instance>::const_iterator		position_iterator;
-#else
 typedef	vector<object_state>::const_iterator		position_iterator;
-#endif
 
 template <size_t D>
 static
 bool
 dim_less(const position_iterator l, const position_iterator r) {
-#if PR_STATE_IN_TILE
-	return l->current.position[D] < r->current.position[D];
-#else
 	return l->position[D] < r->position[D];
-#endif
 }
 
 template <size_t D>
 static
 bool
 dim_comp(const position_iterator l, const real_type& r) {
-#if PR_STATE_IN_TILE
-	return l->current.position[D] < r;
-#else
 	return l->position[D] < r;
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -318,19 +293,11 @@ placement_engine::refresh_proximity_cache(void) {
 	STACKTRACE_VERBOSE;
 	clear_proximity_cache();		// wipe before recomputing
 	// sort by each dimension/index
-#if PR_STATE_IN_TILE
-	typedef	vector<tile_instance>::iterator		iterator;
-#else
 	typedef	vector<object_state>::const_iterator	iterator;
-#endif
 	vector<iterator> obj_x;
 //	cout << "SPACE size = " << space.objects.size() << endl;
 	obj_x.reserve(space.objects.size());
-#if PR_STATE_IN_TILE
-	iterator i(space.objects.begin()), e(space.objects.end());
-#else
 	iterator i(space.current.begin()), e(space.current.end());
-#endif
 	for ( ; i!=e; ++i) {
 		obj_x.push_back(i);
 	}
@@ -342,11 +309,7 @@ placement_engine::refresh_proximity_cache(void) {
 	// Q: is binary search worth it? linear-incremental may suffice
 	// A: linear! b/c overall cost O(N) vs. O(N lg N)
 	vector<iterator>::iterator xu(xb);
-#if PR_STATE_IN_TILE
-	const array_offset<iterator> vo(space.objects.begin());
-#else
 	const array_offset<iterator> vo(space.current.begin());
-#endif
 	const size_t i1 = vo(*xb);
 	const tile_instance& o1(space.objects[i1]);
 #if 0
@@ -356,11 +319,7 @@ placement_engine::refresh_proximity_cache(void) {
 #endif
 	// x-sweep
 for ( ; xb!=xe; ++xb) {
-#if PR_STATE_IN_TILE
-	const real_type x = (*xb)->current.position[0];
-#else
 	const real_type x = (*xb)->position[0];
-#endif
 	// [xb, xu] defines a sliding window along the x-dimension
 	// linear scan overall costs less than repeated (lg N) binary searches
 	while (xu!=xe && (*xu)->position[0] < x+opt.proximity_radius) {
@@ -376,11 +335,7 @@ if (xw_size > 1) {
 	// copy range of iterators, and re-sort by y-dimension
 	vector<iterator> obj_y(xb, xu);
 	sort(obj_y.begin(), obj_y.end(), &dim_less<1>);
-#if PR_STATE_IN_TILE
-	const real_type& y_ref((*xb)->current.position[1]);
-#else
 	const real_type& y_ref((*xb)->position[1]);
-#endif
 	const vector<iterator>::iterator
 		yb(obj_y.begin()), ye(obj_y.end());
 	const vector<iterator>::iterator
@@ -393,11 +348,7 @@ if (xw_size > 1) {
 		// copy range of iterators, re-sort by z-dimension
 		vector<iterator> obj_z(yl, yu);
 		sort(obj_z.begin(), obj_z.end(), &dim_less<2>);
-#if PR_STATE_IN_TILE
-		const real_type& z_ref((*xb)->current.position[2]);
-#else
 		const real_type& z_ref((*xb)->position[2]);
-#endif
 		const vector<iterator>::iterator
 			zb(obj_y.begin()), ze(obj_y.end());
 		const vector<iterator>::iterator
@@ -458,29 +409,17 @@ placement_engine::compute_collision_forces(void) {
 	for ( ; pi!=pe; ++pi) {
 		const size_t& j1(pi->source);
 		const size_t& j2(pi->destination);
-#if PR_STATE_IN_TILE
-			tile_instance& o1(space.objects[j1]);
-#else
 			const tile_instance& o1(space.objects[j1]);
 			object_state& s1(space.current[j1]);
-#endif
 			// avoid double counting
 			INVARIANT(j1 < j2);
 			STACKTRACE_INDENT_PRINT("repelling objects " <<
 				j1 << " and " << j2 << endl);
-#if PR_STATE_IN_TILE
-			tile_instance& o2(space.objects[j2]);
-#else
 			const tile_instance& o2(space.objects[j2]);
 			object_state& s2(space.current[j2]);
-#endif
 			pi->potential_energy =
 				tile_instance::apply_repulsion_forces(
-					o1, o2, pi->properties
-#if !PR_STATE_IN_TILE
-					, s1, s2
-#endif
-					);
+					o1, o2, pi->properties, s1, s2);
 			proximity_potential_energy += pi->potential_energy;
 	}	// end for each proximity_edge
 	proximity_potential_energy *= 0.5;
@@ -503,19 +442,13 @@ placement_engine::update_proximity_potential_energy(void) {
 		INVARIANT(j1 < j2);
 		const tile_instance& o1(space.objects[j1]);
 		const tile_instance& o2(space.objects[j2]);
-#if !PR_STATE_IN_TILE
 		const object_state& s1(space.current[j1]);
 		const object_state& s2(space.current[j2]);
-#endif
 		STACKTRACE_INDENT_PRINT("repelling objects " <<
 			j1 << " and " << j2 << endl);
 		pi->potential_energy =
 			tile_instance::current_repulsion_potential_energy(
-				o1, o2, pi->properties
-#if !PR_STATE_IN_TILE
-				, s1, s2
-#endif
-				);
+				o1, o2, pi->properties, s1, s2);
 		proximity_potential_energy += pi->potential_energy;
 	}	// end for each proximity_edge
 	proximity_potential_energy *= 0.5;
@@ -943,12 +876,8 @@ ostream&
 placement_engine::dump_positions(ostream& o) const {
 	const save_precision p(o, opt.precision);
 	o << "object-positions:" << endl;
-#if PR_STATE_IN_TILE
-	return __dump_array(o, space.objects, &tile_instance::dump_position);
-#else
 	return __dump_array(o, space.current, &object_state::dump);
 //	return __dump_array(o, space.current, &object_state::dump_position);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

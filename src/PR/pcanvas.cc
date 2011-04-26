@@ -26,11 +26,8 @@ pcanvas::pcanvas(const size_t d) :
 #if PR_VARIABLE_DIMENSIONS
 		dimensions(d),
 #endif
-		objects(), springs()
-#if PR_MULTINETS
-		, nets()
-#endif
-		{
+		objects(), springs(),
+		current() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -68,18 +65,12 @@ pcanvas::update_potential_energy(void) {
 		const int_type& di(i->destination);
 		const tile_instance& sobj(objects[si]);
 		const tile_instance& dobj(objects[di]);
-#if !PR_STATE_IN_TILE
 		const object_state& ss(current[si]);
 		const object_state& ds(current[di]);
-#endif
 		// this is *pre-update* potential energy
 		i->potential_energy =
 			tile_instance::current_attraction_potential_energy(
-				sobj, dobj, i->properties
-#if !PR_STATE_IN_TILE
-				, ss, ds
-#endif
-				);
+				sobj, dobj, i->properties, ss, ds);
 		spring_potential_energy += i->potential_energy;
 	}	// end for each spring
 	spring_potential_energy *= 0.5;
@@ -104,23 +95,14 @@ pcanvas::compute_spring_forces(void) {
 	for ( ; i!=e; ++i) {
 		const int_type& si(i->source);
 		const int_type& di(i->destination);
-#if PR_STATE_IN_TILE
-		tile_instance& sobj(objects[si]);
-		tile_instance& dobj(objects[di]);
-#else
 		const tile_instance& sobj(objects[si]);
 		const tile_instance& dobj(objects[di]);
 		object_state& ss(current[si]);
 		object_state& ds(current[di]);
-#endif
 		// this is *pre-update* potential energy
 		i->potential_energy =
 			tile_instance::apply_attraction_forces(
-				sobj, dobj, i->properties
-#if !PR_STATE_IN_TILE
-				, ss, ds
-#endif
-				);
+				sobj, dobj, i->properties, ss, ds);
 		spring_potential_energy += i->potential_energy;
 	}	// end for each spring
 	spring_potential_energy *= 0.5;
@@ -140,10 +122,8 @@ pcanvas::update_objects(const placer_options& opt) {
 	_max_delta_velocity = 0.0;
 #endif
 	object_kinetic_energy = 0.0;
-#if !PR_STATE_IN_TILE
 	typedef	vector<object_state>::iterator		state_iterator;
 	state_iterator j(current.begin());
-#endif
 	typedef vector<tile_instance>::iterator		object_iterator;
 	object_iterator i(objects.begin()), e(objects.end());
 	const real_type tt = opt.temperature *opt.time_step;
@@ -153,17 +133,9 @@ pcanvas::update_objects(const placer_options& opt) {
 	for ( ; i!=e; ++i, ++j) {
 	if (!i->is_fixed()) {
 		// apply force and momentum, update kinetic energy
-#if PR_STATE_IN_TILE
-		i->update(opt.time_step, opt.viscous_damping);
-#else
 		j->update(opt.time_step, opt.viscous_damping);
-#endif
 		// enforce bounds
-#if PR_STATE_IN_TILE
-		opt.clamp_position(i->current.position);
-#else
 		opt.clamp_position(j->position);
-#endif
 		// record maximum change, not counting randomness
 		// don't bother with euclidean distance
 		// rectilinear or maximum_dimension shall suffice
@@ -179,11 +151,7 @@ pcanvas::update_objects(const placer_options& opt) {
 		// kinetic energy calculation!
 		if (opt.temperature > 0.0) {
 			// alter position or velocity?
-#if PR_STATE_IN_TILE
-			i->current.position
-#else
 			j->position
-#endif
 				+= random_unit_vector() *
 #if PR_TILE_MASS
 				sqrt(tt / i->properties.mass);
@@ -192,11 +160,7 @@ pcanvas::update_objects(const placer_options& opt) {
 #endif
 		}
 		object_kinetic_energy +=
-#if PR_STATE_IN_TILE
-			i->update_kinetic_energy_2();
-#else
 			i->update_kinetic_energy_2(j->velocity);
-#endif
 	}
 	}	// end for all objects
 	// finally correct factor of 1.2
@@ -212,10 +176,8 @@ pcanvas::kill_momentum(void) {
 	STACKTRACE_VERBOSE;
 	for_each(objects.begin(), objects.end(),
 		mem_fun_ref(&tile_instance::kill_momentum));
-#if !PR_STATE_IN_TILE
 	for_each(current.begin(), current.end(),
 		mem_fun_ref(&object_state::kill_momentum));
-#endif
 	object_kinetic_energy = 0.0;	// easy calculation!
 }
 
@@ -227,12 +189,7 @@ pcanvas::save_checkpoint(ostream& o) const {
 #endif
 	save_array(o, objects);
 	save_array(o, springs);
-#if !PR_STATE_IN_TILE
 	save_array(o, current);
-#endif
-#if PR_MULTINETS
-#error	"FINISH ME!"
-#endif
 	return !o;
 }
 
@@ -249,12 +206,7 @@ pcanvas::load_checkpoint(istream& i) {
 #endif
 	load_array(i, objects);
 	load_array(i, springs);
-#if !PR_STATE_IN_TILE
 	load_array(i, current);
-#endif
-#if PR_MULTINETS
-#error	"FINISH ME!"
-#endif
 	return !i;
 }
 

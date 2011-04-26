@@ -1,6 +1,6 @@
 /**
 	\file "PR/tile_instance.cc"
-	$Id: tile_instance.cc,v 1.1.2.12 2011/04/26 01:03:14 fang Exp $
+	$Id: tile_instance.cc,v 1.1.2.13 2011/04/26 01:20:29 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -190,9 +190,6 @@ bool tile_instance::dump_properties = true;
 tile_instance::tile_instance() :
 		properties(),
 		fixed(false)
-#if PR_STATE_IN_TILE
-		, current(), previous()
-#endif
 		{
 }
 
@@ -200,9 +197,6 @@ tile_instance::tile_instance() :
 tile_instance::tile_instance(const tile_type& t) :
 		properties(t),
 		fixed(false)
-#if PR_STATE_IN_TILE
-		, current(), previous()
-#endif
 		{
 }
 
@@ -217,21 +211,11 @@ tile_instance::~tile_instance() {
  */
 void
 tile_instance::apply_pairwise_force(
-#if PR_STATE_IN_TILE
-		tile_instance& sobj, tile_instance& dobj,
-		const force_type& force_vec
-#else
 		const tile_instance& sobj, const tile_instance& dobj,
 		const force_type& force_vec,
-		object_state& ss, object_state& ds
-#endif
-		) {
+		object_state& ss, object_state& ds) {
 	const bool sf = sobj.is_fixed();
 	const bool df = dobj.is_fixed();
-#if PR_STATE_IN_TILE
-	object_state& ss(sobj.current);
-	object_state& ds(dobj.current);
-#endif
 #if PR_TILE_MASS
 	const tile_type& sp(sobj.properties);
 	const tile_type& dp(dobj.properties);
@@ -283,17 +267,10 @@ tile_instance::apply_pairwise_force(
 real_type
 tile_instance::current_attraction_potential_energy(
 		const tile_instance& sobj, const tile_instance& dobj,
-		const channel_properties& cp
-#if !PR_STATE_IN_TILE
-		, const object_state& ss, const object_state& ds
-#endif
-		) {
+		const channel_properties& cp,
+		const object_state& ss, const object_state& ds) {
 	const bool sf = sobj.is_fixed();
 	const bool df = dobj.is_fixed();
-#if PR_STATE_IN_TILE
-	const object_state& ss(sobj.current);
-	const object_state& ds(dobj.current);
-#endif
 if (!(sf && df)) {
 	const position_type delta(ds.position -ss.position);
 	const real_type dist = norm(delta);	// distance between centers
@@ -314,17 +291,10 @@ if (!(sf && df)) {
 real_type
 tile_instance::current_repulsion_potential_energy(
 		const tile_instance& sobj, const tile_instance& dobj,
-		const channel_properties& cp
-#if !PR_STATE_IN_TILE
-		, const object_state& ss, const object_state& ds
-#endif
-		) {
+		const channel_properties& cp,
+		const object_state& ss, const object_state& ds) {
 	const bool sf = sobj.is_fixed();
 	const bool df = dobj.is_fixed();
-#if PR_STATE_IN_TILE
-	const object_state& ss(sobj.current);
-	const object_state& ds(dobj.current);
-#endif
 if (!(sf && df)) {
 	const position_type delta(ds.position -ss.position);
 	const real_type dist = norm(delta);	// distance between centers
@@ -348,22 +318,12 @@ if (!(sf && df)) {
  */
 real_type
 tile_instance::apply_attraction_forces(
-#if PR_STATE_IN_TILE
-		tile_instance& sobj, tile_instance& dobj,
-		const channel_properties& cp
-#else
 		const tile_instance& sobj, const tile_instance& dobj,
 		const channel_properties& cp,
-		object_state& ss, object_state& ds
-#endif
-		) {
+		object_state& ss, object_state& ds) {
 	STACKTRACE_VERBOSE;
 	const bool sf = sobj.is_fixed();
 	const bool df = dobj.is_fixed();
-#if PR_STATE_IN_TILE
-	object_state& ss(sobj.current);
-	object_state& ds(dobj.current);
-#endif
 if (!(sf && df)) {
 	// at least one end not fixed
 	// TODO: optimize away number of mathematical operations
@@ -377,11 +337,7 @@ if (!(sf && df)) {
 	if (stretch > 0.0) {
 		const force_type force_vec(delta *
 			(cp.spring_coeff *stretch / dist));
-#if PR_STATE_IN_TILE
-		apply_pairwise_force(sobj, dobj, force_vec);
-#else
 		apply_pairwise_force(sobj, dobj, force_vec, ss, ds);
-#endif
 		return stretch * stretch *cp.spring_coeff;
 	}       // else objects too close to attract
 	// let repulsion forces be computed in different phase
@@ -399,22 +355,12 @@ if (!(sf && df)) {
  */
 real_type
 tile_instance::apply_repulsion_forces(
-#if PR_STATE_IN_TILE
-		tile_instance& sobj, tile_instance& dobj,
-		const channel_properties& cp
-#else
 		const tile_instance& sobj, const tile_instance& dobj,
 		const channel_properties& cp,
-		object_state& ss, object_state& ds
-#endif
-		) {
+		object_state& ss, object_state& ds) {
 	STACKTRACE_VERBOSE;
 	const bool sf = sobj.is_fixed();
 	const bool df = dobj.is_fixed();
-#if PR_STATE_IN_TILE
-	object_state& ss(sobj.current);
-	object_state& ds(dobj.current);
-#endif
 if (!(sf && df)) {
 	// at least one end not fixed
 	// TODO: optimize away number of mathematical operations
@@ -428,11 +374,7 @@ if (!(sf && df)) {
 	if (stretch < 0.0) {
 		const force_type force_vec(delta *
 			(cp.spring_coeff *stretch / dist));
-#if PR_STATE_IN_TILE
-		apply_pairwise_force(sobj, dobj, force_vec);
-#else
 		apply_pairwise_force(sobj, dobj, force_vec, ss, ds);
-#endif
 		return stretch *stretch *cp.spring_coeff;
 	}       // else objects too close to attract
 	// let repulsion forces be computed in different phase
@@ -447,17 +389,7 @@ if (!(sf && df)) {
 	To be consistent with old-potential energy, use previous_velocity
  */
 const real_type&
-tile_instance::update_kinetic_energy_2(
-#if PR_STATE_IN_TILE
-		void
-#else
-		const velocity_type& v
-#endif
-		) {
-#if PR_STATE_IN_TILE
-	const real_vector& v(previous.velocity);
-//	const real_vector& v(velocity);
-#endif
+tile_instance::update_kinetic_energy_2(const velocity_type& v) {
 #if PR_TILE_MASS
 	_kinetic_energy_2 = properties.mass * normsq(v);
 #else
@@ -472,17 +404,9 @@ tile_instance::update_kinetic_energy_2(
  */
 ostream&
 tile_instance::dump(ostream& o) const {
-#if PR_STATE_IN_TILE
-	if (fixed) {
-		o << "@=" << current.position << " (fixed)";
-	} else {
-		current.dump(o);
-	}
-#else
 	if (fixed) {
 		o << " (fixed)";
 	}
-#endif
 	if (dump_properties) {
 		properties.dump(o << " [") << ']';
 	}
@@ -494,16 +418,7 @@ bool
 tile_instance::save_checkpoint(ostream& o) const {
 	properties.save_checkpoint(o);
 	write_value(o, fixed);
-#if PR_STATE_IN_TILE
-	current.save_checkpoint(o);
-	previous.save_checkpoint(o);
-#endif
-	// proximity cache should be regenerated
-#if PR_STATE_IN_TILE
-	// kinetic_energy recalculated
-#else
 	write_value(o, _kinetic_energy_2);
-#endif
 	return !o;
 }
 
@@ -512,16 +427,7 @@ bool
 tile_instance::load_checkpoint(istream& i) {
 	properties.load_checkpoint(i);
 	read_value(i, fixed);
-#if PR_STATE_IN_TILE
-	current.load_checkpoint(i);
-	previous.load_checkpoint(i);
-#endif
-	// proximity cache should be regenerated
-#if PR_STATE_IN_TILE
-	update_kinetic_energy_2();
-#else
 	read_value(i, _kinetic_energy_2);
-#endif
 	return !i;
 }
 

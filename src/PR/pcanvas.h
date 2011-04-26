@@ -1,7 +1,7 @@
 /**
 	\file "PR/pcanvas.h"
 	Medium on which placement is solved with physics.
-	$Id: pcanvas.h,v 1.1.2.9 2011/04/26 00:30:51 fang Exp $
+	$Id: pcanvas.h,v 1.1.2.10 2011/04/26 01:20:28 fang Exp $
  */
 
 #ifndef	__HAC_PR_PCANVAS_H__
@@ -13,8 +13,8 @@
 /**
 	Define to 1 to enable multi-terminal net physics.
 	Don't really need this yet.
- */
 #define	PR_MULTINETS				0
+ */
 
 namespace PR {
 struct placer_options;
@@ -32,10 +32,6 @@ struct pcanvas {
 #endif
 	vector<tile_instance>		objects;
 	vector<channel_instance>	springs;
-#if PR_MULTINETS
-	vector<net_instance>		nets;
-#endif
-#if !PR_STATE_IN_TILE
 	/**
 		Current set of coordinates: position, velocity...
 		implement with separate state array for efficient
@@ -43,7 +39,6 @@ struct pcanvas {
 		Let previous value be maintained outside.
 	 */
 	vector<object_state>		current;
-#endif
 private:
 	/**
 		The maximum distance changed by any single object
