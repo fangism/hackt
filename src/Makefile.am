@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.251.2.7 2011/04/21 01:32:10 fang Exp $
+#	$Id: Makefile.am,v 1.251.2.8 2011/04/27 01:47:34 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -1081,6 +1081,7 @@ NET_H_FILES = \
 PR_CC_FILES = \
 	PR/channel.cc \
 	PR/numerics.cc \
+	PR/gravity_well.cc \
 	PR/pcanvas.cc \
 	PR/placement_engine.cc \
 	PR/placer_options.cc \

@@ -1,7 +1,7 @@
 /**
 	\file "PR/placer_options.h"
 	Physics simulator.
-	$Id: placer_options.h,v 1.1.2.3 2011/04/22 01:28:22 fang Exp $
+	$Id: placer_options.h,v 1.1.2.4 2011/04/27 01:47:42 fang Exp $
  */
 
 #ifndef	__HAC_PR_PLACER_OPTIONS_H__
@@ -63,6 +63,10 @@ struct placer_options {
 	position_type			upper_corner;
 
 	// these parameters may be publicly tweaked at any time
+
+	real_type			x_gravity_coeff;
+	real_type			y_gravity_coeff;
+	real_type			z_gravity_coeff;
 
 	/// time step
 	time_type			time_step;

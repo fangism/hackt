@@ -2,7 +2,7 @@
 @time=0
 object-positions:
   [0]: @=<0,0,0> @'=<0,0,0> @"=<0,0,0>
-T=2.71151e-42, V=0, E=2.71151e-42, L=2.71151e-42
+T=0, V=0, E=0, L=0
 
 @time=0.001
 object-positions:
@@ -20,6 +20,11 @@ object-positions:
 T=0, V=0, E=0, L=0
 
 @time=0.004
+object-positions:
+  [0]: @=<0,0,0> @'=<0,0,0> @"=<0,0,0>
+T=0, V=0, E=0, L=0
+
+@time=0.005
 object-positions:
   [0]: @=<0,0,0> @'=<0,0,0> @"=<0,0,0>
 T=0, V=0, E=0, L=0

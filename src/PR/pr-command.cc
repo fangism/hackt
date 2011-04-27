@@ -2,7 +2,7 @@
 	\file "PR/pr-command.cc"
 	Command-line feature for PR simulator.
 	TODO: scheme interface
-	$Id: pr-command.cc,v 1.1.2.13 2011/04/26 02:21:16 fang Exp $
+	$Id: pr-command.cc,v 1.1.2.14 2011/04/27 01:47:43 fang Exp $
  */
 
 #define	ENABLE_STATIC_TRACE		0
@@ -542,11 +542,81 @@ if (a.size() < N) {							\
 		return Command::BADARG;					\
 	}
 
+#define	LEX_NUM(i, ref)							\
+	if (string_to_num(ref, i)) {					\
+		cerr << "Error lexing number." << endl;			\
+		return Command::BADARG;					\
+	}
+
 #define	LEX_VECTOR(v, ref)						\
 	if (parse_real_vector(ref, v)) {				\
 		cerr << "Error parsing vector." << endl;		\
 		return Command::BADARG;					\
 	}
+
+//-----------------------------------------------------------------------------
+/**
+	Takes single numeric parameter as an argument.
+ */
+template <class T>
+static
+int
+simple_engine_command_1num(State& s, const string_list& a,
+		void (State::*mf)(const T&), void usage(ostream&)) {
+	REQUIRE_EXACT_ARGS(a, 2)
+	real_type r;
+	LEX_NUM(r, a.back());
+	(s.*mf)(r);
+	return Command::NORMAL;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class T>
+static
+int
+simple_engine_command_2num(State& s, const string_list& a,
+		void (State::*mf)(const T&, const T&), void usage(ostream&)) {
+	REQUIRE_EXACT_ARGS(a, 3)
+	real_type r1, r2;
+	string_list::const_iterator ai(++a.begin());
+	LEX_NUM(r1, *ai);
+	++ai;
+	LEX_NUM(r2, *ai);
+	(s.*mf)(r1, r2);
+	return Command::NORMAL;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class T>
+static
+int
+simple_engine_command_3num(State& s, const string_list& a,
+		void (State::*mf)(const T&, const T&, const T&),
+		void usage(ostream&)) {
+	REQUIRE_EXACT_ARGS(a, 4)
+	real_type r1, r2, r3;
+	string_list::const_iterator ai(++a.begin());
+	LEX_NUM(r1, *ai);
+	++ai;
+	LEX_NUM(r2, *ai);
+	++ai;
+	LEX_NUM(r3, *ai);
+	(s.*mf)(r1, r2, r3);
+	return Command::NORMAL;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Calls a function that takes no arguments.  
+ */
+static
+int
+simple_engine_command(State& s, const string_list& a,
+		void (State::*mf)(void), void usage(ostream&)) {
+	REQUIRE_EXACT_ARGS(a, 1)
+	(s.*mf)();
+	return Command::NORMAL;
+}
 
 //=============================================================================
 // constraints commands
@@ -767,6 +837,95 @@ AddChannel::usage(ostream& o) {
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(AddNet, "add-net", setup,
         "adds a multi-terminal net")
 #endif
+
+//-----------------------------------------------------------------------------
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(AddXWell, "add-x-well", setup,
+        "adds a single gravity well at x=k for alignment")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(AddXWells, "add-x-wells", setup,
+        "adds a strided gravity wells on x-hyperplanes")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(AddYWell, "add-y-well", setup,
+        "adds a single gravity well at y=k for alignment")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(AddYWells, "add-y-wells", setup,
+        "adds a strided gravity wells on y-hyperplanes")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(AddZWell, "add-z-well", setup,
+        "adds a single gravity well at z=k for alignment")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(AddZWells, "add-z-wells", setup,
+        "adds a strided gravity wells on z-hyperplanes")
+// likewise, remove-well commands
+
+int
+AddXWell::main(State& s, const string_list& a) {
+	return simple_engine_command_1num(s, a, &State::add_x_well, usage);
+}
+
+void
+AddXWell::usage(ostream& o) {
+	o << name << " x-coord" << endl;
+	o << "Adds a single gravity well along the plane x=k." << endl;
+}
+
+int
+AddXWells::main(State& s, const string_list& a) {
+	return simple_engine_command_3num(s, a, &State::add_x_wells, usage);
+}
+
+void
+AddXWells::usage(ostream& o) {
+	o << name << " x-min x-step x-max" << endl;
+	o <<
+"Adds a series of evenly spaced gravity planes from x=min to x=max."
+	<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+int
+AddYWell::main(State& s, const string_list& a) {
+	return simple_engine_command_1num(s, a, &State::add_y_well, usage);
+}
+
+void
+AddYWell::usage(ostream& o) {
+	o << name << " y-coord" << endl;
+	o << "Adds a single gravity well along the plane y=k." << endl;
+}
+
+int
+AddYWells::main(State& s, const string_list& a) {
+	return simple_engine_command_3num(s, a, &State::add_y_wells, usage);
+}
+
+void
+AddYWells::usage(ostream& o) {
+	o << name << " y-min y-step y-max" << endl;
+	o <<
+"Adds a series of evenly spaced gravity planes from y=min to y=may."
+	<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+int
+AddZWell::main(State& s, const string_list& a) {
+	return simple_engine_command_1num(s, a, &State::add_z_well, usage);
+}
+
+void
+AddZWell::usage(ostream& o) {
+	o << name << " z-coord" << endl;
+	o << "Adds a single gravity well along the plane z=k." << endl;
+}
+
+int
+AddZWells::main(State& s, const string_list& a) {
+	return simple_engine_command_3num(s, a, &State::add_z_wells, usage);
+}
+
+void
+AddZWells::usage(ostream& o) {
+	o << name << " z-min z-step z-max" << endl;
+	o <<
+"Adds a series of evenly spaced gravity planes from z=min to z=max."
+	<< endl;
+}
 
 //=============================================================================
 // physics commands
@@ -1083,16 +1242,6 @@ UnPin::usage(ostream& o) {
 }
 
 //=============================================================================
-static
-int
-simple_engine_command(State& s, const string_list& a,
-		void (State::*mf)(void), void usage(ostream&)) {
-	REQUIRE_EXACT_ARGS(a, 1)
-	(s.*mf)();
-	return Command::NORMAL;
-}
-
-//-----------------------------------------------------------------------------
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Scatter, "scatter", simulation,
         "randomize location of all un-pinned objects")
 

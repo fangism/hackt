@@ -1,7 +1,7 @@
 /**
 	\file "PR/pcanvas.h"
 	Medium on which placement is solved with physics.
-	$Id: pcanvas.h,v 1.1.2.11 2011/04/26 02:21:15 fang Exp $
+	$Id: pcanvas.h,v 1.1.2.12 2011/04/27 01:47:40 fang Exp $
  */
 
 #ifndef	__HAC_PR_PCANVAS_H__
@@ -40,17 +40,7 @@ struct pcanvas {
 	 */
 	vector<object_state>		current;
 private:
-	/**
-		The maximum distance changed by any single object
-		in the previous iteration.
-	 */
-	real_type			_max_delta_position;
-	/**
-		The maximum velocity changed by any single object
-		in the previous iteration.
-	 */
-	real_type			_max_delta_velocity;
-	// energy values
+	// energy values, computed
 	real_type			object_kinetic_energy;
 	real_type			spring_potential_energy;
 

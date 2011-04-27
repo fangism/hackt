@@ -27,7 +27,9 @@ pcanvas::pcanvas(const size_t d) :
 		dimensions(d),
 #endif
 		objects(), springs(),
-		current() {
+		current(),
+		object_kinetic_energy(0.0),
+		spring_potential_energy(0.0) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

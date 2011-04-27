@@ -14,6 +14,9 @@ parameters:
   watch_deltas=0
   watch_energy=0
   watch_objects=0
+  x_gravity_coeff=0
+  y_gravity_coeff=0
+  z_gravity_coeff=0
 object types:
   [0]: size=<2,2,2>
 channel types:
@@ -29,7 +32,7 @@ Begin simulation...
 object-positions:
   [0]: @=<10,20,0> @'=<0,0,0> @"=<4.293,-4.293,0>
   [1]: @=<20,10,0> @'=<0,0,0> @"=<-4.293,4.293,0>
-T=2.71151e-42, V=73.7157, E=73.7157, L=-73.7157
+T=0, V=73.7157, E=73.7157, L=-73.7157
 
 @time=0.01
 object-positions:

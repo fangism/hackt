@@ -1,6 +1,6 @@
 /**
 	\file "PR/tile_instance.cc"
-	$Id: tile_instance.cc,v 1.1.2.14 2011/04/26 02:21:17 fang Exp $
+	$Id: tile_instance.cc,v 1.1.2.15 2011/04/27 01:47:43 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -195,19 +195,41 @@ bool tile_instance::dump_properties = true;
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 tile_instance::tile_instance() :
 		properties(),
-		fixed(false)
+		fixed(false), 
+		_kinetic_energy_2(0.0)
 		{
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 tile_instance::tile_instance(const tile_type& t) :
 		properties(t),
-		fixed(false)
+		fixed(false),
+		_kinetic_energy_2(0.0)
 		{
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 tile_instance::~tile_instance() {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Applies force to a single object.  
+ */
+void
+tile_instance::apply_single_force(const tile_instance& obj,
+		const force_type& force_vec, object_state& o) {
+	const bool f = obj.is_fixed();
+#if PR_TILE_MASS
+	const tile_type& p(obj.properties);
+#endif
+	if (!f) {
+		o.acceleration -= force_vec
+#if PR_TILE_MASS
+			/ p.mass
+#endif
+			;
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -312,6 +334,65 @@ if (!(sf && df)) {
 }
 	return 0.0;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Shouldn't potential energy account for mass?
+ */
+template <size_t N>
+real_type
+tile_instance::dimension_well_potential_energy(const tile_instance& tobj, 
+		const real_type& x, const real_type& g,
+		const object_state& ts) {
+	const real_type d = ts.position[N] -x;
+	return d *d *g;
+}
+
+template
+real_type
+tile_instance::dimension_well_potential_energy<0>(const tile_instance&, 
+	const real_type&, const real_type&, const object_state&);
+template
+real_type
+tile_instance::dimension_well_potential_energy<1>(const tile_instance&, 
+	const real_type&, const real_type&, const object_state&);
+template
+real_type
+tile_instance::dimension_well_potential_energy<2>(const tile_instance&, 
+	const real_type&, const real_type&, const object_state&);
+
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Pulls the center of object towards plane of attraction.
+	\param x the location of the attraction node
+	\param g the spring-coefficient
+	\return potential energy w.r.t. well
+ */
+template <size_t N>
+real_type
+tile_instance::attract_to_dimension_well(const tile_instance& tobj, 
+		const real_type& x, const real_type& g, object_state& ts) {
+	position_type dist(0.0);
+	dist[N] = ts.position[N] -x;
+	const force_type force_vec(dist *g);
+	apply_single_force(tobj, force_vec, ts);
+	return normsq(dist) *g;
+}
+
+// explicit instantiations
+template
+real_type
+tile_instance::attract_to_dimension_well<0>(const tile_instance&, 
+	const real_type&, const real_type&, object_state&);
+template
+real_type
+tile_instance::attract_to_dimension_well<1>(const tile_instance&, 
+	const real_type&, const real_type&, object_state&);
+template
+real_type
+tile_instance::attract_to_dimension_well<2>(const tile_instance&, 
+	const real_type&, const real_type&, object_state&);
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

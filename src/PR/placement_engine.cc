@@ -1,6 +1,6 @@
 /**
 	\file "PR/placement_engine.cc"
-	$Id: placement_engine.cc,v 1.1.2.15 2011/04/26 02:21:16 fang Exp $
+	$Id: placement_engine.cc,v 1.1.2.16 2011/04/27 01:47:40 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -52,12 +52,15 @@ placement_engine::placement_engine(const size_t d) :
 		channel_types(),
 		opt(),
 		space(d),
+#if ENABLE_GRAVITY_WELLS
+		x_wells(), 
+		y_wells(), 
+		z_wells(),
+#endif
 		proximity_cache(),
 		elapsed_time(0.0), 
-#if 0
-		max_delta_position(0.0),
-		max_delta_velocity(0.0),
-#endif
+		proximity_potential_energy(0.0),
+		gravity_potential_energy(0.0),
 		autosave_name(),
 		need_force_recalc(true) {
 	initialize_default_types();
@@ -282,6 +285,21 @@ placement_engine::clear_proximity_cache(void) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Populate array of iterators (pointers) to objects.
+	Initially they are sorted by index.  
+ */
+void
+placement_engine::create_object_iterator_array(object_iterator_array& v) const {
+	v.clear();
+	v.reserve(space.objects.size());
+	object_iterator i(space.current.begin()), e(space.current.end());
+	for ( ; i!=e; ++i) {
+		v.push_back(i);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Update dynamic graph of near-neighbors.  
 	Use a sliding-window cube in each dimension.
 	TODO: maintain order as object positions are updated
@@ -295,12 +313,9 @@ placement_engine::refresh_proximity_cache(void) {
 	// sort by each dimension/index
 	typedef	vector<object_state>::const_iterator	iterator;
 	vector<iterator> obj_x;
+	create_object_iterator_array(obj_x);
 //	cout << "SPACE size = " << space.objects.size() << endl;
-	obj_x.reserve(space.objects.size());
-	iterator i(space.current.begin()), e(space.current.end());
-	for ( ; i!=e; ++i) {
-		obj_x.push_back(i);
-	}
+
 	// perform in-place sort on each
 	// first, sorted by x-coordinates only
 	sort(obj_x.begin(), obj_x.end(), &dim_less<0>);
@@ -456,6 +471,179 @@ placement_engine::update_proximity_potential_energy(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param N dimension to sort (key) and attract
+	\return potential energy
+ */
+template <size_t N>
+real_type
+placement_engine::__compute_gravity_forces(const gravity_map_type& wm,
+		const real_type& g, object_iterator_array& obj) {
+	real_type grav_energy = 0.0;
+if (g > 0.0) {
+	STACKTRACE_VERBOSE;
+	// perform in-place sort on each
+	sort(obj.begin(), obj.end(), &dim_less<N>);
+	typedef	object_iterator_array::iterator		iter_iter;
+	iter_iter xb(obj.begin()), xe(obj.end());
+	const array_offset<object_iterator> vo(space.current.begin());
+	// apply x-forces
+	typedef	gravity_map_type::const_iterator	g_iterator;
+	g_iterator wi(wm.begin()), we(wm.end());
+	typedef	std::numeric_limits<real_type>		limits_type;
+	// compute gravity region bounds on the fly
+	real_type lb = -limits_type::max();
+	xb = lower_bound(xb, xe, lb, &dim_comp<N>);	// should just be xb
+	for (; wi!=we; ++wi) {
+		const real_type& node(*wi);		// node of attraction
+		g_iterator wj(wi);
+		++wj;
+		const real_type ub((wj!=we) ? (*wj +*wi) *0.5 : limits_type::max());
+		// attract to node at wi->second
+		STACKTRACE_INDENT_PRINT(N << "-well region: (" << lb <<
+			", " << ub << ") -> " << node << endl);
+		// TODO: use linear instead of binary search?
+		const iter_iter xu(lower_bound(xb, xe, ub, &dim_comp<N>));
+		STACKTRACE_INDENT_PRINT("contains " << distance(xb, xu) <<
+			" objects" << endl);
+		for ( ; xb!=xu; ++xb) {
+			const size_t oi(vo(*xb));
+			const tile_instance& t(space.objects[oi]);
+			if (!t.is_fixed()) {
+				object_state& o(space.current[oi]);
+				grav_energy +=
+				tile_instance::attract_to_dimension_well<N>(
+					t, node, g, o);
+			}
+		}
+		INVARIANT(xb == xu);
+		lb = ub;
+	}
+}
+	return grav_energy;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param N dimension to sort (key) and attract
+	\return potential energy
+ */
+template <size_t N>
+real_type
+placement_engine::__compute_gravity_energy(const gravity_map_type& wm,
+		const real_type& g, object_iterator_array& obj) {
+	STACKTRACE_VERBOSE;
+	real_type grav_energy = 0.0;
+if (g > 0.0) {
+	// perform in-place sort on each
+	sort(obj.begin(), obj.end(), &dim_less<N>);
+	typedef	object_iterator_array::iterator		iter_iter;
+	iter_iter xb(obj.begin()), xe(obj.end());
+	const array_offset<object_iterator> vo(space.current.begin());
+	// apply x-forces
+	typedef	std::numeric_limits<real_type>		limits_type;
+	typedef	gravity_map_type::const_iterator	g_iterator;
+	g_iterator wi(wm.begin()), we(wm.end());
+	real_type lb = -limits_type::max();
+	xb = lower_bound(xb, xe, lb, &dim_comp<N>);	// should just be xb
+	for (; wi!=we; ++wi)
+	{
+		const real_type& node(*wi);		// node of attraction
+		g_iterator wj(wi);
+		++wj;
+		const real_type ub((wj!=we) ? (*wj +*wi) *0.5 : limits_type::max());
+		// TODO: use linear instead of binary search?
+		const iter_iter xu(lower_bound(xb, xe, ub, &dim_comp<N>));
+		for ( ; xb!=xu; ++xb) {
+			const size_t oi(vo(*xb));
+			const tile_instance& t(space.objects[oi]);
+			if (!t.is_fixed()) {
+				const object_state& o(space.current[oi]);
+				grav_energy +=
+				tile_instance::dimension_well_potential_energy<N>(
+					t, node, g, o);
+			}
+		}
+		INVARIANT(xb == xu);
+		lb = ub;
+	}
+}
+	return grav_energy;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Attracts objects to their nearest gravity node in each dimension.
+	Also updates potential energy.
+ */
+void
+placement_engine::compute_gravity_forces(void) {
+	STACKTRACE_VERBOSE;
+	gravity_potential_energy = 0.0;
+#if ENABLE_GRAVITY_WELLS
+	const size_t xs = x_wells.size();
+	const size_t ys = y_wells.size();
+	const size_t zs = z_wells.size();
+if (xs +ys +zs) {
+	vector<object_iterator> obj;
+	create_object_iterator_array(obj);
+if (xs) {
+	gravity_potential_energy +=
+		__compute_gravity_forces<0>(
+			x_wells.nodes, opt.x_gravity_coeff, obj);
+}
+if (ys) {
+	gravity_potential_energy +=
+		__compute_gravity_forces<1>(
+			y_wells.nodes, opt.y_gravity_coeff, obj);
+}
+if (zs) {
+	gravity_potential_energy +=
+		__compute_gravity_forces<2>(
+			z_wells.nodes, opt.z_gravity_coeff, obj);
+}
+}	// else no wells!
+#endif
+	gravity_potential_energy *= 0.5;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Computes energy due to gravity wells.
+ */
+const real_type&
+placement_engine::update_gravity_potential_energy(void) {
+	STACKTRACE_VERBOSE;
+	gravity_potential_energy = 0.0;
+#if ENABLE_GRAVITY_WELLS
+	const size_t xs = x_wells.size();
+	const size_t ys = y_wells.size();
+	const size_t zs = z_wells.size();
+if (xs +ys +zs) {
+	vector<object_iterator> obj;
+	create_object_iterator_array(obj);
+if (xs) {
+	gravity_potential_energy +=
+		__compute_gravity_energy<0>(
+			x_wells.nodes, opt.x_gravity_coeff, obj);
+}
+if (ys) {
+	gravity_potential_energy +=
+		__compute_gravity_energy<1>(
+			y_wells.nodes, opt.y_gravity_coeff, obj);
+}
+if (zs) {
+	gravity_potential_energy +=
+		__compute_gravity_energy<2>(
+			z_wells.nodes, opt.z_gravity_coeff, obj);
+}
+}	// else no wells!
+	gravity_potential_energy *= 0.5;
+#endif
+	return gravity_potential_energy;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // inline
 void
 placement_engine::kill_momentum(void) {
@@ -466,6 +654,7 @@ placement_engine::kill_momentum(void) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Update acceleration of objects without moving them yet.
+	Also computes current potential energy at the same time.  
  */
 void
 placement_engine::calculate_forces(void) {
@@ -476,6 +665,8 @@ placement_engine::calculate_forces(void) {
 	// compute proximity repulsions on 'close' objects
 	refresh_proximity_cache();	// depends on positions only
 	compute_collision_forces();
+	// TODO: share iterator x-sort results
+	compute_gravity_forces();
 	need_force_recalc = false;
 }
 
@@ -578,7 +769,7 @@ placement_engine::__gradient_slide(void) {
 	real_type oldV = potential_energy();
 	do {
 		update_positions();
-		// update potential energy without re-applying force
+		// update potential energy *without* re-applying force
 		const real_type newV = update_potential_energy();
 		elapsed_time += opt.time_step;	// increment time
 		if (newV > oldV) {
@@ -891,6 +1082,17 @@ placement_engine::dump_channels(ostream& o) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
+placement_engine::dump_wells(ostream& o) const {
+#if ENABLE_GRAVITY_WELLS
+	if (x_wells.size()) x_wells.dump(o << "x-wells: ");
+	if (y_wells.size()) y_wells.dump(o << "y-wells: ");
+	if (z_wells.size()) z_wells.dump(o << "z-wells: ");
+#endif
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
 placement_engine::dump(ostream& o) const {
 	const save_precision p(o, opt.precision);
 	dump_parameters(o);
@@ -898,6 +1100,7 @@ placement_engine::dump(ostream& o) const {
 	dump_channel_types(o);
 	dump_objects(o);
 	dump_channels(o);
+	dump_wells(o);
 	return o;
 }
 
@@ -927,7 +1130,11 @@ placement_engine::save_checkpoint(ostream& o) const {
 	save_array(o, channel_types);
 // write objects and channels
 	space.save_checkpoint(o);
-
+#if ENABLE_GRAVITY_WELLS
+	x_wells.save_checkpoint(o);
+	y_wells.save_checkpoint(o);
+	z_wells.save_checkpoint(o);
+#endif
 #if 0
 	write_value(o, max_delta_position);
 	write_value(o, max_delta_velocity);
@@ -970,7 +1177,11 @@ try {
 	load_array(i, channel_types);
 // read objects and channels
 	space.load_checkpoint(i);
-
+#if ENABLE_GRAVITY_WELLS
+	x_wells.load_checkpoint(i);
+	y_wells.load_checkpoint(i);
+	z_wells.load_checkpoint(i);
+#endif
 #if 0
 	read_value(i, max_delta_position);
 	read_value(i, max_delta_velocity);

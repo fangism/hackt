@@ -14,6 +14,9 @@ parameters:
   watch_deltas=0
   watch_energy=0
   watch_objects=0
+  x_gravity_coeff=0
+  y_gravity_coeff=0
+  z_gravity_coeff=0
 object types:
   [0]: size=<2,2,2>
   [1]: size=<1,1,1>

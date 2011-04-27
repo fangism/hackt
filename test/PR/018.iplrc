@@ -1,0 +1,10 @@
+# "018.iplrc"
+# testing gravity wells
+
+repeat 2 add-object
+place 0 <20,20,10>
+place 1 <10,10,-5>
+add-z-wells -30 3 30
+parameter damping=0.5
+parameter time_step=0.1
+

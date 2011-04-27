@@ -14,6 +14,9 @@ parameters:
   watch_deltas=0
   watch_energy=0
   watch_objects=0
+  x_gravity_coeff=0
+  y_gravity_coeff=0
+  z_gravity_coeff=0
 randomly place free objects 
 descend-potential: ran 14 iterations from time 0 to 1.2 (V=769.1)
 descend-potential: ran 16 iterations from time 1.2 to 2.6 (V=118.4)

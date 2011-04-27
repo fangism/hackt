@@ -1,7 +1,7 @@
 /**
 	\file "PR/placement_engine.h"
 	Physics simulator.
-	$Id: placement_engine.h,v 1.1.2.13 2011/04/26 02:21:16 fang Exp $
+	$Id: placement_engine.h,v 1.1.2.14 2011/04/27 01:47:41 fang Exp $
  */
 
 #ifndef	__HAC_PR_PLACEMENT_ENGINE_H__
@@ -10,8 +10,17 @@
 #include <string>
 #include "PR/pcanvas.h"
 #include "PR/placer_options.h"
+#include "PR/gravity_well.h"
 #include "sim/state_base.h"
 #include "util/named_ifstream_manager.h"	// needed by interpreter
+
+/**
+	Define to 1 to enable aligning to hyperplanes.
+	Rationale: snapping to grid.
+	Goal: 1
+	Status: in testing
+ */
+#define	ENABLE_GRAVITY_WELLS		1
 
 namespace PR {
 using std::istream;
@@ -35,6 +44,15 @@ public:
 	 */
 	pcanvas				space;
 protected:
+#if ENABLE_GRAVITY_WELLS
+	/**
+		Gravity wells for aligning 
+	 */
+	gravity_well			x_wells;
+	gravity_well			y_wells;
+	gravity_well			z_wells;
+#endif
+
 	typedef	channel_instance		proximity_edge;
 	/**
 		Proximity cache is just a collection of
@@ -47,6 +65,7 @@ protected:
 	time_type			elapsed_time;
 	// run-time updates values
 	real_type			proximity_potential_energy;
+	real_type			gravity_potential_energy;
 	/**
 		Name of auto-saved checkpoint.
 	 */
@@ -77,6 +96,29 @@ public:
 
 	bool
 	add_channel(const channel_instance&);
+
+#if ENABLE_GRAVITY_WELLS
+	void
+	add_x_well(const real_type& r) { x_wells.add_single_well(r); }
+
+	void
+	add_y_well(const real_type& r) { y_wells.add_single_well(r); }
+
+	void
+	add_z_well(const real_type& r) { z_wells.add_single_well(r); }
+
+	void
+	add_x_wells(const real_type& r, const real_type& s, const real_type& t)
+		{ x_wells.add_strided_wells(r, s, t); }
+
+	void
+	add_y_wells(const real_type& r, const real_type& s, const real_type& t)
+		{ y_wells.add_strided_wells(r, s, t); }
+
+	void
+	add_z_wells(const real_type& r, const real_type& s, const real_type& t)
+		{ z_wells.add_strided_wells(r, s, t); }
+#endif
 
 	void
 	scatter(void);
@@ -115,13 +157,16 @@ public:
 	bool
 	place_object(const size_t, const real_vector&);
 
+	// force recalc because changing parameters invalidates energy
 	bool
 	parse_parameter(const string& s) {
+		need_force_recalc = true;
 		return opt.parse_parameter(s);
 	}
 
 	bool
 	parse_parameter(const option_value& o) {
+		need_force_recalc = true;
 		return opt.parse_parameter(o);
 	}
 
@@ -186,13 +231,22 @@ public:
 
 	real_type
 	potential_energy(void) const {
-		return space.potential_energy() +proximity_potential_energy;
+		return space.potential_energy()
+			+proximity_potential_energy
+#if ENABLE_GRAVITY_WELLS
+			+gravity_potential_energy
+#endif
+			;
 	}
 
 	real_type
 	update_potential_energy(void) {
 		return space.update_potential_energy()
-			+update_proximity_potential_energy();
+			+update_proximity_potential_energy()
+#if ENABLE_GRAVITY_WELLS
+			+update_gravity_potential_energy()
+#endif
+			;
 	}
 
 	ostream&
@@ -209,6 +263,9 @@ public:
 
 	ostream&
 	dump_channels(ostream&) const;
+
+	ostream&
+	dump_wells(ostream&) const;
 
 	ostream&
 	dump(ostream&) const;
@@ -244,6 +301,12 @@ private:
 	void
 	calculate_forces(void);
 
+	typedef	vector<object_state>::const_iterator	object_iterator;
+	typedef	vector<object_iterator>			object_iterator_array;
+
+	void
+	create_object_iterator_array(object_iterator_array&) const;
+
 	delta_type
 	update_positions(void);
 
@@ -262,6 +325,24 @@ private:
 
 	const real_type&
 	update_proximity_potential_energy(void);
+
+	const real_type&
+	update_gravity_potential_energy(void);
+
+	typedef	gravity_well::node_set_type		gravity_map_type;
+
+	template <size_t>
+	real_type
+	__compute_gravity_energy(const gravity_map_type&, 
+		const real_type&, object_iterator_array&);
+
+	template <size_t>
+	real_type
+	__compute_gravity_forces(const gravity_map_type&, 
+		const real_type&, object_iterator_array&);
+
+	void
+	compute_gravity_forces(void);
 
 };	// end class placement_engine
 

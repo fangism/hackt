@@ -186,8 +186,25 @@ public:
 
 	static
 	void
+	apply_single_force(const tile_instance&, const force_type&,
+		object_state&);
+
+	static
+	void
 	apply_pairwise_force(const tile_instance&, const tile_instance&,
 		const force_type&, object_state&, object_state&);
+
+	template <size_t N>
+	static
+	real_type
+	dimension_well_potential_energy(const tile_instance&, 
+		const real_type& x, const real_type& g, const object_state&);
+
+	template <size_t N>
+	static
+	real_type
+	attract_to_dimension_well(const tile_instance&, 
+		const real_type& x, const real_type& g, object_state&);
 
 	static
 	real_type

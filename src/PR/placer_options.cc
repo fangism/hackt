@@ -1,6 +1,6 @@
 /**
 	\file "PR/placer_options.cc"
-	$Id: placer_options.cc,v 1.1.2.3 2011/04/22 01:28:22 fang Exp $
+	$Id: placer_options.cc,v 1.1.2.4 2011/04/27 01:47:41 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -37,6 +37,9 @@ placer_options::placer_options() :
 		repulsion_coeff(1.0),
 		lower_corner(__default_lower_corner),
 		upper_corner(__default_upper_corner),
+		x_gravity_coeff(0.0),
+		y_gravity_coeff(0.0),
+		z_gravity_coeff(0.0),
 		time_step(1e-3),
 		pos_tol(1e-3),
 		vel_tol(1e-3),
@@ -61,6 +64,9 @@ placer_options::save_checkpoint(ostream& o) const {
 	write_value(o, repulsion_coeff);
 	write_value(o, lower_corner);
 	write_value(o, upper_corner);
+	write_value(o, x_gravity_coeff);
+	write_value(o, y_gravity_coeff);
+	write_value(o, z_gravity_coeff);
 	write_value(o, time_step);
 	write_value(o, pos_tol);
 	write_value(o, vel_tol);
@@ -84,6 +90,9 @@ placer_options::load_checkpoint(istream& i) {
 	read_value(i, repulsion_coeff);
 	read_value(i, lower_corner);
 	read_value(i, upper_corner);
+	read_value(i, x_gravity_coeff);
+	read_value(i, y_gravity_coeff);
+	read_value(i, z_gravity_coeff);
 	read_value(i, time_step);
 	read_value(i, pos_tol);
 	read_value(i, vel_tol);
@@ -121,6 +130,7 @@ __bool_type__("bool"),
 __int_type__("int"),
 __real_type__("real"),
 __str_type__("string");
+// __vec_type__("vector");
 
 template <typename T>
 static const string&
@@ -137,6 +147,10 @@ __string_type_of(real_type options_struct_type::*) { return __real_type__; }
 #if 0
 static const string&
 __string_type_of(string options_struct_type::*) { return __str_type__; }
+#endif
+#if 0
+static const string&
+__string_type_of(real_vector options_struct_type::*) { return __vec_type__; }
 #endif
 
 template <typename T>
@@ -278,6 +292,13 @@ DEFINE_OPTION_DEFAULT(energy_tol, "energy_tolerance",
 	"energy change tolerance for convergence")
 DEFINE_OPTION_DEFAULT(min_iterations, "min_iterations", 
 	"minimum number of iterations before halting")
+
+DEFINE_OPTION_DEFAULT(x_gravity_coeff, "x_gravity_coeff", 
+	"spring coefficient of x-gravity wells")
+DEFINE_OPTION_DEFAULT(y_gravity_coeff, "y_gravity_coeff", 
+	"spring coefficient of y-gravity wells")
+DEFINE_OPTION_DEFAULT(z_gravity_coeff, "z_gravity_coeff", 
+	"spring coefficient of z-gravity wells")
 
 DEFINE_OPTION_DEFAULT(watch_objects, "watch_objects", 
 	"print coordinates of objects after each iteration")

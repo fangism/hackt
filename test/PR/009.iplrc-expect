@@ -14,6 +14,9 @@ parameters:
   watch_deltas=0
   watch_energy=0
   watch_objects=0
+  x_gravity_coeff=0
+  y_gravity_coeff=0
+  z_gravity_coeff=0
 object types:
   [0]: size=<2,2,2>
   [1]: size=<10,10,10>
@@ -30,7 +33,7 @@ Begin simulation...
 object-positions:
   [0]: @=<11,12,0> @'=<0,0,0> @"=<-3.036,3.036,0>
   [1]: @=<12,11,0> @'=<0,0,0> @"=<3.036,-3.036,0>
-T=2.71151e-42, V=36.8579, E=36.8579, L=-36.8579
+T=0, V=36.8579, E=36.8579, L=-36.8579
 
 @time=0.1
 object-positions:

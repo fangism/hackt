@@ -1,0 +1,13 @@
+# "019a.iplrc"
+# example without gravity
+
+source 019.iplrc
+
+watch-objects
+watch-energy
+
+# descend-gradient-converge
+descend-potential-converge
+
+dump-state
+
