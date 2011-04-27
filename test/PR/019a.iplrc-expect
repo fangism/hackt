@@ -3965,6 +3965,7 @@ parameters:
   precision=4
   report_iterations=1
   repulsion_coeff=20
+  repulsion_constant=0
   temperature=0
   time_step=0.01
   velocity_tolerance=0.001

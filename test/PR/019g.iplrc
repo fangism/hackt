@@ -1,12 +1,13 @@
-# "019e.iplrc"
+# "019g.iplrc"
 # example with gravity
 
+parameter repulsion_constant=0.5
 source 019a.iplrc
 
 echo suddenly turning on gravity!!!
-parameter x_gravity_coeff=0
-parameter y_gravity_coeff=5
-parameter z_gravity_coeff=10
+parameter x_gravity_coeff=2
+parameter y_gravity_coeff=2
+parameter z_gravity_coeff=2
 
 watch-objects
 watch-energy

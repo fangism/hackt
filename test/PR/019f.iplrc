@@ -1,11 +1,9 @@
-# "019c.iplrc"
-# example with gravity
+# "019f.iplrc"
+# example without gravity
+# introducing constant repulsion
 
 source 019.iplrc
-
-parameter x_gravity_coeff=2
-parameter y_gravity_coeff=2
-parameter z_gravity_coeff=2
+parameter repulsion_constant=0.5
 
 watch-objects
 watch-energy

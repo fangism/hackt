@@ -3965,6 +3965,7 @@ parameters:
   precision=4
   report_iterations=1
   repulsion_coeff=20
+  repulsion_constant=0
   temperature=0
   time_step=0.01
   velocity_tolerance=0.001
@@ -11407,6 +11408,7 @@ parameters:
   precision=4
   report_iterations=1
   repulsion_coeff=20
+  repulsion_constant=0
   temperature=0
   time_step=0.01
   velocity_tolerance=0.001
@@ -11436,3 +11438,10 @@ channels:
 x-wells: { 0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100, }
 y-wells: { 0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100, }
 z-wells: { 0, }
+T=5.701e-05, V=5.61e-06, V(attract)=2.345e-09, V(repel)=7.734e-07, V(gravity)=4.835e-06, E=T+V=6.262e-05, L=T-V=5.14e-05
+object-positions:
+  [0]: @=<20,30,0> @'=<0.0001505,0.006606,-0.0003628> @"=<-0.001807,0.003732,0.0002658>
+  [1]: @=<30,35,0> @'=<-0.0002113,4.918e-06,0.005111> @"=<-4.509e-05,0.0002219,-0.003744>
+  [2]: @=<30,35,0> @'=<-0.0002544,-0.005283,-0.0004863> @"=<0.001856,-0.002876,0.0003562>
+  [3]: @=<30,30,0> @'=<0.0003151,0.000317,0.004078> @"=<-4.768e-06,0.000248,-0.002987>
+T=5.701e-05, V=1.393, V(attract)=1.393, V(repel)=0, V(gravity)=0, E=T+V=1.393, L=T-V=-1.393

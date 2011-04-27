@@ -1,7 +1,7 @@
 /**
 	\file "PR/placer_options.h"
 	Physics simulator.
-	$Id: placer_options.h,v 1.1.2.4 2011/04/27 01:47:42 fang Exp $
+	$Id: placer_options.h,v 1.1.2.5 2011/04/27 20:57:21 fang Exp $
  */
 
 #ifndef	__HAC_PR_PLACER_OPTIONS_H__
@@ -48,8 +48,13 @@ struct placer_options {
 	real_type			proximity_radius;
 	/**
 		Repulsive spring coefficient, global.
+		This is linear with stretch distance.
 	 */
 	real_type			repulsion_coeff;
+	/**
+		Constant repulsion force, additive on top of linear term.
+	 */
+	real_type			repulsion_constant;
 	/**
 		Object collisions are hard constraints, 
 		otherwise, allow overlap and use corrective forces.  

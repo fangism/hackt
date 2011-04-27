@@ -1,6 +1,6 @@
 /**
 	\file "PR/tile_instance.cc"
-	$Id: tile_instance.cc,v 1.1.2.15 2011/04/27 01:47:43 fang Exp $
+	$Id: tile_instance.cc,v 1.1.2.16 2011/04/27 20:57:22 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -315,11 +315,12 @@ if (!(sf && df)) {
 /**
 	Computes potential_energy using the *current* position
 	instead of the previous_position.
+	\param rf constant repulsion constant.
  */
 real_type
 tile_instance::current_repulsion_potential_energy(
 		const tile_instance& sobj, const tile_instance& dobj,
-		const channel_properties& cp,
+		const channel_properties& cp, const real_type& rf,
 		const object_state& ss, const object_state& ds) {
 	const bool sf = sobj.is_fixed();
 	const bool df = dobj.is_fixed();
@@ -329,7 +330,7 @@ if (!(sf && df)) {
 	const real_type stretch = dist -cp.equilibrium_distance;
 	// TODO: use rectilinear distance as an option?
 	if (stretch < 0.0) {
-		return stretch * stretch *cp.spring_coeff;
+		return stretch * (stretch *cp.spring_coeff +rf *2.0);
 	}       // else objects too far to repel
 }
 	return 0.0;
@@ -437,13 +438,14 @@ if (!(sf && df)) {
 	Pair-wise repulsion-only force.
 	Identical to above, but with flipped threshold.
 	NOTE: this is the potential energy *before* position updates.
+	\param rf constant repulsion force added on top
 	\returns potential energy of repulsive spring (x2), 
 		which is 0 if spring is not active.
  */
 real_type
 tile_instance::apply_repulsion_forces(
 		const tile_instance& sobj, const tile_instance& dobj,
-		const channel_properties& cp,
+		const channel_properties& cp, const real_type& rf,
 		object_state& ss, object_state& ds) {
 	STACKTRACE_VERBOSE;
 	const bool sf = sobj.is_fixed();
@@ -460,9 +462,9 @@ if (!(sf && df)) {
 	// TODO: use rectilinear distance as an option
 	if (stretch < 0.0) {
 		const force_type force_vec(delta *
-			(cp.spring_coeff *stretch / dist));
+			((cp.spring_coeff *stretch +rf)/ dist));
 		apply_pairwise_force(sobj, dobj, force_vec, ss, ds);
-		return stretch *stretch *cp.spring_coeff;
+		return stretch *(stretch *cp.spring_coeff +rf*2.0);
 	}       // else objects too close to attract
 	// let repulsion forces be computed in different phase
 }       // else don't bother computing if both ends are fixed

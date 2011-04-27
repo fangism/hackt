@@ -3,6 +3,21 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-04-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-64-pr-01-15:
+	  ipple, placement_engine: added option for repulsion constant
+		so that any stretch below threshold can have a constant
+		repulsive force, whereas previous linear-only model
+		was too soft on collisions, this allows 'hardness'.
+		Corresponding potential energy (integral) also updated.
+		TODO: same with gravity, allow constant force term.
+	  ipple: implemented 'snap-gravity-wells' to force objects to
+		nearest gravity wells.  Does not, however, guarantee
+		conflict free placement!
+	  Added new test cases, old ones updated.
+
+
 2011-04-26	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-64-pr-01-14:

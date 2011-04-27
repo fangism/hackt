@@ -1,6 +1,6 @@
 /**
 	\file "PR/placer_options.cc"
-	$Id: placer_options.cc,v 1.1.2.4 2011/04/27 01:47:41 fang Exp $
+	$Id: placer_options.cc,v 1.1.2.5 2011/04/27 20:57:21 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -35,6 +35,7 @@ placer_options::placer_options() :
 		viscous_damping(0.1),	// gooiness (> 0)
 		proximity_radius(0.0),	// for collision scanning
 		repulsion_coeff(1.0),
+		repulsion_constant(0.0),
 		lower_corner(__default_lower_corner),
 		upper_corner(__default_upper_corner),
 		x_gravity_coeff(0.0),
@@ -62,6 +63,7 @@ placer_options::save_checkpoint(ostream& o) const {
 	write_value(o, viscous_damping);
 	write_value(o, proximity_radius);
 	write_value(o, repulsion_coeff);
+	write_value(o, repulsion_constant);
 	write_value(o, lower_corner);
 	write_value(o, upper_corner);
 	write_value(o, x_gravity_coeff);
@@ -88,6 +90,7 @@ placer_options::load_checkpoint(istream& i) {
 	read_value(i, viscous_damping);
 	read_value(i, proximity_radius);
 	read_value(i, repulsion_coeff);
+	read_value(i, repulsion_constant);
 	read_value(i, lower_corner);
 	read_value(i, upper_corner);
 	read_value(i, x_gravity_coeff);
@@ -279,6 +282,8 @@ DEFINE_OPTION_DEFAULT(viscous_damping, "damping",
 DEFINE_OPTION_DEFAULT(temperature, "temperature", 
 	"annealing temperature, for additive random velocity")
 DEFINE_OPTION_DEFAULT(repulsion_coeff, "repulsion_coeff", 
+	"repulsive spring coefficient for (near-)colliding objects")
+DEFINE_OPTION_DEFAULT(repulsion_constant, "repulsion_constant", 
 	"repulsive spring coefficient for (near-)colliding objects")
 DEFINE_OPTION_DEFAULT(precision, "precision", 
 	"time interval over which to integrate per iteration")

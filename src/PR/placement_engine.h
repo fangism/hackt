@@ -1,7 +1,7 @@
 /**
 	\file "PR/placement_engine.h"
 	Physics simulator.
-	$Id: placement_engine.h,v 1.1.2.14 2011/04/27 01:47:41 fang Exp $
+	$Id: placement_engine.h,v 1.1.2.15 2011/04/27 20:57:21 fang Exp $
  */
 
 #ifndef	__HAC_PR_PLACEMENT_ENGINE_H__
@@ -118,6 +118,9 @@ public:
 	void
 	add_z_wells(const real_type& r, const real_type& s, const real_type& t)
 		{ z_wells.add_strided_wells(r, s, t); }
+
+	void
+	snap_to_gravity_wells(void);
 #endif
 
 	void
@@ -268,6 +271,9 @@ public:
 	dump_wells(ostream&) const;
 
 	ostream&
+	dump_energy(ostream&);
+
+	ostream&
 	dump(ostream&) const;
 
 // checkpointing features
@@ -291,6 +297,9 @@ public:
 private:
 	void
 	bootstrap_forces(void);
+
+	void
+	bootstrap_forces_silent(void);
 
 	void
 	initialize_default_types(void);
@@ -340,6 +349,11 @@ private:
 	real_type
 	__compute_gravity_forces(const gravity_map_type&, 
 		const real_type&, object_iterator_array&);
+
+	template <size_t>
+	void
+	__snap_to_gravity_wells(const gravity_map_type&, 
+		object_iterator_array&);
 
 	void
 	compute_gravity_forces(void);

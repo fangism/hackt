@@ -181,7 +181,7 @@ public:
 	real_type
 	current_repulsion_potential_energy(
 		const tile_instance&, const tile_instance&,
-		const channel_properties&,
+		const channel_properties&, const real_type&,
 		const object_state&, const object_state&);
 
 	static
@@ -215,7 +215,7 @@ public:
 	static
 	real_type
 	apply_repulsion_forces(const tile_instance&, const tile_instance&,
-		const channel_properties&, 
+		const channel_properties&, const real_type&,
 		object_state&, object_state&);
 
 	const real_type&

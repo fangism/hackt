@@ -15,4 +15,8 @@ watch-energy
 descend-potential-converge
 
 dump-state
+dump-energy
 
+snap-gravity-wells
+dump-positions
+dump-energy

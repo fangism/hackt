@@ -1,6 +1,6 @@
 /**
 	\file "PR/placement_engine.cc"
-	$Id: placement_engine.cc,v 1.1.2.16 2011/04/27 01:47:40 fang Exp $
+	$Id: placement_engine.cc,v 1.1.2.17 2011/04/27 20:57:20 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -434,7 +434,8 @@ placement_engine::compute_collision_forces(void) {
 			object_state& s2(space.current[j2]);
 			pi->potential_energy =
 				tile_instance::apply_repulsion_forces(
-					o1, o2, pi->properties, s1, s2);
+					o1, o2, pi->properties, 
+					opt.repulsion_constant, s1, s2);
 			proximity_potential_energy += pi->potential_energy;
 	}	// end for each proximity_edge
 	proximity_potential_energy *= 0.5;
@@ -463,7 +464,8 @@ placement_engine::update_proximity_potential_energy(void) {
 			j1 << " and " << j2 << endl);
 		pi->potential_energy =
 			tile_instance::current_repulsion_potential_energy(
-				o1, o2, pi->properties, s1, s2);
+				o1, o2, pi->properties, 
+				opt.repulsion_constant, s1, s2);
 		proximity_potential_energy += pi->potential_energy;
 	}	// end for each proximity_edge
 	proximity_potential_energy *= 0.5;
@@ -472,7 +474,62 @@ placement_engine::update_proximity_potential_energy(void) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Aligns object to nearest well in each hyperplane.
+	\param obj pre-loaded array iterators to all objects
 	\param N dimension to sort (key) and attract
+	\return potential energy
+ */
+template <size_t N>
+void
+placement_engine::__snap_to_gravity_wells(const gravity_map_type& wm,
+		object_iterator_array& obj) {
+//	real_type grav_energy = 0.0;
+	STACKTRACE_VERBOSE;
+	// perform in-place sort on each
+	sort(obj.begin(), obj.end(), &dim_less<N>);
+	typedef	object_iterator_array::iterator		iter_iter;
+	iter_iter xb(obj.begin()), xe(obj.end());
+	const array_offset<object_iterator> vo(space.current.begin());
+	// apply x-forces
+	typedef	gravity_map_type::const_iterator	g_iterator;
+	g_iterator wi(wm.begin()), we(wm.end());
+	typedef	std::numeric_limits<real_type>		limits_type;
+	// compute gravity region bounds on the fly
+	real_type lb = -limits_type::max();
+	xb = lower_bound(xb, xe, lb, &dim_comp<N>);	// should just be xb
+	for (; wi!=we; ++wi) {
+		const real_type& node(*wi);		// node of attraction
+		g_iterator wj(wi);
+		++wj;
+		const real_type ub((wj!=we) ? (*wj +*wi) *0.5 : limits_type::max());
+		// attract to node at wi->second
+		STACKTRACE_INDENT_PRINT(N << "-well region: (" << lb <<
+			", " << ub << ") -> " << node << endl);
+		// TODO: use linear instead of binary search?
+		const iter_iter xu(lower_bound(xb, xe, ub, &dim_comp<N>));
+		STACKTRACE_INDENT_PRINT("contains " << distance(xb, xu) <<
+			" objects" << endl);
+		for ( ; xb!=xu; ++xb) {
+			const size_t oi(vo(*xb));
+			const tile_instance& t(space.objects[oi]);
+			if (!t.is_fixed()) {
+				object_state& o(space.current[oi]);
+//				grav_energy +=
+//				o.snap_to_dimension_well<N>(node);
+				o.position[N] = node;
+			}
+		}
+		INVARIANT(xb == xu);
+		lb = ub;
+	}
+//	return grav_energy;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param N dimension to sort (key) and attract
+	\param obj pre-loaded array iterators to all objects
+	\param g spring strength of gravity (like spring coeff).
 	\return potential energy
  */
 template <size_t N>
@@ -525,6 +582,7 @@ if (g > 0.0) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	\param obj pre-loaded array iterators to all objects
 	\param N dimension to sort (key) and attract
 	\return potential energy
  */
@@ -644,6 +702,33 @@ if (zs) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Force objects to the nearest gravity wells.  
+ */
+void
+placement_engine::snap_to_gravity_wells(void) {
+#if ENABLE_GRAVITY_WELLS
+	const size_t xs = x_wells.size();
+	const size_t ys = y_wells.size();
+	const size_t zs = z_wells.size();
+if (xs +ys +zs) {
+	need_force_recalc = true;	// positions update invalidates states
+	vector<object_iterator> obj;
+	create_object_iterator_array(obj);
+if (xs) {
+	__snap_to_gravity_wells<0>(x_wells.nodes, obj);
+}
+if (ys) {
+	__snap_to_gravity_wells<1>(y_wells.nodes, obj);
+}
+if (zs) {
+	__snap_to_gravity_wells<2>(z_wells.nodes, obj);
+}
+}	// else no wells!
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // inline
 void
 placement_engine::kill_momentum(void) {
@@ -674,6 +759,7 @@ placement_engine::calculate_forces(void) {
 /**
 	Jump starts the simulation by computing the spring forces
 	in advance.  This is only needed for the very first time.  
+	This also computes potential energy at the same time.
  */
 void
 placement_engine::bootstrap_forces(void) {
@@ -682,6 +768,15 @@ placement_engine::bootstrap_forces(void) {
 		// very first time, spring forces not pre-computed
 		calculate_forces();
 		watch_iterate(cout);
+	}
+}
+
+void
+placement_engine::bootstrap_forces_silent(void) {
+	STACKTRACE_VERBOSE;
+	if (need_force_recalc) {
+		// very first time, spring forces not pre-computed
+		calculate_forces();
 	}
 }
 
@@ -738,6 +833,7 @@ placement_engine::watch_iterate(ostream& o) const {
 	}
 #if 1
 	if (opt.watch_energy) {
+//		const save_precision p(o, opt.precision);
 		const real_type T = kinetic_energy();
 		const real_type V = potential_energy();
 		o << "T=" << T << ", V=" << V <<
@@ -1088,6 +1184,24 @@ placement_engine::dump_wells(ostream& o) const {
 	if (y_wells.size()) y_wells.dump(o << "y-wells: ");
 	if (z_wells.size()) z_wells.dump(o << "z-wells: ");
 #endif
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	updates energy calcultion if necessary, prints report.
+ */
+ostream&
+placement_engine::dump_energy(ostream& o) {
+	bootstrap_forces_silent();	// update potential energy if needed
+	const save_precision p(o, opt.precision);
+	const real_type T = kinetic_energy();
+	const real_type V = potential_energy();
+	o << "T=" << T << ", V=" << V <<
+		", V(attract)=" << space.potential_energy() <<
+		", V(repel)=" << proximity_potential_energy <<
+		", V(gravity)=" << gravity_potential_energy <<
+		", E=T+V=" << T+V << ", L=T-V=" << T-V << endl;
 	return o;
 }
 

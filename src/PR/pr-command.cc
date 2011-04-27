@@ -2,7 +2,7 @@
 	\file "PR/pr-command.cc"
 	Command-line feature for PR simulator.
 	TODO: scheme interface
-	$Id: pr-command.cc,v 1.1.2.14 2011/04/27 01:47:43 fang Exp $
+	$Id: pr-command.cc,v 1.1.2.15 2011/04/27 20:57:22 fang Exp $
  */
 
 #define	ENABLE_STATIC_TRACE		0
@@ -927,6 +927,23 @@ AddZWells::usage(ostream& o) {
 	<< endl;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(SnapGravityWells, "snap-gravity-wells",
+	simulation,
+        "snap all objects to their nearest gravity well in each hyperplane")
+
+int
+SnapGravityWells::main(State& s, const string_list& a) {
+	return simple_engine_command(s, a,
+		&State::snap_to_gravity_wells, usage);
+}
+
+void
+SnapGravityWells::usage(ostream& o) {
+	o << name << endl;
+	o << brief << endl;
+}
+
 //=============================================================================
 // physics commands
 
@@ -1159,6 +1176,25 @@ DumpPositions::usage(ostream& o) {
 	o << name << endl;
 	o <<
 "Prints out the current location of all objects."
+	<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(DumpEnergy, "dump-energy", info,
+        "update and print current energy of system")
+
+int
+DumpEnergy::main(State& s, const string_list& a) {
+	REQUIRE_EXACT_ARGS(a, 1)
+	s.dump_energy(cout);
+	return Command::NORMAL;
+}
+
+void
+DumpEnergy::usage(ostream& o) {
+	o << name << endl;
+	o <<
+"Update and print out the current energy of the entire system."
 	<< endl;
 }
 
