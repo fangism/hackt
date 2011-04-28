@@ -5,6 +5,19 @@
 
 2011-04-27	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-84-64-pr-01-16:
+	  ipple/placement_engine: added support for gravity 
+		constant force term, to more strongly encourage 
+		snapping to well.  Potential energy calculation
+		integral updated accordingly.
+	  Bug fix: attraction/repulsion potential energy fixed
+		sign (always positive) and direction of
+		additive constant force term.
+	  Added/updated test cases.
+
+
+2011-04-27	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-84-64-pr-01-15:
 	  ipple, placement_engine: added option for repulsion constant
 		so that any stretch below threshold can have a constant

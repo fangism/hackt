@@ -2,7 +2,7 @@
 	\file "PR/numerics.h"
 	Defines some global types and operations on vectors.
 	Some of this could eventually be migrated to util/vector_ops.h
-	$Id: numerics.h,v 1.1.2.6 2011/04/26 02:21:13 fang Exp $
+	$Id: numerics.h,v 1.1.2.7 2011/04/28 02:28:56 fang Exp $
  */
 
 #ifndef	__HAC_PR_NUMERICS_H__
@@ -59,7 +59,7 @@ typedef	real_vector		position_type;
 typedef	real_vector		velocity_type;
 typedef	real_vector		acceleration_type;
 typedef	real_vector		force_type;
-typedef	real_vector		energy_type;
+typedef	real_type		energy_type;
 
 extern
 ostream&

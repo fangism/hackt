@@ -1,6 +1,6 @@
 /**
 	\file "PR/placement_engine.cc"
-	$Id: placement_engine.cc,v 1.1.2.17 2011/04/27 20:57:20 fang Exp $
+	$Id: placement_engine.cc,v 1.1.2.18 2011/04/28 02:28:56 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -483,7 +483,6 @@ template <size_t N>
 void
 placement_engine::__snap_to_gravity_wells(const gravity_map_type& wm,
 		object_iterator_array& obj) {
-//	real_type grav_energy = 0.0;
 	STACKTRACE_VERBOSE;
 	// perform in-place sort on each
 	sort(obj.begin(), obj.end(), &dim_less<N>);
@@ -514,30 +513,29 @@ placement_engine::__snap_to_gravity_wells(const gravity_map_type& wm,
 			const tile_instance& t(space.objects[oi]);
 			if (!t.is_fixed()) {
 				object_state& o(space.current[oi]);
-//				grav_energy +=
-//				o.snap_to_dimension_well<N>(node);
 				o.position[N] = node;
 			}
 		}
 		INVARIANT(xb == xu);
 		lb = ub;
 	}
-//	return grav_energy;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\param N dimension to sort (key) and attract
 	\param obj pre-loaded array iterators to all objects
-	\param g spring strength of gravity (like spring coeff).
+	\param g1 spring strength of gravity (like spring coeff).
+	\param g0 constant force
 	\return potential energy
  */
 template <size_t N>
 real_type
 placement_engine::__compute_gravity_forces(const gravity_map_type& wm,
-		const real_type& g, object_iterator_array& obj) {
+		const real_type& g1, const real_type& g0, 
+		object_iterator_array& obj) {
 	real_type grav_energy = 0.0;
-if (g > 0.0) {
+if (g1 > 0.0 || g0 > 0.0) {
 	STACKTRACE_VERBOSE;
 	// perform in-place sort on each
 	sort(obj.begin(), obj.end(), &dim_less<N>);
@@ -570,7 +568,7 @@ if (g > 0.0) {
 				object_state& o(space.current[oi]);
 				grav_energy +=
 				tile_instance::attract_to_dimension_well<N>(
-					t, node, g, o);
+					t, node, g1, g0, o);
 			}
 		}
 		INVARIANT(xb == xu);
@@ -582,17 +580,20 @@ if (g > 0.0) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	\param obj pre-loaded array iterators to all objects
 	\param N dimension to sort (key) and attract
+	\param g1 spring strength of gravity (like spring coeff).
+	\param g0 constant force
+	\param obj pre-loaded array iterators to all objects
 	\return potential energy
  */
 template <size_t N>
 real_type
 placement_engine::__compute_gravity_energy(const gravity_map_type& wm,
-		const real_type& g, object_iterator_array& obj) {
+		const real_type& g1, const real_type& g0,
+		object_iterator_array& obj) {
 	STACKTRACE_VERBOSE;
 	real_type grav_energy = 0.0;
-if (g > 0.0) {
+if (g1 > 0.0 || g0 > 0.0) {
 	// perform in-place sort on each
 	sort(obj.begin(), obj.end(), &dim_less<N>);
 	typedef	object_iterator_array::iterator		iter_iter;
@@ -619,7 +620,7 @@ if (g > 0.0) {
 				const object_state& o(space.current[oi]);
 				grav_energy +=
 				tile_instance::dimension_well_potential_energy<N>(
-					t, node, g, o);
+					t, node, g1, g0, o);
 			}
 		}
 		INVARIANT(xb == xu);
@@ -647,18 +648,18 @@ if (xs +ys +zs) {
 	create_object_iterator_array(obj);
 if (xs) {
 	gravity_potential_energy +=
-		__compute_gravity_forces<0>(
-			x_wells.nodes, opt.x_gravity_coeff, obj);
+		__compute_gravity_forces<0>(x_wells.nodes,
+			opt.x_gravity_coeff, opt.x_gravity_constant, obj);
 }
 if (ys) {
 	gravity_potential_energy +=
-		__compute_gravity_forces<1>(
-			y_wells.nodes, opt.y_gravity_coeff, obj);
+		__compute_gravity_forces<1>(y_wells.nodes,
+			opt.y_gravity_coeff, opt.y_gravity_constant, obj);
 }
 if (zs) {
 	gravity_potential_energy +=
-		__compute_gravity_forces<2>(
-			z_wells.nodes, opt.z_gravity_coeff, obj);
+		__compute_gravity_forces<2>(z_wells.nodes,
+			opt.z_gravity_coeff, opt.z_gravity_constant, obj);
 }
 }	// else no wells!
 #endif
@@ -682,18 +683,18 @@ if (xs +ys +zs) {
 	create_object_iterator_array(obj);
 if (xs) {
 	gravity_potential_energy +=
-		__compute_gravity_energy<0>(
-			x_wells.nodes, opt.x_gravity_coeff, obj);
+		__compute_gravity_energy<0>(x_wells.nodes,
+			opt.x_gravity_coeff, opt.x_gravity_constant, obj);
 }
 if (ys) {
 	gravity_potential_energy +=
-		__compute_gravity_energy<1>(
-			y_wells.nodes, opt.y_gravity_coeff, obj);
+		__compute_gravity_energy<1>(y_wells.nodes,
+			opt.y_gravity_coeff, opt.y_gravity_constant, obj);
 }
 if (zs) {
 	gravity_potential_energy +=
-		__compute_gravity_energy<2>(
-			z_wells.nodes, opt.z_gravity_coeff, obj);
+		__compute_gravity_energy<2>(z_wells.nodes,
+			opt.z_gravity_coeff, opt.z_gravity_constant, obj);
 }
 }	// else no wells!
 	gravity_potential_energy *= 0.5;
@@ -724,6 +725,7 @@ if (ys) {
 if (zs) {
 	__snap_to_gravity_wells<2>(z_wells.nodes, obj);
 }
+	kill_momentum();
 }	// else no wells!
 #endif
 }

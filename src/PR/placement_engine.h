@@ -1,7 +1,7 @@
 /**
 	\file "PR/placement_engine.h"
 	Physics simulator.
-	$Id: placement_engine.h,v 1.1.2.15 2011/04/27 20:57:21 fang Exp $
+	$Id: placement_engine.h,v 1.1.2.16 2011/04/28 02:28:57 fang Exp $
  */
 
 #ifndef	__HAC_PR_PLACEMENT_ENGINE_H__
@@ -343,12 +343,12 @@ private:
 	template <size_t>
 	real_type
 	__compute_gravity_energy(const gravity_map_type&, 
-		const real_type&, object_iterator_array&);
+		const real_type&, const real_type&, object_iterator_array&);
 
 	template <size_t>
 	real_type
 	__compute_gravity_forces(const gravity_map_type&, 
-		const real_type&, object_iterator_array&);
+		const real_type&, const real_type&, object_iterator_array&);
 
 	template <size_t>
 	void

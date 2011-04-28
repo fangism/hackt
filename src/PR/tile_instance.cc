@@ -1,16 +1,18 @@
 /**
 	\file "PR/tile_instance.cc"
-	$Id: tile_instance.cc,v 1.1.2.16 2011/04/27 20:57:22 fang Exp $
+	$Id: tile_instance.cc,v 1.1.2.17 2011/04/28 02:28:58 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
 
+#include <cmath>
 #include "PR/tile_instance.h"
 #include "util/array.tcc"
 #include "util/vector_ops.h"
 #include "util/optparse.h"
 // #include "util/optparse.tcc"
 #include "util/IO_utils.tcc"
+#include "util/numeric/abs.h"
 #include "util/stacktrace.h"
 
 namespace PR {
@@ -305,7 +307,9 @@ if (!(sf && df)) {
 	const real_type stretch = dist -cp.equilibrium_distance;
 	// TODO: use rectilinear distance as an option?
 	if (stretch > 0.0) {
-		return stretch * stretch *cp.spring_coeff;
+		const energy_type ret = stretch * stretch *cp.spring_coeff;
+		INVARIANT(ret >= 0.0);
+		return ret;
 	}       // else objects too close to attract
 }
 	return 0.0;
@@ -330,7 +334,10 @@ if (!(sf && df)) {
 	const real_type stretch = dist -cp.equilibrium_distance;
 	// TODO: use rectilinear distance as an option?
 	if (stretch < 0.0) {
-		return stretch * (stretch *cp.spring_coeff +rf *2.0);
+		const energy_type ret =
+			stretch * (stretch *cp.spring_coeff -rf *2.0);
+		INVARIANT(ret >= 0.0);
+		return ret;
 	}       // else objects too far to repel
 }
 	return 0.0;
@@ -339,61 +346,69 @@ if (!(sf && df)) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Shouldn't potential energy account for mass?
+	\param g1 linear force term
+	\param g0 constant force term
  */
 template <size_t N>
 real_type
 tile_instance::dimension_well_potential_energy(const tile_instance& tobj, 
-		const real_type& x, const real_type& g,
+		const real_type& x, const real_type& g1, const real_type& g0,
 		const object_state& ts) {
-	const real_type d = ts.position[N] -x;
-	return d *d *g;
+	const real_type d = util::numeric::abs(ts.position[N] -x);
+	const energy_type ret = d *(d *g1 +g0 *2.0);
+	INVARIANT(ret >= 0.0);
+	return ret;
 }
 
-template
-real_type
-tile_instance::dimension_well_potential_energy<0>(const tile_instance&, 
-	const real_type&, const real_type&, const object_state&);
-template
-real_type
-tile_instance::dimension_well_potential_energy<1>(const tile_instance&, 
-	const real_type&, const real_type&, const object_state&);
-template
-real_type
-tile_instance::dimension_well_potential_energy<2>(const tile_instance&, 
-	const real_type&, const real_type&, const object_state&);
+#define	INSTANTIATE_DIMENSION_WELL_ENERGY(N)				\
+template								\
+real_type								\
+tile_instance::dimension_well_potential_energy<N>(const tile_instance&, \
+	const real_type&, const real_type&, const real_type&,		\
+	const object_state&);
 
+INSTANTIATE_DIMENSION_WELL_ENERGY(0)
+INSTANTIATE_DIMENSION_WELL_ENERGY(1)
+INSTANTIATE_DIMENSION_WELL_ENERGY(2)
+
+#undef	INSTANTIATE_DIMENSION_WELL_ENERGY
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Pulls the center of object towards plane of attraction.
 	\param x the location of the attraction node
-	\param g the spring-coefficient
+	\param g1 the spring-coefficient
+	\param g0 the constant force term
 	\return potential energy w.r.t. well
  */
 template <size_t N>
 real_type
 tile_instance::attract_to_dimension_well(const tile_instance& tobj, 
-		const real_type& x, const real_type& g, object_state& ts) {
+		const real_type& x, const real_type& g1, const real_type& g0,
+		object_state& ts) {
 	position_type dist(0.0);
 	dist[N] = ts.position[N] -x;
-	const force_type force_vec(dist *g);
+	force_type cf(0.0);
+	cf[N] = (dist[N] < 0.0) ? -g0 : g0;
+	const force_type force_vec(dist *g1 +cf);
 	apply_single_force(tobj, force_vec, ts);
-	return normsq(dist) *g;
+	const energy_type ret = dist[N] *(dist[N] *g1 +cf[N] *2.0);
+	INVARIANT(ret >= 0.0);
+	return ret;
 }
 
 // explicit instantiations
-template
-real_type
-tile_instance::attract_to_dimension_well<0>(const tile_instance&, 
-	const real_type&, const real_type&, object_state&);
-template
-real_type
-tile_instance::attract_to_dimension_well<1>(const tile_instance&, 
-	const real_type&, const real_type&, object_state&);
-template
-real_type
-tile_instance::attract_to_dimension_well<2>(const tile_instance&, 
-	const real_type&, const real_type&, object_state&);
+#define	INSTANTIATE_ATTRACT_DIMENSION_WELL(N)				\
+template								\
+real_type								\
+tile_instance::attract_to_dimension_well<N>(const tile_instance&, 	\
+	const real_type&, const real_type&, const real_type&, object_state&);
+
+INSTANTIATE_ATTRACT_DIMENSION_WELL(0)
+INSTANTIATE_ATTRACT_DIMENSION_WELL(1)
+INSTANTIATE_ATTRACT_DIMENSION_WELL(2)
+
+#undef	INSTANTIATE_ATTRACT_DIMENSION_WELL
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -415,7 +430,6 @@ tile_instance::apply_attraction_forces(
 if (!(sf && df)) {
 	// at least one end not fixed
 	// TODO: optimize away number of mathematical operations
-	// TODO: use delta - sizeof(objects)
 	//	or distance between ellipsoids
 	const position_type delta(ds.position -ss.position);
 	// optimization: compare square of distances to avoid sqrt() call?
@@ -426,7 +440,9 @@ if (!(sf && df)) {
 		const force_type force_vec(delta *
 			(cp.spring_coeff *stretch / dist));
 		apply_pairwise_force(sobj, dobj, force_vec, ss, ds);
-		return stretch * stretch *cp.spring_coeff;
+		const energy_type ret = stretch * stretch *cp.spring_coeff;
+		INVARIANT(ret >= 0.0);
+		return ret;
 	}       // else objects too close to attract
 	// let repulsion forces be computed in different phase
 }       // else don't bother computing if both ends are fixed
@@ -453,7 +469,6 @@ tile_instance::apply_repulsion_forces(
 if (!(sf && df)) {
 	// at least one end not fixed
 	// TODO: optimize away number of mathematical operations
-	// TODO: use delta - sizeof(objects)
 	//      or distance between ellipsoids
 	const position_type delta(ds.position -ss.position);
 	// optimization: compare square of distances to avoid sqrt() call?
@@ -462,11 +477,14 @@ if (!(sf && df)) {
 	// TODO: use rectilinear distance as an option
 	if (stretch < 0.0) {
 		const force_type force_vec(delta *
-			((cp.spring_coeff *stretch +rf)/ dist));
+			((cp.spring_coeff *stretch -rf)/ dist));
 		apply_pairwise_force(sobj, dobj, force_vec, ss, ds);
-		return stretch *(stretch *cp.spring_coeff +rf*2.0);
+		const energy_type ret =
+			stretch *(stretch *cp.spring_coeff -rf*2.0);
+		INVARIANT(ret >= 0.0);
+		return ret;
 	}       // else objects too close to attract
-	// let repulsion forces be computed in different phase
+	// let attraction forces be computed in different phase
 }       // else don't bother computing if both ends are fixed
 	return 0.0;
 }       // end placement_engine::apply_repulsion_forces()
@@ -484,6 +502,7 @@ tile_instance::update_kinetic_energy_2(const velocity_type& v) {
 #else
 	_kinetic_energy_2 = normsq(v);
 #endif
+	INVARIANT(_kinetic_energy_2 >= 0.0);
 	return _kinetic_energy_2;
 }
 

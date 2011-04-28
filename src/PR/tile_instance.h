@@ -174,7 +174,7 @@ public:
 	real_type
 	current_attraction_potential_energy(
 		const tile_instance&, const tile_instance&,
-		const channel_properties&, 
+		const channel_properties&,
 		const object_state&, const object_state&);
 
 	static
@@ -198,18 +198,20 @@ public:
 	static
 	real_type
 	dimension_well_potential_energy(const tile_instance&, 
-		const real_type& x, const real_type& g, const object_state&);
+		const real_type& x, const real_type& g1, const real_type& g0,
+		const object_state&);
 
 	template <size_t N>
 	static
 	real_type
 	attract_to_dimension_well(const tile_instance&, 
-		const real_type& x, const real_type& g, object_state&);
+		const real_type& x, const real_type& g1, const real_type& g0,
+		object_state&);
 
 	static
 	real_type
 	apply_attraction_forces(const tile_instance&, const tile_instance&,
-		const channel_properties&, 
+		const channel_properties&,
 		object_state&, object_state&);
 
 	static

@@ -1,6 +1,6 @@
 /**
 	\file "PR/placer_options.cc"
-	$Id: placer_options.cc,v 1.1.2.5 2011/04/27 20:57:21 fang Exp $
+	$Id: placer_options.cc,v 1.1.2.6 2011/04/28 02:28:57 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -41,6 +41,9 @@ placer_options::placer_options() :
 		x_gravity_coeff(0.0),
 		y_gravity_coeff(0.0),
 		z_gravity_coeff(0.0),
+		x_gravity_constant(0.0),
+		y_gravity_constant(0.0),
+		z_gravity_constant(0.0),
 		time_step(1e-3),
 		pos_tol(1e-3),
 		vel_tol(1e-3),
@@ -69,6 +72,9 @@ placer_options::save_checkpoint(ostream& o) const {
 	write_value(o, x_gravity_coeff);
 	write_value(o, y_gravity_coeff);
 	write_value(o, z_gravity_coeff);
+	write_value(o, x_gravity_constant);
+	write_value(o, y_gravity_constant);
+	write_value(o, z_gravity_constant);
 	write_value(o, time_step);
 	write_value(o, pos_tol);
 	write_value(o, vel_tol);
@@ -96,6 +102,9 @@ placer_options::load_checkpoint(istream& i) {
 	read_value(i, x_gravity_coeff);
 	read_value(i, y_gravity_coeff);
 	read_value(i, z_gravity_coeff);
+	read_value(i, x_gravity_constant);
+	read_value(i, y_gravity_constant);
+	read_value(i, z_gravity_constant);
 	read_value(i, time_step);
 	read_value(i, pos_tol);
 	read_value(i, vel_tol);
@@ -304,6 +313,12 @@ DEFINE_OPTION_DEFAULT(y_gravity_coeff, "y_gravity_coeff",
 	"spring coefficient of y-gravity wells")
 DEFINE_OPTION_DEFAULT(z_gravity_coeff, "z_gravity_coeff", 
 	"spring coefficient of z-gravity wells")
+DEFINE_OPTION_DEFAULT(x_gravity_constant, "x_gravity_constant", 
+	"constant force of x-gravity wells")
+DEFINE_OPTION_DEFAULT(y_gravity_constant, "y_gravity_constant", 
+	"constant force of y-gravity wells")
+DEFINE_OPTION_DEFAULT(z_gravity_constant, "z_gravity_constant", 
+	"constant force of z-gravity wells")
 
 DEFINE_OPTION_DEFAULT(watch_objects, "watch_objects", 
 	"print coordinates of objects after each iteration")

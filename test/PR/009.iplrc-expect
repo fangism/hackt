@@ -16,8 +16,11 @@ parameters:
   watch_energy=0
   watch_objects=0
   x_gravity_coeff=0
+  x_gravity_constant=0
   y_gravity_coeff=0
+  y_gravity_constant=0
   z_gravity_coeff=0
+  z_gravity_constant=0
 object types:
   [0]: size=<2,2,2>
   [1]: size=<10,10,10>
@@ -94,7 +97,7 @@ T=10.0254, V=14.7265, E=24.7519, L=-4.70109
 object-positions:
   [0]: @=<9.65,13.35,0> @'=<-2.386,2.386,0> @"=<-1.685,1.685,0>
   [1]: @=<13.35,9.65,0> @'=<2.386,-2.386,0> @"=<1.685,-1.685,0>
-T=11.386, V=11.3606, E=22.7466, L=0.0254755
+T=11.386, V=11.3606, E=22.7466, L=0.0254736
 
 @time=1.1
 object-positions:

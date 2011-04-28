@@ -1,6 +1,6 @@
 /**
 	\file "PR/numerics.cc"
-	$Id: numerics.cc,v 1.1.2.6 2011/04/26 02:21:12 fang Exp $
+	$Id: numerics.cc,v 1.1.2.7 2011/04/28 02:28:55 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -183,7 +183,7 @@ normsq(const position_type& p) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 real_type
 norm(const position_type& p) {
-	return sqrt(normsq(p));
+	return std::sqrt(normsq(p));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
