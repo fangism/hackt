@@ -2,7 +2,7 @@
 	\file "PR/numerics.h"
 	Defines some global types and operations on vectors.
 	Some of this could eventually be migrated to util/vector_ops.h
-	$Id: numerics.h,v 1.1.2.7 2011/04/28 02:28:56 fang Exp $
+	$Id: numerics.h,v 1.1.2.8 2011/04/28 22:40:52 fang Exp $
  */
 
 #ifndef	__HAC_PR_NUMERICS_H__
@@ -77,6 +77,10 @@ parse_real_vector(const string&, real_vector&);
 extern
 real_vector
 random_unit_vector(void);
+
+extern
+real_vector
+random_scaled_vector(const real_type&);
 
 #if 0
 extern

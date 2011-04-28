@@ -1,6 +1,6 @@
 /**
 	\file "PR/placement_engine.cc"
-	$Id: placement_engine.cc,v 1.1.2.19 2011/04/28 21:44:21 fang Exp $
+	$Id: placement_engine.cc,v 1.1.2.20 2011/04/28 22:40:52 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -734,6 +734,19 @@ void
 placement_engine::kill_momentum(void) {
 	STACKTRACE_VERBOSE;
 	space.kill_momentum();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Pertubs all objects by a random distance bound by x.
+ */
+void
+placement_engine::shake(const real_type& x) {
+	need_force_recalc = true;
+	space.shake(x);
+	if (opt.watch_objects) {
+		dump_positions(cout);
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

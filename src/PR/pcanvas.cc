@@ -151,12 +151,11 @@ pcanvas::update_objects(const placer_options& opt) {
 		if (opt.temperature > 0.0) {
 			// alter position or velocity?
 			j->position
-				+= random_unit_vector() *
+				+= random_scaled_vector(sqrttt)
 #if PR_TILE_MASS
-				sqrt(tt / i->properties.mass);
-#else
-				sqrttt;
+					/ sqrt(i->properties.mass)
 #endif
+				;
 		}
 		object_kinetic_energy +=
 			i->update_kinetic_energy_2(j->velocity);
@@ -179,6 +178,21 @@ pcanvas::kill_momentum(void) {
 	for_each(current.begin(), current.end(),
 		mem_fun_ref(&object_state::kill_momentum));
 	object_kinetic_energy = 0.0;	// easy calculation!
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Perturb positions of all objects in some random direction/distance, 
+	bounded by distance r.
+	This ignores mass entirely.  
+ */
+void
+pcanvas::shake(const real_type& r) {
+	vector<object_state>::iterator
+		i(current.begin()), e(current.end());
+	for ( ; i!=e; ++i) {
+		i->position += random_scaled_vector(r);
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

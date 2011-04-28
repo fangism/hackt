@@ -5,6 +5,12 @@
 
 2011-04-28	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-84-64-pr-01-18:
+	  ipple: added shake-all command to perturb all object positions
+
+
+2011-04-28	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-84-64-pr-01-17:
 	  ipple: added emit-dot command, prints out a dot graph, 
 		recommend running through graphviz's fdp, which

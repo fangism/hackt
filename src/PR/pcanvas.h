@@ -1,7 +1,7 @@
 /**
 	\file "PR/pcanvas.h"
 	Medium on which placement is solved with physics.
-	$Id: pcanvas.h,v 1.1.2.13 2011/04/28 21:44:20 fang Exp $
+	$Id: pcanvas.h,v 1.1.2.14 2011/04/28 22:40:52 fang Exp $
  */
 
 #ifndef	__HAC_PR_PCANVAS_H__
@@ -69,6 +69,9 @@ public:
 
 	void
 	kill_momentum(void);
+
+	void
+	shake(const real_type&);
 
 	void
 	compute_spring_forces(void);

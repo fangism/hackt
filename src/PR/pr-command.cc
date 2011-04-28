@@ -2,7 +2,7 @@
 	\file "PR/pr-command.cc"
 	Command-line feature for PR simulator.
 	TODO: scheme interface
-	$Id: pr-command.cc,v 1.1.2.16 2011/04/28 21:44:22 fang Exp $
+	$Id: pr-command.cc,v 1.1.2.17 2011/04/28 22:40:53 fang Exp $
  */
 
 #define	ENABLE_STATIC_TRACE		0
@@ -1445,6 +1445,35 @@ void
 KillMomentum::usage(ostream& o) {
 	o << name << endl;
 	o << brief << endl;
+}
+
+//-----------------------------------------------------------------------------
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ShakeAll, "shake-all", 
+	simulation,
+        "perturb all objects in random direction by bounded random distance")
+
+int
+ShakeAll::main(State& s, const string_list& a) {
+	const size_t asz = a.size();
+	if (asz > 2) {
+		usage(cerr << "usage: ");
+		return Command::SYNTAX;
+	}
+	real_type dist = s.opt.temperature;
+	if (asz == 2) {
+		LEX_NUM(dist, a.back())
+	}
+	s.shake(dist);
+	return Command::NORMAL;
+}
+
+void
+ShakeAll::usage(ostream& o) {
+	o << name << " [maxdist]" << endl;
+	o << brief << endl;
+o <<
+"If maxdist is not supplied, the temperature parameter is used by default."
+	<< endl;
 }
 
 //=============================================================================

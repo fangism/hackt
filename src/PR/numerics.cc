@@ -1,6 +1,6 @@
 /**
 	\file "PR/numerics.cc"
-	$Id: numerics.cc,v 1.1.2.7 2011/04/28 02:28:55 fang Exp $
+	$Id: numerics.cc,v 1.1.2.8 2011/04/28 22:40:51 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -164,6 +164,18 @@ random_unit_vector(void) {
 	ret[1] = sinphi *sth;
 	STACKTRACE_INDENT_PRINT("rand-vec: " << ret << endl);
 	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param n upper bound of the the norm of the random vector.
+	Distance (radius) is *uniformly* distributed.
+ */
+real_vector
+random_scaled_vector(const real_type& n) {
+	typedef	rand48<double>			random_generator;
+	const random_generator g;	// ranges from [0.0,1.0]
+	return random_unit_vector() * (g() *n);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
