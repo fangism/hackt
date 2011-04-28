@@ -182,6 +182,35 @@ pcanvas::kill_momentum(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: scale-factor
+ */
+ostream&
+pcanvas::emit_dot(ostream& o, const placer_options& opt) const {
+	vector<tile_instance>::const_iterator
+		ti(objects.begin()), te(objects.end());
+	vector<object_state>::const_iterator
+		oi(current.begin()), oe(current.end());
+	// nodes
+	size_t j = 0;
+	for ( ; ti!=te; ++ti, ++oi, ++j) {
+		o << "N" << j << " [";
+		// box sizes slightly less than 0.5 to see edges
+		ti->properties.emit_dot(o, 0.45) << ", ";
+		oi->emit_dot(o, opt);
+		o << "];" << endl;
+	}
+	// edges
+	vector<channel_instance>::const_iterator
+		ci(springs.begin()), ce(springs.end());
+	for ( ; ci!=ce; ++ci) {
+		// leave edges as automatic
+		ci->emit_dot(o, opt) << endl;
+	}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pcanvas::save_checkpoint(ostream& o) const {
 #if PR_VARIABLE_DIMENSIONS

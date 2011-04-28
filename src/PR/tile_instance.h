@@ -22,6 +22,7 @@
  */
 
 namespace PR {
+struct placer_options;
 
 //=============================================================================
 /**
@@ -92,6 +93,9 @@ public:
 
 	ostream&
 	dump_position(ostream&) const;
+
+	ostream&
+	emit_dot(ostream&, const placer_options&) const;
 
 	bool
 	save_checkpoint(ostream&) const;

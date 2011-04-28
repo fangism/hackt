@@ -1,4 +1,5 @@
-# "004.iplrc"
+# "009.iplrc"
+# copy-modified from "004.iplrc"
 # testing forces of repulsion, and convergence to equilibrium distance
 
 object-type size=<10,10,10>

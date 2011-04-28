@@ -1,6 +1,6 @@
 # "Make.test-ipl"
 #	vi: ft=automake
-#	$Id: Make.test-ipl,v 1.1.2.4 2011/04/27 01:47:44 fang Exp $
+#	$Id: Make.test-ipl,v 1.1.2.5 2011/04/28 21:44:25 fang Exp $
 # Test infrastructure for the interactive placer 'ipple'.
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
@@ -13,7 +13,8 @@ HACKT_IPPLE_SUFFIXES = \
 	.iplrc .iplrc-out .iplrc-out-filter .iplrc-diff \
 	.iplrcfail-out .iplrcfail-out-filter .iplrcfail-diff \
 	.iplckpt .iplckpt-dump .iplckpt-indump .iplckpt-outdump .iplckpt-diff \
-	.iplckpt-dupe .iplckpt-dupe-dump
+	.iplckpt-dupe .iplckpt-dupe-dump \
+	.ipl-dot .ipl-pdf
 
 HACKT_IPPLE_TEST_SUFFIXES = .ipltest .iplfailtest .iplckpttest
 SUFFIXES += $(HACKT_IPPLE_SUFFIXES) $(HACKT_IPPLE_TEST_SUFFIXES)
@@ -35,15 +36,17 @@ HACKT_IPPLE_CLEAN_IGNORE_PATTERNS = \
 	"*.iplckpt-dupe-dump" \
 	"*.iplckpt-outdump" \
 	"*.iplckpt-indump" \
-	"*.iplckpt-diff"
+	"*.iplckpt-diff" \
+	"*.ipl-dot" \
+	"*.ipl-pdf"
 
 AUTO_IGNORE += $(HACKT_IPPLE_CLEAN_IGNORE_PATTERNS)
 
-EXTRACE_IPPLE_FLAGS_PIPE = $(GREP) "@ipple-flags@" | $(HEAD) -n1 | \
+EXTRACT_IPPLE_FLAGS_PIPE = $(GREP) "@ipple-flags@" | $(HEAD) -n1 | \
 	$(SED) 's/^.*@ipple-flags@[ ]*//g'
 
 IPLRC_TEST_SCRIPT = \
-	flags=`$(CAT) $< | $(EXTRACE_IPPLE_FLAGS_PIPE)` ; \
+	flags=`$(CAT) $< | $(EXTRACT_IPPLE_FLAGS_PIPE)` ; \
 	ckpt=`$(ECHO) $@ | $(SED) 's/\.ipl.*$$/.iplckpt/g'` ; \
 	$(RM) $$ckpt ; \
 	cmd="$(HACKT_IPPLE_EXE) -b -a $$ckpt $(AM_IPPLE_FLAGS) $$flags" ; \
@@ -55,7 +58,7 @@ IPLRC_TEST_SCRIPT = \
 
 # fail test will not attempt to checkpoint
 IPLRC_FAIL_TEST_SCRIPT = \
-	flags=`$(CAT) $< | $(EXTRACE_IPPLE_FLAGS_PIPE)` ; \
+	flags=`$(CAT) $< | $(EXTRACT_IPPLE_FLAGS_PIPE)` ; \
 	cmd="$(HACKT_IPPLE_EXE) -b $(AM_IPPLE_FLAGS) $$flags" ; \
 	$(ECHO) "$$cmd < $<" ; \
 	$$cmd < $< > $@ 2>&1
@@ -201,7 +204,7 @@ IPPLE_CHECKPOINT_DUMP_SCRIPT = $(HACKT_IPPLE_EXE) -d $< > $@
 
 .iplckpt.iplckpt-indump:
 	@rc=$(srcdir)/`$(ECHO) $< | $(SED) 's/\.iplckpt$$/.iplrc/g'` ; \
-	flags=`$(CAT) "$$rc" | $(EXTRACE_IPPLE_FLAGS_PIPE)` ; \
+	flags=`$(CAT) "$$rc" | $(EXTRACT_IPPLE_FLAGS_PIPE)` ; \
 	ckpt=`$(ECHO) $@ | $(SED) 's/-indump$$/-dupe/g'` ; \
 	cmd="$(HACKT_IPPLE_EXE) -b $(AM_IPPLE_FLAGS) $$flags" ; \
 	$(ECHO) "load: $$cmd" ; \
@@ -256,6 +259,20 @@ iplckpttest.autodepend: Makefile
 
 -include iplckpttest.autodepend
 
+.iplckpt.ipl-dot:
+	{ $(ECHO) "load $<" ; $(ECHO) "emit-dot" ;} | $(HACKT_IPPLE_EXE) -b > $@
+
+HACKT_IPL_DOTS = $(HACKT_IPPLE_CKPT_TEST_SCRIPTS_BASES:=.ipl-dot)
+
+if HAVE_FDP
+# force-directed placement tool honors given position coordinates
+.ipl-dot.ipl-pdf:
+	$(FDP) -Tpdf $< -o $@
+
+HACKT_IPL_PDFS = $(HACKT_IPPLE_CKPT_TEST_SCRIPTS_BASES:=.ipl-pdf)
+endif
+ipl-dots: $(HACKT_IPL_DOTS)
+ipl-pdfs: $(HACKT_IPL_PDFS)
 
 AUTO_DEPENDS += \
 	iplrc-out.autodepend \
@@ -319,8 +336,9 @@ build-check-local: \
 	$(HACKT_IPPLE_CKPT_TEST_SCRIPTS_BASES:=.iplckpt-outdump) \
 	$(HACKT_IPPLE_CKPT_TEST_SCRIPTS_BASES:=.iplckpt-dupe) \
 	$(HACKT_IPPLE_CKPT_TEST_SCRIPTS_BASES:=.iplckpt-indump) \
-	$(HACKT_IPPLE_CKPT_TEST_SCRIPTS_BASES:=.iplckpt-diff)
-
+	$(HACKT_IPPLE_CKPT_TEST_SCRIPTS_BASES:=.iplckpt-diff) \
+	$(HACKT_IPL_DOTS) \
+	$(HACKT_IPL_PDFS)
 
 echo-iplrc-passes: force
 	@$(ECHO) $(HACKT_IPPLERC_TEST_SCRIPTS_PASSES)

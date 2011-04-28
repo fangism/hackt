@@ -1,6 +1,6 @@
 /**
 	\file "PR/placer_options.cc"
-	$Id: placer_options.cc,v 1.1.2.6 2011/04/28 02:28:57 fang Exp $
+	$Id: placer_options.cc,v 1.1.2.7 2011/04/28 21:44:21 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -382,6 +382,18 @@ placer_options::dump_parameters(ostream& o) const {
 		lower_corner << ';' << upper_corner << endl;
 	options_map_wrapper.dump(o, *this);
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Prints lower-left, upper-right of corners.
+ */
+ostream&
+placer_options::emit_dot_bb(ostream& o) const {
+	return o << lower_corner[0] << ',' <<
+		lower_corner[1] << ',' <<
+		upper_corner[0] << ',' <<
+		upper_corner[1];
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

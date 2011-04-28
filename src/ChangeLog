@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-04-28	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-64-pr-01-17:
+	  ipple: added emit-dot command, prints out a dot graph, 
+		recommend running through graphviz's fdp, which
+		honors manual fixed placement directives.
+		Test dirs: enable generation of .ipl-dot and .ipl-pdf
+		by default.
+
+
 2011-04-27	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-64-pr-01-16:

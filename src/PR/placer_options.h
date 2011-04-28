@@ -1,7 +1,7 @@
 /**
 	\file "PR/placer_options.h"
 	Physics simulator.
-	$Id: placer_options.h,v 1.1.2.6 2011/04/28 02:28:57 fang Exp $
+	$Id: placer_options.h,v 1.1.2.7 2011/04/28 21:44:22 fang Exp $
  */
 
 #ifndef	__HAC_PR_PLACER_OPTIONS_H__
@@ -119,6 +119,9 @@ struct placer_options {
 
 	ostream&
 	dump_parameters(ostream&) const;
+
+	ostream&
+	emit_dot_bb(ostream&) const;
 
 	bool
 	parse_parameter(const string&);

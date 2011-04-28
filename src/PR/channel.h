@@ -1,6 +1,6 @@
 /**
 	\file "PR/channel.h"
-	$Id: channel.h,v 1.1.2.7 2011/04/26 01:03:12 fang Exp $
+	$Id: channel.h,v 1.1.2.8 2011/04/28 21:44:19 fang Exp $
  */
 #ifndef	__HAC_PR_CHANNEL_H__
 #define	__HAC_PR_CHANNEL_H__
@@ -16,6 +16,7 @@ using std::vector;
 using std::ostream;
 using std::istream;
 using std::string;
+struct placer_options;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -92,6 +93,9 @@ struct channel_instance : public channel_state {
 	static
 	ostream&
 	dump_checkpoint(ostream&, istream&);
+
+	ostream&
+	emit_dot(ostream&, const placer_options&) const;
 
 };	// end struct channel instance
 

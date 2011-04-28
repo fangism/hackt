@@ -1,7 +1,7 @@
 /**
 	\file "PR/tile_type.h"
 	Object types.
-	$Id: tile_type.h,v 1.1.2.4 2011/04/19 01:08:43 fang Exp $
+	$Id: tile_type.h,v 1.1.2.5 2011/04/28 21:44:24 fang Exp $
  */
 
 #ifndef	__HAC_PR_TILE_TYPE_H__
@@ -84,6 +84,9 @@ struct tile_properties {
 	static
 	ostream&
 	dump_checkpoint(ostream&, istream&);
+
+	ostream&
+	emit_dot(ostream&, const real_type&) const;
 
 };	// end struct tile_properties
 

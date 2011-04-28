@@ -1,6 +1,6 @@
 /**
 	\file "PR/channel.cc"
-	$Id: channel.cc,v 1.1.2.5 2011/04/23 22:56:40 fang Exp $
+	$Id: channel.cc,v 1.1.2.6 2011/04/28 21:44:19 fang Exp $
  */
 
 #include <iostream>
@@ -132,6 +132,14 @@ channel_instance::dump(ostream& o) const {
 	o << '(' << source << ',' << destination << ") ";
 	properties.dump(o << '[') << ']';
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+channel_instance::emit_dot(ostream& o, const placer_options&) const {
+	// leave edges as drawn automatically
+	return o << "N" << source << " -> N" << destination
+		<< " [weight=" << properties.spring_coeff << "];";
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

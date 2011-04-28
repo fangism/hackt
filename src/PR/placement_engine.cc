@@ -1,6 +1,6 @@
 /**
 	\file "PR/placement_engine.cc"
-	$Id: placement_engine.cc,v 1.1.2.18 2011/04/28 02:28:56 fang Exp $
+	$Id: placement_engine.cc,v 1.1.2.19 2011/04/28 21:44:21 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -182,8 +182,6 @@ placement_engine::place_object(const size_t i, const real_vector& v) {
 	need_force_recalc = true;
 	return false;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -1218,6 +1216,23 @@ placement_engine::dump(ostream& o) const {
 	dump_channels(o);
 	dump_wells(o);
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: scale factor
+ */
+ostream&
+placement_engine::emit_dot(ostream& o) const {
+	const save_precision p(o, opt.precision);
+	o << "digraph PL {\n";
+	o << "# vi: syntax=dot" << endl;
+	opt.emit_dot_bb(o << "graph [bb=\"") << "\"];" << endl;	// bounding box
+	o << "# default node attributes" << endl;
+	o << "node [shape=box, pin=true];" << endl;
+	o << "# default edge attributes" << endl;
+	space.emit_dot(o, opt);
+	return o << "}" << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

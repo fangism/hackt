@@ -1,6 +1,6 @@
 /**
 	\file "PR/tile_instance.cc"
-	$Id: tile_instance.cc,v 1.1.2.17 2011/04/28 02:28:58 fang Exp $
+	$Id: tile_instance.cc,v 1.1.2.18 2011/04/28 21:44:23 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -94,6 +94,16 @@ tile_properties::dump(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param scale scaling factor
+ */
+ostream&
+tile_properties::emit_dot(ostream& o, const real_type& scale) const {
+	return o << "width=\"" << size[0]*scale <<
+		"\", height=\"" << size[1]*scale << '\"';
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 tile_properties::save_checkpoint(ostream& o) const {
 	write_value(o, size);
@@ -168,6 +178,12 @@ object_state::dump(ostream& o) const {
 	o << " @'=" << velocity;
 	o << " @\"=" << acceleration;
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+object_state::emit_dot(ostream& o, const placer_options&) const {
+	return o << "pos=\"" << position[0] << ',' << position[1] << "\"";
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
