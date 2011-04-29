@@ -1,0 +1,100 @@
+\input texinfo	@c -*-texinfo-*-
+@c %**start of header
+@setfilename ipple.info
+@settitle HACKT IPPLE Manual
+@c `on' is the default
+@setchapternewpage odd
+@c for two-sided book-style printing
+@c %**end of header
+
+@c "ipple.texi"
+@c $Id: ipple.texi,v 1.1.2.1 2011/04/29 01:11:58 fang Exp $
+
+@dircategory Hierarchical Asynchronous Circuit Kompiler Toolkit (HACKT)
+@direntry
+* HAC IPPLE: (ipple).    Interactive physics-driven placement engine.
+@end direntry
+
+@include hacmacros.texi
+
+@copying
+This manual describes the usage and operation of HACKT's @command{ipple} 
+placement engine.  
+
+This document can also be found online at @homepagesubref{ipple}.
+
+The main project home page is @homepageref{}.
+
+Copyright @copyright{} 2011 Cornell University
+
+@quotation
+Published by ...
+ 
+Permission is hereby granted to ...
+@end quotation
+@end copying
+
+@c Title page and Copyright
+@titlepage
+@title HACKT IPPLE
+@subtitle An interactive physics-driven placement-engine manual
+@author David Fang
+@page
+@vskip 0pt plus 1filll
+@insertcopying
+@end titlepage
+
+@c ****************************** contents ************************************
+@shortcontents
+@contents
+
+@ignore
+@iftex
+@node List of Figures
+@unnumbered List of Figures
+@listoffloats Figure
+@end iftex
+@end ignore
+
+@c ****************************** Top *****************************************
+@ifnottex
+@node Top
+@top IPPLE Manual Outline
+@insertcopying
+@end ifnottex
+
+@c @copying is recommended here as well
+@menu
+* Introduction:: Introduction to IPPLE.
+* Usage:: Command-line summary.
+* Global Parameters:: Global system parameters.
+* Commands:: Interpreter commands.
+* Command Index:: Interpreter commands and interface functions.
+@c * Variable Index:: Variables.
+* Concept Index:: Concepts and terms.
+@end menu
+
+@c ****************************** chapter *************************************
+@include intro.texi
+@include usage.texi
+@include config.texi
+@include commands.texi
+
+@c ****************************** index ***************************************
+@node Command Index
+@unnumbered Command Index
+@printindex fn
+
+@ignore
+@node Variable Index
+@unnumbered Variable Index
+@printindex vr
+@end ignore
+
+@node Concept Index
+@unnumbered Concept Index
+@printindex cp
+
+@c ****************************** finis ***************************************
+@bye
+

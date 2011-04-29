@@ -5,6 +5,14 @@
 
 2011-04-28	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-84-64-pr-01-19:
+	  ipple: Added texinfo documentation to sources for 
+		command-line usage, parameter/options, commands.  
+	  Concluding branch.
+
+
+2011-04-28	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-84-64-pr-01-18:
 	  ipple: added shake-all command to perturb all object positions
 

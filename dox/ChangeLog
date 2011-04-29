@@ -1,5 +1,11 @@
 # "dox/ChangeLog"
-#	$Id: ChangeLog,v 1.41 2009/11/19 23:29:08 fang Exp $
+#	$Id: ChangeLog,v 1.41.12.1 2011/04/29 01:11:54 fang Exp $
+
+2011-04-28	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-64-pr-01-19:
+	  Added ipple directory for documentation, texinfo.
+
 
 2009-11-19	David Fang		<fangism@users.sourceforge.net>
 

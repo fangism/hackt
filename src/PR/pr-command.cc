@@ -2,7 +2,7 @@
 	\file "PR/pr-command.cc"
 	Command-line feature for PR simulator.
 	TODO: scheme interface
-	$Id: pr-command.cc,v 1.1.2.17 2011/04/28 22:40:53 fang Exp $
+	$Id: pr-command.cc,v 1.1.2.18 2011/04/29 01:12:06 fang Exp $
  */
 
 #define	ENABLE_STATIC_TRACE		0
@@ -48,7 +48,7 @@ static
 CommandCategory
 	builtin("builtin", "built-in commands"),
 	general("general", "general commands"),
-	debug("debug", "debugging internals"),
+//	debug("debug", "debugging internals"),
 	setup("setup", "constructing the constrained system"),
 	simulation("simulation", "simulation commands"),
 //	objects("objects", "object creation/manipulation commands"),
@@ -621,6 +621,15 @@ simple_engine_command(State& s, const string_list& a,
 //=============================================================================
 // constraints commands
 
+/***
+@texinfo cmd/geometry.texi
+@deffn Command geometry corner corner
+Sets the bounds of the placement problem with two vectors that represent
+the far opposite corners of the space.
+Corners are formatted @t{<X,Y,Z>}, including the angle brackets.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Geometry, "geometry", setup,
         "sets coordinate bounds of the system")
 
@@ -651,6 +660,18 @@ Geometry::usage(ostream& o) {
 //=============================================================================
 // setup commands
 
+/***
+@texinfo cmd/object-type.texi
+@deffn Command object-type attributes...
+Declares an object type having the listed attributes.
+Attributes are formatted as @t{key=value} pairs.
+Each newly created object type is referenced by an index, 
+in the order in which it was added.  
+Upon startup, there exists an object type with default attributes
+at index 0, so the first object type the user adds will be at index 1.
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ObjectType, "object-type", setup,
         "declare an object type")
 
@@ -679,6 +700,16 @@ ObjectType::usage(ostream& o) {
 }
 
 //-----------------------------------------------------------------------------
+/***
+@texinfo cmd/add-object.texi
+@deffn Command add-object attributes...
+Creates an object with the specified attributes.  
+In addition, the user may reference an existing object type
+by specifying @t{type=N} and acquire all the attributes from 
+the indexed object type.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(AddObject, "add-object", setup,
         "adds an object (node)")
 
@@ -727,6 +758,14 @@ AddObject::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/add-pin.texi
+@deffn Command add-pin attributes...
+Same as @command{add-object} followed by @command{pin}ning the newly
+created object.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(AddPin, "add-pin", setup,
         "adds an immovable object")
 
@@ -749,6 +788,18 @@ AddPin::usage(ostream& o) {
 }
 
 //-----------------------------------------------------------------------------
+/***
+@texinfo cmd/channel-type.texi
+@deffn Command channel-type attributes...
+Declares a channel type having the listed attributes.
+Attributes are formatted as @t{key=value} pairs.
+Each newly created channel type is referenced by an index, 
+in the order in which it was added.  
+Upon startup, there exists a channel type with default attributes
+at index 0, so the first channel type the user adds will be at index 1.
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelType, "channel-type", setup,
         "declare an channel type")
 
@@ -781,6 +832,17 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(NetType, "net-type", setup,
         "declare an multi-terminal net type")
 #endif
 //-----------------------------------------------------------------------------
+/***
+@texinfo cmd/add-channel.texi
+@deffn Command add-channel src dst attributes...
+Creates a channel (spring) connecting two terminals (objects)
+with the specified attributes.  
+In addition, the user may reference an existing channel type
+by specifying @t{type=N} and acquire all the attributes from 
+the indexed channel type.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(AddChannel, "add-channel", setup,
         "adds a channel (spring) object")
 
@@ -839,6 +901,28 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(AddNet, "add-net", setup,
 #endif
 
 //-----------------------------------------------------------------------------
+/***
+@texinfo cmd/add-well.texi
+@deffn Command add-x-well loc
+@deffnx Command add-y-well loc
+@deffnx Command add-z-well loc
+Creates a gravity well for attracting objects to aligned to 
+the specified @var{loc} coordinate in the x,y,z planes.  
+Objects will be attracted to the nearest wells in each hyperplane.  
+Users will typically want a z-well at 0 to encourage planar placement.  
+@end deffn
+@end texinfo
+***/
+/***
+@texinfo cmd/add-wells.texi
+@deffn Command add-x-wells min step max
+@deffnx Command add-y-wells min step max
+@deffnx Command add-z-wells min step max
+Creates a series of gravity wells spaced apart by @var{step}
+starting from @var{min} in the x,y,z planes.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(AddXWell, "add-x-well", setup,
         "adds a single gravity well at x=k for alignment")
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(AddXWells, "add-x-wells", setup,
@@ -928,6 +1012,15 @@ AddZWells::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/snap-gravity-wells.texi
+@deffn Command snap-gravity-wells
+Forces all objects to re-locate to the nearest gravity well in
+each hyperplane.  
+Typically, this is used for final placement legalization.
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(SnapGravityWells, "snap-gravity-wells",
 	simulation,
         "snap all objects to their nearest gravity well in each hyperplane")
@@ -947,6 +1040,16 @@ SnapGravityWells::usage(ostream& o) {
 //=============================================================================
 // physics commands
 
+/***
+@texinfo cmd/parameter.texi
+@deffn Command parameter attributes...
+Sets a global system parameter such as physical parameters
+and simulation parameters.  
+Each parameter is formatted @t{key=value}.
+All parameters can be listed using the @command{dump-parameters} command.
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Parameter, "parameter", setup,
         "sets/gets a physical parameter of the system")
 
@@ -980,6 +1083,15 @@ set_boolean_option(State& s, const string_list& a, void usage(ostream&)) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+/***
+@texinfo cmd/watch-objects.texi
+@deffn Command watch-objects
+@deffnx Command nowatch-objects
+When enabled, simulator will print out coordinates of all objects
+as their locations are updated.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(WatchObjects, "watch-objects", setup,
         "print coordinates of objects after each iteration")
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoWatchObjects, "nowatch-objects", setup,
@@ -1010,6 +1122,16 @@ NoWatchObjects::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+/***
+@texinfo cmd/watch-deltas.texi
+@deffn Command watch-deltas
+@deffnx Command nowatch-deltas
+OBSOLETE.
+When enabled, simulator will print out changes in coordinates of all objects
+as their locations are updated.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(WatchDeltas, "watch-deltas", setup,
         "print change in position/velocity after each iteration")
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoWatchDeltas, "nowatch-deltas", setup,
@@ -1040,6 +1162,15 @@ NoWatchDeltas::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+/***
+@texinfo cmd/watch-energy.texi
+@deffn Command watch-energy
+@deffnx Command nowatch-energy
+When enabled, simulator will print out kinetic and potential energy
+with every step of simulation.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(WatchEnergy, "watch-energy", setup,
         "print energy after each iteration")
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoWatchEnergy, "nowatch-energy", setup,
@@ -1070,6 +1201,15 @@ NoWatchEnergy::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+/***
+@texinfo cmd/report-iterations.texi
+@deffn Command report-iterations
+@deffnx Command noreport-iterations
+When enabled, simulator will print out number of iterations executed per 
+convergence loop.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ReportIterations, "report-iterations",
 	setup,
         "print energy after each iteration")
@@ -1104,6 +1244,14 @@ NoReportIterations::usage(ostream& o) {
 //=============================================================================
 // info commands
 
+/***
+@texinfo cmd/dump-state.texi
+@deffn Command dump-state
+Print information for the entire state of the system: parameters, objects,
+etc...
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(DumpState, "dump-state", info,
         "print entire state of simulation")
 
@@ -1123,6 +1271,13 @@ DumpState::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/dump-parameters.texi
+@deffn Command dump-parameters
+Print global system parameters.
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(DumpParameters, "dump-parameters", info,
         "print set of parameters")
 
@@ -1142,6 +1297,13 @@ DumpParameters::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/dump-objects.texi
+@deffn Command dump-objects
+Print state and location of all objects.
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(DumpObjects, "dump-objects", info,
         "print current coordinates and state of objects")
 
@@ -1161,6 +1323,13 @@ DumpObjects::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/dump-positions.texi
+@deffn Command dump-positions
+Print location of all objects.
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(DumpPositions, "dump-positions", info,
         "print only current coordinates of objects")
 
@@ -1180,6 +1349,13 @@ DumpPositions::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/dump-energy.texi
+@deffn Command dump-energy
+Print detailed kinetic and potential energy breakdown for the whole system.
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(DumpEnergy, "dump-energy", info,
         "update and print current energy of system")
 
@@ -1199,6 +1375,17 @@ DumpEnergy::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/emit-dot.texi
+@deffn Command emit-dot
+Print to stdout output in the dot language (from graphviz), suitable
+for generating a diagram of the current state of objects.
+Recommendation: run the output through the 
+@command{fdp} (force-directed placement) command:
+@command{fdp -Tpdf input -o output.pdf}.
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(EmitDot, "emit-dot", info,
         "print system to graphviz output annotated with coordinates")
 
@@ -1218,7 +1405,13 @@ EmitDot::usage(ostream& o) {
 //=============================================================================
 // simulation commands
 
-// could just call this 'place'
+/***
+@texinfo cmd/place.texi
+@deffn Command place obj loc
+Manually move object indexed @var{obj} to location @var{loc}, a 3D vector.
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Place, "place", simulation,
         "manually place an object")
 
@@ -1252,6 +1445,16 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(Throw, "throw", simulation,
         "impart a impulse velocity on an object")
 #endif
 
+/***
+@texinfo cmd/pin.texi
+@deffn Command pin obj
+@deffnx Command unpin obj
+Fix object @var{obj} at its current location.
+This is usually done for boundary terminals.  
+@command{unpin} allows an object to move freely. 
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Pin, "pin", simulation,
         "fix location of object to present or specified location")
 
@@ -1295,6 +1498,14 @@ UnPin::usage(ostream& o) {
 }
 
 //=============================================================================
+/***
+@texinfo cmd/scatter.texi
+@deffn Command scatter
+Relocates every object to some random location within the bounding box.
+This is often done at the start of the simulation.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Scatter, "scatter", simulation,
         "randomize location of all un-pinned objects")
 
@@ -1310,6 +1521,17 @@ Scatter::usage(ostream& o) {
 }
 
 //-----------------------------------------------------------------------------
+/***
+@texinfo cmd/step.texi
+@deffn Command step
+Advances the simulation one iteration using the 
+current @t{time_step} (parameter).
+Each iteration evaluates the forces (spring, repulsion, gravity)
+acting upon all objects, and then updates the position and velocity
+by numerical integration.
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Step, "step", simulation,
         "advances simulation one iteration")
 
@@ -1325,6 +1547,17 @@ Step::usage(ostream& o) {
 }
 
 //-----------------------------------------------------------------------------
+/***
+@texinfo cmd/simple-converge.texi
+@deffn Command simple-converge
+Runs @command{step} iteratively until some convergence criterion is met.  
+The convergence criterion used here is when the relative maximum
+change in position and velocity fall below the thresholds specified
+in the global parameters, @t{position_tolerance} and 
+@t{velocity_tolerance}.
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(SimpleConverge, "simple-converge", 
 	simulation,
         "iterate with constant time_step until convergence")
@@ -1345,6 +1578,16 @@ o <<
 }
 
 //-----------------------------------------------------------------------------
+/***
+@texinfo cmd/descend-gradient.texi
+@deffn Command descend-gradient
+Accelerates all objects in a straight line 
+(constant acceleration determined by an initial force calculation), 
+until potential energy no longer decreases monotonically.  
+At the start of this routine, all velocity/momentum is reset to 0.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(DescendGradient, "descend-gradient", 
 	simulation,
         "iterate linear direction until potential energy increases")
@@ -1367,6 +1610,16 @@ o <<
 }
 
 //-----------------------------------------------------------------------------
+/***
+@texinfo cmd/descend-gradient-converge.texi
+@deffn Command descend-gradient-converge
+Repeatedly runs @command{descend-gradient} until local minimum
+in potential energy is found.  
+This is very similar to the conjugate-gradient minimization method.  
+@cindex conjugate gradient method
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(DescendGradientConverge,
 	"descend-gradient-converge", 
 	simulation,
@@ -1388,6 +1641,18 @@ o <<
 }
 
 //-----------------------------------------------------------------------------
+/***
+@texinfo cmd/descend-potential.texi
+@deffn Command descend-potential
+At the start of this routine, all velocity/momentum is reset to 0.  
+Simulates transiently @command{step} until while potential energy
+is monotonically decreasing.  
+Unlike @command{descend-gradient} the force is continuously updated
+with every iteration, so the paths taken by each object may curve.
+This stops early to avoid overshooting a local minimum due to kinetic energy.
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(DescendPotential, "descend-potential", 
 	simulation,
         "iterate with constant time_step until potential energy increases")
@@ -1410,6 +1675,14 @@ o <<
 }
 
 //-----------------------------------------------------------------------------
+/***
+@texinfo cmd/descend-potential-converge.texi
+@deffn Command descend-potential-converge
+Repeatedly runs @command{descend-potential} until local minimum
+in potential energy is found.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(DescendPotentialConverge,
 	"descend-potential-converge", 
 	simulation,
@@ -1431,6 +1704,13 @@ o <<
 }
 
 //-----------------------------------------------------------------------------
+/***
+@texinfo cmd/kill-momentum.texi
+@deffn Command kill-momentum
+Resets velocities of all objects to 0.
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(KillMomentum, "kill-momentum", 
 	simulation,
         "zero out all object velocities, killing momentum")
@@ -1448,6 +1728,17 @@ KillMomentum::usage(ostream& o) {
 }
 
 //-----------------------------------------------------------------------------
+/***
+@texinfo cmd/shake-all.texi
+@deffn Command shake-all [maxdist]
+Randomly perturbs positions of all objects in random direction, 
+uniformly random distance bounded by @var{maxdist}.
+This helps the system get unstuck from some local minima.
+If @var{maxdist} is omitted, the global @t{temperature} parameter
+is used instead.
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ShakeAll, "shake-all", 
 	simulation,
         "perturb all objects in random direction by bounded random distance")

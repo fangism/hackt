@@ -1,0 +1,40 @@
+@c "config.texi"
+@c $Id: config.texi,v 1.1.2.1 2011/04/29 01:11:57 fang Exp $
+
+@c ****************************************************************************
+@node Global Parameters
+@chapter Global Parameters
+@cindex parameters
+
+This section describes all of the global parameters that affect simulation.
+All of these parameters are set by the @command{parameter} command
+with @command{parameter key=value ...}.
+
+Simulation parameters:
+
+@include config/time_step.texi
+
+Convergence parameters:
+
+@include config/position_tolerance.texi
+@include config/velocity_tolerance.texi
+@include config/energy_tolerance.texi
+
+Physics parameters:
+
+@include config/damping.texi
+@include config/temperature.texi
+@include config/repulsion.texi
+
+Gravity parameters:
+
+@include config/gravity_coeff.texi
+@include config/gravity_constant.texi
+
+Feedback parameters:
+
+@include config/precision.texi
+@include config/watch_objects.texi
+@include config/watch_energy.texi
+@include config/report_iterations.texi
+

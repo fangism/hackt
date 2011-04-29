@@ -1,6 +1,6 @@
 /**
 	\file "PR/placer_options.cc"
-	$Id: placer_options.cc,v 1.1.2.7 2011/04/28 21:44:21 fang Exp $
+	$Id: placer_options.cc,v 1.1.2.8 2011/04/29 01:12:06 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -286,46 +286,152 @@ __ATTRIBUTE_UNUSED_CTOR__((PE_option_map[STRINGIFY(key)] =		\
 
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo config/damping.texi
+@defopt damping val
+Viscous damping coefficient that applies a linearly dependent
+force in the opposite direction of the velocity vector.
+@end defopt
+@end texinfo
+***/
 DEFINE_OPTION_DEFAULT(viscous_damping, "damping", 
 	"viscous damping coefficient, linear with velocity")
+/***
+@texinfo config/temperature.texi
+@defopt temperature val
+Temperature is used to randomly perturb the position of all objects
+after each iteration.  Random perturbation is means by which
+annealing is simulated.  
+@end defopt
+@end texinfo
+***/
 DEFINE_OPTION_DEFAULT(temperature, "temperature", 
 	"annealing temperature, for additive random velocity")
+/***
+@texinfo config/repulsion.texi
+@defopt repulsion_coeff val
+@defoptx repulsion_constant val
+Object proximity is modeled as spring repulsion.  
+@option{repulsion_coeff} is the repulsion spring coefficient
+for a compressed spring, which models the collision of soft objects.  
+@option{repulsion_constant} is a constant additive force term
+for the spring that is compressed to model the hardness
+of the boundary.
+@end defopt
+@end texinfo
+***/
 DEFINE_OPTION_DEFAULT(repulsion_coeff, "repulsion_coeff", 
 	"repulsive spring coefficient for (near-)colliding objects")
 DEFINE_OPTION_DEFAULT(repulsion_constant, "repulsion_constant", 
 	"repulsive spring coefficient for (near-)colliding objects")
+/***
+@texinfo config/precision.texi
+@defopt precision val
+Sets the precision of floating-point values that are printed.  
+@end defopt
+@end texinfo
+***/
 DEFINE_OPTION_DEFAULT(precision, "precision", 
 	"time interval over which to integrate per iteration")
+/***
+@texinfo config/time_step.texi
+@defopt time_step val
+Sets the step-size for simulation and numerical integration.  
+@end defopt
+@end texinfo
+***/
 DEFINE_OPTION_DEFAULT(time_step, "time_step", 
 	"time interval over which to integrate per iteration")
+/***
+@texinfo config/position_tolerance.texi
+@defopt position_tolerance val
+Set the threshold for maximum delta in position for considering convergence.
+@end defopt
+@end texinfo
+***/
 DEFINE_OPTION_DEFAULT(pos_tol, "position_tolerance", 
 	"position change tolerance for convergence")
+/***
+@texinfo config/velocity_tolerance.texi
+@defopt velocity_tolerance val
+Set the threshold for maximum delta in velocity for considering convergence.
+@end defopt
+@end texinfo
+***/
 DEFINE_OPTION_DEFAULT(vel_tol, "velocity_tolerance", 
 	"velocity change tolerance for convergence")
+/***
+@texinfo config/energy_tolerance.texi
+@defopt energy_tolerance val
+Set the threshold for maximum delta in energy for considering convergence.
+@end defopt
+@end texinfo
+***/
 DEFINE_OPTION_DEFAULT(energy_tol, "energy_tolerance", 
 	"energy change tolerance for convergence")
+// not used
 DEFINE_OPTION_DEFAULT(min_iterations, "min_iterations", 
 	"minimum number of iterations before halting")
 
+/***
+@texinfo config/gravity_coeff.texi
+@defopt x_gravity_coeff val
+@defoptx y_gravity_coeff val
+@defoptx z_gravity_coeff val
+The linear spring coefficient for gravity wells in the x,y,z direction.  
+@end defopt
+@end texinfo
+***/
 DEFINE_OPTION_DEFAULT(x_gravity_coeff, "x_gravity_coeff", 
 	"spring coefficient of x-gravity wells")
 DEFINE_OPTION_DEFAULT(y_gravity_coeff, "y_gravity_coeff", 
 	"spring coefficient of y-gravity wells")
 DEFINE_OPTION_DEFAULT(z_gravity_coeff, "z_gravity_coeff", 
 	"spring coefficient of z-gravity wells")
+/***
+@texinfo config/gravity_constant.texi
+@defopt x_gravity_constant val
+@defoptx y_gravity_constant val
+@defoptx z_gravity_constant val
+The constant force term for gravity wells in the x,y,z directions.  
+Setting this to non-zero helps attract objects closer to the well.
+@end defopt
+@end texinfo
+***/
 DEFINE_OPTION_DEFAULT(x_gravity_constant, "x_gravity_constant", 
 	"constant force of x-gravity wells")
 DEFINE_OPTION_DEFAULT(y_gravity_constant, "y_gravity_constant", 
 	"constant force of y-gravity wells")
 DEFINE_OPTION_DEFAULT(z_gravity_constant, "z_gravity_constant", 
 	"constant force of z-gravity wells")
-
+/***
+@texinfo config/watch_objects.texi
+@defopt watch_objects val
+Set to 1 to print out object position updates with every iteration.
+@end defopt
+@end texinfo
+***/
 DEFINE_OPTION_DEFAULT(watch_objects, "watch_objects", 
 	"print coordinates of objects after each iteration")
+// not really used
 DEFINE_OPTION_DEFAULT(watch_deltas, "watch_deltas", 
 	"report changes in position and velocity after each iteration")
+/***
+@texinfo config/watch_energy.texi
+@defopt watch_energy val
+Set to 1 to print out object position updates with every iteration.
+@end defopt
+@end texinfo
+***/
 DEFINE_OPTION_DEFAULT(watch_energy, "watch_energy", 
 	"report kinetic and potential energy after each iteration")
+/***
+@texinfo config/report_iterations.texi
+@defopt report_iterations val
+Set to 1 to report number of iterations in numerical convergence routines. 
+@end defopt
+@end texinfo
+***/
 DEFINE_OPTION_DEFAULT(report_iterations, "report_iterations", 
 	"report iteration counts")
 
