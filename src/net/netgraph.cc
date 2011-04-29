@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.cc"
-	$Id: netgraph.cc,v 1.35 2011/04/23 00:22:02 fang Exp $
+	$Id: netgraph.cc,v 1.36 2011/04/29 18:37:08 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -121,12 +121,14 @@ device_group::summarize_parasitics(node_pool_type& node_pool,
 			s.cap.ndiff_perimeter += p.source_perimeter;
 			d.cap.ndiff_area += p.drain_area;
 			d.cap.ndiff_perimeter += p.drain_perimeter;
+			++s.cap.ndrain_terms;
 			++d.cap.ndrain_terms;
 		} else {
 			s.cap.pdiff_area += p.source_area;
 			s.cap.pdiff_perimeter += p.source_perimeter;
 			d.cap.pdiff_area += p.drain_area;
 			d.cap.pdiff_perimeter += p.drain_perimeter;
+			++s.cap.pdrain_terms;
 			++d.cap.pdrain_terms;
 		}
 #endif

@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-04-29	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-67:
+	  hacknet: when counting ndrain/pdrain terminals, also include
+		count for source terminals, lumped into same count.
+	  Test cases updated, 1 added.
+
+
 2011-04-22	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-66:

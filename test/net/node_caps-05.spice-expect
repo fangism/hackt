@@ -1,7 +1,7 @@
 * BEGIN node caps
-* 	@en_ [ndiff_perim=66u, ndiff_area=90p, ndrain_terms=1, pdiff_perim=22u, pdiff_area=30p, pdrain_terms=1, gate_area=0p, gate_terms=0, wire_area=0p]
-* 	!GND [ndiff_perim=22u, ndiff_area=30p, ndrain_terms=0, pdiff_perim=0u, pdiff_area=0p, pdrain_terms=0, gate_area=0p, gate_terms=0, wire_area=0p]
-* 	!Vdd [ndiff_perim=0u, ndiff_area=0p, ndrain_terms=0, pdiff_perim=66u, pdiff_area=90p, pdrain_terms=0, gate_area=0p, gate_terms=0, wire_area=0p]
+* 	@en_ [ndiff_perim=66u, ndiff_area=90p, ndrain_terms=3, pdiff_perim=22u, pdiff_area=30p, pdrain_terms=1, gate_area=0p, gate_terms=0, wire_area=0p]
+* 	!GND [ndiff_perim=22u, ndiff_area=30p, ndrain_terms=1, pdiff_perim=0u, pdiff_area=0p, pdrain_terms=0, gate_area=0p, gate_terms=0, wire_area=0p]
+* 	!Vdd [ndiff_perim=0u, ndiff_area=0p, ndrain_terms=0, pdiff_perim=66u, pdiff_area=90p, pdrain_terms=3, gate_area=0p, gate_terms=0, wire_area=0p]
 * 	_o[0] [ndiff_perim=22u, ndiff_area=30p, ndrain_terms=1, pdiff_perim=22u, pdiff_area=30p, pdrain_terms=1, gate_area=0p, gate_terms=0, wire_area=0p]
 * 	en [ndiff_perim=0u, ndiff_area=0p, ndrain_terms=0, pdiff_perim=0u, pdiff_area=0p, pdrain_terms=0, gate_area=40p, gate_terms=4, wire_area=0p]
 * 	i[0] [ndiff_perim=0u, ndiff_area=0p, ndrain_terms=0, pdiff_perim=0u, pdiff_area=0p, pdrain_terms=0, gate_area=10p, gate_terms=1, wire_area=0p]

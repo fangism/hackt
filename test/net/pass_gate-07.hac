@@ -1,0 +1,24 @@
+// "pass_gate-07.hac"
+// copy-modified from "pass_gate-03.hac"
+// @hacknet-flags@ -T multipass<5,3> -f emit_parasitics=1 -f emit_node_caps=1
+
+template <pint N>
+defproc full_pass(bool g, _g, s, d) {
+prs {
+	passn<N>(g, s, d)
+	passp<N>(_g, s, d)
+}
+}
+
+template <pint X, Y>
+defproc multipass(bool g, _g, s, d) {
+bool m[Y+1];
+m[0] = s;
+m[Y] = d;
+full_pass<X> p[Y];
+(;i:Y:
+	p[i](g, _g, m[i], m[i+1]);
+)
+}
+
+

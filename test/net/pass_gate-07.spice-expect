@@ -1,0 +1,32 @@
+.subckt full_pass<5> !GND !Vdd g _g s d
+* BEGIN node caps
+* 	!GND [ndiff_perim=0u, ndiff_area=0p, ndrain_terms=0, pdiff_perim=0u, pdiff_area=0p, pdrain_terms=0, gate_area=0p, gate_terms=0, wire_area=0p]
+* 	!Vdd [ndiff_perim=0u, ndiff_area=0p, ndrain_terms=0, pdiff_perim=0u, pdiff_area=0p, pdrain_terms=0, gate_area=0p, gate_terms=0, wire_area=0p]
+* 	g [ndiff_perim=0u, ndiff_area=0p, ndrain_terms=0, pdiff_perim=0u, pdiff_area=0p, pdrain_terms=0, gate_area=10p, gate_terms=1, wire_area=0p]
+* 	s [ndiff_perim=22u, ndiff_area=30p, ndrain_terms=1, pdiff_perim=22u, pdiff_area=30p, pdrain_terms=1, gate_area=0p, gate_terms=0, wire_area=0p]
+* 	d [ndiff_perim=22u, ndiff_area=30p, ndrain_terms=1, pdiff_perim=22u, pdiff_area=30p, pdrain_terms=1, gate_area=0p, gate_terms=0, wire_area=0p]
+* 	_g [ndiff_perim=0u, ndiff_area=0p, ndrain_terms=0, pdiff_perim=0u, pdiff_area=0p, pdrain_terms=0, gate_area=10p, gate_terms=1, wire_area=0p]
+* END node caps
+Md:dn:0:pass s g d !GND nch W=5u L=2u
++ AS=30p PS=22u AD=30p PD=22u
+Md:up:0:pass s _g d !Vdd pch W=5u L=2u
++ AS=30p PS=22u AD=30p PD=22u
+.ends
+
+.subckt multipass<5,3> !GND !Vdd g _g s d
+* BEGIN node caps
+* 	!GND [ndiff_perim=0u, ndiff_area=0p, ndrain_terms=0, pdiff_perim=0u, pdiff_area=0p, pdrain_terms=0, gate_area=0p, gate_terms=0, wire_area=0p]
+* 	!Vdd [ndiff_perim=0u, ndiff_area=0p, ndrain_terms=0, pdiff_perim=0u, pdiff_area=0p, pdrain_terms=0, gate_area=0p, gate_terms=0, wire_area=0p]
+* 	g [ndiff_perim=0u, ndiff_area=0p, ndrain_terms=0, pdiff_perim=0u, pdiff_area=0p, pdrain_terms=0, gate_area=30p, gate_terms=3, wire_area=0p]
+* 	_g [ndiff_perim=0u, ndiff_area=0p, ndrain_terms=0, pdiff_perim=0u, pdiff_area=0p, pdrain_terms=0, gate_area=30p, gate_terms=3, wire_area=0p]
+* 	s [ndiff_perim=22u, ndiff_area=30p, ndrain_terms=1, pdiff_perim=22u, pdiff_area=30p, pdrain_terms=1, gate_area=0p, gate_terms=0, wire_area=0p]
+* 	m[1] [ndiff_perim=44u, ndiff_area=60p, ndrain_terms=2, pdiff_perim=44u, pdiff_area=60p, pdrain_terms=2, gate_area=0p, gate_terms=0, wire_area=0p]
+* 	m[2] [ndiff_perim=44u, ndiff_area=60p, ndrain_terms=2, pdiff_perim=44u, pdiff_area=60p, pdrain_terms=2, gate_area=0p, gate_terms=0, wire_area=0p]
+* 	d [ndiff_perim=22u, ndiff_area=30p, ndrain_terms=1, pdiff_perim=22u, pdiff_area=30p, pdrain_terms=1, gate_area=0p, gate_terms=0, wire_area=0p]
+* END node caps
+xp[0] !GND !Vdd g _g s m[1] full_pass<5>
+xp[1] !GND !Vdd g _g m[1] m[2] full_pass<5>
+xp[2] !GND !Vdd g _g m[2] d full_pass<5>
+.ends
+
+

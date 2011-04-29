@@ -1,6 +1,6 @@
 /**
 	\file "net/netgraph.h"
-	$Id: netgraph.h,v 1.28 2011/04/23 00:22:02 fang Exp $
+	$Id: netgraph.h,v 1.29 2011/04/29 18:37:09 fang Exp $
  */
 
 #ifndef	__HAC_NET_NETGRAPH_H__
@@ -429,11 +429,11 @@ struct node_caps {
 	 */
 	real_type			wire_area;
 	/**
-		Number of terminals at NFET drains.
+		Number of terminals at NFET drains and sources.
 	 */
 	size_t				ndrain_terms;
 	/**
-		Number of terminals at PFET drains.
+		Number of terminals at PFET drains and sources.
 	 */
 	size_t				pdrain_terms;
 	/**
