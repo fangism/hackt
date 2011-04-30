@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry_context.cc"
-	$Id: global_entry_context.cc,v 1.12 2011/03/29 04:34:36 fang Exp $
+	$Id: global_entry_context.cc,v 1.13 2011/04/30 04:16:51 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -50,7 +50,12 @@ typedef	value_saver<const footprint_frame*>	footprint_frame_setter;
 global_entry_context::global_entry_context(const footprint_frame& ff, 
 		const global_offset& g) :
 		global_entry_context_base(*ff._footprint), 
-		fpf(&ff), parent_offset(&g) {
+		fpf(&ff), parent_offset(&g),
+		g_offset(NULL)
+#if GLOBAL_CONTEXT_GPID
+		, _gpid(0)
+#endif
+{
 	NEVER_NULL(topfp);
 }
 
@@ -519,7 +524,7 @@ global_entry_context::construct_global_footprint_frame(
 #endif
 	return gpid;
 #endif
-}
+}	// end global_entry_context::construct_global_footprint_frame
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -638,10 +643,10 @@ void
 global_entry_context::visit_recursive(const footprint& f) {
         STACKTRACE_VERBOSE;
 #if ENABLE_STACKTRACE
-	STACKTRACE_INDENT_PRINT("in process type: ");
+	STACKTRACE_INDENT_PRINT("in process id " << _gpid << ", type: ");
 	f.dump_type(STACKTRACE_STREAM) << endl;
 	STACKTRACE_INDENT_PRINT("offset: " << *parent_offset << endl);
-	fpf->dump_frame(STACKTRACE_STREAM << "frame:\n") << endl;
+	fpf->dump_frame(STACKTRACE_STREAM << "frame:") << endl;
 #endif
 	// recurse through processes and print
 	const state_instance<process_tag>::pool_type&
@@ -656,22 +661,23 @@ global_entry_context::visit_recursive(const footprint& f) {
 	const size_t pe = lpp.local_entries();
 	// but for the top-level only, we want start with ports (process?)
 	size_t pi = lpp.port_entries();
+#if GLOBAL_CONTEXT_GPID
+	size_t ppo = parent_offset->get_offset<process_tag>() +1;
+#endif
 	const value_saver<const global_offset*> __gs__(parent_offset, &sgo);
-	for ( ; pi<pe; ++pi) {
+	for ( ; pi<pe; ++pi, ++ppo) {
+#if GLOBAL_CONTEXT_GPID
+		STACKTRACE_INDENT_PRINT("for pi = " << pi <<
+			", gpid = " << ppo << endl);
+		const value_saver<size_t> __save_gpid(_gpid, ppo);
+#endif
 		const state_instance<process_tag>& sp(lpp[pi]);
 		const footprint_frame& spf(sp._frame);
 		const footprint& sfp(*spf._footprint);
 		const footprint_frame af(spf, lff);     // context
 		const footprint_frame_setter ffs(fpf, &af);
 		// really wants to be conditional, but would depend on <Tag>
-#if 0
-		if (sfp.get_instance_pool<Tag>().total_private_entries()) {
-			sfp.__dump_local_map_by_process<Tag>(o, topfp,
-				af, next_ppid, sgo);
-		}
-#else
 		sfp.accept(*this);
-#endif
 		sgo += sfp;
 	}
 	// invariant checks on sgo, consistent with local instance_pools

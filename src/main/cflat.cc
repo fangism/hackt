@@ -2,7 +2,7 @@
 	\file "main/cflat.cc"
 	cflat backwards compability module.  
 
-	$Id: cflat.cc,v 1.33 2010/08/31 23:48:04 fang Exp $
+	$Id: cflat.cc,v 1.34 2011/04/30 04:16:55 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -173,6 +173,7 @@ __cflat_prsim(OPTARG_UNUSED cflat::options& cf) {
 	cf.compute_conductances = false;
 	cf.show_precharges = false;
 	cf.show_supply_nodes = false;
+	cf.show_hierarchy = false;
 	cf.size_prs = false;
 	cf.use_referenced_type_instead_of_top_level = false;
 	OPTFUN_RETURN
@@ -198,6 +199,7 @@ __cflat_prlint(OPTARG_UNUSED cflat::options& cf) {
 	cf.compute_conductances = false;
 	cf.show_precharges = false;
 	cf.show_supply_nodes = false;
+	cf.show_hierarchy = false;
 	cf.use_referenced_type_instead_of_top_level = false;
 	OPTFUN_RETURN
 }
@@ -224,6 +226,7 @@ __cflat_connect(OPTARG_UNUSED cflat::options& cf) {
 	cf.compute_conductances = false;
 	cf.show_precharges = false;
 	cf.show_supply_nodes = false;
+	cf.show_hierarchy = false;
 	cf.use_referenced_type_instead_of_top_level = false;
 	OPTFUN_RETURN
 }
@@ -253,6 +256,7 @@ __cflat_lvs(OPTARG_UNUSED cflat::options& cf) {
 	cf.compute_conductances = false;
 	cf.show_precharges = false;	// maybe true?
 	cf.show_supply_nodes = false;
+	cf.show_hierarchy = false;
 	cf.use_referenced_type_instead_of_top_level = false;
 	OPTFUN_RETURN
 }
@@ -316,6 +320,7 @@ __cflat_ADspice(OPTARG_UNUSED cflat::options& cf) {
 	cf.compute_conductances = false;
 	cf.show_precharges = false;
 	cf.show_supply_nodes = false;
+	cf.show_hierarchy = false;
 	cf.use_referenced_type_instead_of_top_level = false;
 	OPTFUN_RETURN
 }
@@ -661,6 +666,20 @@ multiple voltage domains.
 DEFINE_BOOL_OPTION_PAIR(show_supply_nodes, "supply-nodes",
 	"show voltage supply nodes per rule",
 	"hide voltage supply nodes per rule")
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cflat/opt-process-hierarchy.texi
+@defvr {@t{cflat -f} option} process-hierarchy
+@defvrx {@t{cflat -f} option} no-process-hierarchy
+When enabled, rules are encapsulated by the names of the process
+to which they belong, in nested fashion.  
+@end defvr
+@end texinfo
+***/
+DEFINE_BOOL_OPTION_PAIR(show_hierarchy, "process-hierarchy",
+	"show process hierarchy in rules",
+	"hide process hierarchy in rules")
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***

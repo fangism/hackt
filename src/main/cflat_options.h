@@ -1,6 +1,6 @@
 /**
 	\file "main/cflat_options.h"
-	$Id: cflat_options.h,v 1.22 2010/08/31 23:48:05 fang Exp $
+	$Id: cflat_options.h,v 1.23 2011/04/30 04:16:55 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_CFLAT_OPTIONS_H__
@@ -174,6 +174,11 @@ public:
 	 */
 	bool				show_supply_nodes;
 	/**
+		As the hierarchy is traversed wrap output
+		in hierarchy delimiters to show where rules come from.
+	 */
+	bool				show_hierarchy;
+	/**
 		Ignore top-level instances and flatten one anonymous
 		instance of a named complete process type.  
 		Flag to do 'cast2lvs'-like behavior.  
@@ -230,6 +235,7 @@ public:
 		compute_conductances(false),
 		show_precharges(false), 
 		show_supply_nodes(false),
+		show_hierarchy(false),
 		use_referenced_type_instead_of_top_level(false), 
 		named_process_type(), 
 		comp_opt(), 

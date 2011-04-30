@@ -1,0 +1,62 @@
+globID	super		localID	canonical	footprint-frame
+[global process entries]
+1	(top)	-	1	foo	fifo<3>
+	process: 2,3,4;5..9 {10..12}
+	bool: 3,4,5,6,7,8,9,10,11,12,1,2;13..18 {19..30}
+2	(top)	-	2	foo.g	globals<>
+	bool: 3,4,5,6
+3	(top)	-	3	foo.I	e1of2<>
+	bool: 9,8,7
+4	(top)	-	4	foo.O	e1of2<>
+	bool: 12,11,10
+5	process	1	4	foo.M[1]	e1of2<>
+	bool: 15,14,13
+6	process	1	5	foo.M[2]	e1of2<>
+	bool: 18,17,16
+7	process	1	6	foo.b[0]	wchb<>
+	process: 2,3,5;10
+	bool: 3,4,5,6,7,8,9,13,14,15,1,2;19..22
+8	process	1	7	foo.b[1]	wchb<>
+	process: 2,5,6;11
+	bool: 3,4,5,6,13,14,15,16,17,18,1,2;23..26
+9	process	1	8	foo.b[2]	wchb<>
+	process: 2,6,4;12
+	bool: 3,4,5,6,16,17,18,10,11,12,1,2;27..30
+10	process	7	4	foo.b[0]._r	_1of2<>
+	bool: 20,19
+11	process	8	4	foo.b[1]._r	_1of2<>
+	bool: 24,23
+12	process	9	4	foo.b[2]._r	_1of2<>
+	bool: 28,27
+[global bool entries]
+1	(top)	-	1	!GND	 @[ supply_low ]
+2	(top)	-	2	!Vdd	 @[ supply_high ]
+3	(top)	-	3	foo.g.Vdd	
+4	(top)	-	4	foo.g.GND	
+5	(top)	-	5	foo.g._sReset	
+6	(top)	-	6	foo.g._pReset	
+7	(top)	-	7	foo.I.d[0]	
+8	(top)	-	8	foo.I.d[1]	
+9	(top)	-	9	foo.I.e	
+10	(top)	-	10	foo.O.d[0]	
+11	(top)	-	11	foo.O.d[1]	
+12	(top)	-	12	foo.O.e	
+13	process	1	13	foo.M[1].d[0]	
+14	process	1	14	foo.M[1].d[1]	
+15	process	1	15	foo.M[1].e	
+16	process	1	16	foo.M[2].d[0]	
+17	process	1	17	foo.M[2].d[1]	
+18	process	1	18	foo.M[2].e	
+19	process	7	13	foo.b[0]._r.d[0]	
+20	process	7	14	foo.b[0]._r.d[1]	
+21	process	7	15	foo.b[0].rv	
+22	process	7	16	foo.b[0].mypReset	
+23	process	8	13	foo.b[1]._r.d[0]	
+24	process	8	14	foo.b[1]._r.d[1]	
+25	process	8	15	foo.b[1].rv	
+26	process	8	16	foo.b[1].mypReset	
+27	process	9	13	foo.b[2]._r.d[0]	
+28	process	9	14	foo.b[2]._r.d[1]	
+29	process	9	15	foo.b[2].rv	
+30	process	9	16	foo.b[2].mypReset	
+

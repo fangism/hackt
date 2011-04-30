@@ -1,0 +1,124 @@
+$process: "foo" (type: fifo<3>) {
+$process: "foo.b[0]" (type: wchb<>) {
+"foo.I.d[0]" & "foo.M[1].e" -> "foo.b[0]._r.d[0]"-
+~"foo.I.d[0]" & ~"foo.M[1].e" -> "foo.b[0]._r.d[0]"+
+"foo.b[0]._r.d[0]" -> "foo.M[1].d[0]"-
+~"foo.b[0]._r.d[0]" -> "foo.M[1].d[0]"+
+"foo.I.d[1]" & "foo.M[1].e" -> "foo.b[0]._r.d[1]"-
+~"foo.I.d[1]" & ~"foo.M[1].e" -> "foo.b[0]._r.d[1]"+
+"foo.b[0]._r.d[1]" -> "foo.M[1].d[1]"-
+~"foo.b[0]._r.d[1]" -> "foo.M[1].d[1]"+
+"foo.g._sReset" & "foo.b[0]._r.d[1]" & "foo.b[0]._r.d[0]" -> "foo.b[0].rv"-
+~"foo.g._sReset" | ~"foo.b[0]._r.d[1]" | ~"foo.b[0]._r.d[0]" -> "foo.b[0].rv"+
+"foo.b[0].rv" -> "foo.I.e"-
+~"foo.b[0].rv" -> "foo.I.e"+
+} // end $process: "foo.b[0]" (type: wchb<>)
+$process: "foo.b[1]" (type: wchb<>) {
+"foo.M[1].d[0]" & "foo.M[2].e" -> "foo.b[1]._r.d[0]"-
+~"foo.M[1].d[0]" & ~"foo.M[2].e" -> "foo.b[1]._r.d[0]"+
+"foo.b[1]._r.d[0]" -> "foo.M[2].d[0]"-
+~"foo.b[1]._r.d[0]" -> "foo.M[2].d[0]"+
+"foo.M[1].d[1]" & "foo.M[2].e" -> "foo.b[1]._r.d[1]"-
+~"foo.M[1].d[1]" & ~"foo.M[2].e" -> "foo.b[1]._r.d[1]"+
+"foo.b[1]._r.d[1]" -> "foo.M[2].d[1]"-
+~"foo.b[1]._r.d[1]" -> "foo.M[2].d[1]"+
+"foo.g._sReset" & "foo.b[1]._r.d[1]" & "foo.b[1]._r.d[0]" -> "foo.b[1].rv"-
+~"foo.g._sReset" | ~"foo.b[1]._r.d[1]" | ~"foo.b[1]._r.d[0]" -> "foo.b[1].rv"+
+"foo.b[1].rv" -> "foo.M[1].e"-
+~"foo.b[1].rv" -> "foo.M[1].e"+
+} // end $process: "foo.b[1]" (type: wchb<>)
+$process: "foo.b[2]" (type: wchb<>) {
+"foo.M[2].d[0]" & "foo.O.e" -> "foo.b[2]._r.d[0]"-
+~"foo.M[2].d[0]" & ~"foo.O.e" -> "foo.b[2]._r.d[0]"+
+"foo.b[2]._r.d[0]" -> "foo.O.d[0]"-
+~"foo.b[2]._r.d[0]" -> "foo.O.d[0]"+
+"foo.M[2].d[1]" & "foo.O.e" -> "foo.b[2]._r.d[1]"-
+~"foo.M[2].d[1]" & ~"foo.O.e" -> "foo.b[2]._r.d[1]"+
+"foo.b[2]._r.d[1]" -> "foo.O.d[1]"-
+~"foo.b[2]._r.d[1]" -> "foo.O.d[1]"+
+"foo.g._sReset" & "foo.b[2]._r.d[1]" & "foo.b[2]._r.d[0]" -> "foo.b[2].rv"-
+~"foo.g._sReset" | ~"foo.b[2]._r.d[1]" | ~"foo.b[2]._r.d[0]" -> "foo.b[2].rv"+
+"foo.b[2].rv" -> "foo.M[2].e"-
+~"foo.b[2].rv" -> "foo.M[2].e"+
+} // end $process: "foo.b[2]" (type: wchb<>)
+} // end $process: "foo" (type: fifo<3>)
+= "!GND" "foo.!GND"
+= "!GND" "foo.b[0].!GND"
+= "!GND" "foo.b[1].!GND"
+= "!GND" "foo.b[2].!GND"
+= "!Vdd" "foo.!Vdd"
+= "!Vdd" "foo.b[0].!Vdd"
+= "!Vdd" "foo.b[1].!Vdd"
+= "!Vdd" "foo.b[2].!Vdd"
+= "foo.I.d[0]" "foo.I.f"
+= "foo.I.d[1]" "foo.I.t"
+= "foo.O.d[0]" "foo.O.f"
+= "foo.O.d[1]" "foo.O.t"
+= "foo.g.Vdd" "foo.b[0].g.Vdd"
+= "foo.g.Vdd" "foo.b[1].g.Vdd"
+= "foo.g.Vdd" "foo.b[2].g.Vdd"
+= "foo.g.GND" "foo.b[0].g.GND"
+= "foo.g.GND" "foo.b[1].g.GND"
+= "foo.g.GND" "foo.b[2].g.GND"
+= "foo.g._sReset" "foo.b[0]._sReset"
+= "foo.g._sReset" "foo.b[0].g._sReset"
+= "foo.g._sReset" "foo.b[1]._sReset"
+= "foo.g._sReset" "foo.b[1].g._sReset"
+= "foo.g._sReset" "foo.b[2]._sReset"
+= "foo.g._sReset" "foo.b[2].g._sReset"
+= "foo.g._pReset" "foo.b[0]._pReset"
+= "foo.g._pReset" "foo.b[0].g._pReset"
+= "foo.g._pReset" "foo.b[1]._pReset"
+= "foo.g._pReset" "foo.b[1].g._pReset"
+= "foo.g._pReset" "foo.b[2]._pReset"
+= "foo.g._pReset" "foo.b[2].g._pReset"
+= "foo.I.d[0]" "foo.M[0].d[0]"
+= "foo.I.d[0]" "foo.M[0].f"
+= "foo.I.d[0]" "foo.b[0].l.d[0]"
+= "foo.I.d[0]" "foo.b[0].l.f"
+= "foo.I.d[1]" "foo.M[0].d[1]"
+= "foo.I.d[1]" "foo.M[0].t"
+= "foo.I.d[1]" "foo.b[0].l.d[1]"
+= "foo.I.d[1]" "foo.b[0].l.t"
+= "foo.I.e" "foo.M[0].e"
+= "foo.I.e" "foo.b[0].l.e"
+= "foo.O.d[0]" "foo.M[3].d[0]"
+= "foo.O.d[0]" "foo.M[3].f"
+= "foo.O.d[0]" "foo.b[2].r.d[0]"
+= "foo.O.d[0]" "foo.b[2].r.f"
+= "foo.O.d[1]" "foo.M[3].d[1]"
+= "foo.O.d[1]" "foo.M[3].t"
+= "foo.O.d[1]" "foo.b[2].r.d[1]"
+= "foo.O.d[1]" "foo.b[2].r.t"
+= "foo.O.e" "foo.M[3].e"
+= "foo.O.e" "foo.b[2].r.e"
+= "foo.M[1].d[0]" "foo.M[1].f"
+= "foo.M[1].d[0]" "foo.b[0].r.d[0]"
+= "foo.M[1].d[0]" "foo.b[0].r.f"
+= "foo.M[1].d[0]" "foo.b[1].l.d[0]"
+= "foo.M[1].d[0]" "foo.b[1].l.f"
+= "foo.M[1].d[1]" "foo.M[1].t"
+= "foo.M[1].d[1]" "foo.b[0].r.d[1]"
+= "foo.M[1].d[1]" "foo.b[0].r.t"
+= "foo.M[1].d[1]" "foo.b[1].l.d[1]"
+= "foo.M[1].d[1]" "foo.b[1].l.t"
+= "foo.M[1].e" "foo.b[0].r.e"
+= "foo.M[1].e" "foo.b[1].l.e"
+= "foo.M[2].d[0]" "foo.M[2].f"
+= "foo.M[2].d[0]" "foo.b[1].r.d[0]"
+= "foo.M[2].d[0]" "foo.b[1].r.f"
+= "foo.M[2].d[0]" "foo.b[2].l.d[0]"
+= "foo.M[2].d[0]" "foo.b[2].l.f"
+= "foo.M[2].d[1]" "foo.M[2].t"
+= "foo.M[2].d[1]" "foo.b[1].r.d[1]"
+= "foo.M[2].d[1]" "foo.b[1].r.t"
+= "foo.M[2].d[1]" "foo.b[2].l.d[1]"
+= "foo.M[2].d[1]" "foo.b[2].l.t"
+= "foo.M[2].e" "foo.b[1].r.e"
+= "foo.M[2].e" "foo.b[2].l.e"
+= "foo.b[0]._r.d[0]" "foo.b[0]._r.f"
+= "foo.b[0]._r.d[1]" "foo.b[0]._r.t"
+= "foo.b[1]._r.d[0]" "foo.b[1]._r.f"
+= "foo.b[1]._r.d[1]" "foo.b[1]._r.t"
+= "foo.b[2]._r.d[0]" "foo.b[2]._r.f"
+= "foo.b[2]._r.d[1]" "foo.b[2]._r.t"

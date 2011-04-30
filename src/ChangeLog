@@ -5,6 +5,17 @@
 
 2011-04-29	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-84-68:
+	  hflat: added -f process-hierarchy option to wrap rules
+		in $process hierarchical groups.
+	  global_entry_context: added _gpid to have the current 
+		global process ID number available.
+	  Documented, test case added.
+	  TODO: add hflat preset for ipple, placer tool coming from branch
+
+
+2011-04-29	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-84-67:
 	  hacknet: when counting ndrain/pdrain terminals, also include
 		count for source terminals, lumped into same count.

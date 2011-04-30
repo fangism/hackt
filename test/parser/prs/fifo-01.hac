@@ -1,0 +1,18 @@
+// "fifo-01.hac"
+// @hflat-flags@ -f process-hierarchy
+
+import "wchb-06.hac";
+
+template <pint N>
+defproc fifo(globals? g; e1of2? I; e1of2! O) {
+e1of2 M[N+1];
+M[0] = I;
+M[N] = O;
+wchb b[N];
+(;j:N:
+	b[j](g, M[j], M[j+1]);
+)
+}
+
+fifo<3> foo;
+

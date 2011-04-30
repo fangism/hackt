@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_printer.cc"
 	Implementation of cflattening visitor.
-	$Id: cflat_printer.cc,v 1.33 2011/02/03 02:23:22 fang Exp $
+	$Id: cflat_printer.cc,v 1.34 2011/04/30 04:16:53 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -45,6 +45,12 @@ using std::accumulate;
 using std::transform;
 using util::numeric::reciprocate;
 
+/**
+	Visiting local pool doesn't quite work, not debugged.
+	original: 0
+ */
+#define	USE_VISIT_LOCAL			0
+
 //=============================================================================
 // class cflat_prs_printer method definitions
 
@@ -52,15 +58,37 @@ cflat_prs_printer::~cflat_prs_printer() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-cflat_prs_printer::visit(const entity::footprint& f) {
+cflat_prs_printer::__visit(const entity::footprint& f) {
 	STACKTRACE_VERBOSE;
+#if USE_VISIT_LOCAL
+	visit_local<process_tag>(f, at_top());	// for fun
+#else
 	// visit rules and spec directives, locally
 	f.get_prs_footprint().accept(*this);
 	f.get_spec_footprint().accept(*this);
 	// f.get_chp_footprint().accept(*this);
+#endif
 	parent_type::visit(f);	// visit_recursive
 	visit_local<bool_tag>(f, at_top());	// for bool attributes
 	// exception printing handled by caller
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+cflat_prs_printer::visit(const entity::footprint& f) {
+if (cfopts.show_hierarchy && current_gpid() &&
+		f.get_meta_type() == META_TYPE_PROCESS) {
+	const size_t gpid = current_gpid();
+	std::ostringstream oss;
+	oss << "$process: ";
+	__dump_resolved_canonical_literal<process_tag>(oss, gpid);
+	f.dump_type(oss << " (type: ") << ')';
+	os << oss.str() << " {" << endl;
+	__visit(f);
+	os << "} // end " << oss.str() << endl;
+} else {
+	__visit(f);
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -420,6 +448,21 @@ if (a.has_nondefault_attributes()) {
 }
 }
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_VISIT_LOCAL
+void
+cflat_prs_printer::visit(const state_instance<process_tag>& gp) {
+	STACKTRACE_VERBOSE;
+	// get this instance name and type name
+	const footprint_frame& gpff(gp._frame);
+	const entity::footprint& f(*gpff._footprint);
+	// visit rules and spec directives, locally
+	f.get_prs_footprint().accept(*this);
+	f.get_spec_footprint().accept(*this);
+	// f.get_chp_footprint().accept(*this);
+}
+#endif
 
 //=============================================================================
 }	// end namespace PRS

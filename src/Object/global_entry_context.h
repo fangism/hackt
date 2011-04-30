@@ -2,7 +2,7 @@
 	\file "Object/global_entry_context.h"
 	Structure containing all the minimal information
 	needed for a global_entry traversal over instances.  
-	$Id: global_entry_context.h,v 1.12 2011/03/29 04:34:36 fang Exp $
+	$Id: global_entry_context.h,v 1.13 2011/04/30 04:16:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_CONTEXT_H__
@@ -16,6 +16,15 @@
 #include "Object/traits/classification_tags_fwd.h"
 #include "Object/ref/reference_enum.h"	// for global_indexed_reference
 #include "util/tokenize_fwd.h"		// for string_list
+
+/**
+	Define to 1 to keep around global pid in global_entry_context
+	as hierarchy is walked.
+	Goal: 1
+	Cost: little
+	Rationale: know which process you're in.
+ */
+#define	GLOBAL_CONTEXT_GPID		1
 
 namespace util {
 template <class, class>
@@ -95,7 +104,9 @@ protected:
 		Should be set by visit_local for traversals that need it.
 	 */
 	global_offset*				g_offset;
-
+#if GLOBAL_CONTEXT_GPID
+	size_t					_gpid;
+#endif
 public:
 	global_entry_context(const footprint_frame&, const global_offset&);
 
@@ -103,6 +114,11 @@ virtual	~global_entry_context();
 
 	ostream&
 	dump_context(ostream&) const;
+
+#if GLOBAL_CONTEXT_GPID
+	const size_t&
+	current_gpid(void) const { return _gpid; }
+#endif
 
 	template <class Tag>
 	void
