@@ -1,0 +1,12 @@
+// "strengths-03.hac"
+// testing cflat with conductance calculations
+// @hflat-flags@ -fstrengths
+// TODO: implement conductances for pass-gates
+
+bool g, _g, s, d;
+
+prs {
+	passn(g, s, d)
+	passp(_g, s, d)
+}
+

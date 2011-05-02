@@ -1,0 +1,36 @@
+$process: foo (type: fifo_array<3, 2>) {
+$process: foo.f[0] (type: fifo<3>) {
+$process: foo.f[0].b[0] (type: wchb<>) {
+$channel: foo.g?
+$channel: foo.I[0]?
+$channel: foo.f[0].M[1]!
+} // end $process: foo.f[0].b[0] (type: wchb<>)
+$process: foo.f[0].b[1] (type: wchb<>) {
+$channel: foo.g?
+$channel: foo.f[0].M[1]?
+$channel: foo.f[0].M[2]!
+} // end $process: foo.f[0].b[1] (type: wchb<>)
+$process: foo.f[0].b[2] (type: wchb<>) {
+$channel: foo.g?
+$channel: foo.f[0].M[2]?
+$channel: foo.O[0]!
+} // end $process: foo.f[0].b[2] (type: wchb<>)
+} // end $process: foo.f[0] (type: fifo<3>)
+$process: foo.f[1] (type: fifo<3>) {
+$process: foo.f[1].b[0] (type: wchb<>) {
+$channel: foo.g?
+$channel: foo.I[1]?
+$channel: foo.f[1].M[1]!
+} // end $process: foo.f[1].b[0] (type: wchb<>)
+$process: foo.f[1].b[1] (type: wchb<>) {
+$channel: foo.g?
+$channel: foo.f[1].M[1]?
+$channel: foo.f[1].M[2]!
+} // end $process: foo.f[1].b[1] (type: wchb<>)
+$process: foo.f[1].b[2] (type: wchb<>) {
+$channel: foo.g?
+$channel: foo.f[1].M[2]?
+$channel: foo.O[1]!
+} // end $process: foo.f[1].b[2] (type: wchb<>)
+} // end $process: foo.f[1] (type: fifo<3>)
+} // end $process: foo (type: fifo_array<3, 2>)

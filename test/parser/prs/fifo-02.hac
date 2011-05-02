@@ -1,0 +1,37 @@
+// "fifo-02.hac"
+// copy-modified from "wchb-06.hac" and "fifo-01.hac"
+// @hflat-flags@ -t fifo_array<3,2> -f process-hierarchy -f channel-terminals
+// testing printing of channel terminals
+
+deftype globals <: int<4> (bool Vdd, GND, _sReset, _pReset) { }
+deftype _1of2 <: int<1> (bool d[2], t, f) { d[0] = f; d[1] = t; }
+defchan e1of2 <: chan(bool) (bool d[2], e, t, f) { d[0] = f; d[1] = t; }
+
+defproc wchb (globals? g; e1of2? l; e1of2! r) {
+	g?;
+	l?;
+	r!;
+}
+
+template <pint N>
+defproc fifo(globals? g; e1of2? I; e1of2! O) {
+e1of2 M[N+1];
+M[0] = I;
+M[N] = O;
+wchb b[N];
+(;j:N:
+	b[j](g, M[j], M[j+1]);
+)
+}
+
+template <pint N, M>
+defproc fifo_array(globals? g; e1of2? I[M]; e1of2! O[M]) {
+fifo<N> f[M];
+(;j:M:
+	f[j](g, I[j], O[j]);
+)
+}
+
+fifo_array<3,2> foo;
+
+

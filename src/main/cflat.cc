@@ -2,7 +2,7 @@
 	\file "main/cflat.cc"
 	cflat backwards compability module.  
 
-	$Id: cflat.cc,v 1.34 2011/04/30 04:16:55 fang Exp $
+	$Id: cflat.cc,v 1.35 2011/05/02 21:27:19 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -174,6 +174,7 @@ __cflat_prsim(OPTARG_UNUSED cflat::options& cf) {
 	cf.show_precharges = false;
 	cf.show_supply_nodes = false;
 	cf.show_hierarchy = false;
+	cf.show_channel_terminals = false;
 	cf.size_prs = false;
 	cf.use_referenced_type_instead_of_top_level = false;
 	OPTFUN_RETURN
@@ -200,6 +201,7 @@ __cflat_prlint(OPTARG_UNUSED cflat::options& cf) {
 	cf.show_precharges = false;
 	cf.show_supply_nodes = false;
 	cf.show_hierarchy = false;
+	cf.show_channel_terminals = false;
 	cf.use_referenced_type_instead_of_top_level = false;
 	OPTFUN_RETURN
 }
@@ -227,6 +229,7 @@ __cflat_connect(OPTARG_UNUSED cflat::options& cf) {
 	cf.show_precharges = false;
 	cf.show_supply_nodes = false;
 	cf.show_hierarchy = false;
+	cf.show_channel_terminals = false;
 	cf.use_referenced_type_instead_of_top_level = false;
 	OPTFUN_RETURN
 }
@@ -257,6 +260,7 @@ __cflat_lvs(OPTARG_UNUSED cflat::options& cf) {
 	cf.show_precharges = false;	// maybe true?
 	cf.show_supply_nodes = false;
 	cf.show_hierarchy = false;
+	cf.show_channel_terminals = false;
 	cf.use_referenced_type_instead_of_top_level = false;
 	OPTFUN_RETURN
 }
@@ -321,6 +325,7 @@ __cflat_ADspice(OPTARG_UNUSED cflat::options& cf) {
 	cf.show_precharges = false;
 	cf.show_supply_nodes = false;
 	cf.show_hierarchy = false;
+	cf.show_channel_terminals = false;
 	cf.use_referenced_type_instead_of_top_level = false;
 	OPTFUN_RETURN
 }
@@ -342,6 +347,31 @@ __cflat_check(OPTARG_UNUSED cflat::options& cf) {
 	cf.dsim_prs = false;
 	cf.size_prs = false;
 	cf.use_referenced_type_instead_of_top_level = false;
+	OPTFUN_RETURN
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+static
+optfun_return_type
+__cflat_ipple(OPTARG_UNUSED cflat::options& cf) {
+	cf.primary_tool = cflat::options::TOOL_LAYOUT;
+	cf.tool_options = cflat::options::TOOL_OPTIONS_DEFAULT;
+	cf.connect_style = cflat::options::CONNECT_STYLE_NONE;
+	cf.include_prs = false;
+	cf.dump_self_connect = false;
+	cf.enquote_names = false;
+	cf.dump_non_bools = true;
+	cf.namespace_policy = cflat::options::NAMESPACE_POLICY_NONE;
+	cf.check_prs = false;
+	cf.wire_mode = false;
+	cf.csim_style_prs = false;
+	cf.dsim_prs = false;
+	cf.compute_conductances = false;
+	cf.show_precharges = false;
+	cf.show_supply_nodes = false;
+	cf.show_hierarchy = true;
+	cf.show_channel_terminals = true;
+//	cf.use_referenced_type_instead_of_top_level = false;
 	OPTFUN_RETURN
 }
 
@@ -456,6 +486,15 @@ The java-lvs option is a slight variant from the traditional lvs.
 ***/
 	cflat_opt_mod_ADspice("ADspice", &__cflat_ADspice),
 
+/***
+@texinfo cflat/mode-ipple.texi
+@defvr {@t{cflat} option} ipple
+@command{ipple} output mode.
+Prints out hierarchical processes and source/destination terminals of channels.
+@end defvr
+@end texinfo
+***/
+	cflat_opt_mod_ipple("ipple", &__cflat_ipple),
 /***
 @texinfo cflat/mode-default.texi
 @defvr {@t{cflat} option} default
@@ -680,6 +719,21 @@ to which they belong, in nested fashion.
 DEFINE_BOOL_OPTION_PAIR(show_hierarchy, "process-hierarchy",
 	"show process hierarchy in rules",
 	"hide process hierarchy in rules")
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cflat/opt-channel-terminals.texi
+@defvr {@t{cflat -f} option} channel-terminals
+@defvrx {@t{cflat -f} option} no-channel-terminals
+When enabled, channels' sources and destinations are printed
+out as the hierarchy is traversed.
+Recommend @option{process-hierarchy} with this option.
+@end defvr
+@end texinfo
+***/
+DEFINE_BOOL_OPTION_PAIR(show_channel_terminals, "channel-terminals",
+	"show channel terminals in hierarchical processes",
+	"hide channel terminals in hierarchical processes")
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***

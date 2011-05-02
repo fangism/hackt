@@ -3,6 +3,15 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-05-02	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-69:
+	  hflat: added ipple preset, implemented printing of
+		channel source/destination terminals, enabled with
+		the -f channel-terminals option.
+	  Documented, test cases added.
+
+
 2011-04-29	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-68:

@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.48 2011/04/02 01:45:53 fang Exp $
+ 	$Id: module.cc,v 1.49 2011/05/02 21:27:16 fang Exp $
  */
 
 // code debugging switches
@@ -456,17 +456,15 @@ module::__cflat_rules(const footprint& _footprint,
 	const footprint_frame ff(_footprint);	// empty ports
 	global_offset g;	// 0s
 	PRS::cflat_prs_printer cfp(ff, g, o, cf);
-	if (cf.include_prs) {
-		STACKTRACE("cflatting production rules.");
-		if (cf.dsim_prs)	o << "dsim {" << endl;
-		try {
-			_footprint.accept(cfp);
-		} catch (...) {
-			cerr << "Caught exception during cflat PRS." << endl;
-			return good_bool(false);
-		}
-		if (cf.dsim_prs)	o << "}" << endl;
+	STACKTRACE("cflatting production rules.");
+	if (cf.dsim_prs)	o << "dsim {" << endl;
+	try {
+		_footprint.accept(cfp);
+	} catch (...) {
+		cerr << "Caught exception during cflat PRS." << endl;
+		return good_bool(false);
 	}
+	if (cf.dsim_prs)	o << "}" << endl;
 	return good_bool(true);
 }
 

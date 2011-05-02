@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/connection_policy.h"
 	Specializations for connections in the HAC language. 
-	$Id: connection_policy.h,v 1.21 2011/03/29 04:34:36 fang Exp $
+	$Id: connection_policy.h,v 1.22 2011/05/02 21:27:17 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CONNECTION_POLICY_H__
@@ -769,6 +769,16 @@ public:
 	bool
 	is_output_port(void) const {
 		return direction_flags & CONNECTED_PORT_FORMAL_CONSUMER;
+	}
+
+	bool
+	is_terminal_producer(void) const {
+		return direction_flags & CONNECTED_PRS_PRODUCER;
+	}
+
+	bool
+	is_terminal_consumer(void) const {
+		return direction_flags & CONNECTED_PRS_CONSUMER;
 	}
 
 protected:

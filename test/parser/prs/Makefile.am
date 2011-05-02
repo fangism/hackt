@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.77 2011/04/30 04:16:57 fang Exp $
+#	$Id: Makefile.am,v 1.78 2011/05/02 21:27:19 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -42,7 +42,7 @@ HACKT_PARSE_TEST_PASSES = \
 	nor-01 xor-01 \
 	celem-01 celem-02 celem-03 celem-04 celem-05 celem-06 \
 	wchb-00 wchb-01 wchb-02 wchb-03 wchb-03b wchb-04 wchb-05 wchb-06 \
-	fifo-01 \
+	fifo-01 fifo-02 fifo-03 \
 	null-00 null-01 \
 	pal-01 pal-02 pal-03 \
 	loop-00 loop-01 loop-02 loop-03 loop-04 loop-05 loop-06 loop-07 \
@@ -131,7 +131,8 @@ srcdir_EXTRA_DIST += \
 	act-008.hac \
 	rule-type-01.hac rule-type-02.hac rule-type-03.hac rule-type-04.hac \
 	rule-type-05.hac rule-type-06.hac \
-	internal-node-subckt-01.hac
+	internal-node-subckt-01.hac \
+	strengths-03.hac
 
 HACKT_CREATE_TEST_PASSES = \
 	inv-01 \
@@ -139,7 +140,7 @@ HACKT_CREATE_TEST_PASSES = \
 	celem-01 celem-02 celem-03 celem-04 celem-05 celem-06 \
 	nand-04 nand-05 nand-06 nand-07 \
 	wchb-00 wchb-01 wchb-02 wchb-03 wchb-03b wchb-04 wchb-05 wchb-06 \
-	fifo-01 \
+	fifo-01 fifo-02 \
 	null-00 \
 	pal-01 pal-02 pal-03 \
 	loop-00 loop-04 loop-05 loop-06 loop-07 loop-08 loop-09 \
@@ -233,7 +234,7 @@ HACKT_CFLAT_TEST_SUBJECTS = \
 	celem-01 celem-02 celem-03 celem-04 celem-05 celem-06 \
 	nand-04 nand-05 nand-06 nand-07 \
 	wchb-00 wchb-01 wchb-02 wchb-03 wchb-03b wchb-04 wchb-05 wchb-06 \
-	fifo-01 \
+	fifo-01 fifo-02 \
 	null-00 \
 	pal-01 pal-02 pal-03 \
 	loop-00 loop-04 loop-05 loop-06 loop-07 loop-08 loop-09 \

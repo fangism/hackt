@@ -1,0 +1,7 @@
+// "fifo-03.hac"
+// copy-modified from "fifo-02.hac"
+// @hflat-flags@ -f ipple
+
+import "fifo-02.hac";
+
+

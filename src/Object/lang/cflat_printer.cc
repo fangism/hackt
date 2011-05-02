@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_printer.cc"
 	Implementation of cflattening visitor.
-	$Id: cflat_printer.cc,v 1.34 2011/04/30 04:16:53 fang Exp $
+	$Id: cflat_printer.cc,v 1.35 2011/05/02 21:27:18 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -23,10 +23,12 @@
 #include "Object/inst/state_instance.h"
 #include "Object/inst/instance_alias_info.h"
 #include "Object/inst/alias_empty.h"
+#include "Object/inst/alias_actuals.h"
 #include "Object/inst/connection_policy.h"
 #include "Object/global_entry.h"
 #include "Object/global_channel_entry.h"
 #include "Object/traits/bool_traits.h"
+#include "Object/traits/proc_traits.h"
 #include "main/cflat_options.h"
 #include "common/ICE.h"
 #include "common/TODO.h"
@@ -45,12 +47,6 @@ using std::accumulate;
 using std::transform;
 using util::numeric::reciprocate;
 
-/**
-	Visiting local pool doesn't quite work, not debugged.
-	original: 0
- */
-#define	USE_VISIT_LOCAL			0
-
 //=============================================================================
 // class cflat_prs_printer method definitions
 
@@ -60,16 +56,18 @@ cflat_prs_printer::~cflat_prs_printer() { }
 void
 cflat_prs_printer::__visit(const entity::footprint& f) {
 	STACKTRACE_VERBOSE;
-#if USE_VISIT_LOCAL
-	visit_local<process_tag>(f, at_top());	// for fun
-#else
 	// visit rules and spec directives, locally
+if (cfopts.include_prs) {
 	f.get_prs_footprint().accept(*this);
+}
 	f.get_spec_footprint().accept(*this);
 	// f.get_chp_footprint().accept(*this);
-#endif
 	parent_type::visit(f);	// visit_recursive
 	visit_local<bool_tag>(f, at_top());	// for bool attributes
+
+	// for channel-terminals need to check both ports and locals
+	visit_ports<process_tag>(f);
+	visit_local<process_tag>(f, at_top());
 	// exception printing handled by caller
 }
 
@@ -430,14 +428,12 @@ cflat_prs_printer::visit(const SPEC::footprint_directive& d) {
 	Print attributes for nodes with non-default attribute values.  
  */
 void
-cflat_prs_printer::visit(const state_instance<bool_tag>& b) {
+cflat_prs_printer::visit(const state_instance<bool_tag>& i) {
 if (cfopts.node_attributes) {
-	const state_instance<bool_tag>& i(b);
 	const instance_alias_info<bool_tag>& a(*i.get_back_ref());
 if (a.has_nondefault_attributes()) {
 	std::ostringstream oss;
-	__dump_canonical_literal<bool_tag>(oss,
-		i.get_back_ref()->instance_index);
+	__dump_canonical_literal<bool_tag>(oss, a.instance_index);
 	const string& n(oss.str());
 	if (cfopts.split_instance_attributes) {
 		a.dump_split_attributes(os, n);
@@ -450,19 +446,30 @@ if (a.has_nondefault_attributes()) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_VISIT_LOCAL
 void
 cflat_prs_printer::visit(const state_instance<process_tag>& gp) {
 	STACKTRACE_VERBOSE;
+if (cfopts.show_channel_terminals) {
 	// get this instance name and type name
 	const footprint_frame& gpff(gp._frame);
 	const entity::footprint& f(*gpff._footprint);
-	// visit rules and spec directives, locally
-	f.get_prs_footprint().accept(*this);
-	f.get_spec_footprint().accept(*this);
-	// f.get_chp_footprint().accept(*this);
+	if (f.get_meta_type() != META_TYPE_PROCESS) {
+		const instance_alias_info<process_tag>& a(*gp.get_back_ref());
+		if (a.is_terminal_producer()) {
+			os << "$channel: ";
+			__dump_canonical_literal<process_tag>(os,
+				a.instance_index);
+			os << '!' << endl;
+		}
+		if (a.is_terminal_consumer()) {
+			os << "$channel: ";
+			__dump_canonical_literal<process_tag>(os,
+				a.instance_index);
+			os << '?' << endl;
+		}
+	}
 }
-#endif
+}
 
 //=============================================================================
 }	// end namespace PRS

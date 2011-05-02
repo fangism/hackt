@@ -1,6 +1,6 @@
 /**
 	\file "main/cflat_options.h"
-	$Id: cflat_options.h,v 1.23 2011/04/30 04:16:55 fang Exp $
+	$Id: cflat_options.h,v 1.24 2011/05/02 21:27:19 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_CFLAT_OPTIONS_H__
@@ -179,6 +179,12 @@ public:
 	 */
 	bool				show_hierarchy;
 	/**
+		Print out producers and consumers of channels
+		as processes are traversed.
+		More meaningful with show_hierarchy=true.
+	 */
+	bool				show_channel_terminals;
+	/**
 		Ignore top-level instances and flatten one anonymous
 		instance of a named complete process type.  
 		Flag to do 'cast2lvs'-like behavior.  
@@ -236,6 +242,7 @@ public:
 		show_precharges(false), 
 		show_supply_nodes(false),
 		show_hierarchy(false),
+		show_channel_terminals(false),
 		use_referenced_type_instead_of_top_level(false), 
 		named_process_type(), 
 		comp_opt(), 
