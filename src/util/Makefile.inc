@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.inc,v 1.47.4.4 2011/04/19 22:31:21 fang Exp $
+#	$Id: Makefile.inc,v 1.47.4.5 2011/05/03 02:23:45 fang Exp $
 
 # TODO: consider moving guile support down to subdirectory, like lang/guile
 #	vi: ft=automake
@@ -346,6 +346,9 @@ UTIL_DIRS = util util/numeric util/memory util/STL \
 	util/lang util/lang/lexyacc util/lang/CX util/progs
 
 CLEANSUBDIRS += $(UTIL_DIRS)
+
+# oddly, this dir gets missed during distclean
+DISTCLEANDIRS += util/progs/$(LTDL_OBJDIR)
 
 util/.cvsignore: .cvsignore
 	$(CP) $? $@
