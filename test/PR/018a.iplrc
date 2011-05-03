@@ -1,0 +1,14 @@
+# "018a.iplrc"
+# testing gravity wells
+
+source 018.iplrc
+
+parameter z_gravity_coeff=0.25
+
+watch-objects
+watch-energy
+
+descend-gradient-converge
+
+dump-positions
+

@@ -3,7 +3,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.101 2010/09/21 00:18:45 fang Exp $
+#	$Id: Make.test-tail,v 1.102 2011/05/03 19:21:13 fang Exp $
 
 # for test that depend on pre-install plug-ins
 # don't forget to pass -dlopen to assist searching for pre-install dependencies
@@ -28,6 +28,7 @@ HACKT_CHPSIM_RAW_EXE = $(top_builddir)/src/hacchpsim
 HACKT_CHPSIM_EXE = $(LIBTOOL_EXEC) -dlopen $(top_builddir)/lib/stdchpfn.la $$dlopen_extra $(HACKT_CHPSIM_RAW_EXE)
 # because chpsim loads plug-ins for function libraries
 HACKNET_EXE = $(top_builddir)/src/hacknet
+HACKT_IPPLE_EXE = $(top_builddir)/src/ipple
 
 # guile-based and plug-in tests will need a modified environment, 
 # see Make.test-guile
@@ -90,6 +91,8 @@ HAC_DEPEND_FILTER = $(SED) -e '/haco:/s|^$(srcdir)\/||g' \
 
 # arg, need to escape the friggin' hash!
 SHELL_INTERPRETER = "\#!$(SHELL)"
+
+NO_OP_SCRIPT = test -f $< && test -f $@
 
 DEFAULT_DIFF_TEST_SCRIPT = \
 	$(ECHO) "Summarizing $@ ..." ; \
@@ -181,6 +184,7 @@ include $(top_srcdir)/test/Make.test-vpi
 include $(top_srcdir)/test/Make.test-chpsim
 include $(top_srcdir)/test/Make.test-guile
 include $(top_srcdir)/test/Make.test-net
+include $(top_srcdir)/test/Make.test-ipl
 
 BOGUS_TESTS +=
 

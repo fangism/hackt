@@ -1,0 +1,19 @@
+@c "ipple/usage.texi"
+@c $Id: usage.texi,v 1.2 2011/05/03 19:20:36 fang Exp $
+
+@node Usage
+@chapter Usage
+@cindex usage
+
+@strong{FYI:} the documentation here is extracted from source file
+@file{main/ipple.cc}.  
+
+@include opt/option-a.texi
+@include opt/option-b.texi
+@include opt/option-d.texi
+@include opt/option-h.texi
+@include opt/option-H-upper.texi
+@include opt/option-i.texi
+@include opt/option-I-upper.texi
+@include opt/option-v.texi
+

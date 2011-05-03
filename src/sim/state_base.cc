@@ -1,6 +1,6 @@
 /**
 	\file "sim/state_base.cc"
-	$Id: state_base.cc,v 1.6 2010/08/07 00:00:04 fang Exp $
+	$Id: state_base.cc,v 1.7 2011/05/03 19:20:55 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -24,18 +24,39 @@ using entity::global_process_context;
 //=============================================================================
 // class state_base method defintions
 
-state_base::state_base(const module& m, const string& p) :
-		mod(m),
-#if CACHE_GLOBAL_FOOTPRINT_FRAMES
-		frame_cache(0, std::make_pair(
-			footprint_frame(m.get_footprint()), 
-			global_offset())), 
-		top_context(frame_cache.value.first, frame_cache.value.second), 
-#if HOT_CACHE_FRAMES
-		cache_lru(0),
-#endif
-#endif
+state_base::state_base() : prompt(), ifstreams() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+state_base::state_base(const string& p) :
 		prompt(p), ifstreams() {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+state_base::~state_base() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+state_base::dump_source_paths(ostream& o) const {
+	o << "source paths:" << endl;
+	return ifstreams.dump_paths(o);
+}
+
+//=============================================================================
+// class module_state_base method definitions
+
+module_state_base::module_state_base(const module& m, const string& p) :
+		state_base(p), 
+		mod(m)
+#if CACHE_GLOBAL_FOOTPRINT_FRAMES
+		, frame_cache(0, std::make_pair(
+			footprint_frame(m.get_footprint()), 
+			global_offset())) 
+		, top_context(frame_cache.value.first, frame_cache.value.second)
+#if HOT_CACHE_FRAMES
+		, cache_lru(0)
+#endif
+#endif
+		{
 #if CACHE_GLOBAL_FOOTPRINT_FRAMES
 	const footprint& topfp(m.get_footprint());
 	// default constructed global_offset = 0s
@@ -59,7 +80,7 @@ cache_entry_dump(ostream& o, const global_entry_context::cache_entry_type&) {
 }
 #endif
 
-state_base::~state_base() {
+module_state_base::~module_state_base() {
 #if CACHE_GLOBAL_FOOTPRINT_FRAMES
 	STACKTRACE_VERBOSE;
 #if ENABLE_STACKTRACE
@@ -71,13 +92,13 @@ state_base::~state_base() {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if CACHE_GLOBAL_FOOTPRINT_FRAMES
 size_t
-state_base::halve_cache(void) {
+module_state_base::halve_cache(void) {
 	return frame_cache.halve();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-state_base::dump_frame_cache(ostream& o) const {
+module_state_base::dump_frame_cache(ostream& o) const {
 	o << "footprint-frame cache (" << frame_cache.size() <<
 		" entries):" << std::endl;
 	frame_cache.dump(o, &cache_entry_dump) << std::endl;
@@ -94,10 +115,9 @@ footprint_frame
 #else
 const footprint_frame&
 #endif
-state_base::get_footprint_frame(const size_t pid) const {
+module_state_base::get_footprint_frame(const size_t pid) const {
 	return get_global_context(pid).first;
 }
-
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /** 
@@ -109,8 +129,8 @@ state_base::get_footprint_frame(const size_t pid) const {
 	\param pid is 1-based global process index.
 	\return frame containing global bool ids for this process
  */
-const state_base::cache_entry_type&
-state_base::get_global_context(const size_t pid) const {
+const module_state_base::cache_entry_type&
+module_state_base::get_global_context(const size_t pid) const {
 //	cerr << "<pid:" << pid << '>' << endl;
 //	STACKTRACE_VERBOSE;
 //	STACKTRACE_INDENT_PRINT("pid = " << pid << endl);
@@ -162,13 +182,6 @@ state_base::get_global_context(const size_t pid) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ostream&
-state_base::dump_source_paths(ostream& o) const {
-	o << "source paths:" << endl;
-	return ifstreams.dump_paths(o);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // copied from State-prsim.cc
 #ifdef HAVE_STL_TREE
 #define	sizeof_tree_node(type)	sizeof(std::_Rb_tree_node<type>)
@@ -179,7 +192,7 @@ state_base::dump_source_paths(ostream& o) const {
 #endif
 
 ostream&
-state_base::dump_memory_usage(ostream& o) const {
+module_state_base::dump_memory_usage(ostream& o) const {
 	// TODO: report definitions' footprints' memory usage
 	// TODO: sum of frame sizes, accumulate over all entries
 	// tree-cache: ability to gather pointers to all entries?

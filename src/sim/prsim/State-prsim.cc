@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.79 2011/02/25 23:19:38 fang Exp $
+	$Id: State-prsim.cc,v 1.80 2011/05/03 19:21:01 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -301,7 +301,7 @@ State::pull_to_value[3][3] = {
 	\throw exception if there is an error
  */
 State::State(const entity::module& m, const ExprAllocFlags& f) : 
-		state_base(m, "prsim> "), 
+		module_state_base(m, "prsim> "), 
 		node_pool(),
 		unique_process_pool(), 
 #if PRSIM_SEPARATE_PROCESS_EXPR_MAP
@@ -861,7 +861,7 @@ footprint_frame_map_type
 const footprint_frame_map_type&
 #endif
 State::get_footprint_frame_map(const process_index_type pid) const {
-	return state_base::get_footprint_frame(pid).get_frame_map<bool_tag>();
+	return module_state_base::get_footprint_frame(pid).get_frame_map<bool_tag>();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -6229,7 +6229,7 @@ struct process_sim_state::memory_accumulator {
  */
 ostream&
 State::dump_memory_usage(ostream& o) const {
-	state_base::dump_memory_usage(o);
+	module_state_base::dump_memory_usage(o);
 {
 	const size_t ns = node_pool.size();
 	o << "node-state: ("  << ns << " * " << sizeof(node_type) <<
@@ -6414,19 +6414,7 @@ State::save_checkpoint(ostream& o) const {
 	check_event_queue();		// internal structure consistency
 	write_value(o, magic_string);
 	write_value(o, checkpoint_version);
-{
-	// save the random seed
-	ushort seed[3] = {0, 0, 0};
-	const ushort* old_seed = seed48(seed);	// libc
-	seed[0] = old_seed[0];
-	seed[1] = old_seed[1];
-	seed[2] = old_seed[2];
-	// put it back
-	seed48(seed);
-	write_value(o, seed[0]);
-	write_value(o, seed[1]);
-	write_value(o, seed[2]);
-}
+	util::numeric::write_seed48(o);
 {
 	// node_pool
 	write_value(o, node_pool.size());
@@ -6545,14 +6533,9 @@ try {
 } catch (...) {
 	cerr << bad_ckpt << endl;
 	return true;
-}{
-	// restore random seed
-	ushort seed[3];
-	read_value(i, seed[0]);
-	read_value(i, seed[1]);
-	read_value(i, seed[2]);
-	seed48(seed);
-}{
+}
+	util::numeric::read_seed48(i);
+{
 	// node_pool
 	size_t s;
 	read_value(i, s);

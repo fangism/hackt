@@ -1,0 +1,23 @@
+# "019g.iplrc"
+# example with gravity
+
+parameter repulsion_constant=0.5
+source 019a.iplrc
+
+echo suddenly turning on gravity!!!
+parameter x_gravity_coeff=2
+parameter y_gravity_coeff=2
+parameter z_gravity_coeff=2
+
+watch-objects
+watch-energy
+
+# descend-gradient-converge
+descend-potential-converge
+
+dump-state
+dump-energy
+
+snap-gravity-wells
+dump-positions
+dump-energy

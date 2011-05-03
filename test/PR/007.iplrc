@@ -1,0 +1,15 @@
+# "007.iplrc"
+# testing equilibrium state
+
+repeat 2 add-object type=0
+add-channel 0 1 type=0
+place 0 <3,0,0>
+place 1 <5,0,0>
+parameter damping=0.0
+parameter time_step=0.1
+dump-state
+watch-objects
+watch-energy
+echo Begin simulation...
+repeat 10 step
+echo nothing should change, objects already at equilibrium.

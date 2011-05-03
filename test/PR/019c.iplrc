@@ -1,0 +1,21 @@
+# "019c.iplrc"
+# example with gravity
+
+source 019.iplrc
+
+parameter x_gravity_coeff=2
+parameter y_gravity_coeff=2
+parameter z_gravity_coeff=2
+
+watch-objects
+watch-energy
+
+# descend-gradient-converge
+descend-potential-converge
+
+dump-state
+dump-energy
+
+snap-gravity-wells
+dump-positions
+dump-energy

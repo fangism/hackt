@@ -1,0 +1,15 @@
+# "004.iplrc"
+# testing forces of repulsion
+
+object-type size=<10,10,10>
+repeat 2 add-object type=1
+add-channel 0 1 type=0
+place 0 <11,12,0>
+place 1 <12,11,0>
+parameter damping=0.0
+parameter time_step=0.01
+dump-state
+watch-objects
+watch-energy
+echo Begin simulation...
+repeat 20 step

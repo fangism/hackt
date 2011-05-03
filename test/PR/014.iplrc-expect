@@ -1,0 +1,78 @@
+parameters:
+  @time=0
+  bounds=<0,0,-50>;<100,100,50>
+  damping=0.1
+  energy_tolerance=0.001
+  min_iterations=10
+  position_tolerance=0.001
+  precision=4
+  report_iterations=1
+  repulsion_coeff=1
+  repulsion_constant=0
+  temperature=0
+  time_step=0.001
+  velocity_tolerance=0.001
+  watch_deltas=0
+  watch_energy=0
+  watch_objects=0
+  x_gravity_coeff=0
+  x_gravity_constant=0
+  y_gravity_coeff=0
+  y_gravity_constant=0
+  z_gravity_coeff=0
+  z_gravity_constant=0
+randomly place free objects 
+descend-potential: ran 9 iterations from time 0 to 1.4 (V=1064)
+descend-potential: ran 8 iterations from time 1.4 to 2.6 (V=482.2)
+descend-potential: ran 22 iterations from time 2.6 to 6.6 (V=135.5)
+descend-potential: ran 10 iterations from time 6.6 to 8.2 (V=132.3)
+descend-potential: ran 7 iterations from time 8.2 to 9.2 (V=132)
+descend-potential: ran 3 iterations from time 9.2 to 9.4 (V=132)
+descend-potential: ran 3 iterations from time 9.4 to 9.6 (V=132)
+descend-potential: ran 3 iterations from time 9.6 to 9.8 (V=132)
+descend-potential: ran 3 iterations from time 9.8 to 10 (V=132)
+descend-potential: ran 3 iterations from time 10 to 10.2 (V=132)
+descend-potential: ran 3 iterations from time 10.2 to 10.4 (V=132)
+descend-potential: ran 3 iterations from time 10.4 to 10.6 (V=132)
+descend-potential: ran 3 iterations from time 10.6 to 10.8 (V=132)
+descend-potential: ran 3 iterations from time 10.8 to 11 (V=132)
+descend-potential: ran 3 iterations from time 11 to 11.2 (V=132)
+descend-potential: ran 3 iterations from time 11.2 to 11.4 (V=132)
+descend-potential: ran 3 iterations from time 11.4 to 11.6 (V=132)
+descend-potential: ran 3 iterations from time 11.6 to 11.8 (V=132)
+descend-potential: ran 3 iterations from time 11.8 to 12 (V=132)
+descend-potential: ran 3 iterations from time 12 to 12.2 (V=132)
+descend-potential: ran 3 iterations from time 12.2 to 12.4 (V=132)
+descend-potential: ran 3 iterations from time 12.4 to 12.6 (V=132)
+descend-potential: ran 3 iterations from time 12.6 to 12.8 (V=132)
+descend-potential: ran 3 iterations from time 12.8 to 13 (V=132)
+descend-potential: ran 3 iterations from time 13 to 13.2 (V=132)
+descend-potential: ran 3 iterations from time 13.2 to 13.4 (V=132)
+descend-potential: ran 3 iterations from time 13.4 to 13.6 (V=132)
+descend-potential: ran 3 iterations from time 13.6 to 13.8 (V=132)
+descend-potential: ran 3 iterations from time 13.8 to 14 (V=132)
+descend-potential: ran 3 iterations from time 14 to 14.2 (V=132)
+descend-potential: ran 3 iterations from time 14.2 to 14.4 (V=132)
+descend-potential: ran 3 iterations from time 14.4 to 14.6 (V=132)
+descend-potential: ran 3 iterations from time 14.6 to 14.8 (V=132)
+descend-potential: ran 3 iterations from time 14.8 to 15 (V=132)
+descend-potential-converge: ran 34 descend-potential from time 0 to 15 (V=132)
+object-positions:
+  [0]: @=<30,50,0> @'=<0,0,0> @"=<0,0,0>
+  [1]: @=<50,70,0> @'=<0,0,0> @"=<0,0,0>
+  [2]: @=<70,50,0> @'=<0,0,0> @"=<0,0,0>
+  [3]: @=<50,30,0> @'=<0,0,0> @"=<0,0,0>
+  [4]: @=<45.58,50.18,0.04951> @'=<-0.02043,-0.01063,-0.005455> @"=<-0.1006,-0.05261,-0.02669>
+  [5]: @=<50.29,54.9,0.04078> @'=<-0.009889,-0.0054,-0.001431> @"=<-0.05003,-0.02725,-0.007318>
+  [6]: @=<55.03,50.17,0.03642> @'=<-0.01781,-0.008758,-0.003> @"=<-0.08786,-0.0434,-0.01464>
+  [7]: @=<50.28,45.44,0.01283> @'=<-0.007908,-0.007811,0.003796> @"=<-0.04031,-0.039,0.01833>
+simple-converge: ran 129 iterations from time 15 to 40.8 (V=132)
+object-positions:
+  [0]: @=<30,50,0> @'=<0,0,0> @"=<0,0,0>
+  [1]: @=<50,70,0> @'=<0,0,0> @"=<0,0,0>
+  [2]: @=<70,50,0> @'=<0,0,0> @"=<0,0,0>
+  [3]: @=<50,30,0> @'=<0,0,0> @"=<0,0,0>
+  [4]: @=<45.3,50.02,0.004713> @'=<-0.002035,-0.001214,-0.0002611> @"=<-0.007971,-0.004755,-0.001024>
+  [5]: @=<50.03,54.75,0.004715> @'=<-0.002077,-0.001192,-0.0002614> @"=<-0.008138,-0.00467,-0.001025>
+  [6]: @=<54.77,50.02,0.004713> @'=<-0.002035,-0.001214,-0.0002609> @"=<-0.007971,-0.004753,-0.001024>
+  [7]: @=<50.03,45.29,0.004711> @'=<-0.002075,-0.001192,-0.0002606> @"=<-0.008129,-0.004669,-0.001022>

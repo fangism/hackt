@@ -1,0 +1,10 @@
+# "006.iplrc"
+# testing random walk
+
+add-object
+parameter temperature=0
+watch-objects
+repeat 5 step
+parameter temperature=10
+repeat 20 step
+

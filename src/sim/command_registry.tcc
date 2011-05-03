@@ -1,6 +1,6 @@
 /**
 	\file "sim/command_registry.tcc"
-	$Id: command_registry.tcc,v 1.21 2011/02/04 02:23:36 fang Exp $
+	$Id: command_registry.tcc,v 1.22 2011/05/03 19:20:55 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_REGISTRY_TCC__
@@ -863,6 +863,28 @@ static
 char** (*__dummy_completion)(const char*, int, int) = NULL;
 #endif
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Without any hierarchical instance completion module.
+ */
+template <class Command>
+command_registry<Command>::readline_init::readline_init() :
+		_compl(
+#ifdef	USE_READLINE
+			rl_attempted_completion_function,
+#else
+			__dummy_completion, 
+#endif
+			completion), 
+		_mod(instance_completion_module, NULL),
+		_dirs(instance_completion_dirs, &dir_stack)
+{
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Uses compiled module for instance hierarchy name completion.
+ */
 template <class Command>
 command_registry<Command>::readline_init::readline_init(const module& m) :
 		_compl(
@@ -885,6 +907,7 @@ command_registry<Command>::readline_init::readline_init(const module& m) :
 #endif
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class Command>
 command_registry<Command>::readline_init::~readline_init() { }
 

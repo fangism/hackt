@@ -1,6 +1,6 @@
 /**
 	\file "util/optparse.tcc"
-	$Id: optparse.tcc,v 1.2 2010/05/13 00:32:04 fang Exp $
+	$Id: optparse.tcc,v 1.3 2011/05/03 19:21:07 fang Exp $
  */
 
 #ifndef	__UTIL_OPTPARSE_TCC__
@@ -12,6 +12,7 @@
 #include "util/optparse.h"
 #include "util/tokenize.h"
 #include "util/string.h"
+#include "util/indent.h"
 
 namespace util {
 using std::copy;
@@ -166,7 +167,7 @@ options_map_impl<T>::dump(ostream& o, const options_struct_type& t) const {
 	for ( ; i!=e; ++i) {
 		const opt_entry& s(i->second);
 	if (s.printer) {
-		o << i->first << '=';
+		o << auto_indent << i->first << '=';
 		(*s.printer)(o, t) << endl;
 	}       // else is a meta option
 	}
@@ -187,7 +188,7 @@ options_map_impl<T>::help(ostream& o, const bool t, const bool d) const {
 	const map_iterator e(options_map.end());
 	for ( ; i!=e; ++i) {
 		const opt_entry& s(i->second);
-		o << i->first << ' ';
+		o << auto_indent << i->first << ' ';
 	if (t) {
 		o << '(';
 		if (s.type) {

@@ -1,6 +1,42 @@
 # "test/ChangeLog"
-#	$Id: ChangeLog,v 1.107 2011/03/01 17:36:11 fang Exp $
+#	$Id: ChangeLog,v 1.108 2011/05/03 19:21:12 fang Exp $
 # ChangeLog for test directory.
+
+2011-05-03	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-70-merged-pr-01-20:
+	  Merged branch to trunk.
+
+
+2011-05-02	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-64-pr-01-20:
+	  Added resolve-floating-point-diffs.awk to assist in filtering
+		out numerical differences within a specified tolerance,
+		to account for slightly different floating point 
+		results on different machines.  
+		ipple's (PR) tests are referenced on a 32b x86 arch, 
+		and differences occur on x86_64.
+
+
+2011-04-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-64-pr-01-17:
+	  Make.test-ipl: added support for .ipl-dot, .ipl-pdf, using fdp.
+
+
+2011-04-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-64-pr-01-08:
+	  Make.test-ipl: enabled and tested ipl-checkpoint testing.
+
+
+2011-04-15	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-64-pr-01-04:
+	  Added Make.test-ipl for placer tests, but not included by 
+		Make.test-tail yet (untested).
+
 
 2010-03-01	David Fang		<fangism@users.sourceforge.net>
 

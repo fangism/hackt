@@ -2,7 +2,7 @@
 	\file "util/numeric/random.h"
 	Template specializations for random numbers, 
 	wrapper interface to stdlib *rand48 functions.  
-	$Id: random.h,v 1.4 2011/01/13 22:19:10 fang Exp $
+	$Id: random.h,v 1.5 2011/05/03 19:21:10 fang Exp $
  */
 
 #ifndef	__UTIL_NUMERIC_RANDOM_H__
@@ -10,6 +10,7 @@
 
 #include "util/libc.h"
 #include <cstdlib>
+#include <iosfwd>
 
 namespace util {
 namespace numeric {
@@ -28,6 +29,9 @@ struct rand48;
 template <>
 struct rand48<double> {
 	typedef	unsigned short		seed_type[3];
+
+	rand48() { }
+
 	/**
 		\return value from [0.0, 1.0)
 	 */
@@ -54,6 +58,9 @@ struct rand48<double> {
 template <>
 struct rand48<unsigned long> {
 	typedef	unsigned short		seed_type[3];
+
+	rand48() { }
+
 	/**
 		\return value from [0, 2^31 -1]
 	 */
@@ -83,6 +90,9 @@ template <>
 struct rand48<size_t> : public rand48<unsigned long> {
 	typedef	rand48<unsigned long>	impl_type;
 	typedef	impl_type::seed_type	seed_type;
+
+	rand48() { }
+
 	// inherit the rest
 };	// end struct rand48
 #endif
@@ -95,6 +105,9 @@ struct rand48<size_t> : public rand48<unsigned long> {
 template <>
 struct rand48<long> {
 	typedef	unsigned short		seed_type[3];
+
+	rand48() { }
+
 	/**
 		\return value from [-2^31, 2^31 -1]
 	 */
@@ -121,6 +134,8 @@ template <>
 struct rand48<bool> {
 	typedef	rand48<long>		base_rand;
 
+	rand48() { }
+
 	bool
 	operator () (void) const {
 		return base_rand()() & 0x1;	// or any bit
@@ -132,6 +147,15 @@ struct rand48<bool> {
 	}
 
 };	// end struct rand48
+
+//=============================================================================
+extern
+void
+write_seed48(std::ostream&);
+
+extern
+void
+read_seed48(std::istream&);
 
 //=============================================================================
 }	// end namespace numeric

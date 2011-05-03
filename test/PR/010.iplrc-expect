@@ -1,0 +1,44 @@
+parameters:
+  @time=0
+  bounds=<0,0,-50>;<100,100,50>
+  damping=0.1
+  energy_tolerance=0.001
+  min_iterations=10
+  position_tolerance=0.001
+  precision=4
+  report_iterations=1
+  repulsion_coeff=1
+  repulsion_constant=0
+  temperature=0
+  time_step=0.001
+  velocity_tolerance=0.001
+  watch_deltas=0
+  watch_energy=0
+  watch_objects=0
+  x_gravity_coeff=0
+  x_gravity_constant=0
+  y_gravity_coeff=0
+  y_gravity_constant=0
+  z_gravity_coeff=0
+  z_gravity_constant=0
+object types:
+  [0]: size=<2,2,2>
+channel types:
+  [0]: spring_coeff=1 equilibrium=0 
+objects:
+  [0]: @=<10,10,0> @'=<0,0,0> @"=<0,0,0> (fixed) [size=<2,2,2>]
+  [1]: @=<2,6,0> @'=<0,0,0> @"=<0,0,0> [size=<2,2,2>]
+  [2]: @=<6,2,0> @'=<0,0,0> @"=<0,0,0> [size=<2,2,2>]
+channels:
+  [0]: (0,1) [spring_coeff=1 equilibrium=2 ]
+  [1]: (0,2) [spring_coeff=1 equilibrium=2 ]
+  [2]: (1,2) [spring_coeff=1 equilibrium=2 ]
+descend-potential: ran 19 iterations from time 0 to 1.7 (V=0.2684)
+descend-potential: ran 14 iterations from time 1.7 to 2.9 (V=0.009239)
+descend-potential: ran 24 iterations from time 2.9 to 5.1 (V=0.0001582)
+descend-potential: ran 13 iterations from time 5.1 to 6.2 (V=2.974e-06)
+descend-potential-converge: ran 4 descend-potential from time 0 to 6.2 (V=2.974e-06)
+object-positions:
+  [0]: @=<10,10,0> @'=<0,0,0> @"=<0,0,0>
+  [1]: @=<9.598,8.233,0> @'=<0.003597,-0.002997,0> @"=<0.0008036,-0.0006664,0>
+  [2]: @=<8.06,9.508,0> @'=<-0.01346,0.0004844,0> @"=<0.0004183,0.0009764,0>

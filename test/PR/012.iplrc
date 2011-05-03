@@ -1,0 +1,32 @@
+# "012.iplrc"
+# quad problem
+
+repeat 4 add-pin
+place 0 <30,50,0>
+place 1 <50,70,0>
+place 2 <70,50,0>
+place 3 <50,30,0>
+repeat 4 add-object
+add-channel 0 4
+add-channel 1 5
+add-channel 2 6
+add-channel 3 7
+add-channel 4 5
+add-channel 6 5
+add-channel 6 7
+add-channel 4 7
+dump-parameters
+echo randomly place free objects
+scatter
+parameter time_step=0.1
+parameter damping=0.3
+# watch-energy
+# watch-objects
+
+descend-potential-converge
+dump-positions
+
+parameter damping=4.0
+simple-converge
+dump-positions
+

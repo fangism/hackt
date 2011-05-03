@@ -1,0 +1,122 @@
+@c "ipple/commands.texi"
+@c $Id: commands.texi,v 1.2 2011/05/03 19:20:35 fang Exp $
+
+@node Commands
+@chapter Commands
+
+This chapter documents the various commands available in
+the interpreter.  
+Commands are organized into categories.  
+
+@strong{FYI:} the command documentation has been extracted from 
+source file @file{PR/pr-command.cc}.  
+
+@menu
+* Built-in Commands::
+* General Commands::
+* Simulation Commands::
+* Info Commands::
+* Tracing Commands::
+* Debug Commands::
+@end menu
+
+@c ----------------------------------------------------------------------------
+@node Built-in Commands
+@section Built-in Commands
+
+The following commands are listed in the @t{builtin} category.  
+
+@include cmd/help.texi
+@include cmd/echo.texi
+@include cmd/comment.texi
+@include cmd/exit.texi
+@include cmd/abort.texi
+@include cmd/repeat.texi
+@include cmd/interpret.texi
+
+The following command is useful for showing each executed command.
+
+@include cmd/echo-commands.texi
+
+The following commands pertain to command aliases.
+
+@include cmd/alias.texi
+@include cmd/unalias.texi
+@include cmd/unaliasall.texi
+@include cmd/aliases.texi
+
+Shell commands may be executed by prefixing a line with '!'.  
+For example, @samp{!whoami}.  
+
+@strong{New}:
+Block comments are pseudo C-style, using @t{/*} and @t{*/} to enclose comments.
+It is recommended to start use block-comment delimiters on their own lines
+to avoid confusion.  
+The line parser is very crude.
+Nested comments are supported.  
+Files with unterminated comments will be reported as errors.  
+@t{#}-comments are allowed within block comments.  
+
+@c ----------------------------------------------------------------------------
+@node General Commands
+@section General Commands
+
+The following commands are listed in the @t{general} category.  
+
+@include cmd/source.texi
+@include cmd/addpath.texi
+@c @include cmd/paths.texi
+
+@c ----------------------------------------------------------------------------
+@node Simulation Commands
+@section @t{simulation} Commands
+
+@include cmd/seed48.texi
+@include cmd/place.texi
+@include cmd/pin.texi
+@include cmd/scatter.texi
+@include cmd/step.texi
+@include cmd/snap-gravity-wells.texi
+@include cmd/kill-momentum.texi
+@include cmd/shake-all.texi
+
+Simulation and convergence routines.
+
+@include cmd/simple-converge.texi
+@include cmd/descend-gradient.texi
+@include cmd/descend-gradient-converge.texi
+@include cmd/descend-potential.texi
+@include cmd/descend-potential-converge.texi
+
+@c ----------------------------------------------------------------------------
+@node Info Commands
+@section @t{info} Commands
+
+@include cmd/dump-state.texi
+@include cmd/dump-parameters.texi
+@include cmd/dump-objects.texi
+@include cmd/dump-positions.texi
+@include cmd/dump-energy.texi
+
+@c ----------------------------------------------------------------------------
+@node Tracing Commands
+@section @t{tracing} Commands
+@cindex checkpoint
+
+Checkpointing is useful for saving the state of the simulator, 
+which allows one to interrupt and resume long simulations, 
+and also examine points of failure in detail.  
+
+@include cmd/save.texi
+@include cmd/load.texi
+@c @include cmd/autosave.texi
+
+@c ----------------------------------------------------------------------------
+@node Debug Commands
+@section @t{debug} Commands
+
+This section is reserved for commands that are only useful for debugging
+the simulator.  
+Some commands that end in @t{-debug} have already been mentioned
+in the other sections.  
+

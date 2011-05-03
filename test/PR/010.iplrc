@@ -1,0 +1,23 @@
+# "010.iplrc"
+# three-body problem, 1-fixed
+
+repeat 3 add-object
+place 0 <10,10,0>
+place 1 <2,6,0>
+place 2 <6,2,0>
+pin 0
+add-channel 0 1
+add-channel 0 2
+add-channel 1 2
+dump-state
+parameter time_step=0.1
+parameter damping=0.2
+# watch-energy
+# watch-objects
+
+descend-potential-converge
+dump-positions
+
+# simple-converge
+# dump-positions
+

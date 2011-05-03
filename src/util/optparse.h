@@ -4,16 +4,15 @@
 	Simply tokenizes into string sets, which is then handed off
 	elsewhere for processing.
 	Options can come from file or command-line argv.
-	$Id: optparse.h,v 1.5 2010/05/13 00:32:03 fang Exp $
+	$Id: optparse.h,v 1.6 2011/05/03 19:21:06 fang Exp $
  */
 
 #ifndef	__UTIL_OPTPARSE_H__
 #define	__UTIL_OPTPARSE_H__
 
 #include <iosfwd>
-#include <string>
-#include <list>
 #include <map>
+#include "util/optparse_fwd.h"
 
 namespace util {
 using std::string;
@@ -23,20 +22,6 @@ using std::istream;
 using std::map;
 
 //=============================================================================
-/**
-	Storage structure for options.
- */
-struct option_value {
-	string		key;
-	list<string>	values;
-
-	bool
-	empty(void) const { return key.empty(); }
-};	// end struct option_value
-
-typedef	list<option_value>		option_value_list;
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 operator << (ostream&, const option_value&);
 
@@ -47,6 +32,8 @@ operator << (ostream&, const option_value_list&);
 /**
 	Parses a single option of the form:
 	key=value,value,...
+	TODO: support grouping characters to allow separator nesting
+		within parentheses, braces, brackets...
  */
 extern
 option_value
@@ -228,6 +215,40 @@ struct options_map_impl {
 	help(ostream&, const bool t = true, const bool d = true) const;
 
 };	// end class options_map
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Sets a value of a structure member according to first value
+	associated with option.  
+	Such functions should be re-usable in util library.  
+	\param T is value type, can be deduced from arguments!  
+	\param opt key=values option value association.  
+	\param mem is a pointer-to-member of type T.
+ */
+template <class O, typename T>
+// static
+inline
+bool
+set_option_member_single_numeric_value(const option_value& opt,
+		O& n_opt,
+		T O::*mem) {
+	// simply forwards to a default reasonable implementation
+	return options_map_impl<O>::set_member_single_numeric_value(
+			opt, n_opt, mem);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class O>
+// static
+inline
+bool
+set_option_member_single_string(const option_value& opt,
+                O& n_opt,
+		string O::*mem) {
+	// simply forwards to a default reasonable implementation
+	return options_map_impl<O>::set_member_single_string(
+			opt, n_opt, mem);
+}
 
 //=============================================================================
 }	// end namespace util

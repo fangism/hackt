@@ -1,5 +1,55 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.120 2011/03/30 20:59:25 fang Exp $
+#	$Id: ChangeLog,v 1.121 2011/05/03 19:21:04 fang Exp $
+
+2011-05-03	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-70-merged-pr-01-20:
+	  Merged branch to trunk.
+
+
+2011-04-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-64-pr-01-07:
+	  util/random.h: added default empty constructors
+	  Added util/numeric/constants.h for popular math constants.
+	  Added util/numeric/trigonometry.h for sincos function.
+
+
+2011-04-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-64-pr-01-06:
+	  util/optparse.tcc: dump enhanced with auto_indent
+
+
+	* HACKT-00-01-04-main-00-84-64-pr-01-05:
+	  Added util/iomanip.h for changing and saving ios_base
+		parameters like precision, width.
+
+
+2011-04-15	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-64-pr-01-04:
+	  util/optparse.h: inherited some re-usable functions.
+	  util/numeric/random.{h,cc}: added write_seed48 and read_seed48.
+
+
+2011-04-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-64-pr-01-03:
+	  util/optparse.h: split out util/optparse_fwd.h for type decl. only
+	  util/vector_ops.h: added new functions
+		apply, min_swap_element, min/max_clamp_elements
+	  util/numeric/abs.h: new wrapper for abs() absolute value
+	  util/numeric/zero.h: wrapper for type-based 0 value
+
+
+2011-04-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-64-pr-01-01:
+	  Added util/vector_ops.h: define and overload valarray/vector 
+		operations through a single interface.
+	  util/array.h: added size() member function.
+
 
 2011-03-30	David Fang		<fangism@users.sourceforge.net>
 

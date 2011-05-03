@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.47 2011/02/09 03:34:43 fang Exp $
+	$Id: State-prsim.h,v 1.48 2011/05/03 19:21:02 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -96,7 +96,7 @@ struct watch_entry {
 		For now, only the expr_graph_node_pool is log(N) access, 
 		but it's not accessed during simulation, so HA!
  */
-class State : public state_base {
+class State : public module_state_base {
 	// too lazy to write public mutator methods for the moment.  
 	friend class ExprAlloc;
 	friend class channel_manager;
@@ -550,7 +550,7 @@ private:
 #endif
 #if CACHE_GLOBAL_FOOTPRINT_FRAMES
 public:
-	// parameters for managing state_base's footprint_frame cache
+	// parameters for managing module_state_base's footprint_frame cache
 	// period at which cache decays, half-life
 	size_t					cache_half_life;
 private:

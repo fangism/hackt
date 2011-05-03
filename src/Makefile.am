@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.251 2011/03/23 00:36:05 fang Exp $
+#	$Id: Makefile.am,v 1.252 2011/05/03 19:20:40 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -53,7 +53,9 @@ endif
 ########################### main dependencies #################################
 
 bin_PROGRAMS = hackt haco haccreate \
-	hacobjdump hflat hacpp hacprsim hacchpsim hacknet
+	hacobjdump hflat hacpp hacprsim hacchpsim hacknet \
+	ipple
+# coming soon: igre
 
 bin_SCRIPTS = scripts/init_hackt.csh scripts/init_hackt.sh \
 	scripts/hackt-env scripts/hacalloc hacinstdump hac-cpp
@@ -95,7 +97,7 @@ cast_test_static_LDADD = $(cast_test_LDADD)
 # convenience libraries
 # want to install libhackt.la next... but causes undefined symbols...
 noinst_LTLIBRARIES = libhackt.la \
-	$(UTILLIBS) libhacktexec.la libhacktinstref.la \
+	libhacktexec.la libhacktinstref.la \
 	libhacktcommon.la $(FUNLIBS)
 
 # don't actually want to build these, but have the rules for them
@@ -107,11 +109,15 @@ EXTRA_LTLIBRARIES += \
 # Wish automake would automatically order these properly.
 # Just topological sort libraries based on LIBADD deps.
 pkglib_LTLIBRARIES = \
+	$(UTILLIBS) \
 	libhacktast.la \
 	libhacktparsers.la \
 	libhacktlib.la \
 	libhacktsim.la \
-	libhacknet.la
+	libhacktprsim.la \
+	libhacktchpsim.la \
+	libhacknet.la \
+	libhacktpr.la
 # lib_LTLIBRARIES = libhacktlib.la
 if HAVE_LIBGUILE
 pkglib_LTLIBRARIES += libhacktguile.la
@@ -165,12 +171,12 @@ hflat_LDADD = libhacktlib.la
 
 hacprsim_SOURCES = main/prsim.cc
 hacprsim_CPPFLAGS = -DWITH_MAIN
-hacprsim_LDADD = libhacktsim.la
+hacprsim_LDADD = libhacktprsim.la
 
 # enhanced with libtool/dlopen capability
 hacchpsim_SOURCES = main/chpsim.cc
 hacchpsim_CPPFLAGS = -DWITH_MAIN
-hacchpsim_LDADD = libhacktsim.la
+hacchpsim_LDADD = libhacktchpsim.la
 # -dlopen self
 # hacchpsim_LDFLAGS = -export-dynamic 
 # (only if symbols in executable needed to resolve from modules)
@@ -179,6 +185,8 @@ hacknet_SOURCES = main/hacknet.cc
 hacknet_CPPFLAGS = -DWITH_MAIN
 hacknet_LDADD = libhacknet.la
 
+ipple_SOURCES = main/ipple.cc PR/pr-command.cc
+ipple_LDADD = libhacktpr.la libhacktsim.la
 
 main/hacchpsim-chpsim.o main/hacprsim-prsim.o: install_paths.h
 main/chpsim.lo main/chpsim.o: install_paths.h
@@ -203,7 +211,7 @@ libhacktchpsimguile_la_SOURCES = \
 libhacktchpsimguile_la_CPPFLAGS = $(GUILE_CPPFLAGS) -DNO_REGISTER
 libhacktchpsimguile_la_CXXFLAGS = $(AM_CXXFLAGS) $(GUILE_WARN_FLAGS) \
 	-Wno-old-style-cast -Werror 
-libhacktchpsimguile_la_LIBADD = libhacktguile.la libhacktsim.la 
+libhacktchpsimguile_la_LIBADD = libhacktguile.la libhacktchpsim.la 
 
 # this name is needed for libtool objects
 LIBHACKTPARSERS_LA = libhacktparsers_la
@@ -213,7 +221,7 @@ LIBBOGUS3_LA = libbogus3_la
 LIBBOGUS4_LA = libbogus4_la
 LIBBOGUS5_LA = libbogus5_la
 
-libhacktexec_la_LIBADD = libhacktsim.la libhacknet.la
+libhacktexec_la_LIBADD = libhacktprsim.la libhacktchpsim.la libhacknet.la
 
 HACKTLIB_CC_FILES = \
 	main/main_funcs.cc \
@@ -232,8 +240,6 @@ libhacktlib_la_LIBADD = libhacktparsers.la
 # libhacktexec.la
 
 libhacknet_la_LIBADD = libhacktlib.la
-
-libhacktsim_la_LIBADD = libhacktlib.la
 
 libhacktparsers_la_LIBADD = libhacktast.la
 
@@ -287,7 +293,7 @@ endif
 vpihacprsim_la_SOURCES = sim/prsim/vpi-prsim.cc
 vpihacprsim_la_CPPFLAGS = $(VPI_INCLUDE)
 vpihacprsim_la_LDFLAGS = -module $(VPI_LDPATH)
-vpihacprsim_la_LIBADD = libhacktsim.la
+vpihacprsim_la_LIBADD = libhacktprsim.la
 
 # need to list auto-generated header first to guarantee correct build
 # order in parallel builds.  
@@ -1001,7 +1007,9 @@ SIM_CC_FILES = \
 	sim/random_time.cc \
 	sim/state_base.cc \
 	sim/signal_handler.cc \
-	sim/trace_common.cc \
+	sim/trace_common.cc
+
+PRSIM_CC_FILES = \
 	sim/prsim/Channel-prsim.cc \
 	sim/prsim/Command-prsim.cc \
 	sim/prsim/Command-prsim-export.cc \
@@ -1013,7 +1021,9 @@ SIM_CC_FILES = \
 	sim/prsim/State-prsim.cc \
 	sim/prsim/Trace-prsim.cc \
 	sim/prsim/process_graph.cc \
-	sim/prsim/process_state.cc \
+	sim/prsim/process_state.cc
+
+CHPSIM_CC_FILES = \
 	sim/chpsim/nonmeta_context.cc \
 	sim/chpsim/Command.cc \
 	sim/chpsim/Dependence.cc \
@@ -1031,7 +1041,9 @@ SIM_TCC_FILES = \
 	sim/command_macros.tcc \
 	sim/command_registry.tcc \
 	sim/signal_handler.tcc \
-	sim/event.tcc \
+	sim/event.tcc
+
+PRSIM_TCC_FILES = \
 	sim/prsim/util.tcc \
 	sim/prsim/Rule.tcc
 
@@ -1040,11 +1052,16 @@ SIM_H_FILES = $(SIM_CC_FILES:.cc=.h) \
 	sim/common.h \
 	sim/command_error_codes.h \
 	sim/command_completion.h \
-	sim/devel_switches.h \
+	sim/devel_switches.h
+
+PRSIM_H_FILES = $(PRSIM_CC_FILES:.cc=.h) \
+	$(PRSIM_TCC_FILES:.tcc=.h) \
 	sim/prsim/devel_switches.h \
 	sim/prsim/enums.h \
 	sim/prsim/ExprAllocFlags.h \
-	sim/prsim/Exception.h \
+	sim/prsim/Exception.h
+
+CHPSIM_H_FILES = $(CHPSIM_CC_FILES:.cc=.h) \
 	sim/chpsim/chpsim_dlfunction.h \
 	sim/chpsim/StateConstructorFlags.h \
 	sim/chpsim/devel_switches.h \
@@ -1060,6 +1077,23 @@ NET_TCC_FILES =
 NET_H_FILES = \
 	$(NET_CC_FILES:.cc=.h) \
 	net/common.h
+
+PR_CC_FILES = \
+	PR/channel.cc \
+	PR/numerics.cc \
+	PR/gravity_well.cc \
+	PR/pcanvas.cc \
+	PR/placement_engine.cc \
+	PR/placer_options.cc \
+	PR/tile_instance.cc
+
+PR_H_FILES = $(PR_CC_FILES:.cc=.h) \
+	PR/channel_type.h \
+	PR/obstacle.h \
+	PR/pr-command.h \
+	PR/rcanvas.h \
+	PR/tile_type.h \
+	PR/pr_utils.h
 
 # libhacktexec sources
 MAIN_EXEC_CC_FILES = \
@@ -1168,8 +1202,17 @@ echo-libhacktexec-sources:
 libhacktexec_la_LIBADD += $(LIBMISCFUN)
 
 libhacktsim_la_SOURCES = $(SIM_CC_FILES) $(SIM_TCC_FILES) $(SIM_H_FILES)
+libhacktsim_la_LIBADD = libhacktlib.la
+
+libhacktprsim_la_SOURCES = $(PRSIM_CC_FILES) $(PRSIM_TCC_FILES) $(PRSIM_H_FILES)
+libhacktprsim_la_LIBADD = libhacktsim.la
+
+libhacktchpsim_la_SOURCES = $(CHPSIM_CC_FILES) $(CHPSIM_H_FILES)
+libhacktchpsim_la_LIBADD = libhacktsim.la
 
 libhacknet_la_SOURCES = $(NET_CC_FILES) $(NET_TCC_FILES) $(NET_H_FILES)
+
+libhacktpr_la_SOURCES = $(PR_CC_FILES) $(PR_H_FILES)
 
 # any other files that depend on automatically generated headers
 # should have explicit dependencies.  
@@ -1238,7 +1281,10 @@ ALL_HEADER_FILES += \
 	$(AST_H_FILES) \
 	$(PARSER_H_FILES) \
 	$(SIM_H_FILES) \
+	$(PRSIM_H_FILES) \
+	$(CHPSIM_H_FILES) \
 	$(NET_H_FILES) \
+	$(PR_H_FILES) \
 	$(HACKTLIB_H_FILES) \
 	$(LIBHACKTGUILE_H_FILES) \
 	$(MAIN_EXEC_H_FILES)
@@ -1249,6 +1295,7 @@ ALL_TCC_FILES += \
 	$(OBJECT_REF_TCC_FILES) \
 	$(MAIN_EXEC_TCC_FILES) \
 	$(SIM_TCC_FILES) \
+	$(PRSIM_TCC_FILES) \
 	$(AST_TCC_FILES)
 
 # don't actually need -l[f]l

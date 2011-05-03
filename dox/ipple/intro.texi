@@ -1,0 +1,15 @@
+@c "ipple/intro.texi"
+@c $Id: intro.texi,v 1.2 2011/05/03 19:20:35 fang Exp $
+
+@node Introduction
+@chapter Introduction
+
+@command{ipple} is a physics simulator implementation of a 
+general placement engine. 
+@command{ipple} is part of the HACKT tool set, 
+but is actually an entirely generic tool for use in any design toolchain.  
+The placement engine uses various methods of mechanical simulation
+to find the minimum potential energy resting state of a system.
+The simulation however is user-driven and can be scripted to 
+produce custom simulated annealing schedules.  
+

@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.inc,v 1.47 2011/02/04 02:23:39 fang Exp $
+#	$Id: Makefile.inc,v 1.48 2011/05/03 19:21:06 fang Exp $
 
 # TODO: consider moving guile support down to subdirectory, like lang/guile
 #	vi: ft=automake
@@ -121,6 +121,7 @@ UTIL_HEADER_FILES = \
 	util/indent.h \
 	util/index_functor.h \
 	util/inttypes.h \
+	util/iomanip.h \
 	util/iterator_more.h \
 	util/libc.h \
 	util/libc_temp.h \
@@ -162,7 +163,9 @@ UTIL_HEADER_FILES = \
 	util/nullary_function_fwd.h \
 	util/nullary_function.h \
 	util/null_construct.h \
+	util/numeric/abs.h \
 	util/numeric/bigger_ints.h \
+	util/numeric/constants.h \
 	util/numeric/clz.h \
 	util/numeric/ctz.h \
 	util/numeric/div.h \
@@ -175,9 +178,12 @@ UTIL_HEADER_FILES = \
 	util/numeric/popcount.h \
 	util/numeric/random.h \
 	util/numeric/sign_traits.h \
+	util/numeric/trigonometry.h \
+	util/numeric/zero.h \
 	util/numeric/zerodiv_detect.h \
 	util/offset_array.h \
 	util/operators.h \
+	util/optparse_fwd.h \
 	util/optparse.h \
 	util/packed_array_fwd.h \
 	util/persistent_fwd.h \
@@ -214,6 +220,7 @@ UTIL_HEADER_FILES = \
 	util/utypes.h \
 	util/value_saver_fwd.h \
 	util/value_saver.h \
+	util/vector_ops.h \
 	util/visitee.h \
 	util/visitor_functor.h \
 	util/what_fwd.h \
@@ -339,6 +346,9 @@ UTIL_DIRS = util util/numeric util/memory util/STL \
 	util/lang util/lang/lexyacc util/lang/CX util/progs
 
 CLEANSUBDIRS += $(UTIL_DIRS)
+
+# oddly, this dir gets missed during distclean
+DISTCLEANDIRS += util/progs/$(LTDL_OBJDIR)
 
 util/.cvsignore: .cvsignore
 	$(CP) $? $@

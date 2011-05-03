@@ -1,0 +1,17 @@
+# "017a.iplrc"
+# testing gravity wells
+
+source 017.iplrc
+
+dump-state
+watch-objects
+watch-energy
+
+echo first, expect no change because z-gravity = 0.0
+repeat 3 step
+
+parameter z_gravity_coeff=0.5
+echo turning on z-gravity
+dump-state
+repeat 5 step
+

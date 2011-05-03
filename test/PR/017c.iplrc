@@ -1,0 +1,17 @@
+# "017c.iplrc"
+# testing gravity wells
+
+source 017.iplrc
+
+# dump-state
+watch-objects
+watch-energy
+
+parameter z_gravity_coeff=0.5
+echo turning on z-gravity
+# dump-state
+
+# repeat-descend-potential
+echo repeat descend-potential
+descend-potential-converge
+

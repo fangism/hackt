@@ -1,6 +1,6 @@
 /**
 	\file "sim/command_registry.h"
-	$Id: command_registry.h,v 1.14 2010/07/07 23:01:26 fang Exp $
+	$Id: command_registry.h,v 1.15 2011/05/03 19:20:54 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_REGISTRY_H__
@@ -115,8 +115,12 @@ public:
 		value_saver<const module*>		_mod;
 		value_saver<const directory_stack*>	_dirs;
 	public:
+	
+	readline_init();
+
 	explicit
 	readline_init(const module&);
+
 	~readline_init();
 	} __ATTRIBUTE_UNUSED__ ;	// end struct readline_init
 private:

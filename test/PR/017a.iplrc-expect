@@ -1,0 +1,126 @@
+parameters:
+  @time=0
+  bounds=<0,0,-50>;<100,100,50>
+  damping=0.5
+  energy_tolerance=0.001
+  min_iterations=10
+  position_tolerance=0.001
+  precision=4
+  report_iterations=1
+  repulsion_coeff=1
+  repulsion_constant=0
+  temperature=0
+  time_step=0.1
+  velocity_tolerance=0.001
+  watch_deltas=0
+  watch_energy=0
+  watch_objects=0
+  x_gravity_coeff=0
+  x_gravity_constant=0
+  y_gravity_coeff=0
+  y_gravity_constant=0
+  z_gravity_coeff=0
+  z_gravity_constant=0
+object types:
+  [0]: size=<2,2,2>
+channel types:
+  [0]: spring_coeff=1 equilibrium=0 
+objects:
+  [0]: @=<20,20,10> @'=<0,0,0> @"=<0,0,0> [size=<2,2,2>]
+  [1]: @=<10,10,-5> @'=<0,0,0> @"=<0,0,0> [size=<2,2,2>]
+channels:
+z-wells: { 0, }
+first, expect no change because z-gravity = 0.0 
+
+@time=0
+object-positions:
+  [0]: @=<20,20,10> @'=<0,0,0> @"=<0,0,0>
+  [1]: @=<10,10,-5> @'=<0,0,0> @"=<0,0,0>
+T=0, V=0, E=0, L=0
+
+@time=0.1
+object-positions:
+  [0]: @=<20,20,10> @'=<0,0,0> @"=<0,0,0>
+  [1]: @=<10,10,-5> @'=<0,0,0> @"=<0,0,0>
+T=0, V=0, E=0, L=0
+
+@time=0.2
+object-positions:
+  [0]: @=<20,20,10> @'=<0,0,0> @"=<0,0,0>
+  [1]: @=<10,10,-5> @'=<0,0,0> @"=<0,0,0>
+T=0, V=0, E=0, L=0
+
+@time=0.3
+object-positions:
+  [0]: @=<20,20,10> @'=<0,0,0> @"=<0,0,0>
+  [1]: @=<10,10,-5> @'=<0,0,0> @"=<0,0,0>
+T=0, V=0, E=0, L=0
+turning on z-gravity 
+parameters:
+  @time=0.3
+  bounds=<0,0,-50>;<100,100,50>
+  damping=0.5
+  energy_tolerance=0.001
+  min_iterations=10
+  position_tolerance=0.001
+  precision=4
+  report_iterations=1
+  repulsion_coeff=1
+  repulsion_constant=0
+  temperature=0
+  time_step=0.1
+  velocity_tolerance=0.001
+  watch_deltas=0
+  watch_energy=1
+  watch_objects=1
+  x_gravity_coeff=0
+  x_gravity_constant=0
+  y_gravity_coeff=0
+  y_gravity_constant=0
+  z_gravity_coeff=0.5
+  z_gravity_constant=0
+object types:
+  [0]: size=<2,2,2>
+channel types:
+  [0]: spring_coeff=1 equilibrium=0 
+objects:
+  [0]: @=<20,20,10> @'=<0,0,0> @"=<0,0,0> [size=<2,2,2>]
+  [1]: @=<10,10,-5> @'=<0,0,0> @"=<0,0,0> [size=<2,2,2>]
+channels:
+z-wells: { 0, }
+
+@time=0.3
+object-positions:
+  [0]: @=<20,20,10> @'=<0,0,0> @"=<0,0,-5>
+  [1]: @=<10,10,-5> @'=<0,0,0> @"=<0,0,2.5>
+T=0, V=31.25, E=31.25, L=-31.25
+
+@time=0.4
+object-positions:
+  [0]: @=<20,20,9.975> @'=<0,0,-0.5> @"=<0,0,-4.988>
+  [1]: @=<10,10,-4.988> @'=<0,0,0.25> @"=<0,0,2.494>
+T=0.1562, V=31.09, E=31.25, L=-30.94
+
+@time=0.5
+object-positions:
+  [0]: @=<20,20,9.9> @'=<0,0,-0.9737> @"=<0,0,-4.95>
+  [1]: @=<10,10,-4.95> @'=<0,0,0.4869> @"=<0,0,2.475>
+T=0.5926, V=30.63, E=31.22, L=-30.04
+
+@time=0.6
+object-positions:
+  [0]: @=<20,20,9.778> @'=<0,0,-1.42> @"=<0,0,-4.889>
+  [1]: @=<10,10,-4.889> @'=<0,0,0.71> @"=<0,0,2.444>
+T=1.26, V=29.88, E=31.14, L=-28.62
+
+@time=0.7
+object-positions:
+  [0]: @=<20,20,9.611> @'=<0,0,-1.838> @"=<0,0,-4.806>
+  [1]: @=<10,10,-4.806> @'=<0,0,0.919> @"=<0,0,2.403>
+T=2.111, V=28.87, E=30.98, L=-26.76
+
+@time=0.8
+object-positions:
+  [0]: @=<20,20,9.404> @'=<0,0,-2.227> @"=<0,0,-4.702>
+  [1]: @=<10,10,-4.702> @'=<0,0,1.113> @"=<0,0,2.351>
+T=3.099, V=27.63, E=30.73, L=-24.54

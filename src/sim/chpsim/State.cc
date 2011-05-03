@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.26 2011/02/04 02:23:37 fang Exp $
+	$Id: State.cc,v 1.27 2011/05/03 19:21:00 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -298,7 +298,7 @@ State::dump_event_table_header(ostream& o) {
 	Will throw exception upon error.  
  */
 State::State(const module& m) : 
-		state_base(m, "chpsim> "), 
+		module_state_base(m, "chpsim> "), 
 		instances(m.get_footprint()), 
 		event_pool(), 
 		global_root_event(NULL, entity::CHP::EVENT_CONCURRENT_FORK),
@@ -1852,19 +1852,7 @@ State::autosave(const bool b, const string& n) {
  */
 bool
 State::save_checkpoint(ostream& o) const {
-{
-	// save the random seed
-	ushort seed[3] = {0, 0, 0};
-	const ushort* old_seed = seed48(seed);	// libc
-	seed[0] = old_seed[0];
-	seed[1] = old_seed[1];
-	seed[2] = old_seed[2];
-	// put it back
-	seed48(seed);
-	write_value(o, seed[0]);
-	write_value(o, seed[1]);
-	write_value(o, seed[2]);
-}
+	util::numeric::write_seed48(o);
 // save some flags?
 	// save the state of all instances
 	if (instances.save_checkpoint(o)) {
@@ -1918,14 +1906,7 @@ State::save_checkpoint(ostream& o) const {
  */
 bool
 State::load_checkpoint(istream& i) {
-{
-	// restore random seed
-	ushort seed[3];
-	read_value(i, seed[0]);
-	read_value(i, seed[1]);
-	read_value(i, seed[2]);
-	seed48(seed);
-}
+	util::numeric::read_seed48(i);
 	// restore data/channel/variable state
 	if (instances.load_checkpoint(i)) {
 		return true;

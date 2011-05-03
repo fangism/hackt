@@ -1,0 +1,51 @@
+parameters:
+  @time=0
+  bounds=<0,0,-50>;<100,100,50>
+  damping=0.1
+  energy_tolerance=0.001
+  min_iterations=10
+  position_tolerance=0.001
+  precision=4
+  report_iterations=1
+  repulsion_coeff=1
+  repulsion_constant=0
+  temperature=0
+  time_step=0.001
+  velocity_tolerance=0.001
+  watch_deltas=0
+  watch_energy=0
+  watch_objects=0
+  x_gravity_coeff=0
+  x_gravity_constant=0
+  y_gravity_coeff=0
+  y_gravity_constant=0
+  z_gravity_coeff=0
+  z_gravity_constant=0
+randomly place free objects 
+descend-potential: ran 12 iterations from time 0 to 1 (V=1419)
+descend-potential: ran 12 iterations from time 1 to 2 (V=677.5)
+descend-potential: ran 12 iterations from time 2 to 3 (V=616.6)
+descend-potential: ran 12 iterations from time 3 to 4 (V=612)
+descend-potential: ran 14 iterations from time 4 to 5.2 (V=611.3)
+descend-potential: ran 8 iterations from time 5.2 to 5.8 (V=611.3)
+descend-potential: ran 3 iterations from time 5.8 to 5.9 (V=611.3)
+descend-potential-converge: ran 7 descend-potential from time 0 to 5.9 (V=611.3)
+object-positions:
+  [0]: @=<30,50,0> @'=<0,0,0> @"=<0,0,0>
+  [1]: @=<50,70,0> @'=<0,0,0> @"=<0,0,0>
+  [2]: @=<70,50,0> @'=<0,0,0> @"=<0,0,0>
+  [3]: @=<50,30,0> @'=<0,0,0> @"=<0,0,0>
+  [4]: @=<37.56,50,-0.005244> @'=<-0.01359,-0.0003497,-0.0004801> @"=<-0.1333,-0.003299,-0.004564>
+  [5]: @=<49.96,62.46,-0.01943> @'=<0.01311,0.004223,0.004161> @"=<0.1288,0.04159,0.0411>
+  [6]: @=<62.51,50,-0.005296> @'=<-0.01423,-0.0001821,-0.0004714> @"=<-0.1396,-0.001652,-0.004477>
+  [7]: @=<49.96,37.52,-0.01877> @'=<0.01256,0.002233,0.004002> @"=<0.1234,0.02199,0.03953>
+simple-converge: ran 21 iterations from time 5.9 to 8 (V=611.3)
+object-positions:
+  [0]: @=<30,50,0> @'=<0,0,0> @"=<0,0,0>
+  [1]: @=<50,70,0> @'=<0,0,0> @"=<0,0,0>
+  [2]: @=<70,50,0> @'=<0,0,0> @"=<0,0,0>
+  [3]: @=<50,30,0> @'=<0,0,0> @"=<0,0,0>
+  [4]: @=<37.53,50,-0.004118> @'=<-0.001215,0.0009681,0.001338> @"=<-0.001479,0.003627,0.005213>
+  [5]: @=<50,62.47,-0.005117> @'=<0.00326,0.001639,0.002546> @"=<0.009029,0.004998,0.008397>
+  [6]: @=<62.47,50,-0.00413> @'=<-0.001468,0.001053,0.001347> @"=<-0.002217,0.003888,0.005242>
+  [7]: @=<50,37.53,-0.005002> @'=<0.002973,0.0009625,0.002459> @"=<0.008131,0.003092,0.008125>

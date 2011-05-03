@@ -3,7 +3,7 @@
 	Traditional production rule simulator. 
 	This source file is processed by extract_texinfo.awk for 
 	command-line option documentation.  
-	$Id: prsim.cc,v 1.30 2010/08/30 23:51:47 fang Exp $
+	$Id: prsim.cc,v 1.31 2011/05/03 19:20:53 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -525,6 +525,7 @@ prsim::usage(void) {
 "\t-I <path> : include path for scripts (repeatable)\n"
 "\t-O <0..1> : expression optimization level\n"
 "\t-r <file> : record a trace of all events to file at startup\n"
+"\t-v : print version and exit\n"
 "\t-t \"type\" : allocate one instance of the named type,\n"
 	"\t\tignoring top-level instances (quotes recommended).\n";
         const size_t flags = options_modifier_map.size();

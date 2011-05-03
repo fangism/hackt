@@ -1,0 +1,21 @@
+# "020.iplrc"
+# testing shake-all command
+
+repeat 6 add-object
+place 0 <10,10,0>
+place 1 <20,10,0>
+place 2 <30,10,0>
+place 3 <10,30,0>
+place 4 <20,30,0>
+place 5 <30,30,0>
+add-channel 0 1
+add-channel 0 3
+add-channel 1 2
+add-channel 1 4
+add-channel 2 5
+add-channel 3 4
+add-channel 4 5
+
+watch-objects
+repeat 20 shake-all 1.0
+
