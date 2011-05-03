@@ -3,12 +3,20 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-05-02	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-64-pr-01-20:
+	  No source revision, just added test support for comparing
+		ipple test results in the presence of numerical,
+		floating-point differences.
+	  Concluding branch.
+
+
 2011-04-28	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-64-pr-01-19:
 	  ipple: Added texinfo documentation to sources for 
 		command-line usage, parameter/options, commands.  
-	  Concluding branch.
 
 
 2011-04-28	David Fang		<fangism@users.sourceforge.net>

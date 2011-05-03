@@ -1,6 +1,6 @@
 /**
 	\file "PR/placement_engine.cc"
-	$Id: placement_engine.cc,v 1.1.2.20 2011/04/28 22:40:52 fang Exp $
+	$Id: placement_engine.cc,v 1.1.2.21 2011/05/03 01:19:29 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -844,16 +844,14 @@ placement_engine::watch_iterate(ostream& o) const {
 			", delta-velocity=" << max_delta_velocity << endl;
 #endif
 	}
-#if 1
 	if (opt.watch_energy) {
-//		const save_precision p(o, opt.precision);
+		const save_precision p(o, opt.precision);
 		const real_type T = kinetic_energy();
 		const real_type V = potential_energy();
 		o << "T=" << T << ", V=" << V <<
 			", E=" << T+V << ", L=" << T-V << endl;
 		// total energy, Lagrangian
 	}
-#endif
 	return o;
 }
 

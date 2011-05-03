@@ -1,6 +1,6 @@
 # "Make.test-ipl"
 #	vi: ft=automake
-#	$Id: Make.test-ipl,v 1.1.2.5 2011/04/28 21:44:25 fang Exp $
+#	$Id: Make.test-ipl,v 1.1.2.6 2011/05/03 01:19:30 fang Exp $
 # Test infrastructure for the interactive placer 'ipple'.
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
@@ -25,6 +25,7 @@ HACKT_IPPLE_CLEAN_IGNORE_PATTERNS = \
 	"*.iplrc-out" \
 	"*.iplrc-out-filter" \
 	"*.iplrc-diff" \
+	"*.iplrc-diff-orig" \
 	"*.iplfailtest" \
 	"*.iplrcfail-out" \
 	"*.iplrcfail-out-filter" \
@@ -133,6 +134,8 @@ else
 ECHO_IPLRC_DIFF_COMMAND = :
 endif
 
+RESOLVE_FP_DIFF_SCRIPT = $(top_srcdir)/test/resolve-floating-point-diffs.awk
+
 .iplrc-out-filter.iplrc-diff:
 	@stderr=`$(ECHO) $@ | $(SED) 's/\.iplrc-diff$$/.iplrc-expect/g'` ; \
 	expect=$(srcdir)/$$stderr ; \
@@ -141,7 +144,14 @@ endif
 	  $(ECHO_IPLRC_DIFF_COMMAND) ; \
 	  $(DIFF) -bu "$$expect" $< > $@ 2>&1 ; \
 	  if test -s $@ ; then \
-	    $(ECHO) "$@ is non-empty!" ; \
+	    $(ECHO) "$@ is non-empty! (trying to resolve numerical diffs)" && \
+	    $(CP) $@ $@-orig && \
+	    $(RESOLVE_FP_DIFF_SCRIPT) $@-orig > $@ ; \
+	    if test -s $@ ; then \
+	      $(ECHO) "$@ is still non-empty, see also $@-orig" ; \
+	    else \
+	      $(ECHO) "Numerical floating-point differences resolved (OK)." ; \
+	    fi ; \
 	  fi ; \
 	else $(ECHO) "Missing $$expect." | $(TEE) $@ ; \
 	fi ; \
