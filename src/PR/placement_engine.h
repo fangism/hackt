@@ -1,7 +1,7 @@
 /**
 	\file "PR/placement_engine.h"
 	Physics simulator.
-	$Id: placement_engine.h,v 1.2 2011/05/03 19:20:47 fang Exp $
+	$Id: placement_engine.h,v 1.3 2011/05/05 06:50:46 fang Exp $
  */
 
 #ifndef	__HAC_PR_PLACEMENT_ENGINE_H__
@@ -281,6 +281,9 @@ public:
 
 	ostream&
 	emit_dot(ostream&) const;
+
+	ostream&
+	emit_fig(ostream&) const;
 
 // checkpointing features
 	bool

@@ -1,6 +1,6 @@
 /**
 	\file "PR/channel.h"
-	$Id: channel.h,v 1.2 2011/05/03 19:20:44 fang Exp $
+	$Id: channel.h,v 1.3 2011/05/05 06:50:46 fang Exp $
  */
 #ifndef	__HAC_PR_CHANNEL_H__
 #define	__HAC_PR_CHANNEL_H__
@@ -96,6 +96,10 @@ struct channel_instance : public channel_state {
 
 	ostream&
 	emit_dot(ostream&, const placer_options&) const;
+
+	ostream&
+	emit_fig(ostream&, const position_type&, const position_type&,
+		const placer_options&) const;
 
 };	// end struct channel instance
 

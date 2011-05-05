@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-05-04	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-71:
+	  ipple: added emit-fig, emit-dot also takes optional file
+		argument ot write out to file instead of stdout.
+		TODO: add options to figure generation.
+
+
 2011-05-03	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-70-merged-pr-01-20:

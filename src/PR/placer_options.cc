@@ -1,6 +1,6 @@
 /**
 	\file "PR/placer_options.cc"
-	$Id: placer_options.cc,v 1.2 2011/05/03 19:20:48 fang Exp $
+	$Id: placer_options.cc,v 1.3 2011/05/05 06:50:46 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -54,7 +54,8 @@ placer_options::placer_options() :
 		watch_objects(false),
 		watch_deltas(false),
 		watch_energy(false),
-		report_iterations(true)
+		report_iterations(true),
+		xfig_scale(0.1)
 {
 }
 

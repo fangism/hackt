@@ -1,6 +1,13 @@
 # "test/ChangeLog"
-#	$Id: ChangeLog,v 1.108 2011/05/03 19:21:12 fang Exp $
+#	$Id: ChangeLog,v 1.109 2011/05/05 06:50:50 fang Exp $
 # ChangeLog for test directory.
+
+2011-05-04	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-71:
+	  Make.test.ipl: added support for .ipl-fig generation, 
+		and now prefer fig2dev over fdp/dot -> .ipl-pdf
+
 
 2011-05-03	David Fang		<fangism@users.sourceforge.net>
 

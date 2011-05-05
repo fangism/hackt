@@ -2,7 +2,7 @@
 	\file "PR/pr-command.cc"
 	Command-line feature for PR simulator.
 	TODO: scheme interface
-	$Id: pr-command.cc,v 1.2 2011/05/03 19:20:48 fang Exp $
+	$Id: pr-command.cc,v 1.3 2011/05/05 06:50:47 fang Exp $
  */
 
 #define	ENABLE_STATIC_TRACE		0
@@ -12,6 +12,7 @@
 DEFAULT_STATIC_TRACE_BEGIN
 
 #include <iostream>
+#include <fstream>
 #include "PR/pr-command.h"
 #include "PR/placement_engine.h"
 #include "sim/command_base.tcc"
@@ -37,6 +38,7 @@ template class command_registry<PR::Command>;
 //=============================================================================
 using namespace HAC::SIM;
 namespace PR {
+using std::ofstream;
 
 //=============================================================================
 // name/index translation features?
@@ -53,6 +55,7 @@ CommandCategory
 	simulation("simulation", "simulation commands"),
 //	objects("objects", "object creation/manipulation commands"),
 	info("info", "information about objects"),
+	xport("export", "exporting positions to other formats"),
 //	physics("physics", "physical properties of the system"),
 //	parameters("parameters", "simulation control parameters"),
 	tracing("tracing", "checkpointing and tracing features");
@@ -1377,8 +1380,8 @@ DumpEnergy::usage(ostream& o) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
 @texinfo cmd/emit-dot.texi
-@deffn Command emit-dot
-Print to stdout output in the dot language (from graphviz), suitable
+@deffn Command emit-dot [file]
+Print to stdout or @var{file} in the dot language (from graphviz), suitable
 for generating a diagram of the current state of objects.
 Recommendation: run the output through the 
 @command{fdp} (force-directed placement) command:
@@ -1386,20 +1389,66 @@ Recommendation: run the output through the
 @end deffn
 @end texinfo
 ***/
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(EmitDot, "emit-dot", info,
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(EmitDot, "emit-dot", xport,
         "print system to graphviz output annotated with coordinates")
 
 int
 EmitDot::main(State& s, const string_list& a) {
-	REQUIRE_EXACT_ARGS(a, 1)
+const size_t asz = a.size();
+if (asz > 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else if (asz == 2) {
+	ofstream ofs(a.back().c_str());
+	s.emit_dot(ofs);
+} else {
 	s.emit_dot(cout);
+}
 	return Command::NORMAL;
 }
 
 void
 EmitDot::usage(ostream& o) {
-	o << name << endl;
+	o << name << " [file]" << endl;
 	o << brief << endl;
+	o << "If file is omitted, result is printed to stdout." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/emit-fig.texi
+@deffn Command emit-fig [file]
+Print to stdout or @var{file} in the fig language (xfig), suitable
+for generating a diagram of the current state of objects.
+Recommendation: run the output through the 
+@command{fig2dev} export command, such as:
+@command{fig2dev -Lpdf input.fig -o output.pdf}.
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(EmitFig, "emit-fig", xport,
+        "print system to xfig output")
+
+int
+EmitFig::main(State& s, const string_list& a) {
+const size_t asz = a.size();
+if (asz > 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else if (asz == 2) {
+	ofstream ofs(a.back().c_str());
+	s.emit_fig(ofs);
+} else {
+	s.emit_fig(cout);
+}
+	return Command::NORMAL;
+}
+
+void
+EmitFig::usage(ostream& o) {
+	o << name << " [file]" << endl;
+	o << brief << endl;
+	o << "If file is omitted, result is printed to stdout." << endl;
 }
 
 //=============================================================================

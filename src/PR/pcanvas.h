@@ -1,7 +1,7 @@
 /**
 	\file "PR/pcanvas.h"
 	Medium on which placement is solved with physics.
-	$Id: pcanvas.h,v 1.2 2011/05/03 19:20:47 fang Exp $
+	$Id: pcanvas.h,v 1.3 2011/05/05 06:50:46 fang Exp $
  */
 
 #ifndef	__HAC_PR_PCANVAS_H__
@@ -94,6 +94,9 @@ public:
 
 	ostream&
 	emit_dot(ostream&, const placer_options&) const;
+
+	ostream&
+	emit_fig(ostream&, const placer_options&) const;
 
 };	// end class pcanvas
 

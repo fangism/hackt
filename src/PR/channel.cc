@@ -1,11 +1,14 @@
 /**
 	\file "PR/channel.cc"
-	$Id: channel.cc,v 1.2 2011/05/03 19:20:42 fang Exp $
+	$Id: channel.cc,v 1.3 2011/05/05 06:50:45 fang Exp $
  */
 
 #include <iostream>
 #include "PR/channel.h"
+#include "PR/tile_instance.h"
+#include "PR/placer_options.h"
 #include "util/string.h"
+#include "util/fig/xfig.h"
 #include "util/IO_utils.tcc"
 
 namespace PR {
@@ -13,6 +16,9 @@ namespace PR {
 using util::strings::string_to_num;
 using util::write_value;
 using util::read_value;
+using util::fig::xfig::polyline;
+using util::fig::xfig::point;
+using util::fig::xfig::default_resolution;
 
 //=============================================================================
 // class channel_type method definitions
@@ -140,6 +146,17 @@ channel_instance::emit_dot(ostream& o, const placer_options&) const {
 	// leave edges as drawn automatically
 	return o << "N" << source << " -> N" << destination
 		<< " [weight=" << properties.spring_coeff << "];";
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+channel_instance::emit_fig(ostream& o, const position_type& s,
+		const position_type& d, const placer_options& opt) const {
+	polyline p;
+	p.depth = 150;
+	const real_type r = opt.xfig_scale *default_resolution;
+	p.define_segment(point(s[0]*r, s[1]*r), point(d[0]*r, d[1]*r));
+	return p.emit(o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,5 +1,5 @@
 @c "ipple/commands.texi"
-@c $Id: commands.texi,v 1.2 2011/05/03 19:20:35 fang Exp $
+@c $Id: commands.texi,v 1.3 2011/05/05 06:50:43 fang Exp $
 
 @node Commands
 @chapter Commands
@@ -97,6 +97,13 @@ Simulation and convergence routines.
 @include cmd/dump-objects.texi
 @include cmd/dump-positions.texi
 @include cmd/dump-energy.texi
+
+Finally, @command{ipple} can export placements to other
+visualization tools.  
+(It's the least I can do until a GUI is added!)
+
+@include cmd/emit-dot.texi
+@include cmd/emit-fig.texi
 
 @c ----------------------------------------------------------------------------
 @node Tracing Commands

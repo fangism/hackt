@@ -1,5 +1,11 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.121 2011/05/03 19:21:04 fang Exp $
+#	$Id: ChangeLog,v 1.122 2011/05/05 06:50:47 fang Exp $
+
+2011-05-04	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-71:
+	  Added util/fig/xfig.{h,cc}: for emitting xfigs
+
 
 2011-05-03	David Fang		<fangism@users.sourceforge.net>
 

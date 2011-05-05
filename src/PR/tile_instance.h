@@ -23,6 +23,7 @@
 
 namespace PR {
 struct placer_options;
+struct tile_instance;
 
 //=============================================================================
 /**
@@ -96,6 +97,9 @@ public:
 
 	ostream&
 	emit_dot(ostream&, const placer_options&) const;
+
+	ostream&
+	emit_fig(ostream&, const tile_instance&, const placer_options&) const;
 
 	bool
 	save_checkpoint(ostream&) const;

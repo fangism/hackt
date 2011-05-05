@@ -1,18 +1,20 @@
 /**
 	\file "PR/tile_instance.cc"
-	$Id: tile_instance.cc,v 1.2 2011/05/03 19:20:51 fang Exp $
+	$Id: tile_instance.cc,v 1.3 2011/05/05 06:50:47 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
 
 #include <cmath>
 #include "PR/tile_instance.h"
+#include "PR/placer_options.h"
 #include "util/array.tcc"
 #include "util/vector_ops.h"
 #include "util/optparse.h"
 // #include "util/optparse.tcc"
 #include "util/IO_utils.tcc"
 #include "util/numeric/abs.h"
+#include "util/fig/xfig.h"
 #include "util/stacktrace.h"
 
 namespace PR {
@@ -22,6 +24,9 @@ using util::option_value;
 using util::read_value;
 using util::write_value;
 #include "util/using_ostream.h"
+using util::fig::xfig::polyline;
+using util::fig::xfig::point;
+using util::fig::xfig::default_resolution;
 
 //=============================================================================
 // class tile_properties method definitions
@@ -185,6 +190,24 @@ ostream&
 object_state::emit_dot(ostream& o, const placer_options&) const {
 	return o << "pos=\"" << position[0] << ',' << position[1] << "\"";
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+object_state::emit_fig(ostream& o, const tile_instance& t, 
+		const placer_options& opt) const {
+//	o << "2 2 0 1 0 7 50 -1 -1 0.000 0 0 -1 0 0 5" << endl;
+	polyline p;
+	p.depth = 100;
+	position_type center(position);
+	center[2] = 0;
+	const position_type half(t.properties.size / 2.0);
+	const real_type r = opt.xfig_scale *default_resolution;
+	const position_type ur((center +half) *r);
+	const position_type ll((center -half) *r);
+	p.define_box(point(ll[0], ll[1]), point(ur[0], ur[1]));
+	return p.emit(o);
+}
+
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool

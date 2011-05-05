@@ -1,7 +1,7 @@
 /**
 	\file "PR/placer_options.h"
 	Physics simulator.
-	$Id: placer_options.h,v 1.2 2011/05/03 19:20:48 fang Exp $
+	$Id: placer_options.h,v 1.3 2011/05/05 06:50:46 fang Exp $
  */
 
 #ifndef	__HAC_PR_PLACER_OPTIONS_H__
@@ -99,6 +99,9 @@ struct placer_options {
 	bool				watch_deltas;
 	bool				watch_energy;
 	bool				report_iterations;
+
+	/// xfig output magnification
+	real_type			xfig_scale;
 
 	placer_options();
 #if 0

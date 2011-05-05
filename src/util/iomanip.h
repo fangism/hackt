@@ -1,6 +1,6 @@
 /**
 	\file "util/iomanip.h"
-	$Id: iomanip.h,v 1.2 2011/05/03 19:21:06 fang Exp $
+	$Id: iomanip.h,v 1.3 2011/05/05 06:50:48 fang Exp $
  */
 
 #ifndef	__UTIL_IOMANIP_H__
@@ -46,6 +46,8 @@ typedef	iomanip_property_saver<streamsize, &ios_base::precision>
 						save_precision;
 typedef	iomanip_property_saver<streamsize, &ios_base::width>
 						save_width;
+typedef	iomanip_property_saver<ios_base::fmtflags, &ios_base::flags>
+						save_flags;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 }	// end namespace util

@@ -225,6 +225,34 @@ pcanvas::emit_dot(ostream& o, const placer_options& opt) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: scale-factor
+ */
+ostream&
+pcanvas::emit_fig(ostream& o, const placer_options& opt) const {
+	vector<tile_instance>::const_iterator
+		ti(objects.begin()), te(objects.end());
+	vector<object_state>::const_iterator
+		oi(current.begin()), oe(current.end());
+	// nodes
+	size_t j = 0;
+	for ( ; ti!=te; ++ti, ++oi, ++j) {
+		o << "# N" << j << endl;	// comment
+		oi->emit_fig(o, *ti, opt);
+	}
+	// edges
+	vector<channel_instance>::const_iterator
+		ci(springs.begin()), ce(springs.end());
+	for ( ; ci!=ce; ++ci) {
+		// comment
+		o << "# N" << ci->source << " -> N" << ci->destination << endl;
+		ci->emit_fig(o, current[ci->source].position,
+			current[ci->destination].position, opt);
+	}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pcanvas::save_checkpoint(ostream& o) const {
 #if PR_VARIABLE_DIMENSIONS
