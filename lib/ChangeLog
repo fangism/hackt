@@ -1,5 +1,13 @@
 # "lib/ChangeLog"
-#	$Id: ChangeLog,v 1.69 2011/02/25 23:19:25 fang Exp $
+#	$Id: ChangeLog,v 1.70 2011/05/07 03:43:39 fang Exp $
+
+2011-05-06	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-70+:
+	  New: scripts/prsim_timed_fwdtrace.awk to find all critical
+		paths that spawn from a root transition, 
+		searching through a prsim watchall log.
+
 
 2011-02-16	David Fang	<fangism@users.sourceforge.net>
 

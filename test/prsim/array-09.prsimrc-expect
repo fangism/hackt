@@ -1,4 +1,4 @@
-Error: referenced instance must be a single (scalar).
+Error: expecting scalar reference, but got 1-dimensional array reference.
 Error: X[1].w does not reference a bool.
 No such node found: X[1].w
 ... at line 5

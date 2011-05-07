@@ -1,0 +1,22 @@
+# "set-multi-b-01.prsimrc"
+# @haco@ set-multi-b.haco-c
+
+watchall
+# getall .
+
+get a.q[0][0].p[0][0..1].x[0..1][0]
+
+set a.q[0][0].p[0][0..1].x[0..1][0] 1
+cycle
+status-newline 1
+
+set a.q[0][0].p[0..1][0].x[0..1][0] 0
+cycle
+status-newline 0
+status-newline 1
+
+set a.q[0][0].p[1][0..1].x[0][0..1] 1
+cycle
+status-newline 0
+status-newline 1
+

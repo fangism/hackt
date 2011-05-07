@@ -1,0 +1,17 @@
+// "set-multi-b.hac"
+// for testing setting of bits aggregate references
+
+defproc array1() {
+bool x[2][2];
+}
+
+defproc array2() {
+	array1 p[2][2];
+}
+
+defproc array3() {
+	array2 q[2][2];
+}
+
+array3 a;
+

@@ -1,6 +1,6 @@
 /**
 	\file "util/directory.cc"
-	$Id: directory.cc,v 1.1 2009/11/14 03:12:14 fang Exp $
+	$Id: directory.cc,v 1.2 2011/05/07 03:43:45 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -90,10 +90,20 @@ if (!rel.length()) {
 	// subtract and add paths according to relative spec
 	string_list toks;
 	tokenize(cur, toks, separator.c_str());
+#if 0 && ENABLE_STACKTRACE
+	cout << "toks: ";
+	copy(toks.begin(), toks.end(), ostream_iterator<string>(cout, " "));
+	cout << endl;
+#endif
 {
 	string_list rtoks;
 	tokenize(rel, rtoks, parent_separator.c_str());
 	string_list::const_iterator i(rtoks.begin()), e(rtoks.end());
+#if 0 && ENABLE_STACKTRACE
+	cout << "rtoks: ";
+	copy(i, e, ostream_iterator<string>(cout, " "));
+	cout << endl;
+#endif
 	for ( ;i!=e; ++i) {
 	if (*i == parent_dir_string) {
 		if (toks.size()) {
@@ -101,7 +111,20 @@ if (!rel.length()) {
 		}
 	} else if (*i != this_dir_string) {
 		string_list t;
-		tokenize(*i, t, separator.c_str());
+		// caution: *i may contain ".." range operators
+		// but separator may be "."!
+		// this should be PARSED
+		if (separator.length() > 1) {
+			tokenize(*i, t, separator.c_str());
+		} else {
+			// FIXME: HACK ALERT!
+			tokenize_single_char_only(*i, t, separator[0]);
+		}
+#if 0 && ENABLE_STACKTRACE
+		cout << "t: ";
+		copy(t.begin(), t.end(), ostream_iterator<string>(cout, "+"));
+		cout << endl;
+#endif
 #if 1
 		// for tab-completion, want to keep trailing '.'
 		// so don't remove empty strings

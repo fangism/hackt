@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.129 2011/03/24 22:13:41 fang Exp $
+#	$Id: Makefile.am,v 1.130 2011/05/07 03:43:46 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -77,6 +77,7 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	always_random-a \
 	relaxed-a relaxed-b \
 	completion_test \
+	set-multi-a set-multi-b \
 	getall-a getall-a-def getall-b getall-c
 
 # TODO: more cross-coupled test cases
@@ -329,6 +330,8 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	non-CMOS-b-01 non-CMOS-b-02 \
 	assert-fail-01 assert-fail-03 \
 	assert-confirm-01 \
+	set-multi-a-01 \
+	set-multi-b-01 set-multi-b-02 \
 	check-excl-fail-01 check-excl-fail-02 check-excl-fail-03 \
 	check-excl-fail-04 \
 	after_min_max-01 after_min_max-02 after_min_max-03 \

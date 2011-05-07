@@ -1,18 +1,27 @@
 /**
 	\file "util/tokenize.cc"
-	$Id: tokenize.cc,v 1.6 2010/01/05 00:09:47 fang Exp $
+	$Id: tokenize.cc,v 1.7 2011/05/07 03:43:45 fang Exp $
  */
 
-#include "util/tokenize.h"
+#define	ENABLE_STACKTRACE				0
+
 #include <list>
 #include <string>
 #include <valarray>
+#if ENABLE_STACKTRACE
+#include <iostream>
+#endif
+#include "util/tokenize.h"
 #include "util/string.h"		// for eat_whitespace
 #include "util/macros.h"
+#include "util/stacktrace.h"
 
 namespace util {
 using std::string;
 using std::valarray;
+#if ENABLE_STACKTRACE
+using std::endl;
+#endif
 
 //=============================================================================
 /***
@@ -78,6 +87,52 @@ tokenize_char(const string& s, string_list& l, const char c) {
 	}
 	if (f != end) {
 		l.push_back(s.substr(f));
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Tokenizes on only *single* occurrences of char d.  
+	Returns result in l.
+	NOTE: this is a hack.  If you are calling this function, you probably
+	should be using a real parser.
+ */
+void
+tokenize_single_char_only(const std::string& s, string_list& l, const char d) {
+	STACKTRACE_VERBOSE;
+	const size_t len = s.length();
+	size_t i = 0;
+	for ( ; i<len; ) {
+		size_t m = s.find_first_of(d, i);
+		if (m == string::npos) {
+			STACKTRACE_INDENT_PRINT("A" << endl);
+			l.push_back(s.substr(i));
+			break;
+		}
+		size_t n = s.find_first_not_of(d, m);
+		if (n == string::npos) {
+			STACKTRACE_INDENT_PRINT("B" << endl);
+			l.push_back(s.substr(i, m-i));
+			break;
+		}
+		if (n-m > 1) {
+			STACKTRACE_INDENT_PRINT("C1" << endl);
+			// keep going
+			m = s.find_first_of(d, n);
+			if (m == string::npos) {
+				STACKTRACE_INDENT_PRINT("D1" << endl);
+				l.push_back(s.substr(i));
+				break;
+			} else {
+				STACKTRACE_INDENT_PRINT("D2" << endl);
+				l.push_back(s.substr(i, m-i));
+			}
+			i = m+1;
+		} else {
+			STACKTRACE_INDENT_PRINT("C2" << endl);
+			l.push_back(s.substr(i, m-i));
+			i = n;
+		}
 	}
 }
 

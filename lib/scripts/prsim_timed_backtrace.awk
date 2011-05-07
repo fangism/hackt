@@ -1,5 +1,6 @@
 #!/usr/bin/awk -f
 # "prsim_timed_backtrace.awk"
+#	$Id: prsim_timed_backtrace.awk,v 1.4 2011/05/07 03:43:40 fang Exp $
 # follows a causality chain of events from a prsim watchall dump
 # The algorithm used is precisely that of critical path finding. 
 

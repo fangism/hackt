@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.88 2011/03/23 19:49:30 fang Exp $
+	$Id: Command-prsim.cc,v 1.89 2011/05/07 03:43:44 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -66,7 +66,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 		don't use the working directory (yet),
 		known outstanding issue.
  */
-#define	PRSIM_NODE_AGGREGATE_ARGUMENTS			0
+#define	PRSIM_NODE_AGGREGATE_ARGUMENTS			1
 /**
 	Same idea for process references.
 	Not worth the trouble.
@@ -77,7 +77,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #define	NODE_FOR_EACH(ref)						\
 	vector<node_index_type> _tmp;					\
 	if (parse_nodes_to_indices(ref, s.get_module(), _tmp)) {	\
-		cerr << "No such node found: " << ref << '.' << endl;	\
+		cerr << "No such node found: " << ref << endl;		\
 		return Command::BADARG;					\
 	}								\
 	vector<node_index_type>::const_iterator				\
