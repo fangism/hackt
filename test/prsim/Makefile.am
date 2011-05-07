@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.130 2011/05/07 03:43:46 fang Exp $
+#	$Id: Makefile.am,v 1.131 2011/05/07 21:34:27 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -111,7 +111,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	inv-11 inv-12 inv-13 inv-14 inv-15 inv-16 inv-17 \
 	inv-18 inv-19 inv-20 inv-20a inv-21 inv-21a inv-22 inv-23 \
 	inv-24 inv-25 inv-26 inv-27 inv-29 inv-30 \
-	inv-37 \
+	inv-37 inv-38 \
 	inv-alt-01 inv-alt-02 inv-alt-03 inv-alt-04 inv-alt-05 inv-alt-06 \
 	inv-alt-07 inv-alt-08 inv-alt-09 inv-alt-10 \
 	inv-why-01 inv-why-02 \

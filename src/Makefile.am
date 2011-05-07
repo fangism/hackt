@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.252 2011/05/03 19:20:40 fang Exp $
+#	$Id: Makefile.am,v 1.253 2011/05/07 21:34:25 fang Exp $
 #	vi: ft=automake
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -1045,6 +1045,7 @@ SIM_TCC_FILES = \
 
 PRSIM_TCC_FILES = \
 	sim/prsim/util.tcc \
+	sim/prsim/State-prsim.tcc \
 	sim/prsim/Rule.tcc
 
 SIM_H_FILES = $(SIM_CC_FILES:.cc=.h) \

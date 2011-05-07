@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.h"
 	Structure of basic PRS node.  
-	$Id: Node.h,v 1.27 2011/01/18 00:00:01 fang Exp $
+	$Id: Node.h,v 1.28 2011/05/07 21:34:26 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_NODE_H__
@@ -535,6 +535,26 @@ public:
 
 	value_enum
 	current_value(void) const { return value; }
+
+	bool
+	match_value(const value_enum v) const {
+		return current_value() == v;
+	}
+
+	bool
+	is_0(void) const {
+		return current_value() == LOGIC_LOW;
+	}
+
+	bool
+	is_1(void) const {
+		return current_value() == LOGIC_HIGH;
+	}
+
+	bool
+	is_X(void) const {
+		return current_value() == LOGIC_OTHER;
+	}
 
 	void
 	set_value_and_cause(const value_enum c, const event_cause_type& e) {

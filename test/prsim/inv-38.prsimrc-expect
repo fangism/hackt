@@ -1,0 +1,28 @@
+X nodes in I:
+a b 
+X nodes in J:
+b c 
+X nodes in I:
+
+0 nodes in I:
+!GND b 
+1 nodes in I:
+!Vdd a 
+X nodes in J:
+
+0 nodes in J:
+!GND b 
+1 nodes in J:
+!Vdd c 
+X nodes in I:
+
+0 nodes in I:
+!GND a 
+1 nodes in I:
+!Vdd b 
+X nodes in J:
+
+0 nodes in J:
+!GND c 
+1 nodes in J:
+!Vdd b 

@@ -1,0 +1,27 @@
+# "inv-38.prsimrc"
+# @haco@ inv.haco-c
+# testing optional argument to status
+
+status X I
+status X J
+
+set a 1
+cycle
+status X I
+status 0 I
+status 1 I
+
+status X J
+status 0 J
+status 1 J
+
+set a 0
+cycle
+status X I
+status 0 I
+status 1 I
+
+status X J
+status 0 J
+status 1 J
+

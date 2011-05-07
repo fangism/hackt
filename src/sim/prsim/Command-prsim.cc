@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.89 2011/05/07 03:43:44 fang Exp $
+	$Id: Command-prsim.cc,v 1.90 2011/05/07 21:34:26 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -31,7 +31,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 
 #include "sim/prsim/Command-prsim.h"
 #include "sim/prsim/Command-prsim-export.h"
-#include "sim/prsim/State-prsim.h"
+#include "sim/prsim/State-prsim.tcc"
 #include "sim/prsim/Trace-prsim.h"
 #include "sim/command_base.tcc"
 #include "sim/command_category.tcc"
@@ -2713,12 +2713,14 @@ GetAll::usage(ostream& o) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
 @texinfo cmd/status.texi
-@deffn Command status value
-@deffnx Command status-newline value
+@deffn Command status value [proc]
+@deffnx Command status-newline value [proc]
 Print all nodes whose current value is @var{value}.  
 Frequently used to find nodes that are in an unknown ('X') state.  
 Valid @var{value} arguments are [0fF] for logic-low, [1tT] for logic-high,
 [xXuU] for unknown value.  
+If @var{proc} is given, then restrict the scope of search to
+only subnodes of that structure.
 The @command{-newline} variant prints each node on a separate line
 for readability.  
 @end deffn
@@ -2728,28 +2730,56 @@ for readability.
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Status, "status", info, 
 	"show all nodes matching a state value")
 
+static
 int
-Status::main(State& s, const string_list& a) {
-if (a.size() != 2) {
+__status_main(State& s, const string_list& a, void (usage)(ostream&), 
+		const bool nl) {
+const size_t sz = a.size();
+if (sz != 2 && sz != 3) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
-	const value_enum v = node_type::string_to_value(a.back());
-	if (node_type::is_valid_value(v)) {
-		s.print_status_nodes(cout, v, false);
-		return Command::NORMAL;
-	} else {
+	string_list::const_iterator ai(++a.begin());
+	const value_enum v = node_type::string_to_value(*ai);
+	if (!node_type::is_valid_value(v)) {
 		cerr << "Bad status value." << endl;
 		usage(cerr);
 		return Command::BADARG;
 	}
+	if (sz == 2) {
+		s.print_status_nodes(cout, v, nl);
+		return Command::NORMAL;
+	} else {
+		++ai;
+		const string& proc(*ai);
+		vector<node_index_type> nodes;
+		if (parse_name_to_get_subnodes(proc, s.get_module(), nodes)) {
+			// already have error message
+			return Command::BADARG;
+		} else {
+			s.filter_nodes(nodes,
+				bind2nd(mem_fun_ref(&node_type::match_value),
+					v));
+			cout << node_type::value_to_char[size_t(v)] <<
+				" nodes in " << proc << ':' << endl;
+			s.print_nodes(cout, nodes, nl ? "\n" : " ");
+			cout << endl;
+		}
+	}
+	return Command::NORMAL;
 }
+}
+
+int
+Status::main(State& s, const string_list& a) {
+	return __status_main(s, a, usage, false);
 }
 
 void
 Status::usage(ostream& o) {
-	o << "status <[0fF1tTxXuU]>" << endl;
+	o << name << "<[0fF1tTxXuU]> [proc]" << endl;
 	o << "list all nodes with the matching current value" << endl;
+	o << "If proc is given, restrict to nodes under that struct." << endl;
 }
 
 PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(StatusNewline, instance_completer)
@@ -2758,26 +2788,14 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(StatusNewline, "status-newline", info,
 
 int
 StatusNewline::main(State& s, const string_list& a) {
-if (a.size() != 2) {
-	usage(cerr << "usage: ");
-	return Command::SYNTAX;
-} else {
-	const value_enum v = node_type::string_to_value(a.back());
-	if (node_type::is_valid_value(v)) {
-		s.print_status_nodes(cout, v, true);
-		return Command::NORMAL;
-	} else {
-		cerr << "Bad status value." << endl;
-		usage(cerr);
-		return Command::BADARG;
-	}
-}
+	return __status_main(s, a, usage, true);
 }
 
 void
 StatusNewline::usage(ostream& o) {
-	o << "status-newline <[0fF1tTxXuU]>" << endl;
+	o << name << " <[0fF1tTxXuU]> [proc]" << endl;
 	o << "list all nodes with the matching current value" << endl;
+	o << "If proc is given, restrict to nodes under that struct." << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2792,6 +2810,7 @@ Asserts that there are no nodes at value @var{val}.
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoStatus, "no-status", info, 
 	"assert that there are no nodes at a specified value")
 
+// TODO: support for optional proc argument to limit scope
 int
 NoStatus::main(State& s, const string_list& a) {
 if (a.size() != 2) {

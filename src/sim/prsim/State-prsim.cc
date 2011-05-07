@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.80 2011/05/03 19:21:01 fang Exp $
+	$Id: State-prsim.cc,v 1.81 2011/05/07 21:34:27 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -20,7 +20,7 @@
 #include <functional>
 #include <string>
 #include <set>
-#include "sim/prsim/State-prsim.h"
+#include "sim/prsim/State-prsim.tcc"
 #include "sim/prsim/ExprAlloc.h"
 #if PRSIM_TRACE_GENERATION
 #include "sim/prsim/Trace-prsim.h"
@@ -123,6 +123,7 @@ using std::fill;
 using std::find;
 using std::copy;
 using std::set_intersection;
+using std::bind2nd;
 using util::set_inserter;
 using util::strings::string_to_num;
 using util::read_value;
@@ -4348,6 +4349,7 @@ State::dump_watched_nodes(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 static
 bool
 node_is_0(const State::node_type& n) {
@@ -4365,6 +4367,7 @@ bool
 node_is_X(const State::node_type& n) {
 	return n.current_value() == LOGIC_OTHER;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -4375,6 +4378,7 @@ void
 State::status_nodes(const value_enum val, 
 		vector<node_index_type>& nodes) const {
 	ISE_INVARIANT(node_type::is_valid_value(val));
+#if 0
 	bool (*f)(const node_type&) = &node_is_X;
 	switch (val) {
 	case LOGIC_LOW: f = &node_is_0; break;
@@ -4382,6 +4386,9 @@ State::status_nodes(const value_enum val,
 	default: break;
 	}
 	find_nodes(nodes, f);		// std::ptr_fun
+#else
+	find_nodes(nodes, bind2nd(mem_fun_ref(&node_type::match_value), val));
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -5616,24 +5623,6 @@ State::find_nodes(vector<node_index_type>& ret,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Filter a set of node indices, using a predicate.  
-	\param f is a functor that expects a const node_type&
- */
-template <class F>
-void
-State::filter_nodes(vector<node_index_type>& ret, F f) const {
-	vector<node_index_type> tmp;
-	tmp.swap(ret);
-	vector<node_index_type>::const_iterator i(tmp.begin()), e(tmp.end());
-	for ( ; i!=e; ++i) {
-	if (f(node_pool[*i])) {
-		ret.push_back(*i);
-	}
-	}
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
 	printing functor, like output_iterator
 	Caller should call a flush after this.  
  */
@@ -5702,7 +5691,7 @@ State::print_nodes(ostream& o, const vector<node_index_type>& nodes,
 static
 bool
 node_is_X_no_driver(const State& s, const node_index_type ni) {
-	return node_is_X(s.get_node(ni)) && !s.node_is_driven(ni);
+	return s.get_node(ni).is_X() && !s.node_is_driven(ni);
 }
 
 /**
@@ -5729,7 +5718,7 @@ node_is_unused(const State& s, const node_index_type ni) {
 static
 bool
 node_is_X_not_used(const State& s, const node_index_type ni) {
-	return node_is_X(s.get_node(ni)) && !s.node_is_used(ni);
+	return s.get_node(ni).is_X() && !s.node_is_used(ni);
 }
 
 /**
@@ -5738,7 +5727,7 @@ node_is_X_not_used(const State& s, const node_index_type ni) {
 static
 bool
 node_is_X_used(const State& s, const node_index_type ni) {
-	return node_is_X(s.get_node(ni)) && s.node_is_used(ni);
+	return s.get_node(ni).is_X() && s.node_is_used(ni);
 }
 
 /**
@@ -5749,7 +5738,7 @@ static
 bool
 node_is_X_has_fanin_off(const State& s, const node_index_type ni) {
 	const State::node_type& n(s.get_node(ni));
-if (node_is_X(n) && s.node_is_driven(ni)) {
+if (n.is_X() && s.node_is_driven(ni)) {
 bool w = false;
 do {
 bool d = false;

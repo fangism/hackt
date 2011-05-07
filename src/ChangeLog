@@ -9,6 +9,8 @@
 	  hacprsim: commands enabled automatic expansion of
 		aggregate array references, e.g. x[0..1].y[0..2][3..4].
 		This should make some commands more convenient.
+		status commands now take optional process/structure
+			to limit the scope of searched nodes.  
 	  Test cases added.
 
 
