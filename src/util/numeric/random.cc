@@ -1,13 +1,14 @@
 /**
 	\file "util/numeric/random.cc"
 	Static initializers for random generators.  
-	$Id: random.cc,v 1.3 2011/05/03 19:21:10 fang Exp $
+	$Id: random.cc,v 1.4 2011/05/11 15:42:20 fang Exp $
  */
 
 #include <limits>		// the C++ numeric_limits header
 #include <cmath>
 #include <iostream>
 #include "util/numeric/random.h"
+#include "util/utypes.h"	// for ushort
 #include "util/IO_utils.tcc"
 
 namespace util {
