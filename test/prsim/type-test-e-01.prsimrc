@@ -1,0 +1,13 @@
+# "type-test-e-01.prsimrc"
+# @haco@ type-test-e.haco-c
+
+# echo-commands on
+watchall
+set foo.K.p.y.f 0
+set foo.K.p.y.t 1
+set foo.L.p.y.f 1
+set foo.L.p.y.t 0
+cycle
+getall foo.K
+getall foo.L
+

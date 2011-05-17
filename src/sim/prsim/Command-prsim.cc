@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.90 2011/05/07 21:34:26 fang Exp $
+	$Id: Command-prsim.cc,v 1.91 2011/05/17 21:19:55 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -2288,6 +2288,77 @@ CheckQueue::usage(ostream& o) {
 	o << "check-queue" << endl;
 	o << "Halt on error if any event-node inconsistencies are found."
 		<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/process-id.texi
+@deffn Command process-id name
+Just prints the internal process ID referenced by @var{name}.
+@end deffn
+@end texinfo
+***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(ProcessID, instance_completer)
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ProcessID, "process-id", info,
+	"print internal index of named process")
+int
+ProcessID::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	const string& objname(a.back());
+	const module& m(s.get_module());
+	const process_index p(parse_process_to_index(objname, m));
+	if (!p.valid()) {
+		// already have error message
+		return Command::BADARG;
+	}
+	cout << p.index << endl;
+	return Command::NORMAL;
+}
+}
+
+void
+ProcessID::usage(ostream& o) {
+	o << name << " process" << endl;
+	o << brief << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/node-id.texi
+@deffn Command node-id name
+Just prints the internal node ID referenced by @var{name}.
+@end deffn
+@end texinfo
+***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(NodeID, instance_completer)
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(NodeID, "node-id", info,
+	"print internal index of named node")
+int
+NodeID::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	typedef	vector<node_index_type>		nodes_id_list_type;
+	const string& objname(a.back());
+	const module& m(s.get_module());
+	const node_index_type p(parse_node_to_index(objname, m));
+	if (!p) {
+		// already have error message
+		return Command::BADARG;
+	}
+	cout << p << endl;
+	return Command::NORMAL;
+}
+}
+
+void
+NodeID::usage(ostream& o) {
+	o << name << " node" << endl;
+	o << brief << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

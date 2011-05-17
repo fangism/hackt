@@ -1,0 +1,66 @@
+globID	super		localID	canonical	footprint-frame
+[global process entries]
+1	(top)	-	1	foo	sparse<>
+	process: ;2..4 {5..19}
+	bool: 1,2;- {3..8}
+2	process	1	1	foo.K	LUTTILE<>
+	process: ;5 {6..9}
+	bool: 1,2;- {3..4}
+3	process	1	2	foo.L	LUTTILE<>
+	process: ;10 {11..14}
+	bool: 1,2;- {5..6}
+4	process	1	3	foo.M	LUTTILE<>
+	process: ;15 {16..19}
+	bool: 1,2;- {7..8}
+5	process	2	1	foo.K.r	RR<>
+	process: ;6 {7..9}
+	bool: 1,2;- {3..4}
+6	process	5	1	foo.K.r.m	xb<>
+	process: ;7..9
+	bool: 1,2;3 {4}
+7	process	6	1	foo.K.r.m.ix	ib<>
+	process: 8,9
+	bool: 1,2,3
+8	process	6	2	foo.K.r.m.ix.p	pi<>
+	process: 9
+	bool: 1,2,3
+9	process	6	3	foo.K.r.m.ix.p.y	pb<>
+	bool: 1,2,3;4
+10	process	3	1	foo.L.r	RR<>
+	process: ;11 {12..14}
+	bool: 1,2;- {5..6}
+11	process	10	1	foo.L.r.m	xb<>
+	process: ;12..14
+	bool: 1,2;5 {6}
+12	process	11	1	foo.L.r.m.ix	ib<>
+	process: 13,14
+	bool: 1,2,5
+13	process	11	2	foo.L.r.m.ix.p	pi<>
+	process: 14
+	bool: 1,2,5
+14	process	11	3	foo.L.r.m.ix.p.y	pb<>
+	bool: 1,2,5;6
+15	process	4	1	foo.M.r	RR<>
+	process: ;16 {17..19}
+	bool: 1,2;- {7..8}
+16	process	15	1	foo.M.r.m	xb<>
+	process: ;17..19
+	bool: 1,2;7 {8}
+17	process	16	1	foo.M.r.m.ix	ib<>
+	process: 18,19
+	bool: 1,2,7
+18	process	16	2	foo.M.r.m.ix.p	pi<>
+	process: 19
+	bool: 1,2,7
+19	process	16	3	foo.M.r.m.ix.p.y	pb<>
+	bool: 1,2,7;8
+[global bool entries]
+1	(top)	-	1	!GND	 @[ supply_low ]
+2	(top)	-	2	!Vdd	 @[ supply_high ]
+3	process	6	3	foo.K.r.m.ix.p.y.f	
+4	process	9	4	foo.K.r.m.ix.p.y.t	
+5	process	11	3	foo.L.r.m.ix.p.y.f	
+6	process	14	4	foo.L.r.m.ix.p.y.t	
+7	process	16	3	foo.M.r.m.ix.p.y.f	
+8	process	19	4	foo.M.r.m.ix.p.y.t	
+

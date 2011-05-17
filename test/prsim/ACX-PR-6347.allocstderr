@@ -1,0 +1,34 @@
+globID	super		localID	canonical	footprint-frame
+[global process entries]
+1	(top)	-	1	p	pr<>
+	process: 2,3,4,5,6,4,5,7,8,9,10,8,9,11,12
+	bool: 1
+2	(top)	-	2	p.lcg	plg<>
+	process: 3,4,5,6,4,5,7,8,9,10,8,9
+3	(top)	-	3	p.lcg.a	pll<>
+	process: 4,5,6,4,5
+4	(top)	-	4	p.lcg.a.cm	cp<>
+	process: 5
+5	(top)	-	5	p.lcg.a.cm.c	cb<>
+6	(top)	-	6	p.lcg.a.hlc	phl<>
+	process: 4,5
+7	(top)	-	7	p.lcg.b	pll<>
+	process: 8,9,10,8,9
+8	(top)	-	8	p.lcg.b.cm	cp<>
+	process: 9
+9	(top)	-	9	p.lcg.b.cm.c	cb<>
+10	(top)	-	10	p.lcg.b.hlc	phl<>
+	process: 8,9
+11	(top)	-	11	p.cc	pcc<>
+	process: 12
+	bool: 1
+12	(top)	-	12	p.cc.hu	pb<>
+	bool: 1
+13	(top)	-	13	lcs	lcg<>
+	process: 2,3,4,5,6,7,8,9,10
+	bool: 2,3
+[global bool entries]
+1	(top)	-	1	p.cc.hu.t	
+2	(top)	-	2	!GND	 @[ supply_low ]
+3	(top)	-	3	!Vdd	 @[ supply_high ]
+

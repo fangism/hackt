@@ -1,0 +1,570 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	72
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	75
+	6	##ADDR##	footprnt	0	#HEAD#	#TAIL#	290
+	7	##ADDR##	procdefn	0	#HEAD#	#TAIL#	87
+	8	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	9	##ADDR##	portscop	0	#HEAD#	#TAIL#	16
+	10	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	12	##ADDR##	footprnt	0	#HEAD#	#TAIL#	325
+	13	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	14	##ADDR##	procdefn	0	#HEAD#	#TAIL#	120
+	15	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	16	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	17	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	18	##ADDR##	portscop	0	#HEAD#	#TAIL#	24
+	19	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	22	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	25	##ADDR##	procdefn	0	#HEAD#	#TAIL#	96
+	26	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	27	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	28	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	31	##ADDR##	procdefn	0	#HEAD#	#TAIL#	96
+	32	##ADDR##	procplch	0	#HEAD#	#TAIL#	26
+	33	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	34	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	36	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	37	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	39	##ADDR##	procdefn	0	#HEAD#	#TAIL#	88
+	40	##ADDR##	procplch	0	#HEAD#	#TAIL#	26
+	41	##ADDR##	portscop	0	#HEAD#	#TAIL#	16
+	42	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	43	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	44	##ADDR##	footprnt	0	#HEAD#	#TAIL#	362
+	45	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	46	##ADDR##	footprnt	0	#HEAD#	#TAIL#	471
+	47	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	48	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	49	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	50	##ADDR##	footprnt	0	#HEAD#	#TAIL#	730
+	51	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	52	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	53	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	54	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	55	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	56	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	57	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	58	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	59	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	60	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	61	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	62	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
+	63	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
+	64	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	65	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
+	66	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
+	67	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
+	68	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	69	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	70	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
+	71	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
+	72	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	73	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
+	74	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
+	75	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
+	76	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	77	##ADDR##	footprnt	0	#HEAD#	#TAIL#	805
+	78	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	79	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	80	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	81	##ADDR##	procdefn	0	#HEAD#	#TAIL#	87
+	82	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	83	##ADDR##	portscop	0	#HEAD#	#TAIL#	16
+	84	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	85	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	86	##ADDR##	footprnt	0	#HEAD#	#TAIL#	308
+	87	##ADDR##	procdefn	0	#HEAD#	#TAIL#	88
+	88	##ADDR##	procplch	0	#HEAD#	#TAIL#	26
+	89	##ADDR##	portscop	0	#HEAD#	#TAIL#	16
+	90	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	91	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	92	##ADDR##	footprnt	0	#HEAD#	#TAIL#	354
+	93	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	94	##ADDR##	procdefn	0	#HEAD#	#TAIL#	95
+	95	##ADDR##	procplch	0	#HEAD#	#TAIL#	26
+	96	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	97	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
+	98	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	99	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	100	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	101	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	102	##ADDR##	footprnt	0	#HEAD#	#TAIL#	870
+	103	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	104	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	105	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	106	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	107	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	108	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	109	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	110	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	111	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	112	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	113	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	114	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	115	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	116	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	117	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	118	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	119	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	120	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	28
+	121	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	122	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
+	123	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	124	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1519
+	125	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	126	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  4 instantiation-collections
+  0 sub-namespaces
+  9 definitions
+  0 typedefs
+  Definitions:
+    cb = process-definition (defined) cb(
+      )
+      In definition "cb", we have: {
+      unroll sequence: 
+      footprint: {
+      }
+      }
+
+    cp = process-definition (defined) cp(
+        cb<> c
+      )
+      In definition "cp", we have: {
+      Instances:
+        c = cb<> cp::c
+      unroll sequence: 
+        ports: (
+          cb<> c
+        )
+      footprint: {
+        c = process cb<>^0 = cp<>::c (1) 
+        Created state:
+        process instance pool: (1 ports, 0 local, 0 mapped)
+        1	cp<>::c	cb<>
+      }
+      }
+
+    lcg = process-definition (defined) lcg(
+        bool<> !GND
+        bool<> !Vdd
+        plg<> p
+      )
+      In definition "lcg", we have: {
+      Instances:
+        !GND = bool<> lcg::!GND
+        !Vdd = bool<> lcg::!Vdd
+        p = plg<> lcg::p
+      unroll sequence: 
+        ports: (
+          bool<> !GND
+          bool<> !Vdd
+          plg<> p
+        )
+        !GND@[supply=0]
+        !Vdd@[supply=1]
+        p.a.cm = p.a.hlc.ex;
+        p.b.cm = p.b.hlc.ex;
+      footprint: {
+        !GND = bool^0 = lcg<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = lcg<>::!Vdd (2) @[ supply_high port-alias ] 
+        p = process plg<>^0 = lcg<>::p (1) (
+          a = process pll<>^0 = lcg<>::p.a (2) (
+            cm = process cp<>^0 = lcg<>::p.a.cm (3) (
+              c = process cb<>^0 = lcg<>::p.a.cm.c (4) 
+            )
+            hlc = process phl<>^0 = lcg<>::p.a.hlc (5) (
+              ex = process cp<>^0 = lcg<>::p.a.cm (3) (
+                c = process cb<>^0 = lcg<>::p.a.cm.c (4) 
+              )
+            )
+          )
+          b = process pll<>^0 = lcg<>::p.b (6) (
+            cm = process cp<>^0 = lcg<>::p.b.cm (7) (
+              c = process cb<>^0 = lcg<>::p.b.cm.c (8) 
+            )
+            hlc = process phl<>^0 = lcg<>::p.b.hlc (9) (
+              ex = process cp<>^0 = lcg<>::p.b.cm (7) (
+                c = process cb<>^0 = lcg<>::p.b.cm.c (8) 
+              )
+            )
+          )
+        )
+        Created state:
+        process instance pool: (9 ports, 0 local, 0 mapped)
+        1	lcg<>::p	plg<>
+          process: 2,3,4,5,3,4,6,7,8,9,7,8
+        2	lcg<>::p.a	pll<>
+          process: 3,4,5,3,4
+        3	lcg<>::p.a.cm	cp<>
+          process: 4
+        4	lcg<>::p.a.cm.c	cb<>
+        5	lcg<>::p.a.hlc	phl<>
+          process: 3,4
+        6	lcg<>::p.b	pll<>
+          process: 7,8,9,7,8
+        7	lcg<>::p.b.cm	cp<>
+          process: 8
+        8	lcg<>::p.b.cm.c	cb<>
+        9	lcg<>::p.b.hlc	phl<>
+          process: 7,8
+        bool instance pool: (2 ports, 0 local, 0 mapped)
+        1	lcg<>::!GND @[ supply_low port-alias ]	
+        2	lcg<>::!Vdd @[ supply_high port-alias ]	
+        process port aliases:
+        3: lcg<>::p.a.cm = lcg<>::p.a.hlc.ex
+        4: lcg<>::p.a.cm.c = lcg<>::p.a.hlc.ex.c
+        7: lcg<>::p.b.cm = lcg<>::p.b.hlc.ex
+        8: lcg<>::p.b.cm.c = lcg<>::p.b.hlc.ex.c
+      }
+      }
+
+    pb = process-definition (defined) pb(
+        bool<> t
+      )
+      In definition "pb", we have: {
+      Instances:
+        t = bool<> pb::t
+      unroll sequence: 
+        ports: (
+          bool<> t
+        )
+      footprint: {
+        t = bool^0 = pb<>::t (1) @[ port-alias ] 
+        Created state:
+        bool instance pool: (1 ports, 0 local, 0 mapped)
+        1	pb<>::t @[ port-alias ]	
+      }
+      }
+
+    pcc = process-definition (defined) pcc(
+        pb<> hu
+      )
+      In definition "pcc", we have: {
+      Instances:
+        hu = pb<> pcc::hu
+      unroll sequence: 
+        ports: (
+          pb<> hu
+        )
+      footprint: {
+        hu = process pb<>^0 = pcc<>::hu (1) (
+          t = bool^0 = pcc<>::hu.t (1) @[ port-alias ] 
+        )
+        Created state:
+        process instance pool: (1 ports, 0 local, 0 mapped)
+        1	pcc<>::hu	pb<>
+          bool: 1
+        bool instance pool: (1 ports, 0 local, 0 mapped)
+        1	pcc<>::hu.t @[ port-alias ]	
+      }
+      }
+
+    phl = process-definition (defined) phl(
+        cp<> ex
+      )
+      In definition "phl", we have: {
+      Instances:
+        ex = cp<> phl::ex
+      unroll sequence: 
+        ports: (
+          cp<> ex
+        )
+      footprint: {
+        ex = process cp<>^0 = phl<>::ex (1) (
+          c = process cb<>^0 = phl<>::ex.c (2) 
+        )
+        Created state:
+        process instance pool: (2 ports, 0 local, 0 mapped)
+        1	phl<>::ex	cp<>
+          process: 2
+        2	phl<>::ex.c	cb<>
+      }
+      }
+
+    plg = process-definition (defined) plg(
+        pll<> a
+        pll<> b
+      )
+      In definition "plg", we have: {
+      Instances:
+        a = pll<> plg::a
+        b = pll<> plg::b
+      unroll sequence: 
+        ports: (
+          pll<> a
+          pll<> b
+        )
+      footprint: {
+        a = process pll<>^0 = plg<>::a (1) (
+          cm = process cp<>^0 = plg<>::a.cm (2) (
+            c = process cb<>^0 = plg<>::a.cm.c (3) 
+          )
+          hlc = process phl<>^0 = plg<>::a.hlc (4) (
+            ex = process cp<>^0 = plg<>::a.hlc.ex (5) (
+              c = process cb<>^0 = plg<>::a.hlc.ex.c (6) 
+            )
+          )
+        )
+        b = process pll<>^0 = plg<>::b (7) (
+          cm = process cp<>^0 = plg<>::b.cm (8) (
+            c = process cb<>^0 = plg<>::b.cm.c (9) 
+          )
+          hlc = process phl<>^0 = plg<>::b.hlc (10) (
+            ex = process cp<>^0 = plg<>::b.hlc.ex (11) (
+              c = process cb<>^0 = plg<>::b.hlc.ex.c (12) 
+            )
+          )
+        )
+        Created state:
+        process instance pool: (12 ports, 0 local, 0 mapped)
+        1	plg<>::a	pll<>
+          process: 2,3,4,5,6
+        2	plg<>::a.cm	cp<>
+          process: 3
+        3	plg<>::a.cm.c	cb<>
+        4	plg<>::a.hlc	phl<>
+          process: 5,6
+        5	plg<>::a.hlc.ex	cp<>
+          process: 6
+        6	plg<>::a.hlc.ex.c	cb<>
+        7	plg<>::b	pll<>
+          process: 8,9,10,11,12
+        8	plg<>::b.cm	cp<>
+          process: 9
+        9	plg<>::b.cm.c	cb<>
+        10	plg<>::b.hlc	phl<>
+          process: 11,12
+        11	plg<>::b.hlc.ex	cp<>
+          process: 12
+        12	plg<>::b.hlc.ex.c	cb<>
+      }
+      }
+
+    pll = process-definition (defined) pll(
+        cp<> cm
+        phl<> hlc
+      )
+      In definition "pll", we have: {
+      Instances:
+        cm = cp<> pll::cm
+        hlc = phl<> pll::hlc
+      unroll sequence: 
+        ports: (
+          cp<> cm
+          phl<> hlc
+        )
+      footprint: {
+        cm = process cp<>^0 = pll<>::cm (1) (
+          c = process cb<>^0 = pll<>::cm.c (2) 
+        )
+        hlc = process phl<>^0 = pll<>::hlc (3) (
+          ex = process cp<>^0 = pll<>::hlc.ex (4) (
+            c = process cb<>^0 = pll<>::hlc.ex.c (5) 
+          )
+        )
+        Created state:
+        process instance pool: (5 ports, 0 local, 0 mapped)
+        1	pll<>::cm	cp<>
+          process: 2
+        2	pll<>::cm.c	cb<>
+        3	pll<>::hlc	phl<>
+          process: 4,5
+        4	pll<>::hlc.ex	cp<>
+          process: 5
+        5	pll<>::hlc.ex.c	cb<>
+      }
+      }
+
+    pr = process-definition (defined) pr(
+        plg<> lcg
+        pcc<> cc
+      )
+      In definition "pr", we have: {
+      Instances:
+        cc = pcc<> pr::cc
+        lcg = plg<> pr::lcg
+      unroll sequence: 
+        ports: (
+          plg<> lcg
+          pcc<> cc
+        )
+      footprint: {
+        cc = process pcc<>^0 = pr<>::cc (14) (
+          hu = process pb<>^0 = pr<>::cc.hu (15) (
+            t = bool^0 = pr<>::cc.hu.t (1) @[ port-alias ] 
+          )
+        )
+        lcg = process plg<>^0 = pr<>::lcg (1) (
+          a = process pll<>^0 = pr<>::lcg.a (2) (
+            cm = process cp<>^0 = pr<>::lcg.a.cm (3) (
+              c = process cb<>^0 = pr<>::lcg.a.cm.c (4) 
+            )
+            hlc = process phl<>^0 = pr<>::lcg.a.hlc (5) (
+              ex = process cp<>^0 = pr<>::lcg.a.hlc.ex (6) (
+                c = process cb<>^0 = pr<>::lcg.a.hlc.ex.c (7) 
+              )
+            )
+          )
+          b = process pll<>^0 = pr<>::lcg.b (8) (
+            cm = process cp<>^0 = pr<>::lcg.b.cm (9) (
+              c = process cb<>^0 = pr<>::lcg.b.cm.c (10) 
+            )
+            hlc = process phl<>^0 = pr<>::lcg.b.hlc (11) (
+              ex = process cp<>^0 = pr<>::lcg.b.hlc.ex (12) (
+                c = process cb<>^0 = pr<>::lcg.b.hlc.ex.c (13) 
+              )
+            )
+          )
+        )
+        Created state:
+        process instance pool: (15 ports, 0 local, 0 mapped)
+        1	pr<>::lcg	plg<>
+          process: 2,3,4,5,6,7,8,9,10,11,12,13
+        2	pr<>::lcg.a	pll<>
+          process: 3,4,5,6,7
+        3	pr<>::lcg.a.cm	cp<>
+          process: 4
+        4	pr<>::lcg.a.cm.c	cb<>
+        5	pr<>::lcg.a.hlc	phl<>
+          process: 6,7
+        6	pr<>::lcg.a.hlc.ex	cp<>
+          process: 7
+        7	pr<>::lcg.a.hlc.ex.c	cb<>
+        8	pr<>::lcg.b	pll<>
+          process: 9,10,11,12,13
+        9	pr<>::lcg.b.cm	cp<>
+          process: 10
+        10	pr<>::lcg.b.cm.c	cb<>
+        11	pr<>::lcg.b.hlc	phl<>
+          process: 12,13
+        12	pr<>::lcg.b.hlc.ex	cp<>
+          process: 13
+        13	pr<>::lcg.b.hlc.ex.c	cb<>
+        14	pr<>::cc	pcc<>
+          process: 15
+          bool: 1
+        15	pr<>::cc.hu	pb<>
+          bool: 1
+        bool instance pool: (1 ports, 0 local, 0 mapped)
+        1	pr<>::cc.hu.t @[ port-alias ]	
+      }
+      }
+
+  Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
+    lcs = lcg<> lcs
+    p = pr<> p
+}
+
+footprint: {
+  !GND = bool^0 = !GND (2) @[ supply_low ] 
+  !Vdd = bool^0 = !Vdd (3) @[ supply_high ] 
+  lcs = process lcg<>^0 = lcs (13) (
+    !GND = bool^0 = !GND (2) @[ supply_low ] 
+    !Vdd = bool^0 = !Vdd (3) @[ supply_high ] 
+    p = process plg<>^0 = p.lcg (2) (
+      a = process pll<>^0 = p.lcg.a (3) (
+        cm = process cp<>^0 = p.lcg.a.cm (4) (
+          c = process cb<>^0 = p.lcg.a.cm.c (5) 
+        )
+        hlc = process phl<>^0 = p.lcg.a.hlc (6) (
+          ex = process cp<>^0 = p.lcg.a.cm (4) (
+            c = process cb<>^0 = p.lcg.a.cm.c (5) 
+          )
+        )
+      )
+      b = process pll<>^0 = p.lcg.b (7) (
+        cm = process cp<>^0 = p.lcg.b.cm (8) (
+          c = process cb<>^0 = p.lcg.b.cm.c (9) 
+        )
+        hlc = process phl<>^0 = p.lcg.b.hlc (10) (
+          ex = process cp<>^0 = p.lcg.b.cm (8) (
+            c = process cb<>^0 = p.lcg.b.cm.c (9) 
+          )
+        )
+      )
+    )
+  )
+  p = process pr<>^0 = p (1) (
+    lcg = process plg<>^0 = p.lcg (2) (
+      a = process pll<>^0 = p.lcg.a (3) (
+        cm = process cp<>^0 = p.lcg.a.cm (4) (
+          c = process cb<>^0 = p.lcg.a.cm.c (5) 
+        )
+        hlc = process phl<>^0 = p.lcg.a.hlc (6) (
+          ex = process cp<>^0 = p.lcg.a.cm (4) (
+            c = process cb<>^0 = p.lcg.a.cm.c (5) 
+          )
+        )
+      )
+      b = process pll<>^0 = p.lcg.b (7) (
+        cm = process cp<>^0 = p.lcg.b.cm (8) (
+          c = process cb<>^0 = p.lcg.b.cm.c (9) 
+        )
+        hlc = process phl<>^0 = p.lcg.b.hlc (10) (
+          ex = process cp<>^0 = p.lcg.b.cm (8) (
+            c = process cb<>^0 = p.lcg.b.cm.c (9) 
+          )
+        )
+      )
+    )
+    cc = process pcc<>^0 = p.cc (11) (
+      hu = process pb<>^0 = p.cc.hu (12) (
+        t = bool^0 = p.cc.hu.t (1) 
+      )
+    )
+  )
+  Created state:
+  process instance pool: (0 ports, 13 local, 0 mapped)
+  1	p	pr<>
+    process: 2,3,4,5,6,4,5,7,8,9,10,8,9,11,12
+    bool: 1
+  2	p.lcg	plg<>
+    process: 3,4,5,6,4,5,7,8,9,10,8,9
+  3	p.lcg.a	pll<>
+    process: 4,5,6,4,5
+  4	p.lcg.a.cm	cp<>
+    process: 5
+  5	p.lcg.a.cm.c	cb<>
+  6	p.lcg.a.hlc	phl<>
+    process: 4,5
+  7	p.lcg.b	pll<>
+    process: 8,9,10,8,9
+  8	p.lcg.b.cm	cp<>
+    process: 9
+  9	p.lcg.b.cm.c	cb<>
+  10	p.lcg.b.hlc	phl<>
+    process: 8,9
+  11	p.cc	pcc<>
+    process: 12
+    bool: 1
+  12	p.cc.hu	pb<>
+    bool: 1
+  13	lcs	lcg<>
+    process: 2,3,4,5,6,7,8,9,10
+    bool: 2,3
+  bool instance pool: (0 ports, 3 local, 0 mapped)
+  1	p.cc.hu.t	
+  2	!GND @[ supply_low ]	
+  3	!Vdd @[ supply_high ]	
+}

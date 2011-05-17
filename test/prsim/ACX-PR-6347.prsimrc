@@ -1,0 +1,9 @@
+# "ACX-PR-6347.prsimrc"
+# @haco@ ACX-PR-6347.haco-c
+# reduced test case -- was crashing on valid reference
+
+node-id p.cc.hu.t
+# get p.cc.hu.t
+# get !Vdd
+# get !GND
+

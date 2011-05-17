@@ -2,7 +2,7 @@
 	\file "Object/ref/member_meta_instance_reference.tcc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_member_inst_ref.tcc"
- 	$Id: member_meta_instance_reference.tcc,v 1.32 2010/09/02 00:34:41 fang Exp $
+ 	$Id: member_meta_instance_reference.tcc,v 1.33 2011/05/17 21:19:54 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_MEMBER_META_INSTANCE_REFERENCE_TCC__
@@ -205,9 +205,9 @@ MEMBER_INSTANCE_REFERENCE_CLASS::lookup_locally_allocated_index(
 	// TODO: have parent reference populate footprint_frame
 	footprint_frame tmp, owner;	// scratch space
 	const footprint_frame pff(top);
-	global_offset g;
+	global_offset g, tmpg;
 	const global_entry_context gc(pff, g);
-	if (!gc.construct_global_footprint_frame(owner, tmp, g,
+	if (!gc.construct_global_footprint_frame(owner, tmp, g, tmpg,
 			_parent_inst_ref, uc)) {
 		STACKTRACE_INDENT_PRINT("member::lookup_local error." << endl);
 		return 0;
@@ -277,14 +277,15 @@ MEMBER_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_indices(
 	const footprint_frame tff(top);
 	const global_offset g;
 	const global_entry_context gc(tff, g);
-	global_offset tmpg;
+	global_offset tmpg, tmpg2;
 	footprint_frame tmpo, tmpf;
 	const size_t gpid =
-		gc.construct_global_footprint_frame(tmpo, tmpf, tmpg,
+		gc.construct_global_footprint_frame(tmpo, tmpf, tmpg, tmpg2,
 			*this->base_inst_ref, lookup_c);
 	if (!gpid) {
 		return good_bool(false);
 	}
+	STACKTRACE_INDENT_PRINT("gpid = " << gpid << endl);
 	const unroll_context dummy(tmpf._footprint, &top);
 	// reminder: call to unroll_references_packed is virtual
 	if (unroll_references_packed_helper(dummy, *this->inst_collection_ref,
@@ -406,10 +407,10 @@ MEMBER_INSTANCE_REFERENCE_CLASS::unroll_subindices_packed(
 	this->dump(STACKTRACE_STREAM, expr_dump_context::default_value) << endl;
 #endif
 	// resolve parent references first
-	global_offset go;
+	global_offset go, tmpg;
 	footprint_frame tmpo, ff;
 	const size_t ppid =
-		c.construct_global_footprint_frame(tmpo, ff, go,
+		c.construct_global_footprint_frame(tmpo, ff, go, tmpg,
 			*this->base_inst_ref, u);
 	if (!ppid) {
 		return bad_bool(true);
@@ -420,6 +421,7 @@ MEMBER_INSTANCE_REFERENCE_CLASS::unroll_subindices_packed(
 		<< endl;
 	ff.dump_frame(STACKTRACE_STREAM) << endl;
 	STACKTRACE_STREAM << go << endl;
+	STACKTRACE_STREAM << tmpg << endl;
 #endif
 	alias_collection_type local_aliases;
 	NEVER_NULL(ff._footprint);

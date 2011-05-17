@@ -1,0 +1,21 @@
+globID	super		localID	canonical	footprint-frame
+[global process entries]
+1	(top)	-	1	foo	sparse<>
+	process: ;2 {3..4}
+	bool: 1,2;- {3..6}
+2	process	1	1	foo.K	LT<>
+	process: ;3..4
+	bool: 1,2;3 {4..6}
+3	process	2	1	foo.K.p	pi<>
+	process: 4
+	bool: 1,2,3
+4	process	2	2	foo.K.p.y	pb<>
+	bool: 1,2,3;4..6
+[global bool entries]
+1	(top)	-	1	!GND	 @[ supply_low ]
+2	(top)	-	2	!Vdd	 @[ supply_high ]
+3	process	2	3	foo.K.p.y.f	
+4	process	4	4	foo.K.p.y.t1	
+5	process	4	5	foo.K.p.y.t2	
+6	process	4	6	foo.K.p.y.t3	
+

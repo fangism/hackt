@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/instance_pool.h"
 	Template class wrapper around list_vector.
-	$Id: instance_pool.h,v 1.14 2010/04/07 00:12:41 fang Exp $
+	$Id: instance_pool.h,v 1.15 2011/05/17 21:19:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_POOL_H__
@@ -146,7 +146,7 @@ public:
 	}
 
 	/**
-		
+		\return number of local instances, including ports.
 	 */
 	size_t
 	local_entries(void) const {

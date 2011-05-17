@@ -1,0 +1,22 @@
+// "type-test-f.hac"
+// copy-modified from "type-test-e.hac"
+// reduced test case for debugging
+// testing deep references
+
+defproc pb (bool f) {
+	bool t1, t2, t3;		// local private of a public port
+} 
+
+defproc pi (pb y) { }
+
+defproc LT () {
+  pi p;
+}
+
+defproc sparse () {
+ LT K;
+}
+
+sparse foo;
+
+

@@ -1,0 +1,25 @@
+// "ACX-PR-6347.hac"
+// test case contributed by Ilya Ganusov, reduced by Fang (and delta)
+// ICE on valid reference in hacprsim
+deftype cb <: bool () { }
+deftype pb <: bool (bool t) { }
+deftype cp <: bool (cb c) { }
+deftype phl <: int(cp ex) { }
+deftype pll <: int(
+        cp cm;
+        phl hlc
+) { }
+deftype plg <: int(pll a, b) { }
+defproc lcg(plg p) { 
+p.a.cm = p.a.hlc.ex;
+p.b.cm = p.b.hlc.ex;
+}
+deftype pcc <: int(pb hu) { }
+deftype pr <: int(
+        plg lcg;
+        pcc cc ) {
+}
+pr p;
+lcg lcs; 
+lcs(p.lcg);
+// bool x = p.cc.hu.t;

@@ -1,0 +1,14 @@
+# "type-test-g-01.prsimrc"
+# @haco@ type-test-g.haco-c
+
+# echo-commands on
+echo checking process-ids...
+process-id K
+process-id K.p
+process-id K.p.y
+
+echo checking node-ids...
+node-id K.p.y.f
+node-id K.p.y.t1
+node-id K.p.y.t2
+node-id K.p.y.t3

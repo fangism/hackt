@@ -2,7 +2,7 @@
 	\file "Object/global_entry_context.h"
 	Structure containing all the minimal information
 	needed for a global_entry traversal over instances.  
-	$Id: global_entry_context.h,v 1.13 2011/04/30 04:16:52 fang Exp $
+	$Id: global_entry_context.h,v 1.14 2011/05/17 21:19:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_CONTEXT_H__
@@ -197,7 +197,7 @@ virtual	void
 	// \return lpid of returned process frame, 0 on error
 	size_t
 	construct_global_footprint_frame(footprint_frame&, 
-		footprint_frame&, 
+		footprint_frame&, global_offset&,
 		global_offset&, const meta_instance_reference_base&, 
 		const unroll_context&) const;
 

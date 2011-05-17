@@ -2,7 +2,7 @@
 	\file "PR/pr-command.cc"
 	Command-line feature for PR simulator.
 	TODO: scheme interface
-	$Id: pr-command.cc,v 1.3 2011/05/05 06:50:47 fang Exp $
+	$Id: pr-command.cc,v 1.4 2011/05/17 21:19:54 fang Exp $
  */
 
 #define	ENABLE_STATIC_TRACE		0
@@ -1815,6 +1815,23 @@ o <<
 "If maxdist is not supplied, the temperature parameter is used by default."
 	<< endl;
 }
+
+//=============================================================================
+// select functions
+// operations for selecting and apply operations en mass to objects
+
+static
+vector<size_t> selected_objects;
+static
+vector<size_t> selected_channels;
+
+/***
+select - 
+select-all - 
+unselect -
+unselect-all -
+select-toggle -
+***/
 
 //=============================================================================
 }	// end namespace PR

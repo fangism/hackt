@@ -3,6 +3,19 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-05-17	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-73:
+	  CRITICAL BUG FIX in 
+		global_entry_context::construct_global_footprint_frame()
+		incorrect name-to-index lookup due to incorrect usage of
+		global-offsets.  Fixed by returning two global_offsets
+		and letting caller choose the appropriate one.  
+		This bug was extremely latent and introduced during the
+		scalability branch/merge.
+	  Added several test cases.
+
+
 2011-05-06	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-72:
