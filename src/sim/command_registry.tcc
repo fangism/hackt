@@ -1,6 +1,6 @@
 /**
 	\file "sim/command_registry.tcc"
-	$Id: command_registry.tcc,v 1.22 2011/05/03 19:20:55 fang Exp $
+	$Id: command_registry.tcc,v 1.23 2011/05/23 01:10:51 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_REGISTRY_TCC__
@@ -277,6 +277,12 @@ command_registry<Command>::expand_aliases(string_list& c) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // directory commands
+
+template <class Command>
+void
+command_registry<Command>::reset_dirs(void) {
+	return dir_stack.reset();
+}
 
 template <class Command>
 bool

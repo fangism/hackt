@@ -2,7 +2,7 @@
 	\file "sim/command_common.tcc"
 	Library of template command implementations, re-usable with
 	different state types.  
-	$Id: command_common.tcc,v 1.23 2010/08/24 18:08:42 fang Exp $
+	$Id: command_common.tcc,v 1.24 2011/05/23 01:10:50 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_COMMON_TCC__
@@ -874,6 +874,7 @@ template <class State>
 int
 Reset<State>::main(state_type& s, const string_list&) {
 	s.reset();
+	command_registry_type::reset_dirs();
 	return command_type::NORMAL;
 }
 

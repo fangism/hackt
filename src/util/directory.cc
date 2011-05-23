@@ -1,6 +1,6 @@
 /**
 	\file "util/directory.cc"
-	$Id: directory.cc,v 1.2 2011/05/07 03:43:45 fang Exp $
+	$Id: directory.cc,v 1.3 2011/05/23 01:10:51 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -30,11 +30,19 @@ directory_stack::directory_stack() : dir_stack(),
 		parent_dir_string(".."),
 		parent_separator("/") {
 	// start with an empty string
-	dir_stack.push_back("");
+	reset();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 directory_stack::~directory_stack() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+directory_stack::reset(void) {
+	// start with an empty string
+	dir_stack.clear();
+	dir_stack.push_back("");
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

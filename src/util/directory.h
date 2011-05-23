@@ -1,6 +1,6 @@
 /**
 	\file "util/directory.h"
-	$Id: directory.h,v 1.2 2010/04/19 02:46:13 fang Exp $
+	$Id: directory.h,v 1.3 2011/05/23 01:10:52 fang Exp $
 	Directory-like command-interface extensions for simulator
 	command interpreters.  
 	This could be useful enough to go into the util library.
@@ -92,6 +92,9 @@ public:
 
 	bool
 	pop_directory(void);
+
+	void
+	reset(void);
 
 	const string&
 	current_working_directory(void) const;

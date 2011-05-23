@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-05-22	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-73+:
+	  sim/command_registry.tcc: reset command now resets the state
+		of the directory stack as well.
+	  Test case added.
+
+
 2011-05-17	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-73:

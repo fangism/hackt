@@ -1,6 +1,6 @@
 /**
 	\file "sim/command_registry.h"
-	$Id: command_registry.h,v 1.15 2011/05/03 19:20:54 fang Exp $
+	$Id: command_registry.h,v 1.16 2011/05/23 01:10:51 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_REGISTRY_H__
@@ -271,6 +271,10 @@ public:
 	write_history(const string&);
 
 // directory commands
+	static
+	void
+	reset_dirs(void);
+
 	static
 	bool
 	change_dir(const string&);
