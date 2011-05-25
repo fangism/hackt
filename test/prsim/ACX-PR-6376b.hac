@@ -1,0 +1,13 @@
+// "ACX-PR-6376b.hac"
+// even more reduced test case
+
+bool e, d;
+bool _bl;
+bool c;
+
+prs {
+		~e & ~d	-> _bl+
+		e	-> _bl-
+[weak=1]	c	-> _bl-
+}
+

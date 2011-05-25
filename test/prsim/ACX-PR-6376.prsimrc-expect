@@ -1,0 +1,46 @@
+---------- setting WD 0 --------- 
+enqueued:	0	WD : 0
+enqueued:	10	lbl._wdatain : 1	[from WD:=0]
+	0	WD : 0
+enqueued:	20	lbl.logic.blc_writer.en : 0	[from lbl._wdatain:=1]
+	10	lbl._wdatain : 1	[by WD:=0]
+	20	lbl.logic.blc_writer.en : 0	[by lbl._wdatain:=1]
+---------- setting WE 1 --------- 
+enqueued:	20	WE : 1
+enqueued:	30	lbl.logic._wen : 0	[from WE:=1]
+	20	WE : 1
+enqueued:	40	lbl.blc : 1	[from lbl.logic._wen:=0]
+	30	lbl.logic._wen : 0	[by WE:=1]
+	40	lbl.blc : 1	[by lbl.logic._wen:=0]
+---------- setting WE 0 --------- 
+enqueued:	40	WE : 0
+	40	WE : 0
+---------- state --------- 
+All subnodes of '.':
+!GND : 0
+!Vdd : 1
+lbl.blc : 1
+WE : 0
+WD : 0
+logic.wl : X
+logic.blt : X
+logic.c.t : X
+logic.c.f : X
+lbl._wdatain : 1
+lbl.logic._wen : 0
+lbl.logic.blc_writer.en : 0
+Fanins of node `lbl.blc':
+(from logic):
+[after 10, weak]	logic.c.t:X & logic.wl:X<X><X> -> lbl.blc-:1
+(from lbl.logic.blc_writer):
+[after 10]	~lbl.logic._wen:0 & ~lbl.logic.blc_writer.en:0<1><1> -> lbl.blc+:1
+[after 10]	lbl.logic.blc_writer.en:0 -> lbl.blc-:1
+---------- setting WD 1 --------- 
+enqueued:	40	WD : 1
+enqueued:	50	lbl._wdatain : 0	[from WD:=1]
+	40	WD : 1
+enqueued:	60	lbl.logic.blc_writer.en : 1	[from lbl._wdatain:=0]
+	50	lbl._wdatain : 0	[by WD:=1]
+enqueued:	70	lbl.blc : 0	[from lbl.logic.blc_writer.en:=1]
+	60	lbl.logic.blc_writer.en : 1	[by lbl._wdatain:=0]
+	70	lbl.blc : 0	[by lbl.logic.blc_writer.en:=1]

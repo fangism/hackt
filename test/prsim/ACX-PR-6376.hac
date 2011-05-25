@@ -1,0 +1,50 @@
+// "ACX-PR-6376.hac"
+// reduced test case
+
+deftype cbit <: bool (bool t,f) { }
+defproc sram( bool wl, blt, blc; cbit c ) {
+prs {
+/**
+	c.f -> c.t-
+	c.t -> c.f-
+	~(wl & ~blt) & ~c.f -> c.t+
+	~(wl & ~blc) & ~c.t -> c.f+
+	wl & ~blt -> c.t-
+	wl & ~blc -> c.f-
+**/
+	[weak=1] c.t & wl -> blc-
+	[weak=1] c.f & wl -> blt-
+}
+}
+defproc writer ( bool bl, _wen, wdata) {
+bool en;
+prs {
+	(~_wen & ~wdata)	-> en+
+	( _wen | wdata)		-> en-
+	(~_wen & ~en)		-> bl+
+	en			-> bl-
+}
+}
+defproc lbl_logic ( bool blc, wen, _wdata) {
+bool _wen;
+writer blc_writer ( blc, _wen, _wdata);
+prs {
+	wen -> _wen-
+}
+}
+defproc lbl_bit ( bool blc, wen, wdatain) {
+bool _wdatain;
+lbl_logic logic ( blc, wen, _wdatain);
+prs {
+	~wdatain -> _wdatain+
+	wdatain -> _wdatain-
+}
+}
+bool WE;
+bool WD;
+lbl_bit lbl;
+sram logic;
+lbl.wen = WE;
+lbl.blc = logic.blc;
+WD = lbl.wdatain;
+

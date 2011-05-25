@@ -1,0 +1,14 @@
+# "dirs-08.prsimrc"
+# @haco@ inv.haco-c
+
+# make sure that reset resets the dir stack state
+pwd
+pushd I
+pwd
+pushd ../J
+pwd
+dirs
+reset
+pwd
+dirs
+

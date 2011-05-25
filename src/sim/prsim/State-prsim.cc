@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.81 2011/05/07 21:34:27 fang Exp $
+	$Id: State-prsim.cc,v 1.82 2011/05/25 21:26:27 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -961,6 +961,7 @@ State::__copy_event(const event_type& e) {
 		for the purposes of delay computation.
 		Q: What if set by user (set_node)?
 	\param val the future value of the node.
+	\param force to indicate that event was caused by user intervention
 	\pre n must not already have a pending event.
 	\pre n must be the node corresponding to node index ni
 	\return index into event pool for newly created event.
@@ -2068,6 +2069,14 @@ for ( ; i!=e; ++i) {
 	const event_index_type ne = *i;
 	DEBUG_STEP_PRINT("checking pending event ID: " << ne << endl);
 	event_type& ev(get_event(ne));
+#if 0
+	// with weak rules, they may get killed while on pending queue
+	// so just drop event, deallocate here
+	if (ev.killed()) {
+		__deallocate_pending_interference_event(ne);
+		continue;
+	}
+#endif
 	const node_index_type& _ni(ev.node);
 	DEBUG_STEP_PRINT("... on node " <<
 		get_node_canonical_name(_ni) << endl);
@@ -2336,6 +2345,7 @@ State::__flush_pending_event_no_interference(node_type& _n,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Replaces the event on a node.  
 	For the sake of shortening long code.  
  */
 // inline
@@ -3516,6 +3526,14 @@ State::propagate_evaluation(
 	const pull_enum wup_pull = weak_rules_enabled() ?
 		n.pull_up_state STR_INDEX(WEAK_RULE).pull() : PULL_OFF;
 #endif	// PRSIM_WEAK_RULES
+#if DEBUG_STEP
+	STACKTRACE_INDENT_PRINT("up_pull: " << up_pull << endl);
+	STACKTRACE_INDENT_PRINT("dn_pull: " << dn_pull << endl);
+#if PRSIM_WEAK_RULES
+	STACKTRACE_INDENT_PRINT("wup_pull: " << wup_pull << endl);
+	STACKTRACE_INDENT_PRINT("wdn_pull: " << wdn_pull << endl);
+#endif
+#endif
 #if PRSIM_WEAK_RULES
 	// weak rule pre-filtering
 if (weak_rules_enabled()) {
@@ -3627,6 +3645,7 @@ if (!n.pending_event()) {
 			wdn_pull == PULL_ON &&
 			wup_pull == PULL_OFF)
 		|| (wdn_pull == PULL_WEAK &&
+			wup_pull != PULL_OFF &&
 			n.current_value() != LOGIC_OTHER)
 #endif
 		) {
@@ -3638,13 +3657,18 @@ if (!n.pending_event()) {
 		DEBUG_STEP_PRINT("yielding to opposing pull-down." << endl);
 		const event_index_type pe =
 			__allocate_event(n, ui, c,
-				root_rule, LOGIC_LOW 
+				root_rule,
 #if PRSIM_WEAK_RULES
+				// logic low only if not weakly pulled to X
+				(dn_pull == PULL_ON || wdn_pull == PULL_ON)
+					? LOGIC_LOW : LOGIC_OTHER,
 				// if cause is the rule that turned off
 				// , is_weak
 				// if cause is the opposition that was on
-				, (dn_pull == PULL_OFF)
+				(dn_pull == PULL_OFF)
 				// important for interference checking
+#else
+				LOGIC_LOW 
 #endif
 				);
 		// pe->cause = root
@@ -3658,7 +3682,7 @@ if (!n.pending_event()) {
 	}	// end if next is PULL_OFF
 } else if (!n.in_excl_queue()) {
 	DEBUG_STEP_PRINT("pending, but not excl event on this node." << endl);
-	// there is a pending event, not in the exclusive queue
+	// there is a pending event, not in an exclusive queue
 	event_type& e(get_event(ei));
 	DEBUG_STEP_PRINT("next = " << size_t(next) << endl);
 	DEBUG_STEP_PRINT("pull-dn = " << size_t(dn_pull) << endl);
@@ -3839,7 +3863,8 @@ if (!n.pending_event()) {
 		|| (!is_weak &&
 			wup_pull == PULL_ON &&
 			wdn_pull == PULL_OFF)
-		|| (wup_pull == PULL_WEAK && 
+		|| (wup_pull == PULL_WEAK &&
+			wdn_pull != PULL_OFF &&
 			n.current_value() != LOGIC_OTHER)
 #endif
 		) {
@@ -3851,13 +3876,18 @@ if (!n.pending_event()) {
 		DEBUG_STEP_PRINT("yielding to opposing pull-up." << endl);
 		const event_index_type pe =
 			__allocate_event(n, ui, c,
-				root_rule, LOGIC_HIGH
+				root_rule,
 #if PRSIM_WEAK_RULES
+				// logic low only if not weakly pulled to X
+				(up_pull == PULL_ON || wup_pull == PULL_ON)
+					? LOGIC_HIGH : LOGIC_OTHER,
 				// if cause is the rule that turned off
 				// , is_weak
 				// if cause is the opposition that was on
-				, (up_pull == PULL_OFF)
+				(up_pull == PULL_OFF)
 				// important for interference checking
+#else
+				LOGIC_HIGH
 #endif
 				);
 		// pe->cause = root

@@ -1,0 +1,27 @@
+# "ACX-PR-6376.prsimrc"
+# @haco@ ACX-PR-6376.haco-c
+
+unstable warn
+unstable-dequeue
+weak-rules on
+interference fatal
+weak-interference fatal
+watchall
+watchall-queue
+
+echo ---------- setting WD 0 ---------
+set WD 0
+cycle
+echo ---------- setting WE 1 ---------
+set WE 1 
+cycle
+echo ---------- setting WE 0 ---------
+set WE 0
+cycle
+echo ---------- state ---------
+getall .
+fanin-get lbl.blc
+echo ---------- setting WD 1 ---------
+set WD 1
+cycle
+

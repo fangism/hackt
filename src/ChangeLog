@@ -3,6 +3,20 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-05-24	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-74:
+	  hacprsim critical bug fix:
+		pending-event queue inconsistency with killed weak events
+		triggered based on evaluation ordering of pull turning
+		off before opposing pull turns on (while weak-X is pulling).
+		Fixed by properly enqueuing weak-X event and also
+		deallocating killed events in the pending queue.
+		Also strengthened condition under which yield-to-opposing-X
+		events are scheduled to the pending queue.
+	  Reduced test cases added.
+
+
 2011-05-22	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-73+:

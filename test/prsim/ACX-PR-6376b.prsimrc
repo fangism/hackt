@@ -1,0 +1,20 @@
+# "ACX-PR-6376b.prsimrc"
+# @haco@ ACX-PR-6376b.haco-c
+
+weak-rules on
+unstable-dequeue
+unstable warn
+
+watchall
+set d 0
+set e 0
+cycle
+assert _bl 1
+getall .
+rules-verbose .
+echo -------- problem here --------
+set e 1
+cycle
+# note: instability reported here is a false positive
+# due to evaluation ordering of shutting off the pull-down
+
