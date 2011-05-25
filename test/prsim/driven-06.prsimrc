@@ -1,0 +1,16 @@
+# "driven-06.prsimrc"
+# copy-modified from "driven-05.prsimrc"
+# expect fail
+# @haco@ interference.haco-c
+
+# ~a -> c+
+# b  -> c-
+
+watchall
+timing uniform 10
+
+no-status-driven 1
+no-status-driven-fanin 0
+echo expect-fail here
+no-status-driven X
+

@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.134 2011/05/25 21:26:29 fang Exp $
+#	$Id: Makefile.am,v 1.135 2011/05/25 23:09:53 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -143,7 +143,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	interference-b-01 \
 	allow_interference-01 allow_interference-02 \
 	allow_weak_interference-01 allow_weak_interference-02 \
-	driven-01 driven-04 \
+	driven-01 driven-04 driven-05 driven-08 \
 	paranoid-01 \
 	killed-01 \
 	rule_unstable-a-01 rule_unstable-b-01 rule_unstable-c-01 \
@@ -610,6 +610,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
 	interference-13 \
 	interference-14 interference-15 \
 	driven-02 driven-03 \
+	driven-06 driven-07 driven-09 driven-10 \
 	unstable-04 unstable-05 unstable-06 \
 	invariant-a-07 invariant-a-09 \
 	invariant-b-07 \

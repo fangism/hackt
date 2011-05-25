@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.82 2011/05/25 21:26:27 fang Exp $
+	$Id: State-prsim.cc,v 1.83 2011/05/25 23:09:52 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -4478,9 +4478,19 @@ State::status_driven(const pull_enum p,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ostream&
+/**
+	\return true if asserting empty and assertion failed.
+ */
+bool
 State::print_status_driven(ostream& o, const pull_enum p,
-		const bool fanin_only) const {
+		const bool fanin_only, const bool assert_empty) const {
+	bool err = false;
+	vector<node_index_type> nodes;
+	status_driven(p, fanin_only, nodes);
+	if (assert_empty && !nodes.empty()) {
+		o << "Assertion failed: there are ";
+		err = true;
+	}
 switch (p) {
 case PULL_OFF:
 	o << "Nodes undriven (state-holding):" << endl;
@@ -4493,10 +4503,9 @@ default:
 	o << "Nodes driven:" << endl;
 	break;
 }
-	vector<node_index_type> nodes;
-	status_driven(p, fanin_only, nodes);
 	print_nodes(o, nodes, "\n");
-	return o << std::flush;
+	o << std::flush;
+	return err;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

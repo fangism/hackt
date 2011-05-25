@@ -1,0 +1,20 @@
+# "driven-10.prsimrc"
+# copy-modified from "driven-07.prsimrc"
+# expect fail
+# @haco@ weak-vs-weak.haco-c
+
+# ~a -> c+
+# b  -> c-
+
+watchall
+timing uniform 10
+
+set a 1
+set b 0
+cycle
+
+no-status-driven 1
+no-status-driven X
+echo expect-fail here
+no-status-driven-fanin 0
+

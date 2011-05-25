@@ -1,0 +1,48 @@
+Nodes driven:
+Nodes undriven (state-holding):
+Nodes driven by X:
+c
+c pulled up:0 dn:0 weak-up:X weak-dn:X
+	0	a : 1
+	0	b : 0
+Nodes driven:
+Nodes undriven (state-holding):
+!GND
+!Vdd
+a
+b
+c
+Nodes driven by X:
+c pulled up:0 dn:0 weak-up:0 weak-dn:0
+	0	b : 1
+Nodes driven:
+c
+Nodes undriven (state-holding):
+Nodes driven by X:
+c pulled up:0 dn:0 weak-up:0 weak-dn:1
+	0	b : 0
+	0	a : 0
+Nodes driven:
+c
+Nodes undriven (state-holding):
+Nodes driven by X:
+c pulled up:0 dn:0 weak-up:1 weak-dn:0
+	0	a : 1
+Nodes driven:
+Nodes undriven (state-holding):
+!GND
+!Vdd
+a
+b
+c
+Nodes driven by X:
+c pulled up:0 dn:0 weak-up:0 weak-dn:0
+testing for interference 
+expecting interference from guard 
+	0	a : 0
+	0	b : 1
+Nodes driven:
+c
+Nodes undriven (state-holding):
+Nodes driven by X:
+c pulled up:0 dn:0 weak-up:1 weak-dn:1

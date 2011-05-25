@@ -1,0 +1,6 @@
+Nodes driven:
+Nodes undriven (state-holding):
+expect-fail here 
+Assertion failed: there are Nodes driven by X:
+c
+... at line 15

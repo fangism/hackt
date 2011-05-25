@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-05-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-75:
+	  hacprsim: new commands
+		no-status-driven, no-status-driven-fanin.
+		assert that no node are at the given drive-state.
+		useful for asserting that no nodes are floating
+		or high-impedance, or weakly driven.
+	  Test cases added.
+
+
 2011-05-24	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-74:

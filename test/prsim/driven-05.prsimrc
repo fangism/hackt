@@ -1,4 +1,4 @@
-# "driven-04.prsimrc"
+# "driven-05.prsimrc"
 # copy-modified from "driven-01.prsimrc"
 # @haco@ interference.haco-c
 
@@ -8,17 +8,17 @@
 watchall
 timing uniform 10
 
-status-driven 1
-status-driven-fanin 0
+no-status-driven 1
+no-status-driven-fanin 0
 status-driven X
 get-driven c
 
 set a 1
 set b 0
 cycle
-status-driven 1
-status-driven-fanin 0
-status-driven X
+no-status-driven 1
+status-driven 0
+no-status-driven X
 get-driven c
 assert-driven c 0
 
@@ -26,8 +26,8 @@ assert-driven c 0
 set b 1
 cycle
 status-driven 1
-status-driven-fanin 0
-status-driven X
+no-status-driven-fanin 0
+no-status-driven X
 get-driven c
 assert-driven c 1
 
@@ -35,8 +35,8 @@ set b 0
 set a 0
 cycle
 status-driven 1
-status-driven-fanin 0
-status-driven X
+no-status-driven-fanin 0
+no-status-driven X
 get-driven c
 assert-driven c 1
 
@@ -44,9 +44,9 @@ set a 1
 cycle
 assert-driven c 0
 
-status-driven 1
-status-driven-fanin 0
-status-driven X
+no-status-driven 1
+status-driven 0
+no-status-driven X
 get-driven c
 
 echo testing for interference
@@ -58,8 +58,8 @@ cycle
 assert-driven c 1
 
 status-driven 1
-status-driven-fanin 0
-status-driven X
+no-status-driven-fanin 0
+no-status-driven X
 get-driven c
 
 

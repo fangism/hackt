@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.91 2011/05/17 21:19:55 fang Exp $
+	$Id: Command-prsim.cc,v 1.92 2011/05/25 23:09:52 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -3040,6 +3040,8 @@ NoStatusWeakInterfere::usage(ostream& o) {
 @texinfo cmd/status-driven.texi
 @deffn Command status-driven val
 @deffnx Command status-driven-fanin val
+@deffnx Command no-status-driven val
+@deffnx Command no-status-driven-fanin val
 Reports all nodes that are in a particular drive-state.
 The drive-state of a node is the strongest pull in any direction.  
 The current value of the node is not considered.
@@ -3047,6 +3049,10 @@ The current value of the node is not considered.
 driven nodes (which may include interfering nodes).  
 The @command{status-driven-fanin} variant filters out nodes with no
 fanin (inputs), which are always undriven.  
+The @command{no-} command variants assert that there are no nodes
+that match the specified drive state.
+For example, @command{no-status-driven-fanin 0} asserts that
+no nodes with fanins are floating or in the high impedance state.
 @end deffn
 @end texinfo
 ***/
@@ -3055,11 +3061,17 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(StatusDriven, "status-driven", info,
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(StatusDrivenFanin,
 	"status-driven-fanin", info, 
 	"show all nodes with fanin that match a drive-state")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoStatusDriven, "no-status-driven", info, 
+	"assert that no nodes match the drive-state")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoStatusDrivenFanin,
+	"no-status-driven-fanin", info, 
+	"assert that no nodes with fanin match the drive-state")
 
 static
 int
 __status_driven(State& s, const string_list& a,
-		void (*usage)(ostream&), const bool fanin_only) {
+		void (*usage)(ostream&), const bool fanin_only, 
+		const bool assert_empty) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
@@ -3077,25 +3089,36 @@ if (a.size() != 2) {
 			<< endl;
 		return Command::BADARG;
 	}
-	s.print_status_driven(cout, p, fanin_only);
+	if (s.print_status_driven(cout, p, fanin_only, assert_empty))
+		return Command::FATAL;
 	return Command::NORMAL;
 }
 }
 
 int
 StatusDriven::main(State& s, const string_list& a) {
-	return __status_driven(s, a, usage, false);
+	return __status_driven(s, a, usage, false, false);
 }
 
 int
 StatusDrivenFanin::main(State& s, const string_list& a) {
-	return __status_driven(s, a, usage, true);
+	return __status_driven(s, a, usage, true, false);
 }
 
+int
+NoStatusDriven::main(State& s, const string_list& a) {
+	return __status_driven(s, a, usage, false, true);
+}
+
+int
+NoStatusDrivenFanin::main(State& s, const string_list& a) {
+	return __status_driven(s, a, usage, true, true);
+}
+
+static
 void
-StatusDriven::usage(ostream& o) {
-	o << name << " [01Xx]" << endl;
-	o << 
+__drive_values(ostream& o, const char* name) {
+	o <<
 name << " 0: reports nodes that are undriven\n" <<
 name << " 1: reports nodes that are driven (including interference)\n" <<
 name << " X: reports nodes that are only driven by X"
@@ -3103,13 +3126,27 @@ name << " X: reports nodes that are only driven by X"
 }
 
 void
+StatusDriven::usage(ostream& o) {
+	o << name << " [01Xx]" << endl;
+	__drive_values(o, name);
+}
+
+void
+NoStatusDriven::usage(ostream& o) {
+	o << name << " [01Xx]" << endl;
+	__drive_values(o, name);
+}
+
+void
 StatusDrivenFanin::usage(ostream& o) {
 	o << name << " [01Xx]" << endl;
-	o << 
-name << " 0: reports nodes with fanin that are undriven\n" <<
-name << " 1: reports nodes with fanin that are driven (incl. interference)\n" <<
-name << " X: reports nodes with fanin that are only driven by X"
-	<< endl;
+	__drive_values(o, name);
+}
+
+void
+NoStatusDrivenFanin::usage(ostream& o) {
+	o << name << " [01Xx]" << endl;
+	__drive_values(o, name);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
