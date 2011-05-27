@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-05-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-76:
+	  hacprsim: another critical bug fix
+		killed events accidentally graduated from pending queue
+		to the main event queue, leading to inconsistent state.
+		Fixed by filtering out killed events from pending queue.
+	  Test cases added.
+
+
 2011-05-25	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-75:

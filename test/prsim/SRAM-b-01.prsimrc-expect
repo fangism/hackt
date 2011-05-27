@@ -57,7 +57,7 @@ enqueued:	150	_bl : X	[from wl[0]:=1]	(weak)
 	100	wl[0] : 1
 enqueued:	120	c[0].r.d[0] : 0	[from bl:=0]
 	110	bl : 0	[by we:=1]
-killed  :	0	_bl : X	[from wl[0]:=1]	(weak)	(killed)
+killed  :	0	_bl : X	[from wl[0]:=1]	(weak)
 enqueued:	130	c[0].r.d[1] : 1	[from c[0].r.d[0]:=0]	(weak)
 	120	c[0].r.d[0] : 0	[by bl:=0]
 	130	c[0].r.d[1] : 1	[by c[0].r.d[0]:=0]

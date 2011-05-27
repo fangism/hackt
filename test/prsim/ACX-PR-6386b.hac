@@ -1,0 +1,29 @@
+// "ACX-PR-6386b.hac"
+// reduced test case
+
+deftype pbit <: bool (bool t,f) {
+}
+defproc ssmx(bool _sel0) {
+bool __out, sel0;
+prs{
+passp (_sel0, _sel0, __out)
+passn ( sel0, _sel0, __out)
+}
+}
+defproc sram( bool blt, blc;
+pbit p) {
+pbit c;
+prs{
+~c.f -> p.t+
+c.f -> p.t-
+~(~blc) & ~c.t -> c.f+
+~blt -> c.t-
+~blc -> c.f-
+}
+}
+bool WD;
+bool blc;
+prs { WD => blc- }
+pbit ps;
+sram smb(WD, blc, ps);
+ssmx mx(ps.t);

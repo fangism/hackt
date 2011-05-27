@@ -1,0 +1,87 @@
+// "ACX-PR-6386.hac"
+// prsim ISE crash test case
+deftype pbit <: bool (bool t,f) { }
+defproc flp(bool o, rb) {
+bool n;
+prs{
+ ~rb -> n-
+[after=0] ~rb -> o-
+}
+}
+defproc senb( pbit pon; bool en) {
+bool _en;
+prs{
+~pon.t -> _en+
+_en -> en-
+}
+}
+defproc asc( pbit p   ) {
+bool en;
+bool __nre;
+bool re;
+senb enl(p,en);
+flp ref(re,en);
+prs{
+~re -> __nre+
+}
+}
+defproc ssmx(bool _sel0) {
+bool __out, sel0;
+prs{
+passp (_sel0, _sel0, __out)
+passn ( sel0, _sel0, __out)
+~_sel0 -> sel0+
+}
+}
+defproc drv( bool in, out) {
+bool _out;
+prs{
+~in -> _out+
+in -> _out-
+~_out -> out+
+_out -> out-
+}
+}
+defproc mux3z(pbit psel) {
+bool _sel0;
+drv sl(psel.t,_sel0);
+ssmx mx(_sel0);
+}
+defproc sram( bool blt, blc; pbit p; pbit c ) {
+prs{
+~c.f -> p.t+
+c.f -> p.t-
+~(~blc) & ~c.t -> c.f+
+~blt -> c.t-
+~blc -> c.f-
+}
+}
+defproc lw (bool bl, wdata) {
+bool ebl;
+prs {
+~wdata -> ebl+
+wdata -> ebl-
+~ebl -> bl+
+ebl -> bl-
+}
+}
+defproc lbt (bool blt, blc, wdatain) {
+bool _wdatain;
+lw btw (blt, wdatain);
+lw bcw (blc, _wdatain);
+prs {
+~wdatain -> _wdatain+
+wdatain -> _wdatain-
+}
+}
+
+bool WD;
+bool blc[2], blt[2];
+lbt b0(blt[0], blc[0], WD);
+lbt b1(blt[1], blc[1], WD);
+pbit ps;
+pbit pa;
+sram smb(blt[0], blc[0], ps, ); 
+sram sma(blt[1], blc[1], pa, );
+asc ascs(pa);
+mux3z silos(ps);

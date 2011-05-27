@@ -1,0 +1,77 @@
+globID	super		localID	canonical	footprint-frame
+[global process entries]
+1	(top)	-	1	b0	lbt<>
+	process: ;11..12
+	bool: 1,2,3,5,4;16 {17..18}
+2	(top)	-	2	b1	lbt<>
+	process: ;13..14
+	bool: 1,2,6,5,7;19 {20..21}
+3	(top)	-	3	ps	pbit<>
+	bool: 8,9
+4	(top)	-	4	pa	pbit<>
+	bool: 10,11
+5	(top)	-	5	smb	sram<>
+	process: 3,6
+	bool: 8,9,12,13,1,2,3,4
+6	(top)	-	6	smb.c	pbit<>
+	bool: 12,13
+7	(top)	-	7	sma	sram<>
+	process: 4,8
+	bool: 10,11,14,15,1,2,6,7
+8	(top)	-	8	sma.c	pbit<>
+	bool: 14,15
+9	(top)	-	9	ascs	asc<>
+	process: 4;15..16
+	bool: 10,11,1,2;22..24 {25..26}
+10	(top)	-	10	silos	mux3z<>
+	process: 3;17..18
+	bool: 8,9,1,2;27 {28..30}
+11	process	1	1	b0.btw	lw<>
+	bool: 1,2,3,5;17
+12	process	1	2	b0.bcw	lw<>
+	bool: 1,2,4,16;18
+13	process	2	1	b1.btw	lw<>
+	bool: 1,2,6,5;20
+14	process	2	2	b1.bcw	lw<>
+	bool: 1,2,7,19;21
+15	process	9	2	ascs.enl	senb<>
+	process: 4
+	bool: 10,11,1,2,22;25
+16	process	9	3	ascs.ref	flp<>
+	bool: 1,2,23,22;26
+17	process	10	2	silos.sl	drv<>
+	bool: 1,2,8,27;28
+18	process	10	3	silos.mx	ssmx<>
+	bool: 1,2,27;29..30
+[global bool entries]
+1	(top)	-	1	!GND	 @[ supply_low ]
+2	(top)	-	2	!Vdd	 @[ supply_high ]
+3	(top)	-	3	blt[0]	
+4	(top)	-	4	blc[0]	
+5	(top)	-	5	WD	
+6	(top)	-	6	blt[1]	
+7	(top)	-	7	blc[1]	
+8	(top)	-	8	ps.t	
+9	(top)	-	9	ps.f	
+10	(top)	-	10	pa.t	
+11	(top)	-	11	pa.f	
+12	(top)	-	12	smb.c.t	
+13	(top)	-	13	smb.c.f	
+14	(top)	-	14	sma.c.t	
+15	(top)	-	15	sma.c.f	
+16	process	1	6	b0._wdatain	
+17	process	11	5	b0.btw.ebl	
+18	process	12	5	b0.bcw.ebl	
+19	process	2	6	b1._wdatain	
+20	process	13	5	b1.btw.ebl	
+21	process	14	5	b1.bcw.ebl	
+22	process	9	5	ascs.en	
+23	process	9	6	ascs.re	
+24	process	9	7	ascs.__nre	
+25	process	15	6	ascs.enl._en	
+26	process	16	5	ascs.ref.n	
+27	process	10	5	silos._sel0	
+28	process	17	5	silos.sl._out	
+29	process	18	4	silos.mx.__out	
+30	process	18	5	silos.mx.sel0	
+

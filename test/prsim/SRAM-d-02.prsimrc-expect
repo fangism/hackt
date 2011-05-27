@@ -7,7 +7,7 @@ enqueued:	10	bl : 1	[from we:=0]
 write contents to one cell 
 enqueued:	20	bl : 0	[from we:=1]
 enqueued:	20	_bl : X	[from wl[0]:=1]	(weak)
-killed  :	0	_bl : X	[from wl[0]:=1]	(weak)	(killed)
+killed  :	0	_bl : X	[from wl[0]:=1]	(weak)
 	20	bl : 0	[by we:=1]
 resetting... 
 enqueued:	50	bl : 1	[from _pchg:=0]

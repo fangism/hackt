@@ -57,7 +57,7 @@ enqueued:	95	wl[0] : 1
 enqueued:	105	c[0].r.d[0] : 0	[from wl[0]:=1]
 enqueued:	125	_bl : X	[from wl[0]:=1]	(weak)
 	95	wl[0] : 1
-killed  :	0	_bl : X	[from wl[0]:=1]	(weak)	(killed)
+killed  :	0	_bl : X	[from wl[0]:=1]	(weak)
 enqueued:	115	c[0].r.d[1] : 1	[from c[0].r.d[0]:=0]	(weak)
 	105	c[0].r.d[0] : 0	[by wl[0]:=1]
 	115	c[0].r.d[1] : 1	[by c[0].r.d[0]:=0]

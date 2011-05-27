@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.83 2011/05/25 23:09:52 fang Exp $
+	$Id: State-prsim.cc,v 1.84 2011/05/27 22:46:39 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -12,6 +12,7 @@
 #define	ENABLE_STACKTRACE		0
 #define	DEBUG_FANOUT			(0 && ENABLE_STACKTRACE)
 #define	DEBUG_STEP			(0 && ENABLE_STACKTRACE)
+#define	DEBUG_LOOKUP			(0 && ENABLE_STACKTRACE)
 #define	DEBUG_CHECK			(0 && ENABLE_STACKTRACE)
 #define	DEBUG_WHY			(0 && ENABLE_STACKTRACE)
 
@@ -64,6 +65,14 @@
 #else
 #define	DEBUG_STEP_PRINT(x)
 #define	STACKTRACE_VERBOSE_STEP
+#endif
+
+#if	DEBUG_LOOKUP
+#define	DEBUG_LOOKUP_PRINT(x)		STACKTRACE_INDENT_PRINT(x)
+#define	STACKTRACE_VERBOSE_LOOKUP	STACKTRACE_VERBOSE
+#else
+#define	DEBUG_LOOKUP_PRINT(x)
+#define	STACKTRACE_VERBOSE_LOOKUP
 #endif
 
 #if	DEBUG_CHECK
@@ -1134,14 +1143,14 @@ State::pending_live_events(void) const {
  */
 void
 State::kill_event(const event_index_type ei, const node_index_type ni) {
-	get_event(ei).kill();
-	__get_node(ni).clear_event();
 	if (UNLIKELY(watching_all_event_queue() ||
 			(watching_event_queue() && is_watching_node(ni)))) {
 		dump_event_force(cout << "killed  :", ei,
 			delay_policy<time_type>::zero, true);
 		// flush?
 	}
+	get_event(ei).kill();
+	__get_node(ni).clear_event();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1166,6 +1175,7 @@ State::load_enqueue_event(const time_type t, const event_index_type ei) {
 #endif
 	ISE_INVARIANT(t >= current_time);
 	DEBUG_STEP_PRINT("enqueuing event ID " << ei <<
+		" on node " << ni <<
 		" at time " << t << endl);
 	if (UNLIKELY(watching_all_event_queue() ||
 		(watching_event_queue() &&
@@ -2041,8 +2051,8 @@ State::is_rule_expr(const expr_index_type ei) const {
  */
 const State::rule_type*
 State::lookup_rule(const expr_index_type ei) const {
-	STACKTRACE_VERBOSE;
-	STACKTRACE_INDENT_PRINT("global-rule: " << ei << endl);
+	STACKTRACE_VERBOSE_LOOKUP;
+	DEBUG_LOOKUP_PRINT("global-rule: " << ei << endl);
 if (ei) {
 	// translate global expression index to 
 	// global process index with local expression index,
@@ -2069,14 +2079,12 @@ for ( ; i!=e; ++i) {
 	const event_index_type ne = *i;
 	DEBUG_STEP_PRINT("checking pending event ID: " << ne << endl);
 	event_type& ev(get_event(ne));
-#if 0
-	// with weak rules, they may get killed while on pending queue
+	// firings may get killed while on pending queue
 	// so just drop event, deallocate here
 	if (ev.killed()) {
 		__deallocate_pending_interference_event(ne);
 		continue;
 	}
-#endif
 	const node_index_type& _ni(ev.node);
 	DEBUG_STEP_PRINT("... on node " <<
 		get_node_canonical_name(_ni) << endl);
@@ -2227,6 +2235,7 @@ for ( ; i!=e; ++i) {
 #endif
 				ISE_INVARIANT(pv.killed());
 				// FAILED ONCE: 20071217, since weak rules
+				// FIXED ONCE: ACX-PR-6376 (possibly same)
 				__flush_pending_event_replacement(_n, ne, ev);
 			} else {
 			DEBUG_STEP_PRINT("keeping original event" << endl);
@@ -2292,6 +2301,7 @@ void
 State::__flush_pending_event_no_interference(node_type& _n, 
 		const event_index_type ne, event_type& ev) {
 	STACKTRACE_VERBOSE_STEP;
+	INVARIANT(!ev.killed());
 	// if event is weak rule, require the opposing pull to be off
 	if (_n.current_value() != ev.val) {
 #if PRSIM_WEAK_RULES
@@ -3357,15 +3367,15 @@ struct process_sim_state_base::offset_comparator {
 // inline
 const process_sim_state&
 State::lookup_global_expr_process(const expr_index_type gei) const {
-	STACKTRACE_VERBOSE;
-	STACKTRACE_INDENT_PRINT("global-expr: " << gei << endl);
+	STACKTRACE_VERBOSE_LOOKUP;
+	DEBUG_LOOKUP_PRINT("global-expr: " << gei << endl);
 	INVARIANT(gei);
 #if PRSIM_SEPARATE_PROCESS_EXPR_MAP
 	global_expr_process_id_map_type::const_iterator
 		f(global_expr_process_id_map.upper_bound(gei));
 	INVARIANT(f != global_expr_process_id_map.begin());
 	--f;
-	STACKTRACE_INDENT_PRINT("pid = " << f->second << endl);
+	DEBUG_LOOKUP_PRINT("pid = " << f->second << endl);
 	return process_state_array[f->second];
 #else
 	process_state_array_type::const_iterator
@@ -3422,21 +3432,21 @@ State::translate_to_global_node(const process_sim_state& ps,
 node_index_type
 State::translate_to_global_node(const process_index_type pid, 
 		const node_index_type lni) const {
-	STACKTRACE_VERBOSE;
-	STACKTRACE_INDENT_PRINT("lni = " << lni << endl);
+	STACKTRACE_VERBOSE_LOOKUP;
+	DEBUG_LOOKUP_PRINT("lni = " << lni << endl);
 	// HACK: poor style, using pointer arithmetic to deduce index
 	ISE_INVARIANT(pid < process_state_array.size());
 	// no longer need special case for pid=0, b/c frame is identity
 	const footprint_frame_map_type& bfm(get_footprint_frame_map(pid));
-#if 0 && ENABLE_STACKTRACE
+#if DEBUG_LOOKUP
 	copy(bfm.begin(), bfm.end(),
 		std::ostream_iterator<size_t>(
-			STACKTRACE_INDENT_PRINT("translate bfm: "), ","));
+			DEBUG_LOOKUP_PRINT("translate bfm: "), ","));
 	STACKTRACE_STREAM << endl;
 #endif
 	INVARIANT(lni < bfm.size());
 	const size_t ret = bfm[lni];
-	STACKTRACE_INDENT_PRINT("gni = " << ret << endl);
+	DEBUG_LOOKUP_PRINT("gni = " << ret << endl);
 	return ret;
 }
 
@@ -3503,7 +3513,13 @@ State::propagate_evaluation(
 #endif
 	const event_index_type ei = n.get_event();
 #if DEBUG_STEP
-	if (ei) dump_event(cerr << "pending:\t", ei, 0.0) << endl;
+	if (ei) {
+		dump_event(cerr << "pending:\t", ei, 0.0) << endl;
+		const event_type& e(get_event(ei));
+		STACKTRACE_INDENT_PRINT("e.node = " << e.node <<
+			" vs. ui = " << ui << endl);
+		INVARIANT(e.node == ui);
+	}
 #endif
 	// frozen nodes will not switch when expressions propagate to their root
 	break_type err = ERROR_NONE;

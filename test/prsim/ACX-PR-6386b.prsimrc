@@ -1,0 +1,24 @@
+# "ACX-PR-6386b.prsimrc"
+# @haco@ ACX-PR-6386b.haco-c
+
+timing after
+unstable warn
+unstable-dequeue
+
+watchall
+
+set WD 1 
+cycle
+ 
+watchall-queue
+
+set WD 0
+# cycle
+
+step-event 5
+getall .
+queue
+step-event
+# assertn-queue
+# cycle
+

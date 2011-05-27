@@ -1,0 +1,91 @@
+enqueued:	70	WD : 0
+enqueued:	80	b0._wdatain : 1	[from WD:=0]
+enqueued:	80	b1._wdatain : 1	[from WD:=0]
+enqueued:	80	b0.btw.ebl : 1	[from WD:=0]
+enqueued:	80	b1.btw.ebl : 1	[from WD:=0]
+	70	WD : 0
+enqueued:	90	b0.bcw.ebl : 0	[from b0._wdatain:=1]
+	80	b0._wdatain : 1	[by WD:=0]
+enqueued:	90	b1.bcw.ebl : 0	[from b1._wdatain:=1]
+	80	b1._wdatain : 1	[by WD:=0]
+enqueued:	90	blt[0] : 0	[from b0.btw.ebl:=1]
+	80	b0.btw.ebl : 1	[by WD:=0]
+enqueued:	90	blt[1] : 0	[from b1.btw.ebl:=1]
+	80	b1.btw.ebl : 1	[by WD:=0]
+enqueued:	100	blc[0] : 1	[from b0.bcw.ebl:=0]
+	90	b0.bcw.ebl : 0	[by b0._wdatain:=1]
+enqueued:	100	blc[1] : 1	[from b1.bcw.ebl:=0]
+	90	b1.bcw.ebl : 0	[by b1._wdatain:=1]
+enqueued:	100	smb.c.t : 0	[from blt[0]:=0]
+	90	blt[0] : 0	[by b0.btw.ebl:=1]
+enqueued:	100	sma.c.t : 0	[from blt[1]:=0]
+	90	blt[1] : 0	[by b1.btw.ebl:=1]
+enqueued:	110	smb.c.f : X	[from blc[0]:=1]
+	100	blc[0] : 1	[by b0.bcw.ebl:=0]
+enqueued:	110	sma.c.f : X	[from blc[1]:=1]
+	100	blc[1] : 1	[by b1.bcw.ebl:=0]
+	100	smb.c.t : 0	[by blt[0]:=0]
+	100	sma.c.t : 0	[by blt[1]:=0]
+enqueued:	120	ps.t : 0	[from smb.c.f:=1]
+	110	smb.c.f : 1	[by smb.c.t:=0]
+enqueued:	120	pa.t : 0	[from sma.c.f:=1]
+	110	sma.c.f : 1	[by sma.c.t:=0]
+enqueued:	130	silos.sl._out : 1	[from ps.t:=0]
+	120	ps.t : 0	[by smb.c.f:=1]
+enqueued:	130	ascs.enl._en : 1	[from pa.t:=0]
+	120	pa.t : 0	[by sma.c.f:=1]
+enqueued:	140	silos._sel0 : 0	[from silos.sl._out:=1]
+	130	silos.sl._out : 1	[by ps.t:=0]
+enqueued:	140	ascs.en : 0	[from ascs.enl._en:=1]
+	130	ascs.enl._en : 1	[by pa.t:=0]
+enqueued:	150	silos.mx.sel0 : 1	[from silos._sel0:=0]
+killed  :	0	silos.mx.__out : 1	[from silos._sel0:=0]
+WARNING: unstable `silos.mx.__out'+
+rule: [after 0]	~silos._sel0:0 & silos._sel0:0<0><0> -> silos.mx.__out+:X
+>> cause: `silos._sel0' (val: 0)
+	140	silos._sel0 : 0	[by silos.sl._out:=1]
+enqueued:	150	ascs.ref.n : 0	[from ascs.en:=0]
+enqueued:	140	ascs.re : 0	[from ascs.en:=0]
+	140	ascs.en : 0	[by ascs.enl._en:=1]
+enqueued:	150	ascs.__nre : 1	[from ascs.re:=0]
+	140	ascs.re : 0	[by ascs.en:=0]
+All subnodes of '.':
+!GND : 0
+!Vdd : 1
+blt[0] : 0
+blc[0] : 1
+WD : 0
+blt[1] : 0
+blc[1] : 1
+ps.t : 0
+ps.f : X
+pa.t : 0
+pa.f : X
+smb.c.t : 0
+smb.c.f : 1
+sma.c.t : 0
+sma.c.f : 1
+b0._wdatain : 1
+b0.btw.ebl : 1
+b0.bcw.ebl : 0
+b1._wdatain : 1
+b1.btw.ebl : 1
+b1.bcw.ebl : 0
+ascs.en : 0
+ascs.re : 0
+ascs.__nre : X
+ascs.enl._en : 1
+ascs.ref.n : X
+silos._sel0 : 0
+silos.sl._out : 1
+silos.mx.__out : X
+silos.mx.sel0 : X
+event queue:
+	150	silos.mx.sel0 : 1	[from silos._sel0:=0]
+	150	ascs.ref.n : 0	[from ascs.en:=0]
+	150	ascs.__nre : 1	[from ascs.re:=0]
+Fanouts of node `silos.mx.sel0':
+(to silos.mx):
+[after 0]	silos.mx.sel0:X & ~silos._sel0:0<X><X> -> silos.mx.__out-:X
+enqueued:	150	silos.mx.__out : 0	[from silos.mx.sel0:=1]
+	150	silos.mx.sel0 : 1	[by silos._sel0:=0]
