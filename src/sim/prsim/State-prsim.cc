@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.84 2011/05/27 22:46:39 fang Exp $
+	$Id: State-prsim.cc,v 1.85 2011/06/02 01:19:05 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -321,7 +321,9 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 		event_pool(), event_queue(), 
 		mk_exhi(), mk_exlo(), 
 		exclhi_queue(), excllo_queue(), 
+#if !PRSIM_SIMPLE_EVENT_QUEUE
 		pending_queue(), 
+#endif
 		check_exhi_ring_pool(1), check_exlo_ring_pool(1), 
 		check_exhi(), check_exlo(), 
 		current_time(0), 
@@ -1363,6 +1365,7 @@ State::enqueue_excllo(const time_type t, const event_index_type ei) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !PRSIM_SIMPLE_EVENT_QUEUE
 /**
 	Registers event in the pending queue.  
 	(I think this is an unordered worklist.)
@@ -1378,6 +1381,7 @@ State::enqueue_pending(const event_index_type ei) {
 	pending_queue.push_back(ei);
 #endif
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -2063,6 +2067,97 @@ if (ei) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_SIMPLE_EVENT_QUEUE
+/**
+	updated_nodes contains set of all nodes whose pull-states were
+	updated by expression propagation.
+	This procedure evaluates the pull-state of all affected nodes
+	and determines a course of action, possibly enqueuing or
+	dequeuing events.  
+ */
+State::break_type
+State::flush_updated_nodes(void) {
+	STACKTRACE_VERBOSE_STEP;
+	break_type err = ERROR_NONE;
+	typedef	updated_nodes_type::const_iterator	const_iterator;
+	const_iterator i(updated_nodes.begin()), e(updated_nodes.end());
+	// TODO: mind the ordering of processing nodes, numerical order by ID?
+for ( ; i!=e; ++i) {
+	const node_index_type& ni(*i);
+	node_type& n(__get_node(ni));
+	const event_index_type prevevent = n.get_event();
+	event_type newevent;
+	newevent.node = ni;
+	value_enum& pull_val(newevent.val);
+	pull_val = n.current_value();
+	// cause?
+	// rule?
+	// flags?
+{
+	// interference and instability are actually independent
+	// check for interference first
+	// create event first, but don't tie it to the node until
+	// after checking for instability and queue conflicts
+	const pull_enum up_pull = n.pull_up_state STR_INDEX(NORMAL_RULE).pull();
+	const pull_enum dn_pull = n.pull_dn_state STR_INDEX(NORMAL_RULE).pull();
+	const bool up_off = (up_pull == PULL_OFF);
+	const bool dn_off = (dn_pull == PULL_OFF);
+#if PRSIM_WEAK_RULES
+	const pull_enum wdn_pull = weak_rules_enabled() ?
+		n.pull_dn_state STR_INDEX(WEAK_RULE).pull() : PULL_OFF;
+	const pull_enum wup_pull = weak_rules_enabled() ?
+		n.pull_up_state STR_INDEX(WEAK_RULE).pull() : PULL_OFF;
+#endif
+	// compute the future value based on pull-state
+	if (!up_off && !dn_off) {
+		// some interference between strong rules
+		// TODO: diagnostic
+		pull_val = LOGIC_OTHER:
+		if (up_pull == PULL_WEAK || dn_pull == PULL_WEAK) {
+			// weak (possible) interference
+#if 0
+			const event_index_type pe =
+				__allocate_pending_interference_event(
+					n, ui, c, 
+					dir ? LOGIC_HIGH :
+						LOGIC_LOW
+#if PRSIM_WEAK_RULES
+						, NORMAL_RULE	// not weak
+#endif
+						);
+			enqueue_pending(pe);
+#endif
+		} else {
+			// strong (certain) interference
+		}
+		e.pending_interference(true);
+	}
+#if PRSIM_WEAK_RULES
+	else if (up_off && dn_off &&
+			wup_pull != PULL_OFF &&
+			wdn_pull != PULL_OFF) {
+		// some interference between weak rules
+		// TODO: diagnostic
+		pull_val = LOGIC_OTHER:
+	}
+#endif
+	else {
+		
+	}
+}{
+	// check for instability
+	if (prevevent) {
+		// there is a pending event in queue already
+	} else {
+		// no event in queue
+	}
+}
+}	// end for
+	updated_nodes.clear();
+	return err;
+}	// end flush_updated_nodes()
+
+#else	// PRSIM_SIMPLE_EVENT_QUEUE
 /**
 	As rules are evaluated and propagated, events may be enqueued
 	onto the pending queue.
@@ -2387,6 +2482,7 @@ State::__flush_pending_event_replacement(node_type& _n,
 		);
 	}	// end switch
 }
+#endif	// PRSIM_SIMPLE_EVENT_QUEUE
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -2814,16 +2910,20 @@ State::generic_exception::inspect(const State& s, ostream& o) const {
 	Upon destruction, flush intermediate event queues.  
  */
 struct State::auto_flush_queues {
-	State&		state;
-	const node_index_type	node;
+	State&				state;
+	const event_cause_type&		cause;
 
 	explicit
-	auto_flush_queues(State& s, const node_index_type ni) :
-		state(s), node(ni) { }
+	auto_flush_queues(State& s, const event_cause_type& c) :
+		state(s), cause(c) { }
 
 	~auto_flush_queues() {
 		// check and flush pending queue, spawn fanout events
+#if PRSIM_SIMPLE_EVENT_QUEUE
+		const break_type E(state.flush_updated_nodes(cause));
+#else
 		const break_type E(state.flush_pending_queue());
+#endif
 		// can anything go wrong here?
 		// check and flush pending queue against exclhi/lo events
 		state.flush_exclhi_queue();
@@ -2832,7 +2932,7 @@ struct State::auto_flush_queues {
 		if (UNLIKELY(E >= ERROR_BREAK)) {
 			state.stop();		// set stop flag
 			if (UNLIKELY(E >= ERROR_INTERACTIVE)) {
-				const interference_exception x(node, E);
+				const interference_exception x(cause.node, E);
 				// this could be an instability exception
 				// as well, so use a generic exception for now
 				throw x;
@@ -2857,7 +2957,9 @@ State::step_return_type
 State::step(void) THROWS_STEP_EXCEPTION {
 	typedef	State::step_return_type		return_type;
 	STACKTRACE_VERBOSE;
+#if !PRSIM_SIMPLE_EVENT_QUEUE
 	ISE_INVARIANT(pending_queue.empty());
+#endif
 	ISE_INVARIANT(exclhi_queue.empty());
 	ISE_INVARIANT(excllo_queue.empty());
 
@@ -2876,7 +2978,6 @@ State::step(void) THROWS_STEP_EXCEPTION {
 	const event_type& pe(get_event(ei));
 	const bool force = pe.forced();
 	const node_index_type ni = pe.node;
-	const auto_flush_queues __auto_flush(*this, ni);
 	node_type& n(__get_node(ni));
 	const value_enum prev = n.current_value();
 	node_index_type _ci;	// just a copy
@@ -2982,6 +3083,7 @@ State::step(void) THROWS_STEP_EXCEPTION {
 #else
 	const event_cause_type new_cause(ni, next);
 #endif
+	const auto_flush_queues __auto_flush(*this, new_cause);
 {
 	typedef	node_type::const_fanout_iterator	const_iterator;
 	const_iterator i, e;
@@ -3039,6 +3141,7 @@ if (n.in_channel()) {
 	}
 	}
 }
+#if !PRSIM_SIMPLE_EVENT_QUEUE
 	/***
 		If an event is forced (say, by user), then check node's own
 		guards to determine whether or not a new event needs to
@@ -3115,7 +3218,7 @@ if (n.in_channel()) {
 	} while (weak_rules_enabled() && w<2);
 #endif
 	}	// end if forced && pending event
-
+#endif	// PRSIM_SIMPLE_EVENT_QUEUE
 	// exclhi ring enforcement
 	if (n.has_mk_exclhi() && (next == LOGIC_LOW)) {
 		enforce_exclhi(new_cause);
@@ -3608,6 +3711,10 @@ if (dir) {
 if (!n.pending_event()) {
 	DEBUG_STEP_PRINT("no pending event on this node being pulled up."
 		<< endl);
+#if PRSIM_SIMPLE_EVENT_QUEUE
+	updated_nodes.insert(ni);	// re-evaluate queue
+	// TODO: need to identify which rule fired
+#else
 	// no former event pending, ok to enqueue
 	if ((next == PULL_ON &&
 			n.current_value() != LOGIC_HIGH) ||
@@ -3696,6 +3803,7 @@ if (!n.pending_event()) {
 		}
 	}
 	}	// end if next is PULL_OFF
+#endif	// PRSIM_SIMPLE_EVENT_QUEUE
 } else if (!n.in_excl_queue()) {
 	DEBUG_STEP_PRINT("pending, but not excl event on this node." << endl);
 	// there is a pending event, not in an exclusive queue
@@ -3829,6 +3937,10 @@ if (!n.pending_event()) {
 if (!n.pending_event()) {
 	DEBUG_STEP_PRINT("no pending event on this node being pulled down."
 		<< endl);
+#if PRSIM_SIMPLE_EVENT_QUEUE
+	updated_nodes.insert(ni);	// re-evaluate queue
+	// TODO: need to identify which rule fired
+#else
 	// no former event pending, ok to enqueue
 	if ((next == PULL_ON &&
 			n.current_value() != LOGIC_LOW) ||
@@ -3915,6 +4027,7 @@ if (!n.pending_event()) {
 		}
 	}
 	}	// end if next is PULL_OFF
+#endif	// PRSIM_SIMPLE_EVENT_QUEUE
 } else if (!n.in_excl_queue()) {
 	DEBUG_STEP_PRINT("pending, but not excl event on this node." << endl);
 	// there is a pending event, not in an exclusive queue
@@ -4172,6 +4285,7 @@ State::__diagnose_violation(ostream& o, const pull_enum next,
 			// and this new event is weak
 #endif
 			;
+#if !PRSIM_SIMPLE_EVENT_QUEUE
 		/***
 			This last condition !unstab violates exact exclusion 
 			between unstable and interference!
@@ -4186,6 +4300,7 @@ State::__diagnose_violation(ostream& o, const pull_enum next,
 			// and this new event is weak
 #endif
 			;
+#endif
 		const string cause_name(get_node_canonical_name(ni));
 		const string out_name(get_node_canonical_name(ui));
 
@@ -4221,6 +4336,9 @@ State::__diagnose_violation(ostream& o, const pull_enum next,
 				e.val = LOGIC_OTHER;
 			}
 		}
+#if PRSIM_SIMPLE_EVENT_QUEUE
+		// check for interference when processing updated nodes
+#else
 		if (interference) {
 			/***
 				Q: may actually be an instability, 
@@ -4238,6 +4356,7 @@ State::__diagnose_violation(ostream& o, const pull_enum next,
 						);
 			enqueue_pending(pe);
 		}
+#endif
 		// diagnostic message
 		// suppress message for interferences until pending queue
 		if (instability) {
@@ -6336,6 +6455,7 @@ State::dump_memory_usage(ostream& o) const {
 	o << "excllo-queue: ("  << ls << " * " << sizeof_tree_node(value_type)
 		<< " B/event) = " << ls * sizeof_tree_node(value_type)
 		<< " B" << endl;
+#if !PRSIM_SIMPLE_EVENT_QUEUE
 #if UNIQUE_PENDING_QUEUE
 	const size_t ps = pending_queue.size();
 	o << "pending-queue: ("  << ps << " * " <<
@@ -6346,6 +6466,7 @@ State::dump_memory_usage(ostream& o) const {
 	o << "pending-queue: ("  << ps << " * " << sizeof(event_index_type) <<
 		" B/event) = " << ps * sizeof(event_index_type)
 		<< " B" << endl;
+#endif
 #endif
 }
 {
@@ -6497,7 +6618,9 @@ State::save_checkpoint(ostream& o) const {
 	// excl and pending queues should be empty!
 	ISE_INVARIANT(exclhi_queue.empty());
 	ISE_INVARIANT(excllo_queue.empty());
+#if !PRSIM_SIMPLE_EVENT_QUEUE
 	ISE_INVARIANT(pending_queue.empty());
+#endif
 	write_value(o, current_time);
 	write_value(o, uniform_delay);
 	write_value(o, default_after_min);
@@ -6678,7 +6801,9 @@ try {
 	// excl and pending queues should be empty!
 	ISE_INVARIANT(exclhi_queue.empty());
 	ISE_INVARIANT(excllo_queue.empty());
+#if !PRSIM_SIMPLE_EVENT_QUEUE
 	ISE_INVARIANT(pending_queue.empty());
+#endif
 	read_value(i, current_time);
 	read_value(i, uniform_delay);
 	read_value(i, default_after_min);

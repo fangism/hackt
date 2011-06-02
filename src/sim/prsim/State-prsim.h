@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.49 2011/05/25 23:09:53 fang Exp $
+	$Id: State-prsim.h,v 1.50 2011/06/02 01:19:06 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -14,10 +14,6 @@
 // enable additional sanity checking in "sim/event.h" for event queue
 // can be disabled when not debugging
 #define	CHECK_UNIQUE_EVENTS			0
-
-// define to 1 to use a unique-set container for pending queue
-// a wee bit slower, but saner
-#define	UNIQUE_PENDING_QUEUE			1
 
 #include "sim/time.h"
 #include "sim/state_base.h"
@@ -36,6 +32,13 @@
 #include "util/named_ifstream_manager.h"
 #include "util/tokenize_fwd.h"
 #include "Object/devel_switches.h"
+
+#if	!PRSIM_SIMPLE_EVENT_QUEUE
+// define to 1 to use a unique-set container for pending queue
+// a wee bit slower, but saner
+#define	UNIQUE_PENDING_QUEUE			1
+#endif
+
 #if PRSIM_TRACE_GENERATION
 #include "util/memory/excl_ptr.h"
 #endif
@@ -406,6 +409,9 @@ protected:
 	 */
 	typedef	std::map<event_index_type, time_type>
 						mk_excl_queue_type;
+#if PRSIM_SIMPLE_EVENT_QUEUE
+	typedef	std::set<node_index_type>	updated_nodes_type;
+#else
 	/**
 		invariant: no event should be in pending queue more than once.
 	 */
@@ -413,6 +419,7 @@ protected:
 	typedef	std::set<event_index_type>	pending_queue_type;
 #else
 	typedef	vector<event_index_type>	pending_queue_type;
+#endif
 #endif
 	typedef	vector<event_queue_type::value_type>
 						temp_queue_type;
@@ -510,8 +517,12 @@ private:
 	mk_excl_queue_type			exclhi_queue;
 	/// coerced exclusive-low logic queue
 	mk_excl_queue_type			excllo_queue;
+#if PRSIM_SIMPLE_EVENT_QUEUE
+	updated_nodes_type			updated_nodes;
+#else
 	/// pending queue
 	pending_queue_type			pending_queue;
+#endif
 	/// pool of exclusive-hi checking locks
 	check_excl_lock_pool_type		check_exhi_ring_pool;
 	/// pool of exclusive-low checking locks
@@ -1277,6 +1288,10 @@ private:
 	void
 	flush_excllo_queue(void);
 
+#if PRSIM_SIMPLE_EVENT_QUEUE
+	break_type
+	flush_updated_nodes(void);
+#else
 	void
 	enqueue_pending(const event_index_type);
 
@@ -1294,6 +1309,7 @@ private:
 	void
 	__flush_pending_event_replacement(
 		node_type&, const event_index_type, event_type&);
+#endif
 
 	struct auto_flush_queues;
 

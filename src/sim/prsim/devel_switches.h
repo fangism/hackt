@@ -11,7 +11,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.16 2009/02/07 04:08:43 fang Exp $
+	$Id: devel_switches.h,v 1.17 2011/06/02 01:19:06 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_DEVEL_SWITCHES_H__
@@ -161,16 +161,17 @@
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 /**
-	Complete rewrite of prsim event system core, accounting properly
-	for strength of rules, etc.
-	Rationale: the current hacked spaghetti mess is both
-		incomprehensible and unmaintainable.
+	Define 1 to scrap the pending_queue, remenants of the 
+	ancient roots of prsim -- essentially rewrite the event engine.
+	Rationale: the code is unmaintainable and incomprehensible,
+		and full of dark corners where bugs lurk.
 		Rewrite will gain back performance, from simplicity.
-	Status: not begun
-	Priority: medium
+	Was never robust enough to simulate non-QDI circuits.  
 	Goal: 1
+	Priority: med-high
+	Status: just beginning
  */
-#define	PRSIM_NEW_EVENT_MODEL				0
+#define	PRSIM_SIMPLE_EVENT_QUEUE		0
 
 // TODO: prsim-guile interface
 
