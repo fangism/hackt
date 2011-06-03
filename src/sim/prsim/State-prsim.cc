@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.85 2011/06/02 01:19:05 fang Exp $
+	$Id: State-prsim.cc,v 1.86 2011/06/03 23:19:32 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -3902,21 +3902,33 @@ if (!n.pending_event()) {
 #if PRSIM_WEAK_RULES
 		e.set_weak(true);
 #endif
-#if 1
-	} else if (next == PULL_OFF && 
+#if PRSIM_WEAK_RULES
+	} else if (next != PULL_ON && 
 		dn_pull == PULL_OFF &&
 		wdn_pull == PULL_OFF &&
 		wup_pull == PULL_ON &&
 		e.val == LOGIC_HIGH) {
+		DEBUG_STEP_PRINT("downgrading pending 1 to weak." << endl);
 		// technically, is this unstable?
 		// instability is masked because weak-rule continues to pull...
 		// everything but weak pull-up is off
 		// then keep event in queue
 		// change node cause?
 		e.set_cause_node(ni);
-#if PRSIM_WEAK_RULES
 		e.set_weak(true);
-#endif
+	} else if (next != PULL_ON && 
+		wdn_pull == PULL_OFF &&
+		dn_pull == PULL_OFF &&
+		up_pull == PULL_ON &&
+		e.val == LOGIC_HIGH) {
+		DEBUG_STEP_PRINT("upgrading pending 1 to strong." << endl);
+		// technically, is this unstable?
+		// instability is masked because strong-rule still pulls...
+		// strong event was vacuous, as masked by pending weak event
+		// then keep event in queue
+		// change node cause?
+		e.set_cause_node(ni);
+		e.set_weak(false);
 #endif
 #endif	// PRSIM_ALLOW_OVERTAKE_EVENTS
 	} else {
@@ -4126,21 +4138,33 @@ if (!n.pending_event()) {
 #if PRSIM_WEAK_RULES
 		e.set_weak(true);
 #endif
-#if 1
-	} else if (next == PULL_OFF && 
+#if PRSIM_WEAK_RULES
+	} else if (next != PULL_ON && 
 		up_pull == PULL_OFF &&
 		wup_pull == PULL_OFF &&
 		wdn_pull == PULL_ON &&
 		e.val == LOGIC_LOW) {
+		DEBUG_STEP_PRINT("downgrading pending 0 to weak." << endl);
 		// technically, is this unstable?
 		// instability is masked because weak-rule continues to pull...
 		// everything but weak pull-up is off
 		// then keep event in queue
 		// change node cause?
 		e.set_cause_node(ni);
-#if PRSIM_WEAK_RULES
 		e.set_weak(true);
-#endif
+	} else if (next != PULL_ON && 
+		wup_pull == PULL_OFF &&
+		up_pull == PULL_OFF &&
+		dn_pull == PULL_ON &&
+		e.val == LOGIC_LOW) {
+		DEBUG_STEP_PRINT("upgrading pending 0 to strong." << endl);
+		// technically, is this unstable?
+		// instability is masked because strong-rule still pulls...
+		// strong event was vacuous, as masked by pending weak event
+		// then keep event in queue
+		// change node cause?
+		e.set_cause_node(ni);
+		e.set_weak(false);
 #endif
 #endif	// PRSIM_ALLOW_OVERTAKE_EVENTS
 	} else {

@@ -1,0 +1,23 @@
+// "ACX-PR-6393.hac"
+// reduced test case for failure to settle with unstable-dequeue
+
+bool en, d, _o, o_fb;
+// bool o;	// not needed
+
+prs {
+// eval
+	~en			-> _o+
+	en & d			-> _o-
+
+// output
+//	~_o			=> o+
+
+// feedback
+[after=0]	~_o		-> o_fb+
+[after=0]	 _o		-> o_fb-
+
+[iskeeper=1]	~o_fb		-> _o+
+[isckeeper=1]	en & o_fb	-> _o-
+
+}
+

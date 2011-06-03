@@ -1,0 +1,48 @@
+# "ACX-PR-6393.prsimrc"
+# @haco@ ACX-PR-6393.haco-c
+# @hacprsim-flags@ -f fast-weak-keepers
+
+# ignore after=0
+timing uniform
+mode reset
+weak-interference warn
+interference warn
+unstable-dequeue
+unstable warn
+weak-unstable warn
+weak-rules on
+
+watchall
+watchall-queue
+
+# initial conditions
+set d 0
+set en 1
+cycle
+set _o 1
+cycle
+
+# setup problem
+# echo-commands on
+set en X
+step-event
+set d 1
+step-event
+set en 0
+queue
+reschedule-relative en 15
+queue
+
+step-event
+queue
+step-event
+queue
+step-event
+queue
+
+cycle
+getall .
+unsetall
+assertn-queue
+# cycle
+

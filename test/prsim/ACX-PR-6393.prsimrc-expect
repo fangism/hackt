@@ -1,0 +1,52 @@
+enqueued:	0	d : 0
+enqueued:	0	en : 1
+	0	d : 0
+	0	en : 1
+enqueued:	0	_o : 1
+enqueued:	10	o_fb : 0	[from _o:=1]
+	0	_o : 1
+	10	o_fb : 0	[by _o:=1]
+enqueued:	10	en : X
+	10	en : X
+enqueued:	10	d : 1
+WARNING: weak-interference `_o'
+>> cause: `d' (val: 1)
+enqueued:	20	_o : X	[from d:=1]
+	10	d : 1
+enqueued:	10	en : 0
+event queue:
+	10	en : 0
+	20	_o : X	[from d:=1]
+killed  :	0	en : 0
+enqueued:	25	en : 0
+event queue:
+	20	_o : X	[from d:=1]
+	25	en : 0
+WARNING: weak-interference `o_fb'
+>> cause: `_o' (val: X)
+enqueued:	30	o_fb : X	[from _o:=X]
+	20	_o : X	[by d:=1]
+event queue:
+	25	en : 0
+	30	o_fb : X	[from _o:=X]
+WARNING: unstable `_o'-
+rule: [after 10]	~en:0 -> _o+:X
+>> cause: `en' (val: 0)
+enqueued:	35	_o : 1	[from en:=0]	(weak)
+	25	en : 0
+event queue:
+	30	o_fb : X	[from _o:=X]
+	35	_o : 1	[from en:=0]	(weak)
+	30	o_fb : X	[by _o:=X]
+event queue:
+	35	_o : 1	[from o_fb:=0]
+enqueued:	45	o_fb : 0	[from _o:=1]
+	35	_o : 1	[by o_fb:=X]
+	45	o_fb : 0	[by _o:=1]
+All subnodes of '.':
+!GND : 0
+!Vdd : 1
+en : 0
+d : 1
+_o : 1
+o_fb : 0

@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-06-03	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-77:
+	  hacprsim: critical bug fix (ACX-PR-6393)
+		in unstable-dequeue mode, a vacuous strong event gets 
+		dropped, while a weak pending event is (possibly) 
+		unstable, and then mistakenly killed.
+		Solution, updated pending weak unstable event to
+		strong event if being pulled.
+		Added test case, no regressions.
+
+
 2011-06-01	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-76a:

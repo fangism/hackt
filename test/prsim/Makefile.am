@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.136 2011/05/27 22:46:44 fang Exp $
+#	$Id: Makefile.am,v 1.137 2011/06/03 23:19:35 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -74,6 +74,7 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	ACX-PR-6347 \
 	ACX-PR-6376 \
 	ACX-PR-6386 ACX-PR-6386b \
+	ACX-PR-6393 \
 	stuck-bug-a \
 	crash-bug-01 \
 	after_min_max after_min_max-bad \
@@ -135,6 +136,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	ACX-PR-6347 \
 	ACX-PR-6376 ACX-PR-6376b \
 	ACX-PR-6386 ACX-PR-6386b \
+	ACX-PR-6393 \
 	logic-defs-01 logic-defs-a-01 logic-defs-b-01 \
 	expr-limit-a-01 \
 	large_OR_fanin-01 huge_OR_fanin-01 \
@@ -544,6 +546,7 @@ HACKT_CREATE_TEST_PASSES = \
 	type-test-d type-test-e type-test-f type-test-g \
 	ACX-PR-6347 \
 	ACX-PR-6386 \
+	ACX-PR-6393 \
 	large_OR_fanin
 
 HACKT_CREATE_TEST_FAILURES = \
