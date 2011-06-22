@@ -1,0 +1,5 @@
+// "event-queue-a.hac"
+// benchmark for testing event queue performance
+
+bool x[100000];
+

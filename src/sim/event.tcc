@@ -1,7 +1,7 @@
 /**
 	\file "sim/event.tcc"
 	Implementation of prsim event structures.  
-	$Id: event.tcc,v 1.3 2008/03/17 23:02:46 fang Exp $
+	$Id: event.tcc,v 1.4 2011/06/22 19:38:30 fang Exp $
  */
 
 #ifndef	__HAC_SIM_EVENT_TCC__
@@ -11,6 +11,11 @@
 #if MULTIMAP_EVENT_QUEUE
 #include <iterator>
 #include <functional>
+#endif
+
+#if EVENT_QUEUE_FAST_ALLOCATOR
+#include "util/memory/chunk_map_pool.tcc"
+#include "util/memory/allocator_adaptor.tcc"
 #endif
 
 namespace HAC {

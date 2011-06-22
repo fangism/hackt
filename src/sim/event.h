@@ -1,7 +1,7 @@
 /**
 	\file "sim/event.h"
 	Generic event placeholder type.  
-	$Id: event.h,v 1.5 2009/02/11 02:35:15 fang Exp $
+	$Id: event.h,v 1.6 2011/06/22 19:38:29 fang Exp $
  */
 
 #ifndef	__HAC_SIM_EVENT_H__
@@ -37,6 +37,22 @@
 
 #if CHECK_UNIQUE_EVENTS
 #include <set>
+#endif
+
+/**
+	Define to 1 to use a faster pool allocator for events
+	in the event queue.  
+	Goal: 1
+	Rationale: SPEED
+	Status: tested, but early measurements show this makes 
+		negligible improvements here.
+ */
+#define	EVENT_QUEUE_FAST_ALLOCATOR	0
+
+#if EVENT_QUEUE_FAST_ALLOCATOR
+#include "util/STL/functional_fwd.h"		// for std::less
+#include "util/memory/chunk_map_pool.h"
+#include "util/memory/allocator_adaptor.h"
 #endif
 
 namespace HAC {
@@ -122,7 +138,18 @@ private:
 		Also consider trying multimap.  
 	 */
 #if MULTIMAP_EVENT_QUEUE
+#if EVENT_QUEUE_FAST_ALLOCATOR
+	typedef util::memory::chunk_map_pool<value_type,
+			sizeof(size_t) << 3>	// use machine int size
+						pool_alloc_type;
+	typedef util::memory::allocator_adaptor<pool_alloc_type>
+						override_allocator_type;
+private:
+	typedef std::multiset<value_type, std::less<value_type>,
+			override_allocator_type>
+#else
 	typedef	std::multiset<value_type>
+#endif
 #else
 	typedef	std::priority_queue<value_type, vector<value_type> >
 #endif

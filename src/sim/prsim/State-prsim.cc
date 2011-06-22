@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.86 2011/06/03 23:19:32 fang Exp $
+	$Id: State-prsim.cc,v 1.87 2011/06/22 19:38:30 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -321,7 +321,9 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 		event_pool(), event_queue(), 
 		mk_exhi(), mk_exlo(), 
 		exclhi_queue(), excllo_queue(), 
-#if !PRSIM_SIMPLE_EVENT_QUEUE
+#if PRSIM_SIMPLE_EVENT_QUEUE
+		updated_nodes(), 
+#else
 		pending_queue(), 
 #endif
 		check_exhi_ring_pool(1), check_exlo_ring_pool(1), 
