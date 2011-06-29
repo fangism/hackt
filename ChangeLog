@@ -1,6 +1,12 @@
 "ChangeLog"
 #	$Id: ChangeLog,v 1.256 2011/05/03 19:20:32 fang Exp $
 
+2011-06-25	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-78:
+	  repository moved over to git, copy .cvsignore to .gitignore.
+
+
 2011-05-03	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-70-merged-pr-01-20:

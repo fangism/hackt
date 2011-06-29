@@ -149,6 +149,7 @@ $LIBTOOLIZE --copy --force --ltdl
 	echo "moving m4/* to ../$PROJECT_MACROS ..." ; \
 	if test -d m4 ; then mv -f m4/*.m4 ../$PROJECT_MACROS ; \
 		rm -rf m4 ; fi ; \
+	echo "cvsignore:" >> Makefile.am ; \
 	regen )
 
 # back to top_srcdir, should regenerate libltdl's files, recursively

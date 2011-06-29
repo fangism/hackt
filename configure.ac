@@ -56,6 +56,8 @@ AC_CHECK_PROG([CHMOD], chmod, chmod)
 # CVS is not required, but will enable some handy targets
 AC_CHECK_PROG([CVS], cvs, cvs)
 AM_CONDITIONAL(HAVE_CVS, test -n "$CVS")
+AC_CHECK_PROG([GIT], git, git)
+AM_CONDITIONAL(HAVE_GIT, test -n "$GIT")
 AC_CHECK_PROG([DATE], date, date)
 AC_CHECK_PROG([DIFF], diff, diff)
 AC_CHECK_PROG([PATCH], patch, patch)
