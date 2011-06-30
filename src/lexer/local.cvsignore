@@ -2,7 +2,8 @@
 .libs
 .dirstamp
 *.lo
-*.cc
+*-lex.cc
+*-real.cc
 *.loT
 *.swp
 *.hchk

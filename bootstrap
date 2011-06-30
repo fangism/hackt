@@ -149,6 +149,8 @@ $LIBTOOLIZE --copy --force --ltdl
 	echo "moving m4/* to ../$PROJECT_MACROS ..." ; \
 	if test -d m4 ; then mv -f m4/*.m4 ../$PROJECT_MACROS ; \
 		rm -rf m4 ; fi ; \
+	sed -i.bkp -e "/ACLOCAL_AMFLAGS/s|m4|../$PROJECT_MACROS|" Makefile.am ; \
+	mv -f Makefile.am.bkp removed ; \
 	echo "cvsignore:" >> Makefile.am ; \
 	regen )
 

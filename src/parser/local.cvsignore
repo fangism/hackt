@@ -8,7 +8,8 @@ ignore
 *.lo
 *.loT
 *.h
-*.cc
+*-parse.cc
+*-real.cc
 *.swp
 *.hchk
 *.tab.c

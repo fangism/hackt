@@ -6,23 +6,28 @@
 # "maintainer-clean" should invoke "make distclean"
 # Any .tar.* distribution tarballs will not be deleted by this script.  
 
+# even though we've migrated to git, we still keep around .cvsignore files
+# and copy them over to .gitignore files.  
+
 usage () {
 cat << EOF
 $0: script to remove all files not in CVS, like a maintainerclean.
-usage: maintainerclean [options]
+usage: $0 [options]
 options:
 	-h : print usage and exit
 	-k : keep .cvsignore files, even if they are generated
+	-n : dry-run print files that would be removed without removing
 	-v : verbose mode
 EOF
 }
 
-args=`getopt "hkv" $*`
+args=`getopt "hknv" $*`
 test $? = 0 || { usage; exit 2; }
 set -- $args
 
 keep_cvsignore=0
 verbose=0
+dry_run=0
 
 for i
 do
@@ -30,6 +35,7 @@ case "$i"
 in
 	-h) usage; exit ;;
 	-k) keep_cvsignore=1 ; shift ;;
+	-n) dry_run=1 ; shift ;;
 	-v) verbose=1 ; shift ;;
 	--) shift; break ;;
 esac
@@ -40,7 +46,7 @@ done
 
 if test $keep_cvsignore = 1
 then
-	filt_cvsignore="grep -v ^\.cvsignore"
+	filt_cvsignore="grep -v -e ^\.cvsignore -e \.gitignore"
 else
 	filt_cvsignore=cat
 fi
@@ -48,11 +54,17 @@ fi
 # read the .cvsignore to determine what to delete
 cvs_clobber () {
 # traverse flat list if subdirs
-cvsdirs=`find . -type d -name CVS`
+# cvsdirs=`find . -type d -name CVS`
+cvsdirs=`find . -type d`
 for d in $cvsdirs
 do
-	p=`echo $d | sed 's|/CVS$||'`
-	echo "-------- clobbering $p"
+case $d in
+./.git*) ;;
+*/CVS*) ;;
+*)
+#	p=`echo $d | sed 's|/CVS$||'`
+	p=$d
+	echo "-------- clobbering in $p"
 	pushd $p > /dev/null 2>&1
 	if test -f .cvsignore
 	then
@@ -62,13 +74,14 @@ do
 		for f in $clean
 		do
 			test "$verbose" != 1 || echo "rm -rf $f"
-			rm -rf $f
+			test "$dry_run" = 1 || rm -rf $f
 		done
 	fi
-	popd > /dev/null 2>&1
+	popd > /dev/null 2>&1 ;;
+esac
 done
 echo "-------- done clobbering `pwd`"
-test $keep_cvsignore != 1 || echo "All .cvsignore files were kept."
+test $keep_cvsignore != 1 || echo "All .cvsignore and .gitignore files were kept."
 }
 
 cvs_clobber

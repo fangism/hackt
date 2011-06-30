@@ -5,6 +5,7 @@
 
 	* HACKT-00-01-04-main-00-84-78:
 	  repository moved over to git, copy .cvsignore to .gitignore.
+	  updated bootstrap and scripts/maintainerclobber for git use
 
 
 2011-05-03	David Fang	<fangism@users.sourceforge.net>
