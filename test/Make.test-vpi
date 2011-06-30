@@ -65,14 +65,14 @@ COMMON_VCS_FLAGS += -full64
 endif
 
 AM_VCS_VPI_FLAGS = +vpi \
-	-use_vpiobj $(VPI_LIB_PATH)/$(LTDL_OBJDIR)/vpihacprsim.so \
-	-LDFLAGS="-L$(VPI_LIB_PATH)/$(LTDL_OBJDIR)" 
+	-use_vpiobj $(VPI_LIB_PATH)/$(LT_OBJDIR)/vpihacprsim$(LT_MODULE_EXT) \
+	-LDFLAGS="-L$(VPI_LIB_PATH)/$(LT_OBJDIR)" 
 AM_VCS_FLAGS = +incdir+$(srcdir) $(COMMON_VCS_FLAGS) -Mdir=$@.csrc
 AM_PLI_FLAGS =
 
 # for install-time tests, use installed library, not the built one
 INSTALLCHECK_VCS_VPI_FLAGS = +vpi \
-	-use_vpiobj $(INSTALLCHECK_VPI_LIB_PATH)/vpihacprsim.so \
+	-use_vpiobj $(INSTALLCHECK_VPI_LIB_PATH)/vpihacprsim$(LT_MODULE_EXT) \
 	-LDFLAGS="-L$(INSTALLCHECK_VPI_LIB_PATH)" 
 # lazy: for now, use the .. dir instead of +incdir+$(examplesdir)/...
 # because compilation is done in a temporary subdirectory
@@ -180,14 +180,14 @@ endif
 # setup run-time link path for build testing
 VPI_TEST_ENV = \
 	$(LIBTOOL_EXEC) -dlopen $(VPI_LIB_PATH)/vpihacprsim.la
-#	$(LTDL_SHLIBPATH_VAR)=$(VPI_LIB_PATH)/$(LTDL_OBJDIR)$(PATH_SEPARATOR)$$$(LTDL_SHLIBPATH_VAR)
+#	$(LT_MODULE_PATH_VAR)=$(VPI_LIB_PATH)/$(LT_OBJDIR)$(PATH_SEPARATOR)$$$(LT_MODULE_PATH_VAR)
 
 # installcheck environment
 VPI_INSTALLCHECK_ENV = \
-	$(LTDL_SHLIBPATH_VAR)=$(INSTALLCHECK_VPI_LIB_PATH)$(PATH_SEPARATOR)$$$(LTDL_SHLIBPATH_VAR)
+	$(LT_MODULE_PATH_VAR)=$(INSTALLCHECK_VPI_LIB_PATH)$(PATH_SEPARATOR)$$$(LT_MODULE_PATH_VAR)
 #	$(LIBTOOL_EXEC) -dlopen $(INSTALLCHECK_VPI_LIB_PATH)/vpihacprsim.la
 
-# SHOW_VPI_TEST_ENV = $(LTDL_SHLIBPATH_VAR)=$(VPI_LIB_PATH)/$(LTDL_OBJDIR)$(PATH_SEPARATOR)$$"$(LTDL_SHLIBPATH_VAR)"
+# SHOW_VPI_TEST_ENV = $(LT_MODULE_PATH_VAR)=$(VPI_LIB_PATH)/$(LT_OBJDIR)$(PATH_SEPARATOR)$$"$(LT_MODULE_PATH_VAR)"
 
 .vx.vx-out:
 if HAVE_VPI

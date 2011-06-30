@@ -2,7 +2,8 @@
 	$Id: README.CVS,v 1.15 2010/01/21 19:49:56 fang Exp $
 
 -------------------------------------------------------------------------------
-You've just checked out HACKT from CVS, what do you need to need to work?
+You've just checked out HACKT from <strike>CVS</strike> git, 
+what do you need to need to work?
 
 	"It's not so hard to lift yourself by your bootstraps 
 	once you're off the ground."
@@ -11,14 +12,13 @@ You've just checked out HACKT from CVS, what do you need to need to work?
 -------------------------------------------------------------------------------
 Getting started:
 
-If you've checked out this project from CVS as opposed to a distribution
+If you've checked out this project from git as opposed to a distribution
 tarball (.tar.gz, .tar.bz2), then you'll need the following GNU autotools
 installed on your system:
 
 GNUmake-3.79+ is recommended
 automake-1.9+ (OK: 1.10)
 autoconf-2.59+ (OK: 2.60, 2.61)
-libtool-1.5.22+ (1.5.18 has known libltdl(ltdl.c) bug that affects dlopen)
 libtool-2.2+ (also works, recommended)
 
 These may be obtained from gnu.org.  
@@ -35,7 +35,7 @@ This does a little bit more than the standard "autoreconf -i",
 which is conventionally used to regenerate the same set of files.  
 With a tarball distribution, you won't need to run bootstrap unless
 you modify the Makefile.am's or configure.ac.  
-If your autotools are install across different prefixes, you may need to
+If your autotools are installed across different prefixes, you may need to
 help the bootstrap (aclocal) by passing ACLOCAL_FLAGS = -I path.  
 Even when the auto* sources are modified, the Makefiles are built with 
 maintainer-mode off, so the autotools will automatically regenerate files 
@@ -73,13 +73,13 @@ Recommended version teTeX-3.0 distribution.
 
 For building HACKT, now refer to "README". 
 
-For more on the CVS tags and make conventions, mostly for maintainers, 
+For more on the git tags and make conventions, mostly for maintainers, 
 refer to "README.maintainer".
 
 -------------------------------------------------------------------------------
-Updating from CVS:
+Updating from git:
 
-Occasionally, header files are removed from CVS as they become replaced
+Occasionally, header files are removed from git as they become replaced
 or deprecated.  You see a message like:
 
 	file-xyz.h is no longer in the repository
@@ -102,7 +102,7 @@ will be automatically regenerated upon make.
 This will never be a problem for those who use source distribution tarballs.  
 
 -------------------------------------------------------------------------------
-Patch creation relative to CVS:
+Patch creation relative to git:
 
 For those contributing patches, the easiest way to create a patch is to run:
 'make cvsdiffs' from anywhere in the build directory, which can be the same
@@ -110,6 +110,9 @@ as the source directory for non-VPATH builds.  (This is a global target in
 all Makefiles, so you can run in most subdirectories.)  If you don't have 
 commit privileges or prior approval, send the resulting file to the 
 developer(s).  
+update: the 'cvsdiffs' target produces gitdiffs-staged and gitdiffs-cached.
+If you've properly git-added modified files, gitdiffs-staged should be
+empty and gitdiffs-cached contains the patch of interest.
 
 ===============================================================================
 

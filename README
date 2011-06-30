@@ -35,8 +35,13 @@ be used to compile this project:
 
 The following compilers are supported and recommended:
 	gcc-3.3.x, -3.4.x, -4.0.x, -4.1.x, -4.2.x, -4.3.x *
+	gcc-4.6.x
 
-(*) gcc-4.3 needs CXXFLAGS: -Wno-conversion
+(*) gcc-4.3 and above need CXXFLAGS: -Wno-conversion
+
+The following compilers have a bug that prevent compilation:
+	gcc-4.4.4+, gcc-4.5.x
+	http://gcc.gnu.org/bugzilla/show_bug.cgi?id=46170
 
 The following platforms and compilers are actively supported by this project:
 	Mac OS X 10.3+, gcc-3.3+ (either Apple* or FSF)
@@ -75,7 +80,7 @@ Supported versions of bison: 1.35, 1.875, 2.0, 2.1, 2.3
 Supported versions of flex: 2.5.4, 2.5.31, 2.5.33, 2.5.35
 	2.5.31's skeleton may cause some warnings which may require -Wno-error
 	2.5.33+ work after portability fix after version:
-		CVS Tag: HACKT-00-01-04-main-00-84-49
+		git Tag: HACKT-00-01-04-main-00-84-49
 Supported revisions of Berkeley yacc skeletons: 1.14, 1.28, 1.37
 	(can be seen from generated y.tab.cc)
 

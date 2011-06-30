@@ -155,6 +155,8 @@ LT_INIT([dlopen])
 AC_LIBLTDL_INSTALLABLE
 AC_DISABLE_STATIC
 LTDL_INIT
+LT_MODULE_PATH_VAR=$lt_cv_module_path_var
+LT_OBJDIR=$lt_cv_objdir
 dnl - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ],[
 dnl libtool-1.5.x setup
@@ -165,6 +167,12 @@ AC_DISABLE_STATIC
 AC_LIBLTDL_INSTALLABLE
 AC_PROG_LIBTOOL
 AC_CONFIG_SUBDIRS(libltdl)
+dnl need these variables to augment test environment
+dnl some of these are mapped over from libtool 1.5 to 2.x
+LTDL_SHLIBPATH_VAR=$libltdl_cv_shlibpath_var
+LT_MODULE_PATH_VAR=$LTDL_SHLIBPATH_VAR
+LTDL_OBJDIR=$libltdl_cv_objdir
+LT_OBJDIR=$LTDL_OBJDIR
 ])
 
 dnl - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -177,10 +185,10 @@ AC_SUBST(LIBLTDL)
 # Adds corresponding dependencies to "Makefile.in".  
 AC_SUBST(LIBTOOL_DEPS)
 dnl need these variables to augment test environment
-LTDL_SHLIBPATH_VAR=$libltdl_cv_shlibpath_var
-AC_SUBST(LTDL_SHLIBPATH_VAR)
-LTDL_OBJDIR=$libltdl_cv_objdir
-AC_SUBST(LTDL_OBJDIR)
+LT_MODULE_EXT=$libltdl_cv_shlibext
+AC_SUBST(LT_MODULE_EXT)
+AC_SUBST(LT_MODULE_PATH_VAR)
+AC_SUBST(LT_OBJDIR)
 
 dnl ----------------------- end LIBTOOL SECTION -------------------------------
 dnl we move this down here b/c libtool.m4:LT_INIT redefines ECHO with 

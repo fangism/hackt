@@ -5,7 +5,7 @@ This document provide some useful information for HACKT developers,
 also useful to some of those who wish to contribute or modify the sources.  
 
 -------------------------------------------------------------------------------
-For CVS instructions, please refer to "README.CVS".  
+For git instructions, please refer to "README.CVS".  
 For a list of things to verify before checking in revisions, 
 please refer to "MAINTAINER-checklist".
 
@@ -27,7 +27,7 @@ since their initializations in Make.stddef, such as AUTO_IGNORE.
 Make.global should be the last make-fragment included in any makefile.  
 
 -------------------------------------------------------------------------------
-CVS tags:
+git tags:
 
 If you have cvs read access, then you can select specific versions and 
 releases of the art++ package.  
@@ -45,8 +45,10 @@ Eventually, branch tags wil be introduced by appending
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 cvsignore (a phony make target to make .cvsignore recursively)
 
-CVS ignore files (.cvsignore) are all semi-automatically generated
-in this project.  The rationale behind this is that automake already
+git ignore files (.cvsignore) are all semi-automatically generated
+in this project.  
+Now, .gitignore files are just copied from .cvsignore files.
+The rationale behind this is that automake already
 knows most of the files that should be ignored because they are 
 built (although there are always exceptions).  The Makefile system
 uses AUTO_IGNORE as a cumulative list of files to automatically ignore.  
@@ -75,7 +77,7 @@ DEVELOPMENT COMMITS:
 		breaks should be noted as such in the ChangeLog entry.  
 	src/ChangeLog is the primary source revision log and should be 
 		updated with an entry upon every commit.  The new entry should 
-		start with the new CVS Tag, incremented from the previous one.  
+		start with the new git Tag, incremented from the previous one.  
 		If there is no revision in the src/ directory, then just
 		note "no source revision" and reference the other locations
 		where there was a revision, e.g. test, lib, dox...
@@ -105,7 +107,7 @@ BRANCH CREATION:
 		of the branches existence.  
 
 BRANCH MERGES: (merging branch-to-trunk)
-	CVS Tag: 
+	git Tag: 
 		In addition to the tag number incrementing, the new tag on the 
 		main trunk should be suffixed with "-merged-branchname-revision"
 		to indicate up to which point of the branch has been 
@@ -157,7 +159,7 @@ RELEASE:
 RELEASE-BRANCH COMMITS:
 	Release branches will continue to receive bug fixes and documentation
 		improvements, but no other classes of source revisions.  
-	CVS Tags: (numbering convention)
+	git Tags: (numbering convention)
 
 ===============================================================================
 

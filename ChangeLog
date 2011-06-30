@@ -8,6 +8,9 @@
 	  updated bootstrap and scripts/maintainerclobber for git use
 	  bootstrap now propagates ACLOCAL_FLAGS to libltdl's
 		configure.ac and Makefile.am (assist in libtool2 migration)
+	  Now pretty much require libtool 2.x (been around for years).
+		Updated configure.ac to substitute new LT_* variables
+		and pass them to Makefiles.
 
 
 2011-05-03	David Fang	<fangism@users.sourceforge.net>
