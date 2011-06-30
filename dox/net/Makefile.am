@@ -134,5 +134,13 @@ CLEANFILES += $(BUILT_FIGS)
 $(srcdir)/figs/.cvsignore: $(srcdir)/.cvsignore
 	$(CP) $< $@
 
+$(srcdir)/config/.gitignore: $(srcdir)/config/.cvsignore
+	$(GITIGNORE_TEXI_SCRIPT)
+$(srcdir)/opt/.gitignore: $(srcdir)/opt/.cvsignore
+	$(GITIGNORE_TEXI_SCRIPT)
+cvsignore-local: \
+	$(srcdir)/config/.gitignore \
+	$(srcdir)/opt/.gitignore
+
 include $(top_srcdir)/dox/Make.dox-tail
 

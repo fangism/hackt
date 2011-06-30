@@ -77,6 +77,8 @@ EXTRACT_TEXI_INCLUDES = $(GREP) "^@include" | $(CUT) -d\  -f2 | \
 #	$(AWK) '{printf(" \\\n\t" $$1);}'
 # need $(srcdir) to force it to look there w/o relying on VPATH
 
+GITIGNORE_TEXI_SCRIPT = $(mkdir_p) `dirname $@` && cp $< $@
+
 # cumulative variables:
 # auto-generated Makefile snippets
 AUTO_TEXINFO_DEPS =

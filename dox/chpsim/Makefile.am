@@ -183,5 +183,17 @@ built-figs $(srcdir)/hacchpsim.info: $(XFIG_PNG)
 $(srcdir)/figs/.cvsignore: $(srcdir)/.cvsignore
 	$(CP) $< $@
 
+$(srcdir)/cmd/.gitignore: $(srcdir)/cmd/.cvsignore
+	$(GITIGNORE_TEXI_SCRIPT)
+$(srcdir)/fn/.gitignore: $(srcdir)/fn/.cvsignore
+	$(GITIGNORE_TEXI_SCRIPT)
+$(srcdir)/options/.gitignore: $(srcdir)/options/.cvsignore
+	$(GITIGNORE_TEXI_SCRIPT)
+
+cvsignore-local: \
+	$(srcdir)/cmd/.gitignore \
+	$(srcdir)/fn/.gitignore \
+	$(srcdir)/options/.gitignore
+
 include $(top_srcdir)/dox/Make.dox-tail
 

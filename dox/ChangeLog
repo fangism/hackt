@@ -1,6 +1,12 @@
 # "dox/ChangeLog"
 #	$Id: ChangeLog,v 1.42 2011/05/03 19:20:33 fang Exp $
 
+2011-06-29	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-78c:
+	  .cvsignores copied over to .gitignores
+
+
 2011-04-28	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-64-pr-01-19:

@@ -141,7 +141,9 @@ $LIBTOOLIZE --copy --force --ltdl
 	mkdir -p removed && \
 	mkdir -p config && \
 	mv -f configure.ac configure.ac.bkp && \
-	sed "/^AC_CONFIG_AUX_DIR/s|(.*)|([../$PROJECT_MACROS])|" \
+	sed -e "/^AC_CONFIG_AUX_DIR/s|(.*)|([../$PROJECT_MACROS])|" \
+		-e '/LT_CONFIG/a\
+AC_ARG_VAR(ACLOCAL_FLAGS, [Additional aclocal flags, for bootstrap only.])' \
 		configure.ac.bkp > configure.ac && \
 	mv -f configure.ac.bkp removed && \
 	mv -f Makefile.in configure aclocal.m4 removed ; \
@@ -149,7 +151,7 @@ $LIBTOOLIZE --copy --force --ltdl
 	echo "moving m4/* to ../$PROJECT_MACROS ..." ; \
 	if test -d m4 ; then mv -f m4/*.m4 ../$PROJECT_MACROS ; \
 		rm -rf m4 ; fi ; \
-	sed -i.bkp -e "/ACLOCAL_AMFLAGS/s|m4|../$PROJECT_MACROS|" Makefile.am ; \
+	sed -i.bkp -e "/ACLOCAL_AMFLAGS/s|m4|../$PROJECT_MACROS \$(ACLOCAL_FLAGS)|" Makefile.am ; \
 	mv -f Makefile.am.bkp removed ; \
 	echo "cvsignore:" >> Makefile.am ; \
 	regen )

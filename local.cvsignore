@@ -10,3 +10,6 @@ hackt-*.*.*
 *.hchk
 stamp-h*
 hackt-config
+bootstrap.*
+*.build
+*-builds

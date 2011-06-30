@@ -73,5 +73,13 @@ hackt.dvi hackt.pdf hackt.html $(srcdir)/hackt.info: $(hackt_info_DEPS)
 
 EXTRA_DIST += README ChangeLog
 
+$(srcdir)/cflat/.gitignore: $(srcdir)/cflat/.cvsignore
+	$(GITIGNORE_TEXI_SCRIPT)
+$(srcdir)/compile/.gitignore: $(srcdir)/compile/.cvsignore
+	$(GITIGNORE_TEXI_SCRIPT)
+cvsignore-local: \
+	$(srcdir)/cflat/.gitignore \
+	$(srcdir)/compile/.gitignore
+
 include $(top_srcdir)/dox/Make.dox-tail
 
