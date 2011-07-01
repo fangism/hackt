@@ -58,6 +58,7 @@ dist_bin_SCRIPTS = \
 	scripts/prsimlog_to_evcd.awk \
 	scripts/prsimlog_to_evcd_ports.awk \
 	scripts/prsimlog_to_evcd.sh \
+	scripts/spice_line_join.awk \
 	scripts/spice-wrap.awk \
 	verilog/vpp.sh \
 	verilog/vcs_scandepend.sh \

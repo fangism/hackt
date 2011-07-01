@@ -371,6 +371,7 @@ QUAD		0[qQ][0-3]+
 */
 
 ID		{IDHEAD}{IDBODY}*
+ESCAPEDID	"\\"[^ \t\n]+
 BADID		({INT}{ID})|({FLOAT}{ID})
 BADHEX		{HEX}{ID}
 WHITESPACE	[ \t]+
@@ -845,6 +846,16 @@ EMBEDFILE	^#FILE
 			LINE_COL(CURRENT) << endl;
 	}
 	hackt_lval->_token_identifier = new token_identifier(yytext);
+	TOKEN_UPDATE(foo);
+	return ID;
+}
+
+{ESCAPEDID}	{
+	if (token_feedback) {
+		cerr << "escaped identifier = \"" << yytext+1 << "\" " << 
+			LINE_COL(CURRENT) << endl;
+	}
+	hackt_lval->_token_identifier = new token_identifier(yytext+1);
 	TOKEN_UPDATE(foo);
 	return ID;
 }

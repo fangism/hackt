@@ -1,0 +1,8 @@
+// "escaped-id-001.hac"
+// testing escaped identifiers
+
+defproc \f*ck (bool bar) {
+}
+
+\f*ck \&^%!@#!@/?[.,><+-.={}';], ;
+

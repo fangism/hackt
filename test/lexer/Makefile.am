@@ -51,7 +51,8 @@ HACKT_PARSE_TEST_PASSES = \
 	bin-01 \
 	quad-01 \
 	flat-import-01 flat-import-02 \
-	pstring-01 pstring-02
+	pstring-01 pstring-02 \
+	escaped-id-001
 
 HACKT_FLATTEN_TEST_PASSES = \
 	badid-000 badid-001 \
@@ -108,7 +109,8 @@ endif
 
 HACKT_CREATE_TEST_PASSES = \
 	comment-010 \
-	pstring-01 pstring-02
+	pstring-01 pstring-02 \
+	escaped-id-001
 
 ###############################################################################
 # test for include path ordering
