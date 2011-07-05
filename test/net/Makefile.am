@@ -4,7 +4,7 @@
 
 include $(top_srcdir)/test/Make.test-head
 
-SUBDIRS = . verilog
+SUBDIRS = . verilog hac
 
 # .hac inputs
 HACKNET_TEST_SCRIPTS_PASSES = \

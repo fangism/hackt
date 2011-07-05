@@ -14,6 +14,7 @@ AM_HACKNET_FLAGS = -I$(srcdir)
 
 # new: .hv for verilog targets
 HACKNET_SUFFIXES = .spice .spice-diff .spice-fail .spice-fail-diff
+HACKNET_SUFFIXES += .spice-expect .spice-hac
 HACKNET_SUFFIXES += .hv .hv-diff .hv-fail .hv-fail-diff
 
 HACKNET_TEST_SUFFIXES = .hacknettest .hacknetfailtest
@@ -89,6 +90,13 @@ HACVERILOG_FAIL_TEST_SCRIPT = $(HACVERILOG_TEST_SCRIPT)
 	$(MV) $@-err $@ ; \
 	$(CAT) $@ ; \
 	exit $$stat
+
+# spice to hac conversion
+SPICE_TO_HAC = $(AWK) -f $(top_srcdir)/lib/scripts/spice-to-hac.awk
+.spice-expect.spice-hac:
+	$(SPICE_TO_HAC) $< > $@
+.spice.spice-hac:
+	$(SPICE_TO_HAC) $< > $@
 
 # for now: use .hac -> .spice
 # TODO: worry about .hacknetconf files later...

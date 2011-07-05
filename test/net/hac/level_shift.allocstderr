@@ -1,0 +1,46 @@
+globID	super		localID	canonical	footprint-frame
+[global process entries]
+1	(top)	-	1	foo	level_shift<>
+	process: ;2..14
+	bool: 3,5,6,7,4,1,2;8..13
+2	process	1	1	foo.Mrout_up_0	TRANSISTOR_pfet<>
+	bool: 3,8,9,3
+3	process	1	2	foo.Mrout_up_1	TRANSISTOR_pfet<>
+	bool: 9,10,11,3
+4	process	1	3	foo.Mrout_dn_0	TRANSISTOR_nfet<>
+	bool: 5,10,11,5
+5	process	1	4	foo.Mlout_up_0	TRANSISTOR_pfet<>
+	bool: 3,11,12,3
+6	process	1	5	foo.Mlout_up_1	TRANSISTOR_pfet<>
+	bool: 12,6,8,3
+7	process	1	6	foo.Mlout_dn_0	TRANSISTOR_nfet<>
+	bool: 5,6,8,5
+8	process	1	7	foo.Mlout_dn_1_ckeeper	TRANSISTOR_nfet<>
+	bool: 5,6,13,5
+9	process	1	8	foo.Mlout_dn_2_ckeeper	TRANSISTOR_nfet<>
+	bool: 5,11,13,5
+10	process	1	9	foo.Mlout_dn_3_ckeeper	TRANSISTOR_nfet<>
+	bool: 13,7,8,5
+11	process	1	10	foo.Mout_up_0	TRANSISTOR_pfet<>
+	bool: 3,8,7,3
+12	process	1	11	foo.Mout_dn_0	TRANSISTOR_nfet<>
+	bool: 5,8,7,5
+13	process	1	12	foo.Min__up_0	TRANSISTOR_pfet<>
+	bool: 4,6,10,4
+14	process	1	13	foo.Min__dn_0	TRANSISTOR_nfet<>
+	bool: 5,6,10,5
+[global bool entries]
+1	(top)	-	1	!GND	 @[ supply_low ]
+2	(top)	-	2	!Vdd	 @[ supply_high ]
+3	(top)	-	3	foo.Vcfg	
+4	(top)	-	4	foo.Vdd	
+5	(top)	-	5	foo.VSS	
+6	(top)	-	6	foo.in	
+7	(top)	-	7	foo.out	
+8	process	1	8	foo.lout	
+9	process	1	9	foo.#0	
+10	process	1	10	foo.in_	
+11	process	1	11	foo.rout	
+12	process	1	12	foo.#1	
+13	process	1	13	foo.#2	
+

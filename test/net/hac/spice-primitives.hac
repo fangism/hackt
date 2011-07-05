@@ -1,0 +1,15 @@
+/**
+	\file "spice-primitives.hac"
+	Primitive type defintions.
+	For conversion from spice to HAC.
+	$Id: $
+ */
+
+// use deftype instead of defproc to avoid !Vdd and !GND
+
+deftype RESISTOR <: bool (bool a, b) { }
+deftype CAPACITOR <: bool (bool a, b) { }
+deftype INDUCTOR <: bool (bool a, b) { }
+deftype TRANSISTOR_nfet <: bool (bool SOURCE, GATE, DRAIN, BODY) { }
+deftype TRANSISTOR_pfet <: bool (bool SOURCE, GATE, DRAIN, BODY) { }
+

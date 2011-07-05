@@ -618,6 +618,7 @@ AC_CONFIG_FILES([
 	test/chpsim/libinstalltest/Makefile
 	test/guile/Makefile
 	test/net/Makefile
+	test/net/hac/Makefile
 	test/net/verilog/Makefile
 	test/lib/Makefile
 	test/PR/Makefile

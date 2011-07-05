@@ -1,0 +1,19 @@
+*  "level_shift.spice"
+* testing spice-to-hac conversion
+
+.subckt level_shift Vcfg Vdd VSS in out
+Mrout_up_0 Vcfg lout #0 Vcfg pfet W=240n L=30n
+Mrout_up_1 #0 in_ rout Vcfg pfet W=240n L=30n
+Mrout_dn_0 VSS in_ rout VSS nfet W=120n L=30n
+Mlout_up_0 Vcfg rout #1 Vcfg pfet W=240n L=30n
+Mlout_up_1 #1 in lout Vcfg pfet W=240n L=30n
+Mlout_dn_0 VSS in lout VSS nfet W=120n L=30n
+Mlout_dn_1_ckeeper VSS in #2 VSS nfet W=60n L=30n
+Mlout_dn_2_ckeeper VSS rout #2 VSS nfet W=60n L=30n
+Mlout_dn_3_ckeeper #2 out lout VSS nfet W=60n L=30n
+Mout_up_0 Vcfg lout out Vcfg pfet W=240n L=30n
+Mout_dn_0 VSS lout out VSS nfet W=240n L=30n
+Min__up_0 Vdd in in_ Vdd pfet W=240n L=30n
+Min__dn_0 VSS in in_ VSS nfet W=240n L=30n
+.ends
+

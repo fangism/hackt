@@ -1,0 +1,620 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	56
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	94
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	8	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	procdefn	0	#HEAD#	#TAIL#	93
+	14	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	15	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	16	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	procdefn	0	#HEAD#	#TAIL#	93
+	21	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	22	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	23	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	procdefn	0	#HEAD#	#TAIL#	124
+	28	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	29	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	29
+	30	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	31	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	30
+	32	##ADDR##	portscop	0	#HEAD#	#TAIL#	28
+	33	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	34	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	36	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	footprnt	0	#HEAD#	#TAIL#	362
+	39	##ADDR##	procdefn	0	#HEAD#	#TAIL#	124
+	40	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	41	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	29
+	42	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	43	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	30
+	44	##ADDR##	portscop	0	#HEAD#	#TAIL#	28
+	45	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	46	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	47	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	48	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	49	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	50	##ADDR##	footprnt	0	#HEAD#	#TAIL#	362
+	51	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	52	##ADDR##	procdefn	0	#HEAD#	#TAIL#	356
+	53	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	54	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	55	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
+	56	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
+	57	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
+	58	##ADDR##	procplch	0	#HEAD#	#TAIL#	33
+	59	##ADDR##	procplch	0	#HEAD#	#TAIL#	33
+	60	##ADDR##	procplch	0	#HEAD#	#TAIL#	34
+	61	##ADDR##	procplch	0	#HEAD#	#TAIL#	42
+	62	##ADDR##	procplch	0	#HEAD#	#TAIL#	42
+	63	##ADDR##	procplch	0	#HEAD#	#TAIL#	42
+	64	##ADDR##	procplch	0	#HEAD#	#TAIL#	34
+	65	##ADDR##	procplch	0	#HEAD#	#TAIL#	34
+	66	##ADDR##	procplch	0	#HEAD#	#TAIL#	33
+	67	##ADDR##	procplch	0	#HEAD#	#TAIL#	33
+	68	##ADDR##	procplch	0	#HEAD#	#TAIL#	34
+	69	##ADDR##	procplch	0	#HEAD#	#TAIL#	34
+	70	##ADDR##	procplch	0	#HEAD#	#TAIL#	34
+	71	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	27
+	72	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	73	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	27
+	74	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
+	75	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	27
+	76	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	77	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	27
+	78	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	79	##ADDR##	portscop	0	#HEAD#	#TAIL#	40
+	80	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	81	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	82	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	83	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	84	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	85	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	86	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	87	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	88	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	89	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	90	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	91	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	92	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	93	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	94	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	95	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	96	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	97	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	98	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	99	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	100	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	101	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	102	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	103	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	32
+	104	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	105	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	106	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	107	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	108	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	109	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	110	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	111	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	112	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	113	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	114	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	115	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	32
+	116	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	117	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	118	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	119	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	120	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	121	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	122	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	123	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	32
+	124	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	125	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	126	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	127	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	128	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	129	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	130	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	131	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	132	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	133	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	32
+	134	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	135	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	136	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	137	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	138	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	139	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	140	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	141	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	32
+	142	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	143	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	144	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	145	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	146	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	147	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	148	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	149	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	32
+	150	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	151	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	152	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	153	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	154	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	155	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	156	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	157	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	158	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	159	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	32
+	160	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	161	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	162	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	163	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	164	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	165	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	166	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	167	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	32
+	168	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	169	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	170	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	171	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	172	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	173	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	174	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	175	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	32
+	176	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	177	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	178	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	179	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	180	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	181	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	182	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	183	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	32
+	184	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	185	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	186	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	187	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	188	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	189	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	190	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	191	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	32
+	192	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	193	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	194	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	195	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	196	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	197	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	198	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	199	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	32
+	200	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	201	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	202	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	203	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	204	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	205	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	206	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	207	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	32
+	208	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	209	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	210	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	211	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	212	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	213	##ADDR##	footprnt	0	#HEAD#	#TAIL#	2487
+	214	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	215	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	216	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	217	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	218	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	219	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	220	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	221	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	222	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	223	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	224	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	225	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	226	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	227	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	228	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	229	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	230	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	231	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	232	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	233	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	234	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	235	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	236	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	237	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	238	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	239	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	240	##ADDR##	footprnt	0	#HEAD#	#TAIL#	564
+	241	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  3 instantiation-collections
+  0 sub-namespaces
+  6 definitions
+  0 typedefs
+  Definitions:
+    CAPACITOR = process-definition (defined) CAPACITOR(
+        bool<> a
+        bool<> b
+      )
+      In definition "CAPACITOR", we have: {
+      Instances:
+        a = bool<> CAPACITOR::a
+        b = bool<> CAPACITOR::b
+      unroll sequence: 
+        ports: (
+          bool<> a
+          bool<> b
+        )
+      }
+
+    INDUCTOR = process-definition (defined) INDUCTOR(
+        bool<> a
+        bool<> b
+      )
+      In definition "INDUCTOR", we have: {
+      Instances:
+        a = bool<> INDUCTOR::a
+        b = bool<> INDUCTOR::b
+      unroll sequence: 
+        ports: (
+          bool<> a
+          bool<> b
+        )
+      }
+
+    RESISTOR = process-definition (defined) RESISTOR(
+        bool<> a
+        bool<> b
+      )
+      In definition "RESISTOR", we have: {
+      Instances:
+        a = bool<> RESISTOR::a
+        b = bool<> RESISTOR::b
+      unroll sequence: 
+        ports: (
+          bool<> a
+          bool<> b
+        )
+      }
+
+    TRANSISTOR_nfet = process-definition (defined) TRANSISTOR_nfet(
+        bool<> SOURCE
+        bool<> GATE
+        bool<> DRAIN
+        bool<> BODY
+      )
+      In definition "TRANSISTOR_nfet", we have: {
+      Instances:
+        BODY = bool<> TRANSISTOR_nfet::BODY
+        DRAIN = bool<> TRANSISTOR_nfet::DRAIN
+        GATE = bool<> TRANSISTOR_nfet::GATE
+        SOURCE = bool<> TRANSISTOR_nfet::SOURCE
+      unroll sequence: 
+        ports: (
+          bool<> SOURCE
+          bool<> GATE
+          bool<> DRAIN
+          bool<> BODY
+        )
+      footprint: {
+        BODY = bool^0 = TRANSISTOR_nfet<>::BODY (4) @[ port-alias ] 
+        DRAIN = bool^0 = TRANSISTOR_nfet<>::DRAIN (3) @[ port-alias ] 
+        GATE = bool^0 = TRANSISTOR_nfet<>::GATE (2) @[ port-alias ] 
+        SOURCE = bool^0 = TRANSISTOR_nfet<>::SOURCE (1) @[ port-alias ] 
+        Created state:
+        bool instance pool: (4 ports, 0 local, 0 mapped)
+        1	TRANSISTOR_nfet<>::SOURCE @[ port-alias ]	
+        2	TRANSISTOR_nfet<>::GATE @[ port-alias ]	
+        3	TRANSISTOR_nfet<>::DRAIN @[ port-alias ]	
+        4	TRANSISTOR_nfet<>::BODY @[ port-alias ]	
+      }
+      }
+
+    TRANSISTOR_pfet = process-definition (defined) TRANSISTOR_pfet(
+        bool<> SOURCE
+        bool<> GATE
+        bool<> DRAIN
+        bool<> BODY
+      )
+      In definition "TRANSISTOR_pfet", we have: {
+      Instances:
+        BODY = bool<> TRANSISTOR_pfet::BODY
+        DRAIN = bool<> TRANSISTOR_pfet::DRAIN
+        GATE = bool<> TRANSISTOR_pfet::GATE
+        SOURCE = bool<> TRANSISTOR_pfet::SOURCE
+      unroll sequence: 
+        ports: (
+          bool<> SOURCE
+          bool<> GATE
+          bool<> DRAIN
+          bool<> BODY
+        )
+      footprint: {
+        BODY = bool^0 = TRANSISTOR_pfet<>::BODY (4) @[ port-alias ] 
+        DRAIN = bool^0 = TRANSISTOR_pfet<>::DRAIN (3) @[ port-alias ] 
+        GATE = bool^0 = TRANSISTOR_pfet<>::GATE (2) @[ port-alias ] 
+        SOURCE = bool^0 = TRANSISTOR_pfet<>::SOURCE (1) @[ port-alias ] 
+        Created state:
+        bool instance pool: (4 ports, 0 local, 0 mapped)
+        1	TRANSISTOR_pfet<>::SOURCE @[ port-alias ]	
+        2	TRANSISTOR_pfet<>::GATE @[ port-alias ]	
+        3	TRANSISTOR_pfet<>::DRAIN @[ port-alias ]	
+        4	TRANSISTOR_pfet<>::BODY @[ port-alias ]	
+      }
+      }
+
+    level_shift = process-definition (defined) level_shift(
+        bool<> !GND
+        bool<> !Vdd
+        bool<> Vcfg
+        bool<> Vdd
+        bool<> VSS
+        bool<> in
+        bool<> out
+      )
+      In definition "level_shift", we have: {
+      Instances:
+        !GND = bool<> level_shift::!GND
+        !Vdd = bool<> level_shift::!Vdd
+        #0 = bool<> level_shift::#0
+        #1 = bool<> level_shift::#1
+        #2 = bool<> level_shift::#2
+        Min__dn_0 = TRANSISTOR_nfet<> level_shift::Min__dn_0
+        Min__up_0 = TRANSISTOR_pfet<> level_shift::Min__up_0
+        Mlout_dn_0 = TRANSISTOR_nfet<> level_shift::Mlout_dn_0
+        Mlout_dn_1_ckeeper = TRANSISTOR_nfet<> level_shift::Mlout_dn_1_ckeeper
+        Mlout_dn_2_ckeeper = TRANSISTOR_nfet<> level_shift::Mlout_dn_2_ckeeper
+        Mlout_dn_3_ckeeper = TRANSISTOR_nfet<> level_shift::Mlout_dn_3_ckeeper
+        Mlout_up_0 = TRANSISTOR_pfet<> level_shift::Mlout_up_0
+        Mlout_up_1 = TRANSISTOR_pfet<> level_shift::Mlout_up_1
+        Mout_dn_0 = TRANSISTOR_nfet<> level_shift::Mout_dn_0
+        Mout_up_0 = TRANSISTOR_pfet<> level_shift::Mout_up_0
+        Mrout_dn_0 = TRANSISTOR_nfet<> level_shift::Mrout_dn_0
+        Mrout_up_0 = TRANSISTOR_pfet<> level_shift::Mrout_up_0
+        Mrout_up_1 = TRANSISTOR_pfet<> level_shift::Mrout_up_1
+        VSS = bool<> level_shift::VSS
+        Vcfg = bool<> level_shift::Vcfg
+        Vdd = bool<> level_shift::Vdd
+        in = bool<> level_shift::in
+        in_ = bool<> level_shift::in_
+        lout = bool<> level_shift::lout
+        out = bool<> level_shift::out
+        rout = bool<> level_shift::rout
+      unroll sequence: 
+        ports: (
+          bool<> !GND
+          bool<> !Vdd
+          bool<> Vcfg
+          bool<> Vdd
+          bool<> VSS
+          bool<> in
+          bool<> out
+        )
+        !GND@[supply=0]
+        !Vdd@[supply=1]
+        bool<> lout
+        bool<> #0
+        TRANSISTOR_pfet<> Mrout_up_0
+        Mrout_up_0 (Vcfg, lout, #0, Vcfg);
+        bool<> in_
+        bool<> rout
+        TRANSISTOR_pfet<> Mrout_up_1
+        Mrout_up_1 (#0, in_, rout, Vcfg);
+        TRANSISTOR_nfet<> Mrout_dn_0
+        Mrout_dn_0 (VSS, in_, rout, VSS);
+        bool<> #1
+        TRANSISTOR_pfet<> Mlout_up_0
+        Mlout_up_0 (Vcfg, rout, #1, Vcfg);
+        TRANSISTOR_pfet<> Mlout_up_1
+        Mlout_up_1 (#1, in, lout, Vcfg);
+        TRANSISTOR_nfet<> Mlout_dn_0
+        Mlout_dn_0 (VSS, in, lout, VSS);
+        bool<> #2
+        TRANSISTOR_nfet<> Mlout_dn_1_ckeeper
+        Mlout_dn_1_ckeeper (VSS, in, #2, VSS);
+        TRANSISTOR_nfet<> Mlout_dn_2_ckeeper
+        Mlout_dn_2_ckeeper (VSS, rout, #2, VSS);
+        TRANSISTOR_nfet<> Mlout_dn_3_ckeeper
+        Mlout_dn_3_ckeeper (#2, out, lout, VSS);
+        TRANSISTOR_pfet<> Mout_up_0
+        Mout_up_0 (Vcfg, lout, out, Vcfg);
+        TRANSISTOR_nfet<> Mout_dn_0
+        Mout_dn_0 (VSS, lout, out, VSS);
+        TRANSISTOR_pfet<> Min__up_0
+        Min__up_0 (Vdd, in, in_, Vdd);
+        TRANSISTOR_nfet<> Min__dn_0
+        Min__dn_0 (VSS, in, in_, VSS);
+      footprint: {
+        !GND = bool^0 = level_shift<>::!GND (6) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = level_shift<>::!Vdd (7) @[ supply_high port-alias ] 
+        #0 = bool^0 = level_shift<>::#0 (9) 
+        #1 = bool^0 = level_shift<>::#1 (12) 
+        #2 = bool^0 = level_shift<>::#2 (13) 
+        Min__dn_0 = process TRANSISTOR_nfet<>^0 = level_shift<>::Min__dn_0 (13) (
+          SOURCE = bool^0 = level_shift<>::VSS (2) @[ port-alias ] 
+          GATE = bool^0 = level_shift<>::in (3) @[ port-alias ] 
+          DRAIN = bool^0 = level_shift<>::in_ (10) 
+          BODY = bool^0 = level_shift<>::VSS (2) @[ port-alias ] 
+        )
+        Min__up_0 = process TRANSISTOR_pfet<>^0 = level_shift<>::Min__up_0 (12) (
+          SOURCE = bool^0 = level_shift<>::Vdd (5) @[ port-alias ] 
+          GATE = bool^0 = level_shift<>::in (3) @[ port-alias ] 
+          DRAIN = bool^0 = level_shift<>::in_ (10) 
+          BODY = bool^0 = level_shift<>::Vdd (5) @[ port-alias ] 
+        )
+        Mlout_dn_0 = process TRANSISTOR_nfet<>^0 = level_shift<>::Mlout_dn_0 (6) (
+          SOURCE = bool^0 = level_shift<>::VSS (2) @[ port-alias ] 
+          GATE = bool^0 = level_shift<>::in (3) @[ port-alias ] 
+          DRAIN = bool^0 = level_shift<>::lout (8) 
+          BODY = bool^0 = level_shift<>::VSS (2) @[ port-alias ] 
+        )
+        Mlout_dn_1_ckeeper = process TRANSISTOR_nfet<>^0 = level_shift<>::Mlout_dn_1_ckeeper (7) (
+          SOURCE = bool^0 = level_shift<>::VSS (2) @[ port-alias ] 
+          GATE = bool^0 = level_shift<>::in (3) @[ port-alias ] 
+          DRAIN = bool^0 = level_shift<>::#2 (13) 
+          BODY = bool^0 = level_shift<>::VSS (2) @[ port-alias ] 
+        )
+        Mlout_dn_2_ckeeper = process TRANSISTOR_nfet<>^0 = level_shift<>::Mlout_dn_2_ckeeper (8) (
+          SOURCE = bool^0 = level_shift<>::VSS (2) @[ port-alias ] 
+          GATE = bool^0 = level_shift<>::rout (11) 
+          DRAIN = bool^0 = level_shift<>::#2 (13) 
+          BODY = bool^0 = level_shift<>::VSS (2) @[ port-alias ] 
+        )
+        Mlout_dn_3_ckeeper = process TRANSISTOR_nfet<>^0 = level_shift<>::Mlout_dn_3_ckeeper (9) (
+          SOURCE = bool^0 = level_shift<>::#2 (13) 
+          GATE = bool^0 = level_shift<>::out (4) @[ port-alias ] 
+          DRAIN = bool^0 = level_shift<>::lout (8) 
+          BODY = bool^0 = level_shift<>::VSS (2) @[ port-alias ] 
+        )
+        Mlout_up_0 = process TRANSISTOR_pfet<>^0 = level_shift<>::Mlout_up_0 (4) (
+          SOURCE = bool^0 = level_shift<>::Vcfg (1) @[ port-alias ] 
+          GATE = bool^0 = level_shift<>::rout (11) 
+          DRAIN = bool^0 = level_shift<>::#1 (12) 
+          BODY = bool^0 = level_shift<>::Vcfg (1) @[ port-alias ] 
+        )
+        Mlout_up_1 = process TRANSISTOR_pfet<>^0 = level_shift<>::Mlout_up_1 (5) (
+          SOURCE = bool^0 = level_shift<>::#1 (12) 
+          GATE = bool^0 = level_shift<>::in (3) @[ port-alias ] 
+          DRAIN = bool^0 = level_shift<>::lout (8) 
+          BODY = bool^0 = level_shift<>::Vcfg (1) @[ port-alias ] 
+        )
+        Mout_dn_0 = process TRANSISTOR_nfet<>^0 = level_shift<>::Mout_dn_0 (11) (
+          SOURCE = bool^0 = level_shift<>::VSS (2) @[ port-alias ] 
+          GATE = bool^0 = level_shift<>::lout (8) 
+          DRAIN = bool^0 = level_shift<>::out (4) @[ port-alias ] 
+          BODY = bool^0 = level_shift<>::VSS (2) @[ port-alias ] 
+        )
+        Mout_up_0 = process TRANSISTOR_pfet<>^0 = level_shift<>::Mout_up_0 (10) (
+          SOURCE = bool^0 = level_shift<>::Vcfg (1) @[ port-alias ] 
+          GATE = bool^0 = level_shift<>::lout (8) 
+          DRAIN = bool^0 = level_shift<>::out (4) @[ port-alias ] 
+          BODY = bool^0 = level_shift<>::Vcfg (1) @[ port-alias ] 
+        )
+        Mrout_dn_0 = process TRANSISTOR_nfet<>^0 = level_shift<>::Mrout_dn_0 (3) (
+          SOURCE = bool^0 = level_shift<>::VSS (2) @[ port-alias ] 
+          GATE = bool^0 = level_shift<>::in_ (10) 
+          DRAIN = bool^0 = level_shift<>::rout (11) 
+          BODY = bool^0 = level_shift<>::VSS (2) @[ port-alias ] 
+        )
+        Mrout_up_0 = process TRANSISTOR_pfet<>^0 = level_shift<>::Mrout_up_0 (1) (
+          SOURCE = bool^0 = level_shift<>::Vcfg (1) @[ port-alias ] 
+          GATE = bool^0 = level_shift<>::lout (8) 
+          DRAIN = bool^0 = level_shift<>::#0 (9) 
+          BODY = bool^0 = level_shift<>::Vcfg (1) @[ port-alias ] 
+        )
+        Mrout_up_1 = process TRANSISTOR_pfet<>^0 = level_shift<>::Mrout_up_1 (2) (
+          SOURCE = bool^0 = level_shift<>::#0 (9) 
+          GATE = bool^0 = level_shift<>::in_ (10) 
+          DRAIN = bool^0 = level_shift<>::rout (11) 
+          BODY = bool^0 = level_shift<>::Vcfg (1) @[ port-alias ] 
+        )
+        VSS = bool^0 = level_shift<>::VSS (2) @[ port-alias ] 
+        Vcfg = bool^0 = level_shift<>::Vcfg (1) @[ port-alias ] 
+        Vdd = bool^0 = level_shift<>::Vdd (5) @[ port-alias ] 
+        in = bool^0 = level_shift<>::in (3) @[ port-alias ] 
+        in_ = bool^0 = level_shift<>::in_ (10) 
+        lout = bool^0 = level_shift<>::lout (8) 
+        out = bool^0 = level_shift<>::out (4) @[ port-alias ] 
+        rout = bool^0 = level_shift<>::rout (11) 
+        Created state:
+        process instance pool: (0 ports, 13 local, 0 mapped)
+        1	level_shift<>::Mrout_up_0	TRANSISTOR_pfet<>
+          bool: 1,8,9,1
+        2	level_shift<>::Mrout_up_1	TRANSISTOR_pfet<>
+          bool: 9,10,11,1
+        3	level_shift<>::Mrout_dn_0	TRANSISTOR_nfet<>
+          bool: 2,10,11,2
+        4	level_shift<>::Mlout_up_0	TRANSISTOR_pfet<>
+          bool: 1,11,12,1
+        5	level_shift<>::Mlout_up_1	TRANSISTOR_pfet<>
+          bool: 12,3,8,1
+        6	level_shift<>::Mlout_dn_0	TRANSISTOR_nfet<>
+          bool: 2,3,8,2
+        7	level_shift<>::Mlout_dn_1_ckeeper	TRANSISTOR_nfet<>
+          bool: 2,3,13,2
+        8	level_shift<>::Mlout_dn_2_ckeeper	TRANSISTOR_nfet<>
+          bool: 2,11,13,2
+        9	level_shift<>::Mlout_dn_3_ckeeper	TRANSISTOR_nfet<>
+          bool: 13,4,8,2
+        10	level_shift<>::Mout_up_0	TRANSISTOR_pfet<>
+          bool: 1,8,4,1
+        11	level_shift<>::Mout_dn_0	TRANSISTOR_nfet<>
+          bool: 2,8,4,2
+        12	level_shift<>::Min__up_0	TRANSISTOR_pfet<>
+          bool: 5,3,10,5
+        13	level_shift<>::Min__dn_0	TRANSISTOR_nfet<>
+          bool: 2,3,10,2
+        bool instance pool: (7 ports, 6 local, 0 mapped)
+        1	level_shift<>::Vcfg @[ port-alias ]	
+        2	level_shift<>::VSS @[ port-alias ]	
+        3	level_shift<>::in @[ port-alias ]	
+        4	level_shift<>::out @[ port-alias ]	
+        5	level_shift<>::Vdd @[ port-alias ]	
+        6	level_shift<>::!GND @[ supply_low port-alias ]	
+        7	level_shift<>::!Vdd @[ supply_high port-alias ]	
+        8	level_shift<>::lout	
+        9	level_shift<>::#0	
+        10	level_shift<>::in_	
+        11	level_shift<>::rout	
+        12	level_shift<>::#1	
+        13	level_shift<>::#2	
+      }
+      }
+
+  Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
+    foo = level_shift<> foo
+}
+
+footprint: {
+  !GND = bool^0 = !GND (1) @[ supply_low ] 
+  !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
+  foo = process level_shift<>^0 = foo (1) (
+    !GND = bool^0 = !GND (1) @[ supply_low ] 
+    !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
+    Vcfg = bool^0 = foo.Vcfg (3) 
+    Vdd = bool^0 = foo.Vdd (4) 
+    VSS = bool^0 = foo.VSS (5) 
+    in = bool^0 = foo.in (6) 
+    out = bool^0 = foo.out (7) 
+  )
+  Created state:
+  process instance pool: (0 ports, 1 local, 13 mapped)
+  1	foo	level_shift<>
+    bool: 3,5,6,7,4,1,2
+  private sub-process index map:
+    (1 -> 0)
+    (2 -> 13)
+  bool instance pool: (0 ports, 7 local, 6 mapped)
+  1	!GND @[ supply_low ]	
+  2	!Vdd @[ supply_high ]	
+  3	foo.Vcfg	
+  4	foo.Vdd	
+  5	foo.VSS	
+  6	foo.in	
+  7	foo.out	
+  private sub-bool index map:
+    (1 -> 0)
+    (2 -> 6)
+}

@@ -60,6 +60,7 @@ dist_bin_SCRIPTS = \
 	scripts/prsimlog_to_evcd.sh \
 	scripts/spice_line_join.awk \
 	scripts/spice-wrap.awk \
+	scripts/spice-to-hac.awk \
 	verilog/vpp.sh \
 	verilog/vcs_scandepend.sh \
 	verilog/wrap_verilog_modules_to_hacprsim.awk

@@ -1,0 +1,7 @@
+// "level-shift.hac"
+
+import "spice-primitives.hac";
+import "level_shift.spice-hac";
+
+level_shift foo;
+

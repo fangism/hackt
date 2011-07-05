@@ -1,6 +1,14 @@
 # "lib/ChangeLog"
 #	$Id: ChangeLog,v 1.70 2011/05/07 03:43:39 fang Exp $
 
+2011-07-05	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-79a:
+	  New: scripts/spice-to-hac.awk to convert hierarchical spice netlists
+		to HAC for crude hierarchical queries with existing tools.
+	  Basic test case added in test/net/hac/.
+
+
 2011-05-06	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-70+:
