@@ -497,6 +497,7 @@ expr_list::postorder_check_nonmeta_exprs(checked_nonmeta_exprs_type& temp,
 void
 expr_list::select_checked_meta_exprs(const checked_meta_generic_type& src, 
 		checked_meta_exprs_type& dst) {
+	STACKTRACE_VERBOSE;
 	INVARIANT(dst.empty());
 	transform(src.begin(), src.end(), back_inserter(dst),
 		_Select1st<checked_meta_generic_type::value_type>()
@@ -507,6 +508,7 @@ expr_list::select_checked_meta_exprs(const checked_meta_generic_type& src,
 void
 expr_list::select_checked_meta_refs(const checked_meta_generic_type& src, 
 		checked_meta_refs_type& dst) {
+	STACKTRACE_VERBOSE;
 	INVARIANT(dst.empty());
 	transform(src.begin(), src.end(), back_inserter(dst),
 		_Select2nd<checked_meta_generic_type::value_type>()

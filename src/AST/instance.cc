@@ -469,14 +469,24 @@ if (actuals->actual_ports) {
 	actuals->actual_ports->postorder_check_meta_generic(temp, c);
 	expr_list::select_checked_meta_refs(temp, ret);
 	expr_list::checked_meta_generic_type::const_iterator
-		c_iter(temp.begin());
+		tb(temp.begin()), c_iter(tb);
 	expr_list::const_iterator e_iter(actuals->actual_ports->begin());
 	const expr_list::const_iterator e_end(actuals->actual_ports->end());
 	for ( ; e_iter != e_end; ++e_iter, ++c_iter) {
 		if (*e_iter) {
-			if (!c_iter->first && !c_iter->second)
-				return good_bool(false);
-			// both results are NULL => check failed
+		// first is expr, second is ref (may be expr)
+		if (!c_iter->first && !c_iter->second) {
+			// already have error message
+			return good_bool(false);
+		} else if (c_iter->first || c_iter->second.value_ref()) {
+			// reject constant value or value reference
+			cerr << "Error in port actuals, argument " <<
+				std::distance(tb, c_iter) +1 <<
+				" is not a physical instance.  " <<
+				where(**e_iter) << endl;
+			return good_bool(false);
+		}
+		// both results are NULL => check failed
 		}
 		// else expression is null; skip it
 	}

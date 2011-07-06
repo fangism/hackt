@@ -5,6 +5,14 @@
 
 2011-07-05	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-84-79b:
+	  AST/instance.cc: fixed front-end bug ACX-PR-5273, 
+		failure to reject parameter value expression in port.
+	  Test cases added.
+
+
+2011-07-05	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-84-79a:
 	  No source revision: added scripts/spice-to-hac.awk and tested it.
 

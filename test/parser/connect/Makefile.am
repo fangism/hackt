@@ -17,6 +17,7 @@ HACKT_PARSE_TEST_FAILURES = \
 	080 081 082 \
 	090 \
 	138 \
+	162 162b \
 	globals-01 globals-02 globals-03 globals-04 globals-05 globals-06 \
 	globals-07 globals-08 globals-11 globals-12 \
 	supply-01 supply-02 \
@@ -149,10 +150,6 @@ HACKT_GUILE_TEST_SCRIPTS_FAILURES = \
 BISON_OUTPUTS += 032 076 077 \
 	supply-02 \
 	act-007
-
-# pending test cases
-srcdir_EXTRA_DIST += 162.hac
-# FIXME: 162.hac should be rejected
 
 srcdir_EXTRA_DIST += \
 	bool-dir-02 \
