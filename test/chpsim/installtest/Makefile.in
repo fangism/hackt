@@ -82,7 +82,7 @@ confirm-exec:
 
 # run hacchpsim to and log results to file
 hello-test.chpsimrc-out: hello-test.chpsimrc hello-test.haco-a hello.la
-	$(HACKT_CHPSIM_EXE) -b -lhello hello-test.haco-a < \
+	$(HACKT_CHPSIM_EXE) -b -L. -lhello hello-test.haco-a < \
 		$(srcdir)/hello-test.chpsimrc > $@
 
 # hand-written library building rules, in the style of automake-libtool

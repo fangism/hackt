@@ -49,7 +49,7 @@ installcheck-local: $(INSTALLCHECK_TARGETS)
 	do $(CAT) $$o ; done
 endif
 
-Makefile.copy: example.mk Makefile.am
+Makefile.copy: example.mk Makefile
 	$(SED) -e 's|@pkgdatadir@|$(pkgdatadir)|g' \
 		-e 's|@install_bindir@|$(bindir)|g' \
 		-e 's|@vcs_flags@|$(INSTALLCHECK_VCS_FLAGS)|g' \

@@ -27,7 +27,7 @@
 	$(HACKT_CREATE_EXE) $< $@
 
 .haco-c.haco-a:
-	ln -s $< $@
+	ln -f -s $< $@
 #	$(HACKT_ALLOC_EXE) $< $@
 
 .haco-c.prs:

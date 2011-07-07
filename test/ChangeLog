@@ -2,6 +2,16 @@
 #	$Id: ChangeLog,v 1.109 2011/05/05 06:50:50 fang Exp $
 # ChangeLog for test directory.
 
+2011-07-06	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-79d:
+	  installcheck fixes.
+	  Make.test-vpi, prsim/vpi/Makefile.am: fix installcheck, 
+		fix dependencies of Makefile.copy.
+	  chpsim/installtest/Makefile.in: amend run test with 
+		-L. to find loadable module in current dir.
+
+
 2011-05-04	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-71:

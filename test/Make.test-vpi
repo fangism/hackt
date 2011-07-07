@@ -57,8 +57,6 @@ INSTALLCHECK_VPI_LIB_PATH = $(pkglibdir)
 COMMON_VCS_FLAGS = +cli+3 -Mupdate +v2k +vcsace+diff+ok
 # wait for license if none available, damn commercial tools
 COMMON_VCS_FLAGS += +vcs+lic+wait
-# log compiles, and scan for dependencies
-COMMON_VCS_FLAGS += -l $@-compile-log
 # requires env. LM_LICENSE_FILE
 if ABI_ILP64
 COMMON_VCS_FLAGS += -full64
@@ -67,7 +65,8 @@ endif
 AM_VCS_VPI_FLAGS = +vpi \
 	-use_vpiobj $(VPI_LIB_PATH)/$(LT_OBJDIR)/vpihacprsim$(LT_MODULE_EXT) \
 	-LDFLAGS="-L$(VPI_LIB_PATH)/$(LT_OBJDIR)" 
-AM_VCS_FLAGS = +incdir+$(srcdir) $(COMMON_VCS_FLAGS) -Mdir=$@.csrc
+# log compiles, and scan for dependencies
+AM_VCS_FLAGS = +incdir+$(srcdir) $(COMMON_VCS_FLAGS) -l $@-compile-log -Mdir=$@.csrc
 AM_PLI_FLAGS =
 
 # for install-time tests, use installed library, not the built one
@@ -77,7 +76,7 @@ INSTALLCHECK_VCS_VPI_FLAGS = +vpi \
 # lazy: for now, use the .. dir instead of +incdir+$(examplesdir)/...
 # because compilation is done in a temporary subdirectory
 # the generated Makefiles have a variable named $(VSRC) that could be used...
-INSTALLCHECK_VCS_FLAGS = +incdir+$(srcdir) $(COMMON_VCS_FLAGS) -Mdir=$$@.csrc
+INSTALLCHECK_VCS_FLAGS = +incdir+$(srcdir) $(COMMON_VCS_FLAGS) -l $$@-compile-log -Mdir=$$@.csrc
 INSTALLCHECK_PLI_FLAGS =
 
 EXTRACT_VCS_FLAGS_PIPE = $(GREP) "@vcs-flags@" | \

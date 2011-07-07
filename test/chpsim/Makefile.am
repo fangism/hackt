@@ -504,9 +504,9 @@ INSTALLTEST_DIRS = $(installcheckdir) $(libinstallcheckdir)
 
 if INSTALL_TESTS
 installcheck-local: $(installcheckdir)/Makefile $(libinstallcheckdir)/Makefile
-	PATH=$(INSTALL_PATH_OVERRIDE) ; \
+	+PATH=$(INSTALL_PATH_OVERRIDE) ; \
 	export PATH ; \
-	$(ECHO) "installcheck-local" ; \
+	$(ECHO) "$@" ; \
 	list='$(INSTALLTEST_DIRS)' ; \
 	for d in $$list ; do \
 	  $(ECHO) "installcheck: make-ing all and clean in $$d ..." && \
