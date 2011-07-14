@@ -177,8 +177,12 @@ createfailtest.autodepend: Makefile
 
 # unroll and create have been fused together
 .haco.haco-c:
-	$(HACKT_CREATE_EXE) $< $@ 2>&1 | $(TEE) $@-err
-	@$(TOUCH) $@-err
+	@cmd="$(HACKT_CREATE_EXE) $< $@" && \
+	set -o pipefail && \
+	echo "$$cmd" && \
+	$$cmd 2>&1 | $(TEE) $@-err ; status=$$? && \
+	$(TOUCH) $@-err && \
+	exit $$status
 
 .haco-c.haco-c-err:
 	@:
