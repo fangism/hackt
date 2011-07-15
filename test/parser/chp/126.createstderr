@@ -197,27 +197,27 @@ In namespace "", we have: {
         !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high port-alias ] 
         in = channel chan?(bool<>)^1
           {
-            [0] = foo<>::in[0] (3) @[ port! meta! chp? ~meta? ] 
-            [1] = foo<>::in[1] (4) @[ port! meta! chp? ~meta? ] 
+            [0] = foo<>::in[0] (3) @[ port! chp? ~meta? ] 
+            [1] = foo<>::in[1] (4) @[ port! chp? ~meta? ] 
           }
         in2 = channel chan?(bool<>)^1
           {
-            [0] = foo<>::in2[0] (5) @[ port! meta! chp? ~meta? ] 
-            [1] = foo<>::in2[1] (6) @[ port! meta! chp? ~meta? ] 
+            [0] = foo<>::in2[0] (5) @[ port! chp? ~meta? ] 
+            [1] = foo<>::in2[1] (6) @[ port! chp? ~meta? ] 
           }
-        out = channel chan!(bool<>)^0 = foo<>::out (1) @[ chp! meta! port? meta? ] 
-        out2 = channel chan!(bool<>)^0 = foo<>::out2 (2) @[ chp! meta! port? meta? ] 
+        out = channel chan!(bool<>)^0 = foo<>::out (1) @[ chp! meta! port? ] 
+        out2 = channel chan!(bool<>)^0 = foo<>::out2 (2) @[ chp! meta! port? ] 
         sel = int<32>^0 = foo<>::sel (1) 
         x = bool^0 = foo<>::x (3) 
         y = bool^0 = foo<>::y (4) 
         Created state:
         channel instance pool: (6 ports, 0 local, 0 mapped)
-        1	foo<>::out @[ chp! meta! port? meta? ]	
-        2	foo<>::out2 @[ chp! meta! port? meta? ]	
-        3	foo<>::in[0] @[ port! meta! chp? ~meta? ]	
-        4	foo<>::in[1] @[ port! meta! chp? ~meta? ]	
-        5	foo<>::in2[0] @[ port! meta! chp? ~meta? ]	
-        6	foo<>::in2[1] @[ port! meta! chp? ~meta? ]	
+        1	foo<>::out @[ chp! meta! port? ]	
+        2	foo<>::out2 @[ chp! meta! port? ]	
+        3	foo<>::in[0] @[ port! chp? ~meta? ]	
+        4	foo<>::in[1] @[ port! chp? ~meta? ]	
+        5	foo<>::in2[0] @[ port! chp? ~meta? ]	
+        6	foo<>::in2[1] @[ port! chp? ~meta? ]	
         int instance pool: (1 ports, 0 local, 0 mapped)
         1	foo<>::sel	
         bool instance pool: (2 ports, 2 local, 0 mapped)

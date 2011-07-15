@@ -1,0 +1,5 @@
+Error: cannot alias two non-sharing producers of type process.
+	got: bob.O
+	and: joe.O
+Error encountered during module::create.
+ERROR in creating.  Aborting.

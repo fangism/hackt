@@ -134,10 +134,10 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = sink<>::!GND (1) @[ supply_low port-alias ] 
         !Vdd = bool^0 = sink<>::!Vdd (2) @[ supply_high port-alias ] 
-        X = channel chan??(bool<>)^0 = sink<>::X (1) @[ port! !! meta! chp? meta? ] 
+        X = channel chan??(bool<>)^0 = sink<>::X (1) @[ port! !! chp? meta? ] 
         Created state:
         channel instance pool: (1 ports, 0 local, 0 mapped)
-        1	sink<>::X @[ port! !! meta! chp? meta? ]	
+        1	sink<>::X @[ port! !! chp? meta? ]	
         bool instance pool: (2 ports, 0 local, 0 mapped)
         1	sink<>::!GND @[ supply_low port-alias ]	
         2	sink<>::!Vdd @[ supply_high port-alias ]	
@@ -174,10 +174,10 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = source<>::!GND (1) @[ supply_low port-alias ] 
         !Vdd = bool^0 = source<>::!Vdd (2) @[ supply_high port-alias ] 
-        X = channel chan!!(bool<>)^0 = source<>::X (1) @[ chp! meta! port? ?? meta? ] 
+        X = channel chan!!(bool<>)^0 = source<>::X (1) @[ chp! meta! port? ?? ] 
         Created state:
         channel instance pool: (1 ports, 0 local, 0 mapped)
-        1	source<>::X @[ chp! meta! port? ?? meta? ]	
+        1	source<>::X @[ chp! meta! port? ?? ]	
         bool instance pool: (2 ports, 0 local, 0 mapped)
         1	source<>::!GND @[ supply_low port-alias ]	
         2	source<>::!Vdd @[ supply_high port-alias ]	

@@ -114,10 +114,10 @@ In namespace "", we have: {
           !GND = bool^0 = send_me<false>::!GND (1) @[ supply_low port-alias ] 
           !Vdd = bool^0 = send_me<false>::!Vdd (2) @[ supply_high port-alias ] 
           B = pbool^0 value: 0
-          b = channel chan!(bool<>)^0 = send_me<false>::b (1) @[ chp! meta! port? meta? ] 
+          b = channel chan!(bool<>)^0 = send_me<false>::b (1) @[ chp! meta! port? ] 
           Created state:
           channel instance pool: (1 ports, 0 local, 0 mapped)
-          1	send_me<false>::b @[ chp! meta! port? meta? ]	
+          1	send_me<false>::b @[ chp! meta! port? ]	
           bool instance pool: (2 ports, 0 local, 0 mapped)
           1	send_me<false>::!GND @[ supply_low port-alias ]	
           2	send_me<false>::!Vdd @[ supply_high port-alias ]	
@@ -133,10 +133,10 @@ In namespace "", we have: {
           !GND = bool^0 = send_me<true>::!GND (1) @[ supply_low port-alias ] 
           !Vdd = bool^0 = send_me<true>::!Vdd (2) @[ supply_high port-alias ] 
           B = pbool^0 value: 1
-          b = channel chan!(bool<>)^0 = send_me<true>::b (1) @[ chp! meta! port? meta? ] 
+          b = channel chan!(bool<>)^0 = send_me<true>::b (1) @[ chp! meta! port? ] 
           Created state:
           channel instance pool: (1 ports, 0 local, 0 mapped)
-          1	send_me<true>::b @[ chp! meta! port? meta? ]	
+          1	send_me<true>::b @[ chp! meta! port? ]	
           bool instance pool: (2 ports, 0 local, 0 mapped)
           1	send_me<true>::!GND @[ supply_low port-alias ]	
           2	send_me<true>::!Vdd @[ supply_high port-alias ]	

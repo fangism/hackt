@@ -116,12 +116,12 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = boring<>::!GND (1) @[ supply_low port-alias ] 
         !Vdd = bool^0 = boring<>::!Vdd (2) @[ supply_high port-alias ] 
-        in = channel chan?()^0 = boring<>::in (1) @[ port! meta! chp? meta? ] 
-        out = channel chan!()^0 = boring<>::out (2) @[ chp! meta! port? meta? ] 
+        in = channel chan?()^0 = boring<>::in (1) @[ port! chp? meta? ] 
+        out = channel chan!()^0 = boring<>::out (2) @[ chp! meta! port? ] 
         Created state:
         channel instance pool: (2 ports, 0 local, 0 mapped)
-        1	boring<>::in @[ port! meta! chp? meta? ]	
-        2	boring<>::out @[ chp! meta! port? meta? ]	
+        1	boring<>::in @[ port! chp? meta? ]	
+        2	boring<>::out @[ chp! meta! port? ]	
         bool instance pool: (2 ports, 0 local, 0 mapped)
         1	boring<>::!GND @[ supply_low port-alias ]	
         2	boring<>::!Vdd @[ supply_high port-alias ]	

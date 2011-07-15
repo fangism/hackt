@@ -309,13 +309,13 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = bool_buf<>::!GND (1) @[ supply_low port-alias ] 
         !Vdd = bool^0 = bool_buf<>::!Vdd (2) @[ supply_high port-alias ] 
-        L = channel chan?(bool<>)^0 = bool_buf<>::L (1) @[ port! meta! chp? meta? ] 
-        R = channel chan!(bool<>)^0 = bool_buf<>::R (2) @[ chp! meta! port? meta? ] 
+        L = channel chan?(bool<>)^0 = bool_buf<>::L (1) @[ port! chp? meta? ] 
+        R = channel chan!(bool<>)^0 = bool_buf<>::R (2) @[ chp! meta! port? ] 
         x = bool^0 = bool_buf<>::x (3) 
         Created state:
         channel instance pool: (2 ports, 0 local, 0 mapped)
-        1	bool_buf<>::L @[ port! meta! chp? meta? ]	
-        2	bool_buf<>::R @[ chp! meta! port? meta? ]	
+        1	bool_buf<>::L @[ port! chp? meta? ]	
+        2	bool_buf<>::R @[ chp! meta! port? ]	
         bool instance pool: (2 ports, 1 local, 0 mapped)
         1	bool_buf<>::!GND @[ supply_low port-alias ]	
         2	bool_buf<>::!Vdd @[ supply_high port-alias ]	
@@ -404,11 +404,11 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = bool_sink<>::!GND (1) @[ supply_low port-alias ] 
         !Vdd = bool^0 = bool_sink<>::!Vdd (2) @[ supply_high port-alias ] 
-        B = channel chan?(bool<>)^0 = bool_sink<>::B (1) @[ port! meta! chp? meta? ] 
+        B = channel chan?(bool<>)^0 = bool_sink<>::B (1) @[ port! chp? meta? ] 
         b = bool^0 = bool_sink<>::b (3) 
         Created state:
         channel instance pool: (1 ports, 0 local, 0 mapped)
-        1	bool_sink<>::B @[ port! meta! chp? meta? ]	
+        1	bool_sink<>::B @[ port! chp? meta? ]	
         bool instance pool: (2 ports, 1 local, 0 mapped)
         1	bool_sink<>::!GND @[ supply_low port-alias ]	
         2	bool_sink<>::!Vdd @[ supply_high port-alias ]	
@@ -468,10 +468,10 @@ In namespace "", we have: {
               3 = 1
             }
           N = pint^0 value: 4
-          S = channel chan!(bool<>)^0 = bool_source<4, {0,0,1,1}>::S (1) @[ chp! meta! port? meta? ] 
+          S = channel chan!(bool<>)^0 = bool_source<4, {0,0,1,1}>::S (1) @[ chp! meta! port? ] 
           Created state:
           channel instance pool: (1 ports, 0 local, 0 mapped)
-          1	bool_source<4, {0,0,1,1}>::S @[ chp! meta! port? meta? ]	
+          1	bool_source<4, {0,0,1,1}>::S @[ chp! meta! port? ]	
           bool instance pool: (2 ports, 0 local, 0 mapped)
           1	bool_source<4, {0,0,1,1}>::!GND @[ supply_low port-alias ]	
           2	bool_source<4, {0,0,1,1}>::!Vdd @[ supply_high port-alias ]	

@@ -7,5 +7,5 @@ defproc thingy(e1of2? I; e1of2! O) { }
 
 e1of2 B;
 thingy bob(, B), joe(, B);	// cannot share
-
+// is ok because no sources/sinks were *actually* connected
 

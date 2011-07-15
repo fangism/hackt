@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-07-15	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-80:
+	  Fixed ACX-PR-5876: false positive diagnostic on wire-buf
+		on built-in channel types.  Old test cases' createdump
+		expects updated: meta! and meta? flags are only applied when
+		possibly connected to producer/consumer, not just by
+		connecting to ports.  New test cases added as chp/buf*.
+
+
 2011-07-05	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-79b:

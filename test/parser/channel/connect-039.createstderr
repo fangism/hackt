@@ -145,11 +145,11 @@ top-level chp:
 footprint: {
   !GND = bool^0 = !GND (1) @[ supply_low ] 
   !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-  Q = channel chan(bool<>)^0 = Q (1) @[ chp! meta! chp? meta? ] 
+  Q = channel chan(bool<>)^0 = Q (1) @[ chp! meta! sub? chp? meta? ] 
   lecture = process boring<>^0 = lecture (1) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    B = channel chan(bool<>)^0 = Q (1) @[ chp! meta! chp? meta? ] 
+    B = channel chan(bool<>)^0 = Q (1) @[ chp! meta! sub? chp? meta? ] 
   )
   Created state:
   process instance pool: (0 ports, 1 local, 0 mapped)
@@ -157,7 +157,7 @@ footprint: {
     channel: 1
     bool: 1,2
   channel instance pool: (0 ports, 1 local, 0 mapped)
-  1	Q @[ chp! meta! chp? meta? ]	
+  1	Q @[ chp! meta! sub? chp? meta? ]	
   bool instance pool: (0 ports, 2 local, 1 mapped)
   1	!GND @[ supply_low ]	
   2	!Vdd @[ supply_high ]	

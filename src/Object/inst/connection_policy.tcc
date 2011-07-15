@@ -343,51 +343,42 @@ channel_connect_policy::initialize_actual_direction(
 		c(a.container->get_canonical_collection());
 	const direction_type d = c.__get_raw_type().get_direction();
 	// with bit fields, could just twiddle the consumer/producer halves...
-	switch (d) {
-	case CHANNEL_TYPE_BIDIRECTIONAL:
-		direction_flags = a.direction_flags;
-		break;
-	case CHANNEL_TYPE_RECEIVE:
-		// note: this clears out the META flag as well
-		direction_flags =
-			(a.direction_flags & ~CONNECTED_PORT_FORMAL_PRODUCER);
-		if (a.direction_flags & CONNECTED_TO_ANY_CONSUMER) {
-			direction_flags |= CONNECTED_TO_SUBSTRUCT_CONSUMER;
-		}
-		break;
-	case CHANNEL_TYPE_SEND:
-		// note: this clears out the META flag as well
-		direction_flags =
-			(a.direction_flags & ~CONNECTED_PORT_FORMAL_CONSUMER);
-		if (a.direction_flags & CONNECTED_TO_ANY_PRODUCER) {
-			direction_flags |= CONNECTED_TO_SUBSTRUCT_PRODUCER;
-		}
-		break;
+	direction_flags = a.direction_flags & ~ACTUAL_INITIALIZATION_MASK;
+	if (a.direction_flags & CONNECTED_TO_NONPORT_PRODUCER)
+		direction_flags |= CONNECTED_TO_SUBSTRUCT_PRODUCER;
+	if (a.direction_flags & CONNECTED_TO_NONPORT_CONSUMER)
+		direction_flags |= CONNECTED_TO_SUBSTRUCT_CONSUMER;
 #if ENABLE_SHARED_CHANNELS
+	switch (d) {
 	case CHANNEL_TYPE_RECEIVE_SHARED:
+#if 0
 		// note: this clears out the META flag as well
 		direction_flags =
 			(a.direction_flags &
 				~(CONNECTED_PORT_FORMAL_PRODUCER | CONNECTED_PRODUCER_IS_SHARED));
-		if (a.direction_flags & CONNECTED_TO_ANY_CONSUMER) {
-			direction_flags |= CONNECTED_TO_SUBSTRUCT_CONSUMER;
+#endif
+		if (a.direction_flags & CONNECTED_TO_NONPORT_CONSUMER) {
+//			direction_flags |= CONNECTED_TO_SUBSTRUCT_CONSUMER;
 			direction_flags |= CONNECTED_CONSUMER_IS_SHARED;
 		}
 		break;
 	case CHANNEL_TYPE_SEND_SHARED:
+#if 0
 		// note: this clears out the META flag as well
 		direction_flags =
 			(a.direction_flags &
 				~(CONNECTED_PORT_FORMAL_CONSUMER | CONNECTED_CONSUMER_IS_SHARED));
-		if (a.direction_flags & CONNECTED_TO_ANY_PRODUCER) {
-			direction_flags |= CONNECTED_TO_SUBSTRUCT_PRODUCER;
+#endif
+		if (a.direction_flags & CONNECTED_TO_NONPORT_PRODUCER) {
+//			direction_flags |= CONNECTED_TO_SUBSTRUCT_PRODUCER;
 			direction_flags |= CONNECTED_PRODUCER_IS_SHARED;
 		}
 		break;
 #endif
 	default:
-		ICE(cerr, cerr << "Invalid direction: " << d << endl;)
-	}
+		break;
+//		ICE(cerr, cerr << "Invalid direction: " << d << endl;)
+	}	// end switch
 #if ENABLE_STACKTRACE
 	STACKTRACE_INDENT_PRINT("a.direction_flags = 0x" <<
 		std::hex << size_t(a.direction_flags) << endl);
@@ -546,7 +537,7 @@ if (a.has_complete_type()) {
 #endif	// PROCESS_CONNECTIVITY_CHECKING
 	// else type is relaxed, skip this until type is complete
 }
-}
+}	// end process_connect_policy::initialize_actual_direction
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if PROCESS_CONNECTIVITY_CHECKING
@@ -566,7 +557,7 @@ process_connect_policy::initialize_actual_direction(const AliasType& a) {
 #if ENABLE_STACKTRACE
 	STACKTRACE_INDENT_PRINT("a.direction_flags = 0x" <<
 		std::hex << size_t(a.direction_flags) << endl);
-	c.dump_hierarchical_name(STACKTRACE_INDENT << "collection: ",
+	a.dump_hierarchical_name(STACKTRACE_INDENT << "collection: ",
 		dump_flags::default_value) << endl;
 	STACKTRACE_INDENT_PRINT("direction_flags = 0x" <<
 		std::hex << size_t(direction_flags) << endl);
@@ -688,6 +679,7 @@ process_connect_policy::synchronize_flags(
 		// multiple producers
 		// TODO: strengthen condition?
 		// shared, but connection must also be consistent?
+		// applies to all meta-types
 #if 0
 		if (!(_and & CONNECTED_PRODUCER_IS_SHARED)) {
 			// at least one of them not sharing

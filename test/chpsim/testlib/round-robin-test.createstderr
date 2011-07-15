@@ -161,12 +161,12 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = round_robin_source<>::!GND (1) @[ supply_low port-alias ] 
         !Vdd = bool^0 = round_robin_source<>::!Vdd (2) @[ supply_high port-alias ] 
-        Cin = channel chan?()^0 = round_robin_source<>::Cin (1) @[ port! meta! chp? meta? ] 
-        Cout = channel chan!()^0 = round_robin_source<>::Cout (2) @[ chp! meta! port? meta? ] 
+        Cin = channel chan?()^0 = round_robin_source<>::Cin (1) @[ port! chp? meta? ] 
+        Cout = channel chan!()^0 = round_robin_source<>::Cout (2) @[ chp! meta! port? ] 
         Created state:
         channel instance pool: (2 ports, 0 local, 0 mapped)
-        1	round_robin_source<>::Cin @[ port! meta! chp? meta? ]	
-        2	round_robin_source<>::Cout @[ chp! meta! port? meta? ]	
+        1	round_robin_source<>::Cin @[ port! chp? meta? ]	
+        2	round_robin_source<>::Cout @[ chp! meta! port? ]	
         bool instance pool: (2 ports, 0 local, 0 mapped)
         1	round_robin_source<>::!GND @[ supply_low port-alias ]	
         2	round_robin_source<>::!Vdd @[ supply_high port-alias ]	
@@ -223,13 +223,13 @@ In namespace "", we have: {
         <3> {
           !GND = bool^0 = round_robin_source_finite<3>::!GND (1) @[ supply_low port-alias ] 
           !Vdd = bool^0 = round_robin_source_finite<3>::!Vdd (2) @[ supply_high port-alias ] 
-          Cin = channel chan?()^0 = round_robin_source_finite<3>::Cin (1) @[ port! meta! chp? meta? ] 
-          Cout = channel chan!()^0 = round_robin_source_finite<3>::Cout (2) @[ chp! meta! port? meta? ] 
+          Cin = channel chan?()^0 = round_robin_source_finite<3>::Cin (1) @[ port! chp? meta? ] 
+          Cout = channel chan!()^0 = round_robin_source_finite<3>::Cout (2) @[ chp! meta! port? ] 
           N = pint^0 value: 3
           Created state:
           channel instance pool: (2 ports, 0 local, 0 mapped)
-          1	round_robin_source_finite<3>::Cin @[ port! meta! chp? meta? ]	
-          2	round_robin_source_finite<3>::Cout @[ chp! meta! port? meta? ]	
+          1	round_robin_source_finite<3>::Cin @[ port! chp? meta? ]	
+          2	round_robin_source_finite<3>::Cout @[ chp! meta! port? ]	
           bool instance pool: (2 ports, 0 local, 0 mapped)
           1	round_robin_source_finite<3>::!GND @[ supply_low port-alias ]	
           2	round_robin_source_finite<3>::!Vdd @[ supply_high port-alias ]	

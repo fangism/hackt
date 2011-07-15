@@ -1,3 +1,7 @@
+WARNING: channel email.x lacks connection to a producer.
+WARNING: channel email.x lacks connection to a consumer.
+Warnings found (2) while creating complete type <top-level>.
+---- END CREATE WARNINGS ---
 
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail	size
@@ -86,16 +90,16 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = forward<>::!GND (1) @[ supply_low port-alias ] 
         !Vdd = bool^0 = forward<>::!Vdd (2) @[ supply_high port-alias ] 
-        x = channel chan?(bool<>)^0 = forward<>::x (1) @[ port! meta! port? meta? ] 
-        y = channel chan!(bool<>)^0 = forward<>::x (1) @[ port! meta! port? meta? ] 
+        x = channel chan?(bool<>)^0 = forward<>::x (1) @[ port! port? ] 
+        y = channel chan!(bool<>)^0 = forward<>::x (1) @[ port! port? ] 
         Created state:
         channel instance pool: (1 ports, 0 local, 0 mapped)
-        1	forward<>::x @[ port! meta! port? meta? ]	
+        1	forward<>::x @[ port! port? ]	
         bool instance pool: (2 ports, 0 local, 0 mapped)
         1	forward<>::!GND @[ supply_low port-alias ]	
         2	forward<>::!Vdd @[ supply_high port-alias ]	
         channel port aliases:
-        1: forward<>::x = forward<>::y @[ port! meta! port? meta? ]
+        1: forward<>::x = forward<>::y @[ port! port? ]
       }
       }
 
@@ -111,8 +115,8 @@ footprint: {
   email = process forward<>^0 = email (1) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    x = channel chan?(bool<>)^0 = email.x (1) @[ port! sub! meta! port? sub? meta? ] 
-    y = channel chan!(bool<>)^0 = email.x (1) @[ port! sub! meta! port? sub? meta? ] 
+    x = channel chan?(bool<>)^0 = email.x (1) 
+    y = channel chan!(bool<>)^0 = email.x (1) 
   )
   Created state:
   process instance pool: (0 ports, 1 local, 0 mapped)
@@ -120,7 +124,7 @@ footprint: {
     channel: 1
     bool: 1,2
   channel instance pool: (0 ports, 1 local, 0 mapped)
-  1	email.x @[ port! sub! meta! port? sub? meta? ]	
+  1	email.x	
   bool instance pool: (0 ports, 2 local, 0 mapped)
   1	!GND @[ supply_low ]	
   2	!Vdd @[ supply_high ]	

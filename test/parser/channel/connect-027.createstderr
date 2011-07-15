@@ -141,10 +141,10 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = inner<>::!GND (1) @[ supply_low port-alias ] 
         !Vdd = bool^0 = inner<>::!Vdd (2) @[ supply_high port-alias ] 
-        a = channel chan!(bool<>)^0 = inner<>::a (1) @[ chp! meta! port? meta? ] 
+        a = channel chan!(bool<>)^0 = inner<>::a (1) @[ chp! meta! port? ] 
         Created state:
         channel instance pool: (1 ports, 0 local, 0 mapped)
-        1	inner<>::a @[ chp! meta! port? meta? ]	
+        1	inner<>::a @[ chp! meta! port? ]	
         bool instance pool: (2 ports, 0 local, 0 mapped)
         1	inner<>::!GND @[ supply_low port-alias ]	
         2	inner<>::!Vdd @[ supply_high port-alias ]	
@@ -184,11 +184,11 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = one_shot<>::!GND (1) @[ supply_low port-alias ] 
         !Vdd = bool^0 = one_shot<>::!Vdd (2) @[ supply_high port-alias ] 
-        b = channel chan!(bool<>)^0 = one_shot<>::b (1) @[ sub! chp! meta! port? meta? ] 
+        b = channel chan!(bool<>)^0 = one_shot<>::b (1) @[ sub! chp! meta! port? ] 
         y = process inner<>^0 = one_shot<>::y (1) (
           !GND = bool^0 = one_shot<>::!GND (1) @[ supply_low port-alias ] 
           !Vdd = bool^0 = one_shot<>::!Vdd (2) @[ supply_high port-alias ] 
-          a = channel chan!(bool<>)^0 = one_shot<>::b (1) @[ sub! chp! meta! port? meta? ] 
+          a = channel chan!(bool<>)^0 = one_shot<>::b (1) @[ sub! chp! meta! port? ] 
         )
         Created state:
         process instance pool: (0 ports, 1 local, 0 mapped)
@@ -196,7 +196,7 @@ In namespace "", we have: {
           channel: 1
           bool: 1,2
         channel instance pool: (1 ports, 0 local, 0 mapped)
-        1	one_shot<>::b @[ sub! chp! meta! port? meta? ]	
+        1	one_shot<>::b @[ sub! chp! meta! port? ]	
         bool instance pool: (2 ports, 0 local, 0 mapped)
         1	one_shot<>::!GND @[ supply_low port-alias ]	
         2	one_shot<>::!Vdd @[ supply_high port-alias ]	

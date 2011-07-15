@@ -171,10 +171,10 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = bool_sink_alt<>::!GND (1) @[ supply_low port-alias ] 
         !Vdd = bool^0 = bool_sink_alt<>::!Vdd (2) @[ supply_high port-alias ] 
-        B = channel chan?(bool<>)^0 = bool_sink_alt<>::B (1) @[ port! meta! chp? meta? ] 
+        B = channel chan?(bool<>)^0 = bool_sink_alt<>::B (1) @[ port! chp? meta? ] 
         Created state:
         channel instance pool: (1 ports, 0 local, 0 mapped)
-        1	bool_sink_alt<>::B @[ port! meta! chp? meta? ]	
+        1	bool_sink_alt<>::B @[ port! chp? meta? ]	
         bool instance pool: (2 ports, 0 local, 0 mapped)
         1	bool_sink_alt<>::!GND @[ supply_low port-alias ]	
         2	bool_sink_alt<>::!Vdd @[ supply_high port-alias ]	
@@ -220,11 +220,11 @@ In namespace "", we have: {
         <5> {
           !GND = bool^0 = bool_sink_alt_delay<5>::!GND (1) @[ supply_low port-alias ] 
           !Vdd = bool^0 = bool_sink_alt_delay<5>::!Vdd (2) @[ supply_high port-alias ] 
-          B = channel chan?(bool<>)^0 = bool_sink_alt_delay<5>::B (1) @[ port! meta! chp? meta? ] 
+          B = channel chan?(bool<>)^0 = bool_sink_alt_delay<5>::B (1) @[ port! chp? meta? ] 
           D = preal^0 value: 5
           Created state:
           channel instance pool: (1 ports, 0 local, 0 mapped)
-          1	bool_sink_alt_delay<5>::B @[ port! meta! chp? meta? ]	
+          1	bool_sink_alt_delay<5>::B @[ port! chp? meta? ]	
           bool instance pool: (2 ports, 0 local, 0 mapped)
           1	bool_sink_alt_delay<5>::!GND @[ supply_low port-alias ]	
           2	bool_sink_alt_delay<5>::!Vdd @[ supply_high port-alias ]	
@@ -271,11 +271,11 @@ In namespace "", we have: {
         <4> {
           !GND = bool^0 = bool_sink_alt_once<4>::!GND (1) @[ supply_low port-alias ] 
           !Vdd = bool^0 = bool_sink_alt_once<4>::!Vdd (2) @[ supply_high port-alias ] 
-          B = channel chan?(bool<>)^0 = bool_sink_alt_once<4>::B (1) @[ port! meta! chp? meta? ] 
+          B = channel chan?(bool<>)^0 = bool_sink_alt_once<4>::B (1) @[ port! chp? meta? ] 
           N = pint^0 value: 4
           Created state:
           channel instance pool: (1 ports, 0 local, 0 mapped)
-          1	bool_sink_alt_once<4>::B @[ port! meta! chp? meta? ]	
+          1	bool_sink_alt_once<4>::B @[ port! chp? meta? ]	
           bool instance pool: (2 ports, 0 local, 0 mapped)
           1	bool_sink_alt_once<4>::!GND @[ supply_low port-alias ]	
           2	bool_sink_alt_once<4>::!Vdd @[ supply_high port-alias ]	

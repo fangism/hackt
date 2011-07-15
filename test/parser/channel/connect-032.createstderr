@@ -234,17 +234,17 @@ In namespace "", we have: {
         !Vdd = bool^0 = merge<>::!Vdd (2) @[ supply_high port-alias ] 
         B = channel chan?(bool<>)^1
           {
-            [0] = merge<>::B[0] (2) @[ port! meta! chp? ~meta? ] 
-            [1] = merge<>::B[1] (3) @[ port! meta! chp? ~meta? ] 
+            [0] = merge<>::B[0] (2) @[ port! chp? ~meta? ] 
+            [1] = merge<>::B[1] (3) @[ port! chp? ~meta? ] 
           }
-        S = channel chan?(int<1>)^0 = merge<>::S (1) @[ port! meta! chp? meta? ] 
+        S = channel chan?(int<1>)^0 = merge<>::S (1) @[ port! chp? meta? ] 
         b = bool^0 = merge<>::b (3) 
         s = int<1>^0 = merge<>::s (1) 
         Created state:
         channel instance pool: (3 ports, 0 local, 0 mapped)
-        1	merge<>::S @[ port! meta! chp? meta? ]	
-        2	merge<>::B[0] @[ port! meta! chp? ~meta? ]	
-        3	merge<>::B[1] @[ port! meta! chp? ~meta? ]	
+        1	merge<>::S @[ port! chp? meta? ]	
+        2	merge<>::B[0] @[ port! chp? ~meta? ]	
+        3	merge<>::B[1] @[ port! chp? ~meta? ]	
         int instance pool: (0 ports, 1 local, 0 mapped)
         1	merge<>::s	
         bool instance pool: (2 ports, 1 local, 0 mapped)
@@ -302,16 +302,16 @@ In namespace "", we have: {
         !Vdd = bool^0 = split<>::!Vdd (2) @[ supply_high port-alias ] 
         B = channel chan!(bool<>)^1
           {
-            [0] = split<>::B[0] (2) @[ chp! ~meta! port? meta? ] 
-            [1] = split<>::B[1] (3) @[ chp! ~meta! port? meta? ] 
+            [0] = split<>::B[0] (2) @[ chp! ~meta! port? ] 
+            [1] = split<>::B[1] (3) @[ chp! ~meta! port? ] 
           }
-        S = channel chan?(int<1>)^0 = split<>::S (1) @[ port! meta! chp? meta? ] 
+        S = channel chan?(int<1>)^0 = split<>::S (1) @[ port! chp? meta? ] 
         s = int<1>^0 = split<>::s (1) 
         Created state:
         channel instance pool: (3 ports, 0 local, 0 mapped)
-        1	split<>::S @[ port! meta! chp? meta? ]	
-        2	split<>::B[0] @[ chp! ~meta! port? meta? ]	
-        3	split<>::B[1] @[ chp! ~meta! port? meta? ]	
+        1	split<>::S @[ port! chp? meta? ]	
+        2	split<>::B[0] @[ chp! ~meta! port? ]	
+        3	split<>::B[1] @[ chp! ~meta! port? ]	
         int instance pool: (0 ports, 1 local, 0 mapped)
         1	split<>::s	
         bool instance pool: (2 ports, 0 local, 0 mapped)

@@ -1,0 +1,5 @@
+Error: cannot alias two non-sharing consumers of type process.
+	got: bob.I
+	and: joe.I
+Error encountered during module::create.
+ERROR in creating.  Aborting.

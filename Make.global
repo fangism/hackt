@@ -347,10 +347,10 @@ CHANGE_SUMMARY = \
 # assumes 'wc' in PATH
 if HAVE_GIT
 gitdiffs-staged: force
-	{ cd $(srcdir) && git-diff ;} > $@
-	@if test -s $@ ; then echo "There are unstaged modifications, check git-status and then git-add." ; fi
+	{ cd $(srcdir) && git diff . ;} > $@
+	@if test -s $@ ; then echo "There are unstaged modifications, check git status and then git add." ; fi
 gitdiffs-cached: force
-	{ cd $(srcdir) && git-diff --cached ;} > $@
+	{ cd $(srcdir) && git diff --cached . ;} > $@
 	@$(CHANGE_SUMMARY)
 cvsdiffs: gitdiffs-staged gitdiffs-cached
 	@echo "Patches in gitdiffs-staged and gitdiffs-cached."

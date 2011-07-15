@@ -214,17 +214,17 @@ In namespace "", we have: {
           J = pint^0 value: 0
           out = channel chan!(int<32>)^2
             {
-              [0][0] = send_indexed<0, 0>::out[0][0] (1) @[ chp! meta! port? meta? ] 
-              [0][1] = send_indexed<0, 0>::out[0][1] (2) @[ port? meta? ] 
-              [1][0] = send_indexed<0, 0>::out[1][0] (3) @[ port? meta? ] 
-              [1][1] = send_indexed<0, 0>::out[1][1] (4) @[ port? meta? ] 
+              [0][0] = send_indexed<0, 0>::out[0][0] (1) @[ chp! meta! port? ] 
+              [0][1] = send_indexed<0, 0>::out[0][1] (2) @[ port? ] 
+              [1][0] = send_indexed<0, 0>::out[1][0] (3) @[ port? ] 
+              [1][1] = send_indexed<0, 0>::out[1][1] (4) @[ port? ] 
             }
           Created state:
           channel instance pool: (4 ports, 0 local, 0 mapped)
-          1	send_indexed<0, 0>::out[0][0] @[ chp! meta! port? meta? ]	
-          2	send_indexed<0, 0>::out[0][1] @[ port? meta? ]	
-          3	send_indexed<0, 0>::out[1][0] @[ port? meta? ]	
-          4	send_indexed<0, 0>::out[1][1] @[ port? meta? ]	
+          1	send_indexed<0, 0>::out[0][0] @[ chp! meta! port? ]	
+          2	send_indexed<0, 0>::out[0][1] @[ port? ]	
+          3	send_indexed<0, 0>::out[1][0] @[ port? ]	
+          4	send_indexed<0, 0>::out[1][1] @[ port? ]	
           bool instance pool: (2 ports, 0 local, 0 mapped)
           1	send_indexed<0, 0>::!GND @[ supply_low port-alias ]	
           2	send_indexed<0, 0>::!Vdd @[ supply_high port-alias ]	
@@ -243,17 +243,17 @@ In namespace "", we have: {
           J = pint^0 value: 1
           out = channel chan!(int<32>)^2
             {
-              [0][0] = send_indexed<0, 1>::out[0][0] (1) @[ port? meta? ] 
-              [0][1] = send_indexed<0, 1>::out[0][1] (2) @[ chp! meta! port? meta? ] 
-              [1][0] = send_indexed<0, 1>::out[1][0] (3) @[ port? meta? ] 
-              [1][1] = send_indexed<0, 1>::out[1][1] (4) @[ port? meta? ] 
+              [0][0] = send_indexed<0, 1>::out[0][0] (1) @[ port? ] 
+              [0][1] = send_indexed<0, 1>::out[0][1] (2) @[ chp! meta! port? ] 
+              [1][0] = send_indexed<0, 1>::out[1][0] (3) @[ port? ] 
+              [1][1] = send_indexed<0, 1>::out[1][1] (4) @[ port? ] 
             }
           Created state:
           channel instance pool: (4 ports, 0 local, 0 mapped)
-          1	send_indexed<0, 1>::out[0][0] @[ port? meta? ]	
-          2	send_indexed<0, 1>::out[0][1] @[ chp! meta! port? meta? ]	
-          3	send_indexed<0, 1>::out[1][0] @[ port? meta? ]	
-          4	send_indexed<0, 1>::out[1][1] @[ port? meta? ]	
+          1	send_indexed<0, 1>::out[0][0] @[ port? ]	
+          2	send_indexed<0, 1>::out[0][1] @[ chp! meta! port? ]	
+          3	send_indexed<0, 1>::out[1][0] @[ port? ]	
+          4	send_indexed<0, 1>::out[1][1] @[ port? ]	
           bool instance pool: (2 ports, 0 local, 0 mapped)
           1	send_indexed<0, 1>::!GND @[ supply_low port-alias ]	
           2	send_indexed<0, 1>::!Vdd @[ supply_high port-alias ]	
@@ -272,17 +272,17 @@ In namespace "", we have: {
           J = pint^0 value: 0
           out = channel chan!(int<32>)^2
             {
-              [0][0] = send_indexed<1, 0>::out[0][0] (1) @[ port? meta? ] 
-              [0][1] = send_indexed<1, 0>::out[0][1] (2) @[ port? meta? ] 
-              [1][0] = send_indexed<1, 0>::out[1][0] (3) @[ chp! meta! port? meta? ] 
-              [1][1] = send_indexed<1, 0>::out[1][1] (4) @[ port? meta? ] 
+              [0][0] = send_indexed<1, 0>::out[0][0] (1) @[ port? ] 
+              [0][1] = send_indexed<1, 0>::out[0][1] (2) @[ port? ] 
+              [1][0] = send_indexed<1, 0>::out[1][0] (3) @[ chp! meta! port? ] 
+              [1][1] = send_indexed<1, 0>::out[1][1] (4) @[ port? ] 
             }
           Created state:
           channel instance pool: (4 ports, 0 local, 0 mapped)
-          1	send_indexed<1, 0>::out[0][0] @[ port? meta? ]	
-          2	send_indexed<1, 0>::out[0][1] @[ port? meta? ]	
-          3	send_indexed<1, 0>::out[1][0] @[ chp! meta! port? meta? ]	
-          4	send_indexed<1, 0>::out[1][1] @[ port? meta? ]	
+          1	send_indexed<1, 0>::out[0][0] @[ port? ]	
+          2	send_indexed<1, 0>::out[0][1] @[ port? ]	
+          3	send_indexed<1, 0>::out[1][0] @[ chp! meta! port? ]	
+          4	send_indexed<1, 0>::out[1][1] @[ port? ]	
           bool instance pool: (2 ports, 0 local, 0 mapped)
           1	send_indexed<1, 0>::!GND @[ supply_low port-alias ]	
           2	send_indexed<1, 0>::!Vdd @[ supply_high port-alias ]	
@@ -301,17 +301,17 @@ In namespace "", we have: {
           J = pint^0 value: 1
           out = channel chan!(int<32>)^2
             {
-              [0][0] = send_indexed<1, 1>::out[0][0] (1) @[ port? meta? ] 
-              [0][1] = send_indexed<1, 1>::out[0][1] (2) @[ port? meta? ] 
-              [1][0] = send_indexed<1, 1>::out[1][0] (3) @[ port? meta? ] 
-              [1][1] = send_indexed<1, 1>::out[1][1] (4) @[ chp! meta! port? meta? ] 
+              [0][0] = send_indexed<1, 1>::out[0][0] (1) @[ port? ] 
+              [0][1] = send_indexed<1, 1>::out[0][1] (2) @[ port? ] 
+              [1][0] = send_indexed<1, 1>::out[1][0] (3) @[ port? ] 
+              [1][1] = send_indexed<1, 1>::out[1][1] (4) @[ chp! meta! port? ] 
             }
           Created state:
           channel instance pool: (4 ports, 0 local, 0 mapped)
-          1	send_indexed<1, 1>::out[0][0] @[ port? meta? ]	
-          2	send_indexed<1, 1>::out[0][1] @[ port? meta? ]	
-          3	send_indexed<1, 1>::out[1][0] @[ port? meta? ]	
-          4	send_indexed<1, 1>::out[1][1] @[ chp! meta! port? meta? ]	
+          1	send_indexed<1, 1>::out[0][0] @[ port? ]	
+          2	send_indexed<1, 1>::out[0][1] @[ port? ]	
+          3	send_indexed<1, 1>::out[1][0] @[ port? ]	
+          4	send_indexed<1, 1>::out[1][1] @[ chp! meta! port? ]	
           bool instance pool: (2 ports, 0 local, 0 mapped)
           1	send_indexed<1, 1>::!GND @[ supply_low port-alias ]	
           2	send_indexed<1, 1>::!Vdd @[ supply_high port-alias ]	

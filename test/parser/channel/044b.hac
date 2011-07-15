@@ -1,0 +1,12 @@
+// "044b.hac"
+// testing connectivity checking
+
+import "026.hac";
+
+defproc thingy(e1of2? I; e1of2! O) { I?; O!; }
+
+e1of2 A;
+thingy bob(A, ), joe(A, );	// cannot share
+// is ok because no sources/sinks were *actually* connected
+
+

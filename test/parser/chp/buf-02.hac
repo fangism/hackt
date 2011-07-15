@@ -1,0 +1,13 @@
+// "buf-02.hac"
+
+defproc buf2(chan?(bool) In; chan!(bool) Out) {
+In = Out;
+}
+
+defproc foo() {
+chan(bool) A;
+buf2 x(A, A);
+}
+
+foo bar;
+

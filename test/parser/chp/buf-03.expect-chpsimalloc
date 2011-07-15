@@ -1,0 +1,8 @@
+Variables: 
+bool[1]: "!GND" 
+bool[2]: "!Vdd" 
+chan[1]: "bar.A" 
+
+Event graph: 
+event[0]: fork: null, #pred: 0, succ: 
+

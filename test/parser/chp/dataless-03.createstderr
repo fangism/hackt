@@ -106,10 +106,10 @@ In namespace "", we have: {
           !GND = bool^0 = void_source_once<3>::!GND (1) @[ supply_low port-alias ] 
           !Vdd = bool^0 = void_source_once<3>::!Vdd (2) @[ supply_high port-alias ] 
           N = pint^0 value: 3
-          S = channel chan!()^0 = void_source_once<3>::S (1) @[ chp! meta! port? meta? ] 
+          S = channel chan!()^0 = void_source_once<3>::S (1) @[ chp! meta! port? ] 
           Created state:
           channel instance pool: (1 ports, 0 local, 0 mapped)
-          1	void_source_once<3>::S @[ chp! meta! port? meta? ]	
+          1	void_source_once<3>::S @[ chp! meta! port? ]	
           bool instance pool: (2 ports, 0 local, 0 mapped)
           1	void_source_once<3>::!GND @[ supply_low port-alias ]	
           2	void_source_once<3>::!Vdd @[ supply_high port-alias ]	

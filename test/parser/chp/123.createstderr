@@ -176,10 +176,10 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = foo<>::!GND (1) @[ supply_low port-alias ] 
         !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high port-alias ] 
-        B = channel chan?(bool<>)^0 = foo<>::B (1) @[ port! meta! chp? meta? ] 
+        B = channel chan?(bool<>)^0 = foo<>::B (1) @[ port! chp? meta? ] 
         Created state:
         channel instance pool: (1 ports, 0 local, 0 mapped)
-        1	foo<>::B @[ port! meta! chp? meta? ]	
+        1	foo<>::B @[ port! chp? meta? ]	
         bool instance pool: (2 ports, 0 local, 0 mapped)
         1	foo<>::!GND @[ supply_low port-alias ]	
         2	foo<>::!Vdd @[ supply_high port-alias ]	

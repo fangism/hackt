@@ -129,10 +129,10 @@ In namespace "", we have: {
           !GND = bool^0 = send_me<123>::!GND (1) @[ supply_low port-alias ] 
           !Vdd = bool^0 = send_me<123>::!Vdd (2) @[ supply_high port-alias ] 
           B = pint^0 value: 123
-          b = channel chan!(int<32>)^0 = send_me<123>::b (1) @[ chp! meta! port? meta? ] 
+          b = channel chan!(int<32>)^0 = send_me<123>::b (1) @[ chp! meta! port? ] 
           Created state:
           channel instance pool: (1 ports, 0 local, 0 mapped)
-          1	send_me<123>::b @[ chp! meta! port? meta? ]	
+          1	send_me<123>::b @[ chp! meta! port? ]	
           bool instance pool: (2 ports, 0 local, 0 mapped)
           1	send_me<123>::!GND @[ supply_low port-alias ]	
           2	send_me<123>::!Vdd @[ supply_high port-alias ]	
@@ -148,10 +148,10 @@ In namespace "", we have: {
           !GND = bool^0 = send_me<456>::!GND (1) @[ supply_low port-alias ] 
           !Vdd = bool^0 = send_me<456>::!Vdd (2) @[ supply_high port-alias ] 
           B = pint^0 value: 456
-          b = channel chan!(int<32>)^0 = send_me<456>::b (1) @[ chp! meta! port? meta? ] 
+          b = channel chan!(int<32>)^0 = send_me<456>::b (1) @[ chp! meta! port? ] 
           Created state:
           channel instance pool: (1 ports, 0 local, 0 mapped)
-          1	send_me<456>::b @[ chp! meta! port? meta? ]	
+          1	send_me<456>::b @[ chp! meta! port? ]	
           bool instance pool: (2 ports, 0 local, 0 mapped)
           1	send_me<456>::!GND @[ supply_low port-alias ]	
           2	send_me<456>::!Vdd @[ supply_high port-alias ]	
@@ -167,10 +167,10 @@ In namespace "", we have: {
           !GND = bool^0 = send_me<789>::!GND (1) @[ supply_low port-alias ] 
           !Vdd = bool^0 = send_me<789>::!Vdd (2) @[ supply_high port-alias ] 
           B = pint^0 value: 789
-          b = channel chan!(int<32>)^0 = send_me<789>::b (1) @[ chp! meta! port? meta? ] 
+          b = channel chan!(int<32>)^0 = send_me<789>::b (1) @[ chp! meta! port? ] 
           Created state:
           channel instance pool: (1 ports, 0 local, 0 mapped)
-          1	send_me<789>::b @[ chp! meta! port? meta? ]	
+          1	send_me<789>::b @[ chp! meta! port? ]	
           bool instance pool: (2 ports, 0 local, 0 mapped)
           1	send_me<789>::!GND @[ supply_low port-alias ]	
           2	send_me<789>::!Vdd @[ supply_high port-alias ]	

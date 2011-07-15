@@ -148,15 +148,15 @@ In namespace "", we have: {
         <12> {
           !GND = bool^0 = adjacent_diff<12>::!GND (1) @[ supply_low port-alias ] 
           !Vdd = bool^0 = adjacent_diff<12>::!Vdd (2) @[ supply_high port-alias ] 
-          L = channel chan?(int<12>)^0 = adjacent_diff<12>::L (1) @[ port! meta! chp? meta? ] 
-          R = channel chan!(int<12>)^0 = adjacent_diff<12>::R (2) @[ chp! meta! port? meta? ] 
+          L = channel chan?(int<12>)^0 = adjacent_diff<12>::L (1) @[ port! chp? meta? ] 
+          R = channel chan!(int<12>)^0 = adjacent_diff<12>::R (2) @[ chp! meta! port? ] 
           W = pint^0 value: 12
           x = int<12>^0 = adjacent_diff<12>::x (1) 
           z = int<12>^0 = adjacent_diff<12>::z (2) 
           Created state:
           channel instance pool: (2 ports, 0 local, 0 mapped)
-          1	adjacent_diff<12>::L @[ port! meta! chp? meta? ]	
-          2	adjacent_diff<12>::R @[ chp! meta! port? meta? ]	
+          1	adjacent_diff<12>::L @[ port! chp? meta? ]	
+          2	adjacent_diff<12>::R @[ chp! meta! port? ]	
           int instance pool: (0 ports, 2 local, 0 mapped)
           1	adjacent_diff<12>::x	
           2	adjacent_diff<12>::z	

@@ -152,7 +152,7 @@ footprint: {
   w = process wa<>^0 = w (1) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    TX = channel chan(int<32>)^0 = w.TX (1) @[ chp! meta! chp? meta? ] 
+    TX = channel chan(int<32>)^0 = w.TX (1) @[ sub! chp! meta! sub? chp? meta? ] 
   )
   Created state:
   process instance pool: (0 ports, 1 local, 0 mapped)
@@ -160,7 +160,7 @@ footprint: {
     channel: 1
     bool: 1,2
   channel instance pool: (0 ports, 1 local, 0 mapped)
-  1	w.TX @[ chp! meta! chp? meta? ]	
+  1	w.TX @[ sub! chp! meta! sub? chp? meta? ]	
   private sub-int index map:
     (1 -> 0)
     (2 -> 1)

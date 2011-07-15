@@ -189,24 +189,24 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = foo<>::!GND (1) @[ supply_low port-alias ] 
         !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high port-alias ] 
-        A = channel chan?(bool<>)^0 = foo<>::A (1) @[ port! meta! chp? meta? ] 
-        B = channel chan?(bool<>)^0 = foo<>::B (2) @[ port! meta! chp? meta? ] 
-        C = channel chan!(bool<>)^0 = foo<>::C (3) @[ chp! meta! port? meta? ] 
-        D = channel chan!(bool<>)^0 = foo<>::D (4) @[ chp! meta! port? meta? ] 
-        E = channel chan!(bool<>)^0 = foo<>::E (5) @[ chp! meta! port? meta? ] 
-        F = channel chan!(bool<>)^0 = foo<>::F (6) @[ chp! meta! port? meta? ] 
+        A = channel chan?(bool<>)^0 = foo<>::A (1) @[ port! chp? meta? ] 
+        B = channel chan?(bool<>)^0 = foo<>::B (2) @[ port! chp? meta? ] 
+        C = channel chan!(bool<>)^0 = foo<>::C (3) @[ chp! meta! port? ] 
+        D = channel chan!(bool<>)^0 = foo<>::D (4) @[ chp! meta! port? ] 
+        E = channel chan!(bool<>)^0 = foo<>::E (5) @[ chp! meta! port? ] 
+        F = channel chan!(bool<>)^0 = foo<>::F (6) @[ chp! meta! port? ] 
         a = bool^0 = foo<>::a (3) 
         b = bool^0 = foo<>::b (4) 
         y = bool^0 = foo<>::y (5) 
         z = bool^0 = foo<>::z (6) 
         Created state:
         channel instance pool: (6 ports, 0 local, 0 mapped)
-        1	foo<>::A @[ port! meta! chp? meta? ]	
-        2	foo<>::B @[ port! meta! chp? meta? ]	
-        3	foo<>::C @[ chp! meta! port? meta? ]	
-        4	foo<>::D @[ chp! meta! port? meta? ]	
-        5	foo<>::E @[ chp! meta! port? meta? ]	
-        6	foo<>::F @[ chp! meta! port? meta? ]	
+        1	foo<>::A @[ port! chp? meta? ]	
+        2	foo<>::B @[ port! chp? meta? ]	
+        3	foo<>::C @[ chp! meta! port? ]	
+        4	foo<>::D @[ chp! meta! port? ]	
+        5	foo<>::E @[ chp! meta! port? ]	
+        6	foo<>::F @[ chp! meta! port? ]	
         bool instance pool: (2 ports, 4 local, 0 mapped)
         1	foo<>::!GND @[ supply_low port-alias ]	
         2	foo<>::!Vdd @[ supply_high port-alias ]	

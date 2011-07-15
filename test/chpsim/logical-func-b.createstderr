@@ -775,11 +775,11 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = bool_sink<>::!GND (1) @[ supply_low port-alias ] 
         !Vdd = bool^0 = bool_sink<>::!Vdd (2) @[ supply_high port-alias ] 
-        B = channel chan?(bool<>)^0 = bool_sink<>::B (1) @[ port! meta! chp? meta? ] 
+        B = channel chan?(bool<>)^0 = bool_sink<>::B (1) @[ port! chp? meta? ] 
         b = bool^0 = bool_sink<>::b (3) 
         Created state:
         channel instance pool: (1 ports, 0 local, 0 mapped)
-        1	bool_sink<>::B @[ port! meta! chp? meta? ]	
+        1	bool_sink<>::B @[ port! chp? meta? ]	
         bool instance pool: (2 ports, 1 local, 0 mapped)
         1	bool_sink<>::!GND @[ supply_low port-alias ]	
         2	bool_sink<>::!Vdd @[ supply_high port-alias ]	
@@ -971,11 +971,11 @@ In namespace "", we have: {
               2 = 9
             }
           N = pint^0 value: 3
-          S = channel chan!(int<32>)^0 = int_source<32, 3, {6,8,9}>::S (1) @[ chp! meta! port? meta? ] 
+          S = channel chan!(int<32>)^0 = int_source<32, 3, {6,8,9}>::S (1) @[ chp! meta! port? ] 
           W = pint^0 value: 32
           Created state:
           channel instance pool: (1 ports, 0 local, 0 mapped)
-          1	int_source<32, 3, {6,8,9}>::S @[ chp! meta! port? meta? ]	
+          1	int_source<32, 3, {6,8,9}>::S @[ chp! meta! port? ]	
           bool instance pool: (2 ports, 0 local, 0 mapped)
           1	int_source<32, 3, {6,8,9}>::!GND @[ supply_low port-alias ]	
           2	int_source<32, 3, {6,8,9}>::!Vdd @[ supply_high port-alias ]	
@@ -1004,11 +1004,11 @@ In namespace "", we have: {
               3 = 6
             }
           N = pint^0 value: 4
-          S = channel chan!(int<32>)^0 = int_source<32, 4, {3,4,5,6}>::S (1) @[ chp! meta! port? meta? ] 
+          S = channel chan!(int<32>)^0 = int_source<32, 4, {3,4,5,6}>::S (1) @[ chp! meta! port? ] 
           W = pint^0 value: 32
           Created state:
           channel instance pool: (1 ports, 0 local, 0 mapped)
-          1	int_source<32, 4, {3,4,5,6}>::S @[ chp! meta! port? meta? ]	
+          1	int_source<32, 4, {3,4,5,6}>::S @[ chp! meta! port? ]	
           bool instance pool: (2 ports, 0 local, 0 mapped)
           1	int_source<32, 4, {3,4,5,6}>::!GND @[ supply_low port-alias ]	
           2	int_source<32, 4, {3,4,5,6}>::!Vdd @[ supply_high port-alias ]	
@@ -1040,11 +1040,11 @@ In namespace "", we have: {
               4 = 8
             }
           N = pint^0 value: 5
-          S = channel chan!(int<32>)^0 = int_source<32, 5, {4,5,6,7,8}>::S (1) @[ chp! meta! port? meta? ] 
+          S = channel chan!(int<32>)^0 = int_source<32, 5, {4,5,6,7,8}>::S (1) @[ chp! meta! port? ] 
           W = pint^0 value: 32
           Created state:
           channel instance pool: (1 ports, 0 local, 0 mapped)
-          1	int_source<32, 5, {4,5,6,7,8}>::S @[ chp! meta! port? meta? ]	
+          1	int_source<32, 5, {4,5,6,7,8}>::S @[ chp! meta! port? ]	
           bool instance pool: (2 ports, 0 local, 0 mapped)
           1	int_source<32, 5, {4,5,6,7,8}>::!GND @[ supply_low port-alias ]	
           2	int_source<32, 5, {4,5,6,7,8}>::!Vdd @[ supply_high port-alias ]	
@@ -1079,11 +1079,11 @@ In namespace "", we have: {
               5 = 7
             }
           N = pint^0 value: 6
-          S = channel chan!(int<32>)^0 = int_source<32, 6, {2,5,3,6,4,7}>::S (1) @[ chp! meta! port? meta? ] 
+          S = channel chan!(int<32>)^0 = int_source<32, 6, {2,5,3,6,4,7}>::S (1) @[ chp! meta! port? ] 
           W = pint^0 value: 32
           Created state:
           channel instance pool: (1 ports, 0 local, 0 mapped)
-          1	int_source<32, 6, {2,5,3,6,4,7}>::S @[ chp! meta! port? meta? ]	
+          1	int_source<32, 6, {2,5,3,6,4,7}>::S @[ chp! meta! port? ]	
           bool instance pool: (2 ports, 0 local, 0 mapped)
           1	int_source<32, 6, {2,5,3,6,4,7}>::!GND @[ supply_low port-alias ]	
           2	int_source<32, 6, {2,5,3,6,4,7}>::!Vdd @[ supply_high port-alias ]	
@@ -1280,22 +1280,22 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = my_foo<>::!GND (1) @[ supply_low port-alias ] 
         !Vdd = bool^0 = my_foo<>::!Vdd (2) @[ supply_high port-alias ] 
-        A = channel chan?(int<32>)^0 = my_foo<>::A (1) @[ port! meta! chp? meta? ] 
-        B = channel chan?(int<32>)^0 = my_foo<>::B (2) @[ port! meta! chp? meta? ] 
-        C = channel chan?(int<32>)^0 = my_foo<>::C (3) @[ port! meta! chp? meta? ] 
-        D = channel chan?(int<32>)^0 = my_foo<>::D (4) @[ port! meta! chp? meta? ] 
-        G = channel chan!(bool<>)^0 = my_foo<>::G (5) @[ chp! meta! port? meta? ] 
+        A = channel chan?(int<32>)^0 = my_foo<>::A (1) @[ port! chp? meta? ] 
+        B = channel chan?(int<32>)^0 = my_foo<>::B (2) @[ port! chp? meta? ] 
+        C = channel chan?(int<32>)^0 = my_foo<>::C (3) @[ port! chp? meta? ] 
+        D = channel chan?(int<32>)^0 = my_foo<>::D (4) @[ port! chp? meta? ] 
+        G = channel chan!(bool<>)^0 = my_foo<>::G (5) @[ chp! meta! port? ] 
         a = int<32>^0 = my_foo<>::a (1) 
         b = int<32>^0 = my_foo<>::b (2) 
         c = int<32>^0 = my_foo<>::c (3) 
         d = int<32>^0 = my_foo<>::d (4) 
         Created state:
         channel instance pool: (5 ports, 0 local, 0 mapped)
-        1	my_foo<>::A @[ port! meta! chp? meta? ]	
-        2	my_foo<>::B @[ port! meta! chp? meta? ]	
-        3	my_foo<>::C @[ port! meta! chp? meta? ]	
-        4	my_foo<>::D @[ port! meta! chp? meta? ]	
-        5	my_foo<>::G @[ chp! meta! port? meta? ]	
+        1	my_foo<>::A @[ port! chp? meta? ]	
+        2	my_foo<>::B @[ port! chp? meta? ]	
+        3	my_foo<>::C @[ port! chp? meta? ]	
+        4	my_foo<>::D @[ port! chp? meta? ]	
+        5	my_foo<>::G @[ chp! meta! port? ]	
         int instance pool: (0 ports, 4 local, 0 mapped)
         1	my_foo<>::a	
         2	my_foo<>::b	

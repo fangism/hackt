@@ -1,0 +1,13 @@
+// "buf-03.hac"
+// copy-modified from "buf-01.hac"
+
+defproc buf2(chan?(bool) In; chan!(bool) Out) {
+In = Out;
+}
+
+defproc foo(chan?(bool) A; chan!(bool) B) {
+buf2 x(A, B);
+}
+
+foo bar;
+

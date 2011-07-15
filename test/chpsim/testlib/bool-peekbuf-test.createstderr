@@ -168,13 +168,13 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = bool_peekbuf<>::!GND (1) @[ supply_low port-alias ] 
         !Vdd = bool^0 = bool_peekbuf<>::!Vdd (2) @[ supply_high port-alias ] 
-        L = channel chan?(bool<>)^0 = bool_peekbuf<>::L (1) @[ port! meta! chp? meta? ] 
-        R = channel chan!(bool<>)^0 = bool_peekbuf<>::R (2) @[ chp! meta! port? meta? ] 
+        L = channel chan?(bool<>)^0 = bool_peekbuf<>::L (1) @[ port! chp? meta? ] 
+        R = channel chan!(bool<>)^0 = bool_peekbuf<>::R (2) @[ chp! meta! port? ] 
         x = bool^0 = bool_peekbuf<>::x (3) 
         Created state:
         channel instance pool: (2 ports, 0 local, 0 mapped)
-        1	bool_peekbuf<>::L @[ port! meta! chp? meta? ]	
-        2	bool_peekbuf<>::R @[ chp! meta! port? meta? ]	
+        1	bool_peekbuf<>::L @[ port! chp? meta? ]	
+        2	bool_peekbuf<>::R @[ chp! meta! port? ]	
         bool instance pool: (2 ports, 1 local, 0 mapped)
         1	bool_peekbuf<>::!GND @[ supply_low port-alias ]	
         2	bool_peekbuf<>::!Vdd @[ supply_high port-alias ]	
@@ -233,13 +233,13 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = bool_peekbuf_fast<>::!GND (1) @[ supply_low port-alias ] 
         !Vdd = bool^0 = bool_peekbuf_fast<>::!Vdd (2) @[ supply_high port-alias ] 
-        L = channel chan?(bool<>)^0 = bool_peekbuf_fast<>::L (1) @[ port! meta! chp? meta? ] 
-        R = channel chan!(bool<>)^0 = bool_peekbuf_fast<>::R (2) @[ chp! meta! port? meta? ] 
+        L = channel chan?(bool<>)^0 = bool_peekbuf_fast<>::L (1) @[ port! chp? meta? ] 
+        R = channel chan!(bool<>)^0 = bool_peekbuf_fast<>::R (2) @[ chp! meta! port? ] 
         x = bool^0 = bool_peekbuf_fast<>::x (3) 
         Created state:
         channel instance pool: (2 ports, 0 local, 0 mapped)
-        1	bool_peekbuf_fast<>::L @[ port! meta! chp? meta? ]	
-        2	bool_peekbuf_fast<>::R @[ chp! meta! port? meta? ]	
+        1	bool_peekbuf_fast<>::L @[ port! chp? meta? ]	
+        2	bool_peekbuf_fast<>::R @[ chp! meta! port? ]	
         bool instance pool: (2 ports, 1 local, 0 mapped)
         1	bool_peekbuf_fast<>::!GND @[ supply_low port-alias ]	
         2	bool_peekbuf_fast<>::!Vdd @[ supply_high port-alias ]	

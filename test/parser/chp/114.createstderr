@@ -162,18 +162,18 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = split_bool_soup<>::!GND (1) @[ supply_low port-alias ] 
         !Vdd = bool^0 = split_bool_soup<>::!Vdd (2) @[ supply_high port-alias ] 
-        A = channel chan?(bool<>)^0 = split_bool_soup<>::A (1) @[ port! meta! chp? meta? ] 
-        B = channel chan?(bool<>)^0 = split_bool_soup<>::B (2) @[ port! meta! chp? meta? ] 
-        G = channel chan?(bool<>)^0 = split_bool_soup<>::G (3) @[ port! meta! chp? meta? ] 
-        Z = channel chan!(bool<>)^0 = split_bool_soup<>::Z (4) @[ chp! meta! port? meta? ] 
+        A = channel chan?(bool<>)^0 = split_bool_soup<>::A (1) @[ port! chp? meta? ] 
+        B = channel chan?(bool<>)^0 = split_bool_soup<>::B (2) @[ port! chp? meta? ] 
+        G = channel chan?(bool<>)^0 = split_bool_soup<>::G (3) @[ port! chp? meta? ] 
+        Z = channel chan!(bool<>)^0 = split_bool_soup<>::Z (4) @[ chp! meta! port? ] 
         g = bool^0 = split_bool_soup<>::g (3) 
         x = bool^0 = split_bool_soup<>::x (4) 
         Created state:
         channel instance pool: (4 ports, 0 local, 0 mapped)
-        1	split_bool_soup<>::A @[ port! meta! chp? meta? ]	
-        2	split_bool_soup<>::B @[ port! meta! chp? meta? ]	
-        3	split_bool_soup<>::G @[ port! meta! chp? meta? ]	
-        4	split_bool_soup<>::Z @[ chp! meta! port? meta? ]	
+        1	split_bool_soup<>::A @[ port! chp? meta? ]	
+        2	split_bool_soup<>::B @[ port! chp? meta? ]	
+        3	split_bool_soup<>::G @[ port! chp? meta? ]	
+        4	split_bool_soup<>::Z @[ chp! meta! port? ]	
         bool instance pool: (2 ports, 2 local, 0 mapped)
         1	split_bool_soup<>::!GND @[ supply_low port-alias ]	
         2	split_bool_soup<>::!Vdd @[ supply_high port-alias ]	

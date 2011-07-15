@@ -540,11 +540,11 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = bool_sink<>::!GND (1) @[ supply_low port-alias ] 
         !Vdd = bool^0 = bool_sink<>::!Vdd (2) @[ supply_high port-alias ] 
-        B = channel chan?(bool<>)^0 = bool_sink<>::B (1) @[ port! meta! chp? meta? ] 
+        B = channel chan?(bool<>)^0 = bool_sink<>::B (1) @[ port! chp? meta? ] 
         b = bool^0 = bool_sink<>::b (3) 
         Created state:
         channel instance pool: (1 ports, 0 local, 0 mapped)
-        1	bool_sink<>::B @[ port! meta! chp? meta? ]	
+        1	bool_sink<>::B @[ port! chp? meta? ]	
         bool instance pool: (2 ports, 1 local, 0 mapped)
         1	bool_sink<>::!GND @[ supply_low port-alias ]	
         2	bool_sink<>::!Vdd @[ supply_high port-alias ]	
@@ -733,10 +733,10 @@ In namespace "", we have: {
               1 = 0
             }
           N = pint^0 value: 2
-          S = channel chan!(bool<>)^0 = bool_source<2, {1,0}>::S (1) @[ chp! meta! port? meta? ] 
+          S = channel chan!(bool<>)^0 = bool_source<2, {1,0}>::S (1) @[ chp! meta! port? ] 
           Created state:
           channel instance pool: (1 ports, 0 local, 0 mapped)
-          1	bool_source<2, {1,0}>::S @[ chp! meta! port? meta? ]	
+          1	bool_source<2, {1,0}>::S @[ chp! meta! port? ]	
           bool instance pool: (2 ports, 0 local, 0 mapped)
           1	bool_source<2, {1,0}>::!GND @[ supply_low port-alias ]	
           2	bool_source<2, {1,0}>::!Vdd @[ supply_high port-alias ]	

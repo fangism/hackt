@@ -246,19 +246,19 @@ In namespace "", we have: {
         <2> {
           !GND = bool^0 = bool_copy<2>::!GND (1) @[ supply_low port-alias ] 
           !Vdd = bool^0 = bool_copy<2>::!Vdd (2) @[ supply_high port-alias ] 
-          A = channel chan?(bool<>)^0 = bool_copy<2>::A (1) @[ port! meta! chp? meta? ] 
+          A = channel chan?(bool<>)^0 = bool_copy<2>::A (1) @[ port! chp? meta? ] 
           N = pint^0 value: 2
           O = channel chan!(bool<>)^1
             {
-              [0] = bool_copy<2>::O[0] (2) @[ chp! meta! port? meta? ] 
-              [1] = bool_copy<2>::O[1] (3) @[ chp! meta! port? meta? ] 
+              [0] = bool_copy<2>::O[0] (2) @[ chp! meta! port? ] 
+              [1] = bool_copy<2>::O[1] (3) @[ chp! meta! port? ] 
             }
           a = bool^0 = bool_copy<2>::a (3) 
           Created state:
           channel instance pool: (3 ports, 0 local, 0 mapped)
-          1	bool_copy<2>::A @[ port! meta! chp? meta? ]	
-          2	bool_copy<2>::O[0] @[ chp! meta! port? meta? ]	
-          3	bool_copy<2>::O[1] @[ chp! meta! port? meta? ]	
+          1	bool_copy<2>::A @[ port! chp? meta? ]	
+          2	bool_copy<2>::O[0] @[ chp! meta! port? ]	
+          3	bool_copy<2>::O[1] @[ chp! meta! port? ]	
           bool instance pool: (2 ports, 1 local, 0 mapped)
           1	bool_copy<2>::!GND @[ supply_low port-alias ]	
           2	bool_copy<2>::!Vdd @[ supply_high port-alias ]	

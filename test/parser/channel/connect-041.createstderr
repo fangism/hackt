@@ -169,7 +169,7 @@ In namespace "", we have: {
         lecture = process boring<>^0 = classroom<>::lecture (1) (
           !GND = bool^0 = classroom<>::!GND (1) @[ supply_low port-alias ] 
           !Vdd = bool^0 = classroom<>::!Vdd (2) @[ supply_high port-alias ] 
-          B = channel chan(bool<>)^0 = classroom<>::lecture.B (1) @[ chp! meta! chp? meta? ] 
+          B = channel chan(bool<>)^0 = classroom<>::lecture.B (1) @[ sub! chp! meta! sub? chp? meta? ] 
         )
         Created state:
         process instance pool: (0 ports, 1 local, 0 mapped)
@@ -177,7 +177,7 @@ In namespace "", we have: {
           channel: 1
           bool: 1,2
         channel instance pool: (0 ports, 1 local, 0 mapped)
-        1	classroom<>::lecture.B @[ chp! meta! chp? meta? ]	
+        1	classroom<>::lecture.B @[ sub! chp! meta! sub? chp? meta? ]	
         bool instance pool: (2 ports, 0 local, 1 mapped)
         1	classroom<>::!GND @[ supply_low port-alias ]	
         2	classroom<>::!Vdd @[ supply_high port-alias ]	

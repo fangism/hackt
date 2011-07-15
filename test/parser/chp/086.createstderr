@@ -180,10 +180,10 @@ In namespace "", we have: {
         !Vdd = bool^0 = send_indexed<>::!Vdd (2) @[ supply_high port-alias ] 
         index = channel chan?(int<1>)^1
           {
-            [0] = send_indexed<>::index[0] (2) @[ port! meta! chp? meta? ] 
-            [1] = send_indexed<>::index[1] (3) @[ port! meta! chp? meta? ] 
+            [0] = send_indexed<>::index[0] (2) @[ port! chp? meta? ] 
+            [1] = send_indexed<>::index[1] (3) @[ port! chp? meta? ] 
           }
-        out = channel chan!(int<32>)^0 = send_indexed<>::out (1) @[ chp! meta! port? meta? ] 
+        out = channel chan!(int<32>)^0 = send_indexed<>::out (1) @[ chp! meta! port? ] 
         x = pint^2
           unrolled index-value pairs: {
             [0][0] = 1
@@ -195,9 +195,9 @@ In namespace "", we have: {
         z = int<1>^0 = send_indexed<>::z (2) 
         Created state:
         channel instance pool: (3 ports, 0 local, 0 mapped)
-        1	send_indexed<>::out @[ chp! meta! port? meta? ]	
-        2	send_indexed<>::index[0] @[ port! meta! chp? meta? ]	
-        3	send_indexed<>::index[1] @[ port! meta! chp? meta? ]	
+        1	send_indexed<>::out @[ chp! meta! port? ]	
+        2	send_indexed<>::index[0] @[ port! chp? meta? ]	
+        3	send_indexed<>::index[1] @[ port! chp? meta? ]	
         int instance pool: (0 ports, 2 local, 0 mapped)
         1	send_indexed<>::y	
         2	send_indexed<>::z	

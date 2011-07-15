@@ -184,8 +184,8 @@ In namespace "", we have: {
           !GND = bool^0 = send_indexed<0>::!GND (1) @[ supply_low port-alias ] 
           !Vdd = bool^0 = send_indexed<0>::!Vdd (2) @[ supply_high port-alias ] 
           I = pint^0 value: 0
-          index = channel chan?(int<32>)^0 = send_indexed<0>::index (1) @[ port! meta! chp? meta? ] 
-          out = channel chan!(int<32>)^0 = send_indexed<0>::out (2) @[ chp! meta! port? meta? ] 
+          index = channel chan?(int<32>)^0 = send_indexed<0>::index (1) @[ port! chp? meta? ] 
+          out = channel chan!(int<32>)^0 = send_indexed<0>::out (2) @[ chp! meta! port? ] 
           x = pint^2
             unrolled index-value pairs: {
               [0][0] = 1
@@ -196,8 +196,8 @@ In namespace "", we have: {
           y = int<32>^0 = send_indexed<0>::y (1) 
           Created state:
           channel instance pool: (2 ports, 0 local, 0 mapped)
-          1	send_indexed<0>::index @[ port! meta! chp? meta? ]	
-          2	send_indexed<0>::out @[ chp! meta! port? meta? ]	
+          1	send_indexed<0>::index @[ port! chp? meta? ]	
+          2	send_indexed<0>::out @[ chp! meta! port? ]	
           int instance pool: (0 ports, 1 local, 0 mapped)
           1	send_indexed<0>::y	
           bool instance pool: (2 ports, 0 local, 0 mapped)
@@ -219,8 +219,8 @@ In namespace "", we have: {
           !GND = bool^0 = send_indexed<1>::!GND (1) @[ supply_low port-alias ] 
           !Vdd = bool^0 = send_indexed<1>::!Vdd (2) @[ supply_high port-alias ] 
           I = pint^0 value: 1
-          index = channel chan?(int<32>)^0 = send_indexed<1>::index (1) @[ port! meta! chp? meta? ] 
-          out = channel chan!(int<32>)^0 = send_indexed<1>::out (2) @[ chp! meta! port? meta? ] 
+          index = channel chan?(int<32>)^0 = send_indexed<1>::index (1) @[ port! chp? meta? ] 
+          out = channel chan!(int<32>)^0 = send_indexed<1>::out (2) @[ chp! meta! port? ] 
           x = pint^2
             unrolled index-value pairs: {
               [0][0] = 1
@@ -231,8 +231,8 @@ In namespace "", we have: {
           y = int<32>^0 = send_indexed<1>::y (1) 
           Created state:
           channel instance pool: (2 ports, 0 local, 0 mapped)
-          1	send_indexed<1>::index @[ port! meta! chp? meta? ]	
-          2	send_indexed<1>::out @[ chp! meta! port? meta? ]	
+          1	send_indexed<1>::index @[ port! chp? meta? ]	
+          2	send_indexed<1>::out @[ chp! meta! port? ]	
           int instance pool: (0 ports, 1 local, 0 mapped)
           1	send_indexed<1>::y	
           bool instance pool: (2 ports, 0 local, 0 mapped)

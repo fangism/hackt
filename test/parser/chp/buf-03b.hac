@@ -1,0 +1,16 @@
+// "buf-03b.hac"
+// copy-modified from "buf-03.hac"
+// with user-defined channel
+
+defchan vchan <: chan(bool) () { }
+
+defproc buf2(vchan? In; vchan! Out) {
+In = Out;
+}
+
+defproc foo(vchan? A; vchan! B) {
+buf2 x(A, B);
+}
+
+foo bar;
+
