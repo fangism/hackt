@@ -526,6 +526,8 @@ autosave-01.prsimckpt: autosave-01.prsimrcfail-out
 # generated tests needs to be built before auto-dependencies
 prsimrc-out.autodepend: $(srcdir)/cbit_test_stat-01.prsimrc
 
+comment-cpkt-01.prsimrcfail-out: comment-01.prsimckpt
+
 CLEANFILES += cbit_test_stat-01.prsimrc \
 	channel-test-a-values-X.txt \
 	channel-test-a-values-Y.txt \
@@ -629,7 +631,8 @@ HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
 	reschedule-06 reschedule-18 \
 	oscil-trace-01 oscil-trace-02 \
 	dirs-01 \
-	freeze-02
+	freeze-02 \
+	comment-ckpt-01
 
 # KNOWN BUG (fails, but should not): cross-pulldown-01
 

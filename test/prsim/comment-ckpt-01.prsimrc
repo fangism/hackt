@@ -1,0 +1,7 @@
+# "comment-ckpt-01.prsimrc"
+# @haco@ inv.haoc-c
+# @hacprsim-flags@ -d comment-01.prsimckpt
+# @deps@ -d comment-01.prsimckpt
+
+# do nothing else, does not even run here
+
