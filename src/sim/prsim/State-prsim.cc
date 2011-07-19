@@ -6984,7 +6984,8 @@ State::dump_checkpoint(ostream& o, istream& i) {
 }
 	READ_ALIGN_MARKER		// sanity alignment check
 	time_type current_time, uniform_delay,
-		default_after_min, default_after_max, timing_probability;
+		default_after_min, default_after_max;
+	preal_value_type timing_probability;
 	read_value(i, current_time);
 	read_value(i, uniform_delay);
 	read_value(i, default_after_min);

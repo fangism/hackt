@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-07-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-81:
+	  Fixed latent bug with prsim checkpoint dump, introduced by
+		commit HACKT-00-01-04-main-00-84-18, ::dump_checkpoint
+		had wrong type for timing_probability, cause crash.
+		Fixes ACX-PR-6486.
+	  Test case added, now tests textual checkpoint dump.
+
+
 2011-07-15	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-80:
