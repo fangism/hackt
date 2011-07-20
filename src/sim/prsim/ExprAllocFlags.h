@@ -6,14 +6,19 @@
 #ifndef	__HAC_SIM_PRSIM_EXPRALLOCFLAGS_H__
 #define	__HAC_SIM_PRSIM_EXPRALLOCFLAGS_H__
 
+#include <iosfwd>
 #include "sim/prsim/devel_switches.h"		// for PRSIM_WEAK_RULES
 
 namespace HAC {
 namespace SIM {
 namespace PRSIM {
+using std::ostream;
+using std::istream;
+
 //=============================================================================
 /**
 	Enumerated structure for tracking expression allocation options.  
+	Member functions defined in ExprAlloc.cc.
  */
 struct ExprAllocFlags {
 	enum {
@@ -43,6 +48,9 @@ struct ExprAllocFlags {
 		, fast_weak_keepers(false)
 #endif
 		{ }
+
+	bool
+	assert_equal(const ExprAllocFlags&) const;
 
 	bool
 	is_fold_literals(void) const { return flags & FOLD_LITERALS; }
@@ -78,6 +86,12 @@ struct ExprAllocFlags {
 	any_optimize(void) const {
 		return flags | OPTIMIZE_FLAGS;
 	}
+
+	void
+	write_object(ostream&) const;
+
+	void
+	load_object(istream&);
 
 };	// end struct ExprAllocFlags
 

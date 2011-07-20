@@ -19,6 +19,7 @@
 #include "sim/state_base.h"
 #include "sim/signal_handler.h"
 #include "sim/event.h"
+#include "sim/prsim/ExprAllocFlags.h"
 #include "sim/prsim/Exception.h"
 #include "sim/prsim/Event-prsim.h"
 #include "sim/prsim/Node.h"
@@ -50,7 +51,6 @@ namespace entity {
 namespace SIM {
 namespace PRSIM {
 class ExprAlloc;
-struct ExprAllocFlags;
 #if PRSIM_TRACE_GENERATION
 class TraceManager;
 using util::memory::excl_ptr;
@@ -334,7 +334,8 @@ public:
 		ERROR_DEFAULT_WEAK_INTERFERENCE = ERROR_WARN,
 		ERROR_DEFAULT_ASSERT_FAIL = ERROR_FATAL,
 		ERROR_DEFAULT_CHANNEL_EXPECT_FAIL = ERROR_FATAL,
-		ERROR_DEFAULT_EXCL_CHECK_FAIL = ERROR_FATAL
+		ERROR_DEFAULT_EXCL_CHECK_FAIL = ERROR_FATAL,
+		ERROR_DEFAULT_KEEPER_CHECK = ERROR_WARN
 	};
 
 private:
@@ -481,9 +482,17 @@ protected:
 		global_expr_process_id_map (and process_rule_map).  
 	 */
 	typedef	vector<process_sim_state>	process_state_array_type;
-	// TODO: per process instance attributes!
+public:
+	/**
+		Options with which global prsim state was constructed.
+	 */
+	const ExprAllocFlags			expr_alloc_flags;
 private:
+	/**
+		Collection of node states.
+	 */
 	node_pool_type				node_pool;
+	// TODO: per process instance attributes!
 	/**
 		Collection of unique process footprints.  
 	 */
@@ -589,6 +598,8 @@ private:
 	error_policy_enum			channel_expect_fail_policy;
 	/// control handling of exclusion failures
 	error_policy_enum			excl_check_fail_policy;
+	/// control handling/checking of keeper invariants
+	error_policy_enum			keeper_check_policy;
 	/// name of automatically taken checkpoint
 	string					autosave_name;
 	/// timing mode
