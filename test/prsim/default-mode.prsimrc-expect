@@ -11,4 +11,5 @@ mode:
 	on invariant-unknown: warn
 	on assert-fail: fatal
 	on channel-expect-fail: fatal
+	on keeper-check-fail: warn
 timing: uniform (10)

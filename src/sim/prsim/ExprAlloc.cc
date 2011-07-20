@@ -46,6 +46,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "util/stacktrace.h"
 #include "util/qmap.tcc"
 #include "util/value_saver.h"
+#include "util/IO_utils.h"
 #include "util/memory/free_list.h"
 #include "common/TODO.h"
 
@@ -66,6 +67,45 @@ using util::value_saver;
 
 // shortcut for accessing the rules structure of a process graph
 #define	REF_RULE_MAP(g,i)		g->rule_pool[g->rule_map[i]]
+
+//=============================================================================
+// ExprAllocFlags method definitions
+
+bool
+ExprAllocFlags::assert_equal(const ExprAllocFlags& f) const {
+	bool eq = true;
+	if (flags != f.flags) {
+		// fortunately, optimization only affects rules and expressions
+		// which are NOT encoded in the checkpoint, and are only
+		// reconstructed from node values, which are unaffected
+		// by these optimizations.
+		cerr << "Warning: prsim optimization flags not equal." << endl;
+		cerr << "got: 0x" << std::hex << size_t(flags) << " vs.: 0x" <<
+			size_t(f.flags) << endl;
+	}
+	if (fast_weak_keepers != f.fast_weak_keepers) {
+		// fast_weak_keepers however affect rules
+		// this difference *could* still be ok
+		eq = false;
+		cerr << "Error: prsim fast-weak-keepers option does not match."
+			<< endl;
+	}
+	return eq;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+ExprAllocFlags::write_object(ostream& o) const {
+	util::write_value(o, flags);
+	util::write_value(o, fast_weak_keepers);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+ExprAllocFlags::load_object(istream& i) {
+	util::read_value(i, flags);
+	util::read_value(i, fast_weak_keepers);
+}
 
 //=============================================================================
 // currently only supports node attributes

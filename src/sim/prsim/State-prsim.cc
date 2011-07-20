@@ -312,6 +312,7 @@ State::pull_to_value[3][3] = {
  */
 State::State(const entity::module& m, const ExprAllocFlags& f) : 
 		module_state_base(m, "prsim> "), 
+		expr_alloc_flags(f),
 		node_pool(),
 		unique_process_pool(), 
 #if PRSIM_SEPARATE_PROCESS_EXPR_MAP
@@ -356,6 +357,7 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 		assert_fail_policy(E(ASSERT_FAIL)),
 		channel_expect_fail_policy(E(CHANNEL_EXPECT_FAIL)),
 		excl_check_fail_policy(E(EXCL_CHECK_FAIL)),
+		keeper_check_policy(E(KEEPER_CHECK)),
 #undef	E
 		autosave_name("autosave.prsimckpt"),
 		timing_mode(TIMING_DEFAULT),
@@ -763,6 +765,7 @@ State::reset(void) {
 	assert_fail_policy = E(ASSERT_FAIL);
 	channel_expect_fail_policy = E(CHANNEL_EXPECT_FAIL);
 	excl_check_fail_policy = E(EXCL_CHECK_FAIL);
+	keeper_check_policy = E(KEEPER_CHECK);
 #undef	E
 	timing_mode = TIMING_DEFAULT;
 	unwatch_all_nodes();
@@ -1747,6 +1750,8 @@ State::dump_mode(ostream& o) const {
 		error_policy_string(assert_fail_policy) << endl;
 	o << "\ton channel-expect-fail: " <<
 		error_policy_string(channel_expect_fail_policy) << endl;
+	o << "\ton keeper-check-fail: " <<
+		error_policy_string(keeper_check_policy) << endl;
 	return o;
 }
 
@@ -6598,9 +6603,10 @@ State::autosave(const bool b, const string& n) {
 1: initial version
 2: removed watch_list in lieu of using simpler watchpoint flag
 3: added timing binary support
+4: added keeper_check_policy, and expr_alloc_flags
  */
 static
-const size_t	checkpoint_version = 3;
+const size_t	checkpoint_version = 4;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -6621,6 +6627,7 @@ State::save_checkpoint(ostream& o) const {
 	check_event_queue();		// internal structure consistency
 	write_value(o, magic_string);
 	write_value(o, checkpoint_version);
+	expr_alloc_flags.write_object(o);
 	util::numeric::write_seed48(o);
 {
 	// node_pool
@@ -6692,6 +6699,7 @@ State::save_checkpoint(ostream& o) const {
 	write_value(o, assert_fail_policy);
 	write_value(o, channel_expect_fail_policy);
 	write_value(o, excl_check_fail_policy);
+	write_value(o, keeper_check_policy);
 //	write_value(o, autosave_name);		// don't preserve
 	write_value(o, timing_mode);
 	_dump_flags.write_object(o);
@@ -6742,6 +6750,14 @@ try {
 } catch (...) {
 	cerr << bad_ckpt << endl;
 	return true;
+}
+{
+	// guarantee that same options were used that affect
+	// state expansion.
+	ExprAllocFlags tmpf;
+	tmpf.load_object(i);
+	if (!tmpf.assert_equal(expr_alloc_flags))
+		return true;
 }
 	util::numeric::read_seed48(i);
 {
@@ -6888,6 +6904,7 @@ try {
 	read_value(i, assert_fail_policy);
 	read_value(i, channel_expect_fail_policy);
 	read_value(i, excl_check_fail_policy);
+	read_value(i, keeper_check_policy);
 //	read_value(i, autosave_name);	// ignore the name of checkpoint
 	read_value(i, timing_mode);
 	_dump_flags.load_object(i);
@@ -6949,8 +6966,11 @@ State::dump_checkpoint(ostream& o, istream& i) {
 		cerr << "WARNING: checkpoint version mismatch!\n"
 		"Attempting to continue, but this could get ugly..." << endl;
 	}
-}
-{
+}{
+	ExprAllocFlags tmpf;
+	tmpf.load_object(i);
+	// TODO: print options?
+}{
 	// show random seed
 	ushort seed[3];
 	read_value(i, seed[0]);
@@ -7051,6 +7071,8 @@ State::dump_checkpoint(ostream& o, istream& i) {
 	o << "channel-expect-fail policy: " << error_policy_string(p) << endl;
 	read_value(i, p);
 	o << "exclusion-fail policy: " << error_policy_string(p) << endl;
+	read_value(i, p);
+	o << "keeper-check policy: " << error_policy_string(p) << endl;
 }
 #if 0
 {	// ignore the name of checkpoint
