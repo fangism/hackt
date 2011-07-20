@@ -21,6 +21,15 @@
 
 2011-07-19	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-84-81-prsim-keeper-check-01:
+	  Added copy of ExprAllocFlags to PRSIM::State.
+	  Added new error handling policy for keeper-checks.  
+		New fields are written to checkpoints.
+	  Test cases updated.
+
+
+2011-07-19	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-84-81:
 	  Fixed latent bug with prsim checkpoint dump, introduced by
 		commit HACKT-00-01-04-main-00-84-18, ::dump_checkpoint
