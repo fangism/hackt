@@ -1,5 +1,5 @@
 header string: hackt-prsim-ckpt
-checkpoint version: 3
+checkpoint version: 4
 seed48: 0 0 0
 Have 6 unique boolean nodes:
 	value	flags	cause	tcount
@@ -25,6 +25,7 @@ invariant-unknown policy: warn
 assert-fail (bool) policy: fatal
 channel-expect-fail policy: fatal
 exclusion-fail policy: fatal
+keeper-check policy: warn
 timing mode: 1
 dump flags: {
 hide definition owner
