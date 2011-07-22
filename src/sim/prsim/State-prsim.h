@@ -1123,7 +1123,7 @@ public:
 
 #if PRSIM_UPSET_NODES
 	ostream&
-	print_status_frozen(ostream&) const;
+	print_status_frozen(ostream&, const bool) const;
 #endif
 
 	bool
@@ -1165,28 +1165,45 @@ public:
 	append_check_excllo_ring(const ring_set_type&);
 
 	ostream&
-	dump_mk_excl_ring(ostream&, const ring_set_type&) const;
+	dump_mk_excl_ring(ostream&, const ring_set_type&, const bool) const;
 
 	ostream&
-	dump_mk_exclhi_rings(ostream&) const;
+	dump_mk_exclhi_rings(ostream&, const bool) const;
 
 	ostream&
-	dump_mk_excllo_rings(ostream&) const;
+	dump_mk_excllo_rings(ostream&, const bool) const;
 
 	ostream&
-	dump_node_mk_excl_rings(ostream&, const node_index_type) const;
+	dump_mk_excl_rings(ostream& o, const bool v) const {
+		dump_mk_exclhi_rings(o, v);
+		dump_mk_excllo_rings(o, v);
+		return o;
+	}
 
 	ostream&
-	dump_check_excl_ring(ostream&, const lock_index_list_type&) const;
+	dump_node_mk_excl_rings(ostream&, const node_index_type,
+		const bool) const;
 
 	ostream&
-	dump_check_exclhi_rings(ostream&) const;
+	dump_check_excl_ring(ostream&, const lock_index_list_type&,
+		const bool) const;
 
 	ostream&
-	dump_check_excllo_rings(ostream&) const;
+	dump_check_exclhi_rings(ostream&, const bool) const;
 
 	ostream&
-	dump_node_check_excl_rings(ostream&, const node_index_type) const;
+	dump_check_excllo_rings(ostream&, const bool) const;
+
+	ostream&
+	dump_check_excl_rings(ostream& o, const bool v) const {
+		dump_check_exclhi_rings(o, v);
+		dump_check_excllo_rings(o, v);
+		return o;
+	}
+
+	ostream&
+	dump_node_check_excl_rings(ostream&, const node_index_type, 
+		const bool) const;
 
 private:
 
@@ -1508,7 +1525,7 @@ public:
 	filter_nodes(vector<index_type>& ret, F f) const;
 
 	ostream&
-	print_nodes(ostream&, const vector<node_index_type>&,
+	print_nodes(ostream&, const vector<node_index_type>&, const bool,
 		const char*) const;
 
 	void
@@ -1521,13 +1538,13 @@ public:
 	unused_nodes(vector<node_index_type>&) const;
 
 	ostream&
-	dump_unused_nodes(ostream&) const;
+	dump_unused_nodes(ostream&, const bool) const;
 
 	void
 	output_nodes(vector<node_index_type>&) const;
 
 	ostream&
-	dump_output_nodes(ostream&) const;
+	dump_output_nodes(ostream&, const bool) const;
 
 	void
 	output_unknown_nodes(vector<node_index_type>&) const;
@@ -1653,11 +1670,12 @@ private:
 
 	template <typename Iter>
 	ostream&
-	__print_nodes(ostream&, Iter, Iter, const char*) const;
+	__print_nodes(ostream&, Iter, Iter, const bool, const char*) const;
 
 	template <typename Iter>
 	ostream&
-	__print_nodes_infix(ostream&, Iter, Iter, const char*) const;
+	__print_nodes_infix(ostream&, Iter, Iter,
+		const bool, const char*) const;
 
 public:
 	// so channel_manager has access (or pass callback?)

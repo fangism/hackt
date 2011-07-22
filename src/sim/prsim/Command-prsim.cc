@@ -2833,7 +2833,7 @@ if (sz != 2 && sz != 3) {
 					v));
 			cout << node_type::value_to_char[size_t(v)] <<
 				" nodes in " << proc << ':' << endl;
-			s.print_nodes(cout, nodes, nl ? "\n" : " ");
+			s.print_nodes(cout, nodes, false, nl ? "\n" : " ");
 			cout << endl;
 		}
 	}
@@ -2897,7 +2897,7 @@ if (a.size() != 2) {
 		} else {
 			cout << "Assertion failed: " <<
 				"there are nodes at value " << a.back() << endl;
-			s.print_nodes(cout, nodes, "\n") << std::flush;
+			s.print_nodes(cout, nodes, false, "\n") << std::flush;
 			return Command::FATAL;
 		}
 	} else {
@@ -2998,7 +2998,7 @@ if (a.size() != 1) {
 	} else {
 		cout << "Assertion failed: " <<
 			"there are nodes with interference" << endl;
-		s.print_nodes(cout, nodes, "\n") << std::flush;
+		s.print_nodes(cout, nodes, false, "\n") << std::flush;
 		return Command::FATAL;
 	}
 }
@@ -3017,7 +3017,7 @@ if (a.size() != 1) {
 	} else {
 		cout << "Assertion failed: " <<
 			"there are nodes with weak-interference" << endl;
-		s.print_nodes(cout, nodes, "\n") << std::flush;
+		s.print_nodes(cout, nodes, false, "\n") << std::flush;
 		return Command::FATAL;
 	}
 }
@@ -3150,19 +3150,45 @@ NoStatusDrivenFanin::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Common function for similar print routines.  
+	Extra bool parameter is verbosity flag, true for printing
+	values with nodes.  
+ */
+static
+int
+default_print_0(const State& s, const string_list& a,
+		ostream& (State::*memfn)(ostream&, const bool) const,
+		const bool verbose,
+		void (usage)(ostream&)) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	(s.*memfn)(cout, verbose);
+	return Command::NORMAL;
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if PRSIM_UPSET_NODES
 /***
 @texinfo cmd/status-frozen.texi
 @deffn Command status-frozen
+@deffnx Command status-frozen-get
 Print all nodes that have been frozen (switching suppressed).
 @end deffn
 @end texinfo
 ***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(StatusFrozen, "status-frozen", info, 
 	"show all nodes that are frozen from switching")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(StatusFrozenGet, "status-frozen-get", 
+	info, 
+	"show nodes that are frozen with values")
 
 int
 StatusFrozen::main(State& s, const string_list& a) {
+#if 0
 if (a.size() != 1) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
@@ -3170,10 +3196,26 @@ if (a.size() != 1) {
 	s.print_status_frozen(cout);
 	return Command::NORMAL;
 }
+#else
+	return default_print_0(s, a,
+		&State::print_status_frozen, false, usage);
+#endif
+}
+
+int
+StatusFrozenGet::main(State& s, const string_list& a) {
+	return default_print_0(s, a,
+		&State::print_status_frozen, true, usage);
 }
 
 void
 StatusFrozen::usage(ostream& o) {
+	o << name << endl;
+	o << brief << endl;
+}
+
+void
+StatusFrozenGet::usage(ostream& o) {
 	o << name << endl;
 	o << brief << endl;
 }
@@ -3183,6 +3225,7 @@ StatusFrozen::usage(ostream& o) {
 /***
 @texinfo cmd/unused-nodes.texi
 @deffn Command unused-nodes
+@deffn Command unused-nodes-get
 Print all nodes with no fanins and no fanouts, regardless of state.  
 @end deffn
 @end texinfo
@@ -3191,20 +3234,37 @@ Print all nodes with no fanins and no fanouts, regardless of state.
 
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnusedNodes, "unused-nodes", info, 
 	"list all nodes with no fanin, no fanout")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnusedNodesGet, "unused-nodes-get", info, 
+	"list nodes with no fanin, no fanout, with current value")
 
 int
 UnusedNodes::main(State& s, const string_list& a) {
+#if 0
 if (a.size() != 1) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
-	s.dump_unused_nodes(cout);
+	s.dump_unused_nodes(cout, false);
 	return Command::NORMAL;
 }
+#else
+	return default_print_0(s, a,
+		&State::dump_unused_nodes, false, usage);
+#endif
+}
+
+int
+UnusedNodesGet::main(State& s, const string_list& a) {
+	return default_print_0(s, a, &State::dump_unused_nodes, true, usage);
 }
 
 void
 UnusedNodes::usage(ostream& o) {
+	o << name << " -- " << brief << endl;
+}
+
+void
+UnusedNodesGet::usage(ostream& o) {
 	o << name << " -- " << brief << endl;
 }
 
@@ -3232,7 +3292,7 @@ if (a.size() != 1) {
 		return Command::NORMAL;
 	} else {
 		cout << "Assertion failed: there are unused nodes" << endl;
-		s.print_nodes(cout, nodes, "\n") << std::flush;
+		s.print_nodes(cout, nodes, false, "\n") << std::flush;
 		return Command::FATAL;
 	}
 }
@@ -3332,7 +3392,7 @@ if (a.size() != 1) {
 		return Command::NORMAL;
 	} else {
 		cout << "Assertion failed: there are input nodes at X" << endl;
-		s.print_nodes(cout, nodes, "\n") << std::flush;
+		s.print_nodes(cout, nodes, false, "\n") << std::flush;
 		return Command::FATAL;
 	}
 }
@@ -3367,7 +3427,7 @@ if (a.size() != 1) {
 		return Command::NORMAL;
 	} else {
 		cout << "Assertion failed: there are input nodes with fanout at X" << endl;
-		s.print_nodes(cout, nodes, "\n") << std::flush;
+		s.print_nodes(cout, nodes, false, "\n") << std::flush;
 		return Command::FATAL;
 	}
 }
@@ -3434,7 +3494,7 @@ if (a.size() != 1) {
 		return Command::NORMAL;
 	} else {
 		cout << "Assertion failed: there are input nodes at X that have fanin but are undriven" << endl;
-		s.print_nodes(cout, nodes, "\n") << std::flush;
+		s.print_nodes(cout, nodes, false, "\n") << std::flush;
 		return Command::FATAL;
 	}
 }
@@ -3502,7 +3562,7 @@ if (a.size() != 1) {
 		return Command::NORMAL;
 	} else {
 		cout << "Assertion failed: there are output nodes at X" << endl;
-		s.print_nodes(cout, nodes, "\n") << std::flush;
+		s.print_nodes(cout, nodes, false, "\n") << std::flush;
 		return Command::FATAL;
 	}
 }
@@ -3568,7 +3628,7 @@ if (a.size() != 1) {
 		return Command::NORMAL;
 	} else {
 		cout << "Assertion failed: there are nodes with fanout at X" << endl;
-		s.print_nodes(cout, nodes, "\n") << std::flush;
+		s.print_nodes(cout, nodes, false, "\n") << std::flush;
 		return Command::FATAL;
 	}
 }
@@ -3780,16 +3840,25 @@ FanoutGet::usage(ostream& o) {
 /***
 @texinfo cmd/rings-mk.texi
 @deffn Command rings-mk node
+@deffn Command rings-mk-get node
 Print forced exclusive high/low rings of which @var{node} is a member.
 @end deffn
 @end texinfo
 ***/
 PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(RingsMk, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(RingsMkGet, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(RingsMk, "rings-mk", info, 
 	"print forced exclusive rings of which a node is a member")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(RingsMkGet, "rings-mk-get", info, 
+	"print forced exclusive rings of node, with value")
 
+static
 int
-RingsMk::main(State& s, const string_list& a) {
+default_print_node_rings(const State& s, const string_list& a, 
+	const bool verbose,
+	ostream& (State::*memfn)(ostream&,
+		const node_index_type, const bool) const, 
+	void (usage)(ostream&)) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
@@ -3797,7 +3866,7 @@ if (a.size() != 2) {
 	const string& objname(a.back());
 	const node_index_type ni = parse_node_to_index(objname, s.get_module());
 	if (ni) {
-		s.dump_node_mk_excl_rings(cout, ni);
+		(s.*memfn)(cout, ni, verbose);
 		return Command::NORMAL;
 	} else {
 		cerr << "No such node found." << endl;
@@ -3806,10 +3875,46 @@ if (a.size() != 2) {
 }
 }
 
+int
+RingsMk::main(State& s, const string_list& a) {
+#if 0
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	const string& objname(a.back());
+	const node_index_type ni = parse_node_to_index(objname, s.get_module());
+	if (ni) {
+		s.dump_node_mk_excl_rings(cout, ni, false);
+		return Command::NORMAL;
+	} else {
+		cerr << "No such node found." << endl;
+		return Command::BADARG;
+	}
+}
+#else
+	return default_print_node_rings(s, a, false,
+		&State::dump_node_mk_excl_rings, usage);
+#endif
+}
+
+int
+RingsMkGet::main(State& s, const string_list& a) {
+	return default_print_node_rings(s, a, true,
+		&State::dump_node_mk_excl_rings, usage);
+}
+
 void
 RingsMk::usage(ostream& o) {
-	o << "rings-mk <node>" << endl;
+	o << name << " <node>" << endl;
 	o << "print all forced-exclusive rings of which this node is a member"
+		<< endl;
+}
+void
+RingsMkGet::usage(ostream& o) {
+	o << name << " <node>" << endl;
+	o << "print all forced-exclusive rings of which this node is a member, "
+	"along with current value of each node."
 		<< endl;
 }
 
@@ -3817,15 +3922,19 @@ RingsMk::usage(ostream& o) {
 /***
 @texinfo cmd/allrings-mk.texi
 @deffn Command allrings-mk
+@deffn Command allrings-mk-get
 Print all forced exclusive high/low rings.  
 @end deffn
 @end texinfo
 ***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(AllRingsMk, "allrings-mk", info, 
 	"dump all forced exclusive hi/lo rings")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(AllRingsMkGet, "allrings-mk-get", info, 
+	"dump all forced exclusive hi/lo rings, with value")
 
 int
 AllRingsMk::main(State& s, const string_list& a) {
+#if 0
 if (a.size() != 1) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
@@ -3834,25 +3943,43 @@ if (a.size() != 1) {
 	s.dump_mk_excllo_rings(cout);
 	return Command::NORMAL;
 }
+#else
+	return default_print_0(s, a, &State::dump_mk_excl_rings, false, usage);
+#endif
+}
+
+int
+AllRingsMkGet::main(State& s, const string_list& a) {
+	return default_print_0(s, a, &State::dump_mk_excl_rings, true, usage);
 }
 
 void
 AllRingsMk::usage(ostream& o) {
-	o << "allrings-mk" << endl;
+	o << name << endl;
 	o << "print all forced-exclusive rings" << endl;
+}
+
+void
+AllRingsMkGet::usage(ostream& o) {
+	o << name << endl;
+	o << "print all forced-exclusive rings, with values" << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
 @texinfo cmd/rings-chk.texi
 @deffn Command rings-chk node
+@deffnx Command rings-chk-get node
 Print all checked exclusive rings of which @var{node} is a member.
 @end deffn
 @end texinfo
 ***/
 PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(RingsChk, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(RingsChkGet, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(RingsChk, "rings-chk", info, 
 	"print checked exclusive rings of which a node is a member")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(RingsChkGet, "rings-chk-get", info, 
+	"print checked exclusive rings with node, with value")
 
 int
 RingsChk::main(State& s, const string_list& a) {
@@ -3863,7 +3990,26 @@ if (a.size() != 2) {
 	const string& objname(a.back());
 	const node_index_type ni = parse_node_to_index(objname, s.get_module());
 	if (ni) {
-		s.dump_node_check_excl_rings(cout, ni);
+		s.dump_node_check_excl_rings(cout, ni, false);
+		return Command::NORMAL;
+	} else {
+		cerr << "No such node found: " <<
+			nonempty_abs_dir(objname) << endl;
+		return Command::BADARG;
+	}
+}
+}
+
+int
+RingsChkGet::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	const string& objname(a.back());
+	const node_index_type ni = parse_node_to_index(objname, s.get_module());
+	if (ni) {
+		s.dump_node_check_excl_rings(cout, ni, true);
 		return Command::NORMAL;
 	} else {
 		cerr << "No such node found: " <<
@@ -3875,8 +4021,15 @@ if (a.size() != 2) {
 
 void
 RingsChk::usage(ostream& o) {
-	o << "rings-chk <node>" << endl;
+	o << name << " <node>" << endl;
 	o << "print all checked-exclusive rings of which this node is a member"
+		<< endl;
+}
+
+void
+RingsChkGet::usage(ostream& o) {
+	o << name << " <node>" << endl;
+	o << "print all checked-exclusive rings with this node, and value"
 		<< endl;
 }
 
@@ -3884,15 +4037,19 @@ RingsChk::usage(ostream& o) {
 /***
 @texinfo cmd/allrings-chk.texi
 @deffn Command allrings-chk
+@deffnx Command allrings-chk-get
 Print all checked exclusive rings of nodes.  
 @end deffn
 @end texinfo
 ***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(AllRingsChk, "allrings-chk", info, 
 	"dump all checked exclusive hi/lo rings")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(AllRingsChkGet, "allrings-chk-get", info, 
+	"dump all checked exclusive hi/lo rings, with values")
 
 int
 AllRingsChk::main(State& s, const string_list& a) {
+#if 0
 if (a.size() != 1) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
@@ -3901,12 +4058,28 @@ if (a.size() != 1) {
 	s.dump_check_excllo_rings(cout);
 	return Command::NORMAL;
 }
+#else
+	return default_print_0(s, a, &State::dump_check_excl_rings,
+		false, usage);
+#endif
+}
+
+int
+AllRingsChkGet::main(State& s, const string_list& a) {
+	return default_print_0(s, a, &State::dump_check_excl_rings,
+		true, usage);
 }
 
 void
 AllRingsChk::usage(ostream& o) {
-	o << "allrings-chk" << endl;
+	o << name << endl;
 	o << "print all checked-exclusive rings" << endl;
+}
+
+void
+AllRingsChkGet::usage(ostream& o) {
+	o << name << endl;
+	o << "print all checked-exclusive rings, with node values" << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

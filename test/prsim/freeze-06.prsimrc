@@ -1,0 +1,37 @@
+# "freeze-06.prsimrc"
+# copy-modified from "freeze-01.prsimrc"
+# @haco@ inv.haco-c
+# testing freeze and thaw(unset)
+
+watchall
+frozen-verbose on
+status-frozen-get
+echo freezing c
+freeze c
+status-frozen-get
+set a 0
+cycle
+assert c X
+set a 1
+cycle
+assert c X
+thaw c
+queue
+status-frozen-get
+echo released c
+cycle
+set a 0
+cycle
+set a 1
+cycle
+echo freezing c
+freeze c
+set a 0
+cycle
+status-frozen-get
+assert c 1
+echo released c
+thaw c
+cycle
+assert c 0
+

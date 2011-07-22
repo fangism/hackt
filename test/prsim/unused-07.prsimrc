@@ -1,0 +1,12 @@
+# "unused-07.prsimrc"
+# copy-modified from "unused-02.prsimrc"
+# @haco@ unused.haco-c
+
+echo unused nodes
+unused-nodes-get
+
+source inv-17.prsimrc
+
+echo unused nodes
+unused-nodes-get
+

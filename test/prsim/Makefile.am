@@ -128,7 +128,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	nand-or-why-01 \
 	nor-and-why-01 \
 	tcount-01 \
-	unused-01 unused-02 unused-03 unused-04 unused-05 \
+	unused-01 unused-02 unused-03 unused-04 unused-05 unused-07 \
 	ls-01 ls-02 \
 	type-test-a-01 type-test-b-01 type-test-c-01 type-test-d-01 \
 	type-test-d-02 type-test-e-01 type-test-e-02 type-test-f-01 \
@@ -187,8 +187,9 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	after-celem-01 after-celem-02 after-celem-03 \
 	pass-gates-01 pass-gates-02 pass-gates-03 \
 	bad-pass-gate-a-01 bad-pass-gate-b-01 \
-	excl-rings-01 excl-rings-02 excl-rings-03 \
+	excl-rings-01 excl-rings-02 excl-rings-03 excl-rings-04 \
 	check-excl-rings-02 check-excl-rings-04 check-excl-rings-05 \
+	check-excl-rings-06 \
 	check-excl-rings-chan-02 check-excl-rings-chan-04 \
 	check-excl-rings-chan-05 \
 	precharge-a-01 precharge-b-01 \
@@ -352,7 +353,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	separator-01 separator-02 separator-03 separator-04 \
 	separator-05 separator-06 \
 	dequeue-01 dequeue-02 \
-	freeze-01 freeze-03 freeze-04 freeze-05 \
+	freeze-01 freeze-03 freeze-04 freeze-05 freeze-06 \
 	upset-01
 	
 

@@ -4589,7 +4589,7 @@ State::print_status_nodes(ostream& o, const value_enum val,
 	vector<node_index_type> nodes;
 	o << node_type::value_to_char[size_t(val)] << " nodes:" << endl;
 	status_nodes(val, nodes);
-	print_nodes(o, nodes, nl ? "\n" : " ");
+	print_nodes(o, nodes, false, nl ? "\n" : " ");
 	return o << endl;	// TODO: only if !nl, else flush
 }
 
@@ -4613,7 +4613,7 @@ State::print_status_interference(ostream& o, const bool w) const {
 	vector<node_index_type> nodes;
 	o << "Nodes with " << (w ? "weak-" : "") << "interference:" << endl;
 	status_interference(w, nodes);
-	print_nodes(o, nodes, "\n");
+	print_nodes(o, nodes, false, "\n");
 	return o << std::flush;
 }
 
@@ -4664,7 +4664,7 @@ default:
 	o << "Nodes driven:" << endl;
 	break;
 }
-	print_nodes(o, nodes, "\n");
+	print_nodes(o, nodes, false, "\n");
 	o << std::flush;
 	return err;
 }
@@ -4682,11 +4682,11 @@ State::status_frozen(vector<node_index_type>& nodes) const {
 	Print all nodes that are frozen (no activity).
  */
 ostream&
-State::print_status_frozen(ostream& o) const {
+State::print_status_frozen(ostream& o, const bool v) const {
 	vector<node_index_type> nodes;
 	status_frozen(nodes);
 	o << "Nodes frozen:" << endl;
-	print_nodes(o, nodes, "\n");
+	print_nodes(o, nodes, v, "\n");
 	return o << std::flush;
 }
 #endif
@@ -5829,59 +5829,70 @@ State::find_nodes(vector<node_index_type>& ret,
 struct node_printer_base {
 	const State&			state;
 	ostream&			os;
+	const bool			verbose;
 	const char*			delim;
 
 	explicit
-	node_printer_base(const State& s, ostream& o, const char* d) :
-			state(s), os(o), delim(d) {
+	node_printer_base(const State& s, ostream& o, 
+			const bool v, const char* d) :
+			state(s), os(o), verbose(v), delim(d) {
 		NEVER_NULL(delim);
 	}
 
 };
 
 struct node_printer : public node_printer_base {
-	node_printer(const State& s, ostream& o, const char* d) :
-			node_printer_base(s, o, d) { }
+	node_printer(const State& s, ostream& o, const bool v, const char* d) :
+			node_printer_base(s, o, v, d) { }
 
 	void
 	operator () (const node_index_type ni) const {
-		state.dump_node_canonical_name(os, ni) << delim;
+		state.dump_node_canonical_name(os, ni);
+		if (verbose) {
+			state.get_node(ni).dump_value(os << ':');
+		}
+		os << delim;
 	}
 };
 
 struct node_printer_prefix : public node_printer_base {
-	node_printer_prefix(const State& s, ostream& o, const char* d) :
-			node_printer_base(s, o, d) { }
+	node_printer_prefix(const State& s, ostream& o, 
+			const bool v, const char* d) :
+			node_printer_base(s, o, v, d) { }
 
 	void
 	operator () (const node_index_type ni) const {
 		state.dump_node_canonical_name(os << delim, ni);
+		if (verbose) {
+			state.get_node(ni).dump_value(os << ':');
+		}
 	}
 };
 
 template <typename Iter>
 ostream&
-State::__print_nodes(ostream& o, Iter b, Iter e, const char* delim) const {
-	for_each(b, e, node_printer(*this, o, delim));
+State::__print_nodes(ostream& o, Iter b, Iter e, const bool v, 
+		const char* delim) const {
+	for_each(b, e, node_printer(*this, o, v, delim));
 	return o << std::flush;
 }
 
 template <typename Iter>
 ostream&
 State::__print_nodes_infix(ostream& o, Iter b, Iter e,
-		const char* delim) const {
+		const bool v, const char* delim) const {
 if (b != e) {
-	node_printer(*this, o, "")(*b);
+	node_printer(*this, o, v, "")(*b);
 	++b;
-	for_each(b, e, node_printer_prefix(*this, o, delim));
+	for_each(b, e, node_printer_prefix(*this, o, v, delim));
 }
 	return o << std::flush;
 }
 
 ostream&
 State::print_nodes(ostream& o, const vector<node_index_type>& nodes, 
-		const char* delim) const {
-	return __print_nodes(o, nodes.begin(), nodes.end(), delim);
+		const bool v, const char* delim) const {
+	return __print_nodes(o, nodes.begin(), nodes.end(), v, delim);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -5968,11 +5979,11 @@ State::unused_nodes(vector<node_index_type>& nodes) const {
 }
 
 ostream&
-State::dump_unused_nodes(ostream& o) const {
+State::dump_unused_nodes(ostream& o, const bool v) const {
 	o << "Nodes with no fanin, no fanout:" << endl;
 	vector<node_index_type> nodes;
 	unused_nodes(nodes);
-	print_nodes(o, nodes, "\n");
+	print_nodes(o, nodes, v, "\n");
 	return o << std::flush;
 }
 
@@ -5998,7 +6009,7 @@ State::dump_dangling_unknown_nodes(ostream& o, const bool b) const {
 	o << ":" << endl;
 	vector<node_index_type> nodes;
 	dangling_unknown_nodes(b, nodes);
-	print_nodes(o, nodes, "\n");
+	print_nodes(o, nodes, false, "\n");
 	return o << std::flush;
 }
 
@@ -6012,11 +6023,11 @@ State::output_nodes(vector<node_index_type>& nodes) const {
 }
 
 ostream&
-State::dump_output_nodes(ostream& o) const {
+State::dump_output_nodes(ostream& o, const bool v) const {
 	o << "nodes with no fanout (unused): " << endl;
 	vector<node_index_type> nodes;
 	output_nodes(nodes);
-	print_nodes(o, nodes, "\n");
+	print_nodes(o, nodes, v, "\n");
 	return o << std::flush;
 }
 
@@ -6034,7 +6045,7 @@ State::dump_output_unknown_nodes(ostream& o) const {
 	o << "X nodes with no fanout (unused): " << endl;
 	vector<node_index_type> nodes;
 	output_unknown_nodes(nodes);
-	print_nodes(o, nodes, "\n");
+	print_nodes(o, nodes, false, "\n");
 	return o << std::flush;
 }
 
@@ -6052,7 +6063,7 @@ State::dump_unknown_nodes_fanout(ostream& o) const {
 	o << "X nodes with fanout: " << endl;
 	vector<node_index_type> nodes;
 	unknown_nodes_fanout(nodes);
-	print_nodes(o, nodes, "\n");
+	print_nodes(o, nodes, false, "\n");
 	return o << std::flush;
 }
 
@@ -6070,7 +6081,7 @@ State::dump_unknown_nodes_fanin_off(ostream& o) const {
 	o << "X nodes with fanins pull-off: " << endl;
 	vector<node_index_type> nodes;
 	unknown_nodes_fanin_off(nodes);
-	print_nodes(o, nodes, "\n");
+	print_nodes(o, nodes, false, "\n");
 	return o << std::flush;
 }
 
@@ -6086,32 +6097,33 @@ State::dump_subexpr(ostream& o, const expr_index_type ei,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-State::dump_mk_excl_ring(ostream& o, const ring_set_type& r) const {
+State::dump_mk_excl_ring(ostream& o, const ring_set_type& r, const bool v) const {
 	typedef	ring_set_type::const_iterator	const_iterator;
 	ISE_INVARIANT(r.size() > 1);
-	return __print_nodes_infix(o << "{ ", r.begin(), r.end(), ", ") << " }";
+	return __print_nodes_infix(o << "{ ", r.begin(), r.end(), v, ", ")
+		<< " }";
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-State::dump_mk_exclhi_rings(ostream& o) const {
+State::dump_mk_exclhi_rings(ostream& o, const bool v) const {
 	o << "forced exclhi rings:" << endl;
 	typedef	mk_excl_ring_map_type::const_iterator	const_iterator;
 	const_iterator i(mk_exhi.begin()), e(mk_exhi.end());
 	for ( ; i!=e; ++i) {
-		dump_mk_excl_ring(o, *i) << endl;
+		dump_mk_excl_ring(o, *i, v) << endl;
 	}
 	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-State::dump_mk_excllo_rings(ostream& o) const {
+State::dump_mk_excllo_rings(ostream& o, const bool v) const {
 	o << "forced excllo rings:" << endl;
 	typedef	mk_excl_ring_map_type::const_iterator	const_iterator;
 	const_iterator i(mk_exlo.begin()), e(mk_exlo.end());
 	for ( ; i!=e; ++i) {
-		dump_mk_excl_ring(o, *i) << endl;
+		dump_mk_excl_ring(o, *i, v) << endl;
 	}
 	return o;
 }
@@ -6121,7 +6133,8 @@ State::dump_mk_excllo_rings(ostream& o) const {
 	Prints excl-ring fanout of node.  
  */
 ostream&
-State::dump_node_mk_excl_rings(ostream& o, const node_index_type ni) const {
+State::dump_node_mk_excl_rings(ostream& o, const node_index_type ni, 
+		const bool v) const {
 	typedef	mk_excl_ring_map_type::const_iterator	const_iterator;
 	const string nn(get_node_canonical_name(ni));
 {
@@ -6130,7 +6143,7 @@ State::dump_node_mk_excl_rings(ostream& o, const node_index_type ni) const {
 	const_iterator i(mk_exhi.begin()), e(mk_exhi.end());
 	for ( ; i!=e; ++i) {
 		if (i->find(ni) != i->end()) {
-			dump_mk_excl_ring(o, *i) << endl;
+			dump_mk_excl_ring(o, *i, v) << endl;
 		}
 	}
 }{
@@ -6139,7 +6152,7 @@ State::dump_node_mk_excl_rings(ostream& o, const node_index_type ni) const {
 	const_iterator i(mk_exlo.begin()), e(mk_exlo.end());
 	for ( ; i!=e; ++i) {
 		if (i->find(ni) != i->end()) {
-			dump_mk_excl_ring(o, *i) << endl;
+			dump_mk_excl_ring(o, *i, v) << endl;
 		}
 	}
 }
@@ -6148,10 +6161,12 @@ State::dump_node_mk_excl_rings(ostream& o, const node_index_type ni) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-State::dump_check_excl_ring(ostream& o, const lock_index_list_type& r) const {
+State::dump_check_excl_ring(ostream& o, const lock_index_list_type& r, 
+		const bool v) const {
 	typedef	lock_index_list_type::const_iterator	const_iterator;
 	ISE_INVARIANT(r.size() > 1);
-	return __print_nodes_infix(o << "{ ", r.begin(), r.end(), ", ") << " }";
+	return __print_nodes_infix(o << "{ ", r.begin(), r.end(), v, ", ")
+		<< " }";
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -6159,7 +6174,7 @@ State::dump_check_excl_ring(ostream& o, const lock_index_list_type& r) const {
 	Dump all checked exclhi rings.  
  */
 ostream&
-State::dump_check_exclhi_rings(ostream& o) const {
+State::dump_check_exclhi_rings(ostream& o, const bool v) const {
 	o << "checked exclhi rings:" << endl;
 	check_excl_array_type temp(check_exhi_ring_pool.size());
 	__collate_check_excl_reverse_map(check_exhi, temp);
@@ -6167,7 +6182,7 @@ State::dump_check_exclhi_rings(ostream& o) const {
 	const_iterator i(temp.begin()), e(temp.end());
 	// skip first b/c [0] is reserved
 	for (++i; i!=e; ++i) {
-		dump_mk_excl_ring(o, *i) << endl;
+		dump_mk_excl_ring(o, *i, v) << endl;
 	}
 	return o;
 }
@@ -6177,7 +6192,7 @@ State::dump_check_exclhi_rings(ostream& o) const {
 	Dump all checked excllo rings.  
  */
 ostream&
-State::dump_check_excllo_rings(ostream& o) const {
+State::dump_check_excllo_rings(ostream& o, const bool v) const {
 	o << "checked excllo rings:" << endl;
 	check_excl_array_type temp(check_exlo_ring_pool.size());
 	__collate_check_excl_reverse_map(check_exlo, temp);
@@ -6185,7 +6200,7 @@ State::dump_check_excllo_rings(ostream& o) const {
 	const_iterator i(temp.begin()), e(temp.end());
 	// skip first b/c [0] is reserved
 	for (++i; i!=e; ++i) {
-		dump_mk_excl_ring(o, *i) << endl;
+		dump_mk_excl_ring(o, *i, v) << endl;
 	}
 	return o;
 }
@@ -6242,7 +6257,8 @@ State::__partial_collate_check_excl_reverse_map(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-State::dump_node_check_excl_rings(ostream& o, const node_index_type ni) const {
+State::dump_node_check_excl_rings(ostream& o, const node_index_type ni, 
+		const bool v) const {
 	typedef	check_excl_reverse_map_type::const_iterator	const_iterator;
 	const string nn(get_node_canonical_name(ni));
 	const node_type n(get_node(ni));
@@ -6255,7 +6271,7 @@ State::dump_node_check_excl_rings(ostream& o, const node_index_type ni) const {
 			check_exhi.find(ni)->second, temp);
 		const_iterator i(temp.begin()), e(temp.end());
 		for ( ; i!=e; ++i) {
-			dump_mk_excl_ring(o, i->second) << endl;
+			dump_mk_excl_ring(o, i->second, v) << endl;
 		}
 	}
 }{
@@ -6267,7 +6283,7 @@ State::dump_node_check_excl_rings(ostream& o, const node_index_type ni) const {
 			check_exlo.find(ni)->second, temp);
 		const_iterator i(temp.begin()), e(temp.end());
 		for ( ; i!=e; ++i) {
-			dump_mk_excl_ring(o, i->second) << endl;
+			dump_mk_excl_ring(o, i->second, v) << endl;
 		}
 	}
 }

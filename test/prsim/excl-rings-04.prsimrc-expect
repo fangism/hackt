@@ -1,0 +1,21 @@
+foo refers to process-inst-ref arb_invs<>
+Fanins of node `x':
+(from foo):
+[after 10]	~a -> x+
+[after 10]	a -> x-
+Fanins of node `y':
+(from foo):
+[after 10]	~b -> y+
+[after 10]	b -> y-
+allrings-mk: 
+forced exclhi rings:
+{ x:X, y:X }
+forced excllo rings:
+rings of x: 
+forced exclhi rings of which `x' is a member:
+{ x:X, y:X }
+forced excllo rings of which `x' is a member:
+rings of y: 
+forced exclhi rings of which `y' is a member:
+{ x:X, y:X }
+forced excllo rings of which `y' is a member:

@@ -1,0 +1,19 @@
+# "excl-rings-04.prsimrc"
+# copy-modified from "excl-rings-01.prsimrc"
+# @haco@ excl-rings.haco-c
+# testing excl rings features
+
+watchall
+what foo
+
+fanin x
+fanin y
+echo allrings-mk:
+allrings-mk-get
+
+echo rings of x:
+rings-mk-get x
+
+echo rings of y:
+rings-mk-get y
+

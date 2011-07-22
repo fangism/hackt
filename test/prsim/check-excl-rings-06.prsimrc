@@ -1,0 +1,25 @@
+# "check-excl-rings-06.prsimrc"
+# copy-modified from "check-excl-rings-04.prsimrc"
+# @haco@ check-excl-rings.haco-c
+# testing check-excl rings features
+
+watchall
+what foo
+
+fanin x
+fanin y
+echo allrings-chk:
+allrings-chk-get
+
+echo checked rings of a:
+rings-chk-get a
+
+echo checked rings of b:
+rings-chk-get b
+
+echo checked rings of x:
+rings-chk-get x
+
+echo checked rings of y:
+rings-chk-get y
+
