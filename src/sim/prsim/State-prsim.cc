@@ -357,7 +357,7 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 		assert_fail_policy(E(ASSERT_FAIL)),
 		channel_expect_fail_policy(E(CHANNEL_EXPECT_FAIL)),
 		excl_check_fail_policy(E(EXCL_CHECK_FAIL)),
-		keeper_check_policy(E(KEEPER_CHECK)),
+		keeper_check_fail_policy(E(KEEPER_CHECK)),
 #undef	E
 		autosave_name("autosave.prsimckpt"),
 		timing_mode(TIMING_DEFAULT),
@@ -765,7 +765,7 @@ State::reset(void) {
 	assert_fail_policy = E(ASSERT_FAIL);
 	channel_expect_fail_policy = E(CHANNEL_EXPECT_FAIL);
 	excl_check_fail_policy = E(EXCL_CHECK_FAIL);
-	keeper_check_policy = E(KEEPER_CHECK);
+	keeper_check_fail_policy = E(KEEPER_CHECK);
 #undef	E
 	timing_mode = TIMING_DEFAULT;
 	unwatch_all_nodes();
@@ -1751,7 +1751,7 @@ State::dump_mode(ostream& o) const {
 	o << "\ton channel-expect-fail: " <<
 		error_policy_string(channel_expect_fail_policy) << endl;
 	o << "\ton keeper-check-fail: " <<
-		error_policy_string(keeper_check_policy) << endl;
+		error_policy_string(keeper_check_fail_policy) << endl;
 	return o;
 }
 
@@ -3090,8 +3090,10 @@ State::step(void) THROWS_STEP_EXCEPTION {
 #else
 	const event_cause_type new_cause(ni, next);
 #endif
+{	// scoping for auto-flush
 	const auto_flush_queues __auto_flush(*this, new_cause);
 {
+	// evaluate fanout in some order
 	typedef	node_type::const_fanout_iterator	const_iterator;
 	const_iterator i, e;
 	DEBUG_STEP_PRINT("#fanouts: " << n.fanout.size() << endl);
@@ -3255,6 +3257,27 @@ if (n.in_channel()) {
 
 	// return the affected node's index
 	DEBUG_STEP_PRINT("returning node index " << ni << endl);
+}	// auto-flush of pending queue happens here
+	// optional keeper check
+if (keeper_check_fail_policy != ERROR_IGNORE) {
+	// check if node is floating
+	const pull_enum nup = n.pull_up_state[NORMAL_RULE].pull();
+	const pull_enum ndn = n.pull_dn_state[NORMAL_RULE].pull();
+	if (nup == PULL_OFF && ndn == PULL_OFF) {
+#if PRSIM_WEAK_RULES
+	const pull_enum wdn_pull = weak_rules_enabled() ?
+		n.pull_dn_state STR_INDEX(WEAK_RULE).pull() : PULL_OFF;
+	const pull_enum wup_pull = weak_rules_enabled() ?
+		n.pull_up_state STR_INDEX(WEAK_RULE).pull() : PULL_OFF;
+	if (wdn_pull == PULL_OFF && wup_pull == PULL_OFF) {
+#endif	// PRSIM_WEAK_RULES
+		// check and see if there is a feedback rule pending
+		// in the event queue
+#if PRSIM_WEAK_RULES
+	}
+#endif
+	}
+}
 	return return_type(ni, _ci);
 }	// end method step()
 
@@ -3564,6 +3587,9 @@ State::translate_to_global_node(const process_index_type pid,
 /**
 	The main expression evaluation method, ripped off of
 	old prsim's propagate_up.  
+	As expression/rule updates reach root nodes, events are spawned
+	and enqueued to one of the event queues, and eventually
+	graduate to the primary event queue.
 	\param c is the event that triggered these expressions re-evaluation.  
 	\param ni the index of the node causing this propagation (root),
 		only used for diagnostic purposes.
@@ -5265,6 +5291,107 @@ for ( ; i!=e; ++i) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Takes unsorted list with dupes, cleans it up, sorting, and remove dupes.
+ */
+static
+void
+unique_sort_nodes(vector<node_index_type>& ret) {
+	std::sort(ret.begin(), ret.end());		// in-place
+	vector<node_index_type> tmp;
+	tmp.reserve(ret.size());
+	std::unique_copy(ret.begin(), ret.end(), back_inserter(tmp));
+	ret.swap(tmp);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Show explicit feedback rules where applicable.  
+	Prints nodes that are both in the fanout and fanin set.
+	First identify feedback node(s).  (There should really be only 1.)
+	TODO: cache results
+ */
+void
+State::node_fanin(const node_index_type ni,
+		vector<node_index_type>& ret) const {
+	// fanins
+	const node_type& n(get_node(ni));
+#if VECTOR_NODE_FANIN
+	process_fanin_type::const_iterator i(n.fanin.begin()), e(n.fanin.end());
+#else
+	const process_index_type* i(&n.fanin[0]), *e(&n.fanin[n.fanin.size()]);
+#endif
+for ( ; i!=e; ++i) {
+	const process_index_type& pid = *i;
+	const process_sim_state& ps(process_state_array[pid]);
+	// find the local node index that corresponds to global node
+	const footprint_frame_map_type& bfm(get_footprint_frame_map(pid));
+	// note: many local nodes may map to the same global node
+	// linear search to find them all
+	typedef	footprint_frame_map_type::const_iterator frame_iter;
+	const frame_iter b(bfm.begin()), fe(bfm.end());
+	frame_iter f = find(b, fe, ni);
+	while (f != fe) {
+		// iterate over local node's fanin expressions!
+		const node_index_type lni = std::distance(b, f);
+		ps.collect_node_fanin(lni, *this, ret);
+		f = find(f+1, fe, ni);
+	}
+}
+	unique_sort_nodes(ret);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+State::node_fanout(const node_index_type ni,
+		vector<node_index_type>& ret) const {
+	// fanouts
+	typedef	fanout_array_type::const_iterator	const_iterator;
+	typedef	std::set<expr_index_type>		rule_set_type;
+	const node_type& n(get_node(ni));
+	const fanout_array_type& foa(n.fanout);
+	rule_set_type fanout_rules;
+	const_iterator fi(foa.begin()), fe(foa.end());
+	for ( ; fi!=fe; ++fi) {
+		// for each leaf expression in the fanout list, 
+		// trace up the propagation path to find the affected node.
+		const expr_index_type& gei = *fi;
+		const process_sim_state& ps(lookup_global_expr_process(gei));
+		const expr_index_type lei = ps.local_expr_index(gei);
+		const unique_process_subgraph& pg(ps.type());
+		const expr_index_type ei =
+			ps.global_expr_index(pg.local_root_expr(lei));
+		fanout_rules.insert(ei);	// ignore duplicates
+	}
+	typedef	rule_set_type::const_iterator		rule_iterator;
+	rule_iterator ri(fanout_rules.begin()), re(fanout_rules.end());
+	// index-sorted expressions *should* be sorted by process!
+	for ( ; ri!=re; ++ri) {
+		const process_sim_state& ps(lookup_global_expr_process(*ri));
+		const rule_type* r = ps.lookup_rule(*ri);
+	// invariants do not apply here
+	if (!r->is_invariant()) {
+		// always consider weak-rules in fanout
+		ret.push_back(ps.rule_fanout(*ri, *this));
+	}	// end for
+	}
+	// don't consider channels
+	unique_sort_nodes(ret);
+}	// end State::node_feedback
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+State::node_feedback(const node_index_type ni,
+		vector<node_index_type>& ret) const {
+	vector<node_index_type> fanin_set, fanout_set;
+	node_fanin(ni, fanin_set);
+	node_fanout(ni, fanout_set);
+	// fanin_set and fanout_set are sorted
+	std::set_intersection(fanin_set.begin(), fanin_set.end(), 
+		fanout_set.begin(), fanout_set.end(), back_inserter(ret));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 State::dump_rules(ostream& o, const process_index_type pid, 
 		const bool v) const {
@@ -6603,7 +6730,7 @@ State::autosave(const bool b, const string& n) {
 1: initial version
 2: removed watch_list in lieu of using simpler watchpoint flag
 3: added timing binary support
-4: added keeper_check_policy, and expr_alloc_flags
+4: added keeper_check_fail_policy, and expr_alloc_flags
  */
 static
 const size_t	checkpoint_version = 4;
@@ -6699,7 +6826,7 @@ State::save_checkpoint(ostream& o) const {
 	write_value(o, assert_fail_policy);
 	write_value(o, channel_expect_fail_policy);
 	write_value(o, excl_check_fail_policy);
-	write_value(o, keeper_check_policy);
+	write_value(o, keeper_check_fail_policy);
 //	write_value(o, autosave_name);		// don't preserve
 	write_value(o, timing_mode);
 	_dump_flags.write_object(o);
@@ -6904,7 +7031,7 @@ try {
 	read_value(i, assert_fail_policy);
 	read_value(i, channel_expect_fail_policy);
 	read_value(i, excl_check_fail_policy);
-	read_value(i, keeper_check_policy);
+	read_value(i, keeper_check_fail_policy);
 //	read_value(i, autosave_name);	// ignore the name of checkpoint
 	read_value(i, timing_mode);
 	_dump_flags.load_object(i);

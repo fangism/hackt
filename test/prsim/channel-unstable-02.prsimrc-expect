@@ -16,7 +16,7 @@ mode:
 	on invariant-unknown: fatal
 	on assert-fail: fatal
 	on channel-expect-fail: fatal
-	on keeper-check-fail: warn
+	on keeper-check-fail: fatal
 we will manually toggle the enable 
 	0	X.e : 0
 	10	X.d[0] : 0

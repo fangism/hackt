@@ -234,6 +234,37 @@ process_sim_state::dump_invariants(ostream& o, const State& st,
 
 //=============================================================================
 /**
+	Collects fanin literals into ret, unsorted, with duplicates.
+ */
+void
+process_sim_state::collect_node_fanin(const node_index_type lni, 
+		const State& st, vector<node_index_type>& ret) const {
+	const faninout_struct_type& fia(type().local_faninout_map[lni]);
+#if PRSIM_WEAK_RULES
+	size_t w = NORMAL_RULE;
+do {
+#endif
+	vector<expr_index_type>::const_iterator
+		i(fia.pull_up STR_INDEX(w).begin()),
+		e(fia.pull_up STR_INDEX(w).end());
+	for ( ; i!=e; ++i) {
+		const expr_index_type ui = *i;
+		__collect_rule_literals(ui, st, ret);
+	}
+		i = fia.pull_dn STR_INDEX(w).begin();
+		e = fia.pull_dn STR_INDEX(w).end();
+	for ( ; i!=e; ++i) {
+		const expr_index_type di = *i;
+		__collect_rule_literals(di, st, ret);
+	}
+#if PRSIM_WEAK_RULES
+	++w;		// always consider weak rules for feedback
+} while (w<2);		// even if !weak_rules_enabled()
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	TODO: Rajit's prsim suppreses weak rule fanins (copy?)
 		For now, we print those as well.
 	\param v true if literal should be printed with its value.  
@@ -244,7 +275,7 @@ process_sim_state::dump_node_fanin(ostream& o, const node_index_type lni,
 		const State& st, const bool v) const {
 	const node_index_type ni = st.translate_to_global_node(*this, lni);
 	const State::node_type& n(st.get_node(ni));
-	const string cn(st.get_node_canonical_name(ni));
+//	const string cn(st.get_node_canonical_name(ni));
 	const faninout_struct_type& fia(type().local_faninout_map[lni]);
 #if PRSIM_WEAK_RULES
 	size_t w = NORMAL_RULE;
@@ -320,6 +351,23 @@ process_sim_state::dump_rule(ostream& o, const rule_index_type lri,
 		st.get_node(gnr).dump_value(o << ':');
 	}
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Copy-reduced from process_sim_state::dump_rule().
+ */
+node_index_type
+process_sim_state::rule_fanout(const rule_index_type lri, 
+		const State& st) const {
+	const unique_process_subgraph& pg(type());
+	const rule_type* const r = pg.lookup_rule(lri);
+	NEVER_NULL(r);
+	const expr_struct_type& e(pg.expr_pool[lri]);
+	ISE_INVARIANT(e.is_root());
+	const node_index_type nr = e.parent;
+	const node_index_type gnr = st.translate_to_global_node(*this, nr);
+	return gnr;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -544,21 +592,16 @@ process_sim_state::__recurse_expr_why_X(ostream& o,
 		(if so, ignore type comparison for parenthesization).  
  */
 #define	CALL_DUMP_RECURSIVE(a,b,c,d,e)		dump_subexpr(a,b,c,d,e)
-#define	STATE_MEM				st.
 ostream&
 process_sim_state::dump_subexpr(ostream& o, const expr_index_type ei, 
 		const State& st, 	// for node state
 		const bool v, 
 		const uchar ptype, const bool pr) const {
-#if DEBUG_FANOUT
-	STACKTRACE_VERBOSE;
-#endif
 	const unique_process_subgraph& pg(type());
 	ISE_INVARIANT(ei < pg.expr_pool.size());
 	const expr_struct_type& e(pg.expr_pool[ei]);
 	const expr_state_type& es(expr_states[ei]);
 	const graph_node_type& g(pg.expr_graph_node_pool[ei]);
-#define PG	pg.
 	// can elaborate more on when parens are needed
 	const bool need_parens = e.parenthesize(ptype, pr);
 	const uchar _type = e.type;
@@ -576,9 +619,9 @@ process_sim_state::dump_subexpr(ostream& o, const expr_index_type ei,
 	node_index_type gni = 0;
 	if (ci->first) {
 		gni = st.translate_to_global_node(*this, ci->second);
-		STATE_MEM dump_node_canonical_name(o, gni);
+		st.dump_node_canonical_name(o, gni);
 		if (v) {
-			STATE_MEM get_node(gni).dump_value(o << ':');
+			st.get_node(gni).dump_value(o << ':');
 		}
 	} else {
 		CALL_DUMP_RECURSIVE(o, ci->second, st, v, _type);
@@ -588,12 +631,12 @@ process_sim_state::dump_subexpr(ostream& o, const expr_index_type ei,
 		o << op;
 		if (ci->first) {
 			gni = st.translate_to_global_node(*this, ci->second);
-			STATE_MEM dump_node_canonical_name(o, gni);
+			st.dump_node_canonical_name(o, gni);
 			if (v) {
-				STATE_MEM get_node(gni).dump_value(o << ':');
+				st.get_node(gni).dump_value(o << ':');
 			}
 		} else {
-			if (e.is_or() && PG is_rule_expr(ci->second)) {
+			if (e.is_or() && pg.is_rule_expr(ci->second)) {
 				// to place each 'rule' on its own line
 				o << endl;
 			}
@@ -615,7 +658,40 @@ process_sim_state::dump_subexpr(ostream& o, const expr_index_type ei,
 	}
 	return o;
 }
-#undef	PG
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Find all leaf node literals.
+ */
+void
+process_sim_state::__collect_expr_literals(const expr_index_type ei, 
+		const State& st, vector<node_index_type>& ret) const {
+	const unique_process_subgraph& pg(type());
+	ISE_INVARIANT(ei < pg.expr_pool.size());
+	const graph_node_type& g(pg.expr_graph_node_pool[ei]);
+	// can elaborate more on when parens are needed
+	// rule attribute printing has moved! (was here)
+	typedef	graph_node_type::const_iterator		const_iterator;
+	const_iterator ci(g.begin()), ce(g.end());
+	// peel out first iteration for infix printing
+	node_index_type gni = 0;
+	if (ci->first) {
+		gni = st.translate_to_global_node(*this, ci->second);
+		ret.push_back(gni);
+	} else {
+		__collect_expr_literals(ci->second, st, ret);
+	}
+	if (g.children.size() >= 1) {
+	for (++ci; ci!=ce; ++ci) {
+		if (ci->first) {
+			gni = st.translate_to_global_node(*this, ci->second);
+			ret.push_back(gni);
+		} else {
+			__collect_expr_literals(ci->second, st, ret);
+		}
+	}
+	}
+}
 
 //=============================================================================
 // explicit class template instantiations
