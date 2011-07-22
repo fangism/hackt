@@ -599,7 +599,7 @@ private:
 	/// control handling of exclusion failures
 	error_policy_enum			excl_check_fail_policy;
 	/// control handling/checking of keeper invariants
-	error_policy_enum			keeper_check_policy;
+	error_policy_enum			keeper_check_fail_policy;
 	/// name of automatically taken checkpoint
 	string					autosave_name;
 	/// timing mode
@@ -910,6 +910,7 @@ public:
 		assert_fail_policy = ERROR_FATAL;
 		channel_expect_fail_policy = ERROR_FATAL;
 		excl_check_fail_policy = ERROR_FATAL;
+		keeper_check_fail_policy = ERROR_FATAL;
 	}
 
 #define	DEFINE_POLICY_CONTROL_SET(name)				\
@@ -950,9 +951,11 @@ public:
 	DEFINE_POLICY_CONTROL_SET(assert_fail)
 	DEFINE_POLICY_CONTROL_SET(channel_expect_fail)
 	DEFINE_POLICY_CONTROL_SET(excl_check_fail)
+	DEFINE_POLICY_CONTROL_SET(keeper_check_fail)
 	DEFINE_POLICY_CONTROL_GET(assert_fail)
 	DEFINE_POLICY_CONTROL_GET(channel_expect_fail)
 	DEFINE_POLICY_CONTROL_GET(excl_check_fail)
+	DEFINE_POLICY_CONTROL_GET(keeper_check_fail)
 
 #undef	DEFINE_POLICY_CONTROL_SET
 #undef	DEFINE_POLICY_CONTROL_GET
@@ -1464,6 +1467,24 @@ public:
 
 	ostream&
 	dump_node_fanin(ostream&, const node_index_type, const bool) const;
+
+	void
+	node_fanin(const node_index_type, vector<node_index_type>&) const;
+
+	void
+	node_fanout(const node_index_type, vector<node_index_type>&) const;
+
+	void
+	node_feedback(const node_index_type, vector<node_index_type>&) const;
+
+	ostream&
+	dump_node_fanin_brief(ostream&, const node_index_type, const bool) const;
+
+	ostream&
+	dump_node_fanout_brief(ostream&, const node_index_type, const bool) const;
+
+	ostream&
+	dump_node_feedback(ostream&, const node_index_type, const bool) const;
 
 	ostream&
 	dump_rules(ostream&, const process_index_type, const bool) const;

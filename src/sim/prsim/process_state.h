@@ -175,9 +175,26 @@ struct process_sim_state : public process_sim_state_base {
 	dump_rule(ostream&, const rule_index_type, 
 		const State&, const bool, const bool) const;
 
+	node_index_type
+	rule_fanout(const rule_index_type ri, const State& st) const;
+
 	ostream&
 	dump_node_fanin(ostream&, const node_index_type, 
 		const State&, const bool) const;
+
+	void
+	collect_node_fanin(const node_index_type, const State&,
+		vector<node_index_type>&) const;
+
+	void
+	__collect_expr_literals(const expr_index_type, const State&,
+		vector<node_index_type>&) const;
+
+	void
+	__collect_rule_literals(const rule_index_type ri, const State& st,
+		vector<node_index_type>& ret) const {
+		__collect_expr_literals(ri, st, ret);
+	}
 
 };	// end struct process_sim_state
 
