@@ -11,6 +11,14 @@
 	  Test cases added.
 
 
+2011-07-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-81-prsim-keeper-check-02:
+	  hacprsim: added commands to query fanin/fanout as a simple
+		list of nodes, also feedback as the set intersection
+		of fanin and fanout.  No commands to test these yet.
+
+
 2011-07-19	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-81-prsim-keeper-check-01:
