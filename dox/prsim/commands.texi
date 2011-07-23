@@ -449,6 +449,7 @@ The use of weak-rules can be globally enabled or disabled.
 @include cmd/assert-fail.texi
 @include cmd/channel-expect-fail.texi
 @include cmd/checkexcl-fail.texi
+@include cmd/keeper-check-fail.texi
 @include cmd/mode.texi
 
 Two additional commands control the behavior of unstable rules.  

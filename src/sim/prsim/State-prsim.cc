@@ -5393,6 +5393,16 @@ State::node_feedback(const node_index_type ni,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
+State::dump_node_feedback(ostream& o, const node_index_type ni, 
+		const bool v) const {
+	dump_node_canonical_name(o << "feedback nodes of ", ni) << ':' << endl;
+	vector<node_index_type> fb;
+	node_feedback(ni, fb);
+	return print_nodes(o, fb, v, "\n");
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
 State::dump_rules(ostream& o, const process_index_type pid, 
 		const bool v) const {
 	return process_state_array[pid].dump_rules(o, *this, v);

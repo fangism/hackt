@@ -6344,6 +6344,20 @@ DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS(CheckExclFail,
 	"Set error-handling policy on exclusion failures.",
 	excl_check_fail)
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/keeper-check-fail.texi
+@deffn Command keeper-check-fail [mode]
+Set the error-handling policy for when an exclusion check fails.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS(KeeperCheckFail, 
+	"keeper-check-fail", 
+	"set error-handling for missing keeper failures",
+	"Set error-handling policy on missing keepers.",
+	keeper_check_fail)
+
 #undef	DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
