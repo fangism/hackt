@@ -71,6 +71,12 @@ using util::value_saver;
 //=============================================================================
 // ExprAllocFlags method definitions
 
+/**
+	Don't bother saving the optimization level, as it should not
+	affect functional behavior of the circuit under test.
+	This way, we can directly diff checkpoint binaries.
+	Checkpoints are valid across different optimization versions.
+ */
 bool
 ExprAllocFlags::assert_equal(const ExprAllocFlags& f) const {
 	bool eq = true;
@@ -96,14 +102,14 @@ ExprAllocFlags::assert_equal(const ExprAllocFlags& f) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 ExprAllocFlags::write_object(ostream& o) const {
-	util::write_value(o, flags);
+//	util::write_value(o, flags);
 	util::write_value(o, fast_weak_keepers);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 ExprAllocFlags::load_object(istream& i) {
-	util::read_value(i, flags);
+//	util::read_value(i, flags);
 	util::read_value(i, fast_weak_keepers);
 }
 
