@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-07-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-81-prsim-keeper-check-03:
+	  rebase master (-main-00-84-42)
+	  hacprsim: added keeper-check-fail policy command
+	  State-prsim.cc: implemented dump_node_feedback.
+
+
 2011-07-22	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-82:
