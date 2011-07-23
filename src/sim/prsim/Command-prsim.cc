@@ -3652,8 +3652,43 @@ PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(Fanin, instance_completer)
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Fanin, "fanin", info, 
 	"print rules that influence a node")
 
+static
+int
+default_print_nodeinfo_main(const State& s, const string_list& a, 
+		ostream& (State::*memfn)(ostream&, const node_index_type,
+			const bool) const,
+		const char* msg,
+		const bool v, 
+		void (usage)(ostream&)) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	const string& objname(a.back());
+#if PRSIM_NODE_AGGREGATE_ARGUMENTS
+	NODE_FOR_EACH(objname) {
+		const node_index_type& ni(*niter);
+#else
+	const node_index_type ni = parse_node_to_index(objname, s.get_module());
+	if (!ni) {
+		cerr << "No such node found." << endl;
+		return Command::BADARG;
+	}
+#endif
+		// const State::node_type& n(s.get_node(ni));
+		cout << msg << " `" << 
+			nonempty_abs_dir(objname) << "\':" << endl;
+		(s.*memfn)(cout, ni, v);
+#if PRSIM_NODE_AGGREGATE_ARGUMENTS
+	}	// end for each node
+#endif
+	return Command::NORMAL;
+}
+}
+
 int
 Fanin::main(State& s, const string_list& a) {
+#if 0
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
@@ -3678,11 +3713,15 @@ if (a.size() != 2) {
 #endif
 	return Command::NORMAL;
 }
+#else
+	return default_print_nodeinfo_main(s, a, &State::dump_node_fanin,
+		"Fanins of node", false, usage);
+#endif
 }
 
 void
 Fanin::usage(ostream& o) {
-	o << "fanin <node>" << endl;
+	o << name << " <node>" << endl;
 	o << "print all rules and expressions that can affect this node"
 		<< endl;
 }
@@ -3703,6 +3742,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(FaninGet, "fanin-get", info,
 
 int
 FaninGet::main(State& s, const string_list& a) {
+#if 0
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
@@ -3727,11 +3767,15 @@ if (a.size() != 2) {
 #endif
 	return Command::NORMAL;
 }
+#else
+	return default_print_nodeinfo_main(s, a, &State::dump_node_fanin,
+		"Fanins of node", true, usage);
+#endif
 }
 
 void
 FaninGet::usage(ostream& o) {
-	o << "fanin-get <node>" << endl;
+	o << name << " <node>" << endl;
 	o <<
 "print all rules and expressions that can affect this node, also shows\n"
 "current values of expression literals.  Nodes are formatted 'node:val',\n"
@@ -3753,6 +3797,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(Fanout, "fanout", info,
 
 int
 Fanout::main(State& s, const string_list& a) {
+#if 0
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
@@ -3777,11 +3822,15 @@ if (a.size() != 2) {
 #endif
 	return Command::NORMAL;
 }
+#else
+	return default_print_nodeinfo_main(s, a, &State::dump_node_fanout_rules,
+		"Fanouts of node", false, usage);
+#endif
 }
 
 void
 Fanout::usage(ostream& o) {
-	o << "fanout <node>" << endl;
+	o << name << " <node>" << endl;
 	o << "print all rules affected by this node" << endl;
 }
 
@@ -3801,6 +3850,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(FanoutGet, "fanout-get", info,
 
 int
 FanoutGet::main(State& s, const string_list& a) {
+#if 0
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
@@ -3825,11 +3875,15 @@ if (a.size() != 2) {
 #endif
 	return Command::NORMAL;
 }
+#else
+	return default_print_nodeinfo_main(s, a, &State::dump_node_fanout_rules,
+		"Fanouts of node", true, usage);
+#endif
 }
 
 void
 FanoutGet::usage(ostream& o) {
-	o << "fanout-get <node>" << endl;
+	o << name << " <node>" << endl;
 	o << "print all rules affected by this node, " 
 		<< endl
 	<< "also shows current values of expression literals."
