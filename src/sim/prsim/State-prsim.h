@@ -1483,6 +1483,12 @@ public:
 		const bool r, const bool i, const bool v) const;
 
 	ostream&
+	dump_node_fanout_rules(ostream& o, const node_index_type ni, 
+			const bool v) const {
+		return dump_node_fanout(o, ni, true, false, v);
+	}
+
+	ostream&
 	dump_node_fanin(ostream&, const node_index_type, const bool) const;
 
 	void
