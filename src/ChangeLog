@@ -5,6 +5,14 @@
 
 2011-07-22	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-84-81-prsim-keeper-check-03:
+	  rebase master (-main-00-84-42)
+	  hacprsim: added keeper-check-fail policy command
+	  State-prsim.cc: implemented dump_node_feedback.
+
+
+2011-07-22	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-84-82:
 	  Added -get variants to many commands that list nodes.
 	  Wrote re-usable functions to print optional values of nodes.  
