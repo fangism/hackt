@@ -3199,18 +3199,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(StatusFrozenGet, "status-frozen-get",
 
 int
 StatusFrozen::main(State& s, const string_list& a) {
-#if 0
-if (a.size() != 1) {
-	usage(cerr << "usage: ");
-	return Command::SYNTAX;
-} else {
-	s.print_status_frozen(cout);
-	return Command::NORMAL;
-}
-#else
-	return default_print_0(s, a,
-		&State::print_status_frozen, false, usage);
-#endif
+	return default_print_0(s, a, &State::print_status_frozen, false, usage);
 }
 
 int
@@ -3250,18 +3239,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnusedNodesGet, "unused-nodes-get", info,
 
 int
 UnusedNodes::main(State& s, const string_list& a) {
-#if 0
-if (a.size() != 1) {
-	usage(cerr << "usage: ");
-	return Command::SYNTAX;
-} else {
-	s.dump_unused_nodes(cout, false);
-	return Command::NORMAL;
-}
-#else
-	return default_print_0(s, a,
-		&State::dump_unused_nodes, false, usage);
-#endif
+	return default_print_0(s, a, &State::dump_unused_nodes, false, usage);
 }
 
 int
@@ -3699,35 +3677,8 @@ if (a.size() != 2) {
 
 int
 Fanin::main(State& s, const string_list& a) {
-#if 0
-if (a.size() != 2) {
-	usage(cerr << "usage: ");
-	return Command::SYNTAX;
-} else {
-	const string& objname(a.back());
-#if PRSIM_NODE_AGGREGATE_ARGUMENTS
-	NODE_FOR_EACH(objname) {
-		const node_index_type& ni(*niter);
-#else
-	const node_index_type ni = parse_node_to_index(objname, s.get_module());
-	if (!ni) {
-		cerr << "No such node found." << endl;
-		return Command::BADARG;
-	}
-#endif
-		// const State::node_type& n(s.get_node(ni));
-		cout << "Fanins of node `" << 
-			nonempty_abs_dir(objname) << "\':" << endl;
-		s.dump_node_fanin(cout, ni, false);
-#if PRSIM_NODE_AGGREGATE_ARGUMENTS
-	}	// end for each node
-#endif
-	return Command::NORMAL;
-}
-#else
 	return default_print_nodeinfo_main(s, a, &State::dump_node_fanin,
 		"Fanins of node", false, usage);
-#endif
 }
 
 void
@@ -3753,35 +3704,8 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(FaninGet, "fanin-get", info,
 
 int
 FaninGet::main(State& s, const string_list& a) {
-#if 0
-if (a.size() != 2) {
-	usage(cerr << "usage: ");
-	return Command::SYNTAX;
-} else {
-	const string& objname(a.back());
-#if PRSIM_NODE_AGGREGATE_ARGUMENTS
-	NODE_FOR_EACH(objname) {
-		const node_index_type& ni(*niter);
-#else
-	const node_index_type ni = parse_node_to_index(objname, s.get_module());
-	if (!ni) {
-		cerr << "No such node found." << endl;
-		return Command::BADARG;
-	}
-#endif
-		// const State::node_type& n(s.get_node(ni));
-		cout << "Fanins of node `" <<
-			nonempty_abs_dir(objname) << "\':" << endl;
-		s.dump_node_fanin(cout, ni, true);
-#if PRSIM_NODE_AGGREGATE_ARGUMENTS
-	}	// end for each node
-#endif
-	return Command::NORMAL;
-}
-#else
 	return default_print_nodeinfo_main(s, a, &State::dump_node_fanin,
 		"Fanins of node", true, usage);
-#endif
 }
 
 void
@@ -3808,35 +3732,8 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(Fanout, "fanout", info,
 
 int
 Fanout::main(State& s, const string_list& a) {
-#if 0
-if (a.size() != 2) {
-	usage(cerr << "usage: ");
-	return Command::SYNTAX;
-} else {
-	const string& objname(a.back());
-#if PRSIM_NODE_AGGREGATE_ARGUMENTS
-	NODE_FOR_EACH(objname) {
-		const node_index_type& ni(*niter);
-#else
-	const node_index_type ni = parse_node_to_index(objname, s.get_module());
-	if (!ni) {
-		cerr << "No such node found." << endl;
-		return Command::BADARG;
-	}
-#endif
-		// const State::node_type& n(s.get_node(ni));
-		cout << "Fanouts of node `" << 
-			nonempty_abs_dir(objname) << "\':" << endl;
-		s.dump_node_fanout(cout, ni, true, false, false);
-#if PRSIM_NODE_AGGREGATE_ARGUMENTS
-	}	// end for each node
-#endif
-	return Command::NORMAL;
-}
-#else
 	return default_print_nodeinfo_main(s, a, &State::dump_node_fanout_rules,
 		"Fanouts of node", false, usage);
-#endif
 }
 
 void
@@ -3861,35 +3758,8 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(FanoutGet, "fanout-get", info,
 
 int
 FanoutGet::main(State& s, const string_list& a) {
-#if 0
-if (a.size() != 2) {
-	usage(cerr << "usage: ");
-	return Command::SYNTAX;
-} else {
-	const string& objname(a.back());
-#if PRSIM_NODE_AGGREGATE_ARGUMENTS
-	NODE_FOR_EACH(objname) {
-		const node_index_type& ni(*niter);
-#else
-	const node_index_type ni = parse_node_to_index(objname, s.get_module());
-	if (!ni) {
-		cerr << "No such node found." << endl;
-		return Command::BADARG;
-	}
-#endif
-		// const State::node_type& n(s.get_node(ni));
-		cout << "Fanouts of node `" << 
-			nonempty_abs_dir(objname) << "\':" << endl;
-		s.dump_node_fanout(cout, ni, true, false, true);
-#if PRSIM_NODE_AGGREGATE_ARGUMENTS
-	}
-#endif
-	return Command::NORMAL;
-}
-#else
 	return default_print_nodeinfo_main(s, a, &State::dump_node_fanout_rules,
 		"Fanouts of node", true, usage);
-#endif
 }
 
 void
@@ -3942,25 +3812,8 @@ if (a.size() != 2) {
 
 int
 RingsMk::main(State& s, const string_list& a) {
-#if 0
-if (a.size() != 2) {
-	usage(cerr << "usage: ");
-	return Command::SYNTAX;
-} else {
-	const string& objname(a.back());
-	const node_index_type ni = parse_node_to_index(objname, s.get_module());
-	if (ni) {
-		s.dump_node_mk_excl_rings(cout, ni, false);
-		return Command::NORMAL;
-	} else {
-		cerr << "No such node found." << endl;
-		return Command::BADARG;
-	}
-}
-#else
 	return default_print_node_rings(s, a, false,
 		&State::dump_node_mk_excl_rings, usage);
-#endif
 }
 
 int
@@ -3999,18 +3852,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(AllRingsMkGet, "allrings-mk-get", info,
 
 int
 AllRingsMk::main(State& s, const string_list& a) {
-#if 0
-if (a.size() != 1) {
-	usage(cerr << "usage: ");
-	return Command::SYNTAX;
-} else {
-	s.dump_mk_exclhi_rings(cout);
-	s.dump_mk_excllo_rings(cout);
-	return Command::NORMAL;
-}
-#else
 	return default_print_0(s, a, &State::dump_mk_excl_rings, false, usage);
-#endif
 }
 
 int
@@ -4114,19 +3956,8 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(AllRingsChkGet, "allrings-chk-get", info,
 
 int
 AllRingsChk::main(State& s, const string_list& a) {
-#if 0
-if (a.size() != 1) {
-	usage(cerr << "usage: ");
-	return Command::SYNTAX;
-} else {
-	s.dump_check_exclhi_rings(cout);
-	s.dump_check_excllo_rings(cout);
-	return Command::NORMAL;
-}
-#else
 	return default_print_0(s, a, &State::dump_check_excl_rings,
 		false, usage);
-#endif
 }
 
 int
