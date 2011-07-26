@@ -1,0 +1,20 @@
+# "weak-feedback-a-01.prsimrc"
+# @haco@ weak-feedback-a.haco-c
+# @hacprsim-flags@ -f fast-weak-keepers
+
+watchall
+feedback-get a
+feedback-get b
+
+echo setting a:0
+set a 0
+cycle
+feedback-get a
+feedback-get b
+
+echo setting a:1
+set a 1
+cycle
+feedback-get a
+feedback-get b
+

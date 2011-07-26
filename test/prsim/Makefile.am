@@ -203,7 +203,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	weak-fight-b-01 \
 	weak-vs-weak-01 weak-vs-weak-02 weak-vs-weak-03 \
 	weak-vs-weak-04 \
-	weak-feedback-a-01 weak-feedback-a-03 \
+	weak-feedback-a-01 weak-feedback-a-03 weak-feedback-a-04 \
 	weak-feedback-b-01 \
 	celem-fb-01 \
 	half-keeper-a-01 half-keeper-a-02 \

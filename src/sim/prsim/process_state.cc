@@ -39,6 +39,21 @@ using util::indent;
 #include "util/using_ostream.h"
 
 //=============================================================================
+// class process_sim_state_base method definitions
+
+/**
+	\param gei global expression index (from fanout)
+	\return global rule index of the root.
+ */
+expr_index_type
+process_sim_state_base::global_expr_to_root(const expr_index_type gei) const {
+	const expr_index_type lei = local_expr_index(gei);
+	const unique_process_subgraph& pg(type());
+	const expr_index_type ei = global_expr_index(pg.local_root_expr(lei));
+	return ei;
+}
+
+//=============================================================================
 // class process_sim_state method definitions
 void
 process_sim_state::allocate_from_type(const unique_process_subgraph& t, 

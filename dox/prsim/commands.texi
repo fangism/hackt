@@ -340,6 +340,7 @@ simulated production rules and contain no stateful information.
 @include cmd/fanin-get.texi
 @include cmd/fanout.texi
 @include cmd/fanout-get.texi
+@include cmd/feedback.texi
 @include cmd/rules.texi
 @include cmd/allrules.texi
 @include cmd/rings-mk.texi
