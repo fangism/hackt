@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-07-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-81-prsim-keeper-check-04:
+	  Texinfo fixes for recently added commands.
+	  hacprsim: new command 'feedback' and 'feedback-get'
+		to print nodes in the feedback set (current value)
+		debugged node_fanout misuse of invalid rule
+		Added one test case.
+
+
 2011-07-22	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-81-prsim-keeper-check-03:

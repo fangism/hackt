@@ -79,6 +79,12 @@ public:
 		return lei +global_expr_offset;
 	}
 
+	expr_index_type
+	global_expr_to_root(const expr_index_type) const;
+
+	/**
+		\param gei global expression index
+	 */
 	const unique_process_subgraph::rule_type*
 	lookup_rule(const expr_index_type gei) const {
 		return type().lookup_rule(local_expr_index(gei));

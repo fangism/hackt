@@ -1,0 +1,18 @@
+Feedback of node `a':
+b:X
+Feedback of node `b':
+a:X
+setting a:0 
+	0	a : 0
+	10	b : 1	[by a:=0]
+Feedback of node `a':
+b:1
+Feedback of node `b':
+a:0
+setting a:1 
+	10	a : 1
+	20	b : 0	[by a:=1]
+Feedback of node `a':
+b:0
+Feedback of node `b':
+a:1
