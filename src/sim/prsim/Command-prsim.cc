@@ -3214,7 +3214,7 @@ StatusFrozenGet::usage(ostream& o) {
 /***
 @texinfo cmd/unused-nodes.texi
 @deffn Command unused-nodes
-@deffn Command unused-nodes-get
+@deffnx Command unused-nodes-get
 Print all nodes with no fanins and no fanouts, regardless of state.  
 @end deffn
 @end texinfo
@@ -3762,9 +3762,51 @@ FanoutGet::usage(ostream& o) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
+@texinfo cmd/feedback.texi
+@deffn Command feedback node
+@deffnx Command feedback-get node
+Print all nodes that @var{NODE} drives and is also driven-by.
+The takes the intersection of fanout nodes and fanin nodes.
+The @command{-get} variant also prints the current node values.
+@end deffn
+@end texinfo
+***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(Feedback, instance_completer)
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(FeedbackGet, instance_completer)
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Feedback, "feedback", info, 
+	"print feedback nodes of the given node")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(FeedbackGet, "feedback-get", info, 
+	"print feedback nodes of the given node")
+
+int
+Feedback::main(State& s, const string_list& a) {
+	return default_print_nodeinfo_main(s, a, &State::dump_node_feedback,
+		"Feedback of node", false, usage);
+}
+
+int
+FeedbackGet::main(State& s, const string_list& a) {
+	return default_print_nodeinfo_main(s, a, &State::dump_node_feedback,
+		"Feedback of node", true, usage);
+}
+
+void
+Feedback::usage(ostream& o) {
+	o << name << " <node>" << endl;
+	o << brief << endl;
+}
+
+void
+FeedbackGet::usage(ostream& o) {
+	o << name << " <node>" << endl;
+	o << brief << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
 @texinfo cmd/rings-mk.texi
 @deffn Command rings-mk node
-@deffn Command rings-mk-get node
+@deffnx Command rings-mk-get node
 Print forced exclusive high/low rings of which @var{node} is a member.
 @end deffn
 @end texinfo
@@ -3829,7 +3871,7 @@ RingsMkGet::usage(ostream& o) {
 /***
 @texinfo cmd/allrings-mk.texi
 @deffn Command allrings-mk
-@deffn Command allrings-mk-get
+@deffnx Command allrings-mk-get
 Print all forced exclusive high/low rings.  
 @end deffn
 @end texinfo

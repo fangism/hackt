@@ -5107,10 +5107,7 @@ State::dump_node_fanout(ostream& o, const node_index_type ni,
 		// trace up the propagation path to find the affected node.
 		const expr_index_type& gei = *fi;
 		const process_sim_state& ps(lookup_global_expr_process(gei));
-		const expr_index_type lei = ps.local_expr_index(gei);
-		const unique_process_subgraph& pg(ps.type());
-		const expr_index_type ei =
-			ps.global_expr_index(pg.local_root_expr(lei));
+		const expr_index_type ei = ps.global_expr_to_root(gei);
 		// adding offset translates back to global expression id
 		DEBUG_FANOUT_PRINT("ei = " << ei << endl);
 		fanout_rules.insert(ei);	// ignore duplicates
@@ -5342,6 +5339,9 @@ for ( ; i!=e; ++i) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Reduced from dump_node_fanout.
+ */
 void
 State::node_fanout(const node_index_type ni,
 		vector<node_index_type>& ret) const {
@@ -5357,10 +5357,7 @@ State::node_fanout(const node_index_type ni,
 		// trace up the propagation path to find the affected node.
 		const expr_index_type& gei = *fi;
 		const process_sim_state& ps(lookup_global_expr_process(gei));
-		const expr_index_type lei = ps.local_expr_index(gei);
-		const unique_process_subgraph& pg(ps.type());
-		const expr_index_type ei =
-			ps.global_expr_index(pg.local_root_expr(lei));
+		const expr_index_type ei = ps.global_expr_to_root(gei);
 		fanout_rules.insert(ei);	// ignore duplicates
 	}
 	typedef	rule_set_type::const_iterator		rule_iterator;
@@ -5369,10 +5366,12 @@ State::node_fanout(const node_index_type ni,
 	for ( ; ri!=re; ++ri) {
 		const process_sim_state& ps(lookup_global_expr_process(*ri));
 		const rule_type* r = ps.lookup_rule(*ri);
+		NEVER_NULL(r);
 	// invariants do not apply here
 	if (!r->is_invariant()) {
 		// always consider weak-rules in fanout
-		ret.push_back(ps.rule_fanout(*ri, *this));
+		const rule_index_type gr = ps.local_expr_index(*ri);
+		ret.push_back(ps.rule_fanout(gr, *this));
 	}	// end for
 	}
 	// don't consider channels
@@ -5395,7 +5394,7 @@ State::node_feedback(const node_index_type ni,
 ostream&
 State::dump_node_feedback(ostream& o, const node_index_type ni, 
 		const bool v) const {
-	dump_node_canonical_name(o << "feedback nodes of ", ni) << ':' << endl;
+//	dump_node_canonical_name(o << "feedback nodes of ", ni) << ':' << endl;
 	vector<node_index_type> fb;
 	node_feedback(ni, fb);
 	return print_nodes(o, fb, v, "\n");
