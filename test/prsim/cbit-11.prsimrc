@@ -1,0 +1,22 @@
+# "cbit-11.prsimrc"
+# copy-modified from "cbit-10.prsimrc"
+# @haco@ cbit.haco-c
+# testing feedback keeper checks
+
+# mode
+keeper-check-fail fatal
+weak-rules on
+# by default
+watchall
+watchall-queue
+
+set wl 0
+step-event
+assertn-queue
+
+set p.f 1
+step-event
+queue
+cycle
+
+

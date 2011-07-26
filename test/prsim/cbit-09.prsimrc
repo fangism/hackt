@@ -1,0 +1,22 @@
+# "cbit-09.prsimrc"
+# copy-modified from "cbit-05.prsimrc"
+# @haco@ cbit.haco-c
+# @hacprsim-flags@ -f fast-weak-keepers
+# testing feedback keeper checks
+
+# mode
+keeper-check-fail warn
+weak-rules off
+# by default
+watchall
+watchall-queue
+
+set wl 0
+step-event
+assertn-queue
+
+set p.f 1
+step-event
+queue
+assertn-queue
+

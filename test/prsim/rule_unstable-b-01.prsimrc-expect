@@ -31,6 +31,7 @@ rule: [after 10]	~a:1 -> c+:0
 queue:	30	c : X	[from a:=0]
 event c+ was turned into X 
 queue:	30	c : X	[from a:=0]
+Warning: node c is floating without pending feedback.  (fast-weak-keepers disabled) (weak-rules off)
 	30	c : X	[by a:=1]
 resetting c:0 
 	30	b : 1

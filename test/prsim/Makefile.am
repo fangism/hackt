@@ -209,6 +209,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	cross-coupled-01 cross-coupled-weak-01 \
 	cross-coupled-why-01 \
 	cbit-01 cbit-02 cbit-03 cbit-04 cbit-05 cbit-06 cbit-07 cbit-08 \
+	cbit-09 cbit-10 cbit-11 \
 	cbit_test_stat-01 \
 	cbit_test_stat_alt-01 \
 	cross-pull-a-01 cross-pull-a-02 \

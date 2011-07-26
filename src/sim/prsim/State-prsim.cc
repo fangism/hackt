@@ -3259,25 +3259,9 @@ if (n.in_channel()) {
 	DEBUG_STEP_PRINT("returning node index " << ni << endl);
 }	// auto-flush of pending queue happens here
 	// optional keeper check
-if (keeper_check_fail_policy != ERROR_IGNORE) {
-	// check if node is floating
-	const pull_enum nup = n.pull_up_state[NORMAL_RULE].pull();
-	const pull_enum ndn = n.pull_dn_state[NORMAL_RULE].pull();
-	if (nup == PULL_OFF && ndn == PULL_OFF) {
-#if PRSIM_WEAK_RULES
-	const pull_enum wdn_pull = weak_rules_enabled() ?
-		n.pull_dn_state STR_INDEX(WEAK_RULE).pull() : PULL_OFF;
-	const pull_enum wup_pull = weak_rules_enabled() ?
-		n.pull_up_state STR_INDEX(WEAK_RULE).pull() : PULL_OFF;
-	if (wdn_pull == PULL_OFF && wup_pull == PULL_OFF) {
-#endif	// PRSIM_WEAK_RULES
-		// check and see if there is a feedback rule pending
-		// in the event queue
-#if PRSIM_WEAK_RULES
+	if (keeper_check_fail_policy != ERROR_IGNORE && n.has_fanin()) {
+		check_floating_node(ni);
 	}
-#endif
-	}
-}
 	return return_type(ni, _ci);
 }	// end method step()
 
@@ -5399,6 +5383,68 @@ State::dump_node_feedback(ostream& o, const node_index_type ni,
 	node_feedback(ni, fb);
 	return print_nodes(o, fb, v, "\n");
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Checks that if node is floating, feedback node is already pending.
+	Not const, because may call stop().
+ */
+void
+State::check_floating_node(const node_index_type ni) {
+	const node_type& n(get_node(ni));
+	// check if node is floating
+	// skip this check if node has no fanin, as it is probably an input
+	const pull_enum nup = n.pull_up_state[NORMAL_RULE].pull();
+	const pull_enum ndn = n.pull_dn_state[NORMAL_RULE].pull();
+	// don't worry about X pulls
+	if (nup == PULL_OFF && ndn == PULL_OFF) {
+#if PRSIM_WEAK_RULES
+	const pull_enum wdn_pull = weak_rules_enabled() ?
+		n.pull_dn_state STR_INDEX(WEAK_RULE).pull() : PULL_OFF;
+	const pull_enum wup_pull = weak_rules_enabled() ?
+		n.pull_up_state STR_INDEX(WEAK_RULE).pull() : PULL_OFF;
+	if (wdn_pull == PULL_OFF && wup_pull == PULL_OFF) {
+#endif	// PRSIM_WEAK_RULES
+		// check and see if there is a feedback rule pending
+		// in the event queue
+		vector<node_index_type> fb;
+		node_feedback(ni, fb);
+		bool have_pending = false;
+		vector<node_index_type>::const_iterator
+			i(fb.begin()), e(fb.end());
+		for ( ; i!=e; ++i) {
+		if (get_node(*i).pending_event()) {
+			have_pending = true;
+			break;
+		}
+		}
+		if (!have_pending) {
+#define	E	keeper_check_fail_policy
+			cerr << ((E > ERROR_WARN) ? "Error: " : "Warning: ");
+			dump_node_canonical_name(cerr << "node ", ni)
+				<< " is floating without pending feedback. ";
+			if (!expr_alloc_flags.fast_weak_keepers) {
+				cerr << " (fast-weak-keepers disabled)";
+			}
+			if (!weak_rules_enabled()) {
+				cerr << " (weak-rules off)";
+			}
+			cerr << endl;
+			if (UNLIKELY(E >= ERROR_BREAK)) {
+				stop();
+			if (UNLIKELY(E >= ERROR_INTERACTIVE)) {
+				// now catches FATAL and INTERACTIVE
+				const keeper_fail_exception kx(ni, E);
+				throw kx;
+			}
+			}
+#undef E
+		}
+#if PRSIM_WEAK_RULES
+	}	// else is weakly driven
+#endif
+	}	// else is driven
+}	// end check_floating_node
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&

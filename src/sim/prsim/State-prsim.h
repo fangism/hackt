@@ -196,6 +196,7 @@ public:
 
 	typedef	generic_exception	interference_exception;
 	typedef	generic_exception	instability_exception;
+	typedef	generic_exception	keeper_fail_exception;
 
 #define	THROWS_STEP_EXCEPTION	throw (const step_exception&)
 private:
@@ -1499,6 +1500,9 @@ public:
 
 	void
 	node_feedback(const node_index_type, vector<node_index_type>&) const;
+
+	void
+	check_floating_node(const node_index_type);
 
 	ostream&
 	dump_node_fanin_brief(ostream&, const node_index_type, const bool) const;

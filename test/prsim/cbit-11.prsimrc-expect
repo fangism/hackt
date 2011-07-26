@@ -1,0 +1,8 @@
+enqueued:	0	wl : 0
+	0	wl : 0
+enqueued:	0	p.f : 1
+enqueued:	10	p.t : 0	[from p.f:=1]	(weak)
+	0	p.f : 1
+event queue:
+	10	p.t : 0	[from p.f:=1]	(weak)
+	10	p.t : 0	[by p.f:=1]
