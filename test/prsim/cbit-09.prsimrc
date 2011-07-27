@@ -5,7 +5,6 @@
 # testing feedback keeper checks
 
 # mode
-keeper-check-fail warn
 weak-rules off
 # by default
 watchall

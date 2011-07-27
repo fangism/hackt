@@ -9,14 +9,12 @@ f : X
 	0	t : X
 pulling one down first (slight time separation) 
 	0	t : 0
-Warning: node f is floating without pending feedback.  (fast-weak-keepers disabled) (weak-rules off)
 	5	f : 0
 	5	t : X
 	5	f : X
 pulling one up 
 	5	t : 1
 	15	f : 0	[by t:=1]
-Warning: node t is floating without pending feedback.  (fast-weak-keepers disabled) (weak-rules off)
 	15	t : 0
 	15	t : X
 	15	f : X
