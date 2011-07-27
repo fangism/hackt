@@ -1,0 +1,9 @@
+# "cbit-05b.prsimrc"
+# copy-modified from "cbit-05.prsimrc"
+# @haco@ cbit.haco-c
+# testing keeper checks
+
+# mode
+keeper-check-fail warn
+source cbit-05.prsimrc
+

@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-07-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-81-prsim-keeper-check-05:
+	  hacprsim: defaulting to keeper-check-fail ignore
+		because too much regression test noise.
+		Fixed evaluation of floating nodes, to consider
+		fanout candidates (of the node that just switched).
+		Test cases updated and added.
+
+
 2011-07-25	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-81-prsim-keeper-check-04:
@@ -16,7 +26,7 @@
 2011-07-22	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-81-prsim-keeper-check-03:
-	  rebase master (-main-00-84-42)
+	  rebase master (-main-00-84-82)
 	  hacprsim: added keeper-check-fail policy command
 	  State-prsim.cc: implemented dump_node_feedback.
 
