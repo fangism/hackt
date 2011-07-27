@@ -1,0 +1,9 @@
+# "celem-keeper-03d.prsimrc"
+# copy-modified from "celem-keeper-03.prsimrc"
+# @haco@ celem-keeper.haco-c
+# @hacprsim-flags@ -f fast-weak-keepers
+# testing keeper checks
+
+weak-rules on
+source celem-keeper-03.prsimrc
+
