@@ -1,0 +1,36 @@
+Feedback of node `Z._c':
+c
+Fanins of node `Z._c':
+(from Z):
+[after 10]	~a & ~b -> Z._c+
+[after 10]	a & b -> Z._c-
+[after 0, weak]	~c -> Z._c+
+[after 0, weak]	c -> Z._c-
+enqueued:	0	a : 0
+enqueued:	0	b : 0
+	0	a : 0
+enqueued:	10	Z._c : 1	[from b:=0]
+	0	b : 0
+enqueued:	20	c : 0	[from Z._c:=1]
+	10	Z._c : 1	[by b:=0]
+	20	c : 0	[by Z._c:=1]
+enqueued:	20	a : 1
+Warning: node Z._c is floating without pending feedback.  (weak-rules off)
+	20	a : 1
+Nodes undriven (state-holding):
+enqueued:	20	b : 1
+enqueued:	30	Z._c : 0	[from b:=1]
+	20	b : 1
+enqueued:	40	c : 1	[from Z._c:=0]
+	30	Z._c : 0	[by b:=1]
+	40	c : 1	[by Z._c:=0]
+enqueued:	40	a : 0
+Warning: node Z._c is floating without pending feedback.  (weak-rules off)
+	40	a : 0
+Nodes undriven (state-holding):
+enqueued:	40	b : 0
+enqueued:	50	Z._c : 1	[from b:=0]
+	40	b : 0
+enqueued:	60	c : 0	[from Z._c:=1]
+	50	Z._c : 1	[by b:=0]
+	60	c : 0	[by Z._c:=1]

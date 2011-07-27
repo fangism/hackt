@@ -13,6 +13,12 @@
 
 2011-07-27	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-84-81-prsim-keeper-check-06:
+	  hacprsim: fixed condition for checking floating node, 
+		only skip if the candidate fanout node has no fanin.
+		Test cases updated, added.
+
+
 	* HACKT-00-01-04-main-00-84-81-prsim-keeper-check-05:
 	  hacprsim: defaulting to keeper-check-fail ignore
 		because too much regression test noise.

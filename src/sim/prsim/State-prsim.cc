@@ -3260,7 +3260,7 @@ if (n.in_channel()) {
 	DEBUG_STEP_PRINT("returning node index " << ni << endl);
 }	// auto-flush of pending queue happens here
 	// optional keeper check
-	if (keeper_check_fail_policy > ERROR_IGNORE && n.has_fanin()) {
+	if (keeper_check_fail_policy > ERROR_IGNORE) {
 //		cout << "checking floating..." << endl;
 		size_t first_thrown_node = INVALID_NODE_INDEX;
 		set<node_index_type>::const_iterator
@@ -3268,6 +3268,7 @@ if (n.in_channel()) {
 			e(__keeper_check_candidates.end());
 #define	E	keeper_check_fail_policy
 		for ( ; i!=e; ++i) {
+		if (get_node(*i).has_fanin()) {
 		if (check_floating_node(*i)) {
 			if (!first_thrown_node)
 				first_thrown_node = *i;
@@ -3281,8 +3282,9 @@ if (n.in_channel()) {
 				cerr << " (weak-rules off)";
 			}
 			cerr << endl;
-		}
-		}
+		}	// else that node is feedback-driven
+		}	// else no fanin, assume input
+		}	// end for each candidate
 		if (first_thrown_node) {
 			if (UNLIKELY(E >= ERROR_BREAK)) {
 				stop();

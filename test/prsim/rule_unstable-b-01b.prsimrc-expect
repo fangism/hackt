@@ -3,9 +3,11 @@ rules:
 [after 10]	~a -> c+
 [after 10, unstable]	b -> c-
 	0	a : 1
+Warning: node c is floating without pending feedback.  (fast-weak-keepers disabled) (weak-rules off)
 	0	b : 0
 	0	b : 1
 queue:	10	c : 0	[from b:=1]
+Warning: node c is floating without pending feedback.  (fast-weak-keepers disabled) (weak-rules off)
 	0	b : 0
 No event pending on `c'.
 event c- was turned into vacuous X 
@@ -14,6 +16,7 @@ queue:	10	c : 1	[from a:=0]
 WARNING: unstable `c'+
 rule: [after 10]	~a:1 -> c+:X
 >> cause: `a' (val: 1)
+Warning: node c is floating without pending feedback.  (fast-weak-keepers disabled) (weak-rules off)
 	0	a : 1
 should report c+ unstable 
 queue:	10	c : X	[from a:=0]
@@ -21,12 +24,14 @@ event c+ was turned into vacuous X
 	10	c : X	[by a:=1]
 	10	b : 1
 	20	c : 0	[by b:=1]
+Warning: node c is floating without pending feedback.  (fast-weak-keepers disabled) (weak-rules off)
 	20	b : 0
 	20	a : 0
 queue:	30	c : 1	[from a:=0]
 WARNING: unstable `c'+
 rule: [after 10]	~a:1 -> c+:0
 >> cause: `a' (val: 1)
+Warning: node c is floating without pending feedback.  (fast-weak-keepers disabled) (weak-rules off)
 	20	a : 1
 queue:	30	c : X	[from a:=0]
 event c+ was turned into X 
@@ -35,6 +40,7 @@ queue:	30	c : X	[from a:=0]
 resetting c:0 
 	30	b : 1
 	40	c : 0	[by b:=1]
+Warning: node c is floating without pending feedback.  (fast-weak-keepers disabled) (weak-rules off)
 	40	b : 0
 testing weak instability... 
 	40	a : 0
@@ -48,6 +54,7 @@ should report c+ weak unstable
 c should still become X 
 	50	a : 0
 	60	c : 1	[by a:=0]
+Warning: node c is floating without pending feedback.  (fast-weak-keepers disabled) (weak-rules off)
 	60	a : 1
 	60	b : 1
 queue:	70	c : 0	[from b:=1]

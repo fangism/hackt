@@ -211,7 +211,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	cross-coupled-01 cross-coupled-weak-01 \
 	cross-coupled-why-01 \
 	cbit-01 cbit-02 cbit-03 cbit-04 cbit-05 cbit-05b cbit-06 \
-	cbit-07 cbit-08 cbit-09 cbit-09b cbit-10 cbit-11 \
+	cbit-07 cbit-08 cbit-09 cbit-09b cbit-09c cbit-10 cbit-11 \
 	cbit_test_stat-01 \
 	cbit_test_stat_alt-01 \
 	cross-pull-a-01 cross-pull-a-02 \
@@ -230,6 +230,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	iskeeper-a-01 iskeeper-a-02 \
 	isckeeper-a-01 \
 	celem-keeper-01 celem-keeper-02 \
+	celem-keeper-03 celem-keeper-03b celem-keeper-03c celem-keeper-03d \
 	autosave-02 \
 	channel-test-a-01 channel-test-a-02 channel-test-a-03 \
 	channel-test-a-04 channel-test-a-05 channel-test-a-06 \

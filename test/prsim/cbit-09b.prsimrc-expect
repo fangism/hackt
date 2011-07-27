@@ -1,4 +1,8 @@
 enqueued:	0	wl : 0
+Warning: node p.t is floating without pending feedback.  (weak-rules off)
+Warning: node p.f is floating without pending feedback.  (weak-rules off)
+Warning: node bl is floating without pending feedback.  (weak-rules off)
+Warning: node _bl is floating without pending feedback.  (weak-rules off)
 	0	wl : 0
 enqueued:	0	p.f : 1
 Warning: node p.t is floating without pending feedback.  (weak-rules off)
