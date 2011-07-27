@@ -1,0 +1,10 @@
+# "cbit-09b.prsimrc"
+# copy-modified from "cbit-05.prsimrc"
+# @haco@ cbit.haco-c
+# @hacprsim-flags@ -f fast-weak-keepers
+# testing feedback keeper checks
+
+# mode
+keeper-check-fail warn
+source cbit-09.prsimrc
+

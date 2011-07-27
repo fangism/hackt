@@ -3108,6 +3108,7 @@ if (eval_ordering_is_random()) {
 	i = n.fanout.begin();
 	e = n.fanout.end();
 }
+	__keeper_check_candidates.clear();	// look for turned off rules
 	break_type __throw__ = ERROR_NONE;
 	for ( ; i!=e; ++i) {
 		// when evaluating a node as an expression, 
@@ -3259,8 +3260,42 @@ if (n.in_channel()) {
 	DEBUG_STEP_PRINT("returning node index " << ni << endl);
 }	// auto-flush of pending queue happens here
 	// optional keeper check
-	if (keeper_check_fail_policy != ERROR_IGNORE && n.has_fanin()) {
-		check_floating_node(ni);
+	if (keeper_check_fail_policy > ERROR_IGNORE && n.has_fanin()) {
+//		cout << "checking floating..." << endl;
+		size_t first_thrown_node = INVALID_NODE_INDEX;
+		set<node_index_type>::const_iterator
+			i(__keeper_check_candidates.begin()),
+			e(__keeper_check_candidates.end());
+#define	E	keeper_check_fail_policy
+		for ( ; i!=e; ++i) {
+		if (check_floating_node(*i)) {
+			if (!first_thrown_node)
+				first_thrown_node = *i;
+			cerr << ((E > ERROR_WARN) ? "Error: " : "Warning: ");
+			dump_node_canonical_name(cerr << "node ", *i)
+				<< " is floating without pending feedback. ";
+			if (!expr_alloc_flags.fast_weak_keepers) {
+				cerr << " (fast-weak-keepers disabled)";
+			}
+			if (!weak_rules_enabled()) {
+				cerr << " (weak-rules off)";
+			}
+			cerr << endl;
+		}
+		}
+		if (first_thrown_node) {
+			if (UNLIKELY(E >= ERROR_BREAK)) {
+				stop();
+			if (UNLIKELY(E >= ERROR_INTERACTIVE)) {
+				// can only throw one node, pick first one
+				const keeper_fail_exception
+					kx(first_thrown_node, E);
+				throw kx;
+			}
+			}
+		}
+#undef E
+		// __keeper_check_candidates.clear();
 	}
 	return return_type(ni, _ci);
 }	// end method step()
@@ -3670,6 +3705,10 @@ State::propagate_evaluation(
 	STACKTRACE_INDENT_PRINT("wdn_pull: " << wdn_pull << endl);
 #endif
 #endif
+	if (keeper_check_fail_policy > ERROR_IGNORE &&
+			up_pull == PULL_OFF && dn_pull == PULL_OFF) {
+		__keeper_check_candidates.insert(ui);
+	}
 #if PRSIM_WEAK_RULES
 	// weak rule pre-filtering
 if (weak_rules_enabled()) {
@@ -5388,9 +5427,10 @@ State::dump_node_feedback(ostream& o, const node_index_type ni,
 /**
 	Checks that if node is floating, feedback node is already pending.
 	Not const, because may call stop().
+	\return true if keeper check fails
  */
-void
-State::check_floating_node(const node_index_type ni) {
+bool
+State::check_floating_node(const node_index_type ni) const {
 	const node_type& n(get_node(ni));
 	// check if node is floating
 	// skip this check if node has no fanin, as it is probably an input
@@ -5399,11 +5439,13 @@ State::check_floating_node(const node_index_type ni) {
 	// don't worry about X pulls
 	if (nup == PULL_OFF && ndn == PULL_OFF) {
 #if PRSIM_WEAK_RULES
+//	cerr << "strong rules off" << endl;
 	const pull_enum wdn_pull = weak_rules_enabled() ?
 		n.pull_dn_state STR_INDEX(WEAK_RULE).pull() : PULL_OFF;
 	const pull_enum wup_pull = weak_rules_enabled() ?
 		n.pull_up_state STR_INDEX(WEAK_RULE).pull() : PULL_OFF;
 	if (wdn_pull == PULL_OFF && wup_pull == PULL_OFF) {
+//		cerr << "weak rules off" << endl;
 #endif	// PRSIM_WEAK_RULES
 		// check and see if there is a feedback rule pending
 		// in the event queue
@@ -5414,36 +5456,19 @@ State::check_floating_node(const node_index_type ni) {
 			i(fb.begin()), e(fb.end());
 		for ( ; i!=e; ++i) {
 		if (get_node(*i).pending_event()) {
+//			cerr << "pending node " << *i << endl;
 			have_pending = true;
 			break;
 		}
 		}
 		if (!have_pending) {
-#define	E	keeper_check_fail_policy
-			cerr << ((E > ERROR_WARN) ? "Error: " : "Warning: ");
-			dump_node_canonical_name(cerr << "node ", ni)
-				<< " is floating without pending feedback. ";
-			if (!expr_alloc_flags.fast_weak_keepers) {
-				cerr << " (fast-weak-keepers disabled)";
-			}
-			if (!weak_rules_enabled()) {
-				cerr << " (weak-rules off)";
-			}
-			cerr << endl;
-			if (UNLIKELY(E >= ERROR_BREAK)) {
-				stop();
-			if (UNLIKELY(E >= ERROR_INTERACTIVE)) {
-				// now catches FATAL and INTERACTIVE
-				const keeper_fail_exception kx(ni, E);
-				throw kx;
-			}
-			}
-#undef E
+			return true;
 		}
 #if PRSIM_WEAK_RULES
 	}	// else is weakly driven
 #endif
 	}	// else is driven
+	return false;
 }	// end check_floating_node
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

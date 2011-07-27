@@ -1,0 +1,6 @@
+# "rule_unstable-b-01b.prsimrc"
+# @haco@ rule_unstable-b.haco-c
+
+keeper-check-fail warn
+source rule_unstable-b-01.prsimrc
+

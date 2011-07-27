@@ -1,0 +1,6 @@
+# "cross-pull-a-01b.prsimrc"
+# @haco@ cross-pull-a.haco-c
+
+keeper-check-fail warn
+source cross-pull-a-01.prsimrc
+

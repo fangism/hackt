@@ -152,6 +152,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	paranoid-01 \
 	killed-01 \
 	rule_unstable-a-01 rule_unstable-b-01 rule_unstable-c-01 \
+	rule_unstable-b-01b \
 	rule_unstable-d-01 rule_unstable-e-01 rule_unstable-f-01 \
 	attrib-unstab-a-01 attrib-unstab-a-02 \
 	unstable-01 unstable-02 unstable-03 \
@@ -209,11 +210,12 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	half-keeper-a-01 half-keeper-a-02 \
 	cross-coupled-01 cross-coupled-weak-01 \
 	cross-coupled-why-01 \
-	cbit-01 cbit-02 cbit-03 cbit-04 cbit-05 cbit-06 cbit-07 cbit-08 \
-	cbit-09 cbit-10 cbit-11 \
+	cbit-01 cbit-02 cbit-03 cbit-04 cbit-05 cbit-05b cbit-06 \
+	cbit-07 cbit-08 cbit-09 cbit-09b cbit-10 cbit-11 \
 	cbit_test_stat-01 \
 	cbit_test_stat_alt-01 \
 	cross-pull-a-01 cross-pull-a-02 \
+	cross-pull-a-01b cross-pull-a-02b \
 	bitline-a-01 bitline-a-02 \
 	bitline-b-01 bitline-b-02 \
 	half-weak-a-01 half-weak-a-01a half-weak-a-02 half-weak-a-02a \

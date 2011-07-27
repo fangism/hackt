@@ -336,7 +336,7 @@ public:
 		ERROR_DEFAULT_ASSERT_FAIL = ERROR_FATAL,
 		ERROR_DEFAULT_CHANNEL_EXPECT_FAIL = ERROR_FATAL,
 		ERROR_DEFAULT_EXCL_CHECK_FAIL = ERROR_FATAL,
-		ERROR_DEFAULT_KEEPER_CHECK = ERROR_WARN
+		ERROR_DEFAULT_KEEPER_CHECK = ERROR_IGNORE
 	};
 
 private:
@@ -621,6 +621,12 @@ private:
 		Never maintained for checkpointing.  
 	 */
 	fanout_array_type			__shuffle_indices;
+	/**
+		Auxiliary array of nodes whose pull (in either direction)
+		turned OFF, and are thus candidates for checking for 
+		missing keepers.
+	 */
+	set<node_index_type>			__keeper_check_candidates;
 public:
 	/**
 		Signal handler class that binds the State reference
@@ -1501,8 +1507,8 @@ public:
 	void
 	node_feedback(const node_index_type, vector<node_index_type>&) const;
 
-	void
-	check_floating_node(const node_index_type);
+	bool
+	check_floating_node(const node_index_type) const;
 
 	ostream&
 	dump_node_fanin_brief(ostream&, const node_index_type, const bool) const;
