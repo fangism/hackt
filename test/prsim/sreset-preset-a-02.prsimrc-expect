@@ -4,7 +4,8 @@
 	20	out : 0	[by _out:=1]
 	20	in : 1
 Error: node _out is floating without pending feedback.  (fast-weak-keepers disabled) (weak-rules off)
-Halting on node: _out
+	[caused by _pReset : 1]
+Halting on node: _pReset
 ... at line 12
 Error encountered during source #FILE#.
 ... at line 5

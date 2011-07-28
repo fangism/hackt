@@ -3286,12 +3286,14 @@ if (n.in_channel()) {
 		}	// else no fanin, assume input
 		}	// end for each candidate
 		if (first_thrown_node) {
+			dump_node_value(cerr << "\t[caused by ", ni)
+				<< ']' << endl;
 			if (UNLIKELY(E >= ERROR_BREAK)) {
 				stop();
 			if (UNLIKELY(E >= ERROR_INTERACTIVE)) {
 				// can only throw one node, pick first one
 				const keeper_fail_exception
-					kx(first_thrown_node, E);
+					kx(ni, E);
 				throw kx;
 			}
 			}

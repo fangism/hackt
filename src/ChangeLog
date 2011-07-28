@@ -11,6 +11,15 @@
 		Added 1 test case.  Documented.
 
 
+2011-07-29	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-81-prsim-keeper-check-07:
+	  hacprsim: on keeper-check-failure print both the causing
+		node and the output node that failed.
+		Added many test cases with broken keepers, missing
+		feedback, incorrect combinational feedback.
+
+
 2011-07-27	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-81-prsim-keeper-check-06:

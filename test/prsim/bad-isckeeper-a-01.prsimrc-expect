@@ -15,7 +15,8 @@
 	70	_c : 0	[by a:=1]
 	80	c : 1	[by _c:=0]
 Error: node _c is floating without pending feedback.  (fast-weak-keepers disabled) (weak-rules off)
-Halting on node: _c
+	[caused by a : 0]
+Halting on node: a
 ... at line 33
 Error encountered during source #FILE#.
 ... at line 4
