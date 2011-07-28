@@ -83,7 +83,8 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	relaxed-a relaxed-b \
 	completion_test \
 	set-multi-a set-multi-b \
-	getall-a getall-a-def getall-b getall-c
+	getall-a getall-a-def getall-b getall-c \
+	sreset-preset-a sreset-preset-b sreset-preset-c
 
 # TODO: more cross-coupled test cases
 # SRAM cell
@@ -205,7 +206,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	weak-vs-weak-04 \
 	weak-feedback-a-01 weak-feedback-a-03 weak-feedback-a-04 \
 	weak-feedback-b-01 \
-	celem-fb-01 \
+	celem-fb-01 celem-fb-03 \
 	half-keeper-a-01 half-keeper-a-02 \
 	cross-coupled-01 cross-coupled-weak-01 \
 	cross-coupled-why-01 \
@@ -358,7 +359,11 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	separator-05 separator-06 \
 	dequeue-01 dequeue-02 \
 	freeze-01 freeze-03 freeze-04 freeze-05 freeze-06 \
-	upset-01
+	upset-01 \
+	sreset-preset-a-01 sreset-preset-a-04 \
+	sreset-preset-b-01 \
+	sreset-preset-c-01 sreset-preset-c-02 sreset-preset-c-03 \
+	sreset-preset-c-04
 	
 
 # subset of prsimrc test that we wish to compare traces against regressions
@@ -637,7 +642,9 @@ HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
 	oscil-trace-01 oscil-trace-02 \
 	dirs-01 \
 	freeze-02 \
-	comment-ckpt-01
+	comment-ckpt-01 \
+	sreset-preset-a-02 sreset-preset-a-03
+	sreset-preset-b-02
 
 # KNOWN BUG (fails, but should not): cross-pulldown-01
 

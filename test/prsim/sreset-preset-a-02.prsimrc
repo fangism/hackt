@@ -1,0 +1,7 @@
+# "sreset-preset-a-01.prsimrc"
+# @haco@ sreset-preset-a.haco-c
+
+keeper-check-fail fatal
+source sreset-preset-a-01.prsimrc
+# should be same results
+
