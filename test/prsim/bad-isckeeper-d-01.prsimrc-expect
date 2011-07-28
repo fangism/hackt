@@ -11,7 +11,8 @@
 	50	_c : 1	[by a:=0]
 	60	c : 0	[by _c:=1]
 Error: node _c is floating without pending feedback. 
-Halting on node: _c
+	[caused by b : 1]
+Halting on node: b
 ... at line 27
 Error encountered during source #FILE#.
 ... at line 6

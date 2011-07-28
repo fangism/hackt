@@ -10,6 +10,7 @@ is state-holding here
 	40	out : 1	[by _out:=0]
 resetting... temporarily downgrade keeper-check-fail 
 Warning: node _out is floating without pending feedback. 
+	[caused by _sReset : 0]
 	40	_sReset : 0
 could be state-holding here 
 	40	_pReset : 0

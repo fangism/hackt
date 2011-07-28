@@ -13,6 +13,7 @@ enqueued:	20	c : 0	[from Z._c:=1]
 	20	c : 0	[by Z._c:=1]
 enqueued:	20	a : 1
 Warning: node Z._c is floating without pending feedback.  (fast-weak-keepers disabled) (weak-rules off)
+	[caused by a : 1]
 	20	a : 1
 Nodes undriven (state-holding):
 Z._c
@@ -24,6 +25,7 @@ enqueued:	40	c : 1	[from Z._c:=0]
 	40	c : 1	[by Z._c:=0]
 enqueued:	40	a : 0
 Warning: node Z._c is floating without pending feedback.  (fast-weak-keepers disabled) (weak-rules off)
+	[caused by a : 0]
 	40	a : 0
 Nodes undriven (state-holding):
 Z._c
