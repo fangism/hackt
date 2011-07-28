@@ -1,0 +1,16 @@
+# "sreset-preset-a-01.prsimrc"
+# @haco@ sreset-preset-a.haco-c
+
+watchall
+set _sReset 0
+set _pReset 0
+cycle
+set in 1
+cycle
+
+set _pReset 1
+cycle
+echo is state-holding here
+set _sReset 1
+cycle
+
