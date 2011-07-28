@@ -60,6 +60,7 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	keeper-a \
 	iskeeper-a \
 	isckeeper-a \
+	bad-isckeeper-a bad-isckeeper-b bad-isckeeper-c bad-isckeeper-d \
 	channel-test-a channel-test-b channel-test-c channel-test-d \
 	channel-test-f channel-test-g channel-test-h \
 	channel-test-non-QDI-a \
@@ -84,7 +85,9 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	completion_test \
 	set-multi-a set-multi-b \
 	getall-a getall-a-def getall-b getall-c \
-	sreset-preset-a sreset-preset-b sreset-preset-c
+	sreset-preset-a sreset-preset-b sreset-preset-c \
+	sreset-preset-d sreset-preset-e sreset-preset-f \
+	sreset-preset-g sreset-preset-h sreset-preset-i
 
 # TODO: more cross-coupled test cases
 # SRAM cell
@@ -229,7 +232,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	SRAM-d-01 SRAM-d-02 \
 	keeper-a-01 \
 	iskeeper-a-01 iskeeper-a-02 \
-	isckeeper-a-01 \
+	isckeeper-a-01 isckeeper-a-02 \
 	celem-keeper-01 celem-keeper-02 \
 	celem-keeper-03 celem-keeper-03b celem-keeper-03c celem-keeper-03d \
 	autosave-02 \
@@ -364,7 +367,8 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	sreset-preset-a-01 sreset-preset-a-04 \
 	sreset-preset-b-01 \
 	sreset-preset-c-01 sreset-preset-c-02 sreset-preset-c-03 \
-	sreset-preset-c-04
+	sreset-preset-c-04 \
+	sreset-preset-d-01
 	
 
 # subset of prsimrc test that we wish to compare traces against regressions
@@ -644,8 +648,12 @@ HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
 	dirs-01 \
 	freeze-02 \
 	comment-ckpt-01 \
-	sreset-preset-a-02 sreset-preset-a-03
-	sreset-preset-b-02
+	sreset-preset-a-02 sreset-preset-a-03 \
+	sreset-preset-b-02 \
+	sreset-preset-e-01 sreset-preset-f-01 \
+	sreset-preset-g-01 sreset-preset-h-01 sreset-preset-i-01 \
+	bad-isckeeper-a-01 bad-isckeeper-a-02 \
+	bad-isckeeper-b-01 bad-isckeeper-c-01 bad-isckeeper-d-01
 
 # KNOWN BUG (fails, but should not): cross-pulldown-01
 

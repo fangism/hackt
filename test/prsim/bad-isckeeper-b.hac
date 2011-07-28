@@ -1,0 +1,13 @@
+// "bad-isckeeper-b.hac"
+// copy modified from "bad-isckeeper-a.hac"
+
+bool a, b, _c, c;
+
+prs {
+	a & b		-> _c-
+	~a & ~b		-> _c+
+	_c		=> c-
+[isckeeper=1]	c & (b)	-> _c-		// WRONG!
+[isckeeper=1]	~c & (~a | ~b)	-> _c+
+}
+

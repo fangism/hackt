@@ -1,0 +1,7 @@
+# "bad-isckeeper-c-01.prsimrc"
+# @haco@ bad-isckeeper-c.haco-c
+# @hacprsim-flags@ -f fast-weak-keepers
+
+weak-rules on
+source bad-isckeeper-a-02.prsimrc
+
