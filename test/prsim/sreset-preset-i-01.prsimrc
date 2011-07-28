@@ -1,0 +1,5 @@
+# "sreset-preset-i-01.prsimrc"
+# @haco@ sreset-preset-i.haco-c
+# @hacprsim-flags@ -f fast-weak-keepers
+
+source sreset-preset-d-01.prsimrc

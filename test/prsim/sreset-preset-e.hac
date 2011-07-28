@@ -1,0 +1,15 @@
+// "sreset-preset-e.hac"
+// testing keeper-check
+
+bool _sReset, _pReset;
+bool in, _out, out;
+
+prs {
+	~_pReset | ~in	-> _out+
+	_sReset & in	-> _out-
+	_out		=> out-
+	// combinational feedback
+[isckeeper]	out & in & _sReset	-> _out-	// is WRONG
+[isckeeper]	~out & (~in | ~_sReset)	-> _out+
+}
+

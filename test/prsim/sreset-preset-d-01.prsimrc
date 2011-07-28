@@ -1,0 +1,45 @@
+# "sreset-preset-d-01.prsimrc"
+# @haco@ sreset-preset-d.haco-c
+# @hacprsim-flags@ -f fast-weak-keepers
+weak-rules on
+# even through keepers are combinational
+keeper-check-fail fatal
+
+watchall
+set _sReset 0
+set _pReset 0
+cycle
+set in 1
+cycle
+
+set _pReset 1
+cycle
+echo would be state-holding here
+set _sReset 1
+cycle
+
+set _sReset 0
+cycle
+set in 0
+cycle
+set _pReset 0
+cycle
+
+set _pReset 1
+cycle
+
+set in 1
+echo would be state-holding here
+cycle
+set in 0
+cycle
+
+set _sReset 1
+cycle
+
+set in 1
+cycle
+set in 0
+cycle
+
+

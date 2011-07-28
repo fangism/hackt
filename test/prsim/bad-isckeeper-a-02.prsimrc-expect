@@ -1,0 +1,21 @@
+	0	a : 0
+	0	b : 0
+	10	_c : 1	[by b:=0]
+	20	c : 0	[by _c:=1]
+	20	a : 1
+	20	b : 1
+	30	_c : 0	[by b:=1]
+	40	c : 1	[by _c:=0]
+	40	b : 0
+	40	a : 0
+	50	_c : 1	[by a:=0]
+	60	c : 0	[by _c:=1]
+	60	b : 1
+	60	a : 1
+	70	_c : 0	[by a:=1]
+	80	c : 1	[by _c:=0]
+Error: node _c is floating without pending feedback. 
+Halting on node: _c
+... at line 33
+Error encountered during source #FILE#.
+... at line 6
