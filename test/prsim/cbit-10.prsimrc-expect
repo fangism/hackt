@@ -1,6 +1,7 @@
 enqueued:	0	wl : 0
 Warning: node bl is floating without pending feedback. 
 Warning: node _bl is floating without pending feedback. 
+	[caused by wl : 0]
 	0	wl : 0
 enqueued:	0	p.f : 1
 enqueued:	10	p.t : 0	[from p.f:=1]	(weak)

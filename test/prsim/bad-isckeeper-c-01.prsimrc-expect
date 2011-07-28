@@ -3,7 +3,8 @@
 	10	_c : 1	[by b:=0]
 	20	c : 0	[by _c:=1]
 Error: node _c is floating without pending feedback. 
-Halting on node: _c
+	[caused by a : 1]
+Halting on node: a
 ... at line 15
 Error encountered during source #FILE#.
 ... at line 6

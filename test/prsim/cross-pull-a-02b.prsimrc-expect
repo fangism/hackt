@@ -3,6 +3,7 @@ pulling both rails down simultaneously
 WARNING: unstable `f'-
 >> cause: `t' (val: 0)
 Warning: node f is floating without pending feedback.  (fast-weak-keepers disabled) (weak-rules off)
+	[caused by t : 0]
 	0	t : 0
 instability? 
 t : 0
@@ -10,16 +11,20 @@ f : X
 	0	t : X
 pulling one down first (slight time separation) 
 Warning: node f is floating without pending feedback.  (fast-weak-keepers disabled) (weak-rules off)
+	[caused by t : 0]
 	0	t : 0
 Warning: node t is floating without pending feedback.  (fast-weak-keepers disabled) (weak-rules off)
+	[caused by f : 0]
 	5	f : 0
 	5	t : X
 	5	f : X
 pulling one up 
 	5	t : 1
 Warning: node t is floating without pending feedback.  (fast-weak-keepers disabled) (weak-rules off)
+	[caused by f : 0]
 	15	f : 0	[by t:=1]
 Warning: node f is floating without pending feedback.  (fast-weak-keepers disabled) (weak-rules off)
+	[caused by t : 0]
 	15	t : 0
 	15	t : X
 	15	f : X
@@ -30,4 +35,5 @@ WARNING: unstable `f'-
 rule: [after 10]	t:0 -> f-:X
 >> cause: `t' (val: 0)
 Warning: node f is floating without pending feedback.  (fast-weak-keepers disabled) (weak-rules off)
+	[caused by t : 0]
 	20	t : 0

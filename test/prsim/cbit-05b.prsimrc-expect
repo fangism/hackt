@@ -3,8 +3,10 @@ Warning: node p.t is floating without pending feedback.  (fast-weak-keepers disa
 Warning: node p.f is floating without pending feedback.  (fast-weak-keepers disabled) (weak-rules off)
 Warning: node bl is floating without pending feedback.  (fast-weak-keepers disabled) (weak-rules off)
 Warning: node _bl is floating without pending feedback.  (fast-weak-keepers disabled) (weak-rules off)
+	[caused by wl : 0]
 	0	wl : 0
 enqueued:	0	p.f : 1
 Warning: node p.t is floating without pending feedback.  (fast-weak-keepers disabled) (weak-rules off)
+	[caused by p.f : 1]
 	0	p.f : 1
 event queue:

@@ -9,7 +9,8 @@ would be state-holding here
 	30	_out : 0	[by _sReset:=1]
 	40	out : 1	[by _out:=0]
 Error: node _out is floating without pending feedback. 
-Halting on node: _out
+	[caused by _sReset : 0]
+Halting on node: _sReset
 ... at line 22
 Error encountered during source #FILE#.
 ... at line 5
