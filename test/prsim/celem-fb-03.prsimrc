@@ -1,0 +1,8 @@
+# "celem-fb-03.prsimrc"
+# @haco@ celem-fb.haco-c
+# keeper in this case is already marked weak
+
+keeper-check-fail fatal
+weak-rules on
+source celem-fb-01.prsimrc
+

@@ -1,0 +1,10 @@
+	0	_sReset : 0
+	0	_pReset : 0
+	10	_out : 1	[by _pReset:=0]
+	20	out : 0	[by _out:=1]
+	20	in : 1
+	20	_pReset : 1
+is state-holding here 
+	20	_sReset : 1
+	30	_out : 0	[by _sReset:=1]
+	40	out : 1	[by _out:=0]

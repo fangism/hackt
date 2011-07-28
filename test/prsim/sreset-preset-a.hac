@@ -1,0 +1,13 @@
+// "sreset-preset-a.hac"
+// testing keeper-check
+
+bool _sReset, _pReset;
+bool in, _out, out;
+
+prs {
+	~_pReset | ~in	-> _out+
+	_sReset & in	-> _out-
+	_out		=> out-
+[iskeeper]	out	=> _out-	// correct, weak feedback (ratioed)
+}
+

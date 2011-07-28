@@ -1,6 +1,6 @@
 // "isckeeper-a.hac"
 // could just:
-// import "../parser/prs/isckepper-01.hac";
+// import "../parser/prs/isckeeper-01.hac";
 
 bool a, b, _c, c;
 
