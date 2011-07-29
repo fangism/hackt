@@ -17,7 +17,6 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include <list>
 
 #include "main/prsim.h"
-#include "main/program_registry.h"
 #include "util/stacktrace.h"
 #include "main/main_funcs.h"
 #include "main/options_modifier.tcc"
@@ -126,11 +125,6 @@ prsim::name[] = "prsim";
 
 const char
 prsim::brief_str[] = "A simple production rule simulator, based on an old one.";
-
-#ifndef	WITH_MAIN
-const size_t
-prsim::program_id = register_hackt_program_class<prsim>();
-#endif
 
 //=============================================================================
 prsim::prsim() { }
@@ -704,17 +698,6 @@ i.e. weak and delay-less.
 
 //=============================================================================
 }	// end namespace HAC
-
-#ifdef	WITH_MAIN
-/**
-	Assumes no global hackt options.  
- */
-int
-main(const int argc, char* argv[]) {
-	const HAC::global_options g;
-	return HAC::prsim::main(argc, argv, g);
-}
-#endif	// WITH_MAIN
 
 DEFAULT_STATIC_TRACE_END
 
