@@ -5,6 +5,13 @@
 
 2011-07-29	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-84-81-prsim-keeper-check-08:
+	  hacprsim: mode-fatal no longer enables keeper-checks 
+		unless 1) fast-weak-keepers on and 2) weak-rules on.
+		Warning is printed if either is not met.
+		Updated test cases.
+
+
 	* HACKT-00-01-04-main-00-84-81-prsim-keeper-check-07:
 	  hacprsim: on keeper-check-failure print both the causing
 		node and the output node that failed.
