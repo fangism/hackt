@@ -13,6 +13,15 @@
 
 2011-07-29	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-84-81-prsim-keeper-check-09:
+	  hacprsim: splitting most of prsim program class into
+		separate module, so that vpi-prsim can potentially
+		call prsim::parse_command_options() for
+		pasing command-options to (before) $prsim().
+
+
+2011-07-28	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-84-81-prsim-keeper-check-08:
 	  hacprsim: mode-fatal no longer enables keeper-checks 
 		unless 1) fast-weak-keepers on and 2) weak-rules on.

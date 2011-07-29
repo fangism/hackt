@@ -169,7 +169,7 @@ hflat_SOURCES = main/cflat.cc
 hflat_CPPFLAGS = -DWITH_MAIN
 hflat_LDADD = libhacktlib.la
 
-hacprsim_SOURCES = main/prsim.cc
+hacprsim_SOURCES = main/prsim-main.cc
 hacprsim_CPPFLAGS = -DWITH_MAIN
 hacprsim_LDADD = libhacktprsim.la
 
@@ -1021,7 +1021,8 @@ PRSIM_CC_FILES = \
 	sim/prsim/State-prsim.cc \
 	sim/prsim/Trace-prsim.cc \
 	sim/prsim/process_graph.cc \
-	sim/prsim/process_state.cc
+	sim/prsim/process_state.cc \
+	main/prsim.cc
 
 CHPSIM_CC_FILES = \
 	sim/chpsim/nonmeta_context.cc \
@@ -1106,7 +1107,7 @@ MAIN_EXEC_CC_FILES = \
 	main/create.cc \
 	main/cflat.cc \
 	main/prsobjdemo.cc \
-	main/prsim.cc \
+	main/prsim-main.cc \
 	main/dump_persistent_table.cc \
 	main/objdump.cc \
 	main/shell.cc \
