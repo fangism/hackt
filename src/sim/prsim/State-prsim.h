@@ -906,19 +906,7 @@ public:
 	}
 
 	void
-	set_mode_fatal(void) {
-		unstable_policy = ERROR_FATAL;
-		weak_unstable_policy = ERROR_FATAL;
-		interference_policy = ERROR_FATAL;
-		weak_interference_policy = ERROR_FATAL;
-	// additional fatalities:
-		invariant_fail_policy = ERROR_FATAL;
-		invariant_unknown_policy = ERROR_FATAL;
-		assert_fail_policy = ERROR_FATAL;
-		channel_expect_fail_policy = ERROR_FATAL;
-		excl_check_fail_policy = ERROR_FATAL;
-		keeper_check_fail_policy = ERROR_FATAL;
-	}
+	set_mode_fatal(void); 
 
 #define	DEFINE_POLICY_CONTROL_SET(name)				\
 	void							\

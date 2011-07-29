@@ -781,6 +781,34 @@ State::reset(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+State::set_mode_fatal(void) {
+	unstable_policy = ERROR_FATAL;
+	weak_unstable_policy = ERROR_FATAL;
+	interference_policy = ERROR_FATAL;
+	weak_interference_policy = ERROR_FATAL;
+// additional fatalities:
+	invariant_fail_policy = ERROR_FATAL;
+	invariant_unknown_policy = ERROR_FATAL;
+	assert_fail_policy = ERROR_FATAL;
+	channel_expect_fail_policy = ERROR_FATAL;
+	excl_check_fail_policy = ERROR_FATAL;
+	if (expr_alloc_flags.fast_weak_keepers && weak_rules_enabled()) {
+		keeper_check_fail_policy = ERROR_FATAL;
+	} else {
+	// otherwise there are no weak keepers to check
+		cerr << "Warning: [mode fatal, keeper-check-fail]" << endl;
+	if (!expr_alloc_flags.fast_weak_keepers) {
+	cerr << "  simulator did not start with -f fast-weak-keepers" << endl;
+	}
+	if (!weak_rules_enabled()) {
+		cerr << "  weak-rules are currently disabled." << endl;
+	}
+		cerr << "  keeper-check-fail policy unmodified" << endl;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Pre-allocates one element in node and expr pools, which are 1-indexed.
 	NOTE: the event pool takes care of itself already.  
