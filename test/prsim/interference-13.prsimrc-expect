@@ -1,3 +1,7 @@
+Warning: [mode fatal, keeper-check-fail]
+  simulator did not start with -f fast-weak-keepers
+  weak-rules are currently disabled.
+  keeper-check-fail policy unmodified
 WARNING: weak-interference `c'
 >> cause: `a' (val: 0)
 Halting on node: a
