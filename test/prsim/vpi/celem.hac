@@ -1,0 +1,9 @@
+// "celem.hac"
+
+bool in0, in1, out;
+bool _out;
+prs {
+	in0 & in1		#> _out-
+	_out			=> out-
+}
+

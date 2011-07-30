@@ -37,15 +37,17 @@ public:
 	int
 	main(const int, char*[], const global_options&);
 
-private:
+public:
 	static
 	void
 	usage(void);
 
+	// so vpi-prsim.cc may use it
 	static
 	int
-	parse_command_options(const int, char*[], options&);
+	parse_command_options(const int, char* const [], options&);
 
+private:
 	static
 	const size_t
 	program_id;

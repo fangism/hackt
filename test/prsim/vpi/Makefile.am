@@ -11,6 +11,7 @@ HACKT_PRSIMRC_TEST_SUBJECTS = inverters \
 	interleave-a interleave-b interleave-c \
 	oscillator \
 	channel-source-sink \
+	celem \
 	and_tree and_template_tree \
 	and_tree_reverse and_template_tree_reverse \
 	inverters-separate
@@ -27,7 +28,8 @@ HACKT_VPI_TEST_SCRIPTS_PASSES = \
 	and_tree and_template_tree \
 	and_tree_reverse and_template_tree_reverse \
 	fatal-assert-fail \
-	unstable-dequeue
+	unstable-dequeue \
+	celem-test
 
 HACKT_VWRAP_TEST_SCRIPTS_PASSES = \
 	standard standard-ports standard-reverse \
