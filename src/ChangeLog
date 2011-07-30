@@ -13,6 +13,14 @@
 
 2011-07-29	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-84-81-prsim-keeper-check-10:
+	  vpi-prsim now able to process command-line arguments
+		with $prsim_options("...") VPI function call.
+	  prsim_options class pulled out into main/prsim_options.h
+	  const-ified argv argument for prsim::parse_command_options.
+	  Test case added.
+
+
 	* HACKT-00-01-04-main-00-84-81-prsim-keeper-check-09:
 	  hacprsim: splitting most of prsim program class into
 		separate module, so that vpi-prsim can potentially

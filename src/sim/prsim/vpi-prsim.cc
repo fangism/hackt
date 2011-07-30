@@ -35,6 +35,8 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "sim/prsim/Command-prsim.h"
 #include "parser/instref.h"
 #include "main/main_funcs.h"
+#include "main/prsim.h"
+#include "main/prsim_options.h"
 #include "util/memory/count_ptr.tcc"
 #include "util/string.h"
 #include "util/tokenize.h"		// only for debugging
@@ -101,6 +103,7 @@ static Prs *P = NULL;
 #else
 static count_ptr<module> HAC_module(NULL);
 static count_ptr<State>	prsim_state(NULL);
+static prsim_options prsim_opt;
 #endif
 
 /**
@@ -1128,6 +1131,52 @@ static PLI_INT32 prsim_watch (PLI_BYTE8* args)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
+@texinfo vpi/prsim_options.texi
+@deffn Function $prsim_options optstring
+Sets the command-line options to be uesd for @command{hacprsim} co-simulation.  
+This should be done before the call to @command{$prsim()}.
+@end deffn
+@end texinfo
+***/
+static PLI_INT32 prsim_command_options (PLI_BYTE8* args)
+{
+  STACKTRACE_VERBOSE;
+  s_vpi_value arg;
+  static const char usage[] = "Usage: $prsim_options(\"options\")\n";
+  const vpiHandle task_call = vpi_handle (vpiSysTfCall, NULL);
+  const vpiHandle h = vpi_iterate (vpiArgument, task_call);
+  const vpiHandle fname = vpi_scan (h);
+  if (!fname) {
+    vpi_puts_c (usage);
+    return 0;
+  }
+  arg.format = vpiStringVal;
+  vpi_get_value (fname, &arg);
+
+  if (vpi_scan (h)) {
+    vpi_puts_c (usage);
+    return 0;
+  }
+  // split up arg.value.str into argc,argv
+  util::string_list toks;
+  util::tokenize(arg.value.str, toks);
+  toks.push_front("vpi-prsim");
+  const int argc = toks.size();
+  vector<const char*> argv;
+  argv.reserve(argc);
+  transform(toks.begin(), toks.end(), back_inserter(argv), 
+	std::mem_fun_ref(&string::c_str));
+  if (prsim::parse_command_options(argc, const_cast<char**>(&argv[0]),
+	prsim_opt)) {
+	cerr << "Error in command arguments." << endl;
+	prsim::usage();
+	return 0;
+  }
+  return 1;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
 @texinfo vpi/prsim.texi
 @deffn Function $prsim obj
 Loads HAC object file @var{obj} for @command{hacprsim} co-simulation.  
@@ -1168,11 +1217,11 @@ if (HAC_module) {
 	if (!HAC_module->is_allocated()) {
 		if (!HAC_module->allocate_unique().good) {
 			cerr << "ERROR in allocating.  Aborting." << endl;
-			return 1;
+			return 1;	// 0?
 		}
 	}
 	prsim_state = count_ptr<State>(
-		new State(*HAC_module, ExprAllocFlags()));
+		new State(*HAC_module, prsim_opt.expr_alloc_flags));
 	prsim_state->initialize();
 	// forbid step/advance/cycle commands
 	CommandRegistry::external_cosimulation = true;
@@ -1556,6 +1605,7 @@ struct funcs {
 static struct funcs f[] = {
   { "$to_prsim", to_prsim },
   { "$from_prsim", from_prsim },
+  { "$prsim_options", prsim_command_options },
   { "$prsim", prsim_file },
   { "$prsim_default_after", prsim_default_after },
   { "$prsim_confirm_connections", confirm_connections },

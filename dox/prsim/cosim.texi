@@ -105,11 +105,13 @@ defines some new functions that one can call from Verilog.
 The first thing you should do is tell VCS what HAC 
 circuit you are co-simulating.
 
+@include vpi/prsim_options.texi
 @include vpi/prsim.texi
 
 @example
 initial
 begin
+  $prsim_options("-f fast-weak-keepers"); // this is optional
   $prsim("my_hac_circuit.haco-a");
   ...
 end

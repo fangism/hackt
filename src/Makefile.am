@@ -1061,7 +1061,8 @@ PRSIM_H_FILES = $(PRSIM_CC_FILES:.cc=.h) \
 	sim/prsim/devel_switches.h \
 	sim/prsim/enums.h \
 	sim/prsim/ExprAllocFlags.h \
-	sim/prsim/Exception.h
+	sim/prsim/Exception.h \
+	main/prsim_options.h
 
 CHPSIM_H_FILES = $(CHPSIM_CC_FILES:.cc=.h) \
 	sim/chpsim/chpsim_dlfunction.h \
