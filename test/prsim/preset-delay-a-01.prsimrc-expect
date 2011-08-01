@@ -1,0 +1,17 @@
+	0	_pReset : 0
+	0	pi : 0
+	10	mypReset : 1	[by _pReset:=0]
+	10	_r : 1	[by pi:=0]
+	20	r : 0	[by _r:=1]
+releasing reset... 
+	20	_pReset : 1
+event queue:
+	30	mypReset : 0	[from _pReset:=1]
+end of queue 
+Fanins of node `_r':
+(from [top-level]):
+[after 10]	~pi:0 & ~_pReset:1<0><0> -> _r+:1
+[after 10]	pi:0 & mypReset:1<0><0> -> _r-:1
+[after 10]	(pi:0 | _pReset:1)<1> & r:0<0><0> -> _r-:1
+[after 0, weak]	~mypReset:1 & ~r:0<0><0> -> _r+:1
+	30	mypReset : 0	[by _pReset:=1]

@@ -3,6 +3,15 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-08-01	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-81-prsim-keeper-check-11:
+	  hacprsim: keeper-check now allows 1 transition of delay
+		on side-paths driving feedback, in case an opposite
+		sense of a signal is used in conditional feedback.
+		Added test case: preset-delay-a(-01).
+
+
 2011-07-29	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-81-prsim-keeper-check-10:

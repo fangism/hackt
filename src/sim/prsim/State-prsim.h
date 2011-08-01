@@ -1495,8 +1495,16 @@ public:
 	void
 	node_feedback(const node_index_type, vector<node_index_type>&) const;
 
+	void
+	node_feedthrough(const node_index_type, const node_index_type,
+		vector<node_index_type>&) const;
+
+	void
+	node_feedback_feedthrough(const node_index_type, const node_index_type,
+		vector<node_index_type>&) const;
+
 	bool
-	check_floating_node(const node_index_type) const;
+	check_floating_node(const node_index_type, const node_index_type) const;
 
 	ostream&
 	dump_node_fanin_brief(ostream&, const node_index_type, const bool) const;

@@ -3297,7 +3297,7 @@ if (n.in_channel()) {
 #define	E	keeper_check_fail_policy
 		for ( ; i!=e; ++i) {
 		if (get_node(*i).has_fanin()) {
-		if (check_floating_node(*i)) {
+		if (check_floating_node(*i, ni)) {
 			if (!first_thrown_node)
 				first_thrown_node = *i;
 			cout << ((E > ERROR_WARN) ? "Error: " : "Warning: ");
@@ -5434,6 +5434,9 @@ State::node_fanout(const node_index_type ni,
 }	// end State::node_feedback
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Intersects the fanin of node with fanout of same node.
+ */
 void
 State::node_feedback(const node_index_type ni,
 		vector<node_index_type>& ret) const {
@@ -5443,6 +5446,46 @@ State::node_feedback(const node_index_type ni,
 	// fanin_set and fanout_set are sorted
 	std::set_intersection(fanin_set.begin(), fanin_set.end(), 
 		fanout_set.begin(), fanout_set.end(), back_inserter(ret));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Intersects the fanout of node a with the fanin of node b.
+	This finds nodes in common along a 2-transition path.  
+ */
+void
+State::node_feedthrough(const node_index_type a, const node_index_type b,
+		vector<node_index_type>& ret) const {
+	vector<node_index_type> fanin_set, fanout_set;
+	node_fanout(a, fanout_set);
+	node_fanin(b, fanin_set);
+	// fanin_set and fanout_set are sorted
+	std::set_intersection(fanin_set.begin(), fanin_set.end(), 
+		fanout_set.begin(), fanout_set.end(), back_inserter(ret));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Integrates the node_feedback and node_feedthrough, but for
+	efficiency, only calls node_fanin once.  
+	\param a is the input node that just switched
+	\param b is the dynamic node in Z state
+ */
+void
+State::node_feedback_feedthrough(const node_index_type a, 
+		const node_index_type b,
+		vector<node_index_type>& ret) const {
+	STACKTRACE_VERBOSE;
+	vector<node_index_type> tmpa, tmpb;
+	node_fanout(a, tmpa);
+	node_fanout(b, tmpb);
+	std::set_union(tmpa.begin(), tmpa.end(), 
+		tmpb.begin(), tmpb.end(), back_inserter(ret));
+	ret.swap(tmpb);
+	tmpa.clear();
+	node_fanin(b, tmpa);
+	std::set_intersection(tmpa.begin(), tmpa.end(), 
+		tmpb.begin(), tmpb.end(), back_inserter(ret));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -5459,10 +5502,14 @@ State::dump_node_feedback(ostream& o, const node_index_type ni,
 /**
 	Checks that if node is floating, feedback node is already pending.
 	Not const, because may call stop().
+	\param ni the output node that just became state-holding
+	\param in the input node that just switched to cause node ni
+		to become state-holding
 	\return true if keeper check fails
  */
 bool
-State::check_floating_node(const node_index_type ni) const {
+State::check_floating_node(const node_index_type ni,
+		const node_index_type in) const {
 	const node_type& n(get_node(ni));
 	// check if node is floating
 	// skip this check if node has no fanin, as it is probably an input
@@ -5480,11 +5527,17 @@ State::check_floating_node(const node_index_type ni) const {
 		// check and see if there is a feedback rule pending
 		// in the event queue
 		vector<node_index_type> fb;
+#if 0
 		node_feedback(ni, fb);
+#else
+		// allow non-feedback single transition delays
+		node_feedback_feedthrough(in, ni, fb);
+#endif
 		bool have_pending = false;
 		vector<node_index_type>::const_iterator
 			i(fb.begin()), e(fb.end());
 		for ( ; i!=e; ++i) {
+//		dump_node_canonical_name(cout << "considering: ", *i) << endl;
 		if (get_node(*i).pending_event()) {
 			have_pending = true;
 			break;
