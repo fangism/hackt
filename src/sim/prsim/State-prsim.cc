@@ -3300,21 +3300,21 @@ if (n.in_channel()) {
 		if (check_floating_node(*i)) {
 			if (!first_thrown_node)
 				first_thrown_node = *i;
-			cerr << ((E > ERROR_WARN) ? "Error: " : "Warning: ");
-			dump_node_canonical_name(cerr << "node ", *i)
+			cout << ((E > ERROR_WARN) ? "Error: " : "Warning: ");
+			dump_node_canonical_name(cout << "node ", *i)
 				<< " is floating without pending feedback. ";
 			if (!expr_alloc_flags.fast_weak_keepers) {
-				cerr << " (fast-weak-keepers disabled)";
+				cout << " (fast-weak-keepers disabled)";
 			}
 			if (!weak_rules_enabled()) {
-				cerr << " (weak-rules off)";
+				cout << " (weak-rules off)";
 			}
-			cerr << endl;
+			cout << endl;
 		}	// else that node is feedback-driven
 		}	// else no fanin, assume input
 		}	// end for each candidate
 		if (first_thrown_node) {
-			dump_node_value(cerr << "\t[caused by ", ni)
+			dump_node_value(cout << "\t[caused by ", ni)
 				<< ']' << endl;
 			if (UNLIKELY(E >= ERROR_BREAK)) {
 				stop();
@@ -5471,13 +5471,11 @@ State::check_floating_node(const node_index_type ni) const {
 	// don't worry about X pulls
 	if (nup == PULL_OFF && ndn == PULL_OFF) {
 #if PRSIM_WEAK_RULES
-//	cerr << "strong rules off" << endl;
 	const pull_enum wdn_pull = weak_rules_enabled() ?
 		n.pull_dn_state STR_INDEX(WEAK_RULE).pull() : PULL_OFF;
 	const pull_enum wup_pull = weak_rules_enabled() ?
 		n.pull_up_state STR_INDEX(WEAK_RULE).pull() : PULL_OFF;
 	if (wdn_pull == PULL_OFF && wup_pull == PULL_OFF) {
-//		cerr << "weak rules off" << endl;
 #endif	// PRSIM_WEAK_RULES
 		// check and see if there is a feedback rule pending
 		// in the event queue
@@ -5488,7 +5486,6 @@ State::check_floating_node(const node_index_type ni) const {
 			i(fb.begin()), e(fb.end());
 		for ( ; i!=e; ++i) {
 		if (get_node(*i).pending_event()) {
-//			cerr << "pending node " << *i << endl;
 			have_pending = true;
 			break;
 		}
