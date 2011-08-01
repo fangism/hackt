@@ -5,6 +5,13 @@
 
 2011-08-01	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-84-81-prsim-keeper-check-11:
+	  hacprsim: keeper-check now allows 1 transition of delay
+		on side-paths driving feedback, in case an opposite
+		sense of a signal is used in conditional feedback.
+		Added test case: preset-delay-a(-01).
+
+
 	* HACKT-00-01-04-main-00-84-83:
 	  hacprsim, hacchpsim: added 'precision' command to control
 		output precision of real-numbers to stdout.

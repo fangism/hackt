@@ -1,0 +1,19 @@
+// "preset-delay-a.hac"
+// test case for single-transition timing assumption on feedback
+
+bool _pReset, mypReset;
+bool pi, _r, r;
+prs {
+	_pReset				=> mypReset-	// timing assumption
+
+	// rst is in either direction
+	~pi & ~_pReset			-> _r+
+	 pi & mypReset			-> _r-
+
+	 _r				=> r-
+
+	// half-combinational
+[iskeeper=1]	~mypReset & ~r		-> _r+
+[isckeeper=1]	(pi | _pReset) & r	-> _r-
+
+}

@@ -1,0 +1,20 @@
+# "preset-delay-a-01.prsimrc"
+# @haco@ preset-delay-a.haco-c
+# @hacprsim-flags@ -f fast-weak-keepers
+
+keeper-check-fail warn
+weak-rules on
+
+watchall
+set _pReset 0
+set pi 0
+cycle
+
+echo releasing reset...
+set _pReset 1
+step-event
+queue
+echo end of queue
+fanin-get _r
+cycle
+
