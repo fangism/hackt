@@ -10,6 +10,7 @@
 		on side-paths driving feedback, in case an opposite
 		sense of a signal is used in conditional feedback.
 		Added test case: preset-delay-a(-01).
+	  rebase master (-main-00-84-83)
 
 
 	* HACKT-00-01-04-main-00-84-83:
