@@ -406,6 +406,17 @@ PRSIM_INSTANTIATE_STATELESS_COMMAND_CLASS(Abort, builtin)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
+@texinfo cmd/precision.texi
+@deffn Command precision [n]
+Sets the precision of real-valued numbers to be printed.
+Without an argument, this command just reports the current precision.
+@end deffn
+@end texinfo
+***/
+PRSIM_INSTANTIATE_STATELESS_COMMAND_CLASS(Precision, builtin)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
 @texinfo cmd/alias.texi
 @deffn Command alias cmd args
 Defines an alias, whereby the interpreter expands @var{cmd} into

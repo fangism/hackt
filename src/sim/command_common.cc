@@ -34,7 +34,7 @@ using std::ofstream;
 using std::for_each;
 using std::ptr_fun;
 using std::mem_fun_ref;
-// using util::strings::string_to_num;
+using util::strings::string_to_num;
 using entity::module;
 #include "util/using_ostream.h"
 USING_UTIL_COMPOSE
@@ -58,6 +58,32 @@ void
 Echo::usage(ostream& o) {
 	o << "echo [args]: repeats arguments to stdout, space-delimited"
 		<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DESCRIBE_COMMON_COMMAND_CLASS(Precision, "precision", 
+        "report and control precision of real-valued numbers")
+
+int
+Precision::main(const string_list& args) {
+if (args.size() > 2) {
+	usage(cerr << "usage: ");
+	return command_error_codes::SYNTAX;
+} else if (args.size() > 1) {
+	size_t p;
+	string_to_num(args.back(), p);
+	cout.precision(p);
+	cerr.precision(p);
+	return command_error_codes::NORMAL;
+} else {
+	cout << "precision: " << cout.precision() << endl;
+	return command_error_codes::NORMAL;
+}
+}
+
+void
+Precision::usage(ostream& o) {
+	o << "precision [num]: sets and gets the stdout precision" << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-08-01	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-83:
+	  hacprsim, hacchpsim: added 'precision' command to control
+		output precision of real-numbers to stdout.
+		Added 1 test case.  Documented.
+
+
 2011-07-22	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-82:

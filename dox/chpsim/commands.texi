@@ -56,6 +56,7 @@ and have no relation to simulation.
 @include cmd/echo.texi
 @include cmd/exit.texi
 @include cmd/abort.texi
+@include cmd/precision.texi
 @include cmd/repeat.texi
 @include cmd/history.texi
 @include cmd/interpret.texi

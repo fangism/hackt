@@ -1,0 +1,14 @@
+# "precision-01.prsimrc"
+# @haco@ inv.haco-c
+
+precision
+time
+advance 123456789
+time
+precision 12
+precision
+time
+
+# set back to default so that checkpoint dump is identical
+precision 6
+

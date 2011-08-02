@@ -34,6 +34,7 @@ The following commands are listed in the @t{builtin} category.
 @include cmd/comment.texi
 @include cmd/exit.texi
 @include cmd/abort.texi
+@include cmd/precision.texi
 @include cmd/repeat.texi
 @include cmd/interpret.texi
 
