@@ -88,7 +88,8 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	sreset-preset-a sreset-preset-b sreset-preset-c \
 	sreset-preset-d sreset-preset-e sreset-preset-f \
 	sreset-preset-g sreset-preset-h sreset-preset-i \
-	preset-delay-a
+	preset-delay-a \
+	xor-test-a xor-test-b
 
 # TODO: more cross-coupled test cases
 # SRAM cell
@@ -370,7 +371,9 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	sreset-preset-c-01 sreset-preset-c-02 sreset-preset-c-03 \
 	sreset-preset-c-04 \
 	sreset-preset-d-01 \
-	preset-delay-a-01
+	preset-delay-a-01 \
+	xor-test-a-01 xor-test-a-02 \
+	xor-test-b-01
 	
 
 # subset of prsimrc test that we wish to compare traces against regressions
@@ -655,7 +658,8 @@ HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
 	sreset-preset-e-01 sreset-preset-f-01 \
 	sreset-preset-g-01 sreset-preset-h-01 sreset-preset-i-01 \
 	bad-isckeeper-a-01 bad-isckeeper-a-02 \
-	bad-isckeeper-b-01 bad-isckeeper-c-01 bad-isckeeper-d-01
+	bad-isckeeper-b-01 bad-isckeeper-c-01 bad-isckeeper-d-01 \
+	xor-test-b-02
 
 # KNOWN BUG (fails, but should not): cross-pulldown-01
 

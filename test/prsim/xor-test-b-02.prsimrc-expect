@@ -1,0 +1,60 @@
+	0	a : 0
+	0	b : 0
+	10	a_ : 1	[by a:=0]
+	10	b_ : 1	[by b:=0]
+	20	a__ : 0	[by a_:=1]
+	20	b__ : 0	[by b_:=1]
+	30	a___ : 1	[by a__:=0]
+	30	b___ : 1	[by b__:=0]
+	40	o : 0	[by b___:=1]
+	40	a : 1
+	40	b : 1
+	50	a_ : 0	[by a:=1]
+	50	b_ : 0	[by b:=1]
+	60	a__ : 1	[by a_:=0]
+	60	b__ : 1	[by b_:=0]
+	70	a___ : 0	[by a__:=1]
+	70	b___ : 0	[by b__:=1]
+	70	a : 0
+	70	b : 0
+	80	a_ : 1	[by a:=0]
+	80	o : 1	[by a:=0]
+	80	b_ : 1	[by b:=0]
+	90	a__ : 0	[by a_:=1]
+	90	b__ : 0	[by b_:=1]
+	100	a___ : 1	[by a__:=0]
+	100	b___ : 1	[by b__:=0]
+	110	o : 0	[by b___:=1]
+	110	b : 1
+	110	a : 1
+	120	b_ : 0	[by b:=1]
+	120	a_ : 0	[by a:=1]
+	130	b__ : 1	[by b_:=0]
+	130	a__ : 1	[by a_:=0]
+	140	b___ : 0	[by b__:=1]
+	140	a___ : 0	[by a__:=1]
+	140	b : 0
+	140	a : 0
+	150	b_ : 1	[by b:=0]
+	150	o : 1	[by b:=0]
+	150	a_ : 1	[by a:=0]
+	160	b__ : 0	[by b_:=1]
+	160	a__ : 0	[by a_:=1]
+	170	b___ : 1	[by b__:=0]
+	170	a___ : 1	[by a__:=0]
+	180	o : 0	[by a___:=1]
+	180	b : 1
+	190	b_ : 0	[by b:=1]
+	200	b__ : 1	[by b_:=0]
+	210	b___ : 0	[by b__:=1]
+	220	o : 1	[by b___:=0]
+	220	a : 1
+WARNING: unstable `o'-
+rule: [after 10]	a:1 & b:0<0><0> -> o-:1
+>> cause: `b' (val: 0)
+Error: node o is floating without pending feedback.  (fast-weak-keepers disabled) (weak-rules off)
+	[caused by b : 0]
+Halting on node: b
+... at line 36
+Error encountered during source #FILE#.
+... at line 5

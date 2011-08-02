@@ -1,0 +1,30 @@
+// "xor-test-b.hac"
+
+/**
+	Combinational xor, inputs include inverses, 
+	rules with timing assumption.
+	Can be connected differently to make an xnor.  
+ */
+defproc xor(bool a, a_, b, b_, o) {
+	o @ [iscomb=1];
+prs {
+	~a_ & ~b	-> o+
+	 ~a & ~b_	-> o+
+	 a_ &  b_	-> o-
+	  a &  b	-> o-
+}
+}
+
+defproc inv(bool a, b) {
+prs {
+	a		=> b-
+}
+}
+
+// should fail keeper check with longer delay
+bool a, a_, a__, a___, b, b_, b__, b___, o;
+inv ai(a, a_), bi(b, b_);
+inv ai2(a_, a__), bi2(b_, b__);
+inv ai3(a__, a___), bi3(b__, b___);
+xor x(a, a___, b, b___, o);
+

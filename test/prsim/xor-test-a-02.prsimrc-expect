@@ -1,0 +1,56 @@
+	0	a : 0
+	0	b : 0
+	10	a_ : 1	[by a:=0]
+	10	b_ : 1	[by b:=0]
+	20	o : 0	[by b_:=1]
+	20	a : 1
+	20	b : 1
+	30	a_ : 0	[by a:=1]
+	30	b_ : 0	[by b:=1]
+	30	a : 0
+	30	b : 0
+	40	a_ : 1	[by a:=0]
+	40	o : 1	[by a:=0]
+	40	b_ : 1	[by b:=0]
+	50	o : 0	[by b_:=1]
+	50	b : 1
+	50	a : 1
+	60	b_ : 0	[by b:=1]
+	60	a_ : 0	[by a:=1]
+	60	b : 0
+	60	a : 0
+	70	b_ : 1	[by b:=0]
+	70	o : 1	[by b:=0]
+	70	a_ : 1	[by a:=0]
+	80	o : 0	[by a_:=1]
+	80	b : 1
+	90	b_ : 0	[by b:=1]
+	100	o : 1	[by b_:=0]
+	100	a : 1
+WARNING: unstable `o'-
+rule: [after 10]	a:1 & b:0<0><0> -> o-:1
+>> cause: `b' (val: 0)
+	100	b : 0
+	110	a_ : 0	[by a:=1]
+	110	b_ : 1	[by b:=0]
+	110	a : 0
+	110	b : 1
+	120	a_ : 1	[by a:=0]
+WARNING: unstable `o'-
+rule: [after 10]	a_:1 & b_:0<0><0> -> o-:1
+>> cause: `b_' (val: 0)
+	120	b_ : 0	[by b:=1]
+	120	b : 0
+	120	a : 1
+	130	b_ : 1	[by b:=0]
+WARNING: unstable `o'-
+rule: [after 10]	a_:0 & b_:1<0><0> -> o-:1
+>> cause: `a_' (val: 0)
+	130	a_ : 0	[by a:=1]
+	130	b : 1
+WARNING: unstable `o'-
+rule: [after 10]	a:0 & b:1<0><0> -> o-:1
+>> cause: `a' (val: 0)
+	130	a : 0
+	140	b_ : 0	[by b:=1]
+	140	a_ : 1	[by a:=0]

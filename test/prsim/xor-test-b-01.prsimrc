@@ -1,0 +1,6 @@
+# "xor-test-b-01.prsimrc"
+# @haco@ xor-test-b.haco-c
+# don't need hacprsim-flags -f fast-weak-keepers
+
+source xor-test-a-01.prsimrc
+
