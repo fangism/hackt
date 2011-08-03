@@ -29,6 +29,7 @@ HACKNET_CLEAN_IGNORE_PATTERNS = \
 	"*.spice-diff" \
 	"*.spice-fail" \
 	"*.spice-fail-diff" \
+	"*.spice-hac" \
 	"*.hacknettest" \
 	"*.hacknetfailtest"
 

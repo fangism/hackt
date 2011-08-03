@@ -5,6 +5,6 @@
 
 for p in "$@"
 do
-	while { rm $p ; } do : ; done > /dev/null 2>&1
+	while { rm -- $p ; } do : ; done > /dev/null 2>&1
 done
 

@@ -20,6 +20,7 @@ BOGUS_SUFFIX_TARGETS += $(HACKT_VPI_SUFFIXES)
 HACKT_VPI_CLEAN_IGNORE_PATTERNS = \
 	"*.vx" \
 	"*.vx-compile-log" \
+	"*-compile-log" \
 	"*.vxi-compile-log" \
 	"*.v-wrap" \
 	"*.v-wrap-diff" \

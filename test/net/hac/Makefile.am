@@ -11,9 +11,7 @@ HACKNET_TEST_SCRIPTS_PASSES =
 HACKNET_TEST_SCRIPTS_FAILURES =
 
 EXTRA_DIST_HAC = \
-	globals \
-	config-arg-05 \
-	top-type-ports-01
+	spice-primitives
 
 EXTRA_DIST += $(EXTRA_DIST_HAC:=.hac)
 

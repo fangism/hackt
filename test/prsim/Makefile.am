@@ -72,7 +72,7 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	type-test-a type-test-b type-test-c type-test-d \
 	type-test-e type-test-f type-test-g \
 	ACX-PR-6347 \
-	ACX-PR-6376 \
+	ACX-PR-6376 ACX-PR-6376b \
 	ACX-PR-6386 ACX-PR-6386b \
 	ACX-PR-6393 \
 	stuck-bug-a \
