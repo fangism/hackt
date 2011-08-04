@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-08-04	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-85-prsim-precharge-check-01:
+	  Branch for implementeing automatic precharge invariants
+		in hacprsim.  Strategy: use hacknet to produce graphical
+		representation of netlist, and derive expressions from there,
+		because prsim only has tree representations.
+	  hacknet: add option to suppress printing of spice netlist.
+		Added/updated test cases.
+
+
 2011-08-19	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-90:

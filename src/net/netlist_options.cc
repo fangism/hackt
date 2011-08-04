@@ -102,6 +102,7 @@ netlist_options::netlist_options() :
 		fet_diff_overhang(6.0),
 		fet_spacing_diffonly(4.0),
 		reserved_names(), 
+		print(true),
 		emit_parasitics(false),
 		fet_perimeter_gate_edge(true),
 		nested_subcircuits(false),
@@ -1492,6 +1493,17 @@ Default: 1
 DEFINE_OPTION_DEFAULT(top_type_ports, "top_type_ports",
 	"if true, emit top-level instances in subcircuit")
 #endif
+
+/***
+@texinfo config/print.texi
+@defopt print (bool)
+If set to 0, suppress normal netlist output.
+Default: 1
+@end defopt
+@end texinfo
+***/
+DEFINE_OPTION_DEFAULT(print, "print",
+	"if false, suppress netlist printing")
 
 /***
 @texinfo config/emit_parasitics.texi

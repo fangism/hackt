@@ -247,6 +247,7 @@ if (&f == topfp) {	// at_top()
 #if ENABLE_STACKTRACE
 	nl->dump_raw(cerr);	// DEBUG point
 #endif
+if (opt.print) {
 if (opt.empty_subcircuits || !nl->is_empty()) {
 	// TODO: emit verilog modules
 	nl->emit(os, !top_level || opt.top_type_ports, opt) << endl;
@@ -254,6 +255,7 @@ if (opt.empty_subcircuits || !nl->is_empty()) {
 	os << opt.comment_prefix << "subcircuit "
 		<< nl->name << " is empty.\n" << endl;
 }
+}	// else suppress printing
 }	// end if first_time
 }	// end visit(const footprint&)
 

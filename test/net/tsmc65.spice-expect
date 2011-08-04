@@ -52,6 +52,7 @@ post_line_continue=+
 pre_line_continue=
 prefer_port_aliases=0
 preferred_names=
+print=1
 reserved_names=
 resistance_unit=
 stat_n_length=2

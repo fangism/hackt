@@ -203,6 +203,12 @@ struct netlist_options {
 	 */
 	string_set_type			preferred_names;
 	/**
+		Set to false to disable printing of subcircuits,
+		useful if you want to run netlist analysis without
+		printing spice output.
+	 */
+	bool				print;
+	/**
 		If true, emit area/perimeter of source/drain diffusions.
 	 */
 	bool				emit_parasitics;
