@@ -797,12 +797,12 @@ if (suppress_keeper_rule) {
 #if ENABLE_STACKTRACE
 	get_current_footprint().dump_type(STACKTRACE_INDENT_PRINT("In type: ")) << endl;
 #endif
-	const entity::PRS::footprint::expr_pool_type* const expr_pool =
-		&get_current_footprint().get_prs_footprint().get_expr_pool();
+	const entity::PRS::footprint::expr_pool_type& expr_pool(
+		get_current_footprint().get_prs_footprint().get_expr_pool());
 	STACKTRACE_INDENT_PRINT("expr_pool.size = " << expr_pool->size() << endl);
 	STACKTRACE_INDENT_PRINT("r.expr_index = " << r.expr_index << endl);
-	INVARIANT(size_t(r.expr_index) <= expr_pool->size());
-	(*expr_pool)[r.expr_index].accept(*this);
+	INVARIANT(size_t(r.expr_index) <= expr_pool.size());
+	expr_pool[r.expr_index].accept(*this);
 	const size_t top_ex_index = ret_ex_index;
 	// r.output_index gives the local unique ID,
 	// which needs to be translated to global ID.
@@ -1075,8 +1075,8 @@ ExprAlloc::visit(const footprint_expr_node& e) {
 	const size_t sz = e.size();
 	const char type = e.get_type();
 	// NOTE: 1-indexed
-	const entity::PRS::footprint::expr_pool_type* const expr_pool =
-		&get_current_footprint().get_prs_footprint().get_expr_pool();
+	const entity::PRS::footprint::expr_pool_type& expr_pool(
+		get_current_footprint().get_prs_footprint().get_expr_pool());
 switch (type) {
 	// enumerations from "Object/lang/PRS_enum.h"
 	case entity::PRS::PRS_LITERAL_TYPE_ENUM: {
@@ -1091,7 +1091,7 @@ switch (type) {
 	case entity::PRS::PRS_NOT_EXPR_TYPE_ENUM: {
 		STACKTRACE_INDENT_PRINT("not" << endl);
 		INVARIANT(sz == 1);
-		(*expr_pool)[e.only()].accept(*this);
+		expr_pool[e.only()].accept(*this);
 		const size_t sub_ex_index = ret_ex_index;
 		ret_ex_index = allocate_new_not_expr(sub_ex_index);
 		break;
@@ -1105,7 +1105,7 @@ switch (type) {
 		for ( ; i<=sz; i++) {
 			// reminder: e is 1-indexed while 
 			// ExprGraphNode::children is 0-indexed
-			(*expr_pool)[e[i]].accept(*this);
+			expr_pool[e[i]].accept(*this);
 			const size_t sub_ex_index = ret_ex_index;
 			link_child_expr(last, sub_ex_index, i-1);
 		}
@@ -1122,7 +1122,7 @@ switch (type) {
 	case entity::PRS::PRS_NODE_TYPE_ENUM: {
 		STACKTRACE_INDENT_PRINT("node" << endl);
 		INVARIANT(sz == 1);
-		(*expr_pool)[e.only()].accept(*this);
+		expr_pool[e.only()].accept(*this);
 		break;
 	}
 	default:
