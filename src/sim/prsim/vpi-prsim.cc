@@ -191,6 +191,12 @@ __no_op__(PLI_BYTE8*) {
 	return 1;
 }
 
+#if NICE_FINISH
+static
+PLI_INT32
+_vpi_finish(void);
+#endif
+
 //=============================================================================
 // common error routines
 /**
@@ -494,6 +500,44 @@ for ( ; net_iter != net_end; ++net_iter) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	No-throw version of the above.
+	Caught exceptions wile nicely terminate the co-simulation.
+ */
+static void __advance_prsim_nothrow (const Time_t& vcstime, const int context)
+{
+	STACKTRACE_VERBOSE;
+#if VERBOSE_DEBUG
+  cout << "Running prsim @ time " << vcstime << endl;
+	prsim_state->dump_event_queue(cout);
+	cout << "end of event queue." << endl;
+#endif
+try {
+	__advance_prsim(vcstime, context);	// may throw
+} catch (const step_exception& exex) {
+	exex.inspect(*prsim_state, cerr);	// ignore return code?
+	// no need to translate error_policy_to_status
+#if NICE_FINISH
+	cerr << "Terminating simulation early due to hacprsim exception."
+		<< endl;
+	_vpi_finish();
+#else
+	__destroy_globals();
+	THROW_EXIT;	// re-throw
+#endif
+} catch (...) {
+	// catch all remaining exceptions here, destroy globals and rethrow
+	cerr << "hacprsim (VPI) encountered error, terminating..." << endl;
+#if NICE_FINISH
+	_vpi_finish();
+#else
+	__destroy_globals();
+	throw;		// re-throw
+#endif
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Does one of two things:
 	if events are remaining in prsim, schedule a callback, 
 	otherwise synchronize prsim's simulation time to VCS's sim time.  
@@ -521,7 +565,6 @@ reregister_next_callback(void) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if NICE_FINISH
-static
 PLI_INT32
 _vpi_finish(void) {
 	// print this finish timestamp out of convention
@@ -540,34 +583,7 @@ _vpi_finish(void) {
 static void _run_prsim (const Time_t& vcstime, const int context)
 {
 	STACKTRACE_VERBOSE;
-#if VERBOSE_DEBUG
-  cout << "Running prsim @ time " << vcstime << endl;
-	prsim_state->dump_event_queue(cout);
-	cout << "end of event queue." << endl;
-#endif
-try {
-	__advance_prsim(vcstime, context);
-} catch (const step_exception& exex) {
-	exex.inspect(*prsim_state, cerr);	// ignore return code?
-	// no need to translate error_policy_to_status
-#if NICE_FINISH
-	cerr << "Terminating simulation early due to hacprsim exception."
-		<< endl;
-	_vpi_finish();
-#else
-	__destroy_globals();
-	THROW_EXIT;	// re-throw
-#endif
-} catch (...) {
-	// catch all remaining exceptions here, destroy globals and rethrow
-	cerr << "hacprsim (VPI) encountered error, terminating..." << endl;
-#if NICE_FINISH
-	_vpi_finish();
-#else
-	__destroy_globals();
-	throw;		// re-throw
-#endif
-}
+	__advance_prsim_nothrow(vcstime, context);
 	reregister_next_callback();
 }
 
@@ -621,7 +637,7 @@ prsim_catch_up(void) {
 		// "catch-up" prsim to VCS's time, 
 		// even past breakpoints
 		do {
-			__advance_prsim(pq_time, 0);	// context?
+			__advance_prsim_nothrow(pq_time, 0);	// context?
 #if 0
 			cout << "prsim advanced to time: " <<
 				prsim_state->time() << endl;

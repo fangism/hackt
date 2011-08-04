@@ -25,6 +25,7 @@ HACKT_VPI_TEST_SCRIPTS_PASSES = \
 	oscillator-fanout \
 	independent-01 \
 	channel-source-sink \
+	channel-expect-fail \
 	and_tree and_template_tree \
 	and_tree_reverse and_template_tree_reverse \
 	fatal-assert-fail \

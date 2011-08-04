@@ -1,0 +1,81 @@
+$start of simulation 
+# mode fatal 
+Warning: [mode fatal, keeper-check-fail]
+  simulator did not start with -f fast-weak-keepers
+  weak-rules are currently disabled.
+  keeper-check-fail policy unmodified
+# breaks 
+breakpoints: L.d[0] L.d[1] R.e 
+# watchall 
+# channel L e:1 :0 d:2 
+# channel R e:1 :0 d:2 
+# channel-source-args-loop L 0 1 1 0 0 1 
+Warning: channel acknowledge `L.e' has no fanin!
+# channel-sink R 
+# channel-expect-args-loop R 0 1 1 0 0 0 
+# channel-watchall 
+# channel-reset-all 
+prsim:	10	L.d[0] : 0
+prsim:	10	L.d[1] : 0
+prsim:	10	R.e : 1
+prsim:	20	R.d[0] : 0
+prsim:	21	R.d[1] : 0
+prsim:	22	L.e : 1
+# channel-release-all 
+channel	L (.data) : 0
+prsim:	1010	L.d[0] : 1
+channel	R (.data) : 0
+prsim:	1020	R.d[0] : 1
+prsim:	1030	R.e : 0	[by R.d[0]:=1]
+prsim:	1040	L.e : 0
+prsim:	1050	L.d[0] : 0	[by L.e:=0]
+prsim:	1060	R.d[0] : 0
+prsim:	1070	R.e : 1	[by R.d[0]:=0]
+prsim:	1080	L.e : 1
+channel	L (.data) : 1
+prsim:	1090	L.d[1] : 1	[by L.e:=1]
+channel	R (.data) : 1
+prsim:	1100	R.d[1] : 1
+prsim:	1110	R.e : 0	[by R.d[1]:=1]
+prsim:	1120	L.e : 0
+prsim:	1130	L.d[1] : 0	[by L.e:=0]
+prsim:	1140	R.d[1] : 0
+prsim:	1150	R.e : 1	[by R.d[1]:=0]
+prsim:	1160	L.e : 1
+channel	L (.data) : 1
+prsim:	1170	L.d[1] : 1	[by L.e:=1]
+channel	R (.data) : 1
+prsim:	1180	R.d[1] : 1
+prsim:	1190	R.e : 0	[by R.d[1]:=1]
+prsim:	1200	L.e : 0
+prsim:	1210	L.d[1] : 0	[by L.e:=0]
+prsim:	1220	R.d[1] : 0
+prsim:	1230	R.e : 1	[by R.d[1]:=0]
+prsim:	1240	L.e : 1
+channel	L (.data) : 0
+prsim:	1250	L.d[0] : 1	[by L.e:=1]
+channel	R (.data) : 0
+prsim:	1260	R.d[0] : 1
+prsim:	1270	R.e : 0	[by R.d[0]:=1]
+prsim:	1280	L.e : 0
+prsim:	1290	L.d[0] : 0	[by L.e:=0]
+prsim:	1300	R.d[0] : 0
+prsim:	1310	R.e : 1	[by R.d[0]:=0]
+prsim:	1320	L.e : 1
+channel	L (.data) : 0
+prsim:	1330	L.d[0] : 1	[by L.e:=1]
+channel	R (.data) : 0
+prsim:	1340	R.d[0] : 1
+prsim:	1350	R.e : 0	[by R.d[0]:=1]
+prsim:	1360	L.e : 0
+prsim:	1370	L.d[0] : 0	[by L.e:=0]
+prsim:	1380	R.d[0] : 0
+prsim:	1390	R.e : 1	[by R.d[0]:=0]
+prsim:	1400	L.e : 1
+channel	L (.data) : 1
+prsim:	1410	L.d[1] : 1	[by L.e:=1]
+channel	R (.data) : 1
+ERROR: value assertion failed on channel `R' at index [5] of iteration [0].
+	expected: 0, got: 1
+Terminating simulation early due to hacprsim exception.
+$finish at simulation time (hacprsim) 1420

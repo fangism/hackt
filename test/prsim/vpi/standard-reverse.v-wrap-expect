@@ -11,6 +11,45 @@
 //	-v loopvar=_i_
 //	-v output_format=verilog
 
+module HAC_INV #(
+	parameter prsim_name=""
+) (
+// need not be reg with acc: wn:*
+	input A,
+	output Z
+);
+	integer _i_;
+	reg [64*8:1] verilog_name, tmp;
+initial begin
+#0	// happens *after* initial
+	if (prsim_name != "") begin
+	$sformat(verilog_name, "%m");
+	$to_prsim({verilog_name, ".A"}, {prsim_name, ".A"});
+	$from_prsim({prsim_name, ".Z"}, {verilog_name, ".Z"});
+	end // end if
+end // end initial
+endmodule
+
+module HAC_DELAY #(
+	parameter delay = 10,
+	parameter prsim_name=""
+) (
+// need not be reg with acc: wn:*
+	input A,
+	output Z
+);
+	integer _i_;
+	reg [64*8:1] verilog_name, tmp;
+initial begin
+#0	// happens *after* initial
+	if (prsim_name != "") begin
+	$sformat(verilog_name, "%m");
+	$to_prsim({verilog_name, ".A"}, {prsim_name, ".A"});
+	$from_prsim({prsim_name, ".Z"}, {verilog_name, ".Z"});
+	end // end if
+end // end initial
+endmodule
+
 module HAC_AND2 #(
 	parameter prsim_name=""
 ) (

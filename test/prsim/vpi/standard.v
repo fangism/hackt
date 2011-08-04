@@ -2,6 +2,28 @@
 //	$Id: standard.v,v 1.5 2009/10/22 22:30:36 fang Exp $
 // original verilog definitions (e.g. from vendor's standard cell library)
 
+// inverter
+`celldefine
+module INV (A, Z);
+  input A;
+  output Z;
+  not (Z, A);
+  specify
+    (A => Z)=(3, 3);	// rise and fall times
+  endspecify
+endmodule
+`endcelldefine
+
+// delay element
+`celldefine
+module DELAY (A, Z);
+  parameter delay = 10;
+  input A;
+  output Z;
+  assign #delay Z = A;
+endmodule
+`endcelldefine
+
 // two-input and-gate
 `celldefine
 module AND2 (A1, A2, Z);

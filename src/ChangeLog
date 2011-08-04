@@ -5,6 +5,14 @@
 
 2011-08-03	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-84-85:
+	  vpi-prsim: fixed uncaught channel exception causing VCS to 
+		crash, wrapped call to __advance_prsim in a catch-all
+		__advance_prsim_nothrow that calls vpi_finish().
+	  Was not able to reproduce with small targeted test case, 
+		but original test case works, and fix was somewhat obvious.
+
+
 	* HACKT-00-01-04-main-00-84-84-merged-prsim-keeper-check-11:
 	  Merged prsim-keeper-check branch.
 
