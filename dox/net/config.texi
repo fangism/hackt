@@ -56,6 +56,7 @@ emitted output (because not all SPICEs are created alike).
 @cindex SPICE-formatting
 @cindex Spectre-formatting
 
+@include config/print.texi
 @include config/output_format.texi
 @include config/emit_top.texi
 @include config/nested_subcircuits.texi

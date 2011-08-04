@@ -11,6 +11,7 @@ HACKNET_TEST_SCRIPTS_PASSES = \
 	inv-00 inv-01 inv-02 inv-03 inv-04 inv-05 inv-06 inv-07 \
 	inv-08 inv-09 inv-10 inv-11 inv-12 \
 	inv-13 inv-14 inv-15 inv-16 \
+	no-print \
 	spectre-inv-01 spectre-inv-02 spectre-inv-04 spectre-inv-08 \
 	spectre-inv-13 \
 	nand-01 nand-02 nand-03 \

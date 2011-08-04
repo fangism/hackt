@@ -1,0 +1,5 @@
+// "no-print.hac"
+// @hacknet-flags@ -f print=0
+
+import "inv-02.hac";
+
