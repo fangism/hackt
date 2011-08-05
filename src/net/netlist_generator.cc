@@ -375,10 +375,20 @@ netlist_generator::visit(const entity::PRS::footprint& r) {
 		visit_macro(mpool, i);
 	}
 	}	// end for
+}{
+	// count cumulative number of transistors for index map
+	netlist::local_subcircuit_list_type::iterator
+		mi(current_netlist->local_subcircuits.begin()),
+		me(current_netlist->local_subcircuits.end());
+	size_t o = current_netlist->transistor_pool.size();
+	for ( ; mi!=me; ++mi) {
+		mi->transistor_index_offset = o;
+		o += mi->transistor_count();
+	}
 }
 	// process all subcircuits first, then remaining local rules/macros
 	current_netlist->mark_used_nodes();
-}
+}	// end netlist_generator::visit(const PRS::footprint&)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class RP>
