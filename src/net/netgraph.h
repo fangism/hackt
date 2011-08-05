@@ -335,6 +335,9 @@ public:
 	bool
 	is_empty(void) const;
 
+	size_t
+	transistor_count(void) const { return transistor_pool.size(); }
+
 #if 0
 	ostream&
 	emit_devices(ostream&, const index_type, const node_pool_type&, 
@@ -857,6 +860,16 @@ struct local_netlist : public netlist_common {
 	 */
 	node_index_map_type			node_index_map;
 
+	/**
+		Running total of transistor count, so that every transistor
+		in a netlist, including local subcircuits, can be enumerated
+		and mapped to a unique index.
+		Lookups can be done efficiently using binary_search, 
+		lower_bound, etc.
+	 */
+	size_t				transistor_index_offset;
+
+public:
 	local_netlist();
 	~local_netlist();
 

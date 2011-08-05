@@ -315,7 +315,8 @@ device_group::dump_raw_devices(ostream& o) const {
 //=============================================================================
 // class local_netlist method definitions
 
-local_netlist::local_netlist() : netlist_common(), name(), node_index_map() { }
+local_netlist::local_netlist() : netlist_common(), name(), node_index_map(),
+		transistor_index_offset(0) { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 local_netlist::~local_netlist() { }
