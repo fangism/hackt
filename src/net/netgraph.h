@@ -281,9 +281,15 @@ struct transistor {
 	mark_node_terminals(node_pool_type&, const size_t) const;
 #endif
 
+#if 0
+	ostream&
+	emit_identifier(ostream&, const index_type, const node_pool_type&, 
+		const netlist_options&) const;
+#endif
+
 	ostream&
 	emit(ostream&, const index_type, const node_pool_type&, 
-		const footprint&, const netlist_options&) const;
+		const netlist_options&) const;
 
 	ostream&
 	emit_attribute_suffixes(ostream&, const netlist_options&) const;
@@ -818,7 +824,6 @@ struct netlist_common : public device_group {
 #if !NETLIST_COMMON_NODE_POOL
 		const node_pool_type&,
 #endif
-		const footprint&, 
 		const netlist_options&) const;
 
 	ostream&
@@ -826,7 +831,6 @@ struct netlist_common : public device_group {
 #if !NETLIST_COMMON_NODE_POOL
 		const node_pool_type&,
 #endif
-		const footprint&, 
 		const netlist_options&) const;
 
 };	// end class netlist_common
@@ -1185,6 +1189,11 @@ private:
 #if NETLIST_NODE_CAPS
 	ostream&
 	emit_node_caps(ostream&, const netlist_options&) const;
+#endif
+
+#if NETLIST_NODE_GRAPH
+	ostream&
+	emit_node_terminal_graph(ostream&, const netlist_options&) const;
 #endif
 
 };	// end class netlist

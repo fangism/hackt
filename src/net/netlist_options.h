@@ -291,6 +291,13 @@ struct netlist_options {
 		in comments.
 	 */
 	bool				emit_mangle_map;
+	/**
+		For debugging, print out node aliases w.r.t. 
+		transistor and devices terminals.  
+		This prints the results of constructing 
+		redundant connectivity information for graph analysis.
+	 */
+	bool				emit_node_terminals;
 
 
 	netlist_options();

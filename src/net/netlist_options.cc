@@ -119,7 +119,8 @@ netlist_options::netlist_options() :
 		emit_top(true), 
 		emit_node_aliases(false),
 		emit_node_caps(false),
-		emit_mangle_map(false)
+		emit_mangle_map(false),
+		emit_node_terminals(false)
 		{
 	// delayed mangling
 	// to prevent double-mangling, we have to postpone
@@ -1477,6 +1478,19 @@ Default: 0
 ***/
 DEFINE_OPTION_DEFAULT(emit_mangle_map, "emit_mangle_map",
 	"if true, emit mangled node name map in subcircuit comments")
+
+/***
+@texinfo config/emit_node_terminals.texi
+@defopt emit_node_terminals (bool)
+If set to 1, print for every node, the terminals to which it connects
+on all devices.  This is useful for debugging the redundant graphical
+representation used for graph traversals and analysis.
+Default: 0
+@end defopt
+@end texinfo
+***/
+DEFINE_OPTION_DEFAULT(emit_node_terminals, "emit_node_terminals",
+	"if true, emit node terminal graph (debug)")
 
 #if 0
 /***

@@ -70,6 +70,7 @@ emitted output (because not all SPICEs are created alike).
 @include config/preferred_names.texi
 @include config/emit_node_aliases.texi
 @include config/emit_node_caps.texi
+@include config/emit_node_terminals.texi
 @c @include config/top_type_ports.texi
 @include config/transistor_prefix.texi
 @include config/subcircuit_instance_prefix.texi
