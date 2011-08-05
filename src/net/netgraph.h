@@ -1,5 +1,6 @@
 /**
 	\file "net/netgraph.h"
+	Basic strutures for netlist.
 	$Id: netgraph.h,v 1.29 2011/04/29 18:37:09 fang Exp $
  */
 
@@ -83,6 +84,18 @@
 	Status: done, decently tested.
  */
 #define	NETLIST_NODE_CAPS		(1 && NETLIST_CACHE_PARASITICS && NETLIST_COMMON_NODE_POOL)
+
+/**
+	Define to 1 to enable construction of graph using 
+	node adjacency lists, where each node tracks the set of
+	terminals to other components.  
+	This information is redundant with transister/device netlists,
+	and is really only needed for algorithms that do graph traversals.
+	The cost of this is memory.
+	Rationale: needed for prsim precharge invariant checking.
+	Goal: 1
+ */
+#define	NETLIST_NODE_GRAPH			1
 
 namespace HAC {
 namespace entity {
@@ -262,6 +275,11 @@ struct transistor {
 
 	void
 	mark_used_nodes(node_pool_type&) const;
+
+#if NETLIST_NODE_GRAPH
+	void
+	mark_node_terminals(node_pool_type&, const size_t) const;
+#endif
 
 	ostream&
 	emit(ostream&, const index_type, const node_pool_type&, 
@@ -480,6 +498,32 @@ struct node_caps {
 #endif	// NETLIST_NODE_CAPS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if NETLIST_NODE_GRAPH
+/**
+	Adjacency list element.
+	Refers to device as an edge, not your conventional 
+	reference to node on the other end of an edge,
+	because devices may have more than two terminals.
+ */
+struct node_terminal {
+	// index into device type pool
+	size_t					index;
+	/**
+		X: index position
+		M: 's' 'd' 'g' 'b'
+		R,L,D: 0,1
+	 */
+	size_t					port;
+	/// R,L,C,D,M,X
+	char					device_type;
+
+	node_terminal(const char t, const size_t i, const size_t p) :
+		index(i), port(p), device_type(t) { }
+
+};	// end struct node_terminal
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Extension of (local) node information.  
 	Corresponds to an electrical node in the netlist. 
@@ -546,7 +590,14 @@ struct node : public unique_common {
 #else
 #define	INIT_DRIVEN
 #endif
+#if NETLIST_NODE_GRAPH
 	// connectivity information needed? would be redundant with devices
+	/**
+		List of all devices this node touches and to
+		which terminal it is connected.
+	 */
+	vector<node_terminal>		terminals;
+#endif	// NETLIST_NODE_GRAPH
 #if NETLIST_GROUPED_TRANSISTORS
 	/**
 		Auxiliary counter used when printing transistors and

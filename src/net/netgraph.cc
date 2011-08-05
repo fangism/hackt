@@ -66,12 +66,20 @@ device_group::is_empty(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Marks whichnodes are used/driven from a transistor's perspective,
+	and also constructs the (redundant) node-terminal information.
+ */
 void
 device_group::mark_used_nodes(node_pool_type& node_pool) const {
 	transistor_pool_type::const_iterator
 		i(transistor_pool.begin()), e(transistor_pool.end());
-	for ( ; i!=e; ++i) {
+	size_t ti = 0;
+	for ( ; i!=e; ++i, ++ti) {
 		i->mark_used_nodes(node_pool);
+#if NETLIST_NODE_GRAPH
+		i->mark_node_terminals(node_pool, ti);
+#endif
 	}
 }
 
@@ -355,7 +363,14 @@ local_netlist::mark_used_nodes(node_pool_type& nnp) {
 	// transform indices from actual to local formal
 	transistor_pool_type::iterator
 		i(transistor_pool.begin()), e(transistor_pool.end());
-	for ( ; i!=e; ++i) {
+	size_t ti = 0;
+	for ( ; i!=e; ++i, ++ti) {
+#if NETLIST_NODE_GRAPH
+// TODO: consider using a transistor number map to local subcircuits
+//		i->mark_node_terminals(nnp, ti+toffset);
+//		parent node pool
+// need to be able to treat local subcircuits as one flat netlist?
+#endif
 		i->gate = node_index_map.find(i->gate)->second;
 		i->source = node_index_map.find(i->source)->second;
 		i->drain = node_index_map.find(i->drain)->second;
@@ -363,6 +378,9 @@ local_netlist::mark_used_nodes(node_pool_type& nnp) {
 		// INVARIANT: associated node is used and in ports list
 #if NETLIST_GROUPED_TRANSISTORS
 		i->assoc_node = node_index_map.find(i->assoc_node)->second;
+#endif
+#if NETLIST_NODE_GRAPH
+		i->mark_node_terminals(node_pool, ti);	// local node pool
 #endif
 	}
 #endif
@@ -838,6 +856,28 @@ transistor::mark_used_nodes(node_pool_type& node_pool) const {
 #endif
 	node_pool[body].used = true;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if NETLIST_NODE_GRAPH
+void
+transistor::mark_node_terminals(node_pool_type& node_pool, 
+	const size_t ti) const {
+	const size_t nps = node_pool.size();
+// redundantly maintain node graph for adjacency and connectivity
+	const node_terminal s('M', ti, 's');
+	const node_terminal g('M', ti, 'g');
+	const node_terminal d('M', ti, 'd');
+	const node_terminal b('M', ti, 'b');
+	INVARIANT(source < nps);
+	INVARIANT(gate < nps);
+	INVARIANT(drain < nps);
+	INVARIANT(body < nps);
+	node_pool[source].terminals.push_back(s);
+	node_pool[gate].terminals.push_back(g);
+	node_pool[drain].terminals.push_back(d);
+	node_pool[body].terminals.push_back(b);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1633,6 +1673,9 @@ netlist::mark_used_nodes(void) {
 		i(local_subcircuits.begin()), e(local_subcircuits.end());
 	for ( ; i!=e; ++i) {
 		i->mark_used_nodes(node_pool);
+#if NETLIST_NODE_GRAPH
+		// TODO: account for devices in these local subcircuits
+#endif
 	}
 }
 }

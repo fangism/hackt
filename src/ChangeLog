@@ -5,8 +5,13 @@
 
 2011-08-04	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-84-85-prsim-precharge-check-02:
+	  hacknet: enabled computing node terminal graph information,
+		but not checked or printed yet, doesn't crash anything.
+
+
 	* HACKT-00-01-04-main-00-84-85-prsim-precharge-check-01:
-	  Branch for implementeing automatic precharge invariants
+	  Branch for implementing automatic precharge invariants
 		in hacprsim.  Strategy: use hacknet to produce graphical
 		representation of netlist, and derive expressions from there,
 		because prsim only has tree representations.
