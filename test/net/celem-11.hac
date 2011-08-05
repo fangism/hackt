@@ -1,0 +1,5 @@
+// "celem-11.hac"
+// @hacknet-flags@ -T celem -f emit_node_terminals=1
+
+import "celem-01.hac";
+

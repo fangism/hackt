@@ -368,7 +368,7 @@ local_netlist::mark_used_nodes(node_pool_type& nnp) {
 	for ( ; i!=e; ++i, ++ti) {
 #if NETLIST_NODE_GRAPH
 // TODO: consider using a transistor number map to local subcircuits
-//		i->mark_node_terminals(nnp, ti+toffset);
+//		i->mark_node_terminals(nnp, ti+transistor_index_offset);
 //		parent node pool
 // need to be able to treat local subcircuits as one flat netlist?
 #endif
@@ -881,11 +881,13 @@ transistor::mark_node_terminals(node_pool_type& node_pool,
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	\param di the device index, incrementing.
- */
 ostream&
-transistor::emit(ostream& o, const index_type di, 
+transistor::emit_identifier(ostream& o,
+#if NETLIST_GROUPED_TRANSISTORS
+		const index_type, 	// unused
+#else
+		const index_type di, 
+#endif
 		const node_pool_type& node_pool,
 		const netlist_options& nopt) const {
 #if NETLIST_GROUPED_TRANSISTORS
@@ -910,8 +912,18 @@ transistor::emit(ostream& o, const index_type di,
 	o << nopt.transistor_prefix << di << '_';
 #endif
 	// attribute suffixes cannot be overridden
-	emit_attribute_suffixes(o, nopt) << ' ';
+	return emit_attribute_suffixes(o, nopt);
+}
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param di the device index, incrementing.
+ */
+ostream&
+transistor::emit(ostream& o, const index_type di, 
+		const node_pool_type& node_pool,
+		const netlist_options& nopt) const {
+	emit_identifier(o, di, node_pool, nopt) << ' ';
 	const bool paren = 
 		(nopt.instance_port_style == netlist_options::STYLE_SPECTRE);
 	const node& s(node_pool[source]);
@@ -2372,22 +2384,27 @@ netlist::emit_node_terminal_graph(ostream& o, const netlist_options& nopt) const
 for (++i; i!=e; ++i) {
 	// include all nodes, internal, stack, supply, etc...
 	i->emit(o << nopt.comment_prefix << "\t", nopt) << " :";
-#if 0
-	i->emit_terminals(o, nopt) << endl;
-#else
 	vector<node_terminal>::const_iterator
 		ti(i->terminals.begin()), te(i->terminals.end());
 	for ( ; ti!=te; ++ti) {
 		// just space-delimited
+		o << ' ';
 		// TODO: print device *name*, not just index
-		o << ' ' << ti->device_type << ':' << ti->index << '.';
 		switch (ti->device_type) {
-		case 'M': o << char(ti->port); break;
-		default: o << ti->port; break;
+		// TODO: lookup ti->index transistor reference,
+		//	may be in local subcircuit.
+		case 'M': transistor_pool[ti->index]
+			.emit_identifier(o, ti->index, node_pool, nopt) <<
+				nopt.__dump_flags.process_member_separator <<
+				char(ti->port);
+			break;
+		default: o << ti->device_type << ti->index <<
+				nopt.__dump_flags.process_member_separator <<
+				ti->port;
+			break;
 		}
 	}
 	o << endl;
-#endif
 }
 	return o << nopt.comment_prefix << "END node terminals" << endl;
 }
