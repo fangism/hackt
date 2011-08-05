@@ -16,7 +16,7 @@ HACKNET_TEST_SCRIPTS_PASSES = \
 	spectre-inv-13 \
 	nand-01 nand-02 nand-03 \
 	celem-01 celem-02 celem-03 celem-04 celem-05 celem-06 \
-	celem-07 celem-08 celem-09 celem-10 \
+	celem-07 celem-08 celem-09 celem-10 celem-11 \
 	logic-01 logic-02 \
 	ladder-01 ladder-02 \
 	mux-01 mux-02 mux-03 mux-04 mux-05 mux-06 \

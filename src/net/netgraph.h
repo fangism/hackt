@@ -281,11 +281,9 @@ struct transistor {
 	mark_node_terminals(node_pool_type&, const size_t) const;
 #endif
 
-#if 0
 	ostream&
 	emit_identifier(ostream&, const index_type, const node_pool_type&, 
 		const netlist_options&) const;
-#endif
 
 	ostream&
 	emit(ostream&, const index_type, const node_pool_type&, 
