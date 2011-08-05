@@ -178,7 +178,7 @@ netlist_common::emit_devices(ostream& o,
 #if !NETLIST_COMMON_NODE_POOL
 		const node_pool_type& node_pool,
 #endif
-		const footprint& fp, const netlist_options& nopt) const {
+		const netlist_options& nopt) const {
 	// emit devices
 #if ENABLE_STACKTRACE
 	o << nopt.comment_prefix << "devices:" << endl;
@@ -207,13 +207,13 @@ netlist_common::emit_devices(ostream& o,
 	// TODO: use optional label designations
 	size_t j = 0;
 	for ( ; i!=e; ++i, ++j) {
-		i->emit(o, j, node_pool, fp, nopt) << endl;
+		i->emit(o, j, node_pool, nopt) << endl;
 	}
 	emit_passive_devices(o,
 #if !NETLIST_COMMON_NODE_POOL
 		node_pool,
 #endif
-		fp, nopt);
+		nopt);
 	return o;
 }
 
@@ -227,7 +227,7 @@ netlist_common::emit_passive_devices(ostream& o,
 #if !NETLIST_COMMON_NODE_POOL
 		const node_pool_type& node_pool,
 #endif
-		const footprint& fp, const netlist_options& nopt) const {
+		const netlist_options& nopt) const {
 	typedef	passive_device_pool_type::const_iterator	const_iterator;
 	const_iterator i(passive_device_pool.begin()),
 		e(passive_device_pool.end());
@@ -488,7 +488,7 @@ if (nopt.emit_node_caps) {
 #if !NETLIST_COMMON_NODE_POOL
 		n.node_pool,
 #endif
-		*n.fp, nopt);
+		nopt);
 	// end subcircuit
 switch (nopt.subckt_def_style) {
 case netlist_options::STYLE_SPECTRE: 
@@ -887,7 +887,7 @@ transistor::mark_node_terminals(node_pool_type& node_pool,
 ostream&
 transistor::emit(ostream& o, const index_type di, 
 		const node_pool_type& node_pool,
-		const footprint& fp, const netlist_options& nopt) const {
+		const netlist_options& nopt) const {
 #if NETLIST_GROUPED_TRANSISTORS
 	// don't use ordinal index di
 	const node& n(node_pool[assoc_node]);
@@ -1960,6 +1960,11 @@ if (nopt.emit_node_caps) {
 	emit_node_caps(o, nopt);
 }
 #endif
+#if NETLIST_NODE_GRAPH
+if (nopt.emit_node_terminals) {
+	emit_node_terminal_graph(o, nopt);
+}
+#endif
 #if NETLIST_VERILOG
 if (nopt.subckt_def_style == netlist_options::STYLE_VERILOG) {
 	emit_verilog_locals(o, nopt);
@@ -1971,7 +1976,7 @@ if (nopt.subckt_def_style == netlist_options::STYLE_VERILOG) {
 #if !NETLIST_COMMON_NODE_POOL
 		node_pool,
 #endif
-		*fp, nopt);
+		nopt);
 }
 if (sub) {
 switch (nopt.subckt_def_style) {
@@ -2351,6 +2356,40 @@ if (opt.undriven_node_policy != OPTION_IGNORE) {
 	}
 }
 	return ret;
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if NETLIST_NODE_GRAPH
+/**
+	TODO: traverse local subcircuits too.
+ */
+ostream&
+netlist::emit_node_terminal_graph(ostream& o, const netlist_options& nopt) const {
+	o << nopt.comment_prefix << "BEGIN node terminals" << endl;
+	typedef	node_pool_type::const_iterator	const_iterator;
+	const_iterator i(node_pool.begin()), e(node_pool.end());
+for (++i; i!=e; ++i) {
+	// include all nodes, internal, stack, supply, etc...
+	i->emit(o << nopt.comment_prefix << "\t", nopt) << " :";
+#if 0
+	i->emit_terminals(o, nopt) << endl;
+#else
+	vector<node_terminal>::const_iterator
+		ti(i->terminals.begin()), te(i->terminals.end());
+	for ( ; ti!=te; ++ti) {
+		// just space-delimited
+		// TODO: print device *name*, not just index
+		o << ' ' << ti->device_type << ':' << ti->index << '.';
+		switch (ti->device_type) {
+		case 'M': o << char(ti->port); break;
+		default: o << ti->port; break;
+		}
+	}
+	o << endl;
+#endif
+}
+	return o << nopt.comment_prefix << "END node terminals" << endl;
 }
 #endif
 
