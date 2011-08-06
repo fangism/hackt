@@ -748,6 +748,20 @@ instance::is_empty(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+string
+instance::raw_identifier(const footprint& fp,
+		const netlist_options& nopt) const {
+	// process instance name
+	ostringstream oss;
+	fp.get_instance_pool<process_tag>()[pid -1].get_back_ref()
+		->dump_hierarchical_name(oss, nopt.__dump_flags);
+	return oss.str();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param fp is the footprint of the parent that contains this instance.
+ */
 ostream&
 instance::emit(ostream& o, const node_pool_type& node_pool, 
 #if NETLIST_VERILOG
@@ -757,14 +771,12 @@ instance::emit(ostream& o, const node_pool_type& node_pool,
 	string pname;
 {
 	// process instance name
-	ostringstream oss;
-	fp.get_instance_pool<process_tag>()[pid -1].get_back_ref()
-		->dump_hierarchical_name(oss, nopt.__dump_flags);
-	pname = oss.str();
+	const string rname(raw_identifier(fp, nopt));
 if (nopt.emit_mangle_map) {
 	o << nopt.comment_prefix << "instance: " << type->get_unmangled_name()
-		<< ' ' << pname << endl;
+		<< ' ' << rname << endl;	// want original name
 }
+	pname = rname;
 	o << nopt.subckt_instance_prefix;
 	nopt.mangle_instance(pname);
 }
@@ -2442,6 +2454,16 @@ for (++i; i!=e; ++i) {
 				nopt.__dump_flags.process_member_separator <<
 				char(ti->port);
 			break;
+		case 'x': {
+			string pname(instance_pool[ti->index]
+				.raw_identifier(*fp, nopt));
+			nopt.mangle_instance(pname);
+			o << nopt.subckt_instance_prefix << pname <<
+				nopt.__dump_flags.process_member_separator <<
+				ti->port;
+			break;
+		}
+		// unhandled case
 		default: o << ti->device_type << ti->index <<
 				nopt.__dump_flags.process_member_separator <<
 				ti->port;
