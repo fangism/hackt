@@ -780,6 +780,10 @@ struct instance {
 	bool
 	is_empty(void) const;
 
+	string
+	raw_identifier(const footprint&,
+		const netlist_options&) const;
+
 	ostream&
 	emit(ostream&, const node_pool_type&,
 #if NETLIST_VERILOG
