@@ -1667,6 +1667,50 @@ proc_pool.back().dump_raw(STACKTRACE_INDENT_PRINT("new proc: ")) << endl;
 #endif	// NETLIST_VERILOG
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+static
+bool
+__local_subckt_less(const local_netlist& l, const size_t i) {
+	return l.transistor_index_offset < i;
+}
+
+/**
+	\return local subcircuit index and transistor index
+ */
+transistor_reference
+netlist::lookup_transistor_index(const size_t ti) const {
+	if (ti < transistor_pool.size()) {
+		return transistor_reference(0, ti);
+	} else {
+		const vector<local_netlist>::const_iterator
+			b(local_subcircuits.begin()),
+			e(local_subcircuits.end());
+		vector<local_netlist>::const_iterator
+			f(std::lower_bound(b, e, ti, &__local_subckt_less));
+		const size_t rem = ti -f->transistor_index_offset;
+		INVARIANT(rem < f->transistor_count());
+		return transistor_reference(
+			std::distance(b, f)+1, rem);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const transistor&
+netlist::lookup_transistor(const transistor_reference& tr) const {
+	if (tr.first) {
+		return local_subcircuits[tr.first -1]
+			.get_transistor(tr.second);
+	} else {
+		return transistor_pool[tr.second];
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const transistor&
+netlist::lookup_transistor(const size_t ti) const {
+	return lookup_transistor(lookup_transistor_index(ti));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Note which nodes are actually used, to avoid emitting unused nodes.
  */
@@ -2393,7 +2437,7 @@ for (++i; i!=e; ++i) {
 		switch (ti->device_type) {
 		// TODO: lookup ti->index transistor reference,
 		//	may be in local subcircuit.
-		case 'M': transistor_pool[ti->index]
+		case 'M': lookup_transistor(ti->index)
 			.emit_identifier(o, ti->index, node_pool, nopt) <<
 				nopt.__dump_flags.process_member_separator <<
 				char(ti->port);

@@ -342,6 +342,9 @@ public:
 	size_t
 	transistor_count(void) const { return transistor_pool.size(); }
 
+	const transistor&
+	get_transistor(const size_t i) const { return transistor_pool[i]; }
+
 #if 0
 	ostream&
 	emit_devices(ostream&, const index_type, const node_pool_type&, 
@@ -900,6 +903,14 @@ public:
 #endif
 };	// end class local_netlist
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This is the result of a transistor index lookup.
+	first: local subcircuit index (1-based), 0 for main subcircuit
+	second: offset within subcircuit
+ */
+typedef pair<size_t, size_t>		transistor_reference;
+
 //-----------------------------------------------------------------------------
 /**
 	A graph.
@@ -1112,6 +1123,15 @@ public:
 	bool
 	named_node_is_used(const index_type) const;
 #endif
+
+	transistor_reference
+	lookup_transistor_index(const size_t) const;
+
+	const transistor&
+	lookup_transistor(const transistor_reference&) const;
+
+	const transistor&
+	lookup_transistor(const size_t) const;
 
 	void
 	append_instance(const state_instance<process_tag>&, const netlist&, 
