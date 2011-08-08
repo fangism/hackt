@@ -92,9 +92,9 @@
 		in local subcircuits.  
 	Rationale: make local_netlist behave more similarly to netlist.
 	Goal: 1
-	Status: done, tested, should be perm'd
- */
+	Status: done, tested, perm'd
 #define	NETLIST_COMMON_NODE_POOL		1
+ */
 
 /**
 	Define to 1 to accumulate capacitances on nodes.
@@ -104,7 +104,7 @@
 	Goal: 1
 	Status: done, decently tested.
  */
-#define	NETLIST_NODE_CAPS		(1 && NETLIST_CACHE_PARASITICS && NETLIST_COMMON_NODE_POOL)
+#define	NETLIST_NODE_CAPS		(1 && NETLIST_CACHE_PARASITICS)
 
 /**
 	Define to 1 to enable construction of graph using 
@@ -833,12 +833,10 @@ struct instance {
 	Structures common to all netlists.  
  */
 struct netlist_common : public device_group {
-#if NETLIST_COMMON_NODE_POOL
 	/**
 		All local nodes, including ports and internal nodes.
 	 */
 	node_pool_type			node_pool;
-#endif
 	/**
 		TODO: print comment with origin rule before each
 		group of transistors.
@@ -854,18 +852,10 @@ struct netlist_common : public device_group {
 	is_empty(void) const;
 
 	ostream&
-	emit_passive_devices(ostream&,
-#if !NETLIST_COMMON_NODE_POOL
-		const node_pool_type&,
-#endif
-		const netlist_options&) const;
+	emit_passive_devices(ostream&, const netlist_options&) const;
 
 	ostream&
-	emit_devices(ostream&,
-#if !NETLIST_COMMON_NODE_POOL
-		const node_pool_type&,
-#endif
-		const netlist_options&) const;
+	emit_devices(ostream&, const netlist_options&) const;
 
 };	// end class netlist_common
 
@@ -875,15 +865,8 @@ struct netlist_common : public device_group {
 	Intended for use with subcircuits.
  */
 struct local_netlist : public netlist_common {
-#if NETLIST_COMMON_NODE_POOL
 	// maps actual indices to formal indices (ordered!)
 	typedef	map<index_type, index_type>		node_index_map_type;
-#else
-	// does not have own list of internal nodes, defer to parent's
-	// keep a local subset of nodes used, indexing into parent's collection
-	// will use this
-	typedef	set<index_type>		node_index_map_type;
-#endif
 
 	// name of local subcircuit, or just suffix, like :subs_0
 	string				name;
@@ -924,11 +907,7 @@ public:
 		const netlist_options&) const;
 
 	ostream&
-	dump_raw(ostream&
-#if !NETLIST_COMMON_NODE_POOL
-		, const netlist&
-#endif
-		) const;
+	dump_raw(ostream&) const;
 
 #if NETLIST_CACHE_PARASITICS
 	void
@@ -1051,17 +1030,7 @@ private:
 #if NETLIST_VERILOG
 	named_proc_map_type		named_proc_map;
 #endif
-#if NETLIST_COMMON_NODE_POOL
 	// inherit node_pool from netlist_common
-#else
-	/**
-		All local nodes, including ports and internal nodes.
-		This is only stored in the primary netlist, 
-		whereas the local subcircuit netlists use indirect
-		references to parents' nodes.  
-	 */
-	node_pool_type			node_pool;
-#endif
 #if NETLIST_VERILOG
 	/**
 		Collection of channels and datastructs.  

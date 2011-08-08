@@ -148,15 +148,11 @@ device_group::summarize_parasitics(node_pool_type& node_pool,
 // class netlist_common method definitions
 
 netlist_common::netlist_common() : device_group(), 
-#if NETLIST_COMMON_NODE_POOL
 		node_pool(), 
-#endif
 		passive_device_pool() {
-#if NETLIST_COMMON_NODE_POOL
 	node_pool.reserve(8);	// reasonable pre-allocation
 	// following order should match above universal node indices
 	node_pool.push_back(netlist::void_node);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -174,11 +170,7 @@ netlist_common::is_empty(void) const {
 	don't use device_group::emit_devices.  
  */
 ostream&
-netlist_common::emit_devices(ostream& o,
-#if !NETLIST_COMMON_NODE_POOL
-		const node_pool_type& node_pool,
-#endif
-		const netlist_options& nopt) const {
+netlist_common::emit_devices(ostream& o, const netlist_options& nopt) const {
 	// emit devices
 #if ENABLE_STACKTRACE
 	o << nopt.comment_prefix << "devices:" << endl;
@@ -209,11 +201,7 @@ netlist_common::emit_devices(ostream& o,
 	for ( ; i!=e; ++i, ++j) {
 		i->emit(o, j, node_pool, nopt) << endl;
 	}
-	emit_passive_devices(o,
-#if !NETLIST_COMMON_NODE_POOL
-		node_pool,
-#endif
-		nopt);
+	emit_passive_devices(o, nopt);
 	return o;
 }
 
@@ -224,9 +212,6 @@ netlist_common::emit_devices(ostream& o,
  */
 ostream&
 netlist_common::emit_passive_devices(ostream& o,
-#if !NETLIST_COMMON_NODE_POOL
-		const node_pool_type& node_pool,
-#endif
 		const netlist_options& nopt) const {
 	typedef	passive_device_pool_type::const_iterator	const_iterator;
 	const_iterator i(passive_device_pool.begin()),
@@ -335,23 +320,15 @@ local_netlist::mark_used_nodes(node_pool_type& nnp) {
 	transistor_pool_type::const_iterator
 		i(transistor_pool.begin()), e(transistor_pool.end());
 	for ( ; i!=e; ++i) {
-#if NETLIST_COMMON_NODE_POOL
 		// garbage values to be filled below...
 		node_index_map[i->gate] = 0;
 		node_index_map[i->source] = 0;
 		node_index_map[i->drain] = 0;
 		node_index_map[i->body] = 0;
-#else
-		node_index_map.insert(i->gate);
-		node_index_map.insert(i->source);
-		node_index_map.insert(i->drain);
-		node_index_map.insert(i->body);
-#endif
 		// flag as used, since this acts as both definition and instance
 		i->mark_used_nodes(nnp);
 	}
 }{
-#if NETLIST_COMMON_NODE_POOL
 	const size_t ns = node_index_map.size();
 	STACKTRACE_INDENT_PRINT("ns = " << ns << endl);
 	node_pool.reserve(ns +1);
@@ -401,31 +378,17 @@ local_netlist::mark_used_nodes(node_pool_type& nnp) {
 		i->mark_node_terminals(node_pool, ti);	// local node pool
 #endif
 	}
-#endif
 }
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-local_netlist::dump_raw(ostream& o
-#if !NETLIST_COMMON_NODE_POOL
-		, const netlist& n
-#endif
-		) const {
+local_netlist::dump_raw(ostream& o) const {
 	o << name;
-#if NETLIST_COMMON_NODE_POOL
 	typedef	node_pool_type::const_iterator	const_iterator;
 	const_iterator i(++node_pool.begin()), e(node_pool.end());
-#else
-	typedef	node_index_map_type::const_iterator	const_iterator;
-	const_iterator i(node_index_map.begin()), e(node_index_map.end());
-#endif
 	for ( ; i!=e; ++i) {
-#if NETLIST_COMMON_NODE_POOL
 		i->dump_raw(o << ' ');
-#else
-		n.node_pool[*i].dump_raw(o << ' ');
-#endif
 	}
 	o << endl;
 	o << "transistors:" << endl;
@@ -459,19 +422,10 @@ if (!nopt.nested_subcircuits) {
 {
 	// ports, formals
 	ostringstream oss;
-#if NETLIST_COMMON_NODE_POOL
 	typedef	node_pool_type::const_iterator	const_iterator;
 	const_iterator i(++node_pool.begin()), e(node_pool.end());
-#else
-	typedef	node_index_map_type::const_iterator	const_iterator;
-	const_iterator i(node_index_map.begin()), e(node_index_map.end());
-#endif
 	for ( ; i!=e; ++i) {
-#if NETLIST_COMMON_NODE_POOL
 		const node& nd(*i);
-#else
-		const node& nd(n.node_pool[*i]);
-#endif
 		// stack-node are local-only
 		if (!nd.is_auxiliary_node()) {
 			nd.emit(oss << ' ', nopt);
@@ -485,27 +439,12 @@ if (!nopt.nested_subcircuits) {
 	// TODO: emit port-info comments
 #if NETLIST_NODE_CAPS
 if (nopt.emit_node_caps) {
-#if NETLIST_COMMON_NODE_POOL
 	const node_pool_type& local_nodes_only(node_pool);
-#else
-	node_pool_type local_nodes_only;
-	local_nodes_only.reserve(node_index_map.size() +1);
-	local_nodes_only.push_back(netlist::void_node);	// need dummy, first skipped
-	typedef	node_index_map_type::const_iterator	const_iterator;
-	const_iterator i(node_index_map.begin()), e(node_index_map.end());
-	for ( ; i!=e; ++i) {
-		local_nodes_only.push_back(n.node_pool[*i]);
-	}
-#endif
 	node::emit_node_caps(o, local_nodes_only, nopt);
 }
 #endif
 	// use supercircuit's names
-	emit_devices(o,
-#if !NETLIST_COMMON_NODE_POOL
-		n.node_pool,
-#endif
-		nopt);
+	emit_devices(o, nopt);
 	// end subcircuit
 switch (nopt.subckt_def_style) {
 case netlist_options::STYLE_SPECTRE: 
@@ -544,19 +483,10 @@ default:
 	break;
 }	// end switch
 	ostringstream oss;
-#if NETLIST_COMMON_NODE_POOL
 	typedef	node_pool_type::const_iterator	const_iterator;
 	const_iterator i(++node_pool.begin()), e(node_pool.end());
-#else
-	typedef	node_index_map_type::const_iterator	const_iterator;
-	const_iterator i(node_index_map.begin()), e(node_index_map.end());
-#endif
 	for ( ; i!=e; ++i) {
-#if NETLIST_COMMON_NODE_POOL
 		const node& nd(*i);
-#else
-		const node& nd(n.node_pool[*i]);
-#endif
 		// stack-node are local-only
 		if (!nd.is_auxiliary_node()) {
 			nd.emit(oss << ' ', nopt);
@@ -592,9 +522,7 @@ if (!nopt.nested_subcircuits) {
  */
 void
 local_netlist::summarize_parasitics(const netlist_options& nopt) {
-#if NETLIST_COMMON_NODE_POOL
 	device_group::summarize_parasitics(node_pool, nopt);
-#endif
 }
 #endif
 
@@ -1164,9 +1092,6 @@ netlist::netlist() : netlist_common(), name(),
 #if NETLIST_VERILOG
 		named_proc_map(),
 #endif
-#if !NETLIST_COMMON_NODE_POOL
-		node_pool(),
-#endif
 		instance_pool(), internal_node_map(), 
 		internal_expr_map(), 
 #if NETLIST_CHECK_NAME_COLLISIONS
@@ -1182,11 +1107,6 @@ netlist::netlist() : netlist_common(), name(),
 		subs_count(0),
 		warning_count(0) {
 	// copy supply nodes
-#if !NETLIST_COMMON_NODE_POOL
-	node_pool.reserve(8);	// reasonable pre-allocation
-	// following order should match above universal node indices
-	node_pool.push_back(void_node);
-#endif
 #if !PRS_SUPPLY_OVERRIDES
 	node_pool.push_back(GND_node);
 	node_pool.push_back(Vdd_node);
@@ -2071,11 +1991,7 @@ if (nopt.subckt_def_style == netlist_options::STYLE_VERILOG) {
 #endif	// NETLIST_VERILOG
 	emit_subinstances(o, nopt);
 	emit_local_subcircuits(o, nopt);
-	emit_devices(o,
-#if !NETLIST_COMMON_NODE_POOL
-		node_pool,
-#endif
-		nopt);
+	emit_devices(o, nopt);
 }
 if (sub) {
 switch (nopt.subckt_def_style) {
@@ -2192,11 +2108,7 @@ netlist::dump_raw(ostream& o) const {
 	typedef	local_subcircuit_list_type::const_iterator	const_iterator;
 	const_iterator i(local_subcircuits.begin()), e(local_subcircuits.end());
 	for ( ; i!=e; ++i) {
-#if NETLIST_COMMON_NODE_POOL
 		i->dump_raw(o);
-#else
-		i->dump_raw(o, *this);
-#endif
 	}
 	o << '}' << endl;
 }{
@@ -2405,7 +2317,6 @@ netlist::summarize_parasitics(const netlist_options& nopt) {
 		}
 	}
 }
-#if NETLIST_COMMON_NODE_POOL
 	local_subcircuit_list_type::iterator
 		i(local_subcircuits.begin()), e(local_subcircuits.end());
 	for ( ; i!=e; ++i) {
@@ -2419,7 +2330,6 @@ netlist::summarize_parasitics(const netlist_options& nopt) {
 			node_pool[li->first].cap += i->node_pool[li->second].cap;
 		}
 	}
-#endif
 }
 #endif
 
