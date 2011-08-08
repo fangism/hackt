@@ -694,6 +694,7 @@ struct node : public unique_common {
 
 	// default copy-ctor
 
+public:
 	bool
 	is_logical_node(void) const { return type == NODE_TYPE_LOGICAL; }
 

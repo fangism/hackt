@@ -360,7 +360,7 @@ local_netlist::mark_used_nodes(node_pool_type& nnp) {
 		i(node_index_map.begin()), e(node_index_map.end());
 	for ( ; i!=e; ++i, ++j) {
 		i->second = j;
-		node& ref(nnp[i->first]);
+		const node& ref(nnp[i->first]);
 		node_pool.push_back(ref);	// yes, copy node
 	}
 }{

@@ -378,7 +378,7 @@ netlist_generator::visit(const entity::PRS::footprint& r) {
 	}
 	}	// end for
 }
-#else
+#else	// NETLIST_INTERLEAVE_SUBCKT_RULES
 {
 	// different traversal order
 	// 1. rules and macros outside local subcircuits
@@ -396,17 +396,7 @@ netlist_generator::visit(const entity::PRS::footprint& r) {
 	for ( ; i<s; ++i) {
 	if (si!=se && (i >= si->rules.first)) {
 		INVARIANT(mi != current_netlist->local_subcircuits.end());
-#if 0
-		local_netlist& n(*mi);
-		const value_saver<netlist_common*>
-			__tmp(current_local_netlist, &n);
-		for ( ; i < si->rules.second; ++i) {
-			visit_rule(rpool, i);
-		}
-			--i;	// back-adjust before continue
-#else
 		i = si->rules.second -1;	// skip local subcircuit
-#endif
 		// advance to next non-empty subcircuit
 		do { ++si; ++mi; } while (si!=se && si->rules_empty());
 	} else {
@@ -427,18 +417,7 @@ netlist_generator::visit(const entity::PRS::footprint& r) {
 	if (si!=se && (i >= si->macros.first)) {
 		// start of a subcircuit range, can be empty
 		INVARIANT(mi != current_netlist->local_subcircuits.end());
-#if 0
-		local_netlist& n(*mi);
-			const value_saver<netlist_common*>
-				__tmp(current_local_netlist, &n);
-		for ( ; i < si->macros.second; ++i) {
-			visit_macro(mpool, i);
-		}
-			--i;	// back-adjust before continue
-		// advance to next non-empty subcircuit
-#else
 		i = si->macros.second -1;	// skip local subcircuit
-#endif
 		do { ++si; ++mi; } while (si!=se && si->macros_empty());
 	} else {
 		// macro is outside of subcircuits, want these now
@@ -459,7 +438,8 @@ netlist_generator::visit(const entity::PRS::footprint& r) {
 		local_netlist& n(*mi);
 		const value_saver<netlist_common*>
 			__tmp(current_local_netlist, &n);
-#if NETLIST_GROUPED_TRANSISTORS
+#if 0 && NETLIST_CACHE_ASSOC_ID
+	// enabling this makes no difference?
 	// preserve per-node device counters, just save the whole node pool
 	typedef util::ptr_value_saver<index_type>	save_type;
 	typedef	vector<pair<save_type, save_type> >	saves_type;
@@ -495,7 +475,7 @@ netlist_generator::visit(const entity::PRS::footprint& r) {
 	}
 }
 }
-#endif
+#endif	// NETLIST_INTERLEAVE_SUBCKT_RULES
 {
 	// count cumulative number of transistors for index map
 	netlist::local_subcircuit_list_type::iterator
@@ -1159,6 +1139,7 @@ case PRS_LITERAL_TYPE_ENUM: {
 	t.assoc_node = current_assoc_node;
 	t.assoc_dir = current_assoc_dir;
 #if NETLIST_CACHE_ASSOC_UID
+	INVARIANT(t.assoc_node < current_local_netlist->node_pool.size());
 	t.assoc_uid = current_local_netlist->node_pool[t.assoc_node]
 		.device_count[size_t(t.assoc_dir)]++;
 #endif
@@ -1299,6 +1280,7 @@ if (passn || passp) {
 	t.assoc_node = t.drain;
 	t.assoc_dir = passp;
 #if NETLIST_CACHE_ASSOC_UID
+	INVARIANT(t.assoc_node < current_local_netlist->node_pool.size());
 	t.assoc_uid = current_local_netlist->node_pool[t.assoc_node]
 		.device_count[size_t(t.assoc_dir)]++;
 #endif
