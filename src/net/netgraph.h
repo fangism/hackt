@@ -26,6 +26,27 @@
 #define	NETLIST_GROUPED_TRANSISTORS		1
 
 /**
+	Define to 0 to reorder rule processing so that
+	subcircuits are completed one at a time, 
+	and not interleaved w.r.t. macros, etc.
+	The old way (1) has transistor creation interleaved.
+	Goal: 0
+	Rationale: needed for transistor_index_offset coherence,
+		whereby one subcircuit is finished at a time, so that
+		devices in the same subcircuit are enumerated
+		contiguously.
+ */
+#define	NETLIST_INTERLEAVE_SUBCKT_RULES		0
+
+/**
+	Define to 1 to precompute transistors' node assoc id.
+	Goal: 1
+	Rationale: so that assoc_uid is not computed while 
+		dumping output, eww...
+ */
+#define	NETLIST_CACHE_ASSOC_UID			0
+
+/**
 	Define to 1 to enable static connectivity checking for
 	floating nodes.  Semi-redundant checking with PRS checking, 
 	but is more detailed at the transistor level.
@@ -207,6 +228,13 @@ struct transistor {
 		associated, for the purposes of grouping.  
 	 */
 	index_type			assoc_node;
+#if NETLIST_CACHE_ASSOC_UID
+	/**
+		unique id assigned within group belonging to same assoc node
+		This assigned upon transistor instantiation.
+	 */
+	index_type			assoc_uid;
+#endif
 	/**
 		Whether we are associated with a pull-up or pull-dn
 		group of devices.  

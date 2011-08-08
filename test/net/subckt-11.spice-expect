@@ -1,0 +1,26 @@
+.subckt test<>::first !GND !Vdd a[4] b[1] a[1]
+Mb[1]:dn:0 !GND a[1] #2 !GND nch W=5u L=2u
+Mb[1]:dn:1 #2 a[4] b[1] !GND nch W=5u L=2u
+Mb[1]:up:0 !Vdd a[1] #3 !Vdd pch W=5u L=2u
+Mb[1]:up:1 #3 a[4] b[1] !Vdd pch W=5u L=2u
+.ends
+.subckt test<>::second !GND !Vdd a[0] b[3] a[3]
+Mb[3]:dn:0 !GND a[3] #4 !GND nch W=5u L=2u
+Mb[3]:dn:1 #4 a[0] b[3] !GND nch W=5u L=2u
+Mb[3]:up:0 !Vdd a[3] #5 !Vdd pch W=5u L=2u
+Mb[3]:up:1 #5 a[0] b[3] !Vdd pch W=5u L=2u
+.ends
+.subckt test<> !GND !Vdd a[0] a[1] a[2] a[3] a[4] a[5] b[0] b[1] b[2] b[3] b[4]
+xfirst:inst !GND !Vdd a[4] b[1] a[1] test<>::first
+xsecond:inst !GND !Vdd a[0] b[3] a[3] test<>::second
+Mb[0]:dn:0 !GND a[0] b[0] !GND nch W=5u L=2u
+Mb[0]:up:0 !Vdd a[0] b[0] !Vdd pch W=5u L=2u
+Mb[2]:dn:0 !GND a[2] #0 !GND nch W=5u L=2u
+Mb[2]:dn:1 #0 a[5] b[2] !GND nch W=5u L=2u
+Mb[2]:up:0 !Vdd a[2] #1 !Vdd pch W=5u L=2u
+Mb[2]:up:1 #1 a[5] b[2] !Vdd pch W=5u L=2u
+Mb[4]:dn:0 !GND a[4] b[4] !GND nch W=5u L=2u
+Mb[4]:up:0 !Vdd a[4] b[4] !Vdd pch W=5u L=2u
+.ends
+
+

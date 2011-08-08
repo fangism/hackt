@@ -1,0 +1,20 @@
+// "subckt-10.hac"
+// testing mixed ordering of rules and pass-gates in local subcircuits
+// @hacknet-flags@ -T test
+
+defproc test(bool a[6], b[5]) {
+prs {
+	a[0]			=> b[0]-
+subckt<"first"> {
+	a[1]			=> b[1]-
+}
+	a[2] & a[5]		#> b[2]-
+subckt<"second"> {
+	a[3]			=> b[3]-
+}
+	a[4]			=> b[4]-
+}
+}
+
+test me;
+
