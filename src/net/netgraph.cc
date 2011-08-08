@@ -183,7 +183,7 @@ netlist_common::emit_devices(ostream& o,
 #if ENABLE_STACKTRACE
 	o << nopt.comment_prefix << "devices:" << endl;
 #endif
-#if NETLIST_GROUPED_TRANSISTORS
+#if !NETLIST_CACHE_ASSOC_UID && NETLIST_GROUPED_TRANSISTORS
 	// preserve per-node device counters, just save the whole node pool
 	typedef util::ptr_value_saver<index_type>	save_type;
 	typedef	vector<pair<save_type, save_type> >	saves_type;
@@ -330,6 +330,7 @@ local_netlist::~local_netlist() { }
  */
 void
 local_netlist::mark_used_nodes(node_pool_type& nnp) {
+	STACKTRACE_VERBOSE;
 {
 	transistor_pool_type::const_iterator
 		i(transistor_pool.begin()), e(transistor_pool.end());
@@ -351,7 +352,9 @@ local_netlist::mark_used_nodes(node_pool_type& nnp) {
 	}
 }{
 #if NETLIST_COMMON_NODE_POOL
-	node_pool.reserve(node_index_map.size() +1);
+	const size_t ns = node_index_map.size();
+	STACKTRACE_INDENT_PRINT("ns = " << ns << endl);
+	node_pool.reserve(ns +1);
 	index_type j = netlist::void_index +1;
 	node_index_map_type::iterator
 		i(node_index_map.begin()), e(node_index_map.end());
@@ -372,13 +375,27 @@ local_netlist::mark_used_nodes(node_pool_type& nnp) {
 //		parent node pool
 // need to be able to treat local subcircuits as one flat netlist?
 #endif
-		i->gate = node_index_map.find(i->gate)->second;
-		i->source = node_index_map.find(i->source)->second;
-		i->drain = node_index_map.find(i->drain)->second;
-		i->body = node_index_map.find(i->body)->second;
+		const node_index_map_type::const_iterator
+			ne(node_index_map.end()),
+#if NETLIST_GROUPED_TRANSISTORS
+			ai(node_index_map.find(i->assoc_node)),
+#endif
+			gi(node_index_map.find(i->gate)),
+			si(node_index_map.find(i->source)),
+			di(node_index_map.find(i->drain)),
+			bi(node_index_map.find(i->body));
+		INVARIANT(gi != ne);
+		INVARIANT(si != ne);
+		INVARIANT(di != ne);
+		INVARIANT(bi != ne);
+		i->gate = gi->second;
+		i->source = si->second;
+		i->drain = di->second;
+		i->body = bi->second;
 		// INVARIANT: associated node is used and in ports list
 #if NETLIST_GROUPED_TRANSISTORS
-		i->assoc_node = node_index_map.find(i->assoc_node)->second;
+		INVARIANT(ai != ne);
+		i->assoc_node = ai->second;
 #endif
 #if NETLIST_NODE_GRAPH
 		i->mark_node_terminals(node_pool, ti);	// local node pool
@@ -906,7 +923,9 @@ transistor::emit_identifier(ostream& o,
 	// don't use ordinal index di
 	const node& n(node_pool[assoc_node]);
 	INVARIANT(!n.is_auxiliary_node());
+#if !NETLIST_CACHE_ASSOC_UID
 	index_type& c(n.device_count[size_t(assoc_dir)]);
+#endif
 	o << nopt.transistor_prefix;	// spice card
 	if (name.length()) {
 		o << nopt.emit_colon() << name;
@@ -917,9 +936,16 @@ transistor::emit_identifier(ostream& o,
 	} else {
 		// is logical or internal
 		n.emit(o, nopt) << nopt.emit_colon() <<
-			(assoc_dir ? "up" : "dn") << nopt.emit_colon() << c;
+			(assoc_dir ? "up" : "dn") << nopt.emit_colon()
+#if NETLIST_CACHE_ASSOC_UID
+			<< assoc_uid;
+#else
+			<< c;
+#endif
 	}
+#if !NETLIST_CACHE_ASSOC_UID
 	++c;	// unconditionally
+#endif
 #else
 	o << nopt.transistor_prefix << di << '_';
 #endif
@@ -1179,6 +1205,7 @@ netlist::~netlist() { }
  */
 void
 netlist::__bind_footprint(const footprint& f, const netlist_options& nopt) {
+	STACKTRACE_VERBOSE;
 	fp = &f;
 	// pre-allocate, using same indexing and mapping as original pool
 	// null index initially, and default owner is not subcircuit
@@ -1187,6 +1214,7 @@ netlist::__bind_footprint(const footprint& f, const netlist_options& nopt) {
 		internal_node_entry_type(0, 0));
 	const prs_footprint::subcircuit_map_type&
 		subs(pfp.get_subcircuit_map());
+	STACKTRACE_INDENT_PRINT(subs.size() << " local subcircuits" << endl);
 	local_subcircuits.resize(subs.size());
 	// import/generate subcircuit names
 	prs_footprint::subcircuit_map_type::const_iterator
@@ -1630,10 +1658,13 @@ netlist::register_named_node(const index_type _i, const netlist_options& opt) {
 		opt.mangle_instance(new_named_node.name);
 		ret = node_pool.size();
 		INVARIANT(ret);
+		STACKTRACE_INDENT_PRINT("AAA" << endl);
 #if NETLIST_CHECK_NAME_COLLISIONS
 		check_name_collisions(new_named_node.name, ret, opt);
 #endif
+		STACKTRACE_INDENT_PRINT("BBB" << endl);
 		node_pool.push_back(new_named_node);
+		STACKTRACE_INDENT_PRINT("CCC" << endl);
 #if 0 && ENABLE_STACKTRACE
 node_pool.back().dump_raw(STACKTRACE_INDENT_PRINT("new node: ")) << endl;
 #endif

@@ -42,6 +42,7 @@ HACKNET_TEST_SCRIPTS_PASSES = \
 	pass_gate-05 pass_gate-06 pass_gate-07 \
 	spectre-pass_gate-02 \
 	subckt-01 subckt-03 subckt-04 subckt-05 subckt-06 subckt-07 subckt-08 \
+	subckt-09 subckt-10 subckt-11 \
 	spectre-subckt-01 spectre-subckt-03 \
 	channel-member-01 channel-member-02 channel-member-03 \
 	array-01 \
@@ -168,7 +169,7 @@ HACKT_CREATE_TEST_PASSES = \
 	pass_gate-05 pass_gate-06 \
 	precharge-07 precharge-08 \
 	mangle-04 \
-	subckt-08 \
+	subckt-01 subckt-08 subckt-10 subckt-11 \
 	supply-pass-gate-01 supply-pass-gate-02 \
 	supply-instance-01 supply-instance-02 supply-instance-03 \
 	supply-instance-04 supply-instance-05 supply-instance-06 \

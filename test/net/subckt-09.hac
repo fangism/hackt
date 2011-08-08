@@ -1,0 +1,6 @@
+// "subckt-09.hac"
+// test for behavior of netgen w.r.t. subcircuits
+// @hacknet-flags@ -f emit_node_terminals=1
+
+import "subckt-01.hac";
+

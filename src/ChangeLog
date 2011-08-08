@@ -3,6 +3,15 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-08-08	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-85-prsim-precharge-check-04:
+	  hacknet: reorder rule/macro process of subcircuits so that
+		non-local-subcircuit rules are processed first, then
+		whole subckts one-by-one, so that (eventually) grouped
+		transistors may be enumerated contiguouly by subcircuit.
+
+
 2011-08-05	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-85-prsim-precharge-check-03:

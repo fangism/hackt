@@ -1,0 +1,34 @@
+.subckt inv_c<>::first !GND !Vdd _x a x
+M_x:dn:0 !GND a _x !GND nch W=5u L=2u
+M_x:up:0 !Vdd a _x !Vdd pch W=5u L=2u
+Mx:dn:0 !GND _x x !GND nch W=5u L=2u
+Mx:up:0 !Vdd _x x !Vdd pch W=5u L=2u
+.ends
+.subckt inv_c<>::second !GND !Vdd x _y b
+M_y:dn:0 !GND x _y !GND nch W=5u L=2u
+M_y:up:0 !Vdd x _y !Vdd pch W=5u L=2u
+Mb:dn:0 !GND _y b !GND nch W=5u L=2u
+Mb:up:0 !Vdd _y b !Vdd pch W=5u L=2u
+.ends
+.subckt inv_c<> !GND !Vdd a b
+* BEGIN node terminals
+* 	!GND :
+* 	!Vdd :
+* 	_x :
+* 	a :
+* 	x :
+* 	_y :
+* 	b :
+* END node terminals
+xfirst:inst !GND !Vdd _x a x inv_c<>::first
+xsecond:inst !GND !Vdd x _y b inv_c<>::second
+.ends
+
+* BEGIN node terminals
+* 	!GND :
+* 	!Vdd :
+* 	foo.a :
+* 	foo.b :
+* END node terminals
+xfoo !GND !Vdd foo.a foo.b inv_c<>
+

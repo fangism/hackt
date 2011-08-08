@@ -322,6 +322,8 @@ netlist_generator::visit(const entity::PRS::footprint& r) {
 	// these local subcircuit structures need to be kept around longer
 	// because the instances of them would be dangling pointers...
 	const subckt_map_type& subc_map(prs->get_subcircuit_map());
+// need new order, complete one subckt at a time
+#if NETLIST_INTERLEAVE_SUBCKT_RULES
 {
 	STACKTRACE_INDENT_PRINT("processing subcircuits (rules) ..." << endl);
 	const_iterator si(subc_map.begin()), se(subc_map.end());
@@ -375,7 +377,126 @@ netlist_generator::visit(const entity::PRS::footprint& r) {
 		visit_macro(mpool, i);
 	}
 	}	// end for
+}
+#else
+{
+	// different traversal order
+	// 1. rules and macros outside local subcircuits
+	// need to pass over these first
+{
+	STACKTRACE_INDENT_PRINT(
+		"processing non-local subcircuits (rules,macros) ..." << endl);
+	const_iterator si(subc_map.begin()), se(subc_map.end());
+	netlist::local_subcircuit_list_type::iterator
+		mi(current_netlist->local_subcircuits.begin());
+	while (si!=se && si->rules_empty()) { ++si; ++mi; }	// skip empty
+	const prs_footprint::rule_pool_type& rpool(prs->get_rule_pool());
+	const size_t s = rpool.size();
+	size_t i = 0;
+	for ( ; i<s; ++i) {
+	if (si!=se && (i >= si->rules.first)) {
+		INVARIANT(mi != current_netlist->local_subcircuits.end());
+#if 0
+		local_netlist& n(*mi);
+		const value_saver<netlist_common*>
+			__tmp(current_local_netlist, &n);
+		for ( ; i < si->rules.second; ++i) {
+			visit_rule(rpool, i);
+		}
+			--i;	// back-adjust before continue
+#else
+		i = si->rules.second -1;	// skip local subcircuit
+#endif
+		// advance to next non-empty subcircuit
+		do { ++si; ++mi; } while (si!=se && si->rules_empty());
+	} else {
+		// rule is outside of subcircuits, want these now
+		visit_rule(rpool, i);
+	}
+	}	// end for
 }{
+	STACKTRACE_INDENT_PRINT("processing macros..." << endl);
+	const_iterator si(subc_map.begin()), se(subc_map.end());
+	netlist::local_subcircuit_list_type::iterator
+		mi(current_netlist->local_subcircuits.begin());
+	while (si!=se && si->macros_empty()) { ++si; ++mi; }	// skip empty
+	const prs_footprint::macro_pool_type& mpool(prs->get_macro_pool());
+	const size_t s = mpool.size();
+	size_t i = 0;
+	for ( ; i<s; ++i) {
+	if (si!=se && (i >= si->macros.first)) {
+		// start of a subcircuit range, can be empty
+		INVARIANT(mi != current_netlist->local_subcircuits.end());
+#if 0
+		local_netlist& n(*mi);
+			const value_saver<netlist_common*>
+				__tmp(current_local_netlist, &n);
+		for ( ; i < si->macros.second; ++i) {
+			visit_macro(mpool, i);
+		}
+			--i;	// back-adjust before continue
+		// advance to next non-empty subcircuit
+#else
+		i = si->macros.second -1;	// skip local subcircuit
+#endif
+		do { ++si; ++mi; } while (si!=se && si->macros_empty());
+	} else {
+		// macro is outside of subcircuits, want these now
+		visit_macro(mpool, i);
+	}
+	}	// end for
+}{
+	// 2. rules and macros within local subcircuits
+	STACKTRACE_INDENT_PRINT("processing local subckt rules and macros..."
+		<< endl);
+	const prs_footprint::rule_pool_type& rpool(prs->get_rule_pool());
+	const prs_footprint::macro_pool_type& mpool(prs->get_macro_pool());
+	const_iterator si(subc_map.begin()), se(subc_map.end());
+	netlist::local_subcircuit_list_type::iterator
+		mi(current_netlist->local_subcircuits.begin());
+
+	for ( ; si!=se; ++si, ++mi) {
+		local_netlist& n(*mi);
+		const value_saver<netlist_common*>
+			__tmp(current_local_netlist, &n);
+#if NETLIST_GROUPED_TRANSISTORS
+	// preserve per-node device counters, just save the whole node pool
+	typedef util::ptr_value_saver<index_type>	save_type;
+	typedef	vector<pair<save_type, save_type> >	saves_type;
+	saves_type __s;		// will auto-restore at end-of-scope
+{
+	__s.resize(current_local_netlist->node_pool.size());
+	node_pool_type::const_iterator
+		ni(current_local_netlist->node_pool.begin());
+	saves_type::iterator i(__s.begin()), e(__s.end());
+	// skip void node
+	for (++i; i!=e; ++i, ++ni) {
+		index_type& c0(ni->device_count[0]);
+		index_type& c1(ni->device_count[1]);
+		i->first.bind(c0);
+		i->second.bind(c1);
+		c0 = 0; c1 = 0;		// locally reset counter
+	}
+}
+#endif
+	if (!si->rules_empty()) {
+		size_t ir = si->rules.first;
+		for ( ; ir < si->rules.second; ++ir) {
+			visit_rule(rpool, ir);
+		}
+	}
+	if (!si->macros_empty()) {
+		size_t im = si->macros.first;
+		for ( ; im < si->macros.second; ++im) {
+			visit_macro(mpool, im);
+		}
+	}
+	// TODO: update transistor_index_offset
+	}
+}
+}
+#endif
+{
 	// count cumulative number of transistors for index map
 	netlist::local_subcircuit_list_type::iterator
 		mi(current_netlist->local_subcircuits.begin()),
@@ -391,6 +512,9 @@ netlist_generator::visit(const entity::PRS::footprint& r) {
 }	// end netlist_generator::visit(const PRS::footprint&)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param i local rule index
+ */
 template <class RP>
 void
 netlist_generator::visit_rule(const RP& rpool, const index_type i) {
@@ -411,6 +535,9 @@ netlist_generator::visit_rule(const RP& rpool, const index_type i) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param i local macro index
+ */
 template <class MP>
 void
 netlist_generator::visit_macro(const MP& mpool, const index_type i) {
@@ -990,6 +1117,7 @@ const char type = e.get_type();
 switch (type) {
 case PRS_LITERAL_TYPE_ENUM: {
 	STACKTRACE_INDENT_PRINT("expr is leaf node" << endl);
+	NEVER_NULL(current_local_netlist);
 	bool override_fet_type = false;
 	if (negated ^ (fet_type == transistor::PFET_TYPE)) {
 	if (fet_attr & transistor::IS_PRECHARGE) {
@@ -1030,6 +1158,10 @@ case PRS_LITERAL_TYPE_ENUM: {
 #if NETLIST_GROUPED_TRANSISTORS
 	t.assoc_node = current_assoc_node;
 	t.assoc_dir = current_assoc_dir;
+#if NETLIST_CACHE_ASSOC_UID
+	t.assoc_uid = current_local_netlist->node_pool[t.assoc_node]
+		.device_count[size_t(t.assoc_dir)]++;
+#endif
 #endif
 	const directive_base_params_type& p(e.params);
 //	const bool is_n = (t.type == transistor::NFET_TYPE);
@@ -1048,7 +1180,6 @@ case PRS_LITERAL_TYPE_ENUM: {
 	t.attributes = fet_attr;
 	// transistor attributes
 	process_transistor_attributes(t, e.attributes, *current_netlist);
-	NEVER_NULL(current_local_netlist);
 	current_local_netlist->add_transistor(t);
 	break;
 }	// end case PRS_LITERAL_TYPE_ENUM
@@ -1153,6 +1284,7 @@ netlist_generator::visit(const entity::PRS::footprint_macro& e) {
 	const bool passn = (e.name == "passn");
 	const bool passp = (e.name == "passp");
 if (passn || passp) {
+	NEVER_NULL(current_local_netlist);
 	transistor t;
 	t.type = passp ? transistor::PFET_TYPE : transistor::NFET_TYPE;
 	t.gate = register_named_node(*e.nodes[0].begin());
@@ -1166,6 +1298,10 @@ if (passn || passp) {
 #if NETLIST_GROUPED_TRANSISTORS
 	t.assoc_node = t.drain;
 	t.assoc_dir = passp;
+#if NETLIST_CACHE_ASSOC_UID
+	t.assoc_uid = current_local_netlist->node_pool[t.assoc_node]
+		.device_count[size_t(t.assoc_dir)]++;
+#endif
 #endif
 	const directive_base_params_type& p(e.params);
 	if (p.size() > 0) {
@@ -1182,7 +1318,6 @@ if (passn || passp) {
 	// transistor attributes
 	process_transistor_attributes(t, e.attributes, *current_netlist);
 	t.set_pass();		// indicate is pass gate
-	NEVER_NULL(current_local_netlist);
 	current_local_netlist->add_transistor(t);
 } else if (e.name == "echo") {
 	// do nothing
