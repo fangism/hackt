@@ -1,0 +1,43 @@
+* subcircuit c1of2<> is empty.
+
+.subckt add<> !GND !Vdd en a.d[0] a.d[1] b.d[0] b.d[1] c.d[0] c.d[1] s.d[0] s.d[1]
+* BEGIN node terminals
+* 	@foot : M@foot:dn:0.d M@odd_a:dn:0.s M@even_a:dn:0.s
+* 	@odd_a : M@odd_a:dn:0.d M@odd_b:dn:0.s M@even_b:dn:0.s
+* 	@even_a : M@even_a:dn:0.d M@odd_b:dn:1.s M@even_b:dn:1.s
+* 	@even_b : M@even_b:dn:0.d M@even_b:dn:1.d M_s[0]:dn:1.s M_s[1]:dn:1.s
+* 	@odd_b : M@odd_b:dn:0.d M@odd_b:dn:1.d M_s[0]:dn:0.s M_s[1]:dn:0.s
+* 	!GND : M@foot:dn:0.s M@foot:dn:0.b M@odd_a:dn:0.b M@odd_b:dn:0.b M@even_a:dn:0.b M@odd_b:dn:1.b M_s[0]:dn:0.b M@even_b:dn:0.b M@even_b:dn:1.b M_s[0]:dn:1.b M_s[1]:dn:0.b M_s[1]:dn:1.b Ms.d[0]:dn:0.s Ms.d[0]:dn:0.b Ms.d[1]:dn:0.s Ms.d[1]:dn:0.b
+* 	!Vdd : M_s[0]:up:0.s M_s[0]:up:0.b M_s[1]:up:0.s M_s[1]:up:0.b Ms.d[0]:up:0.s Ms.d[0]:up:0.b Ms.d[1]:up:0.s Ms.d[1]:up:0.b
+* 	_s[0] : M_s[0]:dn:0.d M_s[0]:dn:1.d M_s[0]:up:0.d Ms.d[0]:dn:0.g Ms.d[0]:up:0.g
+* 	en : M@foot:dn:0.g M_s[0]:up:0.g M_s[1]:up:0.g
+* 	a.d[1] : M@odd_a:dn:0.g
+* 	b.d[0] : M@odd_b:dn:0.g M@even_b:dn:1.g
+* 	a.d[0] : M@even_a:dn:0.g
+* 	b.d[1] : M@odd_b:dn:1.g M@even_b:dn:0.g
+* 	c.d[1] : M_s[0]:dn:0.g M_s[1]:dn:1.g
+* 	c.d[0] : M_s[0]:dn:1.g M_s[1]:dn:0.g
+* 	_s[1] : M_s[1]:dn:0.d M_s[1]:dn:1.d M_s[1]:up:0.d Ms.d[1]:dn:0.g Ms.d[1]:up:0.g
+* 	s.d[0] : Ms.d[0]:dn:0.d Ms.d[0]:up:0.d
+* 	s.d[1] : Ms.d[1]:dn:0.d Ms.d[1]:up:0.d
+* END node terminals
+M@foot:dn:0 !GND en @foot !GND nch W=5u L=2u
+M@odd_a:dn:0 @foot a.d[1] @odd_a !GND nch W=5u L=2u
+M@odd_b:dn:0 @odd_a b.d[0] @odd_b !GND nch W=5u L=2u
+M@even_a:dn:0 @foot a.d[0] @even_a !GND nch W=5u L=2u
+M@odd_b:dn:1 @even_a b.d[1] @odd_b !GND nch W=5u L=2u
+M_s[0]:dn:0 @odd_b c.d[1] _s[0] !GND nch W=5u L=2u
+M@even_b:dn:0 @odd_a b.d[1] @even_b !GND nch W=5u L=2u
+M@even_b:dn:1 @even_a b.d[0] @even_b !GND nch W=5u L=2u
+M_s[0]:dn:1 @even_b c.d[0] _s[0] !GND nch W=5u L=2u
+M_s[1]:dn:0 @odd_b c.d[0] _s[1] !GND nch W=5u L=2u
+M_s[1]:dn:1 @even_b c.d[1] _s[1] !GND nch W=5u L=2u
+M_s[0]:up:0 !Vdd en _s[0] !Vdd pch W=5u L=2u
+M_s[1]:up:0 !Vdd en _s[1] !Vdd pch W=5u L=2u
+Ms.d[0]:dn:0 !GND _s[0] s.d[0] !GND nch W=5u L=2u
+Ms.d[0]:up:0 !Vdd _s[0] s.d[0] !Vdd pch W=5u L=2u
+Ms.d[1]:dn:0 !GND _s[1] s.d[1] !GND nch W=5u L=2u
+Ms.d[1]:up:0 !Vdd _s[1] s.d[1] !Vdd pch W=5u L=2u
+.ends
+
+

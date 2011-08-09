@@ -1,0 +1,5 @@
+// "terminal-test-15.hac"
+// @hacknet-flags@ -f emit_node_terminals=1
+
+import "supply-internal-01.hac";
+

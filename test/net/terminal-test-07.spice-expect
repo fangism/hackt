@@ -1,0 +1,19 @@
+.subckt share<> !GND !Vdd en x1 x2 _y1 _y2
+* BEGIN node terminals
+* 	@p : M@p:dn:0.d M_y1:dn:0.s M_y2:dn:0.s
+* 	!GND : M@p:dn:0.s M@p:dn:0.b M_y1:dn:0.b M_y2:dn:0.b
+* 	!Vdd : M_y1:up:0.s M_y1:up:0.b M_y2:up:0.s M_y2:up:0.b
+* 	_y1 : M_y1:dn:0.d M_y1:up:0.d
+* 	en : M@p:dn:0.g M_y1:up:0.g M_y2:up:0.g
+* 	x1 : M_y1:dn:0.g
+* 	_y2 : M_y2:dn:0.d M_y2:up:0.d
+* 	x2 : M_y2:dn:0.g
+* END node terminals
+M@p:dn:0 !GND en @p !GND nch W=5u L=2u
+M_y1:dn:0 @p x1 _y1 !GND nch W=5u L=2u
+M_y2:dn:0 @p x2 _y2 !GND nch W=5u L=2u
+M_y1:up:0 !Vdd en _y1 !Vdd pch W=5u L=2u
+M_y2:up:0 !Vdd en _y2 !Vdd pch W=5u L=2u
+.ends
+
+

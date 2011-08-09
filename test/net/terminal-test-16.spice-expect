@@ -1,0 +1,40 @@
+.subckt ladder<4> !GND !Vdd in[0][0] in[0][1] in[1][0] in[1][1] in[2][0] in[2][1] in[3][0] in[3][1] out
+* BEGIN node terminals
+* 	!GND : Mout:dn:0.s Mout:dn:0.b Mout:dn:1.s Mout:dn:1.b Mout:dn:2.b Mout:dn:3.b Mout:dn:4.b Mout:dn:5.b Mout:dn:6.b Mout:dn:7.b
+* 	!Vdd : Mout:up:0.s Mout:up:0.b Mout:up:1.b Mout:up:2.s Mout:up:2.b Mout:up:3.b Mout:up:4.s Mout:up:4.b Mout:up:5.b Mout:up:6.s Mout:up:6.b Mout:up:7.b
+* 	out : Mout:dn:6.d Mout:dn:7.d Mout:up:1.d Mout:up:3.d Mout:up:5.d Mout:up:7.d
+* 	#0 : Mout:dn:0.d Mout:dn:1.d Mout:dn:2.s Mout:dn:3.s
+* 	in[0][0] : Mout:dn:0.g Mout:up:0.g
+* 	in[0][1] : Mout:dn:1.g Mout:up:1.g
+* 	#1 : Mout:dn:2.d Mout:dn:3.d Mout:dn:4.s Mout:dn:5.s
+* 	in[1][0] : Mout:dn:2.g Mout:up:2.g
+* 	in[1][1] : Mout:dn:3.g Mout:up:3.g
+* 	#2 : Mout:dn:4.d Mout:dn:5.d Mout:dn:6.s Mout:dn:7.s
+* 	in[2][0] : Mout:dn:4.g Mout:up:4.g
+* 	in[2][1] : Mout:dn:5.g Mout:up:5.g
+* 	in[3][0] : Mout:dn:6.g Mout:up:6.g
+* 	in[3][1] : Mout:dn:7.g Mout:up:7.g
+* 	#3 : Mout:up:0.d Mout:up:1.s
+* 	#4 : Mout:up:2.d Mout:up:3.s
+* 	#5 : Mout:up:4.d Mout:up:5.s
+* 	#6 : Mout:up:6.d Mout:up:7.s
+* END node terminals
+Mout:dn:0 !GND in[0][0] #0 !GND nch W=5u L=2u
+Mout:dn:1 !GND in[0][1] #0 !GND nch W=5u L=2u
+Mout:dn:2 #0 in[1][0] #1 !GND nch W=5u L=2u
+Mout:dn:3 #0 in[1][1] #1 !GND nch W=5u L=2u
+Mout:dn:4 #1 in[2][0] #2 !GND nch W=5u L=2u
+Mout:dn:5 #1 in[2][1] #2 !GND nch W=5u L=2u
+Mout:dn:6 #2 in[3][0] out !GND nch W=5u L=2u
+Mout:dn:7 #2 in[3][1] out !GND nch W=5u L=2u
+Mout:up:0 !Vdd in[0][0] #3 !Vdd pch W=5u L=2u
+Mout:up:1 #3 in[0][1] out !Vdd pch W=5u L=2u
+Mout:up:2 !Vdd in[1][0] #4 !Vdd pch W=5u L=2u
+Mout:up:3 #4 in[1][1] out !Vdd pch W=5u L=2u
+Mout:up:4 !Vdd in[2][0] #5 !Vdd pch W=5u L=2u
+Mout:up:5 #5 in[2][1] out !Vdd pch W=5u L=2u
+Mout:up:6 !Vdd in[3][0] #6 !Vdd pch W=5u L=2u
+Mout:up:7 #6 in[3][1] out !Vdd pch W=5u L=2u
+.ends
+
+

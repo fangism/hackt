@@ -1,0 +1,5 @@
+// "terminal-test-11.hac"
+// @hacknet-flags@ -T foo -f emit_node_terminals=1
+
+import "precharge-05.hac";
+

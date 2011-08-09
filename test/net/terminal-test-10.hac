@@ -1,0 +1,5 @@
+// "terminal-test-10.hac"
+// @hacknet-flags@ -T hc -f emit_node_terminals=1
+
+import "internal-13.hac";
+

@@ -1,0 +1,28 @@
+.subckt hc<> !GND !Vdd ld re rd
+* BEGIN node terminals
+* 	@re_up : M@re_up:up:0.d M_rd:up:0.s M@ld_up:up:1.s
+* 	@ld_up : M@ld_up:up:0.d M@ld_up:up:1.d M_rd:up:1.s
+* 	@re_dn : M@re_dn:dn:0.d M_rd:dn:0.s M@ld_dn:dn:1.s
+* 	@ld_dn : M@ld_dn:dn:0.d M@ld_dn:dn:1.d M_rd:dn:1.s
+* 	!GND : M@re_dn:dn:0.s M@re_dn:dn:0.b M_rd:dn:0.b M@ld_dn:dn:0.s M@ld_dn:dn:0.b M@ld_dn:dn:1.b M_rd:dn:1.b Mrd:dn:0.s Mrd:dn:0.b
+* 	!Vdd : M@re_up:up:0.s M@re_up:up:0.b M_rd:up:0.b M@ld_up:up:0.s M@ld_up:up:0.b M@ld_up:up:1.b M_rd:up:1.b Mrd:up:0.s Mrd:up:0.b
+* 	_rd : M_rd:up:0.d M_rd:up:1.d M_rd:dn:0.d M_rd:dn:1.d Mrd:dn:0.g Mrd:up:0.g
+* 	re : M@re_up:up:0.g M_rd:up:1.g M@re_dn:dn:0.g M_rd:dn:1.g
+* 	ld : M_rd:up:0.g M@ld_up:up:0.g M_rd:dn:0.g M@ld_dn:dn:0.g
+* 	rd : M@ld_up:up:1.g M@ld_dn:dn:1.g Mrd:dn:0.d Mrd:up:0.d
+* END node terminals
+M@re_up:up:0 !Vdd re @re_up !Vdd pch W=5u L=2u
+M_rd:up:0 @re_up ld _rd !Vdd pch W=5u L=2u
+M@ld_up:up:0 !Vdd ld @ld_up !Vdd pch W=5u L=2u
+M@ld_up:up:1 @re_up rd @ld_up !Vdd pch W=5u L=2u
+M_rd:up:1 @ld_up re _rd !Vdd pch W=5u L=2u
+M@re_dn:dn:0 !GND re @re_dn !GND nch W=5u L=2u
+M_rd:dn:0 @re_dn ld _rd !GND nch W=5u L=2u
+M@ld_dn:dn:0 !GND ld @ld_dn !GND nch W=5u L=2u
+M@ld_dn:dn:1 @re_dn rd @ld_dn !GND nch W=5u L=2u
+M_rd:dn:1 @ld_dn re _rd !GND nch W=5u L=2u
+Mrd:dn:0 !GND _rd rd !GND nch W=5u L=2u
+Mrd:up:0 !Vdd _rd rd !Vdd pch W=5u L=2u
+.ends
+
+
