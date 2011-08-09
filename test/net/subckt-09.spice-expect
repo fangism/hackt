@@ -12,13 +12,13 @@ Mb:up:0 !Vdd _y b !Vdd pch W=5u L=2u
 .ends
 .subckt inv_c<> !GND !Vdd a b
 * BEGIN node terminals
-* 	!GND : xfirst:inst/M_x:dn:0.s xfirst:inst/M_x:dn:0.b xfirst:inst/Mx:dn:0.s xfirst:inst/Mx:dn:0.b xsecond:inst/Ma:dn:0.s xsecond:inst/Ma:dn:0.b xsecond:inst/Mx:dn:0.s xsecond:inst/Mx:dn:0.b
-* 	!Vdd : xfirst:inst/M_x:up:0.s xfirst:inst/M_x:up:0.b xfirst:inst/Mx:up:0.s xfirst:inst/Mx:up:0.b xsecond:inst/Ma:up:0.s xsecond:inst/Ma:up:0.b xsecond:inst/Mx:up:0.s xsecond:inst/Mx:up:0.b
+* 	!GND : xfirst:inst/M_x:dn:0.s xfirst:inst/M_x:dn:0.b xfirst:inst/Mx:dn:0.s xfirst:inst/Mx:dn:0.b xsecond:inst/M_y:dn:0.s xsecond:inst/M_y:dn:0.b xsecond:inst/Mb:dn:0.s xsecond:inst/Mb:dn:0.b
+* 	!Vdd : xfirst:inst/M_x:up:0.s xfirst:inst/M_x:up:0.b xfirst:inst/Mx:up:0.s xfirst:inst/Mx:up:0.b xsecond:inst/M_y:up:0.s xsecond:inst/M_y:up:0.b xsecond:inst/Mb:up:0.s xsecond:inst/Mb:up:0.b
 * 	_x : xfirst:inst/M_x:dn:0.d xfirst:inst/M_x:up:0.d xfirst:inst/Mx:dn:0.g xfirst:inst/Mx:up:0.g
 * 	a : xfirst:inst/M_x:dn:0.g xfirst:inst/M_x:up:0.g
-* 	x : xfirst:inst/Mx:dn:0.d xfirst:inst/Mx:up:0.d xsecond:inst/Ma:dn:0.g xsecond:inst/Ma:up:0.g
-* 	_y : xsecond:inst/Ma:dn:0.d xsecond:inst/Ma:up:0.d xsecond:inst/Mx:dn:0.g xsecond:inst/Mx:up:0.g
-* 	b : xsecond:inst/Mx:dn:0.d xsecond:inst/Mx:up:0.d
+* 	x : xfirst:inst/Mx:dn:0.d xfirst:inst/Mx:up:0.d xsecond:inst/M_y:dn:0.g xsecond:inst/M_y:up:0.g
+* 	_y : xsecond:inst/M_y:dn:0.d xsecond:inst/M_y:up:0.d xsecond:inst/Mb:dn:0.g xsecond:inst/Mb:up:0.g
+* 	b : xsecond:inst/Mb:dn:0.d xsecond:inst/Mb:up:0.d
 * END node terminals
 xfirst:inst !GND !Vdd _x a x inv_c<>::first
 xsecond:inst !GND !Vdd x _y b inv_c<>::second

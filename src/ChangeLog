@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-08-09	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-85-prsim-precharge-check-07:
+	  hacknet: debugged transistor enumeration when internal
+		node rules are computed on-demand, by delaying
+		transistor_index_offset calculation.
+	  Also fixed bug in using wrong node_pool for node terminal
+		graph printing when index is into local subcircuit's pool.
+	  Added test case with internal node spanning subckt.
+
+
 2011-08-08	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-85-prsim-precharge-check-06:

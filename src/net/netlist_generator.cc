@@ -439,10 +439,6 @@ netlist_generator::visit(const entity::PRS::footprint& r) {
 	}	// end for
 	// process all subcircuits first, then remaining local rules/macros
 }
-	size_t o = current_netlist->transistor_count();
-#if 0
-	cout << "master subckt, transistor count: " << o << endl;
-#endif
 {
 	// 2. rules and macros within local subcircuits
 	STACKTRACE_INDENT_PRINT("processing local subckt rules and macros..."
@@ -454,7 +450,6 @@ netlist_generator::visit(const entity::PRS::footprint& r) {
 		mi(current_netlist->local_subcircuits.begin());
 	index_type j = 1;
 	for ( ; si!=se; ++si, ++mi, ++j) {
-		mi->transistor_index_offset = o;
 		local_netlist& n(*mi);
 		const value_saver<netlist_common*>
 			__tmp(current_local_netlist, &n);
@@ -474,8 +469,21 @@ netlist_generator::visit(const entity::PRS::footprint& r) {
 				visit_macro(mpool, im);
 			}
 		}
+	}
+}{
+	// we do this AFTER all transistors have been created
+	// b/c on-demand internal node rule generation may cause creation 
+	// of some devices to occur out of local subcircuit order
+	size_t o = current_netlist->transistor_count();
+	netlist::local_subcircuit_list_type::iterator
+		mi(current_netlist->local_subcircuits.begin()),
+		me(current_netlist->local_subcircuits.end());
+	for ( ; mi!=me; ++mi) {
+		// shift transistor enumeration
+		mi->transistor_index_offset = o;
 		o += mi->transistor_count();
 	}
+
 }
 }
 #endif	// NETLIST_INTERLEAVE_SUBCKT_RULES

@@ -1728,6 +1728,9 @@ netlist::mark_used_nodes(void) {
 		cout << "local subckt " << j << ", transistor_index_offset "
 			<< i->transistor_index_offset << endl;
 #endif
+		// TODO: adjust transistor offsets for subcircuits
+		// only NOW compute transistor_index_offset b/c
+		// internal node definitions were emitted on-demand
 		i->mark_used_nodes(node_pool);
 	}
 }
@@ -2407,7 +2410,8 @@ if (opt.undriven_node_policy != OPTION_IGNORE) {
 	Prints the node view of connections to devices terminals.
  */
 ostream&
-netlist::emit_node_terminal_graph(ostream& o, const netlist_options& nopt) const {
+netlist::emit_node_terminal_graph(ostream& o,
+		const netlist_options& nopt) const {
 	o << nopt.comment_prefix << "BEGIN node terminals" << endl;
 	typedef	node_pool_type::const_iterator	const_iterator;
 	const_iterator i(node_pool.begin()), e(node_pool.end());
@@ -2419,18 +2423,19 @@ for (++i; i!=e; ++i) {
 	for ( ; ti!=te; ++ti) {
 		// just space-delimited
 		o << ' ';
-		// TODO: print device *name*, not just index
 	switch (ti->device_type) {
 	case 'M': {
 		// transistor may be in a local subcircuit
+		const node_pool_type* np = &node_pool;
 		const transistor_reference
 			tr(lookup_transistor_index(ti->index));
 		if (tr.first) {
-			local_subcircuits[tr.first-1]
-				.emit_instance_name(o, nopt) << '/';
+			const local_netlist& ln(local_subcircuits[tr.first-1]);
+			ln.emit_instance_name(o, nopt) << '/';
+			np = &ln.node_pool;
 		}
 		lookup_transistor(tr)
-			.emit_identifier(o, ti->index, node_pool, nopt) <<
+			.emit_identifier(o, ti->index, *np, nopt) <<
 				nopt.__dump_flags.process_member_separator <<
 				char(ti->port);
 		break;
