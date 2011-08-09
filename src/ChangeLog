@@ -5,6 +5,12 @@
 
 2011-08-08	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-84-85-prsim-precharge-check-05:
+	  hacknet: enabled cached assoc_uid for transistors to that
+		indicies are not generated on-the-fly during printing.
+	  Updated 1 test case.
+
+
 	* HACKT-00-01-04-main-00-84-85-prsim-precharge-check-04:
 	  hacknet: reorder rule/macro process of subcircuits so that
 		non-local-subcircuit rules are processed first, then

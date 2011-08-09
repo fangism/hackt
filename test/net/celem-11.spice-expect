@@ -1,12 +1,12 @@
 .subckt celem<> !GND !Vdd a b o
 * BEGIN node terminals
-* 	!GND : Mo:dn:0.s Mo:dn:1.b Mo:dn:2.b
-* 	!Vdd : Mo:up:0.s Mo:up:1.b Mo:up:2.b
-* 	o : Mo:dn:3.d Mo:up:3.d
-* 	#0 : Mo:dn:4.d Mo:dn:5.s
-* 	a : Mo:dn:6.g Mo:up:4.g
-* 	b : Mo:dn:7.g Mo:up:5.g
-* 	#1 : Mo:up:6.d Mo:up:7.s
+* 	!GND : Mo:dn:0.s Mo:dn:0.b Mo:dn:1.b
+* 	!Vdd : Mo:up:0.s Mo:up:0.b Mo:up:1.b
+* 	o : Mo:dn:1.d Mo:up:1.d
+* 	#0 : Mo:dn:0.d Mo:dn:1.s
+* 	a : Mo:dn:0.g Mo:up:0.g
+* 	b : Mo:dn:1.g Mo:up:1.g
+* 	#1 : Mo:up:0.d Mo:up:1.s
 * END node terminals
 Mo:dn:0 !GND a #0 !GND nch W=5u L=2u
 Mo:dn:1 #0 b o !GND nch W=5u L=2u

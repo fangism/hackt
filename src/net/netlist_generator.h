@@ -81,6 +81,13 @@ private:
 		or local subcircuit.  
 	 */
 	netlist_common*			current_local_netlist;
+#if NETLIST_CACHE_ASSOC_UID
+	/**
+		For back-linking devices to their home local subcircuit,
+		this 1-based indexis used to track.
+	 */
+	index_type			current_local_subckt_index;
+#endif
 	/**
 		Usually GND, used for precharge, and local prs override.
 		Overridden by prs <Vdd, GND>
