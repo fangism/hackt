@@ -1,0 +1,14 @@
+.subckt foo<> !GND en x _y
+* BEGIN node terminals
+* 	@a : M@a:dn:0.d M_y:dn:0.s
+* 	!GND : M@a:dn:0.s M@a:dn:0.b M_y:dn:0.b
+* 	!Vdd :
+* 	_y : M_y:dn:0.d
+* 	en : M@a:dn:0.g
+* 	x : M_y:dn:0.g
+* END node terminals
+M@a:dn:0 !GND en @a !GND nch W=5u L=2u
+M_y:dn:0 @a x _y !GND nch W=5u L=2u
+.ends
+
+

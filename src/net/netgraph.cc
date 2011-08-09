@@ -349,12 +349,6 @@ local_netlist::mark_used_nodes(node_pool_type& nnp) {
 	transistor_pool_type::iterator
 		i(transistor_pool.begin()), e(transistor_pool.end());
 	for ( ; i!=e; ++i) {
-#if NETLIST_NODE_GRAPH
-// TODO: consider using a transistor number map to local subcircuits
-//		i->mark_node_terminals(nnp, ti+transistor_index_offset);
-//		parent node pool
-// need to be able to treat local subcircuits as one flat netlist?
-#endif
 		const node_index_map_type::const_iterator
 			ne(node_index_map.end()),
 #if NETLIST_GROUPED_TRANSISTORS
@@ -1162,7 +1156,6 @@ netlist::__bind_footprint(const footprint& f, const netlist_options& nopt) {
 			// mangle here?
 		} else {
 			ostringstream oss;
-			// TODO: mangle colon
 			oss << "INTSUB" << nopt.emit_colon() << subs_count;
 			li->name = oss.str();
 			++subs_count;
@@ -1655,19 +1648,11 @@ netlist::lookup_transistor(const transistor_reference& tr) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-static
-bool
-__local_subckt_less(const local_netlist& l, const size_t i) {
-	return l.transistor_index_offset < i;
-}
-#else
 static
 bool
 __local_subckt_less(const size_t i, const local_netlist& r) {
 	return i < r.transistor_index_offset;
 }
-#endif
 
 /**
 	\return local subcircuit index and transistor index
@@ -1677,8 +1662,7 @@ netlist::lookup_transistor_index(const size_t ti) const {
 #if 0
 	cerr << "(ti=" << ti << ')';
 #endif
-	if (ti < transistor_pool.size()) {
-		INVARIANT(ti < transistor_count());
+	if (ti < transistor_count()) {
 		return transistor_reference(0, ti);
 	} else {
 		const vector<local_netlist>::const_iterator
@@ -1691,12 +1675,10 @@ netlist::lookup_transistor_index(const size_t ti) const {
 		const size_t si = std::distance(b, f);
 		const size_t rem = ti -f->transistor_index_offset;
 #if 0
-		cerr << "(off=" << f->transistor_index_offset << ')';
 		cerr << "(si,rem=" << si << ',' << rem << ')';
 #endif
 		INVARIANT(rem < f->transistor_count());
-		return transistor_reference(
-			si+1, rem);
+		return transistor_reference(si+1, rem);
 	}
 }
 
@@ -1740,7 +1722,12 @@ netlist::mark_used_nodes(void) {
 	// traverse subcircuits
 	local_subcircuit_list_type::iterator
 		i(local_subcircuits.begin()), e(local_subcircuits.end());
+//	size_t j = 0;
 	for ( ; i!=e; ++i) {
+#if 0
+		cout << "local subckt " << j << ", transistor_index_offset "
+			<< i->transistor_index_offset << endl;
+#endif
 		i->mark_used_nodes(node_pool);
 	}
 }
@@ -2417,7 +2404,7 @@ if (opt.undriven_node_policy != OPTION_IGNORE) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if NETLIST_NODE_GRAPH
 /**
-	TODO: traverse local subcircuits too.
+	Prints the node view of connections to devices terminals.
  */
 ostream&
 netlist::emit_node_terminal_graph(ostream& o, const netlist_options& nopt) const {
@@ -2434,9 +2421,8 @@ for (++i; i!=e; ++i) {
 		o << ' ';
 		// TODO: print device *name*, not just index
 	switch (ti->device_type) {
-	// TODO: lookup ti->index transistor reference,
-	//	may be in local subcircuit.
 	case 'M': {
+		// transistor may be in a local subcircuit
 		const transistor_reference
 			tr(lookup_transistor_index(ti->index));
 		if (tr.first) {

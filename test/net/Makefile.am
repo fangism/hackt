@@ -104,7 +104,7 @@ HACKNET_TEST_SCRIPTS_PASSES = \
 	reserved-01 reserved-02 reserved-03 reserved-04 \
 	preferred_names-01 preferred_names-02 preferred_names-03 \
 	preferred_names-04 preferred_names-05 preferred_names-06 \
-	terminal-test-01 terminal-test-02
+	terminal-test-01 terminal-test-02 terminal-test-03 terminal-test-04
 
 # TODO: implement string manipulation to modify rename-04,05
 
