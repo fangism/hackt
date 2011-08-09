@@ -439,7 +439,10 @@ netlist_generator::visit(const entity::PRS::footprint& r) {
 	}	// end for
 	// process all subcircuits first, then remaining local rules/macros
 }
-	size_t o = current_netlist->transistor_pool.size();
+	size_t o = current_netlist->transistor_count();
+#if 0
+	cout << "master subckt, transistor count: " << o << endl;
+#endif
 {
 	// 2. rules and macros within local subcircuits
 	STACKTRACE_INDENT_PRINT("processing local subckt rules and macros..."
