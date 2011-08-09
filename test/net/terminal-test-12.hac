@@ -1,0 +1,5 @@
+// "terminal-test-12.hac"
+// @hacknet-flags@ -f emit_node_terminals=1
+
+import "pass_gate-01.hac";
+

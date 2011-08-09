@@ -1,0 +1,11 @@
+* BEGIN node terminals
+* 	!GND : Md:dn:0:pass.b
+* 	!Vdd : Md:up:0:pass.b
+* 	g : Md:dn:0:pass.g
+* 	s : Md:dn:0:pass.s Md:up:0:pass.s
+* 	d : Md:dn:0:pass.d Md:up:0:pass.d
+* 	_g : Md:up:0:pass.g
+* END node terminals
+Md:dn:0:pass s g d !GND nch W=5u L=2u
+Md:up:0:pass s _g d !Vdd pch W=5u L=2u
+

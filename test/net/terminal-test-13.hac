@@ -1,0 +1,5 @@
+// "terminal-test-13.hac"
+// @hacknet-flags@ -f emit_node_terminals=1
+
+import "substrate-04.hac";
+

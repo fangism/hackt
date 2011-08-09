@@ -1,0 +1,22 @@
+.subckt foo<> !GND !Vdd en1 en2 a b _o
+* BEGIN node terminals
+* 	@x : M@x:dn:0.d M@x:dn:1.d M_o:dn:1:pchg.d M_o:dn:2.s
+* 	!GND : M@x:dn:0.s M@x:dn:0.b M@x:dn:1.s M@x:dn:1.b M_o:dn:2.b M_o:dn:3.b
+* 	!Vdd : M_o:dn:0:pchg.s M_o:dn:0:pchg.b M_o:dn:1:pchg.b
+* 	_o : M_o:dn:3.d
+* 	en1 : M@x:dn:0.g M_o:dn:0:pchg.g
+* 	en2 : M@x:dn:1.g M_o:dn:1:pchg.g
+* 	#0 : M_o:dn:0:pchg.d M_o:dn:1:pchg.s
+* 	#1 : M_o:dn:2.d M_o:dn:3.s
+* 	a : M_o:dn:2.g
+* 	b : M_o:dn:3.g
+* END node terminals
+M@x:dn:0 !GND en1 @x !GND nch W=5u L=2u
+M@x:dn:1 !GND en2 @x !GND nch W=5u L=2u
+M_o:dn:0:pchg !Vdd en1 #0 !Vdd pch W=5u L=2u
+M_o:dn:1:pchg #0 en2 @x !Vdd pch W=5u L=2u
+M_o:dn:2 @x a #1 !GND nch W=5u L=2u
+M_o:dn:3 #1 b _o !GND nch W=5u L=2u
+.ends
+
+

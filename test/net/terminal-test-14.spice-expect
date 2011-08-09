@@ -1,0 +1,13 @@
+* BEGIN node terminals
+* 	@_int : M@_int:dn:0.d My:dn:0:pchg.d My:dn:1.s
+* 	myGND : M@_int:dn:0.s M@_int:dn:0.b My:dn:1.b
+* 	myVdd : My:dn:0:pchg.s My:dn:0:pchg.b My:up:0.s My:up:0.b
+* 	y : My:dn:1.d My:up:0.d
+* 	en : M@_int:dn:0.g My:dn:0:pchg.g My:up:0.g
+* 	x : My:dn:1.g
+* END node terminals
+M@_int:dn:0 myGND en @_int myGND nch W=5u L=2u
+My:dn:0:pchg myVdd en @_int myVdd pch W=5u L=2u
+My:dn:1 @_int x y myGND nch W=5u L=2u
+My:up:0 myVdd en y myVdd pch W=5u L=2u
+
