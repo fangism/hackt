@@ -380,6 +380,16 @@ netlist_generator::visit(const entity::PRS::footprint& r) {
 		visit_macro(mpool, i);
 	}
 	}	// end for
+}{
+	// count cumulative number of transistors for index map
+	netlist::local_subcircuit_list_type::iterator
+		mi(current_netlist->local_subcircuits.begin()),
+		me(current_netlist->local_subcircuits.end());
+	size_t o = current_netlist->transistor_pool.size();
+	for ( ; mi!=me; ++mi) {
+		mi->transistor_index_offset = o;
+		o += mi->transistor_count();
+	}
 }
 #else	// NETLIST_INTERLEAVE_SUBCKT_RULES
 {
@@ -427,7 +437,10 @@ netlist_generator::visit(const entity::PRS::footprint& r) {
 		visit_macro(mpool, i);
 	}
 	}	// end for
-}{
+	// process all subcircuits first, then remaining local rules/macros
+}
+	size_t o = current_netlist->transistor_pool.size();
+{
 	// 2. rules and macros within local subcircuits
 	STACKTRACE_INDENT_PRINT("processing local subckt rules and macros..."
 		<< endl);
@@ -438,33 +451,13 @@ netlist_generator::visit(const entity::PRS::footprint& r) {
 		mi(current_netlist->local_subcircuits.begin());
 	index_type j = 1;
 	for ( ; si!=se; ++si, ++mi, ++j) {
+		mi->transistor_index_offset = o;
 		local_netlist& n(*mi);
 		const value_saver<netlist_common*>
 			__tmp(current_local_netlist, &n);
 #if NETLIST_CACHE_ASSOC_UID
 		const value_saver<index_type>
 			__tmp2(current_local_subckt_index, j);
-#endif
-#if 0 && NETLIST_CACHE_ASSOC_ID
-	// enabling this makes no difference?
-	// preserve per-node device counters, just save the whole node pool
-	typedef util::ptr_value_saver<index_type>	save_type;
-	typedef	vector<pair<save_type, save_type> >	saves_type;
-	saves_type __s;		// will auto-restore at end-of-scope
-{
-	__s.resize(current_local_netlist->node_pool.size());
-	node_pool_type::const_iterator
-		ni(current_local_netlist->node_pool.begin());
-	saves_type::iterator i(__s.begin()), e(__s.end());
-	// skip void node
-	for (++i; i!=e; ++i, ++ni) {
-		index_type& c0(ni->device_count[0]);
-		index_type& c1(ni->device_count[1]);
-		i->first.bind(c0);
-		i->second.bind(c1);
-		c0 = 0; c1 = 0;		// locally reset counter
-	}
-}
 #endif
 		if (!si->rules_empty()) {
 			size_t ir = si->rules.first;
@@ -478,23 +471,11 @@ netlist_generator::visit(const entity::PRS::footprint& r) {
 				visit_macro(mpool, im);
 			}
 		}
-	// TODO: update transistor_index_offset
+		o += mi->transistor_count();
 	}
 }
 }
 #endif	// NETLIST_INTERLEAVE_SUBCKT_RULES
-{
-	// count cumulative number of transistors for index map
-	netlist::local_subcircuit_list_type::iterator
-		mi(current_netlist->local_subcircuits.begin()),
-		me(current_netlist->local_subcircuits.end());
-	size_t o = current_netlist->transistor_pool.size();
-	for ( ; mi!=me; ++mi) {
-		mi->transistor_index_offset = o;
-		o += mi->transistor_count();
-	}
-}
-	// process all subcircuits first, then remaining local rules/macros
 	current_netlist->mark_used_nodes();
 }	// end netlist_generator::visit(const PRS::footprint&)
 
@@ -1146,9 +1127,9 @@ case PRS_LITERAL_TYPE_ENUM: {
 	t.assoc_node = current_assoc_node;
 	t.assoc_dir = current_assoc_dir;
 #if NETLIST_CACHE_ASSOC_UID
-	t.assoc_lsub = current_local_subckt_index;
+	t.assoc_uid.first = current_local_subckt_index;
 	INVARIANT(t.assoc_node < current_netlist->node_pool.size());
-	t.assoc_uid = current_netlist->node_pool[t.assoc_node]
+	t.assoc_uid.second = current_netlist->node_pool[t.assoc_node]
 		.device_count[size_t(t.assoc_dir)]++;
 #endif
 #endif
@@ -1288,9 +1269,9 @@ if (passn || passp) {
 	t.assoc_node = t.drain;
 	t.assoc_dir = passp;
 #if NETLIST_CACHE_ASSOC_UID
-	t.assoc_lsub = current_local_subckt_index;
+	t.assoc_uid.first = current_local_subckt_index;
 	INVARIANT(t.assoc_node < current_netlist->node_pool.size());
-	t.assoc_uid = current_netlist->node_pool[t.assoc_node]
+	t.assoc_uid.second = current_netlist->node_pool[t.assoc_node]
 		.device_count[size_t(t.assoc_dir)]++;
 #endif
 #endif
