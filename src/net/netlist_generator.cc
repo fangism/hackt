@@ -77,6 +77,9 @@ netlist_generator::netlist_generator(
 		prs(NULL), 
 		current_netlist(NULL), 
 		current_local_netlist(NULL),
+#if NETLIST_CACHE_ASSOC_UID
+		current_local_subckt_index(0),
+#endif
 		foot_node(netlist::void_index),
 		output_node(netlist::void_index),
 #if NETLIST_GROUPED_TRANSISTORS
@@ -433,11 +436,15 @@ netlist_generator::visit(const entity::PRS::footprint& r) {
 	const_iterator si(subc_map.begin()), se(subc_map.end());
 	netlist::local_subcircuit_list_type::iterator
 		mi(current_netlist->local_subcircuits.begin());
-
-	for ( ; si!=se; ++si, ++mi) {
+	index_type j = 1;
+	for ( ; si!=se; ++si, ++mi, ++j) {
 		local_netlist& n(*mi);
 		const value_saver<netlist_common*>
 			__tmp(current_local_netlist, &n);
+#if NETLIST_CACHE_ASSOC_UID
+		const value_saver<index_type>
+			__tmp2(current_local_subckt_index, j);
+#endif
 #if 0 && NETLIST_CACHE_ASSOC_ID
 	// enabling this makes no difference?
 	// preserve per-node device counters, just save the whole node pool
@@ -459,18 +466,18 @@ netlist_generator::visit(const entity::PRS::footprint& r) {
 	}
 }
 #endif
-	if (!si->rules_empty()) {
-		size_t ir = si->rules.first;
-		for ( ; ir < si->rules.second; ++ir) {
-			visit_rule(rpool, ir);
+		if (!si->rules_empty()) {
+			size_t ir = si->rules.first;
+			for ( ; ir < si->rules.second; ++ir) {
+				visit_rule(rpool, ir);
+			}
 		}
-	}
-	if (!si->macros_empty()) {
-		size_t im = si->macros.first;
-		for ( ; im < si->macros.second; ++im) {
-			visit_macro(mpool, im);
+		if (!si->macros_empty()) {
+			size_t im = si->macros.first;
+			for ( ; im < si->macros.second; ++im) {
+				visit_macro(mpool, im);
+			}
 		}
-	}
 	// TODO: update transistor_index_offset
 	}
 }
@@ -1139,8 +1146,9 @@ case PRS_LITERAL_TYPE_ENUM: {
 	t.assoc_node = current_assoc_node;
 	t.assoc_dir = current_assoc_dir;
 #if NETLIST_CACHE_ASSOC_UID
-	INVARIANT(t.assoc_node < current_local_netlist->node_pool.size());
-	t.assoc_uid = current_local_netlist->node_pool[t.assoc_node]
+	t.assoc_lsub = current_local_subckt_index;
+	INVARIANT(t.assoc_node < current_netlist->node_pool.size());
+	t.assoc_uid = current_netlist->node_pool[t.assoc_node]
 		.device_count[size_t(t.assoc_dir)]++;
 #endif
 #endif
@@ -1280,8 +1288,9 @@ if (passn || passp) {
 	t.assoc_node = t.drain;
 	t.assoc_dir = passp;
 #if NETLIST_CACHE_ASSOC_UID
-	INVARIANT(t.assoc_node < current_local_netlist->node_pool.size());
-	t.assoc_uid = current_local_netlist->node_pool[t.assoc_node]
+	t.assoc_lsub = current_local_subckt_index;
+	INVARIANT(t.assoc_node < current_netlist->node_pool.size());
+	t.assoc_uid = current_netlist->node_pool[t.assoc_node]
 		.device_count[size_t(t.assoc_dir)]++;
 #endif
 #endif

@@ -35,6 +35,8 @@
 		whereby one subcircuit is finished at a time, so that
 		devices in the same subcircuit are enumerated
 		contiguously.
+	Status: done, tested, updated a few test cases, re-enumerated
+		some #stack nodes, shouldn't affect LVS.
  */
 #define	NETLIST_INTERLEAVE_SUBCKT_RULES		0
 
@@ -44,7 +46,7 @@
 	Rationale: so that assoc_uid is not computed while 
 		dumping output, eww...
  */
-#define	NETLIST_CACHE_ASSOC_UID			0
+#define	NETLIST_CACHE_ASSOC_UID			1
 
 /**
 	Define to 1 to enable static connectivity checking for
@@ -229,6 +231,11 @@ struct transistor {
 	 */
 	index_type			assoc_node;
 #if NETLIST_CACHE_ASSOC_UID
+	/**
+		Associated local subcircuit, 1-based index.
+		0 means the master subcircuit, not any local subcircuit.
+	 */
+	index_type			assoc_lsub;
 	/**
 		unique id assigned within group belonging to same assoc node
 		This assigned upon transistor instantiation.

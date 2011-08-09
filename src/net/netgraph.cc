@@ -864,11 +864,17 @@ transistor::emit_identifier(ostream& o,
 	} else {
 		// is logical or internal
 		n.emit(o, nopt) << nopt.emit_colon() <<
-			(assoc_dir ? "up" : "dn") << nopt.emit_colon()
+			(assoc_dir ? "up" : "dn") << nopt.emit_colon();
 #if NETLIST_CACHE_ASSOC_UID
-			<< assoc_uid;
+#if 0
+		if (assoc_lsub) {
+			// debug-only
+			o << assoc_lsub << nopt.emit_colon();
+		}
+#endif
+		o << assoc_uid;
 #else
-			<< c;
+		o << c;
 #endif
 	}
 #if !NETLIST_CACHE_ASSOC_UID
