@@ -1,0 +1,45 @@
+.subckt celem<> !GND !Vdd x[0] x[1] y
+* BEGIN node terminals
+* 	!GND : M_o:dn:0.s M_o:dn:0.b M_o:dn:1.b My:dn:0.s My:dn:0.b
+* 	!Vdd : M_o:up:0.s M_o:up:0.b M_o:up:1.b My:up:0.s My:up:0.b
+* 	_o : M_o:dn:1.d M_o:up:1.d My:dn:0.g My:up:0.g
+* 	#0 : M_o:dn:0.d M_o:dn:1.s
+* 	x[0] : M_o:dn:0.g M_o:up:0.g
+* 	x[1] : M_o:dn:1.g M_o:up:1.g
+* 	#1 : M_o:up:0.d M_o:up:1.s
+* 	y : My:dn:0.d My:up:0.d
+* END node terminals
+M_o:dn:0 !GND x[0] #0 !GND nch W=5u L=2u
+M_o:dn:1 #0 x[1] _o !GND nch W=5u L=2u
+M_o:up:0 !Vdd x[0] #1 !Vdd pch W=5u L=2u
+M_o:up:1 #1 x[1] _o !Vdd pch W=5u L=2u
+My:dn:0 !GND _o y !GND nch W=5u L=2u
+My:up:0 !Vdd _o y !Vdd pch W=5u L=2u
+.ends
+
+.subckt c4<> !GND !Vdd a[0] a[1] a[2] a[3] b
+* BEGIN node terminals
+* 	!GND : M_o:dn:0.s M_o:dn:0.b M_o:dn:1.b Mb:dn:0.s Mb:dn:0.b xc1.!GND xc2.!GND
+* 	!Vdd : M_o:up:0.s M_o:up:0.b M_o:up:1.b Mb:up:0.s Mb:up:0.b xc1.!Vdd xc2.!Vdd
+* 	a[0] : xc1.x[0]
+* 	a[1] : xc1.x[1]
+* 	m[0] : M_o:dn:0.g M_o:up:0.g xc1.y
+* 	a[2] : xc2.x[0]
+* 	a[3] : xc2.x[1]
+* 	m[1] : M_o:dn:1.g M_o:up:1.g xc2.y
+* 	_o : M_o:dn:1.d M_o:up:1.d Mb:dn:0.g Mb:up:0.g
+* 	#0 : M_o:dn:0.d M_o:dn:1.s
+* 	#1 : M_o:up:0.d M_o:up:1.s
+* 	b : Mb:dn:0.d Mb:up:0.d
+* END node terminals
+xc1 !GND !Vdd a[0] a[1] m[0] celem<>
+xc2 !GND !Vdd a[2] a[3] m[1] celem<>
+M_o:dn:0 !GND m[0] #0 !GND nch W=5u L=2u
+M_o:dn:1 #0 m[1] _o !GND nch W=5u L=2u
+M_o:up:0 !Vdd m[0] #1 !Vdd pch W=5u L=2u
+M_o:up:1 #1 m[1] _o !Vdd pch W=5u L=2u
+Mb:dn:0 !GND _o b !GND nch W=5u L=2u
+Mb:up:0 !Vdd _o b !Vdd pch W=5u L=2u
+.ends
+
+

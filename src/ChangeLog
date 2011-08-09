@@ -5,6 +5,11 @@
 
 2011-08-09	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-84-85-prsim-precharge-check-08:
+	  hacknet: node-terminal-graph now with subinstance terminals.
+		Added few test cases.
+
+
 	* HACKT-00-01-04-main-00-84-85-prsim-precharge-check-07:
 	  hacknet: debugged transistor enumeration when internal
 		node rules are computed on-demand, by delaying

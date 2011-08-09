@@ -1,0 +1,25 @@
+// "terminal-test-18.hac"
+// testing mixing rules and hierarchy
+// @hacknet-flags@ -T c4 -f emit_node_terminals=1
+
+defproc celem(bool x[2], y) {
+bool _o;
+prs {
+	x[0] & x[1]		#> _o-
+	_o			=> y-
+}
+}
+
+defproc c4(bool a[4], b) {
+bool m[2];
+celem c1(a[0..1], m[0]);
+celem c2(a[2..3], m[1]);
+bool _o;
+prs {
+	m[0] & m[1]		#> _o-
+	_o			=> b-
+}
+}
+
+c4 test;
+
