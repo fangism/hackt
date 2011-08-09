@@ -5,6 +5,11 @@
 
 2011-08-08	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-84-85-prsim-precharge-check-06:
+	  hacknet: debugged and tested node terminal output
+		for locally-subcircuited netlists.
+
+
 	* HACKT-00-01-04-main-00-84-85-prsim-precharge-check-05:
 	  hacknet: enabled cached assoc_uid for transistors to that
 		indicies are not generated on-the-fly during printing.
