@@ -170,6 +170,13 @@ typedef	vector<proc>			proc_pool_type;
 typedef	std::map<const footprint*, netlist>		netlist_map_type;
 
 //=============================================================================
+/**
+	This is the result of a transistor index lookup.
+	first: local subcircuit index (1-based), 0 for main subcircuit
+	second: offset within subcircuit
+ */
+typedef pair<size_t, size_t>		transistor_reference;
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Standard 4-terminal device for transistor.
@@ -232,15 +239,14 @@ struct transistor {
 	index_type			assoc_node;
 #if NETLIST_CACHE_ASSOC_UID
 	/**
+		first:
 		Associated local subcircuit, 1-based index.
 		0 means the master subcircuit, not any local subcircuit.
-	 */
-	index_type			assoc_lsub;
-	/**
+		second:
 		unique id assigned within group belonging to same assoc node
 		This assigned upon transistor instantiation.
 	 */
-	index_type			assoc_uid;
+	transistor_reference		assoc_uid;
 #endif
 	/**
 		Whether we are associated with a pull-up or pull-dn
@@ -922,14 +928,6 @@ public:
 #endif
 };	// end class local_netlist
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	This is the result of a transistor index lookup.
-	first: local subcircuit index (1-based), 0 for main subcircuit
-	second: offset within subcircuit
- */
-typedef pair<size_t, size_t>		transistor_reference;
-
 //-----------------------------------------------------------------------------
 /**
 	A graph.
@@ -1133,14 +1131,17 @@ public:
 	named_node_is_used(const index_type) const;
 #endif
 
+	const transistor&
+	lookup_transistor(const transistor_reference&) const;
+
 	transistor_reference
 	lookup_transistor_index(const size_t) const;
 
 	const transistor&
-	lookup_transistor(const transistor_reference&) const;
-
-	const transistor&
 	lookup_transistor(const size_t) const;
+
+	size_t
+	reverse_lookup_transistor_index(const transistor_reference&) const;
 
 	void
 	append_instance(const state_instance<process_tag>&, const netlist&, 

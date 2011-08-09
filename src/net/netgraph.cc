@@ -867,12 +867,12 @@ transistor::emit_identifier(ostream& o,
 			(assoc_dir ? "up" : "dn") << nopt.emit_colon();
 #if NETLIST_CACHE_ASSOC_UID
 #if 0
-		if (assoc_lsub) {
-			// debug-only
-			o << assoc_lsub << nopt.emit_colon();
+		if (assoc_uid.first) {
+			// debug-only: print local subckt index
+			o << assoc_uid.first << nopt.emit_colon();
 		}
 #endif
-		o << assoc_uid;
+		o << assoc_uid.second;	// local transistor index
 #else
 		o << c;
 #endif
@@ -1636,6 +1636,17 @@ proc_pool.back().dump_raw(STACKTRACE_INDENT_PRINT("new proc: ")) << endl;
 #endif	// NETLIST_VERILOG
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const transistor&
+netlist::lookup_transistor(const transistor_reference& tr) const {
+	if (tr.first) {
+		return local_subcircuits[tr.first -1]
+			.get_transistor(tr.second);
+	} else {
+		return transistor_pool[tr.second];
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 static
 bool
 __local_subckt_less(const local_netlist& l, const size_t i) {
@@ -1663,13 +1674,18 @@ netlist::lookup_transistor_index(const size_t ti) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-const transistor&
-netlist::lookup_transistor(const transistor_reference& tr) const {
-	if (tr.first) {
-		return local_subcircuits[tr.first -1]
-			.get_transistor(tr.second);
+/**
+	Translates (subckt,index) into unique index.
+ */
+size_t
+netlist::reverse_lookup_transistor_index(const transistor_reference& r) const {
+	if (r.first) {
+		const local_netlist& n(local_subcircuits[r.first -1]);
+		INVARIANT(r.second < n.transistor_count());
+		return n.transistor_index_offset +r.second;
 	} else {
-		return transistor_pool[tr.second];
+		INVARIANT(r.second < transistor_count());
+		return r.second;
 	}
 }
 
