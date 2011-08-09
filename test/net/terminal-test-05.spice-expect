@@ -3,12 +3,12 @@ M_y:dn:0 @a x _y !GND nch W=5u L=2u
 .ends
 .subckt foo<> !GND en x _y
 * BEGIN node terminals
-* 	@a : M@a:dn:0.d xINTSUB:0:inst/M@a:dn:0.s
-* 	!GND : M@a:dn:0.s M@a:dn:0.b xINTSUB:0:inst/M@a:dn:0.b
+* 	@a : M@a:dn:0.d xINTSUB:0:inst/M_y:dn:0.s
+* 	!GND : M@a:dn:0.s M@a:dn:0.b xINTSUB:0:inst/M_y:dn:0.b
 * 	!Vdd :
-* 	_y : xINTSUB:0:inst/M@a:dn:0.d
+* 	_y : xINTSUB:0:inst/M_y:dn:0.d
 * 	en : M@a:dn:0.g
-* 	x : xINTSUB:0:inst/M@a:dn:0.g
+* 	x : xINTSUB:0:inst/M_y:dn:0.g
 * END node terminals
 xINTSUB:0:inst @a !GND _y x foo<>::INTSUB:0
 M@a:dn:0 !GND en @a !GND nch W=5u L=2u
