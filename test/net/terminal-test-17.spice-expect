@@ -1,0 +1,60 @@
+.subckt recurse<0> !GND !Vdd a b
+* BEGIN node terminals
+* 	!GND : Mb:dn:0.s Mb:dn:0.b
+* 	!Vdd : Mb:up:0.s Mb:up:0.b
+* 	b : Mb:dn:0.d Mb:up:0.d
+* 	a : Mb:dn:0.g Mb:up:0.g
+* END node terminals
+Mb:dn:0 !GND a b !GND nch W=5u L=2u
+Mb:up:0 !Vdd a b !Vdd pch W=5u L=2u
+.ends
+
+.subckt recurse<1> !GND !Vdd a b
+* BEGIN node terminals
+* 	!GND : xj.!GND xk.!GND
+* 	!Vdd : xj.!Vdd xk.!Vdd
+* 	a : xj.a
+* 	x : xj.b xk.a
+* 	b : xk.b
+* END node terminals
+xj !GND !Vdd a x recurse<0>
+xk !GND !Vdd x b recurse<0>
+.ends
+
+.subckt recurse<2> !GND !Vdd a b
+* BEGIN node terminals
+* 	!GND : xj.!GND xk.!GND
+* 	!Vdd : xj.!Vdd xk.!Vdd
+* 	a : xj.a
+* 	x : xj.b xk.a
+* 	b : xk.b
+* END node terminals
+xj !GND !Vdd a x recurse<1>
+xk !GND !Vdd x b recurse<1>
+.ends
+
+.subckt recurse<3> !GND !Vdd a b
+* BEGIN node terminals
+* 	!GND : xj.!GND xk.!GND
+* 	!Vdd : xj.!Vdd xk.!Vdd
+* 	a : xj.a
+* 	x : xj.b xk.a
+* 	b : xk.b
+* END node terminals
+xj !GND !Vdd a x recurse<2>
+xk !GND !Vdd x b recurse<2>
+.ends
+
+.subckt recurse<4> !GND !Vdd a b
+* BEGIN node terminals
+* 	!GND : xj.!GND xk.!GND
+* 	!Vdd : xj.!Vdd xk.!Vdd
+* 	a : xj.a
+* 	x : xj.b xk.a
+* 	b : xk.b
+* END node terminals
+xj !GND !Vdd a x recurse<3>
+xk !GND !Vdd x b recurse<3>
+.ends
+
+

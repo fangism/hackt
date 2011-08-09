@@ -675,6 +675,7 @@ for (++i; i!=e; ++i) {
 
 /**
 	Mark all instance actuals as used automatically?
+	\param inst_index the process id.
  */
 void
 instance::mark_used_nodes(node_pool_type& node_pool) const {
@@ -1713,24 +1714,28 @@ netlist::mark_used_nodes(void) {
 	STACKTRACE_VERBOSE;
 	netlist_common::mark_used_nodes(node_pool);
 {
+	// traverse subcircuit instances
 	instance_pool_type::iterator
 		i(instance_pool.begin()), e(instance_pool.end());
-	for ( ; i!=e; ++i) {
+	size_t k = 0;		// index into instance_pool
+	for ( ; i!=e; ++i, ++k) {
 		i->mark_used_nodes(node_pool);
+#if NETLIST_NODE_GRAPH
+		instance::node_actuals_list_type::const_iterator
+			ii(i->node_actuals.begin()),
+			ie(i->node_actuals.end());
+		size_t j = 0;	// index into actuals list
+		for ( ; ii!=ie; ++ii, ++j) {
+			const node_terminal t('x', k, j);
+			node_pool[*ii].terminals.push_back(t);
+		}
+#endif
 	}
 }{
 	// traverse subcircuits
 	local_subcircuit_list_type::iterator
 		i(local_subcircuits.begin()), e(local_subcircuits.end());
-//	size_t j = 0;
 	for ( ; i!=e; ++i) {
-#if 0
-		cout << "local subckt " << j << ", transistor_index_offset "
-			<< i->transistor_index_offset << endl;
-#endif
-		// TODO: adjust transistor offsets for subcircuits
-		// only NOW compute transistor_index_offset b/c
-		// internal node definitions were emitted on-demand
 		i->mark_used_nodes(node_pool);
 	}
 }
@@ -1971,6 +1976,12 @@ netlist::emit_node_caps(ostream& o, const netlist_options& nopt) const {
 	return node::emit_node_caps(o, node_pool, nopt);
 }
 #endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+string
+netlist::node_port_name(const size_t ni) const {
+	return node_pool[node_port_list[ni]].name;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -2441,12 +2452,12 @@ for (++i; i!=e; ++i) {
 		break;
 	}
 	case 'x': {
-		string pname(instance_pool[ti->index]
-			.raw_identifier(*fp, nopt));
+		const instance& inst(instance_pool[ti->index]);
+		string pname(inst.raw_identifier(*fp, nopt));
 		nopt.mangle_instance(pname);
 		o << nopt.subckt_instance_prefix << pname <<
 			nopt.__dump_flags.process_member_separator <<
-			ti->port;
+		inst.type->node_port_name(ti->port);
 		break;
 	}
 	// unhandled case

@@ -1174,6 +1174,9 @@ public:
 	ostream&
 	emit(ostream&, const bool s, const netlist_options&) const;
 
+	string
+	node_port_name(const size_t) const;
+
 	ostream&
 	dump_raw(ostream&) const;
 

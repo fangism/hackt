@@ -25,10 +25,10 @@ xsecond:inst !GND !Vdd x _y b inv_c<>::second
 .ends
 
 * BEGIN node terminals
-* 	!GND :
-* 	!Vdd :
-* 	foo.a :
-* 	foo.b :
+* 	!GND : xfoo.!GND
+* 	!Vdd : xfoo.!Vdd
+* 	foo.a : xfoo.a
+* 	foo.b : xfoo.b
 * END node terminals
 xfoo !GND !Vdd foo.a foo.b inv_c<>
 

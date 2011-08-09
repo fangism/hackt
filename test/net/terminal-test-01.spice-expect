@@ -11,16 +11,16 @@ Mb:up:0 !Vdd a b !Vdd pch W=5u L=2u
 
 .subckt inv_array<> !GND !Vdd a[0] a[1] a[2] a[3] b[0] b[1] b[2] b[3]
 * BEGIN node terminals
-* 	!GND :
-* 	!Vdd :
-* 	a[0] :
-* 	b[0] :
-* 	a[1] :
-* 	b[1] :
-* 	a[2] :
-* 	b[2] :
-* 	a[3] :
-* 	b[3] :
+* 	!GND : xi[0].!GND xi[1].!GND xi[2].!GND xi[3].!GND
+* 	!Vdd : xi[0].!Vdd xi[1].!Vdd xi[2].!Vdd xi[3].!Vdd
+* 	a[0] : xi[0].a
+* 	b[0] : xi[0].b
+* 	a[1] : xi[1].a
+* 	b[1] : xi[1].b
+* 	a[2] : xi[2].a
+* 	b[2] : xi[2].b
+* 	a[3] : xi[3].a
+* 	b[3] : xi[3].b
 * END node terminals
 xi[0] !GND !Vdd a[0] b[0] inv<>
 xi[1] !GND !Vdd a[1] b[1] inv<>

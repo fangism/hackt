@@ -1,0 +1,5 @@
+// "terminal-test-17.hac"
+// @hacknet-flags@ -T recurse<4> -f emit_node_terminals=1
+
+import "recurse-01.hac";
+
