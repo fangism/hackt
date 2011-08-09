@@ -1,0 +1,5 @@
+// "terminal-test-02.hac"
+// @hacknet-flags@ -T test -f emit_node_terminals=1
+
+import "subckt-11.hac";
+

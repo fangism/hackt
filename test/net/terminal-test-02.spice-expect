@@ -1,0 +1,47 @@
+.subckt test<>::first !GND !Vdd a[4] b[1] a[1]
+Mb[1]:dn:0 !GND a[1] #2 !GND nch W=5u L=2u
+Mb[1]:dn:1 #2 a[4] b[1] !GND nch W=5u L=2u
+Mb[1]:up:0 !Vdd a[1] #3 !Vdd pch W=5u L=2u
+Mb[1]:up:1 #3 a[4] b[1] !Vdd pch W=5u L=2u
+.ends
+.subckt test<>::second !GND !Vdd a[0] b[3] a[3]
+Mb[3]:dn:0 !GND a[3] #4 !GND nch W=5u L=2u
+Mb[3]:dn:1 #4 a[0] b[3] !GND nch W=5u L=2u
+Mb[3]:up:0 !Vdd a[3] #5 !Vdd pch W=5u L=2u
+Mb[3]:up:1 #5 a[0] b[3] !Vdd pch W=5u L=2u
+.ends
+.subckt test<> !GND !Vdd a[0] a[1] a[2] a[3] a[4] a[5] b[0] b[1] b[2] b[3] b[4]
+* BEGIN node terminals
+* 	!GND : Mb[0]:dn:0.s Mb[0]:dn:0.b Mb[2]:dn:0.s Mb[2]:dn:0.b Mb[2]:dn:1.b Mb[4]:dn:0.s Mb[4]:dn:0.b xfirst:inst/Ma[0]:dn:0.s xfirst:inst/Ma[0]:dn:0.b xfirst:inst/Ma[0]:dn:1.b xsecond:inst/Ma[0]:dn:0.s xsecond:inst/Ma[0]:dn:0.b xsecond:inst/Ma[0]:dn:1.b
+* 	!Vdd : Mb[0]:up:0.s Mb[0]:up:0.b Mb[2]:up:0.s Mb[2]:up:0.b Mb[2]:up:1.b Mb[4]:up:0.s Mb[4]:up:0.b xfirst:inst/Ma[0]:up:0.s xfirst:inst/Ma[0]:up:0.b xfirst:inst/Ma[0]:up:1.b xsecond:inst/Ma[0]:up:0.s xsecond:inst/Ma[0]:up:0.b xsecond:inst/Ma[0]:up:1.b
+* 	b[0] : Mb[0]:dn:0.d Mb[0]:up:0.d
+* 	a[0] : Mb[0]:dn:0.g Mb[0]:up:0.g xsecond:inst/Ma[0]:dn:1.g xsecond:inst/Ma[0]:up:1.g
+* 	b[2] : Mb[2]:dn:1.d Mb[2]:up:1.d
+* 	#0 : Mb[2]:dn:0.d Mb[2]:dn:1.s
+* 	a[2] : Mb[2]:dn:0.g Mb[2]:up:0.g
+* 	a[5] : Mb[2]:dn:1.g Mb[2]:up:1.g
+* 	#1 : Mb[2]:up:0.d Mb[2]:up:1.s
+* 	b[4] : Mb[4]:dn:0.d Mb[4]:up:0.d
+* 	a[4] : Mb[4]:dn:0.g Mb[4]:up:0.g xfirst:inst/Ma[0]:dn:1.g xfirst:inst/Ma[0]:up:1.g
+* 	b[1] : xfirst:inst/Ma[0]:dn:1.d xfirst:inst/Ma[0]:up:1.d
+* 	#2 : xfirst:inst/Ma[0]:dn:0.d xfirst:inst/Ma[0]:dn:1.s
+* 	a[1] : xfirst:inst/Ma[0]:dn:0.g xfirst:inst/Ma[0]:up:0.g
+* 	#3 : xfirst:inst/Ma[0]:up:0.d xfirst:inst/Ma[0]:up:1.s
+* 	b[3] : xsecond:inst/Ma[0]:dn:1.d xsecond:inst/Ma[0]:up:1.d
+* 	#4 : xsecond:inst/Ma[0]:dn:0.d xsecond:inst/Ma[0]:dn:1.s
+* 	a[3] : xsecond:inst/Ma[0]:dn:0.g xsecond:inst/Ma[0]:up:0.g
+* 	#5 : xsecond:inst/Ma[0]:up:0.d xsecond:inst/Ma[0]:up:1.s
+* END node terminals
+xfirst:inst !GND !Vdd a[4] b[1] a[1] test<>::first
+xsecond:inst !GND !Vdd a[0] b[3] a[3] test<>::second
+Mb[0]:dn:0 !GND a[0] b[0] !GND nch W=5u L=2u
+Mb[0]:up:0 !Vdd a[0] b[0] !Vdd pch W=5u L=2u
+Mb[2]:dn:0 !GND a[2] #0 !GND nch W=5u L=2u
+Mb[2]:dn:1 #0 a[5] b[2] !GND nch W=5u L=2u
+Mb[2]:up:0 !Vdd a[2] #1 !Vdd pch W=5u L=2u
+Mb[2]:up:1 #1 a[5] b[2] !Vdd pch W=5u L=2u
+Mb[4]:dn:0 !GND a[4] b[4] !GND nch W=5u L=2u
+Mb[4]:up:0 !Vdd a[4] b[4] !Vdd pch W=5u L=2u
+.ends
+
+

@@ -1,0 +1,31 @@
+.subckt inv<> !GND !Vdd a b
+* BEGIN node terminals
+* 	!GND : Mb:dn:0.s Mb:dn:0.b
+* 	!Vdd : Mb:up:0.s Mb:up:0.b
+* 	b : Mb:dn:0.d Mb:up:0.d
+* 	a : Mb:dn:0.g Mb:up:0.g
+* END node terminals
+Mb:dn:0 !GND a b !GND nch W=5u L=2u
+Mb:up:0 !Vdd a b !Vdd pch W=5u L=2u
+.ends
+
+.subckt inv_array<> !GND !Vdd a[0] a[1] a[2] a[3] b[0] b[1] b[2] b[3]
+* BEGIN node terminals
+* 	!GND :
+* 	!Vdd :
+* 	a[0] :
+* 	b[0] :
+* 	a[1] :
+* 	b[1] :
+* 	a[2] :
+* 	b[2] :
+* 	a[3] :
+* 	b[3] :
+* END node terminals
+xi[0] !GND !Vdd a[0] b[0] inv<>
+xi[1] !GND !Vdd a[1] b[1] inv<>
+xi[2] !GND !Vdd a[2] b[2] inv<>
+xi[3] !GND !Vdd a[3] b[3] inv<>
+.ends
+
+

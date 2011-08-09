@@ -911,6 +911,9 @@ public:
 	void
 	mark_used_nodes(node_pool_type&);
 
+	ostream&
+	emit_instance_name(ostream&, const netlist_options&) const;
+
 	// requires a parent netlist for reference
 	ostream&
 	emit_definition(ostream&, const netlist& n,

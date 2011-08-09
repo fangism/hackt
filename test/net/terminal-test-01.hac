@@ -1,0 +1,16 @@
+// "terminal-test-01.hac"
+// @hacknet-flags@ -T inv_array -f emit_node_terminals=1
+
+defproc inv(bool a, b) {
+prs {
+	a		=> b-
+}
+}
+
+defproc inv_array(bool a[4], b[4]) {
+inv i[4];
+(;j:4:
+	i[j](a[j], b[j]);
+)
+}
+

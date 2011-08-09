@@ -317,9 +317,10 @@ void
 local_netlist::mark_used_nodes(node_pool_type& nnp) {
 	STACKTRACE_VERBOSE;
 {
+	size_t ti = transistor_index_offset;
 	transistor_pool_type::const_iterator
 		i(transistor_pool.begin()), e(transistor_pool.end());
-	for ( ; i!=e; ++i) {
+	for ( ; i!=e; ++i, ++ti) {
 		// garbage values to be filled below...
 		node_index_map[i->gate] = 0;
 		node_index_map[i->source] = 0;
@@ -327,6 +328,9 @@ local_netlist::mark_used_nodes(node_pool_type& nnp) {
 		node_index_map[i->body] = 0;
 		// flag as used, since this acts as both definition and instance
 		i->mark_used_nodes(nnp);
+#if NETLIST_NODE_GRAPH
+		i->mark_node_terminals(nnp, ti);	// local node pool
+#endif
 	}
 }{
 	const size_t ns = node_index_map.size();
@@ -344,8 +348,7 @@ local_netlist::mark_used_nodes(node_pool_type& nnp) {
 	// transform indices from actual to local formal
 	transistor_pool_type::iterator
 		i(transistor_pool.begin()), e(transistor_pool.end());
-	size_t ti = 0;
-	for ( ; i!=e; ++i, ++ti) {
+	for ( ; i!=e; ++i) {
 #if NETLIST_NODE_GRAPH
 // TODO: consider using a transistor number map to local subcircuits
 //		i->mark_node_terminals(nnp, ti+transistor_index_offset);
@@ -373,9 +376,6 @@ local_netlist::mark_used_nodes(node_pool_type& nnp) {
 #if NETLIST_GROUPED_TRANSISTORS
 		INVARIANT(ai != ne);
 		i->assoc_node = ai->second;
-#endif
-#if NETLIST_NODE_GRAPH
-		i->mark_node_terminals(node_pool, ti);	// local node pool
 #endif
 	}
 }
@@ -463,6 +463,15 @@ default:
 }	// end local_netlist::emit_definition
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+local_netlist::emit_instance_name(ostream& o,
+		const netlist_options& nopt) const {
+	o << nopt.subckt_instance_prefix;
+	o << name << nopt.emit_colon() << "inst";
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Instantiation uses the same names as the original ports.
 	Always emit these instances' node ports.  
@@ -470,8 +479,7 @@ default:
 ostream&
 local_netlist::emit_instance(ostream& o, const netlist& n,
 		const netlist_options& nopt) const {
-	o << nopt.subckt_instance_prefix;
-	o << name << nopt.emit_colon() << "inst";
+	emit_instance_name(o, nopt);
 {
 	// actuals
 switch (nopt.instance_port_style) {
@@ -1647,29 +1655,48 @@ netlist::lookup_transistor(const transistor_reference& tr) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 static
 bool
 __local_subckt_less(const local_netlist& l, const size_t i) {
 	return l.transistor_index_offset < i;
 }
+#else
+static
+bool
+__local_subckt_less(const size_t i, const local_netlist& r) {
+	return i < r.transistor_index_offset;
+}
+#endif
 
 /**
 	\return local subcircuit index and transistor index
  */
 transistor_reference
 netlist::lookup_transistor_index(const size_t ti) const {
+#if 0
+	cerr << "(ti=" << ti << ')';
+#endif
 	if (ti < transistor_pool.size()) {
+		INVARIANT(ti < transistor_count());
 		return transistor_reference(0, ti);
 	} else {
 		const vector<local_netlist>::const_iterator
 			b(local_subcircuits.begin()),
 			e(local_subcircuits.end());
 		vector<local_netlist>::const_iterator
-			f(std::lower_bound(b, e, ti, &__local_subckt_less));
+			f(std::upper_bound(b, e, ti, &__local_subckt_less));
+		INVARIANT(f != b);
+		--f;
+		const size_t si = std::distance(b, f);
 		const size_t rem = ti -f->transistor_index_offset;
+#if 0
+		cerr << "(off=" << f->transistor_index_offset << ')';
+		cerr << "(si,rem=" << si << ',' << rem << ')';
+#endif
 		INVARIANT(rem < f->transistor_count());
 		return transistor_reference(
-			std::distance(b, f)+1, rem);
+			si+1, rem);
 	}
 }
 
@@ -1715,9 +1742,6 @@ netlist::mark_used_nodes(void) {
 		i(local_subcircuits.begin()), e(local_subcircuits.end());
 	for ( ; i!=e; ++i) {
 		i->mark_used_nodes(node_pool);
-#if NETLIST_NODE_GRAPH
-		// TODO: account for devices in these local subcircuits
-#endif
 	}
 }
 }
@@ -2409,30 +2433,38 @@ for (++i; i!=e; ++i) {
 		// just space-delimited
 		o << ' ';
 		// TODO: print device *name*, not just index
-		switch (ti->device_type) {
-		// TODO: lookup ti->index transistor reference,
-		//	may be in local subcircuit.
-		case 'M': lookup_transistor(ti->index)
+	switch (ti->device_type) {
+	// TODO: lookup ti->index transistor reference,
+	//	may be in local subcircuit.
+	case 'M': {
+		const transistor_reference
+			tr(lookup_transistor_index(ti->index));
+		if (tr.first) {
+			local_subcircuits[tr.first-1]
+				.emit_instance_name(o, nopt) << '/';
+		}
+		lookup_transistor(tr)
 			.emit_identifier(o, ti->index, node_pool, nopt) <<
 				nopt.__dump_flags.process_member_separator <<
 				char(ti->port);
-			break;
-		case 'x': {
-			string pname(instance_pool[ti->index]
-				.raw_identifier(*fp, nopt));
-			nopt.mangle_instance(pname);
-			o << nopt.subckt_instance_prefix << pname <<
-				nopt.__dump_flags.process_member_separator <<
-				ti->port;
-			break;
-		}
-		// unhandled case
-		default: o << ti->device_type << ti->index <<
-				nopt.__dump_flags.process_member_separator <<
-				ti->port;
-			break;
-		}
+		break;
 	}
+	case 'x': {
+		string pname(instance_pool[ti->index]
+			.raw_identifier(*fp, nopt));
+		nopt.mangle_instance(pname);
+		o << nopt.subckt_instance_prefix << pname <<
+			nopt.__dump_flags.process_member_separator <<
+			ti->port;
+		break;
+	}
+	// unhandled case
+	default: o << ti->device_type << ti->index <<
+			nopt.__dump_flags.process_member_separator <<
+			ti->port;
+		break;
+	}	// end switch
+	}	// end for
 	o << endl;
 }
 	return o << nopt.comment_prefix << "END node terminals" << endl;
