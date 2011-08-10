@@ -370,6 +370,126 @@ __register_self_callback_have_event(Time_t vcstime) {
 // end __register_self_callback_have_event
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+static
+// inline
+value_enum
+vpi_to_prsim_value(const PLI_INT32& v) {
+  value_enum n;
+  switch(v) {
+	case vpi0:
+	case vpiL:
+		n = LOGIC_LOW;
+		break;
+	case vpi1:
+	case vpiH:
+		n = LOGIC_HIGH;
+		break;
+	default:	// vpiX, vpiZ
+		n = LOGIC_OTHER;
+		break;
+  }
+  return n;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+static
+// inline
+PLI_INT32
+prsim_to_vpi_value(const value_enum n) {
+	PLI_INT32 ret;
+	switch (n) {
+	case LOGIC_HIGH:
+		ret = vpi1;
+		break;
+	case LOGIC_LOW:
+		ret = vpi0;
+		break;
+	case LOGIC_OTHER:
+		ret = vpiX;
+		break;
+	default:
+		ret = vpiX;
+		DIE;
+	}
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return the current value of the verilog node using prsim enum.
+ */
+static
+value_enum
+get_prsim_value(const vpiHandle& net) {
+  s_vpi_value v;
+  v.format = vpiScalarVal;
+  vpi_get_value(net, &v);
+  return vpi_to_prsim_value(v.value.scalar);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Schedules a value update from prsim back to verilog-land.
+ */
+static
+void
+transport_value_from_prsim(const node_type& n, 
+#if VERBOSE_DEBUG
+		const node_index_type ni,
+#endif
+		const vpiHandle& net, 
+		s_vpi_time& tm) {
+      s_vpi_value v;
+      v.format = vpiScalarVal;
+      INVARIANT(net);
+#if VERBOSE_DEBUG
+	const string name(prsim_state->get_node_canonical_name(ni));
+	const char* const nodename = name.c_str();
+#endif
+	v.value.scalar = prsim_to_vpi_value(n.current_value());
+#if VERBOSE_DEBUG
+	ostringstream oss;
+	oss << "[tovcs] signal " << name << " changed @ time " <<
+		  prsim_time << ", val = " << v.value.scalar;
+	vpi_printf("%s\n", oss.str().c_str());
+#endif
+	// is temporary allocation really necessary? avoidable?
+	// vpiPureTransportDelay: affects no other events
+	// vpiNoDelay (used by Fang): take effect immediately, ignore time
+	// vpiNoDelay seems to be needed when multiple breakpoint events
+	// are processed before returning to VCS, as was introduced
+	// by $prsim_sync.
+      // vpi_free_object (vpi_put_value (net, &v, &tm, vpiPureTransportDelay));
+      vpi_free_object (vpi_put_value (net, &v, &tm, vpiNoDelay));
+	// Q: shouldn't control return immediately to VCS?
+	// experimenting shows that this makes no difference!? both work
+	// WHY?
+}	// end transport_value_from_prsim
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Like the above, but only conditionally schedules event if
+	values do not match.
+ */
+static
+void
+initial_transport_value_from_prsim(const node_type& n, const vpiHandle& net) {
+	s_vpi_value v;
+	v.format = vpiScalarVal;
+	INVARIANT(net);
+	const value_enum cv(n.current_value());
+	const value_enum vv(get_prsim_value(net));
+	if (cv != vv) {
+		v.value.scalar = prsim_to_vpi_value(cv);
+		s_vpi_time tm;	// current time
+		tm.type = vpiSimTime;
+		vpi_get_time(NULL, &tm);
+		vpi_free_object (vpi_put_value (net, &v, &tm, vpiNoDelay));
+	}
+	// otherwise, don't bother -- values already match
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	While prsim has events that are before VCS's next event time, 
 	run (unless breakpoint encountered that defers back to VCS).  
@@ -443,52 +563,7 @@ static void __advance_prsim (const Time_t& vcstime, const int context)
       INVARIANT(net_iter != net_end);	// must be at least 1
 for ( ; net_iter != net_end; ++net_iter) {
       const vpiHandle& net(*net_iter);
-      s_vpi_value v;
-      v.format = vpiScalarVal;
-      INVARIANT(net);
-#if VERBOSE_DEBUG
-	const string name(prsim_state->get_node_canonical_name(ni));
-	const char* const nodename = name.c_str();
-#endif
-      switch (n.current_value()) {
-      case LOGIC_HIGH:
-#if VERBOSE_DEBUG
-	vpi_printf ("Set net %s (0x%x) to TRUE\n", nodename, net);
-#endif
-	v.value.scalar = vpi1;
-	break;
-      case LOGIC_LOW:
-#if VERBOSE_DEBUG
-	vpi_printf ("Set net %s (0x%x) to FALSE\n", nodename, net);
-#endif
-	v.value.scalar = vpi0;
-	break;
-      case LOGIC_OTHER:
-#if VERBOSE_DEBUG
-	vpi_printf ("Set net %s (0x%x) to X\n", nodename, net);
-#endif
-	v.value.scalar = vpiX;
-	break;
-      default:
-	DIE;
-      }
-#if VERBOSE_DEBUG
-	ostringstream oss;
-	oss << "[tovcs] signal " << name << " changed @ time " <<
-		  prsim_time << ", val = " << v.value.scalar;
-	vpi_printf("%s\n", oss.str().c_str());
-#endif
-	// is temporary allocation really necessary? avoidable?
-	// vpiPureTransportDelay: affects no other events
-	// vpiNoDelay (used by Fang): take effect immediately, ignore time
-	// vpiNoDelay seems to be needed when multiple breakpoint events
-	// are processed before returning to VCS, as was introduced
-	// by $prsim_sync.
-      // vpi_free_object (vpi_put_value (net, &v, &tm, vpiPureTransportDelay));
-      vpi_free_object (vpi_put_value (net, &v, &tm, vpiNoDelay));
-	// Q: shouldn't control return immediately to VCS?
-	// experimenting shows that this makes no difference!? both work
-	// WHY?
+	transport_value_from_prsim(n, net, tm);
 }	// end for each fanout to VPI
 	break;	// from while loop
     }
@@ -709,36 +784,8 @@ PLI_INT32 prsim_callback (s_cb_data *p)
 	Whether or not set events from VPI are considered forced.
  */
 static const bool set_force = true;
-  switch (p->value->value.scalar) {
-// NOTE: for now, set_node_time is not "forced", hence false argument
-  case vpi0:
-#if 0
-    prs_set_nodetime (P, n, PRS_VAL_F, vcstime);
-#else
-    prsim_state->set_node_time(n, LOGIC_LOW, vcstime, set_force);
-#endif
-    break;
-  case vpi1:
-#if 0
-    prs_set_nodetime (P, n, PRS_VAL_T, vcstime);
-#else
-    prsim_state->set_node_time(n, LOGIC_HIGH, vcstime, set_force);
-#endif
-    break;
-  case vpiZ:
-    /* nothing */
-    break;
-  case vpiX:
-#if 0
-    prs_set_nodetime (P, n, PRS_VAL_X, vcstime);
-#else
-    prsim_state->set_node_time(n, LOGIC_OTHER, vcstime, set_force);
-#endif
-    break;
-  default:
-    DIE;
-    break;
-  }
+  const value_enum val = vpi_to_prsim_value(p->value->value.scalar);
+    prsim_state->set_node_time(n, val, vcstime, set_force);
 #if VERBOSE_DEBUG
 	prsim_state->dump_event_queue(cout);
 	cout << "end of event queue." << endl;
@@ -824,23 +871,7 @@ void register_to_prsim (const char *vcs_name, const char *prsim_name)
   }
 
   /* propagate the current value of the node to prsim */
-  s_vpi_value v;
-  v.format = vpiScalarVal;
-  vpi_get_value(net, &v);
-  value_enum n;
-  switch(v.value.scalar) {
-	case vpi0:
-	case vpiL:
-		n = LOGIC_LOW;
-		break;
-	case vpi1:
-	case vpiH:
-		n = LOGIC_HIGH;
-		break;
-	default:	// vpiX, vpiZ
-		n = LOGIC_OTHER;
-		break;
-  }
+  const value_enum n(get_prsim_value(net));
   // cout << "VALUE of " << prsim_name << " is " << size_t(n) << endl;
   s_vpi_time current_time;
   current_time.type = vpiSimTime;
@@ -906,6 +937,9 @@ void register_from_prsim (const char *vcs_name, const char *prsim_name)
   if (_confirm_connections) {
 	cout << "$from_prsim: " << PRSIM_name << " -> " << VCS_name << endl;
   }
+
+/* propagate current prsim value to verilog, if different */
+	initial_transport_value_from_prsim(prsim_state->get_node(ni), net);
 
 }
 

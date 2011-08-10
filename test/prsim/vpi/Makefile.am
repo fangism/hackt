@@ -12,6 +12,7 @@ HACKT_PRSIMRC_TEST_SUBJECTS = inverters \
 	oscillator \
 	channel-source-sink \
 	celem \
+	startup \
 	and_tree and_template_tree \
 	and_tree_reverse and_template_tree_reverse \
 	inverters-separate
@@ -21,6 +22,7 @@ HACKT_VPI_TEST_SCRIPTS_PASSES = \
 	inverters inverters-delay shoelace \
 	inverters-watch inverters-watch2 \
 	initial-value \
+	startup \
 	interleave-a interleave-b interleave-c \
 	oscillator-fanout \
 	independent-01 \

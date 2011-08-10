@@ -1,0 +1,6 @@
+// "startup.hac"
+
+bool in0, in1, in2;
+bool out0, out1;
+// !Vdd and !GND are implicit
+

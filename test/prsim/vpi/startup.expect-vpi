@@ -1,0 +1,49 @@
+$start of simulation 
+All subnodes of '.':
+!GND : 0
+!Vdd : 1
+in0 : X
+in1 : X
+in2 : X
+out0 : X
+out1 : X
+enqueued:	0	out0 : 1
+prsim:	0	out0 : 1
+at time   0.000, observed in3 1
+at time   0.000, observed in2 1
+-------------- connecting --------------- 
+time: 5
+enqueued:	5	in1 : 1
+prsim:	5	in1 : 1
+enqueued:	5	in2 : 1
+prsim:	5	in2 : 1
+time: 5
+All subnodes of '.':
+!GND : 0
+!Vdd : 1
+in0 : X
+in1 : 1
+in2 : 1
+out0 : 1
+out1 : X
+at time   5.000, observed out = 1
+at time   5.000, observed out3 = 1
+----------------------------- 
+time: 10
+enqueued:	10	out1 : 1
+prsim:	10	out1 : 1
+at time  10.000, observed out2 = 1
+enqueued:	10	in0 : 1
+prsim:	10	in0 : 1
+at time  10.000, observed in 1
+----------------------------- 
+time: 20
+All subnodes of '.':
+!GND : 0
+!Vdd : 1
+in0 : 1
+in1 : 1
+in2 : 1
+out0 : 1
+out1 : 1
+$finish at simulation time    0.0 ns
