@@ -286,23 +286,23 @@ control back to the script.
 The @command{exit} command or @kbd{Ctrl-D} sends the EOF signal to exit 
 the current interactive level of input and return control to the parent.  
 The level of shell is indicated by additional @t{>} characters in the prompt.
-This works if @command{hacprsim} was originally launched interactively
+This works if @command{ipple} was originally launched interactively
 and without redirecting a script through stdin.  
 
 @example
-$ @kbd{hacprsim foo.haco}
-prsim> @kbd{!cat foo.prsimrc}
-# foo.prsimrc
+$ @kbd{ipple}
+ipple> @kbd{!cat foo.iplrc}
+# foo.iplrc
 echo hello world
 interpret
 echo goodbye world
-prsim> @kbd{source foo.prsimrc}
+ipple> @kbd{source foo.iplrc}
 hello world
-prsim>> @kbd{echo where am I?}
+ipple>> @kbd{echo where am I?}
 where am I?
-prsim>> @kbd{exit}
+ipple>> @kbd{exit}
 goodbye world
-prsim> @kbd{exit}
+ipple> @kbd{exit}
 $
 @end example
 @end deffn
@@ -401,7 +401,7 @@ PR_INSTANTIATE_TRIVIAL_COMMAND_CLASS(Save, tracing)
 /***
 @texinfo cmd/load.texi
 @deffn Command load ckpt
-Loads a @command{hacprsim} checkpoint file into the simulator state.
+Loads a @command{ipple} checkpoint file into the simulator state.
 Loading a checkpoint will not overwrite the current status of
 the auto-save file, the previous autosave command will keep effect.  
 Loading a checkpoint, however, will close any open tracing streams.  
