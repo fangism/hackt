@@ -253,7 +253,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	channel-test-a-39 channel-test-a-40 \
 	channel-test-a-41 channel-test-a-42 \
 	channel-test-a-43 channel-test-a-44 channel-test-a-45 \
-	channel-test-a-46 \
+	channel-test-a-46 channel-test-a-47 \
 	channel-test-b-01 channel-test-b-02 channel-test-b-03 \
 	channel-test-b-04 channel-test-b-05 channel-test-b-06 \
 	channel-test-b-07 channel-test-b-08 \
@@ -466,6 +466,8 @@ endif
 if RANDOM_TESTS
 else
 after_min_max-03.prsimtest: after_min_max-03.prsimrc
+	$(SKIP_TEST_SCRIPT)
+channel-test-a-47.prsimtest: channel-test-a-47.prsimrc
 	$(SKIP_TEST_SCRIPT)
 # has random source:
 channel-test-b-11.prsimtracetest: channel-test-b-11.prsimrc

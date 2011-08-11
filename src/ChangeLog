@@ -5,6 +5,11 @@
 
 2011-08-10	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-84-87:
+	  hacprsim: added support for channel-timing binary min:max prob
+		Added one test case (random timing).  Documentation updated.
+
+
 	* HACKT-00-01-04-main-00-84-86:
 	  vpi-prsim: fixed failure to propagate already-established value
 		from prsim back to verilog at connection-time $from_prsim.

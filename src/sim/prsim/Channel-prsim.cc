@@ -154,6 +154,12 @@ env_event_type::env_event_type(const node_index_type ni,
 #endif
 		break;
 	}
+	case CHANNEL_TIMING_BINARY: {
+		use_global = false;
+		delay = (State::uniform_random_delay() < c.timing_probability)
+			? c.after_min : c.after_max; 
+		break;
+	}
 	default: DIE;
 	}
 }
@@ -262,6 +268,7 @@ channel::channel() :
 		timing_mode(CHANNEL_TIMING_DEFAULT),
 		after_min(State::rule_type::default_unspecified_delay),
 		after_max(State::rule_type::default_unspecified_delay),
+		timing_probability(0.5),
 #endif
 #if PRSIM_CHANNEL_LEDR
 		type(CHANNEL_TYPE_1ofN),	// default
@@ -1585,6 +1592,7 @@ channel::set_timing(const string& m, const string_list& a) {
 	static const string __random("random");
 	static const string __global("global");
 	static const string __after("after");
+	static const string __binary("binary");
 	if (m == __random) {
 		timing_mode = CHANNEL_TIMING_RANDOM;
 		if (a.size()) {
@@ -1618,6 +1626,23 @@ channel::set_timing(const string& m, const string_list& a) {
 			// alert user that using old value
 			dump_timing(cout << "channel " << name << ": ") << endl;
 		}
+	} else if (m == __binary) {	// copied from State::set_timing
+		// syntax: [min]:[max] prob
+		timing_mode = CHANNEL_TIMING_BINARY;
+		if (a.size() == 2) {
+			if (State::parse_min_max_delay(a.front(),
+				after_min, after_max)) {
+				cerr << "Error parsing min:max." << endl;
+					return true;
+			}
+			if (string_to_num(a.back(), timing_probability)) {
+				cerr << "Error lexing probability." << endl;
+				return true;
+			}
+			return false;
+		} else {
+			cerr << "Expecting min:max prob arguments." << endl;
+		}
 	} else {
 		cerr << "Error: invalid mode: " << m << endl;
 		return true;
@@ -1645,6 +1670,12 @@ channel::dump_timing(ostream& o) const {
 		o << "]";
 		break;
 	}
+	case CHANNEL_TIMING_BINARY: {
+		o << "binary"; 
+		o << " [" << after_min << "," << after_max << "] @"
+			<< timing_probability;
+		break;
+	}
 	default: o << "unknown"; DIE;
 	}
 	return o;
@@ -1654,12 +1685,15 @@ channel::dump_timing(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 channel::help_timing(ostream& o) {
-o << "available channel timing modes:" << endl;
-o << "\tglobal : use the global policy set by \'timing\'" << endl;
-o << "\trandom [[min]:[max]] :\n"
+o << "available channel timing modes:\n"
+	<< "\tglobal : use the global policy set by \'timing\'\n"
+	<< "\trandom [[min]:[max]] :\n"
+	<< "\tafter [val] : use fixed delay\n"
+	<< "\tbinary min:max prob :\n"
 "if max and min given, uniform bounded, else exponential variate"
 "if min given, use min as lower bound." << endl;
-o << "\tafter [del] : if del given, set fixed delay, else use prev. value" << endl;
+o << "\tafter [del] : if del given, set fixed delay, else use prev. value"
+	<< endl;
 	return o;
 }
 #endif	// PRSIM_CHANNEL_TIMING
@@ -3225,6 +3259,7 @@ channel::save_checkpoint(ostream& o) const {
 	write_value(o, timing_mode);
 	write_value(o, after_min);
 	write_value(o, after_max);
+	write_value(o, timing_probability);
 #endif
 #if PRSIM_CHANNEL_LEDR
 	write_value(o, type);
@@ -3254,6 +3289,7 @@ channel::load_checkpoint(istream& i) {
 	read_value(i, timing_mode);
 	read_value(i, after_min);
 	read_value(i, after_max);
+	read_value(i, timing_probability);
 #endif
 #if PRSIM_CHANNEL_LEDR
 	read_value(i, type);

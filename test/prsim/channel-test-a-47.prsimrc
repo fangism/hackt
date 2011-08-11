@@ -1,0 +1,69 @@
+# "channel-test-a-47.prsimrc"
+# @haco@ channel-test-a.haco-c
+# testing channel timing policies + timing binary
+# this test has random timing
+
+source channel-test-a-01.prsimrc
+
+watchall
+channel-show X
+channel-timing X binary 1:10 0.8
+channel-timing X
+
+channel-source-args-loop X 0 1 1 0
+channel-show X
+
+channel-reset-all
+set X.e 1
+cycle
+channel-release-all
+cycle
+
+set X.e 0
+cycle
+
+set X.e 1
+cycle
+
+set X.e 0
+cycle
+
+set X.e 1
+cycle
+
+set X.e 0
+cycle
+
+set X.e 1
+cycle
+
+set X.e 0
+cycle
+
+set X.e 1
+cycle
+
+set X.e 0
+cycle
+
+set X.e 1
+cycle
+
+set X.e 0
+cycle
+
+set X.e 1
+cycle
+
+set X.e 0
+cycle
+
+set X.e 1
+cycle
+
+set X.e 0
+cycle
+
+set X.e 1
+cycle
+

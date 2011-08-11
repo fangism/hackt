@@ -1,0 +1,46 @@
+channels:
+X : .e(init:0)  1x1of2 off
+Y : .e(init:1)  1x1of4 off
+Z : .a(init:0)  1x1of3 off
+X : .e(init:0)  1x1of2 off
+	count: 0, unknowns: 2
+channel X: timing: binary [1,10] @0.8
+Warning: channel acknowledge `X.e' has no fanin!
+X : .e(init:0)  1x1of2 source, timing: binary [1,10] @0.8 {0,1,1,0,}* @0 #0
+	count: 0, unknowns: 2
+	0	X.e : 1
+	1	X.d[0] : 0
+	1	X.d[1] : 0
+	2	X.d[0] : 1
+	2	X.e : 0
+	3	X.d[0] : 0	[by X.e:=0]
+	3	X.e : 1
+	4	X.d[1] : 1	[by X.e:=1]
+	4	X.e : 0
+	5	X.d[1] : 0	[by X.e:=0]
+	5	X.e : 1
+	15	X.d[1] : 1	[by X.e:=1]
+	15	X.e : 0
+	16	X.d[1] : 0	[by X.e:=0]
+	16	X.e : 1
+	17	X.d[0] : 1	[by X.e:=1]
+	17	X.e : 0
+	18	X.d[0] : 0	[by X.e:=0]
+	18	X.e : 1
+	19	X.d[0] : 1	[by X.e:=1]
+	19	X.e : 0
+	29	X.d[0] : 0	[by X.e:=0]
+	29	X.e : 1
+	30	X.d[1] : 1	[by X.e:=1]
+	30	X.e : 0
+	31	X.d[1] : 0	[by X.e:=0]
+	31	X.e : 1
+	32	X.d[1] : 1	[by X.e:=1]
+	32	X.e : 0
+	42	X.d[1] : 0	[by X.e:=0]
+	42	X.e : 1
+	52	X.d[0] : 1	[by X.e:=1]
+	52	X.e : 0
+	62	X.d[0] : 0	[by X.e:=0]
+	62	X.e : 1
+	63	X.d[0] : 1	[by X.e:=1]

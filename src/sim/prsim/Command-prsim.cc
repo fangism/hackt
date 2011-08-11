@@ -8545,6 +8545,9 @@ Modes:
 	otherwise return an exponential variate delay with a minimum
 	of @var{min}.  Unspecified @var{min} bounds defaults to 0.
 	Unspecified @var{max} defaults to +INF.
+@item @t{binary [min]:[max] prob} : chooses either the @var{min} or the 
+	@var{max} value with @var{prob} probability of taking 
+	the @var{min} value.
 @end itemize
 @end deffn
 @end texinfo
