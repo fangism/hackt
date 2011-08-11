@@ -367,9 +367,16 @@ private:
 			Mode in which delay is one of two exact values, 
 			tests bounded delay assumptions, and 
 			scalable delay assumptions.  
-			Ignores all after= delay values. 
+			*Ignores* all after/after_min/after_max= delay values. 
 		 */
 		TIMING_BINARY = 3,
+		/**
+			Mode in which delay is one of two exact values, 
+			tests bounded delay assumptions, and 
+			scalable delay assumptions.  
+			Overridden by after_min/after_max= delay values. 
+		 */
+		TIMING_BOUNDED = 4,
 		/**
 			The mode on start-up.  
 		 */

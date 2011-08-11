@@ -1,0 +1,13 @@
+# "oscil-random-06.prsimrc"
+#	$Id: oscil-random-05.prsimrc,v 1.1 2010/08/27 23:04:55 fang Exp $
+# @haco@ oscillator-bounded.haco-c
+# Testing timing features: bounded delay overrides
+
+watchall
+set _Reset 0
+cycle
+set _Reset 1
+echo now with binary-bounded random delays
+timing bounded 10:1000 .7
+step 80
+assert-queue

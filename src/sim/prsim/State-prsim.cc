@@ -1806,6 +1806,11 @@ switch (timing_mode) {
 			<< default_after_max << "] ("
 			<< timing_probability << ')';
 		break;
+	case TIMING_BOUNDED:	o << "bounded, default:["
+			<< default_after_min << ','
+			<< default_after_max << "] ("
+			<< timing_probability << ')';
+		break;
 	default:		o << "unknown";
 }
 	return o << endl;
@@ -1870,6 +1875,7 @@ State::set_timing(const string& m, const string_list& a) {
 	static const string __uniform("uniform");
 	static const string __after("after");
 	static const string __binary("binary");
+	static const string __bounded__("bounded");
 	if (m == __random) {
 		timing_mode = TIMING_RANDOM;
 		switch (a.size()) {
@@ -1900,9 +1906,9 @@ State::set_timing(const string& m, const string_list& a) {
 	} else if (m == __after) {
 		timing_mode = TIMING_AFTER;
 		return a.size();
-	} else if (m == __binary) {
+	} else if (m == __binary || m == __bounded__) {
 		// syntax: [min]:[max] prob
-		timing_mode = TIMING_BINARY;
+		timing_mode = (m == __binary) ? TIMING_BINARY : TIMING_BOUNDED;
 		if (a.size() == 2) {
 			if (parse_min_max_delay(a.front(),
 				default_after_min, default_after_max)) {
@@ -1928,6 +1934,7 @@ State::help_timing(ostream& o) {
 	o << "available timing modes:" << endl;
 	o << "\trandom [[min]:[max]]" << endl;
 	o << "\tbinary [min]:[max] prob" << endl;
+	o << "\tbounded [min]:[max] prob" << endl;
 	o << "\tuniform [delay]" << endl;
 	o << "\tafter" << endl;
 	o <<
@@ -1941,8 +1948,10 @@ State::help_timing(ostream& o) {
 "After mode uses fixed after-annotated delays for timing, and assumes\n"
 "default delays where none are given.\n"
 "Binary mode chooses between the min and max values only with the given\n"
-"probability p of choosing min, and also ignores all specified rule delays,\n"
+"probability p of choosing min, and also *ignores* all specified rule delays,\n"
 "including after=0 delays.\n"
+"Bounded mode selects the min or max delay value with the given probability,\n"
+"whose delay values are *overridden* by after_min and after_max attributes.\n"
 "Use \'seed48\' to set a random number seed." << endl;
 	return o;
 }
@@ -2032,6 +2041,19 @@ if (e.cause_rule) {
 		// b/c want to verify race ratios
 		delta = (uniform_random_delay() < timing_probability)
 			? default_after_min : default_after_max;
+	} else if (timing_mode == TIMING_BOUNDED) {
+#if PRSIM_AFTER_RANGE
+		const time_type min_val =
+			__get_delay(r, &rule_type::after_min, default_after_min);
+		const time_type max_val =
+			__get_delay(r, &rule_type::after_max, default_after_max);
+		const bool have_min = r && !time_traits::is_zero(min_val);
+		const bool have_max = r && !time_traits::is_zero(max_val);
+		INVARIANT(have_min && have_max);
+		INVARIANT(max_val >= min_val);
+		delta = (uniform_random_delay() < timing_probability)
+			? min_val : max_val;
+#endif
 	} else {
 	// timing_mode == TIMING_AFTER
 		delta = r ? r->after : time_traits::zero;

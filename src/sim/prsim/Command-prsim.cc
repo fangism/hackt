@@ -5707,6 +5707,8 @@ Modes:
 @t{random} is most useful for detecting non-QDI logic violations.  
 @samp{after} applies a different delay for each rule, as determined
 by the @t{after} PRS rule attribute.  
+@t{binary} and @t{bounded} modes are most useful for testing
+that certain timing assumptions (path races) are necessary.  
 
 The @t{after_min} and @t{after_max} rule attributes only have any effect
 in random mode or on nodes marked @t{always_random}.  
@@ -5730,13 +5732,22 @@ A max delay value of 0 is interpreted as being unbounded.
 @item @samp{timing random X:Y} sets the default min and max delays
 @end itemize
 
-Timing @option{binary} randomly chooses between a min and max delay value
-with a specified probability, like a skewer coin-flip.
-This mode completely disregards any user-specified delay attributes
+Timing @option{binary} randomly chooses a min or max delay value
+with a specified probability, like a skewed coin-flip.
+Specifying both min and max values is required @t{X:Y}.
+This mode completely @emph{disregards} any user-specified delay attributes
 in the source, including delay @option{after=0}.
+
+Timing @option{bounded} randomly chooses a min or max delay value
+with a specified probability, like a skewed coin-flip.
+Specifying both min and max values is required @t{X:Y}.
+Unlike @t{binary} mode, @t{bounded} delays are overridden by user-specified 
+delay attributes @option{after_min} and @option{after_max}.
+
 @itemize
 @item @samp{timing binary 10:90 0.5}
 @item @samp{timing binary 10:50 0.95}
+@item @samp{timing bounded 10:50 0.8}
 @end itemize
 @end deffn
 @end texinfo

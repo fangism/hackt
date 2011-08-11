@@ -1,0 +1,21 @@
+/**
+	\file "oscillator-bounded.hac"
+	A humble ring-oscillator, with bounded delays specified.  
+	$Id: oscillator.hac,v 1.2 2006/04/03 05:30:51 fang Exp $
+ */
+
+
+template <pint N>
+defproc ring_oscillator(bool x[N]; bool _Reset) {
+prs {
+	(:i:N-1:
+[after_min=15;after_max=50]
+		x[i]		=> x[i+1]-
+	)
+	x[N-1] & _Reset		=> x[0]-
+}
+}
+
+bool _Reset;
+ring_oscillator<13> R( , _Reset);
+

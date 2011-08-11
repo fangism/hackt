@@ -15,6 +15,7 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	invariant-a invariant-b invariant-c invariant-d invariant-e \
 	invariant-f \
 	invariant-not-X \
+	oscillator-bounded \
 	oscillator-wrong \
 	interference-a interference-b \
 	allow_interference allow_weak_interference \
@@ -171,6 +172,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	oscil-random-01 oscil-random-01a \
 	oscil-random-02 oscil-random-02a oscil-random-02b oscil-random-02c \
 	oscil-random-03 oscil-random-04 oscil-random-05 \
+	oscil-random-06 oscil-random-07 \
 	oscil-what-01 oscil-what-02 \
 	oscil-unset-01 oscil-unset-02 oscil-unset-03 \
 	oscil-backtrace-01 oscil-backtrace-02 \
@@ -189,6 +191,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	aliases-08 aliases-09 \
 	timing-01 \
 	timing-precedence-a-01 \
+	timing-bounded-01 timing-bounded-02 \
 	pending-01 pending-02 \
 	after-override-01 \
 	after-celem-base \
@@ -465,6 +468,10 @@ endif
 # non-deterministic tests
 if RANDOM_TESTS
 else
+timing-bounded-01.prsimtest: timing-bounded-01.prsimrc
+	$(SKIP_TEST_SCRIPT)
+timing-bounded-02.prsimtest: timing-bounded-02.prsimrc
+	$(SKIP_TEST_SCRIPT)
 after_min_max-03.prsimtest: after_min_max-03.prsimrc
 	$(SKIP_TEST_SCRIPT)
 channel-test-a-47.prsimtest: channel-test-a-47.prsimrc

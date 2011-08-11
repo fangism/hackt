@@ -1,0 +1,6 @@
+# "oscil-random-06.prsimrc"
+# @haco@ oscillator-bounded.haco-c
+# Testing timing features: bounded delay overrides
+
+source oscil-random-06.prsimrc
+

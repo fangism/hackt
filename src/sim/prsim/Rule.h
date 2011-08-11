@@ -13,6 +13,9 @@
 
 /**
 	Define to 1 to support bounded delay random timing simulation.
+	Rationale: to check for delay ratio timing assumptions
+	Goal: 1
+	Status: done, tested, in production
  */
 #define	PRSIM_AFTER_RANGE		1
 
