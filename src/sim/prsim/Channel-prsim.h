@@ -107,6 +107,7 @@ using std::ostream;
 using std::istream;
 using std::ofstream;
 using entity::int_value_type;
+using entity::preal_value_type;
 using entity::module;
 using util::memory::count_ptr;
 using util::packed_array;
@@ -123,6 +124,7 @@ enum channel_timing_enum {
 	CHANNEL_TIMING_GLOBAL,	///< use the global timing policy
 	CHANNEL_TIMING_AFTER,	///< use fixed delay timing
 	CHANNEL_TIMING_RANDOM,	///< use random delay (exponential variate)
+	CHANNEL_TIMING_BINARY,	///< use coin-flip delay
 	CHANNEL_TIMING_DEFAULT = CHANNEL_TIMING_GLOBAL
 };
 #endif
@@ -361,6 +363,11 @@ private:
 	 */
 	channel_time_type			after_min;
 	channel_time_type			after_max;
+	/**
+		For timing binary only, this determines the probability
+		of choosing the min value.
+	 */
+	preal_value_type			timing_probability;
 #endif
 #if PRSIM_CHANNEL_LEDR
 	/**

@@ -1901,7 +1901,7 @@ State::set_timing(const string& m, const string_list& a) {
 		timing_mode = TIMING_AFTER;
 		return a.size();
 	} else if (m == __binary) {
-		// syntax: min:max
+		// syntax: [min]:[max] prob
 		timing_mode = TIMING_BINARY;
 		if (a.size() == 2) {
 			if (parse_min_max_delay(a.front(),
@@ -6893,9 +6893,10 @@ State::autosave(const bool b, const string& n) {
 2: removed watch_list in lieu of using simpler watchpoint flag
 3: added timing binary support
 4: added keeper_check_fail_policy, and expr_alloc_flags
+5: added channel timing_probability
  */
 static
-const size_t	checkpoint_version = 4;
+const size_t	checkpoint_version = 5;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
