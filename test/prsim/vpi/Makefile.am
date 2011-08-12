@@ -15,7 +15,8 @@ HACKT_PRSIMRC_TEST_SUBJECTS = inverters \
 	startup \
 	and_tree and_template_tree \
 	and_tree_reverse and_template_tree_reverse \
-	inverters-separate
+	inverters-separate \
+	flop_it
 
 # for .v verilog tests
 HACKT_VPI_TEST_SCRIPTS_PASSES = \
@@ -32,7 +33,8 @@ HACKT_VPI_TEST_SCRIPTS_PASSES = \
 	and_tree_reverse and_template_tree_reverse \
 	fatal-assert-fail \
 	unstable-dequeue \
-	celem-test
+	celem-test \
+	flop_it
 
 HACKT_VWRAP_TEST_SCRIPTS_PASSES = \
 	standard standard-ports standard-reverse \
@@ -82,6 +84,8 @@ and_tree.vx: standard.v-wrap pli.tab
 and_template_tree.vx: standard.v-wrap pli.tab
 and_tree_reverse.vx: standard-reverse.v-wrap pli.tab
 and_template_tree_reverse.vx: standard-reverse.v-wrap pli.tab
+startup.vx: pli.tab
+flop_it.vx: standard.v-wrap pli.tab
 
 # force: always re-run this test
 inverters.vxi-subdir-out: Makefile.copy force
@@ -97,11 +101,12 @@ CLEANFILES += Makefile.copy pli.tab standard-ports.v standard-reverse.v
 EXAMPLE_DATA_FILES = example.mk clkgen.v \
 	inverters.hac inverters.v inverters-delay.v shoelace.v \
 	channel-source-sink.hac channel-source-sink.v \
-	and_tree.hac and_tree.v standard.v \
+	and_tree.hac and_tree.v standard.v startup.v startup.hac \
 	and_tree_reverse.hac and_tree_reverse.v standard-reverse.v \
 	and_template_tree.hac and_template_tree.v \
 	and_template_tree_reverse.hac and_template_tree_reverse.v \
-	oscillator.hac oscillator-fanout.v
+	oscillator.hac oscillator-fanout.v \
+	flop_it.hac flop_it.v
 EXTRA_DIST += $(EXAMPLE_DATA_FILES)
 vpiinv_DATA = $(EXAMPLE_DATA_FILES) Makefile.copy
 

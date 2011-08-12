@@ -63,6 +63,31 @@ module OR2 (A1, A2, Z);
 endmodule
 `endcelldefine
 
+// simple flops
+`celldefine
+module POS_FLOP (CLK, D, Q);
+input CLK;
+input D;
+output reg Q;
+always @(posedge CLK)
+begin
+	Q <= D;
+end
+endmodule
+`endcelldefine
+
+`celldefine
+module NEG_FLOP (CLK, D, Q);
+input CLK;
+input D;
+output reg Q;
+always @(negedge CLK)
+begin
+	Q <= D;
+end
+endmodule
+`endcelldefine
+
 // an array/bus test
 `celldefine
 module bus_array_test(CLK, A, B, C, D, E, F, G, H);

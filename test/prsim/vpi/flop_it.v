@@ -1,10 +1,11 @@
-// "and_tree.v"
+// "flop_it.v"
 // @vcs-flags@ -P pli.tab
 
 `timescale 1ps / 1ps
 
 // `include "standard.v"
 `include "standard.v-wrap"
+`include "clkgen.v"
 
 //-----------------------------------------------------------------------------
 module timeunit;
@@ -12,18 +13,18 @@ module timeunit;
 endmodule
 
 module TOP;
-	reg a, b, c, d;
+	reg a;
+	wire clk;
 	wire z;
+	clk_gen #(.HALF_PERIOD(50)) cg(clk);	
 	initial
 	begin
-	// @haco@ and_tree.haco-c
-		$prsim("and_tree.haco-c");
+	// @haco@ flop_it.haco-c
+		$prsim("flop_it.haco-c");
 		$prsim_cmd("echo $start of simulation");
 		$prsim_cmd("watchall");
 		$to_prsim("TOP.a", "a");
-		$to_prsim("TOP.b", "b");
-		$to_prsim("TOP.c", "c");
-		$to_prsim("TOP.d", "d");
+		$to_prsim("TOP.clk", "clk");
 		$from_prsim("z", "TOP.z");
 	end
 
@@ -31,28 +32,25 @@ module TOP;
 	// by finding all globally unique instances of processes
 	// along with their hierarchical names
 	// e.g. from hacobjdump of .haco-c file
-	HAC_AND2 and_0();
-	defparam and_0.prsim_name="mytree.and_0";
-	HAC_AND2 and_1();
-	defparam and_1.prsim_name="mytree.and_1";
-	HAC_AND2 and_2();
-	defparam and_2.prsim_name="mytree.and_2";
+	HAC_POS_FLOP f0();
+	defparam f0.prsim_name="F.f[0]";
+	HAC_POS_FLOP f1();
+	defparam f1.prsim_name="F.f[1]";
+	HAC_POS_FLOP f2();
+	defparam f2.prsim_name="F.f[2]";
+	HAC_POS_FLOP f3();
+	defparam f3.prsim_name="F.f[3]";
 
 
 	initial
 	begin
-	#10	a <= 1'b0;
-		b <= 1'b0;
-		c <= 1'b0;
-		d <= 1'b0;
+	#20	a <= 1'b0;
+	#400	a <= 1'b1;
+	#400	a <= 1'b0;
 	#100	a <= 1'b1;
-		b <= 1'b1;
-		c <= 1'b1;
-		d <= 1'b1;
 	#100	a <= 1'b0;
-	#100	d <= 1'b0;
 	#100	a <= 1'b1;
-	#100	d <= 1'b1;
+	#300	a <= 1'b0;
 	#50	$finish;
 	end
 endmodule

@@ -129,6 +129,54 @@ initial begin
 end // end initial
 endmodule
 
+module HAC_POS_FLOP;
+	parameter prsim_name="";
+// need not be reg with acc: wn:*
+	wire CLK;
+	wire D;
+	wire Q;
+	integer _i_;
+	reg [64*8:1] verilog_name, tmp;
+	POS_FLOP dummy (
+		CLK,
+		D,
+		Q
+	);
+initial begin
+#0	// happens *after* initial
+	if (prsim_name != "") begin
+	$sformat(verilog_name, "%m");
+	$from_prsim({prsim_name, ".CLK"}, {verilog_name, ".CLK"});
+	$from_prsim({prsim_name, ".D"}, {verilog_name, ".D"});
+	$to_prsim({verilog_name, ".Q"}, {prsim_name, ".Q"});
+	end // end if
+end // end initial
+endmodule
+
+module HAC_NEG_FLOP;
+	parameter prsim_name="";
+// need not be reg with acc: wn:*
+	wire CLK;
+	wire D;
+	wire Q;
+	integer _i_;
+	reg [64*8:1] verilog_name, tmp;
+	NEG_FLOP dummy (
+		CLK,
+		D,
+		Q
+	);
+initial begin
+#0	// happens *after* initial
+	if (prsim_name != "") begin
+	$sformat(verilog_name, "%m");
+	$from_prsim({prsim_name, ".CLK"}, {verilog_name, ".CLK"});
+	$from_prsim({prsim_name, ".D"}, {verilog_name, ".D"});
+	$to_prsim({verilog_name, ".Q"}, {prsim_name, ".Q"});
+	end // end if
+end // end initial
+endmodule
+
 module HAC_bus_array_test;
 	parameter prsim_name="";
 // need not be reg with acc: wn:*

@@ -38,7 +38,7 @@ EXTRACT_VCS_FLAGS_PIPE = grep "@vcs-flags@" | sed 's/^.*@vcs-flags@[ ]*//g'
 all: inverters.vx inverters-delay.vx oscillator-fanout.vx \
 	shoelace.vx channel-source-sink.vx and_tree.vx \
 	and_template_tree.vx and_tree_reverse.vx \
-	and_template_tree_reverse.vx
+	and_template_tree_reverse.vx flop_it.vx
 
 # invert the direction, empty verilog, implementation in HAC
 standard-reverse.v-wrap: standard-reverse.v
@@ -51,6 +51,7 @@ and_tree.vx: standard.v-wrap pli.tab
 and_template_tree.vx: standard.v-wrap pli.tab
 and_tree_reverse.vx: standard-reverse.v-wrap pli.tab
 and_template_tree_reverse.vx: standard-reverse.v-wrap pli.tab
+flop_it.vx: standard.v-wrap pli.tab
 inverters.vx-log: inverters.haco-c
 inverters-delay.vx-log: inverters.haco-c
 shoelace.vx-log: inverters.haco-c
@@ -60,6 +61,7 @@ and_template_tree.vx-log: and_template_tree.haco-c
 and_tree_reverse.vx-log: and_tree_reverse.haco-c
 and_template_tree_reverse.vx-log: and_template_tree_reverse.haco-c
 oscillator-fanout.vx-log: oscillator.haco-c
+flop_it.vx-log: flop_it.haco-c
 
 pli.tab:
 	echo "acc=wn:*" > $@
@@ -68,7 +70,7 @@ pli.tab:
 check: inverters.vx-log inverters-delay.vx-log oscillator-fanout.vx-log \
 	shoelace.vx-log channel-source-sink.vx-log and_tree.vx-log \
 	and_template_tree.vx-log and_tree_reverse.vx-log \
-	and_template_tree_reverse.vx-log
+	and_template_tree_reverse.vx-log flop_it.vx-log
 	cat $^
 #	for f in $^ ; do cat $$f ; done
 

@@ -30,7 +30,7 @@ module TOP;
 	// these could be automatically generated
 	// by finding all globally unique instances of processes
 	// along with their hierarchical names
-	// e.g. from hacobjdupm of .haco-c file
+	// e.g. from hacobjdump of .haco-c file
 	HAC_AND_N #(2) and_0();
 	defparam and_0.prsim_name="mytree.and_0";
 	HAC_AND_N #(2) and_1();

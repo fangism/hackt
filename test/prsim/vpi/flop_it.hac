@@ -1,0 +1,18 @@
+// "flop_it.hac"
+
+// defined in verilog
+defproc posflop(bool CLK, D, Q) { }
+
+defproc fifo(bool CLK, D, Q) {
+bool x[5];
+x[0] = D;
+x[4] = Q;
+posflop f[4];
+(;i:4:
+	f[i](CLK, x[i], x[i+1]);
+)
+}
+
+bool a, z, clk;
+fifo F(clk, a, z);
+
