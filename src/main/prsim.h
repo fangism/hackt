@@ -59,7 +59,8 @@ private:
 		_dump_dot_struct, _no_dump_dot_struct,
 		_fold_literals, _no_fold_literals,
 		_denormalize_negations, _no_denormalize_negations,
-		_fast_weak_keepers, _no_weak_keepers;
+		_fast_weak_keepers, _no_weak_keepers,
+		_precharge_invariants, _no_precharge_invariants;
 
 };	// end class prsim
 

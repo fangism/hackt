@@ -43,6 +43,7 @@ Unless otherwise noted, all options are negatable with a
 @include opt/check-structure.texi
 @include opt/dump-dot-struct.texi
 @include opt/fast-weak-keepers.texi
+@include opt/precharge-invariants.texi
 
 
 @c ----------------------------------------------------------------------------
