@@ -42,11 +42,18 @@ struct ExprAllocFlags {
 	 */
 	bool				fast_weak_keepers;
 #endif
+	/**
+		Set to true to automatically infer 
+		precharge invariant expressions.
+		Default: false
+	 */
+	bool				auto_precharge_invariants;
 
 	ExprAllocFlags() : flags(DEFAULT_FLAGS)
 #if PRSIM_WEAK_RULES
 		, fast_weak_keepers(false)
 #endif
+		, auto_precharge_invariants(false)
 		{ }
 
 	bool

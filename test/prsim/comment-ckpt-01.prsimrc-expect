@@ -1,5 +1,5 @@
 header string: hackt-prsim-ckpt
-checkpoint version: 4
+checkpoint version: 6
 seed48: 0 0 0
 Have 6 unique boolean nodes:
 	value	flags	cause	tcount

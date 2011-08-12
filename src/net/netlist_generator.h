@@ -10,6 +10,7 @@
 #include <string>
 #include <map>
 #include "net/netgraph.h"
+#include "Object/global_entry.h"
 #include "Object/global_entry_context.h"
 #include "Object/lang/cflat_visitor.h"
 #include "Object/lang/PRS_footprint_expr.h"	// for precharge_ref_type
@@ -19,6 +20,7 @@ namespace NET {
 using std::vector;
 using std::string;
 using std::map;
+using entity::global_process_context;
 using entity::global_entry_context;
 using entity::PRS::cflat_visitor;
 using entity::footprint_frame;
@@ -47,6 +49,7 @@ using entity::resolved_attribute_list_type;
 	This is the reason for deftype, defchan, etc.
  */
 class netlist_generator :
+	public global_process_context,
 	public global_entry_context,
 	public cflat_visitor
 {
@@ -153,9 +156,7 @@ private:
 	 */
 	bool				negated;
 public:
-	netlist_generator(
-		const footprint_frame&, 
-		const global_offset&,
+	netlist_generator(const entity::module&,
 		ostream& o, const netlist_options& p);
 	~netlist_generator();
 

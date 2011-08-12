@@ -30,6 +30,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/inst/substructure_alias_base.h"
 #include "Object/traits/instance_traits.h"
 #include "Object/lang/PRS_footprint.h"
+#include "Object/module.h"
 #include "common/TODO.h"
 #include "util/string.h"
 #include "util/stacktrace.h"
@@ -44,6 +45,7 @@ using entity::pint_value_type;
 using entity::pint_const;
 using entity::preal_value_type;
 using entity::preal_const;
+using entity::module;
 using std::ostringstream;
 using std::ostream_iterator;
 using std::upper_bound;
@@ -67,11 +69,12 @@ using entity::resolved_attribute_list_type;
 // class netlist_generator method definitions
 
 netlist_generator::netlist_generator(
-		const footprint_frame& ff, 
-		const global_offset& go, 
+		const module& m,
 		ostream& o, 
 		const netlist_options& p) :
-		global_entry_context(ff, go), 
+		global_process_context(m),
+		global_entry_context(frame, offset),
+		// from global_process_context
 		cflat_visitor(), 
 		os(o), opt(p), netmap(),
 		prs(NULL), 
