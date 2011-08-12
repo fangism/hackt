@@ -93,6 +93,20 @@
  */
 #define	PRSIM_ALLOW_OVERTAKE_EVENTS			1
 
+/**
+	Define to 1 to enable precharge safety checking in prsim.
+	Invariant expressions are acually derived from 
+	graphical structure constructed by hacknet!
+	There are two safety checks:
+	1) that there is no short to between power supplies
+	2) that there is no sneak-path to an output node that
+		would cause it to switch to a non-pending value.
+	Goal: 1
+	Rationale: run-time keeper safety checks
+	Status: begun
+ */
+#define PRSIM_PRECHARGE_INVARIANTS			1
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Eliminate pre-translated, allocated top-level expressions in favor
