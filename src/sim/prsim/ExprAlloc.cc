@@ -42,6 +42,10 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/module.h"
 #include "Object/global_entry.h"
 #include "Object/global_channel_entry.h"
+#if PRSIM_PRECHARGE_INVARIANTS
+#include "net/netlist_options.h"
+#include "net/netlist_generator.h"
+#endif
 #include "util/offset_array.h"
 #include "util/stacktrace.h"
 #include "util/qmap.tcc"
@@ -263,7 +267,11 @@ ExprAlloc::ExprAlloc(state_type& _s,
 		ret_ex_index(INVALID_EXPR_INDEX), 
 		suppress_keeper_rule(false), 
 		temp_rule(NULL),
-		flags(f), expr_free_list() {
+		flags(f), expr_free_list()
+#if PRSIM_PRECHARGE_INVARIANTS
+		, netlists(NULL)
+#endif
+		{
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -319,6 +327,17 @@ ExprAlloc::operator () (void) {
 	visit_rules_and_directives(*topfp);
 	// already in auto_create_unique_process_subgraph
 #endif
+#if PRSIM_PRECHARGE_INVARIANTS
+// hacknet requires your rules to be CMOS-implementable!
+if (flags.auto_precharge_invariants) {
+	NET::netlist_options netopt;	// mostly default
+	netopt.print = false;
+	netlists = excl_ptr<netlist_generator>(
+		new netlist_generator(state.get_module(), cout, netopt));
+	(*netlists)();		// run hierarchcail netlist generation first!
+}
+#endif
+
 	// process top type
 	const size_t ti = auto_create_unique_process_graph(*topfp);
 	const unique_process_subgraph&

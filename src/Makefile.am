@@ -1208,7 +1208,8 @@ libhacktsim_la_SOURCES = $(SIM_CC_FILES) $(SIM_TCC_FILES) $(SIM_H_FILES)
 libhacktsim_la_LIBADD = libhacktlib.la
 
 libhacktprsim_la_SOURCES = $(PRSIM_CC_FILES) $(PRSIM_TCC_FILES) $(PRSIM_H_FILES)
-libhacktprsim_la_LIBADD = libhacktsim.la
+libhacktprsim_la_LIBADD = libhacktsim.la libhacknet.la
+# need libhacknet.la for netlist graphs -- for precharge invariants
 
 libhacktchpsim_la_SOURCES = $(CHPSIM_CC_FILES) $(CHPSIM_H_FILES)
 libhacktchpsim_la_LIBADD = libhacktsim.la

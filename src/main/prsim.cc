@@ -502,6 +502,10 @@ static void __prsim_fast_weak_keepers(prsim_options& o)
 	{ o.expr_alloc_flags.fast_weak_keepers = true; }
 static void __prsim_no_weak_keepers(prsim_options& o)
 	{ o.expr_alloc_flags.fast_weak_keepers = false; }
+static void __prsim_precharge_invariants(prsim_options& o)
+	{ o.expr_alloc_flags.auto_precharge_invariants = true; }
+static void __prsim_no_precharge_invariants(prsim_options& o)
+	{ o.expr_alloc_flags.auto_precharge_invariants = false; }
 
 const prsim::register_options_modifier
 /***
@@ -629,7 +633,34 @@ i.e. weak and delay-less.
 		"interpret iskeeper=1 rules as weak=1,after=0"), 
 	prsim::_no_weak_keepers(
 		"no-weak-keepers", &__prsim_no_weak_keepers,
-		"suppress all iskeeper=1 rules [default]");
+		"suppress all iskeeper=1 rules [default]"),
+
+/***
+@texinfo opt/precharge-invariants.texi
+@defopt {-f precharge-invariants}
+@defoptx {-f no-precharge-invariants}
+Normally, the simulator completely disregards all precharge 
+expressions in the production rules, as they should not
+affect the logical behavior.
+With this option turned on, the simulator also considers
+the precharge expressions in relation to their position
+in the stacks of internal nodes, and checks that
+@itemize
+@item there is no short between power and ground (interference)
+@item there is no accidental switching of an output node through 
+	any sneak paths.
+@end itemize
+This is accomplished by analyzing the netlist for each 
+process, by invoking @command{hacknet} as a sub-program.
+@end defopt
+@end texinfo
+***/
+	prsim::_precharge_invariants(
+		"precharge-invariants", &__prsim_precharge_invariants,
+		"enable precharge safety invariants"), 
+	prsim::_no_precharge_invariants(
+		"no-precharge-invariants", &__prsim_no_precharge_invariants,
+		"disable precharge safety invariants [default]");
 
 
 //=============================================================================

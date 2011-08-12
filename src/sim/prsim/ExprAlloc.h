@@ -15,7 +15,16 @@
 #include "sim/prsim/State-prsim.h"		// for nested typedefs
 #include "sim/common.h"
 
+#if PRSIM_PRECHARGE_INVARIANTS
+#include "util/memory/excl_ptr.h"
+#endif
+
 namespace HAC {
+#if PRSIM_PRECHARGE_INVARIANTS
+namespace NET {
+class netlist_generator;
+}
+#endif
 namespace SIM {
 namespace PRSIM {
 class State;
@@ -34,6 +43,10 @@ using entity::footprint_frame;
 using entity::global_offset;
 using entity::global_entry_context;
 using entity::cflat_context_visitor;
+#if PRSIM_PRECHARGE_INVARIANTS
+using util::memory::excl_ptr;
+using NET::netlist_generator;
+#endif
 
 //=============================================================================
 /**
@@ -106,6 +119,9 @@ protected:
 		new ones.  FIFO.  Only used when optimizations are enabled.  
 	 */
 	free_list_type				expr_free_list;
+#if PRSIM_PRECHARGE_INVARIANTS
+	excl_ptr<netlist_generator>		netlists;
+#endif
 public:
 
 	ExprAlloc(state_type&, 
