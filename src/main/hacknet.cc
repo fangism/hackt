@@ -186,11 +186,7 @@ if (opt.use_referenced_type_instead_of_top_level) {
 	// the simulator state object, initialized with the module
 try {
 	opt.net_opt.commit();		// commit options
-	const module& top_module_c(AS_A(const module&, *top_module));
-	const entity::footprint& topfp(top_module_c.get_footprint());
-	const entity::footprint_frame tff(topfp);
-	const entity::global_offset g;		// 0
-	NET::netlist_generator n(tff, g, cout, opt.net_opt);
+	NET::netlist_generator n(*top_module, cout, opt.net_opt);
 	n();
 } catch (...) {
 	cerr << "Caught exception during netlist generation."

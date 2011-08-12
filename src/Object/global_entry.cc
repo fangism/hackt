@@ -811,6 +811,11 @@ template class global_entry<process_tag>;
 //=============================================================================
 // class global_process_context method definitions
 
+global_process_context::global_process_context(const module& m) :
+		frame(m.get_footprint()), offset() {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 global_process_context::global_process_context(const module& m, 
 		const size_t gpid) : frame(), offset() {
 	footprint_frame tff(m.get_footprint());

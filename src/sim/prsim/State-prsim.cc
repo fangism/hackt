@@ -6938,9 +6938,10 @@ State::autosave(const bool b, const string& n) {
 3: added timing binary support
 4: added keeper_check_fail_policy, and expr_alloc_flags
 5: added channel timing_probability
+6: added auto_precharge_invariant to expr_alloc_flags
  */
 static
-const size_t	checkpoint_version = 5;
+const size_t	checkpoint_version = 6;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

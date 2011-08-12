@@ -551,6 +551,11 @@ struct global_process_context {
 	footprint_frame				frame;
 	global_offset				offset;
 
+	// for top-level module
+	explicit
+	global_process_context(const module&);
+
+	// for a specific process instance
 	global_process_context(const module&, const size_t);
 
 };	// end struct global_process_context

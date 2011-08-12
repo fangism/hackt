@@ -96,6 +96,12 @@ ExprAllocFlags::assert_equal(const ExprAllocFlags& f) const {
 		cerr << "Error: prsim fast-weak-keepers option does not match."
 			<< endl;
 	}
+	if (auto_precharge_invariants != f.auto_precharge_invariants) {
+		cerr << "Warning: auto-precharge-invariants option mismatch."
+			<< endl;
+		cerr << "got: " << size_t(auto_precharge_invariants) <<
+			" vs.: " << size_t(f.auto_precharge_invariants) << endl;
+	}
 	return eq;
 }
 
@@ -104,6 +110,7 @@ void
 ExprAllocFlags::write_object(ostream& o) const {
 //	util::write_value(o, flags);
 	util::write_value(o, fast_weak_keepers);
+	util::write_value(o, auto_precharge_invariants);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -111,6 +118,7 @@ void
 ExprAllocFlags::load_object(istream& i) {
 //	util::read_value(i, flags);
 	util::read_value(i, fast_weak_keepers);
+	util::read_value(i, auto_precharge_invariants);
 }
 
 //=============================================================================
