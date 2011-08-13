@@ -11,6 +11,7 @@ This chapter describes ways in which this can be accomplished.
 @menu
 * Verilog PLI Setup::
 * VPI Basics::
+* VPI Debugging::
 * VPI Example::
 * VPI with Channels::
 * Hierarchical co-simulation::
@@ -172,6 +173,10 @@ There are other useful functions in the @command{hacprsim} VPI library.
 @include vpi/prsim_cmd.texi
 @include vpi/prsim_default_after.texi
 @include vpi/prsim_sync.texi
+
+The following functions are deprecated and should be replaced with
+@t{$prsim_cmd()}.
+
 @include vpi/prsim_set.texi
 @include vpi/prsim_get.texi
 @include vpi/prsim_watch.texi
@@ -182,6 +187,16 @@ The following sections walk you through examples of co-simulating
 hacprsim with VCS.  
 The author highly recommends copying these examples to run them
 and study them.
+
+@c ----------------------------------------------------------------------------
+@node VPI Debugging
+@section VPI Debugging
+
+We provide a few commands to help debugging connectivity 
+and communication between @command{prsim} and the host Verilog simulator.  
+
+@include vpi/prsim_confirm_connections.texi
+@include vpi/prsim_verbose_transport.texi
 
 @c ----------------------------------------------------------------------------
 @node VPI Example

@@ -677,6 +677,11 @@ public:
 	const node_type&
 	get_node(const node_index_type) const;
 
+	node_index_type
+	get_node_index(const node_type& n) const {
+		return std::distance(&node_pool[0], &n);
+	}
+
 public:
 	ostream&
 	dump_node_canonical_name(ostream&, const node_index_type) const;

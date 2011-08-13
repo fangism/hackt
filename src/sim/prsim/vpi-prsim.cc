@@ -106,6 +106,7 @@ static count_ptr<State>	prsim_state(NULL);
 static prsim_options prsim_opt;
 #endif
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Only need to call this upon abrupt termination.
  */
@@ -162,9 +163,13 @@ static int scheduled = 0;
 static vpiHandle last_registered_callback;
 
 /**
-	By default, don't print to/from connections as they are created.
-	TODO: document this function? even if it's only for debugging?
- */
+@texinfo vpi/prsim_confirm_connections.texi
+@deffn Function $prsim_confirm_connections
+When this is called before any @t{$to_prsim}/@t{$from_prsim} connections
+are made, each connection will be verbosely confirmed in the output.
+@end deffn
+@end texinfo
+***/
 static int _confirm_connections = 0;
 static PLI_INT32 confirm_connections (PLI_BYTE8 *args) {
 	_confirm_connections = 1;
@@ -196,6 +201,53 @@ static
 PLI_INT32
 _vpi_finish(void);
 #endif
+
+static
+void
+deprecation_warning(const char* m) {
+	vpi_puts_c("Warning, [deprecated]: ");
+	vpi_puts_c(m);
+	vpi_puts_c("\n");
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/// verbose debugging switch
+/**
+@texinfo vpi/prsim_verbose_transport.texi
+@deffn Function $prsim_verbose_transport arg
+If @var{arg} is 1 (or non-zero), then every value that is transported
+between verilog and @command{prsim} will be verbosely reported.
+@end deffn
+@end texinfo
+***/
+static bool _verbose_transport = false;
+static PLI_INT32 verbose_transport (PLI_BYTE8 *args) {
+  STACKTRACE_VERBOSE;
+  vpiHandle task_call;
+  vpiHandle h;
+  vpiHandle fname;
+  s_vpi_value arg;
+  static const char usage[] = "Usage: $prsim_verbose_transport(0|1)\n";
+
+  task_call = vpi_handle (vpiSysTfCall, NULL);
+  h = vpi_iterate (vpiArgument, task_call);
+  fname = vpi_scan (h);
+  if (!fname) {
+    vpi_puts_c (usage);
+    return 0;
+  }
+  arg.format = vpiIntVal;
+  vpi_get_value (fname, &arg);
+  _verbose_transport = bool(arg.value.integer);
+
+  if (vpi_scan (h)) {
+	// excess arguments
+    vpi_puts_c (usage);
+    return 0;
+  }
+
+  return 1;
+}
 
 //=============================================================================
 // common error routines
@@ -428,39 +480,46 @@ get_prsim_value(const vpiHandle& net) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+static
+void
+report_transport(const char* dirstr, const node_index_type ni, 
+		const s_vpi_time& tm) {
+	ostringstream oss;
+	const string name(prsim_state->get_node_canonical_name(ni));
+	Time_t prsim_time;
+	vcs_to_prstime(&tm, &prsim_time);
+	oss << dirstr << "signal " << name << " changed @ time " <<
+		  prsim_time << ", val = ";
+	prsim_state->get_node(ni).dump_value(oss);
+	vpi_printf("%s\n", oss.str().c_str());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Schedules a value update from prsim back to verilog-land.
  */
 static
 void
 transport_value_from_prsim(const node_type& n, 
-#if VERBOSE_DEBUG
-		const node_index_type ni,
-#endif
 		const vpiHandle& net, 
 		s_vpi_time& tm) {
-      s_vpi_value v;
-      v.format = vpiScalarVal;
-      INVARIANT(net);
-#if VERBOSE_DEBUG
-	const string name(prsim_state->get_node_canonical_name(ni));
-	const char* const nodename = name.c_str();
-#endif
-	v.value.scalar = prsim_to_vpi_value(n.current_value());
-#if VERBOSE_DEBUG
-	ostringstream oss;
-	oss << "[tovcs] signal " << name << " changed @ time " <<
-		  prsim_time << ", val = " << v.value.scalar;
-	vpi_printf("%s\n", oss.str().c_str());
-#endif
+	s_vpi_value v;
+	v.format = vpiScalarVal;
+	INVARIANT(net);
+	const value_enum pval = n.current_value();
+	v.value.scalar = prsim_to_vpi_value(pval);
+	if (_verbose_transport) {
+		report_transport("[to vcs] ",
+			prsim_state->get_node_index(n), tm);
+	}
 	// is temporary allocation really necessary? avoidable?
 	// vpiPureTransportDelay: affects no other events
 	// vpiNoDelay (used by Fang): take effect immediately, ignore time
 	// vpiNoDelay seems to be needed when multiple breakpoint events
 	// are processed before returning to VCS, as was introduced
 	// by $prsim_sync.
-      // vpi_free_object (vpi_put_value (net, &v, &tm, vpiPureTransportDelay));
-      vpi_free_object (vpi_put_value (net, &v, &tm, vpiNoDelay));
+	// vpi_free_object(vpi_put_value(net, &v, &tm, vpiPureTransportDelay));
+	vpi_free_object (vpi_put_value (net, &v, &tm, vpiNoDelay));
 	// Q: shouldn't control return immediately to VCS?
 	// experimenting shows that this makes no difference!? both work
 	// WHY?
@@ -479,13 +538,17 @@ initial_transport_value_from_prsim(const node_type& n, const vpiHandle& net) {
 	INVARIANT(net);
 	const value_enum cv(n.current_value());
 	const value_enum vv(get_prsim_value(net));
-	if (cv != vv) {
-		v.value.scalar = prsim_to_vpi_value(cv);
-		s_vpi_time tm;	// current time
-		tm.type = vpiSimTime;
-		vpi_get_time(NULL, &tm);
-		vpi_free_object (vpi_put_value (net, &v, &tm, vpiNoDelay));
+if (cv != vv) {
+	v.value.scalar = prsim_to_vpi_value(cv);
+	s_vpi_time tm;	// current time
+	tm.type = vpiSimTime;
+	vpi_get_time(NULL, &tm);
+	if (_verbose_transport) {
+		report_transport("[to vcs] ",
+			prsim_state->get_node_index(n), tm);
 	}
+	vpi_free_object (vpi_put_value (net, &v, &tm, vpiNoDelay));
+}
 	// otherwise, don't bother -- values already match
 }
 
@@ -755,18 +818,15 @@ PLI_INT32 prsim_callback (s_cb_data *p)
 #error "node_index_type cannot fit inside a void* (size mismatch)!"
 #endif
 
-#if VERBOSE_DEBUG
 #if 0
   vpi_printf ("signal %s changed @ time %d, val = %d\n",
 	      prs_nodename (n),
 	      p->time->low,
 	      p->value->value.scalar);
 #else
-  cout << "signal " << prsim_state->get_node_canonical_name(n) <<
-	" changed @ time " << p->time->low << ", val = " <<
-	// what about p->time->high?
-	p->value->value.scalar << endl;
-#endif
+if (_verbose_transport) {
+	report_transport("[from vcs] ", n, *p->time);
+}
 #endif
 
   /* convert my time to prsim time */
@@ -780,6 +840,7 @@ PLI_INT32 prsim_callback (s_cb_data *p)
   vcs_to_prstime(p->time, &vcstime);
   SHOW_VCS_TIME(vcstime);
 #endif
+
 /**
 	Whether or not set events from VPI are considered forced.
  */
@@ -1293,6 +1354,8 @@ For @var{v} 0, synonymous with @command{$prsim_cmd("timing after");}.
 static PLI_INT32 prsim_random (PLI_BYTE8 *args)
 {
   STACKTRACE_VERBOSE;
+  deprecation_warning(
+	"$prsim_mkrandom() should be replaced with $prsim_cmd(\"timing random\")");
   s_vpi_value arg;
   static const char usage[] = "Usage: $prsim_mkrandom(1 or 0)\n";
 
@@ -1341,6 +1404,8 @@ For @var{v} 0, synonymous with @command{$prsim_cmd("mode run");}.
 static PLI_INT32 prsim_resetmode (PLI_BYTE8 *args)
 {
   STACKTRACE_VERBOSE;
+  deprecation_warning(
+	"$prsim_resetmode() should be replaced with $prsim_cmd(\"mode reset\")");
   s_vpi_value arg;
   static const char usage[] = "Usage: $prsim_resetmode(1 or 0)\n";
 
@@ -1388,6 +1453,8 @@ Synonymous with @command{$prsim_cmd("status X");}.
 static PLI_INT32 prsim_status_x (PLI_BYTE8 *args)
 {
   STACKTRACE_VERBOSE;
+  deprecation_warning(
+	"$prsim_status_x() should be replaced with $prsim_cmd(\"status X\")");
   vpiHandle task_call;
   vpiHandle h;
   vpiHandle fname;
@@ -1449,6 +1516,8 @@ Synonymous with @command{$prsim_cmd("set node val");}.
 static PLI_INT32 prsim_set (PLI_BYTE8 *args)
 {
   STACKTRACE_VERBOSE;
+  deprecation_warning(
+	"$prsim_set() should be replaced with $prsim_cmd(\"set ...\")");
   vpiHandle task_call;
   vpiHandle h;
   vpiHandle net1;
@@ -1531,6 +1600,8 @@ Synonymous with @command{$prsim_cmd("get node");}.
 static PLI_INT32 prsim_get (PLI_BYTE8 *args)
 {
   STACKTRACE_VERBOSE;
+  deprecation_warning(
+	"$prsim_get() should be replaced with $prsim_cmd(\"get ...\")");
   vpiHandle task_call;
   vpiHandle h;
   vpiHandle net1;
@@ -1658,16 +1729,17 @@ static struct funcs f[] = {
   { "$prsim_options", prsim_command_options },
   { "$prsim", prsim_file },
   { "$prsim_default_after", prsim_default_after },
+  { "$prsim_verbose_transport", verbose_transport },
   { "$prsim_confirm_connections", confirm_connections },
   { "$prsim_cmd", prsim_cmd },		// one command to rule them all
   { "$prsim_sync", __no_op__ },		// deprecated, should be automatic now
 	// these other commands are not needed, only for convenience
-  { "$prsim_status_x", prsim_status_x },
-  { "$prsim_set", prsim_set },
-  { "$prsim_get", prsim_get },
+  { "$prsim_status_x", prsim_status_x },	// deprecated
+  { "$prsim_set", prsim_set },			// deprecated
+  { "$prsim_get", prsim_get },			// deprecated
   // { "$packprsim", prsim_packfile },
-  { "$prsim_mkrandom", prsim_random },
-  { "$prsim_resetmode", prsim_resetmode },
+  { "$prsim_mkrandom", prsim_random },		// deprecated
+  { "$prsim_resetmode", prsim_resetmode },	// deprecated
   { "$prsim_watch", prsim_watch }
 };
 

@@ -1,0 +1,72 @@
+$start of simulation 
+$to_prsim: TOP.in -> in0
+$to_prsim: TOP.in1 -> in1
+$to_prsim: TOP.in2 -> in2
+$to_prsim: TOP.in3 -> in3
+$to_prsim: TOP.in4 -> in4
+$from_prsim: out0 -> TOP.out0
+$from_prsim: out1 -> TOP.out1
+$from_prsim: out2 -> TOP.out2
+$from_prsim: out3 -> TOP.out3
+$from_prsim: out4 -> TOP.out
+[from vcs] signal in0 changed @ time 0, val = X
+at time   0.000, observed in 0
+[to vcs] signal out0 changed @ time 0, val = 1
+[from vcs] signal in1 changed @ time 20, val = X
+[to vcs] signal out1 changed @ time 0, val = 1
+[from vcs] signal in2 changed @ time 40, val = X
+[to vcs] signal out2 changed @ time 0, val = 1
+[from vcs] signal in3 changed @ time 60, val = X
+[to vcs] signal out3 changed @ time 0, val = 1
+[from vcs] signal in4 changed @ time 80, val = X
+[to vcs] signal out4 changed @ time 0, val = 1
+at time   0.090, observed out = 1
+[from vcs] signal in0 changed @ time 1000, val = 0
+at time   1.000, observed in 1
+[to vcs] signal out0 changed @ time 0, val = 0
+[from vcs] signal in1 changed @ time 1020, val = 0
+[to vcs] signal out1 changed @ time 0, val = 0
+[from vcs] signal in2 changed @ time 1040, val = 0
+[to vcs] signal out2 changed @ time 0, val = 0
+[from vcs] signal in3 changed @ time 1060, val = 0
+[to vcs] signal out3 changed @ time 0, val = 0
+[from vcs] signal in4 changed @ time 1080, val = 0
+[to vcs] signal out4 changed @ time 0, val = 0
+at time   1.090, observed out = 0
+[from vcs] signal in0 changed @ time 2000, val = 1
+at time   2.000, observed in 0
+[to vcs] signal out0 changed @ time 0, val = 1
+[from vcs] signal in1 changed @ time 2020, val = 1
+[to vcs] signal out1 changed @ time 0, val = 1
+[from vcs] signal in2 changed @ time 2040, val = 1
+[to vcs] signal out2 changed @ time 0, val = 1
+[from vcs] signal in3 changed @ time 2060, val = 1
+[to vcs] signal out3 changed @ time 0, val = 1
+[from vcs] signal in4 changed @ time 2080, val = 1
+[to vcs] signal out4 changed @ time 0, val = 1
+at time   2.090, observed out = 1
+[from vcs] signal in0 changed @ time 3000, val = 0
+at time   3.000, observed in 1
+[to vcs] signal out0 changed @ time 0, val = 0
+[from vcs] signal in1 changed @ time 3020, val = 0
+[to vcs] signal out1 changed @ time 0, val = 0
+[from vcs] signal in2 changed @ time 3040, val = 0
+[to vcs] signal out2 changed @ time 0, val = 0
+[from vcs] signal in3 changed @ time 3060, val = 0
+[to vcs] signal out3 changed @ time 0, val = 0
+[from vcs] signal in4 changed @ time 3080, val = 0
+[to vcs] signal out4 changed @ time 0, val = 0
+at time   3.090, observed out = 0
+[from vcs] signal in0 changed @ time 4000, val = 1
+at time   4.000, observed in 0
+[to vcs] signal out0 changed @ time 0, val = 1
+[from vcs] signal in1 changed @ time 4020, val = 1
+[to vcs] signal out1 changed @ time 0, val = 1
+[from vcs] signal in2 changed @ time 4040, val = 1
+[to vcs] signal out2 changed @ time 0, val = 1
+[from vcs] signal in3 changed @ time 4060, val = 1
+[to vcs] signal out3 changed @ time 0, val = 1
+[from vcs] signal in4 changed @ time 4080, val = 1
+[to vcs] signal out4 changed @ time 0, val = 1
+at time   4.090, observed out = 1
+$finish at simulation time    5.0 ns

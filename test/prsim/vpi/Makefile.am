@@ -20,7 +20,7 @@ HACKT_PRSIMRC_TEST_SUBJECTS = inverters \
 
 # for .v verilog tests
 HACKT_VPI_TEST_SCRIPTS_PASSES = \
-	inverters inverters-delay shoelace \
+	inverters inverters-delay shoelace shoelace-debug \
 	inverters-watch inverters-watch2 \
 	initial-value \
 	startup \
@@ -99,7 +99,8 @@ inverters.vxi-subdir-out: Makefile.copy force
 CLEANFILES += Makefile.copy pli.tab standard-ports.v standard-reverse.v
 
 EXAMPLE_DATA_FILES = example.mk clkgen.v \
-	inverters.hac inverters.v inverters-delay.v shoelace.v \
+	inverters.hac inverters.v inverters-delay.v \
+	shoelace.v shoelace-debug.v \
 	channel-source-sink.hac channel-source-sink.v \
 	and_tree.hac and_tree.v standard.v startup.v startup.hac \
 	and_tree_reverse.hac and_tree_reverse.v standard-reverse.v \
