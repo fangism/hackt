@@ -45,6 +45,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #if PRSIM_PRECHARGE_INVARIANTS
 #include "net/netlist_options.h"
 #include "net/netlist_generator.h"
+#include "sim/prsim/current-path-graph.h"
 #endif
 #include "util/offset_array.h"
 #include "util/stacktrace.h"
@@ -421,6 +422,15 @@ ExprAlloc::visit(const entity::PRS::footprint& pfp) {
 		link_invariant_expr(ret_ex_index, j);
 	}
 	}
+#if PRSIM_PRECHARGE_INVARIANTS
+if (flags.auto_precharge_invariants && netlists) {
+	// NEW: process precharge invariants
+	const entity::footprint* const fp = g->_footprint;
+	NEVER_NULL(fp);
+	const NET::netlist& nl(netlists->lookup_netlist(*fp));
+	current_path_graph G(nl);
+}
+#endif	// PRSIM_PRECHARGE_INVARIANTS
 #if 0
 	// definitely want to keep this
 	if (flags.any_optimize() && expr_free_list.size()) {
@@ -1206,7 +1216,7 @@ if (d) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Fake a rule as an invariant that doesn't really pull any node.
+	Fake an invariant as a rule that doesn't really pull any node.
 	\param top_ex_index local graph's expression index that was allocated.
 	\param src_inv_index footprint's invariant index.  
  */

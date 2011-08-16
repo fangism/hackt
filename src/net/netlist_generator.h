@@ -164,6 +164,9 @@ public:
 	void
 	operator () (void);
 
+	const netlist&
+	lookup_netlist(const footprint&) const;
+
 private:
 	void
 	visit(const state_instance<process_tag>&);
