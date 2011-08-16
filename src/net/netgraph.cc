@@ -1086,7 +1086,8 @@ netlist::void_proc(0, NULL);
 // universal node indices to every subcircuit
 // these should correspond with the order of insertion in netlist's ctor
 const	index_type
-netlist::void_index = 0
+netlist::void_index = 0,
+netlist::first_node_index = 1
 #if !PRS_SUPPLY_OVERRIDES
 // this must be kept consistent with ordering in "AST/globals.cc"
 // and auto-connections in "Object/def/footprint.cc"
@@ -1703,6 +1704,19 @@ netlist::reverse_lookup_transistor_index(const transistor_reference& r) const {
 const transistor&
 netlist::lookup_transistor(const size_t ti) const {
 	return lookup_transistor(lookup_transistor_index(ti));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Total number of transistors in this netlist, 
+	including local subcircuits.  
+ */
+size_t
+netlist::total_transistor_count(void) const {
+	if (local_subcircuits.size()) {
+		const local_netlist& l(local_subcircuits.back());
+		return l.transistor_index_offset +l.transistor_count();
+	} else	return transistor_count();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2397,7 +2411,7 @@ if (opt.undriven_node_policy != OPTION_IGNORE) {
 	const port_set_type::const_iterator pe(port_set.end());
 	typedef	node_pool_type::const_iterator	const_iterator;
 	const_iterator i(node_pool.begin()), e(node_pool.end());
-	index_type j = 1;
+	index_type j = first_node_index;
 	for (++i; i!=e; ++i, ++j) {
 	if (port_set.find(j) == pe) {
 		const error_status r = i->check_connectivity(opt);

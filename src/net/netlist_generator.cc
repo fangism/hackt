@@ -172,6 +172,19 @@ netlist_generator::visit(const state_instance<process_tag>& p) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param f the footprint of the netlist being sought, 
+		must already exist.
+	\return reference to netlist.
+ */
+const netlist&
+netlist_generator::lookup_netlist(const footprint& f) const {
+	netlist_map_type::const_iterator mi(netmap.find(&f));
+	INVARIANT(mi != netmap.end());
+	return mi->second;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 netlist_generator::visit(const footprint& f) {
 	INVARIANT(f.is_created());	// don't need is_allocated()!!!

@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-08-16	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-85-prsim-precharge-check-11:
+	  prsim: new current_path_graph class for simplifying graph
+		for analyzing precharge invariants.  
+		Digraph is formed by redundant adjacency lists of nodes, 
+		with edge information on forward and backward edges.
+		Untested.
+
+
 2011-08-11	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-85-prsim-precharge-check-10:

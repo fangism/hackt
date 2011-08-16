@@ -268,6 +268,7 @@ struct transistor {
 	// attributes:
 	// is_standard_keeper
 	// is_combination_feedback_keeper
+	// TODO: is_bidirectional
 	enum flags {
 		DEFAULT_ATTRIBUTE = 0x0,
 		IS_PRECHARGE = 0x01,
@@ -309,6 +310,11 @@ struct transistor {
 	bool
 	is_pass(void) const {
 		return attributes & IS_PASS;
+	}
+
+	bool
+	is_precharge(void) const {
+		return attributes & IS_PRECHARGE;
 	}
 
 	real_type
@@ -557,7 +563,10 @@ struct node_caps {
 	because devices may have more than two terminals.
  */
 struct node_terminal {
-	// index into device type pool
+	/**
+		index into device type pool, 
+		pass this to netlist::lookup_transistor.
+	 */
 	size_t					index;
 	/**
 		X: index position
@@ -570,6 +579,11 @@ struct node_terminal {
 
 	node_terminal(const char t, const size_t i, const size_t p) :
 		index(i), port(p), device_type(t) { }
+
+	bool
+	to_transistor(void) const {
+		return device_type == 'M';
+	}
 
 };	// end struct node_terminal
 #endif
@@ -959,6 +973,7 @@ public:
 
 	// these should correspond with the order of insertion in netlist's ctor
 	static const	index_type	void_index;
+	static const	index_type	first_node_index;
 #if !PRS_SUPPLY_OVERRIDES
 	static const	index_type	GND_index;
 	static const	index_type	Vdd_index;
@@ -1145,6 +1160,9 @@ public:
 
 	size_t
 	reverse_lookup_transistor_index(const transistor_reference&) const;
+
+	size_t
+	total_transistor_count(void) const;
 
 	void
 	append_instance(const state_instance<process_tag>&, const netlist&, 

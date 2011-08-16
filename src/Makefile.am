@@ -1022,6 +1022,7 @@ PRSIM_CC_FILES = \
 	sim/prsim/Trace-prsim.cc \
 	sim/prsim/process_graph.cc \
 	sim/prsim/process_state.cc \
+	sim/prsim/current-path-graph.cc \
 	main/prsim.cc
 
 CHPSIM_CC_FILES = \
