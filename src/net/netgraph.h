@@ -206,6 +206,12 @@ struct transistor_base {
 	typedef	char			attributes_type;
 	attributes_type			attributes;
 
+	bool
+	is_NFET(void) const { return type == NFET_TYPE; }
+
+	bool
+	is_PFET(void) const { return type == PFET_TYPE; }
+
 	void
 	set_lvt(void) {
 		attributes |= IS_LOW_VT;

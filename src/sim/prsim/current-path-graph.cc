@@ -1,5 +1,7 @@
 /**
 	\file "sim/prsim/current-path-graph.cc"
+	TODO: consider keeping this in net/ as home, as it may be useful
+		for other netlist digraph analyses.
  */
 
 #include "sim/prsim/current-path-graph.h"
@@ -11,7 +13,7 @@ namespace PRSIM {
 using std::pair;
 using NET::transistor;
 using NET::netlist;
-using util::set_inserter;
+using util::map_key_inserter;
 
 //=============================================================================
 // class current_path_graph method definitions
@@ -24,6 +26,9 @@ current_path_graph::current_path_graph(const netlist& nl) :
 	__ctor_initialize_nodes();
 	__ctor_initialize_edges();
 	__ctor_identify_supplies();
+	__mark_logical_pull_down_nodes();
+	__mark_logical_pull_up_nodes();
+	__ctor_identify_precharge_paths();
 }	// end current_path_graph ctor
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -112,24 +117,44 @@ current_path_graph::__ctor_initialize_edges(void) {
 		precharge_drain_nodes.end(),
 		precharge_source_nodes.begin(), 
 		precharge_source_nodes.end(),
-		set_inserter(precharged_internal_nodes));
+		map_key_inserter(precharged_internal_nodes));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	\pre already called __mark_logical_pull_down_nodes and
+		__mark_logical_pull_up_nodes to classify 
+		internal node directions.
 	\pre precharged_internal_nodes already identified,
 		and supplies have already been identified.
  */
 void
 current_path_graph::__ctor_identify_precharge_paths(void) {
-	set<index_type>::const_iterator
+	map<index_type, subgraph_paths>::iterator
 		pi(precharged_internal_nodes.begin()),
 		pe(precharged_internal_nodes.end());
 	for ( ; pi!=pe; ++pi) {
 		// build invariant expressions, reach supplies first
+		const size_t& ni = pi->first;
 		// pull-up expression to supply
 		// pull-dn expression to supply
 		// path expression to output node(s)
+		subgraph_paths& g(pi->second);
+	if (nodes[ni].dir) {	// is P-stack node
+		__visit_precharge_paths_to_ground(
+			g.paths_to_precharge_supply, ni);
+		__visit_logic_paths_to_power(
+			g.paths_to_logic_supply, ni);
+		__visit_output_paths_down(
+			g.paths_to_named_output, ni);
+	} else {		// is N-stack node
+		__visit_precharge_paths_to_power(
+			g.paths_to_precharge_supply, ni);
+		__visit_logic_paths_to_ground(
+			g.paths_to_logic_supply, ni);
+		__visit_output_paths_up(
+			g.paths_to_named_output, ni);
+	}
 	}
 }
 
@@ -189,7 +214,7 @@ if (f.second) {
 	// visited before (cached)
 	return f.first->second;
 }
-}
+}	// end __visit_paths_DFS_generic
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -275,6 +300,68 @@ current_path_graph::__visit_output_paths_down(
 	__visit_paths_DFS_generic<&this_type::signal_nodes,
 		&netgraph_node::dn_edges,
 		&transistor_base::is_not_precharge>(g, v, ni);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\pre nodes and edges have been initialized, supplies identified.
+	\post intenral nodes in N-stacks have their dir flags set correctly
+ */
+void
+current_path_graph::__mark_logical_pull_down_nodes(void) {
+	set<index_type>::const_iterator
+		gi(ground_supply_nodes.begin()), ge(ground_supply_nodes.end());
+	// for each distinct ground supply
+	for ( ; gi!=ge; ++gi) {
+		node_predicate_map_type v;
+		set<index_type> e;	// not really used
+		__visit_paths_DFS_generic<&this_type::signal_nodes,
+			&netgraph_node::up_edges,
+			&transistor_base::is_NFET>(e, v, *gi);
+		// NOTE: traversal is limited to NFETs only
+		node_predicate_map_type::const_iterator
+			ni(v.begin()), ne(v.end());
+		for ( ; ni!=ne; ++ni) {
+			// ni->second true means that node is on path to output
+		if (ni->second) {
+		if (internal_nodes.find(ni->first) != internal_nodes.end()) {
+			// only interested in internal nodes
+			nodes[ni->first].dir = false;
+		}
+		}
+		}
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\pre nodes and edges have been initialized, supplies identified.
+	\post intenral nodes in P-stacks have their dir flags set correctly
+ */
+void
+current_path_graph::__mark_logical_pull_up_nodes(void) {
+	set<index_type>::const_iterator
+		gi(power_supply_nodes.begin()), ge(power_supply_nodes.end());
+	// for each distinct ground supply
+	for ( ; gi!=ge; ++gi) {
+		node_predicate_map_type v;
+		set<index_type> e;	// not really used
+		__visit_paths_DFS_generic<&this_type::signal_nodes,
+			&netgraph_node::dn_edges,
+			&transistor_base::is_PFET>(e, v, *gi);
+		// NOTE: traversal is limited to NFETs only
+		node_predicate_map_type::const_iterator
+			ni(v.begin()), ne(v.end());
+		for ( ; ni!=ne; ++ni) {
+			// ni->second true means that node is on path to output
+		if (ni->second) {
+		if (internal_nodes.find(ni->first) != internal_nodes.end()) {
+			// only interested in internal nodes
+			nodes[ni->first].dir = true;
+		}
+		}
+		}
+	}
 }
 
 //=============================================================================
