@@ -9,7 +9,6 @@
 #ifndef	__HAC_SIM_PRSIM_CURRENT_PATH_GRAPH_H__
 #define	__HAC_SIM_PRSIM_CURRENT_PATH_GRAPH_H__
 
-#include <set>
 #include "net/netgraph.h"
 
 namespace HAC {
@@ -18,23 +17,49 @@ namespace PRSIM {
 using NET::index_type;
 using std::vector;
 using std::set;
+using std::map;
+using NET::transistor_base;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
-	Subset of information from struct transistor.
-	Each node will have a copy of the transistor from 
-	the tail end and head end.
+	This should just be a slice of NET::transistor.
  */
-struct transistor_edge {
+struct transistor_base {
 	// the named signal connected to FET gate
 	index_type				gate;
-	// the other end of this edge
-	index_type				destination;
 	char					type;	// N or P
 	NET::transistor::attributes_type	attributes;
 
 	explicit
-	transistor_edge(const NET::transistor&);
+	transistor_base(const NET::transistor&);
+
+	bool
+	is_precharge(void) const {
+		return attributes & NET::transistor::IS_PRECHARGE;
+	}
+
+	bool
+	is_logic(void) const {
+	}
+
+};	// end struct transistor_base
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Subset of information from struct transistor.
+	Each node will have an indexed reference to transistor_base from 
+	the tail end and head end.
+ */
+struct transistor_edge {
+	// index into transistor pool where common info is retained
+	index_type				index;
+	// the other end of this edge, which is directed
+	index_type				destination;
+
+	explicit
+	transistor_edge(const index_type i) : index(i), destination(0) { }
 
 };	// end struct transistor_edge_info
 
@@ -60,6 +85,18 @@ struct netgraph_node {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	A path_subgraph consists of a sparse set of edges (transistors)
+	of the whole subcircuit graph.
+	Interpretation depends on whether reference node is N or P.
+ */
+struct subgraph_paths {
+	set<index_type>				paths_to_power;
+	set<index_type>				paths_to_ground;
+	set<index_type>				paths_to_named_output;
+};	// end struct path_subgraph
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Simplified digraph representation of netlists with source nodes
 	as Vdd power supplies, and sink nodes as GND supplies.
 	Nodes are internal nodes, stack nodes, or output nodes.
@@ -68,8 +105,10 @@ struct netgraph_node {
 	not the local bool footprint.
  */
 class current_path_graph {
+	// CAUTION: this reference is owned by ExprAlloc!
 	const NET::netlist&			_netlist;
 	vector<netgraph_node>			nodes;
+	vector<transistor_base>			edges;
 
 	set<index_type>				precharge_transistors;
 
@@ -79,9 +118,68 @@ class current_path_graph {
 	set<index_type>				internal_nodes;
 	set<index_type>				precharged_internal_nodes;
 
+	/**
+		key = node index
+		value = set of paths to supplies and output nodes
+	 */
+	map<index_type, subgraph_paths>		internal_node_paths;
+
 public:
 	explicit
 	current_path_graph(const NET::netlist&);
+
+private:
+	typedef	current_path_graph		this_type;
+
+	void
+	__ctor_initialize_nodes(void);
+
+	void
+	__ctor_initialize_edges(void);
+
+	void
+	__ctor_identify_supplies(void);
+
+	void
+	__ctor_identify_precharge_paths(void);
+
+	/// edge stack for DFS
+	typedef	vector<index_type>		path_stack;
+
+	typedef	map<index_type, bool>		node_predicate_map_type;
+
+	// __visit_{precharge,logic}_paths_to_{power,ground}
+	template <set<index_type> this_type::*,
+		vector<transistor_edge> netgraph_node::*,
+		bool (transistor_base::*)(void) const>
+	bool
+	__visit_paths_DFS_generic(
+		set<index_type>&, node_predicate_map_type&, 
+		const index_type) const;
+
+	void
+	__visit_precharge_paths_to_power(
+		set<index_type>&, const index_type) const;
+
+	void
+	__visit_precharge_paths_to_ground(
+		set<index_type>&, const index_type) const;
+
+	void
+	__visit_logic_paths_to_power(
+		set<index_type>&, const index_type) const;
+
+	void
+	__visit_logic_paths_to_ground(
+		set<index_type>&, const index_type) const;
+
+	void
+	__visit_output_paths_up(
+		set<index_type>&, const index_type) const;
+
+	void
+	__visit_output_paths_down(
+		set<index_type>&, const index_type) const;
 
 };	// end class current_path_graph
 
