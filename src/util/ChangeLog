@@ -3,6 +3,12 @@
 
 2011-05-04	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-84-85-prsim-precharge-check-12:
+	  util/iterator_more.h: added map_key_insert_iterator
+
+
+2011-05-04	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-84-71:
 	  Added util/fig/xfig.{h,cc}: for emitting xfigs
 
