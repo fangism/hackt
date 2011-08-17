@@ -179,16 +179,97 @@ typedef pair<size_t, size_t>		transistor_reference;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	*Minimal* information for transistor used as a graph edge.
+ */
+struct transistor_base {
+	enum fet_type {
+		NFET_TYPE,
+		PFET_TYPE
+	};
+	index_type			gate;
+	/// device type: nfet, pfet
+	char				type;
+	// allow a conf/tech file to define/enumerate additional types
+	// attributes:
+	// is_standard_keeper
+	// is_combination_feedback_keeper
+	// TODO: is_bidirectional
+	enum flags {
+		DEFAULT_ATTRIBUTE = 0x0,
+		IS_PRECHARGE = 0x01,
+		IS_STANDARD_KEEPER = 0x02,
+		IS_COMB_FEEDBACK = 0x04,
+		IS_PASS = 0x08,
+		IS_LOW_VT = 0x10,
+		IS_HIGH_VT = 0x20
+	};
+	typedef	char			attributes_type;
+	attributes_type			attributes;
+
+	void
+	set_lvt(void) {
+		attributes |= IS_LOW_VT;
+		attributes &= ~IS_HIGH_VT;
+	}
+
+	void
+	set_hvt(void) {
+		attributes |= IS_HIGH_VT;
+		attributes &= ~IS_LOW_VT;
+	}
+
+	void
+	set_svt(void) {
+		attributes &= ~(IS_LOW_VT | IS_HIGH_VT);
+	}
+
+	void
+	set_pass(void) {
+		attributes |= IS_PASS;
+	}
+
+	bool
+	is_pass(void) const {
+		return attributes & IS_PASS;
+	}
+
+	bool
+	is_precharge(void) const {
+		return attributes & IS_PRECHARGE;
+	}
+
+	bool
+	is_not_precharge(void) const {
+		return !is_precharge();
+	}
+
+	bool
+	is_weak_keeper(void) const {
+		return attributes & IS_STANDARD_KEEPER;
+	}
+
+	bool
+	is_logic(void) const {
+		// may be pass-gate
+		return !is_precharge() && !is_weak_keeper();
+	}
+
+	static
+	char
+	opposite_FET_type(const char f) {
+		return (f == NFET_TYPE) ? PFET_TYPE : NFET_TYPE;
+	}
+
+};	// end struct transistor_base
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Standard 4-terminal device for transistor.
 	Consider for attributes: pointing to original unrolled literal
 		to reference attributes and parameters instead of copying
 		to save memory at the expense of run-time.
  */
-struct transistor {
-	enum fet_type {
-		NFET_TYPE,
-		PFET_TYPE
-	};
+struct transistor : public transistor_base {
 	/**
 		Cache of parasitic area/perimeter values.
 	 */
@@ -225,7 +306,6 @@ struct transistor {
 	 */
 	string				name;
 	index_type			source;
-	index_type			gate;
 	index_type			drain;
 	/**
 		Substrate contact.
@@ -261,61 +341,11 @@ struct transistor {
 	real_type			width;
 	/// device length parameter
 	real_type			length;
-	/// device type: nfet, pfet
-	char				type;
-
-	// allow a conf/tech file to define/enumerate additional types
-	// attributes:
-	// is_standard_keeper
-	// is_combination_feedback_keeper
-	// TODO: is_bidirectional
-	enum flags {
-		DEFAULT_ATTRIBUTE = 0x0,
-		IS_PRECHARGE = 0x01,
-		IS_STANDARD_KEEPER = 0x02,
-		IS_COMB_FEEDBACK = 0x04,
-		IS_PASS = 0x08,
-		IS_LOW_VT = 0x10,
-		IS_HIGH_VT = 0x20
-	};
-	typedef	char			attributes_type;
-	attributes_type			attributes;
 
 #if NETLIST_CACHE_PARASITICS
 	parasitics			parasitic_values;
 #endif
 
-	void
-	set_lvt(void) {
-		attributes |= IS_LOW_VT;
-		attributes &= ~IS_HIGH_VT;
-	}
-
-	void
-	set_hvt(void) {
-		attributes |= IS_HIGH_VT;
-		attributes &= ~IS_LOW_VT;
-	}
-
-	void
-	set_svt(void) {
-		attributes &= ~(IS_LOW_VT | IS_HIGH_VT);
-	}
-
-	void
-	set_pass(void) {
-		attributes |= IS_PASS;
-	}
-
-	bool
-	is_pass(void) const {
-		return attributes & IS_PASS;
-	}
-
-	bool
-	is_precharge(void) const {
-		return attributes & IS_PRECHARGE;
-	}
 
 	real_type
 	gate_area(void) const { return width *length; }
@@ -341,12 +371,6 @@ struct transistor {
 
 	ostream&
 	dump_raw(ostream&) const;
-
-	static
-	char
-	opposite_FET_type(const char f) {
-		return (f == NFET_TYPE) ? PFET_TYPE : NFET_TYPE;
-	}
 
 };	// end struct transistor
 
