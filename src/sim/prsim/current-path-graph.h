@@ -75,8 +75,15 @@ struct netgraph_node {
 	vector<transistor_edge>			up_edges; // incoming, from Vdd
 	// such bidirectional gates are needed for van Berkel style C-elements
 	vector<transistor_edge>			bi_edges; // bidirectional
+	/**
+		For internal nodes only.
+		if false, this node is primarily in N-stacks for pull-down.
+		if true, this node is primarily in P-stacks for pull-up.
+		For other nodes, this field has no meaning.
+	 */
+	bool					dir;
 
-	netgraph_node() : named_index(0) { }
+	netgraph_node() : named_index(0), dir(false) { }
 
 	bool
 	is_named_output(void) const { return named_index; }
@@ -90,8 +97,8 @@ struct netgraph_node {
 	Interpretation depends on whether reference node is N or P.
  */
 struct subgraph_paths {
-	set<index_type>				paths_to_power;
-	set<index_type>				paths_to_ground;
+	set<index_type>				paths_to_precharge_supply;
+	set<index_type>				paths_to_logic_supply;
 	set<index_type>				paths_to_named_output;
 };	// end struct path_subgraph
 
@@ -116,13 +123,13 @@ class current_path_graph {
 	set<index_type>				ground_supply_nodes;
 	set<index_type>				signal_nodes;
 	set<index_type>				internal_nodes;
-	set<index_type>				precharged_internal_nodes;
 
 	/**
-		key = node index
+		key = node index (precharged nodes)
 		value = set of paths to supplies and output nodes
 	 */
-	map<index_type, subgraph_paths>		internal_node_paths;
+	typedef	map<index_type, subgraph_paths>	precharge_map_type;
+	precharge_map_type			precharged_internal_nodes;
 
 public:
 	explicit
@@ -180,6 +187,12 @@ private:
 	void
 	__visit_output_paths_down(
 		set<index_type>&, const index_type) const;
+
+	void
+	__mark_logical_pull_down_nodes(void);
+
+	void
+	__mark_logical_pull_up_nodes(void);
 
 };	// end class current_path_graph
 
