@@ -1562,6 +1562,19 @@ if (ai != s.end()) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Translates general netlist node index into footprint
+	bool index, 1-based.
+	\param i must refer to a logical node for this to make sense.
+ */
+index_type
+netlist::lookup_named_node(const index_type i) const {
+	const node& n(node_pool[i]);
+	INVARIANT(n.is_logical_node());
+	return n.index;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	As each named logical node is visited for the first time, 
 	register it with the map of named nodes, where the value
 	is the corresponding index of the *subcircuit* node.

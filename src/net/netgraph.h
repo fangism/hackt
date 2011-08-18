@@ -1166,6 +1166,9 @@ public:
 	lookup_internal_node(const index_type i) const;
 
 	index_type
+	lookup_named_node(const index_type) const;
+
+	index_type
 	register_named_node(const index_type, const netlist_options&);
 
 #if NETLIST_VERILOG

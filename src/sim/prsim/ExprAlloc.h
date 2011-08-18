@@ -23,6 +23,7 @@ namespace HAC {
 #if PRSIM_PRECHARGE_INVARIANTS
 namespace NET {
 class netlist_generator;
+struct transistor_base;
 }
 #endif
 namespace SIM {
@@ -44,8 +45,12 @@ using entity::global_offset;
 using entity::global_entry_context;
 using entity::cflat_context_visitor;
 #if PRSIM_PRECHARGE_INVARIANTS
+class current_path_graph;
+class netgraph_node;
+class transistor_edge;
 using util::memory::excl_ptr;
 using NET::netlist_generator;
+using NET::transistor_base;
 #endif
 
 //=============================================================================
@@ -234,6 +239,9 @@ public:
 	link_child_expr(const expr_index_type p, const expr_index_type c, 
 		const size_t o);
 
+	void
+	append_child_expr(const expr_index_type p, const expr_index_type c);
+
 private:
 	void
 	fold_literal(const expr_index_type);
@@ -247,6 +255,34 @@ private:
 	void
 	update_expr_maps(const unique_process_subgraph&, const size_t, 
 		const footprint_frame_map_type&, const size_t);
+
+#if PRSIM_PRECHARGE_INVARIANTS
+	template <bool (current_path_graph::*)(const size_t) const,
+		vector<transistor_edge> netgraph_node::*,
+		bool (transistor_base::*)(void) const>
+	expr_index_type
+	__visit_current_path_graph_generic(const current_path_graph&,
+		const size_t, const size_t);
+
+	expr_index_type
+	__visit_current_path_graph_node_precharge_power(
+		const current_path_graph&, const size_t, const size_t);
+	expr_index_type
+	__visit_current_path_graph_node_precharge_ground(
+		const current_path_graph&, const size_t, const size_t);
+	expr_index_type
+	__visit_current_path_graph_node_logic_power(
+		const current_path_graph&, const size_t, const size_t);
+	expr_index_type
+	__visit_current_path_graph_node_logic_ground(
+		const current_path_graph&, const size_t, const size_t);
+	expr_index_type
+	__visit_current_path_graph_node_logic_output_up(
+		const current_path_graph&, const size_t, const size_t);
+	expr_index_type
+	__visit_current_path_graph_node_logic_output_down(
+		const current_path_graph&, const size_t, const size_t);
+#endif
 
 private:
 	/// private, undefined copy-ctor.

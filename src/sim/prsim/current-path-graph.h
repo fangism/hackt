@@ -11,6 +11,11 @@
 
 #include "net/netgraph.h"
 
+/**
+	Don't think we actually need this.
+ */
+#define	CACHE_PRECHARGE_PATHS				0
+
 namespace HAC {
 namespace SIM {
 namespace PRSIM {
@@ -19,32 +24,6 @@ using std::vector;
 using std::set;
 using std::map;
 using NET::transistor_base;
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	This should just be a slice of NET::transistor.
- */
-struct transistor_base {
-	// the named signal connected to FET gate
-	index_type				gate;
-	char					type;	// N or P
-	NET::transistor::attributes_type	attributes;
-
-	explicit
-	transistor_base(const NET::transistor&);
-
-	bool
-	is_precharge(void) const {
-		return attributes & NET::transistor::IS_PRECHARGE;
-	}
-
-	bool
-	is_logic(void) const {
-	}
-
-};	// end struct transistor_base
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -91,6 +70,7 @@ struct netgraph_node {
 };	// end struct netgraph_node
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if CACHE_PRECHARGE_PATHS
 /**
 	A path_subgraph consists of a sparse set of edges (transistors)
 	of the whole subcircuit graph.
@@ -101,6 +81,7 @@ struct subgraph_paths {
 	set<index_type>				paths_to_logic_supply;
 	set<index_type>				paths_to_named_output;
 };	// end struct path_subgraph
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -128,12 +109,43 @@ class current_path_graph {
 		key = node index (precharged nodes)
 		value = set of paths to supplies and output nodes
 	 */
+#if CACHE_PRECHARGE_PATHS
 	typedef	map<index_type, subgraph_paths>	precharge_map_type;
+#else
+	typedef	set<index_type>			precharge_map_type;
+#endif
 	precharge_map_type			precharged_internal_nodes;
 
 public:
 	explicit
 	current_path_graph(const NET::netlist&);
+
+	const netgraph_node&
+	get_node(const index_type i) const { return nodes[i]; }
+
+	const transistor_base&
+	get_edge(const index_type i) const { return edges[i]; }
+
+	bool
+	node_is_power(const index_type i) const {
+		return power_supply_nodes.find(i) != power_supply_nodes.end();
+	}
+
+	bool
+	node_is_ground(const index_type i) const {
+		return ground_supply_nodes.find(i) != ground_supply_nodes.end();
+	}
+
+	bool
+	node_is_logic_signal(const index_type) const;
+
+	bool
+	node_is_internal(const index_type) const;
+
+	index_type
+	translate_logical_bool_index(const index_type i) const {
+		return _netlist.lookup_named_node(i);
+	}
 
 private:
 	typedef	current_path_graph		this_type;
@@ -147,11 +159,10 @@ private:
 	void
 	__ctor_identify_supplies(void);
 
+#if CACHE_PRECHARGE_PATHS
 	void
 	__ctor_identify_precharge_paths(void);
-
-	/// edge stack for DFS
-	typedef	vector<index_type>		path_stack;
+#endif
 
 	typedef	map<index_type, bool>		node_predicate_map_type;
 
@@ -164,6 +175,7 @@ private:
 		set<index_type>&, node_predicate_map_type&, 
 		const index_type) const;
 
+#if CACHE_PRECHARGE_PATHS
 	void
 	__visit_precharge_paths_to_power(
 		set<index_type>&, const index_type) const;
@@ -187,6 +199,7 @@ private:
 	void
 	__visit_output_paths_down(
 		set<index_type>&, const index_type) const;
+#endif
 
 	void
 	__mark_logical_pull_down_nodes(void);

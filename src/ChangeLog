@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-08-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-85-prsim-precharge-check-13:
+	  prsim, ExprAlloc: Implemented expression construction from netlist
+		graphs, for paths rooted from precharged internal nodes.
+		Untested.
+
+
 2011-08-17	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-85-prsim-precharge-check-12:
