@@ -429,6 +429,7 @@ if (flags.auto_precharge_invariants && netlists) {
 	NEVER_NULL(fp);
 	const NET::netlist& nl(netlists->lookup_netlist(*fp));
 	current_path_graph G(nl);
+	// TODO: iterate over precharge nodes and generate expressions
 }
 #endif	// PRSIM_PRECHARGE_INVARIANTS
 #if 0
@@ -952,6 +953,24 @@ ExprAlloc::link_child_expr(const expr_index_type parent,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Links child expression to a new slot by resizing parent.
+	Made possible by using vector for children_array_type.
+ */
+void
+ExprAlloc::append_child_expr(const expr_index_type parent,
+		const expr_index_type child) {
+	STACKTRACE_VERBOSE;
+	graph_node_type& pg(g->expr_graph_node_pool[parent]);
+	const size_t offset = pg.children.size();	// 0-based index
+	++(g->expr_pool[parent].size);
+	g->expr_pool[child].set_parent_expr(parent);
+	graph_node_type& child_node(g->expr_graph_node_pool[child]);
+	child_node.offset = offset;
+	pg.push_back_expr(child);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	\param type one of the entity::PRS::PRS_* enums defined in
 		"Object/lan/PRS_enum.h", must be either AND or OR.  
 	\param sz the number of children of this expression.  
@@ -1278,6 +1297,164 @@ ExprAlloc::link_node_to_root_expr(const node_index_type ni,
 	g->rule_pool.push_back(dummy);
 	g->rule_pool.back().set_direction(dir);
 }	// end ExprAlloc::link_node_to_root_expr(...)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_PRECHARGE_INVARIANTS
+/**
+	TODO: this is written for pull-up PFETs only, generalize me.
+	\param terminals predicate that returns true for nodes in terminal set
+	\param path_pred predicate or types of FETs to visit.
+	\param ni the internal graph node index to visit (not bool footprint),
+		should be an internal node, else terminate on output node.
+	\param ti the index of the transistor edge taken to reach here
+		If this value is -1, it is only start of recursion.
+	\return index to newly allocated sub-expression in pool.
+ */
+template <bool (current_path_graph::*terminals)(const size_t) const,
+		 vector<transistor_edge> netgraph_node::*edge_set,
+		bool (NET::transistor_base::*path_pred)(void) const>
+expr_index_type
+ExprAlloc::__visit_current_path_graph_generic(
+		const current_path_graph& G, const size_t ni, 
+		const size_t ti) {
+	STACKTRACE_BRIEF;
+	const bool tv = (ti != size_t(-1));
+	expr_index_type next = 0;
+	if (tv) {
+		const transistor_base&
+			gt(G.get_edge(ti));	// may be invalid
+		const node_index_type gi =
+			G.translate_logical_bool_index(gt.gate);
+		INVARIANT(gi);
+		next = allocate_new_literal_expr(gi);
+		// depending on PFET or NFET
+		if (gt.is_PFET()) {
+			next = allocate_new_not_expr(next);
+		}
+	}
+if ((G.*terminals)(ni)) {
+	// have reached power supply, just return literal expression of gi
+	return next;
+} else {
+	const netgraph_node& n(G.get_node(ni));
+	// TODO: include bidirectional edges
+	vector<transistor_edge>::const_iterator
+		i((n.*edge_set).begin()), e((n.*edge_set).end());
+	vector<expr_index_type> se;	// collect subexpressions here
+	for ( ; i!=e; ++i) {
+		const transistor_base& t(G.get_edge(i->index));
+		// should we use the subgraph_paths to check?
+		// were they needed?
+	if ((t.*path_pred)()) {
+		// recursively build up expression tree
+		se.push_back(__visit_current_path_graph_generic<
+			terminals, edge_set, path_pred>(
+			G, i->destination, i->index));
+	}	// else skip
+	}
+	// OR-combine terms if necessary
+	const size_t sz = se.size();
+	INVARIANT(sz);
+	expr_index_type last;
+	if (sz > 1) {
+		last = allocate_new_Nary_expr(
+			entity::PRS::PRS_OR_EXPR_TYPE_ENUM, sz);
+		size_t j = 0;
+		for ( ; j<sz; ++j) {
+			// ExprGraphNode::children is 0-indexed
+			link_child_expr(last, se[j], j);
+		}
+	} else {
+		last = se.front();
+	}
+	if (next) {
+		const expr_type& l(g->expr_pool[last]);
+		if (l.is_conjunctive() && !l.is_not()) {	// AND
+			// just append to previous AND expression
+			append_child_expr(last, next);
+			return last;
+		} else {
+			// create a new AND expression
+			const expr_index_type ret = allocate_new_Nary_expr(
+				entity::PRS::PRS_AND_EXPR_TYPE_ENUM, 2);
+			link_child_expr(ret, last, 0);
+			link_child_expr(ret, next, 1);
+			return ret;
+		}
+	} else {
+		return last;
+	}
+}
+}	// end __visit_current_path_graph_generic
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+expr_index_type
+ExprAlloc::__visit_current_path_graph_node_precharge_power(
+		const current_path_graph& G, const size_t ni, 
+		const size_t ti) {
+	return __visit_current_path_graph_generic<
+		&current_path_graph::node_is_power,
+		&netgraph_node::up_edges,
+		&NET::transistor_base::is_precharge>(G, ni, ti);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+expr_index_type
+ExprAlloc::__visit_current_path_graph_node_precharge_ground(
+		const current_path_graph& G, const size_t ni, 
+		const size_t ti) {
+	return __visit_current_path_graph_generic<
+		&current_path_graph::node_is_ground,
+		&netgraph_node::dn_edges,
+		&NET::transistor_base::is_precharge>(G, ni, ti);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+expr_index_type
+ExprAlloc::__visit_current_path_graph_node_logic_power(
+		const current_path_graph& G, const size_t ni, 
+		const size_t ti) {
+	return __visit_current_path_graph_generic<
+		&current_path_graph::node_is_power,
+		&netgraph_node::up_edges,
+		&NET::transistor_base::is_not_precharge>(G, ni, ti);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+expr_index_type
+ExprAlloc::__visit_current_path_graph_node_logic_ground(
+		const current_path_graph& G, const size_t ni, 
+		const size_t ti) {
+	return __visit_current_path_graph_generic<
+		&current_path_graph::node_is_ground,
+		&netgraph_node::dn_edges,
+		&NET::transistor_base::is_not_precharge>(G, ni, ti);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+expr_index_type
+ExprAlloc::__visit_current_path_graph_node_logic_output_up(
+		const current_path_graph& G, const size_t ni, 
+		const size_t ti) {
+	return __visit_current_path_graph_generic<
+		&current_path_graph::node_is_logic_signal,
+		&netgraph_node::up_edges,
+		&NET::transistor_base::is_not_precharge>(G, ni, ti);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+expr_index_type
+ExprAlloc::__visit_current_path_graph_node_logic_output_down(
+		const current_path_graph& G, const size_t ni, 
+		const size_t ti) {
+	return __visit_current_path_graph_generic<
+		&current_path_graph::node_is_logic_signal,
+		&netgraph_node::dn_edges,
+		&NET::transistor_base::is_not_precharge>(G, ni, ti);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#endif	// PRSIM_PRECHARGE_INVARIANTS
 
 //=============================================================================
 /**

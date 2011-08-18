@@ -13,7 +13,6 @@ namespace PRSIM {
 using std::pair;
 using NET::transistor;
 using NET::netlist;
-using util::map_key_inserter;
 
 //=============================================================================
 // class current_path_graph method definitions
@@ -28,7 +27,9 @@ current_path_graph::current_path_graph(const netlist& nl) :
 	__ctor_identify_supplies();
 	__mark_logical_pull_down_nodes();
 	__mark_logical_pull_up_nodes();
+#if CACHE_PRECHARGE_PATHS
 	__ctor_identify_precharge_paths();
+#endif
 }	// end current_path_graph ctor
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -117,10 +118,16 @@ current_path_graph::__ctor_initialize_edges(void) {
 		precharge_drain_nodes.end(),
 		precharge_source_nodes.begin(), 
 		precharge_source_nodes.end(),
-		map_key_inserter(precharged_internal_nodes));
+#if CACHE_PRECHARGE_PATHS
+		util::map_key_inserter(precharged_internal_nodes)
+#else
+		util::set_inserter(precharged_internal_nodes)
+#endif
+		);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if CACHE_PRECHARGE_PATHS
 /**
 	\pre already called __mark_logical_pull_down_nodes and
 		__mark_logical_pull_up_nodes to classify 
@@ -157,6 +164,7 @@ current_path_graph::__ctor_identify_precharge_paths(void) {
 	}
 	}
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -217,6 +225,7 @@ if (f.second) {
 }	// end __visit_paths_DFS_generic
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if CACHE_PRECHARGE_PATHS
 /**
 	NOTE: this allows both PFET and NFET precharges up to Vdd
  */
@@ -301,6 +310,7 @@ current_path_graph::__visit_output_paths_down(
 		&netgraph_node::dn_edges,
 		&transistor_base::is_not_precharge>(g, v, ni);
 }
+#endif	// CACHE_PRECHARGE_PATHS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -362,6 +372,18 @@ current_path_graph::__mark_logical_pull_up_nodes(void) {
 		}
 		}
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+current_path_graph::node_is_logic_signal(const index_type i) const {
+	return _netlist.node_pool[i].is_logical_node();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+current_path_graph::node_is_internal(const index_type i) const {
+	return _netlist.node_pool[i].is_internal_node();
 }
 
 //=============================================================================
