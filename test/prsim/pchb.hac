@@ -5,7 +5,7 @@
 import "../../lib/channel.hac";
 
 /**
-	Has no reset.
+	half-buffer
  */
 defproc pchb_buf(bool? _Reset; e1of2? L; e1of2! R){
 _c1of2 _r;
@@ -30,25 +30,31 @@ prs {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Has no reset.
+	full-buffer
  */
 defproc pcfb_buf(bool? _Reset; e1of2? L; e1of2! R){
-_c1of2 _r, _l;
-bool le_, en;
+_c1of2 _r;
+bool _en, en, rv, lv, _lv;
 prs {
-	R.e & en			-> @_in-
+	_Reset & R.e & en		-> @_in-
 	~@_in &{+~en & ~R.e} L.d[0]	-> _r.d[0]-
 	~@_in & L.d[1]			-> _r.d[1]-
 (:i:2:
+	~_Reset				-> _r.d[i]+
 	~en & ~R.e			-> _r.d[i]+
 	_r.d[i]				=> R.d[i]-
 )
 
-	R.d[0] | R.d[1]			-> L.e-
-	~en & ~L.d[0] & ~L.d[1]		-> L.e+
-	L.e				=> le_-
-	le_				-> en-
-	~R.d[0] & ~R.d[1] & ~le_	-> en+
+	_r.d[0] & _r.d[1]		=> rv-
+	L.d[0] | L.d[1]			=> _lv-
+	_lv				=> lv-
+	en & rv & lv			-> L.e-
+	~_Reset				-> L.e+
+	~en & ~lv			-> L.e+
+	L.e				-> _en-
+	~L.e				-> _en+
+	_en				-> en-
+	~_en & ~rv			-> en+
 }
 }
 

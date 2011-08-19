@@ -1,0 +1,19 @@
+# "pcfb-test-a-01.prsimrc"
+# @haco@ pcfb-test-a.haco-c
+# @hacprsim-flags@ -f precharge-invariants
+
+channel L e:1 :0 d:2
+channel R e:1 :0 d:2
+channel-source-args L 0 1 1 0
+channel-expect-args R 0 1 1 0
+channel-sink R
+invariants b
+
+watchall
+set _Reset 0
+channel-reset-all
+cycle
+status X
+
+invariants-verbose b
+

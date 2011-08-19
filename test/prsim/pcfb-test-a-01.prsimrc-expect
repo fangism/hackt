@@ -1,0 +1,24 @@
+b refers to process-inst-ref pcfb_buf<>
+invariants:
+$(~((~b.en & ~R.e) & (_Reset & R.e & b.en)), "[auto] precharge interference")
+WARNING: weak-interference `L.e'
+>> cause: `_Reset' (val: 0)
+	0	_Reset : 0
+	10	L.d[0] : 0
+	10	L.d[1] : 0
+	10	R.e : 1
+	10	b._r.d[0] : 1	[by _Reset:=0]
+	10	b._r.d[1] : 1	[by _Reset:=0]
+	20	b._lv : 1	[by L.d[1]:=0]
+	20	R.d[0] : 0	[by b._r.d[0]:=1]
+	20	R.d[1] : 0	[by b._r.d[1]:=1]
+	20	b.rv : 0	[by b._r.d[1]:=1]
+	30	b.lv : 0	[by b._lv:=1]
+	30	L.e : 1	[by b.rv:=0]
+	40	b._en : 0	[by L.e:=1]
+	50	b.en : 1	[by b._en:=0]
+X nodes:
+
+b refers to process-inst-ref pcfb_buf<>
+invariants:
+$(~((~b.en:1 & ~R.e:1)<0> & (_Reset:0 & R.e:1 & b.en:1)<0>)<1>, "[auto] precharge interference")
