@@ -92,7 +92,8 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	sreset-preset-g sreset-preset-h sreset-preset-i \
 	preset-delay-a \
 	xor-test-a xor-test-b \
-	pchb pchb-test-a pcfb-test-a
+	pchb pchb-test-a pcfb-test-a \
+	pcehb-test-a pcefb-test-a
 
 # TODO: more cross-coupled test cases
 # SRAM cell
@@ -381,8 +382,12 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	xor-test-a-01 xor-test-a-02 \
 	xor-test-b-01 \
 	pchb-test-a-01 pchb-test-a-02 \
-	pcfb-test-a-01 pcfb-test-a-02
+	pcfb-test-a-01 pcfb-test-a-02 \
+	pcehb-test-a-01 \
+	pcefb-test-a-01
 
+# The following tests need bug fix for ACX-PR-2315
+# pcehb-test-a-02 pcefb-test-a-02
 
 # subset of prsimrc test that we wish to compare traces against regressions
 HACKT_PRSIMTRACE_TEST_SUBJECTS = \
@@ -680,6 +685,10 @@ HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
 HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES = $(HACKT_PRSIMRC_TEST_SCRIPTS_PASSES)
 
 HACKT_PRSIM_OPT_TEST_SCRIPTS_BASES = $(HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES)
+
+HACKNET_TEST_SCRIPTS_PASSES = \
+	pchb-test-a pcfb-test-a \
+	pcehb-test-a pcefb-test-a
 
 srcdir_EXTRA_DIST += \
 	half-keeper-cycle.prsimrc \

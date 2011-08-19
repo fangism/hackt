@@ -1,0 +1,90 @@
+* subcircuit e1of<2> is empty.
+
+* subcircuit _c1of<2> is empty.
+
+.subckt pcefb_buf<> !GND !Vdd _Reset L.d[0] L.d[1] L.e R.d[0] R.d[1] R.e
+* BEGIN node aliases
+* 	bool port aliases:
+* 	1: L.d[0] @[ port-alias loc-FO- loc-FO+ ]
+* 	2: L.d[1] @[ port-alias loc-FO- loc-FO+ ]
+* 	3: L.e @[ port-alias loc-FO- loc-FO+ loc-FI- loc-FI+ ]
+* 	4: R.d[0] @[ port-alias loc-FI- loc-FI+ ]
+* 	5: R.d[1] @[ port-alias loc-FI- loc-FI+ ]
+* 	6: R.e @[ port-alias loc-FO- loc-FO+ ]
+* 	7: !GND @[ supply_low port-alias ]
+* 	8: !Vdd @[ supply_high port-alias ]
+* 	9: _Reset @[ port-alias loc-FO- loc-FO+ ]
+* 	10: _r.d[0] @[ loc-FO- loc-FO+ loc-FI- loc-FI+ ]
+* 	11: _r.d[1] @[ loc-FO- loc-FO+ loc-FI- loc-FI+ ]
+* 	12: _en @[ loc-FO- loc-FO+ loc-FI- loc-FI+ ]
+* 	13: en @[ loc-FO- loc-FO+ loc-FI- loc-FI+ ]
+* 	14: rv @[ loc-FO- loc-FO+ loc-FI- loc-FI+ ]
+* 	15: lv @[ loc-FO- loc-FO+ loc-FI- loc-FI+ ]
+* 	16: _lv @[ loc-FO- loc-FO+ loc-FI- loc-FI+ ]
+* END node aliases
+* BEGIN node terminals
+* 	@_in : M@_in:dn:0.d M_r.d[0]:dn:0:pchg.d M_r.d[0]:dn:1.s M_r.d[1]:dn:0.s
+* 	!GND : M@_in:dn:0.s M@_in:dn:0.b M_r.d[0]:dn:1.b M_r.d[1]:dn:0.b MR.d[0]:dn:0.s MR.d[0]:dn:0.b MR.d[1]:dn:0.s MR.d[1]:dn:0.b Mrv:dn:0.s Mrv:dn:0.b Mrv:dn:1.b M_lv:dn:0.s M_lv:dn:0.b M_lv:dn:1.s M_lv:dn:1.b Mlv:dn:0.s Mlv:dn:0.b ML.e:dn:0.s ML.e:dn:0.b ML.e:dn:1.b ML.e:dn:2.b M_en:dn:0.s M_en:dn:0.b M_en:dn:1.b M_en:dn:2.b Men:dn:0.s Men:dn:0.b
+* 	!Vdd : M_r.d[0]:dn:0:pchg.s M_r.d[0]:dn:0:pchg.b M_r.d[0]:up:0.s M_r.d[0]:up:0.b MR.d[0]:up:0.s MR.d[0]:up:0.b M_r.d[1]:up:0.s M_r.d[1]:up:0.b MR.d[1]:up:0.s MR.d[1]:up:0.b Mrv:up:0.s Mrv:up:0.b Mrv:up:1.s Mrv:up:1.b M_lv:up:0.s M_lv:up:0.b M_lv:up:1.b Mlv:up:0.s Mlv:up:0.b ML.e:up:0.s ML.e:up:0.b ML.e:up:1.s ML.e:up:1.b ML.e:up:2.b M_en:up:0.s M_en:up:0.b M_en:up:1.b M_en:up:2.s M_en:up:2.b Men:up:0.s Men:up:0.b Men:up:1.b
+* 	_r.d[0] : M_r.d[0]:dn:1.d M_r.d[0]:up:0.d MR.d[0]:dn:0.g MR.d[0]:up:0.g Mrv:dn:0.g Mrv:up:0.g
+* 	en : M@_in:dn:0.g M_r.d[0]:dn:0:pchg.g M_r.d[0]:up:0.g M_r.d[1]:up:0.g ML.e:dn:0.g ML.e:up:1.g Men:dn:0.d Men:up:1.d
+* 	L.d[0] : M_r.d[0]:dn:1.g M_lv:dn:0.g M_lv:up:0.g
+* 	_r.d[1] : M_r.d[1]:dn:0.d M_r.d[1]:up:0.d MR.d[1]:dn:0.g MR.d[1]:up:0.g Mrv:dn:1.g Mrv:up:1.g
+* 	L.d[1] : M_r.d[1]:dn:0.g M_lv:dn:1.g M_lv:up:1.g
+* 	R.d[0] : MR.d[0]:dn:0.d MR.d[0]:up:0.d
+* 	R.d[1] : MR.d[1]:dn:0.d MR.d[1]:up:0.d
+* 	rv : Mrv:dn:1.d Mrv:up:0.d Mrv:up:1.d ML.e:dn:1.g Men:up:1.g
+* 	#0 : Mrv:dn:0.d Mrv:dn:1.s
+* 	_lv : M_lv:dn:0.d M_lv:dn:1.d M_lv:up:1.d Mlv:dn:0.g Mlv:up:0.g
+* 	#1 : M_lv:up:0.d M_lv:up:1.s
+* 	lv : Mlv:dn:0.d Mlv:up:0.d ML.e:dn:2.g ML.e:up:2.g
+* 	L.e : ML.e:dn:2.d ML.e:up:0.d ML.e:up:2.d M_en:dn:1.g M_en:up:0.g
+* 	#2 : ML.e:dn:0.d ML.e:dn:1.s
+* 	#3 : ML.e:dn:1.d ML.e:dn:2.s
+* 	_Reset : ML.e:up:0.g M_en:dn:0.g M_en:up:2.g
+* 	#4 : ML.e:up:1.d ML.e:up:2.s
+* 	_en : M_en:dn:2.d M_en:up:1.d M_en:up:2.d Men:dn:0.g Men:up:0.g
+* 	#5 : M_en:dn:0.d M_en:dn:1.s
+* 	#6 : M_en:dn:1.d M_en:dn:2.s
+* 	R.e : M_en:dn:2.g M_en:up:1.g
+* 	#7 : M_en:up:0.d M_en:up:1.s
+* 	#8 : Men:up:0.d Men:up:1.s
+* END node terminals
+M@_in:dn:0 !GND en @_in !GND nch W=5u L=2u
+M_r.d[0]:dn:0:pchg !Vdd en @_in !Vdd pch W=5u L=2u
+M_r.d[0]:dn:1 @_in L.d[0] _r.d[0] !GND nch W=5u L=2u
+M_r.d[1]:dn:0 @_in L.d[1] _r.d[1] !GND nch W=5u L=2u
+M_r.d[0]:up:0 !Vdd en _r.d[0] !Vdd pch W=5u L=2u
+MR.d[0]:dn:0 !GND _r.d[0] R.d[0] !GND nch W=5u L=2u
+MR.d[0]:up:0 !Vdd _r.d[0] R.d[0] !Vdd pch W=5u L=2u
+M_r.d[1]:up:0 !Vdd en _r.d[1] !Vdd pch W=5u L=2u
+MR.d[1]:dn:0 !GND _r.d[1] R.d[1] !GND nch W=5u L=2u
+MR.d[1]:up:0 !Vdd _r.d[1] R.d[1] !Vdd pch W=5u L=2u
+Mrv:dn:0 !GND _r.d[0] #0 !GND nch W=5u L=2u
+Mrv:dn:1 #0 _r.d[1] rv !GND nch W=5u L=2u
+Mrv:up:0 !Vdd _r.d[0] rv !Vdd pch W=5u L=2u
+Mrv:up:1 !Vdd _r.d[1] rv !Vdd pch W=5u L=2u
+M_lv:dn:0 !GND L.d[0] _lv !GND nch W=5u L=2u
+M_lv:dn:1 !GND L.d[1] _lv !GND nch W=5u L=2u
+M_lv:up:0 !Vdd L.d[0] #1 !Vdd pch W=5u L=2u
+M_lv:up:1 #1 L.d[1] _lv !Vdd pch W=5u L=2u
+Mlv:dn:0 !GND _lv lv !GND nch W=5u L=2u
+Mlv:up:0 !Vdd _lv lv !Vdd pch W=5u L=2u
+ML.e:dn:0 !GND en #2 !GND nch W=5u L=2u
+ML.e:dn:1 #2 rv #3 !GND nch W=5u L=2u
+ML.e:dn:2 #3 lv L.e !GND nch W=5u L=2u
+ML.e:up:0 !Vdd _Reset L.e !Vdd pch W=5u L=2u
+ML.e:up:1 !Vdd en #4 !Vdd pch W=5u L=2u
+ML.e:up:2 #4 lv L.e !Vdd pch W=5u L=2u
+M_en:dn:0 !GND _Reset #5 !GND nch W=5u L=2u
+M_en:dn:1 #5 L.e #6 !GND nch W=5u L=2u
+M_en:dn:2 #6 R.e _en !GND nch W=5u L=2u
+M_en:up:0 !Vdd L.e #7 !Vdd pch W=5u L=2u
+M_en:up:1 #7 R.e _en !Vdd pch W=5u L=2u
+M_en:up:2 !Vdd _Reset _en !Vdd pch W=5u L=2u
+Men:dn:0 !GND _en en !GND nch W=5u L=2u
+Men:up:0 !Vdd _en #8 !Vdd pch W=5u L=2u
+Men:up:1 #8 rv en !Vdd pch W=5u L=2u
+.ends
+
+

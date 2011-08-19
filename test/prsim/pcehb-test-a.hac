@@ -1,0 +1,9 @@
+// "pcehb-test-a.hac"
+// testing precharge invariants
+// @hacknet-flags@ -f emit_node_aliases=1 -f emit_node_terminals=1 -T pcehb_buf
+
+import "pcehb.hac";
+
+bool _Reset;
+e1of2 L, R;
+pcehb_buf b(_Reset, L, R);

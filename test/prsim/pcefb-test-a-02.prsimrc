@@ -1,0 +1,6 @@
+# "pcefb-test-a-02.prsimrc"
+# @haco@ pcefb-test-a.haco-c
+# @hacprsim-flags@ -f precharge-invariants
+
+source pchb-test-a-02.prsimrc
+
