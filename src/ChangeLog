@@ -8,7 +8,8 @@
 	* HACKT-00-01-04-main-00-84-85-prsim-precharge-check-13:
 	  prsim, ExprAlloc: Implemented expression construction from netlist
 		graphs, for paths rooted from precharged internal nodes.
-		Untested.
+		First test case added, showing invariant dumps 
+		with precharge interference checks!
 
 
 2011-08-17	David Fang		<fangism@users.sourceforge.net>

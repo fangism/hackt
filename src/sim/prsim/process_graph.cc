@@ -304,13 +304,23 @@ unique_process_subgraph::dump_invariant_message(ostream& o,
 	const entity::PRS::footprint::invariant_source_ptr_type
 		ivs(pfp.lookup_invariant_source(ri));
 #endif
+	invariant_map_type::const_iterator
+		f(invariant_map.find(ri));
+	INVARIANT(f != invariant_map.end());
+	const size_t sz = pfp.get_invariant_pool().size();
+	if (f->second < sz) {
 	const never_ptr<const entity::SPEC::invariant>
-		ivs(pfp.get_invariant_pool()[invariant_map.find(ri)
-			->second].second);
+		ivs(pfp.get_invariant_pool()[f->second].second);
 	NEVER_NULL(ivs);
 	const string& invstr(ivs->get_message());
 	if (invstr.length()) {
 		o << pre << invstr << post;
+	}
+	} else {
+		// NEW with automatic precharge invariants!
+		o << pre << "[auto] precharge interference" << post;
+		// TODO: another type will be "precharge sneak-path"
+		// need some way to distinguish...
 	}
 #endif
 	return o;

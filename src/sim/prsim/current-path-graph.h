@@ -105,6 +105,7 @@ class current_path_graph {
 	set<index_type>				signal_nodes;
 	set<index_type>				internal_nodes;
 
+public:
 	/**
 		key = node index (precharged nodes)
 		value = set of paths to supplies and output nodes
@@ -114,6 +115,7 @@ class current_path_graph {
 #else
 	typedef	set<index_type>			precharge_map_type;
 #endif
+private:
 	precharge_map_type			precharged_internal_nodes;
 
 public:
@@ -146,6 +148,9 @@ public:
 	translate_logical_bool_index(const index_type i) const {
 		return _netlist.lookup_named_node(i);
 	}
+
+	const precharge_map_type&
+	get_precharge_set(void) const { return precharged_internal_nodes; }
 
 private:
 	typedef	current_path_graph		this_type;

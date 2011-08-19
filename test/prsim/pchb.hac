@@ -1,0 +1,54 @@
+/**
+	\file "pchb.hac"
+	Includes a few buffers with precharges.
+**/
+import "../../lib/channel.hac";
+
+/**
+	Has no reset.
+ */
+defproc pchb_buf(bool? _Reset; e1of2? L; e1of2! R){
+_c1of2 _r;
+bool rv, _lv, lv;
+prs {
+	_Reset & R.e & L.e		-> @_in-
+	~@_in &{+~R.e & ~L.e} L.d[0]	-> _r.d[0]-
+	~@_in & L.d[1]			-> _r.d[1]-
+	
+(:i:2:
+	~_Reset				-> _r.d[i]+
+	~L.e & ~R.e			-> _r.d[i]+
+	_r.d[i]				=> R.d[i]-
+)
+	_r.d[0] & _r.d[1]		=> rv-
+	L.d[0] | L.d[1]			=> _lv-
+	_lv				=> lv-
+
+	rv & lv				#> L.e-
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Has no reset.
+ */
+defproc pcfb_buf(bool? _Reset; e1of2? L; e1of2! R){
+_c1of2 _r, _l;
+bool le_, en;
+prs {
+	R.e & en			-> @_in-
+	~@_in &{+~en & ~R.e} L.d[0]	-> _r.d[0]-
+	~@_in & L.d[1]			-> _r.d[1]-
+(:i:2:
+	~en & ~R.e			-> _r.d[i]+
+	_r.d[i]				=> R.d[i]-
+)
+
+	R.d[0] | R.d[1]			-> L.e-
+	~en & ~L.d[0] & ~L.d[1]		-> L.e+
+	L.e				=> le_-
+	le_				-> en-
+	~R.d[0] & ~R.d[1] & ~le_	-> en+
+}
+}
+

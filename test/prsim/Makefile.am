@@ -91,7 +91,8 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	sreset-preset-d sreset-preset-e sreset-preset-f \
 	sreset-preset-g sreset-preset-h sreset-preset-i \
 	preset-delay-a \
-	xor-test-a xor-test-b
+	xor-test-a xor-test-b \
+	pchb pchb-test-a
 
 # TODO: more cross-coupled test cases
 # SRAM cell
@@ -378,8 +379,9 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	sreset-preset-d-01 \
 	preset-delay-a-01 \
 	xor-test-a-01 xor-test-a-02 \
-	xor-test-b-01
-	
+	xor-test-b-01 \
+	pchb-test-a-01
+
 
 # subset of prsimrc test that we wish to compare traces against regressions
 HACKT_PRSIMTRACE_TEST_SUBJECTS = \

@@ -430,6 +430,50 @@ if (flags.auto_precharge_invariants && netlists) {
 	const NET::netlist& nl(netlists->lookup_netlist(*fp));
 	current_path_graph G(nl);
 	// TODO: iterate over precharge nodes and generate expressions
+	const current_path_graph::precharge_map_type&
+		pcm(G.get_precharge_set());
+	static const size_t nullgate = size_t(-1);
+	size_t j = g->rule_pool.size();		// new indices
+	current_path_graph::precharge_map_type::const_iterator
+		mi(pcm.begin()), me(pcm.end());
+for ( ; mi!=me; ++mi) {
+	const netgraph_node& pn(G.get_node(*mi));
+	// TODO: eliminate tautological/invariant precharge expressions
+	// needs static analysis and a basic SAT solver
+	if (pn.dir) {		// is logically P-stack
+		const expr_index_type pe =
+			__visit_current_path_graph_node_precharge_ground(
+				G, *mi, nullgate);
+		const expr_index_type le =
+			__visit_current_path_graph_node_logic_power(
+				G, *mi, nullgate);
+		const expr_index_type inv =	// NAND
+			allocate_new_not_expr(
+			allocate_new_Nary_expr(
+				entity::PRS::PRS_AND_EXPR_TYPE_ENUM, 2));
+		link_child_expr(inv, pe, 0);
+		link_child_expr(inv, le, 1);
+		link_invariant_expr(inv, j);
+		++j;
+		// TODO: check against precharge sneak paths to output
+	} else {		// is logically N-stack (common)
+		const expr_index_type pe =
+			__visit_current_path_graph_node_precharge_power(
+				G, *mi, nullgate);
+		const expr_index_type le =
+			__visit_current_path_graph_node_logic_ground(
+				G, *mi, nullgate);
+		const expr_index_type inv =	// NAND
+			allocate_new_not_expr(
+			allocate_new_Nary_expr(
+				entity::PRS::PRS_AND_EXPR_TYPE_ENUM, 2));
+		link_child_expr(inv, pe, 0);
+		link_child_expr(inv, le, 1);
+		link_invariant_expr(inv, j);	// FINISH ME
+		++j;
+		// TODO: check against precharge sneak paths to output
+	}
+}	// end for all precharged internal nodes
 }
 #endif	// PRSIM_PRECHARGE_INVARIANTS
 #if 0
@@ -452,7 +496,8 @@ ExprAlloc::visit(const state_instance<bool_tag>& b) {
 	topfp->dump_canonical_name<bool_tag>(
 		STACKTRACE_INDENT_PRINT("unique bool: "),
 		lookup_global_id<bool_tag>(
-			b.get_back_ref()->instance_index) -1) << endl;
+			b.get_back_ref()->instance_index) -1, 
+			dump_flags::default_value) << endl;
 #endif
 	const never_ptr<const instance_alias_info<bool_tag> >
 		bref(b.get_back_ref());
@@ -534,7 +579,7 @@ ExprAlloc::visit(const state_instance<process_tag>& gp) {
 #if ENABLE_STACKTRACE
 	topfp->dump_canonical_name<process_tag>(
 		STACKTRACE_INDENT_PRINT("In process: "),
-		current_process_index -1) << endl;
+		current_process_index -1, dump_flags::default_value) << endl;
 #endif
 	const footprint_frame& gpff(gp._frame);
 	const footprint& gpfp(*gpff._footprint);
@@ -837,7 +882,7 @@ if (suppress_keeper_rule) {
 #endif
 	const entity::PRS::footprint::expr_pool_type& expr_pool(
 		get_current_footprint().get_prs_footprint().get_expr_pool());
-	STACKTRACE_INDENT_PRINT("expr_pool.size = " << expr_pool->size() << endl);
+	STACKTRACE_INDENT_PRINT("expr_pool.size = " << expr_pool.size() << endl);
 	STACKTRACE_INDENT_PRINT("r.expr_index = " << r.expr_index << endl);
 	INVARIANT(size_t(r.expr_index) <= expr_pool.size());
 	expr_pool[r.expr_index].accept(*this);
@@ -1318,15 +1363,20 @@ ExprAlloc::__visit_current_path_graph_generic(
 		const current_path_graph& G, const size_t ni, 
 		const size_t ti) {
 	STACKTRACE_BRIEF;
-	const bool tv = (ti != size_t(-1));
+	STACKTRACE_INDENT_PRINT("netgraph node: " << ni <<
+		", transistor: " << ti << endl);
+	static const size_t nullgate = size_t(-1);
+	const bool tv = (ti != nullgate);
 	expr_index_type next = 0;
 	if (tv) {
 		const transistor_base&
 			gt(G.get_edge(ti));	// may be invalid
+		STACKTRACE_INDENT_PRINT("gate node " << gt.gate << endl);
 		const node_index_type gi =
 			G.translate_logical_bool_index(gt.gate);
 		INVARIANT(gi);
-		next = allocate_new_literal_expr(gi);
+		STACKTRACE_INDENT_PRINT("literal index " << gi << endl);
+		next = allocate_new_literal_expr(lookup_local_bool_id(gi));
 		// depending on PFET or NFET
 		if (gt.is_PFET()) {
 			next = allocate_new_not_expr(next);
@@ -1392,6 +1442,7 @@ expr_index_type
 ExprAlloc::__visit_current_path_graph_node_precharge_power(
 		const current_path_graph& G, const size_t ni, 
 		const size_t ti) {
+	STACKTRACE_BRIEF;
 	return __visit_current_path_graph_generic<
 		&current_path_graph::node_is_power,
 		&netgraph_node::up_edges,
@@ -1403,6 +1454,7 @@ expr_index_type
 ExprAlloc::__visit_current_path_graph_node_precharge_ground(
 		const current_path_graph& G, const size_t ni, 
 		const size_t ti) {
+	STACKTRACE_BRIEF;
 	return __visit_current_path_graph_generic<
 		&current_path_graph::node_is_ground,
 		&netgraph_node::dn_edges,
@@ -1414,6 +1466,7 @@ expr_index_type
 ExprAlloc::__visit_current_path_graph_node_logic_power(
 		const current_path_graph& G, const size_t ni, 
 		const size_t ti) {
+	STACKTRACE_BRIEF;
 	return __visit_current_path_graph_generic<
 		&current_path_graph::node_is_power,
 		&netgraph_node::up_edges,
@@ -1425,6 +1478,7 @@ expr_index_type
 ExprAlloc::__visit_current_path_graph_node_logic_ground(
 		const current_path_graph& G, const size_t ni, 
 		const size_t ti) {
+	STACKTRACE_BRIEF;
 	return __visit_current_path_graph_generic<
 		&current_path_graph::node_is_ground,
 		&netgraph_node::dn_edges,
@@ -1436,6 +1490,7 @@ expr_index_type
 ExprAlloc::__visit_current_path_graph_node_logic_output_up(
 		const current_path_graph& G, const size_t ni, 
 		const size_t ti) {
+	STACKTRACE_BRIEF;
 	return __visit_current_path_graph_generic<
 		&current_path_graph::node_is_logic_signal,
 		&netgraph_node::up_edges,
@@ -1447,6 +1502,7 @@ expr_index_type
 ExprAlloc::__visit_current_path_graph_node_logic_output_down(
 		const current_path_graph& G, const size_t ni, 
 		const size_t ti) {
+	STACKTRACE_BRIEF;
 	return __visit_current_path_graph_generic<
 		&current_path_graph::node_is_logic_signal,
 		&netgraph_node::dn_edges,
