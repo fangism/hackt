@@ -178,9 +178,6 @@ public:
 		inspect(const State&, ostream&) const;
 	};	// end struct invariant_exception
 
-#if 0
-	typedef	generic_exception	invariant_exception;
-#else
 	/**
 		Exception type thrown when there is an invariant
 		violation and the error policy is set to fatal.
@@ -192,7 +189,6 @@ public:
 			generic_exception(n, e) { }
 
 	};	// end struct invariant_exception
-#endif
 
 	typedef	generic_exception	interference_exception;
 	typedef	generic_exception	instability_exception;
@@ -634,6 +630,21 @@ private:
 		missing keepers.
 	 */
 	set<node_index_type>			__keeper_check_candidates;
+#if PRSIM_LAZY_INVARIANTS
+	// using pair for built-in < comparison operator
+	typedef	pair<process_index_type, rule_index_type>
+						rule_reference_type;
+	typedef	map<rule_reference_type, pull_enum>
+						invariant_update_map_type;
+	/**
+		This map is used to accumulate invariant expression updates.  
+		When one node fans out to multiple sub-expressions of the
+		same invariant expression, only the final state is
+		taken; transient values are ignored.  
+		The contents of this map are short-lived are short-lived.
+	 */
+	invariant_update_map_type		__invariant_update_map;
+#endif
 public:
 	/**
 		Signal handler class that binds the State reference
@@ -1369,13 +1380,18 @@ private:
 
 	break_type
 	propagate_evaluation(cause_arg_type, const expr_index_type, 
-		pull_enum prev);
+		const pull_enum prev);
 
 #if 0
 	void
 	kill_evaluation(const node_index_type, expr_index_type, 
 		value_enum prev, value_enum next);
 #endif
+
+	error_policy_enum
+	__diagnose_invariant(ostream&, const process_index_type, 
+		const rule_index_type, const pull_enum,
+		const node_index_type, const value_enum) const;
 
 	break_type
 	__diagnose_violation(ostream&, const pull_enum next, 

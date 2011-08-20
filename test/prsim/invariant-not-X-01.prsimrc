@@ -2,6 +2,7 @@
 # @haco@ invariant-not-X.haco-c
 
 # ACX: bugzilla 2315
+# now FIXED, see also test case evaluate-test-a.hac, evaluate-test-a-01.prsimrc
 echo This test reveals a fundamental bug in the way expressions
 echo are evaluated and firings are propagated.
 echo Below we false positive reports of invariant violations

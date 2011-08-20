@@ -3,6 +3,19 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-08-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-90:
+	  prsim: invariants expressions now evaluated lazily to 
+		aggregate results, taking the last effective change
+		in pull-state *before* diagnosing violations.
+		This fixes ACX-PR-2315, where false-positives were
+		triggered when expressions like (a | ~a) were 
+		evaluated in some unspecified literal order.
+		switch: PRSIM_LAZY_INVARIANTS
+	  Test case added, one updated.  
+
+
 2011-08-12	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-89:

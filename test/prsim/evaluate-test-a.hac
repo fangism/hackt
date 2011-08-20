@@ -1,0 +1,11 @@
+// "evaluate-test-a.hac"
+// test case where a false expression momentarily evaluates true
+// due to implementation of expression propagation and evaluation
+// this test proves that ACX-PR-2315 is fixed
+
+bool x;
+spec {
+	$(~(x & ~x))
+	$(~(~x & x))
+}
+

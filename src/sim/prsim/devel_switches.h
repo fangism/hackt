@@ -124,6 +124,17 @@
 // #define	PRSIM_RULE_DIRECTION		1
 
 /**
+	Define to 1 to aggregate the update of invariant expressions
+	to mask out evaluation-order-sensitive false-positives.
+	This evaluation aggregation only applies to invariants,
+	and not PRS rules that actually fire.
+	Goal: 1
+	Rationale: fix bug ACX-PR-2315
+	Status: done, tested
+ */
+#define	PRSIM_LAZY_INVARIANTS			1
+
+/**
 	Eventually unify the structures and enumerations between
 	sim/prsim/Expr.h and Object/lang/PRS_footprint_expr.h.
 	This will save on per-type memory footprint.  

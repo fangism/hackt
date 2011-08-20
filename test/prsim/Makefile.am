@@ -15,6 +15,7 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	invariant-a invariant-b invariant-c invariant-d invariant-e \
 	invariant-f \
 	invariant-not-X \
+	evaluate-test-a \
 	oscillator-bounded \
 	oscillator-wrong \
 	interference-a interference-b \
@@ -352,6 +353,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	invariant-f-01 invariant-f-02 invariant-f-03 \
 	inv-invariant-01 inv-invariant-02 inv-invariant-03 inv-invariant-04 \
 	invariant-not-X-01 \
+	evaluate-test-a-01 \
 	non-CMOS-a-01 non-CMOS-a-02 \
 	non-CMOS-b-01 non-CMOS-b-02 \
 	assert-fail-01 assert-fail-03 \

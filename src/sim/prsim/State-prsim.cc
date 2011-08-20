@@ -3159,6 +3159,9 @@ if (eval_ordering_is_random()) {
 	e = n.fanout.end();
 }
 	__keeper_check_candidates.clear();	// look for turned off rules
+#if PRSIM_LAZY_INVARIANTS
+	__invariant_update_map.clear();
+#endif
 	break_type __throw__ = ERROR_NONE;
 	for ( ; i!=e; ++i) {
 		// when evaluating a node as an expression, 
@@ -3175,6 +3178,23 @@ if (eval_ordering_is_random()) {
 			}
 		}
 	}
+#if PRSIM_LAZY_INVARIANTS
+	invariant_update_map_type::const_iterator
+		ii(__invariant_update_map.begin()),
+		ie(__invariant_update_map.end());
+	for ( ; ii!=ie; ++ii) {
+		const break_type E =
+			__diagnose_invariant(cerr,
+				ii->first.first, ii->first.second, 
+				ii->second, new_cause.node, new_cause.val);
+		if (UNLIKELY(E >= ERROR_BREAK)) {
+			stop();
+			if (E > __throw__) {
+				__throw__ = E;
+			}
+		}
+	}
+#endif
 	// only throw after all fanouts have been processed
 	if (UNLIKELY(__throw__ >= ERROR_INTERACTIVE)) {
 		const invariant_exception invex(ni, __throw__);
@@ -3411,7 +3431,10 @@ State::evaluate(const node_index_type ni,
 		node_type::value_to_char[size_t(prev)] << " -> " <<
 		node_type::value_to_char[size_t(next)] << endl);
 	expr_state_type* u;
-	const pull_enum node_val = next;	// for invariant diagnostic
+#if !PRSIM_LAZY_INVARIANTS
+	const value_enum node_val = value_enum(next);	// yes, convert
+	// for invariant diagnostic
+#endif
 	// first, localize evaluation to a single process!
 	const expr_struct_type* s;
 	process_sim_state& ps(lookup_global_expr_process(gui));
@@ -3472,8 +3495,8 @@ do {
 	const rule_index_type lri = pg.rule_map.find(ri)->second;
 		// expr -> rule
 	const rule_type& r(pg.rule_pool[lri]);
-if (!r.is_invariant()) {
 	const process_index_type pid = lookup_process_index(ps);
+if (!r.is_invariant()) {
 	// new: remember to update node-fanin state structure!
 	const node_index_type oni = translate_to_global_node(pid, ui);
 	// local -> global node
@@ -3489,6 +3512,8 @@ if (!r.is_invariant()) {
 	fs.dump_state(STACKTRACE_INDENT << "before : ") << endl;
 #endif
 	const pull_enum old_pull = fs.pull();
+	// because 2nd bit (bit[1]) represents X
+	// and 1st bit (bit[1]) represents 0,1 value
 	fs.unknowns += (next >> 1) - (prev >> 1);
 	fs.countdown += (next & LOGIC_VALUE) - (prev & LOGIC_VALUE);
 	const pull_enum new_pull = fs.pull();
@@ -3505,27 +3530,55 @@ if (!r.is_invariant()) {
 		&r, ps.global_expr_index(ri));
 } else {
 	// then this rule doesn't actually pull a node, is an invariant
+#if PRSIM_LAZY_INVARIANTS
+	// aggregate updates before diagnosing invariant violation
+	const rule_reference_type rr(pid, ri);
+	__invariant_update_map[rr] = next;
+	// only the last one will take effect
+	return evaluate_return_type();	// continue
+#else
+	const error_policy_enum err =
+		__diagnose_invariant(cerr, pid, ri, next, ni, node_val);
+	if (err != ERROR_IGNORE)
+		return evaluate_return_type(err);
+	else	return evaluate_return_type();
+#endif
+}
+#undef	STRUCT
+}	// end State::evaluate()
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param pi global process index
+	\param ri local rule index
+	\param next new state of invariant expression pull
+	\param ni the causing node
+	\param nval the causing node value
+	\return error status of evaluated invariant expression
+ */
+error_policy_enum
+State::__diagnose_invariant(ostream& o, const process_index_type pid,
+		const rule_index_type ri, const pull_enum next,
+		const node_index_type ni, const value_enum nval) const {
 	const bool fail = (next == PULL_OFF);
 	const bool maybe = (next == PULL_WEAK);
 	const error_policy_enum err = fail ? invariant_fail_policy :
 		maybe ? invariant_unknown_policy : ERROR_NONE;
 	if (err != ERROR_IGNORE) {
 		const bool halt = (err >= ERROR_BREAK);
-		const string pn(get_process_canonical_name(
-			lookup_process_index(ps)));
-		cerr << (halt ? "Error: " : "Warning: ") <<
+		const string pn(get_process_canonical_name(pid));
+		o << (halt ? "Error: " : "Warning: ") <<
 			(maybe ? "possible " : "" ) <<
 			"invariant violation in " << pn << ": (";
-		ps.dump_subexpr(cerr, ri, *this, true);	// always verbose
-		dump_node_canonical_name(cerr << ") by node ", ni) << ':' <<
-			node_type::value_to_char[size_t(node_val)];
-		pg.dump_invariant_message(cerr, ri, ", \"", "\"") << endl;
-		return evaluate_return_type(err);
+		const process_sim_state& ps(get_process_state(pid));
+		const unique_process_subgraph& pg(ps.type());
+		ps.dump_subexpr(o, ri, *this, true);	// always verbose
+		dump_node_canonical_name(o << ") by node ", ni) << ':' <<
+			node_type::value_to_char[size_t(nval)];
+		pg.dump_invariant_message(o, ri, ", \"", "\"") << endl;
 	}
-	return evaluate_return_type();	// continue
+	return err;
 }
-#undef	STRUCT
-}	// end State::evaluate()
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -3683,7 +3736,7 @@ State::break_type
 State::propagate_evaluation(
 		cause_arg_type c, 
 		const expr_index_type exi, 
-		pull_enum prev
+		const pull_enum prev
 		) {
 	STACKTRACE_VERBOSE_STEP;
 	const node_index_type& ni(c.node);
@@ -4648,27 +4701,6 @@ State::dump_watched_nodes(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-static
-bool
-node_is_0(const State::node_type& n) {
-	return n.current_value() == LOGIC_LOW;
-}
-
-static
-bool
-node_is_1(const State::node_type& n) {
-	return n.current_value() == LOGIC_HIGH;
-}
-
-static
-bool
-node_is_X(const State::node_type& n) {
-	return n.current_value() == LOGIC_OTHER;
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\param val LOGIC_{LOW,HIGH,OTHER}.  
 	\param nl use newline delimiter instead of space.
@@ -4677,17 +4709,7 @@ void
 State::status_nodes(const value_enum val, 
 		vector<node_index_type>& nodes) const {
 	ISE_INVARIANT(node_type::is_valid_value(val));
-#if 0
-	bool (*f)(const node_type&) = &node_is_X;
-	switch (val) {
-	case LOGIC_LOW: f = &node_is_0; break;
-	case LOGIC_HIGH: f = &node_is_1; break;
-	default: break;
-	}
-	find_nodes(nodes, f);		// std::ptr_fun
-#else
 	find_nodes(nodes, bind2nd(mem_fun_ref(&node_type::match_value), val));
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

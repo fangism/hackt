@@ -1,0 +1,26 @@
+# "evaluate-test-a-01.prsimrc"
+# @haco@ evaluate-test-a.haco-c
+# this test proves that ACX-PR-2315 is fixed
+
+invariant-fail warn
+watchall
+set x 0
+cycle
+set x 1
+cycle
+set x 0
+cycle
+set x 1
+cycle
+
+echo re-initializing...
+initialize
+set x 1
+cycle
+set x 0
+cycle
+set x 1
+cycle
+set x 0
+cycle
+
