@@ -383,11 +383,8 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	xor-test-b-01 \
 	pchb-test-a-01 pchb-test-a-02 \
 	pcfb-test-a-01 pcfb-test-a-02 \
-	pcehb-test-a-01 \
-	pcefb-test-a-01
-
-# The following tests need bug fix for ACX-PR-2315
-# pcehb-test-a-02 pcefb-test-a-02
+	pcehb-test-a-01 pcehb-test-a-02 \
+	pcefb-test-a-01 pcefb-test-a-02
 
 # subset of prsimrc test that we wish to compare traces against regressions
 HACKT_PRSIMTRACE_TEST_SUBJECTS = \
