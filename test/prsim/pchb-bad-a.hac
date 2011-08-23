@@ -1,0 +1,60 @@
+/**
+	\file "pchb-bad-a.hac"
+	Includes a few buffers with (wrong) precharges.
+**/
+import "../../lib/channel.hac";
+
+/**
+	half-buffer
+ */
+defproc pchb_buf(bool? _Reset; e1of2? L; e1of2! R){
+_c1of2 _r;
+bool rv, _lv, lv;
+prs {
+	_Reset & R.e & L.e		-> @_in-
+	~@_in &{+~L.d[0]} L.d[0]	-> _r.d[0]-	// WRONG
+	~@_in &{+~L.d[1]} L.d[1]	-> _r.d[1]-
+	
+(:i:2:
+	~_Reset				-> _r.d[i]+
+	~L.e & ~R.e			-> _r.d[i]+
+	_r.d[i]				=> R.d[i]-
+)
+	_r.d[0] & _r.d[1]		=> rv-
+	L.d[0] | L.d[1]			=> _lv-
+	_lv				=> lv-
+
+	rv & lv				#> L.e-
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	full-buffer
+ */
+defproc pcfb_buf(bool? _Reset; e1of2? L; e1of2! R){
+_c1of2 _r;
+bool _en, en, rv, lv, _lv;
+prs {
+	_Reset & R.e & en		-> @_in-
+	~@_in &{+en} L.d[0]		-> _r.d[0]-	// WRONG
+	~@_in & L.d[1]			-> _r.d[1]-
+(:i:2:
+	~_Reset				-> _r.d[i]+
+	~en & ~R.e			-> _r.d[i]+
+	_r.d[i]				=> R.d[i]-
+)
+
+	_r.d[0] & _r.d[1]		=> rv-
+	L.d[0] | L.d[1]			=> _lv-
+	_lv				=> lv-
+	en & rv & lv			-> L.e-
+	~_Reset				-> L.e+
+	~en & ~lv			-> L.e+
+	L.e				-> _en-
+	~L.e				-> _en+
+	_en				-> en-
+	~_en & ~rv			-> en+
+}
+}
+

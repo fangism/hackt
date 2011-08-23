@@ -19,6 +19,7 @@
 namespace HAC {
 namespace SIM {
 namespace PRSIM {
+using std::ostream;
 using NET::index_type;
 using std::vector;
 using std::set;
@@ -40,7 +41,11 @@ struct transistor_edge {
 	explicit
 	transistor_edge(const index_type i) : index(i), destination(0) { }
 
+
 };	// end struct transistor_edge_info
+
+ostream&
+operator << (ostream& o, const transistor_edge& e);
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -48,7 +53,7 @@ struct transistor_edge {
 	Adjacency-list format of node.
  */
 struct netgraph_node {
-	/// is non-zero if corresponds to named node or supply
+	/// is non-zero if corresponds to named node or supply (used?)
 	index_type				named_index;
 	vector<transistor_edge>			dn_edges; // outgoing, to GND
 	vector<transistor_edge>			up_edges; // incoming, from Vdd
@@ -66,6 +71,9 @@ struct netgraph_node {
 
 	bool
 	is_named_output(void) const { return named_index; }
+
+	ostream&
+	dump(ostream&) const;
 
 };	// end struct netgraph_node
 
@@ -151,6 +159,9 @@ public:
 
 	const precharge_map_type&
 	get_precharge_set(void) const { return precharged_internal_nodes; }
+
+	ostream&
+	dump(ostream&) const;
 
 private:
 	typedef	current_path_graph		this_type;

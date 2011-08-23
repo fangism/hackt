@@ -1362,7 +1362,7 @@ expr_index_type
 ExprAlloc::__visit_current_path_graph_generic(
 		const current_path_graph& G, const size_t ni, 
 		const size_t ti) {
-	STACKTRACE_BRIEF;
+//	STACKTRACE_BRIEF;
 	STACKTRACE_INDENT_PRINT("netgraph node: " << ni <<
 		", transistor: " << ti << endl);
 	static const size_t nullgate = size_t(-1);
@@ -1388,6 +1388,7 @@ if ((G.*terminals)(ni)) {
 } else {
 	const netgraph_node& n(G.get_node(ni));
 	// TODO: include bidirectional edges
+	INVARIANT((n.*edge_set).size());
 	vector<transistor_edge>::const_iterator
 		i((n.*edge_set).begin()), e((n.*edge_set).end());
 	vector<expr_index_type> se;	// collect subexpressions here

@@ -1,0 +1,25 @@
+* Warning : precharge is not fully-restoring.
+* Warnings found in producing netlist for pcfb_buf<>.
+	0	_Reset : 0
+	10	L.d[0] : 0
+	10	L.d[1] : 0
+	10	R.e : 1
+	10	b._r.d[0] : 1	[by _Reset:=0]
+	10	b._r.d[1] : 1	[by _Reset:=0]
+	20	b._lv : 1	[by L.d[1]:=0]
+	20	R.d[0] : 0	[by b._r.d[0]:=1]
+	20	R.d[1] : 0	[by b._r.d[1]:=1]
+	20	b.rv : 0	[by b._r.d[1]:=1]
+	30	b.lv : 0	[by b._lv:=1]
+	30	L.e : 1	[by b.rv:=0]
+	40	b._en : 0	[by L.e:=1]
+	50	b.en : 1	[by b._en:=0]
+Warning: [mode fatal, keeper-check-fail]
+  simulator did not start with -f fast-weak-keepers
+  weak-rules are currently disabled.
+  keeper-check-fail policy unmodified
+Error: invariant violation in b: (~(b.en:1 & (_Reset:1 & R.e:1 & b.en:1)<1>)<0>) by node _Reset:1, #FILE#
+Halting on node: _Reset
+... at line 22
+Error encountered during source #FILE#.
+... at line 5

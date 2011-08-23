@@ -5,6 +5,13 @@
 
 2011-08-20	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-84-85-prsim-precharge-check-16:
+	  current-path-graph.cc: account for non-restoring FETs direction
+		when generating graph, ExprAlloc will then generate
+		expressions correctly.
+	  Expect-fail test cases added with wrong precharges.
+
+
 	* HACKT-00-01-04-main-00-84-85-prsim-precharge-check-15:
 	  hacknet: auto-flag non-restoring transistors with 
 		IS_NON_RESTORING attribute.  non-restoring FETs

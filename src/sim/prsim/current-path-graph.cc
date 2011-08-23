@@ -4,15 +4,53 @@
 		for other netlist digraph analyses.
  */
 
+#define	ENABLE_STACKTRACE			0
+
+#include <iostream>
+#include <iterator>
+#include <algorithm>
 #include "sim/prsim/current-path-graph.h"
+#include "net/netlist_options.h"
 #include "util/iterator_more.h"
+#include "util/stacktrace.h"
 
 namespace HAC {
 namespace SIM {
 namespace PRSIM {
+#include "util/using_ostream.h"
 using std::pair;
 using NET::transistor;
 using NET::netlist;
+using NET::netlist_options;
+using std::ostream_iterator;
+
+//=============================================================================
+// struct transistor_edge method definitions
+
+ostream&
+operator << (ostream& o, const transistor_edge& e) {
+	return o << '[' << e.index << "]->" << e.destination;
+}
+
+//=============================================================================
+// class netgraph_node method definitions
+
+ostream&
+netgraph_node::dump(ostream& o) const {
+	o << "\tup: ";
+	copy(up_edges.begin(), up_edges.end(),
+		ostream_iterator<transistor_edge>(o, " "));
+	o << endl;
+	o << "\tdn: ";
+	copy(dn_edges.begin(), dn_edges.end(),
+		ostream_iterator<transistor_edge>(o, " "));
+	o << endl;
+	o << "\tbi: ";
+	copy(bi_edges.begin(), bi_edges.end(),
+		ostream_iterator<transistor_edge>(o, " "));
+	o << endl;
+	return o;
+}
 
 //=============================================================================
 // class current_path_graph method definitions
@@ -21,6 +59,7 @@ current_path_graph::current_path_graph(const netlist& nl) :
 		_netlist(nl), nodes()
 		// default ctor everything else
 		{
+	STACKTRACE_VERBOSE;
 	// allocate nodes, construct graph, identify supplies, precharged nodes
 	__ctor_initialize_nodes();
 	__ctor_initialize_edges();
@@ -30,11 +69,15 @@ current_path_graph::current_path_graph(const netlist& nl) :
 #if CACHE_PRECHARGE_PATHS
 	__ctor_identify_precharge_paths();
 #endif
+#if ENABLE_STACKTRACE
+	dump(cout);
+#endif
 }	// end current_path_graph ctor
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 current_path_graph::__ctor_initialize_nodes(void) {
+	STACKTRACE_VERBOSE;
 	const size_t ns = _netlist.node_pool.size();
 	nodes.resize(ns);
 	size_t i = netlist::first_node_index;	// skip the void node
@@ -60,6 +103,7 @@ current_path_graph::__ctor_initialize_nodes(void) {
  */
 void
 current_path_graph::__ctor_identify_supplies(void) {
+	STACKTRACE_VERBOSE;
 	// identify supplies by source and sink nodes in graph
 	set<index_type>::const_iterator
 		si(signal_nodes.begin()), se(signal_nodes.end());
@@ -81,6 +125,7 @@ current_path_graph::__ctor_identify_supplies(void) {
  */
 void
 current_path_graph::__ctor_initialize_edges(void) {
+	STACKTRACE_VERBOSE;
 	set<index_type> precharge_source_nodes, precharge_drain_nodes;
 	// iterate over transistors instead
 	size_t i = 0;
@@ -93,20 +138,27 @@ current_path_graph::__ctor_initialize_edges(void) {
 		const transistor_base tb(fet);
 		edges.push_back(tb);
 		transistor_edge fwd(i), bwd(i);
-		// forward edge: head towards GND, tail to Vdd
+		// forward edge: head towards GND, tail to Vdd (current flow)
 		// backward edge: tail towards GND, head to Vdd
-		if (fet.type == transistor::NFET_TYPE) {
+		const bool nf = fet.is_NFET();
+		if (nf) {
 			fwd.destination = fet.source;
 			bwd.destination = fet.drain;
-			nodes[fet.drain].dn_edges.push_back(fwd);
-			nodes[fet.source].up_edges.push_back(bwd);
 		} else {	// is PFET
 			fwd.destination = fet.drain;
 			bwd.destination = fet.source;
-			nodes[fet.source].dn_edges.push_back(fwd);
-			nodes[fet.drain].up_edges.push_back(bwd);
 		}
-		if (fet.is_precharge()) {
+		// non-restoring FETs are backwards
+		const bool nr = fet.is_non_restoring();
+		if (nr) {
+			nodes[bwd.destination].up_edges.push_back(fwd);
+			nodes[fwd.destination].dn_edges.push_back(bwd);
+		} else {
+			nodes[bwd.destination].dn_edges.push_back(fwd);
+			nodes[fwd.destination].up_edges.push_back(bwd);
+		}
+		const bool p = fet.is_precharge();
+		if (p) {
 			precharge_transistors.insert(i);
 			precharge_source_nodes.insert(fet.source);
 			precharge_drain_nodes.insert(fet.drain);
@@ -137,6 +189,7 @@ current_path_graph::__ctor_initialize_edges(void) {
  */
 void
 current_path_graph::__ctor_identify_precharge_paths(void) {
+	STACKTRACE_VERBOSE;
 	precharge_map_type::iterator
 		pi(precharged_internal_nodes.begin()),
 		pe(precharged_internal_nodes.end());
@@ -188,6 +241,7 @@ current_path_graph::__visit_paths_DFS_generic(
 		set<index_type>& g,
 		node_predicate_map_type& v, 
 		const index_type ni) const {
+	STACKTRACE_BRIEF;
 	typedef	node_predicate_map_type		map_type;
 	typedef	map_type::value_type	map_value_type;
 	typedef	map_type::iterator	visiterator;
@@ -233,6 +287,7 @@ void
 current_path_graph::__visit_precharge_paths_to_power(
 		set<index_type>& g,
 		const index_type ni) const {
+	STACKTRACE_VERBOSE;
 	node_predicate_map_type v;
 	__visit_paths_DFS_generic<&this_type::power_supply_nodes,
 		&netgraph_node::up_edges,
@@ -247,6 +302,7 @@ void
 current_path_graph::__visit_precharge_paths_to_ground(
 		set<index_type>& g,
 		const index_type ni) const {
+	STACKTRACE_VERBOSE;
 	node_predicate_map_type v;
 	__visit_paths_DFS_generic<&this_type::ground_supply_nodes,
 		&netgraph_node::dn_edges,
@@ -262,6 +318,7 @@ void
 current_path_graph::__visit_logic_paths_to_power(
 		set<index_type>& g,
 		const index_type ni) const {
+	STACKTRACE_VERBOSE;
 	node_predicate_map_type v;
 	__visit_paths_DFS_generic<&this_type::power_supply_nodes,
 		&netgraph_node::up_edges,
@@ -277,6 +334,7 @@ void
 current_path_graph::__visit_logic_paths_to_ground(
 		set<index_type>& g,
 		const index_type ni) const {
+	STACKTRACE_VERBOSE;
 	node_predicate_map_type v;
 	__visit_paths_DFS_generic<&this_type::ground_supply_nodes,
 		&netgraph_node::dn_edges,
@@ -291,6 +349,7 @@ void
 current_path_graph::__visit_output_paths_up(
 		set<index_type>& g,
 		const index_type ni) const {
+	STACKTRACE_VERBOSE;
 	node_predicate_map_type v;
 	__visit_paths_DFS_generic<&this_type::signal_nodes,
 		&netgraph_node::up_edges,
@@ -319,6 +378,7 @@ current_path_graph::__visit_output_paths_down(
  */
 void
 current_path_graph::__mark_logical_pull_down_nodes(void) {
+	STACKTRACE_VERBOSE;
 	set<index_type>::const_iterator
 		gi(ground_supply_nodes.begin()), ge(ground_supply_nodes.end());
 	// for each distinct ground supply
@@ -350,6 +410,7 @@ current_path_graph::__mark_logical_pull_down_nodes(void) {
  */
 void
 current_path_graph::__mark_logical_pull_up_nodes(void) {
+	STACKTRACE_VERBOSE;
 	set<index_type>::const_iterator
 		gi(power_supply_nodes.begin()), ge(power_supply_nodes.end());
 	// for each distinct ground supply
@@ -384,6 +445,60 @@ current_path_graph::node_is_logic_signal(const index_type i) const {
 bool
 current_path_graph::node_is_internal(const index_type i) const {
 	return _netlist.node_pool[i].is_internal_node();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+current_path_graph::dump(ostream& o) const {
+{
+	vector<netgraph_node>::const_iterator
+		ni(nodes.begin()), ne(nodes.end());
+	o << "nodes:" << endl;
+	size_t j = 0;
+	for ( ; ni!=ne; ++ni, ++j) {
+		_netlist.node_pool[j].emit(o << j << ": ",
+			netlist_options::default_value) << endl;
+		ni->dump(o);
+	}
+}{
+	vector<transistor_base>::const_iterator
+		ti(edges.begin()), te(edges.end());
+	o << "edges:" << endl;
+	size_t j = 0;
+	for ( ; ti!=te; ++ti, ++j) {
+		o << j << ": ";
+//		_netlist.transistor_pool[j].emit(o,
+//			netlist_options::default_value);
+		ti->dump(o);
+		o << endl;
+	}
+}{
+	o << "precharge transistors: ";
+	copy(precharge_transistors.begin(), precharge_transistors.end(),
+		ostream_iterator<index_type>(o, " "));
+	o << endl;
+	o << "power supplies: ";
+	copy(power_supply_nodes.begin(), power_supply_nodes.end(),
+		ostream_iterator<index_type>(o, " "));
+	o << endl;
+	o << "ground supplies: ";
+	copy(ground_supply_nodes.begin(), ground_supply_nodes.end(),
+		ostream_iterator<index_type>(o, " "));
+	o << endl;
+	o << "signal nodes: ";
+	copy(signal_nodes.begin(), signal_nodes.end(),
+		ostream_iterator<index_type>(o, " "));
+	o << endl;
+	o << "internal nodes: ";
+	copy(internal_nodes.begin(), internal_nodes.end(),
+		ostream_iterator<index_type>(o, " "));
+	o << endl;
+	o << "precharged internal nodes: ";
+	copy(precharged_internal_nodes.begin(), precharged_internal_nodes.end(),
+		ostream_iterator<index_type>(o, " "));
+	o << endl;
+}
+	return o;
 }
 
 //=============================================================================

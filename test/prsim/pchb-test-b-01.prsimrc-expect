@@ -1,0 +1,20 @@
+b refers to process-inst-ref pchb_buf<>
+invariants:
+$(~((~L.d[0] | ~L.d[1]) & (_Reset & R.e & L.e)), "[auto] precharge interference")
+	0	_Reset : 0
+	10	L.d[0] : 0
+	10	L.d[1] : 0
+	10	R.e : 1
+	10	b._r.d[0] : 1	[by _Reset:=0]
+	10	b._r.d[1] : 1	[by _Reset:=0]
+	20	b._lv : 1	[by L.d[1]:=0]
+	20	R.d[0] : 0	[by b._r.d[0]:=1]
+	20	R.d[1] : 0	[by b._r.d[1]:=1]
+	20	b.rv : 0	[by b._r.d[1]:=1]
+	30	b.lv : 0	[by b._lv:=1]
+	40	L.e : 1	[by b.lv:=0]
+X nodes:
+
+b refers to process-inst-ref pchb_buf<>
+invariants:
+$(~((~L.d[0]:0 | ~L.d[1]:0)<1> & (_Reset:0 & R.e:1 & L.e:1)<0>)<1>, "[auto] precharge interference")
