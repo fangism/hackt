@@ -1177,6 +1177,10 @@ case PRS_LITERAL_TYPE_ENUM: {
 	t.attributes = fet_attr;
 	// transistor attributes
 	process_transistor_attributes(t, e.attributes, *current_netlist);
+	if (override_fet_type) {
+		// flag that this is a non-restoring gate (non-CMOS)
+		t.set_non_restoring();
+	}
 	current_local_netlist->add_transistor(t);
 	break;
 }	// end case PRS_LITERAL_TYPE_ENUM

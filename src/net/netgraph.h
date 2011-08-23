@@ -201,7 +201,8 @@ struct transistor_base {
 		IS_COMB_FEEDBACK = 0x04,
 		IS_PASS = 0x08,
 		IS_LOW_VT = 0x10,
-		IS_HIGH_VT = 0x20
+		IS_HIGH_VT = 0x20,
+		IS_NON_RESTORING = 0x40	// true if NOT fully-restoring
 	};
 	typedef	char			attributes_type;
 	attributes_type			attributes;
@@ -255,9 +256,24 @@ struct transistor_base {
 	}
 
 	bool
+	is_comb_keeper(void) const {
+		return attributes & IS_COMB_FEEDBACK;
+	}
+
+	bool
 	is_logic(void) const {
 		// may be pass-gate
 		return !is_precharge() && !is_weak_keeper();
+	}
+
+	void
+	set_non_restoring(void) {
+		attributes |= IS_NON_RESTORING;
+	}
+
+	bool
+	is_non_restoring(void) const {
+		return attributes & IS_NON_RESTORING;
 	}
 
 	static
@@ -265,6 +281,12 @@ struct transistor_base {
 	opposite_FET_type(const char f) {
 		return (f == NFET_TYPE) ? PFET_TYPE : NFET_TYPE;
 	}
+
+	ostream&
+	emit_attribute_suffixes(ostream&, const netlist_options&) const;
+
+	ostream&
+	dump(ostream&) const;
 
 };	// end struct transistor_base
 
@@ -371,9 +393,6 @@ struct transistor : public transistor_base {
 	ostream&
 	emit(ostream&, const index_type, const node_pool_type&, 
 		const netlist_options&) const;
-
-	ostream&
-	emit_attribute_suffixes(ostream&, const netlist_options&) const;
 
 	ostream&
 	dump_raw(ostream&) const;

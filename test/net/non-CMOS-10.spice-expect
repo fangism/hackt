@@ -1,7 +1,7 @@
 .subckt foo<> !GND !Vdd en a b _o
 M_o:dn:0 !GND en #0 !GND nch W=5u L=2u
-M_o:dn:1:pchg !Vdd en #0 !GND nch W=5u L=2u
-M_o:dn:2:pchg !Vdd a #0 !GND nch W=5u L=2u
+M_o:dn:1:pchgnr !Vdd en #0 !GND nch W=5u L=2u
+M_o:dn:2:pchgnr !Vdd a #0 !GND nch W=5u L=2u
 M_o:dn:3 #0 a #1 !GND nch W=5u L=2u
 M_o:dn:4 #1 b _o !GND nch W=5u L=2u
 .ends

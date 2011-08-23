@@ -123,7 +123,7 @@ device_group::summarize_parasitics(node_pool_type& node_pool,
 		const transistor::parasitics& p(i->parasitic_values);
 		g.cap.gate_area += i->gate_area();
 		++g.cap.gate_terms;
-		const bool N = (i->type == transistor::NFET_TYPE);
+		const bool N = (i->is_NFET());
 		if (N) {
 			s.cap.ndiff_area += p.source_area;
 			s.cap.ndiff_perimeter += p.source_perimeter;
@@ -802,6 +802,16 @@ instance::dump_raw(ostream& o) const {
 //=============================================================================
 // class transistor method definitions
 
+ostream&
+transistor_base::dump(ostream& o) const {
+	o << (is_NFET() ? 'N' : 'P');
+	o << " g:" << gate;
+	emit_attribute_suffixes(o << " [", netlist_options::default_value)
+		<< ']';
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	In a separate pass mark all nodes participating on transistor.
 	Why?  Is possible that a supply node is not used.  
@@ -971,15 +981,17 @@ transistor::emit(ostream& o, const index_type di,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-transistor::emit_attribute_suffixes(ostream& o, 
+transistor_base::emit_attribute_suffixes(ostream& o, 
 		const netlist_options& nopt) const {
-	if (attributes & IS_PASS)
+	if (is_pass())
 		o << nopt.emit_colon() << "pass";
-	if (attributes & IS_PRECHARGE)
-		o << nopt.emit_colon() << "pchg";
-	if (attributes & IS_STANDARD_KEEPER)
+	if (is_precharge()) {
+		o << nopt.emit_colon() <<
+			(is_non_restoring() ? "pchgnr" : "pchg");
+	}
+	if (is_weak_keeper())
 		o << nopt.emit_colon() << "keeper";
-	if (attributes & IS_COMB_FEEDBACK)
+	if (is_comb_keeper())
 		o << nopt.emit_colon() << "ckeeper";
 	return o;
 }
