@@ -3,6 +3,12 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-08-23	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-91:
+	  Merged prsim-precharge-check branch.
+
+
 2011-08-20	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-85-prsim-precharge-check-16:
