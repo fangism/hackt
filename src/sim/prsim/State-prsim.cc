@@ -3014,7 +3014,9 @@ State::step_return_type
 State::step(void) THROWS_STEP_EXCEPTION {
 	typedef	State::step_return_type		return_type;
 	STACKTRACE_VERBOSE;
-#if !PRSIM_SIMPLE_EVENT_QUEUE
+#if PRSIM_SIMPLE_EVENT_QUEUE
+	ISE_INVARIANT(updated_nodes.empty());
+#else
 	ISE_INVARIANT(pending_queue.empty());
 #endif
 	ISE_INVARIANT(exclhi_queue.empty());
@@ -6835,7 +6837,12 @@ State::dump_memory_usage(ostream& o) const {
 	o << "excllo-queue: ("  << ls << " * " << sizeof_tree_node(value_type)
 		<< " B/event) = " << ls * sizeof_tree_node(value_type)
 		<< " B" << endl;
-#if !PRSIM_SIMPLE_EVENT_QUEUE
+#if PRSIM_SIMPLE_EVENT_QUEUE
+	const size_t ps = updated_nodes.size();
+	o << "updated-nodes: ("  << ps << " * " <<
+		sizeof_tree_node(node_index_type) << " B/node) = " <<
+		ps * sizeof_tree_node(node_index_type) << " B" << endl;
+#else
 #if UNIQUE_PENDING_QUEUE
 	const size_t ps = pending_queue.size();
 	o << "pending-queue: ("  << ps << " * " <<
@@ -7002,7 +7009,9 @@ State::save_checkpoint(ostream& o) const {
 	// excl and pending queues should be empty!
 	ISE_INVARIANT(exclhi_queue.empty());
 	ISE_INVARIANT(excllo_queue.empty());
-#if !PRSIM_SIMPLE_EVENT_QUEUE
+#if PRSIM_SIMPLE_EVENT_QUEUE
+	ISE_INVARIANT(updated_nodes.empty());
+#else
 	ISE_INVARIANT(pending_queue.empty());
 #endif
 	write_value(o, current_time);
@@ -7194,7 +7203,9 @@ try {
 	// excl and pending queues should be empty!
 	ISE_INVARIANT(exclhi_queue.empty());
 	ISE_INVARIANT(excllo_queue.empty());
-#if !PRSIM_SIMPLE_EVENT_QUEUE
+#if PRSIM_SIMPLE_EVENT_QUEUE
+	ISE_INVARIANT(updated_nodes.empty());
+#else
 	ISE_INVARIANT(pending_queue.empty());
 #endif
 	read_value(i, current_time);
