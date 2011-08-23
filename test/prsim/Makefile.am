@@ -92,10 +92,11 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	sreset-preset-g sreset-preset-h sreset-preset-i \
 	preset-delay-a \
 	xor-test-a xor-test-b \
-	pchb pchb-bad-a \
+	pchb pchb-bad-a pcehb-bad-a \
 	pchb-test-a pcfb-test-a \
 	pcehb-test-a pcefb-test-a \
-	pchb-test-b pcfb-test-b
+	pchb-test-b pcfb-test-b \
+	pcehb-test-b pcefb-test-b
 
 # TODO: more cross-coupled test cases
 # SRAM cell
@@ -387,8 +388,10 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	pcfb-test-a-01 pcfb-test-a-02 \
 	pcehb-test-a-01 pcehb-test-a-02 \
 	pcefb-test-a-01 pcefb-test-a-02
+	pchb-test-b-01 \
 	pcfb-test-b-01 \
-	pcehb-test-b-01
+	pcehb-test-b-01 \
+	pcefb-test-b-01
 
 # subset of prsimrc test that we wish to compare traces against regressions
 HACKT_PRSIMTRACE_TEST_SUBJECTS = \
@@ -681,7 +684,9 @@ HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
 	bad-isckeeper-b-01 bad-isckeeper-c-01 bad-isckeeper-d-01 \
 	xor-test-b-02 \
 	pcfb-test-b-02 \
-	pchb-test-b-02
+	pchb-test-b-02 \
+	pcefb-test-b-02 \
+	pcehb-test-b-02
 
 # KNOWN BUG (fails, but should not): cross-pulldown-01
 
@@ -691,7 +696,9 @@ HACKT_PRSIM_OPT_TEST_SCRIPTS_BASES = $(HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES)
 
 HACKNET_TEST_SCRIPTS_PASSES = \
 	pchb-test-a pcfb-test-a \
-	pcehb-test-a pcefb-test-a
+	pcehb-test-a pcefb-test-a \
+	pchb-test-b pcfb-test-b \
+	pcehb-test-b pcefb-test-b
 
 srcdir_EXTRA_DIST += \
 	half-keeper-cycle.prsimrc \

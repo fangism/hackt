@@ -1,0 +1,13 @@
+* Warning : precharge is not fully-restoring.
+* Warnings found in producing netlist for pcefb_buf<>.
+default after min: 0
+default after max: +INF
+Warning: [mode fatal, keeper-check-fail]
+  simulator did not start with -f fast-weak-keepers
+  weak-rules are currently disabled.
+  keeper-check-fail policy unmodified
+Error: invariant violation in b: (~(b._en:1 & b.en:1)<0>) by node b._en:1, #FILE#
+Halting on node: b._en
+... at line 22
+Error encountered during source #FILE#.
+... at line 5
