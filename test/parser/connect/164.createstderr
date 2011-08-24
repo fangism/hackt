@@ -1,0 +1,7 @@
+FATAL: reference to uninstantiated bool index [2]
+Error referencing member collection: spare<>::blc.
+ERROR: unrolling aliases.
+ERROR: unrolling instance references in bool_connection::unroll().
+Instantiated from: group<>
+Error encountered during module::create.
+ERROR in creating.  Aborting.

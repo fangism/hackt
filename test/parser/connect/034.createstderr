@@ -1,4 +1,5 @@
 FATAL: reference to uninstantiated process basket<> index [6]
+Error referencing member collection: bundle<>::c.
 ERROR: unrolling aliases.
 ERROR: unrolling instance references in process_connection::unroll().
 Error encountered during module::create.

@@ -22,6 +22,7 @@
 #include "Object/def/footprint.h"
 #include "Object/expr/const_index_list.h"
 #include "Object/expr/const_range_list.h"
+#include "Object/common/dump_flags.h"
 
 #include "common/TODO.h"
 
@@ -400,13 +401,11 @@ PORT_ACTUAL_COLLECTION_CLASS::unroll_aliases(const multikey_index_type& l,
 		key_gen++;
 	} while (key_gen != key_gen.lower_corner);
 	INVARIANT(a_iter == a.end());
-#if 0
 	if (ret) {
-		cerr << "Error referencing " <<
-			this->formal_collection->get_hierarchical_name()
-			<< "." << endl;
+		cerr << "Error referencing member collection: ";
+		this->formal_collection->dump_hierarchical_name(cerr,
+			dump_flags::default_value) << "." << endl;
 	}
-#endif
 	return bad_bool(ret);
 }	// end method unroll_aliases
 

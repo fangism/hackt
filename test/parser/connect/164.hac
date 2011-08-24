@@ -1,0 +1,21 @@
+// "164.hac"
+// test case with poor diagnostic at create-time
+// contributed by Chris Pelosi, reduced by Fang
+
+defchan chledr <: chan(bool)(bool d, r) { send{} recv{} }
+defchan eledr <: chan(bool)(bool d, r, t, f, e) {d = t; r = f;}
+
+defproc spare (bool blc[2]) { }
+
+defproc group (bool blc[12]) {
+		spare pair[3];
+/**
+		blc[0] = pair[0].blc[0];
+		blc[1] = pair[0].blc[1];
+**/
+		blc[2] = pair[0].blc[2];
+		blc[3] = pair[0].blc[3];
+}
+
+group foo;
+
