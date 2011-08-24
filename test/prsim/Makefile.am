@@ -92,7 +92,8 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	sreset-preset-g sreset-preset-h sreset-preset-i \
 	preset-delay-a \
 	xor-test-a xor-test-b \
-	pchb pchb-bad-a pcehb-bad-a \
+	pchb pcehb \
+	pchb-bad-a pcehb-bad-a \
 	pchb-test-a pcfb-test-a \
 	pcehb-test-a pcefb-test-a \
 	pchb-test-b pcfb-test-b \
