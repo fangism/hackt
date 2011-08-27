@@ -2276,7 +2276,7 @@ for ( ; i!=e; ++i) {
 		if ((weak_interference_policy != ERROR_IGNORE) ||
 				!pending_weak) {
 			const break_type E =
-			__report_interference(cout, pending_weak, _ni, ev);
+			__report_interference(cout, pending_weak, _ni, ev.cause);
 			if (E > err) err = E;
 		}
 		if (ev.pending_interference()) {
@@ -2327,7 +2327,7 @@ for ( ; i!=e; ++i) {
 		if ((weak_interference_policy != ERROR_IGNORE) ||
 				!pending_weak) {
 			const break_type E =
-			__report_interference(cout, pending_weak, _ni, ev);
+			__report_interference(cout, pending_weak, _ni, ev.cause);
 			if (E > err) err = E;
 		}
 		if (ev.pending_interference()) {
@@ -4351,8 +4351,8 @@ if (!n.pending_event()) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-State::__report_cause(ostream& o, const event_type& ev) const {
-	const node_index_type& ni(ev.cause.node);
+State::__report_cause(ostream& o, cause_arg_type cause) const {
+	const node_index_type& ni(cause.node);
 	if (ni) {
 		dump_node_canonical_name(o << ">> cause: `", ni)
 			<< "\' (val: ";
@@ -4370,14 +4370,14 @@ State::__report_cause(ostream& o, const event_type& ev) const {
  */
 State::break_type
 State::__report_interference(ostream& o, const bool weak, 
-		const node_index_type _ni, const event_type& ev) const {
+		const node_index_type _ni, cause_arg_type c) const {
 	const node_type& _n(get_node(_ni));
 	if (weak) {
 	if (weak_interference_policy != ERROR_IGNORE &&
 			!_n.may_weak_interfere()) {
 		dump_node_canonical_name(o << "WARNING: weak-interference `", 
 			_ni) << "\'" << endl;
-		__report_cause(o, ev);
+		__report_cause(o, c);
 		return weak_interference_policy;	// >= ERROR_BREAK;
 	}	// endif weak_interference_policy
 	} else {	// !weak
@@ -4385,7 +4385,7 @@ State::__report_interference(ostream& o, const bool weak,
 			!_n.may_interfere()) {
 		dump_node_canonical_name(o << "WARNING: interference `", _ni)
 			<< "\'" << endl;
-		__report_cause(o, ev);
+		__report_cause(o, c);
 		return interference_policy;		// >= ERROR_BREAK;
 	}	// endif interference_policy
 	}	// endif weak
@@ -4411,7 +4411,7 @@ if (!r || !r->is_unstable()) {
 		dump_node_canonical_name(o << "WARNING: weak-unstable `",
 			_ni) << "\'" << (dir ? '+' : '-') << endl;
 	if (r) dump_rule(o << "rule: ", ev.cause_rule, true, false) << endl;
-		__report_cause(o, ev);
+		__report_cause(o, ev.cause);
 		return weak_unstable_policy;		// >= ERROR_BREAK;
 	}	// endif weak_unstable_policy
 	} else {	// !weak
@@ -4419,7 +4419,7 @@ if (!r || !r->is_unstable()) {
 		dump_node_canonical_name(o << "WARNING: unstable `", _ni)
 			<< "\'" << (dir ? '+' : '-') << endl;
 	if (r) dump_rule(o << "rule: ", ev.cause_rule, true, false) << endl;
-		__report_cause(o, ev);
+		__report_cause(o, ev.cause);
 		return unstable_policy;			// >= ERROR_BREAK;
 	}	// endif unstable_policy
 	}	// endif weak

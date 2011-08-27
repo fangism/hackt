@@ -1409,10 +1409,10 @@ private:
 
 	break_type
 	__report_interference(ostream&, const bool wk, 
-		const node_index_type, const event_type&) const;
+		const node_index_type, cause_arg_type) const;
 
 	ostream&
-	__report_cause(ostream&, const event_type&) const;
+	__report_cause(ostream&, cause_arg_type) const;
 
 public:
 #if PRSIM_TRACE_GENERATION
