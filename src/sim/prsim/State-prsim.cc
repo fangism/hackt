@@ -2148,7 +2148,7 @@ if (ei) {
 	dequeuing events.  
  */
 State::break_type
-State::flush_updated_nodes(void) {
+State::flush_updated_nodes(cause_arg_type c) {
 	STACKTRACE_VERBOSE_STEP;
 	break_type err = ERROR_NONE;
 	typedef	updated_nodes_type::const_iterator	const_iterator;
@@ -2160,11 +2160,14 @@ for ( ; i!=e; ++i) {
 	const event_index_type prevevent = n.get_event();
 	event_type newevent;
 	newevent.node = ni;
-	value_enum& pull_val(newevent.val);
-	pull_val = n.current_value();
-	// cause?
-	// rule?
+	newevent.cause = c;
+	// cause rule?
 	// flags?
+	// can we use why-analysis for identify short paths?
+	// TODO: why-interfere (why is pull 1 or X in both directions)?
+	value_enum& pull_val(newevent.val);
+	pull_val = n.current_value();	// start with current value
+	bool have_interference = false;
 {
 	// interference and instability are actually independent
 	// check for interference first
@@ -2172,39 +2175,87 @@ for ( ; i!=e; ++i) {
 	// after checking for instability and queue conflicts
 	const pull_set p(n, weak_rules_enabled());
 	const bool normal_off = p.normal_rules_off();
+#if 0
+	const pull_enum up_pull = n.pull_up_state STR_INDEX(NORMAL_RULE).pull();
+	const pull_enum dn_pull = n.pull_dn_state STR_INDEX(NORMAL_RULE).pull();
+	const bool up_off = (up_pull == PULL_OFF);
+	const bool dn_off = (dn_pull == PULL_OFF);
+	const bool pending_weak =
+		(up_pull == PULL_WEAK) || (dn_pull == PULL_WEAK);
+#if PRSIM_WEAK_RULES
+	const pull_enum wdn_pull = weak_rules_enabled() ?
+		n.pull_dn_state STR_INDEX(WEAK_RULE).pull() : PULL_OFF;
+	const pull_enum wup_pull = weak_rules_enabled() ?
+		n.pull_up_state STR_INDEX(WEAK_RULE).pull() : PULL_OFF;
+#endif
+#else
+	const bool up_off = (p.up == PULL_OFF);
+	const bool dn_off = (p.dn == PULL_OFF);
+	const bool pending_weak = p.normal_pulling_x();
+#endif
 	// compute the future value based on pull-state
 	if (!normal_off) {
 		// some interference between strong rules
 		// TODO: diagnostic
-		pull_val = LOGIC_OTHER:
-		if (up_pull == PULL_WEAK || dn_pull == PULL_WEAK) {
+		pull_val = LOGIC_OTHER;
+		if (p.up == PULL_WEAK || p.dn == PULL_WEAK) {
 			// weak (possible) interference
 #if 0
 			const event_index_type pe =
 				__allocate_pending_interference_event(
 					n, ui, c, 
-					dir ? LOGIC_HIGH :
-						LOGIC_LOW
+					dir ? LOGIC_HIGH : LOGIC_LOW
 #if PRSIM_WEAK_RULES
-						, NORMAL_RULE	// not weak
+					, NORMAL_RULE	// not weak
 #endif
-						);
+					);
 			enqueue_pending(pe);
 #endif
 		} else {
 			// strong (certain) interference
 		}
-		e.pending_interference(true);
+		// e.pending_interference(true);
+		have_interference = true;
 	}
 #if PRSIM_WEAK_RULES
 	else if (normal_off && !p.weak_rules_off()) {
 		// some interference between weak rules
 		// TODO: diagnostic
-		pull_val = LOGIC_OTHER:
+		pull_val = LOGIC_OTHER;
+		// e.pending_interference(true);
+		have_interference = true;
+		newevent.set_weak(true);
 	}
 #endif
 	else {
-		
+		// is a non-interfering rule firing
+		if (p.up == PULL_ON
+#if PRSIM_WEAK_RULES
+			|| p.wup == PULL_ON && dn_off
+#endif
+			) {
+			pull_val = LOGIC_HIGH;
+		} else if (p.dn == PULL_ON
+#if PRSIM_WEAK_RULES
+			|| p.wdn == PULL_ON && up_off
+#endif
+			) {
+			pull_val = LOGIC_LOW;
+		} else if (up_off && dn_off 
+#if PRSIM_WEAK_RULES
+			&& p.wup == PULL_OFF && p.wdn == PULL_OFF
+#endif
+			) {
+			// keep current_value
+		} else {
+			// otherwise, have a non-interfering X pull (vs. 0)
+			pull_val = LOGIC_OTHER;
+		}
+	}
+	if (have_interference) {
+		const break_type E =
+			__report_interference(cout, pending_weak, ni, newevent.cause);
+		if (E > err) err = E;
 	}
 }{
 	// check for instability
@@ -4636,6 +4687,7 @@ State::__diagnose_violation(ostream& o, const pull_enum next,
 	} else {
 		// end if !vacuous
 		DEBUG_STEP_PRINT("vacuous" << endl);
+#if !PRSIM_SIMPLE_EVENT_QUEUE
 		// HACK: to fix bug ACX-PR-6650
 		// check for weak vs. weak rule interference
 	const node_type& _n(get_node(e.node));
@@ -4652,6 +4704,7 @@ State::__diagnose_violation(ostream& o, const pull_enum next,
 						);
 			enqueue_pending(pe);
 	}
+#endif
 	}
 	// else vacuous is OK
 	return err;
