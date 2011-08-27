@@ -2254,7 +2254,7 @@ for ( ; i!=e; ++i) {
 	}
 	if (have_interference) {
 		const break_type E =
-			__report_interference(cout, pending_weak, ni, newevent.cause);
+			__report_interference(cout, pending_weak, ni, c);
 		if (E > err) err = E;
 	}
 }{
