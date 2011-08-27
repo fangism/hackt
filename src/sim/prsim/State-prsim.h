@@ -1339,7 +1339,7 @@ private:
 
 #if PRSIM_SIMPLE_EVENT_QUEUE
 	break_type
-	flush_updated_nodes(void);
+	flush_updated_nodes(cause_arg_type);
 #else
 	void
 	enqueue_pending(const event_index_type);

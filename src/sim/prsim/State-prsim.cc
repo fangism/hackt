@@ -2133,7 +2133,7 @@ if (ei) {
 	dequeuing events.  
  */
 State::break_type
-State::flush_updated_nodes(void) {
+State::flush_updated_nodes(cause_arg_type c) {
 	STACKTRACE_VERBOSE_STEP;
 	break_type err = ERROR_NONE;
 	typedef	updated_nodes_type::const_iterator	const_iterator;
@@ -2145,11 +2145,14 @@ for ( ; i!=e; ++i) {
 	const event_index_type prevevent = n.get_event();
 	event_type newevent;
 	newevent.node = ni;
-	value_enum& pull_val(newevent.val);
-	pull_val = n.current_value();
-	// cause?
-	// rule?
+	newevent.cause = c;
+	// cause rule?
 	// flags?
+	// can we use why-analysis for identify short paths?
+	// TODO: why-interfere (why is pull 1 or X in both directions)?
+	value_enum& pull_val(newevent.val);
+	pull_val = n.current_value();	// start with current value
+	bool have_interference = false;
 {
 	// interference and instability are actually independent
 	// check for interference first
@@ -2159,6 +2162,9 @@ for ( ; i!=e; ++i) {
 	const pull_enum dn_pull = n.pull_dn_state STR_INDEX(NORMAL_RULE).pull();
 	const bool up_off = (up_pull == PULL_OFF);
 	const bool dn_off = (dn_pull == PULL_OFF);
+	const bool pending_weak =
+		(up_pull == PULL_WEAK) ||
+		(up_pull == PULL_WEAK);
 #if PRSIM_WEAK_RULES
 	const pull_enum wdn_pull = weak_rules_enabled() ?
 		n.pull_dn_state STR_INDEX(WEAK_RULE).pull() : PULL_OFF;
@@ -2169,25 +2175,25 @@ for ( ; i!=e; ++i) {
 	if (!up_off && !dn_off) {
 		// some interference between strong rules
 		// TODO: diagnostic
-		pull_val = LOGIC_OTHER:
+		pull_val = LOGIC_OTHER;
 		if (up_pull == PULL_WEAK || dn_pull == PULL_WEAK) {
 			// weak (possible) interference
 #if 0
 			const event_index_type pe =
 				__allocate_pending_interference_event(
 					n, ui, c, 
-					dir ? LOGIC_HIGH :
-						LOGIC_LOW
+					dir ? LOGIC_HIGH : LOGIC_LOW
 #if PRSIM_WEAK_RULES
-						, NORMAL_RULE	// not weak
+					, NORMAL_RULE	// not weak
 #endif
-						);
+					);
 			enqueue_pending(pe);
 #endif
 		} else {
 			// strong (certain) interference
 		}
-		e.pending_interference(true);
+		// e.pending_interference(true);
+		have_interference = true;
 	}
 #if PRSIM_WEAK_RULES
 	else if (up_off && dn_off &&
@@ -2195,11 +2201,41 @@ for ( ; i!=e; ++i) {
 			wdn_pull != PULL_OFF) {
 		// some interference between weak rules
 		// TODO: diagnostic
-		pull_val = LOGIC_OTHER:
+		pull_val = LOGIC_OTHER;
+		// e.pending_interference(true);
+		have_interference = true;
+		newevent.set_weak(true);
 	}
 #endif
 	else {
-		
+		// is a non-interfering rule firing
+		if (up_pull == PULL_ON
+#if PRSIM_WEAK_RULES
+			|| wup_pull == PULL_ON && dn_off
+#endif
+			) {
+			pull_val = LOGIC_HIGH;
+		} else if (dn_pull == PULL_ON
+#if PRSIM_WEAK_RULES
+			|| wdn_pull == PULL_ON && up_off
+#endif
+			) {
+			pull_val = LOGIC_LOW;
+		} else if (up_off && dn_off 
+#if PRSIM_WEAK_RULES
+			&& wup_pull == PULL_OFF && wdn_pull == PULL_OFF
+#endif
+			) {
+			// keep current_value
+		} else {
+			// otherwise, have a non-interfering X pull (vs. 0)
+			pull_val = LOGIC_OTHER;
+		}
+	}
+	if (have_interference) {
+		const break_type E =
+			__report_interference(cout, pending_weak, ni, newevent);
+		if (E > err) err = E;
 	}
 }{
 	// check for instability

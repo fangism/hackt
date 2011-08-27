@@ -196,7 +196,7 @@
 	Priority: med-high
 	Status: just beginning
  */
-#define	PRSIM_SIMPLE_EVENT_QUEUE		0
+#define	PRSIM_SIMPLE_EVENT_QUEUE		1
 
 // TODO: prsim-guile interface
 
