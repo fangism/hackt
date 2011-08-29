@@ -459,7 +459,7 @@ definition_base::add_strict_template_formal(
 	const never_ptr<const object>
 		probe(lookup_member(id));
 	if (probe) {
-		probe->what(cerr << " already taken as a ") << " ERROR!";
+		probe->what(cerr << id << " already taken as a ") << " ERROR!";
 		return return_type(NULL);
 	} 
 	}
@@ -506,7 +506,7 @@ definition_base::add_relaxed_template_formal(
 	const never_ptr<const object>
 		probe(lookup_member(id));
 	if (probe) {
-		probe->what(cerr << " already taken as a ") << " ERROR!";
+		probe->what(cerr << id << " already taken as a ") << " ERROR!";
 		return return_type(NULL);
 	} 
 	}
@@ -962,7 +962,7 @@ user_def_chan::add_port_formal(
 	const never_ptr<const object>
 		probe(lookup_member(id));
 	if (probe) {
-		probe->what(cerr << " already taken as a ") << " ERROR!";
+		probe->what(cerr << id << " already taken as a ") << " ERROR!";
 		return return_type(NULL);
 	}
 	}
@@ -1465,11 +1465,11 @@ built_in_datatype_def::add_template_formal(
 		pf(f.is_a<const value_placeholder_type>());
 	NEVER_NULL(pf);
 	// check and make sure identifier wasn't repeated in formal list!
+	const string& id(pf->get_name());
 	const never_ptr<const object>
-		probe(datatype_definition_base::lookup_member(
-			pf->get_name()));
+		probe(datatype_definition_base::lookup_member(id));
 	if (probe) {
-		probe->what(cerr << " already taken as a ") << " ERROR!";
+		probe->what(cerr << id << " already taken as a ") << " ERROR!";
 		return never_ptr<const value_placeholder_type>(NULL);
 	}
 
@@ -2206,7 +2206,7 @@ user_def_datatype::add_port_formal(
 	const never_ptr<const object>
 		probe(lookup_member(id));
 	if (probe) {
-		probe->what(cerr << " already taken as a ") << " ERROR!";
+		probe->what(cerr << id << " already taken as a ") << " ERROR!";
 		return return_type(NULL);
 	}
 	}
@@ -3044,9 +3044,9 @@ process_definition::add_port_formal(
 	// check and make sure identifier wasn't repeated in formal list!
 	{
 	const never_ptr<const object>
-	probe(lookup_member(id));
+		probe(lookup_member(id));
 	if (probe) {
-		probe->what(cerr << " already taken as a ") << " ERROR!";
+		probe->what(cerr << id << " already taken as a ") << " ERROR!";
 		return return_type(NULL);
 	}
 	}

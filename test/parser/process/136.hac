@@ -1,0 +1,6 @@
+// "136.hac"
+// expect fail, testing for improved diagnostic
+
+defproc foo (bool a, b, c, d, e, b, g) {
+}
+
