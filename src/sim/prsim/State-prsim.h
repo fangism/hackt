@@ -1294,6 +1294,9 @@ private:
 	__copy_event(const event_type&);
 
 	event_index_type
+	__allocate_event(node_type&, const event_type& e);
+
+	event_index_type
 	__allocate_event(node_type&, const node_index_type n,
 		cause_arg_type,	// this is the causing node/event
 		const rule_index_type, const value_enum,

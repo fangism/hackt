@@ -80,6 +80,13 @@
 		Added test cae.
 
 
+	* HACKT-00-01-04-main-00-84-91-prsim-engine-rewrite-01:
+	  With PRSIM_SIMPLE_EVENT_QUEUE enabled, first *simple* 
+		test cases are working.  Stable events are enqueued.
+		Will gradually get all prsim tests working again on 
+		this branch, with fixes along the way.
+
+
 2011-08-23	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-91:
