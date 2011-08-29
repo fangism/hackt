@@ -1033,7 +1033,27 @@ State::__allocate_event(node_type& n,
 #if DEBUG_STEP
 	e.dump_raw(STACKTRACE_INDENT_PRINT("")) << endl;
 #endif
+#if 0
 	ISE_INVARIANT(!n.is_frozen() || force);
+	n.set_event(event_pool.allocate(e));
+	// n.set_cause_node(ci);	// now assign *after* dequeue_event
+	return n.get_event();
+#else
+	return __allocate_event(n, e);
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	With this overload, the event type has already been constructed
+	and just needs to be copied.  
+ */
+inline
+event_index_type
+State::__allocate_event(node_type& n, const event_type& e) {
+	STACKTRACE_VERBOSE;
+	ISE_INVARIANT(!n.pending_event());
+	ISE_INVARIANT(!n.is_frozen() || e.forced());
 	n.set_event(event_pool.allocate(e));
 	// n.set_cause_node(ci);	// now assign *after* dequeue_event
 	return n.get_event();
@@ -2142,6 +2162,8 @@ State::flush_updated_nodes(cause_arg_type c) {
 for ( ; i!=e; ++i) {
 	const node_index_type& ni(*i);
 	node_type& n(__get_node(ni));
+	DEBUG_STEP_PRINT("considering updated node " <<
+		get_node_canonical_name(ni) << endl);
 	const event_index_type prevevent = n.get_event();
 	event_type newevent;
 	newevent.node = ni;
@@ -2171,9 +2193,18 @@ for ( ; i!=e; ++i) {
 	const pull_enum wup_pull = weak_rules_enabled() ?
 		n.pull_up_state STR_INDEX(WEAK_RULE).pull() : PULL_OFF;
 #endif
+#if DEBUG_STEP
+	STACKTRACE_INDENT_PRINT("up_pull: " << up_pull << endl);
+	STACKTRACE_INDENT_PRINT("dn_pull: " << dn_pull << endl);
+#if PRSIM_WEAK_RULES
+	STACKTRACE_INDENT_PRINT("wup_pull: " << wup_pull << endl);
+	STACKTRACE_INDENT_PRINT("wdn_pull: " << wdn_pull << endl);
+#endif
+#endif
 	// compute the future value based on pull-state
 	if (!up_off && !dn_off) {
 		// some interference between strong rules
+		DEBUG_STEP_PRINT("strong rule interference " << endl);
 		// TODO: diagnostic
 		pull_val = LOGIC_OTHER;
 		if (up_pull == PULL_WEAK || dn_pull == PULL_WEAK) {
@@ -2199,6 +2230,7 @@ for ( ; i!=e; ++i) {
 	else if (up_off && dn_off &&
 			wup_pull != PULL_OFF &&
 			wdn_pull != PULL_OFF) {
+		DEBUG_STEP_PRINT("weak rule interference " << endl);
 		// some interference between weak rules
 		// TODO: diagnostic
 		pull_val = LOGIC_OTHER;
@@ -2214,21 +2246,25 @@ for ( ; i!=e; ++i) {
 			|| wup_pull == PULL_ON && dn_off
 #endif
 			) {
+			DEBUG_STEP_PRINT("normal pull-up" << endl);
 			pull_val = LOGIC_HIGH;
 		} else if (dn_pull == PULL_ON
 #if PRSIM_WEAK_RULES
 			|| wdn_pull == PULL_ON && up_off
 #endif
 			) {
+			DEBUG_STEP_PRINT("normal pull-dn" << endl);
 			pull_val = LOGIC_LOW;
 		} else if (up_off && dn_off 
 #if PRSIM_WEAK_RULES
 			&& wup_pull == PULL_OFF && wdn_pull == PULL_OFF
 #endif
 			) {
+			DEBUG_STEP_PRINT("state-holding" << endl);
 			// keep current_value
 		} else {
 			// otherwise, have a non-interfering X pull (vs. 0)
+			DEBUG_STEP_PRINT("non-interfering X-pull" << endl);
 			pull_val = LOGIC_OTHER;
 		}
 	}
@@ -2241,8 +2277,20 @@ for ( ; i!=e; ++i) {
 	// check for instability
 	if (prevevent) {
 		// there is a pending event in queue already
+		// const event_type& pe(get_event(prevevent));
+		FINISH_ME_EXIT(Fang);
 	} else {
-		// no event in queue
+		// no event in queue, then just enqueue new one
+		if (newevent.val != n.current_value()) {
+			const event_index_type ei =
+				__allocate_event(n, newevent);
+			DEBUG_STEP_PRINT("enqueuing event ID " << endl);
+		enqueue_event(newevent.val == LOGIC_LOW ?
+				get_delay_dn(newevent) : get_delay_up(newevent),
+			ei);
+		} else {
+			DEBUG_STEP_PRINT("dropping vacuous event" << endl);
+		}
 	}
 }
 }	// end for
@@ -3913,7 +3961,7 @@ if (!n.pending_event()) {
 	DEBUG_STEP_PRINT("no pending event on this node being pulled up."
 		<< endl);
 #if PRSIM_SIMPLE_EVENT_QUEUE
-	updated_nodes.insert(ni);	// re-evaluate queue
+	updated_nodes.insert(ui);	// re-evaluate queue
 	// TODO: need to identify which rule fired
 #else
 	// no former event pending, ok to enqueue
@@ -4151,7 +4199,7 @@ if (!n.pending_event()) {
 	DEBUG_STEP_PRINT("no pending event on this node being pulled down."
 		<< endl);
 #if PRSIM_SIMPLE_EVENT_QUEUE
-	updated_nodes.insert(ni);	// re-evaluate queue
+	updated_nodes.insert(ui);	// re-evaluate queue
 	// TODO: need to identify which rule fired
 #else
 	// no former event pending, ok to enqueue
