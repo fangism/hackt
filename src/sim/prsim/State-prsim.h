@@ -1405,7 +1405,7 @@ private:
 
 	break_type
 	__report_instability(ostream&, const bool wk, const bool dir, 
-		const node_index_type, const event_type&) const;
+		const event_type&) const;
 
 	break_type
 	__report_interference(ostream&, const bool wk, 

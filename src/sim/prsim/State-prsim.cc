@@ -607,7 +607,7 @@ State::flush_channel_events(const vector<env_event_type>& env_events,
 			const break_type E =
 			__report_instability(cout,
 				_v == LOGIC_OTHER, 
-				ev.val == LOGIC_HIGH, ev.node, ev);
+				ev.val == LOGIC_HIGH, ev);
 			if (E > err) err = E;
 			if (dequeue_unstable_events()) {
 				// overtake
@@ -3831,7 +3831,7 @@ if (n.pending_event()) {
 			const break_type E =
 			__report_instability(cout,
 				next == PULL_WEAK, 
-				e.val == LOGIC_HIGH, e.node, e);
+				e.val == LOGIC_HIGH, e);
 			if (E > err) err = E;
 		}
 		kill_event(ei, ui);
@@ -4060,7 +4060,7 @@ if (!n.pending_event()) {
 		DEBUG_STEP_PRINT("changing pending 1 to 0 in queue." << endl);
 		// for now, out of laziness, overwrite the pending event
 		const break_type E =
-		__report_instability(cout, false, true, e.node, e);
+		__report_instability(cout, false, true, e);
 		if (E > err) err = E;
 		e.val = LOGIC_LOW;
 		e.set_cause_node(ni);
@@ -4296,7 +4296,7 @@ if (!n.pending_event()) {
 		DEBUG_STEP_PRINT("changing pending 0 to 1 in queue." << endl);
 		// for now, out of laziness, overwrite the pending event
 		const break_type E =
-		__report_instability(cout, false, false, e.node, e);
+		__report_instability(cout, false, false, e);
 		if (E > err) err = E;
 		e.val = LOGIC_HIGH;
 		e.set_cause_node(ni);
@@ -4396,15 +4396,17 @@ State::__report_interference(ostream& o, const bool weak,
 /**
 	\param weak is true if unstable was *possible*, i.e. caused by X
 	\param dir the direction of the unstable firing
-	\param _ni affected node (ev.node?)
 	\param ev the unstable event
 	\return true if error causes break in events.  
 	If node is flagged unstable, 
  */
 State::break_type
 State::__report_instability(ostream& o, const bool weak, const bool dir, 
-		const node_index_type _ni, const event_type& ev) const {
+		const event_type& ev) const {
 	const rule_type* const r = lookup_rule(ev.cause_rule);
+	const node_index_type& _ni(ev.node);	// the scheduled node
+//	INVARIANT(ev.val != LOGIC_OTHER);		// not true
+//	INVARIANT(dir == (ev.val == LOGIC_HIGH));	// not true
 if (!r || !r->is_unstable()) {
 	if (weak) {
 	if (weak_unstable_policy != ERROR_IGNORE) {
@@ -4566,7 +4568,7 @@ State::__diagnose_violation(ostream& o, const pull_enum next,
 #endif
 			const break_type E =
 			__report_instability(o, eu & event_type::EVENT_WEAK, 
-				dir, ui, e);
+				dir, e);
 			if (E > err) err = E;
 #if PRSIM_WEAK_RULES
 			}
