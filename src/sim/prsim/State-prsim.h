@@ -427,7 +427,8 @@ protected:
 	typedef	std::map<event_index_type, time_type>
 						mk_excl_queue_type;
 #if PRSIM_SIMPLE_EVENT_QUEUE
-	typedef	std::set<node_index_type>	updated_nodes_type;
+	typedef	std::map<node_index_type, rule_index_type>
+						updated_nodes_type;
 #else
 	/**
 		invariant: no event should be in pending queue more than once.

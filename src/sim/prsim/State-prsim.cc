@@ -2175,7 +2175,7 @@ State::flush_updated_nodes(cause_arg_type c) {
 	const_iterator i(updated_nodes.begin()), e(updated_nodes.end());
 	// TODO: mind the ordering of processing nodes, numerical order by ID?
 for ( ; i!=e; ++i) {
-	const node_index_type& ni(*i);
+	const node_index_type& ni(i->first);
 	node_type& n(__get_node(ni));
 	DEBUG_STEP_PRINT("considering updated node " <<
 		get_node_canonical_name(ni) << endl);
@@ -2183,7 +2183,7 @@ for ( ; i!=e; ++i) {
 	event_type newevent;
 	newevent.node = ni;
 	newevent.cause = c;
-	// cause rule?
+	newevent.cause_rule = i->second;
 	// flags?
 	// can we use why-analysis for identify short paths?
 	// TODO: why-interfere (why is pull 1 or X in both directions)?
@@ -2230,22 +2230,7 @@ for ( ; i!=e; ++i) {
 		DEBUG_STEP_PRINT("strong rule interference " << endl);
 		// TODO: diagnostic
 		pull_val = LOGIC_OTHER;
-		if (p.up == PULL_WEAK || p.dn == PULL_WEAK) {
-			// weak (possible) interference
-#if 0
-			const event_index_type pe =
-				__allocate_pending_interference_event(
-					n, ui, c, 
-					dir ? LOGIC_HIGH : LOGIC_LOW
-#if PRSIM_WEAK_RULES
-					, NORMAL_RULE	// not weak
-#endif
-					);
-			enqueue_pending(pe);
-#endif
-		} else {
-			// strong (certain) interference
-		}
+		// pending_weak (possible interference) already set
 		// e.pending_interference(true);
 		have_interference = true;
 	}
@@ -2253,7 +2238,7 @@ for ( ; i!=e; ++i) {
 	else if (p.possible_interference_weak()) {
 		DEBUG_STEP_PRINT("weak rule interference " << endl);
 		// some interference between weak rules
-		// TODO: diagnostic
+		// TODO: what about possible interference between weak rules?
 		pull_val = LOGIC_OTHER;
 		// e.pending_interference(true);
 		have_interference = true;
@@ -2283,6 +2268,7 @@ for ( ; i!=e; ++i) {
 			) {
 			DEBUG_STEP_PRINT("state-holding" << endl);
 			// keep current_value
+			// TODO: keeper-check
 		} else {
 			// otherwise, have a non-interfering X pull (vs. 0)
 			DEBUG_STEP_PRINT("non-interfering X-pull" << endl);
@@ -2298,8 +2284,8 @@ for ( ; i!=e; ++i) {
 	// check for instability
 	if (prevevent) {
 		// there is a pending event in queue already
-		// const event_type& pe(get_event(prevevent));
 		FINISH_ME_EXIT(Fang);
+		// const event_type& pe(get_event(prevevent));
 	} else {
 		// no event in queue, then just enqueue new one
 		if (newevent.val != n.current_value()) {
@@ -3947,8 +3933,7 @@ State::propagate_evaluation(
 	}
 #endif
 	const pull_set p(n, weak_rules_enabled());
-	if (keeper_check_fail_policy > ERROR_IGNORE &&
-			p.normal_rules_off()) {
+	if (keeper_check_fail_policy > ERROR_IGNORE && p.state_holding()) {
 		__keeper_check_candidates.insert(ui);
 	}
 const bool dir = ev_result.root_rule->direction();
@@ -4022,6 +4007,17 @@ if (n.pending_event()) {
 #endif	// PRSIM_WEAK_RULES
 if (dir) {
 	// pull-up
+#if PRSIM_SIMPLE_EVENT_QUEUE
+	// re-evaluate queue
+	const pair<updated_nodes_type::iterator, bool>
+		pp(updated_nodes.insert(
+			updated_nodes_type::value_type(ui, root_rule)));
+	if (!pp.second) {
+		if (p.up != PULL_OFF) {
+			pp.first->second = root_rule;
+		}
+	}
+#else
 /***
 	The node is either T, F, or X. Either way, it's a change.
 	If the node is T or X, insert into pending Q.
@@ -4031,10 +4027,6 @@ if (dir) {
 if (!n.pending_event()) {
 	DEBUG_STEP_PRINT("no pending event on this node being pulled up."
 		<< endl);
-#if PRSIM_SIMPLE_EVENT_QUEUE
-	updated_nodes.insert(ui);	// re-evaluate queue
-	// TODO: need to identify which rule fired
-#else
 	// no former event pending, ok to enqueue
 	if ((next == PULL_ON &&
 			n.current_value() != LOGIC_HIGH) ||
@@ -4121,7 +4113,6 @@ if (!n.pending_event()) {
 		}
 	}
 	}	// end if next is PULL_OFF
-#endif	// PRSIM_SIMPLE_EVENT_QUEUE
 } else if (!n.in_excl_queue()) {
 	DEBUG_STEP_PRINT("pending, but not excl event on this node." << endl);
 	// there is a pending event, not in an exclusive queue
@@ -4258,15 +4249,23 @@ if (!n.pending_event()) {
 		if (E > err) err = E;
 	}	// end if diagnostic
 }	// end if (!n.ex_queue)
+#endif	// PRSIM_SIMPLE_EVENT_QUEUE
 } else {
 	// pull-dn
+#if PRSIM_SIMPLE_EVENT_QUEUE
+	// re-evaluate queue
+	const pair<updated_nodes_type::iterator, bool>
+		pp(updated_nodes.insert(
+			updated_nodes_type::value_type(ui, root_rule)));
+	if (!pp.second) {
+		if (p.dn != PULL_OFF) {
+			pp.first->second = root_rule;
+		}
+	}
+#else
 if (!n.pending_event()) {
 	DEBUG_STEP_PRINT("no pending event on this node being pulled down."
 		<< endl);
-#if PRSIM_SIMPLE_EVENT_QUEUE
-	updated_nodes.insert(ui);	// re-evaluate queue
-	// TODO: need to identify which rule fired
-#else
 	// no former event pending, ok to enqueue
 	if ((next == PULL_ON &&
 			n.current_value() != LOGIC_LOW) ||
@@ -4357,7 +4356,6 @@ if (!n.pending_event()) {
 		}
 	}
 	}	// end if next is PULL_OFF
-#endif	// PRSIM_SIMPLE_EVENT_QUEUE
 } else if (!n.in_excl_queue()) {
 	DEBUG_STEP_PRINT("pending, but not excl event on this node." << endl);
 	// there is a pending event, not in an exclusive queue
@@ -4494,6 +4492,7 @@ if (!n.pending_event()) {
 		if (E > err) err = E;
 	}	// end if diagonstic
 }	// end if (!n.ex_queue)
+#endif	// PRSIM_SIMPLE_EVENT_QUEUE
 }	// end if (u->direction())
 	return err;
 }	// end method propagate_evaluation
@@ -4515,6 +4514,7 @@ State::__report_cause(ostream& o, cause_arg_type cause) const {
 	Report a node with interfering fanin rules.  
 	Diagnostics may be suppresed by the may-interfere, and 
 	may-weak-interfere node attributes.
+	\param weak is true if interference is only *possible*, but not definite
 	\param _ni the affected output node.
 	\return true if error causes break in events.  
  */
