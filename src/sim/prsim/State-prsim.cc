@@ -2202,8 +2202,6 @@ for ( ; i!=e; ++i) {
 	const pull_enum dn_pull = n.pull_dn_state STR_INDEX(NORMAL_RULE).pull();
 	const bool up_off = (up_pull == PULL_OFF);
 	const bool dn_off = (dn_pull == PULL_OFF);
-	const bool pending_weak =
-		(up_pull == PULL_WEAK) || (dn_pull == PULL_WEAK);
 #if PRSIM_WEAK_RULES
 	const pull_enum wdn_pull = weak_rules_enabled() ?
 		n.pull_dn_state STR_INDEX(WEAK_RULE).pull() : PULL_OFF;
@@ -2213,7 +2211,7 @@ for ( ; i!=e; ++i) {
 #endif
 	const bool up_off = (p.up == PULL_OFF);
 	const bool dn_off = (p.dn == PULL_OFF);
-	const bool pending_weak = p.normal_pulling_x();
+	bool possible_interference = false;	// used to be named pending_weak
 #if 0
 #if DEBUG_STEP
 	STACKTRACE_INDENT_PRINT("up_pull: " << up_pull << endl);
@@ -2227,23 +2225,25 @@ for ( ; i!=e; ++i) {
 {
 	// compute the future value based on pull-state
 	if (!normal_off) {
-		// some interference between strong rules
-		DEBUG_STEP_PRINT("strong rule interference " << endl);
+		DEBUG_STEP_PRINT("strong vs. strong rule interference" << endl);
 		// TODO: diagnostic
-		pull_val = LOGIC_OTHER;
-		// pending_weak (possible interference) already set
-		// e.pending_interference(true);
 		have_interference = true;
+		possible_interference =
+			(p.up == PULL_WEAK) || (p.dn == PULL_WEAK);
 	}
 #if PRSIM_WEAK_RULES
-	else if (p.possible_interference_weak()) {
-		DEBUG_STEP_PRINT("weak rule interference " << endl);
-		// some interference between weak rules
-		// TODO: what about possible interference between weak rules?
-		pull_val = LOGIC_OTHER;
-		// e.pending_interference(true);
+	else if ((p.up == PULL_WEAK && p.wdn != PULL_OFF) ||
+		(p.dn == PULL_WEAK && p.wup != PULL_OFF)) {
+		DEBUG_STEP_PRINT("strong vs. weak rule interference" << endl);
 		have_interference = true;
-		newevent.set_weak(true);
+		newevent.set_weak(true);	// involves weak rule
+		possible_interference = true;	// there is an X involved
+	} else if (p.possible_interference_weak()) {
+		DEBUG_STEP_PRINT("weak vs. weak rule interference" << endl);
+		have_interference = true;
+		newevent.set_weak(true);	// involves weak rule
+		possible_interference =
+			(p.wup == PULL_WEAK) || (p.wdn == PULL_WEAK);
 	}
 #endif
 	else {
@@ -2277,8 +2277,10 @@ for ( ; i!=e; ++i) {
 		}
 	}
 	if (have_interference) {
+		pull_val = LOGIC_OTHER;
 		const break_type E =
-			__report_interference(cout, pending_weak, ni, c);
+			__report_interference(cout,
+				possible_interference, ni, c);
 		if (E > err) err = E;
 	}
 }{
