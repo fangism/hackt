@@ -57,6 +57,9 @@ cycle
 echo X-pull-up
 set a X
 cycle
+# echo is a non-interfering X-pull-up
+assert c X
+assertn-queue
 
 set a 1
 cycle
@@ -64,6 +67,7 @@ cycle
 echo X-pull-down
 set b X
 cycle
+# echo is a non-interfering X-pull-down
 
 set b 0
 cycle
