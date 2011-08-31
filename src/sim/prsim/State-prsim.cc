@@ -2189,8 +2189,8 @@ for ( ; i!=e; ++i) {
 	// TODO: why-interfere (why is pull 1 or X in both directions)?
 	value_enum& pull_val(newevent.val);
 	pull_val = n.current_value();	// start with current value
-	bool have_interference = false;
-{
+	bool have_interference = false;	// to be updated
+
 	// interference and instability are actually independent
 	// check for interference first
 	// create event first, but don't tie it to the node until
@@ -2224,6 +2224,7 @@ for ( ; i!=e; ++i) {
 #endif
 #endif
 #endif
+{
 	// compute the future value based on pull-state
 	if (!normal_off) {
 		// some interference between strong rules
@@ -2281,26 +2282,104 @@ for ( ; i!=e; ++i) {
 		if (E > err) err = E;
 	}
 }{
+	bool have_instability = false;
 	// check for instability
 	if (prevevent) {
 		// there is a pending event in queue already
-		FINISH_ME_EXIT(Fang);
-		// const event_type& pe(get_event(prevevent));
+		event_type& pe(get_event(prevevent));
+		const value_enum pval = pe.val;
+		// * compare event values
+		// * check pull-state based on prev.val
+		//	if pull is no longer active, then is unstable
+		if (have_interference) {
+			// previous event should be clobbered to X
+			// regardless of the instability state
+			DEBUG_STEP_PRINT("overwrite to X." << endl);
+			pe.val = LOGIC_OTHER;
+			// don't report this as instability?
+		} else {
+			// non-interfering
+		switch (pval) {	// based on previously scheduled value
+		case LOGIC_LOW: {
+			// Q: are we still pulling down?
+			if (p.dn == PULL_ON
+#if PRSIM_WEAK_RULES
+				|| p.wdn == PULL_ON
+#endif
+				) {
+				// the rule re-firing is vacuous
+				// the old event stays in queue
+			} else if (p.dn == PULL_WEAK
+#if PRSIM_WEAK_RULES
+				|| p.wdn == PULL_WEAK
+#endif
+				) {
+				// possible instability
+				have_instability = true;
+			} else if (newevent.val != pe.val) {
+				// TODO: what about opposite-pulls?
+				have_instability = true;
+				FINISH_ME_EXIT(Fang);
+			} else {
+				// pull turned off -- instability
+				have_instability = true;
+			}
+			break;
+		}
+		case LOGIC_HIGH: {
+			// Q: are we still pulling up?
+			if (p.up == PULL_ON
+#if PRSIM_WEAK_RULES
+				|| p.wup == PULL_ON
+#endif
+				) {
+				// the rule re-firing is vacuous
+				// the old event stays in queue
+			} else if (p.up == PULL_WEAK
+#if PRSIM_WEAK_RULES
+				|| p.wup == PULL_WEAK
+#endif
+				) {
+				// possible instability
+				have_instability = true;
+			} else if (newevent.val != pe.val) {
+				// TODO: what about opposite-pulls?
+				have_instability = true;
+				FINISH_ME_EXIT(Fang);
+			} else {
+				// pull turned off -- instability
+				have_instability = true;
+			}
+			break;
+		}
+		case LOGIC_OTHER:
+		default:
+			// we don't know what the nature of the scheduled X is
+			// so we might have to deduce from cause-rule
+			break;
+		}	// end switch
+		if (have_instability) {
+			// we either need to cancel, overwrite with X,
+			// or reschedule entirely new event
+			// diagnostic should be issued here
+			FINISH_ME_EXIT(Fang);
+		} // else no modification to event queue necessary
+		}	// end if !have_interference
 	} else {
 		// no event in queue, then just enqueue new one
 		if (newevent.val != n.current_value()) {
 			const event_index_type ei =
 				__allocate_event(n, newevent);
 			DEBUG_STEP_PRINT("enqueuing event ID " << endl);
-		enqueue_event(newevent.val == LOGIC_LOW ?
+			enqueue_event(newevent.val == LOGIC_LOW ?
 				get_delay_dn(newevent) : get_delay_up(newevent),
-			ei);
+				ei);
 		} else {
 			DEBUG_STEP_PRINT("dropping vacuous event" << endl);
 		}
 	}
 }
-}	// end for
+}	// end for all updated nodes
 	updated_nodes.clear();
 	return err;
 }	// end flush_updated_nodes()
