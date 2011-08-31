@@ -2212,14 +2212,12 @@ for ( ; i!=e; ++i) {
 	const bool up_off = (p.up == PULL_OFF);
 	const bool dn_off = (p.dn == PULL_OFF);
 	bool possible_interference = false;	// used to be named pending_weak
-#if 0
 #if DEBUG_STEP
-	STACKTRACE_INDENT_PRINT("up_pull: " << up_pull << endl);
-	STACKTRACE_INDENT_PRINT("dn_pull: " << dn_pull << endl);
+	DEBUG_STEP_PRINT("up_pull: " << p.up << endl);
+	DEBUG_STEP_PRINT("dn_pull: " << p.dn << endl);
 #if PRSIM_WEAK_RULES
-	STACKTRACE_INDENT_PRINT("wup_pull: " << wup_pull << endl);
-	STACKTRACE_INDENT_PRINT("wdn_pull: " << wdn_pull << endl);
-#endif
+	DEBUG_STEP_PRINT("wup_pull: " << p.wup << endl);
+	DEBUG_STEP_PRINT("wdn_pull: " << p.wdn << endl);
 #endif
 #endif
 {
