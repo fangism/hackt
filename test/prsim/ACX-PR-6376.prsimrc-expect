@@ -4,6 +4,8 @@ enqueued:	10	lbl._wdatain : 1	[from WD:=0]
 	0	WD : 0
 enqueued:	20	lbl.logic.blc_writer.en : 0	[from lbl._wdatain:=1]
 	10	lbl._wdatain : 1	[by WD:=0]
+WARNING: weak-interference `lbl.blc'
+>> cause: `lbl.logic.blc_writer.en' (val: 0)
 	20	lbl.logic.blc_writer.en : 0	[by lbl._wdatain:=1]
 ---------- setting WE 1 --------- 
 enqueued:	20	WE : 1

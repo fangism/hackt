@@ -5,13 +5,17 @@ unstable warn
 unstable-dequeue
 weak-rules on
 interference fatal
-weak-interference fatal
+weak-interference warn
+# weak-interference downgraded to warn after discovering ACX-PR-6628
 watchall
 watchall-queue
 
 echo ---------- setting WD 0 ---------
 set WD 0
 cycle
+# re-upgrade to fatal after initial conditions have propagated
+weak-interference fatal
+
 echo ---------- setting WE 1 ---------
 set WE 1 
 cycle

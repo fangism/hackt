@@ -1,0 +1,12 @@
+---------- setting WD 0 --------- 
+enqueued:	0	WD : 0
+enqueued:	10	lbl._wdatain : 1	[from WD:=0]
+	0	WD : 0
+enqueued:	20	lbl.logic.blc_writer.en : 0	[from lbl._wdatain:=1]
+	10	lbl._wdatain : 1	[by WD:=0]
+WARNING: weak-interference `lbl.blc'
+>> cause: `lbl.logic.blc_writer.en' (val: 0)
+Halting on node: lbl.logic.blc_writer.en
+... at line 16
+Error encountered during source #FILE#.
+... at line 13

@@ -1,0 +1,16 @@
+# "ACX-PR-6628.prsimrc"
+# @haco@ ACX-PR-6376.haco-c
+# test case that demonstrates downgrading from strong-rule possible-interference
+# to weak-rule possible-interference
+
+unstable warn
+unstable-dequeue
+weak-rules on
+interference fatal
+weak-interference fatal
+watchall
+watchall-queue
+
+echo ---------- setting WD 0 ---------
+set WD 0
+cycle
