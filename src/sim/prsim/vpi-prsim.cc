@@ -651,8 +651,13 @@ static void __advance_prsim_nothrow (const Time_t& vcstime, const int context)
 #endif
 try {
 	__advance_prsim(vcstime, context);	// may throw
+#if PRSIM_AGGREGATE_EXCEPTIONS
+	if (prsim_state->is_fatal()) {
+		prsim_state->inspect_exceptions();
+#else
 } catch (const step_exception& exex) {
 	exex.inspect(*prsim_state, cerr);	// ignore return code?
+#endif
 	// no need to translate error_policy_to_status
 #if NICE_FINISH
 	cerr << "Terminating simulation early due to hacprsim exception."
@@ -661,6 +666,9 @@ try {
 #else
 	__destroy_globals();
 	THROW_EXIT;	// re-throw
+#endif
+#if PRSIM_AGGREGATE_EXCEPTIONS
+	}	// end if is_fatal
 #endif
 } catch (...) {
 	// catch all remaining exceptions here, destroy globals and rethrow

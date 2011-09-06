@@ -16,6 +16,7 @@
 	80	c : 1	[by _c:=0]
 Error: node _c is floating without pending feedback. 
 	[caused by a : 0]
+	80	a : 0
 Halting on node: a
 ... at line 33
 Error encountered during source #FILE#.

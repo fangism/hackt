@@ -19,6 +19,7 @@ Warning: [mode fatal, keeper-check-fail]
   weak-rules are currently disabled.
   keeper-check-fail policy unmodified
 Error: invariant violation in b: (~(b.en:1 & (_Reset:1 & R.e:1 & b.en:1)<1>)<0>) by node _Reset:1, #FILE#
+	50	_Reset : 1
 Halting on node: _Reset
 ... at line 22
 Error encountered during source #FILE#.

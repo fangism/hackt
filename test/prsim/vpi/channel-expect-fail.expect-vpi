@@ -75,6 +75,7 @@ prsim:	1400	L.e : 1
 channel	L (.data) : 1
 prsim:	1410	L.d[1] : 1	[by L.e:=1]
 channel	R (.data) : 1
+prsim:	1420	R.d[1] : 1
 ERROR: value assertion failed on channel `R' at index [5] of iteration [0].
 	expected: 0, got: 1
 Terminating simulation early due to hacprsim exception.

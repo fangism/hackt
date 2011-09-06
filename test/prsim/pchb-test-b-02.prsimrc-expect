@@ -15,5 +15,6 @@ Warning: [mode fatal, keeper-check-fail]
   weak-rules are currently disabled.
   keeper-check-fail policy unmodified
 Error: invariant violation in b: (~((~L.d[0]:0 | ~L.d[1]:0)<1> & (_Reset:1 & R.e:1 & L.e:1)<1>)<0>) by node _Reset:1, #FILE#
+	40	_Reset : 1
 Halting on node: _Reset
 ... at line 22

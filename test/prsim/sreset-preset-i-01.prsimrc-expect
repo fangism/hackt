@@ -5,6 +5,7 @@
 	20	in : 1
 Error: node _out is floating without pending feedback. 
 	[caused by _pReset : 1]
+	20	_pReset : 1
 Halting on node: _pReset
 ... at line 16
 Error encountered during source #FILE#.

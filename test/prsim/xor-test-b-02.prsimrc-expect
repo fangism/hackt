@@ -54,6 +54,7 @@ rule: [after 10]	a:1 & b:0<0><0> -> o-:1
 >> cause: `b' (val: 0)
 Error: node o is floating without pending feedback.  (fast-weak-keepers disabled) (weak-rules off)
 	[caused by b : 0]
+	220	b : 0
 Halting on node: b
 ... at line 36
 Error encountered during source #FILE#.

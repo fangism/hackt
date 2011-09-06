@@ -4,5 +4,6 @@ expect instability
 WARNING: unstable `b'-
 rule: [after 10]	a:0 -> b-:X
 >> cause: `a' (val: 0)
+	5	a : 0
 Halting on node: a
 ... at line 19

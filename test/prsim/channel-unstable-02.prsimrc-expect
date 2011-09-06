@@ -38,5 +38,6 @@ event queue:
 now retracting acknowledge, should be unstable 
 WARNING: unstable `X.d[1]'-
 >> cause: `X.e' (val: 1)
+	40	X.e : 1
 Halting on node: X.e
 ... at line 32

@@ -39,6 +39,7 @@ channel	D (.data) : 0 @ 70
 	70	D.d : 0
 	80	D.e : 1	[by D.d:=0]
 channel	D (.data) : 1 @ 80
+	80	D.d : 1
 ERROR: value assertion failed on channel `D' at index [7].
 	expected: 0, got: 1
 ... at line 47

@@ -760,8 +760,10 @@ if (a.size() > 2) {
 	s.resume();
 	time_type time = s.time();
 	// could check s.pending_events()
+#if !PRSIM_AGGREGATE_EXCEPTIONS
 	try {
-	while (!s.stopped() && i && GET_NODE((ni = s.step()))) {
+#endif
+	while (!s.stopped_or_fatal() && i && GET_NODE((ni = s.step()))) {
 		// if time actually advanced, decrement steps-remaining
 		// NB: may need specialization for real-valued (float) time.  
 		const time_type ct(s.time());
@@ -810,9 +812,15 @@ if (a.size() > 2) {
 #endif
 		}
 	}	// end while
+#if PRSIM_AGGREGATE_EXCEPTIONS
+	if (s.is_fatal()) {
+		return error_policy_to_status(s.inspect_exceptions());
+	}
+#else
 	} catch (const step_exception& exex) {
 		return error_policy_to_status(exex.inspect(s, cerr));
 	}	// no other exceptions
+#endif
 	return Command::NORMAL;
 }
 }	// end Step::main()
@@ -852,9 +860,11 @@ int
 step_event_main(State& s, size_t i) {
 	s.resume();
 	// could check s.pending_events()
+#if !PRSIM_AGGREGATE_EXCEPTIONS
 	try {
+#endif
 	State::step_return_type ni;	// also stores the cause of the event
-	while (!s.stopped() && i && GET_NODE((ni = s.step()))) {
+	while (!s.stopped_or_fatal() && i && GET_NODE((ni = s.step()))) {
 		--i;
 		// NB: may need specialization for real-valued (float) time.  
 		const time_type ct(s.time());
@@ -899,9 +909,15 @@ step_event_main(State& s, size_t i) {
 #endif
 		}
 	}	// end while
+#if PRSIM_AGGREGATE_EXCEPTIONS
+	if (s.is_fatal()) {
+		return error_policy_to_status(s.inspect_exceptions());
+	}
+#else
 	} catch (const step_exception& exex) {
 		return error_policy_to_status(exex.inspect(s, cerr));
 	}	// no other exceptions
+#endif
 	return Command::NORMAL;
 }
 
@@ -1003,8 +1019,10 @@ if (a.size() != 1) {
 } else {
 	State::step_return_type ni;
 	s.resume();	// clear STOP flag
+#if !PRSIM_AGGREGATE_EXCEPTIONS
 	try {
-	while (!s.stopped() && GET_NODE((ni = s.step()))) {
+#endif
+	while (!s.stopped_or_fatal() && GET_NODE((ni = s.step()))) {
 		if (!GET_NODE(ni))
 			return Command::NORMAL;
 		const node_type& n(s.get_node(GET_NODE(ni)));
@@ -1046,10 +1064,16 @@ if (a.size() != 1) {
 			}
 #endif
 		}
-	}	// end while (!s.stopped())
+	}	// end while (!s.stopped_or_fatal())
+#if PRSIM_AGGREGATE_EXCEPTIONS
+	if (s.is_fatal()) {
+		return error_policy_to_status(s.inspect_exceptions());
+	}
+#else
 	} catch (const step_exception& exex) {
 		return error_policy_to_status(exex.inspect(s, cerr));
 	}	// no other exceptions
+#endif
 	return Command::NORMAL;
 }	// end if
 }	// end Cycle::main()
@@ -2757,7 +2781,10 @@ if (a.size() != 2) {
 	typedef	vector<node_index_type>		nodes_id_list_type;
 	const string& objname(a.back());
 	nodes_id_list_type nodes;
+#if 0
+// FIXED a while ago
 try {	// temporary measure until bug ACX-PR-1456 is fixed
+#endif
 	if (parse_name_to_get_subnodes(objname, s.get_module(), nodes)) {
 		// already got error message?
 		return Command::BADARG;
@@ -2776,12 +2803,14 @@ try {	// temporary measure until bug ACX-PR-1456 is fixed
 		}
 		return Command::NORMAL;
 	}
+#if 0
 } catch (...) {
 	cerr << "... Saved from destruction!!!" << endl;
 	cerr << "You have probably triggered known bug ACX-PR-1456." << endl;
 	cerr << "Please nag Fang about fixing this.  You may resume." << endl;
 	return Command::BADARG;
 }
+#endif
 }
 }
 
@@ -2791,6 +2820,39 @@ GetAll::usage(ostream& o) {
 	o << "prints the current values of all subnodes of the named structure"
 		<< endl;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_AGGREGATE_EXCEPTIONS
+/***
+@texinfo cmd/exceptions.texi
+@deffn Command exceptions
+Prints the information recorded in recently occurred exceptions.
+The simulators exception list is cleared each time simulation is
+advanced by any number of steps.  
+This command is most useful immediately after halting on exceptions.
+This is not fully implemented yet: exceptions are not saved in checkpoints yet. 
+Noted as ACX-PR-6641.
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Exceptions, "exceptions", info, 
+	"show all recent simulation exceptions")
+
+int
+Exceptions::main(State& s, const string_list& a) {
+if (a.size() > 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.inspect_exceptions();
+	return Command::NORMAL;
+}
+}
+
+void
+Exceptions::usage(ostream& o) {
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***

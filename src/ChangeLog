@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-09-06	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-92-prsim-multi-error-handling-01:
+	  hacprsim: replaced exception mechanism with a simpler, cleaner
+		aggregation of exception objects, to be able to handle
+		multiple exceptions on a single-event.
+		Fatal exceptions now print out the last event in watchall
+		logs, test cases updated (all expect-fail).
+		New command: 'exceptions' to print recent exceptions, 
+			but currently not saved in checkpoints yet.  
+
+
 2011-08-29	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-92:

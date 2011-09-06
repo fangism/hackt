@@ -107,6 +107,15 @@
  */
 #define PRSIM_PRECHARGE_INVARIANTS			1
 
+/**
+	Define to 1 to collect multiple exceptions at a time
+	to allow fatal errors to collect more than one error.
+	Goal: 1
+	Rationale: much better diagnostics, safe execution, 
+		reduced risk of simulator incoherence after fatal errors.
+ */
+#define	PRSIM_AGGREGATE_EXCEPTIONS			1
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Eliminate pre-translated, allocated top-level expressions in favor

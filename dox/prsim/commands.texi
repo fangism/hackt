@@ -399,6 +399,7 @@ errors are always treated as fatal.)
 @include cmd/no-unknown-fanout.texi
 @include cmd/unknown-undriven-fanin.texi
 @include cmd/no-unknown-undriven-fanin.texi
+@include cmd/exceptions.texi
 
 @c ----------------------------------------------------------------------------
 @node View Commands

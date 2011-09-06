@@ -1,7 +1,7 @@
 channels:
-X : .e(init:0) 1x1of2 off
-Y : .e(init:1) 1x1of4 off
-Z : .a(init:0) 1x1of3 off
+X : .e(init:0)  1x1of2 off
+Y : .e(init:1)  1x1of4 off
+Z : .a(init:0)  1x1of3 off
 All subnodes of 'X':
 X.d[0] : X
 X.d[1] : X
@@ -16,111 +16,111 @@ releasing channel X
 channel	X (.data) : 0 @ 20
 	20	X.d[0] : 1
 	30	X.e : 0	[by X.d[0]:=1]
-X : .e(init:0) 1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @1 #0 < channel-test-a-values-X.txt
+X : .e(init:0)  1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @1 #0 < channel-test-a-values-X.txt
 	count: 1, unknowns: 0
 - - - - - - - - - - - - - - - - - - 
 	30	X.d[0] : 0
 	40	X.e : 1	[by X.d[0]:=0]
-X : .e(init:0) 1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @1 #0 < channel-test-a-values-X.txt
+X : .e(init:0)  1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @1 #0 < channel-test-a-values-X.txt
 	count: 0, unknowns: 0
 ------------------------------------ 
 channel	X (.data) : 1 @ 40
 	40	X.d[1] : 1
 	50	X.e : 0	[by X.d[1]:=1]
-X : .e(init:0) 1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @2 #0 < channel-test-a-values-X.txt
+X : .e(init:0)  1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @2 #0 < channel-test-a-values-X.txt
 	count: 1, unknowns: 0
 - - - - - - - - - - - - - - - - - - 
 	50	X.d[1] : 0
 	60	X.e : 1	[by X.d[1]:=0]
-X : .e(init:0) 1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @2 #0 < channel-test-a-values-X.txt
+X : .e(init:0)  1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @2 #0 < channel-test-a-values-X.txt
 	count: 0, unknowns: 0
 ------------------------------------ 
 channel	X (.data) : 1 @ 60
 	60	X.d[1] : 1
 	70	X.e : 0	[by X.d[1]:=1]
-X : .e(init:0) 1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @3 #0 < channel-test-a-values-X.txt
+X : .e(init:0)  1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @3 #0 < channel-test-a-values-X.txt
 	count: 1, unknowns: 0
 - - - - - - - - - - - - - - - - - - 
 	70	X.d[1] : 0
 	80	X.e : 1	[by X.d[1]:=0]
-X : .e(init:0) 1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @3 #0 < channel-test-a-values-X.txt
+X : .e(init:0)  1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @3 #0 < channel-test-a-values-X.txt
 	count: 0, unknowns: 0
 ------------------------------------ 
 channel	X (.data) : 0 @ 80
 	80	X.d[0] : 1
 	90	X.e : 0	[by X.d[0]:=1]
-X : .e(init:0) 1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @4 #0 < channel-test-a-values-X.txt
+X : .e(init:0)  1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @4 #0 < channel-test-a-values-X.txt
 	count: 1, unknowns: 0
 - - - - - - - - - - - - - - - - - - 
 	90	X.d[0] : 0
 	100	X.e : 1	[by X.d[0]:=0]
-X : .e(init:0) 1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @4 #0 < channel-test-a-values-X.txt
+X : .e(init:0)  1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @4 #0 < channel-test-a-values-X.txt
 	count: 0, unknowns: 0
 ------------------------------------ 
 channel	X (.data) : 0 @ 100
 	100	X.d[0] : 1
 	110	X.e : 0	[by X.d[0]:=1]
-X : .e(init:0) 1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @5 #0 < channel-test-a-values-X.txt
+X : .e(init:0)  1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @5 #0 < channel-test-a-values-X.txt
 	count: 1, unknowns: 0
 - - - - - - - - - - - - - - - - - - 
 	110	X.d[0] : 0
 	120	X.e : 1	[by X.d[0]:=0]
-X : .e(init:0) 1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @5 #0 < channel-test-a-values-X.txt
+X : .e(init:0)  1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @5 #0 < channel-test-a-values-X.txt
 	count: 0, unknowns: 0
 ------------------------------------ 
 channel	X (.data) : 0 @ 120
 	120	X.d[0] : 1
 	130	X.e : 0	[by X.d[0]:=1]
-X : .e(init:0) 1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @6 #0 < channel-test-a-values-X.txt
+X : .e(init:0)  1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @6 #0 < channel-test-a-values-X.txt
 	count: 1, unknowns: 0
 - - - - - - - - - - - - - - - - - - 
 	130	X.d[0] : 0
 	140	X.e : 1	[by X.d[0]:=0]
-X : .e(init:0) 1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @6 #0 < channel-test-a-values-X.txt
+X : .e(init:0)  1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @6 #0 < channel-test-a-values-X.txt
 	count: 0, unknowns: 0
 ------------------------------------ 
 channel	X (.data) : 1 @ 140
 	140	X.d[1] : 1
 	150	X.e : 0	[by X.d[1]:=1]
-X : .e(init:0) 1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @7 #0 < channel-test-a-values-X.txt
+X : .e(init:0)  1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @7 #0 < channel-test-a-values-X.txt
 	count: 1, unknowns: 0
 - - - - - - - - - - - - - - - - - - 
 	150	X.d[1] : 0
 	160	X.e : 1	[by X.d[1]:=0]
-X : .e(init:0) 1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @7 #0 < channel-test-a-values-X.txt
+X : .e(init:0)  1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @7 #0 < channel-test-a-values-X.txt
 	count: 0, unknowns: 0
 ------------------------------------ 
 channel	X (.data) : 1 @ 160
 	160	X.d[1] : 1
 	170	X.e : 0	[by X.d[1]:=1]
-X : .e(init:0) 1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @8 #0 < channel-test-a-values-X.txt
+X : .e(init:0)  1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @8 #0 < channel-test-a-values-X.txt
 	count: 1, unknowns: 0
 - - - - - - - - - - - - - - - - - - 
 	170	X.d[1] : 0
 	180	X.e : 1	[by X.d[1]:=0]
-X : .e(init:0) 1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @8 #0 < channel-test-a-values-X.txt
+X : .e(init:0)  1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @8 #0 < channel-test-a-values-X.txt
 	count: 0, unknowns: 0
 ------------------------------------ 
 channel	X (.data) : 1 @ 180
 	180	X.d[1] : 1
 	190	X.e : 0	[by X.d[1]:=1]
-X : .e(init:0) 1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @9 #0 < channel-test-a-values-X.txt
+X : .e(init:0)  1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @9 #0 < channel-test-a-values-X.txt
 	count: 1, unknowns: 0
 - - - - - - - - - - - - - - - - - - 
 	190	X.d[1] : 0
 	200	X.e : 1	[by X.d[1]:=0]
-X : .e(init:0) 1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @9 #0 < channel-test-a-values-X.txt
+X : .e(init:0)  1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @9 #0 < channel-test-a-values-X.txt
 	count: 0, unknowns: 0
 ------------------------------------ 
 channel	X (.data) : 1 @ 200
 	200	X.d[1] : 1
 	210	X.e : 0	[by X.d[1]:=1]
-X : .e(init:0) 1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @0 #1 < channel-test-a-values-X.txt
+X : .e(init:0)  1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @0 #1 < channel-test-a-values-X.txt
 	count: 1, unknowns: 0
 - - - - - - - - - - - - - - - - - - 
 	210	X.d[1] : 0
 	220	X.e : 1	[by X.d[1]:=0]
-X : .e(init:0) 1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @0 #1 < channel-test-a-values-X.txt
+X : .e(init:0)  1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @0 #1 < channel-test-a-values-X.txt
 	count: 0, unknowns: 0
 ------------------------------------ 
 expect loop should restart sequence 
@@ -128,71 +128,72 @@ expect loop should restart sequence
 channel	X (.data) : 0 @ 220
 	220	X.d[0] : 1
 	230	X.e : 0	[by X.d[0]:=1]
-X : .e(init:0) 1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @1 #1 < channel-test-a-values-X.txt
+X : .e(init:0)  1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @1 #1 < channel-test-a-values-X.txt
 	count: 1, unknowns: 0
 - - - - - - - - - - - - - - - - - - 
 	230	X.d[0] : 0
 	240	X.e : 1	[by X.d[0]:=0]
-X : .e(init:0) 1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @1 #1 < channel-test-a-values-X.txt
+X : .e(init:0)  1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @1 #1 < channel-test-a-values-X.txt
 	count: 0, unknowns: 0
 ------------------------------------ 
 channel	X (.data) : 1 @ 240
 	240	X.d[1] : 1
 	250	X.e : 0	[by X.d[1]:=1]
-X : .e(init:0) 1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @2 #1 < channel-test-a-values-X.txt
+X : .e(init:0)  1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @2 #1 < channel-test-a-values-X.txt
 	count: 1, unknowns: 0
 - - - - - - - - - - - - - - - - - - 
 	250	X.d[1] : 0
 	260	X.e : 1	[by X.d[1]:=0]
-X : .e(init:0) 1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @2 #1 < channel-test-a-values-X.txt
+X : .e(init:0)  1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @2 #1 < channel-test-a-values-X.txt
 	count: 0, unknowns: 0
 ------------------------------------ 
 channel	X (.data) : 1 @ 260
 	260	X.d[1] : 1
 	270	X.e : 0	[by X.d[1]:=1]
-X : .e(init:0) 1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @3 #1 < channel-test-a-values-X.txt
+X : .e(init:0)  1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @3 #1 < channel-test-a-values-X.txt
 	count: 1, unknowns: 0
 - - - - - - - - - - - - - - - - - - 
 	270	X.d[1] : 0
 	280	X.e : 1	[by X.d[1]:=0]
-X : .e(init:0) 1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @3 #1 < channel-test-a-values-X.txt
+X : .e(init:0)  1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @3 #1 < channel-test-a-values-X.txt
 	count: 0, unknowns: 0
 ------------------------------------ 
 channel	X (.data) : 0 @ 280
 	280	X.d[0] : 1
 	290	X.e : 0	[by X.d[0]:=1]
-X : .e(init:0) 1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @4 #1 < channel-test-a-values-X.txt
+X : .e(init:0)  1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @4 #1 < channel-test-a-values-X.txt
 	count: 1, unknowns: 0
 - - - - - - - - - - - - - - - - - - 
 	290	X.d[0] : 0
 	300	X.e : 1	[by X.d[0]:=0]
-X : .e(init:0) 1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @4 #1 < channel-test-a-values-X.txt
+X : .e(init:0)  1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @4 #1 < channel-test-a-values-X.txt
 	count: 0, unknowns: 0
 ------------------------------------ 
 channel	X (.data) : 0 @ 300
 	300	X.d[0] : 1
 	310	X.e : 0	[by X.d[0]:=1]
-X : .e(init:0) 1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @5 #1 < channel-test-a-values-X.txt
+X : .e(init:0)  1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @5 #1 < channel-test-a-values-X.txt
 	count: 1, unknowns: 0
 - - - - - - - - - - - - - - - - - - 
 	310	X.d[0] : 0
 	320	X.e : 1	[by X.d[0]:=0]
-X : .e(init:0) 1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @5 #1 < channel-test-a-values-X.txt
+X : .e(init:0)  1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @5 #1 < channel-test-a-values-X.txt
 	count: 0, unknowns: 0
 ------------------------------------ 
 channel	X (.data) : 0 @ 320
 	320	X.d[0] : 1
 	330	X.e : 0	[by X.d[0]:=1]
-X : .e(init:0) 1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @6 #1 < channel-test-a-values-X.txt
+X : .e(init:0)  1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @6 #1 < channel-test-a-values-X.txt
 	count: 1, unknowns: 0
 - - - - - - - - - - - - - - - - - - 
 	330	X.d[0] : 0
 	340	X.e : 1	[by X.d[0]:=0]
-X : .e(init:0) 1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @6 #1 < channel-test-a-values-X.txt
+X : .e(init:0)  1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,}* @6 #1 < channel-test-a-values-X.txt
 	count: 0, unknowns: 0
 ------------------------------------ 
 expect to fail here: 
 channel	X (.data) : 0 @ 340
+	340	X.d[0] : 1
 ERROR: value assertion failed on channel `X' at index [6] of iteration [1].
 	expected: 1, got: 0
 ... at line 227
