@@ -1,0 +1,11 @@
+// "ACX-PR-6629.hac"
+// bug test case
+
+import "../../lib/channel.hac";
+
+e1of2 X;
+bool _xv;
+prs {
+	X.d[0] | X.d[1]		=> _xv-
+}
+

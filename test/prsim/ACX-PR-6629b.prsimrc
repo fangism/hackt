@@ -1,0 +1,26 @@
+# "ACX-PR-6629b.prsimrc"
+# @haco@ ACX-PR-6629.haco-c
+# @deps@ ACX-PR-6629.prsimckpt
+# test case showing failure to update channel status during unstable event
+
+load ACX-PR-6629.prsimckpt
+# echo NOT REACHED, EXPECT FAIL
+
+time
+queue
+
+getall X
+channel-show X
+
+echo allowing cycle to continue...
+cycle
+getall X
+channel-show X
+
+echo continuing...
+set X.d[1] 1
+cycle
+
+set X.d[1] 0
+cycle
+

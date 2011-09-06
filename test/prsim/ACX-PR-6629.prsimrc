@@ -1,0 +1,53 @@
+# "ACX-PR-6629.prsimrc"
+# @haco@ ACX-PR-6629.haco-c
+# test case showing failure to update channel status during unstable event
+
+autosave on ACX-PR-6629.prsimckpt
+
+unstable fatal
+unstable-dequeue
+watchall
+
+channel X e:0 :0 d:2
+channel-sink X
+
+set X.d[0] 0
+set X.d[1] 0
+cycle
+channel-reset-all
+cycle
+
+getall X
+channel-show X
+
+# normal operation
+channel-release-all
+cycle
+
+assert X.e 1
+channel-get X
+
+set X.d[0] 1
+cycle
+assert X.e 0
+channel-show X
+
+set X.d[0] 0
+cycle
+assert X.e 1
+channel-show X
+
+# now instability
+set X.d[0] 1
+advance 5
+set X.d[0] 0
+cycle
+
+echo NOT REACHED, EXPECT FAIL
+
+queue
+
+getall X
+channel-show X
+
+

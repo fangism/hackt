@@ -78,6 +78,7 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	ACX-PR-6376 ACX-PR-6376b \
 	ACX-PR-6386 ACX-PR-6386b \
 	ACX-PR-6393 \
+	ACX-PR-6629 \
 	stuck-bug-a \
 	crash-bug-01 \
 	after_min_max after_min_max-bad \
@@ -343,6 +344,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	eledr-buffer-b-07 \
 	channel-ledr-assert-a-01 \
 	channel-eledr-assert-a-01 \
+	ACX-PR-6629b \
 	stuck-bug-a-01 \
 	crash-bug-01-a \
 	always_random-a-01 \
@@ -566,6 +568,10 @@ channel-dont-cares.txt:
 # override default
 autosave-01.prsimckpt: autosave-01.prsimrcfail-out
 	@:
+
+# failing test that produces needed checkpoint
+ACX-PR-6629.prsimckpt: ACX-PR-6629.prsimrcfail-out
+
 # extra deps
 # generated tests needs to be built before auto-dependencies
 prsimrc-out.autodepend: $(srcdir)/cbit_test_stat-01.prsimrc
@@ -659,6 +665,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
 	channel-eledr-c-06 \
 	channel-array-a-01 channel-array-a-02 \
 	channel-array-b-02 \
+	ACX-PR-6629 \
 	interference-11 \
 	interference-13 \
 	interference-14 interference-15 \
