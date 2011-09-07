@@ -138,6 +138,7 @@ struct netlist_options {
 	string				mangle_internal_at;
 	string				mangle_auxiliary_pound;
 	string				mangle_implicit_bang;
+	string				mangle_double_quote;
 	/**
 		Set to true to wrap all instance identifiers with \ and space,
 		verilog-compatible style.
@@ -352,6 +353,9 @@ struct netlist_options {
 
 	const string&
 	emit_auxiliary_pound(void) const;
+
+	const string&
+	emit_double_quote(void) const;
 
 	ostream&
 	line_continue(ostream&) const;

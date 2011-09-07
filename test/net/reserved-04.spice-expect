@@ -22,6 +22,7 @@ mangle_array_index_close=]
 mangle_array_index_open=[
 mangle_auxiliary_pound=#
 mangle_colon=:
+mangle_double_quote="
 mangle_escaped_instance_identifiers=0
 mangle_escaped_type_identifiers=0
 mangle_implicit_bang=!

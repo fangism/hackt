@@ -1,0 +1,13 @@
+.subckt inv<"vanilla"> !GND !Vdd x y
+My:dn:0 !GND x y !GND nch W=5u L=2u
+My:up:0 !Vdd x y !Vdd pch W=5u L=2u
+.ends
+
+.subckt inv<"cherry"> !GND !Vdd x y
+My:dn:0 !GND x y !GND nch W=5u L=2u
+My:up:0 !Vdd x y !Vdd pch W=5u L=2u
+.ends
+
+xp !GND !Vdd a b inv<"vanilla">
+xq !GND !Vdd b c inv<"cherry">
+

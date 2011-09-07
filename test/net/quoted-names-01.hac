@@ -1,0 +1,13 @@
+// "quoted-names-01.hac"
+
+template <pstring Name>
+defproc inv(bool x, y) {
+prs {
+	x	=> y-
+}
+}
+
+bool a, b, c;
+inv<"vanilla"> p(a, b);
+inv<"cherry"> q(b, c);
+

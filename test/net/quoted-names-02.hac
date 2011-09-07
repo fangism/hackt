@@ -1,0 +1,5 @@
+// "quoted-names-02.hac"
+// @hacknet-flags@ -f mangle_double_quote=_DQ_
+
+import "quoted-names-01.hac";
+

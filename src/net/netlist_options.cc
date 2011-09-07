@@ -85,6 +85,7 @@ netlist_options::netlist_options() :
 		mangle_internal_at("@"),
 		mangle_auxiliary_pound("#"),
 		mangle_implicit_bang("!"),
+		mangle_double_quote("\""),
 		mangle_escaped_instance_identifiers(false),
 		mangle_escaped_type_identifiers(false),
 	// format options
@@ -218,6 +219,7 @@ netlist_options::no_mangling(const option_value&) {
 	mangle_internal_at = d.mangle_internal_at;
 	mangle_auxiliary_pound = d.mangle_auxiliary_pound;
 	mangle_implicit_bang = d.mangle_implicit_bang;
+	mangle_double_quote = d.mangle_double_quote;
 	mangle_escaped_instance_identifiers = false;
 	mangle_escaped_type_identifiers = false;
 	return false;
@@ -284,6 +286,7 @@ netlist_options::mangle_type(string& n) const {
 	strgsub(n, "::", mangle_scope);
 	// colon must be mangled *after* scope "::"
 //	strgsub(n, ":", mangle_colon);
+	strgsub(n, "\"", mangle_double_quote);
 	if (mangle_escaped_type_identifiers) {
 	if (find_if(n.begin(), n.end(), &isnot_idchar) != n.end()) {
 		n = string("\\") +n + ' ';
@@ -394,6 +397,12 @@ netlist_options::emit_internal_at(void) const {
 const string&
 netlist_options::emit_auxiliary_pound(void) const {
 	return mangle_auxiliary_pound;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const string&
+netlist_options::emit_double_quote(void) const {
+	return mangle_double_quote;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1069,6 +1078,10 @@ with a replacement string.
 Mangle the `@t{!}' character (designating implicit supply node) 
 with a replacement string.
 @end defopt
+@defopt mangle_double_quote (string)
+Mangle the `@t{"}' character (from template parameter strings) 
+with a replacement string.
+@end defopt
 @end texinfo
 
 @defopt no_mangling
@@ -1112,6 +1125,8 @@ DEFINE_OPTION_DEFAULT(mangle_auxiliary_pound,
 	"mangle_auxiliary_pound", "mangle: # replacement")
 DEFINE_OPTION_DEFAULT(mangle_implicit_bang,
 	"mangle_implicit_bang", "mangle: ! replacement")
+DEFINE_OPTION_DEFAULT(mangle_double_quote,
+	"mangle_double_quote", "mangle: \" replacement")
 DEFINE_OPTION_MEMFUN(no_mangling,
 	"no_mangling", "disable name-mangling")
 
