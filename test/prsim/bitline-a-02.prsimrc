@@ -29,6 +29,7 @@ echo
 echo expect _bl -> X queued
 time
 echo setting another pull-down rule on to overtake X
+# fanin-get _bl
 set wl 1
 advance 4
 queue

@@ -1,4 +1,5 @@
-// "bitline-a.hac"
+// "bitline-b.hac"
+// copy-modified from "bitline-a.hac"
 // bug test case
 
 bool pb, wl, wlx, pbx, _bl, blst, _pchg;

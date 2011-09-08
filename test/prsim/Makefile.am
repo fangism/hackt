@@ -57,7 +57,7 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	cbit_test_stat \
 	cbit_test_stat_alt \
 	cross-pull-a \
-	bitline-a bitline-b \
+	bitline-a bitline-b bitline-c \
 	SRAM SRAM-a SRAM-b SRAM-c SRAM-d \
 	keeper-a \
 	iskeeper-a \
@@ -237,6 +237,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	cross-pull-a-01b cross-pull-a-02b \
 	bitline-a-01 bitline-a-02 \
 	bitline-b-01 bitline-b-02 \
+	bitline-c-01 bitline-c-02 \
 	half-weak-a-01 half-weak-a-01a half-weak-a-02 half-weak-a-02a \
 	half-weak-a-03 half-weak-a-03a half-weak-a-04 half-weak-a-04a \
 	half-weak-b-01 half-weak-b-01a half-weak-b-02 half-weak-b-02a \
@@ -404,6 +405,7 @@ HACKT_PRSIMTRACE_TEST_SUBJECTS = \
 	after-override-01 \
 	bitline-a-01 bitline-a-02 \
 	bitline-b-01 bitline-b-02 \
+	bitline-c-01 bitline-c-02 \
 	channel-test-a-04 channel-test-a-05 channel-test-a-06 \
 	channel-test-a-15 channel-test-a-16 \
 	channel-test-a-17 channel-test-a-18 \
