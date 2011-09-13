@@ -219,6 +219,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	weak-fight-a-01 weak-fight-a-02 weak-fight-a-03 weak-fight-a-04 \
 	weak-fight-a-05 weak-fight-a-06 weak-fight-a-07 \
 	weak-fight-b-01 \
+	weak-fight-b-02 weak-fight-b-03 weak-fight-b-04 weak-fight-b-05 \
 	weak-vs-weak-01 weak-vs-weak-02 weak-vs-weak-03 \
 	weak-vs-weak-04 \
 	weak-feedback-a-01 weak-feedback-a-03 weak-feedback-a-04 \
@@ -227,7 +228,8 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	half-keeper-a-01 half-keeper-a-02 \
 	cross-coupled-01 cross-coupled-weak-01 \
 	cross-coupled-why-01 \
-	cbit-01 cbit-02 cbit-03 cbit-04 cbit-05 cbit-05b cbit-06 \
+	cbit-01 cbit-02 cbit-02b cbit-02c cbit-02d cbit-02e \
+	cbit-03 cbit-04 cbit-05 cbit-05b cbit-06 \
 	cbit-07 cbit-08 cbit-09 cbit-09b cbit-09c cbit-10 cbit-11 \
 	cbit_test_stat-01 \
 	cbit_test_stat_alt-01 \
@@ -571,6 +573,7 @@ autosave-01.prsimckpt: autosave-01.prsimrcfail-out
 
 # failing test that produces needed checkpoint
 ACX-PR-6629.prsimckpt: ACX-PR-6629.prsimrcfail-out
+	@:
 
 # extra deps
 # generated tests needs to be built before auto-dependencies

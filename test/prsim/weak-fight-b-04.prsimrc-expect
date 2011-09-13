@@ -1,0 +1,9 @@
+	0	pup : 1
+	0	ndn : 0
+	0	wndn : 0
+	0	wpup : 0
+	10	out : 1	[by wpup:=0]
+	10	out : X
+event queue:
+	20	out : 1	(weak)
+	20	out : 1

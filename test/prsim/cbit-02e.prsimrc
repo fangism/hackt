@@ -1,0 +1,13 @@
+# "cbit-02c.prsimrc"
+# copy-reduced from "cbit-02b.prsimrc"
+# @haco@ cbit.haco-c
+# testing some weak rules
+
+source cbit-02d.prsimrc
+
+echo re-evaluate rules
+unsetall
+assertn-queue
+assert p.f 1
+assert p.t 0
+

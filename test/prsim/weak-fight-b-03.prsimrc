@@ -1,0 +1,21 @@
+# "weak-fight-b-03.prsimrc"
+# @haco@ weak-fight-b.haco-c
+
+weak-rules on
+watchall
+# different eval ordering
+set wpup 1
+set wndn 1
+set pup 1
+set ndn 0
+cycle
+assert out 0
+
+set out X
+cycle
+
+unsetall
+queue
+assert-pending out
+cycle
+

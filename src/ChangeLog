@@ -3,6 +3,21 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-09-12	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-95:
+	  Batch of MAJOR prsim bug fixes (ACX-PR-{6655,6667}).
+	  case cbit-02{,b}: previously missed pulling firing non-interfering 
+		weak-rule, which left some nodes wrongly stuck at X.
+	  case cbit-02c: unset failed to re-evaluate an X pull on a node,
+		leaving an X-pulled node stuck at not-X!
+		Also test for correct overtaking of X's behavior.
+	  case cbit-02{d,e}: same as above, but cut off wordline to
+		eliminate X-pull on otherwise weakly driven node.
+	  Code fixes are all in the spaghetti-mess of corner-case handling 
+		of event scenarios, which we hope to eliminate soon.
+
+
 2011-09-06	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-94:

@@ -8,15 +8,21 @@ Fanins of node `p.t':
 [after 10]	wl:X & ~bl:X<X><X> -> p.t-:X
 [after 10, weak]	~p.f:1 -> p.t+:X
 [after 10, weak]	p.f:1 -> p.t-:X
+queue:	10	p.t : 0	[from p.f:=1]	(weak)
+expect pending event on p.t- b/c a weak-pull down is unopposed 
+	10	p.t : 0	[by p.f:=1]
+event queue:
 Fanins of node `p.f':
 (from c):
 [after 10]	wl:X & ~_bl:X<X><X> -> p.f-:1
-[after 10, weak]	~p.t:X -> p.f+:1
-[after 10, weak]	p.t:X -> p.f-:1
-	10	p.t : 0	[by p.f:=1]
-re-evaluation of p.f's fanin will expose X to p.f 
+[after 10, weak]	~p.t:0 -> p.f+:1
+[after 10, weak]	p.t:0 -> p.f-:1
+Fanins of node `_bl':
+(from c):
+[after 10, weak]	p.t:0 & wl:X<0><0> -> _bl-:X
+re-evaluate rules 
+expect p.f/p.t to be re-overtaken as X due to X pull 
 enqueued:	10	p.f : X
-event queue:
-	10	p.f : X
 enqueued:	20	p.t : X	[from p.f:=X]	(weak)
 	10	p.f : X
+	20	p.t : X	[by p.f:=X]

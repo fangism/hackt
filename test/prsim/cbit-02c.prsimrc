@@ -1,0 +1,16 @@
+# "cbit-02c.prsimrc"
+# copy-reduced from "cbit-02b.prsimrc"
+# @haco@ cbit.haco-c
+# testing some weak rules
+
+source cbit-02b.prsimrc
+
+echo re-evaluate rules
+echo expect p.f/p.t to be re-overtaken as X due to X pull
+# fanin-get p.f
+unsetall
+cycle
+# fanin-get p.t
+assert p.f X
+assert p.t X
+

@@ -1,0 +1,25 @@
+cut off wordlines first this time 
+enqueued:	0	wl : 0
+	0	wl : 0
+enqueued:	0	p.f : 1
+enqueued:	10	p.t : 0	[from p.f:=1]	(weak)
+	0	p.f : 1
+event queue:
+	10	p.t : 0	[from p.f:=1]	(weak)
+Fanins of node `p.t':
+(from c):
+[after 10]	wl:0 & ~bl:X<0><0> -> p.t-:X
+[after 10, weak]	~p.f:1 -> p.t+:X
+[after 10, weak]	p.f:1 -> p.t-:X
+queue:	10	p.t : 0	[from p.f:=1]	(weak)
+expect pending event on p.t- b/c a weak-pull down is unopposed 
+	10	p.t : 0	[by p.f:=1]
+event queue:
+Fanins of node `p.f':
+(from c):
+[after 10]	wl:0 & ~_bl:X<0><0> -> p.f-:1
+[after 10, weak]	~p.t:0 -> p.f+:1
+[after 10, weak]	p.t:0 -> p.f-:1
+Fanins of node `_bl':
+(from c):
+[after 10, weak]	p.t:0 & wl:0<0><0> -> _bl-:X

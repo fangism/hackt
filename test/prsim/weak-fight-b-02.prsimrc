@@ -1,0 +1,20 @@
+# "weak-fight-b-02.prsimrc"
+# @haco@ weak-fight-b.haco-c
+
+weak-rules on
+watchall
+set pup 1
+set ndn 0
+set wpup 1
+set wndn 1
+cycle
+assert out 0
+
+set out X
+cycle
+
+unsetall
+queue
+assert-pending out
+cycle
+

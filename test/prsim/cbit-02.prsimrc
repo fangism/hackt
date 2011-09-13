@@ -10,13 +10,19 @@ watchall-queue
 set p.f 1
 step-event
 queue
-assertn-queue
+# assertn-queue
+# pull down p.t- is unopposed
 fanin-get p.t
 fanin-get p.f
-
-set wl 0
 step-event
+
+# set wl 0
+# step-event
+assertn-queue
+
 echo re-evaluation of p.f's fanin will expose X to p.f
+# fanin-get p.f
+unsetall
 queue
 
 step-event

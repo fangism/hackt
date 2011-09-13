@@ -6,6 +6,7 @@ weak-rules on
 # unstable-dequeue
 set a 1
 cycle
+assertn-queue
 
 set a 0
 step-event

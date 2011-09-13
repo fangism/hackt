@@ -1,0 +1,28 @@
+# "cbit-02b.prsimrc"
+# copy-reduced from "cbit-02.prsimrc"
+# @haco@ cbit.haco-c
+# testing some weak rules
+
+# mode
+weak-rules on
+watchall
+watchall-queue
+set p.f 1
+step-event
+queue
+# assertn-queue
+fanin-get p.t
+pending p.t
+
+echo expect pending event on p.t- b/c a weak-pull down is unopposed
+assert-pending p.t
+
+cycle
+assert p.t 0
+queue
+
+fanin-get p.f
+fanin-get _bl
+# unsetall
+# assertn-queue
+

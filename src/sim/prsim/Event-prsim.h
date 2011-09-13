@@ -157,6 +157,9 @@ protected:
 			True if event was attributed to a weak rule.
 			This could be inferred from the cause_rule, 
 			so it should at least be consistent.  
+			NOTE: the causing rule may not always be the
+			one that is actively pulling, a rule may 
+			shut off and allow another to win.
 		 */
 		EVENT_WEAK_RULE = 0x08,
 #endif
