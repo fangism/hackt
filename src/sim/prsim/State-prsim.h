@@ -427,6 +427,14 @@ protected:
 	typedef	std::map<event_index_type, time_type>
 						mk_excl_queue_type;
 #if PRSIM_SIMPLE_EVENT_QUEUE
+	struct node_update_info {
+		rule_index_type			rule;
+		// Q: distnguish between rules that turned on/off?
+		// should keep around previous pull-state
+		// being able to diff previous pull-state against
+		// current pull-state may eliminate duplicate
+		// interference diagnostics
+	};	// end struct node_update_info
 	typedef	std::map<node_index_type, rule_index_type>
 						updated_nodes_type;
 #else

@@ -4094,6 +4094,12 @@ if (dir) {
 	if (!pp.second) {
 		if (p.up != PULL_OFF) {
 			pp.first->second = root_rule;
+		// TODO: determine rule precedence for causality
+		// whichever turned on first? strength?
+		// the root rule that is assigned is the one whose
+		// delay value will be used!
+		// what about interference delays to X?
+		// TODO: add mode for interference delay (0 to be conservative)
 		}
 	}
 #else
