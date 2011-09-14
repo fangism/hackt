@@ -15,6 +15,8 @@ setting 1 -> 0
 setting 0 -> X 
 WARNING: weak-interference `f'
 >> cause: `t' (val: X)
+WARNING: weak-interference `f'
+>> cause: `t' (val: X)
 	20	t : X
 	30	f : X	[by t:=X]
 setting X -> 0 

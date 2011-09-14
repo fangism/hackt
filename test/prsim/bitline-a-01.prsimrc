@@ -4,6 +4,8 @@
 weak-rules on
 # unstable-dequeue
 # unstable warn
+interference warn
+weak-interference warn
 watchall
 
 set pb 1

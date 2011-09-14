@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-09-13	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-96:
+	  Fix ACX-PR-6650: missed interference diagnostic between weak rules.
+		Patch is a quick-and-dirty hack, just patching corner case.
+		Expect robust fix to come from prsim-engine-rewrite.
+
+
 2011-09-12	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-95:

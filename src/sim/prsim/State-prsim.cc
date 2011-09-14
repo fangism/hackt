@@ -4113,6 +4113,8 @@ if (!n.pending_event()) {
 	DEBUG_STEP_PRINT("pull-dn = " << size_t(dn_pull) << endl);
 	DEBUG_STEP_PRINT("e.val = " << size_t(e.val) << endl);
 	DEBUG_STEP_PRINT("n.val = " << size_t(n.current_value()) << endl);
+	const bool weak_rule_interf = weak_rules_enabled() && is_weak &&
+		(wdn_pull != PULL_OFF && wup_pull != PULL_OFF);
 	if (next == PULL_OFF && 
 		((dn_pull == PULL_ON)
 #if PRSIM_WEAK_RULES
@@ -4139,6 +4141,7 @@ if (!n.pending_event()) {
 	} else if (dequeue_unstable_events() &&
 		next == PULL_ON && 
 		dn_pull == PULL_OFF &&
+		!weak_rule_interf &&
 		e.val == LOGIC_OTHER &&
 		n.current_value() == LOGIC_LOW
 		// n.current_value() != LOGIC_HIGH
@@ -4155,7 +4158,7 @@ if (!n.pending_event()) {
 			2) cancel previous event, and re-insert new event
 				with new time.
 		***/
-		DEBUG_STEP_PRINT("changing pending X to 1 in queue." << endl);
+		DEBUG_STEP_PRINT("changing pending X to 1 in queue (unstable-dequeue)." << endl);
 		e.val = LOGIC_HIGH;
 		e.set_cause_node(ni);
 	} else if (dequeue_unstable_events() &&
@@ -4178,7 +4181,7 @@ if (!n.pending_event()) {
 			2) cancel previous event, and re-insert new event
 				with new time.
 		***/
-		DEBUG_STEP_PRINT("changing pending X to 0 in queue." << endl);
+		DEBUG_STEP_PRINT("changing pending X to 0 in queue (unstable-dequeue)." << endl);
 		e.val = LOGIC_LOW;
 		e.set_cause_node(ni);
 		}
@@ -4354,6 +4357,8 @@ if (!n.pending_event()) {
 	DEBUG_STEP_PRINT("pull-up = " << size_t(up_pull) << endl);
 	DEBUG_STEP_PRINT("e.val = " << size_t(e.val) << endl);
 	DEBUG_STEP_PRINT("n.val = " << size_t(n.current_value()) << endl);
+	const bool weak_rule_interf = weak_rules_enabled() && is_weak &&
+		(wdn_pull != PULL_OFF && wup_pull != PULL_OFF);
 	if (next == PULL_OFF && 
 		((up_pull == PULL_ON)
 #if PRSIM_WEAK_RULES
@@ -4380,6 +4385,7 @@ if (!n.pending_event()) {
 	} else if (dequeue_unstable_events() &&
 		next == PULL_ON &&
 		up_pull == PULL_OFF &&
+		!weak_rule_interf &&
 		e.val == LOGIC_OTHER &&
 		n.current_value() == LOGIC_HIGH
 		// n.current_value() != LOGIC_LOW
@@ -4396,7 +4402,7 @@ if (!n.pending_event()) {
 			2) cancel previous event, and re-insert new event
 				with new time.
 		***/
-		DEBUG_STEP_PRINT("changing pending X to 0 in queue." << endl);
+		DEBUG_STEP_PRINT("changing pending X to 0 in queue (unstable-dequeue)." << endl);
 		e.val = LOGIC_LOW;
 		e.set_cause_node(ni);
 	} else if (dequeue_unstable_events() &&
@@ -4419,7 +4425,7 @@ if (!n.pending_event()) {
 			2) cancel previous event, and re-insert new event
 				with new time.
 		***/
-		DEBUG_STEP_PRINT("changing pending X to 1 in queue." << endl);
+		DEBUG_STEP_PRINT("changing pending X to 1 in queue (unstable-dequeue)." << endl);
 		e.val = LOGIC_HIGH;
 		e.set_cause_node(ni);
 		}
@@ -4507,6 +4513,7 @@ State::__report_cause(ostream& o, cause_arg_type cause) const {
 	Report a node with interfering fanin rules.  
 	Diagnostics may be suppresed by the may-interfere, and 
 	may-weak-interfere node attributes.
+	\param _ni the affected output node.
 	\return true if error causes break in events.  
  */
 State::break_type
@@ -4602,12 +4609,14 @@ State::__diagnose_violation(ostream& o, const pull_enum next,
 	const node_index_type& ni(c.node);
 	break_type err = ERROR_NONE;
 	// something is amiss!
+	// these tables are probably wrong when involving weak-rules
 	const uchar eu = dir ?
 		event_type::upguard[size_t(next)][size_t(e.val)] :
 		event_type::dnguard[size_t(next)][size_t(e.val)];
 	DEBUG_STEP_PRINT("event_update = " << size_t(eu) << endl);
 	const bool vacuous = eu & event_type::EVENT_VACUOUS;
 	if (!vacuous) {
+		DEBUG_STEP_PRINT("not vacuous" << endl);
 		// then must be unstable or interfering (exclusive)
 		const bool instability =
 			(eu & event_type::EVENT_UNSTABLE)
@@ -4642,6 +4651,7 @@ State::__diagnose_violation(ostream& o, const pull_enum next,
 			// check for conflicting/redundant events 
 			// on pending queue (result of instability)
 		if (instability) {
+			DEBUG_STEP_PRINT("instablity" << endl);
 			e.set_cause_node(ni);
 			const rule_type* const r = lookup_rule(e.cause_rule);
 			if ((dequeue_unstable_events() ||
@@ -4680,6 +4690,7 @@ State::__diagnose_violation(ostream& o, const pull_enum next,
 		// check for interference when processing updated nodes
 #else
 		if (interference) {
+			DEBUG_STEP_PRINT("some interference" << endl);
 			/***
 				Q: may actually be an instability, 
 				so we insert the event into pending-queue
@@ -4723,7 +4734,37 @@ State::__diagnose_violation(ostream& o, const pull_enum next,
 			}
 #endif
 		}	// end if unstable
-	}	// end if !vacuous
+	} else {
+		// end if !vacuous
+		DEBUG_STEP_PRINT("vacuous" << endl);
+		// HACK: to fix bug ACX-PR-6650
+		// check for weak vs. weak rule interference
+	const node_type& _n(get_node(e.node));
+	const pull_enum pull_up_state =
+		_n.pull_up_state STR_INDEX(NORMAL_RULE).pull();
+	const pull_enum pull_dn_state =
+		_n.pull_dn_state STR_INDEX(NORMAL_RULE).pull();
+	const pull_enum wpull_up_state =
+		_n.pull_up_state STR_INDEX(WEAK_RULE).pull();
+	const pull_enum wpull_dn_state =
+		_n.pull_dn_state STR_INDEX(WEAK_RULE).pull();
+	if (weak_rules_enabled() &&
+		(pull_up_state == PULL_OFF) &&
+		(pull_dn_state == PULL_OFF) &&
+		(wpull_up_state != PULL_OFF) &&
+			(wpull_dn_state != PULL_OFF)) {
+			const event_index_type pe =
+				__allocate_pending_interference_event(
+					n, ui, c, 
+					dir ? LOGIC_HIGH :
+						LOGIC_LOW
+#if PRSIM_WEAK_RULES
+						, NORMAL_RULE	// not weak
+#endif
+						);
+			enqueue_pending(pe);
+	}
+	}
 	// else vacuous is OK
 	return err;
 }	// end method __diagnose_violation

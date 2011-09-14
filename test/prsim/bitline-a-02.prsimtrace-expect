@@ -19,7 +19,7 @@ Epoch 1:
 	7	20	0	0	9	1	(_pchg:1)
 	8	20	0	0	5	1	(wlx:1)
 	9	24	0	0	4	1	(wl:1)
-	10	30	5	8	7	0	[after 20, weak]	wlx & pbx -> _bl-
-	11	40	9	10	8	1	[after 10]	~_bl -> blst+
+	10	30	5	8	7	X	[after 20, weak]	wlx & pbx -> _bl-
+	11	40	9	10	8	X	[after 10]	~_bl -> blst+
 Epoch 2: (final values)
-X 0 1 1 1 1 X 0 1 1 
+X 0 1 1 1 1 X X X 1 
