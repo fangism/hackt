@@ -4815,7 +4815,9 @@ State::__diagnose_violation(ostream& o, const pull_enum next,
 	} else {
 		// end if !vacuous
 		DEBUG_STEP_PRINT("vacuous" << endl);
-#if !PRSIM_SIMPLE_EVENT_QUEUE
+#if PRSIM_SIMPLE_EVENT_QUEUE
+		// check for interference when processing updated nodes
+#else
 		// HACK: to fix bug ACX-PR-6650
 		// check for weak vs. weak rule interference
 	const node_type& _n(get_node(e.node));
@@ -4832,7 +4834,7 @@ State::__diagnose_violation(ostream& o, const pull_enum next,
 						);
 			enqueue_pending(pe);
 	}
-#endif
+#endif	// PRSIM_SIMPLE_EVENT_QUEUE
 	}
 	// else vacuous is OK
 	return err;
