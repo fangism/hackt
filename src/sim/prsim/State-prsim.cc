@@ -1614,45 +1614,17 @@ State::unset_node(const node_index_type ni) {
 	const event_index_type pending = n.get_event();
 	// strong events take precedence over weak ones
 	// evaluate node's pull-up and pull-down
-	const pull_enum pu = n.pull_up_state STR_INDEX(NORMAL_RULE).pull();
-	const pull_enum pd = n.pull_dn_state STR_INDEX(NORMAL_RULE).pull();
-#if PRSIM_WEAK_RULES
-	// if weak_rules enabled!
-	const pull_enum wpu = n.pull_up_state STR_INDEX(WEAK_RULE).pull();
-	const pull_enum wpd = n.pull_dn_state STR_INDEX(WEAK_RULE).pull();
-#endif
-if (pu != PULL_OFF || pd != PULL_OFF
-#if PRSIM_WEAK_RULES
-		|| wpu != PULL_OFF || wpd != PULL_OFF
-#endif
-		) {
+	const pull_set p(n, weak_rules_enabled());
+if (!p.state_holding()) {
 	// to Hell with #if PRSIM_WEAK_RULES...
-     	const bool x_pull_up = (pu == PULL_WEAK && wpu != PULL_ON)
-		|| (pu == PULL_OFF && wpu == PULL_WEAK && pd != PULL_ON);
-     	const bool x_pull_dn = (pd == PULL_WEAK && wpd != PULL_ON)
-		|| (pd == PULL_OFF && wpd == PULL_WEAK && pu != PULL_ON);
-	const bool interference = (pu != PULL_OFF && pd != PULL_OFF)
-		|| (pu == PULL_WEAK && wpd != PULL_OFF)
-		|| (pd == PULL_WEAK && wpu != PULL_OFF);
-	const bool weak_wins_up = (pd == PULL_OFF && (
-		(pu == PULL_OFF && wpu != PULL_OFF) || 
-		(pu == PULL_WEAK && wpu == PULL_ON)));
-	const bool weak_wins_dn = (pu == PULL_OFF && (
-		(pd == PULL_OFF && wpd != PULL_OFF) || 
-		(pd == PULL_WEAK && wpd == PULL_ON)));
-	const bool weak_wins = weak_wins_up || weak_wins_dn;
-	DEBUG_STEP_PRINT("x_pull_up: " << (x_pull_up ? 1 : 0) << endl);
-	DEBUG_STEP_PRINT("x_pull_dn: " << (x_pull_dn ? 1 : 0) << endl);
-	DEBUG_STEP_PRINT("interference: " << (interference ? 1 : 0) << endl);
-	DEBUG_STEP_PRINT("weak wins up: " << (weak_wins_up ? 1 : 0) << endl);
-	DEBUG_STEP_PRINT("weak wins dn: " << (weak_wins_dn ? 1 : 0) << endl);
+	const bool weak_wins = p.weak_wins_any();
 #if 0
 	const value_enum new_val = pull_to_value[size_t(pu)][size_t(pd)];
 #else
 	const value_enum new_val =
-		(interference || x_pull_up || x_pull_dn) ? LOGIC_OTHER :
-		(pu == PULL_ON || (wpu == PULL_ON && pd == PULL_OFF)) ?
-			LOGIC_HIGH : LOGIC_LOW;
+		p.pull_up_wins_any() ? LOGIC_HIGH :
+		p.pull_dn_wins_any() ? LOGIC_LOW : LOGIC_OTHER;
+		// is not state-holding, must be some interference
 #endif
 	if (pending) {
 		DEBUG_STEP_PRINT("already pending event" << endl);
@@ -1676,11 +1648,11 @@ if (pu != PULL_OFF || pd != PULL_OFF
 		// no event pending, can make one
 		const value_enum current = n.current_value();
 		if (current == LOGIC_LOW &&
-				pu == PULL_OFF) {
+				p.up == PULL_OFF) {
 			// nothing pulling up, no change
 			return;
 		} else if (current == LOGIC_HIGH &&
-				pd == PULL_OFF) {
+				p.dn == PULL_OFF) {
 			// nothing pulling down, no change
 			return;
 		} else if (current != new_val) {
@@ -2198,18 +2170,10 @@ for ( ; i!=e; ++i) {
 	// check for interference first
 	// create event first, but don't tie it to the node until
 	// after checking for instability and queue conflicts
-	const pull_enum up_pull = n.pull_up_state STR_INDEX(NORMAL_RULE).pull();
-	const pull_enum dn_pull = n.pull_dn_state STR_INDEX(NORMAL_RULE).pull();
-	const bool up_off = (up_pull == PULL_OFF);
-	const bool dn_off = (dn_pull == PULL_OFF);
-#if PRSIM_WEAK_RULES
-	const pull_enum wdn_pull = weak_rules_enabled() ?
-		n.pull_dn_state STR_INDEX(WEAK_RULE).pull() : PULL_OFF;
-	const pull_enum wup_pull = weak_rules_enabled() ?
-		n.pull_up_state STR_INDEX(WEAK_RULE).pull() : PULL_OFF;
-#endif
+	const pull_set p(n, weak_rules_enabled());
+	const bool normal_off = p.normal_rules_off();
 	// compute the future value based on pull-state
-	if (!up_off && !dn_off) {
+	if (!normal_off) {
 		// some interference between strong rules
 		// TODO: diagnostic
 		pull_val = LOGIC_OTHER:
@@ -2233,9 +2197,7 @@ for ( ; i!=e; ++i) {
 		e.pending_interference(true);
 	}
 #if PRSIM_WEAK_RULES
-	else if (up_off && dn_off &&
-			wup_pull != PULL_OFF &&
-			wdn_pull != PULL_OFF) {
+	else if (normal_off && !p.weak_rules_off()) {
 		// some interference between weak rules
 		// TODO: diagnostic
 		pull_val = LOGIC_OTHER:
@@ -2284,36 +2246,16 @@ for ( ; i!=e; ++i) {
 	DEBUG_STEP_PRINT("... on node " <<
 		get_node_canonical_name(_ni) << endl);
 	node_type& _n(__get_node(_ni));
-
-	// are weak events ever inserted into the pending queue?
-	const pull_enum pull_up_state =
-		_n.pull_up_state STR_INDEX(NORMAL_RULE).pull();
-	const pull_enum pull_dn_state =
-		_n.pull_dn_state STR_INDEX(NORMAL_RULE).pull();
-	DEBUG_STEP_PRINT("current pull-states: up=" <<
-		size_t(pull_up_state) << ", dn=" <<
-		size_t(pull_dn_state) << endl);
-#if PRSIM_WEAK_RULES
-	const pull_enum wpull_up_state =
-		_n.pull_up_state STR_INDEX(WEAK_RULE).pull();
-	const pull_enum wpull_dn_state =
-		_n.pull_dn_state STR_INDEX(WEAK_RULE).pull();
-	DEBUG_STEP_PRINT("weak pull-states:    up=" <<
-		size_t(wpull_up_state) << ", dn=" <<
-		size_t(wpull_dn_state) << endl);
-#endif
+	const pull_set p(_n, weak_rules_enabled());
 	// check strong (normal) rules first
-	if ((pull_up_state != PULL_OFF) &&
-		(pull_dn_state != PULL_OFF)) {
+	if (p.possible_interference_strong()) {
 	/***
 		There is interference.  If there is weak interference,
 		suppress report unless explicitly requested.  
 		weak = (X && T) or (T && X);
 	***/
 		DEBUG_STEP_PRINT("some interference." << endl);
-		const bool pending_weak =
-			(pull_up_state == PULL_WEAK) ||
-			(pull_dn_state == PULL_WEAK);
+		const bool pending_weak = p.normal_pulling_x();
 			// not XOR (^), see pending_weak table in prs.c
 		// issue diagnostic
 		if ((weak_interference_policy != ERROR_IGNORE) ||
@@ -2352,19 +2294,13 @@ for ( ; i!=e; ++i) {
 			__flush_pending_event_with_interference(_n, ne, ev);
 		}	// end if pending_interference
 #if PRSIM_WEAK_RULES
-	} else if (weak_rules_enabled() &&
-		(pull_up_state == PULL_OFF) &&
-		(pull_dn_state == PULL_OFF) &&
-		(wpull_up_state != PULL_OFF) &&
-			(wpull_dn_state != PULL_OFF)) {
+	} else if (weak_rules_enabled() && p.possible_interference_weak()) {
 	/***
 		There is interference between weak rules. 
 		Rest of the code in this clause is copied from above.
 	***/
 		DEBUG_STEP_PRINT("some interference (weak rules)." << endl);
-		const bool pending_weak =
-			(wpull_up_state == PULL_WEAK) ||
-			(wpull_dn_state == PULL_WEAK);
+		const bool pending_weak = p.weak_pulling_x();
 			// not XOR (^), see pending_weak table in prs.c
 		// issue diagnostic
 		if ((weak_interference_policy != ERROR_IGNORE) ||
@@ -2405,13 +2341,7 @@ for ( ; i!=e; ++i) {
 		DEBUG_STEP_PRINT("prior enqueued event on this node (possibly killed): " <<
 			pe << endl);
 		// weak_wins
-		const bool weak_wins_up = (pull_dn_state == PULL_OFF && (
-			(pull_up_state == PULL_OFF && wpull_up_state != PULL_OFF) || 
-			(pull_up_state == PULL_WEAK && wpull_up_state == PULL_ON)));
-		const bool weak_wins_dn = (pull_up_state == PULL_OFF && (
-			(pull_dn_state == PULL_OFF && wpull_dn_state != PULL_OFF) || 
-			(pull_dn_state == PULL_WEAK && wpull_dn_state == PULL_ON)));
-		const bool weak_wins = weak_wins_up || weak_wins_dn;
+		const bool weak_wins = p.weak_wins_any();
 		if (weak_wins) {
 			ev.set_weak(true);
 		}
@@ -2516,12 +2446,12 @@ State::__flush_pending_event_no_interference(node_type& _n,
 #endif
 		// not necessarily linked yet
 		_n.set_event_consistent(ne);
+		const pull_set p(_n, weak_rules_enabled());
 		if (ev.val == LOGIC_HIGH) {
 		DEBUG_STEP_PRINT("moving + event to event queue" << endl);
 #if PRSIM_WEAK_RULES
 			// the opposing strong pull:
-			const pull_enum opp =
-				_n.pull_dn_state STR_INDEX(NORMAL_RULE).pull();
+			const pull_enum opp = p.dn;
 			if (!w || (opp == PULL_OFF)) {
 #endif	// PRSIM_WEAK_RULES
 			enqueue_event(get_delay_up(ev), ne);
@@ -2533,8 +2463,7 @@ State::__flush_pending_event_no_interference(node_type& _n,
 		DEBUG_STEP_PRINT("moving - event to event queue" << endl);
 #if PRSIM_WEAK_RULES
 			// the opposing strong pull:
-			const pull_enum opp =
-				_n.pull_up_state STR_INDEX(NORMAL_RULE).pull();
+			const pull_enum opp = p.up;
 			if (!w || (opp == PULL_OFF)) {
 #endif	// PRSIM_WEAK_RULES
 			enqueue_event(get_delay_dn(ev), ne);
@@ -2781,12 +2710,11 @@ for ( ; i!=e; ++i) {
 				continue;
 			}
 			// strong rules only
-			const pull_enum pei =
-				er.pull_up_state STR_INDEX(NORMAL_RULE).pull();
+			const pull_set p(er, weak_rules_enabled());
 			if (!er.pending_event() &&
 				// er->n->up->val == PRS_VAL_T
 				// what if is pulling weakly?
-				pei == PULL_ON) {
+				p.up == PULL_ON) {
 			DEBUG_STEP_PRINT("enqueuing pull-up event" << endl);
 				const event_index_type ne =
 					// the pull-up index may not necessarily
@@ -2841,12 +2769,11 @@ for ( ; i!=e; ++i) {
 				continue;
 			}
 			// strong rules only
-			const pull_enum pei =
-				er.pull_dn_state STR_INDEX(NORMAL_RULE).pull();
+			const pull_set p(er, weak_rules_enabled());
 			if (!er.pending_event() &&
 				// er->n->dn->val == PRS_VAL_T
 				// what if is pulling weakly?
-				pei == PULL_ON) {
+				p.dn == PULL_ON) {
 			DEBUG_STEP_PRINT("enqueuing pull-dn event" << endl);
 				const event_index_type ne =
 					// same comment as enforce_exclhi
@@ -3917,20 +3844,9 @@ State::propagate_evaluation(
 		return err;
 	}
 #endif
-	const pull_enum up_pull = n.pull_up_state STR_INDEX(NORMAL_RULE).pull();
-	const pull_enum dn_pull = n.pull_dn_state STR_INDEX(NORMAL_RULE).pull();
-	DEBUG_STEP_PRINT("up_pull: " << up_pull << endl);
-	DEBUG_STEP_PRINT("dn_pull: " << dn_pull << endl);
-#if PRSIM_WEAK_RULES
-	const pull_enum wdn_pull = weak_rules_enabled() ?
-		n.pull_dn_state STR_INDEX(WEAK_RULE).pull() : PULL_OFF;
-	const pull_enum wup_pull = weak_rules_enabled() ?
-		n.pull_up_state STR_INDEX(WEAK_RULE).pull() : PULL_OFF;
-	DEBUG_STEP_PRINT("wup_pull: " << wup_pull << endl);
-	DEBUG_STEP_PRINT("wdn_pull: " << wdn_pull << endl);
-#endif	// PRSIM_WEAK_RULES
+	const pull_set p(n, weak_rules_enabled());
 	if (keeper_check_fail_policy > ERROR_IGNORE &&
-			up_pull == PULL_OFF && dn_pull == PULL_OFF) {
+			p.normal_rules_off()) {
 		__keeper_check_candidates.insert(ui);
 	}
 const bool dir = ev_result.root_rule->direction();
@@ -3970,20 +3886,20 @@ if (n.pending_event()) {
 } else {	// no pending event
 	if (is_weak &&
 			// old (broken) -- wrongly suppressed firing
-			(up_pull != PULL_OFF || dn_pull != PULL_OFF)
+			!p.normal_rules_off()
 		) {
 		// also account for case where weak-1 turns off and yields
 		// to a strong-X in same direction
 		if ((dir &&
-			((up_pull == PULL_OFF && wup_pull == PULL_OFF
-			&& (dn_pull != PULL_OFF || wdn_pull != PULL_OFF)) ||
-			(up_pull == PULL_OFF && wup_pull == PULL_WEAK &&
-			dn_pull == PULL_WEAK)))
+			((p.up == PULL_OFF && p.wup == PULL_OFF
+			&& (p.dn != PULL_OFF || p.wdn != PULL_OFF)) ||
+			(p.up == PULL_OFF && p.wup == PULL_WEAK &&
+			p.dn == PULL_WEAK)))
 		|| (!dir &&
-			((dn_pull == PULL_OFF && wdn_pull == PULL_OFF
-			&& (up_pull != PULL_OFF || wup_pull != PULL_OFF)) ||
-			(dn_pull == PULL_OFF && wdn_pull == PULL_WEAK &&
-			up_pull == PULL_WEAK)))
+			((p.dn == PULL_OFF && p.wdn == PULL_OFF
+			&& (p.up != PULL_OFF || p.wup != PULL_OFF)) ||
+			(p.dn == PULL_OFF && p.wdn == PULL_WEAK &&
+			p.up == PULL_WEAK)))
 		) {
 		// check for yielding to opposition
 		DEBUG_STEP_PRINT("weak event preserved" << endl);
@@ -4022,7 +3938,7 @@ if (!n.pending_event()) {
 			n.current_value() != LOGIC_HIGH) ||
 		(next == PULL_WEAK &&
 			(n.current_value() == LOGIC_LOW
-			|| dn_pull != PULL_OFF))) {
+			|| p.dn != PULL_OFF))) {
 		/***
 			if (PULL_ON and wasn't already HIGH ||
 				PULL_WEAK and was LOW before ||
@@ -4063,13 +3979,13 @@ if (!n.pending_event()) {
 	// might not have been updated yet...
 	else if (next == PULL_OFF) {
 	DEBUG_STEP_PRINT("pull-up turned off" << endl);
-	if (dn_pull == PULL_ON
+	if (p.dn == PULL_ON
 #if PRSIM_WEAK_RULES
 		|| (
-			wdn_pull == PULL_ON &&
-			wup_pull == PULL_OFF)
-		|| (wdn_pull == PULL_WEAK &&
-			wup_pull != PULL_OFF &&
+			p.wdn == PULL_ON &&
+			p.wup == PULL_OFF)
+		|| (p.wdn == PULL_WEAK &&
+			p.wup != PULL_OFF &&
 			n.current_value() != LOGIC_OTHER)
 #endif
 		) {
@@ -4084,12 +4000,11 @@ if (!n.pending_event()) {
 				root_rule,
 #if PRSIM_WEAK_RULES
 				// logic low only if not weakly pulled to X
-				(dn_pull == PULL_ON || wdn_pull == PULL_ON)
-					? LOGIC_LOW : LOGIC_OTHER,
+				p.pulling_dn() ? LOGIC_LOW : LOGIC_OTHER,
 				// if cause is the rule that turned off
 				// , is_weak
 				// if cause is the opposition that was on
-				(dn_pull == PULL_OFF)
+				(p.dn == PULL_OFF)
 				// important for interference checking
 #else
 				LOGIC_LOW 
@@ -4110,17 +4025,13 @@ if (!n.pending_event()) {
 	// there is a pending event, not in an exclusive queue
 	event_type& e(get_event(ei));
 	DEBUG_STEP_PRINT("next = " << size_t(next) << endl);
-	DEBUG_STEP_PRINT("pull-dn = " << size_t(dn_pull) << endl);
+	DEBUG_STEP_PRINT("pull-dn = " << size_t(p.dn) << endl);
 	DEBUG_STEP_PRINT("e.val = " << size_t(e.val) << endl);
 	DEBUG_STEP_PRINT("n.val = " << size_t(n.current_value()) << endl);
 	const bool weak_rule_interf = weak_rules_enabled() && is_weak &&
-		(wdn_pull != PULL_OFF && wup_pull != PULL_OFF);
+		p.__possible_interference_weak();
 	if (next == PULL_OFF && 
-		((dn_pull == PULL_ON)
-#if PRSIM_WEAK_RULES
-		|| (wdn_pull == PULL_ON)
-#endif
-		) &&
+		p.pulling_dn() &&
 		e.val == LOGIC_OTHER &&
 		n.current_value() != LOGIC_LOW) {
 		/***
@@ -4134,13 +4045,12 @@ if (!n.pending_event()) {
 		e.val = LOGIC_LOW;
 		e.set_cause_node(ni);
 #if PRSIM_WEAK_RULES
-		e.set_weak(wdn_pull != PULL_OFF
-			&& dn_pull == PULL_OFF);
+		e.set_weak(p.wdn != PULL_OFF && p.dn == PULL_OFF);	// weak_wins_dn
 #endif
 #if PRSIM_ALLOW_OVERTAKE_EVENTS
 	} else if (dequeue_unstable_events() &&
 		next == PULL_ON && 
-		dn_pull == PULL_OFF &&
+		p.dn == PULL_OFF &&
 		!weak_rule_interf &&
 		e.val == LOGIC_OTHER &&
 		n.current_value() == LOGIC_LOW
@@ -4163,7 +4073,7 @@ if (!n.pending_event()) {
 		e.set_cause_node(ni);
 	} else if (dequeue_unstable_events() &&
 		next == PULL_OFF && 
-		(dn_pull == PULL_ON ||
+		(p.dn == PULL_ON ||
 			n.current_value() == LOGIC_LOW) &&
 		e.val == LOGIC_OTHER) {
 		if (n.current_value() == LOGIC_LOW) {
@@ -4187,8 +4097,8 @@ if (!n.pending_event()) {
 		}
 	} else if (dequeue_unstable_events() && !is_weak &&
 		next == PULL_OFF && 
-		wup_pull == PULL_OFF &&
-		wdn_pull == PULL_ON) {
+		p.wup == PULL_OFF &&
+		p.wdn == PULL_ON) {
 		/***
 			Strong rule turning off, yielding to weak rule 
 			pulling in opposite direction.
@@ -4208,9 +4118,8 @@ if (!n.pending_event()) {
 #endif
 #if PRSIM_WEAK_RULES
 	} else if (next != PULL_ON && 
-		dn_pull == PULL_OFF &&
-		wdn_pull == PULL_OFF &&
-		wup_pull == PULL_ON &&
+		p.cutoff_dn() &&
+		p.wup == PULL_ON &&
 		e.val == LOGIC_HIGH) {
 		DEBUG_STEP_PRINT("downgrading pending 1 to weak." << endl);
 		// technically, is this unstable?
@@ -4221,9 +4130,8 @@ if (!n.pending_event()) {
 		e.set_cause_node(ni);
 		e.set_weak(true);
 	} else if (next != PULL_ON && 
-		wdn_pull == PULL_OFF &&
-		dn_pull == PULL_OFF &&
-		up_pull == PULL_ON &&
+		p.cutoff_dn() &&
+		p.up == PULL_ON &&
 		e.val == LOGIC_HIGH) {
 		DEBUG_STEP_PRINT("upgrading pending 1 to strong." << endl);
 		// technically, is this unstable?
@@ -4262,7 +4170,7 @@ if (!n.pending_event()) {
 			n.current_value() != LOGIC_LOW) ||
 		(next == PULL_WEAK &&
 			(n.current_value() == LOGIC_HIGH
-			|| up_pull != PULL_OFF))) {
+			|| p.up != PULL_OFF))) {
 		/***
 			if (PULL_ON and wasn't already LOW ||
 				PULL_WEAK and was HIGH before ||
@@ -4307,13 +4215,13 @@ if (!n.pending_event()) {
 	// might not have been updated yet...
 	else if (next == PULL_OFF) {
 	DEBUG_STEP_PRINT("pull-down turned off" << endl);
-	if (up_pull == PULL_ON
+	if (p.up == PULL_ON
 #if PRSIM_WEAK_RULES
 		|| (// !is_weak &&
-			wup_pull == PULL_ON &&
-			wdn_pull == PULL_OFF)
-		|| (wup_pull == PULL_WEAK &&
-			wdn_pull != PULL_OFF &&
+			p.wup == PULL_ON &&
+			p.wdn == PULL_OFF)
+		|| (p.wup == PULL_WEAK &&
+			p.wdn != PULL_OFF &&
 			n.current_value() != LOGIC_OTHER)
 #endif
 		) {
@@ -4328,12 +4236,11 @@ if (!n.pending_event()) {
 				root_rule,
 #if PRSIM_WEAK_RULES
 				// logic low only if not weakly pulled to X
-				(up_pull == PULL_ON || wup_pull == PULL_ON)
-					? LOGIC_HIGH : LOGIC_OTHER,
+				p.pulling_up() ? LOGIC_HIGH : LOGIC_OTHER,
 				// if cause is the rule that turned off
 				// , is_weak
 				// if cause is the opposition that was on
-				(up_pull == PULL_OFF)
+				(p.up == PULL_OFF)
 				// important for interference checking
 #else
 				LOGIC_HIGH
@@ -4354,17 +4261,13 @@ if (!n.pending_event()) {
 	// there is a pending event, not in an exclusive queue
 	event_type& e(get_event(ei));
 	DEBUG_STEP_PRINT("next = " << size_t(next) << endl);
-	DEBUG_STEP_PRINT("pull-up = " << size_t(up_pull) << endl);
+	DEBUG_STEP_PRINT("pull-up = " << size_t(p.up) << endl);
 	DEBUG_STEP_PRINT("e.val = " << size_t(e.val) << endl);
 	DEBUG_STEP_PRINT("n.val = " << size_t(n.current_value()) << endl);
 	const bool weak_rule_interf = weak_rules_enabled() && is_weak &&
-		(wdn_pull != PULL_OFF && wup_pull != PULL_OFF);
-	if (next == PULL_OFF && 
-		((up_pull == PULL_ON)
-#if PRSIM_WEAK_RULES
-		|| (wup_pull == PULL_ON)
-#endif
-		) &&
+		p.__possible_interference_weak();
+	if (next == PULL_OFF &&
+		p.pulling_up() &&
 		e.val == LOGIC_OTHER &&
 		n.current_value() != LOGIC_HIGH) {
 		/***
@@ -4378,13 +4281,12 @@ if (!n.pending_event()) {
 		e.val = LOGIC_HIGH;
 		e.set_cause_node(ni);
 #if PRSIM_WEAK_RULES
-		e.set_weak(wup_pull != PULL_OFF
-			&& up_pull == PULL_OFF);
+		e.set_weak(p.wup != PULL_OFF && p.up == PULL_OFF);	// weak_wins_up
 #endif
 #if PRSIM_ALLOW_OVERTAKE_EVENTS
 	} else if (dequeue_unstable_events() &&
 		next == PULL_ON &&
-		up_pull == PULL_OFF &&
+		p.up == PULL_OFF &&
 		!weak_rule_interf &&
 		e.val == LOGIC_OTHER &&
 		n.current_value() == LOGIC_HIGH
@@ -4407,7 +4309,7 @@ if (!n.pending_event()) {
 		e.set_cause_node(ni);
 	} else if (dequeue_unstable_events() &&
 		next == PULL_OFF &&
-		(up_pull == PULL_ON ||
+		(p.up == PULL_ON ||
 			n.current_value() == LOGIC_HIGH) &&
 		e.val == LOGIC_OTHER) {
 		if (n.current_value() == LOGIC_HIGH) {
@@ -4431,8 +4333,8 @@ if (!n.pending_event()) {
 		}
 	} else if (dequeue_unstable_events() && !is_weak &&
 		next == PULL_OFF && 
-		wdn_pull == PULL_OFF &&
-		wup_pull == PULL_ON) {
+		p.wdn == PULL_OFF &&
+		p.wup == PULL_ON) {
 		/***
 			Strong rule turning off, yielding to weak rule 
 			pulling in opposite direction.
@@ -4452,9 +4354,8 @@ if (!n.pending_event()) {
 #endif
 #if PRSIM_WEAK_RULES
 	} else if (next != PULL_ON && 
-		up_pull == PULL_OFF &&
-		wup_pull == PULL_OFF &&
-		wdn_pull == PULL_ON &&
+		p.cutoff_up() &&
+		p.wdn == PULL_ON &&
 		e.val == LOGIC_LOW) {
 		DEBUG_STEP_PRINT("downgrading pending 0 to weak." << endl);
 		// technically, is this unstable?
@@ -4465,9 +4366,8 @@ if (!n.pending_event()) {
 		e.set_cause_node(ni);
 		e.set_weak(true);
 	} else if (next != PULL_ON && 
-		wup_pull == PULL_OFF &&
-		up_pull == PULL_OFF &&
-		dn_pull == PULL_ON &&
+		p.cutoff_up() &&
+		p.dn == PULL_ON &&
 		e.val == LOGIC_LOW) {
 		DEBUG_STEP_PRINT("upgrading pending 0 to strong." << endl);
 		// technically, is this unstable?
@@ -4714,14 +4614,11 @@ State::__diagnose_violation(ostream& o, const pull_enum next,
 #if PRSIM_WEAK_RULES
 			bool b = !weak;
 			if (!b) {
+				const pull_set p(n, weak_rules_enabled());
 			if (dir) {
-				const pull_enum up =
-					n.pull_up_state STR_INDEX(NORMAL_RULE).pull();
-				b = (up != PULL_ON);
+				b = (p.up != PULL_ON);
 			} else {
-				const pull_enum dn =
-					n.pull_dn_state STR_INDEX(NORMAL_RULE).pull();
-				b = (dn != PULL_ON);
+				b = (p.dn != PULL_ON);
 			}
 			}
 			if (b) {
@@ -4740,19 +4637,8 @@ State::__diagnose_violation(ostream& o, const pull_enum next,
 		// HACK: to fix bug ACX-PR-6650
 		// check for weak vs. weak rule interference
 	const node_type& _n(get_node(e.node));
-	const pull_enum pull_up_state =
-		_n.pull_up_state STR_INDEX(NORMAL_RULE).pull();
-	const pull_enum pull_dn_state =
-		_n.pull_dn_state STR_INDEX(NORMAL_RULE).pull();
-	const pull_enum wpull_up_state =
-		_n.pull_up_state STR_INDEX(WEAK_RULE).pull();
-	const pull_enum wpull_dn_state =
-		_n.pull_dn_state STR_INDEX(WEAK_RULE).pull();
-	if (weak_rules_enabled() &&
-		(pull_up_state == PULL_OFF) &&
-		(pull_dn_state == PULL_OFF) &&
-		(wpull_up_state != PULL_OFF) &&
-			(wpull_dn_state != PULL_OFF)) {
+	const pull_set p(_n, weak_rules_enabled());
+	if (weak_rules_enabled() && p.possible_interference_weak()) {
 			const event_index_type pe =
 				__allocate_pending_interference_event(
 					n, ui, c, 
@@ -5751,17 +5637,8 @@ State::check_floating_node(const node_index_type ni,
 	const node_type& n(get_node(ni));
 	// check if node is floating
 	// skip this check if node has no fanin, as it is probably an input
-	const pull_enum nup = n.pull_up_state[NORMAL_RULE].pull();
-	const pull_enum ndn = n.pull_dn_state[NORMAL_RULE].pull();
-	// don't worry about X pulls
-	if (nup == PULL_OFF && ndn == PULL_OFF) {
-#if PRSIM_WEAK_RULES
-	const pull_enum wdn_pull = weak_rules_enabled() ?
-		n.pull_dn_state STR_INDEX(WEAK_RULE).pull() : PULL_OFF;
-	const pull_enum wup_pull = weak_rules_enabled() ?
-		n.pull_up_state STR_INDEX(WEAK_RULE).pull() : PULL_OFF;
-	if (wdn_pull == PULL_OFF && wup_pull == PULL_OFF) {
-#endif	// PRSIM_WEAK_RULES
+	const pull_set p(n, weak_rules_enabled());
+	if (p.state_holding()) {
 		// check and see if there is a feedback rule pending
 		// in the event queue
 		vector<node_index_type> fb;
@@ -5784,9 +5661,6 @@ State::check_floating_node(const node_index_type ni,
 		if (!have_pending) {
 			return true;
 		}
-#if PRSIM_WEAK_RULES
-	}	// else is weakly driven
-#endif
 	}	// else is driven
 	return false;
 }	// end check_floating_node
@@ -6031,14 +5905,11 @@ if (y.second) {
 		const pull_enum pull_query = why_not ?  PULL_OFF : PULL_ON;
 		const indent __ind_nd(o, verbose ? "." : "  ");
 		// only check for the side that is off
-		const pull_enum ps = (dir ?
-			n.pull_up_state STR_INDEX(NORMAL_RULE) :
-			n.pull_dn_state STR_INDEX(NORMAL_RULE)).pull();
+		const pull_set pp(n, weak_rules_enabled());
+		const pull_enum ps = (dir ? pp.up : pp.dn);
 #if PRSIM_WEAK_RULES
 		// skip this
-		const pull_enum wps = (dir ?
-			n.pull_up_state STR_INDEX(WEAK_RULE) :
-			n.pull_dn_state STR_INDEX(WEAK_RULE)).pull();
+		const pull_enum wps = (dir ? pp.wup : pp.wdn);
 #endif
 		if ((ps == PULL_OFF)
 #if PRSIM_WEAK_RULES

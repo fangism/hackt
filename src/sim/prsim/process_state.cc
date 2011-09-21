@@ -351,12 +351,14 @@ process_sim_state::dump_rule(ostream& o, const rule_index_type lri,
 	const node_index_type nr = e.parent;
 	const node_index_type gnr = st.translate_to_global_node(*this, nr);
 	const State::node_type& n(st.get_node(gnr));
-	const pull_set root_pull(n);	// repetitive waste for fanin...
+	const pull_set root_pull(n, true);	// st.weak_rules_enabled();
+	// repetitive waste for fanin...
 	if (v && (multi_fi || 
 		(pg.expr_graph_node_pool[lri].children.size() > 1))) {
 		const bool w = r->is_weak();
-		const pull_enum p = dir ? root_pull.up STR_INDEX(w)
-			: root_pull.dn STR_INDEX(w);
+		const pull_enum p = w ?
+			(dir ? root_pull.wup : root_pull.wdn) :
+			(dir ? root_pull.up : root_pull.dn);
 		// rewritten this way because g++-3.3 ICEs-on-valid.
 		// was: (dir ? root_pull.up : root_pull.dn) STR_INDEX(w);
 		o << '<' << State::node_type::value_to_char[p] << '>';

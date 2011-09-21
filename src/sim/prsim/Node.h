@@ -122,7 +122,6 @@ struct fanin_state_type {
 	dump_state(ostream&) const;
 };	// end struct fanin_state_type
 
-
 //=============================================================================
 /**
 	Node state information structure.  
@@ -699,29 +698,234 @@ public:
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Set of pull states, in all directions.  
+	Use member functions of this class for readability.
  */
 struct pull_set {
-#if PRSIM_WEAK_RULES
-	pull_enum			up[2];
-	pull_enum			dn[2];
-#else
 	pull_enum			up;
 	pull_enum			dn;
+#if PRSIM_WEAK_RULES
+	pull_enum			wup;
+	pull_enum			wdn;
 #endif
 
+	/**
+		\param w is true if weak rules are enabled.
+		When weak rules are disabled, weak pulls are always OFF.
+	 */
 	explicit
-	pull_set(const NodeState& n) {
-		up STR_INDEX(NORMAL_RULE) =
-			n.pull_up_state STR_INDEX(NORMAL_RULE).pull();
-		dn STR_INDEX(NORMAL_RULE) =
-			n.pull_dn_state STR_INDEX(NORMAL_RULE).pull();
+	pull_set(const NodeState& n, const bool w) :
+		up(n.pull_up_state STR_INDEX(NORMAL_RULE).pull()),
+		dn(n.pull_dn_state STR_INDEX(NORMAL_RULE).pull())
 #if PRSIM_WEAK_RULES
-		up STR_INDEX(WEAK_RULE) =
-			n.pull_up_state STR_INDEX(WEAK_RULE).pull();
-		dn STR_INDEX(WEAK_RULE) =
-			n.pull_dn_state STR_INDEX(WEAK_RULE).pull();
+		, wup(w ? n.pull_up_state STR_INDEX(WEAK_RULE).pull()
+			: PULL_OFF)
+		, wdn(w ? n.pull_dn_state STR_INDEX(WEAK_RULE).pull()
+			: PULL_OFF)
+#endif
+		{
+	}
+
+	bool
+	normal_rules_off(void) const {
+		return (up == PULL_OFF) && (dn == PULL_OFF);
+	}
+
+	bool
+	weak_rules_off(void) const {
+#if PRSIM_WEAK_RULES
+		return (wup == PULL_OFF) && (wdn == PULL_OFF);
+#else
+		return true;
 #endif
 	}
+
+	bool
+	state_holding(void) const {
+		return normal_rules_off() && weak_rules_off();
+	}
+
+	bool
+	pulling_up(void) const {
+		return (up == PULL_ON)
+#if PRSIM_WEAK_RULES
+			|| (wup == PULL_ON)
+#endif
+			;
+	}
+
+	bool
+	pulling_dn(void) const {
+		return (dn == PULL_ON)
+#if PRSIM_WEAK_RULES
+			|| (wdn == PULL_ON)
+#endif
+			;
+	}
+
+	bool
+	cutoff_up(void) const {
+		return up == PULL_OFF && wup == PULL_OFF;
+	}
+
+	bool
+	cutoff_dn(void) const {
+		return dn == PULL_OFF && wdn == PULL_OFF;
+	}
+
+	// \return true if one of the strong pulls is X
+	bool
+	normal_pulling_x(void) const {
+		return dn == PULL_WEAK || up == PULL_WEAK;
+	}
+
+	bool
+	weak_pulling_x(void) const {
+		return wdn == PULL_WEAK || wup == PULL_WEAK;
+	}
+
+	// this is not true if weak-pull-1 overtakes strong-pull-X!
+	bool
+	normal_pulling_up_x(void) const {
+		return (up == PULL_WEAK
+#if PRSIM_WEAK_RULES
+			&& wup != PULL_ON
+#endif
+			);
+	}
+
+	bool
+	weak_pulling_up_x(void) const {
+#if PRSIM_WEAK_RULES
+		return (up == PULL_OFF && wup == PULL_WEAK);
+#else
+		return false;
+#endif
+	}
+
+	bool
+	pulling_up_x(void) const {
+		return normal_pulling_up_x() || weak_pulling_up_x();
+	}
+
+	bool
+	normal_pulling_dn_x(void) const {
+		return (dn == PULL_WEAK
+#if PRSIM_WEAK_RULES
+			&& wdn != PULL_ON
+#endif
+			);
+	}
+
+	bool
+	weak_pulling_dn_x(void) const {
+#if PRSIM_WEAK_RULES
+		return (dn == PULL_OFF && wdn == PULL_WEAK);
+#else
+		return false;
+#endif
+	}
+
+	bool
+	pulling_dn_x(void) const {
+		return normal_pulling_dn_x() || weak_pulling_dn_x();
+	}
+
+	// true if weak pull to 1 or X wins
+	bool
+	weak_pull_up_wins(void) const {
+#if PRSIM_WEAK_RULES
+		return dn == PULL_OFF && // wdn == PULL_OFF &&
+			((up == PULL_OFF && wup != PULL_OFF) ||
+			(up == PULL_WEAK && wup == PULL_ON));
+#else
+		return false;
+#endif
+	}
+
+	bool
+	weak_pull_dn_wins(void) const {
+#if PRSIM_WEAK_RULES
+		return up == PULL_OFF && // wup == PULL_OFF &&
+			((dn == PULL_OFF && wdn != PULL_OFF) ||
+			(dn == PULL_WEAK && wdn == PULL_ON));
+#else
+		return false;
+#endif
+	}
+
+	/// \return true if output should have LOGIC_HIGH next
+	bool
+	pull_up_wins_any(void) const {
+		return dn == PULL_OFF &&
+			(up == PULL_ON || (wup == PULL_ON && wdn == PULL_OFF));
+	}
+
+	/// \return true if output should have LOGIC_LOW next
+	bool
+	pull_dn_wins_any(void) const {
+		return up == PULL_OFF &&
+			(dn == PULL_ON || (wdn == PULL_ON && wup == PULL_OFF));
+	}
+
+	bool
+	weak_wins_any(void) const {
+#if PRSIM_WEAK_RULES
+		return weak_pull_up_wins() || weak_pull_dn_wins();
+#else
+		return false;
+#endif
+	}
+
+	bool
+	definite_interference_strong(void) const {
+		return up == PULL_ON && dn == PULL_ON;
+	}
+
+	// definite is a subset of possible
+	bool
+	possible_interference_strong(void) const {
+		return (dn != PULL_OFF) && (up != PULL_OFF);
+	}
+
+	// no such things as definite_interference_strong_vs_weak
+
+	// a strong-X vs. weak-1
+	bool
+	possible_interference_strong_vs_weak(void) const {
+		return ((up == PULL_WEAK && wup != PULL_ON) &&
+			(dn == PULL_OFF && wdn == PULL_ON)) ||
+			((dn == PULL_WEAK && wdn != PULL_ON) &&
+			(up == PULL_OFF && wup == PULL_ON));
+	}
+
+	bool
+	definite_interference_weak(void) const {
+		return normal_rules_off() &&
+			wup == PULL_ON &&
+			wdn == PULL_ON;
+	}
+
+	bool
+	__possible_interference_weak(void) const {
+		return wdn != PULL_OFF &&
+			wup != PULL_OFF;
+	}
+
+	bool
+	possible_interference_weak(void) const {
+		return normal_rules_off() && __possible_interference_weak();
+	}
+
+	bool
+	possible_interference_any(void) const {
+		return possible_interference_strong() ||
+			possible_interference_strong_vs_weak() ||
+			possible_interference_weak();
+	}
+
+	ostream&
+	dump(ostream&) const;
+
 };	// end struct pull_set
 
 //=============================================================================

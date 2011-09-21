@@ -441,6 +441,17 @@ NodeState::status_dumper::operator () (const NodeState& n) {
 #endif
 
 //=============================================================================
+// class pull_set method definitions
+ostream&
+pull_set::dump(ostream& o) const {
+	o << "pull up:" << up << " dn:" << dn;
+#if PRSIM_WEAK_RULES
+	o << " wup:" << wup << " wdn:" << wdn;
+#endif
+	return o;
+}
+
+//=============================================================================
 }	// end namespace PRSIM
 }	// end namespace SIM
 }	// end namespace HAC
