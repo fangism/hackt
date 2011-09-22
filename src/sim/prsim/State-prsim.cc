@@ -2196,7 +2196,6 @@ for ( ; i!=e; ++i) {
 	// create event first, but don't tie it to the node until
 	// after checking for instability and queue conflicts
 	const pull_set p(n, weak_rules_enabled());
-	const bool normal_off = p.normal_rules_off();
 #if 0
 	const pull_enum up_pull = n.pull_up_state STR_INDEX(NORMAL_RULE).pull();
 	const pull_enum dn_pull = n.pull_dn_state STR_INDEX(NORMAL_RULE).pull();
@@ -2222,16 +2221,14 @@ for ( ; i!=e; ++i) {
 #endif
 {
 	// compute the future value based on pull-state
-	if (!normal_off) {
+	if (p.possible_interference_strong()) {
 		DEBUG_STEP_PRINT("strong vs. strong rule interference" << endl);
 		// TODO: diagnostic
 		have_interference = true;
-		possible_interference =
-			(p.up == PULL_WEAK) || (p.dn == PULL_WEAK);
+		possible_interference = p.normal_pulling_x();
 	}
 #if PRSIM_WEAK_RULES
-	else if ((p.up == PULL_WEAK && p.wdn != PULL_OFF) ||
-		(p.dn == PULL_WEAK && p.wup != PULL_OFF)) {
+	else if (p.possible_interference_strong_vs_weak()) {
 		DEBUG_STEP_PRINT("strong vs. weak rule interference" << endl);
 		have_interference = true;
 		newevent.set_weak(true);	// involves weak rule
@@ -2240,8 +2237,7 @@ for ( ; i!=e; ++i) {
 		DEBUG_STEP_PRINT("weak vs. weak rule interference" << endl);
 		have_interference = true;
 		newevent.set_weak(true);	// involves weak rule
-		possible_interference =
-			(p.wup == PULL_WEAK) || (p.wdn == PULL_WEAK);
+		possible_interference = p.weak_pulling_x();
 	}
 #endif
 	else {
