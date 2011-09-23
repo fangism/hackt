@@ -175,7 +175,7 @@ hacprsim_LDADD = libhacktprsim.la
 
 # enhanced with libtool/dlopen capability
 hacchpsim_SOURCES = main/chpsim.cc
-hacchpsim_CPPFLAGS = -DWITH_MAIN
+hacchpsim_CPPFLAGS = -DWITH_MAIN $(LTDLINCL)
 hacchpsim_LDADD = libhacktchpsim.la
 # -dlopen self
 # hacchpsim_LDFLAGS = -export-dynamic 
