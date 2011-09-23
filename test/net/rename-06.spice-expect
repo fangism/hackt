@@ -4,3 +4,6 @@ Mx:dn:2:ckeeper !GND b #1 !GND nch W=5u L=2u
 M:BAR:ckeeper #1 a #2 !GND nch W=5u L=2u
 Mx:dn:4:ckeeper #2 c x !GND nch W=5u L=2u
 
+* --- WARNINGS ---
+Warning: transistor width was raised to minimum: 4
+* Warnings found in producing netlist for <top-level>.

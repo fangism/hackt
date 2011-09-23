@@ -1,0 +1,6 @@
+// "sizing-08b.hac"
+// testing parameter effect
+// @hacknet-flags@ -f max_p_width=30 -f max_n_width=20 -f exceed_max_width=error
+
+import "sizing-08.hac";
+

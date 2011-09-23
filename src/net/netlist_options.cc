@@ -54,6 +54,8 @@ netlist_options::netlist_options() :
 		undriven_node_policy(OPTION_WARN),
 		case_collision_policy(OPTION_WARN),
 		non_CMOS_precharge_policy(OPTION_WARN),
+		below_min_width_policy(OPTION_WARN),
+		exceed_max_width_policy(OPTION_WARN),
 		std_n_width(5.0),
 		std_p_width(5.0),
 		std_n_length(2.0),
@@ -930,6 +932,19 @@ Be very careful with this option, it allows you to write nonsense like
 @samp{a &@{+x & ~y@} b & c -> o-}.
 Default: warn
 @end defopt
+
+@defopt below_min_width (string)
+Set the error handling policy when a transistor width is
+clamped to the minimum width (from configuration).
+Default: warn
+@end defopt
+@end texinfo
+
+@defopt exceed_max_width (string)
+Set the error handling policy when a transistor width is
+clamped to the maximum width (from configuration).
+Default: warn
+@end defopt
 @end texinfo
 ***/
 DEFINE_OPTION_POLICY(unknown_option, "unknown_option",
@@ -943,6 +958,10 @@ DEFINE_OPTION_POLICY(case_collision, "case_collision",
 	"EH for case-insensitive name collisions")
 DEFINE_OPTION_POLICY(non_CMOS_precharge, "non_CMOS_precharge",
 	"EH for not fully-restoring precharges")
+DEFINE_OPTION_POLICY(below_min_width, "below_min_width",
+	"EH for min-clamping transistor widths")
+DEFINE_OPTION_POLICY(exceed_max_width, "exceed_max_width",
+	"EH for max-clamping transistor widths")
 
 // could just fold string into here instead of initialization function below...
 // TODO: produce usage help for console and texinfo documentation aside

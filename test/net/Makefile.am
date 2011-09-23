@@ -120,7 +120,9 @@ HACKNET_TEST_SCRIPTS_FAILURES = \
 	case-01 case-02 case-03 case-04 \
 	reserved-05 reserved-06 \
 	rename-04 rename-05 \
-	type-mangle-collision-01 type-mangle-collision-02
+	type-mangle-collision-01 type-mangle-collision-02 \
+	iskeeper-01b \
+	sizing-08b
 
 # TODO: promote these to real tests
 EXTRA_DIST_HAC = \

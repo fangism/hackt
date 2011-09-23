@@ -203,7 +203,7 @@ private:
 	void
 	visit_macro(const MP&, const index_type);
 
-	void
+	bool
 	set_current_width(const real_type);
 
 	void

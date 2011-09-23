@@ -1,0 +1,6 @@
+// "iskeeper-01.hac"
+// copy-modified from "precharge-01.hac"
+// @hacknet-flags@ -t foo -f below_min_width=error
+
+import "iskeeper-01.hac";
+

@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-09-23	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-97:
+	  hacknet: added diagnostic options for when transistor width
+		is clamped to min/max from config.
+		options: below_min_width, exceed_max_width (warn|error).
+	  Documented, added new test cases, updated existing ones
+		with default warning.
+
+
 2011-09-20	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-96b:

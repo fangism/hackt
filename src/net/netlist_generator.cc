@@ -844,24 +844,59 @@ try {
 /**
 	Uses fet_type and fet_attr to determine whether this
 	is NFET or PFET and whether is part of a keeper or not.
+	\return true if there is an error.
  */
-void
+bool
 netlist_generator::set_current_width(const real_type w) {
 	STACKTRACE_VERBOSE;
 	STACKTRACE_INDENT_PRINT("w = " << w << endl);
+	bool err = false;
 	const bool dir = (fet_type == transistor::PFET_TYPE);
 //	const bool is_keeper = fet_attr & transistor::IS_STANDARD_KEEPER;
 	real_type max_width = (dir ? opt.max_p_width : opt.max_n_width);
+	if (w < opt.min_width) {
+		// TODO: diagnostic
+		if (opt.below_min_width_policy != OPTION_IGNORE) {
+		if (opt.below_min_width_policy == OPTION_WARN) {
+			cerr << "Warning: ";
+			++current_netlist->warning_count;
+		} else {
+			cerr << "Error: ";
+			err = true;
+		}
+			cerr << "transistor width was raised to minimum: "
+				<< opt.min_width << endl;
+		}
+	}
 	real_type new_width = std::max(opt.min_width, w);
-	if (max_width > 0.0)	// ignore max when 0.0
-		new_width = std::min(max_width, new_width);
+if (max_width > 0.0) {	// ignore max when 0.0
+	if (new_width > max_width) {
+		if (opt.exceed_max_width_policy != OPTION_IGNORE) {
+		if (opt.exceed_max_width_policy == OPTION_WARN) {
+			cerr << "Warning: ";
+			++current_netlist->warning_count;
+		} else {
+			cerr << "Error: ";
+			err = true;
+		}
+			cerr << "transistor width was lowered to maximum: "
+				<< max_width << endl;
+		}
+	}
+	new_width = std::min(max_width, new_width);
+}
 	STACKTRACE_INDENT_PRINT("new_width = " << new_width << endl);
 	current_width = new_width;
+	if (err) {
+		THROW_EXIT;
+	}
+	return err;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 netlist_generator::set_current_length(const real_type l) {
+	// TODO: length bound diagnostic
 	current_length = std::max(opt.min_length, l);
 }
 
