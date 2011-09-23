@@ -1,0 +1,3 @@
+Error: transistor width was raised to minimum: 4
+Instantiated from -TOP-: 
+Caught exception during netlist generation.

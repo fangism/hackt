@@ -1,0 +1,6 @@
+Error: transistor width was lowered to maximum: 20
+ERROR in production rule.
+	a<25> & b<25> -> y-
+Instantiated from type: foo<25>
+Instantiated from -TOP-: 
+Caught exception during netlist generation.

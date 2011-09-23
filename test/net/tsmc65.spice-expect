@@ -1,5 +1,6 @@
 # netlist generation configuration values:
 area_unit=
+below_min_width=warn
 capacitance_unit=
 case_collision=warn
 comment_prefix=* 
@@ -10,6 +11,7 @@ emit_node_terminals=0
 emit_parasitics=0
 emit_top=1
 empty_subcircuits=0
+exceed_max_width=warn
 fet_diff_overhang=10
 fet_perimeter_gate_edge=1
 fet_spacing_diffonly=8

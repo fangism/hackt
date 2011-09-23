@@ -5,3 +5,9 @@ Mz:dn:1 #1 c z !GND nch W=15u L=2u
 My:dn:0 !GND a #2 !GND nch W=10u L=2u
 My:dn:1 #2 c y !GND nch W=10u L=2u
 
+* --- WARNINGS ---
+Warning: transistor width was raised to minimum: 10
+Warning: transistor width was raised to minimum: 10
+Warning: transistor width was raised to minimum: 10
+Warning: transistor width was raised to minimum: 10
+* Warnings found in producing netlist for <top-level>.

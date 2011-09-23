@@ -23,3 +23,12 @@ xbar1 !GND !Vdd bar1.a bar1.b bar1.y foo<15>
 xbar2 !GND !Vdd bar2.a bar2.b bar2.y foo<25>
 xbar3 !GND !Vdd bar3.a bar3.b bar3.y foo<50>
 
+* --- WARNINGS ---
+Warning: transistor width was lowered to maximum: 20
+Warning: transistor width was lowered to maximum: 20
+* Warnings found in producing netlist for foo<25>.
+Warning: transistor width was lowered to maximum: 20
+Warning: transistor width was lowered to maximum: 20
+Warning: transistor width was lowered to maximum: 30
+Warning: transistor width was lowered to maximum: 30
+* Warnings found in producing netlist for foo<50>.

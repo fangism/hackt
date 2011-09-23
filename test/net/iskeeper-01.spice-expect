@@ -8,3 +8,7 @@ Mo:up:0 !Vdd _o o !Vdd pch W=5u L=2u
 M_o:dn:4:keeper !GND o _o !GND nch W=5u L=20u
 M_o:up:1:keeper !Vdd o _o !Vdd pch W=5u L=20u
 
+* --- WARNINGS ---
+Warning: transistor width was raised to minimum: 4
+Warning: transistor width was raised to minimum: 4
+* Warnings found in producing netlist for <top-level>.

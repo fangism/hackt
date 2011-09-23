@@ -18,6 +18,7 @@
 /**
 	Define to 1 to enable Cadence Spectre output format support.
 	Goal: 1
+	Status: done, tested, can perm
  */
 #define	SPECTRE_SUPPORT			1
 
@@ -84,6 +85,8 @@ struct netlist_options {
 	option_error_policy		undriven_node_policy;
 	option_error_policy		case_collision_policy;
 	option_error_policy		non_CMOS_precharge_policy;
+	option_error_policy		below_min_width_policy;
+	option_error_policy		exceed_max_width_policy;
 // generation-time options:
 	/**
 		Dimensions of standard devices to use when unspecified.  
