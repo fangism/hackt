@@ -19,6 +19,7 @@ watchall-queue
 set d 0
 set en 1
 cycle
+# fanin-get _o
 set _o 1
 cycle
 
