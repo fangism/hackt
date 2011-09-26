@@ -889,13 +889,13 @@ struct pull_set {
 
 	// no such things as definite_interference_strong_vs_weak
 
-	// a strong-X vs. weak-1
+	// a strong-X vs. weak-1-or-X
 	bool
 	possible_interference_strong_vs_weak(void) const {
 		return ((up == PULL_WEAK && wup != PULL_ON) &&
-			(dn == PULL_OFF && wdn == PULL_ON)) ||
+			(dn == PULL_OFF && wdn != PULL_OFF)) ||
 			((dn == PULL_WEAK && wdn != PULL_ON) &&
-			(up == PULL_OFF && wup == PULL_ON));
+			(up == PULL_OFF && wup != PULL_OFF));
 	}
 
 	bool
