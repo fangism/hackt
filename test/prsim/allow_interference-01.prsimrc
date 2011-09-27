@@ -37,22 +37,27 @@ echo interfere pull-down
 echo but message should be suppressed...
 set b 1
 cycle
+assert c X
 
 echo remove interference...
 set b 0
 cycle
+assert c 1
 
 echo now weak interference...
 set b X
 cycle
+assert c X
 
 echo remove interference...
 set b 0
 cycle
+assert c 1
 
 echo both off...
 set a 1
 cycle
+assert c 1
 
 echo X-pull-up
 set a X

@@ -2207,15 +2207,16 @@ for ( ; i!=e; ++i) {
 	const pull_enum wup_pull = weak_rules_enabled() ?
 		n.pull_up_state STR_INDEX(WEAK_RULE).pull() : PULL_OFF;
 #endif
-#endif
 	const bool up_off = (p.up == PULL_OFF);
 	const bool dn_off = (p.dn == PULL_OFF);
+#endif
 	bool possible_interference = false;	// used to be named pending_weak
 #if DEBUG_STEP
 	p.dump(DEBUG_STEP_PRINT("")) << endl;
 #endif
 {
 	// compute the future value based on pull-state
+	// TODO: factor this out into an Event constructor?
 	if (p.possible_interference_strong()) {
 		DEBUG_STEP_PRINT("strong vs. strong rule interference" << endl);
 		// TODO: diagnostic
@@ -2239,35 +2240,40 @@ for ( ; i!=e; ++i) {
 		// is a non-interfering rule firing
 		const bool weak_wins = p.weak_wins_any();
 		newevent.set_weak(weak_wins);
-		if (p.up == PULL_ON
-#if PRSIM_WEAK_RULES
-			|| p.wup == PULL_ON && dn_off
-#endif
-			) {
+		if (p.pull_up_wins_any()) {
 			DEBUG_STEP_PRINT("normal pull-up" << endl);
 			pull_val = LOGIC_HIGH;
-		} else if (p.dn == PULL_ON
-#if PRSIM_WEAK_RULES
-			|| p.wdn == PULL_ON && up_off
-#endif
-			) {
+		} else if (p.pull_dn_wins_any()) {
 			DEBUG_STEP_PRINT("normal pull-dn" << endl);
 			pull_val = LOGIC_LOW;
-		} else if (up_off && dn_off 
-#if PRSIM_WEAK_RULES
-			&& p.wup == PULL_OFF && p.wdn == PULL_OFF
-#endif
-			) {
+		} else if (p.pull_up_x_wins_any()) {
+			if (pull_val == LOGIC_LOW) {
+			DEBUG_STEP_PRINT("non-interfering X-pull-up" << endl);
+				pull_val = LOGIC_OTHER;
+			} else {
+			// otherwise, X-pulling up a high node is vacuous
+			DEBUG_STEP_PRINT("vacuous X-pull-up" << endl);
+			}
+			// TODO: keeper-check
+		} else if (p.pull_dn_x_wins_any()) {
+			if (pull_val == LOGIC_HIGH) {
+			DEBUG_STEP_PRINT("non-interfering X-pull-dn" << endl);
+				pull_val = LOGIC_OTHER;
+			} else {
+			// otherwise, X-pulling dn a low node is vacuous
+			DEBUG_STEP_PRINT("vacuous X-pull-dn" << endl);
+			}
+			// TODO: keeper-check
+		} else {
+			ISE_INVARIANT(p.state_holding());
 			DEBUG_STEP_PRINT("state-holding" << endl);
 			// keep current_value
 			// TODO: keeper-check
-		} else {
-			// otherwise, have a non-interfering X pull (vs. 0)
-			DEBUG_STEP_PRINT("non-interfering X-pull" << endl);
-			pull_val = LOGIC_OTHER;
 		}
 	}
 	if (have_interference) {
+		// TODO: what if previous state was already interfering
+		// should a duplicate interference diagnostic be issued?
 		pull_val = LOGIC_OTHER;
 		const break_type E =
 			__report_interference(cout,

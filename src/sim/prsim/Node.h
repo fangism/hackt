@@ -903,6 +903,18 @@ struct pull_set {
 			(dn == PULL_ON || (wdn == PULL_ON && wup == PULL_OFF));
 	}
 
+	// non-interfering pull-up-X wins
+	bool
+	pull_up_x_wins_any(void) const {
+		return cutoff_dn() && pulling_up_x();
+	}
+
+	// non-interfering pull-dn-X wins
+	bool
+	pull_dn_x_wins_any(void) const {
+		return cutoff_up() && pulling_dn_x();
+	}
+
 	bool
 	weak_wins_any(void) const {
 #if PRSIM_WEAK_RULES

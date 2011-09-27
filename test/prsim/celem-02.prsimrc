@@ -2,6 +2,8 @@
 # @haco@ celem.haco-c
 #	$Id: celem-02.prsimrc,v 1.3 2010/04/06 00:04:25 fang Exp $
 
+# weak-interference warn
+
 status 0
 status 1
 status X
@@ -61,6 +63,7 @@ cycle
 status 0
 status 1
 status U
+# fanin-get c
 
 echo setting a -> X
 set a U
