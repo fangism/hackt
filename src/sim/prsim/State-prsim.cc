@@ -2212,12 +2212,7 @@ for ( ; i!=e; ++i) {
 	const bool dn_off = (p.dn == PULL_OFF);
 	bool possible_interference = false;	// used to be named pending_weak
 #if DEBUG_STEP
-	DEBUG_STEP_PRINT("up_pull: " << p.up << endl);
-	DEBUG_STEP_PRINT("dn_pull: " << p.dn << endl);
-#if PRSIM_WEAK_RULES
-	DEBUG_STEP_PRINT("wup_pull: " << p.wup << endl);
-	DEBUG_STEP_PRINT("wdn_pull: " << p.wdn << endl);
-#endif
+	p.dump(DEBUG_STEP_PRINT("")) << endl;
 #endif
 {
 	// compute the future value based on pull-state
@@ -2242,6 +2237,8 @@ for ( ; i!=e; ++i) {
 #endif
 	else {
 		// is a non-interfering rule firing
+		const bool weak_wins = p.weak_wins_any();
+		newevent.set_weak(weak_wins);
 		if (p.up == PULL_ON
 #if PRSIM_WEAK_RULES
 			|| p.wup == PULL_ON && dn_off

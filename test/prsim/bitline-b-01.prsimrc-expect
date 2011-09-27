@@ -8,9 +8,11 @@ precharge
 	20	_pchg : 1
 experimenting... 
 time: 20
+WARNING: weak-interference `_bl'
+>> cause: `wlx' (val: 1)
 	20	wlx : 1
 event queue:
-	30	_bl : X	[from wlx:=1]
+	30	_bl : X	[from wlx:=1]	(weak)
 
 expect _bl -> X queued 
 time: 24

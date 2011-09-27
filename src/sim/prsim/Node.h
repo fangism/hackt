@@ -830,24 +830,60 @@ struct pull_set {
 		return normal_pulling_dn_x() || weak_pulling_dn_x();
 	}
 
-	// true if weak pull to 1 or X wins
+	// the following 4 functions do not account for opposition
 	bool
-	weak_pull_up_wins(void) const {
+	weak_pull_up_fires(void) const {
 #if PRSIM_WEAK_RULES
-		return dn == PULL_OFF && // wdn == PULL_OFF &&
-			((up == PULL_OFF && wup != PULL_OFF) ||
-			(up == PULL_WEAK && wup == PULL_ON));
+		// true if weak-pull-up to 1 overtakes strong rule
+		return (up != PULL_ON && wup == PULL_ON);
 #else
 		return false;
 #endif
 	}
 
 	bool
+	weak_pull_up_fires_x(void) const {
+#if PRSIM_WEAK_RULES
+		// true if weak-pull-up to X overtakes strong rule
+		return (up == PULL_OFF && wup == PULL_WEAK);
+#else
+		return false;
+#endif
+	}
+
+	bool
+	weak_pull_dn_fires(void) const {
+#if PRSIM_WEAK_RULES
+		// true if weak-pull-dn to 1 overtakes strong rule
+		return (dn != PULL_ON && wdn == PULL_ON);
+#else
+		return false;
+#endif
+	}
+
+	bool
+	weak_pull_dn_fires_x(void) const {
+#if PRSIM_WEAK_RULES
+		// true if weak-pull-dn to X overtakes strong rule
+		return (dn == PULL_OFF && wdn == PULL_WEAK);
+#else
+		return false;
+#endif
+	}
+
+
+	// true if weak pull to 1 or X wins
+	bool
+	weak_pull_up_wins(void) const {
+		return dn == PULL_OFF && // wdn == PULL_OFF &&
+			(weak_pull_up_fires_x() || weak_pull_up_fires());
+	}
+
+	bool
 	weak_pull_dn_wins(void) const {
 #if PRSIM_WEAK_RULES
 		return up == PULL_OFF && // wup == PULL_OFF &&
-			((dn == PULL_OFF && wdn != PULL_OFF) ||
-			(dn == PULL_WEAK && wdn == PULL_ON));
+			(weak_pull_dn_fires_x() || weak_pull_dn_fires());
 #else
 		return false;
 #endif
