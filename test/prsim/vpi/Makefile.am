@@ -11,6 +11,7 @@ HACKT_PRSIMRC_TEST_SUBJECTS = inverters \
 	interleave-a interleave-b interleave-c \
 	oscillator \
 	channel-source-sink \
+	channel-ledr-source-sink \
 	celem \
 	startup \
 	and_tree and_template_tree \
@@ -29,6 +30,8 @@ HACKT_VPI_TEST_SCRIPTS_PASSES = \
 	independent-01 \
 	channel-source-sink \
 	channel-expect-fail \
+	channel-ledr-source-sink \
+	channel-ledr-expect-fail \
 	and_tree and_template_tree \
 	and_tree_reverse and_template_tree_reverse \
 	fatal-assert-fail \
@@ -102,6 +105,7 @@ EXAMPLE_DATA_FILES = example.mk clkgen.v \
 	inverters.hac inverters.v inverters-delay.v \
 	shoelace.v shoelace-debug.v \
 	channel-source-sink.hac channel-source-sink.v \
+	channel-ledr-source-sink.hac channel-ledr-source-sink.v \
 	and_tree.hac and_tree.v standard.v startup.v startup.hac \
 	and_tree_reverse.hac and_tree_reverse.v standard-reverse.v \
 	and_template_tree.hac and_template_tree.v \

@@ -1,0 +1,10 @@
+// "channel-ledr-source-sink.hac"
+//	$Id: $
+// connecting channels through Verilog VCS PLI
+
+defchan ledr <: chan(bool) (bool d, r) { }
+
+ledr L, R;
+// will source on L and sink on R, 
+// connect L and R in Verilog
+

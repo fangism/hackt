@@ -1,0 +1,431 @@
+$start of simulation 
+# breaks 
+breakpoints: L.d L.r 
+# watchall 
+# channel-ledr L : :0 d:0 r:0 
+# channel-ledr R : :0 d:0 r:0 
+# channel-source-args-loop L 0 1 1 0 
+# channel-expect-args-loop R 0 1 1 0 
+# channel-watchall 
+# channel-ignore-all 
+# channel-reset-all 
+# channel-show-all 
+channels:
+L : LEDR (init .d:0 .r:0) source,watch,stopped,ignored, timing: global {0,1,1,0,}* @0 #0
+R : LEDR (init .d:0 .r:0) expect,watch,stopped,ignored {0,1,1,0,}* @0 #0
+channel	L (.data) : X
+prsim:	10	L.d : 0
+channel	L (.data) : 0
+prsim:	10	L.r : 0
+channel	R (.data) : X
+prsim:	30	R.d : 0
+channel	R (.data) : 0
+prsim:	31	R.r : 0
+# channel-release-all 
+# channel-heed-all 
+# channel-show-all 
+channels:
+L : LEDR (init .d:0 .r:0) source,watch, timing: global {0,1,1,0,}* @1 #0
+R : LEDR (init .d:0 .r:0) expect,watch {0,1,1,0,}* @0 #0
+channel	L (.data) : 0
+prsim:	2010	L.r : 1
+channel	L (.data) : 1
+prsim:	2020	L.d : 1	[by L.r:=1]
+channel	L (.data) : 1
+prsim:	2030	L.r : 0	[by L.d:=1]
+channel	L (.data) : 0
+prsim:	2040	L.d : 0	[by L.r:=0]
+channel	L (.data) : 0
+prsim:	2050	L.r : 1	[by L.d:=0]
+channel	L (.data) : 1
+prsim:	2060	L.d : 1	[by L.r:=1]
+channel	L (.data) : 1
+prsim:	2070	L.r : 0	[by L.d:=1]
+channel	L (.data) : 0
+prsim:	2080	L.d : 0	[by L.r:=0]
+channel	L (.data) : 0
+prsim:	2090	L.r : 1	[by L.d:=0]
+channel	L (.data) : 1
+prsim:	2100	L.d : 1	[by L.r:=1]
+channel	L (.data) : 1
+prsim:	2110	L.r : 0	[by L.d:=1]
+channel	L (.data) : 0
+prsim:	2120	L.d : 0	[by L.r:=0]
+channel	L (.data) : 0
+prsim:	2130	L.r : 1	[by L.d:=0]
+channel	L (.data) : 1
+prsim:	2140	L.d : 1	[by L.r:=1]
+channel	L (.data) : 1
+prsim:	2150	L.r : 0	[by L.d:=1]
+channel	L (.data) : 0
+prsim:	2160	L.d : 0	[by L.r:=0]
+channel	L (.data) : 0
+prsim:	2170	L.r : 1	[by L.d:=0]
+channel	L (.data) : 1
+prsim:	2180	L.d : 1	[by L.r:=1]
+channel	L (.data) : 1
+prsim:	2190	L.r : 0	[by L.d:=1]
+channel	L (.data) : 0
+prsim:	2200	L.d : 0	[by L.r:=0]
+channel	L (.data) : 0
+prsim:	2210	L.r : 1	[by L.d:=0]
+channel	L (.data) : 1
+prsim:	2220	L.d : 1	[by L.r:=1]
+channel	L (.data) : 1
+prsim:	2230	L.r : 0	[by L.d:=1]
+channel	L (.data) : 0
+prsim:	2240	L.d : 0	[by L.r:=0]
+channel	L (.data) : 0
+prsim:	2250	L.r : 1	[by L.d:=0]
+channel	L (.data) : 1
+prsim:	2260	L.d : 1	[by L.r:=1]
+channel	L (.data) : 1
+prsim:	2270	L.r : 0	[by L.d:=1]
+channel	L (.data) : 0
+prsim:	2280	L.d : 0	[by L.r:=0]
+channel	L (.data) : 0
+prsim:	2290	L.r : 1	[by L.d:=0]
+channel	L (.data) : 1
+prsim:	2300	L.d : 1	[by L.r:=1]
+channel	L (.data) : 1
+prsim:	2310	L.r : 0	[by L.d:=1]
+channel	L (.data) : 0
+prsim:	2320	L.d : 0	[by L.r:=0]
+channel	L (.data) : 0
+prsim:	2330	L.r : 1	[by L.d:=0]
+channel	L (.data) : 1
+prsim:	2340	L.d : 1	[by L.r:=1]
+channel	L (.data) : 1
+prsim:	2350	L.r : 0	[by L.d:=1]
+channel	L (.data) : 0
+prsim:	2360	L.d : 0	[by L.r:=0]
+channel	L (.data) : 0
+prsim:	2370	L.r : 1	[by L.d:=0]
+channel	L (.data) : 1
+prsim:	2380	L.d : 1	[by L.r:=1]
+channel	L (.data) : 1
+prsim:	2390	L.r : 0	[by L.d:=1]
+channel	L (.data) : 0
+prsim:	2400	L.d : 0	[by L.r:=0]
+channel	L (.data) : 0
+prsim:	2410	L.r : 1	[by L.d:=0]
+channel	L (.data) : 1
+prsim:	2420	L.d : 1	[by L.r:=1]
+channel	L (.data) : 1
+prsim:	2430	L.r : 0	[by L.d:=1]
+channel	L (.data) : 0
+prsim:	2440	L.d : 0	[by L.r:=0]
+channel	L (.data) : 0
+prsim:	2450	L.r : 1	[by L.d:=0]
+channel	L (.data) : 1
+prsim:	2460	L.d : 1	[by L.r:=1]
+channel	L (.data) : 1
+prsim:	2470	L.r : 0	[by L.d:=1]
+channel	L (.data) : 0
+prsim:	2480	L.d : 0	[by L.r:=0]
+channel	L (.data) : 0
+prsim:	2490	L.r : 1	[by L.d:=0]
+channel	L (.data) : 1
+prsim:	2500	L.d : 1	[by L.r:=1]
+channel	L (.data) : 1
+prsim:	2510	L.r : 0	[by L.d:=1]
+channel	L (.data) : 0
+prsim:	2520	L.d : 0	[by L.r:=0]
+channel	L (.data) : 0
+prsim:	2530	L.r : 1	[by L.d:=0]
+channel	L (.data) : 1
+prsim:	2540	L.d : 1	[by L.r:=1]
+channel	L (.data) : 1
+prsim:	2550	L.r : 0	[by L.d:=1]
+channel	L (.data) : 0
+prsim:	2560	L.d : 0	[by L.r:=0]
+channel	L (.data) : 0
+prsim:	2570	L.r : 1	[by L.d:=0]
+channel	L (.data) : 1
+prsim:	2580	L.d : 1	[by L.r:=1]
+channel	L (.data) : 1
+prsim:	2590	L.r : 0	[by L.d:=1]
+channel	L (.data) : 0
+prsim:	2600	L.d : 0	[by L.r:=0]
+channel	L (.data) : 0
+prsim:	2610	L.r : 1	[by L.d:=0]
+channel	L (.data) : 1
+prsim:	2620	L.d : 1	[by L.r:=1]
+channel	L (.data) : 1
+prsim:	2630	L.r : 0	[by L.d:=1]
+channel	L (.data) : 0
+prsim:	2640	L.d : 0	[by L.r:=0]
+channel	L (.data) : 0
+prsim:	2650	L.r : 1	[by L.d:=0]
+channel	L (.data) : 1
+prsim:	2660	L.d : 1	[by L.r:=1]
+channel	L (.data) : 1
+prsim:	2670	L.r : 0	[by L.d:=1]
+channel	L (.data) : 0
+prsim:	2680	L.d : 0	[by L.r:=0]
+channel	L (.data) : 0
+prsim:	2690	L.r : 1	[by L.d:=0]
+channel	L (.data) : 1
+prsim:	2700	L.d : 1	[by L.r:=1]
+channel	L (.data) : 1
+prsim:	2710	L.r : 0	[by L.d:=1]
+channel	L (.data) : 0
+prsim:	2720	L.d : 0	[by L.r:=0]
+channel	L (.data) : 0
+prsim:	2730	L.r : 1	[by L.d:=0]
+channel	L (.data) : 1
+prsim:	2740	L.d : 1	[by L.r:=1]
+channel	L (.data) : 1
+prsim:	2750	L.r : 0	[by L.d:=1]
+channel	L (.data) : 0
+prsim:	2760	L.d : 0	[by L.r:=0]
+channel	L (.data) : 0
+prsim:	2770	L.r : 1	[by L.d:=0]
+channel	L (.data) : 1
+prsim:	2780	L.d : 1	[by L.r:=1]
+channel	L (.data) : 1
+prsim:	2790	L.r : 0	[by L.d:=1]
+channel	L (.data) : 0
+prsim:	2800	L.d : 0	[by L.r:=0]
+channel	L (.data) : 0
+prsim:	2810	L.r : 1	[by L.d:=0]
+channel	L (.data) : 1
+prsim:	2820	L.d : 1	[by L.r:=1]
+channel	L (.data) : 1
+prsim:	2830	L.r : 0	[by L.d:=1]
+channel	L (.data) : 0
+prsim:	2840	L.d : 0	[by L.r:=0]
+channel	L (.data) : 0
+prsim:	2850	L.r : 1	[by L.d:=0]
+channel	L (.data) : 1
+prsim:	2860	L.d : 1	[by L.r:=1]
+channel	L (.data) : 1
+prsim:	2870	L.r : 0	[by L.d:=1]
+channel	L (.data) : 0
+prsim:	2880	L.d : 0	[by L.r:=0]
+channel	L (.data) : 0
+prsim:	2890	L.r : 1	[by L.d:=0]
+channel	L (.data) : 1
+prsim:	2900	L.d : 1	[by L.r:=1]
+channel	L (.data) : 1
+prsim:	2910	L.r : 0	[by L.d:=1]
+channel	L (.data) : 0
+prsim:	2920	L.d : 0	[by L.r:=0]
+channel	L (.data) : 0
+prsim:	2930	L.r : 1	[by L.d:=0]
+channel	L (.data) : 1
+prsim:	2940	L.d : 1	[by L.r:=1]
+channel	L (.data) : 1
+prsim:	2950	L.r : 0	[by L.d:=1]
+channel	L (.data) : 0
+prsim:	2960	L.d : 0	[by L.r:=0]
+channel	L (.data) : 0
+prsim:	2970	L.r : 1	[by L.d:=0]
+channel	L (.data) : 1
+prsim:	2980	L.d : 1	[by L.r:=1]
+channel	L (.data) : 1
+prsim:	2990	L.r : 0	[by L.d:=1]
+channel	L (.data) : 0
+prsim:	3000	L.d : 0	[by L.r:=0]
+# nowatchall 
+channel	L (.data) : 0
+channel	L (.data) : 1
+channel	L (.data) : 1
+channel	L (.data) : 0
+channel	L (.data) : 0
+channel	L (.data) : 1
+channel	L (.data) : 1
+channel	L (.data) : 0
+channel	L (.data) : 0
+channel	L (.data) : 1
+channel	L (.data) : 1
+channel	L (.data) : 0
+channel	L (.data) : 0
+channel	L (.data) : 1
+channel	L (.data) : 1
+channel	L (.data) : 0
+channel	L (.data) : 0
+channel	L (.data) : 1
+channel	L (.data) : 1
+channel	L (.data) : 0
+channel	L (.data) : 0
+channel	L (.data) : 1
+channel	L (.data) : 1
+channel	L (.data) : 0
+channel	L (.data) : 0
+channel	L (.data) : 1
+channel	L (.data) : 1
+channel	L (.data) : 0
+channel	L (.data) : 0
+channel	L (.data) : 1
+channel	L (.data) : 1
+channel	L (.data) : 0
+channel	L (.data) : 0
+channel	L (.data) : 1
+channel	L (.data) : 1
+channel	L (.data) : 0
+channel	L (.data) : 0
+channel	L (.data) : 1
+channel	L (.data) : 1
+channel	L (.data) : 0
+channel	L (.data) : 0
+channel	L (.data) : 1
+channel	L (.data) : 1
+channel	L (.data) : 0
+channel	L (.data) : 0
+channel	L (.data) : 1
+channel	L (.data) : 1
+channel	L (.data) : 0
+channel	L (.data) : 0
+channel	L (.data) : 1
+channel	L (.data) : 1
+channel	L (.data) : 0
+channel	L (.data) : 0
+channel	L (.data) : 1
+channel	L (.data) : 1
+channel	L (.data) : 0
+channel	L (.data) : 0
+channel	L (.data) : 1
+channel	L (.data) : 1
+channel	L (.data) : 0
+channel	L (.data) : 0
+channel	L (.data) : 1
+channel	L (.data) : 1
+channel	L (.data) : 0
+channel	L (.data) : 0
+channel	L (.data) : 1
+channel	L (.data) : 1
+channel	L (.data) : 0
+channel	L (.data) : 0
+channel	L (.data) : 1
+channel	L (.data) : 1
+channel	L (.data) : 0
+channel	L (.data) : 0
+channel	L (.data) : 1
+channel	L (.data) : 1
+channel	L (.data) : 0
+channel	L (.data) : 0
+channel	L (.data) : 1
+channel	L (.data) : 1
+channel	L (.data) : 0
+channel	L (.data) : 0
+channel	L (.data) : 1
+channel	L (.data) : 1
+channel	L (.data) : 0
+channel	L (.data) : 0
+channel	L (.data) : 1
+channel	L (.data) : 1
+channel	L (.data) : 0
+channel	L (.data) : 0
+channel	L (.data) : 1
+channel	L (.data) : 1
+channel	L (.data) : 0
+channel	L (.data) : 0
+channel	L (.data) : 1
+channel	L (.data) : 1
+channel	L (.data) : 0
+channel	L (.data) : 0
+channel	L (.data) : 1
+channel	L (.data) : 1
+channel	L (.data) : 0
+channel	L (.data) : 0
+channel	L (.data) : 1
+channel	L (.data) : 1
+channel	L (.data) : 0
+channel	L (.data) : 0
+channel	L (.data) : 1
+channel	L (.data) : 1
+channel	L (.data) : 0
+channel	L (.data) : 0
+channel	L (.data) : 1
+channel	L (.data) : 1
+channel	L (.data) : 0
+channel	L (.data) : 0
+channel	L (.data) : 1
+channel	L (.data) : 1
+channel	L (.data) : 0
+channel	L (.data) : 0
+channel	L (.data) : 1
+channel	L (.data) : 1
+channel	L (.data) : 0
+channel	L (.data) : 0
+channel	L (.data) : 1
+channel	L (.data) : 1
+channel	L (.data) : 0
+channel	L (.data) : 0
+channel	L (.data) : 1
+channel	L (.data) : 1
+channel	L (.data) : 0
+channel	L (.data) : 0
+channel	L (.data) : 1
+channel	L (.data) : 1
+channel	L (.data) : 0
+channel	L (.data) : 0
+channel	L (.data) : 1
+channel	L (.data) : 1
+channel	L (.data) : 0
+channel	L (.data) : 0
+channel	L (.data) : 1
+channel	L (.data) : 1
+channel	L (.data) : 0
+channel	L (.data) : 0
+channel	L (.data) : 1
+channel	L (.data) : 1
+channel	L (.data) : 0
+channel	L (.data) : 0
+channel	L (.data) : 1
+channel	L (.data) : 1
+channel	L (.data) : 0
+channel	L (.data) : 0
+channel	L (.data) : 1
+channel	L (.data) : 1
+channel	L (.data) : 0
+channel	L (.data) : 0
+channel	L (.data) : 1
+channel	L (.data) : 1
+channel	L (.data) : 0
+channel	L (.data) : 0
+channel	L (.data) : 1
+channel	L (.data) : 1
+channel	L (.data) : 0
+channel	L (.data) : 0
+channel	L (.data) : 1
+channel	L (.data) : 1
+channel	L (.data) : 0
+channel	L (.data) : 0
+channel	L (.data) : 1
+channel	L (.data) : 1
+channel	L (.data) : 0
+channel	L (.data) : 0
+channel	L (.data) : 1
+channel	L (.data) : 1
+channel	L (.data) : 0
+channel	L (.data) : 0
+channel	L (.data) : 1
+channel	L (.data) : 1
+channel	L (.data) : 0
+channel	L (.data) : 0
+channel	L (.data) : 1
+channel	L (.data) : 1
+channel	L (.data) : 0
+channel	L (.data) : 0
+channel	L (.data) : 1
+channel	L (.data) : 1
+channel	L (.data) : 0
+channel	L (.data) : 0
+channel	L (.data) : 1
+channel	L (.data) : 1
+channel	L (.data) : 0
+channel	L (.data) : 0
+channel	L (.data) : 1
+channel	L (.data) : 1
+channel	L (.data) : 0
+channel	L (.data) : 0
+channel	L (.data) : 1
+channel	L (.data) : 1
+channel	L (.data) : 0
+channel	L (.data) : 0
+channel	L (.data) : 1
+channel	L (.data) : 1
+channel	L (.data) : 0
+$finish at simulation time    5.0 ns

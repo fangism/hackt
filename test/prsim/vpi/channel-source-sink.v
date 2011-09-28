@@ -5,30 +5,10 @@
  */
 
 `timescale 1ns/1ps 
-`define inv_delay	0.010
 
-/* the humble inverter */
-module inverter (in, out);
-	parameter DELAY=`inv_delay;
-	input in;
-	output out;
-	reg __o;
-	wire out = __o;
+`include "standard.v"
 
-	always @(in)
-	begin
-		#DELAY __o <= ~in;
-	end
-endmodule
-
-/* pair of inverters */
-module delay_elem (in, out);
-	input in;
-	output out;
-	wire mid;
-	inverter a(in, mid);
-	inverter b(mid, out);
-endmodule
+`define inv_delay	0.020
 
 module timeunit;
 	initial $timeformat(-9,1," ns",9);
@@ -38,9 +18,9 @@ module TOP;
 	reg	l0, l1, re;
 	wire	le, r0, r1;
 
-	delay_elem d0(l0, r0);
-	delay_elem d1(l1, r1);
-	delay_elem de(re, le);
+	DELAY #(.delay(`inv_delay)) d0(l0, r0);
+	DELAY #(.delay(`inv_delay)) d1(l1, r1);
+	DELAY #(.delay(`inv_delay)) de(re, le);
 
 	// prsim stuff
 	initial 
