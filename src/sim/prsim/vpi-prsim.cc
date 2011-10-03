@@ -563,7 +563,7 @@ if (cv != vv) {
  */
 static void __advance_prsim (const Time_t& vcstime, const int context)
 {
-  STACKTRACE_VERBOSE;
+  STACKTRACE_BRIEF;
   State::step_return_type nr;
   SHOW_VCS_TIME(vcstime);
 
@@ -572,7 +572,12 @@ static void __advance_prsim (const Time_t& vcstime, const int context)
   while ((heap_peek_minkey (P->eventQueue) <= vcstime) 
 	 && (n = prs_step_cause (P, &m, &seu)))
 #else
-  while (prsim_state->pending_events() &&
+  while (
+#if PRSIM_AGGREGATE_EXCEPTIONS
+	!prsim_state->is_fatal() &&
+	// not is_stopped_or_fatal(), results in infinite loop...
+#endif
+	prsim_state->pending_events() &&
 	(prsim_state->next_event_time() <= vcstime) 
 	 && GET_NODE((nr = prsim_state->step())))
 #endif
@@ -640,10 +645,12 @@ for ( ; net_iter != net_end; ++net_iter) {
 /**
 	No-throw version of the above.
 	Caught exceptions wile nicely terminate the co-simulation.
+	This is not really relevant, since we changed the
+	error-handling mechanism to no longer throw.
  */
 static void __advance_prsim_nothrow (const Time_t& vcstime, const int context)
 {
-	STACKTRACE_VERBOSE;
+	STACKTRACE_BRIEF;
 #if VERBOSE_DEBUG
   cout << "Running prsim @ time " << vcstime << endl;
 	prsim_state->dump_event_queue(cout);

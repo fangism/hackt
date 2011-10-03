@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-09-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-98:
+	  vpi-prsim.cc: in recent exception aggregation, missed one place
+		to check for fatal errors in _advance_prsim.
+		Now fixed.  Issue found by Virantha, ACX-PR-6694.
+
+
 2011-09-23	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-97:

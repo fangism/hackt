@@ -2937,6 +2937,7 @@ default: DIE;
  */
 void
 channel::process_data(const State& s) throw (channel_exception) {
+	STACKTRACE_BRIEF;
 	const bool v = data_is_valid();
 	if (watched()) {
 		// even if channel is ignored?
@@ -2962,19 +2963,24 @@ channel::process_data(const State& s) throw (channel_exception) {
 		// really flush every line?
 	}
 	if (is_expecting() && !ignored()) {
+		STACKTRACE_INDENT_PRINT("expecting and not ignored" << endl);
 	if (have_value()) {
+		STACKTRACE_INDENT_PRINT("have value" << endl);
 		const array_value_type& expect = current_value();
 		const size_t cur_index = current_index();	// save it
 		const size_t cur_iter = iteration;	// save it
 		if (!expect.second) {
+		STACKTRACE_INDENT_PRINT("value is not X" << endl);
 		const error_policy_enum e(s.get_channel_expect_fail_policy());
 		if (v) {
+		STACKTRACE_INDENT_PRINT("channel data is valid" << endl);
 		const value_type got = data_rails_value(s);
 		advance_value();
 		// want to advance after checking, 
 		// but need to guarantee progress in the event of exception
 	// TODO: factor this into __assert_channel_value
 		if (DATA_VALUE(expect) != got) {
+			STACKTRACE_INDENT_PRINT("data mismatch" << endl);
 			const channel_exception
 				ex(this, cur_index, cur_iter,
 					DATA_VALUE(expect), got);
@@ -2994,6 +3000,7 @@ channel::process_data(const State& s) throw (channel_exception) {
 				", as expected." << endl;
 		}
 		} else {	// cannot expect invalid value
+			STACKTRACE_INDENT_PRINT("channel data is invalid" << endl);
 			const channel_exception
 				ex(this, cur_index, cur_iter,
 					DATA_VALUE(expect), 0xDEADBEEF);
