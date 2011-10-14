@@ -10,3 +10,5 @@ cycle
 fanout-get pf
 set pf 0
 step-event
+# crash would happen here
+cycle

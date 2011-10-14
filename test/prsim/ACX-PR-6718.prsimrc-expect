@@ -1,0 +1,11 @@
+	0	_pReset : 0
+	0	pf : 1
+	10	mypReset : 1	[by _pReset:=0]
+	20	xd1 : 0	[by mypReset:=1]
+Fanouts of node `pf':
+(to [top-level]):
+[after 10]	~pf:1 -> xd1+:0
+[after 10]	pf:1 & mypReset:1<1><1> -> xd1-:0
+[after 10]	pf:1 & xd0:X<X><1> -> xd1-:0
+	20	pf : 0
+	30	xd1 : 1	[by pf:=0]

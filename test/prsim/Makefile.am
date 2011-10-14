@@ -79,6 +79,7 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	ACX-PR-6386 ACX-PR-6386b \
 	ACX-PR-6393 \
 	ACX-PR-6629 \
+	ACX-PR-6718 ACX-PR-6718b ACX-PR-6718c ACX-PR-6718d \
 	stuck-bug-a \
 	crash-bug-01 \
 	after_min_max after_min_max-bad \
@@ -153,6 +154,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	ACX-PR-6376 ACX-PR-6376b \
 	ACX-PR-6386 ACX-PR-6386b \
 	ACX-PR-6393 \
+	ACX-PR-6718 ACX-PR-6718b ACX-PR-6718c ACX-PR-6718d \
 	logic-defs-01 logic-defs-a-01 logic-defs-b-01 \
 	expr-limit-a-01 \
 	large_OR_fanin-01 huge_OR_fanin-01 \
@@ -701,14 +703,6 @@ HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
 	pchb-test-b-02 \
 	pcefb-test-b-02 \
 	pcehb-test-b-02
-
-# KNOWN BUG: ACX-PR-6718*
-# expression-evaluation atomicity issue corrupting event queue
-srcdir_EXTRA_DIST += \
-	ACX-PR-6718.hac ACX-PR-6718.prsimrc \
-	ACX-PR-6718b.hac ACX-PR-6718b.prsimrc \
-	ACX-PR-6718c.hac ACX-PR-6718c.prsimrc \
-	ACX-PR-6718d.hac ACX-PR-6718d.prsimrc
 
 # KNOWN BUG (fails, but should not): cross-pulldown-01
 
