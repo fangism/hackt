@@ -1,0 +1,15 @@
+// "ACX-PR-6718d.hac"
+// reduced test case (original from Ilya Ganusov)
+// triggers hacprsim ISE on event-queue consistency
+
+bool _pReset, mypReset;
+bool pf;
+bool xd0, xd1;
+
+prs {
+	_pReset				=> mypReset-
+	~pf				-> xd1+
+	(pf & xd0) |			// re-ordered w.r.t. 6718b
+	(pf & mypReset)			-> xd1-
+	// does NOT crash due to evaluation ordering
+}

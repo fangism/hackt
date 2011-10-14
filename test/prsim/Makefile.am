@@ -699,6 +699,14 @@ HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
 	pcefb-test-b-02 \
 	pcehb-test-b-02
 
+# KNOWN BUG: ACX-PR-6718*
+# expression-evaluation atomicity issue corrupting event queue
+srcdir_EXTRA_DIST += \
+	ACX-PR-6718.hac ACX-PR-6718.prsimrc \
+	ACX-PR-6718b.hac ACX-PR-6718b.prsimrc \
+	ACX-PR-6718c.hac ACX-PR-6718c.prsimrc \
+	ACX-PR-6718d.hac ACX-PR-6718d.prsimrc
+
 # KNOWN BUG (fails, but should not): cross-pulldown-01
 
 HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES = $(HACKT_PRSIMRC_TEST_SCRIPTS_PASSES)

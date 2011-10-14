@@ -1,0 +1,12 @@
+# "ACX-PR-6718.prsimrc"
+# @haco@ ACX-PR-6718.haco-c
+# reduced test case
+
+watchall
+unstable-dequeue
+set _pReset 0
+set pf 1
+cycle
+fanout-get pf
+set pf 0
+step-event

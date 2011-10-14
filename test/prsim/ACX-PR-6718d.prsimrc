@@ -1,0 +1,6 @@
+# "ACX-PR-6718d.prsimrc"
+# @haco@ ACX-PR-6718d.haco-c
+# reduced test case
+
+source ACX-PR-6718.prsimrc
+

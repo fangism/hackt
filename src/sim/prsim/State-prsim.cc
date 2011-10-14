@@ -2373,6 +2373,8 @@ for ( ; i!=e; ++i) {
 				ISE_INVARIANT(pv.killed());
 				// FAILED ONCE: 20071217, since weak rules
 				// FIXED ONCE: ACX-PR-6376 (possibly same)
+				// FAILED AGAIN: ACX-PR-6718, due to non-atomic
+				//	expression evaluation
 				__flush_pending_event_replacement(_n, ne, ev);
 			} else {
 			DEBUG_STEP_PRINT("keeping original event" << endl);
