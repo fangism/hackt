@@ -59,7 +59,9 @@ echo X-pull-up
 set aw X
 cycle
 # echo is a non-interfering X-pull-up
-assert cw X
+# assert cw X
+assert cw 1
+# cw:X is too conservative: leak-away
 assertn-queue
 
 set aw 1

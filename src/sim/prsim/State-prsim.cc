@@ -2196,20 +2196,6 @@ for ( ; i!=e; ++i) {
 	// create event first, but don't tie it to the node until
 	// after checking for instability and queue conflicts
 	const pull_set p(n, weak_rules_enabled());
-#if 0
-	const pull_enum up_pull = n.pull_up_state STR_INDEX(NORMAL_RULE).pull();
-	const pull_enum dn_pull = n.pull_dn_state STR_INDEX(NORMAL_RULE).pull();
-	const bool up_off = (up_pull == PULL_OFF);
-	const bool dn_off = (dn_pull == PULL_OFF);
-#if PRSIM_WEAK_RULES
-	const pull_enum wdn_pull = weak_rules_enabled() ?
-		n.pull_dn_state STR_INDEX(WEAK_RULE).pull() : PULL_OFF;
-	const pull_enum wup_pull = weak_rules_enabled() ?
-		n.pull_up_state STR_INDEX(WEAK_RULE).pull() : PULL_OFF;
-#endif
-	const bool up_off = (p.up == PULL_OFF);
-	const bool dn_off = (p.dn == PULL_OFF);
-#endif
 	bool possible_interference = false;	// used to be named pending_weak
 #if DEBUG_STEP
 	p.dump(DEBUG_STEP_PRINT("")) << endl;

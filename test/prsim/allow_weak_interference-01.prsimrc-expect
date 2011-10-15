@@ -42,10 +42,10 @@ both off...
 	100	a : 1
 X-pull-up 
 	100	a : X
-	110	c : X	[by a:=X]
-	110	a : 1
+	100	a : 1
 X-pull-down 
-	110	b : X
+	100	b : X
+	110	c : X	[by b:=X]
 	110	b : 0
 X vs. X 
 	110	a : X

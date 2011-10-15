@@ -63,7 +63,9 @@ echo X-pull-up
 set a X
 cycle
 # echo is a non-interfering X-pull-up
-assert c X
+# assert c X
+assert c 1
+# c:X would be too conservative, leak-away
 assertn-queue
 
 set a 1
@@ -73,6 +75,7 @@ echo X-pull-down
 set b X
 cycle
 # echo is a non-interfering X-pull-down
+assert c X
 
 set b 0
 cycle

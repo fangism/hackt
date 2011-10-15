@@ -42,10 +42,10 @@ both off...
 	100	aw : 1
 X-pull-up 
 	100	aw : X
-	110	cw : X	[by aw:=X]
-	110	aw : 1
+	100	aw : 1
 X-pull-down 
-	110	bw : X
+	100	bw : X
+	110	cw : X	[by bw:=X]
 	110	bw : 0
 X vs. X 
 	110	aw : X
