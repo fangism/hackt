@@ -102,7 +102,8 @@ noinst_LTLIBRARIES = libhackt.la \
 
 # don't actually want to build these, but have the rules for them
 EXTRA_LTLIBRARIES += \
-	libbogus.la libbogus2.la libbogus3.la libbogus4.la libbogus5.la
+	libbogus.la libbogus2.la libbogus3.la libbogus4.la libbogus5.la \
+	libbogus6.la
 
 # NOTE: the order matters for proper library installation!!!
 # should follow partial order of dependencies (independent first)
@@ -400,6 +401,8 @@ TYPE_PARSE_ROOT = type-parse
 TYPE_LEX_ROOT = type-lex
 VERILOG_PARSE_ROOT = verilog-parse
 VERILOG_LEX_ROOT = verilog-lex
+SPICE_PARSE_ROOT = spice-parse
+SPICE_LEX_ROOT = spice-lex
 
 # libbogus.la is not actually used, hence the name.
 # force use of lex/yacc suffix rules to generate the .c and .cc files
@@ -422,6 +425,9 @@ libbogus4_la_SOURCES = \
 
 libbogus5_la_SOURCES = \
 	parser/verilog-parse.yy
+
+libbogus6_la_SOURCES = \
+	parser/spice-parse.yy
 
 # for debugging
 .output.dot:
@@ -1325,11 +1331,16 @@ parser/$(TYPE_PARSE_ROOT).yy: \
 parser/$(VERILOG_PARSE_ROOT).yy: \
 		parser/$(VERILOG_PARSE_ROOT).yy.in $(top_builddir)/config.status
 	$(RECONFIGURE)
+parser/$(SPICE_PARSE_ROOT).yy: \
+		parser/$(SPICE_PARSE_ROOT).yy.in $(top_builddir)/config.status
+	$(RECONFIGURE)
 
 # these should be distcleaned, because they are configure-generated
 CONFIG_PARSERS = parser/$(HACKT_PARSE_ROOT).yy \
 	parser/$(INSTREF_PARSE_ROOT).yy \
-	parser/$(TYPE_PARSE_ROOT).yy
+	parser/$(TYPE_PARSE_ROOT).yy \
+	parser/$(VERILOG_PARSE_ROOT).yy \
+	parser/$(SPICE_PARSE_ROOT).yy
 
 # because I can't figure out how to produce a literal '&' in awk subst regex.  
 SED_CXX_REFERENCE = $(SED) 's/REFERENCE/\&/g'
