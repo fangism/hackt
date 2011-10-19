@@ -1,10 +1,9 @@
 	0	c : 0
 	0	b : 0
+	10	c : X	[by b:=0]
 Nodes with interference:
 Nodes with weak-interference:
 event queue:
-	0	c : X
 expect c -> X 
-	0	c : X
 Nodes with interference:
 Nodes with weak-interference:

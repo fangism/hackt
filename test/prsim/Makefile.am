@@ -160,6 +160,8 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	large_OR_fanin-01 huge_OR_fanin-01 \
 	interference-01 interference-02 interference-03 interference-04 \
 	interference-05 interference-06 interference-07 interference-08 \
+	interference-07b interference-08b \
+	interference-07c interference-08c \
 	interference-09 interference-10 interference-12 \
 	interference-a-01 interference-a-02 \
 	interference-b-01 \

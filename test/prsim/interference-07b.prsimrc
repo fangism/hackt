@@ -1,0 +1,12 @@
+# "interference-07b.prsimrc"
+# @haco@ interference.haco-c
+
+interference warn
+watchall
+set b 1
+# expect c:0 to be overridden to c:X
+set c 0
+cycle
+assert c X
+status-interference
+status-weak-interference

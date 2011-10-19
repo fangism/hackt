@@ -7,12 +7,12 @@ set c 1
 cycle
 set a 1
 cycle
-assert c 1
+assert c X
 status-interference
 status-weak-interference
 unset c
 queue
-assert-queue
+assertn-queue
 echo expect c -> X
 cycle
 assert c X

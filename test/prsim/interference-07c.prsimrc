@@ -1,21 +1,15 @@
-# "interference-07.prsimrc"
+# "interference-07c.prsimrc"
 # @haco@ interference.haco-c
 
 interference warn
 watchall
 set b 1
+# expect c:0 to be stick
+setf c 0
 cycle
-set c 0
-cycle
+assert c 0
 status-interference
 status-weak-interference
-assert c 0
 unset c
-queue
-assert-queue
-echo expect c -> X
 cycle
 assert c X
-status-interference
-status-weak-interference
-

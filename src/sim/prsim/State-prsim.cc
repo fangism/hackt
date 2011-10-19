@@ -2279,8 +2279,14 @@ for ( ; i!=e; ++i) {
 		if (have_interference) {
 			// previous event should be clobbered to X
 			// regardless of the instability state
+			// BUT NOT if it was set by user (forced)
+			// see test case interference-07.prsimrc
+		if (pe.forced()) {
+			DEBUG_STEP_PRINT("yielding to user-set value" << endl);
+		} else {
 			DEBUG_STEP_PRINT("overwrite to X." << endl);
 			pe.val = LOGIC_OTHER;
+		}
 			// don't report this as instability?
 		} else {
 			// non-interfering

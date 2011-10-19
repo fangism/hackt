@@ -1,13 +1,6 @@
 WARNING: weak-interference `c'
 >> cause: `b' (val: 1)
 	0	b : 1
-	0	c : 0
-Nodes with interference:
-Nodes with weak-interference:
-c
-event queue:
-	0	c : X
-expect c -> X 
 	0	c : X
 Nodes with interference:
 Nodes with weak-interference:
