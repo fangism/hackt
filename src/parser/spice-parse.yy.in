@@ -1,0 +1,197 @@
+/**
+	\file "parser/spice-parse.yy.in"
+	Quick little parser for parsing spice netlists.
+	The grammar in here is an extremely small snippet
+	of the spice language grammar.  
+	Source: http://www.freeda.org/doc/SPICE/spice.pdf
+	$Id: spice-parse.yy.in,v 1.10 2008/12/18 00:32:09 fang Exp $
+ */
+
+%{
+#define	ENABLE_STACKTRACE		0
+
+#include <iostream>
+
+#include "parser/yacc-config.h"
+// #include "AST/AST.h"
+#include "parser/spice-prefix.h"
+#include "util/using_ostream.h"
+#include "parser/spice-union.h"
+#include "parser/spice-parse-options.h"
+#include "parser/spice-parse.output.h"
+#include "lexer/spice-lex-options.h"
+#include "lexer/flex_lexer_state.h"
+#include "util/stacktrace.h"
+
+// extern FILE* yyin;
+
+#ifdef	LIBBOGUS
+static flex::lexer_state	_lexer_state;
+#endif
+
+
+/**
+	These were replaced with macros in "AST/node_list.h"
+ */
+#define	WRAP_LIST(left, list, right)	list->wrap(left, right)
+
+#define	DELETE_TOKEN(tok)		delete tok
+
+#define APPEND_LIST(list, delim, item)					\
+	DELETE_TOKEN(delim); list->push_back(item)
+
+%}
+
+%union {
+	/* SCM */
+	char*		_char;
+}
+
+%{
+extern	YY_DECL;
+
+static void yyerror(const char* msg);
+
+extern	ostream& yy_union_resolve_dump(const YYSTYPE&, const short, const short, ostream&);
+extern	void yy_union_resolve_delete(const YYSTYPE&, const short, const short);
+extern	ostream& yy_union_lookup_dump(const YYSTYPE&, const int, ostream&);
+extern	void yy_union_lookup_delete(const YYSTYPE&, const int);
+
+static
+void
+yyfreestacks(const short* yyss, const short* yyssp,
+		const YYSTYPE* yyvs, const YYSTYPE* yyvsp,
+		const YYSTYPE yylval, const int yychar,
+		const flex::lexer_state& _lexer_state);
+%}
+
+%token	<_char>		SPICE_ID
+%token			NUM
+%token			END ENDS SUBCKT
+%token			RES CAP IND DEV INST
+
+%start	spice_deck
+
+/* YACC_PURE_PARSER: conditionally substituted by configure */
+@YACC_PURE_PARSER@
+
+%%
+
+spice_deck
+	: top_cards_opt end_opt
+	;
+
+end_opt
+	: END
+	|
+	;
+
+top_cards_opt
+	: top_cards
+	|
+	;
+
+top_cards
+	: top_cards top_card
+	| top_card
+	;
+
+top_card
+	: subcircuit_definition
+	| sub_card
+	;
+
+/* for now, no nested subcircuits */
+subcircuit_definition
+	: SUBCKT sub_cards_opt ENDS
+	;
+
+sub_cards_opt
+	: sub_cards
+	|
+	;
+
+sub_cards
+	: sub_cards sub_card
+	| sub_card
+	;
+
+sub_card
+	: instance
+	| resistor
+	| capacitor
+	| inductor
+	| transistor
+/*
+	| diode
+	| connect_stmt
+	| vsrc
+	| isrc
+*/
+	;
+
+instance
+	: INST terminals
+	;
+
+terminals
+	: terminals terminal
+	| terminal
+	;
+
+terminal
+	: SPICE_ID
+	;
+
+resistor
+	: RES terminal terminal value
+	;
+
+capacitor
+	: CAP terminal terminal value
+	;
+
+inductor
+	: IND terminal terminal value
+	;
+
+transistor
+	: DEV terminal terminal terminal terminal parameters_opt
+	;
+
+value
+	: NUM
+	;
+
+parameters_opt
+	: parameters
+	|
+	;
+
+parameters
+	: parameters parameter
+	| parameter
+	;
+
+parameter
+	: SPICE_ID '=' value
+	;
+
+/**
+connect_stmt
+	: CONNECT terminal terminal
+	;
+**/
+
+%%
+
+#include "parser/yyfreestacks.cc"		// we've moved!
+#include "parser/yyerror.cc"			// we've moved!
+
+static
+void yyerror(const char* msg) {
+	STACKTRACE_VERBOSE;
+	__yyerror(msg);		// standard implementation
+	THROW_EXIT;
+}
+

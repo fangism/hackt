@@ -682,6 +682,7 @@ AC_CONFIG_FILES([src/parser/hackt-parse.yy])
 AC_CONFIG_FILES([src/parser/instref-parse.yy])
 AC_CONFIG_FILES([src/parser/type-parse.yy])
 AC_CONFIG_FILES([src/parser/verilog-parse.yy])
+AC_CONFIG_FILES([src/parser/spice-parse.yy])
 AC_CONFIG_FILES([src/guile/config_version.h])
 AC_CONFIG_FILES([src/util/lang/CX/cx-parse.yy])
 AC_CONFIG_FILES([src/scripts/init_hackt.sh],
