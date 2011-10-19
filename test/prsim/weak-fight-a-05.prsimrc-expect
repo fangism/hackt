@@ -12,6 +12,8 @@ do not expect weak-interference
 restoring a -> 0 
 	10	a : 0
 fighting strong unknown pull-dn 
+WARNING: weak-interference `c'
+>> cause: `b' (val: X)
 	10	b : X
 	20	c : X	[by b:=X]
 do not expect weak-interference, but c -> X 

@@ -1,5 +1,7 @@
 	0	wndn : 0
 	0	wpup : 0
+WARNING: weak-interference `out'
+>> cause: `pup' (val: 1)
 	0	pup : 1
 	0	ndn : 0
 	10	out : 1	[by ndn:=0]

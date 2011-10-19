@@ -1,4 +1,8 @@
+WARNING: weak-interference `out'
+>> cause: `pup' (val: 1)
 	0	pup : 1
+WARNING: weak-interference `out'
+>> cause: `ndn' (val: 0)
 	0	ndn : 0
 	0	wndn : 0
 	0	wpup : 0

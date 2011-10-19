@@ -14,12 +14,16 @@ Fanins of node `c':
 [after 10, weak]	~a:0 -> c+:1
 Nodes driven:
 c
+WARNING: weak-interference `c'
+>> cause: `b' (val: X)
 Nodes driven:
 c
 Nodes driven:
 c
 Nodes driven:
 c
+WARNING: weak-interference `c'
+>> cause: `b' (val: X)
 Nodes driven by X:
 c
 Nodes driven by X:
