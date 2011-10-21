@@ -13,14 +13,16 @@
 #include <iostream>
 
 #include "parser/yacc-config.h"
-// #include "AST/AST.h"
+#include "AST/node_list.h"
+#include "AST/token_string.h"
 #include "parser/spice-prefix.h"
-#include "util/using_ostream.h"
-#include "parser/spice-union.h"
 #include "parser/spice-parse-options.h"
 #include "parser/spice-parse.output.h"
+#include "parser/spice-union.h"
 #include "lexer/spice-lex-options.h"
 #include "lexer/flex_lexer_state.h"
+#include "util/using_ostream.h"
+#include "lexer/file_manager.h"
 #include "util/stacktrace.h"
 
 // extern FILE* yyin;
@@ -43,8 +45,7 @@ static flex::lexer_state	_lexer_state;
 %}
 
 %union {
-	/* SCM */
-	char*		_char;
+	token_identifier*	_token_identifier;
 }
 
 %{
@@ -65,10 +66,13 @@ yyfreestacks(const short* yyss, const short* yyssp,
 		const flex::lexer_state& _lexer_state);
 %}
 
-%token	<_char>		SPICE_ID
-%token			NUM
-%token			END ENDS SUBCKT
-%token			RES CAP IND DEV INST
+%token	<_token_identifier>	SPICE_ID ESCAPEDID
+/* delay conversion of numbers because they can be identifiers */
+%token	<_token_identifier>	NUM
+%token	<_token_identifier>	RES CAP IND DEV INST
+/* keywords */
+%token				END ENDS SUBCKT
+%token				CONNECT
 
 %start	spice_deck
 
@@ -130,8 +134,9 @@ sub_card
 */
 	;
 
+/* last 'terminal' is actually the instance type */
 instance
-	: INST terminals
+	: INST terminals identifier parameters_opt
 	;
 
 terminals
@@ -140,7 +145,14 @@ terminals
 	;
 
 terminal
+	: identifier
+	;
+
+/* yes, spice allows almost anything, even numbers to be identifiers */
+identifier
 	: SPICE_ID
+	| ESCAPEDID
+	| NUM
 	;
 
 resistor
@@ -156,7 +168,7 @@ inductor
 	;
 
 transistor
-	: DEV terminal terminal terminal terminal parameters_opt
+	: DEV terminal terminal terminal terminal identifier parameters_opt
 	;
 
 value
