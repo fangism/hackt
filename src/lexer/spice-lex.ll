@@ -41,6 +41,41 @@ using namespace HAC::parser;
 #include "lexer/flex_lexer_state.h"
 using flex::lexer_state;
 
+/**
+	If lexyacc_test links against main parser, 
+	we will want to avoid a symbol conflict.
+ */
+#if	defined(LIBBOGUS)
+#define	spice_parse_file_manager	yy_parse_file_manager
+#define	spice_embedded_file_stack	yy_embedded_file_stack
+#endif
+/**
+	This is the file stack and include path manager for 
+	the spice parser.  
+	This is globally visible and accessible (unfortunately).  
+ */
+HAC::lexer::file_manager
+spice_parse_file_manager;
+
+/**
+	Auxiliary stack for file-embedding construct, whereby the
+	lexer pushes a fake file onto this stack, and the parser
+	pops it off the stack when the file construct is reduced.  
+ */
+HAC::lexer::embedded_file_stack_type
+spice_embedded_file_stack;
+
+
+/// generated in "parser/spice-union.cc" for deleting tokens
+extern
+void
+yy_union_lookup_delete(const YYSTYPE&, const int);
+
+extern
+std::ostream&
+yy_union_lookup_dump(const YYSTYPE&, const int, std::ostream&);
+
+
 namespace HAC {
 
 namespace lexer {
@@ -67,7 +102,7 @@ static const int token_feedback = 0;
 	action of the lexer, even in the middle of tokenizing.  
  */
 static inline void
-DEFAULT_TOKEN_FEEDBACK(__YYLEX_PARAM_VOID) {
+DEFAULT_TOKEN_FEEDBACK(const lexer_state& foo) {
 	if (token_feedback) {
 		cerr << "token = " << yytext <<
 			" " LINE_COL(CURRENT) << endl;
@@ -77,13 +112,13 @@ DEFAULT_TOKEN_FEEDBACK(__YYLEX_PARAM_VOID) {
 /* macros for tracking single line tokens (no new line) */
 
 static inline void
-TOKEN_UPDATE(__YYLEX_PARAM_VOID) {
-	DEFAULT_TOKEN_FEEDBACK(__YYLEX_ARG_VOID);
+TOKEN_UPDATE(const lexer_state& foo) {
+	DEFAULT_TOKEN_FEEDBACK(foo);
 	CURRENT.col += yyleng;
 }
 
 static inline void
-NEWLINE_UPDATE(__YYLEX_PARAM_VOID) {
+NEWLINE_UPDATE(const lexer_state& foo) {
 	CURRENT.line++; CURRENT.col = 1;
 #if 0
 	cerr << "Line number advanced to " << CURRENT.line << endl;
@@ -91,9 +126,9 @@ NEWLINE_UPDATE(__YYLEX_PARAM_VOID) {
 }
 
 static inline void
-NODE_POSITION_UPDATE(YYSTYPE& lval __YYLEX_PARAM) {
-	lval._node_position = new node_position(yytext, CURRENT);
-	TOKEN_UPDATE(__YYLEX_ARG_VOID);
+NODE_POSITION_UPDATE(YYSTYPE& lval, const lexer_state& foo) {
+//	lval._node_position = new node_position(yytext, CURRENT);
+	TOKEN_UPDATE(foo);
 }
 
 }	/* end namespace lexer */
@@ -104,9 +139,12 @@ using namespace HAC::lexer;
 %}
 
 DIGIT		[0-9]
+/**
 HEXDIGIT	[0-9A-Fa-f]
 IDHEAD		[a-zA-Z_]
 IDBODY		[a-zA-Z0-9_]
+**/
+SPICE_IDCHAR	[^ \t=,()\\]
 INT		{DIGIT}+
 SIGN_INT	[+-]?{INT}
 /**
@@ -115,9 +153,7 @@ TODO: scientific unit suffixes
 EXP		[eE]{SIGN_INT}
 FRACTIONAL	"."{INT}
 FLOAT		({INT}{FRACTIONAL}{EXP}?)|({INT}{FRACTIONAL}?{EXP})
-/**
-HEX		0x{HEXDIGIT}+
-**/
+NUM		{INT}|{FLOAT}
 
 /* note: '-' signed ints are lexed as two tokens and combined in the parser
 	as a unary expr, thus, no numerical tokens in the language 
@@ -125,28 +161,18 @@ HEX		0x{HEXDIGIT}+
 	A sign in the exponent of a floating-point number is acceptable.  
 */
 
-IDENTIFIER	{IDHEAD}{IDBODY}*
-/***
-	extended ID allows references to designated globals, prefixed with '!'
-***/
-ID		[!]?{IDENTIFIER}
-ESCAPEDID	"\\"[^ \t\n=]+
+SPICE_ID	{SPICE_IDCHAR}+
+ESCAPEDID	"\\"[^ \t\n]+
 /**
-BADID		({INT}{ID})|({FLOAT}{ID})
-**/
 BADID		{INT}{ID}
-BADHEX		{HEX}{ID}
+**/
 WHITESPACE	[ \t]+
 NEWLINE		"\n"
 WS		{WHITESPACE}
 
-POSITIONTOKEN	[=]
-/**
-POSITIONTOKEN	[][.]
-SCOPE		"::"
-RANGE		".."
-**/
+POSITIONTOKEN	[=,()]
 
+CONNECT		"^.connect"|".CONNECT"
 SUBCKT		"^.subckt"|".SUBCKT"
 ENDS		"^.ends"|".ENDS"
 END		"^.end"|".END"
@@ -172,74 +198,72 @@ INST		"^[xX]{SPICE_ID}"
 
 <INITIAL>{
 
-{SCOPE}		{ NODE_POSITION_UPDATE(*yylval __YYLEX_ARG); return SCOPE; }
-{RANGE}		{ NODE_POSITION_UPDATE(*yylval __YYLEX_ARG); return RANGE; }
+{POSITIONTOKEN} { NODE_POSITION_UPDATE(*yylval, foo); return yytext[0]; }
 
-{POSITIONTOKEN} { NODE_POSITION_UPDATE(*yylval __YYLEX_ARG); return yytext[0]; }
+{RES}	{
+	yylval->_token_identifier = new token_identifier(yytext+1);
+	TOKEN_UPDATE(foo);
+	return RES;
+}
+{CAP}	{
+	yylval->_token_identifier = new token_identifier(yytext+1);
+	TOKEN_UPDATE(foo);
+	return CAP;
+}
+{IND}	{
+	yylval->_token_identifier = new token_identifier(yytext+1);
+	TOKEN_UPDATE(foo);
+	return IND;
+}
+{DEV}	{
+	yylval->_token_identifier = new token_identifier(yytext+1);
+	TOKEN_UPDATE(foo);
+	return DEV;
+}
+{INST}	{
+	yylval->_token_identifier = new token_identifier(yytext+1);
+	TOKEN_UPDATE(foo);
+	return INST;
+}
 
-{WHITESPACE}	TOKEN_UPDATE(__YYLEX_ARG_VOID);
-{NEWLINE}	NEWLINE_UPDATE(__YYLEX_ARG_VOID);
+{WHITESPACE}	TOKEN_UPDATE(foo);
+{NEWLINE}	NEWLINE_UPDATE(foo);
 
-{INT}	{
+{NUM}	{
 	if (token_feedback) {
 		cerr << "int = " << yytext << " " << LINE_COL(CURRENT) << endl;
 	}
-	yylval->_token_int = new token_int(atoi(yytext));
-	TOKEN_UPDATE(__YYLEX_ARG_VOID);
-	return INT;
+	yylval->_token_identifier = new token_identifier(yytext);
+	TOKEN_UPDATE(foo);
+	return NUM;
 }
 
-{HEX}   {
-	if (token_feedback) {
-		cerr << "int = " << yytext << " " << LINE_COL(CURRENT) << endl;
-	}
-	/* TODO: error handling of value-ranges */
-	/* consider using stream conversions to avoid precision errors */
-	/* what if we need atol? */
-	HAC::entity::pint_value_type v;
-	std::istringstream iss(yytext); /* slower, but safer */
-	iss >> std::hex >> v;
-	/* could try to use faster, but unsafe istrstream (deprecated) */
-	spice_lval->_token_int = new token_int(v);
-	/* yylval->_token_int = new token_int(atoi(yytext)); */
-	TOKEN_UPDATE(__YYLEX_ARG_VOID);
-	return INT;
-}
-
-{ID}	{
+{SPICE_ID}	{
 	if (token_feedback) {
 		cerr << "identifier = \"" << yytext << "\" " << 
 			LINE_COL(CURRENT) << endl;
 	}
 	yylval->_token_identifier = new token_identifier(yytext);
-	TOKEN_UPDATE(__YYLEX_ARG_VOID);
-	return ID;
+	TOKEN_UPDATE(foo);
+	return SPICE_ID;
 }
 
-{BADHEX}	{ 
-	hackt_parse_file_manager.dump_file_stack(cerr);
-	cerr << "bad hexadecimal integer: \"" << yytext << "\" " <<
-		LINE_COL(CURRENT) << endl;
-	TOKEN_UPDATE(__YYLEX_ARG_VOID);
-	yylval->_token_identifier = NULL;
-	THROW_EXIT;
-}
-
-{BADID}	{
-	hackt_parse_file_manager.dump_file_stack(cerr);
-	cerr << "bad identifier: \"" << yytext << "\" " <<
-		LINE_COL(CURRENT) << endl;
-	TOKEN_UPDATE(__YYLEX_ARG_VOID);
-	yylval->_token_identifier = NULL;
-	THROW_EXIT;
+{ESCAPEDID}	{
+	if (token_feedback) {
+		cerr << "identifier = \"" << yytext+1 << "\" " << 
+			LINE_COL(CURRENT) << endl;
+	}
+	yylval->_token_identifier = new token_identifier(yytext+1);
+	TOKEN_UPDATE(foo);
+	return ESCAPEDID;
 }
 
 .	{
-	hackt_parse_file_manager.dump_file_stack(cerr);
+	spice_parse_file_manager.dump_file_stack(cerr);
 	/* for everything else that doesn't match... */
 	cerr << "unexpected character: \'" << yytext << "\' " <<
 		LINE_COL(CURRENT) << endl;
-	TOKEN_UPDATE(__YYLEX_ARG_VOID);
+	TOKEN_UPDATE(foo);
 	THROW_EXIT;
 }
 }

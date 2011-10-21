@@ -221,6 +221,7 @@ LIBBOGUS2_LA = libbogus2_la
 LIBBOGUS3_LA = libbogus3_la
 LIBBOGUS4_LA = libbogus4_la
 LIBBOGUS5_LA = libbogus5_la
+LIBBOGUS6_LA = libbogus6_la
 
 libhacktexec_la_LIBADD = libhacktprsim.la libhacktchpsim.la libhacknet.la
 
@@ -427,6 +428,7 @@ libbogus5_la_SOURCES = \
 	parser/verilog-parse.yy
 
 libbogus6_la_SOURCES = \
+	lexer/spice-lex.ll \
 	parser/spice-parse.yy
 
 # for debugging
@@ -1252,6 +1254,12 @@ lexer/$(LIBHACKTPARSERS_LA)-$(TYPE_LEX_ROOT)-real.lo \
 parser/$(LIBHACKTPARSERS_LA)-type-union.lo \
 	parser/$(LIBHACKTPARSERS_LA)-type-union.o: \
 	parser/$(TYPE_PARSE_ROOT).output.h
+lexer/$(LIBHACKTPARSERS_LA)-$(SPICE_LEX_ROOT)-real.lo \
+	lexer/$(LIBHACKTPARSERS_LA)-$(SPICE_LEX_ROOT)-real.o: \
+	parser/$(SPICE_PARSE_ROOT).h
+parser/$(LIBHACKTPARSERS_LA)-spice-union.lo \
+	parser/$(LIBHACKTPARSERS_LA)-spice-union.o: \
+	parser/$(SPICE_PARSE_ROOT).output.h
 
 # even more extra dependencies for bogus libraries
 lexer/$(LIBBOGUS_LA)-$(HACKT_LEX_ROOT).lo \
@@ -1269,6 +1277,11 @@ lexer/$(LIBBOGUS3_LA)-$(TYPE_LEX_ROOT).lo \
 	parser/$(LIBBOGUS3_LA)-$(TYPE_PARSE_ROOT).lo \
 	parser/$(LIBBOGUS3_LA)-$(TYPE_PARSE_ROOT).o: \
 	parser/type-prefix.h
+lexer/$(LIBBOGUS3_LA)-$(SPICE_LEX_ROOT).lo \
+	lexer/$(LIBBOGUS3_LA)-$(SPICE_LEX_ROOT).o \
+	parser/$(LIBBOGUS3_LA)-$(SPICE_PARSE_ROOT).lo \
+	parser/$(LIBBOGUS3_LA)-$(SPICE_PARSE_ROOT).o: \
+	parser/spice-prefix.h
 
 # the following targets need to be prefixed with the library name, libbogus, 
 # but automake complains that it overrides the automatic definition...
@@ -1316,6 +1329,7 @@ ALL_TCC_FILES += \
 HACKT_YACC_PREFIX = hackt_
 INSTREF_YACC_PREFIX = instref_
 TYPE_YACC_PREFIX = type_
+SPICE_YACC_PREFIX = spice_
 HACFLAT_YACC_PREFIX = hacflat_
 
 # regenerate the parser input file using config.status
@@ -1375,9 +1389,14 @@ parser/hacflat-prefix.h: $(LEXYACC_PREFIX_GENERATOR)
 	basename=$(HACFLAT_YACC_PREFIX) ; \
 	$(MAKE_PARSE_PREFIX_HEADER_SCRIPT)
 
+parser/spice-prefix.h: $(LEXYACC_PREFIX_GENERATOR)
+	basename=$(SPICE_YACC_PREFIX) ; \
+	$(MAKE_PARSE_PREFIX_HEADER_SCRIPT)
+
 LEXYACC_PREFIX_H_FILES = parser/hackt-prefix.h \
 	parser/instref-prefix.h parser/type-prefix.h \
-	parser/hacflat-prefix.h
+	parser/hacflat-prefix.h \
+	parser/spice-prefix.h
 
 ALL_HEADER_FILES += $(LEXYACC_PREFIX_H_FILES)
 CLEANFILES += $(LEXYACC_PREFIX_H_FILES)
@@ -1444,6 +1463,10 @@ parser/$(TYPE_PARSE_ROOT)-real.cc: parser/$(TYPE_PARSE_ROOT).cc \
 		parser/$(TYPE_PARSE_ROOT).output.h
 	$(CAT) $< | $(PARSER_HACK_PIPE) > $@
 
+parser/$(SPICE_PARSE_ROOT)-real.cc: parser/$(SPICE_PARSE_ROOT).cc \
+		parser/$(SPICE_PARSE_ROOT).output.h
+	$(CAT) $< | $(PARSER_HACK_PIPE) > $@
+
 
 # requires shell variable 'basename'
 MAKE_REAL_PARSER_HEADER_SCRIPT = \
@@ -1466,17 +1489,15 @@ parser/$(INSTREF_PARSE_ROOT)-real.h: parser/$(INSTREF_PARSE_ROOT).h \
 		parser/instref-prefix.h
 	basename="instref" ; \
 	$(MAKE_REAL_PARSER_HEADER_SCRIPT)
-#	$(SED_srcdir_strip_setup) ; \
-#	{ $(ECHO) "#include \"parser/instref-prefix.h\"" ; \
-#	$(ECHO) "#include \"parser/instref-union.h\"" ; \
-#	$(ECHO) "#include \"parser/instref.h\"" ; \
-#	$(CAT) parser/$(INSTREF_PARSE_ROOT).h ;} > \
-#		`$(ECHO) $@ | $(SED_srcdir_strip_fast)`
-# the above includes an additonal header in the middle
 
 parser/$(TYPE_PARSE_ROOT)-real.h: parser/$(TYPE_PARSE_ROOT).h \
 		parser/type-prefix.h
 	basename="type" ; \
+	$(MAKE_REAL_PARSER_HEADER_SCRIPT)
+
+parser/$(SPICE_PARSE_ROOT)-real.h: parser/$(SPICE_PARSE_ROOT).h \
+		parser/spice-prefix.h
+	basename="spice" ; \
 	$(MAKE_REAL_PARSER_HEADER_SCRIPT)
 
 PURIFY_LEXER_PIPE = $(AWK) -f $(srcdir)/lexer/purify_flex.awk | \
@@ -1523,6 +1544,12 @@ lexer/$(HACFLAT_LEX_ROOT)-real.cc: lexer/$(HACFLAT_LEX_ROOT).cc \
 		parser/hacflat-prefix.h \
 		$(FLEX_COMMON_PATCH)
 	basename="hacflat" ; \
+	$(MAKE_REAL_LEXER_SCRIPT)
+
+lexer/$(SPICE_LEX_ROOT)-real.cc: lexer/$(SPICE_LEX_ROOT).cc \
+		parser/spice-prefix.h \
+		$(FLEX_COMMON_PATCH)
+	basename="spice" ; \
 	$(MAKE_REAL_LEXER_SCRIPT)
 
 # should be able to depend on *ANY* of the above processed lexer sources
@@ -1586,6 +1613,12 @@ $(TYPE_PARSE_OUTPUT): parser/$(TYPE_PARSE_ROOT).h
 $(TYPE_PARSE_OUTPUT).h: $(TYPE_PARSE_OUTPUT)
 	$(PARSE_OUTPUT_HEADER_SCRIPT)
 
+SPICE_PARSE_OUTPUT = parser/$(SPICE_PARSE_ROOT).output
+$(SPICE_PARSE_OUTPUT): parser/$(SPICE_PARSE_ROOT).h
+
+$(SPICE_PARSE_OUTPUT).h: $(SPICE_PARSE_OUTPUT)
+	$(PARSE_OUTPUT_HEADER_SCRIPT)
+
 # These all depend on parser/$(HACKT_PARSE_ROOT).h, 
 # which is made non-atomically, by automake's yacc rules.
 # Using the NOTPARALLEL directive kills parallel-make for this whole Makefile!
@@ -1610,6 +1643,10 @@ $(TYPE_PARSE_OUTPUT): $(CONFIGHEADERS) parser/yacc_version.h
 
 lexer/$(HACFLAT_LEX_ROOT).cc: $(CONFIGHEADERS) lexer/lex_version.h
 
+lexer/$(SPICE_LEX_ROOT).cc: $(CONFIGHEADERS) lexer/lex_version.h
+parser/$(SPICE_PARSE_ROOT).cc: $(CONFIGHEADERS) parser/yacc_version.h
+$(SPICE_PARSE_OUTPUT): $(CONFIGHEADERS) parser/yacc_version.h
+
 # why didn't this work?
 # fixed: need to escape the '#' character
 PARSER_TYPES_PIPE = $(GREP) -v "\#include" | $(CPP_TRADITIONAL) -P | \
@@ -1623,6 +1660,9 @@ parser/instref.types: parser/$(INSTREF_PARSE_ROOT).yy
 	$(CAT) $< | $(PARSER_TYPES_PIPE) > $@
 
 parser/type.types: parser/$(TYPE_PARSE_ROOT).yy
+	$(CAT) $< | $(PARSER_TYPES_PIPE) > $@
+
+parser/spice.types: parser/$(SPICE_PARSE_ROOT).yy
 	$(CAT) $< | $(PARSER_TYPES_PIPE) > $@
 
 # extract num: first matched line, 3rd space-delimited field (#define foo bar)
@@ -1663,6 +1703,11 @@ parser/instref-union.cc: $(INSTREF_PARSE_OUTPUT) parser/instref.types \
 
 parser/type-union.cc: $(TYPE_PARSE_OUTPUT) parser/type.types \
 		parser/$(TYPE_PARSE_ROOT)-real.h
+	basename="type" ; \
+	$(MAKE_PARSER_UNION_SCRIPT)
+
+parser/spice-union.cc: $(SPICE_PARSE_OUTPUT) parser/spice.types \
+		parser/$(SPICE_PARSE_ROOT)-real.h
 	basename="type" ; \
 	$(MAKE_PARSER_UNION_SCRIPT)
 
@@ -1802,6 +1847,9 @@ libbogus3_la_CPPFLAGS = $(BOGUS_CPPFLAGS) \
 	-include parser/type-prefix.h
 libbogus3_la_CXXFLAGS = $(BOGUS_CXXFLAGS)
 libbogus4_la_CXXFLAGS = $(BOGUS_CXXFLAGS)
+libbogus6_la_CPPFLAGS = $(BOGUS_CPPFLAGS) \
+	-include parser/spice-prefix.h
+libbogus6_la_CXXFLAGS = $(BOGUS_CXXFLAGS)
 # here we give the exceptional flags to the lexer and parser, 
 # which are generated automatically by yacc/bison/[f]lex for 
 # traditional C compilers.  (Not the cleanest code ever generated.)
@@ -2010,6 +2058,14 @@ CLEANPARSER = \
 	parser/$(TYPE_PARSE_ROOT).output.h \
 	parser/type-union.cc \
 	parser/type.types \
+	parser/$(SPICE_PARSE_ROOT).cc \
+	parser/$(SPICE_PARSE_ROOT).h \
+	parser/$(SPICE_PARSE_ROOT)-real.cc \
+	parser/$(SPICE_PARSE_ROOT)-real.h \
+	parser/$(SPICE_PARSE_ROOT).output \
+	parser/$(SPICE_PARSE_ROOT).output.h \
+	parser/spice-union.cc \
+	parser/spice.types \
 	parser/$(VERILOG_PARSE_ROOT).cc \
 	parser/$(VERILOG_PARSE_ROOT).h \
 	parser/$(VERILOG_PARSE_ROOT).output
@@ -2023,6 +2079,8 @@ CLEANLEXER = \
 	lexer/$(INSTREF_LEX_ROOT).cc \
 	lexer/$(TYPE_LEX_ROOT)-real.cc \
 	lexer/$(TYPE_LEX_ROOT).cc \
+	lexer/$(SPICE_LEX_ROOT)-real.cc \
+	lexer/$(SPICE_LEX_ROOT).cc \
 	lexer/flex_lexer_common.cc \
 	lexer/flex_buffer_state.h
 
