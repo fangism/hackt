@@ -1,6 +1,12 @@
 # "src/util/ChangeLog"
 #	$Id: ChangeLog,v 1.122 2011/05/05 06:50:47 fang Exp $
 
+2011-10-21i	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-98-spice-verilog-02:
+	  Introduced util/syntax.h for generic syntax tree structures.
+
+
 2011-05-04	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-85-prsim-precharge-check-12:

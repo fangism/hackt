@@ -974,7 +974,13 @@ PARSER_H_FILES = \
 	parser/type.h \
 	parser/$(TYPE_PARSE_ROOT).output.h \
 	parser/$(TYPE_PARSE_ROOT)-options.h \
-	lexer/$(TYPE_LEX_ROOT)-options.h \
+	lexer/$(SPICE_LEX_ROOT)-options.h \
+	parser/$(SPICE_PARSE_ROOT)-real.h \
+	parser/spice-union.h \
+	parser/spice.h \
+	parser/$(SPICE_PARSE_ROOT).output.h \
+	parser/$(SPICE_PARSE_ROOT)-options.h \
+	lexer/$(SPICE_LEX_ROOT)-options.h \
 	lexer/$(HACFLAT_LEX_ROOT)-options.h \
 	lexer/hacflat-lex-options.h \
 	lexer/hacflat-yystype.h \
@@ -997,6 +1003,9 @@ PARSER_CC_FILES = \
 	parser/type-parse-real.cc \
 	parser/type-union.cc \
 	parser/type.cc \
+	lexer/spice-lex-real.cc \
+	parser/spice-parse-real.cc \
+	parser/spice-union.cc \
 	lexer/type-lex-real.cc \
 	lexer/hacflat-lex-real.cc \
 	lexer/file_manager.cc \
@@ -1676,13 +1685,21 @@ GET_START_TOKEN_ENUM = \
 
 # so far, yacc token enums start at 257 consistently, but we take no chances.
 # requires shell variable 'basename'
+
+YACC_UNION_SCRIPT_DEFAULTS = \
+	test -n "$$yacc_union_includes" || \
+	  yacc_union_includes="AST/AST.h parser/$$basename-parse-real.h lexer/hac_lex.h" ; \
+	test -n "$$yacc_union_namespaces" || \
+	  yacc_union_namespaces="HAC::parser HAC::lexer"
+
 YACC_UNION_SCRIPT_ARGS = -v yaccfile=parser/$$basename.types \
-		-v include="AST/AST.h parser/$$basename-parse-real.h lexer/hac_lex.h" \
-		-v namespace="HAC::parser HAC::lexer" \
+		-v include="$$yacc_union_includes" \
+		-v namespace="$$yacc_union_namespaces" \
 		-v token_enum=$(YACC_FIRST_TOKEN_ENUM)
 
 # requires shell variable 'basename'
 MAKE_PARSER_UNION_SCRIPT = \
+	$(YACC_UNION_SCRIPT_DEFAULTS) ; \
 	if test ! -s parser/$$basename.types ; then \
 		$(ECHO) "parser/$$basename.types is empty!" ; \
 		exit 1 ; \
@@ -1708,7 +1725,9 @@ parser/type-union.cc: $(TYPE_PARSE_OUTPUT) parser/type.types \
 
 parser/spice-union.cc: $(SPICE_PARSE_OUTPUT) parser/spice.types \
 		parser/$(SPICE_PARSE_ROOT)-real.h
-	basename="type" ; \
+	basename="spice" ; \
+	yacc_union_includes="util/syntax.h parser/$$basename-parse-real.h AST/common.h" ; \
+	yacc_union_namespaces="util::syntax HAC::parser HAC::lexer" ; \
 	$(MAKE_PARSER_UNION_SCRIPT)
 
 
@@ -2068,7 +2087,8 @@ CLEANPARSER = \
 	parser/spice.types \
 	parser/$(VERILOG_PARSE_ROOT).cc \
 	parser/$(VERILOG_PARSE_ROOT).h \
-	parser/$(VERILOG_PARSE_ROOT).output
+	parser/$(VERILOG_PARSE_ROOT).output \
+	$(LEXYACC_PREFIX_H_FILES)
 
 CLEANLEXER = \
 	lexer/$(HACKT_LEX_ROOT)-real.cc \
