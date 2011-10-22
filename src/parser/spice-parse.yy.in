@@ -13,8 +13,6 @@
 #include <iostream>
 
 #include "parser/yacc-config.h"
-#include "AST/node_list.h"
-#include "AST/token_string.h"
 #include "parser/spice-prefix.h"
 #include "parser/spice-parse-options.h"
 #include "parser/spice-parse.output.h"
@@ -23,6 +21,7 @@
 #include "lexer/flex_lexer_state.h"
 #include "util/using_ostream.h"
 #include "lexer/file_manager.h"
+#include "util/syntax.h"
 #include "util/stacktrace.h"
 
 // extern FILE* yyin;
@@ -36,16 +35,15 @@ static flex::lexer_state	_lexer_state;
 	These were replaced with macros in "AST/node_list.h"
  */
 #define	WRAP_LIST(left, list, right)	list->wrap(left, right)
-
 #define	DELETE_TOKEN(tok)		delete tok
-
-#define APPEND_LIST(list, delim, item)					\
-	DELETE_TOKEN(delim); list->push_back(item)
+#define APPEND_LIST(list, item)		list->push_back(item)
 
 %}
 
 %union {
-	token_identifier*	_token_identifier;
+	void*		_void;
+	string_token*	_token;
+	node_list*	_list;
 }
 
 %{
@@ -66,13 +64,29 @@ yyfreestacks(const short* yyss, const short* yyssp,
 		const flex::lexer_state& _lexer_state);
 %}
 
-%token	<_token_identifier>	SPICE_ID ESCAPEDID
+%token	<_void>			'='
+/* %token	<_void>			',' '(' ')' */
+
+%token	<_token>		SPICE_ID ESCAPEDID
 /* delay conversion of numbers because they can be identifiers */
-%token	<_token_identifier>	NUM
-%token	<_token_identifier>	RES CAP IND DEV INST
+%token	<_token>		NUM
+%token	<_token>		RES CAP IND DEV INST
 /* keywords */
-%token				END ENDS SUBCKT
-%token				CONNECT
+%token	<_void>			END ENDS SUBCKT
+/* %token				CONNECT */
+
+%type	<_list>			spice_deck top_cards_opt top_cards
+%type	<_list>			top_card subcircuit_definition sub_card
+%type	<_list>			sub_cards_opt sub_cards
+%type	<_list>			sub_card
+%type	<_list>			resistor capacitor inductor
+%type	<_list>			transistor instance
+%type	<_list>			terminals
+%type	<_token>		terminal identifier value
+%type	<_list>			parameters_opt parameters
+/* is really just a pair */
+%type	<_list>			parameter
+
 
 %start	spice_deck
 
@@ -82,7 +96,7 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %%
 
 spice_deck
-	: top_cards_opt end_opt
+	: top_cards_opt end_opt { $$ = $1; }
 	;
 
 end_opt
@@ -91,102 +105,152 @@ end_opt
 	;
 
 top_cards_opt
-	: top_cards
-	|
+	: top_cards { $$ = $1; }
+	| { $$ = NULL; }
 	;
 
 top_cards
 	: top_cards top_card
+		{ APPEND_LIST($1, $2); $$ = $1; }
 	| top_card
+		{ $$ = new node_list($1); }
 	;
 
 top_card
-	: subcircuit_definition
-	| sub_card
+	: subcircuit_definition { $$ = $1; }
+	| sub_card { $$ = $1; }
 	;
 
 /* for now, no nested subcircuits */
 subcircuit_definition
-	: SUBCKT sub_cards_opt ENDS
+	: SUBCKT sub_cards_opt ENDS { $$ = $2; }
 	;
 
 sub_cards_opt
-	: sub_cards
-	|
+	: sub_cards { $$ = $1; }
+	| { $$ = NULL; }
 	;
 
 sub_cards
 	: sub_cards sub_card
+		{ APPEND_LIST($1, $2); $$ = $1; }
 	| sub_card
+		{ $$ = new node_list($1); }
 	;
 
 sub_card
-	: instance
-	| resistor
-	| capacitor
-	| inductor
-	| transistor
+	: instance { $$ = $1; }
+	| resistor { $$ = $1; }
+	| capacitor { $$ = $1; }
+	| inductor { $$ = $1; }
+	| transistor { $$ = $1; }
 /*
-	| diode
-	| connect_stmt
-	| vsrc
-	| isrc
+	| diode { $$ = $1; }
+	| connect_stmt { $$ = $1; }
+	| vsrc { $$ = $1; }
+	| isrc { $$ = $1; }
 */
 	;
 
 /* last 'terminal' is actually the instance type */
 instance
-	: INST terminals identifier parameters_opt
+/*
+	terminals[0] is the instance name
+	terminals[last] is the type name
+*/
+	: INST terminals parameters_opt
+		{ $$ = $2;
+			$$->push_front($1);
+			/* parameters not supported for now */
+			if ($3)	DELETE_TOKEN($3);
+		}
 	;
 
 terminals
 	: terminals terminal
+		{ APPEND_LIST($1, $2); $$ = $1; }
 	| terminal
+		{ $$ = new node_list($1); }
 	;
 
 terminal
-	: identifier
+	: identifier { $$ = $1; }
 	;
 
 /* yes, spice allows almost anything, even numbers to be identifiers */
 identifier
-	: SPICE_ID
-	| ESCAPEDID
-	| NUM
+	: SPICE_ID { $$ = $1; }
+	| ESCAPEDID { $$ = $1; }
+	| NUM { $$ = $1; }
 	;
 
 resistor
-	: RES terminal terminal value
+/*	R	name	node1	node2	resistance */
+	: RES terminal terminal terminal value
+		{ $$ = new node_list($1);
+			APPEND_LIST($$, $2);
+			APPEND_LIST($$, $3);
+			APPEND_LIST($$, $4);
+			APPEND_LIST($$, $5);
+		}
 	;
 
 capacitor
-	: CAP terminal terminal value
+/*	C	name	node1	node2	capacitance */
+	: CAP terminal terminal terminal value
+		{ $$ = new node_list($1);
+			APPEND_LIST($$, $2);
+			APPEND_LIST($$, $3);
+			APPEND_LIST($$, $4);
+			APPEND_LIST($$, $5);
+		}
 	;
 
 inductor
-	: IND terminal terminal value
+/*	L	name	node1	node2	inductance */
+	: IND terminal terminal terminal value
+		{ $$ = new node_list($1);
+			APPEND_LIST($$, $2);
+			APPEND_LIST($$, $3);
+			APPEND_LIST($$, $4);
+			APPEND_LIST($$, $5);
+		}
 	;
 
 transistor
-	: DEV terminal terminal terminal terminal identifier parameters_opt
+/*	M	name	source	gate	drain	body	type	... */
+	: DEV terminal terminal terminal terminal terminal terminal parameters_opt
+		{ $$ = new node_list($1);
+			APPEND_LIST($$, $2);
+			APPEND_LIST($$, $3);
+			APPEND_LIST($$, $4);
+			APPEND_LIST($$, $5);
+			APPEND_LIST($$, $6);
+			APPEND_LIST($$, $7);
+			/* parameters not supported for now */
+			if ($8)	DELETE_TOKEN($8);
+		}
 	;
 
 value
-	: NUM
+	: NUM { $$ = $1; }
 	;
 
 parameters_opt
-	: parameters
-	|
+	: parameters { $$ = $1; }
+	| { $$ = NULL; }
 	;
 
 parameters
 	: parameters parameter
+		{ APPEND_LIST($1, $2); $$ = $1; }
 	| parameter
+		{ $$ = new node_list($1); }
 	;
 
 parameter
 	: SPICE_ID '=' value
+		{ $$ = new node_list($1); APPEND_LIST($$, $3); }
 	;
 
 /**

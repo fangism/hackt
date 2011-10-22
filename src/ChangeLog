@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-10-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-98-spice-verilog-02:
+	  parser/spice-parse.yy.in: added semantic actions for building up 
+		spice-syntax tree and assigned generic token types.
+	  lexer/spice-lex.ll: split-out beginning-of-line cards
+		as separate token from identifier.
+		Use util::syntax::string_token.
+	  Syntax tree constructed using util/syntax.h (generic).
+	  parser/common-union-type.awk: support void* null type.
+
+
 2011-10-19	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-98-spice-verilog-01:
