@@ -270,17 +270,23 @@ END {
 		# properly deletes the selected union member
 		print "static void yy_union_delete_" type_str \
 			"(const YYSTYPE& u) {";
+		if (type_str != "void") {
 		print "\tif (u." mid ")";
 		print "\t\tdelete u." mid ";";	#" u." mid " = NULL;";
+		}
 		print "}";
 
 		# dumps a name associated with the member type
 		# and location of token
 		print "static ostream& yy_union_what_where_" type_str \
 			"(const YYSTYPE& u, ostream& o) {";
+		if (type_str != "void") {
 		print "\treturn (u." mid ") ? u." mid "->what(o) << \" \" <<" \
 			"where(*u." mid ") :";
 		print "\t\to << null_what;";
+		} else {
+		print "return o << \"VOID\";";
+		}
 		print "}";
 
 		# add more functions as necessary

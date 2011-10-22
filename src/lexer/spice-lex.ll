@@ -25,8 +25,8 @@
 #include "util/macros.h"
 #include "util/using_ostream.h"
 #include "parser/spice-prefix.h"
-#include "AST/AST.h"		/* everything needed for "y.tab.h" */
-using namespace HAC::parser;
+#include "util/syntax.h"		/* everything needed for "y.tab.h" */
+using namespace util::syntax;
 
 // DIRTY MAKE HACK ALERT
 #if	defined(LIBBOGUS)
@@ -39,6 +39,8 @@ using namespace HAC::parser;
 #include "lexer/hac_lex.h"
 #include "lexer/spice-lex-options.h"
 #include "lexer/flex_lexer_state.h"
+#include "lexer/input_manager.h"
+#include "lexer/file_manager.h"
 using flex::lexer_state;
 
 /**
@@ -178,11 +180,11 @@ ENDS		"^.ends"|".ENDS"
 END		"^.end"|".END"
 /* omit flow control statements */
 
-RES		"^[rR]{SPICE_ID}"
-CAP		"^[cC]{SPICE_ID}"
-IND		"^[lL]{SPICE_ID}"
-DEV		"^[mM]{SPICE_ID}"
-INST		"^[xX]{SPICE_ID}"
+RES		"^[rR]"
+CAP		"^[cC]"
+IND		"^[lL]"
+DEV		"^[mM]"
+INST		"^[xX]"
 
 /*
 	Explicitly stating options to guarantee proper definition of 
@@ -201,27 +203,27 @@ INST		"^[xX]{SPICE_ID}"
 {POSITIONTOKEN} { NODE_POSITION_UPDATE(*yylval, foo); return yytext[0]; }
 
 {RES}	{
-	yylval->_token_identifier = new token_identifier(yytext+1);
+	yylval->_token = new string_token(yytext);
 	TOKEN_UPDATE(foo);
 	return RES;
 }
 {CAP}	{
-	yylval->_token_identifier = new token_identifier(yytext+1);
+	yylval->_token = new string_token(yytext);
 	TOKEN_UPDATE(foo);
 	return CAP;
 }
 {IND}	{
-	yylval->_token_identifier = new token_identifier(yytext+1);
+	yylval->_token = new string_token(yytext);
 	TOKEN_UPDATE(foo);
 	return IND;
 }
 {DEV}	{
-	yylval->_token_identifier = new token_identifier(yytext+1);
+	yylval->_token = new string_token(yytext);
 	TOKEN_UPDATE(foo);
 	return DEV;
 }
 {INST}	{
-	yylval->_token_identifier = new token_identifier(yytext+1);
+	yylval->_token = new string_token(yytext);
 	TOKEN_UPDATE(foo);
 	return INST;
 }
@@ -233,7 +235,7 @@ INST		"^[xX]{SPICE_ID}"
 	if (token_feedback) {
 		cerr << "int = " << yytext << " " << LINE_COL(CURRENT) << endl;
 	}
-	yylval->_token_identifier = new token_identifier(yytext);
+	yylval->_token = new string_token(yytext);
 	TOKEN_UPDATE(foo);
 	return NUM;
 }
@@ -243,7 +245,7 @@ INST		"^[xX]{SPICE_ID}"
 		cerr << "identifier = \"" << yytext << "\" " << 
 			LINE_COL(CURRENT) << endl;
 	}
-	yylval->_token_identifier = new token_identifier(yytext);
+	yylval->_token = new string_token(yytext);
 	TOKEN_UPDATE(foo);
 	return SPICE_ID;
 }
@@ -253,7 +255,7 @@ INST		"^[xX]{SPICE_ID}"
 		cerr << "identifier = \"" << yytext+1 << "\" " << 
 			LINE_COL(CURRENT) << endl;
 	}
-	yylval->_token_identifier = new token_identifier(yytext+1);
+	yylval->_token = new string_token(yytext+1);
 	TOKEN_UPDATE(foo);
 	return ESCAPEDID;
 }
