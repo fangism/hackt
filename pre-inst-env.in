@@ -1,0 +1,13 @@
+#!@SHELL@
+# vi: ft=sh
+# wrapper script for prepending srcdir and builddir in PATH
+# should point to location of support executables and scripts
+
+# not intended for dyld/LD_LIBRARY_PATH support
+
+ts=@abs_top_srcdir@
+tb=@abs_top_builddir@
+
+export PATH="$tb:$tb/src:$tb:$ts:$ts/src:$ts/lib/scripts:$ts/test:$PATH"
+exec "$@"
+

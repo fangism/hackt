@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-11-07	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-98-spice-verilog-03:
+	  lexer/spice-lex.ll: adjust spice card to expect keywords
+		after pre-processing by new script
+	  lib/scripts/hacspice-pp.sed: assist in spice tokenization
+	  main/spice-grind.cc: test program to parse spice file
+		into syntax tree, just dumps out LISP-structures for now.
+
+
 2011-10-21	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-98-spice-verilog-02:
