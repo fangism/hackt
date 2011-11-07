@@ -48,6 +48,9 @@ virtual ~node();
 virtual	ostream&
 	what(ostream&) const = 0;
 
+virtual	ostream&
+	dump(ostream&) const = 0;
+
 virtual	void
 	accept(tree_walker&) const = 0;
 
@@ -92,6 +95,9 @@ public:
 	ostream&
 	what(ostream&) const;
 
+	ostream&
+	dump(ostream&) const;
+
 	line_position
 	leftmost(void) const;
 
@@ -132,8 +138,14 @@ public:
 	void
 	push_back(node*);
 
+	bool
+	contains_list(void) const;
+
 	ostream&
 	what(ostream&) const;
+
+	ostream&
+	dump(ostream&) const;
 
 	line_position
 	leftmost(void) const;

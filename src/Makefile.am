@@ -54,11 +54,11 @@ endif
 
 bin_PROGRAMS = hackt haco haccreate \
 	hacobjdump hflat hacpp hacprsim hacchpsim hacknet \
-	ipple
+	ipple hacspicegrind
 # coming soon: igre
 
 bin_SCRIPTS = scripts/init_hackt.csh scripts/init_hackt.sh \
-	scripts/hackt-env scripts/hacalloc hacinstdump hac-cpp
+	scripts/hackt-env scripts/hacalloc hacinstdump hac-cpp spicegrind
 if HAVE_LIBGUILE
 bin_SCRIPTS += hacguile hacchpsimguile
 endif
@@ -188,6 +188,9 @@ hacknet_LDADD = libhacknet.la
 
 ipple_SOURCES = main/ipple.cc PR/pr-command.cc
 ipple_LDADD = libhacktpr.la libhacktsim.la
+
+hacspicegrind_SOURCES = main/spice-grind.cc
+hacspicegrind_LDADD = libhacknet.la
 
 main/hacchpsim-chpsim.o main/hacprsim-prsim.o: install_paths.h
 main/chpsim.lo main/chpsim.o: install_paths.h

@@ -53,6 +53,7 @@ dist_katesyn_DATA = \
 CLEANFILES += hac.vimrc
 
 dist_bin_SCRIPTS = \
+	scripts/hacspice-pp.sed \
 	scripts/prsim_timed_backtrace.awk \
 	scripts/prsim_timed_fwdtrace.awk \
 	scripts/prsimrc_alter_instance.awk \

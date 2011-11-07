@@ -641,6 +641,8 @@ AC_CONFIG_FILES([
 	hackt.doxygen.config
 	installcheck.mk
 ])
+AC_CONFIG_FILES([pre-inst-env],
+	[chmod +x pre-inst-env])
 AC_CONFIG_FILES([hackt-config],
 	[chmod +x hackt-config])
 AC_CONFIG_FILES([src/hac-cpp],
@@ -649,6 +651,8 @@ AC_CONFIG_FILES([src/hacguile],
 	[chmod +x src/hacguile])
 AC_CONFIG_FILES([src/hacchpsimguile],
 	[chmod +x src/hacchpsimguile])
+AC_CONFIG_FILES([src/spicegrind],
+	[chmod +x src/spicegrind])
 AC_CONFIG_FILES([scripts/replace_if_changed.sh],
 	[chmod +x scripts/replace_if_changed.sh])
 AC_CONFIG_FILES([src/util/test/hash_map_iterator_O2_bug_test.test],

@@ -10,6 +10,9 @@
 %{
 /* scanner-specific header */
 
+#define	ENABLE_STATIC_TRACE			0
+#define	ENABLE_STACKTRACE			(0 && !defined(LIBBOGUS))
+
 #include <iostream>
 #include <cstdlib>
 #include <iomanip>
@@ -25,6 +28,7 @@
 #include "util/macros.h"
 #include "util/using_ostream.h"
 #include "parser/spice-prefix.h"
+#include "util/stacktrace.h"
 #include "util/syntax.h"		/* everything needed for "y.tab.h" */
 using namespace util::syntax;
 
@@ -120,6 +124,15 @@ TOKEN_UPDATE(const lexer_state& foo) {
 }
 
 static inline void
+KEYWORD_UPDATE(YYSTYPE& spice_lval, const lexer_state& foo) {
+	spice_lval._void = NULL;
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT_PRINT("new keyword: " << yytext << endl);
+#endif
+	TOKEN_UPDATE(foo);
+}
+
+static inline void
 NEWLINE_UPDATE(const lexer_state& foo) {
 	CURRENT.line++; CURRENT.col = 1;
 #if 0
@@ -146,7 +159,7 @@ HEXDIGIT	[0-9A-Fa-f]
 IDHEAD		[a-zA-Z_]
 IDBODY		[a-zA-Z0-9_]
 **/
-SPICE_IDCHAR	[^ \t=,()\\]
+SPICE_IDCHAR	[^ \t\n=,()\\]
 INT		{DIGIT}+
 SIGN_INT	[+-]?{INT}
 /**
@@ -156,6 +169,7 @@ EXP		[eE]{SIGN_INT}
 FRACTIONAL	"."{INT}
 FLOAT		({INT}{FRACTIONAL}{EXP}?)|({INT}{FRACTIONAL}?{EXP})
 NUM		{INT}|{FLOAT}
+NUMSCI		{NUM}[gGkKmMuUnNpPfFaA]?
 
 /* note: '-' signed ints are lexed as two tokens and combined in the parser
 	as a unary expr, thus, no numerical tokens in the language 
@@ -174,17 +188,18 @@ WS		{WHITESPACE}
 
 POSITIONTOKEN	[=,()]
 
-CONNECT		"^.connect"|".CONNECT"
-SUBCKT		"^.subckt"|".SUBCKT"
-ENDS		"^.ends"|".ENDS"
-END		"^.end"|".END"
+CONNECT		"\.connect"|"\.CONNECT"
+SUBCKT		"\.subckt"|"\.SUBCKT"
+ENDS		"\.ends"|"\.ENDS"
+END		"\.end"|"\.END"
 /* omit flow control statements */
 
-RES		"^[rR]"
-CAP		"^[cC]"
-IND		"^[lL]"
-DEV		"^[mM]"
-INST		"^[xX]"
+/* these cards have been replaced using the lib/scripts/hacspice-pp.sed */
+RES		"\.resistor"
+CAP		"\.capacitor"
+IND		"\.inductor"
+DEV		"\.mosfet"
+INST		"\.instance"
 
 /*
 	Explicitly stating options to guarantee proper definition of 
@@ -202,36 +217,19 @@ INST		"^[xX]"
 
 {POSITIONTOKEN} { NODE_POSITION_UPDATE(*yylval, foo); return yytext[0]; }
 
-{RES}	{
-	yylval->_token = new string_token(yytext);
-	TOKEN_UPDATE(foo);
-	return RES;
-}
-{CAP}	{
-	yylval->_token = new string_token(yytext);
-	TOKEN_UPDATE(foo);
-	return CAP;
-}
-{IND}	{
-	yylval->_token = new string_token(yytext);
-	TOKEN_UPDATE(foo);
-	return IND;
-}
-{DEV}	{
-	yylval->_token = new string_token(yytext);
-	TOKEN_UPDATE(foo);
-	return DEV;
-}
-{INST}	{
-	yylval->_token = new string_token(yytext);
-	TOKEN_UPDATE(foo);
-	return INST;
-}
+^{RES}		{ KEYWORD_UPDATE(*spice_lval, foo); return RES;		}
+^{CAP}		{ KEYWORD_UPDATE(*spice_lval, foo); return CAP;		}
+^{IND}		{ KEYWORD_UPDATE(*spice_lval, foo); return IND;		}
+^{DEV}		{ KEYWORD_UPDATE(*spice_lval, foo); return DEV;		}
+^{INST}		{ KEYWORD_UPDATE(*spice_lval, foo); return INST;	}
+^{SUBCKT}	{ KEYWORD_UPDATE(*spice_lval, foo); return SUBCKT;	}
+^{ENDS}		{ KEYWORD_UPDATE(*spice_lval, foo); return ENDS;	}
+^{END}		{ KEYWORD_UPDATE(*spice_lval, foo); return END;		}
 
 {WHITESPACE}	TOKEN_UPDATE(foo);
 {NEWLINE}	NEWLINE_UPDATE(foo);
 
-{NUM}	{
+{NUMSCI}	{
 	if (token_feedback) {
 		cerr << "int = " << yytext << " " << LINE_COL(CURRENT) << endl;
 	}
@@ -252,7 +250,7 @@ INST		"^[xX]"
 
 {ESCAPEDID}	{
 	if (token_feedback) {
-		cerr << "identifier = \"" << yytext+1 << "\" " << 
+		cerr << "escaped identifier = \"" << yytext+1 << "\" " << 
 			LINE_COL(CURRENT) << endl;
 	}
 	yylval->_token = new string_token(yytext+1);
