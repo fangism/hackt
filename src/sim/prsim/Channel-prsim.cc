@@ -3340,70 +3340,23 @@ channel_manager::channel_manager() :
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 channel_manager::~channel_manager() { }
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Creates a channel, but leaves the acknowledgement and validity
-	rails uninitialized.  
-	TODO: this does not account for working directory prefix (ACX-PR-5414)
-	\return true on error.
+	Allocates and maps the channel data rails,
+	and initializes the data counter state.
+	\return true if error
  */
 bool
-channel_manager::new_channel(State& state, const string& _base, 
-		const string& bundle_name, const size_t _num_bundles, 
-		const string& rail_name, const size_t _num_rails, 
-		const bool active_low, 
-		const bool have_ack, const bool ack_sense, const bool ack_init, 
-		const bool have_validity, const bool validity_sense) {
-	STACKTRACE_VERBOSE;
-	// make sure base is a legitmate scalar channel name first
-	const entity::module& m(state.get_module());
-#if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
-	parser::expanded_global_references_type refs;
-	if (parser::expand_global_references(_base, m, refs)) {
-		return true;
-	}
-	parser::expanded_global_references_type::const_iterator
-		ri(refs.begin()), re(refs.end());
-for ( ; ri!=re; ++ri) {
-	const entity::global_indexed_reference& g(ri->second);
-	ostringstream oss;
-//	cr.inst_ref()->dump(oss, expr_dump_context::default_value);
-	ri->first->dump(oss);
-	// base name needs to expanded to scalar reference strings...
-	const string& base(oss.str());
-#else
-	const string& base(_base);
-	const entity::global_indexed_reference
-		g(parser::parse_global_reference(base, m));
-#endif
-	if (g.first != entity::META_TYPE_PROCESS || !g.second) {
-		cerr << "Error: base reference is not a valid channel." << endl;
-		return true;
-	}
-	// 0 indicates that bundle/rail is scalar, not array
-	// in any case, size should be at least 1
+channel_manager::allocate_data_rails(State& state, const module& m,
+	const size_t key /* channel index */,
+	const string& bundle_name, const size_t _num_bundles,
+	const string& rail_name, const size_t _num_rails) {
+	// because 0 is used to denote scalars
 	const size_t num_bundles = _num_bundles ? _num_bundles : 1;
 	const size_t num_rails = _num_rails ? _num_rails : 1;
-
-	const size_t key = channel_pool.size();
-	const pair<channel_set_type::iterator, bool>
-		i(channel_index_set.insert(make_pair(base, key)));
-	if (!i.second) {
-		cerr << "Error: channel " << base <<
-			" already registered." << endl;
-		return true;
-	}
-	channel_pool.resize(key +1);	// default construct
-	channel& c(channel_pool.back());
-#if PRSIM_CHANNEL_LEDR
-	c.type = channel::CHANNEL_TYPE_1ofN;
-#endif
-	c.name = base;
-#if PRSIM_CHANNEL_RAILS_INVERTED
-	c.set_data_sense(active_low);
-#endif
+	channel& c(channel_pool[key]);
+	const string& base(c.name);
 	// allocate data rail references:
-	set<size_t> rail_aliases;
+	set<size_t> rail_aliases;		// check for aliases (forbidden)
 	channel::data_rail_index_type dk;
 	dk[0] = num_bundles;
 	dk[1] = num_rails;
@@ -3411,7 +3364,6 @@ for ( ; ri!=re; ++ri) {
 	// lookup and assign node-indices
 	dk[0] = 0;
 	size_t& j = dk[0];
-try {
 	for ( ; j<num_bundles; ++j) {
 		ostringstream bundle_segment;
 		if (bundle_name.length()) {
@@ -3456,6 +3408,132 @@ try {
 	}	// end for each bundle
 	// initialize data-rail state counters from current values
 	c.initialize_data_counter(state);
+	return false;
+}	// end allocate_data_rails
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Creates a channel, but leaves the acknowledgement and validity
+	rails uninitialized.  
+	TODO: this does not account for working directory prefix (ACX-PR-5414)
+	\return true on error.
+ */
+bool
+channel_manager::new_channel(State& state, const string& _base, 
+		const string& bundle_name, const size_t _num_bundles, 
+		const string& rail_name, const size_t _num_rails, 
+		const bool active_low, 
+		const bool have_ack, const bool ack_sense, const bool ack_init, 
+		const bool have_validity, const bool validity_sense) {
+	STACKTRACE_VERBOSE;
+	// make sure base is a legitmate scalar channel name first
+	const entity::module& m(state.get_module());
+#if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
+	parser::expanded_global_references_type refs;
+	if (parser::expand_global_references(_base, m, refs)) {
+		return true;
+	}
+	parser::expanded_global_references_type::const_iterator
+		ri(refs.begin()), re(refs.end());
+for ( ; ri!=re; ++ri) {
+	const entity::global_indexed_reference& g(ri->second);
+	ostringstream oss;
+//	cr.inst_ref()->dump(oss, expr_dump_context::default_value);
+	ri->first->dump(oss);
+	// base name needs to expanded to scalar reference strings...
+	const string& base(oss.str());
+#else
+	const string& base(_base);
+	const entity::global_indexed_reference
+		g(parser::parse_global_reference(base, m));
+#endif
+	if (g.first != entity::META_TYPE_PROCESS || !g.second) {
+		cerr << "Error: base reference is not a valid channel." << endl;
+		return true;
+	}
+#if 0
+	// 0 indicates that bundle/rail is scalar, not array
+	// in any case, size should be at least 1
+	const size_t num_bundles = _num_bundles ? _num_bundles : 1;
+	const size_t num_rails = _num_rails ? _num_rails : 1;
+#endif
+	const size_t key = channel_pool.size();
+	const pair<channel_set_type::iterator, bool>
+		i(channel_index_set.insert(make_pair(base, key)));
+	if (!i.second) {
+		cerr << "Error: channel " << base <<
+			" already registered." << endl;
+		return true;
+	}
+	channel_pool.resize(key +1);	// default construct
+	channel& c(channel_pool.back());
+#if PRSIM_CHANNEL_LEDR
+	c.type = channel::CHANNEL_TYPE_1ofN;
+#endif
+	c.name = base;
+#if PRSIM_CHANNEL_RAILS_INVERTED
+	c.set_data_sense(active_low);
+#endif
+try {
+	if (allocate_data_rails(state, m, key, 
+			bundle_name, _num_bundles, rail_name, _num_rails)) {
+		return true;
+	}
+#if 0
+	// allocate data rail references:
+	set<size_t> rail_aliases;
+	channel::data_rail_index_type dk;
+	dk[0] = num_bundles;
+	dk[1] = num_rails;
+	c.data.resize(dk);
+	// lookup and assign node-indices
+	dk[0] = 0;
+	size_t& j = dk[0];
+	for ( ; j<num_bundles; ++j) {
+		ostringstream bundle_segment;
+		if (bundle_name.length()) {
+			bundle_segment << "." << bundle_name;
+			if (_num_bundles) {
+				bundle_segment << "[" << j << "]";
+			}
+		}
+		dk[1] = 0;
+		size_t& k = dk[1];
+		for ( ; k<num_rails; ++k) {
+			ostringstream n;
+			n << base << bundle_segment.str() << "." << rail_name;
+			if (_num_rails) {
+				n << "[" << k << "]";
+			}
+			// may throw exception
+			const node_index_type ni =
+				parse_node_to_index(n.str(), m).index;
+			if (ni) {
+				c.data[dk] = ni;
+				// flag node for consistency
+				state.__get_node(ni).set_in_channel();
+				c.__node_to_rail[ni] = dk;
+				// lookup from node to channels
+				node_channels_map[ni].insert(key);
+				// check for rail uniqueness
+				if (!rail_aliases.insert(ni).second) {
+					cerr <<
+"Error: channels rails are forbidden from aliasing (implementation limitation)."
+						<< endl;
+					cerr << "Aliased channel rail: "
+						<< n.str() << endl;
+					return true;
+				}
+			} else {
+				cerr << "Error: no such node `" << n.str() <<
+					"\' in channel." << endl;
+				return true;
+			}
+		}	// end for each rail
+	}	// end for each bundle
+	// initialize data-rail state counters from current values
+	c.initialize_data_counter(state);
+#endif
 	// now setup ack and validity
 	// really shouldn't have to lookup channel again here...
 	if (set_channel_ack_valid(state, base, 
@@ -3542,7 +3620,9 @@ if (i.second) {
 		FINISH_ME(Fang);
 		return true;
 	}
-}{
+}
+#if 1
+{
 	// allocate data rail references:
 	channel::data_rail_index_type dk;
 	dk[0] = 1;	// bundles
@@ -3583,6 +3663,13 @@ if (i.second) {
 }
 	// initialize data-rail state counters from current values
 	c.initialize_data_counter(state);
+#else
+	// this doesn't account for repeat rail (yet)
+	if (allocate_data_rails(state, m, key, 
+			"", 0, data_name, 0)) {
+		return true;
+	}
+#endif
 } else {
 	// channel not successfully inserted; already exists
 	return true;
@@ -3592,7 +3679,111 @@ if (i.second) {
 #endif
 	return false;
 }	// end new_channel
+#endif	// PRSIM_CHANNEL_LEDR
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_CHANNEL_BUNDLED_DATA
+/**
+	Creates a bundled-data (4-phase) channel.
+	\return true on error.
+ */
+bool
+channel_manager::new_channel_bd4p(State& state, const string& _base, 
+		const bool ack_sense, const bool ack_init, 
+		const bool req_sense,
+//		const bool req_init, 
+		const string& data_name, const size_t _num_rails, 
+		const bool active_low) {
+	STACKTRACE_VERBOSE;
+#if 0
+	const size_t num_rails = _num_rails ? _num_rails : 1;
 #endif
+	const entity::module& m(state.get_module());
+#if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
+	parser::expanded_global_references_type refs;
+	if (parser::expand_global_references(_base, m, refs)) {
+		return true;
+	}
+	parser::expanded_global_references_type::const_iterator
+		ri(refs.begin()), re(refs.end());
+for ( ; ri!=re; ++ri) {
+//	const entity::global_indexed_reference& g(ri->second);
+	ostringstream oss;
+//	cr.inst_ref()->dump(oss, expr_dump_context::default_value);
+	ri->first->dump(oss);
+	// base name needs to expanded to scalar reference strings...
+	const string& base(oss.str());
+#else
+	const string& base(_base);
+#endif
+//	const size_t num_bundles = _num_bundles ? _num_bundles : 1;
+	const size_t key = channel_pool.size();
+	const pair<channel_set_type::iterator, bool>
+		i(channel_index_set.insert(make_pair(base, key)));
+if (i.second) {
+	channel_pool.resize(key +1);	// default construct
+	channel& c(channel_pool.back());
+	c.type = channel::CHANNEL_TYPE_BD_4P;
+	c.name = base;
+#if PRSIM_CHANNEL_RAILS_INVERTED
+	c.set_data_sense(active_low);
+#endif
+	if (allocate_data_rails(state, m, key, 
+			"", 0, data_name, _num_rails)) {
+		return true;
+	}
+#if 0
+{
+	// allocate data rail references:
+	channel::data_rail_index_type dk;
+	dk[0] = 1;		// bundles (only 1, 1d array)
+	dk[1] = num_rails;	// rails
+	c.data.resize(dk);	// 1d array bus
+	// assign data rail
+	dk[0] = 0;
+	dk[1] = 0;
+	const string n(base + "." + data_name);
+	size_t& k = dk[1];
+	for ( ; k<num_rails; ++k) {
+		ostringstream nss;
+		if (_num_rails) {
+			nss << n << "[" << k << "]";
+		}
+		// may throw exception
+	const node_index_type ni = parse_node_to_index(nss.str(), m).index;
+	if (ni) {
+		c.data[dk] = ni;
+		// flag node for consistency
+		state.__get_node(ni).set_in_channel();
+		c.__node_to_rail[ni] = dk;	// need this?
+		// lookup from node to channels
+		node_channels_map[ni].insert(key);
+	} else {
+		cerr << "Error: no such node `" << n <<
+			"\' in channel." << endl;
+		return true;
+	}
+	}	// end for all data rails
+}
+	// initialize data-rail state counters from current values
+	c.initialize_data_counter(state);
+#endif
+	// now setup ack and validity
+	if (set_channel_ack_valid(state, base, 
+			true, ack_sense, ack_init, 
+			true, req_sense)) {
+		return true;
+	}
+} else {
+	// channel not successfully inserted; already exists
+	return true;
+}
+#if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
+}	// end for each
+#endif
+	return false;
+}	// end new_channel_bd4p
+#endif	// PRSIM_CHANNEL_BUNDLED_DATA
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 channel_index_type

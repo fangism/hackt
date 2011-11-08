@@ -73,11 +73,26 @@
 /**
 	Define to 1 to support different channel types.
 	The first new channel type we support is LEDR.
-	Next could be single-track.
 	Goal: 1
 	Status: done for LEDR channels, just not bundled
+	This should be perm'd.
  */
 #define	PRSIM_CHANNEL_LEDR			1
+#define	PRSIM_CHANNEL_LEDR_BUS			0
+
+/**
+	Define to 1 to support single-track 1ofN channel types.
+	Goal: 1
+	Status: in one's imagination
+ */
+#define	PRSIM_CHANNEL_SINGLE_TRACK		0
+
+/**
+	Define to 1 to support bundled data channel types.
+	There are both 4-phase and 2-phase bundled data types.
+	Goal: 1
+ */
+#define	PRSIM_CHANNEL_BUNDLED_DATA		1
 
 /**
 	Define to 1 to interpret channel values as signed.
@@ -261,13 +276,18 @@ public:
 	/// if true, print watched and logged nodes with timestamps
 	static bool					report_time;
 private:
-#if PRSIM_CHANNEL_LEDR
 	enum channel_types {
 		CHANNEL_TYPE_1ofN,
-		CHANNEL_TYPE_LEDR,
-		CHANNEL_TYPE_SINGLE_TRACK
-	};
+#if PRSIM_CHANNEL_LEDR
+		CHANNEL_TYPE_LEDR,	// level-encoded dual-rail
 #endif
+#if PRSIM_CHANNEL_BUNDLED_DATA
+		CHANNEL_TYPE_BD_4P,	// bundled-data 4-phase
+		CHANNEL_TYPE_BD_2P,	// bundled-data 2-phase
+#endif
+		CHANNEL_TYPE_SINGLE_TRACK,
+		CHANNEL_TYPE_NULL
+	};
 	enum channel_flags {
 		/// the value of channel enable on reset
 		CHANNEL_ACK_RESET_VALUE =	0x0001,
@@ -616,6 +636,9 @@ public:
 	switch (type) {
 		case CHANNEL_TYPE_1ofN: return true;
 		// CHANNEL_TYPE_LEDR
+#if PRSIM_CHANNEL_BUNDLED_DATA
+		case CHANNEL_TYPE_BD_4P: return true;
+#endif
 		// CHANNEL_TYPE_SINGLE_TRACK
 		default: return false;
 	}
@@ -623,6 +646,7 @@ public:
 
 	bool
 	two_phase(void) const {
+		// Q: what about 1-phase? (ack-less)
 		return !four_phase();
 	}
 
@@ -988,7 +1012,13 @@ public:
 private:
 	bool
 	set_channel_ack_valid(State&, const string&, 
-		const bool, const bool, const bool, const bool, const bool);
+		const bool have_ack, const bool ack_sense, const bool ack_init,
+		const bool have_validity, const bool validity_sense);
+
+	bool
+	allocate_data_rails(State&, const module&, const size_t ci,
+		const string& bn, const size_t nb, 
+		const string& rn, const size_t nr);
 
 public:
 #if PRSIM_CHANNEL_LEDR
@@ -998,6 +1028,18 @@ public:
 		const string& bn, const size_t, 
 		const string& dn, const bool di, const bool ds,
 		const string& rn, const bool ri);
+#endif
+
+#if PRSIM_CHANNEL_BUNDLED_DATA
+	// for now, name is hard-coded based on sense
+	bool
+	new_channel_bd4p(State&, const string&, 
+//		const string& an, 
+		const bool as, const bool ai,
+//		const string& rn, 
+		const bool rs, 
+//		const bool ri,
+		const string& dn, const size_t nr, const bool ds);
 #endif
 
 	ostream&
