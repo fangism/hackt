@@ -270,9 +270,7 @@ channel::channel() :
 		after_max(State::rule_type::default_unspecified_delay),
 		timing_probability(0.5),
 #endif
-#if PRSIM_CHANNEL_LEDR
 		type(CHANNEL_TYPE_1ofN),	// default
-#endif
 		flags(CHANNEL_DEFAULT_FLAGS), 
 		counter_state(0), 	// invalid
 		x_counter(0),		// invalid
@@ -364,10 +362,8 @@ public:
 ostream&
 channel::dump(ostream& o) const {
 	o << name << " : ";
-#if PRSIM_CHANNEL_LEDR
 switch (type) {
 case CHANNEL_TYPE_1ofN:
-#endif
 	if (ack_signal) {
 	o << (get_ack_active() ? ".a" : ".e");
 	o << "(init:" << (get_ack_init() ? '1' : '0') << ')';
@@ -382,7 +378,6 @@ case CHANNEL_TYPE_1ofN:
 	if (get_data_sense()) { o << '~'; }
 #endif
 	o << "1of" << radix();
-#if PRSIM_CHANNEL_LEDR
 	break;
 case CHANNEL_TYPE_LEDR:
 	// FIXME: bundle-count Nx
@@ -406,7 +401,6 @@ case CHANNEL_TYPE_LEDR:
 default:
 	DIE;
 }	// end switch
-#endif	// PRSIM_CHANNEL_LEDR
 #if PRSIM_CHANNEL_SIGNED
 	if (can_be_signed()) {
 		if (is_signed())
@@ -506,10 +500,8 @@ channel::summarize_status(const State& s) const {
 	status_summary ret;
 if (!x_counter) {
 	// then we can infer the state of the handshake
-#if PRSIM_CHANNEL_LEDR
 switch (type) {
 case CHANNEL_TYPE_1ofN: {
-#endif
 	// 4-phase
 	if (ack_signal) {
 		const value_enum a = s.get_node(ack_signal).current_value();
@@ -565,7 +557,6 @@ case CHANNEL_TYPE_1ofN: {
 			ret.waiting_sender = true;
 		}
 	}
-#if PRSIM_CHANNEL_LEDR
 	break;
 }
 case CHANNEL_TYPE_LEDR: {
@@ -600,7 +591,6 @@ case CHANNEL_TYPE_SINGLE_TRACK: {
 }
 default: break;
 }	// end switch
-#endif
 } else {
 	// if there are X's do nothing, don't bother summarizing
 }
@@ -618,10 +608,8 @@ channel::dump_status(ostream& o, const State& s) const {
 	const status_summary stat(summarize_status(s));
 if (!x_counter) {
 	// then we can infer the state of the handshake
-#if PRSIM_CHANNEL_LEDR
 switch (type) {
 case CHANNEL_TYPE_1ofN: {
-#endif
 	if (!counter_state) {
 		// data is neutral
 		o << "data is neutral";
@@ -661,7 +649,6 @@ case CHANNEL_TYPE_1ofN: {
 		o << "data is transitioning to " <<
 			(stat.ack_active ? "neutral" : "valid");
 	}
-#if PRSIM_CHANNEL_LEDR
 	break;
 }
 case CHANNEL_TYPE_LEDR: {
@@ -685,7 +672,6 @@ case CHANNEL_TYPE_SINGLE_TRACK: {
 }
 default: break;
 }	// end switch
-#endif
 } else {
 	o << "unknown, because there are " << size_t(x_counter) <<
 		" X rails";
@@ -726,10 +712,8 @@ bool
 channel::__assert_value(const status_summary& stat, const value_type& expect, 
 		const bool confirm) const {
 	static const char cmd[] = "channel-assert";
-#if PRSIM_CHANNEL_LEDR
 switch (type) {
 case CHANNEL_TYPE_1ofN: {
-#endif
 	if (counter_state == bundles()) {
 		if (!__assert_channel_value(expect, stat.current_value,
 				confirm))
@@ -740,7 +724,6 @@ case CHANNEL_TYPE_1ofN: {
 			<< bundles() << " bundles are valid." << endl;
 		return false;
 	}
-#if PRSIM_CHANNEL_LEDR
 	break;
 }	// end case CHANNEL_TYPE_1ofN
 case CHANNEL_TYPE_LEDR: {
@@ -769,7 +752,6 @@ default:
 	FINISH_ME(Fang);
 	break;
 }	// end switch (type)
-#endif
 	return true;
 }	// end channel::assert_value
 
@@ -795,10 +777,8 @@ bool
 channel::__assert_validity(const status_summary& stat,
 		const bool expect_valid, const bool confirm) const {
 	static const char cmd[] = "channel-assert";
-#if PRSIM_CHANNEL_LEDR
 switch (type) {
 case CHANNEL_TYPE_1ofN: {
-#endif
 	if (valid_signal) {
 	if (stat.x_valid) {
 		cerr << cmd << ": validity signal of " << name
@@ -840,7 +820,6 @@ case CHANNEL_TYPE_1ofN: {
 			return false;
 		}
 	}
-#if PRSIM_CHANNEL_LEDR
 	break;
 }	// end case CHANNEL_TYPE_1ofN
 case CHANNEL_TYPE_LEDR: {
@@ -869,7 +848,6 @@ default:
 	FINISH_ME(Fang);
 	break;
 }	// end switch
-#endif
 	return true;
 }	// end channel::__assert_validity
 
@@ -1119,11 +1097,9 @@ channel::set_signed(void) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 channel::value_type
 channel::max_value(void) const {
-#if PRSIM_CHANNEL_LEDR
 	switch (type) {
 	case CHANNEL_TYPE_SINGLE_TRACK:
 	case CHANNEL_TYPE_1ofN:
-#endif
 		// can't assume radix is 2
 		if (is_signed()) {
 			INVARIANT(radix() == 2);
@@ -1131,12 +1107,10 @@ channel::max_value(void) const {
 		} else {
 			return value_type(pow(radix(), bundles())) -1;
 		}
-#if PRSIM_CHANNEL_LEDR
 	case CHANNEL_TYPE_LEDR:
 	default:
 		return 1;	// 0 or 1
 	}
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1146,23 +1120,19 @@ channel::max_value(void) const {
  */
 channel::signed_value_type
 channel::min_value(void) const {
-#if PRSIM_CHANNEL_LEDR
 	switch (type) {
 	case CHANNEL_TYPE_SINGLE_TRACK:
 	case CHANNEL_TYPE_1ofN:
-#endif
 		if (is_signed()) {
 			INVARIANT(radix() == 2);
 			return signed_value_type(-1 << (bundles() -1));
 		} else {
 			return 0;
 		}
-#if PRSIM_CHANNEL_LEDR
 	case CHANNEL_TYPE_LEDR:
 	default:
 		return 1;	// 0 or 1
 	}
-#endif
 }
 #endif
 
@@ -1263,20 +1233,14 @@ if (ack_signal) {
 	}
 } else {
 // TODO: support acknowledgeless sources for the other channel types
-#if PRSIM_CHANNEL_LEDR
 if (type != CHANNEL_TYPE_LEDR) {
-#endif
 	cerr << "Error: acknowledgeless channels cannot be sourced!" << endl;
 	return true;
-#if PRSIM_CHANNEL_LEDR
 }
-#endif
 }
 	bool maybe_externally_driven = false;
 if (valid_signal) {
-#if PRSIM_CHANNEL_LEDR
 if (type != CHANNEL_TYPE_LEDR) {
-#endif
 	const State::node_type& vn(s.get_node(valid_signal));
 	if (vn.has_fanin()) {
 		cerr << "Error: channel validity `" << name <<
@@ -1294,9 +1258,7 @@ if (type != CHANNEL_TYPE_LEDR) {
 			(get_valid_sense() ? ".v" : ".n") <<
 			"\' has no fanout, but is being sourced." << endl;
 	}
-#if PRSIM_CHANNEL_LEDR
 }
-#endif
 }
 	const data_bundle_array_type::const_iterator
 		b(data.begin()), e(data.end());
@@ -1483,11 +1445,9 @@ channel::initialize_data_counter(const State& s) {
 	typedef	State::node_type		node_type;
 	counter_state = 0;
 	x_counter = 0;
-#if PRSIM_CHANNEL_LEDR
 switch (type) {
 case CHANNEL_TYPE_SINGLE_TRACK:
 case CHANNEL_TYPE_1ofN: {
-#endif
 	data_bundle_array_type::const_iterator i(data.begin()), e(data.end());
 	for ( ; i!=e; ++i) {
 		const node_type& n(s.get_node(*i));
@@ -1511,7 +1471,6 @@ case CHANNEL_TYPE_1ofN: {
 			" are permitted." << endl;
 		THROW_EXIT;
 	}
-#if PRSIM_CHANNEL_LEDR
 	break;
 }
 case CHANNEL_TYPE_LEDR:
@@ -1524,7 +1483,6 @@ case CHANNEL_TYPE_LEDR:
 	break;
 default: break;
 }	// end switch
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1540,20 +1498,16 @@ channel::initialize(void) {
 	counter_state = 0;
 	// independent of data-rail sense
 	// would rather call initialize_data_counter(const State&)
-#if PRSIM_CHANNEL_LEDR
 switch (type) {
 case CHANNEL_TYPE_SINGLE_TRACK:
 case CHANNEL_TYPE_1ofN:
-#endif
 	x_counter = bundles() * radix();
-#if PRSIM_CHANNEL_LEDR
 	break;
 case CHANNEL_TYPE_LEDR:
 	x_counter = 2;
 	break;
 default: DIE;
 }	// end switch
-#endif
 	// retain values in sequence, but reset index
 	value_index = 0;
 	// retain inject_expect_file
@@ -1755,18 +1709,15 @@ channel::reset(vector<env_event_type>& events) {
 		// once nodes all become neutral, the validity should be reset
 	}
 	if (is_sinking()) {
-#if PRSIM_CHANNEL_LEDR
 	switch (type) {
 	case CHANNEL_TYPE_1ofN:	// fall-through
 	case CHANNEL_TYPE_LEDR:
-#endif
 		INVARIANT(ack_signal);
 		// ack-less cannot be configured as source/sink
 		events.push_back(ENV_EVENT(ack_signal, 
 			(get_ack_init() ? LOGIC_HIGH
 				: LOGIC_LOW)));
 		// use global timing policy
-#if PRSIM_CHANNEL_LEDR
 		break;
 	case CHANNEL_TYPE_SINGLE_TRACK:
 		FINISH_ME_EXIT(Fang);
@@ -1774,7 +1725,6 @@ channel::reset(vector<env_event_type>& events) {
 	default:
 		DIE;
 	}	// end switch
-#endif
 	}
 	// else nothing else to do
 	stop();	// freeze this channel until it is resumed
@@ -1787,13 +1737,10 @@ channel::reset(vector<env_event_type>& events) {
  */
 void
 channel::initialize_all_data_rails(vector<env_event_type>& events) {
-#if PRSIM_CHANNEL_LEDR
 switch (type) {
 case CHANNEL_TYPE_SINGLE_TRACK:	// fall-through
 case CHANNEL_TYPE_1ofN:
-#endif
 	reset_all_data_rails(events);
-#if PRSIM_CHANNEL_LEDR
 	break;
 case CHANNEL_TYPE_LEDR:
 	events.push_back(__node_setter(
@@ -1804,7 +1751,6 @@ case CHANNEL_TYPE_LEDR:
 default:
 	DIE;
 }	// end switch
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1880,21 +1826,17 @@ if (have_value()) {
 inline
 void
 channel::reset_all_data_rails(vector<env_event_type>& events) {
-#if PRSIM_CHANNEL_LEDR
 switch (type) {
 case CHANNEL_TYPE_SINGLE_TRACK:
 case CHANNEL_TYPE_1ofN:
-#endif
 	transform(data.begin(), data.end(), back_inserter(events),
 		__node_setter(get_data_sense() ? LOGIC_HIGH : LOGIC_LOW));
-#if PRSIM_CHANNEL_LEDR
 	break;
 default:
 // case CHANNEL_TYPE_LEDR:
 // two phase, LEDR: no resetting
 	break;
 }	// end switch
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1905,13 +1847,10 @@ inline
 void
 channel::X_all_data_rails(vector<env_event_type>& events) {
 	const __node_setter_decl(X_it, LOGIC_OTHER);
-#if PRSIM_CHANNEL_LEDR
 switch (type) {
 case CHANNEL_TYPE_SINGLE_TRACK:
 case CHANNEL_TYPE_1ofN:
-#endif
 	transform(data.begin(), data.end(), back_inserter(events), X_it);
-#if PRSIM_CHANNEL_LEDR
 	break;
 case CHANNEL_TYPE_LEDR:
 	events.push_back(X_it(ledr_data_rail()));
@@ -1920,7 +1859,6 @@ case CHANNEL_TYPE_LEDR:
 default:
 	DIE;
 }	// end switch
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1951,11 +1889,9 @@ channel::set_all_data_rails(const State& s, vector<env_event_type>& r) {
 	STACKTRACE_VERBOSE;
 	typedef	State::node_type		node_type;
 if (have_value()) {
-#if PRSIM_CHANNEL_LEDR
 switch (type) {
 case CHANNEL_TYPE_SINGLE_TRACK:
 case CHANNEL_TYPE_1ofN: {
-#endif
 	const int_value_type rdx = radix();
 	// NOTE: div is *signed*
 	data_rail_index_type k;
@@ -1995,7 +1931,6 @@ if (rdx == 2) {
 		}
 	}
 }
-#if PRSIM_CHANNEL_LEDR
 	break;
 }
 case CHANNEL_TYPE_LEDR: {
@@ -2032,7 +1967,6 @@ case CHANNEL_TYPE_LEDR: {
 }
 default: DIE;
 }	// end switch
-#endif
 } else {
 	INVARIANT(!is_random());
 	// otherwise following code would wipe the random value slot!
@@ -2081,12 +2015,8 @@ if (have_value()) {
  */
 bool
 channel::data_is_valid(void) const {
-#if PRSIM_CHANNEL_LEDR
 	return !x_counter &&
 		((type == CHANNEL_TYPE_LEDR) || (counter_state == bundles()));
-#else
-	return !x_counter && (counter_state == bundles());
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2101,11 +2031,9 @@ channel::data_rails_value(const State& s) const {
 	STACKTRACE_VERBOSE;
 	typedef	State::node_type	node_type;
 	value_type ret = 0;
-#if PRSIM_CHANNEL_LEDR
 switch (type) {
 case CHANNEL_TYPE_SINGLE_TRACK:	// use 1ofN
 case CHANNEL_TYPE_1ofN: {
-#endif
 	data_rail_index_type k;
 	k[0] = bundles();
 	const size_t rdx = radix();	// sign mismatch?
@@ -2139,7 +2067,6 @@ case CHANNEL_TYPE_1ofN: {
 		INVARIANT(have_hi);
 		ret += hi;
 	}
-#if PRSIM_CHANNEL_LEDR
 	break;
 }
 case CHANNEL_TYPE_LEDR:
@@ -2152,7 +2079,6 @@ case CHANNEL_TYPE_LEDR:
 	break;
 default: DIE;
 }	// end switch
-#endif
 #if PRSIM_CHANNEL_SIGNED
 	// possible sign extension
 	if (is_signed()) {
@@ -2299,10 +2225,8 @@ if (is_sourcing()) {
 	if (stopped()) {
 	o << auto_indent << "(channel " << name << " is stopped.)" << endl;
 	} else {
-#if PRSIM_CHANNEL_LEDR
 	switch (type) {
 	case CHANNEL_TYPE_1ofN: {
-#endif
 		// only data or validity can be driven by source
 		if (valid_signal && (ni == valid_signal)) {
 			__node_why_not_data_rails(s, o, 
@@ -2323,7 +2247,6 @@ if (is_sourcing()) {
 				why_not, verbose, u, v);
 		}
 		}
-#if PRSIM_CHANNEL_LEDR
 		break;
 	}
 	case CHANNEL_TYPE_LEDR: {
@@ -2353,7 +2276,6 @@ if (is_sourcing()) {
 	default:
 		break;
 	}	// end switch
-#endif
 	}
 }
 if (is_sinking() && ack_signal && (ni == ack_signal)) {
@@ -2584,7 +2506,6 @@ channel::__node_why_X_data_rails(const State& s, ostream& o,
 }	// end __node_why_X_data_rails
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PRSIM_CHANNEL_LEDR
 /**
 	If any participating rails are X, return LOGIC_OTHER.
 	LOGIC_HIGH is parity=1, LOGIC_LOW is parity=0.
@@ -2627,7 +2548,6 @@ if (ack_signal) {
 	}
 	return parity ? LOGIC_HIGH : LOGIC_LOW;
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -2656,11 +2576,9 @@ channel::process_node(const State& s, const node_index_type ni,
 	cout << s.get_node_canonical_name(ni) << " : " << size_t(prev) << 
 		" -> " << size_t(next) << endl;
 #endif
-#if PRSIM_CHANNEL_LEDR
 switch (type) {
 // case CHANNEL_TYPE_SINGLE_TRACK: ?
 case CHANNEL_TYPE_1ofN: {
-#endif
 // first identify which channel node member this node is
 if (ack_signal && (ni == ack_signal)) {
 	STACKTRACE_INDENT_PRINT("got ack update" << endl);
@@ -2852,7 +2770,6 @@ if (ack_signal && (ni == ack_signal)) {
 	}
 	}
 }
-#if PRSIM_CHANNEL_LEDR
 	break;
 }	// end case CHANNEL_TYPE_1ofN
 case CHANNEL_TYPE_LEDR: {
@@ -2923,7 +2840,6 @@ if (ack_signal && (ni == ack_signal)) {
 }
 default: DIE;
 }	// end switch
-#endif
 }	// end channel::process_node
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3062,10 +2978,8 @@ channel::resume(const State& s, vector<env_event_type>& events) {
 "Warning: the current state of data rails is neither valid nor neutral, "
 "so I\'m assuming that current sequence value has NOT already been used; "
 "we are using the current value.";
-#if PRSIM_CHANNEL_LEDR
 switch (type) {
 case CHANNEL_TYPE_1ofN: {
-#endif
 if (is_sourcing()) {
 	INVARIANT(ack_signal);
 	// validity should be set after all data rails are valid/neutral
@@ -3207,7 +3121,6 @@ if (is_sinking()) {
 	}
 	// else in some intermediate state, leave acknowledge alone
 }
-#if PRSIM_CHANNEL_LEDR
 	break;
 }
 case CHANNEL_TYPE_LEDR:
@@ -3258,7 +3171,6 @@ case CHANNEL_TYPE_SINGLE_TRACK:
 	break;
 default: DIE;
 }	// end switch
-#endif
 }	// end channel::resume
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3278,9 +3190,7 @@ channel::save_checkpoint(ostream& o) const {
 	write_value(o, after_max);
 	write_value(o, timing_probability);
 #endif
-#if PRSIM_CHANNEL_LEDR
 	write_value(o, type);
-#endif
 	write_value(o, flags);
 	write_value(o, counter_state);
 	write_value(o, x_counter);
@@ -3308,9 +3218,7 @@ channel::load_checkpoint(istream& i) {
 	read_value(i, after_max);
 	read_value(i, timing_probability);
 #endif
-#if PRSIM_CHANNEL_LEDR
 	read_value(i, type);
-#endif
 	read_value(i, flags);
 	read_value(i, counter_state);
 	read_value(i, x_counter);
@@ -3467,9 +3375,7 @@ for ( ; ri!=re; ++ri) {
 	}
 	channel_pool.resize(key +1);	// default construct
 	channel& c(channel_pool.back());
-#if PRSIM_CHANNEL_LEDR
 	c.type = channel::CHANNEL_TYPE_1ofN;
-#endif
 	c.name = base;
 #if PRSIM_CHANNEL_RAILS_INVERTED
 	c.set_data_sense(active_low);
@@ -3553,7 +3459,6 @@ try {
 }	// end new_channel
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PRSIM_CHANNEL_LEDR
 /**
 	Creates a LEDR channel.
 	\return true on error.
@@ -3679,7 +3584,6 @@ if (i.second) {
 #endif
 	return false;
 }	// end new_channel
-#endif	// PRSIM_CHANNEL_LEDR
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if PRSIM_CHANNEL_BUNDLED_DATA

@@ -74,10 +74,9 @@
 	Define to 1 to support different channel types.
 	The first new channel type we support is LEDR.
 	Goal: 1
-	Status: done for LEDR channels, just not bundled
-	This should be perm'd.
- */
+	Status: done for LEDR channels, just not bundled, perm'd.
 #define	PRSIM_CHANNEL_LEDR			1
+ */
 #define	PRSIM_CHANNEL_LEDR_BUS			0
 
 /**
@@ -278,9 +277,7 @@ public:
 private:
 	enum channel_types {
 		CHANNEL_TYPE_1ofN,
-#if PRSIM_CHANNEL_LEDR
 		CHANNEL_TYPE_LEDR,	// level-encoded dual-rail
-#endif
 #if PRSIM_CHANNEL_BUNDLED_DATA
 		CHANNEL_TYPE_BD_4P,	// bundled-data 4-phase
 		CHANNEL_TYPE_BD_2P,	// bundled-data 2-phase
@@ -389,12 +386,10 @@ private:
 	 */
 	preal_value_type			timing_probability;
 #endif
-#if PRSIM_CHANNEL_LEDR
 	/**
 		Channel encoding and protocol type.
 	 */
 	ushort					type;
-#endif
 	/**
 		General attribute and mode flags.  
 	 */
@@ -602,7 +597,6 @@ public:
 	}
 #endif
 
-#if PRSIM_CHANNEL_LEDR
 	// TODO: once wider LEDR channels are supported, 
 	// cannot use a single repeat rail any more, 
 	// need one per bit.  
@@ -668,7 +662,6 @@ private:
 	node_index_type
 	ledr_data_rail(void) const { return data.front(); }
 
-#endif	// PRSIM_CHANNEL_LEDR
 
 public:
 	bool
@@ -1021,14 +1014,12 @@ private:
 		const string& rn, const size_t nr);
 
 public:
-#if PRSIM_CHANNEL_LEDR
 	bool
 	new_channel_ledr(State&, const string&, 
 		const string& an, const bool ai,
 		const string& bn, const size_t, 
 		const string& dn, const bool di, const bool ds,
 		const string& rn, const bool ri);
-#endif
 
 #if PRSIM_CHANNEL_BUNDLED_DATA
 	// for now, name is hard-coded based on sense
