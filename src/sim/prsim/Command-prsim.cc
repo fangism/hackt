@@ -6900,7 +6900,6 @@ Channel::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PRSIM_CHANNEL_LEDR
 /***
 @texinfo cmd/channel-ledr.texi
 @deffn Command channel-ledr name ack:init bundles:num data:init repeat:init
@@ -7073,7 +7072,6 @@ ChannelLEDR::usage(ostream& o) {
 "The XOR of the initial values of the rails defines the \'empty-parity\'"
 	<< endl;
 }
-#endif	// PRSIM_CHANNEL_LEDR
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if PRSIM_CHANNEL_BUNDLED_DATA
