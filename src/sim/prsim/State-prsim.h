@@ -811,6 +811,13 @@ public:
 	bool
 	set_timing(const string&, const string_list&);
 
+	bool
+	timing_is_randomized(void) const {
+		return !(timing_mode == TIMING_UNIFORM ||
+			timing_mode == TIMING_AFTER);
+		// everything else is randomized
+	}
+
 	static
 	ostream&
 	help_timing(ostream&);
