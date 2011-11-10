@@ -67,6 +67,7 @@
 /**
 	An option to treat a vector of nodes as a bus.
 	Useful for synchronous bus interfaces.  
+	This would be handy for bundled-data channels.
  */
 #define	PRSIM_CHANNEL_VECTORS			0
 
@@ -158,7 +159,7 @@ struct env_event_type {
 	channel_time_type		delay;
 
 #if 0
-	env_event_type(const node_index_type ni, const value_enum v) {
+	env_event_type(const node_index_type ni, const value_enum v) :
 		node_index(ni), value(v), use_global(true) { }
 
 	env_event_type(const node_index_type ni, const value_enum v, 
@@ -167,6 +168,14 @@ struct env_event_type {
 #endif
 	env_event_type(const node_index_type ni, const value_enum v, 
 		const channel& c);
+	env_event_type(const node_index_type ni, const value_enum v, 
+		const channel_time_type d);
+
+	// for sorting based on delay
+	bool
+	operator < (const env_event_type& r) const {
+		return delay < r.delay;
+	}
 
 };	// end struct env_event_type
 #else
@@ -867,13 +876,16 @@ public:
 		const value_enum, const value_enum, 
 		vector<env_event_type>&) throw(channel_exception);
 
-#if 0
 private:
+#if 0
 	void
 	update_rail_map(void);
 	// lookup node_index to bundle, rail
 #endif
+	ostream&
+	__dump_ack_valid_type(ostream&) const;
 
+public:
 	ostream&
 	dump(ostream&) const;
 
@@ -885,15 +897,25 @@ private:
 		in the channel structure.  
 	 */
 	struct status_summary {
+		/// snapshot of the current data value, may be garbage
 		value_type		current_value;
+		/// true if channel data is known to be in transient state
 		bool			value_transitioning;
+		/// true if channel is considered to 'have' a token
 		bool			full;	// or empty
+		/// true if ack is X
 		bool			x_ack;
+		/// true if ack is active (asserted)
 		bool			ack_active;
+		/// true if valid/request is X
 		bool			x_valid;
+		/// true if valid/request is active (asserted)
 		bool			valid_active;
+		/// true if validity/req is due to change next (ev handshake)
 		bool			valid_following;
+		/// true if the next action is expected to be from sender
 		bool			waiting_sender;
+		/// true if the next action is expected to be from receiver
 		bool			waiting_receiver;
 
 		status_summary() :	// defaults
@@ -936,6 +958,9 @@ private:
 	bool
 	__assert_full(const status_summary&,
 		const bool, const bool) const;
+
+	void
+	__resume_4p_sink(const status_summary&, vector<env_event_type>&);
 
 	env_event_type
 	toggle_node(const State& s, const node_index_type ni) const;
