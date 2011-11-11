@@ -1,0 +1,9 @@
+// "channel-bd4p-test-a.hac"
+
+import "../../lib/channel_bd.hac";
+
+bd_ev8 X;
+bd_av8 Y;
+bd_en8 Z;
+bd_an8 W;
+

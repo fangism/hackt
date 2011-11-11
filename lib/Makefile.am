@@ -30,6 +30,7 @@ dist_hacktlib_DATA = \
 	connect.hac \
 	channel.hac \
 	channel_ledr.hac \
+	channel_bd.hac \
 	env.hac \
 	buffer.hac \
 	buffer_init.hac \

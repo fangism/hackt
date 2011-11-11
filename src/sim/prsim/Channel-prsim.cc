@@ -1865,8 +1865,21 @@ channel::reset(vector<env_event_type>& events) {
 	STACKTRACE_VERBOSE;
 	typedef	State::node_type		node_type;
 	if (is_sourcing()) {
+	switch (type) {
+	case CHANNEL_TYPE_BD_4P:
+		// for now, don't bother resetting data rails until neg-ack
+		// just reset the request to neutral
+		events.push_back(ENV_EVENT(valid_signal, 
+			(get_valid_sense() ? LOGIC_LOW : LOGIC_HIGH)));
+		break;
+	case CHANNEL_TYPE_BD_2P:
+		FINISH_ME(Fang);
+		// reset request to initial value
+		break;
+	default:
 		initialize_all_data_rails(events);
 		// once nodes all become neutral, the validity should be reset
+	}	// end switch
 	}
 	if (is_sinking()) {
 	switch (type) {
@@ -3049,84 +3062,74 @@ case CHANNEL_TYPE_BD_4P: {
 // first identify which channel node member this node is
 if (ni == ack_signal) {
 	STACKTRACE_INDENT_PRINT("got ack update" << endl);
+	const status_summary stat(summarize_status(s));
 	// only need to take action if this is a source
 	if (is_sourcing() && !stopped()) {
 	STACKTRACE_INDENT_PRINT("source responding..." << endl);
-	switch (next) {
-		// assumes that data rails are active high
-	case LOGIC_LOW:
-		if (get_ack_active()) {
-			// \pre all data rails are neutral
-			// set data rails to next data value
-			set_all_data_rails(s, new_events);
-			advance_value();
-		} else {
-			reset_all_data_rails(new_events);
-		}
-		break;
-	case LOGIC_HIGH:
-		if (get_ack_active()) {
-			reset_all_data_rails(new_events);
-		} else {
-			// \pre all data rails are neutral
-			// set data rails to next data value
-			set_all_data_rails(s, new_events);
-			advance_value();
-		}
-		break;
-	default:
-		// set all data to X
+	if (stat.x_ack) {
+		// set all data to X, also request rail
 		// do not advance
 		X_all_data_rails(new_events);
-		break;
+		new_events.push_back(ENV_EVENT(valid_signal, LOGIC_OTHER));
+	} else if (stat.ack_active) {
+		reset_all_data_rails(new_events);	// does nothing
+		// followed by resetting request
+		new_events.push_back(ENV_EVENT(valid_signal, 
+			get_valid_sense() ? LOGIC_LOW : LOGIC_HIGH));
+	} else {
+		if (timing_mode == CHANNEL_TIMING_GLOBAL &&
+				s.timing_is_randomized()) {
+			cerr <<
+"Warning (FIXME): global-randomized timing policy is not yet fully supported\n"
+"on bundled-data channel sources; the request signal may fire prematurely."
+				<< endl;
+		}
+		if (have_value()) {
+		// set data rails to next data value
+		set_all_data_rails(s, new_events);
+		advance_value();
+		// followed by setting request
+		if (new_events.empty()) {
+			// possible if next data token has same value
+			// then use any delay value
+			new_events.push_back(ENV_EVENT(valid_signal, 
+				get_valid_sense() ? LOGIC_HIGH : LOGIC_LOW));
+		} else {
+			// must guarantee request is last
+			// use delay equal to max of data rail events
+			vector<env_event_type>::const_iterator
+				i(new_events.begin()), 
+				e(new_events.end());
+			const vector<env_event_type>::const_iterator
+				m(std::max_element(i, e));
+			new_events.push_back(env_event_type(valid_signal, 
+				get_valid_sense() ? LOGIC_HIGH : LOGIC_LOW, 
+				m->delay));
+		}
+		}
 	}
 	}
 	// logging and expect mode don't care
 } else if (ni == valid_signal) {
 	STACKTRACE_INDENT_PRINT("got validity update" << endl);
-	switch (next) {
-	// print, watch, log, check data NOW
-	case LOGIC_LOW:
-		if (!get_valid_sense()) { process_data(s); } break;
-	case LOGIC_HIGH:
-		if (get_valid_sense()) { process_data(s); } break;
-	default: break;
+	const status_summary stat(summarize_status(s));
+	if (!stat.x_valid && stat.valid_active) {
+		process_data(s);
 	}
 	// only need to take action if this is a sink
 	if (is_sinking() && !stopped()) {
 		INVARIANT(ack_signal);
-	switch (next) {
-	case LOGIC_LOW:
-		if (get_valid_sense()) {
-			// neutral, reset ack
-			new_events.push_back(ENV_EVENT(ack_signal, 
-				get_ack_active() ? LOGIC_LOW
-					: LOGIC_HIGH));
-		} else {
+		if (stat.x_valid) {
+			new_events.push_back(ENV_EVENT(ack_signal, LOGIC_OTHER));
+		} else if (stat.valid_active) {
 			// valid, ack
 			new_events.push_back(ENV_EVENT(ack_signal, 
-				get_ack_active() ? LOGIC_HIGH
-					: LOGIC_LOW));
-		}
-		break;
-	case LOGIC_HIGH:
-		if (get_valid_sense()) {
-			// valid, ack
-			new_events.push_back(ENV_EVENT(ack_signal, 
-				get_ack_active() ? LOGIC_HIGH
-					: LOGIC_LOW));
+				get_ack_active() ? LOGIC_HIGH : LOGIC_LOW));
 		} else {
 			// neutral, reset ack
 			new_events.push_back(ENV_EVENT(ack_signal, 
-				get_ack_active() ? LOGIC_LOW
-					: LOGIC_HIGH));
+				get_ack_active() ? LOGIC_LOW : LOGIC_HIGH));
 		}
-		break;
-	default:
-		new_events.push_back(ENV_EVENT(ack_signal, 
-			LOGIC_OTHER));
-		break;
-	}
 	}
 } else {
 	STACKTRACE_INDENT_PRINT("got data-rail update" << endl);
@@ -3159,91 +3162,10 @@ if (ni == ack_signal) {
 	}
 	// generally, no need to spawn any events after data
 	// which can always be transient
-#if 0
-	if (x_counter) {
-		// if there are ANY Xs, then cannot log/expect values
-		// sources/sinks should respond accordingly with X signals
-		if (is_sourcing()) {
-			// for validity protocol, set valid to X
-			// validity signal reacts even when channel stopped
-			if (valid_signal) {
-				new_events.push_back(ENV_EVENT(
-					valid_signal, LOGIC_OTHER));
-			}
-		}
-		if (!stopped()) {
-		if (is_sinking() && (next == LOGIC_OTHER)
-				&& (x_counter == 1)) {
-			INVARIANT(ack_signal);
-			// if counter was JUST incremented to 1
-			// otherwise multiple X's are vacuous
-			// if not validity protocol, set ack to X
-			if (!valid_signal) {
-			new_events.push_back(ENV_EVENT(
-				ack_signal, LOGIC_OTHER));
-			}
-			// otherwise wait for validity to go X
-		}
-		}	// end if !stopped
-	// need to take action for EACH of the following that hold:
-	// 1) this is sink AND not a valid-request protocol
-	//	(otherwise, depends on valid signal)
-	// 2) this is a source on valid-request protocol, 
-	//	and thus need to set valid signal automatically
-	// 3) this is being logged
-	// 4) this is being expected
-	} else if (!counter_state) {
-		// then data rails are in neutral state
-		if (is_sourcing() && valid_signal) {
-			// source is responsible for resetting valid signal
-			// should react to data rails 
-			// EVEN WHEN CHANNEL IS STOPPED
-			new_events.push_back(ENV_EVENT(valid_signal, 
-				get_valid_sense() ? LOGIC_LOW
-					: LOGIC_HIGH));
-		}
-		if (!stopped()) {
-		if (is_sinking() && !valid_signal) {
-			INVARIANT(ack_signal);
-			// sink should reply with ack reset
-			// otherwise, valid_signal is an input
-			new_events.push_back(ENV_EVENT(ack_signal, 
-				get_ack_active() ? LOGIC_LOW
-					: LOGIC_HIGH));
-		}
-		}
-	} else if (counter_state == bundles()) {
-		// NOTE: stopped channels will not assert expected data nor log!
-		if (is_sourcing() && valid_signal) {
-			// source is responsible for setting valid signal
-			// validity signal always reacts to data rails
-			// even when channel is stopped
-			new_events.push_back(ENV_EVENT(valid_signal, 
-				get_valid_sense() ? LOGIC_HIGH
-					: LOGIC_LOW));
-		}
-	if (!valid_signal) {
-		// then data rails are in valid state
-		process_data(s);
-	}
-	if (!stopped()) {
-		// otherwise, data is logged/checked on validity signal
-		// if no value available, just ignore
-		if (is_sinking() && !valid_signal) {
-			INVARIANT(ack_signal);
-			// sink should reply with ack reset
-			// otherwise, valid_signal is an input
-			new_events.push_back(ENV_EVENT(ack_signal, 
-				get_ack_active() ? LOGIC_HIGH
-					: LOGIC_LOW));
-		}
-	}
-	}
-#endif
 }
 	break;
 }	// end case CHANNEL_TYPE_BD_4P
-#endif
+#endif	// PRSIM_CHANNEL_BUNDLED_DATA
 default: DIE;
 }	// end switch
 }	// end channel::process_node
@@ -4022,6 +3944,8 @@ if (i.second) {
 	channel_pool.resize(key +1);	// default construct
 	channel& c(channel_pool.back());
 	c.type = channel::CHANNEL_TYPE_BD_4P;
+	// default timing mode is after, not global
+	c.timing_mode = CHANNEL_TIMING_AFTER;
 	c.name = base;
 #if PRSIM_CHANNEL_RAILS_INVERTED
 	c.set_data_sense(active_low);

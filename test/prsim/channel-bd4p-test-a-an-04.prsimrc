@@ -1,0 +1,154 @@
+# "channel-bd4p-test-a-an-04.prsimrc"
+# @haco@ channel-bd4p-test-a.haco-c
+# testing channel source
+
+# echo-commands on
+source channel-bd4p-test-a-01.prsimrc
+
+channel-show W
+getall W
+watchall
+channel-source-args W 0 33 66 99 11 44 77 22 55 88
+channel-watch W
+channel-reset W
+cycle
+getall W
+channel-show W
+
+echo manually bucketing
+set W.a 1
+cycle
+assert W.n 1
+
+echo releasing channel W (source)
+channel-release W
+cycle
+echo should be no data yet because ack is off
+assert W.n 1
+
+echo -----------------------------------
+set W.a 0
+step-event
+queue
+echo end of queue
+cycle
+assert W.d[0] 0
+assert W.d[1] 0
+# we know the first data value
+channel-show W
+backtrace W.d[0]
+backtrace W.n
+assert W.n 0
+
+echo - - - - - - - - - - - - - - - - - -
+set W.a 1
+cycle
+channel-show W
+assert W.n 1
+
+echo -----------------------------------
+set W.a 0
+cycle
+assert W.d[0] 1
+assert W.d[1] 0
+# we know the second data value
+channel-show W
+# backtrace W.d[0]
+assert W.n 0
+
+echo - - - - - - - - - - - - - - - - - -
+set W.a 1
+cycle
+channel-show W
+assert W.n 1
+
+echo -----------------------------------
+set W.a 0
+cycle
+channel-show W
+
+echo - - - - - - - - - - - - - - - - - -
+set W.a 1
+cycle
+channel-show W
+
+echo -----------------------------------
+set W.a 0
+cycle
+channel-show W
+
+echo - - - - - - - - - - - - - - - - - -
+set W.a 1
+cycle
+channel-show W
+
+echo -----------------------------------
+set W.a 0
+cycle
+channel-show W
+
+echo - - - - - - - - - - - - - - - - - -
+set W.a 1
+cycle
+channel-show W
+
+echo -----------------------------------
+set W.a 0
+cycle
+channel-show W
+
+echo - - - - - - - - - - - - - - - - - -
+set W.a 1
+cycle
+channel-show W
+
+echo -----------------------------------
+set W.a 0
+cycle
+channel-show W
+
+echo - - - - - - - - - - - - - - - - - -
+set W.a 1
+cycle
+channel-show W
+
+echo -----------------------------------
+set W.a 0
+cycle
+channel-show W
+
+echo - - - - - - - - - - - - - - - - - -
+set W.a 1
+cycle
+channel-show W
+
+echo -----------------------------------
+set W.a 0
+cycle
+channel-show W
+
+echo - - - - - - - - - - - - - - - - - -
+set W.a 1
+cycle
+channel-show W
+
+echo -----------------------------------
+set W.a 0
+cycle
+channel-show W
+assert W.n 0
+
+echo - - - - - - - - - - - - - - - - - -
+set W.a 1
+cycle
+channel-show W
+assert W.n 1
+
+echo -----------------------------------
+echo no more values!!!
+set W.a 0
+cycle
+channel-show W
+getall W
+assert W.n 1
+

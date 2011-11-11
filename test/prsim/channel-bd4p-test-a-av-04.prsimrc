@@ -1,0 +1,154 @@
+# "channel-bd4p-test-a-av-04.prsimrc"
+# @haco@ channel-bd4p-test-a.haco-c
+# testing channel source
+
+# echo-commands on
+source channel-bd4p-test-a-01.prsimrc
+
+channel-show Y
+getall Y
+watchall
+channel-source-args Y 0 33 66 99 11 44 77 22 55 88
+channel-watch Y
+channel-reset Y
+cycle
+getall Y
+channel-show Y
+
+echo manually bucketing
+set Y.a 1
+cycle
+assert Y.v 0
+
+echo releasing channel Y (source)
+channel-release Y
+cycle
+echo should be no data yet because ack is off
+assert Y.v 0
+
+echo -----------------------------------
+set Y.a 0
+step-event
+queue
+echo end of queue
+cycle
+assert Y.d[0] 0
+assert Y.d[1] 0
+# we know the first data value
+channel-show Y
+backtrace Y.d[0]
+backtrace Y.v
+assert Y.v 1
+
+echo - - - - - - - - - - - - - - - - - -
+set Y.a 1
+cycle
+channel-show Y
+assert Y.v 0
+
+echo -----------------------------------
+set Y.a 0
+cycle
+assert Y.d[0] 1
+assert Y.d[1] 0
+# we know the second data value
+channel-show Y
+# backtrace Y.d[0]
+assert Y.v 1
+
+echo - - - - - - - - - - - - - - - - - -
+set Y.a 1
+cycle
+channel-show Y
+assert Y.v 0
+
+echo -----------------------------------
+set Y.a 0
+cycle
+channel-show Y
+
+echo - - - - - - - - - - - - - - - - - -
+set Y.a 1
+cycle
+channel-show Y
+
+echo -----------------------------------
+set Y.a 0
+cycle
+channel-show Y
+
+echo - - - - - - - - - - - - - - - - - -
+set Y.a 1
+cycle
+channel-show Y
+
+echo -----------------------------------
+set Y.a 0
+cycle
+channel-show Y
+
+echo - - - - - - - - - - - - - - - - - -
+set Y.a 1
+cycle
+channel-show Y
+
+echo -----------------------------------
+set Y.a 0
+cycle
+channel-show Y
+
+echo - - - - - - - - - - - - - - - - - -
+set Y.a 1
+cycle
+channel-show Y
+
+echo -----------------------------------
+set Y.a 0
+cycle
+channel-show Y
+
+echo - - - - - - - - - - - - - - - - - -
+set Y.a 1
+cycle
+channel-show Y
+
+echo -----------------------------------
+set Y.a 0
+cycle
+channel-show Y
+
+echo - - - - - - - - - - - - - - - - - -
+set Y.a 1
+cycle
+channel-show Y
+
+echo -----------------------------------
+set Y.a 0
+cycle
+channel-show Y
+
+echo - - - - - - - - - - - - - - - - - -
+set Y.a 1
+cycle
+channel-show Y
+
+echo -----------------------------------
+set Y.a 0
+cycle
+channel-show Y
+assert Y.v 1
+
+echo - - - - - - - - - - - - - - - - - -
+set Y.a 1
+cycle
+channel-show Y
+assert Y.v 0
+
+echo -----------------------------------
+echo no more values!!!
+set Y.a 0
+cycle
+channel-show Y
+getall Y
+assert Y.v 0
+

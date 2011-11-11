@@ -1,0 +1,220 @@
+channels:
+W : bundled-4p .a(init:0) .n x8 off
+X : bundled-4p .e(init:1) .v x8 off
+Y : bundled-4p .a(init:0) .v x8 off
+Z : bundled-4p .e(init:1) .n x8 off
+Z : bundled-4p .e(init:1) .n x8 off
+	count: 0, unknowns: 8
+All subnodes of 'Z':
+Z.e : X
+Z.n : X
+Z.d[0] : X
+Z.d[1] : X
+Z.d[2] : X
+Z.d[3] : X
+Z.d[4] : X
+Z.d[5] : X
+Z.d[6] : X
+Z.d[7] : X
+Warning: channel acknowledge `Z.e' has no fanin!
+Warning: channel validity `Z.n' has no fanout, but is being sourced.
+	10	Z.n : 1
+All subnodes of 'Z':
+Z.e : X
+Z.n : 1
+Z.d[0] : X
+Z.d[1] : X
+Z.d[2] : X
+Z.d[3] : X
+Z.d[4] : X
+Z.d[5] : X
+Z.d[6] : X
+Z.d[7] : X
+Z : bundled-4p .e(init:1) .n x8 source,watch,stopped, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @0
+	count: 0, unknowns: 8
+manually bucketing 
+	10	Z.e : 0
+releasing channel Z (source) 
+should be no data yet because ack is off 
+----------------------------------- 
+	10	Z.e : 1
+event queue:
+	20	Z.d[0] : 0	[from Z.e:=1]
+	20	Z.d[1] : 0	[from Z.e:=1]
+	20	Z.d[2] : 0	[from Z.e:=1]
+	20	Z.d[3] : 0	[from Z.e:=1]
+	20	Z.d[4] : 0	[from Z.e:=1]
+	20	Z.d[5] : 0	[from Z.e:=1]
+	20	Z.d[6] : 0	[from Z.e:=1]
+	20	Z.d[7] : 0	[from Z.e:=1]
+	20	Z.n : 0	[from Z.e:=1]
+end of queue 
+	20	Z.d[0] : 0	[by Z.e:=1]
+	20	Z.d[1] : 0	[by Z.e:=1]
+	20	Z.d[2] : 0	[by Z.e:=1]
+	20	Z.d[3] : 0	[by Z.e:=1]
+	20	Z.d[4] : 0	[by Z.e:=1]
+	20	Z.d[5] : 0	[by Z.e:=1]
+	20	Z.d[6] : 0	[by Z.e:=1]
+	20	Z.d[7] : 0	[by Z.e:=1]
+channel	Z (.data) : 0 @ 20
+	20	Z.n : 0	[by Z.e:=1]
+Z : bundled-4p .e(init:1) .n x8 source,watch, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @1
+	count: 0, unknowns: 0
+event    : `Z.d[0]' : 0
+caused by: `Z.e' : 1
+(no cycle)
+event    : `Z.n' : 0
+caused by: `Z.e' : 1
+(no cycle)
+- - - - - - - - - - - - - - - - - - 
+	20	Z.e : 0
+	30	Z.n : 1	[by Z.e:=0]
+Z : bundled-4p .e(init:1) .n x8 source,watch, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @1
+	count: 0, unknowns: 0
+----------------------------------- 
+	30	Z.e : 1
+	40	Z.d[0] : 1	[by Z.e:=1]
+	40	Z.d[5] : 1	[by Z.e:=1]
+channel	Z (.data) : 33 @ 40
+	40	Z.n : 0	[by Z.e:=1]
+Z : bundled-4p .e(init:1) .n x8 source,watch, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @2
+	count: 2, unknowns: 0
+- - - - - - - - - - - - - - - - - - 
+	40	Z.e : 0
+	50	Z.n : 1	[by Z.e:=0]
+Z : bundled-4p .e(init:1) .n x8 source,watch, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @2
+	count: 2, unknowns: 0
+----------------------------------- 
+	50	Z.e : 1
+	60	Z.d[0] : 0	[by Z.e:=1]
+	60	Z.d[1] : 1	[by Z.e:=1]
+	60	Z.d[5] : 0	[by Z.e:=1]
+	60	Z.d[6] : 1	[by Z.e:=1]
+channel	Z (.data) : 66 @ 60
+	60	Z.n : 0	[by Z.e:=1]
+Z : bundled-4p .e(init:1) .n x8 source,watch, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @3
+	count: 2, unknowns: 0
+- - - - - - - - - - - - - - - - - - 
+	60	Z.e : 0
+	70	Z.n : 1	[by Z.e:=0]
+Z : bundled-4p .e(init:1) .n x8 source,watch, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @3
+	count: 2, unknowns: 0
+----------------------------------- 
+	70	Z.e : 1
+	80	Z.d[0] : 1	[by Z.e:=1]
+	80	Z.d[5] : 1	[by Z.e:=1]
+channel	Z (.data) : 99 @ 80
+	80	Z.n : 0	[by Z.e:=1]
+Z : bundled-4p .e(init:1) .n x8 source,watch, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @4
+	count: 4, unknowns: 0
+- - - - - - - - - - - - - - - - - - 
+	80	Z.e : 0
+	90	Z.n : 1	[by Z.e:=0]
+Z : bundled-4p .e(init:1) .n x8 source,watch, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @4
+	count: 4, unknowns: 0
+----------------------------------- 
+	90	Z.e : 1
+	100	Z.d[3] : 1	[by Z.e:=1]
+	100	Z.d[5] : 0	[by Z.e:=1]
+	100	Z.d[6] : 0	[by Z.e:=1]
+channel	Z (.data) : 11 @ 100
+	100	Z.n : 0	[by Z.e:=1]
+Z : bundled-4p .e(init:1) .n x8 source,watch, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @5
+	count: 3, unknowns: 0
+- - - - - - - - - - - - - - - - - - 
+	100	Z.e : 0
+	110	Z.n : 1	[by Z.e:=0]
+Z : bundled-4p .e(init:1) .n x8 source,watch, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @5
+	count: 3, unknowns: 0
+----------------------------------- 
+	110	Z.e : 1
+	120	Z.d[0] : 0	[by Z.e:=1]
+	120	Z.d[1] : 0	[by Z.e:=1]
+	120	Z.d[2] : 1	[by Z.e:=1]
+	120	Z.d[5] : 1	[by Z.e:=1]
+channel	Z (.data) : 44 @ 120
+	120	Z.n : 0	[by Z.e:=1]
+Z : bundled-4p .e(init:1) .n x8 source,watch, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @6
+	count: 3, unknowns: 0
+- - - - - - - - - - - - - - - - - - 
+	120	Z.e : 0
+	130	Z.n : 1	[by Z.e:=0]
+Z : bundled-4p .e(init:1) .n x8 source,watch, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @6
+	count: 3, unknowns: 0
+----------------------------------- 
+	130	Z.e : 1
+	140	Z.d[0] : 1	[by Z.e:=1]
+	140	Z.d[5] : 0	[by Z.e:=1]
+	140	Z.d[6] : 1	[by Z.e:=1]
+channel	Z (.data) : 77 @ 140
+	140	Z.n : 0	[by Z.e:=1]
+Z : bundled-4p .e(init:1) .n x8 source,watch, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @7
+	count: 4, unknowns: 0
+- - - - - - - - - - - - - - - - - - 
+	140	Z.e : 0
+	150	Z.n : 1	[by Z.e:=0]
+Z : bundled-4p .e(init:1) .n x8 source,watch, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @7
+	count: 4, unknowns: 0
+----------------------------------- 
+	150	Z.e : 1
+	160	Z.d[0] : 0	[by Z.e:=1]
+	160	Z.d[1] : 1	[by Z.e:=1]
+	160	Z.d[3] : 0	[by Z.e:=1]
+	160	Z.d[4] : 1	[by Z.e:=1]
+	160	Z.d[6] : 0	[by Z.e:=1]
+channel	Z (.data) : 22 @ 160
+	160	Z.n : 0	[by Z.e:=1]
+Z : bundled-4p .e(init:1) .n x8 source,watch, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @8
+	count: 3, unknowns: 0
+- - - - - - - - - - - - - - - - - - 
+	160	Z.e : 0
+	170	Z.n : 1	[by Z.e:=0]
+Z : bundled-4p .e(init:1) .n x8 source,watch, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @8
+	count: 3, unknowns: 0
+----------------------------------- 
+	170	Z.e : 1
+	180	Z.d[0] : 1	[by Z.e:=1]
+	180	Z.d[5] : 1	[by Z.e:=1]
+channel	Z (.data) : 55 @ 180
+	180	Z.n : 0	[by Z.e:=1]
+Z : bundled-4p .e(init:1) .n x8 source,watch, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @9
+	count: 5, unknowns: 0
+- - - - - - - - - - - - - - - - - - 
+	180	Z.e : 0
+	190	Z.n : 1	[by Z.e:=0]
+Z : bundled-4p .e(init:1) .n x8 source,watch, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @9
+	count: 5, unknowns: 0
+----------------------------------- 
+	190	Z.e : 1
+	200	Z.d[0] : 0	[by Z.e:=1]
+	200	Z.d[1] : 0	[by Z.e:=1]
+	200	Z.d[2] : 0	[by Z.e:=1]
+	200	Z.d[3] : 1	[by Z.e:=1]
+	200	Z.d[5] : 0	[by Z.e:=1]
+	200	Z.d[6] : 1	[by Z.e:=1]
+channel	Z (.data) : 88 @ 200
+	200	Z.n : 0	[by Z.e:=1]
+Z : bundled-4p .e(init:1) .n x8 source,watch, timing: after=10
+	count: 3, unknowns: 0
+- - - - - - - - - - - - - - - - - - 
+	200	Z.e : 0
+	210	Z.n : 1	[by Z.e:=0]
+Z : bundled-4p .e(init:1) .n x8 source,watch, timing: after=10
+	count: 3, unknowns: 0
+----------------------------------- 
+no more values!!! 
+	210	Z.e : 1
+Z : bundled-4p .e(init:1) .n x8 source,watch, timing: after=10
+	count: 3, unknowns: 0
+All subnodes of 'Z':
+Z.e : 1
+Z.n : 1
+Z.d[0] : 0
+Z.d[1] : 0
+Z.d[2] : 0
+Z.d[3] : 1
+Z.d[4] : 1
+Z.d[5] : 0
+Z.d[6] : 1
+Z.d[7] : 0
