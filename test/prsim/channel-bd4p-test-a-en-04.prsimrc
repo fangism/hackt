@@ -1,0 +1,154 @@
+# "channel-bd4p-test-a-en-04.prsimrc"
+# @haco@ channel-bd4p-test-a.haco-c
+# testing channel source
+
+# echo-commands on
+source channel-bd4p-test-a-01.prsimrc
+
+channel-show Z
+getall Z
+watchall
+channel-source-args Z 0 33 66 99 11 44 77 22 55 88
+channel-watch Z
+channel-reset Z
+cycle
+getall Z
+channel-show Z
+
+echo manually bucketing
+set Z.e 0
+cycle
+assert Z.n 1
+
+echo releasing channel Z (source)
+channel-release Z
+cycle
+echo should be no data yet because ack is off
+assert Z.n 1
+
+echo -----------------------------------
+set Z.e 1
+step-event
+queue
+echo end of queue
+cycle
+assert Z.d[0] 0
+assert Z.d[1] 0
+# we know the first data value
+channel-show Z
+backtrace Z.d[0]
+backtrace Z.n
+assert Z.n 0
+
+echo - - - - - - - - - - - - - - - - - -
+set Z.e 0
+cycle
+channel-show Z
+assert Z.n 1
+
+echo -----------------------------------
+set Z.e 1
+cycle
+assert Z.d[0] 1
+assert Z.d[1] 0
+# we know the second data value
+channel-show Z
+# backtrace Z.d[0]
+assert Z.n 0
+
+echo - - - - - - - - - - - - - - - - - -
+set Z.e 0
+cycle
+channel-show Z
+assert Z.n 1
+
+echo -----------------------------------
+set Z.e 1
+cycle
+channel-show Z
+
+echo - - - - - - - - - - - - - - - - - -
+set Z.e 0
+cycle
+channel-show Z
+
+echo -----------------------------------
+set Z.e 1
+cycle
+channel-show Z
+
+echo - - - - - - - - - - - - - - - - - -
+set Z.e 0
+cycle
+channel-show Z
+
+echo -----------------------------------
+set Z.e 1
+cycle
+channel-show Z
+
+echo - - - - - - - - - - - - - - - - - -
+set Z.e 0
+cycle
+channel-show Z
+
+echo -----------------------------------
+set Z.e 1
+cycle
+channel-show Z
+
+echo - - - - - - - - - - - - - - - - - -
+set Z.e 0
+cycle
+channel-show Z
+
+echo -----------------------------------
+set Z.e 1
+cycle
+channel-show Z
+
+echo - - - - - - - - - - - - - - - - - -
+set Z.e 0
+cycle
+channel-show Z
+
+echo -----------------------------------
+set Z.e 1
+cycle
+channel-show Z
+
+echo - - - - - - - - - - - - - - - - - -
+set Z.e 0
+cycle
+channel-show Z
+
+echo -----------------------------------
+set Z.e 1
+cycle
+channel-show Z
+
+echo - - - - - - - - - - - - - - - - - -
+set Z.e 0
+cycle
+channel-show Z
+
+echo -----------------------------------
+set Z.e 1
+cycle
+channel-show Z
+assert Z.n 0
+
+echo - - - - - - - - - - - - - - - - - -
+set Z.e 0
+cycle
+channel-show Z
+assert Z.n 1
+
+echo -----------------------------------
+echo no more values!!!
+set Z.e 1
+cycle
+channel-show Z
+getall Z
+assert Z.n 1
+

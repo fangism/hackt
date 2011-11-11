@@ -1,0 +1,69 @@
+channels:
+W : bundled-4p .a(init:0) .n x8 off
+X : bundled-4p .e(init:1) .v x8 off
+Y : bundled-4p .a(init:0) .v x8 off
+Z : bundled-4p .e(init:1) .n x8 off
+Warning: channel validity `Y.v' has no fanin.
+All subnodes of 'Y':
+Y.a : X
+Y.v : X
+Y.d[0] : X
+Y.d[1] : X
+Y.d[2] : X
+Y.d[3] : X
+Y.d[4] : X
+Y.d[5] : X
+Y.d[6] : X
+Y.d[7] : X
+manually resetting data 
+	0	Y.d[0] : 0
+	0	Y.d[1] : 0
+	0	Y.d[2] : 0
+	0	Y.d[3] : 0
+	0	Y.d[4] : 0
+	0	Y.d[5] : 0
+	0	Y.d[6] : 0
+	0	Y.d[7] : 0
+	0	Y.v : 0
+	10	Y.a : 0
+releasing channel Y 
+------------------------------------ 
+setting data rail 
+channel	Y (.data) : 0 @ 10
+	10	Y.v : 1
+	20	Y.a : 1	[by Y.v:=1]
+Y : bundled-4p .a(init:0) .v x8 sink,watch, timing: global
+	count: 0, unknowns: 0
+event    : `Y.a' : 1
+caused by: `Y.v' : 1
+(no cycle)
+------------------------------------ 
+resetting data rail 
+	20	Y.v : 0
+	30	Y.a : 0	[by Y.v:=0]
+Y : bundled-4p .a(init:0) .v x8 sink,watch, timing: global
+	count: 0, unknowns: 0
+event    : `Y.a' : 0
+caused by: `Y.v' : 0
+(no cycle)
+------------------------------------ 
+setting data rail, new value 
+	30	Y.d[1] : 1
+	30	Y.d[2] : 1
+channel	Y (.data) : 6 @ 30
+	30	Y.v : 1
+	40	Y.a : 1	[by Y.v:=1]
+Y : bundled-4p .a(init:0) .v x8 sink,watch, timing: global
+	count: 2, unknowns: 0
+event    : `Y.a' : 1
+caused by: `Y.v' : 1
+(no cycle)
+------------------------------------ 
+resetting data rail 
+	40	Y.v : 0
+	50	Y.a : 0	[by Y.v:=0]
+Y : bundled-4p .a(init:0) .v x8 sink,watch, timing: global
+	count: 2, unknowns: 0
+event    : `Y.a' : 0
+caused by: `Y.v' : 0
+(no cycle)

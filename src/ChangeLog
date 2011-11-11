@@ -11,6 +11,15 @@
 		This needs to be variadic (c++11) or auto-generated.
 
 
+2011-11-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-98-prsim-bd-02:
+	  prsim: [bundled-data] First set of basic 4p source/sink test
+		cases, and some obvious fixes along the way.
+		bd-4p channels default to "channel-timing after", 
+		instead of global policy.
+
+
 2011-11-10	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-98-prsim-bd-01:
