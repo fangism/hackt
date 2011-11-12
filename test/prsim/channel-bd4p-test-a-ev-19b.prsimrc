@@ -1,0 +1,41 @@
+# "channel-bd4p-test-a-19b.prsimrc"
+# @haco@ channel-bd4p-test-a.haco-c
+# reduced test case for a crash on vacuous Xs from channel sink
+
+source channel-bd4p-test-a-01.prsimrc
+
+timing uniform
+
+# set up some channels with commands
+channel-sink X
+channel-show X
+channel-watch X
+
+watchall
+watchall-queue
+
+set X.d[0..7] 0
+set X.v 0
+cycle
+channel-reset X
+cycle
+channel-release X
+cycle
+assert X.e 1
+
+echo setting any data rail to X
+set X.d[3] X
+set X.v 1
+step-event 2
+queue
+time
+# should filter out vacuous X
+echo after step queue is:
+step-event
+queue
+time
+
+echo finishing...
+cycle
+assert X.e 0
+

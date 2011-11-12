@@ -194,14 +194,16 @@ struct channel_exception : public step_exception {
 	size_t				iteration;
 	int_value_type			expect;
 	int_value_type			got;
+	bool				got_x;
 
 	channel_exception(
 		const channel* c,
 		const size_t in, const size_t it,
-		const int_value_type e, const int_value_type g) :
+		const int_value_type e, const int_value_type g, 
+		const bool gx) :
 		chan(c), 
 		index(in), iteration(it), 
-		expect(e), got(g) { }
+		expect(e), got(g), got_x(gx) { }
 
 	error_policy_enum
 	inspect(const State&, ostream&) const;
@@ -831,6 +833,12 @@ public:
 	bool
 	data_is_valid(void) const;
 
+	bool
+	data_is_bundled(void) const {
+		return (type == CHANNEL_TYPE_BD_4P) ||
+			(type == CHANNEL_TYPE_BD_4P);
+	}
+
 	value_type
 	data_rails_value(const State&) const;
 
@@ -945,7 +953,7 @@ private:
 // don't bother passing ostream& to these assert functions for now
 	bool
 	__assert_channel_value(const value_type& expect, 
-		const value_type& got, const bool confirm) const;
+		const value_type& got, const bool x, const bool confirm) const;
 
 	bool
 	__assert_value(const status_summary&, const value_type&, 

@@ -32,7 +32,7 @@ setting data rail
 channel	Z (.data) : 0 @ 10
 	10	Z.n : 0
 	20	Z.e : 0	[by Z.n:=0]
-Z : bundled-4p .e(init:1) .n x8 sink,watch, timing: global
+Z : bundled-4p .e(init:1) .n x8 sink,watch, timing: after=10
 	count: 0, unknowns: 0
 event    : `Z.e' : 0
 caused by: `Z.n' : 0
@@ -41,7 +41,7 @@ caused by: `Z.n' : 0
 resetting data rail 
 	20	Z.n : 1
 	30	Z.e : 1	[by Z.n:=1]
-Z : bundled-4p .e(init:1) .n x8 sink,watch, timing: global
+Z : bundled-4p .e(init:1) .n x8 sink,watch, timing: after=10
 	count: 0, unknowns: 0
 event    : `Z.e' : 1
 caused by: `Z.n' : 1
@@ -53,7 +53,7 @@ setting data rail, new value
 channel	Z (.data) : 6 @ 30
 	30	Z.n : 0
 	40	Z.e : 0	[by Z.n:=0]
-Z : bundled-4p .e(init:1) .n x8 sink,watch, timing: global
+Z : bundled-4p .e(init:1) .n x8 sink,watch, timing: after=10
 	count: 2, unknowns: 0
 event    : `Z.e' : 0
 caused by: `Z.n' : 0
@@ -62,7 +62,7 @@ caused by: `Z.n' : 0
 resetting data rail 
 	40	Z.n : 1
 	50	Z.e : 1	[by Z.n:=1]
-Z : bundled-4p .e(init:1) .n x8 sink,watch, timing: global
+Z : bundled-4p .e(init:1) .n x8 sink,watch, timing: after=10
 	count: 2, unknowns: 0
 event    : `Z.e' : 1
 caused by: `Z.n' : 1

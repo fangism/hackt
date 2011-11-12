@@ -344,6 +344,9 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	channel-bd4p-test-a-en-03 channel-bd4p-test-a-an-03 \
 	channel-bd4p-test-a-ev-04 channel-bd4p-test-a-av-04 \
 	channel-bd4p-test-a-en-04 channel-bd4p-test-a-an-04 \
+	channel-bd4p-test-a-ev-08 \
+	channel-bd4p-test-a-ev-09 channel-bd4p-test-a-ev-09b
+	channel-bd4p-test-a-ev-19 channel-bd4p-test-a-ev-19b \
 	eledr-buffer-a-01 eledr-buffer-a-02 eledr-buffer-a-03 \
 	eledr-buffer-a-04 eledr-buffer-a-05 eledr-buffer-a-06 \
 	eledr-buffer-a-07 \
@@ -674,6 +677,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
 	channel-eledr-c-06 \
 	channel-array-a-01 channel-array-a-02 \
 	channel-array-b-02 \
+	channel-bd4p-test-a-ev-10 channel-bd4p-test-a-ev-10b \
 	ACX-PR-6629 \
 	interference-11 \
 	interference-13 \

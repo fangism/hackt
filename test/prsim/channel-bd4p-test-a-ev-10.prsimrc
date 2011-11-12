@@ -1,0 +1,110 @@
+# "channel-bd4p-test-a-09.prsimrc"
+# copy-modified from "channel-test-a-09.prsimrc"
+# @haco@ channel-bd4p-test-a.haco-c
+# testing channel sink, with expect
+
+# register channels
+source channel-bd4p-test-a-01.prsimrc
+
+watchall
+# set up some channels with commands
+channel-watch X
+channel-sink X
+channel-expect-args X 0 1 2 4 8 16 32
+channel-reset X
+getall X
+
+echo manually resetting data
+set X.d[0..7] 0
+set X.v 0
+cycle
+assert X.e 1
+channel-release X
+cycle
+assert X.e 1
+# because data is neutral, X.e should request new data
+
+echo ------------------------------------
+set X.v 1
+cycle
+assert X.e 0
+channel-show X
+
+echo - - - - - - - - - - - - - - - - - -
+set X.v 0
+cycle
+assert X.e 1
+channel-show X
+
+echo ------------------------------------
+set X.d[0] 1
+set X.v 1
+cycle
+assert X.e 0
+channel-show X
+
+echo - - - - - - - - - - - - - - - - - -
+set X.v 0
+cycle
+assert X.e 1
+channel-show X
+
+echo ------------------------------------
+set X.d[1] 1
+set X.d[0] 0
+set X.v 1
+cycle
+assert X.e 0
+channel-show X
+
+echo - - - - - - - - - - - - - - - - - -
+set X.v 0
+cycle
+assert X.e 1
+channel-show X
+
+echo ------------------------------------
+set X.d[1] 0
+set X.d[2] 1
+set X.v 1
+cycle
+assert X.e 0
+channel-show X
+
+echo - - - - - - - - - - - - - - - - - -
+set X.v 0
+cycle
+assert X.e 1
+channel-show X
+
+echo ------------------------------------
+set X.d[2] 0
+set X.d[3] 1
+set X.v 1
+cycle
+assert X.e 0
+channel-show X
+
+echo - - - - - - - - - - - - - - - - - -
+set X.v 0
+cycle
+assert X.e 1
+channel-show X
+
+echo ------------------------------------
+set X.d[4] 1
+set X.d[3] 0
+set X.d[2] 1
+set X.v 1
+cycle
+# should expect comparison failure here
+assert X.e 0
+channel-show X
+
+echo - - - - - - - - - - - - - - - - - -
+set X.v 0
+cycle
+assert X.e 1
+channel-show X
+
+echo ------------------------------------

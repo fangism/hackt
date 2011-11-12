@@ -1,0 +1,157 @@
+channels:
+W : bundled-4p .a(init:0) .n x8 off
+X : bundled-4p .e(init:1) .v x8 off
+Y : bundled-4p .a(init:0) .v x8 off
+Z : bundled-4p .e(init:1) .n x8 off
+Warning: channel validity `X.v' has no fanin.
+All subnodes of 'X':
+X.e : X
+X.v : X
+X.d[0] : X
+X.d[1] : X
+X.d[2] : X
+X.d[3] : X
+X.d[4] : X
+X.d[5] : X
+X.d[6] : X
+X.d[7] : X
+manually resetting data 
+	0	X.d[0] : 0
+	0	X.d[1] : 0
+	0	X.d[2] : 0
+	0	X.d[3] : 0
+	0	X.d[4] : 0
+	0	X.d[5] : 0
+	0	X.d[6] : 0
+	0	X.d[7] : 0
+	0	X.v : 0
+	10	X.e : 1
+------------------------------------ 
+channel	X (.data) : 0 @ 10
+	10	X.v : 1
+	20	X.e : 0	[by X.v:=1]
+X : bundled-4p .e(init:1) .v x8 sink,expect,watch, timing: after=10 {0,1,2,4,8,16,32,} @1
+	count: 0, unknowns: 0
+- - - - - - - - - - - - - - - - - - 
+	20	X.v : 0
+	30	X.e : 1	[by X.v:=0]
+X : bundled-4p .e(init:1) .v x8 sink,expect,watch, timing: after=10 {0,1,2,4,8,16,32,} @1
+	count: 0, unknowns: 0
+------------------------------------ 
+	30	X.d[0] : 1
+channel	X (.data) : 1 @ 30
+	30	X.v : 1
+	40	X.e : 0	[by X.v:=1]
+X : bundled-4p .e(init:1) .v x8 sink,expect,watch, timing: after=10 {0,1,2,4,8,16,32,} @2
+	count: 1, unknowns: 0
+- - - - - - - - - - - - - - - - - - 
+	40	X.v : 0
+	50	X.e : 1	[by X.v:=0]
+X : bundled-4p .e(init:1) .v x8 sink,expect,watch, timing: after=10 {0,1,2,4,8,16,32,} @2
+	count: 1, unknowns: 0
+------------------------------------ 
+	50	X.d[1] : 1
+	50	X.d[0] : 0
+channel	X (.data) : 2 @ 50
+	50	X.v : 1
+	60	X.e : 0	[by X.v:=1]
+X : bundled-4p .e(init:1) .v x8 sink,expect,watch, timing: after=10 {0,1,2,4,8,16,32,} @3
+	count: 1, unknowns: 0
+- - - - - - - - - - - - - - - - - - 
+	60	X.v : 0
+	70	X.e : 1	[by X.v:=0]
+X : bundled-4p .e(init:1) .v x8 sink,expect,watch, timing: after=10 {0,1,2,4,8,16,32,} @3
+	count: 1, unknowns: 0
+------------------------------------ 
+	70	X.d[1] : 0
+	70	X.d[2] : 1
+channel	X (.data) : 4 @ 70
+	70	X.v : 1
+	80	X.e : 0	[by X.v:=1]
+X : bundled-4p .e(init:1) .v x8 sink,expect,watch, timing: after=10 {0,1,2,4,8,16,32,} @4
+	count: 1, unknowns: 0
+- - - - - - - - - - - - - - - - - - 
+	80	X.v : 0
+	90	X.e : 1	[by X.v:=0]
+X : bundled-4p .e(init:1) .v x8 sink,expect,watch, timing: after=10 {0,1,2,4,8,16,32,} @4
+	count: 1, unknowns: 0
+------------------------------------ 
+	90	X.d[2] : 0
+	90	X.d[3] : 1
+channel	X (.data) : 8 @ 90
+	90	X.v : 1
+	100	X.e : 0	[by X.v:=1]
+X : bundled-4p .e(init:1) .v x8 sink,expect,watch, timing: after=10 {0,1,2,4,8,16,32,} @5
+	count: 1, unknowns: 0
+- - - - - - - - - - - - - - - - - - 
+	100	X.v : 0
+	110	X.e : 1	[by X.v:=0]
+X : bundled-4p .e(init:1) .v x8 sink,expect,watch, timing: after=10 {0,1,2,4,8,16,32,} @5
+	count: 1, unknowns: 0
+------------------------------------ 
+	110	X.d[4] : 1
+	110	X.d[3] : 0
+channel	X (.data) : 16 @ 110
+	110	X.v : 1
+	120	X.e : 0	[by X.v:=1]
+X : bundled-4p .e(init:1) .v x8 sink,expect,watch, timing: after=10 {0,1,2,4,8,16,32,} @6
+	count: 1, unknowns: 0
+- - - - - - - - - - - - - - - - - - 
+	120	X.v : 0
+	130	X.e : 1	[by X.v:=0]
+X : bundled-4p .e(init:1) .v x8 sink,expect,watch, timing: after=10 {0,1,2,4,8,16,32,} @6
+	count: 1, unknowns: 0
+------------------------------------ 
+	130	X.d[5] : 1
+	130	X.d[4] : 0
+channel	X (.data) : 32 @ 130
+	130	X.v : 1
+	140	X.e : 0	[by X.v:=1]
+X : bundled-4p .e(init:1) .v x8 sink,expect,watch, timing: after=10
+	count: 1, unknowns: 0
+- - - - - - - - - - - - - - - - - - 
+	140	X.v : 0
+	150	X.e : 1	[by X.v:=0]
+X : bundled-4p .e(init:1) .v x8 sink,expect,watch, timing: after=10
+	count: 1, unknowns: 0
+------------------------------------ 
+expect values exhausted, now can be any value 
+------------------------------------ 
+	150	X.d[4] : 1
+channel	X (.data) : 48 @ 150
+	150	X.v : 1
+	160	X.e : 0	[by X.v:=1]
+X : bundled-4p .e(init:1) .v x8 sink,watch, timing: after=10
+	count: 2, unknowns: 0
+- - - - - - - - - - - - - - - - - - 
+	160	X.v : 0
+	170	X.e : 1	[by X.v:=0]
+X : bundled-4p .e(init:1) .v x8 sink,watch, timing: after=10
+	count: 2, unknowns: 0
+------------------------------------ 
+	170	X.d[3] : 1
+	170	X.d[5] : 0
+channel	X (.data) : 24 @ 170
+	170	X.v : 1
+	180	X.e : 0	[by X.v:=1]
+X : bundled-4p .e(init:1) .v x8 sink,watch, timing: after=10
+	count: 2, unknowns: 0
+- - - - - - - - - - - - - - - - - - 
+	180	X.v : 0
+	190	X.e : 1	[by X.v:=0]
+X : bundled-4p .e(init:1) .v x8 sink,watch, timing: after=10
+	count: 2, unknowns: 0
+------------------------------------ 
+	190	X.d[2] : 1
+	190	X.d[4] : 0
+channel	X (.data) : 12 @ 190
+	190	X.v : 1
+	200	X.e : 0	[by X.v:=1]
+X : bundled-4p .e(init:1) .v x8 sink,watch, timing: after=10
+	count: 2, unknowns: 0
+- - - - - - - - - - - - - - - - - - 
+	200	X.v : 0
+	210	X.e : 1	[by X.v:=0]
+X : bundled-4p .e(init:1) .v x8 sink,watch, timing: after=10
+	count: 2, unknowns: 0
+------------------------------------ 
