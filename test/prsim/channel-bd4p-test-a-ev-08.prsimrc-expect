@@ -1,0 +1,121 @@
+channels:
+W : bundled-4p .a(init:0) .n x8 off
+X : bundled-4p .e(init:1) .v x8 off
+Y : bundled-4p .a(init:0) .v x8 off
+Z : bundled-4p .e(init:1) .n x8 off
+X : bundled-4p .e(init:1) .v x8 off
+	count: 0, unknowns: 8
+Warning: channel acknowledge `X.e' has no fanin!
+Warning: channel validity `X.v' has no fanout, but is being sourced.
+Warning: channel validity `X.v' has no fanin.
+All subnodes of 'X':
+X.e : 1
+X.v : 0
+X.d[0] : X
+X.d[1] : X
+X.d[2] : X
+X.d[3] : X
+X.d[4] : X
+X.d[5] : X
+X.d[6] : X
+X.d[7] : X
+X : bundled-4p .e(init:1) .v x8 source,sink,watch,stopped, timing: after=10 {111,255,42,64,33,33,12,9,}* @0 #0
+	count: 0, unknowns: 8
+releasing channel X (source) 
+source values on X will repeat 
+	20	X.d[0] : 1
+	20	X.d[1] : 1
+	20	X.d[2] : 1
+	20	X.d[3] : 1
+	20	X.d[4] : 0
+	20	X.d[5] : 1
+	20	X.d[6] : 1
+	20	X.d[7] : 0
+channel	X (.data) : 111 @ 20
+	20	X.v : 1
+	30	X.e : 0	[by X.v:=1]
+	40	X.v : 0	[by X.e:=0]
+	50	X.e : 1	[by X.v:=0]
+	60	X.d[4] : 1	[by X.e:=1]
+	60	X.d[7] : 1	[by X.e:=1]
+channel	X (.data) : 255 @ 60
+	60	X.v : 1	[by X.e:=1]
+	70	X.e : 0	[by X.v:=1]
+	80	X.v : 0	[by X.e:=0]
+	90	X.e : 1	[by X.v:=0]
+	100	X.d[0] : 0	[by X.e:=1]
+	100	X.d[2] : 0	[by X.e:=1]
+	100	X.d[4] : 0	[by X.e:=1]
+	100	X.d[6] : 0	[by X.e:=1]
+	100	X.d[7] : 0	[by X.e:=1]
+channel	X (.data) : 42 @ 100
+	100	X.v : 1	[by X.e:=1]
+	110	X.e : 0	[by X.v:=1]
+	120	X.v : 0	[by X.e:=0]
+	130	X.e : 1	[by X.v:=0]
+	140	X.d[1] : 0	[by X.e:=1]
+	140	X.d[3] : 0	[by X.e:=1]
+	140	X.d[5] : 0	[by X.e:=1]
+	140	X.d[6] : 1	[by X.e:=1]
+channel	X (.data) : 64 @ 140
+	140	X.v : 1	[by X.e:=1]
+	150	X.e : 0	[by X.v:=1]
+	160	X.v : 0	[by X.e:=0]
+	170	X.e : 1	[by X.v:=0]
+	180	X.d[0] : 1	[by X.e:=1]
+	180	X.d[5] : 1	[by X.e:=1]
+	180	X.d[6] : 0	[by X.e:=1]
+channel	X (.data) : 33 @ 180
+	180	X.v : 1	[by X.e:=1]
+	190	X.e : 0	[by X.v:=1]
+	200	X.v : 0	[by X.e:=0]
+	210	X.e : 1	[by X.v:=0]
+channel	X (.data) : 33 @ 220
+	220	X.v : 1	[by X.e:=1]
+	230	X.e : 0	[by X.v:=1]
+	240	X.v : 0	[by X.e:=0]
+	250	X.e : 1	[by X.v:=0]
+	260	X.d[0] : 0	[by X.e:=1]
+	260	X.d[2] : 1	[by X.e:=1]
+	260	X.d[3] : 1	[by X.e:=1]
+	260	X.d[5] : 0	[by X.e:=1]
+channel	X (.data) : 12 @ 260
+	260	X.v : 1	[by X.e:=1]
+	270	X.e : 0	[by X.v:=1]
+	280	X.v : 0	[by X.e:=0]
+	290	X.e : 1	[by X.v:=0]
+	300	X.d[0] : 1	[by X.e:=1]
+	300	X.d[2] : 0	[by X.e:=1]
+channel	X (.data) : 9 @ 300
+	300	X.v : 1	[by X.e:=1]
+	310	X.e : 0	[by X.v:=1]
+	320	X.v : 0	[by X.e:=0]
+	330	X.e : 1	[by X.v:=0]
+	340	X.d[1] : 1	[by X.e:=1]
+	340	X.d[2] : 1	[by X.e:=1]
+	340	X.d[5] : 1	[by X.e:=1]
+	340	X.d[6] : 1	[by X.e:=1]
+channel	X (.data) : 111 @ 340
+	340	X.v : 1	[by X.e:=1]
+	350	X.e : 0	[by X.v:=1]
+	360	X.v : 0	[by X.e:=0]
+	370	X.e : 1	[by X.v:=0]
+	380	X.d[4] : 1	[by X.e:=1]
+	380	X.d[7] : 1	[by X.e:=1]
+channel	X (.data) : 255 @ 380
+	380	X.v : 1	[by X.e:=1]
+	390	X.e : 0	[by X.v:=1]
+	400	X.v : 0	[by X.e:=0]
+	410	X.e : 1	[by X.v:=0]
+	420	X.d[0] : 0	[by X.e:=1]
+	420	X.d[2] : 0	[by X.e:=1]
+	420	X.d[4] : 0	[by X.e:=1]
+	420	X.d[6] : 0	[by X.e:=1]
+	420	X.d[7] : 0	[by X.e:=1]
+channel	X (.data) : 42 @ 420
+	420	X.v : 1	[by X.e:=1]
+time: 420
+running a bit longer... 
+time: 123870
+X : bundled-4p .e(init:1) .v x8 source,sink, timing: after=10 {111,255,42,64,33,33,12,9,}* @1 #387
+	count: 6, unknowns: 0

@@ -1,0 +1,40 @@
+channels:
+W : bundled-4p .a(init:0) .n x8 off
+X : bundled-4p .e(init:1) .v x8 off
+Y : bundled-4p .a(init:0) .v x8 off
+Z : bundled-4p .e(init:1) .n x8 off
+Warning: channel validity `X.v' has no fanin.
+X : bundled-4p .e(init:1) .v x8 sink, timing: after=10
+	count: 0, unknowns: 8
+enqueued:	0	X.d[0] : 0
+enqueued:	0	X.d[1] : 0
+enqueued:	0	X.d[2] : 0
+enqueued:	0	X.d[3] : 0
+enqueued:	0	X.d[4] : 0
+enqueued:	0	X.d[5] : 0
+enqueued:	0	X.d[6] : 0
+enqueued:	0	X.d[7] : 0
+enqueued:	0	X.v : 0
+	0	X.d[0] : 0
+	0	X.d[1] : 0
+	0	X.d[2] : 0
+	0	X.d[3] : 0
+	0	X.d[4] : 0
+	0	X.d[5] : 0
+	0	X.d[6] : 0
+	0	X.d[7] : 0
+enqueued:	10	X.e : 1	[from X.v:=0]
+	0	X.v : 0
+	10	X.e : 1	[by X.v:=0]
+setting request to X 
+enqueued:	10	X.v : X
+enqueued:	20	X.e : X	[from X.v:=X]
+	10	X.v : X
+event queue:
+	20	X.e : X	[from X.v:=X]
+time: 10
+after step queue is: 
+	20	X.e : X	[by X.v:=X]
+event queue:
+time: 20
+finishing... 

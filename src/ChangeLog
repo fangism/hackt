@@ -11,6 +11,13 @@
 		This needs to be variadic (c++11) or auto-generated.
 
 
+2011-11-12	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-98-prsim-bd-03:
+	  prsim: channel_exception, added support for X data received.
+		Check assertions on bd channels involving Xs and don't-cares.
+
+
 2011-11-11	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-98-prsim-bd-02:

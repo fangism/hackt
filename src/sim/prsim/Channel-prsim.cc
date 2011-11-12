@@ -193,7 +193,12 @@ channel_exception::inspect(const State& s, ostream& o) const {
 	}
 	o << "]." << endl;
 	chan->print_data_value(o << "\texpected: ", expect);
-	chan->print_data_value(o << ", got: ", got) << endl;
+	o << ", got: ";
+	if (got_x) {
+		o << 'X' << endl;
+	} else {
+		chan->print_data_value(o, got) << endl;
+	}
 	return s.get_channel_expect_fail_policy();
 }
 
@@ -762,13 +767,19 @@ default: break;
 bool
 channel::__assert_channel_value(const channel::value_type& expect, 
 		const channel::value_type& got,
+		const bool x, 
 		const bool confirm) const {
 	static const char cmd[] = "channel-assert";
 	if (expect != got) {
 		print_data_value(cerr << cmd <<
 			": value assertion failed on channel " <<
 			name << ", expected: ", expect);
-		print_data_value(cerr << ", but got: ", got) << endl;
+		cerr << ", but got: ";
+		if (x) {
+			cerr << 'X' << endl;
+		} else {
+			print_data_value(cerr, got) << endl;
+		}
 		return false;
 	} else if (confirm) {
 		print_data_value(cout << "channel " << name << " has value ", 
@@ -788,7 +799,7 @@ channel::__assert_value(const status_summary& stat, const value_type& expect,
 switch (type) {
 case CHANNEL_TYPE_1ofN: {
 	if (counter_state == bundles()) {
-		if (!__assert_channel_value(expect, stat.current_value,
+		if (!__assert_channel_value(expect, stat.current_value, false,
 				confirm))
 			return false;
 	} else {
@@ -809,7 +820,7 @@ case CHANNEL_TYPE_BD_2P: {
 ": [warning] asserting value of bundled-data channel when data rails\n"
 "may be transient." << endl;
 	}
-	if (!__assert_channel_value(expect, stat.current_value, confirm))
+	if (!__assert_channel_value(expect, stat.current_value, x_counter, confirm))
 		return false;
 	break;
 }
@@ -819,7 +830,7 @@ case CHANNEL_TYPE_LEDR: {
 	// 2-phase
 	// full/empty
 	if (stat.full) {
-		if (!__assert_channel_value(expect, stat.current_value,
+		if (!__assert_channel_value(expect, stat.current_value, false, 
 				confirm))
 			return false;
 	} else {
@@ -830,7 +841,7 @@ case CHANNEL_TYPE_LEDR: {
 	} else {
 	// 1-phase (ackless)
 		if (!__assert_channel_value(expect, stat.current_value,
-				confirm))
+				false, confirm))
 			return false;
 	}
 	break;
@@ -2221,12 +2232,13 @@ if (have_value()) {
  */
 bool
 channel::data_is_valid(void) const {
-	if (x_counter)
+	if (x_counter) {
 		return false;
+	}
 	switch (type) {
 	case CHANNEL_TYPE_1ofN: return (counter_state == bundles());
 #if PRSIM_CHANNEL_BUNDLED_DATA
-	// data can alway sbe sampled in any phase of handshake
+	// data can always be sampled in any phase of handshake
 	case CHANNEL_TYPE_BD_2P:
 	case CHANNEL_TYPE_BD_4P:
 #endif
@@ -3197,7 +3209,7 @@ channel::process_data(const State& s) throw (channel_exception) {
 	if (!ignored() && dumplog.stream && *dumplog.stream) {
 		// TODO: format me, hex, dec, bin, etc...
 		// should be able to just setbase()
-		if (v) {
+		if (v || data_is_bundled()) {
 		print_data_value(*dumplog.stream, data_rails_value(s));
 		} else {
 		(*dumplog.stream) << 'X';
@@ -3214,9 +3226,10 @@ channel::process_data(const State& s) throw (channel_exception) {
 		const size_t cur_index = current_index();	// save it
 		const size_t cur_iter = iteration;	// save it
 		if (!expect.second) {
-		STACKTRACE_INDENT_PRINT("value is not X" << endl);
+		STACKTRACE_INDENT_PRINT("expect value is not X" << endl);
 		const error_policy_enum e(s.get_channel_expect_fail_policy());
 		if (v) {
+	// FIXME: bundled-data: data may be valid, but X!
 		STACKTRACE_INDENT_PRINT("channel data is valid" << endl);
 		const value_type got = data_rails_value(s);
 		advance_value();
@@ -3227,7 +3240,7 @@ channel::process_data(const State& s) throw (channel_exception) {
 			STACKTRACE_INDENT_PRINT("data mismatch" << endl);
 			const channel_exception
 				ex(this, cur_index, cur_iter,
-					DATA_VALUE(expect), got);
+					DATA_VALUE(expect), got, x_counter);
 			if (e == ERROR_WARN) {
 				ex.inspect(s, cout);
 			} else if (e > ERROR_WARN) {
@@ -3247,7 +3260,7 @@ channel::process_data(const State& s) throw (channel_exception) {
 			STACKTRACE_INDENT_PRINT("channel data is invalid" << endl);
 			const channel_exception
 				ex(this, cur_index, cur_iter,
-					DATA_VALUE(expect), 0xDEADBEEF);
+					DATA_VALUE(expect), 0xDEADBEEF, true);
 			if (e == ERROR_WARN) {
 				ex.inspect(s, cout);
 			} else if (e > ERROR_WARN) {
@@ -3261,8 +3274,10 @@ channel::process_data(const State& s) throw (channel_exception) {
 		}
 		} else {	// else don't care
 			// don't print confirmed values for don't cares
-			if (v) {
+			STACKTRACE_INDENT_PRINT("expect is X (don't care)" << endl);
+			if (v || data_is_bundled()) {
 				// on valid data, advance
+				STACKTRACE_INDENT_PRINT("advancing value" << endl);
 				advance_value();
 			}
 		}
