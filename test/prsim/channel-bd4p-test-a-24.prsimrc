@@ -1,0 +1,17 @@
+# "channel-bd4p-test-a-24.prsimrc"
+# @haco@ channel-bd4p-test-a.haco-c
+# @deps@ channel-test-a-values-X.txt
+# testing initialization and reset
+# can source this script after running any other test
+
+source channel-bd4p-test-a-01.prsimrc
+channel-show-all
+
+channel-source-file X channel-test-a-values-X.txt
+channel-source-file-loop Y channel-test-a-values-X.txt
+channel-sink Z
+channel-sink W
+channel-expect-file W channel-test-a-values-X.txt
+
+source channel-bd4p-test-a-21.prsimrc
+
