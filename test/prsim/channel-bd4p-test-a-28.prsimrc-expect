@@ -1,0 +1,80 @@
+channels:
+W : bundled-4p .a(init:0) .n x8 off
+X : bundled-4p .e(init:1) .v x8 off
+Y : bundled-4p .a(init:0) .v x8 off
+Z : bundled-4p .e(init:1) .n x8 off
+channels:
+W : bundled-4p .a(init:0) .n x8 off
+X : bundled-4p .e(init:1) .v x8 off
+Y : bundled-4p .a(init:0) .v x8 off
+Z : bundled-4p .e(init:1) .n x8 off
+Warning: channel acknowledge `W.a' has no fanin!
+Warning: channel validity `W.n' has no fanout, but is being sourced.
+Warning: channel acknowledge `Z.e' has no fanin!
+Warning: channel validity `Z.n' has no fanout, but is being sourced.
+Warning: channel validity `Y.v' has no fanin.
+Warning: channel validity `X.v' has no fanin.
+event queue:
+	10	X.e : 1
+	10	Y.a : 0
+	10	Z.n : 1
+	10	W.n : 1
+event queue:
+	20	X.e : X
+	20	Y.a : X
+All subnodes of 'X':
+X.e : X
+X.v : X
+X.d[0] : X
+X.d[1] : X
+X.d[2] : X
+X.d[3] : X
+X.d[4] : X
+X.d[5] : X
+X.d[6] : X
+X.d[7] : X
+All subnodes of 'Y':
+Y.a : X
+Y.v : X
+Y.d[0] : X
+Y.d[1] : X
+Y.d[2] : X
+Y.d[3] : X
+Y.d[4] : X
+Y.d[5] : X
+Y.d[6] : X
+Y.d[7] : X
+All subnodes of 'Z':
+Z.e : X
+Z.n : 1
+Z.d[0] : X
+Z.d[1] : X
+Z.d[2] : X
+Z.d[3] : X
+Z.d[4] : X
+Z.d[5] : X
+Z.d[6] : X
+Z.d[7] : X
+All subnodes of 'W':
+W.a : X
+W.n : 1
+W.d[0] : X
+W.d[1] : X
+W.d[2] : X
+W.d[3] : X
+W.d[4] : X
+W.d[5] : X
+W.d[6] : X
+W.d[7] : X
+initializing... 
+X : bundled-4p .e(init:1) .v x8 sink,watch, timing: after=10
+	count: 0, unknowns: 8
+Y : bundled-4p .a(init:0) .v x8 sink,watch, timing: after=10
+	count: 0, unknowns: 8
+Z : bundled-4p .e(init:1) .n x8 source,watch, timing: after=10 {0,2,0,1,}* @0 #0
+	count: 0, unknowns: 8
+W : bundled-4p .a(init:0) .n x8 source,watch, timing: after=10 {0,0,0,1,} @0
+	count: 0, unknowns: 8
+resetting... 
+channels:
+all gone! 
