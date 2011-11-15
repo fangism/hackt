@@ -1,6 +1,6 @@
 channels:
-L : .e(init:0) 1x1of2 off
-R : .e(init:0) 1x1of2 off
+L : .e(init:0)  1x1of2 off
+R : .e(init:0)  1x1of2 off
 sending 1s 
 channel	L (.data) : 1 @ 50
 channel	R (.data) : 1 @ 70
@@ -11,6 +11,7 @@ channel	R (.data) : 1 @ 190
 stopping channel R, sending 0 
 channel	L (.data) : 0 @ 230
 channel	R (.data) : 0 @ 250
+channel-assert: value assertion failed on channel R, expected: 1, but got: 0
 ERROR: value assertion failed on channel `R' at index [0] of iteration [3].
 	expected: 1, got: 0
 ... at line 46
