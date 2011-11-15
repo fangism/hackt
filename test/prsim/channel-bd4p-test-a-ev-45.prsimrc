@@ -1,0 +1,25 @@
+# "channel-bd4p-test-a-40.prsimrc"
+# @haco@ channel-bd4p-test-a.haco-c
+# testing channel sink
+
+# register channels
+source channel-bd4p-test-a-01.prsimrc
+
+fanout X.d[0]
+fanin X.d[0]
+fanout X.v
+fanin X.v
+fanout X.e
+fanin X.e
+
+channel-source-args X 0 1 11 88
+channel-sink X
+channel-show X
+
+fanout X.d[0]
+fanin X.d[0]
+fanout X.v
+fanin X.v
+fanout X.e
+fanin X.e
+

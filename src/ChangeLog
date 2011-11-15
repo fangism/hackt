@@ -3,6 +3,13 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-11-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-98-prsim-bd-04:
+	  prsim: adjusted channel-fanin/fanout, added bd timing global warning,
+		allow all bd channels to be signed.
+
+
 2011-11-12	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-98-prsim-bd-03:

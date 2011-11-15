@@ -94,6 +94,10 @@ using util::numeric::div_type;
 using util::numeric::rand48;
 using entity::global_indexed_reference;
 
+static const char bundled_data_global_timing_warning[] =
+"Warning (FIXME): global-randomized timing policy is not yet fully supported\n"
+"on bundled-data channel sources; the request signal may fire prematurely.";
+
 //=============================================================================
 #if PRSIM_CHANNEL_TIMING
 
@@ -1741,6 +1745,11 @@ channel::set_timing(const string& m, const string_list& a) {
 	} else if (m == __global) {
 		timing_mode = CHANNEL_TIMING_GLOBAL;
 		// no need to set after
+#if PRSIM_CHANNEL_BUNDLED_DATA
+		if (data_is_bundled()) {
+			cerr << bundled_data_global_timing_warning << endl;
+		}
+#endif
 	} else if (m == __after) {
 		timing_mode = CHANNEL_TIMING_AFTER;
 		if (a.size()) {
@@ -2409,20 +2418,35 @@ channel::reads_node(const node_index_type ni) const {
 		if (ack_signal && (ni == ack_signal)) {
 			return true;
 		}
+		switch (type) {
+		case CHANNEL_TYPE_1ofN:
 		if (valid_signal && is_data_rail) {
+			// for ev-handshake channels:
 			// source's validity must respond to its own data rails
 			return true;
+		}
+			break;
+#if PRSIM_CHANNEL_BUNDLED_DATA
+		case CHANNEL_TYPE_BD_2P:
+		case CHANNEL_TYPE_BD_4P:
+		// bundled-data sources do not respond to own data rails
+		// fall-through
+#endif
+		default: break;
 		}
 	}
 	if (is_sinking()) {
 		if (valid_signal) {
 			// ack only responds to validity, not data rails
+			// this also applies to bundled-data channels
 			if (ni == valid_signal)
 				return true;
 		} else {
-			// yes, ack responds to data rails
-			if (is_data_rail)
+			// if there is no validity or request rail
+			// ack responds directly to data rails
+			if (is_data_rail && !valid_signal) {
 				return true;
+			}
 		}
 	}
 	return false;
@@ -3091,10 +3115,7 @@ if (ni == ack_signal) {
 	} else {
 		if (timing_mode == CHANNEL_TIMING_GLOBAL &&
 				s.timing_is_randomized()) {
-			cerr <<
-"Warning (FIXME): global-randomized timing policy is not yet fully supported\n"
-"on bundled-data channel sources; the request signal may fire prematurely."
-				<< endl;
+			cerr << bundled_data_global_timing_warning << endl;
 		}
 		if (have_value()) {
 		// set data rails to next data value
@@ -3426,10 +3447,7 @@ if (is_sourcing()) {
 		// FIXME: how do we guarantee this?
 		if (timing_mode == CHANNEL_TIMING_GLOBAL &&
 				s.timing_is_randomized()) {
-			cerr <<
-"Warning (FIXME): global-randomized timing policy is not yet fully supported\n"
-"on bundled-data channel sources; the request signal may fire prematurely."
-				<< endl;
+			cerr << bundled_data_global_timing_warning << endl;
 		}
 		set_all_data_rails(s, events);
 		advance_value();
@@ -3719,61 +3737,6 @@ try {
 			bundle_name, _num_bundles, rail_name, _num_rails)) {
 		return true;
 	}
-#if 0
-	// allocate data rail references:
-	set<size_t> rail_aliases;
-	channel::data_rail_index_type dk;
-	dk[0] = num_bundles;
-	dk[1] = num_rails;
-	c.data.resize(dk);
-	// lookup and assign node-indices
-	dk[0] = 0;
-	size_t& j = dk[0];
-	for ( ; j<num_bundles; ++j) {
-		ostringstream bundle_segment;
-		if (bundle_name.length()) {
-			bundle_segment << "." << bundle_name;
-			if (_num_bundles) {
-				bundle_segment << "[" << j << "]";
-			}
-		}
-		dk[1] = 0;
-		size_t& k = dk[1];
-		for ( ; k<num_rails; ++k) {
-			ostringstream n;
-			n << base << bundle_segment.str() << "." << rail_name;
-			if (_num_rails) {
-				n << "[" << k << "]";
-			}
-			// may throw exception
-			const node_index_type ni =
-				parse_node_to_index(n.str(), m).index;
-			if (ni) {
-				c.data[dk] = ni;
-				// flag node for consistency
-				state.__get_node(ni).set_in_channel();
-				c.__node_to_rail[ni] = dk;
-				// lookup from node to channels
-				node_channels_map[ni].insert(key);
-				// check for rail uniqueness
-				if (!rail_aliases.insert(ni).second) {
-					cerr <<
-"Error: channels rails are forbidden from aliasing (implementation limitation)."
-						<< endl;
-					cerr << "Aliased channel rail: "
-						<< n.str() << endl;
-					return true;
-				}
-			} else {
-				cerr << "Error: no such node `" << n.str() <<
-					"\' in channel." << endl;
-				return true;
-			}
-		}	// end for each rail
-	}	// end for each bundle
-	// initialize data-rail state counters from current values
-	c.initialize_data_counter(state);
-#endif
 	// now setup ack and validity
 	// really shouldn't have to lookup channel again here...
 	if (set_channel_ack_valid(state, base, 
@@ -3951,7 +3914,6 @@ for ( ; ri!=re; ++ri) {
 #else
 	const string& base(_base);
 #endif
-//	const size_t num_bundles = _num_bundles ? _num_bundles : 1;
 	const size_t key = channel_pool.size();
 	const pair<channel_set_type::iterator, bool>
 		i(channel_index_set.insert(make_pair(base, key)));

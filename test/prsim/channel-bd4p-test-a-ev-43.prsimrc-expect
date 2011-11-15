@@ -1,0 +1,22 @@
+channels:
+W : bundled-4p .a(init:0) .n x8 off
+X : bundled-4p .e(init:1) .v x8 off
+Y : bundled-4p .a(init:0) .v x8 off
+Z : bundled-4p .e(init:1) .n x8 off
+Fanouts of node `X.d[0]':
+Fanins of node `X.d[0]':
+Fanouts of node `X.v':
+Fanins of node `X.v':
+Fanouts of node `X.e':
+Fanins of node `X.e':
+Warning: channel validity `X.v' has no fanin.
+X : bundled-4p .e(init:1) .v x8 sink, timing: after=10
+	count: 0, unknowns: 8
+Fanouts of node `X.d[0]':
+Fanins of node `X.d[0]':
+Fanouts of node `X.v':
+to channel(s): X
+Fanins of node `X.v':
+Fanouts of node `X.e':
+Fanins of node `X.e':
+from channel(s): X
