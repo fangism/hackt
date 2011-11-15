@@ -454,6 +454,92 @@ auto_wrap_dlfunction(void (*f)(A0, A1, A2, A3, A4, A5, A6, A7),
 	return meta_function_return_type(NULL);
 }
 
+template <typename R,
+	typename A0, typename A1, typename A2, typename A3, 
+	typename A4, typename A5, typename A6, typename A7,
+	typename A8>
+meta_function_return_type
+auto_wrap_dlfunction(R (*f)(A0, A1, A2, A3, A4, A5, A6, A7, A8),
+		const meta_function_argument_list_type& a) {
+	VERIFY_WRAPPED_ARGS(a, 9);
+	return make_meta_value((*f)(
+		extract_meta_value<A0>(a[0]),
+		extract_meta_value<A1>(a[1]),
+		extract_meta_value<A2>(a[2]),
+		extract_meta_value<A3>(a[3]),
+		extract_meta_value<A4>(a[4]),
+		extract_meta_value<A5>(a[5]),
+		extract_meta_value<A6>(a[6]),
+		extract_meta_value<A7>(a[7]),
+		extract_meta_value<A8>(a[8])
+	));
+}
+
+template <typename A0, typename A1, typename A2, typename A3, 
+	typename A4, typename A5, typename A6, typename A7,
+	typename A8>
+meta_function_return_type
+auto_wrap_dlfunction(void (*f)(A0, A1, A2, A3, A4, A5, A6, A7, A8),
+		const meta_function_argument_list_type& a) {
+	VERIFY_WRAPPED_ARGS(a, 9);
+	(*f)(
+		extract_meta_value<A0>(a[0]),
+		extract_meta_value<A1>(a[1]),
+		extract_meta_value<A2>(a[2]),
+		extract_meta_value<A3>(a[3]),
+		extract_meta_value<A4>(a[4]),
+		extract_meta_value<A5>(a[5]),
+		extract_meta_value<A6>(a[6]),
+		extract_meta_value<A7>(a[7]),
+		extract_meta_value<A8>(a[8])
+	);
+	return meta_function_return_type(NULL);
+}
+
+template <typename R,
+	typename A0, typename A1, typename A2, typename A3, 
+	typename A4, typename A5, typename A6, typename A7,
+	typename A8, typename A9>
+meta_function_return_type
+auto_wrap_dlfunction(R (*f)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9),
+		const meta_function_argument_list_type& a) {
+	VERIFY_WRAPPED_ARGS(a, 10);
+	return make_meta_value((*f)(
+		extract_meta_value<A0>(a[0]),
+		extract_meta_value<A1>(a[1]),
+		extract_meta_value<A2>(a[2]),
+		extract_meta_value<A3>(a[3]),
+		extract_meta_value<A4>(a[4]),
+		extract_meta_value<A5>(a[5]),
+		extract_meta_value<A6>(a[6]),
+		extract_meta_value<A7>(a[7]),
+		extract_meta_value<A8>(a[8]),
+		extract_meta_value<A9>(a[9])
+	));
+}
+
+template <typename A0, typename A1, typename A2, typename A3, 
+	typename A4, typename A5, typename A6, typename A7,
+	typename A8, typename A9>
+meta_function_return_type
+auto_wrap_dlfunction(void (*f)(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9),
+		const meta_function_argument_list_type& a) {
+	VERIFY_WRAPPED_ARGS(a, 10);
+	(*f)(
+		extract_meta_value<A0>(a[0]),
+		extract_meta_value<A1>(a[1]),
+		extract_meta_value<A2>(a[2]),
+		extract_meta_value<A3>(a[3]),
+		extract_meta_value<A4>(a[4]),
+		extract_meta_value<A5>(a[5]),
+		extract_meta_value<A6>(a[6]),
+		extract_meta_value<A7>(a[7]),
+		extract_meta_value<A8>(a[8]),
+		extract_meta_value<A8>(a[9])
+	);
+	return meta_function_return_type(NULL);
+}
+
 // extend trivially to more arguments as necessary
 
 // usage: return auto_wrap_dlfunction(&func, <const meta_function_argument_list_type&>);
