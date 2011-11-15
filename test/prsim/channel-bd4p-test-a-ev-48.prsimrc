@@ -1,0 +1,77 @@
+# "channel-bd4p-test-a-46.prsimrc"
+# @haco@ channel-bd4p-test-a.haco-c
+
+# bundled-data channels should be allowed to be signed
+source channel-bd4p-test-a-46.prsimrc
+channel-source-args-loop X -128 -64 -63 -1 0 1 27 100 127
+channel-show X
+set X.e 1
+channel-reset-all
+channel-watchall
+cycle
+
+channel-release-all
+cycle
+set X.e 0
+cycle
+
+set X.e 1
+cycle
+set X.e 0
+cycle
+
+set X.e 1
+cycle
+set X.e 0
+cycle
+
+set X.e 1
+cycle
+set X.e 0
+cycle
+
+set X.e 1
+cycle
+set X.e 0
+cycle
+
+set X.e 1
+cycle
+set X.e 0
+cycle
+
+set X.e 1
+cycle
+set X.e 0
+cycle
+
+set X.e 1
+cycle
+set X.e 0
+cycle
+
+set X.e 1
+cycle
+set X.e 0
+cycle
+
+set X.e 1
+cycle
+set X.e 0
+cycle
+
+set X.e 1
+cycle
+set X.e 0
+cycle
+
+set X.e 1
+cycle
+set X.e 0
+cycle
+
+set X.e 1
+cycle
+set X.e 0
+cycle
+
