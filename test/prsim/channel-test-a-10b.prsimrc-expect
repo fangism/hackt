@@ -17,6 +17,7 @@ X : .e(init:0)  1x1of2 sink,expect,watch, timing: global {0,1,1,0,0,0,1,1,1,1,} 
 ------------------------------------ 
 expect to assert fail here: 
 channel	X (.data) : 1 @ 20
+channel-assert: value assertion failed on channel X, expected: 0, but got: 1
 	20	X.d[1] : 1
 ERROR: value assertion failed on channel `X' at index [0].
 	expected: 0, got: 1

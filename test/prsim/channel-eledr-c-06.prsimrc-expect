@@ -39,6 +39,7 @@ channel	D (.data) : 0 @ 70
 	70	D._d : 1
 	80	D.e : 1	[by D._d:=1]
 channel	D (.data) : 1 @ 80
+channel-assert: value assertion failed on channel D, expected: 0, but got: 1
 	80	D._d : 0
 ERROR: value assertion failed on channel `D' at index [7].
 	expected: 0, got: 1

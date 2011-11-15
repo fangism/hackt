@@ -3256,8 +3256,8 @@ channel::process_data(const State& s) throw (channel_exception) {
 		advance_value();
 		// want to advance after checking, 
 		// but need to guarantee progress in the event of exception
-	// TODO: factor this into __assert_channel_value
-		if (DATA_VALUE(expect) != got) {
+		if (!__assert_channel_value(DATA_VALUE(expect),
+				got, x_counter, s.confirm_asserts())) {
 			STACKTRACE_INDENT_PRINT("data mismatch" << endl);
 			const channel_exception
 				ex(this, cur_index, cur_iter,
@@ -3272,10 +3272,6 @@ channel::process_data(const State& s) throw (channel_exception) {
 				throw ex;
 #endif
 			}
-		} else if (s.confirm_asserts()) {
-			print_data_value(cout << "channel " << name <<
-				" has value ", DATA_VALUE(expect)) <<
-				", as expected." << endl;
 		}
 		} else {	// cannot expect invalid value
 			STACKTRACE_INDENT_PRINT("channel data is invalid" << endl);

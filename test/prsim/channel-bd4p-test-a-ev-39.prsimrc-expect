@@ -56,6 +56,7 @@ X : bundled-4p .e(init:1) .v x8 unsigned sink,expect,watch, timing: after=10 {3,
 ------------------------------------ 
 expect to assert fail here: 
 channel	X (.data) : 6 @ 50
+channel-assert: value assertion failed on channel X, expected: 12, but got: 6
 ERROR: value assertion failed on channel `X' at index [2].
 	expected: 12, got: 6
 	50	X.v : 1
