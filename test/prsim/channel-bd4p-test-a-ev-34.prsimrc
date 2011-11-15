@@ -1,0 +1,55 @@
+# "channel-bd4p-test-a-34.prsimrc"
+# @haco@ channel-bd4p-test-a.haco-c
+
+# clear data rails first
+watchall
+set X.d[0..3] 1
+set X.d[4..7] 0
+cycle
+
+# testing hexadecimal values
+source channel-bd4p-test-a-01.prsimrc
+echo no values given: will reset to neutral
+channel-source-args X
+channel-show-all
+# channel-sink X
+echo this time, no sink
+
+channel-watch X
+
+echo resetting all channels...
+channel-reset-all
+watchall
+cycle
+
+echo releasing all channels...
+channel-release-all
+cycle
+
+assertn-queue
+echo all values went to X because X.e is X
+
+channel-show X
+echo setting X.e -> 0, resets data rails
+set X.e 0
+cycle
+assert X.v 0
+
+channel-show X
+echo setting X.e -> X
+set X.e X
+cycle
+assert X.v X
+
+channel-show X
+echo setting X.e -> 1, also causes data rails to reset
+set X.e 1
+cycle
+# no more data!
+assert X.v X
+
+channel-show X
+echo setting X.e -> X
+set X.e X
+cycle
+assert X.v X
