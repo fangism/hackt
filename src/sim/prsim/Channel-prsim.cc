@@ -2352,12 +2352,13 @@ default: DIE;
 #if PRSIM_CHANNEL_SIGNED
 	// possible sign extension
 	if (is_signed()) {
-		INVARIANT(radix() == 2);
+		INVARIANT(radix() == 2 || data_is_bundled());
 		// detect sign bit
-		const bool sign = ret & (1 << (bundles() -1));
+		const size_t width = data_is_bundled() ? radix() : bundles();
+		const bool sign = ret & (1 << (width -1));
 		if (sign) {
 			// then sign extend negative number
-			ret |= (int_value_type(-1) << bundles());
+			ret |= (int_value_type(-1) << width);
 		}
 	}
 #endif
