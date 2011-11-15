@@ -1,0 +1,22 @@
+channels:
+W : bundled-4p .a(init:0) .n x8 off
+X : bundled-4p .e(init:1) .v x8 off
+Y : bundled-4p .a(init:0) .v x8 off
+Z : bundled-4p .e(init:1) .n x8 off
+no values given: will reset to neutral 
+Warning: channel acknowledge `Y.a' has no fanin!
+Warning: channel validity `Y.v' has no fanout, but is being sourced.
+Warning: no values given, channel will remain neutral.
+channels:
+W : bundled-4p .a(init:0) .n x8 off
+X : bundled-4p .e(init:1) .v x8 off
+Y : bundled-4p .a(init:0) .v x8 source, timing: after=10
+Z : bundled-4p .e(init:1) .n x8 off
+Warning: channel validity `Y.v' has no fanin.
+resetting all channels... 
+	10	Y.v : 0
+	10	Y.a : 0
+releasing all channels... 
+channel	Y (.data) : X @ 20
+	20	Y.v : 1
+	30	Y.a : 1	[by Y.v:=1]

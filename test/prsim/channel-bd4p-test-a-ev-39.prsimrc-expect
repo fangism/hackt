@@ -1,0 +1,68 @@
+channels:
+W : bundled-4p .a(init:0) .n x8 off
+X : bundled-4p .e(init:1) .v x8 off
+Y : bundled-4p .a(init:0) .v x8 off
+Z : bundled-4p .e(init:1) .n x8 off
+Warning: channel validity `X.v' has no fanin.
+All subnodes of 'X':
+X.e : X
+X.v : X
+X.d[0] : X
+X.d[1] : X
+X.d[2] : X
+X.d[3] : X
+X.d[4] : X
+X.d[5] : X
+X.d[6] : X
+X.d[7] : X
+manually resetting data 
+	0	X.d[0] : 0
+	0	X.d[1] : 0
+	0	X.d[2] : 0
+	0	X.d[3] : 0
+	0	X.d[4] : 0
+	0	X.d[5] : 0
+	0	X.d[6] : 0
+	0	X.d[7] : 0
+	0	X.v : 0
+	10	X.e : 1
+releasing channel X 
+------------------------------------ 
+	10	X.d[0] : 1
+	10	X.d[1] : 1
+channel	X (.data) : 3 @ 10
+	10	X.v : 1
+	20	X.e : 0	[by X.v:=1]
+X : bundled-4p .e(init:1) .v x8 sink,expect,watch, timing: after=10 {3,6,12,} @1
+	count: 2, unknowns: 0
+- - - - - - - - - - - - - - - - - - 
+	20	X.v : 0
+	30	X.e : 1	[by X.v:=0]
+X : bundled-4p .e(init:1) .v x8 sink,expect,watch, timing: after=10 {3,6,12,} @1
+	count: 2, unknowns: 0
+------------------------------------ 
+	30	X.d[2] : 1
+	30	X.d[0] : 0
+channel	X (.data) : 6 @ 30
+	30	X.v : 1
+	40	X.e : 0	[by X.v:=1]
+X : bundled-4p .e(init:1) .v x8 sink,expect,watch, timing: after=10 {3,6,12,} @2
+	count: 2, unknowns: 0
+- - - - - - - - - - - - - - - - - - 
+	40	X.v : 0
+	50	X.e : 1	[by X.v:=0]
+X : bundled-4p .e(init:1) .v x8 sink,expect,watch, timing: after=10 {3,6,12,} @2
+	count: 2, unknowns: 0
+------------------------------------ 
+expect to assert fail here: 
+channel	X (.data) : 6 @ 50
+ERROR: value assertion failed on channel `X' at index [2].
+	expected: 12, got: 6
+	50	X.v : 1
+	60	X.e : 0	[by X.v:=1]
+X : bundled-4p .e(init:1) .v x8 sink,expect,watch, timing: after=10
+	count: 2, unknowns: 0
+should not be reached 
+- - - - - - - - - - - - - - - - - - 
+assert failed: expecting node `X.e' at 1, but got 0.
+... at line 71

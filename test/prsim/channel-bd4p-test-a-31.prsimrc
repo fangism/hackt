@@ -1,0 +1,11 @@
+# "channel-bd4p-test-a-31.prsimrc"
+# @haco@ channel-bd4p-test-a.haco-c
+
+# testing hexadecimal values
+source channel-bd4p-test-a-01.prsimrc
+channel-expect-args X 0x0 0x1
+channel-expect-args Y 0x0 0x1 0x3 0x2
+channel-expect-args Z 0xf0 0x0d 0xff 0xaa
+channel-expect-args W 0x05 0x55 0x7f 0x64
+channel-show-all
+

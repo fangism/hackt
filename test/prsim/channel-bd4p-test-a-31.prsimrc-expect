@@ -1,0 +1,10 @@
+channels:
+W : bundled-4p .a(init:0) .n x8 off
+X : bundled-4p .e(init:1) .v x8 off
+Y : bundled-4p .a(init:0) .v x8 off
+Z : bundled-4p .e(init:1) .n x8 off
+channels:
+W : bundled-4p .a(init:0) .n x8 expect {5,85,127,100,} @0
+X : bundled-4p .e(init:1) .v x8 expect {0,1,} @0
+Y : bundled-4p .a(init:0) .v x8 expect {0,1,3,2,} @0
+Z : bundled-4p .e(init:1) .n x8 expect {240,13,255,170,} @0
