@@ -754,7 +754,11 @@ public:
 #if PRSIM_CHANNEL_SIGNED
 	bool
 	can_be_signed(void) const {
-		return (radix() == 2) && (bundles() > 1);
+		return
+#if PRSIM_CHANNEL_BUNDLED_DATA
+			data_is_bundled() ||
+#endif
+			((radix() == 2) && (bundles() > 1));
 	}
 
 	void
