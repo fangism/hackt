@@ -1,0 +1,154 @@
+# "channel-bd4p-test-g-ev-04.prsimrc"
+# @haco@ channel-bd4p-test-a.haco-c
+# testing channel source
+
+# echo-commands on
+source channel-bd4p-test-g-01.prsimrc
+
+channel-show X
+getall X
+watchall
+channel-source-args X 0 33 66 99 11 44 77 22 55 88
+channel-watch X
+channel-reset X
+cycle
+getall X
+channel-show X
+
+echo manually bucketing
+set X.e 0
+cycle
+assert X.v 0
+
+echo releasing channel X (source)
+channel-release X
+cycle
+echo should be no data yet because ack is off
+assert X.v 0
+
+echo -----------------------------------
+set X.e 1
+step-event
+queue
+echo end of queue
+cycle
+assert X.d[0] 1
+assert X.d[1] 1
+# we know the first data value
+channel-show X
+backtrace X.d[0]
+backtrace X.v
+assert X.v 1
+
+echo - - - - - - - - - - - - - - - - - -
+set X.e 0
+cycle
+channel-show X
+assert X.v 0
+
+echo -----------------------------------
+set X.e 1
+cycle
+assert X.d[0] 0
+assert X.d[1] 1
+# we know the second data value
+channel-show X
+# backtrace X.d[0]
+assert X.v 1
+
+echo - - - - - - - - - - - - - - - - - -
+set X.e 0
+cycle
+channel-show X
+assert X.v 0
+
+echo -----------------------------------
+set X.e 1
+cycle
+channel-show X
+
+echo - - - - - - - - - - - - - - - - - -
+set X.e 0
+cycle
+channel-show X
+
+echo -----------------------------------
+set X.e 1
+cycle
+channel-show X
+
+echo - - - - - - - - - - - - - - - - - -
+set X.e 0
+cycle
+channel-show X
+
+echo -----------------------------------
+set X.e 1
+cycle
+channel-show X
+
+echo - - - - - - - - - - - - - - - - - -
+set X.e 0
+cycle
+channel-show X
+
+echo -----------------------------------
+set X.e 1
+cycle
+channel-show X
+
+echo - - - - - - - - - - - - - - - - - -
+set X.e 0
+cycle
+channel-show X
+
+echo -----------------------------------
+set X.e 1
+cycle
+channel-show X
+
+echo - - - - - - - - - - - - - - - - - -
+set X.e 0
+cycle
+channel-show X
+
+echo -----------------------------------
+set X.e 1
+cycle
+channel-show X
+
+echo - - - - - - - - - - - - - - - - - -
+set X.e 0
+cycle
+channel-show X
+
+echo -----------------------------------
+set X.e 1
+cycle
+channel-show X
+
+echo - - - - - - - - - - - - - - - - - -
+set X.e 0
+cycle
+channel-show X
+
+echo -----------------------------------
+set X.e 1
+cycle
+channel-show X
+assert X.v 1
+
+echo - - - - - - - - - - - - - - - - - -
+set X.e 0
+cycle
+channel-show X
+assert X.v 0
+
+echo -----------------------------------
+echo no more values!!!
+set X.e 1
+cycle
+channel-show X
+getall X
+assert X.v 0
+
