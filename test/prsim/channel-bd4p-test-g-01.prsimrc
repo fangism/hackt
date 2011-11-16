@@ -1,0 +1,12 @@
+# "channel-bd4p-test-g-01.prsimrc"
+# @haco@ channel-bd4p-test-a.haco-c
+# data rails inverted
+
+channel-bd-4p X e:1 v:0 ~d:8
+channel-bd-4p Y a:0 v:0 ~d:8
+channel-bd-4p Z e:1 n:1 ~d:8
+channel-bd-4p W a:0 n:1 ~d:8
+
+channel-show-all
+channel-report-time on
+

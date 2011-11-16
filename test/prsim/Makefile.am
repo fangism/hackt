@@ -357,6 +357,10 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	channel-bd4p-test-a-ev-45 \
 	channel-bd4p-test-a-46 \
 	channel-bd4p-test-a-ev-48 \
+	channel-bd4p-test-g-01 \
+	channel-bd4p-test-g-ev-03 channel-bd4p-test-g-ev-04 \
+	channel-bd4p-test-g-ev-08 \
+	channel-bd4p-test-g-ev-09 channel-bd4p-test-g-ev-09b \
 	eledr-buffer-a-01 eledr-buffer-a-02 eledr-buffer-a-03 \
 	eledr-buffer-a-04 eledr-buffer-a-05 eledr-buffer-a-06 \
 	eledr-buffer-a-07 \
