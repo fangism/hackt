@@ -7076,6 +7076,147 @@ ChannelLEDR::usage(ostream& o) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if PRSIM_CHANNEL_BUNDLED_DATA
 /***
+@texinfo cmd/channel-bd-2p.texi
+@deffn Command channel-bd-2p name ack:init req:init data:width
+Registers a bundled-data (BD) channel, which consists of a bus, 
+request rail, and acknowledge rail.
+The request and acknowledge perform a two-phase handshake on every token;
+these signals toggle once per handshake.
+The @var{name} of the channel should match that of an instance 
+(process or channel) in the source file.  
+@itemize
+@item @var{name} is the name of the new channel in the simulator's namespace
+@item @var{ack} is a regular expression of the form @t{id:[01]}, where
+@itemize
+	@item t{id} is the name of the acknowledge signal.  
+	@item The value after the @t{:} (required)
+	is interpreted as the initial state of the acknowledge wire, 
+	if driven by sink.
+@end itemize
+@item @var{req} is the name of the request signal.
+	The value given is the initial value of the request signal,
+	if driven by a source.
+	Together the XOR of the initial values of the acknowledge and request
+	defines the @emph{empty-parity}.  
+@item @var{data} is the name of the data rail(s), interpreted with active-high
+	logic levels (prefix with @t{~} to make active-low).  
+	The @var{num} value specifies the number of wires (bus width).
+@end itemize
+@example
+@t{channel-bd-2p NAME e:1 v:1 d:0} -- this names the ack @t{e} and the 
+	request @t{v}, and data is a single-wire bundled-data channel.
+@t{channel-bd-2p NAME a:1 r:0 d:8} -- this names the ack @t{a} and the
+	request @t{r}, and data is a 8-bit bundled-data channel.
+@end example
+@end deffn
+@end texinfo
+***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(ChannelBD2P, instance_completer)
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelBD2P, "channel-bd-2p", 
+	channels, "declare a bundled-data channel")
+
+int
+ChannelBD2P::main(State& s, const string_list& a) {
+if (a.size() != 5) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	string_list::const_iterator i(++a.begin());
+	const string& chan_name(*i);
+	const string& ack(*++i);
+	const string& req(*++i);
+	const string& data(*++i);
+	// could confirm that 'name' exists as a process/channel/datatype?
+	bool ack_init = false;
+	bool req_init = false;
+	bool data_sense = false;
+	size_t num_rails = 0;
+	string ack_name, req_name, data_name;
+	{
+		// parse ack
+		string_list tmp;
+		tokenize_char(ack, tmp, ':');
+		if (tmp.size() != 2) {
+			cerr << "Error: ack must be of the form id:init."
+				<< endl;
+			return Command::SYNTAX;
+		}
+		if (tmp.front().length()) {	// if we have ack (name)...
+		ack_name = tmp.front();
+		if (string_to_num(tmp.back(), ack_init)) {
+			cerr << "Error: parsing initial value of ack." << endl;
+			return Command::SYNTAX;
+		}
+		}	// else skip
+	}{
+		// parse req
+		string_list tmp;
+		tokenize_char(req, tmp, ':');
+		if (tmp.size() != 2) {
+			cerr << "Error: request must be of the form id:init."
+				<< endl;
+			return Command::SYNTAX;
+		}
+		req_name = tmp.front();
+		if (string_to_num(tmp.back(), req_init)) {
+			cerr << "Error: parsing initial value of request."
+				<< endl;
+			return Command::SYNTAX;
+		}
+	}{
+		// parse data
+		size_t c = data.find(':');
+		if (c == string::npos || (c == data.length() -1)) {
+			THROW_EXIT;
+		}
+		string_list tmp;
+		tokenize_char(data, tmp, ':');
+		if (tmp.size() != 2) {
+			cerr << "Error: data must be of the form [~]id:init."
+				<< endl;
+			return Command::SYNTAX;
+		}
+		data_name = tmp.front();
+#if PRSIM_CHANNEL_RAILS_INVERTED
+		data_sense = (data_name[0] == '~');		// active low
+#endif
+		const string::const_iterator b(data_name.begin());
+		data_name.assign(b +size_t(data_sense), b+c);
+		if (!data_name.length()) { THROW_EXIT; }
+		if (string_to_num(tmp.back(), num_rails)) {
+			cerr << "Error: parsing bus width." << endl;
+			return Command::SYNTAX;
+		}
+	}
+	channel_manager& cm(s.get_channel_manager());
+	if (cm.new_channel_bd2p(s, chan_name, 
+			ack_name, ack_init, req_name, req_init,
+			data_name, num_rails, data_sense)) {
+		return Command::BADARG;
+	}
+	return Command::NORMAL;
+}
+}
+
+void
+ChannelBD2P::usage(ostream& o) {
+	o << name << " <name> <ack:init> <req:init> <data:num>" << endl;
+	o <<
+"Registers a named bundled-data channel (2-phase) in a separate namespace in \n"
+"the simulator, typically used to drive or log the environment.\n"
+"\'name\' is the name of the new channel in the simulator's namespace\n"
+"\'ack:init\' : ack is the name of the acknowledge wire, init is the initial\n"
+	"\tvalue of this wire if driven by sink.\n"
+"\'req:init\' : req is the name of the request rail, init is the initial\n"
+	"\tvalue of this wire if driven by source.\n"
+"\'data:num\' : data is the name of the data rail(s) of the channel.\n"
+	"\tnum is the number of rails (bus width).\n"
+	<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+/***
 @texinfo cmd/channel-bd-4p.texi
 @deffn Command channel-bd-4p name ack:init req:init data:width
 Registers a bundled-data (BD) channel, which consists of a bus, 
@@ -7238,9 +7379,9 @@ ChannelBD4P::usage(ostream& o) {
 "Registers a named bundled-data channel (4-phase) in a separate namespace in \n"
 "the simulator, typically used to drive or log the environment.\n"
 "\'name\' is the name of the new channel in the simulator's namespace\n"
-"\'ack:init\' : ack is the name of the acknowledge wire, init is the initial\n"
+"\'ack:init\' : ack is the name of the acknowledge wire [ae], init is the initial\n"
 	"\tvalue of this wire if driven by sink.\n"
-"\'req:init\' : req is the name of the request rail, init is the initial\n"
+"\'req:init\' : req is the name of the request rail [nv], init is the initial\n"
 	"\tvalue of this wire if driven by source.\n"
 "\'data:num\' : data is the name of the data rail(s) of the channel.\n"
 	"\tnum is the number of rails (bus width).\n"
