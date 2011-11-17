@@ -537,6 +537,19 @@ private:
 	void
 	set_all_data_rails(const State&, vector<env_event_type>&);
 
+#if PRSIM_CHANNEL_BUNDLED_DATA
+	void
+	set_bd_data_req(const State&, vector<env_event_type>&);
+
+	void
+	update_bd_data_counter(const value_enum, const value_enum);
+
+	void
+	update_data_counter(const value_enum p, const value_enum n) {
+		update_bd_data_counter(p, n);
+	}
+#endif
+
 	void
 	initialize_all_data_rails(vector<env_event_type>&);
 
@@ -636,6 +649,19 @@ public:
 		return get_valid_sense();
 	}
 
+#if PRSIM_CHANNEL_BUNDLED_DATA
+	// valid-sense is also overloaded for req-init
+	void
+	set_req_init(const bool r) {
+		set_valid_sense(r);
+	}
+
+	bool
+	get_req_init(void) const {
+		return get_valid_sense();
+	}
+#endif
+
 	bool
 	four_phase(void) const {
 	switch (type) {
@@ -658,18 +684,33 @@ public:
 private:
 	// the parity specified by the initial empty state
 	bool
-	empty_parity(void) const {
+	ledr_empty_parity(void) const {
+		INVARIANT(type == CHANNEL_TYPE_LEDR);
 		return get_data_init() ^ get_repeat_init() ^ get_ack_init();
 	}
 
+#if PRSIM_CHANNEL_BUNDLED_DATA
 	bool
-	full_parity(void) const {
-		return !empty_parity();
+	bd2p_empty_parity(void) const {
+		INVARIANT(type == CHANNEL_TYPE_BD_2P);
+		return get_req_init() ^ get_ack_init();
+	}
+#endif
+
+	bool
+	ledr_full_parity(void) const {
+		return !ledr_empty_parity();
 	}
 
 	value_enum
 	current_ledr_parity(const State& s) const;
 
+#if PRSIM_CHANNEL_BUNDLED_DATA
+	value_enum
+	current_bd2p_parity(const State& s) const;
+#endif
+
+	// this suffices until LEDR supports bus of rails
 	node_index_type
 	ledr_data_rail(void) const { return data.front(); }
 
@@ -942,6 +983,26 @@ public:
 			waiting_sender(false), 
 			waiting_receiver(false)
 			{ }
+
+		// only applicable to 2-phase channels
+		void
+		set_empty(bool e) {
+			full = !e;
+		if (e) {
+			waiting_sender = true;
+			valid_active = false;
+			ack_active = true;
+		} else {
+			waiting_receiver = true;
+			valid_active = true;
+			ack_active = false;
+		}
+		}
+
+		void
+		set_full(bool f) {
+			set_empty(!f);
+		}
 	};	// end struct status_summary
 
 	status_summary
@@ -1050,6 +1111,14 @@ private:
 		const string& bn, const size_t nb, 
 		const string& rn, const size_t nr);
 
+	bool
+	set_channel_2p_ack(State&, const size_t ci,
+		const string& an, const bool ai);
+
+	bool
+	set_channel_2p_req(State&, const size_t ci,
+		const string& rn, const bool ri);
+
 public:
 	bool
 	new_channel_ledr(State&, const string&, 
@@ -1067,6 +1136,14 @@ public:
 //		const string& rn, 
 		const bool rs, 
 //		const bool ri,
+		const string& dn, const size_t nr, const bool ds);
+
+	bool
+	new_channel_bd2p(State&, const string&, 
+		const string& an, 
+		const bool ai, 
+		const string& rn, 
+		const bool ri,
 		const string& dn, const size_t nr, const bool ds);
 #endif
 
