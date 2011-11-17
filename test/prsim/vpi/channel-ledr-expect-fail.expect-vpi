@@ -16,13 +16,13 @@ breakpoints: L.d L.r
 # channel-watchall 
 # channel-ignore-all 
 # channel-reset-all 
-channel	L (.data) : X
+channel	L (.data) : X (ignored)
 prsim:	100	L.d : 0
-channel	L (.data) : 0
+channel	L (.data) : 0 (ignored)
 prsim:	100	L.r : 0
-channel	R (.data) : X
+channel	R (.data) : X (ignored)
 prsim:	110	R.d : 0
-channel	R (.data) : 0
+channel	R (.data) : 0 (ignored)
 prsim:	111	R.r : 0
 # channel-release-all 
 # channel-heed-all 

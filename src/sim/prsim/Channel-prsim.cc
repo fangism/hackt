@@ -3380,6 +3380,9 @@ channel::process_data(const State& s) throw (channel_exception) {
 			cout << 'X';
 		}
 		if (report_time) cout << " @ " << s.time();
+		if (ignored()) {
+			cout << " (ignored)";
+		}
 		cout << endl;
 	}
 	if (!ignored() && dumplog.stream && *dumplog.stream) {
