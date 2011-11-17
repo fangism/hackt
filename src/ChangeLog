@@ -5,6 +5,14 @@
 
 2011-11-16	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-84-98-prsim-bd-06:
+	  prsim: channel watched-but-ignored values are printed, 
+		but with extra "(ignored)" text for clarity.
+		Updated test cases.
+
+
+2011-11-16	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-84-98-prsim-bd-05:
 	  prsim: drafted bundled-data 2-phase channel-environments, untested.
 

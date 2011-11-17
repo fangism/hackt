@@ -13,13 +13,13 @@ breakpoints: L.d L.r
 channels:
 L : LEDR (init .d:0 .r:0) source,watch,stopped,ignored, timing: global {0,1,1,0,}* @0 #0
 R : LEDR (init .d:0 .r:0) expect,watch,stopped,ignored {0,1,1,0,}* @0 #0
-channel	L (.data) : X
+channel	L (.data) : X (ignored)
 prsim:	10	L.d : 0
-channel	L (.data) : 0
+channel	L (.data) : 0 (ignored)
 prsim:	10	L.r : 0
-channel	R (.data) : X
+channel	R (.data) : X (ignored)
 prsim:	30	R.d : 0
-channel	R (.data) : 0
+channel	R (.data) : 0 (ignored)
 prsim:	31	R.r : 0
 # channel-release-all 
 # channel-heed-all 

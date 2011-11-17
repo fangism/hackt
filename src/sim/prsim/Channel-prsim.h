@@ -881,7 +881,7 @@ public:
 	bool
 	data_is_bundled(void) const {
 		return (type == CHANNEL_TYPE_BD_4P) ||
-			(type == CHANNEL_TYPE_BD_4P);
+			(type == CHANNEL_TYPE_BD_2P);
 	}
 
 	value_type
