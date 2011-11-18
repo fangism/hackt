@@ -18,20 +18,28 @@ Y.d[6] : X
 Y.d[7] : X
 Warning: channel acknowledge `Y.a' has no fanin!
 Warning: channel validity `Y.v' has no fanout, but is being sourced.
+	10	Y.d[0] : 0
+	10	Y.d[1] : 0
+	10	Y.d[2] : 0
+	10	Y.d[3] : 0
+	10	Y.d[4] : 0
+	10	Y.d[5] : 0
+	10	Y.d[6] : 0
+	10	Y.d[7] : 0
 	10	Y.v : 0
 All subnodes of 'Y':
 Y.a : X
 Y.v : 0
-Y.d[0] : X
-Y.d[1] : X
-Y.d[2] : X
-Y.d[3] : X
-Y.d[4] : X
-Y.d[5] : X
-Y.d[6] : X
-Y.d[7] : X
+Y.d[0] : 0
+Y.d[1] : 0
+Y.d[2] : 0
+Y.d[3] : 0
+Y.d[4] : 0
+Y.d[5] : 0
+Y.d[6] : 0
+Y.d[7] : 0
 Y : bundled-4p .a(init:0) .v x8 unsigned source,watch,stopped, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @0
-	count: 0, unknowns: 8
+	count: 0, unknowns: 0
 manually bucketing 
 	10	Y.a : 1
 releasing channel Y (source) 
@@ -39,30 +47,13 @@ should be no data yet because ack is off
 ----------------------------------- 
 	10	Y.a : 0
 event queue:
-	20	Y.d[0] : 0	[from Y.a:=0]
-	20	Y.d[1] : 0	[from Y.a:=0]
-	20	Y.d[2] : 0	[from Y.a:=0]
-	20	Y.d[3] : 0	[from Y.a:=0]
-	20	Y.d[4] : 0	[from Y.a:=0]
-	20	Y.d[5] : 0	[from Y.a:=0]
-	20	Y.d[6] : 0	[from Y.a:=0]
-	20	Y.d[7] : 0	[from Y.a:=0]
 	20	Y.v : 1	[from Y.a:=0]
 end of queue 
-	20	Y.d[0] : 0	[by Y.a:=0]
-	20	Y.d[1] : 0	[by Y.a:=0]
-	20	Y.d[2] : 0	[by Y.a:=0]
-	20	Y.d[3] : 0	[by Y.a:=0]
-	20	Y.d[4] : 0	[by Y.a:=0]
-	20	Y.d[5] : 0	[by Y.a:=0]
-	20	Y.d[6] : 0	[by Y.a:=0]
-	20	Y.d[7] : 0	[by Y.a:=0]
 channel	Y (.data) : 0 @ 20
 	20	Y.v : 1	[by Y.a:=0]
 Y : bundled-4p .a(init:0) .v x8 unsigned source,watch, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @1
 	count: 0, unknowns: 0
 event    : `Y.d[0]' : 0
-caused by: `Y.a' : 0
 (no cycle)
 event    : `Y.v' : 1
 caused by: `Y.a' : 0

@@ -539,6 +539,9 @@ private:
 
 #if PRSIM_CHANNEL_BUNDLED_DATA
 	void
+	reset_bundled_data_rails(vector<env_event_type>&);
+
+	void
 	set_bd_data_req(const State&, vector<env_event_type>&);
 
 	void

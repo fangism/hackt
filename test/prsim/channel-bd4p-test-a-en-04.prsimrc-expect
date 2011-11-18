@@ -18,20 +18,28 @@ Z.d[6] : X
 Z.d[7] : X
 Warning: channel acknowledge `Z.e' has no fanin!
 Warning: channel validity `Z.n' has no fanout, but is being sourced.
+	10	Z.d[0] : 0
+	10	Z.d[1] : 0
+	10	Z.d[2] : 0
+	10	Z.d[3] : 0
+	10	Z.d[4] : 0
+	10	Z.d[5] : 0
+	10	Z.d[6] : 0
+	10	Z.d[7] : 0
 	10	Z.n : 1
 All subnodes of 'Z':
 Z.e : X
 Z.n : 1
-Z.d[0] : X
-Z.d[1] : X
-Z.d[2] : X
-Z.d[3] : X
-Z.d[4] : X
-Z.d[5] : X
-Z.d[6] : X
-Z.d[7] : X
+Z.d[0] : 0
+Z.d[1] : 0
+Z.d[2] : 0
+Z.d[3] : 0
+Z.d[4] : 0
+Z.d[5] : 0
+Z.d[6] : 0
+Z.d[7] : 0
 Z : bundled-4p .e(init:1) .n x8 unsigned source,watch,stopped, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @0
-	count: 0, unknowns: 8
+	count: 0, unknowns: 0
 manually bucketing 
 	10	Z.e : 0
 releasing channel Z (source) 
@@ -39,30 +47,13 @@ should be no data yet because ack is off
 ----------------------------------- 
 	10	Z.e : 1
 event queue:
-	20	Z.d[0] : 0	[from Z.e:=1]
-	20	Z.d[1] : 0	[from Z.e:=1]
-	20	Z.d[2] : 0	[from Z.e:=1]
-	20	Z.d[3] : 0	[from Z.e:=1]
-	20	Z.d[4] : 0	[from Z.e:=1]
-	20	Z.d[5] : 0	[from Z.e:=1]
-	20	Z.d[6] : 0	[from Z.e:=1]
-	20	Z.d[7] : 0	[from Z.e:=1]
 	20	Z.n : 0	[from Z.e:=1]
 end of queue 
-	20	Z.d[0] : 0	[by Z.e:=1]
-	20	Z.d[1] : 0	[by Z.e:=1]
-	20	Z.d[2] : 0	[by Z.e:=1]
-	20	Z.d[3] : 0	[by Z.e:=1]
-	20	Z.d[4] : 0	[by Z.e:=1]
-	20	Z.d[5] : 0	[by Z.e:=1]
-	20	Z.d[6] : 0	[by Z.e:=1]
-	20	Z.d[7] : 0	[by Z.e:=1]
 channel	Z (.data) : 0 @ 20
 	20	Z.n : 0	[by Z.e:=1]
 Z : bundled-4p .e(init:1) .n x8 unsigned source,watch, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @1
 	count: 0, unknowns: 0
 event    : `Z.d[0]' : 0
-caused by: `Z.e' : 1
 (no cycle)
 event    : `Z.n' : 0
 caused by: `Z.e' : 1
