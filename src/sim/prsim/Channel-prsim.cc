@@ -1905,9 +1905,13 @@ channel::reset(vector<env_event_type>& events) {
 	STACKTRACE_VERBOSE;
 	typedef	State::node_type		node_type;
 	if (is_sourcing()) {
+		// reset data rails to all 0s (arbitrary), just not X.
+		// even for bundled-data
+		initialize_all_data_rails(events);
+#if PRSIM_CHANNEL_BUNDLED_DATA
 	switch (type) {
+	// Q: does timing matter here?
 	case CHANNEL_TYPE_BD_4P:
-		// for now, don't bother resetting data rails until neg-ack
 		// just reset the request to neutral
 		events.push_back(ENV_EVENT(valid_signal, 
 			(get_valid_sense() ? LOGIC_LOW : LOGIC_HIGH)));
@@ -1917,10 +1921,10 @@ channel::reset(vector<env_event_type>& events) {
 			(get_req_init() ? LOGIC_HIGH : LOGIC_LOW)));
 		// reset request to initial value
 		break;
-	default:
-		initialize_all_data_rails(events);
+	default: break;
 		// once nodes all become neutral, the validity should be reset
 	}	// end switch
+#endif
 	}
 	if (is_sinking()) {
 	switch (type) {
@@ -1960,6 +1964,8 @@ case CHANNEL_TYPE_SINGLE_TRACK:	// fall-through
 #if PRSIM_CHANNEL_BUNDLED_DATA
 case CHANNEL_TYPE_BD_2P: // fall-through
 case CHANNEL_TYPE_BD_4P: // fall-through
+	reset_bundled_data_rails(events);
+	break;
 #endif
 case CHANNEL_TYPE_1ofN:
 	reset_all_data_rails(events);
@@ -2041,6 +2047,8 @@ if (have_value()) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Responds to an (active) acknowledge by neutralizing data rails
+	in a return-to-zero protocol.
 	For 4-phase protocols, this means returning data rail bundles to
 	the NULL state.
 	For 2-phase protocols, this does nothing!
@@ -2061,6 +2069,32 @@ default:
 // case CHANNEL_TYPE_BD_2P:
 // case CHANNEL_TYPE_BD_4P:
 #endif
+	break;
+}	// end switch
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Responds to an (active) acknowledge by neutralizing data rails
+	in a return-to-zero protocol.
+	For 4-phase protocols, this means returning data rail bundles to
+	the NULL state.
+	For 2-phase protocols, this does nothing!
+ */
+inline
+void
+channel::reset_bundled_data_rails(vector<env_event_type>& events) {
+switch (type) {
+case CHANNEL_TYPE_BD_2P:
+case CHANNEL_TYPE_BD_4P:
+	transform(data.begin(), data.end(), back_inserter(events),
+		__node_setter(get_data_sense() ? LOGIC_HIGH : LOGIC_LOW));
+	break;
+// case CHANNEL_TYPE_SINGLE_TRACK:
+// case CHANNEL_TYPE_1ofN:
+default:
+// case CHANNEL_TYPE_LEDR:
+// two phase, LEDR: no resetting
 	break;
 }	// end switch
 }
