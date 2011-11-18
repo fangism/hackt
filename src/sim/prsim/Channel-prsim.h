@@ -542,9 +542,6 @@ private:
 	reset_bundled_data_rails(vector<env_event_type>&);
 
 	void
-	set_bd_data_req(const State&, vector<env_event_type>&);
-
-	void
 	update_bd_data_counter(const value_enum, const value_enum);
 
 	void
@@ -1034,6 +1031,12 @@ private:
 	bool
 	__assert_full(const status_summary&,
 		const bool, const bool) const;
+
+#if PRSIM_CHANNEL_BUNDLED_DATA
+	void
+	set_bd_data_req(const State&, const status_summary&,
+		vector<env_event_type>&);
+#endif
 
 	void
 	__resume_4p_sink(const status_summary&, vector<env_event_type>&);
