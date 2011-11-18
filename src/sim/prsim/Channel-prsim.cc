@@ -2150,7 +2150,7 @@ channel::toggle_node(const State& s, const node_index_type ni) const {
  */
 void
 channel::set_all_data_rails(const State& s, vector<env_event_type>& r) {
-	STACKTRACE_VERBOSE;
+	STACKTRACE_BRIEF;
 	typedef	State::node_type		node_type;
 if (have_value()) {
 switch (type) {
@@ -2321,7 +2321,7 @@ channel::data_is_valid(void) const {
  */
 channel::value_type
 channel::data_rails_value(const State& s) const {
-	STACKTRACE_VERBOSE;
+	STACKTRACE_BRIEF;
 	typedef	State::node_type	node_type;
 	value_type ret = 0;
 switch (type) {
@@ -2902,6 +2902,8 @@ if (ack_signal) {
 /**
 	If any participating rails are X, return LOGIC_OTHER.
 	LOGIC_HIGH is parity=1, LOGIC_LOW is parity=0.
+	FIXME: The X overrule may prohibit use of this when
+		one of the signals is initially X.
  */
 value_enum
 channel::current_bd2p_parity(const State& s) const {
@@ -2936,21 +2938,23 @@ channel::current_bd2p_parity(const State& s) const {
 	This sets data rails and request rail.
  */
 void
-channel::set_bd_data_req(const State& s, vector<env_event_type>& new_events) {
+channel::set_bd_data_req(const State& s, const status_summary& stat,
+		vector<env_event_type>& new_events) {
+	STACKTRACE_BRIEF;
 	// set data rails to next data value
 	set_all_data_rails(s, new_events);
 	advance_value();
 	value_enum reqv = LOGIC_OTHER;
 	switch (type) {
-	case CHANNEL_TYPE_BD_2P:
-		const bool ep = bd2p_empty_parity();
-		switch (current_bd2p_parity(s)) {
-		case LOGIC_HIGH: reqv = ep ? LOGIC_LOW : LOGIC_HIGH; break;
-		case LOGIC_LOW: reqv = ep ? LOGIC_HIGH : LOGIC_LOW; break;
-		// or use toggle_node
-		default: break;
+	case CHANNEL_TYPE_BD_2P: {
+		if (!stat.x_ack) {
+			reqv = s.get_node(ack_signal).current_value();
+			if (!bd2p_empty_parity()) {
+				reqv = NodeState::invert_value[size_t(reqv)];
+			}
 		}
 		break;
+	}
 	case CHANNEL_TYPE_BD_4P:
 		reqv = get_valid_sense() ? LOGIC_HIGH : LOGIC_LOW;
 		break;
@@ -3234,39 +3238,25 @@ if (ack_signal && (ni == ack_signal)) {
 }	// end case CHANNEL_TYPE_LEDR
 #if PRSIM_CHANNEL_BUNDLED_DATA
 case CHANNEL_TYPE_BD_2P: {
-	const bool ep = bd2p_empty_parity();
 if (ni == ack_signal) {
 	// much of this code copied from LEDR above, re-factor later
-	STACKTRACE_INDENT_PRINT("got ack update" << endl);
+	STACKTRACE_INDENT_PRINT("bd2p: got ack update" << endl);
+	const status_summary stat(summarize_status(s));
 	// 2-phase, respond on either edge of ack
 	if (is_sourcing() && !stopped()) {
 	// check current parity vs. empty parity to determine action
-	bool empty = false;
-	switch (current_bd2p_parity(s)) {
-		// assumes that data rails are active high
-	case LOGIC_LOW:
-		if (!ep) empty = true;
-		// else warn that acknowledge changed while channel was full
-		break;
-	case LOGIC_HIGH:
-		if (ep) empty = true;
-		break;
-	default:
-		// set all data to X? or just the req?
-		// do not advance
+	if (stat.x_ack) {
 		X_all_data_rails(new_events);
 		new_events.push_back(ENV_EVENT(valid_signal, LOGIC_OTHER));
-		break;
-	}
-	if (empty) {
-	if (have_value()) {
-		set_bd_data_req(s, new_events);
-	}
+	} else if (!stat.full) {
+		if (have_value()) {
+			set_bd_data_req(s, stat, new_events);
+		}
 	}
 	// else 2-phase does not have a reset phase on full, do nothing
 	}	// end if sourcing
 } else if (ni == valid_signal) {
-	STACKTRACE_INDENT_PRINT("got validity update" << endl);
+	STACKTRACE_INDENT_PRINT("bd2p: got validity update" << endl);
 	const status_summary stat(summarize_status(s));
 	if (!stat.x_valid && stat.valid_active) {
 		process_data(s);
@@ -3282,7 +3272,7 @@ if (ni == ack_signal) {
 	}
 } else {
 	// is a data-rail
-	STACKTRACE_INDENT_PRINT("got data rail update" << endl);
+	STACKTRACE_INDENT_PRINT("bd2p: got data rail update" << endl);
 	update_bd_data_counter(prev, next);
 	// nothing responds directly to data-rail
 }
@@ -3314,7 +3304,7 @@ if (ni == ack_signal) {
 		}
 		if (have_value()) {
 			// set data rails to next data value
-			set_bd_data_req(s, new_events);
+			set_bd_data_req(s, stat, new_events);
 		}
 	}
 	}
@@ -3638,58 +3628,50 @@ if (is_sourcing()) {
 		}
 		if (have_value()) {
 			// set data rails to next data value
-			set_bd_data_req(s, events);
+			set_bd_data_req(s, stat, events);
 		}
 	}
 }
 // could also be sinking at the same time
 	__resume_4p_sink(stat, events);
 	break;
-}
+}	// end case CHANNEL_TYPE_BD_4P
 case CHANNEL_TYPE_BD_2P: {
 	// very similar to LEDR, below
 if (is_sourcing()) {
-	bool respond = true;	// whether or not to respond with valid data
-	const bool ep = bd2p_empty_parity();
-	const value_enum p(current_bd2p_parity(s));
-	// only respond if is currently at empty parity
-	switch (p) {
-	case LOGIC_LOW: if (ep) respond = false; break;
-	case LOGIC_HIGH: if (!ep) respond = false; break;
-	default:
+	// only respond if is currently at empty
+	STACKTRACE_INDENT_PRINT("bd2p: releasing source" << endl);
+	if (stat.x_ack) {
+		STACKTRACE_INDENT_PRINT("bd2p: ack is X" << endl);
 		X_all_data_rails(events);
-		respond = false;
-		break;
-	}
-	if (respond) {
+		events.push_back(ENV_EVENT(valid_signal, LOGIC_OTHER));
+	} else if (!stat.full) {
+		STACKTRACE_INDENT_PRINT("bd2p: channel is empty, so filling..." << endl);
 		if (have_value()) {
 			// set data rails to next data value
-			set_bd_data_req(s, events);
+			set_bd_data_req(s, stat, events);
 		}
 	} else {
 	//	possibly issue a warning if channel resumed in wrong phase?
 	}
 }
 if (is_sinking()) {
+	STACKTRACE_INDENT_PRINT("bd2p: releasing sink" << endl);
 	// check for full parity
-	const bool fp = !bd2p_empty_parity();
-	const value_enum p(current_bd2p_parity(s));
-	bool respond = false;
-	switch (p) {
-	case LOGIC_LOW: if (!fp) respond = true; break;
-	case LOGIC_HIGH: if (fp) respond = true; break;
-	default:
+	if (stat.x_valid) {
+		STACKTRACE_INDENT_PRINT("bd2p: req is X" << endl);
 		events.push_back(ENV_EVENT(ack_signal, LOGIC_OTHER));
-	}
-	if (respond) {
+	} else if (stat.full) {
+		STACKTRACE_INDENT_PRINT("bd2p: channel is full, so emptying..." << endl);
+		// Q: what if ack is currently X?
 		events.push_back(toggle_node(s, ack_signal));
 	} else {
-//	possibly issue a warning if channel resumed in wrong phase?
+	//	possibly issue a warning if channel resumed in wrong phase?
 	}
 	// else there's no acknowledge signal to toggle!
 }
 	break;
-}
+}	// end case CHANNEL_TYPE_BD_2P
 #endif	// PRSIM_CHANNEL_BUNDLED_DATA
 case CHANNEL_TYPE_LEDR:
 if (is_sourcing()) {

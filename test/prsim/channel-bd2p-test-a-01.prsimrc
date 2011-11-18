@@ -1,0 +1,11 @@
+# "channel-bd2p-test-a-01.prsimrc"
+# @haco@ channel-bd2p-test-a.haco-c
+
+channel-bd-2p A a:0 r:0 d:8
+channel-bd-2p B a:0 r:1 d:8
+channel-bd-2p C a:1 r:0 d:8
+channel-bd-2p D a:1 r:1 d:8
+
+channel-show-all
+channel-report-time on
+
