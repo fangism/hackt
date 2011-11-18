@@ -549,7 +549,7 @@ channel::dump_state(ostream& o) const {
  */
 channel::status_summary
 channel::summarize_status(const State& s) const {
-	STACKTRACE_VERBOSE;
+	STACKTRACE_BRIEF;
 	status_summary ret;
 if (type != CHANNEL_TYPE_LEDR) {
 	if (ack_signal) {
@@ -562,6 +562,35 @@ if (type != CHANNEL_TYPE_LEDR) {
 		ret.x_valid = (v == LOGIC_OTHER);
 		ret.valid_active = get_valid_sense() ^ (v == LOGIC_LOW);
 	}
+	// for bundled-data, set the full/empty state regardless of data rails
+#if PRSIM_CHANNEL_BUNDLED_DATA
+switch (type) {
+case CHANNEL_TYPE_BD_4P: { 	// treat req/ack as ev-handshake!
+	INVARIANT(ack_signal);
+	INVARIANT(valid_signal);
+	// doesn't care about state of data rails
+	if (!ret.x_valid && !ret.x_ack) {
+		// shared validity, validity may follow rails
+		if (ret.valid_active ^ ret.ack_active)
+			ret.waiting_receiver = true;
+		else	ret.waiting_sender = true;
+	}
+	break;
+}
+case CHANNEL_TYPE_BD_2P: { 	// treat req/ack as 2p handshake
+	INVARIANT(ack_signal);
+	INVARIANT(valid_signal);
+	const value_enum p = current_bd2p_parity(s);
+	// doesn't care about state of data rails
+	if (!ret.x_valid && !ret.x_ack) {
+		const bool empty = bd2p_empty_parity() ^ (p == LOGIC_LOW);
+		ret.set_empty(empty);
+	}
+	break;
+default: break;
+}
+}	// end switch
+#endif
 }	// otherwise not applicable
 if (!x_counter) {
 	// then we can infer the state of the handshake
@@ -615,28 +644,9 @@ case CHANNEL_TYPE_1ofN: {
 	break;
 }
 #if PRSIM_CHANNEL_BUNDLED_DATA
-case CHANNEL_TYPE_BD_4P: { 	// treat req/ack as ev-handshake!
-	INVARIANT(ack_signal);
-	INVARIANT(valid_signal);
-	// doesn't care about state of data rails
-	if (!ret.x_valid && !ret.x_ack) {
-		// shared validity, validity may follow rails
-		if (ret.valid_active ^ ret.ack_active)
-			ret.waiting_receiver = true;
-		else	ret.waiting_sender = true;
-	}
-	ret.current_value = data_rails_value(s);
-	break;
-}
-case CHANNEL_TYPE_BD_2P: { 	// treat req/ack as 2p handshake
-	INVARIANT(ack_signal);
-	INVARIANT(valid_signal);
-	const value_enum p = current_bd2p_parity(s);
-	// doesn't care about state of data rails
-	if (!ret.x_valid && !ret.x_ack) {
-		const bool empty = bd2p_empty_parity() ^ (p == LOGIC_LOW);
-		ret.set_empty(empty);
-	}
+case CHANNEL_TYPE_BD_4P: 	// treat req/ack as ev-handshake!
+	// fall-through
+case CHANNEL_TYPE_BD_2P: {	// treat req/ack as 2p handshake
 	// just always read data rails?
 	ret.current_value = data_rails_value(s);
 	break;
@@ -3002,7 +3012,7 @@ void
 channel::process_node(const State& s, const node_index_type ni, 
 		const value_enum prev, const value_enum next, 
 		vector<env_event_type>& new_events) throw(channel_exception) {
-	STACKTRACE_VERBOSE;
+	STACKTRACE_BRIEF;
 	typedef	State::node_type	node_type;
 #if ENABLE_STACKTRACE
 	cout << s.get_node_canonical_name(ni) << " : " << size_t(prev) << 
@@ -3035,7 +3045,7 @@ if (ack_signal && (ni == ack_signal)) {
 	}
 	// logging and expect mode don't care
 } else if (valid_signal && (ni == valid_signal)) {
-	STACKTRACE_INDENT_PRINT("got validity update" << endl);
+	STACKTRACE_INDENT_PRINT("1ofN: got validity update" << endl);
 	const status_summary stat(summarize_status(s));
 	if (!stat.x_valid && stat.valid_active) {
 		process_data(s);
@@ -3059,35 +3069,7 @@ if (ack_signal && (ni == ack_signal)) {
 	STACKTRACE_INDENT_PRINT("got data-rail update" << endl);
 	// invariant: must be data rail
 	// update state counters
-#if 0
-	switch (prev) {
-	case LOGIC_LOW:
-	if (get_data_sense()) {
-		INVARIANT(counter_state);
-		--counter_state;
-	}
-		break;
-	case LOGIC_HIGH:
-	if (!get_data_sense()) {
-		INVARIANT(counter_state);
-		--counter_state;
-	}
-		break;
-	case LOGIC_OTHER:
-		INVARIANT(x_counter);
-		--x_counter;
-		break;
-	default: break;
-	}
-	switch (next) {
-	case LOGIC_LOW: if (get_data_sense()) ++counter_state; break;
-	case LOGIC_HIGH: if (!get_data_sense()) ++counter_state; break;
-	case LOGIC_OTHER: ++x_counter; break;
-	default: break;
-	}
-#else
 	update_data_counter(prev, next);
-#endif
 	if (x_counter) {
 		// if there are ANY Xs, then cannot log/expect values
 		// sources/sinks should respond accordingly with X signals
@@ -3173,7 +3155,7 @@ if (ack_signal && (ni == ack_signal)) {
 case CHANNEL_TYPE_LEDR: {
 	const bool ep = ledr_empty_parity();
 if (ack_signal && (ni == ack_signal)) {
-	STACKTRACE_INDENT_PRINT("got ack update" << endl);
+	STACKTRACE_INDENT_PRINT("ledr: got ack update" << endl);
 	// 2-phase, respond on either edge of ack
 	if (is_sourcing() && !stopped()) {
 	// check current parity vs. empty parity to determine action
@@ -3201,7 +3183,7 @@ if (ack_signal && (ni == ack_signal)) {
 	}	// end if sourcing
 } else {
 	INVARIANT(ni == repeat_rail() || ni == ledr_data_rail());
-	STACKTRACE_INDENT_PRINT("got data or repeat-rail update" << endl);
+	STACKTRACE_INDENT_PRINT("ledr: got data or repeat-rail update" << endl);
 	switch (prev) {
 	case LOGIC_OTHER: --x_counter; break;
 	default: break;
@@ -3258,7 +3240,7 @@ if (ni == ack_signal) {
 } else if (ni == valid_signal) {
 	STACKTRACE_INDENT_PRINT("bd2p: got validity update" << endl);
 	const status_summary stat(summarize_status(s));
-	if (!stat.x_valid && stat.valid_active) {
+	if (!stat.x_valid && stat.full) {
 		process_data(s);
 	}
 	// only need to take action if this is a sink
@@ -3282,7 +3264,7 @@ if (ni == ack_signal) {
 case CHANNEL_TYPE_BD_4P: {
 // first identify which channel node member this node is
 if (ni == ack_signal) {
-	STACKTRACE_INDENT_PRINT("got ack update" << endl);
+	STACKTRACE_INDENT_PRINT("bd4p: got ack update" << endl);
 	const status_summary stat(summarize_status(s));
 	// only need to take action if this is a source
 	if (is_sourcing() && !stopped()) {
@@ -3310,7 +3292,7 @@ if (ni == ack_signal) {
 	}
 	// logging and expect mode don't care
 } else if (ni == valid_signal) {
-	STACKTRACE_INDENT_PRINT("got validity update" << endl);
+	STACKTRACE_INDENT_PRINT("bd4p: got validity update" << endl);
 	const status_summary stat(summarize_status(s));
 	if (!stat.x_valid && stat.valid_active) {
 		process_data(s);
@@ -3331,7 +3313,7 @@ if (ni == ack_signal) {
 		}
 	}
 } else {
-	STACKTRACE_INDENT_PRINT("got data-rail update" << endl);
+	STACKTRACE_INDENT_PRINT("bd4p: got data-rail update" << endl);
 	// invariant: must be data rail
 	// update state counters
 	update_bd_data_counter(prev, next);
@@ -3909,12 +3891,6 @@ for ( ; ri!=re; ++ri) {
 		cerr << "Error: base reference is not a valid channel." << endl;
 		return true;
 	}
-#if 0
-	// 0 indicates that bundle/rail is scalar, not array
-	// in any case, size should be at least 1
-	const size_t num_bundles = _num_bundles ? _num_bundles : 1;
-	const size_t num_rails = _num_rails ? _num_rails : 1;
-#endif
 	const size_t key = channel_pool.size();
 	const pair<channel_set_type::iterator, bool>
 		i(channel_index_set.insert(make_pair(base, key)));
@@ -4044,44 +4020,16 @@ if (i.second) {
 	// assign ack rail (optional)
 	if (ack_name.length()) {
 		const string a(base + '.' + ack_name);
-#if 0
-		const node_index_type ni = parse_node_to_index(a, m).index;
-		if (ni) {
-			c.ack_signal = ni;
-			state.__get_node(ni).set_in_channel();
-			node_channels_map[ni].insert(key);
-		} else {
-			cerr << "Error: no such node `" << a <<
-				"\' in channel." << endl;
-			return true;
-		}
-		c.set_ack_init(ack_init);
-#else
 		if (set_channel_2p_ack(state, key, a, ack_init)) {
 			return true;
 		}
-#endif
 	}
 }{
 	// assign repeat rail (use validity signal)
 	const string r(base + '.' + repeat_name);
-#if 0
-	const node_index_type ni = parse_node_to_index(r, m).index;
-	if (ni) {
-		c.valid_signal = ni;	// doubles as repeat signal
-		state.__get_node(ni).set_in_channel();
-		node_channels_map[ni].insert(key);
-	} else {
-		cerr << "Error: no such node `" << r <<
-			"\' in channel." << endl;
-		return true;
-	}
-	c.set_repeat_init(repeat_init);
-#else
 	if (set_channel_2p_req(state, key, r, repeat_init)) {
 		return true;
 	}
-#endif
 }{
 	// TODO: handle bundles
 	if (_num_bundles) {
@@ -4812,7 +4760,7 @@ void
 channel_manager::process_node(const State& s, const node_index_type ni, 
 		const value_enum prev, const value_enum next, 
 		vector<env_event_type>& new_events) throw(channel_exception) {
-	STACKTRACE_VERBOSE;
+	STACKTRACE_BRIEF;
 	// find all channels that this node participates in:
 	const node_channels_map_type::const_iterator
 		f(node_channels_map.find(ni));
