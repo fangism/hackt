@@ -5,6 +5,11 @@
 
 2011-11-17	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-84-98-prsim-bd-08:
+	  prsim: fix: make sure summarize_status always sets
+		the full-empty handshake state regardless of data rails.
+
+
 	* HACKT-00-01-04-main-00-84-98-prsim-bd-07:
 	  prsim: fix bundled-data 2-phase sources and sinks for
 		first basic test cases (added).
