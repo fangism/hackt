@@ -366,6 +366,15 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	channel-bd2p-test-a-A-03 channel-bd2p-test-a-A-04 \
 	channel-bd2p-test-a-A-08 \
 	channel-bd2p-test-a-A-09 channel-bd2p-test-a-A-09b \
+	channel-bd2p-test-a-B-03 channel-bd2p-test-a-B-04 \
+	channel-bd2p-test-a-B-08 \
+	channel-bd2p-test-a-B-09 channel-bd2p-test-a-B-09b \
+	channel-bd2p-test-a-C-03 channel-bd2p-test-a-C-04 \
+	channel-bd2p-test-a-C-08 \
+	channel-bd2p-test-a-C-09 channel-bd2p-test-a-C-09b \
+	channel-bd2p-test-a-D-03 channel-bd2p-test-a-D-04 \
+	channel-bd2p-test-a-D-08 \
+	channel-bd2p-test-a-D-09 channel-bd2p-test-a-D-09b \
 	eledr-buffer-a-01 eledr-buffer-a-02 eledr-buffer-a-03 \
 	eledr-buffer-a-04 eledr-buffer-a-05 eledr-buffer-a-06 \
 	eledr-buffer-a-07 \

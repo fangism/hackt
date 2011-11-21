@@ -1,0 +1,107 @@
+channels:
+A : bundled-2p .e:0 .v:0 x8 unsigned off
+B : bundled-2p .e:0 .v:1 x8 unsigned off
+C : bundled-2p .e:1 .v:0 x8 unsigned off
+D : bundled-2p .e:1 .v:1 x8 unsigned off
+Warning: channel validity `C.n' has no fanin.
+All subnodes of 'C':
+C.a : X
+C.r : X
+C.d[0] : X
+C.d[1] : X
+C.d[2] : X
+C.d[3] : X
+C.d[4] : X
+C.d[5] : X
+C.d[6] : X
+C.d[7] : X
+manually resetting data 
+	0	C.d[0] : 0
+	0	C.d[1] : 0
+	0	C.d[2] : 0
+	0	C.d[3] : 0
+	0	C.d[4] : 0
+	0	C.d[5] : 0
+	0	C.d[6] : 0
+	0	C.d[7] : 0
+	0	C.r : 0
+	10	C.a : 1
+------------------------------------ 
+channel	C (.data) : 0 @ 10
+	10	C.r : 1
+	20	C.a : 0	[by C.r:=1]
+C : bundled-2p .e:1 .v:0 x8 unsigned sink,expect,watch, timing: after=10 {0,1,2,4,8,16,32,} @1
+	count: 0, unknowns: 0
+------------------------------------ 
+	20	C.d[0] : 1
+channel	C (.data) : 1 @ 20
+	20	C.r : 0
+	30	C.a : 1	[by C.r:=0]
+C : bundled-2p .e:1 .v:0 x8 unsigned sink,expect,watch, timing: after=10 {0,1,2,4,8,16,32,} @2
+	count: 1, unknowns: 0
+------------------------------------ 
+	30	C.d[1] : 1
+	30	C.d[0] : 0
+channel	C (.data) : 2 @ 30
+	30	C.r : 1
+	40	C.a : 0	[by C.r:=1]
+C : bundled-2p .e:1 .v:0 x8 unsigned sink,expect,watch, timing: after=10 {0,1,2,4,8,16,32,} @3
+	count: 1, unknowns: 0
+------------------------------------ 
+	40	C.d[1] : 0
+	40	C.d[2] : 1
+channel	C (.data) : 4 @ 40
+	40	C.r : 0
+	50	C.a : 1	[by C.r:=0]
+C : bundled-2p .e:1 .v:0 x8 unsigned sink,expect,watch, timing: after=10 {0,1,2,4,8,16,32,} @4
+	count: 1, unknowns: 0
+------------------------------------ 
+	50	C.d[2] : 0
+	50	C.d[3] : 1
+channel	C (.data) : 8 @ 50
+	50	C.r : 1
+	60	C.a : 0	[by C.r:=1]
+C : bundled-2p .e:1 .v:0 x8 unsigned sink,expect,watch, timing: after=10 {0,1,2,4,8,16,32,} @5
+	count: 1, unknowns: 0
+------------------------------------ 
+	60	C.d[4] : 1
+	60	C.d[3] : 0
+channel	C (.data) : 16 @ 60
+	60	C.r : 0
+	70	C.a : 1	[by C.r:=0]
+C : bundled-2p .e:1 .v:0 x8 unsigned sink,expect,watch, timing: after=10 {0,1,2,4,8,16,32,} @6
+	count: 1, unknowns: 0
+------------------------------------ 
+	70	C.d[5] : 1
+	70	C.d[4] : 0
+channel	C (.data) : 32 @ 70
+	70	C.r : 1
+	80	C.a : 0	[by C.r:=1]
+C : bundled-2p .e:1 .v:0 x8 unsigned sink,expect,watch, timing: after=10
+	count: 1, unknowns: 0
+------------------------------------ 
+expect values exhausted, now can be any value 
+------------------------------------ 
+	80	C.d[4] : 1
+channel	C (.data) : 48 @ 80
+	80	C.r : 0
+	90	C.a : 1	[by C.r:=0]
+C : bundled-2p .e:1 .v:0 x8 unsigned sink,watch, timing: after=10
+	count: 2, unknowns: 0
+------------------------------------ 
+	90	C.d[3] : 1
+	90	C.d[5] : 0
+channel	C (.data) : 24 @ 90
+	90	C.r : 1
+	100	C.a : 0	[by C.r:=1]
+C : bundled-2p .e:1 .v:0 x8 unsigned sink,watch, timing: after=10
+	count: 2, unknowns: 0
+------------------------------------ 
+	100	C.d[2] : 1
+	100	C.d[4] : 0
+channel	C (.data) : 12 @ 100
+	100	C.r : 0
+	110	C.a : 1	[by C.r:=0]
+C : bundled-2p .e:1 .v:0 x8 unsigned sink,watch, timing: after=10
+	count: 2, unknowns: 0
+------------------------------------ 

@@ -1,0 +1,76 @@
+channels:
+A : bundled-2p .e:0 .v:0 x8 unsigned off
+B : bundled-2p .e:0 .v:1 x8 unsigned off
+C : bundled-2p .e:1 .v:0 x8 unsigned off
+D : bundled-2p .e:1 .v:1 x8 unsigned off
+Warning: channel validity `C.n' has no fanin.
+channels:
+A : bundled-2p .e:0 .v:0 x8 unsigned off,ignored
+B : bundled-2p .e:0 .v:1 x8 unsigned off,ignored
+C : bundled-2p .e:1 .v:0 x8 unsigned sink,watch,ignored, timing: after=10
+D : bundled-2p .e:1 .v:1 x8 unsigned off,ignored
+All subnodes of 'C':
+C.a : X
+C.r : X
+C.d[0] : X
+C.d[1] : X
+C.d[2] : X
+C.d[3] : X
+C.d[4] : X
+C.d[5] : X
+C.d[6] : X
+C.d[7] : X
+manually resetting data 
+	0	C.d[0] : 0
+	0	C.d[1] : 0
+	0	C.d[2] : 0
+	0	C.d[3] : 0
+	0	C.d[4] : 0
+	0	C.d[5] : 0
+	0	C.d[6] : 0
+	0	C.d[7] : 0
+	0	C.r : 0
+	10	C.a : 1
+releasing channel C 
+------------------------------------ 
+one token 
+channel	C (.data) : 0 @ 10
+	10	C.r : 1
+	20	C.a : 0	[by C.r:=1]
+C : bundled-2p .e:1 .v:0 x8 unsigned sink,watch, timing: after=10
+	count: 0, unknowns: 0
+event    : `C.a' : 0
+caused by: `C.r' : 1
+(no cycle)
+------------------------------------ 
+second token 
+channel	C (.data) : 0 @ 20
+	20	C.r : 0
+	30	C.a : 1	[by C.r:=0]
+C : bundled-2p .e:1 .v:0 x8 unsigned sink,watch, timing: after=10
+	count: 0, unknowns: 0
+event    : `C.a' : 1
+caused by: `C.r' : 0
+(no cycle)
+------------------------------------ 
+third token, new value 
+	30	C.d[2] : 1
+	30	C.d[3] : 1
+channel	C (.data) : 12 @ 30
+	30	C.r : 1
+	40	C.a : 0	[by C.r:=1]
+C : bundled-2p .e:1 .v:0 x8 unsigned sink,watch, timing: after=10
+	count: 2, unknowns: 0
+event    : `C.a' : 0
+caused by: `C.r' : 1
+(no cycle)
+------------------------------------ 
+fourth token, same value 
+channel	C (.data) : 12 @ 40
+	40	C.r : 0
+	50	C.a : 1	[by C.r:=0]
+C : bundled-2p .e:1 .v:0 x8 unsigned sink,watch, timing: after=10
+	count: 2, unknowns: 0
+event    : `C.a' : 1
+caused by: `C.r' : 0
+(no cycle)

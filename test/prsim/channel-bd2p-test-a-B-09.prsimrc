@@ -1,0 +1,107 @@
+# "channel-bd2p-test-a-B-09.prsimrc"
+# copy-modified from "channel-test-a-09.prsimrc"
+# @haco@ channel-bd2p-test-a.haco-c
+# testing channel sink, with expect
+
+# register channels
+source channel-bd2p-test-a-01.prsimrc
+
+watchall
+# set up some channels with commands
+channel-watch B
+channel-sink B
+channel-expect-args B 0 1 2 4 8 16 32
+channel-ignore-all
+channel-reset B
+getall B
+
+echo manually resetting data
+set B.d[0..7] 0
+set B.r 1
+cycle
+assert B.a 0
+channel-heed-all
+channel-release B
+cycle
+assert B.a 0
+# because data is neutral, B.a should request new data
+
+echo ------------------------------------
+set B.r 0
+cycle
+assert B.a 1
+channel-show B
+
+echo ------------------------------------
+set B.d[0] 1
+set B.r 1
+cycle
+assert B.a 0
+channel-show B
+
+echo ------------------------------------
+set B.d[1] 1
+set B.d[0] 0
+set B.r 0
+cycle
+assert B.a 1
+channel-show B
+
+echo ------------------------------------
+set B.d[1] 0
+set B.d[2] 1
+set B.r 1
+cycle
+assert B.a 0
+channel-show B
+
+echo ------------------------------------
+set B.d[2] 0
+set B.d[3] 1
+set B.r 0
+cycle
+assert B.a 1
+channel-show B
+
+echo ------------------------------------
+set B.d[4] 1
+set B.d[3] 0
+set B.r 1
+cycle
+assert B.a 0
+channel-show B
+
+echo ------------------------------------
+set B.d[5] 1
+set B.d[4] 0
+set B.r 0
+cycle
+assert B.a 1
+channel-show B
+
+echo ------------------------------------
+echo expect values exhausted, now can be any value
+echo ------------------------------------
+set B.d[4] 1
+set B.r 1
+cycle
+assert B.a 0
+channel-show B
+
+echo ------------------------------------
+set B.d[3] 1
+set B.d[5] 0
+set B.r 0
+cycle
+assert B.a 1
+channel-show B
+
+echo ------------------------------------
+set B.d[2] 1
+set B.d[4] 0
+set B.r 1
+cycle
+assert B.a 0
+channel-show B
+
+echo ------------------------------------

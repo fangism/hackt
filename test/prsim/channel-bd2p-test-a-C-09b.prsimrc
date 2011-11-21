@@ -1,0 +1,113 @@
+# "channel-bd2p-test-a-09.prsimrc"
+# copy-modified from "channel-test-a-09.prsimrc"
+# @haco@ channel-bd2p-test-a.haco-c
+# testing channel sink, with expect, and don't-care values
+
+# register channels
+source channel-bd2p-test-a-01.prsimrc
+
+watchall
+# set up some channels with commands
+channel-watch C
+channel-sink C
+channel-expect-args C 0 1 X 4 X 16 32
+channel-ignore-all
+channel-reset C
+getall C
+
+echo manually resetting data
+set C.d[0..7] 0
+set C.r 0
+cycle
+assert C.a 1
+channel-heed-all
+channel-release C
+cycle
+assert C.a 1
+# because data is neutral, C.a should request new data
+
+echo ------------------------------------
+set C.r 1
+cycle
+assert C.a 0
+channel-show C
+
+echo ------------------------------------
+set C.d[0] 1
+set C.r 0
+cycle
+assert C.a 1
+channel-show C
+
+echo ------------------------------------
+# wrong value, don't care
+set C.d[1] 1
+set C.d[0] 0
+set C.d[6] 1
+set C.r 1
+cycle
+assert C.a 0
+channel-show C
+
+echo ------------------------------------
+set C.d[6] 0
+set C.d[1] 0
+set C.d[2] 1
+set C.r 0
+cycle
+assert C.a 1
+channel-show C
+
+echo ------------------------------------
+# don't care on garbage value
+set C.d[1] X
+set C.d[2] 0
+set C.d[3] 1
+set C.r 1
+cycle
+assert C.a 0
+channel-show C
+
+echo ------------------------------------
+set C.d[1] 0
+set C.d[4] 1
+set C.d[3] 0
+set C.r 0
+cycle
+assert C.a 1
+channel-show C
+
+echo ------------------------------------
+set C.d[5] 1
+set C.d[4] 0
+set C.r 1
+cycle
+assert C.a 0
+channel-show C
+
+echo ------------------------------------
+echo expect values exhausted, now can be any value
+echo ------------------------------------
+set C.d[4] 1
+set C.r 0
+cycle
+assert C.a 1
+channel-show C
+
+echo ------------------------------------
+set C.d[3] 1
+set C.d[5] 0
+set C.r 1
+cycle
+assert C.a 0
+channel-show C
+
+echo ------------------------------------
+set C.d[2] 1
+set C.d[4] 0
+set C.r 0
+cycle
+assert C.a 1
+channel-show C
+
+echo ------------------------------------

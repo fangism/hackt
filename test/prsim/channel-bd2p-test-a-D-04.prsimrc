@@ -1,0 +1,111 @@
+# "channel-bd2p-test-a-ev-04.prsimrc"
+# @haco@ channel-bd2p-test-a.haco-c
+# testing channel source
+
+# echo-commands on
+source channel-bd2p-test-a-01.prsimrc
+
+channel-show D
+getall D
+watchall
+channel-ignore-all
+channel-source-args D 0 33 66 99 11 44 77 22 55 88
+channel-watch D
+channel-reset D
+cycle
+getall D
+channel-show D
+
+echo manually bucketing
+set D.a 1
+cycle
+assert D.r 1
+channel-get D
+
+channel-heed-all
+echo releasing channel D (source)
+channel-release D
+assert-pending D.r
+
+echo -----------------------------------
+# step-event
+queue
+echo end of queue
+channel-get D
+cycle
+assert D.d[0] 0
+assert D.d[1] 0
+# we know the first data value
+channel-show D
+backtrace D.d[0]
+backtrace D.r
+assert D.r 0
+channel-get D
+
+echo -----------------------------------
+set D.a 0
+cycle
+assert D.d[0] 1
+assert D.d[1] 0
+# we know the second data value
+channel-show D
+# backtrace D.d[0]
+assert D.r 1
+
+echo -----------------------------------
+set D.a 1
+cycle
+channel-show D
+assert D.r 0
+
+echo -----------------------------------
+set D.a 0
+cycle
+channel-show D
+assert D.r 1
+
+echo -----------------------------------
+set D.a 1
+cycle
+channel-show D
+assert D.r 0
+
+echo -----------------------------------
+set D.a 0
+cycle
+channel-show D
+assert D.r 1
+
+echo -----------------------------------
+set D.a 1
+cycle
+channel-show D
+assert D.r 0
+
+echo -----------------------------------
+set D.a 0
+cycle
+channel-show D
+assert D.r 1
+
+echo -----------------------------------
+set D.a 1
+cycle
+channel-show D
+assert D.r 0
+
+echo -----------------------------------
+set D.a 0
+cycle
+channel-show D
+assert D.r 1
+
+echo -----------------------------------
+echo no more values!!!
+set D.a 1
+cycle
+channel-show D
+getall D
+assert D.r 1
+channel-get D
+
