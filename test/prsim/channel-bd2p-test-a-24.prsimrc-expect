@@ -1,0 +1,28 @@
+channels:
+A : bundled-2p .e:0 .v:0 x8 unsigned off
+B : bundled-2p .e:0 .v:1 x8 unsigned off
+C : bundled-2p .e:1 .v:0 x8 unsigned off
+D : bundled-2p .e:1 .v:1 x8 unsigned off
+channels:
+A : bundled-2p .e:0 .v:0 x8 unsigned off
+B : bundled-2p .e:0 .v:1 x8 unsigned off
+C : bundled-2p .e:1 .v:0 x8 unsigned off
+D : bundled-2p .e:1 .v:1 x8 unsigned off
+Warning: channel acknowledge `A.e' has no fanin!
+Warning: channel validity `A.n' has no fanout, but is being sourced.
+Warning: channel acknowledge `B.e' has no fanin!
+Warning: channel validity `B.v' has no fanout, but is being sourced.
+Warning: channel validity `C.n' has no fanin.
+Warning: channel validity `D.v' has no fanin.
+initializing... 
+A : bundled-2p .e:0 .v:0 x8 unsigned source, timing: after=10 {0,1,1,0,0,0,1,1,1,1,} @0 < channel-test-a-values-X.txt
+	count: 0, unknowns: 8
+B : bundled-2p .e:0 .v:1 x8 unsigned source, timing: after=10 {0,1,1,0,0,0,1,1,1,1,}* @0 #0 < channel-test-a-values-X.txt
+	count: 0, unknowns: 8
+C : bundled-2p .e:1 .v:0 x8 unsigned sink, timing: after=10
+	count: 0, unknowns: 8
+D : bundled-2p .e:1 .v:1 x8 unsigned sink,expect, timing: after=10 {0,1,1,0,0,0,1,1,1,1,} @0 < channel-test-a-values-X.txt
+	count: 0, unknowns: 8
+resetting... 
+channels:
+all gone! 

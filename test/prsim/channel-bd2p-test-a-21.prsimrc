@@ -1,0 +1,30 @@
+# "channel-bd2p-test-a-21.prsimrc"
+# @haco@ channel-bd2p-test-a.haco-c
+# testing initialization and reset
+# can source this script after running any other test
+# by itself, will fail, since channels are not registered
+
+# source channel-bd2p-test-a-01.prsimrc
+# channel-show-all
+
+echo initializing...
+initialize
+# channel-show-all
+channel-show A
+channel-show B
+channel-show C
+channel-show D
+
+echo resetting...
+reset
+# keep same autosave checkpoint name as before
+autosave on
+channel-show-all
+# channel-show A
+# channel-show B
+# channel-show C
+# channel-show D
+echo all gone!
+
+
+

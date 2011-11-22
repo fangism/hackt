@@ -1,0 +1,57 @@
+# "channel-bd2p-test-a-A-10b.prsimrc"
+# copy-modified from "channel-test-a-09.prsimrc"
+# @haco@ channel-bd2p-test-a.haco-c
+# testing channel sink, with expect
+
+# register channels
+source channel-bd2p-test-a-01.prsimrc
+
+watchall
+# set up some channels with commands
+channel-watch A
+channel-sink A
+channel-expect-args A 0 1 2 4 8 16 32
+channel-reset A
+getall A
+
+echo manually resetting data
+set A.d[0..7] 0
+set A.r 0
+cycle
+assert A.a 0
+channel-release A
+cycle
+assert A.a 0
+# because data is neutral, A.a should request new data
+
+echo ------------------------------------
+set A.r 1
+cycle
+assert A.a 1
+channel-show A
+
+echo ------------------------------------
+set A.d[0] 1
+set A.r 0
+cycle
+assert A.a 0
+channel-show A
+
+echo ------------------------------------
+set A.d[1] 1
+set A.d[0] 0
+set A.r 1
+cycle
+assert A.a 1
+channel-show A
+
+echo ------------------------------------
+echo now passing an X value...
+set A.d[1] X
+set A.d[2] X
+set A.r 0
+cycle
+assert A.a 0
+channel-show A
+
+echo ------------------------------------

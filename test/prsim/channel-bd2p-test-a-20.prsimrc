@@ -1,0 +1,21 @@
+# "channel-bd2p-test-a-20.prsimrc"
+# @haco@ channel-bd2p-test-a.haco-c
+
+source channel-bd2p-test-a-01.prsimrc
+
+# set up some channels with commands
+channel-sink A
+channel-source-args B 2 1 0
+channel-source-args C 0 2 1
+channel-sink C
+channel-source-args D 1 0 13
+
+channel-show-all
+
+echo undriven A inputs
+unknown-inputs
+echo undriven A inputs with fanout
+unknown-inputs-fanout
+echo A outputs
+unknown-outputs
+

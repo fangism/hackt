@@ -1,0 +1,22 @@
+channels:
+A : bundled-2p .e:0 .v:0 x8 unsigned off
+B : bundled-2p .e:0 .v:1 x8 unsigned off
+C : bundled-2p .e:1 .v:0 x8 unsigned off
+D : bundled-2p .e:1 .v:1 x8 unsigned off
+channels:
+A : bundled-2p .e:0 .v:0 x8 unsigned off
+B : bundled-2p .e:0 .v:1 x8 unsigned off
+C : bundled-2p .e:1 .v:0 x8 unsigned off
+D : bundled-2p .e:1 .v:1 x8 unsigned off
+initializing... 
+A : bundled-2p .e:0 .v:0 x8 unsigned off
+	count: 0, unknowns: 8
+B : bundled-2p .e:0 .v:1 x8 unsigned off
+	count: 0, unknowns: 8
+C : bundled-2p .e:1 .v:0 x8 unsigned off
+	count: 0, unknowns: 8
+D : bundled-2p .e:1 .v:1 x8 unsigned off
+	count: 0, unknowns: 8
+resetting... 
+channels:
+all gone! 

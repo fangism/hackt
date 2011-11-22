@@ -1,0 +1,43 @@
+channels:
+A : bundled-2p .e:0 .v:0 x8 unsigned off
+B : bundled-2p .e:0 .v:1 x8 unsigned off
+C : bundled-2p .e:1 .v:0 x8 unsigned off
+D : bundled-2p .e:1 .v:1 x8 unsigned off
+Warning: channel validity `A.n' has no fanin.
+A : bundled-2p .e:0 .v:0 x8 unsigned sink, timing: after=10
+	count: 0, unknowns: 8
+enqueued:	0	A.d[0] : 0
+enqueued:	0	A.d[1] : 0
+enqueued:	0	A.d[2] : 0
+enqueued:	0	A.d[3] : 0
+enqueued:	0	A.d[4] : 0
+enqueued:	0	A.d[5] : 0
+enqueued:	0	A.d[6] : 0
+enqueued:	0	A.d[7] : 0
+enqueued:	0	A.r : 0
+	0	A.d[0] : 0
+	0	A.d[1] : 0
+	0	A.d[2] : 0
+	0	A.d[3] : 0
+	0	A.d[4] : 0
+	0	A.d[5] : 0
+	0	A.d[6] : 0
+	0	A.d[7] : 0
+	0	A.r : 0
+enqueued:	10	A.a : 0
+	10	A.a : 0
+setting any data rail to X 
+enqueued:	10	A.d[3] : X
+enqueued:	10	A.r : 1
+	10	A.d[3] : X
+channel	A (.data) : X @ 10
+enqueued:	20	A.a : 1	[from A.r:=1]
+	10	A.r : 1
+event queue:
+	20	A.a : 1	[from A.r:=1]
+time: 10
+after step queue is: 
+	20	A.a : 1	[by A.r:=1]
+event queue:
+time: 20
+finishing... 
