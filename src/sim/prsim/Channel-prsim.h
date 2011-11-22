@@ -483,6 +483,7 @@ public:
 	bundles(void) const { return data.size()[0]; }
 
 	// should be ok for LEDR as well
+	// radix == 0 means data-less
 	size_t
 	radix(void) const { return data.size()[1]; }
 
@@ -797,7 +798,7 @@ public:
 	can_be_signed(void) const {
 		return
 #if PRSIM_CHANNEL_BUNDLED_DATA
-			data_is_bundled() ||
+			(data_is_bundled() && radix()) ||
 #endif
 			((radix() == 2) && (bundles() > 1));
 	}

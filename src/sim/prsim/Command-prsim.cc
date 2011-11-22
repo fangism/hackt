@@ -7014,16 +7014,17 @@ if (a.size() != 6) {
 			return Command::SYNTAX;
 		}
 		data_name = tmp.front();
+		if (data_name.length()) {
 #if PRSIM_CHANNEL_RAILS_INVERTED
 		data_sense = (data_name[0] == '~');		// active low
 #endif
 		const string::const_iterator b(data_name.begin());
 		data_name.assign(b +size_t(data_sense), b+c);
-		if (!data_name.length()) { THROW_EXIT; }
 		if (string_to_num(tmp.back(), data_init)) {
 			cerr << "Error: parsing initial value of data." << endl;
 			return Command::SYNTAX;
 		}
+		}	// else is data-less, which we now support
 	}{
 		// parse repeat
 		string_list tmp;
@@ -7101,6 +7102,8 @@ The @var{name} of the channel should match that of an instance
 @item @var{data} is the name of the data rail(s), interpreted with active-high
 	logic levels (prefix with @t{~} to make active-low).  
 	The @var{num} value specifies the number of wires (bus width).
+	If the channel is data-less (handshake only), then omit the 
+	data rail name and just write @t{:}.
 @end itemize
 @example
 @t{channel-bd-2p NAME e:1 v:1 d:0} -- this names the ack @t{e} and the 
@@ -7177,16 +7180,17 @@ if (a.size() != 5) {
 			return Command::SYNTAX;
 		}
 		data_name = tmp.front();
+		if (data_name.length()) {
 #if PRSIM_CHANNEL_RAILS_INVERTED
 		data_sense = (data_name[0] == '~');		// active low
 #endif
 		const string::const_iterator b(data_name.begin());
 		data_name.assign(b +size_t(data_sense), b+c);
-		if (!data_name.length()) { THROW_EXIT; }
 		if (string_to_num(tmp.back(), num_rails)) {
 			cerr << "Error: parsing bus width." << endl;
 			return Command::SYNTAX;
 		}
+		}	// else is data-less, which is now supported
 	}
 	channel_manager& cm(s.get_channel_manager());
 	if (cm.new_channel_bd2p(s, chan_name, 
@@ -7210,7 +7214,7 @@ ChannelBD2P::usage(ostream& o) {
 "\'req:init\' : req is the name of the request rail, init is the initial\n"
 	"\tvalue of this wire if driven by source.\n"
 "\'data:num\' : data is the name of the data rail(s) of the channel.\n"
-	"\tnum is the number of rails (bus width).\n"
+	"\tnum is the number of rails (bus width).  Pass :0 if data-less.\n"
 	<< endl;
 }
 
@@ -7243,6 +7247,8 @@ The @var{name} of the channel should match that of an instance
 @item @var{data} is the name of the data rail(s), interpreted with active-high
 	logic levels (prefix with @t{~} to make active-low).  
 	The @var{num} value specifies the number of wires (bus width).
+	If the channel is data-less (handshake only), then omit the 
+	data rail name and just write @t{:}.
 @end itemize
 @example
 @t{channel-bd-4p NAME e:0 v:1 d:0} -- this declares an active-low acknowledge,
@@ -7384,7 +7390,7 @@ ChannelBD4P::usage(ostream& o) {
 "\'req:init\' : req is the name of the request rail [nv], init is the initial\n"
 	"\tvalue of this wire if driven by source.\n"
 "\'data:num\' : data is the name of the data rail(s) of the channel.\n"
-	"\tnum is the number of rails (bus width).\n"
+	"\tnum is the number of rails (bus width).  Pass :0 if data-less.\n"
 	<< endl;
 }
 #endif	// PRSIM_CHANNEL_BUNDLED_DATA

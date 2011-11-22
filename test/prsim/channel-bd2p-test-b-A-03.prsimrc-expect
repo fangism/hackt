@@ -1,0 +1,58 @@
+channels:
+A : bundled-2p .e:0 .v:0 off
+B : bundled-2p .e:0 .v:1 off
+C : bundled-2p .e:1 .v:0 off
+D : bundled-2p .e:1 .v:1 off
+Warning: channel validity `A.n' has no fanin.
+channels:
+A : bundled-2p .e:0 .v:0 sink,watch,ignored, timing: after=10
+B : bundled-2p .e:0 .v:1 off,ignored
+C : bundled-2p .e:1 .v:0 off,ignored
+D : bundled-2p .e:1 .v:1 off,ignored
+All subnodes of 'A':
+A.a : X
+A.r : X
+manually resetting data 
+	0	A.r : 0
+	10	A.a : 0
+releasing channel A 
+------------------------------------ 
+one token 
+channel	A (.data) : 0 @ 10
+	10	A.r : 1
+	20	A.a : 1	[by A.r:=1]
+A : bundled-2p .e:0 .v:0 sink,watch, timing: after=10
+	count: 0, unknowns: 0
+event    : `A.a' : 1
+caused by: `A.r' : 1
+(no cycle)
+------------------------------------ 
+second token 
+channel	A (.data) : 0 @ 20
+	20	A.r : 0
+	30	A.a : 0	[by A.r:=0]
+A : bundled-2p .e:0 .v:0 sink,watch, timing: after=10
+	count: 0, unknowns: 0
+event    : `A.a' : 0
+caused by: `A.r' : 0
+(no cycle)
+------------------------------------ 
+third token, new value 
+channel	A (.data) : 0 @ 30
+	30	A.r : 1
+	40	A.a : 1	[by A.r:=1]
+A : bundled-2p .e:0 .v:0 sink,watch, timing: after=10
+	count: 0, unknowns: 0
+event    : `A.a' : 1
+caused by: `A.r' : 1
+(no cycle)
+------------------------------------ 
+fourth token, same value 
+channel	A (.data) : 0 @ 40
+	40	A.r : 0
+	50	A.a : 0	[by A.r:=0]
+A : bundled-2p .e:0 .v:0 sink,watch, timing: after=10
+	count: 0, unknowns: 0
+event    : `A.a' : 0
+caused by: `A.r' : 0
+(no cycle)

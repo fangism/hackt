@@ -1,0 +1,115 @@
+channels:
+A : bundled-2p .e:0 .v:0 off
+B : bundled-2p .e:0 .v:1 off
+C : bundled-2p .e:1 .v:0 off
+D : bundled-2p .e:1 .v:1 off
+A : bundled-2p .e:0 .v:0 off
+	count: 0, unknowns: 0
+All subnodes of 'A':
+A.a : X
+A.r : X
+Warning: channel acknowledge `A.e' has no fanin!
+Warning: channel validity `A.n' has no fanout, but is being sourced.
+Warning: value 33 exceeds the maximum value encoded, 0.
+Higher significant bits may be ignored.
+Warning: value 66 exceeds the maximum value encoded, 0.
+Higher significant bits may be ignored.
+Warning: value 99 exceeds the maximum value encoded, 0.
+Higher significant bits may be ignored.
+Warning: value 11 exceeds the maximum value encoded, 0.
+Higher significant bits may be ignored.
+Warning: value 44 exceeds the maximum value encoded, 0.
+Higher significant bits may be ignored.
+Warning: value 77 exceeds the maximum value encoded, 0.
+Higher significant bits may be ignored.
+Warning: value 22 exceeds the maximum value encoded, 0.
+Higher significant bits may be ignored.
+Warning: value 55 exceeds the maximum value encoded, 0.
+Higher significant bits may be ignored.
+Warning: value 88 exceeds the maximum value encoded, 0.
+Higher significant bits may be ignored.
+	10	A.r : 0
+All subnodes of 'A':
+A.a : X
+A.r : 0
+A : bundled-2p .e:0 .v:0 source,watch,stopped,ignored, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @0
+	count: 0, unknowns: 0
+manually bucketing 
+	10	A.a : 0
+channel A: channel is empty, waiting for sender
+releasing channel A (source) 
+----------------------------------- 
+event queue:
+	20	A.r : 1
+end of queue 
+channel A: channel is empty, waiting for sender
+channel	A (.data) : 0 @ 20
+	20	A.r : 1
+A : bundled-2p .e:0 .v:0 source,watch, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @1
+	count: 0, unknowns: 0
+event    : `A.r' : 1
+(no cycle)
+channel A: channel is full (0), waiting for receiver ack
+----------------------------------- 
+	20	A.a : 1
+channel	A (.data) : 0 @ 30
+	30	A.r : 0	[by A.a:=1]
+A : bundled-2p .e:0 .v:0 source,watch, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @2
+	count: 0, unknowns: 0
+----------------------------------- 
+	30	A.a : 0
+channel	A (.data) : 0 @ 40
+	40	A.r : 1	[by A.a:=0]
+A : bundled-2p .e:0 .v:0 source,watch, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @3
+	count: 0, unknowns: 0
+----------------------------------- 
+	40	A.a : 1
+channel	A (.data) : 0 @ 50
+	50	A.r : 0	[by A.a:=1]
+A : bundled-2p .e:0 .v:0 source,watch, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @4
+	count: 0, unknowns: 0
+----------------------------------- 
+	50	A.a : 0
+channel	A (.data) : 0 @ 60
+	60	A.r : 1	[by A.a:=0]
+A : bundled-2p .e:0 .v:0 source,watch, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @5
+	count: 0, unknowns: 0
+----------------------------------- 
+	60	A.a : 1
+channel	A (.data) : 0 @ 70
+	70	A.r : 0	[by A.a:=1]
+A : bundled-2p .e:0 .v:0 source,watch, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @6
+	count: 0, unknowns: 0
+----------------------------------- 
+	70	A.a : 0
+channel	A (.data) : 0 @ 80
+	80	A.r : 1	[by A.a:=0]
+A : bundled-2p .e:0 .v:0 source,watch, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @7
+	count: 0, unknowns: 0
+----------------------------------- 
+	80	A.a : 1
+channel	A (.data) : 0 @ 90
+	90	A.r : 0	[by A.a:=1]
+A : bundled-2p .e:0 .v:0 source,watch, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @8
+	count: 0, unknowns: 0
+----------------------------------- 
+	90	A.a : 0
+channel	A (.data) : 0 @ 100
+	100	A.r : 1	[by A.a:=0]
+A : bundled-2p .e:0 .v:0 source,watch, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @9
+	count: 0, unknowns: 0
+----------------------------------- 
+	100	A.a : 1
+channel	A (.data) : 0 @ 110
+	110	A.r : 0	[by A.a:=1]
+A : bundled-2p .e:0 .v:0 source,watch, timing: after=10
+	count: 0, unknowns: 0
+----------------------------------- 
+no more values!!! 
+	110	A.a : 0
+A : bundled-2p .e:0 .v:0 source,watch, timing: after=10
+	count: 0, unknowns: 0
+All subnodes of 'A':
+A.a : 0
+A.r : 0
+channel A: channel is empty, waiting for sender

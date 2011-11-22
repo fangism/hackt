@@ -73,6 +73,7 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	channel-array-a channel-array-b channel-array-c \
 	channel-bd4p-test-a \
 	channel-bd2p-test-a \
+	channel-bd2p-test-b \
 	eledr-buffer eledr-buffer-a eledr-buffer-b \
 	type-test-a type-test-b type-test-c type-test-d \
 	type-test-e type-test-f type-test-g \
@@ -379,6 +380,10 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	channel-bd2p-test-a-22 channel-bd2p-test-a-23 channel-bd2p-test-a-24 \
 	channel-bd2p-test-a-25 channel-bd2p-test-a-26 channel-bd2p-test-a-27 \
 	channel-bd2p-test-a-28 channel-bd2p-test-a-29 \
+	channel-bd2p-test-b-01 \
+	channel-bd2p-test-b-A-03 channel-bd2p-test-b-A-04 \
+	channel-bd2p-test-b-A-08 \
+	channel-bd2p-test-b-A-09 channel-bd2p-test-b-A-09b \
 	eledr-buffer-a-01 eledr-buffer-a-02 eledr-buffer-a-03 \
 	eledr-buffer-a-04 eledr-buffer-a-05 eledr-buffer-a-06 \
 	eledr-buffer-a-07 \

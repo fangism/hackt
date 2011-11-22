@@ -94,5 +94,13 @@ typedef	bd_2p<6>			bd_2p_6;
 typedef	bd_2p<7>			bd_2p_7;
 typedef	bd_2p<8>			bd_2p_8;
 
+/**
+	Pure-dataless handshake, intended for 2-phase.
+ */
+defchan bd_2p0 <: chan(int<1>) (bool a, r, e, v) {
+	e = a;
+	v = r;
+}
+
 //-----------------------------------------------------------------------------
 

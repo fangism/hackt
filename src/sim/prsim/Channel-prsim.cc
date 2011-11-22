@@ -398,6 +398,7 @@ channel::__dump_ack_valid_type(ostream& o) const {
 ostream&
 channel::dump(ostream& o) const {
 	o << name << " : ";
+	const size_t r = radix();
 switch (type) {
 case CHANNEL_TYPE_1ofN:
 	__dump_ack_valid_type(o);
@@ -430,21 +431,25 @@ case CHANNEL_TYPE_LEDR:
 case CHANNEL_TYPE_BD_4P:
 	o << "bundled-4p ";
 	__dump_ack_valid_type(o);
+if (r) {
 	o << ' ';
 #if PRSIM_CHANNEL_RAILS_INVERTED
 	if (get_data_sense()) { o << '~'; }
 #endif
-	o << 'x' << radix();
+	o << 'x' << r;
+}
 	break;
 case CHANNEL_TYPE_BD_2P:	// similar to LEDR
 	o << "bundled-2p";
 	o << " .e:" << (get_ack_init() ? '1' : '0');	// ack
 	o << " .v:" << (get_req_init() ? '1' : '0');	// request
+if (r) {
 	o << ' ';
 #if PRSIM_CHANNEL_RAILS_INVERTED
 	if (get_data_sense()) { o << '~'; }
 #endif
-	o << 'x' << radix();
+	o << 'x' << r;
+}
 	break;
 #endif
 // case CHANNEL_TYPE_SINGLE_TRACK:
@@ -527,7 +532,7 @@ if (is_sinking() || is_sourcing()) {
 		o << " > " << dumplog.fname;
 	}
 	return o;
-}
+}	// end channel::dump
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -802,6 +807,7 @@ channel::__assert_channel_value(const channel::value_type& expect,
 		const bool x, 
 		const bool confirm) const {
 	static const char cmd[] = "channel-assert";
+if (radix()) {
 	if (expect != got) {
 		print_data_value(cerr << cmd <<
 			": value assertion failed on channel " <<
@@ -817,6 +823,7 @@ channel::__assert_channel_value(const channel::value_type& expect,
 		print_data_value(cout << "channel " << name << " has value ", 
 			expect) << ", as expected." << endl;
 	}
+}	// else is data-less, and thus not applicable
 	return true;
 }
 
@@ -2094,8 +2101,10 @@ default:
 inline
 void
 channel::reset_bundled_data_rails(vector<env_event_type>& events) {
+if (radix()) {
 switch (type) {
 case CHANNEL_TYPE_BD_2P:
+	// fall-through
 case CHANNEL_TYPE_BD_4P:
 	transform(data.begin(), data.end(), back_inserter(events),
 		__node_setter(get_data_sense() ? LOGIC_HIGH : LOGIC_LOW));
@@ -2107,6 +2116,7 @@ default:
 // two phase, LEDR: no resetting
 	break;
 }	// end switch
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2333,6 +2343,9 @@ channel::value_type
 channel::data_rails_value(const State& s) const {
 	STACKTRACE_BRIEF;
 	typedef	State::node_type	node_type;
+if (!radix()) {
+	return 0;			// data-less, don't care
+}
 	value_type ret = 0;
 switch (type) {
 case CHANNEL_TYPE_SINGLE_TRACK:	// use 1ofN
@@ -3783,6 +3796,7 @@ channel_manager::~channel_manager() { }
 /**
 	Allocates and maps the channel data rails,
 	and initializes the data counter state.
+	\param rail_name if empty, means that channel is data-less!
 	\return true if error
  */
 bool
@@ -3798,6 +3812,7 @@ channel_manager::allocate_data_rails(State& state, const module& m,
 	// allocate data rail references:
 	set<size_t> rail_aliases;		// check for aliases (forbidden)
 	channel::data_rail_index_type dk;
+if (rail_name.length()) {
 	dk[0] = num_bundles;
 	dk[1] = num_rails;
 	c.data.resize(dk);
@@ -3848,6 +3863,12 @@ channel_manager::allocate_data_rails(State& state, const module& m,
 	}	// end for each bundle
 	// initialize data-rail state counters from current values
 	c.initialize_data_counter(state);
+} else {	// else skip, is data-less
+	// explicitly resize to 0
+	dk[0] = 0;
+	dk[1] = 0;
+	c.data.resize(dk);
+}
 	return false;
 }	// end allocate_data_rails
 

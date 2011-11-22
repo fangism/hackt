@@ -1,0 +1,158 @@
+channels:
+A : bundled-2p .e:0 .v:0 off
+B : bundled-2p .e:0 .v:1 off
+C : bundled-2p .e:1 .v:0 off
+D : bundled-2p .e:1 .v:1 off
+A : bundled-2p .e:0 .v:0 off
+	count: 0, unknowns: 0
+Warning: channel acknowledge `A.e' has no fanin!
+Warning: channel validity `A.n' has no fanout, but is being sourced.
+Warning: value 111 exceeds the maximum value encoded, 0.
+Higher significant bits may be ignored.
+Warning: value 255 exceeds the maximum value encoded, 0.
+Higher significant bits may be ignored.
+Warning: value 42 exceeds the maximum value encoded, 0.
+Higher significant bits may be ignored.
+Warning: value 64 exceeds the maximum value encoded, 0.
+Higher significant bits may be ignored.
+Warning: value 33 exceeds the maximum value encoded, 0.
+Higher significant bits may be ignored.
+Warning: value 33 exceeds the maximum value encoded, 0.
+Higher significant bits may be ignored.
+Warning: value 12 exceeds the maximum value encoded, 0.
+Higher significant bits may be ignored.
+Warning: value 9 exceeds the maximum value encoded, 0.
+Higher significant bits may be ignored.
+Warning: channel validity `A.n' has no fanin.
+All subnodes of 'A':
+A.a : 0
+A.r : 0
+A : bundled-2p .e:0 .v:0 source,sink,watch,stopped,ignored, timing: after=10 {111,255,42,64,33,33,12,9,}* @0 #0
+	count: 0, unknowns: 0
+releasing channel A (source) 
+source values on A will repeat 
+channel	A (.data) : 0 @ 20
+	20	A.r : 1
+	30	A.a : 1	[by A.r:=1]
+channel	A (.data) : 0 @ 40
+	40	A.r : 0	[by A.a:=1]
+	50	A.a : 0	[by A.r:=0]
+channel	A (.data) : 0 @ 60
+	60	A.r : 1	[by A.a:=0]
+	70	A.a : 1	[by A.r:=1]
+channel	A (.data) : 0 @ 80
+	80	A.r : 0	[by A.a:=1]
+	90	A.a : 0	[by A.r:=0]
+channel	A (.data) : 0 @ 100
+	100	A.r : 1	[by A.a:=0]
+	110	A.a : 1	[by A.r:=1]
+channel	A (.data) : 0 @ 120
+	120	A.r : 0	[by A.a:=1]
+	130	A.a : 0	[by A.r:=0]
+channel	A (.data) : 0 @ 140
+	140	A.r : 1	[by A.a:=0]
+	150	A.a : 1	[by A.r:=1]
+channel	A (.data) : 0 @ 160
+	160	A.r : 0	[by A.a:=1]
+	170	A.a : 0	[by A.r:=0]
+channel	A (.data) : 0 @ 180
+	180	A.r : 1	[by A.a:=0]
+	190	A.a : 1	[by A.r:=1]
+channel	A (.data) : 0 @ 200
+	200	A.r : 0	[by A.a:=1]
+	210	A.a : 0	[by A.r:=0]
+channel	A (.data) : 0 @ 220
+	220	A.r : 1	[by A.a:=0]
+	230	A.a : 1	[by A.r:=1]
+channel	A (.data) : 0 @ 240
+	240	A.r : 0	[by A.a:=1]
+	250	A.a : 0	[by A.r:=0]
+channel	A (.data) : 0 @ 260
+	260	A.r : 1	[by A.a:=0]
+	270	A.a : 1	[by A.r:=1]
+channel	A (.data) : 0 @ 280
+	280	A.r : 0	[by A.a:=1]
+	290	A.a : 0	[by A.r:=0]
+channel	A (.data) : 0 @ 300
+	300	A.r : 1	[by A.a:=0]
+	310	A.a : 1	[by A.r:=1]
+channel	A (.data) : 0 @ 320
+	320	A.r : 0	[by A.a:=1]
+	330	A.a : 0	[by A.r:=0]
+channel	A (.data) : 0 @ 340
+	340	A.r : 1	[by A.a:=0]
+	350	A.a : 1	[by A.r:=1]
+channel	A (.data) : 0 @ 360
+	360	A.r : 0	[by A.a:=1]
+	370	A.a : 0	[by A.r:=0]
+channel	A (.data) : 0 @ 380
+	380	A.r : 1	[by A.a:=0]
+	390	A.a : 1	[by A.r:=1]
+channel	A (.data) : 0 @ 400
+	400	A.r : 0	[by A.a:=1]
+	410	A.a : 0	[by A.r:=0]
+channel	A (.data) : 0 @ 420
+	420	A.r : 1	[by A.a:=0]
+	430	A.a : 1	[by A.r:=1]
+channel	A (.data) : 0 @ 440
+	440	A.r : 0	[by A.a:=1]
+	450	A.a : 0	[by A.r:=0]
+channel	A (.data) : 0 @ 460
+	460	A.r : 1	[by A.a:=0]
+	470	A.a : 1	[by A.r:=1]
+channel	A (.data) : 0 @ 480
+	480	A.r : 0	[by A.a:=1]
+	490	A.a : 0	[by A.r:=0]
+channel	A (.data) : 0 @ 500
+	500	A.r : 1	[by A.a:=0]
+	510	A.a : 1	[by A.r:=1]
+channel	A (.data) : 0 @ 520
+	520	A.r : 0	[by A.a:=1]
+	530	A.a : 0	[by A.r:=0]
+channel	A (.data) : 0 @ 540
+	540	A.r : 1	[by A.a:=0]
+	550	A.a : 1	[by A.r:=1]
+channel	A (.data) : 0 @ 560
+	560	A.r : 0	[by A.a:=1]
+	570	A.a : 0	[by A.r:=0]
+channel	A (.data) : 0 @ 580
+	580	A.r : 1	[by A.a:=0]
+	590	A.a : 1	[by A.r:=1]
+channel	A (.data) : 0 @ 600
+	600	A.r : 0	[by A.a:=1]
+	610	A.a : 0	[by A.r:=0]
+channel	A (.data) : 0 @ 620
+	620	A.r : 1	[by A.a:=0]
+	630	A.a : 1	[by A.r:=1]
+channel	A (.data) : 0 @ 640
+	640	A.r : 0	[by A.a:=1]
+	650	A.a : 0	[by A.r:=0]
+channel	A (.data) : 0 @ 660
+	660	A.r : 1	[by A.a:=0]
+	670	A.a : 1	[by A.r:=1]
+channel	A (.data) : 0 @ 680
+	680	A.r : 0	[by A.a:=1]
+	690	A.a : 0	[by A.r:=0]
+channel	A (.data) : 0 @ 700
+	700	A.r : 1	[by A.a:=0]
+	710	A.a : 1	[by A.r:=1]
+channel	A (.data) : 0 @ 720
+	720	A.r : 0	[by A.a:=1]
+	730	A.a : 0	[by A.r:=0]
+channel	A (.data) : 0 @ 740
+	740	A.r : 1	[by A.a:=0]
+	750	A.a : 1	[by A.r:=1]
+channel	A (.data) : 0 @ 760
+	760	A.r : 0	[by A.a:=1]
+	770	A.a : 0	[by A.r:=0]
+channel	A (.data) : 0 @ 780
+	780	A.r : 1	[by A.a:=0]
+	790	A.a : 1	[by A.r:=1]
+channel	A (.data) : 0 @ 800
+	800	A.r : 0	[by A.a:=1]
+	810	A.a : 0	[by A.r:=0]
+time: 810
+running a bit longer... 
+time: 124260
+A : bundled-2p .e:0 .v:0 source,sink, timing: after=10 {111,255,42,64,33,33,12,9,}* @5 #776
+	count: 0, unknowns: 0
