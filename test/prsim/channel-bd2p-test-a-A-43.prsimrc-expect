@@ -1,0 +1,22 @@
+channels:
+A : bundled-2p .e:0 .v:0 x8 unsigned off
+B : bundled-2p .e:0 .v:1 x8 unsigned off
+C : bundled-2p .e:1 .v:0 x8 unsigned off
+D : bundled-2p .e:1 .v:1 x8 unsigned off
+Fanouts of node `A.d[0]':
+Fanins of node `A.d[0]':
+Fanouts of node `A.r':
+Fanins of node `A.r':
+Fanouts of node `A.a':
+Fanins of node `A.a':
+Warning: channel validity `A.n' has no fanin.
+A : bundled-2p .e:0 .v:0 x8 unsigned sink, timing: after=10
+	count: 0, unknowns: 8
+Fanouts of node `A.d[0]':
+Fanins of node `A.d[0]':
+Fanouts of node `A.r':
+to channel(s): A
+Fanins of node `A.r':
+Fanouts of node `A.a':
+Fanins of node `A.a':
+from channel(s): A

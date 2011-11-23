@@ -1,0 +1,77 @@
+# "channel-bd2p-test-a-A-48.prsimrc"
+# @haco@ channel-bd2p-test-a.haco-c
+
+# bundled-data channels should be allowed to be signed
+source channel-bd2p-test-a-46.prsimrc
+channel-source-args-loop A -128 -64 -63 -1 0 1 27 100 127
+channel-show A
+set A.a 1
+channel-reset-all
+channel-watchall
+cycle
+
+channel-release-all
+cycle
+set A.a 0
+cycle
+
+set A.a 1
+cycle
+set A.a 0
+cycle
+
+set A.a 1
+cycle
+set A.a 0
+cycle
+
+set A.a 1
+cycle
+set A.a 0
+cycle
+
+set A.a 1
+cycle
+set A.a 0
+cycle
+
+set A.a 1
+cycle
+set A.a 0
+cycle
+
+set A.a 1
+cycle
+set A.a 0
+cycle
+
+set A.a 1
+cycle
+set A.a 0
+cycle
+
+set A.a 1
+cycle
+set A.a 0
+cycle
+
+set A.a 1
+cycle
+set A.a 0
+cycle
+
+set A.a 1
+cycle
+set A.a 0
+cycle
+
+set A.a 1
+cycle
+set A.a 0
+cycle
+
+set A.a 1
+cycle
+set A.a 0
+cycle
+

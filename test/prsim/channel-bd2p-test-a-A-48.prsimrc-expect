@@ -1,0 +1,40 @@
+channels:
+A : bundled-2p .e:0 .v:0 x8 unsigned off
+B : bundled-2p .e:0 .v:1 x8 unsigned off
+C : bundled-2p .e:1 .v:0 x8 unsigned off
+D : bundled-2p .e:1 .v:1 x8 unsigned off
+channels:
+A : bundled-2p .e:0 .v:0 x8 signed off
+B : bundled-2p .e:0 .v:1 x8 signed off
+C : bundled-2p .e:1 .v:0 x8 signed off
+D : bundled-2p .e:1 .v:1 x8 signed off
+Warning: channel acknowledge `A.e' has no fanin!
+Warning: channel validity `A.n' has no fanout, but is being sourced.
+A : bundled-2p .e:0 .v:0 x8 signed source, timing: after=10 {-128,-64,-63,-1,0,1,27,100,127,}* @0 #0
+	count: 0, unknowns: 8
+channel	A (.data) : 0 @ 10
+channel	A (.data) : -128 @ 20
+channel	A (.data) : -64 @ 30
+channel	A (.data) : -63 @ 40
+channel	A (.data) : -1 @ 50
+channel	A (.data) : 0 @ 60
+channel	A (.data) : 1 @ 70
+channel	A (.data) : 27 @ 80
+channel	A (.data) : 100 @ 90
+channel	A (.data) : 127 @ 100
+channel	A (.data) : -128 @ 110
+channel	A (.data) : -64 @ 120
+channel	A (.data) : -63 @ 130
+channel	A (.data) : -1 @ 140
+channel	A (.data) : 0 @ 150
+channel	A (.data) : 1 @ 160
+channel	A (.data) : 27 @ 170
+channel	A (.data) : 100 @ 180
+channel	A (.data) : 127 @ 190
+channel	A (.data) : -128 @ 200
+channel	A (.data) : -64 @ 210
+channel	A (.data) : -63 @ 220
+channel	A (.data) : -1 @ 230
+channel	A (.data) : 0 @ 240
+channel	A (.data) : 1 @ 250
+channel	A (.data) : 27 @ 260

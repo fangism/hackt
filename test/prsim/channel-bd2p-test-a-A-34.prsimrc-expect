@@ -1,0 +1,45 @@
+	0	A.d[0] : 1
+	0	A.d[1] : 1
+	0	A.d[2] : 1
+	0	A.d[3] : 1
+	0	A.d[4] : 0
+	0	A.d[5] : 0
+	0	A.d[6] : 0
+	0	A.d[7] : 0
+channels:
+A : bundled-2p .e:0 .v:0 x8 unsigned off
+B : bundled-2p .e:0 .v:1 x8 unsigned off
+C : bundled-2p .e:1 .v:0 x8 unsigned off
+D : bundled-2p .e:1 .v:1 x8 unsigned off
+no values given: will reset to neutral 
+Warning: channel acknowledge `A.e' has no fanin!
+Warning: channel validity `A.n' has no fanout, but is being sourced.
+Warning: no values given, channel will remain neutral.
+channels:
+A : bundled-2p .e:0 .v:0 x8 unsigned source, timing: after=10
+B : bundled-2p .e:0 .v:1 x8 unsigned off
+C : bundled-2p .e:1 .v:0 x8 unsigned off
+D : bundled-2p .e:1 .v:1 x8 unsigned off
+this time, no sink 
+resetting all channels... 
+	10	A.d[0] : 0
+	10	A.d[1] : 0
+	10	A.d[2] : 0
+	10	A.d[3] : 0
+	10	A.r : 0
+releasing all channels... 
+	20	A.d[0] : X
+	20	A.d[1] : X
+	20	A.d[2] : X
+	20	A.d[3] : X
+	20	A.d[4] : X
+	20	A.d[5] : X
+	20	A.d[6] : X
+	20	A.d[7] : X
+	20	A.r : X
+all values went to X because A.a is X 
+A : bundled-2p .e:0 .v:0 x8 unsigned source,watch, timing: after=10
+	count: 0, unknowns: 8
+setting A.a -> 0, resets data rails 
+	20	A.a : 0
+req not responding because data values are empty 

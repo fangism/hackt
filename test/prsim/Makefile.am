@@ -380,6 +380,13 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	channel-bd2p-test-a-22 channel-bd2p-test-a-23 channel-bd2p-test-a-24 \
 	channel-bd2p-test-a-25 channel-bd2p-test-a-26 channel-bd2p-test-a-27 \
 	channel-bd2p-test-a-28 channel-bd2p-test-a-29 \
+	channel-bd2p-test-a-31 channel-bd2p-test-a-33 \
+	channel-bd2p-test-a-A-34 \
+	channel-bd2p-test-a-A-40 channel-bd2p-test-a-A-41 \
+	channel-bd2p-test-a-A-43 channel-bd2p-test-a-A-44 \
+	channel-bd2p-test-a-A-45 \
+	channel-bd2p-test-a-46 \
+	channel-bd2p-test-a-A-48 \
 	channel-bd2p-test-b-01 \
 	channel-bd2p-test-b-A-03 channel-bd2p-test-b-A-04 \
 	channel-bd2p-test-b-A-08 \

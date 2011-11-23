@@ -1,0 +1,23 @@
+# "channel-bd2p-test-a-33.prsimrc"
+# @haco@ channel-bd2p-test-a.haco-c
+
+# testing hexadecimal values
+source channel-bd2p-test-a-01.prsimrc
+echo no values given: will reset to neutral
+channel-source-args B
+channel-show-all
+channel-sink B
+
+channel-watch B
+
+echo resetting all channels...
+channel-reset-all
+watchall
+cycle
+
+echo releasing all channels...
+channel-release-all
+cycle
+
+assertn-queue
+
