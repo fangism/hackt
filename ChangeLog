@@ -1,6 +1,12 @@
 "ChangeLog"
 #	$Id: ChangeLog,v 1.256 2011/05/03 19:20:32 fang Exp $
 
+2011-11-23	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-99:
+	  configure.ac: date-bump
+
+
 2011-06-25	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-78:
