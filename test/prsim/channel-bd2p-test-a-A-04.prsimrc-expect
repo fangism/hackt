@@ -26,7 +26,6 @@ Warning: channel validity `A.n' has no fanout, but is being sourced.
 	10	A.d[5] : 0
 	10	A.d[6] : 0
 	10	A.d[7] : 0
-channel	A (.data) : 0 @ 10 (ignored)
 	10	A.r : 0
 All subnodes of 'A':
 A.a : X

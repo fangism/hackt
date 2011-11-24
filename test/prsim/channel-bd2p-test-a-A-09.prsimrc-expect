@@ -24,7 +24,6 @@ manually resetting data
 	0	A.d[5] : 0
 	0	A.d[6] : 0
 	0	A.d[7] : 0
-channel	A (.data) : 0 @ 0 (ignored)
 	0	A.r : 0
 	10	A.a : 0
 ------------------------------------ 

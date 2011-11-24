@@ -347,7 +347,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	channel-bd4p-test-a-ev-04 channel-bd4p-test-a-av-04 \
 	channel-bd4p-test-a-en-04 channel-bd4p-test-a-an-04 \
 	channel-bd4p-test-a-ev-08 \
-	channel-bd4p-test-a-ev-09 channel-bd4p-test-a-ev-09b
+	channel-bd4p-test-a-ev-09 channel-bd4p-test-a-ev-09b \
 	channel-bd4p-test-a-ev-19 channel-bd4p-test-a-ev-19b \
 	channel-bd4p-test-a-20 channel-bd4p-test-a-22 channel-bd4p-test-a-23 \
 	channel-bd4p-test-a-24 channel-bd4p-test-a-25 channel-bd4p-test-a-26 \

@@ -1,8 +1,8 @@
 channels:
-W : bundled-4p .a(init:0) .n x8 off
-X : bundled-4p .e(init:1) .v x8 off
-Y : bundled-4p .a(init:0) .v x8 off
-Z : bundled-4p .e(init:1) .n x8 off
+W : bundled-4p .a(init:0) .n x8 unsigned off
+X : bundled-4p .e(init:1) .v x8 unsigned off
+Y : bundled-4p .a(init:0) .v x8 unsigned off
+Z : bundled-4p .e(init:1) .n x8 unsigned off
 Warning: channel validity `X.v' has no fanin.
 Warning: channel acknowledge `Y.a' has no fanin!
 Warning: channel validity `Y.v' has no fanout, but is being sourced.
@@ -12,10 +12,10 @@ Warning: channel validity `Z.n' has no fanin.
 Warning: channel acknowledge `W.a' has no fanin!
 Warning: channel validity `W.n' has no fanout, but is being sourced.
 channels:
-W : bundled-4p .a(init:0) .n x8 source, timing: after=10 {1,0,13,} @0
-X : bundled-4p .e(init:1) .v x8 sink, timing: after=10
-Y : bundled-4p .a(init:0) .v x8 source, timing: after=10 {2,1,0,} @0
-Z : bundled-4p .e(init:1) .n x8 source,sink, timing: after=10 {0,2,1,} @0
+W : bundled-4p .a(init:0) .n x8 unsigned source, timing: after=10 {1,0,13,} @0
+X : bundled-4p .e(init:1) .v x8 unsigned sink, timing: after=10
+Y : bundled-4p .a(init:0) .v x8 unsigned source, timing: after=10 {2,1,0,} @0
+Z : bundled-4p .e(init:1) .n x8 unsigned source,sink, timing: after=10 {0,2,1,} @0
 undriven X inputs 
 X nodes with no fanin:
 X.v
@@ -46,4 +46,28 @@ X.d[5]
 X.d[6]
 X.d[7]
 Y.v
+Y.d[0]
+Y.d[1]
+Y.d[2]
+Y.d[3]
+Y.d[4]
+Y.d[5]
+Y.d[6]
+Y.d[7]
+Z.d[0]
+Z.d[1]
+Z.d[2]
+Z.d[3]
+Z.d[4]
+Z.d[5]
+Z.d[6]
+Z.d[7]
 W.n
+W.d[0]
+W.d[1]
+W.d[2]
+W.d[3]
+W.d[4]
+W.d[5]
+W.d[6]
+W.d[7]

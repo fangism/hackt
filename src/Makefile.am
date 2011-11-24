@@ -977,7 +977,7 @@ PARSER_H_FILES = \
 	parser/type.h \
 	parser/$(TYPE_PARSE_ROOT).output.h \
 	parser/$(TYPE_PARSE_ROOT)-options.h \
-	lexer/$(SPICE_LEX_ROOT)-options.h \
+	lexer/$(TYPE_LEX_ROOT)-options.h \
 	parser/$(SPICE_PARSE_ROOT)-real.h \
 	parser/spice-union.h \
 	parser/spice.h \

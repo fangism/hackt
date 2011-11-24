@@ -3,6 +3,13 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-11-23	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-00:
+	  Merged prsim-bd (bundled-data) branch after rebase.
+	  Merged spice-verilog (spice parse front-end) branch after rebase.
+
+
 2011-11-22	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-98-prsim-bd-09:

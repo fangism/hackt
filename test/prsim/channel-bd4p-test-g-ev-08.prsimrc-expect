@@ -11,26 +11,24 @@ Warning: channel validity `X.v' has no fanin.
 All subnodes of 'X':
 X.e : 1
 X.v : 0
-X.d[0] : X
-X.d[1] : X
-X.d[2] : X
-X.d[3] : X
-X.d[4] : X
-X.d[5] : X
-X.d[6] : X
-X.d[7] : X
+X.d[0] : 1
+X.d[1] : 1
+X.d[2] : 1
+X.d[3] : 1
+X.d[4] : 1
+X.d[5] : 1
+X.d[6] : 1
+X.d[7] : 1
 X : bundled-4p .e(init:1) .v ~x8 unsigned source,sink,watch,stopped, timing: after=10 {111,255,42,64,33,33,12,9,}* @0 #0
-	count: 0, unknowns: 8
+	count: 0, unknowns: 0
 releasing channel X (source) 
 source values on X will repeat 
 	20	X.d[0] : 0
 	20	X.d[1] : 0
 	20	X.d[2] : 0
 	20	X.d[3] : 0
-	20	X.d[4] : 1
 	20	X.d[5] : 0
 	20	X.d[6] : 0
-	20	X.d[7] : 1
 channel	X (.data) : 111 @ 20
 	20	X.v : 1
 	30	X.e : 0	[by X.v:=1]
@@ -114,8 +112,10 @@ channel	X (.data) : 255 @ 380
 	420	X.d[7] : 1	[by X.e:=1]
 channel	X (.data) : 42 @ 420
 	420	X.v : 1	[by X.e:=1]
-time: 420
+	430	X.e : 0	[by X.v:=1]
+	440	X.v : 0	[by X.e:=0]
+time: 440
 running a bit longer... 
-time: 123870
-X : bundled-4p .e(init:1) .v ~x8 unsigned source,sink, timing: after=10 {111,255,42,64,33,33,12,9,}* @1 #387
+time: 123890
+X : bundled-4p .e(init:1) .v ~x8 unsigned source,sink, timing: after=10 {111,255,42,64,33,33,12,9,}* @2 #387
 	count: 6, unknowns: 0

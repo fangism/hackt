@@ -1,10 +1,10 @@
 channels:
-W : bundled-4p .a(init:0) .n x8 off
-X : bundled-4p .e(init:1) .v x8 off
-Y : bundled-4p .a(init:0) .v x8 off
-Z : bundled-4p .e(init:1) .n x8 off
+W : bundled-4p .a(init:0) .n x8 unsigned off
+X : bundled-4p .e(init:1) .v x8 unsigned off
+Y : bundled-4p .a(init:0) .v x8 unsigned off
+Z : bundled-4p .e(init:1) .n x8 unsigned off
 Warning: channel validity `X.v' has no fanin.
-X : bundled-4p .e(init:1) .v x8 sink, timing: after=10
+X : bundled-4p .e(init:1) .v x8 unsigned sink, timing: after=10
 	count: 0, unknowns: 8
 enqueued:	0	X.d[0] : 0
 enqueued:	0	X.d[1] : 0

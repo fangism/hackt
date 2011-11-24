@@ -8,7 +8,6 @@ A : bundled-2p .e:0 .v:0 x8 unsigned off
 Warning: channel acknowledge `A.e' has no fanin!
 Warning: channel validity `A.n' has no fanout, but is being sourced.
 Warning: channel validity `A.n' has no fanin.
-channel	A (.data) : 0 @ 10 (ignored)
 All subnodes of 'A':
 A.a : 0
 A.r : 0

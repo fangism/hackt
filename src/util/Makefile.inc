@@ -209,6 +209,7 @@ UTIL_HEADER_FILES = \
 	util/string_fwd.h \
 	util/swap_saver.h \
 	util/syntax_fwd.h \
+	util/syntax.h \
 	util/tagged_subtype.h \
 	util/template.h \
 	util/typeof.h \

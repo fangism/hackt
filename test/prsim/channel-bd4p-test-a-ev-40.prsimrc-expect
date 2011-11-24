@@ -1,8 +1,8 @@
 channels:
-W : bundled-4p .a(init:0) .n x8 off
-X : bundled-4p .e(init:1) .v x8 off
-Y : bundled-4p .a(init:0) .v x8 off
-Z : bundled-4p .e(init:1) .n x8 off
+W : bundled-4p .a(init:0) .n x8 unsigned off
+X : bundled-4p .e(init:1) .v x8 unsigned off
+Y : bundled-4p .a(init:0) .v x8 unsigned off
+Z : bundled-4p .e(init:1) .n x8 unsigned off
 Warning: channel validity `X.v' has no fanin.
 All subnodes of 'X':
 X.e : X
@@ -31,52 +31,54 @@ releasing channel X
 channel	X (.data) : 0 @ 10
 	10	X.v : 1
 	20	X.e : 0	[by X.v:=1]
-X : bundled-4p .e(init:1) .v x8 sink,expect,watch, timing: after=10 {0,1,3,7,15,31,} @1
+X : bundled-4p .e(init:1) .v x8 unsigned sink,expect,watch, timing: after=10 {0,1,3,7,15,31,} @1
 	count: 0, unknowns: 0
 - - - - - - - - - - - - - - - - - - 
 	20	X.v : 0
 	30	X.e : 1	[by X.v:=0]
-X : bundled-4p .e(init:1) .v x8 sink,expect,watch, timing: after=10 {0,1,3,7,15,31,} @1
+X : bundled-4p .e(init:1) .v x8 unsigned sink,expect,watch, timing: after=10 {0,1,3,7,15,31,} @1
 	count: 0, unknowns: 0
 ------------------------------------ 
 	30	X.d[0] : 1
 channel	X (.data) : 1 @ 30
 	30	X.v : 1
 	40	X.e : 0	[by X.v:=1]
-X : bundled-4p .e(init:1) .v x8 sink,expect,watch, timing: after=10 {0,1,3,7,15,31,} @2
+X : bundled-4p .e(init:1) .v x8 unsigned sink,expect,watch, timing: after=10 {0,1,3,7,15,31,} @2
 	count: 1, unknowns: 0
 - - - - - - - - - - - - - - - - - - 
 	40	X.v : 0
 	50	X.e : 1	[by X.v:=0]
-X : bundled-4p .e(init:1) .v x8 sink,expect,watch, timing: after=10 {0,1,3,7,15,31,} @2
+X : bundled-4p .e(init:1) .v x8 unsigned sink,expect,watch, timing: after=10 {0,1,3,7,15,31,} @2
 	count: 1, unknowns: 0
 ------------------------------------ 
 expect comparison fail here: (but silenced) 
 	50	X.d[2] : 1
 channel	X (.data) : 5 @ 50
+channel-assert: value assertion failed on channel X, expected: 3, but got: 5
 ERROR: value assertion failed on channel `X' at index [2].
 	expected: 3, got: 5
 	50	X.v : 1
 	60	X.e : 0	[by X.v:=1]
-X : bundled-4p .e(init:1) .v x8 sink,expect,watch, timing: after=10 {0,1,3,7,15,31,} @3
+X : bundled-4p .e(init:1) .v x8 unsigned sink,expect,watch, timing: after=10 {0,1,3,7,15,31,} @3
 	count: 2, unknowns: 0
 - - - - - - - - - - - - - - - - - - 
 	60	X.d[0] : 0
 	60	X.v : 0
 	70	X.e : 1	[by X.v:=0]
-X : bundled-4p .e(init:1) .v x8 sink,expect,watch, timing: after=10 {0,1,3,7,15,31,} @3
+X : bundled-4p .e(init:1) .v x8 unsigned sink,expect,watch, timing: after=10 {0,1,3,7,15,31,} @3
 	count: 1, unknowns: 0
 ------------------------------------ 
 	70	X.d[1] : 1
 channel	X (.data) : 6 @ 70
+channel-assert: value assertion failed on channel X, expected: 7, but got: 6
 ERROR: value assertion failed on channel `X' at index [3].
 	expected: 7, got: 6
 	70	X.v : 1
 	80	X.e : 0	[by X.v:=1]
-X : bundled-4p .e(init:1) .v x8 sink,expect,watch, timing: after=10 {0,1,3,7,15,31,} @4
+X : bundled-4p .e(init:1) .v x8 unsigned sink,expect,watch, timing: after=10 {0,1,3,7,15,31,} @4
 	count: 2, unknowns: 0
 - - - - - - - - - - - - - - - - - - 
 	80	X.v : 0
 	90	X.e : 1	[by X.v:=0]
-X : bundled-4p .e(init:1) .v x8 sink,expect,watch, timing: after=10 {0,1,3,7,15,31,} @4
+X : bundled-4p .e(init:1) .v x8 unsigned sink,expect,watch, timing: after=10 {0,1,3,7,15,31,} @4
 	count: 2, unknowns: 0
