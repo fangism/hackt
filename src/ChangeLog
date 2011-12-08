@@ -3,6 +3,12 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-12-08	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-91-prsim-engine-rewrite-02:
+	  First draft of instability handling, only partially tested.
+
+
 2011-09-27	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-98:

@@ -1215,6 +1215,7 @@ State::pending_live_events(void) const {
  */
 void
 State::kill_event(const event_index_type ei, const node_index_type ni) {
+	DEBUG_STEP_PRINT("dequeuing event ID " << ei << " on node " << ni << endl);
 	if (UNLIKELY(watching_all_event_queue() ||
 			(watching_event_queue() && is_watching_node(ni)))) {
 		dump_event_force(cout << "killed  :", ei,
@@ -1229,6 +1230,7 @@ State::kill_event(const event_index_type ei, const node_index_type ni) {
 /**
 	Registers event in the primary event queue.  
 	Only this is allowed to load killed events.  
+	\return node index of the event enqueued.
  */
 // inline
 node_index_type
@@ -1263,6 +1265,7 @@ State::load_enqueue_event(const time_type t, const event_index_type ei) {
  */
 void
 State::enqueue_event(const time_type t, const event_index_type ei) {
+//	DEBUG_STEP_PRINT("enqueuing event ID " << ei << " at time " << t << endl);
 	const node_index_type ni = load_enqueue_event(t, ei);
 	const node_type& n(get_node(ni));
 	ISE_INVARIANT(n.pending_event());
@@ -2187,8 +2190,9 @@ for ( ; i!=e; ++i) {
 	// flags?
 	// can we use why-analysis for identify short paths?
 	// TODO: why-interfere (why is pull 1 or X in both directions)?
-	value_enum& pull_val(newevent.val);
-	pull_val = n.current_value();	// start with current value
+	value_enum& pull_val(newevent.val);	// yes, *reference*
+	const value_enum old_val = n.current_value();
+	pull_val = old_val;	// start with current value
 	bool have_interference = false;	// to be updated
 
 	// interference and instability are actually independent
@@ -2196,6 +2200,7 @@ for ( ; i!=e; ++i) {
 	// create event first, but don't tie it to the node until
 	// after checking for instability and queue conflicts
 	const pull_set p(n, weak_rules_enabled());
+	const bool weak_wins = p.weak_wins_any();
 	bool possible_interference = false;	// used to be named pending_weak
 #if DEBUG_STEP
 	p.dump(DEBUG_STEP_PRINT("")) << endl;
@@ -2224,7 +2229,6 @@ for ( ; i!=e; ++i) {
 #endif
 	else {
 		// is a non-interfering rule firing
-		const bool weak_wins = p.weak_wins_any();
 		newevent.set_weak(weak_wins);
 		if (p.pull_up_wins_any()) {
 			DEBUG_STEP_PRINT("normal pull-up" << endl);
@@ -2272,11 +2276,12 @@ for ( ; i!=e; ++i) {
 	if (prevevent) {
 		// there is a pending event in queue already
 		event_type& pe(get_event(prevevent));
-		const value_enum pval = pe.val;
+		const value_enum pval = pe.val;	// save away previous pull
 		// * compare event values
 		// * check pull-state based on prev.val
 		//	if pull is no longer active, then is unstable
 		if (have_interference) {
+			DEBUG_STEP_PRINT("had some interference" << endl);
 			// previous event should be clobbered to X
 			// regardless of the instability state
 			// BUT NOT if it was set by user (forced)
@@ -2286,31 +2291,30 @@ for ( ; i!=e; ++i) {
 		} else {
 			DEBUG_STEP_PRINT("overwrite to X." << endl);
 			pe.val = LOGIC_OTHER;
+			// pe.set_cause_node()?
 		}
 			// don't report this as instability?
 		} else {
+			DEBUG_STEP_PRINT("no interference" << endl);
 			// non-interfering
+		}	// end if !have_interference
+		// even if interfering, also check for instability
 		switch (pval) {	// based on previously scheduled value
+			// conditionals here can't just use pull_val
+			// because state-holding node will retain old value
 		case LOGIC_LOW: {
 			// Q: are we still pulling down?
-			if (p.dn == PULL_ON
-#if PRSIM_WEAK_RULES
-				|| p.wdn == PULL_ON
-#endif
-				) {
+			if (p.pulling_dn()) {
+				DEBUG_STEP_PRINT("active pull-dn" << endl);
 				// the rule re-firing is vacuous
 				// the old event stays in queue
-			} else if (p.dn == PULL_WEAK
-#if PRSIM_WEAK_RULES
-				|| p.wdn == PULL_WEAK
-#endif
-				) {
+			} else if (p.__pulling_dn_x()) {
+				DEBUG_STEP_PRINT("X pull-dn" << endl);
 				// possible instability
 				have_instability = true;
-			} else if (newevent.val != pe.val) {
-				// TODO: what about opposite-pulls?
+			} else if (pull_val != pval) {
+				// TODO: opposite-pulls? new event below
 				have_instability = true;
-				FINISH_ME_EXIT(Fang);
 			} else {
 				// pull turned off -- instability
 				have_instability = true;
@@ -2319,24 +2323,17 @@ for ( ; i!=e; ++i) {
 		}
 		case LOGIC_HIGH: {
 			// Q: are we still pulling up?
-			if (p.up == PULL_ON
-#if PRSIM_WEAK_RULES
-				|| p.wup == PULL_ON
-#endif
-				) {
+			if (p.pulling_up()) {
+				DEBUG_STEP_PRINT("active pull-up" << endl);
 				// the rule re-firing is vacuous
 				// the old event stays in queue
-			} else if (p.up == PULL_WEAK
-#if PRSIM_WEAK_RULES
-				|| p.wup == PULL_WEAK
-#endif
-				) {
+			} else if (p.__pulling_up_x()) {
+				DEBUG_STEP_PRINT("X pull-up" << endl);
 				// possible instability
 				have_instability = true;
-			} else if (newevent.val != pe.val) {
-				// TODO: what about opposite-pulls?
+			} else if (pull_val != pval) {
+				// TODO: opposite-pulls? new event below
 				have_instability = true;
-				FINISH_ME_EXIT(Fang);
 			} else {
 				// pull turned off -- instability
 				have_instability = true;
@@ -2351,18 +2348,38 @@ for ( ; i!=e; ++i) {
 		}	// end switch
 		if (have_instability) {
 			// we either need to cancel, overwrite with X,
-			// or reschedule entirely new event
+			// or kill and reschedule entirely new event
 			// diagnostic should be issued here
-			FINISH_ME_EXIT(Fang);
+			const break_type E =
+			__report_instability(cout, c.val == LOGIC_OTHER, 
+				pval == LOGIC_HIGH, pe);
+			if (E > err) err = E;
+			INVARIANT(pull_val != pval);	// vacuous => stable
+			if (dequeue_unstable_events()) {
+				// remove from queue or replace?
+				kill_event(prevevent, ni);
+				if (pull_val != old_val) {
+					const event_index_type ei =
+						__allocate_event(n, newevent);
+					enqueue_event(pull_val == LOGIC_LOW ?
+						get_delay_dn(newevent) :
+						get_delay_up(newevent),
+						ei);
+				}
+			} else {
+				DEBUG_STEP_PRINT("overwrite to X." << endl);
+				pe.val = LOGIC_OTHER;
+				pe.set_cause_node(c.node);
+				pe.set_weak(weak_wins);
+				// no need to set cause::val?
+			}
 		} // else no modification to event queue necessary
-		}	// end if !have_interference
 	} else {
 		// no event in queue, then just enqueue new one
-		if (newevent.val != n.current_value()) {
+		if (pull_val != old_val) {
 			const event_index_type ei =
 				__allocate_event(n, newevent);
-			DEBUG_STEP_PRINT("enqueuing event ID " << endl);
-			enqueue_event(newevent.val == LOGIC_LOW ?
+			enqueue_event(pull_val == LOGIC_LOW ?
 				get_delay_dn(newevent) : get_delay_up(newevent),
 				ei);
 		} else {

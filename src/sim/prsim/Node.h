@@ -762,6 +762,26 @@ struct pull_set {
 			;
 	}
 
+	// disregards stronger pull-on
+	bool
+	__pulling_up_x(void) const {
+		return (up == PULL_WEAK)
+#if PRSIM_WEAK_RULES
+			|| (wup == PULL_WEAK)
+#endif
+			;
+	}
+
+	// disregards stronger pull-on
+	bool
+	__pulling_dn_x(void) const {
+		return (dn == PULL_WEAK)
+#if PRSIM_WEAK_RULES
+			|| (wdn == PULL_WEAK)
+#endif
+			;
+	}
+
 	bool
 	cutoff_up(void) const {
 		return up == PULL_OFF && wup == PULL_OFF;
@@ -913,6 +933,11 @@ struct pull_set {
 	bool
 	pull_dn_x_wins_any(void) const {
 		return cutoff_up() && pulling_dn_x();
+	}
+
+	bool
+	x_wins_any(void) const {
+		return pull_up_x_wins_any() || pull_dn_x_wins_any();
 	}
 
 	bool
