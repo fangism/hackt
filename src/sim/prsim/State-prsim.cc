@@ -2354,7 +2354,6 @@ for ( ; i!=e; ++i) {
 				pval == LOGIC_HIGH, pe);
 			if (E > err) err = E;
 		}
-#if 1
 		// interference takes precedence over instability, outcome-wise
 		if (have_interference) {
 			// rewrite event's value to X, done with pull_val
@@ -2365,7 +2364,11 @@ for ( ; i!=e; ++i) {
 			// or kill and reschedule entirely new event
 			// diagnostic should be issued here
 			INVARIANT(pull_val != pval);	// vacuous => stable
-			if (dequeue_unstable_events()) {
+			// hope the compiler is smart enough to optimize away
+			// lookup_rule when it is not needed (code motion)
+			const rule_type* const r = lookup_rule(pe.cause_rule);
+			const bool r_unstable = r && r->is_unstable();
+			if (dequeue_unstable_events() || r_unstable) {
 				// remove from queue or replace?
 				kill_event(prevevent, ni);
 				if (pull_val != old_val) {
@@ -2405,7 +2408,6 @@ for ( ; i!=e; ++i) {
 				}
 			}
 		}
-#endif
 	} else {
 		DEBUG_STEP_PRINT("no pending event" << endl);
 		// no event in queue, then just enqueue new one
