@@ -1,7 +1,13 @@
+	0	wl : 1
+	0	f : 0
 enqueued:	10	t : 0	[from bl:=0]
+	0	bl : 0
 queue:	10	t : 0	[from bl:=0]
 WARNING: unstable `t'-
 rule: [after 10]	wl:1 & ~bl:1<0><0> -> t-:X
 >> cause: `bl' (val: 1)
-queue:	10	t : 1	[from bl:=0]	(weak)
+killed  :	0	t : 0	[from bl:=0]
+enqueued:	10	t : 1	[from bl:=1]	(weak)
+	0	bl : 1
+queue:	10	t : 1	[from bl:=1]	(weak)
 	10	t : 1	[by bl:=1]

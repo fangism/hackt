@@ -8,6 +8,7 @@ weak-rules on
 unstable warn
 unstable-dequeue
 interference warn
+watchall
 watch t
 watch-queue
 

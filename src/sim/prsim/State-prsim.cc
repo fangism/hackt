@@ -2270,10 +2270,12 @@ for ( ; i!=e; ++i) {
 				possible_interference, ni, c);
 		if (E > err) err = E;
 	}
+	// schedule event below, after instability check
 }{
 	bool have_instability = false;
 	// check for instability
 	if (prevevent) {
+		DEBUG_STEP_PRINT("there is pending event" << endl);
 		// there is a pending event in queue already
 		event_type& pe(get_event(prevevent));
 		const value_enum pval = pe.val;	// save away previous pull
@@ -2296,7 +2298,6 @@ for ( ; i!=e; ++i) {
 			// don't report this as instability?
 		} else {
 			DEBUG_STEP_PRINT("no interference" << endl);
-			// non-interfering
 		}	// end if !have_interference
 		// even if interfering, also check for instability
 		switch (pval) {	// based on previously scheduled value
@@ -2346,14 +2347,23 @@ for ( ; i!=e; ++i) {
 			// so we might have to deduce from cause-rule
 			break;
 		}	// end switch
+		// report instability before acting on it
 		if (have_instability) {
-			// we either need to cancel, overwrite with X,
-			// or kill and reschedule entirely new event
-			// diagnostic should be issued here
 			const break_type E =
 			__report_instability(cout, c.val == LOGIC_OTHER, 
 				pval == LOGIC_HIGH, pe);
 			if (E > err) err = E;
+		}
+#if 1
+		// interference takes precedence over instability, outcome-wise
+		if (have_interference) {
+			// rewrite event's value to X, done with pull_val
+			DEBUG_STEP_PRINT("interference precedence" << endl);
+		} else if (have_instability) {
+			DEBUG_STEP_PRINT("some instability" << endl);
+			// we either need to cancel, overwrite with X,
+			// or kill and reschedule entirely new event
+			// diagnostic should be issued here
 			INVARIANT(pull_val != pval);	// vacuous => stable
 			if (dequeue_unstable_events()) {
 				// remove from queue or replace?
@@ -2373,8 +2383,31 @@ for ( ; i!=e; ++i) {
 				pe.set_weak(weak_wins);
 				// no need to set cause::val?
 			}
-		} // else no modification to event queue necessary
+		} else {
+			DEBUG_STEP_PRINT("neither interference/instability" << endl);
+			// no change to event queue?
+			// graduate event to main queue?
+			// check for overtaking:
+			if ((p.pulling_dn() || p.pulling_up()) &&
+					pull_val != pval &&
+					pe.val == LOGIC_OTHER &&
+					dequeue_unstable_events()) {
+				DEBUG_STEP_PRINT("overtaking X with [01]" << endl);
+				INVARIANT(pull_val != LOGIC_OTHER);
+				kill_event(prevevent, ni);
+				if (pull_val != old_val) {
+					const event_index_type ei =
+						__allocate_event(n, newevent);
+					enqueue_event(pull_val == LOGIC_LOW ?
+						get_delay_dn(newevent) :
+						get_delay_up(newevent),
+						ei);
+				}
+			}
+		}
+#endif
 	} else {
+		DEBUG_STEP_PRINT("no pending event" << endl);
 		// no event in queue, then just enqueue new one
 		if (pull_val != old_val) {
 			const event_index_type ei =

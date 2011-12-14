@@ -177,7 +177,9 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	unstable-01 unstable-02 unstable-03 \
 	unstable-a-01 unstable-b-01 \
 	weak-unstable-a-01 weak-unstable-a-02 weak-unstable-a-03 \
+	weak-unstable-a-04 \
 	weak-unstable-b-01 weak-unstable-b-02 weak-unstable-b-03 \
+	weak-unstable-b-04 \
 	weak-yield-a-01 weak-yield-b-01 \
 	breakpt-01 \
 	oscil-break-01 oscil-break-02 oscil-break-03 \
