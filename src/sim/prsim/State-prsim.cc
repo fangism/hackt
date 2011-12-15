@@ -328,6 +328,9 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 		exclhi_queue(), excllo_queue(), 
 #if PRSIM_SIMPLE_EVENT_QUEUE
 		updated_nodes(), 
+#if PRSIM_FCFS_UPDATED_NODES
+		updated_nodes_queue(),
+#endif
 #else
 		pending_queue(), 
 #endif
@@ -2166,6 +2169,7 @@ if (ei) {
 /**
 	updated_nodes contains set of all nodes whose pull-states were
 	updated by expression propagation.
+	updated_nodes_queue preserves order of fanout evaluation
 	This procedure evaluates the pull-state of all affected nodes
 	and determines a course of action, possibly enqueuing or
 	dequeuing events.  
@@ -2174,11 +2178,22 @@ State::break_type
 State::flush_updated_nodes(cause_arg_type c) {
 	STACKTRACE_VERBOSE_STEP;
 	break_type err = ERROR_NONE;
+#if PRSIM_FCFS_UPDATED_NODES
+	typedef	updated_nodes_queue_type::const_iterator	const_iterator;
+	const_iterator i(updated_nodes_queue.begin()),
+		e(updated_nodes_queue.end());
+	ISE_INVARIANT(updated_nodes.size() == updated_nodes_queue.size());
+#else
 	typedef	updated_nodes_type::const_iterator	const_iterator;
 	const_iterator i(updated_nodes.begin()), e(updated_nodes.end());
 	// TODO: mind the ordering of processing nodes, numerical order by ID?
+#endif
 for ( ; i!=e; ++i) {
+#if PRSIM_FCFS_UPDATED_NODES
+	const node_index_type& ni(*i);
+#else
 	const node_index_type& ni(i->first);
+#endif
 	node_type& n(__get_node(ni));
 	DEBUG_STEP_PRINT("considering updated node " <<
 		get_node_canonical_name(ni) << endl);
@@ -2186,7 +2201,13 @@ for ( ; i!=e; ++i) {
 	event_type newevent;
 	newevent.node = ni;
 	newevent.cause = c;
+#if PRSIM_FCFS_UPDATED_NODES
+	const updated_nodes_type::iterator f(updated_nodes.find(*i));
+	ISE_INVARIANT(f != updated_nodes.end());
+	newevent.cause_rule = f->second;
+#else
 	newevent.cause_rule = i->second;
+#endif
 	// flags?
 	// can we use why-analysis for identify short paths?
 	// TODO: why-interfere (why is pull 1 or X in both directions)?
@@ -2422,8 +2443,17 @@ for ( ; i!=e; ++i) {
 		}
 	}
 }
+#if PRSIM_FCFS_UPDATED_NODES
+	// remove as each node is processed
+	updated_nodes.erase(f);
+#endif
 }	// end for all updated nodes
+#if PRSIM_FCFS_UPDATED_NODES
+	ISE_INVARIANT(updated_nodes.empty());
+	updated_nodes_queue.clear();
+#else
 	updated_nodes.clear();
+#endif
 	return err;
 }	// end flush_updated_nodes()
 
@@ -3214,6 +3244,9 @@ State::step(void) THROWS_STEP_EXCEPTION {
 	STACKTRACE_VERBOSE;
 #if PRSIM_SIMPLE_EVENT_QUEUE
 	ISE_INVARIANT(updated_nodes.empty());
+#if PRSIM_FCFS_UPDATED_NODES
+	ISE_INVARIANT(updated_nodes_queue.empty());
+#endif
 #else
 	ISE_INVARIANT(pending_queue.empty());
 #endif
@@ -4145,6 +4178,11 @@ if (dir) {
 		// TODO: add mode for interference delay (0 to be conservative)
 		}
 	}
+#if PRSIM_FCFS_UPDATED_NODES
+	else {
+		updated_nodes_queue.push_back(ui);
+	}
+#endif
 #else
 /***
 	The node is either T, F, or X. Either way, it's a change.
@@ -4390,6 +4428,11 @@ if (!n.pending_event()) {
 			pp.first->second = root_rule;
 		}
 	}
+#if PRSIM_FCFS_UPDATED_NODES
+	else {
+		updated_nodes_queue.push_back(ui);
+	}
+#endif
 #else
 if (!n.pending_event()) {
 	DEBUG_STEP_PRINT("no pending event on this node being pulled down."
@@ -7137,6 +7180,11 @@ State::dump_memory_usage(ostream& o) const {
 	o << "updated-nodes: ("  << ps << " * " <<
 		sizeof_tree_node(node_index_type) << " B/node) = " <<
 		ps * sizeof_tree_node(node_index_type) << " B" << endl;
+#if PRSIM_FCFS_UPDATED_NODES
+	o << "updated-nodes-queue: ("  << ps << " * " <<
+		sizeof(node_index_type) << " B/node) = " <<
+		ps * sizeof(node_index_type) << " B" << endl;
+#endif
 #else
 #if UNIQUE_PENDING_QUEUE
 	const size_t ps = pending_queue.size();
@@ -7306,6 +7354,9 @@ State::save_checkpoint(ostream& o) const {
 	ISE_INVARIANT(excllo_queue.empty());
 #if PRSIM_SIMPLE_EVENT_QUEUE
 	ISE_INVARIANT(updated_nodes.empty());
+#if PRSIM_FCFS_UPDATED_NODES
+	ISE_INVARIANT(updated_nodes_queue.empty());
+#endif
 #else
 	ISE_INVARIANT(pending_queue.empty());
 #endif
@@ -7500,6 +7551,9 @@ try {
 	ISE_INVARIANT(excllo_queue.empty());
 #if PRSIM_SIMPLE_EVENT_QUEUE
 	ISE_INVARIANT(updated_nodes.empty());
+#if PRSIM_FCFS_UPDATED_NODES
+	ISE_INVARIANT(updated_nodes_queue.empty());
+#endif
 #else
 	ISE_INVARIANT(pending_queue.empty());
 #endif

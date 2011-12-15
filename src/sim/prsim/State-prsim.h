@@ -40,6 +40,16 @@
 #define	UNIQUE_PENDING_QUEUE			1
 #endif
 
+/**
+	First-come-first-serve ordering of updated nodes.
+	Define to 1 for best-attempt to preserve original event
+	ordering among equal-timed events to minimize false-positive
+	differences in the regression test-suite.
+	This is accomplished by preserving the order in-which 
+	fanouts were propagated.
+ */
+#define	PRSIM_FCFS_UPDATED_NODES		(1 && PRSIM_SIMPLE_EVENT_QUEUE)
+
 #if PRSIM_TRACE_GENERATION
 #include "util/memory/excl_ptr.h"
 #endif
@@ -429,7 +439,7 @@ protected:
 #if PRSIM_SIMPLE_EVENT_QUEUE
 	struct node_update_info {
 		rule_index_type			rule;
-		// Q: distnguish between rules that turned on/off?
+		// Q: distinguish between rules that turned on/off?
 		// should keep around previous pull-state
 		// being able to diff previous pull-state against
 		// current pull-state may eliminate duplicate
@@ -437,6 +447,12 @@ protected:
 	};	// end struct node_update_info
 	typedef	std::map<node_index_type, rule_index_type>
 						updated_nodes_type;
+#if PRSIM_FCFS_UPDATED_NODES
+	/**
+		Preserve the order in which fanouts were processed.
+	 */
+	typedef vector<node_index_type>		updated_nodes_queue_type;
+#endif
 #else
 	/**
 		invariant: no event should be in pending queue more than once.
@@ -553,6 +569,9 @@ private:
 	mk_excl_queue_type			excllo_queue;
 #if PRSIM_SIMPLE_EVENT_QUEUE
 	updated_nodes_type			updated_nodes;
+#if PRSIM_FCFS_UPDATED_NODES
+	updated_nodes_queue_type		updated_nodes_queue;
+#endif
 #else
 	/// pending queue
 	pending_queue_type			pending_queue;

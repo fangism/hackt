@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-12-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-91-prsim-engine-rewrite-04:
+	  Implemented a first-come-first-serve side queue to preserve 
+		order of processing updated nodes, to reduce differences
+		w.r.t. pre-branch.
+
+
 2011-12-13	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-91-prsim-engine-rewrite-03:
