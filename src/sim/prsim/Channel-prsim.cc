@@ -592,8 +592,8 @@ case CHANNEL_TYPE_BD_2P: { 	// treat req/ack as 2p handshake
 		ret.set_empty(empty);
 	}
 	break;
-default: break;
 }
+default: break;
 }	// end switch
 #endif
 }	// otherwise not applicable
