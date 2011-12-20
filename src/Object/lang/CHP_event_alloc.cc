@@ -655,12 +655,16 @@ local_event_allocator::allocate_event(const event_type& e) {
 	if (free_list.empty()) {
 		STACKTRACE_INDENT_PRINT("push_back" << endl);
 		const event_index_type ret = event_pool_size();
+		STACKTRACE_INDENT_PRINT("appending " << ret << endl);
 		event_footprint.push_back(e);
 		return ret;
 	} else {
 		// take first available index
 		STACKTRACE_INDENT_PRINT("free-list" << endl);
 		const event_index_type ret = free_list_acquire(free_list);
+		STACKTRACE_INDENT_PRINT("recycling " << ret <<
+			" (of " << event_footprint.size() << ')' << endl);
+		INVARIANT(ret < event_footprint.size());
 		event_footprint[ret] = e;
 		return ret;
 	}
@@ -673,12 +677,23 @@ local_event_allocator::allocate_event(const event_type& e) {
  */
 void
 local_event_allocator::deallocate_event(const event_index_type ei) {
+	STACKTRACE_VERBOSE;
+	STACKTRACE_INDENT_PRINT("recycle " << ei << endl);
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT_PRINT("free-list: ");
+	copy(free_list.begin(), free_list.end(), 
+		std::ostream_iterator<size_t>(cerr, " "));
+	cerr << endl;
+#endif
+	INVARIANT(free_list.find(ei) == free_list.end());	// double-free!
 	// does invariant checking
 	if (ei == event_pool_size() -1) {
+		STACKTRACE_INDENT_PRINT("pop_back" << endl);
 		// if it happens to be the back entry, just pop it
 		event_footprint.pop_back();
 	} else {
 		// else remember it in free-list
+		STACKTRACE_INDENT_PRINT("free-list" << endl);
 		free_list_release(free_list, ei);
 	}
 }
@@ -717,7 +732,7 @@ local_event_allocator::substitute_successor(const event_index_type f,
 		const event_index_type replacement, 
 		const event_index_type h) {
 	STACKTRACE_VERBOSE;
-	STACKTRACE_INDENT_PRINT("f,r,h = " << f << ", " <<
+	STACKTRACE_INDENT_PRINT("fwd,repl,head = " << std::dec << f << ", " <<
 		replacement << ", " << h << endl);
 
 	// collect event nodes reachable from the head (post-dominate?)
@@ -734,14 +749,14 @@ local_event_allocator::substitute_successor(const event_index_type f,
 		STACKTRACE_INDENT_PRINT("worklist: " << ei << endl);
 		event_type::successor_list_type&
 			s(get_event(ei).successor_events);
-		STACKTRACE_INDENT_PRINT("size: " << s.size() << endl);
+//		STACKTRACE_INDENT_PRINT("size: " << s.size() << endl);
 		event_type::successor_list_type::iterator
 			si(s.begin()), se(s.end());
 		// algorithm: find and replace
 		// non-matches should be thrown into work-list
 		for ( ; si!=se; ++si) {
 			if (visited_set.find(*si) == visited_set.end()) {
-			STACKTRACE_INDENT_PRINT("  enqueue: " << ei << endl);
+			STACKTRACE_INDENT_PRINT("  enqueue: " << *si << endl);
 				worklist.insert(*si);
 			}
 			if (*si == f) {
@@ -797,6 +812,47 @@ local_event_allocator::count_predecessors(const event_type& ev) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Returns the index of the last *valid* event in the pool, 
+	i.e. one that is not already deallocated.
+ */
+size_t
+local_event_allocator::event_pool_tail(void) const {
+	STACKTRACE_VERBOSE;
+	INVARIANT(event_footprint.size() != free_list.size());
+	// otherwise, means pool is empty
+#if 0
+	const size_t ret = event_footprint.size() -1;
+	if (free_list.empty()) {
+		return ret;
+	} else {
+		--free_list.upper_bound(ret);
+	}
+#endif
+	// TODO: improve linear search, return first not-free entry
+	size_t ret = event_footprint.size() -1;
+	while (free_list.find(ret) != free_list.end()) {
+		--ret;
+	}
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+local_event_allocator::is_compact(void) const {
+	return free_list.empty() ||
+		(free_list.size() == event_footprint.size() -*free_list.begin());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+local_event_allocator::prune_pool_tail(void) {
+	INVARIANT(is_compact());
+	event_footprint.resize(event_footprint.size() -free_list.size());
+	free_list.clear();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Moves the root event into index[0].  
 	After allocation, there may be gaps in allocated events
 	indicated by the freelist, and also there may be unreachable events.
@@ -848,18 +904,21 @@ do {
 	// 2. move events from tail end to free_list spots, 
 	// remembering to keep track of root-node index!
 	STACKTRACE_INDENT_PRINT("compacting events..." << endl);
-while (!free_list.empty()) {
+while (!is_compact()) {
 	// allocation will never push_back-invalidate
-	event_index_type slot = allocate_event(event_footprint.back());
-	STACKTRACE_INDENT_PRINT("filling hole: " << slot << endl);
+	const event_index_type ns = event_pool_tail();
+	const event_index_type slot = allocate_event(event_footprint[ns]);
+	STACKTRACE_INDENT_PRINT("filling hole: " << slot << " with " << ns << endl);
 	// new size, also index of the entry that was just popped.  
-	const size_t ns = event_footprint.size() -1;
+//	const size_t ns = event_footprint.size() -1;
 	if (last_event_index == ns) {
 		last_event_index = slot;
 	}
 	substitute_successor(ns, slot, last_event_index);
 	deallocate_event(ns);	// does event_footprint.pop_back();
 }	// end while
+	STACKTRACE_INDENT_PRINT("done compacting events." << endl);
+	prune_pool_tail();
 #endif	// OPTIMIZE_CHPSIM_EVENTS
 #if ENABLE_STACKTRACE
 	event_footprint.dump(cout, expr_dump_context::default_value);

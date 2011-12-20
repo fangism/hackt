@@ -67,6 +67,9 @@ public:
 	bool
 	valid_last_event_index(void) const;
 
+	bool
+	is_compact(void) const;
+
 protected:
 	event_type&
 	get_event(const event_index_type ei);
@@ -86,6 +89,12 @@ protected:
 
 	void
 	connect_successor_events(event_type&) const;
+
+	size_t
+	event_pool_tail(void) const;
+
+	void
+	prune_pool_tail(void);
 
 public:
 	void

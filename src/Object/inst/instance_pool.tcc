@@ -40,7 +40,9 @@ instance_pool<T>::instance_pool() : parent_type(),
 		_port_entries(0), private_entry_map() {
 	STACKTRACE_CTOR_VERBOSE;
 	STACKTRACE_CTOR_PRINT("at: " << this << endl);
-	private_entry_map.push_back(std::make_pair(0, 0));
+	STACKTRACE_CTOR_PRINT("entry-map-size: " << private_entry_map.size() << endl);
+	const pool_private_map_entry_type t(0, 0);
+	private_entry_map.push_back(t);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
