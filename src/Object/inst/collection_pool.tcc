@@ -46,6 +46,7 @@ COLLECTION_POOL_CLASS::collection_pool() :
 		index_value_map(), 
 		address_chunk_map(), 
 		__back(value_pool.begin()) {
+	STACKTRACE_CTOR_VERBOSE;
 //	value_pool.push_back(value_chunk_type());
 	value_pool.front().reserve(INITIAL_RESERVE);	// pre-allocate
 	const typename index_value_map_type::value_type
@@ -59,6 +60,7 @@ COLLECTION_POOL_CLASS::collection_pool() :
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 COLLECTION_POOL_TEMPLATE_SIGNATURE
 COLLECTION_POOL_CLASS::~collection_pool() {
+	STACKTRACE_DTOR_VERBOSE;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

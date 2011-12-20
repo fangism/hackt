@@ -56,7 +56,8 @@ HACKT_PARSE_TEST_PASSES = \
 	source-sink-delay-01 \
 	dataless-01 dataless-03 \
 	string-01 string-02 string-03 \
-	buf-01 buf-02 buf-03 buf-03b buf-04
+	buf-01 buf-02 buf-03 buf-03b buf-04 \
+	ACX-PR-6885
 
 HACKT_PARSE_TEST_WARNINGS = \
 	101 103
@@ -78,7 +79,8 @@ HACKT_CREATE_TEST_PASSES = \
 	source-sink-delay-01 \
 	dataless-01 dataless-03 \
 	string-01 string-02 string-03 \
-	buf-01 buf-02 buf-03 buf-03b buf-04
+	buf-01 buf-02 buf-03 buf-03b buf-04 \
+	ACX-PR-6885
 
 # TODO:
 # 091 094: diagnostic improvement -- 

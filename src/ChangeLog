@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2011-12-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-01:
+	  CRITICAL bug fix (ACX-PR-6885):
+		CHP event pool compaction was corrupting memory,
+		due to a free-list/pool inconsistency.  Fixed.
+
+
 2011-11-23	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-85-00:

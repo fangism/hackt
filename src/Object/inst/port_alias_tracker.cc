@@ -530,6 +530,7 @@ alias_reference_set<Tag>::load_object_base(
 template <class Tag>
 ostream&
 port_alias_tracker_base<Tag>::dump_map(ostream& o, const dump_flags& df) const {
+	STACKTRACE_VERBOSE;
 if (!_ids.empty()) {
 	o << auto_indent << class_traits<Tag>::tag_name
 		<< " port aliases:" << endl;

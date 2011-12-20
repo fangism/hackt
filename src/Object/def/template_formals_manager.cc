@@ -384,6 +384,7 @@ template_formals_manager::must_validate_actuals(
 		the complete type.  
 	***/
 	DECLARE_TEMPORARY_FOOTPRINT(f);
+	STACKTRACE_INDENT_PRINT("built temporary footprint" << endl);
 	unroll_context c(&f, &f);
 	unroll_formal_parameters(c, t);
 	const count_ptr<const_param_expr_list> null(NULL);

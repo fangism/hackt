@@ -348,9 +348,18 @@ footprint::footprint(const temp_footprint_tag_type&) :
 	value_footprint_base<pint_tag>(), 
 	value_footprint_base<preal_tag>(), 
 	value_footprint_base<pstring_tag>(), 
+	created(false),
+	instance_collection_map(), 
+	scope_aliases(), 
+	port_aliases(),
 	prs_footprint(new PRS::footprint), 
+	chp_footprint(NULL), 	// allocate when we actually need it
+	chp_event_footprint(), 
 	spec_footprint(new SPEC::footprint),
-	lock_state(false) { }
+	warning_count(0),
+	lock_state(false) {
+	STACKTRACE_CTOR_VERBOSE;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1418,6 +1427,7 @@ footprint::connection_diagnostics(const bool top) const {
  */
 void
 footprint::allocate_chp_events(void) {
+	STACKTRACE_VERBOSE;
 if (chp_footprint) {
 	CHP::local_event_allocator v(chp_event_footprint);
 	chp_footprint->accept(v);
