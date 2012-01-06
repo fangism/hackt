@@ -2314,7 +2314,9 @@ for ( ; i!=e; ++i) {
 		} else {
 			DEBUG_STEP_PRINT("overwrite to X." << endl);
 			pe.val = LOGIC_OTHER;
+		// cause: most recent transition participating in interference
 			// pe.set_cause_node()?
+			pe.cause = c;
 		}
 			// don't report this as instability?
 		} else {

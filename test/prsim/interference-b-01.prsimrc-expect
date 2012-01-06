@@ -3,8 +3,6 @@ WARNING: weak-interference `c'
 	0	a : 0
 WARNING: weak-interference `c'
 >> cause: `a' (val: 1)
-WARNING: weak-interference `c'
->> cause: `a' (val: 1)
 	0	a : 1
 Nodes with interference:
 Nodes with weak-interference:
