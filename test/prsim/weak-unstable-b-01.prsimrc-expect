@@ -10,7 +10,7 @@ queue:	20	c : 0	[from b:=1]	(weak)
 WARNING: unstable `c'-
 rule: [after 10, weak]	b:0 -> c-:1
 >> cause: `b' (val: 0)
-killed  :	0	c : 0	[from b:=1]	(weak)
+killed  :	0	c : 0	[from b:=0]	(weak)
 enqueued:	20	c : X	[from b:=0]	(weak)
 weak-unstable should leave x-pull in queue 
 queue:	20	c : X	[from b:=0]	(weak)

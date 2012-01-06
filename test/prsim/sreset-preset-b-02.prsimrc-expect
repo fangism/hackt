@@ -1,3 +1,5 @@
+WARNING: weak-interference `_out'
+>> cause: `_sReset' (val: 0)
 	0	_sReset : 0
 	0	_pReset : 0
 	10	_out : 1	[by _pReset:=0]

@@ -2,8 +2,8 @@ event queue:
 	20	c : 0	[from a:=1]
 should be c- in queue 
 time: 12
+WARNING: weak-interference `c'
+>> cause: `a' (val: X)
 WARNING: weak-unstable `c'-
 rule: [after 10]	a:X -> c-:1
->> cause: `a' (val: X)
-WARNING: weak-interference `c'
 >> cause: `a' (val: X)

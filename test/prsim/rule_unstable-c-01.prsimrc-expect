@@ -16,7 +16,7 @@ rule: [after 10]	b:0 -> c-:X
 >> cause: `b' (val: 0)
 	0	b : 0
 should report c- unstable 
-queue:	10	c : X	[from b:=1]
+queue:	10	c : X	[from b:=0]
 event c- was turned into vacuous X 
 	10	c : X	[by b:=0]
 	10	b : 1

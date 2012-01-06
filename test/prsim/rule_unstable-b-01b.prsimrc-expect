@@ -22,7 +22,7 @@ Warning: node c is floating without pending feedback.  (fast-weak-keepers disabl
 	[caused by a : 1]
 	0	a : 1
 should report c+ unstable 
-queue:	10	c : X	[from a:=0]
+queue:	10	c : X	[from a:=1]
 event c+ was turned into vacuous X 
 	10	c : X	[by a:=1]
 	10	b : 1
@@ -38,9 +38,9 @@ rule: [after 10]	~a:1 -> c+:0
 Warning: node c is floating without pending feedback.  (fast-weak-keepers disabled) (weak-rules off)
 	[caused by a : 1]
 	20	a : 1
-queue:	30	c : X	[from a:=0]
+queue:	30	c : X	[from a:=1]
 event c+ was turned into X 
-queue:	30	c : X	[from a:=0]
+queue:	30	c : X	[from a:=1]
 	30	c : X	[by a:=1]
 resetting c:0 
 	30	b : 1

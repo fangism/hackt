@@ -2372,6 +2372,12 @@ for ( ; i!=e; ++i) {
 		}	// end switch
 		// report instability before acting on it
 		if (have_instability) {
+			// update cause of instability for diagnostic
+			// if marked X? if dequeued?
+			// pe.cause = c;
+			pe.cause.node = c.node;
+			pe.cause.val = c.val;
+			// retain original cause.rule
 			const break_type E =
 			__report_instability(cout, c.val == LOGIC_OTHER, 
 				pval == LOGIC_HIGH, pe);
