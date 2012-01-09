@@ -2374,9 +2374,12 @@ for ( ; i!=e; ++i) {
 		if (have_instability) {
 			// update cause of instability for diagnostic
 			// if marked X? if dequeued?
+			// event_type pe_diag(pe);		// diagnostic
+//			if (!dequeue_unstable_events()) {
+				pe.cause.node = c.node;
+				pe.cause.val = c.val;
+//			}
 			// pe.cause = c;
-			pe.cause.node = c.node;
-			pe.cause.val = c.val;
 			// retain original cause.rule
 			const break_type E =
 			__report_instability(cout, c.val == LOGIC_OTHER, 
@@ -3182,6 +3185,11 @@ State::excl_exception::inspect(const State& s, ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Since we aggregate exceptions, there may now be duplicate 
+	messages on node-events that cause multiple exceptions.  
+	TODO: (low priority) fix duplicate node diagnostics
+ */
 error_policy_enum
 State::generic_exception::inspect(const State& s, ostream& o) const {
 	if (policy >= ERROR_INTERACTIVE) {

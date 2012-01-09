@@ -18,7 +18,7 @@ rule: [after 10]	~a:0 & ~b:1<0><0> -> c+:0
 >> cause: `b' (val: 1)
 	15	b : 1
 event queue:
-	20	c : X	[from b:=0]
+	20	c : X	[from b:=1]
 end queue 
 	16	b : 0
 	20	c : X	[by b:=0]
