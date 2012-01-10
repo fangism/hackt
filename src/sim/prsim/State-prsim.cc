@@ -2208,6 +2208,7 @@ for ( ; i!=e; ++i) {
 #else
 	newevent.cause_rule = i->second;
 #endif
+	DEBUG_STEP_PRINT("by rule #" << newevent.cause_rule << endl);
 	// flags?
 	// can we use why-analysis for identify short paths?
 	// TODO: why-interfere (why is pull 1 or X in both directions)?
@@ -4071,25 +4072,12 @@ State::propagate_evaluation(
 	root_rule = ev_result.root_rule_index;
 	DEBUG_STEP_PRINT("root_rule: " << root_rule << endl);
 	ISE_INVARIANT(root_rule);
-#if PRSIM_WEAK_RULES
-	const bool is_weak = ev_result.root_rule->is_weak();
-	DEBUG_STEP_PRINT("updated root is" << (is_weak ? " " : " not") << " weak" << endl);
-#endif
+	const bool dir = ev_result.root_rule->direction();
 // propagation made it to the root node, indexed by ui (now node_index_type)
 	node_type& n(__get_node(ui));
 	DEBUG_STEP_PRINT("propagated to output node: " <<
 		get_node_canonical_name(ui) << " with pull state " <<
 		size_t(next) << endl);
-	const event_index_type ei = n.get_event();
-#if DEBUG_STEP
-	if (ei) {
-		dump_event(cerr << "pending:\t", ei, 0.0) << endl;
-		const event_type& e(get_event(ei));
-		STACKTRACE_INDENT_PRINT("e.node = " << e.node <<
-			" vs. ui = " << ui << endl);
-		INVARIANT(e.node == ui);
-	}
-#endif
 	// frozen nodes will not switch when expressions propagate to their root
 	break_type err = ERROR_NONE;
 #if PRSIM_UPSET_NODES
@@ -4107,8 +4095,19 @@ State::propagate_evaluation(
 	if (keeper_check_fail_policy > ERROR_IGNORE && p.state_holding()) {
 		__keeper_check_candidates.insert(ui);
 	}
-const bool dir = ev_result.root_rule->direction();
 #if PRSIM_WEAK_RULES
+	const bool is_weak = ev_result.root_rule->is_weak();
+	DEBUG_STEP_PRINT("updated root is" << (is_weak ? " " : " not") << " weak" << endl);
+	const event_index_type ei = n.get_event();
+#if DEBUG_STEP
+	if (ei) {
+		dump_event(cerr << "pending:\t", ei, 0.0) << endl;
+		const event_type& e(get_event(ei));
+		STACKTRACE_INDENT_PRINT("e.node = " << e.node <<
+			" vs. ui = " << ui << endl);
+		INVARIANT(e.node == ui);
+	}
+#endif
 	// weak rule pre-filtering
 if (weak_rules_enabled()) {
 if (n.pending_event()) {
@@ -4149,15 +4148,11 @@ if (n.pending_event()) {
 		// also account for case where weak-1 turns off and yields
 		// to a strong-X in same direction
 		if ((dir &&
-			((p.up == PULL_OFF && p.wup == PULL_OFF
-			&& (p.dn != PULL_OFF || p.wdn != PULL_OFF)) ||
-			(p.up == PULL_OFF && p.wup == PULL_WEAK &&
-			p.dn == PULL_WEAK)))
+			((p.cutoff_up() && !p.cutoff_dn()) ||
+			(p.weak_pulling_up_x() && p.dn == PULL_WEAK)))
 		|| (!dir &&
-			((p.dn == PULL_OFF && p.wdn == PULL_OFF
-			&& (p.up != PULL_OFF || p.wup != PULL_OFF)) ||
-			(p.dn == PULL_OFF && p.wdn == PULL_WEAK &&
-			p.up == PULL_WEAK)))
+			((p.cutoff_dn() && !p.cutoff_up()) ||
+			(p.weak_pulling_dn_x() && p.up == PULL_WEAK)))
 		) {
 		// check for yielding to opposition
 		DEBUG_STEP_PRINT("weak event preserved" << endl);
@@ -5447,6 +5442,9 @@ State::dump_event_force(ostream& o, const event_index_type ei,
 		if (ev.killed()) {
 			o << '\t' << "(killed)";
 		}
+#if DEBUG_STEP
+		o << "\t#" << ev.cause_rule;
+#endif
 		o << endl;
 	}
 	return o;
@@ -5547,7 +5545,11 @@ ostream&
 State::dump_rule(ostream& o, const expr_index_type ri, const bool v, 
 		const bool multi_fanin) const {
 	const process_sim_state& ps(lookup_global_expr_process(ri));
-	return ps.dump_rule(o, ps.local_expr_index(ri), *this, v, multi_fanin);
+#if DEBUG_STEP
+	o << '#' << ri << ' ';	// global rule ID
+#endif
+	ps.dump_rule(o, ps.local_expr_index(ri), *this, v, multi_fanin);
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

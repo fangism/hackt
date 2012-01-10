@@ -6,6 +6,8 @@ event queue:
 	30	b : 0	[from a:=1]
 time: 24
 expect weak-instability on b- 
+WARNING: weak-interference `b'
+>> cause: `a' (val: X)
 WARNING: weak-unstable `b'-
 rule: [after 10]	a:X -> b-:1
 >> cause: `a' (val: X)
