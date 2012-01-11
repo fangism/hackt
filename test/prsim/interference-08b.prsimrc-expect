@@ -1,7 +1,6 @@
 WARNING: weak-interference `c'
 >> cause: `a' (val: 0)
 	0	a : 0
-	0	c : X	[by a:=0]
 Nodes with interference:
 Nodes with weak-interference:
 c

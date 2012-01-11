@@ -9,10 +9,10 @@ WARNING: weak-interference `c'
 	30	b : X	[by a:=X]
 	40	c : X	[by b:=X]
 	40	a : 0
+WARNING: weak-interference `b'
+>> cause: `a' (val: X)
 WARNING: weak-unstable `b'+
 rule: [after 10]	~a:X -> b+:X
->> cause: `a' (val: X)
-WARNING: weak-interference `b'
 >> cause: `a' (val: X)
 	44	a : X
 event queue:

@@ -15,5 +15,4 @@ WARNING: weak-unstable `b'-
 rule: [after 10]	a:X -> b-:X
 >> cause: `a' (val: X)
 	44	a : X
-	50	b : X	[by a:=X]
 event queue:

@@ -2312,6 +2312,9 @@ for ( ; i!=e; ++i) {
 			// see test case interference-07.prsimrc
 		if (pe.forced()) {
 			DEBUG_STEP_PRINT("yielding to user-set value" << endl);
+		} else if (old_val == LOGIC_OTHER) {
+			DEBUG_STEP_PRINT("already X (cancel)" << endl);
+			kill_event(prevevent, ni);
 		} else {
 			DEBUG_STEP_PRINT("overwrite to X." << endl);
 			pe.val = LOGIC_OTHER;
@@ -2319,7 +2322,7 @@ for ( ; i!=e; ++i) {
 			// pe.set_cause_node()?
 			pe.cause = c;
 		}
-			// don't report this as instability?
+			// check for stability below
 		} else {
 			DEBUG_STEP_PRINT("no interference" << endl);
 		}	// end if !have_interference
