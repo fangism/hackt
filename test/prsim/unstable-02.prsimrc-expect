@@ -6,8 +6,7 @@ rule: [after 10]	a:0 -> b-:X
 >> cause: `a' (val: 0)
 	5	a : 0
 event queue:
-	10	b : X	[from a:=0]
-expect b:X in queue 
+vacuous X events were dropped from queue (prsim-engine-rewrite) 
 end of queue 
 	0	a : 0
 expect instability 
@@ -16,4 +15,4 @@ rule: [after 10]	~a:1 -> b+:X
 >> cause: `a' (val: 1)
 	5	a : 1
 event queue:
-	10	b : X	[from a:=1]
+vacuous X events were dropped from queue (prsim-engine-rewrite) 

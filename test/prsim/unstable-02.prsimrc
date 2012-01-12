@@ -16,7 +16,9 @@ set a 0
 echo expect instability
 advance 5
 queue
-echo expect b:X in queue
+echo vacuous X events were dropped from queue (prsim-engine-rewrite)
+assertn-pending b
+# echo expect b:X in queue
 echo end of queue
 
 initialize
@@ -29,4 +31,5 @@ advance 5
 # ordering problem of combinational gates.  
 # FIXED: HACKT-00-01-04-main-00-79-27-prsim-06-03
 queue
+echo vacuous X events were dropped from queue (prsim-engine-rewrite)
 

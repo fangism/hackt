@@ -2315,6 +2315,8 @@ for ( ; i!=e; ++i) {
 		} else if (old_val == LOGIC_OTHER) {
 			DEBUG_STEP_PRINT("already X (cancel)" << endl);
 			kill_event(prevevent, ni);
+			// update cause, even though X is vacuous
+			n.set_value_and_cause(LOGIC_OTHER, c);
 		} else {
 			DEBUG_STEP_PRINT("overwrite to X." << endl);
 			pe.val = LOGIC_OTHER;
@@ -2415,6 +2417,11 @@ for ( ; i!=e; ++i) {
 						get_delay_up(newevent),
 						ei);
 				}
+			} else if (old_val == LOGIC_OTHER) {
+				DEBUG_STEP_PRINT("already X (cancel)" << endl);
+				kill_event(prevevent, ni);
+				// update cause, even though X is vacuous
+				n.set_value_and_cause(LOGIC_OTHER, c);
 			} else {
 				DEBUG_STEP_PRINT("overwrite to X." << endl);
 				pe.val = LOGIC_OTHER;
@@ -4182,7 +4189,8 @@ if (dir) {
 		pp(updated_nodes.insert(
 			updated_nodes_type::value_type(ui, root_rule)));
 	if (!pp.second) {
-		if (p.up != PULL_OFF) {
+		if (!is_weak && p.up != PULL_OFF ||
+			is_weak && p.wup != PULL_OFF) {
 			pp.first->second = root_rule;
 		// TODO: determine rule precedence for causality
 		// whichever turned on first? strength?
@@ -4438,7 +4446,8 @@ if (!n.pending_event()) {
 		pp(updated_nodes.insert(
 			updated_nodes_type::value_type(ui, root_rule)));
 	if (!pp.second) {
-		if (p.dn != PULL_OFF) {
+		if (!is_weak && p.dn != PULL_OFF ||
+			is_weak && p.wdn != PULL_OFF) {
 			pp.first->second = root_rule;
 		}
 	}

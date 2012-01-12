@@ -22,9 +22,9 @@ Warning: node c is floating without pending feedback.  (fast-weak-keepers disabl
 	[caused by a : 1]
 	0	a : 1
 should report c+ unstable 
-queue:	10	c : X	[from a:=1]
+No event pending on `c'.
 event c+ was turned into vacuous X 
-	10	c : X	[by a:=1]
+advance 10 was added after vacuous X events were dropped from queue (prsim-engine-rewrite) 
 	10	b : 1
 	20	c : 0	[by b:=1]
 Warning: node c is floating without pending feedback.  (fast-weak-keepers disabled) (weak-rules off)

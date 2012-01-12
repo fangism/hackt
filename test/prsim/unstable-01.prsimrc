@@ -17,6 +17,8 @@ advance 5
 set a 0
 echo expect instability
 step
+echo vacuous X events were dropped from queue (prsim-engine-rewrite)
+pending b
 
 echo initializing
 initialize
@@ -28,4 +30,6 @@ step
 # but with old behavior, this is reported as an interference
 # because of arbitrary evaluation ordering!
 # FIXED: HACKT-00-01-04-main-00-79-27-prsim-06-03
+echo vacuous X events were dropped from queue (prsim-engine-rewrite)
+pending b
 

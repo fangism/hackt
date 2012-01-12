@@ -6,9 +6,8 @@ Warning: node f is floating without pending feedback.  (fast-weak-keepers disabl
 	[caused by t : 0]
 	0	t : 0
 instability? 
-	0	f : X	[by t:=0]
 t : 0
-f : X
+f : X	[by t:=0]
 	0	t : X
 pulling one down first (slight time separation) 
 Warning: node f is floating without pending feedback.  (fast-weak-keepers disabled) (weak-rules off)
