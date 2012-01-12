@@ -29,6 +29,9 @@ echo event c+ was turned into vacuous X
 cycle
 assert c X
 
+echo advance 10 was added after vacuous X events were dropped from queue (prsim-engine-rewrite)
+advance 10
+
 set b 1
 cycle
 assert c 0

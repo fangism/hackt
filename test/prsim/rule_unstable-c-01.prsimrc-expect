@@ -16,9 +16,9 @@ rule: [after 10]	b:0 -> c-:X
 >> cause: `b' (val: 0)
 	0	b : 0
 should report c- unstable 
-queue:	10	c : X	[from b:=0]
+No event pending on `c'.
 event c- was turned into vacuous X 
-	10	c : X	[by b:=0]
+advance 10 was added after vacuous X events were dropped from queue (prsim-engine-rewrite) 
 	10	b : 1
 	20	c : 0	[by b:=1]
 	20	b : 0

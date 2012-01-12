@@ -30,6 +30,8 @@ echo event c- was overturned X
 cycle
 assert c X
 
+echo advance 10 was added after vacuous X events were dropped from queue (prsim-engine-rewrite)
+advance 10
 
 echo testing weak instability...
 set a 0

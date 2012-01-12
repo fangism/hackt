@@ -4,9 +4,8 @@ WARNING: unstable `f'-
 >> cause: `t' (val: 0)
 	0	t : 0
 instability? 
-	0	f : X	[by t:=0]
 t : 0
-f : X
+f : X	[by t:=0]
 	0	t : X
 pulling one down first (slight time separation) 
 	0	t : 0

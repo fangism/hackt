@@ -5,4 +5,4 @@ WARNING: unstable `b'-
 rule: [after 10]	a:0 -> b-:X
 >> cause: `a' (val: 0)
 	0	a : 0
-queue:	10	b : X	[from a:=1]
+No event pending on `b'.

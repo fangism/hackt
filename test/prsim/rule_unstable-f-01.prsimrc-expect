@@ -19,9 +19,9 @@ WARNING: unstable `c'-
 rule: [after 10]	a:0 -> c-:X
 >> cause: `a' (val: 0)
 	20	a : 0
-queue:	30	c : X	[from a:=0]
+No event pending on `c'.
 event c- was overturned X 
-	30	c : X	[by a:=0]
+advance 10 was added after vacuous X events were dropped from queue (prsim-engine-rewrite) 
 testing weak instability... 
 No event pending on `c'.
 WARNING: weak-interference `c'

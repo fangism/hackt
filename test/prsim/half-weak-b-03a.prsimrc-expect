@@ -6,4 +6,4 @@ WARNING: unstable `b'-
 rule: [after 10]	a:0 -> b-:1
 >> cause: `a' (val: 0)
 	10	a : 0
-queue:	20	b : 1	[from a:=1]	(weak)
+No event pending on `b'.
