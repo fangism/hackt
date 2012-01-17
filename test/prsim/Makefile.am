@@ -8,7 +8,8 @@ SUBDIRS = . vpi
 
 # .hac inputs
 HACKT_PRSIMRC_TEST_SUBJECTS = \
-	celem inv oscillator half-celem \
+	celem inv oscillator \
+	half-celem half-celem-b \
 	deep deep2 deep3 \
 	tree interference \
 	invs inv-invariant \
@@ -138,7 +139,8 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	inv-alt-07 inv-alt-08 inv-alt-09 inv-alt-10 \
 	inv-why-01 inv-why-02 \
 	invs-01 \
-	and-01 nand-01 nand-02 or-01 nor-01 nor-02 nor-04 \
+	and-01 nand-01 nand-02 nand-03 nand-03b \
+	or-01 nor-01 nor-02 nor-02b nor-03 nor-04 \
 	nor-why-01 nand-why-01 \
 	and-nand-why-01 or-nor-why-01 \
 	and-nand-alt-why-01 or-nor-alt-why-01 \
@@ -197,6 +199,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	oscil-upset-01 oscil-upset-02 \
 	celem-rules \
 	half-celem-01 \
+	half-celem-b-01 \
 	celem-share-01 celem-share-02 \
 	deep-01 deep-02 \
 	tree-01 tree-02 \
@@ -632,7 +635,6 @@ HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
 	celem-05 \
 	inv-06 inv-10 inv-28 \
 	inv-31 inv-32 inv-33 inv-34 inv-35 inv-36 \
-	nor-03 \
 	inv-why-03 \
 	unused-06 \
 	ls-03 ls-04 ls-05 ls-06 \

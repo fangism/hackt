@@ -1,0 +1,13 @@
+// "half-celem-b.hac"
+// test case for testing an instability scenario
+
+defproc half_celem(bool a, b, c) {
+prs {
+	~a		-> c+
+	a & b		-> c-
+}
+}
+
+bool a, b, c;
+half_celem X(a, b, c);
+

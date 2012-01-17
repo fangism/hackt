@@ -9,9 +9,5 @@ event queue:
 	20	c : X	[from a:=X]
 	13	b : 1
 event queue:
-	20	c : X	[from a:=X]
 expect c -> 0 to overtake X 
-	20	c : X	[by a:=X]
-time: 20
-assert failed: expecting node `c' at 0, but got X.
-... at line 21
+time: 16

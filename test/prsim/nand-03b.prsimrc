@@ -1,0 +1,7 @@
+# "nand-03b.prsimrc"
+# @haco@ nand.haco-c
+
+unstable-dequeue
+unstable warn
+source nand-03.prsimrc
+

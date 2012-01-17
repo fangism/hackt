@@ -1,0 +1,7 @@
+# "nor-02b.prsimrc"
+# @haco@ nor.haco-c
+
+unstable-dequeue
+unstable warn
+source nor-02.prsimrc
+

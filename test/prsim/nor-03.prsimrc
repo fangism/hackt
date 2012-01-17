@@ -10,9 +10,11 @@ cycle
 echo glitch X on A
 set a X
 advance 3
+assert c 0
 queue
 set b 1
 advance 3
+assert c 0
 queue
 echo expect c -> 0 to overtake X
 cycle

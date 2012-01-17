@@ -2436,8 +2436,9 @@ for ( ; i!=e; ++i) {
 			// check for overtaking:
 			if ((p.pulling_dn() || p.pulling_up()) &&
 					pull_val != pval &&
-					pe.val == LOGIC_OTHER &&
-					dequeue_unstable_events()) {
+					pe.val == LOGIC_OTHER
+//					dequeue_unstable_events()
+					) {
 				DEBUG_STEP_PRINT("overtaking X with [01]" << endl);
 				INVARIANT(pull_val != LOGIC_OTHER);
 				kill_event(prevevent, ni);
@@ -2448,6 +2449,8 @@ for ( ; i!=e; ++i) {
 						get_delay_dn(newevent) :
 						get_delay_up(newevent),
 						ei);
+				} else {
+					DEBUG_STEP_PRINT("vacuous, not re-queued" << endl);
 				}
 			}
 		}

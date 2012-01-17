@@ -21,12 +21,13 @@ event queue:
 	20	c : X	[from b:=1]
 end queue 
 	16	b : 0
-	20	c : X	[by b:=0]
+	26	c : 1	[by b:=0]
 X nodes:
-c 
+
 0 nodes:
 !GND a b 
 1 nodes:
-!Vdd 
+!Vdd c 
 event queue:
 in a state where c should be 1, but remains X while pull-up guard true! 
+this is now fixed by the branch: prsim-engine-rewrite 
