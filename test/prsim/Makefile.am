@@ -156,6 +156,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	ACX-PR-6376 ACX-PR-6376b \
 	ACX-PR-6386 ACX-PR-6386b \
 	ACX-PR-6393 \
+	ACX-PR-6628 \
 	ACX-PR-6718 ACX-PR-6718b ACX-PR-6718c ACX-PR-6718d \
 	logic-defs-01 logic-defs-a-01 logic-defs-b-01 \
 	expr-limit-a-01 \
@@ -682,7 +683,6 @@ HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
 	interference-11 \
 	interference-13 \
 	interference-14 interference-15 \
-	ACX-PR-6628 \
 	driven-02 driven-03 \
 	driven-06 driven-07 driven-09 driven-10 \
 	unstable-04 unstable-05 unstable-06 \

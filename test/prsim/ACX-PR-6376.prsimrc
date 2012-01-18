@@ -10,6 +10,8 @@ weak-interference warn
 watchall
 watchall-queue
 
+status-weak-interference
+
 echo ---------- setting WD 0 ---------
 set WD 0
 cycle

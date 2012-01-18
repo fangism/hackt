@@ -172,6 +172,10 @@ struct State::evaluate_return_type {
 	const rule_type*		root_rule;
 	/// root rule index
 	rule_index_type			root_rule_index;
+#if PRSIM_SIMPLE_EVENT_QUEUE
+	/// previous pull-state, complete
+	pull_set			prev_pull;
+#endif
 	/// true signals that simulation should halt, e.g. if there is error
 	error_policy_enum		invariant_break;
 
@@ -187,9 +191,15 @@ struct State::evaluate_return_type {
 
 	evaluate_return_type(const node_index_type ni,
 		const root_ex_type* const e, const pull_enum p, 
+#if PRSIM_SIMPLE_EVENT_QUEUE
+		const pull_set ps, 
+#endif
 		const rule_type* const r, const rule_index_type ri) :
 		node_index(ni), root_ex(e), root_pull(p)
 			, root_rule(r), root_rule_index(ri)
+#if PRSIM_SIMPLE_EVENT_QUEUE
+			, prev_pull(ps)
+#endif
 			, invariant_break(ERROR_NONE)
 			{ }
 };	// end struct evaluate_return_type
@@ -2204,7 +2214,8 @@ for ( ; i!=e; ++i) {
 #if PRSIM_FCFS_UPDATED_NODES
 	const updated_nodes_type::iterator f(updated_nodes.find(*i));
 	ISE_INVARIANT(f != updated_nodes.end());
-	newevent.cause_rule = f->second;
+	newevent.cause_rule = f->second.rule_index;
+	const pull_set& ops(f->second.old_pull_set);
 #else
 	newevent.cause_rule = i->second;
 #endif
@@ -2229,27 +2240,36 @@ for ( ; i!=e; ++i) {
 #endif
 {
 	// compute the future value based on pull-state
-	// TODO: factor this out into an Event constructor?
-	if (p.possible_interference_strong()) {
-		DEBUG_STEP_PRINT("strong vs. strong rule interference" << endl);
-		// TODO: diagnostic
-		have_interference = true;
-		possible_interference = p.normal_pulling_x();
-	}
-#if PRSIM_WEAK_RULES
-	else if (p.possible_interference_strong_vs_weak()) {
-		DEBUG_STEP_PRINT("strong vs. weak rule interference" << endl);
-		have_interference = true;
-		newevent.set_weak(true);	// involves weak rule
-		possible_interference = true;	// there is an X involved
-	} else if (p.possible_interference_weak()) {
-		DEBUG_STEP_PRINT("weak vs. weak rule interference" << endl);
-		have_interference = true;
-		newevent.set_weak(true);	// involves weak rule
-		possible_interference = p.weak_pulling_x();
-	}
-#endif
-	else {
+	const pull_set::interference_info int_info(p);
+	have_interference = int_info.have_interference;
+	possible_interference = int_info.possible_interference;
+	if (have_interference) {
+		if (int_info.weak_rule_involved) {
+			newevent.set_weak(true);
+		}
+		// TODO: move this up above
+		pull_val = LOGIC_OTHER;
+	/**
+		What if previous state was already interfering
+		should a duplicate interference diagnostic be issued?
+		Only if weakness (possibility) of interference changed.
+		Since everything starts out as X, this will reduce the
+		number of transient weak-interference diagnostics
+		as signals transition out of X.  
+	**/
+		const pull_set::interference_info old_interf(ops);
+		if (!old_interf.have_interference
+			|| (old_interf.val_type != int_info.val_type)
+			// redundant
+//			|| (old_interf.possible_interference != possible_interference)
+//			|| (old_interf.rule_type != int_info.rule_type)
+			) {
+		const break_type E =
+			__report_interference(cout,
+				possible_interference, ni, c);
+		if (E > err) err = E;
+		}	// else suppress non-changed interference status
+	} else {
 		// is a non-interfering rule firing
 		newevent.set_weak(weak_wins);
 		if (p.pull_up_wins_any()) {
@@ -2266,7 +2286,6 @@ for ( ; i!=e; ++i) {
 			// otherwise, X-pulling up a high node is vacuous
 			DEBUG_STEP_PRINT("vacuous X-pull-up" << endl);
 			}
-			// TODO: keeper-check
 		} else if (p.pull_dn_x_wins_any()) {
 			if (pull_val == LOGIC_HIGH) {
 			DEBUG_STEP_PRINT("non-interfering X-pull-dn" << endl);
@@ -2275,22 +2294,12 @@ for ( ; i!=e; ++i) {
 			// otherwise, X-pulling dn a low node is vacuous
 			DEBUG_STEP_PRINT("vacuous X-pull-dn" << endl);
 			}
-			// TODO: keeper-check
 		} else {
 			ISE_INVARIANT(p.state_holding());
 			DEBUG_STEP_PRINT("state-holding" << endl);
 			// keep current_value
-			// TODO: keeper-check
 		}
-	}
-	if (have_interference) {
-		// TODO: what if previous state was already interfering
-		// should a duplicate interference diagnostic be issued?
-		pull_val = LOGIC_OTHER;
-		const break_type E =
-			__report_interference(cout,
-				possible_interference, ni, c);
-		if (E > err) err = E;
+		// keeper-check is done at the end of all this
 	}
 	// schedule event below, after instability check
 }{
@@ -3824,6 +3833,9 @@ if (!r.is_invariant()) {
 	const node_index_type oni = translate_to_global_node(pid, ui);
 	// local -> global node
 	node_type& n(__get_node(oni));
+#if PRSIM_SIMPLE_EVENT_QUEUE
+	const pull_set ops(n, weak_rules_enabled());
+#endif
 	const bool dir = r.direction();
 	fanin_state_type& fs(n.get_pull_struct(dir
 #if PRSIM_WEAK_RULES
@@ -3850,6 +3862,9 @@ if (!r.is_invariant()) {
 	}
 	next = fs.pull();
 	return evaluate_return_type(oni, STRUCT, next,
+#if PRSIM_SIMPLE_EVENT_QUEUE
+		ops, 
+#endif
 		&r, ps.global_expr_index(ri));
 } else {
 	// then this rule doesn't actually pull a node, is an invariant
@@ -4077,6 +4092,9 @@ State::propagate_evaluation(
 		return ERROR_NONE;
 		// return false;
 	}
+#if PRSIM_SIMPLE_EVENT_QUEUE
+	const pull_set& ops(ev_result.prev_pull);
+#endif
 	const pull_enum next = ev_result.root_pull;
 	const node_index_type ui = ev_result.node_index;
 	// we delay the root rule search until here to reduce the amount
@@ -4188,13 +4206,15 @@ if (dir) {
 	// pull-up
 #if PRSIM_SIMPLE_EVENT_QUEUE
 	// re-evaluate queue
+	node_update_info nui;
+	nui.rule_index = root_rule;
 	const pair<updated_nodes_type::iterator, bool>
 		pp(updated_nodes.insert(
-			updated_nodes_type::value_type(ui, root_rule)));
+			updated_nodes_type::value_type(ui, nui)));
 	if (!pp.second) {
 		if (!is_weak && p.up != PULL_OFF ||
 			is_weak && p.wup != PULL_OFF) {
-			pp.first->second = root_rule;
+			pp.first->second.rule_index = root_rule;
 		// TODO: determine rule precedence for causality
 		// whichever turned on first? strength?
 		// the root rule that is assigned is the one whose
@@ -4205,7 +4225,9 @@ if (dir) {
 	}
 #if PRSIM_FCFS_UPDATED_NODES
 	else {
+		// first time added
 		updated_nodes_queue.push_back(ui);
+		pp.first->second.old_pull_set = ops;
 	}
 #endif
 #else
@@ -4445,18 +4467,22 @@ if (!n.pending_event()) {
 	// pull-dn
 #if PRSIM_SIMPLE_EVENT_QUEUE
 	// re-evaluate queue
+	node_update_info nui;
+	nui.rule_index = root_rule;
 	const pair<updated_nodes_type::iterator, bool>
 		pp(updated_nodes.insert(
-			updated_nodes_type::value_type(ui, root_rule)));
+			updated_nodes_type::value_type(ui, nui)));
 	if (!pp.second) {
 		if (!is_weak && p.dn != PULL_OFF ||
 			is_weak && p.wdn != PULL_OFF) {
-			pp.first->second = root_rule;
+			pp.first->second.rule_index = root_rule;
 		}
 	}
 #if PRSIM_FCFS_UPDATED_NODES
 	else {
+		// first time added
 		updated_nodes_queue.push_back(ui);
+		pp.first->second.old_pull_set = ops;
 	}
 #endif
 #else

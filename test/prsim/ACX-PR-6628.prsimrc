@@ -14,3 +14,10 @@ watchall-queue
 echo ---------- setting WD 0 ---------
 set WD 0
 cycle
+
+# step-event
+# step-event
+# fanin-get lbl.blc
+# step-event
+# fanin-get lbl.blc
+status-weak-interference

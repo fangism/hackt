@@ -438,14 +438,15 @@ protected:
 						mk_excl_queue_type;
 #if PRSIM_SIMPLE_EVENT_QUEUE
 	struct node_update_info {
-		rule_index_type			rule;
+		rule_index_type			rule_index;
 		// Q: distinguish between rules that turned on/off?
 		// should keep around previous pull-state
 		// being able to diff previous pull-state against
 		// current pull-state may eliminate duplicate
 		// interference diagnostics
+		pull_set			old_pull_set;
 	};	// end struct node_update_info
-	typedef	std::map<node_index_type, rule_index_type>
+	typedef	std::map<node_index_type, node_update_info>
 						updated_nodes_type;
 #if PRSIM_FCFS_UPDATED_NODES
 	/**

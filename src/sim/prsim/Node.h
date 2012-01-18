@@ -708,6 +708,12 @@ struct pull_set {
 	pull_enum			wdn;
 #endif
 
+	pull_set() : up(PULL_OFF), dn(PULL_OFF)
+#if PRSIM_WEAK_RULES
+		, wup(PULL_OFF), wdn(PULL_OFF)
+#endif
+		{ }
+
 	/**
 		\param w is true if weak rules are enabled.
 		When weak rules are disabled, weak pulls are always OFF.
@@ -964,11 +970,21 @@ struct pull_set {
 
 	// a strong-X vs. weak-1-or-X
 	bool
+	possible_interference_strong_x_up_vs_weak_dn(void) const {
+		return (up == PULL_WEAK && wup != PULL_ON) &&
+			(dn == PULL_OFF && wdn != PULL_OFF);
+	}
+
+	bool
+	possible_interference_strong_x_dn_vs_weak_up(void) const {
+		return (dn == PULL_WEAK && wdn != PULL_ON) &&
+			(up == PULL_OFF && wup != PULL_OFF);
+	}
+
+	bool
 	possible_interference_strong_vs_weak(void) const {
-		return ((up == PULL_WEAK && wup != PULL_ON) &&
-			(dn == PULL_OFF && wdn != PULL_OFF)) ||
-			((dn == PULL_WEAK && wdn != PULL_ON) &&
-			(up == PULL_OFF && wup != PULL_OFF));
+		return possible_interference_strong_x_up_vs_weak_dn() ||
+			possible_interference_strong_x_dn_vs_weak_up();
 	}
 
 	bool
@@ -998,6 +1014,80 @@ struct pull_set {
 
 	ostream&
 	dump(ostream&) const;
+
+
+	struct interference_info {
+		// value of interference root expressions
+		enum interference_value_type {
+			INTERFERENCE_VALUE_NONE,
+			INTERFERENCE_1_vs_1,
+			INTERFERENCE_1_vs_X,
+			INTERFERENCE_X_vs_X
+		};
+		// interference between strong/weak rules
+		enum interference_rule_type {
+			INTERFERENCE_RULE_NONE,
+			INTERFERENCE_STRONG_vs_STRONG,
+			INTERFERENCE_STRONG_vs_WEAK,
+			INTERFERENCE_WEAK_vs_WEAK
+		};
+		bool				have_interference;
+		bool				possible_interference;
+		bool				weak_rule_involved;
+		interference_value_type		val_type;
+		interference_rule_type		rule_type;
+
+		explicit
+		interference_info(const pull_set& p) {
+		if (p.possible_interference_strong()) {
+//		DEBUG_STEP_PRINT("strong vs. strong rule interference" << endl);
+			have_interference = true;
+			possible_interference = p.normal_pulling_x();
+			weak_rule_involved = false;
+			rule_type = INTERFERENCE_STRONG_vs_STRONG;
+			val_type = (p.up == PULL_ON && p.dn == PULL_ON) ?
+				INTERFERENCE_1_vs_1 : 
+				(p.up == PULL_WEAK && p.dn == PULL_WEAK) ?
+				INTERFERENCE_X_vs_X : INTERFERENCE_1_vs_X;
+		}
+#if PRSIM_WEAK_RULES
+		else if (p.possible_interference_strong_x_up_vs_weak_dn()) {
+//		DEBUG_STEP_PRINT("strong x up vs. weak dn rule interference" << endl);
+			have_interference = true;
+			weak_rule_involved = true;
+			possible_interference = true;   // there is an X involved
+			rule_type = INTERFERENCE_STRONG_vs_WEAK;
+			val_type = (p.wdn == PULL_WEAK) ? INTERFERENCE_X_vs_X
+				: INTERFERENCE_1_vs_X;
+		} else if (p.possible_interference_strong_x_dn_vs_weak_up()) {
+//		DEBUG_STEP_PRINT("strong x dn vs. weak up rule interference" << endl);
+			have_interference = true;
+			weak_rule_involved = true;
+			possible_interference = true;   // there is an X involved
+			rule_type = INTERFERENCE_STRONG_vs_WEAK;
+			val_type = (p.wup == PULL_WEAK) ? INTERFERENCE_X_vs_X
+				: INTERFERENCE_1_vs_X;
+		} else if (p.possible_interference_weak()) {
+//		DEBUG_STEP_PRINT("weak vs. weak rule interference" << endl);
+			have_interference = true;
+			weak_rule_involved = true;
+			possible_interference = p.weak_pulling_x();
+			rule_type = INTERFERENCE_WEAK_vs_WEAK;
+			val_type = (p.wup == PULL_ON && p.wdn == PULL_ON) ?
+				INTERFERENCE_1_vs_1 : 
+				(p.wup == PULL_WEAK && p.wdn == PULL_WEAK) ?
+				INTERFERENCE_X_vs_X : INTERFERENCE_1_vs_X;
+#endif
+		} else {
+			// no interference
+			have_interference = false;
+			weak_rule_involved = false;
+			possible_interference = false;
+			rule_type = INTERFERENCE_RULE_NONE;
+			val_type = INTERFERENCE_VALUE_NONE;
+		}
+		}
+	};	// end struct interference_info
 
 };	// end struct pull_set
 
