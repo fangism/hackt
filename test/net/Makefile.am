@@ -52,7 +52,7 @@ HACKNET_TEST_SCRIPTS_PASSES = \
 	process-port-05 process-port-06 \
 	process-port-07 process-port-08 \
 	channel-port-01 channel-port-02 \
-	empty-01 empty-02 empty-03 \
+	empty-01 empty-02 empty-03 empty-04 \
 	recurse-01 recurse-02 recurse-03 recurse-04 \
 	config-dump-01 \
 	config-arg-01 config-arg-02 config-arg-03 config-arg-04 \

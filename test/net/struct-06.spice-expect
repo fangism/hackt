@@ -1,6 +1,6 @@
-* subcircuit pfoo is empty.
+* channel or struct pfoo is omitted.
 
-* subcircuit pbar is empty.
+* channel or struct pbar is omitted.
 
 * subcircuit pick is empty.
 

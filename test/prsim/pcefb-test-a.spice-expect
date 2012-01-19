@@ -1,6 +1,6 @@
-* subcircuit e1of<2> is empty.
+* channel or struct e1of<2> is omitted.
 
-* subcircuit _c1of<2> is empty.
+* channel or struct _c1of<2> is omitted.
 
 .subckt pcefb_buf<> !GND !Vdd _Reset L.d[0] L.d[1] L.e R.d[0] R.d[1] R.e
 * BEGIN node aliases

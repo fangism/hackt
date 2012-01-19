@@ -1,4 +1,4 @@
-* subcircuit pair<> is empty.
+* channel or struct pair<> is omitted.
 
 .subckt foo<> !GND !Vdd p.b z
 Mz:dn:0 !GND p.b z !GND nch W=5u L=2u
