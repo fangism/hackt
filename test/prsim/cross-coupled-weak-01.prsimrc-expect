@@ -15,9 +15,9 @@ setting 1 -> 0
 setting 0 -> X 
 WARNING: weak-interference `f'
 >> cause: `t' (val: X)
-WARNING: weak-interference `f'
->> cause: `t' (val: X)
 	20	t : X
+WARNING: weak-interference `t'
+>> cause: `f' (val: X)
 	30	f : X	[by t:=X]
 setting X -> 0 
 	30	t : 0
@@ -29,6 +29,8 @@ setting 1 -> X
 WARNING: weak-interference `f'
 >> cause: `t' (val: X)
 	50	t : X
+WARNING: weak-interference `t'
+>> cause: `f' (val: X)
 	60	f : X	[by t:=X]
 how did we do? 
 TODO: the interference warnings do not exactly match those of 

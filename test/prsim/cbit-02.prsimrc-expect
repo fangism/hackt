@@ -18,5 +18,7 @@ re-evaluation of p.f's fanin will expose X to p.f
 enqueued:	10	p.f : X
 event queue:
 	10	p.f : X
+WARNING: weak-interference `p.t'
+>> cause: `p.f' (val: X)
 enqueued:	20	p.t : X	[from p.f:=X]	(weak)
 	10	p.f : X

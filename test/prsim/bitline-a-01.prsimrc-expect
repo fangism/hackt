@@ -21,7 +21,7 @@ WARNING: interference `_bl'
 >> cause: `wl' (val: 1)
 	24	wl : 1
 event queue:
-	30	_bl : X	[from wlx:=1]	(weak)
+	30	_bl : X	[from wl:=1]	(weak)
 Fanins of node `_bl':
 (from [top-level]):
 [after 10]	~_pchg:1 -> _bl+:1
@@ -34,7 +34,7 @@ blst : 0	[by _bl:=1]
 step: expect pull-down to overtake previous pull down 
 WARNING: weak-interference `blst'
 >> cause: `_bl' (val: X)
-	30	_bl : X	[by wlx:=1]
+	30	_bl : X	[by wl:=1]
 event queue:
 	40	blst : X	[from _bl:=X]
 Fanins of node `_bl':
