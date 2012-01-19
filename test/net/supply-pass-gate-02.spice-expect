@@ -1,4 +1,4 @@
-* subcircuit globals<> is empty.
+* channel or struct globals<> is omitted.
 
 Md[0]:up:0:pass s[0] _g[0] d[0] gl.Vdd_1 pch W=5u L=2u
 Md[0]:dn:0:pass s[0] g[0] d[0] !GND nch W=5u L=2u

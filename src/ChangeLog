@@ -3,6 +3,15 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2012-01-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-02:
+	  hacknet: never print subcircuit placeholders for channels
+		or structs, allows empty processes to be preserved cleanly.
+		For verilog output, print out structs/channels as 
+		dummy modules.  Test cases updated.
+
+
 2011-12-19	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-85-01:

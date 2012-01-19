@@ -1,4 +1,4 @@
-* subcircuit globals<> is empty.
+* channel or struct globals<> is omitted.
 
 .subckt inv<> G.thisVdd G.thisGND G.Vdd G.GND in[0] in[1] out[0] out[1]
 Mout[0]:dn:0 G.thisGND in[0] out[0] G.thisGND nch W=5u L=2u

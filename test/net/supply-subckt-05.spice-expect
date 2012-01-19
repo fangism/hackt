@@ -1,4 +1,4 @@
-* subcircuit globals<> is empty.
+* channel or struct globals<> is omitted.
 
 .subckt foo<> !Vdd g.GND_2 x w
 My:dn:0 g.GND_2 x y g.GND_2 nch W=5u L=2u
