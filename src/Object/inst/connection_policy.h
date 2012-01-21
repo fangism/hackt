@@ -297,7 +297,7 @@ public:
 
 	// really should let PRS determine this
 	good_bool
-	declare_direction(const direction_type) const;
+	declare_direction(const direction_type);
 
 	bool
 	has_nondefault_attributes(const bool i = false) const;

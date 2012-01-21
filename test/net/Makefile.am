@@ -105,6 +105,8 @@ HACKNET_TEST_SCRIPTS_PASSES = \
 	reserved-01 reserved-02 reserved-03 reserved-04 \
 	preferred_names-01 preferred_names-02 preferred_names-03 \
 	preferred_names-04 preferred_names-05 preferred_names-06 \
+	preserve-port-01 preserve-port-02 preserve-port-03 \
+	preserve-port-04 preserve-port-05 preserve-port-05b \
 	terminal-test-01 terminal-test-02 terminal-test-03 terminal-test-04 \
 	terminal-test-05 terminal-test-06 terminal-test-07 terminal-test-08 \
 	terminal-test-09 terminal-test-10 terminal-test-11 terminal-test-12 \
@@ -190,6 +192,7 @@ HACKT_CREATE_TEST_PASSES = \
 	substrate-04 substrate-05 substrate-06 \
 	rule-sizes-01 rule-sizes-02 rule-sizes-03 rule-sizes-04 \
 	rule-sizes-05 rule-sizes-06 \
+	preserve-port-02 preserve-port-03 preserve-port-05 preserve-port-05b \
 	rename-14
 
 HACKT_CREATE_TEST_FAILURES = \

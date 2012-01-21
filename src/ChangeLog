@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2012-01-20	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-03:
+	  hacknet/HAC: added bool!; and bool? definition-body notation
+		to explicitly flag a node as having fanin/fanout to
+		production rules, even if the PRS are absent.
+		This tells backend-tools like hacknet to not optimize it away.
+	  Test cases added only.
+
+
 2012-01-19	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-85-02:

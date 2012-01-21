@@ -121,11 +121,34 @@ bool_connect_policy::set_connection_flags(const connection_flags_type f) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Declare that a bool is driven or used locally.
+	The intent is to consider this node used to avoid being optimized away.
+ */
 good_bool
-bool_connect_policy::declare_direction(const direction_type) const {
+bool_connect_policy::declare_direction(const direction_type d) {
+#if 0
 	cerr <<
 "Warning: direction declaration on bools are ignored (inferred from PRS only)."
 		<< endl;
+#else
+	switch (d) {
+	case CHANNEL_TYPE_SEND:
+		attributes |=
+			BOOL_LOCAL_PRS_FANOUT_PULL_DN |
+			BOOL_LOCAL_PRS_FANOUT_PULL_UP;
+		break;
+	case CHANNEL_TYPE_RECEIVE:
+		attributes |=
+			BOOL_LOCAL_PRS_FANIN_PULL_DN |
+			BOOL_LOCAL_PRS_FANIN_PULL_UP;
+		break;
+	default:
+		cerr << "Error: unhandled bool direction directive, "
+			<< size_t(d) << "." << endl;
+		return good_bool(false);
+	}
+#endif
 	return good_bool(true);
 }
 

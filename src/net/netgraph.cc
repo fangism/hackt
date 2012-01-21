@@ -41,7 +41,6 @@ namespace NET {
 #include "util/using_ostream.h"
 using entity::footprint_frame_map_type;
 using entity::meta_type_port_collector;
-using entity::instance_alias_info;
 using entity::class_traits;
 using entity::bool_tag;
 using entity::port_formals_manager;
@@ -2262,7 +2261,6 @@ typedef	port_alias_collector<process_tag>	process_port_alias_collector;
 	Create a port summary so that other processes may correctly
 	instantiate this.  
 	This also summarizes the 'empty' flag for this netlist.  
-	TODO: power supply ports
 	\param opt for netlist generation configuration
  */
 void
@@ -2286,6 +2284,8 @@ netlist::summarize_ports(
 	bool_port_alias_collector V(*fp);
 	V();
 	STACKTRACE_INDENT_PRINT("named_node_map.size() = " << named_node_map.size() << endl);
+	const entity::state_instance<bool_tag>::pool_type&
+		bp(fp->get_instance_pool<bool_tag>());
 	port_index_list_type::const_iterator
 		i(V.indices.begin()), e(V.indices.end());
 	node_port_list.reserve(V.indices.size() +2);	// for supplies
@@ -2297,10 +2297,20 @@ netlist::summarize_ports(
 		STACKTRACE_INDENT_PRINT("(bool) local_ind = " << local_ind << endl);
 		INVARIANT(local_ind < named_node_map.size());
 		index_type ni = named_node_map[local_ind];
-	if (!ni && opt.unused_ports) {
+		const instance_alias_info<bool_tag>&
+			bref(*(bp[local_ind].get_back_ref()));
+		// nodes explicitly marked as used/driven should be honored
+		const bool b_driven = bref.has_any_fanin();
+		const bool b_used = bref.has_any_fanout();
+	if (!ni && (opt.unused_ports || b_driven || b_used)) {
 		// the consider all ports used, even if unconnected
 		ni = register_named_node(j, opt);
-		node_pool[ni].used = true;
+		node& n(node_pool[ni]);
+		// even driven nodes are considered 'used'
+		n.used = true;
+		if (b_driven) {
+			n.driven = true;
+		}
 	}
 		const node& n(node_pool[ni]);
 #if NETLIST_CHECK_CONNECTIVITY
