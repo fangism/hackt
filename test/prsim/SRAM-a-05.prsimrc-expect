@@ -42,3 +42,7 @@ WARNING: weak-interference `p.bls'
 WARNING: weak-interference `p._bls'
 >> cause: `_bl' (val: X)
 	30	_bl : X	[by wl[0]:=1]
+WARNING: weak-interference `bl'
+>> cause: `p.bls' (val: X)
+WARNING: weak-interference `_bl'
+>> cause: `p._bls' (val: X)

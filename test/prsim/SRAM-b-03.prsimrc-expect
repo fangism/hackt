@@ -42,6 +42,8 @@ WARNING: weak-interference `_bl'
 >> cause: `_pchg' (val: 0)
 WARNING: weak-interference `bl'
 >> cause: `_pchg' (val: 0)
+WARNING: weak-interference `c[0].r.d[1]'
+>> cause: `_bl' (val: X)
 event queue:
 queue should be empty after unsetall 
 testing RAM writing with random timing ... 
@@ -285,6 +287,11 @@ WARNING: weak-interference `_bl'
 >> cause: `_pchg' (val: 0)
 WARNING: weak-interference `bl'
 >> cause: `_pchg' (val: 0)
+WARNING: weak-unstable `c[0].r.d[1]'+
+rule: [after 10, weak]	~c[0].r.d[0]:0 -> c[0].r.d[1]+:X
+>> cause: `c[0].r.d[0]' (val: 0)
+WARNING: weak-interference `c[0].r.d[1]'
+>> cause: `_bl' (val: X)
 event queue:
 queue should be empty after unsetall 
 testing RAM writing with random timing ... 
@@ -330,6 +337,8 @@ WARNING: weak-interference `_bl'
 >> cause: `_pchg' (val: 0)
 WARNING: weak-interference `bl'
 >> cause: `_pchg' (val: 0)
+WARNING: weak-interference `c[0].r.d[1]'
+>> cause: `_bl' (val: X)
 event queue:
 queue should be empty after unsetall 
 testing RAM writing with random timing ... 

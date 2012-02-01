@@ -21,6 +21,8 @@ event queue:
 	10	en : X
 time: 10
 advance 
+WARNING: weak-interference `_o[0]'
+>> cause: `en' (val: X)
 event queue:
 	20	_o[0] : X	[from en:=X]
 time: 20
@@ -32,6 +34,8 @@ event queue:
 	40	_o[0] : X	[from en:=X]
 en -> 0 
 en -> X 
+WARNING: weak-interference `_o[0]'
+>> cause: `en' (val: X)
 event queue:
 	60	_o[0] : X	[from en:=X]
 en -> 1 
@@ -42,6 +46,8 @@ event queue:
 	80	_o[0] : X	[from en:=X]
 en -> 0 
 en -> X 
+WARNING: weak-interference `_o[0]'
+>> cause: `en' (val: X)
 event queue:
 	100	_o[0] : X	[from en:=X]
 en -> 1 
@@ -52,6 +58,8 @@ event queue:
 	120	_o[0] : X	[from en:=X]
 en -> 0 
 en -> X 
+WARNING: weak-interference `_o[0]'
+>> cause: `en' (val: X)
 event queue:
 	140	_o[0] : X	[from en:=X]
 en -> 1 
@@ -62,9 +70,13 @@ event queue:
 	160	_o[0] : X	[from en:=X]
 en -> 0 
 en -> X 
+WARNING: weak-interference `_o[0]'
+>> cause: `en' (val: X)
 event queue:
 	180	_o[0] : X	[from en:=X]
 en -> 1 
+WARNING: weak-interference `_o[1]'
+>> cause: `x[1]' (val: 1)
 en -> X 
 WARNING: weak-interference `_o[1]'
 >> cause: `en' (val: X)
@@ -72,6 +84,8 @@ event queue:
 	200	_o[1] : X	[from en:=X]
 en -> 0 
 en -> X 
+WARNING: weak-interference `_o[1]'
+>> cause: `en' (val: X)
 event queue:
 	220	_o[1] : X	[from en:=X]
 en -> 1 
@@ -82,6 +96,8 @@ event queue:
 	240	_o[1] : X	[from en:=X]
 en -> 0 
 en -> X 
+WARNING: weak-interference `_o[1]'
+>> cause: `en' (val: X)
 event queue:
 	260	_o[1] : X	[from en:=X]
 en -> 1 
@@ -92,6 +108,8 @@ event queue:
 	280	_o[1] : X	[from en:=X]
 en -> 0 
 en -> X 
+WARNING: weak-interference `_o[1]'
+>> cause: `en' (val: X)
 event queue:
 	300	_o[1] : X	[from en:=X]
 en -> 1 
@@ -102,5 +120,7 @@ event queue:
 	320	_o[1] : X	[from en:=X]
 en -> 0 
 en -> X 
+WARNING: weak-interference `_o[1]'
+>> cause: `en' (val: X)
 event queue:
 	340	_o[1] : X	[from en:=X]
