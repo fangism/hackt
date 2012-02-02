@@ -7089,7 +7089,7 @@ The @var{name} of the channel should match that of an instance
 @item @var{name} is the name of the new channel in the simulator's namespace
 @item @var{ack} is a regular expression of the form @t{id:[01]}, where
 @itemize
-	@item t{id} is the name of the acknowledge signal.  
+	@item @t{id} is the name of the acknowledge signal.  
 	@item The value after the @t{:} (required)
 	is interpreted as the initial state of the acknowledge wire, 
 	if driven by sink.
@@ -7233,7 +7233,7 @@ The @var{name} of the channel should match that of an instance
 @item @var{name} is the name of the new channel in the simulator's namespace
 @item @var{ack} is a regular expression of the form @t{id:[01]}, where
 @itemize
-	@item t{id} is the name of the acknowledge signal.  
+	@item @t{id} is the name of the acknowledge signal.  
 	@item The value after the @t{:} (required)
 	is interpreted as the initial state of the acknowledge wire, 
 	if driven by sink.

@@ -198,6 +198,15 @@ Such channels are declared using @command{channel-ledr}.
 @include cmd/channel-ledr.texi
 @include cmd/channel-signed.texi
 
+Yet another class of channels captures bundled-data interfaces.
+Bundled-data channels contain one or more single-rail data wires (bus), 
+and an acknowledge and request rail.
+Data is interpreted as valid during the active edge of the request rail.
+Two-phase and four-phase handshake variants exist for bundled-data.
+@include cmd/channel-bd-2p.texi
+@include cmd/channel-bd-4p.texi
+Data is guaranteed to be stable until an acknowledge is received.
+
 One can get information about channel configurations with 
 the following commands:
 @include cmd/channel-show.texi
