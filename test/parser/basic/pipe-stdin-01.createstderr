@@ -9,7 +9,7 @@ Persistent Object Manager text dump:
 	5	##ADDR##	pintplch	0	#HEAD#	#TAIL#	40
 	6	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	7	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
 	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
 	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	11	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30

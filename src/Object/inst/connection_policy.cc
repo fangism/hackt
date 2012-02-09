@@ -58,8 +58,8 @@ bool_connect_policy::attribute_names[] = {
 	"RESERVED-17",
 	"RESERVED-18",
 	"RESERVED-19",
-	"RESERVED-20",
-	"RESERVED-21",
+	"port?",
+	"port!",
 	"RESERVED-22",
 // this range is reserved for implicit attributes
 	"port-alias",
@@ -135,13 +135,13 @@ bool_connect_policy::declare_direction(const direction_type d) {
 	switch (d) {
 	case CHANNEL_TYPE_SEND:
 		attributes |=
-			BOOL_LOCAL_PRS_FANOUT_PULL_DN |
-			BOOL_LOCAL_PRS_FANOUT_PULL_UP;
+			BOOL_LOCAL_PRS_FANIN_PULL_UP |
+			BOOL_LOCAL_PRS_FANIN_PULL_DN;
 		break;
 	case CHANNEL_TYPE_RECEIVE:
 		attributes |=
-			BOOL_LOCAL_PRS_FANIN_PULL_DN |
-			BOOL_LOCAL_PRS_FANIN_PULL_UP;
+			BOOL_LOCAL_PRS_FANOUT_PULL_UP |
+			BOOL_LOCAL_PRS_FANOUT_PULL_DN;
 		break;
 	default:
 		cerr << "Error: unhandled bool direction directive, "

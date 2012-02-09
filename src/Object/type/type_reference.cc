@@ -274,7 +274,8 @@ collective_type_reference::dump(ostream& o) const {
  */
 data_type_reference::data_type_reference() :
 		fundamental_type_reference(), 
-		base_type_def(NULL) {
+		base_type_def(NULL),
+		direction(CHANNEL_DIRECTION_DEFAULT) {
 	// no assert
 }
 
@@ -282,7 +283,8 @@ data_type_reference::data_type_reference() :
 data_type_reference::data_type_reference(
 		const definition_ptr_type td) :
 		fundamental_type_reference(), 
-		base_type_def(td) {
+		base_type_def(td),
+		direction(CHANNEL_DIRECTION_DEFAULT) {
 	NEVER_NULL(base_type_def);
 }
 
@@ -291,7 +293,8 @@ data_type_reference::data_type_reference(
 		const definition_ptr_type td, 
 		const template_actuals& pl) :
 		fundamental_type_reference(pl), 
-		base_type_def(td) {
+		base_type_def(td),
+		direction(CHANNEL_DIRECTION_DEFAULT) {
 	NEVER_NULL(base_type_def);
 }
 
@@ -303,7 +306,8 @@ data_type_reference::data_type_reference(
 data_type_reference::data_type_reference(
 		const canonical_user_def_data_type& p) :
 		fundamental_type_reference(p.get_template_params()), 
-		base_type_def(p.get_base_def()) {
+		base_type_def(p.get_base_def()),
+		direction(p.get_direction()) {
 }
 #endif
 
@@ -317,6 +321,15 @@ ostream&
 data_type_reference::what(ostream& o) const {
 	return o << "data-type-reference";
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if BOOL_CONNECTIVITY_CHECKING
+ostream&
+data_type_reference::dump(ostream& o) const {
+	return channel_type_reference_base::dump_direction(
+		fundamental_type_reference::dump(o), direction);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_ptr<const definition_base>
@@ -773,6 +786,10 @@ data_type_reference::write_object(const persistent_object_manager& m,
 	STACKTRACE_PERSISTENT("data_type_ref::write_object()");
 	m.write_pointer(f, base_type_def);
 	parent_type::write_object_base(m, f);
+#if BOOL_CONNECTIVITY_CHECKING
+	const char d = direction;
+	write_value(f, d);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -786,6 +803,11 @@ data_type_reference::load_object(const persistent_object_manager& m,
 	STACKTRACE_PERSISTENT("data_type_ref::load_object()");
 	m.read_pointer(f, base_type_def);
 	parent_type::load_object_base(m, f);
+#if BOOL_CONNECTIVITY_CHECKING
+	char d;
+	read_value(f, d);
+	direction = direction_type(d);
+#endif
 	intercept_builtin_definition_hack(m, base_type_def);
 }
 

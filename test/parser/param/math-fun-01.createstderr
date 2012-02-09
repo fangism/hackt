@@ -37,7 +37,7 @@ Persistent Object Manager text dump:
 	33	##ADDR##	prealplh	0	#HEAD#	#TAIL#	33
 	34	##ADDR##	prealins	0	#HEAD#	#TAIL#	16
 	35	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	36	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	36	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
 	37	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
 	38	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	39	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30

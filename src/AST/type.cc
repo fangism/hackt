@@ -343,14 +343,26 @@ generic_type_ref::check_type(const context& c) const {
 		const count_ptr<process_type_reference>
 			ptr(type_ref.is_a<process_type_reference>());
 #endif
+#if BOOL_CONNECTIVITY_CHECKING
+		const count_ptr<data_type_reference>
+			dtr(type_ref.is_a<data_type_reference>());
+#endif
 		const char dir(chan_dir->text[0]);
 		INVARIANT(dir == '!' || dir == '?');
+	// directions now apply to any physical (non-parameter) type
 	if (ctr) {
 		ctr->set_direction(
 			token_to_direction_type(dir, chan_dir->text[1]));
+#if PROCESS_CONNECTIVITY_CHECKING
 	} else if (ptr) {
 		ptr->set_direction(
 			token_to_direction_type(dir, chan_dir->text[1]));
+#endif
+#if BOOL_CONNECTIVITY_CHECKING
+	} else if (dtr) {
+		dtr->set_direction(
+			token_to_direction_type(dir, chan_dir->text[1]));
+#endif
 	}
 	}	// end if chan_dir
 	return type_ref;

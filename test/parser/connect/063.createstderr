@@ -17,15 +17,15 @@ Persistent Object Manager text dump:
 	13	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
 	14	##ADDR##	portscop	0	#HEAD#	#TAIL#	36
 	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	16	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
 	17	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
 	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	19	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	20	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
 	21	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	22	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
 	23	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	24	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
 	25	##ADDR##	datadefn	0	#HEAD#	#TAIL#	68
 	26	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	27	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
@@ -45,7 +45,7 @@ Persistent Object Manager text dump:
 	41	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	42	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	43	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	44	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	44	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
 	45	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	46	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
 	47	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
@@ -56,15 +56,15 @@ Persistent Object Manager text dump:
 	52	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	53	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	54	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	55	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	55	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
 	56	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	57	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	57	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
 	58	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
 	59	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	60	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	60	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
 	61	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	62	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	63	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	63	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
 	64	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	65	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
 	66	##ADDR##	procinst	0	#HEAD#	#TAIL#	20

@@ -15,6 +15,9 @@
 #include "Object/type/channel_direction_enum.h"	// for direction enum
 #include "Object/unroll/unroll_context.h"
 #include "Object/type/canonical_type.h"
+#if BOOL_CONNECTIVITY_CHECKING
+#include "Object/type/data_type_reference.h"
+#endif
 #if	defined(ENABLE_STACKTRACE) && ENABLE_STACKTRACE
 #include "Object/type/channel_type_reference_base.h"
 #endif
@@ -33,11 +36,45 @@ namespace entity {
 
 template <class AliasType>
 void
-bool_connect_policy::initialize_direction(const AliasType&, 
+bool_connect_policy::initialize_direction(const AliasType& a, 
 		const unroll_context&) {
 	// TODO: use direction annotations like channels
-	// this->attributes = BOOL_DEFAULT_ATTRIBUTES;
-	// unnecessary, b/c default ctor
+#if BOOL_CONNECTIVITY_CHECKING
+	typedef	typename AliasType::container_type	container_type;
+	typedef	container_type		collection_interface_type;
+	typedef	typename collection_interface_type::traits_type
+					traits_type;
+	typedef	typename traits_type::tag_type		tag_type;
+	typedef	instance_collection<tag_type>	instance_collection_type;
+	STACKTRACE_VERBOSE;
+	const container_type& p(*a.container);
+	const bool f = p.is_formal();
+	const instance_collection_type& c(p.get_canonical_collection());
+	const direction_type d = c.get_unresolved_type_ref()
+		.template is_a<const data_type_reference>()->get_direction();
+	switch (d) {
+	case CHANNEL_TYPE_BIDIRECTIONAL: break;
+		// leave as initial value
+	case CHANNEL_TYPE_RECEIVE:
+		if (f) {
+			attributes |= BOOL_PORT_FORMAL_INPUT;
+		}
+		break;
+	case CHANNEL_TYPE_SEND:
+		if (f) {
+			attributes |= BOOL_PORT_FORMAL_OUTPUT;
+		}
+		break;
+	default:
+		ICE(cerr, cerr << "Invalid direction: " << d << endl;)
+	}
+#if ENABLE_STACKTRACE
+	c.dump_hierarchical_name(STACKTRACE_INDENT << "collection: ", 
+		dump_flags::default_value) << endl;
+	STACKTRACE_INDENT_PRINT("attributes = 0x" <<
+		std::hex << size_t(attributes) << endl);
+#endif
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -501,31 +538,11 @@ if (a.has_complete_type()) {
 	switch (d) {
 	case PROCESS_DIRECTION_DEFAULT: break;
 		// leave as initial value
-#if 0 && ENABLE_SHARED_CHANNELS
-	case CHANNEL_TYPE_RECEIVE_SHARED:
-		if (formal) {
-			direction_flags |= CONNECTED_PRODUCER_IS_SHARED;
-			direction_flags |= CONNECTED_PORT_FORMAL_PRODUCER;
-		} else {
-			direction_flags |= CONNECTED_CONSUMER_IS_SHARED;
-		}
-		break;
-#endif
 	case CHANNEL_TYPE_RECEIVE:
 		if (formal) {
 			direction_flags |= CONNECTED_PORT_FORMAL_PRODUCER;
 		}
 		break;
-#if 0 && ENABLE_SHARED_CHANNELS
-	case CHANNEL_TYPE_SEND_SHARED:
-		if (formal) {
-			direction_flags |= CONNECTED_CONSUMER_IS_SHARED;
-			direction_flags |= CONNECTED_PORT_FORMAL_CONSUMER;
-		} else {
-			direction_flags |= CONNECTED_PRODUCER_IS_SHARED;
-		}
-		break;
-#endif
 	case CHANNEL_TYPE_SEND:
 		if (formal) {
 			direction_flags |= CONNECTED_PORT_FORMAL_CONSUMER;

@@ -331,6 +331,17 @@
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Define to 1 to enable bool (node, wire)
+	directionality flags and perform static connectivity checking on them.
+	Goal: 1
+	Priority: high
+	Rationale: many back-end tools need this.
+	Status: in progress
+ */
+#define	BOOL_CONNECTIVITY_CHECKING		1
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Define to 1 to enable process (user-defined channel/datatype)
 	directionality flags and perform static connectivity checking on them.
 	Goal: 1

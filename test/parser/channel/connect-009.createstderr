@@ -13,12 +13,12 @@ Persistent Object Manager text dump:
 	9	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
 	10	##ADDR##	portscop	0	#HEAD#	#TAIL#	24
 	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
 	13	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
 	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	15	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
 	16	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	17	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
 	18	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
 	19	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	20	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
@@ -42,11 +42,11 @@ Persistent Object Manager text dump:
 	38	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	39	##ADDR##	portscop	0	#HEAD#	#TAIL#	24
 	40	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	41	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	41	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
 	42	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	43	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
 	44	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	45	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	45	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
 	46	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
 	47	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	48	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
@@ -65,7 +65,7 @@ Persistent Object Manager text dump:
 	61	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
 	62	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	63	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	64	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	64	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
 	65	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	66	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
 	67	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
@@ -77,14 +77,14 @@ Persistent Object Manager text dump:
 	73	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	74	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
 	75	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	76	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	76	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
 	77	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	78	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
 	79	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	28
 	80	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	81	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
 	82	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	83	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	83	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
 	84	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
 	85	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
 	86	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16

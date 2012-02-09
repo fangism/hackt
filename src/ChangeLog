@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2012-02-09	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-04:
+	  Actually propagate bool port direction information through
+		middle-end, added a direction parameter to data_type_reference.
+		Object binary version is bumped to 9.  
+		Updated bool_connection_policy: fixed fanin/fanout direction
+			of local '!' and '?' declarations.  
+		TODO: enforce '?' as read-only, and '!' as must-drive.
+	  hacknet: verilog output now emits wire directions of ports.
+
+
 2012-01-20	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-85-03:

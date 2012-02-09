@@ -13,7 +13,7 @@
 * 	6: R.e @[ port-alias loc-FO- loc-FO+ ]
 * 	7: !GND @[ supply_low port-alias ]
 * 	8: !Vdd @[ supply_high port-alias ]
-* 	9: _Reset @[ port-alias loc-FO- loc-FO+ ]
+* 	9: _Reset @[ port? port-alias loc-FO- loc-FO+ ]
 * 	10: _r.d[0] @[ loc-FO- loc-FO+ loc-FI- loc-FI+ ]
 * 	11: _r.d[1] @[ loc-FO- loc-FO+ loc-FI- loc-FI+ ]
 * 	12: rv @[ loc-FO- loc-FO+ loc-FI- loc-FI+ ]

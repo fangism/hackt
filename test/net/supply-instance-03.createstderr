@@ -34,11 +34,11 @@ Persistent Object Manager text dump:
 	19	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	29
 	20	##ADDR##	portscop	0	#HEAD#	#TAIL#	28
 	21	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	22	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
 	23	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
 	24	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	25	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	26	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
 	27	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	28	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
 	29	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
@@ -57,10 +57,10 @@ Persistent Object Manager text dump:
 	42	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	43	##ADDR##	portscop	0	#HEAD#	#TAIL#	28
 	44	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	45	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	45	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
 	46	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	47	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	48	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	48	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
 	49	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	50	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
 	51	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
@@ -125,7 +125,7 @@ Persistent Object Manager text dump:
 	110	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	111	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	112	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	113	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	113	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
 	114	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	115	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
 	116	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16

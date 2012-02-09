@@ -1897,7 +1897,8 @@ netlist::collect_struct_ports(vector<string>& ports,
 	pool misses out on port structs.  
  */
 ostream&
-netlist::emit_verilog_locals(ostream& o, const netlist_options& nopt) const {
+netlist::emit_verilog_struct_locals(ostream& o, 
+		const netlist_options& nopt) const {
 	STACKTRACE_VERBOSE;
 	// emit local channel declarations, including ports
 	// just use footprint directly
@@ -1913,13 +1914,14 @@ netlist::emit_verilog_locals(ostream& o, const netlist_options& nopt) const {
 	typedef	state_instance<tag_type>::pool_type
 						pool_type;
 #if ENABLE_STACKTRACE
-	o << nopt.comment_prefix << "local structs:" << endl;
+	o << nopt.comment_prefix << "local " << traits_type::tag_name
+		<< ":" << endl;
 #endif
 	const pool_type&
 		ppool(fp->get_instance_pool<tag_type>());
 	proc_pool_type::const_iterator
 		pi(++proc_pool.begin()), pe(proc_pool.end());
-	STACKTRACE_INDENT_PRINT("proc_pool.size() = " << proc_pool.size() << endl);
+//	STACKTRACE_INDENT_PRINT("proc_pool.size() = " << proc_pool.size() << endl);
 	for ( ; pi!=pe; ++pi) {
 		const index_type lpid = pi->index;
 		const instance_type& p(ppool[lpid -1]);
@@ -1930,7 +1932,7 @@ netlist::emit_verilog_locals(ostream& o, const netlist_options& nopt) const {
 		NEVER_NULL(type->fp);
 		const entity::meta_type_tag_enum
 			t(type->fp->get_meta_type());
-		if (t != entity::META_TYPE_PROCESS) {
+		if (t != traits_type::type_tag_enum_value) {
 			// then is a channel or datastruct
 			// print direction
 			const bool inny = _pref.is_input_port();
@@ -1954,6 +1956,71 @@ netlist::emit_verilog_locals(ostream& o, const netlist_options& nopt) const {
 	}	// end for each local instance
 	return o;
 }	// end netlist::emit_verilog_locals
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Using the local instance pool instead of the footprint's instance
+	pool misses out on port wires.  
+ */
+ostream&
+netlist::emit_verilog_wire_locals(ostream& o, 
+		const netlist_options& nopt) const {
+	STACKTRACE_VERBOSE;
+	// emit local channel declarations, including ports
+	// just use footprint directly
+	typedef	bool_tag			tag_type;
+	typedef	class_traits<tag_type>		traits_type;
+	typedef	traits_type::instance_collection_parameter_type
+						type_type;
+	typedef	instance_alias_info<tag_type>	alias_type;
+	typedef	entity::collection_interface<tag_type>
+						collection_type;
+	typedef	alias_type::container_type	container_type;
+	typedef	state_instance<tag_type>	instance_type;
+	typedef	state_instance<tag_type>::pool_type
+						pool_type;
+#if ENABLE_STACKTRACE
+	o << nopt.comment_prefix << "local " << traits_type::tag_name
+		<< ":" << endl;
+#endif
+	const pool_type&
+		ppool(fp->get_instance_pool<tag_type>());
+	node_pool_type::const_iterator
+		pi(++node_pool.begin()), pe(node_pool.end());
+		// skip the void node
+	for ( ; pi!=pe; ++pi) {
+		bool inny = false;
+		bool outy = false;
+		if (pi->is_logical_node()) {
+		const index_type lpid = pi->index;
+		const instance_type& p(ppool[lpid -1]);
+		const never_ptr<const alias_type> pref(p.get_back_ref());
+		const alias_type& _pref(*pref);
+		inny = _pref.is_input_port();
+		outy = _pref.is_output_port();
+		}
+		if (inny) {
+			if (outy) {
+				o << "inout ";
+			} else {
+				o << "input ";
+			}
+		} else if (outy) {
+			o << "output ";
+		} else {
+			o << "wire ";
+		}
+		// print type -- already mangled
+		// o << type->get_name() << ' ';
+		// print name -- already mangled
+		o << pi->name;
+		o << ';' << endl;
+		// else skip processes -- they are sub module instances
+	}	// end for each local instance
+	return o;
+}	// end netlist::emit_verilog_locals
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #endif	// NETLIST_VERILOG
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2071,7 +2138,8 @@ if (nopt.emit_node_terminals) {
 #endif
 #if NETLIST_VERILOG
 if (nopt.subckt_def_style == netlist_options::STYLE_VERILOG) {
-	emit_verilog_locals(o, nopt);
+	emit_verilog_struct_locals(o, nopt);
+	emit_verilog_wire_locals(o, nopt);
 }	// end if verilog mode
 #endif	// NETLIST_VERILOG
 	emit_subinstances(o, nopt);

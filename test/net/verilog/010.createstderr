@@ -1,0 +1,472 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	40
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	162
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	10	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	31
+	11	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
+	12	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	13	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	14	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	27
+	15	##ADDR##	portscop	0	#HEAD#	#TAIL#	32
+	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
+	18	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	19	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
+	22	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
+	25	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
+	27	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	29	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	32	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	33	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	36	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
+	38	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	39	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	41	##ADDR##	procdefn	0	#HEAD#	#TAIL#	142
+	42	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	43	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	44	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	31
+	45	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
+	46	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	27
+	47	##ADDR##	portscop	0	#HEAD#	#TAIL#	32
+	48	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	49	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
+	50	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	51	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	52	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
+	53	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	54	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	55	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
+	56	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	57	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
+	58	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	59	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	60	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	61	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	62	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	63	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	64	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	65	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	66	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	67	##ADDR##	dbooldir	0	#HEAD#	#TAIL#	13
+	68	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	69	##ADDR##	dbooldir	0	#HEAD#	#TAIL#	13
+	70	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	71	##ADDR##	dbooldir	0	#HEAD#	#TAIL#	13
+	72	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	73	##ADDR##	footprnt	0	#HEAD#	#TAIL#	476
+	74	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	75	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
+	76	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	77	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	78	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	36
+	79	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	80	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	81	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	82	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	83	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	84	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	85	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	86	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	87	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	88	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	89	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	90	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	91	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	92	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	93	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	94	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	95	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	96	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	97	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	98	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	99	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	100	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	101	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	36
+	102	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	103	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	104	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	105	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	106	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	107	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	108	##ADDR##	footprnt	0	#HEAD#	#TAIL#	2137
+	109	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	110	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	111	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	112	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
+	113	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	114	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	115	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	116	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	117	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	118	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	119	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	120	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	121	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	122	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	123	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	124	##ADDR##	footprnt	0	#HEAD#	#TAIL#	838
+	125	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  3 instantiation-collections
+  0 sub-namespaces
+  2 definitions
+  0 typedefs
+  Definitions:
+    mux16 = process-definition (defined) mux16(
+        bool<> !GND
+        bool<> !Vdd
+        bool<>? in[0..15]
+        bool<>! out
+        bool<>? cfg_sel[0..3]
+      )
+      In definition "mux16", we have: {
+      Instances:
+        !GND = bool<> mux16::!GND
+        !Vdd = bool<> mux16::!Vdd
+        _mid = bool<> mux16::_mid^1
+        cfg_sel = bool<>? mux16::cfg_sel^1
+        in = bool<>? mux16::in^1
+        mx1 = mux4i<> mux16::mx1^1
+        mx2 = mux4i<> mux16::mx2
+        out = bool<>! mux16::out
+      unroll sequence: 
+        ports: (
+          bool<> !GND
+          bool<> !Vdd
+          bool<>? in[0..15]
+          bool<>! out
+          bool<>? cfg_sel[0..3]
+        )
+        !GND@[supply=0]
+        !Vdd@[supply=1]
+        bool<> _mid[0..3]
+        mux4i<> mx1[0..3]
+        (;i:[0..3]:
+          mx1[$i] ( , , in[4*$i..4*$i+3], _mid[$i], cfg_sel[0..1]);
+        )
+        mux4i<> mx2
+        mx2 ( , , _mid, out, cfg_sel[2..3]);
+      footprint: {
+        !GND = bool^0 = mux16<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = mux16<>::!Vdd (2) @[ supply_high port-alias ] 
+        _mid = bool^1
+          {
+            [0] = mux16<>::_mid[0] (24) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
+            [1] = mux16<>::_mid[1] (25) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
+            [2] = mux16<>::_mid[2] (26) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
+            [3] = mux16<>::_mid[3] (27) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
+          }
+        cfg_sel = bool^1
+          {
+            [0] = mux16<>::cfg_sel[0] (10) @[ port? port-alias sub-FO- sub-FO+ ] 
+            [1] = mux16<>::cfg_sel[1] (11) @[ port? port-alias sub-FO- sub-FO+ ] 
+            [2] = mux16<>::cfg_sel[2] (4) @[ port? port-alias sub-FO- sub-FO+ ] 
+            [3] = mux16<>::cfg_sel[3] (5) @[ port? port-alias sub-FO- sub-FO+ ] 
+          }
+        in = bool^1
+          {
+            [0] = mux16<>::in[0] (6) @[ port? port-alias sub-FO- sub-FO+ ] 
+            [1] = mux16<>::in[1] (7) @[ port? port-alias sub-FO- sub-FO+ ] 
+            [2] = mux16<>::in[2] (8) @[ port? port-alias sub-FO- sub-FO+ ] 
+            [3] = mux16<>::in[3] (9) @[ port? port-alias sub-FO- sub-FO+ ] 
+            [4] = mux16<>::in[4] (12) @[ port? port-alias sub-FO- sub-FO+ ] 
+            [5] = mux16<>::in[5] (13) @[ port? port-alias sub-FO- sub-FO+ ] 
+            [6] = mux16<>::in[6] (14) @[ port? port-alias sub-FO- sub-FO+ ] 
+            [7] = mux16<>::in[7] (15) @[ port? port-alias sub-FO- sub-FO+ ] 
+            [8] = mux16<>::in[8] (16) @[ port? port-alias sub-FO- sub-FO+ ] 
+            [9] = mux16<>::in[9] (17) @[ port? port-alias sub-FO- sub-FO+ ] 
+            [10] = mux16<>::in[10] (18) @[ port? port-alias sub-FO- sub-FO+ ] 
+            [11] = mux16<>::in[11] (19) @[ port? port-alias sub-FO- sub-FO+ ] 
+            [12] = mux16<>::in[12] (20) @[ port? port-alias sub-FO- sub-FO+ ] 
+            [13] = mux16<>::in[13] (21) @[ port? port-alias sub-FO- sub-FO+ ] 
+            [14] = mux16<>::in[14] (22) @[ port? port-alias sub-FO- sub-FO+ ] 
+            [15] = mux16<>::in[15] (23) @[ port? port-alias sub-FO- sub-FO+ ] 
+          }
+        mx1 = process mux4i<>^1
+          {
+            [0] = mux16<>::mx1[0] (2) (
+              !GND = bool^0 = mux16<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = mux16<>::!Vdd (2) @[ supply_high port-alias ] 
+              in = bool^1
+                {
+                  [0] = mux16<>::in[0] (6) @[ port? port-alias sub-FO- sub-FO+ ] 
+                  [1] = mux16<>::in[1] (7) @[ port? port-alias sub-FO- sub-FO+ ] 
+                  [2] = mux16<>::in[2] (8) @[ port? port-alias sub-FO- sub-FO+ ] 
+                  [3] = mux16<>::in[3] (9) @[ port? port-alias sub-FO- sub-FO+ ] 
+                }
+              out = bool^0 = mux16<>::_mid[0] (24) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
+              cfg_sel = bool^1
+                {
+                  [0] = mux16<>::cfg_sel[0] (10) @[ port? port-alias sub-FO- sub-FO+ ] 
+                  [1] = mux16<>::cfg_sel[1] (11) @[ port? port-alias sub-FO- sub-FO+ ] 
+                }
+            )
+            [1] = mux16<>::mx1[1] (3) (
+              !GND = bool^0 = mux16<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = mux16<>::!Vdd (2) @[ supply_high port-alias ] 
+              in = bool^1
+                {
+                  [0] = mux16<>::in[4] (12) @[ port? port-alias sub-FO- sub-FO+ ] 
+                  [1] = mux16<>::in[5] (13) @[ port? port-alias sub-FO- sub-FO+ ] 
+                  [2] = mux16<>::in[6] (14) @[ port? port-alias sub-FO- sub-FO+ ] 
+                  [3] = mux16<>::in[7] (15) @[ port? port-alias sub-FO- sub-FO+ ] 
+                }
+              out = bool^0 = mux16<>::_mid[1] (25) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
+              cfg_sel = bool^1
+                {
+                  [0] = mux16<>::cfg_sel[0] (10) @[ port? port-alias sub-FO- sub-FO+ ] 
+                  [1] = mux16<>::cfg_sel[1] (11) @[ port? port-alias sub-FO- sub-FO+ ] 
+                }
+            )
+            [2] = mux16<>::mx1[2] (4) (
+              !GND = bool^0 = mux16<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = mux16<>::!Vdd (2) @[ supply_high port-alias ] 
+              in = bool^1
+                {
+                  [0] = mux16<>::in[8] (16) @[ port? port-alias sub-FO- sub-FO+ ] 
+                  [1] = mux16<>::in[9] (17) @[ port? port-alias sub-FO- sub-FO+ ] 
+                  [2] = mux16<>::in[10] (18) @[ port? port-alias sub-FO- sub-FO+ ] 
+                  [3] = mux16<>::in[11] (19) @[ port? port-alias sub-FO- sub-FO+ ] 
+                }
+              out = bool^0 = mux16<>::_mid[2] (26) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
+              cfg_sel = bool^1
+                {
+                  [0] = mux16<>::cfg_sel[0] (10) @[ port? port-alias sub-FO- sub-FO+ ] 
+                  [1] = mux16<>::cfg_sel[1] (11) @[ port? port-alias sub-FO- sub-FO+ ] 
+                }
+            )
+            [3] = mux16<>::mx1[3] (5) (
+              !GND = bool^0 = mux16<>::!GND (1) @[ supply_low port-alias ] 
+              !Vdd = bool^0 = mux16<>::!Vdd (2) @[ supply_high port-alias ] 
+              in = bool^1
+                {
+                  [0] = mux16<>::in[12] (20) @[ port? port-alias sub-FO- sub-FO+ ] 
+                  [1] = mux16<>::in[13] (21) @[ port? port-alias sub-FO- sub-FO+ ] 
+                  [2] = mux16<>::in[14] (22) @[ port? port-alias sub-FO- sub-FO+ ] 
+                  [3] = mux16<>::in[15] (23) @[ port? port-alias sub-FO- sub-FO+ ] 
+                }
+              out = bool^0 = mux16<>::_mid[3] (27) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
+              cfg_sel = bool^1
+                {
+                  [0] = mux16<>::cfg_sel[0] (10) @[ port? port-alias sub-FO- sub-FO+ ] 
+                  [1] = mux16<>::cfg_sel[1] (11) @[ port? port-alias sub-FO- sub-FO+ ] 
+                }
+            )
+          }
+        mx2 = process mux4i<>^0 = mux16<>::mx2 (1) (
+          !GND = bool^0 = mux16<>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = mux16<>::!Vdd (2) @[ supply_high port-alias ] 
+          in = bool^1
+            {
+              [0] = mux16<>::_mid[0] (24) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
+              [1] = mux16<>::_mid[1] (25) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
+              [2] = mux16<>::_mid[2] (26) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
+              [3] = mux16<>::_mid[3] (27) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
+            }
+          out = bool^0 = mux16<>::out (3) @[ port! port-alias sub-FI- sub-FI+ ] 
+          cfg_sel = bool^1
+            {
+              [0] = mux16<>::cfg_sel[2] (4) @[ port? port-alias sub-FO- sub-FO+ ] 
+              [1] = mux16<>::cfg_sel[3] (5) @[ port? port-alias sub-FO- sub-FO+ ] 
+            }
+        )
+        out = bool^0 = mux16<>::out (3) @[ port! port-alias sub-FI- sub-FI+ ] 
+        Created state:
+        process instance pool: (0 ports, 5 local, 0 mapped)
+        1	mux16<>::mx2	mux4i<>
+          bool: 1,2,3,24,25,26,27,4,5
+        2	mux16<>::mx1[0]	mux4i<>
+          bool: 1,2,24,6,7,8,9,10,11
+        3	mux16<>::mx1[1]	mux4i<>
+          bool: 1,2,25,12,13,14,15,10,11
+        4	mux16<>::mx1[2]	mux4i<>
+          bool: 1,2,26,16,17,18,19,10,11
+        5	mux16<>::mx1[3]	mux4i<>
+          bool: 1,2,27,20,21,22,23,10,11
+        bool instance pool: (23 ports, 4 local, 0 mapped)
+        1	mux16<>::!GND @[ supply_low port-alias ]	
+        2	mux16<>::!Vdd @[ supply_high port-alias ]	
+        3	mux16<>::out @[ port! port-alias sub-FI- sub-FI+ ]	
+        4	mux16<>::cfg_sel[2] @[ port? port-alias sub-FO- sub-FO+ ]	
+        5	mux16<>::cfg_sel[3] @[ port? port-alias sub-FO- sub-FO+ ]	
+        6	mux16<>::in[0] @[ port? port-alias sub-FO- sub-FO+ ]	
+        7	mux16<>::in[1] @[ port? port-alias sub-FO- sub-FO+ ]	
+        8	mux16<>::in[2] @[ port? port-alias sub-FO- sub-FO+ ]	
+        9	mux16<>::in[3] @[ port? port-alias sub-FO- sub-FO+ ]	
+        10	mux16<>::cfg_sel[0] @[ port? port-alias sub-FO- sub-FO+ ]	
+        11	mux16<>::cfg_sel[1] @[ port? port-alias sub-FO- sub-FO+ ]	
+        12	mux16<>::in[4] @[ port? port-alias sub-FO- sub-FO+ ]	
+        13	mux16<>::in[5] @[ port? port-alias sub-FO- sub-FO+ ]	
+        14	mux16<>::in[6] @[ port? port-alias sub-FO- sub-FO+ ]	
+        15	mux16<>::in[7] @[ port? port-alias sub-FO- sub-FO+ ]	
+        16	mux16<>::in[8] @[ port? port-alias sub-FO- sub-FO+ ]	
+        17	mux16<>::in[9] @[ port? port-alias sub-FO- sub-FO+ ]	
+        18	mux16<>::in[10] @[ port? port-alias sub-FO- sub-FO+ ]	
+        19	mux16<>::in[11] @[ port? port-alias sub-FO- sub-FO+ ]	
+        20	mux16<>::in[12] @[ port? port-alias sub-FO- sub-FO+ ]	
+        21	mux16<>::in[13] @[ port? port-alias sub-FO- sub-FO+ ]	
+        22	mux16<>::in[14] @[ port? port-alias sub-FO- sub-FO+ ]	
+        23	mux16<>::in[15] @[ port? port-alias sub-FO- sub-FO+ ]	
+        24	mux16<>::_mid[0] @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ]	
+        25	mux16<>::_mid[1] @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ]	
+        26	mux16<>::_mid[2] @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ]	
+        27	mux16<>::_mid[3] @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ]	
+      }
+      }
+
+    mux4i = process-definition (defined) mux4i(
+        bool<> !GND
+        bool<> !Vdd
+        bool<>? in[0..3]
+        bool<>! out
+        bool<>? cfg_sel[0..1]
+      )
+      In definition "mux4i", we have: {
+      Instances:
+        !GND = bool<> mux4i::!GND
+        !Vdd = bool<> mux4i::!Vdd
+        cfg_sel = bool<>? mux4i::cfg_sel^1
+        in = bool<>? mux4i::in^1
+        out = bool<>! mux4i::out
+      unroll sequence: 
+        ports: (
+          bool<> !GND
+          bool<> !Vdd
+          bool<>? in[0..3]
+          bool<>! out
+          bool<>? cfg_sel[0..1]
+        )
+        !GND@[supply=0]
+        !Vdd@[supply=1]
+        in?
+        out!
+        cfg_sel?
+      footprint: {
+        !GND = bool^0 = mux4i<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = mux4i<>::!Vdd (2) @[ supply_high port-alias ] 
+        cfg_sel = bool^1
+          {
+            [0] = mux4i<>::cfg_sel[0] (8) @[ port? port-alias loc-FO- loc-FO+ ] 
+            [1] = mux4i<>::cfg_sel[1] (9) @[ port? port-alias loc-FO- loc-FO+ ] 
+          }
+        in = bool^1
+          {
+            [0] = mux4i<>::in[0] (4) @[ port? port-alias loc-FO- loc-FO+ ] 
+            [1] = mux4i<>::in[1] (5) @[ port? port-alias loc-FO- loc-FO+ ] 
+            [2] = mux4i<>::in[2] (6) @[ port? port-alias loc-FO- loc-FO+ ] 
+            [3] = mux4i<>::in[3] (7) @[ port? port-alias loc-FO- loc-FO+ ] 
+          }
+        out = bool^0 = mux4i<>::out (3) @[ port! port-alias loc-FI- loc-FI+ ] 
+        Created state:
+        bool instance pool: (9 ports, 0 local, 0 mapped)
+        1	mux4i<>::!GND @[ supply_low port-alias ]	
+        2	mux4i<>::!Vdd @[ supply_high port-alias ]	
+        3	mux4i<>::out @[ port! port-alias loc-FI- loc-FI+ ]	
+        4	mux4i<>::in[0] @[ port? port-alias loc-FO- loc-FO+ ]	
+        5	mux4i<>::in[1] @[ port? port-alias loc-FO- loc-FO+ ]	
+        6	mux4i<>::in[2] @[ port? port-alias loc-FO- loc-FO+ ]	
+        7	mux4i<>::in[3] @[ port? port-alias loc-FO- loc-FO+ ]	
+        8	mux4i<>::cfg_sel[0] @[ port? port-alias loc-FO- loc-FO+ ]	
+        9	mux4i<>::cfg_sel[1] @[ port? port-alias loc-FO- loc-FO+ ]	
+      }
+      }
+
+  Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
+    Z = mux16<> Z
+}
+
+footprint: {
+  !GND = bool^0 = !GND (1) @[ supply_low ] 
+  !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
+  Z = process mux16<>^0 = Z (1) (
+    !GND = bool^0 = !GND (1) @[ supply_low ] 
+    !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
+    in = bool^1
+      {
+        [0] = Z.in[0] (3) @[ sub-FO- sub-FO+ ] 
+        [1] = Z.in[1] (4) @[ sub-FO- sub-FO+ ] 
+        [2] = Z.in[2] (5) @[ sub-FO- sub-FO+ ] 
+        [3] = Z.in[3] (6) @[ sub-FO- sub-FO+ ] 
+        [4] = Z.in[4] (7) @[ sub-FO- sub-FO+ ] 
+        [5] = Z.in[5] (8) @[ sub-FO- sub-FO+ ] 
+        [6] = Z.in[6] (9) @[ sub-FO- sub-FO+ ] 
+        [7] = Z.in[7] (10) @[ sub-FO- sub-FO+ ] 
+        [8] = Z.in[8] (11) @[ sub-FO- sub-FO+ ] 
+        [9] = Z.in[9] (12) @[ sub-FO- sub-FO+ ] 
+        [10] = Z.in[10] (13) @[ sub-FO- sub-FO+ ] 
+        [11] = Z.in[11] (14) @[ sub-FO- sub-FO+ ] 
+        [12] = Z.in[12] (15) @[ sub-FO- sub-FO+ ] 
+        [13] = Z.in[13] (16) @[ sub-FO- sub-FO+ ] 
+        [14] = Z.in[14] (17) @[ sub-FO- sub-FO+ ] 
+        [15] = Z.in[15] (18) @[ sub-FO- sub-FO+ ] 
+      }
+    out = bool^0 = Z.out (19) @[ sub-FI- sub-FI+ ] 
+    cfg_sel = bool^1
+      {
+        [0] = Z.cfg_sel[0] (20) @[ sub-FO- sub-FO+ ] 
+        [1] = Z.cfg_sel[1] (21) @[ sub-FO- sub-FO+ ] 
+        [2] = Z.cfg_sel[2] (22) @[ sub-FO- sub-FO+ ] 
+        [3] = Z.cfg_sel[3] (23) @[ sub-FO- sub-FO+ ] 
+      }
+  )
+  Created state:
+  process instance pool: (0 ports, 1 local, 5 mapped)
+  1	Z	mux16<>
+    bool: 1,2,19,22,23,3,4,5,6,20,21,7,8,9,10,11,12,13,14,15,16,17,18
+  private sub-process index map:
+    (1 -> 0)
+    (2 -> 5)
+  bool instance pool: (0 ports, 23 local, 4 mapped)
+  1	!GND @[ supply_low ]	
+  2	!Vdd @[ supply_high ]	
+  3	Z.in[0] @[ sub-FO- sub-FO+ ]	
+  4	Z.in[1] @[ sub-FO- sub-FO+ ]	
+  5	Z.in[2] @[ sub-FO- sub-FO+ ]	
+  6	Z.in[3] @[ sub-FO- sub-FO+ ]	
+  7	Z.in[4] @[ sub-FO- sub-FO+ ]	
+  8	Z.in[5] @[ sub-FO- sub-FO+ ]	
+  9	Z.in[6] @[ sub-FO- sub-FO+ ]	
+  10	Z.in[7] @[ sub-FO- sub-FO+ ]	
+  11	Z.in[8] @[ sub-FO- sub-FO+ ]	
+  12	Z.in[9] @[ sub-FO- sub-FO+ ]	
+  13	Z.in[10] @[ sub-FO- sub-FO+ ]	
+  14	Z.in[11] @[ sub-FO- sub-FO+ ]	
+  15	Z.in[12] @[ sub-FO- sub-FO+ ]	
+  16	Z.in[13] @[ sub-FO- sub-FO+ ]	
+  17	Z.in[14] @[ sub-FO- sub-FO+ ]	
+  18	Z.in[15] @[ sub-FO- sub-FO+ ]	
+  19	Z.out @[ sub-FI- sub-FI+ ]	
+  20	Z.cfg_sel[0] @[ sub-FO- sub-FO+ ]	
+  21	Z.cfg_sel[1] @[ sub-FO- sub-FO+ ]	
+  22	Z.cfg_sel[2] @[ sub-FO- sub-FO+ ]	
+  23	Z.cfg_sel[3] @[ sub-FO- sub-FO+ ]	
+  private sub-bool index map:
+    (1 -> 0)
+    (2 -> 4)
+}

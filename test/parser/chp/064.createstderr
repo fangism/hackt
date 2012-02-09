@@ -23,18 +23,18 @@ Persistent Object Manager text dump:
 	15	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
 	16	##ADDR##	portscop	0	#HEAD#	#TAIL#	28
 	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	18	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
 	19	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
 	20	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	21	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
 	22	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	23	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
 	24	##ADDR##	datadefn	0	#HEAD#	#TAIL#	68
 	25	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	26	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	27	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
 	28	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	29	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
 	30	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	31	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	32	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
@@ -46,7 +46,7 @@ Persistent Object Manager text dump:
 	38	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	39	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	40	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	41	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	41	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
 	42	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	43	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	44	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
@@ -74,7 +74,7 @@ Persistent Object Manager text dump:
 	66	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
 	67	##ADDR##	procplch	0	#HEAD#	#TAIL#	30
 	68	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	69	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	69	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
 	70	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	71	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
 	72	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
@@ -86,7 +86,7 @@ Persistent Object Manager text dump:
 	78	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	79	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
 	80	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	81	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	81	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
 	82	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	83	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
 	84	##ADDR##	procinst	0	#HEAD#	#TAIL#	20

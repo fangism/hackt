@@ -15,12 +15,12 @@ Persistent Object Manager text dump:
 	11	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	12	##ADDR##	portscop	0	#HEAD#	#TAIL#	24
 	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
 	15	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
 	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	17	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
 	18	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	19	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
 	20	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
 	21	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	22	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
@@ -30,7 +30,7 @@ Persistent Object Manager text dump:
 	26	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	27	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	28	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	29	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
 	30	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
 	31	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
 	32	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
@@ -49,11 +49,11 @@ Persistent Object Manager text dump:
 	45	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
 	46	##ADDR##	portscop	0	#HEAD#	#TAIL#	24
 	47	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	48	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	48	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
 	49	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	50	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
 	51	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	52	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	52	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
 	53	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
 	54	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	55	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
@@ -77,7 +77,7 @@ Persistent Object Manager text dump:
 	73	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
 	74	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	75	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	76	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	76	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
 	77	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	78	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
 	79	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
@@ -89,7 +89,7 @@ Persistent Object Manager text dump:
 	85	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	86	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
 	87	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	88	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	88	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
 	89	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	90	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
 	91	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
