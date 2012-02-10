@@ -137,8 +137,15 @@ bool_connect_policy::declare_direction(const direction_type d) {
 		attributes |=
 			BOOL_LOCAL_PRS_FANIN_PULL_UP |
 			BOOL_LOCAL_PRS_FANIN_PULL_DN;
+		if (is_input_port()) {
+			cerr <<
+	"Error: driving a read-only (input) port (using '!') is forbidden."
+				<< endl;
+			return good_bool(false);
+		}
 		break;
 	case CHANNEL_TYPE_RECEIVE:
+		// output ports are always allowed to fanout locally
 		attributes |=
 			BOOL_LOCAL_PRS_FANOUT_PULL_UP |
 			BOOL_LOCAL_PRS_FANOUT_PULL_DN;
@@ -221,6 +228,27 @@ bool_connect_policy::set_reset(const bool t) {
 		}
 	}
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if BOOL_PRS_CONNECTIVITY_CHECKING && BOOL_CONNECTIVITY_CHECKING
+/**
+	Only allow connection to fanin if node is not marked as read-only '?'.
+ */
+good_bool
+bool_connect_policy::prs_fanin(const bool dir) {
+	attributes |= dir ?
+		BOOL_LOCAL_PRS_FANIN_PULL_UP :
+		BOOL_LOCAL_PRS_FANIN_PULL_DN;
+	if (is_input_port()) {
+		cerr <<
+"Error: driving a read-only (input) port with a production rule is forbidden."
+			<< endl;
+		// THROW_EXIT;
+		return good_bool(false);
+	}
+	return good_bool(true);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

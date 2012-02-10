@@ -99,10 +99,6 @@ bool_connect_policy::__check_connection(const AliasType& a) {
 	error_count ret;
 #if BOOL_PRS_CONNECTIVITY_CHECKING
 	STACKTRACE_VERBOSE;
-// (!a.is_port_alias())	// wrong: misses aliases to direct ports
-if (!a.is_aliased_to_port())
-{
-	// only check local non-port aliases
 	const bool any_fanout_dn = a.attributes & BOOL_ANY_FANOUT_PULL_DN;
 	const bool any_fanout_up = a.attributes & BOOL_ANY_FANOUT_PULL_UP;
 	const bool any_fanin_dn = a.attributes & BOOL_ANY_FANIN_PULL_DN;
@@ -110,6 +106,35 @@ if (!a.is_aliased_to_port())
 	const bool any_fanout = any_fanout_dn || any_fanout_up;
 	const bool any_fanin = any_fanin_dn || any_fanin_up;
 //	const bool dead = !any_fanout && !any_fanin;
+	std::ostringstream oss;
+// (!a.is_port_alias())	// wrong: misses aliases to direct ports
+if (a.is_aliased_to_port()) {
+#if BOOL_CONNECTIVITY_CHECKING
+#if 0
+	// TODO: configurable warnings
+	if (a.is_input_port()) {
+		// do we care if no fanout?
+		// what about globals that are passed everywhere?
+		// but sometimes unused?
+		// power supplies?
+		if (!any_fanout) {
+		}
+	}
+#endif
+	if (a.is_output_port()) {
+		if (!any_fanin) {
+			// don't evaluate name unless diagnostic is printed
+			a.dump_hierarchical_name(oss);
+			const string& n(oss.str());
+			cerr << "Warning: output port node " << n <<
+				" has no PRS fanin." << endl;
+			++ret.warnings;
+		}
+	}
+#endif
+} else {
+	// node is local-only
+	// only check local non-port aliases
 	const bool floating = any_fanout && !any_fanin;
 	const bool asym_fanin = any_fanout && (any_fanin_dn ^ any_fanin_up);
 //	const bool asym_fanout = any_fanout_dn ^ any_fanout_up;
@@ -117,7 +142,6 @@ if (!a.is_aliased_to_port())
 	const bool warn = floating || asym_fanin;
 if (warn) {
 	// don't evaluate name unless diagnostic is printed
-	std::ostringstream oss;
 	a.dump_hierarchical_name(oss);
 	const string& n(oss.str());
 	// TODO: configurable warnings

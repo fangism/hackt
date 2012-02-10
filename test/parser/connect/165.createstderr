@@ -1,3 +1,8 @@
+Warning: output port node larry<>::out has no PRS fanin.
+Warnings found (1) while creating complete type larry<>.
+Warning: output port node dee<>::out has no PRS fanin.
+Warnings found (1) while creating complete type dee<>.
+---- END CREATE WARNINGS ---
 
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail	size

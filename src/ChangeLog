@@ -11,8 +11,10 @@
 		Object binary version is bumped to 9.  
 		Updated bool_connection_policy: fixed fanin/fanout direction
 			of local '!' and '?' declarations.  
-		TODO: enforce '?' as read-only, and '!' as must-drive.
 	  hacknet: verilog output now emits wire directions of ports.
+	  haccreate-connect:
+		enforced '?' as read-only (error out)
+		and '!' as must-drive (warning only)
 
 
 2012-01-20	David Fang		<fangism@users.sourceforge.net>

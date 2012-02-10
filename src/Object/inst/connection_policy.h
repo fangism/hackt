@@ -386,6 +386,7 @@ public:
 		return attributes & BOOL_ANY_FANOUT;
 	}
 
+	// always considered safe to fanout arbitrarily
 	void
 	prs_fanout(const bool dir) {
 		attributes |= dir ?
@@ -393,12 +394,17 @@ public:
 			BOOL_LOCAL_PRS_FANOUT_PULL_DN;
 	}
 
+#if BOOL_CONNECTIVITY_CHECKING
+	good_bool
+	prs_fanin(const bool dir);
+#else
 	void
 	prs_fanin(const bool dir) {
 		attributes |= dir ?
 			BOOL_LOCAL_PRS_FANIN_PULL_UP :
 			BOOL_LOCAL_PRS_FANIN_PULL_DN;
 	}
+#endif
 #endif
 
 #if BOOL_CONNECTIVITY_CHECKING

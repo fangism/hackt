@@ -1,0 +1,13 @@
+// "168.hac"
+// copy-modified from "166.hac"
+// testing connectivity checking and port directions
+
+defproc foo(bool? in; bool! out) {
+// should error: is read-only
+prs {
+	out	-> in-
+}
+}
+
+foo bar;
+
