@@ -1,0 +1,18 @@
+module e1of_2_ ();
+endmodule
+
+module buffer (I, O);
+input e1of_2_ I;
+output e1of_2_ O;
+endmodule
+
+module array_2_ (\I[0] , \I[1] , \O[0] , \O[1] );
+input e1of_2_ \I[0] ;
+output e1of_2_ \O[0] ;
+input e1of_2_ \I[1] ;
+output e1of_2_ \O[1] ;
+buffer \b[0] (.I(\I[0] ), .O(\O[0] ));
+buffer \b[1] (.I(\I[1] ), .O(\O[1] ));
+endmodule
+
+

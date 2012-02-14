@@ -277,6 +277,11 @@ struct netlist_options {
 	style_enum			instance_port_style;
 #endif
 	/**
+		If true, print port connections named-style.
+		Else print port connections positionally (default).
+	 */
+	bool				named_port_connections;
+	/**
 		If true, emit top-level instances and rules, otherwise, 
 		emit only subcircuit definitions (library-only).
 	 */

@@ -1,0 +1,5 @@
+// "010b.hac"
+// @hacknet-flags@ -T mux16 -f node_ports=1 -f named_port_connections=1
+
+import "010.hac";
+

@@ -1227,6 +1227,14 @@ public:
 #endif
 		const netlist_options&);
 
+	const node&
+	get_node_port(const size_t) const;
+
+#if NETLIST_VERILOG
+	const proc&
+	get_proc_port(const size_t) const;
+#endif
+
 	void
 	summarize_ports(
 #if NETLIST_VERILOG

@@ -3,6 +3,15 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2012-02-13	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-05:
+	  hacknet: new option named_port_connections that emits netlist
+		instances with named port connections .port(local), 
+		which eliminates port order dependence.  
+		Added test cases.  Documented.
+
+
 2012-02-09	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-85-04:

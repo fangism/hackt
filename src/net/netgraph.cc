@@ -732,9 +732,16 @@ if (nopt.emit_mangle_map) {
 if (nopt.node_ports) {
 	node_actuals_list_type::const_iterator
 		i(node_actuals.begin()), e(node_actuals.end());
-	for ( ; i!=e; ++i) {
+	size_t j = 0;
+	for ( ; i!=e; ++i, ++j) {
 		ostringstream oss;
+		if (nopt.named_port_connections) {
+			oss << '.' << type->get_node_port(j).name << '(';
+		}
 		node_pool[*i].emit(oss, nopt);
+		if (nopt.named_port_connections) {
+			oss << ')';
+		}
 		_actuals.push_back(oss.str());
 	}
 }
@@ -745,9 +752,16 @@ if (nopt.struct_ports) {
 		proc_actuals.size() << endl);
 	proc_actuals_list_type::const_iterator
 		i(proc_actuals.begin()), e(proc_actuals.end());
-	for ( ; i!=e; ++i) {
+	size_t j = 0;
+	for ( ; i!=e; ++i, ++j) {
 		ostringstream oss;
+		if (nopt.named_port_connections) {
+			oss << '.' << type->get_proc_port(j).name << '(';
+		}
 		proc_pool[*i].emit(oss);	// nopt
+		if (nopt.named_port_connections) {
+			oss << ')';
+		}
 		_actuals.push_back(oss.str());
 	}
 }
@@ -1221,6 +1235,20 @@ netlist::get_unmangled_name(void) const {
 	fp->dump_type(oss);
 	return oss.str();
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+const node&
+netlist::get_node_port(const size_t i) const {
+	return node_pool[node_port_list[i]];
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+#if NETLIST_VERILOG
+const proc&
+netlist::get_proc_port(const size_t i) const {
+	return proc_pool[proc_port_list[i]];
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 template <class Tag>

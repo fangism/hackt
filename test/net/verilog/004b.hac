@@ -1,0 +1,6 @@
+// "004b.hac"
+// copy modified from "003.hac"
+// @hacknet-flags@ -T fifo<2> -f named_port_connections=1
+
+import "004.hac";
+

@@ -43,6 +43,7 @@ max_n_width=0
 max_p_width=0
 min_length=2
 min_width=4
+named_port_connections=0
 nested_subcircuits=0
 nfet_hvt=nch_hvt
 nfet_lvt=nch_lvt

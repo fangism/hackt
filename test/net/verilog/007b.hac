@@ -1,0 +1,5 @@
+// "007b.hac"
+// @hacknet-flags@ -T fefifo -f named_port_connections=1
+
+import "007.hac";
+

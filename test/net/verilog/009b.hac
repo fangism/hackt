@@ -1,0 +1,5 @@
+// "009b.hac"
+// @hacknet-flags@ -T stooges -f named_port_connections=1
+
+import "009.hac";
+

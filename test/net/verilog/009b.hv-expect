@@ -1,0 +1,69 @@
+module globals ();
+endmodule
+
+module e1of_2_ ();
+endmodule
+
+module buffer (I, O);
+input e1of_2_ I;
+output e1of_2_ O;
+endmodule
+
+module fifo_1_ (I, O);
+input e1of_2_ I;
+output e1of_2_ O;
+buffer \b[0] (.I(I), .O(O));
+endmodule
+
+module larry (g, I, O);
+input e1of_2_ I;
+output e1of_2_ O;
+input globals g;
+fifo_1_ f(.I(I), .O(O));
+endmodule
+
+module fifo_2_ (I, O);
+input e1of_2_ I;
+e1of_2_ \M[1] ;
+output e1of_2_ O;
+buffer \b[0] (.I(I), .O(\M[1] ));
+buffer \b[1] (.I(\M[1] ), .O(O));
+endmodule
+
+module moe (g, A, B);
+input e1of_2_ A;
+output e1of_2_ B;
+input globals g;
+fifo_2_ gee(.I(A), .O(B));
+endmodule
+
+module fifo_3_ (I, O);
+input e1of_2_ I;
+e1of_2_ \M[1] ;
+e1of_2_ \M[2] ;
+output e1of_2_ O;
+buffer \b[0] (.I(I), .O(\M[1] ));
+buffer \b[1] (.I(\M[1] ), .O(\M[2] ));
+buffer \b[2] (.I(\M[2] ), .O(O));
+endmodule
+
+module curly (g, F__D, B__R);
+input e1of_2_ F__D;
+output e1of_2_ B__R;
+input globals g;
+fifo_3_ h(.I(F__D), .O(B__R));
+endmodule
+
+module stooges (g, \N[0] , \N[1] , \P[0] , \P[1] );
+input globals g;
+input e1of_2_ \N[0] ;
+e1of_2_ Z;
+output e1of_2_ \P[0] ;
+input e1of_2_ \N[1] ;
+output e1of_2_ \P[1] ;
+larry L(.g(g), .I(\N[0] ), .O(Z));
+moe M(.g(g), .A(Z), .B(\P[0] ));
+curly C(.g(g), .F__D(\N[1] ), .B__R(\P[1] ));
+endmodule
+
+

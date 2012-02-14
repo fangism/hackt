@@ -1,0 +1,5 @@
+// "005b.hac"
+// @hacknet-flags@ -T array<2> -f named_port_connections=1
+
+import "005.hac";
+
