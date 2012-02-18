@@ -482,6 +482,35 @@ VALUE_ARRAY_CLASS::lookup_value(value_type& v,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Assigns reference parameter to true if the referenced value 
+	exists AND is defined to a value, false if yet undefined.
+	If the reference is invalid (to non-existent entry),
+	just return an error code.
+ */
+VALUE_ARRAY_TEMPLATE_SIGNATURE
+good_bool
+VALUE_ARRAY_CLASS::lookup_defined(pbool_value_type& v, 
+		const multikey_index_type& i) const {
+	STACKTRACE_VERBOSE;
+	INVARIANT(D == i.dimensions());
+	// else is top-level
+	const key_type index(i);
+	typedef	typename collection_type::const_iterator	const_iterator;
+	const const_iterator f(collection.find(index));
+	if (f == collection.end()) {
+		cerr << "ERROR: reference to uninstantiated " <<
+			traits_type::tag_name << ' ' <<
+			this->source_placeholder->get_qualified_name() <<
+			" at index: " << i << endl;
+		return good_bool(false);
+	}
+	const element_type& pi(f->second);
+	v = pi.valid;
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Gathers references (for assignment).  
 	Implementation ripped from instance_collection::unroll_aliases.
  */
@@ -675,11 +704,31 @@ VALUE_SCALAR_CLASS::lookup_value(value_type& v) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	\return true if the referenced value has been set/defined, 
+		false if its value is yet undefined.  
+ */
+VALUE_SCALAR_TEMPLATE_SIGNATURE
+good_bool
+VALUE_SCALAR_CLASS::lookup_defined(void) const {
+	STACKTRACE_VERBOSE;
+	return good_bool(this->the_instance.valid);
+}	// end method lookup_value
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	This should never be called.  
  */
 VALUE_SCALAR_TEMPLATE_SIGNATURE
 good_bool
 VALUE_SCALAR_CLASS::lookup_value(value_type&, 
+		const multikey_index_type&) const {
+	ICE_NEVER_CALL(cerr);
+	return good_bool(false);
+}
+
+VALUE_SCALAR_TEMPLATE_SIGNATURE
+good_bool
+VALUE_SCALAR_CLASS::lookup_defined(pbool_value_type&, 
 		const multikey_index_type&) const {
 	ICE_NEVER_CALL(cerr);
 	return good_bool(false);

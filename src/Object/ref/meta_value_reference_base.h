@@ -9,13 +9,19 @@
 #include <iosfwd>
 #include "util/size_t.h"
 #include "util/memory/pointer_classes_fwd.h"
+#include "Object/expr/types.h"		// for pbool_value_type
+#include "util/boolean_types.h"
+#include "util/persistent.h"
 
 namespace HAC {
 namespace entity {
 using std::ostream;
 using util::memory::never_ptr;
+using util::good_bool;
+using util::persistent_object_manager;
 class param_value_placeholder;
 struct expr_dump_context;
+class unroll_context;
 
 //=============================================================================
 /**
@@ -23,7 +29,9 @@ struct expr_dump_context;
 	This interface represents lvalue referenceable values.  
 	(whereas the param_expr hierarchy represents rvalues)
  */
-class meta_value_reference_base {
+class meta_value_reference_base
+	: virtual public util::persistent
+{
 protected:
 	meta_value_reference_base() { }
 public:
@@ -40,6 +48,13 @@ virtual	ostream&
 
 virtual	never_ptr<const param_value_placeholder>
 	get_coll_base(void) const = 0;
+
+virtual	good_bool
+	unroll_resolve_defined(const unroll_context&,
+		pbool_value_type&) const = 0;
+
+virtual	void
+	collect_transient_info(persistent_object_manager&) const = 0;
 
 };	// end class meta_value_reference_base
 

@@ -39,6 +39,8 @@
 #include "Object/expr/nonmeta_cast_expr.h"
 #include "Object/expr/nonmeta_expr_list.h"
 #include "Object/expr/dynamic_param_expr_list.h"
+#include "Object/expr/param_defined.h"
+#include "Object/ref/meta_value_reference_base.h"
 #include "Object/ref/data_nonmeta_instance_reference.h"
 #include "Object/ref/nonmeta_instance_reference_subtypes.h"
 #include "Object/traits/bool_traits.h"
@@ -129,6 +131,8 @@ using entity::nonmeta_expr_list;
 using entity::nonmeta_func_call;
 using entity::meta_func_call;
 using entity::meta_func_call_base;
+using entity::meta_value_reference_base;
+using entity::param_defined;
 
 //=============================================================================
 // class probe_expr method definitions
@@ -1631,10 +1635,6 @@ function_call_expr::__check_action(context& c) const {
  */
 expr::meta_return_type
 function_call_expr::check_meta_expr(const context& c) const {
-#if 0
-	ICE_NEVER_CALL(cerr);
-	return expr::meta_return_type(NULL);
-#else
 	// check function name against registry
 	const qualified_id& id(*fname->get_id());
 	INVARIANT(!id.empty());
@@ -1649,10 +1649,30 @@ function_call_expr::check_meta_expr(const context& c) const {
 	count_ptr<dynamic_param_expr_list>
 		ra(new dynamic_param_expr_list);
 	copy(i, e, back_inserter(*ra));
+if (fn == "defined") {
+	// intercept this special function and create a different expr type
+	// make sure args contain a single reference only
+	static const char err_msg[] =
+"Error: defined() expects a single scalar parameter reference argument.";
+	if (ra->size() != 1) {
+		cerr << err_msg << endl;
+		cerr << "\tat: " << where(*args) << endl;
+		THROW_EXIT;
+	}
+	const count_ptr<const meta_value_reference_base>
+		rr(ra->front().is_a<const meta_value_reference_base>());
+	if (!rr || rr->dimensions()) {
+		cerr << err_msg << endl;
+		cerr << "\tat: " << where(*args) << endl;
+		THROW_EXIT;
+	}
+	const expr::meta_return_type ret(new param_defined(rr));
+	return ret;
+} else {
 	const expr::meta_return_type
 		ret(meta_func_call_base::make_meta_func_call(fn, ra));
 	return ret;
-#endif
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

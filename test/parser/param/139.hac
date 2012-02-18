@@ -1,0 +1,8 @@
+// "139.hac"
+
+pbool defined;
+[ defined(defined) ->
+	bool x;		// won't be instantiated
+[] else ->
+	bool y;		// will be instantiated
+]

@@ -137,6 +137,9 @@ public:
 	good_bool
 	unroll_resolve_value(const unroll_context&, value_type&) const;
 
+	good_bool
+	unroll_resolve_defined(const unroll_context&, pbool_value_type&) const;
+
 	count_ptr<const const_expr_type>
 	__unroll_resolve_rvalue(const unroll_context&, 
 		const count_ptr<const expr_base_type>&) const;

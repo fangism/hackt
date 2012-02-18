@@ -254,6 +254,18 @@ AGGREGATE_META_VALUE_REFERENCE_CLASS::accept(nonmeta_expr_visitor& v) const {
  */
 AGGREGATE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 good_bool
+AGGREGATE_META_VALUE_REFERENCE_CLASS::unroll_resolve_defined(
+		const unroll_context&, pbool_value_type&) const {
+	ICE_NEVER_CALL(cerr);
+	return good_bool(false);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Concatenations and constructions cannot be scalar values.  
+ */
+AGGREGATE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
+good_bool
 AGGREGATE_META_VALUE_REFERENCE_CLASS::unroll_resolve_value(
 		const unroll_context&, value_type&) const {
 	ICE_NEVER_CALL(cerr);

@@ -290,6 +290,62 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::accept(nonmeta_expr_visitor& v) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	\param i is set to true if referenced value exists and is defined,
+		otherwise false if undefined.
+	If reference is invalid or non-existent, return error condition.
+	\return good if resolution succeeds.
+ */
+SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
+good_bool
+SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_defined(
+		const unroll_context& c, pbool_value_type& i) const {
+	STACKTRACE_VERBOSE;
+	// using a policy to specialize for lookups covering
+	// local loop variables
+	const never_ptr<const value_collection_type>
+	       _v(c.lookup_rvalue_collection(*value_collection_ref)
+			.template is_a<const value_collection_type>());
+	if (!_v) {
+		cerr << "Failed to resolve value reference: ";
+		this->dump(cerr, expr_dump_context::default_value) << endl;
+		return good_bool(false);
+	}
+	const value_collection_type& _vals(*_v);
+
+	if (this->array_indices) {
+		STACKTRACE_INDENT_PRINT("checking indices..." << endl);
+		const const_index_list
+			indices(this->array_indices->unroll_resolve_indices(c));
+		if (!indices.empty()) {
+			const multikey_index_type
+				lower(indices.lower_multikey());
+			const multikey_index_type
+				upper(indices.upper_multikey());
+			if (lower != upper) {
+				cerr << "ERROR: upper != lower" << endl;
+				return good_bool(false);
+			}
+			// what if this references a formal parameter?
+			// then we need to get the template actuals
+			return _vals.lookup_defined(i, lower);
+		} else {
+			cerr << "Unable to unroll-resolve array_indices!"
+				<< endl;
+			return good_bool(false);
+		}
+	} else {
+		STACKTRACE_INDENT_PRINT("is scalar..." << endl);
+		// assert dynamic cast
+		// what if is pbool_const or pint_const?
+		const value_scalar_type&
+			scalar_inst(IS_A(const value_scalar_type&, _vals));
+		i = scalar_inst.lookup_defined().good;
+		return good_bool(true);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	This version specifically asks for one integer value, 
 	thus the array indices must be scalar (0-D).  
 	Now checks unroll context to see if the referenced
@@ -305,24 +361,6 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_value(
 	STACKTRACE_VERBOSE;
 	// using a policy to specialize for lookups covering
 	// local loop variables
-#if 0
-	const pair<bool, const value_collection_type*>
-		_v(unroll_context_value_resolver<Tag>().operator()
-			(c, *value_collection_ref, i));
-		// stupid gcc-3.3 needs .operator()...
-	// TODO: eliminate this pair-return hack, don't need w/ placeholders
-	if (_v.first) {
-		// then our work is done, 
-		// i has already been set as a loop variable
-		return good_bool(true);
-	}
-	if (!_v.second) {
-		cerr << "Failed to resolve value reference: ";
-		this->dump(cerr, expr_dump_context::default_value) << endl;
-		return good_bool(false);
-	}
-	const value_collection_type& _vals(*_v.second);
-#else
 	const never_ptr<const value_collection_type>
 	       _v(c.lookup_rvalue_collection(*value_collection_ref)
 			.template is_a<const value_collection_type>());
@@ -332,7 +370,6 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_value(
 		return good_bool(false);
 	}
 	const value_collection_type& _vals(*_v);
-#endif
 
 	if (this->array_indices) {
 		STACKTRACE_INDENT_PRINT("checking indices..." << endl);

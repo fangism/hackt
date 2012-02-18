@@ -1,0 +1,64 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	40
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	pboolplh	0	#HEAD#	#TAIL#	29
+	6	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
+	7	##ADDR##	pboolplh	0	#HEAD#	#TAIL#	29
+	8	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
+	9	##ADDR##	pboolplh	0	#HEAD#	#TAIL#	29
+	10	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
+	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
+	13	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	16	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	18	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	19	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	20	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	23	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	pdefined	0	#HEAD#	#TAIL#	12
+	25	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	pbolunry	0	#HEAD#	#TAIL#	13
+	29	##ADDR##	pdefined	0	#HEAD#	#TAIL#	12
+	30	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	footprnt	0	#HEAD#	#TAIL#	353
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  3 parameter-collections
+  2 instantiation-collections
+  0 sub-namespaces
+  0 definitions
+  0 typedefs
+  Parameters:
+    x = pbool<> x
+    y = pbool<> y
+    z = pbool<> z
+  Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
+}
+
+footprint: {
+  !GND = bool^0 = !GND (1) @[ supply_low ] 
+  !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
+  x = pbool^0 value: ?
+  y = pbool^0 value: 0
+  z = pbool^0 value: 1
+  Created state:
+  bool instance pool: (0 ports, 2 local, 0 mapped)
+  1	!GND @[ supply_low ]	
+  2	!Vdd @[ supply_high ]	
+}

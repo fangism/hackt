@@ -1,0 +1,4 @@
+ERROR: reference to uninstantiated pint x at index: [4]
+Error resolving guard expression: ~(#x[4])
+Error encountered during module::create.
+ERROR in creating.  Aborting.

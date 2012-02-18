@@ -129,6 +129,9 @@ public:
 	must_be_equivalent(const interface_type& ) const;
 
 	good_bool
+	unroll_resolve_defined(const unroll_context&, pbool_value_type&) const;
+
+	good_bool
 	unroll_resolve_value(const unroll_context&, value_type& i) const;
 
 	const_index_list

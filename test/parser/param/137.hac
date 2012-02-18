@@ -1,0 +1,7 @@
+// "137.hac"
+
+pint x[3];
+// should error: argument must be scalar
+[ ~defined(x) ->
+	x = {0,1,2};
+]

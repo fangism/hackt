@@ -1,0 +1,13 @@
+// "136.hac"
+
+pint x, y, z, w;
+[ ~defined(x) ->
+	x = 5;
+]
+[ ~defined(y) ->
+	y = 4;
+]
+[ ~defined(z) ->
+	z = x;
+]
+

@@ -886,6 +886,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/expr/nonmeta_range_expr_base.h \
 	Object/expr/operator_info.h \
 	Object/expr/operator_precedence.h \
+	Object/expr/param_defined.h \
 	Object/expr/param_expr.h \
 	Object/expr/param_expr_functor.h \
 	Object/expr/param_expr_list.h \

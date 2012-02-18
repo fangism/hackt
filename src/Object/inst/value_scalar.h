@@ -73,6 +73,9 @@ public:
 	good_bool
 	lookup_value(value_type&) const;
 
+	good_bool
+	lookup_defined(void) const;
+
 // there are implemented to do nothing but sanity check, 
 // since it doesn't even make sense to call these.  
 	// update this to accept a const_range_list
@@ -80,6 +83,7 @@ public:
 	instantiate_indices(const const_range_list&);
 
 	LOOKUP_VALUE_INDEXED_PROTO;
+	LOOKUP_DEFINED_INDEXED_PROTO;
 	// need methods for looking up dense sub-collections of values?
 	// what should they return?
 

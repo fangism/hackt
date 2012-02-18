@@ -89,6 +89,7 @@ public:
 	resolve_indices(const const_index_list& l) const;
 
 	LOOKUP_VALUE_INDEXED_PROTO;
+	LOOKUP_DEFINED_INDEXED_PROTO;
 
 	UNROLL_LVALUE_REFERENCES_PROTO;
 

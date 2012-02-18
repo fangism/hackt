@@ -165,6 +165,7 @@ DEFINE_TRIVIAL_VISIT(preal_meta_func_call)
 DEFINE_TRIVIAL_VISIT(pstring_meta_func_call)
 DEFINE_NEVER_VISIT(int_range_expr)
 
+DEFINE_NEVER_VISIT(param_defined)
 DEFINE_NEVER_VISIT(pint_arith_expr)
 DEFINE_NEVER_VISIT(pint_unary_expr)
 DEFINE_NEVER_VISIT(pint_relational_expr)

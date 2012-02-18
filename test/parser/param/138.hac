@@ -1,0 +1,8 @@
+// "138.hac"
+
+pint x[3];
+// should error, bad reference
+[
+~defined(x[4]) ->
+	x = {0,1,2};
+]

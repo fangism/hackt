@@ -13,7 +13,8 @@ HACKT_PARSE_TEST_FAILURES = \
 	090 091 092 099 \
 	100 101 \
 	112 \
-	122 128 129
+	122 128 129 \
+	133 134 135 137
 
 # BISON_OUTPUTS +=
 
@@ -34,7 +35,7 @@ HACKT_PARSE_TEST_PASSES = \
 	102 103 104 105 106 107 108 109 \
 	110 111 113 114 115 116 117 118 119 \
 	120 121 123 124 125 126 127 \
-	130 131 \
+	130 131 132 136 138 139 \
 	string-fun-01 \
 	math-fun-01 math-fun-02
 
@@ -54,7 +55,8 @@ HACKT_CREATE_TEST_FAILURES = \
 	095 \
 	107 \
 	113 114 115 \
-	125
+	125 \
+	138
 
 # TODO: preal test cases
 # do some serious arithmetic
@@ -76,7 +78,7 @@ HACKT_CREATE_TEST_PASSES = \
 	102 103 104 105 106 108 109 \
 	110 111 116 \
 	121 123 124 126 127 \
-	130 131 \
+	130 131 132 136 139 \
 	string-fun-01 \
 	math-fun-01 math-fun-02
 
