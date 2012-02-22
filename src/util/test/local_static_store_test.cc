@@ -26,6 +26,7 @@ STATIC_TRACE_BEGIN("local_static_store_test.cc")
 #include "util/using_ostream.h"
 #include "named_pooled_thing.h"
 #include "util/memory/list_vector_pool.tcc"
+#include "util/memory/count_ptr.tcc"
 #include "util/stacktrace.h"
 #include "util/attributes.h"
 
