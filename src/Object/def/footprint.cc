@@ -79,6 +79,7 @@
 #include "Object/expr/expr_dump_context.h"
 #endif
 #include "Object/unroll/unroll_context.h"
+#include "Object/interfaces/VCDwriter.h"	// should belong elsewhere
 #include "common/TODO.h"
 #include "main/cflat_options.h"
 
@@ -1453,6 +1454,15 @@ footprint::cflat_aliases(ostream& o,
 	}
 	const footprint_frame ff(*this);
 	global_offset g;
+if (cf.connect_style == cflat_options::CONNECT_STYLE_HIERARCHICAL) {
+if (cf.primary_tool == cflat_options::TOOL_VCD) {
+	VCD::VCDwriter v(ff, g, o);
+	accept(v);
+} else {
+	hierarchical_alias_visitor v(ff, g);	// is quiet, but traverses
+	accept(v);
+}
+} else {
 	alias_printer v(o, ff, g, cf, wires, string());
 	accept(AS_A(global_entry_context&, v));
 	if (cf.wire_mode && cf.connect_style && !cf.check_prs) {
@@ -1475,6 +1485,7 @@ footprint::cflat_aliases(ostream& o,
 		// else is loner, has no aliases
 		}
 	}
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,0 +1,26 @@
+$var wire 1 <1> !GND $end
+$var wire 1 <2> !Vdd $end
+$scope module bag $end
+  $var wire 1 <1> !GND $end
+  $var wire 1 <2> !Vdd $end
+$upscope $end
+$scope module sack[0] $end
+  $var wire 1 <1> !GND $end
+  $var wire 1 <2> !Vdd $end
+$upscope $end
+$scope module sack[4] $end
+  $var wire 1 <1> !GND $end
+  $var wire 1 <2> !Vdd $end
+$upscope $end
+$scope module sack[1] $end
+  $var wire 1 <1> !GND $end
+  $var wire 1 <2> !Vdd $end
+$upscope $end
+$scope module sack[2] $end
+  $var wire 1 <1> !GND $end
+  $var wire 1 <2> !Vdd $end
+$upscope $end
+$scope module sack[3] $end
+  $var wire 1 <1> !GND $end
+  $var wire 1 <2> !Vdd $end
+$upscope $end

@@ -10,7 +10,6 @@
 
 
 #include <iosfwd>
-#include <utility>
 #include "Object/global_entry_context.h"
 
 namespace HAC {

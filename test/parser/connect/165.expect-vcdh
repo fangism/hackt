@@ -1,0 +1,44 @@
+$var wire 1 <1> !GND $end
+$var wire 1 <2> !Vdd $end
+$scope module horse $end
+  $var wire 1 <1> !GND $end
+  $var wire 1 <2> !Vdd $end
+  $var wire 1 <3> in $end
+  $var wire 1 <4> out $end
+  $var wire 1 <15> mid $end
+$upscope $end
+$scope module wall $end
+  $var wire 1 <1> !GND $end
+  $var wire 1 <2> !Vdd $end
+  $var wire 1 <5> in $end
+  $var wire 1 <6> out $end
+  $var wire 1 <16> mid $end
+$upscope $end
+$scope module money $end
+  $var wire 1 <1> !GND $end
+  $var wire 1 <2> !Vdd $end
+  $var wire 1 <7> in $end
+  $var wire 1 <8> out $end
+  $var wire 1 <17> mid $end
+$upscope $end
+$scope module braces $end
+  $var wire 1 <1> !GND $end
+  $var wire 1 <2> !Vdd $end
+  $var wire 1 <9> in $end
+  $var wire 1 <10> out $end
+  $var wire 1 <18> mid $end
+$upscope $end
+$scope module fang $end
+  $var wire 1 <1> !GND $end
+  $var wire 1 <2> !Vdd $end
+  $var wire 1 <11> in $end
+  $var wire 1 <12> out $end
+  $var wire 1 <19> mid $end
+$upscope $end
+$scope module diddle $end
+  $var wire 1 <1> !GND $end
+  $var wire 1 <2> !Vdd $end
+  $var wire 1 <13> in $end
+  $var wire 1 <14> out $end
+  $var wire 1 <20> mid $end
+$upscope $end

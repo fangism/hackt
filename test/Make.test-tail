@@ -23,6 +23,7 @@ HACKT_CFLAT_PRSIM_EXE = $(HACKT_CFLAT_EXE) prsim
 HACKT_CFLAT_PRSIM_SEU_EXE = $(HACKT_CFLAT_PRSIM_EXE) -f SEU
 HACKT_CFLAT_SPRS_EXE = $(HACKT_CFLAT_PRSIM_EXE) -fsizes
 HACKT_CFLAT_LVS_EXE = $(HACKT_CFLAT_EXE) lvs
+HACKT_CFLAT_VCDH_EXE = $(HACKT_CFLAT_EXE) vcd
 HACKT_PRSIM_EXE = $(top_builddir)/src/hacprsim
 HACKT_CHPSIM_RAW_EXE = $(top_builddir)/src/hacchpsim
 HACKT_CHPSIM_EXE = $(LIBTOOL_EXEC) -dlopen $(top_builddir)/lib/stdchpfn.la $$dlopen_extra $(HACKT_CHPSIM_RAW_EXE)

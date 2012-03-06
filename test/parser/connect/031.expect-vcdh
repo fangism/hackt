@@ -1,0 +1,589 @@
+$var wire 1 <1> !GND $end
+$var wire 1 <2> !Vdd $end
+$var wire 1 <8> uncrack $end
+$var wire 1 <25> crack $end
+$scope module load $end
+  $var wire 1 <1> !GND $end
+  $var wire 1 <2> !Vdd $end
+  $scope module a $end
+    $var wire 1 <1> !GND $end
+    $var wire 1 <2> !Vdd $end
+    $scope module egg_array[0] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <3> white $end
+    $upscope $end
+    $scope module egg_array[1] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <4> white $end
+    $upscope $end
+    $scope module egg_array[2] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <5> white $end
+    $upscope $end
+    $scope module egg_array[3] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <6> white $end
+    $upscope $end
+    $scope module egg_array[4] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <7> white $end
+    $upscope $end
+    $scope module egg_array[5] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <8> white $end
+    $upscope $end
+    $scope module egg_array[6] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <9> white $end
+    $upscope $end
+    $scope module egg_array[7] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <10> white $end
+    $upscope $end
+    $scope module egg_array[8] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <11> white $end
+    $upscope $end
+    $scope module egg_array[9] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <12> white $end
+    $upscope $end
+    $scope module egg_array[10] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <13> white $end
+    $upscope $end
+    $scope module egg_array[11] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <14> white $end
+    $upscope $end
+  $upscope $end
+  $scope module b $end
+    $var wire 1 <1> !GND $end
+    $var wire 1 <2> !Vdd $end
+    $scope module egg_array[0] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <15> white $end
+    $upscope $end
+    $scope module egg_array[1] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <16> white $end
+    $upscope $end
+    $scope module egg_array[2] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <3> white $end
+    $upscope $end
+    $scope module egg_array[3] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <4> white $end
+    $upscope $end
+    $scope module egg_array[4] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <5> white $end
+    $upscope $end
+    $scope module egg_array[5] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <17> white $end
+    $upscope $end
+    $scope module egg_array[6] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <18> white $end
+    $upscope $end
+    $scope module egg_array[7] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <19> white $end
+    $upscope $end
+    $scope module egg_array[8] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <20> white $end
+    $upscope $end
+    $scope module egg_array[9] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <21> white $end
+    $upscope $end
+    $scope module egg_array[10] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <22> white $end
+    $upscope $end
+    $scope module egg_array[11] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <23> white $end
+    $upscope $end
+  $upscope $end
+  $scope module c[0] $end
+    $var wire 1 <1> !GND $end
+    $var wire 1 <2> !Vdd $end
+    $scope module egg_array[0] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <24> white $end
+    $upscope $end
+    $scope module egg_array[1] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <25> white $end
+    $upscope $end
+    $scope module egg_array[2] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <26> white $end
+    $upscope $end
+    $scope module egg_array[3] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <27> white $end
+    $upscope $end
+    $scope module egg_array[4] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <28> white $end
+    $upscope $end
+    $scope module egg_array[5] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <29> white $end
+    $upscope $end
+    $scope module egg_array[6] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <30> white $end
+    $upscope $end
+    $scope module egg_array[7] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <31> white $end
+    $upscope $end
+    $scope module egg_array[8] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <32> white $end
+    $upscope $end
+    $scope module egg_array[9] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <33> white $end
+    $upscope $end
+    $scope module egg_array[10] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <34> white $end
+    $upscope $end
+    $scope module egg_array[11] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <35> white $end
+    $upscope $end
+  $upscope $end
+  $scope module c[1] $end
+    $var wire 1 <1> !GND $end
+    $var wire 1 <2> !Vdd $end
+    $scope module egg_array[0] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <36> white $end
+    $upscope $end
+    $scope module egg_array[1] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <37> white $end
+    $upscope $end
+    $scope module egg_array[2] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <38> white $end
+    $upscope $end
+    $scope module egg_array[3] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <39> white $end
+    $upscope $end
+    $scope module egg_array[4] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <40> white $end
+    $upscope $end
+    $scope module egg_array[5] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <41> white $end
+    $upscope $end
+    $scope module egg_array[6] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <42> white $end
+    $upscope $end
+    $scope module egg_array[7] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <43> white $end
+    $upscope $end
+    $scope module egg_array[8] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <44> white $end
+    $upscope $end
+    $scope module egg_array[9] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <45> white $end
+    $upscope $end
+    $scope module egg_array[10] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <46> white $end
+    $upscope $end
+    $scope module egg_array[11] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <47> white $end
+    $upscope $end
+  $upscope $end
+  $scope module c[2] $end
+    $var wire 1 <1> !GND $end
+    $var wire 1 <2> !Vdd $end
+    $scope module egg_array[0] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <3> white $end
+    $upscope $end
+    $scope module egg_array[1] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <4> white $end
+    $upscope $end
+    $scope module egg_array[2] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <5> white $end
+    $upscope $end
+    $scope module egg_array[3] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <6> white $end
+    $upscope $end
+    $scope module egg_array[4] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <7> white $end
+    $upscope $end
+    $scope module egg_array[5] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <8> white $end
+    $upscope $end
+    $scope module egg_array[6] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <9> white $end
+    $upscope $end
+    $scope module egg_array[7] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <10> white $end
+    $upscope $end
+    $scope module egg_array[8] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <11> white $end
+    $upscope $end
+    $scope module egg_array[9] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <12> white $end
+    $upscope $end
+    $scope module egg_array[10] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <13> white $end
+    $upscope $end
+    $scope module egg_array[11] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <14> white $end
+    $upscope $end
+  $upscope $end
+  $scope module c[3] $end
+    $var wire 1 <1> !GND $end
+    $var wire 1 <2> !Vdd $end
+    $scope module egg_array[0] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <48> white $end
+    $upscope $end
+    $scope module egg_array[1] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <49> white $end
+    $upscope $end
+    $scope module egg_array[2] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <50> white $end
+    $upscope $end
+    $scope module egg_array[3] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <51> white $end
+    $upscope $end
+    $scope module egg_array[4] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <52> white $end
+    $upscope $end
+    $scope module egg_array[5] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <53> white $end
+    $upscope $end
+    $scope module egg_array[6] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <54> white $end
+    $upscope $end
+    $scope module egg_array[7] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <55> white $end
+    $upscope $end
+    $scope module egg_array[8] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <56> white $end
+    $upscope $end
+    $scope module egg_array[9] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <57> white $end
+    $upscope $end
+    $scope module egg_array[10] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <58> white $end
+    $upscope $end
+    $scope module egg_array[11] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <59> white $end
+    $upscope $end
+  $upscope $end
+  $scope module c[4] $end
+    $var wire 1 <1> !GND $end
+    $var wire 1 <2> !Vdd $end
+    $scope module egg_array[0] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <60> white $end
+    $upscope $end
+    $scope module egg_array[1] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <61> white $end
+    $upscope $end
+    $scope module egg_array[2] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <62> white $end
+    $upscope $end
+    $scope module egg_array[3] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <63> white $end
+    $upscope $end
+    $scope module egg_array[4] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <64> white $end
+    $upscope $end
+    $scope module egg_array[5] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <65> white $end
+    $upscope $end
+    $scope module egg_array[6] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <66> white $end
+    $upscope $end
+    $scope module egg_array[7] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <67> white $end
+    $upscope $end
+    $scope module egg_array[8] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <68> white $end
+    $upscope $end
+    $scope module egg_array[9] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <69> white $end
+    $upscope $end
+    $scope module egg_array[10] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <70> white $end
+    $upscope $end
+    $scope module egg_array[11] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <3> white $end
+    $upscope $end
+  $upscope $end
+  $scope module c[5] $end
+    $var wire 1 <1> !GND $end
+    $var wire 1 <2> !Vdd $end
+    $scope module egg_array[0] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <71> white $end
+    $upscope $end
+    $scope module egg_array[1] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <72> white $end
+    $upscope $end
+    $scope module egg_array[2] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <73> white $end
+    $upscope $end
+    $scope module egg_array[3] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <74> white $end
+    $upscope $end
+    $scope module egg_array[4] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <75> white $end
+    $upscope $end
+    $scope module egg_array[5] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <76> white $end
+    $upscope $end
+    $scope module egg_array[6] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <77> white $end
+    $upscope $end
+    $scope module egg_array[7] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <78> white $end
+    $upscope $end
+    $scope module egg_array[8] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <79> white $end
+    $upscope $end
+    $scope module egg_array[9] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <80> white $end
+    $upscope $end
+    $scope module egg_array[10] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <81> white $end
+    $upscope $end
+    $scope module egg_array[11] $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <82> white $end
+    $upscope $end
+  $upscope $end
+$upscope $end
+$scope module a_basket $end
+  $var wire 1 <1> !GND $end
+  $var wire 1 <2> !Vdd $end
+  $scope module egg_array[0] $end
+    $var wire 1 <1> !GND $end
+    $var wire 1 <2> !Vdd $end
+    $var wire 1 <3> white $end
+  $upscope $end
+  $scope module egg_array[1] $end
+    $var wire 1 <1> !GND $end
+    $var wire 1 <2> !Vdd $end
+    $var wire 1 <4> white $end
+  $upscope $end
+  $scope module egg_array[2] $end
+    $var wire 1 <1> !GND $end
+    $var wire 1 <2> !Vdd $end
+    $var wire 1 <5> white $end
+  $upscope $end
+  $scope module egg_array[3] $end
+    $var wire 1 <1> !GND $end
+    $var wire 1 <2> !Vdd $end
+    $var wire 1 <6> white $end
+  $upscope $end
+  $scope module egg_array[4] $end
+    $var wire 1 <1> !GND $end
+    $var wire 1 <2> !Vdd $end
+    $var wire 1 <7> white $end
+  $upscope $end
+  $scope module egg_array[5] $end
+    $var wire 1 <1> !GND $end
+    $var wire 1 <2> !Vdd $end
+    $var wire 1 <8> white $end
+  $upscope $end
+  $scope module egg_array[6] $end
+    $var wire 1 <1> !GND $end
+    $var wire 1 <2> !Vdd $end
+    $var wire 1 <9> white $end
+  $upscope $end
+  $scope module egg_array[7] $end
+    $var wire 1 <1> !GND $end
+    $var wire 1 <2> !Vdd $end
+    $var wire 1 <10> white $end
+  $upscope $end
+  $scope module egg_array[8] $end
+    $var wire 1 <1> !GND $end
+    $var wire 1 <2> !Vdd $end
+    $var wire 1 <11> white $end
+  $upscope $end
+  $scope module egg_array[9] $end
+    $var wire 1 <1> !GND $end
+    $var wire 1 <2> !Vdd $end
+    $var wire 1 <12> white $end
+  $upscope $end
+  $scope module egg_array[10] $end
+    $var wire 1 <1> !GND $end
+    $var wire 1 <2> !Vdd $end
+    $var wire 1 <13> white $end
+  $upscope $end
+  $scope module egg_array[11] $end
+    $var wire 1 <1> !GND $end
+    $var wire 1 <2> !Vdd $end
+    $var wire 1 <14> white $end
+  $upscope $end
+$upscope $end
+$scope module golden $end
+  $var wire 1 <1> !GND $end
+  $var wire 1 <2> !Vdd $end
+  $var wire 1 <25> white $end
+$upscope $end

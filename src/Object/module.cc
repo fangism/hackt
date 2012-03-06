@@ -17,7 +17,6 @@
 #include "Object/unroll/expression_assignment.h"
 #include "Object/unroll/instantiation_statement.h"
 #include "Object/unroll/param_instantiation_statement.h"
-// #include "Object/traits/value_traits.h"
 #include "Object/persistent_type_hash.h"
 #include "Object/inst/physical_instance_collection.h"
 #include "Object/lang/cflat_printer.h"
@@ -453,6 +452,7 @@ module::__cflat_rules(const footprint& _footprint,
 		ostream& o, const cflat_options& cf) {
 	STACKTRACE_VERBOSE;
 	// our printing visitor functor
+if (cf.include_prs) {
 	const footprint_frame ff(_footprint);	// empty ports
 	global_offset g;	// 0s
 	PRS::cflat_prs_printer cfp(ff, g, o, cf);
@@ -465,6 +465,7 @@ module::__cflat_rules(const footprint& _footprint,
 		return good_bool(false);
 	}
 	if (cf.dsim_prs)	o << "}" << endl;
+}
 	return good_bool(true);
 }
 

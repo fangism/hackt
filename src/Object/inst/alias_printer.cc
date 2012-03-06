@@ -172,6 +172,7 @@ if (!cf.check_prs) {
 	const size_t bi = b.get_back_ref()->instance_index;	// 1-based
 	const size_t gi = lookup_global_id<Tag>(bi);	// 1-based
 	const bool is_top = at_top();
+	STACKTRACE_INDENT_PRINT("lbid = " << bi << endl);
 	STACKTRACE_INDENT_PRINT("gbid = " << gi << endl);
 	ostringstream oss;
 	topfp->dump_canonical_name<Tag>(oss, gi -1, 
@@ -227,6 +228,7 @@ if (!cf.check_prs) {
 #else
 		const string& suffix(*ai);
 #endif
+		STACKTRACE_INDENT_PRINT("local suffix = " << suffix << endl);
 		const string alias(prefix +suffix);
 		STACKTRACE_INDENT_PRINT("alias = " << alias << endl);
 #if USE_ALT_ALIAS_PAIRS

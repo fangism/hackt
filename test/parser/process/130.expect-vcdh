@@ -1,0 +1,14 @@
+$var wire 1 <1> !GND $end
+$var wire 1 <2> !Vdd $end
+$scope module poo $end
+  $var wire 1 <1> !GND $end
+  $var wire 1 <2> !Vdd $end
+  $scope module x $end
+    $var wire 1 <1> !GND $end
+    $var wire 1 <2> !Vdd $end
+  $upscope $end
+  $scope module z $end
+    $var wire 1 <1> !GND $end
+    $var wire 1 <2> !Vdd $end
+  $upscope $end
+$upscope $end

@@ -1,0 +1,24 @@
+$var wire 1 <1> !GND $end
+$var wire 1 <2> !Vdd $end
+$scope module s $end
+  $var wire 1 <1> !GND $end
+  $var wire 1 <2> !Vdd $end
+  $var wire 1 <3> x $end
+  $var wire 1 <3> composite $end
+$upscope $end
+$scope module x $end
+  $var wire 1 <1> !GND $end
+  $var wire 1 <2> !Vdd $end
+  $scope module q $end
+    $var wire 1 <1> !GND $end
+    $var wire 1 <2> !Vdd $end
+    $var wire 1 <3> x $end
+    $var wire 1 <3> composite $end
+  $upscope $end
+  $scope module p $end
+    $var wire 1 <1> !GND $end
+    $var wire 1 <2> !Vdd $end
+    $var wire 1 <3> x $end
+    $var wire 1 <3> composite $end
+  $upscope $end
+$upscope $end
