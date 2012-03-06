@@ -707,6 +707,7 @@ OBJECT_CC_FILES = \
 	Object/module.cc \
 	Object/global_entry.cc \
 	Object/global_channel_entry.cc \
+	Object/hierarchical_alias_visitor.cc \
 	Object/nonmeta_state.cc \
 	Object/nonmeta_variable.cc \
 	Object/nonmeta_context.cc \
@@ -719,6 +720,7 @@ OBJECT_CC_FILES = \
 	Object/type/canonical_type.cc \
 	Object/type/canonical_generic_chan_type.cc \
 	Object/type/canonical_fundamental_chan_type.cc \
+	Object/interfaces/VCDwriter.cc \
 	Object/lang/attribute_common.cc \
 	Object/lang/bool_attribute_common.cc \
 	Object/lang/cflat_visitor.cc \

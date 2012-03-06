@@ -43,7 +43,11 @@ public:
 		/**
 			hierarchical semi-procedural layout directives
 		 */
-		TOOL_LAYOUT
+		TOOL_LAYOUT,
+		/**
+			VCD trace file header
+		 */
+		TOOL_VCD
 		// add more tools as they are needed
 	}				primary_tool_enum;
 	/**
@@ -66,7 +70,8 @@ public:
 		CONNECT_STYLE_NONE = 0,
 		CONNECT_STYLE_CONNECT,
 		CONNECT_STYLE_EQUAL,
-		CONNECT_STYLE_WIRE
+		CONNECT_STYLE_WIRE,
+		CONNECT_STYLE_HIERARCHICAL	///< nested scopes
 	}				connect_style_enum;
 public:
 	/**

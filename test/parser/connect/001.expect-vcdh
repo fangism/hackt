@@ -1,0 +1,4 @@
+$var wire 1 <1> !GND $end
+$var wire 1 <2> !Vdd $end
+$var wire 1 <3> fool $end
+$var wire 1 <3> frodo $end

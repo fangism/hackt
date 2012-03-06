@@ -202,6 +202,7 @@ UTIL_HEADER_FILES = \
 	util/sfinae_types.h \
 	util/size_t.h \
 	util/sstream.h \
+	util/stack_saver.h \
 	util/stacktrace.h \
 	util/static_assert.h \
 	util/static_trace.h \

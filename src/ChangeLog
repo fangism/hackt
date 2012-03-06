@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2012-03-05	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-07:
+	  hflat: new vcd emitter that just produces hierarchical
+		VCD (trace-file) header, w/ global bool IDs
+		that identify each unique node/wire in the hierarchy.
+		Documented, tested.
+		TODO: emit complete vcd traces in hacprsim.
+
+
 2012-02-17	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-85-06:

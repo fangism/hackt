@@ -14,13 +14,15 @@ HACKT_CFLAT_SUFFIXES = \
 	.lvsprs .expect-lvsprs .lvsprsdiff .lvsprs-sort \
 	.expect-lvsprs-sort .lvsprsdiff-sort \
 	.lvsfail .lvsfaildiff \
-	.lvssprs
+	.lvssprs \
+	.vcdh .vcdhdiff .expect-vcdh
 HACKT_CFLAT_TEST_SUFFIXES = \
 	.hacktcflattest \
 	.hacktcflatlvstest \
 	.hacktcflatlvsfailtest \
 	.hacktcflatseutest \
-	.hacktsprstest
+	.hacktsprstest \
+	.hflatvcdhtest
 SUFFIXES += $(HACKT_CFLAT_SUFFIXES) $(HACKT_CFLAT_TEST_SUFFIXES)
 BOGUS_SUFFIX_TARGETS += $(HACKT_CFLAT_SUFFIXES)
 
@@ -56,7 +58,11 @@ HACKT_CFLAT_CLEAN_IGNORE_PATTERNS = \
 	"*.prs-*-pdf" \
 	"*.sprs" \
 	"*.sprsdiff" \
-	"*.sprsdiff-sort"
+	"*.sprsdiff-sort" \
+	"*.vcdh" \
+	"*.vcdhdiff" \
+	"*.vcdh" \
+	"*.hflatvcdhtest"
 
 AUTO_IGNORE += $(HACKT_CFLAT_CLEAN_IGNORE_PATTERNS)
 
@@ -398,6 +404,50 @@ cflatsprstest.autodepend: Makefile
 
 -include cflatsprstest.autodepend
 
+HACKT_CFLAT_VCDH_PRSIM_SCRIPT = \
+	$(DEDUCE_HFLAT_VARIANT) ; \
+	cmd="$(HACKT_CFLAT_VCDH_EXE) $$flags $<" ; \
+	$(ECHO) "$$cmd > $@" ; \
+	$$cmd > $@
+
+.haco-c.vcdh:
+	@$(HACKT_CFLAT_VCDH_PRSIM_SCRIPT)
+
+VCDH_DIFF_COMMAND = $(DIFF) -bu $< $$out
+if VERBOSE_CHECK
+ECHO_VCDH_DIFF_COMMAND = $(ECHO) "$(VCDH_DIFF_COMMAND)"
+else
+ECHO_VCDH_DIFF_COMMAND = :
+endif
+
+.expect-vcdh.vcdhdiff:
+	@out=`$(ECHO) $@ | $(SED) 's/\.vcdhdiff$$/.vcdh/g'` ; \
+	$(RM) $@ ; \
+	if test -f "$$out" ; then \
+	    $(ECHO_VCDH_DIFF_COMMAND) ; \
+	    $(VCDH_DIFF_COMMAND) > $@ ; \
+	    if test -s $@ ; then \
+	      $(ECHO) "$@ is non-empty!" ; \
+	    fi ; \
+	else $(ECHO) "Missing $$out." | $(TEE) $@ ; \
+	fi ; \
+	$(TOUCH) $@
+
+.vcdhdiff.hflatvcdhtest:
+	@$(DEFAULT_DIFF_TEST_SCRIPT)
+
+.hflatvcdhtest:
+	@$(DUMMY_TEST_SCRIPT)
+
+hflatvcdhtest.autodepend: Makefile
+	@$(ECHO) "Generating dependencies $@" ; \
+	$(ECHO) "$(HACKT_CFLAT_VCDH_TEST_SUBJECTS)" | \
+	  $(SPACES_TO_NEWLINE) | $(SORT) -u | \
+	  $(AWK) '/.+/ {print $$1 ".vcdhdiff: " $$1 ".vcdh";}' > $@ ; \
+	$(TOUCH) $@
+
+-include hflatvcdhtest.autodepend
+
 
 if HAVE_CFLAT
 .cast.castprs:
@@ -412,15 +462,17 @@ AUTO_DEPENDS += cflatprstest.autodepend \
 	cflatlvstest.autodepend \
 	cflatlvsfailtest.autodepend \
 	cflatprsseutest.autodepend \
-	cflatsprstest.autodepend
+	cflatsprstest.autodepend \
+	hflatvcdhtest.autodepend
 
 BOGUS_TESTS += .hacktcflattest .hacktcflatlvstest .hacktcflatlvsfailtest \
-	.hacktcflatseutest .hacktsprstest
-BOGUS_TARGETS += .expect-prs
+	.hacktcflatseutest .hacktsprstest .hflatvcdtest
+BOGUS_TARGETS += .expect-prs .expect-vcdh
 
 CHECK_SUMMARIES += prsdiffs prsdiffs.sort \
 	lvsprsdiffs lvsfaildiffs lvsprsdiffs.sort \
-	prsseudiffs prsseudiffs.sort sprsdiffs sprsdiffs.sort
+	prsseudiffs prsseudiffs.sort sprsdiffs sprsdiffs.sort \
+	vcdhdiffs
 
 
 prsdiffs: force
@@ -450,6 +502,9 @@ prsseudiffs.sort: force
 sprsdiffs.sort: force
 	-$(CAT) *.sprsdiff.sort > $@
 
+vcdhdiffs: force
+	-$(CAT) *.vcdhdiff > $@
+
 
 HACKT_CFLAT_LVS_TEST_SUBJECTS = \
 	$(HACKT_CFLAT_LVS_TEST_PASSES) \
@@ -459,7 +514,9 @@ srcdir_EXTRA_DIST += \
 	$(HACKT_CFLAT_LVS_TEST_SUBJECTS:=.hac) \
 	$(HACKT_CFLAT_LVS_TEST_SUBJECTS:=.expect-lvsprs) \
 	$(HACKT_CFLAT_SEU_TEST_SUBJECTS:=.expect-prsseu) \
-	$(HACKT_CFLAT_SPRS_TEST_SUBJECTS:=.expect-sprs)
+	$(HACKT_CFLAT_SPRS_TEST_SUBJECTS:=.expect-sprs) \
+	$(HACKT_CFLAT_VCDH_TEST_SUBJECTS:=.hac) \
+	$(HACKT_CFLAT_VCDH_TEST_SUBJECTS:=.expect-vcdh)
 
 # this contains empty files to be removed, listed in EMPTY_CFLAT_PRS
 EXTRA_DIST += $(HACKT_CFLAT_TEST_SUBJECTS:=.expect-prs)
@@ -470,7 +527,8 @@ TESTS += \
 	$(HACKT_CFLAT_LVS_TEST_PASSES:=.hacktcflatlvstest) \
 	$(HACKT_CFLAT_LVS_TEST_FAILURES:=.hacktcflatlvsfailtest) \
 	$(HACKT_CFLAT_SEU_TEST_SUBJECTS:=.hacktcflatseutest) \
-	$(HACKT_CFLAT_SPRS_TEST_SUBJECTS:=.hacktsprstest)
+	$(HACKT_CFLAT_SPRS_TEST_SUBJECTS:=.hacktsprstest) \
+	$(HACKT_CFLAT_VCDH_TEST_SUBJECTS:=.hflatvcdhtest)
 endif
 
 CFLAT_BUILD_CHECK_LOCAL = \
@@ -486,6 +544,9 @@ CFLAT_BUILD_CHECK_LOCAL = \
 	$(HACKT_CFLAT_LVS_TEST_PASSES:=.lvsprsdiff) \
 	$(HACKT_CFLAT_LVS_TEST_FAILURES:=.lvsfail) \
 	$(HACKT_CFLAT_LVS_TEST_FAILURES:=.lvsfaildiff)
+	$(HACKT_CFLAT_VCDH_TEST_SUBJECTS:=.haco-c) \
+	$(HACKT_CFLAT_VCDH_TEST_SUBJECTS:=.vcdh) \
+	$(HACKT_CFLAT_VCDH_TEST_SUBJECTS:=.vcdhdiff)
 
 build-check-local: $(CFLAT_BUILD_CHECK_LOCAL)
 
@@ -520,6 +581,9 @@ echo-cflat-lvs-tests: force
 
 echo-cflat-sprs-tests: force
 	@$(ECHO) $(HACKT_CFLAT_SPRS_TEST_SUBJECTS)
+
+echo-cflat-vcdh-tests: force
+	@$(ECHO) $(HACKT_CFLAT_VCDH_TEST_SUBJECTS)
 
 
 clean-cflattests:

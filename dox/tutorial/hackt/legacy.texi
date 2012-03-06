@@ -100,6 +100,7 @@ Currently, the following list of modes is supported:
 @include cflat/mode-aspice.texi
 @include cflat/mode-ADspice.texi
 @include cflat/mode-ipple.texi
+@include cflat/mode-vcd.texi
 @include cflat/mode-default.texi
 
 TODO: make table summarizing the flags implied by each preset mode.  

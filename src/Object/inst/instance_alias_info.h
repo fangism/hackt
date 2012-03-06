@@ -197,6 +197,9 @@ public:
 	never_ptr<const substructure_alias>
 	get_supermost_substructure(void) const;
 
+	bool
+	is_subinstance(void) const;
+
 	void
 	check(const container_type* p) const;
 

@@ -331,6 +331,32 @@ __cflat_ADspice(OPTARG_UNUSED cflat::options& cf) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+static
+optfun_return_type
+__cflat_vcd(OPTARG_UNUSED cflat::options& cf) {
+	cf.primary_tool = cflat::options::TOOL_VCD;
+	cf.tool_options = cflat::options::TOOL_OPTIONS_DEFAULT;
+	cf.connect_style = cflat::options::CONNECT_STYLE_HIERARCHICAL;
+	cf.include_prs = false;
+	cf.dump_self_connect = false;
+	cf.enquote_names = false;
+	cf.dump_non_bools = false;
+	cf.namespace_policy = cflat::options::NAMESPACE_POLICY_NONE;
+	cf.check_prs = false;
+	cf.wire_mode = false;
+	cf.csim_style_prs = false;
+	cf.dsim_prs = false;
+	cf.compute_conductances = false;
+	cf.show_precharges = false;
+	cf.show_supply_nodes = false;
+	cf.show_hierarchy = false;
+	cf.show_channel_terminals = false;
+	cf.size_prs = false;
+	cf.use_referenced_type_instead_of_top_level = false;
+	OPTFUN_RETURN
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Just check, don't print.
  */
@@ -447,6 +473,15 @@ The java-lvs option is a slight variant from the traditional lvs.
 @end texinfo
 ***/
 	cflat_opt_mod_connect("connect", &__cflat_connect),
+
+/***
+@texinfo cflat/mode-vcd.texi
+@defvr {@t{cflat} option} vcd
+@command{vcd} (standard trace file) header output mode.
+@end defvr
+@end texinfo
+***/
+	cflat_opt_mod_vcd("vcd", &__cflat_vcd),
 
 /***
 @texinfo cflat/mode-check.texi
