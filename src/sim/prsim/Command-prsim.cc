@@ -32,7 +32,12 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "sim/prsim/Command-prsim.h"
 #include "sim/prsim/Command-prsim-export.h"
 #include "sim/prsim/State-prsim.tcc"
+#if PRSIM_TRACE_GENERATION
 #include "sim/prsim/Trace-prsim.h"
+#endif
+#if PRSIM_VCD_GENERATION
+#include "sim/prsim/VCDManager.h"
+#endif
 #include "sim/command_base.tcc"
 #include "sim/command_category.tcc"
 #include "sim/command_registry.tcc"
@@ -9017,6 +9022,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelAssert, "channel-assert",
 #endif
 
 //=============================================================================
+#if PRSIM_TRACE_GENERATION
 /***
 @texinfo cmd/trace.texi
 @deffn Command trace file
@@ -9026,6 +9032,7 @@ A trace stream is automatically closed when the @command{initialize}
 or @command{reset} commands are invoked.  
 See the @option{-r} option for starting up the simulator
 with a newly opened trace stream.
+The format of this trace file is unique to @command{hacprsim}.  
 @end deffn
 @end texinfo
 ***/
@@ -9090,6 +9097,67 @@ Produce textual dump of trace file contents in @var{file}.
 ***/
 typedef	TraceDump<State>			TraceDump;
 PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(TraceDump, tracing)
+#endif	// PRSIM_TRACE_GENERATION
+
+//=============================================================================
+#if PRSIM_VCD_GENERATION
+/***
+@texinfo cmd/vcd.texi
+@deffn Command vcd file
+Record events to vcd @var{file}.  
+Overwrites @var{file} if it already exists.  
+A vector-change-dump (VCD) stream is automatically closed when the 
+@command{initialize} or @command{reset} commands are invoked.  
+See the @option{-r} option for starting up the simulator
+with a newly opened trace stream.
+@cindex vector-change-dump
+@cindex VCD
+@end deffn
+@end texinfo
+***/
+typedef	VCD<State>				VCD;
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(VCD, tracing)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/vcd-file.texi
+@deffn Command vcd-file
+Print the name of the currently opened vcd file.  
+@end deffn
+@end texinfo
+***/
+typedef	VCDFile<State>			VCDFile;
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(VCDFile, tracing)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/vcd-timescale.texi
+@deffn Command vcd-timescale [val]
+Sets/gets the time scale by which real-valued actual times are
+multiplied to get the output vcd timestamps.  
+This is needed because vcd files don't necessary support
+floating-point values, so a scale factor can be used
+to select a suitable time granularity.
+Default: 1.0
+@end deffn
+@end texinfo
+***/
+typedef	VCDTimeScale<State>			VCDTimeScale;
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(VCDTimeScale, tracing)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/vcd-close.texi
+@deffn Command vcd-close
+Finish writing the currently opened vcd file by flushing out
+buffered events to file.
+VCD files are automatically flushed and closed when the simulator exits.  
+@end deffn
+@end texinfo
+***/
+typedef	VCDClose<State>			VCDClose;
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(VCDClose, tracing)
+#endif	// PRSIM_VCD_GENERATION
 
 //=============================================================================
 #undef	DECLARE_AND_INITIALIZE_COMMAND_CLASS

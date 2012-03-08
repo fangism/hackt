@@ -492,7 +492,7 @@ and also examine points of failure in detail.
 @include cmd/load.texi
 @include cmd/autosave.texi
 
-The simulator supports trace file recording.
+The simulator supports trace file recording, using its own trace file format.
 Unlike checkpoints, trace files contain information for 
 the entire history of execution, not just the state at one point in time.  
 
@@ -502,6 +502,13 @@ the entire history of execution, not just the state at one point in time.
 @include cmd/trace-flush-notify.texi
 @include cmd/trace-flush-interval.texi
 @include cmd/trace-dump.texi
+
+This simulator now has support for recording vector-change-dump (VCD) files.
+
+@include cmd/vcd.texi
+@include cmd/vcd-file.texi
+@include cmd/vcd-timescale.texi
+@include cmd/vcd-close.texi
 
 @c ----------------------------------------------------------------------------
 @node Debug Commands

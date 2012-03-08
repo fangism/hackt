@@ -772,6 +772,22 @@ DEFINE_BOOL_OPTION_PAIR(show_channel_terminals, "channel-terminals",
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
+@texinfo cflat/opt-mangled-vcd-ids.texi
+@defvr {@t{cflat -f} option} mangled-vcd-ids
+@defvrx {@t{cflat -f} option} no-mangled-vcd-ids
+For the vcd output mode,
+when enabled, print out base-94 ASCII characters for unique identifiers, 
+otherwise print out human-readable <integer> values for identifiers.  
+Default: true (mangled)
+@end defvr
+@end texinfo
+***/
+DEFINE_BOOL_OPTION_PAIR(mangled_vcd_ids, "mangled-vcd-ids",
+	"use base-94 ASCII unique identifiers for vcd",
+	"use integer unique identifiers for vcd")
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
 @texinfo cflat/opt-quote-names.texi
 @defvr {@t{cflat -f} option} quote-names
 @defvrx {@t{cflat -f} option} no-quote-names

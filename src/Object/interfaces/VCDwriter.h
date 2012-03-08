@@ -9,6 +9,7 @@
 #include "Object/hierarchical_alias_visitor.h"
 
 namespace HAC {
+class cflat_options;
 namespace VCD {
 using std::ostream;
 using entity::footprint;
@@ -31,14 +32,26 @@ class VCDwriter : public hierarchical_alias_visitor {
 	typedef	hierarchical_alias_visitor	parent_type;
 public:
 	ostream&				os;
-// TODO: options struct?
-	// use cflat_options?
+	const cflat_options&			opt;
 
 	explicit
 	VCDwriter(const footprint_frame& ff, const global_offset& g, 
-		ostream& o) : hierarchical_alias_visitor(ff, g), os(o) { }
+		ostream& o, const cflat_options& cf) :
+		hierarchical_alias_visitor(ff, g), os(o), opt(cf) { }
 
 	~VCDwriter();
+
+	static
+	void
+	mangle_id(ostream&, const size_t);
+
+	static
+	size_t
+	demangle_id(const char*);
+
+	static
+	ostream&
+	print_id(ostream&, const size_t, const bool);
 
 protected:
 	using parent_type::visit;

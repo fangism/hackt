@@ -26,6 +26,9 @@
 #if PRSIM_TRACE_GENERATION
 #include "sim/prsim/Trace-prsim.h"
 #endif
+#if PRSIM_VCD_GENERATION
+#include "sim/prsim/VCDManager.h"
+#endif
 #include "sim/event.tcc"
 #include "sim/prsim/util.tcc"
 #include "sim/random_time.h"
@@ -346,6 +349,10 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 		trace_manager(),
 		trace_flush_interval(1L<<16),
 #endif
+#if PRSIM_VCD_GENERATION
+		vcd_manager(),
+		vcd_timescale(1.0),
+#endif
 #if CACHE_GLOBAL_FOOTPRINT_FRAMES
 		cache_half_life(1024),
 		cache_countdown(cache_half_life),
@@ -423,8 +430,13 @@ try {
 State::~State() {
 	if ((flags & FLAG_AUTOSAVE) && autosave_name.size()) {
 		// always clear some flags before the automatic save?
-		// close trace before checkpointing
+		// close traces before checkpointing
+#if PRSIM_TRACE_GENERATION
 		close_trace();
+#endif
+#if PRSIM_VCD_GENERATION
+		close_vcd();
+#endif
 		ofstream o(autosave_name.c_str());
 		if (o) {
 		try {
@@ -485,7 +497,12 @@ State::__initialize(void) {
 	current_time = 0;
 	// autosave? OK to keep
 	// trace file?
+#if PRSIM_TRACE_GENERATION
 	close_trace();	// close trace, else trace will be incoherent
+#endif
+#if PRSIM_VCD_GENERATION
+	close_vcd();	// close trace, else trace will be incoherent
+#endif
 	// alternative is to record fact that every node went to X
 	_channel_manager.initialize();
 #if IMPLICIT_SUPPLY_PORTS
@@ -771,6 +788,7 @@ void
 State::reset(void) {
 	STACKTRACE_VERBOSE;
 	__initialize();
+	// this also closes trace files
 	flags = FLAGS_DEFAULT;
 #define	E(e)	error_policy_enum(ERROR_DEFAULT_##e)
 	unstable_policy = E(UNSTABLE);
@@ -3033,8 +3051,8 @@ State::step(void) THROWS_STEP_EXCEPTION {
 	node_type& n(__get_node(ni));
 	const value_enum prev = n.current_value();
 	node_index_type _ci;	// just a copy
-#if PRSIM_TRACE_GENERATION
 	trace_index_type critical = INVALID_TRACE_INDEX;
+#if PRSIM_TRACE_GENERATION
 	if (is_tracing()) {
 		critical = trace_manager->push_back_event(
 			state_trace_point(current_time, pe.cause_rule, 
@@ -3044,6 +3062,13 @@ State::step(void) THROWS_STEP_EXCEPTION {
 				trace_flush_interval) {
 			trace_manager->flush();
 		}
+	}
+#endif
+#if PRSIM_VCD_GENERATION
+	// if both traces are on, assert that critical (event count) is the same
+	if (is_tracing_vcd()) {
+		critical = vcd_manager->record_event(current_time, ni, pe.val);
+		// no need to manage flushing
 	}
 #endif
 {
@@ -7009,9 +7034,10 @@ State::autosave(const bool b, const string& n) {
 4: added keeper_check_fail_policy, and expr_alloc_flags
 5: added channel timing_probability
 6: added auto_precharge_invariant to expr_alloc_flags
+7: grew sizeof flags to long, to acommodate VCD tracing
  */
 static
-const size_t	checkpoint_version = 6;
+const size_t	checkpoint_version = 7;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -7112,6 +7138,8 @@ State::save_checkpoint(ostream& o) const {
 	_dump_flags.write_object(o);
 	if (_channel_manager.save_checkpoint(o)) return true;
 	// interrupted flag, just ignore
+	// trace_flush_interval: not saved
+	// vcd_timescale: not saved
 	// ifstreams? don't bother managing input stream stack.
 	// __scratch_expr_trace -- never needed, ignore
 	write_value(o, magic_string);
@@ -7291,11 +7319,20 @@ try {
 }
 	READ_ALIGN_MARKER		// sanity alignment check
 {
+#if PRSIM_TRACE_GENERATION
 	if (is_tracing()) {
 		close_trace();
 		cout << "Closing trace stream while loading checkpoint."
 			<< endl;
 	}
+#endif
+#if PRSIM_VCD_GENERATION
+	if (is_tracing_vcd()) {
+		close_vcd();
+		cout << "Closing vcd stream while loading checkpoint."
+			<< endl;
+	}
+#endif
 	flags_type tmp;
 	read_value(i, tmp);
 	// preserve the auto-checkpointing, but not tracing
@@ -7511,6 +7548,7 @@ State::dump_checkpoint(ostream& o, istream& i) {
 #undef	READ_ALIGN_MARKER
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_TRACE_GENERATION
 /**
 	\return true if result is successful/good.  
  */
@@ -7544,6 +7582,46 @@ if (trace_manager) {
 }
 	stop_trace();
 }
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_VCD_GENERATION
+/**
+	\return true if result is successful/good.  
+ */
+bool
+State::open_vcd(const string& tfn) {
+	if (vcd_manager) {
+cerr << "Error: vcd stream already open.  (command ignored)" << endl;
+		return true;
+	}
+	vcd_manager = excl_ptr<VCDManager>(
+		new VCDManager(tfn, mod, current_time, vcd_timescale));
+	NEVER_NULL(vcd_manager);
+	if (vcd_manager->good()) {
+		flags |= FLAG_VCD_ON;
+		vcd_manager->dumpvars(*this);
+		return true;
+	} else {
+		stop_vcd();
+		return false;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Invoke this if you want tracing to end early.  
+ */
+void
+State::close_vcd(void) {
+if (vcd_manager) {
+	// destroying the vcd manager should cause it to finish writing out.
+	vcd_manager = excl_ptr<VCDManager>(NULL);
+}
+	stop_vcd();
+}
+
+#endif
 
 //=============================================================================
 #if !USE_WATCHPOINT_FLAG

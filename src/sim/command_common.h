@@ -97,6 +97,16 @@ DECLARE_COMMON_COMMAND_CLASS(TraceFlushNotify)
 DECLARE_COMMON_COMMAND_CLASS(TraceFlushInterval)
 DECLARE_COMMON_COMMAND_CLASS(TraceDump)
 
+DECLARE_COMMON_COMMAND_CLASS(VCD)
+DECLARE_COMMON_COMMAND_CLASS(VCDFile)
+DECLARE_COMMON_COMMAND_CLASS(VCDClose)
+DECLARE_COMMON_COMMAND_CLASS(VCDTimeScale)
+#if 0
+DECLARE_COMMON_COMMAND_CLASS(VCDFlushNotify)	// ?
+DECLARE_COMMON_COMMAND_CLASS(VCDFlushInterval)	// ?
+DECLARE_COMMON_COMMAND_CLASS(VCDDump)		// ?
+#endif
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Generally helpful class -- ha ha.  

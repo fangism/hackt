@@ -1,0 +1,82 @@
+$date
+##DATE##
+$end
+$version
+##VERSION##
+$end
+$timescale
+	1ps
+$end
+$scope module hacprsim-TOP $end
+  $var wire 1 " !GND $end
+  $var wire 1 # !Vdd $end
+  $var wire 1 ' in $end
+  $var wire 1 ( out $end
+  $scope module g $end
+    $var wire 1 " !GND $end
+    $var wire 1 # !Vdd $end
+    $var wire 1 $ Vdd $end
+    $var wire 1 % GND $end
+  $upscope $end
+  $scope module ghi $end
+    $var wire 1 " !GND $end
+    $var wire 1 # !Vdd $end
+    $var wire 1 & Vdd $end
+    $var wire 1 % GND $end
+  $upscope $end
+  $scope module shake_me $end
+    $var wire 1 " !GND $end
+    $var wire 1 # !Vdd $end
+    $var wire 1 % GND $end
+    $var wire 1 ' in $end
+    $var wire 1 ( out $end
+    $var wire 1 ) in_ $end
+    $var wire 1 * lout $end
+    $var wire 1 + rout $end
+    $var wire 1 , _out $end
+    $scope module g $end
+      $var wire 1 " !GND $end
+      $var wire 1 # !Vdd $end
+      $var wire 1 $ Vdd $end
+      $var wire 1 % GND $end
+    $upscope $end
+    $scope module ghi $end
+      $var wire 1 " !GND $end
+      $var wire 1 # !Vdd $end
+      $var wire 1 & Vdd $end
+      $var wire 1 % GND $end
+    $upscope $end
+  $upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+0"
+1#
+X$
+X%
+X&
+X'
+X(
+X)
+X*
+X+
+X,
+$end
+0%
+1$
+1&
+0'
+1)
+#10
+0+
+#20
+1*
+1,
+#30
+0(
+1'
+0)
+#34
+X'
+X)

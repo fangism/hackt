@@ -1043,6 +1043,7 @@ PRSIM_CC_FILES = \
 	sim/prsim/Event-prsim.cc \
 	sim/prsim/State-prsim.cc \
 	sim/prsim/Trace-prsim.cc \
+	sim/prsim/VCDManager.cc \
 	sim/prsim/process_graph.cc \
 	sim/prsim/process_state.cc \
 	sim/prsim/current-path-graph.cc \

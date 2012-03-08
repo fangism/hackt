@@ -131,6 +131,7 @@ The following @option{-f} flags are supported:
 @include cflat/opt-wire-mode.texi
 @include cflat/opt-dsim-prs.texi
 @include cflat/opt-sizes.texi
+@include cflat/opt-mangled-vcd-ids.texi
 
 Preset modes are just combinations of the individual mode modifiers.  
 

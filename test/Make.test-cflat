@@ -406,7 +406,7 @@ cflatsprstest.autodepend: Makefile
 
 HACKT_CFLAT_VCDH_PRSIM_SCRIPT = \
 	$(DEDUCE_HFLAT_VARIANT) ; \
-	cmd="$(HACKT_CFLAT_VCDH_EXE) $$flags $<" ; \
+	cmd="$(HACKT_CFLAT_VCDH_EXE) -f no-mangled-vcd-ids $$flags $<" ; \
 	$(ECHO) "$$cmd > $@" ; \
 	$$cmd > $@
 
