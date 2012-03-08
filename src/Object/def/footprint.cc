@@ -1456,7 +1456,7 @@ footprint::cflat_aliases(ostream& o,
 	global_offset g;
 if (cf.connect_style == cflat_options::CONNECT_STYLE_HIERARCHICAL) {
 if (cf.primary_tool == cflat_options::TOOL_VCD) {
-	VCD::VCDwriter v(ff, g, o);
+	VCD::VCDwriter v(ff, g, o, cf);
 	accept(v);
 } else {
 	hierarchical_alias_visitor v(ff, g);	// is quiet, but traverses

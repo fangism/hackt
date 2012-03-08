@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2012-03-07	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-08:
+	  hacprsim: added VCD trace file support.
+		commands: vcd file, vcd-close, vcd-timescale
+	  hflat vcd: added option to mangle/demangle unique IDs
+		-f [no-]mangled-vcd-ids
+	  Documented, basically tested.
+
+
 2012-03-05	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-85-07:

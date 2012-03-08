@@ -1494,6 +1494,135 @@ TraceDump<State>::usage(ostream& o) {
 "Future versions may require a proper object file to be attached." << endl;
 }
 
+//-----------------------------------------------------------------------------
+// common vcd trace file commands
+
+DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(VCD, "vcd", 
+	"record vector change dump trace")
+
+template <class State>
+int
+VCD<State>::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return command_type::SYNTAX;
+} else {
+	if (s.open_vcd(a.back())) {
+		// confirm message
+		cout << "Writing simulation vcd to \"" << a.back()
+			<< "\"." << endl;
+		return command_type::NORMAL;
+	} else {
+		cout << "Error opening file \"" << a.back() <<
+			"\" for vcd recording." << endl;
+		return command_type::BADARG;
+	}
+}
+}
+
+template <class State>
+void
+VCD<State>::usage(ostream& o) {
+	o << name << " <file>" << endl;
+	o << "Records vector-change-dump to file for later analysis.\n"
+"The vcd file is completed with a \'vcd-close\' command, or automatically\n"
+"upon termination of ths simulation." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(VCDFile, "vcd-file", 
+	"show the name of the active vcd file")
+
+template <class State>
+int
+VCDFile<State>::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return command_type::SYNTAX;
+} else {
+	if (s.is_tracing()) {
+		cout << "Active vcd file: " <<
+			s.get_vcd_manager()->get_trace_name() << endl;
+	} else {
+		cout << "No active vcd file." << endl;
+	}
+	return command_type::NORMAL;
+}
+}
+
+template <class State>
+void
+VCDFile<State>::usage(ostream& o) {
+	o << name << endl;
+	o << "Prints the name of the active vcd file, if applicable." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(VCDClose, "vcd-close", 
+	"close the active vcd file")
+
+template <class State>
+int
+VCDClose<State>::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return command_type::SYNTAX;
+} else {
+	s.close_vcd();
+	return command_type::NORMAL;
+}
+}
+
+template <class State>
+void
+VCDClose<State>::usage(ostream& o) {
+	o << name << endl;
+	o << "Stops the active vcd and writes it out to file." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(VCDTimeScale, 
+	"vcd-time-scale", 
+	"set/get the vcd time scale factor")
+
+template <class State>
+int
+VCDTimeScale<State>::main(State& s, const string_list& a) {
+switch (a.size()) {
+case 1:
+	cout << "vcd time scale (mult.): " <<
+		s.get_vcd_timescale() << endl;
+	break;
+case 2:
+	double i;
+	if (string_to_num(a.back(), i)) {
+		cerr << "Error parsing numeric interval argument." << endl;
+		usage(cerr << "usage: ");
+		return command_type::BADARG;
+	} else if (i <= 0.0) {
+		cerr << "Error: time scale must be positive." << endl;
+		return command_type::BADARG;
+	}
+	s.set_vcd_timescale(i);
+	break;
+default:
+	usage(cerr << "usage: ");
+	return command_type::SYNTAX;
+}
+	return command_type::NORMAL;
+}
+
+template <class State>
+void
+VCDTimeScale<State>::usage(ostream& o) {
+	o << name << " [scale]" << endl;
+	o <<
+"If argument is passed, then set the vcd time scale factor to it.\n"
+"Otherwise, just report the current vcd time scale factor.\n"
+"This is sometimes needed because vcd files only accept integer times.\n"
+"Default value: 1.0." << endl;
+}
+
 //=============================================================================
 }	// end namespace SIM
 }	// end namespace HAC

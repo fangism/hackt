@@ -37,6 +37,7 @@ NONCONFIGURED_UPDATESCRIPTS = \
 	update-expect-prsimtrace.sh \
 	update-expect-vpi.sh \
 	update-expect-vcdh.sh \
+	update-expect-vcd.sh \
 	update-expect-chpsimalloc.sh \
 	update-expect-chpsimrc.sh \
 	update-expect-ipl.sh \

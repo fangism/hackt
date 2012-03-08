@@ -496,6 +496,14 @@ HACKT_PRSIMTRACE_TEST_SUBJECTS = \
 # prsimtrace test crashes: FIXME!!!
 # logic-defs-a-01 logic-defs-b-01
 
+# these tests should be subset of PRSIMRC_TEST_PASSES
+HACKT_PRSIMVCD_TEST_SUBJECTS = \
+	inv-01 after-celem-01 \
+	bitline-a-01 bitline-a-02 \
+	channel-test-a-04 channel-test-a-09 \
+	oscil-unset-01 \
+	unstable-a-01
+
 # override defaults for non-matched architectures
 if ABI_ILP32
 memstats64-inv.prsimtest: memstats64-inv.prsimrc
@@ -584,8 +592,8 @@ endif
 
 # different custom test: just compare two existing output dumps (unfiltered!)
 oscil-random-02c.prsimrc-diff: \
-		oscil-random-02a.prsimrc-out oscil-random-02b.prsimrc-out
-	$(DIFF) -u oscil-random-02a.prsimrc-out oscil-random-02b.prsimrc-out \
+		oscil-random-02a.prsimrc-out-filter oscil-random-02b.prsimrc-out-filter
+	$(DIFF) -u oscil-random-02a.prsimrc-out-filter oscil-random-02b.prsimrc-out-filter \
 		> $@ ; \
 	$(TOUCH) $@
 
