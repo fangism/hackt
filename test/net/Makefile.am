@@ -107,6 +107,7 @@ HACKNET_TEST_SCRIPTS_PASSES = \
 	preferred_names-04 preferred_names-05 preferred_names-06 \
 	preserve-port-01 preserve-port-02 preserve-port-03 \
 	preserve-port-04 preserve-port-05 preserve-port-05b \
+	preserve-port-06 \
 	terminal-test-01 terminal-test-02 terminal-test-03 terminal-test-04 \
 	terminal-test-05 terminal-test-06 terminal-test-07 terminal-test-08 \
 	terminal-test-09 terminal-test-10 terminal-test-11 terminal-test-12 \

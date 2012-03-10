@@ -1,0 +1,7 @@
+// "preserve-port-06.hac"
+// copy-modified from "preserve-port-04.hac"
+// @hacknet-flags@ -f empty_subcircuits=0 -T chain
+// want circuit with !? directives to be not considered empty, and preserved
+
+import "preserve-port-04.hac";
+

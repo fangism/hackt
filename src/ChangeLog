@@ -3,6 +3,13 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2012-03-09	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-09:
+	  hacknet: treat subcircuits with any node used or driven
+		as non-empty.  Updated/added test case.
+
+
 2012-03-07	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-85-08:

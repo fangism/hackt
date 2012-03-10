@@ -160,6 +160,7 @@ netlist_common::~netlist_common() { }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 netlist_common::is_empty(void) const {
+	// this doesn't check for fanin/fanout of nodes being used/driven
 	return device_group::is_empty() && passive_device_pool.empty();
 }
 
@@ -1639,13 +1640,10 @@ netlist::register_named_node(const index_type _i, const netlist_options& opt) {
 		opt.mangle_instance(new_named_node.name);
 		ret = node_pool.size();
 		INVARIANT(ret);
-		STACKTRACE_INDENT_PRINT("AAA" << endl);
 #if NETLIST_CHECK_NAME_COLLISIONS
 		check_name_collisions(new_named_node.name, ret, opt);
 #endif
-		STACKTRACE_INDENT_PRINT("BBB" << endl);
 		node_pool.push_back(new_named_node);
-		STACKTRACE_INDENT_PRINT("CCC" << endl);
 #if 0 && ENABLE_STACKTRACE
 node_pool.back().dump_raw(STACKTRACE_INDENT_PRINT("new node: ")) << endl;
 #endif
@@ -2375,6 +2373,8 @@ netlist::summarize_ports(
 		node_port_list.push_back(Vdd_index);
 	}
 #endif
+	// empty is initially false
+	bool MT = true;
 {
 	// this ordering is based on port_formal_manager, declaration order
 	bool_port_alias_collector V(*fp);
@@ -2419,6 +2419,7 @@ netlist::summarize_ports(
 		INVARIANT(n.index == j);	// self-reference
 		node_port_list.push_back(ni);
 		// sorted_ports[local_ind] = ni;
+		MT = false;
 	}
 	}	// end for
 }{
@@ -2458,10 +2459,11 @@ netlist::summarize_ports(
 	}	// end for
 #endif	// NETLIST_VERILOG
 }
-	// empty is initially false
-	bool MT = true;
-	MT = transistor_pool.empty() && passive_device_pool.empty();
-{
+if (MT) {
+	// pretty much same as netlist_common::is_empty
+	MT = netlist_common::is_empty();
+}
+if (MT) {
 	// check subcircuits
 	local_subcircuit_list_type::const_iterator
 		i(local_subcircuits.begin()), e(local_subcircuits.end());
@@ -2470,7 +2472,8 @@ netlist::summarize_ports(
 		MT = false;	// stop on non-empty subcircuit
 	}
 	}
-}{
+}
+if (MT) {
 	// check instances
 	instance_pool_type::const_iterator
 		i(instance_pool.begin()), e(instance_pool.end());
