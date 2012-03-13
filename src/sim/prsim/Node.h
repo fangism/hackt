@@ -355,8 +355,15 @@ public:
 		NODE_INITIALIZE_CLEAR_MASK =
 			NODE_FLAG | NODE_EX_QUEUE
 #if PRSIM_UPSET_NODES
-			| NODE_FROZEN
+			| NODE_FROZEN,
 #endif
+		NODE_RESET_SET_MASK = 0x00,
+		// as if simulator just started up fresh
+		NODE_RESET_CLEAR_MASK =
+			NODE_INITIALIZE_CLEAR_MASK |
+			NODE_BREAKPOINT |
+			NODE_WATCHPOINT |
+			NODE_IN_CHANNEL
 	} state_flags_enum;
 
 public:
@@ -560,6 +567,9 @@ public:
 		value = c;
 		causes.set_cause(c, e);
 	}
+
+	void
+	x_value_and_cause(void);
 
 	ostream&
 	dump_value(ostream&) const;

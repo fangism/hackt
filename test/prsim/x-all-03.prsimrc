@@ -1,0 +1,9 @@
+# "x-all-03.prsimrc"
+# @haco@ channel-test-a.haco-c
+
+source channel-test-a-01.prsimrc
+
+echo ######### x-all ##########
+x-all
+channel-show-all
+

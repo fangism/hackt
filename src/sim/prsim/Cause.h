@@ -71,13 +71,10 @@ struct LastCause {
 	 */
 	value_enum				caused_by_value[4];
 
-	/**
-		How the f-- do you initialize aggregate members?
-	 */
-	LastCause()
+	void
+	initialize(void) {
 		// caused_by_node({0}),
 		// caused_by_value({0})
-	{
 		// caused_by_node = {0};
 		// caused_by_value = {0};
 		// *this = {{0,0,0}, {0,0,0}};
@@ -90,6 +87,13 @@ struct LastCause {
 		caused_by_value[3] = LOGIC_LOW;	// really don't care
 		// but needs to be initialized else binary will be
 		// non-deterministic
+	}
+
+	/**
+		How the f-- do you initialize aggregate members?
+	 */
+	LastCause() {
+		initialize();
 	}
 
 	/**

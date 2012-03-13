@@ -474,14 +474,36 @@ State::destroy(void) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Restarts simulation at time 0.
+	This requires closing trace files so they remain coherent, 
+	and don't jump backwards in time.
+ */
+void
+State::__initialize_time(void) {
+	current_time = 0;
+	// autosave? OK to keep
+	// trace file?
+#if PRSIM_TRACE_GENERATION
+	close_trace();	// close trace, else trace will be incoherent
+#endif
+#if PRSIM_VCD_GENERATION
+	close_vcd();	// close trace, else trace will be incoherent
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Clears internal data structures.
+	Resets nodes to X and clears event queues.  
+	However, keeps time unchanged.
 	Procedure is common to initialize() and reset().
  */
 void
-State::__initialize(void) {
+State::__initialize_state(const bool startup) {
 	STACKTRACE_VERBOSE;
 	for_each(node_pool.begin(), node_pool.end(), 
-		mem_fun_ref(&node_type::initialize));
+		mem_fun_ref(startup ? &node_type::initialize
+			: &node_type::x_value_and_cause));
 	for_each(process_state_array.begin(), process_state_array.end(), 
 		mem_fun_ref(&process_sim_state::initialize));
 	// the expr_graph_node_pool contains no stateful information.  
@@ -494,17 +516,6 @@ State::__initialize(void) {
 	fill(check_exlo_ring_pool.begin(), check_exlo_ring_pool.end(), false);
 	// unwatchall()? no, preserved
 	// timing mode preserved
-	current_time = 0;
-	// autosave? OK to keep
-	// trace file?
-#if PRSIM_TRACE_GENERATION
-	close_trace();	// close trace, else trace will be incoherent
-#endif
-#if PRSIM_VCD_GENERATION
-	close_vcd();	// close trace, else trace will be incoherent
-#endif
-	// alternative is to record fact that every node went to X
-	_channel_manager.initialize();
 #if IMPLICIT_SUPPLY_PORTS
 	const node_index_type gi = parse_node_to_index("!GND", mod).index;
 	const node_index_type vi = parse_node_to_index("!Vdd", mod).index;
@@ -518,6 +529,27 @@ State::__initialize(void) {
 	node_pool[gi].set_value_and_cause(LOGIC_LOW, null);
 	node_pool[vi].set_value_and_cause(LOGIC_HIGH, null);
 #endif
+	// keep connected channels up-to-date with X values of nodes
+	// but this closes channel-log streams
+	_channel_manager.initialize();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+State::__initialize(void) {
+	__initialize_time();
+	__initialize_state(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	X-out all node values, clear causes.  
+	Retain channel setups, modes, etc.
+ */
+void
+State::x_all(void) {
+	STACKTRACE_VERBOSE;
+	__initialize_state(false);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

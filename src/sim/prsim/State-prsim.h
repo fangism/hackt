@@ -717,7 +717,16 @@ public:
 	void
 	destroy(void);
 
+	void
+	x_all(void);
+
 private:
+	void
+	__initialize_state(const bool);
+
+	void
+	__initialize_time(void);
+
 	void
 	__initialize(void);
 

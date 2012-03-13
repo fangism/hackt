@@ -78,6 +78,7 @@ The following commands are listed in the @t{general} category.
 @node Simulation Commands
 @section @t{simulation} Commands
 
+@include cmd/x-all.texi
 @include cmd/initialize.texi
 @include cmd/reset.texi
 

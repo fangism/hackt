@@ -1,0 +1,14 @@
+channels:
+X : .e(init:0)  1x1of2 off
+Y : .e(init:1)  1x1of4 off
+Z : .a(init:0)  1x1of3 off
+channels:
+X : .e(init:0)  1x1of2 off > x-all-04-X.log
+Y : .e(init:1)  1x1of4 off
+Z : .a(init:0)  1x1of3 off
+############## x-all ############### 
+channels:
+X : .e(init:0)  1x1of2 off
+Y : .e(init:1)  1x1of4 off
+Z : .a(init:0)  1x1of3 off
+expect channel logs closed 

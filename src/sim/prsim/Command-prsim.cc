@@ -723,6 +723,40 @@ This also resets the random number generator seed used with @command{seed48}.
 typedef	Reset<State>				Reset;
 PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(Reset, simulation)
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+/***
+@texinfo cmd/x-all.texi
+@deffn Command x-all
+This resets the values of all nodes to @t{X}, and clears the event queue
+and all other state except for the time, which is left as-is.
+Trace files are kept @emph{open}, mode flags, and channel setups are retained.  
+However, channel logs are closed.  
+This is useful for executing multiple simulation runs in one long trace.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(XAll, "x-all", simulation,
+	"set all nodes to X without restarting simulation")
+
+int
+XAll::main(State& s, const string_list& a) {
+if (a.size() > 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.x_all();
+	return Command::NORMAL;
+}
+}
+
+void
+XAll::usage(ostream& o) {
+	o << name << endl;
+o <<
+"Resets all nodes to X, clears event queue and all state except time,\n"
+"mode-flags, channel setup.  Active trace files remain open." << endl;
+}
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
 	Command class for stepping through one time-step at a time from

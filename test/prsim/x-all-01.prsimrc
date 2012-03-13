@@ -1,0 +1,24 @@
+# "x-all-01.prsimrc"
+# @haco@ inv.haco-c
+
+source inv-01.prsimrc
+getall .
+time
+
+echo ########## x-all ############
+x-all
+watchall
+getall .
+queue
+time
+vcd-file
+# trace file should still be open
+
+advance 100
+set a 0
+cycle
+advance 20
+set a 1
+cycle
+vcd-file
+

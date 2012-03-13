@@ -449,7 +449,8 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	pchb-test-b-01 \
 	pcfb-test-b-01 \
 	pcehb-test-b-01 \
-	pcefb-test-b-01
+	pcefb-test-b-01 \
+	x-all-01 x-all-02 x-all-03 x-all-04 x-all-05
 
 # subset of prsimrc test that we wish to compare traces against regressions
 HACKT_PRSIMTRACE_TEST_SUBJECTS = \
@@ -491,7 +492,8 @@ HACKT_PRSIMTRACE_TEST_SUBJECTS = \
 	SRAM-c-01 \
 	SRAM-d-01 SRAM-d-02 \
 	stuck-bug-a-01 \
-	unstable-a-01 unstable-b-01
+	unstable-a-01 unstable-b-01 \
+	x-all-01
 
 # prsimtrace test crashes: FIXME!!!
 # logic-defs-a-01 logic-defs-b-01
@@ -502,7 +504,8 @@ HACKT_PRSIMVCD_TEST_SUBJECTS = \
 	bitline-a-01 bitline-a-02 \
 	channel-test-a-04 channel-test-a-09 \
 	oscil-unset-01 \
-	unstable-a-01
+	unstable-a-01 \
+	x-all-01
 
 # override defaults for non-matched architectures
 if ABI_ILP32
