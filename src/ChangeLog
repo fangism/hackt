@@ -5,6 +5,14 @@
 
 2012-03-10	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-85-11:
+	  updated yacc union awk script to replace 'include' variable, 
+		which is reserved for GNU awk >= 4.0.
+	  fixes #3
+
+
+2012-03-10	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-85-10:
 	  hacprsim: new 'x-all' command to clear nodes to X, clear
 		event queue and most simulator state, except modes

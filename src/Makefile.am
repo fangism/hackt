@@ -1700,7 +1700,7 @@ YACC_UNION_SCRIPT_DEFAULTS = \
 	  yacc_union_namespaces="HAC::parser HAC::lexer"
 
 YACC_UNION_SCRIPT_ARGS = -v yaccfile=parser/$$basename.types \
-		-v include="$$yacc_union_includes" \
+		-v include_headers="$$yacc_union_includes" \
 		-v namespace="$$yacc_union_namespaces" \
 		-v token_enum=$(YACC_FIRST_TOKEN_ENUM)
 
