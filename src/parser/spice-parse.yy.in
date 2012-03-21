@@ -88,7 +88,6 @@ kw_inst(new string_token(".instance"));
 %type	<_list>			spice_deck top_cards_opt top_cards
 %type	<_list>			top_card subcircuit_definition sub_card
 %type	<_list>			sub_cards_opt sub_cards
-%type	<_list>			sub_card
 %type	<_list>			resistor capacitor inductor
 %type	<_list>			transistor instance
 %type	<_list>			terminals identifier_opt
