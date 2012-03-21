@@ -6,7 +6,7 @@ queue:	10	t : 0	[from bl:=0]
 WARNING: unstable `t'-
 rule: [after 10]	wl:1 & ~bl:1<0><0> -> t-:X
 >> cause: `bl' (val: 1)
-killed  :	0	t : 0	[from bl:=0]
+killed  :	0	t : 0	[from bl:=1]
 enqueued:	10	t : 1	[from bl:=1]	(weak)
 	0	bl : 1
 queue:	10	t : 1	[from bl:=1]	(weak)
