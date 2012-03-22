@@ -1,8 +1,6 @@
 enqueued:	0	d : 0
 enqueued:	0	en : 1
 	0	d : 0
-WARNING: weak-interference `_o'
->> cause: `en' (val: 1)
 	0	en : 1
 enqueued:	0	_o : 1
 enqueued:	10	o_fb : 0	[from _o:=1]
@@ -31,19 +29,16 @@ enqueued:	30	o_fb : X	[from _o:=X]
 event queue:
 	25	en : 0
 	30	o_fb : X	[from _o:=X]
-WARNING: unstable `_o'-
-rule: [after 10]	~en:0 -> _o+:X
->> cause: `en' (val: 0)
-enqueued:	35	_o : 1	[from en:=0]	(weak)
+enqueued:	35	_o : 1	[from en:=0]
 	25	en : 0
 event queue:
 	30	o_fb : X	[from _o:=X]
-	35	_o : 1	[from en:=0]	(weak)
+	35	_o : 1	[from en:=0]
 	30	o_fb : X	[by _o:=X]
 event queue:
-	35	_o : 1	[from o_fb:=0]
+	35	_o : 1	[from en:=0]
 enqueued:	45	o_fb : 0	[from _o:=1]
-	35	_o : 1	[by o_fb:=X]
+	35	_o : 1	[by en:=0]
 	45	o_fb : 0	[by _o:=1]
 All subnodes of '.':
 !GND : 0

@@ -3,18 +3,16 @@
 	20	smb.c.f : 0	[by blc:=0]
 	30	ps.t : 1	[by smb.c.f:=0]
 enqueued:	30	WD : 0
-enqueued:	40	smb.c.t : 0	[from WD:=0]
 enqueued:	40	blc : 1	[from WD:=0]
+enqueued:	40	smb.c.t : 0	[from WD:=0]
 	30	WD : 0
-	40	smb.c.t : 0	[by WD:=0]
-enqueued:	50	smb.c.f : 1	[from blc:=1]
+enqueued:	50	smb.c.f : X	[from blc:=1]
 	40	blc : 1	[by WD:=0]
+killed  :	0	smb.c.f : X	[from blc:=1]
+enqueued:	50	smb.c.f : 1	[from smb.c.t:=0]
+	40	smb.c.t : 0	[by WD:=0]
 enqueued:	60	ps.t : 0	[from smb.c.f:=1]
-	50	smb.c.f : 1	[by blc:=1]
-killed  :	0	mx.__out : 1	[from ps.t:=0]
-WARNING: unstable `mx.__out'+
-rule: [after 0]	~ps.t:0 & ps.t:0<0><0> -> mx.__out+:X
->> cause: `ps.t' (val: 0)
+	50	smb.c.f : 1	[by smb.c.t:=0]
 	60	ps.t : 0	[by smb.c.f:=1]
 All subnodes of '.':
 ps.t : 0
