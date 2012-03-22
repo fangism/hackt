@@ -19,7 +19,7 @@ time: 24
 setting another pull-down rule on to overtake X 
 	24	wl : 1
 event queue:
-	30	_bl : X	[from wlx:=1]
+	34	_bl : 0	[from wl:=1]
 Fanins of node `_bl':
 (from [top-level]):
 [after 10]	~_pchg:1 -> _bl+:1
@@ -30,18 +30,16 @@ time: 28
 _bl : 1	[by _pchg:=1]
 blst : 0	[by _bl:=1]
 step: expect pull-down to overtake previous pull down 
-WARNING: weak-interference `blst'
->> cause: `_bl' (val: X)
-	30	_bl : X	[by wlx:=1]
+	34	_bl : 0	[by wl:=1]
 event queue:
-	40	blst : X	[from _bl:=X]
+	44	blst : 1	[from _bl:=0]
 Fanins of node `_bl':
 (from [top-level]):
-[after 10]	~_pchg:1 -> _bl+:X
-[after 10]	wl:1 & pb:1<1><1> -> _bl-:X
-[after 10]	wlx:1 & pbx:X<X><1> -> _bl-:X
-[after 20, weak]	~blst:0 -> _bl+:X
-time: 30
+[after 10]	~_pchg:1 -> _bl+:0
+[after 10]	wl:1 & pb:1<1><1> -> _bl-:0
+[after 10]	wlx:1 & pbx:X<X><1> -> _bl-:0
+[after 20, weak]	~blst:0 -> _bl+:0
+time: 34
 step 
-	40	blst : X	[by _bl:=X]
-time: 40
+	44	blst : 1	[by _bl:=0]
+time: 44
