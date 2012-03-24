@@ -13,13 +13,21 @@ resetting...
 enqueued:	50	bl : 1	[from _pchg:=0]
 	50	bl : 1	[by _pchg:=0]
 scenario... 
+	50	wl[0] : 1
 WARNING: interference `bl'
 >> cause: `we' (val: 1)
 enqueued:	60	bl : X	[from we:=1]
+	50	we : 1
+killed  :	0	bl : X	[from we:=1]
+enqueued:	60	bl : 0	[from _pchg:=1]
+	50	_pchg : 1
 WARNING: unstable `w.we_'-
 rule: [after 10]	we:0 -> w.we_-:1
 >> cause: `we' (val: 0)
-queue:	60	bl : 0	[from we:=1]	(weak)
+	50	we : 0
+cause of bl:0 is actually pulled by we:1, but masked by momentary interference 
+which goes away when _pchg:1. 
+queue:	60	bl : 0	[from _pchg:=1]
 No event pending on `_bl'.
 Fanins of node `bl':
 (from w):
@@ -50,4 +58,4 @@ bl : 1
 _bl : 1
 w.we_ : 1
 w.wv_ : 1
-	60	bl : 0	[by we:=0]
+	60	bl : 0	[by _pchg:=1]

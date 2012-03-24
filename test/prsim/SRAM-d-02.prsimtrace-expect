@@ -35,6 +35,6 @@ Epoch 1:
 	23	50	0	0	3	1	(we:1)
 	24	50	0	0	7	1	(_pchg:1)
 	25	50	0	0	3	0	(we:0)
-	26	60	5	23	5	0	[after 10]	we & w.wv_ -> bl-
+	26	60	18	24	5	0	[after 10]	~_pchg -> bl+
 Epoch 2: (final values)
 X 0 1 0 0 0 1 1 1 0 1 1 X 0 1 X X 

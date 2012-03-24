@@ -26,6 +26,7 @@ cycle
 time
 
 echo enabled write, set zero value, now setting wordline
+echo may see momentary X on _bl because we_ is in flight
 set wv 0
 set we 1
 advance 30

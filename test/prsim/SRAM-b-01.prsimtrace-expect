@@ -3,7 +3,7 @@ Trace file contents: 3 epochs.
 	epoch	index	time	offset	size
 	0	0	0	#SIZE#	#SIZE#
 	1	0	0	#SIZE#	#SIZE#
-	2	17	0	#SIZE#	#SIZE#
+	2	21	0	#SIZE#	#SIZE#
 Epoch 0: (initial values)
 X 0 1 X X X X X X X X X X X X X X 
 Epoch 1:
@@ -25,6 +25,10 @@ Epoch 1:
 	13	110	5	11	5	0	[after 10]	we & w.wv_ -> bl-
 	14	120	26	13	13	0	[after 10]	wl[0] & ~bl -> c[0].r.d[0]-
 	15	130	21	14	14	1	[after 10, weak]	~c[0].r.d[0] -> c[0].r.d[1]+
-	16	200	1	11	10	0	[after 100]	we -> w.we_-
+	16	150	32	12	6	X	[after 50, weak]	c[0].r.d[0] & wl[0] -> _bl-
+	17	160	23	16	14	X	[after 10]	wl[0] & ~_bl -> c[0].r.d[1]-
+	18	200	1	11	10	0	[after 100]	we -> w.we_-
+	19	210	14	18	6	1	[after 10]	~w.we_ & ~wv -> _bl+
+	20	220	23	19	14	1	[after 10]	wl[0] & ~_bl -> c[0].r.d[1]-
 Epoch 2: (final values)
 X 0 1 1 0 0 1 1 1 0 0 1 X 0 1 X X 

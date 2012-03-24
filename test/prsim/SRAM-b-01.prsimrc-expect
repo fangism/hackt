@@ -48,6 +48,7 @@ enqueued:	100	_pchg : 1
 	100	_pchg : 1
 time: 100
 enabled write, set zero value, now setting wordline 
+may see momentary X on _bl because we_ is in flight 
 enqueued:	100	we : 1
 enqueued:	100	wl[0] : 1
 enqueued:	200	w.we_ : 0	[from we:=1]
@@ -57,12 +58,20 @@ enqueued:	150	_bl : X	[from wl[0]:=1]	(weak)
 	100	wl[0] : 1
 enqueued:	120	c[0].r.d[0] : 0	[from bl:=0]
 	110	bl : 0	[by we:=1]
-killed  :	0	_bl : X	[from wl[0]:=1]	(weak)
 enqueued:	130	c[0].r.d[1] : 1	[from c[0].r.d[0]:=0]	(weak)
 	120	c[0].r.d[0] : 0	[by bl:=0]
 	130	c[0].r.d[1] : 1	[by c[0].r.d[0]:=0]
+WARNING: weak-interference `c[0].r.d[1]'
+>> cause: `_bl' (val: X)
+enqueued:	160	c[0].r.d[1] : X	[from _bl:=X]	(weak)
+	150	_bl : X	[by wl[0]:=1]
+	160	c[0].r.d[1] : X	[by _bl:=X]
+enqueued:	210	_bl : 1	[from w.we_:=0]
 	200	w.we_ : 0	[by we:=1]
-time: 200
+enqueued:	220	c[0].r.d[1] : 1	[from _bl:=1]	(weak)
+	210	_bl : 1	[by w.we_:=0]
+	220	c[0].r.d[1] : 1	[by _bl:=1]
+time: 220
 Fanins of node `c[0].r.t':
 (from c[0]):
 [after 10]	wl[0]:1 & ~_bl:1<0><0> -> c[0].r.d[1]-:1

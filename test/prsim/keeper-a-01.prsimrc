@@ -1,6 +1,7 @@
 # "keeper-a-01.prsimrc"
 # @haco@ keeper-a.haco-c
 
+# watchall
 # MUST disable weak rules (default)
 weak-rules off
 initialize
@@ -13,9 +14,12 @@ set g._sReset 0
 cycle
 status U
 mode run
+# unstable fatal
 set g._pReset 1
 cycle
 status U
 set g._sReset 1
 step 100000
 
+# fanin-get src._r0
+# backtrace l.e

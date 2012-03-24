@@ -17,7 +17,7 @@ Epoch 1:
 	5	20	0	0	3	1	(a:1)
 	6	20	0	0	4	1	(b:1)
 	7	24	0	0	3	0	(a:0)
-	8	30	2	6	5	X	[after 10]	b -> c-
+	8	30	2	7	5	X	[after 10]	b -> c-
 	9	40	4	8	6	X	[after 10]	~c -> d+
 Epoch 2: (final values)
 X 0 1 0 1 X X 

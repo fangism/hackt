@@ -4,6 +4,7 @@
 // purpose: without weak-rules off, staticizer on WCHB data rail inverter
 // causes instability when forward delay is slow.
 // MUST use weak-rule off
+// NOTE: requires working force-excl rings
 
 deftype globals <: int<5>(bool Vdd, GND, _pReset, _sReset) {
 	set {}

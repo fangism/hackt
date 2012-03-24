@@ -32,6 +32,7 @@ cycle
 assert bl 1
 assert _bl 1
 
+watchall
 echo scenario...
 set wl[0] 1
 cycle
@@ -41,6 +42,8 @@ set _pchg 1
 step-event
 set we 0
 step-event
+echo cause of bl:0 is actually pulled by we:1, but masked by momentary interference
+echo which goes away when _pchg:1.
 
 pending bl
 pending _bl

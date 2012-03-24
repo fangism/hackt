@@ -12,6 +12,6 @@ Epoch 1:
 	0	0	0	0	0	X	(null)
 	1	0	0	0	5	0	(c:0)
 	2	0	0	0	4	0	(b:0)
-	3	0	0	0	5	X	(c:X)
+	3	10	2	2	5	X	[after 10]	b -> c-
 Epoch 2: (final values)
 X 0 1 X 0 X 
