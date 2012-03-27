@@ -1,4 +1,4 @@
-* subcircuit e1of2<> is empty.
+* channel or struct e1of2<> is omitted.
 
 .subckt inv<> !GND !Vdd x y
 My:dn:0 !GND x y !GND nch W=5u L=2u

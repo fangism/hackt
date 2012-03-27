@@ -1,6 +1,6 @@
 channels:
-L : .e(init:0) 1x1of2 off
-R : .e(init:0) 1x1of2 off
+L : .e(init:0)  1x1of2 off
+R : .e(init:0)  1x1of2 off
 sending 1s 
 channel	L (.data) : 1 @ 50
 channel	R (.data) : 1 @ 70
@@ -11,7 +11,7 @@ channel	R (.data) : 1 @ 190
 ignoring channel R, sending 0 
 masking out one token... 
 channel	L (.data) : 0 @ 230
-channel	R (.data) : 0 @ 250
+channel	R (.data) : 0 @ 250 (ignored)
 R has not ack'd yet 
 releasing R 
 sending 1s again 
@@ -22,11 +22,11 @@ channel	R (.data) : 1 @ 380
 ignoring channel R, sending 0 
 masking out one token... 
 channel	L (.data) : 0 @ 420
-channel	R (.data) : 0 @ 440
+channel	R (.data) : 0 @ 440 (ignored)
 sending 1s again 
 channel	L (.data) : 1 @ 480
 channel	R (.data) : 1 @ 500
 channel	L (.data) : 1 @ 540
 channel	R (.data) : 1 @ 560
-R : .e(init:0) 1x1of2 sink,expect,watch, timing: global {1,}* @0 #7
+R : .e(init:0)  1x1of2 sink,expect,watch, timing: global {1,}* @0 #7
 	count: 0, unknowns: 0

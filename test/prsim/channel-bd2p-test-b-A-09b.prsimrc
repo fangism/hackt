@@ -1,0 +1,92 @@
+# "channel-bd2p-test-b-09.prsimrc"
+# copy-modified from "channel-test-b-09.prsimrc"
+# @haco@ channel-bd2p-test-b.haco-c
+# testing channel sink, with expect, and don't-care values
+
+# register channels
+source channel-bd2p-test-b-01.prsimrc
+
+watchall
+# set up some channels with commands
+channel-watch A
+channel-sink A
+channel-expect-args A 0 1 X 4 X 16 32
+channel-ignore-all
+channel-reset A
+getall A
+
+echo manually resetting data
+set A.r 0
+cycle
+assert A.a 0
+channel-heed-all
+channel-release A
+cycle
+assert A.a 0
+# because data is neutral, A.a should request new data
+
+echo ------------------------------------
+set A.r 1
+cycle
+assert A.a 1
+channel-show A
+
+echo ------------------------------------
+set A.r 0
+cycle
+assert A.a 0
+channel-show A
+
+echo ------------------------------------
+# wrong value, don't care
+set A.r 1
+cycle
+assert A.a 1
+channel-show A
+
+echo ------------------------------------
+set A.r 0
+cycle
+assert A.a 0
+channel-show A
+
+echo ------------------------------------
+# don't care on garbage value
+set A.r 1
+cycle
+assert A.a 1
+channel-show A
+
+echo ------------------------------------
+set A.r 0
+cycle
+assert A.a 0
+channel-show A
+
+echo ------------------------------------
+set A.r 1
+cycle
+assert A.a 1
+channel-show A
+
+echo ------------------------------------
+echo expect values exhausted, now can be any value
+echo ------------------------------------
+set A.r 0
+cycle
+assert A.a 0
+channel-show A
+
+echo ------------------------------------
+set A.r 1
+cycle
+assert A.a 1
+channel-show A
+
+echo ------------------------------------
+set A.r 0
+cycle
+assert A.a 0
+channel-show A
+
+echo ------------------------------------

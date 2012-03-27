@@ -1,0 +1,14 @@
+// "169.hac"
+// copy-modified from "166.hac"
+// testing connectivity checking and port directions
+
+defproc foo(bool? in; bool! out) {
+bool m;
+prs {
+	in		-> m-
+	~m		-> out+		// suppress warning about out undriven
+}
+}
+
+foo bar;
+

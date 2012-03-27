@@ -3210,6 +3210,7 @@ process_definition::__unroll_complete_type(
  */
 good_bool
 process_definition::unroll_lang(const unroll_context& c) const {
+	STACKTRACE_VERBOSE;
 	footprint& f(c.get_target_footprint());
 	// after all aliases have been successfully assigned local IDs
 	// then process the PRS and CHP bodies

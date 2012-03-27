@@ -183,6 +183,12 @@ virtual	good_bool
 
 // possibly DEPRECATED
 // is resolved by context elsewhere, now that we have placeholders
+#define	LOOKUP_DEFINED_INDEXED_PROTO					\
+	good_bool							\
+	lookup_defined(pbool_value_type& v, const multikey_index_type& i) const
+
+virtual	LOOKUP_DEFINED_INDEXED_PROTO = 0;
+
 #define	LOOKUP_VALUE_INDEXED_PROTO					\
 	good_bool							\
 	lookup_value(value_type& v, const multikey_index_type& i) const

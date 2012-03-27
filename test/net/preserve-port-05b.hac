@@ -1,0 +1,5 @@
+// "preserve-port-05b.hac"
+// default to empty_subcircuits=0
+
+import "preserve-port-05.hac";
+

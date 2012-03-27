@@ -1,0 +1,11 @@
+#!@SHELL@
+# vi: ft=sh
+
+# option processing?
+# if $1 is given, pass it to awk
+# otherwise read from stdin
+
+# support scripts must be in PATH
+# wrap call to this script with pre-inst-env, if necessary
+exec spice-line-join.awk $1 | hacspice-pp.sed | hacspicegrind
+

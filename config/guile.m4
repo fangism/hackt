@@ -11,10 +11,12 @@ dnl AC_SUBST's the following variables
 dnl	GUILE_CPPFLAGS (include path to headers)
 dnl	GUILE_LDFLAGS (link path to libraries)
 dnl
+dnl 2012-12-16: use gmp and ltdl flags when testing guile library
 dnl 2011-02-27: added support for guile-2.0
 dnl
 AC_DEFUN([FANG_GUILE], 
 [
+dnl TODO: require that checks for GMP and libltdl happen first
 dnl now we can pass a different guile-config, e.g. guile-1.8-config
 dnl also accepts --without-guile-config -> --with-guile-config=no
 AC_ARG_WITH(guile,
@@ -64,8 +66,17 @@ AC_LANG_PUSH(C++)
 dnl push flags
 save_CPPFLAGS="$CPPFLAGS"
 save_LDFLAGS="$LDFLAGS"
-CPPFLAGS="$GUILE_CPPFLAGS $CPPFLAGS"
-LDFLAGS="$GUILE_LDFLAGS $LDFLAGS"
+dnl use the following variables if specified:
+dnl $with_gmp_include
+dnl $with_gmp_lib
+dnl $with_ltdl_include
+dnl $with_ltdl_lib
+test -z "$with_gmp_include" || gmp_include_flag="-I$with_gmp_include"
+test -z "$with_gmp_lib" || gmp_lib_flag="-L$with_gmp_lib"
+test -z "$with_ltdl_include" || ltdl_include_flag="-I$with_ltdl_include"
+test -z "$with_ltdl_lib" || ltdl_lib_flag="-L$with_ltdl_lib"
+CPPFLAGS="$GUILE_CPPFLAGS $gmp_include_flag $ltdl_include_flag $CPPFLAGS"
+LDFLAGS="$GUILE_LDFLAGS $gmp_lib_flag $ltdl_lib_flag $LDFLAGS"
 AC_CHECK_HEADERS([libguile.h guile/gh.h])
 dnl <guile/gh.h> is deprecated but may have some interfaces for compatibility
 if test "$ac_cv_header_libguile_h" = "yes" ; then

@@ -1,0 +1,20 @@
+channels:
+W : bundled-4p .a(init:0) .n x8 unsigned off
+X : bundled-4p .e(init:1) .v x8 unsigned off
+Y : bundled-4p .a(init:0) .v x8 unsigned off
+Z : bundled-4p .e(init:1) .n x8 unsigned off
+X : bundled-4p .e(init:1) .v x8 unsigned off
+	count: 0, unknowns: 8
+channel X: timing: after=10
+channel X: timing: after=10
+channel X: timing: after=10
+channel X: timing: after=50
+channel X: timing: random(uniform) [50,50]
+channel X: timing: random(uniform) [50,50]
+channel X: timing: random(exp.) [0,+INF]
+channel X: timing: random(exp.) [20,+INF]
+channel X: timing: random(uniform) [40,80]
+channel X: timing: random(uniform) [0,1000]
+Warning (FIXME): global-randomized timing policy is not yet fully supported
+on bundled-data channel sources; the request signal may fire prematurely.
+channel X: timing: global

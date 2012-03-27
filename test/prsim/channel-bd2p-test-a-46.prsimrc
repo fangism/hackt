@@ -1,0 +1,11 @@
+# "channel-bd2p-test-a-46.prsimrc"
+# @haco@ channel-bd2p-test-a.haco-c
+
+# bundled-data channels should be allowed to be signed
+source channel-bd2p-test-a-01.prsimrc
+channel-signed A
+channel-signed B
+channel-signed C
+channel-signed D
+channel-show-all
+

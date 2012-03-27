@@ -1,0 +1,61 @@
+# "channel-bd4p-test-a-av-03.prsimrc"
+# @haco@ channel-bd4p-test-a.haco-c
+# testing channel sink
+
+# register channels
+source channel-bd4p-test-a-01.prsimrc
+
+watchall
+# set up some channels with commands
+# channel-log Y channel-test-a-03-Y.log
+channel-watch Y
+channel-sink Y
+channel-reset Y
+getall Y
+
+echo manually resetting data
+set Y.d[0..7] 0
+set Y.v 0
+cycle
+assert Y.a 0
+
+echo releasing channel Y
+channel-release Y
+cycle
+assert Y.a 0
+# because data is neutral, Y.a should request new data
+
+echo ------------------------------------
+echo setting data rail
+set Y.v 1
+cycle
+assert Y.a 1
+channel-show Y
+backtrace Y.a
+
+echo ------------------------------------
+echo resetting data rail
+set Y.v 0
+cycle
+assert Y.a 0
+channel-show Y
+backtrace Y.a
+
+echo ------------------------------------
+echo setting data rail, new value
+set Y.d[1..2] 1
+cycle
+set Y.v 1
+cycle
+assert Y.a 1
+channel-show Y
+backtrace Y.a
+
+echo ------------------------------------
+echo resetting data rail
+set Y.v 0
+cycle
+assert Y.a 0
+channel-show Y
+backtrace Y.a
+

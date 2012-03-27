@@ -1,0 +1,27 @@
+channels:
+W : bundled-4p .a(init:0) .n x8 unsigned off
+X : bundled-4p .e(init:1) .v x8 unsigned off
+Y : bundled-4p .a(init:0) .v x8 unsigned off
+Z : bundled-4p .e(init:1) .n x8 unsigned off
+channels:
+W : bundled-4p .a(init:0) .n x8 signed off
+X : bundled-4p .e(init:1) .v x8 signed off
+Y : bundled-4p .a(init:0) .v x8 signed off
+Z : bundled-4p .e(init:1) .n x8 signed off
+Warning: channel acknowledge `X.e' has no fanin!
+Warning: channel validity `X.v' has no fanout, but is being sourced.
+X : bundled-4p .e(init:1) .v x8 signed source, timing: after=10 {-128,-64,-63,-1,0,1,27,100,127,}* @0 #0
+	count: 0, unknowns: 8
+channel	X (.data) : -128 @ 20
+channel	X (.data) : -64 @ 40
+channel	X (.data) : -63 @ 60
+channel	X (.data) : -1 @ 80
+channel	X (.data) : 0 @ 100
+channel	X (.data) : 1 @ 120
+channel	X (.data) : 27 @ 140
+channel	X (.data) : 100 @ 160
+channel	X (.data) : 127 @ 180
+channel	X (.data) : -128 @ 200
+channel	X (.data) : -64 @ 220
+channel	X (.data) : -63 @ 240
+channel	X (.data) : -1 @ 260

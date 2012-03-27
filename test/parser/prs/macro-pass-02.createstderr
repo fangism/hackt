@@ -17,11 +17,11 @@ Persistent Object Manager text dump:
 	13	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	14	##ADDR##	portscop	0	#HEAD#	#TAIL#	32
 	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	16	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
 	17	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
 	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	19	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	20	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
 	21	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	22	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	23	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
@@ -49,10 +49,10 @@ Persistent Object Manager text dump:
 	45	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	46	##ADDR##	portscop	0	#HEAD#	#TAIL#	36
 	47	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	48	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	48	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
 	49	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	50	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	51	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	51	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
 	52	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	53	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	54	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
@@ -81,10 +81,10 @@ Persistent Object Manager text dump:
 	77	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	78	##ADDR##	portscop	0	#HEAD#	#TAIL#	32
 	79	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	80	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	80	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
 	81	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	82	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	83	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	83	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
 	84	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	85	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	86	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
@@ -110,7 +110,7 @@ Persistent Object Manager text dump:
 	106	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	107	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	108	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	109	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	109	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
 	110	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	111	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
 	112	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16

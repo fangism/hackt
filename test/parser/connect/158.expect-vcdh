@@ -1,0 +1,22 @@
+$var wire 1 <1> !GND $end
+$var wire 1 <2> !Vdd $end
+$scope module foo $end
+  $var wire 1 <5> re $end
+  $var wire 1 <1> !GND $end
+  $var wire 1 <2> !Vdd $end
+  $scope module I $end
+    $var wire 1 <3> d $end
+    $var wire 1 <4> e $end
+  $upscope $end
+  $scope module O $end
+    $var wire 1 <3> d $end
+    $var wire 1 <5> e $end
+  $upscope $end
+  $scope module c $end
+    $var wire 1 <1> !GND $end
+    $var wire 1 <2> !Vdd $end
+    $var wire 1 <5> i $end
+    $var wire 1 <4> o $end
+    $var wire 1 <6> _o $end
+  $upscope $end
+$upscope $end

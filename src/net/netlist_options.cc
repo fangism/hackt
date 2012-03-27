@@ -119,6 +119,7 @@ netlist_options::netlist_options() :
 		subckt_def_style(STYLE_SPICE),
 		instance_port_style(STYLE_SPICE),
 #endif
+		named_port_connections(false),
 		emit_top(true), 
 		emit_node_aliases(false),
 		emit_node_caps(false),
@@ -165,6 +166,7 @@ if (v.values.size()) {
 		mangle_escaped_type_identifiers = false;
 		subckt_def_style = STYLE_SPICE;
 		instance_port_style = STYLE_SPICE;
+		named_port_connections = false;
 	} else if (f == "spectre") {
 		node_ports = true;
 		struct_ports = false;
@@ -177,6 +179,7 @@ if (v.values.size()) {
 		mangle_escaped_type_identifiers = false;
 		subckt_def_style = STYLE_SPECTRE;
 		instance_port_style = STYLE_SPECTRE;
+		named_port_connections = false;
 	} else if (f == "verilog") {
 		node_ports = true;
 		struct_ports = true;		// include structs
@@ -189,6 +192,7 @@ if (v.values.size()) {
 		mangle_escaped_type_identifiers = false;
 		subckt_def_style = STYLE_VERILOG;
 		instance_port_style = STYLE_VERILOG;
+		named_port_connections = false;
 	} else {
 		cerr << "Unknown output format: " << f << endl;
 		return true;
@@ -1463,6 +1467,24 @@ Default: 0
 ***/
 DEFINE_OPTION_DEFAULT(struct_ports, "struct_ports",
 	"if true, include user-defined structs/channels in ports")
+
+/***
+@texinfo config/named_port_connections.texi
+@defopt named_port_connections (bool)
+If set to 1, emit instances' port connections using @t{.port(local)}
+syntax, otherwise emit port connections positionally.
+@cindex named ports
+@cindex Verilog
+Most spice-like formats support only positional ports, 
+but the Verilog language supports both.  
+Named port connections makes the output more verbose, 
+but less prone to positional connection errors.  
+Default: 0
+@end defopt
+@end texinfo
+***/
+DEFINE_OPTION_DEFAULT(named_port_connections, "named_port_connections",
+	"if true, emit instance port connections w/ named port syntax")
 
 /***
 @texinfo config/emit_top.texi

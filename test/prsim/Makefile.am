@@ -72,6 +72,9 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	channel-ledr-b \
 	channel-ledr-c \
 	channel-array-a channel-array-b channel-array-c \
+	channel-bd4p-test-a \
+	channel-bd2p-test-a \
+	channel-bd2p-test-b \
 	eledr-buffer eledr-buffer-a eledr-buffer-b \
 	type-test-a type-test-b type-test-c type-test-d \
 	type-test-e type-test-f type-test-g \
@@ -349,6 +352,56 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	channel-array-a-03 channel-array-a-04 channel-array-a-05 \
 	channel-array-b-01 \
 	channel-array-c-01 \
+	channel-bd4p-test-a-01 \
+	channel-bd4p-test-a-ev-03 channel-bd4p-test-a-av-03 \
+	channel-bd4p-test-a-en-03 channel-bd4p-test-a-an-03 \
+	channel-bd4p-test-a-ev-04 channel-bd4p-test-a-av-04 \
+	channel-bd4p-test-a-en-04 channel-bd4p-test-a-an-04 \
+	channel-bd4p-test-a-ev-08 \
+	channel-bd4p-test-a-ev-09 channel-bd4p-test-a-ev-09b \
+	channel-bd4p-test-a-ev-19 channel-bd4p-test-a-ev-19b \
+	channel-bd4p-test-a-20 channel-bd4p-test-a-22 channel-bd4p-test-a-23 \
+	channel-bd4p-test-a-24 channel-bd4p-test-a-25 channel-bd4p-test-a-26 \
+	channel-bd4p-test-a-27 channel-bd4p-test-a-28 channel-bd4p-test-a-29 \
+	channel-bd4p-test-a-31 channel-bd4p-test-a-33 \
+	channel-bd4p-test-a-ev-34 \
+	channel-bd4p-test-a-ev-40 channel-bd4p-test-a-ev-41 \
+	channel-bd4p-test-a-ev-43 channel-bd4p-test-a-ev-44 \
+	channel-bd4p-test-a-ev-45 \
+	channel-bd4p-test-a-46 \
+	channel-bd4p-test-a-ev-48 \
+	channel-bd4p-test-g-01 \
+	channel-bd4p-test-g-ev-03 channel-bd4p-test-g-ev-04 \
+	channel-bd4p-test-g-ev-08 \
+	channel-bd4p-test-g-ev-09 channel-bd4p-test-g-ev-09b \
+	channel-bd2p-test-a-01 \
+	channel-bd2p-test-a-A-03 channel-bd2p-test-a-A-04 \
+	channel-bd2p-test-a-A-08 \
+	channel-bd2p-test-a-A-09 channel-bd2p-test-a-A-09b \
+	channel-bd2p-test-a-B-03 channel-bd2p-test-a-B-04 \
+	channel-bd2p-test-a-B-08 \
+	channel-bd2p-test-a-B-09 channel-bd2p-test-a-B-09b \
+	channel-bd2p-test-a-C-03 channel-bd2p-test-a-C-04 \
+	channel-bd2p-test-a-C-08 \
+	channel-bd2p-test-a-C-09 channel-bd2p-test-a-C-09b \
+	channel-bd2p-test-a-D-03 channel-bd2p-test-a-D-04 \
+	channel-bd2p-test-a-D-08 \
+	channel-bd2p-test-a-D-09 channel-bd2p-test-a-D-09b \
+	channel-bd2p-test-a-20 \
+	channel-bd2p-test-a-22 channel-bd2p-test-a-23 channel-bd2p-test-a-24 \
+	channel-bd2p-test-a-25 channel-bd2p-test-a-26 channel-bd2p-test-a-27 \
+	channel-bd2p-test-a-28 channel-bd2p-test-a-29 \
+	channel-bd2p-test-a-31 channel-bd2p-test-a-33 \
+	channel-bd2p-test-a-A-34 \
+	channel-bd2p-test-a-A-40 channel-bd2p-test-a-A-41 \
+	channel-bd2p-test-a-A-43 channel-bd2p-test-a-A-44 \
+	channel-bd2p-test-a-A-45 \
+	channel-bd2p-test-a-46 \
+	channel-bd2p-test-a-A-48 \
+	channel-bd2p-test-b-01 \
+	channel-bd2p-test-b-A-03 channel-bd2p-test-b-A-04 \
+	channel-bd2p-test-b-A-08 \
+	channel-bd2p-test-b-A-09 channel-bd2p-test-b-A-09b \
 	eledr-buffer-a-01 eledr-buffer-a-02 eledr-buffer-a-03 \
 	eledr-buffer-a-04 eledr-buffer-a-05 eledr-buffer-a-06 \
 	eledr-buffer-a-07 \
@@ -407,7 +460,8 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	pchb-test-b-01 \
 	pcfb-test-b-01 \
 	pcehb-test-b-01 \
-	pcefb-test-b-01
+	pcefb-test-b-01 \
+	x-all-01 x-all-02 x-all-03 x-all-04 x-all-05
 
 # subset of prsimrc test that we wish to compare traces against regressions
 HACKT_PRSIMTRACE_TEST_SUBJECTS = \
@@ -450,10 +504,20 @@ HACKT_PRSIMTRACE_TEST_SUBJECTS = \
 	SRAM-c-01 \
 	SRAM-d-01 SRAM-d-02 \
 	stuck-bug-a-01 \
-	unstable-a-01 unstable-b-01
+	unstable-a-01 unstable-b-01 \
+	x-all-01
 
 # prsimtrace test crashes: FIXME!!!
 # logic-defs-a-01 logic-defs-b-01
+
+# these tests should be subset of PRSIMRC_TEST_PASSES
+HACKT_PRSIMVCD_TEST_SUBJECTS = \
+	inv-01 after-celem-01 \
+	bitline-a-01 bitline-a-02 \
+	channel-test-a-04 channel-test-a-09 \
+	oscil-unset-01 \
+	unstable-a-01 \
+	x-all-01
 
 # override defaults for non-matched architectures
 if ABI_ILP32
@@ -543,8 +607,8 @@ endif
 
 # different custom test: just compare two existing output dumps (unfiltered!)
 oscil-random-02c.prsimrc-diff: \
-		oscil-random-02a.prsimrc-out oscil-random-02b.prsimrc-out
-	$(DIFF) -u oscil-random-02a.prsimrc-out oscil-random-02b.prsimrc-out \
+		oscil-random-02a.prsimrc-out-filter oscil-random-02b.prsimrc-out-filter
+	$(DIFF) -u oscil-random-02a.prsimrc-out-filter oscil-random-02b.prsimrc-out-filter \
 		> $@ ; \
 	$(TOUCH) $@
 
@@ -679,6 +743,10 @@ HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
 	channel-eledr-c-06 \
 	channel-array-a-01 channel-array-a-02 \
 	channel-array-b-02 \
+	channel-bd4p-test-a-ev-10 channel-bd4p-test-a-ev-10b \
+	channel-bd4p-test-a-21 \
+	channel-bd4p-test-a-ev-39 \
+	channel-bd2p-test-a-21 \
 	ACX-PR-6629 \
 	interference-11 \
 	interference-13 \

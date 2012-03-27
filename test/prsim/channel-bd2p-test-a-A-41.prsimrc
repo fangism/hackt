@@ -1,0 +1,31 @@
+# "channel-bd2p-test-a-A-41.prsimrc"
+# @haco@ channel-bd2p-test-a.haco-c
+# testing channel timing policies
+
+source channel-bd2p-test-a-01.prsimrc
+
+channel-show A
+channel-timing A
+
+channel-timing A after
+channel-timing A
+
+channel-timing A after 50
+channel-timing A
+
+channel-timing A random
+channel-timing A
+
+channel-timing A random :
+channel-timing A
+channel-timing A random 20:
+channel-timing A
+channel-timing A random 40:80
+channel-timing A
+channel-timing A random :1000
+channel-timing A
+
+channel-timing A global
+channel-timing A
+
+

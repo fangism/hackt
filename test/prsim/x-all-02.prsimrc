@@ -1,0 +1,21 @@
+# "x-all-01.prsimrc"
+# @haco@ inv.haco-c
+
+advance 50
+watch a c
+breakpt b
+watches
+breaks
+time
+set a 1
+queue
+pending a
+
+echo ########## x-all ############
+x-all
+watches
+breaks
+time
+queue
+assertn-queue
+

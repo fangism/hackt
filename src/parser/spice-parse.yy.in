@@ -1,0 +1,301 @@
+/**
+	\file "parser/spice-parse.yy.in"
+	Quick little parser for parsing spice netlists.
+	The grammar in here is an extremely small snippet
+	of the spice language grammar.  
+	Source: http://www.freeda.org/doc/SPICE/spice.pdf
+	$Id: spice-parse.yy.in,v 1.10 2008/12/18 00:32:09 fang Exp $
+ */
+
+%{
+#define	ENABLE_STACKTRACE		0
+
+#include <iostream>
+
+#include "parser/yacc-config.h"
+#include "parser/spice-prefix.h"
+#include "parser/spice-parse-options.h"
+#include "parser/spice-parse.output.h"
+#include "parser/spice-union.h"
+#include "lexer/spice-lex-options.h"
+#include "lexer/flex_lexer_state.h"
+#include "util/using_ostream.h"
+#include "lexer/file_manager.h"
+#include "util/syntax.h"
+#include "util/stacktrace.h"
+
+// extern FILE* yyin;
+
+#ifdef	LIBBOGUS
+static flex::lexer_state	_lexer_state;
+#endif
+
+
+/**
+	These were replaced with macros in "AST/node_list.h"
+ */
+#define	WRAP_LIST(left, list, right)	list->wrap(left, right)
+#define	DELETE_TOKEN(tok)		delete tok
+#define APPEND_LIST(list, item)		list->push_back(item)
+
+%}
+
+%union {
+	void*		_void;		/* kludge for typeless tokens */
+	string_token*	_token;
+	node_list*	_list;
+}
+
+%{
+extern	YY_DECL;
+
+static void yyerror(const char* msg);
+
+extern	ostream& yy_union_resolve_dump(const YYSTYPE&, const short, const short, ostream&);
+extern	void yy_union_resolve_delete(const YYSTYPE&, const short, const short);
+extern	ostream& yy_union_lookup_dump(const YYSTYPE&, const int, ostream&);
+extern	void yy_union_lookup_delete(const YYSTYPE&, const int);
+
+static
+void
+yyfreestacks(const short* yyss, const short* yyssp,
+		const YYSTYPE* yyvs, const YYSTYPE* yyvsp,
+		const YYSTYPE yylval, const int yychar,
+		const flex::lexer_state& _lexer_state);
+
+/* shared keyword tokens -- position inaccurate */
+static const count_ptr<node>
+kw_subckt(new string_token(".subckt")),
+kw_mosfet(new string_token(".mosfet")),
+kw_res(new string_token(".resistor")),
+kw_cap(new string_token(".capacitor")),
+kw_ind(new string_token(".inductor")),
+kw_inst(new string_token(".instance"));
+
+%}
+
+%token	<_void>			'='
+/* %token	<_void>			',' '(' ')' */
+
+%token	<_token>		SPICE_ID ESCAPEDID
+/* delay conversion of numbers because they can be identifiers */
+%token	<_token>		NUM
+%token	<_token>		RES CAP IND DEV INST
+/* keywords */
+%token	<_void>			END ENDS SUBCKT
+/* %token				CONNECT */
+
+%type	<_list>			spice_deck top_cards_opt top_cards
+%type	<_list>			top_card subcircuit_definition sub_card
+%type	<_list>			sub_cards_opt sub_cards
+%type	<_list>			resistor capacitor inductor
+%type	<_list>			transistor instance
+%type	<_list>			terminals identifier_opt
+%type	<_token>		terminal identifier value
+%type	<_list>			parameters_opt parameters
+/* is really just a pair */
+%type	<_list>			parameter
+
+
+%start	spice_deck
+
+/* YACC_PURE_PARSER: conditionally substituted by configure */
+@YACC_PURE_PARSER@
+
+%%
+
+spice_deck
+	: top_cards_opt end_opt {
+		$$ = $1;
+#ifdef	LIBBOGUS
+		global_spice_lval = $1;
+#endif
+		if (!yychar) {
+			yylval._list = $$;
+		}
+	}
+	;
+
+end_opt
+	: END
+	|
+	;
+
+top_cards_opt
+	: top_cards { $$ = $1; }
+	| { $$ = NULL; }
+	;
+
+top_cards
+	: top_cards top_card
+		{ APPEND_LIST($1, $2); $$ = $1; }
+	| top_card
+		{ $$ = new node_list($1); }
+	;
+
+top_card
+	: subcircuit_definition { $$ = $1; }
+	| sub_card { $$ = $1; }
+	;
+
+/* for now, no nested subcircuits */
+subcircuit_definition
+	: SUBCKT terminals sub_cards_opt ENDS identifier_opt {
+		// TODO: start list with subckt keyword?
+		$$ = new node_list(kw_subckt);
+		APPEND_LIST($$, $2);
+		APPEND_LIST($$, $3);
+	}
+	;
+
+sub_cards_opt
+	: sub_cards { $$ = $1; }
+	| { $$ = NULL; }
+	;
+
+sub_cards
+	: sub_cards sub_card
+		{ APPEND_LIST($1, $2); $$ = $1; }
+	| sub_card
+		{ $$ = new node_list($1); }
+	;
+
+sub_card
+	: instance { $$ = $1; }
+	| resistor { $$ = $1; }
+	| capacitor { $$ = $1; }
+	| inductor { $$ = $1; }
+	| transistor { $$ = $1; }
+/*
+	| diode { $$ = $1; }
+	| connect_stmt { $$ = $1; }
+	| vsrc { $$ = $1; }
+	| isrc { $$ = $1; }
+*/
+	;
+
+/* last 'terminal' is actually the instance type */
+instance
+/*
+	terminals[0] is the instance name
+	terminals[last] is the type name
+*/
+	: INST terminals parameters_opt
+		{ $$ = new node_list(kw_inst);
+			APPEND_LIST($$, $2);
+			/* APPEND_LIST($$, $3); */
+			/* parameters not supported for now */
+			if ($3)	DELETE_TOKEN($3);
+		}
+	;
+
+terminals
+	: terminals terminal
+		{ APPEND_LIST($1, $2); $$ = $1; }
+	| terminal
+		{ $$ = new node_list($1); }
+	;
+
+terminal
+	: identifier { $$ = $1; }
+	;
+
+identifier_opt
+	: identifier
+	|
+	;
+
+/* yes, spice allows almost anything, even numbers to be identifiers */
+identifier
+	: SPICE_ID { $$ = $1; }
+	| ESCAPEDID { $$ = $1; }
+	| NUM { $$ = $1; }
+	;
+
+resistor
+/*	R	name	node1	node2	resistance */
+	: RES terminal terminal terminal value
+		{ $$ = new node_list(kw_res);
+			APPEND_LIST($$, $2);
+			APPEND_LIST($$, $3);
+			APPEND_LIST($$, $4);
+			APPEND_LIST($$, $5);
+		}
+	;
+
+capacitor
+/*	C	name	node1	node2	capacitance */
+	: CAP terminal terminal terminal value
+		{ $$ = new node_list(kw_cap);
+			APPEND_LIST($$, $2);
+			APPEND_LIST($$, $3);
+			APPEND_LIST($$, $4);
+			APPEND_LIST($$, $5);
+		}
+	;
+
+inductor
+/*	L	name	node1	node2	inductance */
+	: IND terminal terminal terminal value
+		{ $$ = new node_list(kw_ind);
+			APPEND_LIST($$, $2);
+			APPEND_LIST($$, $3);
+			APPEND_LIST($$, $4);
+			APPEND_LIST($$, $5);
+		}
+	;
+
+transistor
+/*	M	name	source	gate	drain	body	type	... */
+	: DEV terminal terminal terminal terminal terminal terminal parameters_opt
+		{ $$ = new node_list(kw_mosfet);
+			APPEND_LIST($$, $2);
+			APPEND_LIST($$, $3);
+			APPEND_LIST($$, $4);
+			APPEND_LIST($$, $5);
+			APPEND_LIST($$, $6);
+			APPEND_LIST($$, $7);
+			/* parameters not supported for now */
+			if ($8)	DELETE_TOKEN($8);
+		}
+	;
+
+value
+	: NUM { $$ = $1; }
+	;
+
+parameters_opt
+	: parameters { $$ = $1; }
+	| { $$ = NULL; }
+	;
+
+parameters
+	: parameters parameter
+		{ APPEND_LIST($1, $2); $$ = $1; }
+	| parameter
+		{ $$ = new node_list($1); }
+	;
+
+parameter
+	: SPICE_ID '=' value
+		{ $$ = new node_list($1); APPEND_LIST($$, $3); }
+	;
+
+/**
+connect_stmt
+	: CONNECT terminal terminal
+	;
+**/
+
+%%
+
+#include "parser/yyfreestacks.cc"		// we've moved!
+#include "parser/yyerror.cc"			// we've moved!
+
+static
+void yyerror(const char* msg) {
+	STACKTRACE_VERBOSE;
+	__yyerror(msg);		// standard implementation
+	THROW_EXIT;
+}
+

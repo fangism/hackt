@@ -1,0 +1,9 @@
+.subckt dummy<> in out
+.ends
+
+.subckt chain<> x y
+xyummy x b dummy<>
+xtummy b y dummy<>
+.ends
+
+

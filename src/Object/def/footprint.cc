@@ -79,6 +79,7 @@
 #include "Object/expr/expr_dump_context.h"
 #endif
 #include "Object/unroll/unroll_context.h"
+#include "Object/interfaces/VCDwriter.h"	// should belong elsewhere
 #include "common/TODO.h"
 #include "main/cflat_options.h"
 
@@ -348,9 +349,18 @@ footprint::footprint(const temp_footprint_tag_type&) :
 	value_footprint_base<pint_tag>(), 
 	value_footprint_base<preal_tag>(), 
 	value_footprint_base<pstring_tag>(), 
+	created(false),
+	instance_collection_map(), 
+	scope_aliases(), 
+	port_aliases(),
 	prs_footprint(new PRS::footprint), 
+	chp_footprint(NULL), 	// allocate when we actually need it
+	chp_event_footprint(), 
 	spec_footprint(new SPEC::footprint),
-	lock_state(false) { }
+	warning_count(0),
+	lock_state(false) {
+	STACKTRACE_CTOR_VERBOSE;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1418,6 +1428,7 @@ footprint::connection_diagnostics(const bool top) const {
  */
 void
 footprint::allocate_chp_events(void) {
+	STACKTRACE_VERBOSE;
 if (chp_footprint) {
 	CHP::local_event_allocator v(chp_event_footprint);
 	chp_footprint->accept(v);
@@ -1443,6 +1454,15 @@ footprint::cflat_aliases(ostream& o,
 	}
 	const footprint_frame ff(*this);
 	global_offset g;
+if (cf.connect_style == cflat_options::CONNECT_STYLE_HIERARCHICAL) {
+if (cf.primary_tool == cflat_options::TOOL_VCD) {
+	VCD::VCDwriter v(ff, g, o, cf);
+	accept(v);
+} else {
+	hierarchical_alias_visitor v(ff, g);	// is quiet, but traverses
+	accept(v);
+}
+} else {
 	alias_printer v(o, ff, g, cf, wires, string());
 	accept(AS_A(global_entry_context&, v));
 	if (cf.wire_mode && cf.connect_style && !cf.check_prs) {
@@ -1465,6 +1485,7 @@ footprint::cflat_aliases(ostream& o,
 		// else is loner, has no aliases
 		}
 	}
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

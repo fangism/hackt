@@ -1,0 +1,8 @@
+// "preserve-port-01.hac"
+// @hacknet-flags@ -f empty_subcircuits=1 -T dummy
+
+defproc dummy(bool? in; bool! out) {
+in?;
+out!;
+}
+

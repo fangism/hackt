@@ -3,6 +3,122 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2012-03-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-91-prsim-engine-rewrite-06:
+	  At this point, all prsim issues not related to force-excl rings
+		have been resolved, and regression test cases updated.
+		This point has also merged from master up to tag
+		HACKT-00-01-04-main-00-85-12.
+
+
+2012-03-26	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-12:
+	  Fixed error-handling on parse-error of an array instance
+		connection interpreted as a function-call, 
+		which resulted in memory leak.  Added test cases.
+
+
+2012-03-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-11:
+	  updated yacc union awk script to replace 'include' variable, 
+		which is reserved for GNU awk >= 4.0.
+	  fixes #3
+
+
+2012-03-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-10:
+	  hacprsim: new 'x-all' command to clear nodes to X, clear
+		event queue and most simulator state, except modes
+		and setup, so single trace can capture multiple runs.
+	  Documented, basically tested.
+
+
+2012-03-09	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-09:
+	  hacknet: treat subcircuits with any node used or driven
+		as non-empty.  Updated/added test case.
+
+
+2012-03-07	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-08:
+	  hacprsim: added VCD trace file support.
+		commands: vcd file, vcd-close, vcd-timescale
+	  hflat vcd: added option to mangle/demangle unique IDs
+		-f [no-]mangled-vcd-ids
+	  Documented, basically tested.
+
+
+2012-03-05	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-07:
+	  hflat: new vcd emitter that just produces hierarchical
+		VCD (trace-file) header, w/ global bool IDs
+		that identify each unique node/wire in the hierarchy.
+		Documented, tested.
+		TODO: emit complete vcd traces in hacprsim.
+
+
+2012-02-17	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-06:
+	  HAC: added macro/function call 'defined' that takes a single
+		scalar value reference, and returns a bool:
+		true if arg is defined, else false.
+		This allows users to default values if they are not 
+		already defined.
+		Looks like a function call, but is handled as a 
+		special expression type (Object/expr/param_defined.h).
+		Test cases added.
+
+
+2012-02-13	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-05:
+	  hacknet: new option named_port_connections that emits netlist
+		instances with named port connections .port(local), 
+		which eliminates port order dependence.  
+		Added test cases.  Documented.
+
+
+2012-02-09	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-04:
+	  Actually propagate bool port direction information through
+		middle-end, added a direction parameter to data_type_reference.
+		Object binary version is bumped to 9.  
+		Updated bool_connection_policy: fixed fanin/fanout direction
+			of local '!' and '?' declarations.  
+	  hacknet: verilog output now emits wire directions of ports.
+	  haccreate-connect:
+		enforced '?' as read-only (error out)
+		and '!' as must-drive (warning only)
+
+
+2012-01-20	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-03:
+	  hacknet/HAC: added bool!; and bool? definition-body notation
+		to explicitly flag a node as having fanin/fanout to
+		production rules, even if the PRS are absent.
+		This tells backend-tools like hacknet to not optimize it away.
+	  Test cases added only.
+
+
+2012-01-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-02:
+	  hacknet: never print subcircuit placeholders for channels
+		or structs, allows empty processes to be preserved cleanly.
+		For verilog output, print out structs/channels as 
+		dummy modules.  Test cases updated.
+
+
 2012-01-12	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-91-prsim-engine-rewrite-05:
@@ -13,6 +129,14 @@
 	  propagate_evaluate(): fixed condition for assigning root_rule of 
 		updated_nodes to account for weak-rules.
 	  Test cases updated.
+
+
+2011-12-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-01:
+	  CRITICAL bug fix (ACX-PR-6885):
+		CHP event pool compaction was corrupting memory,
+		due to a free-list/pool inconsistency.  Fixed.
 
 
 2011-12-14	David Fang		<fangism@users.sourceforge.net>
@@ -35,6 +159,117 @@
 
 	* HACKT-00-01-04-main-00-84-91-prsim-engine-rewrite-02:
 	  First draft of instability handling, only partially tested.
+2011-11-23	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-00:
+	  Merged prsim-bd (bundled-data) branch after rebase.
+	  Merged spice-verilog (spice parse front-end) branch after rebase.
+
+
+2011-11-22	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-98-prsim-bd-09:
+	  prsim/channel: support data-less handshakes for 2p and 4p
+		bundled-data (pass :0 for data-rail argument).
+		Internally, uses radix = 0 to mean data-less.
+		Test cases added, documented.
+
+
+2011-11-17	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-98-prsim-bd-08:
+	  prsim: fix: make sure summarize_status always sets
+		the full-empty handshake state regardless of data rails.
+
+
+	* HACKT-00-01-04-main-00-84-98-prsim-bd-07:
+	  prsim: fix bundled-data 2-phase sources and sinks for
+		first basic test cases (added).
+
+
+2011-11-16	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-98-prsim-bd-06:
+	  prsim: channel watched-but-ignored values are printed, 
+		but with extra "(ignored)" text for clarity.
+		Updated test cases.
+
+
+2011-11-16	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-98-prsim-bd-05:
+	  prsim: drafted bundled-data 2-phase channel-environments, untested.
+
+
+2011-11-15	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-99:
+	  Object/expr/meta_call_traits.h: extended auto-wrap call to 
+		support up to 10 arguments.  
+		This needs to be variadic (c++11) or auto-generated.
+
+
+2011-11-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-98-prsim-bd-04:
+	  prsim: adjusted channel-fanin/fanout, added bd timing global warning,
+		allow all bd channels to be signed.
+
+
+2011-11-12	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-98-prsim-bd-03:
+	  prsim: channel_exception, added support for X data received.
+		Check assertions on bd channels involving Xs and don't-cares.
+
+
+2011-11-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-98-prsim-bd-02:
+	  prsim: [bundled-data] First set of basic 4p source/sink test
+		cases, and some obvious fixes along the way.
+		bd-4p channels default to "channel-timing after", 
+		instead of global policy.
+
+
+2011-11-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-98-prsim-bd-01:
+	  hacprsim: Initial implementation of bundled-data support
+		in channel environments.  Untested.
+	  Channel-prsim.cc: also, re-factored much code to improve reusage and
+		maintainability, shared code w/ bundled-data support.
+
+
+2011-11-07	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-98-spice-verilog-03:
+	  lexer/spice-lex.ll: adjust spice card to expect keywords
+		after pre-processing by new script
+	  lib/scripts/hacspice-pp.sed: assist in spice tokenization
+	  main/spice-grind.cc: test program to parse spice file
+		into syntax tree, just dumps out LISP-structures for now.
+
+
+2011-10-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-98-spice-verilog-02:
+	  parser/spice-parse.yy.in: added semantic actions for building up 
+		spice-syntax tree and assigned generic token types.
+	  lexer/spice-lex.ll: split-out beginning-of-line cards
+		as separate token from identifier.
+		Use util::syntax::string_token.
+	  Syntax tree constructed using util/syntax.h (generic).
+	  parser/common-union-type.awk: support void* null type.
+
+
+2011-10-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-98-spice-verilog-01:
+	  Initial work on adding a spice-parser front-end, 
+		targeted for netlist (hacknet) data structures.
+		Plan is to produce some spice-to-{hac,verilog}
+		conversion utilities.
 
 
 2011-09-27	David Fang		<fangism@users.sourceforge.net>

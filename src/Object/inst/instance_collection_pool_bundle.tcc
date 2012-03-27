@@ -211,6 +211,7 @@ instance_collection_pool_bundle<Tag>::instance_collection_pool_bundle() :
 		instance_collection_pool_wrapper<instance_array<Tag, 4> >(), 
 		instance_collection_pool_wrapper<port_formal_array<Tag> >(), 
 		instance_collection_pool_wrapper<port_actual_collection<Tag> >() {
+	STACKTRACE_CTOR_VERBOSE;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

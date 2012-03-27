@@ -1,0 +1,4 @@
+.subckt dummy<> in out
+.ends
+
+

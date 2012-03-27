@@ -20,12 +20,14 @@ HACKT_PRSIM_SUFFIXES = \
 	.prsimckpt-O1-dump .prsimopt-diff \
 	.prsimtrace .prsimtrace-O1 \
 	.prsimtrace-dump .prsimtrace-O1-dump .prsimtrace-diff \
-	.prsimtrace-dump-filter .prsimtrace-O1-dump-filter
+	.prsimtrace-dump-filter .prsimtrace-O1-dump-filter \
+	.vcd .vcd-filter .vcd-diff
 
 HACKT_PRSIM_TEST_SUFFIXES = \
 	.prsimtest .prsimfailtest \
 	.hacktprsimexprtest \
 	.prsimtracetest \
+	.prsimvcdtest \
 	.prsimckpttest \
 	.prsimopttest \
 	.hacktprsdottest 
@@ -63,7 +65,11 @@ HACKT_PRSIM_CLEAN_IGNORE_PATTERNS = \
 	"*.prsimtrace-O1-dump" \
 	"*.prsimtrace-O1-dump-filter" \
 	"*.prsimtrace-diff" \
-	"*.prsimtracetest"
+	"*.prsimtracetest" \
+	"*.vcd" \
+	"*.vcd-filter" \
+	"*.vcd-diff" \
+	"*.prsimvcdtest"
 
 AUTO_IGNORE += $(HACKT_PRSIM_CLEAN_IGNORE_PATTERNS)
 
@@ -144,7 +150,8 @@ prsimexprtest.autodepend: Makefile
 # we now perform $srcdir substitution and $(HACO_FLAGS) substitution
 # in the event where the input file is a hac source, as opposed to object file
 # Some directories will not want trace files, so we provide a hook to disable
-# automatic trace saving: PRSIMRC_AUTOTRACE_DISABLE_HOOK = autotrace=0
+# automatic trace saving: PRSIMRC_AUTOTRACE_DISABLE_HOOK = autotrace=0 ;
+# if autotracing is on, also produce a vcd
 PRSIMRC_TEST_SCRIPT = \
 	obj=`$(CAT) $< | $(EXTRACT_HACO_PIPE) | \
 	  $(SED) -e 's|[$$]srcdir|$(srcdir)|g' \
@@ -152,17 +159,22 @@ PRSIMRC_TEST_SCRIPT = \
 	flags=`$(CAT) $< | $(EXTRACT_HACPRSIM_FLAGS_PIPE)` ; \
 	ckpt=`$(ECHO) $@ | $(SED) 's/\.prsim.*$$/.prsimckpt/g'` ; \
 	trace=`$(ECHO) $@ | $(SED) 's/\.prsim.*$$/.prsimtrace/g'` ; \
+	vcd=`$(ECHO) $@ | $(SED) 's/\.prsim.*$$/.vcd/g'` ; \
 	$(RM) $$ckpt $$trace ; \
 	autotrace=1 ; \
 	$(PRSIMRC_AUTOTRACE_DISABLE_HOOK) \
 	if test "$$autotrace" = 1 ; then traceflag="-r $$trace" ; fi ; \
+	autovcd=$$autotrace ; \
 	cmd="$(HACKT_PRSIM_EXE) -b -a $$ckpt $$traceflag $(AM_HACPRSIM_FLAGS) $$flags $$obj" ; \
 	$(ECHO) "ckpt: $$cmd < $<" ; \
-	$(SED) -e 's|SOURCE|$<|g' $(PRSIMCKPT_TEMPLATE_SCRIPT) | \
+	{ if test "$$autovcd" = 1 ; then $(ECHO) "vcd $$vcd" ; fi ; \
+	$(SED) -e 's|SOURCE|$<|g' $(PRSIMCKPT_TEMPLATE_SCRIPT) ;} | \
 	  $$cmd > $@ 2>&1 ; \
 	test -f $$ckpt || $(ECHO) "Warning: $$ckpt not produced." ; \
 	test "$$autotrace" = 0 || \
 	  test -f $$trace || $(ECHO) "Warning: $$trace not produced." ; \
+	test "$$autovcd" = 0 || \
+	  test -f $$vcd || $(ECHO) "Warning: $$vcd not produced." ; \
 	$(TOUCH) $@
 # test -f $$ckpt && test -f $$trace ?
 
@@ -242,11 +254,11 @@ prsimrcfail-out.autodepend: Makefile
 -include prsimrc-out.autodepend
 -include prsimrcfail-out.autodepend
 
+VCD_MSG_FILTER = $(GREP) -v "Writing simulation vcd"
 # semi-hackish way to conditionally filter random timing
 # HACK: if the file name has 'random' in it, then filter out timestamps
 PRSIMRC_TEST_FILTER_SCRIPT = \
-	$(CAT) $< | \
-		$(SED) -e '/DELETE FROM HERE/d' -e '/DELETE TO HERE/,$$d' | \
+	$(SED) -e '0,/DELETE FROM HERE/d' -e '/DELETE TO HERE/,$$d' $< | \
 		$(PRSIMRC_FILTER_AWK) > $@ ; \
 	case $< in \
 	  *random*) $(CAT) $@ | $(PRSIMRC_TIME_FILTER_AWK) | \
@@ -352,7 +364,8 @@ prsimfailtest.autodepend: Makefile
 -include prsimfailtest.autodepend
 
 .prsimrc-out.prsimckpt-outdump:
-	@$(SED) '/DELETE FROM HERE/,/DELETE TO HERE/d' $< > $@
+	@$(SED) '/DELETE FROM HERE/,/DELETE TO HERE/d' $< | \
+		$(VCD_MSG_FILTER) > $@
 
 # no-op: simultaneously produced target
 .prsimrc-out.prsimckpt:
@@ -405,6 +418,41 @@ prsimtracetest.autodepend: Makefile
 
 -include prsimtracetest.autodepend
 
+VCD_SED_FILTER = sed -e '/^$$date/,/^$$end/s|^[\t].*|\#\#DATE\#\#|' \
+	-e '/^$$version/,/^$$end/s|^[\t].*|\#\#VERSION\#\#|'
+
+# but .prsimrc script *should* generate .vcd file explicitly
+.prsimrc-out.vcd:
+	@$(NO_OP_SCRIPT)
+
+.vcd.vcd-filter:
+	@$(VCD_SED_FILTER) $< > $@
+
+.vcd-filter.vcd-diff:
+	@stderr=`$(ECHO) $@ | $(SED) 's/\-diff$$/-expect/'` ; \
+	expect=$(srcdir)/$$stderr ; \
+	$(RM) $@ ; \
+	if test -f "$$expect" ; then \
+	  $(ECHO_PRSIMRC_DIFF_COMMAND) ; \
+	  $(DIFF) -bu "$$expect" $< > $@ 2>&1 ; \
+	  if test -s $@ ; then \
+	    $(ECHO) "$@ is non-empty!" ; \
+	  fi ; \
+	else $(ECHO) "Missing $$expect." | $(TEE) $@ ; \
+	fi ; \
+	$(TOUCH) $@
+
+.vcd-diff.prsimvcdtest:
+	@$(DEFAULT_DIFF_TEST_SCRIPT)
+
+prsimvcdtest.autodepend: Makefile
+	@$(ECHO) "Generating dependencies $@" ; \
+	$(ECHO) "$(HACKT_PRSIMVCD_TEST_SUBJECTS)" | \
+	  $(SPACES_TO_NEWLINE) | $(SORT) -u | \
+	  $(AWK) '/.+/ {print $$1 ".vcd-diff: $$(srcdir)/" $$1 ".vcd-expect"; }' > $@ ; \
+	$(TOUCH) $@
+
+-include prsimvcdtest.autodepend
 
 #	rc=$(srcdir)/`$(ECHO) $@ | $(SED) 's/\.prsim.*$$/.prsimrc/g'` ; \
 #	obj=`$(CAT) "$$rc" | $(EXTRACT_HACO_PIPE)`
@@ -545,6 +593,7 @@ prsimopttest.autodepend: Makefile
 
 AUTO_DEPENDS += hacktprsdottest.autodepend \
 	prsimtracetest.autodepend \
+	prsimvcdtest.autodepend \
 	prsimexprtest.autodepend \
 	prsimrc-out.autodepend \
 	prsimrcfail-out.autodepend \
@@ -555,12 +604,12 @@ AUTO_DEPENDS += hacktprsdottest.autodepend \
 
 
 BOGUS_TESTS += .hacktprsdottest .hacktprsimexprtest \
-	.prsimtest .prsimfailtest .prsimtracetest \
+	.prsimtest .prsimfailtest .prsimtracetest .prsimvcdtest \
 	.prsimckpttest .prsimopttest
 
 
 CHECK_SUMMARIES += prsimexprdiffs \
-	prsimrcdiffs prsimrcfaildiffs prsimtracediffs \
+	prsimrcdiffs prsimrcfaildiffs prsimtracediffs vcddiffs \
 	prsimckptdiffs prsimoptdiffs
 
 
@@ -572,6 +621,9 @@ prsimrcfaildiffs: force
 
 prsimtracediffs: force
 	-$(CAT) *.prsimtrace-diff > $@
+
+vcddiffs: force
+	-$(CAT) *.vcd-diff > $@
 
 prsimckptdiffs: force
 	-$(CAT) *.prsimckpt-diff > $@
@@ -591,7 +643,10 @@ srcdir_EXTRA_DIST += \
 	$(HACKT_PRSIMRC_TEST_SUBJECTS:=.hac) \
 	$(HACKT_PRSIMRC_TEST_SCRIPTS_BASES:=.prsimrc) \
 	$(HACKT_PRSIMRC_TEST_SCRIPTS_BASES:=.prsimrc-expect) \
-	$(HACKT_PRSIMTRACE_TEST_SUBJECTS:=.prsimtrace-expect)
+	$(HACKT_PRSIMTRACE_TEST_SUBJECTS:=.prsimrc) \
+	$(HACKT_PRSIMTRACE_TEST_SUBJECTS:=.prsimtrace-expect) \
+	$(HACKT_PRSIMVCD_TEST_SUBJECTS:=.prsimrc) \
+	$(HACKT_PRSIMVCD_TEST_SUBJECTS:=.vcd-expect)
 
 
 # all alloc tests and prsimrc tests are candidates for prs-dot tests
@@ -606,6 +661,7 @@ TESTS += \
 	$(HACKT_PRSIMRC_TEST_SCRIPTS_PASSES:=.prsimtest) \
 	$(HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES:=.prsimfailtest) \
 	$(HACKT_PRSIMTRACE_TEST_SUBJECTS:=.prsimtracetest) \
+	$(HACKT_PRSIMVCD_TEST_SUBJECTS:=.prsimvcdtest) \
 	$(HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES:=.prsimckpttest) \
 	$(HACKT_PRSIM_OPT_TEST_SCRIPTS_BASES:=.prsimopttest) \
 	$(HACKT_PRS_DOT_TEST_SUBJECTS:=.hacktprsdottest)
@@ -645,6 +701,10 @@ build-check-local: \
 	$(HACKT_PRSIMTRACE_TEST_SUBJECTS:=.prsimtrace-dump) \
 	$(HACKT_PRSIMTRACE_TEST_SUBJECTS:=.prsimtrace-dump-filter) \
 	$(HACKT_PRSIMTRACE_TEST_SUBJECTS:=.prsimtrace-diff) \
+	$(HACKT_PRSIMVCD_TEST_SUBJECTS:=.prsimrc-out) \
+	$(HACKT_PRSIMVCD_TEST_SUBJECTS:=.vcd) \
+	$(HACKT_PRSIMVCD_TEST_SUBJECTS:=.vcd-filter) \
+	$(HACKT_PRSIMVCD_TEST_SUBJECTS:=.vcd-diff) \
 	$(HACKT_PRSIMEXPR_TEST_SUBJECTS:=.haco-c) \
 	$(HACKT_PRSIMEXPR_TEST_SUBJECTS:=.prsimexpr) \
 	$(HACKT_PRSIMEXPR_TEST_SUBJECTS:=.prsimexprdiff) \
@@ -689,6 +749,9 @@ echo-prsimrc-tests: force
 
 echo-prsimtrace-tests: force
 	@$(ECHO) $(HACKT_PRSIMTRACE_TEST_SUBJECTS)
+
+echo-prsimvcd-tests: force
+	@$(ECHO) $(HACKT_PRSIMVCD_TEST_SUBJECTS)
 
 echo-prsimckpt-tests: force
 	@$(ECHO) $(HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES)

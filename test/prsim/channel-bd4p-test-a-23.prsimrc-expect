@@ -1,0 +1,28 @@
+channels:
+W : bundled-4p .a(init:0) .n x8 unsigned off
+X : bundled-4p .e(init:1) .v x8 unsigned off
+Y : bundled-4p .a(init:0) .v x8 unsigned off
+Z : bundled-4p .e(init:1) .n x8 unsigned off
+channels:
+W : bundled-4p .a(init:0) .n x8 unsigned off
+X : bundled-4p .e(init:1) .v x8 unsigned off
+Y : bundled-4p .a(init:0) .v x8 unsigned off
+Z : bundled-4p .e(init:1) .n x8 unsigned off
+Warning: channel acknowledge `X.e' has no fanin!
+Warning: channel validity `X.v' has no fanout, but is being sourced.
+Warning: channel acknowledge `Y.a' has no fanin!
+Warning: channel validity `Y.v' has no fanout, but is being sourced.
+Warning: channel validity `Z.n' has no fanin.
+Warning: channel validity `W.n' has no fanin.
+initializing... 
+X : bundled-4p .e(init:1) .v x8 unsigned source, timing: after=10 {0,0,0,1,} @0
+	count: 0, unknowns: 8
+Y : bundled-4p .a(init:0) .v x8 unsigned source, timing: after=10 {0,2,0,1,}* @0 #0
+	count: 0, unknowns: 8
+Z : bundled-4p .e(init:1) .n x8 unsigned sink, timing: after=10
+	count: 0, unknowns: 8
+W : bundled-4p .a(init:0) .n x8 unsigned sink, timing: after=10
+	count: 0, unknowns: 8
+resetting... 
+channels:
+all gone! 

@@ -1,0 +1,18 @@
+* channel or struct e1of2<> is omitted.
+
+.subckt empty_1<>
+.ends
+
+.subckt empty_2<>
+xr empty_1<>
+xs empty_1<>
+.ends
+
+.subckt empty_3<>
+xQ empty_2<>
+xK empty_1<>
+xQ.Y empty_1<>
+.ends
+
+xfoo empty_3<>
+

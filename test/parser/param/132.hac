@@ -1,0 +1,6 @@
+// "132.hac"
+
+pbool x;
+pbool y = defined(x);		// should be false
+pbool z = ~defined(x);		// should be true
+

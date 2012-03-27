@@ -1,0 +1,8 @@
+// "preserve-port-03.hac"
+// @hacknet-flags@ -f empty_subcircuits=1
+
+import "preserve-port-01.hac";
+
+bool f, g;
+dummy yummy(f, g);
+

@@ -13,11 +13,11 @@ Persistent Object Manager text dump:
 	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	10	##ADDR##	portscop	0	#HEAD#	#TAIL#	28
 	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
 	13	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
 	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	16	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
 	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	18	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
 	19	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
@@ -39,7 +39,7 @@ Persistent Object Manager text dump:
 	35	##ADDR##	procplch	0	#HEAD#	#TAIL#	29
 	36	##ADDR##	procplch	0	#HEAD#	#TAIL#	29
 	37	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	38	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
 	39	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	40	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
 	41	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16

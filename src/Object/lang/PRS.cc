@@ -749,6 +749,9 @@ if (output.is_internal()) {
 	state_instance<bool_tag>::pool_type&
 		bp(tfp.get_instance_pool<bool_tag>());
 	// kludge: get_back_ref only returns const ptr ...
+#if BOOL_CONNECTIVITY_CHECKING
+	const good_bool fig = 
+#endif
 	const_cast<instance_alias_info<bool_tag>&>(
 		*bp[output_node_index -1].get_back_ref())
 			.find()->prs_fanin(dir);
@@ -762,6 +765,14 @@ if (output.is_internal()) {
 			*bp[*i -1].get_back_ref()).find()->prs_fanout(dir);
 		// pool is 0-indexed
 	}
+#if BOOL_CONNECTIVITY_CHECKING
+	if (!fig.good) {
+		cerr << "Attempting to drive: ";
+		output.dump(cerr, rule_dump_context())
+			<< (dir ? '+' : '-') << endl;
+		return good_bool(false);
+	}
+#endif
 }
 #endif
 	footprint_rule&

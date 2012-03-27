@@ -1,0 +1,25 @@
+# "x-all-05.prsimrc"
+# copy-modified from "freeze-01.prsimrc"
+# @haco@ inv.haco-c
+# testing freeze and thaw(unset)
+
+watchall
+frozen-verbose on
+status-frozen
+echo freezing c
+freeze c
+status-frozen
+set a 0
+cycle
+assert c X
+set a 1
+cycle
+assert c X
+time
+
+echo ########## x-all #########
+x-all
+status-frozen
+getall .
+time
+

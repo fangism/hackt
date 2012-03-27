@@ -55,6 +55,7 @@ namespace entity {
 	class pbool_const;
 	class preal_const;
 	class pstring_const;
+	class param_defined;
 //	class param_unary_expr;
 	class pint_unary_expr;
 	class pbool_unary_expr;

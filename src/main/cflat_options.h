@@ -43,7 +43,11 @@ public:
 		/**
 			hierarchical semi-procedural layout directives
 		 */
-		TOOL_LAYOUT
+		TOOL_LAYOUT,
+		/**
+			VCD trace file header
+		 */
+		TOOL_VCD
 		// add more tools as they are needed
 	}				primary_tool_enum;
 	/**
@@ -66,7 +70,8 @@ public:
 		CONNECT_STYLE_NONE = 0,
 		CONNECT_STYLE_CONNECT,
 		CONNECT_STYLE_EQUAL,
-		CONNECT_STYLE_WIRE
+		CONNECT_STYLE_WIRE,
+		CONNECT_STYLE_HIERARCHICAL	///< nested scopes
 	}				connect_style_enum;
 public:
 	/**
@@ -192,7 +197,12 @@ public:
 			to protect shell-characters.  
 	 */
 	bool		use_referenced_type_instead_of_top_level;
-
+	/**
+		If true, use the non-readable base-94 ASCII charecters for
+		unique IDs, otherwise, use a more readable unique <ID> number.  
+		Default: true
+	 */
+	bool				mangled_vcd_ids;
 	/**
 		The string of the complete process type to process
 		in lieu of the top-level instance hierarchy.  
@@ -244,6 +254,7 @@ public:
 		show_hierarchy(false),
 		show_channel_terminals(false),
 		use_referenced_type_instead_of_top_level(false), 
+		mangled_vcd_ids(true),
 		named_process_type(), 
 		comp_opt(), 
 		__dump_flags(dump_flags::no_owners),

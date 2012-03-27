@@ -1,0 +1,2 @@
+Error: cannot reference top-level instance from within a definition!  [9:2]
+ERROR: at least one error in PRS body.

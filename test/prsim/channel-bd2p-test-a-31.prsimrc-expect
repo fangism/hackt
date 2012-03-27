@@ -1,0 +1,10 @@
+channels:
+A : bundled-2p .e:0 .v:0 x8 unsigned off
+B : bundled-2p .e:0 .v:1 x8 unsigned off
+C : bundled-2p .e:1 .v:0 x8 unsigned off
+D : bundled-2p .e:1 .v:1 x8 unsigned off
+channels:
+A : bundled-2p .e:0 .v:0 x8 unsigned expect {0,1,} @0
+B : bundled-2p .e:0 .v:1 x8 unsigned expect {0,1,3,2,} @0
+C : bundled-2p .e:1 .v:0 x8 unsigned expect {240,13,255,170,} @0
+D : bundled-2p .e:1 .v:1 x8 unsigned expect {5,85,127,100,} @0

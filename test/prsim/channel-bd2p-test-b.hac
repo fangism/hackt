@@ -1,0 +1,6 @@
+// "channel-bd2p-test-b.hac"
+
+import "../../lib/channel_bd.hac";
+
+bd_2p0 A, B, C, D;
+

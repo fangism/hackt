@@ -139,14 +139,24 @@ NodeState::invert_value[3] = { LOGIC_HIGH, LOGIC_LOW, LOGIC_OTHER };
 /**
 	This just initializes all nodes with unknown values.  
 	This preserves the watchpoint and breakpoint state of all nodes.  
+	Transition counts are reset to 0.
  */
 void
 NodeState::initialize(void) {
-	event_index = INVALID_EVENT_INDEX;
-	// placement destruct for good measure?
-	new (&causes) LastCause;	// placement construct to initialize
-	value = LOGIC_OTHER;
+	x_value_and_cause();
 	tcount = 0;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This just initializes all nodes with unknown values.  
+	This preserves the watchpoint and breakpoint state of all nodes.  
+ */
+void
+NodeState::x_value_and_cause(void) {
+	event_index = INVALID_EVENT_INDEX;
+	causes.initialize();
+	value = LOGIC_OTHER;
 	state_flags |= NODE_INITIALIZE_SET_MASK;
 	state_flags &= ~NODE_INITIALIZE_CLEAR_MASK;
 	pull_up_state STR_INDEX(NORMAL_RULE).initialize();

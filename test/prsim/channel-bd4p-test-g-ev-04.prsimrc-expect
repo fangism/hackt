@@ -1,0 +1,211 @@
+channels:
+W : bundled-4p .a(init:0) .n ~x8 unsigned off
+X : bundled-4p .e(init:1) .v ~x8 unsigned off
+Y : bundled-4p .a(init:0) .v ~x8 unsigned off
+Z : bundled-4p .e(init:1) .n ~x8 unsigned off
+X : bundled-4p .e(init:1) .v ~x8 unsigned off
+	count: 0, unknowns: 8
+All subnodes of 'X':
+X.e : X
+X.v : X
+X.d[0] : X
+X.d[1] : X
+X.d[2] : X
+X.d[3] : X
+X.d[4] : X
+X.d[5] : X
+X.d[6] : X
+X.d[7] : X
+Warning: channel acknowledge `X.e' has no fanin!
+Warning: channel validity `X.v' has no fanout, but is being sourced.
+	10	X.d[0] : 1
+	10	X.d[1] : 1
+	10	X.d[2] : 1
+	10	X.d[3] : 1
+	10	X.d[4] : 1
+	10	X.d[5] : 1
+	10	X.d[6] : 1
+	10	X.d[7] : 1
+	10	X.v : 0
+All subnodes of 'X':
+X.e : X
+X.v : 0
+X.d[0] : 1
+X.d[1] : 1
+X.d[2] : 1
+X.d[3] : 1
+X.d[4] : 1
+X.d[5] : 1
+X.d[6] : 1
+X.d[7] : 1
+X : bundled-4p .e(init:1) .v ~x8 unsigned source,watch,stopped, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @0
+	count: 0, unknowns: 0
+manually bucketing 
+	10	X.e : 0
+releasing channel X (source) 
+should be no data yet because ack is off 
+----------------------------------- 
+	10	X.e : 1
+event queue:
+	20	X.v : 1	[from X.e:=1]
+end of queue 
+channel	X (.data) : 0 @ 20
+	20	X.v : 1	[by X.e:=1]
+X : bundled-4p .e(init:1) .v ~x8 unsigned source,watch, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @1
+	count: 0, unknowns: 0
+event    : `X.d[0]' : 1
+(no cycle)
+event    : `X.v' : 1
+caused by: `X.e' : 1
+(no cycle)
+- - - - - - - - - - - - - - - - - - 
+	20	X.e : 0
+	30	X.v : 0	[by X.e:=0]
+X : bundled-4p .e(init:1) .v ~x8 unsigned source,watch, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @1
+	count: 0, unknowns: 0
+----------------------------------- 
+	30	X.e : 1
+	40	X.d[0] : 0	[by X.e:=1]
+	40	X.d[5] : 0	[by X.e:=1]
+channel	X (.data) : 33 @ 40
+	40	X.v : 1	[by X.e:=1]
+X : bundled-4p .e(init:1) .v ~x8 unsigned source,watch, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @2
+	count: 2, unknowns: 0
+- - - - - - - - - - - - - - - - - - 
+	40	X.e : 0
+	50	X.v : 0	[by X.e:=0]
+X : bundled-4p .e(init:1) .v ~x8 unsigned source,watch, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @2
+	count: 2, unknowns: 0
+----------------------------------- 
+	50	X.e : 1
+	60	X.d[0] : 1	[by X.e:=1]
+	60	X.d[1] : 0	[by X.e:=1]
+	60	X.d[5] : 1	[by X.e:=1]
+	60	X.d[6] : 0	[by X.e:=1]
+channel	X (.data) : 66 @ 60
+	60	X.v : 1	[by X.e:=1]
+X : bundled-4p .e(init:1) .v ~x8 unsigned source,watch, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @3
+	count: 2, unknowns: 0
+- - - - - - - - - - - - - - - - - - 
+	60	X.e : 0
+	70	X.v : 0	[by X.e:=0]
+X : bundled-4p .e(init:1) .v ~x8 unsigned source,watch, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @3
+	count: 2, unknowns: 0
+----------------------------------- 
+	70	X.e : 1
+	80	X.d[0] : 0	[by X.e:=1]
+	80	X.d[5] : 0	[by X.e:=1]
+channel	X (.data) : 99 @ 80
+	80	X.v : 1	[by X.e:=1]
+X : bundled-4p .e(init:1) .v ~x8 unsigned source,watch, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @4
+	count: 4, unknowns: 0
+- - - - - - - - - - - - - - - - - - 
+	80	X.e : 0
+	90	X.v : 0	[by X.e:=0]
+X : bundled-4p .e(init:1) .v ~x8 unsigned source,watch, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @4
+	count: 4, unknowns: 0
+----------------------------------- 
+	90	X.e : 1
+	100	X.d[3] : 0	[by X.e:=1]
+	100	X.d[5] : 1	[by X.e:=1]
+	100	X.d[6] : 1	[by X.e:=1]
+channel	X (.data) : 11 @ 100
+	100	X.v : 1	[by X.e:=1]
+X : bundled-4p .e(init:1) .v ~x8 unsigned source,watch, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @5
+	count: 3, unknowns: 0
+- - - - - - - - - - - - - - - - - - 
+	100	X.e : 0
+	110	X.v : 0	[by X.e:=0]
+X : bundled-4p .e(init:1) .v ~x8 unsigned source,watch, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @5
+	count: 3, unknowns: 0
+----------------------------------- 
+	110	X.e : 1
+	120	X.d[0] : 1	[by X.e:=1]
+	120	X.d[1] : 1	[by X.e:=1]
+	120	X.d[2] : 0	[by X.e:=1]
+	120	X.d[5] : 0	[by X.e:=1]
+channel	X (.data) : 44 @ 120
+	120	X.v : 1	[by X.e:=1]
+X : bundled-4p .e(init:1) .v ~x8 unsigned source,watch, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @6
+	count: 3, unknowns: 0
+- - - - - - - - - - - - - - - - - - 
+	120	X.e : 0
+	130	X.v : 0	[by X.e:=0]
+X : bundled-4p .e(init:1) .v ~x8 unsigned source,watch, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @6
+	count: 3, unknowns: 0
+----------------------------------- 
+	130	X.e : 1
+	140	X.d[0] : 0	[by X.e:=1]
+	140	X.d[5] : 1	[by X.e:=1]
+	140	X.d[6] : 0	[by X.e:=1]
+channel	X (.data) : 77 @ 140
+	140	X.v : 1	[by X.e:=1]
+X : bundled-4p .e(init:1) .v ~x8 unsigned source,watch, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @7
+	count: 4, unknowns: 0
+- - - - - - - - - - - - - - - - - - 
+	140	X.e : 0
+	150	X.v : 0	[by X.e:=0]
+X : bundled-4p .e(init:1) .v ~x8 unsigned source,watch, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @7
+	count: 4, unknowns: 0
+----------------------------------- 
+	150	X.e : 1
+	160	X.d[0] : 1	[by X.e:=1]
+	160	X.d[1] : 0	[by X.e:=1]
+	160	X.d[3] : 1	[by X.e:=1]
+	160	X.d[4] : 0	[by X.e:=1]
+	160	X.d[6] : 1	[by X.e:=1]
+channel	X (.data) : 22 @ 160
+	160	X.v : 1	[by X.e:=1]
+X : bundled-4p .e(init:1) .v ~x8 unsigned source,watch, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @8
+	count: 3, unknowns: 0
+- - - - - - - - - - - - - - - - - - 
+	160	X.e : 0
+	170	X.v : 0	[by X.e:=0]
+X : bundled-4p .e(init:1) .v ~x8 unsigned source,watch, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @8
+	count: 3, unknowns: 0
+----------------------------------- 
+	170	X.e : 1
+	180	X.d[0] : 0	[by X.e:=1]
+	180	X.d[5] : 0	[by X.e:=1]
+channel	X (.data) : 55 @ 180
+	180	X.v : 1	[by X.e:=1]
+X : bundled-4p .e(init:1) .v ~x8 unsigned source,watch, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @9
+	count: 5, unknowns: 0
+- - - - - - - - - - - - - - - - - - 
+	180	X.e : 0
+	190	X.v : 0	[by X.e:=0]
+X : bundled-4p .e(init:1) .v ~x8 unsigned source,watch, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @9
+	count: 5, unknowns: 0
+----------------------------------- 
+	190	X.e : 1
+	200	X.d[0] : 1	[by X.e:=1]
+	200	X.d[1] : 1	[by X.e:=1]
+	200	X.d[2] : 1	[by X.e:=1]
+	200	X.d[3] : 0	[by X.e:=1]
+	200	X.d[5] : 1	[by X.e:=1]
+	200	X.d[6] : 0	[by X.e:=1]
+channel	X (.data) : 88 @ 200
+	200	X.v : 1	[by X.e:=1]
+X : bundled-4p .e(init:1) .v ~x8 unsigned source,watch, timing: after=10
+	count: 3, unknowns: 0
+- - - - - - - - - - - - - - - - - - 
+	200	X.e : 0
+	210	X.v : 0	[by X.e:=0]
+X : bundled-4p .e(init:1) .v ~x8 unsigned source,watch, timing: after=10
+	count: 3, unknowns: 0
+----------------------------------- 
+no more values!!! 
+	210	X.e : 1
+X : bundled-4p .e(init:1) .v ~x8 unsigned source,watch, timing: after=10
+	count: 3, unknowns: 0
+All subnodes of 'X':
+X.e : 1
+X.v : 0
+X.d[0] : 1
+X.d[1] : 1
+X.d[2] : 1
+X.d[3] : 0
+X.d[4] : 0
+X.d[5] : 1
+X.d[6] : 0
+X.d[7] : 1

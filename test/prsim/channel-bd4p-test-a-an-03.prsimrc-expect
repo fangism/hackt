@@ -1,0 +1,69 @@
+channels:
+W : bundled-4p .a(init:0) .n x8 unsigned off
+X : bundled-4p .e(init:1) .v x8 unsigned off
+Y : bundled-4p .a(init:0) .v x8 unsigned off
+Z : bundled-4p .e(init:1) .n x8 unsigned off
+Warning: channel validity `W.n' has no fanin.
+All subnodes of 'W':
+W.a : X
+W.n : X
+W.d[0] : X
+W.d[1] : X
+W.d[2] : X
+W.d[3] : X
+W.d[4] : X
+W.d[5] : X
+W.d[6] : X
+W.d[7] : X
+manually resetting data 
+	0	W.d[0] : 0
+	0	W.d[1] : 0
+	0	W.d[2] : 0
+	0	W.d[3] : 0
+	0	W.d[4] : 0
+	0	W.d[5] : 0
+	0	W.d[6] : 0
+	0	W.d[7] : 0
+	0	W.n : 1
+	10	W.a : 0
+releasing channel W 
+------------------------------------ 
+setting data rail 
+channel	W (.data) : 0 @ 10
+	10	W.n : 0
+	20	W.a : 1	[by W.n:=0]
+W : bundled-4p .a(init:0) .n x8 unsigned sink,watch, timing: after=10
+	count: 0, unknowns: 0
+event    : `W.a' : 1
+caused by: `W.n' : 0
+(no cycle)
+------------------------------------ 
+resetting data rail 
+	20	W.n : 1
+	30	W.a : 0	[by W.n:=1]
+W : bundled-4p .a(init:0) .n x8 unsigned sink,watch, timing: after=10
+	count: 0, unknowns: 0
+event    : `W.a' : 0
+caused by: `W.n' : 1
+(no cycle)
+------------------------------------ 
+setting data rail, new value 
+	30	W.d[1] : 1
+	30	W.d[2] : 1
+channel	W (.data) : 6 @ 30
+	30	W.n : 0
+	40	W.a : 1	[by W.n:=0]
+W : bundled-4p .a(init:0) .n x8 unsigned sink,watch, timing: after=10
+	count: 2, unknowns: 0
+event    : `W.a' : 1
+caused by: `W.n' : 0
+(no cycle)
+------------------------------------ 
+resetting data rail 
+	40	W.n : 1
+	50	W.a : 0	[by W.n:=1]
+W : bundled-4p .a(init:0) .n x8 unsigned sink,watch, timing: after=10
+	count: 2, unknowns: 0
+event    : `W.a' : 0
+caused by: `W.n' : 1
+(no cycle)

@@ -30,6 +30,7 @@ dist_hacktlib_DATA = \
 	connect.hac \
 	channel.hac \
 	channel_ledr.hac \
+	channel_bd.hac \
 	env.hac \
 	buffer.hac \
 	buffer_init.hac \
@@ -52,15 +53,24 @@ dist_katesyn_DATA = \
 CLEANFILES += hac.vimrc
 
 dist_bin_SCRIPTS = \
+	scripts/hacspice-pp.sed \
 	scripts/prsim_timed_backtrace.awk \
 	scripts/prsim_timed_fwdtrace.awk \
 	scripts/prsimrc_alter_instance.awk \
 	scripts/prsimlog_to_evcd.awk \
 	scripts/prsimlog_to_evcd_ports.awk \
 	scripts/prsimlog_to_evcd.sh \
+	scripts/spice_cell_count.awk \
+	scripts/spice_instance_tree.awk \
 	scripts/spice_line_join.awk \
-	scripts/spice-wrap.awk \
 	scripts/spice-to-hac.awk \
+	scripts/spice_to_pdf.sh \
+	scripts/spice_to_verilog_quick.awk \
+	scripts/spice_tsort.sh \
+	scripts/spice_type_deps.awk \
+	scripts/spice_type_deps_to_pdf.sh \
+	scripts/spice_unique_leaves.awk \
+	scripts/spice-wrap.awk \
 	verilog/vpp.sh \
 	verilog/vcs_scandepend.sh \
 	verilog/wrap_verilog_modules_to_hacprsim.awk

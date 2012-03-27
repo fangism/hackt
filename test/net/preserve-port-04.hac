@@ -1,0 +1,11 @@
+// "preserve-port-04.hac"
+// @hacknet-flags@ -f empty_subcircuits=1 -T chain
+
+import "preserve-port-01.hac";
+
+defproc chain(bool x, y) {
+bool b;
+dummy yummy(x, b);
+dummy tummy(b, y);
+}
+

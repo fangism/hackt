@@ -67,17 +67,32 @@
 /**
 	An option to treat a vector of nodes as a bus.
 	Useful for synchronous bus interfaces.  
+	This would be handy for bundled-data channels.
  */
 #define	PRSIM_CHANNEL_VECTORS			0
 
 /**
 	Define to 1 to support different channel types.
 	The first new channel type we support is LEDR.
-	Next could be single-track.
 	Goal: 1
-	Status: done for LEDR channels, just not bundled
- */
+	Status: done for LEDR channels, just not bundled, perm'd.
 #define	PRSIM_CHANNEL_LEDR			1
+ */
+#define	PRSIM_CHANNEL_LEDR_BUS			0
+
+/**
+	Define to 1 to support single-track 1ofN channel types.
+	Goal: 1
+	Status: in one's imagination
+ */
+#define	PRSIM_CHANNEL_SINGLE_TRACK		0
+
+/**
+	Define to 1 to support bundled data channel types.
+	There are both 4-phase and 2-phase bundled data types.
+	Goal: 1
+ */
+#define	PRSIM_CHANNEL_BUNDLED_DATA		1
 
 /**
 	Define to 1 to interpret channel values as signed.
@@ -144,7 +159,7 @@ struct env_event_type {
 	channel_time_type		delay;
 
 #if 0
-	env_event_type(const node_index_type ni, const value_enum v) {
+	env_event_type(const node_index_type ni, const value_enum v) :
 		node_index(ni), value(v), use_global(true) { }
 
 	env_event_type(const node_index_type ni, const value_enum v, 
@@ -153,6 +168,14 @@ struct env_event_type {
 #endif
 	env_event_type(const node_index_type ni, const value_enum v, 
 		const channel& c);
+	env_event_type(const node_index_type ni, const value_enum v, 
+		const channel_time_type d);
+
+	// for sorting based on delay
+	bool
+	operator < (const env_event_type& r) const {
+		return delay < r.delay;
+	}
 
 };	// end struct env_event_type
 #else
@@ -171,14 +194,16 @@ struct channel_exception : public step_exception {
 	size_t				iteration;
 	int_value_type			expect;
 	int_value_type			got;
+	bool				got_x;
 
 	channel_exception(
 		const channel* c,
 		const size_t in, const size_t it,
-		const int_value_type e, const int_value_type g) :
+		const int_value_type e, const int_value_type g, 
+		const bool gx) :
 		chan(c), 
 		index(in), iteration(it), 
-		expect(e), got(g) { }
+		expect(e), got(g), got_x(gx) { }
 
 	error_policy_enum
 	inspect(const State&, ostream&) const;
@@ -261,13 +286,16 @@ public:
 	/// if true, print watched and logged nodes with timestamps
 	static bool					report_time;
 private:
-#if PRSIM_CHANNEL_LEDR
 	enum channel_types {
 		CHANNEL_TYPE_1ofN,
-		CHANNEL_TYPE_LEDR,
-		CHANNEL_TYPE_SINGLE_TRACK
-	};
+		CHANNEL_TYPE_LEDR,	// level-encoded dual-rail
+#if PRSIM_CHANNEL_BUNDLED_DATA
+		CHANNEL_TYPE_BD_4P,	// bundled-data 4-phase
+		CHANNEL_TYPE_BD_2P,	// bundled-data 2-phase
 #endif
+		CHANNEL_TYPE_SINGLE_TRACK,
+		CHANNEL_TYPE_NULL
+	};
 	enum channel_flags {
 		/// the value of channel enable on reset
 		CHANNEL_ACK_RESET_VALUE =	0x0001,
@@ -369,12 +397,10 @@ private:
 	 */
 	preal_value_type			timing_probability;
 #endif
-#if PRSIM_CHANNEL_LEDR
 	/**
 		Channel encoding and protocol type.
 	 */
 	ushort					type;
-#endif
 	/**
 		General attribute and mode flags.  
 	 */
@@ -457,6 +483,7 @@ public:
 	bundles(void) const { return data.size()[0]; }
 
 	// should be ok for LEDR as well
+	// radix == 0 means data-less
 	size_t
 	radix(void) const { return data.size()[1]; }
 
@@ -510,6 +537,19 @@ private:
 
 	void
 	set_all_data_rails(const State&, vector<env_event_type>&);
+
+#if PRSIM_CHANNEL_BUNDLED_DATA
+	void
+	reset_bundled_data_rails(vector<env_event_type>&);
+
+	void
+	update_bd_data_counter(const value_enum, const value_enum);
+
+	void
+	update_data_counter(const value_enum p, const value_enum n) {
+		update_bd_data_counter(p, n);
+	}
+#endif
 
 	void
 	initialize_all_data_rails(vector<env_event_type>&);
@@ -582,7 +622,6 @@ public:
 	}
 #endif
 
-#if PRSIM_CHANNEL_LEDR
 	// TODO: once wider LEDR channels are supported, 
 	// cannot use a single repeat rail any more, 
 	// need one per bit.  
@@ -611,11 +650,27 @@ public:
 		return get_valid_sense();
 	}
 
+#if PRSIM_CHANNEL_BUNDLED_DATA
+	// valid-sense is also overloaded for req-init
+	void
+	set_req_init(const bool r) {
+		set_valid_sense(r);
+	}
+
+	bool
+	get_req_init(void) const {
+		return get_valid_sense();
+	}
+#endif
+
 	bool
 	four_phase(void) const {
 	switch (type) {
 		case CHANNEL_TYPE_1ofN: return true;
 		// CHANNEL_TYPE_LEDR
+#if PRSIM_CHANNEL_BUNDLED_DATA
+		case CHANNEL_TYPE_BD_4P: return true;
+#endif
 		// CHANNEL_TYPE_SINGLE_TRACK
 		default: return false;
 	}
@@ -623,28 +678,43 @@ public:
 
 	bool
 	two_phase(void) const {
+		// Q: what about 1-phase? (ack-less)
 		return !four_phase();
 	}
 
 private:
 	// the parity specified by the initial empty state
 	bool
-	empty_parity(void) const {
+	ledr_empty_parity(void) const {
+		INVARIANT(type == CHANNEL_TYPE_LEDR);
 		return get_data_init() ^ get_repeat_init() ^ get_ack_init();
 	}
 
+#if PRSIM_CHANNEL_BUNDLED_DATA
 	bool
-	full_parity(void) const {
-		return !empty_parity();
+	bd2p_empty_parity(void) const {
+		INVARIANT(type == CHANNEL_TYPE_BD_2P);
+		return get_req_init() ^ get_ack_init();
+	}
+#endif
+
+	bool
+	ledr_full_parity(void) const {
+		return !ledr_empty_parity();
 	}
 
 	value_enum
 	current_ledr_parity(const State& s) const;
 
+#if PRSIM_CHANNEL_BUNDLED_DATA
+	value_enum
+	current_bd2p_parity(const State& s) const;
+#endif
+
+	// this suffices until LEDR supports bus of rails
 	node_index_type
 	ledr_data_rail(void) const { return data.front(); }
 
-#endif	// PRSIM_CHANNEL_LEDR
 
 public:
 	bool
@@ -726,7 +796,11 @@ public:
 #if PRSIM_CHANNEL_SIGNED
 	bool
 	can_be_signed(void) const {
-		return (radix() == 2) && (bundles() > 1);
+		return
+#if PRSIM_CHANNEL_BUNDLED_DATA
+			(data_is_bundled() && radix()) ||
+#endif
+			((radix() == 2) && (bundles() > 1));
 	}
 
 	void
@@ -805,6 +879,12 @@ public:
 	bool
 	data_is_valid(void) const;
 
+	bool
+	data_is_bundled(void) const {
+		return (type == CHANNEL_TYPE_BD_4P) ||
+			(type == CHANNEL_TYPE_BD_2P);
+	}
+
 	value_type
 	data_rails_value(const State&) const;
 
@@ -850,13 +930,16 @@ public:
 		const value_enum, const value_enum, 
 		vector<env_event_type>&) throw(channel_exception);
 
-#if 0
 private:
+#if 0
 	void
 	update_rail_map(void);
 	// lookup node_index to bundle, rail
 #endif
+	ostream&
+	__dump_ack_valid_type(ostream&) const;
 
+public:
 	ostream&
 	dump(ostream&) const;
 
@@ -868,15 +951,25 @@ private:
 		in the channel structure.  
 	 */
 	struct status_summary {
+		/// snapshot of the current data value, may be garbage
 		value_type		current_value;
+		/// true if channel data is known to be in transient state
 		bool			value_transitioning;
+		/// true if channel is considered to 'have' a token
 		bool			full;	// or empty
+		/// true if ack is X
 		bool			x_ack;
+		/// true if ack is active (asserted)
 		bool			ack_active;
+		/// true if valid/request is X
 		bool			x_valid;
+		/// true if valid/request is active (asserted)
 		bool			valid_active;
+		/// true if validity/req is due to change next (ev handshake)
 		bool			valid_following;
+		/// true if the next action is expected to be from sender
 		bool			waiting_sender;
+		/// true if the next action is expected to be from receiver
 		bool			waiting_receiver;
 
 		status_summary() :	// defaults
@@ -891,6 +984,26 @@ private:
 			waiting_sender(false), 
 			waiting_receiver(false)
 			{ }
+
+		// only applicable to 2-phase channels
+		void
+		set_empty(bool e) {
+			full = !e;
+		if (e) {
+			waiting_sender = true;
+			valid_active = false;
+			ack_active = true;
+		} else {
+			waiting_receiver = true;
+			valid_active = true;
+			ack_active = false;
+		}
+		}
+
+		void
+		set_full(bool f) {
+			set_empty(!f);
+		}
 	};	// end struct status_summary
 
 	status_summary
@@ -906,7 +1019,7 @@ private:
 // don't bother passing ostream& to these assert functions for now
 	bool
 	__assert_channel_value(const value_type& expect, 
-		const value_type& got, const bool confirm) const;
+		const value_type& got, const bool x, const bool confirm) const;
 
 	bool
 	__assert_value(const status_summary&, const value_type&, 
@@ -919,6 +1032,15 @@ private:
 	bool
 	__assert_full(const status_summary&,
 		const bool, const bool) const;
+
+#if PRSIM_CHANNEL_BUNDLED_DATA
+	void
+	set_bd_data_req(const State&, const status_summary&,
+		vector<env_event_type>&);
+#endif
+
+	void
+	__resume_4p_sink(const status_summary&, vector<env_event_type>&);
 
 	env_event_type
 	toggle_node(const State& s, const node_index_type ni) const;
@@ -988,16 +1110,48 @@ public:
 private:
 	bool
 	set_channel_ack_valid(State&, const string&, 
-		const bool, const bool, const bool, const bool, const bool);
+		const bool have_ack, const bool ack_sense, const bool ack_init,
+		const bool have_validity, const bool validity_sense);
+
+	bool
+	allocate_data_rails(State&, const module&, const size_t ci,
+		const string& bn, const size_t nb, 
+		const string& rn, const size_t nr);
+
+	bool
+	set_channel_2p_ack(State&, const size_t ci,
+		const string& an, const bool ai);
+
+	bool
+	set_channel_2p_req(State&, const size_t ci,
+		const string& rn, const bool ri);
 
 public:
-#if PRSIM_CHANNEL_LEDR
 	bool
 	new_channel_ledr(State&, const string&, 
 		const string& an, const bool ai,
 		const string& bn, const size_t, 
 		const string& dn, const bool di, const bool ds,
 		const string& rn, const bool ri);
+
+#if PRSIM_CHANNEL_BUNDLED_DATA
+	// for now, name is hard-coded based on sense
+	bool
+	new_channel_bd4p(State&, const string&, 
+//		const string& an, 
+		const bool as, const bool ai,
+//		const string& rn, 
+		const bool rs, 
+//		const bool ri,
+		const string& dn, const size_t nr, const bool ds);
+
+	bool
+	new_channel_bd2p(State&, const string&, 
+		const string& an, 
+		const bool ai, 
+		const string& rn, 
+		const bool ri,
+		const string& dn, const size_t nr, const bool ds);
 #endif
 
 	ostream&

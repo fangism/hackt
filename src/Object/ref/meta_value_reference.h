@@ -79,6 +79,9 @@ virtual	bad_bool
 		}
 	};	// end struct unroll_resolve_rvaluesr
 
+virtual	void
+	collect_transient_info(persistent_object_manager&) const = 0;
+
 };	// end class meta_value_reference
 
 //=============================================================================

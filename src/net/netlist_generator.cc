@@ -267,7 +267,12 @@ if (&f == topfp) {	// at_top()
 	nl->dump_raw(cerr);	// DEBUG point
 #endif
 if (opt.print) {
-if (opt.empty_subcircuits || !nl->is_empty()) {
+if (nl->is_channel_or_struct() &&
+		(opt.subckt_def_style != netlist_options::STYLE_VERILOG)) {
+	// for verilog, emit dummy bogus modules for now
+	os << opt.comment_prefix << "channel or struct "
+		<< nl->name << " is omitted.\n" << endl;
+} else if (opt.empty_subcircuits || !nl->is_empty()) {
 	// TODO: emit verilog modules
 	nl->emit(os, !top_level || opt.top_type_ports, opt) << endl;
 } else {

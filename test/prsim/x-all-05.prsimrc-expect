@@ -1,0 +1,20 @@
+Nodes frozen:
+freezing c 
+Nodes frozen:
+c
+	0	a : 0
+Firing for frozen node `c' suppressed.
+	10	b : 1	[by a:=0]
+	10	a : 1
+Firing for frozen node `c' suppressed.
+	20	b : 0	[by a:=1]
+time: 20
+########## x-all ######### 
+Nodes frozen:
+All subnodes of '.':
+!GND : 0
+!Vdd : 1
+a : X
+b : X
+c : X
+time: 20

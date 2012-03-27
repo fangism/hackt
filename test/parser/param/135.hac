@@ -1,0 +1,6 @@
+// "135.hac"
+
+pbool x, z;
+pbool y = defined(x, z);		// should compile FAIL
+	// expect arg to be a single reference
+

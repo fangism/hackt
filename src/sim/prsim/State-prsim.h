@@ -70,6 +70,12 @@ using util::memory::excl_ptr;
 using util::memory::never_ptr;
 using SIM::INVALID_TRACE_INDEX;
 #endif
+#if PRSIM_VCD_GENERATION
+class VCDManager;
+using util::memory::excl_ptr;
+using util::memory::never_ptr;
+using SIM::INVALID_TRACE_INDEX;
+#endif
 #if PRSIM_AGGREGATE_EXCEPTIONS
 using util::memory::count_ptr;
 #endif
@@ -144,6 +150,9 @@ public:
 #if PRSIM_TRACE_GENERATION
 	typedef	size_t				trace_index_type;
 	typedef	TraceManager			trace_manager_type;
+#endif
+#if PRSIM_VCD_GENERATION
+	typedef	VCDManager			vcd_manager_type;
 #endif
 	typedef	EventPlaceholder<time_type>	event_placeholder_type;
 	typedef	EventQueue<event_placeholder_type>	event_queue_type;
@@ -314,9 +323,17 @@ private:
 #endif
 #if PRSIM_TRACE_GENERATION
 		/**
-			Set to true when events are being traced.
+			Set to true when events are being 
+			recorded to a prsim trace file.
 		 */
 		FLAG_TRACE_ON = 0x8000,
+#endif
+#if PRSIM_VCD_GENERATION
+		/**
+			Set to true when events are being traced, 
+			and recorded to a vcd file.
+		 */
+		FLAG_VCD_ON = 0x10000,
 #endif
 		/// initial flags
 		FLAGS_DEFAULT = FLAG_CHECK_EXCL | FLAG_SHOW_CAUSE,
@@ -333,12 +350,16 @@ private:
 		/**
 			Flag states that should NOT be saved. 
 		 */
-		FLAGS_CHECKPOINT_MASK = ~(FLAG_AUTOSAVE | FLAG_TRACE_ON)
+		FLAGS_CHECKPOINT_MASK = ~(FLAG_AUTOSAVE | FLAG_TRACE_ON
+#if PRSIM_VCD_GENERATION
+			| FLAG_VCD_ON
+#endif
+			)
 	};
 	/**
 		As we add more flags this will have to expand...
 	 */
-	typedef	ushort				flags_type;
+	typedef	size_t				flags_type;
 
 public:
 	/**
@@ -613,6 +634,10 @@ private:
 	excl_ptr<trace_manager_type>		trace_manager;
 	trace_index_type			trace_flush_interval;
 #endif
+#if PRSIM_TRACE_GENERATION
+	excl_ptr<vcd_manager_type>		vcd_manager;
+	double					vcd_timescale;
+#endif
 #if CACHE_GLOBAL_FOOTPRINT_FRAMES
 public:
 	// parameters for managing module_state_base's footprint_frame cache
@@ -721,7 +746,16 @@ public:
 	void
 	destroy(void);
 
+	void
+	x_all(void);
+
 private:
+	void
+	__initialize_state(const bool);
+
+	void
+	__initialize_time(void);
+
 	void
 	__initialize(void);
 
@@ -839,6 +873,13 @@ public:
 
 	bool
 	set_timing(const string&, const string_list&);
+
+	bool
+	timing_is_randomized(void) const {
+		return !(timing_mode == TIMING_UNIFORM ||
+			timing_mode == TIMING_AFTER);
+		// everything else is randomized
+	}
 
 	static
 	ostream&
@@ -1520,6 +1561,40 @@ public:
 	set_trace_flush_interval(const trace_index_type i) {
 		INVARIANT(i);
 		trace_flush_interval = i;
+	}
+#endif
+#if PRSIM_VCD_GENERATION
+	bool
+	is_tracing_vcd(void) const { return flags & FLAG_VCD_ON; }
+
+	void
+	stop_vcd(void) { flags &= ~FLAG_VCD_ON; }
+
+	never_ptr<vcd_manager_type>
+	get_vcd_manager(void) const {
+		return vcd_manager;
+	}
+
+	never_ptr<vcd_manager_type>
+	get_vcd_manager_if_tracing(void) const {
+		return is_tracing_vcd() ? vcd_manager
+			: never_ptr<vcd_manager_type>(NULL);
+	}
+
+	bool
+	open_vcd(const string&);
+
+	void
+	close_vcd(void);
+
+	double
+	get_vcd_timescale(void) const {
+		return vcd_timescale;
+	}
+
+	void
+	set_vcd_timescale(const double& d) {
+		vcd_timescale = d;
 	}
 #endif
 

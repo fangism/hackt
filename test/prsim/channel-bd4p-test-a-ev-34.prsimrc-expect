@@ -1,0 +1,56 @@
+	0	X.d[0] : 1
+	0	X.d[1] : 1
+	0	X.d[2] : 1
+	0	X.d[3] : 1
+	0	X.d[4] : 0
+	0	X.d[5] : 0
+	0	X.d[6] : 0
+	0	X.d[7] : 0
+channels:
+W : bundled-4p .a(init:0) .n x8 unsigned off
+X : bundled-4p .e(init:1) .v x8 unsigned off
+Y : bundled-4p .a(init:0) .v x8 unsigned off
+Z : bundled-4p .e(init:1) .n x8 unsigned off
+no values given: will reset to neutral 
+Warning: channel acknowledge `X.e' has no fanin!
+Warning: channel validity `X.v' has no fanout, but is being sourced.
+Warning: no values given, channel will remain neutral.
+channels:
+W : bundled-4p .a(init:0) .n x8 unsigned off
+X : bundled-4p .e(init:1) .v x8 unsigned source, timing: after=10
+Y : bundled-4p .a(init:0) .v x8 unsigned off
+Z : bundled-4p .e(init:1) .n x8 unsigned off
+this time, no sink 
+resetting all channels... 
+	10	X.d[0] : 0
+	10	X.d[1] : 0
+	10	X.d[2] : 0
+	10	X.d[3] : 0
+	10	X.v : 0
+releasing all channels... 
+	20	X.d[0] : X
+	20	X.d[1] : X
+	20	X.d[2] : X
+	20	X.d[3] : X
+	20	X.d[4] : X
+	20	X.d[5] : X
+	20	X.d[6] : X
+	20	X.d[7] : X
+all values went to X because X.e is X 
+X : bundled-4p .e(init:1) .v x8 unsigned source,watch, timing: after=10
+	count: 0, unknowns: 8
+setting X.e -> 0, resets data rails 
+	20	X.e : 0
+X : bundled-4p .e(init:1) .v x8 unsigned source,watch, timing: after=10
+	count: 0, unknowns: 8
+setting X.e -> X 
+	20	X.e : X
+	30	X.v : X	[by X.e:=X]
+X : bundled-4p .e(init:1) .v x8 unsigned source,watch, timing: after=10
+	count: 0, unknowns: 8
+setting X.e -> 1, also causes data rails to reset 
+	30	X.e : 1
+X : bundled-4p .e(init:1) .v x8 unsigned source,watch, timing: after=10
+	count: 0, unknowns: 8
+setting X.e -> X 
+	30	X.e : X

@@ -137,6 +137,9 @@ virtual	~global_entry_context();
 	visit_types(const footprint&);
 
 	void
+	visit_recursive_unique(const footprint&);
+
+virtual	void
 	visit_recursive(const footprint&);
 
 public:

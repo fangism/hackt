@@ -1,0 +1,67 @@
+$date
+##DATE##
+$end
+$version
+##VERSION##
+$end
+$timescale
+	1ps
+$end
+$scope module hacprsim-TOP $end
+  $var wire 1 " !GND $end
+  $var wire 1 # !Vdd $end
+  $var wire 1 $ a $end
+  $var wire 1 % b $end
+  $var wire 1 & c $end
+  $scope module I $end
+    $var wire 1 " !GND $end
+    $var wire 1 # !Vdd $end
+    $var wire 1 $ a $end
+    $var wire 1 % b $end
+  $upscope $end
+  $scope module J $end
+    $var wire 1 " !GND $end
+    $var wire 1 # !Vdd $end
+    $var wire 1 % a $end
+    $var wire 1 & b $end
+  $upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+0"
+1#
+X$
+X%
+X&
+$end
+0$
+#10
+1%
+#20
+0&
+1$
+#30
+0%
+#40
+1&
+X$
+#50
+X%
+#60
+X&
+0$
+#70
+1%
+#80
+0&
+1$
+#90
+0%
+#100
+1&
+X$
+#110
+X%
+#120
+X&

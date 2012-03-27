@@ -575,10 +575,12 @@ global_entry_context::visit(const state_instance<bool_tag>& p) { }
 /**
 	Recursively traverses processes, setting up footprint frame context 
 	at each level.
+	This traversal visits each unique process instance *once*.
+	If you wish to visit each unique process alias, then override this.
 	TODO: parameter for include_ports.  not needed?
  */
 void
-global_entry_context::visit_recursive(const footprint& f) {
+global_entry_context::visit_recursive_unique(const footprint& f) {
         STACKTRACE_VERBOSE;
 #if ENABLE_STACKTRACE
 	STACKTRACE_INDENT_PRINT("in process id " << _gpid << ", type: ");
@@ -619,6 +621,12 @@ global_entry_context::visit_recursive(const footprint& f) {
 		sgo += sfp;
 	}
 	// invariant checks on sgo, consistent with local instance_pools
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+global_entry_context::visit_recursive(const footprint& f) {
+	visit_recursive_unique(f);	// default
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

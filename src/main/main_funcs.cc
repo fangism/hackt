@@ -407,13 +407,14 @@ log:
 6c: split meta_func_call into different types, one for each meta-expr type
 7: spec invariants added optional strings for assert messages
 8: process directionality flags, direction_declaration types
+9: added direction enum to data_type_reference
 ?: support for member nonmeta instance/value references
  */
 static const size_t
 #if NONMETA_MEMBER_REFERENCES
-object_file_format_version = 8;
-#else
 object_file_format_version = 9;
+#else
+object_file_format_version = 10;
 #endif
 
 //=============================================================================

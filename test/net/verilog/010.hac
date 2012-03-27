@@ -1,0 +1,20 @@
+// "010.hac"
+// @hacknet-flags@ -T mux16 -f node_ports=1
+
+defproc mux4i(bool? in[4]; bool! out; bool? cfg_sel[2]) {
+in?;
+out!;
+cfg_sel?;
+}
+
+defproc mux16(bool? in[16]; bool! out; bool? cfg_sel[4]) {
+bool _mid[4];
+mux4i mx1[4];
+(;i:4:
+        mx1[i](in[4*i..4*i+3], _mid[i], cfg_sel[0..1]);
+)
+mux4i mx2(_mid, out, cfg_sel[2..3]);
+}
+
+mux16 Z;
+

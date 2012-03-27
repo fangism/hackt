@@ -39,6 +39,8 @@
 #include "Object/expr/nonmeta_cast_expr.h"
 #include "Object/expr/nonmeta_expr_list.h"
 #include "Object/expr/dynamic_param_expr_list.h"
+#include "Object/expr/param_defined.h"
+#include "Object/ref/meta_value_reference_base.h"
 #include "Object/ref/data_nonmeta_instance_reference.h"
 #include "Object/ref/nonmeta_instance_reference_subtypes.h"
 #include "Object/traits/bool_traits.h"
@@ -129,6 +131,8 @@ using entity::nonmeta_expr_list;
 using entity::nonmeta_func_call;
 using entity::meta_func_call;
 using entity::meta_func_call_base;
+using entity::meta_value_reference_base;
+using entity::param_defined;
 
 //=============================================================================
 // class probe_expr method definitions
@@ -1572,10 +1576,11 @@ log::__check_action(context& c) const {
 
 function_call_expr::function_call_expr(const id_expr* i, const expr_list* a) :
 		fname(i), args(a) {
-	NEVER_NULL(fname);
+//	NEVER_NULL(fname);	// error-handling this is postponed
 	NEVER_NULL(args);
 }
 
+#if 0
 /**
 	Parse-time type checking done here to simplify grammar.  
 	\throw exception if base reference is wrong type.  
@@ -1592,6 +1597,7 @@ function_call_expr::function_call_expr(
 	}
 	NEVER_NULL(args);
 }
+#endif
 
 function_call_expr::~function_call_expr() { }
 
@@ -1605,7 +1611,9 @@ function_call_expr::dump(ostream& o) const {
 
 line_position
 function_call_expr::leftmost(void) const {
-	return fname->leftmost();
+	if (fname)
+		return fname->leftmost();
+	else	return args->leftmost();
 }
 
 line_position
@@ -1619,6 +1627,7 @@ function_call_expr::rightmost(void) const {
  */
 statement::return_type
 function_call_expr::__check_action(context& c) const {
+	INVARIANT(valid_fname());
 	const count_ptr<nonmeta_func_call>	
 		call(__check_nonmeta_expr(c));
 	// error handling, please?
@@ -1631,11 +1640,12 @@ function_call_expr::__check_action(context& c) const {
  */
 expr::meta_return_type
 function_call_expr::check_meta_expr(const context& c) const {
-#if 0
-	ICE_NEVER_CALL(cerr);
-	return expr::meta_return_type(NULL);
-#else
 	// check function name against registry
+	if (!valid_fname()) {
+		cerr << "Error: invalid function-id in function call before: "
+			<< where(*this) << endl;
+		return expr::meta_return_type(NULL);
+	}
 	const qualified_id& id(*fname->get_id());
 	INVARIANT(!id.empty());
 	std::ostringstream fname_str;
@@ -1649,10 +1659,33 @@ function_call_expr::check_meta_expr(const context& c) const {
 	count_ptr<dynamic_param_expr_list>
 		ra(new dynamic_param_expr_list);
 	copy(i, e, back_inserter(*ra));
+if (fn == "defined") {
+	// intercept this special function and create a different expr type
+	// make sure args contain a single reference only
+	static const char err_msg[] =
+"Error: defined() expects a single scalar parameter reference argument.";
+	if (ra->size() != 1) {
+		cerr << err_msg << endl;
+		cerr << "\tat: " << where(*args) << endl;
+		THROW_EXIT;
+	}
+	const count_ptr<const meta_value_reference_base>
+		rr(ra->front().is_a<const meta_value_reference_base>());
+	if (!rr || rr->dimensions()) {
+		cerr << err_msg << endl;
+		cerr << "\tat: " << where(*args) << endl;
+		THROW_EXIT;
+	}
+	const expr::meta_return_type ret(new param_defined(rr));
+	return ret;
+} else {
 	const expr::meta_return_type
 		ret(meta_func_call_base::make_meta_func_call(fn, ra));
+	if (!ret) {
+		cerr << "Error with function call at: " << where(*this) << endl;
+	}
 	return ret;
-#endif
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1680,6 +1713,11 @@ function_call_expr::check_nonmeta_expr(const context& c) const {
  */
 count_ptr<nonmeta_func_call>
 function_call_expr::__check_nonmeta_expr(const context& c) const {
+	if (!valid_fname()) {
+		cerr << "Error: invalid function-id in function call before: "
+			<< where(*this) << endl;
+		return count_ptr<nonmeta_func_call>(NULL);
+	}
 	expr_list::checked_nonmeta_exprs_type temp;
 	args->postorder_check_nonmeta_exprs(temp, c);
 	const count_ptr<nonmeta_expr_list>

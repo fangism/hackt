@@ -10,7 +10,7 @@
 
 AC_PREREQ(2.59)
 dnl also works with autoconf 2.60 now
-AC_INIT(hackt, 0.1.4-devel-20110803, fangism@users.sourceforge.net)
+AC_INIT(hackt, 0.1.4-devel-20111123, fangism@users.sourceforge.net)
 dnl prefer to push this into src directory, 
 dnl and have "src/config.h" wrap around this.  
 AC_CONFIG_HEADERS([src/__config__.h])
@@ -641,6 +641,8 @@ AC_CONFIG_FILES([
 	hackt.doxygen.config
 	installcheck.mk
 ])
+AC_CONFIG_FILES([pre-inst-env],
+	[chmod +x pre-inst-env])
 AC_CONFIG_FILES([hackt-config],
 	[chmod +x hackt-config])
 AC_CONFIG_FILES([src/hac-cpp],
@@ -649,6 +651,8 @@ AC_CONFIG_FILES([src/hacguile],
 	[chmod +x src/hacguile])
 AC_CONFIG_FILES([src/hacchpsimguile],
 	[chmod +x src/hacchpsimguile])
+AC_CONFIG_FILES([src/spicegrind],
+	[chmod +x src/spicegrind])
 AC_CONFIG_FILES([scripts/replace_if_changed.sh],
 	[chmod +x scripts/replace_if_changed.sh])
 AC_CONFIG_FILES([src/util/test/hash_map_iterator_O2_bug_test.test],
@@ -682,6 +686,7 @@ AC_CONFIG_FILES([src/parser/hackt-parse.yy])
 AC_CONFIG_FILES([src/parser/instref-parse.yy])
 AC_CONFIG_FILES([src/parser/type-parse.yy])
 AC_CONFIG_FILES([src/parser/verilog-parse.yy])
+AC_CONFIG_FILES([src/parser/spice-parse.yy])
 AC_CONFIG_FILES([src/guile/config_version.h])
 AC_CONFIG_FILES([src/util/lang/CX/cx-parse.yy])
 AC_CONFIG_FILES([src/scripts/init_hackt.sh],

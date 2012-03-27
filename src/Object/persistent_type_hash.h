@@ -200,6 +200,7 @@
 #define	DYNAMIC_RANGE_LIST_TYPE_KEY				"drnglst"
 
 	// symbolic expressions on meta-values
+#define	PARAM_DEFINED_EXPR_TYPE_KEY				"pdefined"
 #define	PINT_UNARY_EXPR_TYPE_KEY				"pintunry"
 #define	PBOOL_UNARY_EXPR_TYPE_KEY				"pbolunry"
 #define	PREAL_UNARY_EXPR_TYPE_KEY				"prelunry"

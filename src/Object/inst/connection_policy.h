@@ -20,6 +20,7 @@
 	Goal: 1
 	Rationale: connectivity summary needed for netlist generation.
 	Status: done, fairly reliable, still testing though...
+	The BOOL_CONNECTIVITY_CHECKING option is slightly different.
  */
 #define	BOOL_PRS_CONNECTIVITY_CHECKING		1
 
@@ -157,6 +158,12 @@ protected:
 			BOOL_MAY_INTERFERE | BOOL_MAY_WEAK_INTERFERE |
 			BOOL_SUPPLY_LOW | BOOL_SUPPLY_HIGH |
 			BOOL_RESET_LOW | BOOL_RESET_HIGH,
+#if BOOL_CONNECTIVITY_CHECKING
+		// port is marked with '?'
+		BOOL_PORT_FORMAL_INPUT = 0x00100000,
+		// port is marked with '!'
+		BOOL_PORT_FORMAL_OUTPUT = 0x00200000,
+#endif
 #if BOOL_PRS_CONNECTIVITY_CHECKING
 	/**
 		This is NOT an attribute, is an intrinsic property
@@ -297,7 +304,7 @@ public:
 
 	// really should let PRS determine this
 	good_bool
-	declare_direction(const direction_type) const;
+	declare_direction(const direction_type);
 
 	bool
 	has_nondefault_attributes(const bool i = false) const;
@@ -379,6 +386,7 @@ public:
 		return attributes & BOOL_ANY_FANOUT;
 	}
 
+	// always considered safe to fanout arbitrarily
 	void
 	prs_fanout(const bool dir) {
 		attributes |= dir ?
@@ -386,11 +394,28 @@ public:
 			BOOL_LOCAL_PRS_FANOUT_PULL_DN;
 	}
 
+#if BOOL_CONNECTIVITY_CHECKING
+	good_bool
+	prs_fanin(const bool dir);
+#else
 	void
 	prs_fanin(const bool dir) {
 		attributes |= dir ?
 			BOOL_LOCAL_PRS_FANIN_PULL_UP :
 			BOOL_LOCAL_PRS_FANIN_PULL_DN;
+	}
+#endif
+#endif
+
+#if BOOL_CONNECTIVITY_CHECKING
+	bool
+	is_input_port(void) const {
+		return attributes & BOOL_PORT_FORMAL_INPUT;
+	}
+
+	bool
+	is_output_port(void) const {
+		return attributes & BOOL_PORT_FORMAL_OUTPUT;
 	}
 #endif
 
@@ -481,6 +506,9 @@ public:
 			Connection state inferred from hierarchy
 			when substructure is instantiated, 
 			propagated from formal to actual.  
+			Mutually exclusive with 
+			CONNECTED_TO_LOCAL_PRODUCER
+			and CONNECTED_CHP_PRODUCER.
 		 */
 		CONNECTED_TO_SUBSTRUCT_PRODUCER = 0x0004,
 		/**
@@ -496,6 +524,9 @@ public:
 			for sharing channels across CHP loop-bodies.  
 			TODO: identify CHP body of origin, perhaps with 
 			automatic (anonymous) tree-naming.  
+			Mutually exclusive with 
+			CONNECTED_TO_LOCAL_PRODUCER
+			and CONNECTED_TO_SUBSTRUCT_PRODUCER.
 		 */
 		CONNECTED_CHP_PRODUCER = 0x0008,
 		/**

@@ -1,0 +1,10 @@
+// "167.hac"
+// testing connectivity checking and port directions
+
+defproc foo(bool? in; bool! out) {
+out?;	// should be OK, everything is allowed to have fanout
+// but should diagnose that 'out' is not actually driven.
+// error or warning?
+}
+
+foo bar;

@@ -1,0 +1,18 @@
+// "ACX-PR-6885.hac"
+// test case triggering bug, contributed by Nikhil Shivaprasad
+// reduced by Fang
+// symptom: memory corruption, caused by fault chp event pool compaction
+
+defproc foo () {
+chan() in;
+chp {
+[ true -> *[in?] [] else -> *[in?] ],
+[ true -> *[in?] [] else -> *[in?] ],
+[ true -> *[in?] [] else -> *[in?] ],
+[ false -> *[in?] [] else -> *[in?] ],
+[ true -> *[in?] [] else -> *[in?] ],
+[ true -> *[in?] [] else -> *[in?] ]
+}
+}
+foo i_foo;
+

@@ -78,6 +78,7 @@ The following commands are listed in the @t{general} category.
 @node Simulation Commands
 @section @t{simulation} Commands
 
+@include cmd/x-all.texi
 @include cmd/initialize.texi
 @include cmd/reset.texi
 
@@ -197,6 +198,15 @@ Another class of channels use level-encoded dual rail (LEDR).
 Such channels are declared using @command{channel-ledr}.
 @include cmd/channel-ledr.texi
 @include cmd/channel-signed.texi
+
+Yet another class of channels captures bundled-data interfaces.
+Bundled-data channels contain one or more single-rail data wires (bus), 
+and an acknowledge and request rail.
+Data is interpreted as valid during the active edge of the request rail.
+Two-phase and four-phase handshake variants exist for bundled-data.
+@include cmd/channel-bd-2p.texi
+@include cmd/channel-bd-4p.texi
+Data is guaranteed to be stable until an acknowledge is received.
 
 One can get information about channel configurations with 
 the following commands:
@@ -483,7 +493,7 @@ and also examine points of failure in detail.
 @include cmd/load.texi
 @include cmd/autosave.texi
 
-The simulator supports trace file recording.
+The simulator supports trace file recording, using its own trace file format.
 Unlike checkpoints, trace files contain information for 
 the entire history of execution, not just the state at one point in time.  
 
@@ -493,6 +503,13 @@ the entire history of execution, not just the state at one point in time.
 @include cmd/trace-flush-notify.texi
 @include cmd/trace-flush-interval.texi
 @include cmd/trace-dump.texi
+
+This simulator now has support for recording vector-change-dump (VCD) files.
+
+@include cmd/vcd.texi
+@include cmd/vcd-file.texi
+@include cmd/vcd-timescale.texi
+@include cmd/vcd-close.texi
 
 @c ----------------------------------------------------------------------------
 @node Debug Commands

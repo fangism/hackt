@@ -1,0 +1,35 @@
+# "channel-bd2p-test-b-ev-08.prsimrc"
+# @haco@ channel-bd2p-test-b.haco-c
+# testing channel source and sink together
+
+# echo-commands on
+source channel-bd2p-test-b-01.prsimrc
+
+channel-show A
+channel-source-args-loop A 111 255 42 64 33 33 12 9
+channel-sink A
+channel-watch A
+channel-ignore-all
+channel-reset A
+cycle
+getall A
+channel-show A
+
+watchall
+echo releasing channel A (source)
+channel-heed-all
+channel-release A
+echo source values on A will repeat
+step-event 80
+time
+
+assert-queue
+channel-unwatch A
+nowatchall
+
+echo running a bit longer...
+step 12345
+assert-queue
+time
+channel-show A
+

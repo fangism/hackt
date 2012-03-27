@@ -5,7 +5,8 @@ include $(top_srcdir)/test/Make.test-head
 
 HACKT_PARSE_TEST_FAILURES = \
 	022 028 029 \
-	loop-expr-03 loop-expr-06
+	loop-expr-03 loop-expr-06 \
+	bad-loop-01 bad-loop-02 bad-loop-03 bad-loop-04 bad-loop-05
 
 HACKT_PARSE_TEST_PASSES = \
 	000 001 002 003 004 005 006 007 008 009 \

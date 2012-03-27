@@ -100,7 +100,6 @@ meta_func_call_base::make_meta_func_call(const string& fn,
 	if (!fp.first) {
 		// already have error message
 		cerr << "Error resolving symbol of meta function call." << endl;
-		THROW_EXIT;
 		return NULL;
 	}
 	switch (fp.second) {

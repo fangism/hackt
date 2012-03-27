@@ -56,6 +56,7 @@ using entity::int_arith_loop_expr;
 using entity::bool_logical_loop_expr;
 using entity::channel_probe;
 // using entity::real_arith_loop_expr;
+using entity::param_defined;
 using entity::pint_unary_expr;
 using entity::pbool_unary_expr;
 using entity::preal_unary_expr;
@@ -194,6 +195,7 @@ public:
 //	VISIT_PROTO(nonmeta_range_list);
 //	VISIT_PROTO(const_param_expr_list);
 //	VISIT_PROTO(dynamic_param_expr_list);
+	VISIT_PROTO(param_defined);
 	VISIT_PROTO(const_index);
 	VISIT_PROTO(pint_const);
 	VISIT_PROTO(pbool_const);

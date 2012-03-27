@@ -1,8 +1,8 @@
-* subcircuit pfoo<> is empty.
+* channel or struct pfoo<> is omitted.
 
-* subcircuit pbar<> is empty.
+* channel or struct pbar<> is omitted.
 
-* subcircuit pick<> is empty.
+* channel or struct pick<> is omitted.
 
 .subckt invert_it<> !GND !Vdd p.b.b.b q.a.a.a q.a.b.a q.b.a.b
 Mx:dn:0 !GND p.b.b.b x !GND nch W=5u L=2u

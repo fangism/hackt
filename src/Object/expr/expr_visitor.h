@@ -98,6 +98,7 @@ virtual	VISIT_PROTO(nonmeta_func_call) = 0;
 virtual	VISIT_PROTO(const_param_expr_list);	// defaulting list traversal
 virtual	VISIT_PROTO(dynamic_param_expr_list);	// defaulting list traversal
 virtual	VISIT_PROTO(const_index) = 0;
+virtual	VISIT_PROTO(param_defined) = 0;
 virtual	VISIT_PROTO(pint_const) = 0;
 virtual	VISIT_PROTO(pbool_const) = 0;
 virtual	VISIT_PROTO(preal_const) = 0;

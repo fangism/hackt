@@ -1,0 +1,16 @@
+# "x-all-04.prsimrc"
+# copy-modified from "channel-test-a-02.prsimrc"
+# @haco@ channel-test-a.haco-c
+
+source channel-test-a-01.prsimrc
+
+# set up some channels with commands
+channel-log X x-all-04-X.log
+channel-show-all
+
+echo ############## x-all ###############
+x-all
+channel-show-all
+!rm x-all-04-X.log
+echo expect channel logs closed
+

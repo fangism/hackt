@@ -1,0 +1,7 @@
+// "bad-loop-03.hac"
+// expect graceful syntax error failure
+// reduced test case, originally reported by Clint Kelly
+// missing range expression of loop
+
+(;i: foo[0](); )
+

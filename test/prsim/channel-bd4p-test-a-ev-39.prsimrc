@@ -1,0 +1,73 @@
+# "channel-bd4p-test-a-ev-39.prsimrc"
+# copy-modified from "channel-bd4p-test-a-10.prsimrc"
+# @haco@ channel-bd4p-test-a.haco-c
+# testing channel sink, expect-fail
+
+# register channels
+source channel-bd4p-test-a-01.prsimrc
+
+# continue after failure
+channel-expect-fail warn
+
+watchall
+# set up some channels with commands
+channel-watch X
+channel-sink X
+channel-expect-args X 3 6 12
+channel-reset X
+getall X
+
+echo manually resetting data
+set X.d[0..7] 0
+set X.v 0
+cycle
+assert X.e 1
+
+echo releasing channel X
+channel-release X
+cycle
+assert X.e 1
+# because data is neutral, X.e should request new data
+
+echo ------------------------------------
+set X.d[0..1] 1
+set X.v 1
+cycle
+assert X.e 0
+channel-show X
+
+echo - - - - - - - - - - - - - - - - - -
+set X.v 0
+cycle
+assert X.e 1
+channel-show X
+
+echo ------------------------------------
+set X.d[2] 1
+set X.d[0] 0
+set X.v 1
+cycle
+assert X.e 0
+channel-show X
+
+echo - - - - - - - - - - - - - - - - - -
+set X.v 0
+cycle
+assert X.e 1
+channel-show X
+
+echo ------------------------------------
+set X.v 1
+echo expect to assert fail here:
+cycle
+assert X.e 0
+channel-show X
+
+echo should not be reached
+
+echo - - - - - - - - - - - - - - - - - -
+set X.d[0] 0
+cycle
+assert X.e 1
+channel-show X
+

@@ -1,6 +1,6 @@
-* subcircuit e1of<2> is empty.
+* channel or struct e1of<2> is omitted.
 
-* subcircuit _c1of<2> is empty.
+* channel or struct _c1of<2> is omitted.
 
 .subckt pcefb_buf<> !GND !Vdd _Reset L.d[0] L.d[1] L.e R.d[0] R.d[1] R.e
 * BEGIN node aliases
@@ -13,7 +13,7 @@
 * 	6: R.e @[ port-alias loc-FO- loc-FO+ ]
 * 	7: !GND @[ supply_low port-alias ]
 * 	8: !Vdd @[ supply_high port-alias ]
-* 	9: _Reset @[ port-alias loc-FO- loc-FO+ ]
+* 	9: _Reset @[ port? port-alias loc-FO- loc-FO+ ]
 * 	10: _r.d[0] @[ loc-FO- loc-FO+ loc-FI- loc-FI+ ]
 * 	11: _r.d[1] @[ loc-FO- loc-FO+ loc-FI- loc-FI+ ]
 * 	12: _en @[ loc-FO- loc-FO+ loc-FI- loc-FI+ ]

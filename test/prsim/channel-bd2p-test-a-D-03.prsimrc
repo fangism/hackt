@@ -1,0 +1,65 @@
+# "channel-bd2p-test-a-D-03.prsimrc"
+# @haco@ channel-bd2p-test-a.haco-c
+# testing channel sink
+
+# register channels
+source channel-bd2p-test-a-01.prsimrc
+
+watchall
+channel-ignore-all
+# set up some channels with commands
+# channel-log D channel-test-a-03-D.log
+channel-watch D
+channel-sink D
+channel-show-all
+
+channel-reset D
+getall D
+
+echo manually resetting data
+set D.d[0..7] 0
+set D.r 1
+cycle
+assert D.a 1
+
+channel-heed-all
+echo releasing channel D
+channel-release D
+cycle
+assert D.a 1
+# because request is neutral (aprity), D.a should request new data
+
+echo ------------------------------------
+echo one token
+set D.r 0
+cycle
+assert D.a 0
+channel-show D
+backtrace D.a
+
+echo ------------------------------------
+echo second token
+set D.r 1
+cycle
+assert D.a 1
+channel-show D
+backtrace D.a
+
+echo ------------------------------------
+echo third token, new value
+set D.d[2..3] 1
+cycle
+set D.r 0
+cycle
+assert D.a 0
+channel-show D
+backtrace D.a
+
+echo ------------------------------------
+echo fourth token, same value
+set D.r 1
+cycle
+assert D.a 1
+channel-show D
+backtrace D.a
+

@@ -1,0 +1,42 @@
+Variables: 
+bool[1]: "!GND" 
+bool[2]: "!Vdd" 
+chan[1]: "i_foo.in" 
+
+Event graph: 
+event[0]: fork: null, #pred: 0, succ: 1 
+
+# process[1]:
+event[1]: fork: , pid: 1, #pred: 1, succ: 3 7 11 15 19 14 
+event[2]: join: , pid: 1, #pred: 6, succ: 
+event[3]: select: [ true -> ... [] else -> ... ], pid: 1, #pred: 1, succ: 4 5 
+event[4]: receive: i_foo.in?, pid: 1, #pred: 1, succ: 4 
+channel deps: 1 
+event[5]: receive: i_foo.in?, pid: 1, #pred: 1, succ: 5 
+channel deps: 1 
+event[6]: receive: i_foo.in?, pid: 1, #pred: 1, succ: 6 
+channel deps: 1 
+event[7]: select: [ true -> ... [] else -> ... ], pid: 1, #pred: 1, succ: 8 9 
+event[8]: receive: i_foo.in?, pid: 1, #pred: 1, succ: 8 
+channel deps: 1 
+event[9]: receive: i_foo.in?, pid: 1, #pred: 1, succ: 9 
+channel deps: 1 
+event[10]: receive: i_foo.in?, pid: 1, #pred: 1, succ: 10 
+channel deps: 1 
+event[11]: select: [ true -> ... [] else -> ... ], pid: 1, #pred: 1, succ: 12 13 
+event[12]: receive: i_foo.in?, pid: 1, #pred: 1, succ: 12 
+channel deps: 1 
+event[13]: receive: i_foo.in?, pid: 1, #pred: 1, succ: 13 
+channel deps: 1 
+event[14]: select: [ true -> ... [] else -> ... ], pid: 1, #pred: 1, succ: 10 6 
+event[15]: select: [ false -> ... [] else -> ... ], pid: 1, #pred: 1, succ: 16 17 
+event[16]: receive: i_foo.in?, pid: 1, #pred: 1, succ: 16 
+channel deps: 1 
+event[17]: receive: i_foo.in?, pid: 1, #pred: 1, succ: 17 
+channel deps: 1 
+event[18]: receive: i_foo.in?, pid: 1, #pred: 1, succ: 18 
+channel deps: 1 
+event[19]: select: [ true -> ... [] else -> ... ], pid: 1, #pred: 1, succ: 20 18 
+event[20]: receive: i_foo.in?, pid: 1, #pred: 1, succ: 20 
+channel deps: 1 
+

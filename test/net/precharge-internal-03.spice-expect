@@ -1,4 +1,4 @@
-* subcircuit c1of2<> is empty.
+* channel or struct c1of2<> is omitted.
 
 .subckt add<> !GND !Vdd en a.d[0] a.d[1] b.d[0] b.d[1] c.d[0] c.d[1] s.d[0] s.d[1]
 M@foot:dn:0 !GND en @foot !GND nch W=5u L=2u

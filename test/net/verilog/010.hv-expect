@@ -1,0 +1,44 @@
+module mux4i (\in[0] , \in[1] , \in[2] , \in[3] , out, \cfg_sel[0] , \cfg_sel[1] );
+input \in[0] ;
+input \in[1] ;
+input \in[2] ;
+input \in[3] ;
+output out;
+input \cfg_sel[0] ;
+input \cfg_sel[1] ;
+endmodule
+
+module mux16 (\in[0] , \in[1] , \in[2] , \in[3] , \in[4] , \in[5] , \in[6] , \in[7] , \in[8] , \in[9] , \in[10] , \in[11] , \in[12] , \in[13] , \in[14] , \in[15] , out, \cfg_sel[0] , \cfg_sel[1] , \cfg_sel[2] , \cfg_sel[3] );
+wire \_mid[0] ;
+wire \_mid[1] ;
+wire \_mid[2] ;
+wire \_mid[3] ;
+output out;
+input \cfg_sel[2] ;
+input \cfg_sel[3] ;
+input \in[0] ;
+input \in[1] ;
+input \in[2] ;
+input \in[3] ;
+input \cfg_sel[0] ;
+input \cfg_sel[1] ;
+input \in[4] ;
+input \in[5] ;
+input \in[6] ;
+input \in[7] ;
+input \in[8] ;
+input \in[9] ;
+input \in[10] ;
+input \in[11] ;
+input \in[12] ;
+input \in[13] ;
+input \in[14] ;
+input \in[15] ;
+mux4i mx2(\_mid[0] , \_mid[1] , \_mid[2] , \_mid[3] , out, \cfg_sel[2] , \cfg_sel[3] );
+mux4i \mx1[0] (\in[0] , \in[1] , \in[2] , \in[3] , \_mid[0] , \cfg_sel[0] , \cfg_sel[1] );
+mux4i \mx1[1] (\in[4] , \in[5] , \in[6] , \in[7] , \_mid[1] , \cfg_sel[0] , \cfg_sel[1] );
+mux4i \mx1[2] (\in[8] , \in[9] , \in[10] , \in[11] , \_mid[2] , \cfg_sel[0] , \cfg_sel[1] );
+mux4i \mx1[3] (\in[12] , \in[13] , \in[14] , \in[15] , \_mid[3] , \cfg_sel[0] , \cfg_sel[1] );
+endmodule
+
+

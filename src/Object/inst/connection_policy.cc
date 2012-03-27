@@ -58,8 +58,8 @@ bool_connect_policy::attribute_names[] = {
 	"RESERVED-17",
 	"RESERVED-18",
 	"RESERVED-19",
-	"RESERVED-20",
-	"RESERVED-21",
+	"port?",
+	"port!",
 	"RESERVED-22",
 // this range is reserved for implicit attributes
 	"port-alias",
@@ -121,11 +121,41 @@ bool_connect_policy::set_connection_flags(const connection_flags_type f) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Declare that a bool is driven or used locally.
+	The intent is to consider this node used to avoid being optimized away.
+ */
 good_bool
-bool_connect_policy::declare_direction(const direction_type) const {
+bool_connect_policy::declare_direction(const direction_type d) {
+#if 0
 	cerr <<
 "Warning: direction declaration on bools are ignored (inferred from PRS only)."
 		<< endl;
+#else
+	switch (d) {
+	case CHANNEL_TYPE_SEND:
+		attributes |=
+			BOOL_LOCAL_PRS_FANIN_PULL_UP |
+			BOOL_LOCAL_PRS_FANIN_PULL_DN;
+		if (is_input_port()) {
+			cerr <<
+	"Error: driving a read-only (input) port (using '!') is forbidden."
+				<< endl;
+			return good_bool(false);
+		}
+		break;
+	case CHANNEL_TYPE_RECEIVE:
+		// output ports are always allowed to fanout locally
+		attributes |=
+			BOOL_LOCAL_PRS_FANOUT_PULL_UP |
+			BOOL_LOCAL_PRS_FANOUT_PULL_DN;
+		break;
+	default:
+		cerr << "Error: unhandled bool direction directive, "
+			<< size_t(d) << "." << endl;
+		return good_bool(false);
+	}
+#endif
 	return good_bool(true);
 }
 
@@ -198,6 +228,27 @@ bool_connect_policy::set_reset(const bool t) {
 		}
 	}
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if BOOL_PRS_CONNECTIVITY_CHECKING && BOOL_CONNECTIVITY_CHECKING
+/**
+	Only allow connection to fanin if node is not marked as read-only '?'.
+ */
+good_bool
+bool_connect_policy::prs_fanin(const bool dir) {
+	attributes |= dir ?
+		BOOL_LOCAL_PRS_FANIN_PULL_UP :
+		BOOL_LOCAL_PRS_FANIN_PULL_DN;
+	if (is_input_port()) {
+		cerr <<
+"Error: driving a read-only (input) port with a production rule is forbidden."
+			<< endl;
+		// THROW_EXIT;
+		return good_bool(false);
+	}
+	return good_bool(true);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

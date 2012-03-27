@@ -39,8 +39,11 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/expr_visitor.h"
 #include "Object/expr/convert_expr.tcc"
 #include "Object/expr/operator_precedence.h"
+#include "Object/expr/param_defined.h"
 #include "Object/traits/preal_traits.h"
 #include "Object/persistent_type_hash.h"
+#include "Object/ref/meta_value_reference_base.h"
+#include "common/TODO.h"
 
 #include "util/numeric/sign_traits.h"
 #include "util/stacktrace.h"
@@ -74,6 +77,8 @@ SPECIALIZE_UTIL_WHAT(HAC::entity::preal_arith_loop_expr,
 		"preal-arith-loop-expr")
 SPECIALIZE_UTIL_WHAT(HAC::entity::convert_pint_to_preal_expr, 
 		"convert-pint-to-preal")
+SPECIALIZE_UTIL_WHAT(HAC::entity::param_defined,
+		"param-defined")
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::pint_unary_expr, PINT_UNARY_EXPR_TYPE_KEY, 0)
@@ -100,6 +105,8 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::convert_pint_to_preal_expr,
 	CONVERT_PINT_TO_PREAL_EXPR_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	HAC::entity::param_defined, PARAM_DEFINED_EXPR_TYPE_KEY, 0)
 }	// end namespace util
 
 //=============================================================================
@@ -2278,6 +2285,193 @@ pbool_logical_expr::load_object(const persistent_object_manager& m, istream& f) 
 	}
 	m.read_pointer(f, lx);
 	m.read_pointer(f, rx);
+}
+
+//=============================================================================
+// class param_defined method definitions
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Private empty constructor.  
+ */
+param_defined::param_defined() :
+		pbool_expr(), arg(NULL) {
+}
+		
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+param_defined::param_defined(
+		const operand_ptr_type& e) :
+		pbool_expr(), arg(e) {
+	NEVER_NULL(arg);
+	INVARIANT(arg->dimensions() == 0);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(param_defined)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+param_defined::dump(ostream& o, const expr_dump_context& c) const {
+	const bool p = c.need_parentheses(OP_PREC_UNARY);
+	if (p) o << '(';
+	arg->dump(o << "#", c);
+	if (p) o << ')';
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+param_defined::is_static_constant(void) const {
+	return false;	// conservatively
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+param_defined::is_relaxed_formal_dependent(void) const {
+	// need cross-cast first
+	return arg.is_a<const param_expr>()->is_relaxed_formal_dependent();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Not sure if this is correct.
+ */
+param_defined::value_type
+param_defined::static_constant_value(void) const {
+	ICE_NEVER_CALL(cerr);
+//	return arg->static_constant_value();
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+param_defined::must_be_equivalent(const pbool_expr& b) const {
+#if 0
+	const this_type* const be = IS_A(const this_type*, &b);
+	if (be) {
+		const count_ptr<const param_expr>
+			pa(arg.is_a<const param_expr>());
+		return pa->must_be_equivalent(*be->arg);
+	} else {
+		// conservatively
+		return false;
+	}
+#else
+	return false;		// conservatively
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const_index_list
+param_defined::resolve_dimensions(void) const {
+	return const_index_list();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+param_defined::accept(nonmeta_expr_visitor& v) const {
+	v.visit(*this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+param_defined::unroll_resolve_value(const unroll_context& c, 
+		value_type& i) const {
+	NEVER_NULL(arg);
+	const good_bool ret(arg->unroll_resolve_defined(c, i));
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Evaluates whether or not reference is defined.
+ */
+count_ptr<const pbool_const>
+param_defined::__unroll_resolve_rvalue(const unroll_context& c, 
+		const count_ptr<const pbool_expr>& p) const {
+	typedef	count_ptr<const pbool_const>		return_type;
+	// should return a pint_const
+	// maybe make a pint_const version to avoid casting
+	INVARIANT(p == this);
+	bool result;
+	const good_bool g(arg->unroll_resolve_defined(c, result));
+	if (g.good) {
+		return return_type(
+			new pbool_const(result));
+	} else {
+		// there is an error
+		// discard intermediate result
+		return return_type(NULL);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const const_param>
+param_defined::unroll_resolve_rvalues(const unroll_context& c, 
+		const count_ptr<const pbool_expr>& p) const {
+	return __unroll_resolve_rvalue(c, p);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const pbool_expr>
+param_defined::unroll_resolve_copy(const unroll_context& c, 
+		const count_ptr<const pbool_expr>& p) const {
+	return __unroll_resolve_rvalue(c, p);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Is this operation even valid?
+	\return expression with any positional parameters substituted.  
+ */
+count_ptr<const pbool_expr>
+param_defined::substitute_default_positional_parameters(
+		const template_formals_manager& f, 
+		const dynamic_param_expr_list& e,
+		const count_ptr<const pbool_expr>& p) const {
+	typedef	count_ptr<const pbool_expr>		return_type;
+#if 0
+	INVARIANT(p == this);
+	const count_ptr<const param_expr> pa(arg.is_a<const param_expr>());
+	const return_type
+		rex(pa->substitute_default_positional_parameters(f, e, pa));
+	if (rex) {
+		if (rex == arg) {
+			return p;
+		} else {
+			return return_type(new this_type(rex));
+		}
+	} else {
+		return return_type(NULL);
+	}
+#else
+	FINISH_ME(Fang);
+	return return_type(NULL);
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+param_defined::collect_transient_info(
+		persistent_object_manager& m) const {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
+	arg->collect_transient_info(m);
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+param_defined::write_object(const persistent_object_manager& m, 
+		ostream& f) const {
+	m.write_pointer(f, arg);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+param_defined::load_object(const persistent_object_manager& m, 
+		istream& f) {
+	m.read_pointer(f, arg);
 }
 
 //=============================================================================

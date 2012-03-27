@@ -10,12 +10,12 @@
 #include <algorithm>
 #include <stack>
 
-#include "util/STL/hash_map.h"
+#include <map>
 #include "util/hash_specializations.h"
 #include "util/indent.h"
 
 namespace util {
-using HASH_MAP_NAMESPACE::hash_map;
+using std::map;
 using std::list;
 using std::for_each;
 using std::stack;
@@ -23,6 +23,7 @@ using std::stack;
 //=============================================================================
 /**
 	Private implementation class, visible only to this module.  
+	Should be safe to copy-move this.
  */
 class indent_string {
 public:
@@ -97,7 +98,8 @@ public:
 
 };      // end struct indent_size_type
 
-typedef hash_map<const ostream*, indent_string>	ostream_indent_map_type;
+// no longer using hash_map
+typedef map<const ostream*, indent_string>	ostream_indent_map_type;
 
 /// privately maintained global stream indent map
 static ostream_indent_map_type			ostream_indent_map;

@@ -94,6 +94,10 @@ using util::numeric::div_type;
 using util::numeric::rand48;
 using entity::global_indexed_reference;
 
+static const char bundled_data_global_timing_warning[] =
+"Warning (FIXME): global-randomized timing policy is not yet fully supported\n"
+"on bundled-data channel sources; the request signal may fire prematurely.";
+
 //=============================================================================
 #if PRSIM_CHANNEL_TIMING
 
@@ -112,6 +116,19 @@ __get_channel_delay(const channel& c,
 }
 #endif
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Overridden with delay value.  
+ */
+env_event_type::env_event_type(const node_index_type ni, 
+		const value_enum v, const channel_time_type d) :
+		node_index(ni), value(v), use_global(false), delay(d) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Use channel timing policy to determine delay.
+ */
 env_event_type::env_event_type(const node_index_type ni, 
 		const value_enum v, const channel& c) :
 		node_index(ni), value(v) {
@@ -180,7 +197,12 @@ channel_exception::inspect(const State& s, ostream& o) const {
 	}
 	o << "]." << endl;
 	chan->print_data_value(o << "\texpected: ", expect);
-	chan->print_data_value(o << ", got: ", got) << endl;
+	o << ", got: ";
+	if (got_x) {
+		o << 'X' << endl;
+	} else {
+		chan->print_data_value(o, got) << endl;
+	}
 	return s.get_channel_expect_fail_policy();
 }
 
@@ -270,9 +292,7 @@ channel::channel() :
 		after_max(State::rule_type::default_unspecified_delay),
 		timing_probability(0.5),
 #endif
-#if PRSIM_CHANNEL_LEDR
 		type(CHANNEL_TYPE_1ofN),	// default
-#endif
 		flags(CHANNEL_DEFAULT_FLAGS), 
 		counter_state(0), 	// invalid
 		x_counter(0),		// invalid
@@ -358,16 +378,8 @@ public:
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Don't bother printing out node indices.
- */
 ostream&
-channel::dump(ostream& o) const {
-	o << name << " : ";
-#if PRSIM_CHANNEL_LEDR
-switch (type) {
-case CHANNEL_TYPE_1ofN:
-#endif
+channel::__dump_ack_valid_type(ostream& o) const {
 	if (ack_signal) {
 	o << (get_ack_active() ? ".a" : ".e");
 	o << "(init:" << (get_ack_init() ? '1' : '0') << ')';
@@ -376,13 +388,26 @@ case CHANNEL_TYPE_1ofN:
 	if (valid_signal) {
 		o << (get_valid_sense() ? ".v" : ".n");
 	}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Don't bother printing out node indices.
+ */
+ostream&
+channel::dump(ostream& o) const {
+	o << name << " : ";
+	const size_t r = radix();
+switch (type) {
+case CHANNEL_TYPE_1ofN:
+	__dump_ack_valid_type(o);
 	// didn't store names of bundles and rails
 	o << ' ' << bundles() << 'x';
 #if PRSIM_CHANNEL_RAILS_INVERTED
 	if (get_data_sense()) { o << '~'; }
 #endif
 	o << "1of" << radix();
-#if PRSIM_CHANNEL_LEDR
 	break;
 case CHANNEL_TYPE_LEDR:
 	// FIXME: bundle-count Nx
@@ -402,11 +427,35 @@ case CHANNEL_TYPE_LEDR:
 	// empty-parity?
 	o << ")";
 	break;
+#if PRSIM_CHANNEL_BUNDLED_DATA
+case CHANNEL_TYPE_BD_4P:
+	o << "bundled-4p ";
+	__dump_ack_valid_type(o);
+if (r) {
+	o << ' ';
+#if PRSIM_CHANNEL_RAILS_INVERTED
+	if (get_data_sense()) { o << '~'; }
+#endif
+	o << 'x' << r;
+}
+	break;
+case CHANNEL_TYPE_BD_2P:	// similar to LEDR
+	o << "bundled-2p";
+	o << " .e:" << (get_ack_init() ? '1' : '0');	// ack
+	o << " .v:" << (get_req_init() ? '1' : '0');	// request
+if (r) {
+	o << ' ';
+#if PRSIM_CHANNEL_RAILS_INVERTED
+	if (get_data_sense()) { o << '~'; }
+#endif
+	o << 'x' << r;
+}
+	break;
+#endif
 // case CHANNEL_TYPE_SINGLE_TRACK:
 default:
 	DIE;
 }	// end switch
-#endif	// PRSIM_CHANNEL_LEDR
 #if PRSIM_CHANNEL_SIGNED
 	if (can_be_signed()) {
 		if (is_signed())
@@ -483,7 +532,7 @@ if (is_sinking() || is_sourcing()) {
 		o << " > " << dumplog.fname;
 	}
 	return o;
-}
+}	// end channel::dump
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -500,27 +549,59 @@ channel::dump_state(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Summarize information about the state of a channel.
+	\pre the value of x_counter and counter_state must be up-to-date 
+		to reflect the current state of the data-rails and validity.  
  */
 channel::status_summary
 channel::summarize_status(const State& s) const {
+	STACKTRACE_BRIEF;
 	status_summary ret;
-if (!x_counter) {
-	// then we can infer the state of the handshake
-#if PRSIM_CHANNEL_LEDR
-switch (type) {
-case CHANNEL_TYPE_1ofN: {
-#endif
-	// 4-phase
+if (type != CHANNEL_TYPE_LEDR) {
 	if (ack_signal) {
 		const value_enum a = s.get_node(ack_signal).current_value();
 		ret.x_ack = (a == LOGIC_OTHER);
 		ret.ack_active = get_ack_active() ^ (a == LOGIC_LOW);
 	}
-	if (valid_signal) {
+	if (valid_signal) {	// use ev handshake protocol
 		const value_enum v = s.get_node(valid_signal).current_value();
 		ret.x_valid = (v == LOGIC_OTHER);
 		ret.valid_active = get_valid_sense() ^ (v == LOGIC_LOW);
 	}
+	// for bundled-data, set the full/empty state regardless of data rails
+#if PRSIM_CHANNEL_BUNDLED_DATA
+switch (type) {
+case CHANNEL_TYPE_BD_4P: { 	// treat req/ack as ev-handshake!
+	INVARIANT(ack_signal);
+	INVARIANT(valid_signal);
+	// doesn't care about state of data rails
+	if (!ret.x_valid && !ret.x_ack) {
+		// shared validity, validity may follow rails
+		if (ret.valid_active ^ ret.ack_active)
+			ret.waiting_receiver = true;
+		else	ret.waiting_sender = true;
+	}
+	break;
+}
+case CHANNEL_TYPE_BD_2P: { 	// treat req/ack as 2p handshake
+	INVARIANT(ack_signal);
+	INVARIANT(valid_signal);
+	const value_enum p = current_bd2p_parity(s);
+	// doesn't care about state of data rails
+	if (!ret.x_valid && !ret.x_ack) {
+		const bool empty = bd2p_empty_parity() ^ (p == LOGIC_LOW);
+		ret.set_empty(empty);
+	}
+	break;
+}
+default: break;
+}	// end switch
+#endif
+}	// otherwise not applicable
+if (!x_counter) {
+	// then we can infer the state of the handshake
+switch (type) {
+case CHANNEL_TYPE_1ofN: {
+	// 4-phase
 	if (!counter_state) {
 		// data is neutral
 	if (ack_signal && !ret.x_ack) {
@@ -565,9 +646,17 @@ case CHANNEL_TYPE_1ofN: {
 			ret.waiting_sender = true;
 		}
 	}
-#if PRSIM_CHANNEL_LEDR
 	break;
 }
+#if PRSIM_CHANNEL_BUNDLED_DATA
+case CHANNEL_TYPE_BD_4P: 	// treat req/ack as ev-handshake!
+	// fall-through
+case CHANNEL_TYPE_BD_2P: {	// treat req/ack as 2p handshake
+	// just always read data rails?
+	ret.current_value = data_rails_value(s);
+	break;
+}
+#endif
 case CHANNEL_TYPE_LEDR: {
 	// 2-phase, or 1-phase
 	const value_enum p = current_ledr_parity(s);
@@ -575,17 +664,9 @@ case CHANNEL_TYPE_LEDR: {
 	INVARIANT(p != LOGIC_OTHER);
 	if (ack_signal) {
 	// full/empty
-		const bool empty = empty_parity() ^ (p == LOGIC_LOW);
-		ret.full = !empty;
-		// could just overload the ::*valid_active member...
-		if (empty) {
-			ret.waiting_sender = true;
-			ret.valid_active = false;
-			ret.ack_active = true;
-		} else {
-			ret.waiting_receiver = true;
-			ret.valid_active = true;
-			ret.ack_active = false;
+		const bool empty = ledr_empty_parity() ^ (p == LOGIC_LOW);
+		ret.set_empty(empty);
+		if (!empty) {
 			ret.current_value = data_rails_value(s);
 		}
 	} else {
@@ -600,7 +681,6 @@ case CHANNEL_TYPE_SINGLE_TRACK: {
 }
 default: break;
 }	// end switch
-#endif
 } else {
 	// if there are X's do nothing, don't bother summarizing
 }
@@ -618,10 +698,8 @@ channel::dump_status(ostream& o, const State& s) const {
 	const status_summary stat(summarize_status(s));
 if (!x_counter) {
 	// then we can infer the state of the handshake
-#if PRSIM_CHANNEL_LEDR
 switch (type) {
 case CHANNEL_TYPE_1ofN: {
-#endif
 	if (!counter_state) {
 		// data is neutral
 		o << "data is neutral";
@@ -661,9 +739,32 @@ case CHANNEL_TYPE_1ofN: {
 		o << "data is transitioning to " <<
 			(stat.ack_active ? "neutral" : "valid");
 	}
-#if PRSIM_CHANNEL_LEDR
 	break;
 }
+#if PRSIM_CHANNEL_BUNDLED_DATA
+case CHANNEL_TYPE_BD_4P: { 	// treat req/ack as ev-handshake!
+	// does not use counter_state
+	if (stat.x_valid)
+		o << ", request is X";
+	// validity is catching up
+	else if (stat.valid_active)
+		o << ", request resetting";
+	// else validity already reflects the ready-state of data rails
+	if (stat.valid_active) {
+		o << ", " << (stat.x_ack ? "ack is X" :
+			(stat.ack_active ? "waiting for sender to neg-request"
+			: "waiting for receiver to ack"));
+	} else {
+		o << ", " << (stat.x_ack ? "ack is X" :
+			(stat.ack_active ? "waiting for receiver to neg-ack"
+			: "waiting for sender request"));
+	}
+	break;
+}
+case CHANNEL_TYPE_BD_2P:
+	// fall-through, same as LEDR!
+	INVARIANT(ack_signal);
+#endif
 case CHANNEL_TYPE_LEDR: {
 	if (ack_signal) {
 	// full/empty
@@ -685,8 +786,8 @@ case CHANNEL_TYPE_SINGLE_TRACK: {
 }
 default: break;
 }	// end switch
-#endif
 } else {
+	// for all channel types, even bundled-data
 	o << "unknown, because there are " << size_t(x_counter) <<
 		" X rails";
 }
@@ -703,18 +804,26 @@ default: break;
 bool
 channel::__assert_channel_value(const channel::value_type& expect, 
 		const channel::value_type& got,
+		const bool x, 
 		const bool confirm) const {
 	static const char cmd[] = "channel-assert";
+if (radix()) {
 	if (expect != got) {
 		print_data_value(cerr << cmd <<
 			": value assertion failed on channel " <<
 			name << ", expected: ", expect);
-		print_data_value(cerr << ", but got: ", got) << endl;
+		cerr << ", but got: ";
+		if (x) {
+			cerr << 'X' << endl;
+		} else {
+			print_data_value(cerr, got) << endl;
+		}
 		return false;
 	} else if (confirm) {
 		print_data_value(cout << "channel " << name << " has value ", 
 			expect) << ", as expected." << endl;
 	}
+}	// else is data-less, and thus not applicable
 	return true;
 }
 
@@ -726,12 +835,10 @@ bool
 channel::__assert_value(const status_summary& stat, const value_type& expect, 
 		const bool confirm) const {
 	static const char cmd[] = "channel-assert";
-#if PRSIM_CHANNEL_LEDR
 switch (type) {
 case CHANNEL_TYPE_1ofN: {
-#endif
 	if (counter_state == bundles()) {
-		if (!__assert_channel_value(expect, stat.current_value,
+		if (!__assert_channel_value(expect, stat.current_value, false,
 				confirm))
 			return false;
 	} else {
@@ -740,15 +847,31 @@ case CHANNEL_TYPE_1ofN: {
 			<< bundles() << " bundles are valid." << endl;
 		return false;
 	}
-#if PRSIM_CHANNEL_LEDR
 	break;
 }	// end case CHANNEL_TYPE_1ofN
+#if PRSIM_CHANNEL_BUNDLED_DATA
+case CHANNEL_TYPE_BD_4P: {
+	// snapshot of data rails
+	// the real window is when request is active and ack is inactive
+	if (!stat.valid_active || stat.ack_active) {
+		cerr << cmd <<
+": [warning] asserting value of bundled-data channel when data rails\n"
+"may be transient." << endl;
+	}
+	if (!__assert_channel_value(expect, stat.current_value, x_counter, confirm))
+		return false;
+	break;
+}
+case CHANNEL_TYPE_BD_2P:
+	// fall-through, same handling as LEDR 2-phase!
+	INVARIANT(ack_signal);
+#endif
 case CHANNEL_TYPE_LEDR: {
 	if (ack_signal) {
 	// 2-phase
 	// full/empty
 	if (stat.full) {
-		if (!__assert_channel_value(expect, stat.current_value,
+		if (!__assert_channel_value(expect, stat.current_value, false, 
 				confirm))
 			return false;
 	} else {
@@ -759,7 +882,7 @@ case CHANNEL_TYPE_LEDR: {
 	} else {
 	// 1-phase (ackless)
 		if (!__assert_channel_value(expect, stat.current_value,
-				confirm))
+				false, confirm))
 			return false;
 	}
 	break;
@@ -769,7 +892,6 @@ default:
 	FINISH_ME(Fang);
 	break;
 }	// end switch (type)
-#endif
 	return true;
 }	// end channel::assert_value
 
@@ -795,10 +917,8 @@ bool
 channel::__assert_validity(const status_summary& stat,
 		const bool expect_valid, const bool confirm) const {
 	static const char cmd[] = "channel-assert";
-#if PRSIM_CHANNEL_LEDR
 switch (type) {
 case CHANNEL_TYPE_1ofN: {
-#endif
 	if (valid_signal) {
 	if (stat.x_valid) {
 		cerr << cmd << ": validity signal of " << name
@@ -840,9 +960,29 @@ case CHANNEL_TYPE_1ofN: {
 			return false;
 		}
 	}
-#if PRSIM_CHANNEL_LEDR
 	break;
 }	// end case CHANNEL_TYPE_1ofN
+#if PRSIM_CHANNEL_BUNDLED_DATA
+case CHANNEL_TYPE_BD_4P: {
+	INVARIANT(valid_signal);
+	if (stat.x_valid) {
+		cerr << cmd << ": validity signal of " << name
+			<< " is X, cannot assert." << endl;
+		return false;
+	} else if (expect_valid ^ stat.valid_active) {
+		__assert_validity_diagnostic(cerr, name, expect_valid);
+		return false;
+	} else if (confirm) {
+		cout << "channel " << name << " is " <<
+			(expect_valid ? "valid" : "neutral") <<
+			", as expected." << endl;
+	}
+	break;
+}
+case CHANNEL_TYPE_BD_2P:
+	INVARIANT(ack_signal);
+	// fall-through to 2p-LEDR
+#endif
 case CHANNEL_TYPE_LEDR: {
 	if (ack_signal) {
 	// 2-phase
@@ -869,7 +1009,6 @@ default:
 	FINISH_ME(Fang);
 	break;
 }	// end switch
-#endif
 	return true;
 }	// end channel::__assert_validity
 
@@ -1119,11 +1258,9 @@ channel::set_signed(void) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 channel::value_type
 channel::max_value(void) const {
-#if PRSIM_CHANNEL_LEDR
 	switch (type) {
 	case CHANNEL_TYPE_SINGLE_TRACK:
 	case CHANNEL_TYPE_1ofN:
-#endif
 		// can't assume radix is 2
 		if (is_signed()) {
 			INVARIANT(radix() == 2);
@@ -1131,12 +1268,21 @@ channel::max_value(void) const {
 		} else {
 			return value_type(pow(radix(), bundles())) -1;
 		}
-#if PRSIM_CHANNEL_LEDR
+#if PRSIM_CHANNEL_BUNDLED_DATA
+	case CHANNEL_TYPE_BD_2P:	// fall-through
+	case CHANNEL_TYPE_BD_4P:
+		if (is_signed()) {
+			return value_type((1 << (radix() -1)) -1);
+		} else {
+			// unsigned
+			return value_type((1 << radix()) -1);
+		}
+#endif
 	case CHANNEL_TYPE_LEDR:
+		// TODO: support LEDR buses
 	default:
 		return 1;	// 0 or 1
 	}
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1146,23 +1292,30 @@ channel::max_value(void) const {
  */
 channel::signed_value_type
 channel::min_value(void) const {
-#if PRSIM_CHANNEL_LEDR
 	switch (type) {
 	case CHANNEL_TYPE_SINGLE_TRACK:
 	case CHANNEL_TYPE_1ofN:
-#endif
 		if (is_signed()) {
 			INVARIANT(radix() == 2);
 			return signed_value_type(-1 << (bundles() -1));
 		} else {
 			return 0;
 		}
-#if PRSIM_CHANNEL_LEDR
+#if PRSIM_CHANNEL_BUNDLED_DATA
+	case CHANNEL_TYPE_BD_2P:	// fall-through
+	case CHANNEL_TYPE_BD_4P:
+		if (is_signed()) {
+			return signed_value_type((-1 << (radix() -1)));
+		} else {
+			// unsigned
+			return 0;
+		}
+#endif
 	case CHANNEL_TYPE_LEDR:
+		// TODO: support LEDR buses
 	default:
 		return 1;	// 0 or 1
 	}
-#endif
 }
 #endif
 
@@ -1263,20 +1416,14 @@ if (ack_signal) {
 	}
 } else {
 // TODO: support acknowledgeless sources for the other channel types
-#if PRSIM_CHANNEL_LEDR
 if (type != CHANNEL_TYPE_LEDR) {
-#endif
 	cerr << "Error: acknowledgeless channels cannot be sourced!" << endl;
 	return true;
-#if PRSIM_CHANNEL_LEDR
 }
-#endif
 }
 	bool maybe_externally_driven = false;
 if (valid_signal) {
-#if PRSIM_CHANNEL_LEDR
 if (type != CHANNEL_TYPE_LEDR) {
-#endif
 	const State::node_type& vn(s.get_node(valid_signal));
 	if (vn.has_fanin()) {
 		cerr << "Error: channel validity `" << name <<
@@ -1294,9 +1441,7 @@ if (type != CHANNEL_TYPE_LEDR) {
 			(get_valid_sense() ? ".v" : ".n") <<
 			"\' has no fanout, but is being sourced." << endl;
 	}
-#if PRSIM_CHANNEL_LEDR
 }
-#endif
 }
 	const data_bundle_array_type::const_iterator
 		b(data.begin()), e(data.end());
@@ -1483,11 +1628,9 @@ channel::initialize_data_counter(const State& s) {
 	typedef	State::node_type		node_type;
 	counter_state = 0;
 	x_counter = 0;
-#if PRSIM_CHANNEL_LEDR
 switch (type) {
 case CHANNEL_TYPE_SINGLE_TRACK:
 case CHANNEL_TYPE_1ofN: {
-#endif
 	data_bundle_array_type::const_iterator i(data.begin()), e(data.end());
 	for ( ; i!=e; ++i) {
 		const node_type& n(s.get_node(*i));
@@ -1511,11 +1654,32 @@ case CHANNEL_TYPE_1ofN: {
 			" are permitted." << endl;
 		THROW_EXIT;
 	}
-#if PRSIM_CHANNEL_LEDR
 	break;
 }
+#if PRSIM_CHANNEL_BUNDLED_DATA
+case CHANNEL_TYPE_BD_2P:		// fall-through
+case CHANNEL_TYPE_BD_4P: {
+	data_bundle_array_type::const_iterator i(data.begin()), e(data.end());
+	for ( ; i!=e; ++i) {
+		const node_type& n(s.get_node(*i));
+		switch (n.current_value()) {
+		case LOGIC_HIGH:
+			if (!get_data_sense()) ++counter_state;
+			break;
+		case LOGIC_LOW:
+			if (get_data_sense()) ++counter_state;
+			break;
+		case LOGIC_OTHER:
+			++x_counter;
+			break;
+		default: break;
+		}
+	}
+	break;
+}
+#endif
 case CHANNEL_TYPE_LEDR:
-	// FIXME: account for multiple bundles
+	// TODO: account for multiple bundles
 	// don't care about counter_state, leave 0
 	if (s.get_node(ledr_data_rail()).current_value() == LOGIC_OTHER)
 		++x_counter;
@@ -1524,7 +1688,6 @@ case CHANNEL_TYPE_LEDR:
 	break;
 default: break;
 }	// end switch
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1540,20 +1703,23 @@ channel::initialize(void) {
 	counter_state = 0;
 	// independent of data-rail sense
 	// would rather call initialize_data_counter(const State&)
-#if PRSIM_CHANNEL_LEDR
 switch (type) {
 case CHANNEL_TYPE_SINGLE_TRACK:
 case CHANNEL_TYPE_1ofN:
-#endif
 	x_counter = bundles() * radix();
-#if PRSIM_CHANNEL_LEDR
 	break;
+#if PRSIM_CHANNEL_BUNDLED_DATA
+case CHANNEL_TYPE_BD_2P:		// fall-through
+case CHANNEL_TYPE_BD_4P:
+	x_counter = radix();
+	break;
+#endif
 case CHANNEL_TYPE_LEDR:
-	x_counter = 2;
+	x_counter = 2;		// data and repeat rail
+	// TODO: account for wider LEDR bundles
 	break;
 default: DIE;
 }	// end switch
-#endif
 	// retain values in sequence, but reset index
 	value_index = 0;
 	// retain inject_expect_file
@@ -1616,6 +1782,11 @@ channel::set_timing(const string& m, const string_list& a) {
 	} else if (m == __global) {
 		timing_mode = CHANNEL_TIMING_GLOBAL;
 		// no need to set after
+#if PRSIM_CHANNEL_BUNDLED_DATA
+		if (data_is_bundled()) {
+			cerr << bundled_data_global_timing_warning << endl;
+		}
+#endif
 	} else if (m == __after) {
 		timing_mode = CHANNEL_TIMING_AFTER;
 		if (a.size()) {
@@ -1751,22 +1922,41 @@ channel::reset(vector<env_event_type>& events) {
 	STACKTRACE_VERBOSE;
 	typedef	State::node_type		node_type;
 	if (is_sourcing()) {
+		// reset data rails to all 0s (arbitrary), just not X.
+		// even for bundled-data
 		initialize_all_data_rails(events);
+#if PRSIM_CHANNEL_BUNDLED_DATA
+	switch (type) {
+	// Q: does timing matter here?
+	case CHANNEL_TYPE_BD_4P:
+		// just reset the request to neutral
+		events.push_back(ENV_EVENT(valid_signal, 
+			(get_valid_sense() ? LOGIC_LOW : LOGIC_HIGH)));
+		break;
+	case CHANNEL_TYPE_BD_2P:
+		events.push_back(ENV_EVENT(valid_signal, 
+			(get_req_init() ? LOGIC_HIGH : LOGIC_LOW)));
+		// reset request to initial value
+		break;
+	default: break;
 		// once nodes all become neutral, the validity should be reset
+	}	// end switch
+#endif
 	}
 	if (is_sinking()) {
-#if PRSIM_CHANNEL_LEDR
 	switch (type) {
 	case CHANNEL_TYPE_1ofN:	// fall-through
-	case CHANNEL_TYPE_LEDR:
+#if PRSIM_CHANNEL_BUNDLED_DATA
+	case CHANNEL_TYPE_BD_2P: // fall-through
+	case CHANNEL_TYPE_BD_4P: // fall-through
 #endif
+	case CHANNEL_TYPE_LEDR:
 		INVARIANT(ack_signal);
 		// ack-less cannot be configured as source/sink
 		events.push_back(ENV_EVENT(ack_signal, 
 			(get_ack_init() ? LOGIC_HIGH
 				: LOGIC_LOW)));
 		// use global timing policy
-#if PRSIM_CHANNEL_LEDR
 		break;
 	case CHANNEL_TYPE_SINGLE_TRACK:
 		FINISH_ME_EXIT(Fang);
@@ -1774,7 +1964,6 @@ channel::reset(vector<env_event_type>& events) {
 	default:
 		DIE;
 	}	// end switch
-#endif
 	}
 	// else nothing else to do
 	stop();	// freeze this channel until it is resumed
@@ -1787,13 +1976,16 @@ channel::reset(vector<env_event_type>& events) {
  */
 void
 channel::initialize_all_data_rails(vector<env_event_type>& events) {
-#if PRSIM_CHANNEL_LEDR
 switch (type) {
 case CHANNEL_TYPE_SINGLE_TRACK:	// fall-through
-case CHANNEL_TYPE_1ofN:
+#if PRSIM_CHANNEL_BUNDLED_DATA
+case CHANNEL_TYPE_BD_2P: // fall-through
+case CHANNEL_TYPE_BD_4P: // fall-through
+	reset_bundled_data_rails(events);
+	break;
 #endif
+case CHANNEL_TYPE_1ofN:
 	reset_all_data_rails(events);
-#if PRSIM_CHANNEL_LEDR
 	break;
 case CHANNEL_TYPE_LEDR:
 	events.push_back(__node_setter(
@@ -1804,7 +1996,6 @@ case CHANNEL_TYPE_LEDR:
 default:
 	DIE;
 }	// end switch
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1873,6 +2064,8 @@ if (have_value()) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Responds to an (active) acknowledge by neutralizing data rails
+	in a return-to-zero protocol.
 	For 4-phase protocols, this means returning data rail bundles to
 	the NULL state.
 	For 2-phase protocols, this does nothing!
@@ -1880,21 +2073,50 @@ if (have_value()) {
 inline
 void
 channel::reset_all_data_rails(vector<env_event_type>& events) {
-#if PRSIM_CHANNEL_LEDR
 switch (type) {
 case CHANNEL_TYPE_SINGLE_TRACK:
 case CHANNEL_TYPE_1ofN:
-#endif
 	transform(data.begin(), data.end(), back_inserter(events),
 		__node_setter(get_data_sense() ? LOGIC_HIGH : LOGIC_LOW));
-#if PRSIM_CHANNEL_LEDR
 	break;
+default:
+// case CHANNEL_TYPE_LEDR:
+// two phase, LEDR: no resetting
+#if PRSIM_CHANNEL_BUNDLED_DATA
+// case CHANNEL_TYPE_BD_2P:
+// case CHANNEL_TYPE_BD_4P:
+#endif
+	break;
+}	// end switch
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Responds to an (active) acknowledge by neutralizing data rails
+	in a return-to-zero protocol.
+	For 4-phase protocols, this means returning data rail bundles to
+	the NULL state.
+	For 2-phase protocols, this does nothing!
+ */
+inline
+void
+channel::reset_bundled_data_rails(vector<env_event_type>& events) {
+if (radix()) {
+switch (type) {
+case CHANNEL_TYPE_BD_2P:
+	// fall-through
+case CHANNEL_TYPE_BD_4P:
+	transform(data.begin(), data.end(), back_inserter(events),
+		__node_setter(get_data_sense() ? LOGIC_HIGH : LOGIC_LOW));
+	break;
+// case CHANNEL_TYPE_SINGLE_TRACK:
+// case CHANNEL_TYPE_1ofN:
 default:
 // case CHANNEL_TYPE_LEDR:
 // two phase, LEDR: no resetting
 	break;
 }	// end switch
-#endif
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1905,13 +2127,14 @@ inline
 void
 channel::X_all_data_rails(vector<env_event_type>& events) {
 	const __node_setter_decl(X_it, LOGIC_OTHER);
-#if PRSIM_CHANNEL_LEDR
 switch (type) {
-case CHANNEL_TYPE_SINGLE_TRACK:
-case CHANNEL_TYPE_1ofN:
+case CHANNEL_TYPE_SINGLE_TRACK:	// fall-through
+#if PRSIM_CHANNEL_BUNDLED_DATA
+case CHANNEL_TYPE_BD_2P: // fall-through
+case CHANNEL_TYPE_BD_4P: // fall-through
 #endif
+case CHANNEL_TYPE_1ofN:
 	transform(data.begin(), data.end(), back_inserter(events), X_it);
-#if PRSIM_CHANNEL_LEDR
 	break;
 case CHANNEL_TYPE_LEDR:
 	events.push_back(X_it(ledr_data_rail()));
@@ -1920,7 +2143,6 @@ case CHANNEL_TYPE_LEDR:
 default:
 	DIE;
 }	// end switch
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1948,14 +2170,12 @@ channel::toggle_node(const State& s, const node_index_type ni) const {
  */
 void
 channel::set_all_data_rails(const State& s, vector<env_event_type>& r) {
-	STACKTRACE_VERBOSE;
+	STACKTRACE_BRIEF;
 	typedef	State::node_type		node_type;
 if (have_value()) {
-#if PRSIM_CHANNEL_LEDR
 switch (type) {
 case CHANNEL_TYPE_SINGLE_TRACK:
 case CHANNEL_TYPE_1ofN: {
-#endif
 	const int_value_type rdx = radix();
 	// NOTE: div is *signed*
 	data_rail_index_type k;
@@ -1963,7 +2183,7 @@ if (rdx == 2) {
 	// optimize for binary, and handle signedness
 	k[0] = 0;
 	value_type v = DATA_VALUE(current_value());
-	for (k[0]=0; k[0]<bundles(); ++k[0]) {
+	for ( ; k[0] < bundles(); ++k[0]) {
 		k[1] = 0;
 		const node_index_type ni0 = data[k];	// node index
 		k[1] = 1;
@@ -1995,11 +2215,27 @@ if (rdx == 2) {
 		}
 	}
 }
-#if PRSIM_CHANNEL_LEDR
 	break;
 }
+#if PRSIM_CHANNEL_BUNDLED_DATA
+case CHANNEL_TYPE_BD_2P:		// fall-through
+case CHANNEL_TYPE_BD_4P: {
+	data_rail_index_type k;
+	const size_t rdx = radix();
+	k[0] = 0;
+	value_type v = DATA_VALUE(current_value());
+	for (k[1]=0; k[1] < rdx; ++k[1]) {
+		const node_index_type ni = data[k];	// node index
+		const value_enum b =
+			((v & 0x1) ^ get_data_sense()) ? LOGIC_HIGH : LOGIC_LOW;
+		r.push_back(ENV_EVENT(ni, b));
+		v >>= 1;
+	}
+	break;
+}
+#endif
 case CHANNEL_TYPE_LEDR: {
-	// FIXME: eventually support wider bundled ledr values
+	// TODO: eventually support wider bundled ledr values
 	const node_index_type& dn(ledr_data_rail());
 #if PRSIM_CHANNEL_RAILS_INVERTED
 	// LSB
@@ -2032,7 +2268,6 @@ case CHANNEL_TYPE_LEDR: {
 }
 default: DIE;
 }	// end switch
-#endif
 } else {
 	INVARIANT(!is_random());
 	// otherwise following code would wipe the random value slot!
@@ -2043,7 +2278,7 @@ default: DIE;
 		values.clear();
 	}
 }
-}
+}	// end set_all_data_rails
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
@@ -2081,12 +2316,20 @@ if (have_value()) {
  */
 bool
 channel::data_is_valid(void) const {
-#if PRSIM_CHANNEL_LEDR
-	return !x_counter &&
-		((type == CHANNEL_TYPE_LEDR) || (counter_state == bundles()));
-#else
-	return !x_counter && (counter_state == bundles());
+	if (x_counter) {
+		return false;
+	}
+	switch (type) {
+	case CHANNEL_TYPE_1ofN: return (counter_state == bundles());
+#if PRSIM_CHANNEL_BUNDLED_DATA
+	// data can always be sampled in any phase of handshake
+	case CHANNEL_TYPE_BD_2P:
+	case CHANNEL_TYPE_BD_4P:
 #endif
+	case CHANNEL_TYPE_LEDR: return true;
+	}
+	// should not be reached
+	return false;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2098,14 +2341,15 @@ channel::data_is_valid(void) const {
  */
 channel::value_type
 channel::data_rails_value(const State& s) const {
-	STACKTRACE_VERBOSE;
+	STACKTRACE_BRIEF;
 	typedef	State::node_type	node_type;
+if (!radix()) {
+	return 0;			// data-less, don't care
+}
 	value_type ret = 0;
-#if PRSIM_CHANNEL_LEDR
 switch (type) {
 case CHANNEL_TYPE_SINGLE_TRACK:	// use 1ofN
 case CHANNEL_TYPE_1ofN: {
-#endif
 	data_rail_index_type k;
 	k[0] = bundles();
 	const size_t rdx = radix();	// sign mismatch?
@@ -2139,9 +2383,40 @@ case CHANNEL_TYPE_1ofN: {
 		INVARIANT(have_hi);
 		ret += hi;
 	}
-#if PRSIM_CHANNEL_LEDR
 	break;
 }
+#if PRSIM_CHANNEL_BUNDLED_DATA
+case CHANNEL_TYPE_BD_2P:		// fall-through
+case CHANNEL_TYPE_BD_4P: {
+	data_rail_index_type k;
+	k[0] = 0;		// no bundles
+	k[1] = radix();		// bus width
+	ret = 0;
+	do {
+		ret <<= 1;
+		--k[1];
+		bool have_hi = false;
+		const node_type& n(s.get_node(data[k]));
+		switch (n.current_value()) {
+		case LOGIC_LOW:
+		if (get_data_sense()) {
+			have_hi = true;
+		}
+			break;
+		case LOGIC_HIGH:
+		if (!get_data_sense()) {
+			have_hi = true;
+		}
+			break;
+		default: DIE;
+		}
+		if (have_hi) {
+			ret |= 0x1;
+		}
+	} while (k[1]);
+	break;
+}
+#endif
 case CHANNEL_TYPE_LEDR:
 	// value is that of just the data rail
 #if PRSIM_CHANNEL_RAILS_INVERTED
@@ -2152,16 +2427,16 @@ case CHANNEL_TYPE_LEDR:
 	break;
 default: DIE;
 }	// end switch
-#endif
 #if PRSIM_CHANNEL_SIGNED
 	// possible sign extension
 	if (is_signed()) {
-		INVARIANT(radix() == 2);
+		INVARIANT(radix() == 2 || data_is_bundled());
 		// detect sign bit
-		const bool sign = ret & (1 << (bundles() -1));
+		const size_t width = data_is_bundled() ? radix() : bundles();
+		const bool sign = ret & (1 << (width -1));
 		if (sign) {
 			// then sign extend negative number
-			ret |= (int_value_type(-1) << bundles());
+			ret |= (int_value_type(-1) << width);
 		}
 	}
 #endif
@@ -2222,20 +2497,35 @@ channel::reads_node(const node_index_type ni) const {
 		if (ack_signal && (ni == ack_signal)) {
 			return true;
 		}
+		switch (type) {
+		case CHANNEL_TYPE_1ofN:
 		if (valid_signal && is_data_rail) {
+			// for ev-handshake channels:
 			// source's validity must respond to its own data rails
 			return true;
+		}
+			break;
+#if PRSIM_CHANNEL_BUNDLED_DATA
+		case CHANNEL_TYPE_BD_2P:
+		case CHANNEL_TYPE_BD_4P:
+		// bundled-data sources do not respond to own data rails
+		// fall-through
+#endif
+		default: break;
 		}
 	}
 	if (is_sinking()) {
 		if (valid_signal) {
 			// ack only responds to validity, not data rails
+			// this also applies to bundled-data channels
 			if (ni == valid_signal)
 				return true;
 		} else {
-			// yes, ack responds to data rails
-			if (is_data_rail)
+			// if there is no validity or request rail
+			// ack responds directly to data rails
+			if (is_data_rail && !valid_signal) {
 				return true;
+			}
 		}
 	}
 	return false;
@@ -2299,10 +2589,8 @@ if (is_sourcing()) {
 	if (stopped()) {
 	o << auto_indent << "(channel " << name << " is stopped.)" << endl;
 	} else {
-#if PRSIM_CHANNEL_LEDR
 	switch (type) {
 	case CHANNEL_TYPE_1ofN: {
-#endif
 		// only data or validity can be driven by source
 		if (valid_signal && (ni == valid_signal)) {
 			__node_why_not_data_rails(s, o, 
@@ -2323,7 +2611,6 @@ if (is_sourcing()) {
 				why_not, verbose, u, v);
 		}
 		}
-#if PRSIM_CHANNEL_LEDR
 		break;
 	}
 	case CHANNEL_TYPE_LEDR: {
@@ -2335,7 +2622,7 @@ if (is_sourcing()) {
 		case LOGIC_OTHER:
 			break;
 		default:
-			empty = (p == LOGIC_HIGH) ^ empty_parity();
+			empty = (p == LOGIC_HIGH) ^ ledr_empty_parity();
 			break;
 		}
 #endif
@@ -2348,12 +2635,18 @@ if (is_sourcing()) {
 		FINISH_ME(Fang);
 		break;
 	}
+#if PRSIM_CHANNEL_BUNDLED_DATA
+	case CHANNEL_TYPE_BD_2P:
+	case CHANNEL_TYPE_BD_4P:
+		FINISH_ME(Fang);
+		break;
+#endif
 	case CHANNEL_TYPE_SINGLE_TRACK:
 		FINISH_ME(Fang);
+		break;
 	default:
 		break;
 	}	// end switch
-#endif
 	}
 }
 if (is_sinking() && ack_signal && (ni == ack_signal)) {
@@ -2584,7 +2877,6 @@ channel::__node_why_X_data_rails(const State& s, ostream& o,
 }	// end __node_why_X_data_rails
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PRSIM_CHANNEL_LEDR
 /**
 	If any participating rails are X, return LOGIC_OTHER.
 	LOGIC_HIGH is parity=1, LOGIC_LOW is parity=0.
@@ -2627,7 +2919,90 @@ if (ack_signal) {
 	}
 	return parity ? LOGIC_HIGH : LOGIC_LOW;
 }
-#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_CHANNEL_BUNDLED_DATA
+/**
+	If any participating rails are X, return LOGIC_OTHER.
+	LOGIC_HIGH is parity=1, LOGIC_LOW is parity=0.
+	FIXME: The X overrule may prohibit use of this when
+		one of the signals is initially X.
+ */
+value_enum
+channel::current_bd2p_parity(const State& s) const {
+	bool parity = false;
+	switch (s.get_node(ack_signal).current_value()) {
+	case LOGIC_HIGH:
+		parity = !parity;
+		break;
+	case LOGIC_LOW:
+		break;
+	// case LOGIC_OTHER:
+	default:
+		return LOGIC_OTHER;
+	}
+	switch (s.get_node(valid_signal).current_value()) {
+	case LOGIC_HIGH:
+		parity = !parity;
+		break;
+	case LOGIC_LOW:
+		break;
+	// case LOGIC_OTHER:
+	default:
+		return LOGIC_OTHER;
+	}
+	return parity ? LOGIC_HIGH : LOGIC_LOW;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+/**
+	Convenience function for bundled-data sources.
+	\pre have_value() is true
+	This sets data rails and request rail.
+ */
+void
+channel::set_bd_data_req(const State& s, const status_summary& stat,
+		vector<env_event_type>& new_events) {
+	STACKTRACE_BRIEF;
+	// set data rails to next data value
+	set_all_data_rails(s, new_events);
+	advance_value();
+	value_enum reqv = LOGIC_OTHER;
+	switch (type) {
+	case CHANNEL_TYPE_BD_2P: {
+		if (!stat.x_ack) {
+			reqv = s.get_node(ack_signal).current_value();
+			if (!bd2p_empty_parity()) {
+				reqv = NodeState::invert_value[size_t(reqv)];
+			}
+		}
+		break;
+	}
+	case CHANNEL_TYPE_BD_4P:
+		reqv = get_valid_sense() ? LOGIC_HIGH : LOGIC_LOW;
+		break;
+	default:
+		DIE;
+		break;
+	}
+	// followed by setting request
+	if (new_events.empty()) {
+		// possible if next data token has same value
+		// then use any delay value
+		new_events.push_back(ENV_EVENT(valid_signal, reqv));
+	} else {
+		// must guarantee request is last
+		// use delay equal to max of data rail events
+		const vector<env_event_type>::const_iterator
+			i(new_events.begin()), 
+			e(new_events.end());
+		const vector<env_event_type>::const_iterator
+			m(std::max_element(i, e));
+		new_events.push_back(env_event_type(valid_signal, 
+			reqv, m->delay));
+	}
+}
+#endif	// PRSIM_CHANNEL_BUNDLED_DATA
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -2650,128 +3025,64 @@ void
 channel::process_node(const State& s, const node_index_type ni, 
 		const value_enum prev, const value_enum next, 
 		vector<env_event_type>& new_events) throw(channel_exception) {
-	STACKTRACE_VERBOSE;
+	STACKTRACE_BRIEF;
 	typedef	State::node_type	node_type;
 #if ENABLE_STACKTRACE
 	cout << s.get_node_canonical_name(ni) << " : " << size_t(prev) << 
 		" -> " << size_t(next) << endl;
 #endif
-#if PRSIM_CHANNEL_LEDR
+	// can't call summarize_status until x_counter and counter_state
+	// have been updated (data-rails, below)
 switch (type) {
 // case CHANNEL_TYPE_SINGLE_TRACK: ?
 case CHANNEL_TYPE_1ofN: {
-#endif
 // first identify which channel node member this node is
 if (ack_signal && (ni == ack_signal)) {
 	STACKTRACE_INDENT_PRINT("got ack update" << endl);
+	const status_summary stat(summarize_status(s));
 	// only need to take action if this is a source
 	if (is_sourcing() && !stopped()) {
 	STACKTRACE_INDENT_PRINT("source responding..." << endl);
-	switch (next) {
-		// assumes that data rails are active high
-	case LOGIC_LOW:
-		if (get_ack_active()) {
-			// \pre all data rails are neutral
-			// set data rails to next data value
-			set_all_data_rails(s, new_events);
-			advance_value();
-		} else {
-			reset_all_data_rails(new_events);
-		}
-		break;
-	case LOGIC_HIGH:
-		if (get_ack_active()) {
-			reset_all_data_rails(new_events);
-		} else {
-			// \pre all data rails are neutral
-			// set data rails to next data value
-			set_all_data_rails(s, new_events);
-			advance_value();
-		}
-		break;
-	default:
+	if (stat.x_ack) {
 		// set all data to X
 		// do not advance
 		X_all_data_rails(new_events);
-		break;
+	} else if (stat.ack_active) {
+		reset_all_data_rails(new_events);
+	} else {	// is neg-ack
+		// \pre all data rails are neutral
+		// set data rails to next data value
+		set_all_data_rails(s, new_events);
+		advance_value();
 	}
 	}
 	// logging and expect mode don't care
 } else if (valid_signal && (ni == valid_signal)) {
-	STACKTRACE_INDENT_PRINT("got validity update" << endl);
-	switch (next) {
-	// print, watch, log, check data NOW
-	case LOGIC_LOW:
-		if (!get_valid_sense()) { process_data(s); } break;
-	case LOGIC_HIGH:
-		if (get_valid_sense()) { process_data(s); } break;
-	default: break;
+	STACKTRACE_INDENT_PRINT("1ofN: got validity update" << endl);
+	const status_summary stat(summarize_status(s));
+	if (!stat.x_valid && stat.valid_active) {
+		process_data(s);
 	}
 	// only need to take action if this is a sink
 	if (is_sinking() && !stopped()) {
 		INVARIANT(ack_signal);
-	switch (next) {
-	case LOGIC_LOW:
-		if (get_valid_sense()) {
-			// neutral, reset ack
-			new_events.push_back(ENV_EVENT(ack_signal, 
-				get_ack_active() ? LOGIC_LOW
-					: LOGIC_HIGH));
-		} else {
+		if (stat.x_valid) {
+			new_events.push_back(ENV_EVENT(ack_signal, LOGIC_OTHER));
+		} else if (stat.valid_active) {
 			// valid, ack
 			new_events.push_back(ENV_EVENT(ack_signal, 
-				get_ack_active() ? LOGIC_HIGH
-					: LOGIC_LOW));
-		}
-		break;
-	case LOGIC_HIGH:
-		if (get_valid_sense()) {
-			// valid, ack
-			new_events.push_back(ENV_EVENT(ack_signal, 
-				get_ack_active() ? LOGIC_HIGH
-					: LOGIC_LOW));
+				get_ack_active() ? LOGIC_HIGH : LOGIC_LOW));
 		} else {
 			// neutral, reset ack
 			new_events.push_back(ENV_EVENT(ack_signal, 
-				get_ack_active() ? LOGIC_LOW
-					: LOGIC_HIGH));
+				get_ack_active() ? LOGIC_LOW : LOGIC_HIGH));
 		}
-		break;
-	default:
-		new_events.push_back(ENV_EVENT(ack_signal, 
-			LOGIC_OTHER));
-		break;
-	}
 	}
 } else {
 	STACKTRACE_INDENT_PRINT("got data-rail update" << endl);
 	// invariant: must be data rail
 	// update state counters
-	switch (prev) {
-	case LOGIC_LOW:
-	if (get_data_sense()) {
-		INVARIANT(counter_state);
-		--counter_state;
-	}
-		break;
-	case LOGIC_HIGH:
-	if (!get_data_sense()) {
-		INVARIANT(counter_state);
-		--counter_state;
-	}
-		break;
-	case LOGIC_OTHER:
-		INVARIANT(x_counter);
-		--x_counter;
-		break;
-	default: break;
-	}
-	switch (next) {
-	case LOGIC_LOW: if (get_data_sense()) ++counter_state; break;
-	case LOGIC_HIGH: if (!get_data_sense()) ++counter_state; break;
-	case LOGIC_OTHER: ++x_counter; break;
-	default: break;
-	}
+	update_data_counter(prev, next);
 	if (x_counter) {
 		// if there are ANY Xs, then cannot log/expect values
 		// sources/sinks should respond accordingly with X signals
@@ -2852,13 +3163,12 @@ if (ack_signal && (ni == ack_signal)) {
 	}
 	}
 }
-#if PRSIM_CHANNEL_LEDR
 	break;
 }	// end case CHANNEL_TYPE_1ofN
 case CHANNEL_TYPE_LEDR: {
-	const bool ep = empty_parity();
+	const bool ep = ledr_empty_parity();
 if (ack_signal && (ni == ack_signal)) {
-	STACKTRACE_INDENT_PRINT("got ack update" << endl);
+	STACKTRACE_INDENT_PRINT("ledr: got ack update" << endl);
 	// 2-phase, respond on either edge of ack
 	if (is_sourcing() && !stopped()) {
 	// check current parity vs. empty parity to determine action
@@ -2886,7 +3196,7 @@ if (ack_signal && (ni == ack_signal)) {
 	}	// end if sourcing
 } else {
 	INVARIANT(ni == repeat_rail() || ni == ledr_data_rail());
-	STACKTRACE_INDENT_PRINT("got data or repeat-rail update" << endl);
+	STACKTRACE_INDENT_PRINT("ledr: got data or repeat-rail update" << endl);
 	switch (prev) {
 	case LOGIC_OTHER: --x_counter; break;
 	default: break;
@@ -2920,11 +3230,152 @@ if (ack_signal && (ni == ack_signal)) {
 	process_data(s);
 }
 	break;
+}	// end case CHANNEL_TYPE_LEDR
+#if PRSIM_CHANNEL_BUNDLED_DATA
+case CHANNEL_TYPE_BD_2P: {
+if (ni == ack_signal) {
+	// much of this code copied from LEDR above, re-factor later
+	STACKTRACE_INDENT_PRINT("bd2p: got ack update" << endl);
+	const status_summary stat(summarize_status(s));
+	// 2-phase, respond on either edge of ack
+	if (is_sourcing() && !stopped()) {
+	// check current parity vs. empty parity to determine action
+	if (stat.x_ack) {
+		X_all_data_rails(new_events);
+		new_events.push_back(ENV_EVENT(valid_signal, LOGIC_OTHER));
+	} else if (!stat.full) {
+		if (have_value()) {
+			set_bd_data_req(s, stat, new_events);
+		}
+	}
+	// else 2-phase does not have a reset phase on full, do nothing
+	}	// end if sourcing
+} else if (ni == valid_signal) {
+	STACKTRACE_INDENT_PRINT("bd2p: got validity update" << endl);
+	const status_summary stat(summarize_status(s));
+	if (!stat.x_valid && stat.full) {
+		process_data(s);
+	}
+	// only need to take action if this is a sink
+	if (is_sinking() && !stopped()) {
+		INVARIANT(ack_signal);
+		if (stat.x_valid) {
+			new_events.push_back(ENV_EVENT(ack_signal, LOGIC_OTHER));
+		} else {
+			new_events.push_back(toggle_node(s, ack_signal));
+		}
+	}
+} else {
+	// is a data-rail
+	STACKTRACE_INDENT_PRINT("bd2p: got data rail update" << endl);
+	update_bd_data_counter(prev, next);
+	// nothing responds directly to data-rail
 }
+	break;
+}	// end case CHANNEL_TYPE_BD_2P
+// follows similarly to 1ofN case (ev-handshake)
+case CHANNEL_TYPE_BD_4P: {
+// first identify which channel node member this node is
+if (ni == ack_signal) {
+	STACKTRACE_INDENT_PRINT("bd4p: got ack update" << endl);
+	const status_summary stat(summarize_status(s));
+	// only need to take action if this is a source
+	if (is_sourcing() && !stopped()) {
+	STACKTRACE_INDENT_PRINT("source responding..." << endl);
+	if (stat.x_ack) {
+		// set all data to X, also request rail
+		// do not advance
+		X_all_data_rails(new_events);
+		new_events.push_back(ENV_EVENT(valid_signal, LOGIC_OTHER));
+	} else if (stat.ack_active) {
+		reset_all_data_rails(new_events);	// does nothing
+		// followed by resetting request
+		new_events.push_back(ENV_EVENT(valid_signal, 
+			get_valid_sense() ? LOGIC_LOW : LOGIC_HIGH));
+	} else {
+		if (timing_mode == CHANNEL_TIMING_GLOBAL &&
+				s.timing_is_randomized()) {
+			cerr << bundled_data_global_timing_warning << endl;
+		}
+		if (have_value()) {
+			// set data rails to next data value
+			set_bd_data_req(s, stat, new_events);
+		}
+	}
+	}
+	// logging and expect mode don't care
+} else if (ni == valid_signal) {
+	STACKTRACE_INDENT_PRINT("bd4p: got validity update" << endl);
+	const status_summary stat(summarize_status(s));
+	if (!stat.x_valid && stat.valid_active) {
+		process_data(s);
+	}
+	// only need to take action if this is a sink
+	if (is_sinking() && !stopped()) {
+		INVARIANT(ack_signal);
+		if (stat.x_valid) {
+			new_events.push_back(ENV_EVENT(ack_signal, LOGIC_OTHER));
+		} else if (stat.valid_active) {
+			// valid, ack
+			new_events.push_back(ENV_EVENT(ack_signal, 
+				get_ack_active() ? LOGIC_HIGH : LOGIC_LOW));
+		} else {
+			// neutral, reset ack
+			new_events.push_back(ENV_EVENT(ack_signal, 
+				get_ack_active() ? LOGIC_LOW : LOGIC_HIGH));
+		}
+	}
+} else {
+	STACKTRACE_INDENT_PRINT("bd4p: got data-rail update" << endl);
+	// invariant: must be data rail
+	// update state counters
+	update_bd_data_counter(prev, next);
+	// generally, no need to spawn any events after data
+	// which can always be transient
+}
+	break;
+}	// end case CHANNEL_TYPE_BD_4P
+#endif	// PRSIM_CHANNEL_BUNDLED_DATA
 default: DIE;
 }	// end switch
-#endif
 }	// end channel::process_node
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_CHANNEL_BUNDLED_DATA
+/**
+	\param prev previous value of data rail
+	\param next new value of data rail
+ */
+void
+channel::update_bd_data_counter(const value_enum prev, const value_enum next) {
+	// update state counters
+	switch (prev) {
+	case LOGIC_LOW:
+	if (get_data_sense()) {
+		INVARIANT(counter_state);
+		--counter_state;
+	}
+		break;
+	case LOGIC_HIGH:
+	if (!get_data_sense()) {
+		INVARIANT(counter_state);
+		--counter_state;
+	}
+		break;
+	case LOGIC_OTHER:
+		INVARIANT(x_counter);
+		--x_counter;
+		break;
+	default: break;
+	}
+	switch (next) {
+	case LOGIC_LOW: if (get_data_sense()) ++counter_state; break;
+	case LOGIC_HIGH: if (!get_data_sense()) ++counter_state; break;
+	case LOGIC_OTHER: ++x_counter; break;
+	default: break;
+	}
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -2948,12 +3399,15 @@ channel::process_data(const State& s) throw (channel_exception) {
 			cout << 'X';
 		}
 		if (report_time) cout << " @ " << s.time();
+		if (ignored()) {
+			cout << " (ignored)";
+		}
 		cout << endl;
 	}
 	if (!ignored() && dumplog.stream && *dumplog.stream) {
 		// TODO: format me, hex, dec, bin, etc...
 		// should be able to just setbase()
-		if (v) {
+		if (v || data_is_bundled()) {
 		print_data_value(*dumplog.stream, data_rails_value(s));
 		} else {
 		(*dumplog.stream) << 'X';
@@ -2970,20 +3424,21 @@ channel::process_data(const State& s) throw (channel_exception) {
 		const size_t cur_index = current_index();	// save it
 		const size_t cur_iter = iteration;	// save it
 		if (!expect.second) {
-		STACKTRACE_INDENT_PRINT("value is not X" << endl);
+		STACKTRACE_INDENT_PRINT("expect value is not X" << endl);
 		const error_policy_enum e(s.get_channel_expect_fail_policy());
 		if (v) {
+	// FIXME: bundled-data: data may be valid, but X!
 		STACKTRACE_INDENT_PRINT("channel data is valid" << endl);
 		const value_type got = data_rails_value(s);
 		advance_value();
 		// want to advance after checking, 
 		// but need to guarantee progress in the event of exception
-	// TODO: factor this into __assert_channel_value
-		if (DATA_VALUE(expect) != got) {
+		if (!__assert_channel_value(DATA_VALUE(expect),
+				got, x_counter, s.confirm_asserts())) {
 			STACKTRACE_INDENT_PRINT("data mismatch" << endl);
 			const channel_exception
 				ex(this, cur_index, cur_iter,
-					DATA_VALUE(expect), got);
+					DATA_VALUE(expect), got, x_counter);
 			if (e == ERROR_WARN) {
 				ex.inspect(s, cout);
 			} else if (e > ERROR_WARN) {
@@ -2994,16 +3449,12 @@ channel::process_data(const State& s) throw (channel_exception) {
 				throw ex;
 #endif
 			}
-		} else if (s.confirm_asserts()) {
-			print_data_value(cout << "channel " << name <<
-				" has value ", DATA_VALUE(expect)) <<
-				", as expected." << endl;
 		}
 		} else {	// cannot expect invalid value
 			STACKTRACE_INDENT_PRINT("channel data is invalid" << endl);
 			const channel_exception
 				ex(this, cur_index, cur_iter,
-					DATA_VALUE(expect), 0xDEADBEEF);
+					DATA_VALUE(expect), 0xDEADBEEF, true);
 			if (e == ERROR_WARN) {
 				ex.inspect(s, cout);
 			} else if (e > ERROR_WARN) {
@@ -3017,8 +3468,10 @@ channel::process_data(const State& s) throw (channel_exception) {
 		}
 		} else {	// else don't care
 			// don't print confirmed values for don't cares
-			if (v) {
+			STACKTRACE_INDENT_PRINT("expect is X (don't care)" << endl);
+			if (v || data_is_bundled()) {
 				// on valid data, advance
+				STACKTRACE_INDENT_PRINT("advancing value" << endl);
 				advance_value();
 			}
 		}
@@ -3044,6 +3497,49 @@ channel::process_data(const State& s) throw (channel_exception) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	respond to 4-phase channel sink by toggling acknowledge.
+	Applicable to:
+		CHANNEL_TYPE_1ofN, CHANNEL_TYPE_BD_4P
+	Refactored out from channel::resume().
+ */
+void
+channel::__resume_4p_sink(const status_summary& stat,
+		vector<env_event_type>& events) {
+if (is_sinking()) {
+	INVARIANT(ack_signal);
+	if (valid_signal) {
+		// only react to the valid signal
+		if (stat.x_valid) {
+			events.push_back(ENV_EVENT(ack_signal, LOGIC_OTHER));
+		} else if (stat.valid_active) {
+			// ack
+			events.push_back(ENV_EVENT(ack_signal, 
+				get_ack_active() ? LOGIC_HIGH : LOGIC_LOW));
+		} else {
+			// reset ack
+			events.push_back(ENV_EVENT(ack_signal, 
+				get_ack_active() ? LOGIC_LOW : LOGIC_HIGH));
+		}
+	} else {
+		// no validity rail, just react to data rails
+	if (x_counter) {
+		events.push_back(ENV_EVENT(ack_signal, LOGIC_OTHER));
+	} else if (!counter_state) {
+		// data is neutral, reset ack
+		events.push_back(ENV_EVENT(ack_signal, 
+			get_ack_active() ? LOGIC_LOW : LOGIC_HIGH));
+	} else if (counter_state == bundles()) {
+		// data is valid, ack
+		events.push_back(ENV_EVENT(ack_signal, 
+			get_ack_active() ? LOGIC_HIGH : LOGIC_LOW));
+	}
+	// else in some intermediate state, leave acknowledge alone
+	}
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Channel is no longer stopped, and is thus free to respond
 	to its current state and spawn events.  
 	We don't know the current state of the channel because it may
@@ -3062,159 +3558,121 @@ channel::resume(const State& s, vector<env_event_type>& events) {
 "Warning: the current state of data rails is neither valid nor neutral, "
 "so I\'m assuming that current sequence value has NOT already been used; "
 "we are using the current value.";
-#if PRSIM_CHANNEL_LEDR
+	const status_summary stat(summarize_status(s));
 switch (type) {
 case CHANNEL_TYPE_1ofN: {
-#endif
 if (is_sourcing()) {
 	INVARIANT(ack_signal);
 	// validity should be set after all data rails are valid/neutral
-	const node_type& a(s.get_node(ack_signal));
-	switch (a.current_value()) {
-	case LOGIC_LOW:
-		if (get_ack_active()) {
-			// should send new data, if available
-			// Q: if counter_state is *between* 0 and #bundles, 
-			// should we assume that the current value was
-			// already used or not?
-			if (counter_state && (counter_state != bundles())) {
-				// ambiguous
-				cerr << ambiguous_data << endl;
-			}
-			if ((counter_state != bundles() || x_counter)) {
-				set_all_data_rails(s, events);
-				advance_value();
-			}
-			if (valid_signal) {
-				if (x_counter) {
-					events.push_back(ENV_EVENT(
-						valid_signal, 
-						LOGIC_OTHER));
-				} else if (!counter_state) {
-					events.push_back(ENV_EVENT(
-						valid_signal, 
-						get_valid_sense() ?
-							LOGIC_LOW :
-							LOGIC_HIGH));
-				} else if (counter_state == bundles()) {
-					events.push_back(ENV_EVENT(
-						valid_signal, 
-						get_valid_sense() ?
-							LOGIC_HIGH :
-							LOGIC_LOW));
-				}
-				// else leave alone in intermediate state
-			}
-		} else {
-			reset_all_data_rails(events);
-		}
-		break;
-	case LOGIC_HIGH:
-		if (get_ack_active()) {
-			reset_all_data_rails(events);
-		} else {
-			if (counter_state && (counter_state != bundles())) {
-				// ambiguous
-				cerr << ambiguous_data << endl;
-			}
-			if ((counter_state != bundles() || x_counter)) {
-				set_all_data_rails(s, events);
-				advance_value();
-			}
-			if (valid_signal) {
-				if (x_counter) {
-					events.push_back(ENV_EVENT(
-						valid_signal, 
-						LOGIC_OTHER));
-				} else if (!counter_state) {
-					events.push_back(ENV_EVENT(
-						valid_signal, 
-						get_valid_sense() ?
-							LOGIC_LOW :
-							LOGIC_HIGH));
-				} else if (counter_state == bundles()) {
-					events.push_back(ENV_EVENT(
-						valid_signal, 
-						get_valid_sense() ?
-							LOGIC_HIGH :
-							LOGIC_LOW));
-				}
-				// else leave alone in intermediate state
-			}
-		}
-		break;
-	default:
+	if (stat.x_ack) {
 		X_all_data_rails(events);
-	}	// end switch
+	} else if (stat.ack_active) {
+		reset_all_data_rails(events);
+	} else {
+		if (counter_state && (counter_state != bundles())) {
+			// ambiguous
+			cerr << ambiguous_data << endl;
+		}
+		if ((counter_state != bundles() || x_counter)) {
+			set_all_data_rails(s, events);
+			advance_value();
+		}
+		if (valid_signal) {
+			if (x_counter) {
+				events.push_back(ENV_EVENT(valid_signal, 
+					LOGIC_OTHER));
+			} else if (!counter_state) {
+				events.push_back(ENV_EVENT(valid_signal, 
+					get_valid_sense() ?
+						LOGIC_LOW : LOGIC_HIGH));
+			} else if (counter_state == bundles()) {
+				events.push_back(ENV_EVENT(valid_signal, 
+					get_valid_sense() ?
+						LOGIC_HIGH : LOGIC_LOW));
+			}
+			// else leave alone in intermediate state
+		}
+	}
 }
 // could also be sinking at the same time
-if (is_sinking()) {
-	INVARIANT(ack_signal);
-	if (valid_signal) {
-		// only react to the valid signal
-		const node_type& v(s.get_node(valid_signal));
-		// TODO: use xor and value inversion to simplify the following:
-		switch (v.current_value()) {
-		case LOGIC_LOW:
-			if (get_valid_sense()) {
-				// reset ack
-				events.push_back(ENV_EVENT(ack_signal, 
-					get_ack_active() ?
-						LOGIC_LOW :
-						LOGIC_HIGH));
-			} else {
-				// ack
-				events.push_back(ENV_EVENT(ack_signal, 
-					get_ack_active() ?
-						LOGIC_HIGH :
-						LOGIC_LOW));
-			}
-			break;
-		case LOGIC_HIGH:
-			if (get_valid_sense()) {
-				// ack
-				events.push_back(ENV_EVENT(ack_signal, 
-					get_ack_active() ?
-						LOGIC_HIGH :
-						LOGIC_LOW));
-			} else {
-				// reset ack
-				events.push_back(ENV_EVENT(ack_signal, 
-					get_ack_active() ?
-						LOGIC_LOW :
-						LOGIC_HIGH));
-			}
-			break;
-		default:
-			events.push_back(ENV_EVENT(
-				ack_signal, LOGIC_OTHER));
-		}
-	} else if (x_counter) {
-		events.push_back(ENV_EVENT(
-			ack_signal, LOGIC_OTHER));
-	} else if (!counter_state) {
-		// data is neutral, reset ack
-		events.push_back(ENV_EVENT(ack_signal, 
-			get_ack_active() ?
-				LOGIC_LOW :
-				LOGIC_HIGH));
-	} else if (counter_state == bundles()) {
-		// data is valid, ack
-		events.push_back(ENV_EVENT(ack_signal, 
-			get_ack_active() ?
-				LOGIC_HIGH :
-				LOGIC_LOW));
-	}
-	// else in some intermediate state, leave acknowledge alone
-}
-#if PRSIM_CHANNEL_LEDR
+	__resume_4p_sink(stat, events);
 	break;
+}	// end case
+#if PRSIM_CHANNEL_BUNDLED_DATA
+case CHANNEL_TYPE_BD_4P: {
+	// should be very similar to ev-protocol
+if (is_sourcing()) {
+	INVARIANT(ack_signal);
+	INVARIANT(valid_signal);
+	// validity should be set after all data rails are valid/neutral
+	if (stat.x_ack) {
+		X_all_data_rails(events);
+	} else if (stat.ack_active) {
+		reset_all_data_rails(events);	// does nothing!
+		// TODO: could optionally change data to X!?
+		// request should be lowered after data is 'reset'
+		events.push_back(ENV_EVENT(valid_signal, 
+			get_valid_sense() ? LOGIC_LOW : LOGIC_HIGH));
+	} else {
+		// neg-ack: set all data rails to next data value
+		// AND set the request/validity (which needs to happen *last*)
+		// even in the event of random-timing
+		if (timing_mode == CHANNEL_TIMING_GLOBAL &&
+				s.timing_is_randomized()) {
+			cerr << bundled_data_global_timing_warning << endl;
+		}
+		if (have_value()) {
+			// set data rails to next data value
+			set_bd_data_req(s, stat, events);
+		}
+	}
 }
+// could also be sinking at the same time
+	__resume_4p_sink(stat, events);
+	break;
+}	// end case CHANNEL_TYPE_BD_4P
+case CHANNEL_TYPE_BD_2P: {
+	// very similar to LEDR, below
+if (is_sourcing()) {
+	// only respond if is currently at empty
+	STACKTRACE_INDENT_PRINT("bd2p: releasing source" << endl);
+	if (stat.x_ack) {
+		STACKTRACE_INDENT_PRINT("bd2p: ack is X" << endl);
+		X_all_data_rails(events);
+		events.push_back(ENV_EVENT(valid_signal, LOGIC_OTHER));
+	} else if (!stat.full) {
+		STACKTRACE_INDENT_PRINT("bd2p: channel is empty, so filling..." << endl);
+		if (have_value()) {
+			// set data rails to next data value
+			set_bd_data_req(s, stat, events);
+		}
+	} else {
+	//	possibly issue a warning if channel resumed in wrong phase?
+	}
+}
+if (is_sinking()) {
+	STACKTRACE_INDENT_PRINT("bd2p: releasing sink" << endl);
+	// check for full parity
+	if (stat.x_valid) {
+		STACKTRACE_INDENT_PRINT("bd2p: req is X" << endl);
+		events.push_back(ENV_EVENT(ack_signal, LOGIC_OTHER));
+	} else if (stat.full) {
+		STACKTRACE_INDENT_PRINT("bd2p: channel is full, so emptying..." << endl);
+		// Q: what if ack is currently X?
+		events.push_back(toggle_node(s, ack_signal));
+	} else {
+	//	possibly issue a warning if channel resumed in wrong phase?
+	}
+	// else there's no acknowledge signal to toggle!
+}
+	break;
+}	// end case CHANNEL_TYPE_BD_2P
+#endif	// PRSIM_CHANNEL_BUNDLED_DATA
 case CHANNEL_TYPE_LEDR:
 if (is_sourcing()) {
 	bool respond = true;	// whether or not to respond with valid data
 	if (ack_signal) {
-		const bool ep = empty_parity();
+		const bool ep = ledr_empty_parity();
 		const value_enum p(current_ledr_parity(s));
 		// only respond if is currently at empty parity
 		switch (p) {
@@ -3236,7 +3694,7 @@ if (is_sourcing()) {
 }
 if (is_sinking() && ack_signal) {
 	// check for full parity
-	const bool fp = full_parity();
+	const bool fp = ledr_full_parity();
 	const value_enum p(current_ledr_parity(s));
 	bool respond = false;
 	switch (p) {
@@ -3258,7 +3716,6 @@ case CHANNEL_TYPE_SINGLE_TRACK:
 	break;
 default: DIE;
 }	// end switch
-#endif
 }	// end channel::resume
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3278,9 +3735,7 @@ channel::save_checkpoint(ostream& o) const {
 	write_value(o, after_max);
 	write_value(o, timing_probability);
 #endif
-#if PRSIM_CHANNEL_LEDR
 	write_value(o, type);
-#endif
 	write_value(o, flags);
 	write_value(o, counter_state);
 	write_value(o, x_counter);
@@ -3308,9 +3763,7 @@ channel::load_checkpoint(istream& i) {
 	read_value(i, after_max);
 	read_value(i, timing_probability);
 #endif
-#if PRSIM_CHANNEL_LEDR
 	read_value(i, type);
-#endif
 	read_value(i, flags);
 	read_value(i, counter_state);
 	read_value(i, x_counter);
@@ -3340,78 +3793,32 @@ channel_manager::channel_manager() :
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 channel_manager::~channel_manager() { }
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Creates a channel, but leaves the acknowledgement and validity
-	rails uninitialized.  
-	TODO: this does not account for working directory prefix (ACX-PR-5414)
-	\return true on error.
+	Allocates and maps the channel data rails,
+	and initializes the data counter state.
+	\param rail_name if empty, means that channel is data-less!
+	\return true if error
  */
 bool
-channel_manager::new_channel(State& state, const string& _base, 
-		const string& bundle_name, const size_t _num_bundles, 
-		const string& rail_name, const size_t _num_rails, 
-		const bool active_low, 
-		const bool have_ack, const bool ack_sense, const bool ack_init, 
-		const bool have_validity, const bool validity_sense) {
-	STACKTRACE_VERBOSE;
-	// make sure base is a legitmate scalar channel name first
-	const entity::module& m(state.get_module());
-#if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
-	parser::expanded_global_references_type refs;
-	if (parser::expand_global_references(_base, m, refs)) {
-		return true;
-	}
-	parser::expanded_global_references_type::const_iterator
-		ri(refs.begin()), re(refs.end());
-for ( ; ri!=re; ++ri) {
-	const entity::global_indexed_reference& g(ri->second);
-	ostringstream oss;
-//	cr.inst_ref()->dump(oss, expr_dump_context::default_value);
-	ri->first->dump(oss);
-	// base name needs to expanded to scalar reference strings...
-	const string& base(oss.str());
-#else
-	const string& base(_base);
-	const entity::global_indexed_reference
-		g(parser::parse_global_reference(base, m));
-#endif
-	if (g.first != entity::META_TYPE_PROCESS || !g.second) {
-		cerr << "Error: base reference is not a valid channel." << endl;
-		return true;
-	}
-	// 0 indicates that bundle/rail is scalar, not array
-	// in any case, size should be at least 1
+channel_manager::allocate_data_rails(State& state, const module& m,
+	const size_t key /* channel index */,
+	const string& bundle_name, const size_t _num_bundles,
+	const string& rail_name, const size_t _num_rails) {
+	// because 0 is used to denote scalars
 	const size_t num_bundles = _num_bundles ? _num_bundles : 1;
 	const size_t num_rails = _num_rails ? _num_rails : 1;
-
-	const size_t key = channel_pool.size();
-	const pair<channel_set_type::iterator, bool>
-		i(channel_index_set.insert(make_pair(base, key)));
-	if (!i.second) {
-		cerr << "Error: channel " << base <<
-			" already registered." << endl;
-		return true;
-	}
-	channel_pool.resize(key +1);	// default construct
-	channel& c(channel_pool.back());
-#if PRSIM_CHANNEL_LEDR
-	c.type = channel::CHANNEL_TYPE_1ofN;
-#endif
-	c.name = base;
-#if PRSIM_CHANNEL_RAILS_INVERTED
-	c.set_data_sense(active_low);
-#endif
+	channel& c(channel_pool[key]);
+	const string& base(c.name);
 	// allocate data rail references:
-	set<size_t> rail_aliases;
+	set<size_t> rail_aliases;		// check for aliases (forbidden)
 	channel::data_rail_index_type dk;
+if (rail_name.length()) {
 	dk[0] = num_bundles;
 	dk[1] = num_rails;
 	c.data.resize(dk);
 	// lookup and assign node-indices
 	dk[0] = 0;
 	size_t& j = dk[0];
-try {
 	for ( ; j<num_bundles; ++j) {
 		ostringstream bundle_segment;
 		if (bundle_name.length()) {
@@ -3456,6 +3863,75 @@ try {
 	}	// end for each bundle
 	// initialize data-rail state counters from current values
 	c.initialize_data_counter(state);
+} else {	// else skip, is data-less
+	// explicitly resize to 0
+	dk[0] = 0;
+	dk[1] = 0;
+	c.data.resize(dk);
+}
+	return false;
+}	// end allocate_data_rails
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Creates a channel, but leaves the acknowledgement and validity
+	rails uninitialized.  
+	TODO: this does not account for working directory prefix (ACX-PR-5414)
+	\return true on error.
+ */
+bool
+channel_manager::new_channel(State& state, const string& _base, 
+		const string& bundle_name, const size_t _num_bundles, 
+		const string& rail_name, const size_t _num_rails, 
+		const bool active_low, 
+		const bool have_ack, const bool ack_sense, const bool ack_init, 
+		const bool have_validity, const bool validity_sense) {
+	STACKTRACE_VERBOSE;
+	// make sure base is a legitmate scalar channel name first
+	const entity::module& m(state.get_module());
+#if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
+	parser::expanded_global_references_type refs;
+	if (parser::expand_global_references(_base, m, refs)) {
+		return true;
+	}
+	parser::expanded_global_references_type::const_iterator
+		ri(refs.begin()), re(refs.end());
+for ( ; ri!=re; ++ri) {
+	const entity::global_indexed_reference& g(ri->second);
+	ostringstream oss;
+//	cr.inst_ref()->dump(oss, expr_dump_context::default_value);
+	ri->first->dump(oss);
+	// base name needs to expanded to scalar reference strings...
+	const string& base(oss.str());
+#else
+	const string& base(_base);
+	const entity::global_indexed_reference
+		g(parser::parse_global_reference(base, m));
+#endif
+	if (g.first != entity::META_TYPE_PROCESS || !g.second) {
+		cerr << "Error: base reference is not a valid channel." << endl;
+		return true;
+	}
+	const size_t key = channel_pool.size();
+	const pair<channel_set_type::iterator, bool>
+		i(channel_index_set.insert(make_pair(base, key)));
+	if (!i.second) {
+		cerr << "Error: channel " << base <<
+			" already registered." << endl;
+		return true;
+	}
+	channel_pool.resize(key +1);	// default construct
+	channel& c(channel_pool.back());
+	c.type = channel::CHANNEL_TYPE_1ofN;
+	c.name = base;
+#if PRSIM_CHANNEL_RAILS_INVERTED
+	c.set_data_sense(active_low);
+#endif
+try {
+	if (allocate_data_rails(state, m, key, 
+			bundle_name, _num_bundles, rail_name, _num_rails)) {
+		return true;
+	}
 	// now setup ack and validity
 	// really shouldn't have to lookup channel again here...
 	if (set_channel_ack_valid(state, base, 
@@ -3475,7 +3951,50 @@ try {
 }	// end new_channel
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PRSIM_CHANNEL_LEDR
+bool
+channel_manager::set_channel_2p_ack(State& state, const size_t key,
+	const string& a, const bool ack_init) {
+	channel& c(channel_pool[key]);
+	const node_index_type ni =
+		parse_node_to_index(a, state.get_module()).index;
+	if (ni) {
+		c.ack_signal = ni;
+		state.__get_node(ni).set_in_channel();
+		node_channels_map[ni].insert(key);
+	} else {
+		cerr << "Error: no such node `" << a <<
+			"\' in channel." << endl;
+		return true;
+	}
+	c.set_ack_init(ack_init);
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	The repeat rail is overloaded to be the validity/request rail.
+ */
+bool
+channel_manager::set_channel_2p_req(State& state, const size_t key,
+	const string& r, const bool req_init) {
+	channel& c(channel_pool[key]);
+	// assign repeat rail (use validity signal)
+	const node_index_type ni =
+		parse_node_to_index(r, state.get_module()).index;
+	if (ni) {
+		c.valid_signal = ni;	// doubles as repeat signal
+		state.__get_node(ni).set_in_channel();
+		node_channels_map[ni].insert(key);
+	} else {
+		cerr << "Error: no such node `" << r <<
+			"\' in channel." << endl;
+		return true;
+	}
+	c.set_repeat_init(req_init);
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Creates a LEDR channel.
 	\return true on error.
@@ -3522,17 +4041,15 @@ if (i.second) {
 	// assign ack rail (optional)
 	if (ack_name.length()) {
 		const string a(base + '.' + ack_name);
-		const node_index_type ni = parse_node_to_index(a, m).index;
-		if (ni) {
-			c.ack_signal = ni;
-			state.__get_node(ni).set_in_channel();
-			node_channels_map[ni].insert(key);
-		} else {
-			cerr << "Error: no such node `" << a <<
-				"\' in channel." << endl;
+		if (set_channel_2p_ack(state, key, a, ack_init)) {
 			return true;
 		}
-		c.set_ack_init(ack_init);
+	}
+}{
+	// assign repeat rail (use validity signal)
+	const string r(base + '.' + repeat_name);
+	if (set_channel_2p_req(state, key, r, repeat_init)) {
+		return true;
 	}
 }{
 	// TODO: handle bundles
@@ -3542,7 +4059,9 @@ if (i.second) {
 		FINISH_ME(Fang);
 		return true;
 	}
-}{
+}
+{
+#if 1
 	// allocate data rail references:
 	channel::data_rail_index_type dk;
 	dk[0] = 1;	// bundles
@@ -3565,21 +4084,14 @@ if (i.second) {
 			"\' in channel." << endl;
 		return true;
 	}
-	c.set_data_init(data_init);
-}{
-	// assign repeat rail (use validity signal)
-	const string r(base + '.' + repeat_name);
-	const node_index_type ni = parse_node_to_index(r, m).index;
-	if (ni) {
-		c.valid_signal = ni;	// doubles as repeat signal
-		state.__get_node(ni).set_in_channel();
-		node_channels_map[ni].insert(key);
-	} else {
-		cerr << "Error: no such node `" << r <<
-			"\' in channel." << endl;
+#else
+	// this doesn't account for repeat rail (yet)
+	if (allocate_data_rails(state, m, key, 
+			"", 0, data_name, 0)) {
 		return true;
 	}
-	c.set_repeat_init(repeat_init);
+#endif
+	c.set_data_init(data_init);
 }
 	// initialize data-rail state counters from current values
 	c.initialize_data_counter(state);
@@ -3592,7 +4104,131 @@ if (i.second) {
 #endif
 	return false;
 }	// end new_channel
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_CHANNEL_BUNDLED_DATA
+/**
+	Creates a bundled-data (4-phase) channel.
+	\return true on error.
+ */
+bool
+channel_manager::new_channel_bd4p(State& state, const string& _base, 
+		const bool ack_sense, const bool ack_init, 
+		const bool req_sense,
+//		const bool req_init, 
+		const string& data_name, const size_t _num_rails, 
+		const bool active_low) {
+	STACKTRACE_VERBOSE;
+	const entity::module& m(state.get_module());
+#if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
+	parser::expanded_global_references_type refs;
+	if (parser::expand_global_references(_base, m, refs)) {
+		return true;
+	}
+	parser::expanded_global_references_type::const_iterator
+		ri(refs.begin()), re(refs.end());
+for ( ; ri!=re; ++ri) {
+//	const entity::global_indexed_reference& g(ri->second);
+	ostringstream oss;
+//	cr.inst_ref()->dump(oss, expr_dump_context::default_value);
+	ri->first->dump(oss);
+	// base name needs to expanded to scalar reference strings...
+	const string& base(oss.str());
+#else
+	const string& base(_base);
 #endif
+	const size_t key = channel_pool.size();
+	const pair<channel_set_type::iterator, bool>
+		i(channel_index_set.insert(make_pair(base, key)));
+if (i.second) {
+	channel_pool.resize(key +1);	// default construct
+	channel& c(channel_pool.back());
+	c.type = channel::CHANNEL_TYPE_BD_4P;
+	// default timing mode is after, not global
+	c.timing_mode = CHANNEL_TIMING_AFTER;
+	c.name = base;
+#if PRSIM_CHANNEL_RAILS_INVERTED
+	c.set_data_sense(active_low);
+#endif
+	if (allocate_data_rails(state, m, key, 
+			"", 0, data_name, _num_rails)) {
+		return true;
+	}
+	// now setup ack and validity
+	if (set_channel_ack_valid(state, base, 
+			true, ack_sense, ack_init, 
+			true, req_sense)) {
+		return true;
+	}
+} else {
+	// channel not successfully inserted; already exists
+	return true;
+}
+#if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
+}	// end for each
+#endif
+	return false;
+}	// end new_channel_bd4p
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+channel_manager::new_channel_bd2p(State& state, const string& _base,
+		const string& ack_name, const bool ack_init,
+		const string& req_name, const bool req_init, 
+		const string& data_name, const size_t _num_rails,
+		const bool active_low) {
+	STACKTRACE_VERBOSE;
+	const entity::module& m(state.get_module());
+#if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
+	parser::expanded_global_references_type refs;
+	if (parser::expand_global_references(_base, m, refs)) {
+		return true;
+	}
+	parser::expanded_global_references_type::const_iterator
+		ri(refs.begin()), re(refs.end());
+for ( ; ri!=re; ++ri) {
+//	const entity::global_indexed_reference& g(ri->second);
+	ostringstream oss;
+//	cr.inst_ref()->dump(oss, expr_dump_context::default_value);
+	ri->first->dump(oss);
+	// base name needs to expanded to scalar reference strings...
+	const string& base(oss.str());
+#else
+	const string& base(_base);
+#endif
+	const size_t key = channel_pool.size();
+	const pair<channel_set_type::iterator, bool>
+		i(channel_index_set.insert(make_pair(base, key)));
+if (i.second) {
+	channel_pool.resize(key +1);	// default construct
+	channel& c(channel_pool.back());
+	c.type = channel::CHANNEL_TYPE_BD_2P;
+	// default timing mode is after, not global
+	c.timing_mode = CHANNEL_TIMING_AFTER;
+	c.name = base;
+	if (set_channel_2p_ack(state, key, base + '.' +ack_name, ack_init)) {
+		return true;
+	}
+	if (set_channel_2p_req(state, key, base + '.' +req_name, req_init)) {
+		return true;
+	}
+#if PRSIM_CHANNEL_RAILS_INVERTED
+	c.set_data_sense(active_low);
+#endif
+	if (allocate_data_rails(state, m, key, 
+			"", 0, data_name, _num_rails)) {
+		return true;
+	}
+} else {
+	// channel not successfully inserted; already exists
+	return true;
+}
+#if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
+}	// end for each
+#endif
+	return false;
+}	// end new_channel_bd2p
+#endif	// PRSIM_CHANNEL_BUNDLED_DATA
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 channel_index_type
@@ -4145,7 +4781,7 @@ void
 channel_manager::process_node(const State& s, const node_index_type ni, 
 		const value_enum prev, const value_enum next, 
 		vector<env_event_type>& new_events) throw(channel_exception) {
-	STACKTRACE_VERBOSE;
+	STACKTRACE_BRIEF;
 	// find all channels that this node participates in:
 	const node_channels_map_type::const_iterator
 		f(node_channels_map.find(ni));

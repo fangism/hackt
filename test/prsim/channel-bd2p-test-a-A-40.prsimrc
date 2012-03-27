@@ -1,0 +1,60 @@
+# "channel-bd2p-test-a-A-40.prsimrc"
+# copy-modified from "channel-bd2p-test-a-10.prsimrc"
+# @haco@ channel-bd2p-test-a.haco-c
+# testing channel sink, expect-fail
+
+# register channels
+source channel-bd2p-test-a-01.prsimrc
+
+# continue after failure
+channel-expect-fail warn
+
+watchall
+# set up some channels with commands
+channel-watch A
+channel-sink A
+channel-expect-args A 0 1 3 7 15 31
+channel-reset A
+getall A
+
+echo manually resetting data
+set A.d[0..7] 0
+set A.r 0
+cycle
+assert A.a 0
+
+echo releasing channel A
+channel-release A
+cycle
+assert A.a 0
+# because data is neutral, A.a should request new data
+
+echo ------------------------------------
+set A.r 1
+cycle
+assert A.a 1
+channel-show A
+
+echo ------------------------------------
+set A.d[0] 1
+set A.r 0
+cycle
+assert A.a 0
+channel-show A
+
+echo ------------------------------------
+set A.d[2] 1
+set A.r 1
+echo expect comparison fail here: (but silenced)
+cycle
+assert A.a 1
+channel-show A
+
+
+echo ------------------------------------
+set A.d[1] 1
+set A.r 0
+cycle
+assert A.a 0
+channel-show A
+

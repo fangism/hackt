@@ -1162,6 +1162,9 @@ public:
 	void
 	bind_footprint(const footprint&, const string&);
 
+	const footprint*
+	get_footprint(void) const { return fp; }
+
 	const string&
 	get_name(void) const { return name; }
 
@@ -1224,6 +1227,14 @@ public:
 #endif
 		const netlist_options&);
 
+	const node&
+	get_node_port(const size_t) const;
+
+#if NETLIST_VERILOG
+	const proc&
+	get_proc_port(const size_t) const;
+#endif
+
 	void
 	summarize_ports(
 #if NETLIST_VERILOG
@@ -1284,7 +1295,10 @@ private:
 	collect_struct_ports(vector<string>&, const netlist_options&) const;
 
 	ostream&
-	emit_verilog_locals(ostream&, const netlist_options&) const;
+	emit_verilog_struct_locals(ostream&, const netlist_options&) const;
+
+	ostream&
+	emit_verilog_wire_locals(ostream&, const netlist_options&) const;
 #endif
 
 	ostream&

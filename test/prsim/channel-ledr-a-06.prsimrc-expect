@@ -29,6 +29,7 @@ channel	C (.data) : 0 @ 0
 channel	C (.data) : 1 @ 0
 	0	C.d : 1
 channel	C (.data) : 1 @ 0
+channel-assert: value assertion failed on channel C, expected: 0, but got: 1
 	0	C.r : 0
 ERROR: value assertion failed on channel `C' at index [10].
 	expected: 0, got: 1

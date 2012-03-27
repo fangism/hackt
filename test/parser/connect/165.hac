@@ -1,0 +1,40 @@
+// "165.hac"
+// testing bool port direction annotations
+
+defproc charlie(bool in; bool out) {
+bool mid;
+}
+
+defproc larry(bool? in; bool! out) {
+bool mid;
+}
+
+defproc moe(bool? in; bool! out) {
+bool mid;
+in?;
+out!;
+}
+
+defproc curly(bool in; bool out) {
+bool mid;
+in?;
+out!;
+}
+
+defproc dee(bool? in; bool! out) {
+bool mid;
+in?;
+}
+
+defproc dum(bool? in; bool! out) {
+bool mid;
+out!;
+}
+
+
+charlie horse;
+larry wall;
+moe money;
+curly braces;
+dee fang;
+dum diddle;

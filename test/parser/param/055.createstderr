@@ -10,7 +10,7 @@ Persistent Object Manager text dump:
 	6	##ADDR##	prealins	0	#HEAD#	#TAIL#	16
 	7	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
 	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
 	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
 	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	12	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30

@@ -275,6 +275,22 @@ INSTANCE_ALIAS_INFO_CLASS::get_container_base(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	\return true if this is a subinstance of another collection.
+	a member.  So 'a.b' will return true.
+	NOTE: this is pretty much template independent.
+ */
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+bool
+INSTANCE_ALIAS_INFO_CLASS::is_subinstance(void) const {
+	const never_ptr<const physical_instance_collection> c(this->container);
+	NEVER_NULL(c);
+	const instance_collection_base::super_instance_ptr_type
+		p(c->get_super_instance());
+	return p;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	\return the owner of the top-most instance of which this is 
 	a member.  So a.b.c will return the owner of a.  
 	NOTE: this is pretty much template independent, except for the 

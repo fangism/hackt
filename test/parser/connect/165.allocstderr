@@ -1,0 +1,36 @@
+globID	super		localID	canonical	footprint-frame
+[global process entries]
+1	(top)	-	1	horse	charlie<>
+	bool: 1,2,3,4;15
+2	(top)	-	2	wall	larry<>
+	bool: 1,2,5,6;16
+3	(top)	-	3	money	moe<>
+	bool: 1,2,7,8;17
+4	(top)	-	4	braces	curly<>
+	bool: 1,2,9,10;18
+5	(top)	-	5	fang	dee<>
+	bool: 1,2,11,12;19
+6	(top)	-	6	diddle	dum<>
+	bool: 1,2,13,14;20
+[global bool entries]
+1	(top)	-	1	!GND	 @[ supply_low ]
+2	(top)	-	2	!Vdd	 @[ supply_high ]
+3	(top)	-	3	horse.in	
+4	(top)	-	4	horse.out	
+5	(top)	-	5	wall.in	
+6	(top)	-	6	wall.out	
+7	(top)	-	7	money.in	
+8	(top)	-	8	money.out	
+9	(top)	-	9	braces.in	
+10	(top)	-	10	braces.out	
+11	(top)	-	11	fang.in	
+12	(top)	-	12	fang.out	
+13	(top)	-	13	diddle.in	
+14	(top)	-	14	diddle.out	
+15	process	1	5	horse.mid	
+16	process	2	5	wall.mid	
+17	process	3	5	money.mid	
+18	process	4	5	braces.mid	
+19	process	5	5	fang.mid	
+20	process	6	5	diddle.mid	
+

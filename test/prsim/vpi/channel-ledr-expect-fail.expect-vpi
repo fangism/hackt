@@ -16,13 +16,13 @@ breakpoints: L.d L.r
 # channel-watchall 
 # channel-ignore-all 
 # channel-reset-all 
-channel	L (.data) : X
+channel	L (.data) : X (ignored)
 prsim:	100	L.d : 0
-channel	L (.data) : 0
+channel	L (.data) : 0 (ignored)
 prsim:	100	L.r : 0
-channel	R (.data) : X
+channel	R (.data) : X (ignored)
 prsim:	110	R.d : 0
-channel	R (.data) : 0
+channel	R (.data) : 0 (ignored)
 prsim:	111	R.r : 0
 # channel-release-all 
 # channel-heed-all 
@@ -54,6 +54,7 @@ prsim:	2510	R.r : 1
 channel	L (.data) : 1
 prsim:	2600	L.d : 1	[by L.r:=1]
 channel	R (.data) : 1
+channel-assert: value assertion failed on channel R, expected: 0, but got: 1
 prsim:	2610	R.d : 1
 ERROR: value assertion failed on channel `R' at index [5] of iteration [0].
 	expected: 0, got: 1

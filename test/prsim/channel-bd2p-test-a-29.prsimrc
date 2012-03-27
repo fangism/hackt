@@ -1,0 +1,35 @@
+# "channel-bd2p-test-a-29.prsimrc"
+# copy-modified from "channel-bd2p-test-a-28.prsimrc"
+# @haco@ channel-bd2p-test-a.haco-c
+# testing initialization and reset
+# can source this script after running any other test
+
+source channel-bd2p-test-a-01.prsimrc
+channel-show-all
+
+channel-source-args A 0 0 0 1
+channel-source-args-loop B 0 2 0 1
+channel-sink C
+channel-sink D
+
+channel-watchall
+channel-reset-all
+
+set A.a 0
+set B.a 1
+set C.d[0..6] 0
+set C.d[7] 1
+set D.d[0] 1
+set D.d[1..7] 0
+
+cycle
+channel-release-all
+
+cycle
+getall A
+getall B
+getall C
+getall D
+
+source channel-bd2p-test-a-21.prsimrc
+

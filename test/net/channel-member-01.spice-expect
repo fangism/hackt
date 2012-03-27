@@ -1,4 +1,4 @@
-* subcircuit e1of2<> is empty.
+* channel or struct e1of2<> is omitted.
 
 .subckt res<6> !GND in out
 Mout:dn:0:pass in in out !GND nch W=5u L=2u

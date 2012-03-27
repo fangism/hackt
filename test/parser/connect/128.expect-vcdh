@@ -1,0 +1,60 @@
+$var wire 1 <1> !GND $end
+$var wire 1 <2> !Vdd $end
+$scope module X $end
+  $var wire 1 <1> !GND $end
+  $var wire 1 <2> !Vdd $end
+  $scope module g $end
+    $var wire 1 <1> !GND $end
+    $var wire 1 <2> !Vdd $end
+  $upscope $end
+  $scope module aa $end
+    $var wire 1 <1> !GND $end
+    $var wire 1 <2> !Vdd $end
+    $var wire 1 <3> d $end
+  $upscope $end
+  $scope module pa0 $end
+    $var wire 1 <1> !GND $end
+    $var wire 1 <2> !Vdd $end
+    $var wire 1 <3> d $end
+  $upscope $end
+  $scope module a0copy $end
+    $var wire 1 <1> !GND $end
+    $var wire 1 <2> !Vdd $end
+    $scope module r $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <3> d $end
+    $upscope $end
+    $scope module rp $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <3> d $end
+    $upscope $end
+  $upscope $end
+  $scope module lt $end
+    $var wire 1 <1> !GND $end
+    $var wire 1 <2> !Vdd $end
+    $scope module g $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+    $upscope $end
+    $scope module a $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <3> d $end
+    $upscope $end
+  $upscope $end
+  $scope module pnd $end
+    $var wire 1 <1> !GND $end
+    $var wire 1 <2> !Vdd $end
+    $scope module g $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+    $upscope $end
+    $scope module a $end
+      $var wire 1 <1> !GND $end
+      $var wire 1 <2> !Vdd $end
+      $var wire 1 <3> d $end
+    $upscope $end
+  $upscope $end
+$upscope $end

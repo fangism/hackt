@@ -61,10 +61,20 @@
 	bug root-causing, possible rewinding (time machine!).
 	This could be a replacement for PRSIM_TRACE_CAUSE_TIME.
 	Goal: 1
-	Priorty: high
+	Priority: high
 	Status: complete, tested, can probably perm.
  */
 #define	PRSIM_TRACE_GENERATION				1
+
+/**
+	Define to 1 to enable support for vector-change-dump (VCD)
+	trace files.
+	Rationale: to view waveforms in 3rd party viewers that
+	support this standard format.
+	Priority: medium
+	Status: done, basically tested
+ */
+#define	PRSIM_VCD_GENERATION				1
 
 /**
 	Define to 1 to support 'weak' flavored rules in prsim.

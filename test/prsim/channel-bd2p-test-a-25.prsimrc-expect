@@ -1,0 +1,50 @@
+channels:
+A : bundled-2p .e:0 .v:0 x8 unsigned off
+B : bundled-2p .e:0 .v:1 x8 unsigned off
+C : bundled-2p .e:1 .v:0 x8 unsigned off
+D : bundled-2p .e:1 .v:1 x8 unsigned off
+channels:
+A : bundled-2p .e:0 .v:0 x8 unsigned off
+B : bundled-2p .e:0 .v:1 x8 unsigned off
+C : bundled-2p .e:1 .v:0 x8 unsigned off
+D : bundled-2p .e:1 .v:1 x8 unsigned off
+Warning: channel acknowledge `A.e' has no fanin!
+Warning: channel validity `A.n' has no fanout, but is being sourced.
+Warning: channel acknowledge `B.e' has no fanin!
+Warning: channel validity `B.v' has no fanout, but is being sourced.
+Warning: channel validity `C.n' has no fanin.
+Warning: channel validity `D.v' has no fanin.
+event queue:
+	10	A.d[0] : 0
+	10	A.d[1] : 0
+	10	A.d[2] : 0
+	10	A.d[3] : 0
+	10	A.d[4] : 0
+	10	A.d[5] : 0
+	10	A.d[6] : 0
+	10	A.d[7] : 0
+	10	A.r : 0
+	10	B.d[0] : 0
+	10	B.d[1] : 0
+	10	B.d[2] : 0
+	10	B.d[3] : 0
+	10	B.d[4] : 0
+	10	B.d[5] : 0
+	10	B.d[6] : 0
+	10	B.d[7] : 0
+	10	B.r : 1
+	10	C.a : 1
+	10	D.a : 1
+time: 0
+initializing... 
+A : bundled-2p .e:0 .v:0 x8 unsigned source,stopped, timing: after=10 {0,0,0,1,} @0
+	count: 0, unknowns: 8
+B : bundled-2p .e:0 .v:1 x8 unsigned source,stopped, timing: after=10 {0,2,0,1,}* @0 #0
+	count: 0, unknowns: 8
+C : bundled-2p .e:1 .v:0 x8 unsigned sink,stopped, timing: after=10
+	count: 0, unknowns: 8
+D : bundled-2p .e:1 .v:1 x8 unsigned sink,stopped, timing: after=10
+	count: 0, unknowns: 8
+resetting... 
+channels:
+all gone! 

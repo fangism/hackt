@@ -1,0 +1,162 @@
+channels:
+A : bundled-2p .e:0 .v:0 x8 unsigned off
+B : bundled-2p .e:0 .v:1 x8 unsigned off
+C : bundled-2p .e:1 .v:0 x8 unsigned off
+D : bundled-2p .e:1 .v:1 x8 unsigned off
+D : bundled-2p .e:1 .v:1 x8 unsigned off
+	count: 0, unknowns: 8
+All subnodes of 'D':
+D.a : X
+D.r : X
+D.d[0] : X
+D.d[1] : X
+D.d[2] : X
+D.d[3] : X
+D.d[4] : X
+D.d[5] : X
+D.d[6] : X
+D.d[7] : X
+Warning: channel acknowledge `D.e' has no fanin!
+Warning: channel validity `D.v' has no fanout, but is being sourced.
+	10	D.d[0] : 0
+	10	D.d[1] : 0
+	10	D.d[2] : 0
+	10	D.d[3] : 0
+	10	D.d[4] : 0
+	10	D.d[5] : 0
+	10	D.d[6] : 0
+	10	D.d[7] : 0
+	10	D.r : 1
+All subnodes of 'D':
+D.a : X
+D.r : 1
+D.d[0] : 0
+D.d[1] : 0
+D.d[2] : 0
+D.d[3] : 0
+D.d[4] : 0
+D.d[5] : 0
+D.d[6] : 0
+D.d[7] : 0
+D : bundled-2p .e:1 .v:1 x8 unsigned source,watch,stopped,ignored, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @0
+	count: 0, unknowns: 0
+manually bucketing 
+	10	D.a : 1
+channel D: channel is empty, waiting for sender
+releasing channel D (source) 
+----------------------------------- 
+event queue:
+	20	D.r : 0
+end of queue 
+channel D: channel is empty, waiting for sender
+channel	D (.data) : 0 @ 20
+	20	D.r : 0
+D : bundled-2p .e:1 .v:1 x8 unsigned source,watch, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @1
+	count: 0, unknowns: 0
+event    : `D.d[0]' : 0
+(no cycle)
+event    : `D.r' : 0
+(no cycle)
+channel D: channel is full (0), waiting for receiver ack
+----------------------------------- 
+	20	D.a : 0
+	30	D.d[0] : 1	[by D.a:=0]
+	30	D.d[5] : 1	[by D.a:=0]
+channel	D (.data) : 33 @ 30
+	30	D.r : 1	[by D.a:=0]
+D : bundled-2p .e:1 .v:1 x8 unsigned source,watch, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @2
+	count: 2, unknowns: 0
+----------------------------------- 
+	30	D.a : 1
+	40	D.d[0] : 0	[by D.a:=1]
+	40	D.d[1] : 1	[by D.a:=1]
+	40	D.d[5] : 0	[by D.a:=1]
+	40	D.d[6] : 1	[by D.a:=1]
+channel	D (.data) : 66 @ 40
+	40	D.r : 0	[by D.a:=1]
+D : bundled-2p .e:1 .v:1 x8 unsigned source,watch, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @3
+	count: 2, unknowns: 0
+----------------------------------- 
+	40	D.a : 0
+	50	D.d[0] : 1	[by D.a:=0]
+	50	D.d[5] : 1	[by D.a:=0]
+channel	D (.data) : 99 @ 50
+	50	D.r : 1	[by D.a:=0]
+D : bundled-2p .e:1 .v:1 x8 unsigned source,watch, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @4
+	count: 4, unknowns: 0
+----------------------------------- 
+	50	D.a : 1
+	60	D.d[3] : 1	[by D.a:=1]
+	60	D.d[5] : 0	[by D.a:=1]
+	60	D.d[6] : 0	[by D.a:=1]
+channel	D (.data) : 11 @ 60
+	60	D.r : 0	[by D.a:=1]
+D : bundled-2p .e:1 .v:1 x8 unsigned source,watch, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @5
+	count: 3, unknowns: 0
+----------------------------------- 
+	60	D.a : 0
+	70	D.d[0] : 0	[by D.a:=0]
+	70	D.d[1] : 0	[by D.a:=0]
+	70	D.d[2] : 1	[by D.a:=0]
+	70	D.d[5] : 1	[by D.a:=0]
+channel	D (.data) : 44 @ 70
+	70	D.r : 1	[by D.a:=0]
+D : bundled-2p .e:1 .v:1 x8 unsigned source,watch, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @6
+	count: 3, unknowns: 0
+----------------------------------- 
+	70	D.a : 1
+	80	D.d[0] : 1	[by D.a:=1]
+	80	D.d[5] : 0	[by D.a:=1]
+	80	D.d[6] : 1	[by D.a:=1]
+channel	D (.data) : 77 @ 80
+	80	D.r : 0	[by D.a:=1]
+D : bundled-2p .e:1 .v:1 x8 unsigned source,watch, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @7
+	count: 4, unknowns: 0
+----------------------------------- 
+	80	D.a : 0
+	90	D.d[0] : 0	[by D.a:=0]
+	90	D.d[1] : 1	[by D.a:=0]
+	90	D.d[3] : 0	[by D.a:=0]
+	90	D.d[4] : 1	[by D.a:=0]
+	90	D.d[6] : 0	[by D.a:=0]
+channel	D (.data) : 22 @ 90
+	90	D.r : 1	[by D.a:=0]
+D : bundled-2p .e:1 .v:1 x8 unsigned source,watch, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @8
+	count: 3, unknowns: 0
+----------------------------------- 
+	90	D.a : 1
+	100	D.d[0] : 1	[by D.a:=1]
+	100	D.d[5] : 1	[by D.a:=1]
+channel	D (.data) : 55 @ 100
+	100	D.r : 0	[by D.a:=1]
+D : bundled-2p .e:1 .v:1 x8 unsigned source,watch, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @9
+	count: 5, unknowns: 0
+----------------------------------- 
+	100	D.a : 0
+	110	D.d[0] : 0	[by D.a:=0]
+	110	D.d[1] : 0	[by D.a:=0]
+	110	D.d[2] : 0	[by D.a:=0]
+	110	D.d[3] : 1	[by D.a:=0]
+	110	D.d[5] : 0	[by D.a:=0]
+	110	D.d[6] : 1	[by D.a:=0]
+channel	D (.data) : 88 @ 110
+	110	D.r : 1	[by D.a:=0]
+D : bundled-2p .e:1 .v:1 x8 unsigned source,watch, timing: after=10
+	count: 3, unknowns: 0
+----------------------------------- 
+no more values!!! 
+	110	D.a : 1
+D : bundled-2p .e:1 .v:1 x8 unsigned source,watch, timing: after=10
+	count: 3, unknowns: 0
+All subnodes of 'D':
+D.a : 1
+D.r : 1
+D.d[0] : 0
+D.d[1] : 0
+D.d[2] : 0
+D.d[3] : 1
+D.d[4] : 1
+D.d[5] : 0
+D.d[6] : 1
+D.d[7] : 0
+channel D: channel is empty, waiting for sender

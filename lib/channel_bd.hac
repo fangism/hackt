@@ -1,0 +1,106 @@
+/**
+	\file "channel_bd.hac"
+	Library for bundled-data channels.
+	$Id: $
+ */
+
+//-----------------------------------------------------------------------------
+/**
+	4-phase bundled-data.
+	e: active-low ack
+	v: active-high req
+ */
+template <pint N>
+defchan bd_ev <: chan(int<N>) (bool e, v, d[N]) { }
+
+/**
+	4-phase bundled-data.
+	a: active-high ack
+	v: active-high req
+ */
+template <pint N>
+defchan bd_av <: chan(int<N>) (bool a, v, d[N]) { }
+
+/**
+	4-phase bundled-data.
+	e: active-low ack
+	n: active-low req
+ */
+template <pint N>
+defchan bd_en <: chan(int<N>) (bool e, n, d[N]) { }
+
+/**
+	4-phase bundled-data.
+	a: active-high ack
+	n: active-low req
+ */
+template <pint N>
+defchan bd_an <: chan(int<N>) (bool a, n, d[N]) { }
+
+// TODO: typedefs for N=0 ?
+typedef	bd_ev<1>			bd_ev1;
+typedef	bd_ev<2>			bd_ev2;
+typedef	bd_ev<3>			bd_ev3;
+typedef	bd_ev<4>			bd_ev4;
+typedef	bd_ev<5>			bd_ev5;
+typedef	bd_ev<6>			bd_ev6;
+typedef	bd_ev<7>			bd_ev7;
+typedef	bd_ev<8>			bd_ev8;
+
+typedef	bd_av<1>			bd_av1;
+typedef	bd_av<2>			bd_av2;
+typedef	bd_av<3>			bd_av3;
+typedef	bd_av<4>			bd_av4;
+typedef	bd_av<5>			bd_av5;
+typedef	bd_av<6>			bd_av6;
+typedef	bd_av<7>			bd_av7;
+typedef	bd_av<8>			bd_av8;
+
+typedef	bd_en<1>			bd_en1;
+typedef	bd_en<2>			bd_en2;
+typedef	bd_en<3>			bd_en3;
+typedef	bd_en<4>			bd_en4;
+typedef	bd_en<5>			bd_en5;
+typedef	bd_en<6>			bd_en6;
+typedef	bd_en<7>			bd_en7;
+typedef	bd_en<8>			bd_en8;
+
+typedef	bd_an<1>			bd_an1;
+typedef	bd_an<2>			bd_an2;
+typedef	bd_an<3>			bd_an3;
+typedef	bd_an<4>			bd_an4;
+typedef	bd_an<5>			bd_an5;
+typedef	bd_an<6>			bd_an6;
+typedef	bd_an<7>			bd_an7;
+typedef	bd_an<8>			bd_an8;
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	2-phase bundled-data.
+	This type does *not* specify the empty parity of req/ack.
+ */
+template <pint N>
+defchan bd_2p <: chan(int<N>) (bool a, r, e, v, d[N]) {
+	e = a;
+	v = r;
+}
+
+typedef	bd_2p<1>			bd_2p_1;
+typedef	bd_2p<2>			bd_2p_2;
+typedef	bd_2p<3>			bd_2p_3;
+typedef	bd_2p<4>			bd_2p_4;
+typedef	bd_2p<5>			bd_2p_5;
+typedef	bd_2p<6>			bd_2p_6;
+typedef	bd_2p<7>			bd_2p_7;
+typedef	bd_2p<8>			bd_2p_8;
+
+/**
+	Pure-dataless handshake, intended for 2-phase.
+ */
+defchan bd_2p0 <: chan(int<1>) (bool a, r, e, v) {
+	e = a;
+	v = r;
+}
+
+//-----------------------------------------------------------------------------
+

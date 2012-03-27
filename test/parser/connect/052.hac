@@ -1,4 +1,4 @@
-// "052.hac" should pass: types match in ports
+// "052.hac" should fail: see comment
 
 defproc portaproc(bool b, c[4]; int i, j[2]) { }
 

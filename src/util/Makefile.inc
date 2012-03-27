@@ -202,12 +202,15 @@ UTIL_HEADER_FILES = \
 	util/sfinae_types.h \
 	util/size_t.h \
 	util/sstream.h \
+	util/stack_saver.h \
 	util/stacktrace.h \
 	util/static_assert.h \
 	util/static_trace.h \
 	util/stream_ptr.h \
 	util/string_fwd.h \
 	util/swap_saver.h \
+	util/syntax_fwd.h \
+	util/syntax.h \
 	util/tagged_subtype.h \
 	util/template.h \
 	util/typeof.h \
@@ -250,6 +253,7 @@ UTIL_CC_FILES = \
 	util/stacktrace.cc \
 	util/static_trace.cc \
 	util/string.cc \
+	util/syntax.cc \
 	util/tokenize.cc \
 	util/stream_ptr.cc \
 	util/uninitialized.cc \

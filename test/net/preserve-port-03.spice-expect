@@ -1,0 +1,5 @@
+.subckt dummy<> in out
+.ends
+
+xyummy f g dummy<>
+

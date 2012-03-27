@@ -74,8 +74,8 @@ if (cfopts.include_prs) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 cflat_prs_printer::visit(const entity::footprint& f) {
-if (cfopts.show_hierarchy && current_gpid() &&
-		f.get_meta_type() == META_TYPE_PROCESS) {
+	const bool b = (f.get_meta_type() == META_TYPE_PROCESS);
+if (cfopts.show_hierarchy && current_gpid() && b) {
 	const size_t gpid = current_gpid();
 	std::ostringstream oss;
 	oss << "$process: ";

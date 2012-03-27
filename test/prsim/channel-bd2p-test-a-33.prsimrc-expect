@@ -1,0 +1,27 @@
+channels:
+A : bundled-2p .e:0 .v:0 x8 unsigned off
+B : bundled-2p .e:0 .v:1 x8 unsigned off
+C : bundled-2p .e:1 .v:0 x8 unsigned off
+D : bundled-2p .e:1 .v:1 x8 unsigned off
+no values given: will reset to neutral 
+Warning: channel acknowledge `B.e' has no fanin!
+Warning: channel validity `B.v' has no fanout, but is being sourced.
+Warning: no values given, channel will remain neutral.
+channels:
+A : bundled-2p .e:0 .v:0 x8 unsigned off
+B : bundled-2p .e:0 .v:1 x8 unsigned source, timing: after=10
+C : bundled-2p .e:1 .v:0 x8 unsigned off
+D : bundled-2p .e:1 .v:1 x8 unsigned off
+Warning: channel validity `B.v' has no fanin.
+resetting all channels... 
+	10	B.d[0] : 0
+	10	B.d[1] : 0
+	10	B.d[2] : 0
+	10	B.d[3] : 0
+	10	B.d[4] : 0
+	10	B.d[5] : 0
+	10	B.d[6] : 0
+	10	B.d[7] : 0
+	10	B.r : 1
+	10	B.a : 0
+releasing all channels... 

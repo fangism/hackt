@@ -32,7 +32,12 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "sim/prsim/Command-prsim.h"
 #include "sim/prsim/Command-prsim-export.h"
 #include "sim/prsim/State-prsim.tcc"
+#if PRSIM_TRACE_GENERATION
 #include "sim/prsim/Trace-prsim.h"
+#endif
+#if PRSIM_VCD_GENERATION
+#include "sim/prsim/VCDManager.h"
+#endif
 #include "sim/command_base.tcc"
 #include "sim/command_category.tcc"
 #include "sim/command_registry.tcc"
@@ -717,6 +722,40 @@ This also resets the random number generator seed used with @command{seed48}.
 ***/
 typedef	Reset<State>				Reset;
 PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(Reset, simulation)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+/***
+@texinfo cmd/x-all.texi
+@deffn Command x-all
+This resets the values of all nodes to @t{X}, and clears the event queue
+and all other state except for the time, which is left as-is.
+Trace files are kept @emph{open}, mode flags, and channel setups are retained.  
+However, channel logs are closed.  
+This is useful for executing multiple simulation runs in one long trace.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(XAll, "x-all", simulation,
+	"set all nodes to X without restarting simulation")
+
+int
+XAll::main(State& s, const string_list& a) {
+if (a.size() > 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.x_all();
+	return Command::NORMAL;
+}
+}
+
+void
+XAll::usage(ostream& o) {
+	o << name << endl;
+o <<
+"Resets all nodes to X, clears event queue and all state except time,\n"
+"mode-flags, channel setup.  Active trace files remain open." << endl;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -6900,7 +6939,6 @@ Channel::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PRSIM_CHANNEL_LEDR
 /***
 @texinfo cmd/channel-ledr.texi
 @deffn Command channel-ledr name ack:init bundles:num data:init repeat:init
@@ -6942,8 +6980,8 @@ driving environments such as sources and sinks.
 For bundled channels, the initial values of data and repeat apply
 to all bundles.  
 @example
-@t{channel NAME e:0 :0 d:0 r:0}
-@t{channel NAME e:1 :0 d:0 r:0}
+@t{channel-ledr NAME e:0 :0 d:0 r:0}
+@t{channel-ledr NAME e:1 :0 d:0 r:0}
 @end example
 @end deffn
 @end texinfo
@@ -7015,16 +7053,17 @@ if (a.size() != 6) {
 			return Command::SYNTAX;
 		}
 		data_name = tmp.front();
+		if (data_name.length()) {
 #if PRSIM_CHANNEL_RAILS_INVERTED
 		data_sense = (data_name[0] == '~');		// active low
 #endif
 		const string::const_iterator b(data_name.begin());
 		data_name.assign(b +size_t(data_sense), b+c);
-		if (!data_name.length()) { THROW_EXIT; }
 		if (string_to_num(tmp.back(), data_init)) {
 			cerr << "Error: parsing initial value of data." << endl;
 			return Command::SYNTAX;
 		}
+		}	// else is data-less, which we now support
 	}{
 		// parse repeat
 		string_list tmp;
@@ -7073,7 +7112,327 @@ ChannelLEDR::usage(ostream& o) {
 "The XOR of the initial values of the rails defines the \'empty-parity\'"
 	<< endl;
 }
-#endif	// PRSIM_CHANNEL_LEDR
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_CHANNEL_BUNDLED_DATA
+/***
+@texinfo cmd/channel-bd-2p.texi
+@deffn Command channel-bd-2p name ack:init req:init data:width
+Registers a bundled-data (BD) channel, which consists of a bus, 
+request rail, and acknowledge rail.
+The request and acknowledge perform a two-phase handshake on every token;
+these signals toggle once per handshake.
+The @var{name} of the channel should match that of an instance 
+(process or channel) in the source file.  
+@itemize
+@item @var{name} is the name of the new channel in the simulator's namespace
+@item @var{ack} is a regular expression of the form @t{id:[01]}, where
+@itemize
+	@item @t{id} is the name of the acknowledge signal.  
+	@item The value after the @t{:} (required)
+	is interpreted as the initial state of the acknowledge wire, 
+	if driven by sink.
+@end itemize
+@item @var{req} is the name of the request signal.
+	The value given is the initial value of the request signal,
+	if driven by a source.
+	Together the XOR of the initial values of the acknowledge and request
+	defines the @emph{empty-parity}.  
+@item @var{data} is the name of the data rail(s), interpreted with active-high
+	logic levels (prefix with @t{~} to make active-low).  
+	The @var{num} value specifies the number of wires (bus width).
+	If the channel is data-less (handshake only), then omit the 
+	data rail name and just write @t{:}.
+@end itemize
+@example
+@t{channel-bd-2p NAME e:1 v:1 d:0} -- this names the ack @t{e} and the 
+	request @t{v}, and data is a single-wire bundled-data channel.
+@t{channel-bd-2p NAME a:1 r:0 d:8} -- this names the ack @t{a} and the
+	request @t{r}, and data is a 8-bit bundled-data channel.
+@end example
+@end deffn
+@end texinfo
+***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(ChannelBD2P, instance_completer)
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelBD2P, "channel-bd-2p", 
+	channels, "declare a bundled-data channel")
+
+int
+ChannelBD2P::main(State& s, const string_list& a) {
+if (a.size() != 5) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	string_list::const_iterator i(++a.begin());
+	const string& chan_name(*i);
+	const string& ack(*++i);
+	const string& req(*++i);
+	const string& data(*++i);
+	// could confirm that 'name' exists as a process/channel/datatype?
+	bool ack_init = false;
+	bool req_init = false;
+	bool data_sense = false;
+	size_t num_rails = 0;
+	string ack_name, req_name, data_name;
+	{
+		// parse ack
+		string_list tmp;
+		tokenize_char(ack, tmp, ':');
+		if (tmp.size() != 2) {
+			cerr << "Error: ack must be of the form id:init."
+				<< endl;
+			return Command::SYNTAX;
+		}
+		if (tmp.front().length()) {	// if we have ack (name)...
+		ack_name = tmp.front();
+		if (string_to_num(tmp.back(), ack_init)) {
+			cerr << "Error: parsing initial value of ack." << endl;
+			return Command::SYNTAX;
+		}
+		}	// else skip
+	}{
+		// parse req
+		string_list tmp;
+		tokenize_char(req, tmp, ':');
+		if (tmp.size() != 2) {
+			cerr << "Error: request must be of the form id:init."
+				<< endl;
+			return Command::SYNTAX;
+		}
+		req_name = tmp.front();
+		if (string_to_num(tmp.back(), req_init)) {
+			cerr << "Error: parsing initial value of request."
+				<< endl;
+			return Command::SYNTAX;
+		}
+	}{
+		// parse data
+		size_t c = data.find(':');
+		if (c == string::npos || (c == data.length() -1)) {
+			THROW_EXIT;
+		}
+		string_list tmp;
+		tokenize_char(data, tmp, ':');
+		if (tmp.size() != 2) {
+			cerr << "Error: data must be of the form [~]id:init."
+				<< endl;
+			return Command::SYNTAX;
+		}
+		data_name = tmp.front();
+		if (data_name.length()) {
+#if PRSIM_CHANNEL_RAILS_INVERTED
+		data_sense = (data_name[0] == '~');		// active low
+#endif
+		const string::const_iterator b(data_name.begin());
+		data_name.assign(b +size_t(data_sense), b+c);
+		if (string_to_num(tmp.back(), num_rails)) {
+			cerr << "Error: parsing bus width." << endl;
+			return Command::SYNTAX;
+		}
+		}	// else is data-less, which is now supported
+	}
+	channel_manager& cm(s.get_channel_manager());
+	if (cm.new_channel_bd2p(s, chan_name, 
+			ack_name, ack_init, req_name, req_init,
+			data_name, num_rails, data_sense)) {
+		return Command::BADARG;
+	}
+	return Command::NORMAL;
+}
+}
+
+void
+ChannelBD2P::usage(ostream& o) {
+	o << name << " <name> <ack:init> <req:init> <data:num>" << endl;
+	o <<
+"Registers a named bundled-data channel (2-phase) in a separate namespace in \n"
+"the simulator, typically used to drive or log the environment.\n"
+"\'name\' is the name of the new channel in the simulator's namespace\n"
+"\'ack:init\' : ack is the name of the acknowledge wire, init is the initial\n"
+	"\tvalue of this wire if driven by sink.\n"
+"\'req:init\' : req is the name of the request rail, init is the initial\n"
+	"\tvalue of this wire if driven by source.\n"
+"\'data:num\' : data is the name of the data rail(s) of the channel.\n"
+	"\tnum is the number of rails (bus width).  Pass :0 if data-less.\n"
+	<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+/***
+@texinfo cmd/channel-bd-4p.texi
+@deffn Command channel-bd-4p name ack:init req:init data:width
+Registers a bundled-data (BD) channel, which consists of a bus, 
+request rail, and acknowledge rail.
+The request and acknowledge perform a four-phase handshake on every token;
+these signals toggle twice per handshake.
+The @var{name} of the channel should match that of an instance 
+(process or channel) in the source file.  
+@itemize
+@item @var{name} is the name of the new channel in the simulator's namespace
+@item @var{ack} is a regular expression of the form @t{id:[01]}, where
+@itemize
+	@item @t{id} is the name of the acknowledge signal.  
+	@item The value after the @t{:} (required)
+	is interpreted as the initial state of the acknowledge wire, 
+	if driven by sink.
+	@item @t{a} denotes an active-high acknowledge, and 
+	@t{e} denotes an active-low acknowledge, (same as 1ofN channels).
+@end itemize
+@item @var{req} is the name of the request signal.
+	The value given is the initial value of the request signal,
+	if driven by a source -- THIS IS IGNORED FOR NOW, 
+	source channels will always drive this to inactive on reset.
+@item @var{data} is the name of the data rail(s), interpreted with active-high
+	logic levels (prefix with @t{~} to make active-low).  
+	The @var{num} value specifies the number of wires (bus width).
+	If the channel is data-less (handshake only), then omit the 
+	data rail name and just write @t{:}.
+@end itemize
+@example
+@t{channel-bd-4p NAME e:0 v:1 d:0} -- this declares an active-low acknowledge,
+	active-high request, single-wire bundled-data channel.
+@t{channel-bd-4p NAME a:1 n:0 d:8} -- this declares an active-high acknowledge,
+	active-low request, 8-bit bundled-data channel.
+@end example
+@end deffn
+@end texinfo
+***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(ChannelBD4P, instance_completer)
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelBD4P, "channel-bd-4p", 
+	channels, "declare a bundled-data channel")
+
+int
+ChannelBD4P::main(State& s, const string_list& a) {
+if (a.size() != 5) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	string_list::const_iterator i(++a.begin());
+	const string& chan_name(*i);
+	const string& ack(*++i);
+	const string& req(*++i);
+	const string& data(*++i);
+	// could confirm that 'name' exists as a process/channel/datatype?
+	bool ack_sense = false;
+	bool ack_init = false;
+	bool req_sense = false;
+//	bool req_init = false;		// not supported yet
+	bool data_sense = false;
+	size_t num_rails = 0;
+	string ack_name, req_name, data_name;
+	{
+		// parse ack
+		string_list tmp;
+		tokenize_char(ack, tmp, ':');
+		if (tmp.size() != 2) {
+			cerr << "Error: ack must be of the form id:init."
+				<< endl;
+			return Command::SYNTAX;
+		}
+		ack_name = tmp.front();
+		if (ack_name.length()) {	// if we have ack (name)...
+		if (ack_name == "a") {
+			ack_sense = true;
+		} else if (ack_name == "e") {
+			ack_sense = false;
+		} else {
+			cerr <<
+"Error: for now, only \'a\' and \'e\' are supported acks." << endl;
+			return Command::SYNTAX;
+		}
+		if (string_to_num(tmp.back(), ack_init)) {
+			cerr << "Error: parsing initial value of ack." << endl;
+			return Command::SYNTAX;
+		}
+		} else {
+			cerr << "Error: ack must be of the form id:init."
+				<< endl;
+			return Command::SYNTAX;
+		}
+	}{
+		// parse req
+		string_list tmp;
+		tokenize_char(req, tmp, ':');
+		if (tmp.size() != 2) {
+			cerr << "Error: req must be of the form id:init."
+				<< endl;
+			return Command::SYNTAX;
+		}
+		req_name = tmp.front();
+		if (req_name.length()) {	// if we have ack (name)...
+		if (req_name == "v") {
+			req_sense = true;
+		} else if (req_name == "n") {
+			req_sense = false;
+		} else {
+			cerr <<
+"Error: for now, only \'v\' and \'n\' are supported reqs." << endl;
+			return Command::SYNTAX;
+		}
+#if 0
+		// req initial value is ignored, always neutral for now
+		if (string_to_num(tmp.back(), req_init)) {
+			cerr << "Error: parsing initial value of req." << endl;
+			return Command::SYNTAX;
+		}
+#endif
+		} else {
+			cerr << "Error: req must be of the form id:init."
+				<< endl;
+			return Command::SYNTAX;
+		}
+	}{
+		// parse data
+		size_t c = data.find(':');
+		if (c == string::npos || (c == data.length() -1)) {
+			THROW_EXIT;
+		}
+		string_list tmp;
+		tokenize_char(data, tmp, ':');
+		if (tmp.size() != 2) {
+			cerr << "Error: data must be of the form [~]id:init."
+				<< endl;
+			return Command::SYNTAX;
+		}
+		data_name = tmp.front();
+#if PRSIM_CHANNEL_RAILS_INVERTED
+		data_sense = (data_name[0] == '~');		// active low
+#endif
+		const string::const_iterator b(data_name.begin());
+		data_name.assign(b +size_t(data_sense), b+c);
+		if (!data_name.length()) { THROW_EXIT; }
+		if (string_to_num(tmp.back(), num_rails)) {
+			cerr << "Error: parsing bus width." << endl;
+			return Command::SYNTAX;
+		}
+	}
+	channel_manager& cm(s.get_channel_manager());
+	if (cm.new_channel_bd4p(s, chan_name, 
+			ack_sense, ack_init, req_sense, // req_init,
+			data_name, num_rails, data_sense)) {
+		return Command::BADARG;
+	}
+	return Command::NORMAL;
+}
+}
+
+void
+ChannelBD4P::usage(ostream& o) {
+	o << name << " <name> <ack:init> <req:init> <data:num>" << endl;
+	o <<
+"Registers a named bundled-data channel (4-phase) in a separate namespace in \n"
+"the simulator, typically used to drive or log the environment.\n"
+"\'name\' is the name of the new channel in the simulator's namespace\n"
+"\'ack:init\' : ack is the name of the acknowledge wire [ae], init is the initial\n"
+	"\tvalue of this wire if driven by sink.\n"
+"\'req:init\' : req is the name of the request rail [nv], init is the initial\n"
+	"\tvalue of this wire if driven by source.\n"
+"\'data:num\' : data is the name of the data rail(s) of the channel.\n"
+	"\tnum is the number of rails (bus width).  Pass :0 if data-less.\n"
+	<< endl;
+}
+#endif	// PRSIM_CHANNEL_BUNDLED_DATA
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
@@ -8697,6 +9056,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelAssert, "channel-assert",
 #endif
 
 //=============================================================================
+#if PRSIM_TRACE_GENERATION
 /***
 @texinfo cmd/trace.texi
 @deffn Command trace file
@@ -8706,6 +9066,7 @@ A trace stream is automatically closed when the @command{initialize}
 or @command{reset} commands are invoked.  
 See the @option{-r} option for starting up the simulator
 with a newly opened trace stream.
+The format of this trace file is unique to @command{hacprsim}.  
 @end deffn
 @end texinfo
 ***/
@@ -8770,6 +9131,67 @@ Produce textual dump of trace file contents in @var{file}.
 ***/
 typedef	TraceDump<State>			TraceDump;
 PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(TraceDump, tracing)
+#endif	// PRSIM_TRACE_GENERATION
+
+//=============================================================================
+#if PRSIM_VCD_GENERATION
+/***
+@texinfo cmd/vcd.texi
+@deffn Command vcd file
+Record events to vcd @var{file}.  
+Overwrites @var{file} if it already exists.  
+A vector-change-dump (VCD) stream is automatically closed when the 
+@command{initialize} or @command{reset} commands are invoked.  
+See the @option{-r} option for starting up the simulator
+with a newly opened trace stream.
+@cindex vector-change-dump
+@cindex VCD
+@end deffn
+@end texinfo
+***/
+typedef	VCD<State>				VCD;
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(VCD, tracing)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/vcd-file.texi
+@deffn Command vcd-file
+Print the name of the currently opened vcd file.  
+@end deffn
+@end texinfo
+***/
+typedef	VCDFile<State>			VCDFile;
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(VCDFile, tracing)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/vcd-timescale.texi
+@deffn Command vcd-timescale [val]
+Sets/gets the time scale by which real-valued actual times are
+multiplied to get the output vcd timestamps.  
+This is needed because vcd files don't necessary support
+floating-point values, so a scale factor can be used
+to select a suitable time granularity.
+Default: 1.0
+@end deffn
+@end texinfo
+***/
+typedef	VCDTimeScale<State>			VCDTimeScale;
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(VCDTimeScale, tracing)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/vcd-close.texi
+@deffn Command vcd-close
+Finish writing the currently opened vcd file by flushing out
+buffered events to file.
+VCD files are automatically flushed and closed when the simulator exits.  
+@end deffn
+@end texinfo
+***/
+typedef	VCDClose<State>			VCDClose;
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(VCDClose, tracing)
+#endif	// PRSIM_VCD_GENERATION
 
 //=============================================================================
 #undef	DECLARE_AND_INITIALIZE_COMMAND_CLASS

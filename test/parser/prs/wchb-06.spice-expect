@@ -1,8 +1,8 @@
-* subcircuit globals<> is empty.
+* channel or struct globals<> is omitted.
 
-* subcircuit e1of2<> is empty.
+* channel or struct e1of2<> is omitted.
 
-* subcircuit _1of2<> is empty.
+* channel or struct _1of2<> is omitted.
 
 M_r.d[0]:dn:0 !GND l.d[0] #0 !GND nch W=5u L=2u
 M_r.d[0]:dn:1 #0 r.e _r.d[0] !GND nch W=5u L=2u

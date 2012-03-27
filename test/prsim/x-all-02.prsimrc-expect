@@ -1,0 +1,11 @@
+watched nodes: a c 
+breakpoints: b 
+time: 50
+event queue:
+	50	a : 1
+queue:	50	a : 1
+########## x-all ############ 
+watched nodes: a c 
+breakpoints: b 
+time: 50
+event queue:

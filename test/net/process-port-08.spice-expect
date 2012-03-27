@@ -1,5 +1,4 @@
-.subckt pair a b
-.ends
+* channel or struct pair is omitted.
 
 .subckt foo !GND !Vdd p/a p/b z
 Mz:dn:0 !GND p/b z !GND nch W=5u L=2u
