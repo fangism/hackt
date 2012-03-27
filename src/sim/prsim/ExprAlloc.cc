@@ -1972,6 +1972,12 @@ DECLARE_AND_DEFINE_PRSIM_SPEC_DIRECTIVE_CLASS(SIM_force_exclhi, "mk_exclhi")
 void
 SIM_force_exclhi::main(visitor_type& v, const param_args_type& params, 
 		const node_args_type& nodes) {
+#if PRSIM_SIMPLE_EVENT_QUEUE
+	// remove this comment when complete
+	cerr <<
+"WARNING: force exclhi is incomplete on the prsim-engine-rewrite branch!"
+	<< endl;
+#endif
 	typedef	node_args_type::const_iterator		const_iterator;
 	typedef	visitor_type::state_type::ring_set_type	ring_set_type;
 	const_iterator i(nodes.begin()), e(nodes.end());
@@ -2013,6 +2019,12 @@ DECLARE_AND_DEFINE_PRSIM_SPEC_DIRECTIVE_CLASS(SIM_force_excllo, "mk_excllo")
 void
 SIM_force_excllo::main(visitor_type& v, const param_args_type& params, 
 		const node_args_type& nodes) {
+#if PRSIM_SIMPLE_EVENT_QUEUE
+	// remove this comment when complete
+	cerr <<
+"WARNING: force excllo is incomplete on the prsim-engine-rewrite branch!"
+	<< endl;
+#endif
 	typedef	node_args_type::const_iterator		const_iterator;
 	typedef	visitor_type::state_type::ring_set_type	ring_set_type;
 	ring_set_type r;
