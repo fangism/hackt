@@ -1,0 +1,9 @@
+// "bad-loop-04.hac"
+// expect graceful syntax error failure
+// reduced test case, originally reported by Clint Kelly
+// missing range expression of loop
+
+bool a;
+bool b[2];
+(;i: foo(a, b[i]); )
+

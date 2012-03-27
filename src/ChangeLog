@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2012-03-26	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-12:
+	  Fixed error-handling on parse-error of an array instance
+		connection interpreted as a function-call, 
+		which resulted in memory leak.  Added test cases.
+
+
 2012-03-10	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-85-11:

@@ -670,8 +670,11 @@ protected:
 	const excl_ptr<const expr_list>			args;
 public:
 	function_call_expr(const id_expr*, const expr_list*);
-	function_call_expr(const inst_ref_expr*, const expr_list*);
+//	function_call_expr(const inst_ref_expr*, const expr_list*);
 	~function_call_expr();
+
+	bool
+	valid_fname(void) const { return fname; }
 
 	ostream&
 	what(ostream& o) const;
