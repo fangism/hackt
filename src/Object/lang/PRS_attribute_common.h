@@ -98,6 +98,9 @@ DECLARE_PRS_RULE_ATTRIBUTE_COMMON_STRUCT(LoadCap)
 DECLARE_PRS_RULE_ATTRIBUTE_COMMON_STRUCT(N_reff)
 DECLARE_PRS_RULE_ATTRIBUTE_COMMON_STRUCT(P_reff)
 
+/// for declaring that rule is diode-connected transistor to supply (not fanin)
+DECLARE_PRS_RULE_ATTRIBUTE_COMMON_STRUCT(Diode)
+
 //=============================================================================
 }	// end namespace rule_attributes
 }	// end namespace PRS

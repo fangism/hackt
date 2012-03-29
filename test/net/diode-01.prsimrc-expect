@@ -1,0 +1,13 @@
+	0	s : 0
+	0	d1 : 0
+	0	d2 : 1
+	10	_s : 1	[by s:=0]
+	10	_d1 : 1	[by d1:=0]
+	10	_d2 : 0	[by d2:=1]
+	20	_o : 0	[by _d2:=0]
+	30	o : 1	[by _o:=0]
+checking for any diode rules (shouldn't be any) 
+Fanins of node `d1':
+Fanins of node `d2':
+Fanouts of node `vcc':
+Fanouts of node `vss':

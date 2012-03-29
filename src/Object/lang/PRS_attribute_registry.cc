@@ -398,7 +398,7 @@ if (p.cfopts.primary_tool == cflat_options::TOOL_PRSIM) {
 @texinfo prs/attribute-iskeeper.texi
 @defmac iskeeper [b]
 If @var{b} is true (1), flag that this rule is part of a standard keeper.
-If unspeficied, default value is true.
+If unspecified, default value is true.
 @end defmac
 @end texinfo
 ***/
@@ -434,7 +434,7 @@ default: break;
 @defmac isckeeper [b]
 If @var{b} is true (1), flag that this rule is part of a combinational
 feedback keeper.
-If unspeficied, default value is true.
+If unspecified, default value is true.
 @end defmac
 @end texinfo
 ***/
@@ -457,6 +457,42 @@ case cflat_options::TOOL_LVS: {
 	if (b) {
 		ostream& o(p.os);
 		o << "ckeeper\t";
+	}
+	break;
+}
+default: break;
+}
+}
+
+//-----------------------------------------------------------------------------
+/***
+@texinfo prs/attribute-diode.texi
+@defmac diode [b]
+If @var{b} is true (1), flag that this rule generates a 
+diode-connected transistor.
+If unspecified, default value is true.
+@end defmac
+@end texinfo
+***/
+DECLARE_AND_DEFINE_CFLAT_PRS_ATTRIBUTE_CLASS(Diode, "diode")
+
+/**
+      Prints out "diode" before a rule in cflat.  
+ */
+void
+Diode::main(visitor_type& p, const values_type& v) {
+switch (p.cfopts.primary_tool) {
+case cflat_options::TOOL_PRSIM:
+	// fall-through
+case cflat_options::TOOL_LVS: {
+	pint_value_type b = 1;
+	if (v.size()) {
+		const pint_const& pi(*v[0].is_a<const pint_const>());
+		b = pi.static_constant_value();
+	}
+	if (b) {
+		ostream& o(p.os);
+		o << "diode\t";
 	}
 	break;
 }

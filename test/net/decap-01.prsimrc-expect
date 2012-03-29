@@ -1,0 +1,7 @@
+	0	vcc : 1
+	0	vss : 0
+checking for any decap rules (shouldn't be any) 
+Fanins of node `vcc':
+Fanins of node `vss':
+Fanouts of node `vcc':
+Fanouts of node `vss':

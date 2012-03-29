@@ -244,6 +244,7 @@ Some existing attributes:
 @include prs/attribute-comb.texi
 @include prs/attribute-iskeeper.texi
 @include prs/attribute-isckeeper.texi
+@include prs/attribute-diode.texi
 @include prs/attribute-keeper.texi
 @include prs/attribute-vt.texi
 @include prs/attribute-output.texi
