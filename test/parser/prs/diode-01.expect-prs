@@ -1,0 +1,16 @@
+"C.d1" -> "C.n1"-
+~"C.d1" -> "C.n1"+
+"C.d2" -> "C.n2"-
+~"C.d2" -> "C.n2"+
+"C.n3" -> "C.o"-
+~"C.n3" -> "C.o"+
+"C.s" -> "C.n4"-
+~"C.s" -> "C.n4"+
+diode	"C.vss" -> "C.d1"-
+diode	"C.vss" -> "C.d2"-
+after 0	"C.s" & ~"C.n1" -> "C.n3"-
+after 0	~"C.n4" & "C.n1" -> "C.n3"+
+after 0	"C.n4" & ~"C.n2" -> "C.n3"-
+after 0	~"C.s" & "C.n2" -> "C.n3"+
+= "!GND" "C.!GND"
+= "!Vdd" "C.!Vdd"

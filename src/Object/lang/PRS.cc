@@ -749,13 +749,36 @@ if (output.is_internal()) {
 	state_instance<bool_tag>::pool_type&
 		bp(tfp.get_instance_pool<bool_tag>());
 	// kludge: get_back_ref only returns const ptr ...
+	// exception: diodes do not count as fanin
+	bool is_diode = false;
+{
+	resolved_attribute_list_type find_diode;
+	r_attr.filter_key("diode", find_diode);
+	resolved_attribute_list_type::const_iterator
+		i(find_diode.begin()), e(find_diode.end());
+	for ( ; i!=e; ++i) {
+		// lifted from Diode::main from PRS_attribute_registry.cc
+		is_diode = 1;
+		if (i->values && i->values->size()) {
+			const pint_const&
+				pi(*(*i->values)[0].is_a<const pint_const>());
+			is_diode = pi.static_constant_value();
+		}
+		// if repeated, last one should take effect
+	}
+}
 #if BOOL_CONNECTIVITY_CHECKING
-	const good_bool fig = 
+	good_bool fig(true);
+#endif
+if (!is_diode) {
+#if BOOL_CONNECTIVITY_CHECKING
+	fig =
 #endif
 	const_cast<instance_alias_info<bool_tag>&>(
 		*bp[output_node_index -1].get_back_ref())
 			.find()->prs_fanin(dir);
 		// pool is 0-indexed
+}
 	std::set<size_t> f;	// node_index_type
 	pfp.collect_literal_indices(f, guard_expr_index);
 	std::set<size_t>::const_iterator

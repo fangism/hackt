@@ -1,0 +1,30 @@
+// "diode-01.hac"
+// copy-modified from ../parser/prs/diode-01.hac
+// @hacknet-flags@ -T clkmux2
+
+export defproc clkmux2(bool? d1, d2; bool! o; bool? s, vcc, vss)
+// this cell is a two input mux clock driver
+// o = ~s & d2 | s & d1
+{
+bool _d1, _d2;
+bool _o, _s;
+prs<vcc, vss>{
+	d1 -> _d1-
+	~d1 -> _d1+
+	d2 -> _d2-
+	~d2 -> _d2+
+	_o -> o-
+	~_o -> o+
+	s -> _s-
+	~s -> _s+
+	passn<3>(s, _d1, _o)
+	passp<3>(_s, _d1, _o)
+	passn<3>(_s, _d2, _o)
+	passp<3>(s, _d2, _o)
+[diode=1]	vss -> d1-		// is diode
+[diode=1]	vss -> d2-		// is diode
+[diode]		~vcc -> d1+		// is diode
+[diode]		~vcc -> d2+		// is diode
+}
+}
+

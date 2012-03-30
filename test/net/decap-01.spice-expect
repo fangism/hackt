@@ -1,0 +1,8 @@
+.subckt decap4<> vcc vss
+Mvss:dn:0 vss vss vss vss nch W=4u L=2u
+Mvss:dn:1 vss vss vss vss nch W=4u L=2u
+Mvcc:up:0 vcc vss vcc vcc pch W=4u L=2u
+Mvcc:up:1 vcc vss vcc vcc pch W=4u L=2u
+.ends
+
+

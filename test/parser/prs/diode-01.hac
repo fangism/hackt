@@ -1,0 +1,30 @@
+// "diode-01.hac"
+
+export defproc clkmux2(bool? d1, d2; bool! o; bool? s, vcc, vss)
+// this cell is a two input mux clock driver
+// o = ~s & d2 | s & d1
+{
+bool n1;
+bool n3;
+bool n2;
+bool n4;
+prs<vcc, vss>{
+	d1 -> n1-
+	~d1 -> n1+
+	d2 -> n2-
+	~d2 -> n2+
+	n3 -> o-
+	~n3 -> o+
+	s -> n4-
+	~s -> n4+
+	passn<3>(s, n1, n3)
+	passp<3>(n4, n1, n3)
+	passn<3>(n4, n2, n3)
+	passp<3>(s, n2, n3)
+[diode]	vss -> d1-		// is diode
+[diode]	vss -> d2-		// is diode
+}
+}
+
+clkmux2 C;
+

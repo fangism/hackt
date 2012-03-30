@@ -112,7 +112,8 @@ HACKNET_TEST_SCRIPTS_PASSES = \
 	terminal-test-05 terminal-test-06 terminal-test-07 terminal-test-08 \
 	terminal-test-09 terminal-test-10 terminal-test-11 terminal-test-12 \
 	terminal-test-13 terminal-test-14 terminal-test-15 terminal-test-16 \
-	terminal-test-17 terminal-test-18
+	terminal-test-17 terminal-test-18 \
+	diode-01 decap-01
 
 # TODO: implement string manipulation to modify rename-04,05
 
@@ -213,6 +214,9 @@ HACKT_CFLAT_TEST_SUBJECTS =
 HACKT_CFLAT_SPRS_TEST_SUBJECTS = \
 	rule-sizes-01 rule-sizes-02 rule-sizes-03 rule-sizes-04 \
 	rule-sizes-05 rule-sizes-06
+
+HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
+	diode-01 decap-01
 
 include $(top_srcdir)/test/Make.test-tail
 

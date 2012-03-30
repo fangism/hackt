@@ -1,0 +1,19 @@
+.subckt clkmux2<> d1 d2 o s vcc vss
+Mn1:dn:0 vss d1 n1 vss nch W=5u L=2u
+Mn1:up:0 vcc d1 n1 vcc pch W=5u L=2u
+Mn2:dn:0 vss d2 n2 vss nch W=5u L=2u
+Mn2:up:0 vcc d2 n2 vcc pch W=5u L=2u
+Mo:dn:0 vss n3 o vss nch W=5u L=2u
+Mo:up:0 vcc n3 o vcc pch W=5u L=2u
+Mn4:dn:0 vss s n4 vss nch W=5u L=2u
+Mn4:up:0 vcc s n4 vcc pch W=5u L=2u
+Md1:dn:0 vss vss d1 vss nch W=5u L=2u
+Md2:dn:0 vss vss d2 vss nch W=5u L=2u
+Mn3:dn:0:pass n1 s n3 vss nch W=3u L=2u
+Mn3:up:0:pass n1 n4 n3 vcc pch W=3u L=2u
+Mn3:dn:1:pass n2 n4 n3 vss nch W=3u L=2u
+Mn3:up:1:pass n2 s n3 vcc pch W=3u L=2u
+.ends
+
+xC C.d1 C.d2 C.o C.s C.vcc C.vss clkmux2<>
+

@@ -1,0 +1,15 @@
+# "diode-01.prsimrc"
+# @haco@ diode-01.haco-c
+# @hacprsim-flags@ -t clkmux2
+
+watchall
+set s 0
+set d1 0
+set d2 1
+cycle
+echo checking for any diode rules (shouldn't be any)
+fanin-get d1
+fanin-get d2
+fanout-get vcc
+fanout-get vss
+

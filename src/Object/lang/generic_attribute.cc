@@ -251,6 +251,20 @@ if (i!=e) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
+resolved_attribute_list_type::filter_key(const string& k,
+		resolved_attribute_list_type& ret) const {
+	// std::copy_if(...)
+	resolved_attribute_list_type::const_iterator
+		i(begin()), e(end());
+	for ( ; i!=e; ++i) {
+	if (i->key == k) {
+		ret.push_back(*i);
+	}
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
 resolved_attribute_list_type::collect_transient_info_base(
 		persistent_object_manager& m) const {
 	for_each(begin(), end(), util::persistent_collector_ref(m));
