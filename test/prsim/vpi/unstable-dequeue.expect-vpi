@@ -5,6 +5,7 @@ rule: [after 2]	~in1:1 -> c1.x[1]+:X
 >> cause: `in1' (val: 1)
 prsim:	4	in1 : 1
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	8	in1 : 0
 WARNING: unstable `c1.x[1]'+
@@ -12,6 +13,7 @@ rule: [after 2]	~in1:1 -> c1.x[1]+:X
 >> cause: `in1' (val: 1)
 prsim:	12	in1 : 1
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	16	in1 : 0
 WARNING: unstable `c1.x[1]'+
@@ -19,6 +21,7 @@ rule: [after 2]	~in1:1 -> c1.x[1]+:X
 >> cause: `in1' (val: 1)
 prsim:	20	in1 : 1
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	24	in1 : 0
 WARNING: unstable `c1.x[1]'+
@@ -26,6 +29,7 @@ rule: [after 2]	~in1:1 -> c1.x[1]+:X
 >> cause: `in1' (val: 1)
 prsim:	28	in1 : 1
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	32	in1 : 0
 WARNING: unstable `c1.x[1]'+
@@ -33,6 +37,7 @@ rule: [after 2]	~in1:1 -> c1.x[1]+:X
 >> cause: `in1' (val: 1)
 prsim:	36	in1 : 1
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	40	in1 : 0
 WARNING: unstable `c1.x[1]'+
@@ -40,6 +45,7 @@ rule: [after 2]	~in1:1 -> c1.x[1]+:X
 >> cause: `in1' (val: 1)
 prsim:	44	in1 : 1
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	48	in1 : 0
 WARNING: unstable `c1.x[1]'+
@@ -47,6 +53,7 @@ rule: [after 2]	~in1:1 -> c1.x[1]+:X
 >> cause: `in1' (val: 1)
 prsim:	52	in1 : 1
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	56	in1 : 0
 WARNING: unstable `c1.x[1]'+
@@ -54,6 +61,7 @@ rule: [after 2]	~in1:1 -> c1.x[1]+:X
 >> cause: `in1' (val: 1)
 prsim:	60	in1 : 1
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	64	in1 : 0
 WARNING: unstable `c1.x[1]'+
@@ -61,6 +69,7 @@ rule: [after 2]	~in1:1 -> c1.x[1]+:X
 >> cause: `in1' (val: 1)
 prsim:	68	in1 : 1
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	72	in1 : 0
 WARNING: unstable `c1.x[1]'+
@@ -68,6 +77,7 @@ rule: [after 2]	~in1:1 -> c1.x[1]+:X
 >> cause: `in1' (val: 1)
 prsim:	76	in1 : 1
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	80	in1 : 0
 WARNING: unstable `c1.x[1]'+
@@ -75,6 +85,7 @@ rule: [after 2]	~in1:1 -> c1.x[1]+:X
 >> cause: `in1' (val: 1)
 prsim:	84	in1 : 1
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	88	in1 : 0
 WARNING: unstable `c1.x[1]'+
@@ -82,6 +93,7 @@ rule: [after 2]	~in1:1 -> c1.x[1]+:X
 >> cause: `in1' (val: 1)
 prsim:	92	in1 : 1
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	96	in1 : 0
 prsim:	100	in0 : 0
@@ -91,6 +103,7 @@ rule: [after 2]	~in1:1 -> c1.x[1]+:X
 prsim:	100	in1 : 1
 at time 100.000, observed in0 0
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	104	in1 : 0
 WARNING: unstable `c1.x[1]'+
@@ -99,6 +112,7 @@ rule: [after 2]	~in1:1 -> c1.x[1]+:X
 prsim:	108	in1 : 1
 prsim:	110	c0.x[1] : 1	[by in0:=0]
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	112	in1 : 0
 WARNING: unstable `c1.x[1]'+
@@ -107,6 +121,7 @@ rule: [after 2]	~in1:1 -> c1.x[1]+:X
 prsim:	116	in1 : 1
 prsim:	120	c0.x[2] : 0	[by c0.x[1]:=1]
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	120	in1 : 0
 WARNING: unstable `c1.x[1]'+
@@ -114,6 +129,7 @@ rule: [after 2]	~in1:1 -> c1.x[1]+:X
 >> cause: `in1' (val: 1)
 prsim:	124	in1 : 1
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	128	in1 : 0
 prsim:	130	out0 : 1	[by c0.x[2]:=0]
@@ -123,6 +139,7 @@ rule: [after 2]	~in1:1 -> c1.x[1]+:X
 >> cause: `in1' (val: 1)
 prsim:	132	in1 : 1
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	136	in1 : 0
 WARNING: unstable `c1.x[1]'+
@@ -130,6 +147,7 @@ rule: [after 2]	~in1:1 -> c1.x[1]+:X
 >> cause: `in1' (val: 1)
 prsim:	140	in1 : 1
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	144	in1 : 0
 WARNING: unstable `c1.x[1]'+
@@ -137,6 +155,7 @@ rule: [after 2]	~in1:1 -> c1.x[1]+:X
 >> cause: `in1' (val: 1)
 prsim:	148	in1 : 1
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	152	in1 : 0
 WARNING: unstable `c1.x[1]'+
@@ -144,6 +163,7 @@ rule: [after 2]	~in1:1 -> c1.x[1]+:X
 >> cause: `in1' (val: 1)
 prsim:	156	in1 : 1
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	160	in1 : 0
 WARNING: unstable `c1.x[1]'+
@@ -151,6 +171,7 @@ rule: [after 2]	~in1:1 -> c1.x[1]+:X
 >> cause: `in1' (val: 1)
 prsim:	164	in1 : 1
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	168	in1 : 0
 WARNING: unstable `c1.x[1]'+
@@ -158,6 +179,7 @@ rule: [after 2]	~in1:1 -> c1.x[1]+:X
 >> cause: `in1' (val: 1)
 prsim:	172	in1 : 1
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	176	in1 : 0
 WARNING: unstable `c1.x[1]'+
@@ -165,6 +187,7 @@ rule: [after 2]	~in1:1 -> c1.x[1]+:X
 >> cause: `in1' (val: 1)
 prsim:	180	in1 : 1
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	184	in1 : 0
 WARNING: unstable `c1.x[1]'+
@@ -172,6 +195,7 @@ rule: [after 2]	~in1:1 -> c1.x[1]+:X
 >> cause: `in1' (val: 1)
 prsim:	188	in1 : 1
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	192	in1 : 0
 WARNING: unstable `c1.x[1]'+
@@ -180,6 +204,7 @@ rule: [after 2]	~in1:1 -> c1.x[1]+:X
 prsim:	196	in1 : 1
 prsim:	200	in0 : 1
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	200	in1 : 0
 at time 200.000, observed in0 1
@@ -188,6 +213,7 @@ rule: [after 2]	~in1:1 -> c1.x[1]+:X
 >> cause: `in1' (val: 1)
 prsim:	204	in1 : 1
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	208	in1 : 0
 prsim:	210	c0.x[1] : 0	[by in0:=1]
@@ -196,6 +222,7 @@ rule: [after 2]	~in1:1 -> c1.x[1]+:X
 >> cause: `in1' (val: 1)
 prsim:	212	in1 : 1
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	216	in1 : 0
 prsim:	220	c0.x[2] : 1	[by c0.x[1]:=0]
@@ -204,6 +231,7 @@ rule: [after 2]	~in1:1 -> c1.x[1]+:X
 >> cause: `in1' (val: 1)
 prsim:	220	in1 : 1
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	224	in1 : 0
 WARNING: unstable `c1.x[1]'+
@@ -213,6 +241,7 @@ prsim:	228	in1 : 1
 prsim:	230	out0 : 0	[by c0.x[2]:=1]
 at time 230.000, observed out0 = 0
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	232	in1 : 0
 WARNING: unstable `c1.x[1]'+
@@ -220,6 +249,7 @@ rule: [after 2]	~in1:1 -> c1.x[1]+:X
 >> cause: `in1' (val: 1)
 prsim:	236	in1 : 1
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	240	in1 : 0
 WARNING: unstable `c1.x[1]'+
@@ -227,6 +257,7 @@ rule: [after 2]	~in1:1 -> c1.x[1]+:X
 >> cause: `in1' (val: 1)
 prsim:	244	in1 : 1
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	248	in1 : 0
 WARNING: unstable `c1.x[1]'+
@@ -234,6 +265,7 @@ rule: [after 2]	~in1:1 -> c1.x[1]+:X
 >> cause: `in1' (val: 1)
 prsim:	252	in1 : 1
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	256	in1 : 0
 WARNING: unstable `c1.x[1]'+
@@ -241,6 +273,7 @@ rule: [after 2]	~in1:1 -> c1.x[1]+:X
 >> cause: `in1' (val: 1)
 prsim:	260	in1 : 1
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	264	in1 : 0
 WARNING: unstable `c1.x[1]'+
@@ -248,6 +281,7 @@ rule: [after 2]	~in1:1 -> c1.x[1]+:X
 >> cause: `in1' (val: 1)
 prsim:	268	in1 : 1
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	272	in1 : 0
 WARNING: unstable `c1.x[1]'+
@@ -255,6 +289,7 @@ rule: [after 2]	~in1:1 -> c1.x[1]+:X
 >> cause: `in1' (val: 1)
 prsim:	276	in1 : 1
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	280	in1 : 0
 WARNING: unstable `c1.x[1]'+
@@ -262,6 +297,7 @@ rule: [after 2]	~in1:1 -> c1.x[1]+:X
 >> cause: `in1' (val: 1)
 prsim:	284	in1 : 1
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	288	in1 : 0
 WARNING: unstable `c1.x[1]'+
@@ -269,6 +305,7 @@ rule: [after 2]	~in1:1 -> c1.x[1]+:X
 >> cause: `in1' (val: 1)
 prsim:	292	in1 : 1
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	296	in1 : 0
 prsim:	300	in0 : 0
@@ -281,6 +318,7 @@ rule: [after 2]	~in1:1 -> c1.x[1]+:X
 prsim:	300	in1 : 1
 at time 300.000, observed in0 0
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	304	in1 : 0
 WARNING: unstable `c0.x[1]'+
@@ -300,6 +338,7 @@ event queue:
 	320	c0.x[1] : 1	[from in0:=0]
 at time 310.000, observed in0 0
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	312	in1 : 0
 WARNING: unstable `c1.x[1]'+
@@ -308,6 +347,7 @@ rule: [after 2]	~in1:1 -> c1.x[1]+:X
 prsim:	316	in1 : 1
 prsim:	320	c0.x[1] : 1	[by in0:=0]
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	320	in1 : 0
 WARNING: unstable `c1.x[1]'+
@@ -315,6 +355,7 @@ rule: [after 2]	~in1:1 -> c1.x[1]+:X
 >> cause: `in1' (val: 1)
 prsim:	324	in1 : 1
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	328	in1 : 0
 prsim:	330	c0.x[2] : 0	[by c0.x[1]:=1]
@@ -323,6 +364,7 @@ rule: [after 2]	~in1:1 -> c1.x[1]+:X
 >> cause: `in1' (val: 1)
 prsim:	332	in1 : 1
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	336	in1 : 0
 prsim:	340	out0 : 1	[by c0.x[2]:=0]
@@ -332,6 +374,7 @@ rule: [after 2]	~in1:1 -> c1.x[1]+:X
 prsim:	340	in1 : 1
 at time 340.000, observed out0 = 1
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	344	in1 : 0
 WARNING: unstable `c1.x[1]'+
@@ -339,6 +382,7 @@ rule: [after 2]	~in1:1 -> c1.x[1]+:X
 >> cause: `in1' (val: 1)
 prsim:	348	in1 : 1
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	352	in1 : 0
 WARNING: unstable `c1.x[1]'+
@@ -346,6 +390,7 @@ rule: [after 2]	~in1:1 -> c1.x[1]+:X
 >> cause: `in1' (val: 1)
 prsim:	356	in1 : 1
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	360	in1 : 0
 WARNING: unstable `c1.x[1]'+
@@ -353,6 +398,7 @@ rule: [after 2]	~in1:1 -> c1.x[1]+:X
 >> cause: `in1' (val: 1)
 prsim:	364	in1 : 1
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	368	in1 : 0
 WARNING: unstable `c1.x[1]'+
@@ -360,6 +406,7 @@ rule: [after 2]	~in1:1 -> c1.x[1]+:X
 >> cause: `in1' (val: 1)
 prsim:	372	in1 : 1
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	376	in1 : 0
 WARNING: unstable `c1.x[1]'+
@@ -367,6 +414,7 @@ rule: [after 2]	~in1:1 -> c1.x[1]+:X
 >> cause: `in1' (val: 1)
 prsim:	380	in1 : 1
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	384	in1 : 0
 WARNING: unstable `c1.x[1]'+
@@ -374,6 +422,7 @@ rule: [after 2]	~in1:1 -> c1.x[1]+:X
 >> cause: `in1' (val: 1)
 prsim:	388	in1 : 1
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	392	in1 : 0
 WARNING: unstable `c1.x[1]'+
@@ -382,6 +431,7 @@ rule: [after 2]	~in1:1 -> c1.x[1]+:X
 prsim:	396	in1 : 1
 prsim:	400	in0 : 1
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	400	in1 : 0
 at time 400.000, observed in0 1
@@ -390,6 +440,7 @@ rule: [after 2]	~in1:1 -> c1.x[1]+:X
 >> cause: `in1' (val: 1)
 prsim:	404	in1 : 1
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	408	in1 : 0
 prsim:	410	c0.x[1] : 0	[by in0:=1]
@@ -398,6 +449,7 @@ rule: [after 2]	~in1:1 -> c1.x[1]+:X
 >> cause: `in1' (val: 1)
 prsim:	412	in1 : 1
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	416	in1 : 0
 prsim:	420	c0.x[2] : 1	[by c0.x[1]:=0]
@@ -406,6 +458,7 @@ rule: [after 2]	~in1:1 -> c1.x[1]+:X
 >> cause: `in1' (val: 1)
 prsim:	420	in1 : 1
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	424	in1 : 0
 WARNING: unstable `c1.x[1]'+
@@ -415,6 +468,7 @@ prsim:	428	in1 : 1
 prsim:	430	out0 : 0	[by c0.x[2]:=1]
 at time 430.000, observed out0 = 0
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	432	in1 : 0
 WARNING: unstable `c1.x[1]'+
@@ -422,6 +476,7 @@ rule: [after 2]	~in1:1 -> c1.x[1]+:X
 >> cause: `in1' (val: 1)
 prsim:	436	in1 : 1
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	440	in1 : 0
 WARNING: unstable `c1.x[1]'+
@@ -429,6 +484,7 @@ rule: [after 2]	~in1:1 -> c1.x[1]+:X
 >> cause: `in1' (val: 1)
 prsim:	444	in1 : 1
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	448	in1 : 0
 WARNING: unstable `c1.x[1]'+
@@ -436,6 +492,7 @@ rule: [after 2]	~in1:1 -> c1.x[1]+:X
 >> cause: `in1' (val: 1)
 prsim:	452	in1 : 1
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	456	in1 : 0
 WARNING: unstable `c1.x[1]'+
@@ -443,6 +500,7 @@ rule: [after 2]	~in1:1 -> c1.x[1]+:X
 >> cause: `in1' (val: 1)
 prsim:	460	in1 : 1
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	464	in1 : 0
 WARNING: unstable `c1.x[1]'+
@@ -450,6 +508,7 @@ rule: [after 2]	~in1:1 -> c1.x[1]+:X
 >> cause: `in1' (val: 1)
 prsim:	468	in1 : 1
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	472	in1 : 0
 WARNING: unstable `c1.x[1]'+
@@ -457,6 +516,7 @@ rule: [after 2]	~in1:1 -> c1.x[1]+:X
 >> cause: `in1' (val: 1)
 prsim:	476	in1 : 1
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	480	in1 : 0
 WARNING: unstable `c1.x[1]'+
@@ -464,6 +524,7 @@ rule: [after 2]	~in1:1 -> c1.x[1]+:X
 >> cause: `in1' (val: 1)
 prsim:	484	in1 : 1
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	488	in1 : 0
 WARNING: unstable `c1.x[1]'+
@@ -471,6 +532,7 @@ rule: [after 2]	~in1:1 -> c1.x[1]+:X
 >> cause: `in1' (val: 1)
 prsim:	492	in1 : 1
 WARNING: unstable `c1.x[1]'-
+rule: [after 2]	in1:0 -> c1.x[1]-:X
 >> cause: `in1' (val: 0)
 prsim:	496	in1 : 0
 $finish at simulation time    0.5 ns
