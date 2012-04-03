@@ -63,8 +63,8 @@
 /**
 	Define to 1 to check for name collisions, due to mangling
 	or case-insensitivity, or reserved names.
-	TODO: name collision checking should eventually include
-		instance names, etc...
+	Name collision checking now includes instance names,
+		and struct/chan names (in their own spaces)
 	For now, just checks node names.
 	Goal: 1
 	Status: done, used for a while.
@@ -1115,7 +1115,10 @@ private:
 #if NETLIST_CHECK_NAME_COLLISIONS
 	// map for node names
 	name_collision_map_type		name_collision_map;
-	// separate map for instance names?
+	// map for structs and chan names
+	name_collision_map_type		struct_name_collision_map;
+	// map for instance names
+	name_collision_map_type		instance_name_collision_map;
 #endif
 	local_subcircuit_list_type	local_subcircuits;
 	/**
@@ -1278,6 +1281,12 @@ private:
 #if NETLIST_CHECK_NAME_COLLISIONS
 	void
 	check_name_collisions(const string&, const index_type, 
+		const netlist_options&);
+	void
+	check_struct_name_collisions(const string&, const index_type, 
+		const netlist_options&);
+	void
+	check_instance_name_collisions(const index_type, 
 		const netlist_options&);
 #endif
 

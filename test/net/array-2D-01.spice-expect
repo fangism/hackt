@@ -1,0 +1,4 @@
+Error: Post-mangled node name `out110' collides with another node `out110'.
+Instantiated from type: foo<>
+Instantiated from -TOP-: 
+Caught exception during netlist generation.

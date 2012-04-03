@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2012-04-02	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-14:
+	  hacknet: implemented post-mangle instance name collision checking,
+		e.g. if [] are stripped from 2D arrays (1,10)=(11,0).
+		Test case added.
+
+
 2012-03-29	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-85-13:

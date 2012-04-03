@@ -1132,6 +1132,8 @@ netlist::netlist() : netlist_common(), name(),
 		internal_expr_map(), 
 #if NETLIST_CHECK_NAME_COLLISIONS
 		name_collision_map(), 
+		struct_name_collision_map(), 
+		instance_name_collision_map(), 
 #endif
 		local_subcircuits(), 
 		node_port_list(), 
@@ -1310,7 +1312,6 @@ if (!fb.is_port_alias()) {
 	\param lpid local process id from footprint.
 	\pre instance_pool is already pre-allocated to avoid 
 		invalidating references due to re-allocation.
-	TODO: possible check for name collisions?
  */
 void
 netlist::append_instance(const state_instance<process_tag>& subp,
@@ -1320,6 +1321,7 @@ netlist::append_instance(const state_instance<process_tag>& subp,
 #endif
 		const netlist_options& opt) {
 	STACKTRACE_VERBOSE;
+	STACKTRACE_INDENT_PRINT("lpid = " << lpid << endl);
 	const footprint* subfp = subp._frame._footprint;
 	// cannot use global allocated footprint_frame
 //	const netlist& subnet(netmap.find(subfp)->second);
@@ -1327,6 +1329,8 @@ netlist::append_instance(const state_instance<process_tag>& subp,
 	// subnet's port list may be shorter than formals list, due to aliases
 	// traverse formals list and lookup each actual to be passed
 	// recall: only used nodes will be in this port list
+	const size_t upid = instance_pool.size();
+		// unique instance_pool index
 	instance_pool.push_back(instance(subnet, lpid));
 	instance& np(instance_pool.back());
 	// local process instance needed to find local port actual id
@@ -1418,6 +1422,19 @@ netlist::append_instance(const state_instance<process_tag>& subp,
 #endif
 	}	// end for each structure port
 #endif	// NETLIST_VERILOG
+	// check for name collisions post-mangling
+	if (subfp->get_meta_type() == entity::META_TYPE_PROCESS) {
+		STACKTRACE_INDENT_PRINT("check instance name collision: " << upid << endl);
+		check_instance_name_collisions(upid, opt);
+	} else {
+		// this looks just wrong
+		STACKTRACE_INDENT_PRINT("skip chan/struct name collision: " << lpid << endl);
+#if 0
+		const size_t npid = named_proc_map[lpid];
+		STACKTRACE_INDENT_PRINT("local named proc id: " << npid << endl);
+//		check_struct_name_collisions(proc_pool[npid].name, npid, opt);
+#endif
+	}
 #if ENABLE_STACKTRACE
 	np.dump_raw(STACKTRACE_INDENT_PRINT("new instance: ")) << endl;
 #endif
@@ -1449,10 +1466,12 @@ netlist::create_auxiliary_node(void) {
 	\param opt case-collision error policy
 	Post-mangling name collisions always result in error.
 	For now, conflict with reserved names will always result in error.
+	\throw general exception on error.
  */
 void
 netlist::check_name_collisions(const string& n, const index_type ni, 
 		const netlist_options& opt) {
+	STACKTRACE_VERBOSE;
 	const string key((opt.case_collision_policy != OPTION_IGNORE) ?
 		util::strings::string_tolower(n) : n);
 	typedef name_collision_map_type::iterator	iterator;
@@ -1471,7 +1490,68 @@ netlist::check_name_collisions(const string& n, const index_type ni,
 		THROW_EXIT;
 	}
 }
-#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Registers against instance name map.  
+	\param n is a post-mangled name of an instance (not case-slammed).
+	\param ni index of this instance
+	\param opt case-collision error policy
+	Post-mangling name collisions always result in error.
+ */
+void
+netlist::check_struct_name_collisions(const string& n, const index_type ni, 
+		const netlist_options& opt) {
+	STACKTRACE_VERBOSE;
+	const string key((opt.case_collision_policy != OPTION_IGNORE) ?
+		util::strings::string_tolower(n) : n);
+	typedef name_collision_map_type::iterator	iterator;
+	typedef name_collision_map_type::value_type	pair_type;
+	const pair<iterator, bool>
+		p(struct_name_collision_map.insert(pair_type(key, ni)));
+	if (!p.second) {
+		string pn(proc_pool[p.first->second].name);
+		opt.mangle_instance(pn);
+		cerr << "Error: Post-mangled struct/chan name `" << n <<
+			"\' collides with another struct/chan `" << pn <<
+			"\'." << endl;
+		THROW_EXIT;
+	}
+	// don't check against reserved names, those are for nodes
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Registers against instance name map.  
+	\param n is a post-mangled name of an instance (not case-slammed).
+	\param ni index of this instance, index into instance_pool
+	\param opt case-collision error policy
+	Post-mangling name collisions always result in error.
+ */
+void
+netlist::check_instance_name_collisions(const index_type ni, 
+		const netlist_options& opt) {
+	STACKTRACE_VERBOSE;
+	INVARIANT(ni < instance_pool.size());
+	string n(instance_pool[ni].raw_identifier(*fp, opt));
+	opt.mangle_instance(n);
+	const string key((opt.case_collision_policy != OPTION_IGNORE) ?
+		util::strings::string_tolower(n) : n);
+	typedef name_collision_map_type::iterator	iterator;
+	typedef name_collision_map_type::value_type	pair_type;
+	const pair<iterator, bool>
+		p(instance_name_collision_map.insert(pair_type(key, ni)));
+	if (!p.second) {
+		string pn(instance_pool[p.first->second].raw_identifier(*fp, opt));
+		opt.mangle_instance(pn);
+		cerr << "Error: Post-mangled instance name `" << n <<
+			"\' collides with another instance `" << pn <<
+			"\'." << endl;
+		THROW_EXIT;
+	}
+	// don't check against reserved names, those are for nodes
+}
+#endif	// NETLIST_CHECK_NAME_COLLISIONS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1676,7 +1756,7 @@ netlist::register_named_proc(const index_type _i,
 		ret = proc_pool.size();
 		INVARIANT(ret);
 #if NETLIST_CHECK_NAME_COLLISIONS
-		check_name_collisions(new_named_proc.name, ret, opt);
+		check_struct_name_collisions(new_named_proc.name, ret, opt);
 #endif
 		proc_pool.push_back(new_named_proc);
 #if 0 && ENABLE_STACKTRACE
