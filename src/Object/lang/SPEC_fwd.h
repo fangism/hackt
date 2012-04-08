@@ -44,7 +44,7 @@ typedef	std::default_vector<util::memory::count_ptr<const const_param> >::type
 //=============================================================================
 namespace PRS {
 	class literal;
-	class rule_dump_context;
+	struct rule_dump_context;
 }	// end namespace PRS
 
 //=============================================================================

@@ -30,7 +30,7 @@ using util::persistent_object_manager;
 using util::memory::count_ptr;
 using util::good_bool;
 typedef	vector<resolved_attribute>	resolved_attribute_list_base;
-struct resolved_attribute_list_type;
+class resolved_attribute_list_type;
 
 //=============================================================================
 /**

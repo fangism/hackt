@@ -17,7 +17,7 @@ namespace util {
 	TODO: add support for pointer-to-member-function.
  */
 template <typename F>
-class function_traits;
+struct function_traits;
 
 // define by specialization
 template <typename R>

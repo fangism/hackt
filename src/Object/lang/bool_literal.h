@@ -41,7 +41,7 @@ typedef	count_ptr<const simple_node_meta_instance_reference>
 /**
 	Base class with minimal functionality for boolean literal reference.  
  */
-struct bool_literal {
+class bool_literal {
 public:
 	typedef	std::default_vector<size_t>::type	group_type;
 	typedef	bool_tag				tag_type;

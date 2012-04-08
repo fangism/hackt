@@ -37,7 +37,7 @@ namespace HAC {
 namespace entity {
 struct dump_flags;
 class footprint;
-struct footprint_frame;
+class footprint_frame;
 #if !AUTO_CACHE_FOOTPRINT_SCOPE_ALIASES
 using std::istream;
 #endif

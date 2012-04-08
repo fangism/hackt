@@ -14,7 +14,7 @@ namespace HAC {
 namespace entity {
 namespace PRS {
 // forward declaration
-struct cflat_visitor;
+class cflat_visitor;
 
 /**
 	Base class for cflat visitable instance hierarchy.  

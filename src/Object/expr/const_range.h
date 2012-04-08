@@ -165,6 +165,7 @@ public:
 
 protected:
 	using meta_index_expr::unroll_resolve_copy;
+	using const_index::unroll_resolve_copy;
 public:
 	bool
 	must_be_formal_size_equivalent(const meta_range_expr& ) const;

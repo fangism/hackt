@@ -58,11 +58,11 @@ private:
 	/// availability count -- the smaller, the more constrained
 	uchar				avail;
 public:
-	static const state_type		full_mask = (1 << N) -1;
+	static const state_type		full_mask = (state_type(1) << N) -1;
 
 	static
 	state_type
-	position_mask(const size_t i) { return 1 << i; }
+	position_mask(const size_t i) { return state_type(1 << i); }
 public:
 	pigeonholes() : state(full_mask), avail(N) { }
 	// default copy-ctor

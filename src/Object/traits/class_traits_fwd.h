@@ -14,7 +14,7 @@ namespace HAC {
 namespace entity {
 
 template <class>
-class class_traits;
+struct class_traits;
 
 // forward declar specializations
 template <> struct class_traits<bool_tag>;

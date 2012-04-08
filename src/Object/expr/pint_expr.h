@@ -137,7 +137,8 @@ virtual	EXPR_ACCEPT_VISITOR_PROTO = 0;
 protected:
 	using nonmeta_parent_type::unroll_resolve_copy;
 	using nonmeta_parent_type::nonmeta_resolve_copy;
-	// using index_parent_type::unroll_resolve_copy;
+	using index_parent_type::unroll_resolve_copy;
+	using index_parent_type::nonmeta_resolve_copy;
 
 protected:
 	MAKE_PARAM_EXPRESSION_ASSIGNMENT_PROTO;

@@ -39,9 +39,9 @@ struct global_offset;
 template <class Tag>
 struct global_offset_base;
 template <class Tag>
-struct  state_instance;
+class  state_instance;
 template <class T>
-struct  instance_pool;
+class  instance_pool;
 
 template <class Tag>
 struct  global_entry;
@@ -68,8 +68,9 @@ typedef	std::vector<size_t>		footprint_frame_map_type;
 	See the constructor that takes a footprint argument.  
  */
 template <class Tag>
-struct footprint_frame_map {
+class footprint_frame_map {
 	typedef	footprint_frame_map<Tag>		this_type;
+public:
 	/**
 		0-indexed translation table from local to global ID.  
 	 */
@@ -130,7 +131,7 @@ protected:
 	TODO: re-use this to pass in external_port_id information
 	during global state allocation.  
  */
-struct footprint_frame :
+class footprint_frame :
 	public footprint_frame_map<process_tag>, 
 	public footprint_frame_map<channel_tag>, 
 #if ENABLE_DATASTRUCTS
@@ -139,6 +140,7 @@ struct footprint_frame :
 	public footprint_frame_map<enum_tag>, 
 	public footprint_frame_map<int_tag>, 
 	public footprint_frame_map<bool_tag> {
+public:
 	typedef	footprint_frame_map<process_tag>	process_map_type;
 	typedef	footprint_frame_map<channel_tag>	channel_map_type;
 #if ENABLE_DATASTRUCTS
