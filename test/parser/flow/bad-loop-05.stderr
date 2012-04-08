@@ -1,0 +1,5 @@
+ERROR: symbol `foo' not found in presently loaded modules.
+Error resolving symbol of meta function call.
+Error with function call at: [8:6..14]
+
+Error resolving expression [8:6..14]

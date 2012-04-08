@@ -1,0 +1,14 @@
+# "decap-01.prsimrc"
+# @haco@ decap-01.haco-c
+# @hacprsim-flags@ -t decap4
+
+watchall
+set vcc 1
+set vss 0
+cycle
+echo checking for any decap rules (shouldn't be any)
+fanin-get vcc
+fanin-get vss
+fanout-get vcc
+fanout-get vss
+

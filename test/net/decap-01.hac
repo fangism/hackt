@@ -1,0 +1,14 @@
+// "decap-01.hac"
+// @hacknet-flags@ -T decap4
+
+export defproc decap4(bool? vcc, vss)
+// this cell is a regular decap cell
+{
+prs<vcc, vss>{
+	[W=4; diode] vss -> vss-
+	[W=4; diode] vss -> vss-
+	[W=4; diode] ~vss -> vcc+
+	[W=4; diode] ~vss -> vcc+
+}
+}
+

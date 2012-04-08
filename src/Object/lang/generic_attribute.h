@@ -167,6 +167,9 @@ public:
 	dump(ostream&) const;
 
 	void
+	filter_key(const string&, resolved_attribute_list_type&) const;
+
+	void
 	collect_transient_info_base(persistent_object_manager&) const;
 
 	void

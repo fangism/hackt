@@ -1,5 +1,6 @@
 /**
 	\file "Object/lang/PRS_attribute_common.cc"
+	This unit just defines argument checks for various attributes.
 	$Id: PRS_attribute_common.cc,v 1.12 2010/09/01 22:14:19 fang Exp $
  */
 
@@ -141,6 +142,12 @@ N_reff::__check_vals(const char* name, const values_type& v) {
 good_bool
 P_reff::__check_vals(const char* name, const values_type& v) {
 	return check_single_real(name, v);
+}
+
+//=============================================================================
+good_bool
+Diode::__check_vals(const char* name, const values_type& v) {
+	return check_optional_integer(name, v);
 }
 
 //=============================================================================

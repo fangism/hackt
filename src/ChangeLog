@@ -3,6 +3,26 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2012-03-29	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-13:
+	  PRS rule attribute: 'diode' for rules like 'GND -> in-'
+		haccreate: does not count as fanin to output node
+		hflat: emits diode attribute
+		prsim: suppresses diode rule
+		hacknet: preserves transistor
+	  Suitable for protection diodes and decap diodes.  
+	  Documented, test cases added.
+
+
+2012-03-26	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-12:
+	  Fixed error-handling on parse-error of an array instance
+		connection interpreted as a function-call, 
+		which resulted in memory leak.  Added test cases.
+
+
 2012-03-10	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-85-11:

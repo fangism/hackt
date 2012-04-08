@@ -1719,6 +1719,26 @@ IsCKeeper::main(visitor_type& v, const values_type& a) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_DEFINE_PRSIM_RULE_ATTRIBUTE_CLASS(Diode, "diode")
+
+/**
+	For convenience, overload the use of suppress_keeper_rule
+	to suppress diode rules.
+ */
+void
+Diode::main(visitor_type& v, const values_type& a) {
+	if (a.empty()) {
+		// default when no value given
+		v.suppress_keeper_rule = true;
+	} else {
+		// honor the value given
+		const values_type::value_type& k(a.front());
+		v.suppress_keeper_rule = 
+			k.is_a<const pint_const>()->static_constant_value();
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DECLARE_AND_DEFINE_PRSIM_RULE_ATTRIBUTE_CLASS(Comb, "comb")
 
 /**

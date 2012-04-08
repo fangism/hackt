@@ -2827,9 +2827,21 @@ function_call_expr
 	 */
 	: member_index_expr optional_implicit_global_connections
 		connection_actuals_list
-		{ $$ = new CHP::function_call_expr($1, $3); 
+		{ 
 			// TODO: should really error out if ($2)
-			DELETE_TOKEN($2); }
+			DELETE_TOKEN($2);
+			const id_expr* fname = IS_A(const id_expr*, $1);
+			if (!fname) {
+				cerr << "Parse error: base reference of function call "
+					"must be an id_expr, but got: ";
+				$1->what(cerr) << " at " << where(*$1) << endl;
+				DELETE_TOKEN($1);
+//				YYERROR;
+//				yyerror("Error parsing function-call-expr.");
+			}
+			// recover from this error during next pass
+			$$ = new CHP::function_call_expr(fname, $3); 
+		}
 	;
 
 multiplicative_expr
