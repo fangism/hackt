@@ -1,0 +1,22 @@
+// "dangling-02.hac"
+// @hacknet-flags@ -T spare_guts
+
+defproc spare_guts(bool? Vdd, GND) {
+bool a, b;
+bool nd, pd;
+bool ns1, ns2, ps1, ps2;
+
+prs <ps1,GND|Vdd,GND> {
+	~a		-> pd+
+}
+prs <ps2,GND|Vdd,GND> {
+	~b		-> pd+
+}
+prs <Vdd,ns1|Vdd,GND> {
+	a		-> nd-
+}
+prs <Vdd,ns2|Vdd,GND> {
+	b		-> nd-
+}
+}
+

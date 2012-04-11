@@ -113,6 +113,7 @@ HACKNET_TEST_SCRIPTS_PASSES = \
 	terminal-test-09 terminal-test-10 terminal-test-11 terminal-test-12 \
 	terminal-test-13 terminal-test-14 terminal-test-15 terminal-test-16 \
 	terminal-test-17 terminal-test-18 \
+	dangling-01 dangling-02 \
 	diode-01 decap-01
 
 # TODO: implement string manipulation to modify rename-04,05
@@ -182,6 +183,7 @@ HACKT_CREATE_TEST_PASSES = \
 	pass_gate-05 pass_gate-06 \
 	precharge-07 precharge-08 \
 	mangle-04 \
+	dangling-01 dangling-02 \
 	subckt-01 subckt-08 subckt-10 subckt-11 \
 	supply-pass-gate-01 supply-pass-gate-02 \
 	supply-instance-01 supply-instance-02 supply-instance-03 \
