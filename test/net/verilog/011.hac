@@ -1,0 +1,33 @@
+// "011.hac"
+// @hacknet-flags@ -f struct_ports=0
+
+deftype pbit <: bool (bool t, f) { }
+
+deftype pbit_pair <: int<2> (pbit a, b) { }
+
+defproc foo(pbit? in; pbit! out) {
+in?;
+out!;
+in.t?;
+in.t?;
+out.t!;
+out.f!;
+}
+
+defproc bar(pbit_pair? x; pbit_pair! y) {
+x?;
+y!;
+foo f[2];
+f[0](x.a, y.a);
+f[1](x.b, y.b);
+}
+
+defproc baz(pbit_pair? p; pbit_pair! q) {
+pbit_pair m;
+bar g[2];
+g[0](p, m);
+g[1](m, q);
+}
+
+baz bam;
+

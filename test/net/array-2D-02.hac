@@ -1,0 +1,18 @@
+// "array-2D-02.hac"
+// @hacknet-flags@ -T foo -f mangle_array_index_open= -f mangle_array_index_close=
+// should catch collision in instance names, post-mangle
+
+defproc inv(bool? in; bool! out) {
+prs {
+	in			=> out-
+}
+}
+
+defproc foo(bool? in; bool! out) {
+inv Z[12][12];
+(;i:12:
+(;j:12:
+	Z[i][j](in, out);
+)
+)
+}
