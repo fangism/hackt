@@ -2019,6 +2019,7 @@ netlist::emit_verilog_struct_locals(ostream& o,
 	typedef	state_instance<tag_type>	instance_type;
 	typedef	state_instance<tag_type>::pool_type
 						pool_type;
+if (nopt.struct_ports) {
 #if ENABLE_STACKTRACE
 	o << nopt.comment_prefix << "local " << traits_type::tag_name
 		<< ":" << endl;
@@ -2060,6 +2061,7 @@ netlist::emit_verilog_struct_locals(ostream& o,
 		}
 		// else skip processes -- they are sub module instances
 	}	// end for each local instance
+}
 	return o;
 }	// end netlist::emit_verilog_locals
 

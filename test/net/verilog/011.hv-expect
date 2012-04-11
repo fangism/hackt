@@ -1,0 +1,46 @@
+module pbit ();
+endmodule
+
+module pbit_pair ();
+endmodule
+
+module foo (\in-t , \out-t , \out-f );
+wire \in-t ;
+wire \out-t ;
+wire \out-f ;
+endmodule
+
+module bar (\x-a-t , \x-b-t , \y-a-t , \y-a-f , \y-b-t , \y-b-f );
+wire \x-a-t ;
+wire \y-a-t ;
+wire \y-a-f ;
+wire \x-b-t ;
+wire \y-b-t ;
+wire \y-b-f ;
+foo \f[0] (\x-a-t , \y-a-t , \y-a-f );
+foo \f[1] (\x-b-t , \y-b-t , \y-b-f );
+endmodule
+
+module baz (\p-a-t , \p-b-t , \q-a-t , \q-a-f , \q-b-t , \q-b-f );
+wire \p-a-t ;
+wire \p-b-t ;
+wire \m-a-t ;
+wire \m-a-f ;
+wire \m-b-t ;
+wire \m-b-f ;
+wire \q-a-t ;
+wire \q-a-f ;
+wire \q-b-t ;
+wire \q-b-f ;
+bar \g[0] (\p-a-t , \p-b-t , \m-a-t , \m-a-f , \m-b-t , \m-b-f );
+bar \g[1] (\m-a-t , \m-b-t , \q-a-t , \q-a-f , \q-b-t , \q-b-f );
+endmodule
+
+wire \bam.p-a-t ;
+wire \bam.p-b-t ;
+wire \bam.q-a-t ;
+wire \bam.q-a-f ;
+wire \bam.q-b-t ;
+wire \bam.q-b-f ;
+baz bam(\bam.p-a-t , \bam.p-b-t , \bam.q-a-t , \bam.q-a-f , \bam.q-b-t , \bam.q-b-f );
+

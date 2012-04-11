@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2012-04-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-15:
+	  hacknet: struct_ports=0 now also suppresses local structs/channels,
+		doesn't make sense to have locals without ports.
+		Test case added.
+
+
 2012-04-02	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-85-14:
