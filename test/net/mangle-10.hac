@@ -1,0 +1,7 @@
+// "mangle-10.hac"
+// testing name-mangling
+// @hacknet-flags@ -c mangle-example-01.hacknet-conf -t ctree<{2,3}> -f auto_wrap_length=80
+// @deps@ mangle-example-01.hacknet-conf
+
+import "mangle-03.hac";
+

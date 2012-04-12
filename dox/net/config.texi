@@ -78,6 +78,7 @@ emitted output (because not all SPICEs are created alike).
 @include config/pre_line_continue.texi
 @include config/post_line_continue.texi
 @include config/comment_prefix.texi
+@include config/auto_wrap_length.texi
 
 The following options are used for name mangling
 type-names and instance-names.

@@ -307,7 +307,12 @@ struct netlist_options {
 		redundant connectivity information for graph analysis.
 	 */
 	bool				emit_node_terminals;
-
+	/**
+		Automatically wrap lines longer than length.
+		This can happen in port lists.
+		If 0, don't wrap at all.
+	 */
+	size_t				auto_wrap_length;
 
 	netlist_options();
 

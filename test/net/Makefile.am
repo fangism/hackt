@@ -75,7 +75,7 @@ HACKNET_TEST_SCRIPTS_PASSES = \
 	node_caps-01 node_caps-02 node_caps-03 node_caps-04 \
 	node_caps-05 node_caps-06 \
 	mangle-01 mangle-02 mangle-03 mangle-04 mangle-04b mangle-05 \
-	mangle-06 mangle-07 mangle-08 mangle-09 \
+	mangle-06 mangle-07 mangle-08 mangle-09 mangle-10 mangle-11 \
 	quoted-names-01 quoted-names-02 \
 	struct-01 struct-02 struct-03 struct-04 struct-05 struct-06 \
 	supply-01 supply-02 supply-03 supply-04 supply-05 supply-06 \
