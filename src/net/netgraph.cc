@@ -708,6 +708,7 @@ instance::raw_identifier(const footprint& fp,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	TODO: support for instance/type parameters?
 	\param fp is the footprint of the parent that contains this instance.
  */
 ostream&
@@ -717,6 +718,7 @@ instance::emit(ostream& o, const node_pool_type& node_pool,
 #endif
 		const footprint& fp, const netlist_options& nopt) const {
 	string pname;
+	size_t line_length = 0;
 {
 	// process instance name
 	const string rname(raw_identifier(fp, nopt));
@@ -726,9 +728,11 @@ if (nopt.emit_mangle_map) {
 }
 	pname = rname;
 	o << nopt.subckt_instance_prefix;
+	line_length += nopt.subckt_instance_prefix.length();
 	nopt.mangle_instance(pname);
 }
 	vector<string> _actuals;
+	_actuals.reserve(32);
 // if include wire ports
 if (nopt.node_ports) {
 	node_actuals_list_type::const_iterator
@@ -774,27 +778,55 @@ switch (nopt.instance_port_style) {
 case netlist_options::STYLE_SPICE:
 case netlist_options::STYLE_SPECTRE:
 	o << pname;
+	line_length += pname.length();
 {
 	// actuals
-	if (paren) o << " (";
+	if (paren) { o << " ("; line_length += 2; }
 {
 	for ( ; i!=e; ++i) {
+		const size_t wl = i->length() +1;
+		line_length += wl;
+		const bool wrap = (nopt.auto_wrap_length &&
+			(line_length > nopt.auto_wrap_length));
+		if (wrap) {
+			nopt.line_continue(o);
+			line_length = nopt.post_line_continue.length() +wl;
+		}
 		o << ' ' << *i;
 	}
 }
 	// already mangled during name caching
-	if (paren) o << " )";
-}
+	if (paren) { o << " )"; line_length += 2; }
+
 	// type name is already mangled
+	const size_t wl = type->get_name().length() +1;
+	line_length += wl;
+	const bool wrap = (nopt.auto_wrap_length &&
+		(line_length > nopt.auto_wrap_length));
+	if (wrap) {
+		nopt.line_continue(o);
+		line_length = nopt.post_line_continue.length() +wl;
+	}
 	o << ' ' << type->get_name();	// endl
 	break;
+}
 case netlist_options::STYLE_VERILOG:
 	o << type->get_name();
 	o << ' ' << pname << '(';
+	line_length += type->get_name().length() +pname.length() +2;
 if (_actuals.size()) {
 	o << *i;
 	for (++i; i!=e; ++i) {
-		o << ", " << *i;
+		o << ", ";
+		const size_t wl = i->length() +2;
+		line_length += wl;
+		const bool wrap = (nopt.auto_wrap_length &&
+			(line_length > nopt.auto_wrap_length));
+		if (wrap) {
+			nopt.line_continue(o);
+			line_length = nopt.post_line_continue.length() +wl;
+		}
+		o << *i;
 	}
 }
 	o << ");";
@@ -2132,23 +2164,32 @@ netlist::emit_verilog_wire_locals(ostream& o,
 #endif	// NETLIST_VERILOG
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This should also track line length and auto-wrap.
+ */
 ostream&
 netlist::emit_header(ostream& o, const netlist_options& nopt) const {
+	size_t line_length = 0;
 switch (nopt.subckt_def_style) {
 case netlist_options::STYLE_SPECTRE: 
 	o << "subckt ";
+	line_length += 7;
 	break;
 case netlist_options::STYLE_SPICE: 
 	o << ".subckt ";
+	line_length += 8;
 	break;
 case netlist_options::STYLE_VERILOG:
 	o << "module ";
+	line_length += 7;
 	break;
 default:
 	o << "define-subcircuit ";
+	line_length += 18;
 	break;
 }	// end switch
 	o << name;
+	line_length += name.length();
 
 	vector<string> ports;
 if (nopt.node_ports) {
@@ -2165,15 +2206,33 @@ switch (nopt.subckt_def_style) {
 case netlist_options::STYLE_SPICE:
 case netlist_options::STYLE_SPECTRE:
 	for (; i!=e; ++i) {
+		const size_t wl = i->length() +1;
+		line_length += wl;
+		const bool wrap = (nopt.auto_wrap_length &&
+			(line_length > nopt.auto_wrap_length));
+		if (wrap) {
+			nopt.line_continue(o);
+			line_length = nopt.post_line_continue.length() +wl;
+		}
 		o << ' ' << *i;
 	}
 	break;
 case netlist_options::STYLE_VERILOG:
 	o << " (";
+	line_length += 2;
 if (ports.size()) {
 	o << *i;
 	for ( ++i; i!=e; ++i) {
-		o << ", " << *i;
+		o << ", ";
+		const size_t wl = i->length() +2;
+		line_length += wl;
+		const bool wrap = (nopt.auto_wrap_length &&
+			(line_length > nopt.auto_wrap_length));
+		if (wrap) {
+			nopt.line_continue(o);
+			line_length = nopt.post_line_continue.length() +wl;
+		}
+		o << *i;
 	}
 }
 	o << ");";

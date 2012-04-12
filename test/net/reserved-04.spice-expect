@@ -1,5 +1,6 @@
 # netlist generation configuration values:
 area_unit=p
+auto_wrap_length=0
 below_min_width=warn
 capacitance_unit=
 case_collision=warn

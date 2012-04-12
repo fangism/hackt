@@ -124,7 +124,8 @@ netlist_options::netlist_options() :
 		emit_node_aliases(false),
 		emit_node_caps(false),
 		emit_mangle_map(false),
-		emit_node_terminals(false)
+		emit_node_terminals(false),
+		auto_wrap_length(0)
 		{
 	// delayed mangling
 	// to prevent double-mangling, we have to postpone
@@ -598,6 +599,14 @@ __set_member_default(const option_value& opt,
 	return util::set_option_member_single_numeric_value(opt, n_opt, mem);
 }
 
+// specialize for size_t
+static
+bool
+__set_member_default(const option_value& opt, 
+	options_struct_type& n_opt, size_t options_struct_type::*mem) {
+	return util::set_option_member_single_numeric_value(opt, n_opt, mem);
+}
+
 // specialize for real_type
 static
 bool
@@ -665,10 +674,8 @@ __string_type_of(T options_struct_type::*);
 
 static const string&
 __string_type_of(bool options_struct_type::*) { return __bool_type__; }
-#if 0
 static const string&
 __string_type_of(size_t options_struct_type::*) { return __int_type__; }
-#endif
 static const string&
 __string_type_of(real_type options_struct_type::*) { return __real_type__; }
 static const string&
@@ -1547,6 +1554,19 @@ Default: 0
 ***/
 DEFINE_OPTION_DEFAULT(emit_node_terminals, "emit_node_terminals",
 	"if true, emit node terminal graph (debug)")
+/***
+@texinfo config/auto_wrap_length.texi
+@defopt auto_wrap_length (int)
+If set to > 0, automatically wrap lines that would be longer than
+the given length.
+This is useful when there are external limits to line length
+that need to be accounted for.
+Default: 0 (no-wrap)
+@end defopt
+@end texinfo
+***/
+DEFINE_OPTION_DEFAULT(auto_wrap_length, "auto_wrap_length",
+	"automatically wrap lines longer than given length")
 
 #if 0
 /***

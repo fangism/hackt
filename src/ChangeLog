@@ -3,6 +3,13 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2012-04-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-16:
+	  hacknet: added option to wrap long lines, auto_wrap_length.
+		Set to > 0 to enable.  Documented, test cases added.
+
+
 2012-04-10	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-85-15:
