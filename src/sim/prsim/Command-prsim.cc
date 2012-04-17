@@ -6152,9 +6152,9 @@ class_name::main(State& s, const string_list& a) {			\
 if (a.size() != 2) {							\
 	usage(cerr << "usage: ");					\
 	cerr << "current mode: " <<					\
-		error_policy_string(s.get_##func_name##_policy()) \
+		error_policy_string(s.get_##func_name##_policy()) 	\
 		<< endl;						\
-	return Command::SYNTAX;						\
+	return Command::NORMAL;						\
 } else {								\
 	const string& m(a.back());					\
 	const error_policy_enum e =	 				\
@@ -7430,6 +7430,155 @@ ChannelBD4P::usage(ostream& o) {
 	"\tvalue of this wire if driven by source.\n"
 "\'data:num\' : data is the name of the data rail(s) of the channel.\n"
 	"\tnum is the number of rails (bus width).  Pass :0 if data-less.\n"
+	<< endl;
+}
+#endif	// PRSIM_CHANNEL_BUNDLED_DATA
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_CHANNEL_SYNC
+/***
+@texinfo cmd/channel-clocked.texi
+@deffn Command channel-clocked name clk:init data:width
+Registers a synchronous (clocked) channel, which consists of a data bus
+and a clock signal.
+The @var{name} of the channel should match that of an instance 
+(process or channel) in the source file.  
+@itemize
+@item @var{name} is the name of the new channel in the simulator's namespace
+@item @var{clk} is the name of the clock signal.
+	The value given is the initial value of the clock on reset,
+	if driven by a source.
+	If the name is prefixed by ~ then clock is active low (negative-edge).
+	If the name is prefixed by * then clock is double-edged.
+	Otherwise, clock is considered positive-edge only.
+	The @var{init} initial value is only relevant for double-edged clocks.
+@item @var{data} is the name of the data rail(s), interpreted with active-high
+	logic levels (prefix with @t{~} to make active-low).  
+	The @var{num} value specifies the number of wires (bus width).
+	If the channel is data-less (handshake only), then omit the 
+	data rail name and just write @t{:}.
+@end itemize
+@example
+@t{channel-clocked NAME clk:0 d:0} -- this names the clock @t{clk}, 
+	and data @var{d} is a single-wire channel.
+	@var{clk} is pos-edge triggered only.
+@t{channel-clocked NAME ~clk:0 d:8} -- this names the clock @t{clk}, 
+	and data @var{d} is a 8-bit bundled-data channel.
+	@var{clk} is neg-edge triggered only.
+@t{channel-clocked NAME *clk:0 d:8} -- this names the clock @t{clk}, 
+	and data @var{d} is a 8-bit bundled-data channel.
+	@var{clk} is double-edge triggered.
+@end example
+	Sources do not actually drive the clock, they only setup the
+	data during clock edges.  
+@end deffn
+@end texinfo
+***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(ChannelClocked, instance_completer)
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelClocked, "channel-clocked", 
+	channels, "declare a clocked channel")
+
+int
+ChannelClocked::main(State& s, const string_list& a) {
+if (a.size() != 4) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	string_list::const_iterator i(++a.begin());
+	const string& chan_name(*i);
+	const string& clk(*++i);
+	const string& data(*++i);
+	// could confirm that 'name' exists as a process/channel/datatype?
+	bool clk_2edge = false;
+	bool clk_sense = true;
+	bool clk_init = false;		// not supported yet
+	bool data_sense = false;
+	size_t num_rails = 0;
+	string clk_name, data_name;
+	{
+		// parse clk
+		static const char clk_fmt_err[] = 
+			"Error: clk must be of the form [~*]?id:init.";
+		string_list tmp;
+		tokenize_char(clk, tmp, ':');
+		if (tmp.size() != 2) {
+			cerr << clk_fmt_err << endl;
+			return Command::SYNTAX;
+		}
+		clk_name = tmp.front();
+		const string clk_name2(clk_name.substr(1));
+		if (clk_name.length()) {
+		switch (clk_name[0]) {
+		case '~' : clk_sense = false; clk_name = clk_name2; break;
+		case '*' : clk_2edge = true; clk_name = clk_name2; break;
+		default: break;
+		}
+		// clk initial value is only meaningful for 2-edged clocks
+		if (clk_2edge) {
+		if (string_to_num(tmp.back(), clk_init)) {
+			cerr << "Error: parsing initial value of clk." << endl;
+			return Command::SYNTAX;
+		}
+		}
+		} else {
+			cerr << clk_fmt_err << endl;
+			return Command::SYNTAX;
+		}
+	}{
+		// parse data
+		size_t c = data.find(':');
+		if (c == string::npos || (c == data.length() -1)) {
+			THROW_EXIT;
+		}
+		string_list tmp;
+		tokenize_char(data, tmp, ':');
+		if (tmp.size() != 2) {
+			cerr << "Error: data must be of the form [~]id:init."
+				<< endl;
+			return Command::SYNTAX;
+		}
+		data_name = tmp.front();
+#if PRSIM_CHANNEL_RAILS_INVERTED
+		data_sense = (data_name[0] == '~');		// active low
+#endif
+		const string::const_iterator b(data_name.begin());
+		data_name.assign(b +size_t(data_sense), b+c);
+		if (!data_name.length()) { THROW_EXIT; }
+		if (string_to_num(tmp.back(), num_rails)) {
+			cerr << "Error: parsing bus width." << endl;
+			return Command::SYNTAX;
+		}
+	}
+	channel_manager& cm(s.get_channel_manager());
+	if (clk_2edge) {
+	if (cm.new_channel_clocked_2edge(s, chan_name, 
+			clk_name, clk_init,
+			data_name, num_rails, data_sense)) {
+		return Command::BADARG;
+	}
+	} else {
+	if (cm.new_channel_clocked_1edge(s, chan_name, 
+			clk_name, clk_sense,
+			data_name, num_rails, data_sense)) {
+		return Command::BADARG;
+	}
+	}
+	return Command::NORMAL;
+}
+}
+
+void
+ChannelClocked::usage(ostream& o) {
+	o << name << " <name> <clk:init> <data:num>" << endl;
+	o <<
+"Registers a named clocked channel in a separate namespace in \n"
+"the simulator, typically used to drive or log the environment.\n"
+"\'name\' is the name of the new channel in the simulator's namespace\n"
+"\'clk:init\' : clk is the name of the clock signal, init is the initial\n"
+	"\tvalue of this wire if configured as double-edged source.\n"
+	"\tPrefix with ~ for neg-edge, prefix with * for double-edge.\n"
+"\'data:num\' : data is the name of the data rail(s) of the channel.\n"
+	"\tnum is the number of rails (bus width).  Pass :0 if scalar wire.\n"
 	<< endl;
 }
 #endif	// PRSIM_CHANNEL_BUNDLED_DATA

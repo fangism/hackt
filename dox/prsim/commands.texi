@@ -208,6 +208,19 @@ Two-phase and four-phase handshake variants exist for bundled-data.
 @include cmd/channel-bd-4p.texi
 Data is guaranteed to be stable until an acknowledge is received.
 
+Finally, there is support for synchnous clocked channels.
+@include cmd/channel-clocked.texi
+When configured as a source, clocked-channels only set the data rails
+in response to the clock signal; it never drives the clock rail.
+This is by design, because the same clock may be referenced to 
+any number of clocked channels.
+(The clock should be driven separately.)
+For single-edged clocked channels, the data is set during the
+inactive clock phase, and held during the active clock phase, 
+in other words, the data is set up on the @emph{opposite}
+triggering clock edge.
+For double-edged clock channels, the data is set/evaluated on every edge.
+
 One can get information about channel configurations with 
 the following commands:
 @include cmd/channel-show.texi

@@ -103,4 +103,26 @@ defchan bd_2p0 <: chan(int<1>) (bool a, r, e, v) {
 }
 
 //-----------------------------------------------------------------------------
+/**
+	Acknowledgeless synchronous channel, clocked data.
+	The clk signal is treated as the request.  
+	\pint N
+ */
+template <pint N>
+defchan cd <: chan(int<N>) (bool clk, d[N]) {
+}
+
+defchan cd0 <: chan(int<1>) (bool clk, d) {
+}
+
+typedef	cd<1>				cd1;
+typedef	cd<2>				cd2;
+typedef	cd<3>				cd3;
+typedef	cd<4>				cd4;
+typedef	cd<5>				cd5;
+typedef	cd<6>				cd6;
+typedef	cd<7>				cd7;
+typedef	cd<8>				cd8;
+
+//-----------------------------------------------------------------------------
 

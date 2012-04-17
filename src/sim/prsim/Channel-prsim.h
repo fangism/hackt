@@ -110,6 +110,12 @@
  */
 #define	PRSIM_CHANNEL_AGGREGATE_ARGUMENTS	1
 
+/**
+	Define to 1 to enable clocked, synchronous channels.
+	Goal: 1
+ */
+#define	PRSIM_CHANNEL_SYNC			1
+
 namespace HAC {
 namespace entity {
 class module;
@@ -293,6 +299,10 @@ private:
 		CHANNEL_TYPE_BD_4P,	// bundled-data 4-phase
 		CHANNEL_TYPE_BD_2P,	// bundled-data 2-phase
 #endif
+#if PRSIM_CHANNEL_SYNC
+		CHANNEL_TYPE_CLK,	// single-edge (posedge or negedge)
+		CHANNEL_TYPE_CLK2,	// double-edge (anyedge)
+#endif
 		CHANNEL_TYPE_SINGLE_TRACK,
 		CHANNEL_TYPE_NULL
 	};
@@ -378,7 +388,7 @@ private:
 	string					name;
 	/// node index for acknowledge/enable
 	node_index_type				ack_signal;
-	/// node index for validity/neutrality (some types)
+	/// node index for validity/neutrality (some types), also used as clk
 	node_index_type				valid_signal;
 
 #if PRSIM_CHANNEL_TIMING
@@ -662,6 +672,12 @@ public:
 		return get_valid_sense();
 	}
 #endif
+#if PRSIM_CHANNEL_SYNC
+	bool
+	get_clk_init(void) const {
+		return get_valid_sense();
+	}
+#endif
 
 	bool
 	four_phase(void) const {
@@ -717,6 +733,19 @@ private:
 
 
 public:
+	bool
+	is_clocked(void) const {
+#if PRSIM_CHANNEL_SYNC
+		return type == CHANNEL_TYPE_CLK ||
+			type == CHANNEL_TYPE_CLK2;
+#else
+		return false;
+#endif
+	}
+
+	bool
+	can_source(void) const;
+
 	bool
 	is_sourcing(void) const {
 		return flags & CHANNEL_SOURCING;
@@ -1004,6 +1033,9 @@ public:
 		set_full(bool f) {
 			set_empty(!f);
 		}
+
+		ostream&
+		dump_raw(ostream&) const;
 	};	// end struct status_summary
 
 	status_summary
@@ -1111,6 +1143,7 @@ private:
 	bool
 	set_channel_ack_valid(State&, const string&, 
 		const bool have_ack, const bool ack_sense, const bool ack_init,
+		const char* vname,
 		const bool have_validity, const bool validity_sense);
 
 	bool
@@ -1151,6 +1184,18 @@ public:
 		const bool ai, 
 		const string& rn, 
 		const bool ri,
+		const string& dn, const size_t nr, const bool ds);
+#endif
+
+#if PRSIM_CHANNEL_SYNC
+	bool
+	new_channel_clocked_1edge(State&, const string&,
+		const string& cn, const bool cs,
+		const string& dn, const size_t nr, const bool ds);
+
+	bool
+	new_channel_clocked_2edge(State&, const string&,
+		const string& cn, const bool ci,
 		const string& dn, const size_t nr, const bool ds);
 #endif
 

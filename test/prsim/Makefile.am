@@ -74,6 +74,7 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	channel-bd4p-test-a \
 	channel-bd2p-test-a \
 	channel-bd2p-test-b \
+	channel-clocked-test-a \
 	eledr-buffer eledr-buffer-a eledr-buffer-b \
 	type-test-a type-test-b type-test-c type-test-d \
 	type-test-e type-test-f type-test-g \
@@ -391,6 +392,16 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	channel-bd2p-test-b-A-03 channel-bd2p-test-b-A-04 \
 	channel-bd2p-test-b-A-08 \
 	channel-bd2p-test-b-A-09 channel-bd2p-test-b-A-09b \
+	channel-clocked-test-a-01 \
+	channel-clocked-test-a-02 channel-clocked-test-a-02b \
+	channel-clocked-test-a-03 \
+	channel-clocked-test-a-04 channel-clocked-test-a-04b \
+	channel-clocked-test-a-05 channel-clocked-test-a-05b \
+	channel-clocked-test-a-05c \
+	channel-clocked-test-b-02 channel-clocked-test-b-02b \
+	channel-clocked-test-b-03 \
+	channel-clocked-test-b-04 channel-clocked-test-b-04b \
+	channel-clocked-test-b-05 \
 	eledr-buffer-a-01 eledr-buffer-a-02 eledr-buffer-a-03 \
 	eledr-buffer-a-04 eledr-buffer-a-05 eledr-buffer-a-06 \
 	eledr-buffer-a-07 \
@@ -765,7 +776,11 @@ HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
 	pcfb-test-b-02 \
 	pchb-test-b-02 \
 	pcefb-test-b-02 \
-	pcehb-test-b-02
+	pcehb-test-b-02 \
+	channel-clocked-test-a-06 \
+	channel-clocked-test-a-06b channel-clocked-test-a-07 \
+	channel-clocked-test-b-06 \
+	channel-clocked-test-b-07
 
 # KNOWN BUG: ACX-PR-6718*
 # expression-evaluation atomicity issue corrupting event queue
