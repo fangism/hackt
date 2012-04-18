@@ -398,10 +398,14 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	channel-clocked-test-a-04 channel-clocked-test-a-04b \
 	channel-clocked-test-a-05 channel-clocked-test-a-05b \
 	channel-clocked-test-a-05c \
+	channel-clocked-test-a-08 channel-clocked-test-a-08b \
+	channel-clocked-test-a-09 channel-clocked-test-a-10 \
+	channel-clocked-test-a-11 \
 	channel-clocked-test-b-02 channel-clocked-test-b-02b \
 	channel-clocked-test-b-03 \
 	channel-clocked-test-b-04 channel-clocked-test-b-04b \
 	channel-clocked-test-b-05 \
+	channel-clocked-test-b-08 \
 	eledr-buffer-a-01 eledr-buffer-a-02 eledr-buffer-a-03 \
 	eledr-buffer-a-04 eledr-buffer-a-05 eledr-buffer-a-06 \
 	eledr-buffer-a-07 \

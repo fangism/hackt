@@ -7437,6 +7437,94 @@ ChannelBD4P::usage(ostream& o) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if PRSIM_CHANNEL_SYNC
 /***
+@texinfo cmd/clock-source.texi
+@deffn Command clock-source node N
+Drives wire @var{node} with toggling values.
+If @var{node} is prefixed with ~, then clock is active low (negative edge).
+If @var{node} is prefixed with *, then clock is double-edged.
+The reset value, init, is only relevant to double-edged clocks.  
+With no prefix, the clock is active-high (positive edge).
+@var{N} is the number of cycles, or * for infinite. 
+For single-edged clocks, a rise and fall counts as one cycle.
+@end deffn
+@end texinfo
+***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(ClockSource, instance_completer)
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ClockSource, "clock-source", 
+	channels, "drives a signal with clock")
+int
+ClockSource::main(State& s, const string_list& a) {
+if (a.size() != 3) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	string_list::const_iterator i(++a.begin());
+	string clk_name(*i++);
+	const string& count(*i);
+	// could confirm that 'name' exists as a process/channel/datatype?
+	bool clk_2edge = false;
+	bool clk_sense = true;
+	bool clk_init = false;		// not supported yet
+	int iter = 0;
+	{
+		// parse clk
+		static const char clk_fmt_err[] = 
+			"Error: clk must be of the form [~*]?id:init.";
+		string_list tmp;
+		tokenize_char(clk_name, tmp, ':');
+		if (tmp.size() != 2) {
+			cerr << clk_fmt_err << endl;
+			return Command::SYNTAX;
+		}
+		clk_name = tmp.front();
+		const string clk_name2(clk_name.substr(1));
+		if (clk_name.length()) {
+		switch (clk_name[0]) {
+		case '~' : clk_sense = false; clk_name = clk_name2; break;
+		case '*' : clk_2edge = true; clk_name = clk_name2; break;
+		default: break;
+		}
+		// clk initial value is only meaningful for 2-edged clocks
+		if (clk_2edge) {
+		if (string_to_num(tmp.back(), clk_init)) {
+			cerr << "Error: parsing initial value of clk." << endl;
+			return Command::SYNTAX;
+		}
+		}
+		} else {
+			cerr << clk_fmt_err << endl;
+			return Command::SYNTAX;
+		}
+	}{
+		// parse num cycles
+		if (count[0] == '*') {
+			iter = -1;		// to mean infinite
+		} else if (string_to_num(count, iter)) {
+			cerr << "Error: parsing cycle count." << endl;
+			return Command::SYNTAX;
+		}
+	}
+	channel_manager& cm(s.get_channel_manager());
+	if (cm.new_clock_source(s, clk_name,
+			clk_2edge, clk_sense, clk_init, iter)) {
+		return Command::BADARG;
+	}
+	return Command::NORMAL;
+}
+}
+
+void
+ClockSource::usage(ostream& o) {
+	o << name << " <[~*]?node:init> <int|*>" << endl;
+	o << "node is the name of a wire signal.\n"
+"If node name is prefixed with ~, clock is active-lowa\n."
+"If node name is prefixed with *, clock is double-edged.\n"
+"For double-edged clocks, init is the reset value.\n"
+"Number of cycles is an integer or * for infinite." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
 @texinfo cmd/channel-clocked.texi
 @deffn Command channel-clocked name clk:init data:width
 Registers a synchronous (clocked) channel, which consists of a data bus
@@ -7581,7 +7669,7 @@ ChannelClocked::usage(ostream& o) {
 	"\tnum is the number of rails (bus width).  Pass :0 if scalar wire.\n"
 	<< endl;
 }
-#endif	// PRSIM_CHANNEL_BUNDLED_DATA
+#endif	// PRSIM_CHANNEL_SYNC
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0

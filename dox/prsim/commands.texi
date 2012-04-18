@@ -214,12 +214,13 @@ When configured as a source, clocked-channels only set the data rails
 in response to the clock signal; it never drives the clock rail.
 This is by design, because the same clock may be referenced to 
 any number of clocked channels.
-(The clock should be driven separately.)
+(The clock should be driven separately by @command{clock-source}.)
 For single-edged clocked channels, the data is set during the
 inactive clock phase, and held during the active clock phase, 
 in other words, the data is set up on the @emph{opposite}
 triggering clock edge.
 For double-edged clock channels, the data is set/evaluated on every edge.
+@include cmd/clock-source.texi
 
 One can get information about channel configurations with 
 the following commands:
