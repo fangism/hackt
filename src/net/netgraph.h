@@ -842,8 +842,11 @@ struct passive_device {
 /**
 	Instantiation of a particular substructure type.
 	spice card: x
+	Inherited members:
+		index: pid number
+		name: post-mangled name (should be local)
  */
-struct instance {
+struct instance : public unique_common {
 	/**
 		Reference to subcircuit type.
 		Translated from looking up netlist_map_type in the generator
@@ -853,10 +856,6 @@ struct instance {
 		Beware of storing insertion-invalidated pointers.
 	 */
 	const netlist*			type;
-	/**
-		Local process index.
-	 */
-	index_type			pid;
 	/**
 		Port node connections.
 	 */
@@ -875,7 +874,8 @@ struct instance {
 
 	explicit
 	instance(const netlist& t, const index_type p) :
-		type(&t), pid(p), node_actuals()
+		unique_common(p), 
+		type(&t), node_actuals()
 #if NETLIST_VERILOG
 		, proc_actuals()
 #endif

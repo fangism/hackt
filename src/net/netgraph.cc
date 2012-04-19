@@ -701,7 +701,7 @@ instance::raw_identifier(const footprint& fp,
 		const netlist_options& nopt) const {
 	// process instance name
 	ostringstream oss;
-	fp.get_instance_pool<process_tag>()[pid -1].get_back_ref()
+	fp.get_instance_pool<process_tag>()[index -1].get_back_ref()
 		->dump_hierarchical_name(oss, nopt.__dump_flags);
 	return oss.str();
 }
@@ -717,19 +717,17 @@ instance::emit(ostream& o, const node_pool_type& node_pool,
 		const proc_pool_type& proc_pool,
 #endif
 		const footprint& fp, const netlist_options& nopt) const {
-	string pname;
+	const string& pname(name);
 	size_t line_length = 0;
 {
 	// process instance name
-	const string rname(raw_identifier(fp, nopt));
 if (nopt.emit_mangle_map) {
+	const string rname(raw_identifier(fp, nopt));
 	o << nopt.comment_prefix << "instance: " << type->get_unmangled_name()
 		<< ' ' << rname << endl;	// want original name
 }
-	pname = rname;
 	o << nopt.subckt_instance_prefix;
 	line_length += nopt.subckt_instance_prefix.length();
-	nopt.mangle_instance(pname);
 }
 	vector<string> _actuals;
 	_actuals.reserve(32);
@@ -838,7 +836,7 @@ if (_actuals.size()) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 instance::dump_raw(ostream& o) const {
-	o << '[' << pid << "]: " << type->get_name() << ": (";
+	o << '[' << index << "]: " << type->get_name() << ": (";
 	copy(node_actuals.begin(), node_actuals.end(),
 		ostream_iterator<index_type>(o, ","));
 	return o << ')';
@@ -1342,6 +1340,7 @@ if (!fb.is_port_alias()) {
 		Technically, we shouldn't need global allocation information.
 	\param subnet the netlist type that corresponds with instance.
 	\param lpid local process id from footprint.
+	\param pfp parent instance's footprint (for hierarchical name).
 	\pre instance_pool is already pre-allocated to avoid 
 		invalidating references due to re-allocation.
  */
@@ -1365,6 +1364,9 @@ netlist::append_instance(const state_instance<process_tag>& subp,
 		// unique instance_pool index
 	instance_pool.push_back(instance(subnet, lpid));
 	instance& np(instance_pool.back());
+	// compute mangled name once
+	np.name = np.raw_identifier(*fp, opt);
+	opt.mangle_instance(np.name);
 	// local process instance needed to find local port actual id
 	const state_instance<process_tag>::pool_type&
 		appool(fp->get_instance_pool<process_tag>());
@@ -1565,8 +1567,7 @@ netlist::check_instance_name_collisions(const index_type ni,
 		const netlist_options& opt) {
 	STACKTRACE_VERBOSE;
 	INVARIANT(ni < instance_pool.size());
-	string n(instance_pool[ni].raw_identifier(*fp, opt));
-	opt.mangle_instance(n);
+	string n(instance_pool[ni].name);	// copy
 	const string key((opt.case_collision_policy != OPTION_IGNORE) ?
 		util::strings::string_tolower(n) : n);
 	typedef name_collision_map_type::iterator	iterator;
@@ -1574,8 +1575,7 @@ netlist::check_instance_name_collisions(const index_type ni,
 	const pair<iterator, bool>
 		p(instance_name_collision_map.insert(pair_type(key, ni)));
 	if (!p.second) {
-		string pn(instance_pool[p.first->second].raw_identifier(*fp, opt));
-		opt.mangle_instance(pn);
+		const string& pn(instance_pool[p.first->second].name);
 		cerr << "Error: Post-mangled instance name `" << n <<
 			"\' collides with another instance `" << pn <<
 			"\'." << endl;
@@ -2742,8 +2742,7 @@ for (++i; i!=e; ++i) {
 	}
 	case 'x': {
 		const instance& inst(instance_pool[ti->index]);
-		string pname(inst.raw_identifier(*fp, nopt));
-		nopt.mangle_instance(pname);
+		const string& pname(inst.name);
 		o << nopt.subckt_instance_prefix << pname <<
 			nopt.__dump_flags.process_member_separator <<
 		inst.type->node_port_name(ti->port);
