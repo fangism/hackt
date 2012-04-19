@@ -14,6 +14,7 @@ channel-sink X
 channel-reset X
 getall X
 channel-get X
+assert-pending X.e
 
 echo manually resetting data
 set X.d[0] 0

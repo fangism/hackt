@@ -1,0 +1,29 @@
+channels:
+W : clocked-anyedge:0 x4 off
+X : clocked-posedge x1 off
+Y : clocked-negedge x1 off
+Z : clocked-anyedge:1 x2 off
+There's no such thing as a sync-sink! 
+Warning: Ignoring.  What exactly do you expect a sync. sink to do?
+	0	X.clk : 0
+X : clocked-posedge x1 expect,watch {0,1,0,1,} @0
+	count: 0, unknowns: 1
+X : clocked-posedge x1 expect,watch,stopped {0,1,0,1,} @0
+	count: 0, unknowns: 1
+X : clocked-posedge x1 expect,watch {0,1,0,1,} @0
+	count: 0, unknowns: 1
+	0	X.d : 0
+channel	X (.data) : 0 @ 50
+	50	X.clk : 1
+	100	X.d : 1
+	100	X.clk : 0
+channel	X (.data) : 1 @ 150
+	150	X.clk : 1
+	200	X.clk : 0
+	200	X.d : 0
+channel	X (.data) : 0 @ 250
+	250	X.clk : 1
+	300	X.clk : 0
+	300	X.d : 1
+channel	X (.data) : 1 @ 350
+	350	X.clk : 1

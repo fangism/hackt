@@ -76,8 +76,10 @@ int
 prsim_advance(State& s, const time_type stop_time, bool show_break) {
 	step_return_type ni;
 	s.resume();
+#if !PRSIM_AGGREGATE_EXCEPTIONS
 try {
-while (!s.stopped() && s.pending_events() &&
+#endif
+while (!s.stopped_or_fatal() && s.pending_events() &&
 		(s.next_event_time() < stop_time) &&
 		GET_NODE((ni = s.step()))) {
 	// honor breakpoints?
@@ -123,12 +125,18 @@ while (!s.stopped() && s.pending_events() &&
 #endif
 	}
 }	// end while
+	if (!s.stopped() && (s.time() < stop_time)) {
+		s.update_time(stop_time);
+	}
+#if PRSIM_AGGREGATE_EXCEPTIONS
+if (s.is_fatal()) {
+	return error_policy_to_status(s.inspect_exceptions());
+}
+#else
 } catch (const step_exception& exex) {
 	return error_policy_to_status(exex.inspect(s, cerr));
 }	// no other exceptions
-	if (!s.stopped() && s.time() < stop_time) {
-		s.update_time(stop_time);
-	}
+#endif
 	// else leave the time at the time as of the last event
 	return Command::NORMAL;
 }	// end prsim_advance

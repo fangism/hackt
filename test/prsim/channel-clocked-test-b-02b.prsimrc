@@ -1,0 +1,50 @@
+# "channel-clocked-test-b-02b.prsimrc"
+# @haco@ channel-clocked-test-a.haco-c
+
+source channel-clocked-test-a-01.prsimrc
+
+alias c advance 50
+# alias c cycle
+
+# echo-commands on
+watchall
+channel-source-args Y 1 0 1 1 0 0 1 1 1 0 0 0
+channel-show Y
+channel-reset Y
+cycle
+channel-show Y
+channel-release Y
+channel-show Y
+cycle
+
+set Y.clk 1
+c
+assert Y.d[0] 1
+set Y.clk 0
+c
+assert Y.d[0] 1
+set Y.clk 1
+c
+assert Y.d[0] 0
+set Y.clk 0
+c
+assert Y.d[0] 0
+set Y.clk 1
+c
+assert Y.d[0] 1
+set Y.clk 0
+c
+assert Y.d[0] 1
+set Y.clk 1
+c
+assert Y.d[0] 1
+set Y.clk 0
+c
+assert Y.d[0] 1
+set Y.clk 1
+c
+assert Y.d[0] 0
+set Y.clk 0
+c
+assert Y.d[0] 0
+

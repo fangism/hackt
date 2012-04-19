@@ -1,0 +1,42 @@
+channels:
+W : clocked-anyedge:0 x4 off
+X : clocked-posedge x1 off
+Y : clocked-negedge x1 off
+Z : clocked-anyedge:1 x2 off
+X : clocked-posedge x1 expect,watch {0,1,0,1,} @0
+	count: 0, unknowns: 1
+	100	X.clk : 0
+X : clocked-posedge x1 expect,watch,stopped {0,1,0,1,} @0
+	count: 0, unknowns: 1
+X : clocked-posedge x1 expect,watch {0,1,0,1,} @0
+	count: 0, unknowns: 1
+	100	X.d : 0
+channel	X (.data) : 0 @ 200
+	200	X.clk : 1
+	*** break, `X.clk' became 1 at time 200
+	300	X.clk : 0	[by X.clk:=0]
+	*** break, `X.clk' became 0 at time 300
+	300	X.d : 1
+channel	X (.data) : 1 @ 400
+	400	X.clk : 1	[by X.clk:=1]
+	*** break, `X.clk' became 1 at time 400
+	500	X.clk : 0	[by X.clk:=0]
+	*** break, `X.clk' became 0 at time 500
+	500	X.d : 0
+channel	X (.data) : 0 @ 600
+	600	X.clk : 1	[by X.clk:=1]
+	*** break, `X.clk' became 1 at time 600
+	700	X.clk : 0	[by X.clk:=0]
+	*** break, `X.clk' became 0 at time 700
+	700	X.d : 1
+channel	X (.data) : 1 @ 800
+	800	X.clk : 1	[by X.clk:=1]
+	*** break, `X.clk' became 1 at time 800
+	900	X.clk : 0	[by X.clk:=0]
+	*** break, `X.clk' became 0 at time 900
+channel	X (.data) : 1 @ 1000
+	1000	X.clk : 1	[by X.clk:=1]
+	1100	X.clk : 0	[by X.clk:=0]
+channel	X (.data) : 1 @ 1200
+	1200	X.clk : 1	[by X.clk:=1]
+	1300	X.clk : 0	[by X.clk:=0]

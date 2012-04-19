@@ -451,7 +451,29 @@ if (r) {
 	o << 'x' << r;
 }
 	break;
+#endif	// PRSIM_CHANNEL_BUNDLED_DATA
+#if PRSIM_CHANNEL_SYNC
+case CHANNEL_TYPE_CLK_SRC1:
+	o << "clock-source " << (get_clock_sense() ? "posedge" : "negedge");
+	break;
+case CHANNEL_TYPE_CLK_SRC2:
+	o << "clock-source anyedge:" << (get_clk_init() ? '1' : '0');	// init
+	break;
+case CHANNEL_TYPE_CLK_1EDGE:
+	o << "clocked-" << (get_clock_sense() ? "posedge " : "negedge ");
+#if PRSIM_CHANNEL_RAILS_INVERTED
+	if (get_data_sense()) { o << '~'; }
 #endif
+	o << 'x' << r;
+	break;
+case CHANNEL_TYPE_CLK_2EDGE:
+	o << "clocked-anyedge:" << (get_clk_init() ? '1' : '0') << ' ';	// init
+#if PRSIM_CHANNEL_RAILS_INVERTED
+	if (get_data_sense()) { o << '~'; }
+#endif
+	o << 'x' << r;
+	break;
+#endif	// PRSIM_CHANNEL_SYNC
 // case CHANNEL_TYPE_SINGLE_TRACK:
 default:
 	DIE;
@@ -507,6 +529,15 @@ if (is_sinking() || is_sourcing()) {
 #endif
 	if (have_value() &&
 			((is_sourcing() && !is_random()) || is_expecting())) {
+	if (is_clock_source()) {
+		// doesn't take real values
+		o << " @" << value_index << '/';
+		if (is_looping()) {
+			o << '*';
+		} else {
+			o << values.size();
+		}
+	} else {
 		o << " {";
 #if PRSIM_CHANNEL_SIGNED
 		for_each(values.begin(), values.end(),
@@ -523,6 +554,7 @@ if (is_sinking() || is_sourcing()) {
 			o << " < " << inject_expect_file;	// source/expect
 		}
 		// values may come from command arguments
+	}
 	} else if (is_random()) {
 #if 0
 		o << " {" << values.front() << '}';
@@ -563,10 +595,12 @@ if (type != CHANNEL_TYPE_LEDR) {
 		ret.ack_active = get_ack_active() ^ (a == LOGIC_LOW);
 	}
 	if (valid_signal) {	// use ev handshake protocol
+		// is also applicable to clock channels/sources
 		const value_enum v = s.get_node(valid_signal).current_value();
 		ret.x_valid = (v == LOGIC_OTHER);
 		ret.valid_active = get_valid_sense() ^ (v == LOGIC_LOW);
 	}
+	// this also sufficiently covers clocked channel types as well
 	// for bundled-data, set the full/empty state regardless of data rails
 #if PRSIM_CHANNEL_BUNDLED_DATA
 switch (type) {
@@ -648,14 +682,22 @@ case CHANNEL_TYPE_1ofN: {
 	}
 	break;
 }
+#if PRSIM_CHANNEL_SYNC
+case CHANNEL_TYPE_CLK_SRC1:		// fall-through
+case CHANNEL_TYPE_CLK_SRC2:
+	// no data
+	break;
+case CHANNEL_TYPE_CLK_1EDGE:		// fall-through
+case CHANNEL_TYPE_CLK_2EDGE:		// fall-through
+	// fall-through
+#endif
 #if PRSIM_CHANNEL_BUNDLED_DATA
 case CHANNEL_TYPE_BD_4P: 	// treat req/ack as ev-handshake!
 	// fall-through
-case CHANNEL_TYPE_BD_2P: {	// treat req/ack as 2p handshake
+case CHANNEL_TYPE_BD_2P:	// treat req/ack as 2p handshake
 	// just always read data rails?
 	ret.current_value = data_rails_value(s);
 	break;
-}
 #endif
 case CHANNEL_TYPE_LEDR: {
 	// 2-phase, or 1-phase
@@ -684,8 +726,30 @@ default: break;
 } else {
 	// if there are X's do nothing, don't bother summarizing
 }
+#if ENABLE_STACKTRACE
+	ret.dump_raw(cerr);
+#endif
 	return ret;
 }	// end channel::summarize_status
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Raw dump of status summary, only really used for debugging.
+ */
+ostream&
+channel::status_summary::dump_raw(ostream& o) const {
+	o << "current value: " << current_value << endl;
+	o << "value transitioning: " << value_transitioning << endl;
+	o << "full: " << full << endl;
+	o << "x_ack: " << x_ack << endl;
+	o << "ack_active: " << ack_active << endl;
+	o << "x_valid: " << x_valid << endl;
+	o << "valid_active: " << valid_active << endl;
+	o << "valid_following: " << valid_following << endl;
+	o << "waiting sender: " << waiting_sender << endl;
+	o << "waiting receiver: " << waiting_receiver << endl;
+	return o;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -784,6 +848,16 @@ case CHANNEL_TYPE_SINGLE_TRACK: {
 	FINISH_ME(Fang);
 	break;
 }
+#if PRSIM_CHANNEL_SYNC
+case CHANNEL_TYPE_CLK_SRC1:		// fall-through
+case CHANNEL_TYPE_CLK_1EDGE:
+	o << "clock is " << (stat.valid_active ? "active" : "inactive");
+	break;
+case CHANNEL_TYPE_CLK_SRC2:		// fall-through
+case CHANNEL_TYPE_CLK_2EDGE:
+	o << "clock is 2-edged";	// always
+	break;
+#endif
 default: break;
 }	// end switch
 } else {
@@ -849,6 +923,18 @@ case CHANNEL_TYPE_1ofN: {
 	}
 	break;
 }	// end case CHANNEL_TYPE_1ofN
+#if PRSIM_CHANNEL_SYNC
+case CHANNEL_TYPE_CLK_SRC1:
+case CHANNEL_TYPE_CLK_SRC2:
+	// value-less
+	break;
+case CHANNEL_TYPE_CLK_1EDGE:
+case CHANNEL_TYPE_CLK_2EDGE:
+	// general warning: values may be transient due to synchronous nature
+	if (!__assert_channel_value(expect, stat.current_value, x_counter, confirm))
+		return false;
+	break;
+#endif
 #if PRSIM_CHANNEL_BUNDLED_DATA
 case CHANNEL_TYPE_BD_4P: {
 	// snapshot of data rails
@@ -1004,6 +1090,16 @@ case CHANNEL_TYPE_LEDR: {
 	}
 	break;
 }	// end case CHANNEL_TYPE_LEDR
+#if PRSIM_CHANNEL_SYNC
+case CHANNEL_TYPE_CLK_SRC1:
+case CHANNEL_TYPE_CLK_SRC2:
+case CHANNEL_TYPE_CLK_1EDGE:
+case CHANNEL_TYPE_CLK_2EDGE:
+	cerr << "Validity is not applicable to clocked channel "
+		<< name << "." << endl;
+	return false;
+	break;
+#endif
 // case CHANNEL_TYPE_SINGLE_TRACK:
 default:
 	FINISH_ME(Fang);
@@ -1268,6 +1364,13 @@ channel::max_value(void) const {
 		} else {
 			return value_type(pow(radix(), bundles())) -1;
 		}
+#if PRSIM_CHANNEL_SYNC
+//	case CHANNEL_TYPE_CLK_SRC1:
+//	case CHANNEL_TYPE_CLK_SRC2:
+//		return 1;
+	case CHANNEL_TYPE_CLK_1EDGE:		// fall-through
+	case CHANNEL_TYPE_CLK_2EDGE:		// fall-through
+#endif
 #if PRSIM_CHANNEL_BUNDLED_DATA
 	case CHANNEL_TYPE_BD_2P:	// fall-through
 	case CHANNEL_TYPE_BD_4P:
@@ -1301,6 +1404,13 @@ channel::min_value(void) const {
 		} else {
 			return 0;
 		}
+#if PRSIM_CHANNEL_SYNC
+//	case CHANNEL_TYPE_CLK_SRC1:
+//	case CHANNEL_TYPE_CLK_SRC2:
+//		return 1;
+	case CHANNEL_TYPE_CLK_1EDGE:		// fall-through
+	case CHANNEL_TYPE_CLK_2EDGE:		// fall-through
+#endif
 #if PRSIM_CHANNEL_BUNDLED_DATA
 	case CHANNEL_TYPE_BD_2P:	// fall-through
 	case CHANNEL_TYPE_BD_4P:
@@ -1382,6 +1492,39 @@ channel::set_rsource(const State& s) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_CHANNEL_SYNC
+/**
+	Configure source to just emit random values.  
+ */
+bool
+channel::set_clock_source(const State& s, const int N) {
+	STACKTRACE_VERBOSE;
+	if (__configure_source(s, N < 0))	return true;
+	value_index = 0;
+	if (N < 0) {
+	values.resize(1);	// fill? don't care about garbage values?
+	} else {
+	values.resize(N);	// fill? don't care about garbage values?
+	}
+	std::fill(values.begin(), values.end(), array_value_type(0, false));
+	return false;
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+channel::can_source(void) const {
+	return ack_signal || type == CHANNEL_TYPE_LEDR
+#if PRSIM_CHANNEL_SYNC
+		|| type == CHANNEL_TYPE_CLK_SRC1
+		|| type == CHANNEL_TYPE_CLK_SRC2
+		|| type == CHANNEL_TYPE_CLK_1EDGE
+		|| type == CHANNEL_TYPE_CLK_2EDGE
+#endif
+	;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Drive a channel from a file, sourcing values, no loop.  
 	\return true on error
@@ -1404,8 +1547,9 @@ channel::__configure_source(const State& s, const bool loop) {
 	// warn if ack has no fanin
 	flags &= ~(CHANNEL_EXPECTING | CHANNEL_VALUE_LOOP | CHANNEL_RANDOM);
 	flags |= CHANNEL_SOURCING;
-	if (loop)
+	if (loop) {
 		flags |= CHANNEL_VALUE_LOOP;
+	}
 
 	// safety checks on signal directions
 if (ack_signal) {
@@ -1416,14 +1560,14 @@ if (ack_signal) {
 	}
 } else {
 // TODO: support acknowledgeless sources for the other channel types
-if (type != CHANNEL_TYPE_LEDR) {
+if (!can_source()) {
 	cerr << "Error: acknowledgeless channels cannot be sourced!" << endl;
 	return true;
 }
 }
 	bool maybe_externally_driven = false;
 if (valid_signal) {
-if (type != CHANNEL_TYPE_LEDR) {
+if (type != CHANNEL_TYPE_LEDR && !is_clocked()) {
 	const State::node_type& vn(s.get_node(valid_signal));
 	if (vn.has_fanin()) {
 		cerr << "Error: channel validity `" << name <<
@@ -1435,7 +1579,7 @@ if (type != CHANNEL_TYPE_LEDR) {
 		maybe_externally_driven = true;
 		// but make sure this is not doubly driven by another source
 	}
-	if (!vn.has_fanout()) {
+	if (!vn.has_fanout() && !is_clocked()) {
 		// this warning might be excessive
 		cerr << "Warning: channel validity `" << name <<
 			(get_valid_sense() ? ".v" : ".n") <<
@@ -1463,7 +1607,7 @@ if (type != CHANNEL_TYPE_LEDR) {
 			"if driven from elsewhere." << endl;
 	}
 	return false;
-}	// end channel::set_source_file
+}	// end channel::__configure_source
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1478,8 +1622,6 @@ channel::set_sink(const State& s) {
 	// is OK to log
 	// warn if data/validity is already driven with fanin
 	// warn if ack has no fanin
-	flags |= CHANNEL_SINKING;
-
 	// additional signal checks
 	// warn if channel happens to be connected in wrong direction
 if (ack_signal) {
@@ -1491,9 +1633,20 @@ if (ack_signal) {
 			"if driven from elsewhere." << endl;
 	}
 } else {
-	cerr << "Error: acknowledgeless channel cannot consume tokens!" << endl;
-	return true;
+	if (is_clocked()) {
+		// be nice, don't error out
+		cerr <<
+			"Warning: Ignoring.  What exactly do you expect a sync. sink to do?" << endl;
+		return false;
+	} else {
+		// no ack, no handshake, no sink
+		cerr << "Error: acknowledgeless channel cannot consume tokens!"
+			<< endl;
+		return true;
+	}
 }
+	// set actual flag
+	flags |= CHANNEL_SINKING;
 if (valid_signal) {
 	const State::node_type& vn(s.get_node(valid_signal));
 	if (!vn.has_fanin()) {
@@ -1656,6 +1809,13 @@ case CHANNEL_TYPE_1ofN: {
 	}
 	break;
 }
+#if PRSIM_CHANNEL_SYNC
+//	case CHANNEL_TYPE_CLK_SRC1:
+//	case CHANNEL_TYPE_CLK_SRC2:
+//		break;
+case CHANNEL_TYPE_CLK_1EDGE:			// fall-through
+case CHANNEL_TYPE_CLK_2EDGE:			// fall-through
+#endif
 #if PRSIM_CHANNEL_BUNDLED_DATA
 case CHANNEL_TYPE_BD_2P:		// fall-through
 case CHANNEL_TYPE_BD_4P: {
@@ -1708,6 +1868,13 @@ case CHANNEL_TYPE_SINGLE_TRACK:
 case CHANNEL_TYPE_1ofN:
 	x_counter = bundles() * radix();
 	break;
+#if PRSIM_CHANNEL_SYNC
+case CHANNEL_TYPE_CLK_SRC1:
+case CHANNEL_TYPE_CLK_SRC2:
+	break;
+case CHANNEL_TYPE_CLK_1EDGE:			// fall-through
+case CHANNEL_TYPE_CLK_2EDGE:			// fall-through
+#endif
 #if PRSIM_CHANNEL_BUNDLED_DATA
 case CHANNEL_TYPE_BD_2P:		// fall-through
 case CHANNEL_TYPE_BD_4P:
@@ -1925,9 +2092,26 @@ channel::reset(vector<env_event_type>& events) {
 		// reset data rails to all 0s (arbitrary), just not X.
 		// even for bundled-data
 		initialize_all_data_rails(events);
-#if PRSIM_CHANNEL_BUNDLED_DATA
 	switch (type) {
+#if PRSIM_CHANNEL_BUNDLED_DATA
 	// Q: does timing matter here?
+#if PRSIM_CHANNEL_SYNC
+	case CHANNEL_TYPE_CLK_SRC1:
+		// always start in inactive phase
+		events.push_back(ENV_EVENT(clock_signal(), 
+			(get_clock_sense() ? LOGIC_LOW : LOGIC_HIGH)));
+		break;
+	case CHANNEL_TYPE_CLK_SRC2:
+		events.push_back(ENV_EVENT(clock_signal(), 
+			(get_clk_init() ? LOGIC_HIGH : LOGIC_LOW)));
+		break;
+	case CHANNEL_TYPE_CLK_1EDGE:		// fall-through
+	case CHANNEL_TYPE_CLK_2EDGE:		// fall-through
+		// does NOT drive the clock rail because
+		// clocks are often globally shared.
+		// use a separate clock source
+		break;
+#endif
 	case CHANNEL_TYPE_BD_4P:
 		// just reset the request to neutral
 		events.push_back(ENV_EVENT(valid_signal, 
@@ -1938,13 +2122,21 @@ channel::reset(vector<env_event_type>& events) {
 			(get_req_init() ? LOGIC_HIGH : LOGIC_LOW)));
 		// reset request to initial value
 		break;
+#endif
 	default: break;
 		// once nodes all become neutral, the validity should be reset
 	}	// end switch
-#endif
 	}
 	if (is_sinking()) {
 	switch (type) {
+#if PRSIM_CHANNEL_SYNC
+	case CHANNEL_TYPE_CLK_SRC1:		// fall-through
+	case CHANNEL_TYPE_CLK_SRC2:		// fall-through
+	case CHANNEL_TYPE_CLK_1EDGE:		// fall-through
+	case CHANNEL_TYPE_CLK_2EDGE:		// fall-through
+		// no ack signal
+		break;
+#endif
 	case CHANNEL_TYPE_1ofN:	// fall-through
 #if PRSIM_CHANNEL_BUNDLED_DATA
 	case CHANNEL_TYPE_BD_2P: // fall-through
@@ -1978,6 +2170,10 @@ void
 channel::initialize_all_data_rails(vector<env_event_type>& events) {
 switch (type) {
 case CHANNEL_TYPE_SINGLE_TRACK:	// fall-through
+#if PRSIM_CHANNEL_SYNC
+case CHANNEL_TYPE_CLK_1EDGE:	// fall-through
+case CHANNEL_TYPE_CLK_2EDGE:	// fall-through
+#endif
 #if PRSIM_CHANNEL_BUNDLED_DATA
 case CHANNEL_TYPE_BD_2P: // fall-through
 case CHANNEL_TYPE_BD_4P: // fall-through
@@ -1993,6 +2189,11 @@ case CHANNEL_TYPE_LEDR:
 	events.push_back(__node_setter(
 		get_repeat_init() ? LOGIC_HIGH : LOGIC_LOW)(repeat_rail()));
 	break;
+#if PRSIM_CHANNEL_SYNC
+case CHANNEL_TYPE_CLK_SRC1:		// fall-through
+case CHANNEL_TYPE_CLK_SRC2:		// fall-through
+	break;
+#endif
 default:
 	DIE;
 }	// end switch
@@ -2082,6 +2283,12 @@ case CHANNEL_TYPE_1ofN:
 default:
 // case CHANNEL_TYPE_LEDR:
 // two phase, LEDR: no resetting
+#if PRSIM_CHANNEL_SYNC
+// case CHANNEL_TYPE_CLK_SRC1:		// fall-through
+// case CHANNEL_TYPE_CLK_SRC2:		// fall-through
+// case CHANNEL_TYPE_CLK_1EDGE:
+// case CHANNEL_TYPE_CLK_2EDGE:
+#endif
 #if PRSIM_CHANNEL_BUNDLED_DATA
 // case CHANNEL_TYPE_BD_2P:
 // case CHANNEL_TYPE_BD_4P:
@@ -2103,15 +2310,23 @@ void
 channel::reset_bundled_data_rails(vector<env_event_type>& events) {
 if (radix()) {
 switch (type) {
+#if PRSIM_CHANNEL_SYNC
+case CHANNEL_TYPE_CLK_1EDGE:		// fall-through
+case CHANNEL_TYPE_CLK_2EDGE:		// fall-through
+#endif
+#if PRSIM_CHANNEL_BUNDLED_DATA
 case CHANNEL_TYPE_BD_2P:
 	// fall-through
 case CHANNEL_TYPE_BD_4P:
+#endif
 	transform(data.begin(), data.end(), back_inserter(events),
 		__node_setter(get_data_sense() ? LOGIC_HIGH : LOGIC_LOW));
 	break;
 // case CHANNEL_TYPE_SINGLE_TRACK:
 // case CHANNEL_TYPE_1ofN:
 default:
+// case CHANNEL_TYPE_CLK_SRC1:		// fall-through
+// case CHANNEL_TYPE_CLK_SRC2:		// fall-through
 // case CHANNEL_TYPE_LEDR:
 // two phase, LEDR: no resetting
 	break;
@@ -2129,6 +2344,10 @@ channel::X_all_data_rails(vector<env_event_type>& events) {
 	const __node_setter_decl(X_it, LOGIC_OTHER);
 switch (type) {
 case CHANNEL_TYPE_SINGLE_TRACK:	// fall-through
+#if PRSIM_CHANNEL_SYNC
+case CHANNEL_TYPE_CLK_1EDGE:		// fall-through
+case CHANNEL_TYPE_CLK_2EDGE:		// fall-through
+#endif
 #if PRSIM_CHANNEL_BUNDLED_DATA
 case CHANNEL_TYPE_BD_2P: // fall-through
 case CHANNEL_TYPE_BD_4P: // fall-through
@@ -2140,6 +2359,11 @@ case CHANNEL_TYPE_LEDR:
 	events.push_back(X_it(ledr_data_rail()));
 	events.push_back(X_it(repeat_rail()));
 	break;
+#if PRSIM_CHANNEL_SYNC
+case CHANNEL_TYPE_CLK_SRC1:		// fall-through
+case CHANNEL_TYPE_CLK_SRC2:		// fall-through
+	break;
+#endif
 default:
 	DIE;
 }	// end switch
@@ -2217,6 +2441,10 @@ if (rdx == 2) {
 }
 	break;
 }
+#if PRSIM_CHANNEL_SYNC
+case CHANNEL_TYPE_CLK_1EDGE:		// fall-through
+case CHANNEL_TYPE_CLK_2EDGE:		// fall-through
+#endif
 #if PRSIM_CHANNEL_BUNDLED_DATA
 case CHANNEL_TYPE_BD_2P:		// fall-through
 case CHANNEL_TYPE_BD_4P: {
@@ -2321,12 +2549,19 @@ channel::data_is_valid(void) const {
 	}
 	switch (type) {
 	case CHANNEL_TYPE_1ofN: return (counter_state == bundles());
+#if PRSIM_CHANNEL_SYNC
+	case CHANNEL_TYPE_CLK_1EDGE:		// fall-through
+	case CHANNEL_TYPE_CLK_2EDGE:		// fall-through
+#endif
 #if PRSIM_CHANNEL_BUNDLED_DATA
 	// data can always be sampled in any phase of handshake
 	case CHANNEL_TYPE_BD_2P:
 	case CHANNEL_TYPE_BD_4P:
 #endif
 	case CHANNEL_TYPE_LEDR: return true;
+//	case CHANNEL_TYPE_CLK_SRC1:		// fall-through
+//	case CHANNEL_TYPE_CLK_SRC2:		// fall-through
+	default: break;
 	}
 	// should not be reached
 	return false;
@@ -2385,6 +2620,13 @@ case CHANNEL_TYPE_1ofN: {
 	}
 	break;
 }
+#if PRSIM_CHANNEL_SYNC
+case CHANNEL_TYPE_CLK_SRC1:		// fall-through
+case CHANNEL_TYPE_CLK_SRC2:		// fall-through
+	return 0;			// data-less
+case CHANNEL_TYPE_CLK_1EDGE:		// fall-through
+case CHANNEL_TYPE_CLK_2EDGE:		// fall-through
+#endif
 #if PRSIM_CHANNEL_BUNDLED_DATA
 case CHANNEL_TYPE_BD_2P:		// fall-through
 case CHANNEL_TYPE_BD_4P: {
@@ -2465,7 +2707,11 @@ channel::print_data_value(ostream& o, const value_type v) const {
 bool
 channel::may_drive_node(const node_index_type ni) const {
 	if (is_sourcing()) {
-		if (valid_signal && (ni == valid_signal)) {
+		if (valid_signal && (ni == valid_signal)
+#if PRSIM_CHANNEL_SYNC
+				&& !is_clock_source()
+#endif
+				) {
 			return true;
 		}
 		// check: is it data rail of source?
@@ -2505,6 +2751,15 @@ channel::reads_node(const node_index_type ni) const {
 			return true;
 		}
 			break;
+#if PRSIM_CHANNEL_SYNC
+		// clock sources respond to self
+		case CHANNEL_TYPE_CLK_SRC1:		// fall-through
+		case CHANNEL_TYPE_CLK_SRC2:		// fall-through
+		// synchronous sources respond to clock when sourcing
+		case CHANNEL_TYPE_CLK_1EDGE:		// fall-through
+		case CHANNEL_TYPE_CLK_2EDGE:		// fall-through
+			return (ni == clock_signal());
+#endif
 #if PRSIM_CHANNEL_BUNDLED_DATA
 		case CHANNEL_TYPE_BD_2P:
 		case CHANNEL_TYPE_BD_4P:
@@ -2518,6 +2773,7 @@ channel::reads_node(const node_index_type ni) const {
 		if (valid_signal) {
 			// ack only responds to validity, not data rails
 			// this also applies to bundled-data channels
+			// this also applies to clocked channels
 			if (ni == valid_signal)
 				return true;
 		} else {
@@ -2635,6 +2891,14 @@ if (is_sourcing()) {
 		FINISH_ME(Fang);
 		break;
 	}
+#if PRSIM_CHANNEL_SYNC
+	case CHANNEL_TYPE_CLK_SRC1:		// fall-through
+	case CHANNEL_TYPE_CLK_SRC2:		// fall-through
+	case CHANNEL_TYPE_CLK_1EDGE:
+	case CHANNEL_TYPE_CLK_2EDGE:
+		FINISH_ME(Fang);
+		break;
+#endif
 #if PRSIM_CHANNEL_BUNDLED_DATA
 	case CHANNEL_TYPE_BD_2P:
 	case CHANNEL_TYPE_BD_4P:
@@ -3231,6 +3495,62 @@ if (ack_signal && (ni == ack_signal)) {
 }
 	break;
 }	// end case CHANNEL_TYPE_LEDR
+#if PRSIM_CHANNEL_SYNC
+case CHANNEL_TYPE_CLK_SRC1:
+case CHANNEL_TYPE_CLK_SRC2: {
+	STACKTRACE_INDENT_PRINT("clk-src: got clock tick" << endl);
+	const status_summary stat(summarize_status(s));
+	INVARIANT(ni == clock_signal());
+	if (is_sourcing() && !stopped() && have_value()) {
+		if (!stat.x_valid && 
+			(type == CHANNEL_TYPE_CLK_SRC2 || stat.valid_active)) {
+			advance_value();
+		}
+		new_events.push_back(toggle_node(s, clock_signal()));
+	}
+	break;
+}
+case CHANNEL_TYPE_CLK_2EDGE: {
+// first identify which channel node member this node is
+if (ni == clock_signal()) {
+	STACKTRACE_INDENT_PRINT("clk2: got clk update" << endl);
+	const status_summary stat(summarize_status(s));
+	if (!stat.x_valid) {
+		// check data on both clock edges
+		process_data(s);	// check expects
+	}
+	// only need to take action if this is a source
+	if (is_sourcing() && !stopped()) {
+	STACKTRACE_INDENT_PRINT("source responding..." << endl);
+	// FIXME: doesn't handle 0-X-0 or 1-X-1 transitions (undefined)
+	if (stat.x_valid) {
+		STACKTRACE_INDENT_PRINT("X-ing all data." << endl);
+		// set all data to X, also request rail
+		// do not advance
+		X_all_data_rails(new_events);
+	} else {
+		STACKTRACE_INDENT_PRINT("setting up data." << endl);
+		// clock is double-edged, setup data
+		if (have_value()) {
+			// set data rails to next data value
+			set_all_data_rails(s, new_events);
+			advance_value();
+		}
+	}
+	}
+	// logging and expect mode don't care
+	// synchronous channels don't sink
+} else {
+	STACKTRACE_INDENT_PRINT("bd4p: got data-rail update" << endl);
+	// invariant: must be data rail
+	// update state counters
+	update_bd_data_counter(prev, next);
+	// generally, no need to spawn any events after data
+	// which can always be transient
+}
+	break;
+}
+#endif
 #if PRSIM_CHANNEL_BUNDLED_DATA
 case CHANNEL_TYPE_BD_2P: {
 if (ni == ack_signal) {
@@ -3258,12 +3578,13 @@ if (ni == ack_signal) {
 	}
 	// only need to take action if this is a sink
 	if (is_sinking() && !stopped()) {
-		INVARIANT(ack_signal);
+		if (ack_signal) {
 		if (stat.x_valid) {
 			new_events.push_back(ENV_EVENT(ack_signal, LOGIC_OTHER));
 		} else {
 			new_events.push_back(toggle_node(s, ack_signal));
 		}
+		}	// else synchronous channel has no ack
 	}
 } else {
 	// is a data-rail
@@ -3273,7 +3594,52 @@ if (ni == ack_signal) {
 }
 	break;
 }	// end case CHANNEL_TYPE_BD_2P
+#endif
 // follows similarly to 1ofN case (ev-handshake)
+#if PRSIM_CHANNEL_SYNC
+case CHANNEL_TYPE_CLK_1EDGE: {
+// first identify which channel node member this node is
+if (ni == clock_signal()) {
+	STACKTRACE_INDENT_PRINT("clk1: got clk update" << endl);
+	const status_summary stat(summarize_status(s));
+	if (!stat.x_valid && stat.valid_active) {
+		process_data(s);	// check expects
+	}
+	// only need to take action if this is a source
+	if (is_sourcing() && !stopped()) {
+	STACKTRACE_INDENT_PRINT("source responding..." << endl);
+	if (stat.x_valid) {
+		STACKTRACE_INDENT_PRINT("X-ing all data." << endl);
+		// set all data to X, also request rail
+		// do not advance
+		X_all_data_rails(new_events);
+	} else if (stat.valid_active) {
+		STACKTRACE_INDENT_PRINT("holding data." << endl);
+		// reset_all_data_rails(new_events);	// does nothing
+	} else {
+		STACKTRACE_INDENT_PRINT("setting up data." << endl);
+		// clock is in inactive phase, setup data
+		if (have_value()) {
+			// set data rails to next data value
+			set_all_data_rails(s, new_events);
+			advance_value();
+		}
+	}
+	}
+	// logging and expect mode don't care
+	// synchronous channels don't sink
+} else {
+	STACKTRACE_INDENT_PRINT("bd4p: got data-rail update" << endl);
+	// invariant: must be data rail
+	// update state counters
+	update_bd_data_counter(prev, next);
+	// generally, no need to spawn any events after data
+	// which can always be transient
+}
+	break;
+}
+#endif
+#if PRSIM_CHANNEL_BUNDLED_DATA
 case CHANNEL_TYPE_BD_4P: {
 // first identify which channel node member this node is
 if (ni == ack_signal) {
@@ -3312,7 +3678,7 @@ if (ni == ack_signal) {
 	}
 	// only need to take action if this is a sink
 	if (is_sinking() && !stopped()) {
-		INVARIANT(ack_signal);
+		if (ack_signal) {
 		if (stat.x_valid) {
 			new_events.push_back(ENV_EVENT(ack_signal, LOGIC_OTHER));
 		} else if (stat.valid_active) {
@@ -3324,6 +3690,7 @@ if (ni == ack_signal) {
 			new_events.push_back(ENV_EVENT(ack_signal, 
 				get_ack_active() ? LOGIC_LOW : LOGIC_HIGH));
 		}
+		}	// else synchronous channel is ack-less
 	}
 } else {
 	STACKTRACE_INDENT_PRINT("bd4p: got data-rail update" << endl);
@@ -3341,7 +3708,7 @@ default: DIE;
 }	// end channel::process_node
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PRSIM_CHANNEL_BUNDLED_DATA
+#if PRSIM_CHANNEL_BUNDLED_DATA || PRSIM_CHANNEL_SYNC
 /**
 	\param prev previous value of data rail
 	\param next new value of data rail
@@ -3668,7 +4035,35 @@ if (is_sinking()) {
 	break;
 }	// end case CHANNEL_TYPE_BD_2P
 #endif	// PRSIM_CHANNEL_BUNDLED_DATA
-case CHANNEL_TYPE_LEDR:
+#if PRSIM_CHANNEL_SYNC
+case CHANNEL_TYPE_CLK_SRC1:
+case CHANNEL_TYPE_CLK_SRC2:
+	// copied from process_node, above
+	if (is_sourcing() && have_value()) {
+		if (!stat.x_valid && 
+			(type == CHANNEL_TYPE_CLK_SRC2 || stat.valid_active)) {
+			advance_value();
+		}
+		events.push_back(toggle_node(s, clock_signal()));
+	}
+	break;
+case CHANNEL_TYPE_CLK_1EDGE:
+case CHANNEL_TYPE_CLK_2EDGE:
+if (is_sourcing()) {
+	// for single-edge clocks, respond when clock is in inactive phase
+	// for double-edged clocks, always respond
+	// never respond to X
+	bool respond = !stat.x_valid &&
+		(type == CHANNEL_TYPE_CLK_2EDGE || !stat.valid_active);
+	if (respond) {
+		set_all_data_rails(s, events);
+		advance_value();
+	}
+}
+	// sinking not applicable; there's no ack
+	break;
+#endif
+case CHANNEL_TYPE_LEDR: {
 if (is_sourcing()) {
 	bool respond = true;	// whether or not to respond with valid data
 	if (ack_signal) {
@@ -3709,6 +4104,7 @@ if (is_sinking() && ack_signal) {
 //	possibly issue a warning if channel resumed in wrong phase?
 	}
 	// else there's no acknowledge signal to toggle!
+}
 }
 	break;
 case CHANNEL_TYPE_SINGLE_TRACK:
@@ -3936,7 +4332,7 @@ try {
 	// really shouldn't have to lookup channel again here...
 	if (set_channel_ack_valid(state, base, 
 			have_ack, ack_sense, ack_init, 
-			have_validity, validity_sense)) {
+			NULL, have_validity, validity_sense)) {
 		return true;
 	}
 } catch (...) {
@@ -4157,7 +4553,7 @@ if (i.second) {
 	// now setup ack and validity
 	if (set_channel_ack_valid(state, base, 
 			true, ack_sense, ack_init, 
-			true, req_sense)) {
+			NULL, true, req_sense)) {
 		return true;
 	}
 } else {
@@ -4229,6 +4625,202 @@ if (i.second) {
 	return false;
 }	// end new_channel_bd2p
 #endif	// PRSIM_CHANNEL_BUNDLED_DATA
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_CHANNEL_SYNC
+/**
+	Creates a single-edge sensitive clocked channel.  
+	The clock signal poses as a request signal.  
+	There is no acknowledge.
+	Same params as other channels.  
+ */
+bool
+channel_manager::new_channel_clocked_1edge(State& state, const string& _base, 
+		const string& clkname, const bool clk_sense,
+		const string& data_name, const size_t _num_rails, 
+		const bool active_low) {
+	STACKTRACE_VERBOSE;
+	const entity::module& m(state.get_module());
+#if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
+	parser::expanded_global_references_type refs;
+	if (parser::expand_global_references(_base, m, refs)) {
+		return true;
+	}
+	parser::expanded_global_references_type::const_iterator
+		ri(refs.begin()), re(refs.end());
+for ( ; ri!=re; ++ri) {
+//	const entity::global_indexed_reference& g(ri->second);
+	ostringstream oss;
+//	cr.inst_ref()->dump(oss, expr_dump_context::default_value);
+	ri->first->dump(oss);
+	// base name needs to expanded to scalar reference strings...
+	const string& base(oss.str());
+#else
+	const string& base(_base);
+#endif
+	const size_t key = channel_pool.size();
+	const pair<channel_set_type::iterator, bool>
+		i(channel_index_set.insert(make_pair(base, key)));
+if (i.second) {
+	channel_pool.resize(key +1);	// default construct
+	channel& c(channel_pool.back());
+	c.type = channel::CHANNEL_TYPE_CLK_1EDGE;
+	// default timing mode is after, not global
+	c.timing_mode = CHANNEL_TIMING_AFTER;
+	c.name = base;
+#if PRSIM_CHANNEL_RAILS_INVERTED
+	c.set_data_sense(active_low);
+#endif
+	if (allocate_data_rails(state, m, key, 
+			"", 0, data_name, _num_rails)) {
+		return true;
+	}
+	// now setup clk
+	if (set_channel_ack_valid(state, base, 
+			false, false, false, 	// don't care, no ack
+			clkname.c_str(), true, clk_sense)) {	// clk == req
+		return true;
+	}
+} else {
+	// channel not successfully inserted; already exists
+	return true;
+}
+#if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
+}	// end for each
+#endif
+	return false;
+}	// end new_channel_clocked_1edge
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Creates a double-edge sensitive clocked channel.  
+	The clock signal poses as a request signal.  
+	There is no acknowledge.
+	Same params as other channels.  
+ */
+bool
+channel_manager::new_channel_clocked_2edge(State& state, const string& _base, 
+		const string& clkname, const bool clk_init, 
+		const string& data_name, const size_t _num_rails, 
+		const bool active_low) {
+	STACKTRACE_VERBOSE;
+	const entity::module& m(state.get_module());
+#if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
+	parser::expanded_global_references_type refs;
+	if (parser::expand_global_references(_base, m, refs)) {
+		return true;
+	}
+	parser::expanded_global_references_type::const_iterator
+		ri(refs.begin()), re(refs.end());
+for ( ; ri!=re; ++ri) {
+//	const entity::global_indexed_reference& g(ri->second);
+	ostringstream oss;
+//	cr.inst_ref()->dump(oss, expr_dump_context::default_value);
+	ri->first->dump(oss);
+	// base name needs to expanded to scalar reference strings...
+	const string& base(oss.str());
+#else
+	const string& base(_base);
+#endif
+	const size_t key = channel_pool.size();
+	const pair<channel_set_type::iterator, bool>
+		i(channel_index_set.insert(make_pair(base, key)));
+if (i.second) {
+	channel_pool.resize(key +1);	// default construct
+	channel& c(channel_pool.back());
+	c.type = channel::CHANNEL_TYPE_CLK_2EDGE;
+	// default timing mode is after, not global
+	c.timing_mode = CHANNEL_TIMING_AFTER;
+	c.name = base;
+#if PRSIM_CHANNEL_RAILS_INVERTED
+	c.set_data_sense(active_low);
+#endif
+	if (allocate_data_rails(state, m, key, 
+			"", 0, data_name, _num_rails)) {
+		return true;
+	}
+	// now setup clk
+	if (set_channel_ack_valid(state, base, 
+			false, false, false, 	// don't care, no ack
+			clkname.c_str(), true, clk_init)) {	// clk == req
+		// valid_sense is overloaded as clk_init
+		return true;
+	}
+} else {
+	// channel not successfully inserted; already exists
+	return true;
+}
+#if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
+}	// end for each
+#endif
+	return false;
+}	// end new_channel_clocked_2edge
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Creates a clock-source.
+ */
+bool
+channel_manager::new_clock_source(State& state,
+		const string& clkname, const bool clk_2edge, 
+		const bool clk_sense, const bool clk_init,
+		const int cycles) {
+	STACKTRACE_VERBOSE;
+	const entity::module& m(state.get_module());
+#if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
+	parser::expanded_global_references_type refs;
+	if (parser::expand_global_references(clkname, m, refs)) {
+		return true;
+	}
+	parser::expanded_global_references_type::const_iterator
+		ri(refs.begin()), re(refs.end());
+for ( ; ri!=re; ++ri) {
+	ostringstream oss;
+	ri->first->dump(oss);
+	const string& base(oss.str());
+#else
+	const string& base(clkname);
+#endif
+	// TODO: warn if has fanin
+	const size_t key = channel_pool.size();
+	const pair<channel_set_type::iterator, bool>
+		i(channel_index_set.insert(make_pair(base, key)));
+if (i.second) {
+	channel_pool.resize(key +1);	// default construct
+	channel& c(channel_pool.back());
+	c.type = clk_2edge ? channel::CHANNEL_TYPE_CLK_SRC2
+		: channel::CHANNEL_TYPE_CLK_SRC1;
+	c.timing_mode = CHANNEL_TIMING_AFTER;
+	c.name = base;
+{
+	// overloaded valid_sense flag
+	if (clk_2edge) {
+		c.set_clk_init(clk_init);
+	} else {
+		c.set_clock_sense(clk_sense);
+	}
+	const node_index_type vi =
+		parse_node_to_index(base, state.get_module()).index;
+	if (!vi) {
+		cerr << "Error: no such node `" << base << "\'." << endl;
+		return true;
+	}
+	c.set_clock_signal(vi);	
+	// TODO: make sure not driven by other alias?
+	state.__get_node(vi).set_in_channel();		// flag in channel
+	node_channels_map[vi].insert(key);
+	c.set_clock_source(state, cycles);
+}
+} else {
+	// channel not successfully inserted; already exists
+	return true;
+}
+#if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
+}	// end for each
+#endif
+	return false;
+}	// end new_clock_source
+#endif	// PRSIM_CHANNEL_SYNC
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 channel_index_type
@@ -4366,12 +4958,16 @@ for ( ; ri!=re; ++ri) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	\param vname optional name to override validity rail (e.g. clk)
 	\pre channel has already been created by new_channel()
 	\return true on error.
+	This can also be used for clocked channels/sources, where
+		the valid_signal serves as the reference clock.
  */
 bool
 channel_manager::set_channel_ack_valid(State& state, const string& base, 
 		const bool have_ack, const bool ack_sense, const bool ack_init, 
+		const char* vname,	// optional override if not NULL
 		const bool have_validity, const bool validity_sense) {
 	STACKTRACE_VERBOSE;
 	// TODO: should just pass in channel from caller instead of lookup
@@ -4390,7 +4986,7 @@ if (have_ack) {
 	const node_index_type ai = parse_node_to_index(ack_name, m).index;
 	if (!ai) {
 		cerr << "Error: no such node `" << ack_name <<
-			"\' in channel." << endl;
+			"\' in channel `" << base << "\'." << endl;
 		return true;
 	}
 	if (c.set_ack_signal(ai)) {
@@ -4404,11 +5000,12 @@ if (have_ack) {
 }
 if (have_validity) {
 	c.set_valid_sense(validity_sense);
-	const string v_name(base + (validity_sense ? ".v" : ".n"));
+	const string v_name((vname ? base +"." +vname :
+		base +(validity_sense ? ".v" : ".n")));
 	const node_index_type vi = parse_node_to_index(v_name, m).index;
 	if (!vi) {
 		cerr << "Error: no such node `" << v_name <<
-			"\' in channel." << endl;
+			"\' in channel `" << base << "\'." << endl;
 		return true;
 	}
 	if (c.set_valid_signal(vi)) {
@@ -4552,8 +5149,12 @@ if (c.valid_signal) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true on error (no error condition exists yet).
+ */
 bool
 channel_manager::check_sink(const channel& c) const {
+if (c.ack_signal) {
 	const channel_index_type ci = get_channel_index(c);
 	// check if signal is registered with other sinking channels?
 	node_channels_map_type::const_iterator
@@ -4572,6 +5173,7 @@ channel_manager::check_sink(const channel& c) const {
 		}
 	}
 	}
+}
 	return false;
 }
 

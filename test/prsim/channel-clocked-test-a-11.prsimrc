@@ -1,0 +1,27 @@
+# "channel-clocked-test-a-11.prsimrc"
+# copy-modified from "channel-clocked-test-a-10.prsimrc"
+# @haco@ channel-clocked-test-a.haco-c
+
+source channel-clocked-test-a-01.prsimrc
+clock-source X.clk:0 15
+channel-timing X.clk after 50
+
+# echo-commands on
+watchall
+channel-source-args X 0 1 1 0 0 1 1 1 0 0 0
+channel-show X
+channel-show X.clk
+channel-reset-all
+cycle
+channel-show X
+channel-show X.clk
+channel-release-all
+channel-show X
+channel-show X.clk
+
+cycle
+time
+channel-show X
+channel-show X.clk
+assertn-queue
+
