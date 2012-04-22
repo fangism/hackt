@@ -531,6 +531,17 @@ PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(Repeat, builtin)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
+@texinfo cmd/meas-time.texi
+@deffn Command meas-time cmd...
+Reports time spent in a command.
+@end deffn
+@end texinfo
+***/
+typedef	MeasTime<State>				MeasTime;
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(MeasTime, builtin)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
 @texinfo cmd/history.texi
 @deffn Command history [start [end]]
 Prints command history.
