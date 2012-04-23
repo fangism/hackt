@@ -5973,7 +5973,8 @@ if (a.size() > 1) {
 	usage(cerr << "usage: ");
 	return Command::BADARG;
 } else {
-	const global_entry_context::frame_cache_type& c(s.get_frame_cache());
+	const global_entry_context::index_frame_cache_type&
+		c(s.get_frame_cache());
 	const size_t weight = c.weight();
 	s.halve_cache();
 	const size_t aft_weight = c.weight();

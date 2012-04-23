@@ -19,6 +19,7 @@
 #include "Object/def/footprint.h"
 #include "Object/type/fundamental_type_reference.h"
 #include "Object/inst/physical_instance_collection.h"
+#include "Object/inst/substructure_alias_base.h"
 #include "Object/expr/const_index_list.h"
 #include "Object/expr/const_range_list.h"
 #include "Object/expr/const_range.h"
@@ -254,6 +255,7 @@ META_INSTANCE_REFERENCE_CLASS::unroll_references_packed_helper(
 	Optional: sort vector.
 	\param sm global state-manager with allocation information.
 	\param top the top-level footprint of the module.  
+	\param indices cumulative set of references indices.
  */
 META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 good_bool
@@ -270,12 +272,12 @@ META_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_indices(
 		cerr << "Error resolving collection of aliases." << endl;
 		return good_bool(false);
 	}
-	const_iterator i(aliases.begin()), e(aliases.end());
-	for ( ; i!=e; ++i) {
-		// don't bother checking for duplicates
-		// (easy: just use std::set instead of vector)
-		indices.push_back((*i)->instance_index);
-	}
+	// don't bother checking for duplicates
+	// (easy: just use std::set instead of vector)
+	indices.reserve(alias_collection_type::sizes_product(aliases.size())
+		+indices.size());
+	transform(aliases.begin(), aliases.end(), 
+		back_inserter(indices), instance_index_extractor());
 	return good_bool(true);
 }
 

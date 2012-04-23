@@ -296,6 +296,9 @@ parse_and_check_reference(const char* s, const module& m) {
 //=============================================================================
 /**
 	Expands to an array of checked references.
+	TODO: don't flatten into massive array of individual references,
+	leverage repeated structure to minimize calls. 
+	Implement interfaces using aggregate references.  
 	\return true on error.
  */
 bool

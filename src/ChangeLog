@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2012-04-22	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-21:
+	  Cleaned up several calls to global_entry_context::
+		construct_global_footprint_frame(), to reduce
+		exposing garbage temporary variables.
+
+
 2012-04-21	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-85-20:

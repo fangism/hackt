@@ -213,7 +213,7 @@ if (gpid) {
  */
 const global_entry_context::cache_entry_type&
 global_entry_context::lookup_global_footprint_frame_cache(size_t gpid, 
-		frame_cache_type* cache) const {
+		index_frame_cache_type* cache) const {
 	STACKTRACE_VERBOSE;
 	typedef	process_tag				Tag;
 	typedef	state_instance<Tag>::pool_type		pool_type;
@@ -233,7 +233,7 @@ if (gpid) {
 			e(p->locate_private_entry(si -1));	// need 0-base!
 		const size_t lpid = e.first;
 		gpid = si -e.second;		// still 1-based
-		const std::pair<frame_cache_type::child_iterator, bool>
+		const std::pair<index_frame_cache_type::child_iterator, bool>
 			cp(cache->insert_find(lpid));
 	if (cp.second) {
 		// was a cache miss: re-compute
@@ -250,14 +250,14 @@ if (gpid) {
 		const footprint_frame& sff(sp._frame);
 		cf = sff._footprint;
 		const footprint_frame lff(sff, ret->first);
-		cache = &const_cast<frame_cache_type&>(*cp.first); // descend
+		cache = &const_cast<index_frame_cache_type&>(*cp.first); // descend
 		ret = &cache->value;
 		ret->first.construct_global_context(*cf, lff, delta);
 		ret->second = delta;		// g = delta;
 		INVARIANT(cf == ret->first._footprint);
 	} else {
 		// else was a cache hit
-		cache = &const_cast<frame_cache_type&>(*cp.first); // descend
+		cache = &const_cast<index_frame_cache_type&>(*cp.first); // descend
 		ret = &cache->value;
 		cf = ret->first._footprint;
 	}
@@ -266,7 +266,7 @@ if (gpid) {
 		local = p->local_private_entries();
 	}	// end while
 	const size_t lpid = gpid +ports;
-	const std::pair<frame_cache_type::child_iterator, bool>
+	const std::pair<index_frame_cache_type::child_iterator, bool>
 		cp(cache->insert_find(lpid));
 if (cp.second) {	// cache miss
 	global_offset g(ret->second, *cf, add_local_private_tag());
@@ -278,12 +278,12 @@ if (cp.second) {	// cache miss
 	cf->set_global_offset_by_process(delta, lpid);
 	delta += g;
 	cf = sff._footprint;
-	cache = &const_cast<frame_cache_type&>(*cp.first); // descend
+	cache = &const_cast<index_frame_cache_type&>(*cp.first); // descend
 	ret = &cache->value;
 	ret->first.construct_global_context(*cf, lff, delta);
 	ret->second = delta;
 } else {	// cache hit
-	cache = &const_cast<frame_cache_type&>(*cp.first); // descend
+	cache = &const_cast<index_frame_cache_type&>(*cp.first); // descend
 	ret = &cache->value;
 }
 	return *ret;
@@ -291,6 +291,50 @@ if (cp.second) {	// cache miss
 	return *ret;
 }
 	// else refers to top-level
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Wrapped call.
+ */
+size_t
+global_entry_context::construct_global_footprint_frame(
+		const footprint& top,
+		const meta_instance_reference_base& pr, 
+		footprint_frame& ret) {
+	const unroll_context lookup_c(&top, &top);      // any loop variables?
+	return construct_global_footprint_frame(top, pr, lookup_c, ret);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Wrapped call.
+	unroll_context is pased in manually, in case of override.
+ */
+size_t
+global_entry_context::construct_global_footprint_frame(
+		const footprint& top,
+		const meta_instance_reference_base& pr, 
+		const unroll_context& c,
+		footprint_frame& ret) {
+	const footprint_frame tff(top);
+	const global_offset g;
+	const global_entry_context gc(tff, g);
+	return gc.construct_global_footprint_frame(pr, c, ret);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Publicly convenience-wrapped call.
+ */
+size_t
+global_entry_context::construct_global_footprint_frame(
+		const meta_instance_reference_base& pr, 
+		const unroll_context& uc,
+		footprint_frame& ret) const {
+        global_offset go, tmpg;
+        footprint_frame tmpo;
+	return construct_global_footprint_frame(tmpo, ret, go, tmpg, pr, uc);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -353,9 +397,6 @@ global_entry_context::construct_global_footprint_frame(
 		const size_t lpid =	// is 1-based index
 			mpr->simple_ref::lookup_locally_allocated_index(tc);
 		const footprint& rfp(*ret._footprint);
-#if 0
-		const footprint& ofp(*owner._footprint);
-#endif
 		const state_instance<Tag>::pool_type&
 			pp(rfp.get_instance_pool<Tag>());
 		const size_t ports = pp.port_entries();

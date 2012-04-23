@@ -22,6 +22,7 @@
 #include "Object/unroll/unroll_context.h"
 #include "Object/global_entry.tcc"
 #include "util/memory/count_ptr.tcc"
+#include "util/compose.h"
 #include "util/stacktrace.h"
 #include "common/ICE.h"
 
@@ -32,6 +33,7 @@ namespace entity {
 using util::write_value;
 using util::read_value;
 using util::persistent_traits;
+USING_UTIL_COMPOSE
 
 //=============================================================================
 // class member_meta_instance_reference method definitions
@@ -203,12 +205,11 @@ MEMBER_INSTANCE_REFERENCE_CLASS::lookup_locally_allocated_index(
 		return 0;
 	}
 	// TODO: have parent reference populate footprint_frame
-	footprint_frame tmp, owner;	// scratch space
-	const footprint_frame pff(top);
-	global_offset g, tmpg;
-	const global_entry_context gc(pff, g);
-	if (!gc.construct_global_footprint_frame(owner, tmp, g, tmpg,
-			_parent_inst_ref, uc)) {
+	footprint_frame tmp;
+	const size_t pp =
+		global_entry_context::construct_global_footprint_frame(
+			top, _parent_inst_ref, tmp);
+	if (!pp) {
 		STACKTRACE_INDENT_PRINT("member::lookup_local error." << endl);
 		return 0;
 	}
@@ -273,15 +274,10 @@ MEMBER_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_indices(
 	typedef vector<size_t>				indices_type;
 	typedef typename alias_collection_type::const_iterator  const_iterator;
 	alias_collection_type aliases;
-	const unroll_context lookup_c(&top, &top);	// any loop variables?
-	const footprint_frame tff(top);
-	const global_offset g;
-	const global_entry_context gc(tff, g);
-	global_offset tmpg, tmpg2;
-	footprint_frame tmpo, tmpf;
+	footprint_frame tmpf;
 	const size_t gpid =
-		gc.construct_global_footprint_frame(tmpo, tmpf, tmpg, tmpg2,
-			*this->base_inst_ref, lookup_c);
+		global_entry_context::construct_global_footprint_frame(top,
+			*this->base_inst_ref, tmpf);
 	if (!gpid) {
 		return good_bool(false);
 	}
@@ -293,13 +289,21 @@ MEMBER_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_indices(
 		cerr << "Error resolving collection of aliases." << endl;
 		return good_bool(false);
 	}
-	const_iterator i(aliases.begin()), e(aliases.end());
 	const footprint_frame_transformer fft(tmpf, Tag());
+#if 1
+	const_iterator i(aliases.begin()), e(aliases.end());
 	for ( ; i!=e; ++i) {
 		// don't bother checking for duplicates
 		// (easy: just use std::set instead of vector)
 		indices.push_back(fft((*i)->instance_index));
 	}
+#else
+	indices.reserve(alias_collection_type::sizes_product(aliases.size())
+		+indices.size());
+	transform(aliases.begin(), aliases.end(), back_inserter(indices), 
+		ADS::unary_compose(fft, instance_index_extractor()));
+	// instance_index_extractor is not : unary_function (template)
+#endif
 	return good_bool(true);
 }
 
@@ -407,11 +411,9 @@ MEMBER_INSTANCE_REFERENCE_CLASS::unroll_subindices_packed(
 	this->dump(STACKTRACE_STREAM, expr_dump_context::default_value) << endl;
 #endif
 	// resolve parent references first
-	global_offset go, tmpg;
-	footprint_frame tmpo, ff;
+	footprint_frame ff;
 	const size_t ppid =
-		c.construct_global_footprint_frame(tmpo, ff, go, tmpg,
-			*this->base_inst_ref, u);
+		c.construct_global_footprint_frame(*this->base_inst_ref, u, ff);
 	if (!ppid) {
 		return bad_bool(true);
 	}
@@ -420,7 +422,7 @@ MEMBER_INSTANCE_REFERENCE_CLASS::unroll_subindices_packed(
 	c.dump_context(STACKTRACE_STREAM << "global_entry_context c:" << endl)
 		<< endl;
 	ff.dump_frame(STACKTRACE_STREAM) << endl;
-	STACKTRACE_STREAM << go << endl;
+//	STACKTRACE_STREAM << go << endl;
 	STACKTRACE_STREAM << tmpg << endl;
 #endif
 	alias_collection_type local_aliases;

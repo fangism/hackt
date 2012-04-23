@@ -1786,6 +1786,9 @@ if (c.is_publicly_viewable()) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This can explode into a large number of references.  
+ */
 int
 member_expr::expand_const_reference(
 		const count_ptr<const inst_ref_expr>& _this, 
@@ -2006,6 +2009,9 @@ index_expr::check_nonmeta_reference(const context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This can explode into a large number of references.  
+ */
 int
 index_expr::expand_const_reference(
 		const count_ptr<const inst_ref_expr>& _this, 
