@@ -722,13 +722,13 @@ public:
 
 private:
 	void
-	__initialize_state(const bool);
+	__initialize_state(const bool, const bool);
 
 	void
 	__initialize_time(void);
 
 	void
-	__initialize(void);
+	__initialize(const bool);
 
 	node_type&
 	__get_node(const node_index_type);

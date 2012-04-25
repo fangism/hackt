@@ -499,11 +499,12 @@ State::__initialize_time(void) {
 	Procedure is common to initialize() and reset().
  */
 void
-State::__initialize_state(const bool startup) {
+State::__initialize_state(const bool startup, const bool reset_count) {
 	STACKTRACE_VERBOSE;
 	for_each(node_pool.begin(), node_pool.end(), 
-		mem_fun_ref(startup ? &node_type::initialize
-			: &node_type::x_value_and_cause));
+		mem_fun_ref(startup ? &node_type::reset :
+			(reset_count ? &node_type::initialize
+				: &node_type::x_value_and_cause)));
 	for_each(process_state_array.begin(), process_state_array.end(), 
 		mem_fun_ref(&process_sim_state::initialize));
 	// the expr_graph_node_pool contains no stateful information.  
@@ -536,9 +537,9 @@ State::__initialize_state(const bool startup) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-State::__initialize(void) {
+State::__initialize(const bool startup) {
 	__initialize_time();
-	__initialize_state(true);
+	__initialize_state(startup, true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -549,7 +550,7 @@ State::__initialize(void) {
 void
 State::x_all(void) {
 	STACKTRACE_VERBOSE;
-	__initialize_state(false);
+	__initialize_state(false, false);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -562,7 +563,7 @@ State::x_all(void) {
 void
 State::initialize(void) {
 	STACKTRACE_VERBOSE;
-	__initialize();
+	__initialize(false);
 	flags |= FLAGS_INITIALIZE_SET_MASK;
 	flags &= ~FLAGS_INITIALIZE_CLEAR_MASK;
 }
@@ -819,7 +820,7 @@ State::reset_tcounts(void) {
 void
 State::reset(void) {
 	STACKTRACE_VERBOSE;
-	__initialize();
+	__initialize(true);
 	// this also closes trace files
 	flags = FLAGS_DEFAULT;
 #define	E(e)	error_policy_enum(ERROR_DEFAULT_##e)

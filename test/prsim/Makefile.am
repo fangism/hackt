@@ -787,7 +787,8 @@ HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
 	channel-clocked-test-a-06 \
 	channel-clocked-test-a-06b channel-clocked-test-a-07 \
 	channel-clocked-test-b-06 \
-	channel-clocked-test-b-07
+	channel-clocked-test-b-07 \
+	reset-test-01
 
 # KNOWN BUG: ACX-PR-6718*
 # expression-evaluation atomicity issue corrupting event queue

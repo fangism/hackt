@@ -5,6 +5,12 @@
 
 2012-04-25	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-85-23:
+	  hacprsim: 'reset' now correctly wipes the in-channel state of 
+		nodes b/c should match channel_manager::clobber_all().
+		New 'dump-node' command for debugging.
+
+
 	* HACKT-00-01-04-main-00-85-22:
 	  hacprsim: clock-source command now reconfigures if channel
 		already exists, and restarts the sourcing.

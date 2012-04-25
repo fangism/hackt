@@ -2377,6 +2377,43 @@ CheckQueue::usage(ostream& o) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
+@texinfo cmd/dump-node.texi
+@deffn Command dump-node node
+Print internal structure information about the named node for debugging.
+@end deffn
+@end texinfo
+***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(DumpNode, instance_completer)
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(DumpNode, "dump-node", debug,
+	"print detailed node information for debugging")
+int
+DumpNode::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	typedef	vector<node_index_type>		nodes_id_list_type;
+	const string& objname(a.back());
+	const module& m(s.get_module());
+	const node_index_type p(parse_node_to_index(objname, m));
+	if (!p) {
+		// already have error message
+		return Command::BADARG;
+	}
+	cout << "node[" << p << "]:\n";
+	s.get_node(p).dump_debug(cout, true) << endl;
+	return Command::NORMAL;
+}
+}
+
+void
+DumpNode::usage(ostream& o) {
+	o << name << " node" << endl;
+	o << brief << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
 @texinfo cmd/process-id.texi
 @deffn Command process-id name
 Just prints the internal process ID referenced by @var{name}.

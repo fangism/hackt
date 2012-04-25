@@ -1,0 +1,22 @@
+# "reset-test-01.hac"
+# @haco@ inv.haco-c
+
+watchall
+dump-node a
+
+clock-source a:0 10
+channel-timing a after 50
+
+dump-node a
+channel-reset-all
+cycle
+
+channel-release-all
+cycle
+
+dump-node a
+
+echo *** resetting
+reset
+
+dump-node a

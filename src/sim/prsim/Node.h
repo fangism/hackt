@@ -577,6 +577,9 @@ public:
 	ostream&
 	dump_state(ostream&) const;
 
+	ostream&
+	dump_debug(ostream&, const bool h) const;
+
 	/**
 		Predicated functor helper for printing nodes with
 		a given status.  

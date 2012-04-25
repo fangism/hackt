@@ -541,4 +541,5 @@ in the other sections.
 
 @include cmd/process-id.texi
 @include cmd/node-id.texi
+@include cmd/dump-node.texi
 
