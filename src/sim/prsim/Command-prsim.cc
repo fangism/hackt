@@ -7458,6 +7458,8 @@ The reset value, init, is only relevant to double-edged clocks.
 With no prefix, the clock is active-high (positive edge).
 @var{N} is the number of cycles, or * for infinite. 
 For single-edged clocks, a rise and fall counts as one cycle.
+If named clock-source already exists, restart it using the new 
+configuration and number of edges.  
 @end deffn
 @end texinfo
 ***/

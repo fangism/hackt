@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2012-04-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-22:
+	  hacprsim: clock-source command now reconfigures if channel
+		already exists, and restarts the sourcing.
+		Documented and tested.
+
+
 2012-04-22	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-85-21:

@@ -1,0 +1,77 @@
+channels:
+clk_a : clock-source anyedge:0 source, timing: after=30 @0/20
+clk_n : clock-source negedge source, timing: after=25 @0/10
+clk_p : clock-source posedge source, timing: after=20 @0/10
+*** resetting clock sources 
+	20	clk_p : 0
+	25	clk_n : 1
+	30	clk_a : 0
+channels:
+clk_a : clock-source anyedge:0 source,stopped, timing: after=30 @0/20
+clk_n : clock-source negedge source,stopped, timing: after=25 @0/10
+clk_p : clock-source posedge source,stopped, timing: after=20 @0/10
+*** releasing clock sources 
+	50	clk_p : 1
+	55	clk_n : 0
+	60	clk_a : 1
+	70	clk_p : 0	[by clk_p:=0]
+	80	clk_n : 1	[by clk_n:=1]
+	90	clk_a : 0	[by clk_a:=0]
+	90	clk_p : 1	[by clk_p:=1]
+	105	clk_n : 0	[by clk_n:=0]
+	110	clk_p : 0	[by clk_p:=0]
+	120	clk_a : 1	[by clk_a:=1]
+	130	clk_n : 1	[by clk_n:=1]
+	130	clk_p : 1	[by clk_p:=1]
+	150	clk_a : 0	[by clk_a:=0]
+	150	clk_p : 0	[by clk_p:=0]
+	155	clk_n : 0	[by clk_n:=0]
+	170	clk_p : 1	[by clk_p:=1]
+	180	clk_a : 1	[by clk_a:=1]
+	180	clk_n : 1	[by clk_n:=1]
+	190	clk_p : 0	[by clk_p:=0]
+	205	clk_n : 0	[by clk_n:=0]
+	210	clk_a : 0	[by clk_a:=0]
+	210	clk_p : 1	[by clk_p:=1]
+	230	clk_n : 1	[by clk_n:=1]
+	230	clk_p : 0	[by clk_p:=0]
+	240	clk_a : 1	[by clk_a:=1]
+	250	clk_p : 1	[by clk_p:=1]
+	255	clk_n : 0	[by clk_n:=0]
+	270	clk_a : 0	[by clk_a:=0]
+	270	clk_p : 0	[by clk_p:=0]
+	280	clk_n : 1	[by clk_n:=1]
+	290	clk_p : 1	[by clk_p:=1]
+	300	clk_a : 1	[by clk_a:=1]
+	305	clk_n : 0	[by clk_n:=0]
+	310	clk_p : 0	[by clk_p:=0]
+	330	clk_a : 0	[by clk_a:=0]
+	330	clk_n : 1	[by clk_n:=1]
+	330	clk_p : 1	[by clk_p:=1]
+	350	clk_p : 0	[by clk_p:=0]
+	355	clk_n : 0	[by clk_n:=0]
+	360	clk_a : 1	[by clk_a:=1]
+	370	clk_p : 1	[by clk_p:=1]
+	380	clk_n : 1	[by clk_n:=1]
+	390	clk_a : 0	[by clk_a:=0]
+	390	clk_p : 0	[by clk_p:=0]
+	405	clk_n : 0	[by clk_n:=0]
+	410	clk_p : 1	[by clk_p:=1]
+	420	clk_a : 1	[by clk_a:=1]
+	430	clk_n : 1	[by clk_n:=1]
+	430	clk_p : 0	[by clk_p:=0]
+	450	clk_a : 0	[by clk_a:=0]
+	455	clk_n : 0	[by clk_n:=0]
+	480	clk_a : 1	[by clk_a:=1]
+	480	clk_n : 1	[by clk_n:=1]
+	505	clk_n : 0	[by clk_n:=0]
+	510	clk_a : 0	[by clk_a:=0]
+	530	clk_n : 1	[by clk_n:=1]
+	540	clk_a : 1	[by clk_a:=1]
+	570	clk_a : 0	[by clk_a:=0]
+	600	clk_a : 1	[by clk_a:=1]
+	630	clk_a : 0	[by clk_a:=0]
+channels:
+clk_a : clock-source anyedge:0 source, timing: after=30
+clk_n : clock-source negedge source, timing: after=25
+clk_p : clock-source posedge source, timing: after=20

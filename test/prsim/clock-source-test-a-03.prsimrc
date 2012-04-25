@@ -1,0 +1,18 @@
+# "clock-source-test-a-03.prsimrc"
+# @haco@ clock-source-test-a.haco-c
+
+source clock-source-test-a-01.prsimrc
+
+echo *** restarting clock sources
+
+clock-source clk_p:0 5
+clock-source ~clk_n:1 5
+clock-source *clk_a:0 10
+channel-show-all
+
+channel-release-all
+queue
+time
+
+cycle
+
