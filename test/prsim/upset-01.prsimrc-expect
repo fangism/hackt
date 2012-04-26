@@ -21,7 +21,7 @@ WARNING: weak-interference `c'
 	50	c : X	[by b:=X]
 event queue:
 	50	a : 0
-WARNING: pending event for node `a' was overridden.
+WARNING: pending event for node `a' -> 0 was overridden to 1.
 event queue:
 	50	a : 1
 	50	a : 1
@@ -33,7 +33,7 @@ upsetting propagated node in queue
 	70	a : 0
 event queue:
 	80	b : 1	[from a:=0]
-WARNING: pending event for node `b' was overridden.
+WARNING: pending event for node `b' -> 1 was overridden to 0.
 event queue:
 	70	b : 0
 b : 0	[by a:=0]

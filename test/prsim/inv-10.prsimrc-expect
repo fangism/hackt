@@ -1,5 +1,5 @@
 	0	a : 0
 event queue:
 	10	b : 1	[from a:=0]
-WARNING: pending value for node `b'; ignoring request
+WARNING: pending value for node `b' is already 1; ignoring new request
 ... at line 12

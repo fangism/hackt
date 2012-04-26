@@ -4,5 +4,5 @@ event queue:
 expecting warning: ignoring set command, b- already pending 
 Currently, a warning will terminate interpretation of the script 
 until we enable fine-grain warning control. 
-WARNING: pending value for node `b'; ignoring request
+WARNING: pending value for node `b' is already 0; ignoring new request
 ... at line 13

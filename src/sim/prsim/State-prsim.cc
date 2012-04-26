@@ -1574,17 +1574,23 @@ State::set_node_time(const node_index_type ni, const value_enum val,
 if (pending) {
 	// does it matter whether or not last_val == val?
 	const string objname(get_node_canonical_name(ni));
+	const event_type& pe(get_event(pending));
+	const value_enum pval = pe.val;
+	const char pc = node_type::value_to_char[pval];
+	const char nc = node_type::value_to_char[val];
 	if (f) {
 		// doesn't matter what what last_val was, override it
 		// even if value is the same, reschedule it
 		// cancel former event, but don't deallocate it until dequeued
 		cout << "WARNING: pending event for node `" << objname <<
-			"\' was overridden." << endl;
+			"\' -> " << pc << " was overridden to " << nc <<
+			'.' << endl;
 		kill_event(pending, ni);
 	} else if (!unchanged) {
 		// not forcing: if new value is different, issue warning
 		cout << "WARNING: pending value for node `" << objname <<
-			"\'; ignoring request" << endl;
+			"\' is already " << pc <<
+			"; ignoring new request" << endl;
 		return ENQUEUE_WARNING;
 	} else {
 		// ignore
