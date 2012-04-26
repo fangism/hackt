@@ -36,6 +36,7 @@ The following commands are listed in the @t{builtin} category.
 @include cmd/abort.texi
 @include cmd/precision.texi
 @include cmd/repeat.texi
+@include cmd/meas-time.texi
 @include cmd/interpret.texi
 
 The following command is useful for showing each executed command.
@@ -540,4 +541,5 @@ in the other sections.
 
 @include cmd/process-id.texi
 @include cmd/node-id.texi
+@include cmd/dump-node.texi
 

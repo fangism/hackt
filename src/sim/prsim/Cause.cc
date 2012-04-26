@@ -67,9 +67,9 @@ LastCause::load_state(istream& i) {
 ostream&
 LastCause::dump_checkpoint_state(ostream& o) const {
 	return o << '(' << caused_by_node[0] << ',' <<
-		NodeState::value_to_char[caused_by_value[0]] << "), (" <<
+		NodeState::value_to_char[caused_by_value[0]] << "),(" <<
 		caused_by_node[1] << ',' <<
-		NodeState::value_to_char[caused_by_value[1]] << "), (" <<
+		NodeState::value_to_char[caused_by_value[1]] << "),(" <<
 		caused_by_node[2] << ',' <<
 		NodeState::value_to_char[caused_by_value[2]] << ')';
 }

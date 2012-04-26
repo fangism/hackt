@@ -4781,40 +4781,41 @@ for ( ; ri!=re; ++ri) {
 #else
 	const string& base(clkname);
 #endif
-	// TODO: warn if has fanin
-	const size_t key = channel_pool.size();
-	const pair<channel_set_type::iterator, bool>
-		i(channel_index_set.insert(make_pair(base, key)));
-if (i.second) {
-	channel_pool.resize(key +1);	// default construct
-	channel& c(channel_pool.back());
-	c.type = clk_2edge ? channel::CHANNEL_TYPE_CLK_SRC2
-		: channel::CHANNEL_TYPE_CLK_SRC1;
-	c.timing_mode = CHANNEL_TIMING_AFTER;
-	c.name = base;
-{
-	// overloaded valid_sense flag
-	if (clk_2edge) {
-		c.set_clk_init(clk_init);
-	} else {
-		c.set_clock_sense(clk_sense);
-	}
 	const node_index_type vi =
 		parse_node_to_index(base, state.get_module()).index;
 	if (!vi) {
 		cerr << "Error: no such node `" << base << "\'." << endl;
 		return true;
 	}
-	c.set_clock_signal(vi);	
+	// TODO: warn if has fanin
+	size_t key = channel_pool.size();
+	const pair<channel_set_type::iterator, bool>
+		i(channel_index_set.insert(make_pair(base, key)));
+	channel* c = NULL;
+if (i.second) {
+	channel_pool.resize(key +1);	// default construct
+	c = &channel_pool.back();
+	c->name = base;
+	c->timing_mode = CHANNEL_TIMING_AFTER;
+} else {
+	// reconfigure existing channel
+	key= i.first->second;
+	c = &channel_pool[key];
+}
+	c->type = clk_2edge ? channel::CHANNEL_TYPE_CLK_SRC2
+		: channel::CHANNEL_TYPE_CLK_SRC1;
+	// overloaded valid_sense flag
+	if (clk_2edge) {
+		c->set_clk_init(clk_init);
+	} else {
+		c->set_clock_sense(clk_sense);
+	}
+	c->set_clock_signal(vi);	
+//	c->stop_on_empty();		// not needed for sources
 	// TODO: make sure not driven by other alias?
 	state.__get_node(vi).set_in_channel();		// flag in channel
 	node_channels_map[vi].insert(key);
-	c.set_clock_source(state, cycles);
-}
-} else {
-	// channel not successfully inserted; already exists
-	return true;
-}
+	c->set_clock_source(state, cycles);
 #if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
 }	// end for each
 #endif

@@ -3,6 +3,35 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2012-04-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-23:
+	  hacprsim: 'reset' now correctly wipes the in-channel state of 
+		nodes b/c should match channel_manager::clobber_all().
+		New 'dump-node' command for debugging.
+
+
+	* HACKT-00-01-04-main-00-85-22:
+	  hacprsim: clock-source command now reconfigures if channel
+		already exists, and restarts the sourcing.
+		Documented and tested.
+
+
+2012-04-22	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-21:
+	  Cleaned up several calls to global_entry_context::
+		construct_global_footprint_frame(), to reduce
+		exposing garbage temporary variables.
+
+
+2012-04-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-20:
+	  hacprsim: implemented 'meas-time' command prefix to 
+		measure elapsed time of command.
+
+
 2012-04-18	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-85-19:

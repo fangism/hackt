@@ -117,7 +117,8 @@ protected:
 	const module&					mod;
 #if CACHE_GLOBAL_FOOTPRINT_FRAMES
 private:
-	typedef	global_entry_context::frame_cache_type	frame_cache_type;
+	typedef	global_entry_context::index_frame_cache_type
+							frame_cache_type;
 	typedef	global_entry_context::cache_entry_type	cache_entry_type;
 	mutable frame_cache_type			frame_cache;
 	// keep around a permanent top-context

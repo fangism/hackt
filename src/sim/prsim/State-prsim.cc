@@ -512,11 +512,12 @@ State::__initialize_time(void) {
 	Procedure is common to initialize() and reset().
  */
 void
-State::__initialize_state(const bool startup) {
+State::__initialize_state(const bool startup, const bool reset_count) {
 	STACKTRACE_VERBOSE;
 	for_each(node_pool.begin(), node_pool.end(), 
-		mem_fun_ref(startup ? &node_type::initialize
-			: &node_type::x_value_and_cause));
+		mem_fun_ref(startup ? &node_type::reset :
+			(reset_count ? &node_type::initialize
+				: &node_type::x_value_and_cause)));
 	for_each(process_state_array.begin(), process_state_array.end(), 
 		mem_fun_ref(&process_sim_state::initialize));
 	// the expr_graph_node_pool contains no stateful information.  
@@ -549,9 +550,9 @@ State::__initialize_state(const bool startup) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-State::__initialize(void) {
+State::__initialize(const bool startup) {
 	__initialize_time();
-	__initialize_state(true);
+	__initialize_state(startup, true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -562,7 +563,7 @@ State::__initialize(void) {
 void
 State::x_all(void) {
 	STACKTRACE_VERBOSE;
-	__initialize_state(false);
+	__initialize_state(false, false);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -575,7 +576,7 @@ State::x_all(void) {
 void
 State::initialize(void) {
 	STACKTRACE_VERBOSE;
-	__initialize();
+	__initialize(false);
 	flags |= FLAGS_INITIALIZE_SET_MASK;
 	flags &= ~FLAGS_INITIALIZE_CLEAR_MASK;
 }
@@ -832,7 +833,7 @@ State::reset_tcounts(void) {
 void
 State::reset(void) {
 	STACKTRACE_VERBOSE;
-	__initialize();
+	__initialize(true);
 	// this also closes trace files
 	flags = FLAGS_DEFAULT;
 #define	E(e)	error_policy_enum(ERROR_DEFAULT_##e)
@@ -1609,17 +1610,23 @@ State::set_node_time(const node_index_type ni, const value_enum val,
 if (pending) {
 	// does it matter whether or not last_val == val?
 	const string objname(get_node_canonical_name(ni));
+	const event_type& pe(get_event(pending));
+	const value_enum pval = pe.val;
+	const char pc = node_type::value_to_char[pval];
+	const char nc = node_type::value_to_char[val];
 	if (f) {
 		// doesn't matter what what last_val was, override it
 		// even if value is the same, reschedule it
 		// cancel former event, but don't deallocate it until dequeued
 		cout << "WARNING: pending event for node `" << objname <<
-			"\' was overridden." << endl;
+			"\' -> " << pc << " was overridden to " << nc <<
+			'.' << endl;
 		kill_event(pending, ni);
 	} else if (!unchanged) {
 		// not forcing: if new value is different, issue warning
 		cout << "WARNING: pending value for node `" << objname <<
-			"\'; ignoring request" << endl;
+			"\' is already " << pc <<
+			"; ignoring new request" << endl;
 		return ENQUEUE_WARNING;
 	} else {
 		// ignore

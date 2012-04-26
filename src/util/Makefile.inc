@@ -213,6 +213,7 @@ UTIL_HEADER_FILES = \
 	util/syntax.h \
 	util/tagged_subtype.h \
 	util/template.h \
+	util/timer.h \
 	util/typeof.h \
 	util/tokenize_fwd.h \
 	util/tokenize.h \
@@ -254,6 +255,7 @@ UTIL_CC_FILES = \
 	util/static_trace.cc \
 	util/string.cc \
 	util/syntax.cc \
+	util/timer.cc \
 	util/tokenize.cc \
 	util/stream_ptr.cc \
 	util/uninitialized.cc \

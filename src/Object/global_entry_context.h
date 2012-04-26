@@ -41,6 +41,7 @@ class state_manager;
 struct global_offset;
 template <class> class state_instance;
 class meta_instance_reference_base;
+using std::string;
 using util::string_list;
 struct bool_tag;
 template <class> class footprint_frame_map;
@@ -187,7 +188,9 @@ virtual	void
 	typedef	std::pair<footprint_frame, global_offset>
 					cache_entry_type;
 	typedef	util::tree_cache<size_t, cache_entry_type>
-					frame_cache_type;
+					index_frame_cache_type;
+	typedef	util::tree_cache<string, cache_entry_type>
+					string_frame_cache_type;
 
 	void
 	construct_global_footprint_frame(footprint_frame&, 
@@ -195,15 +198,44 @@ virtual	void
 
 	const cache_entry_type&
 	lookup_global_footprint_frame_cache(size_t pid,
-		frame_cache_type*) const;
+		index_frame_cache_type*) const;
+
+#if 0
+	const cache_entry_type&
+	lookup_global_footprint_frame_cache(const string_list&,
+		string_frame_cache_type*) const;
+#endif
 
 	// \return lpid of returned process frame, 0 on error
+	static
+	size_t
+	construct_global_footprint_frame(
+		const footprint& top,
+		const meta_instance_reference_base&,
+		footprint_frame&);
+
+	static
+	size_t
+	construct_global_footprint_frame(
+		const footprint& top,
+		const meta_instance_reference_base&,
+		const unroll_context&,		// override
+		footprint_frame&);
+
+	size_t
+	construct_global_footprint_frame(
+		const meta_instance_reference_base&, 
+		const unroll_context&,
+		footprint_frame&) const;
+
+private:
 	size_t
 	construct_global_footprint_frame(footprint_frame&, 
 		footprint_frame&, global_offset&,
 		global_offset&, const meta_instance_reference_base&, 
 		const unroll_context&) const;
 
+public:
 	// e.g. use this after a cache-lookup
 	void
 	set_global_context(const cache_entry_type& c);

@@ -3,7 +3,7 @@
 event queue:
 	20	c : 0	[from b:=1]
 time: 15
-WARNING: pending event for node `c' was overridden.
+WARNING: pending event for node `c' -> 0 was overridden to 1.
 set c 1 accepted 
 event queue:
 	15	c : 1

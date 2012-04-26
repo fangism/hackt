@@ -531,6 +531,17 @@ PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(Repeat, builtin)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
+@texinfo cmd/meas-time.texi
+@deffn Command meas-time cmd...
+Reports time spent in a command.
+@end deffn
+@end texinfo
+***/
+typedef	MeasTime<State>				MeasTime;
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(MeasTime, builtin)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
 @texinfo cmd/history.texi
 @deffn Command history [start [end]]
 Prints command history.
@@ -2362,6 +2373,43 @@ CheckQueue::usage(ostream& o) {
 	o << "check-queue" << endl;
 	o << "Halt on error if any event-node inconsistencies are found."
 		<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/dump-node.texi
+@deffn Command dump-node node
+Print internal structure information about the named node for debugging.
+@end deffn
+@end texinfo
+***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(DumpNode, instance_completer)
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(DumpNode, "dump-node", debug,
+	"print detailed node information for debugging")
+int
+DumpNode::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	typedef	vector<node_index_type>		nodes_id_list_type;
+	const string& objname(a.back());
+	const module& m(s.get_module());
+	const node_index_type p(parse_node_to_index(objname, m));
+	if (!p) {
+		// already have error message
+		return Command::BADARG;
+	}
+	cout << "node[" << p << "]:\n";
+	s.get_node(p).dump_debug(cout, true) << endl;
+	return Command::NORMAL;
+}
+}
+
+void
+DumpNode::usage(ostream& o) {
+	o << name << " node" << endl;
+	o << brief << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -5962,7 +6010,8 @@ if (a.size() > 1) {
 	usage(cerr << "usage: ");
 	return Command::BADARG;
 } else {
-	const global_entry_context::frame_cache_type& c(s.get_frame_cache());
+	const global_entry_context::index_frame_cache_type&
+		c(s.get_frame_cache());
 	const size_t weight = c.weight();
 	s.halve_cache();
 	const size_t aft_weight = c.weight();
@@ -7446,6 +7495,8 @@ The reset value, init, is only relevant to double-edged clocks.
 With no prefix, the clock is active-high (positive edge).
 @var{N} is the number of cycles, or * for infinite. 
 For single-edged clocks, a rise and fall counts as one cycle.
+If named clock-source already exists, restart it using the new 
+configuration and number of edges.  
 @end deffn
 @end texinfo
 ***/
