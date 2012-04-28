@@ -19,6 +19,7 @@ using entity::hierarchical_alias_visitor;
 using entity::state_instance;
 using entity::bool_tag;
 using entity::process_tag;
+using entity::global_process_context;
 
 /**
 	This class is made for writing out the HAC object hierarchy
@@ -35,9 +36,10 @@ public:
 	const cflat_options&			opt;
 
 	explicit
-	VCDwriter(const footprint_frame& ff, const global_offset& g, 
+	VCDwriter(const global_process_context& c,
 		ostream& o, const cflat_options& cf) :
-		hierarchical_alias_visitor(ff, g), os(o), opt(cf) { }
+		hierarchical_alias_visitor(c),
+		os(o), opt(cf) { }
 
 	~VCDwriter();
 

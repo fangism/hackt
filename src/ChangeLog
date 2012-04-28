@@ -3,6 +3,15 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2012-04-28	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-24:
+	  global_entry_context: now always pair together frame and offset
+		in the global_process_context structure, for comprehensibility
+		and preparing for a cleaner rewrite of the reference lookup.
+		No regressions.
+
+
 2012-04-25	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-85-23:

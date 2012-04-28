@@ -443,10 +443,9 @@ global_indexed_reference
 parse_global_reference(const meta_reference_union& r, const module& m) {
 	INVARIANT(r.inst_ref());
 	const footprint& topfp(m.get_footprint());
-	footprint_frame tff(topfp);
-	const global_offset g;
-	tff.construct_top_global_context(topfp, g);
-	const global_entry_context gc(tff, g);
+	global_process_context gpc(topfp);
+	gpc.construct_top_global_context();
+	const global_entry_context gc(gpc);
 	return r.inst_ref()->lookup_top_level_reference(gc);
 }
 
@@ -473,10 +472,9 @@ parse_global_references(const meta_reference_union& r,
 		const module& m, global_reference_array_type& a) {
 	INVARIANT(r.inst_ref());
 	const footprint& topfp(m.get_footprint());
-	footprint_frame tff(topfp);
-	const global_offset g;
-	tff.construct_top_global_context(topfp, g);
-	const global_entry_context gc(tff, g);
+	global_process_context gpc(topfp);
+	gpc.construct_top_global_context();
+	const global_entry_context gc(gpc);
 	const good_bool b(r.inst_ref()->lookup_top_level_references(gc, a));
 	return b.good ? 0 : 1;
 }
@@ -670,9 +668,8 @@ if (!r || !r.inst_ref()) {
 // TODO: refactor this to make re-usable
 	entity::global_reference_array_type tmp;
 	const footprint& topfp(m.get_footprint());
-	const footprint_frame tff(topfp);
-	const global_offset g;
-	const global_entry_context gc(tff, g);
+	const global_process_context gpc(m.get_footprint());
+	const global_entry_context gc(gpc);
 	if (!r.inst_ref()->lookup_top_level_references(gc, tmp).good) {
 		cerr << "Error expanding reference array: ";
 		r.inst_ref()->dump(cerr, expr_dump_context::default_value);

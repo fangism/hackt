@@ -48,10 +48,8 @@ module_state_base::module_state_base(const module& m, const string& p) :
 		state_base(p), 
 		mod(m)
 #if CACHE_GLOBAL_FOOTPRINT_FRAMES
-		, frame_cache(0, std::make_pair(
-			footprint_frame(m.get_footprint()), 
-			global_offset())) 
-		, top_context(frame_cache.value.first, frame_cache.value.second)
+		, frame_cache(0, cache_entry_type(m.get_footprint()))
+		, top_context(frame_cache.value)
 #if HOT_CACHE_FRAMES
 		, cache_lru(0)
 #endif
@@ -60,9 +58,9 @@ module_state_base::module_state_base(const module& m, const string& p) :
 #if CACHE_GLOBAL_FOOTPRINT_FRAMES
 	const footprint& topfp(m.get_footprint());
 	// default constructed global_offset = 0s
-	const global_offset& g(frame_cache.value.second);
+	const global_offset& g(frame_cache.value.offset);
 	// contruct top footprint frame once, and keep around permanently
-	frame_cache.value.first.construct_top_global_context(topfp, g);
+	frame_cache.value.frame.construct_top_global_context(topfp, g);
 #if HOT_CACHE_FRAMES
 	// initially empty cache
 	hot_cache[0].first = size_t(-1);
@@ -116,7 +114,7 @@ footprint_frame
 const footprint_frame&
 #endif
 module_state_base::get_footprint_frame(const size_t pid) const {
-	return get_global_context(pid).first;
+	return get_global_context(pid).frame;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -160,7 +158,8 @@ module_state_base::get_global_context(const size_t pid) const {
 		cache_entry_type& ret(hot_cache[cache_lru].second);
 		hot_cache[cache_lru].first = pid;
 		// copy over to hot_cache
-		ret = top_context.lookup_global_footprint_frame_cache(
+		const global_entry_context tgc(top_context);
+		ret = tgc.lookup_global_footprint_frame_cache(
 			pid, &frame_cache);
 		return ret;
 	}

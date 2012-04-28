@@ -38,8 +38,7 @@ struct alias_printer :
 	wire_alias_set&			wires;
 public:
 	alias_printer(ostream& _o, 
-			const footprint_frame& _fpf, 
-			const global_offset& g,
+			const global_process_context&,
 			const cflat_options& _cf,
 			wire_alias_set& _w,
 			const string& _p = string());

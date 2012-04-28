@@ -273,7 +273,16 @@ MEMBER_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_indices(
 	STACKTRACE_VERBOSE;
 	typedef vector<size_t>				indices_type;
 	typedef typename alias_collection_type::const_iterator  const_iterator;
-	alias_collection_type aliases;
+	// TODO: support constructing multiple parent footprint_frames
+#if AGGREGATE_PARENT_REFS
+	typedef	vector<footprint_frame>			frames_type;
+	indices_type pind;
+	frames_type pfs;
+	if (global_entry_context::construct_global_footprint_frames(top,
+			*this->base_inst_ref, pind, pfs)) {
+		return good_bool(false);
+	}
+#else
 	footprint_frame tmpf;
 	const size_t gpid =
 		global_entry_context::construct_global_footprint_frame(top,
@@ -282,13 +291,31 @@ MEMBER_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_indices(
 		return good_bool(false);
 	}
 	STACKTRACE_INDENT_PRINT("gpid = " << gpid << endl);
+#endif
+#if AGGREGATE_PARENT_REFS
+	frames_type::const_iterator fi(pfs.begin()), fe(pfs.end());
+	indices_type::const_iterator ii(pind.begin());
+for ( ; fi!=fe; ++fi, ++ii) {
+	const footprint_frame& tmpf(*fi);
+#endif
+	// alias lookup needs to be inside loop because of possibility
+	// of heterogenous types due to relaxed templates
+	// TODO: optimize when strict type of array is known
 	const unroll_context dummy(tmpf._footprint, &top);
 	// reminder: call to unroll_references_packed is virtual
+	alias_collection_type aliases;
 	if (unroll_references_packed_helper(dummy, *this->inst_collection_ref,
 			this->array_indices, aliases).bad) {
 		cerr << "Error resolving collection of aliases." << endl;
 		return good_bool(false);
 	}
+	const size_t asz = alias_collection_type::sizes_product(aliases.size());
+#if AGGREGATE_PARENT_REFS
+	const size_t nrefs = pind.size() * asz;	// product: parents X locals
+	indices.reserve(nrefs +indices.size());
+#else
+	indices.reserve(asz +indices.size());
+#endif
 	const footprint_frame_transformer fft(tmpf, Tag());
 #if 1
 	const_iterator i(aliases.begin()), e(aliases.end());
@@ -298,11 +325,12 @@ MEMBER_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_indices(
 		indices.push_back(fft((*i)->instance_index));
 	}
 #else
-	indices.reserve(alias_collection_type::sizes_product(aliases.size())
-		+indices.size());
 	transform(aliases.begin(), aliases.end(), back_inserter(indices), 
 		ADS::unary_compose(fft, instance_index_extractor()));
 	// instance_index_extractor is not : unary_function (template)
+#endif
+#if AGGREGATE_PARENT_REFS
+}	// end for
 #endif
 	return good_bool(true);
 }

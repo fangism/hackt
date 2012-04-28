@@ -35,8 +35,8 @@ typedef	value_saver<const footprint_frame*>	footprint_frame_setter;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 hierarchical_alias_visitor::hierarchical_alias_visitor(
-		const footprint_frame& ff, const global_offset& g) :
-		parent_type(ff, g), scope_stack(), id(0) {
+		const global_process_context& c) :
+		parent_type(c), scope_stack(), id(0) {
 	// FIXME: this just avoids dangling references as a result
 	// vector::push_back, but only up to a pre-determined limit,
 	// should really make this more robust, by resetting iterators.

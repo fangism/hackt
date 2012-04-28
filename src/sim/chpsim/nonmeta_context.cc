@@ -30,10 +30,7 @@ using entity::process_tag;
 	A delegating constructor would be nice...
  */
 nonmeta_context::nonmeta_context(State& r) :
-		nonmeta_context_base(
-			*r.top_context.fpf,
-			*r.top_context.parent_offset, 
-			r.instances),
+		nonmeta_context_base(r.top_context, r.instances),
 		event(NULL), 
 		global_event_offset(0), 	// any invalid value
 		process_index(0),

@@ -394,9 +394,8 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 
 	// NOTE: we're referencing 'this' during construction, however, we 
 	// are done constructing this State's members at this point.  
-	const entity::footprint_frame tff(topfp);
-	const entity::global_offset g;
-	ExprAlloc v(*this, tff, g, f);
+	const entity::global_process_context gpc(topfp);
+	ExprAlloc v(*this, gpc, f);
 	// pre-allocate array of process states
 	// use 0th slot for top-level
 	process_state_array.resize(

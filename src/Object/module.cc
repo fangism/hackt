@@ -453,9 +453,8 @@ module::__cflat_rules(const footprint& _footprint,
 	STACKTRACE_VERBOSE;
 	// our printing visitor functor
 if (cf.include_prs) {
-	const footprint_frame ff(_footprint);	// empty ports
-	global_offset g;	// 0s
-	PRS::cflat_prs_printer cfp(ff, g, o, cf);
+	const global_process_context pc(_footprint);
+	PRS::cflat_prs_printer cfp(pc, o, cf);
 	STACKTRACE("cflatting production rules.");
 	if (cf.dsim_prs)	o << "dsim {" << endl;
 	try {

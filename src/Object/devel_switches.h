@@ -286,6 +286,15 @@
  */
 #define	NONMETA_MEMBER_REFERENCES		0
 
+/**
+	Define to 1 to lookup more than one parent at a time
+	for aggregate references like a[x..y].b, *without* having
+	to flatten or expand into a large number of individual references.
+	Goal: 1
+	Rationale: more efficient lookups
+ */
+#define	AGGREGATE_PARENT_REFS			0
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Define to 1 to construct one canonical process event subgraph per

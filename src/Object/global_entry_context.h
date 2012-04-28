@@ -16,6 +16,8 @@
 #include "Object/traits/classification_tags_fwd.h"
 #include "Object/ref/reference_enum.h"	// for global_indexed_reference
 #include "util/tokenize_fwd.h"		// for string_list
+#include "util/STL/vector_fwd.h"
+#include "Object/devel_switches.h"
 
 /**
 	Define to 1 to keep around global pid in global_entry_context
@@ -48,6 +50,8 @@ template <class> class footprint_frame_map;
 template <class> class simple_meta_instance_reference;
 using std::ostream;
 using util::member_saver;
+using std::vector;
+struct global_process_context;		// from Object/global_entry.h
 
 //=============================================================================
 /**
@@ -109,7 +113,8 @@ protected:
 	size_t					_gpid;
 #endif
 public:
-	global_entry_context(const footprint_frame&, const global_offset&);
+	explicit
+	global_entry_context(const global_process_context&);
 
 virtual	~global_entry_context();
 
@@ -185,16 +190,21 @@ virtual	void
 		const simple_meta_instance_reference<Tag>&, 
 		const unroll_context* = NULL) const;
 
-	typedef	std::pair<footprint_frame, global_offset>
-					cache_entry_type;
+	typedef	global_process_context	cache_entry_type;
 	typedef	util::tree_cache<size_t, cache_entry_type>
 					index_frame_cache_type;
 	typedef	util::tree_cache<string, cache_entry_type>
 					string_frame_cache_type;
 
 	void
-	construct_global_footprint_frame(footprint_frame&, 
-		global_offset&, size_t pid) const;
+	construct_global_footprint_frame(
+#if 0
+		footprint_frame&, 
+		global_offset&,
+#else
+		global_process_context&,
+#endif
+		size_t pid) const;
 
 	const cache_entry_type&
 	lookup_global_footprint_frame_cache(size_t pid,
@@ -206,7 +216,33 @@ virtual	void
 		string_frame_cache_type*) const;
 #endif
 
-	// \return lpid of returned process frame, 0 on error
+#if AGGREGATE_PARENT_REFS
+	// \return true on error
+	static
+	bool
+	construct_global_footprint_frames(
+		const footprint& top,
+		const meta_instance_reference_base&,
+		std::default_vector<size_t>::type&,
+		std::default_vector<footprint_frame>::type&);
+
+	static
+	bool
+	construct_global_footprint_frames(
+		const footprint& top,
+		const meta_instance_reference_base&,
+		const unroll_context&,		// override
+		std::default_vector<size_t>::type&,
+		std::default_vector<footprint_frame>::type&);
+
+	bool
+	construct_global_footprint_frames(
+		const meta_instance_reference_base&, 
+		const unroll_context&,
+		std::default_vector<size_t>::type&,
+		std::default_vector<footprint_frame>::type&) const;
+#endif
+
 	static
 	size_t
 	construct_global_footprint_frame(
@@ -235,6 +271,17 @@ private:
 		global_offset&, const meta_instance_reference_base&, 
 		const unroll_context&) const;
 
+#if AGGREGATE_PARENT_REFS
+	bool
+	construct_global_footprint_frames(footprint_frame&, 
+		std::default_vector<footprint_frame>::type&,
+		global_offset&,
+//		std::default_vector<global_offset>::type&,
+		std::default_vector<global_offset>::type&,
+		const meta_instance_reference_base&, 
+		const unroll_context&,
+		std::default_vector<size_t>::type&) const;
+#endif
 public:
 	// e.g. use this after a cache-lookup
 	void

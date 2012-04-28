@@ -255,11 +255,10 @@ register_ExprAlloc_spec_class(void) {
 	NOTE: 0 is an invalid index to the state's expr_pool.  
  */
 ExprAlloc::ExprAlloc(state_type& _s, 
-		const footprint_frame& ff, 
-		const global_offset& go, 
+		const global_process_context& gpc,
 		const ExprAllocFlags& f) :
 		cflat_visitor(),
-		cflat_context_visitor(ff, go), 
+		cflat_context_visitor(gpc), 
 		state(_s),
 		g(NULL), 
 		current_process_index(0), 	// to represent top-level

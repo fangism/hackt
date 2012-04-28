@@ -35,13 +35,12 @@ cflat_print_alias(ostream&, const string&, const string&,
 // class alias_printer method definitions
 
 alias_printer::alias_printer(ostream& _o,
-		const footprint_frame& _fpf,
-		const global_offset& g,
+		const global_process_context& gpc,
 		const cflat_options& _cf,
 		wire_alias_set& _w,
 		const string& _p) :
 			// pass same alt_dump_flags to skip alternate names
-			cflat_aliases_arg_type(_fpf, g, _cf.__dump_flags,
+			cflat_aliases_arg_type(gpc, _cf.__dump_flags,
 				(_cf.emit_alt_names() ? _cf.alt_dump_flags
 					: _cf.__dump_flags),
 				_p), 

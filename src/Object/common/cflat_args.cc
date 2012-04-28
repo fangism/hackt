@@ -42,14 +42,13 @@ __accept_deep_alias(const instance_alias_info<process_tag>& a,
 // class cflat_aliases_arg_type method definitions
 
 cflat_aliases_arg_type::cflat_aliases_arg_type(
-		const footprint_frame& _fpf,
-		const global_offset& g,
+		const global_process_context& pc,
 		const dump_flags& d,
 #if USE_ALT_ALIAS_PAIRS
 		const dump_flags& ad, 
 #endif
 		const string& _p) :
-		global_entry_context(_fpf, g),
+		global_entry_context(pc),
 		local_proc_graph(), 
 		ordered_lpids(),
 		local_proc_aliases(),

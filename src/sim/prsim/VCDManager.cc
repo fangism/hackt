@@ -57,13 +57,12 @@ if (!good()) {
 	INDENT_SECTION(*trace_file);
 	// TODO: pass some options to vcd writer
 
-	const entity::footprint& topfp(m.get_footprint());
-	entity::global_offset g;
-	const entity::footprint_frame ff(topfp);
 	cflat_options cf;
 	cf.mangled_vcd_ids = mangled_vcd_ids;	// configurable?
 	cf.primary_tool = cflat_options::TOOL_VCD;
-	VCDwriter vw(ff, g, *trace_file, cf);
+	const entity::footprint& topfp(m.get_footprint());
+	const entity::global_process_context gpc(topfp);
+	VCDwriter vw(gpc, *trace_file, cf);
 	topfp.accept(vw);
 }
 	*trace_file << auto_indent << "$upscope $end\n"

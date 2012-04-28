@@ -1452,18 +1452,17 @@ footprint::cflat_aliases(ostream& o,
 		wires.resize(s);
 		// WARNING: could be HUGE
 	}
-	const footprint_frame ff(*this);
-	global_offset g;
+	const global_process_context gpc(*this);
 if (cf.connect_style == cflat_options::CONNECT_STYLE_HIERARCHICAL) {
 if (cf.primary_tool == cflat_options::TOOL_VCD) {
-	VCD::VCDwriter v(ff, g, o, cf);
+	VCD::VCDwriter v(gpc, o, cf);
 	accept(v);
 } else {
-	hierarchical_alias_visitor v(ff, g);	// is quiet, but traverses
+	hierarchical_alias_visitor v(gpc);	// is quiet, but traverses
 	accept(v);
 }
 } else {
-	alias_printer v(o, ff, g, cf, wires, string());
+	alias_printer v(o, gpc, cf, wires, string());
 	accept(AS_A(global_entry_context&, v));
 	if (cf.wire_mode && cf.connect_style && !cf.check_prs) {
 		// style need not be CONNECT_STYLE_WIRE, just not NONE
@@ -1638,11 +1637,10 @@ footprint::__dump_allocation_map(ostream& o) const {
 if (_pool.total_entries()) {
 	o << "[global " << class_traits<Tag>::tag_name << " entries]" << endl;
 	// empty top-level footprint frame, has no ports to pass in!
-	const footprint_frame ff(*this);
-	global_offset g;	// 0s
 	// TODO: why not just have global_offset initialize to 1s for 1-based?
 	// instead of adding 1 everywhere else?
-	global_allocation_dumper<Tag> d(o, ff, g);
+	const global_process_context c(*this);
+	global_allocation_dumper<Tag> d(o, c);
 	this->accept(d);
 }
 	return o;

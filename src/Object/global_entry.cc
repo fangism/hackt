@@ -818,10 +818,9 @@ global_process_context::global_process_context(const module& m) :
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 global_process_context::global_process_context(const module& m, 
 		const size_t gpid) : frame(), offset() {
-	footprint_frame tff(m.get_footprint());
-	global_offset g;
-	const global_entry_context gc(tff, g);
-	gc.construct_global_footprint_frame(frame, offset, gpid);
+	const global_process_context gpc(m.get_footprint());
+	const global_entry_context gc(gpc);
+	gc.construct_global_footprint_frame(*this, gpid);
 #if ENABLE_STACKTRACE
 	STACKTRACE_INDENT_PRINT("offset: " << offset) << endl;
 	frame.dump_frame(STACKTRACE_INDENT_PRINT("frame:")) << endl;
