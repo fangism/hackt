@@ -1,0 +1,9 @@
+// "route-through-01.hac"
+// @hacknet-flags@ -f empty_subcircuits=1 -f unused_ports=1
+
+defproc route_through(bool? in; bool! out) {
+	in = out;
+}
+
+route_through xyz;
+

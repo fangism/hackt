@@ -5,6 +5,12 @@
 
 2012-04-28	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-85-25:
+	  connectivity checking: suppress missing fanin warning on
+		output nodes that are also input ports (route-through).
+		Test case added.
+
+
 	* HACKT-00-01-04-main-00-85-24:
 	  global_entry_context: now always pair together frame and offset
 		in the global_process_context structure, for comprehensibility
