@@ -304,7 +304,7 @@ size_t
 global_entry_context::construct_global_footprint_frame(
 		const footprint& top,
 		const meta_instance_reference_base& pr, 
-		footprint_frame& ret) {
+		global_process_context& ret) {
 	const unroll_context lookup_c(&top, &top);      // any loop variables?
 	return construct_global_footprint_frame(top, pr, lookup_c, ret);
 }
@@ -319,7 +319,7 @@ global_entry_context::construct_global_footprint_frame(
 		const footprint& top,
 		const meta_instance_reference_base& pr, 
 		const unroll_context& c,
-		footprint_frame& ret) {
+		global_process_context& ret) {
 	const global_process_context gpc(top);
 	const global_entry_context gc(gpc);
 	return gc.construct_global_footprint_frame(pr, c, ret);
@@ -333,10 +333,10 @@ size_t
 global_entry_context::construct_global_footprint_frame(
 		const meta_instance_reference_base& pr, 
 		const unroll_context& uc,
-		footprint_frame& ret) const {
-        global_offset go, tmpg;
-        footprint_frame tmpo;
-	return construct_global_footprint_frame(tmpo, ret, go, tmpg, pr, uc);
+//		footprint_frame& ret
+		global_process_context& ret) const {
+	global_process_context tmp;
+	return construct_global_footprint_frame(tmp, ret, pr, uc);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -395,15 +395,15 @@ global_entry_context::construct_global_footprint_frames(
 	Recursive implementation due to member instance reference structuring.
 	\param pr must be a scalar process reference (can be hierarchical).
 	\return local pid of returned process frame, 0 to signal an error.
-		owner_g is the offset of the current owner frame
-		ret_g is the offset of the current return frame
+		owner is the frame and offset of the current owner frame
+		ret is the frame and offset of the current return frame
 		(both returned by reference, not used when passed)
 		Caller should choose which offset is used.
  */
 size_t
 global_entry_context::construct_global_footprint_frame(
-		footprint_frame& owner, footprint_frame& ret,
-		global_offset& owner_g, global_offset& ret_g,
+		global_process_context& owner,
+		global_process_context& ret,
 		const meta_instance_reference_base& pr, 
 		const unroll_context& uc) const {
 	STACKTRACE_VERBOSE;
@@ -428,9 +428,9 @@ global_entry_context::construct_global_footprint_frame(
 		mpr->dump(STACKTRACE_INDENT_PRINT("have a member-ref: "), 
 			expr_dump_context::default_value) << endl;
 #endif
-		// in a sub-process, sets ret, owner and owner_g
+		// in a sub-process, sets ret and owner
 		const size_t ppid =
-			construct_global_footprint_frame(owner, ret, owner_g, ret_g,
+			construct_global_footprint_frame(owner, ret,
 				*mpr->get_base_ref(), uc);
 		if (!ppid) {
 			// have some error
@@ -440,16 +440,16 @@ global_entry_context::construct_global_footprint_frame(
 		mpr->dump(STACKTRACE_INDENT_PRINT("back to member-ref: "), 
 			expr_dump_context::default_value) << endl;
 		STACKTRACE_INDENT_PRINT("ppid = " << ppid << endl);
-		STACKTRACE_INDENT_PRINT("owner_g offset: " << owner_g << endl);
-		STACKTRACE_INDENT_PRINT("ret_g offset: " << ret_g << endl);
-		ret.dump_frame(STACKTRACE_INDENT_PRINT("ret:")) << endl;
+		STACKTRACE_INDENT_PRINT("owner.offset: " << owner.offset << endl);
+		STACKTRACE_INDENT_PRINT("ret.offset: " << ret.offset << endl);
+		ret.frame.dump_frame(STACKTRACE_INDENT_PRINT("ret.frame:")) << endl;
 #endif
 		// want footprint of the member-owner, not the context passed in
-		const unroll_context tc(ret._footprint, topfp);
+		const unroll_context tc(ret.frame._footprint, topfp);
 		// yes, use base-class method, not virtual override
 		const size_t lpid =	// is 1-based index
 			mpr->simple_ref::lookup_locally_allocated_index(tc);
-		const footprint& rfp(*ret._footprint);
+		const footprint& rfp(*ret.frame._footprint);
 		const state_instance<Tag>::pool_type&
 			pp(rfp.get_instance_pool<Tag>());
 		const size_t ports = pp.port_entries();
@@ -466,8 +466,9 @@ global_entry_context::construct_global_footprint_frame(
 			// change both ret frame and owner, and global offset
 			STACKTRACE_INDENT_PRINT("private local" << endl);
 			const state_instance<Tag>& sp(pp[lpid -1]);
-			owner_g = ret_g;
-			STACKTRACE_INDENT_PRINT("owner-g <- ret_g: " << owner_g << endl);
+			owner.offset = ret.offset;
+			STACKTRACE_INDENT_PRINT("owner.offset <- ret.offset: "
+				<< owner.offset << endl);
 			global_offset pdelta;
 		{
 			// compute offset relative to immediate parent
@@ -478,18 +479,19 @@ global_entry_context::construct_global_footprint_frame(
 			STACKTRACE_INDENT_PRINT("pdelta: " << pdelta << endl);
 			pdelta += z;
 			STACKTRACE_INDENT_PRINT("pdelta+z: " << pdelta << endl);
-			pdelta += owner_g;
+			pdelta += owner.offset;
 			STACKTRACE_INDENT_PRINT("pdelta+z+o: " << pdelta << endl);
 		}
-			owner = ret;
-			footprint_frame lff(sp._frame, ret);
-			ret.construct_global_context(*sp._frame._footprint, lff, pdelta);
-			ret_g = pdelta;
+			owner.frame = ret.frame;
+			footprint_frame lff(sp._frame, ret.frame);
+			ret.frame.construct_global_context(*sp._frame._footprint, lff, pdelta);
+			ret.offset = pdelta;
 #if ENABLE_STACKTRACE
 			sp._frame.dump_frame(STACKTRACE_INDENT_PRINT("sp.frame:")) << endl;
-			owner.dump_frame(STACKTRACE_INDENT_PRINT("new owner:")) << endl;
-			STACKTRACE_INDENT_PRINT("offset: " << owner_g << endl);
-			ret.dump_frame(STACKTRACE_INDENT_PRINT("ret:")) << endl;
+			owner.frame.dump_frame(
+				STACKTRACE_INDENT_PRINT("new owner.frame:")) << endl;
+			STACKTRACE_INDENT_PRINT("owner.offset: " << owner.offset << endl);
+			ret.frame.dump_frame(STACKTRACE_INDENT_PRINT("ret.frame:")) << endl;
 #endif
 			return lpid;
 		} else {
@@ -498,44 +500,44 @@ global_entry_context::construct_global_footprint_frame(
 			// keep same owner frame
 			// no change in global offset
 			const state_instance<Tag>& sp(pp[lpid -1]);
-			footprint_frame rff(sp._frame, ret);
+			footprint_frame rff(sp._frame, ret.frame);
 #if ENABLE_STACKTRACE
 			sp._frame.dump_frame(STACKTRACE_INDENT_PRINT("sp.frame formal:")) << endl;
-			owner.dump_frame(STACKTRACE_INDENT_PRINT("owner:")) << endl;
-			ret.dump_frame(STACKTRACE_INDENT_PRINT("parent:")) << endl;
+			owner.frame.dump_frame(STACKTRACE_INDENT_PRINT("owner.frame:")) << endl;
+			ret.frame.dump_frame(STACKTRACE_INDENT_PRINT("parent.frame:")) << endl;
 			rff.dump_frame(STACKTRACE_INDENT_PRINT("rff:")) << endl;
 //			lff.dump_frame(STACKTRACE_INDENT_PRINT("lff:")) << endl;
 #endif
-			ret.construct_global_context(
-				*sp._frame._footprint, rff, ret_g);
-			// ret_g = ...;	// ?
+			ret.frame.construct_global_context(
+				*sp._frame._footprint, rff, ret.offset);
+			// ret.offset = ...;	// ?
 #if ENABLE_STACKTRACE
-			ret.dump_frame(STACKTRACE_INDENT_PRINT("ret-frame:")) << endl;
+			ret.frame.dump_frame(STACKTRACE_INDENT_PRINT("ret.frame:")) << endl;
 #endif
 			const size_t lret = lpid;
 			STACKTRACE_INDENT_PRINT("ret-id = " << lret << endl);
 			return lret;
-			// leave owner_g offset alone
-			// leave owner frame alone
+			// leave owner.offset alone
+			// leave owner.frame alone
 		}	// is public vs. private
 	} else {
 		STACKTRACE_INDENT_PRINT("at top-level: ");
 		// we're at top level
-		owner_g = *parent_offset;
-		owner.construct_top_global_context(*topfp, owner_g);
+		owner.offset = *parent_offset;
+		owner.frame.construct_top_global_context(*topfp, owner.offset);
 #if ENABLE_STACKTRACE
-		owner.dump_frame(STACKTRACE_STREAM << "owner:") << endl;
+		owner.frame.dump_frame(STACKTRACE_STREAM << "owner.frame:") << endl;
 #endif
 		const size_t gpid = spr->lookup_locally_allocated_index(uc);
 		STACKTRACE_INDENT_PRINT("gpid = " << gpid << endl);
 		if (!gpid) {
 			return 0;	// have error message already
 		}
-		const footprint& ofp(*owner._footprint);
+		const footprint& ofp(*owner.frame._footprint);
 		const state_instance<Tag>::pool_type&
 			pp(ofp.get_instance_pool<Tag>());
 		const state_instance<Tag>& sp(pp[gpid -1]);
-		const global_offset sgo(owner_g, ofp, add_all_local_tag());
+		const global_offset sgo(owner.offset, ofp, add_all_local_tag());
 		global_offset delta;
 		ofp.set_global_offset_by_process(delta, gpid);
 		STACKTRACE_INDENT_PRINT("offset: " << delta << endl);
@@ -545,14 +547,14 @@ global_entry_context::construct_global_footprint_frame(
 		STACKTRACE_INDENT_PRINT("offset+sgo: " << delta << endl);
 		sp._frame.dump_frame(STACKTRACE_STREAM << "sp.frame:") << endl;
 #endif
-		footprint_frame lff(sp._frame, owner);
-		ret.construct_global_context(*sp._frame._footprint, lff, delta);
+		footprint_frame lff(sp._frame, owner.frame);
+		ret.frame.construct_global_context(*sp._frame._footprint, lff, delta);
 		// INVARIANT(sub-process is not a top-process-port!);
-		ret_g = delta;	// NEW
+		ret.offset = delta;	// NEW
 #if ENABLE_STACKTRACE
-		STACKTRACE_INDENT_PRINT("owner_g: " << owner_g << endl);
-		STACKTRACE_INDENT_PRINT("ret_g: " << ret_g << endl);
-		ret.dump_frame(STACKTRACE_STREAM << "top sub-process:") << endl;
+		STACKTRACE_INDENT_PRINT("owner.offset: " << owner.offset << endl);
+		STACKTRACE_INDENT_PRINT("ret.offset: " << ret.offset << endl);
+		ret.frame.dump_frame(STACKTRACE_STREAM << "top sub-process:") << endl;
 #endif
 		return gpid;
 	}

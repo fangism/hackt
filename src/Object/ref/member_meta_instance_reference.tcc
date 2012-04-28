@@ -205,7 +205,7 @@ MEMBER_INSTANCE_REFERENCE_CLASS::lookup_locally_allocated_index(
 		return 0;
 	}
 	// TODO: have parent reference populate footprint_frame
-	footprint_frame tmp;
+	global_process_context tmp;
 	const size_t pp =
 		global_entry_context::construct_global_footprint_frame(
 			top, _parent_inst_ref, tmp);
@@ -214,9 +214,9 @@ MEMBER_INSTANCE_REFERENCE_CLASS::lookup_locally_allocated_index(
 		return 0;
 	}
 #if ENABLE_STACKTRACE
-	tmp.dump_frame(STACKTRACE_INDENT_PRINT("parent frame:")) << endl;
+	tmp.frame.dump_frame(STACKTRACE_INDENT_PRINT("parent frame:")) << endl;
 #endif
-	const footprint_frame* const fpf = &tmp;
+	const footprint_frame* const fpf = &tmp.frame;
 	if (!fpf) {
 		// TODO: better error message
 		cerr << "Failure resolving parent instance reference" << endl;
@@ -283,10 +283,10 @@ MEMBER_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_indices(
 		return good_bool(false);
 	}
 #else
-	footprint_frame tmpf;
+	global_process_context tmp;
 	const size_t gpid =
 		global_entry_context::construct_global_footprint_frame(top,
-			*this->base_inst_ref, tmpf);
+			*this->base_inst_ref, tmp);
 	if (!gpid) {
 		return good_bool(false);
 	}
@@ -301,7 +301,7 @@ for ( ; fi!=fe; ++fi, ++ii) {
 	// alias lookup needs to be inside loop because of possibility
 	// of heterogenous types due to relaxed templates
 	// TODO: optimize when strict type of array is known
-	const unroll_context dummy(tmpf._footprint, &top);
+	const unroll_context dummy(tmp.frame._footprint, &top);
 	// reminder: call to unroll_references_packed is virtual
 	alias_collection_type aliases;
 	if (unroll_references_packed_helper(dummy, *this->inst_collection_ref,
@@ -316,7 +316,7 @@ for ( ; fi!=fe; ++fi, ++ii) {
 #else
 	indices.reserve(asz +indices.size());
 #endif
-	const footprint_frame_transformer fft(tmpf, Tag());
+	const footprint_frame_transformer fft(tmp.frame, Tag());
 #if 1
 	const_iterator i(aliases.begin()), e(aliases.end());
 	for ( ; i!=e; ++i) {
@@ -439,7 +439,7 @@ MEMBER_INSTANCE_REFERENCE_CLASS::unroll_subindices_packed(
 	this->dump(STACKTRACE_STREAM, expr_dump_context::default_value) << endl;
 #endif
 	// resolve parent references first
-	footprint_frame ff;
+	global_process_context ff;
 	const size_t ppid =
 		c.construct_global_footprint_frame(*this->base_inst_ref, u, ff);
 	if (!ppid) {
@@ -449,13 +449,13 @@ MEMBER_INSTANCE_REFERENCE_CLASS::unroll_subindices_packed(
 	// looks wrong
 	c.dump_context(STACKTRACE_STREAM << "global_entry_context c:" << endl)
 		<< endl;
-	ff.dump_frame(STACKTRACE_STREAM) << endl;
+	ff.frame.dump_frame(STACKTRACE_STREAM) << endl;
 //	STACKTRACE_STREAM << go << endl;
 	STACKTRACE_STREAM << tmpg << endl;
 #endif
 	alias_collection_type local_aliases;
-	NEVER_NULL(ff._footprint);
-	const footprint& pfp(*ff._footprint);
+	NEVER_NULL(ff.frame._footprint);
+	const footprint& pfp(*ff.frame._footprint);
 	// lookup footprint-local aliases
 	const unroll_context tmpc(&pfp, &pfp);
 //	tmpc.chain_context(u);
@@ -483,7 +483,7 @@ MEMBER_INSTANCE_REFERENCE_CLASS::unroll_subindices_packed(
 	STACKTRACE_INDENT_PRINT("got local indices." << endl);
 	// translate to global indices using parent footprint frame
 	transform(a.begin(), a.end(), a.begin(), 
-		footprint_frame_transformer(ff.template get_frame_map<Tag>()));
+		footprint_frame_transformer(ff.frame.template get_frame_map<Tag>()));
 	STACKTRACE_INDENT_PRINT("got global indices." << endl);
 	return bad_bool(false);
 }

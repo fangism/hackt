@@ -248,7 +248,7 @@ virtual	void
 	construct_global_footprint_frame(
 		const footprint& top,
 		const meta_instance_reference_base&,
-		footprint_frame&);
+		global_process_context&);
 
 	static
 	size_t
@@ -256,19 +256,20 @@ virtual	void
 		const footprint& top,
 		const meta_instance_reference_base&,
 		const unroll_context&,		// override
-		footprint_frame&);
+		global_process_context&);
 
 	size_t
 	construct_global_footprint_frame(
 		const meta_instance_reference_base&, 
 		const unroll_context&,
-		footprint_frame&) const;
+		global_process_context&) const;
 
 private:
 	size_t
-	construct_global_footprint_frame(footprint_frame&, 
-		footprint_frame&, global_offset&,
-		global_offset&, const meta_instance_reference_base&, 
+	construct_global_footprint_frame(
+		global_process_context&,
+		global_process_context&,
+		const meta_instance_reference_base&, 
 		const unroll_context&) const;
 
 #if AGGREGATE_PARENT_REFS
