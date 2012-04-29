@@ -52,6 +52,7 @@ using std::ostream;
 using util::member_saver;
 using std::vector;
 struct global_process_context;		// from Object/global_entry.h
+struct global_process_context_id;	// from Object/global_entry.h
 
 //=============================================================================
 /**
@@ -198,12 +199,7 @@ virtual	void
 
 	void
 	construct_global_footprint_frame(
-#if 0
-		footprint_frame&, 
-		global_offset&,
-#else
 		global_process_context&,
-#endif
 		size_t pid) const;
 
 	const cache_entry_type&
@@ -244,31 +240,31 @@ virtual	void
 #endif
 
 	static
-	size_t
+	bool
 	construct_global_footprint_frame(
 		const footprint& top,
 		const meta_instance_reference_base&,
-		global_process_context&);
+		global_process_context_id&);
 
 	static
-	size_t
+	bool
 	construct_global_footprint_frame(
 		const footprint& top,
 		const meta_instance_reference_base&,
 		const unroll_context&,		// override
-		global_process_context&);
+		global_process_context_id&);
 
-	size_t
+	bool
 	construct_global_footprint_frame(
 		const meta_instance_reference_base&, 
 		const unroll_context&,
-		global_process_context&) const;
+		global_process_context_id&) const;
 
 private:
-	size_t
+	bool
 	construct_global_footprint_frame(
 		global_process_context&,
-		global_process_context&,
+		global_process_context_id&,
 		const meta_instance_reference_base&, 
 		const unroll_context&) const;
 

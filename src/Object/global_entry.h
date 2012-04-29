@@ -572,7 +572,30 @@ struct global_process_context {
 	construct_top_global_context(void) {
 		frame.construct_top_global_context(*frame._footprint, offset);
 	}
+
+	ostream&
+	dump_frame(ostream& o) const {
+		return frame.dump_frame(o);
+	}
+
+	ostream&
+	dump_offset(ostream& o) const {
+		return o << offset;
+	}
 };	// end struct global_process_context
+
+//=============================================================================
+/**
+	Same as above, but with extra global process id field.
+	This is useful as a return type from instance-reference lookups.
+ */
+struct global_process_context_id : public global_process_context {
+	size_t					gpid;
+
+	// usually default ctor
+	global_process_context_id() : global_process_context(), gpid(0) { }
+
+};	// end struct global_process_context_id
 
 //=============================================================================
 }	// end namespace entity

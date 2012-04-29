@@ -7,7 +7,7 @@
 
 	* HACKT-00-01-04-main-00-85-26:
 	  global_entry_context::construct_global_footprint_frame():
-		takes global_process_context, return by reference.
+		takes global_process_context_id, return by reference.
 
 
 	* HACKT-00-01-04-main-00-85-25:
