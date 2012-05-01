@@ -19,16 +19,9 @@
 	global frame computations.
  */
 #define	CACHE_GLOBAL_FOOTPRINT_FRAMES	1
-/**
-	Define to 1 to keep around the last two footprint frames (LRU).  
-	This brings a little bit more speedup.
- */
-#define HOT_CACHE_FRAMES		(1 && CACHE_GLOBAL_FOOTPRINT_FRAMES)
 
 #if CACHE_GLOBAL_FOOTPRINT_FRAMES
-#include "Object/global_entry_context.h"
-#include "Object/global_entry.h"		// for footprint_frame
-#include "util/tree_cache.h"
+#include "Object/global_context_cache.h"
 #endif
 
 namespace HAC {
@@ -44,8 +37,7 @@ using util::string_list;
 using util::ifstream_manager;
 #if CACHE_GLOBAL_FOOTPRINT_FRAMES
 using entity::footprint_frame;
-using entity::global_offset;
-using entity::global_entry_context;
+using entity::global_context_cache;
 #endif
 
 //=============================================================================
@@ -106,7 +98,11 @@ public:
 /**
 	For simulators that use a hac module.
  */
-class module_state_base : public state_base {
+class module_state_base : public state_base
+#if CACHE_GLOBAL_FOOTPRINT_FRAMES
+	, public global_context_cache
+#endif
+{
 protected:
 	/**
 		Attachment to the source object that contains
@@ -115,54 +111,12 @@ protected:
 		back-ends are hierarchical?
 	 */
 	const module&					mod;
-#if CACHE_GLOBAL_FOOTPRINT_FRAMES
-private:
-	typedef	global_entry_context::index_frame_cache_type
-							frame_cache_type;
-	typedef	global_entry_context::cache_entry_type	cache_entry_type;
-	mutable frame_cache_type			frame_cache;
-	// keep around a permanent top-context
-public:
-	const global_entry_context			top_context;
-private:
-#if HOT_CACHE_FRAMES
-	// just keep two most recent entries
-	// key: global pid
-	// value: copies of the most recent cache hits
-	mutable std::pair<size_t, cache_entry_type>	hot_cache[2];
-	mutable size_t					cache_lru;
-#endif
-#endif
 public:
 	module_state_base(const module&, const string&);
 	~module_state_base();
 
 	const module&
 	get_module(void) const { return mod; }
-
-#if !CACHE_GLOBAL_FOOTPRINT_FRAMES
-	footprint_frame
-#else
-	const footprint_frame&
-#endif
-	get_footprint_frame(const size_t pid) const;
-
-#if CACHE_GLOBAL_FOOTPRINT_FRAMES
-	const cache_entry_type&
-	get_global_context(const size_t pid) const;
-
-	const frame_cache_type&
-	get_frame_cache(void) const { return frame_cache; }
-
-	size_t
-	halve_cache(void);
-
-	ostream&
-	dump_frame_cache(ostream&) const;
-#endif
-
-	ostream&
-	dump_memory_usage(ostream&) const;
 
 };	// end class module_state_base
 
