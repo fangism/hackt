@@ -3,6 +3,13 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2012-05-01	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-28:
+	  hacprsim: ~EventPool free-list check, fix arithmetic sum overflow.
+		Test case: quarantine/set-assert-02(.prsimckpttest)
+
+
 2012-04-30	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-85-27:
