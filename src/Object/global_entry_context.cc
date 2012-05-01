@@ -208,6 +208,49 @@ if (gpid) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Looks up sub-cache, refactored out.
+ */
+// inline
+global_entry_context::index_frame_cache_type*
+global_entry_context::lookup_local_footprint_frame_cache(const size_t lpid,
+		const footprint& topfp, index_frame_cache_type* cache) {
+	typedef	process_tag				Tag;
+	typedef	state_instance<Tag>::pool_type		pool_type;
+	NEVER_NULL(cache);
+	const std::pair<index_frame_cache_type::child_iterator, bool>
+		cp(cache->insert_find(lpid));
+if (cp.second) {
+	// was a cache miss: re-compute
+	cache_entry_type& ret(cache->value);
+	const footprint* cf = ret.frame._footprint;	// topfp.footprint
+	const pool_type* p = &cf->get_instance_pool<Tag>();
+	global_offset g(ret.offset);
+	if (cf == &topfp) {
+		g = global_offset(g, *cf, add_all_local_tag());
+	} else {
+		g = global_offset(g, *cf, add_local_private_tag());
+	}
+	global_offset delta;
+	cf->set_global_offset_by_process(delta, lpid);
+	delta += g;
+	const state_instance<Tag>& sp((*p)[lpid -1]);
+	const footprint_frame& sff(sp._frame);
+	cf = sff._footprint;
+	const footprint_frame lff(sff, ret.frame);
+	cache = &const_cast<index_frame_cache_type&>(*cp.first); // descend
+	cache_entry_type& next(cache->value);
+	next.frame.construct_global_context(*cf, lff, delta);
+	next.offset = delta;		// g = delta;
+	INVARIANT(cf == next.frame._footprint);
+} else {
+	// else was a cache hit -- saves a lot of work
+	cache = &const_cast<index_frame_cache_type&>(*cp.first); // descend
+}
+	return cache;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Follows exact same flow as construct_global_footprint_frame(), above.
 	This variation returns a referenced to a cache-managed footprint
 	frame, which could either exist from before, or be generated 
@@ -228,7 +271,6 @@ if (gpid) {
 	// iterative instead of recursive implementation, hence pointers
 	const footprint* cf = ret->frame._footprint;	// topfp->footprint
 	const pool_type* p = &cf->get_instance_pool<Tag>();
-	size_t ports = 0;			// at_top
 	size_t local = p->local_entries();	// at_top
 	while (gpid > local) {
 		const size_t si = gpid -local;	// 1-based index
@@ -236,59 +278,16 @@ if (gpid) {
 			e(p->locate_private_entry(si -1));	// need 0-base!
 		const size_t lpid = e.first;
 		gpid = si -e.second;		// still 1-based
-		const std::pair<index_frame_cache_type::child_iterator, bool>
-			cp(cache->insert_find(lpid));
-	if (cp.second) {
-		// was a cache miss: re-compute
-		global_offset g(ret->offset);
-		if (cf == topfp) {
-			g = global_offset(g, *cf, add_all_local_tag());
-		} else {
-			g = global_offset(g, *cf, add_local_private_tag());
-		}
-		global_offset delta;
-		cf->set_global_offset_by_process(delta, lpid);
-		delta += g;
-		const state_instance<Tag>& sp((*p)[lpid -1]);
-		const footprint_frame& sff(sp._frame);
-		cf = sff._footprint;
-		const footprint_frame lff(sff, ret->frame);
-		cache = &const_cast<index_frame_cache_type&>(*cp.first); // descend
-		ret = &cache->value;
-		ret->frame.construct_global_context(*cf, lff, delta);
-		ret->offset = delta;		// g = delta;
-		INVARIANT(cf == ret->frame._footprint);
-	} else {
-		// else was a cache hit
-		cache = &const_cast<index_frame_cache_type&>(*cp.first); // descend
+		cache = lookup_local_footprint_frame_cache(lpid, *topfp, cache);
 		ret = &cache->value;
 		cf = ret->frame._footprint;
-	}
 		p = &cf->get_instance_pool<Tag>();
-		ports = p->port_entries();
 		local = p->local_private_entries();
 	}	// end while
+	const size_t ports = p->port_entries();
 	const size_t lpid = gpid +ports;
-	const std::pair<index_frame_cache_type::child_iterator, bool>
-		cp(cache->insert_find(lpid));
-if (cp.second) {	// cache miss
-	global_offset g(ret->offset, *cf, add_local_private_tag());
-	p = &cf->get_instance_pool<Tag>();
-	const state_instance<Tag>& sp((*p)[lpid -1]);
-	const footprint_frame& sff(sp._frame);
-	footprint_frame lff(sff, ret->frame);
-	global_offset delta;
-	cf->set_global_offset_by_process(delta, lpid);
-	delta += g;
-	cf = sff._footprint;
-	cache = &const_cast<index_frame_cache_type&>(*cp.first); // descend
+	cache = lookup_local_footprint_frame_cache(lpid, *topfp, cache);
 	ret = &cache->value;
-	ret->frame.construct_global_context(*cf, lff, delta);
-	ret->offset = delta;
-} else {	// cache hit
-	cache = &const_cast<index_frame_cache_type&>(*cp.first); // descend
-	ret = &cache->value;
-}
 	return *ret;
 } else {
 	return *ret;

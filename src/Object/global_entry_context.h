@@ -273,6 +273,13 @@ private:
 		const meta_instance_reference_base&, 
 		const unroll_context&) const;
 #endif
+
+	static
+	index_frame_cache_type*
+	lookup_local_footprint_frame_cache(const size_t lpid,
+		const footprint& topfp,
+		index_frame_cache_type*);
+
 public:
 	// e.g. use this after a cache-lookup
 	void
