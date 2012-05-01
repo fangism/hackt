@@ -274,8 +274,7 @@ META_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_indices(
 	}
 	// don't bother checking for duplicates
 	// (easy: just use std::set instead of vector)
-	indices.reserve(alias_collection_type::sizes_product(aliases.size())
-		+indices.size());
+	indices.reserve(aliases.sizes_product() +indices.size());
 	transform(aliases.begin(), aliases.end(), 
 		back_inserter(indices), instance_index_extractor());
 	return good_bool(true);

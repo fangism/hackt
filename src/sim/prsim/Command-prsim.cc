@@ -1174,6 +1174,7 @@ static
 int
 __set_main(State& s, const string_list& a, const bool force, 
 		void (*usage)(ostream&)) {
+	STACKTRACE_VERBOSE;
 	const size_t asz = a.size();
 if (asz < 3 || asz > 4) {
 	usage(cerr << "usage: ");

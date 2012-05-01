@@ -1,6 +1,6 @@
 FATAL: reference to process c1of<2> with out-of-bounds indices [3]:[3]
 ERROR: unrolling aliases.
-Error resolving a single instance alias.
+Error resolving instance aliases.
 Error: Z.b[3].d[0] does not reference a bool.
 Error: no such node `Z.b[3].d[0]' in channel.
 ... at line 5

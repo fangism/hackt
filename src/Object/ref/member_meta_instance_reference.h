@@ -126,8 +126,8 @@ public:
 	size_t
 	lookup_locally_allocated_index(const unroll_context&) const;
 
-#if AGGREGATE_PARENT_REFS
-	bool
+#if 0 && AGGREGATE_PARENT_REFS
+	good_bool
 	lookup_locally_allocated_indices(const unroll_context&, 
 		std::default_vector<size_t>::type&) const;
 #endif

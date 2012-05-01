@@ -1645,6 +1645,7 @@ member_expr::check_meta_reference(const context& c) const {
 		NEVER_NULL(o.value_ref());
 		FINISH_ME_EXIT(Fang);
 	}
+#if !AGGREGATE_PARENT_REFS
 	if (inst_ref->dimensions()) {
 		cerr << "ERROR: cannot take the member of a " <<
 			inst_ref->dimensions() << "-dimension array, "
@@ -1655,6 +1656,7 @@ member_expr::check_meta_reference(const context& c) const {
 				"." << *member << endl;
 		THROW_EXIT;
 	}
+#endif
 
 	const never_ptr<const definition_base>
 		base_def(inst_ref->get_base_def());

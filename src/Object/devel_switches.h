@@ -292,8 +292,9 @@
 	to flatten or expand into a large number of individual references.
 	Goal: 1
 	Rationale: more efficient lookups
+	Status: massive speedup on quarantine tests
  */
-#define	AGGREGATE_PARENT_REFS			0
+#define	AGGREGATE_PARENT_REFS			1
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

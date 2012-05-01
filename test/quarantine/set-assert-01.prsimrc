@@ -1,0 +1,15 @@
+# "set-assert-01.prsimrc"
+# @haco@ set-assert-01.haco-c
+
+# before re-implementing global_entry_context::construct_global_footprint_frames
+# to operate on unexpanded aggregate references, this test took around 1:15.
+# Now it takes under 3s.
+
+# !date
+set foo.x[0..9][0..9][0..19][0..19] 0
+# !date
+cycle
+# !date
+assert foo.y[0..9][0..9][0..19][0..19] 1
+# !date
+

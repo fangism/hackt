@@ -219,8 +219,7 @@ virtual	void
 	construct_global_footprint_frames(
 		const footprint& top,
 		const meta_instance_reference_base&,
-		std::default_vector<size_t>::type&,
-		std::default_vector<footprint_frame>::type&);
+		std::default_vector<global_process_context_id>::type&);
 
 	static
 	bool
@@ -228,15 +227,13 @@ virtual	void
 		const footprint& top,
 		const meta_instance_reference_base&,
 		const unroll_context&,		// override
-		std::default_vector<size_t>::type&,
-		std::default_vector<footprint_frame>::type&);
+		std::default_vector<global_process_context_id>::type&);
 
 	bool
 	construct_global_footprint_frames(
 		const meta_instance_reference_base&, 
 		const unroll_context&,
-		std::default_vector<size_t>::type&,
-		std::default_vector<footprint_frame>::type&) const;
+		std::default_vector<global_process_context_id>::type&) const;
 #endif
 
 	static
@@ -270,14 +267,11 @@ private:
 
 #if AGGREGATE_PARENT_REFS
 	bool
-	construct_global_footprint_frames(footprint_frame&, 
-		std::default_vector<footprint_frame>::type&,
-		global_offset&,
-//		std::default_vector<global_offset>::type&,
-		std::default_vector<global_offset>::type&,
+	construct_global_footprint_frames(
+		std::default_vector<global_process_context>::type&,
+		std::default_vector<global_process_context_id>::type&,
 		const meta_instance_reference_base&, 
-		const unroll_context&,
-		std::default_vector<size_t>::type&) const;
+		const unroll_context&) const;
 #endif
 public:
 	// e.g. use this after a cache-lookup

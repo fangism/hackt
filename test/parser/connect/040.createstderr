@@ -1,0 +1,8 @@
+ERROR: parent instance reference of a member reference must be scalar.
+However, non-scalar member-parent references may be introduced in the future, bug Fang about it.
+	got ref: wrap_it::load.bundle::c[0..0].basket::egg_array[1]
+	in type: wrap_it<>
+ERROR: unrolling instance references in process_connection::unroll().
+Instantiated from: wrap_it<>
+Error encountered during module::create.
+ERROR in creating.  Aborting.

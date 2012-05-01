@@ -1,0 +1,29 @@
+// "set-assert-03.hac"
+// testing hacprsim slowness on massive set/assert commands
+
+template <pint N>
+defproc inv_array(bool? x[N][N]; bool! y[N][N]) {
+prs {
+(:i:N:
+(:j:N:
+	x[i][j]		=> y[i][j]-
+)
+)
+}
+}
+
+/*
+template <pint M, N>
+defproc big_array(bool? x[M][M][N][N]; bool! y[M][M][N][N]) {
+inv_array<N> q[M][M];
+(;i:M:
+(;j:M:
+	q[i][j](x[i][j], y[i][j]);
+)
+)
+}
+*/
+
+inv_array<2> foo;
+// big_array<2,2> foo;
+ 

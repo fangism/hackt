@@ -113,6 +113,10 @@ MEMBER_INSTANCE_REFERENCE_CLASS::resolve_parent_member_helper(
 			"However, non-scalar member-parent references "
 			"may be introduced in the future, bug Fang about it."
 			<< endl;
+		this->dump(cerr << "\tgot ref: ",
+			expr_dump_context::default_value) << endl;
+		c.get_target_footprint().dump_type(cerr << "\tin type: ")
+			<< endl;
 		return return_type(NULL);
 	}
 	const never_ptr<substructure_alias>
@@ -202,15 +206,29 @@ MEMBER_INSTANCE_REFERENCE_CLASS::lookup_locally_allocated_index(
 			"However, non-scalar member-parent references "
 			"may be introduced in the future, bug Fang about it."
 			<< endl;
+		this->dump(cerr << "\tgot ref: ",
+			expr_dump_context::default_value) << endl;
+		uc.get_target_footprint().dump_type(cerr << "\tin type: ")
+			<< endl;
 		return 0;
 	}
 	// TODO: have parent reference populate footprint_frame
+#if AGGREGATE_PARENT_REFS
+	vector<global_process_context_id> tmps;
+	if (global_entry_context::construct_global_footprint_frames(
+			top, _parent_inst_ref, tmps)) {
+		STACKTRACE_INDENT_PRINT("member::lookup_local error." << endl);
+		return 0;
+	}
+	const global_process_context_id& tmp(tmps.front());
+#else
 	global_process_context_id tmp;
 	if (global_entry_context::construct_global_footprint_frame(
 			top, _parent_inst_ref, tmp)) {
 		STACKTRACE_INDENT_PRINT("member::lookup_local error." << endl);
 		return 0;
 	}
+#endif
 //	const size_t pp = tmp.gpid;	// unused
 #if ENABLE_STACKTRACE
 	tmp.frame.dump_frame(STACKTRACE_INDENT_PRINT("parent frame:")) << endl;
@@ -272,13 +290,10 @@ MEMBER_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_indices(
 	STACKTRACE_VERBOSE;
 	typedef vector<size_t>				indices_type;
 	typedef typename alias_collection_type::const_iterator  const_iterator;
-	// TODO: support constructing multiple parent footprint_frames
 #if AGGREGATE_PARENT_REFS
-	typedef	vector<footprint_frame>			frames_type;
-	indices_type pind;
-	frames_type pfs;
+	vector<global_process_context_id> tmps;
 	if (global_entry_context::construct_global_footprint_frames(top,
-			*this->base_inst_ref, pind, pfs)) {
+			*this->base_inst_ref, tmps)) {
 		return good_bool(false);
 	}
 #else
@@ -287,14 +302,14 @@ MEMBER_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_indices(
 			*this->base_inst_ref, tmp)) {
 		return good_bool(false);
 	}
+#endif
 //	const size_t gpid = tmp.gpid;	// unused
 //	STACKTRACE_INDENT_PRINT("gpid = " << gpid << endl);
-#endif
 #if AGGREGATE_PARENT_REFS
-	frames_type::const_iterator fi(pfs.begin()), fe(pfs.end());
-	indices_type::const_iterator ii(pind.begin());
-for ( ; fi!=fe; ++fi, ++ii) {
-	const footprint_frame& tmpf(*fi);
+	vector<global_process_context_id>::const_iterator
+		fi(tmps.begin()), fe(tmps.end());
+for ( ; fi!=fe; ++fi) {
+	const global_process_context_id& tmp(*fi);
 #endif
 	// alias lookup needs to be inside loop because of possibility
 	// of heterogenous types due to relaxed templates
@@ -307,25 +322,25 @@ for ( ; fi!=fe; ++fi, ++ii) {
 		cerr << "Error resolving collection of aliases." << endl;
 		return good_bool(false);
 	}
-	const size_t asz = alias_collection_type::sizes_product(aliases.size());
+	const size_t asz = aliases.sizes_product();
 #if AGGREGATE_PARENT_REFS
-	const size_t nrefs = pind.size() * asz;	// product: parents X locals
+	const size_t nrefs = tmps.size() * asz;	// product: parents X locals
 	indices.reserve(nrefs +indices.size());
 #else
 	indices.reserve(asz +indices.size());
 #endif
 	const footprint_frame_transformer fft(tmp.frame, Tag());
-#if 1
+#if 0
+	transform(aliases.begin(), aliases.end(), back_inserter(indices), 
+		ADS::unary_compose(fft, instance_index_extractor()));
+	// instance_index_extractor is not : unary_function (template)
+#else
 	const_iterator i(aliases.begin()), e(aliases.end());
 	for ( ; i!=e; ++i) {
 		// don't bother checking for duplicates
 		// (easy: just use std::set instead of vector)
 		indices.push_back(fft((*i)->instance_index));
 	}
-#else
-	transform(aliases.begin(), aliases.end(), back_inserter(indices), 
-		ADS::unary_compose(fft, instance_index_extractor()));
-	// instance_index_extractor is not : unary_function (template)
 #endif
 #if AGGREGATE_PARENT_REFS
 }	// end for
@@ -437,18 +452,32 @@ MEMBER_INSTANCE_REFERENCE_CLASS::unroll_subindices_packed(
 	this->dump(STACKTRACE_STREAM, expr_dump_context::default_value) << endl;
 #endif
 	// resolve parent references first
+#if AGGREGATE_PARENT_REFS
+	vector<global_process_context_id> ffs;
+	if (c.construct_global_footprint_frames(*this->base_inst_ref, u, ffs)) {
+		return bad_bool(true);
+	}
+	vector<size_t> local_indices;		// recycle memory
+	size_t asp = 0;
+	bool sized = false;
+	index_array_reference::iterator ai;
+	vector<global_process_context_id>::const_iterator
+		ffi(ffs.begin()), ffe(ffs.end());
+	for ( ; ffi!=ffe; ++ffi) {
+	const global_process_context_id& ff(*ffi);
+#else
 	global_process_context_id ff;
 	if (c.construct_global_footprint_frame(*this->base_inst_ref, u, ff)) {
 		return bad_bool(true);
 	}
+#endif
 //	const size_t ppid = ff.gpid;	// unused
 #if ENABLE_STACKTRACE
-	// looks wrong
 	c.dump_context(STACKTRACE_STREAM << "global_entry_context c:" << endl)
 		<< endl;
 	ff.frame.dump_frame(STACKTRACE_STREAM) << endl;
 //	STACKTRACE_STREAM << go << endl;
-	STACKTRACE_STREAM << tmpg << endl;
+//	STACKTRACE_STREAM << tmpg << endl;
 #endif
 	alias_collection_type local_aliases;
 	NEVER_NULL(ff.frame._footprint);
@@ -473,6 +502,29 @@ MEMBER_INSTANCE_REFERENCE_CLASS::unroll_subindices_packed(
 		return bad_bool(true);
 	}
 	STACKTRACE_INDENT_PRINT("got local aliases." << endl);
+#if AGGREGATE_PARENT_REFS
+	if (!sized) {
+		// one-time sizing operation
+		// TODO: construct higher dimension arrays
+		typedef	typename alias_collection_type::key_type	key_type;
+		const key_type& l(local_aliases.size());
+		local_indices.resize(local_aliases.sizes_product());
+		key_type k(local_aliases.dimensions()+1);
+		typename key_type::iterator kb(k.begin());
+		k[0] = ffs.size();	// should concatenate dimensions
+		copy(l.begin(), l.end(), kb+1);
+		a.resize(k);
+		ai = a.begin();
+		asp = a.sizes_product();
+		sized = true;
+	}
+	transform(local_aliases.begin(), local_aliases.end(),
+		local_indices.begin(), instance_index_extractor());
+	STACKTRACE_INDENT_PRINT("got local indices." << endl);
+	transform(local_indices.begin(), local_indices.end(), ai, 
+		footprint_frame_transformer(ff.frame, Tag()));
+	ai += asp;
+#else
 	// translate to local indices
 	a.resize(local_aliases.size());
 	transform(local_aliases.begin(), local_aliases.end(), a.begin(), 
@@ -480,8 +532,12 @@ MEMBER_INSTANCE_REFERENCE_CLASS::unroll_subindices_packed(
 	STACKTRACE_INDENT_PRINT("got local indices." << endl);
 	// translate to global indices using parent footprint frame
 	transform(a.begin(), a.end(), a.begin(), 
-		footprint_frame_transformer(ff.frame.template get_frame_map<Tag>()));
+		footprint_frame_transformer(ff.frame, Tag()));
+#endif
 	STACKTRACE_INDENT_PRINT("got global indices." << endl);
+#if AGGREGATE_PARENT_REFS
+	}	// end for
+#endif
 	return bad_bool(false);
 }
 #endif
