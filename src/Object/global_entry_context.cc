@@ -10,6 +10,7 @@
 #include "Object/module.h"
 #include "Object/global_entry.h"
 #include "Object/global_channel_entry.h"
+#include "Object/global_context_cache.h"
 #include "Object/def/footprint.h"
 #include "Object/def/datatype_definition_base.h"
 #include "Object/expr/expr_dump_context.h"
@@ -24,16 +25,9 @@
 #include "Object/inst/instance_placeholder.h"
 #include "Object/inst/physical_instance_placeholder.h"
 #include "Object/ref/member_meta_instance_reference.h"
-#include "util/tree_cache.tcc"
 #include "util/stacktrace.h"
 #include "util/indent.h"
 #include "util/value_saver.h"
-
-// explicit template instantiation
-namespace util {
-using HAC::entity::global_entry_context;
-template class tree_cache<size_t, global_entry_context::cache_entry_type>;
-}
 
 namespace HAC {
 namespace entity {
@@ -82,7 +76,7 @@ global_entry_context::at_top(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-global_entry_context::set_global_context(const cache_entry_type& c) {
+global_entry_context::set_global_context(const global_process_context& c) {
 	fpf = &c.frame;
 	parent_offset = &c.offset;
 }
@@ -205,95 +199,6 @@ if (gpid) {
 }
 	// else refers to top-level
 }	// end global_entry_context::construct_global_footprint_frame
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Looks up sub-cache, refactored out.
- */
-// inline
-global_entry_context::index_frame_cache_type*
-global_entry_context::lookup_local_footprint_frame_cache(const size_t lpid,
-		const footprint& topfp, index_frame_cache_type* cache) {
-	typedef	process_tag				Tag;
-	typedef	state_instance<Tag>::pool_type		pool_type;
-	NEVER_NULL(cache);
-	const std::pair<index_frame_cache_type::child_iterator, bool>
-		cp(cache->insert_find(lpid));
-if (cp.second) {
-	// was a cache miss: re-compute
-	cache_entry_type& ret(cache->value);
-	const footprint* cf = ret.frame._footprint;	// topfp.footprint
-	const pool_type* p = &cf->get_instance_pool<Tag>();
-	global_offset g(ret.offset);
-	if (cf == &topfp) {
-		g = global_offset(g, *cf, add_all_local_tag());
-	} else {
-		g = global_offset(g, *cf, add_local_private_tag());
-	}
-	global_offset delta;
-	cf->set_global_offset_by_process(delta, lpid);
-	delta += g;
-	const state_instance<Tag>& sp((*p)[lpid -1]);
-	const footprint_frame& sff(sp._frame);
-	cf = sff._footprint;
-	const footprint_frame lff(sff, ret.frame);
-	cache = &const_cast<index_frame_cache_type&>(*cp.first); // descend
-	cache_entry_type& next(cache->value);
-	next.frame.construct_global_context(*cf, lff, delta);
-	next.offset = delta;		// g = delta;
-	INVARIANT(cf == next.frame._footprint);
-} else {
-	// else was a cache hit -- saves a lot of work
-	cache = &const_cast<index_frame_cache_type&>(*cp.first); // descend
-}
-	return cache;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Follows exact same flow as construct_global_footprint_frame(), above.
-	This variation returns a referenced to a cache-managed footprint
-	frame, which could either exist from before, or be generated 
-	on the fly.
-	Performance-critical back-ends should use this.
- */
-const global_entry_context::cache_entry_type&
-global_entry_context::lookup_global_footprint_frame_cache(size_t gpid, 
-		index_frame_cache_type* cache) const {
-	STACKTRACE_VERBOSE;
-	typedef	process_tag				Tag;
-	typedef	state_instance<Tag>::pool_type		pool_type;
-	NEVER_NULL(cache);
-	// the top footprint frame is always cached, and pre-constructed
-	cache_entry_type* ret = &cache->value;
-	// entry type contains both frame and offset (pair)
-if (gpid) {
-	// iterative instead of recursive implementation, hence pointers
-	const footprint* cf = ret->frame._footprint;	// topfp->footprint
-	const pool_type* p = &cf->get_instance_pool<Tag>();
-	size_t local = p->local_entries();	// at_top
-	while (gpid > local) {
-		const size_t si = gpid -local;	// 1-based index
-		const pool_private_map_entry_type&
-			e(p->locate_private_entry(si -1));	// need 0-base!
-		const size_t lpid = e.first;
-		gpid = si -e.second;		// still 1-based
-		cache = lookup_local_footprint_frame_cache(lpid, *topfp, cache);
-		ret = &cache->value;
-		cf = ret->frame._footprint;
-		p = &cf->get_instance_pool<Tag>();
-		local = p->local_private_entries();
-	}	// end while
-	const size_t ports = p->port_entries();
-	const size_t lpid = gpid +ports;
-	cache = lookup_local_footprint_frame_cache(lpid, *topfp, cache);
-	ret = &cache->value;
-	return *ret;
-} else {
-	return *ret;
-}
-	// else refers to top-level
-}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

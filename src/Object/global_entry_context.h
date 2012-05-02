@@ -15,7 +15,6 @@
 #include "util/member_saver.h"
 #include "Object/traits/classification_tags_fwd.h"
 #include "Object/ref/reference_enum.h"	// for global_indexed_reference
-#include "util/tokenize_fwd.h"		// for string_list
 #include "util/STL/vector_fwd.h"
 #include "Object/devel_switches.h"
 
@@ -28,11 +27,6 @@
  */
 #define	GLOBAL_CONTEXT_GPID		1
 
-namespace util {
-template <class, class>
-class tree_cache;
-}
-
 namespace HAC {
 namespace entity {
 class module;
@@ -43,8 +37,6 @@ class state_manager;
 struct global_offset;
 template <class> class state_instance;
 class meta_instance_reference_base;
-using std::string;
-using util::string_list;
 struct bool_tag;
 template <class> class footprint_frame_map;
 template <class> class simple_meta_instance_reference;
@@ -191,26 +183,10 @@ virtual	void
 		const simple_meta_instance_reference<Tag>&, 
 		const unroll_context* = NULL) const;
 
-	typedef	global_process_context	cache_entry_type;
-	typedef	util::tree_cache<size_t, cache_entry_type>
-					index_frame_cache_type;
-	typedef	util::tree_cache<string, cache_entry_type>
-					string_frame_cache_type;
-
 	void
 	construct_global_footprint_frame(
 		global_process_context&,
 		size_t pid) const;
-
-	const cache_entry_type&
-	lookup_global_footprint_frame_cache(size_t pid,
-		index_frame_cache_type*) const;
-
-#if 0
-	const cache_entry_type&
-	lookup_global_footprint_frame_cache(const string_list&,
-		string_frame_cache_type*) const;
-#endif
 
 #if AGGREGATE_PARENT_REFS
 	// \return true on error
@@ -274,16 +250,10 @@ private:
 		const unroll_context&) const;
 #endif
 
-	static
-	index_frame_cache_type*
-	lookup_local_footprint_frame_cache(const size_t lpid,
-		const footprint& topfp,
-		index_frame_cache_type*);
-
 public:
 	// e.g. use this after a cache-lookup
 	void
-	set_global_context(const cache_entry_type& c);
+	set_global_context(const global_process_context&);
 
 	void
 	report_instantiation_error(ostream&) const;

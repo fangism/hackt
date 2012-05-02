@@ -35,13 +35,16 @@ using entity::module;
 
 //=============================================================================
 /**
-	For simulators that use a hac module.
+	This struct should be associated with each module instance,
+	of which there is usually only one.
  */
 class global_context_cache {
-protected:
-	typedef	global_entry_context::index_frame_cache_type
+public:
+	typedef	global_process_context	cache_entry_type;
+	typedef	util::tree_cache<size_t, cache_entry_type>
 							frame_cache_type;
-	typedef	global_entry_context::cache_entry_type	cache_entry_type;
+
+protected:
 	mutable frame_cache_type			frame_cache;
 	// keep around a permanent top-context
 public:
@@ -67,6 +70,14 @@ public:
 
 	const frame_cache_type&
 	get_frame_cache(void) const { return frame_cache; }
+
+	static
+	frame_cache_type*
+	lookup_local_footprint_frame_cache(const size_t lpid, 
+		const footprint&, frame_cache_type*);
+
+	const cache_entry_type&
+	lookup_global_footprint_frame_cache(const size_t gpid) const;
 
 	size_t
 	halve_cache(void);

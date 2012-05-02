@@ -8,7 +8,18 @@
 #include <iostream>
 #include <string>
 #include "Object/global_context_cache.h"
+#include "Object/def/footprint.h"
+#include "Object/inst/state_instance.h"
+#include "Object/inst/instance_pool.h"
+#include "Object/traits/proc_traits.h"
+#include "util/tree_cache.tcc"
 #include "util/stacktrace.h"
+
+// explicit template instantiation
+namespace util {
+using HAC::entity::global_context_cache;
+template class tree_cache<size_t, global_context_cache::cache_entry_type>;
+}
 
 namespace HAC {
 namespace entity {
@@ -38,7 +49,7 @@ global_context_cache::global_context_cache(const footprint& topfp) :
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 static
 void
-cache_entry_dump(ostream& o, const global_entry_context::cache_entry_type&) {
+cache_entry_dump(ostream& o, const global_context_cache::cache_entry_type&) {
 	o << "pair<frame,offset>\n";
 }
 
@@ -86,7 +97,6 @@ global_context_cache::get_footprint_frame(const size_t pid) const {
  */
 const global_context_cache::cache_entry_type&
 global_context_cache::get_global_context(const size_t pid) const {
-//	cerr << "<pid:" << pid << '>' << endl;
 //	STACKTRACE_VERBOSE;
 //	STACKTRACE_INDENT_PRINT("pid = " << pid << endl);
 	// special case for top-level
@@ -114,20 +124,109 @@ global_context_cache::get_global_context(const size_t pid) const {
 		cache_entry_type& ret(hot_cache[cache_lru].second);
 		hot_cache[cache_lru].first = pid;
 		// copy over to hot_cache
-		const global_entry_context tgc(top_context);
-		ret = tgc.lookup_global_footprint_frame_cache(
-			pid, &frame_cache);
+//		const global_entry_context& tgc(top_context);
+		ret = lookup_global_footprint_frame_cache(pid);
 		return ret;
 	}
 #else
-	const footprint_frame&
-		ret(top_context.lookup_global_footprint_frame_cache(pid,
-			&frame_cache).first);
+	const cache_entry_type&
+		ret(lookup_global_footprint_frame_cache(pid));
 #if ENABLE_STACKTRACE
 	ret.dump_frame(STACKTRACE_INDENT_PRINT("frame:")) << endl;
 #endif
-	return ret.get_frame_map<bool_tag>();
+	return ret;
 #endif	// HOT_CACHE_FRAMES
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Looks up sub-cache, refactored out.
+ */
+// inline
+global_context_cache::frame_cache_type*
+global_context_cache::lookup_local_footprint_frame_cache(const size_t lpid,
+		const footprint& topfp, frame_cache_type* cache) {
+	typedef	process_tag				Tag;
+	typedef	state_instance<Tag>::pool_type		pool_type;
+	NEVER_NULL(cache);
+//	const footprint* topfp = &top_context.fpf->_footprint;
+	const std::pair<frame_cache_type::child_iterator, bool>
+		cp(cache->insert_find(lpid));
+if (cp.second) {
+	// was a cache miss: re-compute
+	cache_entry_type& ret(cache->value);
+	const footprint* cf = ret.frame._footprint;	// topfp.footprint
+	const pool_type* p = &cf->get_instance_pool<Tag>();
+	global_offset g(ret.offset);
+	if (cf == &topfp) {
+		g = global_offset(g, *cf, add_all_local_tag());
+	} else {
+		g = global_offset(g, *cf, add_local_private_tag());
+	}
+	global_offset delta;
+	cf->set_global_offset_by_process(delta, lpid);
+	delta += g;
+	const state_instance<Tag>& sp((*p)[lpid -1]);
+	const footprint_frame& sff(sp._frame);
+	cf = sff._footprint;
+	const footprint_frame lff(sff, ret.frame);
+	cache = &const_cast<frame_cache_type&>(*cp.first); // descend
+	cache_entry_type& next(cache->value);
+	next.frame.construct_global_context(*cf, lff, delta);
+	next.offset = delta;		// g = delta;
+	INVARIANT(cf == next.frame._footprint);
+} else {
+	// else was a cache hit -- saves a lot of work
+	cache = &const_cast<frame_cache_type&>(*cp.first); // descend
+}
+	return cache;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Follows exact same flow as construct_global_footprint_frame(), above.
+	This variation returns a referenced to a cache-managed footprint
+	frame, which could either exist from before, or be generated 
+	on the fly.
+	Performance-critical back-ends should use this.
+	Is a member-function because of reference to topfp.
+ */
+const global_context_cache::cache_entry_type&
+global_context_cache::lookup_global_footprint_frame_cache(size_t gpid) const {
+	STACKTRACE_VERBOSE;
+	typedef	process_tag				Tag;
+	typedef	state_instance<Tag>::pool_type		pool_type;
+	// the top footprint frame is always cached, and pre-constructed
+	const footprint* const topfp = top_context.fpf->_footprint;
+	frame_cache_type* cache = &frame_cache;
+	cache_entry_type* ret = &cache->value;
+	// entry type contains both frame and offset (pair)
+if (gpid) {
+	// iterative instead of recursive implementation, hence pointers
+	const footprint* cf = ret->frame._footprint;	// topfp->footprint
+	const pool_type* p = &cf->get_instance_pool<Tag>();
+	size_t local = p->local_entries();	// at_top
+	while (gpid > local) {
+		const size_t si = gpid -local;	// 1-based index
+		const pool_private_map_entry_type&
+			e(p->locate_private_entry(si -1));	// need 0-base!
+		const size_t lpid = e.first;
+		gpid = si -e.second;		// still 1-based
+		cache = lookup_local_footprint_frame_cache(lpid, *topfp, cache);
+		ret = &cache->value;
+		cf = ret->frame._footprint;
+		p = &cf->get_instance_pool<Tag>();
+		local = p->local_private_entries();
+	}	// end while
+	const size_t ports = p->port_entries();
+	const size_t lpid = gpid +ports;
+	cache = lookup_local_footprint_frame_cache(lpid, *topfp, cache);
+	ret = &cache->value;
+	return *ret;
+} else {
+	return *ret;
+}
+	// else refers to top-level
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
