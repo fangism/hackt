@@ -12,6 +12,7 @@
 #include "Object/global_channel_entry.h"
 #endif
 #include "Object/global_entry_context.h"
+#include "Object/global_context_cache.h"
 #include "Object/def/footprint.h"
 #include "Object/module.h"
 #include "Object/traits/bool_traits.h"
@@ -818,13 +819,63 @@ global_process_context::global_process_context(const module& m) :
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 global_process_context::global_process_context(const module& m, 
 		const size_t gpid) : frame(), offset() {
+#if MODULE_OWNS_CONTEXT_CACHE
+	// FIXME: this is failing...
+	// always use context_cache for lookup
+	NEVER_NULL(m.context_cache);
+	const global_process_context&
+		c(m.context_cache->get_global_context(gpid));
+	frame = c.frame;
+	offset = c.offset;
+#else
 	const global_process_context gpc(m.get_footprint());
 	const global_entry_context gc(gpc);
 	gc.construct_global_footprint_frame(*this, gpid);
+#endif
 #if ENABLE_STACKTRACE
 	STACKTRACE_INDENT_PRINT("offset: " << offset) << endl;
 	frame.dump_frame(STACKTRACE_INDENT_PRINT("frame:")) << endl;
 #endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Transforms frame and offset by 'descending' into local process lpid.
+	This call is expensive, so recommend caching results where possible.
+	\param gpc is the parent context (can be self if already initialized).
+	\param lpid local process id to descend into.
+	\param is_top is true if the initial frame represents the top-level.
+ */
+void
+global_process_context::descend_frame(const global_process_context& gpc, 
+		const size_t lpid, const bool is_top) {
+	typedef process_tag				Tag;
+	typedef state_instance<Tag>::pool_type		pool_type;
+	STACKTRACE_VERBOSE;
+	STACKTRACE_INDENT_PRINT("lpid = " << lpid << endl);
+	INVARIANT(lpid);
+	const footprint& cf(*gpc.frame._footprint);
+//	INVARIANT(cf == frame._footprint);
+	if (is_top) {
+		offset = global_offset(gpc.offset, cf, add_all_local_tag());
+	} else {
+		offset = global_offset(gpc.offset, cf, add_local_private_tag());
+	}
+	global_offset delta;
+	cf.set_global_offset_by_process(delta, lpid);
+	delta += offset;
+	const pool_type& p(cf.get_instance_pool<Tag>());
+	const state_instance<Tag>& sp(p[lpid -1]);
+	const footprint_frame& sff(sp._frame);
+	const footprint& nextfp(*sff._footprint);
+	footprint_frame lff(sff, gpc.frame);
+	frame.construct_global_context(nextfp, lff, delta);
+#if ENABLE_STACKTRACE
+	frame.dump_frame(STACKTRACE_INDENT_PRINT("frame:")) << endl;
+#endif
+	offset = delta;
+	STACKTRACE_INDENT_PRINT("offset = " << offset << endl);
+//	INVARIANT(nextfp == frame._footprint);
 }
 
 //=============================================================================

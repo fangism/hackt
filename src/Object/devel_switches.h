@@ -292,9 +292,18 @@
 	to flatten or expand into a large number of individual references.
 	Goal: 1
 	Rationale: more efficient lookups
-	Status: massive speedup on quarantine tests
+	Status: tested, massive speedup on quarantine tests
  */
 #define	AGGREGATE_PARENT_REFS			1
+
+/**
+	Define to 1 if module contains top-level hierarchical global
+	context cache for indexed reference/frame lookups.
+	Rationale: for speeding up lookups
+	Goal: 1
+	Status: basically tested
+ */
+#define	MODULE_OWNS_CONTEXT_CACHE		0
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

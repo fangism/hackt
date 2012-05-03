@@ -154,6 +154,12 @@ HAC_GUILE_DEFINE(wrap_load_object, FUNC_NAME, 1, 0, 0, (SCM objname),
 			"Error: unable to load HAC object file.",
 			SCM_EOL);
 	}
+	// this was needed to initialize context-cache
+	if (!obj_module->allocate_unique().good) {
+		scm_misc_error(FUNC_NAME, 
+			"Error: creating/expanding top-level.",
+			SCM_EOL);
+	}
 	return SCM_UNSPECIFIED;
 }
 #undef	FUNC_NAME

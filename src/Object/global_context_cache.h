@@ -16,18 +16,20 @@
  */
 // #define	CACHE_GLOBAL_FOOTPRINT_FRAMES			1
 
+#include "Object/global_entry_context.h"
+#include "Object/global_entry.h"		// for footprint_frame
+#include "util/tree_cache.h"
+
 /**
 	Define to 1 to keep around the last two footprint frames (LRU).  
 	This brings a little bit more speedup.
  */
 #define HOT_CACHE_FRAMES		1
 
-#include "Object/global_entry_context.h"
-#include "Object/global_entry.h"		// for footprint_frame
-#include "util/tree_cache.h"
 
 namespace HAC {
 namespace entity {
+struct global_entry_context;
 using std::ostream;
 using std::istream;
 using std::string;
@@ -61,9 +63,6 @@ public:
 	explicit
 	global_context_cache(const footprint&);
 	~global_context_cache();
-
-	const footprint_frame&
-	get_footprint_frame(const size_t pid) const;
 
 	const cache_entry_type&
 	get_global_context(const size_t pid) const;

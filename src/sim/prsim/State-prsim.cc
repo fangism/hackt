@@ -123,6 +123,12 @@
  */
 #define	EXTRA_ALIGN_MARKERS			0
 
+#if MODULE_OWNS_CONTEXT_CACHE
+#define	GET_CONTEXT_CACHE		get_module().context_cache->
+#else
+#define	GET_CONTEXT_CACHE		module_state_base::
+#endif
+
 
 namespace HAC {
 namespace entity { }
@@ -973,7 +979,8 @@ footprint_frame_map_type
 const footprint_frame_map_type&
 #endif
 State::get_footprint_frame_map(const process_index_type pid) const {
-	return module_state_base::get_footprint_frame(pid).get_frame_map<bool_tag>();
+	return GET_CONTEXT_CACHE
+		get_global_context(pid).frame.get_frame_map<bool_tag>();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3406,7 +3413,7 @@ if (n.in_channel()) {
 		--cache_countdown;
 	} else {
 		cache_countdown = cache_half_life;
-		halve_cache();
+		GET_CONTEXT_CACHE halve_cache();
 	}
 #endif
 
@@ -6900,7 +6907,7 @@ struct process_sim_state::memory_accumulator {
  */
 ostream&
 State::dump_memory_usage(ostream& o) const {
-	module_state_base::dump_memory_usage(o);
+	GET_CONTEXT_CACHE dump_memory_usage(o);
 {
 	const size_t ns = node_pool.size();
 	o << "node-state: ("  << ns << " * " << sizeof(node_type) <<

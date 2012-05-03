@@ -573,6 +573,16 @@ struct global_process_context {
 		frame.construct_top_global_context(*frame._footprint, offset);
 	}
 
+	void
+	descend_frame(const global_process_context&, 
+		const size_t lpid, const bool);
+
+	/// modifies self, overwriting with child frame/offset
+	void
+	descend_frame(const size_t lpid, const bool is_top) {
+		descend_frame(*this, lpid, is_top);
+	}
+
 	ostream&
 	dump_frame(ostream& o) const {
 		return frame.dump_frame(o);

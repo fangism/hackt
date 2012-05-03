@@ -77,15 +77,6 @@ global_context_cache::dump_frame_cache(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Only returns the frame portion of the context.
- */
-const footprint_frame&
-global_context_cache::get_footprint_frame(const size_t pid) const {
-	return get_global_context(pid).frame;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /** 
 	Returns the local-to-global node translation map for process pid.
 	This *really* should be inlined...
@@ -97,8 +88,7 @@ global_context_cache::get_footprint_frame(const size_t pid) const {
  */
 const global_context_cache::cache_entry_type&
 global_context_cache::get_global_context(const size_t pid) const {
-//	STACKTRACE_VERBOSE;
-//	STACKTRACE_INDENT_PRINT("pid = " << pid << endl);
+	STACKTRACE_VERBOSE;
 	// special case for top-level
 	if (!pid) {
 		// this is permanent
@@ -126,6 +116,9 @@ global_context_cache::get_global_context(const size_t pid) const {
 		// copy over to hot_cache
 //		const global_entry_context& tgc(top_context);
 		ret = lookup_global_footprint_frame_cache(pid);
+#if ENABLE_STACKTRACE
+		ret.dump_frame(STACKTRACE_INDENT_PRINT("frame:")) << endl;
+#endif
 		return ret;
 	}
 #else
@@ -146,6 +139,8 @@ global_context_cache::get_global_context(const size_t pid) const {
 global_context_cache::frame_cache_type*
 global_context_cache::lookup_local_footprint_frame_cache(const size_t lpid,
 		const footprint& topfp, frame_cache_type* cache) {
+	STACKTRACE_VERBOSE;
+	STACKTRACE_INDENT_PRINT("lpid = " << lpid << endl);
 	typedef	process_tag				Tag;
 	typedef	state_instance<Tag>::pool_type		pool_type;
 	NEVER_NULL(cache);
@@ -154,29 +149,14 @@ global_context_cache::lookup_local_footprint_frame_cache(const size_t lpid,
 		cp(cache->insert_find(lpid));
 if (cp.second) {
 	// was a cache miss: re-compute
-	cache_entry_type& ret(cache->value);
-	const footprint* cf = ret.frame._footprint;	// topfp.footprint
-	const pool_type* p = &cf->get_instance_pool<Tag>();
-	global_offset g(ret.offset);
-	if (cf == &topfp) {
-		g = global_offset(g, *cf, add_all_local_tag());
-	} else {
-		g = global_offset(g, *cf, add_local_private_tag());
-	}
-	global_offset delta;
-	cf->set_global_offset_by_process(delta, lpid);
-	delta += g;
-	const state_instance<Tag>& sp((*p)[lpid -1]);
-	const footprint_frame& sff(sp._frame);
-	cf = sff._footprint;
-	const footprint_frame lff(sff, ret.frame);
+	STACKTRACE_INDENT_PRINT("local cache miss, computing frame" << endl);
+	const cache_entry_type& ret(cache->value);	// parent context
 	cache = &const_cast<frame_cache_type&>(*cp.first); // descend
-	cache_entry_type& next(cache->value);
-	next.frame.construct_global_context(*cf, lff, delta);
-	next.offset = delta;		// g = delta;
-	INVARIANT(cf == next.frame._footprint);
+	// expensive child frame construction
+	cache->value.descend_frame(ret, lpid, ret.frame._footprint == &topfp);
 } else {
 	// else was a cache hit -- saves a lot of work
+	STACKTRACE_INDENT_PRINT("local cache hit, re-using frame" << endl);
 	cache = &const_cast<frame_cache_type&>(*cp.first); // descend
 }
 	return cache;
@@ -194,6 +174,7 @@ if (cp.second) {
 const global_context_cache::cache_entry_type&
 global_context_cache::lookup_global_footprint_frame_cache(size_t gpid) const {
 	STACKTRACE_VERBOSE;
+	STACKTRACE_INDENT_PRINT("gpid = " << gpid << endl);
 	typedef	process_tag				Tag;
 	typedef	state_instance<Tag>::pool_type		pool_type;
 	// the top footprint frame is always cached, and pre-constructed
@@ -206,8 +187,10 @@ if (gpid) {
 	const footprint* cf = ret->frame._footprint;	// topfp->footprint
 	const pool_type* p = &cf->get_instance_pool<Tag>();
 	size_t local = p->local_entries();	// at_top
+	STACKTRACE_INDENT_PRINT("local entries = " << local << endl);
 	while (gpid > local) {
 		const size_t si = gpid -local;	// 1-based index
+		STACKTRACE_INDENT_PRINT("remainder = " << si << endl);
 		const pool_private_map_entry_type&
 			e(p->locate_private_entry(si -1));	// need 0-base!
 		const size_t lpid = e.first;
@@ -218,6 +201,7 @@ if (gpid) {
 		p = &cf->get_instance_pool<Tag>();
 		local = p->local_private_entries();
 	}	// end while
+	STACKTRACE_INDENT_PRINT("deepest level, owner scope" << endl);
 	const size_t ports = p->port_entries();
 	const size_t lpid = gpid +ports;
 	cache = lookup_local_footprint_frame_cache(lpid, *topfp, cache);

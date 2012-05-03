@@ -26,6 +26,7 @@ class context;
 
 namespace entity {
 class process_type_reference;
+class global_context_cache;
 using std::default_vector;
 using std::string;
 using std::ostream;
@@ -54,6 +55,9 @@ protected:
 	excl_ptr<name_space>			global_namespace;
 public:
 	compile_options				compile_opts;
+#if MODULE_OWNS_CONTEXT_CACHE
+	mutable excl_ptr<global_context_cache>		context_cache;
+#endif
 private:
 	module();
 
@@ -102,6 +106,11 @@ public:
 
 	void
 	reset(void);
+
+#if MODULE_OWNS_CONTEXT_CACHE
+	void
+	initialize_context_cache(void) const;
+#endif
 
 private:
 	good_bool

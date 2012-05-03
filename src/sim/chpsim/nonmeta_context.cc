@@ -10,6 +10,7 @@
 #include "sim/chpsim/Event.h"
 #include "sim/chpsim/State.h"
 #include "Object/def/footprint.h"
+#include "Object/module.h"
 #include "Object/global_entry.h"
 #include "Object/traits/proc_traits.h"
 #include "Object/lang/CHP_event.h"
@@ -30,7 +31,13 @@ using entity::process_tag;
 	A delegating constructor would be nice...
  */
 nonmeta_context::nonmeta_context(State& r) :
-		nonmeta_context_base(r.top_context, r.instances),
+		nonmeta_context_base(
+#if MODULE_OWNS_CONTEXT_CACHE
+			r.get_module().context_cache->top_context,
+#else
+			r.top_context,
+#endif
+			r.instances),
 		event(NULL), 
 		global_event_offset(0), 	// any invalid value
 		process_index(0),

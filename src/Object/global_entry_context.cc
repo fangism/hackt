@@ -101,11 +101,15 @@ global_entry_context::dump_context(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if MODULE_OWNS_CONTEXT_CACHE
+// call global_context_cache::get_global_context() instead
+#else
 /**
 	Similar traversal to footprint::get_instance<>().
 	\param gpid global process index 1-based.  
 		pass 0 to indicate top-level.
 	NOTE: parent_offset and fpf are only used once in this impl.
+		g_offset member is never used here.
  */
 void
 global_entry_context::construct_global_footprint_frame(
@@ -120,85 +124,43 @@ global_entry_context::construct_global_footprint_frame(
 	ret.construct_top_global_context(*topfp, g);
 	g = *parent_offset;
 #if ENABLE_STACKTRACE
-	ret.dump_frame(STACKTRACE_INDENT_PRINT("top:")) << endl;
+	gpc.dump_frame(STACKTRACE_INDENT_PRINT("top:")) << endl;
 #endif
 if (gpid) {
 	// iterative instead of recursive implementation, hence pointers
 	const footprint* cf = fpf->_footprint;
 	const pool_type* p = &cf->get_instance_pool<Tag>();
-	size_t ports = 0;			// at_top
 	size_t local = p->local_entries();	// at_top
-	STACKTRACE_INDENT_PRINT("ports = " << ports << endl);
 	STACKTRACE_INDENT_PRINT("local = " << local << endl);
 	STACKTRACE_INDENT_PRINT("gpid(1) = " << gpid << endl);
-	STACKTRACE_INDENT_PRINT("offset = " << g << endl);
+//	STACKTRACE_INDENT_PRINT("offset = " << g << endl);
 	while (gpid > local) {
 		STACKTRACE_INDENT_PRINT("descending..." << endl);
 		const size_t si = gpid -local;	// 1-based index
-		// subtract 1 for self index?
-		// TODO: refactor out following code
 		STACKTRACE_INDENT_PRINT("rem(1) = " << si << endl);
-		if (cf == topfp) {
-			g = global_offset(g, *cf, add_all_local_tag());
-		} else {
-			g = global_offset(g, *cf, add_local_private_tag());
-		}
 		const pool_private_map_entry_type&
 			e(p->locate_private_entry(si -1));	// need 0-base!
 		const size_t lpid = e.first;
 		STACKTRACE_INDENT_PRINT("lpid(1) = " << lpid << endl);
-		global_offset delta;
-		cf->set_global_offset_by_process(delta, lpid);
-		delta += g;
-		const state_instance<Tag>& sp((*p)[lpid -1]);
-		const footprint_frame& sff(sp._frame);
-		cf = sff._footprint;
 		gpid = si -e.second;		// still 1-based
-		footprint_frame lff(sff, ret);
-		ret.construct_global_context(*cf, lff, delta);
-#if ENABLE_STACKTRACE
-		ret.dump_frame(STACKTRACE_INDENT_PRINT("frame:")) << endl;
-#endif
-		g = delta;
+		gpc.descend_frame(lpid, cf == topfp);
+		cf = gpc.frame._footprint;
 		p = &cf->get_instance_pool<Tag>();
-		ports = p->port_entries();
 		local = p->local_private_entries();
-		STACKTRACE_INDENT_PRINT("ports = " << ports << endl);
 		STACKTRACE_INDENT_PRINT("local = " << local << endl);
 		STACKTRACE_INDENT_PRINT("gpid(1) = " << gpid << endl);
-		STACKTRACE_INDENT_PRINT("offset = " << g << endl);
 	}
 	STACKTRACE_INDENT_PRINT("found owner scope" << endl);
+	const size_t ports = p->port_entries();
+	STACKTRACE_INDENT_PRINT("ports = " << ports << endl);
 	const size_t lpid = gpid +ports;
 	STACKTRACE_INDENT_PRINT("lpid(1) = " << lpid << endl);
-	STACKTRACE_INDENT_PRINT("offset = " << g << endl);
-	g = global_offset(g, *cf, add_local_private_tag());
-	STACKTRACE_INDENT_PRINT("offset+fp = " << g << endl);
-	p = &cf->get_instance_pool<Tag>();
-	const state_instance<Tag>& sp((*p)[lpid -1]);
-	const footprint_frame& sff(sp._frame);
-	footprint_frame lff(sff, ret);
-#if ENABLE_STACKTRACE
-	sff.dump_frame(STACKTRACE_INDENT_PRINT("sff:")) << endl;
-	ret.dump_frame(STACKTRACE_INDENT_PRINT("actuals:")) << endl;
-	lff.dump_frame(STACKTRACE_INDENT_PRINT("pre-frame:")) << endl;
-#endif
-	global_offset delta;
-	cf->set_global_offset_by_process(delta, lpid);
-	STACKTRACE_INDENT_PRINT("delta = " << delta << endl);
-	delta += g;
-#if ENABLE_STACKTRACE
-	STACKTRACE_INDENT_PRINT("delta+g = " << delta << endl);
-#endif
-	cf = sff._footprint;
-	ret.construct_global_context(*cf, lff, delta);
-#if ENABLE_STACKTRACE
-	ret.dump_frame(STACKTRACE_INDENT_PRINT("ret-frame:")) << endl;
-#endif
-	g = delta;
+//	STACKTRACE_INDENT_PRINT("offset = " << g << endl);
+	gpc.descend_frame(lpid, cf == topfp);
 }
 	// else refers to top-level
 }	// end global_entry_context::construct_global_footprint_frame
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
