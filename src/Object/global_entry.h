@@ -546,6 +546,7 @@ public:
 //=============================================================================
 /**
 	Uses global_entry_context to construct process context.
+	Frame and offset go together.
  */
 struct global_process_context {
 	footprint_frame				frame;
@@ -583,6 +584,14 @@ struct global_process_context {
 		descend_frame(*this, lpid, is_top);
 	}
 
+	void
+	descend_port(const global_process_context&, const size_t lpid);
+
+	void
+	descend_port(const size_t lpid) {
+		descend_port(*this, lpid);
+	}
+
 	ostream&
 	dump_frame(ostream& o) const {
 		return frame.dump_frame(o);
@@ -600,10 +609,37 @@ struct global_process_context {
 	This is useful as a return type from instance-reference lookups.
  */
 struct global_process_context_id : public global_process_context {
+	typedef	global_process_context		parent_type;
 	size_t					gpid;
 
 	// usually default ctor
 	global_process_context_id() : global_process_context(), gpid(0) { }
+
+	void
+	descend_frame(const global_process_context& gpc, 
+			const size_t lpid, const bool is_top) {
+		parent_type::descend_frame(gpc, lpid, is_top);
+		gpid = lpid;
+	}
+
+	void
+	descend_frame(const size_t lpid, const bool is_top) {
+		parent_type::descend_frame(*this, lpid, is_top);
+		gpid = lpid;
+	}
+
+	void
+	descend_port(const global_process_context& gpc, 
+			const size_t lpid) {
+		parent_type::descend_port(gpc, lpid);
+		gpid = lpid;
+	}
+
+	void
+	descend_port(const size_t lpid) {
+		parent_type::descend_port(*this, lpid);
+		gpid = lpid;
+	}
 
 };	// end struct global_process_context_id
 

@@ -835,7 +835,7 @@ global_process_context::global_process_context(const module& m,
 	frame = c.frame;
 	offset = c.offset;
 #else
-	// this works, uncached
+	// uncached, does work from scratch, is expensive
 	const global_process_context gpc(m.get_footprint());
 	const global_entry_context gc(gpc);
 	gc.construct_global_footprint_frame(*this, gpid);
@@ -851,7 +851,7 @@ global_process_context::global_process_context(const module& m,
 	Transforms frame and offset by 'descending' into local process lpid.
 	This call is expensive, so recommend caching results where possible.
 	\param gpc is the parent context (can be self if already initialized).
-	\param lpid local process id to descend into.
+	\param lpid local process id to descend into, 1-based.
 	\param is_top is true if the initial frame represents the top-level.
  */
 void
@@ -873,17 +873,46 @@ global_process_context::descend_frame(const global_process_context& gpc,
 	cf.set_global_offset_by_process(delta, lpid);
 	delta += offset;
 	const pool_type& p(cf.get_instance_pool<Tag>());
-	const state_instance<Tag>& sp(p[lpid -1]);
+	INVARIANT(lpid <= p.local_entries());
+	const state_instance<Tag>& sp(p[lpid -1]);	// need 0-based
 	const footprint_frame& sff(sp._frame);
 	const footprint& nextfp(*sff._footprint);
 	footprint_frame lff(sff, gpc.frame);
 	frame.construct_global_context(nextfp, lff, delta);
+	offset = delta;
+#if ENABLE_STACKTRACE
+	frame.dump_frame(STACKTRACE_INDENT_PRINT("frame:")) << endl;
+	STACKTRACE_INDENT_PRINT("offset = " << offset << endl);
+#endif
+//	INVARIANT(nextfp == frame._footprint);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Descending down a public port structure.
+	only results in changing the frame.
+	Offset remains the same.
+	\param gpc is the parent context (can be self if already initialized).
+	\param lpid local process id to descend into, 1-based.
+ */
+void
+global_process_context::descend_port(const global_process_context& gpc, 
+		const size_t lpid) {
+	typedef process_tag				Tag;
+	typedef state_instance<Tag>::pool_type		pool_type;
+	STACKTRACE_VERBOSE;
+	STACKTRACE_INDENT_PRINT("lpid = " << lpid << endl);
+	const footprint& cf(*gpc.frame._footprint);
+	const pool_type& p(cf.get_instance_pool<Tag>());
+	INVARIANT(lpid <= p.port_entries());
+	const state_instance<Tag>& sp(p[lpid -1]);	// need 0-based
+	const footprint_frame& sff(sp._frame);
+	footprint_frame rff(sff, gpc.frame);
+	const footprint& nextfp(*sff._footprint);
+	frame.construct_global_context(nextfp, rff, gpc.offset);
 #if ENABLE_STACKTRACE
 	frame.dump_frame(STACKTRACE_INDENT_PRINT("frame:")) << endl;
 #endif
-	offset = delta;
-	STACKTRACE_INDENT_PRINT("offset = " << offset << endl);
-//	INVARIANT(nextfp == frame._footprint);
 }
 
 //=============================================================================
