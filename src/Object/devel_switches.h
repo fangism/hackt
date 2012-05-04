@@ -303,7 +303,7 @@
 	Goal: 1
 	Status: basically tested
  */
-#define	MODULE_OWNS_CONTEXT_CACHE		0
+#define	MODULE_OWNS_CONTEXT_CACHE		1
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

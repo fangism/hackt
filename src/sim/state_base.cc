@@ -19,15 +19,20 @@ namespace SIM {
 //=============================================================================
 // class state_base method defintions
 
-state_base::state_base() : prompt(), ifstreams() { }
+state_base::state_base() : prompt(), ifstreams() {
+	STACKTRACE_VERBOSE;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 state_base::state_base(const string& p) :
 		prompt(p), ifstreams() {
+	STACKTRACE_VERBOSE;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-state_base::~state_base() { }
+state_base::~state_base() {
+	STACKTRACE_VERBOSE;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -45,10 +50,13 @@ module_state_base::module_state_base(const module& m, const string& p) :
 		global_context_cache(m.get_footprint()),
 #endif
 		mod(m) {
+	STACKTRACE_VERBOSE;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-module_state_base::~module_state_base() { }
+module_state_base::~module_state_base() {
+	STACKTRACE_VERBOSE;
+}
 
 //=============================================================================
 }	// end namespace SIM

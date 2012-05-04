@@ -817,17 +817,25 @@ global_process_context::global_process_context(const module& m) :
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This is called from: parser/instref.cc
+	parse_name_to_get_subinstances()
+	parse_name_to_get_subnodes_local()
+	parse_name_to_get_ports()
+ */
 global_process_context::global_process_context(const module& m, 
 		const size_t gpid) : frame(), offset() {
+	STACKTRACE_VERBOSE;
 #if MODULE_OWNS_CONTEXT_CACHE
-	// FIXME: this is failing...
 	// always use context_cache for lookup
 	NEVER_NULL(m.context_cache);
 	const global_process_context&
 		c(m.context_cache->get_global_context(gpid));
+	// copy to self
 	frame = c.frame;
 	offset = c.offset;
 #else
+	// this works, uncached
 	const global_process_context gpc(m.get_footprint());
 	const global_entry_context gc(gpc);
 	gc.construct_global_footprint_frame(*this, gpid);

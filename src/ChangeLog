@@ -3,6 +3,15 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2012-05-03	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-29:
+	  Series of rewrites to global_context lookup, now all globally 
+		indexed are cached, where the cache belongs to the module.
+		Much code was refactored and is significantly cleaner.
+		No regressions.
+		
+
 2012-05-01	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-85-28:

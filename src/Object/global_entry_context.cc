@@ -106,6 +106,8 @@ global_entry_context::dump_context(ostream& o) const {
 #else
 /**
 	Similar traversal to footprint::get_instance<>().
+	Only called by global_process_context::global_process_context(
+		const module&, const size_t)
 	\param gpid global process index 1-based.  
 		pass 0 to indicate top-level.
 	NOTE: parent_offset and fpf are only used once in this impl.

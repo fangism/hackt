@@ -35,14 +35,19 @@ global_context_cache::global_context_cache(const footprint& topfp) :
 		, cache_lru(0)
 #endif
 		{
+	STACKTRACE_VERBOSE;
 	// default constructed global_offset = 0s
-	const global_offset& g(frame_cache.value.offset);
 	// contruct top footprint frame once, and keep around permanently
-	frame_cache.value.frame.construct_top_global_context(topfp, g);
+	frame_cache.value.construct_top_global_context();
 #if HOT_CACHE_FRAMES
 	// initially empty cache
 	hot_cache[0].first = size_t(-1);
 	hot_cache[1].first = size_t(-1);
+#endif
+#if ENABLE_STACKTRACE
+	frame_cache.value.dump_frame(STACKTRACE_STREAM << "top frame: ")
+		<< endl;
+	STACKTRACE_STREAM << "top offset: " << frame_cache.value.offset << endl;
 #endif
 }
 

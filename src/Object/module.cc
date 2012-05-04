@@ -593,10 +593,7 @@ module::load_object(const persistent_object_manager& m, istream& f) {
 	// since instance pools are reconstructed,
 	// we need to override the top-level module to have no ports
 	get_footprint().zero_top_level_ports();
-	// ignore context cache
-#if MODULE_OWNS_CONTEXT_CACHE
-	initialize_context_cache();
-#endif
+	// ignore context cache, load later...
 }
 
 //=============================================================================

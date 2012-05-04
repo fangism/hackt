@@ -183,13 +183,13 @@ virtual	void
 		const simple_meta_instance_reference<Tag>&, 
 		const unroll_context* = NULL) const;
 
-#if !MODULE_OWNS_CONTEXT_CACHE
+#if MODULE_OWNS_CONTEXT_CACHE
+// call global_context_cache::get_global_context() instead
+#else
 	void
 	construct_global_footprint_frame(
 		global_process_context&,
 		size_t gpid) const;
-#else
-// call global_context_cache::get_global_context() instead
 #endif
 
 #if AGGREGATE_PARENT_REFS

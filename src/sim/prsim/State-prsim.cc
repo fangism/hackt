@@ -398,6 +398,9 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 	// got a walker? and prs_expr_visitor?
 	// see "ExprAlloc.h"
 
+#if MODULE_OWNS_CONTEXT_CACHE
+	NEVER_NULL(m.context_cache);
+#endif
 	// NOTE: we're referencing 'this' during construction, however, we 
 	// are done constructing this State's members at this point.  
 	const entity::global_process_context gpc(topfp);
