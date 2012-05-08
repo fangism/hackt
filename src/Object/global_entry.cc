@@ -830,7 +830,7 @@ global_process_context::global_process_context(const module& m,
 	// always use context_cache for lookup
 	NEVER_NULL(m.context_cache);
 	const global_process_context&
-		c(m.context_cache->get_global_context(gpid));
+		c(m.context_cache->get_global_context(gpid).value);
 	// copy to self
 	frame = c.frame;
 	offset = c.offset;
@@ -874,6 +874,7 @@ global_process_context::descend_frame(const global_process_context& gpc,
 	delta += offset;
 	const pool_type& p(cf.get_instance_pool<Tag>());
 	INVARIANT(lpid <= p.local_entries());
+//	INVARIANT(lpid >= p.port_entries());		// not necessarily!
 	const state_instance<Tag>& sp(p[lpid -1]);	// need 0-based
 	const footprint_frame& sff(sp._frame);
 	const footprint& nextfp(*sff._footprint);

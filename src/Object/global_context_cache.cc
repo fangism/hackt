@@ -69,6 +69,11 @@ global_context_cache::~global_context_cache() {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 size_t
 global_context_cache::halve_cache(void) {
+#if HOT_CACHE_FRAMES
+	// to be safe and not leave dangling ref, invalidate these
+	hot_cache[0].first = size_t(-1);
+	hot_cache[1].first = size_t(-1);
+#endif
 	return frame_cache.halve();
 }
 
@@ -91,14 +96,14 @@ global_context_cache::dump_frame_cache(ostream& o) const {
 	\param pid is 1-based global process index.
 	\return frame containing global bool ids for this process
  */
-const global_context_cache::cache_entry_type&
+const global_context_cache::frame_cache_type&
 global_context_cache::get_global_context(const size_t pid) const {
 	STACKTRACE_VERBOSE;
 	// special case for top-level
 	if (!pid) {
 		// this is permanent
 		// return top_context.get_footprint_frame();
-		return frame_cache.value;
+		return frame_cache;
 	}
 #if HOT_CACHE_FRAMES
 	// check LRU before tree cache
@@ -106,39 +111,40 @@ global_context_cache::get_global_context(const size_t pid) const {
 	if (hot_cache[cache_lru].first == pid) {
 		// hit most LRU
 		STACKTRACE_INDENT_PRINT("LRU hit 1 @" << pid << endl);
-		return hot_cache[cache_lru].second;
+		return *hot_cache[cache_lru].second;
 	} else if (hot_cache[second].first == pid) {
 		STACKTRACE_INDENT_PRINT("LRU hit 2 @" << pid << endl);
 		// hit second most LRU
 		cache_lru = second;
-		return hot_cache[cache_lru].second;
+		return *hot_cache[cache_lru].second;
 	} else {
 		STACKTRACE_INDENT_PRINT("LRU miss  @" << pid << endl);
 		// miss hot cache, replace second most LRU
 		cache_lru = second;
-		cache_entry_type& ret(hot_cache[cache_lru].second);
+		const frame_cache_type*& ret(hot_cache[cache_lru].second);
 		hot_cache[cache_lru].first = pid;
 		// copy over to hot_cache
 //		const global_entry_context& tgc(top_context);
 		ret = lookup_global_footprint_frame_cache(pid);
 #if ENABLE_STACKTRACE
-		ret.dump_frame(STACKTRACE_INDENT_PRINT("frame:")) << endl;
+		ret->value.dump_frame(STACKTRACE_INDENT_PRINT("frame:")) << endl;
 #endif
-		return ret;
+		return *ret;
 	}
 #else
-	const cache_entry_type&
-		ret(lookup_global_footprint_frame_cache(pid));
+	const frame_cache_type*
+		ret = lookup_global_footprint_frame_cache(pid);
 #if ENABLE_STACKTRACE
-	ret.dump_frame(STACKTRACE_INDENT_PRINT("frame:")) << endl;
+	ret->value.dump_frame(STACKTRACE_INDENT_PRINT("frame:")) << endl;
 #endif
-	return ret;
+	return *ret;
 #endif	// HOT_CACHE_FRAMES
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Looks up sub-cache, refactored out.
+	\param lpid is 1-based indexed into local footprint.
  */
 // inline
 global_context_cache::frame_cache_type*
@@ -156,9 +162,17 @@ if (cp.second) {
 	// was a cache miss: re-compute
 	STACKTRACE_INDENT_PRINT("local cache miss, computing frame" << endl);
 	const cache_entry_type& ret(cache->value);	// parent context
+	const footprint& f(*ret.frame._footprint);
+	const pool_type& p(f.get_instance_pool<Tag>());
+	const size_t ports = p.port_entries();
 	cache = &const_cast<frame_cache_type&>(*cp.first); // descend
+	cache_entry_type& next(cache->value);
 	// expensive child frame construction
-	cache->value.descend_frame(ret, lpid, ret.frame._footprint == &topfp);
+	if (lpid > ports) {
+		next.descend_frame(ret, lpid, &f == &topfp);
+	} else {
+		next.descend_port(ret, lpid);
+	}
 } else {
 	// else was a cache hit -- saves a lot of work
 	STACKTRACE_INDENT_PRINT("local cache hit, re-using frame" << endl);
@@ -175,8 +189,9 @@ if (cp.second) {
 	on the fly.
 	Performance-critical back-ends should use this.
 	Is a member-function because of reference to topfp.
+	\param gpid is global index, 1-based
  */
-const global_context_cache::cache_entry_type&
+const global_context_cache::frame_cache_type*
 global_context_cache::lookup_global_footprint_frame_cache(size_t gpid) const {
 	STACKTRACE_VERBOSE;
 	STACKTRACE_INDENT_PRINT("gpid = " << gpid << endl);
@@ -185,11 +200,11 @@ global_context_cache::lookup_global_footprint_frame_cache(size_t gpid) const {
 	// the top footprint frame is always cached, and pre-constructed
 	const footprint* const topfp = top_context.fpf->_footprint;
 	frame_cache_type* cache = &frame_cache;
-	cache_entry_type* ret = &cache->value;
 	// entry type contains both frame and offset (pair)
 if (gpid) {
 	// iterative instead of recursive implementation, hence pointers
-	const footprint* cf = ret->frame._footprint;	// topfp->footprint
+	const cache_entry_type& ret(cache->value);
+	const footprint* cf = ret.frame._footprint;	// topfp->footprint
 	const pool_type* p = &cf->get_instance_pool<Tag>();
 	size_t local = p->local_entries();	// at_top
 	STACKTRACE_INDENT_PRINT("local entries = " << local << endl);
@@ -201,8 +216,8 @@ if (gpid) {
 		const size_t lpid = e.first;
 		gpid = si -e.second;		// still 1-based
 		cache = lookup_local_footprint_frame_cache(lpid, *topfp, cache);
-		ret = &cache->value;
-		cf = ret->frame._footprint;
+		const cache_entry_type& nret(cache->value);
+		cf = nret.frame._footprint;
 		p = &cf->get_instance_pool<Tag>();
 		local = p->local_private_entries();
 	}	// end while
@@ -210,12 +225,9 @@ if (gpid) {
 	const size_t ports = p->port_entries();
 	const size_t lpid = gpid +ports;
 	cache = lookup_local_footprint_frame_cache(lpid, *topfp, cache);
-	ret = &cache->value;
-	return *ret;
-} else {
-	return *ret;
 }
 	// else refers to top-level
+	return cache;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

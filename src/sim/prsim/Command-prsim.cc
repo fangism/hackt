@@ -2686,7 +2686,7 @@ if (a.size() != 2) {
 	}
 	nodes_id_list_type nodes;
 	vector<bool> input_mask;
-	GET_CONTEXT_CACHE(s) get_global_context(p.index).frame._footprint
+	GET_CONTEXT_CACHE(s) get_global_context(p.index).value.frame._footprint
 		->has_not_sub_fanin_map(input_mask);
 	if (parser::parse_name_to_get_ports(p, m, nodes, &input_mask)) {
 		return Command::BADARG;
@@ -2719,7 +2719,7 @@ if (a.size() != 2) {
 	}
 	nodes_id_list_type nodes;
 	vector<bool> output_mask;
-	GET_CONTEXT_CACHE(s) get_global_context(p.index).frame._footprint
+	GET_CONTEXT_CACHE(s) get_global_context(p.index).value.frame._footprint
 		->has_sub_fanin_map(output_mask);
 	if (parser::parse_name_to_get_ports(p, m, nodes, &output_mask)) {
 		return Command::BADARG;

@@ -330,7 +330,7 @@ StateConstructor::get_process_footprint(void) const {
 #if MODULE_OWNS_CONTEXT_CACHE
 		get_module().context_cache->
 #endif
-		get_global_context(current_process_index).frame._footprint;
+		get_global_context(current_process_index).value.frame._footprint;
 }
 
 //=============================================================================

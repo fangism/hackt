@@ -120,7 +120,7 @@ DependenceSetCollector::DependenceSetCollector(const StateConstructor& s) :
 #if MODULE_OWNS_CONTEXT_CACHE
 			get_module().context_cache->
 #endif
-			get_global_context(s.current_process_index).frame;
+			get_global_context(s.current_process_index).value.frame;
 		// do anything about global offset?
 		// probably don't need if process traversal is flat
 	}

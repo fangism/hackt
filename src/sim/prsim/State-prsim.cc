@@ -983,7 +983,7 @@ const footprint_frame_map_type&
 #endif
 State::get_footprint_frame_map(const process_index_type pid) const {
 	return GET_CONTEXT_CACHE
-		get_global_context(pid).frame.get_frame_map<bool_tag>();
+		get_global_context(pid).value.frame.get_frame_map<bool_tag>();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

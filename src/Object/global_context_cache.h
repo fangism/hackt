@@ -56,7 +56,9 @@ private:
 	// just keep two most recent entries
 	// key: global pid
 	// value: copies of the most recent cache hits
-	mutable std::pair<size_t, cache_entry_type>	hot_cache[2];
+	// CAUTION: dangling pointers if cache ages out?
+	mutable std::pair<size_t, const frame_cache_type*>
+							hot_cache[2];
 	mutable size_t					cache_lru;
 #endif
 public:
@@ -64,7 +66,7 @@ public:
 	global_context_cache(const footprint&);
 	~global_context_cache();
 
-	const cache_entry_type&
+	const frame_cache_type&
 	get_global_context(const size_t pid) const;
 
 	const frame_cache_type&
@@ -75,7 +77,7 @@ public:
 	lookup_local_footprint_frame_cache(const size_t lpid, 
 		const footprint&, frame_cache_type*);
 
-	const cache_entry_type&
+	const frame_cache_type*
 	lookup_global_footprint_frame_cache(const size_t gpid) const;
 
 	size_t

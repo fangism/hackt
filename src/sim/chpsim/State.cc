@@ -195,7 +195,7 @@ struct State::recheck_transformer {
 #if MODULE_OWNS_CONTEXT_CACHE
 			get_module().context_cache->
 #endif
-				get_global_context(pid));
+				get_global_context(pid).value);
 		// no need for global_offset
 		context.set_event(state, 
 			e, pid, state.get_offset_from_pid(pid));
@@ -629,7 +629,7 @@ do {
 #if MODULE_OWNS_CONTEXT_CACHE
 			get_module().context_cache->
 #endif
-			get_global_context(pid));
+			get_global_context(pid).value);
 	}
 	// no need for global_offset
 #if ENABLE_STACKTRACE
