@@ -99,8 +99,8 @@ dependence_collector_base<Tag>::~dependence_collector_base() { }
 DependenceSetCollector::DependenceSetCollector(const StateConstructor& s) : 
 		global_entry_context(
 			s.state.
-#if MODULE_OWNS_CONTEXT_CACHE
-			get_module().context_cache->
+#if FOOTPRINT_OWNS_CONTEXT_CACHE
+			get_module().get_context_cache().
 #endif
 			top_context
 			),
@@ -117,8 +117,8 @@ DependenceSetCollector::DependenceSetCollector(const StateConstructor& s) :
 	// because a return by reference is necessary, not return by value
 #endif
 		fpf = &s.state.
-#if MODULE_OWNS_CONTEXT_CACHE
-			get_module().context_cache->
+#if FOOTPRINT_OWNS_CONTEXT_CACHE
+			get_module().get_context_cache().
 #endif
 			get_global_context(s.current_process_index).value.frame;
 		// do anything about global offset?

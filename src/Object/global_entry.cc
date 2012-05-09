@@ -826,11 +826,10 @@ global_process_context::global_process_context(const module& m) :
 global_process_context::global_process_context(const module& m, 
 		const size_t gpid) : frame(), offset() {
 	STACKTRACE_VERBOSE;
-#if MODULE_OWNS_CONTEXT_CACHE
+#if FOOTPRINT_OWNS_CONTEXT_CACHE
 	// always use context_cache for lookup
-	NEVER_NULL(m.context_cache);
 	const global_process_context&
-		c(m.context_cache->get_global_context(gpid).value);
+		c(m.get_context_cache().get_global_context(gpid).value);
 	// copy to self
 	frame = c.frame;
 	offset = c.offset;

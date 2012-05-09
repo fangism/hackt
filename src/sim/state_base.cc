@@ -46,7 +46,7 @@ state_base::dump_source_paths(ostream& o) const {
 
 module_state_base::module_state_base(const module& m, const string& p) :
 		state_base(p), 
-#if CACHE_GLOBAL_FOOTPRINT_FRAMES && !MODULE_OWNS_CONTEXT_CACHE
+#if CACHE_GLOBAL_FOOTPRINT_FRAMES && !FOOTPRINT_OWNS_CONTEXT_CACHE
 		global_context_cache(m.get_footprint()),
 #endif
 		mod(m) {

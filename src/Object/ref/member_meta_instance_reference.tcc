@@ -21,6 +21,7 @@
 #include "Object/def/footprint.h"
 #include "Object/unroll/unroll_context.h"
 #include "Object/global_entry.tcc"
+#include "Object/global_context_cache.h"
 #include "util/memory/count_ptr.tcc"
 #include "util/compose.h"
 #include "util/stacktrace.h"
@@ -233,7 +234,7 @@ MEMBER_INSTANCE_REFERENCE_CLASS::lookup_locally_allocated_index(
 #if ENABLE_STACKTRACE
 	tmp.frame.dump_frame(STACKTRACE_INDENT_PRINT("parent frame:")) << endl;
 #endif
-	const footprint_frame* const fpf = &tmp.frame;
+	const footprint_frame* const fpf = &tmp.get_frame();
 	if (!fpf) {
 		// TODO: better error message
 		cerr << "Failure resolving parent instance reference" << endl;
@@ -314,7 +315,7 @@ for ( ; fi!=fe; ++fi) {
 	// alias lookup needs to be inside loop because of possibility
 	// of heterogenous types due to relaxed templates
 	// TODO: optimize when strict type of array is known
-	const unroll_context dummy(tmp.frame._footprint, &top);
+	const unroll_context dummy(tmp.get_frame()._footprint, &top);
 	// reminder: call to unroll_references_packed is virtual
 	alias_collection_type aliases;
 	if (unroll_references_packed_helper(dummy, *this->inst_collection_ref,
@@ -329,7 +330,7 @@ for ( ; fi!=fe; ++fi) {
 #else
 	indices.reserve(asz +indices.size());
 #endif
-	const footprint_frame_transformer fft(tmp.frame, Tag());
+	const footprint_frame_transformer fft(tmp.get_frame(), Tag());
 #if 0
 	transform(aliases.begin(), aliases.end(), back_inserter(indices), 
 		ADS::unary_compose(fft, instance_index_extractor()));
@@ -480,8 +481,9 @@ MEMBER_INSTANCE_REFERENCE_CLASS::unroll_subindices_packed(
 //	STACKTRACE_STREAM << tmpg << endl;
 #endif
 	alias_collection_type local_aliases;
-	NEVER_NULL(ff.frame._footprint);
-	const footprint& pfp(*ff.frame._footprint);
+	const footprint_frame& fpf(ff.get_frame());
+	NEVER_NULL(fpf._footprint);
+	const footprint& pfp(*fpf._footprint);
 	// lookup footprint-local aliases
 	const unroll_context tmpc(&pfp, &pfp);
 //	tmpc.chain_context(u);
@@ -522,7 +524,7 @@ MEMBER_INSTANCE_REFERENCE_CLASS::unroll_subindices_packed(
 		local_indices.begin(), instance_index_extractor());
 	STACKTRACE_INDENT_PRINT("got local indices." << endl);
 	transform(local_indices.begin(), local_indices.end(), ai, 
-		footprint_frame_transformer(ff.frame, Tag()));
+		footprint_frame_transformer(fpf, Tag()));
 	ai += asp;
 #else
 	// translate to local indices
@@ -532,7 +534,7 @@ MEMBER_INSTANCE_REFERENCE_CLASS::unroll_subindices_packed(
 	STACKTRACE_INDENT_PRINT("got local indices." << endl);
 	// translate to global indices using parent footprint frame
 	transform(a.begin(), a.end(), a.begin(), 
-		footprint_frame_transformer(ff.frame, Tag()));
+		footprint_frame_transformer(fpf, Tag()));
 #endif
 	STACKTRACE_INDENT_PRINT("got global indices." << endl);
 #if AGGREGATE_PARENT_REFS

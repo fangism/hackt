@@ -91,6 +91,59 @@ public:
 
 };	// end class global_context_cache
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Same as above, but with extra global process id field.
+	This is useful as a return type from instance-reference lookups.
+ */
+struct global_process_context_ref {
+	typedef	global_context_cache::frame_cache_type
+						frame_cache_type;
+	size_t					gpid;
+	// pointer to sub-cache, which contains .value = global_process_context
+	frame_cache_type*			subcache;
+
+	// usually default ctor
+	global_process_context_ref() : gpid(0), subcache(NULL) { }
+
+	const global_process_context&
+	get_context(void) const {
+	//	NEVER_NULL(subcache);
+		return subcache->value;
+	}
+
+	const footprint_frame&
+	get_frame(void) const {
+		return get_context().frame;
+	}
+
+	const global_offset&
+	get_offset(void) const {
+		return get_context().offset;
+	}
+
+	/**
+		Use this for both descend_frame and descend_port.
+		Doesn't do any copying, just pointer moving.
+	 */
+	void
+	descend(const size_t lpid, const footprint& topfp) {
+		subcache = global_context_cache::
+			lookup_local_footprint_frame_cache(
+				lpid, topfp, subcache);
+		gpid = lpid;
+	}
+
+	void
+	descend(frame_cache_type* c, 
+			const size_t lpid, const footprint& topfp) {
+		subcache = global_context_cache::
+			lookup_local_footprint_frame_cache(lpid, topfp, c);
+		gpid = lpid;
+	}
+
+};	// end struct global_process_context_id
+
 //=============================================================================
 }	// end namespace entity
 }	// end namespace HAC

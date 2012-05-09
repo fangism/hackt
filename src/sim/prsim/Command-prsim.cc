@@ -91,8 +91,8 @@ DEFAULT_STATIC_TRACE_BEGIN
 	for ( ; niter!=nend; ++niter)
 #endif
 
-#if MODULE_OWNS_CONTEXT_CACHE
-#define	GET_CONTEXT_CACHE(x)	x.get_module().context_cache->
+#if FOOTPRINT_OWNS_CONTEXT_CACHE
+#define	GET_CONTEXT_CACHE(x)	x.get_module().get_context_cache().
 #else
 #define	GET_CONTEXT_CACHE(x)	x.
 #endif

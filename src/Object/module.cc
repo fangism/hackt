@@ -86,7 +86,7 @@ module::module() :
 		process_definition(), 
 		global_namespace(NULL), 
 		compile_opts()
-#if MODULE_OWNS_CONTEXT_CACHE
+#if !FOOTPRINT_OWNS_CONTEXT_CACHE
 		, context_cache(NULL)
 #endif
 		{
@@ -97,7 +97,7 @@ module::module(const string& s) :
 		process_definition(s), 
 		global_namespace(new name_space("")),
 		compile_opts()
-#if MODULE_OWNS_CONTEXT_CACHE
+#if !FOOTPRINT_OWNS_CONTEXT_CACHE
 		, context_cache(NULL)
 #endif
 		{
@@ -271,7 +271,7 @@ module::create_unique(void) {
 			return good_bool(false);
 		}
 	}
-#if MODULE_OWNS_CONTEXT_CACHE
+#if FOOTPRINT_OWNS_CONTEXT_CACHE
 	initialize_context_cache();
 #endif
 	return good_bool(true);
@@ -458,17 +458,31 @@ module::__import_global_parameters(const module& m,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if MODULE_OWNS_CONTEXT_CACHE
+#if FOOTPRINT_OWNS_CONTEXT_CACHE
+global_context_cache&
+module::get_context_cache(void) const {
+	return get_footprint().get_context_cache();
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 module::initialize_context_cache(void) const {
 	STACKTRACE_VERBOSE;
-	if (is_created() && !context_cache) {
+	if (is_created()
+#if !FOOTPRINT_OWNS_CONTEXT_CACHE
+		&& !context_cache
+#endif
+		) {
+#if FOOTPRINT_OWNS_CONTEXT_CACHE
+		get_footprint().initialize_context_cache();
+#else
 	STACKTRACE_INDENT_PRINT("creating global context cache" << endl);
 		context_cache = excl_ptr<global_context_cache>(
 			new global_context_cache(get_footprint()));
+#endif
 	}
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool

@@ -327,8 +327,8 @@ const entity::footprint&
 StateConstructor::get_process_footprint(void) const {
 	// 1-indexed process index, 0 for top-level
 	return *state.
-#if MODULE_OWNS_CONTEXT_CACHE
-		get_module().context_cache->
+#if FOOTPRINT_OWNS_CONTEXT_CACHE
+		get_module().get_context_cache().
 #endif
 		get_global_context(current_process_index).value.frame._footprint;
 }

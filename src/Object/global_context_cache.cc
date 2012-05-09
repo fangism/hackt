@@ -155,7 +155,6 @@ global_context_cache::lookup_local_footprint_frame_cache(const size_t lpid,
 	typedef	process_tag				Tag;
 	typedef	state_instance<Tag>::pool_type		pool_type;
 	NEVER_NULL(cache);
-//	const footprint* topfp = &top_context.fpf->_footprint;
 	const std::pair<frame_cache_type::child_iterator, bool>
 		cp(cache->insert_find(lpid));
 if (cp.second) {

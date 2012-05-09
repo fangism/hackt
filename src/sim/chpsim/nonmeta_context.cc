@@ -32,8 +32,8 @@ using entity::process_tag;
  */
 nonmeta_context::nonmeta_context(State& r) :
 		nonmeta_context_base(
-#if MODULE_OWNS_CONTEXT_CACHE
-			r.get_module().context_cache->top_context,
+#if FOOTPRINT_OWNS_CONTEXT_CACHE
+			r.get_module().get_context_cache().top_context,
 #else
 			r.top_context,
 #endif

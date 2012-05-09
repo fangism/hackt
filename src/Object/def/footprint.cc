@@ -79,6 +79,9 @@
 #include "Object/expr/expr_dump_context.h"
 #endif
 #include "Object/unroll/unroll_context.h"
+#if FOOTPRINT_OWNS_CONTEXT_CACHE
+#include "Object/global_context_cache.h"
+#endif
 #include "Object/interfaces/VCDwriter.h"	// should belong elsewhere
 #include "common/TODO.h"
 #include "main/cflat_options.h"
@@ -255,6 +258,9 @@ footprint::footprint() :
 	value_footprint_base<pstring_tag>(), 
 	prs_footprint(new PRS::footprint), 
 	spec_footprint(new SPEC::footprint),
+#if FOOTPRINT_OWNS_CONTEXT_CACHE
+	context_cache(NULL),
+#endif
 	warning_count(0), 
 	lock_state(false) { }
 // the other members, don't care, just placeholder ctor before loading object
@@ -325,6 +331,9 @@ footprint::footprint(const const_param_expr_list& p,
 	chp_footprint(NULL), 	// allocate when we actually need it
 	chp_event_footprint(), 
 	spec_footprint(new SPEC::footprint), 
+#if FOOTPRINT_OWNS_CONTEXT_CACHE
+	context_cache(NULL),
+#endif
 	warning_count(0),
 	lock_state(false) {
 	STACKTRACE_CTOR_VERBOSE;
@@ -357,6 +366,9 @@ footprint::footprint(const temp_footprint_tag_type&) :
 	chp_footprint(NULL), 	// allocate when we actually need it
 	chp_event_footprint(), 
 	spec_footprint(new SPEC::footprint),
+#if FOOTPRINT_OWNS_CONTEXT_CACHE
+	context_cache(NULL),
+#endif
 	warning_count(0),
 	lock_state(false) {
 	STACKTRACE_CTOR_VERBOSE;
@@ -405,6 +417,29 @@ footprint::footprint(const footprint& t) :
 footprint::~footprint() {
 	STACKTRACE_DTOR_VERBOSE;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if FOOTPRINT_OWNS_CONTEXT_CACHE
+/**
+	\return true on error.
+ */
+bool
+footprint::initialize_context_cache(void) const {
+	STACKTRACE_INDENT_PRINT("creating global context cache" << endl);
+	if (is_created()) {
+		if (!context_cache) {
+			context_cache = excl_ptr<global_context_cache>(
+				new global_context_cache(*this));
+		}
+		return false;
+	} else {
+		cerr <<
+"Error: Cannot initialize context cache until footprint (and dependents) have "
+"been created." << endl;
+		return true;
+	}
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 meta_type_tag_enum
@@ -1804,6 +1839,7 @@ footprint::write_object_base(const persistent_object_manager& m,
 	chp_event_footprint.write_object_base(m, o);
 	// alternative: re-construct event footprint upon loading?
 	spec_footprint->write_object_base(m, o);
+	// ignore context_cache
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1893,6 +1929,7 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 	// alternative: re-construct event footprint upon loading?
 	chp_event_footprint.load_object_base(m, i);
 	spec_footprint->load_object_base(m, i);
+	// ignore context_cache
 	lock_state = false;
 }
 

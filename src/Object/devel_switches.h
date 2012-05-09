@@ -297,13 +297,15 @@
 #define	AGGREGATE_PARENT_REFS			1
 
 /**
-	Define to 1 if module contains top-level hierarchical global
-	context cache for indexed reference/frame lookups.
-	Rationale: for speeding up lookups
+	Define to 1 if each footprint contains its own context cache.
+	For non-top footprints, this only benefits references to 
+	private subinstance references.
+	This should reduce the amount of passing around of structs.  
 	Goal: 1
+	Rationale: caching.
 	Status: basically tested
  */
-#define	MODULE_OWNS_CONTEXT_CACHE		1
+#define	FOOTPRINT_OWNS_CONTEXT_CACHE		1
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

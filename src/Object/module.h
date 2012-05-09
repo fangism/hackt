@@ -55,7 +55,7 @@ protected:
 	excl_ptr<name_space>			global_namespace;
 public:
 	compile_options				compile_opts;
-#if MODULE_OWNS_CONTEXT_CACHE
+#if !FOOTPRINT_OWNS_CONTEXT_CACHE
 	mutable excl_ptr<global_context_cache>		context_cache;
 #endif
 private:
@@ -107,10 +107,19 @@ public:
 	void
 	reset(void);
 
-#if MODULE_OWNS_CONTEXT_CACHE
+	global_context_cache&
+	get_context_cache(void) const
+#if FOOTPRINT_OWNS_CONTEXT_CACHE
+	;
+#else
+	{
+		NEVER_NULL(context_cache);
+		return *context_cache;
+	}
+#endif
+
 	void
 	initialize_context_cache(void) const;
-#endif
 
 private:
 	good_bool

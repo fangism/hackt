@@ -44,7 +44,7 @@ using std::ostream;
 using util::member_saver;
 using std::vector;
 struct global_process_context;		// from Object/global_entry.h
-struct global_process_context_id;	// from Object/global_entry.h
+struct global_process_context_id;	// from Object/global_context_cache.h
 
 //=============================================================================
 /**
@@ -183,7 +183,7 @@ virtual	void
 		const simple_meta_instance_reference<Tag>&, 
 		const unroll_context* = NULL) const;
 
-#if MODULE_OWNS_CONTEXT_CACHE
+#if FOOTPRINT_OWNS_CONTEXT_CACHE
 // call global_context_cache::get_global_context() instead
 #else
 	void

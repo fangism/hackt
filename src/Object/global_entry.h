@@ -574,6 +574,12 @@ struct global_process_context {
 		frame.construct_top_global_context(*frame._footprint, offset);
 	}
 
+	const footprint_frame&
+	get_frame(void) const { return frame; }
+
+	const global_offset&
+	get_offset(void) const { return offset; }
+
 	void
 	descend_frame(const global_process_context&, 
 		const size_t lpid, const bool);

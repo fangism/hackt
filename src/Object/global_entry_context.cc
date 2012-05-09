@@ -101,7 +101,7 @@ global_entry_context::dump_context(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if MODULE_OWNS_CONTEXT_CACHE
+#if FOOTPRINT_OWNS_CONTEXT_CACHE
 // call global_context_cache::get_global_context() instead
 #else
 /**
@@ -195,6 +195,17 @@ global_entry_context::construct_global_footprint_frame(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	1 is OK.  0 is OK too.
+	Want to be able to pass down top-level cache pointer.
+ */
+#define	__CALLER_INITIALIZE_OWNER_SCALAR			1
+/**
+	1 was broken, is now OK.
+	Failed because of temporaries allocated in recursive call.
+	Fixed by passing down top owner and swapping arrays.
+ */
+#define	__CALLER_INITIALIZE_OWNER_AGGREGATE			1
+/**
 	Publicly convenience-wrapped call.
  */
 bool
@@ -202,8 +213,14 @@ global_entry_context::construct_global_footprint_frame(
 		const meta_instance_reference_base& pr, 
 		const unroll_context& uc,
 		global_process_context_id& ret) const {
-	global_process_context tmp;
-	return construct_global_footprint_frame(tmp, ret, pr, uc);
+#if __CALLER_INITIALIZE_OWNER_SCALAR
+	global_process_context owner(*topfp);
+	owner.offset = *parent_offset;
+	owner.construct_top_global_context();
+#else
+	global_process_context owner;
+#endif
+	return construct_global_footprint_frame(owner, ret, pr, uc);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -217,6 +234,7 @@ global_entry_context::construct_global_footprint_frames(
 		const footprint& top,
 		const meta_instance_reference_base& pr, 
 		vector<global_process_context_id>& retf) {
+	STACKTRACE("construct_global_footprint_frames(top, pr, retf)");
 	const unroll_context lookup_c(&top, &top);      // any loop variables?
 	return construct_global_footprint_frames(
 		top, pr, lookup_c, retf);
@@ -232,6 +250,7 @@ global_entry_context::construct_global_footprint_frames(
 		const meta_instance_reference_base& pr, 
 		const unroll_context& c,
 		vector<global_process_context_id>& retf) {
+	STACKTRACE("construct_global_footprint_frames(top, pr, uc, retf)");
 	const global_process_context gpc(top);
 	const global_entry_context gc(gpc);
 	return gc.construct_global_footprint_frames(pr, c, retf);
@@ -246,7 +265,16 @@ global_entry_context::construct_global_footprint_frames(
 		const meta_instance_reference_base& pr, 
 		const unroll_context& uc,
 		vector<global_process_context_id>& retf) const {
+	STACKTRACE("construct_global_footprint_frames(pr, uc, retf)");
 	vector<global_process_context> tmpo;
+#if __CALLER_INITIALIZE_OWNER_AGGREGATE
+	global_process_context owner(*topfp);
+	tmpo.push_back(owner);
+	global_process_context& first(tmpo.front());
+	first.offset = *parent_offset;
+	first.construct_top_global_context();
+	INVARIANT(tmpo.size() == 1);
+#endif
 	return construct_global_footprint_frames(
 		tmpo, retf, pr, uc);
 }
@@ -307,11 +335,12 @@ global_entry_context::construct_global_footprint_frame(
 		ret.dump_frame(STACKTRACE_INDENT_PRINT("ret.frame:")) << endl;
 #endif
 		// want footprint of the member-owner, not the context passed in
-		const unroll_context tc(ret.frame._footprint, topfp);
+		const footprint_frame& rfpf(ret.get_frame());
+		const footprint& rfp(*rfpf._footprint);
+		const unroll_context tc(&rfp, topfp);
 		// yes, use base-class method, not virtual override
 		const size_t lpid =	// is 1-based index
 			mpr->simple_ref::lookup_locally_allocated_index(tc);
-		const footprint& rfp(*ret.frame._footprint);
 		const state_instance<Tag>::pool_type&
 			pp(rfp.get_instance_pool<Tag>());
 		const size_t ports = pp.port_entries();
@@ -327,29 +356,47 @@ global_entry_context::construct_global_footprint_frame(
 			// then is local private
 			// change both ret frame and owner, and global offset
 			STACKTRACE_INDENT_PRINT("private local" << endl);
+#if 1
 			owner = ret;	// frame and offset
 			ret.descend_frame(lpid, false);
+#else
+			owner = ret.get_context();	// frame and offset
+			ret.descend(lpid, *topfp);
+#endif
 		} else {
 			STACKTRACE_INDENT_PRINT("public port" << endl);
 			// then is public port, only change ret frame
 			// keep same owner frame
 			// no change in global offset
+#if 1
 			ret.descend_port(lpid);
+#else
+			ret.descend(lpid, *topfp);
+#endif
 		}	// is public vs. private
 	} else {
 		STACKTRACE_INDENT_PRINT("at top-level: " << endl);
 		// we're at top level
+#if __CALLER_INITIALIZE_OWNER_SCALAR
+		// owner should already point to top context
+#else
 		owner.offset = *parent_offset;
 		owner.frame.construct_top_global_context(*topfp, owner.offset);
+#endif
 #if ENABLE_STACKTRACE
 		owner.dump_frame(STACKTRACE_STREAM << "owner.frame:") << endl;
+		STACKTRACE_INDENT_PRINT("owner.offset: " << owner.offset << endl);
 #endif
 		const size_t gpid = spr->lookup_locally_allocated_index(uc);
 		STACKTRACE_INDENT_PRINT("gpid = " << gpid << endl);
 		if (!gpid) {
 			return true;	// have error message already
 		}
+#if 1
 		ret.descend_frame(owner, gpid, true);
+#else
+		ret.descend(owner, gpid, *topfp);
+#endif
 	}
 	return false;
 }	// end global_entry_context::construct_global_footprint_frame
@@ -365,6 +412,7 @@ global_entry_context::construct_global_footprint_frame(
 		ret_g is the offset of the current return frame
 		(both returned by reference, not used when passed)
 		Caller should choose which offset is used.
+	Also directly called from member_instance_reference::lookup_locally_allocated_index.
  */
 bool
 global_entry_context::construct_global_footprint_frames(
@@ -392,11 +440,14 @@ global_entry_context::construct_global_footprint_frames(
 		// in a sub-process, sets ret and owner
 		vector<global_process_context> p_owners;
 		vector<global_process_context_id> p_rets;
-		if (construct_global_footprint_frames(p_owners, p_rets,
+		// pass-down top-level owner
+		if (construct_global_footprint_frames(owners, p_rets,
 				*mpr->get_base_ref(), uc)) {
 			// have some error
 			return true;
 		}
+		owners.swap(p_owners);
+		owners.clear();
 #if ENABLE_STACKTRACE
 		mpr->dump(STACKTRACE_INDENT_PRINT("back to member-ref: "), 
 			expr_dump_context::default_value) << endl;
@@ -470,13 +521,18 @@ global_entry_context::construct_global_footprint_frames(
 			expr_dump_context::default_value) << endl;
 #endif
 		// we're at top level
-		global_process_context common;	// common owner
+#if __CALLER_INITIALIZE_OWNER_AGGREGATE
+		INVARIANT(owners.size() == 1);
+		const global_process_context& common(owners.front());
+#else
+		global_process_context common(*topfp);	// common owner
 		common.offset = *parent_offset;
-		common.frame.construct_top_global_context(*topfp, common.offset);
-#if ENABLE_STACKTRACE
-		common.dump_frame(STACKTRACE_STREAM << "owner.frame:") << endl;
+		common.construct_top_global_context();
 #endif
+#if ENABLE_STACKTRACE
+		common.dump_frame(STACKTRACE_STREAM << "common.frame:") << endl;
 		STACKTRACE_INDENT_PRINT("common.offset: " << common.offset << endl);
+#endif
 		vector<size_t> gpids;
 		if (!spr->lookup_locally_allocated_indices(uc, gpids).good) {
 			return true;	// have error message already
@@ -486,8 +542,19 @@ global_entry_context::construct_global_footprint_frames(
 		copy(gpids.begin(), gpids.end(), std::ostream_iterator<size_t>(cerr, ","));
 		cerr << endl;
 #endif
-		owners.resize(gpids.size());
+#if __CALLER_INITIALIZE_OWNER_AGGREGATE
+		// reference safety: allocate aside and swap
+		vector<global_process_context> owner_array;
+		owner_array.resize(gpids.size());
+		std::fill(owner_array.begin(), owner_array.end(), common);
+		owners.swap(owner_array);
+		const global_process_context& com(owner_array.front());
+#else
+		owners.resize(gpids.size());	// causes realloc!
 		std::fill(owners.begin(), owners.end(), common);
+		// copy into array
+		const global_process_context& com(common);
+#endif
 		rets.resize(gpids.size());
 		vector<size_t>::const_iterator
 			gpii(gpids.begin()), gpie(gpids.end());
@@ -495,11 +562,11 @@ global_entry_context::construct_global_footprint_frames(
 		for ( ; gpii!=gpie; ++gpii, ++gpci) {
 		const size_t gpid = *gpii;
 		global_process_context_id& ret(*gpci);
-		ret.descend_frame(common, gpid, true);
+		ret.descend_frame(com, gpid, true);
 		}	// end for
 	}
 	return false;
-}
+}	// end construct_global_footprint_frames
 #endif	// AGGREGATE_PARENT_REFS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

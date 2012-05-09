@@ -99,7 +99,7 @@ public:
 	For simulators that use a hac module.
  */
 class module_state_base : public state_base
-#if CACHE_GLOBAL_FOOTPRINT_FRAMES && !MODULE_OWNS_CONTEXT_CACHE
+#if CACHE_GLOBAL_FOOTPRINT_FRAMES && !FOOTPRINT_OWNS_CONTEXT_CACHE
 	, public global_context_cache
 #endif
 {
