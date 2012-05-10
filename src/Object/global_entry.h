@@ -610,6 +610,7 @@ struct global_process_context {
 };	// end struct global_process_context
 
 //=============================================================================
+#if	!FOOTPRINT_OWNS_CONTEXT_CACHE
 /**
 	Same as above, but with extra global process id field.
 	This is useful as a return type from instance-reference lookups.
@@ -648,6 +649,7 @@ struct global_process_context_id : public global_process_context {
 	}
 
 };	// end struct global_process_context_id
+#endif
 
 //=============================================================================
 }	// end namespace entity

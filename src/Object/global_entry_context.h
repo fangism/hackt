@@ -44,7 +44,17 @@ using std::ostream;
 using util::member_saver;
 using std::vector;
 struct global_process_context;		// from Object/global_entry.h
-struct global_process_context_id;	// from Object/global_context_cache.h
+struct global_process_context_id;	// from Object/global_entry.h
+struct global_process_context_ref;	// from Object/global_context_cache.h
+
+/**
+	Define to 1 to have reference lookups use footprints'
+	context caches.
+	Rationale: performance
+	Goal: 1
+	Status: tested, regression free!
+ */
+#define	CACHE_REFERENCE_LOOKUP_CONTEXTS		(1 && FOOTPRINT_OWNS_CONTEXT_CACHE)
 
 //=============================================================================
 /**
@@ -86,6 +96,13 @@ public:
 class global_entry_context : public global_entry_context_base {
 	typedef	global_entry_context		this_type;
 public:
+#if CACHE_REFERENCE_LOOKUP_CONTEXTS
+	typedef	global_process_context_ref	context_arg_type;
+	typedef	global_process_context_ref	context_result_type;
+#else
+	typedef	global_process_context		context_arg_type;
+	typedef	global_process_context_id	context_result_type;
+#endif
 	/**
 		Local footprint frame.  
 		Use fpf->_footprint for local-to-global index translation.  
@@ -199,7 +216,7 @@ virtual	void
 	construct_global_footprint_frames(
 		const footprint& top,
 		const meta_instance_reference_base&,
-		std::default_vector<global_process_context_id>::type&);
+		std::default_vector<context_result_type>::type&);
 
 	static
 	bool
@@ -207,13 +224,13 @@ virtual	void
 		const footprint& top,
 		const meta_instance_reference_base&,
 		const unroll_context&,		// override
-		std::default_vector<global_process_context_id>::type&);
+		std::default_vector<context_result_type>::type&);
 
 	bool
 	construct_global_footprint_frames(
 		const meta_instance_reference_base&, 
 		const unroll_context&,
-		std::default_vector<global_process_context_id>::type&) const;
+		std::default_vector<context_result_type>::type&) const;
 #endif
 
 	static
@@ -221,7 +238,7 @@ virtual	void
 	construct_global_footprint_frame(
 		const footprint& top,
 		const meta_instance_reference_base&,
-		global_process_context_id&);
+		context_result_type&);
 
 	static
 	bool
@@ -229,27 +246,27 @@ virtual	void
 		const footprint& top,
 		const meta_instance_reference_base&,
 		const unroll_context&,		// override
-		global_process_context_id&);
+		context_result_type&);
 
 	bool
 	construct_global_footprint_frame(
 		const meta_instance_reference_base&, 
 		const unroll_context&,
-		global_process_context_id&) const;
+		context_result_type&) const;
 
 private:
 	bool
 	construct_global_footprint_frame(
-		global_process_context&,
-		global_process_context_id&,
+		context_arg_type&,
+		context_result_type&,
 		const meta_instance_reference_base&, 
 		const unroll_context&) const;
 
 #if AGGREGATE_PARENT_REFS
 	bool
 	construct_global_footprint_frames(
-		std::default_vector<global_process_context>::type&,
-		std::default_vector<global_process_context_id>::type&,
+		std::default_vector<context_arg_type>::type&,
+		std::default_vector<context_result_type>::type&,
 		const meta_instance_reference_base&, 
 		const unroll_context&) const;
 #endif

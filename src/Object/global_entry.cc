@@ -902,6 +902,10 @@ global_process_context::descend_port(const global_process_context& gpc,
 	typedef state_instance<Tag>::pool_type		pool_type;
 	STACKTRACE_VERBOSE;
 	STACKTRACE_INDENT_PRINT("lpid = " << lpid << endl);
+#if ENABLE_STACKTRACE
+	gpc.frame.dump_frame(STACKTRACE_INDENT_PRINT("arg.frame:")) << endl;
+	STACKTRACE_INDENT_PRINT("arg.offset = " << gpc.offset << endl);
+#endif
 	const footprint& cf(*gpc.frame._footprint);
 	const pool_type& p(cf.get_instance_pool<Tag>());
 	INVARIANT(lpid <= p.port_entries());
@@ -910,8 +914,12 @@ global_process_context::descend_port(const global_process_context& gpc,
 	footprint_frame rff(sff, gpc.frame);
 	const footprint& nextfp(*sff._footprint);
 	frame.construct_global_context(nextfp, rff, gpc.offset);
+	if (&gpc != this) {
+		offset = gpc.offset;
+	}
 #if ENABLE_STACKTRACE
 	frame.dump_frame(STACKTRACE_INDENT_PRINT("frame:")) << endl;
+	STACKTRACE_INDENT_PRINT("offset = " << offset << endl);
 #endif
 }
 

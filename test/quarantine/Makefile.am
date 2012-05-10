@@ -24,7 +24,8 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 
 HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	memstats32-mem-01 memstats64-mem-01 \
-	set-assert-01 set-assert-02 set-assert-03 
+	set-assert-01 set-assert-02 set-assert-03 \
+	set-assert-01b set-assert-02b set-assert-02c
 
 if ABI_ILP32
 memstats64-mem-01.prsimtest: memstats64-mem-01.prsimrc

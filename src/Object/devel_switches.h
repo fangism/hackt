@@ -292,7 +292,7 @@
 	to flatten or expand into a large number of individual references.
 	Goal: 1
 	Rationale: more efficient lookups
-	Status: tested, massive speedup on quarantine tests
+	Status: tested, massive speedup on quarantine tests, stable
  */
 #define	AGGREGATE_PARENT_REFS			1
 
@@ -302,8 +302,8 @@
 	private subinstance references.
 	This should reduce the amount of passing around of structs.  
 	Goal: 1
-	Rationale: caching.
-	Status: basically tested
+	Rationale: caching for speedup of reference lookups.
+	Status: tested, stable
  */
 #define	FOOTPRINT_OWNS_CONTEXT_CACHE		1
 

@@ -69,7 +69,7 @@ public:
 	const frame_cache_type&
 	get_global_context(const size_t pid) const;
 
-	const frame_cache_type&
+	frame_cache_type&
 	get_frame_cache(void) const { return frame_cache; }
 
 	static
@@ -105,6 +105,9 @@ struct global_process_context_ref {
 
 	// usually default ctor
 	global_process_context_ref() : gpid(0), subcache(NULL) { }
+
+	explicit
+	global_process_context_ref(const footprint&);
 
 	const global_process_context&
 	get_context(void) const {

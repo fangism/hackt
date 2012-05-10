@@ -6016,7 +6016,7 @@ if (a.size() > 1) {
 	usage(cerr << "usage: ");
 	return Command::BADARG;
 } else {
-	const entity::global_context_cache::frame_cache_type&
+	entity::global_context_cache::frame_cache_type&
 		c(GET_CONTEXT_CACHE(s) get_frame_cache());
 	const size_t weight = c.weight();
 	GET_CONTEXT_CACHE(s) halve_cache();

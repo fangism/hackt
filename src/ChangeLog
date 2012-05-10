@@ -3,6 +3,15 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2012-05-09	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-30:
+	  global_entry_context reference lookups are now all cached
+		hierarchically with the corresponding top-level footprint.
+		This brings about significant improvement in reference
+		parsing and lookup.  Regression tests clean.
+
+
 2012-05-03	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-85-29:
