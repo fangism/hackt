@@ -33,11 +33,9 @@ public:
 	nonmeta_state_manager&			values;
 
 protected:
-	nonmeta_context_base(
-		const footprint_frame& l, 
-		const global_offset& g, 
+	nonmeta_context_base(const global_entry_context& c,
 		nonmeta_state_manager& v) : 
-		global_entry_context(l, g), 
+		global_entry_context(c), 
 		values(v) { }
 
 	// default copy-ctor

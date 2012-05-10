@@ -162,6 +162,11 @@ public:
 	index_type
 	sizes_product(const key_type& k);
 
+	index_type
+	sizes_product(void) const {
+		return sizes_product(this->size());
+	}
+
 	void
 	resize(const key_type& s);
 
@@ -406,6 +411,11 @@ public:
 	static
 	index_type
 	sizes_product(const key_type& k);
+
+	index_type
+	sizes_product(void) const {
+		return sizes_product(this->size());
+	}
 
 	void
 	resize(void);

@@ -55,6 +55,9 @@ struct entry_collection;
 struct alias_visitor;
 struct dump_flags;
 struct expr_dump_context;
+#if FOOTPRINT_OWNS_CONTEXT_CACHE
+class global_context_cache;
+#endif
 
 using std::string;
 using util::memory::count_ptr;
@@ -249,6 +252,14 @@ private:
 		Privatized implementation.  
 	 */
 	excl_ptr<SPEC::footprint>		spec_footprint;
+#if FOOTPRINT_OWNS_CONTEXT_CACHE
+	/**
+		Hierarchical tree cache of footprint frames and offsets
+		deep within the sub-hierarchy of this footprint.
+		Greatly accelerates top-level reference lookups.
+	 */
+	mutable excl_ptr<global_context_cache>	context_cache;
+#endif
 	/**
 		Only used during create-phase, count of local warnings.
 	 */
@@ -499,6 +510,18 @@ public:
 	// zero-out the count of top-level ports
 	void
 	zero_top_level_ports(void);
+
+#if FOOTPRINT_OWNS_CONTEXT_CACHE
+	bool
+	initialize_context_cache(void) const;
+
+	global_context_cache&
+	get_context_cache(void) const {
+		initialize_context_cache();
+		NEVER_NULL(context_cache);
+		return *context_cache;
+	}
+#endif
 
 private:
 	good_bool

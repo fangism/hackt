@@ -32,10 +32,8 @@ public:
 
 	static const char			table_header[];
 
-	global_entry_dumper(ostream& _o,
-		const footprint_frame& ff,
-		const global_offset& g) :
-		parent_type(ff, g), os(_o), pid(0)
+	global_entry_dumper(ostream& _o, const global_process_context& c) :
+		parent_type(c), os(_o), pid(0)
 		{ }
 
 virtual	~global_entry_dumper();
@@ -63,9 +61,10 @@ protected:
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class Tag>
 struct global_allocation_dumper : public global_entry_dumper {
+
 	global_allocation_dumper(ostream& o,
-		const footprint_frame& ff, global_offset& g) :
-		global_entry_dumper(o, ff, g) { }
+		const global_process_context& c) :
+		global_entry_dumper(o, c) { }
 
 	void
 	visit(const footprint&);

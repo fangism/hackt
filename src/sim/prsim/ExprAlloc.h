@@ -44,6 +44,7 @@ using entity::footprint_frame;
 using entity::global_offset;
 using entity::global_entry_context;
 using entity::cflat_context_visitor;
+using entity::global_process_context;
 #if PRSIM_PRECHARGE_INVARIANTS
 class current_path_graph;
 class netgraph_node;
@@ -130,8 +131,7 @@ protected:
 public:
 
 	ExprAlloc(state_type&, 
-		const footprint_frame&, 
-		const global_offset&,
+		const global_process_context&,
 		const ExprAllocFlags&);
 	~ExprAlloc();
 

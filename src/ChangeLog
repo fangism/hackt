@@ -3,6 +3,60 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2012-05-09	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-30:
+	  global_entry_context reference lookups are now all cached
+		hierarchically with the corresponding top-level footprint.
+		This brings about significant improvement in reference
+		parsing and lookup.  Regression tests clean.
+
+
+2012-05-03	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-29:
+	  Series of rewrites to global_context lookup, now all globally 
+		indexed are cached, where the cache belongs to the module.
+		Much code was refactored and is significantly cleaner.
+		No regressions.
+		
+
+2012-05-01	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-28:
+	  hacprsim: ~EventPool free-list check, fix arithmetic sum overflow.
+		Test case: quarantine/set-assert-02(.prsimckpttest)
+
+
+2012-04-30	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-27:
+	  Enabled aggregate-member-parent-references to allow 
+		aggregate references to be looked-up in a single call,
+		rather than having to expand references expensively.
+	  Tested.  
+
+
+2012-04-28	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-26:
+	  global_entry_context::construct_global_footprint_frame():
+		takes global_process_context_id, return by reference.
+
+
+	* HACKT-00-01-04-main-00-85-25:
+	  connectivity checking: suppress missing fanin warning on
+		output nodes that are also input ports (route-through).
+		Test case added.
+
+
+	* HACKT-00-01-04-main-00-85-24:
+	  global_entry_context: now always pair together frame and offset
+		in the global_process_context structure, for comprehensibility
+		and preparing for a cleaner rewrite of the reference lookup.
+		No regressions.
+
+
 2012-04-25	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-85-23:

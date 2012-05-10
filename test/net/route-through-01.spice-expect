@@ -1,0 +1,5 @@
+.subckt route_through<> !GND !Vdd in
+.ends
+
+xxyz !GND !Vdd xyz.in route_through<>
+

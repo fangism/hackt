@@ -1,0 +1,21 @@
+# "set-assert-02b.prsimrc"
+# @haco@ set-assert-02.haco-c
+
+#			host	host
+#	aggreg.	caching	fe-1	build64-1
+#	no	no	26.5s	23s
+#	yes	no	7s	5.7s
+#	no	yes	24.6s	20.4s
+#	yes	yes	7s	5.8s
+
+
+# !date
+set foo.q[0][0].q[0..9][0..9].x[0..3][0..3] 0
+repeat 100 assert-pending foo.q[0][0].q[0..9][0..9].x[0..3][0..3]
+# !date
+cycle
+assertn-queue
+# !date
+repeat 100 assert foo.q[0][0].q[0..9][0..9].y[0..3][0..3] 1
+# !date
+

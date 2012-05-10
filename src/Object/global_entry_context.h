@@ -15,7 +15,8 @@
 #include "util/member_saver.h"
 #include "Object/traits/classification_tags_fwd.h"
 #include "Object/ref/reference_enum.h"	// for global_indexed_reference
-#include "util/tokenize_fwd.h"		// for string_list
+#include "util/STL/vector_fwd.h"
+#include "Object/devel_switches.h"
 
 /**
 	Define to 1 to keep around global pid in global_entry_context
@@ -25,11 +26,6 @@
 	Rationale: know which process you're in.
  */
 #define	GLOBAL_CONTEXT_GPID		1
-
-namespace util {
-template <class, class>
-class tree_cache;
-}
 
 namespace HAC {
 namespace entity {
@@ -41,13 +37,24 @@ class state_manager;
 struct global_offset;
 template <class> class state_instance;
 class meta_instance_reference_base;
-using std::string;
-using util::string_list;
 struct bool_tag;
 template <class> class footprint_frame_map;
 template <class> class simple_meta_instance_reference;
 using std::ostream;
 using util::member_saver;
+using std::vector;
+struct global_process_context;		// from Object/global_entry.h
+struct global_process_context_id;	// from Object/global_entry.h
+struct global_process_context_ref;	// from Object/global_context_cache.h
+
+/**
+	Define to 1 to have reference lookups use footprints'
+	context caches.
+	Rationale: performance
+	Goal: 1
+	Status: tested, regression free!
+ */
+#define	CACHE_REFERENCE_LOOKUP_CONTEXTS		(1 && FOOTPRINT_OWNS_CONTEXT_CACHE)
 
 //=============================================================================
 /**
@@ -89,6 +96,13 @@ public:
 class global_entry_context : public global_entry_context_base {
 	typedef	global_entry_context		this_type;
 public:
+#if CACHE_REFERENCE_LOOKUP_CONTEXTS
+	typedef	global_process_context_ref	context_arg_type;
+	typedef	global_process_context_ref	context_result_type;
+#else
+	typedef	global_process_context		context_arg_type;
+	typedef	global_process_context_id	context_result_type;
+#endif
 	/**
 		Local footprint frame.  
 		Use fpf->_footprint for local-to-global index translation.  
@@ -109,7 +123,8 @@ protected:
 	size_t					_gpid;
 #endif
 public:
-	global_entry_context(const footprint_frame&, const global_offset&);
+	explicit
+	global_entry_context(const global_process_context&);
 
 virtual	~global_entry_context();
 
@@ -185,60 +200,81 @@ virtual	void
 		const simple_meta_instance_reference<Tag>&, 
 		const unroll_context* = NULL) const;
 
-	typedef	std::pair<footprint_frame, global_offset>
-					cache_entry_type;
-	typedef	util::tree_cache<size_t, cache_entry_type>
-					index_frame_cache_type;
-	typedef	util::tree_cache<string, cache_entry_type>
-					string_frame_cache_type;
-
+#if FOOTPRINT_OWNS_CONTEXT_CACHE
+// call global_context_cache::get_global_context() instead
+#else
 	void
-	construct_global_footprint_frame(footprint_frame&, 
-		global_offset&, size_t pid) const;
-
-	const cache_entry_type&
-	lookup_global_footprint_frame_cache(size_t pid,
-		index_frame_cache_type*) const;
-
-#if 0
-	const cache_entry_type&
-	lookup_global_footprint_frame_cache(const string_list&,
-		string_frame_cache_type*) const;
+	construct_global_footprint_frame(
+		global_process_context&,
+		size_t gpid) const;
 #endif
 
-	// \return lpid of returned process frame, 0 on error
+#if AGGREGATE_PARENT_REFS
+	// \return true on error
 	static
-	size_t
+	bool
+	construct_global_footprint_frames(
+		const footprint& top,
+		const meta_instance_reference_base&,
+		std::default_vector<context_result_type>::type&);
+
+	static
+	bool
+	construct_global_footprint_frames(
+		const footprint& top,
+		const meta_instance_reference_base&,
+		const unroll_context&,		// override
+		std::default_vector<context_result_type>::type&);
+
+	bool
+	construct_global_footprint_frames(
+		const meta_instance_reference_base&, 
+		const unroll_context&,
+		std::default_vector<context_result_type>::type&) const;
+#endif
+
+	static
+	bool
 	construct_global_footprint_frame(
 		const footprint& top,
 		const meta_instance_reference_base&,
-		footprint_frame&);
+		context_result_type&);
 
 	static
-	size_t
+	bool
 	construct_global_footprint_frame(
 		const footprint& top,
 		const meta_instance_reference_base&,
 		const unroll_context&,		// override
-		footprint_frame&);
+		context_result_type&);
 
-	size_t
+	bool
 	construct_global_footprint_frame(
 		const meta_instance_reference_base&, 
 		const unroll_context&,
-		footprint_frame&) const;
+		context_result_type&) const;
 
 private:
-	size_t
-	construct_global_footprint_frame(footprint_frame&, 
-		footprint_frame&, global_offset&,
-		global_offset&, const meta_instance_reference_base&, 
+	bool
+	construct_global_footprint_frame(
+		context_arg_type&,
+		context_result_type&,
+		const meta_instance_reference_base&, 
 		const unroll_context&) const;
+
+#if AGGREGATE_PARENT_REFS
+	bool
+	construct_global_footprint_frames(
+		std::default_vector<context_arg_type>::type&,
+		std::default_vector<context_result_type>::type&,
+		const meta_instance_reference_base&, 
+		const unroll_context&) const;
+#endif
 
 public:
 	// e.g. use this after a cache-lookup
 	void
-	set_global_context(const cache_entry_type& c);
+	set_global_context(const global_process_context&);
 
 	void
 	report_instantiation_error(ostream&) const;

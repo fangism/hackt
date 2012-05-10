@@ -72,6 +72,7 @@ HACKNET_TEST_SCRIPTS_PASSES = \
 	fet-type-33 fet-type-34 fet-type-35 fet-type-36 \
 	parasitics-01 \
 	aliases-01 aliases-02 aliases-03 aliases-04 \
+	route-through-01 \
 	node_caps-01 node_caps-02 node_caps-03 node_caps-04 \
 	node_caps-05 node_caps-06 \
 	mangle-01 mangle-02 mangle-03 mangle-04 mangle-04b mangle-05 \
@@ -184,6 +185,7 @@ HACKT_CREATE_TEST_PASSES = \
 	precharge-07 precharge-08 \
 	mangle-04 \
 	dangling-01 dangling-02 \
+	route-through-01 \
 	subckt-01 subckt-08 subckt-10 subckt-11 \
 	supply-pass-gate-01 supply-pass-gate-02 \
 	supply-instance-01 supply-instance-02 supply-instance-03 \

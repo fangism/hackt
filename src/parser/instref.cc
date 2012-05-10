@@ -121,6 +121,7 @@ typedef	inst_ref_expr::meta_return_type		checked_ref_type;
 template <class Tag>
 typed_indexed_reference<Tag>::typed_indexed_reference(
 		const string& n, const entity::module& m) {
+	STACKTRACE_VERBOSE;
 	typedef	entity::class_traits<Tag>		traits_type;
 	const global_indexed_reference gref(parse_global_reference(n, m));
 	if (gref.first != traits_type::type_tag_enum_value) {
@@ -149,7 +150,24 @@ template class typed_indexed_reference<process_tag>;
 template <class Tag>
 typed_indexed_references<Tag>::typed_indexed_references(
 		const string& n, const entity::module& m) {
+	STACKTRACE_VERBOSE;
 	typedef	entity::class_traits<Tag>		traits_type;
+#if AGGREGATE_PARENT_REFS
+	global_reference_array_type temp;
+	if (parse_global_references(n, m, temp)) {
+		cerr << "Error parsing reference(s): " << n << endl;
+		return;
+	}
+	if (temp.front().first != traits_type::type_tag_enum_value) {
+		cerr << "Error: " << n << " does not reference a " <<
+			traits_type::tag_name << "." << endl;
+		return;
+	}
+	// TODO: copy indices
+	indices.resize(temp.size());
+	transform(temp.begin(), temp.end(), indices.begin(), 
+		util::member_select_ref(&global_indexed_reference::second));
+#else
 	expanded_global_references_type temp;
 	if (expand_global_references(n, m, temp))
 		return;
@@ -172,6 +190,7 @@ for ( ; i!=e; ++i) {
 	INVARIANT(gref.second);
 	indices.push_back(gref.second);
 }	// end for each reference
+#endif
 }
 
 template class typed_indexed_references<bool_tag>;
@@ -350,6 +369,10 @@ parse_node_to_index(const string& n, const module& m) {
 	return bool_index(n, m);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true on error
+ */
 bool
 parse_nodes_to_indices(const string& n, const module& m,
 		vector<size_t>& b) {
@@ -357,6 +380,11 @@ parse_nodes_to_indices(const string& n, const module& m,
 	STACKTRACE_INDENT_PRINT("Parsing node(s): " << n << endl);
 	bool_indices tmp(n, m);
 	tmp.indices.swap(b);
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT_PRINT("bool-ids: ");
+	copy(b.begin(), b.end(), std::ostream_iterator<size_t>(cerr, ","));
+	cerr << endl;
+#endif
 	return b.empty();
 }
 
@@ -381,6 +409,10 @@ if (n == ".") {
 }
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true on error
+ */
 bool
 parse_processes_to_indices(const string& n, const module& m, 
 		vector<size_t>& p) {
@@ -443,10 +475,9 @@ global_indexed_reference
 parse_global_reference(const meta_reference_union& r, const module& m) {
 	INVARIANT(r.inst_ref());
 	const footprint& topfp(m.get_footprint());
-	footprint_frame tff(topfp);
-	const global_offset g;
-	tff.construct_top_global_context(topfp, g);
-	const global_entry_context gc(tff, g);
+	global_process_context gpc(topfp);
+	gpc.construct_top_global_context();
+	const global_entry_context gc(gpc);
 	return r.inst_ref()->lookup_top_level_reference(gc);
 }
 
@@ -471,14 +502,14 @@ parse_global_references(const string& n,
 int
 parse_global_references(const meta_reference_union& r, 
 		const module& m, global_reference_array_type& a) {
+	STACKTRACE_VERBOSE;
 	INVARIANT(r.inst_ref());
 	const footprint& topfp(m.get_footprint());
-	footprint_frame tff(topfp);
-	const global_offset g;
-	tff.construct_top_global_context(topfp, g);
-	const global_entry_context gc(tff, g);
+	global_process_context gpc(topfp);
+	gpc.construct_top_global_context();
+	const global_entry_context gc(gpc);
 	const good_bool b(r.inst_ref()->lookup_top_level_references(gc, a));
-	return b.good ? 0 : 1;
+	return (b.good && a.size()) ? 0 : 1;
 }
 
 //=============================================================================
@@ -670,9 +701,8 @@ if (!r || !r.inst_ref()) {
 // TODO: refactor this to make re-usable
 	entity::global_reference_array_type tmp;
 	const footprint& topfp(m.get_footprint());
-	const footprint_frame tff(topfp);
-	const global_offset g;
-	const global_entry_context gc(tff, g);
+	const global_process_context gpc(m.get_footprint());
+	const global_entry_context gc(gpc);
 	if (!r.inst_ref()->lookup_top_level_references(gc, tmp).good) {
 		cerr << "Error expanding reference array: ";
 		r.inst_ref()->dump(cerr, expr_dump_context::default_value);

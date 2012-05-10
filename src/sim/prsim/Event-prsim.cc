@@ -157,6 +157,11 @@ EventPool::~EventPool() {
 	Strict paranoia checking.  
 	All resources returned properly to the pool, free-list
 		must be as big as the pool (minus sentinel).  
+	Note: for 2^k-bit architectures, this can easily overflow
+		if the free-list size, m, exceeds a number.
+		Overflow condition: m*(m+1)/2 > 2^k
+		Could be off by a sign bit, due to unsigned right shift!
+		Test case: quarantine/set-assert-02.prsimckpttest
  */
 bool
 EventPool::check_valid_empty(void) const {
@@ -171,7 +176,13 @@ EventPool::check_valid_empty(void) const {
 		const size_t s = std::accumulate(
 			free_indices.begin(), free_indices.end(), size_t(0));
 			// explicit type-spec to prevent overflow
-		const size_t expect_sum = m*(m+1)/2; // triangular sum
+#if 0
+		const size_t expect_sum = (m*(m+1))>>1; // triangular sum
+#else
+		// overflow-sign safe version, halve the even multiplicand
+		const size_t expect_sum = (m&1) ? m*((m+1)>>1) : (m>>1)*(m+1);
+		// result may overflow, but we just want modulo-2^k to match
+#endif
 		if (s != expect_sum) {
 			cerr << "FATAL: event pool free list sum "
 				"is not what\'s expected!" << endl;

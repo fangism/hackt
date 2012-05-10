@@ -29,8 +29,8 @@ protected:
 	scope_stack_type			scope_stack;
 	size_t					id;
 public:
-	hierarchical_alias_visitor(const footprint_frame&, 
-		const global_offset&);
+	explicit
+	hierarchical_alias_visitor(const global_process_context&);
 
 virtual	~hierarchical_alias_visitor();
 

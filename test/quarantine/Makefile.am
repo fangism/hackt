@@ -8,7 +8,8 @@ HACO_FLAGS += -I$(top_srcdir)/lib
 
 # just to make sure library files compile
 HACKT_PARSE_TEST_PASSES = \
-	mem-01
+	mem-01 \
+	set-assert-01 set-assert-02 set-assert-03
 HACKT_PARSE_TEST_WARNINGS =
 HACKT_PARSE_TEST_FAILURES =
 
@@ -22,7 +23,9 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	mem-01
 
 HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
-	memstats32-mem-01 memstats64-mem-01
+	memstats32-mem-01 memstats64-mem-01 \
+	set-assert-01 set-assert-02 set-assert-03 \
+	set-assert-01b set-assert-02b set-assert-02c
 
 if ABI_ILP32
 memstats64-mem-01.prsimtest: memstats64-mem-01.prsimrc

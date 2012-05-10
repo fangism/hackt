@@ -546,10 +546,21 @@ public:
 //=============================================================================
 /**
 	Uses global_entry_context to construct process context.
+	Frame and offset go together.
  */
 struct global_process_context {
 	footprint_frame				frame;
 	global_offset				offset;
+
+	global_process_context() : frame(), offset() { }
+
+	explicit
+	global_process_context(const footprint& top) :
+		frame(footprint_frame(top)), offset() { }
+
+	explicit
+	global_process_context(const footprint_frame& tf) :
+		frame(tf), offset() { }
 
 	// for top-level module
 	explicit
@@ -558,7 +569,87 @@ struct global_process_context {
 	// for a specific process instance
 	global_process_context(const module&, const size_t);
 
+	void
+	construct_top_global_context(void) {
+		frame.construct_top_global_context(*frame._footprint, offset);
+	}
+
+	const footprint_frame&
+	get_frame(void) const { return frame; }
+
+	const global_offset&
+	get_offset(void) const { return offset; }
+
+	void
+	descend_frame(const global_process_context&, 
+		const size_t lpid, const bool);
+
+	/// modifies self, overwriting with child frame/offset
+	void
+	descend_frame(const size_t lpid, const bool is_top) {
+		descend_frame(*this, lpid, is_top);
+	}
+
+	void
+	descend_port(const global_process_context&, const size_t lpid);
+
+	void
+	descend_port(const size_t lpid) {
+		descend_port(*this, lpid);
+	}
+
+	ostream&
+	dump_frame(ostream& o) const {
+		return frame.dump_frame(o);
+	}
+
+	ostream&
+	dump_offset(ostream& o) const {
+		return o << offset;
+	}
 };	// end struct global_process_context
+
+//=============================================================================
+#if	!FOOTPRINT_OWNS_CONTEXT_CACHE
+/**
+	Same as above, but with extra global process id field.
+	This is useful as a return type from instance-reference lookups.
+ */
+struct global_process_context_id : public global_process_context {
+	typedef	global_process_context		parent_type;
+	size_t					gpid;
+
+	// usually default ctor
+	global_process_context_id() : global_process_context(), gpid(0) { }
+
+	void
+	descend_frame(const global_process_context& gpc, 
+			const size_t lpid, const bool is_top) {
+		parent_type::descend_frame(gpc, lpid, is_top);
+		gpid = lpid;
+	}
+
+	void
+	descend_frame(const size_t lpid, const bool is_top) {
+		parent_type::descend_frame(*this, lpid, is_top);
+		gpid = lpid;
+	}
+
+	void
+	descend_port(const global_process_context& gpc, 
+			const size_t lpid) {
+		parent_type::descend_port(gpc, lpid);
+		gpid = lpid;
+	}
+
+	void
+	descend_port(const size_t lpid) {
+		parent_type::descend_port(*this, lpid);
+		gpid = lpid;
+	}
+
+};	// end struct global_process_context_id
+#endif
 
 //=============================================================================
 }	// end namespace entity

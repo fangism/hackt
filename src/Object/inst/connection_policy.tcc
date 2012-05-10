@@ -122,7 +122,8 @@ if (a.is_aliased_to_port()) {
 	}
 #endif
 	if (a.is_output_port()) {
-		if (!any_fanin) {
+		// allow route-through ports to have no fanin
+		if (!(any_fanin || a.is_input_port())) {
 			// don't evaluate name unless diagnostic is printed
 			a.dump_hierarchical_name(oss);
 			const string& n(oss.str());

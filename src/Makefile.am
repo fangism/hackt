@@ -714,6 +714,7 @@ OBJECT_CC_FILES = \
 	Object/nonmeta_channel_manipulator.cc \
 	Object/global_entry_context.cc \
 	Object/global_entry_dumper.cc \
+	Object/global_context_cache.cc \
 	Object/sizes-entity.cc \
 	Object/type/template_actuals.cc \
 	Object/type/canonical_type_base.cc \

@@ -1340,11 +1340,9 @@ if (!check_object_loadable(arg.value.str).good) {
 }
   HAC_module = load_module(arg.value.str);
 if (HAC_module) {
-	if (!HAC_module->is_allocated()) {
-		if (!HAC_module->allocate_unique().good) {
-			cerr << "ERROR in allocating.  Aborting." << endl;
-			return 1;	// 0?
-		}
+	if (!HAC_module->allocate_unique().good) {
+		cerr << "ERROR in allocating.  Aborting." << endl;
+		return 1;	// 0?
 	}
 	prsim_state = count_ptr<State>(
 		new State(*HAC_module, prsim_opt.expr_alloc_flags));

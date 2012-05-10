@@ -44,6 +44,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "sim/command_macros.tcc"
 #include "sim/command_common.tcc"
 #include "parser/instref.h"
+#include "Object/module.h"
 #include "Object/def/footprint.h"
 
 #include "common/TODO.h"
@@ -88,6 +89,12 @@ DEFAULT_STATIC_TRACE_BEGIN
 	vector<node_index_type>::const_iterator				\
 		niter(_tmp.begin()), nend(_tmp.end());			\
 	for ( ; niter!=nend; ++niter)
+#endif
+
+#if FOOTPRINT_OWNS_CONTEXT_CACHE
+#define	GET_CONTEXT_CACHE(x)	x.get_module().get_context_cache().
+#else
+#define	GET_CONTEXT_CACHE(x)	x.
 #endif
 
 namespace HAC {
@@ -1174,6 +1181,7 @@ static
 int
 __set_main(State& s, const string_list& a, const bool force, 
 		void (*usage)(ostream&)) {
+	STACKTRACE_VERBOSE;
 	const size_t asz = a.size();
 if (asz < 3 || asz > 4) {
 	usage(cerr << "usage: ");
@@ -2678,8 +2686,7 @@ if (a.size() != 2) {
 	}
 	nodes_id_list_type nodes;
 	vector<bool> input_mask;
-//	s.get_process_state(p.index).type().has_not_local_fanin_map(input_mask);
-	s.get_footprint_frame(p.index)._footprint
+	GET_CONTEXT_CACHE(s) get_global_context(p.index).value.frame._footprint
 		->has_not_sub_fanin_map(input_mask);
 	if (parser::parse_name_to_get_ports(p, m, nodes, &input_mask)) {
 		return Command::BADARG;
@@ -2712,8 +2719,7 @@ if (a.size() != 2) {
 	}
 	nodes_id_list_type nodes;
 	vector<bool> output_mask;
-//	s.get_process_state(p.index).type().has_local_fanin_map(output_mask);
-	s.get_footprint_frame(p.index)._footprint
+	GET_CONTEXT_CACHE(s) get_global_context(p.index).value.frame._footprint
 		->has_sub_fanin_map(output_mask);
 	if (parser::parse_name_to_get_ports(p, m, nodes, &output_mask)) {
 		return Command::BADARG;
@@ -6010,10 +6016,10 @@ if (a.size() > 1) {
 	usage(cerr << "usage: ");
 	return Command::BADARG;
 } else {
-	const global_entry_context::index_frame_cache_type&
-		c(s.get_frame_cache());
+	entity::global_context_cache::frame_cache_type&
+		c(GET_CONTEXT_CACHE(s) get_frame_cache());
 	const size_t weight = c.weight();
-	s.halve_cache();
+	GET_CONTEXT_CACHE(s) halve_cache();
 	const size_t aft_weight = c.weight();
 	cout << "frame cache weight reduced from " << weight << " to "
 		<< aft_weight << endl;
@@ -6047,7 +6053,7 @@ if (a.size() > 1) {
 	usage(cerr << "usage: ");
 	return Command::BADARG;
 } else {
-	s.dump_frame_cache(cout);
+	GET_CONTEXT_CACHE(s) dump_frame_cache(cout);
 	return Command::NORMAL;
 }
 }
