@@ -512,14 +512,15 @@ public:
 	zero_top_level_ports(void);
 
 #if FOOTPRINT_OWNS_CONTEXT_CACHE
+	bool
+	initialize_context_cache(void) const;
+
 	global_context_cache&
 	get_context_cache(void) const {
+		initialize_context_cache();
 		NEVER_NULL(context_cache);
 		return *context_cache;
 	}
-
-	bool
-	initialize_context_cache(void) const;
 #endif
 
 private:

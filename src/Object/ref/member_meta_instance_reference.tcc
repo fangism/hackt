@@ -214,16 +214,18 @@ MEMBER_INSTANCE_REFERENCE_CLASS::lookup_locally_allocated_index(
 		return 0;
 	}
 	// TODO: have parent reference populate footprint_frame
+	typedef	global_entry_context::context_result_type
+							context_result_type;
 #if AGGREGATE_PARENT_REFS
-	vector<global_process_context_id> tmps;
+	vector<context_result_type> tmps;
 	if (global_entry_context::construct_global_footprint_frames(
 			top, _parent_inst_ref, tmps)) {
 		STACKTRACE_INDENT_PRINT("member::lookup_local error." << endl);
 		return 0;
 	}
-	const global_process_context_id& tmp(tmps.front());
+	const context_result_type& tmp(tmps.front());
 #else
-	global_process_context_id tmp;
+	context_result_type tmp;
 	if (global_entry_context::construct_global_footprint_frame(
 			top, _parent_inst_ref, tmp)) {
 		STACKTRACE_INDENT_PRINT("member::lookup_local error." << endl);
@@ -291,14 +293,16 @@ MEMBER_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_indices(
 	STACKTRACE_VERBOSE;
 	typedef vector<size_t>				indices_type;
 	typedef typename alias_collection_type::const_iterator  const_iterator;
+	typedef	global_entry_context::context_result_type
+							context_result_type;
 #if AGGREGATE_PARENT_REFS
-	vector<global_process_context_id> tmps;
+	vector<context_result_type> tmps;
 	if (global_entry_context::construct_global_footprint_frames(top,
 			*this->base_inst_ref, tmps)) {
 		return good_bool(false);
 	}
 #else
-	global_process_context_id tmp;
+	context_result_type tmp;
 	if (global_entry_context::construct_global_footprint_frame(top,
 			*this->base_inst_ref, tmp)) {
 		return good_bool(false);
@@ -307,10 +311,10 @@ MEMBER_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_indices(
 //	const size_t gpid = tmp.gpid;	// unused
 //	STACKTRACE_INDENT_PRINT("gpid = " << gpid << endl);
 #if AGGREGATE_PARENT_REFS
-	vector<global_process_context_id>::const_iterator
+	vector<context_result_type>::const_iterator
 		fi(tmps.begin()), fe(tmps.end());
 for ( ; fi!=fe; ++fi) {
-	const global_process_context_id& tmp(*fi);
+	const context_result_type& tmp(*fi);
 #endif
 	// alias lookup needs to be inside loop because of possibility
 	// of heterogenous types due to relaxed templates
@@ -453,8 +457,10 @@ MEMBER_INSTANCE_REFERENCE_CLASS::unroll_subindices_packed(
 	this->dump(STACKTRACE_STREAM, expr_dump_context::default_value) << endl;
 #endif
 	// resolve parent references first
+	typedef	global_entry_context::context_result_type
+							context_result_type;
 #if AGGREGATE_PARENT_REFS
-	vector<global_process_context_id> ffs;
+	vector<context_result_type> ffs;
 	if (c.construct_global_footprint_frames(*this->base_inst_ref, u, ffs)) {
 		return bad_bool(true);
 	}
@@ -462,12 +468,12 @@ MEMBER_INSTANCE_REFERENCE_CLASS::unroll_subindices_packed(
 	size_t asp = 0;
 	bool sized = false;
 	index_array_reference::iterator ai;
-	vector<global_process_context_id>::const_iterator
+	vector<context_result_type>::const_iterator
 		ffi(ffs.begin()), ffe(ffs.end());
 	for ( ; ffi!=ffe; ++ffi) {
-	const global_process_context_id& ff(*ffi);
+	const context_result_type& ff(*ffi);
 #else
-	global_process_context_id ff;
+	context_result_type ff;
 	if (c.construct_global_footprint_frame(*this->base_inst_ref, u, ff)) {
 		return bad_bool(true);
 	}
