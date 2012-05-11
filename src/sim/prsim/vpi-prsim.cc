@@ -877,17 +877,42 @@ static const bool set_force = true;
 	of padded string concatenation in verilog;
 	Helper function for stripping whitespaces anywhere in string, 
 	not just leading whitespace. 
+	NOTE: escaped identifiers need a trailing space preserved
  */
 static
 string
 strip_spaces(const char* c) {
+	STACKTRACE_VERBOSE;
 #if 0
+	// insufficient
 	return string(eat_whitespace(c));
 #else
 	const string temp(c);
 	string ret;
+//	ret.reserve(temp.length());		// optional
+#if 0
+	// too aggressive
 	std::remove_copy_if(temp.begin(), temp.end(), back_inserter(ret), 
 		isspace);
+#else
+	bool in_escape = false;
+	string::const_iterator i(temp.begin()), e(temp.end());
+	for ( ; i!=e; ++i) {
+		switch (*i) {
+		case ' ':
+			if (in_escape) {
+				// keep escape-terminating trailing space
+				ret.push_back(*i);
+				in_escape = false;
+			} // else strip all other spaces
+			break;
+		case '\\': in_escape = true;	// fall-through
+		default: ret.push_back(*i); break;
+		}
+	}
+#endif
+	STACKTRACE_INDENT_PRINT("original: \"" << c << "\"" << endl);
+	STACKTRACE_INDENT_PRINT("stripped: \"" << ret << "\"" << endl);
 	return ret;
 #endif
 }

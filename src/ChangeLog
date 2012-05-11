@@ -5,6 +5,11 @@
 
 2012-05-11	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-85-32:
+	  vpi-prsim: space-stripping now handles verilog escaped identifiers
+		by preserving end-of-identifier spaces.  Tested.
+
+
 	* HACKT-00-01-04-main-00-85-31:
 	  hacprsim: channel values files were not searching include paths
 	  vpi-prsim: include paths were not being searched for source files
