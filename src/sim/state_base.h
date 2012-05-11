@@ -55,7 +55,7 @@ protected:
 		Interpreter state for the input stream.
 		This is not checkpointed.  
 	 */
-	ifstream_manager				ifstreams;
+	mutable ifstream_manager			ifstreams;
 private:
 	/// private, undefined copy-ctor (non-copyable)
 	state_base(const state_base&);
@@ -69,7 +69,7 @@ public:
 	~state_base();
 
 	ifstream_manager&
-	get_stream_manager(void) { return ifstreams; }
+	get_stream_manager(void) const { return ifstreams; }
 
 	const string&
 	get_prompt(void) const { return prompt; }

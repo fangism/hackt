@@ -1259,7 +1259,7 @@ static PLI_INT32 prsim_watch (PLI_BYTE8* args)
 /***
 @texinfo vpi/prsim_options.texi
 @deffn Function $prsim_options optstring
-Sets the command-line options to be uesd for @command{hacprsim} co-simulation.  
+Sets the command-line options to be used for @command{hacprsim} co-simulation.  
 This should be done before the call to @command{$prsim()}.
 @end deffn
 @end texinfo
@@ -1346,7 +1346,16 @@ if (HAC_module) {
 	}
 	prsim_state = count_ptr<State>(
 		new State(*HAC_module, prsim_opt.expr_alloc_flags));
+	// grab paths from command-line options
+	prsim_state->import_source_paths(prsim_opt.source_paths);
 	prsim_state->initialize();
+	if (prsim_opt.autosave) {
+		prsim_state->autosave(prsim_opt.autosave,
+			prsim_opt.autosave_name);
+	}
+	if (prsim_opt.autotrace) {
+		prsim_state->open_trace(prsim_opt.autotrace_name);
+	}
 	// forbid step/advance/cycle commands
 	CommandRegistry::external_cosimulation = true;
 }

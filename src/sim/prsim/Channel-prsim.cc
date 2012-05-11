@@ -27,6 +27,7 @@
 #include "util/numeric/div.h"
 #include "util/numeric/random.h"	// for rand48 family
 #include "util/stacktrace.h"
+#include "util/named_ifstream_manager.h"
 #include "util/wtf.h"
 #include "common/TODO.h"
 
@@ -92,6 +93,7 @@ using util::strings::string_to_num;
 using util::numeric::div;
 using util::numeric::div_type;
 using util::numeric::rand48;
+using util::ifstream_manager;
 using entity::global_indexed_reference;
 
 static const char bundled_data_global_timing_warning[] =
@@ -1296,22 +1298,22 @@ channel::read_values_from_list(const string_list& s) {
 /**
 	Reads values from a file line-by-line.
 	TODO: make this function re-usable to others
-	TODO: lookup file in search paths (from interpreter?)
 	TODO: actual lexing?
 	TODO: accept values in various formats.
  */
 bool
-channel::read_values_from_file(const string& fn) {
+channel::read_values_from_file(const string& fn, ifstream_manager& ifm) {
 //		const channel::value_type max, 
 //		vector<channel::array_value_type>& v
 	STACKTRACE_VERBOSE;
 	values.clear();
-	ifstream f(fn.c_str());
-	if (!f) {
+	ifstream_manager::placeholder fp(ifm, fn);
+	if (!fp.good()) {
 		cerr << "Error opening file \"" << fn << "\" for reading."
 			<< endl;
 		return true;
 	}
+	istream& f(fp.get_stream());
 	// honor '#' comments
 	string_list s;
 	size_t i = 1;
@@ -1440,7 +1442,7 @@ channel::set_source_file(const State& s, const string& file_name,
 	STACKTRACE_VERBOSE;
 	if (__configure_source(s, loop))	return true;
 	value_index = 0;	// TODO: optional offset or initial position
-	if (read_values_from_file(file_name)) return true;
+	if (read_values_from_file(file_name, s.get_stream_manager())) return true;
 	if (!values.size()) {
 		cerr << "Warning: no values found in file \"" << file_name
 			<< "\", channel will remain neutral."
@@ -1695,7 +1697,8 @@ channel::__configure_expect(const bool loop) {
 	TODO: check for values that overflow (bundle,rail)?
  */
 bool
-channel::set_expect_file(const string& fn, const bool loop) {
+channel::set_expect_file(const string& fn, const bool loop,
+		ifstream_manager& ifm) {
 	STACKTRACE_VERBOSE;
 	__configure_expect(loop);
 	value_index = 0;
@@ -1713,7 +1716,7 @@ channel::set_expect_file(const string& fn, const bool loop) {
 		break;
 	}
 #endif
-	if (read_values_from_file(fn)) return true;
+	if (read_values_from_file(fn, ifm)) return true;
 	if (values.size()) {
 		inject_expect_file = fn;	// save name
 	} else {

@@ -274,7 +274,8 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	channel-test-a-15 channel-test-a-16 channel-test-a-17 \
 	channel-test-a-18 channel-test-a-19 channel-test-a-20 \
 	channel-test-a-22 channel-test-a-23 \
-	channel-test-a-24 channel-test-a-25 channel-test-a-26 \
+	channel-test-a-24 channel-test-a-24b channel-test-a-24c \
+	channel-test-a-25 channel-test-a-26 \
 	channel-test-a-27 channel-test-a-28 channel-test-a-29 \
 	channel-test-a-30 channel-test-a-31 channel-test-a-32 \
 	channel-test-a-33 channel-test-a-34 channel-test-a-35 \

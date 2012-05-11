@@ -116,6 +116,9 @@
  */
 #define	PRSIM_CHANNEL_SYNC			1
 
+namespace util {
+class ifstream_manager;
+}
 namespace HAC {
 namespace entity {
 class module;
@@ -133,6 +136,7 @@ using entity::module;
 using util::memory::count_ptr;
 using util::packed_array;
 using util::string_list;
+using util::ifstream_manager;
 class State;
 class channel;
 class channel_manager;
@@ -900,7 +904,7 @@ private:
 	read_values_from_list(const string_list&);
 
 	bool
-	read_values_from_file(const string&);
+	read_values_from_file(const string&, ifstream_manager&);
 
 public:
 	bool
@@ -930,7 +934,7 @@ public:
 	set_log(const string&);
 
 	bool
-	set_expect_file(const string&, const bool);
+	set_expect_file(const string&, const bool, ifstream_manager&);
 
 	bool
 	set_expect_args(const string_list&, const bool);
