@@ -39,7 +39,7 @@ HACKT_VPI_TEST_SCRIPTS_PASSES = \
 	fatal-assert-fail \
 	unstable-dequeue \
 	celem-test \
-	flop_it
+	flop_it flop_it-b flop_it-c
 
 HACKT_VWRAP_TEST_SCRIPTS_PASSES = \
 	standard standard-ports standard-reverse \
@@ -91,6 +91,8 @@ and_tree_reverse.vx: standard-reverse.v-wrap pli.tab
 and_template_tree_reverse.vx: standard-reverse.v-wrap pli.tab
 startup.vx: pli.tab
 flop_it.vx: standard.v-wrap pli.tab
+flop_it-b.vx: standard.v-wrap pli.tab
+flop_it-c.vx: standard.v-wrap pli.tab
 
 subdir/channel-values-X.txt:
 	mkdir -p subdir && \
@@ -127,7 +129,7 @@ EXAMPLE_DATA_FILES = example.mk clkgen.v \
 	and_template_tree.hac and_template_tree.v \
 	and_template_tree_reverse.hac and_template_tree_reverse.v \
 	oscillator.hac oscillator-fanout.v \
-	flop_it.hac flop_it.v
+	flop_it.hac flop_it.v flop_it-b.v flop_it-c.v
 EXTRA_DIST += $(EXAMPLE_DATA_FILES)
 vpiinv_DATA = $(EXAMPLE_DATA_FILES) Makefile.copy
 
