@@ -1,0 +1,23 @@
+# "channel-test-a-24b.prsimrc"
+# @haco@ channel-test-a.haco-c
+# @deps@ channel-test-a-values-X.txt
+# @hacprsim-flags@ -I another_dir-24b
+# testing directory search
+
+source channel-test-a-01.prsimrc
+channel-show-all
+
+!mkdir -p another_dir-24b
+!cp -f channel-test-a-values-X.txt another_dir-24b/Xv.txt
+# addpath another_dir-24b
+# paths
+
+# try opening same file 2x, separately
+channel-source-file X Xv.txt
+channel-source-file-loop Y Xv.txt
+channel-sink Z
+
+source channel-test-a-21.prsimrc
+
+!rm -rf another_dir-24b
+

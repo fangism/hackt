@@ -29,6 +29,8 @@ HACKT_VPI_TEST_SCRIPTS_PASSES = \
 	oscillator-fanout \
 	independent-01 \
 	channel-source-sink \
+	channel-source-sink-b \
+	channel-source-sink-c \
 	channel-expect-fail \
 	channel-ledr-source-sink \
 	channel-ledr-expect-fail \
@@ -90,6 +92,19 @@ and_template_tree_reverse.vx: standard-reverse.v-wrap pli.tab
 startup.vx: pli.tab
 flop_it.vx: standard.v-wrap pli.tab
 
+subdir/channel-values-X.txt:
+	mkdir -p subdir && \
+	{ $(ECHO) "# $@" ; \
+	$(ECHO) "# bunch values" ; \
+	$(ECHO) "0" ; \
+	$(ECHO) "1" ; $(ECHO) "1" ; \
+	$(ECHO) "0" ; $(ECHO) "0" ; $(ECHO) "0" ; \
+	$(ECHO) "1" ; $(ECHO) "1" ; $(ECHO) "1" ; $(ECHO) "1" ; \
+		} > $@
+
+channel-source-sink-b.vx-out: subdir/channel-values-X.txt
+channel-source-sink-c.vx-out: subdir/channel-values-X.txt
+
 # force: always re-run this test
 inverters.vxi-subdir-out: Makefile.copy force
 	+$(ECHO) "Part 2: building subdir to test installed example." && \
@@ -105,6 +120,7 @@ EXAMPLE_DATA_FILES = example.mk clkgen.v \
 	inverters.hac inverters.v inverters-delay.v \
 	shoelace.v shoelace-debug.v \
 	channel-source-sink.hac channel-source-sink.v \
+	channel-source-sink-b.v channel-source-sink-c.v \
 	channel-ledr-source-sink.hac channel-ledr-source-sink.v \
 	and_tree.hac and_tree.v standard.v startup.v startup.hac \
 	and_tree_reverse.hac and_tree_reverse.v standard-reverse.v \

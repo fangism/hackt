@@ -8987,7 +8987,7 @@ if (a.size() != 3) {
 #if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
 	CHANNEL_FOR_EACH(channel, chan_name) {
 		channel& c(**i);
-		if (c.set_expect_file(fn, false))
+		if (c.set_expect_file(fn, false, s.get_stream_manager()))
 			return Command::BADARG;
 	}
 #else
@@ -9047,7 +9047,7 @@ if (a.size() != 3) {
 #if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
 	CHANNEL_FOR_EACH(channel, chan_name) {
 		channel& c(**i);
-		if (c.set_expect_file(fn, true))
+		if (c.set_expect_file(fn, true, s.get_stream_manager()))
 			return Command::BADARG;
 	}
 #else
