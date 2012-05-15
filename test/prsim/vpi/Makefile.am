@@ -21,7 +21,8 @@ HACKT_PRSIMRC_TEST_SUBJECTS = inverters \
 
 # for .v verilog tests
 HACKT_VPI_TEST_SCRIPTS_PASSES = \
-	inverters inverters-delay shoelace shoelace-debug \
+	inverters inverters-delay inverters-syntax-err \
+	shoelace shoelace-debug \
 	inverters-watch inverters-watch2 \
 	initial-value \
 	startup \

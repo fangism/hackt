@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2012-05-15	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-33:
+	  vpi-prsim: treat syntax and argument errors as fatal,
+		so that PEBKAC-causes of failure are more obvious.
+		Test case added.
+
+
 2012-05-11	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-85-32:
