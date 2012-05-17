@@ -1229,6 +1229,11 @@ require_prsim_state(__FUNCTION__);
 
 	prsim_sync(NULL);
   switch (CommandRegistry::interpret_line (*prsim_state, arg.value.str)) {
+  case command_error_codes::SYNTAX:	// fall-through
+  case command_error_codes::BADARG:
+	cerr << "Treating command errors (syntax, bad-arg) as fatal."
+		<< endl;
+	// fall-through
   case command_error_codes::FATAL:
 #if NICE_FINISH
 	cerr << "Terminating simulation early due to hacprsim fatal error."
