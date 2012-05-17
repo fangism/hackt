@@ -400,6 +400,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	channel-clocked-test-a-04 channel-clocked-test-a-04b \
 	channel-clocked-test-a-05 channel-clocked-test-a-05b \
 	channel-clocked-test-a-05c \
+	channel-clocked-test-a-07b \
 	channel-clocked-test-a-08 channel-clocked-test-a-08b \
 	channel-clocked-test-a-09 channel-clocked-test-a-10 \
 	channel-clocked-test-a-11 \

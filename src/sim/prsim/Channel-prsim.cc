@@ -3839,7 +3839,7 @@ channel::process_data(const State& s) throw (channel_exception) {
 		} else {	// else don't care
 			// don't print confirmed values for don't cares
 			STACKTRACE_INDENT_PRINT("expect is X (don't care)" << endl);
-			if (v || data_is_bundled()) {
+			if (v || data_is_bundled() || is_clocked()) {
 				// on valid data, advance
 				STACKTRACE_INDENT_PRINT("advancing value" << endl);
 				advance_value();
