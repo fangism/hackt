@@ -29,7 +29,7 @@ struct transistor_base;
 namespace SIM {
 namespace PRSIM {
 class State;
-class unique_process_subgraph;
+struct unique_process_subgraph;
 using std::map;
 using entity::state_instance;
 using entity::process_tag;

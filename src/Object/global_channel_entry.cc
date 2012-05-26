@@ -14,7 +14,7 @@
 namespace HAC {
 namespace entity {
 //=============================================================================
-// class global_entry<channel_tag> method definitions
+// struct global_entry<channel_tag> method definitions
 
 global_entry_base<channel_tag>::global_entry_base() : 
 		channel_type(NULL) {

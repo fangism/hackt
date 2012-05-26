@@ -27,8 +27,8 @@
 namespace HAC {
 namespace entity {
 template <class> class instantiation_statement;
-template <class> class instance_collection_pool_bundle;
-class collection_index_entry;
+template <class> struct instance_collection_pool_bundle;
+struct collection_index_entry;
 template <class> class port_actual_collection;
 
 //=============================================================================
@@ -54,7 +54,7 @@ INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 class instance_collection :
 	public collection_interface<Tag>, 
 	public class_traits<Tag>::collection_type_manager_parent_type {
-friend	class class_traits<Tag>::collection_type_manager_parent_type;
+friend	struct class_traits<Tag>::collection_type_manager_parent_type;
 friend	class subinstance_manager;
 public:
 	typedef	class_traits<Tag>			traits_type;

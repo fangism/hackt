@@ -18,7 +18,7 @@ template <class Tag>
 struct  global_entry;
 
 template <class Tag>
-class global_entry_pool;
+struct global_entry_pool;
 
 /**
 	Common type passed around for translating

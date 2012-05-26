@@ -15,7 +15,7 @@
 namespace HAC {
 namespace entity {
 template <class> class simple_nonmeta_value_reference;
-class global_entry_context;
+struct global_entry_context;
 class nonmeta_context_base;
 using util::good_bool;
 using std::vector;

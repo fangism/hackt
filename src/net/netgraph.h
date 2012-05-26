@@ -140,9 +140,9 @@ using entity::PRS::footprint_expr_node;
 
 typedef	size_t		index_type;
 typedef	double		real_type;
-class node;
+struct node;
 #if NETLIST_VERILOG
-class proc;
+struct proc;
 #endif
 class netlist;
 class local_netlist;
@@ -940,7 +940,7 @@ struct netlist_common : public device_group {
 	Minimum requirements for any type of netlist.  
 	Intended for use with subcircuits.
  */
-struct local_netlist : public netlist_common {
+class local_netlist : public netlist_common {
 	// maps actual indices to formal indices (ordered!)
 	typedef	map<index_type, index_type>		node_index_map_type;
 

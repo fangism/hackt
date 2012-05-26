@@ -21,7 +21,7 @@ namespace HAC {
 namespace entity {
 class definition_base;
 class fundamental_type_reference;
-class expr_dump_context;
+struct expr_dump_context;
 class const_param;
 class const_range_list;
 class param_value_collection;

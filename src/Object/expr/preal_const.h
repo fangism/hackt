@@ -108,9 +108,11 @@ public:
 
 protected:
 	using parent_type::unroll_resolve_rvalues;
+	using param_expr::unroll_resolve_rvalues;
 	using parent_type::unroll_resolve_copy;
 	using parent_type::nonmeta_resolve_copy;
 	using parent_type::substitute_default_positional_parameters;
+	using param_expr::substitute_default_positional_parameters;
 
 	LESS_OPERATOR_PROTO;
 

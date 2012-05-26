@@ -33,7 +33,7 @@ using util::persistent_object_manager;
 #include "util/using_ostream.h"
 #endif
 class const_param_expr_list;
-template <class> class class_traits;
+template <class> struct class_traits;
 
 //=============================================================================
 /**

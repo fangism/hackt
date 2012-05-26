@@ -146,7 +146,9 @@ public:
 	is_absolute(void) const { return absolute; }
 
 	size_type
-	size(void) const { return std::distance(parent.begin(), parent.end()); }
+	size(void) const {
+		return size_type(std::distance(parent.begin(), parent.end()));
+	}
 
 /***
 using parent::begin;

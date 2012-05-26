@@ -28,10 +28,10 @@ class node_list;			// defined in "AST/node_list.h"
 
 class expr_list;
 class inst_ref_expr_list;
-class extended_connection_actuals;
+struct extended_connection_actuals;
 
 
-class expr_attr_list;
+struct expr_attr_list;
 class template_argument_list_pair;
 class root_item;
 class root_body;

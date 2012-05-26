@@ -38,7 +38,7 @@ struct class_traits<string_tag> {
 	static const string		is_connection_directional = false;
 	enum {		is_nonmeta_data_lvalue = true		};
 	/// defined in "Object/inst/string_instance_collection.h"
-	class state_instance_base;
+	struct state_instance_base;
 
 	template <size_t D>
 	struct value_array {

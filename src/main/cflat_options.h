@@ -17,8 +17,7 @@ using entity::dump_flags;
 	Printing and operating options for cflat.
 	Add variations and options as needed.  
  */
-class cflat_options {
-public:
+struct cflat_options {
 	/**
 		The preset modes will set the primary_tool
 		to one of these values.  

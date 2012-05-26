@@ -64,7 +64,7 @@ template <class T>
 class instance_pool;
 
 template <class>
-class instance_collection_pool_bundle;
+struct instance_collection_pool_bundle;
 
 //=============================================================================
 /**
@@ -81,7 +81,7 @@ public:
 	typedef never_ptr<alias_type>			alias_ptr_type;
 #if USE_ALIAS_STRING_CACHE
 	/**
-		Blatantly copied from class global_entry<Tag>.
+		Blatantly copied from struct global_entry<Tag>.
 		TODO: move this to "inst/instance_alias_info.h"
 	 */
 	struct alias_to_string_transformer;

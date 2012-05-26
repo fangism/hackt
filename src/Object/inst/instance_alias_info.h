@@ -25,11 +25,11 @@ namespace entity {
 struct dump_flags;
 class footprint;
 class instance_alias_info_actuals;
-struct alias_visitor;
+class alias_visitor;
 struct alias_printer;
 template <class> struct alias_matcher;
 template <class> class collection_interface;
-template <class> class instance_collection_pool_bundle;
+template <class> struct instance_collection_pool_bundle;
 template <class> class port_actual_collection;
 using std::ostream;
 using std::istream;

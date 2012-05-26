@@ -28,10 +28,10 @@
 namespace HAC {
 namespace entity {
 
-template class value_collection_pool_bundle<pbool_tag>;
-template class value_collection_pool_bundle<pint_tag>;
-template class value_collection_pool_bundle<preal_tag>;
-template class value_collection_pool_bundle<pstring_tag>;
+template struct value_collection_pool_bundle<pbool_tag>;
+template struct value_collection_pool_bundle<pint_tag>;
+template struct value_collection_pool_bundle<preal_tag>;
+template struct value_collection_pool_bundle<pstring_tag>;
 
 template class value_footprint_base<pbool_tag>;
 template class value_footprint_base<pint_tag>;

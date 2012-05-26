@@ -18,7 +18,7 @@
 namespace HAC {
 namespace entity {
 //=============================================================================
-// class global_entry_context method definitions
+// struct global_entry_context method definitions
 
 /**
 	Looks up globally allocated index using footprint frame

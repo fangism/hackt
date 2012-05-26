@@ -474,7 +474,7 @@ protected:
 /**
 	Specialized operations for direction-sensitive meta-types.  
  */
-struct channel_connect_policy {
+class channel_connect_policy {
 private:
 	typedef	channel_connect_policy		this_type;
 public:
@@ -692,7 +692,7 @@ public:
 /**
 	Mostly just redirects many calls to substructure, for recursion.
  */
-struct process_connect_policy
+class process_connect_policy
 #if !PROCESS_CONNECTIVITY_CHECKING
 	: public null_connect_policy
 #endif

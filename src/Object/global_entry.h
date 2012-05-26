@@ -15,7 +15,7 @@
 #include "util/macros.h"
 
 namespace HAC {
-class cflat_options;
+struct cflat_options;
 
 namespace entity {
 using std::ostream;
@@ -28,12 +28,12 @@ namespace PRS {
 
 class module;
 struct dump_flags;
-class global_entry_context_base;
+struct global_entry_context_base;
 struct global_entry_dumper;
 class alias_string_set;
 class footprint;
 class state_manager;
-class entry_collection;		// defined in "Object/entry_collection.h"
+struct entry_collection;		// defined in "Object/entry_collection.h"
 class footprint_frame;
 struct global_offset;
 template <class Tag>
@@ -114,7 +114,7 @@ protected:
 		const footprint_frame_map<Tag>&,
 		const global_offset_base<Tag>&);
 
-};	// end struct footprint_frame_map
+};	// end class footprint_frame_map
 
 //=============================================================================
 /**
@@ -271,13 +271,13 @@ private:
 
 	void
 	get_frame_map_test(void) const;
-};	// end struct footprint_frame
+};	// end class footprint_frame
 
 //=============================================================================
 /**
 	Functor for transforming indices via footprint frame lookup.  
  */
-struct footprint_frame_transformer {
+class footprint_frame_transformer {
 	typedef	size_t				argument_type;
 	typedef	size_t				result_type;
 
@@ -305,7 +305,7 @@ struct footprint_frame_transformer {
 		return ff[i -1];
 	}
 	
-};	// end struct footprint_frame_transformer
+};	// end class footprint_frame_transformer
 
 //=============================================================================
 struct add_local_private_tag {};

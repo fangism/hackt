@@ -34,7 +34,7 @@ namespace PRS {
 // forward declarations of all the visitable types in this hierarchy
 class footprint;
 class footprint_expr_node;
-class footprint_rule;
+struct footprint_rule;
 class footprint_macro;
 
 

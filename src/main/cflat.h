@@ -25,7 +25,7 @@ template <class> class getopt_map;
 }
 
 namespace HAC {
-class cflat_options;
+struct cflat_options;
 using std::string;
 using std::ostream;
 

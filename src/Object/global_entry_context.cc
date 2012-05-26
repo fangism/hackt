@@ -42,10 +42,10 @@ using util::value_saver;
 typedef	value_saver<const footprint_frame*>	footprint_frame_setter;
 
 //=============================================================================
-// class global_entry_context_base method definitions
+// struct global_entry_context_base method definitions
 
 //=============================================================================
-// class global_entry_context method definitions
+// struct global_entry_context method definitions
 
 global_entry_context::global_entry_context(const footprint_frame& ff, 
 		const global_offset& g) :

@@ -73,8 +73,8 @@ protected:
 		Iterator that only conditionally increments.  
 		Useful for emulating a stream of state changes.  
 	 */
-	struct __pseudo_const_iterator;
-	struct __pseudo_const_iterator_range;
+	class __pseudo_const_iterator;
+	class __pseudo_const_iterator_range;
 public:
 	typedef	typename data_array_type::const_iterator	iter_type;
 	typedef	std::pair<iter_type, iter_type>	__pseudo_const_iterator_pair;

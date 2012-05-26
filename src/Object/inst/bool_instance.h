@@ -37,9 +37,9 @@ namespace entity {
 		Is saving/restoring state complicated?
 
  */
-class class_traits<bool_tag>::state_instance_base {
+struct class_traits<bool_tag>::state_instance_base {
 	// eventually add state information
-};	// end class state_instance_base
+};	// end struct state_instance_base
 
 //-----------------------------------------------------------------------------
 }	// end namespace entity

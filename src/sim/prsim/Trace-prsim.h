@@ -64,7 +64,7 @@ public:
 	state_trace_point(const time_type& t, const trace_index_type ei, 
 		const trace_index_type c, const node_index_type ni, 
 		const char nv, const char ov) : event_trace_point(t, ei, c), 
-		node_index(ni), node_value((ov << 4) | nv) { }
+		node_index(ni), node_value(value_type(ov << 4) | nv) { }
 
 	value_type
 	new_value(void) const {

@@ -129,20 +129,30 @@ public:
 	unroll_resolve_rvalues(const unroll_context&, 
 		const count_ptr<const pint_expr>&) const;
 
+protected:
 	using pint_expr::unroll_resolve_rvalues;
+	using param_expr::unroll_resolve_rvalues;
 
+public:
 	count_ptr<const_index>
 	unroll_resolve_index(const unroll_context&) const;
 
+protected:
 	using pint_expr::unroll_resolve_copy;
 	using pint_expr::nonmeta_resolve_copy;
+	using meta_index_expr::unroll_resolve_copy;
 
+public:
 	UNROLL_RESOLVE_COPY_PINT_PROTO;
 	EXPR_ACCEPT_VISITOR_PROTO;
 
 	SUBSTITUTE_DEFAULT_PARAMETERS_PINT_PROTO;
+protected:
 	using pint_expr::substitute_default_positional_parameters;
+	using param_expr::substitute_default_positional_parameters;
+	using meta_index_expr::substitute_default_positional_parameters;
 
+public:
 	LESS_OPERATOR_PROTO;
 
 	preal_value_type

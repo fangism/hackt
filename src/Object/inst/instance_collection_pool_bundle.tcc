@@ -200,7 +200,7 @@ instance_collection_pool_wrapper<T>::load_connections(
 }
 
 //=============================================================================
-// class instance_collection_pool_bundle method definitions
+// struct instance_collection_pool_bundle method definitions
 
 template <class Tag>
 instance_collection_pool_bundle<Tag>::instance_collection_pool_bundle() :

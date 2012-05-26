@@ -11375,7 +11375,7 @@
 		and copy-loops re-written functionally.
 	  chpsim/DependenceCollector.cc: fixed index translation by
 		conditionally transforming through footprint frame.  
-	  Object/global_entry.h: struct footprint_frame_transformer
+	  Object/global_entry.h: class footprint_frame_transformer
 		useful functor for iterating and transformation.  
 		Should use this more where same operation is expressed, 
 		but now in more functional form.  

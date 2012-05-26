@@ -31,7 +31,7 @@ namespace PRS {
 }
 namespace parser {
 class inst_ref_expr_list;
-class expr_attr_list;
+struct expr_attr_list;
 /**
 	This is the namespace for the PRS sub-language.  
  */

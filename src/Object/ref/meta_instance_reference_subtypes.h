@@ -23,7 +23,7 @@
 namespace HAC {
 namespace entity {
 class unroll_context;
-class global_entry_context;
+struct global_entry_context;
 class nonmeta_expr_visitor;
 template <class> class simple_meta_instance_reference;
 template <class> class aggregate_meta_instance_reference;

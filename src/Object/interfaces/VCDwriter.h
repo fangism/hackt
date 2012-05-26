@@ -9,7 +9,7 @@
 #include "Object/hierarchical_alias_visitor.h"
 
 namespace HAC {
-class cflat_options;
+struct cflat_options;
 namespace VCD {
 using std::ostream;
 using entity::footprint;

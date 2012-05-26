@@ -17,8 +17,8 @@ namespace entity {
 	Placeholder for...
 	State information for an integer.  
  */
-class class_traits<int_tag>::state_instance_base {
-};	// end class state_instance_base
+struct class_traits<int_tag>::state_instance_base {
+};	// end struct state_instance_base
 
 //=============================================================================
 }	// end namespace entity

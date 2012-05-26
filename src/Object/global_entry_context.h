@@ -54,7 +54,7 @@ using util::member_saver;
 	to perform a meaninful traversal of the instance hierarchy, 
 	such as for cflatting, or allocating global expressions.  
  */
-class global_entry_context_base {
+struct global_entry_context_base {
 	typedef	global_entry_context_base	this_type;
 protected:
 	// need some replacement, nope
@@ -85,7 +85,7 @@ public:
 	Add a footprint frame when recursively traversing substructures
 	such as processes.  
  */
-class global_entry_context : public global_entry_context_base {
+struct global_entry_context : public global_entry_context_base {
 	typedef	global_entry_context		this_type;
 public:
 	/**

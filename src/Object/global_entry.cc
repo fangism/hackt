@@ -802,11 +802,11 @@ template class footprint_frame_map<enum_tag>;
 template class footprint_frame_map<channel_tag>;
 template class footprint_frame_map<process_tag>;
 
-template class global_entry<bool_tag>;
-template class global_entry<int_tag>;
-template class global_entry<enum_tag>;
-template class global_entry<channel_tag>;
-template class global_entry<process_tag>;
+template struct global_entry<bool_tag>;
+template struct global_entry<int_tag>;
+template struct global_entry<enum_tag>;
+template struct global_entry<channel_tag>;
+template struct global_entry<process_tag>;
 
 //=============================================================================
 // class global_process_context method definitions

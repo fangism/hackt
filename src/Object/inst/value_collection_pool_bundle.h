@@ -115,7 +115,7 @@ struct value_collection_pool_bundle :
 	// load everything but actual_collections into footprint's map.
 	void
 	load_footprint(footprint&) const;
-};	// end class value_collection_pool_bundle
+};	// end struct value_collection_pool_bundle
 
 //=============================================================================
 }	// end namespace entity

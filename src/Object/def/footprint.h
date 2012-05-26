@@ -29,11 +29,11 @@
 
 
 namespace HAC {
-class cflat_options;
+struct cflat_options;
 namespace entity {
 namespace PRS {
 	class footprint;
-	class footprint_rule;
+	struct footprint_rule;
 	class cflat_visitor;
 }
 namespace SPEC {
@@ -52,7 +52,7 @@ struct global_offset;
 struct global_entry_context;
 class footprint_manager;
 struct entry_collection;
-struct alias_visitor;
+class alias_visitor;
 struct dump_flags;
 struct expr_dump_context;
 

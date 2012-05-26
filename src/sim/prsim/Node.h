@@ -619,7 +619,7 @@ public:
 	char_to_pull(const char);
 
 	static
-	char
+	uchar
 	translate_value_to_char(const char e) {
 		return value_to_char[size_t(e)];
 	}

@@ -23,10 +23,10 @@
 namespace HAC {
 namespace entity {
 class scopespace;
-struct footprint_frame;
+class footprint_frame;
 struct expr_dump_context;
 struct global_entry_context;
-class entry_collection;
+struct entry_collection;
 class module;
 class definition_base;
 class fundamental_type_reference;

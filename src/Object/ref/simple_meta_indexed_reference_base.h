@@ -23,7 +23,7 @@ namespace HAC {
 namespace entity {
 class scopespace;
 class const_index_list;
-struct footprint_frame;
+class footprint_frame;
 class state_manager;
 class definition_base;
 class fundamental_type_reference;

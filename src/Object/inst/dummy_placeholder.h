@@ -24,7 +24,7 @@ class nonmeta_instance_reference_base;
 class subinstance_manager;
 template <bool> class internal_aliases_policy;
 template <class> class instantiation_statement;
-template <class> class instance_collection_pool_bundle;
+template <class> struct instance_collection_pool_bundle;
 #endif
 
 //=============================================================================

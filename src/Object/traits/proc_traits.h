@@ -50,7 +50,7 @@ struct class_traits<process_tag> {
 	typedef	instance_alias_info_actuals
 					instance_alias_relaxed_actuals_type;
 	/// defined in "Object/inst/process_instance.h"
-	class state_instance_base;
+	struct state_instance_base;
 	enum { instance_pool_chunk_size = 256 };
 
 	typedef	process_instance_collection	instance_collection_generic_type;

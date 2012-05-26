@@ -156,7 +156,7 @@ private:
 			
 	MAKE_INSTANCE_COLLECTION_PROTO;
 
-friend class canonical_definition_load_policy<definition_type>;
+friend struct canonical_definition_load_policy<definition_type>;
 
 	/// TODO: eliminate this once we properly sub-type data types.  
 	static

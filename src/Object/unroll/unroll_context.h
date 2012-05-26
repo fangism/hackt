@@ -26,7 +26,7 @@ class param_value_placeholder;
 class physical_instance_placeholder;
 class physical_instance_collection;
 class param_value_collection;
-class global_entry_context_base;
+struct global_entry_context_base;
 using std::ostream;
 using util::memory::never_ptr;
 using util::memory::count_ptr;

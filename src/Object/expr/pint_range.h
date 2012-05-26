@@ -85,6 +85,7 @@ public:
 
 protected:
 	using parent_type::unroll_resolve_copy;
+	using nonmeta_index_expr_base::unroll_resolve_copy;
 
 public:
 	FRIEND_PERSISTENT_TRAITS

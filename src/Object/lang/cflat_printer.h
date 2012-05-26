@@ -13,7 +13,7 @@
 #include "Object/lang/SPEC_fwd.h"
 
 namespace HAC {
-class cflat_options;
+struct cflat_options;
 
 namespace entity {
 class footprint;

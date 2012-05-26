@@ -19,8 +19,8 @@ namespace entity {
 	A final pass is required to construct the instances.  
 	Needs to be pool allocated for efficient unique construction. 
  */
-class class_traits<process_tag>::state_instance_base {
-};	// end class state_instance_base
+struct class_traits<process_tag>::state_instance_base {
+};	// end struct state_instance_base
 
 //=============================================================================
 }	// end namespace entity

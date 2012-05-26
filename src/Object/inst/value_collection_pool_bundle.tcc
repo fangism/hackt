@@ -89,7 +89,7 @@ value_collection_pool_wrapper<T>::load_object_base(
 }
 
 //=============================================================================
-// class value_collection_pool_bundle method definitions
+// struct value_collection_pool_bundle method definitions
 
 template <class Tag>
 value_collection_pool_bundle<Tag>::value_collection_pool_bundle() :

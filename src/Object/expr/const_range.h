@@ -164,6 +164,7 @@ public:
 	accept(nonmeta_expr_visitor&) const;
 
 protected:
+	using nonmeta_index_expr_base::unroll_resolve_copy;
 	using meta_index_expr::unroll_resolve_copy;
 	using const_index::unroll_resolve_copy;
 public:
@@ -176,7 +177,7 @@ public:
 
 public:
 	PERSISTENT_METHODS_DECLARATIONS
-	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
+//	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS	// not needed, ctors are public
 	LIST_VECTOR_POOL_DEFAULT_STATIC_DECLARATIONS
 	// don't need robust declarations, unless dynamically allocating
 	// during global static initialization.

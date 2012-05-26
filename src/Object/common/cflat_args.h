@@ -24,7 +24,7 @@
 #include "Object/global_entry_context.h"
 
 namespace HAC {
-class cflat_options;
+struct cflat_options;
 namespace entity {
 using std::string;
 using std::ostream;
