@@ -3822,6 +3822,10 @@ channel::process_data(const State& s) throw (channel_exception) {
 		}
 		} else {	// cannot expect invalid value
 			STACKTRACE_INDENT_PRINT("channel data is invalid" << endl);
+			// sampled/synchronous channels advance index
+			if (data_is_bundled() || is_clocked()) {
+				advance_value();
+			}
 			const channel_exception
 				ex(this, cur_index, cur_iter,
 					DATA_VALUE(expect), 0xDEADBEEF, true);
