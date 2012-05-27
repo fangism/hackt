@@ -412,6 +412,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	channel-clocked-test-a-05 channel-clocked-test-a-05b \
 	channel-clocked-test-a-05c \
 	channel-clocked-test-a-07b \
+	channel-clocked-test-a-07d channel-clocked-test-a-07e \
 	channel-clocked-test-a-08 channel-clocked-test-a-08b \
 	channel-clocked-test-a-09 channel-clocked-test-a-10 \
 	channel-clocked-test-a-11 \
@@ -797,8 +798,8 @@ HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
 	pchb-test-b-02 \
 	pcefb-test-b-02 \
 	pcehb-test-b-02 \
-	channel-clocked-test-a-06 \
-	channel-clocked-test-a-06b channel-clocked-test-a-07 \
+	channel-clocked-test-a-06 channel-clocked-test-a-06b \
+	channel-clocked-test-a-07 channel-clocked-test-a-07c \
 	channel-clocked-test-b-06 \
 	channel-clocked-test-b-07 \
 	reset-test-01

@@ -1,0 +1,47 @@
+channels:
+W : clocked-anyedge:0 x4 off
+X : clocked-posedge x1 off
+Y : clocked-negedge x1 off
+Z : clocked-anyedge:1 x2 off
+There's no such thing as a sync-sink! 
+Warning: Ignoring.  What exactly do you expect a sync. sink to do?
+X : clocked-posedge x1 expect,watch {0,1,1,1,0,1,} @0
+	count: 0, unknowns: 1
+X : clocked-posedge x1 expect,watch,stopped {0,1,1,1,0,1,} @0
+	count: 0, unknowns: 1
+X : clocked-posedge x1 expect,watch {0,1,1,1,0,1,} @0
+	count: 0, unknowns: 1
+	0	X.d : 0
+	0	X.clk : 0
+channel	X (.data) : 0 @ 50
+	50	X.clk : 1
+	100	X.d : 1
+	100	X.clk : 0
+channel	X (.data) : 1 @ 150
+	150	X.clk : 1
+	200	X.clk : 0
+channel	X (.data) : 1 @ 250
+	250	X.clk : 1
+X : clocked-posedge x1 expect,watch {0,1,1,1,0,1,} @3
+	count: 1, unknowns: 0
+	300	X.clk : 0
+	300	X.d : X
+*** expect failure/warning here: 
+channel	X (.data) : X @ 350
+ERROR: value assertion failed on channel `X' at index [3].
+	expected: 1, got: X
+	350	X.clk : 1
+X : clocked-posedge x1 expect,watch {0,1,1,1,0,1,} @4
+	count: 0, unknowns: 1
+	400	X.clk : 0
+	400	X.d : 0
+channel	X (.data) : 0 @ 450
+	450	X.clk : 1
+X : clocked-posedge x1 expect,watch {0,1,1,1,0,1,} @5
+	count: 0, unknowns: 0
+	500	X.clk : 0
+	500	X.d : 1
+channel	X (.data) : 1 @ 550
+	550	X.clk : 1
+X : clocked-posedge x1 expect,watch
+	count: 1, unknowns: 0

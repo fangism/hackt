@@ -3,6 +3,13 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2012-05-26	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-35:
+	  hacprsim: channel-expect-fail against X vs. expected non-X
+		was failing to advance vector index.  Fixed.  Tests added.
+
+
 2012-05-17	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-85-34:
