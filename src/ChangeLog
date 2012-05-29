@@ -3,6 +3,13 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2012-05-29	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-36:
+	  HAC: Object/lang/PRS_rule_attribute.h: new 'res' rule attribute
+		to flag that a rule is a fake resistor.
+
+
 2012-05-26	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-85-35:
