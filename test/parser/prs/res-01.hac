@@ -1,0 +1,13 @@
+// "res-01.hac"
+// testing res (resistor) attribute
+
+bool in, mid, mid2, mid3, mid4, out;
+
+prs {
+	in => mid-
+[res]	mid => mid2-
+[res=0]	mid2 => mid3-
+[res=1]	mid3 => mid4-
+	mid4 => out-
+}
+

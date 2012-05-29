@@ -151,6 +151,12 @@ Diode::__check_vals(const char* name, const values_type& v) {
 }
 
 //=============================================================================
+good_bool
+Res::__check_vals(const char* name, const values_type& v) {
+	return check_optional_integer(name, v);
+}
+
+//=============================================================================
 }	// end namespace rule_attributes
 }	// end namespace PRS
 }	// end namespace entity

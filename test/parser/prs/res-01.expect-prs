@@ -1,0 +1,10 @@
+"in" -> "mid"-
+~"in" -> "mid"+
+res	"mid" -> "mid2"-
+res	~"mid" -> "mid2"+
+"mid2" -> "mid3"-
+~"mid2" -> "mid3"+
+res	"mid3" -> "mid4"-
+res	~"mid3" -> "mid4"+
+"mid4" -> "out"-
+~"mid4" -> "out"+
