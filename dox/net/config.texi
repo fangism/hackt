@@ -69,6 +69,7 @@ emitted output (because not all SPICEs are created alike).
 @include config/named_port_connections.texi
 @include config/prefer_port_aliases.texi
 @include config/preferred_names.texi
+@include config/emit_port_summary.texi
 @include config/emit_node_aliases.texi
 @include config/emit_node_caps.texi
 @include config/emit_node_terminals.texi

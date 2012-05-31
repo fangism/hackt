@@ -290,6 +290,11 @@ struct netlist_options {
 		Emit sets of nodes aliased.
 		Should these names be mangled?
 	 */
+	bool				emit_port_summary;
+	/**
+		Emit sets of nodes aliased.
+		Should these names be mangled?
+	 */
 	bool				emit_node_aliases;
 	/**
 		If true, emit node capacitance components.  

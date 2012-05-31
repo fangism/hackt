@@ -121,6 +121,7 @@ netlist_options::netlist_options() :
 #endif
 		named_port_connections(false),
 		emit_top(true), 
+		emit_port_summary(false), 
 		emit_node_aliases(false),
 		emit_node_caps(false),
 		emit_mangle_map(false),
@@ -1506,6 +1507,17 @@ Default: 1
 ***/
 DEFINE_OPTION_DEFAULT(emit_top, "emit_top",
 	"if true, emit top-level instances in output")
+
+/***
+@texinfo config/emit_port_summary.texi
+@defopt emit_port_summary (bool)
+If set to 1, prints out node port information, including signal direction.
+Default: 0
+@end defopt
+@end texinfo
+***/
+DEFINE_OPTION_DEFAULT(emit_port_summary, "emit_port_summary",
+	"if true, emit node port direction information")
 
 /***
 @texinfo config/emit_node_aliases.texi
