@@ -430,7 +430,7 @@ if (!nopt.nested_subcircuits) {
 	o << formals << endl;
 }
 	// TODO: emit mangle map? only if not nested format?
-	// TODO: emit port-info comments
+	// TODO: emit node port-info
 #if NETLIST_NODE_CAPS
 if (nopt.emit_node_caps) {
 	const node_pool_type& local_nodes_only(node_pool);
@@ -615,6 +615,29 @@ default:
 #if NETLIST_CHECK_CONNECTIVITY
 	if (!driven) o << " (undriven)";
 #endif
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Print basic port direction information.
+ */
+ostream&
+node::emit_port_summary(ostream& o, const netlist_options& opt) const {
+	o << name << " : ";
+	if (used) {
+	if (driven) {
+		o << "inout";	// bidirectional
+	} else {
+		o << "input";
+	}
+	} else {
+	if (driven) {
+		o << "output";
+	} else {
+		o << "unused";
+	}
+	}
 	return o;
 }
 
@@ -2286,6 +2309,9 @@ if (sub || nopt.emit_top) {
 if (nopt.emit_mangle_map) {
 	emit_mangle_map(o, nopt);
 }
+if (nopt.emit_port_summary) {
+	emit_node_port_info(o, nopt);	// in comment block
+}
 if (nopt.emit_node_aliases) {
 	const util::indent _temp_(o, nopt.comment_prefix + "\t");
 	o << nopt.comment_prefix << "BEGIN node aliases" << endl;
@@ -2760,6 +2786,24 @@ for (++i; i!=e; ++i) {
 	return o << nopt.comment_prefix << "END node terminals" << endl;
 }
 #endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true if we are to error out due to connectivity
+ */
+ostream&
+netlist::emit_node_port_info(ostream& o, const netlist_options& opt) const {
+	typedef	node_port_list_type::const_iterator	const_iterator;
+	const_iterator i(node_port_list.begin()), e(node_port_list.end());
+	o << opt.comment_prefix << "BEGIN node port info" << endl;
+	for (; i!=e; ++i) {
+		const node& n(node_pool[*i]);
+		n.emit_port_summary(
+			o << opt.comment_prefix << '\t', opt) << endl;
+	}
+	o << opt.comment_prefix << "END node port info" << endl;
+	return o;
+}
 
 //=============================================================================
 }	// end namespace NET

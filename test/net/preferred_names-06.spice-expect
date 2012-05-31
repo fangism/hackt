@@ -10,6 +10,7 @@ emit_node_aliases=0
 emit_node_caps=0
 emit_node_terminals=0
 emit_parasitics=0
+emit_port_summary=0
 emit_top=1
 empty_subcircuits=0
 exceed_max_width=warn

@@ -818,6 +818,10 @@ public:
 	emit_node_caps(ostream&, const node_pool_type&,
 		const netlist_options&);
 #endif
+
+	ostream&
+	emit_port_summary(ostream&, const netlist_options&) const;
+
 };	// end struct node
 
 //-----------------------------------------------------------------------------
@@ -1322,6 +1326,9 @@ private:
 	ostream&
 	emit_node_terminal_graph(ostream&, const netlist_options&) const;
 #endif
+
+	ostream&
+	emit_node_port_info(ostream&, const netlist_options&) const;
 
 };	// end class netlist
 

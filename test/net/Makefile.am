@@ -20,6 +20,7 @@ HACKNET_TEST_SCRIPTS_PASSES = \
 	logic-01 logic-02 \
 	ladder-01 ladder-02 \
 	mux-01 mux-02 mux-03 mux-04 mux-05 mux-06 \
+	port-summary-01 \
 	port-alias-01 port-alias-02 port-alias-03 port-alias-04 port-alias-05 \
 	top-global-params-01 top-global-params-02 \
 	top-global-params-03 top-global-params-04 \
