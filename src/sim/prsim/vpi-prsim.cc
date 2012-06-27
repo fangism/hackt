@@ -196,11 +196,9 @@ __no_op__(PLI_BYTE8*) {
 	return 1;
 }
 
-#if NICE_FINISH
 static
 PLI_INT32
 _vpi_finish(void);
-#endif
 
 static
 void
@@ -717,7 +715,6 @@ reregister_next_callback(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if NICE_FINISH
 PLI_INT32
 _vpi_finish(void) {
 	// print this finish timestamp out of convention
@@ -726,7 +723,6 @@ _vpi_finish(void) {
 	__destroy_globals();
 	return vpi_control(vpiFinish, 1);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -861,7 +857,12 @@ if (_verbose_transport) {
  */
 static const bool set_force = true;
   const value_enum val = vpi_to_prsim_value(p->value->value.scalar);
+try {
     prsim_state->set_node_time(n, val, vcstime, set_force);
+} catch (...) {
+	// possible exception with scheduling events in past
+	_vpi_finish();
+}
 #if VERBOSE_DEBUG
 	prsim_state->dump_event_queue(cout);
 	cout << "end of event queue." << endl;

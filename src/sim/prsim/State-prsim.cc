@@ -1269,6 +1269,7 @@ State::kill_event(const event_index_type ei, const node_index_type ni) {
 /**
 	Registers event in the primary event queue.  
 	Only this is allowed to load killed events.  
+	\return index of the node whose event was just enqueued
  */
 // inline
 node_index_type
@@ -1282,8 +1283,11 @@ State::load_enqueue_event(const time_type t, const event_index_type ei) {
 		"FATAL: attempt to schedule event in the past on node: ", ni)
 			<< endl;
 		cerr << "\tnew: " << t << " vs. now: " << current_time << endl;
+		dump_event(cout << "event:", ei, t);
+		// just to keep event_queue consistent for termination
+		event_queue.push(event_placeholder_type(t, ei));
+		ISE_INVARIANT(t >= current_time);	// noreturn
 	}
-	ISE_INVARIANT(t >= current_time);
 	DEBUG_STEP_PRINT("enqueuing event ID " << ei <<
 		" on node " << ni <<
 		" at time " << t << endl);
