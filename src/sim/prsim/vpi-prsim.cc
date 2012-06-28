@@ -74,6 +74,15 @@ DEFAULT_STATIC_TRACE_BEGIN
  */
 #define	NICE_FINISH		1
 
+/**
+	Define to 1 to enforce a zero transport delay going from
+	prsim to vcs, instead of calculating the time difference via
+	floating-point subtraction.
+	Rationale: floating-point subtraction of near-zero values
+		sometimes yields garbage value?
+ */
+#define	FORCE_ZERO_EXPORT_DELAY		1
+
 //=============================================================================
 namespace HAC {
 namespace SIM {
@@ -624,10 +633,15 @@ static void __advance_prsim (const Time_t& vcstime, const int context)
 	STACKTRACE("breakpt && registered");
       s_vpi_time tm;
 
-      const Time_t prsdiff = prsim_time - vcstime;
-
       tm.type = vpiSimTime;
+#if FORCE_ZERO_EXPORT_DELAY
+      tm.high = 0;
+      tm.low = 0;
+#else
+	// floating-point subtraction, sometimes problematic?
+      const Time_t prsdiff = prsim_time - vcstime;
       prs_to_vcstime (&tm, &prsdiff);
+#endif
       /* aha, schedule an event into the vcs queue */
       const vpiHandleSetType& net_set(n_space->second);
       vpiHandleSetType::const_iterator

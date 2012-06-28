@@ -5,6 +5,15 @@
 
 2012-06-27	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-85-40:
+	 vpi-prsim: force transport delays from prsim to vcs to be zero,
+		instead of calculating a time difference (floating-point sub.)
+		This works around a rare issue where the floating-point 
+		time subtraction results in a garbage value.  
+
+
+2012-06-27	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-85-39:
 	  hacprsim: added time-fmt command to control formatting and
 		precision of time values in output.
