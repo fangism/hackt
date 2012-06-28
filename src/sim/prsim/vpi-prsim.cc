@@ -37,7 +37,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "main/main_funcs.h"
 #include "main/prsim.h"
 #include "main/prsim_options.h"
-#include "util/numformat.h"
+#include "util/numformat.tcc"
 #include "util/memory/count_ptr.tcc"
 #include "util/string.h"
 #include "util/tokenize.h"		// only for debugging
