@@ -9,11 +9,13 @@
 #include "sim/prsim/Command-prsim.h"
 #include "sim/prsim/State-prsim.h"
 #include "sim/command_base.h"		// for return values
+#include "util/numformat.tcc"
 
 namespace HAC {
 namespace SIM {
 namespace PRSIM {
 #include "util/using_ostream.h"
+using util::format_ostream_ref;
 
 /**
 	Yeah, I know looking up already looked up node, but we don't
@@ -95,7 +97,9 @@ while (!s.stopped_or_fatal() && s.pending_events() &&
 		|| n.is_watchpoint()
 #endif
 			) {
-		print_watched_node(cout << '\t' << s.time() << '\t', s, ni);
+		format_ostream_ref(cout << '\t', s.time_fmt)
+			<< s.time() << '\t';
+		print_watched_node(cout, s, ni);
 	}
 	if (n.is_breakpoint()) {
 #if !USE_WATCHPOINT_FLAG
@@ -103,8 +107,9 @@ while (!s.stopped_or_fatal() && s.pending_events() &&
 		const bool w = s.is_watching_node(GET_NODE(ni));
 		if (w) {
 		if (!s.watching_all_nodes()) {
-			print_watched_node(cout << '\t' <<
-				s.time() << '\t', s, ni);
+			format_ostream_ref(cout << '\t', s.time_fmt)
+				<< s.time() << '\t';
+			print_watched_node(cout, s, ni);
 		}	// else already have message from before
 		}
 		// channel support
@@ -114,7 +119,8 @@ while (!s.stopped_or_fatal() && s.pending_events() &&
 		if (show_break) {
 			const string nodename(s.get_node_canonical_name(
 				GET_NODE(ni)));
-			cout << "\t*** break, " << stop_time -s.time() <<
+			format_ostream_ref(cout << "\t*** break, ", s.time_fmt)
+				<< (stop_time -s.time()) <<
 				" time left: `" << nodename << "\' became ";
 			n.dump_value(cout) << endl;
 		}

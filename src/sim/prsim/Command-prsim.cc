@@ -48,6 +48,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/def/footprint.h"
 
 #include "common/TODO.h"
+#include "util/numformat.tcc"
 #include "util/libc.h"
 #include "util/memory/excl_malloc_ptr.h"
 #include "util/stacktrace.h"
@@ -115,6 +116,7 @@ using std::front_inserter;
 using util::tokenize_char;
 using util::excl_malloc_ptr;
 using util::strings::string_to_num;
+using util::format_ostream_ref;
 using entity::global_indexed_reference;
 using entity::global_reference_array_type;
 using entity::META_TYPE_PROCESS;
@@ -839,7 +841,9 @@ if (a.size() > 2) {
 			|| n.is_watchpoint()
 #endif
 			) {
-			print_watched_node(cout << '\t' << ct << '\t', s, ni);
+			format_ostream_ref(cout << '\t', s.time_fmt)
+				<< ct << '\t';
+			print_watched_node(cout, s, ni);
 		}
 		if (n.is_breakpoint()) {
 #if !USE_WATCHPOINT_FLAG
@@ -860,8 +864,10 @@ if (a.size() > 2) {
 				cout << "\t*** break, " << i <<
 					" steps left: `" << nodename <<
 					"\' became ";
+				format_ostream_ref(
 				n.dump_value(cout) <<
-					" at time " << s.time() << endl;
+					" at time ", s.time_fmt)
+						<< s.time() << endl;
 				return Command::NORMAL;
 				// or Command::BREAK; ?
 #if !USE_WATCHPOINT_FLAG
@@ -936,7 +942,9 @@ step_event_main(State& s, size_t i) {
 			|| n.is_watchpoint()
 #endif
 				) {
-			print_watched_node(cout << '\t' << ct << '\t', s, ni);
+			format_ostream_ref(cout << '\t', s.time_fmt)
+				<< ct << '\t';
+			print_watched_node(cout, s, ni);
 		}
 		if (n.is_breakpoint()) {
 #if !USE_WATCHPOINT_FLAG
@@ -944,8 +952,9 @@ step_event_main(State& s, size_t i) {
 			const bool w = s.is_watching_node(GET_NODE(ni));
 			if (w) {
 			if (!s.watching_all_nodes()) {
-				print_watched_node(cout << '\t' << ct << '\t',
-					s, ni);
+				format_ostream_ref(cout << '\t', s.time_fmt)
+					<< ct << '\t';
+				print_watched_node(cout, s, ni);
 			}	// else already have message from before
 			}
 			// channel support
@@ -957,8 +966,10 @@ step_event_main(State& s, size_t i) {
 				cout << "\t*** break, " << i <<
 					" steps left: `" << nodename <<
 					"\' became ";
+				format_ostream_ref(
 				n.dump_value(cout) <<
-					" at time " << s.time() << endl;
+					" at time ", s.time_fmt)
+						<< s.time() << endl;
 				return Command::NORMAL;
 				// or Command::BREAK; ?
 #if !USE_WATCHPOINT_FLAG
@@ -1092,8 +1103,9 @@ if (a.size() != 1) {
 			|| n.is_watchpoint()
 #endif
 				) {
-			print_watched_node(cout << '\t' << s.time() <<
-				'\t', s, ni);
+			format_ostream_ref(cout << '\t', s.time_fmt)
+				<< s.time() << '\t';
+			print_watched_node(cout, s, ni);
 		}
 		if (n.is_breakpoint()) {
 #if !USE_WATCHPOINT_FLAG
@@ -1101,8 +1113,9 @@ if (a.size() != 1) {
 			const bool w = s.is_watching_node(GET_NODE(ni));
 			if (w) {
 			if (!s.watching_all_nodes()) {
-				print_watched_node(cout << '\t' <<
-					s.time() << '\t', s, ni);
+				format_ostream_ref(cout << '\t', s.time_fmt)
+					<< s.time() << '\t';
+				print_watched_node(cout, s, ni);
 			}	// else already have message from before
 			}
 			// channel support
@@ -1113,8 +1126,10 @@ if (a.size() != 1) {
 				// node is plain breakpoint
 				cout << "\t*** break, `" << nodename <<
 					"\' became ";
+				format_ostream_ref(
 				n.dump_value(cout) <<
-					" at time " << s.time() << endl;
+					" at time ", s.time_fmt)
+						<< s.time() << endl;
 				return Command::NORMAL;
 				// or Command::BREAK; ?
 #if !USE_WATCHPOINT_FLAG
@@ -4621,6 +4636,22 @@ What time is it (in the simulator)?
 ***/
 typedef	Time<State>				Time;
 PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(Time, info)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/time-fmt.texi
+@deffn Command time-fmt [[no]fixed|[no]sci|INT]*
+Controls the formatting and precision of time values.
+@itemize
+@item [no]fixed : fixed-point
+@item [no]sci : scientific-notation
+@item INT : precision
+@end itemize
+@end deffn
+@end texinfo
+***/
+typedef	TimeFmt<State>				TimeFmt;
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(TimeFmt, view)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***

@@ -37,6 +37,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "main/main_funcs.h"
 #include "main/prsim.h"
 #include "main/prsim_options.h"
+#include "util/numformat.h"
 #include "util/memory/count_ptr.tcc"
 #include "util/string.h"
 #include "util/tokenize.h"		// only for debugging
@@ -83,6 +84,7 @@ using std::ostringstream;
 using parser::parse_node_to_index;
 using util::memory::count_ptr;
 using util::strings::eat_whitespace;
+using util::format_ostream_ref;
 // is current double-precision floating-point
 typedef	State::time_type		Time_t;
 typedef	State::node_type		node_type;
@@ -486,8 +488,10 @@ report_transport(const char* dirstr, const node_index_type ni,
 	const string name(prsim_state->get_node_canonical_name(ni));
 	Time_t prsim_time;
 	vcs_to_prstime(&tm, &prsim_time);
-	oss << dirstr << "signal " << name << " changed @ time " <<
-		  prsim_time << ", val = ";
+	format_ostream_ref(
+		oss << dirstr << "signal " << name << " changed @ time ",
+		prsim_state->time_fmt) <<
+		prsim_time << ", val = ";
 	prsim_state->get_node(ni).dump_value(oss);
 	vpi_printf("%s\n", oss.str().c_str());
 }
@@ -603,15 +607,17 @@ static void __advance_prsim (const Time_t& vcstime, const int context)
 			|| prsim_state->is_watching_node(GET_NODE(nr))
 #endif
 			) {
-		print_watched_node(cout << "prsim:\t" << prsim_time << '\t', 
-			*prsim_state, nr);
+		format_ostream_ref(cout << "prsim:\t", prsim_state->time_fmt)
+			<< prsim_time << '\t';
+		print_watched_node(cout, *prsim_state, nr);
 	}
     if (n.is_breakpoint()) {
 #if !USE_WATCHPOINT_FLAG
 	if (prsim_state->is_watching_node(GET_NODE(nr)) &&
 			!prsim_state->watching_all_nodes()) {
-		print_watched_node(cout << "prsim:\t" << prsim_time << '\t', 
-			*prsim_state, nr);
+		format_ostream_ref(cout << "prsim:\t", prsim_state->time_fmt)
+			<< prsim_time << '\t';
+		print_watched_node(cout, *prsim_state, nr);
 	}
 #endif
     if (n_space != n_end) {

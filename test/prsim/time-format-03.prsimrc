@@ -1,0 +1,9 @@
+# "time-format-03.prsimrc"
+#	$Id: $
+# @haco@ oscillator.haco-c
+# testing backtrace command
+
+advance 123.4
+
+source time-format-01.prsimrc
+

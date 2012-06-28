@@ -61,6 +61,7 @@
 #include "util/utypes.h"
 #include "util/indent.h"
 #include "util/tokenize.h"
+#include "util/numformat.tcc"
 
 // re-define to be more readable
 #undef	STACKTRACE_VERBOSE
@@ -155,6 +156,7 @@ using util::bind2nd_argval_void;
 using util::auto_indent;
 using util::indent;
 using util::tokenize_char;
+using util::format_ostream_ref;
 using entity::state_manager;
 using entity::global_entry_pool;
 using entity::bool_tag;
@@ -379,10 +381,14 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 		autosave_name("autosave.prsimckpt"),
 		timing_mode(TIMING_DEFAULT),
 		_dump_flags(dump_flags::no_owners), 
+		time_fmt(cout),
 #if PRSIM_AGGREGATE_EXCEPTIONS
 		recent_exceptions(),
 #endif
 		__shuffle_indices(0) {
+//	time_fmt.fmt |= std::ios_base::fixed;
+//	time_fmt.fmt &= ~std::ios_base::scientific;
+//	time_fmt.precision = 3;		// default is 6
 	const footprint& topfp(mod.get_footprint());
 	const size_t s = topfp.get_instance_pool<bool_tag>().total_entries() +1;
 	// let 0th slot be dummy, so we can use 1-based global indexing
@@ -1282,7 +1288,9 @@ State::load_enqueue_event(const time_type t, const event_index_type ei) {
 		dump_node_canonical_name(cerr <<
 		"FATAL: attempt to schedule event in the past on node: ", ni)
 			<< endl;
-		cerr << "\tnew: " << t << " vs. now: " << current_time << endl;
+		format_ostream_ref(cerr << "\tnew: ", time_fmt)
+			<< t << " vs. now: ";
+		format_ostream_ref(cerr, time_fmt) << current_time << endl;
 		dump_event(cout << "event:", ei, t);
 		// just to keep event_queue consistent for termination
 		event_queue.push(event_placeholder_type(t, ei));
@@ -1872,6 +1880,7 @@ State::dump_mode(ostream& o) const {
 /**
 	Show current timing mode.
 	Show random seed?
+	TODO: use time_fmt
  */
 ostream&
 State::dump_timing(ostream& o) const {
@@ -1953,6 +1962,7 @@ State::parse_min_max_delay(const string& d,
 /**
 	\return true if there is a syntax error.  
 	TODO: use a map to parsers.  
+	TODO: use time_fmt
  */
 bool
 State::set_timing(const string& m, const string_list& a) {
@@ -5220,7 +5230,8 @@ State::dump_event_force(ostream& o, const event_index_type ei,
 	const event_type& ev(get_event(ei));
 //	o << '[' << ei << ']';		// for debugging
 	if (!ev.killed() || force) {
-		dump_node_canonical_name(o << '\t' << t << '\t', ev.node) <<
+		format_ostream_ref(o << '\t', time_fmt) << t << '\t';
+		dump_node_canonical_name(o, ev.node) <<
 			" : " << node_type::value_to_char[ev.val];
 		if (ev.cause.node) {
 			dump_node_canonical_name(o << '\t' << "[from ",
@@ -7188,6 +7199,7 @@ State::save_checkpoint(ostream& o) const {
 //	write_value(o, autosave_name);		// don't preserve
 	write_value(o, timing_mode);
 	_dump_flags.write_object(o);
+	time_fmt.write_object(o);
 	if (_channel_manager.save_checkpoint(o)) return true;
 	// interrupted flag, just ignore
 	// trace_flush_interval: not saved
@@ -7406,6 +7418,7 @@ try {
 //	read_value(i, autosave_name);	// ignore the name of checkpoint
 	read_value(i, timing_mode);
 	_dump_flags.load_object(i);
+	time_fmt.load_object(i);
 	// interrupted flag, just ignore
 	// ifstreams? don't bother managing input stream stack.
 	// __scratch_expr_trace -- never needed, ignore
@@ -7548,6 +7561,7 @@ State::dump_checkpoint(ostream& o, istream& i) {
 	READ_ALIGN_MARKER		// sanity alignment check
 	flags_type flags;
 	read_value(i, flags);
+	const util::save_flags s(o, o.flags());
 	o << "flags: 0x" << std::hex << size_t(flags) << endl;
 {
 	error_policy_enum p;
@@ -7586,8 +7600,11 @@ State::dump_checkpoint(ostream& o, istream& i) {
 	dump_flags tmp;
 	tmp.load_object(i);
 	tmp.dump(o << "dump flags: {\n") << "}" << endl;
-}
-{
+}{
+	util::numformat tmp(cout);
+	tmp.load_object(i);
+	tmp.dump(o << "time-fmt flags: { ") << " }" << endl;
+}{
 	channel_manager tmp;
 	tmp.load_checkpoint(i);
 	tmp.dump_checkpoint_state(o) << endl;

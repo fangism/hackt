@@ -5,6 +5,13 @@
 
 2012-06-27	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-85-39:
+	  hacprsim: added time-fmt command to control formatting and
+		precision of time values in output.
+
+
+2012-06-27	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-85-38:
 	  prsim/State-prsim.cc: event on event queue exception, 
 		keep event queue free-list coherent for cleaner exiting.

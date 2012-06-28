@@ -1243,6 +1243,57 @@ Time<State>::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(TimeFmt, "time-fmt",
+	"display current simulation time")
+
+/**
+	TODO:
+	Allow "time x" to manually set the time if the event queue is empty. 
+	Useful for manually resetting the timer.  
+	Allow "time +x" to advance by time, like step.  
+		(or reserve for the advance command?)
+ */
+template <class State>
+int
+TimeFmt<State>::main(State& s, const string_list& a) {
+if (a.size() == 1) {
+	usage(cerr << "usage: ");
+	s.time_fmt.describe(cout);
+	return command_type::NORMAL;
+} else {
+	string_list::const_iterator i(a.begin()), e(a.end());
+	for (++i; i!=e; ++i) {
+		const string& arg(*i);
+		if (arg == "fixed") {
+			s.time_fmt.fmt |= std::ios_base::fixed;
+		} else if (arg == "nofixed") {
+			s.time_fmt.fmt &= ~std::ios_base::fixed;
+		} else if (arg == "sci") {
+			s.time_fmt.fmt |= std::ios_base::scientific;
+		} else if (arg == "nosci") {
+			s.time_fmt.fmt &= ~std::ios_base::scientific;
+		} else {
+			if (string_to_num(*i, s.time_fmt.precision)) {
+				cerr << "Unrecognized option." << endl;
+				return command_type::BADARG;
+			}
+		}
+	}
+	return command_type::NORMAL;
+}
+}
+
+template <class State>
+void
+TimeFmt<State>::usage(ostream& o) {
+	o << "time-fmt [fixed|nofixed|sci|nosci|INT]*" << endl;
+	o << "sets the output formatting of time values.\n"
+"  [no]fixed : use fixed-point\n"
+"  [no]sci   : use scientific notation\n"
+"  INT       : set precision" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(WatchQueue, "watch-queue",
 	"print each event on watched nodes as it is enqueued")
 

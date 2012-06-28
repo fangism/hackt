@@ -1,0 +1,10 @@
+# "time-format-01.prsimrc"
+#	$Id: $
+# @haco@ oscillator.haco-c
+# testing backtrace command
+
+timing uniform 9000000
+advance 123.4
+
+source time-format-01.prsimrc
+

@@ -43,6 +43,7 @@ UTIL_TCC_FILES = \
 	util/multikey_qmap.tcc \
 	util/multikey_set.tcc \
 	util/new_functor.tcc \
+	util/numformat.tcc \
 	util/optparse.tcc \
 	util/packed_array.tcc \
 	util/persistent_object_manager.tcc \
@@ -247,6 +248,7 @@ UTIL_CC_FILES = \
 	util/getopt_mapped.cc \
 	util/libc.c \
 	util/named_ifstream_manager.cc \
+	util/numformat.cc \
 	util/optparse.cc \
 	util/persistent.cc \
 	util/persistent_object_manager.cc \
