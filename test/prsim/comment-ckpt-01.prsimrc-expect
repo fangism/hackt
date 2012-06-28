@@ -34,6 +34,7 @@ hide leading scope
 process member separatorr: .
 struct member separatorr: .
 }
+time-fmt flags: { flags:0x1002, w:0, p:6 }
 channels:
 
 footer string: hackt-prsim-ckpt

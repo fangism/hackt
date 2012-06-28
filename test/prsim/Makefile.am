@@ -121,6 +121,7 @@ HACKT_PARSE_TEST_PASSES = \
 HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	comment-01 comment-02 comment-04 comment-06 comment-08 \
 	precision-01 \
+	time-format-01 time-format-02 time-format-03 time-format-04 \
 	repeat-01 \
 	default-mode \
 	default-after-01 default-after-02 default-after-03 default-after-04 \
