@@ -1,0 +1,6 @@
+# "power-supplies-a-03.prsimrc"
+# @haco@ power-supplies-a.haco-c
+# @hacprsim-flags@ -f dynamic-power-supply
+
+source power-supplies-a-01.prsimrc
+

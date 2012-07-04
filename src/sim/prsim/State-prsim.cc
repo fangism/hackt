@@ -541,8 +541,16 @@ State::__initialize_state(const bool startup, const bool reset_count) {
 	// for now, the implciit globals cannot be referenced directly
 	// in the source language, so we'll punt.
 	const event_cause_type null;
+#if PRSIM_MODEL_POWER_SUPPLIES
+	// TODO: these need to trigger fanout evaluations!
+	set_node(gi, LOGIC_LOW, false);		// force?
+	set_node(vi, LOGIC_HIGH, false);	// force?
+	cycle();
+	// make sure time has not advanced!
+#else
 	node_pool[gi].set_value_and_cause(LOGIC_LOW, null);
 	node_pool[vi].set_value_and_cause(LOGIC_HIGH, null);
+#endif
 #endif
 	// keep connected channels up-to-date with X values of nodes
 	// but this closes channel-log streams
@@ -554,6 +562,7 @@ void
 State::__initialize(const bool startup) {
 	__initialize_time();
 	__initialize_state(startup, true);
+	assert(time_traits::is_zero(current_time));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
