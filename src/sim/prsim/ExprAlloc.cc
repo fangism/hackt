@@ -73,6 +73,8 @@ using util::value_saver;
 // shortcut for accessing the rules structure of a process graph
 #define	REF_RULE_MAP(g,i)		g->rule_pool[g->rule_map[i]]
 
+typedef	entity::PRS::footprint		prs_footprint;
+
 //=============================================================================
 // ExprAllocFlags method definitions
 
@@ -988,7 +990,9 @@ ExprAlloc::allocate_new_literal_expr(const node_index_type ni) {
 		g->expr_graph_node_pool.push_back(graph_node_type());
 		STACKTRACE_INDENT_PRINT("appending graph_expr_pool..." << endl);
 	}
+	INVARIANT(ni < g->local_faninout_map.size());
 	g->local_faninout_map[ni].fanout.push_back(ret);
+	INVARIANT(ret < g->expr_graph_node_pool.size());
 	g->expr_graph_node_pool[ret].push_back_node(ni);
 	// literal graph node has no children
 	return ret;
@@ -1265,8 +1269,8 @@ ExprAlloc::visit(const footprint_expr_node& e) {
 	const size_t sz = e.size();
 	const char type = e.get_type();
 	// NOTE: 1-indexed
-	const entity::PRS::footprint::expr_pool_type& expr_pool(
-		get_current_footprint().get_prs_footprint().get_expr_pool());
+	const prs_footprint& pfp(get_current_footprint().get_prs_footprint());
+	const prs_footprint::expr_pool_type& expr_pool(pfp.get_expr_pool());
 switch (type) {
 	// enumerations from "Object/lang/PRS_enum.h"
 	case entity::PRS::PRS_LITERAL_TYPE_ENUM: {
@@ -1282,7 +1286,7 @@ switch (type) {
 		STACKTRACE_INDENT_PRINT("not" << endl);
 		INVARIANT(sz == 1);
 		expr_pool[e.only()].accept(*this);
-		const size_t sub_ex_index = ret_ex_index;
+		const expr_index_type sub_ex_index = ret_ex_index;
 		ret_ex_index = allocate_new_not_expr(sub_ex_index);
 		break;
 	}
@@ -1297,14 +1301,34 @@ switch (type) {
 		STACKTRACE_INDENT_PRINT("node" << endl);
 		INVARIANT(sz == 1);
 #if PRSIM_MODEL_POWER_SUPPLIES
-#if 0
+		const expr_index_type eo = e.only();
+		STACKTRACE_INDENT_PRINT("e.only() = " << eo << endl);
+		const prs_footprint::internal_node_pool_type&
+			inp(pfp.get_internal_node_pool());
+		const prs_footprint::internal_node_pool_type::const_iterator
+			f(pfp.find_internal_node(eo));
+		const node_index_type int_ind(std::distance(inp.begin(), f));
+		STACKTRACE_INDENT_PRINT("internal node index " << int_ind << endl);
+		const prs_footprint::supply_map_type::const_iterator
+			s(pfp.lookup_internal_node_supply(int_ind));
 		// adjust power supply
 		const value_saver<node_index_type>
-			_t_(power_supply, temp_rule->dir ? : );
-		// is there internal node index?
+			_t_(power_supply,
+				lookup_local_bool_id(
+				temp_rule->direction() ? s->Vdd : s->GND));
+		STACKTRACE_INDENT_PRINT("supply node " << power_supply << endl);
 #endif
+		expr_pool[eo].accept(*this);
+#if PRSIM_MODEL_POWER_SUPPLIES
+		// in case internal node driver expression is a simple literal
+		if (at_source) {
+			// if still no source, then and it here
+			const expr_index_type ps = allocate_new_supply_expr();
+			ret_ex_index =
+				and_expression_with_literal(ret_ex_index, ps);
+			at_source = false;
+		}
 #endif
-		expr_pool[e.only()].accept(*this);
 		break;
 	}
 	default:

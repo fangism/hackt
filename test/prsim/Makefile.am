@@ -104,7 +104,8 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	pcehb-test-a pcefb-test-a \
 	pchb-test-b pcfb-test-b \
 	pcehb-test-b pcefb-test-b \
-	power-supplies-a power-supplies-b power-supplies-c power-supplies-d
+	power-supplies-a power-supplies-b power-supplies-c power-supplies-d \
+	power-supplies-e power-supplies-f
 
 # TODO: more cross-coupled test cases
 # SRAM cell
@@ -475,6 +476,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	pcefb-test-b-01 \
 	power-supplies-a-01 power-supplies-a-02 power-supplies-a-03 \
 	power-supplies-b-01 power-supplies-c-01 power-supplies-d-01 \
+	power-supplies-e-01 power-supplies-f-01 \
 	x-all-01 x-all-02 x-all-03 x-all-04 x-all-05
 
 # subset of prsimrc test that we wish to compare traces against regressions
