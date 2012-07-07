@@ -7531,9 +7531,16 @@ If @var{node} is prefixed with *, then clock is double-edged.
 The reset value, init, is only relevant to double-edged clocks.  
 With no prefix, the clock is active-high (positive edge).
 @var{N} is the number of cycles, or * for infinite. 
+For single=edged clocks, the clock always resets to its inactive value.  
 For single-edged clocks, a rise and fall counts as one cycle.
 If named clock-source already exists, restart it using the new 
 configuration and number of edges.  
+@example
+@t{clock-source CLK:0 *} -- @var{clk} is pos-edge, infinitely running clock.
+@t{clock-source ~CLK:1 20} -- @var{clk} is a neg-edge clock running 20 cycles.
+@t{clock-source *CLK:0 *} -- @var{clk} is double-edge clock, reset to 0,
+	running infinitely.
+@end example
 @end deffn
 @end texinfo
 ***/
