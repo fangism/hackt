@@ -1,0 +1,38 @@
+	0	!Vdd : X
+	0	!GND : X
+[top-level]
+rules:
+[after 10]	((~!GND & a & b) | (~!GND & c & d)) & ((e & f) | (g & h)) -> o1-
+[after 10]	(((~a & !Vdd) | (~b & !Vdd)) & (~c | ~d)) | (((~e & !Vdd) | (~f & !Vdd)) & (~g | ~h)) -> o1+
+[after 10]	(((a & ~!GND) | (b & ~!GND)) & (c | d)) | (((e & ~!GND) | (f & ~!GND)) & (g | h)) -> o2-
+[after 10]	((!Vdd & ~a & ~b) | (!Vdd & ~c & ~d)) & ((~e & ~f) | (~g & ~h)) -> o2+
+[after 10]	((~!GND & a & b) | (c & ~!GND)) & ((e & f) | h) -> o3-
+[after 10]	(((~a & !Vdd) | (~b & !Vdd)) & ~c) | (((~e & !Vdd) | (~f & !Vdd)) & ~h) -> o3+
+[after 10]	(((a & ~!GND) | (d & ~!GND)) & c) | (((g & ~!GND) | (f & ~!GND)) & h) -> o4-
+[after 10]	((!Vdd & ~a & ~d) | (~c & !Vdd)) & ((~g & ~f) | ~h) -> o4+
+[after 10]	((g & ~!GND) | (~!GND & a & b)) & (d | (e & f)) -> o5-
+[after 10]	(!Vdd & ~g & (~a | ~b)) | (!Vdd & ~d & (~e | ~f)) -> o5+
+[after 10]	(~!GND & e & (a | d)) | (~!GND & b & (g | f)) -> o6-
+[after 10]	((~e & !Vdd) | (!Vdd & ~a & ~d)) & (~b | (~g & ~f)) -> o6+
+	0	a : 0
+	0	b : 0
+	0	c : 0
+	0	d : 0
+	0	e : 0
+	0	f : 0
+	0	g : 0
+	0	h : 0
+Fanins of node `o1':
+(from [top-level]):
+[after 10]	(((~a:0 & !Vdd:X)<X> | (~b:0 & !Vdd:X)<X>)<X> & (~c:0 | ~d:0)<1>)<X> | (((~e:0 & !Vdd:X)<X> | (~f:0 & !Vdd:X)<X>)<X> & (~g:0 | ~h:0)<1>)<X><X><X> -> o1+:X
+[after 10]	((~!GND:X & a:0 & b:0)<0> | (~!GND:X & c:0 & d:0)<0>)<0> & ((e:0 & f:0)<0> | (g:0 & h:0)<0>)<0><0><0> -> o1-:X
+	0	c : 1
+	0	d : 1
+	0	g : 1
+	0	h : 1
+Fanins of node `o1':
+(from [top-level]):
+[after 10]	(((~a:0 & !Vdd:X)<X> | (~b:0 & !Vdd:X)<X>)<X> & (~c:1 | ~d:1)<0>)<0> | (((~e:0 & !Vdd:X)<X> | (~f:0 & !Vdd:X)<X>)<X> & (~g:1 | ~h:1)<0>)<0><0><0> -> o1+:X
+[after 10]	((~!GND:X & a:0 & b:0)<0> | (~!GND:X & c:1 & d:1)<X>)<X> & ((e:0 & f:0)<0> | (g:1 & h:1)<1>)<1><X><X> -> o1-:X
+o1:X, unknown-pull dn
+  !GND:X, pull up/dn undriven, no fanin
