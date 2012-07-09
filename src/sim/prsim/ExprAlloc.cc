@@ -73,6 +73,8 @@ using util::value_saver;
 // shortcut for accessing the rules structure of a process graph
 #define	REF_RULE_MAP(g,i)		g->rule_pool[g->rule_map[i]]
 
+typedef	entity::PRS::footprint		prs_footprint;
+
 //=============================================================================
 // ExprAllocFlags method definitions
 
@@ -267,6 +269,10 @@ ExprAlloc::ExprAlloc(state_type& _s,
 		ret_ex_index(INVALID_EXPR_INDEX), 
 		suppress_keeper_rule(false), 
 		temp_rule(NULL),
+#if PRSIM_MODEL_POWER_SUPPLIES
+		power_supply(0),
+		at_source(false),
+#endif
 		flags(f), expr_free_list()
 #if PRSIM_PRECHARGE_INVARIANTS
 		, netlists(NULL)
@@ -393,7 +399,7 @@ ExprAlloc::visit(const entity::PRS::footprint& pfp) {
 #if 0
 	state.unique_process_pool.push_back(unique_process_subgraph());
 	unique_process_subgraph& u(state.unique_process_pool.back());
-	const util::value_saver<unique_process_subgraph*> tmp(g, &u);
+	const value_saver<unique_process_subgraph*> tmp(g, &u);
 	// resize the faninout_struct array as if it were local nodes
 	// kludgy way of inferring the correct footprint
 	u.local_faninout_map.resize(node_pool_size);
@@ -529,7 +535,7 @@ if (f == process_footprint_map.end()) {
 		state.unique_process_pool.push_back(unique_process_subgraph());
 	unique_process_subgraph& u(state.unique_process_pool.back());
 	u._footprint = &gpfp;
-	const util::value_saver<unique_process_subgraph*> tmp(g, &u);
+	const value_saver<unique_process_subgraph*> tmp(g, &u);
 	// resize the faninout_struct array as if it were local nodes
 	// kludgy way of inferring the correct footprint
 	u.local_faninout_map.resize(node_pool_size);
@@ -572,7 +578,7 @@ void
 ExprAlloc::visit(const state_instance<process_tag>& gp) {
 	STACKTRACE_VERBOSE;
 	const size_t lpid = gp.get_back_ref()->instance_index;
-	const util::value_saver<size_t>
+	const value_saver<size_t>
 		__pi__(current_process_index,
 			lookup_global_id<process_tag>(lpid));
 #if ENABLE_STACKTRACE
@@ -857,11 +863,12 @@ ExprAlloc::visit(const footprint_rule& r) {
 //	STACKTRACE("ExprAlloc::visit(footprint_rule&)");
 try {
 	rule_type dummy_rule;
+	dummy_rule.set_direction(r.dir);
 {
 	// first, unconditionally create a rule entry in the state's rule
 	// map for every top-level (root) expression that affects a node.  
 //	rule_type& rule __ATTRIBUTE_UNUSED_CTOR__((st_rule_map[ret_ex_index]));
-	const util::value_saver<rule_type*> rs(temp_rule, &dummy_rule);
+	const value_saver<rule_type*> rs(temp_rule, &dummy_rule);
 	// now iterate over attributes to apply changes
 	typedef footprint_rule::attributes_list_type	attr_list_type;
 	typedef	attr_list_type::const_iterator		const_iterator;
@@ -876,15 +883,42 @@ if (suppress_keeper_rule) {
 	// do nothing, suppress rule
 	suppress_keeper_rule = false;	// reset it for next rule
 } else {
+	const footprint& cfp(get_current_footprint());
+	const entity::PRS::footprint& cpfp(cfp.get_prs_footprint());
 #if ENABLE_STACKTRACE
-	get_current_footprint().dump_type(STACKTRACE_INDENT_PRINT("In type: ")) << endl;
+	cfp.dump_type(STACKTRACE_INDENT_PRINT("In type: ")) << endl;
 #endif
-	const entity::PRS::footprint::expr_pool_type& expr_pool(
-		get_current_footprint().get_prs_footprint().get_expr_pool());
+	const entity::PRS::footprint::expr_pool_type&
+		expr_pool(cpfp.get_expr_pool());
 	STACKTRACE_INDENT_PRINT("expr_pool.size = " << expr_pool.size() << endl);
 	STACKTRACE_INDENT_PRINT("r.expr_index = " << r.expr_index << endl);
 	INVARIANT(size_t(r.expr_index) <= expr_pool.size());
+#if PRSIM_MODEL_POWER_SUPPLIES
+	const value_saver<rule_type*> rs(temp_rule, &dummy_rule);
+	// need to identify the supply
+	const rule_index_type rule_index =
+		std::distance(&cpfp.get_rule_pool().front(), &r);
+	const entity::PRS::footprint::supply_map_type::const_iterator
+		si(cpfp.lookup_rule_supply(rule_index));
+	// need 0-based index
+	const node_index_type source =
+		lookup_local_bool_id(r.dir ? si->Vdd : si->GND);
+	const value_saver<node_index_type> ss(power_supply, source);
+	const value_saver<bool> bs(at_source,
+		r.dir ? flags.dynamic_power_supply
+			: flags.dynamic_ground_supply);
+	// at_source initialized to false is the same as disabling
+	// dynamic power supplies
+#endif
 	expr_pool[r.expr_index].accept(*this);
+#if PRSIM_MODEL_POWER_SUPPLIES
+	if (at_source) {
+		// if still no source, then and it here
+		const expr_index_type ps = allocate_new_supply_expr();
+		ret_ex_index =
+			and_expression_with_literal(ret_ex_index, ps);
+	}
+#endif
 	const size_t top_ex_index = ret_ex_index;
 	// r.output_index gives the local unique ID,
 	// which needs to be translated to global ID.
@@ -956,10 +990,26 @@ ExprAlloc::allocate_new_literal_expr(const node_index_type ni) {
 		g->expr_graph_node_pool.push_back(graph_node_type());
 		STACKTRACE_INDENT_PRINT("appending graph_expr_pool..." << endl);
 	}
+	INVARIANT(ni < g->local_faninout_map.size());
 	g->local_faninout_map[ni].fanout.push_back(ret);
+	INVARIANT(ret < g->expr_graph_node_pool.size());
 	g->expr_graph_node_pool[ret].push_back_node(ni);
 	// literal graph node has no children
 	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Allocate a power-supply expression, which may be negated
+	depending on rule direction.
+ */
+expr_index_type
+ExprAlloc::allocate_new_supply_expr(void) {
+	expr_index_type ps = allocate_new_literal_expr(power_supply);
+	NEVER_NULL(temp_rule);
+	if (!temp_rule->direction())
+		ps = allocate_new_not_expr(ps);
+	return ps;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1015,6 +1065,24 @@ ExprAlloc::append_child_expr(const expr_index_type parent,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Links child expression to a new slot by resizing parent.
+	\pre no other children have been added to this parent already!
+ */
+void
+ExprAlloc::prepend_child_expr(const expr_index_type parent,
+		const expr_index_type child) {
+	STACKTRACE_VERBOSE;
+	graph_node_type& pg(g->expr_graph_node_pool[parent]);
+	const size_t offset = 0;
+	++(g->expr_pool[parent].size);
+	g->expr_pool[child].set_parent_expr(parent);
+	graph_node_type& child_node(g->expr_graph_node_pool[child]);
+	child_node.offset = offset;
+	pg.push_back_expr(child);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	\param type one of the entity::PRS::PRS_* enums defined in
 		"Object/lan/PRS_enum.h", must be either AND or OR.  
 	\param sz the number of children of this expression.  
@@ -1046,6 +1114,32 @@ if (expr_free_list.size()) {
 	STACKTRACE_INDENT_PRINT("appending graph_expr_pool..." << endl);
 	return ret;
 }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	ANDs expression with another.
+	\param last the existing expression
+	\param next literal terminal expression (may be negated)
+	This does NOT update ret_ex_index.
+ */
+expr_index_type
+ExprAlloc::and_expression_with_literal(const expr_index_type last, 
+		const expr_index_type next) {
+	const expr_type& l(g->expr_pool[last]);
+	if (l.is_conjunctive() && !l.is_not()) {	// AND
+		// just append to previous AND expression
+		append_child_expr(last, next);
+		// really want to prepend in most cases
+		return last;
+	} else {
+		// create a new AND expression
+		const expr_index_type ret = allocate_new_Nary_expr(
+			entity::PRS::PRS_AND_EXPR_TYPE_ENUM, 2);
+		link_child_expr(ret, last, 0);
+		link_child_expr(ret, next, 1);
+		return ret;
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1175,8 +1269,8 @@ ExprAlloc::visit(const footprint_expr_node& e) {
 	const size_t sz = e.size();
 	const char type = e.get_type();
 	// NOTE: 1-indexed
-	const entity::PRS::footprint::expr_pool_type& expr_pool(
-		get_current_footprint().get_prs_footprint().get_expr_pool());
+	const prs_footprint& pfp(get_current_footprint().get_prs_footprint());
+	const prs_footprint::expr_pool_type& expr_pool(pfp.get_expr_pool());
 switch (type) {
 	// enumerations from "Object/lang/PRS_enum.h"
 	case entity::PRS::PRS_LITERAL_TYPE_ENUM: {
@@ -1192,37 +1286,49 @@ switch (type) {
 		STACKTRACE_INDENT_PRINT("not" << endl);
 		INVARIANT(sz == 1);
 		expr_pool[e.only()].accept(*this);
-		const size_t sub_ex_index = ret_ex_index;
+		const expr_index_type sub_ex_index = ret_ex_index;
 		ret_ex_index = allocate_new_not_expr(sub_ex_index);
 		break;
 	}
 	case entity::PRS::PRS_AND_EXPR_TYPE_ENUM:
-		// yes, fall-through
-	case entity::PRS::PRS_OR_EXPR_TYPE_ENUM: {
-		STACKTRACE_INDENT_PRINT("or/and" << endl);
-		const expr_index_type last = allocate_new_Nary_expr(type, sz);
-		size_t i = 1;
-		for ( ; i<=sz; i++) {
-			// reminder: e is 1-indexed while 
-			// ExprGraphNode::children is 0-indexed
-			expr_pool[e[i]].accept(*this);
-			const size_t sub_ex_index = ret_ex_index;
-			link_child_expr(last, sub_ex_index, i-1);
-		}
-		// welcome to graph surgery!
-		if (flags.is_fold_literals()) {
-			fold_literal(last);
-		}	// end if is_fold_literals()
-		if (flags.is_denormalize_negations()) {
-			denormalize_negation(last);
-		}	// end if is_denormalize_negations()
-		ret_ex_index = last;
+		visit_and_expr(e);
 		break;
-	}
+	case entity::PRS::PRS_OR_EXPR_TYPE_ENUM:
+		visit_or_expr(e);
+		break;
 	case entity::PRS::PRS_NODE_TYPE_ENUM: {
+	// internal nodes are substituted with their equivalent expressions
 		STACKTRACE_INDENT_PRINT("node" << endl);
 		INVARIANT(sz == 1);
-		expr_pool[e.only()].accept(*this);
+#if PRSIM_MODEL_POWER_SUPPLIES
+		const expr_index_type eo = e.only();
+		STACKTRACE_INDENT_PRINT("e.only() = " << eo << endl);
+		const prs_footprint::internal_node_pool_type&
+			inp(pfp.get_internal_node_pool());
+		const prs_footprint::internal_node_pool_type::const_iterator
+			f(pfp.find_internal_node(eo));
+		const node_index_type int_ind(std::distance(inp.begin(), f));
+		STACKTRACE_INDENT_PRINT("internal node index " << int_ind << endl);
+		const prs_footprint::supply_map_type::const_iterator
+			s(pfp.lookup_internal_node_supply(int_ind));
+		// adjust power supply
+		const value_saver<node_index_type>
+			_t_(power_supply,
+				lookup_local_bool_id(
+				temp_rule->direction() ? s->Vdd : s->GND));
+		STACKTRACE_INDENT_PRINT("supply node " << power_supply << endl);
+#endif
+		expr_pool[eo].accept(*this);
+#if PRSIM_MODEL_POWER_SUPPLIES
+		// in case internal node driver expression is a simple literal
+		if (at_source) {
+			// if still no source, then and it here
+			const expr_index_type ps = allocate_new_supply_expr();
+			ret_ex_index =
+				and_expression_with_literal(ret_ex_index, ps);
+			at_source = false;
+		}
+#endif
 		break;
 	}
 	default:
@@ -1234,6 +1340,96 @@ switch (type) {
 	g->dump_struct(cerr) << endl;
 #endif
 }	// end method visit(const footprint_expr_node&)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+ExprAlloc::visit_and_expr(const footprint_expr_node& e) {
+	STACKTRACE_INDENT_PRINT("and" << endl);
+	const entity::PRS::footprint::expr_pool_type& expr_pool(
+		get_current_footprint().get_prs_footprint().get_expr_pool());
+	const size_t sz = e.size();
+	const expr_index_type last =
+		allocate_new_Nary_expr(e.get_type(), sz);
+	size_t i = 1;
+	size_t adjust = 1;
+#if PRSIM_MODEL_POWER_SUPPLIES
+{
+	// unroll first iteration, see if power supply/source is needed
+	// doing this here should be robust to negated sub-expressions, 
+	// negated literals and even non-CMOS rules
+	expr_pool[e[i]].accept(*this);
+	const size_t first_ex_index = ret_ex_index;
+	if (at_source) {
+		const expr_index_type ps = allocate_new_supply_expr();
+		prepend_child_expr(last, ps);
+		link_child_expr(last, first_ex_index, 1);
+		at_source = false;	// only first term needs supply
+		adjust = 0;
+	} else {
+		link_child_expr(last, first_ex_index, 0);
+	}
+	++i;
+}
+#endif
+	for (; i<=sz; i++) {
+		// reminder: e is 1-indexed while 
+		// ExprGraphNode::children is 0-indexed
+		expr_pool[e[i]].accept(*this);
+		const size_t sub_ex_index = ret_ex_index;
+		link_child_expr(last, sub_ex_index, i-adjust);
+	}
+	// welcome to graph surgery!
+	if (flags.is_fold_literals()) {
+		fold_literal(last);
+	}	// end if is_fold_literals()
+	if (flags.is_denormalize_negations()) {
+		denormalize_negation(last);
+	}	// end if is_denormalize_negations()
+	ret_ex_index = last;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+ExprAlloc::visit_or_expr(const footprint_expr_node& e) {
+	STACKTRACE_INDENT_PRINT("or" << endl);
+	const entity::PRS::footprint::expr_pool_type& expr_pool(
+		get_current_footprint().get_prs_footprint().get_expr_pool());
+	const size_t sz = e.size();
+	const expr_index_type last =
+		allocate_new_Nary_expr(e.get_type(), sz);
+	size_t i = 1;
+	for ( ; i<=sz; i++) {
+#if PRSIM_MODEL_POWER_SUPPLIES
+		// remember whether or not power supply is needed in expr.
+		// apply equally to all branches
+		const value_saver<bool> _t_(at_source);
+#endif
+		// reminder: e is 1-indexed while 
+		// ExprGraphNode::children is 0-indexed
+		expr_pool[e[i]].accept(*this);
+#if PRSIM_MODEL_POWER_SUPPLIES
+		if (at_source) {
+			// if still no source, then and it here
+			const expr_index_type ps = allocate_new_supply_expr();
+			ret_ex_index =
+				and_expression_with_literal(ret_ex_index, ps);
+		}
+#endif
+		const size_t sub_ex_index = ret_ex_index;
+		link_child_expr(last, sub_ex_index, i-1);
+	}
+#if PRSIM_MODEL_POWER_SUPPLIES
+	at_source = false;	// inform caller as having processed power supplies
+#endif
+	// welcome to graph surgery!
+	if (flags.is_fold_literals()) {
+		fold_literal(last);
+	}	// end if is_fold_literals()
+	if (flags.is_denormalize_negations()) {
+		denormalize_negation(last);
+	}	// end if is_denormalize_negations()
+	ret_ex_index = last;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -1418,19 +1614,7 @@ if ((G.*terminals)(ni)) {
 		last = se.front();
 	}
 	if (next) {
-		const expr_type& l(g->expr_pool[last]);
-		if (l.is_conjunctive() && !l.is_not()) {	// AND
-			// just append to previous AND expression
-			append_child_expr(last, next);
-			return last;
-		} else {
-			// create a new AND expression
-			const expr_index_type ret = allocate_new_Nary_expr(
-				entity::PRS::PRS_AND_EXPR_TYPE_ENUM, 2);
-			link_child_expr(ret, last, 0);
-			link_child_expr(ret, next, 1);
-			return ret;
-		}
+		return and_expression_with_literal(last, next);
 	} else {
 		return last;
 	}

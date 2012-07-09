@@ -44,6 +44,7 @@ Unless otherwise noted, all options are negatable with a
 @include opt/dump-dot-struct.texi
 @include opt/fast-weak-keepers.texi
 @include opt/precharge-invariants.texi
+@include opt/dynamic-supply.texi
 
 
 @c ----------------------------------------------------------------------------

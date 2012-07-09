@@ -9,6 +9,7 @@ event queue:
 	15	b : 1	[from a:=0]
 expect empty queue 
 end of queue 
+	0	!Vdd : 1
 	0	a : 0
 expect instability 
 WARNING: unstable `b'+

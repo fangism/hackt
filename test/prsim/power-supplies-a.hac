@@ -1,0 +1,15 @@
+// "power-supplies-a.hac"
+
+bool va, vb, ga, gb;
+bool x, y, za, zb, wa, wb;
+
+prs <va, ga> {
+	x	=> wa-
+	x & y	=> za-
+}
+prs <vb, gb> {
+	~x	=> wb+
+	x | y	=> zb-
+}
+
+

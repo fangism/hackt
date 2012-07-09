@@ -1,0 +1,39 @@
+[top-level]
+rules:
+[after 10]	a & ~!GND -> b-
+[after 10]	~a & !Vdd -> b+
+[after 10]	en & ~g2 & x & y -> z-
+[after 10]	~en & v2 & ~x -> z+
+	0	en : 1
+	0	x : 1
+	0	y : 1
+z : X
+Fanins of node `z':
+(from [top-level]):
+[after 10]	~en:1 & v2:X<0> & ~x:1<0><0> -> z+:X
+[after 10]	en:1 & ~g2:X<X> & x:1 & y:1<X><X> -> z-:X
+z:X, unknown-pull dn
+  g2:X, pull up/dn undriven, no fanin
+turning on g2 
+	0	g2 : 0
+	10	z : 0	[by g2:=0]
+z : 0	[by g2:=0]
+	10	en : 0
+Fanins of node `z':
+(from [top-level]):
+[after 10]	~en:0 & v2:X<X> & ~x:1<0><0> -> z+:0
+[after 10]	en:0 & ~g2:0<0> & x:1 & y:1<0><0> -> z-:0
+	10	x : 0
+	10	y : 0
+	20	z : X	[by x:=0]
+z : X	[by x:=0]
+z:X, unknown-pull up
+  v2:X, pull up/dn undriven, no fanin
+turning on v2 
+	20	v2 : 1
+	30	z : 1	[by v2:=1]
+z : 1	[by v2:=1]
+Fanins of node `z':
+(from [top-level]):
+[after 10]	~en:0 & v2:1<1> & ~x:0<1><1> -> z+:1
+[after 10]	en:0 & ~g2:0<0> & x:0 & y:0<0><0> -> z-:1
