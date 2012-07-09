@@ -60,7 +60,9 @@ private:
 		_fold_literals, _no_fold_literals,
 		_denormalize_negations, _no_denormalize_negations,
 		_fast_weak_keepers, _no_weak_keepers,
-		_precharge_invariants, _no_precharge_invariants;
+		_precharge_invariants, _no_precharge_invariants,
+		_dynamic_ground_supply, _no_dynamic_ground_supply, 
+		_dynamic_power_supply, _no_dynamic_power_supply;
 
 };	// end class prsim
 

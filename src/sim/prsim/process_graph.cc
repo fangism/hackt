@@ -164,7 +164,11 @@ if (!e.wiped()) {
 		assert(pc.second == i);
 	}
 	// check children
-	assert(e.size == g.children.size());
+	if (e.size != g.children.size()) {
+		cerr << "Error: Inconsistency in process graph expr "
+			<< i << endl;
+		assert(e.size == g.children.size());
+	}
 	size_t j = 0;
 	for ( ; j<e.size; ++j) {
 		const graph_node_type::child_entry_type& c(g.children[j]);

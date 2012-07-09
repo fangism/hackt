@@ -1,0 +1,19 @@
+// "power-supplies-e.hac"
+// testing internal nodes
+
+bool en, x, y, z;
+bool a, b;
+bool v2, g2;
+
+prs {
+	a		=> b-
+}
+prs <v2,g2> {
+	en		-> @_p_-
+	~en		-> @_q_+
+}
+prs {
+	~@_p_ & x & y	-> z-
+	@_q_ & ~x	-> z+
+}
+

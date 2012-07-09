@@ -8,6 +8,7 @@ rule: [after 10]	a:0 -> b-:X
 event queue:
 vacuous X events were dropped from queue (prsim-engine-rewrite) 
 end of queue 
+	0	!Vdd : 1
 	0	a : 0
 expect instability 
 WARNING: unstable `b'+

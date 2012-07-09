@@ -48,12 +48,29 @@ struct ExprAllocFlags {
 		Default: false
 	 */
 	bool				auto_precharge_invariants;
+#if PRSIM_MODEL_POWER_SUPPLIES
+	/**
+		Set to true to model multiple and dynamic GND.
+		This is uncommon, usually GND is shared among multiple
+		power domains.  
+	 */
+	bool				dynamic_ground_supply;
+	/**
+		Set to true to model multiple and dynamic Vdd.
+		This allows simulation of power-gating and power-sequencing.
+	 */
+	bool				dynamic_power_supply;
+#endif
 
 	ExprAllocFlags() : flags(DEFAULT_FLAGS)
 #if PRSIM_WEAK_RULES
 		, fast_weak_keepers(false)
 #endif
 		, auto_precharge_invariants(false)
+#if PRSIM_MODEL_POWER_SUPPLIES
+		, dynamic_ground_supply(false)
+		, dynamic_power_supply(false)
+#endif
 		{ }
 
 	bool

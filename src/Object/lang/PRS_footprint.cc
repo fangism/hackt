@@ -267,7 +267,6 @@ footprint::dump_expr(const expr_node& e, ostream& o,
 			// print the name of the internal node only
 			const internal_node_pool_type::const_iterator
 				f(find_internal_node(e.only()));
-			INVARIANT(f != internal_node_pool.end());
 			o << '@' << f->name;
 #endif
 			break;
@@ -517,6 +516,11 @@ footprint::collect_literal_indices(set<node_index_type>& ret,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param k name of internal node (identifier)
+	\param eid root id of the expression that defines the internal node
+	\param dir direction that internal node is pulled (1:up, 0:dn)
+ */
 good_bool
 footprint::register_internal_node_expr(const string& k, 
 		const expr_index_type eid, const bool dir) {
@@ -570,13 +574,15 @@ footprint::lookup_internal_node_expr(const string& k, const bool dir) const {
 footprint::internal_node_pool_type::const_iterator
 footprint::find_internal_node(const expr_index_type ei) const {
 	typedef	internal_node_pool_type::const_iterator	const_iterator;
-	const_iterator i(internal_node_pool.begin()),
+	const const_iterator b(internal_node_pool.begin()),
 		e(internal_node_pool.end());
+	const_iterator i(b);
 	for ( ;i!=e; ++i) {
 		if (i->first == ei) {
 			return i;
 		}
 	}
+	INVARIANT(i != e);
 	return i;		// match not found
 }
 

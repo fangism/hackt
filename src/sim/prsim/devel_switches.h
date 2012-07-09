@@ -219,6 +219,14 @@
 
 // TODO: prsim-guile interface
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Define to 1 to support modeling dynamic power supplies
+	in expression evaluation.
+	Goal: 1
+ */
+#define	PRSIM_MODEL_POWER_SUPPLIES		1
+
 //-----------------------------------------------------------------------------
 // ready-to-commit the flags below
 
