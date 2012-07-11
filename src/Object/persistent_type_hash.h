@@ -215,6 +215,7 @@
 #define	PINT_META_FUNCTION_CALL_TYPE_KEY			"pimfunex"
 #define	PBOOL_META_FUNCTION_CALL_TYPE_KEY			"pbmfunex"
 #define	PREAL_META_FUNCTION_CALL_TYPE_KEY			"prmfunex"
+#define	PSTRING_RELATIONAL_EXPR_TYPE_KEY			"psreltex"
 #define	PSTRING_META_FUNCTION_CALL_TYPE_KEY			"psmfunex"
 
 	// convert expressions

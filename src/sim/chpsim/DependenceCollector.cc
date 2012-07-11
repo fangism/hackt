@@ -188,6 +188,7 @@ DEFINE_NEVER_VISIT(preal_relational_expr)
 DEFINE_NEVER_VISIT(pint_arith_loop_expr)
 DEFINE_NEVER_VISIT(pbool_logical_loop_expr)
 DEFINE_NEVER_VISIT(preal_arith_loop_expr)
+DEFINE_NEVER_VISIT(pstring_relational_expr)
 DEFINE_NEVER_VISIT(convert_pint_to_preal_expr)
 
 #if 0

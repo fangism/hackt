@@ -1,0 +1,436 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	52
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	6	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	7	##ADDR##	pboolplh	0	#HEAD#	#TAIL#	30
+	8	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
+	9	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	10	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	11	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	12	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	13	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	14	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	15	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	16	##ADDR##	procdefn	0	#HEAD#	#TAIL#	128
+	17	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	18	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	19	##ADDR##	pboolplh	0	#HEAD#	#TAIL#	29
+	20	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
+	24	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	25	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	27	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	30	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	31	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	34	##ADDR##	footprnt	0	#HEAD#	#TAIL#	335
+	35	##ADDR##	cnstpbc_	0	#HEAD#	#TAIL#	21
+	36	##ADDR##	footprnt	0	#HEAD#	#TAIL#	335
+	37	##ADDR##	cnstpbc_	0	#HEAD#	#TAIL#	21
+	38	##ADDR##	pstrplch	0	#HEAD#	#TAIL#	33
+	39	##ADDR##	pstrinst	0	#HEAD#	#TAIL#	16
+	40	##ADDR##	pstrplch	0	#HEAD#	#TAIL#	31
+	41	##ADDR##	pstrinst	0	#HEAD#	#TAIL#	16
+	42	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	43	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
+	44	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	45	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	46	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	47	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	48	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	49	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	50	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	51	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	52	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	53	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	54	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	55	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	56	##ADDR##	psassign	0	#HEAD#	#TAIL#	20
+	57	##ADDR##	cnstps__	0	#HEAD#	#TAIL#	17
+	58	##ADDR##	spsmvref	0	#HEAD#	#TAIL#	16
+	59	##ADDR##	psassign	0	#HEAD#	#TAIL#	20
+	60	##ADDR##	cnstps__	0	#HEAD#	#TAIL#	15
+	61	##ADDR##	spsmvref	0	#HEAD#	#TAIL#	16
+	62	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
+	63	##ADDR##	psreltex	0	#HEAD#	#TAIL#	22
+	64	##ADDR##	spsmvref	0	#HEAD#	#TAIL#	16
+	65	##ADDR##	spsmvref	0	#HEAD#	#TAIL#	16
+	66	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+	67	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	68	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	69	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
+	70	##ADDR##	psreltex	0	#HEAD#	#TAIL#	22
+	71	##ADDR##	spsmvref	0	#HEAD#	#TAIL#	16
+	72	##ADDR##	cnstps__	0	#HEAD#	#TAIL#	17
+	73	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+	74	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	75	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	76	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
+	77	##ADDR##	psreltex	0	#HEAD#	#TAIL#	22
+	78	##ADDR##	cnstps__	0	#HEAD#	#TAIL#	17
+	79	##ADDR##	spsmvref	0	#HEAD#	#TAIL#	16
+	80	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+	81	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	82	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	83	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
+	84	##ADDR##	psreltex	0	#HEAD#	#TAIL#	22
+	85	##ADDR##	spsmvref	0	#HEAD#	#TAIL#	16
+	86	##ADDR##	spsmvref	0	#HEAD#	#TAIL#	16
+	87	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+	88	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	89	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	90	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
+	91	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	92	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+	93	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	94	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	95	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
+	96	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	97	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+	98	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	99	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	100	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
+	101	##ADDR##	psreltex	0	#HEAD#	#TAIL#	22
+	102	##ADDR##	spsmvref	0	#HEAD#	#TAIL#	16
+	103	##ADDR##	spsmvref	0	#HEAD#	#TAIL#	16
+	104	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+	105	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	106	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	107	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
+	108	##ADDR##	psreltex	0	#HEAD#	#TAIL#	21
+	109	##ADDR##	spsmvref	0	#HEAD#	#TAIL#	16
+	110	##ADDR##	spsmvref	0	#HEAD#	#TAIL#	16
+	111	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+	112	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	113	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	114	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
+	115	##ADDR##	psreltex	0	#HEAD#	#TAIL#	21
+	116	##ADDR##	spsmvref	0	#HEAD#	#TAIL#	16
+	117	##ADDR##	spsmvref	0	#HEAD#	#TAIL#	16
+	118	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+	119	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	120	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	121	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
+	122	##ADDR##	psreltex	0	#HEAD#	#TAIL#	22
+	123	##ADDR##	spsmvref	0	#HEAD#	#TAIL#	16
+	124	##ADDR##	spsmvref	0	#HEAD#	#TAIL#	16
+	125	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+	126	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	127	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	128	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
+	129	##ADDR##	psreltex	0	#HEAD#	#TAIL#	22
+	130	##ADDR##	spsmvref	0	#HEAD#	#TAIL#	16
+	131	##ADDR##	spsmvref	0	#HEAD#	#TAIL#	16
+	132	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+	133	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	134	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	135	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
+	136	##ADDR##	psreltex	0	#HEAD#	#TAIL#	21
+	137	##ADDR##	spsmvref	0	#HEAD#	#TAIL#	16
+	138	##ADDR##	spsmvref	0	#HEAD#	#TAIL#	16
+	139	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+	140	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	141	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	142	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
+	143	##ADDR##	psreltex	0	#HEAD#	#TAIL#	21
+	144	##ADDR##	spsmvref	0	#HEAD#	#TAIL#	16
+	145	##ADDR##	spsmvref	0	#HEAD#	#TAIL#	16
+	146	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+	147	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	148	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	149	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
+	150	##ADDR##	psreltex	0	#HEAD#	#TAIL#	22
+	151	##ADDR##	spsmvref	0	#HEAD#	#TAIL#	16
+	152	##ADDR##	spsmvref	0	#HEAD#	#TAIL#	16
+	153	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+	154	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	155	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	156	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
+	157	##ADDR##	psreltex	0	#HEAD#	#TAIL#	22
+	158	##ADDR##	spsmvref	0	#HEAD#	#TAIL#	16
+	159	##ADDR##	spsmvref	0	#HEAD#	#TAIL#	16
+	160	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+	161	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	162	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	163	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
+	164	##ADDR##	psreltex	0	#HEAD#	#TAIL#	22
+	165	##ADDR##	spsmvref	0	#HEAD#	#TAIL#	16
+	166	##ADDR##	spsmvref	0	#HEAD#	#TAIL#	16
+	167	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+	168	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	169	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	170	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
+	171	##ADDR##	psreltex	0	#HEAD#	#TAIL#	22
+	172	##ADDR##	spsmvref	0	#HEAD#	#TAIL#	16
+	173	##ADDR##	spsmvref	0	#HEAD#	#TAIL#	16
+	174	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+	175	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	176	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	177	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	178	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	179	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	180	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	181	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	182	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	183	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	184	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	185	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
+	186	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	187	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	188	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	189	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	190	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	191	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	192	##ADDR##	proctpcp	0	#HEAD#	#TAIL#	16
+	193	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	194	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	195	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	196	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	197	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+	198	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	199	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	200	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1986
+	201	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	202	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	203	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	204	##ADDR##	cnstpbc_	0	#HEAD#	#TAIL#	21
+	205	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	206	##ADDR##	cnstpbc_	0	#HEAD#	#TAIL#	21
+	207	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	208	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	209	##ADDR##	cnstpbc_	0	#HEAD#	#TAIL#	21
+	210	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	211	##ADDR##	cnstpbc_	0	#HEAD#	#TAIL#	21
+	212	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	213	##ADDR##	cnstpbc_	0	#HEAD#	#TAIL#	21
+	214	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	215	##ADDR##	cnstpbc_	0	#HEAD#	#TAIL#	21
+	216	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	217	##ADDR##	cnstpbc_	0	#HEAD#	#TAIL#	21
+	218	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	219	##ADDR##	cnstpbc_	0	#HEAD#	#TAIL#	21
+	220	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	221	##ADDR##	cnstpbc_	0	#HEAD#	#TAIL#	21
+	222	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	223	##ADDR##	cnstpbc_	0	#HEAD#	#TAIL#	21
+	224	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	225	##ADDR##	cnstpbc_	0	#HEAD#	#TAIL#	21
+	226	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	227	##ADDR##	cnstpbc_	0	#HEAD#	#TAIL#	21
+	228	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	229	##ADDR##	cnstpbc_	0	#HEAD#	#TAIL#	21
+	230	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	231	##ADDR##	cnstpbc_	0	#HEAD#	#TAIL#	21
+	232	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	233	##ADDR##	cnstpbc_	0	#HEAD#	#TAIL#	21
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  4 parameter-collections
+  3 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Parameters:
+    N = pint<> N
+    eq = pbool<> eq^1
+    larry = pstring<> larry
+    moe = pstring<> moe
+  Definitions:
+    foo = process-definition (defined) foo<>
+<
+      pbool<> X
+      >(
+        bool<> !GND
+        bool<> !Vdd
+      )
+      In definition "foo", we have: {
+      Parameters:
+        X = pbool<> foo::X
+      Instances:
+        !GND = bool<> foo::!GND
+        !Vdd = bool<> foo::!Vdd
+      unroll sequence: 
+        ports: (
+          bool<> !GND
+          bool<> !Vdd
+        )
+        !GND@[supply=0]
+        !Vdd@[supply=1]
+      footprint collection: {
+        <0> {
+          !GND = bool^0 = foo<0>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = foo<0>::!Vdd (2) @[ supply_high port-alias ] 
+          X = pbool^0 value: 0
+          Created state:
+          bool instance pool: (2 ports, 0 local, 0 mapped)
+          1	foo<0>::!GND @[ supply_low port-alias ]	
+          2	foo<0>::!Vdd @[ supply_high port-alias ]	
+        }
+        <1> {
+          !GND = bool^0 = foo<1>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = foo<1>::!Vdd (2) @[ supply_high port-alias ] 
+          X = pbool^0 value: 1
+          Created state:
+          bool instance pool: (2 ports, 0 local, 0 mapped)
+          1	foo<1>::!GND @[ supply_low port-alias ]	
+          2	foo<1>::!Vdd @[ supply_high port-alias ]	
+        }
+      }
+      }
+
+  Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
+    f = foo<> f^1
+}
+
+footprint: {
+  !GND = bool^0 = !GND (1) @[ supply_low ] 
+  !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
+  N = pint^0 value: 17
+  eq = pbool^1
+    unrolled index-value pairs: {
+      0 = 0
+      1 = 0
+      2 = 0
+      3 = 1
+      4 = 1
+      5 = 0
+      6 = 1
+      7 = 1
+      8 = 0
+      9 = 1
+      10 = 0
+      11 = 0
+      12 = 0
+      13 = 1
+      14 = 1
+      15 = 1
+      16 = 0
+    }
+  f = process foo<>^1
+    {
+      [0]<0> = f[0] (1) (
+        !GND = bool^0 = !GND (1) @[ supply_low ] 
+        !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
+      )
+      [1]<0> = f[1] (2) (
+        !GND = bool^0 = !GND (1) @[ supply_low ] 
+        !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
+      )
+      [2]<0> = f[2] (3) (
+        !GND = bool^0 = !GND (1) @[ supply_low ] 
+        !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
+      )
+      [3]<1> = f[3] (4) (
+        !GND = bool^0 = !GND (1) @[ supply_low ] 
+        !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
+      )
+      [4]<1> = f[4] (5) (
+        !GND = bool^0 = !GND (1) @[ supply_low ] 
+        !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
+      )
+      [5]<0> = f[5] (6) (
+        !GND = bool^0 = !GND (1) @[ supply_low ] 
+        !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
+      )
+      [6]<1> = f[6] (7) (
+        !GND = bool^0 = !GND (1) @[ supply_low ] 
+        !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
+      )
+      [7]<1> = f[7] (8) (
+        !GND = bool^0 = !GND (1) @[ supply_low ] 
+        !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
+      )
+      [8]<0> = f[8] (9) (
+        !GND = bool^0 = !GND (1) @[ supply_low ] 
+        !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
+      )
+      [9]<1> = f[9] (10) (
+        !GND = bool^0 = !GND (1) @[ supply_low ] 
+        !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
+      )
+      [10]<0> = f[10] (11) (
+        !GND = bool^0 = !GND (1) @[ supply_low ] 
+        !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
+      )
+      [11]<0> = f[11] (12) (
+        !GND = bool^0 = !GND (1) @[ supply_low ] 
+        !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
+      )
+      [12]<0> = f[12] (13) (
+        !GND = bool^0 = !GND (1) @[ supply_low ] 
+        !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
+      )
+      [13]<1> = f[13] (14) (
+        !GND = bool^0 = !GND (1) @[ supply_low ] 
+        !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
+      )
+      [14]<1> = f[14] (15) (
+        !GND = bool^0 = !GND (1) @[ supply_low ] 
+        !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
+      )
+      [15]<1> = f[15] (16) (
+        !GND = bool^0 = !GND (1) @[ supply_low ] 
+        !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
+      )
+      [16]<0> = f[16] (17) (
+        !GND = bool^0 = !GND (1) @[ supply_low ] 
+        !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
+      )
+    }
+  larry = pstring^0 value: Larry
+  moe = pstring^0 value: Moe
+  Created state:
+  process instance pool: (0 ports, 17 local, 0 mapped)
+  1	f[0]<0>	foo<0>
+    bool: 1,2
+  2	f[1]<0>	foo<0>
+    bool: 1,2
+  3	f[2]<0>	foo<0>
+    bool: 1,2
+  4	f[3]<1>	foo<1>
+    bool: 1,2
+  5	f[4]<1>	foo<1>
+    bool: 1,2
+  6	f[5]<0>	foo<0>
+    bool: 1,2
+  7	f[6]<1>	foo<1>
+    bool: 1,2
+  8	f[7]<1>	foo<1>
+    bool: 1,2
+  9	f[8]<0>	foo<0>
+    bool: 1,2
+  10	f[9]<1>	foo<1>
+    bool: 1,2
+  11	f[10]<0>	foo<0>
+    bool: 1,2
+  12	f[11]<0>	foo<0>
+    bool: 1,2
+  13	f[12]<0>	foo<0>
+    bool: 1,2
+  14	f[13]<1>	foo<1>
+    bool: 1,2
+  15	f[14]<1>	foo<1>
+    bool: 1,2
+  16	f[15]<1>	foo<1>
+    bool: 1,2
+  17	f[16]<0>	foo<0>
+    bool: 1,2
+  bool instance pool: (0 ports, 2 local, 0 mapped)
+  1	!GND @[ supply_low ]	
+  2	!Vdd @[ supply_high ]	
+}

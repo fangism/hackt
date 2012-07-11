@@ -3,11 +3,20 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2012-07-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-86:
+	  HAC: added string comparison operator support.
+		object binary format version bumped to 10.
+		Test cases added, documentation updated.
+
+
 2012-07-05	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-85-40-prsim-power-supply-03:
 	  hacprsim: dynamic power supplies now properly use the 
 		supply associated with each defined internal node.
+	  Merged to master.
 
 
 2012-07-04	David Fang		<fangism@users.sourceforge.net>

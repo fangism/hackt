@@ -60,6 +60,8 @@
 #include "Object/expr/int_arith_expr.h"
 #include "Object/expr/int_relational_expr.h"
 #include "Object/expr/bool_logical_expr.h"
+#include "Object/expr/pstring_expr.h"
+#include "Object/expr/pstring_relational_expr.h"
 #include "Object/expr/loop_meta_expr.h"
 #include "Object/expr/loop_nonmeta_expr.h"
 #include "Object/expr/nonmeta_func_call.h"
@@ -167,6 +169,8 @@ using entity::pbool_unary_expr;
 using entity::preal_arith_expr;
 using entity::preal_unary_expr;
 using entity::preal_relational_expr;
+using entity::pstring_expr;
+using entity::pstring_relational_expr;
 using entity::meta_loop_base;
 using entity::meta_range_expr;
 using entity::nonmeta_func_call;
@@ -2385,6 +2389,8 @@ relational_expr::check_meta_expr(const context& c) const {
 	const count_ptr<preal_expr> rr(ro.is_a<preal_expr>());
 	const count_ptr<pbool_expr> lb(lo.is_a<pbool_expr>());
 	const count_ptr<pbool_expr> rb(ro.is_a<pbool_expr>());
+	const count_ptr<pstring_expr> ls(lo.is_a<pstring_expr>());
+	const count_ptr<pstring_expr> rs(ro.is_a<pstring_expr>());
 	const string op_str(op->text);
 	// maintainence: 
 	// could let expr_type::static_constant_value() or resolve_value()
@@ -2423,6 +2429,15 @@ if (li && ri) {
 	} else {
 		return ret;
 	}
+} else if (ls && rs) {
+	const count_ptr<pstring_relational_expr>
+		ret(new entity::pstring_relational_expr(ls, op_str, rs));
+	if (ret->is_static_constant()) {
+		return return_type(
+			new pbool_const(ret->static_constant_value()));
+	} else {
+		return ret;
+	}
 } else {
 	cerr << "ERROR: relational_expr expects two operands of the same type, "
 		"but got:" << endl;
@@ -2435,6 +2450,7 @@ if (li && ri) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	TODO: add support for reals if it ever comes about.
+	TODO: add support for string expressions.
  */
 nonmeta_expr_return_type
 relational_expr::check_nonmeta_expr(const context& c) const {

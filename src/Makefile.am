@@ -911,6 +911,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/expr/string_expr.h \
 	Object/expr/pstring_expr.h \
 	Object/expr/pstring_const.h \
+	Object/expr/pstring_relational_expr.h \
 	Object/expr/struct_expr.h \
 	Object/expr/types.h \
 	Object/lang/generic_attribute_fwd.h \

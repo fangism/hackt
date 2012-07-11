@@ -394,8 +394,10 @@ try {
 
 //=============================================================================
 /**
-	Identifies the object file format version.
+	Identifies the binary object file format version.
 	Increment this whenever format changes.  
+	TODO: use library versioning scheme that also encodes compatibility
+		x.y, where .y denotes forward compatible versions in series.
 log:
 1: [initial version]
 2: node supply attributes, node attribute flags now 32b
@@ -408,13 +410,14 @@ log:
 7: spec invariants added optional strings for assert messages
 8: process directionality flags, direction_declaration types
 9: added direction enum to data_type_reference
+10: added pstring_relational_expr type for string comparison operators
 ?: support for member nonmeta instance/value references
  */
 static const size_t
 #if NONMETA_MEMBER_REFERENCES
-object_file_format_version = 9;
-#else
 object_file_format_version = 10;
+#else
+object_file_format_version = 11;
 #endif
 
 //=============================================================================

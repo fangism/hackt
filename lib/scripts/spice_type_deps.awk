@@ -5,7 +5,7 @@
 # recommend piping the output through sort -u (unique)
 
 # second argument of subckt line is the defining type
-/^.subckt/ { target = $2; }
+/^\.subckt/ || /^\.SUBCKT/ { target = $2; }
 
 # last position is the instance type
 /^[xX]/ {

@@ -68,6 +68,7 @@ using entity::pbool_logical_expr;
 using entity::pint_arith_loop_expr;
 using entity::pbool_logical_loop_expr;
 using entity::preal_arith_loop_expr;
+using entity::pstring_relational_expr;
 using entity::convert_pint_to_preal_expr;
 using entity::bool_return_cast_expr;
 using entity::int_return_cast_expr;
@@ -212,6 +213,7 @@ public:
 	VISIT_PROTO(pint_arith_loop_expr);
 	VISIT_PROTO(pbool_logical_loop_expr);
 	VISIT_PROTO(preal_arith_loop_expr);
+	VISIT_PROTO(pstring_relational_expr);
 	VISIT_PROTO(convert_pint_to_preal_expr);
 	VISIT_PROTO(bool_return_cast_expr);
 	VISIT_PROTO(int_return_cast_expr);

@@ -66,6 +66,7 @@ namespace entity {
 	class preal_arith_expr;
 	class preal_relational_expr;
 	class pbool_logical_expr;
+	class pstring_relational_expr;
 	class meta_range_expr;
 	class pint_range;
 	class const_range;
