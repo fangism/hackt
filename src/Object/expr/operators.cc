@@ -28,6 +28,8 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/preal_arith_expr.h"
 #include "Object/expr/preal_relational_expr.h"
 #include "Object/expr/preal_unary_expr.h"
+#include "Object/expr/pstring_relational_expr.h"
+#include "Object/expr/pstring_const.h"
 #include "Object/expr/const_index_list.h"
 #include "Object/expr/const_range_list.h"
 #include "Object/expr/pint_const.h"
@@ -75,6 +77,8 @@ SPECIALIZE_UTIL_WHAT(HAC::entity::pbool_logical_loop_expr,
 		"logical-loop-expr")
 SPECIALIZE_UTIL_WHAT(HAC::entity::preal_arith_loop_expr, 
 		"preal-arith-loop-expr")
+SPECIALIZE_UTIL_WHAT(HAC::entity::pstring_relational_expr, 
+		"pstring-relational-expr")
 SPECIALIZE_UTIL_WHAT(HAC::entity::convert_pint_to_preal_expr, 
 		"convert-pint-to-preal")
 SPECIALIZE_UTIL_WHAT(HAC::entity::param_defined,
@@ -102,6 +106,8 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::pbool_logical_loop_expr, PBOOL_LOGICAL_LOOP_EXPR_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::preal_arith_loop_expr, PREAL_ARITH_LOOP_EXPR_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	HAC::entity::pstring_relational_expr, PSTRING_RELATIONAL_EXPR_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::convert_pint_to_preal_expr,
 	CONVERT_PINT_TO_PREAL_EXPR_TYPE_KEY, 0)
@@ -1195,8 +1201,8 @@ pint_relational_expr::static_constant_value(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pint_relational_expr::value_type
-pint_relational_expr::evaluate(const string& o, const value_type l, 
-		const value_type r) {
+pint_relational_expr::evaluate(const string& o, const arg_type l, 
+		const arg_type r) {
 	const op_type* const op(op_map[o]);
 	INVARIANT(op);
 	return (*op)(l,r);
@@ -1204,8 +1210,8 @@ pint_relational_expr::evaluate(const string& o, const value_type l,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pint_relational_expr::value_type
-pint_relational_expr::evaluate(const op_type* op, const value_type l, 
-		const value_type r) {
+pint_relational_expr::evaluate(const op_type* op, const arg_type l, 
+		const arg_type r) {
 	INVARIANT(op);
 	return (*op)(l,r);
 }
@@ -1324,9 +1330,8 @@ pint_relational_expr::substitute_default_positional_parameters(
 		const dynamic_param_expr_list& e,
 		const count_ptr<const pbool_expr>& p) const {
 	typedef	count_ptr<const pbool_expr>		return_type;
-	typedef	count_ptr<const pint_expr>		operand_type;
 	INVARIANT(p == this);
-	const operand_type
+	const operand_ptr_type
 		rlx(lx->substitute_default_positional_parameters(f, e, lx)),
 		rrx(rx->substitute_default_positional_parameters(f, e, rx));
 	if (rlx && rrx) {
@@ -1815,8 +1820,8 @@ preal_relational_expr::static_constant_value(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 preal_relational_expr::value_type
-preal_relational_expr::evaluate(const string& o, const value_type l, 
-		const value_type r) {
+preal_relational_expr::evaluate(const string& o, const arg_type l, 
+		const arg_type r) {
 	const op_type* const op(op_map[o]);
 	INVARIANT(op);
 	return (*op)(l,r);
@@ -1824,8 +1829,8 @@ preal_relational_expr::evaluate(const string& o, const value_type l,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 preal_relational_expr::value_type
-preal_relational_expr::evaluate(const op_type* op, const value_type l, 
-		const value_type r) {
+preal_relational_expr::evaluate(const op_type* op, const arg_type l, 
+		const arg_type r) {
 	INVARIANT(op);
 	return (*op)(l,r);
 }
@@ -1932,9 +1937,8 @@ preal_relational_expr::substitute_default_positional_parameters(
 		const dynamic_param_expr_list& e,
 		const count_ptr<const pbool_expr>& p) const {
 	typedef	count_ptr<const pbool_expr>		return_type;
-	typedef	count_ptr<const preal_expr>		operand_type;
 	INVARIANT(p == this);
-	const operand_type
+	const operand_ptr_type
 		rlx(lx->substitute_default_positional_parameters(f, e, lx)),
 		rrx(rx->substitute_default_positional_parameters(f, e, rx));
 	if (rlx && rrx) {
@@ -2277,6 +2281,320 @@ pbool_logical_expr::write_object(const persistent_object_manager& m,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 pbool_logical_expr::load_object(const persistent_object_manager& m, istream& f) {
+	{
+	string s;
+	read_value(f, s);
+	op = op_map[s];
+	NEVER_NULL(op);
+	}
+	m.read_pointer(f, lx);
+	m.read_pointer(f, rx);
+}
+
+//=============================================================================
+// class pstring_relational_expr method definitions
+
+// static member initializations (order matters!)
+
+const equal_to<pbool_value_type, pstring_value_type>
+pstring_relational_expr::op_equal_to;
+
+const not_equal_to<pbool_value_type, pstring_value_type>
+pstring_relational_expr::op_not_equal_to;
+
+const less<pbool_value_type, pstring_value_type>
+pstring_relational_expr::op_less;
+
+const greater<pbool_value_type, pstring_value_type>
+pstring_relational_expr::op_greater;
+
+const less_equal<pbool_value_type, pstring_value_type>
+pstring_relational_expr::op_less_equal;
+
+const greater_equal<pbool_value_type, pstring_value_type>
+pstring_relational_expr::op_greater_equal;
+
+const pstring_relational_expr::op_map_type
+pstring_relational_expr::op_map;
+
+const pstring_relational_expr::reverse_op_map_type
+pstring_relational_expr::reverse_op_map;
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	NOTE: will be initialized to 0 (POD -- plain old data) before 
+		static objects will be constructed, then will initialized
+		to its proper value.  
+		Thus, this statement must follow initializations 
+		of op_map and reverse_op_map.  
+ */
+const size_t
+pstring_relational_expr::op_map_size = pstring_relational_expr::op_map_init();
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Static initialization of operator map.  
+ */
+void
+pstring_relational_expr::op_map_register(const string& s, const op_type* o) {
+	NEVER_NULL(o);
+	const_cast<op_map_type&>(op_map)[s] = o;
+	const_cast<reverse_op_map_type&>(reverse_op_map)[o] = s;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Static initialization of registered relationalmetic operators.  
+ */
+size_t
+pstring_relational_expr::op_map_init(void) {
+	op_map_register("==", &op_equal_to);
+	op_map_register("!=", &op_not_equal_to);
+	op_map_register("<", &op_less);
+	op_map_register(">", &op_greater);
+	op_map_register("<=", &op_less_equal);
+	op_map_register(">=", &op_greater_equal);
+	INVARIANT(op_map.size() == reverse_op_map.size());
+	return op_map.size();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Private empty constructor.  
+	Note: pass string, not null char.  
+ */
+pstring_relational_expr::pstring_relational_expr() :
+		lx(NULL), rx(NULL), op(NULL) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+pstring_relational_expr::~pstring_relational_expr() {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+pstring_relational_expr::pstring_relational_expr(const operand_ptr_type& l,
+		const string& o, const operand_ptr_type& r) :
+		lx(l), rx(r), op(op_map[o]) {
+	NEVER_NULL(op);
+	NEVER_NULL(lx);
+	NEVER_NULL(rx);
+	INVARIANT(lx->dimensions() == 0);
+	INVARIANT(rx->dimensions() == 0);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+pstring_relational_expr::pstring_relational_expr(const operand_ptr_type& l,
+		const op_type* o, const operand_ptr_type& r) :
+		lx(l), rx(r), op(o) {
+	NEVER_NULL(op);
+	NEVER_NULL(lx);
+	NEVER_NULL(rx);
+	INVARIANT(lx->dimensions() == 0);
+	INVARIANT(rx->dimensions() == 0);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pstring_relational_expr)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+pstring_relational_expr::dump(ostream& o, const expr_dump_context& c) const {
+	return rx->dump(lx->dump(o, c) << reverse_op_map[op], c);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+pstring_relational_expr::is_static_constant(void) const {
+	return lx->is_static_constant() && rx->is_static_constant();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+pstring_relational_expr::is_relaxed_formal_dependent(void) const {
+	return lx->is_relaxed_formal_dependent() ||
+		rx->is_relaxed_formal_dependent();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return result of resolved comparison.  
+ */
+pstring_relational_expr::value_type
+pstring_relational_expr::static_constant_value(void) const {
+	const arg_type a = lx->static_constant_value();
+	const arg_type b = rx->static_constant_value();
+	return (*op)(a,b);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+pstring_relational_expr::value_type
+pstring_relational_expr::evaluate(const string& o, const arg_type& l, 
+		const arg_type& r) {
+	const op_type* const op(op_map[o]);
+	INVARIANT(op);
+	return (*op)(l,r);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+pstring_relational_expr::value_type
+pstring_relational_expr::evaluate(const op_type* op, const arg_type& l, 
+		const arg_type& r) {
+	INVARIANT(op);
+	return (*op)(l,r);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+pstring_relational_expr::must_be_equivalent(const pbool_expr& b) const {
+	const this_type* const
+		re = IS_A(const this_type*, &b);
+	if (re) {
+		return (op == re->op) &&
+			lx->must_be_equivalent(*re->lx) &&
+			rx->must_be_equivalent(*re->rx);
+		// this is also conservative, 
+		// doesn't check symbolic equivalence... yet
+	} else {
+		// conservatively
+		return false;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const_index_list
+pstring_relational_expr::resolve_dimensions(void) const {
+	return const_index_list();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+pstring_relational_expr::accept(nonmeta_expr_visitor& v) const {
+	v.visit(*this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+pstring_relational_expr::unroll_resolve_value(const unroll_context& c,
+		value_type& i) const {
+	static const expr_dump_context& dc(expr_dump_context::default_value);
+	// should return a pstring_const
+	// maybe make a pstring_const version to avoid casting
+	pstring_value_type lval, rval;
+	const good_bool lex(lx->unroll_resolve_value(c, lval));
+	const good_bool rex(rx->unroll_resolve_value(c, rval));
+	if (!lex.good) {
+		cerr << "ERROR: resolving left operand of: ";
+		dump(cerr, dc) << endl;
+		return good_bool(false);
+	} else if (!rex.good) {
+		cerr << "ERROR: resolving right operand of: ";
+		dump(cerr, dc) << endl;
+		return good_bool(false);
+	} else {
+		i = (*op)(lval, rval);
+		return good_bool(true);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return pbool_const of the resolved value.
+ */
+count_ptr<const pbool_const>
+pstring_relational_expr::__unroll_resolve_rvalue(const unroll_context& c, 
+		const count_ptr<const pbool_expr>& p) const {
+	typedef	count_ptr<const pbool_const>		return_type;
+	typedef	count_ptr<const pstring_const>		leaf_type;
+	// should return a pstring_const
+	// maybe make a pstring_const version to avoid casting
+	INVARIANT(p == this);
+	const leaf_type lex(lx->__unroll_resolve_rvalue(c, lx));
+	const leaf_type rex(rx->__unroll_resolve_rvalue(c, rx));
+	if (lex && rex) {
+#if 0
+		const count_ptr<pstring_const> lpc(lex.is_a<pstring_const>());
+		const count_ptr<pstring_const> rpc(rex.is_a<pstring_const>());
+		// NOT TRUE, could be scalar const_collection
+		INVARIANT(lpc);	
+		INVARIANT(rpc);
+		// would like to just modify pc, but pstring_const's 
+		// value_type is const :( consider un-const-ing it...
+		const pstring_value_type lop = lpc->static_constant_value();
+		const pstring_value_type rop = rpc->static_constant_value();
+#else
+		const pstring_value_type lop = lex->static_constant_value();
+		const pstring_value_type rop = rex->static_constant_value();
+#endif
+		return return_type(new pbool_const((*op)(lop, rop)));
+	} else {
+		// there is an error in at least one sub-expression
+		// discard intermediate result
+		return return_type(NULL);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const const_param>
+pstring_relational_expr::unroll_resolve_rvalues(const unroll_context& c, 
+		const count_ptr<const pbool_expr>& p) const {
+	return __unroll_resolve_rvalue(c, p);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const pbool_expr>
+pstring_relational_expr::unroll_resolve_copy(const unroll_context& c, 
+		const count_ptr<const pbool_expr>& p) const {
+	return __unroll_resolve_rvalue(c, p);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return expression with any positional parameters substituted.  
+ */
+count_ptr<const pbool_expr>
+pstring_relational_expr::substitute_default_positional_parameters(
+		const template_formals_manager& f, 
+		const dynamic_param_expr_list& e,
+		const count_ptr<const pbool_expr>& p) const {
+	typedef	count_ptr<const pbool_expr>		return_type;
+	INVARIANT(p == this);
+	const operand_ptr_type
+		rlx(lx->substitute_default_positional_parameters(f, e, lx)),
+		rrx(rx->substitute_default_positional_parameters(f, e, rx));
+	if (rlx && rrx) {
+		if (rlx == lx && rrx == rx) {
+			return p;
+		} else {
+			return return_type(new this_type(rlx, op, rrx));
+		}
+	} else {
+		return return_type(NULL);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+pstring_relational_expr::collect_transient_info(
+		persistent_object_manager& m) const {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
+	lx->collect_transient_info(m);
+	rx->collect_transient_info(m);
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+pstring_relational_expr::write_object(const persistent_object_manager& m, 
+		ostream& f) const {
+	write_value(f, reverse_op_map[op]);
+	m.write_pointer(f, lx);
+	m.write_pointer(f, rx);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+pstring_relational_expr::load_object(const persistent_object_manager& m, istream& f) {
 	{
 	string s;
 	read_value(f, s);

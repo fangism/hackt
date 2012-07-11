@@ -114,6 +114,7 @@ virtual	VISIT_PROTO(pbool_logical_expr) = 0;
 virtual	VISIT_PROTO(pint_arith_loop_expr) = 0;
 virtual	VISIT_PROTO(pbool_logical_loop_expr) = 0;
 virtual	VISIT_PROTO(preal_arith_loop_expr) = 0;
+virtual	VISIT_PROTO(pstring_relational_expr) = 0;
 virtual	VISIT_PROTO(convert_pint_to_preal_expr) = 0;
 virtual	VISIT_PROTO(bool_return_cast_expr) = 0;
 virtual	VISIT_PROTO(int_return_cast_expr) = 0;

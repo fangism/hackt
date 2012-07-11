@@ -37,6 +37,7 @@ HACKT_PARSE_TEST_PASSES = \
 	120 121 123 124 125 126 127 \
 	130 131 132 136 138 139 \
 	string-fun-01 \
+	string-compare-01 \
 	math-fun-01 math-fun-02
 
 # subset of HACKT_OBJ_TEST_SUBJECTS
@@ -80,6 +81,7 @@ HACKT_CREATE_TEST_PASSES = \
 	121 123 124 126 127 \
 	130 131 132 136 139 \
 	string-fun-01 \
+	string-compare-01 \
 	math-fun-01 math-fun-02
 
 

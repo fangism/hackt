@@ -1,13 +1,13 @@
 /**
-	\file "Object/expr/pint_relational_expr.h"
+	\file "Object/expr/pstring_relational_expr.h"
 	Boolean relations between integer parameters.  
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: pint_relational_expr.h,v 1.16 2007/01/21 05:59:06 fang Exp $
+	$Id: pstring_relational_expr.h,v 1.16 2007/01/21 05:59:06 fang Exp $
  */
 
-#ifndef __HAC_OBJECT_EXPR_PINT_RELATIONAL_EXPR_H__
-#define __HAC_OBJECT_EXPR_PINT_RELATIONAL_EXPR_H__
+#ifndef __HAC_OBJECT_EXPR_PSTRING_RELATIONAL_EXPR_H__
+#define __HAC_OBJECT_EXPR_PSTRING_RELATIONAL_EXPR_H__
 
 #include "Object/expr/pbool_expr.h"
 #include "util/memory/count_ptr.h"
@@ -17,7 +17,7 @@
 
 namespace HAC {
 namespace entity {
-class pint_expr;
+class pstring_expr;
 class pbool_const;
 using std::string;
 USING_UTIL_OPERATIONS
@@ -28,13 +28,13 @@ using util::memory::count_ptr;
 /**
 	Binary relational expression accepts ints and returns a bool.  
  */
-class pint_relational_expr : public pbool_expr {
-	typedef	pint_relational_expr			this_type;
+class pstring_relational_expr : public pbool_expr {
+	typedef	pstring_relational_expr			this_type;
 	typedef	pbool_expr				parent_type;
 public:
 	typedef	pbool_value_type		value_type;
-	typedef	pint_value_type			arg_type;
-	typedef	count_ptr<const pint_expr>	operand_ptr_type;
+	typedef	pstring_value_type			arg_type;
+	typedef	count_ptr<const pstring_expr>	operand_ptr_type;
 	typedef	binary_relational_operation<value_type, arg_type>
 							op_type;
 	static const equal_to<value_type, arg_type>	op_equal_to;
@@ -67,14 +67,14 @@ protected:
 	const op_type*			op;
 
 private:
-	pint_relational_expr();
+	pstring_relational_expr();
 public:
-	pint_relational_expr(const operand_ptr_type& l, const string& o, 
+	pstring_relational_expr(const operand_ptr_type& l, const string& o, 
 		const operand_ptr_type& r);
-	pint_relational_expr(const operand_ptr_type& l, const op_type* o, 
+	pstring_relational_expr(const operand_ptr_type& l, const op_type* o, 
 		const operand_ptr_type& r);
 
-	~pint_relational_expr();
+	~pstring_relational_expr();
 
 	const operand_ptr_type&
 	get_first(void) const { return lx; }
@@ -102,11 +102,11 @@ public:
 
 	static
 	value_type
-	evaluate(const string&, const arg_type, const arg_type);
+	evaluate(const string&, const arg_type&, const arg_type&);
 
 	static
 	value_type
-	evaluate(const op_type*, const arg_type, const arg_type);
+	evaluate(const op_type*, const arg_type&, const arg_type&);
 
 	bool
 	must_be_equivalent(const pbool_expr& ) const;
@@ -142,11 +142,11 @@ protected:
 public:
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS
-};	// end class pint_relational_expr
+};	// end class pstring_relational_expr
 
 //=============================================================================
 }	// end namespace HAC
 }	// end namespace entity
 
-#endif	// __HAC_OBJECT_EXPR_PINT_RELATIONAL_EXPR_H__
+#endif	// __HAC_OBJECT_EXPR_PSTRING_RELATIONAL_EXPR_H__
 
