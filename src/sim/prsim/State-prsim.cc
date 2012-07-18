@@ -345,8 +345,15 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 #endif
 		process_state_array(), 
 		event_pool(), event_queue(), 
+#if PRSIM_MK_EXCL_BLOCKING_SET
+		mk_exhi(1), mk_exlo(1), 
+		mk_exhi_counter_map(),
+		mk_exlo_counter_map(),
+		__mk_excl_blocking_set(),
+#else
 		mk_exhi(), mk_exlo(), 
 		exclhi_queue(), excllo_queue(), 
+#endif
 #if PRSIM_SIMPLE_EVENT_QUEUE
 		updated_nodes(), 
 #if PRSIM_FCFS_UPDATED_NODES
@@ -1023,13 +1030,26 @@ State::get_footprint_frame_map(const process_index_type pid) const {
  */
 void
 State::append_mk_exclhi_ring(ring_set_type& r) {
+	STACKTRACE_VERBOSE;
 	typedef	ring_set_type::const_iterator	const_iterator;
+#if PRSIM_MK_EXCL_BLOCKING_SET
+	const lock_index_type j = mk_exhi.size();
+#endif
 	const_iterator i(r.begin()), e(r.end());
 	for ( ; i!=e; ++i) {
-		__get_node(*i).make_exclhi();
+		const node_index_type ni = *i;
+		__get_node(ni).make_exclhi();
+#if PRSIM_MK_EXCL_BLOCKING_SET
+		mk_exhi_counter_map[ni].push_back(j);
+#endif
 	}
+#if PRSIM_MK_EXCL_BLOCKING_SET
+	mk_exhi.push_back(ring_counter_state());
+	mk_exhi.back().elems.swap(r);
+#else
 	mk_exhi.push_back(ring_set_type());
 	mk_exhi.back().swap(r);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1041,13 +1061,26 @@ State::append_mk_exclhi_ring(ring_set_type& r) {
  */
 void
 State::append_mk_excllo_ring(ring_set_type& r) {
+	STACKTRACE_VERBOSE;
 	typedef	ring_set_type::const_iterator	const_iterator;
+#if PRSIM_MK_EXCL_BLOCKING_SET
+	const lock_index_type j = mk_exlo.size();
+#endif
 	const_iterator i(r.begin()), e(r.end());
 	for ( ; i!=e; ++i) {
-		__get_node(*i).make_excllo();
+		const node_index_type ni = *i;
+		__get_node(ni).make_excllo();
+#if PRSIM_MK_EXCL_BLOCKING_SET
+		mk_exlo_counter_map[ni].push_back(j);
+#endif
 	}
+#if PRSIM_MK_EXCL_BLOCKING_SET
+	mk_exlo.push_back(ring_counter_state());
+	mk_exlo.back().elems.swap(r);
+#else
 	mk_exlo.push_back(ring_set_type());
 	mk_exlo.back().swap(r);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1492,6 +1525,7 @@ State::reschedule_event_future(const node_index_type ni, const time_type dt) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !PRSIM_MK_EXCL_BLOCKING_SET
 /**
 	Registers event in the exclusive high event queue.  
 	(I think this is an unordered worklist.)
@@ -1527,6 +1561,7 @@ State::enqueue_excllo(const time_type t, const event_index_type ei) {
 	ISE_INVARIANT(i.second || (t == i.first->second));
 	__get_node(get_event(ei).node).set_excl_queue();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if !PRSIM_SIMPLE_EVENT_QUEUE
@@ -2263,6 +2298,67 @@ if (ei) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Convenience routine for flush_updated_nodes() enqueuing of new events.
+ */
+void
+State::enqueue_new_event(const event_type& newevent) {
+	STACKTRACE_VERBOSE;
+	const value_enum& pull_val(newevent.val);
+	node_type& n(__get_node(newevent.node));
+	const event_index_type ei = __allocate_event(n, newevent);
+	enqueue_event(pull_val == LOGIC_LOW ?
+		get_delay_dn(newevent) : get_delay_up(newevent),
+		ei);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_MK_EXCL_BLOCKING_SET
+/**
+	Takes all node in the force-excl blocked set and 
+	overwrites their pull-state to reflect a virtual exclusive cut-off.
+	This should be called after all fanouts have been evaluated, 
+	no more additions to updated_nodes, and before flush_updated_nodes().
+ */
+void
+State::flush_blocked_excl_nodes(const value_enum val) {
+	STACKTRACE_VERBOSE_STEP;
+	set<node_index_type>::const_iterator
+		i(__mk_excl_blocking_set.begin()),
+		e(__mk_excl_blocking_set.end());
+for ( ; i!=e; ++i) {
+	const node_index_type& ni(*i);
+	updated_nodes_type::iterator f(updated_nodes.find(ni));
+	if (f != updated_nodes.end()) {
+		DEBUG_STEP_PRINT("flagging blocked node " << ni << endl);
+		f->second.excl_blocked = true;
+	} else {
+		// if event is pending, force a re-evaluation that will
+		// result in cancelling it (instability)
+		const node_type& n(get_node(ni));
+		const event_index_type ei(n.get_event());
+		if (ei) {
+			DEBUG_STEP_PRINT("blocking pending event on node "
+				<< ni << endl);
+			if (get_event(ei).val == val) {
+				node_update_info nui;
+				nui.excl_blocked = true;
+				updated_nodes.insert(std::make_pair(ni, nui));
+				// assert: insertion successful, was not found
+#if PRSIM_FCFS_UPDATED_NODES
+				updated_nodes_queue.push_back(ni);
+#endif
+			}
+			// TODO: minor opt: use insert instead of find above
+			// becomes a single log-time access
+		}
+	}
+}
+	__mk_excl_blocking_set.clear();
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if PRSIM_SIMPLE_EVENT_QUEUE
 /**
 	updated_nodes contains set of all nodes whose pull-states were
@@ -2275,6 +2371,11 @@ if (ei) {
 State::break_type
 State::flush_updated_nodes(cause_arg_type c) {
 	STACKTRACE_VERBOSE_STEP;
+#if PRSIM_MK_EXCL_BLOCKING_SET
+	if (c.val != LOGIC_OTHER) {
+		flush_blocked_excl_nodes(c.val);
+	}
+#endif
 	break_type err = ERROR_NONE;
 #if PRSIM_FCFS_UPDATED_NODES
 	typedef	updated_nodes_queue_type::const_iterator	const_iterator;
@@ -2320,7 +2421,21 @@ for ( ; i!=e; ++i) {
 	// check for interference first
 	// create event first, but don't tie it to the node until
 	// after checking for instability and queue conflicts
+#if PRSIM_MK_EXCL_BLOCKING_SET
+	// pull states are overridden by excl forcing
+	pull_set p(n, weak_rules_enabled());
+	if (f->second.excl_blocked) {
+		// this also masks interference diagnostics!
+		DEBUG_STEP_PRINT("blocked by force excl" << endl);
+		switch (c.val) {
+		case LOGIC_HIGH:	p.cut_off_pull_up(); break;
+		case LOGIC_LOW:		p.cut_off_pull_dn(); break;
+		default: break;
+		}
+	}
+#else
 	const pull_set p(n, weak_rules_enabled());
+#endif
 	const bool weak_wins = p.weak_wins_any();
 	bool possible_interference = false;	// used to be named pending_weak
 #if DEBUG_STEP
@@ -2507,12 +2622,7 @@ for ( ; i!=e; ++i) {
 				// remove from queue or replace?
 				kill_event(prevevent, ni);
 				if (pull_val != old_val) {
-					const event_index_type ei =
-						__allocate_event(n, newevent);
-					enqueue_event(pull_val == LOGIC_LOW ?
-						get_delay_dn(newevent) :
-						get_delay_up(newevent),
-						ei);
+					enqueue_new_event(newevent);
 				}
 			} else if (old_val == LOGIC_OTHER) {
 				DEBUG_STEP_PRINT("already X (cancel)" << endl);
@@ -2540,12 +2650,7 @@ for ( ; i!=e; ++i) {
 				INVARIANT(pull_val != LOGIC_OTHER);
 				kill_event(prevevent, ni);
 				if (pull_val != old_val) {
-					const event_index_type ei =
-						__allocate_event(n, newevent);
-					enqueue_event(pull_val == LOGIC_LOW ?
-						get_delay_dn(newevent) :
-						get_delay_up(newevent),
-						ei);
+					enqueue_new_event(newevent);
 				} else {
 					DEBUG_STEP_PRINT("vacuous, not re-queued" << endl);
 				}
@@ -2555,11 +2660,7 @@ for ( ; i!=e; ++i) {
 		DEBUG_STEP_PRINT("no pending event" << endl);
 		// no event in queue, then just enqueue new one
 		if (pull_val != old_val) {
-			const event_index_type ei =
-				__allocate_event(n, newevent);
-			enqueue_event(pull_val == LOGIC_LOW ?
-				get_delay_dn(newevent) : get_delay_up(newevent),
-				ei);
+			enqueue_new_event(newevent);
 		} else {
 			DEBUG_STEP_PRINT("dropping vacuous event" << endl);
 		}
@@ -2888,6 +2989,7 @@ State::__flush_pending_event_replacement(node_type& _n,
 #endif	// PRSIM_SIMPLE_EVENT_QUEUE
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !PRSIM_MK_EXCL_BLOCKING_SET
 /**
 	Processes exclusive high ring enqueued events.  
 	Place such events into the primary event queue if
@@ -3039,6 +3141,7 @@ for ( ; i!=e; ++i) {
 	}
 	excllo_queue.clear();
 }	// end method flush_excllo_queue
+#endif	// PRSIM_MK_EXCL_BLOCKING_SET
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -3047,7 +3150,11 @@ for ( ; i!=e; ++i) {
 	\param ni index of the node that changed that affects exclhi rings.  
  */
 void
-State::enforce_exclhi(cause_arg_type c) {
+State::enforce_exclhi(cause_arg_type c
+#if PRSIM_MK_EXCL_BLOCKING_SET
+		, const value_enum prev
+#endif
+		) {
 	/***
 		If n.exclhi and n is 0, check if any of the nodes
 		in n's exclhi rings are enabled.  
@@ -3056,6 +3163,58 @@ State::enforce_exclhi(cause_arg_type c) {
 	typedef	mk_excl_ring_map_type::const_iterator	const_iterator;
 	STACKTRACE_VERBOSE_STEP;
 	const node_index_type& ni(c.node);
+#if PRSIM_MK_EXCL_BLOCKING_SET
+	const value_enum v(c.val);
+	mk_excl_counter_map_type::const_iterator
+		f(mk_exhi_counter_map.find(ni));
+	ISE_INVARIANT(f != mk_exhi_counter_map.end());
+	const lock_index_list_type& l(f->second);
+	DEBUG_STEP_PRINT("exclhi ring memberships: " << l.size() << endl);
+	lock_index_list_type::const_iterator i(l.begin()), e(l.end());
+for ( ; i!=e; ++i) {	// for each ring
+	// update counter value too
+	ring_counter_state& r(mk_exhi[*i]);
+	ring_set_type::const_iterator
+		ri(r.elems.begin()), re(r.elems.end());
+	// Xs count as inactive (low), but 0 <-> X should not count
+	if (v == LOGIC_HIGH && prev != LOGIC_HIGH) {
+		DEBUG_STEP_PRINT("exclhi ring blocking" << endl);
+		++r.count;
+		// lock-out: add to blocking set for suppression/cancellation
+		for ( ; ri!=re; ++ri) {
+			if (*ri != ni) {	// exclude self
+				DEBUG_STEP_PRINT("blocking node " << *ri << endl);
+				__mk_excl_blocking_set.insert(*ri);
+			}
+		}
+	} else if (v != LOGIC_HIGH && prev == LOGIC_HIGH) {
+		DEBUG_STEP_PRINT("exclhi ring releasing" << endl);
+		--r.count;
+		// un-lock: add to standard re-evaluation queue
+		if (!r.count) {		// in case count > 1
+		for ( ; ri!=re; ++ri) {
+			if (*ri != ni) {	// exclude self
+				const pair<updated_nodes_type::iterator, bool>
+					p(updated_nodes.insert(
+						updated_nodes_type::value_type(
+						*ri, node_update_info())));
+				// node_update_info is blank: no associated rule
+#if PRSIM_FCFS_UPDATED_NODES
+				if (p.second) {
+					// new entry
+					updated_nodes_queue.push_back(*ri);
+				}
+				// else keep existing entry's node_update_info
+#endif
+			}
+		}
+		}
+	} else {
+		// else no change (should never have to add to blocking_set?)
+		DEBUG_STEP_PRINT("exclhi ring no change" << endl);
+	}
+}	// end for each ring
+#else
 	const_iterator i(mk_exhi.begin()), e(mk_exhi.end());
 for ( ; i!=e; ++i) {
 	typedef	std::iterator_traits<const_iterator>::value_type::const_iterator
@@ -3097,6 +3256,7 @@ for ( ; i!=e; ++i) {
 		}	// end for all set members
 	}	// end if found member in ring
 }	// end for (all exclhi members)
+#endif
 }	// end method enforce_exclhi()
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3106,7 +3266,11 @@ for ( ; i!=e; ++i) {
 	\param ni index of the node that changed that affects excllo rings.  
  */
 void
-State::enforce_excllo(cause_arg_type c) {
+State::enforce_excllo(cause_arg_type c
+#if PRSIM_MK_EXCL_BLOCKING_SET
+		, const value_enum prev
+#endif
+		) {
 	/***
 		If n.excllo and n is 1, check if any of the nodes
 		in n's excllo rings are enabled.  
@@ -3115,6 +3279,58 @@ State::enforce_excllo(cause_arg_type c) {
 	typedef	mk_excl_ring_map_type::const_iterator	const_iterator;
 	STACKTRACE_VERBOSE_STEP;
 	const node_index_type& ni(c.node);
+#if PRSIM_MK_EXCL_BLOCKING_SET
+	const value_enum v(c.val);
+	mk_excl_counter_map_type::const_iterator
+		f(mk_exlo_counter_map.find(ni));
+	ISE_INVARIANT(f != mk_exlo_counter_map.end());
+	const lock_index_list_type& l(f->second);
+	DEBUG_STEP_PRINT("excllo ring memberships: " << l.size() << endl);
+	lock_index_list_type::const_iterator i(l.begin()), e(l.end());
+for ( ; i!=e; ++i) {	// for each ring
+	// update counter value too
+	ring_counter_state& r(mk_exlo[*i]);
+	ring_set_type::const_iterator
+		ri(r.elems.begin()), re(r.elems.end());
+	// Xs count as inactive (low), but 0 <-> X should not count
+	if (v == LOGIC_LOW && prev != LOGIC_LOW) {
+		DEBUG_STEP_PRINT("excllo ring blocking" << endl);
+		++r.count;
+		// lock-out: add to blocking set for suppression/cancellation
+		for ( ; ri!=re; ++ri) {
+			if (*ri != ni) {	// exclude self
+				DEBUG_STEP_PRINT("blocking node " << *ri << endl);
+				__mk_excl_blocking_set.insert(*ri);
+			}
+		}
+	} else if (v != LOGIC_LOW && prev == LOGIC_LOW) {
+		DEBUG_STEP_PRINT("excllo ring releasing" << endl);
+		--r.count;
+		// un-lock: add to standard re-evaluation queue
+		if (!r.count) {		// in case count > 1
+		for ( ; ri!=re; ++ri) {
+			if (*ri != ni) {	// exclude self
+				const pair<updated_nodes_type::iterator, bool>
+					p(updated_nodes.insert(
+						updated_nodes_type::value_type(
+						*ri, node_update_info())));
+				// node_update_info is blank: no associated rule
+#if PRSIM_FCFS_UPDATED_NODES
+				if (p.second) {
+					// new entry
+					updated_nodes_queue.push_back(*ri);
+				}
+				// else keep existing entry's node_update_info
+#endif
+			}
+		}
+		}
+	} else {
+		// else no change (should never have to add to blocking_set?)
+		DEBUG_STEP_PRINT("excllo ring no change" << endl);
+	}
+}	// end for each ring
+#else
 	const_iterator i(mk_exlo.begin()), e(mk_exlo.end());
 for ( ; i!=e; ++i) {
 	typedef	std::iterator_traits<const_iterator>::value_type::const_iterator
@@ -3154,6 +3370,7 @@ for ( ; i!=e; ++i) {
 		}	// end for all set members
 	}	// end if found member in ring
 }	// end for (all excllo members)
+#endif
 }	// end method enforce_excllo
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3330,11 +3547,12 @@ struct State::auto_flush_queues {
 #else
 		const break_type E(state.flush_pending_queue());
 #endif
+#if !PRSIM_MK_EXCL_BLOCKING_SET
 		// can anything go wrong here?
 		// check and flush pending queue against exclhi/lo events
 		state.flush_exclhi_queue();
 		state.flush_excllo_queue();
-
+#endif
 		if (UNLIKELY(E >= ERROR_BREAK)) {
 			state.stop();		// set stop flag
 			if (UNLIKELY(E >= ERROR_INTERACTIVE)) {
@@ -3377,8 +3595,12 @@ State::step(void) THROWS_STEP_EXCEPTION {
 #else
 	ISE_INVARIANT(pending_queue.empty());
 #endif
+#if PRSIM_MK_EXCL_BLOCKING_SET
+	ISE_INVARIANT(__mk_excl_blocking_set.empty());
+#else
 	ISE_INVARIANT(exclhi_queue.empty());
 	ISE_INVARIANT(excllo_queue.empty());
+#endif
 
 	if (event_queue.empty()) {
 		return return_type(INVALID_NODE_INDEX, INVALID_NODE_INDEX);
@@ -3695,6 +3917,16 @@ if (n.in_channel()) {
 #endif
 	}	// end if forced && pending event
 #endif	// PRSIM_SIMPLE_EVENT_QUEUE
+
+#if PRSIM_MK_EXCL_BLOCKING_SET
+	// update excl lock counters
+	if (n.has_mk_exclhi()) {
+		enforce_exclhi(new_cause, prev);
+	}
+	if (n.has_mk_excllo()) {
+		enforce_excllo(new_cause, prev);
+	}
+#else
 	// exclhi ring enforcement
 	if (n.has_mk_exclhi() && (next == LOGIC_LOW)) {
 		enforce_exclhi(new_cause);
@@ -3704,7 +3936,7 @@ if (n.in_channel()) {
 	if (n.has_mk_excllo() && (next == LOGIC_HIGH)) {
 		enforce_excllo(new_cause);
 	}	// end if (excllo enforcement)
-
+#endif
 	// energy estimation?  TODO later for a different sim variant
 	// queues automatically flushed by dtor of auto_flush_queues
 
@@ -6932,7 +7164,8 @@ State::dump_subexpr(ostream& o, const expr_index_type ei,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-State::dump_mk_excl_ring(ostream& o, const ring_set_type& r, const bool v) const {
+State::dump_mk_excl_ring(ostream& o, const ring_set_type& r,
+		const bool v) const {
 	typedef	ring_set_type::const_iterator	const_iterator;
 	ISE_INVARIANT(r.size() > 1);
 	return __print_nodes_infix(o << "{ ", r.begin(), r.end(), v, ", ")
@@ -6945,8 +7178,15 @@ State::dump_mk_exclhi_rings(ostream& o, const bool v) const {
 	o << "forced exclhi rings:" << endl;
 	typedef	mk_excl_ring_map_type::const_iterator	const_iterator;
 	const_iterator i(mk_exhi.begin()), e(mk_exhi.end());
+#if PRSIM_MK_EXCL_BLOCKING_SET
+	++i;
+#endif
 	for ( ; i!=e; ++i) {
+#if PRSIM_MK_EXCL_BLOCKING_SET
+		dump_mk_excl_ring(o, i->elems, v) << endl;
+#else
 		dump_mk_excl_ring(o, *i, v) << endl;
+#endif
 	}
 	return o;
 }
@@ -6957,8 +7197,15 @@ State::dump_mk_excllo_rings(ostream& o, const bool v) const {
 	o << "forced excllo rings:" << endl;
 	typedef	mk_excl_ring_map_type::const_iterator	const_iterator;
 	const_iterator i(mk_exlo.begin()), e(mk_exlo.end());
+#if PRSIM_MK_EXCL_BLOCKING_SET
+	++i;
+#endif
 	for ( ; i!=e; ++i) {
+#if PRSIM_MK_EXCL_BLOCKING_SET
+		dump_mk_excl_ring(o, i->elems, v) << endl;
+#else
 		dump_mk_excl_ring(o, *i, v) << endl;
+#endif
 	}
 	return o;
 }
@@ -6966,30 +7213,58 @@ State::dump_mk_excllo_rings(ostream& o, const bool v) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Prints excl-ring fanout of node.  
+	TODO: rewrite using lookup by node id, 
+		instead of iterating over all rings duh!
  */
 ostream&
 State::dump_node_mk_excl_rings(ostream& o, const node_index_type ni, 
 		const bool v) const {
+#if PRSIM_MK_EXCL_BLOCKING_SET
+	typedef	mk_excl_counter_map_type::const_iterator	const_iterator;
+#else
 	typedef	mk_excl_ring_map_type::const_iterator	const_iterator;
+#endif
 	const string nn(get_node_canonical_name(ni));
 {
 	o << "forced exclhi rings of which `" << nn <<
 		"\' is a member:" << endl;
+#if PRSIM_MK_EXCL_BLOCKING_SET
+	const const_iterator f(mk_exhi_counter_map.find(ni));
+	if (f != mk_exhi_counter_map.end()) {
+		lock_index_list_type::const_iterator
+			ri(f->second.begin()), re(f->second.end());
+		for ( ; ri!=re; ++ri) {
+			dump_mk_excl_ring(o, mk_exhi[*ri].elems, v) << endl;
+		}
+	}
+#else
 	const_iterator i(mk_exhi.begin()), e(mk_exhi.end());
 	for ( ; i!=e; ++i) {
 		if (i->find(ni) != i->end()) {
 			dump_mk_excl_ring(o, *i, v) << endl;
 		}
 	}
+#endif
 }{
 	o << "forced excllo rings of which `" << nn <<
 		"\' is a member:" << endl;
+#if PRSIM_MK_EXCL_BLOCKING_SET
+	const const_iterator f(mk_exlo_counter_map.find(ni));
+	if (f != mk_exlo_counter_map.end()) {
+		lock_index_list_type::const_iterator
+			ri(f->second.begin()), re(f->second.end());
+		for ( ; ri!=re; ++ri) {
+			dump_mk_excl_ring(o, mk_exlo[*ri].elems, v) << endl;
+		}
+	}
+#else
 	const_iterator i(mk_exlo.begin()), e(mk_exlo.end());
 	for ( ; i!=e; ++i) {
 		if (i->find(ni) != i->end()) {
 			dump_mk_excl_ring(o, *i, v) << endl;
 		}
 	}
+#endif
 }
 	return o;
 }
@@ -7013,7 +7288,7 @@ State::dump_check_exclhi_rings(ostream& o, const bool v) const {
 	o << "checked exclhi rings:" << endl;
 	check_excl_array_type temp(check_exhi_ring_pool.size());
 	__collate_check_excl_reverse_map(check_exhi, temp);
-	typedef	mk_excl_ring_map_type::const_iterator	const_iterator;
+	typedef	check_excl_array_type::const_iterator	const_iterator;
 	const_iterator i(temp.begin()), e(temp.end());
 	// skip first b/c [0] is reserved
 	for (++i; i!=e; ++i) {
@@ -7031,7 +7306,7 @@ State::dump_check_excllo_rings(ostream& o, const bool v) const {
 	o << "checked excllo rings:" << endl;
 	check_excl_array_type temp(check_exlo_ring_pool.size());
 	__collate_check_excl_reverse_map(check_exlo, temp);
-	typedef	mk_excl_ring_map_type::const_iterator	const_iterator;
+	typedef	check_excl_array_type::const_iterator	const_iterator;
 	const_iterator i(temp.begin()), e(temp.end());
 	// skip first b/c [0] is reserved
 	for (++i; i!=e; ++i) {
@@ -7321,6 +7596,7 @@ State::dump_memory_usage(ostream& o) const {
 	// may be bigger due to reserved capacity
 }
 {
+#if !PRSIM_MK_EXCL_BLOCKING_SET
 	typedef	mk_excl_queue_type::const_iterator::value_type	value_type;
 	const size_t hs = exclhi_queue.size();
 	o << "exclhi-queue: ("  << hs << " * " << sizeof_tree_node(value_type)
@@ -7330,6 +7606,7 @@ State::dump_memory_usage(ostream& o) const {
 	o << "excllo-queue: ("  << ls << " * " << sizeof_tree_node(value_type)
 		<< " B/event) = " << ls * sizeof_tree_node(value_type)
 		<< " B" << endl;
+#endif
 #if PRSIM_SIMPLE_EVENT_QUEUE
 	const size_t ps = updated_nodes.size();
 	o << "updated-nodes: ("  << ps << " * " <<
@@ -7356,11 +7633,12 @@ State::dump_memory_usage(ostream& o) const {
 }
 {
 	// rings
+	typedef	mk_excl_ring_map_type::value_type		elem_type;
 	const size_t rs = mk_exhi.size();
-	o << "mk-exclhi-rings: ("  << rs << " * " << sizeof(ring_set_type) <<
-		" B/ring) = " << rs * sizeof(ring_set_type) << " B" << endl;
+	o << "mk-exclhi-rings: ("  << rs << " * " << sizeof(elem_type) <<
+		" B/ring) = " << rs * sizeof(elem_type) << " B" << endl;
 	const size_t rr = std::accumulate(mk_exhi.begin(), mk_exhi.end(), 
-		size_t(0), &add_size<ring_set_type>);
+		size_t(0),&add_size<elem_type>);
 	typedef	ring_set_type::iterator::value_type	value_type;
 	o << "mk-exclhi::nodes: (" << rr << " * " <<
 		sizeof_tree_node(value_type) <<
@@ -7369,11 +7647,12 @@ State::dump_memory_usage(ostream& o) const {
 	// alternative to set: sorted valarray/vector
 }{
 	// rings
+	typedef	mk_excl_ring_map_type::value_type		elem_type;
 	const size_t rs = mk_exlo.size();
-	o << "mk-excllo-rings: ("  << rs << " * " << sizeof(ring_set_type) <<
-		" B/ring) = " << rs * sizeof(ring_set_type) << " B" << endl;
+	o << "mk-excllo-rings: ("  << rs << " * " << sizeof(elem_type) <<
+		" B/ring) = " << rs * sizeof(elem_type) << " B" << endl;
 	const size_t rr = std::accumulate(mk_exlo.begin(), mk_exlo.end(), 
-		size_t(0), &add_size<ring_set_type>);
+		size_t(0), &add_size<elem_type>);
 	typedef	ring_set_type::iterator::value_type	value_type;
 	o << "mk-excllo::nodes: (" << rr << " * " <<
 		sizeof_tree_node(value_type) <<
@@ -7506,8 +7785,12 @@ State::save_checkpoint(ostream& o) const {
 	WRITE_ALIGN_MARKER
 	// excl_rings -- structural only
 	// excl and pending queues should be empty!
+#if PRSIM_MK_EXCL_BLOCKING_SET
+	ISE_INVARIANT(__mk_excl_blocking_set.empty());
+#else
 	ISE_INVARIANT(exclhi_queue.empty());
 	ISE_INVARIANT(excllo_queue.empty());
+#endif
 #if PRSIM_SIMPLE_EVENT_QUEUE
 	ISE_INVARIANT(updated_nodes.empty());
 #if PRSIM_FCFS_UPDATED_NODES
@@ -7706,8 +7989,12 @@ try {
 	READ_ALIGN_MARKER		// sanity alignment check
 	// excl_rings -- structural only
 	// excl and pending queues should be empty!
+#if PRSIM_MK_EXCL_BLOCKING_SET
+	ISE_INVARIANT(__mk_excl_blocking_set.empty());
+#else
 	ISE_INVARIANT(exclhi_queue.empty());
 	ISE_INVARIANT(excllo_queue.empty());
+#endif
 #if PRSIM_SIMPLE_EVENT_QUEUE
 	ISE_INVARIANT(updated_nodes.empty());
 #if PRSIM_FCFS_UPDATED_NODES
@@ -7804,6 +8091,9 @@ if (checking_excl()) {
 		return true;
 	}
 }
+#if PRSIM_MK_EXCL_BLOCKING_SET
+// TODO: reconstruct force excl ring counter values
+#endif
 	return !i;
 }	// end State::load_checkpoint
 

@@ -3,6 +3,22 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2012-07-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-91-prsim-engine-rewrite-07:
+	  hacprsim: completely rewrite force-exclusive ring (mk_excl)
+		no longer maintain excl-queues, instead use the set
+		of updated_nodes along with a blocking-set that
+		overrides node events by forcing pull status changes,
+		and cancelling pending events.
+		For this revision, events cancelled due to mk_excl
+		are diagnosed as instabilities.
+		Next revision may change this to original behavior
+		of silently dequeuing blocked event.
+		New implementation controlled by switch:
+			PRSIM_MK_EXCL_BLOCKING_SET.
+
+
 2012-07-11	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-86:

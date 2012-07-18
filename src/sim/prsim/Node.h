@@ -323,11 +323,13 @@ public:
 		 */
 		NODE_WATCHPOINT = 0x02,
 #endif
+#if !PRSIM_MK_EXCL_BLOCKING_SET
 		/**
 			Whether or not this node is currently in
 			one of the exclusive ring queues.  
 		 */
 		NODE_EX_QUEUE = 0x04,
+#endif
 
 		/// true if this node participates in any registered channel
 		NODE_IN_CHANNEL = 0x08,
@@ -353,7 +355,10 @@ public:
 		NODE_INITIALIZE_SET_MASK = 0x00,
 		/// AND-mask (negated) for initialization
 		NODE_INITIALIZE_CLEAR_MASK =
-			NODE_FLAG | NODE_EX_QUEUE
+			NODE_FLAG
+#if !PRSIM_MK_EXCL_BLOCKING_SET
+			| NODE_EX_QUEUE
+#endif
 #if PRSIM_UPSET_NODES
 			| NODE_FROZEN,
 #endif
@@ -505,6 +510,7 @@ public:
 	bool
 	is_flagged(void) const { return state_flags & NODE_FLAG; }
 
+#if !PRSIM_MK_EXCL_BLOCKING_SET
 	bool
 	in_excl_queue(void) const { return state_flags & NODE_EX_QUEUE; }
 
@@ -513,6 +519,7 @@ public:
 
 	void
 	clear_excl_queue(void) { state_flags &= ~NODE_EX_QUEUE; }
+#endif
 
 	void
 	set_in_channel(void) { state_flags |= NODE_IN_CHANNEL; }
@@ -809,6 +816,20 @@ struct pull_set {
 	bool
 	cutoff_dn(void) const {
 		return dn == PULL_OFF && wdn == PULL_OFF;
+	}
+
+	// forced overrides
+	void
+	cut_off_pull_up(void) {
+		up = PULL_OFF;
+		wup = PULL_OFF;
+	}
+
+	// forced overrides
+	void
+	cut_off_pull_dn(void) {
+		dn = PULL_OFF;
+		wdn = PULL_OFF;
 	}
 
 	// \return true if one of the strong pulls is X

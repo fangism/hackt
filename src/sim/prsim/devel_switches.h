@@ -217,6 +217,21 @@
  */
 #define	PRSIM_SIMPLE_EVENT_QUEUE		1
 
+/**
+	Define to 1 to use new force-excl queue scheme.
+	With this new scheme, when a node that participates in any
+	mk_excl rings is updated, all nodes that are share
+	rings with this node are notified as follows:
+	1) if the new value 'releases' potential firing of other nodes, 
+		then add those to the normal updated_nodes (re-eval) queue.
+		Need not be distinguishable from normal rule firings(?).
+	2) if the new value potentially 'blocks' the firing of rules
+		on other nodes, then firings on those nodes need to
+		be suppressed, or if already in event queue,
+		then dequeued/cancelled.
+ */
+#define	PRSIM_MK_EXCL_BLOCKING_SET			(1 && PRSIM_SIMPLE_EVENT_QUEUE)
+
 // TODO: prsim-guile interface
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

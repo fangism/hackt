@@ -448,7 +448,45 @@ public:
 	typedef	unique_process_subgraph::node_set_type
 						node_set_type;
 protected:
+#if PRSIM_MK_EXCL_BLOCKING_SET
+	/**
+		Shared ring expression state.
+		This combines ring structural and state information.
+	 */
+	struct ring_counter_state {
+		/**
+			Participating nodes in this ring.  
+		 */
+		ring_set_type			elems;
+		/**
+			A 0 count means the ring is unlocked, 
+			and that any member may fire freely.
+			A non-zero count means that only an unlocking
+			transition is permitted, all others must be 
+			suppressed while locked.
+			Note: char value type limits ring size to 256.
+		 */
+		char				count;
+	
+		ring_counter_state() : elems(), count(0) { }
+		// default dtor
+
+		size_t
+		size(void) const { return elems.size(); }
+
+		ring_set_type::const_iterator
+		begin(void) const { return elems.begin(); }
+
+		ring_set_type::const_iterator
+		end(void) const { return elems.end(); }
+
+	};	// end struct ring_counter_state
+#endif
+#if PRSIM_MK_EXCL_BLOCKING_SET
+	typedef	vector<ring_counter_state>
+#else
 	typedef	vector<ring_set_type>
+#endif
 						mk_excl_ring_map_type;
 	/**
 		This needs to be a unique forward mapping (injection),
@@ -467,6 +505,14 @@ protected:
 		// current pull-state may eliminate duplicate
 		// interference diagnostics
 		pull_set			old_pull_set;
+#if PRSIM_MK_EXCL_BLOCKING_SET
+		// auxiliary flag to override rule as blocked for excl
+		bool				excl_blocked;
+
+		node_update_info() :
+			rule_index(INVALID_RULE_INDEX),
+			excl_blocked(false) { }
+#endif
 	};	// end struct node_update_info
 	typedef	std::map<node_index_type, node_update_info>
 						updated_nodes_type;
@@ -506,9 +552,18 @@ protected:
 #if !PRSIM_HIERARCHICAL_RINGS
 	/**
 		Sparse map of nodes to their check-exclusive rings.  
+		Could also use std::multimap, and look up using equal_range.
 	 */
 	typedef	map<node_index_type, lock_index_list_type>
 						check_excl_ring_map_type;
+#if PRSIM_MK_EXCL_BLOCKING_SET
+	/**
+		Sparse map of nodes to their force-exclusive rings.  
+		Could also use std::multimap, and look up using equal_range.
+	 */
+	typedef	map<node_index_type, lock_index_list_type>
+						mk_excl_counter_map_type;
+#endif
 #endif
 	/**
 		Useful for collating check-excl rings sparsely, 
@@ -586,10 +641,22 @@ private:
 	mk_excl_ring_map_type			mk_exhi;
 	/// coerce exclusive-low ring
 	mk_excl_ring_map_type			mk_exlo;
+#if PRSIM_MK_EXCL_BLOCKING_SET
+	/// map of exclusive-hi force rings
+	mk_excl_counter_map_type		mk_exhi_counter_map;
+	/// map of exclusive-low force rings
+	mk_excl_counter_map_type		mk_exlo_counter_map;
+	/**
+		The set of nodes whose events should be suppressed
+		or cancelled due to force-excl rings (locked).  
+	 */
+	std::set<node_index_type>		__mk_excl_blocking_set;
+#else
 	/// coerced exclusive-hi logic queue
 	mk_excl_queue_type			exclhi_queue;
 	/// coerced exclusive-low logic queue
 	mk_excl_queue_type			excllo_queue;
+#endif
 #if PRSIM_SIMPLE_EVENT_QUEUE
 	updated_nodes_type			updated_nodes;
 #if PRSIM_FCFS_UPDATED_NODES
@@ -1418,6 +1485,9 @@ private:
 	void
 	enqueue_event(const time_type, const event_index_type);
 
+	void
+	enqueue_new_event(const event_type&);
+
 public:
 	bool
 	deschedule_event(const node_index_type);
@@ -1435,6 +1505,13 @@ public:
 	reschedule_event_relative(const node_index_type, const time_type);
 
 private:
+#if PRSIM_MK_EXCL_BLOCKING_SET
+	void
+	enforce_exclhi(cause_arg_type, const value_enum);
+
+	void
+	enforce_excllo(cause_arg_type, const value_enum);
+#else
 	void
 	enqueue_exclhi(const time_type, const event_index_type);
 
@@ -1452,6 +1529,12 @@ private:
 
 	void
 	flush_excllo_queue(void);
+#endif
+
+#if PRSIM_MK_EXCL_BLOCKING_SET
+	void
+	flush_blocked_excl_nodes(const value_enum);
+#endif
 
 #if PRSIM_SIMPLE_EVENT_QUEUE
 	break_type
