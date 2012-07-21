@@ -11,7 +11,6 @@ rule: [after 10]	~b:0 -> y+:0
 since a- was first, x+, while y+ is suppressed 
 x : 1	[by a:=0]
 y : 0	[by b:=0]
-	20	y : X	[by x:=1]
 	20	a : 1
 	30	x : 0	[by a:=1]
 	40	y : 1	[by x:=0]
@@ -31,7 +30,6 @@ rule: [after 10]	~a:0 -> x+:0
 since b- was first, y+, while x+ is suppressed 
 x : 0	[by a:=0]
 y : 1	[by b:=0]
-	60	x : X	[by y:=1]
 	60	b : 1
 	70	y : 0	[by b:=1]
 	80	x : 1	[by y:=0]

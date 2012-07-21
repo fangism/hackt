@@ -1,0 +1,8 @@
+# "excl-rings-02b.prsimrc"
+#	$Id: excl-rings-02.prsimrc,v 1.4 2010/04/06 00:06:25 fang Exp $
+# @haco@ excl-rings.haco-c
+# testing excl rings features
+
+excl-unstable-dequeue
+source excl-rings-02.prsimrc
+

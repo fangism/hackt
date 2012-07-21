@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2012-07-20	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-91-prsim-engine-rewrite-08:
+	  hacprsim: added commands excl-unstable{,-unknown,-dequeue}
+		as counterparts to the non-excl commands for
+		situations where instability is caused by force-excl ring.
+		Updated many of the remaining test cases.
+		Bumped prsim checkpoint object version.
+
+
 2012-07-18	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-91-prsim-engine-rewrite-07:

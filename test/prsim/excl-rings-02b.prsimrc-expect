@@ -1,7 +1,7 @@
 mode: 
 	weak rules: off
 	unstable events propagate Xs
-	force-excl caused unstable events propagate Xs
+	force-excl caused unstable events are dequeued
 	on unstable: break
 	on weak-unstable: warn
 	on excl-unstable: break
@@ -27,11 +27,9 @@ rule: [after 10]	~b:0 -> y+:0
 x and y should be exclusive high 
 x : 1	[by a:=0]
 y : 0	[by b:=0]
-	20	y : X	[by x:=1]
 	20	a : 1
 	20	b : 1
 	30	x : 0	[by a:=1]
-	30	y : 0	[by b:=1]
 	30	b : 0
 	30	a : 0
 WARNING: excl-unstable `x'+

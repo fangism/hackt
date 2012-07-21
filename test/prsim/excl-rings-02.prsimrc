@@ -3,6 +3,7 @@
 # @haco@ excl-rings.haco-c
 # testing excl rings features
 
+mode
 watchall
 
 set a 1

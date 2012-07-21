@@ -470,6 +470,7 @@ The use of weak-rules can be globally enabled or disabled.
 @include cmd/diagnostics.texi
 @include cmd/unstable.texi
 @include cmd/weak-unstable.texi
+@include cmd/excl-unstable.texi
 @include cmd/interference.texi
 @include cmd/weak-interference.texi
 @include cmd/invariant-fail.texi
@@ -486,6 +487,13 @@ glitch, such as synchronous (clocked) circuits.
 
 @include cmd/unstable-unknown.texi
 @include cmd/unstable-dequeue.texi
+
+@cindex force-exclusive rings
+Instabilities that are caused by force-exclusion rings are
+treated with their own corresponding options.  
+
+@include cmd/excl-unstable-unknown.texi
+@include cmd/excl-unstable-dequeue.texi
 
 Some additional commands are available for examining and 
 controlling some internal lookup table caching.

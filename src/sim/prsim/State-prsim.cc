@@ -391,6 +391,9 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 		invariant_unknown_policy(E(INVARIANT_UNKNOWN)),
 		unstable_policy(E(UNSTABLE)),
 		weak_unstable_policy(E(WEAK_UNSTABLE)),
+#if PRSIM_MK_EXCL_BLOCKING_SET
+		excl_unstable_policy(E(EXCL_UNSTABLE)),
+#endif
 		interference_policy(E(INTERFERENCE)),
 		weak_interference_policy(E(WEAK_INTERFERENCE)),
 		assert_fail_policy(E(ASSERT_FAIL)),
@@ -707,7 +710,11 @@ State::flush_channel_events(const vector<env_event_type>& env_events,
 			const break_type E =
 			__report_instability(cout,
 				_v == LOGIC_OTHER, 
-				ev.val == LOGIC_HIGH, ev);
+				ev.val == LOGIC_HIGH,
+#if PRSIM_MK_EXCL_BLOCKING_SET
+				false,	// unrelated to excl
+#endif
+				ev);
 #if 0 && PRSIM_AGGREGATE_EXCEPTIONS
 			if (UNLIKELY(E >= ERROR_BREAK)) {
 				stop();
@@ -869,6 +876,9 @@ State::reset(void) {
 #define	E(e)	error_policy_enum(ERROR_DEFAULT_##e)
 	unstable_policy = E(UNSTABLE);
 	weak_unstable_policy = E(WEAK_UNSTABLE);
+#if PRSIM_MK_EXCL_BLOCKING_SET
+	excl_unstable_policy = E(EXCL_UNSTABLE);
+#endif
 	interference_policy = E(INTERFERENCE);
 	weak_interference_policy = E(WEAK_INTERFERENCE);
 	invariant_fail_policy = E(INVARIANT_FAIL),
@@ -896,6 +906,9 @@ void
 State::set_mode_fatal(void) {
 	unstable_policy = ERROR_FATAL;
 	weak_unstable_policy = ERROR_FATAL;
+#if PRSIM_MK_EXCL_BLOCKING_SET
+	excl_unstable_policy = ERROR_FATAL;
+#endif
 	interference_policy = ERROR_FATAL;
 	weak_interference_policy = ERROR_FATAL;
 // additional fatalities:
@@ -1930,10 +1943,19 @@ State::dump_mode(ostream& o) const {
 	o << "\tunstable events " <<
 		(dequeue_unstable_events() ? "are dequeued" : "propagate Xs")
 			<< endl;
+#if PRSIM_MK_EXCL_BLOCKING_SET
+	o << "\tforce-excl caused unstable events " <<
+		(dequeue_excl_unstable_events() ?
+			"are dequeued" : "propagate Xs") << endl;
+#endif
 	o << "\ton unstable: " <<
 		error_policy_string(unstable_policy) << endl;
 	o << "\ton weak-unstable: " <<
 		error_policy_string(weak_unstable_policy) << endl;
+#if PRSIM_MK_EXCL_BLOCKING_SET
+	o << "\ton excl-unstable: " <<
+		error_policy_string(excl_unstable_policy) << endl;
+#endif
 	o << "\ton interference: " <<
 		error_policy_string(interference_policy) << endl;
 	o << "\ton weak-interference: " <<
@@ -2423,10 +2445,12 @@ for ( ; i!=e; ++i) {
 	// after checking for instability and queue conflicts
 #if PRSIM_MK_EXCL_BLOCKING_SET
 	// pull states are overridden by excl forcing
+	const bool excl_blocked = f->second.excl_blocked;
 	pull_set p(n, weak_rules_enabled());
-	if (f->second.excl_blocked) {
-		// this also masks interference diagnostics!
+	if (excl_blocked) {
+		// note: this also masks interference diagnostics!
 		DEBUG_STEP_PRINT("blocked by force excl" << endl);
+		// nullify the pull in the direction that is blocked
 		switch (c.val) {
 		case LOGIC_HIGH:	p.cut_off_pull_up(); break;
 		case LOGIC_LOW:		p.cut_off_pull_dn(); break;
@@ -2601,7 +2625,11 @@ for ( ; i!=e; ++i) {
 			// retain original cause.rule
 			const break_type E =
 			__report_instability(cout, c.val == LOGIC_OTHER, 
-				pval == LOGIC_HIGH, pe);
+				pval == LOGIC_HIGH,
+#if PRSIM_MK_EXCL_BLOCKING_SET
+				excl_blocked, 
+#endif
+				pe);
 			if (E > err) err = E;
 		}
 		// interference takes precedence over instability, outcome-wise
@@ -2618,7 +2646,12 @@ for ( ; i!=e; ++i) {
 			// lookup_rule when it is not needed (code motion)
 			const rule_type* const r = lookup_rule(pe.cause_rule);
 			const bool r_unstable = r && r->is_unstable();
-			if (dequeue_unstable_events() || r_unstable) {
+			if (dequeue_unstable_events() || r_unstable
+#if PRSIM_MK_EXCL_BLOCKING_SET
+				// user-controllable policy
+				|| ( excl_blocked && dequeue_excl_unstable_events())
+#endif
+				) {
 				// remove from queue or replace?
 				kill_event(prevevent, ni);
 				if (pull_val != old_val) {
@@ -4478,7 +4511,11 @@ if (n.pending_event()) {
 			const break_type E =
 			__report_instability(cout,
 				next == PULL_WEAK, 
-				e.val == LOGIC_HIGH, e);
+				e.val == LOGIC_HIGH,
+#if PRSIM_MK_EXCL_BLOCKING_SET
+				false,	// unrelated to excl
+#endif
+				e);
 			if (E > err) err = E;
 		}
 		kill_event(ei, ui);
@@ -5096,18 +5133,34 @@ State::__report_interference(ostream& o, const bool weak,
 /**
 	\param weak is true if unstable was *possible*, i.e. caused by X
 	\param dir the direction of the unstable firing
+	\param excl is true if instabilities was caused by force-exclusion.
 	\param ev the unstable event
 	\return true if error causes break in events.  
 	If node is flagged unstable, 
  */
 State::break_type
 State::__report_instability(ostream& o, const bool weak, const bool dir, 
+#if PRSIM_MK_EXCL_BLOCKING_SET
+		const bool excl,
+#endif
 		const event_type& ev) const {
 	const rule_type* const r = lookup_rule(ev.cause_rule);
 	const node_index_type& _ni(ev.node);	// the scheduled node
 //	INVARIANT(ev.val != LOGIC_OTHER);		// not true
 //	INVARIANT(dir == (ev.val == LOGIC_HIGH));	// not true
 if (!r || !r->is_unstable()) {
+#if PRSIM_MK_EXCL_BLOCKING_SET
+	if (excl) {
+	if (excl_unstable_policy != ERROR_IGNORE) {
+		dump_node_canonical_name(o << "WARNING: excl-unstable `",
+			_ni) << "\'" << (dir ? '+' : '-') << endl;
+		// TODO: print ring(s) that were involved
+	if (r) dump_rule(o << "rule: ", ev.cause_rule, true, false) << endl;
+		__report_cause(o, ev.cause);
+		return excl_unstable_policy;
+	}
+	} else
+#endif
 	if (weak) {
 	if (weak_unstable_policy != ERROR_IGNORE) {
 		dump_node_canonical_name(o << "WARNING: weak-unstable `",
@@ -5277,7 +5330,11 @@ State::__diagnose_violation(ostream& o, const pull_enum next,
 #endif
 			const break_type E =
 			__report_instability(o, eu & event_type::EVENT_WEAK, 
-				dir, e);
+				dir,
+#if PRSIM_MK_EXCL_BLOCKING_SET
+				false,	// unrelated to excl
+#endif
+				e);
 			if (E > err) err = E;
 #if PRSIM_WEAK_RULES
 			}
@@ -7717,6 +7774,7 @@ State::autosave(const bool b, const string& n) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Bump this when checkpoint binary version changes (compatibility).
+	TODO: use library versioning scheme to indicate forward compat
 1: initial version
 2: removed watch_list in lieu of using simpler watchpoint flag
 3: added timing binary support
@@ -7724,9 +7782,10 @@ State::autosave(const bool b, const string& n) {
 5: added channel timing_probability
 6: added auto_precharge_invariant to expr_alloc_flags
 7: grew sizeof flags to long, to acommodate VCD tracing
+8: added excl-unstable and dequeue-unknown flags
  */
 static
-const size_t	checkpoint_version = 7;
+const size_t	checkpoint_version = 8;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -7821,6 +7880,9 @@ State::save_checkpoint(ostream& o) const {
 	write_value(o, flags_type(flags & FLAGS_CHECKPOINT_MASK));
 	write_value(o, unstable_policy);
 	write_value(o, weak_unstable_policy);
+#if PRSIM_MK_EXCL_BLOCKING_SET
+	write_value(o, excl_unstable_policy);
+#endif
 	write_value(o, interference_policy);
 	write_value(o, weak_interference_policy);
 	write_value(o, invariant_fail_policy);
@@ -8047,6 +8109,9 @@ try {
 	// This is already masked out during saving of checkpoint.
 	read_value(i, unstable_policy);
 	read_value(i, weak_unstable_policy);
+#if PRSIM_MK_EXCL_BLOCKING_SET
+	read_value(i, excl_unstable_policy);
+#endif
 	read_value(i, interference_policy);
 	read_value(i, weak_interference_policy);
 	read_value(i, invariant_fail_policy);
@@ -8213,6 +8278,10 @@ State::dump_checkpoint(ostream& o, istream& i) {
 	read_value(i, p);
 	o << "weak-unstable policy: " << error_policy_string(p) << endl;
 	read_value(i, p);
+#if PRSIM_MK_EXCL_BLOCKING_SET
+	o << "excl-unstable policy: " << error_policy_string(p) << endl;
+	read_value(i, p);
+#endif
 	o << "interference policy: " << error_policy_string(p) << endl;
 	read_value(i, p);
 	o << "weak-interference policy: " << error_policy_string(p) << endl;

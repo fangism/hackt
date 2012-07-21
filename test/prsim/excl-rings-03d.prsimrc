@@ -1,7 +1,10 @@
-# "excl-rings-03.prsimrc"
+# "excl-rings-03b.prsimrc"
 #	$Id: excl-rings-03.prsimrc,v 1.3 2010/04/06 00:06:25 fang Exp $
 # @haco@ excl-rings.haco-c
 # testing excl rings features
+
+excl-unstable-dequeue
+excl-unstable ignore
 
 watchall
 
@@ -14,7 +17,7 @@ set b 0
 cycle
 echo since a- was first, x+, while y+ is suppressed
 assert x 1
-# assert y 0
+assert y 0
 get x
 get y
 
@@ -35,7 +38,7 @@ set a 0
 cycle
 echo since b- was first, y+, while x+ is suppressed
 assert y 1
-# assert x 0
+assert x 0
 get x
 get y
 
@@ -50,4 +53,5 @@ cycle
 assert x 0
 get x
 get y
+
 

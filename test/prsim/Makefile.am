@@ -225,6 +225,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	pass-gates-01 pass-gates-02 pass-gates-03 \
 	bad-pass-gate-a-01 bad-pass-gate-b-01 \
 	excl-rings-01 excl-rings-02 excl-rings-03 excl-rings-04 \
+	excl-rings-02b excl-rings-03b excl-rings-03c excl-rings-03d \
 	check-excl-rings-02 check-excl-rings-04 check-excl-rings-05 \
 	check-excl-rings-06 \
 	check-excl-rings-chan-02 check-excl-rings-chan-04 \
@@ -264,7 +265,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	SRAM-b-01 SRAM-b-02 SRAM-b-03 \
 	SRAM-c-01 SRAM-c-02 SRAM-c-03 \
 	SRAM-d-01 SRAM-d-02 \
-	keeper-a-01 \
+	keeper-a-01 keeper-a-01b \
 	iskeeper-a-01 iskeeper-a-02 \
 	isckeeper-a-01 isckeeper-a-02 \
 	celem-keeper-01 celem-keeper-02 \

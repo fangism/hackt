@@ -336,6 +336,18 @@ private:
 		 */
 		FLAG_VCD_ON = 0x10000,
 #endif
+#if PRSIM_MK_EXCL_BLOCKING_SET
+		/**
+			Set to true to treat instabilities that
+			are the result of force excl rings as
+			dequeued/cancelled events.
+			Otherwise, pending event is changed to X.
+			By default, is more conservative, -> X.
+			The other behavior (dequeue) is consistent
+			with legacy prsim.
+		 */
+		FLAG_EXCL_UNSTABLE_DEQUEUE = 0x20000,
+#endif
 		/// initial flags
 		FLAGS_DEFAULT = FLAG_CHECK_EXCL | FLAG_SHOW_CAUSE,
 		/**
@@ -371,6 +383,9 @@ public:
 		ERROR_DEFAULT_INVARIANT_UNKNOWN = ERROR_WARN,
 		ERROR_DEFAULT_UNSTABLE = ERROR_BREAK,
 		ERROR_DEFAULT_WEAK_UNSTABLE = ERROR_WARN,
+#if PRSIM_MK_EXCL_BLOCKING_SET
+		ERROR_DEFAULT_EXCL_UNSTABLE = ERROR_BREAK,
+#endif
 		ERROR_DEFAULT_INTERFERENCE = ERROR_BREAK,
 		ERROR_DEFAULT_WEAK_INTERFERENCE = ERROR_WARN,
 		ERROR_DEFAULT_ASSERT_FAIL = ERROR_FATAL,
@@ -726,6 +741,9 @@ private:
 	error_policy_enum			unstable_policy;
 	/// controls the simulation behavior upon weak-instability
 	error_policy_enum			weak_unstable_policy;
+#if PRSIM_MK_EXCL_BLOCKING_SET
+	error_policy_enum			excl_unstable_policy;
+#endif
 	/// controls the simulation behavior upon interference
 	error_policy_enum			interference_policy;
 	/// controls the simulation behavior upon weak-interference
@@ -1125,6 +1143,11 @@ public:
 	DEFINE_POLICY_CONTROL_GET(interference)
 	DEFINE_POLICY_CONTROL_GET(weak_interference)
 
+#if PRSIM_MK_EXCL_BLOCKING_SET
+	DEFINE_POLICY_CONTROL_GET(excl_unstable)
+	DEFINE_POLICY_CONTROL_SET(excl_unstable)
+#endif
+
 	DEFINE_POLICY_CONTROL_SET(assert_fail)
 	DEFINE_POLICY_CONTROL_SET(channel_expect_fail)
 	DEFINE_POLICY_CONTROL_SET(excl_check_fail)
@@ -1348,6 +1371,20 @@ public:
 		if (dq)	flags |= FLAG_UNSTABLE_DEQUEUE;
 		else	flags &= ~FLAG_UNSTABLE_DEQUEUE;
 	}
+
+#if PRSIM_MK_EXCL_BLOCKING_SET
+	bool
+	dequeue_excl_unstable_events(void) const {
+		return flags & FLAG_EXCL_UNSTABLE_DEQUEUE;
+	}
+
+	void
+	dequeue_excl_unstable_events(const bool dq) {
+		if (dq)	flags |= FLAG_EXCL_UNSTABLE_DEQUEUE;
+		else	flags &= ~FLAG_EXCL_UNSTABLE_DEQUEUE;
+	}
+
+#endif
 
 	void
 	append_mk_exclhi_ring(ring_set_type&);
@@ -1604,6 +1641,9 @@ private:
 
 	break_type
 	__report_instability(ostream&, const bool wk, const bool dir, 
+#if PRSIM_MK_EXCL_BLOCKING_SET
+		const bool excl,
+#endif
 		const event_type&) const;
 
 	break_type

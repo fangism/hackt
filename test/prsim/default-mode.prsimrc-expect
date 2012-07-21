@@ -1,8 +1,10 @@
 mode: 
 	weak rules: off
 	unstable events propagate Xs
+	force-excl caused unstable events propagate Xs
 	on unstable: break
 	on weak-unstable: warn
+	on excl-unstable: break
 	on interference: break
 	on weak-interference: warn
 	checking exclusions: on

@@ -3989,6 +3989,7 @@ FeedbackGet::usage(ostream& o) {
 @deffn Command rings-mk node
 @deffnx Command rings-mk-get node
 Print forced exclusive high/low rings of which @var{node} is a member.
+@cindex force-exclusive rings
 @end deffn
 @end texinfo
 ***/
@@ -6216,6 +6217,73 @@ UnstableDequeue::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_MK_EXCL_BLOCKING_SET
+/***
+@texinfo cmd/excl-unstable-unknown.texi
+@deffn Command excl-unstable-unknown
+When set, this causes rules that are cancelled by force-exclusive rings
+to transition to an unknown value on the output node.  
+The opposite effect is the @command{excl-unstable-dequeue} command.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ExclUnstableUnknown,
+	"excl-unstable-unknown", 
+	modes, "instabilities due to force-exclusion result in X (default)")
+
+int
+ExclUnstableUnknown::main(State& s, const string_list& a) {
+if (a.size() > 1) {
+	usage(cerr << "usage: ");
+	return Command::BADARG;
+} else {
+	s.dequeue_excl_unstable_events(false);
+	return Command::NORMAL;
+}
+}
+
+void
+ExclUnstableUnknown::usage(ostream& o) {
+	o << name << endl;
+	o << "Unstable events caused by force-exclusion rings propagate X\'s."
+		<< endl;
+	o << "See also \'excl-unstable-dequeue\'." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/excl-unstable-dequeue.texi
+@deffn Command excl-unstable-dequeue
+When set, this causes unstable rules due to force-exclusion
+to be dequeued from the event queue.
+The opposite effect is the @command{excl-unstable-unknown} command.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ExclUnstableDequeue,
+	"excl-unstable-dequeue", 
+	modes, "rule instabilities due force-exclusion are dequeued")
+
+int
+ExclUnstableDequeue::main(State& s, const string_list& a) {
+if (a.size() > 1) {
+	usage(cerr << "usage: ");
+	return Command::BADARG;
+} else {
+	s.dequeue_excl_unstable_events(true);
+	return Command::NORMAL;
+}
+}
+
+void
+ExclUnstableDequeue::usage(ostream& o) {
+	o << name << endl;
+	o << "Unstable events dur to force-exclusion are dequeued." << endl;
+	o << "See also \'excl-unstable-unknown\'." << endl;
+}
+#endif	// PRSIM_MK_EXCL_BLOCKING_SET
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 static const char
 break_options[] = "[ignore|warn|notify|break|interactive|fatal]";
 
@@ -6300,7 +6368,7 @@ DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS(Unstable, "unstable",
 @deffn Command weak-unstable [mode]
 Set the simulator policy in the event of a weak-instability.
 A rule is weakly-unstable when it is enqueued to fire, 
-but a change in the input literal (to unknown) @emph{may} 
+but a change in the input literal (to X, unknown) @emph{may} 
 stop the rule from firing.  
 Default mode is @t{warn}.
 @end deffn
@@ -6310,6 +6378,23 @@ DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS(WeakUnstable, "weak-unstable",
 	"alter simulation behavior on weak-unstable",
 	"Alters simulator behavior on a weak-instability violation.", 
 	weak_unstable)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_MK_EXCL_BLOCKING_SET
+/***
+@texinfo cmd/excl-unstable.texi
+@deffn Command excl-unstable [mode]
+Set the simulator policy in the event of an excl-instability, 
+one that is caused by enforcement of force-exclusion rings.
+Default mode is @t{warn}.
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS(ExclUnstable, "excl-unstable", 
+	"alter simulation behavior on excl-unstable",
+	"Alters simulator behavior on a excl-instability.", 
+	excl_unstable)
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***

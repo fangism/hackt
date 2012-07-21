@@ -4,14 +4,11 @@
 	10	y : 0	[by b:=1]
 	10	a : 0
 	10	b : 0
-WARNING: excl-unstable `y'+
-rule: [after 10]	~b:0 -> y+:0
->> cause: `x' (val: 1)
 	20	x : 1	[by a:=0]
+	20	y : X	[by x:=1]
 since a- was first, x+, while y+ is suppressed 
 x : 1	[by a:=0]
-y : 0	[by b:=0]
-	20	y : X	[by x:=1]
+y : X	[by x:=1]
 	20	a : 1
 	30	x : 0	[by a:=1]
 	40	y : 1	[by x:=0]
@@ -24,14 +21,11 @@ x : 0	[by a:=1]
 y : 0	[by b:=1]
 	50	b : 0
 	50	a : 0
-WARNING: excl-unstable `x'+
-rule: [after 10]	~a:0 -> x+:0
->> cause: `y' (val: 1)
 	60	y : 1	[by b:=0]
-since b- was first, y+, while x+ is suppressed 
-x : 0	[by a:=0]
-y : 1	[by b:=0]
 	60	x : X	[by y:=1]
+since b- was first, y+, while x+ is suppressed 
+x : X	[by y:=1]
+y : 1	[by b:=0]
 	60	b : 1
 	70	y : 0	[by b:=1]
 	80	x : 1	[by y:=0]

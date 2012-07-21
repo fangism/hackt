@@ -1,5 +1,5 @@
 header string: hackt-prsim-ckpt
-checkpoint version: 7
+checkpoint version: 8
 seed48: 0 0 0
 Have 6 unique boolean nodes:
 	value	flags	cause	tcount
@@ -18,6 +18,7 @@ binary timing probability: 0.5
 flags: 0x48
 unstable policy: break
 weak-unstable policy: warn
+excl-unstable policy: break
 interference policy: break
 weak-interference policy: warn
 invariant-fail policy: break

@@ -10,8 +10,10 @@ Warning: [mode fatal, keeper-check-fail]
 mode: 
 	weak rules: off
 	unstable events propagate Xs
+	force-excl caused unstable events propagate Xs
 	on unstable: fatal
 	on weak-unstable: fatal
+	on excl-unstable: fatal
 	on interference: fatal
 	on weak-interference: fatal
 	checking exclusions: on

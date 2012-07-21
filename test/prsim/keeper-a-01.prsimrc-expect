@@ -4,3 +4,6 @@ X nodes:
 
 X nodes:
 
+WARNING: excl-unstable `src._r0'-
+rule: [after 10]	l.e:1 -> src._r0-:1
+>> cause: `src._r1' (val: 0)

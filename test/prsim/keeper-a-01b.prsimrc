@@ -1,0 +1,8 @@
+# "keeper-a-01b.prsimrc"
+# @haco@ keeper-a.haco-c
+
+excl-unstable-dequeue
+excl-unstable ignore
+
+source keeper-a-01.prsimrc
+
