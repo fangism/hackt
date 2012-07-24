@@ -4576,15 +4576,16 @@ if (dir) {
 		pp(updated_nodes.insert(
 			updated_nodes_type::value_type(ui, nui)));
 	if (!pp.second) {
-		if (!is_weak && p.up != PULL_OFF ||
-			is_weak && p.wup != PULL_OFF) {
+		if (!is_weak && p.up != PULL_OFF && ops.up != PULL_ON ||
+			is_weak && p.wup != PULL_OFF && ops.wup != PULL_ON) {
 			pp.first->second.rule_index = root_rule;
 		// TODO: determine rule precedence for causality
 		// whichever turned on first? strength?
 		// the root rule that is assigned is the one whose
 		// delay value will be used!
-		// what about interference delays to X?
-		// TODO: add mode for interference delay (0 to be conservative)
+		// In the event of weak-interference, favor the pull
+		// rule side that *increased* in strength, 0->X, 0->1, X->1,
+		// that turned partially or fully on.
 		}
 	}
 #if PRSIM_FCFS_UPDATED_NODES
@@ -4837,9 +4838,12 @@ if (!n.pending_event()) {
 		pp(updated_nodes.insert(
 			updated_nodes_type::value_type(ui, nui)));
 	if (!pp.second) {
-		if (!is_weak && p.dn != PULL_OFF ||
-			is_weak && p.wdn != PULL_OFF) {
+		if (!is_weak && p.dn != PULL_OFF && ops.dn != PULL_ON ||
+			is_weak && p.wdn != PULL_OFF && ops.wdn != PULL_ON) {
 			pp.first->second.rule_index = root_rule;
+		// In the event of weak-interference, favor the pull
+		// rule side that *increased* in strength, 0->X, 0->1, X->1,
+		// that turned partially or fully on.
 		}
 	}
 #if PRSIM_FCFS_UPDATED_NODES

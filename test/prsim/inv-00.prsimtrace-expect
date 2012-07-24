@@ -18,7 +18,7 @@ Epoch 1:
 	6	40	4	5	5	1	[after 10]	~b -> c+
 	7	40	0	0	3	X	(a:X)
 	8	50	2	7	4	X	[after 10]	~a -> b+
-	9	60	4	8	5	X	[after 10]	~b -> c+
+	9	60	3	8	5	X	[after 10]	b -> c-
 	10	60	0	0	3	0	(a:0)
 	11	70	2	10	4	1	[after 10]	~a -> b+
 	12	80	3	11	5	0	[after 10]	b -> c-
@@ -27,6 +27,6 @@ Epoch 1:
 	15	100	4	14	5	1	[after 10]	~b -> c+
 	16	100	0	0	3	X	(a:X)
 	17	110	2	16	4	X	[after 10]	~a -> b+
-	18	120	4	17	5	X	[after 10]	~b -> c+
+	18	120	3	17	5	X	[after 10]	b -> c-
 Epoch 2: (final values)
 X 0 1 X X X 

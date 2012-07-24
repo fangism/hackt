@@ -22,6 +22,6 @@ Epoch 1:
 	10	30	0	0	6	1	(in:1)
 	11	30	14	10	8	0	[after 0]	in -> shake_me.in_-
 	12	34	0	0	6	X	(in:X)
-	13	34	14	12	8	X	[after 0]	in -> shake_me.in_-
+	13	34	13	12	8	X	[after 0]	~in -> shake_me.in_+
 Epoch 2: (final values)
 X 0 1 1 0 1 X 0 X 1 0 1 
