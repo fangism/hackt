@@ -233,6 +233,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	precharge-a-01 precharge-b-01 \
 	precharge-c-01 precharge-d-01 \
 	precharge-e-01 precharge-f-01 \
+	precharge-g-01 \
 	precharge-h-01 \
 	weak-inv-01 weak-inv-02 weak-inv-03 \
 	weak-fight-a-01 weak-fight-a-02 weak-fight-a-03 weak-fight-a-04 \
@@ -765,7 +766,6 @@ HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
 	channel-assert-c-05 channel-assert-c-06 channel-assert-c-07 \
 	channel-ledr-assert-a-02 \
 	channel-eledr-assert-a-02 \
-	precharge-g-01 \
 	channel-ledr-a-06 \
 	channel-ledr-c-06 \
 	channel-eledr-a-06 \

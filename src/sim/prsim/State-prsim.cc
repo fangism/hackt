@@ -7653,7 +7653,18 @@ State::dump_memory_usage(ostream& o) const {
 	// may be bigger due to reserved capacity
 }
 {
-#if !PRSIM_MK_EXCL_BLOCKING_SET
+#if PRSIM_MK_EXCL_BLOCKING_SET
+	typedef	mk_excl_counter_map_type::value_type	value_type;
+	const size_t hs = mk_exhi_counter_map.size();
+	o << "exclhi-counter-map: ("  << hs << " * " << sizeof_tree_node(value_type)
+		<< " B/node) = " << hs * sizeof_tree_node(value_type)
+		<< " B" << endl;
+	const size_t ls = mk_exlo_counter_map.size();
+	o << "excllo-counter-map: ("  << ls << " * " << sizeof_tree_node(value_type)
+		<< " B/node) = " << ls * sizeof_tree_node(value_type)
+		<< " B" << endl;
+	// TODO: mapped_type is also a vector, and should be accounted for
+#else
 	typedef	mk_excl_queue_type::const_iterator::value_type	value_type;
 	const size_t hs = exclhi_queue.size();
 	o << "exclhi-queue: ("  << hs << " * " << sizeof_tree_node(value_type)
@@ -7695,7 +7706,7 @@ State::dump_memory_usage(ostream& o) const {
 	o << "mk-exclhi-rings: ("  << rs << " * " << sizeof(elem_type) <<
 		" B/ring) = " << rs * sizeof(elem_type) << " B" << endl;
 	const size_t rr = std::accumulate(mk_exhi.begin(), mk_exhi.end(), 
-		size_t(0),&add_size<elem_type>);
+		size_t(0), &add_size<elem_type>);
 	typedef	ring_set_type::iterator::value_type	value_type;
 	o << "mk-exclhi::nodes: (" << rr << " * " <<
 		sizeof_tree_node(value_type) <<
