@@ -191,14 +191,11 @@ NodeState::count_fanins(const faninout_struct_type& f) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	This initializes the state and also wipes the watch/break flags.  
+	Also wipes out IN_CHANNEL.
  */
 void
 NodeState::reset(void) {
-	event_index = INVALID_EVENT_INDEX;
-	// placement destruct for good measure?
-	new (&causes) LastCause;	// placement construct to initialize
-	value = LOGIC_OTHER;
-	tcount = 0;
+	initialize();
 	state_flags = NODE_INITIAL_STATE_FLAGS;
 }
 
@@ -431,10 +428,19 @@ ostream&
 NodeState::dump_checkpoint_state(ostream& o, istream& i) {
 	this_type temp;
 	temp.load_state(i);
-	temp.dump_value(o) << '\t' << size_t(temp.state_flags) <<
+	return temp.dump_debug(o, false);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+NodeState::dump_debug(ostream& o, const bool h) const {
+if (h) {
+	dump_checkpoint_state_header(o) << endl;
+}
+	dump_value(o) << "\t0x" << std::hex << size_t(state_flags) <<
 		'\t';
-	temp.causes.dump_checkpoint_state(o);
-	return o << '\t' << temp.tcount;
+	causes.dump_checkpoint_state(o);
+	return o << '\t' << tcount;
 }
 
 //=============================================================================

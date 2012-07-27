@@ -3,6 +3,240 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2012-07-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-86:
+	  HAC: added string comparison operator support.
+		object binary format version bumped to 10.
+		Test cases added, documentation updated.
+
+
+2012-07-05	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-40-prsim-power-supply-03:
+	  hacprsim: dynamic power supplies now properly use the 
+		supply associated with each defined internal node.
+	  Merged to master.
+
+
+2012-07-04	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-40-prsim-power-supply-02:
+	  hacprsim: on startup, set !Vdd and !GND as initial events 
+		in the event queue, so their fanout gets processed.
+
+
+2012-07-03	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-40-prsim-power-supply-01:
+	  hacprsim: added options to model dynamic power/ground supplies
+		by adding terms to the production rules (ExprAlloc).
+		TODO: properly handle internal nodes' supplies.
+
+
+2012-06-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-40:
+	 vpi-prsim: force transport delays from prsim to vcs to be zero,
+		instead of calculating a time difference (floating-point sub.)
+		This works around a rare issue where the floating-point 
+		time subtraction results in a garbage value.  
+
+
+2012-06-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-39:
+	  hacprsim: added time-fmt command to control formatting and
+		precision of time values in output.
+
+
+2012-06-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-38:
+	  prsim/State-prsim.cc: event on event queue exception, 
+		keep event queue free-list coherent for cleaner exiting.
+	  vpi-prsim.cc: on exception thrown, call _vpi_finish().
+
+
+2012-05-30	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-37:
+	  hacknet: added 'emit_port_summary' option to print port
+		direction information in comment block.
+
+
+2012-05-29	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-36:
+	  HAC: Object/lang/PRS_rule_attribute.h: new 'res' rule attribute
+		to flag that a rule is a fake resistor.
+
+
+2012-05-26	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-35:
+	  hacprsim: channel-expect-fail against X vs. expected non-X
+		was failing to advance vector index.  Fixed.  Tests added.
+
+
+2012-05-17	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-34:
+	  hacprsim: clocked channels were not advancing expect vector
+		indices when data received was X.  Fixed.  Test case added.
+
+
+2012-05-15	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-33:
+	  vpi-prsim: treat syntax and argument errors as fatal,
+		so that PEBKAC-causes of failure are more obvious.
+		Test case added.
+
+
+2012-05-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-32:
+	  vpi-prsim: space-stripping now handles verilog escaped identifiers
+		by preserving end-of-identifier spaces.  Tested.
+
+
+	* HACKT-00-01-04-main-00-85-31:
+	  hacprsim: channel values files were not searching include paths
+	  vpi-prsim: include paths were not being searched for source files
+		Both fixed, test cases added.
+
+
+2012-05-09	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-30:
+	  global_entry_context reference lookups are now all cached
+		hierarchically with the corresponding top-level footprint.
+		This brings about significant improvement in reference
+		parsing and lookup.  Regression tests clean.
+
+
+2012-05-03	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-29:
+	  Series of rewrites to global_context lookup, now all globally 
+		indexed are cached, where the cache belongs to the module.
+		Much code was refactored and is significantly cleaner.
+		No regressions.
+		
+
+2012-05-01	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-28:
+	  hacprsim: ~EventPool free-list check, fix arithmetic sum overflow.
+		Test case: quarantine/set-assert-02(.prsimckpttest)
+
+
+2012-04-30	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-27:
+	  Enabled aggregate-member-parent-references to allow 
+		aggregate references to be looked-up in a single call,
+		rather than having to expand references expensively.
+	  Tested.  
+
+
+2012-04-28	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-26:
+	  global_entry_context::construct_global_footprint_frame():
+		takes global_process_context_id, return by reference.
+
+
+	* HACKT-00-01-04-main-00-85-25:
+	  connectivity checking: suppress missing fanin warning on
+		output nodes that are also input ports (route-through).
+		Test case added.
+
+
+	* HACKT-00-01-04-main-00-85-24:
+	  global_entry_context: now always pair together frame and offset
+		in the global_process_context structure, for comprehensibility
+		and preparing for a cleaner rewrite of the reference lookup.
+		No regressions.
+
+
+2012-04-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-23:
+	  hacprsim: 'reset' now correctly wipes the in-channel state of 
+		nodes b/c should match channel_manager::clobber_all().
+		New 'dump-node' command for debugging.
+
+
+	* HACKT-00-01-04-main-00-85-22:
+	  hacprsim: clock-source command now reconfigures if channel
+		already exists, and restarts the sourcing.
+		Documented and tested.
+
+
+2012-04-22	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-21:
+	  Cleaned up several calls to global_entry_context::
+		construct_global_footprint_frame(), to reduce
+		exposing garbage temporary variables.
+
+
+2012-04-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-20:
+	  hacprsim: implemented 'meas-time' command prefix to 
+		measure elapsed time of command.
+
+
+2012-04-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-19:
+	  hacknet: post-mangle instance name collision checking
+		is accelerated slightly (10%) by caching the
+		post-mangled name up-front.
+
+
+2012-04-17	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-18:
+	  hacprsim: implemented clock-source command that drives
+		one node with a specified number of clock edges.
+
+
+2012-04-16	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-17:
+	  hacprsim: implemented channel-clocked for synchronous
+		sources and expects.  Documented, test cases added.
+	  prsim_advance(): was not properly handling fatal errors, 
+		resulting in dropped error status.  fixed.
+
+
+2012-04-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-16:
+	  hacknet: added option to wrap long lines, auto_wrap_length.
+		Set to > 0 to enable.  Documented, test cases added.
+
+
+2012-04-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-15:
+	  hacknet: struct_ports=0 now also suppresses local structs/channels,
+		doesn't make sense to have locals without ports.
+		Test case added.
+
+
+2012-04-02	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-85-14:
+	  hacknet: implemented post-mangle instance name collision checking,
+		e.g. if [] are stripped from 2D arrays (1,10)=(11,0).
+		Test case added.
+
+
 2012-03-29	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-85-13:

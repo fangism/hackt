@@ -60,6 +60,8 @@
 #include "Object/expr/int_arith_expr.h"
 #include "Object/expr/int_relational_expr.h"
 #include "Object/expr/bool_logical_expr.h"
+#include "Object/expr/pstring_expr.h"
+#include "Object/expr/pstring_relational_expr.h"
 #include "Object/expr/loop_meta_expr.h"
 #include "Object/expr/loop_nonmeta_expr.h"
 #include "Object/expr/nonmeta_func_call.h"
@@ -167,6 +169,8 @@ using entity::pbool_unary_expr;
 using entity::preal_arith_expr;
 using entity::preal_unary_expr;
 using entity::preal_relational_expr;
+using entity::pstring_expr;
+using entity::pstring_relational_expr;
 using entity::meta_loop_base;
 using entity::meta_range_expr;
 using entity::nonmeta_func_call;
@@ -1645,6 +1649,7 @@ member_expr::check_meta_reference(const context& c) const {
 		NEVER_NULL(o.value_ref());
 		FINISH_ME_EXIT(Fang);
 	}
+#if !AGGREGATE_PARENT_REFS
 	if (inst_ref->dimensions()) {
 		cerr << "ERROR: cannot take the member of a " <<
 			inst_ref->dimensions() << "-dimension array, "
@@ -1655,6 +1660,7 @@ member_expr::check_meta_reference(const context& c) const {
 				"." << *member << endl;
 		THROW_EXIT;
 	}
+#endif
 
 	const never_ptr<const definition_base>
 		base_def(inst_ref->get_base_def());
@@ -1786,6 +1792,9 @@ if (c.is_publicly_viewable()) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This can explode into a large number of references.  
+ */
 int
 member_expr::expand_const_reference(
 		const count_ptr<const inst_ref_expr>& _this, 
@@ -2006,6 +2015,9 @@ index_expr::check_nonmeta_reference(const context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This can explode into a large number of references.  
+ */
 int
 index_expr::expand_const_reference(
 		const count_ptr<const inst_ref_expr>& _this, 
@@ -2377,6 +2389,8 @@ relational_expr::check_meta_expr(const context& c) const {
 	const count_ptr<preal_expr> rr(ro.is_a<preal_expr>());
 	const count_ptr<pbool_expr> lb(lo.is_a<pbool_expr>());
 	const count_ptr<pbool_expr> rb(ro.is_a<pbool_expr>());
+	const count_ptr<pstring_expr> ls(lo.is_a<pstring_expr>());
+	const count_ptr<pstring_expr> rs(ro.is_a<pstring_expr>());
 	const string op_str(op->text);
 	// maintainence: 
 	// could let expr_type::static_constant_value() or resolve_value()
@@ -2415,6 +2429,15 @@ if (li && ri) {
 	} else {
 		return ret;
 	}
+} else if (ls && rs) {
+	const count_ptr<pstring_relational_expr>
+		ret(new entity::pstring_relational_expr(ls, op_str, rs));
+	if (ret->is_static_constant()) {
+		return return_type(
+			new pbool_const(ret->static_constant_value()));
+	} else {
+		return ret;
+	}
 } else {
 	cerr << "ERROR: relational_expr expects two operands of the same type, "
 		"but got:" << endl;
@@ -2427,6 +2450,7 @@ if (li && ri) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	TODO: add support for reals if it ever comes about.
+	TODO: add support for string expressions.
  */
 nonmeta_expr_return_type
 relational_expr::check_nonmeta_expr(const context& c) const {

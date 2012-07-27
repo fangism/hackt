@@ -1,0 +1,44 @@
+[top-level]
+rules:
+[after 10]	((~!GND & a & b) | (~!GND & c & d)) & ((e & f) | (g & h)) -> o1-
+[after 10]	(((~a & !Vdd) | (~b & !Vdd)) & (~c | ~d)) | (((~e & !Vdd) | (~f & !Vdd)) & (~g | ~h)) -> o1+
+[after 10]	(((a & ~!GND) | (b & ~!GND)) & (c | d)) | (((e & ~!GND) | (f & ~!GND)) & (g | h)) -> o2-
+[after 10]	((!Vdd & ~a & ~b) | (!Vdd & ~c & ~d)) & ((~e & ~f) | (~g & ~h)) -> o2+
+[after 10]	((~!GND & a & b) | (c & ~!GND)) & ((e & f) | h) -> o3-
+[after 10]	(((~a & !Vdd) | (~b & !Vdd)) & ~c) | (((~e & !Vdd) | (~f & !Vdd)) & ~h) -> o3+
+[after 10]	(((a & ~!GND) | (d & ~!GND)) & c) | (((g & ~!GND) | (f & ~!GND)) & h) -> o4-
+[after 10]	((!Vdd & ~a & ~d) | (~c & !Vdd)) & ((~g & ~f) | ~h) -> o4+
+[after 10]	((g & ~!GND) | (~!GND & a & b)) & (d | (e & f)) -> o5-
+[after 10]	(!Vdd & ~g & (~a | ~b)) | (!Vdd & ~d & (~e | ~f)) -> o5+
+[after 10]	(~!GND & e & (a | d)) | (~!GND & b & (g | f)) -> o6-
+[after 10]	((~e & !Vdd) | (!Vdd & ~a & ~d)) & (~b | (~g & ~f)) -> o6+
+	0	a : 0
+	0	b : 0
+	0	c : 0
+	0	d : 0
+	0	e : 0
+	0	f : 0
+	0	g : 0
+	0	h : 0
+	10	o1 : 1	[by c:=0]
+	10	o3 : 1	[by c:=0]
+	10	o6 : 1	[by d:=0]
+	10	o5 : 1	[by e:=0]
+	10	o2 : 1	[by f:=0]
+	10	o4 : 1	[by g:=0]
+Fanins of node `o1':
+(from [top-level]):
+[after 10]	(((~a:0 & !Vdd:1)<1> | (~b:0 & !Vdd:1)<1>)<1> & (~c:0 | ~d:0)<1>)<1> | (((~e:0 & !Vdd:1)<1> | (~f:0 & !Vdd:1)<1>)<1> & (~g:0 | ~h:0)<1>)<1><1><1> -> o1+:1
+[after 10]	((~!GND:0 & a:0 & b:0)<0> | (~!GND:0 & c:0 & d:0)<0>)<0> & ((e:0 & f:0)<0> | (g:0 & h:0)<0>)<0><0><0> -> o1-:1
+	10	c : 1
+	10	d : 1
+	10	g : 1
+	10	h : 1
+	20	o4 : 0	[by d:=1]
+	20	o5 : 0	[by g:=1]
+	20	o1 : 0	[by h:=1]
+	20	o3 : 0	[by h:=1]
+Fanins of node `o1':
+(from [top-level]):
+[after 10]	(((~a:0 & !Vdd:1)<1> | (~b:0 & !Vdd:1)<1>)<1> & (~c:1 | ~d:1)<0>)<0> | (((~e:0 & !Vdd:1)<1> | (~f:0 & !Vdd:1)<1>)<1> & (~g:1 | ~h:1)<0>)<0><0><0> -> o1+:0
+[after 10]	((~!GND:0 & a:0 & b:0)<0> | (~!GND:0 & c:1 & d:1)<1>)<1> & ((e:0 & f:0)<0> | (g:1 & h:1)<1>)<1><1><1> -> o1-:0

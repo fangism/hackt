@@ -110,6 +110,15 @@
  */
 #define	PRSIM_CHANNEL_AGGREGATE_ARGUMENTS	1
 
+/**
+	Define to 1 to enable clocked, synchronous channels.
+	Goal: 1
+ */
+#define	PRSIM_CHANNEL_SYNC			1
+
+namespace util {
+class ifstream_manager;
+}
 namespace HAC {
 namespace entity {
 class module;
@@ -127,6 +136,7 @@ using entity::module;
 using util::memory::count_ptr;
 using util::packed_array;
 using util::string_list;
+using util::ifstream_manager;
 class State;
 class channel;
 class channel_manager;
@@ -276,7 +286,11 @@ public:
 		Signage doesn't matter for storing values, cast-OK.  
 		Define to struct to be able to overload ostream& operator <<
 	 */
+#if 0
 	struct array_value_type : public std::pair<value_type, bool> { };
+#else
+	typedef std::pair<value_type, bool>		array_value_type;
+#endif
 	/**
 		Utility data structure for set of unique node indices. 
 	 */
@@ -292,6 +306,12 @@ private:
 #if PRSIM_CHANNEL_BUNDLED_DATA
 		CHANNEL_TYPE_BD_4P,	// bundled-data 4-phase
 		CHANNEL_TYPE_BD_2P,	// bundled-data 2-phase
+#endif
+#if PRSIM_CHANNEL_SYNC
+		CHANNEL_TYPE_CLK_SRC1,	// clock generator, source
+		CHANNEL_TYPE_CLK_SRC2,	// clock generator, source (double-edge)
+		CHANNEL_TYPE_CLK_1EDGE,	// single-edge (posedge or negedge)
+		CHANNEL_TYPE_CLK_2EDGE,	// double-edge (anyedge)
 #endif
 		CHANNEL_TYPE_SINGLE_TRACK,
 		CHANNEL_TYPE_NULL
@@ -378,7 +398,7 @@ private:
 	string					name;
 	/// node index for acknowledge/enable
 	node_index_type				ack_signal;
-	/// node index for validity/neutrality (some types)
+	/// node index for validity/neutrality (some types), also used as clk
 	node_index_type				valid_signal;
 
 #if PRSIM_CHANNEL_TIMING
@@ -538,6 +558,16 @@ private:
 	void
 	set_all_data_rails(const State&, vector<env_event_type>&);
 
+#if PRSIM_CHANNEL_SYNC
+	void
+	toggle_clock(const State&, vector<env_event_type>&);
+
+	void
+	set_clock_signal(const node_index_type vi) {
+		valid_signal = vi;
+	}
+#endif
+
 #if PRSIM_CHANNEL_BUNDLED_DATA
 	void
 	reset_bundled_data_rails(vector<env_event_type>&);
@@ -598,11 +628,36 @@ private:
 		else	flags &= ~CHANNEL_VALID_ACTIVE_SENSE;
 	}
 
+#if PRSIM_CHANNEL_SYNC
+	// overloading
+	void
+	set_clock_sense(const bool v) {
+		set_valid_sense(v);
+	}
+
+	void
+	set_clk_init(const bool v) {
+		set_valid_sense(v);
+	}
+#endif
+
 public:
 	bool
 	get_valid_sense(void) const {
 		return flags & CHANNEL_VALID_ACTIVE_SENSE;
 	}
+
+#if PRSIM_CHANNEL_SYNC
+	bool
+	get_clock_sense(void) const {
+		return get_valid_sense();
+	}
+
+	bool
+	get_clk_init(void) const {
+		return get_valid_sense();
+	}
+#endif
 
 	/// \return true if data is active-low
 	bool
@@ -662,6 +717,12 @@ public:
 		return get_valid_sense();
 	}
 #endif
+#if PRSIM_CHANNEL_SYNC
+	node_index_type
+	clock_signal(void) const {
+		return valid_signal;
+	}
+#endif
 
 	bool
 	four_phase(void) const {
@@ -717,6 +778,21 @@ private:
 
 
 public:
+	bool
+	is_clocked(void) const {
+#if PRSIM_CHANNEL_SYNC
+		return type == CHANNEL_TYPE_CLK_SRC1 ||
+			type == CHANNEL_TYPE_CLK_SRC2 ||
+			type == CHANNEL_TYPE_CLK_1EDGE ||
+			type == CHANNEL_TYPE_CLK_2EDGE;
+#else
+		return false;
+#endif
+	}
+
+	bool
+	can_source(void) const;
+
 	bool
 	is_sourcing(void) const {
 		return flags & CHANNEL_SOURCING;
@@ -828,7 +904,7 @@ private:
 	read_values_from_list(const string_list&);
 
 	bool
-	read_values_from_file(const string&);
+	read_values_from_file(const string&, ifstream_manager&);
 
 public:
 	bool
@@ -836,6 +912,17 @@ public:
 
 	bool
 	set_source_args(const State&, const string_list&, const bool);
+
+#if PRSIM_CHANNEL_SYNC
+	bool
+	set_clock_source(const State&, const int);
+
+	bool
+	is_clock_source(void) const {
+		return type == CHANNEL_TYPE_CLK_SRC1 ||
+			type == CHANNEL_TYPE_CLK_SRC2;
+	}
+#endif
 
 	bool
 	set_rsource(const State&);
@@ -847,7 +934,7 @@ public:
 	set_log(const string&);
 
 	bool
-	set_expect_file(const string&, const bool);
+	set_expect_file(const string&, const bool, ifstream_manager&);
 
 	bool
 	set_expect_args(const string_list&, const bool);
@@ -1004,6 +1091,9 @@ public:
 		set_full(bool f) {
 			set_empty(!f);
 		}
+
+		ostream&
+		dump_raw(ostream&) const;
 	};	// end struct status_summary
 
 	status_summary
@@ -1111,6 +1201,7 @@ private:
 	bool
 	set_channel_ack_valid(State&, const string&, 
 		const bool have_ack, const bool ack_sense, const bool ack_init,
+		const char* vname,
 		const bool have_validity, const bool validity_sense);
 
 	bool
@@ -1152,6 +1243,22 @@ public:
 		const string& rn, 
 		const bool ri,
 		const string& dn, const size_t nr, const bool ds);
+#endif
+
+#if PRSIM_CHANNEL_SYNC
+	bool
+	new_channel_clocked_1edge(State&, const string&,
+		const string& cn, const bool cs,
+		const string& dn, const size_t nr, const bool ds);
+
+	bool
+	new_channel_clocked_2edge(State&, const string&,
+		const string& cn, const bool ci,
+		const string& dn, const size_t nr, const bool ds);
+
+	bool
+	new_clock_source(State&, const string&, const bool e,
+		const bool cs, const bool ci, const int n);
 #endif
 
 	ostream&

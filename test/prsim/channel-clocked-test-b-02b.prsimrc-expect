@@ -1,0 +1,26 @@
+channels:
+W : clocked-anyedge:0 x4 off
+X : clocked-posedge x1 off
+Y : clocked-negedge x1 off
+Z : clocked-anyedge:1 x2 off
+Y : clocked-negedge x1 source, timing: after=10 {1,0,1,1,0,0,1,1,1,0,0,0,} @0
+	count: 0, unknowns: 1
+	10	Y.d[0] : 0
+Y : clocked-negedge x1 source,stopped, timing: after=10 {1,0,1,1,0,0,1,1,1,0,0,0,} @0
+	count: 0, unknowns: 0
+Y : clocked-negedge x1 source, timing: after=10 {1,0,1,1,0,0,1,1,1,0,0,0,} @0
+	count: 0, unknowns: 0
+	10	Y.clk : 1
+	20	Y.d[0] : 1	[by Y.clk:=1]
+	60	Y.clk : 0
+	110	Y.clk : 1
+	120	Y.d[0] : 0	[by Y.clk:=1]
+	160	Y.clk : 0
+	210	Y.clk : 1
+	220	Y.d[0] : 1	[by Y.clk:=1]
+	260	Y.clk : 0
+	310	Y.clk : 1
+	360	Y.clk : 0
+	410	Y.clk : 1
+	420	Y.d[0] : 0	[by Y.clk:=1]
+	460	Y.clk : 0

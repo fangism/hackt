@@ -30,8 +30,8 @@ class cflat_context_visitor :
 public:
 
 	cflat_context_visitor(
-		const footprint_frame& ff, const global_offset& g) :
-		cflat_context(ff, g) { }
+		const global_process_context& c) :
+		cflat_context(c) { }
 
 	~cflat_context_visitor() { }
 

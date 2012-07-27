@@ -430,7 +430,7 @@ if (!nopt.nested_subcircuits) {
 	o << formals << endl;
 }
 	// TODO: emit mangle map? only if not nested format?
-	// TODO: emit port-info comments
+	// TODO: emit node port-info
 #if NETLIST_NODE_CAPS
 if (nopt.emit_node_caps) {
 	const node_pool_type& local_nodes_only(node_pool);
@@ -619,6 +619,29 @@ default:
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Print basic port direction information.
+ */
+ostream&
+node::emit_port_summary(ostream& o, const netlist_options& opt) const {
+	o << name << " : ";
+	if (used) {
+	if (driven) {
+		o << "inout";	// bidirectional
+	} else {
+		o << "input";
+	}
+	} else {
+	if (driven) {
+		o << "output";
+	} else {
+		o << "unused";
+	}
+	}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if NETLIST_CHECK_CONNECTIVITY
 error_status
 node::check_connectivity(const netlist_options& opt) const {
@@ -701,13 +724,14 @@ instance::raw_identifier(const footprint& fp,
 		const netlist_options& nopt) const {
 	// process instance name
 	ostringstream oss;
-	fp.get_instance_pool<process_tag>()[pid -1].get_back_ref()
+	fp.get_instance_pool<process_tag>()[index -1].get_back_ref()
 		->dump_hierarchical_name(oss, nopt.__dump_flags);
 	return oss.str();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	TODO: support for instance/type parameters?
 	\param fp is the footprint of the parent that contains this instance.
  */
 ostream&
@@ -716,19 +740,20 @@ instance::emit(ostream& o, const node_pool_type& node_pool,
 		const proc_pool_type& proc_pool,
 #endif
 		const footprint& fp, const netlist_options& nopt) const {
-	string pname;
+	const string& pname(name);
+	size_t line_length = 0;
 {
 	// process instance name
-	const string rname(raw_identifier(fp, nopt));
 if (nopt.emit_mangle_map) {
+	const string rname(raw_identifier(fp, nopt));
 	o << nopt.comment_prefix << "instance: " << type->get_unmangled_name()
 		<< ' ' << rname << endl;	// want original name
 }
-	pname = rname;
 	o << nopt.subckt_instance_prefix;
-	nopt.mangle_instance(pname);
+	line_length += nopt.subckt_instance_prefix.length();
 }
 	vector<string> _actuals;
+	_actuals.reserve(32);
 // if include wire ports
 if (nopt.node_ports) {
 	node_actuals_list_type::const_iterator
@@ -774,27 +799,55 @@ switch (nopt.instance_port_style) {
 case netlist_options::STYLE_SPICE:
 case netlist_options::STYLE_SPECTRE:
 	o << pname;
+	line_length += pname.length();
 {
 	// actuals
-	if (paren) o << " (";
+	if (paren) { o << " ("; line_length += 2; }
 {
 	for ( ; i!=e; ++i) {
+		const size_t wl = i->length() +1;
+		line_length += wl;
+		const bool wrap = (nopt.auto_wrap_length &&
+			(line_length > nopt.auto_wrap_length));
+		if (wrap) {
+			nopt.line_continue(o);
+			line_length = nopt.post_line_continue.length() +wl;
+		}
 		o << ' ' << *i;
 	}
 }
 	// already mangled during name caching
-	if (paren) o << " )";
-}
+	if (paren) { o << " )"; line_length += 2; }
+
 	// type name is already mangled
+	const size_t wl = type->get_name().length() +1;
+	line_length += wl;
+	const bool wrap = (nopt.auto_wrap_length &&
+		(line_length > nopt.auto_wrap_length));
+	if (wrap) {
+		nopt.line_continue(o);
+		line_length = nopt.post_line_continue.length() +wl;
+	}
 	o << ' ' << type->get_name();	// endl
 	break;
+}
 case netlist_options::STYLE_VERILOG:
 	o << type->get_name();
 	o << ' ' << pname << '(';
+	line_length += type->get_name().length() +pname.length() +2;
 if (_actuals.size()) {
 	o << *i;
 	for (++i; i!=e; ++i) {
-		o << ", " << *i;
+		o << ", ";
+		const size_t wl = i->length() +2;
+		line_length += wl;
+		const bool wrap = (nopt.auto_wrap_length &&
+			(line_length > nopt.auto_wrap_length));
+		if (wrap) {
+			nopt.line_continue(o);
+			line_length = nopt.post_line_continue.length() +wl;
+		}
+		o << *i;
 	}
 }
 	o << ");";
@@ -806,7 +859,7 @@ if (_actuals.size()) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 instance::dump_raw(ostream& o) const {
-	o << '[' << pid << "]: " << type->get_name() << ": (";
+	o << '[' << index << "]: " << type->get_name() << ": (";
 	copy(node_actuals.begin(), node_actuals.end(),
 		ostream_iterator<index_type>(o, ","));
 	return o << ')';
@@ -1132,6 +1185,8 @@ netlist::netlist() : netlist_common(), name(),
 		internal_expr_map(), 
 #if NETLIST_CHECK_NAME_COLLISIONS
 		name_collision_map(), 
+		struct_name_collision_map(), 
+		instance_name_collision_map(), 
 #endif
 		local_subcircuits(), 
 		node_port_list(), 
@@ -1308,9 +1363,9 @@ if (!fb.is_port_alias()) {
 		Technically, we shouldn't need global allocation information.
 	\param subnet the netlist type that corresponds with instance.
 	\param lpid local process id from footprint.
+	\param pfp parent instance's footprint (for hierarchical name).
 	\pre instance_pool is already pre-allocated to avoid 
 		invalidating references due to re-allocation.
-	TODO: possible check for name collisions?
  */
 void
 netlist::append_instance(const state_instance<process_tag>& subp,
@@ -1320,6 +1375,7 @@ netlist::append_instance(const state_instance<process_tag>& subp,
 #endif
 		const netlist_options& opt) {
 	STACKTRACE_VERBOSE;
+	STACKTRACE_INDENT_PRINT("lpid = " << lpid << endl);
 	const footprint* subfp = subp._frame._footprint;
 	// cannot use global allocated footprint_frame
 //	const netlist& subnet(netmap.find(subfp)->second);
@@ -1327,8 +1383,13 @@ netlist::append_instance(const state_instance<process_tag>& subp,
 	// subnet's port list may be shorter than formals list, due to aliases
 	// traverse formals list and lookup each actual to be passed
 	// recall: only used nodes will be in this port list
+	const size_t upid = instance_pool.size();
+		// unique instance_pool index
 	instance_pool.push_back(instance(subnet, lpid));
 	instance& np(instance_pool.back());
+	// compute mangled name once
+	np.name = np.raw_identifier(*fp, opt);
+	opt.mangle_instance(np.name);
 	// local process instance needed to find local port actual id
 	const state_instance<process_tag>::pool_type&
 		appool(fp->get_instance_pool<process_tag>());
@@ -1418,6 +1479,19 @@ netlist::append_instance(const state_instance<process_tag>& subp,
 #endif
 	}	// end for each structure port
 #endif	// NETLIST_VERILOG
+	// check for name collisions post-mangling
+	if (subfp->get_meta_type() == entity::META_TYPE_PROCESS) {
+		STACKTRACE_INDENT_PRINT("check instance name collision: " << upid << endl);
+		check_instance_name_collisions(upid, opt);
+	} else {
+		// this looks just wrong
+		STACKTRACE_INDENT_PRINT("skip chan/struct name collision: " << lpid << endl);
+#if 0
+		const size_t npid = named_proc_map[lpid];
+		STACKTRACE_INDENT_PRINT("local named proc id: " << npid << endl);
+//		check_struct_name_collisions(proc_pool[npid].name, npid, opt);
+#endif
+	}
 #if ENABLE_STACKTRACE
 	np.dump_raw(STACKTRACE_INDENT_PRINT("new instance: ")) << endl;
 #endif
@@ -1449,10 +1523,12 @@ netlist::create_auxiliary_node(void) {
 	\param opt case-collision error policy
 	Post-mangling name collisions always result in error.
 	For now, conflict with reserved names will always result in error.
+	\throw general exception on error.
  */
 void
 netlist::check_name_collisions(const string& n, const index_type ni, 
 		const netlist_options& opt) {
+	STACKTRACE_VERBOSE;
 	const string key((opt.case_collision_policy != OPTION_IGNORE) ?
 		util::strings::string_tolower(n) : n);
 	typedef name_collision_map_type::iterator	iterator;
@@ -1471,7 +1547,66 @@ netlist::check_name_collisions(const string& n, const index_type ni,
 		THROW_EXIT;
 	}
 }
-#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Registers against instance name map.  
+	\param n is a post-mangled name of an instance (not case-slammed).
+	\param ni index of this instance
+	\param opt case-collision error policy
+	Post-mangling name collisions always result in error.
+ */
+void
+netlist::check_struct_name_collisions(const string& n, const index_type ni, 
+		const netlist_options& opt) {
+	STACKTRACE_VERBOSE;
+	const string key((opt.case_collision_policy != OPTION_IGNORE) ?
+		util::strings::string_tolower(n) : n);
+	typedef name_collision_map_type::iterator	iterator;
+	typedef name_collision_map_type::value_type	pair_type;
+	const pair<iterator, bool>
+		p(struct_name_collision_map.insert(pair_type(key, ni)));
+	if (!p.second) {
+		string pn(proc_pool[p.first->second].name);
+		opt.mangle_instance(pn);
+		cerr << "Error: Post-mangled struct/chan name `" << n <<
+			"\' collides with another struct/chan `" << pn <<
+			"\'." << endl;
+		THROW_EXIT;
+	}
+	// don't check against reserved names, those are for nodes
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Registers against instance name map.  
+	\param n is a post-mangled name of an instance (not case-slammed).
+	\param ni index of this instance, index into instance_pool
+	\param opt case-collision error policy
+	Post-mangling name collisions always result in error.
+ */
+void
+netlist::check_instance_name_collisions(const index_type ni, 
+		const netlist_options& opt) {
+	STACKTRACE_VERBOSE;
+	INVARIANT(ni < instance_pool.size());
+	string n(instance_pool[ni].name);	// copy
+	const string key((opt.case_collision_policy != OPTION_IGNORE) ?
+		util::strings::string_tolower(n) : n);
+	typedef name_collision_map_type::iterator	iterator;
+	typedef name_collision_map_type::value_type	pair_type;
+	const pair<iterator, bool>
+		p(instance_name_collision_map.insert(pair_type(key, ni)));
+	if (!p.second) {
+		const string& pn(instance_pool[p.first->second].name);
+		cerr << "Error: Post-mangled instance name `" << n <<
+			"\' collides with another instance `" << pn <<
+			"\'." << endl;
+		THROW_EXIT;
+	}
+	// don't check against reserved names, those are for nodes
+}
+#endif	// NETLIST_CHECK_NAME_COLLISIONS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1676,7 +1811,7 @@ netlist::register_named_proc(const index_type _i,
 		ret = proc_pool.size();
 		INVARIANT(ret);
 #if NETLIST_CHECK_NAME_COLLISIONS
-		check_name_collisions(new_named_proc.name, ret, opt);
+		check_struct_name_collisions(new_named_proc.name, ret, opt);
 #endif
 		proc_pool.push_back(new_named_proc);
 #if 0 && ENABLE_STACKTRACE
@@ -1939,6 +2074,7 @@ netlist::emit_verilog_struct_locals(ostream& o,
 	typedef	state_instance<tag_type>	instance_type;
 	typedef	state_instance<tag_type>::pool_type
 						pool_type;
+if (nopt.struct_ports) {
 #if ENABLE_STACKTRACE
 	o << nopt.comment_prefix << "local " << traits_type::tag_name
 		<< ":" << endl;
@@ -1980,6 +2116,7 @@ netlist::emit_verilog_struct_locals(ostream& o,
 		}
 		// else skip processes -- they are sub module instances
 	}	// end for each local instance
+}
 	return o;
 }	// end netlist::emit_verilog_locals
 
@@ -2050,23 +2187,32 @@ netlist::emit_verilog_wire_locals(ostream& o,
 #endif	// NETLIST_VERILOG
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This should also track line length and auto-wrap.
+ */
 ostream&
 netlist::emit_header(ostream& o, const netlist_options& nopt) const {
+	size_t line_length = 0;
 switch (nopt.subckt_def_style) {
 case netlist_options::STYLE_SPECTRE: 
 	o << "subckt ";
+	line_length += 7;
 	break;
 case netlist_options::STYLE_SPICE: 
 	o << ".subckt ";
+	line_length += 8;
 	break;
 case netlist_options::STYLE_VERILOG:
 	o << "module ";
+	line_length += 7;
 	break;
 default:
 	o << "define-subcircuit ";
+	line_length += 18;
 	break;
 }	// end switch
 	o << name;
+	line_length += name.length();
 
 	vector<string> ports;
 if (nopt.node_ports) {
@@ -2083,15 +2229,33 @@ switch (nopt.subckt_def_style) {
 case netlist_options::STYLE_SPICE:
 case netlist_options::STYLE_SPECTRE:
 	for (; i!=e; ++i) {
+		const size_t wl = i->length() +1;
+		line_length += wl;
+		const bool wrap = (nopt.auto_wrap_length &&
+			(line_length > nopt.auto_wrap_length));
+		if (wrap) {
+			nopt.line_continue(o);
+			line_length = nopt.post_line_continue.length() +wl;
+		}
 		o << ' ' << *i;
 	}
 	break;
 case netlist_options::STYLE_VERILOG:
 	o << " (";
+	line_length += 2;
 if (ports.size()) {
 	o << *i;
 	for ( ++i; i!=e; ++i) {
-		o << ", " << *i;
+		o << ", ";
+		const size_t wl = i->length() +2;
+		line_length += wl;
+		const bool wrap = (nopt.auto_wrap_length &&
+			(line_length > nopt.auto_wrap_length));
+		if (wrap) {
+			nopt.line_continue(o);
+			line_length = nopt.post_line_continue.length() +wl;
+		}
+		o << *i;
 	}
 }
 	o << ");";
@@ -2144,6 +2308,9 @@ if (sub || nopt.emit_top) {
 	// option to suppress top-level instances and rules
 if (nopt.emit_mangle_map) {
 	emit_mangle_map(o, nopt);
+}
+if (nopt.emit_port_summary) {
+	emit_node_port_info(o, nopt);	// in comment block
 }
 if (nopt.emit_node_aliases) {
 	const util::indent _temp_(o, nopt.comment_prefix + "\t");
@@ -2601,8 +2768,7 @@ for (++i; i!=e; ++i) {
 	}
 	case 'x': {
 		const instance& inst(instance_pool[ti->index]);
-		string pname(inst.raw_identifier(*fp, nopt));
-		nopt.mangle_instance(pname);
+		const string& pname(inst.name);
 		o << nopt.subckt_instance_prefix << pname <<
 			nopt.__dump_flags.process_member_separator <<
 		inst.type->node_port_name(ti->port);
@@ -2620,6 +2786,24 @@ for (++i; i!=e; ++i) {
 	return o << nopt.comment_prefix << "END node terminals" << endl;
 }
 #endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true if we are to error out due to connectivity
+ */
+ostream&
+netlist::emit_node_port_info(ostream& o, const netlist_options& opt) const {
+	typedef	node_port_list_type::const_iterator	const_iterator;
+	const_iterator i(node_port_list.begin()), e(node_port_list.end());
+	o << opt.comment_prefix << "BEGIN node port info" << endl;
+	for (; i!=e; ++i) {
+		const node& n(node_pool[*i]);
+		n.emit_port_summary(
+			o << opt.comment_prefix << '\t', opt) << endl;
+	}
+	o << opt.comment_prefix << "END node port info" << endl;
+	return o;
+}
 
 //=============================================================================
 }	// end namespace NET

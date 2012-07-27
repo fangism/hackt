@@ -1,0 +1,14 @@
+// "port-summary-01.hac"
+// @hacknet-flags@ -f emit_port_summary=1 -f unused_ports=1
+
+defproc inv2(bool? in; bool mid; bool! out; bool? dummy) {
+prs {
+	in	=> mid-
+	mid	=> out-
+}
+}
+
+bool a, b, c, d, e;
+inv2 x(a, b, c, );
+inv2 y(c, d, e, );
+

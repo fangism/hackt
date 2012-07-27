@@ -1,0 +1,24 @@
+# "time-format-01.prsimrc"
+#	$Id: $
+# @haco@ oscillator.haco-c
+# testing backtrace command
+
+time-fmt fixed 2
+watchall
+
+echo ### resetting ...
+set _Reset 0
+cycle
+
+echo ### reeleasing ...
+set _Reset 1
+step-event 40
+
+echo ### resetting ...
+set _Reset 0
+cycle
+
+echo ### restarting ...
+set _Reset 1
+step-event 40
+

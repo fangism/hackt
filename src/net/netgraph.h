@@ -63,8 +63,8 @@
 /**
 	Define to 1 to check for name collisions, due to mangling
 	or case-insensitivity, or reserved names.
-	TODO: name collision checking should eventually include
-		instance names, etc...
+	Name collision checking now includes instance names,
+		and struct/chan names (in their own spaces)
 	For now, just checks node names.
 	Goal: 1
 	Status: done, used for a while.
@@ -818,6 +818,10 @@ public:
 	emit_node_caps(ostream&, const node_pool_type&,
 		const netlist_options&);
 #endif
+
+	ostream&
+	emit_port_summary(ostream&, const netlist_options&) const;
+
 };	// end struct node
 
 //-----------------------------------------------------------------------------
@@ -842,8 +846,11 @@ struct passive_device {
 /**
 	Instantiation of a particular substructure type.
 	spice card: x
+	Inherited members:
+		index: pid number
+		name: post-mangled name (should be local)
  */
-struct instance {
+struct instance : public unique_common {
 	/**
 		Reference to subcircuit type.
 		Translated from looking up netlist_map_type in the generator
@@ -853,10 +860,6 @@ struct instance {
 		Beware of storing insertion-invalidated pointers.
 	 */
 	const netlist*			type;
-	/**
-		Local process index.
-	 */
-	index_type			pid;
 	/**
 		Port node connections.
 	 */
@@ -875,7 +878,8 @@ struct instance {
 
 	explicit
 	instance(const netlist& t, const index_type p) :
-		type(&t), pid(p), node_actuals()
+		unique_common(p), 
+		type(&t), node_actuals()
 #if NETLIST_VERILOG
 		, proc_actuals()
 #endif
@@ -1115,7 +1119,10 @@ private:
 #if NETLIST_CHECK_NAME_COLLISIONS
 	// map for node names
 	name_collision_map_type		name_collision_map;
-	// separate map for instance names?
+	// map for structs and chan names
+	name_collision_map_type		struct_name_collision_map;
+	// map for instance names
+	name_collision_map_type		instance_name_collision_map;
 #endif
 	local_subcircuit_list_type	local_subcircuits;
 	/**
@@ -1279,6 +1286,12 @@ private:
 	void
 	check_name_collisions(const string&, const index_type, 
 		const netlist_options&);
+	void
+	check_struct_name_collisions(const string&, const index_type, 
+		const netlist_options&);
+	void
+	check_instance_name_collisions(const index_type, 
+		const netlist_options&);
 #endif
 
 	void
@@ -1313,6 +1326,9 @@ private:
 	ostream&
 	emit_node_terminal_graph(ostream&, const netlist_options&) const;
 #endif
+
+	ostream&
+	emit_node_port_info(ostream&, const netlist_options&) const;
 
 };	// end class netlist
 

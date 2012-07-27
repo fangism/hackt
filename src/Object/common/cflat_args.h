@@ -84,8 +84,7 @@ protected:
 	string				prefix;
 public:
 	cflat_aliases_arg_type(
-			const footprint_frame& _fpf,
-			const global_offset& g,
+			const global_process_context&,
 			const dump_flags&,
 #if USE_ALT_ALIAS_PAIRS
 			const dump_flags&,

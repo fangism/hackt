@@ -20,6 +20,7 @@ HACKNET_TEST_SCRIPTS_PASSES = \
 	logic-01 logic-02 \
 	ladder-01 ladder-02 \
 	mux-01 mux-02 mux-03 mux-04 mux-05 mux-06 \
+	port-summary-01 \
 	port-alias-01 port-alias-02 port-alias-03 port-alias-04 port-alias-05 \
 	top-global-params-01 top-global-params-02 \
 	top-global-params-03 top-global-params-04 \
@@ -72,10 +73,11 @@ HACKNET_TEST_SCRIPTS_PASSES = \
 	fet-type-33 fet-type-34 fet-type-35 fet-type-36 \
 	parasitics-01 \
 	aliases-01 aliases-02 aliases-03 aliases-04 \
+	route-through-01 \
 	node_caps-01 node_caps-02 node_caps-03 node_caps-04 \
 	node_caps-05 node_caps-06 \
 	mangle-01 mangle-02 mangle-03 mangle-04 mangle-04b mangle-05 \
-	mangle-06 mangle-07 mangle-08 mangle-09 \
+	mangle-06 mangle-07 mangle-08 mangle-09 mangle-10 mangle-11 \
 	quoted-names-01 quoted-names-02 \
 	struct-01 struct-02 struct-03 struct-04 struct-05 struct-06 \
 	supply-01 supply-02 supply-03 supply-04 supply-05 supply-06 \
@@ -113,6 +115,7 @@ HACKNET_TEST_SCRIPTS_PASSES = \
 	terminal-test-09 terminal-test-10 terminal-test-11 terminal-test-12 \
 	terminal-test-13 terminal-test-14 terminal-test-15 terminal-test-16 \
 	terminal-test-17 terminal-test-18 \
+	dangling-01 dangling-02 \
 	diode-01 decap-01
 
 # TODO: implement string manipulation to modify rename-04,05
@@ -126,7 +129,8 @@ HACKNET_TEST_SCRIPTS_FAILURES = \
 	rename-04 rename-05 \
 	type-mangle-collision-01 type-mangle-collision-02 \
 	iskeeper-01b \
-	sizing-08b
+	sizing-08b \
+	array-2D-01 array-2D-02
 
 # TODO: promote these to real tests
 EXTRA_DIST_HAC = \
@@ -181,6 +185,8 @@ HACKT_CREATE_TEST_PASSES = \
 	pass_gate-05 pass_gate-06 \
 	precharge-07 precharge-08 \
 	mangle-04 \
+	dangling-01 dangling-02 \
+	route-through-01 \
 	subckt-01 subckt-08 subckt-10 subckt-11 \
 	supply-pass-gate-01 supply-pass-gate-02 \
 	supply-instance-01 supply-instance-02 supply-instance-03 \

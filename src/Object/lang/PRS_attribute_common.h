@@ -100,6 +100,8 @@ DECLARE_PRS_RULE_ATTRIBUTE_COMMON_STRUCT(P_reff)
 
 /// for declaring that rule is diode-connected transistor to supply (not fanin)
 DECLARE_PRS_RULE_ATTRIBUTE_COMMON_STRUCT(Diode)
+/// for declaring that rule is fake resistor
+DECLARE_PRS_RULE_ATTRIBUTE_COMMON_STRUCT(Res)
 
 //=============================================================================
 }	// end namespace rule_attributes

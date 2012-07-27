@@ -44,6 +44,7 @@ using entity::footprint_frame;
 using entity::global_offset;
 using entity::global_entry_context;
 using entity::cflat_context_visitor;
+using entity::global_process_context;
 #if PRSIM_PRECHARGE_INVARIANTS
 class current_path_graph;
 class netgraph_node;
@@ -115,6 +116,15 @@ protected:
 		for applying attributes.  
 	 */
 	rule_type*				temp_rule;
+#if PRSIM_MODEL_POWER_SUPPLIES
+	/// the current power supply associated with rule/internal node
+	node_index_type				power_supply;
+	/**
+		Auxiliary flag for determining when power supply 
+		expression is needed.
+	 */
+	bool					at_source;
+#endif
 	/**
 		Set of optimization flags.  
 	 */
@@ -130,8 +140,7 @@ protected:
 public:
 
 	ExprAlloc(state_type&, 
-		const footprint_frame&, 
-		const global_offset&,
+		const global_process_context&,
 		const ExprAllocFlags&);
 	~ExprAlloc();
 
@@ -177,6 +186,12 @@ protected:
 
 	void
 	visit(const footprint_expr_node&);
+
+	void
+	visit_and_expr(const footprint_expr_node&);
+
+	void
+	visit_or_expr(const footprint_expr_node&);
 
 	void
 	visit(const footprint_macro&);
@@ -242,7 +257,17 @@ public:
 	void
 	append_child_expr(const expr_index_type p, const expr_index_type c);
 
+	void
+	prepend_child_expr(const expr_index_type p, const expr_index_type c);
+
 private:
+	expr_index_type
+	allocate_new_supply_expr(void);
+
+	expr_index_type
+	and_expression_with_literal(const expr_index_type, 
+		const expr_index_type);
+
 	void
 	fold_literal(const expr_index_type);
 

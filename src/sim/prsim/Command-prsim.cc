@@ -44,9 +44,11 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "sim/command_macros.tcc"
 #include "sim/command_common.tcc"
 #include "parser/instref.h"
+#include "Object/module.h"
 #include "Object/def/footprint.h"
 
 #include "common/TODO.h"
+#include "util/numformat.tcc"
 #include "util/libc.h"
 #include "util/memory/excl_malloc_ptr.h"
 #include "util/stacktrace.h"
@@ -90,6 +92,12 @@ DEFAULT_STATIC_TRACE_BEGIN
 	for ( ; niter!=nend; ++niter)
 #endif
 
+#if FOOTPRINT_OWNS_CONTEXT_CACHE
+#define	GET_CONTEXT_CACHE(x)	x.get_module().get_context_cache().
+#else
+#define	GET_CONTEXT_CACHE(x)	x.
+#endif
+
 namespace HAC {
 namespace SIM {
 
@@ -108,6 +116,7 @@ using std::front_inserter;
 using util::tokenize_char;
 using util::excl_malloc_ptr;
 using util::strings::string_to_num;
+using util::format_ostream_ref;
 using entity::global_indexed_reference;
 using entity::global_reference_array_type;
 using entity::META_TYPE_PROCESS;
@@ -531,6 +540,17 @@ PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(Repeat, builtin)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
+@texinfo cmd/meas-time.texi
+@deffn Command meas-time cmd...
+Reports time spent in a command.
+@end deffn
+@end texinfo
+***/
+typedef	MeasTime<State>				MeasTime;
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(MeasTime, builtin)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
 @texinfo cmd/history.texi
 @deffn Command history [start [end]]
 Prints command history.
@@ -821,7 +841,9 @@ if (a.size() > 2) {
 			|| n.is_watchpoint()
 #endif
 			) {
-			print_watched_node(cout << '\t' << ct << '\t', s, ni);
+			format_ostream_ref(cout << '\t', s.time_fmt)
+				<< ct << '\t';
+			print_watched_node(cout, s, ni);
 		}
 		if (n.is_breakpoint()) {
 #if !USE_WATCHPOINT_FLAG
@@ -842,8 +864,10 @@ if (a.size() > 2) {
 				cout << "\t*** break, " << i <<
 					" steps left: `" << nodename <<
 					"\' became ";
+				format_ostream_ref(
 				n.dump_value(cout) <<
-					" at time " << s.time() << endl;
+					" at time ", s.time_fmt)
+						<< s.time() << endl;
 				return Command::NORMAL;
 				// or Command::BREAK; ?
 #if !USE_WATCHPOINT_FLAG
@@ -918,7 +942,9 @@ step_event_main(State& s, size_t i) {
 			|| n.is_watchpoint()
 #endif
 				) {
-			print_watched_node(cout << '\t' << ct << '\t', s, ni);
+			format_ostream_ref(cout << '\t', s.time_fmt)
+				<< ct << '\t';
+			print_watched_node(cout, s, ni);
 		}
 		if (n.is_breakpoint()) {
 #if !USE_WATCHPOINT_FLAG
@@ -926,8 +952,9 @@ step_event_main(State& s, size_t i) {
 			const bool w = s.is_watching_node(GET_NODE(ni));
 			if (w) {
 			if (!s.watching_all_nodes()) {
-				print_watched_node(cout << '\t' << ct << '\t',
-					s, ni);
+				format_ostream_ref(cout << '\t', s.time_fmt)
+					<< ct << '\t';
+				print_watched_node(cout, s, ni);
 			}	// else already have message from before
 			}
 			// channel support
@@ -939,8 +966,10 @@ step_event_main(State& s, size_t i) {
 				cout << "\t*** break, " << i <<
 					" steps left: `" << nodename <<
 					"\' became ";
+				format_ostream_ref(
 				n.dump_value(cout) <<
-					" at time " << s.time() << endl;
+					" at time ", s.time_fmt)
+						<< s.time() << endl;
 				return Command::NORMAL;
 				// or Command::BREAK; ?
 #if !USE_WATCHPOINT_FLAG
@@ -1074,8 +1103,9 @@ if (a.size() != 1) {
 			|| n.is_watchpoint()
 #endif
 				) {
-			print_watched_node(cout << '\t' << s.time() <<
-				'\t', s, ni);
+			format_ostream_ref(cout << '\t', s.time_fmt)
+				<< s.time() << '\t';
+			print_watched_node(cout, s, ni);
 		}
 		if (n.is_breakpoint()) {
 #if !USE_WATCHPOINT_FLAG
@@ -1083,8 +1113,9 @@ if (a.size() != 1) {
 			const bool w = s.is_watching_node(GET_NODE(ni));
 			if (w) {
 			if (!s.watching_all_nodes()) {
-				print_watched_node(cout << '\t' <<
-					s.time() << '\t', s, ni);
+				format_ostream_ref(cout << '\t', s.time_fmt)
+					<< s.time() << '\t';
+				print_watched_node(cout, s, ni);
 			}	// else already have message from before
 			}
 			// channel support
@@ -1095,8 +1126,10 @@ if (a.size() != 1) {
 				// node is plain breakpoint
 				cout << "\t*** break, `" << nodename <<
 					"\' became ";
+				format_ostream_ref(
 				n.dump_value(cout) <<
-					" at time " << s.time() << endl;
+					" at time ", s.time_fmt)
+						<< s.time() << endl;
 				return Command::NORMAL;
 				// or Command::BREAK; ?
 #if !USE_WATCHPOINT_FLAG
@@ -1163,6 +1196,7 @@ static
 int
 __set_main(State& s, const string_list& a, const bool force, 
 		void (*usage)(ostream&)) {
+	STACKTRACE_VERBOSE;
 	const size_t asz = a.size();
 if (asz < 3 || asz > 4) {
 	usage(cerr << "usage: ");
@@ -2366,6 +2400,43 @@ CheckQueue::usage(ostream& o) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
+@texinfo cmd/dump-node.texi
+@deffn Command dump-node node
+Print internal structure information about the named node for debugging.
+@end deffn
+@end texinfo
+***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(DumpNode, instance_completer)
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(DumpNode, "dump-node", debug,
+	"print detailed node information for debugging")
+int
+DumpNode::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	typedef	vector<node_index_type>		nodes_id_list_type;
+	const string& objname(a.back());
+	const module& m(s.get_module());
+	const node_index_type p(parse_node_to_index(objname, m));
+	if (!p) {
+		// already have error message
+		return Command::BADARG;
+	}
+	cout << "node[" << p << "]:\n";
+	s.get_node(p).dump_debug(cout, true) << endl;
+	return Command::NORMAL;
+}
+}
+
+void
+DumpNode::usage(ostream& o) {
+	o << name << " node" << endl;
+	o << brief << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
 @texinfo cmd/process-id.texi
 @deffn Command process-id name
 Just prints the internal process ID referenced by @var{name}.
@@ -2630,8 +2701,7 @@ if (a.size() != 2) {
 	}
 	nodes_id_list_type nodes;
 	vector<bool> input_mask;
-//	s.get_process_state(p.index).type().has_not_local_fanin_map(input_mask);
-	s.get_footprint_frame(p.index)._footprint
+	GET_CONTEXT_CACHE(s) get_global_context(p.index).value.frame._footprint
 		->has_not_sub_fanin_map(input_mask);
 	if (parser::parse_name_to_get_ports(p, m, nodes, &input_mask)) {
 		return Command::BADARG;
@@ -2664,8 +2734,7 @@ if (a.size() != 2) {
 	}
 	nodes_id_list_type nodes;
 	vector<bool> output_mask;
-//	s.get_process_state(p.index).type().has_local_fanin_map(output_mask);
-	s.get_footprint_frame(p.index)._footprint
+	GET_CONTEXT_CACHE(s) get_global_context(p.index).value.frame._footprint
 		->has_sub_fanin_map(output_mask);
 	if (parser::parse_name_to_get_ports(p, m, nodes, &output_mask)) {
 		return Command::BADARG;
@@ -4570,6 +4639,22 @@ PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(Time, info)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
+@texinfo cmd/time-fmt.texi
+@deffn Command time-fmt [[no]fixed|[no]sci|INT]*
+Controls the formatting and precision of time values.
+@itemize
+@item [no]fixed : fixed-point
+@item [no]sci : scientific-notation
+@item INT : precision
+@end itemize
+@end deffn
+@end texinfo
+***/
+typedef	TimeFmt<State>				TimeFmt;
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(TimeFmt, view)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
 @texinfo cmd/confirm.texi
 @deffn Command confirm
 @deffnx Command noconfirm
@@ -5962,9 +6047,10 @@ if (a.size() > 1) {
 	usage(cerr << "usage: ");
 	return Command::BADARG;
 } else {
-	const global_entry_context::frame_cache_type& c(s.get_frame_cache());
+	entity::global_context_cache::frame_cache_type&
+		c(GET_CONTEXT_CACHE(s) get_frame_cache());
 	const size_t weight = c.weight();
-	s.halve_cache();
+	GET_CONTEXT_CACHE(s) halve_cache();
 	const size_t aft_weight = c.weight();
 	cout << "frame cache weight reduced from " << weight << " to "
 		<< aft_weight << endl;
@@ -5998,7 +6084,7 @@ if (a.size() > 1) {
 	usage(cerr << "usage: ");
 	return Command::BADARG;
 } else {
-	s.dump_frame_cache(cout);
+	GET_CONTEXT_CACHE(s) dump_frame_cache(cout);
 	return Command::NORMAL;
 }
 }
@@ -6152,9 +6238,9 @@ class_name::main(State& s, const string_list& a) {			\
 if (a.size() != 2) {							\
 	usage(cerr << "usage: ");					\
 	cerr << "current mode: " <<					\
-		error_policy_string(s.get_##func_name##_policy()) \
+		error_policy_string(s.get_##func_name##_policy()) 	\
 		<< endl;						\
-	return Command::SYNTAX;						\
+	return Command::NORMAL;						\
 } else {								\
 	const string& m(a.back());					\
 	const error_policy_enum e =	 				\
@@ -7435,6 +7521,252 @@ ChannelBD4P::usage(ostream& o) {
 #endif	// PRSIM_CHANNEL_BUNDLED_DATA
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_CHANNEL_SYNC
+/***
+@texinfo cmd/clock-source.texi
+@deffn Command clock-source node N
+Drives wire @var{node} with toggling values.
+If @var{node} is prefixed with ~, then clock is active low (negative edge).
+If @var{node} is prefixed with *, then clock is double-edged.
+The reset value, init, is only relevant to double-edged clocks.  
+With no prefix, the clock is active-high (positive edge).
+@var{N} is the number of cycles, or * for infinite. 
+For single=edged clocks, the clock always resets to its inactive value.  
+For single-edged clocks, a rise and fall counts as one cycle.
+If named clock-source already exists, restart it using the new 
+configuration and number of edges.  
+@example
+@t{clock-source CLK:0 *} -- @var{clk} is pos-edge, infinitely running clock.
+@t{clock-source ~CLK:1 20} -- @var{clk} is a neg-edge clock running 20 cycles.
+@t{clock-source *CLK:0 *} -- @var{clk} is double-edge clock, reset to 0,
+	running infinitely.
+@end example
+@end deffn
+@end texinfo
+***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(ClockSource, instance_completer)
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ClockSource, "clock-source", 
+	channels, "drives a signal with clock")
+int
+ClockSource::main(State& s, const string_list& a) {
+if (a.size() != 3) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	string_list::const_iterator i(++a.begin());
+	string clk_name(*i++);
+	const string& count(*i);
+	// could confirm that 'name' exists as a process/channel/datatype?
+	bool clk_2edge = false;
+	bool clk_sense = true;
+	bool clk_init = false;		// not supported yet
+	int iter = 0;
+	{
+		// parse clk
+		static const char clk_fmt_err[] = 
+			"Error: clk must be of the form [~*]?id:init.";
+		string_list tmp;
+		tokenize_char(clk_name, tmp, ':');
+		if (tmp.size() != 2) {
+			cerr << clk_fmt_err << endl;
+			return Command::SYNTAX;
+		}
+		clk_name = tmp.front();
+		const string clk_name2(clk_name.substr(1));
+		if (clk_name.length()) {
+		switch (clk_name[0]) {
+		case '~' : clk_sense = false; clk_name = clk_name2; break;
+		case '*' : clk_2edge = true; clk_name = clk_name2; break;
+		default: break;
+		}
+		// clk initial value is only meaningful for 2-edged clocks
+		if (clk_2edge) {
+		if (string_to_num(tmp.back(), clk_init)) {
+			cerr << "Error: parsing initial value of clk." << endl;
+			return Command::SYNTAX;
+		}
+		}
+		} else {
+			cerr << clk_fmt_err << endl;
+			return Command::SYNTAX;
+		}
+	}{
+		// parse num cycles
+		if (count[0] == '*') {
+			iter = -1;		// to mean infinite
+		} else if (string_to_num(count, iter)) {
+			cerr << "Error: parsing cycle count." << endl;
+			return Command::SYNTAX;
+		}
+	}
+	channel_manager& cm(s.get_channel_manager());
+	if (cm.new_clock_source(s, clk_name,
+			clk_2edge, clk_sense, clk_init, iter)) {
+		return Command::BADARG;
+	}
+	return Command::NORMAL;
+}
+}
+
+void
+ClockSource::usage(ostream& o) {
+	o << name << " <[~*]?node:init> <int|*>" << endl;
+	o << "node is the name of a wire signal.\n"
+"If node name is prefixed with ~, clock is active-lowa\n."
+"If node name is prefixed with *, clock is double-edged.\n"
+"For double-edged clocks, init is the reset value.\n"
+"Number of cycles is an integer or * for infinite." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/channel-clocked.texi
+@deffn Command channel-clocked name clk:init data:width
+Registers a synchronous (clocked) channel, which consists of a data bus
+and a clock signal.
+The @var{name} of the channel should match that of an instance 
+(process or channel) in the source file.  
+@itemize
+@item @var{name} is the name of the new channel in the simulator's namespace
+@item @var{clk} is the name of the clock signal.
+	The value given is the initial value of the clock on reset,
+	if driven by a source.
+	If the name is prefixed by ~ then clock is active low (negative-edge).
+	If the name is prefixed by * then clock is double-edged.
+	Otherwise, clock is considered positive-edge only.
+	The @var{init} initial value is only relevant for double-edged clocks.
+@item @var{data} is the name of the data rail(s), interpreted with active-high
+	logic levels (prefix with @t{~} to make active-low).  
+	The @var{num} value specifies the number of wires (bus width).
+	If the channel is data-less (handshake only), then omit the 
+	data rail name and just write @t{:}.
+@end itemize
+@example
+@t{channel-clocked NAME clk:0 d:0} -- this names the clock @t{clk}, 
+	and data @var{d} is a single-wire channel.
+	@var{clk} is pos-edge triggered only.
+@t{channel-clocked NAME ~clk:0 d:8} -- this names the clock @t{clk}, 
+	and data @var{d} is a 8-bit bundled-data channel.
+	@var{clk} is neg-edge triggered only.
+@t{channel-clocked NAME *clk:0 d:8} -- this names the clock @t{clk}, 
+	and data @var{d} is a 8-bit bundled-data channel.
+	@var{clk} is double-edge triggered.
+@end example
+	Sources do not actually drive the clock, they only setup the
+	data during clock edges.  
+@end deffn
+@end texinfo
+***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(ChannelClocked, instance_completer)
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelClocked, "channel-clocked", 
+	channels, "declare a clocked channel")
+
+int
+ChannelClocked::main(State& s, const string_list& a) {
+if (a.size() != 4) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	string_list::const_iterator i(++a.begin());
+	const string& chan_name(*i);
+	const string& clk(*++i);
+	const string& data(*++i);
+	// could confirm that 'name' exists as a process/channel/datatype?
+	bool clk_2edge = false;
+	bool clk_sense = true;
+	bool clk_init = false;		// not supported yet
+	bool data_sense = false;
+	size_t num_rails = 0;
+	string clk_name, data_name;
+	{
+		// parse clk
+		static const char clk_fmt_err[] = 
+			"Error: clk must be of the form [~*]?id:init.";
+		string_list tmp;
+		tokenize_char(clk, tmp, ':');
+		if (tmp.size() != 2) {
+			cerr << clk_fmt_err << endl;
+			return Command::SYNTAX;
+		}
+		clk_name = tmp.front();
+		const string clk_name2(clk_name.substr(1));
+		if (clk_name.length()) {
+		switch (clk_name[0]) {
+		case '~' : clk_sense = false; clk_name = clk_name2; break;
+		case '*' : clk_2edge = true; clk_name = clk_name2; break;
+		default: break;
+		}
+		// clk initial value is only meaningful for 2-edged clocks
+		if (clk_2edge) {
+		if (string_to_num(tmp.back(), clk_init)) {
+			cerr << "Error: parsing initial value of clk." << endl;
+			return Command::SYNTAX;
+		}
+		}
+		} else {
+			cerr << clk_fmt_err << endl;
+			return Command::SYNTAX;
+		}
+	}{
+		// parse data
+		size_t c = data.find(':');
+		if (c == string::npos || (c == data.length() -1)) {
+			THROW_EXIT;
+		}
+		string_list tmp;
+		tokenize_char(data, tmp, ':');
+		if (tmp.size() != 2) {
+			cerr << "Error: data must be of the form [~]id:init."
+				<< endl;
+			return Command::SYNTAX;
+		}
+		data_name = tmp.front();
+#if PRSIM_CHANNEL_RAILS_INVERTED
+		data_sense = (data_name[0] == '~');		// active low
+#endif
+		const string::const_iterator b(data_name.begin());
+		data_name.assign(b +size_t(data_sense), b+c);
+		if (!data_name.length()) { THROW_EXIT; }
+		if (string_to_num(tmp.back(), num_rails)) {
+			cerr << "Error: parsing bus width." << endl;
+			return Command::SYNTAX;
+		}
+	}
+	channel_manager& cm(s.get_channel_manager());
+	if (clk_2edge) {
+	if (cm.new_channel_clocked_2edge(s, chan_name, 
+			clk_name, clk_init,
+			data_name, num_rails, data_sense)) {
+		return Command::BADARG;
+	}
+	} else {
+	if (cm.new_channel_clocked_1edge(s, chan_name, 
+			clk_name, clk_sense,
+			data_name, num_rails, data_sense)) {
+		return Command::BADARG;
+	}
+	}
+	return Command::NORMAL;
+}
+}
+
+void
+ChannelClocked::usage(ostream& o) {
+	o << name << " <name> <clk:init> <data:num>" << endl;
+	o <<
+"Registers a named clocked channel in a separate namespace in \n"
+"the simulator, typically used to drive or log the environment.\n"
+"\'name\' is the name of the new channel in the simulator's namespace\n"
+"\'clk:init\' : clk is the name of the clock signal, init is the initial\n"
+	"\tvalue of this wire if configured as double-edged source.\n"
+	"\tPrefix with ~ for neg-edge, prefix with * for double-edge.\n"
+"\'data:num\' : data is the name of the data rail(s) of the channel.\n"
+	"\tnum is the number of rails (bus width).  Pass :0 if scalar wire.\n"
+	<< endl;
+}
+#endif	// PRSIM_CHANNEL_SYNC
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
 // for finesse
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(AutoChannel, "auto-channel", 
@@ -8693,7 +9025,7 @@ if (a.size() != 3) {
 #if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
 	CHANNEL_FOR_EACH(channel, chan_name) {
 		channel& c(**i);
-		if (c.set_expect_file(fn, false))
+		if (c.set_expect_file(fn, false, s.get_stream_manager()))
 			return Command::BADARG;
 	}
 #else
@@ -8753,7 +9085,7 @@ if (a.size() != 3) {
 #if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
 	CHANNEL_FOR_EACH(channel, chan_name) {
 		channel& c(**i);
-		if (c.set_expect_file(fn, true))
+		if (c.set_expect_file(fn, true, s.get_stream_manager()))
 			return Command::BADARG;
 	}
 #else

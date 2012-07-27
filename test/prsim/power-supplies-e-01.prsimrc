@@ -1,0 +1,38 @@
+# "power-supplies-e-01.prsimrc"
+# @haco@ power-supplies-e.haco-c
+# @hacprsim-flags@ -f dynamic-ground-supply -f dynamic-power-supply
+
+rules .
+
+watchall
+
+set en 1
+set x 1
+set y 1
+cycle
+get z
+fanin-get z
+why-x z
+
+echo turning on g2
+set g2 0
+cycle
+get z
+
+set en 0
+cycle
+fanin-get z
+
+set x 0
+set y 0
+cycle
+get z
+why-x z
+
+echo turning on v2
+set v2 1
+cycle
+
+get z
+fanin-get z
+

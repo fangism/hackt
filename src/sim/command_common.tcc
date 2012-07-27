@@ -26,6 +26,7 @@
 #include "util/compose.h"
 #include "util/string.tcc"
 #include "util/utypes.h"
+#include "util/timer.h"
 
 namespace HAC {
 namespace SIM {
@@ -221,7 +222,7 @@ if (a.size() != 1) {
 template <class State>
 void
 Interpret<State>::usage(ostream& o) {
-	o << "interpret" << endl;
+	o << name << endl;
 	o << "Re-opens standard-input interactive as a subshell." << endl;
 }
 
@@ -262,6 +263,42 @@ EchoCommands<State>::usage(ostream& o) {
 	o << "echo-commands [on|off]" << endl;
 	o << "Enable or disable printing of each command as it is interpreted."
  		<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(MeasTime, "meas-time",
+	"report time spent in command")
+
+template <class State>
+int
+MeasTime<State>::main(state_type& s, const string_list& a) {
+if (a.size() >= 2) {
+	string_list::const_iterator i(++a.begin());
+	string_list cmd(i, a.end());
+	// taken from command_registry_type::interpret_line:
+	// FIXME: this will not process escape-to-shell commands
+	// expand aliases first
+	if (command_registry_type::expand_aliases(cmd) != command_type::NORMAL) {
+		return command_type::BADARG;
+	}
+	const string tag(cmd.front() + " ...");
+	const util::timer T(true, cout, tag.c_str());
+	int ret = command_registry_type::execute(s, cmd);
+	if (ret == command_type::INTERACT) {
+		ret = command_registry_type::interpret_stdin(s);
+	}
+	return ret;
+} else {
+	usage(cerr << "usage: ");
+	return command_type::SYNTAX;
+}
+}
+
+template <class State>
+void
+MeasTime<State>::usage(ostream& o) {
+	o << name << " command...\n";
+	o << "Reports time spent in a given command." << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -309,7 +346,7 @@ if (a.size() > 2) {
 template <class State>
 void
 Repeat<State>::usage(ostream& o) {
-	o << "repeat <int> command...\n";
+	o << name << " <int> command...\n";
 	o << "Repeats the given command a fixed number of times." << endl;
 }
 
@@ -350,7 +387,7 @@ if (a > 2) {
 template <class State>
 void
 History<State>::usage(ostream& o) {
-	o << "history [start [end]]:\n"
+	o << name << " [start [end]]:\n"
 	"If no arguments given, then print entire command history.\n"
 	"If only START is given, print to the end.\n"
 	"If START is negative, count backwards from last line.\n"
@@ -396,7 +433,7 @@ if (a == 3) {
 template <class State>
 void
 HistoryRerun<State>::usage(ostream& o) {
-	o << "history-rerun start [end]:\n"
+	o << name << " start [end]:\n"
 	"Reruns partial command history.\n"
 	"If START is non-negative, use START as the first line.\n"
 	"If START is negative, count backwards from last line.\n"
@@ -426,7 +463,7 @@ if (s != 2) {
 template <class State>
 void
 HistorySave<State>::usage(ostream& o) {
-	o << "history-save FILE" << endl;
+	o << name << " FILE" << endl;
 	o << "Writes command-line history to file." << endl;
 }
 
@@ -467,7 +504,7 @@ if (s > 1) {
 template <class State>
 void
 HistoryNonInteractive<State>::usage(ostream& o) {
-	o << "history-noninteractive [on|off]" << endl;
+	o << name << " [on|off]" << endl;
 	o << "Turns recording of non-interactive commands on or off." << endl;
 	o << "When no argument is give, just reports the current mode." << endl;
 }
@@ -1203,6 +1240,57 @@ void
 Time<State>::usage(ostream& o) {
 	o << "time" << endl;
 	o << "shows the current time" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(TimeFmt, "time-fmt",
+	"display current simulation time")
+
+/**
+	TODO:
+	Allow "time x" to manually set the time if the event queue is empty. 
+	Useful for manually resetting the timer.  
+	Allow "time +x" to advance by time, like step.  
+		(or reserve for the advance command?)
+ */
+template <class State>
+int
+TimeFmt<State>::main(State& s, const string_list& a) {
+if (a.size() == 1) {
+	usage(cerr << "usage: ");
+	s.time_fmt.describe(cout);
+	return command_type::NORMAL;
+} else {
+	string_list::const_iterator i(a.begin()), e(a.end());
+	for (++i; i!=e; ++i) {
+		const string& arg(*i);
+		if (arg == "fixed") {
+			s.time_fmt.fmt |= std::ios_base::fixed;
+		} else if (arg == "nofixed") {
+			s.time_fmt.fmt &= ~std::ios_base::fixed;
+		} else if (arg == "sci") {
+			s.time_fmt.fmt |= std::ios_base::scientific;
+		} else if (arg == "nosci") {
+			s.time_fmt.fmt &= ~std::ios_base::scientific;
+		} else {
+			if (string_to_num(*i, s.time_fmt.precision)) {
+				cerr << "Unrecognized option." << endl;
+				return command_type::BADARG;
+			}
+		}
+	}
+	return command_type::NORMAL;
+}
+}
+
+template <class State>
+void
+TimeFmt<State>::usage(ostream& o) {
+	o << "time-fmt [fixed|nofixed|sci|nosci|INT]*" << endl;
+	o << "sets the output formatting of time values.\n"
+"  [no]fixed : use fixed-point\n"
+"  [no]sci   : use scientific notation\n"
+"  INT       : set precision" << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

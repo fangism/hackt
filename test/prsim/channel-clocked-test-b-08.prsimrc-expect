@@ -1,0 +1,38 @@
+channels:
+W : clocked-anyedge:0 x4 off
+X : clocked-posedge x1 off
+Y : clocked-negedge x1 off
+Z : clocked-anyedge:1 x2 off
+Warning: channel validity is already being driven by source on channel `Y.clk'.
+Y : clocked-negedge x1 source, timing: after=10 {0,1,1,0,0,1,1,1,0,0,0,} @0
+	count: 0, unknowns: 1
+Y.clk : clock-source negedge source, timing: after=50 @0/5
+	count: 0, unknowns: 0
+	10	Y.d[0] : 0
+	50	Y.clk : 1
+Y : clocked-negedge x1 source,stopped, timing: after=10 {0,1,1,0,0,1,1,1,0,0,0,} @0
+	count: 0, unknowns: 0
+Y.clk : clock-source negedge source,stopped, timing: after=50 @0/5
+	count: 0, unknowns: 0
+Y : clocked-negedge x1 source, timing: after=10 {0,1,1,0,0,1,1,1,0,0,0,} @1
+	count: 0, unknowns: 0
+Y.clk : clock-source negedge source, timing: after=50 @0/5
+	count: 0, unknowns: 0
+	100	Y.clk : 0
+	150	Y.clk : 1	[by Y.clk:=1]
+	160	Y.d[0] : 1	[by Y.clk:=1]
+	200	Y.clk : 0	[by Y.clk:=0]
+	250	Y.clk : 1	[by Y.clk:=1]
+	300	Y.clk : 0	[by Y.clk:=0]
+	350	Y.clk : 1	[by Y.clk:=1]
+	360	Y.d[0] : 0	[by Y.clk:=1]
+	400	Y.clk : 0	[by Y.clk:=0]
+	450	Y.clk : 1	[by Y.clk:=1]
+	500	Y.clk : 0	[by Y.clk:=0]
+	550	Y.clk : 1	[by Y.clk:=1]
+	560	Y.d[0] : 1	[by Y.clk:=1]
+time: 560
+Y : clocked-negedge x1 source, timing: after=10 {0,1,1,0,0,1,1,1,0,0,0,} @6
+	count: 1, unknowns: 0
+Y.clk : clock-source negedge source, timing: after=50
+	count: 0, unknowns: 0

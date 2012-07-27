@@ -32,6 +32,7 @@
 #include "util/string_fwd.h"
 #include "util/named_ifstream_manager.h"
 #include "util/tokenize_fwd.h"
+#include "util/numformat.h"
 #include "Object/devel_switches.h"
 
 #if	!PRSIM_SIMPLE_EVENT_QUEUE
@@ -649,6 +650,8 @@ private:
 public:
 	// save flags used for printing
 	dump_flags				_dump_flags;
+	// for formatting timestamps
+	util::numformat				time_fmt;
 private:
 #if PRSIM_AGGREGATE_EXCEPTIONS
 	/**
@@ -722,13 +725,13 @@ public:
 
 private:
 	void
-	__initialize_state(const bool);
+	__initialize_state(const bool, const bool);
 
 	void
 	__initialize_time(void);
 
 	void
-	__initialize(void);
+	__initialize(const bool);
 
 	node_type&
 	__get_node(const node_index_type);

@@ -502,6 +502,41 @@ default: break;
 
 //-----------------------------------------------------------------------------
 /***
+@texinfo prs/attribute-res.texi
+@defmac res [b]
+If @var{b} is true (1), flag that this rule is a fake resistor.
+If unspecified, default value is true.
+@end defmac
+@end texinfo
+***/
+DECLARE_AND_DEFINE_CFLAT_PRS_ATTRIBUTE_CLASS(Res, "res")
+
+/**
+      Prints out "res" before a rule in cflat.  
+ */
+void
+Res::main(visitor_type& p, const values_type& v) {
+switch (p.cfopts.primary_tool) {
+case cflat_options::TOOL_PRSIM:
+	// fall-through
+case cflat_options::TOOL_LVS: {
+	pint_value_type b = 1;
+	if (v.size()) {
+		const pint_const& pi(*v[0].is_a<const pint_const>());
+		b = pi.static_constant_value();
+	}
+	if (b) {
+		ostream& o(p.os);
+		o << "res\t";
+	}
+	break;
+}
+default: break;
+}
+}
+
+//-----------------------------------------------------------------------------
+/***
 @texinfo prs/attribute-output.texi
 @defmac output b
 If @var{b} is true (1), staticize (explicitly).

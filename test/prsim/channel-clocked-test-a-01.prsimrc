@@ -1,0 +1,14 @@
+# "channel-clocked-test-a-01.prsimrc"
+# @haco@ channel-clocked-test-a.haco-c
+
+# pos-edge
+channel-clocked X clk:0 d:0
+# neg-edge
+channel-clocked Y ~clk:0 d:1
+# any-edge (2p)
+channel-clocked Z *clk:1 d:2
+channel-clocked W *clk:0 d:4
+
+channel-show-all
+channel-report-time on
+

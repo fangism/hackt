@@ -1,0 +1,12 @@
+# "set-assert-03.prsimrc"
+# @haco@ set-assert-03.haco-c
+
+watchall
+# !date
+set foo.x[0..1][0..1] 0
+# !date
+cycle
+# !date
+assert foo.y[0..1][0..1] 1
+# !date
+

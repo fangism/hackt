@@ -1,0 +1,28 @@
+# "clock-source-test-a-02.prsimrc"
+# @haco@ clock-source-test-a.haco-c
+
+watchall
+
+clock-source clk_p:0 10
+clock-source ~clk_n:1 10
+clock-source *clk_a:0 20
+
+channel-timing clk_p after 20
+channel-timing clk_n after 25
+channel-timing clk_a after 30
+
+channel-show-all
+
+echo *** resetting clock sources
+channel-ignore-all
+channel-reset-all
+cycle
+
+channel-show-all
+
+echo *** releasing clock sources
+channel-heed-all
+channel-release-all
+cycle
+
+channel-show-all

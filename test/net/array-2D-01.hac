@@ -1,0 +1,13 @@
+// "array-2D-01.hac"
+// @hacknet-flags@ -T foo -f mangle_array_index_open= -f mangle_array_index_close=
+// should catch collision in bool names, post-mangle
+
+defproc foo(bool? in[12][12]; bool! out[12][12]) {
+prs {
+	(:i:12:
+	(:j:12:
+		in[i][j]	=> out[i][j]-
+	)
+	)
+}
+}

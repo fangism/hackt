@@ -73,7 +73,7 @@ netlist_generator::netlist_generator(
 		ostream& o, 
 		const netlist_options& p) :
 		global_process_context(m),
-		global_entry_context(frame, offset),
+		global_entry_context(AS_A(const global_process_context&, *this)),
 		// from global_process_context
 		cflat_visitor(), 
 		os(o), opt(p), netmap(),

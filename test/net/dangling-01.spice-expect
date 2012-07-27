@@ -1,0 +1,5 @@
+Mpd:up:0 ps1 a pd Vdd pch W=5u L=2u
+Mpd:up:1 ps2 b pd Vdd pch W=5u L=2u
+Mnd:dn:0 ns1 a nd GND nch W=5u L=2u
+Mnd:dn:1 ns2 b nd GND nch W=5u L=2u
+

@@ -1,0 +1,31 @@
+// "string-compare-01.hac"
+
+pint N = 17;
+pstring larry = "Larry";
+pstring moe = "Moe";
+pbool eq[N];
+eq[0] = (larry == moe);				// false
+eq[1] = (larry == "Curly");			// false
+eq[2] = ("Curly" == moe);			// false
+eq[3] = (moe == moe);				// true
+eq[4] = ("Joe" == "Joe");			// true
+eq[5] = ("Joe" == "Snow");			// false
+eq[6] = (larry != moe);				// true
+eq[7] = (larry < moe);				// true
+eq[8] = (larry > moe);				// false
+eq[9] = (larry <= moe);				// true
+eq[10] = (larry >= moe);			// false
+eq[11] = (larry < larry);			// false
+eq[12] = (larry > larry);			// false
+eq[13] = (larry <= larry);			// true
+eq[14] = (larry >= larry);			// true
+eq[15] = (larry == larry);			// true
+eq[16] = (larry != larry);			// false
+
+template <><pbool X>
+defproc foo() { }
+
+foo f[N];
+(;i:N:
+	f[i]<eq[i]>;
+)

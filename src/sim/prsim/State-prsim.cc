@@ -61,6 +61,7 @@
 #include "util/utypes.h"
 #include "util/indent.h"
 #include "util/tokenize.h"
+#include "util/numformat.tcc"
 
 // re-define to be more readable
 #undef	STACKTRACE_VERBOSE
@@ -123,6 +124,12 @@
  */
 #define	EXTRA_ALIGN_MARKERS			0
 
+#if FOOTPRINT_OWNS_CONTEXT_CACHE
+#define	GET_CONTEXT_CACHE		get_module().get_context_cache().
+#else
+#define	GET_CONTEXT_CACHE		module_state_base::
+#endif
+
 
 namespace HAC {
 namespace entity { }
@@ -149,6 +156,7 @@ using util::bind2nd_argval_void;
 using util::auto_indent;
 using util::indent;
 using util::tokenize_char;
+using util::format_ostream_ref;
 using entity::state_manager;
 using entity::global_entry_pool;
 using entity::bool_tag;
@@ -373,10 +381,14 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 		autosave_name("autosave.prsimckpt"),
 		timing_mode(TIMING_DEFAULT),
 		_dump_flags(dump_flags::no_owners), 
+		time_fmt(cout),
 #if PRSIM_AGGREGATE_EXCEPTIONS
 		recent_exceptions(),
 #endif
 		__shuffle_indices(0) {
+//	time_fmt.fmt |= std::ios_base::fixed;
+//	time_fmt.fmt &= ~std::ios_base::scientific;
+//	time_fmt.precision = 3;		// default is 6
 	const footprint& topfp(mod.get_footprint());
 	const size_t s = topfp.get_instance_pool<bool_tag>().total_entries() +1;
 	// let 0th slot be dummy, so we can use 1-based global indexing
@@ -392,11 +404,13 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 	// got a walker? and prs_expr_visitor?
 	// see "ExprAlloc.h"
 
+#if FOOTPRINT_OWNS_CONTEXT_CACHE
+	m.get_context_cache();		// reference checks for NULL
+#endif
 	// NOTE: we're referencing 'this' during construction, however, we 
 	// are done constructing this State's members at this point.  
-	const entity::footprint_frame tff(topfp);
-	const entity::global_offset g;
-	ExprAlloc v(*this, tff, g, f);
+	const entity::global_process_context gpc(topfp);
+	ExprAlloc v(*this, gpc, f);
 	// pre-allocate array of process states
 	// use 0th slot for top-level
 	process_state_array.resize(
@@ -499,11 +513,12 @@ State::__initialize_time(void) {
 	Procedure is common to initialize() and reset().
  */
 void
-State::__initialize_state(const bool startup) {
+State::__initialize_state(const bool startup, const bool reset_count) {
 	STACKTRACE_VERBOSE;
 	for_each(node_pool.begin(), node_pool.end(), 
-		mem_fun_ref(startup ? &node_type::initialize
-			: &node_type::x_value_and_cause));
+		mem_fun_ref(startup ? &node_type::reset :
+			(reset_count ? &node_type::initialize
+				: &node_type::x_value_and_cause)));
 	for_each(process_state_array.begin(), process_state_array.end(), 
 		mem_fun_ref(&process_sim_state::initialize));
 	// the expr_graph_node_pool contains no stateful information.  
@@ -526,8 +541,16 @@ State::__initialize_state(const bool startup) {
 	// for now, the implciit globals cannot be referenced directly
 	// in the source language, so we'll punt.
 	const event_cause_type null;
+#if PRSIM_MODEL_POWER_SUPPLIES
+	// TODO: these need to trigger fanout evaluations!
+	set_node(gi, LOGIC_LOW, false);		// force?
+	set_node(vi, LOGIC_HIGH, false);	// force?
+	cycle();
+	// make sure time has not advanced!
+#else
 	node_pool[gi].set_value_and_cause(LOGIC_LOW, null);
 	node_pool[vi].set_value_and_cause(LOGIC_HIGH, null);
+#endif
 #endif
 	// keep connected channels up-to-date with X values of nodes
 	// but this closes channel-log streams
@@ -536,9 +559,10 @@ State::__initialize_state(const bool startup) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-State::__initialize(void) {
+State::__initialize(const bool startup) {
 	__initialize_time();
-	__initialize_state(true);
+	__initialize_state(startup, true);
+	assert(time_traits::is_zero(current_time));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -549,7 +573,7 @@ State::__initialize(void) {
 void
 State::x_all(void) {
 	STACKTRACE_VERBOSE;
-	__initialize_state(false);
+	__initialize_state(false, false);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -562,7 +586,7 @@ State::x_all(void) {
 void
 State::initialize(void) {
 	STACKTRACE_VERBOSE;
-	__initialize();
+	__initialize(false);
 	flags |= FLAGS_INITIALIZE_SET_MASK;
 	flags &= ~FLAGS_INITIALIZE_CLEAR_MASK;
 }
@@ -819,7 +843,7 @@ State::reset_tcounts(void) {
 void
 State::reset(void) {
 	STACKTRACE_VERBOSE;
-	__initialize();
+	__initialize(true);
 	// this also closes trace files
 	flags = FLAGS_DEFAULT;
 #define	E(e)	error_policy_enum(ERROR_DEFAULT_##e)
@@ -973,7 +997,8 @@ footprint_frame_map_type
 const footprint_frame_map_type&
 #endif
 State::get_footprint_frame_map(const process_index_type pid) const {
-	return module_state_base::get_footprint_frame(pid).get_frame_map<bool_tag>();
+	return GET_CONTEXT_CACHE
+		get_global_context(pid).value.frame.get_frame_map<bool_tag>();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1259,6 +1284,7 @@ State::kill_event(const event_index_type ei, const node_index_type ni) {
 /**
 	Registers event in the primary event queue.  
 	Only this is allowed to load killed events.  
+	\return index of the node whose event was just enqueued
  */
 // inline
 node_index_type
@@ -1271,9 +1297,14 @@ State::load_enqueue_event(const time_type t, const event_index_type ei) {
 		dump_node_canonical_name(cerr <<
 		"FATAL: attempt to schedule event in the past on node: ", ni)
 			<< endl;
-		cerr << "\tnew: " << t << " vs. now: " << current_time << endl;
+		format_ostream_ref(cerr << "\tnew: ", time_fmt)
+			<< t << " vs. now: ";
+		format_ostream_ref(cerr, time_fmt) << current_time << endl;
+		dump_event(cout << "event:", ei, t);
+		// just to keep event_queue consistent for termination
+		event_queue.push(event_placeholder_type(t, ei));
+		ISE_INVARIANT(t >= current_time);	// noreturn
 	}
-	ISE_INVARIANT(t >= current_time);
 	DEBUG_STEP_PRINT("enqueuing event ID " << ei <<
 		" on node " << ni <<
 		" at time " << t << endl);
@@ -1573,17 +1604,23 @@ State::set_node_time(const node_index_type ni, const value_enum val,
 if (pending) {
 	// does it matter whether or not last_val == val?
 	const string objname(get_node_canonical_name(ni));
+	const event_type& pe(get_event(pending));
+	const value_enum pval = pe.val;
+	const char pc = node_type::value_to_char[pval];
+	const char nc = node_type::value_to_char[val];
 	if (f) {
 		// doesn't matter what what last_val was, override it
 		// even if value is the same, reschedule it
 		// cancel former event, but don't deallocate it until dequeued
 		cout << "WARNING: pending event for node `" << objname <<
-			"\' was overridden." << endl;
+			"\' -> " << pc << " was overridden to " << nc <<
+			'.' << endl;
 		kill_event(pending, ni);
 	} else if (!unchanged) {
 		// not forcing: if new value is different, issue warning
 		cout << "WARNING: pending value for node `" << objname <<
-			"\'; ignoring request" << endl;
+			"\' is already " << pc <<
+			"; ignoring new request" << endl;
 		return ENQUEUE_WARNING;
 	} else {
 		// ignore
@@ -1852,6 +1889,7 @@ State::dump_mode(ostream& o) const {
 /**
 	Show current timing mode.
 	Show random seed?
+	TODO: use time_fmt
  */
 ostream&
 State::dump_timing(ostream& o) const {
@@ -1933,6 +1971,7 @@ State::parse_min_max_delay(const string& d,
 /**
 	\return true if there is a syntax error.  
 	TODO: use a map to parsers.  
+	TODO: use time_fmt
  */
 bool
 State::set_timing(const string& m, const string_list& a) {
@@ -3400,7 +3439,7 @@ if (n.in_channel()) {
 		--cache_countdown;
 	} else {
 		cache_countdown = cache_half_life;
-		halve_cache();
+		GET_CONTEXT_CACHE halve_cache();
 	}
 #endif
 
@@ -5200,7 +5239,8 @@ State::dump_event_force(ostream& o, const event_index_type ei,
 	const event_type& ev(get_event(ei));
 //	o << '[' << ei << ']';		// for debugging
 	if (!ev.killed() || force) {
-		dump_node_canonical_name(o << '\t' << t << '\t', ev.node) <<
+		format_ostream_ref(o << '\t', time_fmt) << t << '\t';
+		dump_node_canonical_name(o, ev.node) <<
 			" : " << node_type::value_to_char[ev.val];
 		if (ev.cause.node) {
 			dump_node_canonical_name(o << '\t' << "[from ",
@@ -6894,7 +6934,7 @@ struct process_sim_state::memory_accumulator {
  */
 ostream&
 State::dump_memory_usage(ostream& o) const {
-	module_state_base::dump_memory_usage(o);
+	GET_CONTEXT_CACHE dump_memory_usage(o);
 {
 	const size_t ns = node_pool.size();
 	o << "node-state: ("  << ns << " * " << sizeof(node_type) <<
@@ -7168,6 +7208,7 @@ State::save_checkpoint(ostream& o) const {
 //	write_value(o, autosave_name);		// don't preserve
 	write_value(o, timing_mode);
 	_dump_flags.write_object(o);
+	time_fmt.write_object(o);
 	if (_channel_manager.save_checkpoint(o)) return true;
 	// interrupted flag, just ignore
 	// trace_flush_interval: not saved
@@ -7386,6 +7427,7 @@ try {
 //	read_value(i, autosave_name);	// ignore the name of checkpoint
 	read_value(i, timing_mode);
 	_dump_flags.load_object(i);
+	time_fmt.load_object(i);
 	// interrupted flag, just ignore
 	// ifstreams? don't bother managing input stream stack.
 	// __scratch_expr_trace -- never needed, ignore
@@ -7528,6 +7570,7 @@ State::dump_checkpoint(ostream& o, istream& i) {
 	READ_ALIGN_MARKER		// sanity alignment check
 	flags_type flags;
 	read_value(i, flags);
+	const util::save_flags s(o, o.flags());
 	o << "flags: 0x" << std::hex << size_t(flags) << endl;
 {
 	error_policy_enum p;
@@ -7566,8 +7609,11 @@ State::dump_checkpoint(ostream& o, istream& i) {
 	dump_flags tmp;
 	tmp.load_object(i);
 	tmp.dump(o << "dump flags: {\n") << "}" << endl;
-}
-{
+}{
+	util::numformat tmp(cout);
+	tmp.load_object(i);
+	tmp.dump(o << "time-fmt flags: { ") << " }" << endl;
+}{
 	channel_manager tmp;
 	tmp.load_checkpoint(i);
 	tmp.dump_checkpoint_state(o) << endl;

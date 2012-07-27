@@ -50,11 +50,9 @@ protected:
 	float					one_conductance;
 
 public:
-	cflat_prs_printer(
-			const footprint_frame& ff, 
-			const global_offset& g,
+	cflat_prs_printer(const global_process_context& c,
 			ostream& _os, const cflat_options& _cfo) :
-			cflat_context_visitor(ff, g), 
+			cflat_context_visitor(c), 
 			os(_os), cfopts(_cfo) { }
 	~cflat_prs_printer();
 

@@ -143,12 +143,12 @@ try {
 	const State::signal_handler_type int_handler(&sim_state);
 	if (opt.dump_expr_alloc)
 		sim_state.dump_struct(cout) << endl;
+	if (opt.dump_dot_struct)
+		sim_state.dump_struct_dot(cout) << endl;
 	if (opt.check_structure)
 		sim_state.check_structure();
 	// optimize expression allocation?
 
-	if (opt.dump_dot_struct)
-		sim_state.dump_struct_dot(cout) << endl;
 	sim_state.import_source_paths(opt.source_paths);
 	if (opt.run) {
 		sim_state.initialize();
@@ -473,6 +473,7 @@ prsim::usage(void) {
 //-----------------------------------------------------------------------------
 // prsim_option modifier functions and their flag registrations
 // TODO: several of these options could be exposed to vpi-prsim.cc!
+// TODO: implement this in a real opt-parse map (util/optparse.h)
 
 static void __prsim_default(prsim_options& o) { o = prsim_options(); }
 static void __prsim_run(prsim_options& o) { o.run = true; }
@@ -506,6 +507,16 @@ static void __prsim_precharge_invariants(prsim_options& o)
 	{ o.expr_alloc_flags.auto_precharge_invariants = true; }
 static void __prsim_no_precharge_invariants(prsim_options& o)
 	{ o.expr_alloc_flags.auto_precharge_invariants = false; }
+#if PRSIM_MODEL_POWER_SUPPLIES
+static void __prsim_dynamic_ground_supply(prsim_options& o)
+	{ o.expr_alloc_flags.dynamic_ground_supply = true; }
+static void __prsim_no_dynamic_ground_supply(prsim_options& o)
+	{ o.expr_alloc_flags.dynamic_ground_supply = false; }
+static void __prsim_dynamic_power_supply(prsim_options& o)
+	{ o.expr_alloc_flags.dynamic_power_supply = true; }
+static void __prsim_no_dynamic_power_supply(prsim_options& o)
+	{ o.expr_alloc_flags.dynamic_power_supply = false; }
+#endif
 
 const prsim::register_options_modifier
 /***
@@ -660,7 +671,39 @@ process, by invoking @command{hacknet} as a sub-program.
 		"enable precharge safety invariants"), 
 	prsim::_no_precharge_invariants(
 		"no-precharge-invariants", &__prsim_no_precharge_invariants,
-		"disable precharge safety invariants [default]");
+		"disable precharge safety invariants [default]"),
+
+/***
+@texinfo opt/dynamic-supply.texi
+@defopt {-f dynamic-ground-supply}
+@defoptx {-f no-dynamic-ground-supply}
+@defoptx {-f dynamic-power-supply}
+@defoptx {-f no-dynamic-power-supply}
+Normally, the simulator models prodution rules as always being connected
+to power supplies that are always on.  
+However, to model the effect of selectively turning on power supplies,
+this option automatically adds the respective power domain supply signals
+into the production rule expressions.
+Pull-up terms are AND-ed with the corresponding Vdd supply,
+and pull-down terms are AND-ed with ~GND.
+Rules in domains that have their supply turned off will be cut-off
+and not fire.
+Default: both disabled
+@end defopt
+@end texinfo
+***/
+	prsim::_dynamic_ground_supply(
+		"dynamic-ground-supply", &__prsim_dynamic_ground_supply,
+		"model dynamic ground supplies for pull-downs"), 
+	prsim::_no_dynamic_ground_supply(
+		"no-dynamic-ground-supply", &__prsim_no_dynamic_ground_supply,
+		"assume statically on ground supplies [default]"),
+	prsim::_dynamic_power_supply(
+		"dynamic-power-supply", &__prsim_dynamic_power_supply,
+		"model dynamic power supplies for pull-ups"), 
+	prsim::_no_dynamic_power_supply(
+		"no-dynamic-power-supply", &__prsim_no_dynamic_power_supply,
+		"assume statically on power supplies [default]");
 
 
 //=============================================================================

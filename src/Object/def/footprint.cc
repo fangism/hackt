@@ -79,6 +79,9 @@
 #include "Object/expr/expr_dump_context.h"
 #endif
 #include "Object/unroll/unroll_context.h"
+#if FOOTPRINT_OWNS_CONTEXT_CACHE
+#include "Object/global_context_cache.h"
+#endif
 #include "Object/interfaces/VCDwriter.h"	// should belong elsewhere
 #include "common/TODO.h"
 #include "main/cflat_options.h"
@@ -255,6 +258,9 @@ footprint::footprint() :
 	value_footprint_base<pstring_tag>(), 
 	prs_footprint(new PRS::footprint), 
 	spec_footprint(new SPEC::footprint),
+#if FOOTPRINT_OWNS_CONTEXT_CACHE
+	context_cache(NULL),
+#endif
 	warning_count(0), 
 	lock_state(false) { }
 // the other members, don't care, just placeholder ctor before loading object
@@ -325,6 +331,9 @@ footprint::footprint(const const_param_expr_list& p,
 	chp_footprint(NULL), 	// allocate when we actually need it
 	chp_event_footprint(), 
 	spec_footprint(new SPEC::footprint), 
+#if FOOTPRINT_OWNS_CONTEXT_CACHE
+	context_cache(NULL),
+#endif
 	warning_count(0),
 	lock_state(false) {
 	STACKTRACE_CTOR_VERBOSE;
@@ -357,6 +366,9 @@ footprint::footprint(const temp_footprint_tag_type&) :
 	chp_footprint(NULL), 	// allocate when we actually need it
 	chp_event_footprint(), 
 	spec_footprint(new SPEC::footprint),
+#if FOOTPRINT_OWNS_CONTEXT_CACHE
+	context_cache(NULL),
+#endif
 	warning_count(0),
 	lock_state(false) {
 	STACKTRACE_CTOR_VERBOSE;
@@ -405,6 +417,29 @@ footprint::footprint(const footprint& t) :
 footprint::~footprint() {
 	STACKTRACE_DTOR_VERBOSE;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if FOOTPRINT_OWNS_CONTEXT_CACHE
+/**
+	\return true on error.
+ */
+bool
+footprint::initialize_context_cache(void) const {
+	STACKTRACE_INDENT_PRINT("creating global context cache" << endl);
+	if (is_created()) {
+		if (!context_cache) {
+			context_cache = excl_ptr<global_context_cache>(
+				new global_context_cache(*this));
+		}
+		return false;
+	} else {
+		cerr <<
+"Error: Cannot initialize context cache until footprint (and dependents) have "
+"been created." << endl;
+		return true;
+	}
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 meta_type_tag_enum
@@ -1452,18 +1487,17 @@ footprint::cflat_aliases(ostream& o,
 		wires.resize(s);
 		// WARNING: could be HUGE
 	}
-	const footprint_frame ff(*this);
-	global_offset g;
+	const global_process_context gpc(*this);
 if (cf.connect_style == cflat_options::CONNECT_STYLE_HIERARCHICAL) {
 if (cf.primary_tool == cflat_options::TOOL_VCD) {
-	VCD::VCDwriter v(ff, g, o, cf);
+	VCD::VCDwriter v(gpc, o, cf);
 	accept(v);
 } else {
-	hierarchical_alias_visitor v(ff, g);	// is quiet, but traverses
+	hierarchical_alias_visitor v(gpc);	// is quiet, but traverses
 	accept(v);
 }
 } else {
-	alias_printer v(o, ff, g, cf, wires, string());
+	alias_printer v(o, gpc, cf, wires, string());
 	accept(AS_A(global_entry_context&, v));
 	if (cf.wire_mode && cf.connect_style && !cf.check_prs) {
 		// style need not be CONNECT_STYLE_WIRE, just not NONE
@@ -1638,11 +1672,10 @@ footprint::__dump_allocation_map(ostream& o) const {
 if (_pool.total_entries()) {
 	o << "[global " << class_traits<Tag>::tag_name << " entries]" << endl;
 	// empty top-level footprint frame, has no ports to pass in!
-	const footprint_frame ff(*this);
-	global_offset g;	// 0s
 	// TODO: why not just have global_offset initialize to 1s for 1-based?
 	// instead of adding 1 everywhere else?
-	global_allocation_dumper<Tag> d(o, ff, g);
+	const global_process_context c(*this);
+	global_allocation_dumper<Tag> d(o, c);
 	this->accept(d);
 }
 	return o;
@@ -1806,6 +1839,7 @@ footprint::write_object_base(const persistent_object_manager& m,
 	chp_event_footprint.write_object_base(m, o);
 	// alternative: re-construct event footprint upon loading?
 	spec_footprint->write_object_base(m, o);
+	// ignore context_cache
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1895,6 +1929,7 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 	// alternative: re-construct event footprint upon loading?
 	chp_event_footprint.load_object_base(m, i);
 	spec_footprint->load_object_base(m, i);
+	// ignore context_cache
 	lock_state = false;
 }
 

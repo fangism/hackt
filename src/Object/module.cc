@@ -29,6 +29,7 @@
 #include "Object/type/canonical_type.h"
 #include "Object/def/process_definition.h"
 #include "Object/global_entry.h"
+#include "Object/global_context_cache.h"
 #include "Object/traits/proc_traits.h"
 #include "AST/token_string.h"		// blech, cyclic library dep?
 
@@ -85,13 +86,20 @@ module::module() :
 		process_definition(), 
 		global_namespace(NULL), 
 		compile_opts()
+#if !FOOTPRINT_OWNS_CONTEXT_CACHE
+		, context_cache(NULL)
+#endif
 		{
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 module::module(const string& s) :
 		process_definition(s), 
-		global_namespace(new name_space(""))
+		global_namespace(new name_space("")),
+		compile_opts()
+#if !FOOTPRINT_OWNS_CONTEXT_CACHE
+		, context_cache(NULL)
+#endif
 		{
 	NEVER_NULL(global_namespace);
 }
@@ -263,6 +271,9 @@ module::create_unique(void) {
 			return good_bool(false);
 		}
 	}
+#if FOOTPRINT_OWNS_CONTEXT_CACHE
+	initialize_context_cache();
+#endif
 	return good_bool(true);
 }
 
@@ -447,15 +458,41 @@ module::__import_global_parameters(const module& m,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if FOOTPRINT_OWNS_CONTEXT_CACHE
+global_context_cache&
+module::get_context_cache(void) const {
+	return get_footprint().get_context_cache();
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+module::initialize_context_cache(void) const {
+	STACKTRACE_VERBOSE;
+	if (is_created()
+#if !FOOTPRINT_OWNS_CONTEXT_CACHE
+		&& !context_cache
+#endif
+		) {
+#if FOOTPRINT_OWNS_CONTEXT_CACHE
+		get_footprint().initialize_context_cache();
+#else
+	STACKTRACE_INDENT_PRINT("creating global context cache" << endl);
+		context_cache = excl_ptr<global_context_cache>(
+			new global_context_cache(get_footprint()));
+#endif
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
 module::__cflat_rules(const footprint& _footprint, 
 		ostream& o, const cflat_options& cf) {
 	STACKTRACE_VERBOSE;
 	// our printing visitor functor
 if (cf.include_prs) {
-	const footprint_frame ff(_footprint);	// empty ports
-	global_offset g;	// 0s
-	PRS::cflat_prs_printer cfp(ff, g, o, cf);
+	const global_process_context pc(_footprint);
+	PRS::cflat_prs_printer cfp(pc, o, cf);
 	STACKTRACE("cflatting production rules.");
 	if (cf.dsim_prs)	o << "dsim {" << endl;
 	try {
@@ -532,6 +569,7 @@ if (!m.register_transient_object(this,
 	global_namespace->collect_transient_info(m);
 	// the list itself is a statically allocated member
 	parent_type::collect_transient_info_base(m);
+	// ignore context cache
 }
 // else already visited
 }
@@ -544,6 +582,7 @@ module::write_object(const persistent_object_manager& m, ostream& f) const {
 	compile_opts.write_object(f);		// record compile options
 	// need options *before* body because reconstruction depends on it
 	parent_type::write_object_base(m, f);
+	// ignore context cache
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -568,6 +607,7 @@ module::load_object(const persistent_object_manager& m, istream& f) {
 	// since instance pools are reconstructed,
 	// we need to override the top-level module to have no ports
 	get_footprint().zero_top_level_ports();
+	// ignore context cache, load later...
 }
 
 //=============================================================================

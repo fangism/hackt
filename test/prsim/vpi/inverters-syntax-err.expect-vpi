@@ -1,0 +1,7 @@
+$start of simulation 
+usage: get <node>
+Print the current value of the node and, if applicable, the last arriving
+signal transition that caused it to become its current value.
+Treating command errors (syntax, bad-arg) as fatal.
+Terminating simulation early due to hacprsim fatal error.
+$finish at simulation time (hacprsim) 0

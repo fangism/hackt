@@ -1,0 +1,11 @@
+Mmid:dn:0 !GND in mid !GND nch W=5u L=2u
+Mmid:up:0 !Vdd in mid !Vdd pch W=5u L=2u
+Mmid2:dn:0 !GND mid mid2 !GND nch W=5u L=2u
+Mmid2:up:0 !Vdd mid mid2 !Vdd pch W=5u L=2u
+Mmid3:dn:0 !GND mid2 mid3 !GND nch W=5u L=2u
+Mmid3:up:0 !Vdd mid2 mid3 !Vdd pch W=5u L=2u
+Mmid4:dn:0 !GND mid3 mid4 !GND nch W=5u L=2u
+Mmid4:up:0 !Vdd mid3 mid4 !Vdd pch W=5u L=2u
+Mout:dn:0 !GND mid4 out !GND nch W=5u L=2u
+Mout:up:0 !Vdd mid4 out !Vdd pch W=5u L=2u
+

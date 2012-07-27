@@ -286,6 +286,27 @@
  */
 #define	NONMETA_MEMBER_REFERENCES		0
 
+/**
+	Define to 1 to lookup more than one parent at a time
+	for aggregate references like a[x..y].b, *without* having
+	to flatten or expand into a large number of individual references.
+	Goal: 1
+	Rationale: more efficient lookups
+	Status: tested, massive speedup on quarantine tests, stable
+ */
+#define	AGGREGATE_PARENT_REFS			1
+
+/**
+	Define to 1 if each footprint contains its own context cache.
+	For non-top footprints, this only benefits references to 
+	private subinstance references.
+	This should reduce the amount of passing around of structs.  
+	Goal: 1
+	Rationale: caching for speedup of reference lookups.
+	Status: tested, stable
+ */
+#define	FOOTPRINT_OWNS_CONTEXT_CACHE		1
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Define to 1 to construct one canonical process event subgraph per

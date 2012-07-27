@@ -74,6 +74,8 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	channel-bd4p-test-a \
 	channel-bd2p-test-a \
 	channel-bd2p-test-b \
+	channel-clocked-test-a \
+	clock-source-test-a \
 	eledr-buffer eledr-buffer-a eledr-buffer-b \
 	type-test-a type-test-b type-test-c type-test-d \
 	type-test-e type-test-f type-test-g \
@@ -101,7 +103,9 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	pchb-test-a pcfb-test-a \
 	pcehb-test-a pcefb-test-a \
 	pchb-test-b pcfb-test-b \
-	pcehb-test-b pcefb-test-b
+	pcehb-test-b pcefb-test-b \
+	power-supplies-a power-supplies-b power-supplies-c power-supplies-d \
+	power-supplies-e power-supplies-f
 
 # TODO: more cross-coupled test cases
 # SRAM cell
@@ -117,6 +121,7 @@ HACKT_PARSE_TEST_PASSES = \
 HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	comment-01 comment-02 comment-04 comment-06 comment-08 \
 	precision-01 \
+	time-format-01 time-format-02 time-format-03 time-format-04 \
 	repeat-01 \
 	default-mode \
 	default-after-01 default-after-02 default-after-03 default-after-04 \
@@ -261,7 +266,8 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	channel-test-a-15 channel-test-a-16 channel-test-a-17 \
 	channel-test-a-18 channel-test-a-19 channel-test-a-20 \
 	channel-test-a-22 channel-test-a-23 \
-	channel-test-a-24 channel-test-a-25 channel-test-a-26 \
+	channel-test-a-24 channel-test-a-24b channel-test-a-24c \
+	channel-test-a-25 channel-test-a-26 \
 	channel-test-a-27 channel-test-a-28 channel-test-a-29 \
 	channel-test-a-30 channel-test-a-31 channel-test-a-32 \
 	channel-test-a-33 channel-test-a-34 channel-test-a-35 \
@@ -391,6 +397,24 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	channel-bd2p-test-b-A-03 channel-bd2p-test-b-A-04 \
 	channel-bd2p-test-b-A-08 \
 	channel-bd2p-test-b-A-09 channel-bd2p-test-b-A-09b \
+	channel-clocked-test-a-01 \
+	channel-clocked-test-a-02 channel-clocked-test-a-02b \
+	channel-clocked-test-a-03 \
+	channel-clocked-test-a-04 channel-clocked-test-a-04b \
+	channel-clocked-test-a-05 channel-clocked-test-a-05b \
+	channel-clocked-test-a-05c \
+	channel-clocked-test-a-07b \
+	channel-clocked-test-a-07d channel-clocked-test-a-07e \
+	channel-clocked-test-a-08 channel-clocked-test-a-08b \
+	channel-clocked-test-a-09 channel-clocked-test-a-10 \
+	channel-clocked-test-a-11 \
+	channel-clocked-test-b-02 channel-clocked-test-b-02b \
+	channel-clocked-test-b-03 \
+	channel-clocked-test-b-04 channel-clocked-test-b-04b \
+	channel-clocked-test-b-05 \
+	channel-clocked-test-b-08 \
+	clock-source-test-a-01 clock-source-test-a-02 clock-source-test-a-03 \
+	clock-source-test-a-04 \
 	eledr-buffer-a-01 eledr-buffer-a-02 eledr-buffer-a-03 \
 	eledr-buffer-a-04 eledr-buffer-a-05 eledr-buffer-a-06 \
 	eledr-buffer-a-07 \
@@ -450,6 +474,10 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	pcfb-test-b-01 \
 	pcehb-test-b-01 \
 	pcefb-test-b-01 \
+	power-supplies-a-01 power-supplies-a-02 power-supplies-a-03 \
+	power-supplies-b-01 power-supplies-b-02 \
+	power-supplies-c-01 power-supplies-d-01 \
+	power-supplies-e-01 power-supplies-f-01 \
 	x-all-01 x-all-02 x-all-03 x-all-04 x-all-05
 
 # subset of prsimrc test that we wish to compare traces against regressions
@@ -765,7 +793,12 @@ HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
 	pcfb-test-b-02 \
 	pchb-test-b-02 \
 	pcefb-test-b-02 \
-	pcehb-test-b-02
+	pcehb-test-b-02 \
+	channel-clocked-test-a-06 channel-clocked-test-a-06b \
+	channel-clocked-test-a-07 channel-clocked-test-a-07c \
+	channel-clocked-test-b-06 \
+	channel-clocked-test-b-07 \
+	reset-test-01
 
 # KNOWN BUG: ACX-PR-6718*
 # expression-evaluation atomicity issue corrupting event queue

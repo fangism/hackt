@@ -125,6 +125,7 @@ HACKT_PARSE_TEST_PASSES = \
 	load_cap-01 \
 	fanin-check-01-a fanin-check-01-b fanin-check-01-c fanin-check-01-d \
 	fanin-check-01-e fanin-check-01-f fanin-check-01-g \
+	res-01 \
 	diode-01
 # pending (transistor type param): act-008 rule-type{01,02,03,04,05,06}
 
@@ -217,7 +218,8 @@ HACKT_CREATE_TEST_PASSES = \
 	load_cap-01 \
 	fanin-check-01-a fanin-check-01-b fanin-check-01-c fanin-check-01-d \
 	fanin-check-01-e fanin-check-01-f fanin-check-01-g \
-	diode-01
+	diode-01 \
+	res-01
 
 HACKT_CREATE_TEST_FAILURES = \
 	loop-01 loop-02 loop-03 \
@@ -293,7 +295,8 @@ HACKT_CFLAT_TEST_SUBJECTS = \
 	flavor-01 flavor-03 flavor-04 flavor-05 \
 	reset-01 reset-02 reset-03 reset-04 reset-05 \
 	supply-show-01 supply-show-02 \
-	diode-01
+	diode-01 \
+	res-01
 
 # TODO: after implementing supply annotation in hflat
 #	supply-01 supply-02 supply-03 supply-04 supply-05 supply-06
@@ -391,7 +394,8 @@ HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
 HACKNET_TEST_SCRIPTS_PASSES = \
 	wchb-06 \
 	top-level-05 \
-	diode-01
+	diode-01 \
+	res-01
 
 # more output expectation files for when bison is used
 BISON_OUTPUTS += inv-01 inv-11 \

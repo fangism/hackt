@@ -121,10 +121,12 @@ netlist_options::netlist_options() :
 #endif
 		named_port_connections(false),
 		emit_top(true), 
+		emit_port_summary(false), 
 		emit_node_aliases(false),
 		emit_node_caps(false),
 		emit_mangle_map(false),
-		emit_node_terminals(false)
+		emit_node_terminals(false),
+		auto_wrap_length(0)
 		{
 	// delayed mangling
 	// to prevent double-mangling, we have to postpone
@@ -598,6 +600,14 @@ __set_member_default(const option_value& opt,
 	return util::set_option_member_single_numeric_value(opt, n_opt, mem);
 }
 
+// specialize for size_t
+static
+bool
+__set_member_default(const option_value& opt, 
+	options_struct_type& n_opt, size_t options_struct_type::*mem) {
+	return util::set_option_member_single_numeric_value(opt, n_opt, mem);
+}
+
 // specialize for real_type
 static
 bool
@@ -665,10 +675,8 @@ __string_type_of(T options_struct_type::*);
 
 static const string&
 __string_type_of(bool options_struct_type::*) { return __bool_type__; }
-#if 0
 static const string&
 __string_type_of(size_t options_struct_type::*) { return __int_type__; }
-#endif
 static const string&
 __string_type_of(real_type options_struct_type::*) { return __real_type__; }
 static const string&
@@ -1501,6 +1509,17 @@ DEFINE_OPTION_DEFAULT(emit_top, "emit_top",
 	"if true, emit top-level instances in output")
 
 /***
+@texinfo config/emit_port_summary.texi
+@defopt emit_port_summary (bool)
+If set to 1, prints out node port information, including signal direction.
+Default: 0
+@end defopt
+@end texinfo
+***/
+DEFINE_OPTION_DEFAULT(emit_port_summary, "emit_port_summary",
+	"if true, emit node port direction information")
+
+/***
 @texinfo config/emit_node_aliases.texi
 @defopt emit_node_aliases (bool)
 If set to 1, print a sets of node aliases (equivalent names).
@@ -1547,6 +1566,19 @@ Default: 0
 ***/
 DEFINE_OPTION_DEFAULT(emit_node_terminals, "emit_node_terminals",
 	"if true, emit node terminal graph (debug)")
+/***
+@texinfo config/auto_wrap_length.texi
+@defopt auto_wrap_length (int)
+If set to > 0, automatically wrap lines that would be longer than
+the given length.
+This is useful when there are external limits to line length
+that need to be accounted for.
+Default: 0 (no-wrap)
+@end defopt
+@end texinfo
+***/
+DEFINE_OPTION_DEFAULT(auto_wrap_length, "auto_wrap_length",
+	"automatically wrap lines longer than given length")
 
 #if 0
 /***

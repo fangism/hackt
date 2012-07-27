@@ -37,6 +37,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "main/main_funcs.h"
 #include "main/prsim.h"
 #include "main/prsim_options.h"
+#include "util/numformat.tcc"
 #include "util/memory/count_ptr.tcc"
 #include "util/string.h"
 #include "util/tokenize.h"		// only for debugging
@@ -73,6 +74,15 @@ DEFAULT_STATIC_TRACE_BEGIN
  */
 #define	NICE_FINISH		1
 
+/**
+	Define to 1 to enforce a zero transport delay going from
+	prsim to vcs, instead of calculating the time difference via
+	floating-point subtraction.
+	Rationale: floating-point subtraction of near-zero values
+		sometimes yields garbage value?
+ */
+#define	FORCE_ZERO_EXPORT_DELAY		1
+
 //=============================================================================
 namespace HAC {
 namespace SIM {
@@ -83,6 +93,7 @@ using std::ostringstream;
 using parser::parse_node_to_index;
 using util::memory::count_ptr;
 using util::strings::eat_whitespace;
+using util::format_ostream_ref;
 // is current double-precision floating-point
 typedef	State::time_type		Time_t;
 typedef	State::node_type		node_type;
@@ -196,11 +207,9 @@ __no_op__(PLI_BYTE8*) {
 	return 1;
 }
 
-#if NICE_FINISH
 static
 PLI_INT32
 _vpi_finish(void);
-#endif
 
 static
 void
@@ -488,8 +497,10 @@ report_transport(const char* dirstr, const node_index_type ni,
 	const string name(prsim_state->get_node_canonical_name(ni));
 	Time_t prsim_time;
 	vcs_to_prstime(&tm, &prsim_time);
-	oss << dirstr << "signal " << name << " changed @ time " <<
-		  prsim_time << ", val = ";
+	format_ostream_ref(
+		oss << dirstr << "signal " << name << " changed @ time ",
+		prsim_state->time_fmt) <<
+		prsim_time << ", val = ";
 	prsim_state->get_node(ni).dump_value(oss);
 	vpi_printf("%s\n", oss.str().c_str());
 }
@@ -605,25 +616,32 @@ static void __advance_prsim (const Time_t& vcstime, const int context)
 			|| prsim_state->is_watching_node(GET_NODE(nr))
 #endif
 			) {
-		print_watched_node(cout << "prsim:\t" << prsim_time << '\t', 
-			*prsim_state, nr);
+		format_ostream_ref(cout << "prsim:\t", prsim_state->time_fmt)
+			<< prsim_time << '\t';
+		print_watched_node(cout, *prsim_state, nr);
 	}
     if (n.is_breakpoint()) {
 #if !USE_WATCHPOINT_FLAG
 	if (prsim_state->is_watching_node(GET_NODE(nr)) &&
 			!prsim_state->watching_all_nodes()) {
-		print_watched_node(cout << "prsim:\t" << prsim_time << '\t', 
-			*prsim_state, nr);
+		format_ostream_ref(cout << "prsim:\t", prsim_state->time_fmt)
+			<< prsim_time << '\t';
+		print_watched_node(cout, *prsim_state, nr);
 	}
 #endif
     if (n_space != n_end) {
 	STACKTRACE("breakpt && registered");
       s_vpi_time tm;
 
-      const Time_t prsdiff = prsim_time - vcstime;
-
       tm.type = vpiSimTime;
+#if FORCE_ZERO_EXPORT_DELAY
+      tm.high = 0;
+      tm.low = 0;
+#else
+	// floating-point subtraction, sometimes problematic?
+      const Time_t prsdiff = prsim_time - vcstime;
       prs_to_vcstime (&tm, &prsdiff);
+#endif
       /* aha, schedule an event into the vcs queue */
       const vpiHandleSetType& net_set(n_space->second);
       vpiHandleSetType::const_iterator
@@ -717,7 +735,6 @@ reregister_next_callback(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if NICE_FINISH
 PLI_INT32
 _vpi_finish(void) {
 	// print this finish timestamp out of convention
@@ -726,7 +743,6 @@ _vpi_finish(void) {
 	__destroy_globals();
 	return vpi_control(vpiFinish, 1);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -861,7 +877,12 @@ if (_verbose_transport) {
  */
 static const bool set_force = true;
   const value_enum val = vpi_to_prsim_value(p->value->value.scalar);
+try {
     prsim_state->set_node_time(n, val, vcstime, set_force);
+} catch (...) {
+	// possible exception with scheduling events in past
+	_vpi_finish();
+}
 #if VERBOSE_DEBUG
 	prsim_state->dump_event_queue(cout);
 	cout << "end of event queue." << endl;
@@ -877,17 +898,42 @@ static const bool set_force = true;
 	of padded string concatenation in verilog;
 	Helper function for stripping whitespaces anywhere in string, 
 	not just leading whitespace. 
+	NOTE: escaped identifiers need a trailing space preserved
  */
 static
 string
 strip_spaces(const char* c) {
+	STACKTRACE_VERBOSE;
 #if 0
+	// insufficient
 	return string(eat_whitespace(c));
 #else
 	const string temp(c);
 	string ret;
+//	ret.reserve(temp.length());		// optional
+#if 0
+	// too aggressive
 	std::remove_copy_if(temp.begin(), temp.end(), back_inserter(ret), 
 		isspace);
+#else
+	bool in_escape = false;
+	string::const_iterator i(temp.begin()), e(temp.end());
+	for ( ; i!=e; ++i) {
+		switch (*i) {
+		case ' ':
+			if (in_escape) {
+				// keep escape-terminating trailing space
+				ret.push_back(*i);
+				in_escape = false;
+			} // else strip all other spaces
+			break;
+		case '\\': in_escape = true;	// fall-through
+		default: ret.push_back(*i); break;
+		}
+	}
+#endif
+	STACKTRACE_INDENT_PRINT("original: \"" << c << "\"" << endl);
+	STACKTRACE_INDENT_PRINT("stripped: \"" << ret << "\"" << endl);
 	return ret;
 #endif
 }
@@ -1204,6 +1250,11 @@ require_prsim_state(__FUNCTION__);
 
 	prsim_sync(NULL);
   switch (CommandRegistry::interpret_line (*prsim_state, arg.value.str)) {
+  case command_error_codes::SYNTAX:	// fall-through
+  case command_error_codes::BADARG:
+	cerr << "Treating command errors (syntax, bad-arg) as fatal."
+		<< endl;
+	// fall-through
   case command_error_codes::FATAL:
 #if NICE_FINISH
 	cerr << "Terminating simulation early due to hacprsim fatal error."
@@ -1259,7 +1310,7 @@ static PLI_INT32 prsim_watch (PLI_BYTE8* args)
 /***
 @texinfo vpi/prsim_options.texi
 @deffn Function $prsim_options optstring
-Sets the command-line options to be uesd for @command{hacprsim} co-simulation.  
+Sets the command-line options to be used for @command{hacprsim} co-simulation.  
 This should be done before the call to @command{$prsim()}.
 @end deffn
 @end texinfo
@@ -1340,15 +1391,22 @@ if (!check_object_loadable(arg.value.str).good) {
 }
   HAC_module = load_module(arg.value.str);
 if (HAC_module) {
-	if (!HAC_module->is_allocated()) {
-		if (!HAC_module->allocate_unique().good) {
-			cerr << "ERROR in allocating.  Aborting." << endl;
-			return 1;	// 0?
-		}
+	if (!HAC_module->allocate_unique().good) {
+		cerr << "ERROR in allocating.  Aborting." << endl;
+		return 1;	// 0?
 	}
 	prsim_state = count_ptr<State>(
 		new State(*HAC_module, prsim_opt.expr_alloc_flags));
+	// grab paths from command-line options
+	prsim_state->import_source_paths(prsim_opt.source_paths);
 	prsim_state->initialize();
+	if (prsim_opt.autosave) {
+		prsim_state->autosave(prsim_opt.autosave,
+			prsim_opt.autosave_name);
+	}
+	if (prsim_opt.autotrace) {
+		prsim_state->open_trace(prsim_opt.autotrace_name);
+	}
 	// forbid step/advance/cycle commands
 	CommandRegistry::external_cosimulation = true;
 }

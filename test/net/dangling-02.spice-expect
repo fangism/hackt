@@ -1,0 +1,19 @@
+.subckt spare_guts<> Vdd GND
+Mpd:up:0 ps1 a pd Vdd pch W=5u L=2u
+Mpd:up:1 ps2 b pd Vdd pch W=5u L=2u
+Mnd:dn:0 ns1 a nd GND nch W=5u L=2u
+Mnd:dn:1 ns2 b nd GND nch W=5u L=2u
+.ends
+
+
+* --- WARNINGS ---
+Warning: node spare_guts<>::a has no pull-up nor pull-dn PRS fanin.
+Warning: node spare_guts<>::b has no pull-up nor pull-dn PRS fanin.
+Warnings found (2) while creating complete type spare_guts<>.
+Warning: node ps1 is used but not driven!
+Warning: node a is used but not driven!
+Warning: node ps2 is used but not driven!
+Warning: node b is used but not driven!
+Warning: node ns1 is used but not driven!
+Warning: node ns2 is used but not driven!
+... in subcircuit spare_guts<>

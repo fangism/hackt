@@ -1,9 +1,10 @@
 // "040.hac" should fail: see comment
 
-defproc egg(bool white; int yolk);
-defproc basket(egg egg_array[12]);
-defproc bundle(basket a, b, c[6]);
+defproc egg(bool white; int yolk) { }
+defproc basket(egg egg_array[12]) { }
+defproc bundle(basket a, b, c[6]) { }
 
+defproc wrap_it() {
 bundle load;
 
 basket a_basket = load.a = load.c[2];
@@ -21,4 +22,8 @@ bool crack = golden.white;
 
 int uncount = a_basket.egg_array[3].yolk;
 bool uncrack = a_basket.egg_array[5].white;
+
+}
+
+wrap_it up;
 

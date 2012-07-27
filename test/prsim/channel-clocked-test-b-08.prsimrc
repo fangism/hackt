@@ -1,0 +1,28 @@
+# "channel-clocked-test-b-08.prsimrc"
+# copy-modified from "channel-clocked-test-a-08.prsimrc"
+# @haco@ channel-clocked-test-a.haco-c
+
+source channel-clocked-test-a-01.prsimrc
+# neg-edge clock
+clock-source ~Y.clk:0 5
+channel-timing Y.clk after 50
+
+# echo-commands on
+watchall
+channel-source-args Y 0 1 1 0 0 1 1 1 0 0 0
+channel-show Y
+channel-show Y.clk
+channel-reset-all
+cycle
+channel-show Y
+channel-show Y.clk
+channel-release-all
+channel-show Y
+channel-show Y.clk
+
+cycle
+time
+channel-show Y
+channel-show Y.clk
+assertn-queue
+

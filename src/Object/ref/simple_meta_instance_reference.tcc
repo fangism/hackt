@@ -276,6 +276,7 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_top_level_references(
 	const footprint_frame* const fpf = gc.get_footprint_frame();
 	const footprint& fp(fpf ? *fpf->_footprint : top);
 	if (this->lookup_globally_allocated_indices(fp, tmp).good) {
+		ret.reserve(tmp.size());
 		transform(tmp.begin(), tmp.end(), back_inserter(ret), 
 			std::bind1st(std::ptr_fun(&make_global_reference),
 				size_t(traits_type::type_tag_enum_value)));
@@ -311,6 +312,30 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_locally_allocated_index(
 	STACKTRACE_INDENT_PRINT("local-index = " << ret << endl);
 	return ret;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if AGGREGATE_PARENT_REFS
+/**
+	Collects a bunch of ids at once.
+ */
+SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+good_bool
+SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_locally_allocated_indices(
+		const unroll_context& uc, vector<size_t>& ids) const {
+	STACKTRACE_VERBOSE;
+	alias_collection_type aliases;
+	if (!__unroll_generic_scalar_references(
+			*this->inst_collection_ref, this->array_indices,
+			uc, aliases).good) {
+		cerr << "Error resolving instance aliases." << endl;
+		return good_bool(false);
+	}
+	ids.resize(aliases.sizes_product());
+	transform(aliases.begin(), aliases.end(), ids.begin(), 
+		instance_index_extractor());
+	return good_bool(true);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE

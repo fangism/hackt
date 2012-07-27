@@ -135,9 +135,8 @@ if (allow_private_member_references) {
 	// direct translation to indices, allowing references to 
 	// private sub-members in the hierarchy.
 	proc_subindex_collection_type pbi;
-	const footprint_frame ff(c.get_target_footprint());
-	const global_offset go;
-	const global_entry_context gc(ff, go);
+	const global_process_context gpc(c.get_target_footprint());
+	const global_entry_context gc(gpc);
 	if (var->unroll_subindices_packed(gc, c, pbi).bad) {
 		return good_bool(false);
 	}

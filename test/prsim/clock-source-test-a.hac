@@ -1,0 +1,4 @@
+// "clock-source-test-a.hac"
+
+bool clk_n, clk_p, clk_a;
+

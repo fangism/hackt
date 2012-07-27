@@ -1,0 +1,13 @@
+# "power-supplies-b-02.prsimrc"
+# @haco@ power-supplies-b.haco-c
+# @hacprsim-flags@ -f dynamic-ground-supply -f dynamic-power-supply
+
+watchall
+set !Vdd X
+set !GND X
+cycle
+
+source power-supplies-b-01.prsimrc
+
+why-x o1
+

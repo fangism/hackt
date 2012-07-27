@@ -1,0 +1,9 @@
+// "channel-clocked-test-a.hac"
+
+import "../../lib/channel_bd.hac";
+
+cd0 X;
+cd1 Y;
+cd2 Z;
+cd4 W;
+

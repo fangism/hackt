@@ -1,0 +1,4 @@
+Error: Post-mangled instance name `Z110' collides with another instance `Z110'.
+Instantiated from type: foo<>
+Instantiated from -TOP-: 
+Caught exception during netlist generation.

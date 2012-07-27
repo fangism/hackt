@@ -1,0 +1,56 @@
+channels:
+W : clocked-anyedge:0 x4 off
+X : clocked-posedge x1 off
+Y : clocked-negedge x1 off
+Z : clocked-anyedge:1 x2 off
+There's no such thing as a sync-sink! 
+Warning: Ignoring.  What exactly do you expect a sync. sink to do?
+usage: channel-expect-fail [ignore|warn|notify|break|interactive|fatal]
+Set error-handling policy on channel-expect failures.
+	ignore: silently ignores violation
+	warn: print warning without halting
+	notify: (same as warn)
+	break: notify and halt
+	interactive: halt and start an interactive sub-shell (exit resumes)
+	fatal: immediately terminate simulator with nonzero exit status
+current mode: fatal
+X : clocked-posedge x1 expect,watch {0,X,X,X,1,0,} @0
+	count: 0, unknowns: 1
+X : clocked-posedge x1 expect,watch,stopped {0,X,X,X,1,0,} @0
+	count: 0, unknowns: 1
+X : clocked-posedge x1 expect,watch {0,X,X,X,1,0,} @0
+	count: 0, unknowns: 1
+	0	X.d : 0
+	0	X.clk : 0
+channel	X (.data) : 0 @ 50
+	50	X.clk : 1
+X : clocked-posedge x1 expect,watch {0,X,X,X,1,0,} @1
+	count: 0, unknowns: 0
+	100	X.d : X
+	100	X.clk : 0
+channel	X (.data) : X @ 150
+	150	X.clk : 1
+X : clocked-posedge x1 expect,watch {0,X,X,X,1,0,} @2
+	count: 0, unknowns: 1
+	200	X.clk : 0
+channel	X (.data) : X @ 250
+	250	X.clk : 1
+X : clocked-posedge x1 expect,watch {0,X,X,X,1,0,} @3
+	count: 0, unknowns: 1
+	300	X.clk : 0
+channel	X (.data) : X @ 350
+	350	X.clk : 1
+X : clocked-posedge x1 expect,watch {0,X,X,X,1,0,} @4
+	count: 0, unknowns: 1
+	400	X.clk : 0
+	400	X.d : 1
+channel	X (.data) : 1 @ 450
+	450	X.clk : 1
+X : clocked-posedge x1 expect,watch {0,X,X,X,1,0,} @5
+	count: 1, unknowns: 0
+	500	X.clk : 0
+	500	X.d : 0
+channel	X (.data) : 0 @ 550
+	550	X.clk : 1
+X : clocked-posedge x1 expect,watch
+	count: 0, unknowns: 0

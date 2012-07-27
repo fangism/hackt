@@ -1,0 +1,67 @@
+[top-level]
+rules:
+[after 10]	x & ~ga -> wa-
+[after 10]	~x & va -> wa+
+[after 10]	~ga & x & y -> za-
+[after 10]	(~x & va) | (~y & va) -> za+
+[after 10]	~x & vb -> wb+
+[after 10]	x & ~gb -> wb-
+[after 10]	(x & ~gb) | (y & ~gb) -> zb-
+[after 10]	vb & ~x & ~y -> zb+
+turning on va 
+	0	va : 1
+	0	ga : 0
+	0	x : 1
+	10	wa : 0	[by x:=1]
+	10	y : 1
+	20	za : 0	[by y:=1]
+	20	x : 0
+	30	wa : 1	[by x:=0]
+	30	za : 1	[by x:=0]
+	30	y : 0
+	30	y : 1
+	30	x : 1
+	40	wa : 0	[by x:=1]
+	40	za : 0	[by x:=1]
+	40	y : 0
+	50	za : 1	[by y:=0]
+	50	x : 0
+	60	wa : 1	[by x:=0]
+turning off va 
+	60	va : 0
+All subnodes of '.':
+!GND : 0
+!Vdd : 1
+va : 0
+vb : X
+ga : 0
+gb : X
+x : 0
+y : 0
+za : 1
+zb : X
+wa : 1
+wb : X
+turning on vb 
+	60	gb : 0
+	60	vb : 1
+	70	wb : 1	[by vb:=1]
+	70	zb : 1	[by vb:=1]
+	70	x : 1
+	80	wa : 0	[by x:=1]
+	80	wb : 0	[by x:=1]
+	80	zb : 0	[by x:=1]
+	80	y : 1
+	90	za : 0	[by y:=1]
+	90	x : 0
+	100	wb : 1	[by x:=0]
+	100	y : 0
+	110	zb : 1	[by y:=0]
+	110	y : 1
+	120	zb : 0	[by y:=1]
+	120	x : 1
+	130	wb : 0	[by x:=1]
+	130	y : 0
+	130	x : 0
+	140	wb : 1	[by x:=0]
+	140	zb : 1	[by x:=0]

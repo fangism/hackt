@@ -43,6 +43,7 @@ UTIL_TCC_FILES = \
 	util/multikey_qmap.tcc \
 	util/multikey_set.tcc \
 	util/new_functor.tcc \
+	util/numformat.tcc \
 	util/optparse.tcc \
 	util/packed_array.tcc \
 	util/persistent_object_manager.tcc \
@@ -213,6 +214,7 @@ UTIL_HEADER_FILES = \
 	util/syntax.h \
 	util/tagged_subtype.h \
 	util/template.h \
+	util/timer.h \
 	util/typeof.h \
 	util/tokenize_fwd.h \
 	util/tokenize.h \
@@ -246,6 +248,7 @@ UTIL_CC_FILES = \
 	util/getopt_mapped.cc \
 	util/libc.c \
 	util/named_ifstream_manager.cc \
+	util/numformat.cc \
 	util/optparse.cc \
 	util/persistent.cc \
 	util/persistent_object_manager.cc \
@@ -254,6 +257,7 @@ UTIL_CC_FILES = \
 	util/static_trace.cc \
 	util/string.cc \
 	util/syntax.cc \
+	util/timer.cc \
 	util/tokenize.cc \
 	util/stream_ptr.cc \
 	util/uninitialized.cc \

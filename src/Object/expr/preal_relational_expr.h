@@ -100,11 +100,11 @@ public:
 
 	static
 	value_type
-	evaluate(const string&, const value_type, const value_type);
+	evaluate(const string&, const arg_type, const arg_type);
 
 	static
 	value_type
-	evaluate(const op_type*, const value_type, const value_type);
+	evaluate(const op_type*, const arg_type, const arg_type);
 
 	bool
 	must_be_equivalent(const pbool_expr& ) const;

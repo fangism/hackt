@@ -21,7 +21,8 @@ HACKT_PRSIMRC_TEST_SUBJECTS = inverters \
 
 # for .v verilog tests
 HACKT_VPI_TEST_SCRIPTS_PASSES = \
-	inverters inverters-delay shoelace shoelace-debug \
+	inverters inverters-delay inverters-syntax-err \
+	shoelace shoelace-debug \
 	inverters-watch inverters-watch2 \
 	initial-value \
 	startup \
@@ -29,6 +30,8 @@ HACKT_VPI_TEST_SCRIPTS_PASSES = \
 	oscillator-fanout \
 	independent-01 \
 	channel-source-sink \
+	channel-source-sink-b \
+	channel-source-sink-c \
 	channel-expect-fail \
 	channel-ledr-source-sink \
 	channel-ledr-expect-fail \
@@ -37,7 +40,7 @@ HACKT_VPI_TEST_SCRIPTS_PASSES = \
 	fatal-assert-fail \
 	unstable-dequeue \
 	celem-test \
-	flop_it
+	flop_it flop_it-b flop_it-c
 
 HACKT_VWRAP_TEST_SCRIPTS_PASSES = \
 	standard standard-ports standard-reverse \
@@ -89,6 +92,21 @@ and_tree_reverse.vx: standard-reverse.v-wrap pli.tab
 and_template_tree_reverse.vx: standard-reverse.v-wrap pli.tab
 startup.vx: pli.tab
 flop_it.vx: standard.v-wrap pli.tab
+flop_it-b.vx: standard.v-wrap pli.tab
+flop_it-c.vx: standard.v-wrap pli.tab
+
+subdir/channel-values-X.txt:
+	mkdir -p subdir && \
+	{ $(ECHO) "# $@" ; \
+	$(ECHO) "# bunch values" ; \
+	$(ECHO) "0" ; \
+	$(ECHO) "1" ; $(ECHO) "1" ; \
+	$(ECHO) "0" ; $(ECHO) "0" ; $(ECHO) "0" ; \
+	$(ECHO) "1" ; $(ECHO) "1" ; $(ECHO) "1" ; $(ECHO) "1" ; \
+		} > $@
+
+channel-source-sink-b.vx-out: subdir/channel-values-X.txt
+channel-source-sink-c.vx-out: subdir/channel-values-X.txt
 
 # force: always re-run this test
 inverters.vxi-subdir-out: Makefile.copy force
@@ -105,13 +123,14 @@ EXAMPLE_DATA_FILES = example.mk clkgen.v \
 	inverters.hac inverters.v inverters-delay.v \
 	shoelace.v shoelace-debug.v \
 	channel-source-sink.hac channel-source-sink.v \
+	channel-source-sink-b.v channel-source-sink-c.v \
 	channel-ledr-source-sink.hac channel-ledr-source-sink.v \
 	and_tree.hac and_tree.v standard.v startup.v startup.hac \
 	and_tree_reverse.hac and_tree_reverse.v standard-reverse.v \
 	and_template_tree.hac and_template_tree.v \
 	and_template_tree_reverse.hac and_template_tree_reverse.v \
 	oscillator.hac oscillator-fanout.v \
-	flop_it.hac flop_it.v
+	flop_it.hac flop_it.v flop_it-b.v flop_it-c.v
 EXTRA_DIST += $(EXAMPLE_DATA_FILES)
 vpiinv_DATA = $(EXAMPLE_DATA_FILES) Makefile.copy
 

@@ -1,0 +1,44 @@
+# "channel-clocked-test-b-05.prsimrc"
+# @haco@ channel-clocked-test-a.haco-c
+
+source channel-clocked-test-a-01.prsimrc
+
+echo There's no such thing as a sync-sink!
+channel-sink Y
+channel-watch Y
+channel-expect-args Y 0 1 0 1
+
+alias c advance 50
+# alias c cycle
+
+# echo-commands on
+watchall
+channel-show Y
+channel-reset-all
+cycle
+channel-show Y
+channel-release-all
+channel-show Y
+cycle
+
+set Y.d[0] 0
+set Y.clk 1
+c
+set Y.clk 0
+c
+set Y.d[0] 1
+set Y.clk 1
+c
+set Y.clk 0
+c
+set Y.clk 1
+set Y.d[0] 0
+c
+set Y.clk 0
+c
+set Y.clk 1
+set Y.d[0] 1
+c
+set Y.clk 0
+c
+

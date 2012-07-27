@@ -1,0 +1,39 @@
+channels:
+W : clocked-anyedge:0 x4 off
+X : clocked-posedge x1 off
+Y : clocked-negedge x1 off
+Z : clocked-anyedge:1 x2 off
+There's no such thing as a sync-sink! 
+Warning: Ignoring.  What exactly do you expect a sync. sink to do?
+usage: channel-expect-fail [ignore|warn|notify|break|interactive|fatal]
+Set error-handling policy on channel-expect failures.
+	ignore: silently ignores violation
+	warn: print warning without halting
+	notify: (same as warn)
+	break: notify and halt
+	interactive: halt and start an interactive sub-shell (exit resumes)
+	fatal: immediately terminate simulator with nonzero exit status
+current mode: fatal
+X : clocked-posedge x1 expect,watch {0,1,1,1,} @0
+	count: 0, unknowns: 1
+X : clocked-posedge x1 expect,watch,stopped {0,1,1,1,} @0
+	count: 0, unknowns: 1
+X : clocked-posedge x1 expect,watch {0,1,1,1,} @0
+	count: 0, unknowns: 1
+	0	X.d : 0
+	0	X.clk : 0
+channel	X (.data) : 0 @ 50
+	50	X.clk : 1
+	100	X.d : 1
+	100	X.clk : 0
+channel	X (.data) : 1 @ 150
+	150	X.clk : 1
+	200	X.clk : 0
+	200	X.d : 0
+*** expect failure here: 
+channel	X (.data) : 0 @ 250
+channel-assert: value assertion failed on channel X, expected: 1, but got: 0
+	250	X.clk : 1
+ERROR: value assertion failed on channel `X' at index [2].
+	expected: 1, got: 0
+... at line 41
