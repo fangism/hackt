@@ -6,6 +6,7 @@
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_CONTEXT_TCC__
 #define	__HAC_OBJECT_GLOBAL_ENTRY_CONTEXT_TCC__
 
+#include <vector>
 #include "Object/global_entry_context.h"
 #include "Object/global_entry.h"
 #include "Object/def/footprint.h"

@@ -31,7 +31,7 @@ template <class OptionsType, typename Modifier = void (*)(OptionsType&)>
 struct options_modifier_policy {
 	typedef	OptionsType			options_type;
 	typedef Modifier			modifier_type;
-	struct options_modifier_info;
+	class options_modifier_info;
 	typedef	typename std::default_map<std::string,
 			options_modifier_info>::type
 					options_modifier_map_type;

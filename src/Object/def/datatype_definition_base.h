@@ -16,7 +16,7 @@ namespace HAC {
 namespace entity {
 class data_type_reference;
 class fundamental_channel_footprint;
-class channel_data_reader;	// from "Object/nonmeta_channel_manipulator.h"
+struct channel_data_reader;	// from "Object/nonmeta_channel_manipulator.h"
 
 //=============================================================================
 /**

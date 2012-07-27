@@ -28,7 +28,7 @@ class nonmeta_context_base;	// from "Object/nonmeta_context.h"
 struct expr_dump_context;	// from "Object/expr/expr_dump_context.h"
 class nonmeta_expr_visitor;
 class const_param;
-class channel_data_writer;	// from "Object/nonmeta_channel_manipulator.h"
+struct channel_data_writer;	// from "Object/nonmeta_channel_manipulator.h"
 using std::ostream;
 using util::persistent;
 using util::memory::count_ptr;

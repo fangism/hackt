@@ -278,11 +278,13 @@ private:
 	Functor for transforming indices via footprint frame lookup.  
  */
 class footprint_frame_transformer {
+	// public unary_function<...>
 	typedef	size_t				argument_type;
 	typedef	size_t				result_type;
 
 	const footprint_frame_map_type&			ff;
 
+public:
 	explicit
 	footprint_frame_transformer(const footprint_frame_map_type& f) :
 		ff(f) { }
