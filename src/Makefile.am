@@ -1250,6 +1250,8 @@ libhacktpr_la_SOURCES = $(PR_CC_FILES) $(PR_H_FILES)
 # unfornately, it doesn't detect these dependenvies until AFTER first compile
 sim/ISE.lo sim/ISE.o: cvstag.h
 common/ICE.lo common/ICE.o: cvstag.h
+common/config.lo common/config.o: cvstag.h
+sim/prsim/VCDManager.lo sim/prsim/VCDManager.o: cvstag.h
 main/lexyacc.lo main/lexyacc.o: parser/$(HACKT_PARSE_ROOT).h
 main/main_funcs.lo main/main_funcs.o: parser/$(HACKT_PARSE_ROOT)-real.h
 common/config.lo common/config.o: $(AUTOHEADERS) $(VERSIONHEADERS) \

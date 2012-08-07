@@ -166,7 +166,7 @@ nobase_pkginclude_HEADERS = \
 	libchpfn/string.h
 
 # install a copy of the source for reference (is libdir appropriate?)
-pkglib_DATA = libchpfn/stdchpfn.cc
+nobase_pkgdata_DATA = libchpfn/stdchpfn.cc
 
 # this is the module to be dlopened by chpsim
 stdchpfn_la_SOURCES = libchpfn/stdchpfn.cc

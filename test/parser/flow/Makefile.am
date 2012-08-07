@@ -66,7 +66,8 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	loop-spec-05
 
 # more output expectation files for when bison is used
-BISON_OUTPUTS +=
+BISON_OUTPUTS += \
+	bad-loop-01 bad-loop-02 bad-loop-03 bad-loop-04
 
 # TODO:
 srcdir_EXTRA_DIST +=
