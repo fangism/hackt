@@ -5,6 +5,13 @@
 
 2012-08-06	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-86d:
+	  Makefile.am: hackt,hacchpsim LDADD += $(LIBLTDL)
+		to fix undefined reference.  Fixes #12.
+
+
+2012-08-06	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-86c:
 	  Makefile.am: missing dependencies on cvstag.h
 

@@ -132,7 +132,7 @@ endif
 # no need to name EXTRA_LTLIBRARIES += ...
 
 hackt_SOURCES = main/hackt.cc
-hackt_LDADD = libhacktexec.la
+hackt_LDADD = libhacktexec.la $(LIBLTDL)
 #	libhacktexec.la libhacktsim.la libhacktparsers.la \
 #	libhacktast.la libhackt.la libhacktinstref.la libhacktcommon.la \
 #	$(LIBFANGUTIL)
@@ -177,7 +177,7 @@ hacprsim_LDADD = libhacktprsim.la
 # enhanced with libtool/dlopen capability
 hacchpsim_SOURCES = main/chpsim.cc
 hacchpsim_CPPFLAGS = -DWITH_MAIN $(LTDLINCL)
-hacchpsim_LDADD = libhacktchpsim.la
+hacchpsim_LDADD = libhacktchpsim.la $(LIBLTDL)
 # -dlopen self
 # hacchpsim_LDFLAGS = -export-dynamic 
 # (only if symbols in executable needed to resolve from modules)
