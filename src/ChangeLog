@@ -3,6 +3,12 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2012-08-06	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-86c:
+	  Makefile.am: missing dependencies on cvstag.h
+
+
 2012-07-11	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-86:
