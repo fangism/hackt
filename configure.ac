@@ -516,7 +516,7 @@ AUTO_LDFLAGS="$EL_LDPATH $RL_LDPATH $NCURSES_LDPATH $GMP_LDPATH"
 dnl order matters! we are taking responsibility for this
 dnl rather than letting LIBS accumulate over checks.  
 AUTO_LIBS="$EL_LIB $RL_LIB $NCURSES_LIB $GMP_LIB"
-LIBS="$AUTO_LIBS"
+dnl LIBS="$AUTO_LIBS"
 dnl may decide not to use these, depending on how much control is needed
 AC_SUBST(AUTO_CPPFLAGS)
 AC_SUBST(AUTO_LDFLAGS)

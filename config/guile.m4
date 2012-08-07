@@ -66,6 +66,7 @@ AC_LANG_PUSH(C++)
 dnl push flags
 save_CPPFLAGS="$CPPFLAGS"
 save_LDFLAGS="$LDFLAGS"
+save_LIBS="$LIBS"
 dnl use the following variables if specified:
 dnl $with_gmp_include
 dnl $with_gmp_lib
@@ -135,6 +136,7 @@ AC_CHECK_FUNCS(scm_makfrom0str)	dnl from 1.6 API
 AC_CHECK_FUNCS(scm_assert_smob_type)
 dnl test "$libguile_b" = "no" ... warn...
 dnl pop flags
+LIBS="$save_LIBS"
 LDFLAGS="$save_LDFLAGS"
 CPPFLAGS="$save_CPPFLAGS"
 AC_LANG_POP(C++)

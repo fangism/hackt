@@ -5,20 +5,20 @@
 
 2012-08-06	David Fang		<fangism@users.sourceforge.net>
 
-	* HACKT-00-01-04-main-00-86d:
+	* HACKT-00-01-04-main-00-86-41d:
 	  Makefile.am: hackt,hacchpsim LDADD += $(LIBLTDL)
 		to fix undefined reference.  Fixes #12.
 
 
 2012-08-06	David Fang		<fangism@users.sourceforge.net>
 
-	* HACKT-00-01-04-main-00-86c:
+	* HACKT-00-01-04-main-00-86-41c:
 	  Makefile.am: missing dependencies on cvstag.h
 
 
 2012-07-11	David Fang		<fangism@users.sourceforge.net>
 
-	* HACKT-00-01-04-main-00-86:
+	* HACKT-00-01-04-main-00-86-41:
 	  HAC: added string comparison operator support.
 		object binary format version bumped to 10.
 		Test cases added, documentation updated.

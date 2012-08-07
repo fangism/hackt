@@ -1,6 +1,15 @@
 "ChangeLog"
 #	$Id: ChangeLog,v 1.256 2011/05/03 19:20:32 fang Exp $
 
+2012-08-07	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-86-41e:
+	  config/{hackt,guile}.m4, configure.ac: do NOT accumulate
+		libraries to link in the LIBS var, that's just sloppy.
+		Explicitly add them to the appropriate LIBADD and LDADD
+		automake variables.
+
+
 2011-11-23	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-99:

@@ -1,6 +1,12 @@
 # "src/util/ChangeLog"
 #	$Id: ChangeLog,v 1.122 2011/05/05 06:50:47 fang Exp $
 
+2012-08-07	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-86-41e:
+	  util/Makefile.inc: explicitly add RL_LIB to fangutil_LIBADD.
+
+
 2012-04-30	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-85-27:
