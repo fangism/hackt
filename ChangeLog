@@ -1,6 +1,13 @@
 "ChangeLog"
 #	$Id: ChangeLog,v 1.256 2011/05/03 19:20:32 fang Exp $
 
+2012-08-08	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-86-41f:
+	  configure.ac: detect whether or not Makefiles were bootstrapped
+		with automake version that produces .hh or .h from .yy(.cc).
+
+
 2012-08-07	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-86-41e:

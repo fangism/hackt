@@ -127,6 +127,8 @@ AM_CONDITIONAL(HAVE_CFLAT, test -n "$CFLAT" )
 HACKT_ARG_VAR_LEX
 HACKT_ARG_VAR_YACC
 HACKT_LEX_VERSION
+dnl naive macro to check whether automake produces .h or .hh from .cc after .yy
+AM_CONDITIONAL(YLWRAP_CC2HH, grep -q am__yacc_c2h $srcdir/src/Makefile.in)
 
 AC_CHECK_PROG([PKG_CONFIG], pkg-config, pkg-config)
 AM_CONDITIONAL(HAVE_PKG_CONFIG, test -n "$PKG_CONFIG" )
