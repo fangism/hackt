@@ -90,8 +90,8 @@ kw_inst(new string_token(".instance"));
 %type	<_list>			sub_cards_opt sub_cards
 %type	<_list>			resistor capacitor inductor
 %type	<_list>			transistor instance
-%type	<_list>			terminals identifier_opt
-%type	<_token>		terminal identifier value
+%type	<_list>			terminals
+%type	<_token>		terminal identifier value identifier_opt
 %type	<_list>			parameters_opt parameters
 /* is really just a pair */
 %type	<_list>			parameter
@@ -202,7 +202,7 @@ terminal
 
 identifier_opt
 	: identifier
-	|
+	| { $$ = NULL; }
 	;
 
 /* yes, spice allows almost anything, even numbers to be identifiers */

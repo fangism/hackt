@@ -127,6 +127,8 @@ AM_CONDITIONAL(HAVE_CFLAT, test -n "$CFLAT" )
 HACKT_ARG_VAR_LEX
 HACKT_ARG_VAR_YACC
 HACKT_LEX_VERSION
+dnl naive macro to check whether automake produces .h or .hh from .cc after .yy
+AM_CONDITIONAL(YLWRAP_CC2HH, grep -q am__yacc_c2h $srcdir/src/Makefile.in)
 
 AC_CHECK_PROG([PKG_CONFIG], pkg-config, pkg-config)
 AM_CONDITIONAL(HAVE_PKG_CONFIG, test -n "$PKG_CONFIG" )
@@ -516,7 +518,7 @@ AUTO_LDFLAGS="$EL_LDPATH $RL_LDPATH $NCURSES_LDPATH $GMP_LDPATH"
 dnl order matters! we are taking responsibility for this
 dnl rather than letting LIBS accumulate over checks.  
 AUTO_LIBS="$EL_LIB $RL_LIB $NCURSES_LIB $GMP_LIB"
-LIBS="$AUTO_LIBS"
+dnl LIBS="$AUTO_LIBS"
 dnl may decide not to use these, depending on how much control is needed
 AC_SUBST(AUTO_CPPFLAGS)
 AC_SUBST(AUTO_LDFLAGS)

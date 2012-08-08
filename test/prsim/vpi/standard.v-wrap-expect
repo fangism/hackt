@@ -19,8 +19,8 @@ module HAC_INV;
 	integer _i_;
 	reg [64*8:1] verilog_name, tmp;
 	INV dummy (
-		A,
-		Z
+		.A ( A ),
+		.Z ( Z )
 	);
 initial begin
 #0	// happens *after* initial
@@ -42,8 +42,8 @@ module HAC_DELAY;
 	reg [64*8:1] verilog_name, tmp;
 	DELAY #(delay)
 	dummy (
-		A,
-		Z
+		.A ( A ),
+		.Z ( Z )
 	);
 initial begin
 #0	// happens *after* initial
@@ -64,9 +64,9 @@ module HAC_AND2;
 	integer _i_;
 	reg [64*8:1] verilog_name, tmp;
 	AND2 dummy (
-		A1,
-		A2,
-		Z
+		.A1 ( A1 ),
+		.A2 ( A2 ),
+		.Z ( Z )
 	);
 initial begin
 #0	// happens *after* initial
@@ -89,8 +89,8 @@ module HAC_AND_N;
 	reg [64*8:1] verilog_name, tmp;
 	AND_N #(input_size)
 	dummy (
-		A,
-		Z
+		.A ( A ),
+		.Z ( Z )
 	);
 initial begin
 #0	// happens *after* initial
@@ -114,9 +114,9 @@ module HAC_OR2;
 	integer _i_;
 	reg [64*8:1] verilog_name, tmp;
 	OR2 dummy (
-		A1,
-		A2,
-		Z
+		.A1 ( A1 ),
+		.A2 ( A2 ),
+		.Z ( Z )
 	);
 initial begin
 #0	// happens *after* initial
@@ -138,9 +138,9 @@ module HAC_POS_FLOP;
 	integer _i_;
 	reg [64*8:1] verilog_name, tmp;
 	POS_FLOP dummy (
-		CLK,
-		D,
-		Q
+		.CLK ( CLK ),
+		.D ( D ),
+		.Q ( Q )
 	);
 initial begin
 #0	// happens *after* initial
@@ -162,9 +162,9 @@ module HAC_NEG_FLOP;
 	integer _i_;
 	reg [64*8:1] verilog_name, tmp;
 	NEG_FLOP dummy (
-		CLK,
-		D,
-		Q
+		.CLK ( CLK ),
+		.D ( D ),
+		.Q ( Q )
 	);
 initial begin
 #0	// happens *after* initial
@@ -192,15 +192,15 @@ module HAC_bus_array_test;
 	integer _i_;
 	reg [64*8:1] verilog_name, tmp;
 	bus_array_test dummy (
-		CLK,
-		A,
-		B,
-		C,
-		D,
-		E,
-		F,
-		G,
-		H
+		.CLK ( CLK ),
+		.A ( A ),
+		.B ( B ),
+		.C ( C ),
+		.D ( D ),
+		.E ( E ),
+		.F ( F ),
+		.G ( G ),
+		.H ( H )
 	);
 initial begin
 #0	// happens *after* initial
@@ -246,9 +246,9 @@ module HAC_wire_port_test;
 	integer _i_;
 	reg [64*8:1] verilog_name, tmp;
 	wire_port_test dummy (
-		in_a,
-		in_b,
-		out_x
+		.in_a ( in_a ),
+		.in_b ( in_b ),
+		.out_x ( out_x )
 	);
 initial begin
 #0	// happens *after* initial

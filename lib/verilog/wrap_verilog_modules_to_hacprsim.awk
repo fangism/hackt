@@ -433,9 +433,13 @@ if (!reverse) {
 		printf(" ");
 	}
 	print "dummy (";
-	# order matters for port fowarding
+	# order matters for port forwarding
 	for (i=0; i<port_index; ++i) {
-		print "\t\t" ordered_ports[i] (i+1 < port_index ? "," : "");
+		port = ordered_ports[i];
+# this style depends on port ordering
+#		print "\t\t" port (i+1 < port_index ? "," : "");
+# this style uses named port connections
+		print "\t\t." port " ( " port " )" (i+1 < port_index ? "," : "");
 	}
 	print "\t);";
 }

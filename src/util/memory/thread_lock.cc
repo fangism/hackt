@@ -42,7 +42,9 @@ struct pool_thread_lock<true>::release_message {
 struct pool_thread_lock<true>::acquire_message {
 	acquire_message(mutex_type*) { }
 } __ATTRIBUTE_UNUSED__ ;
-struct pool_thread_lock<true>::release_message { } __ATTRIBUTE_UNUSED__ ;
+struct pool_thread_lock<true>::release_message {
+	release_message() { }
+} __ATTRIBUTE_UNUSED__ ;
 #endif
 
 pool_thread_lock<true>::pool_thread_lock(mutex_type* const m) : the_mutex(m) {
@@ -56,7 +58,7 @@ pool_thread_lock<true>::pool_thread_lock(mutex_type* const m) : the_mutex(m) {
 
 pool_thread_lock<true>::~pool_thread_lock() {
 #if THREADED_ALLOC
-	const release_message msg();
+	const release_message msg;
 	// NDEBUG WILL DISABLE THIS! FIX ME!
 	assert(!pthread_mutex_unlock(the_mutex));
 #endif

@@ -1,6 +1,21 @@
 # "lib/ChangeLog"
 #	$Id: ChangeLog,v 1.70 2011/05/07 03:43:39 fang Exp $
 
+2012-08-08	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-86-42:
+	  wrap_verilog_modules_to_hacprsim.awk:
+		dummy instances emit ports connected by name
+		rather than position now.
+
+
+2012-08-06	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-86-41b:
+	  lib/Makefile.am: install stdchpfn.cc to pkgdata_DATA
+		for newer automake conformance (1.11.3+, 1.12+).
+
+
 2011-07-05	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-79a:

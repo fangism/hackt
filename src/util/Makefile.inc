@@ -1,8 +1,8 @@
-# "src/Makefile.am"
+# "src/util/Makefile.inc"
 #	$Id: Makefile.inc,v 1.49 2011/05/05 06:50:48 fang Exp $
+#	vi: ft=automake
 
 # TODO: consider moving guile support down to subdirectory, like lang/guile
-#	vi: ft=automake
 
 # dirgen is completely bogus, workaround to coerce directory generation
 UTILPROGRAMS = util/progs/readline_toy
@@ -271,6 +271,10 @@ libfangutil_la_SOURCES = \
 	$(UTIL_CC_FILES) \
 	$(UTIL_HEADER_FILES) \
 	$(UTIL_TCC_FILES)
+libfangutil_la_LDFLAGS = $(RL_LDPATH) $(NCURSES_LDPATH)
+libfangutil_la_LIBADD = $(RL_LIB) $(NCURSES_LIB)
+# TODO: readline often depends on ncurses
+# extra libs should be detected by configure
 
 # installed headers (keep to minimum)
 nobase_pkginclude_HEADERS += \

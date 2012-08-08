@@ -3,6 +3,31 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2012-08-08	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-86-42:
+	  see lib/ChangeLog, just a verilog wrapper generator update.
+
+
+2012-08-08	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-86-41f:
+	  Makefile.am: support automake 1.12's producing ylwrap .cc -> .hh
+
+
+2012-08-06	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-86-41d:
+	  Makefile.am: hackt,hacchpsim LDADD += $(LIBLTDL)
+		to fix undefined reference.  Fixes #12.
+
+
+2012-08-06	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-86-41c:
+	  Makefile.am: missing dependencies on cvstag.h
+
+
 2012-07-24	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-91-prsim-engine-rewrite-09:
@@ -42,7 +67,7 @@
 
 2012-07-11	David Fang		<fangism@users.sourceforge.net>
 
-	* HACKT-00-01-04-main-00-86:
+	* HACKT-00-01-04-main-00-86-41:
 	  HAC: added string comparison operator support.
 		object binary format version bumped to 10.
 		Test cases added, documentation updated.
