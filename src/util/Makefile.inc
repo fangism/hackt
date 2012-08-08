@@ -271,8 +271,10 @@ libfangutil_la_SOURCES = \
 	$(UTIL_CC_FILES) \
 	$(UTIL_HEADER_FILES) \
 	$(UTIL_TCC_FILES)
-libfangutil_la_LDFLAGS = $(RL_LDPATH)
-libfangutil_la_LIBADD = $(RL_LIB)
+libfangutil_la_LDFLAGS = $(RL_LDPATH) $(NCURSES_LDPATH)
+libfangutil_la_LIBADD = $(RL_LIB) $(NCURSES_LIB)
+# TODO: readline often depends on ncurses
+# extra libs should be detected by configure
 
 # installed headers (keep to minimum)
 nobase_pkginclude_HEADERS += \
