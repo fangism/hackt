@@ -5,6 +5,12 @@
 
 2012-08-08	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-86-42:
+	  see lib/ChangeLog, just a verilog wrapper generator update.
+
+
+2012-08-08	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-86-41f:
 	  Makefile.am: support automake 1.12's producing ylwrap .cc -> .hh
 

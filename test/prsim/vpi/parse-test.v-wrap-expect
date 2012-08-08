@@ -31,12 +31,12 @@ module HAC_T_001;
 	reg [64*8:1] verilog_name, tmp;
 	T_001 #(mode, i_k_polarity, i_k_dl, dmn, data_is_reset, e_dls, ig_z_ack)
 	dummy (
-		a,
-		ck,
-		en,
-		z_d0,
-		z_d1,
-		z_ack
+		.a ( a ),
+		.ck ( ck ),
+		.en ( en ),
+		.z_d0 ( z_d0 ),
+		.z_d1 ( z_d1 ),
+		.z_ack ( z_ack )
 	);
 initial begin
 #0	// happens *after* initial
