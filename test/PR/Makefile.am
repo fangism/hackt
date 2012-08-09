@@ -23,6 +23,28 @@ else
 	$(SKIP_TEST_SCRIPT)
 endif
 
+# also any tests that use the 'scatter' function as a random seed belong here
+# these override the default suffix rules
+if RANDOM_TESTS
+else
+011.ipltest: 011.iplrc
+	$(SKIP_TEST_SCRIPT)
+012.ipltest: 012.iplrc
+	$(SKIP_TEST_SCRIPT)
+013.ipltest: 013.iplrc
+	$(SKIP_TEST_SCRIPT)
+014.ipltest: 014.iplrc
+	$(SKIP_TEST_SCRIPT)
+015.ipltest: 015.iplrc
+	$(SKIP_TEST_SCRIPT)
+015b.ipltest: 015b.iplrc
+	$(SKIP_TEST_SCRIPT)
+016.ipltest: 016.iplrc
+	$(SKIP_TEST_SCRIPT)
+016b.ipltest: 016b.iplrc
+	$(SKIP_TEST_SCRIPT)
+endif
+
 HACKT_IPPLE_CKPT_TEST_SCRIPTS_BASES = $(HACKT_IPPLERC_TEST_SCRIPTS_PASSES)
 
 include $(top_srcdir)/test/Make.test-tail

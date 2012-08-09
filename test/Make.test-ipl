@@ -135,7 +135,7 @@ else
 ECHO_IPLRC_DIFF_COMMAND = :
 endif
 
-RESOLVE_FP_DIFF_SCRIPT = $(top_srcdir)/test/resolve-floating-point-diffs.awk
+RESOLVE_FP_DIFF_SCRIPT = ( unset POSIXLY_CORRECT ; $(AWK) -f $(top_srcdir)/test/resolve-floating-point-diffs.awk ;)
 
 .iplrc-out-filter.iplrc-diff:
 	@stderr=`$(ECHO) $@ | $(SED) 's/\.iplrc-diff$$/.iplrc-expect/g'` ; \
@@ -147,7 +147,7 @@ RESOLVE_FP_DIFF_SCRIPT = $(top_srcdir)/test/resolve-floating-point-diffs.awk
 	  if test -s $@ ; then \
 	    $(ECHO) "$@ is non-empty! (trying to resolve numerical diffs)" && \
 	    $(CP) $@ $@-orig && \
-	    $(RESOLVE_FP_DIFF_SCRIPT) $@-orig > $@ ; \
+	    $(RESOLVE_FP_DIFF_SCRIPT) < $@-orig > $@ ; \
 	    if test -s $@ ; then \
 	      $(ECHO) "$@ is still non-empty, see also $@-orig" ; \
 	    else \

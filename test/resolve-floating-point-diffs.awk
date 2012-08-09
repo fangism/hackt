@@ -4,6 +4,9 @@
 # differences between floating-point values withing a certain rel_tol.
 # TODO: some fields should be relative, others should be absolute diffs
 
+# This script uses the strtonum function, which is not in the POSIX
+# standard for awk.  May have to unset the POSIXLY_CORRECT environment variable.
+
 BEGIN {
 	# relative tolerance
 	if (length(rel_tol)) {
@@ -129,7 +132,7 @@ if ($1 != "---") {
 }
 }
 
-/^+/ {
+/^\+/ {
 if ($1 != "+++") {
 	new_lines[num_new_lines] = extract_real_numbers($0);
 	++num_new_lines;
