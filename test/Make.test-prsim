@@ -418,15 +418,15 @@ prsimtracetest.autodepend: Makefile
 
 -include prsimtracetest.autodepend
 
-VCD_SED_FILTER = sed -e '/^$$date/,/^$$end/s|^[\t].*|\#\#DATE\#\#|' \
-	-e '/^$$version/,/^$$end/s|^[\t].*|\#\#VERSION\#\#|'
+VCD_SED_FILTER = $(SED) -e '/^\$$date/,/^\$$end/s|^[^$$].*|\#\#DATE\#\#|' \
+	-e '/^\$$version/,/^\$$end/s|^[^$$].*|\#\#VERSION\#\#|'
 
 # but .prsimrc script *should* generate .vcd file explicitly
 .prsimrc-out.vcd:
 	@$(NO_OP_SCRIPT)
 
 .vcd.vcd-filter:
-	@$(VCD_SED_FILTER) $< > $@
+	$(VCD_SED_FILTER) $< > $@
 
 .vcd-filter.vcd-diff:
 	@stderr=`$(ECHO) $@ | $(SED) 's/\-diff$$/-expect/'` ; \
