@@ -914,6 +914,7 @@ State::head_sentinel(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !PRSIM_FAST_GET_NODE
 /**
 	Node accessor, const.
 	Can remove bounds checks if we're really confident.
@@ -938,6 +939,7 @@ State::__get_node(const node_index_type i) {
 	ISE_INVARIANT(i < node_pool.size());
 	return node_pool[i];
 }
+#endif	// PRSIM_FAST_GET_NODE
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

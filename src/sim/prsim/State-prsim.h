@@ -48,6 +48,12 @@
 #include "util/memory/count_ptr.h"
 #endif
 
+/**
+	Define 1 to inline and disable bounds checking on
+	get_node() and __get_node().
+ */
+#define	PRSIM_FAST_GET_NODE			1
+
 namespace HAC {
 namespace entity {
 	class footprint;
@@ -734,7 +740,12 @@ private:
 	__initialize(const bool);
 
 	node_type&
-	__get_node(const node_index_type);
+	__get_node(const node_index_type i)
+#if PRSIM_FAST_GET_NODE
+		{ return node_pool[i]; }
+#else
+		;
+#endif
 
 public:
 
@@ -742,7 +753,12 @@ public:
 	get_node_pool(void) const { return node_pool; }
 
 	const node_type&
-	get_node(const node_index_type) const;
+	get_node(const node_index_type i) const
+#if PRSIM_FAST_GET_NODE
+		{ return node_pool[i]; }
+#else
+		;
+#endif
 
 	node_index_type
 	get_node_index(const node_type& n) const {
