@@ -62,6 +62,10 @@
 #include "util/indent.h"
 #include "util/tokenize.h"
 #include "util/numformat.tcc"
+#if PRSIM_SET_FAST_ALLOCATOR
+#include "util/memory/allocator_adaptor.tcc"	// for fast allocators
+#include "util/memory/chunk_map_pool.tcc"	// for fast allocators
+#endif
 
 // re-define to be more readable
 #undef	STACKTRACE_VERBOSE

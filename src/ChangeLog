@@ -5,6 +5,10 @@
 
 2012-08-16	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-86-44b:
+	  hacprsim: pool-allocated set<index> brings another 2-3% speedup.
+
+
 	* HACKT-00-01-04-main-00-86-44:
 	  hacprsim: inlined and de-assert get_node(), __get_node(), 
 		resulting in about 2-3% speedup.
