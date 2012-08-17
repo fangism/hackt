@@ -60,12 +60,12 @@ void
 VCDwriter::visit(const footprint& f) {
 if (scope_stack.size()) {
 	os << auto_indent << "$scope module " << scope_stack.back()
-		<< " $end" << endl;
+		<< " $end\n";
 {
 	INDENT_SECTION(os);
 	__visit(f);
 }
-	os << auto_indent << "$upscope $end" << endl;
+	os << auto_indent << "$upscope $end\n";
 } else {
 	__visit(f);
 }
@@ -83,7 +83,8 @@ VCDwriter::visit(const state_instance<bool_tag>& i) {
 	print_id(os, id, opt.mangled_vcd_ids);
 	os << ' ' << scope_stack.back() << 
 		// normally bus width spec would go here, if arrays supported
-			" $end" << endl;
+			" $end\n";
+	// print newline without flushing for performance
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -98,9 +99,14 @@ VCDwriter::print_id(ostream& o, const size_t i, const bool m) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+static const long vcd_id_base = 94;
+static const char vcd_id_offset = '!';
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	VCD identifier symbols use base-94 with ASCII characters.
 	Uses upper 96/128 characters, except SPACE and DEL.
+	TODO: profile whether or not this ldiv loop is bottleneck.
  */
 void
 VCDwriter::mangle_id(ostream& o, const size_t i) {
@@ -109,13 +115,13 @@ VCDwriter::mangle_id(ostream& o, const size_t i) {
 	long N = long(i);
 	ldiv_t qr;
 	do {
-		qr = ldiv(N, 94);
+		qr = ldiv(N, vcd_id_base);
 		__stack__.push_back(qr.rem);
 		N = qr.quot;
 	} while (N);
 	std::transform(__stack__.rbegin(), __stack__.rend(), 
 		std::ostream_iterator<char>(o),
-		std::bind2nd(std::plus<char>(), '!'));
+		std::bind2nd(std::plus<char>(), vcd_id_offset));
 	__stack__.clear();
 }
 
@@ -128,7 +134,7 @@ VCDwriter::demangle_id(const char* id) {
 	NEVER_NULL(id);
 	size_t ret = 0;
 	while (*id) {
-		ret *= 94;
+		ret *= vcd_id_base;
 		ret += *id;
 		++id;
 	}

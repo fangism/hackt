@@ -62,6 +62,10 @@
 #include "util/indent.h"
 #include "util/tokenize.h"
 #include "util/numformat.tcc"
+#if PRSIM_SET_FAST_ALLOCATOR
+#include "util/memory/allocator_adaptor.tcc"	// for fast allocators
+#include "util/memory/chunk_map_pool.tcc"	// for fast allocators
+#endif
 
 // re-define to be more readable
 #undef	STACKTRACE_VERBOSE
@@ -947,6 +951,7 @@ State::head_sentinel(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !PRSIM_FAST_GET_NODE
 /**
 	Node accessor, const.
 	Can remove bounds checks if we're really confident.
@@ -971,6 +976,7 @@ State::__get_node(const node_index_type i) {
 	ISE_INVARIANT(i < node_pool.size());
 	return node_pool[i];
 }
+#endif	// PRSIM_FAST_GET_NODE
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

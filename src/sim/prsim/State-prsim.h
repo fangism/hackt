@@ -58,6 +58,20 @@
 #include "util/memory/count_ptr.h"
 #endif
 
+/**
+	Define 1 to inline and disable bounds checking on
+	get_node() and __get_node().
+ */
+#define	PRSIM_FAST_GET_NODE			1
+
+#define	PRSIM_SET_FAST_ALLOCATOR		1
+
+#if PRSIM_SET_FAST_ALLOCATOR
+#include "util/STL/functional_fwd.h"		// for std::less
+#include "util/memory/chunk_map_pool.h"
+#include "util/memory/allocator_adaptor.h"
+#endif
+
 namespace HAC {
 namespace entity {
 	class footprint;
@@ -446,6 +460,19 @@ private:
 	 */
 	static const value_enum			pull_to_value[3][3];
 
+#if PRSIM_SET_FAST_ALLOCATOR
+	typedef util::memory::chunk_map_pool<node_index_type,
+			sizeof(size_t) << 3>	// use machine int size
+						set_pool_alloc_type;
+	typedef util::memory::allocator_adaptor<set_pool_alloc_type>
+						set_override_allocator_type;
+	typedef set<node_index_type, std::less<node_index_type>,
+			set_override_allocator_type>
+						index_set_type;
+#else
+	typedef	set<node_index_type>		index_set_type;
+#endif
+
 public:
 #if !PRSIM_HIERARCHICAL_RINGS
 	/**
@@ -458,6 +485,7 @@ public:
 		Alternative: use map for sparser exclusive rings.  
 		Alternative: use sorted array (for fast binary search)
 	 */
+//	typedef	index_set_type			ring_set_type;
 	typedef	std::set<node_index_type>	ring_set_type;
 #endif
 	typedef	unique_process_subgraph::node_set_type
@@ -790,7 +818,8 @@ private:
 		turned OFF, and are thus candidates for checking for 
 		missing keepers.
 	 */
-	set<node_index_type>			__keeper_check_candidates;
+	typedef	index_set_type			keeper_check_set_type;
+	keeper_check_set_type			__keeper_check_candidates;
 #if PRSIM_LAZY_INVARIANTS
 	// using pair for built-in < comparison operator
 	typedef	pair<process_index_type, rule_index_type>
@@ -848,7 +877,12 @@ private:
 	__initialize(const bool);
 
 	node_type&
-	__get_node(const node_index_type);
+	__get_node(const node_index_type i)
+#if PRSIM_FAST_GET_NODE
+		{ return node_pool[i]; }
+#else
+		;
+#endif
 
 public:
 
@@ -856,7 +890,12 @@ public:
 	get_node_pool(void) const { return node_pool; }
 
 	const node_type&
-	get_node(const node_index_type) const;
+	get_node(const node_index_type i) const
+#if PRSIM_FAST_GET_NODE
+		{ return node_pool[i]; }
+#else
+		;
+#endif
 
 	node_index_type
 	get_node_index(const node_type& n) const {
