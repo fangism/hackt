@@ -25,6 +25,10 @@ namespace PRSIM {
 using std::ostream;
 using std::istream;
 
+/// can switch between integer and real-valued time
+// typedef      discrete_time                   rule_time_type;
+typedef	real_time			rule_time_type;
+
 //-----------------------------------------------------------------------------
 /**
 	Structural information per production rule.  

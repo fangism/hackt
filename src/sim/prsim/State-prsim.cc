@@ -715,7 +715,11 @@ State::flush_channel_events(const vector<env_event_type>& env_events,
 		if (_n.current_value() != _v) {
 		const event_index_type pn =
 			__allocate_event(_n, ni, c,
-				INVALID_RULE_INDEX, _v
+				INVALID_RULE_INDEX,
+#if EVENT_INCLUDE_RULE_POINTER
+				NULL,
+#endif
+				_v
 #if PRSIM_WEAK_RULES
 				, false	// environment never weak
 #endif
@@ -1114,6 +1118,9 @@ State::__allocate_event(node_type& n,
 		const node_index_type ni,
 		cause_arg_type c, 
 		const rule_index_type ri,
+#if EVENT_INCLUDE_RULE_POINTER
+		const rule_type* r,
+#endif
 		const value_enum val,
 #if PRSIM_WEAK_RULES
 		const bool weak,
@@ -1122,7 +1129,11 @@ State::__allocate_event(node_type& n,
 		) {
 	STACKTRACE_VERBOSE;
 	ISE_INVARIANT(!n.pending_event());
-	event_type e(ni, c, ri, val
+	event_type e(ni, c, ri, 
+#if EVENT_INCLUDE_RULE_POINTER
+		r,
+#endif
+		val
 #if PRSIM_WEAK_RULES
 		, weak
 #endif
@@ -1160,7 +1171,11 @@ State::__allocate_pending_interference_event(node_type& n,
 	// node may or may not have pending event (?)
 	// don't care about the node value
 	const event_index_type ne = event_pool.allocate(
-		event_type(ni, c, INVALID_RULE_INDEX, next
+		event_type(ni, c, INVALID_RULE_INDEX,
+#if EVENT_INCLUDE_RULE_POINTER
+		NULL,
+#endif
+		next
 #if PRSIM_WEAK_RULES
 		, weak
 #endif
@@ -1642,7 +1657,11 @@ if (!n.is_frozen() || f) {
 		// node cause to assign, since this is externally set
 		__allocate_event(n, ni, 
 			EMPTY_CAUSE,
-			INVALID_RULE_INDEX, val,
+			INVALID_RULE_INDEX,
+#if EVENT_INCLUDE_RULE_POINTER
+			NULL,
+#endif
+			val,
 #if PRSIM_WEAK_RULES
 			NORMAL_RULE,	// normal strength of 'set'
 #endif
@@ -1758,7 +1777,11 @@ if (!p.state_holding()) {
 			// fanin to use!  Passing INVALID_RULE_INDEX
 			// will use a delay of 0.  
 			const event_index_type ei = __allocate_event(
-				n, ni, EMPTY_CAUSE, ri, new_val
+				n, ni, EMPTY_CAUSE, ri, 
+#if EVENT_INCLUDE_RULE_POINTER
+				NULL,
+#endif
+				new_val
 #if PRSIM_WEAK_RULES
 				, weak_wins
 #endif
@@ -2108,11 +2131,15 @@ __get_delay(const State::rule_type* r, State::time_type State::rule_type::* m,
 // inline
 State::time_type
 State::get_delay_up(const event_type& e) const {
+#if EVENT_INCLUDE_RULE_POINTER
+	const rule_type* r = e.cause_rule_ptr;
+#else
 	const rule_type* r = NULL;
 if (e.cause_rule) {
 	r = lookup_rule(e.cause_rule);
 	NEVER_NULL(r);
 }
+#endif
 	time_type delta;
 	if (timing_mode == TIMING_UNIFORM) {
 		delta = uniform_delay;
@@ -2173,35 +2200,13 @@ if (e.cause_rule) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	NOTE: event's cause_rule is not checkpointed.  
+	NOTE: event's cause_rule, cause_rule_ptr is not checkpointed.  
 	\return absolute time of scheduled pull-down event.
  */
 // inline
 State::time_type
 State::get_delay_dn(const event_type& e) const {
-#if 0
-	const rule_type* r = NULL;
-if (e.cause_rule) {
-	r = lookup_rule(e.cause_rule);
-	NEVER_NULL(r);
-}
-return current_time +
-	(timing_mode == TIMING_RANDOM ?
-	(e.cause_rule && time_traits::is_zero(r->after) ?
-		time_traits::zero : ((0x01 << 11)*exponential_random_delay()))
-		:
-	(timing_mode == TIMING_UNIFORM ? uniform_delay :
-	// timing_mode == TIMING_AFTER
-	//	(e.cause_rule ?
-	//		r->after : 0)
-		(e.cause_rule ?
-			(r->is_always_random() ?
-				(r->after * exponential_random_delay())
-		: r->after) : 0)	
-	));
-#else
 	return get_delay_up(e);		// is identical, actually
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2820,6 +2825,9 @@ for ( ; i!=e; ++i) {
 						// not sure...
 						// er.pull_up_index, 
 						INVALID_RULE_INDEX, 
+#if EVENT_INCLUDE_RULE_POINTER
+						NULL,
+#endif
 						LOGIC_HIGH
 #if PRSIM_WEAK_RULES
 						, NORMAL_RULE
@@ -2877,6 +2885,9 @@ for ( ; i!=e; ++i) {
 					__allocate_event(er, eri, c, 
 						// er.pull_dn_index, 
 						INVALID_RULE_INDEX,
+#if EVENT_INCLUDE_RULE_POINTER
+						NULL,
+#endif
 						LOGIC_LOW
 #if PRSIM_WEAK_RULES
 						, NORMAL_RULE
@@ -3133,6 +3144,9 @@ State::step(void) THROWS_STEP_EXCEPTION {
 	if (is_tracing()) {
 		critical = trace_manager->push_back_event(
 			state_trace_point(current_time, pe.cause_rule, 
+#if 0 && EVENT_INCLUDE_RULE_POINTER
+			pe.cause_rule_ptr,	// cannot checkpoint pointer
+#endif
 				pe.cause.critical_trace_event, 
 				ni, pe.val, prev));
 		if (trace_manager->current_event_count() >=
@@ -3390,6 +3404,9 @@ if (n.in_channel()) {
 			const event_index_type _ne =
 				__allocate_event(n, ni, EMPTY_CAUSE, 
 					INVALID_RULE_INDEX, // ui, // cause?
+#if EVENT_INCLUDE_RULE_POINTER
+					NULL,
+#endif
 					LOGIC_HIGH
 #if PRSIM_WEAK_RULES
 					, w	// rule_strength
@@ -3405,6 +3422,9 @@ if (n.in_channel()) {
 			const event_index_type _ne =
 				__allocate_event(n, ni, EMPTY_CAUSE, 
 					INVALID_RULE_INDEX, // di, // cause?
+#if EVENT_INCLUDE_RULE_POINTER
+					NULL,
+#endif
 					LOGIC_LOW
 #if PRSIM_WEAK_RULES
 					, w	// rule_strength
@@ -4053,6 +4073,9 @@ if (!n.pending_event()) {
 		const event_index_type pe =
 			__allocate_event(n, ui, c,
 				root_rule,
+#if EVENT_INCLUDE_RULE_POINTER
+				ev_result.root_rule,
+#endif
 				next == PULL_ON ? LOGIC_HIGH : LOGIC_OTHER
 #if PRSIM_WEAK_RULES
 //				, weak_wins
@@ -4102,6 +4125,9 @@ if (!n.pending_event()) {
 		const event_index_type pe =
 			__allocate_event(n, ui, c,
 				root_rule,
+#if EVENT_INCLUDE_RULE_POINTER
+				ev_result.root_rule,
+#endif
 #if PRSIM_WEAK_RULES
 				// logic low only if not weakly pulled to X
 				p.pulling_dn() ? LOGIC_LOW : LOGIC_OTHER,
@@ -4285,6 +4311,9 @@ if (!n.pending_event()) {
 		const event_index_type pe =
 			__allocate_event(n, ui, c, 
 				root_rule, 
+#if EVENT_INCLUDE_RULE_POINTER
+				ev_result.root_rule,
+#endif
 				next == PULL_ON ? LOGIC_LOW : LOGIC_OTHER
 #if PRSIM_WEAK_RULES
 				, is_weak
@@ -4338,6 +4367,9 @@ if (!n.pending_event()) {
 		const event_index_type pe =
 			__allocate_event(n, ui, c,
 				root_rule,
+#if EVENT_INCLUDE_RULE_POINTER
+				ev_result.root_rule,
+#endif
 #if PRSIM_WEAK_RULES
 				// logic low only if not weakly pulled to X
 				p.pulling_up() ? LOGIC_HIGH : LOGIC_OTHER,
@@ -4555,7 +4587,11 @@ State::__report_interference(ostream& o, const bool weak,
 State::break_type
 State::__report_instability(ostream& o, const bool weak, const bool dir, 
 		const event_type& ev) const {
+#if EVENT_INCLUDE_RULE_POINTER
+	const rule_type* const r = ev.cause_rule_ptr;
+#else
 	const rule_type* const r = lookup_rule(ev.cause_rule);
+#endif
 	const node_index_type& _ni(ev.node);	// the scheduled node
 //	INVARIANT(ev.val != LOGIC_OTHER);		// not true
 //	INVARIANT(dir == (ev.val == LOGIC_HIGH));	// not true
@@ -4657,7 +4693,11 @@ State::__diagnose_violation(ostream& o, const pull_enum next,
 		if (instability) {
 			DEBUG_STEP_PRINT("instablity" << endl);
 			e.set_cause_node(ni);
+#if EVENT_INCLUDE_RULE_POINTER
+			const rule_type* const r = e.cause_rule_ptr;
+#else
 			const rule_type* const r = lookup_rule(e.cause_rule);
+#endif
 			if ((dequeue_unstable_events() ||
 					(r && r->is_unstable())) &&
 				(next == PULL_OFF ||

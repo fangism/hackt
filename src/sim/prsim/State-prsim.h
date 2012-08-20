@@ -1380,7 +1380,11 @@ private:
 	event_index_type
 	__allocate_event(node_type&, const node_index_type n,
 		cause_arg_type,	// this is the causing node/event
-		const rule_index_type, const value_enum,
+		const rule_index_type, 
+#if EVENT_INCLUDE_RULE_POINTER
+		const rule_type*,
+#endif
+		const value_enum,
 #if PRSIM_WEAK_RULES
 		const bool weak,
 #endif
