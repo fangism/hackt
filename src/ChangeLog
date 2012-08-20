@@ -3,6 +3,13 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2012-08-17	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-84-91-prsim-engine-rewrite-10:
+	  Experimented w/ pool-allocating updated_node map, but didn't
+		get the speed up sought.  Left disabled for future study.
+
+
 2012-08-16	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-86-44b:

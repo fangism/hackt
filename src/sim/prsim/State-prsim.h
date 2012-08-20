@@ -64,9 +64,17 @@
  */
 #define	PRSIM_FAST_GET_NODE			1
 
+/**
+	This gives about 3% speedup.
+ */
 #define	PRSIM_SET_FAST_ALLOCATOR		1
+/**
+	This slows down runs by 12%, even after using sentinel entry?
+	TODO: investigate further.
+ */
+#define	PRSIM_MAP_FAST_ALLOCATOR		0
 
-#if PRSIM_SET_FAST_ALLOCATOR
+#if PRSIM_SET_FAST_ALLOCATOR || PRSIM_MAP_FAST_ALLOCATOR
 #include "util/STL/functional_fwd.h"		// for std::less
 #include "util/memory/chunk_map_pool.h"
 #include "util/memory/allocator_adaptor.h"
@@ -472,7 +480,13 @@ private:
 #else
 	typedef	set<node_index_type>		index_set_type;
 #endif
-
+#if PRSIM_MAP_FAST_ALLOCATOR
+	typedef util::memory::chunk_map_pool<node_index_type,
+			sizeof(size_t) << 3>	// use machine int size
+						map_pool_alloc_type;
+	typedef util::memory::allocator_adaptor<map_pool_alloc_type>
+						map_override_allocator_type;
+#endif
 public:
 #if !PRSIM_HIERARCHICAL_RINGS
 	/**
@@ -539,6 +553,7 @@ protected:
 	 */
 	typedef	std::map<event_index_type, time_type>
 						mk_excl_queue_type;
+public:
 #if PRSIM_SIMPLE_EVENT_QUEUE
 	struct node_update_info {
 		rule_index_type			rule_index;
@@ -557,8 +572,14 @@ protected:
 			excl_blocked(false) { }
 #endif
 	};	// end struct node_update_info
-	typedef	std::map<node_index_type, node_update_info>
+#if PRSIM_MAP_FAST_ALLOCATOR
+	typedef	map<node_index_type, node_update_info, 
+			std::less<node_index_type>, map_override_allocator_type>
+#else
+	typedef	map<node_index_type, node_update_info>
+#endif
 						updated_nodes_type;
+protected:
 #if PRSIM_FCFS_UPDATED_NODES
 	/**
 		Preserve the order in which fanouts were processed.

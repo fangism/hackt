@@ -333,6 +333,28 @@ State::pull_to_value[3][3] = {
 };
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_MAP_FAST_ALLOCATOR
+static
+State::updated_nodes_type
+__updated_nodes_sentinel;
+
+// give this dummy a permanent null entry to prevent allocator from
+// repeatedly allocating-first/deallocating-last chunk
+static
+void
+__initialize_updated_nodes_sentinel(void) {
+	__updated_nodes_sentinel[__updated_nodes_sentinel.size()] =
+		State::node_update_info();
+}
+
+static
+void
+__remove_updated_nodes_sentinel(void) {
+	__updated_nodes_sentinel.erase(__updated_nodes_sentinel.size() -1);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Allocates simulation state, given a module.
 	\param m the expanded module object.
@@ -413,6 +435,9 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 		recent_exceptions(),
 #endif
 		__shuffle_indices(0) {
+#if PRSIM_MAP_FAST_ALLOCATOR
+	__initialize_updated_nodes_sentinel();
+#endif
 //	time_fmt.fmt |= std::ios_base::fixed;
 //	time_fmt.fmt &= ~std::ios_base::scientific;
 //	time_fmt.precision = 3;		// default is 6
@@ -496,6 +521,9 @@ State::~State() {
 		const event_placeholder_type next(event_queue.pop());
 		event_pool.deallocate(next.event_index);
 	}
+#if PRSIM_MAP_FAST_ALLOCATOR
+	__remove_updated_nodes_sentinel();
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3713,7 +3741,7 @@ State::step(void) THROWS_STEP_EXCEPTION {
 			// Q: or is it better to catch this before enqueuing?
 			__deallocate_event(n, ei);
 			// then just silence this event
-			// slow head-recusrion, but infrequent
+			// slow head-recursion, but infrequent
 			return step();
 		}
 		// else proceed
