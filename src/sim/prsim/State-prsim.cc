@@ -3149,6 +3149,7 @@ State::step(void) THROWS_STEP_EXCEPTION {
 #endif
 				pe.cause.critical_trace_event, 
 				ni, pe.val, prev));
+		DEBUG_STEP_PRINT("prsim trace event # " << critical << endl);
 		if (trace_manager->current_event_count() >=
 				trace_flush_interval) {
 			trace_manager->flush();
@@ -3159,6 +3160,7 @@ State::step(void) THROWS_STEP_EXCEPTION {
 	// if both traces are on, assert that critical (event count) is the same
 	if (is_tracing_vcd()) {
 		critical = vcd_manager->record_event(current_time, ni, pe.val);
+		DEBUG_STEP_PRINT("prsim vcd event # " << critical << endl);
 		// no need to manage flushing
 	}
 #endif
@@ -4807,6 +4809,8 @@ State::__diagnose_violation(ostream& o, const pull_enum next,
  */
 State::step_return_type
 State::cycle(void) THROWS_STEP_EXCEPTION {
+	STACKTRACE_VERBOSE;
+	DEBUG_STEP_PRINT("flags: " << std::hex << flags << endl);
 	step_return_type ret;
 	while ((ret = step()).first) {
 		if (get_node(ret.first).is_breakpoint() || stopped())
