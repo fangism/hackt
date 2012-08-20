@@ -42,6 +42,16 @@
 #include <set>
 #endif
 
+/**
+	Define to 1 to store rule_type* along with cause rule_index
+	to avoid having to lookup rule pointer later.
+	Rationale: performance.
+ */
+#define	EVENT_INCLUDE_RULE_POINTER				1
+#if EVENT_INCLUDE_RULE_POINTER
+#include "sim/prsim/Rule.h"		// for rule_time_type
+#endif
+
 namespace HAC {
 namespace SIM {
 namespace PRSIM {
@@ -105,6 +115,9 @@ public:
 #else
 	typedef	EventCause		cause_type;
 #endif
+#if EVENT_INCLUDE_RULE_POINTER
+	typedef	Rule<rule_time_type>	rule_type;
+#endif
 public:
 	/**
 		Event classification table of 
@@ -132,6 +145,13 @@ public:
 		also the source of the delay value.  
 	 */
 	rule_index_type			cause_rule;
+#if EVENT_INCLUDE_RULE_POINTER
+	/**
+		Pointer to the rule referenced by the cause_rule index.
+		Passing this together avoids an extra lookup_rule() call.
+	 */
+	const rule_type*		cause_rule_ptr;
+#endif
 	/**
 		The node's new value: 0, 1, 2 (X).
 		See value_enum enumeration, "sim/prsim/enums.h"
@@ -176,6 +196,9 @@ public:
 	Event() : node(INVALID_NODE_INDEX),
 		cause(), 
 		cause_rule(INVALID_RULE_INDEX), 
+#if EVENT_INCLUDE_RULE_POINTER
+		cause_rule_ptr(NULL),
+#endif
 		val(LOGIC_LOW), 
 		flags(EVENT_FLAGS_DEFAULT_VALUE) { }
 
@@ -188,6 +211,9 @@ public:
 	Event(const node_index_type n,
 		const cause_type& c, 
 		const rule_index_type r, 
+#if EVENT_INCLUDE_RULE_POINTER
+		const rule_type* rp,
+#endif
 		const value_enum v
 #if PRSIM_WEAK_RULES
 		, const bool w
@@ -196,6 +222,9 @@ public:
 		node(n),
 		cause(c), 
 		cause_rule(r),
+#if EVENT_INCLUDE_RULE_POINTER
+		cause_rule_ptr(rp),
+#endif
 		val(v),
 		flags(
 #if PRSIM_WEAK_RULES

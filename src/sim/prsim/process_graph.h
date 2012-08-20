@@ -47,10 +47,6 @@ using entity::footprint_frame_map_type;
  */
 #define	PRSIM_SEPARATE_PROCESS_EXPR_MAP		1
 
-/// can switch between integer and real-valued time
-// typedef      discrete_time                   rule_time_type;
-typedef	real_time			rule_time_type;
-
 //=============================================================================
 // structures to account for local fanin contribution
 typedef	vector<expr_index_type>		fanin_array_type;

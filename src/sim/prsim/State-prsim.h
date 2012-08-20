@@ -557,6 +557,9 @@ public:
 #if PRSIM_SIMPLE_EVENT_QUEUE
 	struct node_update_info {
 		rule_index_type			rule_index;
+#if EVENT_INCLUDE_RULE_POINTER
+		const rule_type*		rule_ptr;
+#endif
 		// Q: distinguish between rules that turned on/off?
 		// should keep around previous pull-state
 		// being able to diff previous pull-state against
@@ -569,6 +572,9 @@ public:
 
 		node_update_info() :
 			rule_index(INVALID_RULE_INDEX),
+#if EVENT_INCLUDE_RULE_POINTER
+			rule_ptr(NULL),
+#endif
 			excl_blocked(false) { }
 #endif
 	};	// end struct node_update_info
@@ -1536,7 +1542,11 @@ private:
 	event_index_type
 	__allocate_event(node_type&, const node_index_type n,
 		cause_arg_type,	// this is the causing node/event
-		const rule_index_type, const value_enum,
+		const rule_index_type, 
+#if EVENT_INCLUDE_RULE_POINTER
+		const rule_type*,
+#endif
+		const value_enum,
 #if PRSIM_WEAK_RULES
 		const bool weak,
 #endif
