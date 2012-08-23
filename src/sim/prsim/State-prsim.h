@@ -49,6 +49,18 @@
 #endif
 
 /**
+	Define to 1 to use a binary-searchable sorted linear array
+	for the global expression -> process-id map.
+	Rationale: lookup performance, reduces memory footprint slightly
+	Goal: 1
+	Measurement: is actually a 1-2% slower? 
+		so leave disabled until further analysis
+ */
+#if PRSIM_SEPARATE_PROCESS_EXPR_MAP
+#define PRSIM_PROCESS_EXPR_MAP_ARRAY		0
+#endif
+
+/**
 	Define 1 to inline and disable bounds checking on
 	get_node() and __get_node().
  */
@@ -536,8 +548,16 @@ protected:
 		Basically each process owns a contiguous 
 		range of expr indices.  
 	 */
+#if PRSIM_PROCESS_EXPR_MAP_ARRAY
+	typedef	pair<expr_index_type, process_index_type>
+					expr_process_entry_type;
+	struct expr_id_key_compare;
+	typedef	vector<expr_process_entry_type>
+					global_expr_process_id_map_type;
+#else
 	typedef	map<expr_index_type, process_index_type>
 					global_expr_process_id_map_type;
+#endif
 #endif
 	/**
 		Collection of unique process footprints.

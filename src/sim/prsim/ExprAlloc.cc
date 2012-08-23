@@ -684,7 +684,12 @@ if (pxs) {
 	// STACKTRACE_INDENT_PRINT("prev offset = " << x->first << endl);
 	STACKTRACE_INDENT_PRINT("offset[" << ex_offset << "] -> process " <<
 		current_process_index +1 << endl);
+#if PRSIM_PROCESS_EXPR_MAP_ARRAY
+	state.global_expr_process_id_map.push_back(
+		std::make_pair(ex_offset, current_process_index +1));
+#else
 	state.global_expr_process_id_map[ex_offset] = current_process_index +1;
+#endif
 #endif
 	// connect global nodes to global fanout expressions
 	node_index_type lni = 0;	// frame-map is 0-indexed

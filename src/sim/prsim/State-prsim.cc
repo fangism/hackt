@@ -422,7 +422,13 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 	// unique_process_pool.reserve() ?
 #if PRSIM_SEPARATE_PROCESS_EXPR_MAP
 	// first valid global expression ID is 1, 0 is reserved as NULL
+#if PRSIM_PROCESS_EXPR_MAP_ARRAY
+	global_expr_process_id_map.reserve(1024);
+	global_expr_process_id_map.push_back(
+		expr_process_entry_type(FIRST_VALID_GLOBAL_EXPR, 0));
+#else
 	global_expr_process_id_map[FIRST_VALID_GLOBAL_EXPR] = 0;
+#endif
 	// for top-level
 	// if top-level process is empty, will need to replace this entry!
 #endif
@@ -3795,6 +3801,17 @@ struct process_sim_state_base::offset_comparator {
 };	// end struct offset_comparator
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_PROCESS_EXPR_MAP_ARRAY
+struct State::expr_id_key_compare {
+	bool
+	operator () (const expr_index_type e, 
+			const expr_process_entry_type& p) const {
+		return e < p.first;
+	}
+};
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\param gei global expression index
 	\return pair: local process expression index offset, process ID
@@ -3806,8 +3823,15 @@ State::lookup_global_expr_process(const expr_index_type gei) const {
 	DEBUG_LOOKUP_PRINT("global-expr: " << gei << endl);
 	INVARIANT(gei);
 #if PRSIM_SEPARATE_PROCESS_EXPR_MAP
+#if PRSIM_PROCESS_EXPR_MAP_ARRAY
+	global_expr_process_id_map_type::const_iterator
+		f(upper_bound(global_expr_process_id_map.begin(), 
+			global_expr_process_id_map.end(), gei, 
+			expr_id_key_compare()));
+#else
 	global_expr_process_id_map_type::const_iterator
 		f(global_expr_process_id_map.upper_bound(gei));
+#endif
 	INVARIANT(f != global_expr_process_id_map.begin());
 	--f;
 	DEBUG_LOOKUP_PRINT("pid = " << f->second << endl);
@@ -3830,8 +3854,15 @@ State::lookup_global_expr_process(const expr_index_type gei) const {
 process_sim_state&
 State::lookup_global_expr_process(const expr_index_type gei) {
 #if PRSIM_SEPARATE_PROCESS_EXPR_MAP
+#if PRSIM_PROCESS_EXPR_MAP_ARRAY
+	global_expr_process_id_map_type::const_iterator
+		f(upper_bound(global_expr_process_id_map.begin(), 
+			global_expr_process_id_map.end(), gei, 
+			expr_id_key_compare()));
+#else
 	global_expr_process_id_map_type::const_iterator
 		f(global_expr_process_id_map.upper_bound(gei));
+#endif
 	INVARIANT(f != global_expr_process_id_map.begin());
 	--f;
 	return process_state_array[f->second];
@@ -7023,9 +7054,14 @@ State::dump_memory_usage(ostream& o) const {
 	// hashtable iterator value-types
 	typedef	global_expr_process_id_map_type::const_iterator::value_type
 							value_type;
+#if PRSIM_PROCESS_EXPR_MAP_ARRAY
+	const size_t es = sizeof(value_type);
+#else
+	const size_t es = sizeof_tree_node(value_type);
+#endif
 	const size_t n = global_expr_process_id_map.size();
-	o << "expr-process-map: (" << n << " * " << sizeof_tree_node(value_type)
-		<< " B/proc) = " << n * sizeof_tree_node(value_type)
+	o << "expr-process-map: (" << n << " * " << es
+		<< " B/proc) = " << n * es
 		<< " B" << endl;
 #endif
 }
