@@ -3801,6 +3801,7 @@ struct process_sim_state_base::offset_comparator {
 };	// end struct offset_comparator
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_SEPARATE_PROCESS_EXPR_MAP
 #if PRSIM_PROCESS_EXPR_MAP_ARRAY
 struct State::expr_id_key_compare {
 	bool
@@ -3809,6 +3810,7 @@ struct State::expr_id_key_compare {
 		return e < p.first;
 	}
 };
+#endif
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
