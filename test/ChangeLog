@@ -2,6 +2,15 @@
 #	$Id: ChangeLog,v 1.109 2011/05/05 06:50:50 fang Exp $
 # ChangeLog for test directory.
 
+2012-08-09	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-86-42b:
+	  ipple tests: allow numerical diff filter awk script to call
+		strtonum() by unset POSIXLY_CORRECT.
+		Flag more tests whose results are random, due to
+		use of scatter command for seeding.
+
+
 2011-07-06	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-84-79d:

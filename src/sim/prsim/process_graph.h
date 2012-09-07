@@ -44,12 +44,9 @@ using entity::footprint_frame_map_type;
 	Whe the map is combined search may need to be modified
 	to use lower_bound rather than --upper_bound
 	Goal: 0
+	Status: broken
  */
 #define	PRSIM_SEPARATE_PROCESS_EXPR_MAP		1
-
-/// can switch between integer and real-valued time
-// typedef      discrete_time                   rule_time_type;
-typedef	real_time			rule_time_type;
 
 //=============================================================================
 // structures to account for local fanin contribution

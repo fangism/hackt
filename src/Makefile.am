@@ -1250,6 +1250,8 @@ libhacktpr_la_SOURCES = $(PR_CC_FILES) $(PR_H_FILES)
 # unfornately, it doesn't detect these dependenvies until AFTER first compile
 sim/ISE.lo sim/ISE.o: cvstag.h
 common/ICE.lo common/ICE.o: cvstag.h
+common/config.lo common/config.o: cvstag.h
+sim/prsim/VCDManager.lo sim/prsim/VCDManager.o: cvstag.h
 main/lexyacc.lo main/lexyacc.o: parser/$(HACKT_PARSE_ROOT).h
 main/main_funcs.lo main/main_funcs.o: parser/$(HACKT_PARSE_ROOT)-real.h
 common/config.lo common/config.o: $(AUTOHEADERS) $(VERSIONHEADERS) \
@@ -1485,6 +1487,27 @@ parser/$(SPICE_PARSE_ROOT)-real.cc: parser/$(SPICE_PARSE_ROOT).cc \
 		parser/$(SPICE_PARSE_ROOT).output.h
 	$(CAT) $< | $(PARSER_HACK_PIPE) > $@
 
+if YLWRAP_CC2HH
+PARSE_ROOT_HEADER_SCRIPT = \
+	base=`basename $@ .h` ; \
+	dir=`dirname $@` ; \
+	if test -f $@ ; \
+	then touch $@ ; \
+	elif test -f $*.hh ; \
+	then cd parser ; $(LN_S) $$base.hh $$base.h ; touch $$base.h ; \
+	else echo "Error: no $@ or .hh found." ; exit 1 ; \
+	fi
+
+# newer automake 1.12's ylwrap produces $root.hh instead of $root.h
+parser/$(HACKT_PARSE_ROOT).h: parser/$(HACKT_PARSE_ROOT).cc
+	$(PARSE_ROOT_HEADER_SCRIPT)
+parser/$(TYPE_PARSE_ROOT).h: parser/$(TYPE_PARSE_ROOT).cc
+	$(PARSE_ROOT_HEADER_SCRIPT)
+parser/$(INSTREF_PARSE_ROOT).h: parser/$(INSTREF_PARSE_ROOT).cc
+	$(PARSE_ROOT_HEADER_SCRIPT)
+parser/$(SPICE_PARSE_ROOT).h: parser/$(SPICE_PARSE_ROOT).cc
+	$(PARSE_ROOT_HEADER_SCRIPT)
+endif
 
 # requires shell variable 'basename'
 MAKE_REAL_PARSER_HEADER_SCRIPT = \
@@ -2064,6 +2087,7 @@ hackt_persistent_table.sh: hackt
 CLEANPARSER = \
 	parser/$(HACKT_PARSE_ROOT).cc \
 	parser/$(HACKT_PARSE_ROOT).h \
+	parser/$(HACKT_PARSE_ROOT).hh \
 	parser/$(HACKT_PARSE_ROOT)-real.cc \
 	parser/$(HACKT_PARSE_ROOT)-real.h \
 	parser/$(HACKT_PARSE_ROOT).output \
@@ -2072,6 +2096,7 @@ CLEANPARSER = \
 	parser/hackt.types \
 	parser/$(INSTREF_PARSE_ROOT).cc \
 	parser/$(INSTREF_PARSE_ROOT).h \
+	parser/$(INSTREF_PARSE_ROOT).hh \
 	parser/$(INSTREF_PARSE_ROOT)-real.cc \
 	parser/$(INSTREF_PARSE_ROOT)-real.h \
 	parser/$(INSTREF_PARSE_ROOT).output \
@@ -2080,6 +2105,7 @@ CLEANPARSER = \
 	parser/instref.types \
 	parser/$(TYPE_PARSE_ROOT).cc \
 	parser/$(TYPE_PARSE_ROOT).h \
+	parser/$(TYPE_PARSE_ROOT).hh \
 	parser/$(TYPE_PARSE_ROOT)-real.cc \
 	parser/$(TYPE_PARSE_ROOT)-real.h \
 	parser/$(TYPE_PARSE_ROOT).output \
@@ -2088,6 +2114,7 @@ CLEANPARSER = \
 	parser/type.types \
 	parser/$(SPICE_PARSE_ROOT).cc \
 	parser/$(SPICE_PARSE_ROOT).h \
+	parser/$(SPICE_PARSE_ROOT).hh \
 	parser/$(SPICE_PARSE_ROOT)-real.cc \
 	parser/$(SPICE_PARSE_ROOT)-real.h \
 	parser/$(SPICE_PARSE_ROOT).output \
@@ -2096,6 +2123,7 @@ CLEANPARSER = \
 	parser/spice.types \
 	parser/$(VERILOG_PARSE_ROOT).cc \
 	parser/$(VERILOG_PARSE_ROOT).h \
+	parser/$(VERILOG_PARSE_ROOT).hh \
 	parser/$(VERILOG_PARSE_ROOT).output \
 	$(LEXYACC_PREFIX_H_FILES)
 

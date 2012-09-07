@@ -21,8 +21,8 @@ module HAC_AND_N;
 	reg [64*8:1] verilog_name, tmp;
 	AND_N #(input_size)
 	dummy (
-		A,
-		Z
+		.A ( A ),
+		.Z ( Z )
 	);
 initial begin
 #0	// happens *after* initial

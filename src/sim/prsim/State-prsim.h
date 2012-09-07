@@ -48,6 +48,32 @@
 #include "util/memory/count_ptr.h"
 #endif
 
+/**
+	Define to 1 to use a binary-searchable sorted linear array
+	for the global expression -> process-id map.
+	Rationale: lookup performance, reduces memory footprint slightly
+	Goal: 1
+	Measurement: is actually a 1-2% slower? 
+		so leave disabled until further analysis
+ */
+#if PRSIM_SEPARATE_PROCESS_EXPR_MAP
+#define PRSIM_PROCESS_EXPR_MAP_ARRAY		0
+#endif
+
+/**
+	Define 1 to inline and disable bounds checking on
+	get_node() and __get_node().
+ */
+#define	PRSIM_FAST_GET_NODE			1
+
+#define	PRSIM_SET_FAST_ALLOCATOR		1
+
+#if PRSIM_SET_FAST_ALLOCATOR
+#include "util/STL/functional_fwd.h"		// for std::less
+#include "util/memory/chunk_map_pool.h"
+#include "util/memory/allocator_adaptor.h"
+#endif
+
 namespace HAC {
 namespace entity {
 	class footprint;
@@ -421,6 +447,19 @@ private:
 	 */
 	static const value_enum			pull_to_value[3][3];
 
+#if PRSIM_SET_FAST_ALLOCATOR
+	typedef util::memory::chunk_map_pool<node_index_type,
+			sizeof(size_t) << 3>	// use machine int size
+						set_pool_alloc_type;
+	typedef util::memory::allocator_adaptor<set_pool_alloc_type>
+						set_override_allocator_type;
+	typedef set<node_index_type, std::less<node_index_type>,
+			set_override_allocator_type>
+						index_set_type;
+#else
+	typedef	set<node_index_type>		index_set_type;
+#endif
+
 public:
 #if !PRSIM_HIERARCHICAL_RINGS
 	/**
@@ -433,6 +472,7 @@ public:
 		Alternative: use map for sparser exclusive rings.  
 		Alternative: use sorted array (for fast binary search)
 	 */
+//	typedef	index_set_type			ring_set_type;
 	typedef	std::set<node_index_type>	ring_set_type;
 #endif
 	typedef	unique_process_subgraph::node_set_type
@@ -449,6 +489,7 @@ protected:
 	typedef	std::map<event_index_type, time_type>
 						mk_excl_queue_type;
 #if PRSIM_SIMPLE_EVENT_QUEUE
+//	typedef	index_set_type			updated_nodes_type;
 	typedef	std::set<node_index_type>	updated_nodes_type;
 #else
 	/**
@@ -507,8 +548,16 @@ protected:
 		Basically each process owns a contiguous 
 		range of expr indices.  
 	 */
+#if PRSIM_PROCESS_EXPR_MAP_ARRAY
+	typedef	pair<expr_index_type, process_index_type>
+					expr_process_entry_type;
+	struct expr_id_key_compare;
+	typedef	vector<expr_process_entry_type>
+					global_expr_process_id_map_type;
+#else
 	typedef	map<expr_index_type, process_index_type>
 					global_expr_process_id_map_type;
+#endif
 #endif
 	/**
 		Collection of unique process footprints.
@@ -676,7 +725,8 @@ private:
 		turned OFF, and are thus candidates for checking for 
 		missing keepers.
 	 */
-	set<node_index_type>			__keeper_check_candidates;
+	typedef	index_set_type			keeper_check_set_type;
+	keeper_check_set_type			__keeper_check_candidates;
 #if PRSIM_LAZY_INVARIANTS
 	// using pair for built-in < comparison operator
 	typedef	pair<process_index_type, rule_index_type>
@@ -734,7 +784,12 @@ private:
 	__initialize(const bool);
 
 	node_type&
-	__get_node(const node_index_type);
+	__get_node(const node_index_type i)
+#if PRSIM_FAST_GET_NODE
+		{ return node_pool[i]; }
+#else
+		;
+#endif
 
 public:
 
@@ -742,7 +797,12 @@ public:
 	get_node_pool(void) const { return node_pool; }
 
 	const node_type&
-	get_node(const node_index_type) const;
+	get_node(const node_index_type i) const
+#if PRSIM_FAST_GET_NODE
+		{ return node_pool[i]; }
+#else
+		;
+#endif
 
 	node_index_type
 	get_node_index(const node_type& n) const {
@@ -1340,7 +1400,11 @@ private:
 	event_index_type
 	__allocate_event(node_type&, const node_index_type n,
 		cause_arg_type,	// this is the causing node/event
-		const rule_index_type, const value_enum,
+		const rule_index_type, 
+#if EVENT_INCLUDE_RULE_POINTER
+		const rule_type*,
+#endif
+		const value_enum,
 #if PRSIM_WEAK_RULES
 		const bool weak,
 #endif

@@ -3,9 +3,59 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2012-08-20	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-86-44c:
+	  hacprsim: pass rule pointer w/ rule_index to avoid lookup_rule(),
+		resulting in 3% speedup.  Event struct increased in size
+		by 1 pointer, affects memory stats in a few tests.
+
+
+2012-08-16	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-86-44b:
+	  hacprsim: pool-allocated set<index> brings another 2-3% speedup.
+
+
+	* HACKT-00-01-04-main-00-86-44:
+	  hacprsim: inlined and de-assert get_node(), __get_node(), 
+		resulting in about 2-3% speedup.
+
+
+2012-08-13	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-86-43:
+	  VCDwriter.cc: use '\n' instead of endl to reduce calls to flush().
+
+
+2012-08-08	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-86-42:
+	  see lib/ChangeLog, just a verilog wrapper generator update.
+
+
+2012-08-08	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-86-41f:
+	  Makefile.am: support automake 1.12's producing ylwrap .cc -> .hh
+
+
+2012-08-06	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-86-41d:
+	  Makefile.am: hackt,hacchpsim LDADD += $(LIBLTDL)
+		to fix undefined reference.  Fixes #12.
+
+
+2012-08-06	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-86-41c:
+	  Makefile.am: missing dependencies on cvstag.h
+
+
 2012-07-11	David Fang		<fangism@users.sourceforge.net>
 
-	* HACKT-00-01-04-main-00-86:
+	* HACKT-00-01-04-main-00-86-41:
 	  HAC: added string comparison operator support.
 		object binary format version bumped to 10.
 		Test cases added, documentation updated.

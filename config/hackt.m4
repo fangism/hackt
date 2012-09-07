@@ -209,6 +209,7 @@ fi
 dnl readline may need to link against ncurses, without requiring headers
 dnl Thus, we check for tputs unconditionally
 saved_LDFLAGS="$LDFLAGS"
+saved_LIBS="$LIBS"
 LDFLAGS="$LDFLAGS $ncurses_ldpath"
 dnl NOTE: SEARCH_LIBS automatically prepends LIBS
 AC_LANG_PUSH(C)
@@ -223,6 +224,7 @@ AC_SEARCH_LIBS(tputs, ncurses termcap,
 )
 AC_LANG_POP(C)
 LDFLAGS="$saved_LDFLAGS"
+LIBS="$saved_LIBS"
 dnl these variables are set only if corresponding headers/libraries are found
 AC_SUBST(NCURSES_INCLUDE)
 AC_SUBST(NCURSES_LDPATH)
