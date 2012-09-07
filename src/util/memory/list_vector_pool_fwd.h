@@ -88,13 +88,15 @@ public:									\
 	formal parameters matter -- it's just an eyesore to see them here.  
 
 	NOTE: doesn't like std::_Construct in friend declaration.
+	NOTE: newer compilers (clang) don't like un-namespace-qualified 
+		_Construct, it might be time to move past gcc-3.3.
 
 	See "util/test/friend_function_formal_bug.cc" for example.  
  */
 #define	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS				\
 	friend class util::memory::list_vector_pool<this_type>;		\
-	friend void _Construct<this_type>(this_type* __p);		\
-	friend void _Construct<this_type, this_type>(			\
+	friend void std::_Construct<this_type>(this_type* __p);		\
+	friend void std::_Construct<this_type, this_type>(		\
 		this_type* __p, const this_type& __value);
 
 namespace util {

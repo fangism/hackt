@@ -31,7 +31,7 @@ test_func_step(R (*f)(A), const char* fn,
 	do {
 		cout << fn << "(0x";
 		cout << std::hex << min;
-		cout << ") = " << std::dec << size_t((*f)(min)) << endl;
+		cout << ") = " << std::dec << size_t((*f)(A(min))) << endl;
 		min += step;
 	} while (min <= max);
 }
@@ -46,7 +46,7 @@ test_func_shift(R (*f)(A), const char* fn,
 	do {
 		cout << fn << "(0x";
 		cout << std::hex << min;
-		cout << ") = " << std::dec << size_t((*f)(min)) << endl;
+		cout << ") = " << std::dec << size_t((*f)(A(min))) << endl;
 		min <<= 1;
 		min += step;
 		++i;
@@ -63,7 +63,7 @@ test_func_shift_repeat(R (*f)(A), const char* fn,
 	do {
 		cout << fn << "(0x";
 		cout << std::hex << A(min);	// mask out overflow
-		cout << ") = " << std::dec << size_t((*f)(min)) << endl;
+		cout << ") = " << std::dec << size_t((*f)(A(min))) << endl;
 		min <<= 1;
 		++i;
 	} while (i < count);

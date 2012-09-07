@@ -84,7 +84,7 @@ test_value(void) {
 		what<typename power_of_2_traits<N>::category>::name << endl;
 
 	if (is_power_of_2<N>::value) {
-		static const size_t product = multiply_by_constant<N>(10);
+		static const ssize_t product = multiply_by_constant<N>(10);
 		cout << "multiplication becomes shift: (10 * " << N <<
 			") = (10 << " << significance<N>::value << ") = " <<
 			product << endl;

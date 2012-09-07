@@ -216,7 +216,7 @@ inline
 char
 msb(const T& v) {
 #if DEFINE_MSB_FROM_CLZ
-	return (sizeof(T) << 3) -1 -clz(v);
+	return char(sizeof(T) << 3) -1 -clz(v);
 	// undefined: results in -1 for (v == 0)
 #else
 	return MSB_position<T>()(v);
