@@ -465,7 +465,7 @@ MEMBER_INSTANCE_REFERENCE_CLASS::unroll_subindices_packed(
 		return bad_bool(true);
 	}
 	vector<size_t> local_indices;		// recycle memory
-	size_t asp = 0;
+	ssize_t asp = 0;
 	bool sized = false;
 	index_array_reference::iterator ai;
 	vector<context_result_type>::const_iterator

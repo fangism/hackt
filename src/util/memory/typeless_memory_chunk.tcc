@@ -59,7 +59,7 @@ TYPELESS_MEMORY_CHUNK_CLASS::contains(const void* p) const {
 #endif
 	if (offset >= chunk_size)
 		return false;
-	const bit_map_type dealloc_mask = bit_map_type(1) << offset;
+	const bit_map_type dealloc_mask(bit_map_type(1) << offset);
 	return any_bits<bit_map_type>()(free_mask & dealloc_mask);
 }
 
@@ -116,6 +116,7 @@ TYPELESS_MEMORY_CHUNK_CLASS::__deallocate(void* p) {
 		std::iterator_traits<storage_type*>::difference_type
 		offset = std::distance(&elements[0],
 			reinterpret_cast<storage_type*>(p));
+	INVARIANT(offset >= 0);
 #endif
 #if 0
 	// for debugging
@@ -127,7 +128,7 @@ TYPELESS_MEMORY_CHUNK_CLASS::__deallocate(void* p) {
 	}
 #endif
 	INVARIANT(offset < chunk_size);	// else doesn't belong to this chunk!
-	const bit_map_type dealloc_mask = bit_map_type(1) << offset;
+	const bit_map_type dealloc_mask(bit_map_type(1) << size_t(offset));
 	// was actually allocated and not already freed
 #if 0
 	cerr << "start = " << begin();
