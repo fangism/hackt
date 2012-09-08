@@ -15,7 +15,6 @@
 #include "Object/def/footprint.h"
 #include "Object/def/process_definition.h"
 #include "util/attributes.h"
-#include "util/STL/vector_fwd.h"
 
 namespace HAC {
 struct cflat_options;
@@ -27,7 +26,6 @@ class context;
 namespace entity {
 class process_type_reference;
 class global_context_cache;
-using std::default_vector;
 using std::string;
 using std::ostream;
 using util::persistent;

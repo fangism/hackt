@@ -47,8 +47,8 @@ using entity::cflat_context_visitor;
 using entity::global_process_context;
 #if PRSIM_PRECHARGE_INVARIANTS
 class current_path_graph;
-class netgraph_node;
-class transistor_edge;
+struct netgraph_node;
+struct transistor_edge;
 using util::memory::excl_ptr;
 using NET::netlist_generator;
 using NET::transistor_base;

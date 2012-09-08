@@ -146,7 +146,7 @@ struct dependence_collector_base {
 /**
 	Keep synchronized with declarations in expr_visitor.  
  */
-struct DependenceSetCollector :
+class DependenceSetCollector :
 		public entity::nonmeta_expr_visitor, 
 		public global_entry_context, 
 		public dependence_collector_base<bool_tag>,

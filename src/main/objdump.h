@@ -18,7 +18,7 @@ namespace HAC {
  */
 class objdump {
 private:
-	class options;
+	struct options;
 
 public:
 	static const char		name[];

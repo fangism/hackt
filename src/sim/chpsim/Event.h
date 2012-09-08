@@ -28,7 +28,7 @@ namespace SIM {
 namespace CHPSIM {
 class DependenceSetCollector;
 class nonmeta_context;
-class graph_options;
+struct graph_options;
 class State;		// arg... event shouldn't depend on State?
 using std::ostream;
 using std::string;

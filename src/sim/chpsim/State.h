@@ -44,7 +44,7 @@ using util::string_list;
 using std::string;
 class StateConstructor;
 class nonmeta_context;
-class graph_options;
+struct graph_options;
 class TraceManager;
 using util::memory::excl_ptr;
 using util::memory::never_ptr;
