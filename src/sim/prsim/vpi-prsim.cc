@@ -991,6 +991,12 @@ void register_to_prsim (const char *vcs_name, const char *prsim_name)
   if (_confirm_connections) {
 	cout << "$to_prsim: " << VCS_name << " -> " << PRSIM_name << endl;
   }
+  if (prsim_state->node_is_driven(ni)) {
+	cout << "$to_prsim: WARNING: node `" << PRSIM_name <<
+		"' is driven from Verilog (" << VCS_name <<
+		") and production rules!" << endl;
+	// caveat: script might connect node to channel-source/env later
+  }
 
   /* propagate the current value of the node to prsim */
   const value_enum n(get_prsim_value(net));
