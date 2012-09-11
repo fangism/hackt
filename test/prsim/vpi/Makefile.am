@@ -8,6 +8,7 @@ include $(top_srcdir)/installdirs.mk
 
 # for .hac and .haco
 HACKT_PRSIMRC_TEST_SUBJECTS = inverters \
+	inverters-backwards \
 	interleave-a interleave-b interleave-c \
 	oscillator \
 	channel-source-sink \
@@ -22,6 +23,7 @@ HACKT_PRSIMRC_TEST_SUBJECTS = inverters \
 # for .v verilog tests
 HACKT_VPI_TEST_SCRIPTS_PASSES = \
 	inverters inverters-delay inverters-syntax-err \
+	inverters-backwards \
 	shoelace shoelace-debug \
 	inverters-watch inverters-watch2 \
 	initial-value \
