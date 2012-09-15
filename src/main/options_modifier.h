@@ -28,7 +28,8 @@ namespace HAC {
 	of functor class type.  
  */
 template <class OptionsType, typename Modifier = void (*)(OptionsType&)>
-struct options_modifier_policy {
+class options_modifier_policy {
+public:
 	typedef	OptionsType			options_type;
 	typedef Modifier			modifier_type;
 	class options_modifier_info;

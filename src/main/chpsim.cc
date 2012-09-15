@@ -48,7 +48,7 @@ using entity::footprint;
 using entity::CHP::local_event_footprint;
 
 //=============================================================================
-template struct options_modifier_policy<chpsim_options>;
+template class options_modifier_policy<chpsim_options>;
 
 //=============================================================================
 // class chpsim static initializers

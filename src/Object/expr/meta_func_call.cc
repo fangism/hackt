@@ -262,7 +262,7 @@ try {
 		ERROR_OUT;
 	}
 	// cast from const_param back to subtype
-	return (*fsym)(*rargs).is_a<const const_expr_type>();
+	return (*fsym)(*rargs).template is_a<const const_expr_type>();
 } catch (...) {
 	cerr << "Run-time error calling function: ";
 	// drat, process_index unavailable from context...

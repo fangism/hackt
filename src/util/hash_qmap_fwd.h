@@ -58,7 +58,10 @@ class hash_qmap;
  */
 template <class K, class T>
 struct default_hash_qmap {
-#if	defined(HASH_MAP_SGI_STYLE)
+#if	USING_UNORDERED_MAP
+	typedef hash_qmap<K, T, HASH_MAP_NAMESPACE::hash<K>,
+		std::equal_to<K>, std::allocator<T> >
+#elif	defined(HASH_MAP_SGI_STYLE)
 	typedef hash_qmap<K, T, HASH_MAP_NAMESPACE::hash<K>,
 		std::equal_to<K>, std::allocator<T> >
 #elif	defined(HASH_MAP_INTEL_STYLE)

@@ -10,12 +10,12 @@
 
 #include <iosfwd>
 #include <utility>
+#include <vector>			// really only need fwd decl.
 #include "util/NULL.h"
 #include "util/size_t.h"
 #include "util/member_saver.h"
 #include "Object/traits/classification_tags_fwd.h"
 #include "Object/ref/reference_enum.h"	// for global_indexed_reference
-#include "util/STL/vector_fwd.h"
 #include "Object/devel_switches.h"
 
 /**
@@ -216,7 +216,7 @@ virtual	void
 	construct_global_footprint_frames(
 		const footprint& top,
 		const meta_instance_reference_base&,
-		std::default_vector<context_result_type>::type&);
+		vector<context_result_type>&);
 
 	static
 	bool
@@ -224,13 +224,13 @@ virtual	void
 		const footprint& top,
 		const meta_instance_reference_base&,
 		const unroll_context&,		// override
-		std::default_vector<context_result_type>::type&);
+		vector<context_result_type>&);
 
 	bool
 	construct_global_footprint_frames(
 		const meta_instance_reference_base&, 
 		const unroll_context&,
-		std::default_vector<context_result_type>::type&) const;
+		vector<context_result_type>&) const;
 #endif
 
 	static
@@ -265,8 +265,8 @@ private:
 #if AGGREGATE_PARENT_REFS
 	bool
 	construct_global_footprint_frames(
-		std::default_vector<context_arg_type>::type&,
-		std::default_vector<context_result_type>::type&,
+		vector<context_arg_type>&,
+		vector<context_result_type>&,
 		const meta_instance_reference_base&, 
 		const unroll_context&) const;
 #endif

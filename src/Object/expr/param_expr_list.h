@@ -10,12 +10,8 @@
 #ifndef __HAC_OBJECT_EXPR_PARAM_EXPR_LIST_H__
 #define __HAC_OBJECT_EXPR_PARAM_EXPR_LIST_H__
 
-#include "util/persistent.h"
-#ifdef	INSTALLED_HACKT
 #include <vector>
-#else
-#include "util/STL/vector_fwd.h"
-#endif
+#include "util/persistent.h"
 #include "util/memory/pointer_classes_fwd.h"
 
 //=============================================================================
@@ -29,9 +25,6 @@ class template_actuals;
 struct expr_dump_context;
 class nonmeta_expr_visitor;
 using std::vector;
-#ifndef	INSTALLED_HACKT
-using std::default_vector;
-#endif
 using std::ostream;
 using util::memory::count_ptr;
 using util::memory::never_ptr;
@@ -84,11 +77,7 @@ virtual	void
 
 // coordinate with template_formals_manager::template_formals_list_type
 protected:
-#ifdef	INSTALLED_HACKT
 	typedef	vector<placeholder_ptr_type>
-#else
-	typedef	default_vector<placeholder_ptr_type>::type
-#endif
 					template_formals_list_type;
 
 };	// end class param_expr_list

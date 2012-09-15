@@ -945,6 +945,7 @@ struct netlist_common : public device_group {
 	Intended for use with subcircuits.
  */
 class local_netlist : public netlist_common {
+	friend class netlist;
 	// maps actual indices to formal indices (ordered!)
 	typedef	map<index_type, index_type>		node_index_map_type;
 
@@ -973,6 +974,19 @@ class local_netlist : public netlist_common {
 public:
 	local_netlist();
 	~local_netlist();
+
+	void
+	set_name(const string& s) { name = s; }
+
+	void
+	set_index_offset(const size_t o) {
+		transistor_index_offset = o;
+	}
+
+	size_t
+	get_index_offset(void) const {
+		return transistor_index_offset;
+	}
 
 	// does NOT have local subinstances, only devices
 	void

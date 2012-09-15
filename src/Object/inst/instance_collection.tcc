@@ -841,7 +841,7 @@ INSTANCE_ARRAY_CLASS::unroll_aliases(const multikey_index_type& l,
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 void
 INSTANCE_ARRAY_CLASS::get_all_aliases(
-		typename std::default_vector<const_instance_alias_info_ptr_type>::type& aliases) const {
+		std::vector<const_instance_alias_info_ptr_type>& aliases) const {
 	aliases.reserve(this->collection_size());
 	const_iterator i(this->collection.begin()), 
 		e(this->collection.end());
@@ -931,7 +931,7 @@ if (this->has_relaxed_type()) {
 	// evaluate it once and re-use it when replaying internal aliases
 	const typename parent_type::instance_collection_parameter_type
 		t(collection_type_manager_parent_type::__get_raw_type());
-	if (!create_definition_footprint(t, top).good) {
+	if (!this->create_definition_footprint(t, top).good) {
 		return good_bool(false);
 	}
 	for ( ; i!=e; ++i) {
@@ -1563,7 +1563,7 @@ INSTANCE_SCALAR_CLASS::lookup_instance_collection(
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 void
 INSTANCE_SCALAR_CLASS::get_all_aliases(
-		typename std::default_vector<const_instance_alias_info_ptr_type>::type& aliases) const {
+		std::vector<const_instance_alias_info_ptr_type>& aliases) const {
 	aliases.push_back(
 		const_instance_alias_info_ptr_type(&this->the_instance));
 }
@@ -1625,7 +1625,7 @@ if (this->has_relaxed_type()) {
 } else {
 	const typename parent_type::instance_collection_parameter_type
 		t(collection_type_manager_parent_type::__get_raw_type());
-	if (!create_definition_footprint(t, top).good) {
+	if (!this->create_definition_footprint(t, top).good) {
 		return good_bool(false);
 	}
 }

@@ -11,14 +11,16 @@
 
 #include <iosfwd>
 
+// no longer rely on forward declaration headers
+#include <list>
+#include <vector>
+
 #include "Object/traits/class_traits_fwd.h"
 #include "Object/inst/physical_instance_collection.h"	// for macros
 #include "Object/common/multikey_index.h"
 #include "Object/inst/collection_interface.h"
 #include "Object/inst/connection_policy_fwd.h"
 #include "util/persistent_functor.h"
-#include "util/STL/list_fwd.h"
-#include "util/STL/vector_fwd.h"
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
 #include "util/boolean_types.h"
@@ -54,6 +56,7 @@ INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 class instance_collection :
 	public collection_interface<Tag>, 
 	public class_traits<Tag>::collection_type_manager_parent_type {
+// C++: elaborated type as a typedef cannot be a friend
 friend	struct class_traits<Tag>::collection_type_manager_parent_type;
 friend	class subinstance_manager;
 public:
@@ -234,7 +237,7 @@ virtual instance_alias_info_ptr_type
 
 virtual	bool
 	lookup_instance_collection(
-		typename default_list<instance_alias_info_ptr_type>::type& l, 
+		list<instance_alias_info_ptr_type>& l, 
 		const const_range_list& r) const = 0;
 
 virtual	const_index_list
@@ -252,7 +255,7 @@ virtual	void
  */
 #define	GET_ALL_ALIASES_PROTO						\
 	void								\
-	get_all_aliases(typename std::default_vector<const_instance_alias_info_ptr_type>::type&) const
+	get_all_aliases(std::vector<const_instance_alias_info_ptr_type>&) const
 
 virtual	GET_ALL_ALIASES_PROTO = 0;
 

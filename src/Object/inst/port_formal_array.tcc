@@ -386,7 +386,7 @@ PORT_FORMAL_ARRAY_CLASS::lookup_instance_collection(
 PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
 void
 PORT_FORMAL_ARRAY_CLASS::get_all_aliases(
-		typename std::default_vector<const_instance_alias_info_ptr_type>::type& aliases) const {
+		vector<const_instance_alias_info_ptr_type>& aliases) const {
 	aliases.reserve(this->collection_size());
 	const_iterator i(begin()), e(end());
 	for ( ; i!=e; ++i) {
@@ -484,7 +484,7 @@ if (this->has_relaxed_type()) {
 	// evaluate it once and re-use it when replaying internal aliases
 	const typename parent_type::instance_collection_parameter_type
 		t(collection_type_manager_parent_type::__get_raw_type());
-	if (!create_definition_footprint(t, top).good) {
+	if (!this->create_definition_footprint(t, top).good) {
 		return good_bool(false);
 	}
 	for ( ; i!=e; i++) {

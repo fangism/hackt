@@ -118,7 +118,7 @@ function append_call_args(str, arg) {
 		# this would be a good place to include the state file
 		# print "#include \"lexer/flex_lexer_state.h\"" \
 		# instead, we print a forward declaration now
-		print "namespace flex { class lexer_state; }";
+		print "namespace flex { struct lexer_state; }";
 		print "\t/* injected by " script_name " */";
 	} else if (match($0, "^static char yy_hold_char;")) {
 		# members[extract_yy_identifier($0)] = "";
