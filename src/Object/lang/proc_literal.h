@@ -8,12 +8,12 @@
 #define	__HAC_OBJECT_LANG_PROC_LITERAL_H__
 
 #include <iosfwd>
+#include <vector>		// only need fwd decl.
 #include "Object/ref/references_fwd.h"
 #include "util/memory/count_ptr.h"
 #include "util/persistent_fwd.h"
 #include "util/size_t.h"
 #include "util/boolean_types.h"
-#include "util/STL/vector_fwd.h"
 
 namespace HAC {
 namespace entity {
@@ -41,7 +41,7 @@ typedef	count_ptr<const simple_process_meta_instance_reference>
  */
 class proc_literal {
 public:
-	typedef	std::default_vector<size_t>::type	group_type;
+	typedef	std::vector<size_t>			group_type;
 	typedef	process_tag				tag_type;
 protected:
 	/**

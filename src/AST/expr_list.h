@@ -9,10 +9,10 @@
 #ifndef __HAC_AST_EXPR_LIST_H__
 #define __HAC_AST_EXPR_LIST_H__
 
+#include <vector>		// really wish fwd decl was enough
 #include "AST/expr_base.h"
 #include "AST/node_list.h"
 #include "AST/AST_fwd.h"	// for generic_attribute_list
-#include "util/STL/vector_fwd.h"
 
 namespace HAC {
 namespace entity {
@@ -20,7 +20,6 @@ class template_actuals;
 }
 namespace parser {
 using std::vector;
-using std::default_vector;
 //=============================================================================
 /**
 	List of expressions.  
@@ -46,13 +45,13 @@ protected:
 	typedef	expr_list_base			parent_type;
 public:
 	typedef	parent_type::const_iterator	const_iterator;
-	typedef	default_vector<expr::generic_meta_return_type>::type
+	typedef	vector<expr::generic_meta_return_type>
 						checked_meta_generic_type;
-	typedef	default_vector<expr::meta_return_type>::type
+	typedef	vector<expr::meta_return_type>
 						checked_meta_exprs_type;
-	typedef	default_vector<expr::nonmeta_return_type>::type
+	typedef	vector<expr::nonmeta_return_type>
 						checked_nonmeta_exprs_type;
-	typedef	default_vector<inst_ref_meta_return_type>::type
+	typedef	vector<inst_ref_meta_return_type>
 						checked_meta_refs_type;
 public:
 	expr_list();
@@ -103,23 +102,23 @@ class inst_ref_expr_list : public inst_ref_expr_list_base {
 protected:
 	typedef	inst_ref_expr_list_base		parent_type;
 public:
-	typedef	default_vector<prs_literal_ptr_type>::type
+	typedef	vector<prs_literal_ptr_type>
 						checked_bool_refs_type;
-	typedef	default_vector<inst_ref_meta_return_type>::type
+	typedef	vector<inst_ref_meta_return_type>
 						checked_meta_refs_type;
-	typedef	default_vector<inst_ref_nonmeta_return_type>::type
+	typedef	vector<inst_ref_nonmeta_return_type>
 						checked_nonmeta_refs_type;
-	typedef	default_vector<data_ref_nonmeta_return_type>::type
+	typedef	vector<data_ref_nonmeta_return_type>
 						checked_nonmeta_data_refs_type;
 	/// note the pluralization of groups
 	typedef	inst_ref_expr::checked_bool_group_type
 					checked_bool_group_type;
-	typedef	default_vector<inst_ref_expr::checked_bool_group_type>::type
+	typedef	vector<inst_ref_expr::checked_bool_group_type>
 					checked_bool_groups_type;
 
 	typedef	inst_ref_expr::checked_proc_group_type
 					checked_proc_group_type;
-	typedef	default_vector<inst_ref_expr::checked_proc_group_type>::type
+	typedef	vector<inst_ref_expr::checked_proc_group_type>
 					checked_proc_groups_type;
 public:
 	inst_ref_expr_list();

@@ -98,6 +98,7 @@ if (b) {
 }	// end if bool true
 	// else don't bother expanding inside
 }	// end for-each guard-clause pair
+	INVARIANT(gi == ge);
 	return good_bool(true);
 }
 

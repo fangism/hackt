@@ -1594,7 +1594,7 @@ State::next_event_time(void) const {
  */
 value_enum
 State::node_to_value(const string& v, const node_index_type ni) const {
-	const rand48<long> r();
+	const rand48<long> r;
 	return (v == "~") ?
 		node_type::invert_value[get_node(ni).current_value()] :
 		node_type::string_to_value(v);

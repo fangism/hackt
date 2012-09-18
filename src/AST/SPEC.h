@@ -9,7 +9,6 @@
 #include "AST/common.h"
 #include "AST/SPEC_fwd.h"
 #include "AST/lang.h"
-#include "util/STL/vector_fwd.h"
 
 namespace HAC {
 namespace entity {

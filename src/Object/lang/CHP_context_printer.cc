@@ -238,7 +238,7 @@ chp_context_printer::visit(const do_forever_loop& s) {
 	os << "*[";
 {
 	// INDENT_SECTION(os);
-	const path_iterator match(here);
+//	const path_iterator match(here);
 	const value_saver<path_iterator> v(here);
 	++here;
 	NEVER_NULL(s.get_body());

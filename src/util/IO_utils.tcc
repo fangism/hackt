@@ -25,7 +25,7 @@
 #include <functional>
 #include <iterator>
 #include <utility>		// for std::pair
-#include "util/STL/vector_fwd.h"	// for vector<bool>
+#include <vector>		// for vector<bool>
 #include "util/macros.h"	// for INVARIANT
 
 #if	STACKTRACE_IOS

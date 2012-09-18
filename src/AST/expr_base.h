@@ -9,10 +9,10 @@
 #ifndef __HAC_AST_EXPR_BASE_H__
 #define __HAC_AST_EXPR_BASE_H__
 
+#include <vector>
 #include "AST/common.h"
 #include "util/STL/pair_fwd.h"
 #include "Object/ref/references_fwd.h"
-#include "util/STL/vector_fwd.h"
 
 namespace HAC {
 //=============================================================================
@@ -154,11 +154,11 @@ public:
 	typedef inst_ref_nonmeta_return_type		nonmeta_return_type;
 	typedef data_ref_nonmeta_return_type	nonmeta_data_return_type;
 	typedef	entity::bool_literal		simple_meta_return_type;
-	typedef	std::default_vector<simple_meta_return_type>::type
+	typedef	std::vector<simple_meta_return_type>
 					checked_bool_group_type;
-	typedef	std::default_vector<entity::proc_literal>::type
+	typedef	std::vector<entity::proc_literal>
 					checked_proc_group_type;
-	typedef	std::default_vector<count_ptr<const inst_ref_expr> >::type
+	typedef	std::vector<count_ptr<const inst_ref_expr> >
 					reference_array_type;
 
 	inst_ref_expr() : parent_type() { }

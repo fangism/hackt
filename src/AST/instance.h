@@ -13,7 +13,6 @@
 #include "AST/expr_list.h"
 #include "AST/instance_base.h"
 #include "Object/devel_switches.h"	// for INSTANCE_SUPPLY_OVERRIDES
-#include "util/STL/vector_fwd.h"
 #include "util/boolean_types.h"
 #include "util/memory/count_ptr.h"
 

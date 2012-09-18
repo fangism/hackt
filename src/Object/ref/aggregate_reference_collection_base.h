@@ -7,7 +7,7 @@
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_REFERENCE_COLLECTION_BASE_H__
 #define	__HAC_OBJECT_REF_AGGREGATE_REFERENCE_COLLECTION_BASE_H__
 
-#include "util/STL/vector_fwd.h"
+#include <vector>			// only need fwd decl
 #include "util/boolean_types.h"
 #include "util/packed_array_fwd.h"
 #include "Object/common/multikey_index.h"
@@ -24,7 +24,7 @@ using util::packed_array_generic;
  */
 class aggregate_reference_collection_base {
 public:
-	typedef std::default_vector<multikey_index_type>::type
+	typedef std::vector<multikey_index_type>
 						size_array_type;
 protected:
 	/**

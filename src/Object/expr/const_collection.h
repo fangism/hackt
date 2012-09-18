@@ -165,6 +165,7 @@ public:
 	unroll_resolve_rvalues(const unroll_context&, 
 		const count_ptr<const expr_base_type>&) const;
 
+	using parent_const_type::unroll_resolve_rvalues;
 	using expr_base_type::unroll_resolve_rvalues;
 	using expr_base_type::unroll_resolve_copy;
 	using expr_base_type::nonmeta_resolve_copy;
@@ -182,6 +183,7 @@ public:
 		const dynamic_param_expr_list&,
 		const count_ptr<const expr_base_type>&) const;
 
+	using parent_const_type::substitute_default_positional_parameters;
 	using expr_base_type::substitute_default_positional_parameters;
 
 	this_type

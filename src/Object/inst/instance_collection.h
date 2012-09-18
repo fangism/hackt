@@ -57,7 +57,7 @@ class instance_collection :
 	public collection_interface<Tag>, 
 	public class_traits<Tag>::collection_type_manager_parent_type {
 // C++: elaborated type as a typedef cannot be a friend
-friend	struct class_traits<Tag>::collection_type_manager_parent_type;
+// friend	struct class_traits<Tag>::collection_type_manager_parent_type;
 friend	class subinstance_manager;
 public:
 	typedef	class_traits<Tag>			traits_type;
