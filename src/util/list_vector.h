@@ -12,12 +12,12 @@
 
 #include <iosfwd>
 #include <algorithm>
-
-#include "util/macros.h"
-#include "util/list_vector_fwd.h"
 #include <list>
 #include <vector>
 #include <map>
+
+#include "util/macros.h"
+#include "util/list_vector_fwd.h"
 // #include "util/qmap.h"
 #include "util/nested_iterator.h"
 

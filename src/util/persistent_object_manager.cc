@@ -865,6 +865,14 @@ endian_stamp(void) {
 	return t;
 }
 
+// degenerate case, don't bother shifting (-Wshift-count-overflow)
+template <>
+unsigned char
+endian_stamp<unsigned char>(void) {
+	unsigned char t = 1;
+	return t;
+}
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\param T should be unsigned type
