@@ -3,6 +3,12 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2012-09-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-86-46:
+	  util/ChangeLog: fix IO_utils.cc:read_string() typo.
+
+
 2012-09-10	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-86-45:
