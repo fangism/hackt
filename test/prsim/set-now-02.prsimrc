@@ -1,0 +1,28 @@
+# "set-now-02.prsimrc"
+# copy-modified from "reschedule-17.prsimrc"
+# @haco@ inv.haco-c
+
+timing uniform 10
+watchall
+set-now a 0
+assert a 0
+queue
+echo end of queue
+cycle
+
+set-now a 1
+assert a 1
+cycle
+
+set-now a X
+assert a X
+cycle
+
+set-now a 1
+assert a 1
+cycle
+
+set-now a 0
+assert a 0
+cycle
+

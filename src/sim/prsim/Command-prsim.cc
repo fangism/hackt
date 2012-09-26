@@ -1251,6 +1251,7 @@ if (asz < 3 || asz > 4) {
 			err = s.set_node(ni, val, force);
 		}
 #if PRSIM_NODE_AGGREGATE_ARGUMENTS
+		// TODO: what if one of the many nodes has an error?
 	}	// end for each node
 #endif
 	return (err < 1) ? Command::NORMAL : Command::BADARG;
@@ -1266,13 +1267,107 @@ void
 Set::usage(ostream& o) {
 	o << "set <node> <0|F|1|T|X|U|~|?> [+delay | time]" << endl;
 	o <<
-"\tWithout delay, node is set immediately.  Relative delay into future\n"
-"\tis given by +delay, whereas an absolute time is given without \'+\'.\n"
+"\tWithout delay, node is *scheduled* to change at the current time.\n"
+"\tRelative delay into future is given by +delay,\n"
+"\twhereas an absolute time is given without \'+\'.\n"
 "\tIf there is a pending event on the node, this command is ignored with a\n"
 "\twarning.  The value '~' means opposite-of-the-current-value.\n"
 "\tThe value '?' means any non-X value (0 or 1, random).\n"
 "See also \'setf\'."
 	<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/set-now.texi
+@deffn Command set-now node val
+Unlike the @command{set} command, this sets the value of @var{node}
+to @var{val} immediately, without enqueuing an event.
+@end deffn
+@end texinfo
+***/
+PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(SetNow, instance_completer)
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(SetNow, "set-now", simulation,
+	"set node immediately, executing it right away (skip queue)")
+
+static
+int
+__set_now_main(State& s, const string_list& a,
+//		const bool force, 
+		void (*usage)(ostream&)) {
+	STACKTRACE_VERBOSE;
+	const size_t asz = a.size();
+if (asz != 3) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	// now I'm wishing string_list was string_vector... :) can do!
+	string_list::const_iterator ai(++a.begin());
+	const string& objname(*ai++);	// node name
+	const string& _val(*ai++);	// node value
+#if PRSIM_NODE_AGGREGATE_ARGUMENTS
+	NODE_FOR_EACH(objname) {
+		const node_index_type& ni(*niter);
+#else
+	const node_index_type ni = parse_node_to_index(objname, s.get_module());
+	if (!ni) {
+		cerr << "No such node found." << endl;
+		return Command::BADARG;
+	} // else
+#endif
+		// TODO: support force overrides
+		if (s.get_node(ni).get_event()) {
+			cerr << "There is already event pending on node `"
+				<< objname << "'.  Ignoring set-now." << endl;
+			return Command::BADARG;
+		}
+		// valid values are 0, 1, 2(X)
+		const value_enum val = s.node_to_value(_val, ni);
+		if (!node_type::is_valid_value(val)) {
+			cerr << "Invalid logic value: " << _val << endl;
+			return Command::SYNTAX;
+		}
+		const State::step_return_type
+			r(s.set_node_immediately(ni, val, false));
+		const node_type& n(s.get_node(GET_NODE(r)));
+		/***
+			The following code should be consistent with
+			Cycle::main() and Advance::main().
+			tracing stuff here later...
+		***/
+		if (s.watching_all_nodes()
+#if USE_WATCHPOINT_FLAG
+			|| n.is_watchpoint()
+#endif
+			) {
+			format_ostream_ref(cout << '\t', s.time_fmt)
+				<< s.time() << '\t';
+			print_watched_node(cout, s, r);
+		}
+		// ignore breakpoints?
+		// handle exceptions
+#if PRSIM_AGGREGATE_EXCEPTIONS
+		if (s.is_fatal()) {
+			return error_policy_to_status(s.inspect_exceptions());
+		}
+#endif
+#if PRSIM_NODE_AGGREGATE_ARGUMENTS
+	}	// end for each node
+#endif
+	return Command::NORMAL;
+}
+}	// end SetNow::main
+
+int
+SetNow::main(State& s, const string_list& a) {
+	return __set_now_main(s, a, &usage);
+}
+
+void
+SetNow::usage(ostream& o) {
+	o << name <<
+"\nSets the node to specified value immediately, \n"
+"without going through event queue." << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
