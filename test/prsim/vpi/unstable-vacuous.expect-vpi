@@ -1,0 +1,42 @@
+$start of simulation 
+[from vcs] signal x changed @ time 100, val = 0
+prsim:	100	x : 0
+[from vcs] signal x2 changed @ time 100, val = 0
+prsim:	100	x2 : 0
+at time 100.000, observed in = 0
+at time 100.000, observed in = 0
+prsim:	120	y2 : 1	[by x2:=0]
+[to vcs]   signal y2 changed @ time 120, val = 1
+at time 150.000, observed local = 1
+prsim:	180	y : 1	[by x:=0]
+[to vcs]   signal y changed @ time 180, val = 1
+[from vcs] signal x changed @ time 300, val = 1
+prsim:	300	x : 1
+[from vcs] signal x2 changed @ time 300, val = 1
+prsim:	300	x2 : 1
+at time 300.000, observed in = 1
+at time 300.000, observed in = 1
+prsim:	320	y2 : 0	[by x2:=1]
+[to vcs]   signal y2 changed @ time 320, val = 0
+prsim:	380	y : 0	[by x:=1]
+[to vcs]   signal y changed @ time 380, val = 0
+event queue:
+event queue:
+[from vcs] signal x changed @ time 510, val = 0
+prsim:	510	x : 0
+[from vcs] signal x2 changed @ time 510, val = 0
+prsim:	510	x2 : 0
+at time 510.000, observed in = 0
+at time 510.000, observed in = 0
+event queue:
+	530	y2 : 1	[from x2:=0]
+	590	y : 1	[from x:=0]
+[from vcs] signal x changed @ time 520, val = 1
+WARNING: unstable `y'+
+rule: [after 80]	~x:1 -> y+:0
+>> cause: `x' (val: 1)
+prsim:	520	x : 1
+at time 520.000, observed in = 1
+prsim:	530	y2 : 1	[by x2:=0]
+[to vcs]   signal y2 changed @ time 530, val = 1
+$finish at simulation time    0.7 ps

@@ -154,7 +154,7 @@ if (len) {
 #endif
 	INVARIANT(s.length() == len);	// sanity check
 } else {
-	s == "";
+	s = "";
 }
 }
 

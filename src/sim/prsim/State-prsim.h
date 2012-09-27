@@ -382,6 +382,17 @@ private:
 		 */
 		FLAG_EXCL_UNSTABLE_DEQUEUE = 0x20000,
 #endif
+		/**
+			If true, vacuous events are automatically
+			dequeued and skipped, and step returns
+			when it finds the next non-vacuous event.
+			This avoids blank events.
+			Default: false
+			Want this to be true for cosim,
+			so that the next_event_time() reported
+			accounts for possibly vacuous events.  
+		 */
+		FLAG_STOP_ON_VACUOUS = 0x40000,
 		/// initial flags
 		FLAGS_DEFAULT = FLAG_CHECK_EXCL | FLAG_SHOW_CAUSE,
 		/**
@@ -1025,10 +1036,14 @@ public:
 	const rule_type*
 	lookup_rule(const expr_index_type) const;
 
+	// this fast-forwards, but should make sure event-queue is safe
 	void
 	update_time(const time_type t) {
 		current_time = t;
 	}
+
+	void
+	safe_fast_forward(const time_type&);
 
 	void
 	advance_time(const time_type t) {
@@ -1284,6 +1299,10 @@ public:
 		return set_node_time(n, val, this->current_time, f);
 	}
 
+	step_return_type
+	set_node_immediately(const node_index_type, const value_enum,
+		const bool f);
+
 	void
 	unset_node(const node_index_type);
 
@@ -1318,6 +1337,16 @@ public:
 	ostream&
 	dump_breakpoints(ostream&) const;
 
+private:
+	step_return_type
+	execute_immediately(const event_index_type, const time_type&)
+		THROWS_STEP_EXCEPTION;
+
+	step_return_type
+	execute_immediately(const event_type&, const time_type&)
+		THROWS_STEP_EXCEPTION;
+
+public:
 	step_return_type
 	step(void) THROWS_STEP_EXCEPTION;
 
@@ -1471,6 +1500,21 @@ public:
 	}
 
 #endif
+
+	void
+	step_over_vacuous_events(void) {
+		flags &= ~FLAG_STOP_ON_VACUOUS;
+	}
+
+	void
+	stop_on_vacuous_events(void) {
+		flags |= FLAG_STOP_ON_VACUOUS;
+	}
+
+	bool
+	stopping_on_vacuous_events(void) const {
+		return flags & FLAG_STOP_ON_VACUOUS;
+	}
 
 	void
 	append_mk_exclhi_ring(ring_set_type&);

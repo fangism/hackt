@@ -11,106 +11,106 @@ Warning: channel acknowledge `L.e' has no fanin!
 # channel-reset-all 
 # channel-show-all 
 channels:
-L : .e(init:0) 1x1of2 source,watch,stopped, timing: global {0,1,1,0,}* @0 #0
-R : .e(init:1) 1x1of2 sink,watch,stopped, timing: global
+L : .e(init:0)  1x1of2 source,watch,stopped, timing: global {0,1,1,0,}* @0 #0
+R : .e(init:1)  1x1of2 sink,watch,stopped, timing: global
 # breaks 
 breakpoints: L.d[0] L.d[1] R.e 
-prsim: 	10	L.d[0] : 0
-prsim: 	10	L.d[1] : 0
-prsim: 	10	R.e : 1
-prsim: 	30	R.d[0] : 0
-prsim: 	31	R.d[1] : 0
-prsim: 	32	L.e : 1
+prsim:	10	L.d[0] : 0
+prsim:	10	L.d[1] : 0
+prsim:	10	R.e : 1
+prsim:	30	R.d[0] : 0
+prsim:	30	R.d[1] : 0
+prsim:	30	L.e : 1
 # channel-release-all 
 # channel-show-all 
 channels:
-L : .e(init:0) 1x1of2 source,watch, timing: global {0,1,1,0,}* @1 #0
-R : .e(init:1) 1x1of2 sink,watch, timing: global
+L : .e(init:0)  1x1of2 source,watch, timing: global {0,1,1,0,}* @1 #0
+R : .e(init:1)  1x1of2 sink,watch, timing: global
 channel	L (.data) : 0
-prsim: 	5010	L.d[0] : 1
+prsim:	5010	L.d[0] : 1
 channel	R (.data) : 0
-prsim: 	5030	R.d[0] : 1
-prsim: 	5040	R.e : 0	[by R.d[0]:=1]
-prsim: 	5060	L.e : 0
-prsim: 	5070	L.d[0] : 0	[by L.e:=0]
-prsim: 	5090	R.d[0] : 0
-prsim: 	5100	R.e : 1	[by R.d[0]:=0]
-prsim: 	5120	L.e : 1
+prsim:	5030	R.d[0] : 1
+prsim:	5040	R.e : 0	[by R.d[0]:=1]
+prsim:	5060	L.e : 0
+prsim:	5070	L.d[0] : 0	[by L.e:=0]
+prsim:	5090	R.d[0] : 0
+prsim:	5100	R.e : 1	[by R.d[0]:=0]
+prsim:	5120	L.e : 1
 channel	L (.data) : 1
-prsim: 	5130	L.d[1] : 1	[by L.e:=1]
+prsim:	5130	L.d[1] : 1	[by L.e:=1]
 channel	R (.data) : 1
-prsim: 	5150	R.d[1] : 1
-prsim: 	5160	R.e : 0	[by R.d[1]:=1]
-prsim: 	5180	L.e : 0
-prsim: 	5190	L.d[1] : 0	[by L.e:=0]
-prsim: 	5210	R.d[1] : 0
-prsim: 	5220	R.e : 1	[by R.d[1]:=0]
-prsim: 	5240	L.e : 1
+prsim:	5150	R.d[1] : 1
+prsim:	5160	R.e : 0	[by R.d[1]:=1]
+prsim:	5180	L.e : 0
+prsim:	5190	L.d[1] : 0	[by L.e:=0]
+prsim:	5210	R.d[1] : 0
+prsim:	5220	R.e : 1	[by R.d[1]:=0]
+prsim:	5240	L.e : 1
 channel	L (.data) : 1
-prsim: 	5250	L.d[1] : 1	[by L.e:=1]
+prsim:	5250	L.d[1] : 1	[by L.e:=1]
 channel	R (.data) : 1
-prsim: 	5270	R.d[1] : 1
-prsim: 	5280	R.e : 0	[by R.d[1]:=1]
-prsim: 	5300	L.e : 0
-prsim: 	5310	L.d[1] : 0	[by L.e:=0]
-prsim: 	5330	R.d[1] : 0
-prsim: 	5340	R.e : 1	[by R.d[1]:=0]
-prsim: 	5360	L.e : 1
+prsim:	5270	R.d[1] : 1
+prsim:	5280	R.e : 0	[by R.d[1]:=1]
+prsim:	5300	L.e : 0
+prsim:	5310	L.d[1] : 0	[by L.e:=0]
+prsim:	5330	R.d[1] : 0
+prsim:	5340	R.e : 1	[by R.d[1]:=0]
+prsim:	5360	L.e : 1
 channel	L (.data) : 0
-prsim: 	5370	L.d[0] : 1	[by L.e:=1]
+prsim:	5370	L.d[0] : 1	[by L.e:=1]
 channel	R (.data) : 0
-prsim: 	5390	R.d[0] : 1
-prsim: 	5400	R.e : 0	[by R.d[0]:=1]
-prsim: 	5420	L.e : 0
-prsim: 	5430	L.d[0] : 0	[by L.e:=0]
-prsim: 	5450	R.d[0] : 0
-prsim: 	5460	R.e : 1	[by R.d[0]:=0]
-prsim: 	5480	L.e : 1
+prsim:	5390	R.d[0] : 1
+prsim:	5400	R.e : 0	[by R.d[0]:=1]
+prsim:	5420	L.e : 0
+prsim:	5430	L.d[0] : 0	[by L.e:=0]
+prsim:	5450	R.d[0] : 0
+prsim:	5460	R.e : 1	[by R.d[0]:=0]
+prsim:	5480	L.e : 1
 channel	L (.data) : 0
-prsim: 	5490	L.d[0] : 1	[by L.e:=1]
+prsim:	5490	L.d[0] : 1	[by L.e:=1]
 channel	R (.data) : 0
-prsim: 	5510	R.d[0] : 1
-prsim: 	5520	R.e : 0	[by R.d[0]:=1]
-prsim: 	5540	L.e : 0
-prsim: 	5550	L.d[0] : 0	[by L.e:=0]
-prsim: 	5570	R.d[0] : 0
-prsim: 	5580	R.e : 1	[by R.d[0]:=0]
-prsim: 	5600	L.e : 1
+prsim:	5510	R.d[0] : 1
+prsim:	5520	R.e : 0	[by R.d[0]:=1]
+prsim:	5540	L.e : 0
+prsim:	5550	L.d[0] : 0	[by L.e:=0]
+prsim:	5570	R.d[0] : 0
+prsim:	5580	R.e : 1	[by R.d[0]:=0]
+prsim:	5600	L.e : 1
 channel	L (.data) : 1
-prsim: 	5610	L.d[1] : 1	[by L.e:=1]
+prsim:	5610	L.d[1] : 1	[by L.e:=1]
 channel	R (.data) : 1
-prsim: 	5630	R.d[1] : 1
-prsim: 	5640	R.e : 0	[by R.d[1]:=1]
-prsim: 	5660	L.e : 0
-prsim: 	5670	L.d[1] : 0	[by L.e:=0]
-prsim: 	5690	R.d[1] : 0
-prsim: 	5700	R.e : 1	[by R.d[1]:=0]
-prsim: 	5720	L.e : 1
+prsim:	5630	R.d[1] : 1
+prsim:	5640	R.e : 0	[by R.d[1]:=1]
+prsim:	5660	L.e : 0
+prsim:	5670	L.d[1] : 0	[by L.e:=0]
+prsim:	5690	R.d[1] : 0
+prsim:	5700	R.e : 1	[by R.d[1]:=0]
+prsim:	5720	L.e : 1
 channel	L (.data) : 1
-prsim: 	5730	L.d[1] : 1	[by L.e:=1]
+prsim:	5730	L.d[1] : 1	[by L.e:=1]
 channel	R (.data) : 1
-prsim: 	5750	R.d[1] : 1
-prsim: 	5760	R.e : 0	[by R.d[1]:=1]
-prsim: 	5780	L.e : 0
-prsim: 	5790	L.d[1] : 0	[by L.e:=0]
-prsim: 	5810	R.d[1] : 0
-prsim: 	5820	R.e : 1	[by R.d[1]:=0]
-prsim: 	5840	L.e : 1
+prsim:	5750	R.d[1] : 1
+prsim:	5760	R.e : 0	[by R.d[1]:=1]
+prsim:	5780	L.e : 0
+prsim:	5790	L.d[1] : 0	[by L.e:=0]
+prsim:	5810	R.d[1] : 0
+prsim:	5820	R.e : 1	[by R.d[1]:=0]
+prsim:	5840	L.e : 1
 channel	L (.data) : 0
-prsim: 	5850	L.d[0] : 1	[by L.e:=1]
+prsim:	5850	L.d[0] : 1	[by L.e:=1]
 channel	R (.data) : 0
-prsim: 	5870	R.d[0] : 1
-prsim: 	5880	R.e : 0	[by R.d[0]:=1]
-prsim: 	5900	L.e : 0
-prsim: 	5910	L.d[0] : 0	[by L.e:=0]
-prsim: 	5930	R.d[0] : 0
-prsim: 	5940	R.e : 1	[by R.d[0]:=0]
-prsim: 	5960	L.e : 1
+prsim:	5870	R.d[0] : 1
+prsim:	5880	R.e : 0	[by R.d[0]:=1]
+prsim:	5900	L.e : 0
+prsim:	5910	L.d[0] : 0	[by L.e:=0]
+prsim:	5930	R.d[0] : 0
+prsim:	5940	R.e : 1	[by R.d[0]:=0]
+prsim:	5960	L.e : 1
 channel	L (.data) : 0
-prsim: 	5970	L.d[0] : 1	[by L.e:=1]
+prsim:	5970	L.d[0] : 1	[by L.e:=1]
 channel	R (.data) : 0
-prsim: 	5990	R.d[0] : 1
-prsim: 	6000	R.e : 0	[by R.d[0]:=1]
+prsim:	5990	R.d[0] : 1
+prsim:	6000	R.e : 0	[by R.d[0]:=1]
 # nowatchall 
 channel	L (.data) : 1
 channel	R (.data) : 1

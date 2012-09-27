@@ -1,0 +1,22 @@
+	0	a : 0
+event queue:
+	10	b : 1	[from a:=0]
+end of queue 
+	10	b : 1	[by a:=0]
+	20	c : 0	[by b:=1]
+	20	a : 1
+	30	b : 0	[by a:=1]
+	40	c : 1	[by b:=0]
+WARNING: weak-interference `b'
+>> cause: `a' (val: X)
+	40	a : X
+WARNING: weak-interference `c'
+>> cause: `b' (val: X)
+	50	b : X	[by a:=X]
+	60	c : X	[by b:=X]
+	60	a : 1
+	70	b : 0	[by a:=1]
+	80	c : 1	[by b:=0]
+	80	a : 0
+	90	b : 1	[by a:=0]
+	100	c : 0	[by b:=1]

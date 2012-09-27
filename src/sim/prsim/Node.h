@@ -634,6 +634,12 @@ public:
 		return value_to_char[size_t(e)];
 	}
 
+	static
+	char
+	translate_value_enum_to_char(const value_enum e) {
+		return value_to_char[size_t(e)];
+	}
+
 	/// \return < 0 on error, else returns 0, 1, 2
 	static
 	value_enum

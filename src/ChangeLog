@@ -3,6 +3,33 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2012-09-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-86-48:
+	  vpi-prsim: re-wrote scheduling of callback events to NOT
+		poll every single time unit, but advance by a conservative 
+		time difference until next event.  Should be faster!
+		Also stops on vacuous events, to make it easier to 
+		determine proper callback time, otherwise can result
+		in overrrun and schedule-in-past error.
+
+
+2012-09-26	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-86-47:
+	  hacprsim: new 'set-now' command to set node to value
+		immediately without having to go through event queue.
+		Documented, test cases added.
+	  Added support for stopping step() on vacuous events in the queue,
+		which is off by default, but may be needed for VPI-prsim.
+
+
+2012-09-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-86-46:
+	  util/ChangeLog: fix IO_utils.cc:read_string() typo.
+
+
 2012-09-10	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-86-45:

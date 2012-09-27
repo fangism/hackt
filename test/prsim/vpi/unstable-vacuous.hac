@@ -1,0 +1,12 @@
+// "unstable-vacuous.hac"
+// test case for vacuous event bug
+// resulting in scheduling event in past (prsim overrun)
+
+bool x, y, x2, y2;
+// bool x3, y3;
+prs {
+[after=80]	x 	=> y-
+[after=20]	x2 	=> y2-
+// [after=400]	x3 	=> y3-
+}
+
