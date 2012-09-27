@@ -2237,6 +2237,22 @@ State::get_delay_dn(const event_type& e) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	This makes sure that next event does NOT fall behind specified time.
+ */
+void
+State::safe_fast_forward(const time_type& t) {
+	ISE_INVARIANT(t >= current_time);
+	if (t > current_time) {
+		if (pending_events()) {
+			const time_type next = next_event_time();
+			ISE_INVARIANT(t <= next);
+		}
+		update_time(t);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	\return true if expression is a root-level expression
 	(and hence, has attributes)
  */

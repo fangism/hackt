@@ -20,7 +20,7 @@ prsim:	10	L.r : 0
 channel	R (.data) : X (ignored)
 prsim:	30	R.d : 0
 channel	R (.data) : 0 (ignored)
-prsim:	31	R.r : 0
+prsim:	30	R.r : 0
 # channel-release-all 
 # channel-heed-all 
 # channel-show-all 

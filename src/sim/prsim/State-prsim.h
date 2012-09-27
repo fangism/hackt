@@ -896,10 +896,14 @@ public:
 	const rule_type*
 	lookup_rule(const expr_index_type) const;
 
+	// this fast-forwards, but should make sure event-queue is safe
 	void
 	update_time(const time_type t) {
 		current_time = t;
 	}
+
+	void
+	safe_fast_forward(const time_type&);
 
 	void
 	advance_time(const time_type t) {

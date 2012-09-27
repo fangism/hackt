@@ -41,6 +41,7 @@ HACKT_VPI_TEST_SCRIPTS_PASSES = \
 	and_tree_reverse and_template_tree_reverse \
 	fatal-assert-fail \
 	unstable-dequeue \
+	unstable-vacuous \
 	celem-test \
 	flop_it flop_it-b flop_it-c
 

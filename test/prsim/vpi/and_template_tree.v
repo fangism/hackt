@@ -25,6 +25,7 @@ module TOP;
 		$to_prsim("TOP.c", "c");
 		$to_prsim("TOP.d", "d");
 		$from_prsim("z", "TOP.z");
+//		$prsim_verbose_transport(1);
 	end
 
 	// these could be automatically generated
