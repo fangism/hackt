@@ -2365,7 +2365,13 @@ State::safe_fast_forward(const time_type& t) {
 	if (t > current_time) {
 		if (pending_events()) {
 			const time_type next = next_event_time();
-			ISE_INVARIANT(t <= next);
+			if (t > next) {
+				cerr << "attempt to fast-forward to " << t
+					<< ", but next event at " << next
+					<< endl;
+				dump_event_queue(cerr);
+				ISE_INVARIANT(t <= next);
+			}
 		}
 		update_time(t);
 	}

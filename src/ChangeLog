@@ -5,6 +5,12 @@
 
 2012-09-27	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-86-49:
+	  vpi-prsim: revert most of previous patch, 
+		both pieces found to crash larger cosim tests.  :(
+		Keeping stop_on_vacuous_events.
+
+
 	* HACKT-00-01-04-main-00-86-48:
 	  vpi-prsim: re-wrote scheduling of callback events to NOT
 		poll every single time unit, but advance by a conservative 

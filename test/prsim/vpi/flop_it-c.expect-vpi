@@ -3,9 +3,6 @@ prsim:	0	clk : 0
 prsim:	20	a : 0
 prsim:	50	clk : 1
 prsim:	50	F.x[1] : 0
-prsim:	50	F.x[2] : X
-prsim:	50	F.x[3] : X
-prsim:	50	z : X
 prsim:	100	clk : 0
 prsim:	150	clk : 1
 prsim:	150	F.x[2] : 0

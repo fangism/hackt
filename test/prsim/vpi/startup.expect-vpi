@@ -13,7 +13,9 @@ at time   0.000, observed in3 1
 at time   0.000, observed in2 1
 -------------- connecting --------------- 
 time: 5
+enqueued:	5	in1 : 1
 prsim:	5	in1 : 1
+enqueued:	5	in2 : 1
 prsim:	5	in2 : 1
 time: 5
 All subnodes of '.':
@@ -31,6 +33,7 @@ time: 10
 enqueued:	10	out1 : 1
 prsim:	10	out1 : 1
 at time  10.000, observed out2 = 1
+enqueued:	10	in0 : 1
 prsim:	10	in0 : 1
 at time  10.000, observed in 1
 ----------------------------- 

@@ -88,15 +88,28 @@ DEFAULT_STATIC_TRACE_BEGIN
 	without inserting into event queue.
 	Rationale: simpler event handling
 	Goal: 1
-	Status: drafted, tested, validated
+	Status: drafted, tested somewhat
+	Update: found to break cosim test, investigation pending...
+		violated invariant in safe_fast_forward.
+		Did callback get mis-scheduled?
  */
-#define	VPI_SET_NODE_IMMEDIATE		1
+#define	VPI_SET_NODE_IMMEDIATE		0
 
 /**
 	Define to 1 to set callback farther ahead than 1 time unit,
 	to minimize the number of callbacks during idle times.
+	Rationale: performance
+	Goal: 1
+	Update: may still be buggy
+
+Internal error: Unable to locate Eblk in scheduler 
+Run time internal error: contact Synopsys VCS Customer Support:
+        (12423; sched.c)
+Failure occured while executing at time 100 in file ...
+which contains:
+	#100 $prsim_cmd("echo ...");
  */
-#define	OPTIMISTIC_CALLBACK_SCHEDULING		1
+#define	OPTIMISTIC_CALLBACK_SCHEDULING		0
 
 //=============================================================================
 namespace HAC {
