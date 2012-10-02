@@ -71,8 +71,11 @@ DEFAULT_STATIC_TRACE_BEGIN
 
 /**
 	Define to 1 to call $finish instead of throwing an uncaught exception.
+	Goal: 1
+	Rationale: want clean exit to produce valid trace files, even on error.
+	Status: well-tested, can perm
  */
-#define	NICE_FINISH		1
+#define	NICE_FINISH			1
 
 /**
 	Define to 1 to enforce a zero transport delay going from
@@ -80,6 +83,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 	floating-point subtraction.
 	Rationale: floating-point subtraction of near-zero values
 		sometimes yields garbage value?
+	Status: tested, can perm
  */
 #define	FORCE_ZERO_EXPORT_DELAY		1
 
@@ -93,7 +97,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 		violated invariant in safe_fast_forward.
 		Did callback get mis-scheduled?
  */
-#define	VPI_SET_NODE_IMMEDIATE		0
+#define	VPI_SET_NODE_IMMEDIATE		1
 
 /**
 	Define to 1 to set callback farther ahead than 1 time unit,
@@ -835,6 +839,7 @@ static void __advance_prsim (const Time_t& vcstime, const int context)
 	 && (n = prs_step_cause (P, &m, &seu)))
 #else
   Time_t next_time;
+  Time_t break_time = vcstime;		// may decrease only
   while (
 #if PRSIM_AGGREGATE_EXCEPTIONS
 	!prsim_state->is_fatal() &&
@@ -843,6 +848,7 @@ static void __advance_prsim (const Time_t& vcstime, const int context)
 	prsim_state->pending_events() &&
 	(next_time = prsim_state->next_event_time(), 1) &&
 	(next_time <= vcstime) &&
+	(next_time <= break_time) && 
 	GET_NODE((nr = prsim_state->step())))
 #endif
   {
@@ -860,8 +866,9 @@ if (_verbose_transport) {
 		<< prsim_state->time() << endl;
 }
 #endif
+	// aggregate multiple break events (to vcs) that happen at same time
 	if (react_to_node_event(nr, false)) {
-		break;
+		break_time = prsim_state->time();
 	}
   }	// end while
 }
@@ -881,8 +888,10 @@ static void __advance_prsim_nothrow (const Time_t& vcstime, const int context)
 #if VERBOSE_DEBUG
 if (_verbose_transport) {
 	format_time(cout << "Running prsim until ") << vcstime << endl;
+#if 0
 	prsim_state->dump_event_queue(cout);
 	cout << "end of event queue." << endl;
+#endif
 }
 #endif
 try {
@@ -1114,7 +1123,7 @@ try {
 	// possible exception with scheduling events in past
 	_vpi_finish();
 }
-#if VERBOSE_DEBUG
+#if VERBOSE_DEBUG && 0
 	prsim_state->dump_event_queue(cout);
 	cout << "end of event queue." << endl;
 #endif
