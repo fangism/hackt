@@ -19,8 +19,8 @@ prsim:	10	L.d[0] : 0
 prsim:	10	L.d[1] : 0
 prsim:	10	R.e : 1
 prsim:	30	R.d[0] : 0
-prsim:	31	R.d[1] : 0
-prsim:	32	L.e : 1
+prsim:	30	R.d[1] : 0
+prsim:	30	L.e : 1
 # channel-release-all 
 # channel-show-all 
 channels:
