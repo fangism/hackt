@@ -3,6 +3,15 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2012-10-02	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-86-49b:
+	  vpi-prsim.cc: enable optimistic (non-polling) callback scheduling,
+		which significantly increases performance (15%+)
+		by reducing the number of unnecessary callbacks.
+		This was enabled by fix in previous patch.
+
+
 2012-10-01	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-86-49:
