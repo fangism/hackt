@@ -308,7 +308,7 @@ OVERRIDE_DEFAULT_COMPLETER(PRSIM, _class, _func)
 	Same thing, but with forward declaration of class.  
  */
 #define	PRSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(_class, _func)		\
-class _class;								\
+struct _class;								\
 PRSIM_OVERRIDE_DEFAULT_COMPLETER(_class, _func)
 
 #define	PRSIM_OVERRIDE_TEMPLATE_COMPLETER_FWD(_class, _func)		\
