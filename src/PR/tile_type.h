@@ -27,6 +27,7 @@
  */
 #define	PR_TILE_MASS			0
 
+namespace HAC {
 namespace PR {
 // using std::vector;
 using std::string;
@@ -127,5 +128,6 @@ typedef	tile_properties			tile_type;
 
 //=============================================================================
 }	// end namespace PR
+}	// end namespace HAC
 
 #endif	// __HAC_PR_TILE_TYPE_H__

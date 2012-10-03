@@ -21,6 +21,7 @@
 #define	PR_STATE_IN_TILE			0
  */
 
+namespace HAC {
 namespace PR {
 struct placer_options;
 struct tile_instance;
@@ -263,5 +264,6 @@ public:
 
 //=============================================================================
 }	// end namespace PR
+}	// end namespace HAC
 
 #endif	// __HAC_PR_TILE_INSTANCE_H__

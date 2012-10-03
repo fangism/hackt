@@ -18,6 +18,7 @@
 #endif
 #include "PR/numerics.h"
 
+namespace HAC {
 namespace PR {
 #if PL_CHANNEL_WIRES
 using std::vector;
@@ -117,5 +118,6 @@ typedef	channel_type			channel_properties;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 }	// end namespace PR
+}	// end namespace HAC
 
 #endif	// __HAC_PR_CHANNEL_TYPE_H__

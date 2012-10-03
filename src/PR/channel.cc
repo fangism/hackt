@@ -11,6 +11,7 @@
 #include "util/fig/xfig.h"
 #include "util/IO_utils.tcc"
 
+namespace HAC {
 namespace PR {
 #include "util/using_ostream.h"
 using util::strings::string_to_num;
@@ -183,4 +184,5 @@ channel_instance::load_checkpoint(istream& i) {
 
 //=============================================================================
 }	// end namespace PR
+}	// end namespace HAC
 

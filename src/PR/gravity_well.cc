@@ -10,6 +10,7 @@
 #include "PR/gravity_well.h"
 #include "util/IO_utils.tcc"
 
+namespace HAC {
 namespace PR {
 using std::set;
 using std::ostream_iterator;
@@ -78,4 +79,5 @@ gravity_well::load_checkpoint(istream& i) {
 
 //=============================================================================
 }	// end namespace PR
+}	// end namespace HAC
 

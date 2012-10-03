@@ -28,6 +28,7 @@
 #include "util/optparse_fwd.h"
 #include "util/IO_utils_fwd.h"
 
+namespace HAC {
 namespace PR {
 using std::string;
 using util::option_value;
@@ -138,16 +139,18 @@ minimum_distance_between_ellipsoids(
 	const real_vector&, const real_vector&);
 
 }	// end namespace PR
+}	// end namespace HAC
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // specializations for vector
 namespace util {
 extern
 void
-write_value(std::ostream&, const PR::real_vector&);
+write_value(std::ostream&, const HAC::PR::real_vector&);
 
 extern
 void
-read_value(std::istream&, PR::real_vector&);
+read_value(std::istream&, HAC::PR::real_vector&);
 
 }	// end namespace util
 

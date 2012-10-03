@@ -33,7 +33,6 @@ namespace HAC {
 namespace SIM {
 template class command_registry<PR::Command>;
 }
-}
 
 //=============================================================================
 using namespace HAC::SIM;
@@ -86,11 +85,11 @@ PR_OVERRIDE_DEFAULT_COMPLETER(_class, _func)
 // command declaration macros
 
 #define	PR_INSTANTIATE_TRIVIAL_COMMAND_CLASS(_class, _cat)		\
-INSTANTIATE_TRIVIAL_COMMAND_CLASS(PR, _class, _cat)
+INSTANTIATE_TRIVIAL_COMMAND_CLASS_SIM(PR, _class, _cat)
 
 #define	PR_INSTANTIATE_STATELESS_COMMAND_CLASS(_class, _cat)		\
 typedef	stateless_command_wrapper<_class, State>	_class;		\
-INSTANTIATE_COMMON_COMMAND_CLASS(PR, stateless_command_wrapper, _class, _cat)
+INSTANTIATE_COMMON_COMMAND_CLASS_SIM(PR, stateless_command_wrapper, _class, _cat)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1835,6 +1834,7 @@ select-toggle -
 
 //=============================================================================
 }	// end namespace PR
+}	// end namespace HAC
 
 DEFAULT_STATIC_TRACE_BEGIN
 

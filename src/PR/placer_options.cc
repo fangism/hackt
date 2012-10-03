@@ -14,6 +14,7 @@
 #include "util/vector_ops.h"
 #include "util/stacktrace.h"
 
+namespace HAC {
 namespace PR {
 using util::auto_indent;
 using util::strings::string_to_num;
@@ -512,4 +513,5 @@ placer_options::clamp_position(real_vector& v) const {
 
 //=============================================================================
 }	// end namespace PR
+}	// end namespace HAC
 

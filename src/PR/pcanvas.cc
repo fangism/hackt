@@ -14,6 +14,7 @@
 #include "util/macros.h"
 #include "util/stacktrace.h"
 
+namespace HAC {
 namespace PR {
 #include "util/using_ostream.h"
 using namespace util::vector_ops;
@@ -214,6 +215,7 @@ pcanvas::emit_dot(ostream& o, const placer_options& opt) const {
 		oi->emit_dot(o, opt);
 		o << "];" << endl;
 	}
+	INVARIANT(oi == oe);
 	// edges
 	vector<channel_instance>::const_iterator
 		ci(springs.begin()), ce(springs.end());
@@ -240,6 +242,7 @@ pcanvas::emit_fig(ostream& o, const placer_options& opt) const {
 		o << "# N" << j << endl;	// comment
 		oi->emit_fig(o, *ti, opt);
 	}
+	INVARIANT(oi == oe);
 	// edges
 	vector<channel_instance>::const_iterator
 		ci(springs.begin()), ce(springs.end());
@@ -283,4 +286,5 @@ pcanvas::load_checkpoint(istream& i) {
 
 //=============================================================================
 }	// end namespace PR
+}	// end namespace HAC
 

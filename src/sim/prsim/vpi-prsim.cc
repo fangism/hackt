@@ -24,6 +24,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 
 #include <cstdio>
 #include <cctype>
+#include <cstdarg>
 #include <map>
 #include <set>
 #include <iostream>
@@ -237,6 +238,19 @@ vpi_puts_c(const char* str) {
 	return vpi_printf(const_cast<PLI_BYTE8*>(str));
 }
 
+/**
+	Wrapper around vpi_printf that casts away constness
+	for an incorrect prototype.
+ */
+static
+PLI_INT32
+vpi_printf_c(const char* str, ...) {
+	va_list a;
+	va_start(a, str);
+	return vpi_printf(const_cast<PLI_BYTE8*>(str), a);
+	va_end(a);
+}
+
 static
 PLI_INT32
 prsim_sync(PLI_BYTE8*);
@@ -313,14 +327,15 @@ vpi_dump_queue(void) {
 	vpiHandle tQi, tQh;
 	s_vpi_time timeInfo;
 	timeInfo.type = vpiSimTime;
-	vpi_printf("VPI event queue contains times (hi:lo):\n");
+	// static const
+	vpi_puts_c("VPI event queue contains times (hi:lo):\n");
 	tQi = vpi_iterate(vpiTimeQueue, NULL);
 	while ((tQh = vpi_scan(tQi))) {
 		vpi_get_time(tQh, &timeInfo);
-		vpi_printf("\t%d:%d\n", timeInfo.high, timeInfo.low);
+		vpi_printf_c("\t%d:%d\n", timeInfo.high, timeInfo.low);
 		vpi_free_object(tQh);
 	}
-	vpi_printf("end of VPI event queue\n");
+	vpi_puts_c("end of VPI event queue\n");
 }
 
 static
@@ -1409,7 +1424,7 @@ static PLI_INT32 to_prsim (PLI_BYTE8 *args)
   vpi_get_value (net2, &arg);
 
 #if VERBOSE_DEBUG
-  vpi_printf ("setup %s (vcs) -> %s (prsim)\n", arg1.c_str(), arg.value.str);
+  vpi_printf_c ("setup %s (vcs) -> %s (prsim)\n", arg1.c_str(), arg.value.str);
 #endif
 
   if (vpi_scan (h)) {

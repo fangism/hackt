@@ -17,6 +17,7 @@
 #include "util/fig/xfig.h"
 #include "util/stacktrace.h"
 
+namespace HAC {
 namespace PR {
 // using PR::optparse;
 using namespace util::vector_ops;
@@ -580,4 +581,5 @@ tile_instance::load_checkpoint(istream& i) {
 
 //=============================================================================
 }	// end namespace PR
+}	// end namespace HAC
 

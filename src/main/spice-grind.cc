@@ -5,6 +5,7 @@
  */
 
 #include <iostream>
+#include <cstdio>			// for stdin
 // #include "main/spice-grind.h"
 #include "net/netlist_generator.h"
 #include "parser/spice-parse-real.h"

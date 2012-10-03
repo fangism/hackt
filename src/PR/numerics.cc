@@ -30,7 +30,7 @@
 namespace util {
 using std::ostream;
 using std::istream;
-using PR::real_vector;
+using HAC::PR::real_vector;
 
 /**
 	Fixed size array for now.
@@ -58,6 +58,7 @@ read_value(istream& i, real_vector& v) {
 
 }	// end namespace util
 
+namespace HAC {
 namespace PR {
 #include "util/using_ostream.h"
 using std::transform;
@@ -213,4 +214,5 @@ rectilinear_distance(const real_vector& r1, const real_vector& r2) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 }	// end namespace PR
+}	// end namespace HAC
 

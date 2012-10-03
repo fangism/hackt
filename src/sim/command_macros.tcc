@@ -46,6 +46,17 @@ template class _wrap<_class, _ns::State>;				\
 namespace _ns {	/* re-open namespace */
 
 /**
+	Variant that is used for namespace that is sibling to SIM.
+ */
+#define INSTANTIATE_COMMON_COMMAND_CLASS_SIM(_ns, _wrap, _class, _cat)	\
+}	/* end namespace _ns */						\
+namespace SIM {								\
+CATEGORIZE_COMMON_COMMAND_CLASS(_ns, _class, _ns::_cat)			\
+template class _wrap<_class, _ns::State>;				\
+}	/* end namespace SIM */						\
+namespace _ns {	/* re-open namespace */
+
+/**
 	Macro for classes based on SIM::Class<State>.
 	\param _wrap is the wrapper class template
 	Requires the following typedef in the simulator namespace:
@@ -55,6 +66,17 @@ namespace _ns {	/* re-open namespace */
 }	/* end namespace _ns */						\
 CATEGORIZE_COMMON_COMMAND_CLASS(_ns, _class, _ns::_cat)			\
 template class _class<_ns::State>;					\
+namespace _ns {	/* re-open namespace */
+
+/**
+	Variant that is used for namespace that is sibling to SIM.
+ */
+#define INSTANTIATE_TRIVIAL_COMMAND_CLASS_SIM(_ns, _class, _cat)	\
+}	/* end namespace _ns */						\
+namespace SIM {								\
+CATEGORIZE_COMMON_COMMAND_CLASS(_ns, _class, _ns::_cat)			\
+template class _class<_ns::State>;					\
+}	/* end namespace SIM */						\
 namespace _ns {	/* re-open namespace */
 
 

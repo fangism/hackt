@@ -16,6 +16,7 @@
 #define	PR_MULTINETS				0
  */
 
+namespace HAC {
 namespace PR {
 struct placer_options;
 
@@ -103,5 +104,6 @@ public:
 //=============================================================================
 
 }	// end namespace PR
+}	// end namespace HAC
 
 #endif	// __HAC_PR_PCANVAS_H__

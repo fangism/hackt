@@ -20,7 +20,6 @@ namespace HAC {
 namespace SIM {
 template <class> class Help;
 }
-}
 
 namespace PR {
 class placement_engine;
@@ -31,9 +30,9 @@ using std::string;
 using std::ostream;
 
 //=============================================================================
-typedef	HAC::SIM::Command<State>		Command;
-typedef	HAC::SIM::command_category<Command>	CommandCategory;
-typedef	HAC::SIM::command_registry<Command>	CommandRegistry;
+typedef	SIM::Command<State>		Command;
+typedef	SIM::command_category<Command>	CommandCategory;
+typedef	SIM::command_registry<Command>	CommandRegistry;
 
 //=============================================================================
 #if 0
@@ -83,10 +82,11 @@ private:								\
 /**
 	public help class.  
  */
-typedef	HAC::SIM::Help<State>			Help;
+typedef	SIM::Help<State>			Help;
 
 //=============================================================================
 }	// end namespace PR
+}	// end namespace HAC
 
 #endif	// __HAC_PR_PR_COMMAND_H__
 
