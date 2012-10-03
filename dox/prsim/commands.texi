@@ -93,6 +93,7 @@ Running the simulation.
 Coercively setting values.
 
 @include cmd/set.texi
+@include cmd/set-now.texi
 @include cmd/setr.texi
 @include cmd/setf.texi
 @include cmd/setrf.texi

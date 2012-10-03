@@ -288,17 +288,21 @@ struct process_sim_state::invariant_dumper : public dumper_base {
 	This helps the State::step method in which there are
 	multiple early return cases.  
 	Except, there's one case where we don't want to deallocate... 
-		(exception)
+		(exception), hence the keep member.
  */
 class State::event_deallocator {
 	State&				_state;
 	node_type& 			_node;
 	const event_index_type		_event;
 public:
-	event_deallocator(State& s, node_type& n, const event_index_type e) :
-		_state(s), _node(n), _event(e) { }
+	bool				keep;
+public:
+	event_deallocator(State& s, node_type& n) :
+		_state(s), _node(n), _event(n.get_event()), keep(false) { }
 	~event_deallocator() {
-		_state.__deallocate_event(_node, _event);
+		if (!keep) {
+			_state.__deallocate_event(_node, _event);
+		}
 	}
 } __ATTRIBUTE_UNUSED__ ;	// end class State::event_deallocator
 
@@ -1696,6 +1700,22 @@ if (!n.is_frozen() || f) {
 }	// end State::set_node_time
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Without going through the event queue, set the value of the node
+	now.
+ */
+State::step_return_type
+State::set_node_immediately(const node_index_type ni, const value_enum val,
+		const bool force) {
+	event_type e;	// default construct
+	e.node = ni;
+	e.val = val;
+	if (force) e.force();
+	ISE_INVARIANT(!get_node(ni).get_event());
+	return execute_immediately(e, current_time);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if PRSIM_UPSET_NODES
 /**
 	Flags a node as frozen, preventing further activity.
@@ -2213,6 +2233,28 @@ if (e.cause_rule) {
 State::time_type
 State::get_delay_dn(const event_type& e) const {
 	return get_delay_up(e);		// is identical, actually
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This makes sure that next event does NOT fall behind specified time.
+ */
+void
+State::safe_fast_forward(const time_type& t) {
+	ISE_INVARIANT(t >= current_time);
+	if (t > current_time) {
+		if (pending_events()) {
+			const time_type next = next_event_time();
+			if (t > next) {
+				cerr << "attempt to fast-forward to " << t
+					<< ", but next event at " << next
+					<< endl;
+				dump_event_queue(cerr);
+				ISE_INVARIANT(t <= next);
+			}
+		}
+		update_time(t);
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3103,10 +3145,7 @@ struct State::auto_flush_queues {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Modeled after prs_step() from the original prsim.  
-	Critical path through here.  
 	TODO: possible add arguments later. 
-	\pre the exclhi, excllo, and pending queues are empty.
-	\post the exclhi, excllo, and pending queues are empty.
 	\return index of the affected node, 
 		INVALID_NODE_INDEX if nothing happened.  
 	\throw excl_exception if there is a logical exclusion violation, 
@@ -3114,6 +3153,63 @@ struct State::auto_flush_queues {
  */
 State::step_return_type
 State::step(void) THROWS_STEP_EXCEPTION {
+	typedef	State::step_return_type		return_type;
+	STACKTRACE_VERBOSE;
+	if (event_queue.empty()) {
+		return return_type(INVALID_NODE_INDEX, INVALID_NODE_INDEX);
+	}
+	const event_placeholder_type ep(dequeue_event());
+	current_time = ep.time;
+	return execute_immediately(ep.event_index, ep.time);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This executes a specific event (passed by placeholder)
+	which need not be the next event in the queue.
+	This can be useful for instantly executing an event 
+	without going through the event queue, or advancing
+	an event that is already in queue.
+	Critical path through here.  
+	NOTE: this does NOT update the current time to that of the event.
+	\pre the exclhi, excllo, and pending queues are empty.
+	\post the exclhi, excllo, and pending queues are empty.
+	\return index of the affected node, 
+		INVALID_NODE_INDEX if nothing happened.  
+	\throw excl_exception if there is a logical exclusion violation, 
+		leaving violating event in queue.  
+ */
+// inline
+State::step_return_type
+State::execute_immediately(
+		// const event_placeholder_type& ep,
+		const event_index_type ei,
+		const time_type& ept) THROWS_STEP_EXCEPTION {
+	typedef	State::step_return_type		return_type;
+//	STACKTRACE_VERBOSE;
+	if (!ei) {
+		// possible in the queue that last events are killed
+		return return_type(INVALID_NODE_INDEX, INVALID_NODE_INDEX);
+	}
+	const event_type& pe(get_event(ei));
+	const node_index_type ni = pe.node;
+	node_type& n(__get_node(ni));
+	ISE_INVARIANT(n.pending_event());	// must have been pending
+	ISE_INVARIANT(n.get_event() == ei);	// must be consistent!
+	DEBUG_STEP_PRINT("time = " << current_time << endl);
+	DEBUG_STEP_PRINT("event_index = " << ei << endl);
+	return execute_immediately(pe, ept);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This execute a raw event that may not necessarily be in queue.
+	This changes the value of a node now, bypassing the event_queue.
+ */
+State::step_return_type
+State::execute_immediately(
+		const event_type& pe,
+		const time_type& ept) THROWS_STEP_EXCEPTION {
 	typedef	State::step_return_type		return_type;
 	STACKTRACE_VERBOSE;
 #if PRSIM_SIMPLE_EVENT_QUEUE
@@ -3124,25 +3220,22 @@ State::step(void) THROWS_STEP_EXCEPTION {
 	ISE_INVARIANT(exclhi_queue.empty());
 	ISE_INVARIANT(excllo_queue.empty());
 
-	if (event_queue.empty()) {
-		return return_type(INVALID_NODE_INDEX, INVALID_NODE_INDEX);
-	}
 #if PRSIM_AGGREGATE_EXCEPTIONS
 	recent_exceptions.clear();
 #endif
-	const event_placeholder_type ep(dequeue_event());
-	current_time = ep.time;
-	DEBUG_STEP_PRINT("time = " << current_time << endl);
-	const event_index_type& ei(ep.event_index);
+//	const event_index_type& ei(ep.event_index);
+#if 0
 	if (!ei) {
 		// possible in the queue that last events are killed
 		return return_type(INVALID_NODE_INDEX, INVALID_NODE_INDEX);
 	}
-	DEBUG_STEP_PRINT("event_index = " << ei << endl);
-	const event_type& pe(get_event(ei));
+#endif
+//	const event_type& pe(get_event(ei));
 	const bool force = pe.forced();
 	const node_index_type ni = pe.node;
 	node_type& n(__get_node(ni));
+//	ISE_INVARIANT(n.pending_event());	// must have been pending
+//	ISE_INVARIANT(n.get_event() == ei);	// must be consistent!
 	const value_enum prev = n.current_value();
 	node_index_type _ci;	// just a copy
 	trace_index_type critical = INVALID_TRACE_INDEX;
@@ -3176,11 +3269,17 @@ State::step(void) THROWS_STEP_EXCEPTION {
 	_ci = ci;
 	DEBUG_STEP_PRINT("examining node: " <<
 		get_node_canonical_name(ni) << endl);
-	ISE_INVARIANT(n.pending_event());	// must have been pending
-	ISE_INVARIANT(n.get_event() == ei);	// must be consistent!
 {
-	// event-deallocation scope (optional)
-	// const event_deallocator __d(*this, n, ei);	// auto-deallocate?
+	// event-deallocation scope
+	event_deallocator ed(*this, n);
+	const event_index_type pei = n.get_event();
+		// pending event index, may be 0 if queue was bypassed!
+		// if bypassed, then event was not allocated from pool
+	if (!pei) {
+		// if event was not from queue, then it did not point into pool
+		// so never try to de-allocate it
+		ed.keep = true;
+	}
 	DEBUG_STEP_PRINT("former value: " <<
 		node_type::value_to_char[size_t(prev)] << endl);
 	DEBUG_STEP_PRINT("new value: " <<
@@ -3190,7 +3289,6 @@ State::step(void) THROWS_STEP_EXCEPTION {
 		// node being set to X, but is already X, this could occur
 		// b/c there are other causes of X besides guards going X.
 		DEBUG_STEP_PRINT("X: returning node index " << ni << endl);
-		__deallocate_event(n, ei);
 		return return_type(ni, ci);
 	}
 	// assert: vacuous firings on the event queue, 
@@ -3199,10 +3297,20 @@ State::step(void) THROWS_STEP_EXCEPTION {
 	if (dequeue_unstable_events()) {
 		if (UNLIKELY(prev == pe.val)) {
 			// Q: or is it better to catch this before enqueuing?
-			__deallocate_event(n, ei);
 			// then just silence this event
-			// slow head-recusrion, but infrequent
-			return step();
+#if 0
+			cout << "vacuous event on node " <<
+				get_node_canonical_name(ni) << endl;
+			// might need a mode to return control to caller
+			// after vacuous firings
+#endif
+			if (stopping_on_vacuous_events()) {
+				return return_type(INVALID_NODE_INDEX,
+					INVALID_NODE_INDEX);
+			} else {
+			// slow head-recursion, but infrequent
+				return step();
+			}
 		}
 		// else proceed
 	} else {
@@ -3235,7 +3343,12 @@ State::step(void) THROWS_STEP_EXCEPTION {
 			// because event will not be deallocated!
 			// next attempt to step will hit same exception
 			// forcing simulation to be stuck (intentional)
-			enqueue_event(ep.time, ep.event_index);
+			if (pei) {
+				// then event came from queue
+				ed.keep = true;
+				// enqueue_event(ep.time, ei);
+				enqueue_event(ept, pei);
+			}	// otherwise was not from queue, don't enqueue
 #if PRSIM_AGGREGATE_EXCEPTIONS
 			record_exception(
 				exception_ptr_type(new excl_exception(exex)));
@@ -3254,7 +3367,6 @@ State::step(void) THROWS_STEP_EXCEPTION {
 	if (pe.val != LOGIC_OTHER) {
 		++n.tcount;
 	}
-	__deallocate_event(n, ei);
 }
 }
 	// note: pe is invalid, deallocated beyond this point, could scope it

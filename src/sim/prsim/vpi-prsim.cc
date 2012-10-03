@@ -64,15 +64,18 @@ DEFAULT_STATIC_TRACE_BEGIN
 #define	TRACE_VCS_TIME		(0 || DEBUG_MAX)
 
 #if TRACE_VCS_TIME
-#define	SHOW_VCS_TIME(x)	cout << "vcstime: " << x << endl
+#define	SHOW_VCS_TIME(str, x)	format_time(cout << str) << x << endl
 #else
-#define	SHOW_VCS_TIME(x)
+#define	SHOW_VCS_TIME(str, x)
 #endif
 
 /**
 	Define to 1 to call $finish instead of throwing an uncaught exception.
+	Goal: 1
+	Rationale: want clean exit to produce valid trace files, even on error.
+	Status: well-tested, can perm
  */
-#define	NICE_FINISH		1
+#define	NICE_FINISH			1
 
 /**
 	Define to 1 to enforce a zero transport delay going from
@@ -80,8 +83,30 @@ DEFAULT_STATIC_TRACE_BEGIN
 	floating-point subtraction.
 	Rationale: floating-point subtraction of near-zero values
 		sometimes yields garbage value?
+	Status: tested, can perm
  */
 #define	FORCE_ZERO_EXPORT_DELAY		1
+
+/**
+	Define to 1 to set nodes coming from vcs immediately, 
+	without inserting into event queue.
+	Rationale: simpler event handling
+	Goal: 1
+	Status: drafted, tested, including large test cases
+		Fixed __advance_prsim to trigger multiple breakpoints, 
+		not just the first one.
+ */
+#define	VPI_SET_NODE_IMMEDIATE		1
+
+/**
+	Define to 1 to set callback farther ahead than 1 time unit,
+	to minimize the number of callbacks during idle times.
+	Rationale: performance
+	Goal: 1
+	Status: tested, including large cosim,
+		also enabled by __advance_prsim fix.
+ */
+#define	OPTIMISTIC_CALLBACK_SCHEDULING		1
 
 //=============================================================================
 namespace HAC {
@@ -93,7 +118,6 @@ using std::ostringstream;
 using parser::parse_node_to_index;
 using util::memory::count_ptr;
 using util::strings::eat_whitespace;
-using util::format_ostream_ref;
 // is current double-precision floating-point
 typedef	State::time_type		Time_t;
 typedef	State::node_type		node_type;
@@ -128,6 +152,14 @@ static void __destroy_globals(void) {
 
 static void _run_prsim (const Time_t& vcstime, const int context);
 static void __register_self_callback_have_event(Time_t);
+
+// for time formatting
+static
+inline
+util::format_ostream_ref
+format_time(ostream& o) {
+	return util::format_ostream_ref(o, prsim_state->time_fmt);
+}
 
 #if 0
 static char *skip_white (char *s)
@@ -167,11 +199,19 @@ static void prs_to_vcstime (s_vpi_time *p, const Time_t *tm)
 
 // whether or not callback is currently registered
 static int scheduled = 0;
+// callback scheduled time, revelant if scheduled == 1
+static Time_t scheduled_time = 0;
 
 /*
   last scheduled _run_prsim_callback. We need to remove it!!! Insane! 
 */
 static vpiHandle last_registered_callback;
+static
+void
+remove_callback(void) {
+	vpi_remove_cb (last_registered_callback);
+	scheduled = 0;
+}
 
 /**
 @texinfo vpi/prsim_confirm_connections.texi
@@ -219,6 +259,77 @@ deprecation_warning(const char* m) {
 	vpi_puts_c("\n");
 }
 
+static
+bool
+react_to_node_event(const State::step_return_type nr, const bool init);
+
+/**
+	Wrapper around set_node, depending on implementation.
+	\throw step_exception
+ */
+static
+void
+prsim_set_node(const node_index_type n, const value_enum val,
+		const Time_t vcstime, const bool set_force,
+		const bool init) {
+	STACKTRACE_BRIEF;
+#if VPI_SET_NODE_IMMEDIATE
+	// what if vcstime is > prsimtime?
+	// make sure there are no events before vcstime, and fast-forward
+	prsim_state->safe_fast_forward(vcstime);
+	const State::step_return_type
+		nr(prsim_state->set_node_immediately(n, val, set_force));
+	react_to_node_event(nr, init);	// may connect back out to vcs!
+#else
+	// this just enqueues node instead of changing it
+	prsim_state->set_node_time(n, val, vcstime, set_force);
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// equivalent current time on verilog-side of simulation (host)
+static s_vpi_time vpi_current_time;
+static Time_t vpi_current_time_prs;
+
+/**
+	Cache the current time from the host simulator side.
+ */
+static
+void
+sync_vpi_time(void) {
+	STACKTRACE_BRIEF;
+//	vpi_current_time.type = vpiSimTime;	// do once only during init
+	vpi_get_time(NULL, &vpi_current_time);
+	vcs_to_prstime(&vpi_current_time, &vpi_current_time_prs);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// print/debug time queues
+// static
+static
+void
+vpi_dump_queue(void) {
+	STACKTRACE_BRIEF;
+	vpiHandle tQi, tQh;
+	s_vpi_time timeInfo;
+	timeInfo.type = vpiSimTime;
+	vpi_printf("VPI event queue contains times (hi:lo):\n");
+	tQi = vpi_iterate(vpiTimeQueue, NULL);
+	while ((tQh = vpi_scan(tQi))) {
+		vpi_get_time(tQh, &timeInfo);
+		vpi_printf("\t%d:%d\n", timeInfo.high, timeInfo.low);
+		vpi_free_object(tQh);
+	}
+	vpi_printf("end of VPI event queue\n");
+}
+
+static
+PLI_INT32
+vpi_dump_queue_cmd(PLI_BYTE8*) {
+	vpi_dump_queue();
+	return 0;
+}
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /// verbose debugging switch
 /**
@@ -231,7 +342,7 @@ between verilog and @command{prsim} will be verbosely reported.
 ***/
 static bool _verbose_transport = false;
 static PLI_INT32 verbose_transport (PLI_BYTE8 *args) {
-  STACKTRACE_VERBOSE;
+  STACKTRACE_BRIEF;
   vpiHandle task_call;
   vpiHandle h;
   vpiHandle fname;
@@ -327,6 +438,7 @@ lookup_vcs_name(const string& s) {
 
 //=============================================================================
 /**
+	This callback is due to time-elapsed.
 	\param p callback data.
 	p->time is the time-limit to return back to VCS, in VCS's time units
 		and time scale.  
@@ -337,12 +449,29 @@ PLI_INT32
 // was: void
 _run_prsim_callback (const p_cb_data p)
 {
-  STACKTRACE_VERBOSE;
-  Time_t curtime;
-  scheduled = 0;
+  STACKTRACE_BRIEF;
+  Time_t curtime;	// max time to run before turning control to vcs.
+	// p->time depends on the callback data reason
+	// TODO: really want to know the time of next vcs event
   vcs_to_prstime (p->time, &curtime);
-  vpi_remove_cb (last_registered_callback);
+	// curtime is also the current VCS simulator time
+	sync_vpi_time();	// always update sim time right away
+#if VERBOSE_DEBUG
+if (_verbose_transport) {
+	format_time(cout << "vcs.current_time: ") << vpi_current_time_prs << endl;
+	format_time(cout << "prsim.current_time: ") << prsim_state->time() << endl;
+	format_time(cout << "_run_prsim_callback: until ") << curtime << endl;
+}
+#endif
+  remove_callback();
   _run_prsim (curtime, 1);
+#if VERBOSE_DEBUG
+if (_verbose_transport) {
+	format_time(cout << "_run_prsim_callback: return at prsim time ")
+		<< prsim_state->time() << endl;
+	vpi_dump_queue();	// always empty?
+}
+#endif
 // TODO: return something, but what?
 	return 0;
 }
@@ -353,29 +482,60 @@ _run_prsim_callback (const p_cb_data p)
 	calling back to prsim to handle its events.  
 	May actually return earlier on events on registered nodes.  
 	\param vcstime time at which to call back (at the latest)
+	\pre this is called only if there are pending events.
  */
 static void register_self_callback (Time_t vcstime)
 {
-  STACKTRACE_VERBOSE;
+  STACKTRACE_BRIEF;
   require_prsim_state(__FUNCTION__);
-  SHOW_VCS_TIME(vcstime);
+//  SHOW_VCS_TIME("callback vcstime: ", vcstime);
   
-  if (scheduled == 1) return;
-
+  if (scheduled == 1) {
+#if VERBOSE_DEBUG
+    if (_verbose_transport) {
+	format_time(cout << "register_self_callback: vcstime: ") << vcstime;
+	format_time(cout << ", scheduled: " ) << scheduled_time << endl;
+    }
+#endif
+	if (vcstime < scheduled_time) {
+#if VERBOSE_DEBUG
+		if (_verbose_transport) {
+			cout << "  replacing old callback." << endl;
+		}
+#endif
+		// then newly scheduled time is earlier
+		// replace previous callback
+		remove_callback();
+	} else {
+#if VERBOSE_DEBUG
+		if (_verbose_transport) {
+			cout << "  keep previous callback." << endl;
+		}
+#endif
+		// previous scheduled callback is already earlier, keep it
+		return;
+	}
+  } else {
+#if VERBOSE_DEBUG
+	if (_verbose_transport) {
+		cout << "  not yet scheduled." << endl;
+	}
+#endif
 	STACKTRACE_INDENT_PRINT("not scheduled" << endl);
+  }
 #if 0 && VERBOSE_DEBUG
 	prsim_state->dump_event_queue(cout);
 	cout << "end of event queue." << endl;
 #endif
 #if 0
   if (heap_peek_min (P->eventQueue) == NULL)
-#else
-  if (!prsim_state->pending_events())
-#endif
   {
     /* I have nothing to do, go away */
     return;
   }
+#else
+  // assured that this is called only if there is pending event at vcstime
+#endif
 	__register_self_callback_have_event(vcstime);
 }
 
@@ -389,20 +549,33 @@ static void register_self_callback (Time_t vcstime)
  */
 static void
 __register_self_callback_have_event(Time_t vcstime) {
-	STACKTRACE_VERBOSE;
-  static s_cb_data cb_data;
-  static s_vpi_time tm; /* at most one callback pending, let's not malloc! */
+	STACKTRACE_BRIEF;
+/** Single instance of callback data passed to VCS and re-used.  */
+static s_cb_data cb_data;
+/* at most one callback pending, let's not malloc!  */
+static s_vpi_time tm;
 	INVARIANT(!scheduled);
   cb_data.reason = cbAfterDelay;	// relative to now, in future
   cb_data.cb_rtn = _run_prsim_callback;
   cb_data.obj = NULL;
 
   cb_data.time = &tm;
+  scheduled_time = vcstime;
+#if VERBOSE_DEBUG
+if (_verbose_transport) {
+	format_time(cout << "__register_self...: re-scheduled time: ")
+		<< scheduled_time << endl;
+}
+#endif
+#if OPTIMISTIC_CALLBACK_SCHEDULING
+  vcstime -= vpi_current_time_prs;
+#else
 #if 0
   if (heap_peek_minkey (P->eventQueue) > vcstime)
 #else
   const Time_t next_time = prsim_state->next_event_time();
 	STACKTRACE_INDENT_PRINT("next_time: " << next_time << endl);
+  INVARIANT(next_time == vcstime);
   if (next_time > vcstime)
 #endif
   {
@@ -411,14 +584,16 @@ __register_self_callback_have_event(Time_t vcstime) {
     vcstime = heap_peek_minkey (P->eventQueue) - vcstime;
 #else
     vcstime = next_time - vcstime;
-    SHOW_VCS_TIME(vcstime);
 #endif
   }
   else {
+	// always in this case!
 	STACKTRACE_INDENT_PRINT("next_time <= vcstime" << endl);
     vcstime = 1;
-    SHOW_VCS_TIME(vcstime);
+	// polling every single time unit!?  expensive and unnecessary
   }
+#endif
+  SHOW_VCS_TIME("advance vcstime: ", vcstime);
 	// here, vcstime is the relative time in the future (from now)
   cb_data.time->type = vpiSimTime;
   prs_to_vcstime (cb_data.time, &vcstime);
@@ -489,20 +664,33 @@ get_prsim_value(const vpiHandle& net) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Prints the current value of the node.
+ */
 static
 void
-report_transport(const char* dirstr, const node_index_type ni, 
-		const s_vpi_time& tm) {
-	ostringstream oss;
+report_transport_from_prsim(const node_index_type ni) {
 	const string name(prsim_state->get_node_canonical_name(ni));
-	Time_t prsim_time;
-	vcs_to_prstime(&tm, &prsim_time);
-	format_ostream_ref(
-		oss << dirstr << "signal " << name << " changed @ time ",
-		prsim_state->time_fmt) <<
-		prsim_time << ", val = ";
-	prsim_state->get_node(ni).dump_value(oss);
-	vpi_printf("%s\n", oss.str().c_str());
+	format_time(cout << "[to vcs]   signal " << name << " changed @ time ")
+		<< vpi_current_time_prs << ", val = ";
+	prsim_state->get_node(ni).dump_value(cout) << '\n';
+	// not endl, minimize flushing
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Prints the current value of the node.
+	\param v new value of node.
+ */
+static
+void
+report_transport_to_prsim(const node_index_type ni, const value_enum v) {
+	const string name(prsim_state->get_node_canonical_name(ni));
+	format_time(cout << "[from vcs] signal " << name << " changed @ time ")
+		<< vpi_current_time_prs << ", val = " <<
+		node_type::translate_value_enum_to_char(v) << '\n';
+//	prsim_state->get_node(ni).dump_value(cout) << '\n';
+	// not endl, minimize flushing
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -520,8 +708,7 @@ transport_value_from_prsim(const node_type& n,
 	const value_enum pval = n.current_value();
 	v.value.scalar = prsim_to_vpi_value(pval);
 	if (_verbose_transport) {
-		report_transport("[to vcs] ",
-			prsim_state->get_node_index(n), tm);
+		report_transport_from_prsim(prsim_state->get_node_index(n));
 	}
 	// is temporary allocation really necessary? avoidable?
 	// vpiPureTransportDelay: affects no other events
@@ -551,81 +738,47 @@ initial_transport_value_from_prsim(const node_type& n, const vpiHandle& net) {
 	const value_enum vv(get_prsim_value(net));
 if (cv != vv) {
 	v.value.scalar = prsim_to_vpi_value(cv);
-	s_vpi_time tm;	// current time
-	tm.type = vpiSimTime;
-	vpi_get_time(NULL, &tm);
+//	sync_vpi_time();	// is this really necessary? assume init time?
 	if (_verbose_transport) {
-		report_transport("[to vcs] ",
-			prsim_state->get_node_index(n), tm);
+		report_transport_from_prsim(prsim_state->get_node_index(n));
 	}
-	vpi_free_object (vpi_put_value (net, &v, &tm, vpiNoDelay));
+	vpi_free_object (vpi_put_value (net, &v, &vpi_current_time, vpiNoDelay));
 }
 	// otherwise, don't bother -- values already match
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	While prsim has events that are before VCS's next event time, 
-	run (unless breakpoint encountered that defers back to VCS).  
-	\param vcstime the longest that prsim should run before returning
-		control back to VCS (absolute simulation time).  
-	What is context for?
-	Should be like "advance-until" behavior.  
+	Handles node transition and possible transport back to vcs
+	Also handles printing of watched nodes.
+	if it is a registered breakpoint.
+	\return true if hit a breakpoint.
  */
-static void __advance_prsim (const Time_t& vcstime, const int context)
-{
-  STACKTRACE_BRIEF;
-  State::step_return_type nr;
-  SHOW_VCS_TIME(vcstime);
-
-  /* run for at most 1ps */
-#if 0
-  while ((heap_peek_minkey (P->eventQueue) <= vcstime) 
-	 && (n = prs_step_cause (P, &m, &seu)))
-#else
-  while (
-#if PRSIM_AGGREGATE_EXCEPTIONS
-	!prsim_state->is_fatal() &&
-	// not is_stopped_or_fatal(), results in infinite loop...
-#endif
-	prsim_state->pending_events() &&
-	(prsim_state->next_event_time() <= vcstime) 
-	 && GET_NODE((nr = prsim_state->step())))
-#endif
-  {
-    const node_index_type ni = GET_NODE(nr);
-    const node_type& n(prsim_state->get_node(ni));
-    // const node_index_type m = GET_CAUSE(nr);
-    const Time_t prsim_time = prsim_state->time();
-    const vpiHandleMapType::const_iterator
-	n_space(vpiHandleMap.find(ni)),
-	n_end(vpiHandleMap.end());
-    // "n_space" in honor of the abuse of a certain void* PrsNode::*space
-#if 0 && VERBOSE_DEBUG
-	prsim_state->dump_event_queue(cout);
-	cout << "end of event queue." << endl;
-#endif
-#if TRACE_VCS_TIME
-	if (prsim_state->pending_events()) {
-	cout << "next event time: " << prsim_state->next_event_time() << endl;
-	}
-	cout << "prsim time: " << prsim_time << endl;
-#endif
-	if (prsim_state->watching_all_nodes()
+bool
+react_to_node_event(const State::step_return_type nr, const bool init) {
+	const node_index_type ni = GET_NODE(nr);
+	const node_type& n(prsim_state->get_node(ni));
+	// const node_index_type m = GET_CAUSE(nr);
+	const vpiHandleMapType::const_iterator
+		n_space(vpiHandleMap.find(ni)),
+		n_end(vpiHandleMap.end());
+	// "n_space" in honor of the abuse of a certain void* PrsNode::*space
+	const Time_t prsim_time = prsim_state->time();
+	const value_enum val = n.current_value();
+	if ((!init || (val != LOGIC_OTHER)) &&
+		(prsim_state->watching_all_nodes()
 #if USE_WATCHPOINT_FLAG
 			|| prsim_state->is_watching_node(GET_NODE(nr))
 #endif
-			) {
-		format_ostream_ref(cout << "prsim:\t", prsim_state->time_fmt)
-			<< prsim_time << '\t';
+			)) {
+		format_time(cout << "prsim:\t") << prsim_time << '\t';
 		print_watched_node(cout, *prsim_state, nr);
 	}
     if (n.is_breakpoint()) {
 #if !USE_WATCHPOINT_FLAG
 	if (prsim_state->is_watching_node(GET_NODE(nr)) &&
 			!prsim_state->watching_all_nodes()) {
-		format_ostream_ref(cout << "prsim:\t", prsim_state->time_fmt)
-			<< prsim_time << '\t';
+		format_time(cout << "prsim:\t") << prsim_time << '\t';
 		print_watched_node(cout, *prsim_state, nr);
 	}
 #endif
@@ -651,10 +804,65 @@ for ( ; net_iter != net_end; ++net_iter) {
       const vpiHandle& net(*net_iter);
 	transport_value_from_prsim(n, net, tm);
 }	// end for each fanout to VPI
-	break;	// from while loop
+	return true;
     }
 	// is not registered $from_prsim
     }	// end if is_breakpoint
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	While prsim has events that are before VCS's next event time, 
+	run (unless breakpoint encountered that defers back to VCS).  
+	\param vcstime the longest that prsim should run before returning
+		control back to VCS (absolute simulation time).  
+	What is context for?
+	Should be like "advance-until" behavior.  
+ */
+static void __advance_prsim (const Time_t& vcstime, const int context)
+{
+  STACKTRACE_BRIEF;
+  State::step_return_type nr;
+  SHOW_VCS_TIME("limit vcstime: ", vcstime);
+
+  /* run for at most 1ps */
+#if 0
+  while ((heap_peek_minkey (P->eventQueue) <= vcstime) 
+	 && (n = prs_step_cause (P, &m, &seu)))
+#else
+  Time_t next_time;
+  Time_t break_time = vcstime;		// may decrease only
+  while (
+#if PRSIM_AGGREGATE_EXCEPTIONS
+	!prsim_state->is_fatal() &&
+	// not is_stopped_or_fatal(), results in infinite loop...
+#endif
+	prsim_state->pending_events() &&
+	(next_time = prsim_state->next_event_time(), 1) &&
+	(next_time <= vcstime) &&
+	(next_time <= break_time) && 
+	GET_NODE((nr = prsim_state->step())))
+#endif
+  {
+#if 0 && VERBOSE_DEBUG
+	prsim_state->dump_event_queue(cout);
+	cout << "end of event queue." << endl;
+#endif
+#if TRACE_VCS_TIME
+if (_verbose_transport) {
+	if (prsim_state->pending_events()) {
+	format_time(cout << "__advance_prsim: this event time: ")
+		<< next_time << endl;
+	}
+	format_time(cout << "__advance_prsim: prsim time: ")
+		<< prsim_state->time() << endl;
+}
+#endif
+	// aggregate multiple break events (to vcs) that happen at same time
+	if (react_to_node_event(nr, false)) {
+		break_time = prsim_state->time();
+	}
   }	// end while
 }
 // end __advance_prsim
@@ -665,14 +873,19 @@ for ( ; net_iter != net_end; ++net_iter) {
 	Caught exceptions wile nicely terminate the co-simulation.
 	This is not really relevant, since we changed the
 	error-handling mechanism to no longer throw.
+	\param vcstime the maximum time to run before turning control to vcs.
  */
 static void __advance_prsim_nothrow (const Time_t& vcstime, const int context)
 {
 	STACKTRACE_BRIEF;
 #if VERBOSE_DEBUG
-  cout << "Running prsim @ time " << vcstime << endl;
+if (_verbose_transport) {
+	format_time(cout << "Running prsim until ") << vcstime << endl;
+#if 0
 	prsim_state->dump_event_queue(cout);
 	cout << "end of event queue." << endl;
+#endif
+}
 #endif
 try {
 	__advance_prsim(vcstime, context);	// may throw
@@ -717,20 +930,24 @@ static
 // inline
 void
 reregister_next_callback(void) {
+	STACKTRACE_BRIEF;
 	if (prsim_state->pending_events()) {
 		// re-schedule callback if there are events left
-		register_self_callback(prsim_state->next_event_time());
-	} else {
+		const Time_t next = prsim_state->next_event_time();
+//		format_time(cout << "next pending: ") << next << endl;
+		if (next != SIM::delay_policy<Time_t>::max()) {
+			register_self_callback(next);
+			return;
+		}
+	}
+// else
+	{
 		// otherwise, no events in queue, only wait for $to_prsim events
 		// don't bother scheduling timed callback
 		// it is safe to update prsim's current time 
 		// if and only if there are no pending events
-		s_vpi_time current_time;
-		current_time.type = vpiSimTime;
-		vpi_get_time(NULL, &current_time);
-		Time_t pcur_time;
-		vcs_to_prstime(&current_time, &pcur_time);
-		prsim_state->update_time(pcur_time);
+//		sync_vpi_time();	// is this really necessary?
+		prsim_state->safe_fast_forward(vpi_current_time_prs);
 	}
 }
 
@@ -738,6 +955,7 @@ reregister_next_callback(void) {
 PLI_INT32
 _vpi_finish(void) {
 	// print this finish timestamp out of convention
+	// format_time(...) ?
 	cerr << "$finish at simulation time (hacprsim) " <<
 		prsim_state->time() << endl;
 	__destroy_globals();
@@ -748,10 +966,11 @@ _vpi_finish(void) {
 /**
 	Runs prsim until a max time or first reached breakpoint, 
 	and reschedules callback when done (if there are events remaining).
+	\param vcstime the maximum time to run before turning control to vcs.
  */
 static void _run_prsim (const Time_t& vcstime, const int context)
 {
-	STACKTRACE_VERBOSE;
+	STACKTRACE_BRIEF;
 	__advance_prsim_nothrow(vcstime, context);
 	reregister_next_callback();
 }
@@ -776,16 +995,14 @@ calls automatically re-synchronize the event queues, as a conservative measure.
 static
 void
 prsim_catch_up(void) {
-	STACKTRACE_VERBOSE;
+	STACKTRACE_BRIEF;
 	require_prsim_state(__FUNCTION__);
+	sync_vpi_time();
 	const vpiHandle queue = vpi_handle(vpiTimeQueue, NULL);
-	s_vpi_time current_time, queue_time;
-	current_time.type = vpiSimTime;
+	s_vpi_time queue_time;
 	queue_time.type = vpiSimTime;
-	vpi_get_time(NULL, &current_time);
 	vpi_get_time(queue, &queue_time);
-	Time_t pq_time, pcur_time;
-	vcs_to_prstime(&current_time, &pcur_time);
+	Time_t pq_time;
 	vcs_to_prstime(&queue_time, &pq_time);
 #if 0
 	cout << "VCS current time: " << current_time.low << endl;
@@ -797,11 +1014,11 @@ prsim_catch_up(void) {
 		prsim_state->dump_event_queue(cout);
 	} else	cout << "(none)" << endl;
 #endif
+	vpi_free_object(queue);	// vpi_get_time() allocates a s_vpi_time object
 	if (prsim_state->pending_events()) {
 		if (scheduled) {
 			// unschedule and reschedule
-			vpi_remove_cb (last_registered_callback);
-			scheduled = 0;
+			remove_callback();
 		}
 		// "catch-up" prsim to VCS's time, 
 		// even past breakpoints
@@ -812,14 +1029,16 @@ prsim_catch_up(void) {
 				prsim_state->time() << endl;
 #endif
 		} while (prsim_state->pending_events() &&
-			(prsim_state->next_event_time() <= pcur_time));
+			(prsim_state->next_event_time() <= vpi_current_time_prs));
 	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PLI_INT32
 prsim_sync(PLI_BYTE8*) {
+	STACKTRACE_BRIEF;
 	prsim_catch_up();
+	// already calls sync_vpi_time()
 	reregister_next_callback();
 #if 0
 	cout << "prsim caught up to time: " << prsim_state->time() << endl;
@@ -830,17 +1049,21 @@ prsim_sync(PLI_BYTE8*) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	This is called when a signal transition is transported from
+	vcs to prsim, from $to_prsim();
 	\param p callback data.
  */
 static
 PLI_INT32 prsim_callback (s_cb_data *p)
 {
-  STACKTRACE_VERBOSE;
+  STACKTRACE_BRIEF;
+  sync_vpi_time();
   // PrsNode *n;
   Time_t vcstime;	// , prsdiff;
   // int bpcount = 0;
   // int gap;
 
+  const value_enum val = vpi_to_prsim_value(p->value->value.scalar);
 // TODO: use template type_traits on sizeof
 #if (SIZEOF_SIZE_T == SIZEOF_VOIDP)
   const node_index_type n = reinterpret_cast<node_index_type>(p->user_data);
@@ -854,14 +1077,7 @@ PLI_INT32 prsim_callback (s_cb_data *p)
 	      prs_nodename (n),
 	      p->time->low,
 	      p->value->value.scalar);
-#else
-if (_verbose_transport) {
-	report_transport("[from vcs] ", n, *p->time);
-}
-#endif
-
   /* convert my time to prsim time */
-#if 0
 #ifdef TIME_64
   vcstime = ((unsigned long long)p->time->high) << 32 | ((unsigned long long)p->time->low);
 #else
@@ -869,25 +1085,50 @@ if (_verbose_transport) {
 #endif
 #else
   vcs_to_prstime(p->time, &vcstime);
-  SHOW_VCS_TIME(vcstime);
+if (_verbose_transport) {
+	report_transport_to_prsim(n, val);
+}
 #endif
 
 /**
 	Whether or not set events from VPI are considered forced.
  */
 static const bool set_force = true;
-  const value_enum val = vpi_to_prsim_value(p->value->value.scalar);
 try {
-    prsim_state->set_node_time(n, val, vcstime, set_force);
+	prsim_set_node(n, val, vcstime, set_force, false);
+	// optional: execute this most recent event now
+	// bypass event queue!
+
+	// is this reregister optional because _run_prsim also calls reregister?
+	// this is required because new event may be vacuous,
+	// but still needs to be registered.
+	reregister_next_callback();
+#if VERBOSE_DEBUG
+    if (_verbose_transport) {
+	const Time_t next_time = prsim_state->next_event_time();
+	format_time(cout << "prsim_callback: next_time: ")
+		<< next_time;	// could be time_type<Time_t>::max()
+	format_time(cout << ", scheduled_time: ")
+		<< scheduled_time << endl;
+    }
+#endif
 } catch (...) {
 	// possible exception with scheduling events in past
 	_vpi_finish();
 }
-#if VERBOSE_DEBUG
+#if VERBOSE_DEBUG && 0
 	prsim_state->dump_event_queue(cout);
 	cout << "end of event queue." << endl;
 #endif
+#if VPI_SET_NODE_IMMEDIATE
+// then node value change was executed immediately, bypassing event queue
+// so no need to run
+#else
+// alternative: if receiving transport delay is zero, 
+// could force-execute this event immediately.
+// with any arbitrary transport delay, let event queue pick next event.
   _run_prsim (vcstime, 0);
+#endif
 // TODO: don't know what should be returned, was missing/void before
 	return 0;
 }
@@ -903,7 +1144,7 @@ try {
 static
 string
 strip_spaces(const char* c) {
-	STACKTRACE_VERBOSE;
+	STACKTRACE_BRIEF;
 #if 0
 	// insufficient
 	return string(eat_whitespace(c));
@@ -955,7 +1196,7 @@ This command should be invoked prior to any events in simulation.
 static
 void register_to_prsim (const char *vcs_name, const char *prsim_name)
 {
-  STACKTRACE_VERBOSE;
+  STACKTRACE_BRIEF;
   s_cb_data cb_data;
   // PrsNode *n;
   
@@ -971,6 +1212,8 @@ void register_to_prsim (const char *vcs_name, const char *prsim_name)
   cb_data.obj = net;
 
 	// TODO: who frees these mallocs???
+	// these are setup one-time upon connection
+	// ideally, free them upon finish
 	// TODO: is this the right time type?
   cb_data.time = p_vpi_time(malloc (sizeof(s_vpi_time)));
   cb_data.time->type = vpiSimTime;
@@ -987,6 +1230,8 @@ void register_to_prsim (const char *vcs_name, const char *prsim_name)
   /* prsim net name */
   cb_data.user_data = reinterpret_cast<PLI_BYTE8*>(ni);	// YUCK, void*
   vpi_register_cb (&cb_data);
+	// ignore return value of registered callback?
+	// might be useful in future if we ever decide to 'disconnect'
 
   if (_confirm_connections) {
 	cout << "$to_prsim: " << VCS_name << " -> " << PRSIM_name << endl;
@@ -999,14 +1244,11 @@ void register_to_prsim (const char *vcs_name, const char *prsim_name)
   }
 
   /* propagate the current value of the node to prsim */
-  const value_enum n(get_prsim_value(net));
+  const value_enum v(get_prsim_value(net));
   // cout << "VALUE of " << prsim_name << " is " << size_t(n) << endl;
-  s_vpi_time current_time;
-  current_time.type = vpiSimTime;
-  vpi_get_time(NULL, &current_time);
-  Time_t t;
-  vcs_to_prstime(&current_time, &t);
-  prsim_state->set_node_time(ni, n, t, false);	// force?
+//  sync_vpi_time();	// is this really necessary? or assume init time?
+  prsim_set_node(ni, v, vpi_current_time_prs, false, true);	// force?
+	// may throw exception, b/c executes immediately
   prsim_sync(NULL);		// flush events
 }
 
@@ -1027,7 +1269,7 @@ the Verilog simulator will be notified accordingly.
 static
 void register_from_prsim (const char *vcs_name, const char *prsim_name)
 {
-  STACKTRACE_VERBOSE;
+  STACKTRACE_BRIEF;
   // PrsNode *n;
   
   require_prsim_state(__FUNCTION__);
@@ -1096,7 +1338,7 @@ Synonymous with @command{$prsim_cmd("watch node");}.
 */
 void register_prsim_watchpoint (const char *prsim_name)
 {
-  STACKTRACE_VERBOSE;
+  STACKTRACE_BRIEF;
   // vpiHandle net;
   // PrsNode *n;
   
@@ -1138,7 +1380,7 @@ void register_prsim_watchpoint (const char *prsim_name)
  */
 static PLI_INT32 to_prsim (PLI_BYTE8 *args)
 {
-  STACKTRACE_VERBOSE;
+  STACKTRACE_BRIEF;
   vpiHandle task_call;
   vpiHandle h;
   vpiHandle net1, net2;
@@ -1182,7 +1424,7 @@ static PLI_INT32 to_prsim (PLI_BYTE8 *args)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 static PLI_INT32 from_prsim (PLI_BYTE8 *args)
 {
-  STACKTRACE_VERBOSE;
+  STACKTRACE_BRIEF;
   vpiHandle task_call;
   vpiHandle h;
   vpiHandle net1, net2;
@@ -1235,7 +1477,7 @@ the last command you will ever need.
  */
 static PLI_INT32 prsim_cmd (PLI_BYTE8* args)
 {
-  STACKTRACE_VERBOSE;
+  STACKTRACE_BRIEF;
   s_vpi_value arg;
   static const char usage[] = "Usage: $prsim_cmd(prsim-command)\n";
 require_prsim_state(__FUNCTION__);
@@ -1288,7 +1530,7 @@ require_prsim_state(__FUNCTION__);
  */
 static PLI_INT32 prsim_watch (PLI_BYTE8* args)
 {
-  STACKTRACE_VERBOSE;
+  STACKTRACE_BRIEF;
   s_vpi_value arg;
   static const char usage[] = "Usage: $prsim_watch(prsim-name)\n";
 
@@ -1323,7 +1565,7 @@ This should be done before the call to @command{$prsim()}.
 ***/
 static PLI_INT32 prsim_command_options (PLI_BYTE8* args)
 {
-  STACKTRACE_VERBOSE;
+  STACKTRACE_BRIEF;
   s_vpi_value arg;
   static const char usage[] = "Usage: $prsim_options(\"options\")\n";
   const vpiHandle task_call = vpi_handle (vpiSysTfCall, NULL);
@@ -1371,7 +1613,7 @@ for you if needed.
 ***/
 static PLI_INT32 prsim_file (PLI_BYTE8* args)
 {
-  STACKTRACE_VERBOSE;
+  STACKTRACE_BRIEF;
   s_vpi_value arg;
   static const char usage[] = "Usage: $prsim(filename)\n";
   const vpiHandle task_call = vpi_handle (vpiSysTfCall, NULL);
@@ -1406,6 +1648,8 @@ if (HAC_module) {
 	// grab paths from command-line options
 	prsim_state->import_source_paths(prsim_opt.source_paths);
 	prsim_state->initialize();
+	// do not just run over vacuous events
+	prsim_state->stop_on_vacuous_events();
 	if (prsim_opt.autosave) {
 		prsim_state->autosave(prsim_opt.autosave,
 			prsim_opt.autosave_name);
@@ -1432,7 +1676,7 @@ For @var{v} 0, synonymous with @command{$prsim_cmd("timing after");}.
 ***/
 static PLI_INT32 prsim_random (PLI_BYTE8 *args)
 {
-  STACKTRACE_VERBOSE;
+  STACKTRACE_BRIEF;
   deprecation_warning(
 	"$prsim_mkrandom() should be replaced with $prsim_cmd(\"timing random\")");
   s_vpi_value arg;
@@ -1482,7 +1726,7 @@ For @var{v} 0, synonymous with @command{$prsim_cmd("mode run");}.
 ***/
 static PLI_INT32 prsim_resetmode (PLI_BYTE8 *args)
 {
-  STACKTRACE_VERBOSE;
+  STACKTRACE_BRIEF;
   deprecation_warning(
 	"$prsim_resetmode() should be replaced with $prsim_cmd(\"mode reset\")");
   s_vpi_value arg;
@@ -1531,7 +1775,7 @@ Synonymous with @command{$prsim_cmd("status X");}.
 ***/
 static PLI_INT32 prsim_status_x (PLI_BYTE8 *args)
 {
-  STACKTRACE_VERBOSE;
+  STACKTRACE_BRIEF;
   deprecation_warning(
 	"$prsim_status_x() should be replaced with $prsim_cmd(\"status X\")");
   vpiHandle task_call;
@@ -1594,7 +1838,7 @@ Synonymous with @command{$prsim_cmd("set node val");}.
 ***/
 static PLI_INT32 prsim_set (PLI_BYTE8 *args)
 {
-  STACKTRACE_VERBOSE;
+  STACKTRACE_BRIEF;
   deprecation_warning(
 	"$prsim_set() should be replaced with $prsim_cmd(\"set ...\")");
   vpiHandle task_call;
@@ -1678,7 +1922,7 @@ Synonymous with @command{$prsim_cmd("get node");}.
 ***/
 static PLI_INT32 prsim_get (PLI_BYTE8 *args)
 {
-  STACKTRACE_VERBOSE;
+  STACKTRACE_BRIEF;
   deprecation_warning(
 	"$prsim_get() should be replaced with $prsim_cmd(\"get ...\")");
   vpiHandle task_call;
@@ -1747,7 +1991,7 @@ object file (@command{$prsim()}) that initializes the state of the simulation.
 static
 PLI_INT32
 prsim_default_after(PLI_BYTE8 *args) {
-  STACKTRACE_VERBOSE;
+  STACKTRACE_BRIEF;
   vpiHandle task_call;
   vpiHandle h;
   vpiHandle fname;
@@ -1792,7 +2036,7 @@ Execute prsim events until event queue is empty.
 static
 PLI_INT32
 prsim_cycle(PLI_BYTE8 *args) {
-  STACKTRACE_VERBOSE;
+  STACKTRACE_BRIEF;
 }
 #endif
 
@@ -1819,7 +2063,8 @@ static struct funcs f[] = {
   // { "$packprsim", prsim_packfile },
   { "$prsim_mkrandom", prsim_random },		// deprecated
   { "$prsim_resetmode", prsim_resetmode },	// deprecated
-  { "$prsim_watch", prsim_watch }
+  { "$prsim_watch", prsim_watch },
+  { "$vpi_dump_queue", vpi_dump_queue_cmd }
 };
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1829,7 +2074,11 @@ static struct funcs f[] = {
 static
 void register_prsim (void)
 {
-  STACKTRACE_VERBOSE;
+  STACKTRACE_BRIEF;
+	// do some one-time initializations here
+	vpi_current_time.type = vpiSimTime;	// do once only
+	sync_vpi_time();		// should just be 0
+
   s_vpi_systf_data s;
   size_t i;
 

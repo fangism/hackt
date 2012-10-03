@@ -430,6 +430,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	reschedule-07 reschedule-08 reschedule-09 reschedule-10 reschedule-11 \
 	reschedule-12 reschedule-13 reschedule-14 reschedule-15 \
 	reschedule-16 reschedule-17 \
+	set-now-01 set-now-02 \
 	invariant-a-01 invariant-a-02 invariant-a-03 invariant-a-04 \
 	invariant-a-05 invariant-a-06 invariant-a-08 \
 	invariant-b-01 invariant-b-02 invariant-b-03 invariant-b-04 \
