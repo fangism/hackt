@@ -113,15 +113,14 @@ template <class Command>
 size_t
 command_registry<Command>::register_category(command_category_type& c) {
 	typedef	typename category_map_type::mapped_type		mapped_type;
-	mapped_type& probe(category_map[c.name()]);
-	// can we be sure that the ptr is initially NULL?
-	// perhaps only if we use a never_ptr.  
-	if (probe) {
+	typedef	typename category_map_type::value_type		value_type;
+	typedef	typename category_map_type::iterator		iterator;
+	const std::pair<iterator, bool>
+		probe(category_map.insert(value_type(c.name(), &c)));
+	if (!probe.second) {
 		cerr << "category \'" << c.name() <<
 			"\' has already been registered." << endl;
 		THROW_EXIT;
-	} else {
-		probe = &c;
 	}
 	return category_map.size();
 }
@@ -139,14 +138,15 @@ command_registry<Command>::register_command(void) {
 		&command_class::category, &command_class::main, 
 		&command_class::usage, &Completer<command_class>);
 	typedef	typename command_map_type::mapped_type		mapped_type;
+	typedef	typename command_map_type::value_type		value_type;
+	typedef	typename command_map_type::iterator		iterator;
 	const string& s(command_class::name);
-	mapped_type& probe(command_map[s]);
-	if (probe) {
+	const std::pair<iterator, bool>
+		probe(command_map.insert(value_type(s, temp)));
+	if (!probe.second) {
 		cerr << "command \'" << s << "\' has already been "
 			"registered globally." << endl;
 		THROW_EXIT;
-	} else {
-		probe = temp;
 	}
 	command_class::category.register_command(temp);
 	return command_map.size();
