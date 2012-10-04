@@ -116,6 +116,10 @@ using HAC::entity::string_return_cast_expr;
 		real_return_cast_expr, REAL_RETURN_CAST_EXPR_TYPE_KEY, 0)
 	SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 		string_return_cast_expr, STRING_RETURN_CAST_EXPR_TYPE_KEY, 0)
+
+namespace memory {
+template class count_ptr<const HAC::entity::string_expr>;
+}
 }	// end namespace util
 
 namespace HAC {

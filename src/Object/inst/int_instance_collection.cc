@@ -53,6 +53,12 @@ namespace util {
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::int_instance_placeholder, 
 	DINT_INSTANCE_PLACEHOLDER_TYPE_KEY, 0)
+
+// explicit template instantiation
+using namespace HAC::entity;
+// from Object/traits/int_traits.h: alias_collection_type
+template class packed_array_generic<pint_value_type,
+		memory::never_ptr<instance_alias_info<int_tag> > >;
 }	// end namespace util
 
 

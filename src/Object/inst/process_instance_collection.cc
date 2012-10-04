@@ -47,6 +47,12 @@ namespace util {
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::process_instance_placeholder, 
 	PROCESS_INSTANCE_PLACEHOLDER_TYPE_KEY, 0)
+
+// explicit template instantiation
+using namespace HAC::entity;
+// from Object/traits/proc_traits.h: alias_collection_type
+template class packed_array_generic<pint_value_type,
+		memory::never_ptr<instance_alias_info<HAC::entity::process_tag> > >;
 }	// end namespace util
 
 namespace HAC {
