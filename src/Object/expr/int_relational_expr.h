@@ -9,10 +9,10 @@
 #ifndef	__HAC_OBJECT_EXPR_INT_RELATIONAL_EXPR_H__
 #define	__HAC_OBJECT_EXPR_INT_RELATIONAL_EXPR_H__
 
+#include <map>
 #include "Object/expr/bool_expr.h"
 #include "Object/expr/types.h"
 #include "util/string_fwd.h"
-#include "util/qmap_fwd.h"
 #include "util/operators.h"
 #include "util/memory/count_ptr.h"
 
@@ -20,7 +20,7 @@ namespace HAC {
 namespace entity {
 class int_expr;
 using std::string;
-using util::default_qmap;
+using std::map;
 USING_UTIL_OPERATIONS
 using util::persistent_object_manager;
 //=============================================================================
@@ -44,13 +44,10 @@ public:
 	static const less_equal<value_type, arg_type>	op_less_equal;
 	static const greater_equal<value_type, arg_type>
 							op_greater_equal;
-private:
-	// safe to use naked (never-delete) pointers on static objects
-	typedef	default_qmap<string, const op_type*>::type
-						op_map_type;
-	typedef	default_qmap<const op_type*, string>::type
-						reverse_op_map_type;
 public:
+	// safe to use naked (never-delete) pointers on static objects
+	typedef	map<string, const op_type*>	op_map_type;
+	typedef	map<const op_type*, string>	reverse_op_map_type;
 	static const op_map_type		op_map;
 private:
 	static const reverse_op_map_type	reverse_op_map;

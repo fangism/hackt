@@ -58,7 +58,6 @@
 
 #include "util/what.h"
 #include "util/stacktrace.h"
-// #include "util/qmap.tcc"
 #include "util/memory/count_ptr.tcc"
 
 #define	CONSTRUCTOR_INLINE

@@ -9,17 +9,17 @@
 #ifndef	__HAC_OBJECT_EXPR_BOOL_LOGICAL_EXPR_H__
 #define	__HAC_OBJECT_EXPR_BOOL_LOGICAL_EXPR_H__
 
+#include <map>
 #include "Object/expr/types.h"
 #include "Object/expr/bool_expr.h"
 #include "util/string_fwd.h"
-#include "util/qmap_fwd.h"
 #include "util/operators.h"
 #include "util/memory/count_ptr.h"
 
 namespace HAC {
 namespace entity {
 using std::string;
-using util::default_qmap;
+using std::map;
 USING_UTIL_OPERATIONS
 using util::persistent_object_manager;
 //=============================================================================
@@ -39,13 +39,10 @@ public:
 	static const util::logical_xor<value_type, arg_type>	op_xor;
 	static const util::logical_xnor<value_type, arg_type>	op_xnor;
 	typedef	string					op_key_type;
-private:
-	// safe to use naked (never-delete) pointers on static objects
-	typedef default_qmap<op_key_type, const op_type*>::type
-							op_map_type;
-	typedef default_qmap<const op_type*, op_key_type>::type
-							reverse_op_map_type;
 public:
+	// safe to use naked (never-delete) pointers on static objects
+	typedef map<op_key_type, const op_type*>	op_map_type;
+	typedef map<const op_type*, op_key_type>	reverse_op_map_type;
 	static const op_map_type		op_map;
 	static const reverse_op_map_type	reverse_op_map;
 private:

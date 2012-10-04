@@ -47,7 +47,6 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "util/IO_utils.h"
 #include "util/memory/count_ptr.tcc"
 #include "util/memory/chunk_map_pool.tcc"
-// #include "util/qmap.tcc"	// for const_assoc_query::operator[]
 #include "util/packed_array.h"	// for bool_alias_collection_type
 #include "util/likely.h"
 #include "util/stacktrace.h"
