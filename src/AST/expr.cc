@@ -84,8 +84,6 @@
 #include "util/stacktrace.h"
 #include "util/iterator_more.h"
 #include "util/memory/count_ptr.tcc"
-#include "util/qmap.tcc"
-	// qmap for operator maps, alternative: explicit template instantiation
 
 // enable or disable constructor inlining, undefined at the end of file
 // leave blank do disable, define as inline to enable
@@ -2414,9 +2412,10 @@ if (li && ri) {
 		return ret;
 	}
 } else if (lb && rb) {
-	const entity::pbool_logical_expr::op_type*
-		o(entity::pbool_logical_expr::op_map[op_str]);
-	if (!o) {
+	typedef	entity::pbool_logical_expr::op_map_type	op_map_type;
+	const op_map_type& op_map(entity::pbool_logical_expr::op_map);
+	const op_map_type::const_iterator o(op_map.find(op_str));
+	if (o == op_map.end()) {
 		cerr << "ERROR: operator \'" << op_str <<
 			"\' not supported.  " << where(*op) << endl;
 		return return_type(NULL);
@@ -2486,20 +2485,22 @@ relational_expr::check_nonmeta_expr(const context& c) const {
 }
 	if (li && ri) {
 		const string op_str(op->text);
-		const entity::int_relational_expr::op_type*
-			o(entity::int_relational_expr::op_map[op_str]);
-		INVARIANT(o);
-		return return_type(new entity::int_relational_expr(li, o, ri));
+		typedef entity::int_relational_expr::op_map_type	op_map_type;
+		const op_map_type& op_map(entity::int_relational_expr::op_map);
+		const op_map_type::const_iterator o(op_map.find(op_str));
+		INVARIANT(o != op_map.end());
+		return return_type(new entity::int_relational_expr(li, o->second, ri));
 	} else if (lb && rb) {
 		const string op_str(op->text);
-		const entity::bool_logical_expr::op_type*
-			o(entity::bool_logical_expr::op_map[op_str]);
-		if (!o) {
+		typedef	entity::bool_logical_expr::op_map_type	op_map_type;
+		const op_map_type& op_map(entity::bool_logical_expr::op_map);
+		const op_map_type::const_iterator o(op_map.find(op_str));
+		if (o == op_map.end()) {
 			cerr << "ERROR: operator \'" << op_str <<
 				"\' not supported.  " << where(*op) << endl;
 			return return_type(NULL);
 		}
-		return return_type(new entity::bool_logical_expr(lb, o, rb));
+		return return_type(new entity::bool_logical_expr(lb, o->second, rb));
 	} else {
 		static const char err_str[] =
 			"ERROR relational_expr expected two ints, "
@@ -2554,9 +2555,10 @@ logical_expr::check_meta_expr(const context& c) const {
 	// else is safe to make entity::relational_expr object
 	const string op_str(op->text);
 if (lb && rb) {
-	entity::pbool_logical_expr::op_type const* const
-		o(entity::pbool_logical_expr::op_map[op_str]);
-	if (!o) {
+	typedef	entity::pbool_logical_expr::op_map_type	op_map_type;
+	const op_map_type& op_map(entity::pbool_logical_expr::op_map);
+	const op_map_type::const_iterator o(op_map.find(op_str));
+	if (o == op_map.end()) {
 		cerr << "ERROR: \"" << op_str << "\" is not a valid "
 			"boolean logical operator, at " << where(*op) << endl;
 		return return_type(NULL);
@@ -2564,9 +2566,9 @@ if (lb && rb) {
 	if (lb->is_static_constant() && rb->is_static_constant()) {
 		const bool lc = lb->static_constant_value();
 		const bool rc = rb->static_constant_value();
-		return return_type(new pbool_const((*o)(lc,rc)));
+		return return_type(new pbool_const((*o->second)(lc,rc)));
 	} else {
-		return return_type(new entity::pbool_logical_expr(lb, o, rb));
+		return return_type(new entity::pbool_logical_expr(lb, o->second, rb));
 	}
 } else if (li && ri) {
 	const char ch = op->text[0];
@@ -2642,14 +2644,15 @@ logical_expr::check_nonmeta_expr(const context& c) const {
 	// else is safe to make entity::bool_logical_expr object
 	const string op_str(op->text);
 if (lb && rb) {
-	entity::bool_logical_expr::op_type const* const
-		o(entity::bool_logical_expr::op_map[op_str]);
-	if (!o) {
+	typedef	entity::bool_logical_expr::op_map_type	op_map_type;
+	const op_map_type& op_map(entity::bool_logical_expr::op_map);
+	const op_map_type::const_iterator o(op_map.find(op_str));
+	if (o == op_map.end()) {
 		cerr << "ERROR: \"" << op_str << "\" is not a valid "
 			"boolean logical operator, at " << where(*op) << endl;
 		return return_type(NULL);
 	}
-	return return_type(new entity::bool_logical_expr(lb, o, rb));
+	return return_type(new entity::bool_logical_expr(lb, o->second, rb));
 } else if (li && ri) {
 	const char ch = op->text[0];
 	switch (ch) {
@@ -2880,15 +2883,16 @@ if (lb) {
 	default: {}
 	}
 #endif
-	entity::pbool_logical_expr::op_type const* const
-		o(entity::pbool_logical_expr::op_map[op_str]);
-	if (!o) {
+	typedef	entity::pbool_logical_expr::op_map_type	op_map_type;
+	const op_map_type& op_map(entity::pbool_logical_expr::op_map);
+	const op_map_type::const_iterator o(op_map.find(op_str));
+	if (o == op_map.end()) {
 		cerr << "ERROR: \"" << op_str << "\" is not a valid "
 			"boolean logical operator, at " << where(*op) << endl;
 		return return_type(NULL);
 	}
 	return return_type(new entity::pbool_logical_loop_expr(
-		loop_ind, loop_range, lb, o));
+		loop_ind, loop_range, lb, o->second));
 } else if (li) {
 	const char ch = op->text[0];
 #if 1
@@ -2905,16 +2909,17 @@ if (lb) {
 	default: {}
 	}
 #endif
-	entity::pint_arith_expr::op_type const* const
-		o(entity::pint_arith_expr::op_map[ch]);
-	if (!o) {
+	typedef	entity::pint_arith_expr::op_map_type	op_map_type;
+	const op_map_type& op_map(entity::pint_arith_expr::op_map);
+	const op_map_type::const_iterator o(op_map.find(ch));
+	if (o == op_map.end()) {
 		cerr << "ERROR: \"" << op_str << "\" is not a valid "
 			"integer arithmetic operator, at " <<
 			where(*op) << endl;
 		return return_type(NULL);
 	}
 	return return_type(new entity::pint_arith_loop_expr(
-		loop_ind, loop_range, li, o));
+		loop_ind, loop_range, li, o->second));
 	return return_type(NULL);
 } else if (lr) {
 	FINISH_ME(Fang);
@@ -2973,15 +2978,16 @@ if (lb) {
 	default: {}
 	}
 #endif
-	entity::bool_logical_expr::op_type const* const
-		o(entity::bool_logical_expr::op_map[op_str]);
-	if (!o) {
+	typedef	entity::bool_logical_expr::op_map_type	op_map_type;
+	const op_map_type& op_map(entity::bool_logical_expr::op_map);
+	const op_map_type::const_iterator o(op_map.find(op_str));
+	if (o == op_map.end()) {
 		cerr << "ERROR: \"" << op_str << "\" is not a valid "
 			"boolean logical operator, at " << where(*op) << endl;
 		return return_type(NULL);
 	}
 	return return_type(new entity::bool_logical_loop_expr(
-		loop_ind, loop_range, lb, o));
+		loop_ind, loop_range, lb, o->second));
 } else if (li) {
 	const char ch = op->text[0];
 #if 1
@@ -2998,16 +3004,17 @@ if (lb) {
 	default: {}
 	}
 #endif
-	entity::int_arith_expr::op_type const* const
-		o(entity::int_arith_expr::op_map[ch]);
-	if (!o) {
+	typedef	entity::int_arith_expr::op_map_type	op_map_type;
+	const op_map_type& op_map(entity::int_arith_expr::op_map);
+	const op_map_type::const_iterator o(op_map.find(ch));
+	if (o == op_map.end()) {
 		cerr << "ERROR: \"" << op_str << "\" is not a valid "
 			"integer arithmetic operator, at " <<
 			where(*op) << endl;
 		return return_type(NULL);
 	}
 	return return_type(new entity::int_arith_loop_expr(
-		loop_ind, loop_range, li, o));
+		loop_ind, loop_range, li, o->second));
 	return return_type(NULL);
 } else if (lr) {
 	FINISH_ME(Fang);

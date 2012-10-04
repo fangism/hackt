@@ -9,17 +9,17 @@
 #ifndef __HAC_OBJECT_EXPR_PINT_ARITH_EXPR_H__
 #define __HAC_OBJECT_EXPR_PINT_ARITH_EXPR_H__
 
+#include <map>
 #include "Object/expr/pint_expr.h"
 #include "Object/expr/operator_info.h"
 #include "util/memory/count_ptr.h"
-#include "util/qmap.h"
 #include "util/operators.h"
 
 namespace HAC {
 namespace entity {
 using std::ostream;
 USING_UTIL_OPERATIONS
-using util::default_qmap;
+using std::map;
 using util::memory::count_ptr;
 
 //=============================================================================
@@ -49,14 +49,11 @@ public:
 	static const bitwise_or<value_type, arg_type>	unmasker;
 	static const bitwise_xor<value_type, arg_type>	hasher;
 
-private:
+public:
 	// safe to use naked (never-delete) pointers on static objects
 	typedef	expr_detail::op_info		op_info;
-	typedef	default_qmap<op_key_type, const op_type*>::type
-						op_map_type;
-	typedef	default_qmap<const op_type*, op_info>::type
-						reverse_op_map_type;
-public:
+	typedef	map<op_key_type, const op_type*>	op_map_type;
+	typedef	map<const op_type*, op_info>	reverse_op_map_type;
 	static const op_map_type		op_map;
 	static const reverse_op_map_type	reverse_op_map;
 private:

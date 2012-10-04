@@ -49,7 +49,6 @@ DEFAULT_STATIC_TRACE_BEGIN
 
 #include "util/numeric/sign_traits.h"
 #include "util/stacktrace.h"
-#include "util/qmap.tcc"
 #include "util/memory/count_ptr.tcc"
 #include "util/persistent_object_manager.tcc"
 
@@ -811,7 +810,8 @@ pint_arith_expr::~pint_arith_expr() {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pint_arith_expr::pint_arith_expr(const operand_ptr_type& l, const char o,
 		const operand_ptr_type& r) :
-		lx(l), rx(r), op(op_map[o]) {
+		lx(l), rx(r), op(op_map.find(o)->second) {
+	INVARIANT(op_map.find(o) != op_map.end());
 	NEVER_NULL(op);
 	NEVER_NULL(lx);
 	NEVER_NULL(rx);
@@ -840,7 +840,7 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pint_arith_expr)
 ostream&
 pint_arith_expr::dump(ostream& o, const expr_dump_context& c) const {
 #if 1
-	const op_info& oi(reverse_op_map[op]);
+	const op_info& oi(reverse_op_map.find(op)->second);
 	const bool a = op->is_associative();
 	const bool p = c.need_parentheses(oi.prec, a);
 	const expr_dump_context::stamp_modifier m(c, oi.prec, a);
@@ -854,7 +854,7 @@ pint_arith_expr::dump(ostream& o, const expr_dump_context& c) const {
 	if (p) o << ')';
 	return o;
 #else
-	return rx->dump(lx->dump(o, c) << reverse_op_map[op].op, c);
+	return rx->dump(lx->dump(o, c) << reverse_op_map.find(op)->second.op, c);
 #endif
 }
 
@@ -884,7 +884,9 @@ pint_arith_expr::static_constant_value(void) const {
 pint_arith_expr::value_type
 pint_arith_expr::evaluate(const op_key_type o,
 		const value_type l, const value_type r) {
-	const op_type* op(op_map[o]);
+	const op_map_type::const_iterator i(op_map.find(o));
+	INVARIANT(i != op_map.end());
+	const op_type* op(i->second);
 	INVARIANT(op);
 	return (*op)(l,r);
 }
@@ -1047,7 +1049,7 @@ if (!m.register_transient_object(this,
 void
 pint_arith_expr::write_object(const persistent_object_manager& m,
 		ostream& f) const {
-	write_value(f, reverse_op_map[op].op);	// writes a character
+	write_value(f, reverse_op_map.find(op)->second.op);	// writes a character
 	m.write_pointer(f, lx);
 	m.write_pointer(f, rx);
 }
@@ -1058,7 +1060,9 @@ pint_arith_expr::load_object(const persistent_object_manager& m, istream& f) {
 	{
 	char o;
 	read_value(f, o);
-	op = op_map[o];
+	const op_map_type::const_iterator i(op_map.find(o));
+	INVARIANT(i != op_map.end());
+	op = i->second;
 	}
 	m.read_pointer(f, lx);
 	m.read_pointer(f, rx);
@@ -1147,7 +1151,8 @@ pint_relational_expr::~pint_relational_expr() {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pint_relational_expr::pint_relational_expr(const operand_ptr_type& l,
 		const string& o, const operand_ptr_type& r) :
-		lx(l), rx(r), op(op_map[o]) {
+		lx(l), rx(r), op(op_map.find(o)->second) {
+	INVARIANT(op_map.find(o) != op_map.end());
 	NEVER_NULL(op);
 	NEVER_NULL(lx);
 	NEVER_NULL(rx);
@@ -1172,7 +1177,7 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pint_relational_expr)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 pint_relational_expr::dump(ostream& o, const expr_dump_context& c) const {
-	return rx->dump(lx->dump(o, c) << reverse_op_map[op], c);
+	return rx->dump(lx->dump(o, c) << reverse_op_map.find(op)->second, c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1203,7 +1208,9 @@ pint_relational_expr::static_constant_value(void) const {
 pint_relational_expr::value_type
 pint_relational_expr::evaluate(const string& o, const arg_type l, 
 		const arg_type r) {
-	const op_type* const op(op_map[o]);
+	const op_map_type::const_iterator i(op_map.find(o));
+	INVARIANT(i != op_map.end());
+	const op_type* const op(i->second);
 	INVARIANT(op);
 	return (*op)(l,r);
 }
@@ -1360,7 +1367,7 @@ if (!m.register_transient_object(this,
 void
 pint_relational_expr::write_object(const persistent_object_manager& m, 
 		ostream& f) const {
-	write_value(f, reverse_op_map[op]);
+	write_value(f, reverse_op_map.find(op)->second);
 	m.write_pointer(f, lx);
 	m.write_pointer(f, rx);
 }
@@ -1371,7 +1378,9 @@ pint_relational_expr::load_object(const persistent_object_manager& m, istream& f
 	{
 	string s;
 	read_value(f, s);
-	op = op_map[s];
+	const op_map_type::const_iterator i(op_map.find(s));
+	INVARIANT(i != op_map.end());
+	op = i->second;
 	NEVER_NULL(op);
 	}
 	m.read_pointer(f, lx);
@@ -1458,7 +1467,8 @@ preal_arith_expr::preal_arith_expr(const operand_ptr_type& l, const op_type* o,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 preal_arith_expr::preal_arith_expr(const operand_ptr_type& l, const char o,
 		const operand_ptr_type& r) :
-		lx(l), rx(r), op(op_map[o]) {
+		lx(l), rx(r), op(op_map.find(o)->second) {
+	INVARIANT(op_map.find(o) != op_map.end());
 	NEVER_NULL(op);
 	NEVER_NULL(lx);
 	NEVER_NULL(rx);
@@ -1475,7 +1485,7 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(preal_arith_expr)
  */
 ostream&
 preal_arith_expr::dump(ostream& o, const expr_dump_context& c) const {
-	const op_info& oi(reverse_op_map[op]);
+	const op_info& oi(reverse_op_map.find(op)->second);
 	const bool a = op->is_associative();
 	const bool p = c.need_parentheses(oi.prec, a);
 	const expr_dump_context::stamp_modifier m(c, oi.prec, a);
@@ -1511,7 +1521,9 @@ preal_arith_expr::static_constant_value(void) const {
 preal_arith_expr::value_type
 preal_arith_expr::evaluate(const op_key_type o,
 		const value_type l, const value_type r) {
-	const op_type* op(op_map[o]);
+	const op_map_type::const_iterator i(op_map.find(o));
+	INVARIANT(i != op_map.end());
+	const op_type* op(i->second);
 	INVARIANT(op);
 	return (*op)(l,r);
 }
@@ -1663,7 +1675,7 @@ if (!m.register_transient_object(this,
 void
 preal_arith_expr::write_object(const persistent_object_manager& m,
 		ostream& f) const {
-	write_value(f, reverse_op_map[op].op);	// writes a character
+	write_value(f, reverse_op_map.find(op)->second.op);	// writes a character
 	m.write_pointer(f, lx);
 	m.write_pointer(f, rx);
 }
@@ -1674,7 +1686,9 @@ preal_arith_expr::load_object(const persistent_object_manager& m, istream& f) {
 	{
 	char o;
 	read_value(f, o);
-	op = op_map[o];
+	const op_map_type::const_iterator i(op_map.find(o));
+	INVARIANT(i != op_map.end());
+	op = i->second;
 	}
 	m.read_pointer(f, lx);
 	m.read_pointer(f, rx);
@@ -1766,7 +1780,8 @@ preal_relational_expr::~preal_relational_expr() {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 preal_relational_expr::preal_relational_expr(const operand_ptr_type& l,
 		const string& o, const operand_ptr_type& r) :
-		lx(l), rx(r), op(op_map[o]) {
+		lx(l), rx(r), op(op_map.find(o)->second) {
+	INVARIANT(op_map.find(o) != op_map.end());
 	NEVER_NULL(op);
 	NEVER_NULL(lx);
 	NEVER_NULL(rx);
@@ -1791,7 +1806,7 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(preal_relational_expr)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 preal_relational_expr::dump(ostream& o, const expr_dump_context& c) const {
-	return rx->dump(lx->dump(o, c) << reverse_op_map[op], c);
+	return rx->dump(lx->dump(o, c) << reverse_op_map.find(op)->second, c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1822,7 +1837,9 @@ preal_relational_expr::static_constant_value(void) const {
 preal_relational_expr::value_type
 preal_relational_expr::evaluate(const string& o, const arg_type l, 
 		const arg_type r) {
-	const op_type* const op(op_map[o]);
+	const op_map_type::const_iterator i(op_map.find(o));
+	INVARIANT(i != op_map.end());
+	const op_type* const op(i->second);
 	INVARIANT(op);
 	return (*op)(l,r);
 }
@@ -1967,7 +1984,7 @@ if (!m.register_transient_object(this,
 void
 preal_relational_expr::write_object(const persistent_object_manager& m, 
 		ostream& f) const {
-	write_value(f, reverse_op_map[op]);
+	write_value(f, reverse_op_map.find(op)->second);
 	m.write_pointer(f, lx);
 	m.write_pointer(f, rx);
 }
@@ -1979,7 +1996,9 @@ preal_relational_expr::load_object(const persistent_object_manager& m,
 	{
 	string s;
 	read_value(f, s);
-	op = op_map[s];
+	const op_map_type::const_iterator i(op_map.find(s));
+	INVARIANT(i != op_map.end());
+	op = i->second;
 	NEVER_NULL(op);
 	}
 	m.read_pointer(f, lx);
@@ -2062,7 +2081,8 @@ pbool_logical_expr::~pbool_logical_expr() {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pbool_logical_expr::pbool_logical_expr(const operand_ptr_type& l,
 		const string& o, const operand_ptr_type& r) :
-		lx(l), rx(r), op(op_map[o]) {
+		lx(l), rx(r), op(op_map.find(o)->second) {
+	INVARIANT(op_map.find(o) != op_map.end());
 	NEVER_NULL(op);
 	NEVER_NULL(lx);
 	NEVER_NULL(rx);
@@ -2087,7 +2107,7 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pbool_logical_expr)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 pbool_logical_expr::dump(ostream& o, const expr_dump_context& c) const {
-	return rx->dump(lx->dump(o, c) << reverse_op_map[op], c);
+	return rx->dump(lx->dump(o, c) << reverse_op_map.find(op)->second, c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2118,7 +2138,9 @@ pbool_logical_expr::static_constant_value(void) const {
 pbool_logical_expr::value_type
 pbool_logical_expr::evaluate(const string& o, 
 		const value_type l, const value_type r) {
-	const op_type* op(op_map[o]);
+	const op_map_type::const_iterator i(op_map.find(o));
+	INVARIANT(i != op_map.end());
+	const op_type* op(i->second);
 	INVARIANT(op);
 	return (*op)(l,r);
 }
@@ -2273,7 +2295,7 @@ if (!m.register_transient_object(this,
 void
 pbool_logical_expr::write_object(const persistent_object_manager& m, 
 		ostream& f) const {
-	write_value(f, reverse_op_map[op]);
+	write_value(f, reverse_op_map.find(op)->second);
 	m.write_pointer(f, lx);
 	m.write_pointer(f, rx);
 }
@@ -2284,7 +2306,9 @@ pbool_logical_expr::load_object(const persistent_object_manager& m, istream& f) 
 	{
 	string s;
 	read_value(f, s);
-	op = op_map[s];
+	const op_map_type::const_iterator i(op_map.find(s));
+	INVARIANT(i != op_map.end());
+	op = i->second;
 	NEVER_NULL(op);
 	}
 	m.read_pointer(f, lx);
@@ -2374,7 +2398,7 @@ pstring_relational_expr::~pstring_relational_expr() {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pstring_relational_expr::pstring_relational_expr(const operand_ptr_type& l,
 		const string& o, const operand_ptr_type& r) :
-		lx(l), rx(r), op(op_map[o]) {
+		lx(l), rx(r), op(op_map.find(o)->second) {
 	NEVER_NULL(op);
 	NEVER_NULL(lx);
 	NEVER_NULL(rx);
@@ -2399,7 +2423,7 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pstring_relational_expr)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 pstring_relational_expr::dump(ostream& o, const expr_dump_context& c) const {
-	return rx->dump(lx->dump(o, c) << reverse_op_map[op], c);
+	return rx->dump(lx->dump(o, c) << reverse_op_map.find(op)->second, c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2430,7 +2454,9 @@ pstring_relational_expr::static_constant_value(void) const {
 pstring_relational_expr::value_type
 pstring_relational_expr::evaluate(const string& o, const arg_type& l, 
 		const arg_type& r) {
-	const op_type* const op(op_map[o]);
+	op_map_type::const_iterator i(op_map.find(o));
+	INVARIANT(i != op_map.end());
+	const op_type* const op = i->second;
 	INVARIANT(op);
 	return (*op)(l,r);
 }
@@ -2587,7 +2613,7 @@ if (!m.register_transient_object(this,
 void
 pstring_relational_expr::write_object(const persistent_object_manager& m, 
 		ostream& f) const {
-	write_value(f, reverse_op_map[op]);
+	write_value(f, reverse_op_map.find(op)->second);
 	m.write_pointer(f, lx);
 	m.write_pointer(f, rx);
 }
@@ -2598,7 +2624,9 @@ pstring_relational_expr::load_object(const persistent_object_manager& m, istream
 	{
 	string s;
 	read_value(f, s);
-	op = op_map[s];
+	const op_map_type::const_iterator i(op_map.find(s));
+	INVARIANT(i != op_map.end());
+	op = i->second;
 	NEVER_NULL(op);
 	}
 	m.read_pointer(f, lx);

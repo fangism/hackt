@@ -24,7 +24,6 @@
 #include "common/ICE.h"
 #include "util/persistent_object_manager.h"
 #include "util/what.h"
-#include "util/qmap.h"
 #include "util/IO_utils.h"
 
 namespace HAC {
@@ -75,7 +74,8 @@ ostream&
 loop_nonmeta_expr<E>::dump(ostream& o, const expr_dump_context& c) const {
 	NEVER_NULL(this->ind_var);
 	NEVER_NULL(this->range);
-	o << '(' << op_key_type(binary_expr_type::reverse_op_map[this->op])
+	o << '(' << op_key_type(
+		binary_expr_type::reverse_op_map.find(this->op)->second)
 		<< ':' << this->ind_var->get_name() << ':';
 	this->range->dump(o, c) << ": ";
 	return this->ex->dump(o, c) << ')';
@@ -204,7 +204,8 @@ void
 loop_nonmeta_expr<E>::write_object(const persistent_object_manager& m, 
 		ostream& f) const {
 	meta_loop_base::write_object_base(m, f);
-	write_value(f, op_key_type(binary_expr_type::reverse_op_map[op]));
+	write_value(f,
+		op_key_type(binary_expr_type::reverse_op_map.find(op)->second));
 	m.write_pointer(f, ex);
 }
 
@@ -217,7 +218,7 @@ loop_nonmeta_expr<E>::load_object(const persistent_object_manager& m,
 	{
 	op_key_type o;
 	read_value(f, o);
-	op = binary_expr_type::op_map[o];
+	op = binary_expr_type::op_map.find(o)->second;
 	}
 	m.read_pointer(f, ex);
 }
