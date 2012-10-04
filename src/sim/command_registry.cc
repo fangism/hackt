@@ -13,7 +13,6 @@
 #include <vector>
 #include "sim/command_registry.h"
 #include "sim/command_base.h"
-#include "util/qmap.tcc"
 // #include "util/readline.h"
 #include "util/readline_wrap.h"
 
