@@ -122,6 +122,8 @@ public:
 	~readline_init();
 	} __ATTRIBUTE_UNUSED__ ;	// end struct readline_init
 private:
+	class dummy_type;
+	static dummy_type		dummy;
 	static command_map_type		command_map;
 	static category_map_type	category_map;
 	/**

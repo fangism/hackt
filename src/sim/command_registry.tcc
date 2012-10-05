@@ -18,6 +18,7 @@
 #include "util/tokenize.h"
 #include "util/string.tcc"
 #include "util/value_saver.h"
+#include "util/stacktrace.h"
 
 // TODO: move library-dependent functionality into library
 #include "util/readline.h"
@@ -36,8 +37,26 @@ using util::tokenize;
 using util::value_saver;
 #include "util/using_ostream.h"
 
+REQUIRES_STACKTRACE_STATIC_INIT
+
 //=============================================================================
 // class command_registry member/method definitions
+
+/**
+	Show whem static members get instantiated.  Debugging only.
+ */
+template <class Command>
+class command_registry<Command>::dummy_type {
+#if 0
+public:
+	dummy_type() { cout << "Hello, world! -- command_registry" << endl; }
+	~dummy_type() { cout << "Goodbye, world! -- command_registry" << endl; }
+#endif
+};
+
+template <class Command>
+typename command_registry<Command>::dummy_type
+command_registry<Command>::dummy;
 
 /**
 	Global static initialization of the command-map.
@@ -112,6 +131,7 @@ command_registry<Command>::external_cosimulation = false;
 template <class Command>
 size_t
 command_registry<Command>::register_category(command_category_type& c) {
+	STACKTRACE_VERBOSE;
 	typedef	typename category_map_type::mapped_type		mapped_type;
 	typedef	typename category_map_type::value_type		value_type;
 	typedef	typename category_map_type::iterator		iterator;
@@ -133,6 +153,7 @@ template <class Command>
 template <class C>
 size_t
 command_registry<Command>::register_command(void) {
+	STACKTRACE_VERBOSE;
 	typedef	C	command_class;
 	const Command temp(command_class::name, command_class::brief,
 		&command_class::category, &command_class::main, 

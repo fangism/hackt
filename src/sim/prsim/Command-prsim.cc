@@ -18,10 +18,11 @@
 	Painful discontinuity in revision history...
  */
 
+#define	ENABLE_STATIC_TRACE				0
+#define	ENABLE_STACKTRACE				0
+
 #include "util/static_trace.h"
 DEFAULT_STATIC_TRACE_BEGIN
-
-#define	ENABLE_STACKTRACE				0
 
 #include <iostream>
 #include <fstream>
@@ -39,10 +40,37 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "sim/prsim/VCDManager.h"
 #endif
 #include "sim/command_base.tcc"
-#include "sim/command_category.tcc"
 #include "sim/command_registry.tcc"
+#include "sim/command_category.tcc"
 #include "sim/command_macros.tcc"
 #include "sim/command_common.tcc"
+
+DEFAULT_STATIC_TRACE
+namespace HAC {
+namespace SIM {
+// must instantiate dependent class first!
+template class command_registry<PRSIM::Command>;
+namespace PRSIM {
+DEFAULT_STATIC_TRACE
+// local static CommandCategories
+// feel free to add categories here
+
+// initialize here to help clang with initialization ordering
+static CommandCategory
+	builtin("builtin", "built-in commands"),
+	general("general", "general commands"),
+	debug("debug", "debugging internals"),
+	simulation("simulation", "simulation commands"),
+	channels("channels", "channel commands"),
+	info("info", "information about simulated circuit"),
+	view("view", "instance to watch"),
+	tracing("tracing", "trace and checkpoint commands"), 
+	modes("modes", "timing model, error handling");
+}
+}
+}
+DEFAULT_STATIC_TRACE
+
 #include "parser/instref.h"
 #include "Object/module.h"
 #include "Object/def/footprint.h"
@@ -52,6 +80,8 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "util/libc.h"
 #include "util/memory/excl_malloc_ptr.h"
 #include "util/stacktrace.h"
+
+DEFAULT_STATIC_TRACE
 
 /**
 	These commands are deprecated, but provided for backwards compatibility.
@@ -101,8 +131,12 @@ DEFAULT_STATIC_TRACE_BEGIN
 namespace HAC {
 namespace SIM {
 
+#if 0
+DEFAULT_STATIC_TRACE
 // must instantiate dependent class first!
 template class command_registry<PRSIM::Command>;
+DEFAULT_STATIC_TRACE
+#endif
 
 namespace PRSIM {
 #include "util/using_istream.h"
@@ -280,9 +314,11 @@ using parser::parse_name_to_get_ports;
 #endif
 
 //=============================================================================
+#if 0
 // local static CommandCategories
 // feel free to add categories here
 
+DEFAULT_STATIC_TRACE
 static CommandCategory
 	builtin("builtin", "built-in commands"),
 	general("general", "general commands"),
@@ -293,6 +329,8 @@ static CommandCategory
 	view("view", "instance to watch"),
 	tracing("tracing", "trace and checkpoint commands"), 
 	modes("modes", "timing model, error handling");
+DEFAULT_STATIC_TRACE
+#endif
 
 //=============================================================================
 // command completion facilities

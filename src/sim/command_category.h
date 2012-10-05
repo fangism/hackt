@@ -56,6 +56,9 @@ public:
 	size_t
 	register_command(const command_type&);
 
+	size_t
+	size(void) const { return command_map.size(); }
+
 	const string&
 	name(void) const { return _name; }
 
