@@ -96,6 +96,21 @@ public:
 
 	Expr(const expr_index_type, const uchar, const count_type);
 
+#if 1
+// explicit copy-constructor, if we don't trust (clang) compiler
+// to synthesize one correctly
+	Expr(const Expr& e) : parent(e.parent), type(e.type), size(e.size) { }
+
+	// did it screw up default assignment too?  yes it did.  :(
+	Expr&
+	operator = (const Expr& e) {
+		parent = e.parent;
+		type = e.type;
+		size = e.size;
+		return *this;
+	}
+#endif
+
 	~Expr();
 
 	void

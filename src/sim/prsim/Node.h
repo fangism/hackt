@@ -628,7 +628,7 @@ public:
 	}
 
 	static
-	char
+	uchar
 	translate_value_enum_to_char(const value_enum e) {
 		return value_to_char[size_t(e)];
 	}

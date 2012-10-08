@@ -94,6 +94,11 @@ cast_test_static_SOURCES = $(cast_test_SOURCES)
 cast_test_static_CXXFLAGS = $(cast_test_CXXFLAGS)
 cast_test_static_LDADD = $(cast_test_LDADD)
 
+# just for debugging and testing only
+noinst_PROGRAMS += test_case
+test_case_SOURCES = test/test_case.cc
+test_case_LDADD = libhacktprsim.la
+
 # convenience libraries
 # want to install libhackt.la next... but causes undefined symbols...
 noinst_LTLIBRARIES = libhackt.la \

@@ -15,14 +15,14 @@
 #include "sim/prsim/Event-prsim.h"
 #include "sim/prsim/Node.h"		// for value_to_char
 #include "sim/time.h"
-#include "util/memory/index_pool.tcc"
-#include "util/IO_utils.tcc"
 
 // debug switch defined in this corresponding header file
 #if DEBUG_EVENT_POOL_ALLOC
 #define	ENABLE_STACKTRACE			1
 #endif
 
+#include "util/memory/index_pool.tcc"
+#include "util/IO_utils.tcc"
 #include "util/stacktrace.h"
 
 namespace HAC {
@@ -141,6 +141,8 @@ Event::dump_checkpoint_state(ostream& o, istream& i) {
 	Thus, 0 should never be in the freelist.  
  */
 EventPool::EventPool() : event_pool(), free_indices() {
+	STACKTRACE_VERBOSE;
+	STACKTRACE_INDENT_PRINT("this @0x" << this << endl);
 	const event_index_type zero __ATTRIBUTE_UNUSED__ =
 		event_pool.allocate();
 	INVARIANT(!zero);
@@ -149,6 +151,7 @@ EventPool::EventPool() : event_pool(), free_indices() {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 EventPool::~EventPool() {
+	STACKTRACE_VERBOSE;
 	INVARIANT(check_valid_empty());
 }
 

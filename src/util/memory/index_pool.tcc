@@ -10,6 +10,7 @@
 
 namespace util {
 namespace memory {
+
 //=============================================================================
 // class index_pool method definitions
 
