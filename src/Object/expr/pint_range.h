@@ -85,7 +85,9 @@ public:
 
 protected:
 	using parent_type::unroll_resolve_copy;
+#if OVERLOAD_VIRTUAL_USING
 	using nonmeta_index_expr_base::unroll_resolve_copy;
+#endif
 
 public:
 	FRIEND_PERSISTENT_TRAITS

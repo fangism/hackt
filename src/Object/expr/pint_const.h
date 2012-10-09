@@ -131,7 +131,9 @@ public:
 
 protected:
 	using pint_expr::unroll_resolve_rvalues;
+#if OVERLOAD_VIRTUAL_USING
 	using param_expr::unroll_resolve_rvalues;
+#endif
 
 public:
 	count_ptr<const_index>
@@ -140,7 +142,9 @@ public:
 protected:
 	using pint_expr::unroll_resolve_copy;
 	using pint_expr::nonmeta_resolve_copy;
+#if OVERLOAD_VIRTUAL_USING
 	using meta_index_expr::unroll_resolve_copy;
+#endif
 
 public:
 	UNROLL_RESOLVE_COPY_PINT_PROTO;
@@ -149,8 +153,10 @@ public:
 	SUBSTITUTE_DEFAULT_PARAMETERS_PINT_PROTO;
 protected:
 	using pint_expr::substitute_default_positional_parameters;
+#if OVERLOAD_VIRTUAL_USING
 	using param_expr::substitute_default_positional_parameters;
 	using meta_index_expr::substitute_default_positional_parameters;
+#endif
 
 public:
 	LESS_OPERATOR_PROTO;

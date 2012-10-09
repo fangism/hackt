@@ -19,6 +19,13 @@
 #include "__config__.h"
 #endif
 
+/**
+	Define this if extra using declarations are needed for overloaded
+	virtual functions, detected by configure.
+	Works around differences between gcc and clang.
+ */
+#define	OVERLOAD_VIRTUAL_USING	defined(OVERLOAD_VIRTUAL_USING_ALLOWED) && defined(OVERLOAD_VIRTUAL_USING_REQUIRED)
+
 #ifdef	const
 #error	Detected preprocessor definition of const.  \
 	This means that a configure test found const non-ANSI-conforming.  \

@@ -101,7 +101,9 @@ protected:
 	using pbool_expr::unroll_resolve_rvalues;
 	using pbool_expr::unroll_resolve_copy;
 	using pbool_expr::nonmeta_resolve_copy;
+#if OVERLOAD_VIRTUAL_USING
 	using param_expr::unroll_resolve_rvalues;
+#endif
 
 public:
 	UNROLL_RESOLVE_COPY_PBOOL_PROTO;
@@ -110,7 +112,9 @@ public:
 	SUBSTITUTE_DEFAULT_PARAMETERS_PBOOL_PROTO;
 protected:
 	using pbool_expr::substitute_default_positional_parameters;
+#if OVERLOAD_VIRTUAL_USING
 	using param_expr::substitute_default_positional_parameters;
+#endif
 
 public:
 	LESS_OPERATOR_PROTO;

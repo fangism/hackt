@@ -100,7 +100,9 @@ public:
 
 protected:
 	using pstring_expr::unroll_resolve_rvalues;
+#if OVERLOAD_VIRTUAL_USING
 	using param_expr::unroll_resolve_rvalues;
+#endif
 	using pstring_expr::unroll_resolve_copy;
 	using pstring_expr::nonmeta_resolve_copy;
 
@@ -111,7 +113,9 @@ public:
 	SUBSTITUTE_DEFAULT_PARAMETERS_PSTRING_PROTO;
 protected:
 	using pstring_expr::substitute_default_positional_parameters;
+#if OVERLOAD_VIRTUAL_USING
 	using param_expr::substitute_default_positional_parameters;
+#endif
 
 public:
 	LESS_OPERATOR_PROTO;
