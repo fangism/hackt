@@ -1073,6 +1073,95 @@ AC_DEFINE(HAVE_TEMPLATE_FORMAL_BASE_CLASS, [],
 fi
 ])dnl
 
+dnl @synopsis FANG_CXX_FRIEND_FUNCTION_NAMESPACE
+dnl
+dnl Checking whether or not friend function declaration needs to
+dnl be qualified with its home namespace.
+dnl Define FRIEND_FUNCTION_HOME_NAMESPACE.
+dnl
+dnl @category Cxx
+dnl @version 2012-10-09
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
+dnl
+AC_DEFUN([FANG_CXX_FRIEND_FUNCTION_NAMESPACE],
+[AC_REQUIRE([FANG_ANAL_COMPILE_FLAGS])
+AC_CACHE_CHECK(
+[whether friend functions may be declared with their home namespace],
+[fang_cv_cxx_friend_function_home_namespace_allowed],
+[AC_LANG_PUSH(C++)
+	saved_CXXFLAGS=$CXXFLAGS
+	CXXFLAGS="$saved_CXXFLAGS $ANAL_FLAGS"
+	AC_COMPILE_IFELSE(
+		AC_LANG_PROGRAM(
+		[[
+namespace std {
+	template <class _T1>
+	inline void _Construct(_T1*);
+	template <class _T1, class _T2>
+	inline void _Construct(_T1*, const _T2&);
+}
+using std::_Construct;
+class thing {
+	typedef thing				this_type;
+#define FRIEND_NAMESPACE_CONSTRUCT		std::
+	friend void FRIEND_NAMESPACE_CONSTRUCT
+		_Construct<this_type>(this_type*);
+	friend void FRIEND_NAMESPACE_CONSTRUCT
+		_Construct<this_type, this_type>(
+		this_type* __p, const this_type& __value);
+};
+		]], []),
+		[fang_cv_cxx_friend_function_home_namespace_allowed=yes],
+		[fang_cv_cxx_friend_function_home_namespace_allowed=no]
+	)
+	CXXFLAGS=$saved_CXXFLAGS
+AC_LANG_POP(C++)
+])
+AC_CACHE_CHECK(
+[whether friend functions must be declared with their home namespace],
+[fang_cv_cxx_friend_function_home_namespace_required],
+[AC_LANG_PUSH(C++)
+	saved_CXXFLAGS=$CXXFLAGS
+	CXXFLAGS="$saved_CXXFLAGS $ANAL_FLAGS"
+	AC_COMPILE_IFELSE(
+		AC_LANG_PROGRAM(
+		[[
+namespace std {
+        template <class _T1>
+        inline void _Construct(_T1*);
+        template <class _T1, class _T2>
+        inline void _Construct(_T1*, const _T2&);
+}
+using std::_Construct;
+class thing {
+        typedef thing		this_type;
+#define FRIEND_NAMESPACE_CONSTRUCT
+        friend void FRIEND_NAMESPACE_CONSTRUCT
+                _Construct<this_type>(this_type*);
+        friend void FRIEND_NAMESPACE_CONSTRUCT
+                _Construct<this_type, this_type>(
+                this_type* __p, const this_type& __value);
+};
+		]], []),
+		[fang_cv_cxx_friend_function_home_namespace_required=no],
+		[fang_cv_cxx_friend_function_home_namespace_required=yes]
+	)
+	CXXFLAGS=$saved_CXXFLAGS
+AC_LANG_POP(C++)
+])
+if test "$fang_cv_cxx_friend_function_home_namespace_allowed" = "yes"; then
+AC_DEFINE(FRIEND_FUNCTION_HOME_NAMESPACE_ALLOWED, [],
+        [Define if friend functions may be declared with their home namespace.])
+fi
+if test "$fang_cv_cxx_friend_function_home_namespace_required" = "yes"; then
+AC_DEFINE(FRIEND_FUNCTION_HOME_NAMESPACE_REQUIRED, [],
+        [Define if friend functions must be declared with their home namespace.])
+fi
+])dnl
+
+
+
 dnl @synopsis FANG_CXX_OVERLOAD_VIRTUAL_USING
 dnl
 dnl Checking whether or not virtual functions allow/need explicit

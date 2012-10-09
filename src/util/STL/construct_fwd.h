@@ -83,12 +83,18 @@ _Construct(_T1* __p, const _T2& __v) {
 #define	USING_CONSTRUCT		using std::_Construct;
 #define	USING_DESTROY		using std::_Destroy;
 
+#if FRIEND_FUNCTION_HOME_NAMESPACE
+#define	FRIEND_NAMESPACE_STD_CONSTRUCT		std::
+#else
+#define	FRIEND_NAMESPACE_STD_CONSTRUCT
+#endif
+
 #define	FRIEND_STD_CONSTRUCT						\
 	template <class _T1>						\
-	friend void std::_Construct(_T1*);
+	friend void FRIEND_NAMESPACE_STD_CONSTRUCT _Construct(_T1*);
 #define	FRIEND_STD_CONSTRUCT2						\
 	template <class _T1, class _T2>					\
-	friend void std::_Construct(_T1*, const _T2&);
+	friend void FRIEND_NAMESPACE_STD_CONSTRUCT _Construct(_T1*, const _T2&);
 
 #endif	// __UTIL_STL_CONSTRUCT_FWD_H__
 

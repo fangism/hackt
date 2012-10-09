@@ -95,8 +95,8 @@ public:									\
  */
 #define	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS				\
 	friend class util::memory::list_vector_pool<this_type>;		\
-	friend void std::_Construct<this_type>(this_type* __p);		\
-	friend void std::_Construct<this_type, this_type>(		\
+	friend void FRIEND_NAMESPACE_STD_CONSTRUCT _Construct<this_type>(this_type* __p);		\
+	friend void FRIEND_NAMESPACE_STD_CONSTRUCT _Construct<this_type, this_type>(		\
 		this_type* __p, const this_type& __value);
 
 namespace util {

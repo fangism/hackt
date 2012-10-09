@@ -1323,6 +1323,7 @@ libhacktparsers_la_SOURCES = \
 ALL_HEADER_FILES += \
 	$(CONFIG_HEADERS) \
 	test/overload-virtual-using-conftest.h \
+	test/friend_function_namespace-conftest.h \
 	$(COMMON_H_FILES) \
 	$(OBJECT_H_FILES) \
 	$(OBJECT_COMMON_H_FILES) \

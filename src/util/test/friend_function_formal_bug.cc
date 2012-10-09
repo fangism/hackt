@@ -60,7 +60,7 @@ public:
 	~thing() { }
 
 	friend class fake_pool<this_type>;
-	friend void std::_Construct<this_type>(this_type*);
+	friend void FRIEND_NAMESPACE_STD_CONSTRUCT _Construct<this_type>(this_type*);
 
 //*************************** BUG HERE *********************************
 #if 0
@@ -68,7 +68,7 @@ public:
 	friend void _Construct<this_type, this_type>(
 		this_type*, const this_type&);
 #else
-	friend void std::_Construct<this_type, this_type>(
+	friend void FRIEND_NAMESPACE_STD_CONSTRUCT _Construct<this_type, this_type>(
 		this_type* __p, const this_type& __value);
 #endif
 //*************************** END BUG **********************************
