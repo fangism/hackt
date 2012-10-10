@@ -1,0 +1,4 @@
+"X.a"[lvt] & "X.b"[svt=0] -> "X.c"-
+~"X.a"[svt=1] | ~"X.b"[svt] -> "X.c"+
+= "!GND" "X.!GND"
+= "!Vdd" "X.!Vdd"

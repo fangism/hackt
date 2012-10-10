@@ -51,6 +51,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #define	WIN32	0
 #endif
 
+// from either included sim/vpi_user.h or external: $(VPI_INCLUDE)
 #include "vpi_user.h"
 
 // use 64b time if there is 64b native integer available (some 32b platforms)

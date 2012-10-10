@@ -294,10 +294,7 @@ hackt_chpsim_guile_la_LIBADD = libhacktchpsimguile.la
 #	$(LIBFANGUTIL)
 
 # VPI (Verilog Programming Language Interface)
-# EXTRA_LTLIBRARIES += vpihacprsim.la
-if HAVE_VPI
 pkglib_LTLIBRARIES += vpihacprsim.la
-endif
 
 # try dynamic library plug-in module first
 vpihacprsim_la_SOURCES = sim/prsim/vpi-prsim.cc
@@ -1086,6 +1083,7 @@ SIM_H_FILES = $(SIM_CC_FILES:.cc=.h) \
 	sim/common.h \
 	sim/command_error_codes.h \
 	sim/command_completion.h \
+	sim/vpi_user.h \
 	sim/devel_switches.h
 
 PRSIM_H_FILES = $(PRSIM_CC_FILES:.cc=.h) \
