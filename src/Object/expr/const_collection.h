@@ -165,10 +165,10 @@ public:
 	unroll_resolve_rvalues(const unroll_context&, 
 		const count_ptr<const expr_base_type>&) const;
 
-	using parent_const_type::unroll_resolve_rvalues;
 #if OVERLOAD_VIRTUAL_USING
-	using expr_base_type::unroll_resolve_rvalues;
+	using parent_const_type::unroll_resolve_rvalues;
 #endif
+	using expr_base_type::unroll_resolve_rvalues;
 	using expr_base_type::unroll_resolve_copy;
 	using expr_base_type::nonmeta_resolve_copy;
 
@@ -185,10 +185,10 @@ public:
 		const dynamic_param_expr_list&,
 		const count_ptr<const expr_base_type>&) const;
 
-	using parent_const_type::substitute_default_positional_parameters;
 #if OVERLOAD_VIRTUAL_USING
-	using expr_base_type::substitute_default_positional_parameters;
+	using parent_const_type::substitute_default_positional_parameters;
 #endif
+	using expr_base_type::substitute_default_positional_parameters;
 
 	this_type
 	make_value_slice(const const_index_list&) const;

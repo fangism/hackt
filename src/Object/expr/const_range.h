@@ -164,9 +164,9 @@ public:
 	accept(nonmeta_expr_visitor&) const;
 
 protected:
-	using nonmeta_index_expr_base::unroll_resolve_copy;
-#if OVERLOAD_VIRTUAL_USING
 	using meta_index_expr::unroll_resolve_copy;
+#if OVERLOAD_VIRTUAL_USING
+	using nonmeta_index_expr_base::unroll_resolve_copy;
 	using const_index::unroll_resolve_copy;
 #endif
 public:
