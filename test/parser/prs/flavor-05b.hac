@@ -1,0 +1,5 @@
+// "flavor-05b.hac"
+// @hflat-flags@ -fliteral-attributes -fsizes
+
+import "flavor-05.hac";
+

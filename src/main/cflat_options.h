@@ -242,6 +242,7 @@ public:
 		include_prs(true), dump_self_connect(false), 
 		node_attributes(false), 
 		split_instance_attributes(false), 
+		literal_attributes(false),
 		expand_pass_gates(true), 
 		enquote_names(true), dump_non_bools(false), 
 		namespace_policy(NAMESPACE_POLICY_NONE), 

@@ -1,5 +1,6 @@
 // "flavor-04.hac"
 // testing FET attributes on prs macros
+// doesn't print them... yet?
 
 bool g, s, d;
 
