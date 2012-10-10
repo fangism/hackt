@@ -756,7 +756,7 @@ __print_misc_option(ostream& o, const options_struct_type& n_opt,
 	Specialization for error policy enumeration.
  */
 template <>
-static
+// static	// explicit template specialization cannot have storage class
 ostream&
 __print_member_default(ostream& o, const options_struct_type& n_opt,
 		option_error_policy options_struct_type::*mem) {
@@ -774,7 +774,7 @@ switch (n_opt.*mem) {
 	Specialization for style enumeration.
  */
 template <>
-static
+// static	// explicit template specialization cannot have storage class
 ostream&
 __print_member_default(ostream& o, const options_struct_type& n_opt,
 		options_struct_type::style_enum options_struct_type::*mem) {
