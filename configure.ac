@@ -570,6 +570,7 @@ configuration summary:
 	guile config:	 	$GUILE_CONFIG_VERSION
 	guile CPPFLAGS: 	$GUILE_CPPFLAGS
 	guile LDFLAGS: 		$GUILE_LDFLAGS
+	vpi CPPFLAGS: 		$VPI_INCLUDE
 ACEOF
 
 dnl error out if critical dependencies are not met
