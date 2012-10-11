@@ -4795,8 +4795,8 @@ if (dir) {
 		pp(updated_nodes.insert(
 			updated_nodes_type::value_type(ui, nui)));
 	if (!pp.second) {
-		if (!is_weak && p.up != PULL_OFF && ops.up != PULL_ON ||
-			is_weak && p.wup != PULL_OFF && ops.wup != PULL_ON) {
+		if ((!is_weak && p.up != PULL_OFF && ops.up != PULL_ON) ||
+			(is_weak && p.wup != PULL_OFF && ops.wup != PULL_ON)) {
 			pp.first->second.rule_index = root_rule;
 #if EVENT_INCLUDE_RULE_POINTER
 			pp.first->second.rule_ptr = ev_result.root_rule;
@@ -5069,8 +5069,8 @@ if (!n.pending_event()) {
 		pp(updated_nodes.insert(
 			updated_nodes_type::value_type(ui, nui)));
 	if (!pp.second) {
-		if (!is_weak && p.dn != PULL_OFF && ops.dn != PULL_ON ||
-			is_weak && p.wdn != PULL_OFF && ops.wdn != PULL_ON) {
+		if ((!is_weak && p.dn != PULL_OFF && ops.dn != PULL_ON) ||
+			(is_weak && p.wdn != PULL_OFF && ops.wdn != PULL_ON)) {
 			pp.first->second.rule_index = root_rule;
 #if EVENT_INCLUDE_RULE_POINTER
 			pp.first->second.rule_ptr = ev_result.root_rule;
