@@ -290,6 +290,27 @@ readline: GNU readline 5.0
 
 
 ===============================================================================
+x86_64-apple-darwin11
+
+Version: hackt 0.1.4-devel-20121011
+CVS Tag: HACKT-00-01-04-main-00-86-50
+Configured with: '--with-readline=/sw' '--disable-static' 'YACC=/usr/bin/yacc' 'LEX=/sw/bin/flex' 'CC=clang' 'CXX=clang++' 'CFLAGS=-g -O2 -Qunused-arguments' 'CXXFLAGS=-g -O2 -Wno-error=sign-conversion -Wno-error=unused-function -Wno-error=conversion -Qunused-arguments' '-C' '--enable-ltdl-install' --enable-ltdl-install
+build-triplet: x86_64-apple-darwin11.4.2
+c++: Apple clang version 4.1 (tags/Apple/clang-421.11.66) (based on LLVM 3.1svn)
+AM_CPPFLAGS: -I../../hackt/src   -I/sw/include  
+AM_CXXFLAGS: -pipe -ansi -pedantic-errors -Wold-style-cast -Woverloaded-virtual -W -Wextra -Wall -Wundef -Wshadow -Wno-unused-parameter -Wpointer-arith -Wcast-qual -Wcast-align -Wconversion -Werror
+AM_LDFLAGS: -L/sw/lib  
+config-CXXFLAGS: -g -O2 -Wno-error=sign-conversion -Wno-error=unused-function -Wno-error=conversion -Qunused-arguments
+config-CPPFLAGS: 
+config-LDFLAGS: 
+config-LIBS: 
+lex: /sw/bin/flex version 2.5.4
+yacc: bison (GNU Bison) 2.3
+readline: GNU readline 6.2
+guile: none
+
+
+===============================================================================
 i686-*-linux-gnu
 
 (Fang: simba)
