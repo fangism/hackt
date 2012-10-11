@@ -77,7 +77,8 @@ fi
 
 AC_LANG_PUSH(C)
 saved_CFLAGS="$CFLAGS"
-CFLAGS="$ANAL_FLAGS"
+dnl prepend ANAL_FLAGS
+CFLAGS="$ANAL_FLAGS $CFLAGS"
 AC_COMPILE_IFELSE([_TRIVIAL_SOURCE_],[],
 [AC_MSG_ERROR([Your C compiler doesn't like flags: $ANAL_FLAGS
 	Bug fangism about supporting your compiler.])]
@@ -86,7 +87,8 @@ CFLAGS="$saved_CFLAGS"
 AC_LANG_POP(C)
 AC_LANG_PUSH(C++)
 saved_CXXFLAGS="$CXXFLAGS"
-CXXFLAGS="$ANAL_FLAGS"
+dnl prepend ANAL_FLAGS
+CXXFLAGS="$ANAL_FLAGS $CXXFLAGS"
 AC_COMPILE_IFELSE([_TRIVIAL_SOURCE_],[],
 [AC_MSG_ERROR([Your C++ compiler doesn't like flags: $ANAL_FLAGS
 	Bug fangism about supporting your compiler.])]
