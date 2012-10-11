@@ -326,6 +326,19 @@ State::pull_to_value[3][3] = {
 { LOGIC_OTHER, LOGIC_OTHER, LOGIC_OTHER }
 };
 
+/**
+	Upon library/module loading, initialize the random seed one-time.
+ */
+static
+int
+__module_init__(void) {
+	util::numeric::seed48_zeros();
+	return 1;
+}
+
+static
+const int __module_init_token__ = __module_init__();
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Allocates simulation state, given a module.
@@ -882,8 +895,7 @@ State::reset(void) {
 	uniform_delay = time_traits::default_delay;
 	_channel_manager.clobber_all();
 	// reset seed
-	ushort seed[3] = {0,0,0};
-	seed48(seed);
+	util::numeric::seed48_zeros();
 	// FIXME, ALERT: not every libc resets with the same 0-seed!!!
 	// one option is to set upon State construction, but this
 	// would only safely accomodate one state in any program...

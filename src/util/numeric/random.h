@@ -151,6 +151,10 @@ struct rand48<bool> {
 //=============================================================================
 extern
 void
+seed48_zeros(void);
+
+extern
+void
 write_seed48(std::ostream&);
 
 extern
