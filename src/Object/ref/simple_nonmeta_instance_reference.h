@@ -21,7 +21,7 @@ namespace entity {
 class data_expr;
 class unroll_context;
 class nonmeta_context_base;
-class global_entry_context;
+struct global_entry_context;
 class nonmeta_expr_visitor;
 class state_manager;
 class footprint;

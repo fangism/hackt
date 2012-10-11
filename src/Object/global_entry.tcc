@@ -74,7 +74,7 @@ footprint_frame_map<Tag>::~footprint_frame_map() { }
 // class footprint_frame method definitions
 
 //=============================================================================
-// class global_entry_substructure_base method definitions
+// struct global_entry_substructure_base method definitions
 
 template <class Tag>
 ostream&
@@ -104,7 +104,7 @@ global_entry_substructure_base<true>::count_frame_size(const size_t s,
 }
 
 //=============================================================================
-// class global_entry method definitions
+// struct global_entry method definitions
 
 template <class Tag>
 global_entry<Tag>::global_entry() : parent_type() {

@@ -49,7 +49,8 @@ DEFAULT_DIFF_TEST_SCRIPT = \
 .stderr.stderr-filter:
 	@$(ADDRESS_FILTER) $< > $@
 
-TEST_DIFF = $(DIFF) -u
+# ignore whitespace differences in __PRETTY_FUNCTION__ between compilers
+TEST_DIFF = $(DIFF) -u -w
 
 .stderr-filter.diff:
 	@out=`$(ECHO) $@ | $(SED) 's/\.diff$$/.out-filter/g'` ; \

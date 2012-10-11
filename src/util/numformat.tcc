@@ -5,6 +5,7 @@
 #ifndef	__UTIL_NUMFORMAT_TCC__
 #define	__UTIL_NUMFORMAT_TCC__
 
+#include <ostream>
 #include "util/numformat.h"
 #include "util/iomanip.h"
 

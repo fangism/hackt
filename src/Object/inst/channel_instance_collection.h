@@ -29,7 +29,7 @@ namespace entity {
 	type specifiers in base classes.  (in this case, of
 	the instance_collection)
  */
-class class_traits<channel_tag>::collection_type_manager_parent_type :
+struct class_traits<channel_tag>::collection_type_manager_parent_type :
 #if BUILTIN_CHANNEL_FOOTPRINTS
 	public channel_collection_type_manager<channel_tag>
 #else

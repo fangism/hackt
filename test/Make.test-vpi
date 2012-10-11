@@ -87,7 +87,7 @@ EXTRACT_VCS_FLAGS_PIPE = $(GREP) "@vcs-flags@" | \
 # '+' connects child make (vcs) to parent's jobserver
 # touch b/c incremental compilation doesn't always updated timestamp
 .v.vx:
-if HAVE_VPI
+if HAVE_VCS
 	+vflags=`cat $< | $(EXTRACT_VCS_FLAGS_PIPE)` && \
 	$(VCS_ENV) $(VCS) $(AM_VCS_FLAGS) $(AM_VCS_VPI_FLAGS) $(AM_PLI_FLAGS) \
 		$$vflags -o $@ $< && \
@@ -170,7 +170,7 @@ AUTO_DEPENDS += vwraptest.autodepend
 
 # post-install tests!
 .v.vxi:
-if HAVE_VPI
+if HAVE_VCS
 	+$(VCS_ENV) $(VCS) $(INSTALLCHECK_VCS_FLAGS) \
 		$(INSTALLCHECK_VCS_VPI_FLAGS) $(INSTALLCHECK_PLI_FLAGS) -o $@ $<
 else
@@ -190,7 +190,7 @@ VPI_INSTALLCHECK_ENV = \
 # SHOW_VPI_TEST_ENV = $(LT_MODULE_PATH_VAR)=$(VPI_LIB_PATH)/$(LT_OBJDIR)$(PATH_SEPARATOR)$$"$(LT_MODULE_PATH_VAR)"
 
 .vx.vx-out:
-if HAVE_VPI
+if HAVE_VCS
 	-$(VPI_TEST_ENV) ./$< > $@ 2>&1
 else
 	@$(ECHO) "VCS/VPI was not explicitly configured, so skipping." > $@
@@ -212,7 +212,7 @@ ECHO_VPI_DIFF_COMMAND = :
 endif
 
 .vx-out-filter.vx-diff:
-if HAVE_VPI
+if HAVE_VCS
 	@stderr=`$(ECHO) $@ | $(SED) 's/\.vx-diff$$/.expect-vpi/g'` ; \
 	expect=$(srcdir)/$$stderr ; \
 	$(RM) $@ ; \
@@ -230,7 +230,7 @@ else
 endif
 
 .vx-diff.vpitest:
-if HAVE_VPI
+if HAVE_VCS
 	@$(DEFAULT_DIFF_TEST_SCRIPT)
 else
 	@$(SKIP_TEST_SCRIPT)
@@ -292,13 +292,13 @@ $(VWRAP_OUTPUTS): $(WRAP_VERILOG_AWK_SCRIPT)
 
 VPI_SIM_EXECUTABLES = $(HACKT_VPI_TEST_SCRIPTS_PASSES:=.vx)
 ALL_VERILOG_TARGETS = $(VPI_SIM_EXECUTABLES)
-if HAVE_VPI
+if HAVE_VCS
 # executables depend on the plugin module
 $(VPI_SIM_EXECUTABLES): $(VPI_PRSIM_MODULE)
 endif
 
 VPI_TARGETS =
-if HAVE_VPI
+if HAVE_VCS
 VPI_TARGETS += \
 	$(HACKT_VPI_TEST_SCRIPTS_PASSES:=.vx-out) \
 	$(HACKT_VPI_TEST_SCRIPTS_PASSES:=.vx-out-filter) \

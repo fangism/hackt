@@ -22,6 +22,14 @@ using std::log;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
+seed48_zeros(void) {
+	ushort seed[3] = {0,0,0};
+	seed48(seed);
+	// ALERT: not every libc resets with the same 0-seed!!!
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
 write_seed48(ostream& o) {
 	// save the random seed
 	ushort seed[3] = {0, 0, 0};

@@ -49,7 +49,6 @@ DEFAULT_STATIC_TRACE_BEGIN
 #endif
 #include "util/offset_array.h"
 #include "util/stacktrace.h"
-#include "util/qmap.tcc"
 #include "util/value_saver.h"
 #include "util/IO_utils.h"
 #include "util/memory/free_list.h"
@@ -133,7 +132,7 @@ ExprAllocFlags::load_object(istream& i) {
 typedef	entity::PRS::attribute_visitor_entry<ExprAlloc>
 					ExprAlloc_attribute_definition_entry;
 
-typedef	util::qmap<string, ExprAlloc_attribute_definition_entry>
+typedef	std::map<string, ExprAlloc_attribute_definition_entry>
 					ExprAlloc_attribute_registry_type;
 
 static
@@ -151,19 +150,21 @@ register_ExprAlloc_attribute_class(void) {
 	typedef	ExprAlloc_attribute_registry_type	registry_type;
 	typedef	registry_type::iterator			iterator;
 	typedef	registry_type::mapped_type		mapped_type;
+	typedef	registry_type::value_type		value_type;
 	ExprAlloc_attribute_registry_type&
 		__init_registry(const_cast<ExprAlloc_attribute_registry_type&>(
 				ExprAlloc_attribute_registry));
 	const string k(T::name);
-	mapped_type& m(__init_registry[k]);
-	if (m) {
+	const std::pair<iterator, bool>
+		m(__init_registry.insert(value_type(k,
+			ExprAlloc_attribute_definition_entry(
+				k, &T::main, &T::check_vals))));
+	if (!m.second) {
 		cerr << "Error: PRS attribute by the name \'" << k <<
 			"\' has already been registered!" << endl;
 		THROW_EXIT;
 	}
-	m = ExprAlloc_attribute_definition_entry(k, &T::main, &T::check_vals);
-	// oddly, this is needed to force instantiation of the [] const operator
-	const mapped_type& n __ATTRIBUTE_UNUSED_CTOR__((__init_registry[k]));
+	const mapped_type& n __ATTRIBUTE_UNUSED_CTOR__((m.first->second));
 	INVARIANT(n);
 	return ExprAlloc_attribute_registry.size();
 }
@@ -172,7 +173,7 @@ register_ExprAlloc_attribute_class(void) {
 typedef	entity::PRS::macro_visitor_entry<ExprAlloc>
 					ExprAlloc_macro_definition_entry;
 
-typedef	util::qmap<string, ExprAlloc_macro_definition_entry>
+typedef	std::map<string, ExprAlloc_macro_definition_entry>
 					ExprAlloc_macro_registry_type;
 
 static
@@ -190,21 +191,22 @@ register_ExprAlloc_macro_class(void) {
 	typedef	ExprAlloc_macro_registry_type		registry_type;
 	typedef	registry_type::iterator			iterator;
 	typedef	registry_type::mapped_type		mapped_type;
+	typedef	registry_type::value_type		value_type;
 	ExprAlloc_macro_registry_type&
 		__init_registry(const_cast<ExprAlloc_macro_registry_type&>(
 				ExprAlloc_macro_registry));
 	const string k(T::name);
-	mapped_type& m(__init_registry[k]);
-	if (m) {
+	const std::pair<iterator, bool>
+		m(__init_registry.insert(value_type(k, 
+			ExprAlloc_macro_definition_entry(k, &T::main,
+				&T::check_num_params, &T::check_num_nodes, 
+				&T::check_param_args, &T::check_node_args))));
+	if (!m.second) {
 		cerr << "Error: PRS macro by the name \'" << k <<
 			"\' has already been registered!" << endl;
 		THROW_EXIT;
 	}
-	m = ExprAlloc_macro_definition_entry(k, &T::main,
-		&T::check_num_params, &T::check_num_nodes, 
-		&T::check_param_args, &T::check_node_args);
-	// oddly, this is needed to force instantiation of the [] const operator
-	const mapped_type& n __ATTRIBUTE_UNUSED_CTOR__((__init_registry[k]));
+	const mapped_type& n __ATTRIBUTE_UNUSED_CTOR__((m.first->second));
 	INVARIANT(n);
 	return ExprAlloc_macro_registry.size();
 }
@@ -213,7 +215,7 @@ register_ExprAlloc_macro_class(void) {
 typedef	entity::SPEC::spec_visitor_entry<ExprAlloc>
 					ExprAlloc_spec_definition_entry;
 
-typedef	util::qmap<string, ExprAlloc_spec_definition_entry>
+typedef	std::map<string, ExprAlloc_spec_definition_entry>
 					ExprAlloc_spec_registry_type;
 
 static
@@ -231,21 +233,22 @@ register_ExprAlloc_spec_class(void) {
 	typedef	ExprAlloc_spec_registry_type		registry_type;
 	typedef	registry_type::iterator			iterator;
 	typedef	registry_type::mapped_type		mapped_type;
+	typedef	registry_type::value_type		value_type;
 	ExprAlloc_spec_registry_type&
 		__init_registry(const_cast<ExprAlloc_spec_registry_type&>(
 				ExprAlloc_spec_registry));
 	const string k(T::name);
-	mapped_type& m(__init_registry[k]);
-	if (m) {
+	const std::pair<iterator, bool>
+		m(__init_registry.insert(value_type(k,
+			ExprAlloc_spec_definition_entry(k, T::type, &T::main,
+				&T::check_num_params, &T::check_num_nodes, 
+				&T::check_param_args, &T::check_node_args))));
+	if (!m.second) {
 		cerr << "Error: SPEC directive by the name \'" << k <<
 			"\' has already been registered!" << endl;
 		THROW_EXIT;
 	}
-	new (&m) ExprAlloc_spec_definition_entry(k, T::type, &T::main,
-		&T::check_num_params, &T::check_num_nodes, 
-		&T::check_param_args, &T::check_node_args);
-	// oddly, this is needed to force instantiation of the [] const operator
-	const mapped_type& n __ATTRIBUTE_UNUSED_CTOR__((__init_registry[k]));
+	const mapped_type& n __ATTRIBUTE_UNUSED_CTOR__((m.first->second));
 	INVARIANT(n);
 	return ExprAlloc_spec_registry.size();
 }
@@ -880,8 +883,12 @@ try {
 	const_iterator i(r.attributes.begin()), e(r.attributes.end());
 	entity::resolved_attribute::values_type empty;
 	for ( ; i!=e; ++i) {
-		ExprAlloc_attribute_registry[i->key].main(*this, 
-			(i->values ? *i->values : empty));
+		const ExprAlloc_attribute_registry_type::const_iterator
+			ai(ExprAlloc_attribute_registry.find(i->key));
+		if (ai != ExprAlloc_attribute_registry.end()) {
+			ai->second.main(*this, (i->values ? *i->values : empty));
+		}
+		// else ignore unknown attributes?
 	}
 }
 if (suppress_keeper_rule) {
@@ -1440,9 +1447,10 @@ ExprAlloc::visit_or_expr(const footprint_expr_node& e) {
 void
 ExprAlloc::visit(const footprint_macro& m) {
 	STACKTRACE_VERBOSE;
-	const ExprAlloc_macro_definition_entry&
-		d(ExprAlloc_macro_registry[m.name]);
-if (d) {
+	const ExprAlloc_macro_registry_type::const_iterator
+		mi(ExprAlloc_macro_registry.find(m.name));
+if (mi != ExprAlloc_macro_registry.end()) {
+	const ExprAlloc_macro_definition_entry& d(mi->second);
 	if (!d.check_param_args(m.params).good
 			|| !d.check_node_args(m.nodes).good) {
 		cerr << "Error with PRS macro." << endl;
@@ -1461,9 +1469,10 @@ if (d) {
 void
 ExprAlloc::visit(const footprint_directive& s) {
 	STACKTRACE_VERBOSE;
-	const ExprAlloc_spec_definition_entry&
-		d(ExprAlloc_spec_registry[s.name]);
-if (d) {
+	const ExprAlloc_spec_registry_type::const_iterator
+		mi(ExprAlloc_spec_registry.find(s.name));
+if (mi != ExprAlloc_spec_registry.end()) {
+	const ExprAlloc_spec_definition_entry& d(mi->second);
 	if (!d.check_param_args(s.params).good
 			|| !d.check_node_args(s.nodes).good) {
 		cerr << "Error with SPEC directive." << endl;

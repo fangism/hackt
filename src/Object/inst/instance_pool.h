@@ -21,7 +21,7 @@ using std::ostream;
 using std::vector;
 using util::good_bool;
 using util::persistent_object_manager;
-template <class> class instance_collection_pool_bundle;
+template <class> struct instance_collection_pool_bundle;
 
 
 /**

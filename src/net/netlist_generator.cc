@@ -501,7 +501,7 @@ netlist_generator::visit(const entity::PRS::footprint& r) {
 		me(current_netlist->local_subcircuits.end());
 	for ( ; mi!=me; ++mi) {
 		// shift transistor enumeration
-		mi->transistor_index_offset = o;
+		mi->set_index_offset(o);
 		o += mi->transistor_count();
 	}
 

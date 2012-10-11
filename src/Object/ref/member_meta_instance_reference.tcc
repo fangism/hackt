@@ -262,7 +262,7 @@ MEMBER_INSTANCE_REFERENCE_CLASS::lookup_locally_allocated_index(
 	// footprint_frame_map
 	// we look for the local alias to get the local offset!
 	const instance_alias_info_ptr_type
-		local_alias(__unroll_generic_scalar_reference_no_lookup(
+		local_alias(this->__unroll_generic_scalar_reference_no_lookup(
 			pi, this->array_indices, uc));
 	if (!local_alias) {
 		// TODO: better error message
@@ -322,7 +322,8 @@ for ( ; fi!=fe; ++fi) {
 	const unroll_context dummy(tmp.get_frame()._footprint, &top);
 	// reminder: call to unroll_references_packed is virtual
 	alias_collection_type aliases;
-	if (unroll_references_packed_helper(dummy, *this->inst_collection_ref,
+	if (this->unroll_references_packed_helper(dummy,
+			*this->inst_collection_ref,
 			this->array_indices, aliases).bad) {
 		cerr << "Error resolving collection of aliases." << endl;
 		return good_bool(false);
@@ -465,7 +466,7 @@ MEMBER_INSTANCE_REFERENCE_CLASS::unroll_subindices_packed(
 		return bad_bool(true);
 	}
 	vector<size_t> local_indices;		// recycle memory
-	size_t asp = 0;
+	ssize_t asp = 0;
 	bool sized = false;
 	index_array_reference::iterator ai;
 	vector<context_result_type>::const_iterator
@@ -564,7 +565,7 @@ MEMBER_INSTANCE_REFERENCE_CLASS::unroll_generic_scalar_reference(
 	}
 	const unroll_context cc(c.make_member_context());
 	// The following call should NOT be doing extra lookup! (pass false)
-	return __unroll_generic_scalar_reference_no_lookup(
+	return this->__unroll_generic_scalar_reference_no_lookup(
 			*inst_base, this->array_indices, cc);
 }
 

@@ -122,7 +122,7 @@ private:
 /**
 	Functor reference wrapper.
  */
-class guarded_action::selection_evaluator_ref :
+struct guarded_action::selection_evaluator_ref :
 	public util::reference_wrapper<guarded_action::selection_evaluator> {
 	typedef	util::reference_wrapper<guarded_action::selection_evaluator>
 				parent_type;

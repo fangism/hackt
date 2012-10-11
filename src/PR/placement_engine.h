@@ -22,6 +22,7 @@
  */
 #define	ENABLE_GRAVITY_WELLS		1
 
+namespace HAC {
 namespace PR {
 using std::istream;
 using std::string;
@@ -372,5 +373,6 @@ private:
 //=============================================================================
 
 }	// end namespace PR
+}	// end namespace HAC
 
 #endif	// __HAC_PR_PLACEMENT_ENGINE_H__

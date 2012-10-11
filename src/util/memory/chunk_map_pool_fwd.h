@@ -45,14 +45,15 @@ public:									\
 	pool_ref_ref_type						\
 	get_pool(void);
 
+#define	CHUNK_MAP_POOL_CTOR_FRIENDS					\
+	friend void _Construct<this_type>(this_type* __p);		\
+	friend void _Construct<this_type, this_type>(			\
+		this_type* __p, const this_type& __value);
 /**
 	Friend declarations needed if default constructor is private.
  */
 #define	CHUNK_MAP_POOL_ESSENTIAL_FRIENDS(C)				\
-	friend class util::memory::chunk_map_pool<this_type,C>;		\
-	friend void _Construct<this_type>(this_type* __p);		\
-	friend void _Construct<this_type, this_type>(		\
-		this_type* __p, const this_type& __value);
+	friend class util::memory::chunk_map_pool<this_type,C>;
 
 
 namespace util {

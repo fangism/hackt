@@ -43,10 +43,10 @@ class const_range_list;
 class const_param_expr_list;
 class unroll_context;
 class subinstance_manager;
-template <bool> class internal_aliases_policy;
+template <bool> struct internal_aliases_policy;
 template <class> class instance_collection;
 template <class> class collection_pool;
-template <class> class instance_collection_pool_bundle;
+template <class> struct instance_collection_pool_bundle;
 
 //=============================================================================
 #define	COLLECTION_INTERFACE_TEMPLATE_SIGNATURE				\

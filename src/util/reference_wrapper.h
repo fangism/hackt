@@ -31,10 +31,10 @@ reference_wrapper<T const>
 cref(T const&);
 
 template<typename T>
-class is_reference_wrapper;
+struct is_reference_wrapper;
 
 template<typename T>
-class unwrap_reference;
+struct unwrap_reference;
 
 //=============================================================================
 /**

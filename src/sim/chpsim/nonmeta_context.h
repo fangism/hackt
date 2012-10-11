@@ -6,10 +6,10 @@
 #ifndef	__HAC_SIM_CHPSIM_NONMETA_CONTEXT_H__
 #define	__HAC_SIM_CHPSIM_NONMETA_CONTEXT_H__
 
+#include <vector>			// only need fwd decl
 #include "Object/nonmeta_context.h"
 #include "Object/nonmeta_variable.h"	// for event_subscribers_type
 #include "Object/ref/reference_set.h"
-#include "util/STL/vector_fwd.h"
 #include "sim/common.h"
 #include "util/member_saver.h"
 #include "util/memory/excl_ptr.h"
@@ -42,9 +42,8 @@ class nonmeta_context : public nonmeta_context_base {
 	// these types must correspond to those used in CHPSIM::State!
 	// but I'm too lazy to include its header here...
 	typedef	EventNode			event_type;
-	typedef	std::default_vector<event_index_type>::type
-							enqueue_queue_type;
-	typedef	std::default_vector<event_type>::type	event_pool_type;
+	typedef	std::vector<event_index_type>	enqueue_queue_type;
+	typedef	std::vector<event_type>		event_pool_type;
 	/// for set-insert interface to first_checks
 	typedef	event_subscribers_type::const_iterator	const_iterator;
 public:

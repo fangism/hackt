@@ -19,8 +19,8 @@ namespace entity {
 	These are not constructed until after unrolling.  
 	A final pass is required to construct the instances.  
  */
-class class_traits<datastruct_tag>::state_instance_base {
-};	// end class state_instance_base
+struct class_traits<datastruct_tag>::state_instance_base {
+};	// end struct state_instance_base
 
 //=============================================================================
 }	// end namespace entity

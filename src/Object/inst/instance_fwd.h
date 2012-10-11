@@ -16,10 +16,10 @@ namespace entity {
 template <class>
 class state_instance;
 
-class pint_instance;	// should be value
-class pbool_instance;	// should be value
-class preal_instance;	// should be value
-class pstring_instance;	// should be value
+struct pint_instance;	// should be value
+struct pbool_instance;	// should be value
+struct preal_instance;	// should be value
+struct pstring_instance;	// should be value
 typedef state_instance<int_tag>		int_instance;
 typedef state_instance<bool_tag>	bool_instance;
 typedef state_instance<enum_tag>	enum_instance;

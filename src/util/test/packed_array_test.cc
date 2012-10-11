@@ -162,7 +162,7 @@ main(int, char*[]) {
 		const size_t val =
 			inner_product(key_gen.begin(), key_gen.end(), 
 			scale.begin(), 0);
-		bari[key_gen] = val;
+		bari[key_gen] = int(val);
 		key_gen++;
 	} while (key_gen != key_gen.lower_corner);
 	bari.dump(cerr << "bari: ") << endl;

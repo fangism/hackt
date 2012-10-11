@@ -8,6 +8,7 @@
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_H__
 #define	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_H__
 
+#include <vector>
 #include "Object/ref/meta_instance_reference_base.h"
 #include "Object/ref/simple_meta_indexed_reference_base.h"
 #include "Object/inst/instance_collection_base.h"
@@ -15,7 +16,6 @@
 #include "util/packed_array_fwd.h"
 #include "Object/ref/inst_ref_implementation_fwd.h"
 #include "Object/devel_switches.h"
-#include "util/STL/vector_fwd.h"
 
 namespace HAC {
 namespace entity {
@@ -176,7 +176,7 @@ virtual	size_t
 #if AGGREGATE_PARENT_REFS
 virtual	good_bool
 	lookup_locally_allocated_indices(const unroll_context&, 
-		std::default_vector<size_t>::type&) const;
+		std::vector<size_t>&) const;
 #endif
 
 virtual	void

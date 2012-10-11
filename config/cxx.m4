@@ -77,7 +77,8 @@ fi
 
 AC_LANG_PUSH(C)
 saved_CFLAGS="$CFLAGS"
-CFLAGS="$ANAL_FLAGS"
+dnl prepend ANAL_FLAGS
+CFLAGS="$ANAL_FLAGS $CFLAGS"
 AC_COMPILE_IFELSE([_TRIVIAL_SOURCE_],[],
 [AC_MSG_ERROR([Your C compiler doesn't like flags: $ANAL_FLAGS
 	Bug fangism about supporting your compiler.])]
@@ -86,7 +87,8 @@ CFLAGS="$saved_CFLAGS"
 AC_LANG_POP(C)
 AC_LANG_PUSH(C++)
 saved_CXXFLAGS="$CXXFLAGS"
-CXXFLAGS="$ANAL_FLAGS"
+dnl prepend ANAL_FLAGS
+CXXFLAGS="$ANAL_FLAGS $CXXFLAGS"
 AC_COMPILE_IFELSE([_TRIVIAL_SOURCE_],[],
 [AC_MSG_ERROR([Your C++ compiler doesn't like flags: $ANAL_FLAGS
 	Bug fangism about supporting your compiler.])]
@@ -1070,6 +1072,212 @@ AC_LANG_POP(C++)
 if test "$fang_cv_cxx_template_formal_base_class" = "yes"; then
 AC_DEFINE(HAVE_TEMPLATE_FORMAL_BASE_CLASS, [],
         [Define if templates formal parameters may be named as base classes.])
+fi
+])dnl
+
+dnl @synopsis FANG_CXX_FRIEND_FUNCTION_NAMESPACE
+dnl
+dnl Checking whether or not friend function declaration needs to
+dnl be qualified with its home namespace.
+dnl Define FRIEND_FUNCTION_HOME_NAMESPACE.
+dnl
+dnl @category Cxx
+dnl @version 2012-10-09
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
+dnl
+AC_DEFUN([FANG_CXX_FRIEND_FUNCTION_NAMESPACE],
+[AC_REQUIRE([FANG_ANAL_COMPILE_FLAGS])
+AC_CACHE_CHECK(
+[whether friend functions may be declared with their home namespace],
+[fang_cv_cxx_friend_function_home_namespace_allowed],
+[AC_LANG_PUSH(C++)
+	saved_CXXFLAGS=$CXXFLAGS
+	CXXFLAGS="$saved_CXXFLAGS $ANAL_FLAGS"
+	AC_COMPILE_IFELSE(
+		AC_LANG_PROGRAM(
+		[[
+namespace std {
+	template <class _T1>
+	inline void _Construct(_T1*);
+	template <class _T1, class _T2>
+	inline void _Construct(_T1*, const _T2&);
+}
+using std::_Construct;
+class thing {
+	typedef thing				this_type;
+#define FRIEND_NAMESPACE_CONSTRUCT		std::
+	friend void FRIEND_NAMESPACE_CONSTRUCT
+		_Construct<this_type>(this_type*);
+	friend void FRIEND_NAMESPACE_CONSTRUCT
+		_Construct<this_type, this_type>(
+		this_type* __p, const this_type& __value);
+};
+		]], []),
+		[fang_cv_cxx_friend_function_home_namespace_allowed=yes],
+		[fang_cv_cxx_friend_function_home_namespace_allowed=no]
+	)
+	CXXFLAGS=$saved_CXXFLAGS
+AC_LANG_POP(C++)
+])
+AC_CACHE_CHECK(
+[whether friend functions must be declared with their home namespace],
+[fang_cv_cxx_friend_function_home_namespace_required],
+[AC_LANG_PUSH(C++)
+	saved_CXXFLAGS=$CXXFLAGS
+	CXXFLAGS="$saved_CXXFLAGS $ANAL_FLAGS"
+	AC_COMPILE_IFELSE(
+		AC_LANG_PROGRAM(
+		[[
+namespace std {
+        template <class _T1>
+        inline void _Construct(_T1*);
+        template <class _T1, class _T2>
+        inline void _Construct(_T1*, const _T2&);
+}
+using std::_Construct;
+class thing {
+        typedef thing		this_type;
+#define FRIEND_NAMESPACE_CONSTRUCT
+        friend void FRIEND_NAMESPACE_CONSTRUCT
+                _Construct<this_type>(this_type*);
+        friend void FRIEND_NAMESPACE_CONSTRUCT
+                _Construct<this_type, this_type>(
+                this_type* __p, const this_type& __value);
+};
+		]], []),
+		[fang_cv_cxx_friend_function_home_namespace_required=no],
+		[fang_cv_cxx_friend_function_home_namespace_required=yes]
+	)
+	CXXFLAGS=$saved_CXXFLAGS
+AC_LANG_POP(C++)
+])
+if test "$fang_cv_cxx_friend_function_home_namespace_allowed" = "yes"; then
+AC_DEFINE(FRIEND_FUNCTION_HOME_NAMESPACE_ALLOWED, [],
+        [Define if friend functions may be declared with their home namespace.])
+fi
+if test "$fang_cv_cxx_friend_function_home_namespace_required" = "yes"; then
+AC_DEFINE(FRIEND_FUNCTION_HOME_NAMESPACE_REQUIRED, [],
+        [Define if friend functions must be declared with their home namespace.])
+fi
+])dnl
+
+
+
+dnl @synopsis FANG_CXX_OVERLOAD_VIRTUAL_USING
+dnl
+dnl Checking whether or not virtual functions allow/need explicit
+dnl using directives to overload virtual functions.
+dnl The workaround was intended for a difference between gcc and clang.
+dnl Define OVERLOAD_VIRTUAL_USING_ALLOWED.
+dnl Define OVERLOAD_VIRTUAL_USING_REQUIRED.
+dnl
+dnl @category Cxx
+dnl @version 2012-10-09
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
+dnl
+AC_DEFUN([FANG_CXX_OVERLOAD_VIRTUAL_USING],
+[AC_REQUIRE([FANG_ANAL_COMPILE_FLAGS])
+AC_CACHE_CHECK(
+[whether virtual method overloads with using directives are required],
+[fang_cv_cxx_overload_virtual_using_required],
+[AC_LANG_PUSH(C++)
+	saved_CXXFLAGS=$CXXFLAGS
+	CXXFLAGS="$saved_CXXFLAGS $ANAL_FLAGS"
+	AC_COMPILE_IFELSE(
+		AC_LANG_PROGRAM(
+		[[
+class pint_const;
+class const_param;
+class nonmeta_index_expr_base {
+public:
+virtual ~nonmeta_index_expr_base();
+virtual const pint_const* deep_copy(const nonmeta_index_expr_base*) const = 0;
+};
+typedef nonmeta_index_expr_base meta_index_expr;
+class data_expr {
+public:
+virtual ~data_expr();
+virtual const const_param* deep_copy(const data_expr*) const = 0;
+};
+class int_expr : virtual public nonmeta_index_expr_base, public data_expr {
+public:
+virtual ~int_expr();
+virtual const const_param* deep_copy(const int_expr*) const = 0;
+ const const_param* deep_copy(const data_expr*) const;
+ const pint_const* deep_copy(const nonmeta_index_expr_base*) const;
+};
+class pint_expr :
+  virtual public meta_index_expr,
+  public int_expr {
+public:
+virtual ~pint_expr();
+ const const_param* deep_copy(const int_expr*) const;
+protected:
+ using int_expr::deep_copy;
+// using meta_index_expr::deep_copy;      // clang wants, gcc doesn't
+};
+		]], []),
+		[fang_cv_cxx_overload_virtual_using_required=no],
+		[fang_cv_cxx_overload_virtual_using_required=yes]
+	)
+	CXXFLAGS=$saved_CXXFLAGS
+AC_LANG_POP(C++)
+])
+AC_CACHE_CHECK(
+[whether virtual method overloads with using directives are allowed],
+[fang_cv_cxx_overload_virtual_using_allowed],
+[AC_LANG_PUSH(C++)
+	saved_CXXFLAGS=$CXXFLAGS
+	CXXFLAGS="$saved_CXXFLAGS $ANAL_FLAGS"
+	AC_COMPILE_IFELSE(
+		AC_LANG_PROGRAM(
+		[[
+class pint_const;
+class const_param;
+class nonmeta_index_expr_base {
+public:
+virtual ~nonmeta_index_expr_base();
+virtual const pint_const* deep_copy(const nonmeta_index_expr_base*) const = 0;
+};
+typedef nonmeta_index_expr_base meta_index_expr;
+class data_expr {
+public:
+virtual ~data_expr();
+virtual const const_param* deep_copy(const data_expr*) const = 0;
+};
+class int_expr : virtual public nonmeta_index_expr_base, public data_expr {
+public:
+virtual ~int_expr();
+virtual const const_param* deep_copy(const int_expr*) const = 0;
+ const const_param* deep_copy(const data_expr*) const;
+ const pint_const* deep_copy(const nonmeta_index_expr_base*) const;
+};
+class pint_expr :
+  virtual public meta_index_expr,
+  public int_expr {
+public:
+virtual ~pint_expr();
+ const const_param* deep_copy(const int_expr*) const;
+protected:
+ using int_expr::deep_copy;
+ using meta_index_expr::deep_copy;      // clang wants, gcc doesn't
+};
+		]], []),
+		[fang_cv_cxx_overload_virtual_using_allowed=yes],
+		[fang_cv_cxx_overload_virtual_using_allowed=no]
+	)
+	CXXFLAGS=$saved_CXXFLAGS
+AC_LANG_POP(C++)
+])
+if test "$fang_cv_cxx_overload_virtual_using_required" = "yes"; then
+AC_DEFINE(OVERLOAD_VIRTUAL_USING_REQUIRED, [],
+        [Define if overloading virtual functions with using is required.])
+fi
+if test "$fang_cv_cxx_overload_virtual_using_allowed" = "yes"; then
+AC_DEFINE(OVERLOAD_VIRTUAL_USING_ALLOWED, [],
+        [Define if overloading virtual functions with using is allowed.])
 fi
 ])dnl
 

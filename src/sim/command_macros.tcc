@@ -30,19 +30,30 @@ namespace SIM {
 	\param _brief one-line quoted-string description.
  */
 
-#define	CATEGORIZE_COMMON_COMMAND_CLASS(_class, _category)		\
+#define	CATEGORIZE_COMMON_COMMAND_CLASS(_ns, _class, _category)		\
 template <>								\
-_class::command_category_type&						\
-_class::category(_category);
+_ns::_class::command_category_type&					\
+_ns::_class::category(_category);
 
 /**
 	\param _wrap is the wrapper class template
 	\param _cat is the category object
  */
 #define INSTANTIATE_COMMON_COMMAND_CLASS(_ns, _wrap, _class, _cat)	\
-CATEGORIZE_COMMON_COMMAND_CLASS(_class, _ns::_cat)			\
 }	/* end namespace _ns */						\
+CATEGORIZE_COMMON_COMMAND_CLASS(_ns, _class, _ns::_cat)			\
 template class _wrap<_class, _ns::State>;				\
+namespace _ns {	/* re-open namespace */
+
+/**
+	Variant that is used for namespace that is sibling to SIM.
+ */
+#define INSTANTIATE_COMMON_COMMAND_CLASS_SIM(_ns, _wrap, _class, _cat)	\
+}	/* end namespace _ns */						\
+namespace SIM {								\
+CATEGORIZE_COMMON_COMMAND_CLASS(_ns, _class, _ns::_cat)			\
+template class _wrap<_class, _ns::State>;				\
+}	/* end namespace SIM */						\
 namespace _ns {	/* re-open namespace */
 
 /**
@@ -52,9 +63,20 @@ namespace _ns {	/* re-open namespace */
 	typedef	_class<State>				_class;
  */
 #define INSTANTIATE_TRIVIAL_COMMAND_CLASS(_ns, _class, _cat)		\
-CATEGORIZE_COMMON_COMMAND_CLASS(_class, _ns::_cat)			\
 }	/* end namespace _ns */						\
+CATEGORIZE_COMMON_COMMAND_CLASS(_ns, _class, _ns::_cat)			\
 template class _class<_ns::State>;					\
+namespace _ns {	/* re-open namespace */
+
+/**
+	Variant that is used for namespace that is sibling to SIM.
+ */
+#define INSTANTIATE_TRIVIAL_COMMAND_CLASS_SIM(_ns, _class, _cat)	\
+}	/* end namespace _ns */						\
+namespace SIM {								\
+CATEGORIZE_COMMON_COMMAND_CLASS(_ns, _class, _ns::_cat)			\
+template class _class<_ns::State>;					\
+}	/* end namespace SIM */						\
 namespace _ns {	/* re-open namespace */
 
 

@@ -31,9 +31,9 @@ namespace HAC {
 namespace entity {
 
 #if 0
-template class instance_collection_pool_bundle<bool_tag>;
-template class instance_collection_pool_bundle<int_tag>;
-template class instance_collection_pool_bundle<enum_tag>;
+template struct instance_collection_pool_bundle<bool_tag>;
+template struct instance_collection_pool_bundle<int_tag>;
+template struct instance_collection_pool_bundle<enum_tag>;
 #endif
 
 template class footprint_base<bool_tag>;

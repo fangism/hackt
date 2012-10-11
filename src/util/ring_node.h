@@ -32,7 +32,7 @@ template <class, class, class>
 class ring_node_iterator;
 
 template <class>
-class ring_node_iterator_default;
+struct ring_node_iterator_default;
 
 template <class>
 class ring_node_derived;
@@ -41,7 +41,7 @@ template <class, class, class>
 class ring_node_derived_iterator;
 
 template <class>
-class ring_node_derived_iterator_default;
+struct ring_node_derived_iterator_default;
 
 #define	RING_NODE_DERIVED_TEMPLATE_SIGNATURE				\
 template <class T>

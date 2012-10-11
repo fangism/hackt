@@ -7,11 +7,12 @@
 #ifndef	__HAC_OBJECT_REF_REFERENCE_ENUM_H__
 #define	__HAC_OBJECT_REF_REFERENCE_ENUM_H__
 
-#include "Object/traits/type_tag_enum.h"
 #include <utility>
+#include <vector>
+
+#include "Object/traits/type_tag_enum.h"
 #include "Object/expr/types.h"
 #include "util/packed_array_fwd.h"
-#include "util/STL/vector_fwd.h"
 #include "util/size_t.h"
 
 namespace HAC {
@@ -47,7 +48,7 @@ make_global_reference(const size_t f, const size_t s) {
 	Array container of reference.  
 	Used to accumulate heterogenous collections of instance references.  
  */
-typedef	std::default_vector<global_indexed_reference>::type
+typedef	std::vector<global_indexed_reference>
 				global_reference_array_type;
 
 //=============================================================================

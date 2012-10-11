@@ -16,7 +16,7 @@ namespace HAC {
 namespace entity {
 class unroll_context;
 class built_in_param_def;
-class null_parameter_type;	// from "Object/traits/class_traits.h"
+struct null_parameter_type;	// from "Object/traits/class_traits.h"
 
 //=============================================================================
 /**

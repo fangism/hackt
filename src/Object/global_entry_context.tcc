@@ -6,6 +6,7 @@
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_CONTEXT_TCC__
 #define	__HAC_OBJECT_GLOBAL_ENTRY_CONTEXT_TCC__
 
+#include <vector>
 #include "Object/global_entry_context.h"
 #include "Object/global_entry.h"
 #include "Object/def/footprint.h"
@@ -18,7 +19,7 @@
 namespace HAC {
 namespace entity {
 //=============================================================================
-// class global_entry_context method definitions
+// struct global_entry_context method definitions
 
 /**
 	Looks up globally allocated index using footprint frame

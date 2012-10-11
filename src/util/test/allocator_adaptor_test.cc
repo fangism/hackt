@@ -18,7 +18,7 @@
 using util::memory::chunk_map_pool;
 using util::memory::allocator_adaptor;
 
-typedef	int						value_type;
+typedef	size_t						value_type;
 typedef	chunk_map_pool<value_type, sizeof(size_t) << 3>	pool_type;
 typedef	std::set<value_type, std::less<value_type>,
 		allocator_adaptor<pool_type> >

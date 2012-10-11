@@ -140,9 +140,9 @@ using entity::PRS::footprint_expr_node;
 
 typedef	size_t		index_type;
 typedef	double		real_type;
-class node;
+struct node;
 #if NETLIST_VERILOG
-class proc;
+struct proc;
 #endif
 class netlist;
 class local_netlist;
@@ -944,7 +944,8 @@ struct netlist_common : public device_group {
 	Minimum requirements for any type of netlist.  
 	Intended for use with subcircuits.
  */
-struct local_netlist : public netlist_common {
+class local_netlist : public netlist_common {
+	friend class netlist;
 	// maps actual indices to formal indices (ordered!)
 	typedef	map<index_type, index_type>		node_index_map_type;
 
@@ -973,6 +974,19 @@ struct local_netlist : public netlist_common {
 public:
 	local_netlist();
 	~local_netlist();
+
+	void
+	set_name(const string& s) { name = s; }
+
+	void
+	set_index_offset(const size_t o) {
+		transistor_index_offset = o;
+	}
+
+	size_t
+	get_index_offset(void) const {
+		return transistor_index_offset;
+	}
 
 	// does NOT have local subinstances, only devices
 	void

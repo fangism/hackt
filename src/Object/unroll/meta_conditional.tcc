@@ -58,7 +58,7 @@ meta_conditional<T>::dump(const T& mc, ostream& o, const C& c,
 	INVARIANT(mc.guards.size());
 	INVARIANT(mc.guards.size() == mc.clauses.size());
 	clause_iterator ci(mc.clauses.begin()), ce(mc.clauses.end());
-	guard_iterator gi(mc.guards_begin()), ge(mc.guards_end());
+	guard_iterator gi(mc.guards_begin());	// , ge(mc.guards_end());
 	const entity::expr_dump_context edc(c);
 	NEVER_NULL(*gi);
 	(*gi)->dump(o << "[ ", edc) << " ->" << endl;
@@ -92,7 +92,7 @@ meta_conditional<T>::unroll(const T& mc,
 		const unroll_context& c,
 		const char* str) {
 	clause_iterator ci(mc.clauses.begin()), ce(mc.clauses.end());
-	guard_iterator gi(mc.guards_begin()), ge(mc.guards_end());
+	guard_iterator gi(mc.guards_begin());	// , ge(mc.guards_end());
 for ( ; ci!=ce; ++ci, ++gi) {
 	const meta_conditional_base::guard_ptr_type& guard(*gi);
 	// guards may be NULL-terminated with else clause

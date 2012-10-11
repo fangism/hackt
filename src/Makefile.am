@@ -94,6 +94,11 @@ cast_test_static_SOURCES = $(cast_test_SOURCES)
 cast_test_static_CXXFLAGS = $(cast_test_CXXFLAGS)
 cast_test_static_LDADD = $(cast_test_LDADD)
 
+# just for debugging and testing only
+noinst_PROGRAMS += test_case
+test_case_SOURCES = test/test_case.cc
+test_case_LDADD = libhacktprsim.la
+
 # convenience libraries
 # want to install libhackt.la next... but causes undefined symbols...
 noinst_LTLIBRARIES = libhackt.la \
@@ -289,10 +294,7 @@ hackt_chpsim_guile_la_LIBADD = libhacktchpsimguile.la
 #	$(LIBFANGUTIL)
 
 # VPI (Verilog Programming Language Interface)
-# EXTRA_LTLIBRARIES += vpihacprsim.la
-if HAVE_VPI
 pkglib_LTLIBRARIES += vpihacprsim.la
-endif
 
 # try dynamic library plug-in module first
 vpihacprsim_la_SOURCES = sim/prsim/vpi-prsim.cc
@@ -1081,6 +1083,7 @@ SIM_H_FILES = $(SIM_CC_FILES:.cc=.h) \
 	sim/common.h \
 	sim/command_error_codes.h \
 	sim/command_completion.h \
+	sim/vpi_user.h \
 	sim/devel_switches.h
 
 PRSIM_H_FILES = $(PRSIM_CC_FILES:.cc=.h) \
@@ -1317,6 +1320,8 @@ libhacktparsers_la_SOURCES = \
 
 ALL_HEADER_FILES += \
 	$(CONFIG_HEADERS) \
+	test/overload-virtual-using-conftest.h \
+	test/friend_function_namespace-conftest.h \
 	$(COMMON_H_FILES) \
 	$(OBJECT_H_FILES) \
 	$(OBJECT_COMMON_H_FILES) \

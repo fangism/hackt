@@ -22,7 +22,6 @@ template <class> class Help;
 namespace CHPSIM {
 class State;
 using std::string;
-using util::default_qmap;
 using util::string_list;
 using std::string;
 using std::ostream;

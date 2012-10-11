@@ -31,7 +31,7 @@ namespace util {
 // bogus test class
 class string_manager {
 public:
-	typedef	default_qmap<int, string*>::type	string_map_type;
+	typedef	default_qmap<size_t, string*>::type	string_map_type;
 	typedef list_vector_pool<string>	string_pool_type;
 private:
 	string_pool_type			string_pool;
@@ -42,7 +42,7 @@ public:
 		cout << "cleaning up string_manager..." << endl;
 	}
 
-	void add_index_string(const int i, const string& s) {
+	void add_index_string(const size_t i, const string& s) {
 		string* sptr = 
 			static_cast<const string_map_type&>(string_map)[i];
 		if (sptr) {
@@ -55,7 +55,7 @@ public:
 		}
 	}
 
-	void delete_index(const int i) {
+	void delete_index(const size_t i) {
 		string* sptr = 
 			static_cast<const string_map_type&>(string_map)[i];
 		if (sptr) {

@@ -159,11 +159,11 @@ if (_pool.total_private_entries() || (is_top && _pool.port_entries())) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // explicit template instantiations
-template class global_allocation_dumper<process_tag>;
-template class global_allocation_dumper<channel_tag>;
-template class global_allocation_dumper<enum_tag>;
-template class global_allocation_dumper<int_tag>;
-template class global_allocation_dumper<bool_tag>;
+template struct global_allocation_dumper<process_tag>;
+template struct global_allocation_dumper<channel_tag>;
+template struct global_allocation_dumper<enum_tag>;
+template struct global_allocation_dumper<int_tag>;
+template struct global_allocation_dumper<bool_tag>;
 
 //=============================================================================
 }	// end namespace entity

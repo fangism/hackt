@@ -18,6 +18,7 @@
 #include "util/tokenize.h"
 #include "util/string.tcc"
 #include "util/value_saver.h"
+#include "util/stacktrace.h"
 
 // TODO: move library-dependent functionality into library
 #include "util/readline.h"
@@ -36,8 +37,26 @@ using util::tokenize;
 using util::value_saver;
 #include "util/using_ostream.h"
 
+REQUIRES_STACKTRACE_STATIC_INIT
+
 //=============================================================================
 // class command_registry member/method definitions
+
+/**
+	Show whem static members get instantiated.  Debugging only.
+ */
+template <class Command>
+class command_registry<Command>::dummy_type {
+#if 0
+public:
+	dummy_type() { cout << "Hello, world! -- command_registry" << endl; }
+	~dummy_type() { cout << "Goodbye, world! -- command_registry" << endl; }
+#endif
+};
+
+template <class Command>
+typename command_registry<Command>::dummy_type
+command_registry<Command>::dummy;
 
 /**
 	Global static initialization of the command-map.
@@ -112,16 +131,16 @@ command_registry<Command>::external_cosimulation = false;
 template <class Command>
 size_t
 command_registry<Command>::register_category(command_category_type& c) {
+	STACKTRACE_VERBOSE;
 	typedef	typename category_map_type::mapped_type		mapped_type;
-	mapped_type& probe(category_map[c.name()]);
-	// can we be sure that the ptr is initially NULL?
-	// perhaps only if we use a never_ptr.  
-	if (probe) {
+	typedef	typename category_map_type::value_type		value_type;
+	typedef	typename category_map_type::iterator		iterator;
+	const std::pair<iterator, bool>
+		probe(category_map.insert(value_type(c.name(), &c)));
+	if (!probe.second) {
 		cerr << "category \'" << c.name() <<
 			"\' has already been registered." << endl;
 		THROW_EXIT;
-	} else {
-		probe = &c;
 	}
 	return category_map.size();
 }
@@ -134,19 +153,21 @@ template <class Command>
 template <class C>
 size_t
 command_registry<Command>::register_command(void) {
+	STACKTRACE_VERBOSE;
 	typedef	C	command_class;
 	const Command temp(command_class::name, command_class::brief,
 		&command_class::category, &command_class::main, 
 		&command_class::usage, &Completer<command_class>);
 	typedef	typename command_map_type::mapped_type		mapped_type;
+	typedef	typename command_map_type::value_type		value_type;
+	typedef	typename command_map_type::iterator		iterator;
 	const string& s(command_class::name);
-	mapped_type& probe(command_map[s]);
-	if (probe) {
+	const std::pair<iterator, bool>
+		probe(command_map.insert(value_type(s, temp)));
+	if (!probe.second) {
 		cerr << "command \'" << s << "\' has already been "
 			"registered globally." << endl;
 		THROW_EXIT;
-	} else {
-		probe = temp;
 	}
 	command_class::category.register_command(temp);
 	return command_map.size();

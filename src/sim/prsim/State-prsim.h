@@ -957,7 +957,7 @@ public:
 
 	node_index_type
 	get_node_index(const node_type& n) const {
-		return std::distance(&node_pool[0], &n);
+		return node_index_type(std::distance(&node_pool[0], &n));
 	}
 
 public:

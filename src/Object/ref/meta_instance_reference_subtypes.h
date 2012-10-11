@@ -8,11 +8,11 @@
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_H__
 #define	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_H__
 
+#include <vector>			// really only need fwd decl
 #include "Object/ref/meta_instance_reference_base.h"
 #include "Object/ref/meta_index_list_fwd.h"
 #include "Object/traits/class_traits_fwd.h"
 #include "util/boolean_types.h"
-#include "util/STL/vector_fwd.h"
 
 #include "Object/devel_switches.h"
 #if PRIVATE_MEMBER_REFERENCES
@@ -23,7 +23,7 @@
 namespace HAC {
 namespace entity {
 class unroll_context;
-class global_entry_context;
+struct global_entry_context;
 class nonmeta_expr_visitor;
 template <class> class simple_meta_instance_reference;
 template <class> class aggregate_meta_instance_reference;
@@ -114,7 +114,7 @@ virtual	void
 
 virtual	good_bool
 	lookup_globally_allocated_indices(
-		const footprint&, std::default_vector<size_t>::type&) const;
+		const footprint&, std::vector<size_t>&) const;
 
 protected:
 	/**

@@ -7,8 +7,8 @@
 #ifndef	__HAC_OBJECT_LANG_SPEC_FWD_H__
 #define	__HAC_OBJECT_LANG_SPEC_FWD_H__
 
+#include <vector>
 #include "util/size_t.h"
-#include "util/STL/vector_fwd.h"
 #include "util/STL/set_fwd.h"
 #include "Object/inst/instance_pool_fwd.h"
 #include "util/memory/pointer_classes_fwd.h"
@@ -25,26 +25,26 @@ template <class> class state_instance;
 
 #if 0
 // source types
-typedef	std::default_vector<bool_literal>::type	directive_source_group_type;
-typedef std::default_vector<directive_source_group_type>::type
+typedef	std::vector<bool_literal>	directive_source_group_type;
+typedef std::vector<directive_source_group_type>
 						directive_source_nodes_type;
 #endif
-typedef	std::default_vector<util::memory::count_ptr<const param_expr> >::type	
+typedef	std::vector<util::memory::count_ptr<const param_expr> >
 						directive_source_params_type;
 // unrolled types (resolved parameters)
 typedef	std::default_set<size_t>::type		directive_node_group_type;
 /**
 	Vector of sets is needed for support for grouped nodes.  
  */
-typedef	std::default_vector<directive_node_group_type>::type	
+typedef	std::vector<directive_node_group_type>
 						directive_base_nodes_type;
-typedef	std::default_vector<util::memory::count_ptr<const const_param> >::type	
+typedef	std::vector<util::memory::count_ptr<const const_param> >
 						directive_base_params_type;
 
 //=============================================================================
 namespace PRS {
 	class literal;
-	class rule_dump_context;
+	struct rule_dump_context;
 }	// end namespace PRS
 
 //=============================================================================

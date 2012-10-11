@@ -9,25 +9,32 @@
 #include <iostream>
 #include "sim/command_category.h"
 #include "sim/command_registry.h"
-#include "util/qmap.tcc"
+#include "util/stacktrace.h"
 
 namespace HAC {
 namespace SIM {
 #include "util/using_ostream.h"
+
+REQUIRES_STACKTRACE_STATIC_INIT
 
 //=============================================================================
 // class command_category method definitions
 
 template <class Command>
 command_category<Command>::command_category() :
-		_name(), _brief(), command_map() { }
+		_name(), _brief(), command_map() {
+	STACKTRACE_VERBOSE;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class Command>
 command_category<Command>::command_category(
 		const string& _n, const string& _b) :
 		_name(_n), _brief(_b), command_map() {
+	STACKTRACE_VERBOSE;
+	// corresponding command_registry must have already been instantiated!
 	typedef	command_registry<command_type>	registry_type;
+	STACKTRACE_INDENT_PRINT("Adding category: " << _name << endl);
 	registry_type::register_category(*this);
 }
 
@@ -38,6 +45,7 @@ command_category<Command>::command_category(
  */
 template <class Command>
 command_category<Command>::~command_category() {
+	STACKTRACE_VERBOSE;
 	// command_category::unregister_category()?
 }
 
@@ -48,15 +56,20 @@ command_category<Command>::~command_category() {
 template <class Command>
 size_t
 command_category<Command>::register_command(const Command& c) {
+	STACKTRACE_VERBOSE;
 	typedef	typename command_map_type::mapped_type	mapped_type;
-	mapped_type& probe(command_map[c.name()]);
-	if (probe) {
+	typedef	typename command_map_type::value_type	value_type;
+	typedef	typename command_map_type::iterator	iterator;
+	const std::pair<iterator, bool>
+		probe(command_map.insert(value_type(c.name(), c)));
+	if (!probe.second) {
 		cerr << "command \'" << c.name() <<
 			"\' has already been registered "
-			"in this category (" << probe.name() << ")." << endl;
+			"in this category (" <<
+//			probe.first->second.name() <<
+			_name <<
+			")." << endl;
 		THROW_EXIT;
-	} else {
-		probe = c;
 	}
 	return command_map.size();
 }

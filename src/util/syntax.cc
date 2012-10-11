@@ -9,6 +9,10 @@
 #include "util/indent.h"
 
 namespace util {
+namespace memory {
+// explicit template instantiation
+template class count_ptr<syntax::node>;
+}
 namespace syntax {
 // TODO: move lexer/hac_lex.h into util/lexer/
 // line_position should belong to util

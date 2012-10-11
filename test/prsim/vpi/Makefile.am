@@ -59,7 +59,7 @@ vpiinvdir = $(examplesdir)/$(EXAMPLE_NAME)
 INSTALLCHECK_TARGETS = inverters.vxi-out inverters.vxi-subdir-out
 CLEANFILES += inverters.vxi-subdir-out
 
-if HAVE_VPI
+if HAVE_VCS
 installcheck-local: $(INSTALLCHECK_TARGETS)
 	for o in '$(INSTALLCHECK_TARGETS)' ; \
 	do $(CAT) $$o ; done

@@ -46,7 +46,7 @@ aggregate_reference_collection_base::resize_packed_array_for_construction(
 	// just copy pointer value-references over
 	key_type new_size(f.dimensions() +1);	// add one dimension
 	new_size.front() = 0;		// initialize first dim. to zero
-	copy(f.begin(), f.end(), new_size.begin() +1);
+	std::copy(f.begin(), f.end(), new_size.begin() +1);
 	a.resize(new_size);
 }
 

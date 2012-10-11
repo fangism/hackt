@@ -19,7 +19,7 @@
 namespace HAC {
 namespace entity {
 class param_expr;
-class expr_dump_context;
+struct expr_dump_context;
 using std::ostream;
 using std::istream;
 using std::string;

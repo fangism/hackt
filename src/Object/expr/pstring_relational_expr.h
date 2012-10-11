@@ -9,10 +9,10 @@
 #ifndef __HAC_OBJECT_EXPR_PSTRING_RELATIONAL_EXPR_H__
 #define __HAC_OBJECT_EXPR_PSTRING_RELATIONAL_EXPR_H__
 
+#include <map>
 #include "Object/expr/pbool_expr.h"
 #include "util/memory/count_ptr.h"
 #include "util/string_fwd.h"
-#include "util/qmap.h"
 #include "util/operators.h"
 
 namespace HAC {
@@ -21,7 +21,7 @@ class pstring_expr;
 class pbool_const;
 using std::string;
 USING_UTIL_OPERATIONS
-using util::default_qmap;
+using std::map;
 using util::memory::count_ptr;
 
 //=============================================================================
@@ -46,10 +46,8 @@ public:
 							op_greater_equal;
 private:
 	// safe to use naked (never-delete) pointers on static objects
-	typedef	default_qmap<string, const op_type*>::type
-						op_map_type;
-	typedef	default_qmap<const op_type*, string>::type
-						reverse_op_map_type;
+	typedef	map<string, const op_type*>	op_map_type;
+	typedef	map<const op_type*, string>	reverse_op_map_type;
 public:
 	static const op_map_type		op_map;
 private:

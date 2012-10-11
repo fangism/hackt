@@ -27,7 +27,7 @@ struct entry_collection_base {
 
 	~entry_collection_base() { }
 
-};	// end class entry_collection_base
+};	// end struct entry_collection_base
 
 //-----------------------------------------------------------------------------
 /**
@@ -70,7 +70,7 @@ struct entry_collection :
 		return entry_collection_base<Tag>::index_set;
 	}
 
-};	// end class entry_collection
+};	// end struct entry_collection
 
 //=============================================================================
 }	// end namespace entity

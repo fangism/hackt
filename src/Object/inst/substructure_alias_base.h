@@ -24,7 +24,7 @@ class port_alias_tracker;
 class footprint;
 class footprint_frame;
 class state_manager;
-template <class> class global_entry;
+template <class> struct global_entry;
 template <class> class state_instance;
 struct alias_printer;
 struct alias_matcher_base;

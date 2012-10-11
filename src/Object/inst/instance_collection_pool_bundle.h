@@ -30,7 +30,7 @@ template <class, size_t> class instance_array;
 template <class Tag> class instance_array<Tag,0>;
 template <class> class port_formal_array;
 template <class> class port_actual_collection;
-template <class> class instance_collection_pool_bundle;
+template <class> struct instance_collection_pool_bundle;
 using util::persistent_object_manager;
 using util::memory::never_ptr;
 using util::good_bool;
@@ -76,7 +76,7 @@ private:
 	struct dependent_creator;
 	struct index_allocator;
 	struct scope_alias_collector;
-	struct footprint_frame_assigner;
+	class footprint_frame_assigner;
 	struct substructure_finalizer;
 
 // serialization helper routines
@@ -215,7 +215,7 @@ struct instance_collection_pool_bundle :
 	load_object_base(footprint&, 
 		const persistent_object_manager&, istream&);
 
-};	// end class instance_collection_pool_bundle
+};	// end struct instance_collection_pool_bundle
 
 //=============================================================================
 }	// end namespace entity

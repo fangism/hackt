@@ -19,7 +19,7 @@
 namespace HAC {
 namespace SIM {
 namespace CHPSIM {
-class graph_options;
+struct graph_options;
 }	// end namespace CHPSIM
 }	// end namespace SIM
 namespace entity {

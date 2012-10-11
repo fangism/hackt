@@ -440,9 +440,9 @@ state_data_extractor<channel_tag>::dump(ostream& o, const value_type& v) {
 //=============================================================================
 // explicit template instantiations
 
-template class state_data_extractor<bool_tag>;
-template class state_data_extractor<int_tag>;
-template class state_data_extractor<enum_tag>;
+template struct state_data_extractor<bool_tag>;
+template struct state_data_extractor<int_tag>;
+template struct state_data_extractor<enum_tag>;
 
 //=============================================================================
 }	// end namespace entity

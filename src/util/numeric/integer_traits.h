@@ -60,11 +60,14 @@ struct power_of_2_traits {
 // such operations would be distinguished using power_of_2_tag<true or false>
 
 // multiplies already defined in "operators.h"
+/**
+	\param N must be unsigned
+ */
 template <size_t N, class I>
 inline
 I
 __multiply_by_constant(const I& val, power_of_2_tag<false> ) {
-	return val * N;
+	return val * I(N);
 }
 
 template <size_t N, class I>

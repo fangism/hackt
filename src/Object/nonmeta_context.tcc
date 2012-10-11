@@ -7,6 +7,7 @@
 #define	__HAC_OBJECT_NONMETA_CONTEXT_TCC__
 
 #include <iostream>
+#include <vector>
 #include "Object/nonmeta_context.h"
 // #include "Object/ref/simple_nonmeta_value_reference.h"
 #include "Object/ref/simple_meta_instance_reference.h"

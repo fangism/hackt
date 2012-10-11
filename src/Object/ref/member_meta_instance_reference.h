@@ -129,7 +129,7 @@ public:
 #if 0 && AGGREGATE_PARENT_REFS
 	good_bool
 	lookup_locally_allocated_indices(const unroll_context&, 
-		std::default_vector<size_t>::type&) const;
+		std::vector<size_t>&) const;
 #endif
 
 	// override meta_instance_reference<>
@@ -137,7 +137,7 @@ public:
 	lookup_globally_allocated_indices(
 //		const global_entry_context&,
 		const footprint&,
-		std::default_vector<size_t>::type&) const;
+		std::vector<size_t>&) const;
 
 	void
 	accept(nonmeta_expr_visitor&) const;

@@ -39,7 +39,7 @@ struct class_traits<real_tag> {
 	typedef	instance_alias_info_empty
 					instance_alias_relaxed_actuals_type;
 	/// defined in "Object/inst/int_instance_collection.h"
-	class state_instance_base;
+	struct state_instance_base;
 
 	template <size_t D>
 	struct value_array {

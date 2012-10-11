@@ -4,6 +4,7 @@
  */
 
 #include <iostream>
+#include <cstdlib>			// for ldiv_t
 #include "util/timer.h"
 #include "util/iomanip.h"
 

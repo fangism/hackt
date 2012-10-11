@@ -27,7 +27,7 @@ class const_index_list;
 class unroll_context;
 class nonmeta_context_base;
 class nonmeta_expr_visitor;
-class global_entry_context;
+struct global_entry_context;
 class state_manager;
 class footprint;
 class footprint_frame;

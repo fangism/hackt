@@ -73,7 +73,7 @@ public:
 		NOTE: currently construct_empty does NOT follow this...
 		This should be fixed for consistency sake.  
 	 */
-	typedef	char			aux_alloc_arg_type;
+	typedef	unsigned char			aux_alloc_arg_type;
 public:
 /** standard default destructor, but virtual */
 virtual ~persistent() { }

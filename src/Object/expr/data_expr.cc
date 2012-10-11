@@ -57,7 +57,6 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "util/IO_utils.h"
 #include "util/stacktrace.h"
 #include "util/multikey.h"
-#include "util/qmap.tcc"
 
 namespace util {
 using HAC::entity::int_arith_expr;
@@ -116,6 +115,10 @@ using HAC::entity::string_return_cast_expr;
 		real_return_cast_expr, REAL_RETURN_CAST_EXPR_TYPE_KEY, 0)
 	SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 		string_return_cast_expr, STRING_RETURN_CAST_EXPR_TYPE_KEY, 0)
+
+namespace memory {
+template class count_ptr<const HAC::entity::string_expr>;
+}
 }	// end namespace util
 
 namespace HAC {
@@ -425,7 +428,7 @@ int_arith_expr::int_arith_expr(const operand_ptr_type& l, const op_type* o,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 int_arith_expr::int_arith_expr(const operand_ptr_type& l, const char o,
 		const operand_ptr_type& r) :
-		lx(l), rx(r), op(op_map[o]) {
+		lx(l), rx(r), op(op_map.find(o)->second) {
 	NEVER_NULL(op);
 	NEVER_NULL(lx);
 	NEVER_NULL(rx);
@@ -439,7 +442,7 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(int_arith_expr)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 int_arith_expr::dump(ostream& o, const expr_dump_context& c) const {
-	const op_info& oi(reverse_op_map[op]);
+	const op_info& oi(reverse_op_map.find(op)->second);
 	const bool a = op->is_associative();
 	const bool p = c.need_parentheses(oi.prec, a);
 	const expr_dump_context::stamp_modifier m(c, oi.prec, a);
@@ -576,7 +579,7 @@ if (!m.register_transient_object(this,
 void
 int_arith_expr::write_object(const persistent_object_manager& m, 
 		ostream& f) const {
-	write_value(f, reverse_op_map[op].op);     // writes a character
+	write_value(f, reverse_op_map.find(op)->second.op);     // writes a character
 	m.write_pointer(f, lx);
 	m.write_pointer(f, rx);
 }
@@ -587,7 +590,9 @@ int_arith_expr::load_object(const persistent_object_manager& m, istream& f) {
 	{
 	char o;
 	read_value(f, o);
-	op = op_map[o];
+	const op_map_type::const_iterator i(op_map.find(o));
+	INVARIANT(i != op_map.end());
+	op = i->second;
 	}
 	m.read_pointer(f, lx);
 	m.read_pointer(f, rx);
@@ -674,7 +679,8 @@ int_relational_expr::~int_relational_expr() {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 int_relational_expr::int_relational_expr(const operand_ptr_type& l,
 		const string& o, const operand_ptr_type& r) :
-		lx(l), rx(r), op(op_map[o]) {
+		lx(l), rx(r), op(op_map.find(o)->second) {
+	INVARIANT(op_map.find(o) != op_map.end());
 	NEVER_NULL(op);
 	NEVER_NULL(lx);
 	NEVER_NULL(rx);
@@ -699,7 +705,7 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(int_relational_expr)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 int_relational_expr::dump(ostream& o, const expr_dump_context& c) const {
-	return rx->dump(lx->dump(o, c) << reverse_op_map[op], c);
+	return rx->dump(lx->dump(o, c) << reverse_op_map.find(op)->second, c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -825,7 +831,7 @@ if (!m.register_transient_object(this,
 void
 int_relational_expr::write_object(const persistent_object_manager& m,
 		ostream& f) const {
-	write_value(f, reverse_op_map[op]);
+	write_value(f, reverse_op_map.find(op)->second);
 	m.write_pointer(f, lx);
 	m.write_pointer(f, rx);
 }
@@ -837,8 +843,9 @@ int_relational_expr::load_object(const persistent_object_manager& m,
 	{
 	string s;
 	read_value(f, s);
-	op = op_map[s];
-	NEVER_NULL(op);
+	const op_map_type::const_iterator i(op_map.find(s));
+	INVARIANT(i != op_map.end());
+	op = i->second;
 	}
 	m.read_pointer(f, lx);
 	m.read_pointer(f, rx);
@@ -916,7 +923,8 @@ bool_logical_expr::~bool_logical_expr() { }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool_logical_expr::bool_logical_expr(const operand_ptr_type& l,
 		const op_key_type& o, const operand_ptr_type& r) :
-		lx(l), rx(r), op(op_map[o]) {
+		lx(l), rx(r), op(op_map.find(o)->second) {
+	INVARIANT(op_map.find(o) != op_map.end());
 	NEVER_NULL(op);
 	NEVER_NULL(lx);
 	NEVER_NULL(rx);
@@ -941,7 +949,7 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(bool_logical_expr)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 bool_logical_expr::dump(ostream& o, const expr_dump_context& c) const {
-	return rx->dump(lx->dump(o, c) << reverse_op_map[op], c);
+	return rx->dump(lx->dump(o, c) << reverse_op_map.find(op)->second, c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1050,7 +1058,7 @@ if (!m.register_transient_object(this,
 void
 bool_logical_expr::write_object(const persistent_object_manager& m, 
 		ostream& f) const {
-	write_value(f, reverse_op_map[op]);
+	write_value(f, reverse_op_map.find(op)->second);
 	m.write_pointer(f, lx);
 	m.write_pointer(f, rx);
 }
@@ -1061,8 +1069,9 @@ bool_logical_expr::load_object(const persistent_object_manager& m, istream& f) {
 	{
 	string s;
 	read_value(f, s);
-	op = op_map[s];
-	NEVER_NULL(op);
+	const op_map_type::const_iterator i(op_map.find(s));
+	INVARIANT(i != op_map.end());
+	op = i->second;
 	}
 	m.read_pointer(f, lx);
 	m.read_pointer(f, rx);

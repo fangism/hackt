@@ -13,7 +13,7 @@
 namespace HAC {
 namespace entity {
 using util::memory::count_ptr;
-struct canonical_fundamental_chan_type_base;
+class canonical_fundamental_chan_type_base;
 
 //=============================================================================
 template <>

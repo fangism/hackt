@@ -13,10 +13,12 @@ using std::endl;
 using std::priority_queue;
 using std::multimap;
 
-struct entry : std::pair<int, int> {
-	typedef	std::pair<int, int>	parent_type;
+typedef	size_t 				int_value_type;
 
-	entry(const int a, const int b) : parent_type(a,b) { }
+struct entry : std::pair<int, int_value_type> {
+	typedef	std::pair<int, int_value_type>	parent_type;
+
+	entry(const int a, const int_value_type b) : parent_type(a,b) { }
 
 	bool
 	operator < (const entry& r) const {
@@ -25,13 +27,13 @@ struct entry : std::pair<int, int> {
 };
 
 typedef	priority_queue<entry>	queue_type;
-typedef	multimap<int,int>	map_type;
+typedef	multimap<int, int_value_type>	map_type;
 
 int
 main(int, char*[]) {
 	queue_type q;
 	map_type m;
-	size_t i = 0;
+	int_value_type i = 0;
 	for ( ; i<20; ++i) {
 		q.push(entry(0, i));
 		m.insert(std::make_pair(0, i));

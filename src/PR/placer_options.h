@@ -10,6 +10,7 @@
 #include <string>
 #include "PR/numerics.h"
 
+namespace HAC {
 namespace PR {
 using std::istream;
 using std::ostream;
@@ -143,5 +144,6 @@ struct placer_options {
 //=============================================================================
 
 }	// end namespace PR
+}	// end namespace HAC
 
 #endif	// __HAC_PR_PLACER_OPTIONS_H__

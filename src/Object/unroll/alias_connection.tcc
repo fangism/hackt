@@ -23,6 +23,7 @@
 #include "Object/expr/expr_dump_context.h"
 
 #include "util/persistent_object_manager.tcc"
+// #include "util/packed_array.tcc"	// for alias_collection_type
 #include "util/stacktrace.h"
 #include "util/what.h"
 #include "util/binders.h"

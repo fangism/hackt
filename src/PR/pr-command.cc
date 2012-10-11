@@ -20,32 +20,15 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "sim/command_registry.tcc"
 #include "sim/command_macros.tcc"
 #include "sim/command_common.tcc"
-#include "common/TODO.h"
-#include "util/optparse.h"
-#include "util/STL/container_iterator.h"
-#if PR_VARIABLE_DIMENSIONS
-#include "util/STL/valarray_iterator.h"
-#endif
 
-//=============================================================================
-// explicit instantiations
+// clang-3.1 needs these points of instantiation/initialization earlier
 namespace HAC {
 namespace SIM {
+DEFAULT_STATIC_TRACE
 template class command_registry<PR::Command>;
 }
-}
-
-//=============================================================================
-using namespace HAC::SIM;
 namespace PR {
-using std::ofstream;
-
-//=============================================================================
-// name/index translation features?
-
-// reference parsing features?
-
-//=============================================================================
+DEFAULT_STATIC_TRACE
 static
 CommandCategory
 	builtin("builtin", "built-in commands"),
@@ -59,6 +42,28 @@ CommandCategory
 //	physics("physics", "physical properties of the system"),
 //	parameters("parameters", "simulation control parameters"),
 	tracing("tracing", "checkpointing and tracing features");
+DEFAULT_STATIC_TRACE
+}
+}
+
+#include "common/TODO.h"
+#include "util/optparse.h"
+#include "util/STL/container_iterator.h"
+#if PR_VARIABLE_DIMENSIONS
+#include "util/STL/valarray_iterator.h"
+#endif
+
+//=============================================================================
+// explicit instantiations
+namespace HAC {
+using namespace HAC::SIM;
+namespace PR {
+using std::ofstream;
+
+//=============================================================================
+// name/index translation features?
+
+// reference parsing features?
 
 //=============================================================================
 // command-line completion features
@@ -86,11 +91,11 @@ PR_OVERRIDE_DEFAULT_COMPLETER(_class, _func)
 // command declaration macros
 
 #define	PR_INSTANTIATE_TRIVIAL_COMMAND_CLASS(_class, _cat)		\
-INSTANTIATE_TRIVIAL_COMMAND_CLASS(PR, _class, _cat)
+INSTANTIATE_TRIVIAL_COMMAND_CLASS_SIM(PR, _class, _cat)
 
 #define	PR_INSTANTIATE_STATELESS_COMMAND_CLASS(_class, _cat)		\
 typedef	stateless_command_wrapper<_class, State>	_class;		\
-INSTANTIATE_COMMON_COMMAND_CLASS(PR, stateless_command_wrapper, _class, _cat)
+INSTANTIATE_COMMON_COMMAND_CLASS_SIM(PR, stateless_command_wrapper, _class, _cat)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1835,6 +1840,7 @@ select-toggle -
 
 //=============================================================================
 }	// end namespace PR
+}	// end namespace HAC
 
 DEFAULT_STATIC_TRACE_BEGIN
 

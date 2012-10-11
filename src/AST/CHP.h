@@ -16,7 +16,6 @@
 #include "AST/expr_base.h"
 #include "Object/type/channel_direction_enum.h"
 #include "util/memory/count_ptr.h"
-#include "util/STL/vector_fwd.h"
 #include "util/boolean_types.h"
 
 namespace HAC {
@@ -39,7 +38,6 @@ namespace parser {
  */
 namespace CHP {
 using util::good_bool;
-using std::default_vector;
 
 //=============================================================================
 /**
@@ -431,7 +429,7 @@ class selection : public statement, public selection_list_base {
 	typedef	selection_list_base			list_type;
 // is this class even necessary?
 public:
-	typedef	default_vector<guarded_command::return_type>::type
+	typedef	std::vector<guarded_command::return_type>
 							checked_gcs_type;
 public:
 	selection();
@@ -599,7 +597,7 @@ public:
 
 	CHP_CHECK_STMT_PROTO;
 private:
-	typedef	default_vector<statement::return_type>::type
+	typedef	std::vector<statement::return_type>
 						checked_actions_type;
 };	// end class loop
 

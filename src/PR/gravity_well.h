@@ -12,6 +12,7 @@
 
 #include "PR/numerics.h"
 
+namespace HAC {
 namespace PR {
 class placement_engine;
 using std::ostream;
@@ -71,5 +72,6 @@ public:
 };	// end struct gravity_well
 
 }	// end namespace PR
+}	// end namespace HAC
 
 #endif	// __HAC_PR_GRAVITY_WELL_H__

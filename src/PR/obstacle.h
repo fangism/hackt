@@ -8,6 +8,7 @@
 
 #include "PR/numerics.h"
 
+namespace HAC {
 namespace PR {
 
 /**
@@ -18,6 +19,7 @@ struct obstacle {
 };	// end struct obstacle
 
 }	// end namespace PR
+}	// end namespace HAC
 
 #endif	// __HAC_PR_OBSTACLE_H__
 

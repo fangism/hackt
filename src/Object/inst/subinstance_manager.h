@@ -16,7 +16,7 @@
 #include "util/memory/excl_ptr.h"
 
 namespace HAC {
-class cflat_options;
+struct cflat_options;
 namespace entity {
 class substructure_manager;
 class footprint;

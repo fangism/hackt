@@ -20,7 +20,7 @@ namespace entity {
 class const_param_expr_list;
 struct global_entry_context;
 namespace PRS {
-struct cflat_visitor;
+class cflat_visitor;
 using std::string;
 using std::ostream;
 using std::istream;

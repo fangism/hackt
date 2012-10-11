@@ -58,6 +58,7 @@ struct rand48<double> {
 template <>
 struct rand48<unsigned long> {
 	typedef	unsigned short		seed_type[3];
+	typedef	unsigned long		return_type;
 
 	rand48() { }
 
@@ -66,7 +67,7 @@ struct rand48<unsigned long> {
 	 */
 	unsigned long
 	operator () (void) const {
-		return lrand48();
+		return return_type(lrand48());
 	}
 
 	/**
@@ -74,7 +75,7 @@ struct rand48<unsigned long> {
 	 */
 	unsigned long
 	operator () (seed_type& s) const {
-		return nrand48(s);
+		return return_type(nrand48(s));
 	}
 
 };	// end struct rand48
@@ -149,6 +150,10 @@ struct rand48<bool> {
 };	// end struct rand48
 
 //=============================================================================
+extern
+void
+seed48_zeros(void);
+
 extern
 void
 write_seed48(std::ostream&);

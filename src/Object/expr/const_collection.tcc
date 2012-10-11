@@ -587,11 +587,12 @@ CONST_COLLECTION_TEMPLATE_SIGNATURE
 void
 CONST_COLLECTION_CLASS::collect_transient_info(
 		persistent_object_manager& m) const {
-	const char s = values.dimensions();
-	INVARIANT(s >= 0);
+	const size_t s = values.dimensions();
+//	INVARIANT(s >= 0);
 	INVARIANT(s <= 4);
 	m.register_transient_object(this, 
-		persistent_traits<this_type>::type_key, s);
+		persistent_traits<this_type>::type_key,
+			static_cast<unsigned char>(s));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

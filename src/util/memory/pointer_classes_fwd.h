@@ -64,9 +64,9 @@ class count_ptr;
 	policy for type-safety -- it transfers to other things that delete.  
  */
 template <class, class>
-class raw_count_ptr;	// reference-counted helper
+struct raw_count_ptr;	// reference-counted helper
 template <class, class = default_deallocation_policy>
-class raw_count_ptr;
+struct raw_count_ptr;
 
 //=============================================================================
 }	// end namespace memory

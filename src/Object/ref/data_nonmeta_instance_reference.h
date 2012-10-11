@@ -17,7 +17,7 @@ class data_expr;
 class data_type_reference;
 class unroll_context;
 class nonmeta_context_base;
-class channel_data_reader;	// from "Object/nonmeta_channel_manipulator.h"
+struct channel_data_reader;	// from "Object/nonmeta_channel_manipulator.h"
 class meta_instance_reference_base;
 using util::memory::count_ptr;
 

@@ -11,6 +11,9 @@
 	$Id: Command.cc,v 1.27 2010/07/07 23:01:27 fang Exp $
  */
 
+#define	ENABLE_STATIC_TRACE			0
+#define	ENABLE_STACKTRACE			0
+
 #include "util/static_trace.h"
 DEFAULT_STATIC_TRACE_BEGIN
 
@@ -23,14 +26,39 @@ DEFAULT_STATIC_TRACE_BEGIN
 
 #include "sim/chpsim/Command.h"
 #include "sim/chpsim/State.h"
+#include "sim/chpsim/Trace.h"
 #include "sim/command_base.tcc"
-#include "sim/command_category.tcc"
 #include "sim/command_registry.tcc"
+#include "sim/command_category.tcc"
 #include "sim/command_common.tcc"
 #include "sim/command_macros.tcc"
-#include "parser/instref.h"
-#include "sim/chpsim/Trace.h"
 
+DEFAULT_STATIC_TRACE
+namespace HAC {
+namespace SIM {
+template class command_registry<CHPSIM::Command>;
+DEFAULT_STATIC_TRACE
+namespace CHPSIM {
+//=============================================================================
+// local static CommandCategories
+// declared here b/c clang screws up static initialization ordering otherwise
+// feel free to add categories here
+
+static CommandCategory
+	builtin("builtin", "built-in commands"),
+	general("general", "general commands"),
+	simulation("simulation", "simulation commands"),
+//	channel("channel", "channel commands"),
+	info("info", "information about simulated circuit"),
+	view("view", "instance to watch"),
+	tracing("tracing", "trace and checkpoint commands"), 
+	modes("modes", "timing model, error handling");
+}
+}
+}
+DEFAULT_STATIC_TRACE
+
+#include "parser/instref.h"
 #include "common/TODO.h"
 #include "util/libc.h"
 #include "util/attributes.h"
@@ -38,10 +66,6 @@ DEFAULT_STATIC_TRACE_BEGIN
 
 namespace HAC {
 namespace SIM {
-
-// must instantiate dependent class first!
-template class command_registry<CHPSIM::Command>;
-
 namespace CHPSIM {
 #include "util/using_istream.h"
 #include "util/using_ostream.h"
@@ -70,20 +94,6 @@ using parser::parse_global_reference;
 #endif
 
 //=============================================================================
-// local static CommandCategories
-// feel free to add categories here
-
-static CommandCategory
-	builtin("builtin", "built-in commands"),
-	general("general", "general commands"),
-	simulation("simulation", "simulation commands"),
-//	channel("channel", "channel commands"),
-	info("info", "information about simulated circuit"),
-	view("view", "instance to watch"),
-	tracing("tracing", "trace and checkpoint commands"), 
-	modes("modes", "timing model, error handling");
-
-//=============================================================================
 // command completion facilities
 
 /**
@@ -97,7 +107,7 @@ static CommandCategory
 	Same thing, but with forward declaration of class.  
  */
 #define CHPSIM_OVERRIDE_DEFAULT_COMPLETER_FWD(_class, _func)		\
-class _class;								\
+struct _class;								\
 CHPSIM_OVERRIDE_DEFAULT_COMPLETER(_class, _func)
 
 #define CHPSIM_OVERRIDE_TEMPLATE_COMPLETER_FWD(_class, _func)		\

@@ -19,6 +19,20 @@
 #include "__config__.h"
 #endif
 
+/**
+	Define this if extra using declarations are needed for overloaded
+	virtual functions, detected by configure.
+	Works around differences between gcc and clang.
+ */
+#define	OVERLOAD_VIRTUAL_USING	defined(OVERLOAD_VIRTUAL_USING_ALLOWED) && defined(OVERLOAD_VIRTUAL_USING_REQUIRED)
+
+/**
+	Define this if friend function declarations in classes want
+	the functions to be declared with their home namespaces.
+	Works around differences between gcc (various versions) and clang.
+ */
+#define	FRIEND_FUNCTION_HOME_NAMESPACE	defined(FRIEND_FUNCTION_HOME_NAMESPACE_ALLOWED) && defined(FRIEND_FUNCTION_HOME_NAMESPACE_REQUIRED)
+
 #ifdef	const
 #error	Detected preprocessor definition of const.  \
 	This means that a configure test found const non-ANSI-conforming.  \

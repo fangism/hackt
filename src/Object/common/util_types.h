@@ -8,8 +8,8 @@
 #ifndef	__HAC_OBJECT_COMMON_UTIL_TYPES_H__
 #define	__HAC_OBJECT_COMMON_UTIL_TYPES_H__
 
-#include "util/STL/vector_fwd.h"
-#include "util/STL/list_fwd.h"
+#include <vector>
+#include <list>
 #include "util/memory/pointer_classes_fwd.h"
 
 namespace HAC {
@@ -21,17 +21,16 @@ namespace entity {
 	using util::memory::never_ptr;
 	using util::memory::count_ptr;
 
-	typedef	std::default_list<never_ptr<name_space> >::type
+	typedef	std::list<never_ptr<name_space> >
 						namespace_collection_type;
-	typedef	std::default_list<never_ptr<const name_space> >::type
+	typedef	std::list<never_ptr<const name_space> >
 					const_namespace_collection_type;
 
 	/**
 		Should be synchronized with
 		parser::expr_list::checked_refs_type.
 	 */
-	typedef std::default_vector<
-			count_ptr<meta_instance_reference_base> >::type
+	typedef std::vector<count_ptr<meta_instance_reference_base> >
 						checked_refs_type;
 
 	/**

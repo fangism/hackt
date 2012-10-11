@@ -10,8 +10,8 @@
 #include <vector>
 #include <string>
 #include <utility>
+#include <map>
 #include "util/macros.h"
-#include "util/qmap.h"	// TODO: use std::map instead
 #include "util/tokenize_fwd.h"
 #include "util/attributes.h"
 #include "util/value_saver.h"
@@ -23,7 +23,7 @@ class module;
 }
 namespace SIM {
 using std::string;
-using util::default_qmap;
+using std::map;
 using util::string_list;
 using util::value_saver;
 using util::directory_stack;
@@ -53,7 +53,7 @@ public:
 		An alias is just a string_list, the key string
 		will expand into the value strings.  
 	 */
-	typedef	default_qmap<string, string_list>::type	aliases_map_type;
+	typedef	map<string, string_list>		aliases_map_type;
 	typedef	aliases_map_type::const_iterator	alias_iterator;
 
 	static
@@ -93,11 +93,9 @@ public:
 	typedef	typename command_type::state_type	state_type;
 	typedef	command_category<command_type>		command_category_type;
 private:
-	typedef	typename default_qmap<string, command_type>::type
-							command_map_type;
+	typedef	map<string, command_type>		command_map_type;
 	// consider using never_ptr to guarantee NULL initialization
-	typedef	typename default_qmap<string, command_category_type*>::type
-							category_map_type;
+	typedef	map<string, command_category_type*>	category_map_type;
 	typedef	typename command_map_type::const_iterator
 							command_iterator;
 	typedef	typename category_map_type::const_iterator
@@ -124,6 +122,8 @@ public:
 	~readline_init();
 	} __ATTRIBUTE_UNUSED__ ;	// end struct readline_init
 private:
+	class dummy_type;
+	static dummy_type		dummy;
 	static command_map_type		command_map;
 	static category_map_type	category_map;
 	/**

@@ -137,11 +137,11 @@ typed_indexed_reference<Tag>::typed_indexed_reference(
 	}
 }
 
-template class typed_indexed_reference<bool_tag>;
-template class typed_indexed_reference<int_tag>;
-template class typed_indexed_reference<enum_tag>;
-template class typed_indexed_reference<channel_tag>;
-template class typed_indexed_reference<process_tag>;
+template struct typed_indexed_reference<bool_tag>;
+template struct typed_indexed_reference<int_tag>;
+template struct typed_indexed_reference<enum_tag>;
+template struct typed_indexed_reference<channel_tag>;
+template struct typed_indexed_reference<process_tag>;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -193,11 +193,11 @@ for ( ; i!=e; ++i) {
 #endif
 }
 
-template class typed_indexed_references<bool_tag>;
-template class typed_indexed_references<int_tag>;
-template class typed_indexed_references<enum_tag>;
-template class typed_indexed_references<channel_tag>;
-template class typed_indexed_references<process_tag>;
+template struct typed_indexed_references<bool_tag>;
+template struct typed_indexed_references<int_tag>;
+template struct typed_indexed_references<enum_tag>;
+template struct typed_indexed_references<channel_tag>;
+template struct typed_indexed_references<process_tag>;
 
 //=============================================================================
 #if 0
@@ -700,7 +700,7 @@ if (!r || !r.inst_ref()) {
 #else
 // TODO: refactor this to make re-usable
 	entity::global_reference_array_type tmp;
-	const footprint& topfp(m.get_footprint());
+//	const footprint& topfp(m.get_footprint());
 	const global_process_context gpc(m.get_footprint());
 	const global_entry_context gc(gpc);
 	if (!r.inst_ref()->lookup_top_level_references(gc, tmp).good) {
@@ -742,7 +742,7 @@ int
 parse_name_to_get_subinstances(const global_indexed_reference& gref,
 		const module& m, entry_collection& e) {
 	STACKTRACE_VERBOSE;
-	const footprint& topfp(m.get_footprint());
+//	const footprint& topfp(m.get_footprint());
 	switch (gref.first) {
 	case META_TYPE_PROCESS: {
 		// TODO: factor this out somewhere else for reuse?
@@ -1011,6 +1011,8 @@ complete_instance_names(const char* _text, const module& m,
 #if DEBUG_COMPLETION
 	cout << "<orig:" << orig << ",equiv:" << text << '>';
 #endif
+	vector<string> temp;
+{
 	const footprint* f = NULL;
 	// extract parent from text
 	// if text is blank, return items from "ls ." (top-level)
@@ -1032,8 +1034,8 @@ complete_instance_names(const char* _text, const module& m,
 		// until non-process types have subinstances...
 		f = get_process_footprint(gref.second, m);
 	}
-	vector<string> temp;
 	f->export_instance_names(temp);
+}
 	// filter out with child string
 	// TODO: handle array indices
 	// may need to prepend parent '.' to matched names...

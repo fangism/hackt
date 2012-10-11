@@ -23,7 +23,7 @@ using util::bad_bool;
 using util::persistent_object_manager;
 using util::memory::count_ptr;
 class footprint;
-template <class> class class_traits;
+template <class> struct class_traits;
 
 //=============================================================================
 /**

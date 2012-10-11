@@ -92,6 +92,10 @@ using namespace HAC::entity;
 	// explicit template instantiations
 template class count_ptr<const fundamental_type_reference>;
 template class count_ptr<const process_type_reference>;
+template class count_ptr<const data_type_reference>;
+template class count_ptr<const channel_type_reference_base>;
+template class count_ptr<builtin_channel_type_reference>;
+template class count_ptr<const channel_type_reference>;
 }	// end namespace memory
 }	// end namespace util
 
@@ -1044,7 +1048,7 @@ if (i!=e) {
  */
 never_ptr<const definition_base>
 builtin_channel_type_reference::get_base_def(void) const {
-	cerr << "Got: builtin_chanel_type_reference::get_base_def(), "
+	cerr << "Got: builtin_channel_type_reference::get_base_def(), "
 		"did you really mean this?" << endl;
 //	return never_ptr<const built_in_channel_def>(NULL);
 	return never_ptr<const definition_base>(NULL);

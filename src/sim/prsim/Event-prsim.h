@@ -233,6 +233,39 @@ public:
 			EVENT_FLAGS_DEFAULT_VALUE
 			) { }
 
+#if 1
+// for debugging: tracing through copy-constructor
+// kludge: clang++-3.1 screws up the synthesized default copy-ctor (crash)
+#if 0
+	// default copy-ctor
+	Event(const Event&);
+#else
+	// inline
+	Event(const Event& e) : node(e.node), cause(e.cause), 
+		cause_rule(e.cause_rule), 
+#if EVENT_INCLUDE_RULE_POINTER
+		cause_rule_ptr(e.cause_rule_ptr), 
+#endif
+		val(e.val),
+		flags(e.flags) {
+	}
+
+	// clang-3.1 screws up default assignment operator [synthesized]
+	Event&
+	operator = (const Event& e) {
+		node = e.node;
+		cause = e.cause;
+		cause_rule = e.cause_rule;
+#if EVENT_INCLUDE_RULE_POINTER
+		cause_rule_ptr = e.cause_rule_ptr;
+#endif
+		val = e.val;
+		flags = e.flags;
+		return *this;
+	}
+#endif
+#endif
+
 	void
 	kill(void) { flags |= EVENT_FLAG_KILLED; }
 

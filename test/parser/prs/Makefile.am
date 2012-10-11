@@ -116,6 +116,7 @@ HACKT_PARSE_TEST_PASSES = \
 	strengths-01 strengths-02 \
 	invariant-01 invariant-02 invariant-03 invariant-04 \
 	flavor-01 flavor-03 flavor-04 flavor-05 \
+	flavor-01b flavor-03b flavor-04b flavor-05b \
 	supply-01 supply-02 supply-03 supply-04 supply-05 supply-06 \
 	supply-show-01 supply-show-02 \
 	supply-attrib-01 supply-attrib-02 supply-attrib-03 \
@@ -293,6 +294,7 @@ HACKT_CFLAT_TEST_SUBJECTS = \
 	act-001 act-002 act-003 act-004 act-005 act-006 act-007 act-010 \
 	reff-01 \
 	flavor-01 flavor-03 flavor-04 flavor-05 \
+	flavor-01b flavor-03b flavor-04b flavor-05b \
 	reset-01 reset-02 reset-03 reset-04 reset-05 \
 	supply-show-01 supply-show-02 \
 	diode-01 \

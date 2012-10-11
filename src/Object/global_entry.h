@@ -15,7 +15,7 @@
 #include "util/macros.h"
 
 namespace HAC {
-class cflat_options;
+struct cflat_options;
 
 namespace entity {
 using std::ostream;
@@ -28,20 +28,20 @@ namespace PRS {
 
 class module;
 struct dump_flags;
-class global_entry_context_base;
+struct global_entry_context_base;
 struct global_entry_dumper;
 class alias_string_set;
 class footprint;
 class state_manager;
-class entry_collection;		// defined in "Object/entry_collection.h"
+struct entry_collection;		// defined in "Object/entry_collection.h"
 class footprint_frame;
 struct global_offset;
 template <class Tag>
 struct global_offset_base;
 template <class Tag>
-struct  state_instance;
+class  state_instance;
 template <class T>
-struct  instance_pool;
+class  instance_pool;
 
 template <class Tag>
 struct  global_entry;
@@ -68,8 +68,9 @@ typedef	std::vector<size_t>		footprint_frame_map_type;
 	See the constructor that takes a footprint argument.  
  */
 template <class Tag>
-struct footprint_frame_map {
+class footprint_frame_map {
 	typedef	footprint_frame_map<Tag>		this_type;
+public:
 	/**
 		0-indexed translation table from local to global ID.  
 	 */
@@ -113,7 +114,7 @@ protected:
 		const footprint_frame_map<Tag>&,
 		const global_offset_base<Tag>&);
 
-};	// end struct footprint_frame_map
+};	// end class footprint_frame_map
 
 //=============================================================================
 /**
@@ -130,7 +131,7 @@ protected:
 	TODO: re-use this to pass in external_port_id information
 	during global state allocation.  
  */
-struct footprint_frame :
+class footprint_frame :
 	public footprint_frame_map<process_tag>, 
 	public footprint_frame_map<channel_tag>, 
 #if ENABLE_DATASTRUCTS
@@ -139,6 +140,7 @@ struct footprint_frame :
 	public footprint_frame_map<enum_tag>, 
 	public footprint_frame_map<int_tag>, 
 	public footprint_frame_map<bool_tag> {
+public:
 	typedef	footprint_frame_map<process_tag>	process_map_type;
 	typedef	footprint_frame_map<channel_tag>	channel_map_type;
 #if ENABLE_DATASTRUCTS
@@ -269,18 +271,21 @@ private:
 
 	void
 	get_frame_map_test(void) const;
-};	// end struct footprint_frame
+};	// end class footprint_frame
 
 //=============================================================================
 /**
 	Functor for transforming indices via footprint frame lookup.  
  */
-struct footprint_frame_transformer {
+class footprint_frame_transformer {
+public:
+	// public unary_function<...>
 	typedef	size_t				argument_type;
 	typedef	size_t				result_type;
-
+private:
 	const footprint_frame_map_type&			ff;
 
+public:
 	explicit
 	footprint_frame_transformer(const footprint_frame_map_type& f) :
 		ff(f) { }
@@ -303,7 +308,7 @@ struct footprint_frame_transformer {
 		return ff[i -1];
 	}
 	
-};	// end struct footprint_frame_transformer
+};	// end class footprint_frame_transformer
 
 //=============================================================================
 struct add_local_private_tag {};

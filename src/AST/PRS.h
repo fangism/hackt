@@ -14,7 +14,6 @@
 #include "AST/expr_base.h"
 #include "AST/lang.h"
 #include "AST/attribute.h"
-#include "util/STL/vector_fwd.h"
 #include "util/STL/pair_fwd.h"
 #include "util/memory/count_ptr.h"
 #include "Object/devel_switches.h"	// for PRS_SUPPLY_OVERRIDES
@@ -31,13 +30,12 @@ namespace PRS {
 }
 namespace parser {
 class inst_ref_expr_list;
-class expr_attr_list;
+struct expr_attr_list;
 /**
 	This is the namespace for the PRS sub-language.  
  */
 namespace PRS {
 using util::memory::count_ptr;
-using std::default_vector;
 
 //=============================================================================
 // local forward declarations

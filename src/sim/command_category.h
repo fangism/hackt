@@ -8,15 +8,15 @@
 
 #include <iosfwd>
 #include <string>
+#include <map>
 #include "util/macros.h"
-#include "util/qmap.h"	// TODO: use std::map instead
 #include "util/tokenize_fwd.h"
 #include "util/member_saver_fwd.h"
 
 namespace HAC {
 namespace SIM {
 using std::string;
-using util::default_qmap;
+using std::map;
 using util::string_list;
 using std::string;
 using std::ostream;
@@ -33,8 +33,7 @@ class command_category {
 public:
 	typedef	Command				command_type;
 private:
-	typedef	typename default_qmap<string, command_type>::type
-						command_map_type;
+	typedef	map<string, command_type>	command_map_type;
 	typedef	typename command_type::main_ptr_type	main_ptr_type;
 	typedef	typename command_type::usage_ptr_type	usage_ptr_type;
 	typedef	typename command_map_type::const_iterator
@@ -56,6 +55,9 @@ public:
 	// command_registry<>::register_command().
 	size_t
 	register_command(const command_type&);
+
+	size_t
+	size(void) const { return command_map.size(); }
 
 	const string&
 	name(void) const { return _name; }

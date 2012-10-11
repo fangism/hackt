@@ -712,7 +712,7 @@ process_sim_state::__collect_expr_literals(const expr_index_type ei,
 
 //=============================================================================
 // explicit class template instantiations
-template class RuleState<State::time_type>;
+template struct RuleState<State::time_type>;
 }	// end namespace PRSIM
 }	// end namespace SIM
 }	// end namespace HAC

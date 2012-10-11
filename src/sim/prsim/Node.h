@@ -37,7 +37,7 @@
 
 namespace HAC {
 namespace entity {
-struct bool_connect_policy;	// from "Object/inst/connection_policy.h"
+class bool_connect_policy;	// from "Object/inst/connection_policy.h"
 }
 namespace SIM {
 namespace PRSIM {
@@ -298,7 +298,7 @@ public:
 	Size of this should be a total of 8 double-words, or 32 B.  
 	Nice and quad-word aligned.  
  */
-struct NodeState : public Node {
+class NodeState : public Node {
 private:
 	typedef	NodeState			this_type;
 public:
@@ -629,13 +629,13 @@ public:
 	char_to_pull(const char);
 
 	static
-	char
+	uchar
 	translate_value_to_char(const char e) {
 		return value_to_char[size_t(e)];
 	}
 
 	static
-	char
+	uchar
 	translate_value_enum_to_char(const value_enum e) {
 		return value_to_char[size_t(e)];
 	}

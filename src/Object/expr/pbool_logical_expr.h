@@ -9,9 +9,9 @@
 #ifndef __HAC_OBJECT_EXPR_PBOOL_LOGICAL_EXPR_H__
 #define __HAC_OBJECT_EXPR_PBOOL_LOGICAL_EXPR_H__
 
+#include <map>
 #include "Object/expr/pbool_expr.h"
 #include "util/memory/count_ptr.h"
-#include "util/qmap.h"
 #include "util/operators.h"
 
 namespace HAC {
@@ -19,7 +19,7 @@ namespace entity {
 using std::string;
 using std::ostream;
 USING_UTIL_OPERATIONS
-using util::default_qmap;
+using std::map;
 using util::memory::count_ptr;
 
 //=============================================================================
@@ -40,13 +40,10 @@ public:
 	static const util::logical_or<value_type, arg_type>	op_or;
 	static const util::logical_xor<value_type, arg_type>	op_xor;
 	static const util::logical_xnor<value_type, arg_type>	op_xnor;
-private:
-	// safe to use naked (never-delete) pointers on static objects
-	typedef	default_qmap<op_key_type, const op_type*>::type
-						op_map_type;
-	typedef	default_qmap<const op_type*, op_key_type>::type
-						reverse_op_map_type;
 public:
+	// safe to use naked (never-delete) pointers on static objects
+	typedef	map<op_key_type, const op_type*>	op_map_type;
+	typedef	map<const op_type*, op_key_type>	reverse_op_map_type;
 	static const op_map_type		op_map;
 	static const reverse_op_map_type	reverse_op_map;
 private:

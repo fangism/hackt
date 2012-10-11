@@ -15,10 +15,11 @@
 
 #include "util/using_ostream.h"
 using std::cin;
-using PR::CommandRegistry;
+using HAC::PR::CommandRegistry;
 using std::string;
 
 //=============================================================================
+namespace HAC {
 namespace PR {
 struct ipple_options {
 	bool				help_only;
@@ -43,7 +44,6 @@ struct ipple_options {
 
 //=============================================================================
 // could go to "main/ippl.h" in the future
-namespace HAC {
 class ipple {
 public:
 	typedef	PR::ipple_options		options;

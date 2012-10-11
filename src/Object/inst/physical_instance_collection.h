@@ -12,13 +12,13 @@
 #include "util/persistent_fwd.h"
 
 namespace HAC {
-class cflat_options;
+struct cflat_options;
 namespace entity {
 class port_alias_tracker;
 class state_manager;
 class footprint_frame;
 class physical_instance_placeholder;
-struct alias_visitor;
+class alias_visitor;
 struct dump_flags;
 using util::persistent_object_manager;
 

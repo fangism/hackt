@@ -143,7 +143,7 @@ instance_collection_pool_wrapper<T>::finalize_substructure_aliases(
 }
 
 //=============================================================================
-// selected class instance_collection_pool_bundle method definitions
+// selected struct instance_collection_pool_bundle method definitions
 
 template <class Tag>
 good_bool

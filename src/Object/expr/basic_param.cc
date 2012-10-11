@@ -100,6 +100,7 @@ template class count_ptr<const preal_const>;
 template class count_ptr<const const_param>;
 template class count_ptr<const pstring_expr>;
 template class count_ptr<const pstring_const>;
+template class chunk_map_pool<pint_const, pint_const::pool_chunk_size>;
 }	// end namespace memory
 }	// end namespace util
 

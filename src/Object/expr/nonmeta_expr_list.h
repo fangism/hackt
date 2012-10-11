@@ -14,7 +14,7 @@
 namespace HAC {
 namespace entity {
 class data_expr;
-class expr_dump_context;
+struct expr_dump_context;
 class nonmeta_expr_visitor;
 class unroll_context;
 class nonmeta_context_base;

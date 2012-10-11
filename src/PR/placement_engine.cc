@@ -27,6 +27,7 @@
 #include "util/fig/xfig.h"
 #include "util/stacktrace.h"
 
+namespace HAC {
 namespace PR {
 using std::for_each;
 using std::transform;
@@ -422,8 +423,8 @@ placement_engine::compute_collision_forces(void) {
 	STACKTRACE_VERBOSE;
 	proximity_potential_energy = 0.0;
 	typedef	vector<tile_instance>::iterator		iterator;
-	iterator i(space.objects.begin()), e(space.objects.end());
-	const array_offset<iterator> vo(i);
+//	iterator i(space.objects.begin()), e(space.objects.end());
+//	const array_offset<iterator> vo(i);
 	vector<proximity_edge>::iterator
 		pi(proximity_cache.begin()), pe(proximity_cache.end());
 	for ( ; pi!=pe; ++pi) {
@@ -452,8 +453,8 @@ placement_engine::update_proximity_potential_energy(void) {
 	STACKTRACE_VERBOSE;
 	proximity_potential_energy = 0.0;
 	typedef	vector<tile_instance>::iterator		iterator;
-	iterator i(space.objects.begin()), e(space.objects.end());
-	const array_offset<iterator> vo(i);
+//	iterator i(space.objects.begin()), e(space.objects.end());
+//	const array_offset<iterator> vo(i);
 	vector<proximity_edge>::iterator
 		pi(proximity_cache.begin()), pe(proximity_cache.end());
 	for ( ; pi!=pe; ++pi) {
@@ -1142,6 +1143,7 @@ __dump_array2(ostream& o, const T1& a, const T2& b,
 		(*i.*mf)(o);
 		(*i2.*mf2)(o) << endl;
 	}
+	INVARIANT(i2 == e2);
 	return o;
 }
 
@@ -1376,4 +1378,5 @@ try {
 
 //=============================================================================
 }	// end namespace PR
+}	// end namespace HAC
 

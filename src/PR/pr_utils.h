@@ -9,6 +9,7 @@
 #include <iosfwd>
 #include "util/IO_utils_fwd.h"
 
+namespace HAC {
 namespace PR {
 using std::ostream;
 using std::istream;
@@ -44,6 +45,7 @@ load_array(istream& i, T& a) {
 }
 
 }	// end namespace PR
+}	// end namespace HAC
 
 #endif	// __PR_PR_UTILS_H__
 

@@ -338,17 +338,17 @@ dnl
 dnl Support for Verilog HDL co-simulation through the Programming 
 dnl Language Interface.
 dnl Argument is the base path where include and lib can be found 
-dnl (without include/).
+dnl (without include/) for the externally provided library.
 dnl e.g. /usr/local/cad/synopsys/vcs/linux
 dnl which is expected to contain subdirs include/, lib/
 dnl Often times, this will be some architecture-dependent path.
-dnl Also checks for vcs compiler
+dnl Also checks for vcs compiler.
 dnl
-dnl TODO: make a different version for each vpi interface to build against
-dnl e.g. vcs, ultrasim, iverilog, etc...
+dnl vpi_user.h is a standard interface, so we now ship a copy (sim/vpi_user.h)
+dnl By default the included copy is used.  This option lets the user override.
 dnl
 dnl @category ProjectSpecific
-dnl @version 2007-12-17
+dnl @version 2012-10-10
 dnl @author David Fang
 dnl @license AllPermissive
 dnl
@@ -368,12 +368,18 @@ then
 	VPI_INCLUDE="$vpi_include"
 	VPI_LDPATH="$vpi_ldpath"
 fi
-dnl else don't bother checking for vpi_user.h
 fi
-AM_CONDITIONAL(HAVE_VPI, test "$VPI_INCLUDE")
+dnl default to using included sim/vpi_user.h
+if test -f "$with_vpi/include/vpi_user.h"
+then
+	AC_DEFINE(EXTERNAL_VPI_USER_H, 1,
+	[Define to 1 to use included sim/vpi_user.h])
+fi
+dnl AM_CONDITIONAL(HAVE_VPI, test "$VPI_INCLUDE")
 AC_SUBST(VPI_INCLUDE)
 AC_SUBST(VPI_LDPATH)
 dnl check for vcs for running tests
+dnl TODO: check for other verilog compilers
 AC_CHECK_PROG([VCS], vcs, vcs)
 AM_CONDITIONAL(HAVE_VCS, test "$ac_cv_prog_VCS" = "vcs")
 ])dnl

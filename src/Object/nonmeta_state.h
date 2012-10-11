@@ -16,10 +16,10 @@ namespace HAC {
 namespace entity {
 class state_manager;
 class footprint;
-class bool_tag;
-class int_tag;
-class enum_tag;
-class channel_tag;
+struct bool_tag;
+struct int_tag;
+struct enum_tag;
+struct channel_tag;
 using std::vector;
 using std::ostream;
 using std::istream;

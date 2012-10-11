@@ -52,7 +52,7 @@ struct class_traits<datastruct_tag> {
 	typedef	instance_alias_info_empty
 					instance_alias_relaxed_actuals_type;
 	/// defined in "Object/inst/struct_instance.h"
-	class state_instance_base;
+	struct state_instance_base;
 
 	enum { instance_pool_chunk_size = 64 };
 

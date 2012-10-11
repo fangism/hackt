@@ -31,9 +31,9 @@ namespace HAC {
 namespace entity {
 
 #if 0
-template class instance_collection_pool_bundle<process_tag>;
-template class instance_collection_pool_bundle<channel_tag>;
-template class instance_collection_pool_bundle<datastruct_tag>;
+template struct instance_collection_pool_bundle<process_tag>;
+template struct instance_collection_pool_bundle<channel_tag>;
+template struct instance_collection_pool_bundle<datastruct_tag>;
 #endif
 
 template class footprint_base<process_tag>;

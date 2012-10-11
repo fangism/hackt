@@ -1084,23 +1084,23 @@ transistor::dump_raw(ostream& o) const {
 // class transistor::parasitics method definitions
 
 transistor::parasitics::parasitics(
-		const real_type width, const real_type length,
+		const real_type wd, const real_type ln,
 		const bool s_ext, const bool d_ext,
 		const netlist_options& nopt) {
-	__update(width, length, s_ext, d_ext, nopt);
+	__update(wd, ln, s_ext, d_ext, nopt);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	\param width device width
-	\param length device length
+	\param wd device width
+	\param ln device length (FIXME: is this used???)
 	\param s_ext true if source is at end of device stack (external)
 	\param d_ext true if drain is at end of device stack (external)
 	\param nopt global netlist parameters and constants
  */
 void
 transistor::parasitics::__update(
-		const real_type width, const real_type length,
+		const real_type wd, const real_type ln,
 		const bool s_ext, const bool d_ext,
 		const netlist_options& nopt) {
 	STACKTRACE_VERBOSE;
@@ -1115,17 +1115,17 @@ transistor::parasitics::__update(
 		nopt.fet_diff_overhang : half_spacing);
 	// areas of internal stack nodes are halved to 
 	// assume internal sharing, split to each sharer.
-	source_area = width * sl * lsq;
+	source_area = wd * sl * lsq;
 	source_perimeter = pge ? 
-		(s_ext ? (width + sl) *l2		// width +side
+		(s_ext ? (wd + sl) *l2		// width +side
 			: sl*l2) :			// sides only
-		(s_ext ? (width*nopt.lambda + sl*l2)	// 3 sides
+		(s_ext ? (wd*nopt.lambda + sl*l2)	// 3 sides
 			: (sl * l2));			// 2 sides
-	drain_area = width * dl * lsq;
+	drain_area = wd * dl * lsq;
 	drain_perimeter = pge ?
-		(d_ext ? (width + dl) *l2		// width +side
+		(d_ext ? (wd + dl) *l2		// width +side
 			: dl*l2) :			// sides only
-		(d_ext ? (width*nopt.lambda + dl*l2)	// 3 sides
+		(d_ext ? (wd*nopt.lambda + dl*l2)	// 3 sides
 			: (dl * l2));			// 2 sides
 }
 
@@ -1235,12 +1235,12 @@ netlist::__bind_footprint(const footprint& f, const netlist_options& nopt) {
 	for (; si!=se; ++si, ++li) {
 		const string& nn(si->get_name());
 		if (nn.length()) {
-			li->name = nn;
+			li->set_name(nn);
 			// mangle here?
 		} else {
 			ostringstream oss;
 			oss << "INTSUB" << nopt.emit_colon() << subs_count;
-			li->name = oss.str();
+			li->set_name(oss.str());
 			++subs_count;
 		}
 	}
@@ -1838,7 +1838,7 @@ netlist::lookup_transistor(const transistor_reference& tr) const {
 static
 bool
 __local_subckt_less(const size_t i, const local_netlist& r) {
-	return i < r.transistor_index_offset;
+	return i < r.get_index_offset();
 }
 
 /**
@@ -1860,7 +1860,7 @@ netlist::lookup_transistor_index(const size_t ti) const {
 		INVARIANT(f != b);
 		--f;
 		const size_t si = std::distance(b, f);
-		const size_t rem = ti -f->transistor_index_offset;
+		const size_t rem = ti -f->get_index_offset();
 #if 0
 		cerr << "(si,rem=" << si << ',' << rem << ')';
 #endif
@@ -1878,7 +1878,7 @@ netlist::reverse_lookup_transistor_index(const transistor_reference& r) const {
 	if (r.first) {
 		const local_netlist& n(local_subcircuits[r.first -1]);
 		INVARIANT(r.second < n.transistor_count());
-		return n.transistor_index_offset +r.second;
+		return n.get_index_offset() +r.second;
 	} else {
 		INVARIANT(r.second < transistor_count());
 		return r.second;
@@ -1900,7 +1900,7 @@ size_t
 netlist::total_transistor_count(void) const {
 	if (local_subcircuits.size()) {
 		const local_netlist& l(local_subcircuits.back());
-		return l.transistor_index_offset +l.transistor_count();
+		return l.get_index_offset() +l.transistor_count();
 	} else	return transistor_count();
 }
 
@@ -2677,6 +2677,7 @@ netlist::summarize_parasitics(const netlist_options& nopt) {
 		for ( ; fi!=fe; ++fi, ++ai) {
 			node_pool[*ai].cap += type.node_pool[*fi].cap;
 		}
+		INVARIANT(ai == ae);
 	}
 }
 	local_subcircuit_list_type::iterator

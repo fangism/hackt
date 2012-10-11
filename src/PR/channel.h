@@ -11,6 +11,7 @@
 #include "PR/numerics.h"
 #include "PR/channel_type.h"
 
+namespace HAC {
 namespace PR {
 using std::vector;
 using std::ostream;
@@ -105,5 +106,6 @@ struct channel_instance : public channel_state {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 }	// end namespace PR
+}	// end namespace HAC
 
 #endif	// __HAC_PR_CHANNEL_H__

@@ -9,6 +9,7 @@
 
 #include "PR/numerics.h"
 
+namespace HAC {
 /**
 	For routing solving.  
 	Coordinates are int-valued (gridded).
@@ -22,5 +23,6 @@ class rcanvas {
 };	// end class rcanvas
 
 }	// end namespace PR
+}	// end namespace HAC
 
 #endif	// __HAC_PR_RCANVAS_H__

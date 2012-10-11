@@ -9,14 +9,14 @@
 #include "Object/inst/instance_placeholder_base.h"
 
 namespace HAC {
-class cflat_options;
+struct cflat_options;
 namespace entity {
 class port_alias_tracker;
 class state_manager;
 class footprint_frame;
 class port_collection_context;
 class physical_instance_collection;
-struct alias_visitor;
+class alias_visitor;
 struct dump_flags;
 
 //=============================================================================

@@ -29,7 +29,7 @@ using util::persistent_object_manager;
 struct global_entry_context;
 struct global_entry_dumper;
 template <class> class instance_alias_info;
-template <class> class instance_collection_pool_bundle;
+template <class> struct instance_collection_pool_bundle;
 
 #define	STATE_INSTANCE_TEMPLATE_SIGNATURE	template <class Tag>
 #define	STATE_INSTANCE_CLASS			state_instance<Tag>

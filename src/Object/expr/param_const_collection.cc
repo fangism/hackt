@@ -70,6 +70,12 @@ SPECIALIZE_PERSISTENT_TRAITS_CONST_COLLECTION_FULL_DEFINITION(
 SPECIALIZE_PERSISTENT_TRAITS_CONST_COLLECTION_FULL_DEFINITION(
 	HAC::entity::pstring_tag, CONST_PSTRING_COLLECTION_TYPE_KEY)
 
+namespace memory {
+template class count_ptr<const const_collection<HAC::entity::pint_tag> >;
+template class count_ptr<const const_collection<HAC::entity::pbool_tag> >;
+template class count_ptr<const const_collection<HAC::entity::preal_tag> >;
+template class count_ptr<const const_collection<HAC::entity::pstring_tag> >;
+}
 }	// end namespace util
 
 //=============================================================================

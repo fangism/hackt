@@ -865,6 +865,14 @@ endian_stamp(void) {
 	return t;
 }
 
+// degenerate case, don't bother shifting (-Wshift-count-overflow)
+template <>
+unsigned char
+endian_stamp<unsigned char>(void) {
+	unsigned char t = 1;
+	return t;
+}
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\param T should be unsigned type
@@ -974,11 +982,16 @@ persistent_object_manager::load_header(ifstream& f) {
 		// more creative error-handling later...
 		THROW_EXIT;
 	}
+	STACKTRACE_INDENT_PRINT("loading header objects" << endl);
 	size_t i = 0;
 	for ( ; i<max; i++) {
+		STACKTRACE_INDENT_PRINT("object " << i << endl);
 		persistent::hash_key t;
+		STACKTRACE_INDENT_PRINT("aux_alloc_arg_type" << endl);
 		aux_alloc_arg_type aux;
-		streampos head, tail;
+		STACKTRACE_INDENT_PRINT("streampos" << endl);
+		streampos head, tail;	// clang-3.1: crash here in cosim?
+		STACKTRACE_INDENT_PRINT("read fields" << endl);
 		read_value(f, t);
 		read_value(f, aux);
 		read_value(f, head);
