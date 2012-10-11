@@ -370,7 +370,11 @@ then
 fi
 fi
 dnl default to using included sim/vpi_user.h
-test -f "$with_vpi/include/vpi_user.h" || VPI_INCLUDE='-I$(srcdir)/sim'
+if test -f "$with_vpi/include/vpi_user.h"
+then
+	AC_DEFINE(EXTERNAL_VPI_USER_H, 1,
+	[Define to 1 to use included sim/vpi_user.h])
+fi
 dnl AM_CONDITIONAL(HAVE_VPI, test "$VPI_INCLUDE")
 AC_SUBST(VPI_INCLUDE)
 AC_SUBST(VPI_LDPATH)

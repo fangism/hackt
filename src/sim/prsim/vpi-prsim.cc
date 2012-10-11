@@ -51,7 +51,11 @@ DEFAULT_STATIC_TRACE_BEGIN
 #endif
 
 // from either included sim/vpi_user.h or external: $(VPI_INCLUDE)
+#ifdef	EXTERNAL_VPI_USER_H
 #include "vpi_user.h"
+#else
+#include "sim/vpi_user.h"
+#endif
 
 // use 64b time if there is 64b native integer available (some 32b platforms)
 #ifdef	HAVE_UINT64_TYPE	// from "util/inttypes.h"
