@@ -258,7 +258,8 @@ VCD_MSG_FILTER = $(GREP) -v "Writing simulation vcd"
 # semi-hackish way to conditionally filter random timing
 # HACK: if the file name has 'random' in it, then filter out timestamps
 PRSIMRC_TEST_FILTER_SCRIPT = \
-	$(SED) -e '0,/DELETE FROM HERE/d' -e '/DELETE TO HERE/,$$d' $< | \
+	$(SED) -e '/^Writing simulation vcd/,/DELETE FROM HERE/d' \
+		-e '/DELETE TO HERE/,$$d' $< | \
 		$(PRSIMRC_FILTER_AWK) > $@ ; \
 	case $< in \
 	  *random*) $(CAT) $@ | $(PRSIMRC_TIME_FILTER_AWK) | \
