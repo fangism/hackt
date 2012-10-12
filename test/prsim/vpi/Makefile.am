@@ -18,6 +18,7 @@ HACKT_PRSIMRC_TEST_SUBJECTS = inverters \
 	and_tree and_template_tree \
 	and_tree_reverse and_template_tree_reverse \
 	inverters-separate \
+	unstable-vacuous \
 	flop_it
 
 # for .v verilog tests
