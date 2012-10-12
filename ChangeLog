@@ -1,6 +1,14 @@
 "ChangeLog"
 #	$Id: ChangeLog,v 1.256 2011/05/03 19:20:32 fang Exp $
 
+2012-10-11	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-86-50:
+	  Merged clangification branch to master!
+	  Merged prsim-engine-rewrite branch to master!
+	  configure.ac: date bump
+
+
 2012-08-08	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-86-41f:
