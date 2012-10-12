@@ -379,20 +379,24 @@ yacc: bison (GNU Bison) 1.875c
 readline: GNU readline 4.3
 
 
-(Fang "build32-1")
-Version: hackt 0.1.4-devel-20091002
-CVS Tag: HACKT-00-01-04-main-00-83-33
-Configured with: '--prefix=/home/davidfang/experimental' '--with-readline' 'CC=ccache gcc' 'CXX=ccache g++' 'YACC=yacc' '--with-vpi=/usr/local/cad/synopsys/vcs-mx/linux' '-C' '--enable-ltdl-convenience'
-build-triplet: i686-redhat-linux-gnu
-c++: g++ (GCC) 3.4.6 20060404 (Red Hat 3.4.6-3)
-AM_CPPFLAGS: -I../../src    
+(Fang "fe1")
+Version: hackt 0.1.4-devel-20121011
+CVS Tag: HACKT-00-01-04-main-00-86-50
+Configured with: 'ACLOCAL_FLAGS=-I /share/dev/tools/share/aclocal' '--prefix=/home/davidfang/experimental' '--with-readline' 'CC=ccache gcc' 'CXX=ccache g++' 'YACC=yacc' '--with-vpi=/usr/local/cad/synopsys/vcs-mx/linux' '-C' '--enable-ltdl-convenience' '--enable-ltdl-install=no' --enable-ltdl-install=no
+build-triplet: i686-pc-linux-gnu
+c++: g++ (GCC) 3.4.6 20060404 (Red Hat 3.4.6-8)
+AM_CPPFLAGS: -I../../hackt/src -I../../hackt/libltdl    
 AM_CXXFLAGS: -pipe -ansi -pedantic-errors -Wold-style-cast -Woverloaded-virtual -W -Wextra -Wall -Wundef -Wshadow -Wno-unused-parameter -Wpointer-arith -Wcast-qual -Wcast-align -Wconversion -Werror
+AM_LDFLAGS: 
 config-CXXFLAGS: -g -O2
-config-LIBS:  -lreadline -lncurses 
+config-CPPFLAGS: 
+config-LDFLAGS: 
+config-LIBS: -ldl 
 lex: flex version 2.5.4
-yacc: $FreeBSD: src/usr.bin/yacc/skeleton.c,v 1.28 2000/01/17 02:04:06 bde Exp $
+yacc: bison (GNU Bison) 2.5
 readline: GNU readline 4.3
 guile: guile-config - Guile version 1.8.6
+build-date: Thu Oct 11 13:29:02 PDT 2012
 
 
 (Nathan Smith)
@@ -441,18 +445,24 @@ lex: flex version 2.5.4
 yacc: bison (GNU Bison) 1.875
 readline: none
 
-(Fang, with VCS-64!)
-Version: hackt 0.1.4-devel-20081105
-CVS Tag: HACKT-00-01-04-main-00-82-50-merged-prsim-10-20
-Configured with: '--with-vpi=/usr/local/cad/synopsys/vcs-mx/amd64' '--with-readline' '--disable-static' 'YACC=yacc' '--prefix=/home/davidfang/local64' '-C' 'CC=ccache gcc' 'CXX=ccache g++' '--enable-ltdl-convenience'
-build-triplet: x86_64-redhat-linux-gnu
-c++: g++ (GCC) 3.4.6 20060404 (Red Hat 3.4.6-8)
+(Fang, "build64-1" with VCS-64!)
+Version: hackt 0.1.4-devel-20121011
+CVS Tag: HACKT-00-01-04-main-00-86-50
+Configured with: 'ACLOCAL_FLAGS=-I /share/dev/tools/share/aclocal' '--with-vpi=/usr/local/cad/synopsys/vcs-mx/amd64' '--with-readline' '--disable-static' 'YACC=yacc' '--prefix=/home/davidfang/experimental64' 'CC=ccache gcc' 'CXX=ccache g++' '-C' '--disable-docs' '--enable-ltdl-convenience' '--enable-ltdl-install=no' --enable-ltdl-install=no
+build-triplet: x86_64-unknown-linux-gnu
+c++: g++ (GCC) 3.4.6 20060404 (Red Hat 3.4.6-3)
+AM_CPPFLAGS: -I../../hackt/src -I../../hackt/libltdl    
+AM_CXXFLAGS: -pipe -ansi -pedantic-errors -Wold-style-cast -Woverloaded-virtual -W -Wextra -Wall -Wundef -Wshadow -Wno-unused-parameter -Wpointer-arith -Wcast-qual -Wcast-align -Wconversion -Werror
+AM_LDFLAGS: 
 config-CXXFLAGS: -g -O2
-config-LIBS:  -lreadline -lncurses 
+config-CPPFLAGS: 
+config-LDFLAGS: 
+config-LIBS: -ldl 
 lex: flex version 2.5.4
-yacc: $FreeBSD: src/usr.bin/yacc/skeleton.c,v 1.28 2000/01/17 02:04:06 bde Exp $
+yacc: bison (GNU Bison) 2.5
 readline: GNU readline 4.3
-guile: guile-config - Guile version 1.6.8
+guile: guile-config - Guile version 1.8.6
+
 
 (Fang, hal-03)
 Version: hackt 0.1.4-devel-20081105

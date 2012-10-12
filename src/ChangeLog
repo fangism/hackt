@@ -3,6 +3,13 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2012-10-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-86-50:
+	  Merged clangification branch to master!
+	  Merged prsim-engine-rewrite branch to master!
+
+
 2012-10-08	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-86-49b-clangification-01:

@@ -483,7 +483,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	pchb-test-a-01 pchb-test-a-02 \
 	pcfb-test-a-01 pcfb-test-a-02 \
 	pcehb-test-a-01 pcehb-test-a-02 \
-	pcefb-test-a-01 pcefb-test-a-02
+	pcefb-test-a-01 pcefb-test-a-02 \
 	pchb-test-b-01 \
 	pcfb-test-b-01 \
 	pcehb-test-b-01 \

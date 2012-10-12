@@ -1318,10 +1318,15 @@ lexer/$(LIBBOGUS3_LA)-$(SPICE_LEX_ROOT).lo \
 libhacktparsers_la_SOURCES = \
 	$(PARSER_CC_FILES) $(PARSER_H_FILES)
 
+CONFTEST_HEADER_FILES = \
+	test/overload-virtual-using-conftest.h \
+	test/friend_function_namespace-conftest.h
+
+EXTRA_DIST += $(CONFTEST_HEADER_FILES)
+
 ALL_HEADER_FILES += \
 	$(CONFIG_HEADERS) \
-	test/overload-virtual-using-conftest.h \
-	test/friend_function_namespace-conftest.h \
+	$(CONFTEST_HEADER_FILES) \
 	$(COMMON_H_FILES) \
 	$(OBJECT_H_FILES) \
 	$(OBJECT_COMMON_H_FILES) \

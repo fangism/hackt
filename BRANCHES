@@ -10,8 +10,5 @@ When a branch is merged for the last time, delete the entry from this file.
 Open branches:
 
 Coming soon:
-
-	HACKT-00-01-04-main-00-82-??-prsim-??
-		Completely rewrite of event model (simplification).
-		Guile Scheme interface to data structures, like chpsim.
+	Guile Scheme interface to data structures, like chpsim.
 
