@@ -386,6 +386,9 @@ EMPTY_CFLAT_PRS_TESTS += \
 	cond-08 cond-10 cond-11 cond-15 \
 	macro-pass-01
 
+# We do not want to trace prsim tests in this directory -- disable
+PRSIMRC_AUTOTRACE_DISABLE_HOOK = autotrace=0;
+
 HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	spec_min_sep_proc-12 \
 	macro-pass-02
