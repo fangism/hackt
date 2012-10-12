@@ -3,6 +3,8 @@
 	$Id: $
  */
 
+#define	ENABLE_STACKTRACE			0
+
 #include <iostream>
 #include <iomanip>
 #include <fstream>
@@ -16,6 +18,7 @@
 #include "Object/interfaces/VCDwriter.h"
 #include "cvstag.h"
 #include "util/indent.h"
+#include "util/stacktrace.h"
 
 namespace HAC {
 namespace SIM {
@@ -35,10 +38,13 @@ VCDManager::VCDManager(const string& fn, const module& m, const real_time& t,
 		event_count(1), last_time(t),
 		trace_file(new ofstream(fn.c_str())),
 		time_scale(ts) {
+	STACKTRACE_VERBOSE;
 if (!good()) {
 	cerr << "Error opening vcd file '" << fn << "' for writing." << endl;
 	trace_name.clear();
 } else {
+	STACKTRACE_INDENT_PRINT("writing vcd header section" << endl);
+	STACKTRACE_INDENT_PRINT("opened file: " << trace_name << endl);
 // $date, $version, $timescale
 {
 	time_t tm;

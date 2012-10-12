@@ -27,6 +27,7 @@
 #include "util/string.tcc"
 #include "util/utypes.h"
 #include "util/timer.h"
+#include "util/stacktrace.h"
 
 namespace HAC {
 namespace SIM {
@@ -1436,8 +1437,8 @@ if (a.size() != 1) {
 	return command_type::SYNTAX;
 } else {
 	if (s.is_tracing()) {
-		cout << "Active trace file: " <<
-			s.get_trace_manager()->get_trace_name() << endl;
+		const string& tn(s.get_trace_manager()->get_trace_name());
+		cout << "Active trace file: " << tn << endl;
 	} else {
 		cout << "No active trace file." << endl;
 	}
@@ -1624,13 +1625,17 @@ DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(VCDFile, "vcd-file",
 template <class State>
 int
 VCDFile<State>::main(State& s, const string_list& a) {
+	STACKTRACE_VERBOSE;
 if (a.size() != 1) {
 	usage(cerr << "usage: ");
 	return command_type::SYNTAX;
 } else {
-	if (s.is_tracing()) {
-		cout << "Active vcd file: " <<
-			s.get_vcd_manager()->get_trace_name() << endl;
+	const util::memory::never_ptr<typename State::vcd_manager_type>
+		vt(s.get_vcd_manager_if_tracing());
+	if (vt) {
+		STACKTRACE_INDENT_PRINT("is tracing");
+		const string& tn(vt->get_trace_name());
+		cout << "Active vcd file: " << tn << endl;
 	} else {
 		cout << "No active vcd file." << endl;
 	}
