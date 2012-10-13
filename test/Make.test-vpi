@@ -42,6 +42,7 @@ VCS_SCANDEPEND = $(top_srcdir)/lib/verilog/vcs_scandepend.sh
 AUTO_IGNORE += $(HACKT_VPI_CLEAN_IGNORE_PATTERNS)
 AUTO_IGNORE += .vcsmx_rebuild
 DISTCLEANFILES += .vcsmx_rebuild
+CLEANFILES += ucli.key
 
 VCS_OUTPUT_FILTER = \
 	$(SED) -n '/^[$$]start of simulation/,/^[$$]finish at simulation/p' | \

@@ -108,6 +108,7 @@ subdir/channel-values-X.txt:
 	$(ECHO) "0" ; $(ECHO) "0" ; $(ECHO) "0" ; \
 	$(ECHO) "1" ; $(ECHO) "1" ; $(ECHO) "1" ; $(ECHO) "1" ; \
 		} > $@
+CLEANFILES += subdir/channel-values-X.txt
 
 channel-source-sink-b.vx-out: subdir/channel-values-X.txt
 channel-source-sink-c.vx-out: subdir/channel-values-X.txt
