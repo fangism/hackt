@@ -60,182 +60,184 @@ UTIL_TCC_FILES = \
 # POLICY: every .tcc MUST have a corresponding .h file, 
 # but the _fwd.h file is optional.  
 UTIL_HEADER_FILES = \
-	$(UTIL_TCC_FILES:.tcc=.h) \
-	util/STL/algorithm_fwd.h \
-	util/STL/back_inserter.h \
-	util/STL/allocator_fwd.h \
-	util/STL/construct_fwd.h \
-	util/STL/container_iterator.h \
-	util/STL/deque_fwd.h \
-	util/STL/functional_fwd.h \
-	util/STL/functional.h \
-	util/STL/hash_map_fwd.h \
-	util/STL/hash_map.h \
-	util/STL/hash_map_utils.h \
-	util/STL/iterator_fwd.h \
-	util/STL/list_fwd.h \
-	util/STL/map_fwd.h \
-	util/STL/namespace.h \
-	util/STL/pair_fwd.h \
-	util/STL/queue_fwd.h \
-	util/STL/reverse_iterator.h \
-	util/STL/set_fwd.h \
-	util/STL/stack_fwd.h \
-	util/STL/valarray_fwd.h \
-	util/STL/valarray_iterator.h \
-	util/STL/vector_fwd.h \
-	util/IO_utils_fwd.h \
-	util/addressof.h \
-	util/algorithm.h \
-	util/array_indexer.h \
-	util/array_traits.h \
-	util/assoc_traits_fwd.h \
-	util/assoc_traits.h \
 	util/attributes.h \
-	util/bitmanip.h \
-	util/bitwise_functional.h \
-	util/boolean_types.h \
 	util/c99.h \
 	util/c_decl.h \
-	util/caller.h \
-	util/call_traits.h \
-	util/copy_if.h \
-	util/cppcat.h \
-	util/counter.h \
-	util/convert.h \
 	util/ctype.h \
-	util/dereference.h \
-	util/directory.h \
-	util/dirent.h \
-	util/discrete_interval_set_fwd.h \
-	util/fig/xfig.h \
-	util/finite_vector.h \
+	util/cppcat.h \
 	util/FILE_fwd.h \
-	util/file_status.h \
-	util/for_all.h \
-	util/format_IO.h \
-	util/function_traits.h \
 	util/free.h \
 	util/getopt_portable.h \
-	util/hash_qmap_fwd.h \
-	util/hash_specializations.h \
-	util/ifthenelse.h \
-	util/indent.h \
-	util/index_functor.h \
 	util/inttypes.h \
-	util/iomanip.h \
-	util/iterator_more.h \
 	util/libc.h \
 	util/libc_temp.h \
 	util/likely.h \
-	util/list_vector_fwd.h \
 	util/macros.h \
-	util/maplikeset.h \
-	util/member_saver_fwd.h \
-	util/member_saver.h \
-	util/member_select.h \
-	util/memory/deallocation_policy_fwd.h \
-	util/memory/deallocation_policy.h \
-	util/memory/deep_copy.h \
-	util/memory/chunk_map_pool_fwd.h \
-	util/memory/list_vector_pool_fwd.h \
-	util/memory/pointer_classes_fwd.h \
-	util/memory/pointer_classes.h \
-	util/memory/pointer_traits.h \
-	util/memory/pointer_manipulator.h \
-	util/memory/unique_ptr.h \
-	util/memory/excl_ptr.h \
-	util/memory/excl_array_ptr.h \
-	util/memory/excl_malloc_ptr.h \
-	util/memory/free_list.h \
-	util/memory/ref_count_pool.h \
-	util/memory/ref_count_pool_anchor.h \
-	util/memory/thread_lock.h \
-	util/multidimensional_qmap_fwd.h \
-	util/multidimensional_sparse_set_fwd.h \
-	util/multikey_fwd.h \
-	util/multikey_assoc_fwd.h \
-	util/multikey_map_fwd.h \
-	util/multikey_qmap_fwd.h \
-	util/multikey_set_fwd.h \
-	util/named_ifstream_manager.h \
-	util/nested_iterator.h \
-	util/new_functor_fwd.h \
 	util/NULL.h \
-	util/nullary_function_fwd.h \
-	util/nullary_function.h \
-	util/null_construct.h \
-	util/numeric/abs.h \
-	util/numeric/bigger_ints.h \
 	util/numeric/constants.h \
-	util/numeric/clz.h \
-	util/numeric/ctz.h \
-	util/numeric/div.h \
-	util/numeric/ffs.h \
-	util/numeric/functional.h \
-	util/numeric/integer_traits.h \
-	util/numeric/inttype_traits.h \
-	util/numeric/nibble_tables.h \
-	util/numeric/parity.h \
-	util/numeric/popcount.h \
-	util/numeric/random.h \
-	util/numeric/sign_traits.h \
-	util/numeric/trigonometry.h \
-	util/numeric/zero.h \
-	util/numeric/zerodiv_detect.h \
-	util/offset_array.h \
-	util/operators.h \
-	util/optparse_fwd.h \
-	util/optparse.h \
-	util/packed_array_fwd.h \
-	util/persistent_fwd.h \
-	util/persistent.h \
-	util/persistent_hash.h \
 	util/pthread.h \
-	util/qmap_fwd.h \
 	util/readline.h \
-	util/readline_wrap.h \
-	util/rebinder.h \
-	util/reference_wrapper.h \
-	util/reserve.h \
-	util/ring_node_fwd.h \
 	util/signal.h \
-	util/sfinae_types.h \
 	util/size_t.h \
-	util/sstream.h \
-	util/stack_saver.h \
-	util/stacktrace.h \
-	util/static_assert.h \
-	util/static_trace.h \
-	util/stream_ptr.h \
-	util/string_fwd.h \
-	util/swap_saver.h \
-	util/syntax_fwd.h \
-	util/syntax.h \
-	util/tagged_subtype.h \
-	util/template.h \
-	util/timer.h \
 	util/typeof.h \
-	util/tokenize_fwd.h \
-	util/tokenize.h \
-	util/type_traits.h \
-	util/union_find.h \
-	util/uninitialized.h \
-	util/using_istream.h \
-	util/using_ostream.h \
 	util/utypes.h \
-	util/value_saver_fwd.h \
-	util/value_saver.h \
-	util/vector_ops.h \
-	util/visitee.h \
-	util/visitor_functor.h \
-	util/what_fwd.h \
-	util/wtf.h \
-	util/xdr.h \
-	util/binders.h \
-	util/compose.h \
-	util/conditional.h \
-	util/ptrs_functional.h
+	util/xdr.h
+
+UTIL_CXX_HEADER_FILES = \
+	$(UTIL_TCC_FILES:.tcc=.hh) \
+	util/fig/xfig.hh \
+	util/STL/algorithm_fwd.hh \
+	util/STL/back_inserter.hh \
+	util/STL/allocator_fwd.hh \
+	util/STL/construct_fwd.hh \
+	util/STL/container_iterator.hh \
+	util/STL/deque_fwd.hh \
+	util/STL/functional_fwd.hh \
+	util/STL/functional.hh \
+	util/STL/hash_map_fwd.hh \
+	util/STL/hash_map.hh \
+	util/STL/hash_map_utils.hh \
+	util/STL/iterator_fwd.hh \
+	util/STL/list_fwd.hh \
+	util/STL/map_fwd.hh \
+	util/STL/namespace.hh \
+	util/STL/pair_fwd.hh \
+	util/STL/queue_fwd.hh \
+	util/STL/reverse_iterator.hh \
+	util/STL/set_fwd.hh \
+	util/STL/stack_fwd.hh \
+	util/STL/valarray_fwd.hh \
+	util/STL/valarray_iterator.hh \
+	util/STL/vector_fwd.hh \
+	util/IO_utils_fwd.hh \
+	util/addressof.hh \
+	util/algorithm.hh \
+	util/array_indexer.hh \
+	util/array_traits.hh \
+	util/assoc_traits_fwd.hh \
+	util/assoc_traits.hh \
+	util/bitmanip.hh \
+	util/bitwise_functional.hh \
+	util/boolean_types.hh \
+	util/caller.hh \
+	util/call_traits.hh \
+	util/copy_if.hh \
+	util/counter.hh \
+	util/convert.hh \
+	util/dereference.hh \
+	util/directory.hh \
+	util/dirent.hh \
+	util/discrete_interval_set_fwd.hh \
+	util/finite_vector.hh \
+	util/file_status.hh \
+	util/for_all.hh \
+	util/format_IO.hh \
+	util/function_traits.hh \
+	util/hash_qmap_fwd.hh \
+	util/hash_specializations.hh \
+	util/ifthenelse.hh \
+	util/indent.hh \
+	util/index_functor.hh \
+	util/iomanip.hh \
+	util/iterator_more.hh \
+	util/list_vector_fwd.hh \
+	util/maplikeset.hh \
+	util/member_saver_fwd.hh \
+	util/member_saver.hh \
+	util/member_select.hh \
+	util/memory/deallocation_policy_fwd.hh \
+	util/memory/deallocation_policy.hh \
+	util/memory/deep_copy.hh \
+	util/memory/chunk_map_pool_fwd.hh \
+	util/memory/list_vector_pool_fwd.hh \
+	util/memory/pointer_classes_fwd.hh \
+	util/memory/pointer_classes.hh \
+	util/memory/pointer_traits.hh \
+	util/memory/pointer_manipulator.hh \
+	util/memory/unique_ptr.hh \
+	util/memory/excl_ptr.hh \
+	util/memory/excl_array_ptr.hh \
+	util/memory/excl_malloc_ptr.hh \
+	util/memory/free_list.hh \
+	util/memory/ref_count_pool.hh \
+	util/memory/ref_count_pool_anchor.hh \
+	util/memory/thread_lock.hh \
+	util/multidimensional_qmap_fwd.hh \
+	util/multidimensional_sparse_set_fwd.hh \
+	util/multikey_fwd.hh \
+	util/multikey_assoc_fwd.hh \
+	util/multikey_map_fwd.hh \
+	util/multikey_qmap_fwd.hh \
+	util/multikey_set_fwd.hh \
+	util/named_ifstream_manager.hh \
+	util/nested_iterator.hh \
+	util/new_functor_fwd.hh \
+	util/nullary_function_fwd.hh \
+	util/nullary_function.hh \
+	util/null_construct.hh \
+	util/numeric/abs.hh \
+	util/numeric/bigger_ints.hh \
+	util/numeric/clz.hh \
+	util/numeric/ctz.hh \
+	util/numeric/div.hh \
+	util/numeric/ffs.hh \
+	util/numeric/functional.hh \
+	util/numeric/integer_traits.hh \
+	util/numeric/inttype_traits.hh \
+	util/numeric/nibble_tables.hh \
+	util/numeric/parity.hh \
+	util/numeric/popcount.hh \
+	util/numeric/random.hh \
+	util/numeric/sign_traits.hh \
+	util/numeric/trigonometry.hh \
+	util/numeric/zero.hh \
+	util/numeric/zerodiv_detect.hh \
+	util/offset_array.hh \
+	util/operators.hh \
+	util/optparse_fwd.hh \
+	util/optparse.hh \
+	util/packed_array_fwd.hh \
+	util/persistent_fwd.hh \
+	util/persistent.hh \
+	util/persistent_hash.hh \
+	util/qmap_fwd.hh \
+	util/readline_wrap.hh \
+	util/rebinder.hh \
+	util/reference_wrapper.hh \
+	util/reserve.hh \
+	util/ring_node_fwd.hh \
+	util/sfinae_types.hh \
+	util/sstream.hh \
+	util/stack_saver.hh \
+	util/stacktrace.hh \
+	util/static_assert.hh \
+	util/static_trace.hh \
+	util/stream_ptr.hh \
+	util/string_fwd.hh \
+	util/swap_saver.hh \
+	util/syntax_fwd.hh \
+	util/syntax.hh \
+	util/tagged_subtype.hh \
+	util/template.hh \
+	util/timer.hh \
+	util/tokenize_fwd.hh \
+	util/tokenize.hh \
+	util/type_traits.hh \
+	util/union_find.hh \
+	util/uninitialized.hh \
+	util/using_istream.hh \
+	util/using_ostream.hh \
+	util/value_saver_fwd.hh \
+	util/value_saver.hh \
+	util/vector_ops.hh \
+	util/visitee.hh \
+	util/visitor_functor.hh \
+	util/what_fwd.hh \
+	util/wtf.hh \
+	util/binders.hh \
+	util/compose.hh \
+	util/conditional.hh \
+	util/ptrs_functional.hh
 
 UTIL_CC_FILES = \
 	util/IO_utils.cc \
@@ -246,7 +248,6 @@ UTIL_CC_FILES = \
 	util/format_IO.cc \
 	util/indent.cc \
 	util/getopt_mapped.cc \
-	util/libc.c \
 	util/named_ifstream_manager.cc \
 	util/numformat.cc \
 	util/optparse.cc \
@@ -267,8 +268,13 @@ UTIL_CC_FILES = \
 	util/numeric/nibble_tables.cc \
 	util/numeric/random.cc
 
+UTIL_C_FILES = \
+	util/libc.c
+
 libfangutil_la_SOURCES = \
+	$(UTIL_C_FILES) \
 	$(UTIL_CC_FILES) \
+	$(UTIL_CXX_HEADER_FILES) \
 	$(UTIL_HEADER_FILES) \
 	$(UTIL_TCC_FILES)
 libfangutil_la_LDFLAGS = $(RL_LDPATH) $(NCURSES_LDPATH)
@@ -278,22 +284,25 @@ libfangutil_la_LIBADD = $(RL_LIB) $(NCURSES_LIB)
 
 # installed headers (keep to minimum)
 nobase_pkginclude_HEADERS += \
-	util/boolean_types.h \
+	util/boolean_types.hh \
 	util/cppcat.h \
 	util/macros.h \
-	util/memory/pointer_classes_fwd.h \
-	util/memory/pointer_manipulator.h \
-	util/memory/pointer_traits.h \
-	util/memory/count_ptr.h \
-	util/new_functor_fwd.h \
-	util/persistent_fwd.h \
-	util/persistent.h
+	util/memory/pointer_classes_fwd.hh \
+	util/memory/pointer_manipulator.hh \
+	util/memory/pointer_traits.hh \
+	util/memory/count_ptr.hh \
+	util/new_functor_fwd.hh \
+	util/persistent_fwd.hh \
+	util/persistent.hh
+
+GUILE_UTIL_HH_FILES = \
+	util/libguile.hh \
+	util/guile_STL.hh
 
 GUILE_UTIL_H_FILES = \
-	util/libguile.h \
-	util/guile_gh.h \
-	util/guile_STL.h
+	util/guile_gh.h
 
+UTIL_CXX_HEADER_FILES += $(GUILE_UTIL_HH_FILES)
 UTIL_HEADER_FILES += $(GUILE_UTIL_H_FILES)
 
 # exceptions to work-around guile header dependencies
@@ -304,6 +313,7 @@ LIBGUILE_HCHK_FLAGS = $(GUILE_CPPFLAGS) $(GUILE_WARN_FLAGS)
 
 libguileutil_la_SOURCES = \
 	util/libguile.cc \
+	$(GUILE_UTIL_HH_FILES) \
 	$(GUILE_UTIL_H_FILES)
 libguileutil_la_CPPFLAGS = $(GUILE_CPPFLAGS)
 libguileutil_la_CXXFLAGS = $(AM_CXXFLAGS) $(GUILE_WARN_FLAGS)
@@ -314,36 +324,46 @@ util_progs_readline_toy_SOURCES = util/progs/readline_toy.cc
 util_progs_readline_toy_LDADD = $(LIBFANGUTIL)
 
 ALL_HEADER_FILES += $(UTIL_HEADER_FILES)
+ALL_CXX_HEADER_FILES += $(UTIL_CXX_HEADER_FILES)
 
 ALL_TCC_FILES += $(UTIL_TCC_FILES)
 
-util/using_istream.hchk:
+# skip these, not standalone
+util/using_istream.hhchk:
 	@$(TOUCH) $@
 
-util/using_ostream.hchk:
+util/using_ostream.hhchk:
 	@$(TOUCH) $@
 
 # extending default header check
 LIBGUILE_HCHK_TEST_SCRIPT =
+LIBGUILE_HHCHK_TEST_SCRIPT =
 if HAVE_LIBGUILE
 LIBGUILE_HCHK_TEST_SCRIPT += \
 	$(ECHO) "Validating $< ... " ; \
 	more_hchk_flags="$(LIBGUILE_HCHK_FLAGS)" ; \
 	$(H_CHECK_TEST_SCRIPT)
+LIBGUILE_HHCHK_TEST_SCRIPT += \
+	$(ECHO) "Validating $< ... " ; \
+	more_hchk_flags="$(LIBGUILE_HCHK_FLAGS)" ; \
+	$(HH_CHECK_TEST_SCRIPT)
 else
 LIBGUILE_HCHK_TEST_SCRIPT += \
 	$(ECHO) "Skipping $< ... " ; \
 	$(TOUCH) $@
+LIBGUILE_HHCHK_TEST_SCRIPT += \
+	$(ECHO) "Skipping $< ... " ; \
+	$(TOUCH) $@
 endif
 
-util/libguile.hchk: util/libguile.h
-	@$(LIBGUILE_HCHK_TEST_SCRIPT)
+util/libguile.hhchk: util/libguile.hh
+	@$(LIBGUILE_HHCHK_TEST_SCRIPT)
 
 util/guile_gh.hchk: util/guile_gh.h
 	@$(LIBGUILE_HCHK_TEST_SCRIPT)
 
-util/guile_STL.hchk: util/guile_STL.h
-	@$(LIBGUILE_HCHK_TEST_SCRIPT)
+util/guile_STL.hhchk: util/guile_STL.hh
+	@$(LIBGUILE_HHCHK_TEST_SCRIPT)
 
 LEXYACC_PREFIX_GENERATOR = util/lang/lexyacc/lexyacc-prefix-generator.awk
 

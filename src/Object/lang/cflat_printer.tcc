@@ -13,14 +13,14 @@
 #include <sstream>
 #include <numeric>
 #include <vector>
-#include "Object/lang/cflat_printer.h"
-#include "Object/def/footprint.h"
-#include "main/cflat_options.h"
+#include "Object/lang/cflat_printer.hh"
+#include "Object/def/footprint.hh"
+#include "main/cflat_options.hh"
 
 namespace HAC {
 namespace entity {
 namespace PRS {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

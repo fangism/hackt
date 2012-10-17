@@ -10,22 +10,22 @@
 #include <iostream>
 #include <algorithm>
 
-#include "Object/ref/nonmeta_ref_implementation.h"
-// #include "Object/ref/simple_nonmeta_instance_reference.h"
-#include "Object/unroll/unroll_context.h"
+#include "Object/ref/nonmeta_ref_implementation.hh"
+// #include "Object/ref/simple_nonmeta_instance_reference.hh"
+#include "Object/unroll/unroll_context.hh"
 #include "Object/global_entry_context.tcc"
 #include "Object/nonmeta_context.tcc"
-#include "Object/expr/nonmeta_index_list.h"
-#include "Object/expr/dynamic_meta_index_list.h"
-#include "Object/traits/classification_tags.h"
-#include "Object/global_entry.h"
+#include "Object/expr/nonmeta_index_list.hh"
+#include "Object/expr/dynamic_meta_index_list.hh"
+#include "Object/traits/classification_tags.hh"
+#include "Object/global_entry.hh"
 
-#include "common/ICE.h"
+#include "common/ICE.hh"
 
-#include "util/compose.h"
-#include "util/dereference.h"
-#include "util/member_select.h"
-#include "util/stacktrace.h"
+#include "util/compose.hh"
+#include "util/dereference.hh"
+#include "util/member_select.hh"
+#include "util/stacktrace.hh"
 
 #if ENABLE_STACKTRACE
 #include <iterator>
@@ -35,7 +35,7 @@
 namespace HAC {
 namespace entity {
 //=============================================================================
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using std::transform;
 using std::copy;
 using ADS::unary_compose;

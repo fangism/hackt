@@ -7,11 +7,11 @@
 #ifndef	__HAC_OBJECT_INST_PORT_ALIAS_TRACKER_TCC__
 #define	__HAC_OBJECT_INST_PORT_ALIAS_TRACKER_TCC__
 
-#include "Object/inst/port_alias_tracker.h"
-#include "Object/inst/instance_alias_info.h"
+#include "Object/inst/port_alias_tracker.hh"
+#include "Object/inst/instance_alias_info.hh"
 
 #include "util/macros.h"
-// #include "util/stacktrace.h"
+// #include "util/stacktrace.hh"
 
 namespace HAC {
 namespace entity {

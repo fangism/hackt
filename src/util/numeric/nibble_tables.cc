@@ -4,7 +4,7 @@
 	$Id: nibble_tables.cc,v 1.2 2007/08/29 18:56:45 fang Exp $
  */
 
-#include "util/numeric/nibble_tables.h"
+#include "util/numeric/nibble_tables.hh"
 
 namespace util {
 namespace numeric {

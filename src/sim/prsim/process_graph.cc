@@ -13,15 +13,15 @@
 #include <iostream>
 #include <numeric>			// for accumulate
 #include <functional>
-#include "sim/prsim/State-prsim.h"
+#include "sim/prsim/State-prsim.hh"
 #include "sim/prsim/util.tcc"
 #include "sim/prsim/Rule.tcc"
-#include "sim/ISE.h"
-#include "Object/def/footprint.h"
-#include "Object/lang/PRS_footprint.h"
-#include "Object/lang/SPEC.h"
-#include "util/stacktrace.h"
-#include "util/compose.h"
+#include "sim/ISE.hh"
+#include "Object/def/footprint.hh"
+#include "Object/lang/PRS_footprint.hh"
+#include "Object/lang/SPEC.hh"
+#include "util/stacktrace.hh"
+#include "util/compose.hh"
 
 #if	DEBUG_CHECK
 #define	DEBUG_CHECK_PRINT(x)		STACKTRACE_INDENT_PRINT(x)
@@ -40,7 +40,7 @@
 namespace HAC {
 namespace SIM {
 namespace PRSIM {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 USING_UTIL_COMPOSE
 
 //=============================================================================

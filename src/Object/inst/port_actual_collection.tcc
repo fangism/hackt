@@ -15,27 +15,27 @@
 #include <algorithm>
 #include <list>
 
-#include "Object/inst/port_actual_collection.h"
-#include "Object/inst/instance_collection.h"
-#include "Object/inst/instance_alias_info.h"
-#include "Object/inst/port_alias_tracker.h"
-#include "Object/def/footprint.h"
-#include "Object/expr/const_index_list.h"
-#include "Object/expr/const_range_list.h"
-#include "Object/common/dump_flags.h"
+#include "Object/inst/port_actual_collection.hh"
+#include "Object/inst/instance_collection.hh"
+#include "Object/inst/instance_alias_info.hh"
+#include "Object/inst/port_alias_tracker.hh"
+#include "Object/def/footprint.hh"
+#include "Object/expr/const_index_list.hh"
+#include "Object/expr/const_range_list.hh"
+#include "Object/common/dump_flags.hh"
 
-#include "common/TODO.h"
+#include "common/TODO.hh"
 
-#include "util/multikey.h"
-#include "util/IO_utils.h"
-#include "util/stacktrace.h"
+#include "util/multikey.hh"
+#include "util/IO_utils.hh"
+#include "util/stacktrace.hh"
 #include "util/persistent_object_manager.tcc"
-#include "Object/inst/collection_traits.h"
+#include "Object/inst/collection_traits.hh"
 #include "Object/inst/collection_pool.tcc"	// for lookup_index
 
 namespace HAC {
 namespace entity {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using std::distance;
 using std::for_each;
 using util::read_value;

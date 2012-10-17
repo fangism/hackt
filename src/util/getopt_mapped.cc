@@ -3,7 +3,7 @@
 	$Id: getopt_mapped.cc,v 1.4 2008/11/23 17:54:45 fang Exp $
  */
 
-#include "util/getopt_mapped.h"
+#include "util/getopt_mapped.hh"
 #include <iostream>
 #include <cstring>
 #include "util/libc.h"		// for strsep

@@ -32,10 +32,16 @@ BEGIN {
 # NOTE: a constructor was added because gcc-3.2 requires a constructor
 #	for structs with non-static const members.
 #	gcc-3.3 and up don't require it.  
+# omit constructor in C-mode
+	print "#ifdef __cplusplus";
 	print "\t_yy_output_state_string_(const int k, const char* const* r) :";
 	print "\t\tn(k), rule(r) { }";
+	print "#endif";
 
 	print "} yy_output_state_string;\t\t/* end struct */"
+	print "#ifndef __cplusplus";
+	print "#define yy_output_state_string(x, y) { x, y }"
+	print "#endif";
 	print "";
 #	print "typedef const char* const*\t\tconst_string_array;";
 
@@ -77,8 +83,9 @@ END {
 		# trailing comma is ok
 	}
 	print "};\t\t/* end yysss */";
+	print "#undef yy_output_state_string"
 	print "";
-	print "#endif // __Y_OUTPUT_H__";
+	print "#endif /* __Y_OUTPUT_H__ */";
 	print "";
 }
 

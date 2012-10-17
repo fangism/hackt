@@ -8,11 +8,11 @@
 #include <functional>			// for bind2nd, greater_equal
 #include <iterator>
 #include "Object/common/cflat_args.tcc"
-#include "Object/inst/alias_actuals.h"
-#include "Object/inst/alias_empty.h"
-#include "util/copy_if.h"
-#include "util/iterator_more.h"		// for set_inserter
-#include "util/swap_saver.h"
+#include "Object/inst/alias_actuals.hh"
+#include "Object/inst/alias_empty.hh"
+#include "util/copy_if.hh"
+#include "util/iterator_more.hh"		// for set_inserter
+#include "util/swap_saver.hh"
 
 
 namespace HAC {

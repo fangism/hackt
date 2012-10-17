@@ -7,11 +7,11 @@
 #define	__HAC_SIM_COMMAND_BASE_TCC__
 
 #include <iostream>
-#include "sim/command_base.h"
+#include "sim/command_base.hh"
 
 namespace HAC {
 namespace SIM {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 //=============================================================================
 // class Command method definitions

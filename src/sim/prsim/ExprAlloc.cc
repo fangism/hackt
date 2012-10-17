@@ -6,53 +6,53 @@
 
 #define	ENABLE_STACKTRACE				0
 
-#include "util/static_trace.h"
+#include "util/static_trace.hh"
 DEFAULT_STATIC_TRACE_BEGIN
 
 #include <iostream>
 #include <algorithm>
 #include <limits>
 // #include <iterator>
-#include "sim/prsim/ExprAlloc.h"
-#include "sim/prsim/Expr.h"
-#include "sim/prsim/State-prsim.h"
-#include "Object/lang/PRS_enum.h"
-#include "Object/lang/PRS_footprint.h"
-#include "Object/lang/PRS_attribute_common.h"
-#include "Object/lang/PRS_attribute_registry.h"
-#include "Object/lang/PRS_macro_common.h"
+#include "sim/prsim/ExprAlloc.hh"
+#include "sim/prsim/Expr.hh"
+#include "sim/prsim/State-prsim.hh"
+#include "Object/lang/PRS_enum.hh"
+#include "Object/lang/PRS_footprint.hh"
+#include "Object/lang/PRS_attribute_common.hh"
+#include "Object/lang/PRS_attribute_registry.hh"
+#include "Object/lang/PRS_macro_common.hh"
 #include "Object/lang/PRS_macro_registry.tcc"
-#include "Object/lang/SPEC_common.h"
+#include "Object/lang/SPEC_common.hh"
 #include "Object/lang/SPEC_registry.tcc"
-#include "Object/lang/SPEC_footprint.h"
-#include "Object/inst/instance_pool.h"
-#include "Object/inst/state_instance.h"
+#include "Object/lang/SPEC_footprint.hh"
+#include "Object/inst/instance_pool.hh"
+#include "Object/inst/state_instance.hh"
 #if 0
-#include "Object/lang/cflat_printer.h"		// for diagnostics
-#include "main/cflat_options.h"			// for diagnostics
+#include "Object/lang/cflat_printer.hh"		// for diagnostics
+#include "main/cflat_options.hh"			// for diagnostics
 #endif
-#include "Object/inst/instance_alias_info.h"
-#include "Object/inst/alias_actuals.h"
-#include "Object/inst/alias_empty.h"
-#include "Object/inst/substructure_alias_base.h"
-#include "Object/expr/const_param_expr_list.h"
-#include "Object/expr/pint_const.h"
-#include "Object/traits/instance_traits.h"
-#include "Object/traits/classification_tags.h"
-#include "Object/module.h"
-#include "Object/global_entry.h"
-#include "Object/global_channel_entry.h"
+#include "Object/inst/instance_alias_info.hh"
+#include "Object/inst/alias_actuals.hh"
+#include "Object/inst/alias_empty.hh"
+#include "Object/inst/substructure_alias_base.hh"
+#include "Object/expr/const_param_expr_list.hh"
+#include "Object/expr/pint_const.hh"
+#include "Object/traits/instance_traits.hh"
+#include "Object/traits/classification_tags.hh"
+#include "Object/module.hh"
+#include "Object/global_entry.hh"
+#include "Object/global_channel_entry.hh"
 #if PRSIM_PRECHARGE_INVARIANTS
-#include "net/netlist_options.h"
-#include "net/netlist_generator.h"
-#include "sim/prsim/current-path-graph.h"
+#include "net/netlist_options.hh"
+#include "net/netlist_generator.hh"
+#include "sim/prsim/current-path-graph.hh"
 #endif
-#include "util/offset_array.h"
-#include "util/stacktrace.h"
-#include "util/value_saver.h"
-#include "util/IO_utils.h"
-#include "util/memory/free_list.h"
-#include "common/TODO.h"
+#include "util/offset_array.hh"
+#include "util/stacktrace.hh"
+#include "util/value_saver.hh"
+#include "util/IO_utils.hh"
+#include "util/memory/free_list.hh"
+#include "common/TODO.hh"
 
 namespace HAC {
 namespace SIM {
@@ -67,7 +67,7 @@ using util::good_bool;
 using util::memory::free_list_acquire;
 using util::memory::free_list_release;
 using util::value_saver;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 // shortcut for accessing the rules structure of a process graph
 #define	REF_RULE_MAP(g,i)		g->rule_pool[g->rule_map[i]]

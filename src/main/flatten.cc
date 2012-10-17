@@ -11,23 +11,23 @@
 #include <string>
 #include <map>
 #include <cstdio>
-#include "common/config.h"
-#include "main/program_registry.h"
-#include "main/flatten.h"
-#include "main/main_funcs.h"
-#include "main/compile_options.h"
-#include "main/global_options.h"
-#include "lexer/file_manager.h"
+#include "common/config.hh"
+#include "main/program_registry.hh"
+#include "main/flatten.hh"
+#include "main/main_funcs.hh"
+#include "main/compile_options.hh"
+#include "main/global_options.hh"
+#include "lexer/file_manager.hh"
 #include "util/getopt_portable.h"
-#include "util/getopt_mapped.h"
-// #include "util/dirent.h"		// configured wrapper around <dirent.h>
+#include "util/getopt_mapped.hh"
+// #include "util/dirent.hh"		// configured wrapper around <dirent.h>
 #include "util/attributes.h"
 
 extern HAC::lexer::file_manager
 hackt_parse_file_manager;
 
 namespace HAC {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using std::list;
 using std::string;
 using lexer::file_manager;

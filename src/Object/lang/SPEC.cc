@@ -8,21 +8,21 @@
 #include <iostream>
 #include <algorithm>
 #include <iterator>
-#include "Object/lang/SPEC.h"
-#include "Object/lang/SPEC_footprint.h"
-#include "Object/lang/PRS_literal_unroller.h"	// for PRS::literal
-#include "Object/lang/PRS_footprint.h"	// for PRS::literal
-#include "Object/persistent_type_hash.h"
-#include "Object/def/footprint.h"
-#include "Object/ref/simple_meta_instance_reference.h"
-#include "Object/ref/meta_instance_reference_subtypes.h"
+#include "Object/lang/SPEC.hh"
+#include "Object/lang/SPEC_footprint.hh"
+#include "Object/lang/PRS_literal_unroller.hh"	// for PRS::literal
+#include "Object/lang/PRS_footprint.hh"	// for PRS::literal
+#include "Object/persistent_type_hash.hh"
+#include "Object/def/footprint.hh"
+#include "Object/ref/simple_meta_instance_reference.hh"
+#include "Object/ref/meta_instance_reference_subtypes.hh"
 #include "Object/unroll/meta_conditional.tcc"
 #include "Object/unroll/meta_loop.tcc"
 #include "util/memory/count_ptr.tcc"
 #include "util/memory/chunk_map_pool.tcc"	// for memory pool
-#include "util/what.h"
-#include "util/stacktrace.h"
-#include "util/IO_utils.h"
+#include "util/what.hh"
+#include "util/stacktrace.hh"
+#include "util/IO_utils.hh"
 
 namespace util {
 SPECIALIZE_UTIL_WHAT(HAC::entity::SPEC::bool_directive, "SPEC::bool_directive")
@@ -56,7 +56,7 @@ using std::for_each;
 using std::back_inserter;
 using std::transform;
 using util::auto_indent;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using PRS::rule_dump_context;
 using util::read_value;
 using util::write_value;

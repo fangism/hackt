@@ -5,36 +5,36 @@
 
 #define	ENABLE_STACKTRACE			0
 
-#include "Object/expr/expr_visitor.h"
-#include "Object/expr/pbool_expr.h"
-#include "Object/expr/pint_expr.h"
-#include "Object/expr/preal_expr.h"
-#include "Object/expr/const_param.h"
-#include "Object/expr/nonmeta_index_expr_base.h"
-#include "Object/expr/nonmeta_range_expr_base.h"
-#include "Object/expr/param_expr_list.h"
-#include "Object/expr/meta_range_expr.h"
-#include "Object/expr/meta_range_list.h"
-#include "Object/expr/meta_index_expr.h"
-#include "Object/expr/meta_index_list.h"
+#include "Object/expr/expr_visitor.hh"
+#include "Object/expr/pbool_expr.hh"
+#include "Object/expr/pint_expr.hh"
+#include "Object/expr/preal_expr.hh"
+#include "Object/expr/const_param.hh"
+#include "Object/expr/nonmeta_index_expr_base.hh"
+#include "Object/expr/nonmeta_range_expr_base.hh"
+#include "Object/expr/param_expr_list.hh"
+#include "Object/expr/meta_range_expr.hh"
+#include "Object/expr/meta_range_list.hh"
+#include "Object/expr/meta_index_expr.hh"
+#include "Object/expr/meta_index_list.hh"
 
-#include "Object/expr/pint_range.h"
-#include "Object/expr/const_range.h"
+#include "Object/expr/pint_range.hh"
+#include "Object/expr/const_range.hh"
 
-#include "Object/expr/nonmeta_index_list.h"
-// #include "Object/expr/nonmeta_range_list.h"
-#include "Object/expr/nonmeta_expr_list.h"
-#include "Object/expr/const_param_expr_list.h"
-#include "Object/expr/dynamic_param_expr_list.h"
-#include "Object/expr/const_range_list.h"
-#include "Object/expr/dynamic_meta_range_list.h"
-#include "Object/expr/const_index_list.h"
-#include "Object/expr/dynamic_meta_index_list.h"
-#include "Object/expr/nonmeta_func_call.h"
+#include "Object/expr/nonmeta_index_list.hh"
+// #include "Object/expr/nonmeta_range_list.hh"
+#include "Object/expr/nonmeta_expr_list.hh"
+#include "Object/expr/const_param_expr_list.hh"
+#include "Object/expr/dynamic_param_expr_list.hh"
+#include "Object/expr/const_range_list.hh"
+#include "Object/expr/dynamic_meta_range_list.hh"
+#include "Object/expr/const_index_list.hh"
+#include "Object/expr/dynamic_meta_index_list.hh"
+#include "Object/expr/nonmeta_func_call.hh"
 
-#include "common/ICE.h"
-#include "util/memory/excl_ptr.h"	// for never_ptr
-#include "util/stacktrace.h"
+#include "common/ICE.hh"
+#include "util/memory/excl_ptr.hh"	// for never_ptr
+#include "util/stacktrace.hh"
 
 namespace HAC {
 namespace entity {

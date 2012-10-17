@@ -7,8 +7,8 @@
 #define	__HAC_OBJECT_LANG_PRS_MACRO_REGISTRY_TCC__
 
 #include <vector>
-#include "Object/lang/PRS_macro_registry.h"
-#include "Object/expr/const_param_expr_list.h"
+#include "Object/lang/PRS_macro_registry.hh"
+#include "Object/expr/const_param_expr_list.hh"
 #include "util/macros.h"
 
 namespace HAC {

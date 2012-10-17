@@ -7,11 +7,11 @@
  */
 
 #include <iostream>
-#include "Object/common/object_base.h"
+#include "Object/common/object_base.hh"
 
 namespace HAC {
 namespace entity {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 //=============================================================================
 // class object method definitions

@@ -10,15 +10,15 @@
 #include <iostream>
 
 #include "parser/yacc-config.h"
-#include "AST/AST.h"
-#include "parser/verilog-prefix.h"
-#include "util/using_ostream.h"
-#include "parser/verilog-union.h"
+#include "AST/AST.hh"
+#include "parser/verilog-prefix.hh"
+#include "util/using_ostream.hh"
+#include "parser/verilog-union.hh"
 #include "parser/verilog-parse-options.h"
 #include "parser/verilog-parse.output.h"
 #include "lexer/verilog-lex-options.h"
-#include "lexer/flex_lexer_state.h"
-#include "util/stacktrace.h"
+#include "lexer/flex_lexer_state.hh"
+#include "util/stacktrace.hh"
 
 
 // extern FILE* yyin;
@@ -29,7 +29,7 @@ static flex::lexer_state	_lexer_state;
 
 
 /***
-// list macros (now inline functions in "AST/node_list.h")
+// list macros (now inline functions in "AST/node_list.hh")
 WRAP_LIST
 DELETE_TOKEN
 APPEND_LIST

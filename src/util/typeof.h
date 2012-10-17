@@ -18,4 +18,4 @@
 #error	"Unable to find support for a typeof-like operator."
 #endif
 
-#endif	// __UTIL_TYPEOF_H__
+#endif	/* __UTIL_TYPEOF_H__ */

@@ -4,7 +4,7 @@
 	$Id: uninitialized.cc,v 1.1 2009/03/14 01:46:23 fang Exp $
  */
 
-#include "util/uninitialized.h"
+#include "util/uninitialized.hh"
 
 namespace util {
 // construct global object

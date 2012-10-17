@@ -12,15 +12,15 @@
 #include <vector>
 #include <algorithm>
 
-#include "Object/ref/simple_nonmeta_instance_reference.h"
-#include "Object/expr/expr_dump_context.h"
-#include "Object/expr/expr_visitor.h"
-#include "Object/common/dump_flags.h"
-#include "Object/expr/nonmeta_index_list.h"
-#include "Object/unroll/unroll_context.h"
-#include "Object/global_entry.h"
+#include "Object/ref/simple_nonmeta_instance_reference.hh"
+#include "Object/expr/expr_dump_context.hh"
+#include "Object/expr/expr_visitor.hh"
+#include "Object/common/dump_flags.hh"
+#include "Object/expr/nonmeta_index_list.hh"
+#include "Object/unroll/unroll_context.hh"
+#include "Object/global_entry.hh"
 #include "Object/ref/nonmeta_ref_implementation.tcc"
-#include "util/what.h"
+#include "util/what.hh"
 #include "util/persistent_object_manager.tcc"
 
 #if ENABLE_STACKTRACE
@@ -28,12 +28,12 @@
 #endif
 
 // might as well include this, will be needed
-#include "Object/ref/nonmeta_instance_reference_subtypes.h"
+#include "Object/ref/nonmeta_instance_reference_subtypes.hh"
 
 namespace HAC {
 namespace entity {
 using util::persistent_traits;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 //=============================================================================
 // class simple_nonmeta_instance_reference method definitions

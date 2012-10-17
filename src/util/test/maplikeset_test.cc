@@ -10,9 +10,9 @@
 #include <iostream>
 #include <string>
 #include <set>
-#include "util/maplikeset.h"
+#include "util/maplikeset.hh"
 
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using std::string;
 using std::set;
 using util::maplikeset;

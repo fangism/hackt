@@ -8,37 +8,37 @@
  */
 
 #define	ENABLE_STACKTRACE			0
-#include "util/static_trace.h"
+#include "util/static_trace.hh"
 
 DEFAULT_STATIC_TRACE_BEGIN
 
 #include <iostream>
 #include <fstream>
 #include <list>
-#include "main/chpsim.h"
-#include "main/chpsim_options.h"
-#include "main/program_registry.h"	// to register with hackt's dispatcher
-#include "main/main_funcs.h"		// for save/load_module()
+#include "main/chpsim.hh"
+#include "main/chpsim_options.hh"
+#include "main/program_registry.hh"	// to register with hackt's dispatcher
+#include "main/main_funcs.hh"		// for save/load_module()
 #include "main/options_modifier.tcc"
-#include "main/global_options.h"
-#include "common/config.h"
-#include "Object/type/canonical_fundamental_chan_type.h"
-#include "Object/type/process_type_reference.h"
-#include "Object/def/footprint.h"
-#include "Object/lang/CHP_footprint.h"
-#include "Object/expr/expr_dump_context.h"
-#include "Object/expr/dlfunction.h"	// for ack_loaded_functions
-#include "sim/chpsim/State.h"
-#include "sim/chpsim/Command.h"
-#include "sim/chpsim/graph_options.h"
-#include "sim/command_common.h"
-#include "util/getopt_mapped.h"		// for getopt()
-#include "common/ltdl-wrap.h"
-#include "common/TODO.h"
+#include "main/global_options.hh"
+#include "common/config.hh"
+#include "Object/type/canonical_fundamental_chan_type.hh"
+#include "Object/type/process_type_reference.hh"
+#include "Object/def/footprint.hh"
+#include "Object/lang/CHP_footprint.hh"
+#include "Object/expr/expr_dump_context.hh"
+#include "Object/expr/dlfunction.hh"	// for ack_loaded_functions
+#include "sim/chpsim/State.hh"
+#include "sim/chpsim/Command.hh"
+#include "sim/chpsim/graph_options.hh"
+#include "sim/command_common.hh"
+#include "util/getopt_mapped.hh"		// for getopt()
+#include "common/ltdl-wrap.hh"
+#include "common/TODO.hh"
 #include "install_paths.h"
 
 namespace HAC {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using SIM::CHPSIM::State;
 using SIM::CHPSIM::CommandRegistry;
 using SIM::CHPSIM::graph_options;

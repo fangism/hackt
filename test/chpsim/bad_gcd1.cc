@@ -1,8 +1,8 @@
 // "bad_gcd1.cc"
 // extra library function provided for chpsim
 
-#include "sim/chpsim/chpsim_dlfunction.h"
-// #include "libhackt/sim/chpsim/chpsim_dlfunction.h"
+#include "sim/chpsim/chpsim_dlfunction.hh"
+// #include "libhackt/sim/chpsim/chpsim_dlfunction.hh"
 
 USING_CHPSIM_DLFUNCTION_PROLOGUE
 

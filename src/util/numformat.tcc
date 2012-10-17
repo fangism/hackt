@@ -6,8 +6,8 @@
 #define	__UTIL_NUMFORMAT_TCC__
 
 #include <ostream>
-#include "util/numformat.h"
-#include "util/iomanip.h"
+#include "util/numformat.hh"
+#include "util/iomanip.hh"
 
 namespace util {
 

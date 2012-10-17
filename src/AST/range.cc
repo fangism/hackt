@@ -18,27 +18,27 @@
 #include <functional>		// for ptr_fun
 #include <vector>
 
-#include "AST/range_list.h"
-#include "AST/token_char.h"
-#include "AST/token.h"		// for token_int
+#include "AST/range_list.hh"
+#include "AST/token_char.hh"
+#include "AST/token.hh"		// for token_int
 #include "AST/node_list.tcc"
-#include "AST/expr.h"		// for arith_expr
+#include "AST/expr.hh"		// for arith_expr
 
-#include "Object/ref/simple_meta_instance_reference.h"
-#include "Object/expr/const_range.h"
-#include "Object/expr/pint_range.h"
-#include "Object/expr/pint_const.h"
-#include "Object/expr/dynamic_meta_index_list.h"
-#include "Object/expr/dynamic_meta_range_list.h"
-#include "Object/expr/const_index_list.h"
-#include "Object/expr/const_range_list.h"
-#include "Object/expr/int_range_expr.h"
-#include "Object/expr/nonmeta_index_list.h"
+#include "Object/ref/simple_meta_instance_reference.hh"
+#include "Object/expr/const_range.hh"
+#include "Object/expr/pint_range.hh"
+#include "Object/expr/pint_const.hh"
+#include "Object/expr/dynamic_meta_index_list.hh"
+#include "Object/expr/dynamic_meta_range_list.hh"
+#include "Object/expr/const_index_list.hh"
+#include "Object/expr/const_range_list.hh"
+#include "Object/expr/int_range_expr.hh"
+#include "Object/expr/nonmeta_index_list.hh"
 
-#include "util/what.h"
-#include "util/stacktrace.h"
+#include "util/what.hh"
+#include "util/stacktrace.hh"
 #include "util/memory/count_ptr.tcc"
-#include "util/memory/unique_ptr.h"
+#include "util/memory/unique_ptr.hh"
 
 // enable or disable constructor inlining, undefined at the end of file
 // leave blank do disable, define as inline to enable
@@ -64,7 +64,7 @@ template class count_ptr<const range>;
 //=============================================================================
 namespace HAC {
 namespace parser {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using namespace entity;
 using std::back_inserter;
 using std::ptr_fun;

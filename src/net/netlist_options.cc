@@ -12,19 +12,19 @@
 #include <iterator>
 #include <map>
 #include <list>
-#include "net/netlist_options.h"
+#include "net/netlist_options.hh"
 #include "util/string.tcc"		// for strgsub, string_to_num
-#include "util/stacktrace.h"
+#include "util/stacktrace.hh"
 #include "util/attributes.h"
-#include "util/iterator_more.h"
-#include "util/assoc_traits.h"
+#include "util/iterator_more.hh"
+#include "util/assoc_traits.hh"
 #include "util/cppcat.h"
 #include "util/optparse.tcc"
-#include "util/assoc_traits.h"
+#include "util/assoc_traits.hh"
 
 namespace HAC {
 namespace NET {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using std::map;
 using std::pair;
 using std::list;

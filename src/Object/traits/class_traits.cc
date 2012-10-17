@@ -5,13 +5,13 @@
 	$Id: class_traits.cc,v 1.13 2011/04/02 01:46:07 fang Exp $
  */
 
-#include "Object/traits/instance_traits.h"
-#include "Object/traits/data_traits.h"
-#include "Object/traits/param_traits.h"
-#include "Object/traits/value_traits.h"
-#include "Object/traits/node_traits.h"
-#include "Object/unroll/unroll_context.h"
-#include "Object/unroll/empty_instantiation_statement_type_ref_base.h"
+#include "Object/traits/instance_traits.hh"
+#include "Object/traits/data_traits.hh"
+#include "Object/traits/param_traits.hh"
+#include "Object/traits/value_traits.hh"
+#include "Object/traits/node_traits.hh"
+#include "Object/unroll/unroll_context.hh"
+#include "Object/unroll/empty_instantiation_statement_type_ref_base.hh"
 
 namespace HAC {
 namespace entity {

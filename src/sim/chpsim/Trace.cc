@@ -5,24 +5,24 @@
 
 #define	ENABLE_STACKTRACE			0
 
-#include "sim/chpsim/Trace.h"
-#include "sim/chpsim/TraceStreamer.h"
+#include "sim/chpsim/Trace.hh"
+#include "sim/chpsim/TraceStreamer.hh"
 #include <iostream>
 #include <sstream>
 #include <iterator>
 #include <algorithm>
 #include <functional>
 #include <fstream>
-#include "util/stacktrace.h"
+#include "util/stacktrace.hh"
 #include <cstdio>			// for tmpnam
 #include "util/libc_temp.h"	// for temp file functions
 #include "util/IO_utils.tcc"	// .tcc?
-#include "util/binders.h"
+#include "util/binders.hh"
 
 namespace HAC {
 namespace SIM {
 namespace CHPSIM {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using std::for_each;
 using std::ios_base;
 using std::copy;

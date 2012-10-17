@@ -5,7 +5,7 @@
  */
 
 #include <cassert>
-#include "util/dirent.h"
+#include "util/dirent.hh"
 
 namespace util {
 //=============================================================================

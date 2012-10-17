@@ -10,20 +10,20 @@
 #include <string>
 #include <iterator>
 #include <algorithm>
-#include "sim/prsim/Node.h"
+#include "sim/prsim/Node.hh"
 #include "util/macros.h"
-#include "util/stacktrace.h"
+#include "util/stacktrace.hh"
 #include "util/IO_utils.tcc"
-#include "util/numeric/random.h"
-#include "util/STL/valarray_iterator.h"
-#include "sim/prsim/process_graph.h"	// for faninout_struct_type
-#include "Object/inst/connection_policy.h"	// for bool_connect_policy
-#include "Object/devel_switches.h"	// for IMPLICIT_SUPPLY_PORTS
+#include "util/numeric/random.hh"
+#include "util/STL/valarray_iterator.hh"
+#include "sim/prsim/process_graph.hh"	// for faninout_struct_type
+#include "Object/inst/connection_policy.hh"	// for bool_connect_policy
+#include "Object/devel_switches.hh"	// for IMPLICIT_SUPPLY_PORTS
 
 namespace HAC {
 namespace SIM {
 namespace PRSIM {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using std::ostream_iterator;
 using std::string;
 using util::write_value;

@@ -5,13 +5,13 @@
 	Also provide some convenient wrappers of our own.  
  */
 
-#include "util/libguile.h"
+#include "util/libguile.hh"
 #ifdef	HAVE_LIBGUILE_H
 #include <iostream>
 
 namespace util {
 namespace guile {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 //-----------------------------------------------------------------------------
 /**

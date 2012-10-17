@@ -7,8 +7,8 @@
 // ENABLE_STACKTRACE is forced for this module, regardless of pre-definitions!
 #define	ENABLE_STACKTRACE	1
 
-#include "bogus_stacktrace.h"
-#include "util/static_trace.h"
+#include "bogus_stacktrace.hh"
+#include "util/static_trace.hh"
 
 STATIC_TRACE_BEGIN("bogus_stacktrace")
 

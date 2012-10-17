@@ -7,13 +7,13 @@
 
 #include <iostream>
 #include <string>
-#include "Object/global_context_cache.h"
-#include "Object/def/footprint.h"
-#include "Object/inst/state_instance.h"
-#include "Object/inst/instance_pool.h"
-#include "Object/traits/proc_traits.h"
+#include "Object/global_context_cache.hh"
+#include "Object/def/footprint.hh"
+#include "Object/inst/state_instance.hh"
+#include "Object/inst/instance_pool.hh"
+#include "Object/traits/proc_traits.hh"
 #include "util/tree_cache.tcc"
-#include "util/stacktrace.h"
+#include "util/stacktrace.hh"
 
 // explicit template instantiation
 namespace util {
@@ -23,7 +23,7 @@ template class tree_cache<size_t, global_context_cache::cache_entry_type>;
 
 namespace HAC {
 namespace entity {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 //=============================================================================
 // class global_context_cache method definitions

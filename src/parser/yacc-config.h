@@ -30,15 +30,15 @@
 #elif defined(YYBYACC) && YYBYACC
 
 #if defined(USING_BYACC) && !USING_BYACC && !USING_YACC
-// on many systems, yacc == byacc
+/* on many systems, yacc == byacc */
 #error  Inconsistency in configuration: YYBYACC && !USING_BYACC && !USING_YACC
 #endif
-#else   // !YYBISON && !YYBYACC
+#else   /* !YYBISON && !YYBYACC */
 
 #if defined(USING_YACC) && !USING_YACC
 #error  Inconsistency in configuration: !YYBISON && !YYBYACC && !USING_YACC
 #endif
-#endif	// YYBISON
+#endif	/* YYBISON */
 
-#endif	// __HAC_PARSER_YACC_CONFIG_H__
+#endif	/* __HAC_PARSER_YACC_CONFIG_H__ */
 

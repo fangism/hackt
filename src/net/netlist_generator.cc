@@ -5,7 +5,7 @@
  */
 
 #define	ENABLE_STATIC_TRACE		0
-#include "util/static_trace.h"
+#include "util/static_trace.hh"
 DEFAULT_STATIC_TRACE_BEGIN
 
 #define	ENABLE_STACKTRACE		0
@@ -14,30 +14,30 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include <sstream>		// for ostringstream
 #include <iterator>		// for ostream_iterator
 #include <algorithm>
-#include "net/netlist_generator.h"
-#include "net/netlist_options.h"
-#include "Object/global_entry.h"
-#include "Object/global_channel_entry.h"
-#include "Object/global_entry_context.h"
-#include "Object/def/footprint.h"
-#include "Object/expr/pint_const.h"
-#include "Object/expr/preal_const.h"
-#include "Object/expr/pstring_const.h"
-#include "Object/inst/instance_pool.h"
-#include "Object/inst/state_instance.h"
-#include "Object/inst/instance_alias_info.h"
-#include "Object/inst/alias_actuals.h"
-#include "Object/inst/substructure_alias_base.h"
-#include "Object/traits/instance_traits.h"
-#include "Object/lang/PRS_footprint.h"
-#include "Object/module.h"
-#include "common/TODO.h"
-#include "util/string.h"
-#include "util/stacktrace.h"
+#include "net/netlist_generator.hh"
+#include "net/netlist_options.hh"
+#include "Object/global_entry.hh"
+#include "Object/global_channel_entry.hh"
+#include "Object/global_entry_context.hh"
+#include "Object/def/footprint.hh"
+#include "Object/expr/pint_const.hh"
+#include "Object/expr/preal_const.hh"
+#include "Object/expr/pstring_const.hh"
+#include "Object/inst/instance_pool.hh"
+#include "Object/inst/state_instance.hh"
+#include "Object/inst/instance_alias_info.hh"
+#include "Object/inst/alias_actuals.hh"
+#include "Object/inst/substructure_alias_base.hh"
+#include "Object/traits/instance_traits.hh"
+#include "Object/lang/PRS_footprint.hh"
+#include "Object/module.hh"
+#include "common/TODO.hh"
+#include "util/string.hh"
+#include "util/stacktrace.hh"
 
 namespace HAC {
 namespace NET {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using entity::footprint_frame_map_type;
 using entity::bool_tag;
 using entity::state_instance;

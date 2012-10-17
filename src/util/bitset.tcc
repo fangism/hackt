@@ -6,7 +6,7 @@
 #ifndef	__UTIL_BITSET_TCC__
 #define	__UTIL_BITSET_TCC__
 
-#include "util/bitset.h"
+#include "util/bitset.hh"
 #include <ostream>
 // #include <iomanip>
 

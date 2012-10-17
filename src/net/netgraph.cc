@@ -8,37 +8,37 @@
 #include <iostream>
 #include <sstream>		// for ostringstream
 #include <iterator>		// for ostream_iterator
-#include "net/netgraph.h"
-#include "net/netlist_options.h"
-#include "Object/global_entry.h"
-#include "Object/global_channel_entry.h"
-#include "Object/global_entry_context.h"
-#include "Object/def/footprint.h"
-#include "Object/def/process_definition.h"
-#include "Object/traits/instance_traits.h"
-#include "Object/lang/PRS_footprint.h"
-#include "Object/inst/physical_instance_placeholder.h"
-#include "Object/inst/physical_instance_collection.h"
-#include "Object/inst/port_alias_tracker.h"
-#include "Object/inst/instance_alias_info.h"
-#include "Object/inst/alias_empty.h"
-#include "Object/inst/alias_actuals.h"
+#include "net/netgraph.hh"
+#include "net/netlist_options.hh"
+#include "Object/global_entry.hh"
+#include "Object/global_channel_entry.hh"
+#include "Object/global_entry_context.hh"
+#include "Object/def/footprint.hh"
+#include "Object/def/process_definition.hh"
+#include "Object/traits/instance_traits.hh"
+#include "Object/lang/PRS_footprint.hh"
+#include "Object/inst/physical_instance_placeholder.hh"
+#include "Object/inst/physical_instance_collection.hh"
+#include "Object/inst/port_alias_tracker.hh"
+#include "Object/inst/instance_alias_info.hh"
+#include "Object/inst/alias_empty.hh"
+#include "Object/inst/alias_actuals.hh"
 #include "Object/inst/bool_port_collector.tcc"
-#include "Object/inst/state_instance.h"
-#include "Object/inst/instance_pool.h"
+#include "Object/inst/state_instance.hh"
+#include "Object/inst/instance_pool.hh"
 #if NETLIST_VERILOG
-#include "Object/inst/collection_interface.h"
-#include "Object/type/canonical_type.h"
+#include "Object/inst/collection_interface.hh"
+#include "Object/type/canonical_type.hh"
 #endif
-#include "util/iterator_more.h"		// for set_inserter
+#include "util/iterator_more.hh"		// for set_inserter
 #include "util/unique_list.tcc"
-#include "util/string.h"		// for strgsub
-#include "util/stacktrace.h"
-#include "util/indent.h"
+#include "util/string.hh"		// for strgsub
+#include "util/stacktrace.hh"
+#include "util/indent.hh"
 
 namespace HAC {
 namespace NET {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using entity::footprint_frame_map_type;
 using entity::meta_type_port_collector;
 using entity::class_traits;

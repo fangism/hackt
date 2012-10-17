@@ -7,7 +7,7 @@
 #ifndef	__UTIL_MULTIKEY_MAP_TCC__
 #define	__UTIL_MULTIKEY_MAP_TCC__
 
-#include "util/multikey_map.h"
+#include "util/multikey_map.hh"
 
 #ifndef	EXTERN_TEMPLATE_UTIL_MULTIKEY_MAP
 
@@ -28,7 +28,7 @@
 #include "util/IO_utils.tcc"
 
 namespace util {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using std::istream;
 using std::pair;
 using std::numeric_limits;

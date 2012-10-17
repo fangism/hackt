@@ -7,8 +7,8 @@
 
 #include <iostream>
 #include <cstring>
-#include "common/config.h"
-// #include "main/main_funcs.h"
+#include "common/config.hh"
+// #include "main/main_funcs.hh"
 #include "config.h"
 
 // various configure-generated and make-generated headers
@@ -22,12 +22,12 @@
 #include "buildhost.h"
 #include "config_params.h"
 #include "guile/config_version.h"
-#include "util/readline_wrap.h"
+#include "util/readline_wrap.hh"
 
-// #include "util/getopt_portable.h"
+// #include "util/getopt_portable.hh"
 
 namespace HAC {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using util::readline_wrapper;
 
 //=============================================================================

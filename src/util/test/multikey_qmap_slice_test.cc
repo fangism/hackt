@@ -9,8 +9,8 @@
 #endif
 
 #include "util/qmap.tcc"
-#include "cube_slice.h"
-#include "plane_slice.h"
+#include "cube_slice.hh"
+#include "plane_slice.hh"
 
 using namespace std;
 using namespace testing;

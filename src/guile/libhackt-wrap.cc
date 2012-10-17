@@ -12,27 +12,27 @@
 #include <iostream>
 #include <sstream>
 #include <set>
-#include "Object/module.h"
-#include "Object/global_entry.h"
-#include "Object/global_channel_entry.h"
-#include "Object/traits/instance_traits.h"
-#include "Object/inst/instance_pool.h"
-#include "Object/inst/state_instance.h"
-#include "Object/global_entry_context.h"
-#include "Object/common/dump_flags.h"
-#include "parser/instref.h"
-#include "guile/devel_switches.h"
-#include "guile/libhackt-wrap.h"
-#include "guile/hackt-config.h"
-#include "guile/hackt-documentation.h"
-#include "guile/scm_reference.h"
-#include "main/main_funcs.h"		// for load_module
-#include "util/tokenize.h"
-#include "util/memory/excl_malloc_ptr.h"
-#include "util/guile_STL.h"
-#include "util/stacktrace.h"
-#include "util/for_all.h"
-#include "util/caller.h"
+#include "Object/module.hh"
+#include "Object/global_entry.hh"
+#include "Object/global_channel_entry.hh"
+#include "Object/traits/instance_traits.hh"
+#include "Object/inst/instance_pool.hh"
+#include "Object/inst/state_instance.hh"
+#include "Object/global_entry_context.hh"
+#include "Object/common/dump_flags.hh"
+#include "parser/instref.hh"
+#include "guile/devel_switches.hh"
+#include "guile/libhackt-wrap.hh"
+#include "guile/hackt-config.hh"
+#include "guile/hackt-documentation.hh"
+#include "guile/scm_reference.hh"
+#include "main/main_funcs.hh"		// for load_module
+#include "util/tokenize.hh"
+#include "util/memory/excl_malloc_ptr.hh"
+#include "util/guile_STL.hh"
+#include "util/stacktrace.hh"
+#include "util/for_all.hh"
+#include "util/caller.hh"
 
 //=============================================================================
 // smob wrapped structures
@@ -45,7 +45,7 @@
 
 namespace HAC {
 namespace guile_wrap {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using std::string;
 using std::transform;
 using std::ostringstream;

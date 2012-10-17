@@ -11,19 +11,19 @@
 #endif
 
 #include <iostream>
-#include "Object/expr/nonmeta_cast_expr.h"
-#include "Object/expr/const_param.h"
-#include "Object/expr/expr_visitor.h"
-#include "Object/type/canonical_generic_datatype.h"
-#include "Object/traits/class_traits_fwd.h"
-#include "util/what.h"
-#include "util/stacktrace.h"
+#include "Object/expr/nonmeta_cast_expr.hh"
+#include "Object/expr/const_param.hh"
+#include "Object/expr/expr_visitor.hh"
+#include "Object/type/canonical_generic_datatype.hh"
+#include "Object/traits/class_traits_fwd.hh"
+#include "util/what.hh"
+#include "util/stacktrace.hh"
 #include "util/memory/chunk_map_pool.tcc"
-#include "util/persistent_object_manager.h"
+#include "util/persistent_object_manager.hh"
 
 namespace HAC {
 namespace entity {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 template <class>
 struct expr_tag;

@@ -13,14 +13,14 @@
 #include <algorithm>
 #include <functional>
 
-#include "sim/command_common.h"
-#include "sim/command_error_codes.h"
-#include "sim/command_base.h"
-#include "Object/expr/dlfunction.h"
-#include "common/TODO.h"
-#include "common/ltdl-wrap.h"
-#include "util/memory/excl_ptr.h"
-#include "util/compose.h"
+#include "sim/command_common.hh"
+#include "sim/command_error_codes.hh"
+#include "sim/command_base.hh"
+#include "Object/expr/dlfunction.hh"
+#include "common/TODO.hh"
+#include "common/ltdl-wrap.hh"
+#include "util/memory/excl_ptr.hh"
+#include "util/compose.hh"
 #include "util/string.tcc"
 #include "util/utypes.h"
 
@@ -36,7 +36,7 @@ using std::ptr_fun;
 using std::mem_fun_ref;
 using util::strings::string_to_num;
 using entity::module;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 USING_UTIL_COMPOSE
 
 //=============================================================================

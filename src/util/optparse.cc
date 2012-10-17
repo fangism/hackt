@@ -8,14 +8,14 @@
 #include <algorithm>
 #include <iterator>
 #include "util/size_t.h"
-#include "util/optparse.h"
-#include "util/tokenize.h"
-#include "util/string.h"	// for strgsub
+#include "util/optparse.hh"
+#include "util/tokenize.hh"
+#include "util/string.hh"	// for strgsub
 
 namespace util {
 using std::transform;
 using strings::strgsub;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

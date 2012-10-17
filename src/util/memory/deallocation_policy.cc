@@ -6,7 +6,7 @@
 
 #include <cassert>
 #include <iostream>
-#include "util/memory/deallocation_policy.h"
+#include "util/memory/deallocation_policy.hh"
 
 namespace util {
 namespace memory {

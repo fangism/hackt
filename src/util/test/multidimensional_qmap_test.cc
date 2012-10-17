@@ -10,14 +10,14 @@
 
 #include <iostream>
 #include <string>
-#include "util/sstream.h"
+#include "util/sstream.hh"
 using std::ostringstream;
 
 #include <list>
 using std::list;
 using std::string;
 
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 // later separate the following into declarations and definitions
 #include "util/multidimensional_qmap.tcc"

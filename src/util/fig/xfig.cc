@@ -6,13 +6,13 @@
 #include <iostream>
 #include <iterator>
 #include <algorithm>
-#include "util/fig/xfig.h"
+#include "util/fig/xfig.hh"
 #include "util/memory/count_ptr.tcc"
 
 namespace util {
 namespace fig {
 namespace xfig {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using std::ostream_iterator;
 using std::copy;
 

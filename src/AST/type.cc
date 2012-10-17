@@ -14,25 +14,25 @@
 #include <exception>
 #include <iostream>
 
-#include "AST/expr_list.h"
-#include "AST/type.h"
-#include "AST/identifier.h"
+#include "AST/expr_list.hh"
+#include "AST/type.hh"
+#include "AST/identifier.hh"
 #include "AST/node_list.tcc"
-#include "AST/parse_context.h"
+#include "AST/parse_context.hh"
 
-#include "Object/def/user_def_chan.h"
-#include "Object/type/template_actuals.h"
-#include "Object/type/data_type_reference.h"
-#include "Object/type/builtin_channel_type_reference.h"
-#include "Object/type/channel_type_reference.h"
+#include "Object/def/user_def_chan.hh"
+#include "Object/type/template_actuals.hh"
+#include "Object/type/data_type_reference.hh"
+#include "Object/type/builtin_channel_type_reference.hh"
+#include "Object/type/channel_type_reference.hh"
 #if PROCESS_CONNECTIVITY_CHECKING
-#include "Object/type/process_type_reference.h"
+#include "Object/type/process_type_reference.hh"
 #endif
-#include "Object/expr/dynamic_param_expr_list.h"
+#include "Object/expr/dynamic_param_expr_list.hh"
 
-#include "util/indent.h"
-#include "util/what.h"
-#include "util/stacktrace.h"
+#include "util/indent.hh"
+#include "util/what.hh"
+#include "util/stacktrace.hh"
 #include "util/memory/count_ptr.tcc"
 
 // enable or disable constructor inlining, undefined at the end of file
@@ -67,7 +67,7 @@ using entity::data_type_reference;
 using entity::channel_type_reference;
 using entity::process_type_reference;
 using entity::user_def_chan;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using util::indent;
 using util::auto_indent;
 
@@ -75,7 +75,7 @@ using util::auto_indent;
 /**
 	\param c1 primary direction
 	\param c2 flag a channel as shared.  
-	\return enumeration in "Object/type/channel_direction_enum.h"
+	\return enumeration in "Object/type/channel_direction_enum.hh"
  */
 entity::direction_type
 token_to_direction_type(const char c1, const char c2) {

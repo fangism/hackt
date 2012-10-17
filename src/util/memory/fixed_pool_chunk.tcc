@@ -7,7 +7,7 @@
 #ifndef	__UTIL_MEMORY_FIXED_POOL_CHUNK_TCC__
 #define	__UTIL_MEMORY_FIXED_POOL_CHUNK_TCC__
 
-#include "util/memory/fixed_pool_chunk.h"
+#include "util/memory/fixed_pool_chunk.hh"
 #include "util/memory/typeless_memory_chunk.tcc"
 #include <iostream>
 #include "util/what.tcc"
@@ -16,7 +16,7 @@
 
 namespace util {
 namespace memory {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 //=============================================================================
 // class fixed_pool_chunk method definitions

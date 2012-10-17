@@ -7,8 +7,8 @@
 
 #include <iostream>
 #include <stdexcept>
-#include "libchpfn/assert.h"
-#include "Object/expr/types.h"
+#include "libchpfn/assert.hh"
+#include "Object/expr/types.hh"
 // #include "util/macros.h"
 
 namespace HAC {

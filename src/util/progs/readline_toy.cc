@@ -6,9 +6,9 @@
 
 #include <iostream>
 #include <cstdlib>		// for system
-#include "util/readline_wrap.h"
-#include "util/using_ostream.h"
-#include "util/string.h"
+#include "util/readline_wrap.hh"
+#include "util/using_ostream.hh"
+#include "util/string.hh"
 
 using util::readline_wrapper;
 using util::strings::eat_whitespace;

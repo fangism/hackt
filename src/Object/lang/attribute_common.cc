@@ -4,20 +4,20 @@
  */
 
 #include <iostream>
-#include "Object/expr/expr_fwd.h"
-#include "Object/lang/attribute_common.h"
-#include "Object/expr/const_collection.h"
-#include "Object/expr/pint_const.h"
-#include "Object/expr/preal_const.h"
-#include "Object/expr/string_expr.h"
-#include "Object/expr/const_param_expr_list.h"
-#include "Object/traits/value_traits.h"
-#include "util/memory/count_ptr.h"
+#include "Object/expr/expr_fwd.hh"
+#include "Object/lang/attribute_common.hh"
+#include "Object/expr/const_collection.hh"
+#include "Object/expr/pint_const.hh"
+#include "Object/expr/preal_const.hh"
+#include "Object/expr/string_expr.hh"
+#include "Object/expr/const_param_expr_list.hh"
+#include "Object/traits/value_traits.hh"
+#include "util/memory/count_ptr.hh"
 
 namespace HAC {
 namespace entity {
 namespace attributes {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 // NOTE: pint_const can also come in the form of pint_const_collection, scalar
 

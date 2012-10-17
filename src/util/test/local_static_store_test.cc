@@ -18,16 +18,16 @@
 #undef	NDEBUG
 #endif
 
-#include "util/static_trace.h"
+#include "util/static_trace.hh"
 STATIC_TRACE_BEGIN("local_static_store_test.cc")
 
 #include <iostream>
 // #include <string>
-#include "util/using_ostream.h"
-#include "named_pooled_thing.h"
+#include "util/using_ostream.hh"
+#include "named_pooled_thing.hh"
 #include "util/memory/list_vector_pool.tcc"
 #include "util/memory/count_ptr.tcc"
-#include "util/stacktrace.h"
+#include "util/stacktrace.hh"
 #include "util/attributes.h"
 
 // DEBUG memory pool using stacktrace, seeing double destruction!

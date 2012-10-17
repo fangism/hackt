@@ -24,24 +24,24 @@
 #include <algorithm>
 
 #include "parser/yacc-config.h"
-#include "AST/AST.h"		// should be first
-#include "parser/hackt-prefix.h"
+#include "AST/AST.hh"		// should be first
+#include "parser/hackt-prefix.hh"
 #include "parser/hackt-parse.output.h"	// auto-generated state strings! :)
 #include "parser/hackt-parse-options.h"
-#include "parser/hackt-union.h"
+#include "parser/hackt-union.hh"
 #include "lexer/hackt-lex-options.h"
-#include "lexer/flex_lexer_state.h"
-#include "util/using_ostream.h"
-#include "lexer/file_manager.h"
-#include "Object/devel_switches.h"	// for DEFCHAN_LIKE_PROCESS
-#include "Object/traits/type_tag_enum.h"	// for META_TYPE_*
+#include "lexer/flex_lexer_state.hh"
+#include "util/using_ostream.hh"
+#include "lexer/file_manager.hh"
+#include "Object/devel_switches.hh"	// for DEFCHAN_LIKE_PROCESS
+#include "Object/traits/type_tag_enum.hh"	// for META_TYPE_*
 #if IMPLICIT_SUPPLY_PORTS
-#include "AST/globals.h"
+#include "AST/globals.hh"
 #endif
-#include "util/convert.h"
+#include "util/convert.hh"
 
 #define	ENABLE_STACKTRACE		0
-#include "util/stacktrace.h"
+#include "util/stacktrace.hh"
 
 using namespace HAC::lexer;
 using namespace HAC::parser;
@@ -72,7 +72,7 @@ HAC::parser::root_body* global_hackt_lval;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
-// list macros (now inline functions in "AST/node_list.h")
+// list macros (now inline functions in "AST/node_list.hh")
 WRAP_LIST
 DELETE_TOKEN
 APPEND_LIST

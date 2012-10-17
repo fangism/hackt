@@ -6,8 +6,8 @@
 	output through another program, in this case the paging program `more'.
  */
 
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <cstdlib>
 
 static
 void

@@ -7,14 +7,14 @@
 	$Id: bool_instance_attribute.cc,v 1.6 2010/08/24 22:52:05 fang Exp $
  */
 
-#include "Object/unroll/instance_attribute_registry.h"
-#include "Object/lang/bool_attribute_common.h"
-#include "Object/expr/const_param_expr_list.h"
-#include "Object/expr/pint_const.h"
-#include "Object/traits/bool_traits.h"
-#include "Object/inst/instance_alias_info.h"
-#include "Object/inst/alias_empty.h"
-#include "Object/inst/connection_policy.h"
+#include "Object/unroll/instance_attribute_registry.hh"
+#include "Object/lang/bool_attribute_common.hh"
+#include "Object/expr/const_param_expr_list.hh"
+#include "Object/expr/pint_const.hh"
+#include "Object/traits/bool_traits.hh"
+#include "Object/inst/instance_alias_info.hh"
+#include "Object/inst/alias_empty.hh"
+#include "Object/inst/connection_policy.hh"
 
 namespace HAC {
 namespace entity {

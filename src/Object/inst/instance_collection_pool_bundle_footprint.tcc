@@ -7,15 +7,15 @@
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_POOL_BUNDLE_FOOTPRINT_TCC__
 #define	__HAC_OBJECT_INST_INSTANCE_COLLECTION_POOL_BUNDLE_FOOTPRINT_TCC__
 
-#include "Object/inst/instance_collection_pool_bundle.h"
-#include "Object/inst/instance_placeholder.h"
-#include "Object/inst/datatype_instance_placeholder.h"
-#include "Object/inst/instance_array.h"
-#include "Object/inst/instance_scalar.h"
-#include "Object/inst/port_formal_array.h"
-#include "Object/inst/port_actual_collection.h"
-#include "Object/devel_switches.h"
-#include "util/stacktrace.h"
+#include "Object/inst/instance_collection_pool_bundle.hh"
+#include "Object/inst/instance_placeholder.hh"
+#include "Object/inst/datatype_instance_placeholder.hh"
+#include "Object/inst/instance_array.hh"
+#include "Object/inst/instance_scalar.hh"
+#include "Object/inst/port_formal_array.hh"
+#include "Object/inst/port_actual_collection.hh"
+#include "Object/devel_switches.hh"
+#include "util/stacktrace.hh"
 
 namespace HAC {
 namespace entity {

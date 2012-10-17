@@ -4,7 +4,7 @@
 	$Id: stream_ptr.cc,v 1.2 2007/08/28 04:54:31 fang Exp $
  */
 
-#include "util/stream_ptr.h"
+#include "util/stream_ptr.hh"
 #include <fstream>
 #include "util/memory/count_ptr.tcc"
 

@@ -23,17 +23,17 @@
 #endif
 
 #include "util/macros.h"
-#include "util/using_ostream.h"
-#include "util/boolean_types.h"
-#include "lexer/input_manager.h"
-#include "lexer/file_manager.h"
-#include "lexer/hacflat-yystype.h"
+#include "util/using_ostream.hh"
+#include "util/boolean_types.hh"
+#include "lexer/input_manager.hh"
+#include "lexer/file_manager.hh"
+#include "lexer/hacflat-yystype.hh"
 
-#include "lexer/hac_lex.h"
+#include "lexer/hac_lex.hh"
 #include "lexer/hacflat-lex-options.h"
-#include "lexer/flex_lexer_state.h"
-#include "util/stacktrace.h"
-#include "util/sstream.h"
+#include "lexer/flex_lexer_state.hh"
+#include "util/stacktrace.hh"
+#include "util/sstream.hh"
 using flex::lexer_state;
 
 /**

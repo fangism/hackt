@@ -19,7 +19,7 @@
 
 #define	ENABLE_STACKTRACE			(0 || DEBUG_MAX)
 #define	ENABLE_STATIC_TRACE			(0 || DEBUG_MAX)
-#include "util/static_trace.h"
+#include "util/static_trace.hh"
 DEFAULT_STATIC_TRACE_BEGIN
 
 #include <cstdio>
@@ -30,21 +30,21 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include <iostream>
 #include <sstream>
 #include <algorithm>			// for remove_copy_if
-#include "sim/prsim/State-prsim.h"
-#include "sim/prsim/Command-prsim-export.h"
-#include "sim/prsim/ExprAllocFlags.h"
-#include "sim/prsim/Command-prsim.h"
-#include "parser/instref.h"
-#include "main/main_funcs.h"
-#include "main/prsim.h"
-#include "main/prsim_options.h"
+#include "sim/prsim/State-prsim.hh"
+#include "sim/prsim/Command-prsim-export.hh"
+#include "sim/prsim/ExprAllocFlags.hh"
+#include "sim/prsim/Command-prsim.hh"
+#include "parser/instref.hh"
+#include "main/main_funcs.hh"
+#include "main/prsim.hh"
+#include "main/prsim_options.hh"
 #include "util/numformat.tcc"
 #include "util/memory/count_ptr.tcc"
-#include "util/string.h"
-#include "util/tokenize.h"		// only for debugging
+#include "util/string.hh"
+#include "util/tokenize.hh"		// only for debugging
 #include "util/inttypes.h"		// for 64b int type
 #include "util/c_decl.h"
-#include "util/stacktrace.h"
+#include "util/stacktrace.hh"
 #include "util/utypes.h"
 
 #ifndef	WIN32
@@ -120,7 +120,7 @@ namespace SIM {
 namespace PRSIM {
 using std::set;
 using std::ostringstream;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using parser::parse_node_to_index;
 using util::memory::count_ptr;
 using util::strings::eat_whitespace;

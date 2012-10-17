@@ -8,25 +8,25 @@
 
 #include <iostream>
 
-#include "Object/unroll/port_connection.h"
-#include "Object/unroll/unroll_context.h"	// for debugging
-#include "Object/ref/simple_meta_instance_reference.h"
-#include "Object/expr/expr_dump_context.h"
-#include "Object/inst/substructure_alias_base.h"
+#include "Object/unroll/port_connection.hh"
+#include "Object/unroll/unroll_context.hh"	// for debugging
+#include "Object/ref/simple_meta_instance_reference.hh"
+#include "Object/expr/expr_dump_context.hh"
+#include "Object/inst/substructure_alias_base.hh"
 #if IMPLICIT_SUPPLY_PORTS
-#include "Object/def/process_definition.h"
+#include "Object/def/process_definition.hh"
 #endif
 
 #include "util/what.tcc"
 #include "util/memory/count_ptr.tcc"
 #include "util/persistent_object_manager.tcc"
-#include "util/stacktrace.h"
+#include "util/stacktrace.hh"
 
 //=============================================================================
 namespace HAC {
 namespace entity {
 using util::persistent_traits;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 //=============================================================================
 // class port_connection method definitions

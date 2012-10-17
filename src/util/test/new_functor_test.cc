@@ -9,10 +9,10 @@
 
 #include <iostream>
 #include <vector>
-#include "util/memory/excl_ptr.h"
+#include "util/memory/excl_ptr.hh"
 #include "util/new_functor.tcc"
 
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using std::vector;
 using util::new_functor;
 using util::binder_new_functor;

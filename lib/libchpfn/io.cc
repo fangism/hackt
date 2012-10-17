@@ -12,16 +12,16 @@
 #include <iostream>
 #include <fstream>
 #include <map>
-#include "libchpfn/io.h"
-#include "util/memory/count_ptr.h"	// .tcc
-#include "util/format_IO.h"
-#include "Object/expr/dlfunction.h"
-#include "Object/expr/meta_call_traits.h"
+#include "libchpfn/io.hh"
+#include "util/memory/count_ptr.hh"	// .tcc
+#include "util/format_IO.hh"
+#include "Object/expr/dlfunction.hh"
+#include "Object/expr/meta_call_traits.hh"
 // #include "util/string.tcc"		// for string_to_num
-#include "util/stacktrace.h"
+#include "util/stacktrace.hh"
 
 // from libhackt.la
-#include "Object/expr/const_param_expr_list.h"
+#include "Object/expr/const_param_expr_list.hh"
 
 namespace HAC {
 namespace CHP {

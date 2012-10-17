@@ -3,8 +3,8 @@
 	$Id: flex_lexer_state.cc,v 1.3 2008/03/21 00:20:13 fang Exp $
  */
 
-#include "lexer/flex_lexer_state.h"
-#include "lexer/flex_buffer_state.h"	// auto-generated
+#include "lexer/flex_lexer_state.hh"
+#include "lexer/flex_buffer_state.hh"	// auto-generated
 #include "util/macros.h"
 
 // TODO: re-generate "flex_lexer_common.cc" as member functions?

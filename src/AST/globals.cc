@@ -5,21 +5,21 @@
  */
 
 #define	ENABLE_STATIC_TRACE			0
-#include "util/static_trace.h"
+#include "util/static_trace.hh"
 DEFAULT_STATIC_TRACE_BEGIN
 
 #define	ENABLE_STACKTRACE			0
 
-#include "AST/globals.h"
-#include "AST/formal.h"
-#include "AST/instance.h"
-#include "AST/reference.h"
-#include "AST/type.h"
-#include "AST/attribute.h"
-#include "AST/identifier.h"
-#include "AST/token.h"
-#include "AST/token_string.h"
-#include "util/stacktrace.h"
+#include "AST/globals.hh"
+#include "AST/formal.hh"
+#include "AST/instance.hh"
+#include "AST/reference.hh"
+#include "AST/type.hh"
+#include "AST/attribute.hh"
+#include "AST/identifier.hh"
+#include "AST/token.hh"
+#include "AST/token_string.hh"
+#include "util/stacktrace.hh"
 #include "util/memory/count_ptr.tcc"
 
 REQUIRES_STACKTRACE_STATIC_INIT

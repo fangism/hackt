@@ -3,17 +3,17 @@
 	$Id: Dependence.cc,v 1.4 2010/04/02 22:19:07 fang Exp $
  */
 
-#include "sim/chpsim/Dependence.h"
-#include "sim/chpsim/DependenceCollector.h"
-#include "sim/chpsim/Event.h"	// for EventNode::node_prefix
-#include "Object/nonmeta_context.h"
-#include "Object/nonmeta_state.h"
-#include "Object/traits/instance_traits.h"
+#include "sim/chpsim/Dependence.hh"
+#include "sim/chpsim/DependenceCollector.hh"
+#include "sim/chpsim/Event.hh"	// for EventNode::node_prefix
+#include "Object/nonmeta_context.hh"
+#include "Object/nonmeta_state.hh"
+#include "Object/traits/instance_traits.hh"
 #include <iostream>
 #include <iterator>
 #include <algorithm>
-#include "util/STL/valarray_iterator.h"
-#include "util/iterator_more.h"
+#include "util/STL/valarray_iterator.hh"
+#include "util/iterator_more.hh"
 
 namespace HAC {
 namespace SIM {
@@ -24,7 +24,7 @@ using std::copy;
 using entity::class_traits;
 using entity::nonmeta_state_base;
 using entity::event_subscribers_type;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 //=============================================================================
 // class dependence_set_base method definitions
 

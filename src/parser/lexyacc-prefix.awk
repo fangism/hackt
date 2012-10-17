@@ -1,5 +1,5 @@
 #!`which awk` -f
-# "lexyacc-prefix.h"
+# "lexyacc-prefix.hh"
 #	$Id: lexyacc-prefix.awk,v 1.2 2007/01/23 07:21:20 fang Exp $
 
 # NOTE: this file is obsolete.  Its functionality has been replaced
@@ -21,7 +21,7 @@
 #
 #	2004-11-14	David Fang	<fangism@users.sourceforge.net>
 #		Enabled prefix renaming for [f]lex symbols
-#		This file was renamed to "lexyacc-prefix.h"
+#		This file was renamed to "lexyacc-prefix.hh"
 
 BEGIN {
 	if (!length(PREFIX)) {

@@ -9,7 +9,7 @@
 #define ENABLE_STACKTRACE		0
 
 //=============================================================================
-#include "util/static_trace.h"
+#include "util/static_trace.hh"
 DEFAULT_STATIC_TRACE_BEGIN
 
 #include <exception>
@@ -17,28 +17,28 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include <functional>
 #include <iterator>
 
-#include "util/hash_specializations.h"		// substitute for the following
-#include "AST/token_string.h"	// for token_identifier
+#include "util/hash_specializations.hh"		// substitute for the following
+#include "AST/token_string.hh"	// for token_identifier
 
-#include "Object/def/port_formals_manager.h"
-#include "Object/persistent_type_hash.h"
-#include "Object/inst/physical_instance_placeholder.h"
-#include "Object/inst/physical_instance_collection.h"
-#include "Object/inst/subinstance_manager.h"
-#include "Object/ref/meta_instance_reference_base.h"
-#include "Object/expr/expr_dump_context.h"
-#include "Object/common/dump_flags.h"
+#include "Object/def/port_formals_manager.hh"
+#include "Object/persistent_type_hash.hh"
+#include "Object/inst/physical_instance_placeholder.hh"
+#include "Object/inst/physical_instance_collection.hh"
+#include "Object/inst/subinstance_manager.hh"
+#include "Object/ref/meta_instance_reference_base.hh"
+#include "Object/expr/expr_dump_context.hh"
+#include "Object/common/dump_flags.hh"
 
 #include "util/memory/count_ptr.tcc"
-#include "util/indent.h"
-#include "util/stacktrace.h"
+#include "util/indent.hh"
+#include "util/stacktrace.hh"
 #include "util/persistent_object_manager.tcc"
 
 //=============================================================================
 namespace HAC {
 namespace entity {
 using std::_Select2nd;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using util::indent;
 using util::auto_indent;
 using util::write_value;

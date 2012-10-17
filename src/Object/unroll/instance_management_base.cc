@@ -10,31 +10,31 @@
 #define	STACKTRACE_DESTRUCTORS		(0 && ENABLE_STACKTRACE)
 #define	STACKTRACE_PERSISTENTS		(0 && ENABLE_STACKTRACE)
 
-#include "util/static_trace.h"
+#include "util/static_trace.hh"
 DEFAULT_STATIC_TRACE_BEGIN
 
 #include <iostream>
 #include <algorithm>
 #include <list>
 
-#include "Object/unroll/instance_management_base.h"
-#include "Object/unroll/sequential_scope.h"
+#include "Object/unroll/instance_management_base.hh"
+#include "Object/unroll/sequential_scope.hh"
 
 #include "util/memory/count_ptr.tcc"
-#include "util/dereference.h"
-#include "util/compose.h"
-#include "util/binders.h"
-#include "util/static_assert.h"
-#include "util/type_traits.h"
+#include "util/dereference.hh"
+#include "util/compose.hh"
+#include "util/binders.hh"
+#include "util/static_assert.hh"
+#include "util/type_traits.hh"
 #include "util/persistent_object_manager.tcc"
-#include "util/stacktrace.h"
-#include "util/indent.h"
+#include "util/stacktrace.hh"
+#include "util/indent.hh"
 
 #define	DEBUG_BETWEEN_STATEMENTS		(0 && ENABLE_STACKTRACE)
 
 #if DEBUG_BETWEEN_STATEMENTS
-#include "Object/def/footprint.h"
-#include "Object/unroll/unroll_context.h"
+#include "Object/def/footprint.hh"
+#include "Object/unroll/unroll_context.hh"
 #endif
 
 namespace HAC {
@@ -44,7 +44,7 @@ using util::dereference;
 using util::auto_indent;
 using std::istream;
 using std::for_each;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 USING_UTIL_COMPOSE
 
 //=============================================================================

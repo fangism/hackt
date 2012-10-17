@@ -22,45 +22,45 @@
 #include <string>
 #include <set>
 #include "sim/prsim/State-prsim.tcc"
-#include "sim/prsim/ExprAlloc.h"
+#include "sim/prsim/ExprAlloc.hh"
 #if PRSIM_TRACE_GENERATION
-#include "sim/prsim/Trace-prsim.h"
+#include "sim/prsim/Trace-prsim.hh"
 #endif
 #if PRSIM_VCD_GENERATION
-#include "sim/prsim/VCDManager.h"
+#include "sim/prsim/VCDManager.hh"
 #endif
 #include "sim/event.tcc"
 #include "sim/prsim/util.tcc"
-#include "sim/random_time.h"
+#include "sim/random_time.hh"
 #include "sim/signal_handler.tcc"
-#include "Object/module.h"
+#include "Object/module.hh"
 #include "Object/global_entry.tcc"	// for extract_parent_formal_...
-#include "Object/traits/classification_tags.h"
-#include "Object/traits/bool_traits.h"
-#include "Object/lang/PRS_footprint.h"
-#include "Object/lang/SPEC_footprint.h"
-#include "Object/inst/instance_alias_info.h"	// for bool_connect_policy
-#include "Object/inst/alias_empty.h"
-#include "Object/traits/proc_traits.h"	// for diagnostic
-#include "Object/global_entry.h"
+#include "Object/traits/classification_tags.hh"
+#include "Object/traits/bool_traits.hh"
+#include "Object/lang/PRS_footprint.hh"
+#include "Object/lang/SPEC_footprint.hh"
+#include "Object/inst/instance_alias_info.hh"	// for bool_connect_policy
+#include "Object/inst/alias_empty.hh"
+#include "Object/traits/proc_traits.hh"	// for diagnostic
+#include "Object/global_entry.hh"
 #if IMPLICIT_SUPPLY_PORTS
-#include "parser/instref.h"
+#include "parser/instref.hh"
 #endif
-#include "sim/ISE.h"
-#include "common/TODO.h"
+#include "sim/ISE.hh"
+#include "common/TODO.hh"
 #include "util/attributes.h"
-#include "util/sstream.h"
-#include "util/stacktrace.h"
+#include "util/sstream.hh"
+#include "util/stacktrace.hh"
 #include "util/memory/index_pool.tcc"
 #include "util/memory/count_ptr.tcc"
 #include "util/likely.h"
-#include "util/iterator_more.h"
+#include "util/iterator_more.hh"
 #include "util/string.tcc"
 #include "util/IO_utils.tcc"
-#include "util/binders.h"
+#include "util/binders.hh"
 #include "util/utypes.h"
-#include "util/indent.h"
-#include "util/tokenize.h"
+#include "util/indent.hh"
+#include "util/tokenize.hh"
 #include "util/numformat.tcc"
 #if PRSIM_SET_FAST_ALLOCATOR
 #include "util/memory/allocator_adaptor.tcc"	// for fast allocators
@@ -166,7 +166,7 @@ using entity::global_entry_pool;
 using entity::bool_tag;
 using entity::process_tag;
 using entity::footprint_frame_map_type;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 #if IMPLICIT_SUPPLY_PORTS
 using parser::parse_node_to_index;
 #endif

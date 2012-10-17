@@ -202,20 +202,20 @@ main/chpsim.lo main/chpsim.o: install_paths.h
 main/prsim.lo main/prsim.o: install_paths.h
 main/hacknet.lo main/hacknet.o: install_paths.h
 
-LIBHACKTGUILE_H_FILES = \
-	guile/libhackt-wrap.h \
-	guile/hackt-config.h \
-	guile/hackt-documentation.h \
-	guile/scm_reference.h \
-	guile/scm_chpsim_trace_streamer.h \
-	guile/scm_chpsim_event_node.h \
-	guile/chpsim-wrap.h
+LIBHACKTGUILE_HH_FILES = \
+	guile/libhackt-wrap.hh \
+	guile/hackt-config.hh \
+	guile/hackt-documentation.hh \
+	guile/scm_reference.hh \
+	guile/scm_chpsim_trace_streamer.hh \
+	guile/scm_chpsim_event_node.hh \
+	guile/chpsim-wrap.hh
 
 libhacktchpsimguile_la_SOURCES = \
 	guile/chpsim-wrap.cc \
 	guile/scm_chpsim_trace_streamer.cc \
 	guile/scm_chpsim_event_node.cc \
-	$(LIBHACKTGUILE_H_FILES)
+	$(LIBHACKTGUILE_HH_FILES)
 # removed:	main/chpsim-guile.cc main/chpsim.cc
 libhacktchpsimguile_la_CPPFLAGS = $(GUILE_CPPFLAGS) -DNO_REGISTER
 libhacktchpsimguile_la_CXXFLAGS = $(AM_CXXFLAGS) $(GUILE_WARN_FLAGS) \
@@ -238,13 +238,13 @@ HACKTLIB_CC_FILES = \
 	main/compile.cc \
 	main/compile_options.cc \
 	main/create_options.cc
-HACKTLIB_H_FILES = \
-	$(HACKTLIB_CC_FILES:.cc=.h)
+HACKTLIB_HH_FILES = \
+	$(HACKTLIB_CC_FILES:.cc=.hh)
 
 # pass in a C++ file to coerce --tag=CXX linkage
 libhacktlib_la_SOURCES = \
 	$(HACKTLIB_CC_FILES) \
-	$(HACKTLIB_H_FILES)
+	$(HACKTLIB_HH_FILES)
 # want to split-off:  main/parse_funcs.cc
 libhacktlib_la_LIBADD = libhacktparsers.la
 # libhacktexec.la
@@ -261,12 +261,12 @@ libhacktguile_la_SOURCES = \
 	guile/libhackt-wrap.cc \
 	guile/libhackt-wrap.h \
 	guile/hackt-config.cc \
-	guile/hackt-config.h \
+	guile/hackt-config.hh \
 	guile/hackt-documentation.cc \
-	guile/hackt-documentation.h \
+	guile/hackt-documentation.hh \
 	guile/scm_reference.cc \
-	guile/scm_reference.h \
-	guile/devel_switches.h
+	guile/scm_reference.hh \
+	guile/devel_switches.hh
 libhacktguile_la_CPPFLAGS = $(GUILE_CPPFLAGS) -DWITH_MAIN
 libhacktguile_la_CXXFLAGS = $(AM_CXXFLAGS) $(GUILE_WARN_FLAGS) \
 	-Wno-old-style-cast -Werror
@@ -474,30 +474,30 @@ AST_TCC_FILES = \
 	AST/node_list.tcc \
 	AST/parse_context.tcc
 
-AST_H_FILES = \
-	$(AST_CC_FILES:.cc=.h) \
-	$(AST_TCC_FILES:.tcc=.h) \
-	AST/AST_fwd.h \
-	AST/CHP_fwd.h \
-	AST/HSE_fwd.h \
-	AST/PRS_fwd.h \
-	AST/SPEC_fwd.h \
-	AST/AST.h \
-	AST/common.h \
-	AST/expr_base.h \
-	AST/expr_list.h \
-	AST/identifier.h \
-	AST/instance_base.h \
-	AST/lang.h \
-	AST/range_list.h \
-	AST/reference.h \
-	AST/root.h \
-	AST/terminal.h \
-	AST/token_char.h \
-	AST/token_string.h \
-	AST/type_base.h
+AST_HH_FILES = \
+	$(AST_CC_FILES:.cc=.hh) \
+	$(AST_TCC_FILES:.tcc=.hh) \
+	AST/AST_fwd.hh \
+	AST/CHP_fwd.hh \
+	AST/HSE_fwd.hh \
+	AST/PRS_fwd.hh \
+	AST/SPEC_fwd.hh \
+	AST/AST.hh \
+	AST/common.hh \
+	AST/expr_base.hh \
+	AST/expr_list.hh \
+	AST/identifier.hh \
+	AST/instance_base.hh \
+	AST/lang.hh \
+	AST/range_list.hh \
+	AST/reference.hh \
+	AST/root.hh \
+	AST/terminal.hh \
+	AST/token_char.hh \
+	AST/token_string.hh \
+	AST/type_base.hh
 
-# all of these .cc files have a corresponding .h file
+# all of these .cc files have a corresponding .hh file
 OBJECT_INST_CC_FILES = \
 	Object/inst/substructure_alias_base.cc \
 	Object/inst/subinstance_manager.cc \
@@ -549,61 +549,61 @@ OBJECT_INST_TCC_FILES = \
 	Object/inst/instance_pool.tcc \
 	Object/inst/state_instance.tcc
 
-OBJECT_INST_H_FILES = $(OBJECT_INST_CC_FILES:.cc=.h) \
-	Object/inst/alias_visitee.h \
-	Object/inst/alias_visitor.h \
-	Object/inst/bool_port_collector.h \
-	Object/inst/collection_fwd.h \
-	Object/inst/connection_policy_fwd.h \
-	Object/inst/instance_fwd.h \
-	Object/inst/substructure_alias_fwd.h \
-	Object/inst/general_collection_type_manager.h \
-	Object/inst/null_collection_type_manager.h \
-	Object/inst/int_collection_type_manager.h \
-	Object/inst/parameterless_collection_type_manager.h \
-	Object/inst/channel_collection_type_manager.h \
-	Object/inst/instance_collection_base.h \
-	Object/inst/physical_instance_collection.h \
-	Object/inst/datatype_instance_collection.h \
-	Object/inst/collection_index_entry.h \
-	Object/inst/collection_traits.h \
-	Object/inst/sparse_collection.h \
-	Object/inst/collection_pool.h \
-	Object/inst/collection_interface.h \
-	Object/inst/instance_array.h \
-	Object/inst/instance_scalar.h \
-	Object/inst/port_formal_array.h \
-	Object/inst/port_actual_collection.h \
-	Object/inst/instance_collection_pool_bundle.h \
-	Object/inst/value_collection_pool_bundle.h \
-	Object/inst/instance_placeholder_base.h \
-	Object/inst/instance_placeholder.h \
-	Object/inst/value_placeholder.h \
-	Object/inst/dummy_placeholder.h \
-	Object/inst/physical_instance_placeholder.h \
-	Object/inst/datatype_instance_placeholder.h \
-	Object/inst/param_value_placeholder.h \
-	Object/inst/instance_alias_info.h \
-	Object/inst/internal_aliases_policy_fwd.h \
-	Object/inst/internal_aliases_policy.h \
-	Object/inst/alias_empty.h \
-	Object/inst/element_key_dumper.h \
-	Object/inst/value_collection.h \
-	Object/inst/value_array.h \
-	Object/inst/value_scalar.h \
-	Object/inst/instance_pool_fwd.h \
-	Object/inst/instance_pool.h \
-	Object/inst/state_instance.h \
-	Object/inst/bool_instance.h \
-	Object/inst/int_instance.h \
-	Object/inst/enum_instance.h \
-	Object/inst/struct_instance.h \
-	Object/inst/process_instance.h \
-	Object/inst/channel_instance.h \
-	Object/inst/pbool_instance.h \
-	Object/inst/pint_instance.h \
-	Object/inst/preal_instance.h \
-	Object/inst/pstring_instance.h
+OBJECT_INST_HH_FILES = $(OBJECT_INST_CC_FILES:.cc=.hh) \
+	Object/inst/alias_visitee.hh \
+	Object/inst/alias_visitor.hh \
+	Object/inst/bool_port_collector.hh \
+	Object/inst/collection_fwd.hh \
+	Object/inst/connection_policy_fwd.hh \
+	Object/inst/instance_fwd.hh \
+	Object/inst/substructure_alias_fwd.hh \
+	Object/inst/general_collection_type_manager.hh \
+	Object/inst/null_collection_type_manager.hh \
+	Object/inst/int_collection_type_manager.hh \
+	Object/inst/parameterless_collection_type_manager.hh \
+	Object/inst/channel_collection_type_manager.hh \
+	Object/inst/instance_collection_base.hh \
+	Object/inst/physical_instance_collection.hh \
+	Object/inst/datatype_instance_collection.hh \
+	Object/inst/collection_index_entry.hh \
+	Object/inst/collection_traits.hh \
+	Object/inst/sparse_collection.hh \
+	Object/inst/collection_pool.hh \
+	Object/inst/collection_interface.hh \
+	Object/inst/instance_array.hh \
+	Object/inst/instance_scalar.hh \
+	Object/inst/port_formal_array.hh \
+	Object/inst/port_actual_collection.hh \
+	Object/inst/instance_collection_pool_bundle.hh \
+	Object/inst/value_collection_pool_bundle.hh \
+	Object/inst/instance_placeholder_base.hh \
+	Object/inst/instance_placeholder.hh \
+	Object/inst/value_placeholder.hh \
+	Object/inst/dummy_placeholder.hh \
+	Object/inst/physical_instance_placeholder.hh \
+	Object/inst/datatype_instance_placeholder.hh \
+	Object/inst/param_value_placeholder.hh \
+	Object/inst/instance_alias_info.hh \
+	Object/inst/internal_aliases_policy_fwd.hh \
+	Object/inst/internal_aliases_policy.hh \
+	Object/inst/alias_empty.hh \
+	Object/inst/element_key_dumper.hh \
+	Object/inst/value_collection.hh \
+	Object/inst/value_array.hh \
+	Object/inst/value_scalar.hh \
+	Object/inst/instance_pool_fwd.hh \
+	Object/inst/instance_pool.hh \
+	Object/inst/state_instance.hh \
+	Object/inst/bool_instance.hh \
+	Object/inst/int_instance.hh \
+	Object/inst/enum_instance.hh \
+	Object/inst/struct_instance.hh \
+	Object/inst/process_instance.hh \
+	Object/inst/channel_instance.hh \
+	Object/inst/pbool_instance.hh \
+	Object/inst/pint_instance.hh \
+	Object/inst/preal_instance.hh \
+	Object/inst/pstring_instance.hh
 
 OBJECT_REF_CC_FILES = \
 	Object/ref/instance_reference.cc \
@@ -626,38 +626,38 @@ OBJECT_REF_TCC_FILES = \
 	Object/ref/nonmeta_ref_implementation.tcc
 #	Object/ref/member_nonmeta_value_reference.tcc
 
-OBJECT_REF_H_FILES = \
-	Object/ref/reference_enum.h \
-	Object/ref/reference_set.h \
-	Object/ref/references_fwd.h \
-	Object/ref/meta_reference_union.h \
-	Object/ref/aggregate_reference_collection_base.h \
-	Object/ref/aggregate_meta_instance_reference_base.h \
-	Object/ref/aggregate_meta_instance_reference.h \
-	Object/ref/aggregate_meta_value_reference_base.h \
-	Object/ref/aggregate_meta_value_reference.h \
-	Object/ref/member_meta_instance_reference.h \
-	Object/ref/meta_index_list_fwd.h \
-	Object/ref/meta_instance_reference_base.h \
-	Object/ref/meta_instance_reference_subtypes.h \
-	Object/ref/meta_value_reference_base.h \
-	Object/ref/meta_value_reference.h \
-	Object/ref/nonmeta_instance_reference_base.h \
-	Object/ref/nonmeta_instance_reference_subtypes.h \
-	Object/ref/data_nonmeta_instance_reference.h \
-	Object/ref/simple_meta_dummy_reference.h \
-	Object/ref/simple_meta_instance_reference.h \
-	Object/ref/simple_meta_indexed_reference_base.h \
-	Object/ref/simple_meta_value_reference.h \
-	Object/ref/simple_nonmeta_instance_reference.h \
-	Object/ref/simple_nonmeta_instance_reference_base.h \
-	Object/ref/simple_nonmeta_value_reference.h \
-	Object/ref/inst_ref_implementation_fwd.h \
-	Object/ref/inst_ref_implementation.h \
-	Object/ref/nonmeta_ref_implementation.h
-#	Object/ref/member_nonmeta_value_reference.h
+OBJECT_REF_HH_FILES = \
+	Object/ref/reference_enum.hh \
+	Object/ref/reference_set.hh \
+	Object/ref/references_fwd.hh \
+	Object/ref/meta_reference_union.hh \
+	Object/ref/aggregate_reference_collection_base.hh \
+	Object/ref/aggregate_meta_instance_reference_base.hh \
+	Object/ref/aggregate_meta_instance_reference.hh \
+	Object/ref/aggregate_meta_value_reference_base.hh \
+	Object/ref/aggregate_meta_value_reference.hh \
+	Object/ref/member_meta_instance_reference.hh \
+	Object/ref/meta_index_list_fwd.hh \
+	Object/ref/meta_instance_reference_base.hh \
+	Object/ref/meta_instance_reference_subtypes.hh \
+	Object/ref/meta_value_reference_base.hh \
+	Object/ref/meta_value_reference.hh \
+	Object/ref/nonmeta_instance_reference_base.hh \
+	Object/ref/nonmeta_instance_reference_subtypes.hh \
+	Object/ref/data_nonmeta_instance_reference.hh \
+	Object/ref/simple_meta_dummy_reference.hh \
+	Object/ref/simple_meta_instance_reference.hh \
+	Object/ref/simple_meta_indexed_reference_base.hh \
+	Object/ref/simple_meta_value_reference.hh \
+	Object/ref/simple_nonmeta_instance_reference.hh \
+	Object/ref/simple_nonmeta_instance_reference_base.hh \
+	Object/ref/simple_nonmeta_value_reference.hh \
+	Object/ref/inst_ref_implementation_fwd.hh \
+	Object/ref/inst_ref_implementation.hh \
+	Object/ref/nonmeta_ref_implementation.hh
+#	Object/ref/member_nonmeta_value_reference.hh
 
-# all these must have corresponding .h file
+# all these must have corresponding .hh file
 OBJECT_COMMON_CC_FILES = \
 	Object/common/object_base.cc \
 	Object/common/extern_templates.cc \
@@ -667,13 +667,13 @@ OBJECT_COMMON_CC_FILES = \
 	common/ICE.cc \
 	common/TODO.cc
 
-OBJECT_COMMON_H_FILES = $(OBJECT_COMMON_CC_FILES:.cc=.h) \
-	Object/common/alias_string_cache.h \
-	Object/common/frame_map.h \
-	Object/common/multikey_index.h \
-	Object/common/util_types.h \
-	common/status.h \
-	common/devel_switches.h
+OBJECT_COMMON_HH_FILES = $(OBJECT_COMMON_CC_FILES:.cc=.hh) \
+	Object/common/alias_string_cache.hh \
+	Object/common/frame_map.hh \
+	Object/common/multikey_index.hh \
+	Object/common/util_types.hh \
+	common/status.hh \
+	common/devel_switches.hh
 
 OBJECT_CC_FILES = \
 	Object/common/namespace.cc \
@@ -806,200 +806,203 @@ OBJECT_TCC_FILES = \
 	Object/common/namespace.tcc \
 	Object/lang/CHP.tcc
 
-OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
-	Object/devel_switches.h \
-	Object/object_fwd.h \
-	Object/persistent_type_hash.h \
-	Object/cflat_context.h \
-	Object/entry_collection.h \
-	Object/common/scopespace.h \
-	Object/traits/class_traits_fwd.h \
-	Object/traits/classification_tags_fwd.h \
-	Object/traits/classification_tags.h \
-	Object/traits/chan_traits.h \
-	Object/traits/data_traits.h \
-	Object/traits/proc_traits.h \
-	Object/traits/param_traits.h \
-	Object/traits/pint_traits.h \
-	Object/traits/pbool_traits.h \
-	Object/traits/preal_traits.h \
-	Object/traits/pstring_traits.h \
-	Object/traits/int_traits.h \
-	Object/traits/bool_traits.h \
-	Object/traits/enum_traits.h \
-	Object/traits/node_traits.h \
-	Object/traits/real_traits.h \
-	Object/traits/string_traits.h \
-	Object/traits/struct_traits.h \
-	Object/traits/instance_traits.h \
-	Object/traits/type_tag_enum.h \
-	Object/traits/value_traits.h \
-	Object/def/definition_fwd.h \
-	Object/def/built_in_datatype_def.h \
-	Object/def/channel_definition_alias.h \
-	Object/def/channel_definition_base.h \
-	Object/def/datatype_definition_alias.h \
-	Object/def/datatype_definition_base.h \
-	Object/def/definition_base.h \
-	Object/def/enum_datatype_def.h \
-	Object/def/param_definition.h \
-	Object/def/process_definition.h \
-	Object/def/process_definition_alias.h \
-	Object/def/process_definition_base.h \
-	Object/def/typedef_base.h \
-	Object/def/user_def_chan.h \
-	Object/def/user_def_datatype.h \
-	Object/def/footprint_base.h \
-	Object/def/fundamental_channel_footprint.h \
-	Object/expr/expr_fwd.h \
-	Object/expr/exceptions_fwd.h \
-	Object/expr/bool_expr.h \
-	Object/expr/bool_logical_expr.h \
-	Object/expr/bool_negation_expr.h \
-	Object/expr/const_collection.h \
-	Object/expr/const_index.h \
-	Object/expr/const_index_list.h \
-	Object/expr/const_param.h \
-	Object/expr/const_param_expr_list.h \
-	Object/expr/const_range.h \
-	Object/expr/const_range_list.h \
-	Object/expr/convert_expr.h \
-	Object/expr/data_expr.h \
-	Object/expr/dlfunction_fwd.h \
-	Object/expr/dynamic_meta_index_list.h \
-	Object/expr/dynamic_meta_range_list.h \
-	Object/expr/dynamic_param_expr_list.h \
-	Object/expr/enum_expr.h \
-	Object/expr/int_arith_expr.h \
-	Object/expr/int_expr.h \
-	Object/expr/int_negation_expr.h \
-	Object/expr/int_range_expr.h \
-	Object/expr/int_range_list.h \
-	Object/expr/int_relational_expr.h \
-	Object/expr/loop_meta_expr.h \
-	Object/expr/loop_nonmeta_expr.h \
-	Object/expr/real_expr.h \
-	Object/expr/meta_index_expr.h \
-	Object/expr/meta_index_list.h \
-	Object/expr/meta_range_expr.h \
-	Object/expr/meta_range_list.h \
-	Object/expr/nonmeta_cast_expr.h \
-	Object/expr/nonmeta_expr_functor.h \
-	Object/expr/nonmeta_expr_list.h \
-	Object/expr/nonmeta_index_expr_base.h \
-	Object/expr/nonmeta_index_list.h \
-	Object/expr/nonmeta_range_expr_base.h \
-	Object/expr/operator_info.h \
-	Object/expr/operator_precedence.h \
-	Object/expr/param_defined.h \
-	Object/expr/param_expr.h \
-	Object/expr/param_expr_functor.h \
-	Object/expr/param_expr_list.h \
-	Object/expr/pbool_const.h \
-	Object/expr/pbool_expr.h \
-	Object/expr/pbool_logical_expr.h \
-	Object/expr/pbool_unary_expr.h \
-	Object/expr/pint_arith_expr.h \
-	Object/expr/pint_const.h \
-	Object/expr/pint_expr.h \
-	Object/expr/pint_range.h \
-	Object/expr/pint_relational_expr.h \
-	Object/expr/pint_unary_expr.h \
-	Object/expr/preal_const.h \
-	Object/expr/preal_expr.h \
-	Object/expr/preal_arith_expr.h \
-	Object/expr/preal_relational_expr.h \
-	Object/expr/preal_unary_expr.h \
-	Object/expr/string_expr.h \
-	Object/expr/pstring_expr.h \
-	Object/expr/pstring_const.h \
-	Object/expr/pstring_relational_expr.h \
-	Object/expr/struct_expr.h \
-	Object/expr/types.h \
-	Object/lang/generic_attribute_fwd.h \
-	Object/lang/attribute_visitor_entry.h \
-	Object/lang/cflat_visitee.h \
-	Object/lang/PRS_enum.h \
-	Object/lang/PRS_footprint_expr.h \
-	Object/lang/PRS_footprint_expr_pool_fwd.h \
-	Object/lang/PRS_footprint_macro.h \
-	Object/lang/PRS_footprint_rule.h \
-	Object/type/type_fwd.h \
-	Object/type/builtin_channel_type_reference.h \
-	Object/type/channel_direction_enum.h \
-	Object/type/channel_type_reference.h \
-	Object/type/channel_type_reference_base.h \
-	Object/type/data_type_reference.h \
-	Object/type/fundamental_type_reference.h \
-	Object/type/param_type_reference.h \
-	Object/type/process_type_reference.h \
-	Object/type/type_reference_base.h \
-	Object/type/canonical_type_fwd.h \
-	Object/type/canonical_generic_datatype.h \
-	Object/unroll/unroll_fwd.h \
-	Object/unroll/alias_connection.h \
-	Object/unroll/aliases_connection_base.h \
-	Object/unroll/channel_instantiation_statement.h \
-	Object/unroll/data_alias_connection_base.h \
-	Object/unroll/datatype_instantiation_statement.h \
-	Object/unroll/direction_declaration.h \
-	Object/unroll/empty_instantiation_statement_type_ref_base.h \
-	Object/unroll/instance_management_base.h \
-	Object/unroll/instance_attribute_registry.h \
-	Object/unroll/instantiation_statement_base.h \
-	Object/unroll/instantiation_statement_type_ref_default.h \
-	Object/unroll/instance_attribute.h \
-	Object/unroll/channel_instantiation_type_ref_base.h \
-	Object/unroll/meta_conditional.h \
-	Object/unroll/meta_loop.h \
-	Object/unroll/null_parameter_type.h \
-	Object/unroll/param_expression_assignment.h \
-	Object/unroll/param_instantiation_statement.h \
-	Object/unroll/port_connection_base.h \
-	Object/unroll/port_connection.h \
-	Object/unroll/process_instantiation_statement.h \
-	Object/unroll/sequential_scope.h \
-	Object/unroll/template_type_completion.h \
-	Object/lang/PRS_fwd.h \
-	Object/lang/PRS_base.h \
-	Object/lang/PRS_literal_unroller.h \
-	Object/lang/CHP_base.h \
-	Object/lang/SPEC_fwd.h
+
+OBJECT_HH_FILES = $(OBJECT_CC_FILES:.cc=.hh) \
+	Object/devel_switches.hh \
+	Object/persistent_type_hash.hh \
+	Object/object_fwd.hh \
+	Object/cflat_context.hh \
+	Object/entry_collection.hh \
+	Object/common/scopespace.hh \
+	Object/traits/class_traits_fwd.hh \
+	Object/traits/classification_tags_fwd.hh \
+	Object/traits/classification_tags.hh \
+	Object/traits/chan_traits.hh \
+	Object/traits/data_traits.hh \
+	Object/traits/proc_traits.hh \
+	Object/traits/param_traits.hh \
+	Object/traits/pint_traits.hh \
+	Object/traits/pbool_traits.hh \
+	Object/traits/preal_traits.hh \
+	Object/traits/pstring_traits.hh \
+	Object/traits/int_traits.hh \
+	Object/traits/bool_traits.hh \
+	Object/traits/enum_traits.hh \
+	Object/traits/node_traits.hh \
+	Object/traits/real_traits.hh \
+	Object/traits/string_traits.hh \
+	Object/traits/struct_traits.hh \
+	Object/traits/instance_traits.hh \
+	Object/traits/type_tag_enum.hh \
+	Object/traits/value_traits.hh \
+	Object/def/definition_fwd.hh \
+	Object/def/built_in_datatype_def.hh \
+	Object/def/channel_definition_alias.hh \
+	Object/def/channel_definition_base.hh \
+	Object/def/datatype_definition_alias.hh \
+	Object/def/datatype_definition_base.hh \
+	Object/def/definition_base.hh \
+	Object/def/enum_datatype_def.hh \
+	Object/def/param_definition.hh \
+	Object/def/process_definition.hh \
+	Object/def/process_definition_alias.hh \
+	Object/def/process_definition_base.hh \
+	Object/def/typedef_base.hh \
+	Object/def/user_def_chan.hh \
+	Object/def/user_def_datatype.hh \
+	Object/def/footprint_base.hh \
+	Object/def/fundamental_channel_footprint.hh \
+	Object/expr/expr_fwd.hh \
+	Object/expr/exceptions_fwd.hh \
+	Object/expr/bool_expr.hh \
+	Object/expr/bool_logical_expr.hh \
+	Object/expr/bool_negation_expr.hh \
+	Object/expr/const_collection.hh \
+	Object/expr/const_index.hh \
+	Object/expr/const_index_list.hh \
+	Object/expr/const_param.hh \
+	Object/expr/const_param_expr_list.hh \
+	Object/expr/const_range.hh \
+	Object/expr/const_range_list.hh \
+	Object/expr/convert_expr.hh \
+	Object/expr/data_expr.hh \
+	Object/expr/dlfunction_fwd.hh \
+	Object/expr/dynamic_meta_index_list.hh \
+	Object/expr/dynamic_meta_range_list.hh \
+	Object/expr/dynamic_param_expr_list.hh \
+	Object/expr/enum_expr.hh \
+	Object/expr/int_arith_expr.hh \
+	Object/expr/int_expr.hh \
+	Object/expr/int_negation_expr.hh \
+	Object/expr/int_range_expr.hh \
+	Object/expr/int_range_list.hh \
+	Object/expr/int_relational_expr.hh \
+	Object/expr/loop_meta_expr.hh \
+	Object/expr/loop_nonmeta_expr.hh \
+	Object/expr/real_expr.hh \
+	Object/expr/meta_index_expr.hh \
+	Object/expr/meta_index_list.hh \
+	Object/expr/meta_range_expr.hh \
+	Object/expr/meta_range_list.hh \
+	Object/expr/nonmeta_cast_expr.hh \
+	Object/expr/nonmeta_expr_functor.hh \
+	Object/expr/nonmeta_expr_list.hh \
+	Object/expr/nonmeta_index_expr_base.hh \
+	Object/expr/nonmeta_index_list.hh \
+	Object/expr/nonmeta_range_expr_base.hh \
+	Object/expr/operator_info.hh \
+	Object/expr/operator_precedence.hh \
+	Object/expr/param_defined.hh \
+	Object/expr/param_expr.hh \
+	Object/expr/param_expr_functor.hh \
+	Object/expr/param_expr_list.hh \
+	Object/expr/pbool_const.hh \
+	Object/expr/pbool_expr.hh \
+	Object/expr/pbool_logical_expr.hh \
+	Object/expr/pbool_unary_expr.hh \
+	Object/expr/pint_arith_expr.hh \
+	Object/expr/pint_const.hh \
+	Object/expr/pint_expr.hh \
+	Object/expr/pint_range.hh \
+	Object/expr/pint_relational_expr.hh \
+	Object/expr/pint_unary_expr.hh \
+	Object/expr/preal_const.hh \
+	Object/expr/preal_expr.hh \
+	Object/expr/preal_arith_expr.hh \
+	Object/expr/preal_relational_expr.hh \
+	Object/expr/preal_unary_expr.hh \
+	Object/expr/string_expr.hh \
+	Object/expr/pstring_expr.hh \
+	Object/expr/pstring_const.hh \
+	Object/expr/pstring_relational_expr.hh \
+	Object/expr/struct_expr.hh \
+	Object/expr/types.hh \
+	Object/lang/generic_attribute_fwd.hh \
+	Object/lang/attribute_visitor_entry.hh \
+	Object/lang/cflat_visitee.hh \
+	Object/lang/PRS_enum.hh \
+	Object/lang/PRS_footprint_expr.hh \
+	Object/lang/PRS_footprint_expr_pool_fwd.hh \
+	Object/lang/PRS_footprint_macro.hh \
+	Object/lang/PRS_footprint_rule.hh \
+	Object/type/type_fwd.hh \
+	Object/type/builtin_channel_type_reference.hh \
+	Object/type/channel_direction_enum.hh \
+	Object/type/channel_type_reference.hh \
+	Object/type/channel_type_reference_base.hh \
+	Object/type/data_type_reference.hh \
+	Object/type/fundamental_type_reference.hh \
+	Object/type/param_type_reference.hh \
+	Object/type/process_type_reference.hh \
+	Object/type/type_reference_base.hh \
+	Object/type/canonical_type_fwd.hh \
+	Object/type/canonical_generic_datatype.hh \
+	Object/unroll/unroll_fwd.hh \
+	Object/unroll/alias_connection.hh \
+	Object/unroll/aliases_connection_base.hh \
+	Object/unroll/channel_instantiation_statement.hh \
+	Object/unroll/data_alias_connection_base.hh \
+	Object/unroll/datatype_instantiation_statement.hh \
+	Object/unroll/direction_declaration.hh \
+	Object/unroll/empty_instantiation_statement_type_ref_base.hh \
+	Object/unroll/instance_management_base.hh \
+	Object/unroll/instance_attribute_registry.hh \
+	Object/unroll/instantiation_statement_base.hh \
+	Object/unroll/instantiation_statement_type_ref_default.hh \
+	Object/unroll/instance_attribute.hh \
+	Object/unroll/channel_instantiation_type_ref_base.hh \
+	Object/unroll/meta_conditional.hh \
+	Object/unroll/meta_loop.hh \
+	Object/unroll/null_parameter_type.hh \
+	Object/unroll/param_expression_assignment.hh \
+	Object/unroll/param_instantiation_statement.hh \
+	Object/unroll/port_connection_base.hh \
+	Object/unroll/port_connection.hh \
+	Object/unroll/process_instantiation_statement.hh \
+	Object/unroll/sequential_scope.hh \
+	Object/unroll/template_type_completion.hh \
+	Object/lang/PRS_fwd.hh \
+	Object/lang/PRS_base.hh \
+	Object/lang/PRS_literal_unroller.hh \
+	Object/lang/CHP_base.hh \
+	Object/lang/SPEC_fwd.hh
 
 PARSER_H_FILES = \
 	parser/yacc-config.h \
-	parser/$(HACKT_PARSE_ROOT)-real.h \
-	parser/hackt-union.h \
 	parser/$(HACKT_PARSE_ROOT).output.h \
 	parser/$(HACKT_PARSE_ROOT)-options.h \
 	lexer/$(HACKT_LEX_ROOT)-options.h \
-	parser/$(INSTREF_PARSE_ROOT)-real.h \
-	parser/instref-union.h \
-	parser/instref.h \
 	parser/$(INSTREF_PARSE_ROOT).output.h \
 	parser/$(INSTREF_PARSE_ROOT)-options.h \
 	lexer/$(INSTREF_LEX_ROOT)-options.h \
-	parser/$(TYPE_PARSE_ROOT)-real.h \
-	parser/type-union.h \
-	parser/type.h \
 	parser/$(TYPE_PARSE_ROOT).output.h \
 	parser/$(TYPE_PARSE_ROOT)-options.h \
 	lexer/$(TYPE_LEX_ROOT)-options.h \
-	parser/$(SPICE_PARSE_ROOT)-real.h \
-	parser/spice-union.h \
-	parser/spice.h \
 	parser/$(SPICE_PARSE_ROOT).output.h \
 	parser/$(SPICE_PARSE_ROOT)-options.h \
 	lexer/$(SPICE_LEX_ROOT)-options.h \
 	lexer/$(HACFLAT_LEX_ROOT)-options.h \
-	lexer/hacflat-lex-options.h \
-	lexer/hacflat-yystype.h \
-	lexer/file_manager.h \
-	lexer/input_manager.h \
-	lexer/flex_lexer_state.h \
-	lexer/flex_buffer_state.h \
-	lexer/yyin_manager.h \
-	lexer/hac_lex.h
+	lexer/hacflat-lex-options.h
+
+PARSER_HH_FILES = \
+	parser/hackt-union.hh \
+	parser/$(HACKT_PARSE_ROOT)-real.hh \
+	parser/$(INSTREF_PARSE_ROOT)-real.hh \
+	parser/instref-union.hh \
+	parser/instref.hh \
+	parser/$(TYPE_PARSE_ROOT)-real.hh \
+	parser/type-union.hh \
+	parser/type.hh \
+	parser/$(SPICE_PARSE_ROOT)-real.hh \
+	parser/spice-union.hh \
+	parser/spice.hh \
+	lexer/hacflat-yystype.hh \
+	lexer/file_manager.hh \
+	lexer/input_manager.hh \
+	lexer/flex_lexer_state.hh \
+	lexer/flex_buffer_state.hh \
+	lexer/yyin_manager.hh \
+	lexer/hac_lex.hh
 
 # can't use $(HACKT_PARSE_ROOT) to substitute :(
 PARSER_CC_FILES = \
@@ -1078,38 +1081,40 @@ PRSIM_TCC_FILES = \
 	sim/prsim/State-prsim.tcc \
 	sim/prsim/Rule.tcc
 
-SIM_H_FILES = $(SIM_CC_FILES:.cc=.h) \
-	$(SIM_TCC_FILES:.tcc=.h) \
-	sim/common.h \
-	sim/command_error_codes.h \
-	sim/command_completion.h \
-	sim/vpi_user.h \
-	sim/devel_switches.h
+SIM_HH_FILES = $(SIM_CC_FILES:.cc=.hh) \
+	$(SIM_TCC_FILES:.tcc=.hh) \
+	sim/common.hh \
+	sim/command_error_codes.hh \
+	sim/command_completion.hh \
+	sim/devel_switches.hh
 
-PRSIM_H_FILES = $(PRSIM_CC_FILES:.cc=.h) \
-	$(PRSIM_TCC_FILES:.tcc=.h) \
-	sim/prsim/devel_switches.h \
-	sim/prsim/enums.h \
-	sim/prsim/ExprAllocFlags.h \
-	sim/prsim/Exception.h \
-	main/prsim_options.h
+SIM_H_FILES = \
+	sim/vpi_user.h
 
-CHPSIM_H_FILES = $(CHPSIM_CC_FILES:.cc=.h) \
-	sim/chpsim/chpsim_dlfunction.h \
-	sim/chpsim/StateConstructorFlags.h \
-	sim/chpsim/devel_switches.h \
-	sim/chpsim/graph_options.h \
-	sim/chpsim/TraceIterators.h \
-	sim/chpsim/TraceStreamer.h
+PRSIM_HH_FILES = $(PRSIM_CC_FILES:.cc=.hh) \
+	$(PRSIM_TCC_FILES:.tcc=.hh) \
+	sim/prsim/enums.hh \
+	sim/prsim/ExprAllocFlags.hh \
+	sim/prsim/Exception.hh \
+	main/prsim_options.hh \
+	sim/prsim/devel_switches.hh
+
+CHPSIM_HH_FILES = $(CHPSIM_CC_FILES:.cc=.hh) \
+	sim/chpsim/chpsim_dlfunction.hh \
+	sim/chpsim/StateConstructorFlags.hh \
+	sim/chpsim/graph_options.hh \
+	sim/chpsim/TraceIterators.hh \
+	sim/chpsim/TraceStreamer.hh \
+	sim/chpsim/devel_switches.hh
 
 NET_CC_FILES = \
 	net/netgraph.cc \
 	net/netlist_generator.cc \
 	net/netlist_options.cc
 NET_TCC_FILES =
-NET_H_FILES = \
-	$(NET_CC_FILES:.cc=.h) \
-	net/common.h
+NET_HH_FILES = \
+	$(NET_CC_FILES:.cc=.hh) \
+	net/common.hh
 
 PR_CC_FILES = \
 	PR/channel.cc \
@@ -1120,13 +1125,13 @@ PR_CC_FILES = \
 	PR/placer_options.cc \
 	PR/tile_instance.cc
 
-PR_H_FILES = $(PR_CC_FILES:.cc=.h) \
-	PR/channel_type.h \
-	PR/obstacle.h \
-	PR/pr-command.h \
-	PR/rcanvas.h \
-	PR/tile_type.h \
-	PR/pr_utils.h
+PR_HH_FILES = $(PR_CC_FILES:.cc=.hh) \
+	PR/channel_type.hh \
+	PR/obstacle.hh \
+	PR/pr-command.hh \
+	PR/rcanvas.hh \
+	PR/tile_type.hh \
+	PR/pr_utils.hh
 
 # libhacktexec sources
 MAIN_EXEC_CC_FILES = \
@@ -1150,49 +1155,46 @@ MAIN_EXEC_TCC_FILES = \
 	main/options_modifier.tcc \
 	main/simple_options.tcc
 
-MAIN_EXEC_H_FILES = $(MAIN_EXEC_CC_FILES:.cc=.h) \
-	$(MAIN_EXEC_TCC_FILES:.tcc=.h) \
-	main/hackt.h \
-	main/hackt_fwd.h \
-	main/cflat_options.h \
-	main/global_options.h \
-	main/chpsim_options.h \
-	main/main_funcs.h
-
-# removed:
-#	main/guile.h main/chpsim-guile.h
+MAIN_EXEC_HH_FILES = $(MAIN_EXEC_CC_FILES:.cc=.hh) \
+	$(MAIN_EXEC_TCC_FILES:.tcc=.hh) \
+	main/hackt.hh \
+	main/hackt_fwd.hh \
+	main/cflat_options.hh \
+	main/global_options.hh \
+	main/chpsim_options.hh \
+	main/main_funcs.hh
 
 # installed development headers
 nobase_pkginclude_HEADERS += \
-	Object/expr/const_param.h \
-	Object/expr/const_param_expr_list.h \
-	Object/expr/param_expr.h \
-	Object/expr/param_expr_list.h \
-	Object/expr/types.h \
-	Object/expr/dlfunction_fwd.h \
-	Object/expr/dlfunction.h \
-	Object/expr/meta_call_traits.h \
-	sim/chpsim/chpsim_dlfunction.h
+	Object/expr/const_param.hh \
+	Object/expr/const_param_expr_list.hh \
+	Object/expr/param_expr.hh \
+	Object/expr/param_expr_list.hh \
+	Object/expr/types.hh \
+	Object/expr/dlfunction_fwd.hh \
+	Object/expr/dlfunction.hh \
+	Object/expr/meta_call_traits.hh \
+	sim/chpsim/chpsim_dlfunction.hh
 
-guile/libhackt-wrap.hchk: guile/libhackt-wrap.h
-	@$(LIBGUILE_HCHK_TEST_SCRIPT)
+guile/libhackt-wrap.hhchk: guile/libhackt-wrap.hh
+	@$(LIBGUILE_HHCHK_TEST_SCRIPT)
 
-guile/hackt-documentation.hchk: guile/hackt-documentation.h
-	@$(LIBGUILE_HCHK_TEST_SCRIPT)
+guile/hackt-documentation.hhchk: guile/hackt-documentation.hh
+	@$(LIBGUILE_HHCHK_TEST_SCRIPT)
 
-guile/scm_reference.hchk: guile/scm_reference.h
-	@$(LIBGUILE_HCHK_TEST_SCRIPT)
+guile/scm_reference.hhchk: guile/scm_reference.hh
+	@$(LIBGUILE_HHCHK_TEST_SCRIPT)
 
-guile/scm_chpsim_trace_streamer.hchk: guile/scm_chpsim_trace_streamer.h
-	@$(LIBGUILE_HCHK_TEST_SCRIPT)
+guile/scm_chpsim_trace_streamer.hhchk: guile/scm_chpsim_trace_streamer.hh
+	@$(LIBGUILE_HHCHK_TEST_SCRIPT)
 
-guile/scm_chpsim_event_node.hchk: guile/scm_chpsim_event_node.h
-	@$(LIBGUILE_HCHK_TEST_SCRIPT)
+guile/scm_chpsim_event_node.hhchk: guile/scm_chpsim_event_node.hh
+	@$(LIBGUILE_HHCHK_TEST_SCRIPT)
 
-COMMON_H_FILES = \
-	common/sizes-common.h
+COMMON_HH_FILES = \
+	common/sizes-common.hh
 
-COMMON_FILES = $(COMMON_H_FILES) \
+COMMON_FILES = $(COMMON_HH_FILES) \
 	common/sizes-common.cc
 
 # automake doesn't like macro in generating .Plo, a bug methinks
@@ -1201,7 +1203,8 @@ COMMON_FILES = $(COMMON_H_FILES) \
 
 # the generated lexer and parser sources aren't supposed to be distributed!
 libhackt_la_SOURCES = \
-	$(OBJECT_CC_FILES) $(OBJECT_TCC_FILES) $(OBJECT_H_FILES) \
+	$(OBJECT_CC_FILES) $(OBJECT_TCC_FILES) \
+	$(OBJECT_HH_FILES) \
 	$(OBJECT_CC_NO_H_FILES) \
 	$(COMMON_FILES) \
 	config.h
@@ -1209,7 +1212,7 @@ libhackt_la_SOURCES = \
 libhacktcommon_la_SOURCES = \
 	$(OBJECT_COMMON_CC_FILES) \
 	$(OBJECT_COMMON_TCC_FILES) \
-	$(OBJECT_COMMON_H_FILES)
+	$(OBJECT_COMMON_HH_FILES)
 # libhacktcommon_la_CPPFLAGS = $(LTDLINCL)
 libhacktcommon_la_LIBADD = $(LIBLTDL)
 
@@ -1217,16 +1220,16 @@ libhacktcommon_la_LIBADD = $(LIBLTDL)
 libhacktinstref_la_SOURCES = \
 	$(OBJECT_INST_CC_FILES) \
 	$(OBJECT_INST_TCC_FILES) \
-	$(OBJECT_INST_H_FILES) \
+	$(OBJECT_INST_HH_FILES) \
 	$(OBJECT_REF_CC_FILES) \
 	$(OBJECT_REF_TCC_FILES) \
-	$(OBJECT_REF_H_FILES)
+	$(OBJECT_REF_HH_FILES)
 
-libhacktast_la_SOURCES = $(AST_CC_FILES) $(AST_TCC_FILES) $(AST_H_FILES)
+libhacktast_la_SOURCES = $(AST_CC_FILES) $(AST_TCC_FILES) $(AST_HH_FILES)
 
 libhacktexec_la_SOURCES = \
 	$(MAIN_EXEC_CC_FILES) \
-	$(MAIN_EXEC_H_FILES) \
+	$(MAIN_EXEC_HH_FILES) \
 	$(MAIN_EXEC_TCC_FILES)
 
 echo-libhacktexec-sources:
@@ -1234,19 +1237,19 @@ echo-libhacktexec-sources:
 
 libhacktexec_la_LIBADD += $(LIBMISCFUN)
 
-libhacktsim_la_SOURCES = $(SIM_CC_FILES) $(SIM_TCC_FILES) $(SIM_H_FILES)
+libhacktsim_la_SOURCES = $(SIM_CC_FILES) $(SIM_TCC_FILES) $(SIM_HH_FILES) $(SIM_H_FILES)
 libhacktsim_la_LIBADD = libhacktlib.la
 
-libhacktprsim_la_SOURCES = $(PRSIM_CC_FILES) $(PRSIM_TCC_FILES) $(PRSIM_H_FILES)
+libhacktprsim_la_SOURCES = $(PRSIM_CC_FILES) $(PRSIM_TCC_FILES) $(PRSIM_HH_FILES)
 libhacktprsim_la_LIBADD = libhacktsim.la libhacknet.la
 # need libhacknet.la for netlist graphs -- for precharge invariants
 
-libhacktchpsim_la_SOURCES = $(CHPSIM_CC_FILES) $(CHPSIM_H_FILES)
+libhacktchpsim_la_SOURCES = $(CHPSIM_CC_FILES) $(CHPSIM_HH_FILES)
 libhacktchpsim_la_LIBADD = libhacktsim.la
 
-libhacknet_la_SOURCES = $(NET_CC_FILES) $(NET_TCC_FILES) $(NET_H_FILES)
+libhacknet_la_SOURCES = $(NET_CC_FILES) $(NET_TCC_FILES) $(NET_HH_FILES)
 
-libhacktpr_la_SOURCES = $(PR_CC_FILES) $(PR_H_FILES)
+libhacktpr_la_SOURCES = $(PR_CC_FILES) $(PR_HH_FILES)
 
 # any other files that depend on automatically generated headers
 # should have explicit dependencies.  
@@ -1255,31 +1258,31 @@ sim/ISE.lo sim/ISE.o: cvstag.h
 common/ICE.lo common/ICE.o: cvstag.h
 common/config.lo common/config.o: cvstag.h
 sim/prsim/VCDManager.lo sim/prsim/VCDManager.o: cvstag.h
-main/lexyacc.lo main/lexyacc.o: parser/$(HACKT_PARSE_ROOT).h
-main/main_funcs.lo main/main_funcs.o: parser/$(HACKT_PARSE_ROOT)-real.h
+main/lexyacc.lo main/lexyacc.o: parser/$(HACKT_PARSE_ROOT).hh
+main/main_funcs.lo main/main_funcs.o: parser/$(HACKT_PARSE_ROOT)-real.hh
 common/config.lo common/config.o: $(AUTOHEADERS) $(VERSIONHEADERS) \
 	parser/yacc_version.h lexer/lex_version.h
 lexer/$(LIBHACKTPARSERS_LA)-$(HACKT_LEX_ROOT)-real.lo \
 	lexer/$(LIBHACKTPARSERS_LA)-$(HACKT_LEX_ROOT)-real.o: \
-	parser/$(HACKT_PARSE_ROOT).h
+	parser/$(HACKT_PARSE_ROOT).hh
 parser/$(LIBHACKTPARSERS_LA)-hackt-union.lo \
 	parser/$(LIBHACKTPARSERS_LA)-hackt-union.o: \
 	parser/$(HACKT_PARSE_ROOT).output.h
 lexer/$(LIBHACKTPARSERS_LA)-$(INSTREF_LEX_ROOT)-real.lo \
 	lexer/$(LIBHACKTPARSERS_LA)-$(INSTREF_LEX_ROOT)-real.o: \
-	parser/$(INSTREF_PARSE_ROOT).h
+	parser/$(INSTREF_PARSE_ROOT).hh
 parser/$(LIBHACKTPARSERS_LA)-instref-union.lo \
 	parser/$(LIBHACKTPARSERS_LA)-instref-union.o: \
 	parser/$(INSTREF_PARSE_ROOT).output.h
 lexer/$(LIBHACKTPARSERS_LA)-$(TYPE_LEX_ROOT)-real.lo \
 	lexer/$(LIBHACKTPARSERS_LA)-$(TYPE_LEX_ROOT)-real.o: \
-	parser/$(TYPE_PARSE_ROOT).h
+	parser/$(TYPE_PARSE_ROOT).hh
 parser/$(LIBHACKTPARSERS_LA)-type-union.lo \
 	parser/$(LIBHACKTPARSERS_LA)-type-union.o: \
 	parser/$(TYPE_PARSE_ROOT).output.h
 lexer/$(LIBHACKTPARSERS_LA)-$(SPICE_LEX_ROOT)-real.lo \
 	lexer/$(LIBHACKTPARSERS_LA)-$(SPICE_LEX_ROOT)-real.o: \
-	parser/$(SPICE_PARSE_ROOT).h
+	parser/$(SPICE_PARSE_ROOT).hh
 parser/$(LIBHACKTPARSERS_LA)-spice-union.lo \
 	parser/$(LIBHACKTPARSERS_LA)-spice-union.o: \
 	parser/$(SPICE_PARSE_ROOT).output.h
@@ -1289,22 +1292,22 @@ lexer/$(LIBBOGUS_LA)-$(HACKT_LEX_ROOT).lo \
 	lexer/$(LIBBOGUS_LA)-$(HACKT_LEX_ROOT).o \
 	parser/$(LIBBOGUS_LA)-$(HACKT_PARSE_ROOT).lo \
 	parser/$(LIBBOGUS_LA)-$(HACKT_PARSE_ROOT).o: \
-	parser/hackt-prefix.h
+	parser/hackt-prefix.hh
 lexer/$(LIBBOGUS2_LA)-$(INSTREF_LEX_ROOT).lo \
 	lexer/$(LIBBOGUS2_LA)-$(INSTREF_LEX_ROOT).o \
 	parser/$(LIBBOGUS2_LA)-$(INSTREF_PARSE_ROOT).lo \
 	parser/$(LIBBOGUS2_LA)-$(INSTREF_PARSE_ROOT).o: \
-	parser/instref-prefix.h
+	parser/instref-prefix.hh
 lexer/$(LIBBOGUS3_LA)-$(TYPE_LEX_ROOT).lo \
 	lexer/$(LIBBOGUS3_LA)-$(TYPE_LEX_ROOT).o \
 	parser/$(LIBBOGUS3_LA)-$(TYPE_PARSE_ROOT).lo \
 	parser/$(LIBBOGUS3_LA)-$(TYPE_PARSE_ROOT).o: \
-	parser/type-prefix.h
+	parser/type-prefix.hh
 lexer/$(LIBBOGUS3_LA)-$(SPICE_LEX_ROOT).lo \
 	lexer/$(LIBBOGUS3_LA)-$(SPICE_LEX_ROOT).o \
 	parser/$(LIBBOGUS3_LA)-$(SPICE_PARSE_ROOT).lo \
 	parser/$(LIBBOGUS3_LA)-$(SPICE_PARSE_ROOT).o: \
-	parser/spice-prefix.h
+	parser/spice-prefix.hh
 
 # the following targets need to be prefixed with the library name, libbogus, 
 # but automake complains that it overrides the automatic definition...
@@ -1316,32 +1319,36 @@ lexer/$(LIBBOGUS3_LA)-$(SPICE_LEX_ROOT).lo \
 # compile lexer and parser into separate library to for convenient way
 # of giving them exceptional compiler flags, see libhacktparsers_la_CXXFLAGS
 libhacktparsers_la_SOURCES = \
-	$(PARSER_CC_FILES) $(PARSER_H_FILES)
+	$(PARSER_CC_FILES) $(PARSER_HH_FILES) $(PARSER_H_FILES)
 
 CONFTEST_HEADER_FILES = \
-	test/overload-virtual-using-conftest.h \
-	test/friend_function_namespace-conftest.h
+	test/overload-virtual-using-conftest.hh \
+	test/friend_function_namespace-conftest.hh
 
 EXTRA_DIST += $(CONFTEST_HEADER_FILES)
 
-ALL_HEADER_FILES += \
+ALL_CXX_HEADER_FILES += \
+	$(COMMON_HH_FILES) \
 	$(CONFIG_HEADERS) \
 	$(CONFTEST_HEADER_FILES) \
-	$(COMMON_H_FILES) \
-	$(OBJECT_H_FILES) \
-	$(OBJECT_COMMON_H_FILES) \
-	$(OBJECT_INST_H_FILES) \
-	$(OBJECT_REF_H_FILES) \
-	$(AST_H_FILES) \
+	$(OBJECT_HH_FILES) \
+	$(OBJECT_COMMON_HH_FILES) \
+	$(OBJECT_INST_HH_FILES) \
+	$(OBJECT_REF_HH_FILES) \
+	$(AST_HH_FILES) \
+	$(PARSER_HH_FILES) \
+	$(SIM_HH_FILES) \
+	$(PRSIM_HH_FILES) \
+	$(CHPSIM_HH_FILES) \
+	$(NET_HH_FILES) \
+	$(PR_HH_FILES) \
+	$(HACKTLIB_HH_FILES) \
+	$(LIBHACKTGUILE_HH_FILES) \
+	$(MAIN_EXEC_HH_FILES)
+
+ALL_HEADER_FILES += \
 	$(PARSER_H_FILES) \
-	$(SIM_H_FILES) \
-	$(PRSIM_H_FILES) \
-	$(CHPSIM_H_FILES) \
-	$(NET_H_FILES) \
-	$(PR_H_FILES) \
-	$(HACKTLIB_H_FILES) \
-	$(LIBHACKTGUILE_H_FILES) \
-	$(MAIN_EXEC_H_FILES)
+	$(SIM_H_FILES)
 
 ALL_TCC_FILES += \
 	$(OBJECT_TCC_FILES) \
@@ -1403,33 +1410,33 @@ MAKE_PARSE_PREFIX_HEADER_SCRIPT = \
 		`$(ECHO) $@ | $(SED_srcdir_strip_fast)`
 
 # Oddly, these targets get mistakenly placed in the srcdir
-parser/hackt-prefix.h: $(LEXYACC_PREFIX_GENERATOR)
+parser/hackt-prefix.hh: $(LEXYACC_PREFIX_GENERATOR)
 	basename=$(HACKT_YACC_PREFIX) ; \
 	$(MAKE_PARSE_PREFIX_HEADER_SCRIPT)
 
-parser/instref-prefix.h: $(LEXYACC_PREFIX_GENERATOR)
+parser/instref-prefix.hh: $(LEXYACC_PREFIX_GENERATOR)
 	basename=$(INSTREF_YACC_PREFIX) ; \
 	$(MAKE_PARSE_PREFIX_HEADER_SCRIPT)
 
-parser/type-prefix.h: $(LEXYACC_PREFIX_GENERATOR)
+parser/type-prefix.hh: $(LEXYACC_PREFIX_GENERATOR)
 	basename=$(TYPE_YACC_PREFIX) ; \
 	$(MAKE_PARSE_PREFIX_HEADER_SCRIPT)
 
-parser/hacflat-prefix.h: $(LEXYACC_PREFIX_GENERATOR)
+parser/hacflat-prefix.hh: $(LEXYACC_PREFIX_GENERATOR)
 	basename=$(HACFLAT_YACC_PREFIX) ; \
 	$(MAKE_PARSE_PREFIX_HEADER_SCRIPT)
 
-parser/spice-prefix.h: $(LEXYACC_PREFIX_GENERATOR)
+parser/spice-prefix.hh: $(LEXYACC_PREFIX_GENERATOR)
 	basename=$(SPICE_YACC_PREFIX) ; \
 	$(MAKE_PARSE_PREFIX_HEADER_SCRIPT)
 
-LEXYACC_PREFIX_H_FILES = parser/hackt-prefix.h \
-	parser/instref-prefix.h parser/type-prefix.h \
-	parser/hacflat-prefix.h \
-	parser/spice-prefix.h
+LEXYACC_PREFIX_HH_FILES = parser/hackt-prefix.hh \
+	parser/instref-prefix.hh parser/type-prefix.hh \
+	parser/hacflat-prefix.hh \
+	parser/spice-prefix.hh
 
-ALL_HEADER_FILES += $(LEXYACC_PREFIX_H_FILES)
-CLEANFILES += $(LEXYACC_PREFIX_H_FILES)
+ALL_CXX_HEADER_FILES += $(LEXYACC_PREFIX_HH_FILES)
+CLEANFILES += $(LEXYACC_PREFIX_HH_FILES)
 
 PARSER_HACK_PIPE =
 if HAVE_BISON
@@ -1498,56 +1505,58 @@ parser/$(SPICE_PARSE_ROOT)-real.cc: parser/$(SPICE_PARSE_ROOT).cc \
 	$(CAT) $< | $(PARSER_HACK_PIPE) > $@
 
 if YLWRAP_CC2HH
+# ylwrap already produces .hh from .cc
+else
 PARSE_ROOT_HEADER_SCRIPT = \
-	base=`basename $@ .h` ; \
+	base=`basename $@ .hh` ; \
 	dir=`dirname $@` ; \
 	if test -f $@ ; \
 	then touch $@ ; \
-	elif test -f $*.hh ; \
-	then cd parser ; $(LN_S) $$base.hh $$base.h ; touch $$base.h ; \
-	else echo "Error: no $@ or .hh found." ; exit 1 ; \
+	elif test -f $*.h ; \
+	then cd parser ; $(LN_S) $$base.h $$base.hh ; touch $$base.hh ; \
+	else echo "Error: no $@ or .h found." ; exit 1 ; \
 	fi
 
 # newer automake 1.12's ylwrap produces $root.hh instead of $root.h
-parser/$(HACKT_PARSE_ROOT).h: parser/$(HACKT_PARSE_ROOT).cc
+parser/$(HACKT_PARSE_ROOT).hh: parser/$(HACKT_PARSE_ROOT).cc
 	$(PARSE_ROOT_HEADER_SCRIPT)
-parser/$(TYPE_PARSE_ROOT).h: parser/$(TYPE_PARSE_ROOT).cc
+parser/$(TYPE_PARSE_ROOT).hh: parser/$(TYPE_PARSE_ROOT).cc
 	$(PARSE_ROOT_HEADER_SCRIPT)
-parser/$(INSTREF_PARSE_ROOT).h: parser/$(INSTREF_PARSE_ROOT).cc
+parser/$(INSTREF_PARSE_ROOT).hh: parser/$(INSTREF_PARSE_ROOT).cc
 	$(PARSE_ROOT_HEADER_SCRIPT)
-parser/$(SPICE_PARSE_ROOT).h: parser/$(SPICE_PARSE_ROOT).cc
+parser/$(SPICE_PARSE_ROOT).hh: parser/$(SPICE_PARSE_ROOT).cc
 	$(PARSE_ROOT_HEADER_SCRIPT)
 endif
 
 # requires shell variable 'basename'
 MAKE_REAL_PARSER_HEADER_SCRIPT = \
 	$(SED_srcdir_strip_setup) ; \
-	{ $(ECHO) "\#include \"parser/$$basename-prefix.h\"" ; \
-	$(ECHO) "\#include \"parser/$$basename-union.h\"" ; \
-	if test -f "parser/$$basename.h" ; then \
-		$(ECHO) "\#include \"parser/$$basename.h\"" ; \
+	{ $(ECHO) "\#include \"parser/$$basename-prefix.hh\"" ; \
+	$(ECHO) "\#include \"parser/$$basename-union.hh\"" ; \
+	if test -f "parser/$$basename.hh" ; then \
+		$(ECHO) "\#include \"parser/$$basename.hh\"" ; \
 	fi ; \
-	$(CAT) parser/$$basename-parse.h ;} > \
+	$(CAT) parser/$$basename-parse.hh ;} > \
 		`$(ECHO) $@ | $(SED_srcdir_strip_fast)`
 
 # NOTE: oddly, this sometimes builds in the srcdir, when it shouldn't
-parser/$(HACKT_PARSE_ROOT)-real.h: parser/$(HACKT_PARSE_ROOT).h \
-		parser/hackt-prefix.h
+parser/$(HACKT_PARSE_ROOT)-real.hh: parser/$(HACKT_PARSE_ROOT).hh \
+		parser/hackt-prefix.hh
 	basename="hackt" ; \
 	$(MAKE_REAL_PARSER_HEADER_SCRIPT)
 
-parser/$(INSTREF_PARSE_ROOT)-real.h: parser/$(INSTREF_PARSE_ROOT).h \
-		parser/instref-prefix.h
+parser/$(INSTREF_PARSE_ROOT)-real.hh: parser/$(INSTREF_PARSE_ROOT).hh \
+		parser/instref-prefix.hh
 	basename="instref" ; \
 	$(MAKE_REAL_PARSER_HEADER_SCRIPT)
 
-parser/$(TYPE_PARSE_ROOT)-real.h: parser/$(TYPE_PARSE_ROOT).h \
-		parser/type-prefix.h
+parser/$(TYPE_PARSE_ROOT)-real.hh: parser/$(TYPE_PARSE_ROOT).hh \
+		parser/type-prefix.hh
 	basename="type" ; \
 	$(MAKE_REAL_PARSER_HEADER_SCRIPT)
 
-parser/$(SPICE_PARSE_ROOT)-real.h: parser/$(SPICE_PARSE_ROOT).h \
-		parser/spice-prefix.h
+parser/$(SPICE_PARSE_ROOT)-real.hh: parser/$(SPICE_PARSE_ROOT).hh \
+		parser/spice-prefix.hh
 	basename="spice" ; \
 	$(MAKE_REAL_PARSER_HEADER_SCRIPT)
 
@@ -1563,8 +1572,8 @@ PURIFY_LEXER_PIPE = $(AWK) -f $(srcdir)/lexer/purify_flex.awk | \
 MAKE_REAL_LEXER_SCRIPT = $(AWK) -f $(srcdir)/$(FLEX_COMMON_PATCH) $< > $@.tmp
 
 MAKE_REAL_LEXER_SCRIPT += && \
-	{ $(ECHO) "\#include \"parser/$$basename-prefix.h\"" && \
-	$(ECHO) "\#include \"lexer/flex_lexer_state.h\"" && \
+	{ $(ECHO) "\#include \"parser/$$basename-prefix.hh\"" && \
+	$(ECHO) "\#include \"lexer/flex_lexer_state.hh\"" && \
 	$(CAT) $@.tmp | $(PURIFY_LEXER_PIPE) ;} > $@ && \
 	$(RM) $@.tmp $@.tmp.orig
 
@@ -1572,7 +1581,7 @@ MAKE_REAL_LEXER_SCRIPT += && \
 # doesn't include it early enough from the .ll source :(
 # if HAVE_FLEX ...
 lexer/$(HACKT_LEX_ROOT)-real.cc: lexer/$(HACKT_LEX_ROOT).cc \
-		parser/$(HACKT_PARSE_ROOT)-real.h \
+		parser/$(HACKT_PARSE_ROOT)-real.hh \
 		$(FLEX_COMMON_PATCH)
 # need forward declaration for flex 2.5.31
 # need early declaration of flex::lexer_state needed for flex 2.5.{31,33}
@@ -1580,25 +1589,25 @@ lexer/$(HACKT_LEX_ROOT)-real.cc: lexer/$(HACKT_LEX_ROOT).cc \
 	$(MAKE_REAL_LEXER_SCRIPT)
 
 lexer/$(INSTREF_LEX_ROOT)-real.cc: lexer/$(INSTREF_LEX_ROOT).cc \
-		parser/$(INSTREF_PARSE_ROOT)-real.h \
+		parser/$(INSTREF_PARSE_ROOT)-real.hh \
 		$(FLEX_COMMON_PATCH)
 	basename="instref" ; \
 	$(MAKE_REAL_LEXER_SCRIPT)
 
 lexer/$(TYPE_LEX_ROOT)-real.cc: lexer/$(TYPE_LEX_ROOT).cc \
-		parser/$(TYPE_PARSE_ROOT)-real.h \
+		parser/$(TYPE_PARSE_ROOT)-real.hh \
 		$(FLEX_COMMON_PATCH)
 	basename="type" ; \
 	$(MAKE_REAL_LEXER_SCRIPT)
 
 lexer/$(HACFLAT_LEX_ROOT)-real.cc: lexer/$(HACFLAT_LEX_ROOT).cc \
-		parser/hacflat-prefix.h \
+		parser/hacflat-prefix.hh \
 		$(FLEX_COMMON_PATCH)
 	basename="hacflat" ; \
 	$(MAKE_REAL_LEXER_SCRIPT)
 
 lexer/$(SPICE_LEX_ROOT)-real.cc: lexer/$(SPICE_LEX_ROOT).cc \
-		parser/spice-prefix.h \
+		parser/spice-prefix.hh \
 		$(FLEX_COMMON_PATCH)
 	basename="spice" ; \
 	$(MAKE_REAL_LEXER_SCRIPT)
@@ -1610,17 +1619,17 @@ lexer/flex_lexer_common.cc: lexer/$(HACKT_LEX_ROOT)-real.cc
 	{ $(ECHO) "// \"$@\" -- automatically generated, do not modify" ; \
 	cmd="$(CAT) $< | $(EXTRACT_FLEX_COMMON_PIPE)" ; \
 	$(ECHO) "// produced by: $$cmd" ; \
-	$(ECHO) "#include \"lexer/flex_lexer_state.h\"" ; \
-	$(ECHO) "#include \"lexer/flex_buffer_state.h\"" ; \
+	$(ECHO) "#include \"lexer/flex_lexer_state.hh\"" ; \
+	$(ECHO) "#include \"lexer/flex_buffer_state.hh\"" ; \
 	$(ECHO) "#define FLEX_STRUCT_BUFFER_STATE" ; \
 	$(ECHO) "#define KEEP_FLEX_COMMON	1" ; \
 	$(ECHO) "#define YY_ALWAYS_INTERACTIVE	0" ; \
 	$(CAT) $< | $(EXTRACT_FLEX_COMMON_PIPE) ; } > $@
 
 # generated header, extracting struct definition
-lexer/flex_lexer_state.cc: lexer/flex_buffer_state.h
+lexer/flex_lexer_state.cc: lexer/flex_buffer_state.hh
 
-lexer/flex_buffer_state.h: lexer/$(HACKT_LEX_ROOT)-real.cc
+lexer/flex_buffer_state.hh: lexer/$(HACKT_LEX_ROOT)-real.cc
 	$(SED_srcdir_strip_setup) ; \
 	{ $(ECHO) "// \"$@\" -- automatically generated, do not modify" ; \
 	$(ECHO) "#ifndef	__LEXER_FLEX_BUFFER_STATE_H__" ; \
@@ -1631,22 +1640,22 @@ lexer/flex_buffer_state.h: lexer/$(HACKT_LEX_ROOT)-real.cc
 	$(ECHO) "#endif	// __LEXER_FLEX_BUFFER_STATE_H__" ; } > \
 		`$(ECHO) $@ | $(SED_srcdir_strip_fast)`
 
-$(srcdir)/parser/instref.cc: parser/$(INSTREF_PARSE_ROOT)-real.h
+$(srcdir)/parser/instref.cc: parser/$(INSTREF_PARSE_ROOT)-real.hh
 
-$(srcdir)/parser/type.cc: parser/$(TYPE_PARSE_ROOT)-real.h
+$(srcdir)/parser/type.cc: parser/$(TYPE_PARSE_ROOT)-real.hh
 
 # can't depend on the .output alone, not a known dependence with .y[y]
 HACKT_PARSE_OUTPUT = parser/$(HACKT_PARSE_ROOT).output
 $(HACKT_PARSE_OUTPUT): parser/$(HACKT_PARSE_ROOT).h
 
-PARSE_OUTPUT_TO_HEADER_PIPE = $(AWK) -f $(YACC_OUTPUT_H_SCRIPT) \
-	-f $(srcdir)/parser/common-output-to-C.awk
+PARSE_OUTPUT_TO_HEADER_PIPE = { $(AWK) -f $(YACC_OUTPUT_H_SCRIPT) \
+	-f $(srcdir)/parser/common-output-to-C.awk ;}
 
 # Oddly, the targets sometimes get mistakenly generated in the srcdir...
 PARSE_OUTPUT_HEADER_SCRIPT = \
 	if $(GREP) "conflict" $< ; then exit 1; fi ; \
 	$(SED_srcdir_strip_setup) ; \
-	$(CAT) $< | $(PARSE_OUTPUT_TO_HEADER_PIPE) > \
+	$(PARSE_OUTPUT_TO_HEADER_PIPE) < $< > \
 		`$(ECHO) $@ | $(SED_srcdir_strip_fast)`
 
 $(HACKT_PARSE_OUTPUT).h: $(HACKT_PARSE_OUTPUT)
@@ -1730,7 +1739,7 @@ GET_START_TOKEN_ENUM = \
 
 YACC_UNION_SCRIPT_DEFAULTS = \
 	test -n "$$yacc_union_includes" || \
-	  yacc_union_includes="AST/AST.h parser/$$basename-parse-real.h lexer/hac_lex.h" ; \
+	  yacc_union_includes="AST/AST.hh parser/$$basename-parse-real.hh lexer/hac_lex.hh" ; \
 	test -n "$$yacc_union_namespaces" || \
 	  yacc_union_namespaces="HAC::parser HAC::lexer"
 
@@ -1751,24 +1760,24 @@ MAKE_PARSER_UNION_SCRIPT = \
 		parser/$$basename-parse.output > $@
 
 parser/hackt-union.cc: $(HACKT_PARSE_OUTPUT) parser/hackt.types \
-		parser/$(HACKT_PARSE_ROOT)-real.h
+		parser/$(HACKT_PARSE_ROOT)-real.hh
 	basename="hackt" ; \
 	$(MAKE_PARSER_UNION_SCRIPT)
 
 parser/instref-union.cc: $(INSTREF_PARSE_OUTPUT) parser/instref.types \
-		parser/$(INSTREF_PARSE_ROOT)-real.h
+		parser/$(INSTREF_PARSE_ROOT)-real.hh
 	basename="instref" ; \
 	$(MAKE_PARSER_UNION_SCRIPT)
 
 parser/type-union.cc: $(TYPE_PARSE_OUTPUT) parser/type.types \
-		parser/$(TYPE_PARSE_ROOT)-real.h
+		parser/$(TYPE_PARSE_ROOT)-real.hh
 	basename="type" ; \
 	$(MAKE_PARSER_UNION_SCRIPT)
 
 parser/spice-union.cc: $(SPICE_PARSE_OUTPUT) parser/spice.types \
-		parser/$(SPICE_PARSE_ROOT)-real.h
+		parser/$(SPICE_PARSE_ROOT)-real.hh
 	basename="spice" ; \
-	yacc_union_includes="util/syntax.h parser/$$basename-parse-real.h AST/common.h" ; \
+	yacc_union_includes="util/syntax.hh parser/$$basename-parse-real.hh AST/common.hh" ; \
 	yacc_union_namespaces="util::syntax HAC::parser HAC::lexer" ; \
 	$(MAKE_PARSER_UNION_SCRIPT)
 
@@ -1840,7 +1849,9 @@ am_cxxflags.h: $(srcdir)/Makefile.am
 AM_YFLAGS = -d -t -v
 AM_LFLAGS = 
 
+FORCE_LANG_C = -x c
 FORCE_LANG_CXX = -x c++
+CPREPROCESS_HOOK = $(CPREPROCESS) $(FORCE_LANG_C)
 CXXPREPROCESS_HOOK = $(CXXPREPROCESS) $(FORCE_LANG_CXX)
 # for occasional debugging
 # SAVETEMP = $(CXXCOMPILE) -v -save-temps
@@ -1853,7 +1864,7 @@ CXXPREPROCESS_HOOK = $(CXXPREPROCESS) $(FORCE_LANG_CXX)
 # yes, even use C++ for .h files because we've (perhaps mistakenly)
 # named all C++ header files .h instead of .hh
 .h.hii:
-	$(CXXPREPROCESS_HOOK) $< > $@
+	$(CPREPROCESS_HOOK) $< > $@
 
 .hh.hhii:
 	$(CXXPREPROCESS_HOOK) $< > $@
@@ -1899,17 +1910,17 @@ INCLUDE_C99 = -include $(srcdir)/util/c99.h
 # really, this isn't necessary since we've prevented yy-name conflicts
 # by compiling each lexer/parser pair into a separate bogus convenience library
 libbogus_la_CPPFLAGS = $(BOGUS_CPPFLAGS) \
-	-include parser/hackt-prefix.h
+	-include parser/hackt-prefix.hh
 libbogus_la_CXXFLAGS = $(BOGUS_CXXFLAGS)
 libbogus2_la_CPPFLAGS = $(BOGUS_CPPFLAGS) \
-	-include parser/instref-prefix.h
+	-include parser/instref-prefix.hh
 libbogus2_la_CXXFLAGS = $(BOGUS_CXXFLAGS)
 libbogus3_la_CPPFLAGS = $(BOGUS_CPPFLAGS) \
-	-include parser/type-prefix.h
+	-include parser/type-prefix.hh
 libbogus3_la_CXXFLAGS = $(BOGUS_CXXFLAGS)
 libbogus4_la_CXXFLAGS = $(BOGUS_CXXFLAGS)
 libbogus6_la_CPPFLAGS = $(BOGUS_CPPFLAGS) \
-	-include parser/spice-prefix.h
+	-include parser/spice-prefix.hh
 libbogus6_la_CXXFLAGS = $(BOGUS_CXXFLAGS)
 # here we give the exceptional flags to the lexer and parser, 
 # which are generated automatically by yacc/bison/[f]lex for 
@@ -1919,8 +1930,9 @@ libhacktparsers_la_CXXFLAGS = \
 	$(AM_CXXFLAGS) $(PARSER_NOWARN_FLAGS)
 
 # is required to be set for Make.hchk-tail.am
-EMPTY_SOURCE = $(srcdir)/test/header_test.cc
-EXTRA_DIST += $(srcdir)/test/header_test.cc
+EMPTY_C_SOURCE = $(srcdir)/test/header_test.c
+EMPTY_CXX_SOURCE = $(srcdir)/test/header_test.cc
+EXTRA_DIST += $(srcdir)/test/header_test.cc $(srcdir)/test/header_test.c
 
 # there are a few headers we want exempt from stand-alone testing
 # what about their dependencies?  
@@ -1929,19 +1941,19 @@ EXTRA_DIST += $(srcdir)/test/header_test.cc
 
 SKIP_HCHK = $(ECHO) "Skipping $@ ..." && $(TOUCH) $@
 
-common/devel_switches.hchk: common/devel_switches.h
+common/devel_switches.hhchk: common/devel_switches.hh
 	@$(SKIP_HCHK)
 
-Object/devel_switches.hchk: Object/devel_switches.h
+Object/devel_switches.hhchk: Object/devel_switches.hh
 	@$(SKIP_HCHK)
 
-sim/devel_switches.hchk: sim/devel_switches.h
+sim/devel_switches.hhchk: sim/devel_switches.hh
 	@$(SKIP_HCHK)
 
-sim/prsim/devel_switches.hchk: sim/prsim/devel_switches.h
+sim/prsim/devel_switches.hhchk: sim/prsim/devel_switches.hh
 	@$(TOUCH) $@
 
-common/ltdl-wrap.hchk: common/ltdl-wrap.h
+common/ltdl-wrap.hhchk: common/ltdl-wrap.hh
 	@$(SKIP_HCHK)
 
 # ../libltdl/ltdl.hchk: ../libltdl/ltdl.h
@@ -2135,7 +2147,7 @@ CLEANPARSER = \
 	parser/$(VERILOG_PARSE_ROOT).h \
 	parser/$(VERILOG_PARSE_ROOT).hh \
 	parser/$(VERILOG_PARSE_ROOT).output \
-	$(LEXYACC_PREFIX_H_FILES)
+	$(LEXYACC_PREFIX_HH_FILES)
 
 CLEANLEXER = \
 	lexer/$(HACKT_LEX_ROOT)-real.cc \
@@ -2149,7 +2161,7 @@ CLEANLEXER = \
 	lexer/$(SPICE_LEX_ROOT)-real.cc \
 	lexer/$(SPICE_LEX_ROOT).cc \
 	lexer/flex_lexer_common.cc \
-	lexer/flex_buffer_state.h
+	lexer/flex_buffer_state.hh
 
 libs: $(LTLIBRARIES)
 

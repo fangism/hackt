@@ -11,7 +11,7 @@
 #define	STACKTRACE_PERSISTENTS		(0 && ENABLE_STACKTRACE)
 
 //=============================================================================
-#include "util/static_trace.h"
+#include "util/static_trace.hh"
 DEFAULT_STATIC_TRACE_BEGIN
 
 #include <exception>
@@ -19,57 +19,57 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include <functional>
 #include <list>
 
-#include "AST/delim.h"
-#include "AST/token_string.h"
+#include "AST/delim.hh"
+#include "AST/token_string.hh"
 
-#include "util/hash_specializations.h"		// substitute for the following
+#include "util/hash_specializations.hh"		// substitute for the following
 
-#include "Object/def/param_definition.h"
-#include "Object/def/user_def_datatype.h"
-#include "Object/def/built_in_datatype_def.h"
-#include "Object/def/datatype_definition_alias.h"
-#include "Object/def/enum_datatype_def.h"
-#include "Object/def/user_def_chan.h"
-#include "Object/def/channel_definition_alias.h"
-#include "Object/def/process_definition.h"
-#include "Object/def/process_definition_alias.h"
-#include "Object/def/fundamental_channel_footprint.h"
-#include "Object/def/footprint.h"
-#include "Object/type/data_type_reference.h"
-#include "Object/type/builtin_channel_type_reference.h"
-#include "Object/type/channel_type_reference.h"
-#include "Object/type/process_type_reference.h"
-#include "Object/inst/param_value_placeholder.h"
-#include "Object/inst/physical_instance_placeholder.h"
-#include "Object/inst/instance_pool.h"
-#include "Object/inst/state_instance.h"
-#include "Object/unroll/instantiation_statement.h"
-#include "Object/unroll/datatype_instantiation_statement.h"
-#include "Object/unroll/unroll_context.h"
-#include "Object/expr/expr_dump_context.h"
-#include "Object/expr/dynamic_param_expr_list.h"
-#include "Object/expr/meta_range_list.h"
-#include "Object/persistent_type_hash.h"
-#include "Object/common/namespace.h"
-#include "Object/common/dump_flags.h"
-#include "Object/traits/pint_traits.h"
-#include "Object/traits/pbool_traits.h"
-#include "Object/traits/preal_traits.h"
-#include "Object/traits/bool_traits.h"	// for built_in_definition
-#include "Object/traits/int_traits.h"	// for built_in_definition
-#include "Object/traits/enum_traits.h"	// for type_tag_enum_value
-#include "Object/type/canonical_generic_chan_type.h"
-#include "Object/nonmeta_channel_manipulator.h"
-#include "Object/nonmeta_variable.h"
+#include "Object/def/param_definition.hh"
+#include "Object/def/user_def_datatype.hh"
+#include "Object/def/built_in_datatype_def.hh"
+#include "Object/def/datatype_definition_alias.hh"
+#include "Object/def/enum_datatype_def.hh"
+#include "Object/def/user_def_chan.hh"
+#include "Object/def/channel_definition_alias.hh"
+#include "Object/def/process_definition.hh"
+#include "Object/def/process_definition_alias.hh"
+#include "Object/def/fundamental_channel_footprint.hh"
+#include "Object/def/footprint.hh"
+#include "Object/type/data_type_reference.hh"
+#include "Object/type/builtin_channel_type_reference.hh"
+#include "Object/type/channel_type_reference.hh"
+#include "Object/type/process_type_reference.hh"
+#include "Object/inst/param_value_placeholder.hh"
+#include "Object/inst/physical_instance_placeholder.hh"
+#include "Object/inst/instance_pool.hh"
+#include "Object/inst/state_instance.hh"
+#include "Object/unroll/instantiation_statement.hh"
+#include "Object/unroll/datatype_instantiation_statement.hh"
+#include "Object/unroll/unroll_context.hh"
+#include "Object/expr/expr_dump_context.hh"
+#include "Object/expr/dynamic_param_expr_list.hh"
+#include "Object/expr/meta_range_list.hh"
+#include "Object/persistent_type_hash.hh"
+#include "Object/common/namespace.hh"
+#include "Object/common/dump_flags.hh"
+#include "Object/traits/pint_traits.hh"
+#include "Object/traits/pbool_traits.hh"
+#include "Object/traits/preal_traits.hh"
+#include "Object/traits/bool_traits.hh"	// for built_in_definition
+#include "Object/traits/int_traits.hh"	// for built_in_definition
+#include "Object/traits/enum_traits.hh"	// for type_tag_enum_value
+#include "Object/type/canonical_generic_chan_type.hh"
+#include "Object/nonmeta_channel_manipulator.hh"
+#include "Object/nonmeta_variable.hh"
 
-#include "common/ICE.h"
-#include "common/TODO.h"
+#include "common/ICE.hh"
+#include "common/TODO.hh"
 
 #include "util/memory/count_ptr.tcc"
-#include "util/indent.h"
-#include "util/binders.h"
-#include "util/compose.h"
-#include "util/stacktrace.h"
+#include "util/indent.hh"
+#include "util/binders.hh"
+#include "util/compose.hh"
+#include "util/stacktrace.hh"
 #include "util/persistent_object_manager.tcc"
 
 #if STACKTRACE_DUMPS
@@ -100,7 +100,7 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 namespace HAC {
 namespace entity {
 using std::_Select2nd;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using parser::scope;
 using util::indent;
 using util::auto_indent;

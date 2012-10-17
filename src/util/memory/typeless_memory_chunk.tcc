@@ -7,7 +7,7 @@
 #ifndef	__UTIL_MEMORY_TYPELESS_MEMORY_CHUNK_TCC__
 #define	__UTIL_MEMORY_TYPELESS_MEMORY_CHUNK_TCC__
 
-#include "util/memory/typeless_memory_chunk.h"
+#include "util/memory/typeless_memory_chunk.hh"
 
 /// for suppressing contents of this file
 #ifndef	EXTERN_TEMPLATE_UTIL_MEMORY_TYPELESS_MEMORY_CHUNK
@@ -15,11 +15,11 @@
 // #include <iostream>
 #include <iterator>				// for std::distance
 #include "util/macros.h"
-#include "util/static_assert.h"
+#include "util/static_assert.hh"
 #include "util/bitset.tcc"
-#include "util/numeric/integer_traits.h"	// may not need anymore :(
+#include "util/numeric/integer_traits.hh"	// may not need anymore :(
 #if !TYPELESS_MEMORY_CHUNK_USE_BITSET
-#include "util/numeric/clz.h"			// may not need anymore :(
+#include "util/numeric/clz.hh"			// may not need anymore :(
 #endif
 
 /**

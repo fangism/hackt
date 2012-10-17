@@ -17,38 +17,38 @@
 
 //=============================================================================
 // start of static initializations
-#include "util/static_trace.h"
+#include "util/static_trace.hh"
 DEFAULT_STATIC_TRACE_BEGIN
 
-#include "Object/expr/pint_arith_expr.h"
-#include "Object/expr/pint_relational_expr.h"
-#include "Object/expr/pint_unary_expr.h"
-#include "Object/expr/pbool_logical_expr.h"
-#include "Object/expr/pbool_unary_expr.h"
-#include "Object/expr/preal_arith_expr.h"
-#include "Object/expr/preal_relational_expr.h"
-#include "Object/expr/preal_unary_expr.h"
-#include "Object/expr/pstring_relational_expr.h"
-#include "Object/expr/pstring_const.h"
-#include "Object/expr/const_index_list.h"
-#include "Object/expr/const_range_list.h"
-#include "Object/expr/pint_const.h"
-#include "Object/expr/pbool_const.h"
-#include "Object/expr/preal_const.h"
-#include "Object/expr/const_range.h"
+#include "Object/expr/pint_arith_expr.hh"
+#include "Object/expr/pint_relational_expr.hh"
+#include "Object/expr/pint_unary_expr.hh"
+#include "Object/expr/pbool_logical_expr.hh"
+#include "Object/expr/pbool_unary_expr.hh"
+#include "Object/expr/preal_arith_expr.hh"
+#include "Object/expr/preal_relational_expr.hh"
+#include "Object/expr/preal_unary_expr.hh"
+#include "Object/expr/pstring_relational_expr.hh"
+#include "Object/expr/pstring_const.hh"
+#include "Object/expr/const_index_list.hh"
+#include "Object/expr/const_range_list.hh"
+#include "Object/expr/pint_const.hh"
+#include "Object/expr/pbool_const.hh"
+#include "Object/expr/preal_const.hh"
+#include "Object/expr/const_range.hh"
 #include "Object/expr/loop_meta_expr.tcc"
-#include "Object/expr/expr_dump_context.h"
-#include "Object/expr/expr_visitor.h"
+#include "Object/expr/expr_dump_context.hh"
+#include "Object/expr/expr_visitor.hh"
 #include "Object/expr/convert_expr.tcc"
-#include "Object/expr/operator_precedence.h"
-#include "Object/expr/param_defined.h"
-#include "Object/traits/preal_traits.h"
-#include "Object/persistent_type_hash.h"
-#include "Object/ref/meta_value_reference_base.h"
-#include "common/TODO.h"
+#include "Object/expr/operator_precedence.hh"
+#include "Object/expr/param_defined.hh"
+#include "Object/traits/preal_traits.hh"
+#include "Object/persistent_type_hash.hh"
+#include "Object/ref/meta_value_reference_base.hh"
+#include "common/TODO.hh"
 
-#include "util/numeric/sign_traits.h"
-#include "util/stacktrace.h"
+#include "util/numeric/sign_traits.hh"
+#include "util/stacktrace.hh"
 #include "util/memory/count_ptr.tcc"
 #include "util/persistent_object_manager.tcc"
 
@@ -120,7 +120,7 @@ namespace entity {
 using util::persistent_traits;
 using util::persistent_object_manager;
 using std::istream;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using util::write_value;
 using util::read_value;
 using util::numeric::signed_type;

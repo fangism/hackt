@@ -7,15 +7,15 @@
 #define	ENABLE_STACKTRACE		0
 
 #include <iostream>
-#include "util/string.h"		// for C-string funcs
+#include "util/string.hh"		// for C-string funcs
 #include <string>
-#include "main/shell.h"
-#include "main/program_registry.h"
-#include "util/stacktrace.h"
-#include "main/main_funcs.h"
-#include "util/persistent_object_manager.h"
+#include "main/shell.hh"
+#include "main/program_registry.hh"
+#include "util/stacktrace.hh"
+#include "main/main_funcs.hh"
+#include "util/persistent_object_manager.hh"
 #include "util/getopt_portable.h"
-#include "util/readline_wrap.h"
+#include "util/readline_wrap.hh"
 #include "util/libc.h"
 	/**
 		libc functions used:
@@ -29,7 +29,7 @@ using util::persistent;
 using util::persistent_object_manager;
 using util::readline_wrapper;
 using util::strings::eat_whitespace;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 //=============================================================================
 class shell::options {

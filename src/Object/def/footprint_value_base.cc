@@ -8,21 +8,21 @@
 #define	ENABLE_STACKTRACE			0
 #define	STACKTRACE_PERSISTENTS			(0 && ENABLE_STACKTRACE)
 
-#include "Object/def/footprint_value_base.h"
-#include "Object/def/footprint.h"
+#include "Object/def/footprint_value_base.hh"
+#include "Object/def/footprint.hh"
 #include "Object/def/footprint_base.tcc"
 #include "Object/inst/value_collection_pool_bundle.tcc"
-#include "Object/inst/null_collection_type_manager.h"
-#include "Object/inst/value_collection.h"
-#include "Object/expr/const_collection.h"
-#include "Object/expr/pbool_const.h"
-#include "Object/expr/pint_const.h"
-#include "Object/expr/preal_const.h"
-#include "Object/expr/pstring_const.h"
-#include "Object/inst/pbool_instance.h"
-#include "Object/inst/pint_instance.h"
-#include "Object/inst/preal_instance.h"
-#include "Object/inst/pstring_instance.h"
+#include "Object/inst/null_collection_type_manager.hh"
+#include "Object/inst/value_collection.hh"
+#include "Object/expr/const_collection.hh"
+#include "Object/expr/pbool_const.hh"
+#include "Object/expr/pint_const.hh"
+#include "Object/expr/preal_const.hh"
+#include "Object/expr/pstring_const.hh"
+#include "Object/inst/pbool_instance.hh"
+#include "Object/inst/pint_instance.hh"
+#include "Object/inst/preal_instance.hh"
+#include "Object/inst/pstring_instance.hh"
 #include "util/multikey_map.tcc"	// for destructor, when symbol optimized
 
 namespace HAC {

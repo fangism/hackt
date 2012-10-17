@@ -7,14 +7,14 @@
 #define	__HAC_OBJECT_GLOBAL_ENTRY_CONTEXT_TCC__
 
 #include <vector>
-#include "Object/global_entry_context.h"
-#include "Object/global_entry.h"
-#include "Object/def/footprint.h"
-#include "Object/ref/meta_instance_reference_subtypes.h"
-#include "Object/ref/simple_meta_instance_reference.h"
-#include "Object/unroll/unroll_context.h"
-#include "common/TODO.h"
-#include "util/stacktrace.h"
+#include "Object/global_entry_context.hh"
+#include "Object/global_entry.hh"
+#include "Object/def/footprint.hh"
+#include "Object/ref/meta_instance_reference_subtypes.hh"
+#include "Object/ref/simple_meta_instance_reference.hh"
+#include "Object/unroll/unroll_context.hh"
+#include "common/TODO.hh"
+#include "util/stacktrace.hh"
 
 namespace HAC {
 namespace entity {

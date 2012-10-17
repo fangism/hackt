@@ -9,12 +9,12 @@
 #include <vector>
 #include <list>
 
-#include "common/sizes-common.h"
+#include "common/sizes-common.hh"
 #include "util/what.tcc"	// use default typeinfo-based mangled names
-#include "AST/sizes-AST.h"
+#include "AST/sizes-AST.hh"
 
-// include all AST/*.h header files to evaluate struct sizes.
-#include "AST/parse_context.h"
+// include all AST/*.hh header files to evaluate struct sizes.
+#include "AST/parse_context.hh"
 
 namespace HAC {
 namespace parser {

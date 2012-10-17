@@ -9,21 +9,21 @@
 
 #include <iostream>
 #include <algorithm>
-#include "Object/inst/instance_pool.h"
-#include "Object/traits/class_traits_fwd.h"
-#include "Object/def/footprint.h"
+#include "Object/inst/instance_pool.hh"
+#include "Object/traits/class_traits_fwd.hh"
+#include "Object/def/footprint.hh"
 #include "util/persistent_object_manager.tcc"	// for STACKTRACE macros
 #include "util/persistent_functor.tcc"
 #include "util/list_vector.tcc"
-#include "util/stacktrace.h"
-#include "util/IO_utils.h"
-#include "util/indent.h"
+#include "util/stacktrace.hh"
+#include "util/IO_utils.hh"
+#include "util/indent.hh"
 #include "util/memory/index_pool.tcc"
-#include "util/type_traits.h"
+#include "util/type_traits.hh"
 
 namespace HAC {
 namespace entity {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using util::write_value;
 using util::read_value;
 using util::auto_indent;

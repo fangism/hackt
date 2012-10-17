@@ -9,21 +9,21 @@
 
 #include <iostream>
 #include <algorithm>
-#include "Object/ref/aggregate_meta_instance_reference.h"
+#include "Object/ref/aggregate_meta_instance_reference.hh"
 #include "Object/ref/aggregate_reference_collection_base.tcc"
-#include "Object/ref/meta_instance_reference_subtypes.h"
-#include "Object/inst/instance_collection.h"
-#include "Object/type/fundamental_type_reference.h"
-#include "Object/inst/collection_interface.h"
-#include "Object/expr/expr_visitor.h"
-#include "common/ICE.h"
-#include "common/TODO.h"
+#include "Object/ref/meta_instance_reference_subtypes.hh"
+#include "Object/inst/instance_collection.hh"
+#include "Object/type/fundamental_type_reference.hh"
+#include "Object/inst/collection_interface.hh"
+#include "Object/expr/expr_visitor.hh"
+#include "common/ICE.hh"
+#include "common/TODO.hh"
 #include "util/persistent_object_manager.tcc"
-#include "util/IO_utils.h"
+#include "util/IO_utils.hh"
 
 namespace HAC {
 namespace entity {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using std::distance;
 using std::copy;
 

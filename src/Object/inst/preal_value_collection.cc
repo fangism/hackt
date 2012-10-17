@@ -8,24 +8,24 @@
 
 //=============================================================================
 // start of static initializations
-#include "util/static_trace.h"
+#include "util/static_trace.hh"
 DEFAULT_STATIC_TRACE_BEGIN
 
 #include <exception>
 #include <iostream>
 #include <algorithm>
 
-#include "Object/type/param_type_reference.h"
-#include "Object/inst/preal_value_collection.h"
-#include "Object/ref/simple_meta_value_reference.h"
-#include "Object/ref/simple_nonmeta_value_reference.h"
-#include "Object/expr/preal_const.h"
-#include "Object/expr/pbool_expr.h"
-#include "Object/expr/pint_expr.h"
-#include "Object/expr/pstring_expr.h"
-#include "Object/persistent_type_hash.h"
-#include "Object/unroll/param_instantiation_statement.h"
-#include "Object/traits/preal_traits.h"
+#include "Object/type/param_type_reference.hh"
+#include "Object/inst/preal_value_collection.hh"
+#include "Object/ref/simple_meta_value_reference.hh"
+#include "Object/ref/simple_nonmeta_value_reference.hh"
+#include "Object/expr/preal_const.hh"
+#include "Object/expr/pbool_expr.hh"
+#include "Object/expr/pint_expr.hh"
+#include "Object/expr/pstring_expr.hh"
+#include "Object/persistent_type_hash.hh"
+#include "Object/unroll/param_instantiation_statement.hh"
+#include "Object/traits/preal_traits.hh"
 #include "Object/inst/value_collection.tcc"
 #include "Object/inst/value_placeholder.tcc"
 
@@ -90,7 +90,7 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 //=============================================================================
 namespace HAC {
 namespace entity {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 USING_UTIL_COMPOSE
 using util::dereference;
 using std::mem_fun_ref;

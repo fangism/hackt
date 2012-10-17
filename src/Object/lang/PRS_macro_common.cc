@@ -7,17 +7,17 @@
 #include <iostream>
 #include <vector>
 #include <set>
-#include "Object/lang/PRS_macro_common.h"
-#include "util/memory/count_ptr.h"
+#include "Object/lang/PRS_macro_common.hh"
+#include "util/memory/count_ptr.hh"
 #include "util/attributes.h"
-#include "Object/expr/preal_const.h"
-#include "Object/expr/pint_const.h"
+#include "Object/expr/preal_const.hh"
+#include "Object/expr/pint_const.hh"
 
 namespace HAC {
 namespace entity {
 namespace PRS {
 namespace macros {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using util::memory::count_ptr;
 
 //=============================================================================

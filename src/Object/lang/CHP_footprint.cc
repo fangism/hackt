@@ -4,16 +4,16 @@
  */
 
 #include <iostream>
-#include "Object/lang/CHP_footprint.h"
-#include "Object/expr/expr_dump_context.h"
-#include "sim/chpsim/graph_options.h"
-#include "util/indent.h"
-#include "util/IO_utils.h"
+#include "Object/lang/CHP_footprint.hh"
+#include "Object/expr/expr_dump_context.hh"
+#include "sim/chpsim/graph_options.hh"
+#include "util/indent.hh"
+#include "util/IO_utils.hh"
 
 namespace HAC {
 namespace entity {
 namespace CHP {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using util::auto_indent;
 using util::write_value;
 using util::read_value;

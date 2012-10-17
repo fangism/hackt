@@ -5,13 +5,13 @@
  */
 
 #define	ENABLE_STATIC_TRACE		0
-#include "util/static_trace.h"
+#include "util/static_trace.hh"
 DEFAULT_STATIC_TRACE_BEGIN
 
-#include "parser/hackt-union.h"	// for forward declarations
-#include "parser/hackt-parse.h"	// for YYSTYPE
-#include "AST/root.h"
-#include "util/memory/count_ptr.h"
+#include "parser/hackt-union.hh"	// for forward declarations
+#include "parser/hackt-parse.hh"	// for YYSTYPE
+#include "AST/root.hh"
+#include "util/memory/count_ptr.hh"
 
 using util::memory::count_ptr;
 using HAC::parser::root_body;

@@ -7,25 +7,25 @@
  */
 
 #include "config.h"
-#include "main/force_load.h"
-#include "Object/module.h"
-#include "main/compile.h"
-#include "main/haco.h"
-#include "main/flatten.h"
-#include "main/parse_test.h"
-#include "main/create.h"
-#include "main/objdump.h"
-#include "main/cflat.h"
-#include "main/prsim.h"
-#include "main/prsobjdemo.h"
-#include "main/dump_persistent_table.h"
-#include "main/shell.h"
-#include "main/version.h"
-#include "main/chpsim.h"
-#include "main/hacknet.h"
+#include "main/force_load.hh"
+#include "Object/module.hh"
+#include "main/compile.hh"
+#include "main/haco.hh"
+#include "main/flatten.hh"
+#include "main/parse_test.hh"
+#include "main/create.hh"
+#include "main/objdump.hh"
+#include "main/cflat.hh"
+#include "main/prsim.hh"
+#include "main/prsobjdemo.hh"
+#include "main/dump_persistent_table.hh"
+#include "main/shell.hh"
+#include "main/version.hh"
+#include "main/chpsim.hh"
+#include "main/hacknet.hh"
 
 #if	WANT_TO_HAVE_FUN
-#include "misc/sudoku-solver.h"
+#include "misc/sudoku-solver.hh"
 #endif
 
 namespace HAC {

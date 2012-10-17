@@ -15,43 +15,43 @@
 
 //=============================================================================
 // start of static initializations
-#include "util/static_trace.h"
+#include "util/static_trace.hh"
 DEFAULT_STATIC_TRACE_BEGIN
 
-#include "Object/expr/pint_const.h"
-#include "Object/expr/pbool_const.h"
-#include "Object/expr/preal_const.h"
-#include "Object/expr/pstring_const.h"
-#include "Object/expr/const_index.h"
-#include "Object/expr/const_index_list.h"
-#include "Object/expr/const_range.h"
-#include "Object/expr/const_range_list.h"
-#include "Object/expr/const_collection.h"
-#include "Object/expr/expr_dump_context.h"
-#include "Object/expr/expr_visitor.h"
-#include "Object/inst/param_value_collection.h"
-#include "Object/traits/bool_traits.h"
-#include "Object/traits/int_traits.h"
-#include "Object/traits/string_traits.h"
-#include "Object/traits/pint_traits.h"	// needed for assign
-#include "Object/traits/pbool_traits.h"	// needed for assign
-#include "Object/traits/preal_traits.h"	// needed for assign
-#include "Object/traits/pstring_traits.h"
-#include "Object/type/data_type_reference.h"
-#include "Object/unroll/expression_assignment.h"
-#include "Object/persistent_type_hash.h"
-#include "Object/ref/meta_instance_reference_subtypes.h"
+#include "Object/expr/pint_const.hh"
+#include "Object/expr/pbool_const.hh"
+#include "Object/expr/preal_const.hh"
+#include "Object/expr/pstring_const.hh"
+#include "Object/expr/const_index.hh"
+#include "Object/expr/const_index_list.hh"
+#include "Object/expr/const_range.hh"
+#include "Object/expr/const_range_list.hh"
+#include "Object/expr/const_collection.hh"
+#include "Object/expr/expr_dump_context.hh"
+#include "Object/expr/expr_visitor.hh"
+#include "Object/inst/param_value_collection.hh"
+#include "Object/traits/bool_traits.hh"
+#include "Object/traits/int_traits.hh"
+#include "Object/traits/string_traits.hh"
+#include "Object/traits/pint_traits.hh"	// needed for assign
+#include "Object/traits/pbool_traits.hh"	// needed for assign
+#include "Object/traits/preal_traits.hh"	// needed for assign
+#include "Object/traits/pstring_traits.hh"
+#include "Object/type/data_type_reference.hh"
+#include "Object/unroll/expression_assignment.hh"
+#include "Object/persistent_type_hash.hh"
+#include "Object/ref/meta_instance_reference_subtypes.hh"
 	// for aggregate_value_references' base
-#include "Object/ref/aggregate_meta_value_reference.h"
-#include "Object/ref/meta_value_reference.h"
-#include "Object/type/canonical_generic_datatype.h"
-#include "Object/nonmeta_context.h"
-#include "Object/unroll/unroll_context.h"
+#include "Object/ref/aggregate_meta_value_reference.hh"
+#include "Object/ref/meta_value_reference.hh"
+#include "Object/type/canonical_generic_datatype.hh"
+#include "Object/nonmeta_context.hh"
+#include "Object/unroll/unroll_context.hh"
 
-#include "common/TODO.h"
+#include "common/TODO.hh"
 
 #include "util/what.tcc"
-#include "util/stacktrace.h"
+#include "util/stacktrace.hh"
 #include "util/memory/count_ptr.tcc"
 #include "util/memory/chunk_map_pool.tcc"
 #include "util/memory/list_vector_pool.tcc"
@@ -110,7 +110,7 @@ namespace entity {
 using util::write_value;
 using util::read_value;
 using util::persistent_traits;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 #if DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE && ENABLE_STACKTRACE
 REQUIRES_STACKTRACE_STATIC_INIT

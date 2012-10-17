@@ -4,8 +4,8 @@
 
 #include <iostream>
 #include <iomanip>
-#include "util/numformat.h"
-#include "util/iomanip.h"
+#include "util/numformat.hh"
+#include "util/iomanip.hh"
 #include "util/IO_utils.tcc"
 
 namespace util {

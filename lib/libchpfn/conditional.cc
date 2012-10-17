@@ -5,17 +5,17 @@
 
 #define	ENABLE_STACKTRACE		0
 
-#include "libchpfn/conditional.h"
-#include "Object/expr/const_param_expr_list.h"
-#include "Object/expr/const_param.h"
-#include "sim/chpsim/chpsim_dlfunction.h"
-#include "util/memory/count_ptr.h"
-#include "util/stacktrace.h"
+#include "libchpfn/conditional.hh"
+#include "Object/expr/const_param_expr_list.hh"
+#include "Object/expr/const_param.hh"
+#include "sim/chpsim/chpsim_dlfunction.hh"
+#include "util/memory/count_ptr.hh"
+#include "util/stacktrace.hh"
 
 #if ENABLE_STACKTRACE
 // debugging only
 #include <iostream>
-#include "Object/expr/expr_dump_context.h"
+#include "Object/expr/expr_dump_context.hh"
 #endif
 
 namespace HAC {

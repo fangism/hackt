@@ -25,51 +25,51 @@
 #include <iostream>
 #include <algorithm>
 
-#include "Object/common/extern_templates.h"
+#include "Object/common/extern_templates.hh"
 // #define EXTERN_TEMPLATE_UTIL_PACKED_ARRAY
 
-#include "Object/inst/value_placeholder.h"
-#include "Object/inst/value_collection.h"	// for constructors
-#include "Object/expr/const_collection.h"
-#include "Object/expr/expr_dump_context.h"
-#include "Object/expr/param_expr.h"
-#include "Object/expr/const_index.h"
-#include "Object/expr/const_index_list.h"
-#include "Object/expr/const_range.h"
-#include "Object/expr/const_range_list.h"
-#include "Object/common/dump_flags.h"
-#include "Object/ref/meta_instance_reference_subtypes.h"
-#include "Object/ref/simple_nonmeta_instance_reference.h"
-#include "Object/unroll/instantiation_statement.h"
-#include "Object/def/definition_base.h"
-#include "Object/def/footprint.h"
-#include "Object/common/namespace.h"
-#include "Object/traits/classification_tags.h"
-#include "Object/type/param_type_reference.h"
-#include "Object/ref/meta_value_reference.h"
-#include "Object/ref/simple_meta_value_reference.h"
-#include "Object/ref/data_nonmeta_instance_reference.h"
-#include "Object/unroll/expression_assignment.h"
+#include "Object/inst/value_placeholder.hh"
+#include "Object/inst/value_collection.hh"	// for constructors
+#include "Object/expr/const_collection.hh"
+#include "Object/expr/expr_dump_context.hh"
+#include "Object/expr/param_expr.hh"
+#include "Object/expr/const_index.hh"
+#include "Object/expr/const_index_list.hh"
+#include "Object/expr/const_range.hh"
+#include "Object/expr/const_range_list.hh"
+#include "Object/common/dump_flags.hh"
+#include "Object/ref/meta_instance_reference_subtypes.hh"
+#include "Object/ref/simple_nonmeta_instance_reference.hh"
+#include "Object/unroll/instantiation_statement.hh"
+#include "Object/def/definition_base.hh"
+#include "Object/def/footprint.hh"
+#include "Object/common/namespace.hh"
+#include "Object/traits/classification_tags.hh"
+#include "Object/type/param_type_reference.hh"
+#include "Object/ref/meta_value_reference.hh"
+#include "Object/ref/simple_meta_value_reference.hh"
+#include "Object/ref/data_nonmeta_instance_reference.hh"
+#include "Object/unroll/expression_assignment.hh"
 #include "Object/inst/value_collection_pool_bundle.tcc"	// for allocate
 
-#include "common/ICE.h"
+#include "common/ICE.hh"
 
 // #include "util/memory/list_vector_pool.tcc"
 #include "util/memory/chunk_map_pool.tcc"
 #include "util/memory/count_ptr.tcc"
-#include "util/what.h"
+#include "util/what.hh"
 #include "util/multikey_qmap.tcc"		// include "qmap.tcc"
 #include "util/persistent_object_manager.tcc"
-#include "util/compose.h"
-#include "util/binders.h"
-#include "util/dereference.h"
-#include "util/indent.h"
-#include "util/stacktrace.h"
+#include "util/compose.hh"
+#include "util/binders.hh"
+#include "util/dereference.hh"
+#include "util/indent.hh"
+#include "util/stacktrace.hh"
 
 //=============================================================================
 namespace HAC {
 namespace entity {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 USING_UTIL_COMPOSE
 using util::dereference;
 using std::mem_fun_ref;

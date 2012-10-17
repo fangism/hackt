@@ -28,54 +28,54 @@
 #include <list>
 
 // experimental: suppressing automatic template instantiation
-#include "Object/common/extern_templates.h"
+#include "Object/common/extern_templates.hh"
 
-#include "Object/inst/instance_collection.h"
-#include "Object/inst/instance_array.h"
-#include "Object/inst/instance_scalar.h"
-#include "Object/inst/instance_placeholder.h"
+#include "Object/inst/instance_collection.hh"
+#include "Object/inst/instance_array.hh"
+#include "Object/inst/instance_scalar.hh"
+#include "Object/inst/instance_placeholder.hh"
 // #include "Object/inst/alias_actuals.tcc"
-#include "Object/inst/alias_actuals.h"
+#include "Object/inst/alias_actuals.hh"
 #include "Object/inst/subinstance_manager.tcc"
 #include "Object/inst/instance_pool.tcc"
-#include "Object/inst/internal_aliases_policy.h"
+#include "Object/inst/internal_aliases_policy.hh"
 #include "Object/inst/port_alias_tracker.tcc"
-#include "Object/expr/const_index.h"
-#include "Object/expr/const_range.h"
-#include "Object/expr/const_param_expr_list.h"		// for debug only
-#include "Object/expr/const_index_list.h"
-#include "Object/expr/const_range_list.h"
-#include "Object/def/definition_base.h"
-#include "Object/common/namespace.h"
-#include "Object/type/canonical_type.h"
-#include "Object/ref/meta_instance_reference_subtypes.h"
-#include "Object/ref/nonmeta_instance_reference_subtypes.h"
-#include "Object/ref/simple_nonmeta_instance_reference.h"
-#include "Object/ref/simple_meta_instance_reference.h"
-#include "Object/unroll/instantiation_statement_base.h"
-#include "Object/def/footprint.h"
+#include "Object/expr/const_index.hh"
+#include "Object/expr/const_range.hh"
+#include "Object/expr/const_param_expr_list.hh"		// for debug only
+#include "Object/expr/const_index_list.hh"
+#include "Object/expr/const_range_list.hh"
+#include "Object/def/definition_base.hh"
+#include "Object/common/namespace.hh"
+#include "Object/type/canonical_type.hh"
+#include "Object/ref/meta_instance_reference_subtypes.hh"
+#include "Object/ref/nonmeta_instance_reference_subtypes.hh"
+#include "Object/ref/simple_nonmeta_instance_reference.hh"
+#include "Object/ref/simple_meta_instance_reference.hh"
+#include "Object/unroll/instantiation_statement_base.hh"
+#include "Object/def/footprint.hh"
 #include "Object/global_entry.tcc"
-#include "Object/unroll/instantiation_statement.h"
+#include "Object/unroll/instantiation_statement.hh"
 #include "Object/inst/sparse_collection.tcc"
-#include "Object/inst/element_key_dumper.h"
+#include "Object/inst/element_key_dumper.hh"
 #include "Object/inst/port_formal_array.tcc"
 #include "Object/inst/port_actual_collection.tcc"
-#include "Object/inst/collection_traits.h"
+#include "Object/inst/collection_traits.hh"
 #include "Object/inst/collection_pool.tcc"		// for lookup_index
-#include "common/ICE.h"
+#include "common/ICE.hh"
 
 #include "util/multikey_assoc.tcc"
 #include "util/packed_array.tcc"
 #include "util/memory/count_ptr.tcc"
 
 #include "util/persistent_object_manager.tcc"
-#include "util/indent.h"
-#include "util/what.h"
-#include "util/stacktrace.h"
-#include "util/static_trace.h"
-#include "util/compose.h"
-#include "util/binders.h"
-#include "util/dereference.h"
+#include "util/indent.hh"
+#include "util/what.hh"
+#include "util/stacktrace.hh"
+#include "util/static_trace.hh"
+#include "util/compose.hh"
+#include "util/binders.hh"
+#include "util/dereference.hh"
 
 #if ENABLE_STACKTRACE
 #include <iterator>
@@ -88,7 +88,7 @@ namespace entity {
 using std::string;
 using std::_Select1st;
 using std::for_each;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using util::multikey_generator;
 USING_UTIL_COMPOSE
 using util::dereference;

@@ -7,14 +7,14 @@
 #define	__HAC_OBJECT_INST_ALIAS_EMPTY_TCC__
 
 #include <iostream>
-#include "Object/inst/alias_empty.h"
-#include "Object/common/dump_flags.h"
-#include "Object/type/canonical_type.h"
-#include "util/stacktrace.h"
+#include "Object/inst/alias_empty.hh"
+#include "Object/common/dump_flags.hh"
+#include "Object/type/canonical_type.hh"
+#include "util/stacktrace.hh"
 
 namespace HAC {
 namespace entity {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 //=============================================================================
 /**
 	Implementation policy class.

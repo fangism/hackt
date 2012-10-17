@@ -8,21 +8,21 @@
 
 #include <iostream>
 #include <typeinfo>		// for std::bad_cast
-#include "Object/expr/meta_call_traits.h"
-#include "Object/expr/pint_const.h"
-#include "Object/expr/pbool_const.h"
-#include "Object/expr/preal_const.h"
-#include "Object/expr/pstring_const.h"
+#include "Object/expr/meta_call_traits.hh"
+#include "Object/expr/pint_const.hh"
+#include "Object/expr/pbool_const.hh"
+#include "Object/expr/preal_const.hh"
+#include "Object/expr/pstring_const.hh"
 #include "util/macros.h"
-#include "util/memory/count_ptr.h"
-// #include "util/memory/excl_ptr.h"
-#include "util/stacktrace.h"
+#include "util/memory/count_ptr.hh"
+// #include "util/memory/excl_ptr.hh"
+#include "util/stacktrace.hh"
 
 namespace HAC {
 namespace entity {
 using util::memory::never_ptr;
 using std::string;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 //=============================================================================
 /**

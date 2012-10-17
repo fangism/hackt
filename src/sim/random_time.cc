@@ -3,7 +3,7 @@
 	$Id: random_time.cc,v 1.2 2006/04/03 05:30:35 fang Exp $
  */
 
-#include "sim/random_time.h"
+#include "sim/random_time.hh"
 #include <limits>
 
 namespace HAC {

@@ -13,16 +13,16 @@
 #include <iostream>
 
 #include "parser/yacc-config.h"
-#include "parser/spice-prefix.h"
+#include "parser/spice-prefix.hh"
 #include "parser/spice-parse-options.h"
 #include "parser/spice-parse.output.h"
-#include "parser/spice-union.h"
+#include "parser/spice-union.hh"
 #include "lexer/spice-lex-options.h"
-#include "lexer/flex_lexer_state.h"
-#include "util/using_ostream.h"
-#include "lexer/file_manager.h"
-#include "util/syntax.h"
-#include "util/stacktrace.h"
+#include "lexer/flex_lexer_state.hh"
+#include "util/using_ostream.hh"
+#include "lexer/file_manager.hh"
+#include "util/syntax.hh"
+#include "util/stacktrace.hh"
 
 // extern FILE* yyin;
 
@@ -32,7 +32,7 @@ static flex::lexer_state	_lexer_state;
 
 
 /**
-	These were replaced with macros in "AST/node_list.h"
+	These were replaced with macros in "AST/node_list.hh"
  */
 #define	WRAP_LIST(left, list, right)	list->wrap(left, right)
 #define	DELETE_TOKEN(tok)		delete tok

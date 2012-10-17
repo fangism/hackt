@@ -7,7 +7,7 @@
 #define	__HAC_SIM_PRSIM_RULE_TCC__
 
 #include <iostream>
-#include "sim/prsim/Rule.h"
+#include "sim/prsim/Rule.hh"
 
 namespace HAC {
 namespace SIM {

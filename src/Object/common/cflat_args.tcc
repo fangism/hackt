@@ -7,20 +7,20 @@
 #define	__HAC_OBJECT_COMMON_CFLAT_ARGS_TCC__
 
 #include <algorithm>
-#include "Object/common/cflat_args.h"
-#include "Object/inst/instance_alias_info.h"
-#include "Object/inst/alias_actuals.h"
-#include "Object/inst/alias_empty.h"
-#include "Object/def/footprint.h"
+#include "Object/common/cflat_args.hh"
+#include "Object/inst/instance_alias_info.hh"
+#include "Object/inst/alias_actuals.hh"
+#include "Object/inst/alias_empty.hh"
+#include "Object/def/footprint.hh"
 #include "Object/global_entry.tcc"
-#include "Object/common/dump_flags.h"
-#include "Object/inst/physical_instance_collection.h"
-#include "Object/inst/physical_instance_placeholder.h"
-#include "common/ICE.h"
-#include "common/TODO.h"
-#include "util/sstream.h"
+#include "Object/common/dump_flags.hh"
+#include "Object/inst/physical_instance_collection.hh"
+#include "Object/inst/physical_instance_placeholder.hh"
+#include "common/ICE.hh"
+#include "common/TODO.hh"
+#include "util/sstream.hh"
 #include "util/macros.h"
-#include "util/stacktrace.h"
+#include "util/stacktrace.hh"
 
 
 namespace HAC {

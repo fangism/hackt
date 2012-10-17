@@ -4,14 +4,14 @@
  */
 
 #include <iostream>
-#include "main/compile_options.h"
-#include "lexer/file_manager.h"
-#include "util/stacktrace.h"
-#include "util/dirent.h"		// configured wrapper around <dirent.h>
+#include "main/compile_options.hh"
+#include "lexer/file_manager.hh"
+#include "util/stacktrace.hh"
+#include "util/dirent.hh"		// configured wrapper around <dirent.h>
 #include "util/IO_utils.tcc"
 
 namespace HAC {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using util::write_value;
 using util::read_value;
 using lexer::file_manager;

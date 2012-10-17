@@ -10,28 +10,28 @@
 #include <set>
 #include <functional>
 
-#include "Object/lang/directive_base.h"
-#include "Object/expr/const_param.h"
+#include "Object/lang/directive_base.hh"
+#include "Object/expr/const_param.hh"
 #if PRIVATE_MEMBER_REFERENCES
-#include "Object/def/footprint.h"
+#include "Object/def/footprint.hh"
 #endif
-#include "Object/common/dump_flags.h"
-#include "Object/inst/instance_pool.h"
-#include "Object/inst/bool_instance.h"
-#include "Object/inst/instance_alias_info.h"
-#include "Object/inst/alias_empty.h"
-#include "Object/inst/alias_actuals.h"
-#include "Object/traits/bool_traits.h"
-#include "Object/traits/proc_traits.h"
+#include "Object/common/dump_flags.hh"
+#include "Object/inst/instance_pool.hh"
+#include "Object/inst/bool_instance.hh"
+#include "Object/inst/instance_alias_info.hh"
+#include "Object/inst/alias_empty.hh"
+#include "Object/inst/alias_actuals.hh"
+#include "Object/traits/bool_traits.hh"
+#include "Object/traits/proc_traits.hh"
 
 #include "util/memory/count_ptr.tcc"
 #include "util/persistent_object_manager.tcc"
-#include "util/stacktrace.h"
+#include "util/stacktrace.hh"
 #include "util/IO_utils.tcc"
 
 namespace HAC {
 namespace entity {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using util::write_value;
 using util::read_value;
 using std::find;

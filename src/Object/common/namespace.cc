@@ -11,7 +11,7 @@
 #define	STACKTRACE_DESTRUCTORS		(0 && ENABLE_STACKTRACE)
 #define	STACKTRACE_PERSISTENTS		(0 && ENABLE_STACKTRACE)
 
-#include "util/static_trace.h"
+#include "util/static_trace.hh"
 DEFAULT_STATIC_TRACE_BEGIN
 
 #include <iostream>
@@ -22,11 +22,11 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include <string>
 #include <typeinfo>		// for std::bad_cast
 
-#include "util/STL/functional.h"
-#include "util/ptrs_functional.h"
-#include "util/compose.h"
-#include "util/binders.h"
-#include "util/conditional.h"
+#include "util/STL/functional.hh"
+#include "util/ptrs_functional.hh"
+#include "util/compose.hh"
+#include "util/binders.hh"
+#include "util/conditional.hh"
 
 // CAUTION on ordering of the following two include files!
 // including "art_object.h" first will cause compiler to complain
@@ -34,32 +34,32 @@ DEFAULT_STATIC_TRACE_BEGIN
 // hash<string>.  
 
 // include this as early as possible
-#include "util/hash_specializations.h"		// substitute for the following
-#include "util/STL/hash_map_utils.h"
+#include "util/hash_specializations.hh"		// substitute for the following
+#include "util/STL/hash_map_utils.hh"
 
-#include "AST/token_string.h"
-#include "AST/identifier.h"
+#include "AST/token_string.hh"
+#include "AST/identifier.hh"
 
-#include "Object/common/namespace.h"
-#include "Object/common/dump_flags.h"
-#include "Object/def/typedef_base.h"
-#include "Object/inst/physical_instance_placeholder.h"
-#include "Object/inst/param_value_placeholder.h"
-#include "Object/inst/node_instance_collection.h"
-#include "Object/unroll/instantiation_statement_base.h"
-#include "Object/expr/const_range.h"
-#include "Object/expr/const_range_list.h"
-#include "Object/expr/expr_dump_context.h"
-#include "Object/type/fundamental_type_reference.h"
-#include "Object/persistent_type_hash.h"
+#include "Object/common/namespace.hh"
+#include "Object/common/dump_flags.hh"
+#include "Object/def/typedef_base.hh"
+#include "Object/inst/physical_instance_placeholder.hh"
+#include "Object/inst/param_value_placeholder.hh"
+#include "Object/inst/node_instance_collection.hh"
+#include "Object/unroll/instantiation_statement_base.hh"
+#include "Object/expr/const_range.hh"
+#include "Object/expr/const_range_list.hh"
+#include "Object/expr/expr_dump_context.hh"
+#include "Object/type/fundamental_type_reference.hh"
+#include "Object/persistent_type_hash.hh"
 
 #include "util/memory/count_ptr.tcc"
 #if POOL_ALLOCATE_NAMESPACE
 #include "util/memory/list_vector_pool.tcc"
 #endif
-#include "util/indent.h"
-#include "util/string.h"
-#include "util/stacktrace.h"
+#include "util/indent.hh"
+#include "util/string.hh"
+#include "util/stacktrace.hh"
 #include "util/persistent_object_manager.tcc"
 
 #define	TRACE_ARG_ADDRESS					\
@@ -105,7 +105,7 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 namespace HAC {
 namespace entity {
 
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using parser::scope;
 using std::_Select1st;
 using std::_Select2nd;

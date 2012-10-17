@@ -16,11 +16,11 @@
 
 #include <iostream>
 #if USE_EXCL_ARRAY_PTR
-#include "util/memory/excl_array_ptr.h"
+#include "util/memory/excl_array_ptr.hh"
 #else
-#include "util/memory/deallocation_policy_fwd.h"
+#include "util/memory/deallocation_policy_fwd.hh"
 #endif
-#include "one_array_only.h"
+#include "one_array_only.hh"
 
 using std::cout;
 

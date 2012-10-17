@@ -9,23 +9,23 @@
 #define	ENABLE_STACKTRACE			0
 #define	STACKTRACE_PERSISTENTS			(0 && ENABLE_STACKTRACE)
 
-#include "Object/def/footprint_basic_base.h"
+#include "Object/def/footprint_basic_base.hh"
 #include "Object/def/footprint_base.tcc"
-#include "Object/def/user_def_datatype.h"
-#include "Object/inst/instance_alias_info.h"
-#include "Object/inst/alias_empty.h"
-#include "Object/inst/datatype_instance_placeholder.h"
-#include "Object/inst/datatype_instance_collection.h"
-#include "Object/inst/parameterless_collection_type_manager.h"
-#include "Object/inst/int_collection_type_manager.h"
-#include "Object/inst/null_collection_type_manager.h"
-#include "Object/inst/enum_instance.h"
-#include "Object/inst/int_instance.h"
-#include "Object/inst/bool_instance.h"
-#include "Object/inst/instance_scalar.h"
-#include "Object/inst/instance_array.h"
+#include "Object/def/user_def_datatype.hh"
+#include "Object/inst/instance_alias_info.hh"
+#include "Object/inst/alias_empty.hh"
+#include "Object/inst/datatype_instance_placeholder.hh"
+#include "Object/inst/datatype_instance_collection.hh"
+#include "Object/inst/parameterless_collection_type_manager.hh"
+#include "Object/inst/int_collection_type_manager.hh"
+#include "Object/inst/null_collection_type_manager.hh"
+#include "Object/inst/enum_instance.hh"
+#include "Object/inst/int_instance.hh"
+#include "Object/inst/bool_instance.hh"
+#include "Object/inst/instance_scalar.hh"
+#include "Object/inst/instance_array.hh"
 #include "Object/inst/instance_collection_pool_bundle.tcc"
-#include "Object/traits/instance_traits.h"
+#include "Object/traits/instance_traits.hh"
 
 namespace HAC {
 namespace entity {

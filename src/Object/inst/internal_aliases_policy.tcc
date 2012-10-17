@@ -6,15 +6,15 @@
 #ifndef	__HAC_OBJECT_INST_INTERNAL_ALIASES_POLICY_TCC__
 #define	__HAC_OBJECT_INST_INTERNAL_ALIASES_POLICY_TCC__
 
-#include "Object/inst/internal_aliases_policy.h"
-#include "Object/inst/substructure_alias_base.h"
-#include "Object/inst/port_alias_tracker.h"
-#include "Object/def/footprint.h"
-#include "Object/type/canonical_type.h"
-#include "Object/inst/instance_alias_info.h"
-#include "Object/inst/collection_interface.h"
-#include "util/memory/excl_ptr.h"
-#include "util/stacktrace.h"
+#include "Object/inst/internal_aliases_policy.hh"
+#include "Object/inst/substructure_alias_base.hh"
+#include "Object/inst/port_alias_tracker.hh"
+#include "Object/def/footprint.hh"
+#include "Object/type/canonical_type.hh"
+#include "Object/inst/instance_alias_info.hh"
+#include "Object/inst/collection_interface.hh"
+#include "util/memory/excl_ptr.hh"
+#include "util/stacktrace.hh"
 
 namespace HAC {
 namespace entity {

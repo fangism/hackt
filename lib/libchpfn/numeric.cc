@@ -3,13 +3,13 @@
 	$Id: numeric.cc,v 1.1 2010/10/14 17:33:44 fang Exp $
  */
 
-#include "libchpfn/numeric.h"
+#include "libchpfn/numeric.hh"
 #include "util/macros.h"
-#include "sim/chpsim/chpsim_dlfunction.h"
-#include "Object/expr/expr_fwd.h"
-#include "Object/expr/const_collection.h"
-#include "Object/expr/pint_const.h"
-#include "Object/expr/const_param_expr_list.h"
+#include "sim/chpsim/chpsim_dlfunction.hh"
+#include "Object/expr/expr_fwd.hh"
+#include "Object/expr/const_collection.hh"
+#include "Object/expr/pint_const.hh"
+#include "Object/expr/const_param_expr_list.hh"
 
 namespace HAC {
 namespace CHP {

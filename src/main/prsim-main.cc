@@ -4,11 +4,11 @@
 	$Id: prsim.cc,v 1.31 2011/05/03 19:20:53 fang Exp $
  */
 
-#include "util/static_trace.h"
+#include "util/static_trace.hh"
 DEFAULT_STATIC_TRACE_BEGIN
 
-#include "main/prsim-main.h"
-#include "main/program_registry.h"
+#include "main/prsim-main.hh"
+#include "main/program_registry.hh"
 
 #ifndef	WITH_MAIN
 namespace HAC {

@@ -14,51 +14,51 @@
 #include <iostream>
 #include <algorithm>
 
-#include "Object/def/definition_base.h"
-#include "Object/def/footprint.h"
-#include "Object/def/user_def_datatype.h"
-#include "Object/type/fundamental_type_reference.h"
-#include "Object/inst/datatype_instance_collection.h"
-#include "Object/inst/general_collection_type_manager.h"
-#include "Object/ref/simple_meta_instance_reference.h"
-#include "Object/ref/nonmeta_instance_reference_base.h"
-#include "Object/unroll/instantiation_statement.h"
-#include "Object/unroll/null_parameter_type.h"
-#include "Object/expr/const_range.h"
-#include "Object/expr/const_range_list.h"
-#include "Object/expr/expr_dump_context.h"
-#include "Object/common/namespace.h"
-#include "Object/persistent_type_hash.h"
-#include "Object/inst/substructure_alias_base.h"
-#include "common/TODO.h"
-#include "common/ICE.h"
+#include "Object/def/definition_base.hh"
+#include "Object/def/footprint.hh"
+#include "Object/def/user_def_datatype.hh"
+#include "Object/type/fundamental_type_reference.hh"
+#include "Object/inst/datatype_instance_collection.hh"
+#include "Object/inst/general_collection_type_manager.hh"
+#include "Object/ref/simple_meta_instance_reference.hh"
+#include "Object/ref/nonmeta_instance_reference_base.hh"
+#include "Object/unroll/instantiation_statement.hh"
+#include "Object/unroll/null_parameter_type.hh"
+#include "Object/expr/const_range.hh"
+#include "Object/expr/const_range_list.hh"
+#include "Object/expr/expr_dump_context.hh"
+#include "Object/common/namespace.hh"
+#include "Object/persistent_type_hash.hh"
+#include "Object/inst/substructure_alias_base.hh"
+#include "common/TODO.hh"
+#include "common/ICE.hh"
 
 // the following are required by use of canonical_type<>
 // see also the temporary hack in datatype_instance_collection
-#include "Object/def/enum_datatype_def.h"
-#include "Object/expr/pint_expr.h"
-#include "Object/expr/const_param.h"
-#include "Object/type/canonical_type.h"
-#include "Object/inst/alias_empty.h"
-#include "Object/inst/alias_actuals.h"
-#include "Object/inst/instance_collection.h"
-#include "Object/inst/bool_instance_collection.h"
-#include "Object/inst/int_instance_collection.h"
-#include "Object/inst/enum_instance_collection.h"
-#include "Object/inst/struct_instance_collection.h"
-#include "Object/inst/param_value_collection.h"	// for dynamic_cast
-#include "Object/common/dump_flags.h"
-#include "Object/type/param_type_reference.h"	// for must_be_type_eq
-#include "Object/inst/param_value_placeholder.h"
-#include "Object/inst/datatype_instance_placeholder.h"
+#include "Object/def/enum_datatype_def.hh"
+#include "Object/expr/pint_expr.hh"
+#include "Object/expr/const_param.hh"
+#include "Object/type/canonical_type.hh"
+#include "Object/inst/alias_empty.hh"
+#include "Object/inst/alias_actuals.hh"
+#include "Object/inst/instance_collection.hh"
+#include "Object/inst/bool_instance_collection.hh"
+#include "Object/inst/int_instance_collection.hh"
+#include "Object/inst/enum_instance_collection.hh"
+#include "Object/inst/struct_instance_collection.hh"
+#include "Object/inst/param_value_collection.hh"	// for dynamic_cast
+#include "Object/common/dump_flags.hh"
+#include "Object/type/param_type_reference.hh"	// for must_be_type_eq
+#include "Object/inst/param_value_placeholder.hh"
+#include "Object/inst/datatype_instance_placeholder.hh"
 
 #include "util/memory/count_ptr.tcc"
 #include "util/persistent_object_manager.tcc"
-#include "util/compose.h"
-#include "util/binders.h"
-#include "util/dereference.h"
-#include "util/indent.h"
-#include "util/stacktrace.h"
+#include "util/compose.hh"
+#include "util/binders.hh"
+#include "util/dereference.hh"
+#include "util/indent.hh"
+#include "util/stacktrace.hh"
 
 
 //=============================================================================
@@ -66,7 +66,7 @@ namespace HAC {
 namespace entity {
 using namespace ADS;		// for composition functors
 using util::dereference;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using util::bind2nd_argval_void;
 using util::indent;
 using util::auto_indent;

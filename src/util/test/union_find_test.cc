@@ -9,8 +9,8 @@
 
 #include <iostream>
 #include <string>
-#include "util/union_find.h"
-#include "util/using_ostream.h"
+#include "util/union_find.hh"
+#include "util/using_ostream.hh"
 
 using util::union_find;
 using util::union_find_derived;

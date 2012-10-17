@@ -7,17 +7,17 @@
 
 #include <iostream>
 #if ENABLE_STACKTRACE
-#include "Object/expr/expr_dump_context.h"
+#include "Object/expr/expr_dump_context.hh"
 #endif
 
-#include "Object/nonmeta_channel_manipulator.h"
-#include "Object/nonmeta_context.h"
-#include "Object/expr/data_expr.h"
-#include "Object/ref/data_nonmeta_instance_reference.h"
-#include "Object/type/canonical_generic_datatype.h"
+#include "Object/nonmeta_channel_manipulator.hh"
+#include "Object/nonmeta_context.hh"
+#include "Object/expr/data_expr.hh"
+#include "Object/ref/data_nonmeta_instance_reference.hh"
+#include "Object/type/canonical_generic_datatype.hh"
 #include "util/memory/count_ptr.tcc"
 #include "util/macros.h"
-#include "util/stacktrace.h"
+#include "util/stacktrace.hh"
 
 namespace HAC {
 namespace entity {

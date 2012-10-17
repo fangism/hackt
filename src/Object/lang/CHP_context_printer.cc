@@ -5,21 +5,21 @@
  */
 
 #include <iostream>
-#include "Object/lang/CHP_context_printer.h"
-#include "Object/expr/bool_expr.h"
-#include "common/ICE.h"
-#include "util/value_saver.h"
-#include "util/indent.h"
-#include "util/type_traits.h"
-#include "util/static_assert.h"
-#include "util/wtf.h"
+#include "Object/lang/CHP_context_printer.hh"
+#include "Object/expr/bool_expr.hh"
+#include "common/ICE.hh"
+#include "util/value_saver.hh"
+#include "util/indent.hh"
+#include "util/type_traits.hh"
+#include "util/static_assert.hh"
+#include "util/wtf.hh"
 
 namespace HAC {
 namespace entity {
 namespace CHP {
 using util::value_saver;
 using util::auto_indent;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 //=============================================================================
 // class chp_context_printer method definitions

@@ -7,16 +7,16 @@
 #ifndef	__HAC_OBJECT_INST_CHANNEL_COLLECTION_TYPE_MANAGER_TCC__
 #define	__HAC_OBJECT_INST_CHANNEL_COLLECTION_TYPE_MANAGER_TCC__
 
-#include "Object/inst/channel_collection_type_manager.h"
-// #include "Object/type/data_type_reference.h"
-// #include "Object/def/enum_datatype_def.h"
-#include "Object/type/canonical_fundamental_chan_type.h"
+#include "Object/inst/channel_collection_type_manager.hh"
+// #include "Object/type/data_type_reference.hh"
+// #include "Object/def/enum_datatype_def.hh"
+#include "Object/type/canonical_fundamental_chan_type.hh"
 #include <iostream>
-#include "util/persistent_object_manager.h"
+#include "util/persistent_object_manager.hh"
 
 namespace HAC {
 namespace entity {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 #define CHANNEL_COLLECTION_TYPE_MANAGER_TEMPLATE_SIGNATURE	\
 template <class Tag>

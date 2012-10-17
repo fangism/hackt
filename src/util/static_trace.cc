@@ -11,12 +11,12 @@
 #include <iostream>			// for std::cerr, std::endl
 // to guarantee proper iostream initialization prior to use
 // declare a std::ios_base::Init.  
-#include "util/static_trace.h"
+#include "util/static_trace.hh"
 #include "util/macros.h"		// for INVARIANT (assert)
 
 namespace util {
 using std::string;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 //=============================================================================
 /**

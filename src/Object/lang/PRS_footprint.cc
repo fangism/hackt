@@ -9,32 +9,32 @@
 #define	STACKTRACE_DUMPS		(0 && ENABLE_STACKTRACE)
 
 #include <iostream>
-#include "Object/lang/PRS_footprint.h"
-#include "Object/lang/PRS.h"
-#include "Object/lang/SPEC.h"		// for invariant
-#include "Object/def/footprint.h"
-#include "Object/inst/alias_empty.h"
-#include "Object/inst/instance_alias_info.h"
-#include "Object/global_entry.h"
-#include "Object/global_entry_context.h"
-#include "Object/common/dump_flags.h"
-#include "Object/expr/const_param_expr_list.h"
-#include "Object/expr/expr_dump_context.h"
-#include "Object/expr/const_param.h"
-#include "Object/lang/cflat_visitor.h"
-#include "Object/lang/directive_base.h"
-#include "Object/traits/instance_traits.h"
-#include "Object/global_channel_entry.h"
-#include "Object/inst/state_instance.h"
-#include "Object/inst/instance_pool.h"
-#include "main/cflat_options.h"
-#include "util/indent.h"
+#include "Object/lang/PRS_footprint.hh"
+#include "Object/lang/PRS.hh"
+#include "Object/lang/SPEC.hh"		// for invariant
+#include "Object/def/footprint.hh"
+#include "Object/inst/alias_empty.hh"
+#include "Object/inst/instance_alias_info.hh"
+#include "Object/global_entry.hh"
+#include "Object/global_entry_context.hh"
+#include "Object/common/dump_flags.hh"
+#include "Object/expr/const_param_expr_list.hh"
+#include "Object/expr/expr_dump_context.hh"
+#include "Object/expr/const_param.hh"
+#include "Object/lang/cflat_visitor.hh"
+#include "Object/lang/directive_base.hh"
+#include "Object/traits/instance_traits.hh"
+#include "Object/global_channel_entry.hh"
+#include "Object/inst/state_instance.hh"
+#include "Object/inst/instance_pool.hh"
+#include "main/cflat_options.hh"
+#include "util/indent.hh"
 #include "util/persistent_object_manager.tcc"	// includes "IO_utils.tcc"
 #include "util/persistent_functor.tcc"
-#include "util/stacktrace.h"
+#include "util/stacktrace.hh"
 #include "util/memory/count_ptr.tcc"
-#include "common/ICE.h"
-#include "common/TODO.h"
+#include "common/ICE.hh"
+#include "common/TODO.hh"
 
 #if STACKTRACE_DUMPS
 #define	STACKTRACE_DUMP_PRINT(x)		STACKTRACE_INDENT_PRINT(x)
@@ -73,7 +73,7 @@ namespace entity {
 namespace PRS {
 using std::set;
 using std::make_pair;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using util::auto_indent;
 using util::write_value;
 using util::write_array;

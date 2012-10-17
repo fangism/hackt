@@ -10,15 +10,15 @@
 #include <iostream>
 #include <iterator>
 #include "util/memory/count_ptr.tcc"
-#include "Object/lang/CHP.h"
-#include "Object/inst/channel_instance_collection.h"
-#include "Object/inst/instance_placeholder.h"
-#include "Object/type/data_type_reference.h"
-#include "Object/type/builtin_channel_type_reference.h"
-#include "Object/ref/simple_nonmeta_instance_reference.h"
-#include "Object/ref/data_nonmeta_instance_reference.h"
-#include "Object/ref/nonmeta_instance_reference_subtypes.h"
-#include "Object/expr/expr_dump_context.h"
+#include "Object/lang/CHP.hh"
+#include "Object/inst/channel_instance_collection.hh"
+#include "Object/inst/instance_placeholder.hh"
+#include "Object/type/data_type_reference.hh"
+#include "Object/type/builtin_channel_type_reference.hh"
+#include "Object/ref/simple_nonmeta_instance_reference.hh"
+#include "Object/ref/data_nonmeta_instance_reference.hh"
+#include "Object/ref/nonmeta_instance_reference_subtypes.hh"
+#include "Object/expr/expr_dump_context.hh"
 
 namespace HAC {
 namespace entity {
@@ -26,7 +26,7 @@ namespace CHP {
 using std::copy;
 using std::back_inserter;
 using util::memory::never_ptr;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 //=============================================================================
 // class channel_send method definitions

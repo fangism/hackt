@@ -7,7 +7,7 @@
 #ifndef	__UTIL_WHAT_TCC__
 #define	__UTIL_WHAT_TCC__
 
-#include "util/what.h"
+#include "util/what.hh"
 
 #ifndef	EXTERN_TEMPLATE_UTIL_WHAT
 

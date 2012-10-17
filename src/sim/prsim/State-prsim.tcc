@@ -7,7 +7,7 @@
 #ifndef	__HAC_SIM_PRSIM_STATE_PRSIM_TCC__
 #define	__HAC_SIM_PRSIM_STATE_PRSIM_TCC__
 
-#include "sim/prsim/State-prsim.h"
+#include "sim/prsim/State-prsim.hh"
 
 namespace HAC {
 namespace SIM {

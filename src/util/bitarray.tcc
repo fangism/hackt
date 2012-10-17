@@ -8,10 +8,10 @@
 #define	__UTIL_BITARRAY_TCC__
 
 #include <algorithm>
-#include "util/bitarray.h"
+#include "util/bitarray.hh"
 #include "util/array.tcc"		// underlying container
-#include "util/bitmanip.h"		// for low-level bitwise operations
-#include "util/bitwise_functional.h"
+#include "util/bitmanip.hh"		// for low-level bitwise operations
+#include "util/bitwise_functional.hh"
 
 namespace util {
 //=============================================================================

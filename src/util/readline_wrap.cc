@@ -10,11 +10,11 @@
 
 #include <iostream>
 #include <cstdio>			// for stdin, feof
-#include "util/readline_wrap.h"
+#include "util/readline_wrap.hh"
 #include "util/readline.h"
-#include "util/string.h"
-#include "util/stacktrace.h"
-#include "util/value_saver.h"
+#include "util/string.hh"
+#include "util/stacktrace.hh"
+#include "util/value_saver.hh"
 
 /**
 	Arbitrarily chosen buffer line size.  
@@ -25,7 +25,7 @@
 #endif
 
 namespace util {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using namespace strings;		// for some utility functions
 
 //=============================================================================

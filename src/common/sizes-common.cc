@@ -15,7 +15,7 @@
 #include "config.h"
 #include "util/size_t.h"
 #include "util/what.tcc"
-#include "common/sizes-common.h"
+#include "common/sizes-common.hh"
 
 namespace HAC {
 using std::ostream;

@@ -13,13 +13,13 @@
 #include <iostream>
 #include <string>
 #include <list>
-#include "util/sstream.h"
+#include "util/sstream.hh"
 #include "util/qmap.tcc"
 #include "util/multikey_qmap.tcc"
 
 using std::list;
 using std::string;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using std::ostringstream;
 using util::qmap;
 using util::multikey_map;

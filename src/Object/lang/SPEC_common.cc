@@ -7,17 +7,17 @@
 #include <iostream>
 #include <vector>
 #include <set>
-#include "Object/lang/SPEC_common.h"
-#include "Object/expr/const_param_expr_list.h"
-#include "Object/lang/cflat_context_visitor.h"
-#include "Object/traits/bool_traits.h"
-#include "Object/traits/proc_traits.h"
+#include "Object/lang/SPEC_common.hh"
+#include "Object/expr/const_param_expr_list.hh"
+#include "Object/lang/cflat_context_visitor.hh"
+#include "Object/traits/bool_traits.hh"
+#include "Object/traits/proc_traits.hh"
 
 namespace HAC {
 namespace entity {
 namespace SPEC {
 namespace directives {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 /**
 	Default check for number of arguments.  

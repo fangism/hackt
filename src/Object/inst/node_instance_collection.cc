@@ -12,29 +12,29 @@
 #define	STACKTRACE_DESTRUCTORS		(0 && ENABLE_STACKTRACE)
 #define	STACKTRACE_PERSISTENTS		(0 && ENABLE_STACKTRACE)
 
-#include "util/static_trace.h"
+#include "util/static_trace.hh"
 DEFAULT_STATIC_TRACE_BEGIN
 
 #include <exception>
 #include <iostream>
 #include <algorithm>
 
-// #include "Object/inst/node_instance_collection.h"
+// #include "Object/inst/node_instance_collection.hh"
 // #include "Object/inst/alias_empty.tcc"
-// #include "Object/ref/member_meta_instance_reference.h"
-// #include "Object/ref/simple_nonmeta_value_reference.h"
-// #include "Object/expr/bool_expr.h"
-// #include "Object/def/built_in_datatype_def.h"
-#include "Object/traits/node_traits.h"
-#include "Object/type/data_type_reference.h"
-#include "Object/persistent_type_hash.h"
+// #include "Object/ref/member_meta_instance_reference.hh"
+// #include "Object/ref/simple_nonmeta_value_reference.hh"
+// #include "Object/expr/bool_expr.hh"
+// #include "Object/def/built_in_datatype_def.hh"
+#include "Object/traits/node_traits.hh"
+#include "Object/type/data_type_reference.hh"
+#include "Object/persistent_type_hash.hh"
 #include "Object/inst/null_collection_type_manager.tcc"
 // #include "Object/inst/instance_collection.tcc"
 #include "Object/inst/dummy_placeholder.tcc"
 // #include "Object/inst/instance_alias.tcc"
 // #include "Object/inst/state_instance.tcc"
-#include "Object/unroll/datatype_instantiation_statement.h"
-#include "Object/unroll/null_parameter_type.h"
+#include "Object/unroll/datatype_instantiation_statement.hh"
+#include "Object/unroll/null_parameter_type.hh"
 
 //=============================================================================
 // module-local specializations

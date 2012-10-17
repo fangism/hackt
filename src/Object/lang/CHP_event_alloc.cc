@@ -8,17 +8,17 @@
 
 #include <iostream>
 #include <iterator>
-#include "Object/lang/CHP_event_alloc.h"
-#include "Object/lang/CHP.h"
-#include "Object/expr/bool_expr.h"		// for guard->dump
-#include "Object/traits/chan_traits.h"
+#include "Object/lang/CHP_event_alloc.hh"
+#include "Object/lang/CHP.hh"
+#include "Object/expr/bool_expr.hh"		// for guard->dump
+#include "Object/traits/chan_traits.hh"
 #if ENABLE_STACKTRACE
-#include "Object/expr/expr_dump_context.h"
+#include "Object/expr/expr_dump_context.hh"
 #endif
-#include "common/ICE.h"
-#include "util/visitor_functor.h"
-#include "util/stacktrace.h"
-#include "util/memory/free_list.h"
+#include "common/ICE.hh"
+#include "util/visitor_functor.hh"
+#include "util/stacktrace.hh"
+#include "util/memory/free_list.hh"
 
 /**
 	Various levels of chpsim event generation optimizations, 
@@ -33,7 +33,7 @@ namespace CHP {
 using std::vector;
 using util::memory::free_list_acquire;
 using util::memory::free_list_release;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 //=============================================================================
 // class local_event_allocator method definitions

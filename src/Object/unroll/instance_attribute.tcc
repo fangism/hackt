@@ -8,17 +8,17 @@
 #define	__HAC_OBJECT_UNROLL_INSTANCE_ATTRIBUTE_TCC__
 
 #include <vector>
-#include "Object/unroll/instance_attribute.h"
-#include "Object/ref/meta_instance_reference_subtypes.h"
-#include "Object/expr/const_param_expr_list.h"
+#include "Object/unroll/instance_attribute.hh"
+#include "Object/ref/meta_instance_reference_subtypes.hh"
+#include "Object/expr/const_param_expr_list.hh"
 #include "util/persistent_object_manager.tcc"
 #include "util/what.tcc"
-#include "util/stacktrace.h"
-#include "common/TODO.h"
+#include "util/stacktrace.hh"
+#include "common/TODO.hh"
 
 namespace HAC {
 namespace entity {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using util::persistent_traits;
 
 //=============================================================================

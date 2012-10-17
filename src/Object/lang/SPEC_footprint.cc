@@ -8,24 +8,24 @@
 #include <iostream>
 #include <set>
 
-#include "Object/def/footprint.h"
-#include "Object/lang/SPEC_footprint.h"
-#include "Object/lang/cflat_visitor.h"
-#include "Object/lang/SPEC_registry.h"
-#include "Object/inst/instance_pool.h"
-#include "Object/inst/alias_empty.h"
-#include "Object/inst/instance_alias_info.h"
-#include "Object/global_channel_entry.h"
-#include "Object/inst/state_instance.h"
-#include "Object/inst/instance_pool.h"
-#include "Object/common/dump_flags.h"
-#include "Object/global_entry_context.h"
-#include "common/TODO.h"
-#include "util/indent.h"
-#include "util/IO_utils.h"
+#include "Object/def/footprint.hh"
+#include "Object/lang/SPEC_footprint.hh"
+#include "Object/lang/cflat_visitor.hh"
+#include "Object/lang/SPEC_registry.hh"
+#include "Object/inst/instance_pool.hh"
+#include "Object/inst/alias_empty.hh"
+#include "Object/inst/instance_alias_info.hh"
+#include "Object/global_channel_entry.hh"
+#include "Object/inst/state_instance.hh"
+#include "Object/inst/instance_pool.hh"
+#include "Object/common/dump_flags.hh"
+#include "Object/global_entry_context.hh"
+#include "common/TODO.hh"
+#include "util/indent.hh"
+#include "util/IO_utils.hh"
 #include "util/persistent_object_manager.tcc"
 #include "util/persistent_functor.tcc"
-#include "util/stacktrace.h"
+#include "util/stacktrace.hh"
 
 namespace util {
 using HAC::entity::SPEC::footprint_directive;
@@ -63,7 +63,7 @@ struct value_reader<footprint_directive> {
 namespace HAC {
 namespace entity {
 namespace SPEC {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 #if 0
 using util::write_value;
 using util::read_value;

@@ -5,10 +5,10 @@
 
 #include <iostream>
 #include <sstream>
-#include "libchpfn/string.h"
-#include "Object/expr/const_param_expr_list.h"
-#include "Object/expr/dlfunction.h"
-#include "util/memory/count_ptr.h"
+#include "libchpfn/string.hh"
+#include "Object/expr/const_param_expr_list.hh"
+#include "Object/expr/dlfunction.hh"
+#include "util/memory/count_ptr.hh"
 #include "util/string.tcc"		// for string_to_num
 
 namespace HAC {

@@ -6,7 +6,7 @@
 
 #define	ENABLE_STACKTRACE			0
 
-#include "util/static_trace.h"
+#include "util/static_trace.hh"
 DEFAULT_STATIC_TRACE_BEGIN
 
 #include <iostream>
@@ -14,19 +14,19 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include <set>
 #include <map>
 #include "Object/lang/SPEC_registry.tcc"
-#include "Object/lang/SPEC_common.h"
-#include "Object/lang/directive_base.h"
+#include "Object/lang/SPEC_common.hh"
+#include "Object/lang/directive_base.hh"
 #include "Object/lang/cflat_printer.tcc"
-#include "Object/expr/const_param.h"
-#include "Object/expr/const_param_expr_list.h"
-#include "main/cflat_options.h"
-#include "common/TODO.h"
-#include "util/stacktrace.h"
+#include "Object/expr/const_param.hh"
+#include "Object/expr/const_param_expr_list.hh"
+#include "main/cflat_options.hh"
+#include "common/TODO.hh"
+#include "util/stacktrace.hh"
 
 namespace HAC {
 namespace entity {
 namespace SPEC {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 // explicit template instantiation
 template class spec_visitor_entry<cflat_prs_printer>;

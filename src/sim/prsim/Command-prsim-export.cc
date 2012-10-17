@@ -5,16 +5,16 @@
  */
 
 #include <iostream>
-#include "sim/prsim/Command-prsim-export.h"
-#include "sim/prsim/Command-prsim.h"
-#include "sim/prsim/State-prsim.h"
-#include "sim/command_base.h"		// for return values
+#include "sim/prsim/Command-prsim-export.hh"
+#include "sim/prsim/Command-prsim.hh"
+#include "sim/prsim/State-prsim.hh"
+#include "sim/command_base.hh"		// for return values
 #include "util/numformat.tcc"
 
 namespace HAC {
 namespace SIM {
 namespace PRSIM {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using util::format_ostream_ref;
 
 /**

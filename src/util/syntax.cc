@@ -4,9 +4,9 @@
  */
 
 #include <iostream>
-#include "util/syntax.h"
+#include "util/syntax.hh"
 #include "util/memory/count_ptr.tcc"
-#include "util/indent.h"
+#include "util/indent.hh"
 
 namespace util {
 namespace memory {

@@ -6,16 +6,16 @@
 #define	ENABLE_STACKTRACE			0
 
 #include <cmath>
-#include "PR/tile_instance.h"
-#include "PR/placer_options.h"
+#include "PR/tile_instance.hh"
+#include "PR/placer_options.hh"
 #include "util/array.tcc"
-#include "util/vector_ops.h"
-#include "util/optparse.h"
+#include "util/vector_ops.hh"
+#include "util/optparse.hh"
 // #include "util/optparse.tcc"
 #include "util/IO_utils.tcc"
-#include "util/numeric/abs.h"
-#include "util/fig/xfig.h"
-#include "util/stacktrace.h"
+#include "util/numeric/abs.hh"
+#include "util/fig/xfig.hh"
+#include "util/stacktrace.hh"
 
 namespace HAC {
 namespace PR {
@@ -24,7 +24,7 @@ using namespace util::vector_ops;
 using util::option_value;
 using util::read_value;
 using util::write_value;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using util::fig::xfig::polyline;
 using util::fig::xfig::point;
 using util::fig::xfig::default_resolution;

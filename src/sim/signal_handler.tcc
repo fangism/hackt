@@ -6,7 +6,7 @@
 #ifndef	__HAC_SIM_SIGNAL_HANDLER_TCC__
 #define	__HAC_SIM_SIGNAL_HANDLER_TCC__
 
-#include "sim/signal_handler.h"
+#include "sim/signal_handler.hh"
 #include "util/NULL.h"
 
 namespace HAC {

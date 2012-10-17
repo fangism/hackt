@@ -11,8 +11,8 @@
 #include <stack>
 
 #include <map>
-#include "util/hash_specializations.h"
-#include "util/indent.h"
+#include "util/hash_specializations.hh"
+#include "util/indent.hh"
 
 namespace util {
 using std::map;

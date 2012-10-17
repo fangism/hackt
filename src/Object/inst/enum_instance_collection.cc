@@ -11,23 +11,23 @@
 #include <iostream>
 #include <algorithm>
 
-#include "Object/inst/enum_instance_collection.h"
+#include "Object/inst/enum_instance_collection.hh"
 #include "Object/inst/alias_empty.tcc"
-#include "Object/ref/member_meta_instance_reference.h"
-#include "Object/ref/simple_nonmeta_value_reference.h"
-#include "Object/expr/enum_expr.h"
-#include "Object/def/enum_datatype_def.h"
-#include "Object/type/data_type_reference.h"
-#include "Object/persistent_type_hash.h"
+#include "Object/ref/member_meta_instance_reference.hh"
+#include "Object/ref/simple_nonmeta_value_reference.hh"
+#include "Object/expr/enum_expr.hh"
+#include "Object/def/enum_datatype_def.hh"
+#include "Object/type/data_type_reference.hh"
+#include "Object/persistent_type_hash.hh"
 
-#include "Object/def/user_def_datatype.h"	// needed by canonical_type
+#include "Object/def/user_def_datatype.hh"	// needed by canonical_type
 
 #include "Object/inst/instance_collection.tcc"
 #include "Object/inst/instance_placeholder.tcc"
 #include "Object/inst/instance_alias.tcc"
 #include "Object/inst/parameterless_collection_type_manager.tcc"
 #include "Object/inst/state_instance.tcc"
-#include "Object/unroll/datatype_instantiation_statement.h"
+#include "Object/unroll/datatype_instantiation_statement.hh"
 
 namespace util {
 
@@ -47,7 +47,7 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 
 // explicit template instantiation
 using namespace HAC::entity;
-// from Object/traits/enum_traits.h: alias_collection_type
+// from Object/traits/enum_traits.hh: alias_collection_type
 template class packed_array_generic<pint_value_type,
 		memory::never_ptr<instance_alias_info<enum_tag> > >;
 }	// end namespace util

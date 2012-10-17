@@ -8,13 +8,13 @@
 #define	ENABLE_STACKTRACE			0
 
 #include "Object/ref/simple_meta_dummy_reference.tcc"
-#include "Object/inst/node_instance_collection.h"
-#include "Object/expr/const_range.h"
-#include "Object/devel_switches.h"
-#include "Object/persistent_type_hash.h"
+#include "Object/inst/node_instance_collection.hh"
+#include "Object/expr/const_range.hh"
+#include "Object/devel_switches.hh"
+#include "Object/persistent_type_hash.hh"
 #include "util/persistent_object_manager.tcc"
-#include "Object/traits/node_traits.h"
-#include "Object/inst/null_collection_type_manager.h"	// need?
+#include "Object/traits/node_traits.hh"
+#include "Object/inst/null_collection_type_manager.hh"	// need?
 
 namespace util {
 

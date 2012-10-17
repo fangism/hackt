@@ -9,24 +9,24 @@
 #include <iostream>
 #include <iterator>
 #include <algorithm>
-#include "Object/expr/param_expr.h"
-#include "Object/lang/generic_attribute.h"
-#include "Object/expr/const_param_expr_list.h"
-#include "Object/expr/dynamic_param_expr_list.h"
-#include "Object/def/template_formals_manager.h"
-#include "Object/type/template_actuals.h"
+#include "Object/expr/param_expr.hh"
+#include "Object/lang/generic_attribute.hh"
+#include "Object/expr/const_param_expr_list.hh"
+#include "Object/expr/dynamic_param_expr_list.hh"
+#include "Object/def/template_formals_manager.hh"
+#include "Object/type/template_actuals.hh"
 
-#include "util/IO_utils.h"
+#include "util/IO_utils.hh"
 #include "util/memory/count_ptr.tcc"
 #include "util/persistent_object_manager.tcc"
 #include "util/persistent_functor.tcc"
-#include "util/stacktrace.h"
+#include "util/stacktrace.hh"
 
 //=============================================================================
 
 namespace HAC {
 namespace entity {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using util::write_value;
 using util::read_value;
 

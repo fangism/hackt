@@ -21,7 +21,7 @@
 #define	ENABLE_STATIC_TRACE				0
 #define	ENABLE_STACKTRACE				0
 
-#include "util/static_trace.h"
+#include "util/static_trace.hh"
 DEFAULT_STATIC_TRACE_BEGIN
 
 #include <iostream>
@@ -30,14 +30,14 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include <algorithm>
 #include <iterator>
 
-#include "sim/prsim/Command-prsim.h"
-#include "sim/prsim/Command-prsim-export.h"
+#include "sim/prsim/Command-prsim.hh"
+#include "sim/prsim/Command-prsim-export.hh"
 #include "sim/prsim/State-prsim.tcc"
 #if PRSIM_TRACE_GENERATION
-#include "sim/prsim/Trace-prsim.h"
+#include "sim/prsim/Trace-prsim.hh"
 #endif
 #if PRSIM_VCD_GENERATION
-#include "sim/prsim/VCDManager.h"
+#include "sim/prsim/VCDManager.hh"
 #endif
 #include "sim/command_base.tcc"
 #include "sim/command_registry.tcc"
@@ -71,15 +71,15 @@ static CommandCategory
 }
 DEFAULT_STATIC_TRACE
 
-#include "parser/instref.h"
-#include "Object/module.h"
-#include "Object/def/footprint.h"
+#include "parser/instref.hh"
+#include "Object/module.hh"
+#include "Object/def/footprint.hh"
 
-#include "common/TODO.h"
+#include "common/TODO.hh"
 #include "util/numformat.tcc"
 #include "util/libc.h"
-#include "util/memory/excl_malloc_ptr.h"
-#include "util/stacktrace.h"
+#include "util/memory/excl_malloc_ptr.hh"
+#include "util/stacktrace.hh"
 
 DEFAULT_STATIC_TRACE
 
@@ -139,8 +139,8 @@ DEFAULT_STATIC_TRACE
 #endif
 
 namespace PRSIM {
-#include "util/using_istream.h"
-#include "util/using_ostream.h"
+#include "util/using_istream.hh"
+#include "util/using_ostream.hh"
 using std::ios_base;
 using std::ifstream;
 using std::copy;

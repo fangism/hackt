@@ -31,20 +31,20 @@
 #include <algorithm>
 #include <stdexcept>
 
-#include "Object/expr/const_collection.h"
-#include "Object/expr/const_param.h"
-#include "Object/traits/class_traits.h"
-#include "Object/common/multikey_index.h"
-#include "Object/expr/const_index.h"
-#include "Object/expr/const_index_list.h"
-#include "Object/expr/const_range.h"
-#include "Object/expr/const_range_list.h"
-#include "Object/expr/expr_visitor.h"
-#include "common/ICE.h"
+#include "Object/expr/const_collection.hh"
+#include "Object/expr/const_param.hh"
+#include "Object/traits/class_traits.hh"
+#include "Object/common/multikey_index.hh"
+#include "Object/expr/const_index.hh"
+#include "Object/expr/const_index_list.hh"
+#include "Object/expr/const_range.hh"
+#include "Object/expr/const_range_list.hh"
+#include "Object/expr/expr_visitor.hh"
+#include "common/ICE.hh"
 
-#include "util/persistent_object_manager.h"
-#include "util/multikey.h"
-#include "util/stacktrace.h"
+#include "util/persistent_object_manager.hh"
+#include "util/multikey.hh"
+#include "util/stacktrace.hh"
 #include "util/what.tcc"
 #include "util/memory/count_ptr.tcc"
 
@@ -97,7 +97,7 @@ persistent_object_manager::register_persistent_type<const_collection<Tag> >(\
 namespace HAC {
 namespace entity {
 //=============================================================================
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using namespace util::memory;
 using util::persistent_traits;
 

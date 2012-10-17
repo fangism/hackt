@@ -7,7 +7,7 @@
 #ifndef	__UTIL_NEW_FUNCTOR_TCC__
 #define	__UTIL_NEW_FUNCTOR_TCC__
 
-#include "util/new_functor.h"
+#include "util/new_functor.hh"
 
 #ifndef	EXTERN_TEMPLATE_UTIL_NEW_FUNCTOR
 

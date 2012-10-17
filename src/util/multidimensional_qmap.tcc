@@ -7,14 +7,14 @@
 #ifndef	__UTIL_MULTIDIMENSIONAL_QMAP_TCC__
 #define	__UTIL_MULTIDIMENSIONAL_QMAP_TCC__
 
-#include "util/multidimensional_qmap.h"
+#include "util/multidimensional_qmap.hh"
 
 // predefine to suppress this definition
 #ifndef	EXTERN_TEMPLATE_UTIL_MULTIDIMENSIONAL_QMAP
 
 #include <iostream>
 #include <numeric>		// for accumulate
-#include "util/sstream.h"
+#include "util/sstream.hh"
 
 // predefine to suppress dependent template definitions
 #ifdef	EXCLUDE_DEPENDENT_TEMPLATES_MULTIDIMENSIONAL_QMAP
@@ -25,7 +25,7 @@
 
 namespace util {
 using std::accumulate;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 //=============================================================================
 // class multidimensional_qmap method definitions

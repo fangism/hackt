@@ -18,14 +18,14 @@
 #include <exception>
 #include <iostream>
 
-#include "AST/expr_base.h"
-#include "AST/node_position.h"
-#include "AST/statement.h"
-#include "AST/parse_context.h"
+#include "AST/expr_base.hh"
+#include "AST/node_position.hh"
+#include "AST/statement.hh"
+#include "AST/parse_context.hh"
 
-#include "util/indent.h"
-#include "util/what.h"
-#include "util/stacktrace.h"
+#include "util/indent.hh"
+#include "util/what.hh"
+#include "util/stacktrace.hh"
 
 // enable or disable constructor inlining, undefined at the end of file
 // leave blank do disable, define as inline to enable
@@ -42,7 +42,7 @@ SPECIALIZE_UTIL_WHAT(HAC::parser::assign_stmt, "(assign-stmt)")
 //=============================================================================
 namespace HAC {
 namespace parser {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using util::indent;
 using util::auto_indent;
 

@@ -5,23 +5,23 @@
 
 #define	ENABLE_STACKTRACE				0
 
-#include "Object/lang/bool_literal.h"
-#include "Object/inst/alias_empty.h"
-#include "Object/inst/instance_alias_info.h"
-#include "Object/traits/bool_traits.h"
-#include "Object/ref/simple_meta_instance_reference.h"
-#include "Object/ref/meta_instance_reference_subtypes.h"
-#include "Object/lang/PRS.h"	// for PRS::literal, PRS::expr_dump_context
-#include "Object/expr/expr_dump_context.h"
-#include "Object/traits/node_traits.h"
-#include "Object/ref/simple_meta_dummy_reference.h"
-#include "Object/global_entry.h"
-#include "Object/global_entry_context.h"
-#include "Object/unroll/unroll_context.h"
+#include "Object/lang/bool_literal.hh"
+#include "Object/inst/alias_empty.hh"
+#include "Object/inst/instance_alias_info.hh"
+#include "Object/traits/bool_traits.hh"
+#include "Object/ref/simple_meta_instance_reference.hh"
+#include "Object/ref/meta_instance_reference_subtypes.hh"
+#include "Object/lang/PRS.hh"	// for PRS::literal, PRS::expr_dump_context
+#include "Object/expr/expr_dump_context.hh"
+#include "Object/traits/node_traits.hh"
+#include "Object/ref/simple_meta_dummy_reference.hh"
+#include "Object/global_entry.hh"
+#include "Object/global_entry_context.hh"
+#include "Object/unroll/unroll_context.hh"
 #include "util/memory/count_ptr.tcc"
 #include "util/persistent_object_manager.tcc"
-#include "util/packed_array.h"
-#include "util/stacktrace.h"
+#include "util/packed_array.hh"
+#include "util/stacktrace.hh"
 
 namespace HAC {
 namespace entity {

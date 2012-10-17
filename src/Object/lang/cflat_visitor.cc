@@ -6,19 +6,19 @@
 #define	ENABLE_STACKTRACE				0
 
 #include <algorithm>
-#include "Object/def/footprint.h"
-#include "Object/lang/cflat_visitor.h"
-#include "Object/lang/CHP_visitor.h"
-#include "Object/lang/PRS_footprint.h"
-#include "Object/lang/SPEC_footprint.h"
+#include "Object/def/footprint.hh"
+#include "Object/lang/cflat_visitor.hh"
+#include "Object/lang/CHP_visitor.hh"
+#include "Object/lang/PRS_footprint.hh"
+#include "Object/lang/SPEC_footprint.hh"
 #include "Object/global_entry.tcc"
-#include "Object/global_channel_entry.h"
-#include "Object/traits/instance_traits.h"
-#include "common/TODO.h"
-#include "util/visitor_functor.h"
-#include "util/index_functor.h"
-#include "util/compose.h"
-#include "util/stacktrace.h"
+#include "Object/global_channel_entry.hh"
+#include "Object/traits/instance_traits.hh"
+#include "common/TODO.hh"
+#include "util/visitor_functor.hh"
+#include "util/index_functor.hh"
+#include "util/compose.hh"
+#include "util/stacktrace.hh"
 
 namespace HAC {
 namespace entity {

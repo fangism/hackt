@@ -6,7 +6,7 @@
 #ifndef	__UTIL_PACKED_ARRAY_TCC__
 #define	__UTIL_PACKED_ARRAY_TCC__
 
-#include "util/packed_array.h"
+#include "util/packed_array.hh"
 
 #ifndef	EXTERN_TEMPLATE_UTIL_PACKED_ARRAY
 
@@ -19,11 +19,11 @@
 #define	EXTERN_TEMPLATE_UTIL_MULTIKEY
 #endif
 
-// #include "util/addressof.h"
+// #include "util/addressof.hh"
 #include "util/multikey.tcc"
 
 namespace util {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using std::accumulate;
 // using util::multikey_generator;
 

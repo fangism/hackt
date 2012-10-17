@@ -9,7 +9,7 @@
 # The responsibility for hacking the yylex() call is elsewhere, 
 # e.g. in a header file that redefines yylex() according to YYLEX_PARAM.
 
-# this script works closely with "lexer/flex_lexer_state.h"
+# this script works closely with "lexer/flex_lexer_state.hh"
 
 {
 	if (match($0, "^yyparse[ ]*\\(.*\\)")) {

@@ -6,15 +6,15 @@
 
 #include <iostream>
 #include <algorithm>
-#include "sim/prsim/Expr.h"
-#include "Object/lang/PRS_enum.h"
+#include "sim/prsim/Expr.hh"
+#include "Object/lang/PRS_enum.hh"
 #include "util/macros.h"
 #include "util/IO_utils.tcc"
 
 namespace HAC {
 namespace SIM {
 namespace PRSIM {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using util::read_value;
 using util::write_value;
 

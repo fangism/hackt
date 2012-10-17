@@ -21,41 +21,41 @@
 #include <stdexcept>
 #include <algorithm>
 
-#include "Object/ref/simple_meta_value_reference.h"
-#include "Object/ref/meta_instance_reference_subtypes.h"
-#include "Object/ref/aggregate_meta_instance_reference_base.h"
-#include "Object/traits/class_traits.h"
-#include "Object/def/definition_base.h"
-#include "Object/common/namespace.h"
-#include "Object/common/multikey_index.h"
-#include "Object/common/dump_flags.h"
-#include "Object/expr/const_param.h"
-#include "Object/expr/const_index.h"
-#include "Object/expr/const_range.h"
-#include "Object/expr/const_range_list.h"
-#include "Object/expr/expr_dump_context.h"
-#include "Object/expr/expr_visitor.h"
-#include "Object/unroll/unroll_context.h"
-#include "Object/def/footprint.h"
-#include "Object/ref/meta_value_reference.h"
-#include "Object/inst/value_placeholder.h"
-#include "Object/inst/param_value_collection.h"
-#include "Object/inst/value_scalar.h"
-#include "Object/expr/dynamic_param_expr_list.h"
+#include "Object/ref/simple_meta_value_reference.hh"
+#include "Object/ref/meta_instance_reference_subtypes.hh"
+#include "Object/ref/aggregate_meta_instance_reference_base.hh"
+#include "Object/traits/class_traits.hh"
+#include "Object/def/definition_base.hh"
+#include "Object/common/namespace.hh"
+#include "Object/common/multikey_index.hh"
+#include "Object/common/dump_flags.hh"
+#include "Object/expr/const_param.hh"
+#include "Object/expr/const_index.hh"
+#include "Object/expr/const_range.hh"
+#include "Object/expr/const_range_list.hh"
+#include "Object/expr/expr_dump_context.hh"
+#include "Object/expr/expr_visitor.hh"
+#include "Object/unroll/unroll_context.hh"
+#include "Object/def/footprint.hh"
+#include "Object/ref/meta_value_reference.hh"
+#include "Object/inst/value_placeholder.hh"
+#include "Object/inst/param_value_collection.hh"
+#include "Object/inst/value_scalar.hh"
+#include "Object/expr/dynamic_param_expr_list.hh"
 
-#include "common/ICE.h"
-#include "common/TODO.h"
+#include "common/ICE.hh"
+#include "common/TODO.hh"
 
 // experimental: suppressing automatic instantiation of template code
-// #include "Object/common/extern_templates.h"
+// #include "Object/common/extern_templates.hh"
 
 #include "util/memory/count_ptr.tcc"
-#include "util/multikey.h"
+#include "util/multikey.hh"
 #include "util/packed_array.tcc"
 #include "util/macros.h"
-#include "util/what.h"
-#include "util/stacktrace.h"
-#include "util/persistent_object_manager.h"
+#include "util/what.hh"
+#include "util/stacktrace.hh"
+#include "util/persistent_object_manager.hh"
 #include "util/memory/count_ptr.tcc"
 
 //=============================================================================
@@ -63,7 +63,7 @@ namespace HAC {
 namespace entity {
 //=============================================================================
 using namespace util::memory;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using util::persistent_traits;
 
 //=============================================================================

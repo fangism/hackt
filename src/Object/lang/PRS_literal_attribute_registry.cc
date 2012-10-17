@@ -4,26 +4,26 @@
 	$Id: PRS_literal_attribute_registry.cc,v 1.3 2009/10/05 23:09:26 fang Exp $
  */
 
-#include "util/static_trace.h"
+#include "util/static_trace.hh"
 DEFAULT_STATIC_TRACE_BEGIN
 
 #include <iostream>
 #include <map>
-#include "Object/lang/PRS_literal_attribute_registry.h"
-#include "Object/lang/cflat_printer.h"
-#include "Object/expr/const_param_expr_list.h"
-#include "Object/expr/pint_const.h"
-#include "Object/expr/string_expr.h"
-#include "Object/expr/expr_dump_context.h"
-#include "Object/lang/PRS_literal_attribute_common.h"
-#include "main/cflat_options.h"
-#include "common/TODO.h"
+#include "Object/lang/PRS_literal_attribute_registry.hh"
+#include "Object/lang/cflat_printer.hh"
+#include "Object/expr/const_param_expr_list.hh"
+#include "Object/expr/pint_const.hh"
+#include "Object/expr/string_expr.hh"
+#include "Object/expr/expr_dump_context.hh"
+#include "Object/lang/PRS_literal_attribute_common.hh"
+#include "main/cflat_options.hh"
+#include "common/TODO.hh"
 #include "util/memory/count_ptr.tcc"
 
 namespace HAC {
 namespace entity {
 namespace PRS {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 //-----------------------------------------------------------------------------
 // global initializers

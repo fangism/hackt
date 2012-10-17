@@ -23,29 +23,29 @@
 
 #define	UTIL_WHAT_PARTIAL_SPECIALIZATIONS	0	// 1: DEATH
 
-#include "AST/expr_base.h"
-#include "AST/definition.h"
-#include "AST/formal.h"
-#include "AST/token_char.h"
-#include "AST/token_string.h"
+#include "AST/expr_base.hh"
+#include "AST/definition.hh"
+#include "AST/formal.hh"
+#include "AST/token_char.hh"
+#include "AST/token_string.hh"
 #include "AST/node_list.tcc"
-#include "AST/CHP.h"
-#include "AST/parse_context.h"
+#include "AST/CHP.hh"
+#include "AST/parse_context.hh"
 
-#include "Object/type/data_type_reference.h"
-#include "Object/type/builtin_channel_type_reference.h"
-#include "Object/def/typedef_base.h"
-#include "Object/def/user_def_datatype.h"
-#include "Object/def/enum_datatype_def.h"
-#include "Object/def/user_def_chan.h"
-#include "Object/def/process_definition.h"
-#include "Object/common/namespace.h"
-#include "Object/unroll/port_scope.h"
+#include "Object/type/data_type_reference.hh"
+#include "Object/type/builtin_channel_type_reference.hh"
+#include "Object/def/typedef_base.hh"
+#include "Object/def/user_def_datatype.hh"
+#include "Object/def/enum_datatype_def.hh"
+#include "Object/def/user_def_chan.hh"
+#include "Object/def/process_definition.hh"
+#include "Object/common/namespace.hh"
+#include "Object/unroll/port_scope.hh"
 
-#include "util/what.h"
-#include "util/stacktrace.h"
+#include "util/what.hh"
+#include "util/stacktrace.hh"
 #include "util/memory/count_ptr.tcc"
-#include "util/value_saver.h"
+#include "util/value_saver.hh"
 
 // enable or disable constructor inlining, undefined at the end of file
 // leave blank do disable, define as inline to enable
@@ -79,7 +79,7 @@ SPECIALIZE_UTIL_WHAT(HAC::parser::typedef_alias,
 //=============================================================================
 namespace HAC {
 namespace parser {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using entity::enum_datatype_def;
 using entity::user_def_chan;
 using entity::user_def_datatype;

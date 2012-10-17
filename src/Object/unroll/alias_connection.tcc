@@ -18,19 +18,19 @@
 #include <functional>
 #include <algorithm>
 
-#include "Object/unroll/alias_connection.h"
-#include "Object/ref/meta_instance_reference_subtypes.h"
-#include "Object/expr/expr_dump_context.h"
+#include "Object/unroll/alias_connection.hh"
+#include "Object/ref/meta_instance_reference_subtypes.hh"
+#include "Object/expr/expr_dump_context.hh"
 
 #include "util/persistent_object_manager.tcc"
 // #include "util/packed_array.tcc"	// for alias_collection_type
-#include "util/stacktrace.h"
-#include "util/what.h"
-#include "util/binders.h"
-#include "util/compose.h"
-#include "util/dereference.h"
+#include "util/stacktrace.hh"
+#include "util/what.hh"
+#include "util/binders.hh"
+#include "util/compose.hh"
+#include "util/dereference.hh"
 #include "util/memory/count_ptr.tcc"
-#include "util/reserve.h"
+#include "util/reserve.hh"
 
 //=============================================================================
 namespace HAC {
@@ -40,7 +40,7 @@ template <class> class instance_alias_info;
 USING_IO_UTILS
 using std::vector;
 using util::persistent_traits;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using std::mem_fun_ref;
 using std::transform;
 using std::find_if;

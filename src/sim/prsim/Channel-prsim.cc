@@ -11,25 +11,25 @@
 #include <functional>
 #include <algorithm>
 #include <iterator>			// for ostream_iterator
-#include "sim/prsim/Channel-prsim.h"
-#include "sim/prsim/State-prsim.h"
-#include "parser/instref.h"
-#include "AST/expr_base.h"
-#include "Object/ref/meta_reference_union.h"
-#include "util/iterator_more.h"		// for set_inserter
-#include "util/copy_if.h"
+#include "sim/prsim/Channel-prsim.hh"
+#include "sim/prsim/State-prsim.hh"
+#include "parser/instref.hh"
+#include "AST/expr_base.hh"
+#include "Object/ref/meta_reference_union.hh"
+#include "util/iterator_more.hh"		// for set_inserter
+#include "util/copy_if.hh"
 #include "util/memory/count_ptr.tcc"
 #include "util/string.tcc"
-#include "util/tokenize.h"
+#include "util/tokenize.hh"
 #include "util/IO_utils.tcc"
 #include "util/packed_array.tcc"
-#include "util/indent.h"
-#include "util/numeric/div.h"
-#include "util/numeric/random.h"	// for rand48 family
-#include "util/stacktrace.h"
-#include "util/named_ifstream_manager.h"
-#include "util/wtf.h"
-#include "common/TODO.h"
+#include "util/indent.hh"
+#include "util/numeric/div.hh"
+#include "util/numeric/random.hh"	// for rand48 family
+#include "util/stacktrace.hh"
+#include "util/named_ifstream_manager.hh"
+#include "util/wtf.hh"
+#include "common/TODO.hh"
 
 namespace util {
 using std::istream;
@@ -84,7 +84,7 @@ using std::ostream_iterator;
 using std::back_inserter;
 USING_COPY_IF
 using util::set_inserter;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using util::read_value;
 using util::write_value;
 using util::indent;

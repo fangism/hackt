@@ -12,11 +12,11 @@
 #include <vector>
 
 #include "util/obsolete/ptrs.h"
-#include "var.h"
-#include "func.h"
+#include "var.hh"
+#include "func.hh"
 
 using std::vector;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using namespace PTRS_NAMESPACE;
 
 

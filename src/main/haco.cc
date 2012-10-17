@@ -5,13 +5,13 @@
  */
 
 // #define	ENABLE_STATIC_TRACE			1
-#include "util/static_trace.h"
+#include "util/static_trace.hh"
 DEFAULT_STATIC_TRACE_BEGIN
 
-#include "main/haco.h"
-#include "main/compile.h"
-#include "main/global_options.h"
-#include "main/program_registry.h"
+#include "main/haco.hh"
+#include "main/compile.hh"
+#include "main/global_options.hh"
+#include "main/program_registry.hh"
 
 namespace HAC {
 #ifndef	WITH_MAIN

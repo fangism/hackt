@@ -6,7 +6,7 @@
 #ifndef	__UTIL_UNIQUE_LIST_TCC__
 #define	__UTIL_UNIQUE_LIST_TCC__
 
-#include "util/unique_list.h"
+#include "util/unique_list.hh"
 
 #ifndef	EXTERN_TEMPLATE_UTIL_UNIQUE_LIST
 

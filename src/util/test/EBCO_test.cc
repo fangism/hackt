@@ -1,5 +1,5 @@
 #include <iostream>
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 class A { };
 class B { };

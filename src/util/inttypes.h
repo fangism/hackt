@@ -10,7 +10,7 @@
 #include "config.h"
 
 #if defined(HAVE_INTTYPES_H) && HAVE_INTTYPES_H
-#include <inttypes.h>	// usually includes <stdint.h>
+#include <inttypes.h>	/* usually includes <stdint.h> */
 #endif
 
 #if defined(HAVE_STDINT_H) && HAVE_STDINT_H
@@ -27,7 +27,7 @@
 	#if	(SIZEOF_QUAD_T == 8 && QUAD_T_IS_ARITHMETIC)
 	#define	HAVE_INT64_TYPE
 	#endif
-// else leave undefined
+/* else leave undefined */
 #endif
 
 /**
@@ -40,23 +40,23 @@
 	#if	(SIZEOF_U_QUAD_T == 8 && U_QUAD_T_IS_ARITHMETIC)
 	#define	HAVE_UINT64_TYPE
 	#endif
-// else leave undefined
+/* else leave undefined */
 #endif
 
-// yes, in the global namespace
+/* yes, in the global namespace */
 
-typedef	int8_t			int8;		// usually char
-typedef	int16_t			int16;		// usually short
-typedef	int32_t			int32;		// usually int
+typedef	int8_t			int8;		/* usually char */
+typedef	int16_t			int16;		/* usually short */
+typedef	int32_t			int32;		/* usually int */
 #if !SIZEOF_INT64
 #if SIZEOF_INT64_T
-typedef	int64_t			int64;		// usually long long
+typedef	int64_t			int64;		/* usually long long */
 #elif	(SIZEOF_QUAD_T == 8 && QUAD_T_IS_ARITHMETIC)
 typedef	quad_t			int64;
 #endif
 #endif
 
-// unsigned counterparts
+/* unsigned counterparts */
 typedef	uint8_t			uint8;
 typedef	uint16_t		uint16;
 typedef	uint32_t		uint32;
@@ -73,5 +73,5 @@ typedef	u_quad_t		uint64;
 	TODO: handle GMP mpz_t? (arbitrary)
 ***/
 
-#endif	// __UTIL_INTTYPES_H__
+#endif	/* __UTIL_INTTYPES_H__ */
 

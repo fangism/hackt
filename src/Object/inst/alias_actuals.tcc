@@ -11,15 +11,15 @@
 #define	__HAC_OBJECT_INST_ALIAS_ACTUALS_TCC__
 
 #include <iostream>
-#include "Object/inst/alias_actuals.h"
-#include "Object/inst/instance_alias_info.h"
-#include "Object/type/canonical_type.h"
-#include "util/stacktrace.h"
-#include "Object/expr/expr_dump_context.h"
+#include "Object/inst/alias_actuals.hh"
+#include "Object/inst/instance_alias_info.hh"
+#include "Object/type/canonical_type.hh"
+#include "util/stacktrace.hh"
+#include "Object/expr/expr_dump_context.hh"
 
 namespace HAC {
 namespace entity {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 //=============================================================================
 // class instance_alias_info_empty method definitions
 

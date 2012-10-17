@@ -9,10 +9,10 @@
 #include <iostream>
 #include <iterator>
 #include <algorithm>
-#include "util/optparse.h"
-#include "util/tokenize.h"
-#include "util/string.h"
-#include "util/indent.h"
+#include "util/optparse.hh"
+#include "util/tokenize.hh"
+#include "util/string.hh"
+#include "util/indent.hh"
 
 namespace util {
 using std::copy;

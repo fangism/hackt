@@ -8,7 +8,7 @@
 #ifndef	__UTIL_LIST_VECTOR_TCC__
 #define	__UTIL_LIST_VECTOR_TCC__
 
-#include "util/list_vector.h"
+#include "util/list_vector.hh"
 
 // to suppress definition entirely
 #ifndef	EXTERN_TEMPLATE_UTIL_LIST_VECTOR
@@ -25,7 +25,7 @@
 // #include "util/qmap.tcc"
 
 namespace util {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using std::inner_product;
 using std::ptr_fun;
 

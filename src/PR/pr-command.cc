@@ -8,13 +8,13 @@
 #define	ENABLE_STATIC_TRACE		0
 #define	ENABLE_STACKTRACE		0
 
-#include "util/static_trace.h"
+#include "util/static_trace.hh"
 DEFAULT_STATIC_TRACE_BEGIN
 
 #include <iostream>
 #include <fstream>
-#include "PR/pr-command.h"
-#include "PR/placement_engine.h"
+#include "PR/pr-command.hh"
+#include "PR/placement_engine.hh"
 #include "sim/command_base.tcc"
 #include "sim/command_category.tcc"
 #include "sim/command_registry.tcc"
@@ -46,11 +46,11 @@ DEFAULT_STATIC_TRACE
 }
 }
 
-#include "common/TODO.h"
-#include "util/optparse.h"
-#include "util/STL/container_iterator.h"
+#include "common/TODO.hh"
+#include "util/optparse.hh"
+#include "util/STL/container_iterator.hh"
 #if PR_VARIABLE_DIMENSIONS
-#include "util/STL/valarray_iterator.h"
+#include "util/STL/valarray_iterator.hh"
 #endif
 
 //=============================================================================

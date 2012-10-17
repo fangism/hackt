@@ -11,20 +11,20 @@
 #include <cstring>
 #include <vector>
 
-#include "main/create.h"
-#include "main/compile_options.h"
-#include "main/program_registry.h"
-#include "util/stacktrace.h"
-#include "main/main_funcs.h"
-#include "main/global_options.h"
-#include "util/persistent_object_manager.h"
+#include "main/create.hh"
+#include "main/compile_options.hh"
+#include "main/program_registry.hh"
+#include "util/stacktrace.hh"
+#include "main/main_funcs.hh"
+#include "main/global_options.hh"
+#include "util/persistent_object_manager.hh"
 
 namespace HAC {
 
 using util::persistent;
 using util::persistent_object_manager;
 
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 //=============================================================================
 // class create static initializers

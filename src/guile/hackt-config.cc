@@ -6,14 +6,14 @@
 	$Id: hackt-config.cc,v 1.2 2007/04/20 18:25:55 fang Exp $
  */
 
-#include "guile/hackt-config.h"
-#include "common/config.h"
+#include "guile/hackt-config.hh"
+#include "common/config.hh"
 #include <vector>
 #include <sstream>
-#include "guile/hackt-documentation.h"
-#include "util/guile_STL.h"
-#include "util/for_all.h"
-#include "util/caller.h"
+#include "guile/hackt-documentation.hh"
+#include "util/guile_STL.hh"
+#include "util/for_all.hh"
+#include "util/caller.hh"
 
 namespace HAC {
 namespace guile_wrap {

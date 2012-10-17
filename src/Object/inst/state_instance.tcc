@@ -8,15 +8,15 @@
 #define	__HAC_OBJECT_INST_STATE_INSTANCE_TCC__
 
 #include <iostream>
-#include "Object/inst/state_instance.h"
-#include "Object/global_entry_context.h"
-#include "Object/global_channel_entry.h"
-#include "util/stacktrace.h"
-#include "util/indent.h"
+#include "Object/inst/state_instance.hh"
+#include "Object/global_entry_context.hh"
+#include "Object/global_channel_entry.hh"
+#include "util/stacktrace.hh"
+#include "util/indent.hh"
 
 namespace HAC {
 namespace entity {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 //=============================================================================
 // class state_instance method definitions

@@ -7,14 +7,14 @@
 #undef	NDEBUG
 #endif
 
-// #include "util/memory/pointer_classes_fwd.h"
+// #include "util/memory/pointer_classes_fwd.hh"
 #include "util/memory/count_ptr.tcc"
 #include "util/memory/count_array_ptr.tcc"
 #include "util/memory/count_malloc_ptr.tcc"
 // deliberately including multiple times to test include protection
-#include "util/memory/count_array_ptr.h"
-#include "util/memory/count_malloc_ptr.h"
-#include "util/memory/count_ptr.h"
+#include "util/memory/count_array_ptr.hh"
+#include "util/memory/count_malloc_ptr.hh"
+#include "util/memory/count_ptr.hh"
 #include "util/memory/count_array_ptr.tcc"
 #include "util/memory/count_ptr.tcc"
 #include "util/memory/count_malloc_ptr.tcc"

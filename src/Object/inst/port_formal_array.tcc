@@ -1,5 +1,5 @@
 /**
-	\file "Object/inst/port_formal_array.h"
+	\file "Object/inst/port_formal_array.tcc"
 	$Id: port_formal_array.tcc,v 1.14 2011/02/08 22:32:49 fang Exp $
  */
 
@@ -15,26 +15,26 @@
 #include <algorithm>
 #include <list>
 
-#include "Object/inst/port_formal_array.h"
-#include "Object/inst/instance_alias_info.h"
-#include "Object/inst/port_alias_tracker.h"
-#include "Object/expr/const_index_list.h"
-#include "Object/expr/const_range_list.h"
-#include "Object/def/footprint.h"
-#include "common/ICE.h"
+#include "Object/inst/port_formal_array.hh"
+#include "Object/inst/instance_alias_info.hh"
+#include "Object/inst/port_alias_tracker.hh"
+#include "Object/expr/const_index_list.hh"
+#include "Object/expr/const_range_list.hh"
+#include "Object/def/footprint.hh"
+#include "common/ICE.hh"
 
-#include "util/stacktrace.h"
+#include "util/stacktrace.hh"
 #include "util/persistent_object_manager.tcc"
 #include "util/packed_array.tcc"
-#include "Object/inst/collection_traits.h"
+#include "Object/inst/collection_traits.hh"
 #include "Object/inst/collection_pool.tcc"	// for lookup_index
-#include "util/compose.h"
-#include "util/dereference.h"
-#include "util/indent.h"
+#include "util/compose.hh"
+#include "util/dereference.hh"
+#include "util/indent.hh"
 
 namespace HAC {
 namespace entity {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using std::transform;
 using std::mem_fun_ref;
 using std::back_inserter;

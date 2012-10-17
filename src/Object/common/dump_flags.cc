@@ -5,14 +5,14 @@
  */
 
 #include <iostream>
-#include "Object/common/dump_flags.h"
-#include "util/IO_utils.h"
+#include "Object/common/dump_flags.hh"
+#include "util/IO_utils.hh"
 
 namespace HAC {
 namespace entity {
 using util::write_value;
 using util::read_value;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 //=============================================================================
 // class dump_flags method and static member definitions

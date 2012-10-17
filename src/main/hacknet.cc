@@ -6,28 +6,28 @@
 
 #define	ENABLE_STACKTRACE		0
 
-#include "util/static_trace.h"
+#include "util/static_trace.hh"
 DEFAULT_STATIC_TRACE_BEGIN
 
 #include <iostream>
 #include <fstream>
 #include <list>
 
-#include "net/netlist_options.h"
-#include "net/netlist_generator.h"
-#include "common/config.h"
-#include "main/hacknet.h"
-#include "main/program_registry.h"
-#include "main/main_funcs.h"
+#include "net/netlist_options.hh"
+#include "net/netlist_generator.hh"
+#include "common/config.hh"
+#include "main/hacknet.hh"
+#include "main/program_registry.hh"
+#include "main/main_funcs.hh"
 #include "main/simple_options.tcc"
-#include "main/global_options.h"
-#include "main/compile_options.h"
-#include "Object/global_entry.h"
-#include "common/TODO.h"
-#include "util/stacktrace.h"
-#include "util/getopt_mapped.h"
-#include "util/persistent_object_manager.h"
-#include "util/optparse.h"
+#include "main/global_options.hh"
+#include "main/compile_options.hh"
+#include "Object/global_entry.hh"
+#include "common/TODO.hh"
+#include "util/stacktrace.hh"
+#include "util/getopt_mapped.hh"
+#include "util/persistent_object_manager.hh"
+#include "util/optparse.hh"
 #include "install_paths.h"
 
 namespace HAC {
@@ -36,7 +36,7 @@ using util::persistent;
 using util::persistent_object_manager;
 using util::option_value;
 using NET::netlist_options;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 //=============================================================================
 class hacknet_options {

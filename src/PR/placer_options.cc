@@ -6,13 +6,13 @@
 #define	ENABLE_STACKTRACE		0
 
 #include <iostream>
-#include "PR/placer_options.h"
-#include "util/indent.h"
-#include "util/string.h"
+#include "PR/placer_options.hh"
+#include "util/indent.hh"
+#include "util/string.hh"
 #include "util/optparse.tcc"
 #include "util/IO_utils.tcc"
-#include "util/vector_ops.h"
-#include "util/stacktrace.h"
+#include "util/vector_ops.hh"
+#include "util/stacktrace.hh"
 
 namespace HAC {
 namespace PR {
@@ -20,7 +20,7 @@ using util::auto_indent;
 using util::strings::string_to_num;
 using util::write_value;
 using util::read_value;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 //=============================================================================
 // class placer_options method definitions

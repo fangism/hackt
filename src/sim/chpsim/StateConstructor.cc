@@ -7,22 +7,22 @@
 
 #include <iostream>
 #include <vector>
-#include "sim/chpsim/StateConstructor.h"
-#include "sim/chpsim/DependenceCollector.h"
-#include "sim/chpsim/State.h"
-#include "sim/chpsim/Event.h"
-#include "Object/module.h"
+#include "sim/chpsim/StateConstructor.hh"
+#include "sim/chpsim/DependenceCollector.hh"
+#include "sim/chpsim/State.hh"
+#include "sim/chpsim/Event.hh"
+#include "Object/module.hh"
 #include "Object/global_entry.tcc"
-#include "Object/lang/CHP.h"
-#include "Object/expr/preal_const.h"
-#include "Object/expr/bool_expr.h"
-#include "Object/ref/simple_nonmeta_instance_reference.h"
-// #include "Object/traits/chan_traits.h"
-#include "common/ICE.h"
-#include "common/TODO.h"
-// #include "util/visitor_functor.h"
-#include "util/stacktrace.h"
-// #include "util/STL/valarray_iterator.h"
+#include "Object/lang/CHP.hh"
+#include "Object/expr/preal_const.hh"
+#include "Object/expr/bool_expr.hh"
+#include "Object/ref/simple_nonmeta_instance_reference.hh"
+// #include "Object/traits/chan_traits.hh"
+#include "common/ICE.hh"
+#include "common/TODO.hh"
+// #include "util/visitor_functor.hh"
+#include "util/stacktrace.hh"
+// #include "util/STL/valarray_iterator.hh"
 
 namespace HAC {
 namespace SIM {
@@ -32,7 +32,7 @@ using entity::process_tag;
 using entity::global_entry_pool;
 using entity::preal_const;
 using entity::CHP::delay_ptr_type;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 //=============================================================================
 // class StateConstructor method definitions

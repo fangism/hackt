@@ -11,22 +11,22 @@
 #include <functional>
 #include <numeric>
 #include <list>
-#include "PR/numerics.h"
-#include "util/vector_ops.h"
-#include "util/numeric/abs.h"
-#include "util/tokenize.h"
+#include "PR/numerics.hh"
+#include "util/vector_ops.hh"
+#include "util/numeric/abs.hh"
+#include "util/tokenize.hh"
 #include "util/string.tcc"
 #include "util/array.tcc"
-#include "util/optparse.h"
+#include "util/optparse.hh"
 #include "util/IO_utils.tcc"
-#include "util/numeric/random.h"
+#include "util/numeric/random.hh"
 #include "util/numeric/constants.h"
-#include "util/numeric/trigonometry.h"
-#include "util/STL/container_iterator.h"
+#include "util/numeric/trigonometry.hh"
+#include "util/STL/container_iterator.hh"
 #if PR_VARIABLE_DIMENSIONS
-#include "util/STL/valarray_iterator.h"
+#include "util/STL/valarray_iterator.hh"
 #endif
-#include "util/stacktrace.h"
+#include "util/stacktrace.hh"
 
 namespace util {
 using std::ostream;
@@ -70,7 +70,7 @@ read_value(istream& i, real_vector& v) {
 
 namespace HAC {
 namespace PR {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using std::transform;
 using std::accumulate;
 using util::numeric::abs;

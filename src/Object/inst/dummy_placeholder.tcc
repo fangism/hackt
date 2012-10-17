@@ -19,27 +19,27 @@
 #include <vector>
 
 // experimental: suppressing automatic template instantiation
-#include "Object/common/extern_templates.h"
+#include "Object/common/extern_templates.hh"
 
-#include "Object/inst/dummy_placeholder.h"
-#include "Object/expr/const_range_list.h"
-#include "Object/ref/meta_instance_reference_base.h"
-#include "Object/ref/nonmeta_instance_reference_base.h"
+#include "Object/inst/dummy_placeholder.hh"
+#include "Object/expr/const_range_list.hh"
+#include "Object/ref/meta_instance_reference_base.hh"
+#include "Object/ref/nonmeta_instance_reference_base.hh"
 
-#include "common/TODO.h"
-#include "common/ICE.h"
+#include "common/TODO.hh"
+#include "common/ICE.hh"
 
 #include "util/memory/count_ptr.tcc"
 // #include "util/memory/chunk_map_pool.tcc"
 
 #include "util/persistent_object_manager.tcc"
-// #include "util/indent.h"
-#include "util/what.h"
-#include "util/stacktrace.h"
-// #include "util/static_trace.h"
-// #include "util/compose.h"
-// #include "util/binders.h"
-// #include "util/dereference.h"
+// #include "util/indent.hh"
+#include "util/what.hh"
+#include "util/stacktrace.hh"
+// #include "util/static_trace.hh"
+// #include "util/compose.hh"
+// #include "util/binders.hh"
+// #include "util/dereference.hh"
 
 #if ENABLE_STACKTRACE
 #include <iterator>
@@ -51,7 +51,7 @@ namespace HAC {
 namespace entity {
 // using std::string;
 // using std::_Select1st;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 // using util::multikey_generator;
 // USING_UTIL_COMPOSE
 // using util::dereference;

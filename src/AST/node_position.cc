@@ -9,14 +9,14 @@
 #define	DEBUG_CHUNK_MAP_POOL		0
 #define	ENABLE_STACKTRACE		0
 
-#include "util/static_trace.h"
+#include "util/static_trace.hh"
 DEFAULT_STATIC_TRACE_BEGIN
 
 #include <iostream>
-#include "AST/node_position.h"
+#include "AST/node_position.hh"
 #include "util/memory/chunk_map_pool.tcc"
 #include "util/memory/count_ptr.tcc"
-#include "util/what.h"
+#include "util/what.hh"
 
 namespace util {
 	SPECIALIZE_UTIL_WHAT(HAC::parser::node_position, "node_position")

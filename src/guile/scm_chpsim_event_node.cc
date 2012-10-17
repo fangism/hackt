@@ -5,21 +5,21 @@
 
 #define	ENABLE_STACKTRACE			0
 
-#include "sim/chpsim/Event.h"
-#include "sim/chpsim/State.h"
-#include "sim/chpsim/Dependence.h"
-#include "Object/lang/CHP.h"	// for dynamic_cast on actions
-#include "Object/traits/classification_tags_fwd.h"
-#include "Object/expr/expr_dump_context.h"
-#include "guile/scm_chpsim_event_node.h"
-#include "guile/libhackt-wrap.h"
-#include "guile/chpsim-wrap.h"
-#include "Object/module.h"
-#include "guile/hackt-documentation.h"
+#include "sim/chpsim/Event.hh"
+#include "sim/chpsim/State.hh"
+#include "sim/chpsim/Dependence.hh"
+#include "Object/lang/CHP.hh"	// for dynamic_cast on actions
+#include "Object/traits/classification_tags_fwd.hh"
+#include "Object/expr/expr_dump_context.hh"
+#include "guile/scm_chpsim_event_node.hh"
+#include "guile/libhackt-wrap.hh"
+#include "guile/chpsim-wrap.hh"
+#include "Object/module.hh"
+#include "guile/hackt-documentation.hh"
 #include <sstream>
-#include "util/guile_STL.h"
-#include "util/for_all.h"
-#include "util/caller.h"
+#include "util/guile_STL.hh"
+#include "util/for_all.hh"
+#include "util/caller.hh"
 
 namespace HAC {
 namespace guile_wrap {

@@ -10,22 +10,22 @@
 #include <algorithm>
 #include <functional>
 #include <string>
-#include "Object/lang/CHP_event.h"
-#include "Object/lang/CHP_event_alloc.h"	// for EventSuccessorDumper
-#include "common/ICE.h"
-#include "common/TODO.h"
-#include "Object/expr/expr_dump_context.h"
-#include "Object/lang/CHP_base.h"
-#include "sim/chpsim/graph_options.h"
-#include "util/stacktrace.h"
-#include "util/iterator_more.h"
+#include "Object/lang/CHP_event.hh"
+#include "Object/lang/CHP_event_alloc.hh"	// for EventSuccessorDumper
+#include "common/ICE.hh"
+#include "common/TODO.hh"
+#include "Object/expr/expr_dump_context.hh"
+#include "Object/lang/CHP_base.hh"
+#include "sim/chpsim/graph_options.hh"
+#include "util/stacktrace.hh"
+#include "util/iterator_more.hh"
 #include "util/IO_utils.tcc"
 #include "util/persistent_object_manager.tcc"
 
 namespace HAC {
 namespace entity {
 namespace CHP {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using std::ostream_iterator;
 using std::transform;
 using std::back_inserter;

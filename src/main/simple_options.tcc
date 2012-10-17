@@ -7,13 +7,13 @@
 #define	__HAC_MAIN_SIMPLE_OPTIONS_TCC__
 
 #include <iostream>
-#include "main/simple_options.h"
+#include "main/simple_options.hh"
 #include "util/macros.h"
 #include "util/getopt_portable.h"
-#include "util/getopt_mapped.h"		// for unknown_option
+#include "util/getopt_mapped.hh"		// for unknown_option
 
 namespace HAC {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 //=============================================================================
 template <class Opt, class ModMap>
 int

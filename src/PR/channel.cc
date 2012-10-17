@@ -4,16 +4,16 @@
  */
 
 #include <iostream>
-#include "PR/channel.h"
-#include "PR/tile_instance.h"
-#include "PR/placer_options.h"
-#include "util/string.h"
-#include "util/fig/xfig.h"
+#include "PR/channel.hh"
+#include "PR/tile_instance.hh"
+#include "PR/placer_options.hh"
+#include "util/string.hh"
+#include "util/fig/xfig.hh"
 #include "util/IO_utils.tcc"
 
 namespace HAC {
 namespace PR {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using util::strings::string_to_num;
 using util::write_value;
 using util::read_value;

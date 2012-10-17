@@ -5,13 +5,13 @@
 
 #include <iostream>
 #include <iterator>
-#include "Object/nonmeta_variable.h"
-#include "Object/nonmeta_channel_manipulator.h"
-#include "Object/def/fundamental_channel_footprint.h"
-#include "Object/type/canonical_fundamental_chan_type.h"
-#include "Object/type/canonical_generic_datatype.h"
+#include "Object/nonmeta_variable.hh"
+#include "Object/nonmeta_channel_manipulator.hh"
+#include "Object/def/fundamental_channel_footprint.hh"
+#include "Object/type/canonical_fundamental_chan_type.hh"
+#include "Object/type/canonical_generic_datatype.hh"
 #include "util/IO_utils.tcc"
-#include "util/STL/valarray_iterator.h"
+#include "util/STL/valarray_iterator.hh"
 
 namespace HAC {
 namespace entity {

@@ -4,7 +4,7 @@
  */
 
 #include <iostream>
-#include "AST/parse_options.h"
+#include "AST/parse_options.hh"
 #include "util/IO_utils.tcc"
 
 namespace HAC {

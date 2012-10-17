@@ -13,15 +13,15 @@
 #include <iostream>
 
 #include "parser/yacc-config.h"
-#include "AST/AST.h"
-#include "parser/instref-prefix.h"
-#include "util/using_ostream.h"
-#include "parser/instref-union.h"
+#include "AST/AST.hh"
+#include "parser/instref-prefix.hh"
+#include "util/using_ostream.hh"
+#include "parser/instref-union.hh"
 #include "parser/instref-parse-options.h"
 #include "parser/instref-parse.output.h"
 #include "lexer/instref-lex-options.h"
-#include "lexer/flex_lexer_state.h"
-#include "util/stacktrace.h"
+#include "lexer/flex_lexer_state.hh"
+#include "util/stacktrace.hh"
 
 // extern FILE* yyin;
 
@@ -34,7 +34,7 @@ using namespace HAC::lexer;
 using namespace HAC::parser;
 
 /***
-// list macros (now inline functions in "AST/node_list.h")
+// list macros (now inline functions in "AST/node_list.hh")
 WRAP_LIST
 DELETE_TOKEN
 APPEND_LIST

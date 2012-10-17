@@ -8,25 +8,25 @@
 #include <iostream>
 #include <sstream>
 #include <iterator>
-#include "Object/hierarchical_alias_visitor.h"
-#include "Object/def/footprint.h"
-#include "Object/global_entry.h"
-#include "Object/global_channel_entry.h"
-#include "Object/inst/port_alias_tracker.h"
-#include "Object/inst/alias_actuals.h"
-#include "Object/inst/alias_empty.h"
-#include "Object/inst/instance_alias_info.h"
-#include "Object/inst/state_instance.h"
-#include "Object/inst/instance_pool.h"
-#include "Object/traits/instance_traits.h"
-#include "Object/common/dump_flags.h"
-#include "util/value_saver.h"
-#include "util/stack_saver.h"
-#include "util/stacktrace.h"
+#include "Object/hierarchical_alias_visitor.hh"
+#include "Object/def/footprint.hh"
+#include "Object/global_entry.hh"
+#include "Object/global_channel_entry.hh"
+#include "Object/inst/port_alias_tracker.hh"
+#include "Object/inst/alias_actuals.hh"
+#include "Object/inst/alias_empty.hh"
+#include "Object/inst/instance_alias_info.hh"
+#include "Object/inst/state_instance.hh"
+#include "Object/inst/instance_pool.hh"
+#include "Object/traits/instance_traits.hh"
+#include "Object/common/dump_flags.hh"
+#include "util/value_saver.hh"
+#include "util/stack_saver.hh"
+#include "util/stacktrace.hh"
 
 namespace HAC {
 namespace entity {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using std::ostream_iterator;
 using std::ostringstream;
 using util::value_saver;

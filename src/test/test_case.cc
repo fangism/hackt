@@ -9,8 +9,8 @@
 #include <cstdio>
 #include <iostream>
 #include <vector>
-#include "sim/prsim/Event-prsim.h"
-#include "util/stacktrace.h"
+#include "sim/prsim/Event-prsim.hh"
+#include "util/stacktrace.hh"
 
 using std::vector;
 using std::endl;

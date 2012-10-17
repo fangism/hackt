@@ -16,48 +16,48 @@
 #include <algorithm>
 #include <functional>
 
-#include "AST/PRS.h"
-#include "AST/reference.h"	// for id_expr
-#include "AST/expr_list.h"	// for attributes
-#include "AST/attribute.h"
-#include "AST/range.h"
-#include "AST/range_list.h"
-#include "AST/token.h"
-#include "AST/token_char.h"
-#include "AST/token_string.h"
+#include "AST/PRS.hh"
+#include "AST/reference.hh"	// for id_expr
+#include "AST/expr_list.hh"	// for attributes
+#include "AST/attribute.hh"
+#include "AST/range.hh"
+#include "AST/range_list.hh"
+#include "AST/token.hh"
+#include "AST/token_char.hh"
+#include "AST/token_string.hh"
 #include "AST/node_list.tcc"
-#include "AST/parse_context.h"
+#include "AST/parse_context.hh"
 
-#include "Object/def/process_definition.h"
-#include "Object/expr/pint_const.h"
-#include "Object/expr/pbool_expr.h"
-#include "Object/expr/param_expr.h"
-#include "Object/expr/dynamic_param_expr_list.h"
-#include "Object/expr/data_expr.h"
-#include "Object/expr/pstring_expr.h"
-#include "Object/expr/meta_range_expr.h"
-#include "Object/expr/meta_index_list.h"
-#include "Object/lang/PRS.h"
-#include "Object/lang/PRS_attribute_registry.h"
-#include "Object/lang/PRS_literal_attribute_registry.h"
-#include "Object/lang/PRS_macro_registry.h"
-#include "Object/inst/pint_value_collection.h"
-#include "Object/traits/bool_traits.h"
-#include "Object/ref/meta_instance_reference_base.h"
-#include "Object/ref/meta_instance_reference_subtypes.h" // for conversion
-#include "Object/ref/nonmeta_instance_reference_subtypes.h"
-#include "Object/ref/simple_meta_instance_reference.h"	// for conversion
-#include "Object/ref/meta_reference_union.h"
-#include "Object/module.h"
-#include "Object/ref/simple_meta_dummy_reference.h"
-#include "Object/ref/references_fwd.h"
-#include "Object/traits/node_traits.h"
+#include "Object/def/process_definition.hh"
+#include "Object/expr/pint_const.hh"
+#include "Object/expr/pbool_expr.hh"
+#include "Object/expr/param_expr.hh"
+#include "Object/expr/dynamic_param_expr_list.hh"
+#include "Object/expr/data_expr.hh"
+#include "Object/expr/pstring_expr.hh"
+#include "Object/expr/meta_range_expr.hh"
+#include "Object/expr/meta_index_list.hh"
+#include "Object/lang/PRS.hh"
+#include "Object/lang/PRS_attribute_registry.hh"
+#include "Object/lang/PRS_literal_attribute_registry.hh"
+#include "Object/lang/PRS_macro_registry.hh"
+#include "Object/inst/pint_value_collection.hh"
+#include "Object/traits/bool_traits.hh"
+#include "Object/ref/meta_instance_reference_base.hh"
+#include "Object/ref/meta_instance_reference_subtypes.hh" // for conversion
+#include "Object/ref/nonmeta_instance_reference_subtypes.hh"
+#include "Object/ref/simple_meta_instance_reference.hh"	// for conversion
+#include "Object/ref/meta_reference_union.hh"
+#include "Object/module.hh"
+#include "Object/ref/simple_meta_dummy_reference.hh"
+#include "Object/ref/references_fwd.hh"
+#include "Object/traits/node_traits.hh"
 
-#include "common/ICE.h"
-#include "common/TODO.h"
+#include "common/ICE.hh"
+#include "common/TODO.hh"
 
-#include "util/what.h"
-#include "util/stacktrace.h"
+#include "util/what.hh"
+#include "util/stacktrace.hh"
 #include "util/memory/count_ptr.tcc"
 
 #define	CONSTRUCTOR_INLINE
@@ -86,7 +86,7 @@ namespace HAC {
 namespace parser {
 namespace PRS {
 using std::back_inserter;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using entity::definition_base;
 using entity::process_definition;
 using entity::pint_scalar;

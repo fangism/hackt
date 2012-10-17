@@ -3,11 +3,11 @@
 	$Id: global_channel_entry.cc,v 1.4 2010/04/07 00:12:27 fang Exp $
  */
 
-#include "Object/global_channel_entry.h"
+#include "Object/global_channel_entry.hh"
 #if BUILTIN_CHANNEL_FOOTPRINTS
-#include "Object/global_entry_dumper.h"
+#include "Object/global_entry_dumper.hh"
 // #include "Object/global_entry.tcc"	// for substructure dump
-#include "Object/type/canonical_fundamental_chan_type.h"
+#include "Object/type/canonical_fundamental_chan_type.hh"
 #include "util/memory/count_ptr.tcc"
 #include "util/persistent_object_manager.tcc"
 

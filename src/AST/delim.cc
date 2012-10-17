@@ -10,7 +10,7 @@
 
 #define	ENABLE_STACKTRACE		0
 
-#include "AST/delim.h"
+#include "AST/delim.hh"
 
 //=============================================================================
 namespace HAC {

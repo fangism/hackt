@@ -7,7 +7,7 @@
 #ifndef	__UTIL_MEMORY_CHUNK_MAP_POOL_TCC__
 #define	__UTIL_MEMORY_CHUNK_MAP_POOL_TCC__
 
-#include "util/memory/chunk_map_pool.h"
+#include "util/memory/chunk_map_pool.hh"
 
 #ifndef	EXTERN_TEMPLATE_UTIL_MEMORY_CHUNK_MAP_POOL
 
@@ -27,12 +27,12 @@
 #include "util/memory/destruction_policy.tcc"
 #include "util/what.tcc"
 #if DEBUG_CHUNK_MAP_POOL
-#include "util/stacktrace.h"
+#include "util/stacktrace.hh"
 #endif
 
 namespace util {
 namespace memory {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 #if DEBUG_CHUNK_MAP_POOL
 REQUIRES_STACKTRACE_STATIC_INIT	

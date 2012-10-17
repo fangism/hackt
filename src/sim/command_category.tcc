@@ -7,13 +7,13 @@
 #define	__HAC_SIM_COMMAND_CATEGORY_TCC__
 
 #include <iostream>
-#include "sim/command_category.h"
-#include "sim/command_registry.h"
-#include "util/stacktrace.h"
+#include "sim/command_category.hh"
+#include "sim/command_registry.hh"
+#include "util/stacktrace.hh"
 
 namespace HAC {
 namespace SIM {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 REQUIRES_STACKTRACE_STATIC_INIT
 

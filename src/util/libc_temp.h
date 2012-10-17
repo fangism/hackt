@@ -25,8 +25,8 @@
 #endif
 
 BEGIN_C_DECLS
-//=============================================================================
-// reminder: else clauses if we want to provide our own workaround-wrapper
+/*===========================================================================*/
+/* reminder: else clauses if we want to provide our own workaround-wrapper */
 #if	defined(HAVE_TMPFILE)
 #else
 extern	FILE*	tmpfile(void);
@@ -62,8 +62,8 @@ extern	int	mkstemps(char* tmplate, int suffixlen);
 extern	char*	mkdtemp(char* tmplate);
 #endif
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// derived macros -- for this project
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
+/* derived macros -- for this project */
 
 /**
 	Irritating: I really want an fstream, but mkstemp only gives
@@ -80,8 +80,8 @@ extern	char*	mkdtemp(char* tmplate);
 #error	"Your system lacks both mkstemp and tmpnam, but I need one of them!"
 #endif
 
-//=============================================================================
+/*===========================================================================*/
 END_C_DECLS
 
-#endif	// __UTIL_LIBC_TEMP_H__
+#endif	/* __UTIL_LIBC_TEMP_H__ */
 

@@ -17,10 +17,10 @@
 #include <unistd.h>
 #endif
 // assuming these are present
-#include <stdio.h>
-#include <stdlib.h>
-#include "util/memory/excl_ptr.h"
-#include "util/memory/deallocation_policy.h"
+#include <cstdio>
+#include <cstdlib>
+#include "util/memory/excl_ptr.hh"
+#include "util/memory/deallocation_policy.hh"
 
 using util::memory::excl_ptr;
 using util::memory::FILE_tag;

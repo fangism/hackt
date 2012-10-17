@@ -7,13 +7,13 @@
 #define	__UTIL_GETOPT_MAPPED_TCC__
 
 #include <iostream>
-#include "util/getopt_mapped.h"
+#include "util/getopt_mapped.hh"
 #include "util/getopt_portable.h"
 #include "util/macros.h"
 
 namespace util {
 using std::string;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 //=============================================================================
 #if 0

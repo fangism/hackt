@@ -8,14 +8,14 @@
  */
 
 #include <iostream>
-#include "common/config.h"
-#include "main/objdump.h"
-#include "main/program_registry.h"
-#include "main/main_funcs.h"
-#include "main/global_options.h"
-#include "Object/type/process_type_reference.h"
-#include "util/getopt_mapped.h"
-#include "util/using_ostream.h"
+#include "common/config.hh"
+#include "main/objdump.hh"
+#include "main/program_registry.hh"
+#include "main/main_funcs.hh"
+#include "main/global_options.hh"
+#include "Object/type/process_type_reference.hh"
+#include "util/getopt_mapped.hh"
+#include "util/using_ostream.hh"
 
 namespace HAC {
 //=============================================================================

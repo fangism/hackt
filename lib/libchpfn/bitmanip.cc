@@ -3,9 +3,9 @@
 	$Id: bitmanip.cc,v 1.1 2007/08/29 04:45:41 fang Exp $
  */
 
-#include "libchpfn/bitmanip.h"
-#include "util/bitmanip.h"
-#include "util/numeric/sign_traits.h"
+#include "libchpfn/bitmanip.hh"
+#include "util/bitmanip.hh"
+#include "util/numeric/sign_traits.hh"
 
 namespace HAC {
 namespace CHP {

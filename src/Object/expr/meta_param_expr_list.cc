@@ -13,25 +13,25 @@
 
 //=============================================================================
 // start of static initializations
-#include "util/static_trace.h"
+#include "util/static_trace.hh"
 DEFAULT_STATIC_TRACE_BEGIN
 
 #include <algorithm>
 #include <iterator>
 
-#include "Object/expr/dynamic_param_expr_list.h"
-#include "Object/expr/const_param_expr_list.h"
-#include "Object/expr/param_expr.h"
-#include "Object/expr/const_param.h"
-#include "Object/expr/expr_dump_context.h"
-#include "Object/expr/expr_visitor.h"
-#include "Object/inst/value_placeholder.h"
-#include "Object/common/dump_flags.h"
-#include "Object/persistent_type_hash.h"
-#include "common/ICE.h"
+#include "Object/expr/dynamic_param_expr_list.hh"
+#include "Object/expr/const_param_expr_list.hh"
+#include "Object/expr/param_expr.hh"
+#include "Object/expr/const_param.hh"
+#include "Object/expr/expr_dump_context.hh"
+#include "Object/expr/expr_visitor.hh"
+#include "Object/inst/value_placeholder.hh"
+#include "Object/common/dump_flags.hh"
+#include "Object/persistent_type_hash.hh"
+#include "common/ICE.hh"
 
-#include "util/reserve.h"
-#include "util/stacktrace.h"
+#include "util/reserve.hh"
+#include "util/stacktrace.hh"
 #include "util/persistent_object_manager.tcc"
 #include "util/memory/count_ptr.tcc"
 
@@ -66,7 +66,7 @@ template class count_ptr<const HAC::entity::dynamic_param_expr_list>;
 //=============================================================================
 namespace HAC {
 namespace entity {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using std::distance;
 using util::persistent_traits;
 using util::write_value;

@@ -27,31 +27,31 @@
 #include <iostream>
 #include <algorithm>
 
-#include "Object/type/fundamental_type_reference.h"
-#include "Object/unroll/instantiation_statement.h"
-#include "Object/unroll/unroll_context.h"
-#include "Object/expr/dynamic_param_expr_list.h"
-#include "Object/expr/meta_range_list.h"
-#include "Object/expr/const_range_list.h"
-#include "Object/def/footprint.h"
-#include "Object/inst/instance_collection.h"
-#include "Object/common/dump_flags.h"
-#include "Object/inst/instance_placeholder.h"
-#include "Object/inst/value_placeholder.h"
+#include "Object/type/fundamental_type_reference.hh"
+#include "Object/unroll/instantiation_statement.hh"
+#include "Object/unroll/unroll_context.hh"
+#include "Object/expr/dynamic_param_expr_list.hh"
+#include "Object/expr/meta_range_list.hh"
+#include "Object/expr/const_range_list.hh"
+#include "Object/def/footprint.hh"
+#include "Object/inst/instance_collection.hh"
+#include "Object/common/dump_flags.hh"
+#include "Object/inst/instance_placeholder.hh"
+#include "Object/inst/value_placeholder.hh"
 
-#include "common/ICE.h"
+#include "common/ICE.hh"
 
 #include "util/what.tcc"
 #include "util/memory/list_vector_pool.tcc"
 #include "util/memory/count_ptr.tcc"
 #include "util/persistent_object_manager.tcc"
-#include "util/stacktrace.h"
+#include "util/stacktrace.hh"
 
 //=============================================================================
 namespace HAC {
 namespace entity {
 class const_param_expr_list;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using util::persistent_traits;
 #if DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE
 REQUIRES_STACKTRACE_STATIC_INIT

@@ -9,7 +9,7 @@
 #define	__UTIL_UTYPES_H__
 
 #include "config.h"
-// #include "util/inttypes.h"
+/* #include "util/inttypes.h" */
 
 #ifdef	HAVE_SYS_TYPES_H
 #include <sys/types.h>

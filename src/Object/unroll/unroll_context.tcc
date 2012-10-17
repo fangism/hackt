@@ -7,8 +7,8 @@
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_TCC__
 #define	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_TCC__
 
-#include "Object/unroll/unroll_context.h"
-#include "Object/def/template_formals_manager.h"
+#include "Object/unroll/unroll_context.hh"
+#include "Object/def/template_formals_manager.hh"
 
 namespace HAC {
 namespace entity {

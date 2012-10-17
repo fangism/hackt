@@ -7,14 +7,14 @@
 #define	__HAC_OBJECT_LANG_GENERIC_ATTRIBUTE_TCC__
 
 #include <iostream>
-#include "Object/lang/generic_attribute.h"
-#include "Object/expr/const_param_expr_list.h"
+#include "Object/lang/generic_attribute.hh"
+#include "Object/expr/const_param_expr_list.hh"
 #include "util/memory/count_ptr.tcc"
-#include "util/stacktrace.h"
+#include "util/stacktrace.hh"
 
 namespace HAC {
 namespace entity {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 //=============================================================================
 

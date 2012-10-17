@@ -11,27 +11,27 @@
 
 #include <iostream>
 
-#include "Object/common/namespace.h"
-#include "Object/type/param_type_reference.h"
-#include "Object/inst/param_value_collection.h"
-#include "Object/ref/meta_instance_reference_base.h"
-#include "Object/unroll/instantiation_statement_base.h"
-#include "Object/inst/param_value_placeholder.h"
-#include "Object/expr/const_param.h"
-#include "Object/expr/const_range.h"
-#include "Object/expr/const_index_list.h"
-#include "Object/expr/const_range_list.h"
-#include "Object/expr/expr_dump_context.h"
+#include "Object/common/namespace.hh"
+#include "Object/type/param_type_reference.hh"
+#include "Object/inst/param_value_collection.hh"
+#include "Object/ref/meta_instance_reference_base.hh"
+#include "Object/unroll/instantiation_statement_base.hh"
+#include "Object/inst/param_value_placeholder.hh"
+#include "Object/expr/const_param.hh"
+#include "Object/expr/const_range.hh"
+#include "Object/expr/const_index_list.hh"
+#include "Object/expr/const_range_list.hh"
+#include "Object/expr/expr_dump_context.hh"
 
-#include "common/ICE.h"
-#include "util/indent.h"
-#include "util/stacktrace.h"
+#include "common/ICE.hh"
+#include "util/indent.hh"
+#include "util/stacktrace.hh"
 #include "util/memory/count_ptr.tcc"
 
 //=============================================================================
 namespace HAC {
 namespace entity {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using util::indent;
 using util::auto_indent;
 using util::disable_indent;

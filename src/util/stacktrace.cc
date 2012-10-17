@@ -8,7 +8,7 @@
 #define	ENABLE_STACKTRACE	1
 // #define	ENABLE_STATIC_TRACE	1
 
-#include "util/static_trace.h"
+#include "util/static_trace.hh"
 DEFAULT_STATIC_TRACE_BEGIN
 
 #include "config.h"
@@ -21,7 +21,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include <list>
 
 #include "util/memory/count_ptr.tcc"
-#include "util/stacktrace.h"
+#include "util/stacktrace.hh"
 #include "util/likely.h"
 #include "util/qmap.tcc"
 
@@ -31,7 +31,7 @@ using std::ostream;
 // using util::qmap;
 using std::stack;
 using std::ostream_iterator;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using memory::raw_count_ptr;
 
 // macro to guarantee proper orderly initialization

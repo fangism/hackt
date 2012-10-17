@@ -9,7 +9,7 @@
 
 #include <iostream>
 
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 class bar {
 public:

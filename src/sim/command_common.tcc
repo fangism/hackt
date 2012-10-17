@@ -15,19 +15,19 @@
 #include <algorithm>
 #include <functional>
 
-#include "sim/command_common.h"
-#include "sim/command_base.h"
-#include "sim/command_category.h"
-#include "sim/command_registry.h"
-#include "sim/trace_common.h"		// for trace_manager_base
-#include "parser/instref.h"
-#include "Object/expr/dlfunction.h"
-#include "common/TODO.h"
-#include "util/compose.h"
+#include "sim/command_common.hh"
+#include "sim/command_base.hh"
+#include "sim/command_category.hh"
+#include "sim/command_registry.hh"
+#include "sim/trace_common.hh"		// for trace_manager_base
+#include "parser/instref.hh"
+#include "Object/expr/dlfunction.hh"
+#include "common/TODO.hh"
+#include "util/compose.hh"
 #include "util/string.tcc"
 #include "util/utypes.h"
-#include "util/timer.h"
-#include "util/stacktrace.h"
+#include "util/timer.hh"
+#include "util/stacktrace.hh"
 
 namespace HAC {
 namespace SIM {
@@ -37,7 +37,7 @@ using std::for_each;
 using std::ptr_fun;
 using std::mem_fun_ref;
 using util::strings::string_to_num;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 USING_UTIL_COMPOSE
 
 //=============================================================================

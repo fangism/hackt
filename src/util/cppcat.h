@@ -56,5 +56,5 @@
 #define	CPP_EMPTY
 
 
-#endif	// __UTIL_CPPCAT_H__
+#endif	/* __UTIL_CPPCAT_H__ */
 

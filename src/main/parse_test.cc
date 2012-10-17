@@ -10,17 +10,17 @@
  */
 
 #include <iostream>
-#include "main/parse_test.h"
-#include "main/program_registry.h"
-#include "main/main_funcs.h"
-#include "main/compile.h"
-#include "main/compile_options.h"
+#include "main/parse_test.hh"
+#include "main/program_registry.hh"
+#include "main/main_funcs.hh"
+#include "main/compile.hh"
+#include "main/compile_options.hh"
 #include "util/getopt_portable.h"
 
 #define ENABLE_STACKTRACE		0
 
-#include "util/using_ostream.h"
-#include "util/stacktrace.h"
+#include "util/using_ostream.hh"
+#include "util/stacktrace.hh"
 
 extern HAC::lexer::file_manager
 hackt_parse_file_manager;

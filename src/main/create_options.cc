@@ -4,13 +4,13 @@
  */
 
 #include <iostream>
-#include "main/create_options.h"
+#include "main/create_options.hh"
 #include "util/IO_utils.tcc"
 
 namespace HAC {
 using util::write_value;
 using util::read_value;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 //=============================================================================
 // global variable

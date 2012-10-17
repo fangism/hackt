@@ -13,7 +13,7 @@
 #define	__UTIL_MACROS_H__
 
 #if defined(BUILT_HACKT) || defined(INSTALLED_HACKT)
-// so that installed headers do not depend on "config.h"
+/* so that installed headers do not depend on "config.h" */
 #ifndef	NULL
 #define	NULL		0
 #endif
@@ -23,20 +23,20 @@
 #include <assert.h>
 #endif
 
-#else	// !BUILT_HACKT && !INSTALLED_HACKT
+#else	/* !BUILT_HACKT && !INSTALLED_HACKT */
 #include "config.h"
 #include "util/NULL.h"
 
 #if defined(__cplusplus) && defined(HAVE_CASSERT) && HAVE_CASSERT
-// C++ wrapped header
+/* C++ wrapped header */
 #include <cassert>
 #else
-// standard C header
+/* standard C header */
 #include <assert.h>
 #endif
-#endif	// !BUILT_HACKT && !INSTALLED_HACKT
+#endif	/* !BUILT_HACKT && !INSTALLED_HACKT */
 
-//=============================================================================
+/*===========================================================================*/
 /**
 	This is needed because some preprocessors error on empty arguments.  
 	Pass EMPTY_ARG when 'nothing' is passed as a macro argument.  
@@ -47,7 +47,7 @@
 #define	EMPTY_ARG
 #endif
 
-//=============================================================================
+/*===========================================================================*/
 /**
 	Checks for NULL before deleting. 
 	Then NULLs out pointer (optional).  
@@ -60,10 +60,12 @@
  */
 #define	SAFEDELETE(x)	{ if (x) delete x; x = NULL; }
 
-//=============================================================================
-// type-cast and type checks...
-// is there a way to use typeid() to infer type (even statically)
-// to make dynamic_casts more convenient?
+/*===========================================================================*/
+/**
+type-cast and type checks...
+is there a way to use typeid() to infer type (even statically)
+to make dynamic_casts more convenient?
+**/
 
 /**
 	Abbreviation for dynamic_cast.  
@@ -71,7 +73,7 @@
  */
 #define	IS_A(type, id)		dynamic_cast<type>(id)
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 #ifdef	DISABLE_INVARIANT
 #define	MUST_BE_A(type, id)
 #else
@@ -82,15 +84,14 @@
 #define	MUST_BE_A(type, id)	assert(IS_A(type,id))
 #endif
 
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 /**
 	Abbreviation for static_cast.  
 	type argument must be pointer or reference, of course.  
  */
 #define	AS_A(type, id)		static_cast<type>(id)
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 /**
 	Abbreviation for reinterpret_cast.
 	Please minimize use of reinterpret_cast,
@@ -98,7 +99,7 @@
  */
 #define	TO_A(type, id)		reinterpret_cast<type>(id)
 
-//=============================================================================
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 /**
 	A seemingly useless macro, resulting in a blank.  
 	This is used for situations where the compiler
@@ -109,8 +110,8 @@
  */
 #define	UNNAMED(x)
 
-//=============================================================================
-// various assertions, debug statements...
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
+/* various assertions, debug statements... */
 #ifdef	DISABLE_INVARIANT
 /**
 	Invariant assertions.  Really only intended for assertions.  
@@ -122,10 +123,12 @@
 #define	INVARIANT(x)		assert(x)
 #endif
 
-// of course invariant-checks may also come as expensive operations, 
-// those we leave to specific instances.  
+/**
+of course invariant-checks may also come as expensive operations, 
+those we leave to specific instances.  
+**/
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 #ifdef	DISABLE_NULL_CHECK
 #define	NEVER_NULL(x)
 #define	MUST_BE_NULL(x)
@@ -134,7 +137,7 @@
 #define	MUST_BE_NULL(x)		assert(!(x))
 #endif
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 #ifdef	DISABLE_BOUNDS_CHECK
 /**
 	Assertion macro specifically for bounds-checking.  
@@ -146,7 +149,7 @@
 #define	BOUNDS_CHECK(x)		assert(x)
 #endif
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 /**
 	Reserved for code that is never supposed to be called, but needs
 	to exist to satisfy some requirement.  
@@ -154,8 +157,8 @@
  */
 #define	DIE			assert(0)
 
-//=============================================================================
-// exception throwing...
+/*===========================================================================*/
+/* exception throwing... */
 
 /**
 	A replacement for exit(1).  
@@ -165,8 +168,8 @@
  */
 #define	THROW_EXIT		throw std::exception()
 
-//=============================================================================
-// error reporting...
+/*===========================================================================*/
+/* error reporting... */
 
-#endif	// __UTIL_MACROS_H__
+#endif	/* __UTIL_MACROS_H__ */
 

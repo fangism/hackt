@@ -7,10 +7,10 @@
 #ifndef	__UTIL_CONST_ASSOC_QUERY_TCC__
 #define	__UTIL_CONST_ASSOC_QUERY_TCC__
 
-#include "util/STL/functional.h"	// in case _Select is missing
-#include "util/const_assoc_query.h"
-#include "util/assoc_traits.h"		// contains STL specializations
-#include "util/null_construct.h"
+#include "util/STL/functional.hh"	// in case _Select is missing
+#include "util/const_assoc_query.hh"
+#include "util/assoc_traits.hh"		// contains STL specializations
+#include "util/null_construct.hh"
 
 namespace util {
 //=============================================================================

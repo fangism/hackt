@@ -5,7 +5,7 @@
  */
 
 #include <ostream>
-#include "common/ICE.h"
+#include "common/ICE.hh"
 #include "config.h"
 #include "util/attributes.h"
 #include "cvstag.h"	// generated

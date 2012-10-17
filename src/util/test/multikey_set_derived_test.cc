@@ -11,12 +11,12 @@
 
 #include <string>
 #include <iostream>
-// #include "maplikeset.h"
+// #include "maplikeset.hh"
 #include "util/multikey_set.tcc"
-#include "util/sstream.h"
+#include "util/sstream.hh"
 #include <set>
 
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 using std::string;
 using util::multikey;

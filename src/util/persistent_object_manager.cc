@@ -11,18 +11,18 @@
 #include <fstream>
 
 #include "config.h"		// for ENABLE_OBJECT_ALIGN_CHECKING
-#include "util/hash_specializations.h"	// include this first
+#include "util/hash_specializations.hh"	// include this first
 	// for hash specialization to take effect
 #include "util/new_functor.tcc"
 #include "util/list_vector.tcc"
 #include "util/persistent_object_manager.tcc"	// for read_pointer
 #include "util/memory/chunk_map_pool.tcc"
 #include "util/memory/count_ptr.tcc"
-#include "util/memory/excl_array_ptr.h"
+#include "util/memory/excl_array_ptr.hh"
 #include "util/macros.h"
 #include "util/IO_utils.tcc"
-#include "util/sstream.h"
-#include "util/stacktrace.h"
+#include "util/sstream.hh"
+#include "util/stacktrace.hh"
 #include "util/attributes.h"
 
 //=============================================================================
@@ -113,7 +113,7 @@
 //=============================================================================
 
 namespace util {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using std::ios_base;
 using std::stringstream;
 using std::stringbuf;

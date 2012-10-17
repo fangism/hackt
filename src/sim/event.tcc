@@ -7,7 +7,7 @@
 #ifndef	__HAC_SIM_EVENT_TCC__
 #define	__HAC_SIM_EVENT_TCC__
 
-#include "sim/event.h"
+#include "sim/event.hh"
 #if MULTIMAP_EVENT_QUEUE
 #include <iterator>
 #include <functional>

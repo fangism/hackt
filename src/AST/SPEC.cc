@@ -9,25 +9,25 @@
 #include <vector>
 #include <iterator>
 
-#include "AST/SPEC.h"
+#include "AST/SPEC.hh"
 #include "AST/node_list.tcc"
-#include "AST/token_string.h"
-#include "AST/expr_list.h"
-#include "AST/parse_context.h"
+#include "AST/token_string.hh"
+#include "AST/expr_list.hh"
+#include "AST/parse_context.hh"
 
-#include "Object/def/process_definition.h"
-#include "Object/def/user_def_chan.h"
-#include "Object/ref/simple_meta_instance_reference.h"
-#include "Object/ref/meta_instance_reference_subtypes.h"
-#include "Object/traits/bool_traits.h"
-#include "Object/expr/param_expr.h"
-#include "Object/module.h"
-#include "Object/lang/SPEC.h"
-#include "Object/lang/SPEC_registry.h"
-#include "Object/lang/PRS.h"	// for PRS::literal
-#include "common/TODO.h"
+#include "Object/def/process_definition.hh"
+#include "Object/def/user_def_chan.hh"
+#include "Object/ref/simple_meta_instance_reference.hh"
+#include "Object/ref/meta_instance_reference_subtypes.hh"
+#include "Object/traits/bool_traits.hh"
+#include "Object/expr/param_expr.hh"
+#include "Object/module.hh"
+#include "Object/lang/SPEC.hh"
+#include "Object/lang/SPEC_registry.hh"
+#include "Object/lang/PRS.hh"	// for PRS::literal
+#include "common/TODO.hh"
 #include "util/memory/count_ptr.tcc"
-#include "util/stacktrace.h"
+#include "util/stacktrace.hh"
 
 namespace util {
 namespace memory {
@@ -40,7 +40,7 @@ template class count_ptr<const directive_base>;
 namespace HAC {
 namespace parser {
 namespace SPEC {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using std::find;
 using std::copy;
 using std::back_inserter;

@@ -6,14 +6,14 @@
 
 #include <iostream>
 #include "config.h"
-#include "main/hackt.h"
-#include "main/program_registry.h"
-#include "main/force_load.h"
+#include "main/hackt.hh"
+#include "main/program_registry.hh"
+#include "main/force_load.hh"
 #include "util/getopt_portable.h"
 #include "util/qmap.tcc"
 
 namespace HAC {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 //=============================================================================
 const char

@@ -8,29 +8,29 @@
 
 #include <iostream>
 #include <sstream>
-#include "Object/def/footprint.h"
-#include "Object/inst/connection_policy.h"
-#include "Object/inst/instance_collection.h"
-#include "Object/inst/instance_alias_info.h"
-#include "Object/type/channel_direction_enum.h"	// for direction enum
-#include "Object/unroll/unroll_context.h"
-#include "Object/type/canonical_type.h"
+#include "Object/def/footprint.hh"
+#include "Object/inst/connection_policy.hh"
+#include "Object/inst/instance_collection.hh"
+#include "Object/inst/instance_alias_info.hh"
+#include "Object/type/channel_direction_enum.hh"	// for direction enum
+#include "Object/unroll/unroll_context.hh"
+#include "Object/type/canonical_type.hh"
 #if BOOL_CONNECTIVITY_CHECKING
-#include "Object/type/data_type_reference.h"
+#include "Object/type/data_type_reference.hh"
 #endif
 #if	defined(ENABLE_STACKTRACE) && ENABLE_STACKTRACE
-#include "Object/type/channel_type_reference_base.h"
+#include "Object/type/channel_type_reference_base.hh"
 #endif
-#include "Object/common/dump_flags.h"		// debug only
-#include "common/ICE.h"
+#include "Object/common/dump_flags.hh"		// debug only
+#include "common/ICE.hh"
 
-#include "util/stacktrace.h"
+#include "util/stacktrace.hh"
 #include "util/macros.h"
-#include "util/memory/excl_ptr.h"
+#include "util/memory/excl_ptr.hh"
 
 namespace HAC {
 namespace entity {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 //=============================================================================
 // class bool_connect_policy method definitions
 

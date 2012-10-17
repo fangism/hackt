@@ -6,15 +6,15 @@
  */
 
 #include <iostream>
-#include "main/dump_persistent_table.h"
-#include "main/program_registry.h"
-#include "util/persistent_object_manager.h"
+#include "main/dump_persistent_table.hh"
+#include "main/program_registry.hh"
+#include "util/persistent_object_manager.hh"
 #include "util/what.tcc"	// use default typeinfo-based mangled names
-#include "Object/module.h"
+#include "Object/module.hh"
 
-#include "common/sizes-common.h"
-#include "AST/sizes-AST.h"
-#include "Object/sizes-entity.h"
+#include "common/sizes-common.hh"
+#include "AST/sizes-AST.hh"
+#include "Object/sizes-entity.hh"
 
 namespace HAC {
 using std::ostream;

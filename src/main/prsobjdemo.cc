@@ -9,16 +9,16 @@
 #include <list>
 #include <cstring>
 
-// this needs to be first because it includes "util/hash_specializations.h"
+// this needs to be first because it includes "util/hash_specializations.hh"
 #include "Object/module.tcc"	// for template method definitions
-#include "main/prsobjdemo.h"
-#include "main/program_registry.h"
-#include "main/main_funcs.h"
-#include "Object/def/process_definition.h"
+#include "main/prsobjdemo.hh"
+#include "main/program_registry.hh"
+#include "main/main_funcs.hh"
+#include "Object/def/process_definition.hh"
 
 // using declarations
 namespace HAC {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using std::list;
 using util::memory::never_ptr;		// never-delete pointer
 using entity::process_definition;
