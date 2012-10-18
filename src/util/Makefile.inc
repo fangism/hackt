@@ -360,7 +360,7 @@ util/libguile.hhchk: util/libguile.hh
 	@$(LIBGUILE_HHCHK_TEST_SCRIPT)
 
 util/guile_gh.hchk: util/guile_gh.h
-	@$(LIBGUILE_HCHK_TEST_SCRIPT)
+	@$(LIBGUILE_HHCHK_TEST_SCRIPT)
 
 util/guile_STL.hhchk: util/guile_STL.hh
 	@$(LIBGUILE_HHCHK_TEST_SCRIPT)
