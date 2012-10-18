@@ -12,34 +12,34 @@
 #include <sstream>
 
 #include "Object/inst/port_alias_tracker.tcc"
-#include "Object/inst/alias_actuals.h"
-#include "Object/inst/alias_empty.h"
-#include "Object/global_channel_entry.h"
-#include "Object/inst/connection_policy.h"
-#include "Object/inst/substructure_alias_base.h"
-#include "Object/inst/instance_pool.h"
-#include "Object/inst/state_instance.h"
-#include "Object/common/dump_flags.h"
-#include "Object/def/footprint.h"
-#include "Object/traits/proc_traits.h"
-#include "Object/traits/chan_traits.h"
-#include "Object/traits/struct_traits.h"
-#include "Object/traits/enum_traits.h"
-#include "Object/traits/int_traits.h"
-#include "Object/traits/bool_traits.h"
-#include "main/create_options.h"
+#include "Object/inst/alias_actuals.hh"
+#include "Object/inst/alias_empty.hh"
+#include "Object/global_channel_entry.hh"
+#include "Object/inst/connection_policy.hh"
+#include "Object/inst/substructure_alias_base.hh"
+#include "Object/inst/instance_pool.hh"
+#include "Object/inst/state_instance.hh"
+#include "Object/common/dump_flags.hh"
+#include "Object/def/footprint.hh"
+#include "Object/traits/proc_traits.hh"
+#include "Object/traits/chan_traits.hh"
+#include "Object/traits/struct_traits.hh"
+#include "Object/traits/enum_traits.hh"
+#include "Object/traits/int_traits.hh"
+#include "Object/traits/bool_traits.hh"
+#include "main/create_options.hh"
 
-#include "util/persistent_object_manager.h"
-#include "util/copy_if.h"
-#include "util/STL/functional.h"	// for _Select2nd
-#include "util/IO_utils.h"
-#include "util/indent.h"
-#include "util/stacktrace.h"
-#include "util/sstream.h"
+#include "util/persistent_object_manager.hh"
+#include "util/copy_if.hh"
+#include "util/STL/functional.hh"	// for _Select2nd
+#include "util/IO_utils.hh"
+#include "util/indent.hh"
+#include "util/stacktrace.hh"
+#include "util/sstream.hh"
 
 namespace HAC {
 namespace entity {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using util::read_value;
 using util::write_value;
 using util::auto_indent;

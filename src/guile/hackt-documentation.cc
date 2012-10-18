@@ -3,11 +3,11 @@
 	$Id: hackt-documentation.cc,v 1.3 2011/03/01 01:57:44 fang Exp $
  */
 
-#include "guile/hackt-documentation.h"
-#include "util/guile_STL.h"
-#include "util/string.h"
-#include "util/for_all.h"
-#include "util/caller.h"
+#include "guile/hackt-documentation.hh"
+#include "util/guile_STL.hh"
+#include "util/string.hh"
+#include "util/for_all.hh"
+#include "util/caller.hh"
 
 namespace HAC {
 namespace guile_wrap {

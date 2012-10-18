@@ -12,17 +12,17 @@
 #include <exception>
 #include <iostream>
 
-#include "AST/token.h"
-#include "AST/namespace.h"
-#include "AST/identifier.h"
+#include "AST/token.hh"
+#include "AST/namespace.hh"
+#include "AST/identifier.hh"
 #include "AST/node_list.tcc"
-#include "AST/parse_context.h"
+#include "AST/parse_context.hh"
 
-#include "Object/common/namespace.h"
+#include "Object/common/namespace.hh"
 
-#include "util/indent.h"
-#include "util/what.h"
-#include "util/stacktrace.h"
+#include "util/indent.hh"
+#include "util/what.hh"
+#include "util/stacktrace.hh"
 #include "util/memory/count_ptr.tcc"
 
 // enable or disable constructor inlining, undefined at the end of file
@@ -49,7 +49,7 @@ template class count_ptr<root_body>;
 //=============================================================================
 namespace HAC {
 namespace parser {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using util::indent;
 using util::auto_indent;
 

@@ -9,14 +9,14 @@
 #include <iterator>
 #include <algorithm>
 #include <list>
-#include "util/directory.h"
-#include "util/tokenize.h"
-#include "util/string.h"
+#include "util/directory.hh"
+#include "util/tokenize.hh"
+#include "util/string.hh"
 #include "util/macros.h"
-#include "util/stacktrace.h"
+#include "util/stacktrace.hh"
 
 namespace util {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using std::ostream_iterator;
 using strings::strip_prefix;
 

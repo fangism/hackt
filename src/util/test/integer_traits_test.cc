@@ -10,12 +10,12 @@
 
 #include <string>
 #include <iostream>
-#include "util/numeric/integer_traits.h"
+#include "util/numeric/integer_traits.hh"
 #include "util/what.tcc"
 
 using std::string;
 using namespace util::numeric;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using util::what;
 using util::ifthenelse_value;
 

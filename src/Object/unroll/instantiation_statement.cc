@@ -14,47 +14,47 @@
 
 //=============================================================================
 // start of static initializations
-#include "util/static_trace.h"
+#include "util/static_trace.hh"
 DEFAULT_STATIC_TRACE_BEGIN
 
 #include <iostream>
 #include <algorithm>
 
-#include "Object/type/fundamental_type_reference.h"
-#include "Object/inst/param_value_collection.h"
-#include "Object/unroll/instantiation_statement.h"
-#include "Object/ref/meta_instance_reference_base.h"
-#include "Object/expr/param_expr_list.h"
-#include "Object/expr/const_range.h"
-#include "Object/expr/const_range_list.h"
-#include "Object/expr/expr_dump_context.h"
-#include "Object/persistent_type_hash.h"
-#include "Object/unroll/unroll_context.h"
-#include "Object/traits/class_traits.h"
-#include "Object/traits/instance_traits.h"
-#include "Object/inst/instance_placeholder.h"
-#include "Object/inst/value_placeholder.h"
-#include "Object/inst/param_value_placeholder.h"
+#include "Object/type/fundamental_type_reference.hh"
+#include "Object/inst/param_value_collection.hh"
+#include "Object/unroll/instantiation_statement.hh"
+#include "Object/ref/meta_instance_reference_base.hh"
+#include "Object/expr/param_expr_list.hh"
+#include "Object/expr/const_range.hh"
+#include "Object/expr/const_range_list.hh"
+#include "Object/expr/expr_dump_context.hh"
+#include "Object/persistent_type_hash.hh"
+#include "Object/unroll/unroll_context.hh"
+#include "Object/traits/class_traits.hh"
+#include "Object/traits/instance_traits.hh"
+#include "Object/inst/instance_placeholder.hh"
+#include "Object/inst/value_placeholder.hh"
+#include "Object/inst/param_value_placeholder.hh"
 
 // required by use of canonical_type
-#include "Object/def/user_def_datatype.h"
-#include "Object/def/user_def_chan.h"
-#include "Object/def/process_definition.h"
+#include "Object/def/user_def_datatype.hh"
+#include "Object/def/user_def_chan.hh"
+#include "Object/def/process_definition.hh"
 
-#include "Object/unroll/param_instantiation_statement.h"
-#include "Object/unroll/datatype_instantiation_statement.h"
-#include "Object/unroll/channel_instantiation_statement.h"
-#include "Object/unroll/process_instantiation_statement.h"
+#include "Object/unroll/param_instantiation_statement.hh"
+#include "Object/unroll/datatype_instantiation_statement.hh"
+#include "Object/unroll/channel_instantiation_statement.hh"
+#include "Object/unroll/process_instantiation_statement.hh"
 #include "Object/unroll/instantiation_statement.tcc"
-// #include "Object/traits/proc_traits.h"
+// #include "Object/traits/proc_traits.hh"
 #include "Object/unroll/template_type_completion.tcc"
 #include "Object/unroll/instance_attribute.tcc"
 #include "Object/unroll/direction_declaration.tcc"
 #include "Object/inst/internal_aliases_policy.tcc"
 
-#include "common/ICE.h"
+#include "common/ICE.hh"
 #include "util/persistent_object_manager.tcc"
-#include "util/stacktrace.h"
+#include "util/stacktrace.hh"
 
 
 //=============================================================================
@@ -165,7 +165,7 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 namespace HAC {
 namespace entity {
 using util::persistent_traits;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 #if DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE
 REQUIRES_STACKTRACE_STATIC_INIT
 #endif

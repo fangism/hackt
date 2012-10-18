@@ -12,7 +12,7 @@
 #define	ENABLE_STACKTRACE		0
 #define	ENABLE_STATIC_TRACE		0
 // b/c this module has memory pools to initialize
-#include "util/static_trace.h"
+#include "util/static_trace.hh"
 DEFAULT_STATIC_TRACE_BEGIN
 
 #include <ostream>
@@ -20,32 +20,32 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include <cstring>		// for a few C-string functions
 #include <exception>
 
-#include "AST/token.h"
-#include "AST/token_char.h"
-#include "AST/token_string.h"
-#include "AST/parse_context.h"
+#include "AST/token.hh"
+#include "AST/token_char.hh"
+#include "AST/token_string.hh"
+#include "AST/parse_context.hh"
 
-#include "Object/def/built_in_datatype_def.h"
-#include "Object/ref/meta_instance_reference_base.h"
-#include "Object/inst/physical_instance_placeholder.h"
-#include "Object/inst/param_value_placeholder.h"
-#include "Object/ref/meta_reference_union.h"
-#include "Object/ref/nonmeta_instance_reference_base.h"
-#include "Object/common/namespace.h"	// for dynamic_cast
-#include "Object/expr/pint_const.h"
-#include "Object/expr/pbool_const.h"
-#include "Object/expr/preal_const.h"
-#include "Object/expr/pstring_const.h"
-#include "Object/type/param_type_reference.h"
-#include "Object/traits/value_traits.h"
-#include "Object/traits/int_traits.h"
-#include "Object/traits/bool_traits.h"
+#include "Object/def/built_in_datatype_def.hh"
+#include "Object/ref/meta_instance_reference_base.hh"
+#include "Object/inst/physical_instance_placeholder.hh"
+#include "Object/inst/param_value_placeholder.hh"
+#include "Object/ref/meta_reference_union.hh"
+#include "Object/ref/nonmeta_instance_reference_base.hh"
+#include "Object/common/namespace.hh"	// for dynamic_cast
+#include "Object/expr/pint_const.hh"
+#include "Object/expr/pbool_const.hh"
+#include "Object/expr/preal_const.hh"
+#include "Object/expr/pstring_const.hh"
+#include "Object/type/param_type_reference.hh"
+#include "Object/traits/value_traits.hh"
+#include "Object/traits/int_traits.hh"
+#include "Object/traits/bool_traits.hh"
 
-#include "common/TODO.h"
-#include "util/what.h"
+#include "common/TODO.hh"
+#include "util/what.hh"
 #include "util/libc.h"
-#include "util/sstream.h"
-#include "util/stacktrace.h"
+#include "util/sstream.hh"
+#include "util/stacktrace.hh"
 #include "util/memory/count_ptr.tcc"
 #include "util/memory/chunk_map_pool.tcc"
 
@@ -89,7 +89,7 @@ template class count_ptr<const HAC::parser::token_identifier>;
 
 namespace HAC {
 namespace parser {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using std::ostringstream;
 using entity::pint_const;
 using entity::pbool_const;

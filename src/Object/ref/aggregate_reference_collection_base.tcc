@@ -7,10 +7,10 @@
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_REFERENCE_COLLECTION_BASE_TCC__
 #define	__HAC_OBJECT_REF_AGGREGATE_REFERENCE_COLLECTION_BASE_TCC__
 
-#include "Object/ref/aggregate_reference_collection_base.h"
+#include "Object/ref/aggregate_reference_collection_base.hh"
 #include "util/packed_array.tcc"
-#include "util/type_traits.h"
-#include "util/static_assert.h"
+#include "util/type_traits.hh"
+#include "util/static_assert.hh"
 
 namespace HAC {
 namespace entity {

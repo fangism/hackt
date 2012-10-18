@@ -12,7 +12,7 @@
 #define	ENABLE_STACKTRACE		0
 #endif
 
-#include "util/persistent_object_manager.h"
+#include "util/persistent_object_manager.hh"
 
 #ifndef	EXTERN_TEMPLATE_UTIL_PERSISTENT_OBJECT_MANAGER
 
@@ -21,7 +21,7 @@
 #include <functional>			// for std::for_each
 
 #include "util/macros.h"
-#include "util/stacktrace.h"
+#include "util/stacktrace.hh"
 
 #ifdef	EXCLUDE_DEPENDENT_TEMPLATES_UTIL_PERSISTENT_OBJECT_MANAGER
 #define	EXTERN_TEMPLATE_UTIL_NEW_FUNCTOR
@@ -29,15 +29,15 @@
 #define	EXTERN_TEMPLATE_UTIL_WHAT
 #endif
 
-#include "util/persistent_hash.h"
+#include "util/persistent_hash.hh"
 #include "util/new_functor.tcc"
 #include "util/IO_utils.tcc"
 #include "util/what.tcc"
 #include "util/attributes.h"
-#include "util/reserve.h"
+#include "util/reserve.hh"
 
 #if ENABLE_STACKTRACE
-#include "util/sstream.h"
+#include "util/sstream.hh"
 #endif
 
 #ifndef	STACKTRACE_PERSISTENTS
@@ -71,7 +71,7 @@
 
 namespace util {
 //=============================================================================
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using namespace util::memory;
 // using util::what;
 #if ENABLE_STACKTRACE
@@ -392,7 +392,7 @@ persistent_object_manager::read_pointer_list(istream& f, L& l) const {
 	STACKTRACE_PERSISTENT("pom::read_pointer_list()");
 	size_type s = 0;
 	read_value(f, s);
-	// magic! reserves memory in advance if is vector! ("util/reserve.h")
+	// magic! reserves memory in advance if is vector! ("util/reserve.hh")
 	util::reserve(l, s);
 	size_type i = 0;
 	for ( ; i<s; i++) {

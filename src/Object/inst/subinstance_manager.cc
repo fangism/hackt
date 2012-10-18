@@ -7,31 +7,31 @@
 #define	ENABLE_STACKTRACE		0
 
 #include <iostream>
-#include "Object/inst/subinstance_manager.h"
-#include "Object/inst/physical_instance_collection.h"
-#include "Object/inst/port_alias_tracker.h"
-#include "Object/ref/meta_instance_reference_base.h"
-#include "Object/type/fundamental_type_reference.h"
-#include "Object/common/dump_flags.h"
-#include "Object/inst/physical_instance_placeholder.h"
+#include "Object/inst/subinstance_manager.hh"
+#include "Object/inst/physical_instance_collection.hh"
+#include "Object/inst/port_alias_tracker.hh"
+#include "Object/ref/meta_instance_reference_base.hh"
+#include "Object/type/fundamental_type_reference.hh"
+#include "Object/common/dump_flags.hh"
+#include "Object/inst/physical_instance_placeholder.hh"
 #if INSTANCE_SUPPLY_OVERRIDES
-#include "Object/inst/port_actual_collection.h"
-#include "Object/inst/bool_instance_collection.h"
-#include "Object/ref/simple_meta_instance_reference.h"
-#include "Object/ref/meta_instance_reference_subtypes.h"
+#include "Object/inst/port_actual_collection.hh"
+#include "Object/inst/bool_instance_collection.hh"
+#include "Object/ref/simple_meta_instance_reference.hh"
+#include "Object/ref/meta_instance_reference_subtypes.hh"
 #endif
-#include "common/ICE.h"
-#include "Object/def/footprint.h"
-#include "util/IO_utils.h"
+#include "common/ICE.hh"
+#include "Object/def/footprint.hh"
+#include "util/IO_utils.hh"
 #include "util/persistent_object_manager.tcc"
 #include "util/memory/count_ptr.tcc"
-#include "util/reserve.h"
-#include "util/indent.h"
-#include "util/stacktrace.h"
+#include "util/reserve.hh"
+#include "util/indent.hh"
+#include "util/stacktrace.hh"
 
 namespace HAC {
 namespace entity {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using util::auto_indent;
 using util::read_value;
 using util::write_value;

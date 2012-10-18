@@ -9,16 +9,16 @@
 #define	USE_BOGUS					1
 
 #include <iostream>
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
-// #include "link_mod_a.h"
-#include "link_mod_b.h"
+// #include "link_mod_a.hh"
+#include "link_mod_b.hh"
 #if USE_BOGUS
-#include "bogus_stacktrace.h"
+#include "bogus_stacktrace.hh"
 #else
-#include "util/stacktrace.h"
+#include "util/stacktrace.hh"
 #endif
-#include "util/static_trace.h"
+#include "util/static_trace.hh"
 
 //-----------------------------------------------------------------------------
 // specializations

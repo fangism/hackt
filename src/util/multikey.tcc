@@ -7,15 +7,15 @@
 #ifndef	__UTIL_MULTIKEY_TCC__
 #define	__UTIL_MULTIKEY_TCC__
 
-#include "util/multikey.h"
+#include "util/multikey.hh"
 
 #ifndef	EXTERN_TEMPLATE_UTIL_MULTIKEY
 
 #include <iostream>
 #include <algorithm>		// for transform
 #include <functional>
-#include "util/static_assert.h"
-#include "util/type_traits.h"
+#include "util/static_assert.hh"
+#include "util/type_traits.hh"
 
 #ifdef	EXCLUDE_DEPENDENT_TEMPLATES_UTIL_MULTIKEY
 #define	EXTERN_TEMPLATE_UTIL_IO_UTILS
@@ -46,7 +46,7 @@ template multikey_generic<K >::multikey_generic(const multikey<D,K >&);
 namespace util {
 // using util::write_value;
 // using util::read_value;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using std::copy;
 using std::fill;
 using std::transform;

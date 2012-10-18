@@ -3,7 +3,7 @@
 	$Id: signal_handler.cc,v 1.2 2007/01/21 06:00:32 fang Exp $
  */
 
-#include "sim/signal_handler.h"
+#include "sim/signal_handler.hh"
 #include "util/signal.h"
 
 namespace HAC {

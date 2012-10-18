@@ -7,33 +7,33 @@
 #define	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_TCC__
 
 #include <iostream>
-#include "Object/ref/meta_instance_reference_subtypes.h"
-#include "Object/ref/simple_meta_instance_reference.h"
-#include "Object/ref/aggregate_meta_instance_reference.h"
+#include "Object/ref/meta_instance_reference_subtypes.hh"
+#include "Object/ref/simple_meta_instance_reference.hh"
+#include "Object/ref/aggregate_meta_instance_reference.hh"
 #include "Object/module.tcc"
-#include "Object/unroll/port_connection_base.h"
-#include "Object/unroll/alias_connection.h"
-#include "Object/unroll/unroll_context.h"
-#include "Object/unroll/instance_attribute.h"
-#include "Object/unroll/direction_declaration.h"
-#include "Object/def/footprint.h"
-#include "Object/type/fundamental_type_reference.h"
-#include "Object/inst/physical_instance_collection.h"
-#include "Object/inst/substructure_alias_base.h"
-#include "Object/expr/const_index_list.h"
-#include "Object/expr/const_range_list.h"
-#include "Object/expr/const_range.h"
-#include "Object/expr/expr_dump_context.h"
-#include "Object/common/dump_flags.h"
+#include "Object/unroll/port_connection_base.hh"
+#include "Object/unroll/alias_connection.hh"
+#include "Object/unroll/unroll_context.hh"
+#include "Object/unroll/instance_attribute.hh"
+#include "Object/unroll/direction_declaration.hh"
+#include "Object/def/footprint.hh"
+#include "Object/type/fundamental_type_reference.hh"
+#include "Object/inst/physical_instance_collection.hh"
+#include "Object/inst/substructure_alias_base.hh"
+#include "Object/expr/const_index_list.hh"
+#include "Object/expr/const_range_list.hh"
+#include "Object/expr/const_range.hh"
+#include "Object/expr/expr_dump_context.hh"
+#include "Object/common/dump_flags.hh"
 #include "util/packed_array.tcc"	// for packed_array_generic<>::resize()
-#include "util/stacktrace.h"
-#include "common/TODO.h"
+#include "util/stacktrace.hh"
+#include "common/TODO.hh"
 #include "util/macros.h"
 
 namespace HAC {
 namespace entity {
 using util::string_list;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 //=============================================================================
 // class meta_instance_reference method definitions
 

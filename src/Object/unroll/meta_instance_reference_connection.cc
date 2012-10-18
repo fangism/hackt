@@ -15,27 +15,27 @@
 #include <list>
 
 #include "Object/unroll/alias_connection.tcc"
-#include "Object/unroll/data_alias_connection_base.h"
-#include "Object/unroll/port_connection.h"
-#include "Object/unroll/unroll_context.h"	// for debugging
-#include "Object/ref/simple_meta_instance_reference.h"
-#include "Object/inst/alias_empty.h"
-#include "Object/inst/alias_actuals.h"
-#include "Object/devel_switches.h"
-#include "Object/inst/int_instance_collection.h"
-#include "Object/inst/bool_instance_collection.h"
-#include "Object/inst/enum_instance_collection.h"
+#include "Object/unroll/data_alias_connection_base.hh"
+#include "Object/unroll/port_connection.hh"
+#include "Object/unroll/unroll_context.hh"	// for debugging
+#include "Object/ref/simple_meta_instance_reference.hh"
+#include "Object/inst/alias_empty.hh"
+#include "Object/inst/alias_actuals.hh"
+#include "Object/devel_switches.hh"
+#include "Object/inst/int_instance_collection.hh"
+#include "Object/inst/bool_instance_collection.hh"
+#include "Object/inst/enum_instance_collection.hh"
 #if ENABLE_DATASTRUCTS
-#include "Object/inst/struct_instance_collection.h"
+#include "Object/inst/struct_instance_collection.hh"
 #endif
-#include "Object/persistent_type_hash.h"
-#include "Object/traits/chan_traits.h"
-#include "Object/traits/proc_traits.h"
-#include "Object/traits/int_traits.h"
-#include "Object/traits/bool_traits.h"
-#include "Object/traits/enum_traits.h"
+#include "Object/persistent_type_hash.hh"
+#include "Object/traits/chan_traits.hh"
+#include "Object/traits/proc_traits.hh"
+#include "Object/traits/int_traits.hh"
+#include "Object/traits/bool_traits.hh"
+#include "Object/traits/enum_traits.hh"
 #if ENABLE_DATASTRUCTS
-#include "Object/traits/struct_traits.h"
+#include "Object/traits/struct_traits.hh"
 #endif
 #include "Object/unroll/port_connection.tcc"
 
@@ -43,11 +43,11 @@
 #include "util/memory/count_ptr.tcc"
 #include "util/persistent_object_manager.tcc"
 #include "util/packed_array.tcc"
-#include "util/stacktrace.h"
-// #include "util/binders.h"
-// #include "util/compose.h"
-// #include "util/dereference.h"
-#include "util/reserve.h"
+#include "util/stacktrace.hh"
+// #include "util/binders.hh"
+// #include "util/compose.hh"
+// #include "util/dereference.hh"
+#include "util/reserve.hh"
 
 //=============================================================================
 namespace util {
@@ -105,7 +105,7 @@ namespace entity {
 USING_IO_UTILS
 using std::vector;
 using util::persistent_traits;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using std::mem_fun_ref;
 using util::dereference;
 USING_UTIL_COMPOSE

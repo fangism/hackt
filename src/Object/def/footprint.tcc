@@ -9,18 +9,18 @@
 
 #include <iostream>
 #include <iterator>
-#include "Object/def/footprint.h"
-#include "Object/inst/instance_pool.h"	// for pool_private_map_entry_type
-#include "Object/inst/state_instance.h"
-#include "Object/inst/alias_actuals.h"
-#include "Object/inst/instance_alias_info.h"
-#include "Object/traits/proc_traits.h"
-#include "Object/common/dump_flags.h"
-#include "util/stacktrace.h"
+#include "Object/def/footprint.hh"
+#include "Object/inst/instance_pool.hh"	// for pool_private_map_entry_type
+#include "Object/inst/state_instance.hh"
+#include "Object/inst/alias_actuals.hh"
+#include "Object/inst/instance_alias_info.hh"
+#include "Object/traits/proc_traits.hh"
+#include "Object/common/dump_flags.hh"
+#include "util/stacktrace.hh"
 
 namespace HAC {
 namespace entity {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using std::ostream_iterator;
 
 //=============================================================================

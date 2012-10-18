@@ -20,24 +20,24 @@
 #include <exception>
 #include <iostream>
 
-#include "AST/formal.h"
-#include "AST/expr_base.h"
-#include "AST/range_list.h"
-#include "AST/token.h"
-#include "AST/token_char.h"
-#include "AST/type.h"
+#include "AST/formal.hh"
+#include "AST/expr_base.hh"
+#include "AST/range_list.hh"
+#include "AST/token.hh"
+#include "AST/token_char.hh"
+#include "AST/type.hh"
 #include "AST/node_list.tcc"
-#include "AST/parse_context.h"
+#include "AST/parse_context.hh"
 
-#include "Object/type/fundamental_type_reference.h"
-#include "Object/inst/instance_placeholder_base.h"
-#include "Object/def/user_def_chan.h"
-#include "Object/expr/param_expr.h"
-#include "Object/expr/dynamic_param_expr_list.h"
-#include "Object/expr/meta_range_list.h"
+#include "Object/type/fundamental_type_reference.hh"
+#include "Object/inst/instance_placeholder_base.hh"
+#include "Object/def/user_def_chan.hh"
+#include "Object/expr/param_expr.hh"
+#include "Object/expr/dynamic_param_expr_list.hh"
+#include "Object/expr/meta_range_list.hh"
 
-#include "util/what.h"
-#include "util/stacktrace.h"
+#include "util/what.hh"
+#include "util/stacktrace.hh"
 #include "util/memory/count_ptr.tcc"
 
 // enable or disable constructor inlining, undefined at the end of file
@@ -71,7 +71,7 @@ template class count_ptr<const template_formal_decl>;
 //=============================================================================
 namespace HAC {
 namespace parser {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using entity::user_def_chan;
 using entity::dynamic_param_expr_list;
 

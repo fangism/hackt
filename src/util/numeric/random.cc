@@ -7,7 +7,7 @@
 #include <limits>		// the C++ numeric_limits header
 #include <cmath>
 #include <iostream>
-#include "util/numeric/random.h"
+#include "util/numeric/random.hh"
 #include "util/utypes.h"	// for ushort
 #include "util/IO_utils.tcc"
 

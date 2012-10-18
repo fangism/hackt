@@ -462,7 +462,7 @@ greeting_la_SOURCES = greeting.cc
 greeting_la_LDFLAGS = $(noinst_MODULE_FLAGS)
 
 # static library only
-libgcdstatic_la_SOURCES = gcdstatic.cc gcdstatic.h
+libgcdstatic_la_SOURCES = gcdstatic.cc gcdstatic.hh
 # libgcdstatic_la_LDFLAGS = -static
 # -static flag is unnecessary, convenience library is static by default
 

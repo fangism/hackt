@@ -11,25 +11,25 @@
 #include <set>
 #include <functional>
 
-#include "Object/lang/directive_source.h"
-#include "Object/lang/PRS_literal_unroller.h"	// for PRS::literal
-#include "Object/expr/param_expr_functor.h"
-#include "Object/expr/const_param.h"
-#include "Object/expr/expr_dump_context.h"
-#include "Object/persistent_type_hash.h"
-#include "Object/traits/bool_traits.h"
-#include "Object/ref/simple_meta_instance_reference.h"
-#include "Object/ref/meta_instance_reference_subtypes.h"
+#include "Object/lang/directive_source.hh"
+#include "Object/lang/PRS_literal_unroller.hh"	// for PRS::literal
+#include "Object/expr/param_expr_functor.hh"
+#include "Object/expr/const_param.hh"
+#include "Object/expr/expr_dump_context.hh"
+#include "Object/persistent_type_hash.hh"
+#include "Object/traits/bool_traits.hh"
+#include "Object/ref/simple_meta_instance_reference.hh"
+#include "Object/ref/meta_instance_reference_subtypes.hh"
 
-#include "common/TODO.h"
+#include "common/TODO.hh"
 #include "util/memory/count_ptr.tcc"
 #include "util/persistent_object_manager.tcc"
 #include "util/persistent_functor.tcc"
-#include "util/reserve.h"
-#include "util/indent.h"
-#include "util/what.h"
-#include "util/stacktrace.h"
-#include "util/IO_utils.h"
+#include "util/reserve.hh"
+#include "util/indent.hh"
+#include "util/what.hh"
+#include "util/stacktrace.hh"
+#include "util/IO_utils.hh"
 
 namespace HAC {
 namespace entity {
@@ -37,7 +37,7 @@ using std::for_each;
 using std::back_inserter;
 using std::transform;
 using util::auto_indent;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using PRS::rule_dump_context;
 using util::read_value;
 using util::write_value;

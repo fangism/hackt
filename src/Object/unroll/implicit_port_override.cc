@@ -6,17 +6,17 @@
 #define	ENABLE_STACKTRACE			0
 
 #include <iostream>
-#include "Object/unroll/implicit_port_override.h"
-#include "Object/ref/meta_instance_reference_subtypes.h"
-#include "Object/ref/simple_meta_instance_reference.h"
-#include "Object/traits/bool_traits.h"
-#include "Object/traits/proc_traits.h"
-#include "Object/expr/expr_dump_context.h"
-#include "Object/inst/substructure_alias_base.h"
-#include "Object/persistent_type_hash.h"
+#include "Object/unroll/implicit_port_override.hh"
+#include "Object/ref/meta_instance_reference_subtypes.hh"
+#include "Object/ref/simple_meta_instance_reference.hh"
+#include "Object/traits/bool_traits.hh"
+#include "Object/traits/proc_traits.hh"
+#include "Object/expr/expr_dump_context.hh"
+#include "Object/inst/substructure_alias_base.hh"
+#include "Object/persistent_type_hash.hh"
 #include "util/memory/count_ptr.tcc"
-#include "util/what.h"
-#include "util/stacktrace.h"
+#include "util/what.hh"
+#include "util/stacktrace.hh"
 #include "util/persistent_object_manager.tcc"
 
 namespace util {
@@ -30,7 +30,7 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 //=============================================================================
 namespace HAC {
 namespace entity {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 // class implicit_port_override method definitions
 /**

@@ -11,11 +11,11 @@
 #define	DEBUG_WHY			(0 && ENABLE_STACKTRACE)
 
 #include <iostream>
-#include "sim/prsim/State-prsim.h"
+#include "sim/prsim/State-prsim.hh"
 #include "sim/prsim/Rule.tcc"
-#include "sim/ISE.h"
-#include "util/stacktrace.h"
-#include "util/indent.h"
+#include "sim/ISE.hh"
+#include "util/stacktrace.hh"
+#include "util/indent.hh"
 
 #if	DEBUG_WHY
 #define	DEBUG_WHY_PRINT(x)		STACKTRACE_INDENT_PRINT(x)
@@ -36,7 +36,7 @@ namespace SIM {
 namespace PRSIM {
 using util::auto_indent;
 using util::indent;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 //=============================================================================
 // class process_sim_state_base method definitions

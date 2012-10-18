@@ -13,7 +13,7 @@
 #include "config.h"
 #include "parser/type-prefix.h"
 
-// this needs to be consistent with the %option never-interactive
+/* this needs to be consistent with the %option never-interactive */
 #ifndef	YY_ALWAYS_INTERACTIVE
 #define	YY_ALWAYS_INTERACTIVE		0
 #endif
@@ -72,40 +72,44 @@
 #endif
 
 #ifndef	LIBBOGUS
-// else don't bother
+/* else don't bother */
 
 #if defined(USING_YACC) || defined(USING_BYACC)
 #define	type_lex()		__type_lex(&type_lval, _lexer_state)
-#endif	// USING_YACC || USING_BYACC
+#endif	/* USING_YACC || USING_BYACC */
 
 #if defined(USING_BISON)
 #ifdef	YYLEX_PARAM
-// YYLEX_PARAM is a declarator, so we have to manually pass
-// in the correct argument name.
-// only bison-2.1 and up define YYBISON_VERSION (as a "string", incidentally)
-// bison-2.1 defines YYLEX differently than 2.0, *&^%$#@!
+/**
+YYLEX_PARAM is a declarator, so we have to manually pass
+in the correct argument name.
+only bison-2.1 and up define YYBISON_VERSION (as a "string", incidentally)
+bison-2.1 defines YYLEX differently than 2.0, *&^%$#@!
+**/
 #ifdef	YYBISON_VERSION
 #define	type_lex(x, y)		__type_lex(x, _lexer_state)
-#else	// YYBISON_VERSION
+#else	/* YYBISON_VERSION */
 #define	type_lex(x, y)		__type_lex(x, _lexer_state)
-#endif	// YYBISON_VERSION
-#else	// ifdef YYLEX_PARAM
-// #define	yylex			__type_lex
+#endif	/* YYBISON_VERSION */
+#else	/* ifdef YYLEX_PARAM */
+/**
+#define	yylex			__type_lex
+**/
 #define	type_lex		__type_lex
-#endif	// YYLEX_PARAM
-#endif	// USING_BISON
+#endif	/* YYLEX_PARAM */
+#endif	/* USING_BISON */
 
-#else	// defined(LIBBOGUS)
+#else	/* defined(LIBBOGUS) */
 #if USING_BISON
 #ifdef	YYBISON_VERSION
 #define	type_lex(x)		__type_lex(&yylval)
-#else	// YYBISON_VERSION
+#else	/* YYBISON_VERSION */
 #define	type_lex		__type_lex
-#endif	// YYBISON_VERSION
-#else	// USING_BISON
+#endif	/* YYBISON_VERSION */
+#else	/* USING_BISON */
 #define	type_lex()		__type_lex(&yylval)
-#endif	// USING BISON
-#endif	// LIBBOGUS
+#endif	/* USING BISON */
+#endif	/* LIBBOGUS */
 
-#endif	// __LEXER_TYPE_LEX_OPTIONS_H__
+#endif	/* __LEXER_TYPE_LEX_OPTIONS_H__ */
 

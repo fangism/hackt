@@ -153,7 +153,7 @@ exec.autodepend: Makefile
 noinst_LTLIBRARIES = libfangutil.la libpooled.la \
 	liblinktest.la libbogusutil.la
 
-noinst_HEADERS = multikey_qmap_type_helper.h
+noinst_HEADERS = multikey_qmap_type_helper.hh
 
 # No external libraries! see comment at top of this Makefile.am
 LIBS = 
@@ -170,14 +170,14 @@ BUILT_SOURCES = stacktrace.cc static_trace.cc thread_lock.cc \
 	ref_count_pool.cc bitset.cc nibble_tables.cc \
 	$(EMPTY_STDERR_FILES) $(AUTO_STDERR_FILES)
 
-pointer_classes_test_SOURCES = pointer_classes_test.cc var.h func.h
+pointer_classes_test_SOURCES = pointer_classes_test.cc var.hh func.hh
 excl_ptr_variant_test_SOURCES = excl_ptr_variant_test.cc
 count_ptr_variant_test_SOURCES = count_ptr_variant_test.cc
 count_ptr_variant_test_LDADD = libfangutil.la
-count_ptr_test_SOURCES = count_ptr_test.cc var.h
+count_ptr_test_SOURCES = count_ptr_test.cc var.hh
 count_ptr_test_LDADD = libfangutil.la
 gxx_pr29164_operator_delete_SOURCES = gxx-pr29164-operator-delete.cc \
-	one_array_only.cc one_array_only.h
+	one_array_only.cc one_array_only.hh
 sublist_test_SOURCES = sublist_test.cc
 deque_iterator_test_SOURCES = deque_iterator_test.cc
 deque_iterator_test_LDADD = libfangutil.la
@@ -211,20 +211,20 @@ multidimensional_qmap_test_SOURCES = multidimensional_qmap_test.cc
 maplikeset_test_SOURCES = maplikeset_test.cc
 multikey_qmap_test_SOURCES = multikey_qmap_test.cc
 multikey_generator_test_SOURCES = multikey_generator_test.cc
-multikey_qmap_slice_test_SOURCES = multikey_qmap_slice_test.cc cube_slice.h plane_slice.h
+multikey_qmap_slice_test_SOURCES = multikey_qmap_slice_test.cc cube_slice.hh plane_slice.hh
 multikey_qmap_slice_test_LDADD = libfangutil.la
 multikey_set_test_SOURCES = multikey_set_test.cc
 multikey_set_derived_test_SOURCES = multikey_set_derived_test.cc
 integer_traits_test_SOURCES = integer_traits_test.cc
 new_functor_test_SOURCES = new_functor_test.cc
 packed_array_test_SOURCES = packed_array_test.cc
-exit_test_SOURCES = exit_test.cc pooled_thing.cc pooled_thing.h
+exit_test_SOURCES = exit_test.cc pooled_thing.cc pooled_thing.hh
 exit_test_LDADD = libfangutil.la
 pipe_fork_test_SOURCES = pipe_fork_test.cc
 # pipe_fork_test_LDADD = libfangutil.la
 popen_test_SOURCES = popen_test.cc
 # popen_test_LDADD = libfangutil.la
-throw_test_SOURCES = throw_test.cc pooled_thing.cc pooled_thing.h
+throw_test_SOURCES = throw_test.cc pooled_thing.cc pooled_thing.hh
 throw_test_LDADD = libfangutil.la
 stacktrace_test_SOURCES = stacktrace_test.cc
 stacktrace_test_LDADD = libfangutil.la
@@ -232,7 +232,7 @@ what_test_SOURCES = what_test.cc
 what_test_LDADD = libfangutil.la
 pretty_function_test_SOURCES = pretty_function_test.cc
 local_static_store_test_SOURCES = local_static_store_test.cc \
-	named_pooled_thing.cc named_pooled_thing.h
+	named_pooled_thing.cc named_pooled_thing.hh
 local_static_store_test_LDADD = libfangutil.la
 multi_pool_module_test_SOURCES = multi_pool_module_test.cc
 multi_pool_module_test_LDADD = libpooled.la libfangutil.la
@@ -248,11 +248,11 @@ collection_pool_test_LDADD = libfangutil.la
 
 libfangutil_la_SOURCES = stacktrace.cc static_trace.cc thread_lock.cc \
 	ref_count_pool.cc bitset.cc nibble_tables.cc string.cc
-libbogusutil_la_SOURCES = bogus_stacktrace.cc bogus_stacktrace.h static_trace.cc
+libbogusutil_la_SOURCES = bogus_stacktrace.cc bogus_stacktrace.hh static_trace.cc
 libpooled_la_SOURCES = \
-	pool_module_a.cc pool_module_b.cc pool_module_a.h pool_module_b.h
+	pool_module_a.cc pool_module_b.cc pool_module_a.hh pool_module_b.hh
 liblinktest_la_SOURCES = \
-	link_mod_a.cc link_mod_b.cc link_mod_a.h link_mod_b.h
+	link_mod_a.cc link_mod_b.cc link_mod_a.hh link_mod_b.hh
 
 # liblinktest_la_LDFLAGS = -multiply_defined
 
@@ -265,7 +265,7 @@ liblinktest_la_SOURCES = \
 	$(CXXPREPROCESS) $< > $@
 
 .h.hii:
-	$(CXXPREPROCESS) $< > $@
+	$(CPREPROCESS) $< > $@
 
 .hh.hhii:
 	$(CXXPREPROCESS) $< > $@

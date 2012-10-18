@@ -7,14 +7,14 @@
 #define	__UTIL_TREE_CACHE_TCC__
 
 #include <iostream>
-#include "util/tree_cache.h"
+#include "util/tree_cache.hh"
 #include "util/macros.h"
-#include "util/indent.h"
-#include "util/stacktrace.h"
-#include "util/value_saver.h"
+#include "util/indent.hh"
+#include "util/stacktrace.hh"
+#include "util/value_saver.hh"
 
 namespace util {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using util::auto_indent;
 using util::value_saver;
 

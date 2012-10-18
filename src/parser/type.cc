@@ -6,16 +6,16 @@
 #include <iostream>
 
 #include "config.h"
-#include "parser/type.h"
-#include "AST/AST.h"		// should be first
-#include "AST/parse_context.h"
-#include "parser/type-parse-real.h"
-#include "lexer/flex_lexer_state.h"
-#include "Object/type/fundamental_type_reference.h"
+#include "parser/type.hh"
+#include "AST/AST.hh"		// should be first
+#include "AST/parse_context.hh"
+#include "parser/type-parse-real.hh"
+#include "lexer/flex_lexer_state.hh"
+#include "Object/type/fundamental_type_reference.hh"
 #include "util/memory/count_ptr.tcc"
 
 #define	ENABLE_STACKTRACE		0
-#include "util/stacktrace.h"
+#include "util/stacktrace.hh"
 
 extern
 int
@@ -27,7 +27,7 @@ namespace entity {
 	class module;
 }
 namespace parser {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 static
 excl_ptr<const concrete_type_ref>

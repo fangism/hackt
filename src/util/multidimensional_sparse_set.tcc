@@ -7,13 +7,13 @@
 #ifndef	__UTIL_MULTIDIMENSIONAL_SPARSE_SET_TCC__
 #define	__UTIL_MULTIDIMENSIONAL_SPARSE_SET_TCC__
 
-#include "util/multidimensional_sparse_set.h"
+#include "util/multidimensional_sparse_set.hh"
 
 // predefine to suppress definition
 #ifndef	EXTERN_TEMPLATE_UTIL_MULTIDIMENSIONAL_SPARSE_SET
 
 #include <iostream>
-#include "util/sstream.h"		// used by the dumo method
+#include "util/sstream.hh"		// used by the dumo method
 #include "util/memory/count_ptr.tcc"
 
 #ifdef	EXCLUDE_DEPENDENT_TEMPLATES_UTIL_MULTIDIMENSIONAL_SPARSE_SET
@@ -26,7 +26,7 @@
 
 namespace util {
 using std::ostringstream;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 //=============================================================================
 // class base_multidimensional_sparse_set method definitions

@@ -6,8 +6,8 @@
 
 #include <set>
 #include <iostream>
-#include "util/memory/free_list.h"
-#include "util/numeric/random.h"
+#include "util/memory/free_list.hh"
+#include "util/numeric/random.hh"
 #include "util/size_t.h"
 
 using std::set;

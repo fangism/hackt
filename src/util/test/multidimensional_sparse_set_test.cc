@@ -13,10 +13,10 @@
 #include "util/qmap.tcc"
 
 #include "util/multidimensional_sparse_set.tcc"
-#include "util/memory/excl_ptr.h"
+#include "util/memory/excl_ptr.hh"
 
 #include <list>
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 using std::list;
 using std::pair;

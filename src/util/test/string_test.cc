@@ -5,7 +5,7 @@
 
 #include <iostream>
 #include <string>
-#include "util/string.h"
+#include "util/string.hh"
 
 using std::string;
 using std::cout;

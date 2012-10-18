@@ -9,28 +9,28 @@
 #define	__HAC_OBJECT_REF_MEMBER_META_INSTANCE_REFERENCE_TCC__
 
 #include <iostream>
-#include "util/what.h"
-#include "util/persistent_object_manager.h"
-#include "Object/inst/physical_instance_collection.h"
-#include "Object/inst/physical_instance_placeholder.h"
-#include "Object/ref/member_meta_instance_reference.h"
-#include "Object/ref/inst_ref_implementation.h"
-#include "Object/inst/substructure_alias_base.h"
-#include "Object/expr/expr_dump_context.h"
-#include "Object/expr/expr_visitor.h"
-#include "Object/def/footprint.h"
-#include "Object/unroll/unroll_context.h"
+#include "util/what.hh"
+#include "util/persistent_object_manager.hh"
+#include "Object/inst/physical_instance_collection.hh"
+#include "Object/inst/physical_instance_placeholder.hh"
+#include "Object/ref/member_meta_instance_reference.hh"
+#include "Object/ref/inst_ref_implementation.hh"
+#include "Object/inst/substructure_alias_base.hh"
+#include "Object/expr/expr_dump_context.hh"
+#include "Object/expr/expr_visitor.hh"
+#include "Object/def/footprint.hh"
+#include "Object/unroll/unroll_context.hh"
 #include "Object/global_entry.tcc"
-#include "Object/global_context_cache.h"
+#include "Object/global_context_cache.hh"
 #include "util/memory/count_ptr.tcc"
-#include "util/compose.h"
-#include "util/stacktrace.h"
-#include "common/ICE.h"
+#include "util/compose.hh"
+#include "util/stacktrace.hh"
+#include "common/ICE.hh"
 
 //=============================================================================
 namespace HAC {
 namespace entity {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using util::write_value;
 using util::read_value;
 using util::persistent_traits;

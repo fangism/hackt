@@ -6,15 +6,15 @@
  */
 
 #include <iostream>
-#include "main/program_registry.h"
-#include "main/version.h"
-#include "main/main_funcs.h"
-#include "common/config.h"
+#include "main/program_registry.hh"
+#include "main/version.hh"
+#include "main/main_funcs.hh"
+#include "common/config.hh"
 
 // #include "util/getopt_portable.h"
 
 namespace HAC {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 //=============================================================================
 

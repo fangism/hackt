@@ -6,17 +6,17 @@
 
 #include <iostream>
 #include <functional>
-#include "PR/pcanvas.h"
-#include "PR/tile_type.h"
-#include "PR/placer_options.h"
-#include "PR/pr_utils.h"
-#include "util/vector_ops.h"
+#include "PR/pcanvas.hh"
+#include "PR/tile_type.hh"
+#include "PR/placer_options.hh"
+#include "PR/pr_utils.hh"
+#include "util/vector_ops.hh"
 #include "util/macros.h"
-#include "util/stacktrace.h"
+#include "util/stacktrace.hh"
 
 namespace HAC {
 namespace PR {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using namespace util::vector_ops;
 using std::mem_fun_ref;
 

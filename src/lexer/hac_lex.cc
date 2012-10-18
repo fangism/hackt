@@ -7,7 +7,7 @@
  */
 
 #include <ostream>
-#include "hac_lex.h"
+#include "hac_lex.hh"
 
 namespace HAC {
 namespace lexer {

@@ -4,21 +4,21 @@
  */
 
 #include <iostream>
-#include "Object/expr/channel_probe.h"
-#include "Object/ref/simple_nonmeta_instance_reference.h"
-#include "Object/expr/expr_visitor.h"
-#include "Object/expr/expr_dump_context.h"
-#include "Object/expr/pbool_const.h"
-#include "Object/traits/instance_traits.h"
-#include "Object/persistent_type_hash.h"
-#include "Object/type/canonical_generic_datatype.h"
-#include "Object/type/data_type_reference.h"
-#include "Object/nonmeta_context.h"
-#include "Object/nonmeta_variable.h"
-#include "Object/nonmeta_state.h"
+#include "Object/expr/channel_probe.hh"
+#include "Object/ref/simple_nonmeta_instance_reference.hh"
+#include "Object/expr/expr_visitor.hh"
+#include "Object/expr/expr_dump_context.hh"
+#include "Object/expr/pbool_const.hh"
+#include "Object/traits/instance_traits.hh"
+#include "Object/persistent_type_hash.hh"
+#include "Object/type/canonical_generic_datatype.hh"
+#include "Object/type/data_type_reference.hh"
+#include "Object/nonmeta_context.hh"
+#include "Object/nonmeta_variable.hh"
+#include "Object/nonmeta_state.hh"
 #include "util/persistent_object_manager.tcc"
-#include "util/what.h"
-#include "util/new_functor.h"
+#include "util/what.hh"
+#include "util/new_functor.hh"
 #include "util/memory/count_ptr.tcc"
 
 namespace util {
@@ -35,7 +35,7 @@ namespace memory {
 
 namespace HAC {
 namespace entity {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using util::persistent_traits;
 
 //=============================================================================

@@ -7,29 +7,29 @@
 #define	__HAC_OBJECT_EXPR_LOOP_META_EXPR_TCC__
 
 #include <iostream>
-#include "Object/expr/loop_meta_expr.h"
-#include "Object/expr/const_range.h"
-#include "Object/expr/const_index_list.h"
-#include "Object/expr/expr_visitor.h"
-#include "Object/expr/expr_dump_context.h"
-#include "Object/expr/pint_const.h"
-#include "Object/def/footprint.h"
-#include "Object/inst/param_value_collection.h"
-#include "Object/inst/value_placeholder.h"
-#include "Object/inst/value_scalar.h"
-#include "Object/inst/pint_instance.h"
-#include "Object/traits/classification_tags_fwd.h"
-#include "Object/traits/pint_traits.h"
-#include "Object/common/dump_flags.h"
-#include "Object/unroll/unroll_context.h"
-#include "common/ICE.h"
-#include "util/persistent_object_manager.h"
-#include "util/what.h"
-#include "util/IO_utils.h"
+#include "Object/expr/loop_meta_expr.hh"
+#include "Object/expr/const_range.hh"
+#include "Object/expr/const_index_list.hh"
+#include "Object/expr/expr_visitor.hh"
+#include "Object/expr/expr_dump_context.hh"
+#include "Object/expr/pint_const.hh"
+#include "Object/def/footprint.hh"
+#include "Object/inst/param_value_collection.hh"
+#include "Object/inst/value_placeholder.hh"
+#include "Object/inst/value_scalar.hh"
+#include "Object/inst/pint_instance.hh"
+#include "Object/traits/classification_tags_fwd.hh"
+#include "Object/traits/pint_traits.hh"
+#include "Object/common/dump_flags.hh"
+#include "Object/unroll/unroll_context.hh"
+#include "common/ICE.hh"
+#include "util/persistent_object_manager.hh"
+#include "util/what.hh"
+#include "util/IO_utils.hh"
 
 namespace HAC {
 namespace entity {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using util::persistent_traits;
 using util::write_value;
 using util::read_value;

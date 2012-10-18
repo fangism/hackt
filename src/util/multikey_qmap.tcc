@@ -8,7 +8,7 @@
 #ifndef	__UTIL_MULTIKEY_QMAP_TCC__
 #define	__UTIL_MULTIKEY_QMAP_TCC__
 
-#include "util/multikey_qmap.h"
+#include "util/multikey_qmap.hh"
 
 #ifndef	EXTERN_TEMPLATE_UTIL_MULTIKEY_QMAP
 

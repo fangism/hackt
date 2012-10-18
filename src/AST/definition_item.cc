@@ -12,14 +12,14 @@
 #include <exception>
 #include <iostream>
 
-#include "AST/definition_item.h"
-#include "AST/lang.h"
+#include "AST/definition_item.hh"
+#include "AST/lang.hh"
 #include "AST/node_list.tcc"
-#include "AST/parse_context.h"
+#include "AST/parse_context.hh"
 
-#include "util/indent.h"
-#include "util/what.h"
-#include "util/stacktrace.h"
+#include "util/indent.hh"
+#include "util/what.hh"
+#include "util/stacktrace.hh"
 #include "util/memory/count_ptr.tcc"
 
 // enable or disable constructor inlining, undefined at the end of file
@@ -41,7 +41,7 @@ template class count_ptr<const HAC::parser::def_body_item>;
 //=============================================================================
 namespace HAC {
 namespace parser {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using util::indent;
 using util::auto_indent;
 

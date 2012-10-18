@@ -15,27 +15,27 @@
 
 //=============================================================================
 // start of static initializations
-#include "util/static_trace.h"
+#include "util/static_trace.hh"
 DEFAULT_STATIC_TRACE_BEGIN
 
 #include <algorithm>
 
-#include "Object/common/multikey_index.h"
-#include "Object/expr/const_range_list.h"
-#include "Object/expr/dynamic_meta_range_list.h"
-#include "Object/expr/pint_const.h"
-#include "Object/expr/pint_range.h"
-#include "Object/expr/const_range.h"
-#include "Object/expr/const_index_list.h"
-#include "Object/expr/dynamic_meta_index_list.h"
-#include "Object/expr/expr_dump_context.h"
-#include "Object/expr/expr_visitor.h"
-#include "Object/persistent_type_hash.h"
+#include "Object/common/multikey_index.hh"
+#include "Object/expr/const_range_list.hh"
+#include "Object/expr/dynamic_meta_range_list.hh"
+#include "Object/expr/pint_const.hh"
+#include "Object/expr/pint_range.hh"
+#include "Object/expr/const_range.hh"
+#include "Object/expr/const_index_list.hh"
+#include "Object/expr/dynamic_meta_index_list.hh"
+#include "Object/expr/expr_dump_context.hh"
+#include "Object/expr/expr_visitor.hh"
+#include "Object/persistent_type_hash.hh"
 
-#include "util/STL/functional.h"	// for _Select{1st,2nd}
-#include "util/reserve.h"
-#include "util/stacktrace.h"
-#include "util/multikey.h"
+#include "util/STL/functional.hh"	// for _Select{1st,2nd}
+#include "util/reserve.hh"
+#include "util/stacktrace.hh"
+#include "util/multikey.hh"
 #include "util/memory/count_ptr.tcc"
 #include "util/persistent_object_manager.tcc"
 
@@ -60,7 +60,7 @@ namespace entity {
 using util::persistent_traits;
 using util::persistent_object_manager;
 using std::istream;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using std::_Select1st;
 using std::_Select2nd;
 using std::transform;

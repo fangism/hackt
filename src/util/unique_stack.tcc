@@ -6,7 +6,7 @@
 #ifndef	__UTIL_UNIQUE_STACK_TCC__
 #define	__UTIL_UNIQUE_STACK_TCC__
 
-#include "util/unique_stack.h"
+#include "util/unique_stack.hh"
 
 #ifndef	EXTERN_TEMPLATE_UTIL_UNIQUE_STACK
 

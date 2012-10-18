@@ -4,7 +4,7 @@
 	$Id: format_IO.cc,v 1.1 2007/08/30 00:20:42 fang Exp $
  */
 
-#include "util/format_IO.h"
+#include "util/format_IO.hh"
 
 namespace util {
 //=============================================================================

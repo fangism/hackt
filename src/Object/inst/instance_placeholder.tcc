@@ -22,44 +22,44 @@
 #include <vector>
 
 // experimental: suppressing automatic template instantiation
-#include "Object/common/extern_templates.h"
+#include "Object/common/extern_templates.hh"
 
-#include "Object/inst/instance_placeholder.h"
-#include "Object/inst/instance_collection.h"
-#include "Object/expr/expr_dump_context.h"
-#include "Object/expr/const_index.h"
-#include "Object/expr/const_range.h"
-#include "Object/expr/const_param_expr_list.h"		// for debug only
-#include "Object/expr/const_index_list.h"
-#include "Object/expr/const_range_list.h"
-#include "Object/def/definition_base.h"
-#include "Object/def/footprint.h"
-#include "Object/type/canonical_type.h"
-#include "Object/ref/meta_instance_reference_subtypes.h"
-#include "Object/ref/nonmeta_instance_reference_subtypes.h"
-#include "Object/ref/simple_nonmeta_instance_reference.h"
+#include "Object/inst/instance_placeholder.hh"
+#include "Object/inst/instance_collection.hh"
+#include "Object/expr/expr_dump_context.hh"
+#include "Object/expr/const_index.hh"
+#include "Object/expr/const_range.hh"
+#include "Object/expr/const_param_expr_list.hh"		// for debug only
+#include "Object/expr/const_index_list.hh"
+#include "Object/expr/const_range_list.hh"
+#include "Object/def/definition_base.hh"
+#include "Object/def/footprint.hh"
+#include "Object/type/canonical_type.hh"
+#include "Object/ref/meta_instance_reference_subtypes.hh"
+#include "Object/ref/nonmeta_instance_reference_subtypes.hh"
+#include "Object/ref/simple_nonmeta_instance_reference.hh"
 #if NONMETA_MEMBER_REFERENCES
-#include "Object/ref/member_nonmeta_instance_reference.h"
+#include "Object/ref/member_nonmeta_instance_reference.hh"
 #endif
-#include "Object/ref/simple_meta_instance_reference.h"
-#include "Object/unroll/instantiation_statement_base.h"
-#include "Object/unroll/instantiation_statement.h"
-#include "Object/unroll/unroll_context.h"
-#include "Object/inst/port_actual_collection.h"
+#include "Object/ref/simple_meta_instance_reference.hh"
+#include "Object/unroll/instantiation_statement_base.hh"
+#include "Object/unroll/instantiation_statement.hh"
+#include "Object/unroll/unroll_context.hh"
+#include "Object/inst/port_actual_collection.hh"
 #include "Object/inst/instance_collection_pool_bundle.tcc"	// for allocate
-#include "common/ICE.h"
+#include "common/ICE.hh"
 
 #include "util/memory/count_ptr.tcc"
 #include "util/memory/chunk_map_pool.tcc"
 
 #include "util/persistent_object_manager.tcc"
-#include "util/indent.h"
-#include "util/what.h"
-#include "util/stacktrace.h"
-#include "util/static_trace.h"
-#include "util/compose.h"
-#include "util/binders.h"
-#include "util/dereference.h"
+#include "util/indent.hh"
+#include "util/what.hh"
+#include "util/stacktrace.hh"
+#include "util/static_trace.hh"
+#include "util/compose.hh"
+#include "util/binders.hh"
+#include "util/dereference.hh"
 
 #if ENABLE_STACKTRACE
 #include <iterator>
@@ -71,7 +71,7 @@ namespace HAC {
 namespace entity {
 using std::string;
 using std::_Select1st;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using util::multikey_generator;
 USING_UTIL_COMPOSE
 using util::dereference;

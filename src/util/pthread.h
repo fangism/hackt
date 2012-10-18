@@ -13,5 +13,5 @@
 #include <pthread.h>
 #endif
 
-#endif	// __UTIL_PTHREAD_H__
+#endif	/* __UTIL_PTHREAD_H__ */
 

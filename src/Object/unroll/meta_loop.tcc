@@ -9,28 +9,28 @@
 #include <iostream>
 #include <vector>
 
-#include "Object/unroll/meta_loop.h"
-#include "Object/unroll/unroll_context.h"
-#include "Object/common/dump_flags.h"
-#include "Object/def/footprint.h"
-#include "Object/expr/const_range.h"
-#include "Object/expr/expr_dump_context.h"
-#include "Object/inst/pint_value_collection.h"
-#include "Object/inst/value_placeholder.h"
-#include "Object/inst/value_scalar.h"
-#include "Object/traits/pint_traits.h"
+#include "Object/unroll/meta_loop.hh"
+#include "Object/unroll/unroll_context.hh"
+#include "Object/common/dump_flags.hh"
+#include "Object/def/footprint.hh"
+#include "Object/expr/const_range.hh"
+#include "Object/expr/expr_dump_context.hh"
+#include "Object/inst/pint_value_collection.hh"
+#include "Object/inst/value_placeholder.hh"
+#include "Object/inst/value_scalar.hh"
+#include "Object/traits/pint_traits.hh"
 #include "util/memory/count_ptr.tcc"
 #include "util/persistent_object_manager.tcc"
 #include "util/persistent_functor.tcc"
-#include "util/indent.h"
-#include "util/stacktrace.h"
-#include "util/IO_utils.h"
+#include "util/indent.hh"
+#include "util/stacktrace.hh"
+#include "util/IO_utils.hh"
 
 
 namespace HAC {
 namespace entity {
 using util::auto_indent;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using PRS::rule_dump_context;
 using util::read_value;
 using util::write_value;

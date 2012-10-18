@@ -8,8 +8,10 @@
 #ifndef	__UTIL_C99_H__
 #define	__UTIL_C99_H__
 
-// #include "config.h"
-// need for __restrict?
+/**
+#include "config.h"
+need for __restrict?
+**/
 
 #ifdef	__cplusplus
 #ifndef	__STDC_VERSION__

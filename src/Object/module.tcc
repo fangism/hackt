@@ -8,9 +8,9 @@
 #ifndef	__HAC_OBJECT_MODULE_TCC__
 #define	__HAC_OBJECT_MODULE_TCC__
 
-#include "Object/common/namespace.h"
+#include "Object/common/namespace.hh"
 #include "Object/common/namespace.tcc"
-#include "Object/module.h"
+#include "Object/module.hh"
 
 namespace HAC {
 namespace entity {

@@ -12,27 +12,27 @@
 
 //=============================================================================
 // start of static initializations
-#include "util/static_trace.h"
+#include "util/static_trace.hh"
 DEFAULT_STATIC_TRACE_BEGIN
 
 #include <exception>
 #include <iostream>
 #include <algorithm>
 
-#include "Object/type/param_type_reference.h"
-#include "Object/inst/pint_value_collection.h"
-#include "Object/ref/simple_meta_value_reference.h"
-#include "Object/ref/simple_nonmeta_value_reference.h"
-#include "Object/expr/pint_const.h"
-#include "Object/expr/pbool_expr.h"
-#include "Object/expr/preal_expr.h"
-#include "Object/expr/pstring_expr.h"
-#include "Object/persistent_type_hash.h"
-#include "Object/unroll/param_instantiation_statement.h"
+#include "Object/type/param_type_reference.hh"
+#include "Object/inst/pint_value_collection.hh"
+#include "Object/ref/simple_meta_value_reference.hh"
+#include "Object/ref/simple_nonmeta_value_reference.hh"
+#include "Object/expr/pint_const.hh"
+#include "Object/expr/pbool_expr.hh"
+#include "Object/expr/preal_expr.hh"
+#include "Object/expr/pstring_expr.hh"
+#include "Object/persistent_type_hash.hh"
+#include "Object/unroll/param_instantiation_statement.hh"
 #include "Object/inst/value_collection.tcc"
 #include "Object/inst/value_placeholder.tcc"
-#include "Object/traits/pint_traits.h"
-#include "Object/traits/int_traits.h"
+#include "Object/traits/pint_traits.hh"
+#include "Object/traits/int_traits.hh"
 
 //=============================================================================
 namespace util {

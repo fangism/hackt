@@ -5,19 +5,19 @@
 
 #define	ENABLE_STACKTRACE			0
 
-#include "guile/scm_chpsim_trace_streamer.h"
+#include "guile/scm_chpsim_trace_streamer.hh"
 #include <iostream>
 // #include <sstream>
-#include "util/guile_STL.h"
-#include "guile/hackt-documentation.h"
-#include "guile/chpsim-wrap.h"			// for chpsim_state
-#include "util/for_all.h"
-#include "util/caller.h"
-#include "util/memory/excl_ptr.h"
+#include "util/guile_STL.hh"
+#include "guile/hackt-documentation.hh"
+#include "guile/chpsim-wrap.hh"			// for chpsim_state
+#include "util/for_all.hh"
+#include "util/caller.hh"
+#include "util/memory/excl_ptr.hh"
 
 namespace HAC {
 namespace guile_wrap {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using HAC::SIM::CHPSIM::TraceManager;
 using util::guile::scm_assert_string;
 using util::guile::make_scm;

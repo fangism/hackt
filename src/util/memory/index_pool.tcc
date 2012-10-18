@@ -6,7 +6,7 @@
 #ifndef	__UTIL_MEMORY_INDEX_POOL_TCC__
 #define	__UTIL_MEMORY_INDEX_POOL_TCC__
 
-#include "util/memory/index_pool.h"
+#include "util/memory/index_pool.hh"
 
 namespace util {
 namespace memory {

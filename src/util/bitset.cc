@@ -6,10 +6,10 @@
 #ifndef	__UTIL_BITSET_CC__
 #define	__UTIL_BITSET_CC__
 
-#include "util/bitset.h"
+#include "util/bitset.hh"
 #include <ostream>
-#include "util/numeric/ctz.h"
-// #include "util/numeric/ffs.h"
+#include "util/numeric/ctz.hh"
+// #include "util/numeric/ffs.hh"
 
 
 // working around suse-linux g++-3.3's libstdc++ defects

@@ -8,12 +8,12 @@
 #ifndef	__UTIL_MULTIKEY_SET_TCC__
 #define	__UTIL_MULTIKEY_SET_TCC__
 
-#include "util/multikey_set.h"
+#include "util/multikey_set.hh"
 
 #ifndef	EXTERN_TEMPLATE_UTIL_MULTIKEY_SET
 
 #include <iostream>
-#include "util/null_construct.h"
+#include "util/null_construct.hh"
 
 #ifdef	EXCLUDE_DEPENDENT_TEMPLATES_UTIL_MULTIKEY_SET
 #define	EXTERN_TEMPLATE_UTIL_MULTIKEY
@@ -24,7 +24,7 @@
 #include "util/multikey_assoc.tcc"
 
 namespace util {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 //=============================================================================
 // class multikey_set method definition
 

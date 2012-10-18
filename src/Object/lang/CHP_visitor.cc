@@ -5,12 +5,12 @@
 
 #define	ENABLE_STACKTRACE				0
 
-#include "Object/lang/CHP_visitor.h"
-#include "Object/def/footprint.h"
-#include "Object/lang/CHP.h"
-#include "Object/global_entry.h"
-#include "Object/inst/state_instance.h"
-#include "common/ICE.h"
+#include "Object/lang/CHP_visitor.hh"
+#include "Object/def/footprint.hh"
+#include "Object/lang/CHP.hh"
+#include "Object/global_entry.hh"
+#include "Object/inst/state_instance.hh"
+#include "common/ICE.hh"
 
 namespace HAC {
 namespace entity {

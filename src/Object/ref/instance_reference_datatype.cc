@@ -16,51 +16,51 @@
 #include "Object/ref/member_nonmeta_instance_reference.tcc"
 #endif
 #include "Object/ref/aggregate_meta_instance_reference.tcc"
-#include "Object/inst/alias_empty.h"
-#include "Object/inst/bool_instance_collection.h"
-#include "Object/inst/int_instance_collection.h"
-#include "Object/inst/enum_instance_collection.h"
-#include "Object/inst/struct_instance_collection.h"
-#include "Object/inst/datatype_instance_placeholder.h"
-#include "Object/type/canonical_generic_datatype.h"
+#include "Object/inst/alias_empty.hh"
+#include "Object/inst/bool_instance_collection.hh"
+#include "Object/inst/int_instance_collection.hh"
+#include "Object/inst/enum_instance_collection.hh"
+#include "Object/inst/struct_instance_collection.hh"
+#include "Object/inst/datatype_instance_placeholder.hh"
+#include "Object/type/canonical_generic_datatype.hh"
 
-#include "Object/inst/value_collection.h"
-#include "Object/inst/pbool_instance.h"
-#include "Object/inst/pint_instance.h"
-#include "Object/expr/pbool_const.h"
-#include "Object/expr/pint_const.h"
-#include "Object/expr/preal_const.h"
-// #include "Object/expr/enum_const.h"		// much later...
-// #include "Object/expr/struct_const.h"	// much later...
-#include "Object/expr/pstring_expr.h"
+#include "Object/inst/value_collection.hh"
+#include "Object/inst/pbool_instance.hh"
+#include "Object/inst/pint_instance.hh"
+#include "Object/expr/pbool_const.hh"
+#include "Object/expr/pint_const.hh"
+#include "Object/expr/preal_const.hh"
+// #include "Object/expr/enum_const.hh"		// much later...
+// #include "Object/expr/struct_const.hh"	// much later...
+#include "Object/expr/pstring_expr.hh"
 
-#include "Object/unroll/alias_connection.h"
-#include "Object/unroll/data_alias_connection_base.h"
-#include "Object/expr/int_expr.h"
-#include "Object/expr/bool_expr.h"
-#include "Object/expr/enum_expr.h"
-#include "Object/expr/real_expr.h"		// why? (nonmeta_expr_visitor)
-#include "Object/expr/string_expr.h"		// why? (nonmeta_expr_visitor)
-#include "Object/expr/struct_expr.h"
-#include "Object/expr/const_range.h"
+#include "Object/unroll/alias_connection.hh"
+#include "Object/unroll/data_alias_connection_base.hh"
+#include "Object/expr/int_expr.hh"
+#include "Object/expr/bool_expr.hh"
+#include "Object/expr/enum_expr.hh"
+#include "Object/expr/real_expr.hh"		// why? (nonmeta_expr_visitor)
+#include "Object/expr/string_expr.hh"		// why? (nonmeta_expr_visitor)
+#include "Object/expr/struct_expr.hh"
+#include "Object/expr/const_range.hh"
 
-#include "Object/devel_switches.h"
+#include "Object/devel_switches.hh"
 
 // introduced by canonical_type
-#include "Object/def/user_def_datatype.h"
-#include "Object/def/user_def_chan.h"
-#include "Object/def/process_definition.h"
+#include "Object/def/user_def_datatype.hh"
+#include "Object/def/user_def_chan.hh"
+#include "Object/def/process_definition.hh"
 
-#include "Object/persistent_type_hash.h"
+#include "Object/persistent_type_hash.hh"
 #include "util/persistent_object_manager.tcc"
-#include "Object/traits/class_traits.h"
-#include "Object/traits/instance_traits.h"
-#include "Object/traits/value_traits.h"	// why? (nonmeta_expr_visitor)
-#include "Object/inst/general_collection_type_manager.h"
-#include "Object/inst/null_collection_type_manager.h"
-#include "Object/inst/int_collection_type_manager.h"
+#include "Object/traits/class_traits.hh"
+#include "Object/traits/instance_traits.hh"
+#include "Object/traits/value_traits.hh"	// why? (nonmeta_expr_visitor)
+#include "Object/inst/general_collection_type_manager.hh"
+#include "Object/inst/null_collection_type_manager.hh"
+#include "Object/inst/int_collection_type_manager.hh"
 #include "Object/inst/parameterless_collection_type_manager.tcc"
-#include "Object/unroll/port_connection_base.h"
+#include "Object/unroll/port_connection_base.hh"
 
 namespace util {
 using HAC::entity::int_tag;

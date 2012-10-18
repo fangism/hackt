@@ -13,15 +13,15 @@
 #include <exception>
 #include <iostream>
 
-#include "AST/parse_context.h"
-#include "AST/token_string.h"
-#include "AST/identifier.h"
-#include "Object/common/namespace.h"
+#include "AST/parse_context.hh"
+#include "AST/token_string.hh"
+#include "AST/identifier.hh"
+#include "Object/common/namespace.hh"
 
 //=============================================================================
 namespace HAC {
 namespace parser {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

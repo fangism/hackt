@@ -9,7 +9,7 @@
 #ifndef	__UTIL_MEMORY_LIST_VECTOR_POOL_TCC__
 #define	__UTIL_MEMORY_LIST_VECTOR_POOL_TCC__
 
-#include "util/memory/list_vector_pool.h"
+#include "util/memory/list_vector_pool.hh"
 
 #ifndef	EXTERN_TEMPLATE_UTIL_MEMORY_LIST_VECTOR_POOL
 
@@ -52,7 +52,7 @@
 #endif
 
 #if DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE
-	#include "util/stacktrace.h"
+	#include "util/stacktrace.hh"
 	#define	LIST_VECTOR_POOL_STACKTRACE(arg)	STACKTRACE(arg)
 #else
 	#define	LIST_VECTOR_POOL_STACKTRACE(arg)
@@ -62,7 +62,7 @@ namespace util {
 namespace memory {
 using std::_Construct;
 using std::_Destroy;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 #if DEBUG_LIST_VECTOR_POOL_USING_WHAT
 using util::what;
 #endif

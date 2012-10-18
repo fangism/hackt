@@ -7,11 +7,11 @@
 #ifndef	__UTIL_MEMORY_DESTRUCTION_POLICY_TCC__
 #define	__UTIL_MEMORY_DESTRUCTION_POLICY_TCC__
 
-#include "util/memory/destruction_policy.h"
+#include "util/memory/destruction_policy.hh"
 
 #ifndef	EXTERN_TEMPLATE_UTIL_MEMORY_DESTRUCTION_POLICY
 
-#include "util/STL/construct_fwd.h"
+#include "util/STL/construct_fwd.hh"
 
 namespace util {
 namespace memory {

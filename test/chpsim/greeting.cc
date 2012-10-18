@@ -2,7 +2,7 @@
 // testing void function
 
 #include <iostream>
-#include <sim/chpsim/chpsim_dlfunction.h>
+#include <sim/chpsim/chpsim_dlfunction.hh>
 
 using std::cout;
 using std::endl;

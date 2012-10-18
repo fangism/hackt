@@ -15,10 +15,10 @@
 // #define	USE_REF_COUNT_POOL	0
 #define	ENABLE_STATIC_TRACE		0
 
-#include "util/static_trace.h"
+#include "util/static_trace.hh"
 DEFAULT_STATIC_TRACE_BEGIN
 
-#include "util/memory/ref_count_pool_anchor.h"
+#include "util/memory/ref_count_pool_anchor.hh"
 #include "util/memory/chunk_map_pool.tcc"
 #include "util/memory/count_ptr.tcc"
 
@@ -26,7 +26,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 
 namespace util {
 namespace memory {
-// #include "util/using_ostream.h"
+// #include "util/using_ostream.hh"
 //-----------------------------------------------------------------------------
 /**
 	Since reference count are likely to be needed during 

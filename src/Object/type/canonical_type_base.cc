@@ -1,16 +1,16 @@
 /**
-	\file "Object/type/canonical_type_base.h"
+	\file "Object/type/canonical_type_base.hh"
 	$Id: canonical_type_base.cc,v 1.9 2011/03/23 00:36:18 fang Exp $
  */
 
 #include <algorithm>
 #include <iterator>
-#include "Object/type/canonical_type_base.h"
-#include "Object/type/template_actuals.h"
-#include "Object/expr/const_param.h"
-#include "Object/expr/const_param_expr_list.h"
-#include "Object/expr/dynamic_param_expr_list.h"
-#include "Object/expr/expr_dump_context.h"
+#include "Object/type/canonical_type_base.hh"
+#include "Object/type/template_actuals.hh"
+#include "Object/expr/const_param.hh"
+#include "Object/expr/const_param_expr_list.hh"
+#include "Object/expr/dynamic_param_expr_list.hh"
+#include "Object/expr/expr_dump_context.hh"
 #include "util/memory/count_ptr.tcc"
 
 namespace HAC {

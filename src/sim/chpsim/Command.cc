@@ -14,7 +14,7 @@
 #define	ENABLE_STATIC_TRACE			0
 #define	ENABLE_STACKTRACE			0
 
-#include "util/static_trace.h"
+#include "util/static_trace.hh"
 DEFAULT_STATIC_TRACE_BEGIN
 
 #include <iostream>
@@ -24,9 +24,9 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include <iterator>
 #include <set>
 
-#include "sim/chpsim/Command.h"
-#include "sim/chpsim/State.h"
-#include "sim/chpsim/Trace.h"
+#include "sim/chpsim/Command.hh"
+#include "sim/chpsim/State.hh"
+#include "sim/chpsim/Trace.hh"
 #include "sim/command_base.tcc"
 #include "sim/command_registry.tcc"
 #include "sim/command_category.tcc"
@@ -58,17 +58,17 @@ static CommandCategory
 }
 DEFAULT_STATIC_TRACE
 
-#include "parser/instref.h"
-#include "common/TODO.h"
+#include "parser/instref.hh"
+#include "common/TODO.hh"
 #include "util/libc.h"
 #include "util/attributes.h"
-#include "util/memory/excl_malloc_ptr.h"
+#include "util/memory/excl_malloc_ptr.hh"
 
 namespace HAC {
 namespace SIM {
 namespace CHPSIM {
-#include "util/using_istream.h"
-#include "util/using_ostream.h"
+#include "util/using_istream.hh"
+#include "util/using_ostream.hh"
 using std::ios_base;
 using std::ifstream;
 using std::copy;

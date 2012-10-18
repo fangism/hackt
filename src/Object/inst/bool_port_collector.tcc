@@ -6,10 +6,10 @@
 #ifndef	__HAC_OBJECT_INST_BOOL_PORT_COLLECTOR_TCC__
 #define	__HAC_OBJECT_INST_BOOL_PORT_COLLECTOR_TCC__
 
-#include "Object/inst/bool_port_collector.h"
-#include "Object/inst/instance_alias_info.h"
-#include "Object/inst/alias_empty.h"
-#include "Object/traits/bool_traits.h"
+#include "Object/inst/bool_port_collector.hh"
+#include "Object/inst/instance_alias_info.hh"
+#include "Object/inst/alias_empty.hh"
+#include "Object/traits/bool_traits.hh"
 
 namespace HAC {
 namespace entity {

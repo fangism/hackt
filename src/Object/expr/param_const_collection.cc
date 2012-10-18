@@ -16,26 +16,26 @@
 
 //=============================================================================
 // start of static initializations
-#include "util/static_trace.h"
+#include "util/static_trace.hh"
 DEFAULT_STATIC_TRACE_BEGIN
 
-#include "Object/common/extern_templates.h"
+#include "Object/common/extern_templates.hh"
 #include "Object/expr/const_collection.tcc"
-#include "Object/traits/pint_traits.h"
-#include "Object/traits/pbool_traits.h"
-#include "Object/traits/preal_traits.h"
-#include "Object/traits/pstring_traits.h"
-#include "Object/expr/pint_const.h"
-#include "Object/expr/pbool_const.h"
-#include "Object/expr/preal_const.h"
-#include "Object/expr/pstring_const.h"
-#include "Object/expr/const_index.h"
-#include "Object/expr/const_index_list.h"
-#include "Object/expr/const_range.h"
-#include "Object/expr/const_range_list.h"
-#include "Object/persistent_type_hash.h"
+#include "Object/traits/pint_traits.hh"
+#include "Object/traits/pbool_traits.hh"
+#include "Object/traits/preal_traits.hh"
+#include "Object/traits/pstring_traits.hh"
+#include "Object/expr/pint_const.hh"
+#include "Object/expr/pbool_const.hh"
+#include "Object/expr/preal_const.hh"
+#include "Object/expr/pstring_const.hh"
+#include "Object/expr/const_index.hh"
+#include "Object/expr/const_index_list.hh"
+#include "Object/expr/const_range.hh"
+#include "Object/expr/const_range_list.hh"
+#include "Object/persistent_type_hash.hh"
 
-#include "util/stacktrace.h"
+#include "util/stacktrace.hh"
 #include "util/persistent_object_manager.tcc"
 
 

@@ -5,26 +5,26 @@
 
 #define	ENABLE_STACKTRACE				0
 
-#include "Object/lang/proc_literal.h"
-#include "Object/inst/alias_actuals.h"
-#include "Object/inst/instance_alias_info.h"
-#include "Object/traits/proc_traits.h"
-#include "Object/ref/simple_meta_instance_reference.h"
-#include "Object/ref/meta_instance_reference_subtypes.h"
-#include "Object/expr/expr_dump_context.h"
-#include "Object/global_entry.h"
-#include "Object/global_entry_context.h"
-#include "Object/unroll/unroll_context.h"
+#include "Object/lang/proc_literal.hh"
+#include "Object/inst/alias_actuals.hh"
+#include "Object/inst/instance_alias_info.hh"
+#include "Object/traits/proc_traits.hh"
+#include "Object/ref/simple_meta_instance_reference.hh"
+#include "Object/ref/meta_instance_reference_subtypes.hh"
+#include "Object/expr/expr_dump_context.hh"
+#include "Object/global_entry.hh"
+#include "Object/global_entry_context.hh"
+#include "Object/unroll/unroll_context.hh"
 #include "util/memory/count_ptr.tcc"
 #include "util/persistent_object_manager.tcc"
-#include "util/packed_array.h"
-#include "util/stacktrace.h"
+#include "util/packed_array.hh"
+#include "util/stacktrace.hh"
 
 namespace HAC {
 namespace entity {
 using util::write_value;
 using util::read_value;
-#include "util/using_ostream.h"		// debug only
+#include "util/using_ostream.hh"		// debug only
 
 //=============================================================================
 // global variables

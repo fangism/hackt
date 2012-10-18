@@ -10,12 +10,12 @@
 #include <algorithm>
 
 #include "util/macros.h"
-#include "util/persistent.h"
-#include "util/persistent_hash.h"
+#include "util/persistent.hh"
+#include "util/persistent_hash.hh"
 
 namespace util {
 //=============================================================================
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using std::fill;
 
 //=============================================================================

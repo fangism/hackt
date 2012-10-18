@@ -7,26 +7,26 @@
 #define	__HAC_OBJECT_UNROLL_TEMPLATE_TYPE_COMPLETION_TCC__
 
 #include <iostream>
-#include "Object/unroll/template_type_completion.h"
-#include "Object/ref/meta_instance_reference_subtypes.h"
-#include "Object/ref/simple_meta_instance_reference.h"	// for dynamic casting
-#include "Object/inst/instance_alias_info.h"
+#include "Object/unroll/template_type_completion.hh"
+#include "Object/ref/meta_instance_reference_subtypes.hh"
+#include "Object/ref/simple_meta_instance_reference.hh"	// for dynamic casting
+#include "Object/inst/instance_alias_info.hh"
 #include "Object/inst/alias_actuals.tcc"	// for create_dependent_types
-#include "Object/inst/instance_collection.h"
-#include "Object/inst/internal_aliases_policy.h"
-#include "Object/expr/dynamic_param_expr_list.h"
-#include "Object/expr/expr_dump_context.h"
-#include "Object/unroll/unroll_context.h"
+#include "Object/inst/instance_collection.hh"
+#include "Object/inst/internal_aliases_policy.hh"
+#include "Object/expr/dynamic_param_expr_list.hh"
+#include "Object/expr/expr_dump_context.hh"
+#include "Object/unroll/unroll_context.hh"
 
-#include "common/TODO.h"
-#include "util/persistent_object_manager.h"
-#include "util/stacktrace.h"
+#include "common/TODO.hh"
+#include "util/persistent_object_manager.hh"
+#include "util/stacktrace.hh"
 #include "util/what.tcc"
-#include "util/packed_array.h"
+#include "util/packed_array.hh"
 
 namespace HAC {
 namespace entity {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using util::persistent_traits;
 
 //=============================================================================

@@ -10,14 +10,14 @@
 #define	ENABLE_STATIC_TRACE				1
 
 #include <iostream>
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
-#include "pool_module_b.h"
-#include "pool_module_a.h"
-#include "util/stacktrace.h"
-#include "util/memory/pointer_classes.h"
+#include "pool_module_b.hh"
+#include "pool_module_a.hh"
+#include "util/stacktrace.hh"
+#include "util/memory/pointer_classes.hh"
 #include "util/memory/list_vector_pool.tcc"
-#include "util/static_trace.h"
+#include "util/static_trace.hh"
 
 using util::memory::count_ptr;
 using util::memory::excl_ptr;

@@ -12,7 +12,7 @@
 #include <string>
 #include "util/ring_node.tcc"
 
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using std::string;
 using util::ring_node;
 using util::ring_node_derived;

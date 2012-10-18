@@ -6,16 +6,16 @@
 #define	ENABLE_STACKTRACE			0
 
 #include <iostream>
-#include "Object/inst/substructure_alias_base.h"
-#include "Object/inst/instance_collection_base.h"
-#include "Object/common/dump_flags.h"
-#include "common/ICE.h"
+#include "Object/inst/substructure_alias_base.hh"
+#include "Object/inst/instance_collection_base.hh"
+#include "Object/common/dump_flags.hh"
+#include "common/ICE.hh"
 #include "util/macros.h"
-#include "util/stacktrace.h"
+#include "util/stacktrace.hh"
 
 namespace HAC {
 namespace entity {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 //=============================================================================
 // class substructure_alias_base<false> method definitions

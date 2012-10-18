@@ -13,11 +13,11 @@
 #include <algorithm>
 #include <functional>
 
-#include "AST/node_list.h"
-#include "AST/node_position.h"
+#include "AST/node_list.hh"
+#include "AST/node_position.hh"
 #include "util/what.tcc"
-#include "util/stacktrace.h"
-#include "util/type_traits.h"
+#include "util/stacktrace.hh"
+#include "util/type_traits.hh"
 // #include "util/binders.h"
 #include "util/memory/count_ptr.tcc"
 

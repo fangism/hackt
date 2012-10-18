@@ -10,19 +10,19 @@
 #define	STACKTRACE_PERSISTENTS			(0 && ENABLE_STACKTRACE)
 
 #include "Object/type/canonical_type.tcc"
-#include "Object/def/user_def_datatype.h"
-#include "Object/def/user_def_chan.h"
-#include "Object/def/process_definition.h"
-#include "Object/type/data_type_reference.h"
-#include "Object/type/channel_type_reference.h"
-#include "Object/type/process_type_reference.h"
-#include "Object/inst/subinstance_manager.h"
-#include "Object/traits/proc_traits.h"
-#include "Object/traits/struct_traits.h"
-#include "Object/def/footprint.h"
-#include "Object/devel_switches.h"
-#include "common/TODO.h"
-#include "common/ICE.h"
+#include "Object/def/user_def_datatype.hh"
+#include "Object/def/user_def_chan.hh"
+#include "Object/def/process_definition.hh"
+#include "Object/type/data_type_reference.hh"
+#include "Object/type/channel_type_reference.hh"
+#include "Object/type/process_type_reference.hh"
+#include "Object/inst/subinstance_manager.hh"
+#include "Object/traits/proc_traits.hh"
+#include "Object/traits/struct_traits.hh"
+#include "Object/def/footprint.hh"
+#include "Object/devel_switches.hh"
+#include "common/TODO.hh"
+#include "common/ICE.hh"
 
 namespace HAC {
 namespace entity {

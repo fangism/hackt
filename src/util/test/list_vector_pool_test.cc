@@ -15,9 +15,9 @@
 #include "util/qmap.tcc"
 #include "util/memory/list_vector_pool.tcc"
 
-#include "util/what.h"
+#include "util/what.hh"
 
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using std::string;
 using util::memory::list_vector_pool;
 using util::default_qmap;

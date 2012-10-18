@@ -8,13 +8,13 @@
 #define	__HAC_OBJECT_INST_SUBINSTANCE_MANAGER_TCC__
 
 #include <iostream>
-#include "Object/inst/subinstance_manager.h"
-#include "Object/inst/instance_collection.h"
-#include "util/stacktrace.h"
+#include "Object/inst/subinstance_manager.hh"
+#include "Object/inst/instance_collection.hh"
+#include "util/stacktrace.hh"
 
 namespace HAC {
 namespace entity {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 //=============================================================================
 // class subinstance_manager method definitions

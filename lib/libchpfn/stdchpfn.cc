@@ -5,14 +5,14 @@
 	$Id: stdchpfn.cc,v 1.6 2010/10/14 17:33:45 fang Exp $
  */
 
-#include "libchpfn/assert.h"
-#include "libchpfn/conditional.h"
-#include "libchpfn/io.h"
-#include "libchpfn/OS.h"
-#include "libchpfn/string.h"
-#include "libchpfn/bitmanip.h"
-#include "libchpfn/numeric.h"
-#include "sim/chpsim/chpsim_dlfunction.h"
+#include "libchpfn/assert.hh"
+#include "libchpfn/conditional.hh"
+#include "libchpfn/io.hh"
+#include "libchpfn/OS.hh"
+#include "libchpfn/string.hh"
+#include "libchpfn/bitmanip.hh"
+#include "libchpfn/numeric.hh"
+#include "sim/chpsim/chpsim_dlfunction.hh"
 
 namespace HAC {
 namespace CHP {
@@ -27,13 +27,13 @@ CHP_DLFUNCTION_LOAD_DEFAULT("assert", Assert)
 // NOTE: all functions referenced are form the HAC::CHP namespace
 // (not the global C namespace) unless otherwise noted.  
 
-// from "libchpfn/conditional.h"
+// from "libchpfn/conditional.hh"
 CHP_DLFUNCTION_LOAD_DEFAULT("bcond", bcond)
 CHP_DLFUNCTION_LOAD_DEFAULT("zcond", zcond)
 CHP_DLFUNCTION_LOAD_DEFAULT("rcond", rcond)
 REGISTER_DLFUNCTION_RAW("select", select)
 
-// from "libchpfn/io.h"
+// from "libchpfn/io.hh"
 REGISTER_DLFUNCTION_RAW("echo", echo)
 REGISTER_DLFUNCTION_RAW("cout", echo)
 REGISTER_DLFUNCTION_RAW("print", print)
@@ -73,10 +73,10 @@ CHP_DLFUNCTION_LOAD_DEFAULT("fbscan_loop", fbscan_loop)
 CHP_DLFUNCTION_LOAD_DEFAULT("fsscan_loop", fsscan_loop)
 // CHP_DLFUNCTION_LOAD_DEFAULT("frscan_loop", frscan_loop)
 
-// from "libchpfn/OS.h"
+// from "libchpfn/OS.hh"
 CHP_DLFUNCTION_LOAD_DEFAULT("system", System)
 
-// from "libchpfn/string.h"
+// from "libchpfn/string.hh"
 CHP_DLFUNCTION_LOAD_DEFAULT("strcat", strcat)
 CHP_DLFUNCTION_LOAD_DEFAULT("sprint", strcat)
 CHP_DLFUNCTION_LOAD_DEFAULT("tostring", strcat)
@@ -84,7 +84,7 @@ CHP_DLFUNCTION_LOAD_DEFAULT("strtoz", strtoz)
 CHP_DLFUNCTION_LOAD_DEFAULT("strtob", strtob)
 CHP_DLFUNCTION_LOAD_DEFAULT("strtor", strtor)
 
-// from "libchpfn/bitmanip.h"
+// from "libchpfn/bitmanip.hh"
 CHP_DLFUNCTION_LOAD_DEFAULT("popcount", popcount)
 CHP_DLFUNCTION_LOAD_DEFAULT("parity", parity)
 CHP_DLFUNCTION_LOAD_DEFAULT("clz32", clz32)
@@ -93,7 +93,7 @@ CHP_DLFUNCTION_LOAD_DEFAULT("ffs", ffs)
 CHP_DLFUNCTION_LOAD_DEFAULT("msb", msb)
 CHP_DLFUNCTION_LOAD_DEFAULT("lsb", lsb)
 
-// from "libchpfn/numeric.h"
+// from "libchpfn/numeric.hh"
 CHP_DLFUNCTION_LOAD_DEFAULT("sign_extend", sign_extend)
 CHP_DLFUNCTION_LOAD_DEFAULT("extract_bit", extract_bit)
 CHP_DLFUNCTION_LOAD_DEFAULT("extract_bits", extract_bits)

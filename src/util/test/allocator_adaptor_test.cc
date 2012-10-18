@@ -14,7 +14,7 @@
 #include "util/memory/chunk_map_pool.tcc"
 #include "util/memory/allocator_adaptor.tcc"
 
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using util::memory::chunk_map_pool;
 using util::memory::allocator_adaptor;
 

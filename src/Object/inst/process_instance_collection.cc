@@ -16,13 +16,13 @@
 #include <iostream>
 #include <algorithm>
 
-#include "Object/inst/process_instance_collection.h"
-#include "Object/ref/simple_meta_instance_reference.h"
-#include "Object/ref/member_meta_instance_reference.h"
-#include "Object/def/process_definition.h"
-#include "Object/type/process_type_reference.h"
+#include "Object/inst/process_instance_collection.hh"
+#include "Object/ref/simple_meta_instance_reference.hh"
+#include "Object/ref/member_meta_instance_reference.hh"
+#include "Object/def/process_definition.hh"
+#include "Object/type/process_type_reference.hh"
 #include "Object/inst/alias_actuals.tcc"
-#include "Object/persistent_type_hash.h"
+#include "Object/persistent_type_hash.hh"
 #include "Object/inst/connection_policy.tcc"
 #include "Object/inst/instance_collection.tcc"
 #include "Object/inst/instance_placeholder.tcc"
@@ -30,8 +30,8 @@
 #include "Object/inst/general_collection_type_manager.tcc"
 #include "Object/inst/state_instance.tcc"
 #include "Object/inst/internal_aliases_policy.tcc"
-#include "Object/inst/alias_empty.h"		// why is this needed?
-#include "Object/unroll/instantiation_statement_type_ref_default.h"
+#include "Object/inst/alias_empty.hh"		// why is this needed?
+#include "Object/unroll/instantiation_statement_type_ref_default.hh"
 
 namespace util {
 	SPECIALIZE_UTIL_WHAT(HAC::entity::process_instance_collection,
@@ -50,7 +50,7 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 
 // explicit template instantiation
 using namespace HAC::entity;
-// from Object/traits/proc_traits.h: alias_collection_type
+// from Object/traits/proc_traits.hh: alias_collection_type
 template class packed_array_generic<pint_value_type,
 		memory::never_ptr<instance_alias_info<HAC::entity::process_tag> > >;
 }	// end namespace util

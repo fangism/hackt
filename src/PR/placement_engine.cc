@@ -10,22 +10,22 @@
 #include <fstream>
 #include <algorithm>
 #include <functional>
-#include "PR/placement_engine.h"
-#include "PR/tile_type.h"
-#include "PR/pr_utils.h"
-#include "common/TODO.h"
-#include "util/vector_ops.h"
+#include "PR/placement_engine.hh"
+#include "PR/tile_type.hh"
+#include "PR/pr_utils.hh"
+#include "common/TODO.hh"
+#include "util/vector_ops.hh"
 #include "util/array.tcc"
-#include "util/indent.h"
-#include "util/string.h"
-#include "util/numeric/random.h"
-#include "util/numeric/abs.h"
+#include "util/indent.hh"
+#include "util/string.hh"
+#include "util/numeric/random.hh"
+#include "util/numeric/abs.hh"
 #include "util/IO_utils.tcc"
-#include "util/iterator_more.h"
-#include "util/iomanip.h"
-#include "util/value_saver.h"
-#include "util/fig/xfig.h"
-#include "util/stacktrace.h"
+#include "util/iterator_more.hh"
+#include "util/iomanip.hh"
+#include "util/value_saver.hh"
+#include "util/fig/xfig.hh"
+#include "util/stacktrace.hh"
 
 namespace HAC {
 namespace PR {
@@ -49,7 +49,7 @@ using util::fig::xfig::document;
 using util::fig::xfig::polyline;
 using util::fig::xfig::point;
 using util::fig::xfig::default_resolution;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 //=============================================================================
 // class placement_engine method definitions

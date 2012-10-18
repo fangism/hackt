@@ -12,17 +12,17 @@
 #include <iostream>
 
 #include "parser/yacc-config.h"
-#include "AST/AST.h"		// should be first
+#include "AST/AST.hh"		// should be first
 #include "parser/type-prefix.h"
 #include "parser/type-parse.output.h"	// auto-generated state strings! :)
 #include "parser/type-parse-options.h"
-#include "parser/type-union.h"
+#include "parser/type-union.hh"
 #include "lexer/type-lex-options.h"
-#include "lexer/flex_lexer_state.h"
-#include "util/using_ostream.h"
+#include "lexer/flex_lexer_state.hh"
+#include "util/using_ostream.hh"
 
 #define	ENABLE_STACKTRACE		0
-#include "util/stacktrace.h"
+#include "util/stacktrace.hh"
 
 // extern FILE* yyin;
 
@@ -37,7 +37,7 @@ using namespace HAC::lexer;
 using namespace HAC::parser;
 
 /***
-// list macros (now inline functions in "AST/node_list.h")
+// list macros (now inline functions in "AST/node_list.hh")
 WRAP_LIST
 DELETE_TOKEN
 APPEND_LIST

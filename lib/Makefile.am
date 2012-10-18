@@ -142,28 +142,28 @@ EXTRA_DIST += libchpfn/TODO
 #	dox/chpsim/Makefile.am for automatic documentation (texinfo)
 libstdchpfn_la_SOURCES = \
 	libchpfn/assert.cc \
-	libchpfn/assert.h \
+	libchpfn/assert.hh \
 	libchpfn/bitmanip.cc \
-	libchpfn/bitmanip.h \
+	libchpfn/bitmanip.hh \
 	libchpfn/conditional.cc \
-	libchpfn/conditional.h \
+	libchpfn/conditional.hh \
 	libchpfn/io.cc \
-	libchpfn/io.h \
+	libchpfn/io.hh \
 	libchpfn/OS.cc \
-	libchpfn/OS.h \
+	libchpfn/OS.hh \
 	libchpfn/numeric.cc \
-	libchpfn/numeric.h \
+	libchpfn/numeric.hh \
 	libchpfn/string.cc \
-	libchpfn/string.h
+	libchpfn/string.hh
 # libstdchpfn_la_LIBADD = ../src/libhackt.la
 
 nobase_pkginclude_HEADERS = \
-	libchpfn/assert.h \
-	libchpfn/bitmanip.h \
-	libchpfn/conditional.h \
-	libchpfn/io.h \
-	libchpfn/OS.h \
-	libchpfn/string.h
+	libchpfn/assert.hh \
+	libchpfn/bitmanip.hh \
+	libchpfn/conditional.hh \
+	libchpfn/io.hh \
+	libchpfn/OS.hh \
+	libchpfn/string.hh
 
 # install a copy of the source for reference (is libdir appropriate?)
 nobase_pkgdata_DATA = libchpfn/stdchpfn.cc

@@ -8,13 +8,13 @@
 
 #include <iostream>
 #include <iterator>
-#include "Object/inst/sparse_collection.h"
+#include "Object/inst/sparse_collection.hh"
 #include "util/likely.h"
-#include "util/stacktrace.h"
+#include "util/stacktrace.hh"
 
 namespace HAC {
 namespace entity {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 //=============================================================================
 // class sparse_collection method definitions

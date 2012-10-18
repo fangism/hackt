@@ -9,21 +9,21 @@
 
 #include <iostream>
 #include <vector>
-#include "Object/type/canonical_type.h"
-#include "Object/traits/class_traits_fwd.h"
-#include "Object/def/typedef_base.h"
-#include "Object/def/template_formals_manager.h"
-#include "Object/type/template_actuals.h"
-#include "Object/expr/const_param_expr_list.h"
-#include "Object/unroll/unroll_context.h"
-#include "Object/global_entry.h"
+#include "Object/type/canonical_type.hh"
+#include "Object/traits/class_traits_fwd.hh"
+#include "Object/def/typedef_base.hh"
+#include "Object/def/template_formals_manager.hh"
+#include "Object/type/template_actuals.hh"
+#include "Object/expr/const_param_expr_list.hh"
+#include "Object/unroll/unroll_context.hh"
+#include "Object/global_entry.hh"
 #include "util/persistent_object_manager.tcc"
-#include "common/TODO.h"
-#include "util/stacktrace.h"
+#include "common/TODO.hh"
+#include "util/stacktrace.hh"
 
 namespace HAC {
 namespace entity {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 //=============================================================================
 // struct canonical_definition_load_policy method definitions
 

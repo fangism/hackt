@@ -8,17 +8,17 @@
 #define	ENABLE_STACKTRACE		1
 
 #include <iostream>
-#include "Object/common/namespace.h"
-#include "Object/traits/bool_traits.h"
-#include "Object/ref/meta_instance_reference_subtypes.h"
-#include "Object/ref/simple_meta_instance_reference.h"
-#include "Object/inst/instance_placeholder_base.h"
-#include "Object/inst/datatype_instance_placeholder.h" // DEBUG ONLY
-#include "Object/inst/instance_placeholder.h" // DEBUG ONLY
-#include "Object/ref/meta_reference_union.h"
+#include "Object/common/namespace.hh"
+#include "Object/traits/bool_traits.hh"
+#include "Object/ref/meta_instance_reference_subtypes.hh"
+#include "Object/ref/simple_meta_instance_reference.hh"
+#include "Object/inst/instance_placeholder_base.hh"
+#include "Object/inst/datatype_instance_placeholder.hh" // DEBUG ONLY
+#include "Object/inst/instance_placeholder.hh" // DEBUG ONLY
+#include "Object/ref/meta_reference_union.hh"
 // #include "util/memory/count_ptr.tcc"
-#include "util/stacktrace.h"
-// #include "ctest.h"
+#include "util/stacktrace.hh"
+// #include "ctest.hh"
 
 using namespace std;
 using namespace HAC::entity;

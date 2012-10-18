@@ -3,9 +3,9 @@
 	$Id: expr_dump_context.cc,v 1.7 2007/09/27 02:03:41 fang Exp $
  */
 
-#include "Object/expr/expr_dump_context.h"
-#include "Object/expr/operator_precedence.h"
-#include "Object/lang/PRS_base.h"	// for PRS::expr_dump_context
+#include "Object/expr/expr_dump_context.hh"
+#include "Object/expr/operator_precedence.hh"
+#include "Object/lang/PRS_base.hh"	// for PRS::expr_dump_context
 
 namespace HAC {
 namespace entity {

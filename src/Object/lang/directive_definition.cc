@@ -4,9 +4,9 @@
  */
 
 #include <vector>
-#include "Object/lang/directive_definition.h"
-#include "Object/expr/const_param.h"
-#include "util/memory/count_ptr.h"
+#include "Object/lang/directive_definition.hh"
+#include "Object/expr/const_param.hh"
+#include "util/memory/count_ptr.hh"
 
 namespace HAC {
 namespace entity {

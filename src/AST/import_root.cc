@@ -7,17 +7,17 @@
 #define	STACKTRACE_DTORS			(0 && ENABLE_STACKTRACE)
 
 #include <iostream>
-#include "AST/import_root.h"
+#include "AST/import_root.hh"
 #include "AST/node_list.tcc"
-#include "AST/parse_context.h"
-#include "AST/token.h"
-#include "AST/token_string.h"
+#include "AST/parse_context.hh"
+#include "AST/token.hh"
+#include "AST/token_string.hh"
 #include "util/memory/count_ptr.tcc"
-#include "Object/common/namespace.h"
-#include "common/TODO.h"
-#include "util/what.h"
-#include "util/stacktrace.h"
-#include "util/value_saver.h"
+#include "Object/common/namespace.hh"
+#include "common/TODO.hh"
+#include "util/what.hh"
+#include "util/stacktrace.hh"
+#include "util/value_saver.hh"
 
 namespace util {
 SPECIALIZE_UTIL_WHAT(HAC::parser::imported_root, "(imported-root)")
@@ -31,7 +31,7 @@ template class count_ptr<const HAC::parser::imported_root>;
 
 namespace HAC {
 namespace parser {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 //=============================================================================
 // class imported_root method definitions
 

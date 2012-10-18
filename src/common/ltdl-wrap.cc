@@ -3,13 +3,13 @@
 	$Id: ltdl-wrap.cc,v 1.3 2007/08/19 04:00:37 fang Exp $
  */
 
-#include "common/ltdl-wrap.h"
-// #include "util/memory/excl_ptr.h"
+#include "common/ltdl-wrap.hh"
+// #include "util/memory/excl_ptr.hh"
 #include "util/memory/count_ptr.tcc"
 #include <iostream>
 #include <map>
 #include <list>
-#include "util/stacktrace.h"
+#include "util/stacktrace.hh"
 
 /**
 	Leave as 0 to use a consistent, but less informative error message.
@@ -22,7 +22,7 @@ namespace HAC {
 using util::memory::count_ptr;
 using std::list;
 using std::string;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 //=============================================================================
 // static global structures

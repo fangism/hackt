@@ -7,7 +7,7 @@
 #ifndef	__UTIL_DISCRETE_INTERVAL_SET_TCC__
 #define	__UTIL_DISCRETE_INTERVAL_SET_TCC__
 
-#include "util/discrete_interval_set.h"
+#include "util/discrete_interval_set.hh"
 
 // predefine to suppress definition
 #ifndef	EXTERN_TEMPLATE_UTIL_DISCRETE_INTERVAL_SET

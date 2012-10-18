@@ -6,14 +6,14 @@
 
 #define	ENABLE_STACKTRACE		0
 
-#include "Object/unroll/meta_conditional_base.h"
-#include "Object/expr/pbool_expr.h"
+#include "Object/unroll/meta_conditional_base.hh"
+#include "Object/expr/pbool_expr.hh"
 
-// #include "common/TODO.h"
+// #include "common/TODO.hh"
 #include "util/persistent_object_manager.tcc"
-// #include "util/IO_utils.h"
+// #include "util/IO_utils.hh"
 #include "util/memory/count_ptr.tcc"
-// #include "util/stacktrace.h"
+// #include "util/stacktrace.hh"
 
 //=============================================================================
 namespace HAC {

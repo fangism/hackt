@@ -12,7 +12,7 @@
 #include <iostream>
 #include <string>
 
-// #include "var.h"
+// #include "var.hh"
 #include "util/memory/count_ptr.tcc"
 #include "util/memory/chunk_map_pool.tcc"
 
@@ -34,7 +34,7 @@ CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(string)
 
 }	// end namespace test
 
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using test::string;
 
 

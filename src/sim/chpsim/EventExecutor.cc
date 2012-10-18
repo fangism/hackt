@@ -13,36 +13,36 @@
 #include <algorithm>
 #include <sstream>
 
-#include "sim/chpsim/EventExecutor.h"
-#include "Object/lang/CHP.h"
-#include "Object/def/footprint.h"
-#include "Object/expr/expr_dump_context.h"
-#include "Object/expr/pbool_const.h"
-#include "Object/expr/preal_const.h"
-#include "Object/expr/nonmeta_func_call.h"
-#include "Object/ref/data_nonmeta_instance_reference.h"
-#include "Object/ref/nonmeta_instance_reference_subtypes.h"
-#include "Object/ref/simple_nonmeta_instance_reference.h"
-#include "Object/traits/chan_traits.h"
-#include "Object/nonmeta_context.h"
-#include "Object/global_channel_entry.h"
-#include "Object/nonmeta_channel_manipulator.h"
-#include "Object/traits/proc_traits.h"
-#include "Object/common/dump_flags.h"
+#include "sim/chpsim/EventExecutor.hh"
+#include "Object/lang/CHP.hh"
+#include "Object/def/footprint.hh"
+#include "Object/expr/expr_dump_context.hh"
+#include "Object/expr/pbool_const.hh"
+#include "Object/expr/preal_const.hh"
+#include "Object/expr/nonmeta_func_call.hh"
+#include "Object/ref/data_nonmeta_instance_reference.hh"
+#include "Object/ref/nonmeta_instance_reference_subtypes.hh"
+#include "Object/ref/simple_nonmeta_instance_reference.hh"
+#include "Object/traits/chan_traits.hh"
+#include "Object/nonmeta_context.hh"
+#include "Object/global_channel_entry.hh"
+#include "Object/nonmeta_channel_manipulator.hh"
+#include "Object/traits/proc_traits.hh"
+#include "Object/common/dump_flags.hh"
 
-#include "sim/chpsim/StateConstructor.h"
-#include "sim/chpsim/DependenceCollector.h"
-#include "sim/chpsim/State.h"
-#include "sim/chpsim/nonmeta_context.h"
+#include "sim/chpsim/StateConstructor.hh"
+#include "sim/chpsim/DependenceCollector.hh"
+#include "sim/chpsim/State.hh"
+#include "sim/chpsim/nonmeta_context.hh"
 
-#include "common/ICE.h"
-#include "common/TODO.h"
-#include "util/stacktrace.h"
+#include "common/ICE.hh"
+#include "common/TODO.hh"
+#include "util/stacktrace.hh"
 #include "util/memory/count_ptr.tcc"
-#include "util/STL/valarray_iterator.h"
-#include "util/reference_wrapper.h"
-#include "util/iterator_more.h"		// for set_inserter
-#include "util/numeric/random.h"	// for rand48
+#include "util/STL/valarray_iterator.hh"
+#include "util/reference_wrapper.hh"
+#include "util/iterator_more.hh"		// for set_inserter
+#include "util/numeric/random.hh"	// for rand48
 
 #if ENABLE_STACKTRACE_CHPSIM
 #define	STACKTRACE_CHPSIM_VERBOSE	STACKTRACE_VERBOSE
@@ -53,7 +53,7 @@
 namespace HAC {
 namespace entity {
 namespace CHP {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 //=============================================================================
 // class guarded_action::selection_evaluator definition
@@ -153,7 +153,7 @@ using entity::expr_dump_context;
 using entity::ChannelState;
 using entity::CHP::selection_list_type;
 using util::set_inserter;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using util::reference_wrapper;
 using util::numeric::rand48;
 using util::memory::count_ptr;

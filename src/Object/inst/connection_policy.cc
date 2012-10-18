@@ -8,18 +8,18 @@
 #include <iostream>
 #include <iomanip>
 #include <string>
-#include "Object/inst/connection_policy.h"
-#include "Object/devel_switches.h"
-#include "common/TODO.h"
+#include "Object/inst/connection_policy.hh"
+#include "Object/devel_switches.hh"
+#include "common/TODO.hh"
 #include "util/IO_utils.tcc"
-#include "util/stacktrace.h"
+#include "util/stacktrace.hh"
 
 namespace HAC {
 namespace entity {
 using std::string;
 using util::write_value;
 using util::read_value;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 //=============================================================================
 // bool_connect_policy method definitions

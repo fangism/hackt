@@ -7,28 +7,28 @@
 
 #include <iostream>
 #include <functional>
-#include "Object/nonmeta_state.h"
-#include "Object/def/footprint.h"
-#include "Object/common/dump_flags.h"
-#include "Object/global_entry.h"
+#include "Object/nonmeta_state.hh"
+#include "Object/def/footprint.hh"
+#include "Object/common/dump_flags.hh"
+#include "Object/global_entry.hh"
 #if BUILTIN_CHANNEL_FOOTPRINTS
-#include "Object/global_channel_entry.h"
+#include "Object/global_channel_entry.hh"
 #endif
-#include "Object/traits/int_traits.h"
-#include "Object/traits/bool_traits.h"
-#include "Object/traits/chan_traits.h"
-#include "Object/traits/enum_traits.h"
-#include "Object/inst/state_instance.h"
-#include "Object/inst/instance_pool.h"
-#include "Object/type/canonical_fundamental_chan_type.h"
-#include "common/TODO.h"
-#include "util/binders.h"
-#include "util/IO_utils.h"
-#include "util/stacktrace.h"
+#include "Object/traits/int_traits.hh"
+#include "Object/traits/bool_traits.hh"
+#include "Object/traits/chan_traits.hh"
+#include "Object/traits/enum_traits.hh"
+#include "Object/inst/state_instance.hh"
+#include "Object/inst/instance_pool.hh"
+#include "Object/type/canonical_fundamental_chan_type.hh"
+#include "common/TODO.hh"
+#include "util/binders.hh"
+#include "util/IO_utils.hh"
+#include "util/stacktrace.hh"
 
 namespace HAC {
 namespace entity {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using std::mem_fun_ref;
 using std::for_each;
 using util::bind2nd_argval;

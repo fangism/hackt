@@ -7,7 +7,7 @@
 #include <limits>
 #include <algorithm>
 #include <iterator>
-#include "PR/gravity_well.h"
+#include "PR/gravity_well.hh"
 #include "util/IO_utils.tcc"
 
 namespace HAC {
@@ -15,7 +15,7 @@ namespace PR {
 using std::set;
 using std::ostream_iterator;
 using std::numeric_limits;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 //=============================================================================
 // class gravity well method definitions

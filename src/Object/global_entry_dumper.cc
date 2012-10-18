@@ -6,27 +6,27 @@
 #define	ENABLE_STACKTRACE			0
 
 #include <iostream>
-#include "Object/global_entry_dumper.h"
-#include "Object/module.h"
-#include "Object/global_entry.h"
-#include "Object/global_channel_entry.h"
-#include "Object/common/dump_flags.h"
-#include "Object/def/footprint.h"
-#include "Object/type/canonical_fundamental_chan_type.h"
-#include "Object/expr/expr_dump_context.h"
-#include "Object/inst/state_instance.h"
-#include "Object/inst/instance_pool.h"
-#include "Object/traits/instance_traits.h"
-#include "Object/inst/instance_alias_info.h"
-#include "Object/inst/alias_empty.h"
-#include "Object/inst/alias_actuals.h"
-#include "util/stacktrace.h"
-#include "util/indent.h"
-#include "util/value_saver.h"
+#include "Object/global_entry_dumper.hh"
+#include "Object/module.hh"
+#include "Object/global_entry.hh"
+#include "Object/global_channel_entry.hh"
+#include "Object/common/dump_flags.hh"
+#include "Object/def/footprint.hh"
+#include "Object/type/canonical_fundamental_chan_type.hh"
+#include "Object/expr/expr_dump_context.hh"
+#include "Object/inst/state_instance.hh"
+#include "Object/inst/instance_pool.hh"
+#include "Object/traits/instance_traits.hh"
+#include "Object/inst/instance_alias_info.hh"
+#include "Object/inst/alias_empty.hh"
+#include "Object/inst/alias_actuals.hh"
+#include "util/stacktrace.hh"
+#include "util/indent.hh"
+#include "util/value_saver.hh"
 
 namespace HAC {
 namespace entity {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using util::value_saver;
 
 //=============================================================================

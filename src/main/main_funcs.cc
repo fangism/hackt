@@ -15,7 +15,7 @@
 #define	KEEP_PARSE_FUNCS		1
 
 #include "config.h"			// for USING_BISON / USING_YACC
-#include "util/static_trace.h"
+#include "util/static_trace.hh"
 DEFAULT_STATIC_TRACE_BEGIN
 
 #include <iostream>
@@ -24,35 +24,35 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include <cstdio>
 
 #include "util/macros.h"
-#include "main/main_funcs.h"
+#include "main/main_funcs.hh"
 
-#include "AST/root.h"			// for parser::root_body
-#include "AST/type_base.h"		// for parser::concrete_type_ref
-#include "AST/parse_context.h"		// for parser::context
-#include "main/compile_options.h"
-#include "main/compile.h"
-#include "main/create.h"
-#include "common/config.h"
-#include "Object/type/process_type_reference.h"
-#include "Object/type/canonical_type.h"
+#include "AST/root.hh"			// for parser::root_body
+#include "AST/type_base.hh"		// for parser::concrete_type_ref
+#include "AST/parse_context.hh"		// for parser::context
+#include "main/compile_options.hh"
+#include "main/compile.hh"
+#include "main/create.hh"
+#include "common/config.hh"
+#include "Object/type/process_type_reference.hh"
+#include "Object/type/canonical_type.hh"
 #include "util/getopt_portable.h"
-#include "util/getopt_mapped.h"
-#include "util/value_saver.h"
-#include "util/persistent_object_manager.h"
+#include "util/getopt_mapped.hh"
+#include "util/value_saver.hh"
+#include "util/persistent_object_manager.hh"
 #if IMPLICIT_SUPPLY_PORTS
-#include "AST/globals.h"
-#include "AST/instance.h"
+#include "AST/globals.hh"
+#include "AST/instance.hh"
 #endif
 
 #if KEEP_PARSE_FUNCS
 // forward declarations needed for YSTYPE
-#include "parser/hackt-parse-real.h"	// for YYSTYPE
+#include "parser/hackt-parse-real.hh"	// for YYSTYPE
 using util::memory::count_ptr;
 
-#include "lexer/file_manager.h"
-#include "lexer/yyin_manager.h"
-#include "lexer/flex_lexer_state.h"
-#include "lexer/hacflat-yystype.h"
+#include "lexer/file_manager.hh"
+#include "lexer/yyin_manager.hh"
+#include "lexer/flex_lexer_state.hh"
+#include "lexer/hacflat-yystype.hh"
 #endif
 #include "util/libc.h"			// for remove
 
@@ -60,7 +60,7 @@ using util::memory::count_ptr;
 /**
 	This prototype for yyparse is either set by
 	YYPARSE_PARAM for bison, or hacked by scripts for yacc.  
-	Coordinate with "parser/hackt-parse-options.h".
+	Coordinate with "parser/hackt-parse-options.hh".
  */
 extern	int	hackt_parse(void*, YYSTYPE&, flex::lexer_state&);
 extern	HAC::lexer::file_manager	hackt_parse_file_manager;
@@ -74,7 +74,7 @@ extern	good_bool	__flatten_source(FILE*);
 }	// end namespace HAC
 #endif
 
-#include "util/stacktrace.h"
+#include "util/stacktrace.hh"
 
 //=============================================================================
 namespace HAC {
@@ -91,7 +91,7 @@ using lexer::file_manager;
 #if KEEP_PARSE_FUNCS
 using lexer::yyin_manager;
 #endif
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 typedef	parser::context		parse_context;
 
 //=============================================================================

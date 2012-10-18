@@ -11,11 +11,11 @@
 #include <iostream>
 #include <string>
 
-#include "var.h"
+#include "var.hh"
 #include "util/memory/count_ptr.tcc"
 
 using std::string;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using namespace util::memory;
 
 

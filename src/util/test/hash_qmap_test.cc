@@ -12,10 +12,10 @@
 #include <string>
 
 #include "util/hash_qmap.tcc"
-#include "util/memory/excl_ptr.h"
-#include "util/hash_specializations.h"
+#include "util/memory/excl_ptr.hh"
+#include "util/hash_specializations.hh"
 
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using std::string;
 using util::hash_qmap;
 using namespace util::memory;

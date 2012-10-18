@@ -13,25 +13,25 @@
 #include <string>
 #include <map>
 #include <cstdio>
-#include "common/config.h"
-#include "main/compile.h"
-#include "main/main_funcs.h"
-#include "main/compile_options.h"
-#include "main/global_options.h"
-#include "lexer/file_manager.h"
+#include "common/config.hh"
+#include "main/compile.hh"
+#include "main/main_funcs.hh"
+#include "main/compile_options.hh"
+#include "main/global_options.hh"
+#include "lexer/file_manager.hh"
 #if COMPILE_USE_OPTPARSE
 #include "util/optparse.tcc"
 #endif
 #include "util/getopt_portable.h"
-#include "util/getopt_mapped.h"
+#include "util/getopt_mapped.hh"
 #include "util/attributes.h"
-#include "util/stacktrace.h"
+#include "util/stacktrace.hh"
 
 extern HAC::lexer::file_manager
 hackt_parse_file_manager;
 
 namespace HAC {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using entity::module;
 using std::list;
 using std::string;

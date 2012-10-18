@@ -8,7 +8,7 @@
 #undef	NDEBUG
 #endif	// NDEBUG
 
-#include "one_array_only.h"
+#include "one_array_only.hh"
 #include <iostream>
 #include <cassert>
 

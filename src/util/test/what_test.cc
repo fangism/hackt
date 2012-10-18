@@ -15,7 +15,7 @@
 #define	DEBUG_LIST_VECTOR_POOL		1	// pre-define to enable debug
 #include "util/memory/list_vector_pool.tcc"
 
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using util::what;
 using util::memory::list_vector_pool;
 

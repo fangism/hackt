@@ -9,21 +9,21 @@
 #include <iomanip>
 #include <fstream>
 #include <ctime>
-#include "sim/prsim/VCDManager.h"
-#include "sim/prsim/State-prsim.h"
-#include "main/cflat_options.h"
-#include "Object/module.h"
-#include "Object/def/footprint.h"
-#include "Object/global_entry.h"
-#include "Object/interfaces/VCDwriter.h"
+#include "sim/prsim/VCDManager.hh"
+#include "sim/prsim/State-prsim.hh"
+#include "main/cflat_options.hh"
+#include "Object/module.hh"
+#include "Object/def/footprint.hh"
+#include "Object/global_entry.hh"
+#include "Object/interfaces/VCDwriter.hh"
 #include "cvstag.h"
-#include "util/indent.h"
-#include "util/stacktrace.h"
+#include "util/indent.hh"
+#include "util/stacktrace.hh"
 
 namespace HAC {
 namespace SIM {
 namespace PRSIM {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using VCD::VCDwriter;
 using util::auto_indent;
 

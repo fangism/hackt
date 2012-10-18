@@ -9,13 +9,13 @@
 #include <iostream>
 
 #include "config.h"
-#include "AST/AST.h"
-#include "parser/instref.h"
+#include "AST/AST.hh"
+#include "parser/instref.hh"
 #include "parser/instref-prefix.h"
-#include "parser/instref-parse-real.h"
+#include "parser/instref-parse-real.hh"
 #include "parser/instref-parse-options.h"
-#include "lexer/flex_lexer_state.h"
-#include "util/stacktrace.h"
+#include "lexer/flex_lexer_state.hh"
+#include "util/stacktrace.hh"
 
 // the rest of this file came from an old "sim/prsim/Reference.cc"
 
@@ -23,42 +23,42 @@
 #include <algorithm>
 #include <cstdio>
 #include <string>
-#include "AST/parse_context.h"
-#include "Object/module.h"
-#include "Object/global_entry.h"
-#include "Object/global_channel_entry.h"
-#include "Object/global_entry_context.h"
-// #include "Object/common/dump_flags.h"
-#include "Object/common/namespace.h"
-#include "Object/unroll/unroll_context.h"
-#include "Object/traits/instance_traits.h"
-#include "Object/expr/expr_dump_context.h"
-#include "Object/ref/meta_instance_reference_subtypes.h"
-#include "Object/ref/simple_meta_instance_reference.h"
-#include "Object/inst/alias_empty.h"
-#include "Object/inst/alias_actuals.h"
-#include "Object/inst/instance_alias_info.h"
-#include "Object/inst/instance_placeholder_base.h"
+#include "AST/parse_context.hh"
+#include "Object/module.hh"
+#include "Object/global_entry.hh"
+#include "Object/global_channel_entry.hh"
+#include "Object/global_entry_context.hh"
+// #include "Object/common/dump_flags.hh"
+#include "Object/common/namespace.hh"
+#include "Object/unroll/unroll_context.hh"
+#include "Object/traits/instance_traits.hh"
+#include "Object/expr/expr_dump_context.hh"
+#include "Object/ref/meta_instance_reference_subtypes.hh"
+#include "Object/ref/simple_meta_instance_reference.hh"
+#include "Object/inst/alias_empty.hh"
+#include "Object/inst/alias_actuals.hh"
+#include "Object/inst/instance_alias_info.hh"
+#include "Object/inst/instance_placeholder_base.hh"
 #if DEBUGGING_SHIT
-#include "Object/inst/datatype_instance_placeholder.h" // DEBUG ONLY
-#include "Object/inst/instance_placeholder.h" // DEBUG ONLY
+#include "Object/inst/datatype_instance_placeholder.hh" // DEBUG ONLY
+#include "Object/inst/instance_placeholder.hh" // DEBUG ONLY
 #include "util/memory/count_ptr.tcc"
 #endif
 #include "Object/inst/bool_port_collector.tcc"
-#include "Object/inst/state_instance.h"
-#include "Object/inst/instance_pool.h"
-#include "Object/ref/meta_reference_union.h"
-#include "Object/traits/type_tag_enum.h"
-#include "Object/entry_collection.h"
-#include "common/TODO.h"
-#include "util/tokenize_fwd.h"		// for string_list
-#include "util/value_saver.h"
-#include "util/directory.h"
+#include "Object/inst/state_instance.hh"
+#include "Object/inst/instance_pool.hh"
+#include "Object/ref/meta_reference_union.hh"
+#include "Object/traits/type_tag_enum.hh"
+#include "Object/entry_collection.hh"
+#include "common/TODO.hh"
+#include "util/tokenize_fwd.hh"		// for string_list
+#include "util/value_saver.hh"
+#include "util/directory.hh"
 #include "util/memory/count_ptr.tcc"
-#include "util/packed_array.h"		// for alias_collection_type
-#include "util/member_select.h"
-#include "util/copy_if.h"		// for transform_if algo
-#include "util/iterator_more.h"		// for set_inserter
+#include "util/packed_array.hh"		// for alias_collection_type
+#include "util/member_select.hh"
+#include "util/copy_if.hh"		// for transform_if algo
+#include "util/iterator_more.hh"		// for set_inserter
 
 extern
 int
@@ -108,7 +108,7 @@ using util::string_list;
 using util::memory::excl_ptr;
 using util::memory::never_ptr;
 using util::directory_stack;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 typedef	inst_ref_expr::meta_return_type		checked_ref_type;
 //=============================================================================

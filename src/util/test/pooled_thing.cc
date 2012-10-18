@@ -7,9 +7,9 @@
 
 #define	DEBUG_LIST_VECTOR_POOL		1
 
-#include "pooled_thing.h"
+#include "pooled_thing.hh"
 #include "util/memory/list_vector_pool.tcc"
-#include "util/what.h"
+#include "util/what.hh"
 
 using util::what;
 

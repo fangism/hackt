@@ -11,17 +11,16 @@
 #include <string>
 #include <cstring>			// for strrchr
 #include <vector>
-#include "sim/command_registry.h"
-#include "sim/command_base.h"
-// #include "util/readline.h"
-#include "util/readline_wrap.h"
+#include "sim/command_registry.hh"
+#include "sim/command_base.hh"
+#include "util/readline_wrap.hh"
 
 namespace HAC {
 namespace SIM {
 using std::set;
 using std::ostream_iterator;
 using util::readline_wrapper;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 //=============================================================================
 /**

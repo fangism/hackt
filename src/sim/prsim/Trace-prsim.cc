@@ -5,20 +5,20 @@
 
 #define	ENABLE_STACKTRACE			0
 
-#include "sim/prsim/Trace-prsim.h"
-// #include "sim/prsim/TraceStreamer.h"
-#include "sim/prsim/State-prsim.h"
+#include "sim/prsim/Trace-prsim.hh"
+// #include "sim/prsim/TraceStreamer.hh"
+#include "sim/prsim/State-prsim.hh"
 #include <iostream>
 #include <sstream>
 #include <iterator>
 #include <algorithm>
 #include <functional>
 #include <fstream>
-#include "util/stacktrace.h"
+#include "util/stacktrace.hh"
 #include <cstdio>			// for tmpnam
 #include "util/libc_temp.h"	// for temp file functions
 #include "util/IO_utils.tcc"	// .tcc?
-#include "util/binders.h"
+#include "util/binders.hh"
 
 /**
 	Define to 1 to include initial and final checkpoints.
@@ -28,7 +28,7 @@
 namespace HAC {
 namespace SIM {
 namespace PRSIM {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using std::for_each;
 using std::ios_base;
 using std::copy;

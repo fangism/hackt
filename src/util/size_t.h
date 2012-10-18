@@ -10,7 +10,7 @@
 #include "config.h"
 
 #if defined(__cplusplus) && defined(HAVE_CSTDDEF) && HAVE_CSTDDEF
-// size_t is usually typedef'd in <stddef.h>
+/* size_t is usually typedef'd in <stddef.h> */
 #include <cstddef>
 #elif defined(HAVE_STDDEF_H) && HAVE_STDDEF_H
 #include <stddef.h>
@@ -18,5 +18,5 @@
 #error	"I don't know where size_t is defined."
 #endif
 
-#endif	// __UTIL_SIZE_T_H__
+#endif	/* __UTIL_SIZE_T_H__ */
 

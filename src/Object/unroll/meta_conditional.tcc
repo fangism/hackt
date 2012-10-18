@@ -9,23 +9,23 @@
 
 #include <iostream>
 #include <algorithm>
-#include "Object/unroll/meta_conditional.h"
-#include "Object/expr/pbool_const.h"
-#include "Object/expr/expr_dump_context.h"
-#include "Object/unroll/unroll_context.h"
-#include "Object/common/dump_flags.h"
+#include "Object/unroll/meta_conditional.hh"
+#include "Object/expr/pbool_const.hh"
+#include "Object/expr/expr_dump_context.hh"
+#include "Object/unroll/unroll_context.hh"
+#include "Object/common/dump_flags.hh"
 #include "util/memory/count_ptr.tcc"
 #include "util/persistent_object_manager.tcc"
 #include "util/persistent_functor.tcc"
-#include "util/indent.h"
-#include "util/stacktrace.h"
-#include "util/IO_utils.h"
+#include "util/indent.hh"
+#include "util/stacktrace.hh"
+#include "util/IO_utils.hh"
 
 namespace HAC {
 namespace entity {
 using std::for_each;
 using util::auto_indent;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using PRS::rule_dump_context;
 using util::read_value;
 using util::write_value;

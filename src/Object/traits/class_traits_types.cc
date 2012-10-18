@@ -8,36 +8,36 @@
 
 #define	DEBUG_TRAITS_CLASS_TRAITS_TYPES			0
 
-#include "util/static_trace.h"
+#include "util/static_trace.hh"
 DEFAULT_STATIC_TRACE_BEGIN
 
-#include "util/memory/excl_ptr.h"
+#include "util/memory/excl_ptr.hh"
 #include "util/memory/count_ptr.tcc"
 #include "util/attributes.h"
-#include "util/memory/chunk_map_pool.h"
-#include "Object/def/built_in_datatype_def.h"
-#include "Object/def/param_definition.h"
-#include "Object/common/namespace.h"
-#include "Object/type/data_type_reference.h"
-#include "Object/type/param_type_reference.h"
-#include "Object/inst/value_placeholder.h"
-#include "Object/expr/dynamic_param_expr_list.h"
-#include "Object/unroll/instantiation_statement.h"
-#include "Object/unroll/param_instantiation_statement.h"
-#include "Object/expr/meta_range_list.h"
-#include "Object/inst/pint_value_collection.h"
-#include "Object/inst/value_scalar.h"
-#include "Object/expr/pint_const.h"
-#include "Object/traits/value_traits.h"
-#include "Object/traits/bool_traits.h"
-#include "Object/traits/int_traits.h"
-#include "Object/traits/real_traits.h"
-#include "Object/traits/string_traits.h"
-#include "Object/traits/node_traits.h"
+#include "util/memory/chunk_map_pool.hh"
+#include "Object/def/built_in_datatype_def.hh"
+#include "Object/def/param_definition.hh"
+#include "Object/common/namespace.hh"
+#include "Object/type/data_type_reference.hh"
+#include "Object/type/param_type_reference.hh"
+#include "Object/inst/value_placeholder.hh"
+#include "Object/expr/dynamic_param_expr_list.hh"
+#include "Object/unroll/instantiation_statement.hh"
+#include "Object/unroll/param_instantiation_statement.hh"
+#include "Object/expr/meta_range_list.hh"
+#include "Object/inst/pint_value_collection.hh"
+#include "Object/inst/value_scalar.hh"
+#include "Object/expr/pint_const.hh"
+#include "Object/traits/value_traits.hh"
+#include "Object/traits/bool_traits.hh"
+#include "Object/traits/int_traits.hh"
+#include "Object/traits/real_traits.hh"
+#include "Object/traits/string_traits.hh"
+#include "Object/traits/node_traits.hh"
 
 #if DEBUG_TRAITS_CLASS_TRAITS_TYPES
 #define	ENABLE_STACKTRACE		DEBUG_TRAITS_CLASS_TRAITS_TYPES
-#include "util/stacktrace.h"
+#include "util/stacktrace.hh"
 REQUIRES_STACKTRACE_STATIC_INIT
 #endif
 

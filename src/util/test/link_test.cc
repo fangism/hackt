@@ -7,8 +7,8 @@
 #undef	NDEBUG
 #endif
 
-#include "link_mod_a.h"
-#include "link_mod_b.h"
+#include "link_mod_a.hh"
+#include "link_mod_b.hh"
 
 int
 main(int, char*[]) {

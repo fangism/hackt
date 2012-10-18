@@ -11,23 +11,23 @@
 #include <iostream>
 #include <algorithm>
 
-#include "Object/inst/struct_instance_collection.h"
+#include "Object/inst/struct_instance_collection.hh"
 #include "Object/inst/alias_empty.tcc"
-#include "Object/ref/member_meta_instance_reference.h"
-#include "Object/ref/simple_nonmeta_value_reference.h"
-#include "Object/expr/struct_expr.h"
-#include "Object/def/user_def_datatype.h"
-#include "Object/type/data_type_reference.h"
-#include "Object/persistent_type_hash.h"
+#include "Object/ref/member_meta_instance_reference.hh"
+#include "Object/ref/simple_nonmeta_value_reference.hh"
+#include "Object/expr/struct_expr.hh"
+#include "Object/def/user_def_datatype.hh"
+#include "Object/type/data_type_reference.hh"
+#include "Object/persistent_type_hash.hh"
 
 #include "Object/inst/instance_collection.tcc"
 #include "Object/inst/instance_placeholder.tcc"
 #include "Object/inst/instance_alias.tcc"
 #include "Object/inst/general_collection_type_manager.tcc"
 #include "Object/inst/state_instance.tcc"
-#include "Object/unroll/datatype_instantiation_statement.h"
+#include "Object/unroll/datatype_instantiation_statement.hh"
 
-#include "Object/devel_switches.h"
+#include "Object/devel_switches.hh"
 
 #if ENABLE_DATASTRUCTS
 // this is a nuisance, so we disable it

@@ -7,15 +7,15 @@
 #ifndef	__HAC_MAIN_OPTIONS_MODIFIER_TCC__
 #define	__HAC_MAIN_OPTIONS_MODIFIER_TCC__
 
-#include "util/static_trace.h"
-#include "main/options_modifier.h"
+#include "util/static_trace.hh"
+#include "main/options_modifier.hh"
 #include <string>
 #include <map>
 #include <iostream>
 
 namespace HAC {
 using std::string;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 //=============================================================================
 /**
 	TODO: specialize for different return types. 

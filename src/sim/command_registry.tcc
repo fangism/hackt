@@ -10,15 +10,15 @@
 #include <iterator>
 #include <fstream>
 
-#include "sim/command_registry.h"
-#include "sim/command_base.h"
-#include "sim/command_category.h"
-#include "util/readline_wrap.h"
-#include "util/named_ifstream_manager.h"
-#include "util/tokenize.h"
+#include "sim/command_registry.hh"
+#include "sim/command_base.hh"
+#include "sim/command_category.hh"
+#include "util/readline_wrap.hh"
+#include "util/named_ifstream_manager.hh"
+#include "util/tokenize.hh"
 #include "util/string.tcc"
-#include "util/value_saver.h"
-#include "util/stacktrace.h"
+#include "util/value_saver.hh"
+#include "util/stacktrace.hh"
 
 // TODO: move library-dependent functionality into library
 #include "util/readline.h"
@@ -35,7 +35,7 @@ using util::ifstream_manager;
 using util::strings::eat_whitespace;
 using util::tokenize;
 using util::value_saver;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 REQUIRES_STACKTRACE_STATIC_INIT
 

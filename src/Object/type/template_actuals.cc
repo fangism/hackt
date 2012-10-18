@@ -11,18 +11,18 @@
 
 #include <algorithm>
 #include <iterator>
-#include "Object/type/template_actuals.h"
-#include "Object/def/template_formals_manager.h"
-#include "Object/unroll/unroll_context.h"
-#include "Object/expr/param_expr.h"
-#include "Object/expr/const_param.h"
-#include "Object/expr/const_param_expr_list.h"
-#include "Object/expr/dynamic_param_expr_list.h"
-#include "Object/expr/expr_dump_context.h"
-#include "Object/def/footprint.h"
+#include "Object/type/template_actuals.hh"
+#include "Object/def/template_formals_manager.hh"
+#include "Object/unroll/unroll_context.hh"
+#include "Object/expr/param_expr.hh"
+#include "Object/expr/const_param.hh"
+#include "Object/expr/const_param_expr_list.hh"
+#include "Object/expr/dynamic_param_expr_list.hh"
+#include "Object/expr/expr_dump_context.hh"
+#include "Object/def/footprint.hh"
 #include "util/memory/count_ptr.tcc"
 #include "util/persistent_object_manager.tcc"
-#include "util/stacktrace.h"
+#include "util/stacktrace.hh"
 
 #define	ADDRESS_IF_NULL(x)						\
 	if (x) { cerr << &*x; } else { cerr << "(null)"; }
@@ -54,7 +54,7 @@ namespace HAC {
 namespace entity {
 using std::copy;
 using std::back_inserter;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 //=============================================================================
 // class template_actuals method definitions
 //=============================================================================

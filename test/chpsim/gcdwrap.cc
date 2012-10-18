@@ -5,8 +5,8 @@
 	chpsim function module.  
  */
 
-#include "gcdstatic.h"
-#include "sim/chpsim/chpsim_dlfunction.h"
+#include "gcdstatic.hh"
+#include "sim/chpsim/chpsim_dlfunction.hh"
 
 USING_CHPSIM_DLFUNCTION_PROLOGUE
 

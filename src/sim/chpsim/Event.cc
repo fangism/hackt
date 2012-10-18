@@ -10,25 +10,25 @@
 #include <algorithm>
 #include <string>
 #include <sstream>
-#include "sim/chpsim/Event.h"
-#include "common/TODO.h"
-#include "sim/ISE.h"
-#include "Object/expr/expr_dump_context.h"
-#include "Object/lang/CHP_base.h"
-#include "Object/lang/CHP_context_printer.h"
-#include "sim/chpsim/nonmeta_context.h"
-#include "sim/chpsim/graph_options.h"
-#include "sim/chpsim/EventExecutor.h"
-#include "Object/lang/CHP_event.h"
-#include "Object/lang/CHP_event_alloc.h"	// for Dumper
-#include "sim/chpsim/StateConstructor.h"	// for dependencies
-#include "util/stacktrace.h"
-#include "util/iterator_more.h"
+#include "sim/chpsim/Event.hh"
+#include "common/TODO.hh"
+#include "sim/ISE.hh"
+#include "Object/expr/expr_dump_context.hh"
+#include "Object/lang/CHP_base.hh"
+#include "Object/lang/CHP_context_printer.hh"
+#include "sim/chpsim/nonmeta_context.hh"
+#include "sim/chpsim/graph_options.hh"
+#include "sim/chpsim/EventExecutor.hh"
+#include "Object/lang/CHP_event.hh"
+#include "Object/lang/CHP_event_alloc.hh"	// for Dumper
+#include "sim/chpsim/StateConstructor.hh"	// for dependencies
+#include "util/stacktrace.hh"
+#include "util/iterator_more.hh"
 
 namespace HAC {
 namespace SIM {
 namespace CHPSIM {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using std::ostream_iterator;
 using std::copy;
 using std::back_inserter;

@@ -5,7 +5,7 @@
  */
 
 #define	ENABLE_STATIC_TRACE				0
-#include "util/static_trace.h"
+#include "util/static_trace.hh"
 DEFAULT_STATIC_TRACE_BEGIN
 
 #define	ENABLE_STACKTRACE				0
@@ -21,30 +21,30 @@ DEFAULT_STATIC_TRACE_BEGIN
 
 #include "util/cppcat.h"	// for UNIQUIFY
 #include "util/macros.h"
-#include "util/memory/count_ptr.h"
+#include "util/memory/count_ptr.hh"
 // #include "util/memory/count_ptr.tcc"
-#include "util/memory/excl_ptr.h"
-#include "util/stacktrace.h"
+#include "util/memory/excl_ptr.hh"
+#include "util/stacktrace.hh"
 
-#include "util/function_traits.h"	// for result_of
+#include "util/function_traits.hh"	// for result_of
 #include "util/string.tcc"
 
-#include "Object/expr/meta_func_lib.h"
-#include "Object/expr/pint_const.h"
-#include "Object/expr/pbool_const.h"
-#include "Object/expr/preal_const.h"
-#include "Object/expr/pstring_const.h"
-#include "Object/traits/value_traits.h"
+#include "Object/expr/meta_func_lib.hh"
+#include "Object/expr/pint_const.hh"
+#include "Object/expr/pbool_const.hh"
+#include "Object/expr/preal_const.hh"
+#include "Object/expr/pstring_const.hh"
+#include "Object/traits/value_traits.hh"
 
-#include "Object/expr/meta_call_traits.h"
-#include "Object/expr/const_param_expr_list.h"
+#include "Object/expr/meta_call_traits.hh"
+#include "Object/expr/const_param_expr_list.hh"
 
 namespace HAC {
 namespace entity {
 using util::memory::never_ptr;
 using std::string;
 using std::ostringstream;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 
 typedef	std::map<string, mapped_func_entry_type>	
@@ -71,7 +71,7 @@ REGISTER_META_FUNCTION_PROTO;
 //=============================================================================
 // I thought this reverse-map code already existed somewhere...
 // in Object/expr/..., Object/traits/... ?
-// maybe this belongs in Object/expr/meta_call_traits.h ?
+// maybe this belongs in Object/expr/meta_call_traits.hh ?
 
 template <typename T>
 struct reverse_type_map;

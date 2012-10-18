@@ -11,10 +11,10 @@
 #if ENABLE_STACKTRACE
 #include <iostream>
 #endif
-#include "util/tokenize.h"
-#include "util/string.h"		// for eat_whitespace
+#include "util/tokenize.hh"
+#include "util/string.hh"		// for eat_whitespace
 #include "util/macros.h"
-#include "util/stacktrace.h"
+#include "util/stacktrace.hh"
 
 namespace util {
 using std::string;

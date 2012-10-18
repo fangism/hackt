@@ -13,14 +13,14 @@
 #endif
 
 #include <iostream>
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
-#include "pool_module_a.h"
-#include "pool_module_b.h"
+#include "pool_module_a.hh"
+#include "pool_module_b.hh"
 
-#include "util/memory/list_vector_pool.h"
-#include "util/stacktrace.h"
-#include "util/static_trace.h"
+#include "util/memory/list_vector_pool.hh"
+#include "util/stacktrace.hh"
+#include "util/static_trace.hh"
 
 STATIC_TRACE_BEGIN("test-main")
 

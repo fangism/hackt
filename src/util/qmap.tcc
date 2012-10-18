@@ -7,7 +7,7 @@
 #ifndef	__UTIL_QMAP_TCC__
 #define	__UTIL_QMAP_TCC__
 
-#include "util/qmap.h"
+#include "util/qmap.hh"
 
 // predefine to suppress template definition
 #ifndef	EXTERN_TEMPLATE_UTIL_QMAP

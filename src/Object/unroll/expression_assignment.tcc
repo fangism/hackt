@@ -16,27 +16,27 @@
 #include <iostream>
 #include <numeric>
 
-#include "Object/unroll/expression_assignment.h"
+#include "Object/unroll/expression_assignment.hh"
 #include "util/persistent_object_manager.tcc"
 #include "util/memory/list_vector_pool.tcc"
 #include "util/memory/count_ptr.tcc"
-#include "Object/ref/meta_instance_reference_subtypes.h"
-#include "Object/common/multikey_index.h"
-#include "Object/expr/expr_dump_context.h"
-#include "Object/expr/const_collection.h"
-#include "Object/ref/meta_value_reference.h"
+#include "Object/ref/meta_instance_reference_subtypes.hh"
+#include "Object/common/multikey_index.hh"
+#include "Object/expr/expr_dump_context.hh"
+#include "Object/expr/const_collection.hh"
+#include "Object/ref/meta_value_reference.hh"
 
 #include "util/what.tcc"
-#include "util/binders.h"
-#include "util/compose.h"
-#include "util/dereference.h"
-#include "util/stacktrace.h"
+#include "util/binders.hh"
+#include "util/compose.hh"
+#include "util/dereference.hh"
+#include "util/stacktrace.hh"
 #include "util/packed_array.tcc"	// for ~value_reference_collection_type
 
 //=============================================================================
 namespace HAC {
 namespace entity {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 USING_UTIL_COMPOSE
 using std::mem_fun_ref;
 using util::dereference;

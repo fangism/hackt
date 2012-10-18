@@ -6,7 +6,7 @@
 #ifndef	__UTIL_ARRAY_TCC__
 #define	__UTIL_ARRAY_TCC__
 
-#include "util/array.h"
+#include "util/array.hh"
 #include <iostream>
 #include <iterator>
 #include <algorithm>

@@ -9,7 +9,7 @@
 
 #include <list>
 #include <iostream>
-#include "Object/expr/types.h"
+#include "Object/expr/types.hh"
 #include "util/multikey.tcc"
 #include "util/packed_array.tcc"
 #include "util/IO_utils.tcc"

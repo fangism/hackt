@@ -7,13 +7,13 @@
 #define	ENABLE_STACKTRACE		0
 
 #include <iostream>
-#include "sim/prsim/Node.h"
+#include "sim/prsim/Node.hh"
 #include "util/IO_utils.tcc"
 
 namespace HAC {
 namespace SIM {
 namespace PRSIM {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using util::write_value;
 using util::read_value;
 

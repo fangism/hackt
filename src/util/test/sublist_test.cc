@@ -12,7 +12,7 @@
 #include <list>
 #include "util/sublist.tcc"
 
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using std::list;
 using namespace	util;
 

@@ -8,21 +8,21 @@
 
 #define	ENABLE_STACKTRACE			0
 
-#include "Object/module.h"
-#include "guile/scm_reference.h"
+#include "Object/module.hh"
+#include "guile/scm_reference.hh"
 #include <iostream>
 #include <sstream>
-#include "util/guile_STL.h"
-#include "Object/traits/instance_traits.h"
-#include "Object/ref/reference_set.h"
-#include "Object/entry_collection.h"
-#include "common/TODO.h"
-#include "parser/instref.h"
-#include "guile/hackt-documentation.h"
-#include "guile/libhackt-wrap.h"
-#include "util/memory/unique_ptr.h"
-#include "util/for_all.h"
-#include "util/caller.h"
+#include "util/guile_STL.hh"
+#include "Object/traits/instance_traits.hh"
+#include "Object/ref/reference_set.hh"
+#include "Object/entry_collection.hh"
+#include "common/TODO.hh"
+#include "parser/instref.hh"
+#include "guile/hackt-documentation.hh"
+#include "guile/libhackt-wrap.hh"
+#include "util/memory/unique_ptr.hh"
+#include "util/for_all.hh"
+#include "util/caller.hh"
 
 //=============================================================================
 // smob wrapped structures

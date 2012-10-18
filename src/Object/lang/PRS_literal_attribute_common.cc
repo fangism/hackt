@@ -4,16 +4,16 @@
  */
 
 #include <iostream>
-#include "Object/lang/PRS_literal_attribute_common.h"
-#include "Object/lang/attribute_common.h"
-#include "common/TODO.h"
-#include "util/memory/count_ptr.h"
+#include "Object/lang/PRS_literal_attribute_common.hh"
+#include "Object/lang/attribute_common.hh"
+#include "common/TODO.hh"
+#include "util/memory/count_ptr.hh"
 
 namespace HAC {
 namespace entity {
 namespace PRS {
 namespace literal_attributes {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using namespace entity::attributes;
 
 //=============================================================================

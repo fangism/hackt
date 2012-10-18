@@ -15,7 +15,7 @@ using util::multikey;
 using util::multikey_generic;
 using util::multikey_generator;
 
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using std::inner_product;
 
 typedef	multikey_generic<size_t>		generic_key_type;

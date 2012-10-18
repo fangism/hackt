@@ -11,38 +11,38 @@
 #include <set>
 #include <sstream>
 #include <numeric>
-#include "Object/lang/cflat_printer.h"
+#include "Object/lang/cflat_printer.hh"
 #include "Object/lang/cflat_printer.tcc"
-#include "Object/lang/PRS_enum.h"
-#include "Object/lang/PRS_footprint.h"
-#include "Object/lang/PRS_attribute_registry.h"
-#include "Object/lang/PRS_macro_registry.h"
-#include "Object/lang/SPEC_footprint.h"
-#include "Object/lang/SPEC_registry.h"
-#include "Object/expr/const_param_expr_list.h"
-#include "Object/inst/state_instance.h"
-#include "Object/inst/instance_alias_info.h"
-#include "Object/inst/alias_empty.h"
-#include "Object/inst/alias_actuals.h"
-#include "Object/inst/connection_policy.h"
-#include "Object/global_entry.h"
-#include "Object/global_channel_entry.h"
-#include "Object/traits/bool_traits.h"
-#include "Object/traits/proc_traits.h"
-#include "main/cflat_options.h"
-#include "common/ICE.h"
-#include "common/TODO.h"
-#include "util/stacktrace.h"
-#include "util/offset_array.h"
-#include "util/member_saver.h"
-#include "Object/expr/pint_const.h"
-#include "Object/expr/preal_const.h"
-#include "util/numeric/functional.h"	// for reciprocate
+#include "Object/lang/PRS_enum.hh"
+#include "Object/lang/PRS_footprint.hh"
+#include "Object/lang/PRS_attribute_registry.hh"
+#include "Object/lang/PRS_macro_registry.hh"
+#include "Object/lang/SPEC_footprint.hh"
+#include "Object/lang/SPEC_registry.hh"
+#include "Object/expr/const_param_expr_list.hh"
+#include "Object/inst/state_instance.hh"
+#include "Object/inst/instance_alias_info.hh"
+#include "Object/inst/alias_empty.hh"
+#include "Object/inst/alias_actuals.hh"
+#include "Object/inst/connection_policy.hh"
+#include "Object/global_entry.hh"
+#include "Object/global_channel_entry.hh"
+#include "Object/traits/bool_traits.hh"
+#include "Object/traits/proc_traits.hh"
+#include "main/cflat_options.hh"
+#include "common/ICE.hh"
+#include "common/TODO.hh"
+#include "util/stacktrace.hh"
+#include "util/offset_array.hh"
+#include "util/member_saver.hh"
+#include "Object/expr/pint_const.hh"
+#include "Object/expr/preal_const.hh"
+#include "util/numeric/functional.hh"	// for reciprocate
 
 namespace HAC {
 namespace entity {
 namespace PRS {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using std::accumulate;
 using std::transform;
 using util::numeric::reciprocate;

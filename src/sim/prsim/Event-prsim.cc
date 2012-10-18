@@ -12,9 +12,9 @@
 #include <iostream>
 #include <iterator>
 #include <numeric>
-#include "sim/prsim/Event-prsim.h"
-#include "sim/prsim/Node.h"		// for value_to_char
-#include "sim/time.h"
+#include "sim/prsim/Event-prsim.hh"
+#include "sim/prsim/Node.hh"		// for value_to_char
+#include "sim/time.hh"
 
 // debug switch defined in this corresponding header file
 #if DEBUG_EVENT_POOL_ALLOC
@@ -23,12 +23,12 @@
 
 #include "util/memory/index_pool.tcc"
 #include "util/IO_utils.tcc"
-#include "util/stacktrace.h"
+#include "util/stacktrace.hh"
 
 namespace HAC {
 namespace SIM {
 namespace PRSIM {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using util::write_value;
 using util::read_value;
 

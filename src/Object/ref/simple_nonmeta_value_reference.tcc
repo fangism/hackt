@@ -22,47 +22,47 @@
 #include <exception>
 #include <algorithm>
 
-#include "Object/ref/simple_nonmeta_value_reference.h"
+#include "Object/ref/simple_nonmeta_value_reference.hh"
 #if NONMETA_MEMBER_REFERENCES
-#include "Object/ref/simple_meta_value_reference.h"
+#include "Object/ref/simple_meta_value_reference.hh"
 #endif
-#include "Object/traits/class_traits.h"
-#include "Object/ref/nonmeta_instance_reference_subtypes.h"
-#include "Object/type/data_type_reference.h"
-#include "Object/inst/param_value_placeholder.h"
-#include "Object/inst/instance_placeholder.h"
-#include "Object/inst/value_placeholder.h"
-#include "Object/unroll/unroll_context.h"
-#include "Object/type/canonical_generic_datatype.h"
-#include "Object/inst/param_value_collection.h"
-#include "Object/inst/value_scalar.h"
-#include "Object/common/dump_flags.h"
-#include "Object/expr/expr_dump_context.h"
-#include "Object/expr/expr_visitor.h"
-#include "Object/expr/nonmeta_index_list.h"
-#include "Object/expr/const_index_list.h"
-#include "Object/expr/dynamic_meta_index_list.h"
-#include "Object/traits/classification_tags.h"
-#include "Object/global_entry.h"
+#include "Object/traits/class_traits.hh"
+#include "Object/ref/nonmeta_instance_reference_subtypes.hh"
+#include "Object/type/data_type_reference.hh"
+#include "Object/inst/param_value_placeholder.hh"
+#include "Object/inst/instance_placeholder.hh"
+#include "Object/inst/value_placeholder.hh"
+#include "Object/unroll/unroll_context.hh"
+#include "Object/type/canonical_generic_datatype.hh"
+#include "Object/inst/param_value_collection.hh"
+#include "Object/inst/value_scalar.hh"
+#include "Object/common/dump_flags.hh"
+#include "Object/expr/expr_dump_context.hh"
+#include "Object/expr/expr_visitor.hh"
+#include "Object/expr/nonmeta_index_list.hh"
+#include "Object/expr/const_index_list.hh"
+#include "Object/expr/dynamic_meta_index_list.hh"
+#include "Object/traits/classification_tags.hh"
+#include "Object/global_entry.hh"
 #include "Object/ref/nonmeta_ref_implementation.tcc"
 #include "Object/nonmeta_context.tcc"
-#include "Object/nonmeta_variable.h"
-#include "Object/nonmeta_state.h"
-#include "Object/nonmeta_channel_manipulator.h"
+#include "Object/nonmeta_variable.hh"
+#include "Object/nonmeta_state.hh"
+#include "Object/nonmeta_channel_manipulator.hh"
 
-#include "common/ICE.h"
+#include "common/ICE.hh"
 
-#include "util/what.h"
-#include "util/stacktrace.h"
-#include "util/persistent_object_manager.h"
+#include "util/what.hh"
+#include "util/stacktrace.hh"
+#include "util/persistent_object_manager.hh"
 #include "util/memory/count_ptr.tcc"
-#include "util/multikey.h"
+#include "util/multikey.hh"
 
 //=============================================================================
 namespace HAC {
 namespace entity {
 //=============================================================================
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using util::persistent_traits;
 using std::transform;
 

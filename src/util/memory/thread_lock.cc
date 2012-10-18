@@ -14,12 +14,12 @@
 #include <iostream>
 #endif
 #include "util/macros.h"
-#include "util/memory/thread_lock.h"
+#include "util/memory/thread_lock.hh"
 
 namespace util {
 namespace memory {
 #if VERBOSE_LOCK
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 #endif
 
 //-----------------------------------------------------------------------------

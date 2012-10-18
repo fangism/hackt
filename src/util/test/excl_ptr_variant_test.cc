@@ -7,14 +7,14 @@
 #undef	NDEBUG
 #endif
 
-// #include "util/memory/pointer_classes_fwd.h"
-#include "util/memory/excl_array_ptr.h"
-#include "util/memory/excl_ptr.h"
-#include "util/memory/excl_malloc_ptr.h"
+// #include "util/memory/pointer_classes_fwd.hh"
+#include "util/memory/excl_array_ptr.hh"
+#include "util/memory/excl_ptr.hh"
+#include "util/memory/excl_malloc_ptr.hh"
 // deliberately including multiple times to test include protection
-#include "util/memory/excl_array_ptr.h"
-#include "util/memory/excl_ptr.h"
-#include "util/memory/excl_malloc_ptr.h"
+#include "util/memory/excl_array_ptr.hh"
+#include "util/memory/excl_ptr.hh"
+#include "util/memory/excl_malloc_ptr.hh"
 
 #include <cstdlib>
 using util::memory::excl_ptr;

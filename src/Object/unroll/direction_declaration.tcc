@@ -8,17 +8,17 @@
 #define	__HAC_OBJECT_UNROLL_DIRECTION_DECLARATION_TCC__
 
 #include <vector>
-#include "Object/unroll/direction_declaration.h"
-#include "Object/ref/meta_instance_reference_subtypes.h"
-#include "Object/type/channel_type_reference_base.h"
+#include "Object/unroll/direction_declaration.hh"
+#include "Object/ref/meta_instance_reference_subtypes.hh"
+#include "Object/type/channel_type_reference_base.hh"
 #include "util/persistent_object_manager.tcc"
 #include "util/what.tcc"
-#include "util/stacktrace.h"
-#include "common/TODO.h"
+#include "util/stacktrace.hh"
+#include "common/TODO.hh"
 
 namespace HAC {
 namespace entity {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using util::persistent_traits;
 
 //=============================================================================

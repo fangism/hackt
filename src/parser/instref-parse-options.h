@@ -12,14 +12,18 @@
 
 #include "config.h"
 
-// this could be configure-dependent!  
-// since alloca is rather efficient, but sometimes not portable
+/**
+this could be configure-dependent!  
+since alloca is rather efficient, but sometimes not portable
+**/
 #ifndef	YYSTACK_USE_ALLOCA
 #define	YYSTACK_USE_ALLOCA		0
 #endif
 
-// some yacc/bison implementations will choose some reasonable
-// default value if you predefine to 0
+/**
+some yacc/bison implementations will choose some reasonable
+default value if you predefine to 0
+**/
 /***
 	NB: bison-1.875 default differs from bison-2.0.
 	With bison-1.875 if undefined macros were assumed to be 0, 
@@ -33,18 +37,20 @@
 #define	YYMAXDEPTH			1024
 #endif
 
-// introduced and used by bison-2.0
+/* introduced and used by bison-2.0 */
 #ifndef	YYLTYPE_IS_TRIVIAL
 #define	YYLTYPE_IS_TRIVIAL		0
 #endif
 
-// needed by bison-1.35
-// to determine whether or not yylloc is used in the call to yylex
+/**
+needed by bison-1.35
+to determine whether or not yylloc is used in the call to yylex
+**/
 #ifndef	YYLSP_NEEDED
 #define	YYLSP_NEEDED			0
 #endif
 
-// needed for bison-2.1
+/* needed for bison-2.1 */
 #ifndef	YYENABLE_NLS
 #define	YYENABLE_NLS			0
 #endif
@@ -52,8 +58,10 @@
 #define	ENABLE_NLS			0
 #endif
 
-// in the original source, a local variable yylval shares the same name
-// as the parameter we wish to pass by reference.  
+/**
+in the original source, a local variable yylval shares the same name
+as the parameter we wish to pass by reference.  
+**/
 #ifndef	LIBBOGUS
 #if defined(USING_BISON)
 #define	YYPARSE_PARAM		null, YYSTYPE& instref_lval, flex::lexer_state& _lexer_state
@@ -61,17 +69,17 @@
 
 #if defined(YYBYACC)
 #if defined(USING_YACC)
-// we need more drastic measure to hack the prototype...
+/* we need more drastic measure to hack the prototype... */
 #endif
 #if defined(USING_BYACC)
-// ?
+/* ? */
 #endif
-// some versons of byacc use YYPARSE_PARAM_TYPE
+/* some versons of byacc use YYPARSE_PARAM_TYPE */
 #define	YYPARSE_PARAM
 #define	YYPARSE_PARAM_TYPE	void*, YYSTYPE& instref_lval, flex::lexer_state& _lexer_state
-#endif	// YYBYACC
-// else don't bother transforming
-#endif	// LIBBOGUS
+#endif	/* YYBYACC */
+/* else don't bother transforming */
+#endif	/* LIBBOGUS */
 
-#endif	// __PARSER_INSTREF_PARSE_OPTIONS_H__
+#endif	/* __PARSER_INSTREF_PARSE_OPTIONS_H__ */
 

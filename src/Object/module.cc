@@ -12,38 +12,38 @@
 
 #include "Object/module.tcc"
 #include <iostream>
-#include "Object/common/namespace.h"
-#include "Object/unroll/unroll_context.h"
-#include "Object/unroll/expression_assignment.h"
-#include "Object/unroll/instantiation_statement.h"
-#include "Object/unroll/param_instantiation_statement.h"
-#include "Object/persistent_type_hash.h"
-#include "Object/inst/physical_instance_collection.h"
-#include "Object/lang/cflat_printer.h"
-#include "Object/lang/PRS_footprint.h"
-#include "Object/lang/SPEC_footprint.h"
-#include "Object/expr/expr_dump_context.h"
-#include "Object/expr/const_param_expr_list.h"
-#include "Object/expr/meta_range_list.h"
-#include "Object/type/process_type_reference.h"
-#include "Object/type/canonical_type.h"
-#include "Object/def/process_definition.h"
-#include "Object/global_entry.h"
-#include "Object/global_context_cache.h"
-#include "Object/traits/proc_traits.h"
-#include "AST/token_string.h"		// blech, cyclic library dep?
+#include "Object/common/namespace.hh"
+#include "Object/unroll/unroll_context.hh"
+#include "Object/unroll/expression_assignment.hh"
+#include "Object/unroll/instantiation_statement.hh"
+#include "Object/unroll/param_instantiation_statement.hh"
+#include "Object/persistent_type_hash.hh"
+#include "Object/inst/physical_instance_collection.hh"
+#include "Object/lang/cflat_printer.hh"
+#include "Object/lang/PRS_footprint.hh"
+#include "Object/lang/SPEC_footprint.hh"
+#include "Object/expr/expr_dump_context.hh"
+#include "Object/expr/const_param_expr_list.hh"
+#include "Object/expr/meta_range_list.hh"
+#include "Object/type/process_type_reference.hh"
+#include "Object/type/canonical_type.hh"
+#include "Object/def/process_definition.hh"
+#include "Object/global_entry.hh"
+#include "Object/global_context_cache.hh"
+#include "Object/traits/proc_traits.hh"
+#include "AST/token_string.hh"		// blech, cyclic library dep?
 
 #if ENABLE_STACKTRACE
-#include "Object/common/dump_flags.h"
+#include "Object/common/dump_flags.hh"
 #endif
 
-#include "main/cflat_options.h"
+#include "main/cflat_options.hh"
 #include "util/persistent_object_manager.tcc"
 #include "util/memory/count_ptr.tcc"
-#include "util/stacktrace.h"
-#include "util/indent.h"
-#include "util/value_saver.h"
-#include "common/TODO.h"
+#include "util/stacktrace.hh"
+#include "util/indent.hh"
+#include "util/value_saver.hh"
+#include "common/TODO.hh"
 
 namespace util {
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
@@ -57,7 +57,7 @@ template class count_ptr<const module>;
 
 namespace HAC {
 namespace entity {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using std::istream;
 using util::write_value;
 using util::read_value;

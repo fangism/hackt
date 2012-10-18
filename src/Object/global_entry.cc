@@ -9,18 +9,18 @@
 #include <algorithm>
 #include "Object/global_entry.tcc"
 #if BUILTIN_CHANNEL_FOOTPRINTS
-#include "Object/global_channel_entry.h"
+#include "Object/global_channel_entry.hh"
 #endif
-#include "Object/global_entry_context.h"
-#include "Object/global_context_cache.h"
-#include "Object/def/footprint.h"
-#include "Object/module.h"
-#include "Object/traits/bool_traits.h"
-#include "Object/traits/int_traits.h"
-#include "Object/traits/enum_traits.h"
+#include "Object/global_entry_context.hh"
+#include "Object/global_context_cache.hh"
+#include "Object/def/footprint.hh"
+#include "Object/module.hh"
+#include "Object/traits/bool_traits.hh"
+#include "Object/traits/int_traits.hh"
+#include "Object/traits/enum_traits.hh"
 #include "util/IO_utils.tcc"
-#include "util/indent.h"
-#include "util/stacktrace.h"
+#include "util/indent.hh"
+#include "util/stacktrace.hh"
 
 namespace HAC {
 namespace entity {

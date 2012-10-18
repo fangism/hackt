@@ -3,22 +3,22 @@
 	$Id: meta_func_call.cc,v 1.2 2010/09/21 00:18:16 fang Exp $
  */
 
-#include "Object/expr/meta_func_call.h"
-#include "Object/expr/meta_func_lib.h"
-#include "Object/expr/const_param_expr_list.h"
-#include "Object/expr/dynamic_param_expr_list.h"
-#include "Object/expr/pint_const.h"
-#include "Object/expr/preal_const.h"
-#include "Object/expr/pbool_const.h"
-#include "Object/expr/pstring_const.h"
-#include "Object/expr/expr_visitor.h"
-#include "Object/expr/expr_dump_context.h"
-#include "Object/unroll/param_expression_assignment.h"
-#include "Object/ref/aggregate_meta_value_reference_base.h"
-#include "Object/traits/value_traits.h"
-#include "Object/persistent_type_hash.h"
-#include "common/TODO.h"
-#include "common/ICE.h"
+#include "Object/expr/meta_func_call.hh"
+#include "Object/expr/meta_func_lib.hh"
+#include "Object/expr/const_param_expr_list.hh"
+#include "Object/expr/dynamic_param_expr_list.hh"
+#include "Object/expr/pint_const.hh"
+#include "Object/expr/preal_const.hh"
+#include "Object/expr/pbool_const.hh"
+#include "Object/expr/pstring_const.hh"
+#include "Object/expr/expr_visitor.hh"
+#include "Object/expr/expr_dump_context.hh"
+#include "Object/unroll/param_expression_assignment.hh"
+#include "Object/ref/aggregate_meta_value_reference_base.hh"
+#include "Object/traits/value_traits.hh"
+#include "Object/persistent_type_hash.hh"
+#include "common/TODO.hh"
+#include "common/ICE.hh"
 #include "util/IO_utils.tcc"
 #include "util/persistent_object_manager.tcc"
 #include "util/memory/count_ptr.tcc"
@@ -56,7 +56,7 @@ template class count_ptr<const pstring_meta_func_call>;
 //-----------------------------------------------------------------------------
 namespace HAC {
 namespace entity {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using util::persistent_traits;
 
 // need some sort of function registry

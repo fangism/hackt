@@ -16,33 +16,33 @@
 
 //=============================================================================
 // start of static initializations
-#include "util/static_trace.h"
+#include "util/static_trace.hh"
 DEFAULT_STATIC_TRACE_BEGIN
 
-#include "Object/common/extern_templates.h"
+#include "Object/common/extern_templates.hh"
 #include "Object/ref/simple_nonmeta_value_reference.tcc"
-#include "Object/traits/classification_tags.h"
-#include "Object/traits/value_traits.h"
-#include "Object/traits/bool_traits.h"
-#include "Object/traits/int_traits.h"
-#include "Object/traits/enum_traits.h"
-#include "Object/traits/struct_traits.h"	// why? (nonmeta_expr_visitor)
-#include "Object/traits/chan_traits.h"		// why? (nonmeta_expr_visitor)
-#include "Object/traits/proc_traits.h"		// why? (nonmeta_expr_visitor)
-#include "Object/persistent_type_hash.h"
-#include "Object/expr/struct_expr.h"	// why? (nonmeta_expr_visitor)
-#include "Object/expr/enum_expr.h"	// why? (nonmeta_expr_visitor)
-#include "Object/expr/pint_const.h"
-#include "Object/expr/pbool_const.h"
-#include "Object/expr/preal_const.h"
-#include "Object/expr/pstring_const.h"
-#include "Object/inst/pint_instance.h"
-#include "Object/inst/pbool_instance.h"
-#include "Object/inst/preal_instance.h"
-#include "Object/inst/pstring_instance.h"
-#include "Object/type/canonical_generic_datatype.h"
-#include "common/TODO.h"
-#include "util/stacktrace.h"
+#include "Object/traits/classification_tags.hh"
+#include "Object/traits/value_traits.hh"
+#include "Object/traits/bool_traits.hh"
+#include "Object/traits/int_traits.hh"
+#include "Object/traits/enum_traits.hh"
+#include "Object/traits/struct_traits.hh"	// why? (nonmeta_expr_visitor)
+#include "Object/traits/chan_traits.hh"		// why? (nonmeta_expr_visitor)
+#include "Object/traits/proc_traits.hh"		// why? (nonmeta_expr_visitor)
+#include "Object/persistent_type_hash.hh"
+#include "Object/expr/struct_expr.hh"	// why? (nonmeta_expr_visitor)
+#include "Object/expr/enum_expr.hh"	// why? (nonmeta_expr_visitor)
+#include "Object/expr/pint_const.hh"
+#include "Object/expr/pbool_const.hh"
+#include "Object/expr/preal_const.hh"
+#include "Object/expr/pstring_const.hh"
+#include "Object/inst/pint_instance.hh"
+#include "Object/inst/pbool_instance.hh"
+#include "Object/inst/preal_instance.hh"
+#include "Object/inst/pstring_instance.hh"
+#include "Object/type/canonical_generic_datatype.hh"
+#include "common/TODO.hh"
+#include "util/stacktrace.hh"
 #include "util/persistent_object_manager.tcc"
 
 //=============================================================================

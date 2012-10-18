@@ -23,7 +23,7 @@
 extern "C" {
 #endif
 
-// The following was added to prevent evaluation of undefined macro (-Wundef):
+/* The following was added to prevent evaluation of undefined macro (-Wundef): */
 #ifndef	WIN32
 #define	WIN32		0
 #endif
@@ -843,7 +843,7 @@ XXTERN vpiHandle  vpi_handle_by_multi_index PROTO_PARAMS((vpiHandle obj,
 
 
 /**************************** GLOBAL VARIABLES ****************************/
-PLI_VEXTERN PLI_DLLESPEC void (*vlog_startup_routines[])();
+PLI_VEXTERN PLI_DLLESPEC void (*vlog_startup_routines[])(void);
   /* array of function pointers, last pointer should be null */
 
 #undef PLI_EXTERN

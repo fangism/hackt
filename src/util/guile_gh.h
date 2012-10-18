@@ -11,10 +11,14 @@
 #ifdef	HAVE_GUILE_GH_H
 #ifdef	SIZEOF_LONG_LONG
 #undef	SIZEOF_LONG_LONG
-#endif	// already defined by libguile/scmconfig.h
+#endif	/* already defined by libguile/scmconfig.h */
+#ifdef	__cplusplus
 #include <cstdio>	// for std::FILE, required by <gmp.h>
+#else
+#include <stdio.h>
+#endif
 #include <guile/gh.h>
 
-#endif	// HAVE_GUILE_GH_H
-#endif	// __UTIL_GUILE_GH_H__
+#endif	/* HAVE_GUILE_GH_H */
+#endif	/* __UTIL_GUILE_GH_H__ */
 

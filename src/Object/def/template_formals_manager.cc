@@ -11,27 +11,27 @@
 
 #include <iostream>
 #include <iterator>
-#include "util/hash_specializations.h"	// include as early as possible
+#include "util/hash_specializations.hh"	// include as early as possible
 
-#include "Object/def/template_formals_manager.h"
-#include "Object/inst/param_value_placeholder.h"
-#include "Object/expr/const_param.h"
-#include "Object/expr/const_param_expr_list.h"
-#include "Object/expr/dynamic_param_expr_list.h"
-#include "Object/type/template_actuals.h"
-#include "Object/unroll/unroll_context.h"
-#include "Object/common/dump_flags.h"
-#include "Object/def/footprint.h"
+#include "Object/def/template_formals_manager.hh"
+#include "Object/inst/param_value_placeholder.hh"
+#include "Object/expr/const_param.hh"
+#include "Object/expr/const_param_expr_list.hh"
+#include "Object/expr/dynamic_param_expr_list.hh"
+#include "Object/type/template_actuals.hh"
+#include "Object/unroll/unroll_context.hh"
+#include "Object/common/dump_flags.hh"
+#include "Object/def/footprint.hh"
 
 #include "util/persistent_object_manager.tcc"
 #include "util/memory/count_ptr.tcc"
 #include "util/IO_utils.tcc"
-#include "util/indent.h"
-#include "util/stacktrace.h"
+#include "util/indent.hh"
+#include "util/stacktrace.hh"
 
 namespace HAC {
 namespace entity {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using std::distance;
 using util::indent;
 using util::auto_indent;

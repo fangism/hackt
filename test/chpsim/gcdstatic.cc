@@ -2,7 +2,7 @@
 // A plain static library.  
 //	$Id: gcdstatic.cc,v 1.2 2007/07/31 23:24:20 fang Exp $
 
-#include "gcdstatic.h"
+#include "gcdstatic.hh"
 
 /**
 	\pre a >= b

@@ -6,13 +6,13 @@
 #include <iostream>
 #include <set>
 #include <cstdio>
-#include "lexer/file_manager.h"
+#include "lexer/file_manager.hh"
 #include "util/unique_list.tcc"
 // #include "util/unique_stack.tcc"
 #include "util/memory/count_ptr.tcc"
 
 #define	ENABLE_STACKTRACE			0
-#include "util/stacktrace.h"
+#include "util/stacktrace.hh"
 
 namespace util {
 namespace memory {
@@ -24,7 +24,7 @@ template class count_ptr<file_manager::embed_manager>;
 
 namespace HAC {
 namespace lexer {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using std::set;
 
 //=============================================================================

@@ -7,12 +7,12 @@
 #define	__HAC_OBJECT_EXPR_CONVERT_EXPR_TCC__
 
 #include <iostream>
-#include "Object/expr/convert_expr.h"
-#include "Object/expr/expr_visitor.h"
-#include "Object/traits/class_traits_fwd.h"
+#include "Object/expr/convert_expr.hh"
+#include "Object/expr/expr_visitor.hh"
+#include "Object/traits/class_traits_fwd.hh"
 // #include "util/memory/count_ptr.tcc"
-#include "util/what.h"
-#include "util/persistent_object_manager.h"
+#include "util/what.hh"
+#include "util/persistent_object_manager.hh"
 
 namespace HAC {
 namespace entity {

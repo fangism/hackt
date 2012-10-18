@@ -8,17 +8,17 @@
 
 #define	ENABLE_STACKTRACE		0
 
-#include "Object/inst/alias_actuals.h"
-#include "Object/inst/alias_empty.h"
-#include "Object/expr/expr_dump_context.h"
+#include "Object/inst/alias_actuals.hh"
+#include "Object/inst/alias_empty.hh"
+#include "Object/expr/expr_dump_context.hh"
 #include <iostream>
 #include "util/memory/count_ptr.tcc"
 #include "util/persistent_object_manager.tcc"
-#include "util/stacktrace.h"
+#include "util/stacktrace.hh"
 
 namespace HAC {
 namespace entity {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 //=============================================================================
 // class instance_alias_info_empty method definitions

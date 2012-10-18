@@ -3,7 +3,7 @@
 	$Id: OS.cc,v 1.2 2007/08/28 04:53:46 fang Exp $
  */
 
-#include "libchpfn/OS.h"
+#include "libchpfn/OS.hh"
 #include <cstdlib>
 #include <string>
 

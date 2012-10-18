@@ -11,7 +11,7 @@
 #include <fstream>
 #include <cstdlib>
 #include "util/getopt_portable.h"
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 using std::cin;
 using std::ifstream;

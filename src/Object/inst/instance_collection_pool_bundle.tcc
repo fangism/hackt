@@ -1,5 +1,5 @@
 /**
-	\file "Object/inst/instance_collection_pool_bundle.h"
+	\file "Object/inst/instance_collection_pool_bundle.hh"
 	$Id: instance_collection_pool_bundle.tcc,v 1.4 2007/07/18 23:28:43 fang Exp $
  */
 
@@ -8,20 +8,20 @@
 
 #include <iostream>
 #include <algorithm>
-#include "Object/inst/instance_collection_pool_bundle.h"
+#include "Object/inst/instance_collection_pool_bundle.hh"
 #include "Object/inst/collection_pool.tcc"
-#include "Object/inst/instance_placeholder.h"
-#include "Object/inst/instance_scalar.h"
-#include "Object/inst/instance_array.h"
-#include "Object/inst/port_formal_array.h"
-#include "Object/inst/port_actual_collection.h"
-#include "Object/inst/instance_alias_info.h"
-#include "Object/inst/collection_traits.h"
-#include "Object/def/footprint.h"
-#include "common/ICE.h"
+#include "Object/inst/instance_placeholder.hh"
+#include "Object/inst/instance_scalar.hh"
+#include "Object/inst/instance_array.hh"
+#include "Object/inst/port_formal_array.hh"
+#include "Object/inst/port_actual_collection.hh"
+#include "Object/inst/instance_alias_info.hh"
+#include "Object/inst/collection_traits.hh"
+#include "Object/def/footprint.hh"
+#include "common/ICE.hh"
 #include "util/persistent_object_manager.tcc"
 #include "util/persistent_functor.tcc"
-#include "util/stacktrace.h"
+#include "util/stacktrace.hh"
 #include "util/IO_utils.tcc"
 
 #if	ENABLE_STACKTRACE
@@ -38,7 +38,7 @@ namespace entity {
 using std::for_each;
 using util::write_value;
 using util::read_value;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 //=============================================================================
 // class instance_collection_pool_wrapper helper structs

@@ -7,7 +7,7 @@
 #ifndef	__UTIL_RING_NODE_TCC__
 #define	__UTIL_RING_NODE_TCC__
 
-#include "util/ring_node.h"
+#include "util/ring_node.hh"
 
 #ifndef	EXTERN_TEMPLATE_UTIL_RING_NODE
 

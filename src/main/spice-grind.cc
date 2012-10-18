@@ -6,14 +6,14 @@
 
 #include <iostream>
 #include <cstdio>			// for stdin
-// #include "main/spice-grind.h"
-#include "net/netlist_generator.h"
-#include "parser/spice-parse-real.h"
-#include "lexer/file_manager.h"
-#include "lexer/yyin_manager.h"
-#include "lexer/flex_lexer_state.h"
-#include "util/syntax.h"
-#include "main/main_funcs.h"
+// #include "main/spice-grind.hh"
+#include "net/netlist_generator.hh"
+#include "parser/spice-parse-real.hh"
+#include "lexer/file_manager.hh"
+#include "lexer/yyin_manager.hh"
+#include "lexer/flex_lexer_state.hh"
+#include "util/syntax.hh"
+#include "main/main_funcs.hh"
 
 using util::memory::count_ptr;
 using util::syntax::node;

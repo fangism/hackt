@@ -10,23 +10,23 @@
 #include <iostream>
 #include <set>
 #include "util/macros.h"
-#include "Object/def/footprint_manager.h"
+#include "Object/def/footprint_manager.hh"
 #include "Object/def/footprint.tcc"		// where is dtor ref'd?
-#include "Object/expr/expr_dump_context.h"
-#include "Object/expr/const_param.h"
-#include "Object/common/dump_flags.h"
+#include "Object/expr/expr_dump_context.hh"
+#include "Object/expr/const_param.hh"
+#include "Object/common/dump_flags.hh"
 #include "Object/inst/port_alias_tracker.tcc"	// why are symbols ref'd?
-#include "Object/traits/instance_traits.h"
+#include "Object/traits/instance_traits.hh"
 
 #include "util/memory/count_ptr.tcc"
 #include "util/persistent_object_manager.tcc"
-#include "util/stacktrace.h"
-#include "util/IO_utils.h"
-#include "util/indent.h"
+#include "util/stacktrace.hh"
+#include "util/IO_utils.hh"
+#include "util/indent.hh"
 
 namespace HAC {
 namespace entity {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using util::write_value;
 using util::read_value;
 using util::auto_indent;

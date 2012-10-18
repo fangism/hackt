@@ -8,18 +8,18 @@
 #define	__HAC_OBJECT_INST_INT_COLLECTION_TYPE_MANAGER_TCC__
 
 #include <iostream>
-#include "Object/inst/int_collection_type_manager.h"
-#include "Object/traits/int_traits.h"
-#include "Object/type/data_type_reference.h"
-#include "Object/unroll/instantiation_statement.h"
-#include "Object/unroll/datatype_instantiation_statement.h"
-#include "Object/expr/pint_const.h"
-#include "util/persistent_object_manager.h"
-#include "util/stacktrace.h"
+#include "Object/inst/int_collection_type_manager.hh"
+#include "Object/traits/int_traits.hh"
+#include "Object/type/data_type_reference.hh"
+#include "Object/unroll/instantiation_statement.hh"
+#include "Object/unroll/datatype_instantiation_statement.hh"
+#include "Object/expr/pint_const.hh"
+#include "util/persistent_object_manager.hh"
+#include "util/stacktrace.hh"
 
 namespace HAC {
 namespace entity {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using util::write_value;
 using util::read_value;
 

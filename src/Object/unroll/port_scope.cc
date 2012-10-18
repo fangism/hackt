@@ -7,21 +7,21 @@
 #define	ENABLE_STACKTRACE		0
 
 #include <iostream>
-#include "Object/unroll/port_scope.h"
-#include "Object/def/template_formals_manager.h"
-#include "Object/expr/expr_dump_context.h"
-#include "Object/persistent_type_hash.h"
-#include "Object/inst/port_visitor.h"
-#include "Object/inst/alias_empty.h"
-#include "Object/inst/alias_actuals.h"
-#include "Object/inst/instance_alias_info.h"
-#include "Object/traits/instance_traits.h"
-#include "Object/unroll/unroll_context.h"
-#include "Object/def/footprint.h"
-#include "common/TODO.h"
-#include "common/ICE.h"
-#include "util/stacktrace.h"
-#include "util/indent.h"
+#include "Object/unroll/port_scope.hh"
+#include "Object/def/template_formals_manager.hh"
+#include "Object/expr/expr_dump_context.hh"
+#include "Object/persistent_type_hash.hh"
+#include "Object/inst/port_visitor.hh"
+#include "Object/inst/alias_empty.hh"
+#include "Object/inst/alias_actuals.hh"
+#include "Object/inst/instance_alias_info.hh"
+#include "Object/traits/instance_traits.hh"
+#include "Object/unroll/unroll_context.hh"
+#include "Object/def/footprint.hh"
+#include "common/TODO.hh"
+#include "common/ICE.hh"
+#include "util/stacktrace.hh"
+#include "util/indent.hh"
 #include "util/persistent_object_manager.tcc"
 
 namespace util {
@@ -32,7 +32,7 @@ namespace util {
 
 namespace HAC {
 namespace entity {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using util::auto_indent;
 using util::persistent_traits;
 

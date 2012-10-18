@@ -12,15 +12,15 @@
 #undef	NDEBUG
 #endif
 
-#include "util/static_trace.h"
+#include "util/static_trace.hh"
 STATIC_TRACE_BEGIN("static_count_ptr_test::main")
 
 #include <iostream>
-#include "util/memory/count_ptr.h"
-#include "util/memory/list_vector_pool.h"
-#include "named_pooled_thing.h"
-#include "util/stacktrace.h"
-#include "util/using_ostream.h"
+#include "util/memory/count_ptr.hh"
+#include "util/memory/list_vector_pool.hh"
+#include "named_pooled_thing.hh"
+#include "util/stacktrace.hh"
+#include "util/using_ostream.hh"
 #include "util/attributes.h"
 
 using namespace util::memory;

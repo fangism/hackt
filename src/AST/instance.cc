@@ -17,54 +17,54 @@
 #include <functional>
 #include <numeric>
 
-#include "AST/instance.h"
-#include "AST/reference.h"
-#include "AST/range_list.h"
-#include "AST/token_string.h"
-#include "AST/token.h"			// for token_else
-#include "AST/type.h"
-#include "AST/attribute.h"
+#include "AST/instance.hh"
+#include "AST/reference.hh"
+#include "AST/range_list.hh"
+#include "AST/token_string.hh"
+#include "AST/token.hh"			// for token_else
+#include "AST/type.hh"
+#include "AST/attribute.hh"
 #include "AST/node_list.tcc"
-#include "AST/parse_context.h"
+#include "AST/parse_context.hh"
 
-#include "Object/common/namespace.h"
-#include "Object/inst/instance_placeholder_base.h"
-#include "Object/inst/pint_value_collection.h"
-#include "Object/def/definition_base.h"
-#include "Object/type/fundamental_type_reference.h"
-#include "Object/type/channel_type_reference_base.h"	// reject directions
-#include "Object/ref/simple_meta_instance_reference.h"
-#include "Object/ref/meta_value_reference_base.h"
-#include "Object/lang/PRS.h"
-#include "Object/lang/SPEC.h"
-#include "Object/expr/expr_dump_context.h"
-#include "Object/expr/pbool_const.h"
-#include "Object/expr/meta_range_expr.h"
-#include "Object/expr/meta_range_list.h"
-#include "Object/expr/dynamic_param_expr_list.h"
-#include "Object/unroll/expression_assignment.h"
-#include "Object/unroll/alias_connection.h"
-#include "Object/unroll/port_connection.h"
-#include "Object/unroll/loop_scope.h"
-#include "Object/unroll/conditional_scope.h"
-#include "Object/unroll/template_type_completion.h"
+#include "Object/common/namespace.hh"
+#include "Object/inst/instance_placeholder_base.hh"
+#include "Object/inst/pint_value_collection.hh"
+#include "Object/def/definition_base.hh"
+#include "Object/type/fundamental_type_reference.hh"
+#include "Object/type/channel_type_reference_base.hh"	// reject directions
+#include "Object/ref/simple_meta_instance_reference.hh"
+#include "Object/ref/meta_value_reference_base.hh"
+#include "Object/lang/PRS.hh"
+#include "Object/lang/SPEC.hh"
+#include "Object/expr/expr_dump_context.hh"
+#include "Object/expr/pbool_const.hh"
+#include "Object/expr/meta_range_expr.hh"
+#include "Object/expr/meta_range_list.hh"
+#include "Object/expr/dynamic_param_expr_list.hh"
+#include "Object/unroll/expression_assignment.hh"
+#include "Object/unroll/alias_connection.hh"
+#include "Object/unroll/port_connection.hh"
+#include "Object/unroll/loop_scope.hh"
+#include "Object/unroll/conditional_scope.hh"
+#include "Object/unroll/template_type_completion.hh"
 #if INSTANCE_SUPPLY_OVERRIDES
-#include "Object/unroll/implicit_port_override.h"
-#include "Object/traits/bool_traits.h"
+#include "Object/unroll/implicit_port_override.hh"
+#include "Object/traits/bool_traits.hh"
 #endif
-#include "Object/traits/proc_traits.h"
-#include "Object/ref/meta_instance_reference_subtypes.h"
-#include "Object/ref/meta_instance_reference_base.h"
-#include "Object/ref/meta_reference_union.h"
+#include "Object/traits/proc_traits.hh"
+#include "Object/ref/meta_instance_reference_subtypes.hh"
+#include "Object/ref/meta_instance_reference_base.hh"
+#include "Object/ref/meta_reference_union.hh"
 
-#include "common/ICE.h"
-#include "common/TODO.h"
+#include "common/ICE.hh"
+#include "common/TODO.hh"
 
-#include "util/what.h"
-#include "util/stacktrace.h"
-#include "util/dereference.h"
-#include "util/compose.h"
-#include "util/binders.h"
+#include "util/what.hh"
+#include "util/stacktrace.hh"
+#include "util/dereference.hh"
+#include "util/compose.hh"
+#include "util/binders.hh"
 #include "util/memory/count_ptr.tcc"
 
 // enable or disable constructor inlining, undefined at the end of file
@@ -116,7 +116,7 @@ template class count_ptr<const direction_statement>;
 //=============================================================================
 namespace HAC {
 namespace parser {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using util::dereference;
 using std::transform;
 using std::mem_fun_ref;

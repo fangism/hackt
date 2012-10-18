@@ -8,7 +8,7 @@
 
 #define	ENABLE_STACKTRACE		0
 
-#include "util/static_trace.h"
+#include "util/static_trace.hh"
 DEFAULT_STATIC_TRACE_BEGIN
 
 #include <iostream>
@@ -16,21 +16,21 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include <cstring>
 #include <list>
 
-#include "main/prsim.h"
-#include "main/prsim_options.h"
-#include "util/stacktrace.h"
-#include "main/main_funcs.h"
+#include "main/prsim.hh"
+#include "main/prsim_options.hh"
+#include "util/stacktrace.hh"
+#include "main/main_funcs.hh"
 #include "main/options_modifier.tcc"
 #include "main/simple_options.tcc"
-#include "main/global_options.h"
-#include "main/compile_options.h"
-#include "common/config.h"
-#include "util/getopt_mapped.h"
-#include "util/persistent_object_manager.h"
-#include "sim/prsim/State-prsim.h"
-#include "sim/prsim/Command-prsim.h"
-#include "sim/command_common.h"
-#include "sim/prsim/ExprAllocFlags.h"
+#include "main/global_options.hh"
+#include "main/compile_options.hh"
+#include "common/config.hh"
+#include "util/getopt_mapped.hh"
+#include "util/persistent_object_manager.hh"
+#include "sim/prsim/State-prsim.hh"
+#include "sim/prsim/Command-prsim.hh"
+#include "sim/command_common.hh"
+#include "sim/prsim/ExprAllocFlags.hh"
 #include "util/string.tcc"	// for string_to_num
 #include "install_paths.h"
 
@@ -43,7 +43,7 @@ using util::persistent;
 using util::persistent_object_manager;
 using util::strings::string_to_num;
 
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 //=============================================================================
 // explicit instantiation for proper initialization ordering

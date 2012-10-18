@@ -1041,7 +1041,7 @@ dnl @synopsis FANG_CXX_TEMPLATE_FORMAL_BASE_CLASS
 dnl
 dnl Checking whether or not template parameter may be named directly 
 dnl as a base type.  
-dnl The work around is to use the identity<> type-trait "util/type_traits.h"
+dnl The work around is to use the identity<> type-trait "util/type_traits.hh"
 dnl to create an indirect reference to the desired type.  
 dnl Define HAVE_TEMPLATE_FORMAL_BASE_CLASS.
 dnl

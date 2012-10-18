@@ -12,7 +12,7 @@
 #include <iostream>
 #include "util/discrete_interval_set.tcc"
 
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using std::map;
 using util::discrete_interval_set;
 

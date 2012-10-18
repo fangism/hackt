@@ -68,7 +68,7 @@
 #define	M_SQRT1_2	0.70710678118654752440	/* 1/sqrt(2) */
 #endif
 
-// the following constants I provided from elsewhere
+/* the following constants I provided from elsewhere */
 
 #ifndef	M_TAU
 #define	M_TAU		1.6180339887498948482	/* golden ratio */
@@ -78,5 +78,5 @@
 #define	M_GAMMA		0.57721566490153286061	/* gamma */
 #endif
 
-#endif	// __UTIL_NUMERIC_CONSTANTS_H__
+#endif	/* __UTIL_NUMERIC_CONSTANTS_H__ */
 

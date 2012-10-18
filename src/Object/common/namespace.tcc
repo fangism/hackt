@@ -13,7 +13,7 @@
 // we may no longer need this if using ordered_maps
 #include "util/hash_specializations.h"	// needs to be first
 #endif
-#include "Object/common/scopespace.h"
+#include "Object/common/scopespace.hh"
 
 namespace HAC {
 namespace entity {

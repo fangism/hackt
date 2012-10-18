@@ -5,12 +5,12 @@
 
 #define	ENABLE_STACKTRACE			0
 
-#include "Object/inst/port_visitor.h"
-#include "Object/inst/instance_alias_info.h"
-#include "Object/inst/alias_empty.h"
-#include "Object/inst/alias_actuals.h"
-#include "Object/traits/instance_traits.h"
-#include "util/stacktrace.h"
+#include "Object/inst/port_visitor.hh"
+#include "Object/inst/instance_alias_info.hh"
+#include "Object/inst/alias_empty.hh"
+#include "Object/inst/alias_actuals.hh"
+#include "Object/traits/instance_traits.hh"
+#include "util/stacktrace.hh"
 
 namespace HAC {
 namespace entity {

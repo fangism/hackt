@@ -10,10 +10,10 @@
 #include <string>
 #include <iterator>
 #include <algorithm>
-#include "util/string.h"
-#include "util/sstream.h"
+#include "util/string.hh"
+#include "util/sstream.hh"
 
-#include "util/numeric/sign_traits.h"
+#include "util/numeric/sign_traits.hh"
 
 namespace util {
 namespace strings {

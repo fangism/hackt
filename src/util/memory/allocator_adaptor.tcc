@@ -6,7 +6,7 @@
 #ifndef	__UTIL_MEMORY_ALLOCATOR_ADAPTOR_TCC__
 #define	__UTIL_MEMORY_ALLOCATOR_ADAPTOR_TCC__
 
-#include "util/memory/allocator_adaptor.h"
+#include "util/memory/allocator_adaptor.hh"
 
 namespace util {
 namespace memory {

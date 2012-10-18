@@ -11,11 +11,11 @@
 #include <iostream>
 #include <vector>
 
-#include "util/memory/excl_ptr.h"
-#include "var.h"
+#include "util/memory/excl_ptr.hh"
+#include "var.hh"
 
 using std::vector;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using namespace util::memory;
 
 void basic_vector_test(void);

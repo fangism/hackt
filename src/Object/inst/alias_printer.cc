@@ -5,19 +5,19 @@
 
 #define	ENABLE_STACKTRACE				0
 
-#include "Object/inst/alias_printer.h"
-#include "Object/traits/bool_traits.h"
+#include "Object/inst/alias_printer.hh"
+#include "Object/traits/bool_traits.hh"
 #if BUILTIN_CHANNEL_FOOTPRINTS
-#include "Object/global_channel_entry.h"
+#include "Object/global_channel_entry.hh"
 #endif
-#include "Object/traits/chan_traits.h"
-#include "Object/traits/proc_traits.h"
-#include "Object/common/dump_flags.h"
-#include "Object/common/alias_string_cache.h"
+#include "Object/traits/chan_traits.hh"
+#include "Object/traits/proc_traits.hh"
+#include "Object/common/dump_flags.hh"
+#include "Object/common/alias_string_cache.hh"
 #include "Object/common/cflat_args.tcc"
-#include "main/cflat.h"
-#include "main/cflat_options.h"
-#include "util/swap_saver.h"
+#include "main/cflat.hh"
+#include "main/cflat_options.hh"
+#include "util/swap_saver.hh"
 
 
 namespace HAC {

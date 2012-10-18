@@ -11,34 +11,34 @@
 #include <iostream>
 #include <vector>
 
-#include "Object/ref/simple_meta_dummy_reference.h"
-#include "Object/expr/const_range_list.h"
-#include "Object/expr/const_index_list.h"
-#include "Object/expr/expr_dump_context.h"
-#include "Object/expr/expr_visitor.h"
-#include "Object/common/dump_flags.h"
-#include "Object/unroll/unroll_context.h"
-#include "Object/def/footprint.h"
-#include "Object/type/fundamental_type_reference.h"
-#include "common/TODO.h"
-#include "common/ICE.h"
-#include "util/what.h"
+#include "Object/ref/simple_meta_dummy_reference.hh"
+#include "Object/expr/const_range_list.hh"
+#include "Object/expr/const_index_list.hh"
+#include "Object/expr/expr_dump_context.hh"
+#include "Object/expr/expr_visitor.hh"
+#include "Object/common/dump_flags.hh"
+#include "Object/unroll/unroll_context.hh"
+#include "Object/def/footprint.hh"
+#include "Object/type/fundamental_type_reference.hh"
+#include "common/TODO.hh"
+#include "common/ICE.hh"
+#include "util/what.hh"
 #include "util/persistent_object_manager.tcc"
-// #include "Object/ref/meta_instance_reference_subtypes.h"
-#include "Object/ref/aggregate_meta_instance_reference_base.h"
-#include "Object/inst/substructure_alias_base.h"
-#include "Object/inst/physical_instance_collection.h"
-#include "Object/ref/inst_ref_implementation.h"
-#include "Object/unroll/aliases_connection_base.h"
-#include "Object/unroll/port_connection_base.h"
-#include "util/stacktrace.h"
-#include "Object/inst/dummy_placeholder.h"
+// #include "Object/ref/meta_instance_reference_subtypes.hh"
+#include "Object/ref/aggregate_meta_instance_reference_base.hh"
+#include "Object/inst/substructure_alias_base.hh"
+#include "Object/inst/physical_instance_collection.hh"
+#include "Object/ref/inst_ref_implementation.hh"
+#include "Object/unroll/aliases_connection_base.hh"
+#include "Object/unroll/port_connection_base.hh"
+#include "util/stacktrace.hh"
+#include "Object/inst/dummy_placeholder.hh"
 #include "util/memory/count_ptr.tcc"
 
 namespace HAC {
 namespace entity {
 using std::vector;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using util::write_value;
 using util::read_value;
 using util::persistent_traits;

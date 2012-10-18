@@ -9,8 +9,8 @@
 
 #ifndef	__UTIL_MEMORY_COUNT_PTR_TCC__
 #define	__UTIL_MEMORY_COUNT_PTR_TCC__
-#include "util/memory/count_ptr.h"
-#include "util/memory/deallocation_policy_fwd.h"
+#include "util/memory/count_ptr.hh"
+#include "util/memory/deallocation_policy_fwd.hh"
 
 #ifndef	EXTERN_TEMPLATE_UTIL_MEMORY_COUNT_PTR
 
@@ -20,7 +20,7 @@
 
 #if USE_REF_COUNT_POOL
 // only include header, not definition!
-#include "util/memory/chunk_map_pool.h"
+#include "util/memory/chunk_map_pool.hh"
 #endif
 
 //=============================================================================

@@ -3,11 +3,11 @@
 	$Id: attribute.cc,v 1.5 2010/07/01 20:20:22 fang Exp $
  */
 
-#include "AST/attribute.h"
-#include "AST/common.h"
+#include "AST/attribute.hh"
+#include "AST/common.hh"
 #include "AST/node_list.tcc"
-#include "AST/token_string.h"
-#include "AST/expr_list.h"
+#include "AST/token_string.hh"
+#include "AST/expr_list.hh"
 #include "util/memory/count_ptr.tcc"
 
 namespace util {

@@ -10,7 +10,7 @@
 // #include "util/STL/list.tcc"
 // not needed because we only need the list iterator
 
-#include "util/sublist.h"
+#include "util/sublist.hh"
 
 #ifndef	EXTERN_TEMPLATE_UTIL_SUBLIST
 

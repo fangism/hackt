@@ -14,7 +14,7 @@
 #include <functional>
 #include "util/list_vector.tcc"
 
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using std::ostream_iterator;
 using std::copy;
 using std::reverse_copy;

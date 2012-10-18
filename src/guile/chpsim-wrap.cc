@@ -6,30 +6,30 @@
 #define	ENABLE_STACKTRACE			0
 
 #include <iostream>
-#include "sim/chpsim/State.h"
-#include "sim/chpsim/TraceIterators.h"
-// #include "sim/chpsim/graph_options.h"
-#include "Object/traits/instance_traits.h"
-#include "Object/module.h"
-#include "Object/global_channel_entry.h"
-#include "Object/nonmeta_channel_manipulator.h"
-#include "Object/nonmeta_variable.h"
-#include "Object/type/canonical_fundamental_chan_type.h"
-#include "Object/type/canonical_generic_datatype.h"
-#include "Object/def/built_in_datatype_def.h"
-#include "Object/def/enum_datatype_def.h"
-#include "Object/inst/instance_pool.h"
-#include "Object/inst/state_instance.h"
-#include "util/stacktrace.h"
-#include "util/libguile.h"
-#include "util/guile_STL.h"
-#include "guile/chpsim-wrap.h"
-#include "guile/libhackt-wrap.h"
-#include "guile/scm_chpsim_trace_streamer.h"
-#include "guile/scm_chpsim_event_node.h"
-#include "guile/hackt-documentation.h"
-#include "util/for_all.h"
-#include "util/caller.h"
+#include "sim/chpsim/State.hh"
+#include "sim/chpsim/TraceIterators.hh"
+// #include "sim/chpsim/graph_options.hh"
+#include "Object/traits/instance_traits.hh"
+#include "Object/module.hh"
+#include "Object/global_channel_entry.hh"
+#include "Object/nonmeta_channel_manipulator.hh"
+#include "Object/nonmeta_variable.hh"
+#include "Object/type/canonical_fundamental_chan_type.hh"
+#include "Object/type/canonical_generic_datatype.hh"
+#include "Object/def/built_in_datatype_def.hh"
+#include "Object/def/enum_datatype_def.hh"
+#include "Object/inst/instance_pool.hh"
+#include "Object/inst/state_instance.hh"
+#include "util/stacktrace.hh"
+#include "util/libguile.hh"
+#include "util/guile_STL.hh"
+#include "guile/chpsim-wrap.hh"
+#include "guile/libhackt-wrap.hh"
+#include "guile/scm_chpsim_trace_streamer.hh"
+#include "guile/scm_chpsim_event_node.hh"
+#include "guile/hackt-documentation.hh"
+#include "util/for_all.hh"
+#include "util/caller.hh"
 
 namespace HAC {
 namespace guile_wrap {
@@ -52,7 +52,7 @@ using entity::int_tag;
 using entity::enum_tag;
 using entity::channel_tag;
 // using SIM::CHPSIM::graph_options;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using util::memory::never_ptr;
 using util::guile::scm_assert_string;
 using util::guile::make_scm;

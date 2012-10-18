@@ -11,10 +11,10 @@
 #define	__UTIL_ATTRIBUTES_H__
 
 #include "config.h"
-// use configure to determine whether or not compiler supports attributes
+/* use configure to determine whether or not compiler supports attributes */
 
-//=============================================================================
-// general attributes
+/*===========================================================================*/
+/* general attributes */
 /**
 	Apply to types that are never used, but do some real work
 	in their non-trivial constructors and destructors.  
@@ -53,8 +53,8 @@
 #define	__ATTRIBUTE_UNUSED_CTOR__(args)		args
 #endif
 
-//=============================================================================
-// visibility attributes (support added in gcc-4.0)
+/*===========================================================================*/
+/* visibility attributes (support added in gcc-4.0) */
 
 /**
 	Public symbol visibility.  
@@ -74,8 +74,8 @@
 #define	__VISIBILITY_HIDDEN__
 #endif
 
-//=============================================================================
-// type and variable attributes
+/*===========================================================================*/
+/* type and variable attributes */
 
 /**
 	Align to natural boundary.  
@@ -105,8 +105,8 @@
 #define	__ATTRIBUTE_PACKED__
 #endif
 
-//=============================================================================
-// function attributes
+/*===========================================================================*/
+/* function attributes */
 
 /**
 	Use this in functions that do not return, such as exit and abort
@@ -118,7 +118,7 @@
 #define	__ATTRIBUTE_NORETURN__
 #endif
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 /**
 	The const attribute asserts that this function has no
 	side-effects: it only takes arguments and produces a 
@@ -136,7 +136,7 @@
 #define	__ATTRIBUTE_PURE__
 #endif
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 /**
 	The malloc attribute asserts that this non-NULL pointers returned
 	by this function do not alias, just like malloc.
@@ -149,7 +149,7 @@
 #endif
 
 
-//=============================================================================
+/*===========================================================================*/
 
-#endif	// __UTIL_ATTRIBUTES_H__
+#endif	/* __UTIL_ATTRIBUTES_H__ */
 

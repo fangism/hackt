@@ -8,7 +8,7 @@
 
 #include <iostream>
 #include <iomanip>
-#include "util/bitmanip.h"
+#include "util/bitmanip.hh"
 #include "util/size_t.h"
 #include "util/macros.h"
 

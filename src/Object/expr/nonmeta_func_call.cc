@@ -5,26 +5,26 @@
 
 #define	ENABLE_STACKTRACE				0
 
-#include "Object/expr/nonmeta_func_call.h"
-#include "Object/expr/nonmeta_expr_list.h"
-#include "Object/expr/expr_visitor.h"
-#include "Object/expr/const_param.h"
-#include "Object/expr/expr_dump_context.h"
-#include "Object/type/data_type_reference.h"
-#include "Object/type/canonical_generic_datatype.h"
-#include "Object/persistent_type_hash.h"
-// #include "Object/expr/dlfunction.h"
-#include "Object/devel_switches.h"
+#include "Object/expr/nonmeta_func_call.hh"
+#include "Object/expr/nonmeta_expr_list.hh"
+#include "Object/expr/expr_visitor.hh"
+#include "Object/expr/const_param.hh"
+#include "Object/expr/expr_dump_context.hh"
+#include "Object/type/data_type_reference.hh"
+#include "Object/type/canonical_generic_datatype.hh"
+#include "Object/persistent_type_hash.hh"
+// #include "Object/expr/dlfunction.hh"
+#include "Object/devel_switches.hh"
 #if USE_TOP_DATA_TYPE
-#include "Object/def/built_in_datatype_def.h"
-#include "Object/def/user_def_datatype.h"		// why?
+#include "Object/def/built_in_datatype_def.hh"
+#include "Object/def/user_def_datatype.hh"		// why?
 #endif
-#include "common/TODO.h"
-#include "util/stacktrace.h"
+#include "common/TODO.hh"
+#include "util/stacktrace.hh"
 #include "util/persistent_object_manager.tcc"
 #include "util/memory/count_ptr.tcc"
 #include "util/IO_utils.tcc"
-#include "util/what.h"
+#include "util/what.hh"
 
 namespace util {
 using HAC::entity::nonmeta_func_call;
@@ -40,7 +40,7 @@ namespace HAC {
 namespace entity {
 using util::write_value;
 using util::read_value;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 //=============================================================================
 // class nonmeta_func_call method definitions

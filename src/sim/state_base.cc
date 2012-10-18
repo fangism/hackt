@@ -7,14 +7,14 @@
 
 #include <iostream>
 #include <string>
-#include "sim/state_base.h"
-#include "Object/module.h"
-#include "Object/global_entry.h"
-#include "util/stacktrace.h"
+#include "sim/state_base.hh"
+#include "Object/module.hh"
+#include "Object/global_entry.hh"
+#include "util/stacktrace.hh"
 
 namespace HAC {
 namespace SIM {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 //=============================================================================
 // class state_base method defintions

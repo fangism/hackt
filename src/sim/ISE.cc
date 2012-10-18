@@ -5,7 +5,7 @@
  */
 
 #include <ostream>
-#include "sim/ISE.h"
+#include "sim/ISE.hh"
 #include "cvstag.h"	// generated
 
 namespace HAC {

@@ -9,12 +9,12 @@
 
 #include <iostream>
 #include <functional>
-#include "util/persistent_functor.h"
+#include "util/persistent_functor.hh"
 #include "util/macros.h"
 #include "util/size_t.h"
-#include "util/reserve.h"
-#include "util/IO_utils.h"
-// #include "util/persistent_object_manager.h"
+#include "util/reserve.hh"
+#include "util/IO_utils.hh"
+// #include "util/persistent_object_manager.hh"
 
 namespace util {
 using std::ostream;

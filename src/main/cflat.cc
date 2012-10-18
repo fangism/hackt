@@ -8,36 +8,36 @@
 #define	ENABLE_STACKTRACE		0
 #define	ENABLE_STATIC_TRACE		0
 
-#include "util/static_trace.h"
+#include "util/static_trace.hh"
 DEFAULT_STATIC_TRACE_BEGIN
 
 #include <iostream>
 #include <string>
 
-#include "main/cflat.h"
-#include "main/cflat_options.h"
-#include "main/program_registry.h"
-#include "main/main_funcs.h"
+#include "main/cflat.hh"
+#include "main/cflat_options.hh"
+#include "main/program_registry.hh"
+#include "main/main_funcs.hh"
 #if HFLAT_USE_OPTPARSE
 #include "util/optparse.tcc"
 #else
 #include "main/options_modifier.tcc"
 #endif
-#include "main/global_options.h"
-#include "common/config.h"
+#include "main/global_options.hh"
+#include "common/config.hh"
 
-#include "Object/type/process_type_reference.h"
-#include "common/TODO.h"
+#include "Object/type/process_type_reference.hh"
+#include "common/TODO.hh"
 
 #include "util/getopt_mapped.tcc"
-#include "util/stacktrace.h"
-#include "util/persistent_object_manager.h"
+#include "util/stacktrace.hh"
+#include "util/persistent_object_manager.hh"
 
 namespace HAC {
 using std::string;
 using util::persistent;
 using util::persistent_object_manager;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using entity::process_type_reference;
 
 

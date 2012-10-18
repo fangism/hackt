@@ -11,26 +11,26 @@
 #include <iostream>
 #include <numeric>
 
-#include "Object/unroll/param_expression_assignment.h"
+#include "Object/unroll/param_expression_assignment.hh"
 #include "Object/unroll/expression_assignment.tcc"
-#include "Object/inst/pbool_instance.h"
-#include "Object/inst/pint_instance.h"
-#include "Object/inst/preal_instance.h"
-#include "Object/inst/pstring_instance.h"
-#include "Object/expr/pint_const.h"
-#include "Object/expr/pbool_const.h"
-#include "Object/expr/preal_const.h"
-#include "Object/expr/pstring_const.h"
-#include "Object/expr/const_index.h"
-#include "Object/expr/const_index_list.h"
-#include "Object/expr/const_collection.h"
-#include "Object/ref/simple_meta_value_reference.h"
-#include "Object/traits/pint_traits.h"
-#include "Object/traits/pbool_traits.h"
-#include "Object/traits/preal_traits.h"
-#include "Object/traits/pstring_traits.h"
-#include "Object/persistent_type_hash.h"
-#include "Object/ref/meta_value_reference_base.h"
+#include "Object/inst/pbool_instance.hh"
+#include "Object/inst/pint_instance.hh"
+#include "Object/inst/preal_instance.hh"
+#include "Object/inst/pstring_instance.hh"
+#include "Object/expr/pint_const.hh"
+#include "Object/expr/pbool_const.hh"
+#include "Object/expr/preal_const.hh"
+#include "Object/expr/pstring_const.hh"
+#include "Object/expr/const_index.hh"
+#include "Object/expr/const_index_list.hh"
+#include "Object/expr/const_collection.hh"
+#include "Object/ref/simple_meta_value_reference.hh"
+#include "Object/traits/pint_traits.hh"
+#include "Object/traits/pbool_traits.hh"
+#include "Object/traits/preal_traits.hh"
+#include "Object/traits/pstring_traits.hh"
+#include "Object/persistent_type_hash.hh"
+#include "Object/ref/meta_value_reference_base.hh"
 
 //=============================================================================
 namespace util {
@@ -61,7 +61,7 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 //=============================================================================
 namespace HAC {
 namespace entity {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 //=============================================================================
 // class param_expression_assignment method definitions

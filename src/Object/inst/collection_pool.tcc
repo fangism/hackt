@@ -10,17 +10,17 @@
 #include <iterator>
 // #include <algorithm>
 
-#include "Object/inst/collection_pool.h"
-#include "Object/inst/collection_index_entry.h"
-#include "Object/inst/collection_traits.h"
+#include "Object/inst/collection_pool.hh"
+#include "Object/inst/collection_index_entry.hh"
+#include "Object/inst/collection_traits.hh"
 #include "util/likely.h"
-#include "util/stacktrace.h"
+#include "util/stacktrace.hh"
 
 #define	STACKTRACE_FIND_ITERATOR	(0 && ENABLE_STACKTACE)
 
 namespace HAC {
 namespace entity {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 //=============================================================================
 // class collection_pool method definitions

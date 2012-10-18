@@ -11,7 +11,7 @@
 
 #include <list>
 #include <cstdlib>		// for exit()
-#include "pooled_thing.h"
+#include "pooled_thing.hh"
 #include "util/memory/count_ptr.tcc"
 
 using util::memory::count_ptr;

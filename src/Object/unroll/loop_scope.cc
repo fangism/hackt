@@ -6,15 +6,15 @@
 
 #define	ENABLE_STACKTRACE		0
 
-#include "Object/unroll/loop_scope.h"
+#include "Object/unroll/loop_scope.hh"
 #include "Object/unroll/meta_loop.tcc"
-#include "Object/def/template_formals_manager.h"
-#include "Object/expr/const_param_expr_list.h"
-#include "Object/expr/expr_dump_context.h"
-#include "Object/persistent_type_hash.h"
-#include "common/TODO.h"
-#include "common/ICE.h"
-#include "util/stacktrace.h"
+#include "Object/def/template_formals_manager.hh"
+#include "Object/expr/const_param_expr_list.hh"
+#include "Object/expr/expr_dump_context.hh"
+#include "Object/persistent_type_hash.hh"
+#include "common/TODO.hh"
+#include "common/ICE.hh"
+#include "util/stacktrace.hh"
 
 namespace util {
 	SPECIALIZE_UTIL_WHAT(HAC::entity::loop_scope, "loop-scope")
@@ -24,7 +24,7 @@ namespace util {
 
 namespace HAC {
 namespace entity {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using util::auto_indent;
 using util::persistent_traits;
 

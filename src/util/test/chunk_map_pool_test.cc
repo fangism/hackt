@@ -8,12 +8,12 @@
 #undef	NDEBUG
 #endif
 
-#include "util/numeric/bigger_ints.h"
+#include "util/numeric/bigger_ints.hh"
 #include "util/memory/chunk_map_pool.tcc"
-#include "util/memory/excl_ptr.h"
+#include "util/memory/excl_ptr.hh"
 #include <iostream>
 
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using util::memory::fixed_pool_chunk;
 using util::memory::chunk_map_pool;
 using util::memory::excl_ptr;

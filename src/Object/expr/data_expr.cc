@@ -5,58 +5,58 @@
 	$Id: data_expr.cc,v 1.21 2011/01/14 01:32:56 fang Exp $
  */
 
-#include "util/static_trace.h"
+#include "util/static_trace.hh"
 DEFAULT_STATIC_TRACE_BEGIN
 
 #define	ENABLE_STACKTRACE			0
 #define	PARANOID				0
 
 #include <iostream>
-#include "Object/expr/int_arith_expr.h"
-#include "Object/expr/int_relational_expr.h"
-#include "Object/expr/bool_logical_expr.h"
-#include "Object/expr/int_negation_expr.h"
-#include "Object/expr/bool_negation_expr.h"
-#include "Object/expr/int_range_expr.h"
-#include "Object/expr/real_expr.h"
-#include "Object/expr/enum_expr.h"
-#include "Object/expr/string_expr.h"
-#include "Object/expr/struct_expr.h"
-#include "Object/expr/nonmeta_expr_functor.h"
-#include "Object/expr/nonmeta_expr_list.h"
-#include "Object/expr/nonmeta_index_list.h"
-#include "Object/expr/int_range_list.h"
-#include "Object/expr/expr_dump_context.h"
-#include "Object/expr/operator_precedence.h"
-#include "Object/expr/const_index_list.h"
-#include "Object/expr/dynamic_meta_index_list.h"
-#include "Object/expr/pint_const.h"
-#include "Object/expr/pbool_const.h"
-#include "Object/expr/preal_const.h"
-#include "Object/expr/pstring_const.h"
+#include "Object/expr/int_arith_expr.hh"
+#include "Object/expr/int_relational_expr.hh"
+#include "Object/expr/bool_logical_expr.hh"
+#include "Object/expr/int_negation_expr.hh"
+#include "Object/expr/bool_negation_expr.hh"
+#include "Object/expr/int_range_expr.hh"
+#include "Object/expr/real_expr.hh"
+#include "Object/expr/enum_expr.hh"
+#include "Object/expr/string_expr.hh"
+#include "Object/expr/struct_expr.hh"
+#include "Object/expr/nonmeta_expr_functor.hh"
+#include "Object/expr/nonmeta_expr_list.hh"
+#include "Object/expr/nonmeta_index_list.hh"
+#include "Object/expr/int_range_list.hh"
+#include "Object/expr/expr_dump_context.hh"
+#include "Object/expr/operator_precedence.hh"
+#include "Object/expr/const_index_list.hh"
+#include "Object/expr/dynamic_meta_index_list.hh"
+#include "Object/expr/pint_const.hh"
+#include "Object/expr/pbool_const.hh"
+#include "Object/expr/preal_const.hh"
+#include "Object/expr/pstring_const.hh"
 #include "Object/expr/loop_nonmeta_expr.tcc"
 #include "Object/expr/nonmeta_cast_expr.tcc"
-#include "Object/expr/nonmeta_func_call.h"
-#include "Object/expr/expr_visitor.h"
-#include "Object/nonmeta_channel_manipulator.h"
+#include "Object/expr/nonmeta_func_call.hh"
+#include "Object/expr/expr_visitor.hh"
+#include "Object/nonmeta_channel_manipulator.hh"
 
-#include "Object/persistent_type_hash.h"
-#include "Object/type/data_type_reference.h"
-#include "Object/type/canonical_generic_datatype.h"
-#include "Object/traits/bool_traits.h"
-#include "Object/traits/int_traits.h"
-#include "Object/traits/real_traits.h"
-#include "Object/traits/string_traits.h"
+#include "Object/persistent_type_hash.hh"
+#include "Object/type/data_type_reference.hh"
+#include "Object/type/canonical_generic_datatype.hh"
+#include "Object/traits/bool_traits.hh"
+#include "Object/traits/int_traits.hh"
+#include "Object/traits/real_traits.hh"
+#include "Object/traits/string_traits.hh"
 
-#include "common/TODO.h"
+#include "common/TODO.hh"
 
-#include "util/reserve.h"
+#include "util/reserve.hh"
 #include "util/persistent_object_manager.tcc"
 #include "util/memory/count_ptr.tcc"
-#include "util/what.h"
-#include "util/IO_utils.h"
-#include "util/stacktrace.h"
-#include "util/multikey.h"
+#include "util/what.hh"
+#include "util/IO_utils.hh"
+#include "util/stacktrace.hh"
+#include "util/multikey.hh"
 
 namespace util {
 using HAC::entity::int_arith_expr;
@@ -123,7 +123,7 @@ template class count_ptr<const HAC::entity::string_expr>;
 
 namespace HAC {
 namespace entity {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using std::istream;
 using util::persistent_traits;
 using util::write_value;

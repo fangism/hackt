@@ -8,21 +8,21 @@
 
 #include <iostream>
 #include <algorithm>
-#include "Object/inst/value_collection_pool_bundle.h"
-#include "Object/inst/param_value_collection.h"
+#include "Object/inst/value_collection_pool_bundle.hh"
+#include "Object/inst/param_value_collection.hh"
 #include "Object/inst/collection_pool.tcc"
-#include "Object/inst/value_placeholder.h"
-#include "Object/inst/value_scalar.h"
-#include "Object/inst/value_array.h"
-#include "Object/expr/const_collection.h"
-#include "Object/expr/const_param.h"
-#include "Object/inst/collection_traits.h"
-#include "Object/def/footprint.h"
-#include "common/ICE.h"
-#include "util/stacktrace.h"
+#include "Object/inst/value_placeholder.hh"
+#include "Object/inst/value_scalar.hh"
+#include "Object/inst/value_array.hh"
+#include "Object/expr/const_collection.hh"
+#include "Object/expr/const_param.hh"
+#include "Object/inst/collection_traits.hh"
+#include "Object/def/footprint.hh"
+#include "common/ICE.hh"
+#include "util/stacktrace.hh"
 #include "util/persistent_object_manager.tcc"
 #include "util/persistent_functor.tcc"
-#include "util/multikey.h"
+#include "util/multikey.hh"
 #include "util/IO_utils.tcc"
 
 #if	ENABLE_STACKTRACE
@@ -36,7 +36,7 @@ namespace entity {
 using std::for_each;
 using util::write_value;
 using util::read_value;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 //=============================================================================
 /**

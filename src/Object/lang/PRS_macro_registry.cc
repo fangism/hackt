@@ -4,7 +4,7 @@
 	$Id: PRS_macro_registry.cc,v 1.15 2010/09/02 00:34:38 fang Exp $
  */
 
-#include "util/static_trace.h"
+#include "util/static_trace.hh"
 DEFAULT_STATIC_TRACE_BEGIN
 
 #include <iostream>
@@ -13,15 +13,15 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include <map>
 #include "Object/lang/PRS_macro_registry.tcc"
 #include "Object/lang/cflat_printer.tcc"
-#include "Object/lang/directive_base.h"
-#include "Object/lang/PRS_macro_common.h"
-#include "main/cflat_options.h"
-#include "common/TODO.h"
+#include "Object/lang/directive_base.hh"
+#include "Object/lang/PRS_macro_common.hh"
+#include "main/cflat_options.hh"
+#include "common/TODO.hh"
 
 namespace HAC {
 namespace entity {
 namespace PRS {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 // explicit template instantiations
 template class macro_visitor_entry<cflat_prs_printer>;

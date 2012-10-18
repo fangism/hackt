@@ -9,30 +9,30 @@
 #define	STACKTRACE_DUMP			(0 && ENABLE_STACKTRACE)
 
 #include <iostream>
-#include "Object/unroll/unroll_context.h"
-#include "Object/expr/const_param.h"
-#include "Object/expr/expr_dump_context.h"
-#include "Object/def/definition_base.h"
-#include "Object/def/footprint.h"
-#include "Object/common/scopespace.h"
-#include "Object/common/dump_flags.h"
-#include "Object/inst/pint_value_collection.h"
-#include "Object/type/template_actuals.h"
-#include "Object/def/template_formals_manager.h"
-#include "Object/expr/param_expr_list.h"
-#include "Object/ref/meta_value_reference_base.h"
-#include "Object/inst/physical_instance_placeholder.h"
-#include "Object/inst/value_placeholder.h"
-#include "Object/inst/physical_instance_collection.h"
-#include "Object/global_entry_context.h"
-#include "common/ICE.h"
-#include "common/TODO.h"
+#include "Object/unroll/unroll_context.hh"
+#include "Object/expr/const_param.hh"
+#include "Object/expr/expr_dump_context.hh"
+#include "Object/def/definition_base.hh"
+#include "Object/def/footprint.hh"
+#include "Object/common/scopespace.hh"
+#include "Object/common/dump_flags.hh"
+#include "Object/inst/pint_value_collection.hh"
+#include "Object/type/template_actuals.hh"
+#include "Object/def/template_formals_manager.hh"
+#include "Object/expr/param_expr_list.hh"
+#include "Object/ref/meta_value_reference_base.hh"
+#include "Object/inst/physical_instance_placeholder.hh"
+#include "Object/inst/value_placeholder.hh"
+#include "Object/inst/physical_instance_collection.hh"
+#include "Object/global_entry_context.hh"
+#include "common/ICE.hh"
+#include "common/TODO.hh"
 #include "util/memory/count_ptr.tcc"
-#include "util/stacktrace.h"
+#include "util/stacktrace.hh"
 
 namespace HAC {
 namespace entity {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 //=============================================================================
 // class unroll_context method definitions
 

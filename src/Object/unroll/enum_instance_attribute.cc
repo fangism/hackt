@@ -7,14 +7,14 @@
 	$Id: enum_instance_attribute.cc,v 1.1 2008/10/07 03:22:30 fang Exp $
  */
 
-#include "Object/unroll/instance_attribute_registry.h"
-// #include "Object/lang/enum_attribute_common.h"
-// #include "Object/expr/const_param_expr_list.h"
-// #include "Object/expr/pint_const.h"
-#include "Object/traits/enum_traits.h"
-// #include "Object/inst/instance_alias_info.h"
-// #include "Object/inst/alias_empty.h"
-// #include "Object/inst/connection_policy.h"
+#include "Object/unroll/instance_attribute_registry.hh"
+// #include "Object/lang/enum_attribute_common.hh"
+// #include "Object/expr/const_param_expr_list.hh"
+// #include "Object/expr/pint_const.hh"
+#include "Object/traits/enum_traits.hh"
+// #include "Object/inst/instance_alias_info.hh"
+// #include "Object/inst/alias_empty.hh"
+// #include "Object/inst/connection_policy.hh"
 
 namespace HAC {
 namespace entity {

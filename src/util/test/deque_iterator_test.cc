@@ -11,11 +11,11 @@
 #include <iostream>
 #include <string>
 #include <deque>
-#include "util/memory/pointer_classes.h"
+#include "util/memory/pointer_classes.hh"
 
 using std::deque;
 using std::string;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using namespace util::memory;
 
 typedef	deque<count_ptr<string> >		string_deck;

@@ -6,13 +6,13 @@
 
 #include <iostream>
 #include <cstdlib>			// for exit()
-#include "main/program_registry.h"
+#include "main/program_registry.hh"
 #include "util/qmap.tcc"
 #include "util/memory/count_ptr.tcc"
 #include "util/attributes.h"
 
 namespace HAC {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 //=============================================================================
 // class program entry member definitions
@@ -24,7 +24,7 @@ namespace HAC {
 util::memory::raw_count_ptr<program_entry::program_registry_type>
 program_entry::get_program_registry(void) {
 	static program_registry_type*	reg = new program_registry_type();
-	STATIC_RC_POOL_REF_INIT;	// defined in "util/memory/count_ptr.h"
+	STATIC_RC_POOL_REF_INIT;	// defined in "util/memory/count_ptr.hh"
 	static size_t*			count = NEW_SIZE_T;
 	static const size_t	zero __ATTRIBUTE_UNUSED__ = (*count = 0);
 	return util::memory::raw_count_ptr<program_registry_type>(reg, count);

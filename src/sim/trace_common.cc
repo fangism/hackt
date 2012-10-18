@@ -5,18 +5,18 @@
 
 #define	ENABLE_STACKTRACE			0
 
-#include "sim/trace_common.h"
+#include "sim/trace_common.hh"
 #include <iostream>
 #include <sstream>
 #include <iterator>
 #include <algorithm>
 #include <functional>
 #include <fstream>
-#include "util/stacktrace.h"
+#include "util/stacktrace.hh"
 #include <cstdio>			// for tmpnam
 #include "util/libc_temp.h"	// for temp file functions
 #include "util/IO_utils.tcc"	// .tcc?
-#include "util/binders.h"
+#include "util/binders.hh"
 
 /**
 	Option for the paranoid.  
@@ -28,7 +28,7 @@
 
 namespace HAC {
 namespace SIM {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using std::for_each;
 using std::ifstream;
 using std::ios_base;

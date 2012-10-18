@@ -5,30 +5,30 @@
 
 #define	ENABLE_STACKTRACE		0
 
-#include "Object/unroll/meta_loop_base.h"
-#include "Object/expr/meta_range_expr.h"
-#include "Object/inst/value_placeholder.h"
-#include "Object/traits/pint_traits.h"
-#include "Object/unroll/instantiation_statement_base.h"
-#include "Object/unroll/instantiation_statement.h"
-#include "Object/unroll/param_instantiation_statement.h"
-#include "Object/expr/dynamic_param_expr_list.h"
-#include "Object/expr/meta_range_list.h"
-#include "Object/def/footprint.h"
-#include "Object/unroll/unroll_context.h"
-#include "Object/inst/pint_value_collection.h"
-#include "Object/inst/value_scalar.h"
+#include "Object/unroll/meta_loop_base.hh"
+#include "Object/expr/meta_range_expr.hh"
+#include "Object/inst/value_placeholder.hh"
+#include "Object/traits/pint_traits.hh"
+#include "Object/unroll/instantiation_statement_base.hh"
+#include "Object/unroll/instantiation_statement.hh"
+#include "Object/unroll/param_instantiation_statement.hh"
+#include "Object/expr/dynamic_param_expr_list.hh"
+#include "Object/expr/meta_range_list.hh"
+#include "Object/def/footprint.hh"
+#include "Object/unroll/unroll_context.hh"
+#include "Object/inst/pint_value_collection.hh"
+#include "Object/inst/value_scalar.hh"
 
-// #include "common/TODO.h"
+// #include "common/TODO.hh"
 #include "util/persistent_object_manager.tcc"
-// #include "util/IO_utils.h"
+// #include "util/IO_utils.hh"
 #include "util/memory/count_ptr.tcc"
-// #include "util/stacktrace.h"
+// #include "util/stacktrace.hh"
 
 //=============================================================================
 namespace HAC {
 namespace entity {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 //=============================================================================
 // class meta_loop_base method definitions

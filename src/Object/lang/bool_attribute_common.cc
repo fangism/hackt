@@ -4,18 +4,18 @@
  */
 
 #include <iostream>
-#include "Object/lang/bool_attribute_common.h"
-#include "Object/lang/attribute_common.h"
-#include "Object/expr/pint_const.h"
-#include "Object/expr/preal_const.h"
-#include "Object/expr/const_param_expr_list.h"
-#include "common/TODO.h"
-#include "util/memory/count_ptr.h"
+#include "Object/lang/bool_attribute_common.hh"
+#include "Object/lang/attribute_common.hh"
+#include "Object/expr/pint_const.hh"
+#include "Object/expr/preal_const.hh"
+#include "Object/expr/const_param_expr_list.hh"
+#include "common/TODO.hh"
+#include "util/memory/count_ptr.hh"
 
 namespace HAC {
 namespace entity {
 namespace bool_attributes {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using namespace entity::attributes;
 
 //=============================================================================

@@ -7,7 +7,7 @@
  */
 
 // #include <iostream>
-#include "util/STL/hash_map.h"
+#include "util/STL/hash_map.hh"
 
 // using std::cerr;
 // using std::endl;

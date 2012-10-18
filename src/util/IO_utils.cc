@@ -11,7 +11,7 @@
 #include <string>
 #include <valarray>
 #include "util/IO_utils.tcc"	// need to explicitly instantiate for char
-#include "util/stacktrace.h"
+#include "util/stacktrace.hh"
 
 //=============================================================================
 /**
@@ -22,7 +22,7 @@
 
 //=============================================================================
 namespace util {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 //-----------------------------------------------------------------------------
 /**

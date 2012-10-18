@@ -7,15 +7,15 @@
 #ifndef	__HAC_OBJECT_INST_GENERAL_COLLECTION_TYPE_MANAGER_TCC__
 #define	__HAC_OBJECT_INST_GENERAL_COLLECTION_TYPE_MANAGER_TCC__
 
-#include "Object/inst/general_collection_type_manager.h"
-#include "Object/type/canonical_type.h"	// tcc later
-#include "Object/def/footprint.h"
+#include "Object/inst/general_collection_type_manager.hh"
+#include "Object/type/canonical_type.hh"	// tcc later
+#include "Object/def/footprint.hh"
 #include <iostream>
-#include "util/persistent_object_manager.h"
+#include "util/persistent_object_manager.hh"
 
 namespace HAC {
 namespace entity {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 #define GENERAL_COLLECTION_TYPE_MANAGER_TEMPLATE_SIGNATURE		\
 template <class Tag>

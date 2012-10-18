@@ -14,20 +14,20 @@
 
 #include "config.h"
 
-// this needs to be consistent with the %option never-interactive
+/* this needs to be consistent with the %option never-interactive */
 #ifndef	YY_ALWAYS_INTERACTIVE
 #define	YY_ALWAYS_INTERACTIVE		0
 #endif
 
 #if 0
-// this is covered by %option nostack
+/* this is covered by %option nostack */
 #ifndef	YY_STACK_USED
 #define	YY_STACK_USED			0
 #endif
 #endif
 
 #if 0
-// this is covered by %option nomain
+/* this is covered by %option nomain */
 #ifndef	YY_MAIN
 #define	YY_MAIN				0
 #endif
@@ -66,27 +66,31 @@
 #if defined(USING_YACC) || defined(USING_BYACC)
 #define	yylex()			__hackt_lex(&yylval, _lexer_state)
 #define	hackt_lex()		__hackt_lex(&hackt_lval, _lexer_state)
-#endif	// USING_YACC || USING_BYACC
+#endif	/* USING_YACC || USING_BYACC */
 
 #if defined(USING_BISON)
 #ifdef	YYLEX_PARAM
-// YYLEX_PARAM is a declarator, so we have to manually pass
-// in the correct argument name.
+/**
+YYLEX_PARAM is a declarator, so we have to manually pass
+in the correct argument name.
+**/
 #ifdef	YYBISON_VERSION
-// only bison-2.1 and up define YYBISON_VERSION (as a "string", incidentally)
-// bison-2.1 defines YYLEX differently than 2.0, *&^%$#@!
+/**
+only bison-2.1 and up define YYBISON_VERSION (as a "string", incidentally)
+bison-2.1 defines YYLEX differently than 2.0, *&^%$#@!
+**/
 #define	yylex(x,y)		__hackt_lex(x, _lexer_state)
 #define	hackt_lex(x,y)		__hackt_lex(x, _lexer_state)
-#else	// YYBISON_VERSION
+#else	/* YYBISON_VERSION */
 #define	yylex(x,y)		__hackt_lex(x, _lexer_state)
 #define	hackt_lex(x,y)		__hackt_lex(x, _lexer_state)
-#endif	// YYBISON_VERSION
-#else	// ifdef YYLEX_PARAM
+#endif	/* YYBISON_VERSION */
+#else	/* ifdef YYLEX_PARAM */
 #define	yylex			__hackt_lex
 #define	hackt_lex		__hackt_lex
-#endif	// YYLEX_PARAM
-#endif	// USING_BISON
+#endif	/* YYLEX_PARAM */
+#endif	/* USING_BISON */
 
 
-#endif	// __LEXER_HACKT_LEX_OPTIONS_H__
+#endif	/* __LEXER_HACKT_LEX_OPTIONS_H__ */
 

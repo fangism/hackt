@@ -8,16 +8,16 @@
 
 #include <iostream>
 #include <set>
-#include "Object/lang/cflat_context_visitor.h"
+#include "Object/lang/cflat_context_visitor.hh"
 #include "Object/global_entry_context.tcc"
-#include "Object/lang/SPEC_footprint.h"
+#include "Object/lang/SPEC_footprint.hh"
 #include "Object/global_entry.tcc"
-#include "Object/traits/bool_traits.h"
-#include "util/stacktrace.h"
+#include "Object/traits/bool_traits.hh"
+#include "util/stacktrace.hh"
 
 namespace HAC {
 namespace entity {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 //=============================================================================
 // class cflat_context_visitor method definitions
 

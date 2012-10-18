@@ -3,7 +3,7 @@
 	$Id: time.cc,v 1.3 2010/06/14 00:22:31 fang Exp $
  */
 
-#include "sim/time.h"
+#include "sim/time.hh"
 
 namespace HAC {
 namespace SIM {

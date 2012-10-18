@@ -7,7 +7,7 @@
 #ifndef	__UTIL_MULTIKEY_ASSOC_TCC__
 #define	__UTIL_MULTIKEY_ASSOC_TCC__
 
-#include "util/multikey_assoc.h"
+#include "util/multikey_assoc.hh"
 
 // predefine to suppress template definition
 #ifndef	EXTERN_TEMPLATE_UTIL_MULTIKEY_ASSOC
@@ -17,7 +17,7 @@
 #include <algorithm>
 #include <iterator>
 #include <numeric>			// for std::accumlate
-#include "util/STL/functional.h"
+#include "util/STL/functional.hh"
 // consider using util::member_select instead of _Select...
 
 #ifndef	DEBUG_MULTIKEY_ASSOC_SLICE
@@ -25,14 +25,14 @@
 #endif
 
 #if DEBUG_MULTIKEY_ASSOC_SLICE
-#include "util/stacktrace.h"
+#include "util/stacktrace.hh"
 #define	STACKTRACE_MULTIKEY_ASSOC		STACKTRACE_VERBOSE
 #else
 #define	STACKTRACE_MULTIKEY_ASSOC
 #endif
 
 namespace util {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using std::pair;
 using std::distance;
 using std::_Select1st;

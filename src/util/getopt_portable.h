@@ -24,7 +24,7 @@
 #include <getopt.h>
 #endif
 
-// additional checks for <gnugetopt/getopt.h>
+/* additional checks for <gnugetopt/getopt.h> */
  
-#endif	// __UTIL_GETOPT_PORTABLE_H__
+#endif	/* __UTIL_GETOPT_PORTABLE_H__ */
 

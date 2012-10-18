@@ -8,23 +8,23 @@
 #include <iostream>
 #include <map>
 #include <typeinfo>		// for std::bad_cast
-#include "Object/expr/dlfunction.h"
-#include "Object/expr/pint_const.h"
-#include "Object/expr/pbool_const.h"
-#include "Object/expr/preal_const.h"
-#include "Object/expr/pstring_const.h"
-// #include "Object/expr/const_collection.h"
-#include "common/ltdl-wrap.h"	// not actually needed
+#include "Object/expr/dlfunction.hh"
+#include "Object/expr/pint_const.hh"
+#include "Object/expr/pbool_const.hh"
+#include "Object/expr/preal_const.hh"
+#include "Object/expr/pstring_const.hh"
+// #include "Object/expr/const_collection.hh"
+#include "common/ltdl-wrap.hh"	// not actually needed
 #include "util/macros.h"
-#include "util/memory/count_ptr.h"
-#include "util/memory/excl_ptr.h"
-#include "util/stacktrace.h"
+#include "util/memory/count_ptr.hh"
+#include "util/memory/excl_ptr.hh"
+#include "util/stacktrace.hh"
 
 namespace HAC {
 namespace entity {
 using util::memory::never_ptr;
 using std::string;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 // typedef	never_ptr<chp_dlfunction_type>
 typedef	chp_dlfunction_ptr_type

@@ -11,14 +11,14 @@
 
 #include <iostream>
 
-#include "AST/HSE.h"
-#include "AST/token.h"
-#include "AST/token_char.h"
+#include "AST/HSE.hh"
+#include "AST/token.hh"
+#include "AST/token_char.hh"
 #include "AST/node_list.tcc"
-#include "AST/parse_context.h"
-#include "common/TODO.h"
+#include "AST/parse_context.hh"
+#include "common/TODO.hh"
 
-#include "util/what.h"
+#include "util/what.hh"
 #include "util/memory/count_ptr.tcc"
 
 #define	CONSTRUCTOR_INLINE
@@ -53,7 +53,7 @@ template class count_ptr<const guarded_command>;
 namespace HAC {
 namespace parser {
 namespace HSE {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 //=============================================================================
 // class statement method definitions

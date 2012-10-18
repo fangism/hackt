@@ -7,13 +7,13 @@
 
 #include <iostream>
 #include <list>
-#include "PR/placement_engine.h"
-#include "PR/pr-command.h"
-#include "sim/command_common.h"
-#include "common/config.h"
-#include "util/getopt_mapped.h"
+#include "PR/placement_engine.hh"
+#include "PR/pr-command.hh"
+#include "sim/command_common.hh"
+#include "common/config.hh"
+#include "util/getopt_mapped.hh"
 
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using std::cin;
 using HAC::PR::CommandRegistry;
 using std::string;

@@ -8,17 +8,17 @@
 
 #include <iostream>
 #include <vector>
-#include "Object/nonmeta_context.h"
-// #include "Object/ref/simple_nonmeta_value_reference.h"
-#include "Object/ref/simple_meta_instance_reference.h"
+#include "Object/nonmeta_context.hh"
+// #include "Object/ref/simple_nonmeta_value_reference.hh"
+#include "Object/ref/simple_meta_instance_reference.hh"
 #include "Object/global_entry_context.tcc"
-#include "Object/expr/const_index_list.h"
-#include "Object/expr/nonmeta_index_list.h"
-#include "util/stacktrace.h"
+#include "Object/expr/const_index_list.hh"
+#include "Object/expr/nonmeta_index_list.hh"
+#include "util/stacktrace.hh"
 
 namespace HAC {
 namespace entity {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 //=============================================================================
 // class nonemta_context_base method definitions

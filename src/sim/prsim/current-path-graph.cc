@@ -9,15 +9,15 @@
 #include <iostream>
 #include <iterator>
 #include <algorithm>
-#include "sim/prsim/current-path-graph.h"
-#include "net/netlist_options.h"
-#include "util/iterator_more.h"
-#include "util/stacktrace.h"
+#include "sim/prsim/current-path-graph.hh"
+#include "net/netlist_options.hh"
+#include "util/iterator_more.hh"
+#include "util/stacktrace.hh"
 
 namespace HAC {
 namespace SIM {
 namespace PRSIM {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using std::pair;
 using NET::transistor;
 using NET::netlist;

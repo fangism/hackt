@@ -10,9 +10,9 @@
 #endif
 
 #include <iostream>
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
-#include "util/stacktrace.h"
+#include "util/stacktrace.hh"
 
 using util::stacktrace;
 

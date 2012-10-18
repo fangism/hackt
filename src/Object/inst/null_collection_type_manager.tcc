@@ -7,12 +7,12 @@
 #ifndef	__HAC_OBJECT_INST_NULL_COLLECTION_TYPE_MANAGER_TCC__
 #define	__HAC_OBJECT_INST_NULL_COLLECTION_TYPE_MANAGER_TCC__
 
-#include "Object/inst/null_collection_type_manager.h"
+#include "Object/inst/null_collection_type_manager.hh"
 #include <iostream>
 
 namespace HAC {
 namespace entity {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 #define NULL_COLLECTION_TYPE_MANAGER_TEMPLATE_SIGNATURE			\
 template <class Tag>

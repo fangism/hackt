@@ -15,28 +15,28 @@
 
 //=============================================================================
 // start of static initializations
-#include "util/static_trace.h"
+#include "util/static_trace.hh"
 DEFAULT_STATIC_TRACE_BEGIN
 
-#include "Object/expr/dynamic_meta_index_list.h"
-#include "Object/expr/const_index_list.h"
-#include "Object/common/multikey_index.h"
-#include "Object/expr/meta_index_expr.h"
-#include "Object/expr/const_range.h"
-#include "Object/expr/pint_const.h"
-#include "Object/expr/const_range_list.h"
-#include "Object/expr/expr_dump_context.h"
-#include "Object/expr/expr_visitor.h"
-#include "Object/persistent_type_hash.h"
+#include "Object/expr/dynamic_meta_index_list.hh"
+#include "Object/expr/const_index_list.hh"
+#include "Object/common/multikey_index.hh"
+#include "Object/expr/meta_index_expr.hh"
+#include "Object/expr/const_range.hh"
+#include "Object/expr/pint_const.hh"
+#include "Object/expr/const_range_list.hh"
+#include "Object/expr/expr_dump_context.hh"
+#include "Object/expr/expr_visitor.hh"
+#include "Object/persistent_type_hash.hh"
 
-#include "util/stacktrace.h"
-#include "util/reserve.h"
-#include "util/multikey.h"
+#include "util/stacktrace.hh"
+#include "util/reserve.hh"
+#include "util/multikey.hh"
 #include "util/persistent_object_manager.tcc"
 #include "util/memory/count_ptr.tcc"
-#include "util/compose.h"
-#include "util/conditional.h"		// for compare_if
-#include "util/dereference.h"
+#include "util/compose.hh"
+#include "util/conditional.hh"		// for compare_if
+#include "util/dereference.hh"
 
 //=============================================================================
 namespace util {
@@ -60,7 +60,7 @@ using util::persistent_traits;
 using util::persistent_object_manager;
 using std::distance;
 using std::istream;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using std::mem_fun_ref;
 using util::dereference;
 USING_UTIL_COMPOSE

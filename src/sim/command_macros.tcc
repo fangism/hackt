@@ -6,10 +6,10 @@
 #ifndef	__HAC_SIM_COMMAND_MACROS_TCC__
 #define	__HAC_SIM_COMMAND_MACROS_TCC__
 
-#include "sim/command_macros.h"
-#include "sim/command_base.h"
-#include "sim/command_category.h"
-#include "sim/command_registry.h"
+#include "sim/command_macros.hh"
+#include "sim/command_base.hh"
+#include "sim/command_category.hh"
+#include "sim/command_registry.hh"
 #include <list>
 #include <string>
 

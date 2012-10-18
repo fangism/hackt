@@ -7,27 +7,27 @@
 #define	STACKTRACE_CONSTRUCTORS		(0 && ENABLE_STACKTRACE)
 #define	STACKTRACE_DESTRUCTORS		(0 && ENABLE_STACKTRACE)
 
-#include "util/static_trace.h"
+#include "util/static_trace.hh"
 DEFAULT_STATIC_TRACE_BEGIN
 
 #include <iostream>
 #include <algorithm>
-#include "Object/type/canonical_fundamental_chan_type.h"
-#include "Object/type/canonical_type.h"	// for generic data-type
-#include "Object/type/channel_type_reference_base.h"
-#include "Object/def/datatype_definition_base.h"
-#include "Object/def/fundamental_channel_footprint.h"
-#include "Object/persistent_type_hash.h"
-#include "Object/expr/const_param_expr_list.h"
-#include "Object/expr/pint_const.h"
+#include "Object/type/canonical_fundamental_chan_type.hh"
+#include "Object/type/canonical_type.hh"	// for generic data-type
+#include "Object/type/channel_type_reference_base.hh"
+#include "Object/def/datatype_definition_base.hh"
+#include "Object/def/fundamental_channel_footprint.hh"
+#include "Object/persistent_type_hash.hh"
+#include "Object/expr/const_param_expr_list.hh"
+#include "Object/expr/pint_const.hh"
 
 #include "util/memory/count_ptr.tcc"
 #include "util/memory/chunk_map_pool.tcc"
 #include "util/persistent_object_manager.tcc"
-#include "util/persistent_functor.h"
+#include "util/persistent_functor.hh"
 #include "util/IO_utils.tcc"
-#include "util/stacktrace.h"
-#include "util/what.h"
+#include "util/stacktrace.hh"
+#include "util/what.hh"
 
 namespace util {
 // TODO: specialize reconstructor for de-serialization
@@ -62,7 +62,7 @@ template class count_ptr<const canonical_fundamental_chan_type_base>;
 
 namespace HAC {
 namespace entity {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 // using util::memory::operator<;
 using util::persistent_traits;
 using std::cin;

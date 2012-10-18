@@ -5,7 +5,7 @@
  */
 
 #define	ENABLE_STATIC_TRACE		0
-#include "util/static_trace.h"
+#include "util/static_trace.hh"
 DEFAULT_STATIC_TRACE_BEGIN
 
 #define	ENABLE_STACKTRACE		0
@@ -13,43 +13,43 @@ DEFAULT_STATIC_TRACE_BEGIN
 
 #include <sstream>
 #include <limits>
-#include "Object/lang/PRS.h"
-#include "Object/lang/PRS_footprint.h"
-#include "Object/lang/PRS_attribute_registry.h"
-#include "Object/lang/PRS_macro_registry.h"
-#include "Object/lang/PRS_literal_attribute_registry.h"
-#include "Object/lang/PRS_literal_unroller.h"
+#include "Object/lang/PRS.hh"
+#include "Object/lang/PRS_footprint.hh"
+#include "Object/lang/PRS_attribute_registry.hh"
+#include "Object/lang/PRS_macro_registry.hh"
+#include "Object/lang/PRS_literal_attribute_registry.hh"
+#include "Object/lang/PRS_literal_unroller.hh"
 #include "Object/lang/generic_attribute.tcc"
 #include "Object/unroll/meta_conditional.tcc"
 #include "Object/unroll/meta_loop.tcc"
-#include "Object/inst/connection_policy.h"
+#include "Object/inst/connection_policy.hh"
 #if BOOL_PRS_CONNECTIVITY_CHECKING
-#include "Object/inst/instance_alias_info.h"
-#include "Object/inst/alias_empty.h"
+#include "Object/inst/instance_alias_info.hh"
+#include "Object/inst/alias_empty.hh"
 #endif
-#include "Object/inst/state_instance.h"
-#include "Object/inst/instance_pool.h"
+#include "Object/inst/state_instance.hh"
+#include "Object/inst/instance_pool.hh"
 
-#include "Object/ref/simple_meta_instance_reference.h"
-#include "Object/ref/meta_instance_reference_subtypes.h"
-#include "Object/traits/bool_traits.h"
-#include "Object/traits/node_traits.h"
-#include "Object/ref/simple_meta_dummy_reference.h"
+#include "Object/ref/simple_meta_instance_reference.hh"
+#include "Object/ref/meta_instance_reference_subtypes.hh"
+#include "Object/traits/bool_traits.hh"
+#include "Object/traits/node_traits.hh"
+#include "Object/ref/simple_meta_dummy_reference.hh"
 
-#include "Object/expr/const_param_expr_list.h"
-#include "Object/expr/dynamic_param_expr_list.h"
-#include "Object/def/template_formals_manager.h"
-#include "Object/type/template_actuals.h"
-#include "Object/persistent_type_hash.h"
+#include "Object/expr/const_param_expr_list.hh"
+#include "Object/expr/dynamic_param_expr_list.hh"
+#include "Object/def/template_formals_manager.hh"
+#include "Object/type/template_actuals.hh"
+#include "Object/persistent_type_hash.hh"
 
-#include "common/TODO.h"
-#include "common/ICE.h"
-#include "util/IO_utils.h"
+#include "common/TODO.hh"
+#include "common/ICE.hh"
+#include "util/IO_utils.hh"
 #include "util/memory/count_ptr.tcc"
 #include "util/memory/chunk_map_pool.tcc"
-#include "util/packed_array.h"	// for bool_alias_collection_type
+#include "util/packed_array.hh"	// for bool_alias_collection_type
 #include "util/likely.h"
-#include "util/stacktrace.h"
+#include "util/stacktrace.hh"
 
 //=============================================================================
 namespace util {
@@ -102,7 +102,7 @@ using std::transform;
 using std::back_inserter;
 using util::persistent_traits;
 using util::auto_indent;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using util::write_value;
 using util::read_value;
 using util::value_saver;

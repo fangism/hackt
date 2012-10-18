@@ -7,15 +7,15 @@
 #include <iostream>
 #include <fstream>
 #include "config.h"
-#include "util/named_ifstream_manager.h"
+#include "util/named_ifstream_manager.hh"
 #include "util/unique_list.tcc"
 
 #define	ENABLE_STACKTRACE			0
-#include "util/stacktrace.h"
+#include "util/stacktrace.hh"
 
 namespace util {
 using std::ifstream;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 //=============================================================================
 // class named_ifstream method definitions

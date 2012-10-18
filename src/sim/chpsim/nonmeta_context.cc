@@ -6,17 +6,17 @@
 #define	ENABLE_STACKTRACE				0
 
 #include <vector>
-#include "sim/chpsim/nonmeta_context.h"
-#include "sim/chpsim/Event.h"
-#include "sim/chpsim/State.h"
-#include "Object/def/footprint.h"
-#include "Object/module.h"
-#include "Object/global_entry.h"
-#include "Object/traits/proc_traits.h"
-#include "Object/lang/CHP_event.h"
-#include "util/iterator_more.h"
-#include "common/TODO.h"
-#include "util/stacktrace.h"
+#include "sim/chpsim/nonmeta_context.hh"
+#include "sim/chpsim/Event.hh"
+#include "sim/chpsim/State.hh"
+#include "Object/def/footprint.hh"
+#include "Object/module.hh"
+#include "Object/global_entry.hh"
+#include "Object/traits/proc_traits.hh"
+#include "Object/lang/CHP_event.hh"
+#include "util/iterator_more.hh"
+#include "common/TODO.hh"
+#include "util/stacktrace.hh"
 
 namespace HAC {
 namespace SIM {

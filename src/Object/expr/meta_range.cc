@@ -15,18 +15,18 @@
 
 //=============================================================================
 // start of static initializations
-#include "util/static_trace.h"
+#include "util/static_trace.hh"
 DEFAULT_STATIC_TRACE_BEGIN
 
-#include "Object/expr/pint_range.h"
-#include "Object/expr/const_range.h"
-#include "Object/expr/pint_const.h"
-#include "Object/expr/pint_arith_expr.h"
-#include "Object/expr/expr_visitor.h"
-#include "Object/persistent_type_hash.h"
+#include "Object/expr/pint_range.hh"
+#include "Object/expr/const_range.hh"
+#include "Object/expr/pint_const.hh"
+#include "Object/expr/pint_arith_expr.hh"
+#include "Object/expr/expr_visitor.hh"
+#include "Object/persistent_type_hash.hh"
 
-#include "util/stacktrace.h"
-#include "util/memory/excl_ptr.h"
+#include "util/stacktrace.hh"
+#include "util/memory/excl_ptr.hh"
 #include "util/memory/count_ptr.tcc"
 #include "util/memory/list_vector_pool.tcc"
 #include "util/persistent_object_manager.tcc"
@@ -67,7 +67,7 @@ using util::read_value;
 using util::persistent_traits;
 using util::persistent_object_manager;
 using std::istream;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 #if DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE && ENABLE_STACKTRACE
 REQUIRES_STACKTRACE_STATIC_INIT

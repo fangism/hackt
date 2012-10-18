@@ -19,38 +19,38 @@
 #include "Object/ref/member_nonmeta_instance_reference.tcc"
 #endif
 #include "Object/ref/aggregate_meta_instance_reference.tcc"
-#include "Object/type/fundamental_type_reference.h"
-#include "Object/type/canonical_type.h"
-#include "Object/inst/physical_instance_collection.h"
-#include "Object/inst/channel_instance_collection.h"
-#include "Object/inst/alias_empty.h"
-#include "Object/inst/param_value_collection.h"
-#include "Object/common/namespace.h"
-#include "Object/common/dump_flags.h"
-#include "Object/expr/const_range.h"
-#include "Object/expr/dynamic_meta_index_list.h"
-#include "Object/expr/dynamic_meta_range_list.h"
-#include "Object/expr/nonmeta_index_list.h"
-#include "Object/expr/pstring_expr.h"
-#include "Object/unroll/instantiation_statement_base.h"
-#include "Object/unroll/loop_scope.h"
-#include "Object/unroll/alias_connection.h"
-#include "Object/persistent_type_hash.h"
-#include "Object/traits/instance_traits.h"
-#include "Object/inst/instance_collection.h"
-#include "Object/inst/general_collection_type_manager.h"
-#include "Object/unroll/port_connection_base.h"
+#include "Object/type/fundamental_type_reference.hh"
+#include "Object/type/canonical_type.hh"
+#include "Object/inst/physical_instance_collection.hh"
+#include "Object/inst/channel_instance_collection.hh"
+#include "Object/inst/alias_empty.hh"
+#include "Object/inst/param_value_collection.hh"
+#include "Object/common/namespace.hh"
+#include "Object/common/dump_flags.hh"
+#include "Object/expr/const_range.hh"
+#include "Object/expr/dynamic_meta_index_list.hh"
+#include "Object/expr/dynamic_meta_range_list.hh"
+#include "Object/expr/nonmeta_index_list.hh"
+#include "Object/expr/pstring_expr.hh"
+#include "Object/unroll/instantiation_statement_base.hh"
+#include "Object/unroll/loop_scope.hh"
+#include "Object/unroll/alias_connection.hh"
+#include "Object/persistent_type_hash.hh"
+#include "Object/traits/instance_traits.hh"
+#include "Object/inst/instance_collection.hh"
+#include "Object/inst/general_collection_type_manager.hh"
+#include "Object/unroll/port_connection_base.hh"
 
 // introduced by using canonical_types
-#include "Object/def/user_def_datatype.h"
-#include "Object/def/user_def_chan.h"
-#include "Object/def/process_definition.h"
-#include "Object/type/canonical_generic_chan_type.h"
+#include "Object/def/user_def_datatype.hh"
+#include "Object/def/user_def_chan.hh"
+#include "Object/def/process_definition.hh"
+#include "Object/type/canonical_generic_chan_type.hh"
 #if BUILTIN_CHANNEL_FOOTPRINTS
-#include "Object/global_channel_entry.h"
+#include "Object/global_channel_entry.hh"
 #endif
 
-#include "common/TODO.h"
+#include "common/TODO.hh"
 
 #include "util/persistent_object_manager.tcc"
 #include "util/multidimensional_sparse_set.tcc"
@@ -125,7 +125,7 @@ template class count_ptr<HAC::entity::meta_instance_reference_base>;
 //=============================================================================
 namespace HAC {
 namespace entity {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using std::equal;
 using util::multidimensional_sparse_set_traits;
 using util::multidimensional_sparse_set;

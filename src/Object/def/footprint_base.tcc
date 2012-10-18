@@ -11,18 +11,18 @@
 #include <algorithm>
 #include <iterator>
 #include "Object/def/footprint.tcc"
-#include "Object/traits/classification_tags.h"
-#include "Object/inst/instance_collection_pool_bundle.h"
-#include "Object/inst/value_collection_pool_bundle.h"
-#include "Object/inst/state_instance.h"
-#include "Object/inst/instance_pool.h"
+#include "Object/traits/classification_tags.hh"
+#include "Object/inst/instance_collection_pool_bundle.hh"
+#include "Object/inst/value_collection_pool_bundle.hh"
+#include "Object/inst/state_instance.hh"
+#include "Object/inst/instance_pool.hh"
 
-#include "util/stacktrace.h"
-#include "util/persistent_object_manager.h"
+#include "util/stacktrace.hh"
+#include "util/persistent_object_manager.hh"
 
 namespace HAC {
 namespace entity {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 //=============================================================================
 // class footprint_base method definitions

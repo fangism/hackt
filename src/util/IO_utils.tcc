@@ -1,6 +1,6 @@
 /**
 	\file "util/IO_utils.tcc"
-	Template function definitions from "IO_utils.h".
+	Template function definitions from "IO_utils.hh".
 	Consider renaming this file to value_read/writer...
 	$Id: IO_utils.tcc,v 1.19 2009/08/28 20:45:22 fang Exp $
  */
@@ -15,7 +15,7 @@
 #define	STACKTRACE_IOS			0
 #endif
 
-#include "util/IO_utils.h"
+#include "util/IO_utils.hh"
 
 #ifndef	EXTERN_TEMPLATE_UTIL_IO_UTILS
 
@@ -29,7 +29,7 @@
 #include "util/macros.h"	// for INVARIANT
 
 #if	STACKTRACE_IOS
-#include "util/stacktrace.h"
+#include "util/stacktrace.hh"
 	#define	STACKTRACE_IO(x)	STACKTRACE(x)
 	#define	STACKTRACE_IO_BRIEF	STACKTRACE_BRIEF
 	#define	STACKTRACE_IO_VERBOSE	STACKTRACE_VERBOSE
@@ -43,7 +43,7 @@
 
 namespace util {
 #if STACKTRACE_IOS
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 #endif
 using std::ostream;
 using std::istream;

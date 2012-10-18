@@ -5,15 +5,15 @@
 
 #include <iostream>
 #include <cstdio>
-#include "lexer/yyin_manager.h"
-#include "lexer/file_manager.h"
+#include "lexer/yyin_manager.hh"
+#include "lexer/file_manager.hh"
 
 #define	ENABLE_STACKTRACE			0
-#include "util/stacktrace.h"
+#include "util/stacktrace.hh"
 
 namespace HAC {
 namespace lexer {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 //=============================================================================
 // class yyin_manager method definitions
 

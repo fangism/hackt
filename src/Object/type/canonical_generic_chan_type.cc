@@ -8,27 +8,27 @@
 #define	STACKTRACE_CONSTRUCTORS			(0 && ENABLE_STACKTRACE)
 #define	STACKTRACE_DUMPS			(0 && ENABLE_STACKTRACE)
 
-#include "Object/type/canonical_generic_chan_type.h"
+#include "Object/type/canonical_generic_chan_type.hh"
 
 #include <iostream>
-#include "Object/type/canonical_type.h"
-#include "Object/type/builtin_channel_type_reference.h"
-#include "Object/traits/class_traits_fwd.h"
-#include "Object/def/typedef_base.h"
-#include "Object/def/datatype_definition_base.h"
-#include "Object/def/template_formals_manager.h"
-#include "Object/type/template_actuals.h"
-#include "Object/expr/const_param_expr_list.h"
-#include "Object/unroll/unroll_context.h"
+#include "Object/type/canonical_type.hh"
+#include "Object/type/builtin_channel_type_reference.hh"
+#include "Object/traits/class_traits_fwd.hh"
+#include "Object/def/typedef_base.hh"
+#include "Object/def/datatype_definition_base.hh"
+#include "Object/def/template_formals_manager.hh"
+#include "Object/type/template_actuals.hh"
+#include "Object/expr/const_param_expr_list.hh"
+#include "Object/unroll/unroll_context.hh"
 #include "util/persistent_object_manager.tcc"
-#include "util/indent.h"
-#include "common/TODO.h"
-#include "common/ICE.h"
-#include "util/stacktrace.h"
+#include "util/indent.hh"
+#include "common/TODO.hh"
+#include "common/ICE.hh"
+#include "util/stacktrace.hh"
 
 namespace HAC {
 namespace entity {
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 using util::write_value;
 using util::read_value;
 

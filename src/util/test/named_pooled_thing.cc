@@ -9,17 +9,17 @@
 #define	DEBUG_LIST_VECTOR_POOL				1
 #define	DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE		1
 
-#include "util/static_trace.h"
+#include "util/static_trace.hh"
 STATIC_TRACE_BEGIN("named_pooled_thing.o")
 
-#include "named_pooled_thing.h"
+#include "named_pooled_thing.hh"
 #include "util/memory/count_ptr.tcc"
 
 #include <iostream>
 #include <string>
-#include "util/using_ostream.h"
-#include "util/what.h"
-#include "util/stacktrace.h"
+#include "util/using_ostream.hh"
+#include "util/what.hh"
+#include "util/stacktrace.hh"
 
 #include "util/memory/list_vector_pool.tcc"
 

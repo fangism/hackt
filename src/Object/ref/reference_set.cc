@@ -3,20 +3,20 @@
 	$Id: reference_set.cc,v 1.4 2010/04/02 22:18:46 fang Exp $
  */
 
-#include "Object/ref/reference_set.h"
+#include "Object/ref/reference_set.hh"
 #include <iostream>
 #include <functional>
 #include <algorithm>
-#include "Object/entry_collection.h"
-#include "Object/traits/instance_traits.h"
-#include "util/iterator_more.h"
+#include "Object/entry_collection.hh"
+#include "Object/traits/instance_traits.hh"
+#include "util/iterator_more.hh"
 
 namespace HAC {
 namespace entity {
 using std::for_each;
 using std::mem_fun_ref;
 using util::set_inserter;
-#include "util/using_ostream.h"
+#include "util/using_ostream.hh"
 
 //=============================================================================
 /**
