@@ -290,7 +290,7 @@ dnl
 dnl Workaround SuSE-linux-g++3.3 defect, where size_t is not considered
 dnl the exact same as unsigned long.
 dnl AC_DEFINEs TYPE_EQUIV_SIZE_T_UNSIGNED_LONG to 0 or 1.
-dnl This result is used in util/numeric/inttype_traits.h.
+dnl This result is used in util/numeric/inttype_traits.hh.
 dnl
 AC_DEFUN([FANG_TYPE_EQUIV_SIZE_T_UNSIGNED_LONG],
 [AC_CHECK_SIZEOF(size_t)
@@ -304,8 +304,8 @@ AC_CACHE_CHECK([whether C++ considers size_t and unsigned long the same],
 	CPPFLAGS="$CPPFLAGS -I $srcdir/src"
 	AC_COMPILE_IFELSE(
 		AC_LANG_PROGRAM([
-#include "util/static_assert.h"
-#include "util/type_traits.h"
+#include "util/static_assert.hh"
+#include "util/type_traits.hh"
 #include "util/size_t.h"
 		],[[
         UTIL_STATIC_ASSERT((util::is_same<size_t, size_t>::value));
@@ -334,7 +334,7 @@ dnl
 dnl On cygwin-g++3.4 defect, detect that uint32_t is
 dnl the exact same as unsigned long.
 dnl AC_DEFINEs TYPE_EQUIV_UINT32_UNSIGNED_LONG to 0 or 1.
-dnl This result is used in util/numeric/inttype_traits.h.
+dnl This result is used in util/numeric/inttype_traits.hh.
 dnl
 AC_DEFUN([FANG_TYPE_EQUIV_UINT32_UNSIGNED_LONG],
 [AC_CHECK_SIZEOF(uint32_t)
@@ -354,8 +354,8 @@ AC_CACHE_CHECK([whether C++ considers uint32_t and unsigned long the same],
 #ifdef	HAVE_INTTYPES_H
 #include <inttypes.h>
 #endif
-#include "util/static_assert.h"
-#include "util/type_traits.h"
+#include "util/static_assert.hh"
+#include "util/type_traits.hh"
 		],[[
         UTIL_STATIC_ASSERT((util::is_same<uint32_t, uint32_t>::value));
         UTIL_STATIC_ASSERT((util::is_same<uint32_t, unsigned long>::value));
@@ -382,7 +382,7 @@ dnl
 dnl On cygwin-g++3.4 defect, detect that uint64_t is
 dnl the exact same as unsigned long.
 dnl AC_DEFINEs TYPE_EQUIV_UINT64_UNSIGNED_LONG to 0 or 1.
-dnl This result is used in util/numeric/inttype_traits.h.
+dnl This result is used in util/numeric/inttype_traits.hh.
 dnl
 AC_DEFUN([FANG_TYPE_EQUIV_UINT64_UNSIGNED_LONG],
 [AC_CHECK_SIZEOF(uint64_t)
@@ -402,8 +402,8 @@ AC_CACHE_CHECK([whether C++ considers uint64_t and unsigned long the same],
 #ifdef	HAVE_INTTYPES_H
 #include <inttypes.h>
 #endif
-#include "util/static_assert.h"
-#include "util/type_traits.h"
+#include "util/static_assert.hh"
+#include "util/type_traits.hh"
 		],[[
         UTIL_STATIC_ASSERT((util::is_same<uint64_t, uint64_t>::value));
         UTIL_STATIC_ASSERT((util::is_same<uint64_t, unsigned long>::value));
@@ -429,7 +429,7 @@ dnl @synopsis FANG_TYPE_EQUIV_UINT32_SIZE_T
 dnl
 dnl Detect that uint32_t is the exact same as size_t
 dnl AC_DEFINEs TYPE_EQUIV_UINT32_SIZE_T to 0 or 1.
-dnl This result is used in util/numeric/inttype_traits.h.
+dnl This result is used in util/numeric/inttype_traits.hh.
 dnl
 AC_DEFUN([FANG_TYPE_EQUIV_UINT32_SIZE_T],
 [AC_CHECK_SIZEOF(uint32_t)
@@ -450,8 +450,8 @@ AC_CACHE_CHECK([whether C++ considers uint32_t and size_t the same],
 #include <inttypes.h>
 #endif
 #include "util/size_t.h"
-#include "util/static_assert.h"
-#include "util/type_traits.h"
+#include "util/static_assert.hh"
+#include "util/type_traits.hh"
 		],[[
         UTIL_STATIC_ASSERT((util::is_same<uint32_t, uint32_t>::value));
         UTIL_STATIC_ASSERT((util::is_same<uint32_t, size_t>::value));
@@ -477,7 +477,7 @@ dnl @synopsis FANG_TYPE_EQUIV_UINT64_SIZE_T
 dnl
 dnl Detect that uint64_t is the exact same as size_t
 dnl AC_DEFINEs TYPE_EQUIV_UINT64_SIZE_T to 0 or 1.
-dnl This result is used in util/numeric/inttype_traits.h.
+dnl This result is used in util/numeric/inttype_traits.hh.
 dnl
 AC_DEFUN([FANG_TYPE_EQUIV_UINT64_SIZE_T],
 [AC_CHECK_SIZEOF(uint64_t)
@@ -498,8 +498,8 @@ AC_CACHE_CHECK([whether C++ considers uint64_t and size_t the same],
 #include <inttypes.h>
 #endif
 #include "util/size_t.h"
-#include "util/static_assert.h"
-#include "util/type_traits.h"
+#include "util/static_assert.hh"
+#include "util/type_traits.hh"
 		],[[
         UTIL_STATIC_ASSERT((util::is_same<uint64_t, uint64_t>::value));
         UTIL_STATIC_ASSERT((util::is_same<uint64_t, size_t>::value));

@@ -11,7 +11,7 @@
 #include "config.h"
 #include "AST/AST.hh"
 #include "parser/instref.hh"
-#include "parser/instref-prefix.hh"
+#include "parser/instref-prefix.h"
 #include "parser/instref-parse-real.hh"
 #include "parser/instref-parse-options.h"
 #include "lexer/flex_lexer_state.hh"

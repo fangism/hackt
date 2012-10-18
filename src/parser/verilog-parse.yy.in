@@ -11,7 +11,7 @@
 
 #include "parser/yacc-config.h"
 #include "AST/AST.hh"
-#include "parser/verilog-prefix.hh"
+#include "parser/verilog-prefix.h"
 #include "util/using_ostream.hh"
 #include "parser/verilog-union.hh"
 #include "parser/verilog-parse-options.h"

@@ -13,7 +13,7 @@
 
 #include "parser/yacc-config.h"
 #include "AST/AST.hh"		// should be first
-#include "parser/type-prefix.hh"
+#include "parser/type-prefix.h"
 #include "parser/type-parse.output.h"	// auto-generated state strings! :)
 #include "parser/type-parse-options.h"
 #include "parser/type-union.hh"

@@ -13,7 +13,7 @@
 #include <iostream>
 
 #include "parser/yacc-config.h"
-#include "parser/spice-prefix.hh"
+#include "parser/spice-prefix.h"
 #include "parser/spice-parse-options.h"
 #include "parser/spice-parse.output.h"
 #include "parser/spice-union.hh"

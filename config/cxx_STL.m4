@@ -6,7 +6,7 @@ dnl
 
 dnl @synopsis FANG_CXX_STL_REVERSE_ITERATOR_COMPARISONS
 dnl
-dnl source taken from "src/util/STL/reverse_iterator.h"
+dnl source taken from "src/util/STL/reverse_iterator.hh"
 dnl known to be present in gcc-4.1 headers, 
 dnl but missing in all previous versions of gcc.  
 dnl Defines HAVE_STL_REVERSE_ITERATOR_COMPARISONS if present.  
@@ -335,7 +335,7 @@ dnl However, you're not supposed to use anything older than gcc-3.3 anyways...
 dnl where is that damn hash_map?
 	[ext/hash_map hash_map alt/hash_map \]
 	[ext/hashtable.h \]
-dnl used mainly in "src/util/hash_specializations.h"
+dnl used mainly in "src/util/hash_specializations.hh"
 	[ext/stl_hash_fun.h ext/hash_fun.h \]
 	[stl_hash_fun.h bits/functional_hash.h\]
 	[ext/hash_set hash_set alt/hash_set \]
@@ -344,7 +344,7 @@ dnl used mainly in "src/util/hash_specializations.h"
 	[unordered_map tr1/unordered_map unordered_set tr1/unordered_set \]
 	[ext/new_allocator.h \]
 	[ext/functional tr1/functional \]
-dnl used in "src/util/string_fwd.h"
+dnl used in "src/util/string_fwd.hh"
 	[bits/stringfwd.h \]
 	[bits/concept_check.h \]
 dnl bits/stl_contruct.h requires <iterator> for iterator traits
@@ -582,7 +582,7 @@ dnl Three tests combined in one.
 dnl Checks if <functional> contains _Identity, _Select1st, _Select2nd.
 dnl Defines HAVE_STD__IDENTITY, HAVE_STD__SELECT1ST, HAVE_STD_SELECT__2ND
 dnl respectively, if they are available and defined.  
-dnl In source, "util/STL/functional.h" provide them if they are missing.  
+dnl In source, "util/STL/functional.hh" provide them if they are missing.  
 dnl
 dnl @category Cxx
 dnl @version 2006-05-08
@@ -669,7 +669,7 @@ dnl Checks if <bitset> has member functions _Find_first(), _Find_next(),
 dnl as given by GLIBC++'s SGI extensions.  
 dnl Defines HAVE_STD_BITSET_FIND_FIRST, HAVE_STD_BITSET_FIND_NEXT
 dnl respectively, if they are available and defined.  
-dnl In source, "util/bitset.h" provides a common interface in either case.
+dnl In source, "util/bitset.hh" provides a common interface in either case.
 dnl
 dnl @category Cxx
 dnl @version 2007-02-20
