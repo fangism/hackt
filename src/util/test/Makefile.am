@@ -98,6 +98,7 @@ noinst_PROGRAMS = \
 	link_test \
 	bitmanip_test \
 	string_test \
+	tokenize_test \
 	priority_queue_test \
 	pointer_classes_test \
 	excl_ptr_variant_test \
@@ -191,6 +192,8 @@ bitmanip_test_SOURCES = bitmanip_test.cc
 bitmanip_test_LDADD = libfangutil.la
 string_test_SOURCES = string_test.cc
 string_test_LDADD = libfangutil.la
+tokenize_test_SOURCES = tokenize_test.cc
+tokenize_test_LDADD = libfangutil.la
 link_test_SOURCES = link_test.cc
 link_test_LDADD = liblinktest.la libbogusutil.la
 list_vector_test_SOURCES = list_vector_test.cc
@@ -247,7 +250,7 @@ collection_pool_test_SOURCES = collection_pool_test.cc
 collection_pool_test_LDADD = libfangutil.la
 
 libfangutil_la_SOURCES = stacktrace.cc static_trace.cc thread_lock.cc \
-	ref_count_pool.cc bitset.cc nibble_tables.cc string.cc
+	ref_count_pool.cc bitset.cc nibble_tables.cc string.cc tokenize.cc
 libbogusutil_la_SOURCES = bogus_stacktrace.cc bogus_stacktrace.hh static_trace.cc
 libpooled_la_SOURCES = \
 	pool_module_a.cc pool_module_b.cc pool_module_a.hh pool_module_b.hh
@@ -293,6 +296,9 @@ bitset.cc: ../bitset.cc
 	$(LN_SF) $? $@
 
 string.cc: ../string.cc
+	$(LN_SF) $? $@
+
+tokenize.cc: ../tokenize.cc
 	$(LN_SF) $? $@
 
 nibble_tables.cc: ../numeric/nibble_tables.cc

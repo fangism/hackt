@@ -105,33 +105,54 @@ tokenize_single_char_only(const std::string& s, string_list& l, const char d) {
 	for ( ; i<len; ) {
 		size_t m = s.find_first_of(d, i);
 		if (m == string::npos) {
-			STACKTRACE_INDENT_PRINT("A" << endl);
 			l.push_back(s.substr(i));
 			break;
 		}
 		size_t n = s.find_first_not_of(d, m);
 		if (n == string::npos) {
-			STACKTRACE_INDENT_PRINT("B" << endl);
 			l.push_back(s.substr(i, m-i));
 			break;
 		}
 		if (n-m > 1) {
-			STACKTRACE_INDENT_PRINT("C1" << endl);
 			// keep going
 			m = s.find_first_of(d, n);
 			if (m == string::npos) {
-				STACKTRACE_INDENT_PRINT("D1" << endl);
 				l.push_back(s.substr(i));
 				break;
 			} else {
-				STACKTRACE_INDENT_PRINT("D2" << endl);
 				l.push_back(s.substr(i, m-i));
 			}
 			i = m+1;
 		} else {
-			STACKTRACE_INDENT_PRINT("C2" << endl);
 			l.push_back(s.substr(i, m-i));
 			i = n;
+		}
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param s original string
+	\param sep separator string, e.g. "::"
+	\param l resulting list
+ */
+void
+tokenize_string(const std::string& s, const std::string& sep, string_list& l) {
+	const size_t sl = sep.length();
+	const size_t len = s.length();
+	size_t i = 0;	// scan index
+	for ( ; i<len; ) {
+		size_t m = s.find(sep, i);
+		if (m == string::npos) {
+			l.push_back(s.substr(i));	// grab the remainder
+			break;
+		} else {
+			l.push_back(s.substr(i, m-i));
+			i = m+sl;
+			if (i == len) {
+				l.push_back("");
+				break;
+			}
 		}
 	}
 }

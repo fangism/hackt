@@ -1,6 +1,12 @@
 # "src/util/ChangeLog"
 #	$Id: ChangeLog,v 1.122 2011/05/05 06:50:47 fang Exp $
 
+2012-10-24	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-86-51b:
+	  util/tokenize.cc: added tokenize_string(), test case added.
+
+
 2012-09-18	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-86-46:
