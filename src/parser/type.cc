@@ -12,6 +12,7 @@
 #include "parser/type-parse-real.hh"
 #include "lexer/flex_lexer_state.hh"
 #include "Object/type/fundamental_type_reference.hh"
+#include "Object/common/namespace.hh"
 #include "util/memory/count_ptr.tcc"
 
 #define	ENABLE_STACKTRACE		0
@@ -110,6 +111,23 @@ parse_and_check_complete_type(const char* t, const entity::module& m) {
 	return check_complete_type(*ct, m);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+/**
+	Lookups up a process/definition footprint from the top-level module.
+	\return NULL on error
+ */
+const footprint*
+parse_to_footprint(const char* t, const module& m) {
+	// parse namespace portion of argument, if any
+	// go into that namespace
+	// lookup definition
+	// lookup footprint with template args, if any
+	// return pointer to footprint
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 }	// end namespace parser
 }	// end namespace HAC
 

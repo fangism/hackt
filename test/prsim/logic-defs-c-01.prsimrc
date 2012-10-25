@@ -1,0 +1,6 @@
+# "logic-defs-c-01.prsimrc"
+# @haco@ logic-defs-c.haco-c
+# @hacprsim-flags@ -t std::and4
+
+source logic-defs-a-01.prsimrc
+

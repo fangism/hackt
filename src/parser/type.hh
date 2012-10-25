@@ -12,13 +12,20 @@
 namespace HAC {
 namespace entity {
 class module;
+class footprint;
 }
 
 namespace parser {
+using entity::module;
+using entity::footprint;
 
 extern
 concrete_type_ref::return_type
-parse_and_check_complete_type(const char*, const entity::module&);
+parse_and_check_complete_type(const char*, const module&);
+
+extern
+const footprint*
+parse_to_footprint(const char*, const module&);
 
 }	// end namespace parser
 }	// end namespace HAC

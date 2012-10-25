@@ -623,6 +623,7 @@ context::add_assignment(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_ptr<const definition_base>
 context::__lookup_definition_return(const never_ptr<const object> o) const {
+	STACKTRACE_VERBOSE;
 #if REQUIRE_DEFINITION_EXPORT
 	const never_ptr<const definition_base>
 		ret(o.is_a<const definition_base>());
@@ -636,6 +637,10 @@ context::__lookup_definition_return(const never_ptr<const object> o) const {
 				<< endl;
 			return never_ptr<const definition_base>();
 		}
+	} else {
+		const never_ptr<const name_space>
+			ns(o.is_a<const name_space>());
+		// FINISH ME HERE
 	}
 	return ret;
 #else
@@ -649,6 +654,7 @@ context::__lookup_definition_return(const never_ptr<const object> o) const {
  */
 never_ptr<const definition_base>
 context::lookup_definition(const token_identifier& id) const {
+	STACKTRACE_VERBOSE;
 	INVARIANT(get_current_namespace());
 	const never_ptr<const object> o(lookup_object(id));
 	return __lookup_definition_return(o);
@@ -663,6 +669,7 @@ context::lookup_definition(const token_identifier& id) const {
  */
 never_ptr<const definition_base>
 context::lookup_definition(const qualified_id& id) const {
+	STACKTRACE_VERBOSE;
 	INVARIANT(get_current_namespace());
 	const never_ptr<const object> o(lookup_object(id));
 	return __lookup_definition_return(o);

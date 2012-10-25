@@ -183,6 +183,8 @@ scopespace::lookup_member(const string& id) const {
  */
 never_ptr<const object>
 scopespace::__lookup_member(const string& id) const {
+	STACKTRACE_VERBOSE;
+	STACKTRACE_INDENT_PRINT("id = " << id << endl);
 	const const_map_iterator f(used_id_map.find(id));
 	return (f != used_id_map.end()) ? f->second :
 		never_ptr<const object>(NULL);
@@ -212,6 +214,8 @@ scopespace::lookup_member_with_modify(const string& id) const {
  */
 never_ptr<const object>
 scopespace::lookup_object(const string& id) const {
+	STACKTRACE_VERBOSE;
+	STACKTRACE_INDENT_PRINT("id = " << id << endl);
 	const never_ptr<const object> o(lookup_member(id));
 	const never_ptr<const scopespace> parent(get_parent());
 	if (o) return o;
@@ -348,7 +352,7 @@ scopespace::dump_for_definitions(ostream& o) const {
  */
 never_ptr<const scopespace>
 scopespace::lookup_namespace(const qualified_id_slice& id) const {
-	STACKTRACE("scopespace::lookup_namespace()");
+	STACKTRACE_VERBOSE;
 	const never_ptr<const scopespace> parent(get_parent());
 	NEVER_NULL(parent);
 	return parent->lookup_namespace(id);
@@ -1786,7 +1790,7 @@ name_space::add_definition(excl_ptr<definition_base>& db) {
  */
 never_ptr<const scopespace>
 name_space::lookup_namespace(const qualified_id_slice& id) const {
-	STACKTRACE("namespace::lookup_namespace()");
+	STACKTRACE_VERBOSE;
 	return query_subnamespace_match(id);
 }
 
@@ -1818,6 +1822,7 @@ name_space::lookup_member(const string& id) const {
 	typedef	std::set<return_type>	return_set;
 	typedef	namespace_list::const_iterator		const_iterator;
 	STACKTRACE_VERBOSE;
+	STACKTRACE_INDENT_PRINT("id = " << id << endl);
 	return_type o(parent_type::lookup_member(id));
 	if (o)
 		return o;

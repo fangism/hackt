@@ -30,7 +30,7 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	check-excl-rings-chan-def check-excl-rings-chan \
 	check-excl-fail \
 	check-excl-rings-priv \
-	logic-defs logic-defs-a logic-defs-b \
+	logic-defs logic-defs-a logic-defs-b logic-defs-c \
 	and nand or nor \
 	array array-b \
 	and-nand or-nor nand-or \
@@ -166,7 +166,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	ACX-PR-6393 \
 	ACX-PR-6628 \
 	ACX-PR-6718 ACX-PR-6718b ACX-PR-6718c ACX-PR-6718d \
-	logic-defs-01 logic-defs-a-01 logic-defs-b-01 \
+	logic-defs-01 logic-defs-a-01 logic-defs-b-01 logic-defs-c-01 \
 	expr-limit-a-01 \
 	large_OR_fanin-01 huge_OR_fanin-01 \
 	interference-01 interference-02 interference-03 interference-04 \
