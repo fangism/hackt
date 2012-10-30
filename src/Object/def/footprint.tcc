@@ -22,6 +22,7 @@ namespace HAC {
 namespace entity {
 #include "util/using_ostream.hh"
 using std::ostream_iterator;
+using std::pair;
 
 //=============================================================================
 // class footprint_base method definitions
@@ -41,6 +42,39 @@ footprint_base<Tag>::~footprint_base() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	\return a pair of: (owner footprint, local id)
+	that represents the unique type that owns the instance indexed.
+	\param Tag is the meta-type tag.
+	\param gi is the global index being referenced.  0-based.
+ */
+template <class Tag>
+pair<const footprint*, size_t>
+footprint::get_instance_owner(const size_t gi) const {
+	typedef	typename state_instance<Tag>::pool_type	pool_type;
+//	STACKTRACE_VERBOSE;
+	const pool_type& p(get_instance_pool<Tag>());
+	const size_t local = p.local_private_entries();	// skip ports
+	if (gi < local) {
+		const size_t ports = p.port_entries();
+		return std::make_pair(this, gi +ports);
+	} else {
+		const size_t si = gi -local;
+		const pool_private_map_entry_type&
+			e(p.locate_private_entry(si));
+		// e.first is the local process index (1-indexed)
+		const state_instance<process_tag>::pool_type&
+			ppool(get_instance_pool<process_tag>());
+		const size_t m = ppool.local_entries();
+		INVARIANT(e.first <= m);
+		const state_instance<process_tag>& sp(ppool[e.first -1]);
+		// e.second is the offset to subtract
+		return sp._frame._footprint->get_instance_owner<Tag>(
+			si -e.second);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	This lookup could be critical?
 	Return a reference to a unique object in the hierarchy
 	that represents the type information.  
@@ -54,25 +88,10 @@ const state_instance<Tag>&
 footprint::get_instance(const size_t gi) const {
 	typedef	typename state_instance<Tag>::pool_type	pool_type;
 //	STACKTRACE_VERBOSE;
-	const pool_type& p(get_instance_pool<Tag>());
-	const size_t ports = p.port_entries();
-	const size_t local = p.local_private_entries();	// skip ports
-	if (gi < local) {
-		return p[gi +ports];
-	} else {
-		const size_t si = gi -local;
-		const pool_private_map_entry_type&
-			e(p.locate_private_entry(si));
-		// e.first is the local process index (1-indexed)
-		const state_instance<process_tag>::pool_type&
-			ppool(get_instance_pool<process_tag>());
-		const size_t m = ppool.local_entries();
-		INVARIANT(e.first <= m);
-		const state_instance<process_tag>& sp(ppool[e.first -1]);
-		// e.second is the offset to subtract
-		return sp._frame._footprint->get_instance<Tag>(
-			si -e.second);
-	}
+	const pair<const footprint*, size_t>
+		oref(this->get_instance_owner<Tag>(gi));
+	const pool_type& p(oref.first->template get_instance_pool<Tag>());
+	return p[oref.second];
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

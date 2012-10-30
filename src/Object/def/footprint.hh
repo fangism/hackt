@@ -393,6 +393,10 @@ public:
 	const state_instance<Tag>&
 	get_instance(const size_t) const;
 
+	template <class Tag>
+	std::pair<const footprint*, size_t>
+	get_instance_owner(const size_t) const;
+
 #if 0
 	good_bool
 	collect_subentries(const global_indexed_reference&,
