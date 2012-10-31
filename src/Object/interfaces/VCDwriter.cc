@@ -135,7 +135,7 @@ VCDwriter::demangle_id(const char* id) {
 	size_t ret = 0;
 	while (*id) {
 		ret *= vcd_id_base;
-		ret += *id;
+		ret += *id -vcd_id_offset;
 		++id;
 	}
 	return ret;
