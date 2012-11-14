@@ -1,6 +1,15 @@
 # "lib/ChangeLog"
 #	$Id: ChangeLog,v 1.70 2011/05/07 03:43:39 fang Exp $
 
+2012-11-14	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-86-51b:
+	  wrap_verilog_modules_to_hacprsim.awk:
+	  	concatenate reg-to-reg for newer vcs compilation
+		of system verilog (no string casting needed).
+		Still works w/ previous versions of vcs.
+
+
 2012-09-04	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-86-44d:

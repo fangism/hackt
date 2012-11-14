@@ -374,8 +374,15 @@ function verilog_strcat2(s1, s2) {
 	return "{" s1 ", " s2 "}";
 }
 
+# string concatenation
 function emit_from_prsim(name) {
 	return "$from_prsim(" verilog_strcat2("prsim_name", name) \
+		", " verilog_strcat2("verilog_name", name) ");";
+}
+
+# register concatenation
+function emit_from_prsim_reg(name) {
+	return "$from_prsim(" verilog_strcat2("prsim_name_reg", name) \
 		", " verilog_strcat2("verilog_name", name) ");";
 }
 
@@ -417,7 +424,7 @@ if (output_format == "verilog") {
 #	print "\tparameter prsim_name=\"\";";
 	loopvar = "_i_";		# loop variable name
 	print "\tinteger " loopvar ";";
-	print "\treg [" max_strlen "*8:1] verilog_name, tmp;";
+	print "\treg [" max_strlen "*8:1] prsim_name_reg, verilog_name, tmp;";
 	# tmp is just local var for string manip
 if (!reverse) {
 	printf("\t" type_name);
@@ -446,6 +453,7 @@ if (!reverse) {
 	print "initial begin";
 	print "#0\t// happens *after* initial";
 	print "\tif (prsim_name != \"\") begin";
+	print "\tprsim_name_reg = prsim_name;";
 	print "\t$sformat(verilog_name, \"%m\");"
 # this order does not matter
 # but we preserve original order to avoid hash nondeterminism for testing
@@ -465,7 +473,7 @@ for (i=0; i<port_index; ++i) {
 #	}
 	print "\tfor (" loopvar "=" l "; " loopvar "<=" u "; " loopvar "=" loopvar "+1) begin";
 		print "\t\t$sformat(tmp, \"." p "[%d]\", " loopvar ");"
-		print "\t\t" (reverse ? emit_to_prsim("tmp") : emit_from_prsim("tmp"));
+		print "\t\t" (reverse ? emit_to_prsim("tmp") : emit_from_prsim_reg("tmp"));
 	print "\tend // end for";
 	} else {
 		n = enquote_mem_ref(p);
@@ -481,7 +489,7 @@ for (i=0; i<port_index; ++i) {
 #	}
 	print "\tfor (" loopvar "=" l "; " loopvar "<=" u "; " loopvar "=" loopvar "+1) begin";
 		print "\t\t$sformat(tmp, \"." p "[%d]\", " loopvar ");"
-		print "\t\t" (reverse ? emit_from_prsim("tmp") : emit_to_prsim("tmp"));
+		print "\t\t" (reverse ? emit_from_prsim_reg("tmp") : emit_to_prsim("tmp"));
 	print "\tend // end for";
 	} else {
 		n = enquote_mem_ref(p);

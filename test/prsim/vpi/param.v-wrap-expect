@@ -18,7 +18,7 @@ module HAC_AND_N;
 	wire [input_size-1:0] A;
 	wire Z;
 	integer _i_;
-	reg [64*8:1] verilog_name, tmp;
+	reg [64*8:1] prsim_name_reg, verilog_name, tmp;
 	AND_N #(input_size)
 	dummy (
 		.A ( A ),
@@ -27,10 +27,11 @@ module HAC_AND_N;
 initial begin
 #0	// happens *after* initial
 	if (prsim_name != "") begin
+	prsim_name_reg = prsim_name;
 	$sformat(verilog_name, "%m");
 	for (_i_=0; _i_<=input_size-1; _i_=_i_+1) begin
 		$sformat(tmp, ".A[%d]", _i_);
-		$from_prsim({prsim_name, tmp}, {verilog_name, tmp});
+		$from_prsim({prsim_name_reg, tmp}, {verilog_name, tmp});
 	end // end for
 	$to_prsim({verilog_name, ".Z"}, {prsim_name, ".Z"});
 	end // end if
