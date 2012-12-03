@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2012-12-03	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-86-52:
+	  Moved around some lexer and AST symbol definitions to reduce
+		cyclic dependencies, but ended up just declaring
+		libhacktast as a convenience-only library, so it will
+		no longer be installed (was private), 
+		just merged into libhacktparsers.la.
+		Built on x86_64-ubuntu-linux w/ gcc-4.6.3.
+
+
 2012-10-16	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-86-51:

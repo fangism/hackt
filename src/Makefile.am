@@ -102,6 +102,8 @@ test_case_LDADD = libhacktprsim.la
 # convenience libraries
 # want to install libhackt.la next... but causes undefined symbols...
 noinst_LTLIBRARIES = libhackt.la \
+	libhacktlex.la \
+	libhacktast.la \
 	libhacktexec.la libhacktinstref.la \
 	libhacktcommon.la $(FUNLIBS)
 
@@ -116,7 +118,6 @@ EXTRA_LTLIBRARIES += \
 # Just topological sort libraries based on LIBADD deps.
 pkglib_LTLIBRARIES = \
 	$(UTILLIBS) \
-	libhacktast.la \
 	libhacktparsers.la \
 	libhacktlib.la \
 	libhacktsim.la \
@@ -235,11 +236,11 @@ libhacktexec_la_LIBADD = libhacktprsim.la libhacktchpsim.la libhacknet.la
 
 HACKTLIB_CC_FILES = \
 	main/main_funcs.cc \
-	main/compile.cc \
-	main/compile_options.cc \
-	main/create_options.cc
+	main/compile.cc
 HACKTLIB_HH_FILES = \
-	$(HACKTLIB_CC_FILES:.cc=.hh)
+	$(HACKTLIB_CC_FILES:.cc=.hh) \
+	main/compile_options.hh \
+	main/create_options.hh
 
 # pass in a C++ file to coerce --tag=CXX linkage
 libhacktlib_la_SOURCES = \
@@ -255,6 +256,7 @@ libhacktparsers_la_LIBADD = libhacktast.la
 
 libhacktast_la_LIBADD = \
 	libhackt.la libhacktinstref.la libhacktcommon.la \
+	libhacktlex.la \
 	$(LIBFANGUTIL)
 
 libhacktguile_la_SOURCES = \
@@ -417,6 +419,7 @@ SPICE_LEX_ROOT = spice-lex
 libbogus_la_SOURCES = \
 	lexer/hackt-lex.ll \
 	parser/hackt-parse.yy
+# libbogus_la_LIBADD = libhacktparsers.la
 
 libbogus2_la_SOURCES = \
 	lexer/instref-lex.ll \
@@ -445,6 +448,16 @@ libbogus6_la_SOURCES = \
 # automake doesn't like macro in generating .Plo, a bug methinks
 #	lexer/$(HACKT_LEX_ROOT).ll \
 #	parser/$(HACKT_PARSE_ROOT).yy
+
+LEXER_CC_FILES = \
+	AST/parser_globals.cc \
+	lexer/file_manager.cc \
+	lexer/flex_lexer_common.cc \
+	lexer/flex_lexer_state.cc \
+	lexer/hac_lex.cc
+
+LEXER_HH_FILES = \
+	$(LEXER_CC_FILES:.cc=.hh)
 
 AST_CC_FILES = \
 	AST/node_position.cc \
@@ -996,12 +1009,9 @@ PARSER_HH_FILES = \
 	parser/spice-union.hh \
 	parser/spice.hh \
 	lexer/hacflat-yystype.hh \
-	lexer/file_manager.hh \
 	lexer/input_manager.hh \
-	lexer/flex_lexer_state.hh \
 	lexer/flex_buffer_state.hh \
-	lexer/yyin_manager.hh \
-	lexer/hac_lex.hh
+	lexer/yyin_manager.hh
 
 # can't use $(HACKT_PARSE_ROOT) to substitute :(
 PARSER_CC_FILES = \
@@ -1020,11 +1030,7 @@ PARSER_CC_FILES = \
 	parser/spice-union.cc \
 	lexer/type-lex-real.cc \
 	lexer/hacflat-lex-real.cc \
-	lexer/file_manager.cc \
-	lexer/flex_lexer_state.cc \
-	lexer/yyin_manager.cc \
-	lexer/hac_lex.cc \
-	lexer/flex_lexer_common.cc
+	lexer/yyin_manager.cc
 
 
 SIM_CC_FILES = \
@@ -1224,7 +1230,13 @@ libhacktinstref_la_SOURCES = \
 	$(OBJECT_REF_TCC_FILES) \
 	$(OBJECT_REF_HH_FILES)
 
-libhacktast_la_SOURCES = $(AST_CC_FILES) $(AST_TCC_FILES) $(AST_HH_FILES)
+libhacktast_la_SOURCES = $(AST_CC_FILES) $(AST_TCC_FILES) $(AST_HH_FILES) \
+	main/compile_options.cc \
+	main/create_options.cc
+
+# libhacktlex.la is just a convenience library
+libhacktlex_la_SOURCES = $(LEXER_CC_FILES) $(LEXER_HH_FILES)
+libhacktlex_la_CXXFLAGS = $(AM_CXXFLAGS) $(CXXFLAGS) -Wno-old-style-cast
 
 libhacktexec_la_SOURCES = \
 	$(MAIN_EXEC_CC_FILES) \
@@ -1238,6 +1250,8 @@ libhacktexec_la_LIBADD += $(LIBMISCFUN)
 
 libhacktsim_la_SOURCES = $(SIM_CC_FILES) $(SIM_TCC_FILES) $(SIM_HH_FILES) $(SIM_H_FILES)
 libhacktsim_la_LIBADD = libhacktlib.la
+libhacktsim_la_LIBADD += libhacktparsers.la
+# needed libhacktparsers.la for parser::complete_instance_names(...)
 
 libhacktprsim_la_SOURCES = $(PRSIM_CC_FILES) $(PRSIM_TCC_FILES) $(PRSIM_HH_FILES)
 libhacktprsim_la_LIBADD = libhacktsim.la libhacknet.la
