@@ -1,6 +1,13 @@
 "ChangeLog"
 #	$Id: ChangeLog,v 1.256 2011/05/03 19:20:32 fang Exp $
 
+2012-12-05	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-86-52b:
+	  config/hackt.m4: also search for tputs in libtinfo
+		needed for some linux distros: Ubuntu, Fedora
+
+
 2012-10-18	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-86-51:

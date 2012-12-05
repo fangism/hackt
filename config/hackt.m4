@@ -149,8 +149,6 @@ XDR_INCLUDE="$xdr_include"
 fi
 CPPFLAGS="$saved_CPPFLAGS"
 fi
-dnl readline may need to link against xdr, without requiring headers
-dnl Thus, we check for tputs unconditionally
 saved_LDFLAGS="$LDFLAGS"
 LDFLAGS="$LDFLAGS $xdr_ldpath"
 dnl NOTE: SEARCH_LIBS automatically prepends LIBS
@@ -177,7 +175,7 @@ dnl NCURSES_LDPATH for path to libraries, and
 dnl NCURSES_LIB for the library itself.  
 dnl
 dnl @category InstalledPackages
-dnl @version 2010-03-09
+dnl @version 2012-12-05
 dnl @author David Fang <fangism@users.sourceforge.net>
 dnl @license AllPermissive
 dnl
@@ -214,11 +212,11 @@ LDFLAGS="$LDFLAGS $ncurses_ldpath"
 dnl NOTE: SEARCH_LIBS automatically prepends LIBS
 AC_LANG_PUSH(C)
 dnl autoconf's test may not automatically extern "C"
-AC_SEARCH_LIBS(tputs, ncurses termcap,
+AC_SEARCH_LIBS(tputs, ncurses termcap tinfo,
 	[NCURSES_LDPATH="$ncurses_ldpath"
 	NCURSES_LIB="$ac_cv_search_tputs"
 	dnl saved_LDFLAGS="$LDFLAGS"
-	AC_DEFINE(HAVE_TERMCAP, [], [Define if have ncurses OR termcap])],
+	AC_DEFINE(HAVE_TERMCAP, [], [Define if have ncurses OR termcap OR tinfo])],
 	[:]
 	dnl check for ac_cv_search_tputs for the result of this check
 )
