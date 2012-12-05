@@ -25,6 +25,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "main/global_options.hh"
 #include "main/compile_options.hh"
 #include "common/config.hh"
+#include "util/getopt_portable.h"		// for optind
 #include "util/getopt_mapped.hh"
 #include "util/persistent_object_manager.hh"
 #include "sim/prsim/State-prsim.hh"

@@ -32,6 +32,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "sim/chpsim/Command.hh"
 #include "sim/chpsim/graph_options.hh"
 #include "sim/command_common.hh"
+#include "util/getopt_portable.h"		// for optind
 #include "util/getopt_mapped.hh"		// for getopt()
 #include "common/ltdl-wrap.hh"
 #include "common/TODO.hh"

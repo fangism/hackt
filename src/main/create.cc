@@ -14,6 +14,7 @@
 #include "main/create.hh"
 #include "main/compile_options.hh"
 #include "main/program_registry.hh"
+#include "util/getopt_portable.h"		// for optind
 #include "util/stacktrace.hh"
 #include "main/main_funcs.hh"
 #include "main/global_options.hh"
