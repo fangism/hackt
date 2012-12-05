@@ -10,6 +10,7 @@
 
 #include <string>
 #include <iostream>
+#include <unistd.h>		// for ssize_t
 #include "util/numeric/integer_traits.hh"
 #include "util/what.tcc"
 
