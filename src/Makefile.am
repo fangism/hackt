@@ -314,9 +314,9 @@ getopt_test_SOURCES = test/getopt_test.cc
 
 # This says, "always build me first."
 # trying NOT to abuse this, writing explicit dependencies below
-BUILT_SOURCES += parser/hackt-parse.output.h \
-	parser/instref-parse.output.h \
-	parser/type-parse.output.h
+BUILT_SOURCES += parser/hackt-parse.output.hh \
+	parser/instref-parse.output.hh \
+	parser/type-parse.output.hh
 
 cvstag.h: ChangeLog
 	@{ $(ECHO) "#ifndef	CVSTAG" ; \
@@ -982,16 +982,16 @@ OBJECT_HH_FILES = $(OBJECT_CC_FILES:.cc=.hh) \
 
 PARSER_H_FILES = \
 	parser/yacc-config.h \
-	parser/$(HACKT_PARSE_ROOT).output.h \
+	parser/$(HACKT_PARSE_ROOT).output.hh \
 	parser/$(HACKT_PARSE_ROOT)-options.h \
 	lexer/$(HACKT_LEX_ROOT)-options.h \
-	parser/$(INSTREF_PARSE_ROOT).output.h \
+	parser/$(INSTREF_PARSE_ROOT).output.hh \
 	parser/$(INSTREF_PARSE_ROOT)-options.h \
 	lexer/$(INSTREF_LEX_ROOT)-options.h \
-	parser/$(TYPE_PARSE_ROOT).output.h \
+	parser/$(TYPE_PARSE_ROOT).output.hh \
 	parser/$(TYPE_PARSE_ROOT)-options.h \
 	lexer/$(TYPE_LEX_ROOT)-options.h \
-	parser/$(SPICE_PARSE_ROOT).output.h \
+	parser/$(SPICE_PARSE_ROOT).output.hh \
 	parser/$(SPICE_PARSE_ROOT)-options.h \
 	lexer/$(SPICE_LEX_ROOT)-options.h \
 	lexer/$(HACFLAT_LEX_ROOT)-options.h
@@ -1280,25 +1280,25 @@ lexer/$(LIBHACKTPARSERS_LA)-$(HACKT_LEX_ROOT)-real.lo \
 	parser/$(HACKT_PARSE_ROOT).hh
 parser/$(LIBHACKTPARSERS_LA)-hackt-union.lo \
 	parser/$(LIBHACKTPARSERS_LA)-hackt-union.o: \
-	parser/$(HACKT_PARSE_ROOT).output.h
+	parser/$(HACKT_PARSE_ROOT).output.hh
 lexer/$(LIBHACKTPARSERS_LA)-$(INSTREF_LEX_ROOT)-real.lo \
 	lexer/$(LIBHACKTPARSERS_LA)-$(INSTREF_LEX_ROOT)-real.o: \
 	parser/$(INSTREF_PARSE_ROOT).hh
 parser/$(LIBHACKTPARSERS_LA)-instref-union.lo \
 	parser/$(LIBHACKTPARSERS_LA)-instref-union.o: \
-	parser/$(INSTREF_PARSE_ROOT).output.h
+	parser/$(INSTREF_PARSE_ROOT).output.hh
 lexer/$(LIBHACKTPARSERS_LA)-$(TYPE_LEX_ROOT)-real.lo \
 	lexer/$(LIBHACKTPARSERS_LA)-$(TYPE_LEX_ROOT)-real.o: \
 	parser/$(TYPE_PARSE_ROOT).hh
 parser/$(LIBHACKTPARSERS_LA)-type-union.lo \
 	parser/$(LIBHACKTPARSERS_LA)-type-union.o: \
-	parser/$(TYPE_PARSE_ROOT).output.h
+	parser/$(TYPE_PARSE_ROOT).output.hh
 lexer/$(LIBHACKTPARSERS_LA)-$(SPICE_LEX_ROOT)-real.lo \
 	lexer/$(LIBHACKTPARSERS_LA)-$(SPICE_LEX_ROOT)-real.o: \
 	parser/$(SPICE_PARSE_ROOT).hh
 parser/$(LIBHACKTPARSERS_LA)-spice-union.lo \
 	parser/$(LIBHACKTPARSERS_LA)-spice-union.o: \
-	parser/$(SPICE_PARSE_ROOT).output.h
+	parser/$(SPICE_PARSE_ROOT).output.hh
 
 # even more extra dependencies for bogus libraries
 lexer/$(LIBBOGUS_LA)-$(HACKT_LEX_ROOT).lo \
@@ -1328,10 +1328,10 @@ lexer/instref-lex-options.hchk: parser/instref-prefix.h
 
 # the following targets need to be prefixed with the library name, libbogus, 
 # but automake complains that it overrides the automatic definition...
-# parser/$(HACKT_PARSE_ROOT).lo: parser/$(HACKT_PARSE_ROOT).output.h
-# parser/$(HACKT_PARSE_ROOT).$(OBJEXT): parser/$(HACKT_PARSE_ROOT).output.h
+# parser/$(HACKT_PARSE_ROOT).lo: parser/$(HACKT_PARSE_ROOT).output.hh
+# parser/$(HACKT_PARSE_ROOT).$(OBJEXT): parser/$(HACKT_PARSE_ROOT).output.hh
 # this creates cyclic dependencies (bad)
-# parser/$(HACKT_PARSE_ROOT).cc: parser/$(HACKT_PARSE_ROOT).output.h
+# parser/$(HACKT_PARSE_ROOT).cc: parser/$(HACKT_PARSE_ROOT).output.hh
 
 # compile lexer and parser into separate library to for convenient way
 # of giving them exceptional compiler flags, see libhacktparsers_la_CXXFLAGS
@@ -1506,19 +1506,19 @@ EXTRACT_FLEX_COMMON_PIPE = \
 # important: the LEXYACC_PREFIX_SCRIPT must be applied LAST!
 # the other preceeding scripts shouldn't matter in their order
 parser/$(HACKT_PARSE_ROOT)-real.cc: parser/$(HACKT_PARSE_ROOT).cc \
-		parser/$(HACKT_PARSE_ROOT).output.h
+		parser/$(HACKT_PARSE_ROOT).output.hh
 	$(CAT) $< | $(PARSER_HACK_PIPE) > $@
 
 parser/$(INSTREF_PARSE_ROOT)-real.cc: parser/$(INSTREF_PARSE_ROOT).cc \
-		parser/$(INSTREF_PARSE_ROOT).output.h
+		parser/$(INSTREF_PARSE_ROOT).output.hh
 	$(CAT) $< | $(PARSER_HACK_PIPE) > $@
 
 parser/$(TYPE_PARSE_ROOT)-real.cc: parser/$(TYPE_PARSE_ROOT).cc \
-		parser/$(TYPE_PARSE_ROOT).output.h
+		parser/$(TYPE_PARSE_ROOT).output.hh
 	$(CAT) $< | $(PARSER_HACK_PIPE) > $@
 
 parser/$(SPICE_PARSE_ROOT)-real.cc: parser/$(SPICE_PARSE_ROOT).cc \
-		parser/$(SPICE_PARSE_ROOT).output.h
+		parser/$(SPICE_PARSE_ROOT).output.hh
 	$(CAT) $< | $(PARSER_HACK_PIPE) > $@
 
 if YLWRAP_CC2HH
@@ -1675,25 +1675,25 @@ PARSE_OUTPUT_HEADER_SCRIPT = \
 	$(PARSE_OUTPUT_TO_HEADER_PIPE) < $< > \
 		`$(ECHO) $@ | $(SED_srcdir_strip_fast)`
 
-$(HACKT_PARSE_OUTPUT).h: $(HACKT_PARSE_OUTPUT)
+$(HACKT_PARSE_OUTPUT).hh: $(HACKT_PARSE_OUTPUT)
 	$(PARSE_OUTPUT_HEADER_SCRIPT)
 
 INSTREF_PARSE_OUTPUT = parser/$(INSTREF_PARSE_ROOT).output
 $(INSTREF_PARSE_OUTPUT): parser/$(INSTREF_PARSE_ROOT).hh
 
-$(INSTREF_PARSE_OUTPUT).h: $(INSTREF_PARSE_OUTPUT)
+$(INSTREF_PARSE_OUTPUT).hh: $(INSTREF_PARSE_OUTPUT)
 	$(PARSE_OUTPUT_HEADER_SCRIPT)
 
 TYPE_PARSE_OUTPUT = parser/$(TYPE_PARSE_ROOT).output
 $(TYPE_PARSE_OUTPUT): parser/$(TYPE_PARSE_ROOT).hh
 
-$(TYPE_PARSE_OUTPUT).h: $(TYPE_PARSE_OUTPUT)
+$(TYPE_PARSE_OUTPUT).hh: $(TYPE_PARSE_OUTPUT)
 	$(PARSE_OUTPUT_HEADER_SCRIPT)
 
 SPICE_PARSE_OUTPUT = parser/$(SPICE_PARSE_ROOT).output
 $(SPICE_PARSE_OUTPUT): parser/$(SPICE_PARSE_ROOT).hh
 
-$(SPICE_PARSE_OUTPUT).h: $(SPICE_PARSE_OUTPUT)
+$(SPICE_PARSE_OUTPUT).hh: $(SPICE_PARSE_OUTPUT)
 	$(PARSE_OUTPUT_HEADER_SCRIPT)
 
 # These all depend on parser/$(HACKT_PARSE_ROOT).h, 
@@ -2130,7 +2130,7 @@ CLEANPARSER = \
 	parser/$(HACKT_PARSE_ROOT)-real.cc \
 	parser/$(HACKT_PARSE_ROOT)-real.hh \
 	parser/$(HACKT_PARSE_ROOT).output \
-	parser/$(HACKT_PARSE_ROOT).output.h \
+	parser/$(HACKT_PARSE_ROOT).output.hh \
 	parser/hackt-union.cc \
 	parser/hackt.types \
 	parser/$(INSTREF_PARSE_ROOT).cc \
@@ -2139,7 +2139,7 @@ CLEANPARSER = \
 	parser/$(INSTREF_PARSE_ROOT)-real.cc \
 	parser/$(INSTREF_PARSE_ROOT)-real.hh \
 	parser/$(INSTREF_PARSE_ROOT).output \
-	parser/$(INSTREF_PARSE_ROOT).output.h \
+	parser/$(INSTREF_PARSE_ROOT).output.hh \
 	parser/instref-union.cc \
 	parser/instref.types \
 	parser/$(TYPE_PARSE_ROOT).cc \
@@ -2148,7 +2148,7 @@ CLEANPARSER = \
 	parser/$(TYPE_PARSE_ROOT)-real.cc \
 	parser/$(TYPE_PARSE_ROOT)-real.hh \
 	parser/$(TYPE_PARSE_ROOT).output \
-	parser/$(TYPE_PARSE_ROOT).output.h \
+	parser/$(TYPE_PARSE_ROOT).output.hh \
 	parser/type-union.cc \
 	parser/type.types \
 	parser/$(SPICE_PARSE_ROOT).cc \
@@ -2157,7 +2157,7 @@ CLEANPARSER = \
 	parser/$(SPICE_PARSE_ROOT)-real.cc \
 	parser/$(SPICE_PARSE_ROOT)-real.hh \
 	parser/$(SPICE_PARSE_ROOT).output \
-	parser/$(SPICE_PARSE_ROOT).output.h \
+	parser/$(SPICE_PARSE_ROOT).output.hh \
 	parser/spice-union.cc \
 	parser/spice.types \
 	parser/$(VERILOG_PARSE_ROOT).cc \

@@ -15,7 +15,7 @@
 #include "parser/yacc-config.h"
 #include "parser/spice-prefix.h"
 #include "parser/spice-parse-options.h"
-#include "parser/spice-parse.output.h"
+#include "parser/spice-parse.output.hh"
 #include "parser/spice-union.hh"
 #include "lexer/spice-lex-options.h"
 #include "lexer/flex_lexer_state.hh"
