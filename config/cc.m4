@@ -592,3 +592,44 @@ if test "$fang_cv_func_cxx_popen" = yes ; then
 fi
 ])
 
+dnl AC_C_TYPEOF was provided since autoconf 2.60 (2005)
+dnl this is stolen from autoconf so that version 2.59 can be used to bootstrap
+# AC_C_TYPEOF
+# -----------
+# Check if the C compiler supports GCC's typeof syntax.
+# The test case provokes incompatibilities in the Sun C compilers
+# (both Solaris 8 and Solaris 10).
+m4_ifndef([AC_C_TYPEOF], 
+[AC_DEFUN([AC_C_TYPEOF],
+[
+  AC_CACHE_CHECK([for typeof syntax and keyword spelling], ac_cv_c_typeof,
+    [ac_cv_c_typeof=no
+     for ac_kw in typeof __typeof__ no; do
+       test $ac_kw = no && break
+       AC_COMPILE_IFELSE([AC_LANG_PROGRAM([],
+         [[
+           int value;
+           typedef struct {
+                   char a [1
+                           + ! (($ac_kw (value))
+                                (($ac_kw (value)) 0 < ($ac_kw (value)) -1
+                                 ? ($ac_kw (value)) - 1
+                                 : ~ (~ ($ac_kw (value)) 0
+                                      << sizeof ($ac_kw (value)))))]; }
+              ac__typeof_type_;
+           return
+             (! ((void) ((ac__typeof_type_ *) 0), 0));
+         ]])],
+         [ac_cv_c_typeof=$ac_kw])
+       test $ac_cv_c_typeof != no && break
+     done])
+  if test $ac_cv_c_typeof != no; then
+    AC_DEFINE([HAVE_TYPEOF], 1,
+      [Define to 1 if typeof works with your compiler.])
+    if test $ac_cv_c_typeof != typeof; then
+      AC_DEFINE_UNQUOTED([typeof], [$ac_cv_c_typeof],
+        [Define to __typeof__ if your compiler spells it that way.])
+    fi
+  fi
+]])
+)
