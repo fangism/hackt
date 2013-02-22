@@ -191,6 +191,7 @@ INSTANTIATION_STATEMENT_CLASS::unroll(const unroll_context& c) const {
 		inst_ptr(c.lookup_target_collection(*this->inst_base)
 			.template is_a<collection_type>());
 	if (!inst_ptr) {
+		STACKTRACE_INDENT_PRINT("collection not found in target footprint" << endl);
 		// we pass the whole footprint because only the caller
 		// knows whether to allocate a value_collection 
 		// vs. instance_collection
@@ -212,6 +213,7 @@ INSTANTIATION_STATEMENT_CLASS::unroll(const unroll_context& c) const {
 	// which will be distinguishably strict or relaxed.  
 	const bool first_time = !_inst.is_partially_unrolled();
 	if (first_time) {
+		STACKTRACE_INDENT_PRINT("first type-commit to collection" << endl);
 		const instance_collection_parameter_type
 			cft(type_ref_parent_type::get_canonical_type(c));
 		if (!cft) {
@@ -246,6 +248,7 @@ INSTANTIATION_STATEMENT_CLASS::unroll(const unroll_context& c) const {
 		return good_bool(false);
 	}
 	// note: commit_type_check also unrolls the complete type
+	STACKTRACE_INDENT_PRINT("commit_type_check" << endl);
 	const good_bool
 		tc(type_ref_parent_type::commit_type_check(
 			_inst, final_type_ref, *c.get_top_footprint()));

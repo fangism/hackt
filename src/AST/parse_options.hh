@@ -39,6 +39,15 @@ struct parse_options {
 	 */
 	bool		array_internal_nodes;
 	/**
+		This turns off accessibility checks in all contexts, 
+		which is useful for other tools that need to read 
+		the pre-compiled objects.  
+		Default: false, enforcing port visibility only.  
+		Some compile-time checks however, do allow
+		private member references, so we allow such exceptions.
+	 */
+	bool		view_all_publicly;
+	/**
 		Whether or not to check for case collisions in scopes, 
 		and whether or not to signal an error.
 		Default: warn
@@ -58,6 +67,7 @@ struct parse_options {
 #endif
 		namespace_instances(true), 
 		array_internal_nodes(true),
+		view_all_publicly(false),
 		case_collision_policy(OPTION_WARN),
 		unknown_spec_policy(OPTION_ERROR)
 		{ }

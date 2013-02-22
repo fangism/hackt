@@ -35,6 +35,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/def/process_definition_alias.hh"
 #include "Object/def/fundamental_channel_footprint.hh"
 #include "Object/def/footprint.hh"
+#include "Object/module.hh"
 #include "Object/type/data_type_reference.hh"
 #include "Object/type/builtin_channel_type_reference.hh"
 #include "Object/type/channel_type_reference.hh"
@@ -243,7 +244,11 @@ definition_base::lookup_nonparameter_member(const string& id) const {
 	typedef	never_ptr<const object>	return_type;
 	const never_ptr<const scopespace> s(get_scopespace());
 	if (s) {
+#if PROCESS_DEFINITION_IS_NAMESPACE
+		const return_type ret(s->lookup_local(id));
+#else
 		const return_type ret(s->__lookup_member(id));
+#endif
 		if (ret && !lookup_template_formal(id)) {
 			return ret;
 		} 
@@ -375,7 +380,13 @@ definition_base::dump_qualified_name(ostream& o, const dump_flags& df) const {
 if (df.show_definition_owner) {
 	const string& key(get_key());
 	const never_ptr<const scopespace> parent(get_parent());
-	if (parent && !parent->is_global_namespace()) {
+	if (parent &&
+#if PROCESS_DEFINITION_IS_NAMESPACE
+		!parent.is_a<const module>()
+#else
+		!parent->is_global_namespace()
+#endif
+		) {
 		parent->dump_qualified_name(o, df) << scope;
 	}
 	return o << key;
@@ -933,7 +944,11 @@ user_def_chan::commit_arity(void) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_ptr<const object>
 user_def_chan::lookup_member(const string& id) const {
+#if PROCESS_DEFINITION_IS_NAMESPACE
+	return scopespace::lookup_local(id);
+#else
 	return scopespace::lookup_member(id);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -960,7 +975,11 @@ user_def_chan::add_port_formal(
 	// check and make sure identifier wasn't repeated in formal list!
 	{
 	const never_ptr<const object>
+#if PROCESS_DEFINITION_IS_NAMESPACE
+		probe(lookup_local(id));
+#else
 		probe(lookup_member(id));
+#endif
 	if (probe) {
 		probe->what(cerr << id << " already taken as a ") << " ERROR!";
 		return return_type(NULL);
@@ -1903,7 +1922,11 @@ enum_datatype_def::require_signature_match(
 bool
 enum_datatype_def::add_member(const token_identifier& em) {
 	const never_ptr<const object>
+#if PROCESS_DEFINITION_IS_NAMESPACE
+		probe(scopespace::lookup_local(em));
+#else
 		probe(scopespace::lookup_member(em));
+#endif
 	if (probe) {
 		const never_ptr<const enum_member>
 			probe_em(probe.is_a<const enum_member>());
@@ -2177,7 +2200,11 @@ user_def_datatype::resolve_canonical_datatype_definition(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_ptr<const object>
 user_def_datatype::lookup_member(const string& id) const {
+#if PROCESS_DEFINITION_IS_NAMESPACE
+	return scopespace::lookup_local(id);
+#else
 	return scopespace::lookup_member(id);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2802,15 +2829,19 @@ process_definition_base::make_typedef(never_ptr<const scopespace> s,
 process_definition::process_definition() :
 		definition_base(), 
 		process_definition_base(),
-		scopespace(),
+		scope_parent_type(),
 		sequential_scope(), 
+#if !PROCESS_DEFINITION_IS_NAMESPACE
 		key(), 
 		parent(), 
+#endif
 		meta_type(META_TYPE_PROCESS),	// don't care
 		port_formals(), 
 		prs(), chp(), 
 		footprint_map() {
 	// no null check: because of partial reconstruction
+	STACKTRACE_VERBOSE;
+	STACKTRACE_INDENT_PRINT("this @ " << this << endl);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2821,14 +2852,21 @@ process_definition::process_definition() :
 process_definition::process_definition(const string& s) :
 		definition_base(), 
 		process_definition_base(),
-		scopespace(),
+#if PROCESS_DEFINITION_IS_NAMESPACE
+		scope_parent_type(s),
+#else
+		scope_parent_type(),
+#endif
 		sequential_scope(), 
+#if !PROCESS_DEFINITION_IS_NAMESPACE
 		key(s), 
 		parent(), 
+#endif
 		meta_type(META_TYPE_PROCESS),	// top-type is a process
 		port_formals(), 
 		prs(), chp(), 
 		footprint_map(0, *this) {
+	STACKTRACE_VERBOSE;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2843,20 +2881,29 @@ process_definition::process_definition(
 		const meta_type_tag_enum t) :
 		definition_base(), 
 		process_definition_base(),
-		scopespace(),
+#if PROCESS_DEFINITION_IS_NAMESPACE
+		scope_parent_type(s, o),
+#else
+		scope_parent_type(),
+#endif
 		sequential_scope(), 
+#if !PROCESS_DEFINITION_IS_NAMESPACE
 		key(s), 
 		parent(o), 
+#endif
 		meta_type(t), 
 		port_formals(), 
 		prs(), chp(), 
 		footprint_map() {
+	STACKTRACE_VERBOSE;
 	// fill me in...
 	NEVER_NULL(o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-process_definition::~process_definition() { }
+process_definition::~process_definition() {
+	STACKTRACE_VERBOSE;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -2900,7 +2947,7 @@ process_definition::dump(ostream& o) const {
 	o << auto_indent <<
 		"In definition \"" << key << "\", we have: {" << endl;
 	{	// begin indent level
-		scopespace::dump_for_definitions(o);
+		scope_parent_type::dump_for_definitions(o);
 		if (defined) {
 			const expr_dump_context dc(this);
 			o << auto_indent << "unroll sequence: " << endl;
@@ -2976,7 +3023,11 @@ process_definition::commit_arity(void) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_ptr<const object>
 process_definition::lookup_member(const string& s) const {
-	return scopespace::lookup_member(s);
+#if PROCESS_DEFINITION_IS_NAMESPACE
+	return scopespace::lookup_local(s);	// not scope_parent_type?
+#else
+	return scopespace::lookup_member(s);	// not scope_parent_type?
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3349,7 +3400,7 @@ process_definition::collect_transient_info_base(
 #endif
 	// no need to visit template formals, port formals, separately, 
 	// b/c they're all registered in the used_id_map.  
-	scopespace::collect_transient_info_base(m);
+	scope_parent_type::collect_transient_info_base(m);
 	sequential_scope::collect_transient_info_base(m);
 #if 0
 	port_formals.collect_transient_info_base(m);	// is a NO-OP, actually
@@ -3380,12 +3431,18 @@ void
 process_definition::write_object_base(
 		const persistent_object_manager& m, ostream& f) const {
 	STACKTRACE_PERSISTENT_VERBOSE;
+#if !PROCESS_DEFINITION_IS_NAMESPACE
 	write_string(f, key);
 	m.write_pointer(f, parent);
+#endif
 	definition_base::write_object_base(m, f);
 	write_value(f, meta_type);
 	port_formals.write_object_base(m, f);
-	scopespace::write_object_base(m, f);
+#if PROCESS_DEFINITION_IS_NAMESPACE
+	scope_parent_type::write_object(m, f);
+#else
+	scope_parent_type::write_object_base(m, f);
+#endif
 	// connections and assignments
 	sequential_scope::write_object_base(m, f);
 // if (meta_type == META_TYPE_PROCESS) {
@@ -3409,12 +3466,23 @@ void
 process_definition::load_object_base(
 		const persistent_object_manager& m, istream& f) {
 	STACKTRACE_PERSISTENT_VERBOSE;
+	STACKTRACE_INDENT_PRINT("this @ " << this << endl);
+#if ENABLE_STACKTRACE
+	what(STACKTRACE_INDENT_PRINT("what: ")) << endl;
+#endif
+	
+#if !PROCESS_DEFINITION_IS_NAMESPACE
 	read_string(f, const_cast<string&>(key));
 	m.read_pointer(f, parent);
+#endif
 	definition_base::load_object_base(m, f);
 	read_value(f, meta_type);
 	port_formals.load_object_base(m, f);
-	scopespace::load_object_base(m, f);
+#if PROCESS_DEFINITION_IS_NAMESPACE
+	scope_parent_type::load_object(m, f);
+#else
+	scope_parent_type::load_object_base(m, f);
+#endif
 	// connections and assignments
 	sequential_scope::load_object_base(m, f);
 // if (meta_type == META_TYPE_PROCESS) {
@@ -3434,6 +3502,7 @@ process_definition::load_object(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !PROCESS_DEFINITION_IS_NAMESPACE
 void
 process_definition::load_used_id_map_object(excl_ptr<persistent>& o) {
 	STACKTRACE_PERSISTENT_VERBOSE;
@@ -3447,6 +3516,7 @@ process_definition::load_used_id_map_object(excl_ptr<persistent>& o) {
 			<< " back to process definition." << endl;
 	}
 }
+#endif
 
 //=============================================================================
 // class process_definition_alias method definitions

@@ -25,6 +25,8 @@
 #include "Object/expr/expr_dump_context.hh"
 #include "Object/expr/const_collection.hh"
 #include "Object/ref/meta_value_reference.hh"
+#include "Object/unroll/unroll_context.hh"
+#include "Object/def/footprint.hh"
 
 #include "util/what.tcc"
 #include "util/binders.hh"
@@ -358,10 +360,14 @@ EXPRESSION_ASSIGNMENT_CLASS::unroll(const unroll_context& c) const {
 			*bunch_of_consts, c);
 	}
 	if (!g.good) {
+		const expr_dump_context
+			edc(&*c.get_target_footprint().get_owner_scope());
 		this->dump(
 			cerr << "ERROR: failed to assign " <<
 				traits_type::tag_name << ": ",
-			expr_dump_context::default_value) << endl;
+			edc
+//			expr_dump_context::default_value
+			) << endl;
 	}
 	return g;
 }

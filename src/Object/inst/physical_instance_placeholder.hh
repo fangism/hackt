@@ -42,8 +42,8 @@ protected:
 	explicit
 	physical_instance_placeholder(const size_t d) : parent_type(d) { }
 
-	physical_instance_placeholder(const scopespace& o, const string& n, 
-		const size_t d);
+	physical_instance_placeholder(const parent_type::owner_ptr_raw_type& o,
+		const string& n, const size_t d);
 
 protected:
 virtual	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO = 0;

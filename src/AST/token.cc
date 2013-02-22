@@ -357,9 +357,17 @@ token_identifier::check_meta_reference(const context& c) const {
 			pinst(inst.is_a<const physical_instance_placeholder>());
 		if (pinst) {
 			// catch references to 
+			const never_ptr<const entity::scopespace>
+				ssp(c.get_current_open_definition()
+				.is_a<const entity::scopespace>());
 			if (!c.at_top_level() &&
+#if PROCESS_DEFINITION_IS_NAMESPACE
+				pinst->get_owner() != ssp
+#else
 				pinst->get_owner()
-				.is_a<const entity::name_space>()) {
+				.is_a<const entity::name_space>()
+#endif
+				) {
 				cerr <<
 	"Error: cannot reference top-level instance from within a definition!  "
 					<< where(*this) << endl;
@@ -397,9 +405,17 @@ token_identifier::check_nonmeta_reference(const context& c) const {
 		inst(c.lookup_instance(*this));
 	// problem: stack is count_ptr, incompatible with never_ptr
 	if (inst) {
+		const never_ptr<const entity::scopespace>
+			ssp(c.get_current_open_definition()
+			.is_a<const entity::scopespace>());
 		if (!c.at_top_level() &&
+#if PROCESS_DEFINITION_IS_NAMESPACE
+			inst->get_owner() != ssp
+#else
 			inst->get_owner()
-			.is_a<const entity::name_space>()) {
+			.is_a<const entity::name_space>()
+#endif
+			) {
 			cerr <<
 	"Error: cannot reference top-level instance from within a definition!  "
 				<< where(*this) << endl;

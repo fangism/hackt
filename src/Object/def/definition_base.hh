@@ -64,7 +64,7 @@ using util::memory::excl_ptr;
  */
 class definition_base :
 		virtual public persistent, 
-		public object {
+		virtual public object {
 public:
 	typedef	template_formals_manager::template_formals_value_type
 					template_formals_value_type;

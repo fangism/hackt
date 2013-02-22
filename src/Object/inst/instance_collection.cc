@@ -52,6 +52,10 @@
 #include "Object/inst/param_value_placeholder.hh"
 #include "Object/inst/datatype_instance_placeholder.hh"
 
+#if PROCESS_DEFINITION_IS_NAMESPACE
+#include "Object/module.hh"
+#endif
+
 #include "util/memory/count_ptr.tcc"
 #include "util/persistent_object_manager.tcc"
 #include "util/compose.hh"
@@ -219,7 +223,7 @@ physical_instance_collection::get_name(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-never_ptr<const scopespace>
+instance_collection_base::owner_ptr_type
 physical_instance_collection::get_owner(void) const {
 	return get_placeholder_base()->get_owner();
 }
@@ -278,7 +282,7 @@ param_value_collection::get_name(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-never_ptr<const scopespace>
+instance_collection_base::owner_ptr_type
 param_value_collection::get_owner(void) const {
 	return get_placeholder_base()->get_owner();
 }
@@ -445,7 +449,7 @@ instance_placeholder_base::null(NULL);
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 instance_placeholder_base::instance_placeholder_base(
-		const scopespace& s, const string& k, const size_t d) :
+		const owner_ptr_raw_type& s, const string& k, const size_t d) :
 		owner(&s), key(k), dimensions(d) {
 }
 
@@ -459,7 +463,11 @@ instance_placeholder_base::~instance_placeholder_base() { }
 string
 instance_placeholder_base::get_qualified_name(void) const {
 #if 1
+#if PROCESS_DEFINITION_IS_NAMESPACE
+	if (owner && !owner.is_a<const module>())
+#else
 	if (owner && !owner->is_global_namespace())
+#endif
 #else
 	if (owner)
 #endif
@@ -479,11 +487,12 @@ ostream&
 instance_placeholder_base::dump_qualified_name(ostream& o, 
 		const dump_flags& df) const {
 #if 0
-	o << "[dump flags: " << (df.show_definition_owner ? "(def) " : " ") <<
-		(df.show_namespace_owner ? "(ns) " : " ") <<
-		(df.show_leading_scope ? "(::)]" : "]");
+	df.dump_brief(o) << '<';
 #endif
 if (owner) {
+#if 0
+	o << "+";
+#endif
 	const param_value_placeholder* const
 		p(IS_A(const param_value_placeholder*, this));
 	if (p && p->is_loop_variable()) {
@@ -491,10 +500,22 @@ if (owner) {
 		// maybe '$' to indicate variable?
 		o << '$';
 	} else if (owner->dump_include_parent(df)) {
-		owner->dump_qualified_name(o, df) << "::";
+#if 0
+		o << "*";
+#endif
+#if PROCESS_DEFINITION_IS_NAMESPACE
+		if ((!owner.is_a<const definition_base>() &&
+				df.show_namespace_owner)
+				|| df.show_definition_owner)
+#endif
+			owner->dump_qualified_name(o, df) << "::";
 	}
 }
-	return o << key;
+	o << key;
+#if 0
+	o << '>';
+#endif
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -504,8 +525,18 @@ if (owner) {
  */
 string
 instance_placeholder_base::get_footprint_key(void) const {
-	const never_ptr<const name_space> ns(owner.is_a<const name_space>());
-	if (ns && ns->get_parent()) {
+	STACKTRACE_VERBOSE;
+	const never_ptr<const name_space>
+#if 0 && PROCESS_DEFINITION_IS_NAMESPACE
+		ns(owner.is_a<const module>());
+#else
+		ns(owner.is_a<const name_space>());
+#endif
+	if (ns && ns->get_parent()
+#if PROCESS_DEFINITION_IS_NAMESPACE
+		&& !owner.is_a<const definition_base>()
+#endif
+		) {
 		// use this, now that leading global namespace is dropped
 		return get_qualified_name();
 //		return ns->get_qualified_name() + "::" + key;
@@ -620,13 +651,15 @@ instance_placeholder_base::write_object_base(
 void
 instance_placeholder_base::load_object_base(
 		const persistent_object_manager& m, istream& i) {
+	STACKTRACE_PERSISTENT("instance_placeholder_base::load_object_base()");
 	m.read_pointer(i, owner);
 	read_string(i, key);
 	read_value(i, dimensions);
 #if 1
+	NEVER_NULL(owner);
 	// need this to guarantee that hierarchical name is
 	// available when re-constructing footprints' instance collections.  
-	m.load_object_once(const_cast<scopespace*>(&*owner));
+	m.load_object_once(const_cast<instance_collection_base::owner_ptr_raw_type*>(&*owner));
 #endif
 }
 
@@ -639,7 +672,8 @@ param_value_placeholder::param_value_placeholder(const size_t d) :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 param_value_placeholder::param_value_placeholder(
-		const scopespace& s, const string& k, const size_t d) :
+		const parent_type::owner_ptr_raw_type& s,
+		const string& k, const size_t d) :
 		parent_type(s, k, d) { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -663,6 +697,9 @@ param_value_placeholder::is_template_formal(void) const {
 	if (def)
 		return def->lookup_template_formal_position(key);
 	else {
+#if PROCESS_DEFINITION_IS_NAMESPACE
+		// this clause is no longer relevant
+#endif
 		// owner is not a definition
 		INVARIANT(owner.is_a<const name_space>());
 		// is owned by a namespace, i.e. actually instantiated
@@ -901,7 +938,8 @@ param_value_placeholder::make_member_nonmeta_instance_reference(
 // class physical_instance_placeholder method definitions
 
 physical_instance_placeholder::physical_instance_placeholder(
-		const scopespace& s, const string& k, const size_t d) :
+		const parent_type::owner_ptr_raw_type& s,
+		const string& k, const size_t d) :
 		parent_type(s, k, d) { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -960,7 +998,8 @@ physical_instance_placeholder::dump(ostream& o, const dump_flags& df) const {
 // class datatype_instance_placeholder method definitions
 
 datatype_instance_placeholder::datatype_instance_placeholder(
-		const scopespace& s, const string& k, const size_t d) :
+		const parent_type::owner_ptr_raw_type& s,
+		const string& k, const size_t d) :
 		parent_type(s, k, d) { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

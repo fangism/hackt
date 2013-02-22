@@ -12,6 +12,10 @@
 #	default 0.  if 1, masks out the index when rewriting the header entry
 
 
+BEGIN {
+	seen_namespace_file = 0;
+}
+
 {
 if (match($0,"^Persistent Object Manager")) {
 	print;		# echo title back out
@@ -21,6 +25,10 @@ if (match($0,"^Persistent Object Manager")) {
 	print $0;
 # } else if (match($0, "^WARNING")) {
 	# then filter out this line
+} else if (match($0, "^In namespace") && !seen_namespace_file) {
+	gsub("\".*\"", "\"\"", $0);	# strip out file name in quotes
+	seen_namespace_file = 1;
+	print $0;
 } else {
 	print;		# crashes???
 }

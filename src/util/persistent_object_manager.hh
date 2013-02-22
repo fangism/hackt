@@ -266,8 +266,10 @@ public:
 	collect_transient_object(const P& p);
 
 private:
+#if 0
 	bool
 	flag_visit(const persistent* ptr);
+#endif
 
 	ostream&
 	lookup_write_buffer(const persistent* ptr) const;
@@ -275,12 +277,19 @@ private:
 	istream&
 	lookup_read_buffer(const persistent* ptr) const;
 
+	istream&
+	lookup_read_buffer(const size_t) const;
+
 	size_t
 	lookup_ptr_index(const persistent* ptr) const;
 
 	// was public, but this is nor a good idea, use read_pointer only
 	persistent*
 	lookup_obj_ptr(const size_t) const;
+
+	static
+	bool
+	partially_loaded(std::stringstream&);
 
 public:
 	bool

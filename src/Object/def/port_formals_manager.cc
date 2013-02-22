@@ -7,6 +7,7 @@
  */
 
 #define ENABLE_STACKTRACE		0
+#define	STACKTRACE_PERSISTENTS		(0 && ENABLE_STACKTRACE)
 
 //=============================================================================
 #include "util/static_trace.hh"
@@ -276,7 +277,8 @@ port_formals_manager::unroll_ports(const unroll_context& c,
 			return good_bool(false);
 		}
 #if ENABLE_STACKTRACE
-		new_port->dump(cerr << "new port: ") << endl;
+		new_port->dump(cerr << "new port: ",
+			dump_flags::default_value) << endl;
 #endif
 		sub.push_back(new_port);
 	}
@@ -307,6 +309,7 @@ port_formals_manager::collect_transient_info_base(
 void
 port_formals_manager::write_object_base(
 		const persistent_object_manager& m, ostream& f) const {
+	STACKTRACE_PERSISTENT_VERBOSE;
 	INVARIANT(port_formals_list.size() == port_formals_map.size());
 	m.write_pointer_list(f, port_formals_list);
 	// the map is redundant
@@ -323,6 +326,7 @@ port_formals_manager::write_object_base(
 void
 port_formals_manager::load_object_base(
 		const persistent_object_manager& m, istream& f) {
+	STACKTRACE_PERSISTENT_VERBOSE;
 	port_formals_list_type temp;
 	m.read_pointer_list(f, temp);
 	port_formals_list_type::const_iterator

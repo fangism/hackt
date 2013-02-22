@@ -1,0 +1,11 @@
+// "loop-alias-04c.hac"
+// copy-reduced from "loop-alias-04b.hac"
+
+defproc foo(bool a[4], b[4]) {
+(;i:2:
+	a[i] = b[i];
+)
+}
+
+foo bar;
+

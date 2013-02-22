@@ -311,6 +311,9 @@ public:
 	never_ptr<const definition_base>
 	get_owner_def(void) const { return owner_def; }
 
+	never_ptr<const scopespace>
+	get_owner_scope(void) const;
+
 	meta_type_tag_enum
 	get_meta_type(void) const;
 

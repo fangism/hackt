@@ -487,7 +487,7 @@ data_type_reference::make_instantiation_statement_private(
  */
 excl_ptr<instance_placeholder_base>
 data_type_reference::make_instance_collection(
-		const never_ptr<const scopespace> s, 
+		const instance_placeholder_base::owner_ptr_type s, 
 		const token_identifier& id, const size_t d) const {
 	typedef excl_ptr<instance_placeholder_base>	return_type;
 /***
@@ -1266,7 +1266,7 @@ builtin_channel_type_reference::make_instantiation_statement_private(
  */
 excl_ptr<instance_placeholder_base>
 builtin_channel_type_reference::make_instance_collection(
-		const never_ptr<const scopespace> s, 
+		const instance_placeholder_base::owner_ptr_type s, 
 		const token_identifier& id, const size_t d) const {
 	return excl_ptr<instance_placeholder_base>(
 		new channel_instance_placeholder(*s, id, d));
@@ -1599,7 +1599,7 @@ channel_type_reference::make_instantiation_statement_private(
  */
 excl_ptr<instance_placeholder_base>
 channel_type_reference::make_instance_collection(
-		const never_ptr<const scopespace> s, 
+		const instance_placeholder_base::owner_ptr_type s, 
 		const token_identifier& id, const size_t d) const {
 	return excl_ptr<instance_placeholder_base>(
 		new channel_instance_placeholder(*s, id, d));
@@ -1882,7 +1882,7 @@ process_type_reference::make_instantiation_statement_private(
  */
 excl_ptr<instance_placeholder_base>
 process_type_reference::make_instance_collection(
-		const never_ptr<const scopespace> s, 
+		const instance_placeholder_base::owner_ptr_type s, 
 		const token_identifier& id, const size_t d) const {
 	return excl_ptr<instance_placeholder_base>(
 		new process_instance_placeholder(*s, id, d));
@@ -2148,7 +2148,7 @@ param_type_reference::make_instantiation_statement_private(
  */
 excl_ptr<instance_placeholder_base>
 param_type_reference::make_instance_collection(
-		const never_ptr<const scopespace> s, 
+		const instance_placeholder_base::owner_ptr_type s, 
 		const token_identifier& id, const size_t d) const {
 	// hard coded... yucky, but efficient.  
 	typedef	excl_ptr<instance_placeholder_base>	return_type;

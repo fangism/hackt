@@ -62,6 +62,9 @@
 #include "Object/inst/port_actual_collection.tcc"
 #include "Object/inst/collection_traits.hh"
 #include "Object/inst/collection_pool.tcc"		// for lookup_index
+#if PROCESS_DEFINITION_IS_NAMESPACE
+#include "Object/module.hh"
+#endif
 #include "common/ICE.hh"
 
 #include "util/multikey_assoc.tcc"
@@ -166,16 +169,29 @@ INSTANCE_COLLECTION_CLASS::dump_hierarchical_name(ostream& o,
 	// copied from instance_placeholder_base::dump_qualified_name()
 	const instance_placeholder_base::owner_ptr_type
 		owner(source_placeholder->get_owner());
+#if PROCESS_DEFINITION_IS_NAMESPACE
+if (!owner.is_a<const module>()) {
+#endif
 	const never_ptr<const name_space>
 		n(owner.template is_a<const name_space>());
 	if (n) {
 		if (!n->is_global_namespace()) {
-			n->dump_qualified_name(o, df) << "::";
+			if (owner.is_a<const definition_base>()) {
+#if PROCESS_DEFINITION_IS_NAMESPACE
+				if (df.show_definition_owner)
+#endif
+					footprint_ref->dump_type(o) << "::";
+			} else if (df.show_namespace_owner) {
+				n->dump_qualified_name(o, df) << "::";
+			}
 		}
 	} else if (owner->dump_include_parent(df)) {
 		footprint_ref->dump_type(o) << "::";
 		// if not owned by namespace!
 	}
+#if PROCESS_DEFINITION_IS_NAMESPACE
+}
+#endif
 	o << source_placeholder->get_name();
 	return o;
 }

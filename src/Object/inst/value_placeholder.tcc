@@ -128,7 +128,8 @@ VALUE_PLACEHOLDER_CLASS::value_placeholder(const size_t d) :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_PLACEHOLDER_TEMPLATE_SIGNATURE
-VALUE_PLACEHOLDER_CLASS::value_placeholder(const scopespace& o, 
+VALUE_PLACEHOLDER_CLASS::value_placeholder(
+		const typename parent_type::owner_ptr_raw_type& o, 
 		const string& n, const size_t d) :
 		parent_type(o, n, d), ival(NULL) {
 }
@@ -218,7 +219,12 @@ VALUE_PLACEHOLDER_CLASS::dump_formal(ostream& o) const {
 	this->dump_collection_only(o);
 #endif
 	expr_dump_context dc(expr_dump_context::default_value);
+#if PROCESS_DEFINITION_IS_NAMESPACE
+	dc.enclosing_scope = this->owner.template is_a<const scopespace>();
+	NEVER_NULL(dc.enclosing_scope);
+#else
 	dc.enclosing_scope = this->owner;
+#endif
 	if (this->dimensions) {
 		const index_collection_item_ptr_type
 			i(this->get_initial_instantiation_indices());
@@ -272,7 +278,12 @@ VALUE_PLACEHOLDER_CLASS::dump(ostream& o, const dump_flags& df) const {
 		init_def(this->default_value());
 	if (init_def) {
 		expr_dump_context dc(expr_dump_context::default_value);
+#if 0 && PROCESS_DEFINITION_IS_NAMESPACE
+		dc.enclosing_scope = this->owner.template is_a<const scopespace>();
+		NEVER_NULL(dc.enclosing_scope);
+#else
 		dc.enclosing_scope = this->owner;
+#endif
 		if (this->is_template_formal())
 			init_def->dump(o << " (default = ", dc) << ")";
 		else    init_def->dump(o << " (init = ", dc) << ")";
@@ -303,7 +314,11 @@ bool
 VALUE_PLACEHOLDER_CLASS::is_loop_variable(void) const {
 	STACKTRACE_VERBOSE;
 	NEVER_NULL(this->owner);
+#if PROCESS_DEFINITION_IS_NAMESPACE
+	return !this->dimensions && !this->owner->lookup_local(this->key);
+#else
 	return !this->dimensions && !this->owner->lookup_member(this->key);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -490,6 +505,7 @@ VALUE_PLACEHOLDER_CLASS::make_instance_collection_footprint_copy(
 VALUE_PLACEHOLDER_TEMPLATE_SIGNATURE
 typename VALUE_PLACEHOLDER_CLASS::value_collection_generic_type*
 VALUE_PLACEHOLDER_CLASS::make_collection(footprint& f) const {
+	STACKTRACE_VERBOSE;
 	value_collection_pool_bundle<Tag>&
 		pool(f. template get_value_collection_pool_bundle<Tag>());
 	// if (this->is_template_formal()) ...

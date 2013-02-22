@@ -657,7 +657,7 @@ instance_base::check_build(context& c) const {
 	}
 	// need current_instance?  no, not using as reference.
 	// return inst;
-	return c.top_namespace();
+	return c.top_namespace().is_a<const object>();
 }
 
 //=============================================================================
@@ -830,7 +830,7 @@ instance_declaration::check_build(context& c) const {
 		return never_ptr<const object>(NULL);
 	}
 	// instance could be ANY type
-	return c.top_namespace();
+	return c.top_namespace().is_a<const object>();
 }
 
 //=============================================================================
@@ -1425,7 +1425,7 @@ if (attribs) {
 	c.add_instance_management(ia);
 }
 	// additional error handling?
-	return c.top_namespace();
+	return c.top_namespace().is_a<const object>();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1533,7 +1533,7 @@ type_completion_connection_statement::check_build(context& c) const {
 	if (!actuals_base::add_instance_port_connections(iref, c).good) {
 		THROW_EXIT;
 	}
-	return c.top_namespace();
+	return c.top_namespace().is_a<const object>();
 }
 
 //=============================================================================
@@ -1592,7 +1592,7 @@ direction_statement::check_build(context& c) const {
 	NEVER_NULL(ia);
 	c.add_instance_management(ia);
 	// additional error handling?
-	return c.top_namespace();
+	return c.top_namespace().is_a<const object>();
 }
 
 //=============================================================================

@@ -67,6 +67,7 @@ prsim::prsim() { }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 int
 prsim::main(const int argc, char* argv[], const global_options&) {
+	STACKTRACE_VERBOSE;
 	options opt;
 	if (parse_command_options(argc, argv, opt)) {
 		cerr << "Error in command invocation." << endl;

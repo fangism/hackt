@@ -18,6 +18,7 @@ parse_options::write_object(ostream& o) const {
 	write_value(o, export_all);
 	write_value(o, namespace_instances);
 	write_value(o, array_internal_nodes);
+//	write_value(o, view_all_publicly);
 	write_value(o, case_collision_policy);
 	write_value(o, unknown_spec_policy);
 }
@@ -28,6 +29,8 @@ parse_options::load_object(istream& i) {
 	read_value(i, export_all);
 	read_value(i, namespace_instances);
 	read_value(i, array_internal_nodes);
+//	read_value(i, view_all_publicly);
+	view_all_publicly = false;		// always
 	read_value(i, case_collision_policy);
 	read_value(i, unknown_spec_policy);
 }

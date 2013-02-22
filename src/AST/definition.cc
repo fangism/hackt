@@ -151,7 +151,7 @@ user_data_type_signature::return_type
 user_data_type_signature::check_signature(context& c) const {
 	STACKTRACE("user_data_type_signature::check_build()");
 	excl_ptr<definition_base>
-		dd(new user_def_datatype(c.get_current_namespace(), *id));
+		dd(new user_def_datatype(c.get_current_namespace().is_a<const name_space>(), *id));
 	const never_ptr<user_def_datatype>
 		ndd(c.set_current_prototype(dd).is_a<user_def_datatype>());
 	NEVER_NULL(ndd);
@@ -330,7 +330,7 @@ if (p != OPTION_IGNORE) {
 	}
 }
 	c.warning_count += local_warnings;	// accumulate
-	return c.top_namespace();
+	return c.top_namespace().is_a<const object>();
 }
 
 //=============================================================================
@@ -357,7 +357,7 @@ never_ptr<const object>
 enum_signature::check_build(context& c) const {
 	STACKTRACE("enum_signature::check_build()");
 	excl_ptr<definition_base>
-		ed(new enum_datatype_def(c.get_current_namespace(), *id));
+		ed(new enum_datatype_def(c.get_current_namespace().is_a<const name_space>(), *id));
 	// elsewhere would need to add template and port formals
 	// no need for set_current_prototype
 	const never_ptr<const definition_base>
@@ -507,7 +507,7 @@ user_chan_type_signature::return_type
 user_chan_type_signature::check_signature(context& c) const {
 	STACKTRACE("user_chan_type_signature::check_signature()");
 	excl_ptr<definition_base>
-		cd(new user_def_chan(c.get_current_namespace(), *id));
+		cd(new user_def_chan(c.get_current_namespace().is_a<const name_space>(), *id));
 	const never_ptr<user_def_chan>
 		ncd(c.set_current_prototype(cd).is_a<user_def_chan>());
 	NEVER_NULL(ncd);
@@ -678,7 +678,7 @@ if (p != OPTION_IGNORE) {
 }
 	c.warning_count += local_warnings;	// accumulate
 	// nothing better to do
-	return c.top_namespace();
+	return c.top_namespace().is_a<const object>();
 }
 
 //=============================================================================
@@ -730,7 +730,7 @@ process_signature::return_type
 process_signature::check_signature(context& c) const {
 	STACKTRACE("process_signature::check_build()");
 	excl_ptr<definition_base>
-		ret(new process_definition(c.get_current_namespace(), *id, 
+		ret(new process_definition(c.get_current_namespace().is_a<const name_space>(), *id, 
 			entity::meta_type_tag_enum(meta_type)));
 	const never_ptr<process_definition> seq(ret.is_a<process_definition>());
 	NEVER_NULL(seq);
@@ -906,7 +906,7 @@ if (p != OPTION_IGNORE) {
 }
 	c.warning_count += local_warnings;	// accumulate
 	// nothing better to do
-	return c.top_namespace();
+	return c.top_namespace().is_a<const object>();
 }
 
 //=============================================================================
@@ -967,6 +967,7 @@ typedef_alias::check_build(context& c) const {
 		base_not_chan(base.is_a<const generic_type_ref>());
 
 if (base_not_chan) {
+	STACKTRACE_INDENT_PRINT("base type not channel" << endl);
 	// Need to redo this!
 	// first we read the user's mind by peeking down base.  
 	// does base have any template params, even an empty list?
@@ -982,6 +983,7 @@ if (base_not_chan) {
 	// need to worry about resetting definition reference?
 
 if (base_not_chan->get_temp_spec()) {
+	STACKTRACE_INDENT_PRINT("type has template arguments" << endl);
 	// then base certainly refers to a concrete type
 	// so now we make a new definition to wrap around it
 	// what kind of alias? we need to peek at the definition
@@ -991,7 +993,11 @@ if (base_not_chan->get_temp_spec()) {
 	const never_ptr<definition_base> tdf(td_ex);
 	const never_ptr<typedef_base> tdb(tdf.is_a<typedef_base>());
 	NEVER_NULL(tdb);
+#if 0 && PROCESS_DEFINITION_IS_NAMESPACE
+	const context::prototype_frame pf(c, td_ex);
+#else
 	c.set_current_prototype(td_ex);
+#endif
 	if (temp_spec) {
 		const never_ptr<const object> o(temp_spec->check_build(c));
 		// will add template_formals to the alias
@@ -1001,6 +1007,9 @@ if (base_not_chan->get_temp_spec()) {
 			THROW_EXIT;
 		}
 	}
+	STACKTRACE_INDENT_PRINT("template arguments OK" << endl);
+	// prepare to transfer ownership
+//	excl_ptr<definition_base> td_ex2(c.get_current_prototype());
 #if 0
 	base_not_chan->check_build(c);	// make sure is complete type
 	count_ptr<const fundamental_type_reference>
@@ -1009,9 +1018,14 @@ if (base_not_chan->get_temp_spec()) {
 	count_ptr<const fundamental_type_reference>
 		ftr(base_not_chan->check_type(c));
 #endif
+	// kludge: changing prototype context?
+	excl_ptr<definition_base> td_ex2(c.get_current_prototype());
+//	c.set_current_prototype(td_ex2);
+
 	// transfers ownership between context members
+	STACKTRACE_INDENT_PRINT("adding new type reference" << endl);
 	const never_ptr<const object>
-		obj(c.add_declaration(c.get_current_prototype()));
+		obj(c.add_declaration(td_ex2));
 		// also resets current_prototype, *after* checking type ref
 	if (!obj) {
 		cerr << "(or is duplicate) " << where(*this) << endl;
@@ -1034,6 +1048,7 @@ if (base_not_chan->get_temp_spec()) {
 	INVARIANT(!ftr);
 	INVARIANT(ftr_ex);
 	// else safe to alias type
+	STACKTRACE_INDENT_PRINT("assigning new type definition" << endl);
 	bool b = tdb->assign_typedef(ftr_ex);
 	if (!b) {
 		cerr << "ERROR assigning typedef!  " << where(*this) << endl;
@@ -1051,6 +1066,7 @@ if (base_not_chan->get_temp_spec()) {
 		THROW_EXIT;
 	}
 	// issue warning about this interpretation?
+	STACKTRACE_INDENT_PRINT("registering new typedef" << endl);
 	const good_bool b(c.alias_definition(d, *id));
 	if (!b.good) {
 		cerr << where(*id) << endl;

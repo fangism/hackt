@@ -97,7 +97,8 @@ INSTANCE_PLACEHOLDER_CLASS::instance_placeholder() :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_PLACEHOLDER_TEMPLATE_SIGNATURE
-INSTANCE_PLACEHOLDER_CLASS::instance_placeholder(const scopespace& o, 
+INSTANCE_PLACEHOLDER_CLASS::instance_placeholder(
+		const typename parent_type::owner_ptr_raw_type& o, 
 		const string& n, const size_t d) :
 		parent_type(o, n, d), 
 		initial_instantiation_statement_ptr() {
@@ -147,7 +148,12 @@ ostream&
 INSTANCE_PLACEHOLDER_CLASS::dump_formal(ostream& o) const {
 	this->get_unresolved_type_ref()->dump(o) << ' ' << this->key;
 	expr_dump_context dc(expr_dump_context::default_value);
+#if PROCESS_DEFINITION_IS_NAMESPACE
+	dc.enclosing_scope = this->owner.template is_a<const scopespace>();
+	NEVER_NULL(dc.enclosing_scope);
+#else
 	dc.enclosing_scope = this->owner;
+#endif
 	if (this->dimensions) {
 		const index_collection_item_ptr_type
 			i(this->get_initial_instantiation_indices());
@@ -336,6 +342,7 @@ INSTANCE_PLACEHOLDER_CLASS::make_instance_collection_footprint_copy(
 INSTANCE_PLACEHOLDER_TEMPLATE_SIGNATURE
 typename INSTANCE_PLACEHOLDER_CLASS::instance_collection_generic_type*
 INSTANCE_PLACEHOLDER_CLASS::make_collection(footprint& f) const {
+	STACKTRACE_VERBOSE;
 	typedef	instance_collection_generic_type*	return_type;
 	collection_pool_bundle_type&
 		pool(f.template get_instance_collection_pool_bundle<Tag>());

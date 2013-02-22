@@ -1,0 +1,4 @@
+// one namespace, with one object
+namespace one {
+int the_loneliest_number;
+}

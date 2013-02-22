@@ -136,6 +136,7 @@ namespace_body::rightmost(void) const {
 never_ptr<const object>
 namespace_body::check_build(context& c) const {
 	STACKTRACE("namespace_body::check_build()");
+	STACKTRACE_INDENT_PRINT("in namespace " << *name << endl);
 	// use context lookup: see if namespace already exists in super-scope
 		// name_space* ns = c.lookup_namespace(name);
 	// if so, open it up, and work with existing namespace
@@ -161,7 +162,7 @@ if (p != OPTION_IGNORE) {
 }
 }
 	// if no errors, return pointer to the namespace just processed
-	return c.top_namespace();
+	return c.top_namespace().is_a<const object>();
 }
 
 //=============================================================================
@@ -273,7 +274,7 @@ if (alias) {
 	// if aliased... print all, report as error (done inside)
 	c.using_namespace(*id->get_id());
 }
-	return c.top_namespace();
+	return c.top_namespace().is_a<const object>();
 }
 
 //=============================================================================

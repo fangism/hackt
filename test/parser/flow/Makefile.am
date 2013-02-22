@@ -14,6 +14,7 @@ HACKT_PARSE_TEST_PASSES = \
 	020 021 023 024 025 026 027 \
 	030 031 031b 032 033 \
 	loop-alias-01 loop-alias-02 loop-alias-03 loop-alias-04 loop-alias-05 \
+	loop-alias-04b loop-alias-04c \
 	loop-alias-06 loop-alias-07 \
 	loop-ports-01 loop-ports-02 loop-ports-03 loop-ports-04 loop-ports-05 \
 	loop-ports-06 loop-ports-07 loop-ports-08 loop-ports-09 loop-ports-10 \
@@ -40,6 +41,7 @@ HACKT_CREATE_TEST_PASSES = \
 	020 021 023 024 025 026 \
 	030 031 031b 032 033 \
 	loop-alias-01 loop-alias-02 loop-alias-03 loop-alias-04 loop-alias-05 \
+	loop-alias-04b loop-alias-04c \
 	loop-alias-06 loop-alias-07 \
 	loop-ports-01 loop-ports-02 loop-ports-03 loop-ports-04 loop-ports-05 \
 	loop-ports-06 loop-ports-07 loop-ports-10 \

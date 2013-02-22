@@ -40,6 +40,7 @@
 #include "main/cflat_options.hh"
 #include "util/persistent_object_manager.tcc"
 #include "util/memory/count_ptr.tcc"
+#include "util/IO_utils.tcc"
 #include "util/stacktrace.hh"
 #include "util/indent.hh"
 #include "util/value_saver.hh"
@@ -84,23 +85,31 @@ const count_ptr<const const_param_expr_list> null_module_params(NULL);
  */
 module::module() :
 		process_definition(), 
-		global_namespace(NULL), 
+		global_namespace(NULL), 	// now unused, bogus
 		compile_opts()
 #if !FOOTPRINT_OWNS_CONTEXT_CACHE
 		, context_cache(NULL)
 #endif
 		{
+	STACKTRACE_VERBOSE;
+	STACKTRACE_INDENT_PRINT("this @ " << this << endl);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 module::module(const string& s) :
+#if PROCESS_DEFINITION_IS_NAMESPACE
+		process_definition(""), 
+		module_name(s),
+#else
 		process_definition(s), 
-		global_namespace(new name_space("")),
+#endif
+		global_namespace(new name_space("")),	// now unused, bogus
 		compile_opts()
 #if !FOOTPRINT_OWNS_CONTEXT_CACHE
 		, context_cache(NULL)
 #endif
 		{
+	STACKTRACE_VERBOSE;
 	NEVER_NULL(global_namespace);
 }
 
@@ -129,10 +138,15 @@ module::get_footprint(void) {
  */
 never_ptr<name_space>
 module::get_global_namespace(void) const {
+#if PROCESS_DEFINITION_IS_NAMESPACE
+	return never_ptr<name_space>(const_cast<module*>(this));
+#else
 	return global_namespace;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Sets the global namespace for this module.
 	\param n owned (and transferred) pointer to new namespace.  
@@ -142,6 +156,7 @@ module::set_global_namespace(excl_ptr<name_space>& n) {
 	// automatically memory-managed
 	global_namespace = n;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -150,9 +165,14 @@ module::set_global_namespace(excl_ptr<name_space>& n) {
  */
 void
 module::collect_namespaces(namespace_collection_type& l) const {
+#if PROCESS_DEFINITION_IS_NAMESPACE
+	l.push_back(get_global_namespace());
+	name_space::collect_namespaces(l);
+#else
 	INVARIANT(global_namespace);
 	l.push_back(global_namespace);
 	global_namespace->collect_namespaces(l);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -167,12 +187,20 @@ module::what(ostream& o) const {
  */
 ostream&
 module::dump_definitions(ostream& o) const {
+#if PROCESS_DEFINITION_IS_NAMESPACE
+	o << "In module created from: " << module_name;
+#else
 	o << "In module created from: " << key;
+#endif
 	if (is_created())
 		o << " (unrolled) (created)";
 	o << endl;
 
+#if PROCESS_DEFINITION_IS_NAMESPACE
+	name_space::dump(o) << endl;
+#else
 	global_namespace->dump(o) << endl;
+#endif
 	const expr_dump_context& dc(expr_dump_context::default_value);
 	if (!is_created()) {
 		o << "Sequential instance management (to unroll): " << endl;
@@ -182,7 +210,11 @@ module::dump_definitions(ostream& o) const {
 	if (!prs.empty()) {
 		o << auto_indent << "top-level prs:" << endl;
 		INDENT_SECTION(o);
+#if PROCESS_DEFINITION_IS_NAMESPACE
+		const PRS::rule_dump_context rdc(*this);
+#else
 		const PRS::rule_dump_context rdc(*global_namespace);
+#endif
 		prs.dump(o, rdc) << endl;
 	}
 	// CHP
@@ -448,7 +480,11 @@ module::__import_global_parameters(const module& m,
 		cerr << "Error unrolling top-level parameter values." << endl;
 		return good_bool(false);
 	}
+#if PROCESS_DEFINITION_IS_NAMESPACE
+	name_space::import_physical_instances(pd);
+#else
 	global_namespace->import_physical_instances(pd);
+#endif
 	// need to remove shadowed value collection, since they won't be
 	// visible to the process-type within its scope anyways...
 	_footprint.remove_shadowed_collections(pd);
@@ -566,7 +602,7 @@ module::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
 	STACKTRACE_PERSISTENT_VERBOSE;
-	global_namespace->collect_transient_info(m);
+	global_namespace->collect_transient_info(m);	// is now bogus
 	// the list itself is a statically allocated member
 	parent_type::collect_transient_info_base(m);
 	// ignore context cache
@@ -578,7 +614,10 @@ if (!m.register_transient_object(this,
 void
 module::write_object(const persistent_object_manager& m, ostream& f) const {
 	STACKTRACE_PERSISTENT_VERBOSE;
-	m.write_pointer(f, global_namespace);
+#if PROCESS_DEFINITION_IS_NAMESPACE
+	write_value(f, module_name);
+#endif
+	m.write_pointer(f, global_namespace);	// is now bogus
 	compile_opts.write_object(f);		// record compile options
 	// need options *before* body because reconstruction depends on it
 	parent_type::write_object_base(m, f);
@@ -592,7 +631,10 @@ module::write_object(const persistent_object_manager& m, ostream& f) const {
 void
 module::load_object(const persistent_object_manager& m, istream& f) {
 	STACKTRACE_PERSISTENT_VERBOSE;
-	m.read_pointer(f, global_namespace);
+#if PROCESS_DEFINITION_IS_NAMESPACE
+	read_value(f, module_name);
+#endif
+	m.read_pointer(f, global_namespace);	// is now bogus
 //	global_namespace->load_object(m);	// not necessary
 	compile_opts.load_object(f);
 	// footprint reconstruction depends on global_create_options

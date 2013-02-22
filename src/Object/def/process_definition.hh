@@ -8,8 +8,14 @@
 #ifndef	__HAC_OBJECT_DEF_PROCESS_DEFINITION_H__
 #define	__HAC_OBJECT_DEF_PROCESS_DEFINITION_H__
 
+#include "Object/devel_switches.hh"
+
 #include "Object/def/process_definition_base.hh"
+#if PROCESS_DEFINITION_IS_NAMESPACE
+#include "Object/common/namespace.hh"
+#else
 #include "Object/common/scopespace.hh"
+#endif
 #include "Object/unroll/sequential_scope.hh"
 #include "Object/lang/PRS_base.hh"
 #include "Object/lang/SPEC.hh"
@@ -17,9 +23,15 @@
 #include "Object/def/footprint_manager.hh"
 #include "Object/lang/CHP.hh"
 
+
 namespace HAC {
 namespace entity {
 class process_type_reference;
+#if PROCESS_DEFINITION_IS_NAMESPACE
+#define	PD_VIRTUAL		virtual
+#else
+#define	PD_VIRTUAL
+#endif
 //=============================================================================
 /**
 	Process definition.  
@@ -30,14 +42,25 @@ class process_type_reference;
 	from class name_space without copying?  
 	No other class derives from this?
  */
-class process_definition : public process_definition_base, public scopespace, 
+class process_definition : public process_definition_base,
+#if PROCESS_DEFINITION_IS_NAMESPACE
+	public name_space,
+#else
+	public scopespace, 
+#endif
 	public sequential_scope {
 private:
 	typedef	process_definition		this_type;
 protected:
-	const string		key;		// inherited
+#if PROCESS_DEFINITION_IS_NAMESPACE
+	typedef	name_space			scope_parent_type;
+	// key and parent are inherited
+#else
+	typedef	scopespace			scope_parent_type;
+	const string		key;
 //	used_id_map_type	used_id_map;	// inherited
 	const never_ptr<const name_space>	parent;
+#endif
 	meta_type_tag_enum			meta_type;
 	port_formals_manager			port_formals;
 	// list language bodies
@@ -59,11 +82,14 @@ public:
 	process_definition(const never_ptr<const name_space> o,
 		const string& s, 
 		const meta_type_tag_enum t = META_TYPE_PROCESS); 
+PD_VIRTUAL
 	~process_definition();
 
+PD_VIRTUAL
 	ostream&
 	what(ostream& o) const;
 
+PD_VIRTUAL
 	ostream&
 	dump(ostream& o) const;
 
@@ -170,10 +196,16 @@ protected:
 	load_object_base(const persistent_object_manager&, istream&);
 
 private:
+#if PROCESS_DEFINITION_IS_NAMESPACE
+	using scope_parent_type::load_used_id_map_object;
+#else
 	void
 	load_used_id_map_object(excl_ptr<persistent>& o);
+#endif
 
 };	// end class process_definition
+
+#undef	PD_VIRTUAL
 
 //=============================================================================
 }	// end namespace entity

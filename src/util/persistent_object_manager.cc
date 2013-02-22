@@ -566,17 +566,25 @@ persistent_object_manager::initialize_null(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Uses the table entry's scratch flag.  
 	Sets it to true.  
 	\return true if already visited, false if this is first time.
+		Already visited just means the deserialization has
+		*begun*, but not necessarily finished.
+		To detect mid-stream, compare tellg and tellp offsets.  
  */
 bool
 persistent_object_manager::flag_visit(const persistent* ptr) {
+#if 0
 	const addr_to_index_map_type::const_iterator
 		f(addr_to_index_map.find(ptr));
 	INVARIANT(f != addr_to_index_map.end());
 	const size_t probe = f->second.val;
+#else
+	const size_t probe = lookup_ptr_index(ptr);
+#endif
 	reconstruction_table_entry& e(reconstruction_table[probe]);
 	INVARIANT(e.addr() == ptr);		// sanity check
 	if (e.flagged())
@@ -586,6 +594,7 @@ persistent_object_manager::flag_visit(const persistent* ptr) {
 		return false;
 	}
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -720,19 +729,49 @@ persistent_object_manager::lookup_write_buffer(const persistent* ptr) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	\return true if tellg is neither at the beginning nor the end,
+		which means that stream is mid-read.
+ */
+bool
+persistent_object_manager::partially_loaded(stringstream& s) {
+	const istream::pos_type g = s.tellg();
+	const ostream::pos_type p = s.tellp();
+#if DEBUG_ME
+	STACKTRACE_INDENT_PRINT("stringstream: tellg = " <<
+		g << ", tellp = " << p << endl);
+#endif
+	return (g && (g != p));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param index of the object, which maps to some reconstruction
+		table entry.  
+	\return readable reference to a stream buffer.  
+ */
+istream&
+persistent_object_manager::lookup_read_buffer(const size_t index) const {
+#if DEBUG_ME
+	STACKTRACE_VERBOSE;
+#endif
+	stringstream& ret(reconstruction_table[index].get_buffer());
+#if DEBUG_ME
+	STACKTRACE_INDENT_PRINT("lookup_read_buffer(): [" << index << "]" << endl);
+#endif
+	INVARIANT(!partially_loaded(ret));
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	\param address of the object, which maps to some reconstruction
 		table entry.  
 	\return readable reference to a stream buffer.  
  */
 istream&
 persistent_object_manager::lookup_read_buffer(const persistent* ptr) const {
-	stringstream&
-		ret(reconstruction_table[lookup_ptr_index(ptr)].get_buffer());
-#if DEBUG_ME
-	cerr << "lookup_read_buffer(): tellg = " << ret.tellg()
-		<< ", tellp = " << ret.tellp() << endl;
-#endif
-	return ret;
+	const size_t index = lookup_ptr_index(ptr);
+	return lookup_read_buffer(index);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -987,9 +1026,7 @@ persistent_object_manager::load_header(ifstream& f) {
 	for ( ; i<max; i++) {
 		STACKTRACE_INDENT_PRINT("object " << i << endl);
 		persistent::hash_key t;
-		STACKTRACE_INDENT_PRINT("aux_alloc_arg_type" << endl);
 		aux_alloc_arg_type aux;
-		STACKTRACE_INDENT_PRINT("streampos" << endl);
 		streampos head, tail;	// clang-3.1: crash here in cosim?
 		STACKTRACE_INDENT_PRINT("read fields" << endl);
 		read_value(f, t);
@@ -997,6 +1034,7 @@ persistent_object_manager::load_header(ifstream& f) {
 		read_value(f, head);
 		read_value(f, tail);
 		// make sure t is a registered type
+		STACKTRACE_INDENT_PRINT("persistent hash key: " << t << endl);
 		if (t != persistent::hash_key::null && 
 				!verify_registered_type(t, aux)) {
 			cerr << "FATAL: persistent type code \"" <<
@@ -1027,6 +1065,7 @@ persistent_object_manager::reconstruct(void) {
 	addr_to_index_map[NULL] = 0;
 	size_t i = 1;
 	for ( ; i<max; i++) {
+		STACKTRACE_INDENT_PRINT("allocating object " << i << endl);
 		reconstruction_table_entry& e(reconstruction_table[i]);
 		const persistent::hash_key& t(e.type());
 		if (t != persistent::hash_key::null) {	// not NULL_TYPE
@@ -1044,11 +1083,15 @@ persistent_object_manager::reconstruct(void) {
 				// this allocates and empty constructs
 				e.assign_addr((*ctor_vec[j])());
 				addr_to_index_map[e.addr()] = i;
-#if 0
-				e.addr()->what(cerr << i << ": ") << endl;
+#if DEBUG_ME
+				e.addr()->what(
+					STACKTRACE_INDENT_PRINT(
+					i << " @ " << e.addr() << ": "))
+					<< endl;
 #endif
 			}
 		} else {
+			STACKTRACE_INDENT_PRINT("assigning NULL addr." << endl);
 			e.assign_addr(NULL);
 		}
 	}
@@ -1216,14 +1259,35 @@ persistent_object_manager::finish_load(ifstream& f) {
 void
 persistent_object_manager::__load_object_once(
 		persistent* p, raw_pointer_tag) const {
+	STACKTRACE_BRIEF;
 	NEVER_NULL(p);
+	const size_t probe = lookup_ptr_index(p);
+	STACKTRACE_INDENT_PRINT("object [" << probe << "]" << endl);
+	reconstruction_table_entry&
+		e(const_cast<reconstruction_table_entry&>(
+			reconstruction_table[probe]));
+	stringstream& i(e.get_buffer());
 	// ugh, const_cast...
-	if (!const_cast<persistent_object_manager*>(this)->flag_visit(p)) {
-		istream& i = lookup_read_buffer(p);
+	if (!e.flagged()) {
 		INVARIANT(i.good());
+	if (partially_loaded(i)) {
+		STACKTRACE_INDENT_PRINT("warning: partially loaded, skipping" << endl);
+	} else {
+		const istream::pos_type start = i.tellg();
 		STRIP_POINTER_INDEX(i, p);
+		STACKTRACE_INDENT_PRINT("calling p->load_object()..." << endl);
+#if ENABLE_STACKTRACE
+		p->what(STACKTRACE_INDENT_PRINT("type: ")) << endl;
+#endif
 		p->load_object(*this, i);
 		STRIP_OBJECT_FOOTER(i);
+		const istream::pos_type end = i.tellg();
+		const istream::pos_type size = end -start;
+		STACKTRACE_INDENT_PRINT("entry read " << size << " bytes." << endl);
+		e.flag();
+	}
+	} else {
+		STACKTRACE_INDENT_PRINT("already loaded." << endl);
 	}
 }
 

@@ -9,6 +9,7 @@
 
 #include <iostream>
 #include "Object/common/namespace.hh"
+#include "Object/module.hh"
 #include "Object/traits/bool_traits.hh"
 #include "Object/ref/meta_instance_reference_subtypes.hh"
 #include "Object/ref/simple_meta_instance_reference.hh"
@@ -69,7 +70,11 @@ expanded_test(ostream& o) {
 #define	USE_COUNT_PTR		0
 // de-const-ifying makes no difference
 #define CONST	const
+#if PROCESS_DEFINITION_IS_NAMESPACE
+	const module ss("blank");
+#else
 	const name_space ss("blank");
+#endif
 	const bool_ref_type::instance_placeholder_type ph(ss, "fake", 0);
 	const bool_ref_type::instance_placeholder_ptr_type php(&ph);
 #if USE_COUNT_PTR

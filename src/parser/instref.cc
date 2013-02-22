@@ -30,6 +30,7 @@
 #include "Object/global_entry_context.hh"
 // #include "Object/common/dump_flags.hh"
 #include "Object/common/namespace.hh"
+#include "Object/def/process_definition.hh"
 #include "Object/unroll/unroll_context.hh"
 #include "Object/traits/instance_traits.hh"
 #include "Object/expr/expr_dump_context.hh"
@@ -120,10 +121,10 @@ typedef	inst_ref_expr::meta_return_type		checked_ref_type;
 
 template <class Tag>
 typed_indexed_reference<Tag>::typed_indexed_reference(
-		const string& n, const entity::module& m) {
+		const string& n, const entity::footprint& m) {
 	STACKTRACE_VERBOSE;
 	typedef	entity::class_traits<Tag>		traits_type;
-	const global_indexed_reference gref(parse_global_reference(n, m));
+	const global_indexed_reference gref(parse_local_reference(n, m, &cerr));
 	if (gref.first != traits_type::type_tag_enum_value) {
 #if 1
 		cerr << "Error: " << n << " does not reference a " <<
@@ -149,12 +150,12 @@ template struct typed_indexed_reference<process_tag>;
  */
 template <class Tag>
 typed_indexed_references<Tag>::typed_indexed_references(
-		const string& n, const entity::module& m) {
+		const string& n, const entity::footprint& m) {
 	STACKTRACE_VERBOSE;
 	typedef	entity::class_traits<Tag>		traits_type;
 #if AGGREGATE_PARENT_REFS
 	global_reference_array_type temp;
-	if (parse_global_references(n, m, temp)) {
+	if (parse_local_references(n, m, temp)) {
 		cerr << "Error parsing reference(s): " << n << endl;
 		return;
 	}
@@ -262,7 +263,7 @@ expand_reference(const count_ptr<const inst_ref_expr>& r,
  */
 meta_reference_union
 check_reference(const inst_ref_expr& ref_tree,
-		const entity::module& m) {
+		const process_definition& m) {
 	typedef	meta_reference_union		return_type;
 	STACKTRACE_VERBOSE;
 /***
@@ -295,13 +296,54 @@ check_reference(const inst_ref_expr& ref_tree,
 	return r;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+/**
+	Starts checking a reference from any footprint, not just top-level.
+ */
+meta_reference_union
+check_reference(const inst_ref_expr& ref_tree,
+		const entity::footprint& f) {
+	typedef	meta_reference_union		return_type;
+	STACKTRACE_VERBOSE;
+/***
+	And now for a slice of compiler pie:
+	Oh by the way, once we enable non-const expressions
+	in indices, this will automatically support 
+	meta-expression evaluation using the values present in
+	the module.  Yeah, baby.  
+	Passing "true" as the 2nd arg says we want all names 
+	publicly visible, see AST::parser::context::view_all_publicly.
+***/
+	const context c(f, parse_options(), true);
+	return_type r;
+	try {
+		// NOTE: this checks for PUBLIC members only
+		// but we should allow PRIVATE references too!
+		// perhaps flag through context?
+		r = ref_tree.check_meta_reference(c);
+		// this only checks that reference is syntactically well-formed
+	} catch (...) {
+		// temporary have shitty error-handling...
+		// already have type-check error message
+		return return_type();
+	}
+	if (!r) {
+		// don't expect this message to ever happen...
+		cerr << "Some other error type-checking..." << endl;
+		return return_type();
+	}
+	return r;
+}
+#endif
+
 //=============================================================================
 /** 
 	Composition of parse_reference and check_reference.  
 	Some error message already given.  
  */
 meta_reference_union
-parse_and_check_reference(const char* s, const module& m) {
+parse_and_check_reference(const char* s, const process_definition& m) {
 	typedef	meta_reference_union		return_type;
 	typedef	count_ptr<inst_ref_expr>	lval_ptr_type;
 	STACKTRACE_VERBOSE;
@@ -364,7 +406,7 @@ for ( ; ri!=re; ++ri) {
 	\return 1-based global bool index, 0 if not found.
  */
 bool_index
-parse_node_to_index(const string& n, const module& m) {
+parse_node_to_index(const string& n, const footprint& m) {
 	STACKTRACE_VERBOSE;
 	return bool_index(n, m);
 }
@@ -374,7 +416,7 @@ parse_node_to_index(const string& n, const module& m) {
 	\return true on error
  */
 bool
-parse_nodes_to_indices(const string& n, const module& m,
+parse_nodes_to_indices(const string& n, const footprint& m,
 		vector<size_t>& b) {
 	STACKTRACE_VERBOSE;
 	STACKTRACE_INDENT_PRINT("Parsing node(s): " << n << endl);
@@ -395,7 +437,7 @@ parse_nodes_to_indices(const string& n, const module& m,
 		-1 signals an error.
  */
 process_index
-parse_process_to_index(const string& n, const module& m) {
+parse_process_to_index(const string& n, const footprint& m) {
 	STACKTRACE_VERBOSE;
 if (n == ".") {
 	// refers to the top-level process
@@ -414,7 +456,7 @@ if (n == ".") {
 	\return true on error
  */
 bool
-parse_processes_to_indices(const string& n, const module& m, 
+parse_processes_to_indices(const string& n, const footprint& m, 
 		vector<size_t>& p) {
 	STACKTRACE_VERBOSE;
 if (n == ".") {
@@ -452,6 +494,19 @@ must_be_scalar_inst(const checked_ref_type& r, ostream* o) {
 	TODO: handle meta value references?
  */
 global_indexed_reference
+parse_local_reference(const string& n, const footprint& f, ostream* o) {
+	STACKTRACE_VERBOSE;
+	static const global_indexed_reference
+		err(META_TYPE_NONE, INVALID_NODE_INDEX);
+	const never_ptr<const process_definition>
+		pdef(f.get_owner_def().is_a<const process_definition>());
+	const checked_ref_type r(parse_and_check_reference(n.c_str(), *pdef));
+	if (!must_be_scalar_inst(r, o)) { return err; }
+	return parse_local_reference(r, f);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+global_indexed_reference
 parse_global_reference(const string& n, const module& m, ostream* o) {
 	STACKTRACE_VERBOSE;
 	static const global_indexed_reference
@@ -467,18 +522,24 @@ parse_global_reference(const string& n, const module& m, ostream* o) {
  */
 global_indexed_reference
 parse_global_reference(const string& n, const module& m) {
-	return parse_global_reference(n, m, &std::cerr);
+	return parse_global_reference(n, m, &cerr);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+global_indexed_reference
+parse_local_reference(const meta_reference_union& r, const footprint& topfp) {
+	INVARIANT(r.inst_ref());
+	global_process_context gpc(topfp);
+	gpc.construct_top_global_context();
+	const global_entry_context gc(gpc);
+	return r.inst_ref()->lookup_top_level_reference(gc);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 global_indexed_reference
 parse_global_reference(const meta_reference_union& r, const module& m) {
 	INVARIANT(r.inst_ref());
-	const footprint& topfp(m.get_footprint());
-	global_process_context gpc(topfp);
-	gpc.construct_top_global_context();
-	const global_entry_context gc(gpc);
-	return r.inst_ref()->lookup_top_level_reference(gc);
+	return parse_local_reference(r, m.get_footprint());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -505,6 +566,37 @@ parse_global_references(const meta_reference_union& r,
 	STACKTRACE_VERBOSE;
 	INVARIANT(r.inst_ref());
 	const footprint& topfp(m.get_footprint());
+	global_process_context gpc(topfp);
+	gpc.construct_top_global_context();
+	const global_entry_context gc(gpc);
+	const good_bool b(r.inst_ref()->lookup_top_level_references(gc, a));
+	return (b.good && a.size()) ? 0 : 1;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+int
+parse_local_references(const string& n, 
+		const footprint& m, global_reference_array_type& a) {
+	STACKTRACE_VERBOSE;
+	const checked_ref_type r(parse_and_check_reference(n.c_str(),
+		*m.get_owner_def().is_a<const process_definition>()));
+	if (!r.inst_ref()) {
+		return 1;
+	}
+	// allow array references
+	return parse_local_references(r, m, a);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Parses an aggregate reference into a collection.
+	\return non-zero on error
+ */
+int
+parse_local_references(const meta_reference_union& r, 
+		const footprint& topfp, global_reference_array_type& a) {
+	STACKTRACE_VERBOSE;
+	INVARIANT(r.inst_ref());
 	global_process_context gpc(topfp);
 	gpc.construct_top_global_context();
 	const global_entry_context gc(gpc);

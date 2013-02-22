@@ -23,7 +23,7 @@
 #include "util/persistent_object_manager.tcc"
 // #include "util/IO_utils.hh"
 #include "util/memory/count_ptr.tcc"
-// #include "util/stacktrace.hh"
+#include "util/stacktrace.hh"
 
 //=============================================================================
 namespace HAC {
@@ -54,6 +54,7 @@ meta_loop_base::~meta_loop_base() { }
  */
 never_ptr<pint_scalar>
 meta_loop_base::initialize_footprint(footprint& f) const {
+	STACKTRACE_VERBOSE;
 	// temporary instantiation statement
 	const never_ptr<const pint_value_placeholder> ivr(&*ind_var);
 	const pint_instantiation_statement
@@ -62,11 +63,17 @@ meta_loop_base::initialize_footprint(footprint& f) const {
 	// fake a context, no additional information necessary to instantiate
 	const unroll_context temp(&f, &f);
 	const good_bool g(pis.unroll(temp));
+#if ENABLE_STACKTRACE
+	temp.dump(cerr);
+#endif
 	// doesn't assign init. value
 	INVARIANT(g.good);
 	const string& key(ind_var->get_name());
+	STACKTRACE_INDENT_PRINT("looking up: " << key << endl);
+	const footprint::instance_collection_ptr_type p(f[key]);
+	NEVER_NULL(p);
 	const never_ptr<pint_scalar>
-		ret(f[key].is_a<pint_scalar>());
+		ret(p.is_a<pint_scalar>());
 	NEVER_NULL(ret);
 	// other back-linking collection to placeholder? for diagnostics?
 	// assign it some value to make it valid initially

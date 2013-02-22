@@ -56,7 +56,7 @@ public:
 	size_t
 	get_dimensions(void) const;
 
-	never_ptr<const scopespace>
+	parent_type::owner_ptr_type
 	get_owner(void) const;
 
 	const string&

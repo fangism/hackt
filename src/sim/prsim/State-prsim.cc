@@ -452,6 +452,7 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 		recent_exceptions(),
 #endif
 		__shuffle_indices(0) {
+	STACKTRACE_VERBOSE;
 #if PRSIM_MAP_FAST_ALLOCATOR
 	__initialize_updated_nodes_sentinel();
 #endif
@@ -517,6 +518,7 @@ try {
 	TODO: auto-checkpoint here if desired, even if state incoherent
  */
 State::~State() {
+	STACKTRACE_VERBOSE;
 	if ((flags & FLAG_AUTOSAVE) && autosave_name.size()) {
 		// always clear some flags before the automatic save?
 		// close traces before checkpointing
@@ -610,8 +612,9 @@ State::__initialize_state(const bool startup, const bool reset_count) {
 	// unwatchall()? no, preserved
 	// timing mode preserved
 #if IMPLICIT_SUPPLY_PORTS
-	const node_index_type gi = parse_node_to_index("!GND", mod).index;
-	const node_index_type vi = parse_node_to_index("!Vdd", mod).index;
+	const footprint& fp(mod.get_footprint());
+	const node_index_type gi = parse_node_to_index("!GND", fp).index;
+	const node_index_type vi = parse_node_to_index("!Vdd", fp).index;
 	INVARIANT(gi);
 	INVARIANT(vi);
 	// Q: should this be done with set_node(), in case setting globals
@@ -638,6 +641,7 @@ State::__initialize_state(const bool startup, const bool reset_count) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 State::__initialize(const bool startup) {
+	STACKTRACE_VERBOSE;
 	__initialize_time();
 	__initialize_state(startup, true);
 	assert(time_traits::is_zero(current_time));

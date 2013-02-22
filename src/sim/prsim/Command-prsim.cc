@@ -196,7 +196,7 @@ parse_node_to_index(const string& s, const entity::module& m) {
 	STACKTRACE_INDENT_PRINT("Parsing node(s): " << s << endl);
 	// automatically prepend working directory
 	return parser::parse_node_to_index(
-		CommandRegistry::prepend_working_dir(s), m).index;
+		CommandRegistry::prepend_working_dir(s), m.get_footprint()).index;
 }
 
 #if PRSIM_NODE_AGGREGATE_ARGUMENTS
@@ -205,7 +205,7 @@ bool
 parse_nodes_to_indices(const string& s, const entity::module& m, 
 		vector<node_index_type>& r) {
 	return parser::parse_nodes_to_indices(
-		CommandRegistry::prepend_working_dir(s), m, r);
+		CommandRegistry::prepend_working_dir(s), m.get_footprint(), r);
 }
 #endif
 
@@ -215,7 +215,7 @@ parse_process_to_index(const string& s, const entity::module& m) {
 	STACKTRACE_VERBOSE;
 	// automatically prepend working directory
 	const string t(nonempty_abs_dir(s));
-	return parser::parse_process_to_index(t, m);
+	return parser::parse_process_to_index(t, m.get_footprint());
 }
 
 #if PRSIM_PROCESS_AGGREGATE_ARGUMENTS
@@ -224,7 +224,7 @@ bool
 parse_processes_to_indices(const string& s, const entity::module& m, 
 		vector<process_index_type>& r) {
 	return parser::parse_processes_to_indices(
-		CommandRegistry::prepend_working_dir(s), m, r);
+		CommandRegistry::prepend_working_dir(s), m.get_footprint(), r);
 }
 #endif
 

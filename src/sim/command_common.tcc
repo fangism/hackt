@@ -22,6 +22,7 @@
 #include "sim/trace_common.hh"		// for trace_manager_base
 #include "parser/instref.hh"
 #include "Object/expr/dlfunction.hh"
+#include "Object/module.hh"
 #include "common/TODO.hh"
 #include "util/compose.hh"
 #include "util/string.tcc"
@@ -620,7 +621,9 @@ if (a.size() > 2) {
 		const string newdir(command_registry_type::working_dir());
 		// optional: confirm and print new working dir
 		if (newdir != "" && 
-			parser::parse_process_to_index(newdir, s.get_module()).index == INVALID_PROCESS_INDEX) {
+			parser::parse_process_to_index(newdir,
+				s.get_module().get_footprint()).index
+					== INVALID_PROCESS_INDEX) {
 			cerr << "Invalid process/directory: " << newdir << endl;
 			command_registry_type::change_dir_abs(save);
 			return command_type::BADARG;
@@ -663,7 +666,9 @@ if (a.size() != 2) {
 	command_registry_type::push_dir(ac.back());
 	const string newdir(command_registry_type::working_dir());
 	if (newdir != "" && 
-		parser::parse_process_to_index(newdir, s.get_module()).index == INVALID_PROCESS_INDEX) {
+		parser::parse_process_to_index(newdir,
+			s.get_module().get_footprint()).index
+				== INVALID_PROCESS_INDEX) {
 		cerr << "Invalid process/directory: " << newdir << endl;
 		command_registry_type::pop_dir();
 		return command_type::BADARG;

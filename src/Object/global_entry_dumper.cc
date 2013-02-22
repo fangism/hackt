@@ -70,7 +70,7 @@ global_entry_dumper::__default_visit(const state_instance<Tag>& p) {
 	os << local_offset << '\t';
 	const size_t gid = global_index -1;	// 0-based
 	topfp->template dump_canonical_name<Tag>(
-		os, gid, dump_flags::no_owners) << '\t';
+		os, gid, dump_flags::no_definition_owner) << '\t';
 	p.get_back_ref()->dump_explicit_attributes(os);
 }
 

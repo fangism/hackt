@@ -52,6 +52,9 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/expr_dump_context.hh"
 #include "Object/type/fundamental_type_reference.hh"
 #include "Object/persistent_type_hash.hh"
+#if PROCESS_DEFINITION_IS_NAMESPACE
+#include "Object/module.hh"
+#endif
 
 #include "util/memory/count_ptr.tcc"
 #if POOL_ALLOCATE_NAMESPACE
@@ -152,14 +155,31 @@ scopespace::is_global_namespace(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 scopespace::dump_include_parent(const dump_flags& df) const {
-        return ((IS_A(const definition_base*, this) &&
-                        df.show_definition_owner) ||
-                (IS_A(const name_space*, this) &&
+#if 0
+	df.dump_brief(cerr);
+#endif
+#if PROCESS_DEFINITION_IS_NAMESPACE
+	const bool top_mod = IS_A(const module*, this);
+#endif
+	const bool show_def = IS_A(const definition_base*, this) &&
+		df.show_definition_owner;
+	const bool show_ns = 
+                IS_A(const name_space*, this) &&
                         df.show_namespace_owner &&
-                        !is_global_namespace()));
+                        !is_global_namespace();
+#if 0
+	if (show_def) cout << "[D]";
+	if (show_ns) cout << "[N]";
+#endif
+        return (show_def || show_ns)
+#if PROCESS_DEFINITION_IS_NAMESPACE
+		&& !top_mod	// never show leading :: for top module
+#endif
+		;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !PROCESS_DEFINITION_IS_NAMESPACE
 /**
 	Generic object lookup for unqualified identifier.  
 	This is overrideable.  
@@ -174,15 +194,22 @@ scopespace::dump_include_parent(const dump_flags& df) const {
  */
 never_ptr<const object>
 scopespace::lookup_member(const string& id) const {
+	STACKTRACE_VERBOSE;
 	return __lookup_member(id);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Non-overrideable lookup_member.  
  */
 never_ptr<const object>
-scopespace::__lookup_member(const string& id) const {
+#if PROCESS_DEFINITION_IS_NAMESPACE
+scopespace::lookup_local(const string& id) const
+#else
+scopespace::__lookup_member(const string& id) const
+#endif
+{
 	STACKTRACE_VERBOSE;
 	STACKTRACE_INDENT_PRINT("id = " << id << endl);
 	const const_map_iterator f(used_id_map.find(id));
@@ -195,13 +222,19 @@ scopespace::__lookup_member(const string& id) const {
 	Same as regular map lookup, but returning a modifiable pointer.  
  */
 never_ptr<object>
-scopespace::lookup_member_with_modify(const string& id) const {
+#if PROCESS_DEFINITION_IS_NAMESPACE
+scopespace::lookup_local_with_modify(const string& id) const
+#else
+scopespace::lookup_member_with_modify(const string& id) const
+#endif
+{
 	const const_map_iterator f(used_id_map.find(id));
 	return (f != used_id_map.end()) ?
 		never_ptr<object>(f->second) : never_ptr<object>(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !PROCESS_DEFINITION_IS_NAMESPACE
 /**
 	Generic object lookup for unqualified identifier.  
 	Doesn't care what sub-type the object actually is.  
@@ -222,6 +255,7 @@ scopespace::lookup_object(const string& id) const {
 	else if (parent) return parent->lookup_object(id);
 	else return never_ptr<const object>(NULL);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -230,31 +264,76 @@ scopespace::lookup_object(const string& id) const {
 	then it is considered an unqualified identifier.  
  */
 never_ptr<const object>
-scopespace::lookup_object(const qualified_id_slice& id) const {
+#if PROCESS_DEFINITION_IS_NAMESPACE
+scopespace::lookup_qualified(const qualified_id_slice& id) const
+#else
+scopespace::lookup_object(const qualified_id_slice& id) const
+#endif
+{
 	typedef	never_ptr<const object>		return_type;
 	STACKTRACE_VERBOSE;
+#if 1 || !PROCESS_DEFINITION_IS_NAMESPACE
 if (id.is_absolute()) {
 	const never_ptr<const scopespace> parent(get_parent());
 	if (parent)
+#if PROCESS_DEFINITION_IS_NAMESPACE
+		return parent->lookup_qualified(id);
+#else
 		return parent->lookup_object(id);
+#endif
 	else {	// we are the ROOT, start looking down namespaces
 		qualified_id_slice idc(id);
 		const never_ptr<const name_space>
 			ns = lookup_namespace(
 				idc.betail()).is_a<const name_space>();
 		if (ns)
+#if PROCESS_DEFINITION_IS_NAMESPACE
+			return ns->lookup_local(**(--id.end()));
+#else
 			return ns->lookup_object(**(--id.end()));
+#endif
 		else return return_type(NULL);
 	}
-} else if (id.size() <= 1) {
-	return lookup_object(**id.begin());
+} else
+#endif
+if (id.size() <= 1) {
+	const string& idf(*id.front());
+	STACKTRACE_INDENT_PRINT("lookup simple id " << idf << endl);
+#if PROCESS_DEFINITION_IS_NAMESPACE
+	// kludgy
+	never_ptr<const scopespace> tsp(this);
+	do {
+#if ENABLE_STACKTRACE
+		tsp->what(cerr << "this is ") << " " << tsp->get_key() << endl;
+#endif
+		const never_ptr<const name_space>
+			tns(tsp.is_a<const name_space>());
+	if (tns) {		// could be a definition-alias
+		const lookup_parameters p(true, true);
+		return tns->lookup_object(idf, p);	// should be virtual
+	} else {
+		const return_type ret(lookup_local(idf));
+		if (ret) return ret;
+		tsp = tsp->get_parent();
+	}
+	} while (tsp);
+	return return_type(NULL);
+#else
+	return this->lookup_object(idf);	// should be virtual
+#endif
 } else {
 	// else need to resolve namespace portion first
 	qualified_id_slice idc(id);
 	const never_ptr<const name_space>
 		ns(lookup_namespace(idc.betail()).is_a<const name_space>());
-	if (ns)
+	if (ns) {
+#if PROCESS_DEFINITION_IS_NAMESPACE
+		const lookup_parameters p(false, false);
+		return ns->lookup_object(**(--id.end()), p);
+#else
 		return ns->lookup_object(**(--id.end()));
+#endif
+	}
 	else return return_type(NULL);
 }
 }
@@ -360,16 +439,22 @@ scopespace::lookup_namespace(const qualified_id_slice& id) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Registers a ndoe into the scopespace if it is new, 
+	Registers a node into the scopespace if it is new, 
 	otherwise returns previously registered placeholder, as long as
 	implicit dimensions match.  
  */
 never_ptr<const node_instance_placeholder>
 scopespace::add_node_instance_idempotent(const token_identifier& id,
 		const size_t dim) {
+	STACKTRACE_VERBOSE;
 	typedef	never_ptr<const node_instance_placeholder>	return_type;
+#if PROCESS_DEFINITION_IS_NAMESPACE
+	const never_ptr<const object> probe(lookup_local(id));
+#else
 	const never_ptr<const object> probe(lookup_member(id));
+#endif
 	if (probe) {
+		STACKTRACE_INDENT_PRINT("found matching name" << endl);
 		// is it the same type or a different type?
 		const never_ptr<const node_instance_placeholder>
 			np(probe.is_a<const node_instance_placeholder>());
@@ -388,9 +473,16 @@ scopespace::add_node_instance_idempotent(const token_identifier& id,
 		}
 		return np;
 	} else {
+		STACKTRACE_INDENT_PRINT("no matching found, adding" << endl);
 		// just add it, this establishes the dimensionality
 		excl_ptr<node_instance_placeholder>
-			np(new node_instance_placeholder(*this, id, dim));
+			np(new node_instance_placeholder(
+#if 0 && PROCESS_DEFINITION_IS_NAMESPACE
+				IS_A(const definition_base&, *this),
+#else
+				*this,
+#endif
+				id, dim));
 		const return_type ret(np);
 		excl_ptr<instance_placeholder_base>
 			npx = np.is_a_xfer<instance_placeholder_base>();
@@ -431,7 +523,11 @@ scopespace::add_instance(
 	// inst_stmt won't have a name yet!
 	// const string id(inst_stmt->get_name());
 	const size_t dim = inst_stmt->dimensions();
+#if PROCESS_DEFINITION_IS_NAMESPACE
+	const never_ptr<object> probe(lookup_local_with_modify(id));
+#else
 	const never_ptr<object> probe(lookup_member_with_modify(id));
+#endif
 if (probe) {
 	const never_ptr<instance_placeholder_base>
 		probe_inst(probe.is_a<instance_placeholder_base>());
@@ -541,7 +637,12 @@ if (probe) {
 	// didn't exist before, just create and add new instance
 	excl_ptr<instance_placeholder_base> new_inst =
 		inst_stmt->get_type_ref()->make_instance_collection(
-			never_ptr<const scopespace>(this), id, dim);
+#if 0 && PROCESS_DEFINITION_IS_NAMESPACE
+			never_ptr<const definition_base>(IS_A(const definition_base*, this)), 
+#else
+			never_ptr<const scopespace>(this), 
+#endif
+			id, dim);
 	// attach non-const back-reference
 	inst_stmt->attach_collection(new_inst);
 	new_inst->attach_initial_instantiation_statement(inst_stmt);
@@ -570,6 +671,7 @@ scopespace::add_instance(excl_ptr<instance_placeholder_base>& i) {
 	NEVER_NULL(i);
 	const string id(i->get_name());
 	INVARIANT(id != "");		// cannot be empty string
+	STACKTRACE_INDENT_PRINT("instance key: " << id << endl);
 	used_id_map[id] = i;
 	// IS THE NEW ENTRY OWNED? IT SHOULD BE
 	INVARIANT(used_id_map[id].owned());
@@ -613,11 +715,17 @@ scopespace::import_physical_instances(const scopespace& s) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Adds a definition name alias to this scope.  
+	Disregard any shadowing.
  */
 good_bool
 scopespace::add_definition_alias(const never_ptr<const definition_base> d, 
 		const string& a) {
+	STACKTRACE_VERBOSE;
+#if PROCESS_DEFINITION_IS_NAMESPACE
+	const never_ptr<const object> probe(lookup_local(a));
+#else
 	const never_ptr<const object> probe(lookup_member(a));
+#endif
 		// or __lookup_member
 	if (probe) {
 		cerr << "Identifier \"" << a << "\" already taken by a ";
@@ -773,6 +881,7 @@ scopespace::write_object_used_id_map(const persistent_object_manager& m,
 		// any distinction between aliases and non-owners?
 		if (!exclude_object(*m_iter)) {
 			const never_ptr<const object> m_obj(m_iter->second);
+			NEVER_NULL(m_obj);
 			m.write_pointer(f, m_obj);
 		}
 	}
@@ -829,6 +938,9 @@ scopespace::load_object_used_id_map(
 #endif
 			}
 		} else {
+#if STACKTRACE_PERSISTENTS
+			STACKTRACE_INDENT_PRINT("have m_obj pointer" << endl);
+#endif
 			m.load_object_once(m_obj);	// recursion!!!
 			// need to reconstruct it to get its key, 
 			// then add this object to the used_id_map
@@ -867,14 +979,16 @@ scopespace::bin_sort::operator () (const used_id_map_type::value_type& i) {
 	const never_ptr<instance_placeholder_base>
 		i_b(o_p.is_a<instance_placeholder_base>());
 	const string& k(i.first);
-	if (n_b) {
-		ns_bin[k] = n_b;
-	} else if (d_b) {
+	// now all process_definitions inherit from namespace, 
+	// so check for definition first
+	if (d_b) {
 		const never_ptr<typedef_base>
 			t_b(d_b.is_a<typedef_base>());
 		if (t_b)
 			alias_bin[k] = t_b;
 		else	def_bin[k] = d_b;
+	} else if (n_b) {
+		ns_bin[k] = n_b;
 	} else if (i_b) {
 		const never_ptr<param_value_placeholder>
 			p_b(i_b.is_a<param_value_placeholder>());
@@ -912,9 +1026,9 @@ scopespace::const_bin_sort::operator () (
 	const never_ptr<const instance_placeholder_base>
 		i_b(o_p.is_a<const instance_placeholder_base>());
 	const string& k = i.first;
-	if (n_b) {
-		ns_bin[k] = n_b;		INVARIANT(ns_bin[k]);
-	} else if (d_b) {
+	// now all process_definitions inherit from namespace, 
+	// so check for definition first
+	if (d_b) {
 		const never_ptr<const typedef_base>
 			t_b(d_b.is_a<const typedef_base>());
 		if (t_b) {
@@ -922,6 +1036,8 @@ scopespace::const_bin_sort::operator () (
 		} else {
 			def_bin[k] = d_b;	INVARIANT(def_bin[k]);
 		}
+	} else if (n_b) {
+		ns_bin[k] = n_b;		INVARIANT(ns_bin[k]);
 	} else if (i_b) {
 		const never_ptr<const param_value_placeholder>
 			p_b(i_b.is_a<const param_value_placeholder>());
@@ -1066,14 +1182,7 @@ ostream&
 name_space::dump_qualified_name(ostream& o, const dump_flags& df) const {
 	if (parent) {
 		INVARIANT(parent.is_a<const name_space>());
-#if 0
-		return parent->dump_qualified_name(o, df) << scope << key;
-#else
-		if (
-#if 0
-			df.show_leading_scope || 
-#endif
-			!parent->is_global_namespace()) {
+		if (!parent->is_global_namespace()) {
 			return parent->dump_qualified_name(o, df)
 				<< scope << key;
 		} else {
@@ -1081,7 +1190,6 @@ name_space::dump_qualified_name(ostream& o, const dump_flags& df) const {
 			// return o << parent->key << scope << key;
 			return o << key;
 		}
-#endif
 	} else	return o;
 }
 
@@ -1236,8 +1344,13 @@ name_space::add_open_namespace(const string& n) {
 	STACKTRACE_VERBOSE;
 	STACKTRACE_INDENT_PRINT("opening: " << n << endl);
 	never_ptr<name_space> ret;
+#if PROCESS_DEFINITION_IS_NAMESPACE
+	const never_ptr<const object> probe(lookup_local(n));
+#else
 	const never_ptr<const object> probe(__lookup_member(n));
+#endif
 	if (probe) {
+		STACKTRACE_INDENT_PRINT("re-using previously created namespace" << endl);
 		const never_ptr<const name_space>
 			probe_ns(probe.is_a<const name_space>());
 		// an alias may return with valid pointer!
@@ -1257,12 +1370,17 @@ name_space::add_open_namespace(const string& n) {
 			cerr << n << " is already exists as subspace, "
 					"re-opening";
 #endif
+#if PROCESS_DEFINITION_IS_NAMESPACE
+			ret = lookup_local_with_modify(n).is_a<name_space>();
+#else
 			ret = lookup_member_with_modify(n).is_a<name_space>();
+#endif
 //			INVARIANT(lookup_member(n).is_a<name_space>());
 			INVARIANT(probe_ns->key == ret->key);
 		}
 		INVARIANT(ret);
 	} else {
+		STACKTRACE_INDENT_PRINT("creating new namespace" << endl);
 		// create it, linking this as its parent
 //		cerr << " ... creating new";
 		excl_ptr<name_space>
@@ -1277,6 +1395,8 @@ name_space::add_open_namespace(const string& n) {
 	INVARIANT(ret->parent == this);
 	INVARIANT(ret->key == n);
 //	cerr << " with parent: " << ret->parent->key;
+	STACKTRACE_INDENT_PRINT("name of opened namespace: "
+		<< ret->key << endl);
 	return ret;
 }
 
@@ -1425,7 +1545,11 @@ name_space::add_using_alias(const qualified_id& n, const string& a) {
 	// because this method is non-const.  
 	// else it will modify the used_id_map!
 	// perhaps wrap with a probe() const method...
+#if PROCESS_DEFINITION_IS_NAMESPACE
+	probe = lookup_local(a);
+#else
 	probe = __lookup_member(a);	// not lookup_member?
+#endif
 	if (probe) {
 		probe = never_ptr<const object>(&probe->self());
 		// resolve handles
@@ -1549,7 +1673,11 @@ name_space::query_namespace_match(const qualified_id_slice& id) const {
 			// the [] operator of map<> doesn't have const 
 			// semantics, even if looking up an entry!
 			const never_ptr<const name_space>
+#if PROCESS_DEFINITION_IS_NAMESPACE
+				next(ns->lookup_local(tid2).is_a<const name_space>());
+#else
 				next(ns->__lookup_member(tid2).is_a<const name_space>());
+#endif
 			// if not found in subspaces, check aliases list
 			// or should we not search aliases?
 			ns = (next) ? next : ns->lookup_open_alias(tid2);
@@ -1577,6 +1705,7 @@ name_space::query_namespace_match(const qualified_id_slice& id) const {
  */
 never_ptr<const name_space>
 name_space::query_subnamespace_match(const qualified_id_slice& id) const {
+	STACKTRACE_VERBOSE;
 	// qualified_id_slice is just a wrapper around qualified_id
 	// recall that qualified_id is a node_list<token_identifier,scope>
 	// and that token_identifier is a sub-type of string
@@ -1596,11 +1725,23 @@ name_space::query_subnamespace_match(const qualified_id_slice& id) const {
 	// no check for absoluteness
 	never_ptr<const name_space> ns;
 	if (id.is_absolute()) {
+		STACKTRACE_INDENT_PRINT("absolute ns" << endl);
 		ns = get_global_namespace()->
+#if PROCESS_DEFINITION_IS_NAMESPACE
+			lookup_local(tid).is_a<const name_space>();
+#else
 			__lookup_member(tid).is_a<const name_space>();
+#endif
 	} else {
+		STACKTRACE_INDENT_PRINT("relative ns" << endl);
 		// force use of const probe
+#if PROCESS_DEFINITION_IS_NAMESPACE
+		const lookup_parameters lp(true, true);
+		const never_ptr<const object> probe(lookup_object(tid, lp));
+//		const never_ptr<const object> probe(lookup_local(tid));
+#else
 		const never_ptr<const object> probe(__lookup_member(tid));
+#endif
 		ns = probe.is_a<const name_space>();
 	}
 
@@ -1611,7 +1752,11 @@ name_space::query_subnamespace_match(const qualified_id_slice& id) const {
 		NEVER_NULL(*i);
 		const token_identifier& tid2(**i);
 		const never_ptr<const name_space>
+#if PROCESS_DEFINITION_IS_NAMESPACE
+			next(ns->lookup_local(tid2).is_a<const name_space>());
+#else
 			next(ns->__lookup_member(tid2).is_a<const name_space>());
+#endif
 		// if not found in subspaces, check aliases list
 		ns = (next) ? next : ns->lookup_open_alias(tid2);
 	}
@@ -1716,11 +1861,19 @@ name_space::find_namespace_ending_with(
 	\return modifiable pointer to definition if successful, else NULL.  
  */
 never_ptr<definition_base>
-name_space::add_definition(excl_ptr<definition_base>& db) {
+name_space::add_definition(excl_ptr<definition_base>& db, 
+		const bool warn_shadow) {
+	STACKTRACE_VERBOSE;
 	typedef	never_ptr<definition_base>	return_type;
 	NEVER_NULL(db);
 	const string k = db->get_name();
+	// TODO: account for definition exporting in diagnostics and lookup
+#if PROCESS_DEFINITION_IS_NAMESPACE
+	const lookup_parameters lp(true, true);
+	const never_ptr<const object> probe(lookup_object(k, lp));
+#else
 	const never_ptr<const object> probe(lookup_member(k));
+#endif
 		// not __lookup_member
 	if (probe) {
 		const never_ptr<const definition_base>
@@ -1739,11 +1892,13 @@ name_space::add_definition(excl_ptr<definition_base>& db) {
 				// then we found a definition belonging to
 				// another namespace, warn about shadowing, 
 				// then overwrite this entry in map.  
+				if (warn_shadow) {
 				cerr << "WARNING: new definition `" <<
 					this->get_qualified_name() << "::" <<
 					k << "\' will overshadow `" <<
 					probe_def->get_qualified_name() <<
 					"\'." << endl;
+				}
 				const never_ptr<definition_base> ret(db);
 				used_id_map[k] = db;
 				INVARIANT(!db);
@@ -1800,11 +1955,29 @@ name_space::lookup_namespace(const qualified_id_slice& id) const {
  */
 never_ptr<const name_space>
 name_space::lookup_open_alias(const string& id) const {
+	STACKTRACE_VERBOSE;
 	// need static cast to guarantee non-modification
 	typedef	never_ptr<const name_space>	return_type;
 	const alias_map_type::const_iterator f(open_aliases.find(id));
 	return (f != open_aliases.end()) ? f->second : return_type(NULL);
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PROCESS_DEFINITION_IS_NAMESPACE && 0
+/**
+	Override default, also lookup open namespaces.  
+	Also lookup in parent namespaces and parents' open namespaces.
+ */
+never_ptr<const object>
+name_space::lookup_object(const string& id, const lookup_parameters& p) const {
+	STACKTRACE_VERBOSE;
+//	const never_ptr<const object> o(this_type::lookup_member(id));
+	const never_ptr<const object> o(lookup_local(id));
+	if (o) return o;
+	else if (p.search_parents && parent) return parent->lookup_object(id);
+	else return never_ptr<const object>(NULL);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1817,21 +1990,47 @@ name_space::lookup_open_alias(const string& id) const {
 	Recursive search should not lookup aliases, so call __lookup_member.  
  */
 never_ptr<const object>
-name_space::lookup_member(const string& id) const {
+#if PROCESS_DEFINITION_IS_NAMESPACE
+name_space::lookup_object(const string& id, const lookup_parameters& p) const
+#else
+name_space::lookup_member(const string& id) const
+#endif
+{
 	typedef	never_ptr<const object>	return_type;
 	typedef	std::set<return_type>	return_set;
 	typedef	namespace_list::const_iterator		const_iterator;
 	STACKTRACE_VERBOSE;
 	STACKTRACE_INDENT_PRINT("id = " << id << endl);
+#if PROCESS_DEFINITION_IS_NAMESPACE
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT_PRINT("in namespace " << key << ":" << endl);
+	dump_for_definitions(cerr);
+#endif
+	// always lookup locally first
+	return_type o(parent_type::lookup_local(id));
+#else
 	return_type o(parent_type::lookup_member(id));
-	if (o)
+#endif
+	if (o) {
+		STACKTRACE_INDENT_PRINT("found locally." << endl);
 		return o;
+	}
+#if PROCESS_DEFINITION_IS_NAMESPACE
+if (p.search_open_ns) {
+	// do not lookup parents nor open namespaecs of open namespaces
+	const lookup_parameters sp(false, false);
+#endif
+	STACKTRACE_INDENT_PRINT("searching open namespaces" << endl);
 	// else search open namespace aliases
 	return_set candidates;
 {
 	const_iterator i(open_spaces.begin()), e(open_spaces.end());
 	for ( ;i!=e; ++i) {
+#if PROCESS_DEFINITION_IS_NAMESPACE
+		const return_type a((*i)->lookup_object(id, sp));
+#else
 		const return_type a((*i)->__lookup_member(id));
+#endif
 		if (a) {
 			const bool b __ATTRIBUTE_UNUSED__ =
 				candidates.insert(a).second;
@@ -1848,8 +2047,8 @@ name_space::lookup_member(const string& id) const {
 	}
 }
 	if (candidates.empty()) {
-		// no matches found
-		return return_type(NULL);
+		// no matches found, fallback to searching parents
+//		return return_type(NULL);
 	} else if (candidates.size() == 1) {
 		return *candidates.begin();
 	} else {
@@ -1865,6 +2064,14 @@ name_space::lookup_member(const string& id) const {
 		}
 		return return_type(NULL);
 	}
+#if PROCESS_DEFINITION_IS_NAMESPACE
+}	// end if search_open_ns
+if (p.search_parents && parent) {
+	return parent->lookup_object(id, p);
+}
+#endif
+	STACKTRACE_INDENT_PRINT("not found." << endl);
+	return return_type(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1881,6 +2088,7 @@ name_space::collect_namespaces(namespace_collection_type& l) const {
 	for ( ; i!=e; i++) {
 		const namespace_collection_type::value_type
 			p(i->second.is_a<name_space>());
+			// and is NOT a process_definition?
 		if (p) {
 			l.push_back(p);
 			p->collect_namespaces(l);	// recursion
@@ -1965,17 +2173,19 @@ void
 name_space::load_used_id_map_object(excl_ptr<persistent>& o) {
 	STACKTRACE("name_space::load_used_id_map_object()");
 	NEVER_NULL(o);
-	if (o.is_a<name_space>()) {
+	// NB: process_definition is a namespace, 
+	// but should be treated as a definition
+	if (o.is_a<definition_base>()) {
+		excl_ptr<definition_base>
+			defp = o.is_a_xfer<definition_base>();
+		add_definition(defp, false);	// no warn shadow
+		INVARIANT(!defp);
+	// ownership restored here!
+	} else if (o.is_a<name_space>()) {
 		excl_ptr<name_space>
 			nsp = o.is_a_xfer<name_space>();
 		add_namespace(nsp);
 		INVARIANT(!nsp);
-	} else if (o.is_a<definition_base>()) {
-		excl_ptr<definition_base>
-			defp = o.is_a_xfer<definition_base>();
-		add_definition(defp);
-		INVARIANT(!defp);
-	// ownership restored here!
 	} else if (o.is_a<instance_placeholder_base>()) {
 		excl_ptr<instance_placeholder_base>
 			icbp = o.is_a_xfer<instance_placeholder_base>();

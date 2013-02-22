@@ -223,6 +223,16 @@
 // Perm'd
 // #define	CFLAT_WITH_CONDUCTANCES			1
 
+/**
+	Define to 1 to derive process_definition from namespace, 
+	not just scopespace.
+	Rationale: simplify interfaces
+	Goal: 1
+	Semantically, open-spaces and open-aliases are allowed,
+		but syntactically not supported.
+ */
+#define	PROCESS_DEFINITION_IS_NAMESPACE		1
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // features targeted for branch HACKT-00-01-04-main-00-83-29-supply-01
 /**

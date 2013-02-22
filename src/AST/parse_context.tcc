@@ -17,6 +17,7 @@
 #include "AST/token_string.hh"
 #include "AST/identifier.hh"
 #include "Object/common/namespace.hh"
+#include "util/stacktrace.hh"
 
 //=============================================================================
 namespace HAC {
@@ -41,7 +42,12 @@ context::open_definition(const token_identifier& pname) {
 	// concept check code
 	INVARIANT(!static_cast<const definition_base*>(NULL));
 	const never_ptr<D>
-		def(get_current_namespace()->lookup_member_with_modify(pname)
+		def(get_current_namespace()->
+#if PROCESS_DEFINITION_IS_NAMESPACE
+			lookup_local_with_modify(pname)
+#else
+			lookup_member_with_modify(pname)
+#endif
 				.template is_a<D>());
 	if (def) {
 		if (def->is_defined()) {
@@ -49,6 +55,7 @@ context::open_definition(const token_identifier& pname) {
 				"redefinition at " << where(pname) << endl;
 			THROW_EXIT;
 		}
+		STACKTRACE_INDENT_PRINT("enter definition: " << pname << endl);
 		open_definition_stack.push(def);
 		sequential_scope_stack.push(
 			def.template as_a<sequential_scope>());

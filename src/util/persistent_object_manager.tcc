@@ -446,6 +446,7 @@ persistent_object_manager::write_pointer_map(ostream& f, const M& m) const {
 template <class P>
 void
 persistent_object_manager::load_object_once(const P& p) const {
+	NEVER_NULL(p);
 	__load_object_once(p, __pointer_category(p));
 }
 

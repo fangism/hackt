@@ -3,6 +3,20 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2013-02-22	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-86-51-frontend-rewrite-01:
+	  Invasive code change alert!
+	  Rewrite of front-end instref parsing and letting process_definition
+		derive from namespace directly for uniformity of lookup.
+		entity::module is a process_definition, inheriting and
+		using base-classes scopespace instead of containing
+		a global namespace pointer.
+	  Changes: namespace lookups are a little more liberal.
+		object file contents shuffled, but format is same.
+		Regression tests updated as needed.
+
+
 2012-10-16	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-86-51:

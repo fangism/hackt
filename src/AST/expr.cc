@@ -33,6 +33,7 @@
 #include "Object/inst/physical_instance_placeholder.hh"
 #include "Object/inst/param_value_placeholder.hh"
 #include "Object/def/definition_base.hh"
+#include "Object/def/process_definition.hh"
 #include "Object/ref/aggregate_meta_value_reference.hh"
 #include "Object/ref/aggregate_meta_instance_reference.hh"
 #include "Object/ref/simple_meta_instance_reference.hh"
@@ -1225,8 +1226,13 @@ id_expr::check_meta_reference(const context& c) const {
 				// verify that definition doesn't reference
 				// global!
 				if (!c.at_top_level() &&
+#if PROCESS_DEFINITION_IS_NAMESPACE
+					pinst->get_owner() != c.get_current_named_scope()
+#else
 					pinst->get_owner()
-					.is_a<const entity::name_space>()) {
+					.is_a<const entity::name_space>()
+#endif
+					) {
 					cerr <<
 	"Error: cannot reference top-level instance from within a definition!  "
 						<< where(*qid) << endl;
@@ -1281,8 +1287,13 @@ if (o) {
 			pinst(inst.is_a<const physical_instance_placeholder>());
 		if (pinst) {
 			if (!c.at_top_level() &&
+#if PROCESS_DEFINITION_IS_NAMESPACE
+				pinst->get_owner() != c.get_current_named_scope()
+#else
 				pinst->get_owner()
-				.is_a<const entity::name_space>()) {
+				.is_a<const entity::name_space>()
+#endif
+				) {
 				cerr <<
 	"Error: cannot reference top-level instance from within a definition!  "
 					<< where(*qid) << endl;
@@ -1290,6 +1301,7 @@ if (o) {
 			}
 			return pinst->make_nonmeta_instance_reference();
 		} else {
+			STACKTRACE_INDENT_PRINT("is parameter value" << endl);
 			const never_ptr<const param_value_placeholder>
 				vinst(inst.is_a<const param_value_placeholder>());
 			NEVER_NULL(vinst);

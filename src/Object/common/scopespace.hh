@@ -20,6 +20,7 @@
 #include <map>
 #include <string>
 #include "Object/common/util_types.hh"
+#include "Object/devel_switches.hh"
 #include "util/persistent.hh"		// for persistent object interface
 #include "util/boolean_types.hh"
 #if !USE_SCOPESPACE_STD_MAP
@@ -64,6 +65,23 @@ using util::memory::excl_ptr;
 using util::good_bool;
 using util::bad_bool;
 using util::unique_list;
+
+//=============================================================================
+/**
+	Lookup parameters for tuning search.  
+ */
+struct lookup_parameters {
+	bool			search_parents;
+	bool			search_open_ns;
+	// parents of open namespaces? never
+	// open namespaces of parents? if both of the above are set
+
+	lookup_parameters() : search_parents(false), search_open_ns(false) { }
+
+	lookup_parameters(const bool p, const bool o) :
+		search_parents(p), search_open_ns(o) { }
+
+};	// end struct lookup_parameters
 
 //=============================================================================
 /**
@@ -223,7 +241,7 @@ protected:
 public:
 virtual	~scopespace();
 
-#if 0
+#if 1
 virtual	ostream&
 	what(ostream& o) const = 0;
 #endif
@@ -268,8 +286,22 @@ virtual	bool
 	void
 	collect(L&) const;
 
+#if PROCESS_DEFINITION_IS_NAMESPACE
 public:
+	never_ptr<const object>
+	lookup_local(const string& id) const;
 
+	never_ptr<object>
+	lookup_local_with_modify(const string& id) const;
+
+	never_ptr<const object>
+	lookup_qualified(const qualified_id_slice& id) const;
+
+protected:
+virtual	never_ptr<const scopespace>
+	lookup_namespace(const qualified_id_slice& id) const;
+#else
+public:
 	never_ptr<const object>
 	__lookup_member(const string& id) const;
 
@@ -287,6 +319,7 @@ virtual	never_ptr<const object>
 
 virtual	never_ptr<const scopespace>
 	lookup_namespace(const qualified_id_slice& id) const;
+#endif
 
 protected:
 	never_ptr<const dummy_placeholder<node_tag> >

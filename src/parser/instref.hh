@@ -26,8 +26,10 @@ class directory_stack;
 
 namespace HAC {
 namespace entity {
+class footprint;
 class module;
 class meta_reference_union;
+class process_definition;
 struct entry_collection;
 struct dump_flags;
 }
@@ -37,6 +39,8 @@ namespace parser {
 using std::ostream;
 using std::vector;
 using std::string;
+using entity::process_definition;
+using entity::footprint;
 using entity::module;
 using entity::bool_tag;
 using entity::channel_tag;
@@ -88,7 +92,7 @@ struct typed_indexed_reference {
 	explicit
 	typed_indexed_reference(const size_t i) : index(i) { }
 
-	typed_indexed_reference(const string&, const module&);
+	typed_indexed_reference(const string&, const footprint&);
 
 	bool
 	valid(void) const {
@@ -111,7 +115,7 @@ struct typed_indexed_references {
 	// default value is invalid
 	typed_indexed_references() : indices() { }
 
-	typed_indexed_references(const string&, const module&);
+	typed_indexed_references(const string&, const footprint&);
 
 	bool
 	valid(void) const {
@@ -131,7 +135,7 @@ parse_reference(const char*);
 
 extern
 meta_reference_union
-check_reference(const inst_ref_expr&, const module&);
+check_reference(const inst_ref_expr&, const process_definition&);
 
 extern
 int
@@ -140,7 +144,7 @@ expand_reference(const count_ptr<const inst_ref_expr>&,
 
 extern
 meta_reference_union
-parse_and_check_reference(const char*, const module&);
+parse_and_check_reference(const char*, const process_definition&);
 
 extern
 bool
@@ -149,19 +153,19 @@ expand_global_references(const string&, const module&,
 
 extern
 bool
-parse_nodes_to_indices(const string&, const module&, vector<size_t>&);
+parse_nodes_to_indices(const string&, const footprint&, vector<size_t>&);
 
 extern
 bool_index
-parse_node_to_index(const string&, const module&);
+parse_node_to_index(const string&, const footprint&);
 
 extern
 bool
-parse_processes_to_indices(const string&, const module&, vector<size_t>&);
+parse_processes_to_indices(const string&, const footprint&, vector<size_t>&);
 
 extern
 process_index
-parse_process_to_index(const string&, const module&);
+parse_process_to_index(const string&, const footprint&);
 
 extern
 global_indexed_reference
@@ -169,7 +173,15 @@ parse_global_reference(const string&, const module&, ostream*);
 
 extern
 global_indexed_reference
+parse_local_reference(const string&, const footprint&, ostream*);
+
+extern
+global_indexed_reference
 parse_global_reference(const string&, const module&);
+
+extern
+global_indexed_reference
+parse_local_reference(const meta_reference_union&, const footprint&);
 
 extern
 global_indexed_reference
@@ -185,6 +197,16 @@ extern
 int
 parse_global_references(const meta_reference_union&,
 	const module&, global_reference_array_type&);
+
+extern
+int
+parse_local_references(const string&, const footprint&,
+	global_reference_array_type&);
+
+extern
+int
+parse_local_references(const meta_reference_union&,
+	const footprint&, global_reference_array_type&);
 
 extern
 int

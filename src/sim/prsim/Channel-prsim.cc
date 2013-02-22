@@ -16,6 +16,7 @@
 #include "parser/instref.hh"
 #include "AST/expr_base.hh"
 #include "Object/ref/meta_reference_union.hh"
+#include "Object/module.hh"
 #include "util/iterator_more.hh"		// for set_inserter
 #include "util/copy_if.hh"
 #include "util/memory/count_ptr.tcc"
@@ -4240,7 +4241,7 @@ if (rail_name.length()) {
 			}
 			// may throw exception
 			const node_index_type ni =
-				parse_node_to_index(n.str(), m).index;
+				parse_node_to_index(n.str(), m.get_footprint()).index;
 			if (ni) {
 				c.data[dk] = ni;
 				// flag node for consistency
@@ -4359,7 +4360,7 @@ channel_manager::set_channel_2p_ack(State& state, const size_t key,
 	const string& a, const bool ack_init) {
 	channel& c(channel_pool[key]);
 	const node_index_type ni =
-		parse_node_to_index(a, state.get_module()).index;
+		parse_node_to_index(a, state.get_module().get_footprint()).index;
 	if (ni) {
 		c.ack_signal = ni;
 		state.__get_node(ni).set_in_channel();
@@ -4383,7 +4384,7 @@ channel_manager::set_channel_2p_req(State& state, const size_t key,
 	channel& c(channel_pool[key]);
 	// assign repeat rail (use validity signal)
 	const node_index_type ni =
-		parse_node_to_index(r, state.get_module()).index;
+		parse_node_to_index(r, state.get_module().get_footprint()).index;
 	if (ni) {
 		c.valid_signal = ni;	// doubles as repeat signal
 		state.__get_node(ni).set_in_channel();
@@ -4474,7 +4475,7 @@ if (i.second) {
 	dk[0] = 0;
 	dk[1] = 0;
 	const string n(base + "." + data_name);
-	const node_index_type ni = parse_node_to_index(n, m).index;
+	const node_index_type ni = parse_node_to_index(n, m.get_footprint()).index;
 	if (ni) {
 		c.data[dk] = ni;
 		// flag node for consistency
@@ -4789,7 +4790,7 @@ for ( ; ri!=re; ++ri) {
 	const string& base(clkname);
 #endif
 	const node_index_type vi =
-		parse_node_to_index(base, state.get_module()).index;
+		parse_node_to_index(base, state.get_module().get_footprint()).index;
 	if (!vi) {
 		cerr << "Error: no such node `" << base << "\'." << endl;
 		return true;
@@ -4991,7 +4992,7 @@ if (have_ack) {
 	c.set_ack_init(ack_init);
 	// ack and enable rail names are hard-coded for now :(
 	const string ack_name(base + (ack_sense ? ".a" : ".e"));
-	const node_index_type ai = parse_node_to_index(ack_name, m).index;
+	const node_index_type ai = parse_node_to_index(ack_name, m.get_footprint()).index;
 	if (!ai) {
 		cerr << "Error: no such node `" << ack_name <<
 			"\' in channel `" << base << "\'." << endl;
@@ -5010,7 +5011,7 @@ if (have_validity) {
 	c.set_valid_sense(validity_sense);
 	const string v_name((vname ? base +"." +vname :
 		base +(validity_sense ? ".v" : ".n")));
-	const node_index_type vi = parse_node_to_index(v_name, m).index;
+	const node_index_type vi = parse_node_to_index(v_name, m.get_footprint()).index;
 	if (!vi) {
 		cerr << "Error: no such node `" << v_name <<
 			"\' in channel `" << base << "\'." << endl;
