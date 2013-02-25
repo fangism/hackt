@@ -80,11 +80,6 @@ public:
 	never_ptr<name_space>
 	get_global_namespace(void) const;
 
-#if 0
-	void
-	set_global_namespace(excl_ptr<name_space>& n);
-#endif
-
 	void
 	collect_namespaces(namespace_collection_type&) const;
 

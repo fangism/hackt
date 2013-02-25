@@ -167,10 +167,6 @@ scopespace::dump_include_parent(const dump_flags& df) const {
                 IS_A(const name_space*, this) &&
                         df.show_namespace_owner &&
                         !is_global_namespace();
-#if 0
-	if (show_def) cout << "[D]";
-	if (show_ns) cout << "[N]";
-#endif
         return (show_def || show_ns)
 #if PROCESS_DEFINITION_IS_NAMESPACE
 		&& !top_mod	// never show leading :: for top module
@@ -476,13 +472,7 @@ scopespace::add_node_instance_idempotent(const token_identifier& id,
 		STACKTRACE_INDENT_PRINT("no matching found, adding" << endl);
 		// just add it, this establishes the dimensionality
 		excl_ptr<node_instance_placeholder>
-			np(new node_instance_placeholder(
-#if 0 && PROCESS_DEFINITION_IS_NAMESPACE
-				IS_A(const definition_base&, *this),
-#else
-				*this,
-#endif
-				id, dim));
+			np(new node_instance_placeholder(*this, id, dim));
 		const return_type ret(np);
 		excl_ptr<instance_placeholder_base>
 			npx = np.is_a_xfer<instance_placeholder_base>();
@@ -637,12 +627,7 @@ if (probe) {
 	// didn't exist before, just create and add new instance
 	excl_ptr<instance_placeholder_base> new_inst =
 		inst_stmt->get_type_ref()->make_instance_collection(
-#if 0 && PROCESS_DEFINITION_IS_NAMESPACE
-			never_ptr<const definition_base>(IS_A(const definition_base*, this)), 
-#else
-			never_ptr<const scopespace>(this), 
-#endif
-			id, dim);
+			never_ptr<const scopespace>(this), id, dim);
 	// attach non-const back-reference
 	inst_stmt->attach_collection(new_inst);
 	new_inst->attach_initial_instantiation_statement(inst_stmt);
@@ -1434,10 +1419,6 @@ name_space::add_namespace(excl_ptr<name_space>& new_ns) {
 never_ptr<const name_space>
 name_space::leave_namespace(void) {
 	STACKTRACE_VERBOSE;
-#if 0
-	cerr << "Beginning of name_space::leave_namespace(): " << endl;
-	dump(cerr) << endl;
-#endif
 	// for all open_aliases, release their names from used-map
 	alias_map_type::const_iterator i(open_aliases.begin());
 	const alias_map_type::const_iterator a_end(open_aliases.end());
@@ -1450,10 +1431,6 @@ name_space::leave_namespace(void) {
 	}
 	open_spaces.clear();
 	open_aliases.clear();
-#if 0
-	cerr << "End of name_space::leave_namespace(): " << endl;
-	dump(cerr) << endl;
-#endif
 	return parent;
 	// never NULL, can't leave global namespace!
 }

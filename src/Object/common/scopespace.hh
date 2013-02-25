@@ -241,10 +241,8 @@ protected:
 public:
 virtual	~scopespace();
 
-#if 1
 virtual	ostream&
 	what(ostream& o) const = 0;
-#endif
 
 virtual	ostream&
 	dump(ostream& o) const = 0;

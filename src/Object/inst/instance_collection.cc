@@ -232,9 +232,7 @@ physical_instance_collection::get_owner(void) const {
 ostream&
 physical_instance_collection::dump(ostream& o, const dump_flags& df) const {
 #if 0
-	o << "dump flags: " << (df.show_definition_owner ? "(def) " : " ") <<
-		(df.show_namespace_owner ? "(ns) " : " ") <<
-		(df.show_leading_scope ? "(::) " : " ") << endl << auto_indent;
+	df.dump(o << "dump flags: ") << endl << auto_indent;
 #endif
 	parent_type::dump_base(o, df);
 	// it IS partially unrolled
@@ -490,9 +488,6 @@ instance_placeholder_base::dump_qualified_name(ostream& o,
 	df.dump_brief(o) << '<';
 #endif
 if (owner) {
-#if 0
-	o << "+";
-#endif
 	const param_value_placeholder* const
 		p(IS_A(const param_value_placeholder*, this));
 	if (p && p->is_loop_variable()) {
@@ -500,9 +495,6 @@ if (owner) {
 		// maybe '$' to indicate variable?
 		o << '$';
 	} else if (owner->dump_include_parent(df)) {
-#if 0
-		o << "*";
-#endif
 #if PROCESS_DEFINITION_IS_NAMESPACE
 		if ((!owner.is_a<const definition_base>() &&
 				df.show_namespace_owner)
@@ -527,11 +519,7 @@ string
 instance_placeholder_base::get_footprint_key(void) const {
 	STACKTRACE_VERBOSE;
 	const never_ptr<const name_space>
-#if 0 && PROCESS_DEFINITION_IS_NAMESPACE
-		ns(owner.is_a<const module>());
-#else
 		ns(owner.is_a<const name_space>());
-#endif
 	if (ns && ns->get_parent()
 #if PROCESS_DEFINITION_IS_NAMESPACE
 		&& !owner.is_a<const definition_base>()

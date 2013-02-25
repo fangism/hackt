@@ -139,11 +139,7 @@ private:
 virtual	MAKE_INSTANTIATION_STATEMENT_PRIVATE_PROTO = 0;
 
 public:
-#if 0 && PROCESS_DEFINITION_IS_NAMESPACE
-	typedef	definition_base			owner_ptr_raw_type;
-#else
 	typedef	scopespace			owner_ptr_raw_type;
-#endif
 
 // rename macro and function name later after committing rework
 #define	MAKE_INSTANCE_COLLECTION_PROTO					\

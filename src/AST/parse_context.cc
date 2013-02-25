@@ -89,7 +89,6 @@ context::context(module& m, const parse_options& o) :
 		current_spec_body(&m.get_spec_directives_set()),
 		strict_template_mode(true), 
 		in_conditional_scope(false), 
-//		view_all_publicly(false), 
 		parse_opts(o)
 		{
 	STACKTRACE_VERBOSE;
@@ -138,7 +137,6 @@ context::context(const process_definition& m,
 		current_spec_body(NULL),	// not adding any spec
 		strict_template_mode(true), 
 		in_conditional_scope(false), 
-//		view_all_publicly(_pub), 
 		parse_opts(o)
 		{
 	STACKTRACE_VERBOSE;
@@ -244,11 +242,7 @@ context::close_namespace(void) {
 bool
 context::at_top_level(void) const {
 	const never_ptr<const definition_base> d(get_current_open_definition());
-#if 1
 	return !d || d.is_a<const module>();
-#else
-	return d.is_a<const module>();
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -526,14 +520,6 @@ context::set_current_prototype(excl_ptr<definition_base>& d) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-void
-context::reset_current_prototype(void) {
-	current_prototype.release();
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Given a valid complete type reference, set the context to use it.  
 	\param tr the expanded type reference to be used for 
@@ -572,16 +558,7 @@ context::lookup_object(const qualified_id& id) const {
 	STACKTRACE_INDENT_PRINT("looking up (qualified): " << id << endl);
 	// automatically resolve object handles.  
 #if PROCESS_DEFINITION_IS_NAMESPACE
-#if 0
-	return_type o;
-	if (id.size() <= 1) {
-		o = lookup_object(*id.front());
-	} else {
-		o = get_current_named_scope()->lookup_qualified(id);
-	}
-#else
 	return_type o(get_current_named_scope()->lookup_qualified(id));
-#endif
 #else
 	return_type o(get_current_named_scope()->lookup_object(id));
 #endif
@@ -837,10 +814,6 @@ context::get_current_named_scope_no_proto(void) const {
 				.is_a<const scopespace>());
 		INVARIANT(ret);
 		STACKTRACE_INDENT_PRINT("ret->key = " << ret->get_key() << endl);
-#if 0 && PROCESS_DEFINITION_IS_NAMESPACE
-		// top-level module is a process_definition, which is a namespace
-		return ret;
-#else
 		if (ret.is_a<const module>()) {
 			// top-level module does not count as a named scope
 			STACKTRACE_INDENT_PRINT("current open def is module" << endl);
@@ -849,7 +822,6 @@ context::get_current_named_scope_no_proto(void) const {
 			STACKTRACE_INDENT_PRINT("current open def is not module" << endl);
 			return ret;
 		}
-#endif
 	} else {
 		STACKTRACE_INDENT_PRINT("in some namespace." << endl);
 		// This code can be reached only when calling parser
@@ -878,9 +850,6 @@ context::get_current_named_scope(void) {
 		const never_ptr<scopespace>
 			ret(get_current_open_definition().is_a<scopespace>());
 		INVARIANT(ret);
-#if 0 && PROCESS_DEFINITION_IS_NAMESPACE
-		return ret;
-#else
 		if (ret.is_a<module>()) {
 			// top-level module does not count as a named scope
 			STACKTRACE_INDENT_PRINT("is top module" << endl);
@@ -889,7 +858,6 @@ context::get_current_named_scope(void) {
 			STACKTRACE_INDENT_PRINT("is not top module" << endl);
 			return ret;
 		}
-#endif
 	} else {
 		ICE(cerr, cerr << "Reached the unreachable code!" << endl;)
 		return namespace_stack.top().as_a<scopespace>();
@@ -1169,8 +1137,7 @@ context::push_loop_var(const token_identifier& i) {
 	// nevertheless, it needs to associate with some parent scope.  
 	const return_type
 		ret(new loop_var_placeholder_type(
-			*get_current_named_scope(),
-			i , 0));
+			*get_current_named_scope(), i , 0));
 	INVARIANT(ret);
 	loop_var_stack.push_front(ret);
 	return ret;

@@ -577,14 +577,7 @@ persistent_object_manager::initialize_null(void) {
  */
 bool
 persistent_object_manager::flag_visit(const persistent* ptr) {
-#if 0
-	const addr_to_index_map_type::const_iterator
-		f(addr_to_index_map.find(ptr));
-	INVARIANT(f != addr_to_index_map.end());
-	const size_t probe = f->second.val;
-#else
 	const size_t probe = lookup_ptr_index(ptr);
-#endif
 	reconstruction_table_entry& e(reconstruction_table[probe]);
 	INVARIANT(e.addr() == ptr);		// sanity check
 	if (e.flagged())

@@ -156,12 +156,6 @@ public:
 	add_using_alias(const qualified_id& n, const string& a);
 
 #if PROCESS_DEFINITION_IS_NAMESPACE
-#if 0
-	// overrides default
-	never_ptr<const object>
-	lookup_member(const string&) const;
-#endif
-
 	never_ptr<const object>
 	lookup_object(const string&, const lookup_parameters&) const;
 

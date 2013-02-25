@@ -278,12 +278,7 @@ VALUE_PLACEHOLDER_CLASS::dump(ostream& o, const dump_flags& df) const {
 		init_def(this->default_value());
 	if (init_def) {
 		expr_dump_context dc(expr_dump_context::default_value);
-#if 0 && PROCESS_DEFINITION_IS_NAMESPACE
-		dc.enclosing_scope = this->owner.template is_a<const scopespace>();
-		NEVER_NULL(dc.enclosing_scope);
-#else
 		dc.enclosing_scope = this->owner;
-#endif
 		if (this->is_template_formal())
 			init_def->dump(o << " (default = ", dc) << ")";
 		else    init_def->dump(o << " (init = ", dc) << ")";

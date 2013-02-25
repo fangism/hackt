@@ -146,19 +146,6 @@ module::get_global_namespace(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	Sets the global namespace for this module.
-	\param n owned (and transferred) pointer to new namespace.  
- */
-void
-module::set_global_namespace(excl_ptr<name_space>& n) {
-	// automatically memory-managed
-	global_namespace = n;
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\param l the list in which to accumulate collection of 
 		pointers to namespaces.  

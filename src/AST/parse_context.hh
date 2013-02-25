@@ -253,17 +253,6 @@ private:
 	 */
 	bool					in_conditional_scope;
 
-#if 0
-	/**
-		This turns off accessibility checks in all contexts, 
-		which is useful for other tools that need to read 
-		the pre-compiled objects.  
-		Default: false, enforcing port visibility only.  
-		Some compile-time checks however, do allow
-		private member references, so we allow such exceptions.
-	 */
-	bool					view_all_publicly;
-#endif
 public:
 	/**
 		User-controlled parse-check options.  Copied.
@@ -296,16 +285,6 @@ public:
 		namespace_frame(context&, const token_identifier&);
 		~namespace_frame();
 	} __ATTRIBUTE_UNUSED__;
-
-#if 0
-	/**
-		As an exception, allow private member references
-		in certain cases.  
-	 */
-	typedef	util::member_saver<context, 
-		bool, &context::view_all_publicly>
-						private_member_accessor;
-#endif
 
 private:
 	void
@@ -420,11 +399,6 @@ public:
 
 	never_ptr<definition_base>
 	set_current_prototype(excl_ptr<definition_base>& d);
-
-#if 0
-	void
-	reset_current_prototype(void);
-#endif
 
 /** destructive transfer return */
 	excl_ptr<definition_base>&

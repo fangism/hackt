@@ -993,11 +993,7 @@ if (base_not_chan->get_temp_spec()) {
 	const never_ptr<definition_base> tdf(td_ex);
 	const never_ptr<typedef_base> tdb(tdf.is_a<typedef_base>());
 	NEVER_NULL(tdb);
-#if 0 && PROCESS_DEFINITION_IS_NAMESPACE
-	const context::prototype_frame pf(c, td_ex);
-#else
 	c.set_current_prototype(td_ex);
-#endif
 	if (temp_spec) {
 		const never_ptr<const object> o(temp_spec->check_build(c));
 		// will add template_formals to the alias
@@ -1009,18 +1005,10 @@ if (base_not_chan->get_temp_spec()) {
 	}
 	STACKTRACE_INDENT_PRINT("template arguments OK" << endl);
 	// prepare to transfer ownership
-//	excl_ptr<definition_base> td_ex2(c.get_current_prototype());
-#if 0
-	base_not_chan->check_build(c);	// make sure is complete type
-	count_ptr<const fundamental_type_reference>
-		ftr(c.get_current_fundamental_type());
-#else
 	count_ptr<const fundamental_type_reference>
 		ftr(base_not_chan->check_type(c));
-#endif
 	// kludge: changing prototype context?
 	excl_ptr<definition_base> td_ex2(c.get_current_prototype());
-//	c.set_current_prototype(td_ex2);
 
 	// transfers ownership between context members
 	STACKTRACE_INDENT_PRINT("adding new type reference" << endl);
@@ -1039,9 +1027,6 @@ if (base_not_chan->get_temp_spec()) {
 		THROW_EXIT;
 	}
 	// must reset because not making instances
-#if 0
-	c.reset_current_fundamental_type();
-#endif
 	INVARIANT(ftr.refs() == 1);
 	excl_ptr<const fundamental_type_reference>
 		ftr_ex(ftr.exclusive_release());
