@@ -102,6 +102,8 @@ test_case_LDADD = libhacktprsim.la
 # convenience libraries
 # want to install libhackt.la next... but causes undefined symbols...
 noinst_LTLIBRARIES = libhackt.la \
+	libhacktlex.la \
+	libhacktast.la \
 	libhacktexec.la libhacktinstref.la \
 	libhacktcommon.la $(FUNLIBS)
 
@@ -116,7 +118,6 @@ EXTRA_LTLIBRARIES += \
 # Just topological sort libraries based on LIBADD deps.
 pkglib_LTLIBRARIES = \
 	$(UTILLIBS) \
-	libhacktast.la \
 	libhacktparsers.la \
 	libhacktlib.la \
 	libhacktsim.la \
@@ -235,11 +236,11 @@ libhacktexec_la_LIBADD = libhacktprsim.la libhacktchpsim.la libhacknet.la
 
 HACKTLIB_CC_FILES = \
 	main/main_funcs.cc \
-	main/compile.cc \
-	main/compile_options.cc \
-	main/create_options.cc
+	main/compile.cc
 HACKTLIB_HH_FILES = \
-	$(HACKTLIB_CC_FILES:.cc=.hh)
+	$(HACKTLIB_CC_FILES:.cc=.hh) \
+	main/compile_options.hh \
+	main/create_options.hh
 
 # pass in a C++ file to coerce --tag=CXX linkage
 libhacktlib_la_SOURCES = \
@@ -255,6 +256,7 @@ libhacktparsers_la_LIBADD = libhacktast.la
 
 libhacktast_la_LIBADD = \
 	libhackt.la libhacktinstref.la libhacktcommon.la \
+	libhacktlex.la \
 	$(LIBFANGUTIL)
 
 libhacktguile_la_SOURCES = \
@@ -312,9 +314,9 @@ getopt_test_SOURCES = test/getopt_test.cc
 
 # This says, "always build me first."
 # trying NOT to abuse this, writing explicit dependencies below
-BUILT_SOURCES += parser/hackt-parse.output.h \
-	parser/instref-parse.output.h \
-	parser/type-parse.output.h
+BUILT_SOURCES += parser/hackt-parse.output.hh \
+	parser/instref-parse.output.hh \
+	parser/type-parse.output.hh
 
 cvstag.h: ChangeLog
 	@{ $(ECHO) "#ifndef	CVSTAG" ; \
@@ -417,6 +419,7 @@ SPICE_LEX_ROOT = spice-lex
 libbogus_la_SOURCES = \
 	lexer/hackt-lex.ll \
 	parser/hackt-parse.yy
+# libbogus_la_LIBADD = libhacktparsers.la
 
 libbogus2_la_SOURCES = \
 	lexer/instref-lex.ll \
@@ -445,6 +448,16 @@ libbogus6_la_SOURCES = \
 # automake doesn't like macro in generating .Plo, a bug methinks
 #	lexer/$(HACKT_LEX_ROOT).ll \
 #	parser/$(HACKT_PARSE_ROOT).yy
+
+LEXER_CC_FILES = \
+	AST/parser_globals.cc \
+	lexer/file_manager.cc \
+	lexer/flex_lexer_common.cc \
+	lexer/flex_lexer_state.cc \
+	lexer/hac_lex.cc
+
+LEXER_HH_FILES = \
+	$(LEXER_CC_FILES:.cc=.hh)
 
 AST_CC_FILES = \
 	AST/node_position.cc \
@@ -969,16 +982,16 @@ OBJECT_HH_FILES = $(OBJECT_CC_FILES:.cc=.hh) \
 
 PARSER_H_FILES = \
 	parser/yacc-config.h \
-	parser/$(HACKT_PARSE_ROOT).output.h \
+	parser/$(HACKT_PARSE_ROOT).output.hh \
 	parser/$(HACKT_PARSE_ROOT)-options.h \
 	lexer/$(HACKT_LEX_ROOT)-options.h \
-	parser/$(INSTREF_PARSE_ROOT).output.h \
+	parser/$(INSTREF_PARSE_ROOT).output.hh \
 	parser/$(INSTREF_PARSE_ROOT)-options.h \
 	lexer/$(INSTREF_LEX_ROOT)-options.h \
-	parser/$(TYPE_PARSE_ROOT).output.h \
+	parser/$(TYPE_PARSE_ROOT).output.hh \
 	parser/$(TYPE_PARSE_ROOT)-options.h \
 	lexer/$(TYPE_LEX_ROOT)-options.h \
-	parser/$(SPICE_PARSE_ROOT).output.h \
+	parser/$(SPICE_PARSE_ROOT).output.hh \
 	parser/$(SPICE_PARSE_ROOT)-options.h \
 	lexer/$(SPICE_LEX_ROOT)-options.h \
 	lexer/$(HACFLAT_LEX_ROOT)-options.h
@@ -996,12 +1009,9 @@ PARSER_HH_FILES = \
 	parser/spice-union.hh \
 	parser/spice.hh \
 	lexer/hacflat-yystype.hh \
-	lexer/file_manager.hh \
 	lexer/input_manager.hh \
-	lexer/flex_lexer_state.hh \
 	lexer/flex_buffer_state.hh \
-	lexer/yyin_manager.hh \
-	lexer/hac_lex.hh
+	lexer/yyin_manager.hh
 
 # can't use $(HACKT_PARSE_ROOT) to substitute :(
 PARSER_CC_FILES = \
@@ -1020,11 +1030,7 @@ PARSER_CC_FILES = \
 	parser/spice-union.cc \
 	lexer/type-lex-real.cc \
 	lexer/hacflat-lex-real.cc \
-	lexer/file_manager.cc \
-	lexer/flex_lexer_state.cc \
-	lexer/yyin_manager.cc \
-	lexer/hac_lex.cc \
-	lexer/flex_lexer_common.cc
+	lexer/yyin_manager.cc
 
 
 SIM_CC_FILES = \
@@ -1224,7 +1230,13 @@ libhacktinstref_la_SOURCES = \
 	$(OBJECT_REF_TCC_FILES) \
 	$(OBJECT_REF_HH_FILES)
 
-libhacktast_la_SOURCES = $(AST_CC_FILES) $(AST_TCC_FILES) $(AST_HH_FILES)
+libhacktast_la_SOURCES = $(AST_CC_FILES) $(AST_TCC_FILES) $(AST_HH_FILES) \
+	main/compile_options.cc \
+	main/create_options.cc
+
+# libhacktlex.la is just a convenience library
+libhacktlex_la_SOURCES = $(LEXER_CC_FILES) $(LEXER_HH_FILES)
+libhacktlex_la_CXXFLAGS = $(AM_CXXFLAGS) $(CXXFLAGS) -Wno-old-style-cast
 
 libhacktexec_la_SOURCES = \
 	$(MAIN_EXEC_CC_FILES) \
@@ -1238,6 +1250,8 @@ libhacktexec_la_LIBADD += $(LIBMISCFUN)
 
 libhacktsim_la_SOURCES = $(SIM_CC_FILES) $(SIM_TCC_FILES) $(SIM_HH_FILES) $(SIM_H_FILES)
 libhacktsim_la_LIBADD = libhacktlib.la
+libhacktsim_la_LIBADD += libhacktparsers.la
+# needed libhacktparsers.la for parser::complete_instance_names(...)
 
 libhacktprsim_la_SOURCES = $(PRSIM_CC_FILES) $(PRSIM_TCC_FILES) $(PRSIM_HH_FILES)
 libhacktprsim_la_LIBADD = libhacktsim.la libhacknet.la
@@ -1266,25 +1280,25 @@ lexer/$(LIBHACKTPARSERS_LA)-$(HACKT_LEX_ROOT)-real.lo \
 	parser/$(HACKT_PARSE_ROOT).hh
 parser/$(LIBHACKTPARSERS_LA)-hackt-union.lo \
 	parser/$(LIBHACKTPARSERS_LA)-hackt-union.o: \
-	parser/$(HACKT_PARSE_ROOT).output.h
+	parser/$(HACKT_PARSE_ROOT).output.hh
 lexer/$(LIBHACKTPARSERS_LA)-$(INSTREF_LEX_ROOT)-real.lo \
 	lexer/$(LIBHACKTPARSERS_LA)-$(INSTREF_LEX_ROOT)-real.o: \
 	parser/$(INSTREF_PARSE_ROOT).hh
 parser/$(LIBHACKTPARSERS_LA)-instref-union.lo \
 	parser/$(LIBHACKTPARSERS_LA)-instref-union.o: \
-	parser/$(INSTREF_PARSE_ROOT).output.h
+	parser/$(INSTREF_PARSE_ROOT).output.hh
 lexer/$(LIBHACKTPARSERS_LA)-$(TYPE_LEX_ROOT)-real.lo \
 	lexer/$(LIBHACKTPARSERS_LA)-$(TYPE_LEX_ROOT)-real.o: \
 	parser/$(TYPE_PARSE_ROOT).hh
 parser/$(LIBHACKTPARSERS_LA)-type-union.lo \
 	parser/$(LIBHACKTPARSERS_LA)-type-union.o: \
-	parser/$(TYPE_PARSE_ROOT).output.h
+	parser/$(TYPE_PARSE_ROOT).output.hh
 lexer/$(LIBHACKTPARSERS_LA)-$(SPICE_LEX_ROOT)-real.lo \
 	lexer/$(LIBHACKTPARSERS_LA)-$(SPICE_LEX_ROOT)-real.o: \
 	parser/$(SPICE_PARSE_ROOT).hh
 parser/$(LIBHACKTPARSERS_LA)-spice-union.lo \
 	parser/$(LIBHACKTPARSERS_LA)-spice-union.o: \
-	parser/$(SPICE_PARSE_ROOT).output.h
+	parser/$(SPICE_PARSE_ROOT).output.hh
 
 # even more extra dependencies for bogus libraries
 lexer/$(LIBBOGUS_LA)-$(HACKT_LEX_ROOT).lo \
@@ -1314,10 +1328,10 @@ lexer/instref-lex-options.hchk: parser/instref-prefix.h
 
 # the following targets need to be prefixed with the library name, libbogus, 
 # but automake complains that it overrides the automatic definition...
-# parser/$(HACKT_PARSE_ROOT).lo: parser/$(HACKT_PARSE_ROOT).output.h
-# parser/$(HACKT_PARSE_ROOT).$(OBJEXT): parser/$(HACKT_PARSE_ROOT).output.h
+# parser/$(HACKT_PARSE_ROOT).lo: parser/$(HACKT_PARSE_ROOT).output.hh
+# parser/$(HACKT_PARSE_ROOT).$(OBJEXT): parser/$(HACKT_PARSE_ROOT).output.hh
 # this creates cyclic dependencies (bad)
-# parser/$(HACKT_PARSE_ROOT).cc: parser/$(HACKT_PARSE_ROOT).output.h
+# parser/$(HACKT_PARSE_ROOT).cc: parser/$(HACKT_PARSE_ROOT).output.hh
 
 # compile lexer and parser into separate library to for convenient way
 # of giving them exceptional compiler flags, see libhacktparsers_la_CXXFLAGS
@@ -1492,19 +1506,19 @@ EXTRACT_FLEX_COMMON_PIPE = \
 # important: the LEXYACC_PREFIX_SCRIPT must be applied LAST!
 # the other preceeding scripts shouldn't matter in their order
 parser/$(HACKT_PARSE_ROOT)-real.cc: parser/$(HACKT_PARSE_ROOT).cc \
-		parser/$(HACKT_PARSE_ROOT).output.h
+		parser/$(HACKT_PARSE_ROOT).output.hh
 	$(CAT) $< | $(PARSER_HACK_PIPE) > $@
 
 parser/$(INSTREF_PARSE_ROOT)-real.cc: parser/$(INSTREF_PARSE_ROOT).cc \
-		parser/$(INSTREF_PARSE_ROOT).output.h
+		parser/$(INSTREF_PARSE_ROOT).output.hh
 	$(CAT) $< | $(PARSER_HACK_PIPE) > $@
 
 parser/$(TYPE_PARSE_ROOT)-real.cc: parser/$(TYPE_PARSE_ROOT).cc \
-		parser/$(TYPE_PARSE_ROOT).output.h
+		parser/$(TYPE_PARSE_ROOT).output.hh
 	$(CAT) $< | $(PARSER_HACK_PIPE) > $@
 
 parser/$(SPICE_PARSE_ROOT)-real.cc: parser/$(SPICE_PARSE_ROOT).cc \
-		parser/$(SPICE_PARSE_ROOT).output.h
+		parser/$(SPICE_PARSE_ROOT).output.hh
 	$(CAT) $< | $(PARSER_HACK_PIPE) > $@
 
 if YLWRAP_CC2HH
@@ -1661,25 +1675,25 @@ PARSE_OUTPUT_HEADER_SCRIPT = \
 	$(PARSE_OUTPUT_TO_HEADER_PIPE) < $< > \
 		`$(ECHO) $@ | $(SED_srcdir_strip_fast)`
 
-$(HACKT_PARSE_OUTPUT).h: $(HACKT_PARSE_OUTPUT)
+$(HACKT_PARSE_OUTPUT).hh: $(HACKT_PARSE_OUTPUT)
 	$(PARSE_OUTPUT_HEADER_SCRIPT)
 
 INSTREF_PARSE_OUTPUT = parser/$(INSTREF_PARSE_ROOT).output
 $(INSTREF_PARSE_OUTPUT): parser/$(INSTREF_PARSE_ROOT).hh
 
-$(INSTREF_PARSE_OUTPUT).h: $(INSTREF_PARSE_OUTPUT)
+$(INSTREF_PARSE_OUTPUT).hh: $(INSTREF_PARSE_OUTPUT)
 	$(PARSE_OUTPUT_HEADER_SCRIPT)
 
 TYPE_PARSE_OUTPUT = parser/$(TYPE_PARSE_ROOT).output
 $(TYPE_PARSE_OUTPUT): parser/$(TYPE_PARSE_ROOT).hh
 
-$(TYPE_PARSE_OUTPUT).h: $(TYPE_PARSE_OUTPUT)
+$(TYPE_PARSE_OUTPUT).hh: $(TYPE_PARSE_OUTPUT)
 	$(PARSE_OUTPUT_HEADER_SCRIPT)
 
 SPICE_PARSE_OUTPUT = parser/$(SPICE_PARSE_ROOT).output
 $(SPICE_PARSE_OUTPUT): parser/$(SPICE_PARSE_ROOT).hh
 
-$(SPICE_PARSE_OUTPUT).h: $(SPICE_PARSE_OUTPUT)
+$(SPICE_PARSE_OUTPUT).hh: $(SPICE_PARSE_OUTPUT)
 	$(PARSE_OUTPUT_HEADER_SCRIPT)
 
 # These all depend on parser/$(HACKT_PARSE_ROOT).h, 
@@ -2116,7 +2130,7 @@ CLEANPARSER = \
 	parser/$(HACKT_PARSE_ROOT)-real.cc \
 	parser/$(HACKT_PARSE_ROOT)-real.hh \
 	parser/$(HACKT_PARSE_ROOT).output \
-	parser/$(HACKT_PARSE_ROOT).output.h \
+	parser/$(HACKT_PARSE_ROOT).output.hh \
 	parser/hackt-union.cc \
 	parser/hackt.types \
 	parser/$(INSTREF_PARSE_ROOT).cc \
@@ -2125,7 +2139,7 @@ CLEANPARSER = \
 	parser/$(INSTREF_PARSE_ROOT)-real.cc \
 	parser/$(INSTREF_PARSE_ROOT)-real.hh \
 	parser/$(INSTREF_PARSE_ROOT).output \
-	parser/$(INSTREF_PARSE_ROOT).output.h \
+	parser/$(INSTREF_PARSE_ROOT).output.hh \
 	parser/instref-union.cc \
 	parser/instref.types \
 	parser/$(TYPE_PARSE_ROOT).cc \
@@ -2134,7 +2148,7 @@ CLEANPARSER = \
 	parser/$(TYPE_PARSE_ROOT)-real.cc \
 	parser/$(TYPE_PARSE_ROOT)-real.hh \
 	parser/$(TYPE_PARSE_ROOT).output \
-	parser/$(TYPE_PARSE_ROOT).output.h \
+	parser/$(TYPE_PARSE_ROOT).output.hh \
 	parser/type-union.cc \
 	parser/type.types \
 	parser/$(SPICE_PARSE_ROOT).cc \
@@ -2143,7 +2157,7 @@ CLEANPARSER = \
 	parser/$(SPICE_PARSE_ROOT)-real.cc \
 	parser/$(SPICE_PARSE_ROOT)-real.hh \
 	parser/$(SPICE_PARSE_ROOT).output \
-	parser/$(SPICE_PARSE_ROOT).output.h \
+	parser/$(SPICE_PARSE_ROOT).output.hh \
 	parser/spice-union.cc \
 	parser/spice.types \
 	parser/$(VERILOG_PARSE_ROOT).cc \

@@ -589,7 +589,7 @@ typedef struct t_vpi_value
 #define vpiTimeVal           11
 #define vpiObjTypeVal        12
 #define vpiSuppressVal       13
-#define vpiValueInfoVal      25   // Synopsys internal use
+#define vpiValueInfoVal      25   /* Synopsys internal use */
 
 /************** value format for System Verilog *************/
 #define vpiAggregateVal       14

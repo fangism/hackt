@@ -171,6 +171,7 @@ check_file_writeable(const char* fname) {
 
 //=============================================================================
 #if KEEP_PARSE_FUNCS
+#if 0
 /**
 	Parses a file as an independent module, resulting in a root body.
 	No error handling here.  
@@ -192,6 +193,9 @@ parse_to_AST(FILE* yyin) {
 	}
 	return return_type(lval._root_body);
 }
+#else
+// relocated to AST/parser_globals.cc
+#endif
 
 //=============================================================================
 /**

@@ -25,6 +25,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/global_entry.hh"
 #include "common/TODO.hh"
 #include "util/stacktrace.hh"
+#include "util/getopt_portable.h"		// for optind
 #include "util/getopt_mapped.hh"
 #include "util/persistent_object_manager.hh"
 #include "util/optparse.hh"

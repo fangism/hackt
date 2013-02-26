@@ -19,6 +19,7 @@
 
 #include <iosfwd>
 #include <string>
+#include <unistd.h>			// for ssize_t
 #if PR_VARIABLE_DIMENSIONS
 #include <valarray>
 #else

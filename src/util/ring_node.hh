@@ -15,6 +15,7 @@
 #define	WANT_RING_NODE_COPY_CTOR	0
 
 #include <iterator>
+#include "util/size_t.h"		// for size_t and ptrdiff_t
 #include "util/macros.h"
 #include "util/ring_node_fwd.hh"
 

@@ -29,6 +29,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/type/process_type_reference.hh"
 #include "common/TODO.hh"
 
+#include "util/getopt_portable.h"		// for optind
 #include "util/getopt_mapped.tcc"
 #include "util/stacktrace.hh"
 #include "util/persistent_object_manager.hh"

@@ -14,6 +14,7 @@
 #include "main/main_funcs.hh"
 #include "main/global_options.hh"
 #include "Object/type/process_type_reference.hh"
+#include "util/getopt_portable.h"	// for optind
 #include "util/getopt_mapped.hh"
 #include "util/using_ostream.hh"
 

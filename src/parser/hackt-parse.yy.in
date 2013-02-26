@@ -26,7 +26,7 @@
 #include "parser/yacc-config.h"
 #include "AST/AST.hh"		// should be first
 #include "parser/hackt-prefix.h"
-#include "parser/hackt-parse.output.h"	// auto-generated state strings! :)
+#include "parser/hackt-parse.output.hh"	// auto-generated state strings! :)
 #include "parser/hackt-parse-options.h"
 #include "parser/hackt-union.hh"
 #include "lexer/hackt-lex-options.h"

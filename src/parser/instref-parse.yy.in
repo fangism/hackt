@@ -18,7 +18,7 @@
 #include "util/using_ostream.hh"
 #include "parser/instref-union.hh"
 #include "parser/instref-parse-options.h"
-#include "parser/instref-parse.output.h"
+#include "parser/instref-parse.output.hh"
 #include "lexer/instref-lex-options.h"
 #include "lexer/flex_lexer_state.hh"
 #include "util/stacktrace.hh"

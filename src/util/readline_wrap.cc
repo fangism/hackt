@@ -10,6 +10,7 @@
 
 #include <iostream>
 #include <cstdio>			// for stdin, feof
+#include <cstdlib>			// for malloc
 #include "util/readline_wrap.hh"
 #include "util/readline.h"
 #include "util/string.hh"
@@ -195,8 +196,12 @@ do {
 	cout << _prompt;
 	get_line_type get_line(static_cast<char_type*>(
 		malloc(sizeof(char_type) *READLINE_BUFFER_SIZE)));
-	fgets(&*get_line, READLINE_BUFFER_SIZE, stdin);
+	const char* s = fgets(&*get_line, READLINE_BUFFER_SIZE, stdin);
+	// s should be same as get_line (address), NULL on error
 	hold_line = get_line;	// transfer ownership
+	if (s) {
+		INVARIANT(hold_line == s);
+	}
 #endif
 	// NOTE: BSD editline does not return NULL on EOF
 	// it returns a string with strlen() == 0

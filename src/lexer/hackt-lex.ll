@@ -81,6 +81,16 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "util/macros.h"
 #include "util/using_ostream.hh"
 #include "parser/hackt-prefix.h"
+
+/**
+	If lexyacc_test links against main parser, 
+	we will want to avoid a symbol conflict.
+ */
+#if	defined(LIBBOGUS)
+#define	hackt_parse_file_manager	yy_parse_file_manager
+#define	hackt_embedded_file_stack	yy_embedded_file_stack
+#endif
+
 #include "AST/AST.hh"		/* everything needed for "y.tab.h" */
 #include "lexer/input_manager.hh"
 #include "lexer/file_manager.hh"
@@ -105,18 +115,13 @@ using namespace HAC::parser;
 using flex::lexer_state;
 
 /**
-	If lexyacc_test links against main parser, 
-	we will want to avoid a symbol conflict.
- */
-#if	defined(LIBBOGUS)
-#define	hackt_parse_file_manager	yy_parse_file_manager
-#define	hackt_embedded_file_stack	yy_embedded_file_stack
-#endif
-/**
 	This is the file stack and include path manager for 
 	the hackt parser.  
 	This is globally visible and accessible (unfortunately).  
  */
+#if	!defined(LIBBOGUS)
+extern
+#endif
 HAC::lexer::file_manager
 hackt_parse_file_manager;
 
@@ -125,6 +130,9 @@ hackt_parse_file_manager;
 	lexer pushes a fake file onto this stack, and the parser
 	pops it off the stack when the file construct is reduced.  
  */
+#if	!defined(LIBBOGUS)
+extern
+#endif
 HAC::lexer::embedded_file_stack_type
 hackt_embedded_file_stack;
 
