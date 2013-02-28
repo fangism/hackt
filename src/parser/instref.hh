@@ -185,8 +185,7 @@ parse_local_reference(const meta_reference_union&, const footprint&);
 
 extern
 global_indexed_reference
-parse_global_reference(const meta_reference_union&,
-	const module&);
+parse_global_reference(const meta_reference_union&, const footprint&);
 
 extern
 int

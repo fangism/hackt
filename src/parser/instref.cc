@@ -389,7 +389,7 @@ for ( ; ri!=re; ++ri) {
 		return true;
 	}
 	const global_indexed_reference
-		g(parse_global_reference(cr, m));
+		g(parse_global_reference(cr, m.get_footprint()));
 	ret.push_back(expanded_global_reference(*ri, g));
 }	// end for all expanded references
 	return false;
@@ -513,7 +513,7 @@ parse_global_reference(const string& n, const module& m, ostream* o) {
 		err(META_TYPE_NONE, INVALID_NODE_INDEX);
 	const checked_ref_type r(parse_and_check_reference(n.c_str(), m));
 	if (!must_be_scalar_inst(r, o)) { return err; }
-	return parse_global_reference(r, m);
+	return parse_global_reference(r, m.get_footprint());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -537,9 +537,9 @@ parse_local_reference(const meta_reference_union& r, const footprint& topfp) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 global_indexed_reference
-parse_global_reference(const meta_reference_union& r, const module& m) {
+parse_global_reference(const meta_reference_union& r, const footprint& f) {
 	INVARIANT(r.inst_ref());
-	return parse_local_reference(r, m.get_footprint());
+	return parse_local_reference(r, f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -694,7 +694,7 @@ if (n == ".") {
 	const checked_ref_type r(parse_and_check_reference(n.c_str(), m));
 	if (!must_be_scalar_inst(r, &cerr)) { return 1; }
 	const global_indexed_reference
-		gref(parse_global_reference(r, m));
+		gref(parse_global_reference(r, m.get_footprint()));
 	if (!gref.second) {
 		o << "Error resolving instance reference: "
 			<< n << endl;
