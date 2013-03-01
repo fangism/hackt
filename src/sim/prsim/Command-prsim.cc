@@ -241,7 +241,7 @@ entity::global_indexed_reference
 parse_global_reference(const string& s, const entity::module& m) {
 	STACKTRACE_VERBOSE;
 	return parser::parse_global_reference(
-		CommandRegistry::prepend_working_dir(s), m);
+		CommandRegistry::prepend_working_dir(s), m.get_footprint());
 }
 
 #if 0

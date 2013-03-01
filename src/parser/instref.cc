@@ -487,6 +487,7 @@ must_be_scalar_inst(const checked_ref_type& r, ostream* o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !REUSE_PARSE_GLOBAL_FOR_LOCAL
 /**
 	\returns a (type, index)-pair that references the globally
 	allocated index.  
@@ -504,16 +505,19 @@ parse_local_reference(const string& n, const footprint& f, ostream* o) {
 	if (!must_be_scalar_inst(r, o)) { return err; }
 	return parse_local_reference(r, f);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 global_indexed_reference
-parse_global_reference(const string& n, const module& m, ostream* o) {
+parse_global_reference(const string& n, const footprint& f, ostream* o) {
 	STACKTRACE_VERBOSE;
 	static const global_indexed_reference
 		err(META_TYPE_NONE, INVALID_NODE_INDEX);
-	const checked_ref_type r(parse_and_check_reference(n.c_str(), m));
+	const never_ptr<const process_definition>
+		pdef(f.get_owner_def().is_a<const process_definition>());
+	const checked_ref_type r(parse_and_check_reference(n.c_str(), *pdef));
 	if (!must_be_scalar_inst(r, o)) { return err; }
-	return parse_global_reference(r, m.get_footprint());
+	return parse_global_reference(r, f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -521,13 +525,13 @@ parse_global_reference(const string& n, const module& m, ostream* o) {
 	Default to passing cerr stream.
  */
 global_indexed_reference
-parse_global_reference(const string& n, const module& m) {
+parse_global_reference(const string& n, const footprint& m) {
 	return parse_global_reference(n, m, &cerr);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 global_indexed_reference
-parse_local_reference(const meta_reference_union& r, const footprint& topfp) {
+parse_global_reference(const meta_reference_union& r, const footprint& topfp) {
 	INVARIANT(r.inst_ref());
 	global_process_context gpc(topfp);
 	gpc.construct_top_global_context();
@@ -536,18 +540,21 @@ parse_local_reference(const meta_reference_union& r, const footprint& topfp) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !REUSE_PARSE_GLOBAL_FOR_LOCAL
 global_indexed_reference
-parse_global_reference(const meta_reference_union& r, const footprint& f) {
+parse_local_reference(const meta_reference_union& r, const footprint& f) {
 	INVARIANT(r.inst_ref());
-	return parse_local_reference(r, f);
+	return parse_global_reference(r, f);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 int
 parse_global_references(const string& n, 
-		const module& m, global_reference_array_type& a) {
+		const footprint& m, global_reference_array_type& a) {
 	STACKTRACE_VERBOSE;
-	const checked_ref_type r(parse_and_check_reference(n.c_str(), m));
+	const checked_ref_type r(parse_and_check_reference(n.c_str(),
+		*m.get_owner_def().is_a<const process_definition>()));
 	if (!r.inst_ref()) {
 		return 1;
 	}
@@ -562,10 +569,10 @@ parse_global_references(const string& n,
  */
 int
 parse_global_references(const meta_reference_union& r, 
-		const module& m, global_reference_array_type& a) {
+		const footprint& topfp, global_reference_array_type& a) {
 	STACKTRACE_VERBOSE;
 	INVARIANT(r.inst_ref());
-	const footprint& topfp(m.get_footprint());
+//	const footprint& topfp(m.get_footprint());
 	global_process_context gpc(topfp);
 	gpc.construct_top_global_context();
 	const global_entry_context gc(gpc);
@@ -574,6 +581,7 @@ parse_global_references(const meta_reference_union& r,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !REUSE_PARSE_GLOBAL_FOR_LOCAL
 int
 parse_local_references(const string& n, 
 		const footprint& m, global_reference_array_type& a) {
@@ -603,6 +611,7 @@ parse_local_references(const meta_reference_union& r,
 	const good_bool b(r.inst_ref()->lookup_top_level_references(gc, a));
 	return (b.good && a.size()) ? 0 : 1;
 }
+#endif
 
 //=============================================================================
 /**
@@ -653,7 +662,7 @@ parse_name_to_what(ostream& o, const string& n, const module& m) {
 	}
 	// else is scalar
 	// TODO: re-write to avoid double-parsing
-	const global_indexed_reference gref(parse_global_reference(n, m));
+	const global_indexed_reference gref(parse_global_reference(n, m.get_footprint()));
 	// wasteful to parse again, I know...
 	if (!gref.second) {
 		o << "Error resolving instance reference: " << n << endl;
@@ -815,7 +824,7 @@ if (!r || !r.inst_ref()) {
 	// wasteful double-parsing... TODO: rewrite
 	// much easier with continuous ranges in memory mapping
 	const global_indexed_reference
-		gref(parse_global_reference(n, m));
+		gref(parse_global_reference(n, m.get_footprint()));
 	if (!gref.second) {
 		// there was an error
 		cerr << "ERROR: bad instance reference: ";
@@ -1012,7 +1021,7 @@ parse_name_to_aliases(string_set& aliases, const string& n, const module& m,
 	STACKTRACE_VERBOSE;
 	const footprint& topfp(m.get_footprint());
 	const global_indexed_reference
-		gref(parse_global_reference(n, m));
+		gref(parse_global_reference(n, m.get_footprint()));
 	STACKTRACE_INDENT_PRINT("gref.index = " << gref.second << endl);
 	if (gref.first && gref.second) {
 		topfp.collect_aliases_recursive(gref, df, aliases);
@@ -1119,7 +1128,7 @@ complete_instance_names(const char* _text, const module& m,
 	} else {			// split up string
 		// parse the parent to get context
 		const global_indexed_reference
-			gref(parse_global_reference(parent, m, NULL));
+			gref(parse_global_reference(parent, m.get_footprint(), NULL));
 		// silence bad references diagnostics
 		if (!gref.second) { return; }
 		if (gref.first != entity::META_TYPE_PROCESS) { return; }

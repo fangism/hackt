@@ -20,6 +20,17 @@
 
 #define	INVALID_PROCESS_INDEX			size_t(-1)
 
+/**
+	Define to 1 to use the same functions for global and local
+	lookups of references, given footprint contexts.
+	Goal: 1
+ */
+#define	REUSE_PARSE_GLOBAL_FOR_LOCAL		1
+#if REUSE_PARSE_GLOBAL_FOR_LOCAL
+#define parse_local_reference		parse_global_reference
+#define parse_local_references		parse_global_references
+#endif
+
 namespace util {
 class directory_stack;
 }	// end namespace util
@@ -169,19 +180,23 @@ parse_process_to_index(const string&, const footprint&);
 
 extern
 global_indexed_reference
-parse_global_reference(const string&, const module&, ostream*);
+parse_global_reference(const string&, const footprint&, ostream*);
 
+#if !REUSE_PARSE_GLOBAL_FOR_LOCAL
 extern
 global_indexed_reference
 parse_local_reference(const string&, const footprint&, ostream*);
+#endif
 
 extern
 global_indexed_reference
-parse_global_reference(const string&, const module&);
+parse_global_reference(const string&, const footprint&);
 
+#if !REUSE_PARSE_GLOBAL_FOR_LOCAL
 extern
 global_indexed_reference
 parse_local_reference(const meta_reference_union&, const footprint&);
+#endif
 
 extern
 global_indexed_reference
@@ -189,14 +204,15 @@ parse_global_reference(const meta_reference_union&, const footprint&);
 
 extern
 int
-parse_global_references(const string&, const module&,
+parse_global_references(const string&, const footprint&,
 	global_reference_array_type&);
 
 extern
 int
 parse_global_references(const meta_reference_union&,
-	const module&, global_reference_array_type&);
+	const footprint&, global_reference_array_type&);
 
+#if !REUSE_PARSE_GLOBAL_FOR_LOCAL
 extern
 int
 parse_local_references(const string&, const footprint&,
@@ -206,6 +222,7 @@ extern
 int
 parse_local_references(const meta_reference_union&,
 	const footprint&, global_reference_array_type&);
+#endif
 
 extern
 int

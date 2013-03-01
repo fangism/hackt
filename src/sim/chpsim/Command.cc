@@ -87,7 +87,7 @@ static
 entity::global_indexed_reference
 parse_global_reference(const string& s, const entity::module& m) {
 	return parser::parse_global_reference(
-		CommandRegistry::prepend_working_dir(s), m);
+		CommandRegistry::prepend_working_dir(s), m.get_footprint());
 }
 #else
 using parser::parse_global_reference;
