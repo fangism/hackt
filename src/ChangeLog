@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2013-03-01	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-86-51-frontend-rewrite-02:
+	  parser/instref.{hh,cc}: replaced module as standard unit
+		of interface with footprint.  Callers updated.
+		No regressions.
+
+
 2013-02-22	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-86-51-frontend-rewrite-01:

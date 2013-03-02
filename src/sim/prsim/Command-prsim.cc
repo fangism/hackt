@@ -233,7 +233,7 @@ int
 parse_name_to_what(ostream& o, const string& s, const entity::module& m) {
 	STACKTRACE_VERBOSE;
 	return parser::parse_name_to_what(o, 
-		CommandRegistry::prepend_working_dir(s), m);
+		CommandRegistry::prepend_working_dir(s), m.get_footprint());
 }
 
 static
@@ -262,7 +262,7 @@ parse_name_to_get_subnodes(const string& s, const entity::module& m,
 		vector<size_t>& v) {
 	STACKTRACE_VERBOSE;
 	const string t(nonempty_abs_dir(s));
-	return parser::parse_name_to_get_subnodes(t, m, v);
+	return parser::parse_name_to_get_subnodes(t, m.get_footprint(), v);
 }
 
 static
@@ -272,7 +272,8 @@ parse_name_to_get_subnodes_local(const string& s, const entity::module& m,
 	STACKTRACE_VERBOSE;
 //	const string t(nonempty_abs_dir(s));
 	return parser::parse_name_to_get_subnodes_local(
-		parse_process_to_index(s, m), m, v);
+		parse_process_to_index(s, m),
+		m.get_footprint(), v);
 }
 
 #if 0
@@ -292,7 +293,8 @@ parse_name_to_get_ports(const string& s, const entity::module& m,
 	STACKTRACE_VERBOSE;
 //	const string t(nonempty_abs_dir(s));
 	return parser::parse_name_to_get_ports(
-		parse_process_to_index(s, m), m, v, pred);
+		parse_process_to_index(s, m),
+		m.get_footprint(), v, pred);
 }
 
 #else
@@ -2836,7 +2838,8 @@ if (a.size() != 2) {
 	vector<bool> input_mask;
 	GET_CONTEXT_CACHE(s) get_global_context(p.index).value.frame._footprint
 		->has_not_sub_fanin_map(input_mask);
-	if (parser::parse_name_to_get_ports(p, m, nodes, &input_mask)) {
+	if (parser::parse_name_to_get_ports(p, m.get_footprint(),
+			nodes, &input_mask)) {
 		return Command::BADARG;
 	} else {
 		typedef	nodes_id_list_type::const_iterator	const_iterator;
@@ -2869,7 +2872,8 @@ if (a.size() != 2) {
 	vector<bool> output_mask;
 	GET_CONTEXT_CACHE(s) get_global_context(p.index).value.frame._footprint
 		->has_sub_fanin_map(output_mask);
-	if (parser::parse_name_to_get_ports(p, m, nodes, &output_mask)) {
+	if (parser::parse_name_to_get_ports(p, m.get_footprint(),
+			nodes, &output_mask)) {
 		return Command::BADARG;
 	} else {
 		typedef	nodes_id_list_type::const_iterator	const_iterator;
@@ -8048,7 +8052,7 @@ ChannelReportTime::usage(ostream& o) {
 #define	CHANNEL_FOR_EACH(T, name)					\
 	channel_manager& cm(s.get_channel_manager());			\
 	vector<T*> __tmp;						\
-	if (cm.lookup_expand(name, s.get_module(), __tmp))		\
+	if (cm.lookup_expand(name, s.get_module().get_footprint(), __tmp))\
 		{ return Command::BADARG; }				\
 	vector<T*>::const_iterator					\
 		i(__tmp.begin()), e(__tmp.end());			\

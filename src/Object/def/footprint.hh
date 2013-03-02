@@ -43,6 +43,7 @@ namespace CHP {
 	class concurrent_actions;
 }
 class definition_base;
+class process_definition;
 class instance_collection_base;
 class port_formals_manager;
 class scopespace;
@@ -310,6 +311,9 @@ public:
 
 	never_ptr<const definition_base>
 	get_owner_def(void) const { return owner_def; }
+
+	never_ptr<const process_definition>
+	get_owner_process_def(void) const;
 
 	never_ptr<const scopespace>
 	get_owner_scope(void) const;

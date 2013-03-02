@@ -288,7 +288,7 @@ HAC_GUILE_DEFINE(wrap_collect_reference_subinstances, FUNC_NAME, 1, 0, 0,
 				mod.get_footprint()));
 		if (!gref.second ||
 				parser::parse_name_to_get_subinstances(
-					gref, mod, e)) {
+					gref, mod.get_footprint(), e)) {
 			return SCM_EOL;
 		}
 		global_references_set s;

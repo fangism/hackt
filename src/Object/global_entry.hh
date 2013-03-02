@@ -26,7 +26,6 @@ namespace PRS {
 	class cflat_visitor;
 }
 
-class module;
 struct dump_flags;
 struct global_entry_context_base;
 struct global_entry_dumper;
@@ -567,12 +566,8 @@ struct global_process_context {
 	global_process_context(const footprint_frame& tf) :
 		frame(tf), offset() { }
 
-	// for top-level module
-	explicit
-	global_process_context(const module&);
-
 	// for a specific process instance
-	global_process_context(const module&, const size_t);
+	global_process_context(const footprint&, const size_t);
 
 	void
 	construct_top_global_context(void) {

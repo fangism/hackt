@@ -14,7 +14,6 @@
 #include "Object/global_entry_context.hh"
 #include "Object/global_context_cache.hh"
 #include "Object/def/footprint.hh"
-#include "Object/module.hh"
 #include "Object/traits/bool_traits.hh"
 #include "Object/traits/int_traits.hh"
 #include "Object/traits/enum_traits.hh"
@@ -812,10 +811,6 @@ template struct global_entry<process_tag>;
 //=============================================================================
 // class global_process_context method definitions
 
-global_process_context::global_process_context(const module& m) :
-		frame(m.get_footprint()), offset() {
-}
-
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	This is called from: parser/instref.cc
@@ -823,7 +818,7 @@ global_process_context::global_process_context(const module& m) :
 	parse_name_to_get_subnodes_local()
 	parse_name_to_get_ports()
  */
-global_process_context::global_process_context(const module& m, 
+global_process_context::global_process_context(const footprint& m, 
 		const size_t gpid) : frame(), offset() {
 	STACKTRACE_VERBOSE;
 #if FOOTPRINT_OWNS_CONTEXT_CACHE
@@ -835,7 +830,7 @@ global_process_context::global_process_context(const module& m,
 	offset = c.offset;
 #else
 	// uncached, does work from scratch, is expensive
-	const global_process_context gpc(m.get_footprint());
+	const global_process_context gpc(m);
 	const global_entry_context gc(gpc);
 	gc.construct_global_footprint_frame(*this, gpid);
 #endif

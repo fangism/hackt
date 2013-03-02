@@ -24,7 +24,6 @@
 #include <cstdio>
 #include <string>
 #include "AST/parse_context.hh"
-#include "Object/module.hh"
 #include "Object/global_entry.hh"
 #include "Object/global_channel_entry.hh"
 #include "Object/global_entry_context.hh"
@@ -34,6 +33,7 @@
 #include "Object/unroll/unroll_context.hh"
 #include "Object/traits/instance_traits.hh"
 #include "Object/expr/expr_dump_context.hh"
+#include "Object/def/footprint.hh"
 #include "Object/ref/meta_instance_reference_subtypes.hh"
 #include "Object/ref/simple_meta_instance_reference.hh"
 #include "Object/inst/alias_empty.hh"
@@ -77,7 +77,6 @@ using entity::footprint_frame_map_type;
 using entity::state_manager;
 using entity::unroll_context;
 using entity::expr_dump_context;
-using entity::module;
 using entity::footprint;
 using entity::simple_bool_meta_instance_reference;
 using entity::simple_process_meta_instance_reference;
@@ -363,7 +362,7 @@ parse_and_check_reference(const char* s, const process_definition& m) {
 	\return true on error.
  */
 bool
-expand_global_references(const string& _base, const module& m, 
+expand_global_references(const string& _base, const footprint& m, 
 		expanded_global_references_type& ret) {
 	STACKTRACE_VERBOSE;
 	// we have to expand this the hard way because we need
@@ -383,13 +382,14 @@ expand_global_references(const string& _base, const module& m,
 		ri(st_refs.begin()), re(st_refs.end());
 for ( ; ri!=re; ++ri) {
 	NEVER_NULL(*ri);
-	const meta_reference_union cr(check_reference(**ri, m));
+	const meta_reference_union cr(check_reference(**ri,
+		*m.get_owner_process_def()));
 	if (!cr) {
 		cerr << "Error in instance reference." << endl;
 		return true;
 	}
 	const global_indexed_reference
-		g(parse_global_reference(cr, m.get_footprint()));
+		g(parse_global_reference(cr, m));
 	ret.push_back(expanded_global_reference(*ri, g));
 }	// end for all expanded references
 	return false;
@@ -500,7 +500,7 @@ parse_local_reference(const string& n, const footprint& f, ostream* o) {
 	static const global_indexed_reference
 		err(META_TYPE_NONE, INVALID_NODE_INDEX);
 	const never_ptr<const process_definition>
-		pdef(f.get_owner_def().is_a<const process_definition>());
+		pdef(f.get_owner_process_def());
 	const checked_ref_type r(parse_and_check_reference(n.c_str(), *pdef));
 	if (!must_be_scalar_inst(r, o)) { return err; }
 	return parse_local_reference(r, f);
@@ -514,7 +514,7 @@ parse_global_reference(const string& n, const footprint& f, ostream* o) {
 	static const global_indexed_reference
 		err(META_TYPE_NONE, INVALID_NODE_INDEX);
 	const never_ptr<const process_definition>
-		pdef(f.get_owner_def().is_a<const process_definition>());
+		pdef(f.get_owner_process_def());
 	const checked_ref_type r(parse_and_check_reference(n.c_str(), *pdef));
 	if (!must_be_scalar_inst(r, o)) { return err; }
 	return parse_global_reference(r, f);
@@ -554,7 +554,7 @@ parse_global_references(const string& n,
 		const footprint& m, global_reference_array_type& a) {
 	STACKTRACE_VERBOSE;
 	const checked_ref_type r(parse_and_check_reference(n.c_str(),
-		*m.get_owner_def().is_a<const process_definition>()));
+		*m.get_owner_process_def()));
 	if (!r.inst_ref()) {
 		return 1;
 	}
@@ -587,7 +587,7 @@ parse_local_references(const string& n,
 		const footprint& m, global_reference_array_type& a) {
 	STACKTRACE_VERBOSE;
 	const checked_ref_type r(parse_and_check_reference(n.c_str(),
-		*m.get_owner_def().is_a<const process_definition>()));
+		*m.get_owner_process_def()));
 	if (!r.inst_ref()) {
 		return 1;
 	}
@@ -621,9 +621,9 @@ parse_local_references(const meta_reference_union& r,
  */
 static
 const footprint*
-get_process_footprint(const size_t pid, const module& m) {
+get_process_footprint(const size_t pid, const footprint& topfp) {
 	typedef	process_tag			Tag;
-	const footprint& topfp(m.get_footprint());
+//	const footprint& topfp(m.get_footprint());
 if (pid) {
 	return topfp.get_instance<Tag>(pid -1)._frame._footprint;
 } else {
@@ -643,9 +643,10 @@ if (pid) {
 	\return 0 upon success, 1 upon error.  
  */
 int
-parse_name_to_what(ostream& o, const string& n, const module& m) {
+parse_name_to_what(ostream& o, const string& n, const footprint& m) {
 	STACKTRACE_VERBOSE;
-	const checked_ref_type r(parse_and_check_reference(n.c_str(), m));
+	const checked_ref_type r(parse_and_check_reference(n.c_str(),
+		*m.get_owner_process_def()));
 	const count_ptr<const entity::meta_instance_reference_base>&
 		mr(r.inst_ref());
 	if (!r || !mr) {
@@ -662,7 +663,7 @@ parse_name_to_what(ostream& o, const string& n, const module& m) {
 	}
 	// else is scalar
 	// TODO: re-write to avoid double-parsing
-	const global_indexed_reference gref(parse_global_reference(n, m.get_footprint()));
+	const global_indexed_reference gref(parse_global_reference(n, m));
 	// wasteful to parse again, I know...
 	if (!gref.second) {
 		o << "Error resolving instance reference: " << n << endl;
@@ -691,19 +692,21 @@ parse_name_to_what(ostream& o, const string& n, const module& m) {
 	\return 0 upon success, 1 upon error.  
  */
 int
-parse_name_to_members(ostream& o, const string& n, const module& m) {
+parse_name_to_members(ostream& o, const string& n, const footprint& m) {
 	STACKTRACE_VERBOSE;
 	// scopespace::const_map_iterator i, e;
+	const never_ptr<const process_definition>
+		pdef(m.get_owner_process_def());
+	NEVER_NULL(pdef);
 if (n == ".") {
 	// special designator for top-level
 	o << "top-level instances: " << endl;
-	m.get_global_namespace()->dump_for_definitions(o);
-	// TODO: use module's top_footprint
+	pdef->dump_for_definitions(o);
 } else {
-	const checked_ref_type r(parse_and_check_reference(n.c_str(), m));
+	const checked_ref_type r(parse_and_check_reference(n.c_str(), *pdef));
 	if (!must_be_scalar_inst(r, &cerr)) { return 1; }
 	const global_indexed_reference
-		gref(parse_global_reference(r, m.get_footprint()));
+		gref(parse_global_reference(r, m));
 	if (!gref.second) {
 		o << "Error resolving instance reference: "
 			<< n << endl;
@@ -743,7 +746,7 @@ if (n == ".") {
 	their bool members from their footprint frames?
  */
 int
-parse_name_to_get_subnodes(const string& n, const module& m, 
+parse_name_to_get_subnodes(const string& n, const footprint& m, 
 		vector<size_t>& v) {
 	STACKTRACE_VERBOSE;
 	entry_collection e;
@@ -763,10 +766,10 @@ parse_name_to_get_subnodes(const string& n, const module& m,
 	\return 0 upon success, 1 upon error.  
  */
 int
-parse_name_to_get_subinstances(const string& n, const module& m, 
+parse_name_to_get_subinstances(const string& n, const footprint& topfp, 
 		entry_collection& e) {
 	STACKTRACE_VERBOSE;
-	const footprint& topfp(m.get_footprint());
+//	const footprint& topfp(m.get_footprint());
 if (n == ".") {
 	// no lookup necessary, just copy all integers!
 #define PMAX(Tag)	topfp.get_instance_pool<Tag>().total_entries() +1
@@ -789,7 +792,8 @@ if (n == ".") {
 #undef	PMAX
 	return 0;
 } else {
-	const checked_ref_type r(parse_and_check_reference(n.c_str(), m));
+	const checked_ref_type r(parse_and_check_reference(n.c_str(),
+		*topfp.get_owner_process_def()));
 if (!r || !r.inst_ref()) {
 	return 1;
 } else if (r.inst_ref()->dimensions()) {
@@ -802,7 +806,7 @@ if (!r || !r.inst_ref()) {
 // TODO: refactor this to make re-usable
 	entity::global_reference_array_type tmp;
 //	const footprint& topfp(m.get_footprint());
-	const global_process_context gpc(m.get_footprint());
+	const global_process_context gpc(topfp);
 	const global_entry_context gc(gpc);
 	if (!r.inst_ref()->lookup_top_level_references(gc, tmp).good) {
 		cerr << "Error expanding reference array: ";
@@ -815,7 +819,7 @@ if (!r || !r.inst_ref()) {
 		ti(tmp.begin()), te(tmp.end());
 	for ( ; ti!=te; ++ti) {
 		// should never error out, really
-		if (parse_name_to_get_subinstances(*ti, m, e))
+		if (parse_name_to_get_subinstances(*ti, topfp, e))
 			return 1;
 	}
 	return 0;
@@ -824,7 +828,7 @@ if (!r || !r.inst_ref()) {
 	// wasteful double-parsing... TODO: rewrite
 	// much easier with continuous ranges in memory mapping
 	const global_indexed_reference
-		gref(parse_global_reference(n, m.get_footprint()));
+		gref(parse_global_reference(n, topfp));
 	if (!gref.second) {
 		// there was an error
 		cerr << "ERROR: bad instance reference: ";
@@ -833,7 +837,7 @@ if (!r || !r.inst_ref()) {
 		cerr << endl;
 		return 1;
 	}
-	return parse_name_to_get_subinstances(gref, m, e);
+	return parse_name_to_get_subinstances(gref, topfp, e);
 }
 }
 }
@@ -841,7 +845,7 @@ if (!r || !r.inst_ref()) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 int
 parse_name_to_get_subinstances(const global_indexed_reference& gref,
-		const module& m, entry_collection& e) {
+		const footprint& m, entry_collection& e) {
 	STACKTRACE_VERBOSE;
 //	const footprint& topfp(m.get_footprint());
 	switch (gref.first) {
@@ -935,7 +939,7 @@ int
 parse_name_to_get_subnodes_local(
 		const process_index& p,
 //		const string& n,
-		const module& m, 
+		const footprint& m, 
 		vector<size_t>& v) {
 	STACKTRACE_VERBOSE;
 	const size_t& pid(p.index);
@@ -970,7 +974,7 @@ parse_name_to_get_subnodes_local(
 int
 parse_name_to_get_ports(const process_index& p, 
 //		const string& n,
-		const module& m, 
+		const footprint& m, 
 		vector<size_t>& v, const vector<bool>* pred) {
 	STACKTRACE_VERBOSE;
 	const size_t& pid(p.index);
@@ -1016,12 +1020,13 @@ if (pred) {
 	\return 0 upon success, 1 upon error.  
  */
 int
-parse_name_to_aliases(string_set& aliases, const string& n, const module& m,
+parse_name_to_aliases(string_set& aliases, const string& n,
+		const footprint& topfp,
 		const dump_flags& df) {
 	STACKTRACE_VERBOSE;
-	const footprint& topfp(m.get_footprint());
+//	const footprint& topfp(m.get_footprint());
 	const global_indexed_reference
-		gref(parse_global_reference(n, m.get_footprint()));
+		gref(parse_global_reference(n, topfp));
 	STACKTRACE_INDENT_PRINT("gref.index = " << gref.second << endl);
 	if (gref.first && gref.second) {
 		topfp.collect_aliases_recursive(gref, df, aliases);
@@ -1043,7 +1048,7 @@ parse_name_to_aliases(string_set& aliases, const string& n, const module& m,
 	\return 0 upon success, 1 upon error.  
  */
 int
-parse_name_to_aliases(ostream& o, const string& n, const module& m, 
+parse_name_to_aliases(ostream& o, const string& n, const footprint& m, 
 		const dump_flags& df, 
 		const char* _sep) {
 	STACKTRACE_VERBOSE;
@@ -1089,7 +1094,7 @@ last_separator(const string& orig) {
 	Now returns only names of instances that were instantiated!
  */
 void
-complete_instance_names(const char* _text, const module& m, 
+complete_instance_names(const char* _text, const footprint& topfp, 
 		const directory_stack* d, 
 		vector<string>& matches) {
 	typedef	scopespace::const_map_iterator	const_iterator;
@@ -1124,16 +1129,16 @@ complete_instance_names(const char* _text, const module& m,
 // does canonical string contain a '.'?  If so, cut text into two parts.
 // else need to do partial parsing for context
 	if (!parent.length()) {
-		f = &m.get_footprint();
+		f = &topfp;
 	} else {			// split up string
 		// parse the parent to get context
 		const global_indexed_reference
-			gref(parse_global_reference(parent, m.get_footprint(), NULL));
+			gref(parse_global_reference(parent, topfp, NULL));
 		// silence bad references diagnostics
 		if (!gref.second) { return; }
 		if (gref.first != entity::META_TYPE_PROCESS) { return; }
 		// until non-process types have subinstances...
-		f = get_process_footprint(gref.second, m);
+		f = get_process_footprint(gref.second, topfp);
 	}
 	f->export_instance_names(temp);
 }

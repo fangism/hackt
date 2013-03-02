@@ -442,6 +442,12 @@ footprint::initialize_context_cache(void) const {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+never_ptr<const process_definition>
+footprint::get_owner_process_def(void) const {
+	return owner_def.is_a<const process_definition>();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_ptr<const scopespace>
 footprint::get_owner_scope(void) const {
 	return get_owner_def().is_a<const scopespace>();	// cross-cast

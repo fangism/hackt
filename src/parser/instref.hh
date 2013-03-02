@@ -38,7 +38,6 @@ class directory_stack;
 namespace HAC {
 namespace entity {
 class footprint;
-class module;
 class meta_reference_union;
 class process_definition;
 struct entry_collection;
@@ -52,7 +51,6 @@ using std::vector;
 using std::string;
 using entity::process_definition;
 using entity::footprint;
-using entity::module;
 using entity::bool_tag;
 using entity::channel_tag;
 using entity::process_tag;
@@ -159,7 +157,7 @@ parse_and_check_reference(const char*, const process_definition&);
 
 extern
 bool
-expand_global_references(const string&, const module&, 
+expand_global_references(const string&, const footprint&, 
 	expanded_global_references_type&);
 
 extern
@@ -226,29 +224,29 @@ parse_local_references(const meta_reference_union&,
 
 extern
 int
-parse_name_to_what(ostream&, const string&, const module&);
+parse_name_to_what(ostream&, const string&, const footprint&);
 
 extern
 int
 parse_name_to_members(ostream&,
-	const string&, const module&);
+	const string&, const footprint&);
 
 extern
 int
 parse_name_to_get_subinstances(
-	const string&, const module&, 
+	const string&, const footprint&, 
 	entity::entry_collection&);
 
 extern
 int
 parse_name_to_get_subinstances(
-	const global_indexed_reference&, const module&, 
+	const global_indexed_reference&, const footprint&, 
 	entity::entry_collection&);
 
 extern
 int
 parse_name_to_get_subnodes(
-	const string&, const module&, 
+	const string&, const footprint&, 
 	vector<size_t>&);
 	// node_index_type
 
@@ -257,7 +255,7 @@ int
 parse_name_to_get_subnodes_local(
 	const process_index&,
 //	const string&,
-	const module&, 
+	const footprint&, 
 	vector<size_t>&);
 
 extern
@@ -265,23 +263,23 @@ int
 parse_name_to_get_ports(
 	const process_index&, 
 //	const string&,
-	const module&, 
+	const footprint&, 
 	vector<size_t>&, 
 	const vector<bool>* pred = NULL);
 
 extern
 int
 parse_name_to_aliases(string_set&, const string&, 
-	const module&, const dump_flags&);
+	const footprint&, const dump_flags&);
 
 extern
 int
 parse_name_to_aliases(ostream&, const string&, 
-	const module&, const dump_flags&, const char* sep);
+	const footprint&, const dump_flags&, const char* sep);
 
 extern
 void
-complete_instance_names(const char*, const module&, 
+complete_instance_names(const char*, const footprint&, 
 	const util::directory_stack*, vector<string>&);
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -767,6 +767,7 @@ DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(LS, "ls",
 template <class State>
 int
 LS<State>::main(state_type& s, const string_list& a) {
+	const entity::footprint& f(s.get_module().get_footprint());
 if (a.size() > 2) {
 	usage(cerr << "usage: ");
 	return command_type::SYNTAX;
@@ -775,14 +776,14 @@ if (a.size() > 2) {
 	if (t.empty()) {
 		t = ".";
 	}
-	parser::parse_name_to_members(cout, t, s.get_module());
+	parser::parse_name_to_members(cout, t, f);
 	return command_type::NORMAL;
 } else {
 	string t(command_registry_type::prepend_working_dir(a.back()));
 	if (t.empty()) {
 		t = ".";
 	}
-	if (parser::parse_name_to_members(cout, t, s.get_module()))
+	if (parser::parse_name_to_members(cout, t, f))
 		return command_type::BADARG;
 	else	return command_type::NORMAL;
 }
@@ -811,7 +812,7 @@ if (a.size() != 2) {
 } else {
 	if (parser::parse_name_to_what(cout,
 			command_registry_type::prepend_working_dir(a.back()),
-			s.get_module()))
+			s.get_module().get_footprint()))
 		return command_type::BADARG;
 	else	return command_type::NORMAL;
 }
@@ -838,8 +839,8 @@ if (a.size() != 2) {
 } else {
 	const string r(command_registry_type::prepend_working_dir(a.back()));
 	cout << "aliases of \"" << r << "\":" << endl;
-	if (parser::parse_name_to_aliases(cout, r, s.get_module(), 
-			s._dump_flags, " ")) {
+	if (parser::parse_name_to_aliases(cout, r, 
+			s.get_module().get_footprint(), s._dump_flags, " ")) {
 		return command_type::BADARG;
 	} else {
 		cout << endl;
@@ -870,7 +871,8 @@ if (a.size() != 2) {
 } else {
 	const string r(command_registry_type::prepend_working_dir(a.back()));
 	cout << "aliases of \"" << r << "\":" << endl;
-	if (parser::parse_name_to_aliases(cout, r, s.get_module(), 
+	if (parser::parse_name_to_aliases(cout, r,
+			s.get_module().get_footprint(), 
 			s._dump_flags, "\n")) {
 		return command_type::BADARG;
 	} else {

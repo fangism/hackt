@@ -10,6 +10,7 @@
 #include <string>
 #include <cstring>			// for strdup
 #include "sim/command_base.hh"
+#include "Object/module.hh"
 #include "util/directory.hh"		// for directory_stack
 #include "util/string.hh"
 #include "util/NULL.h"
@@ -154,7 +155,7 @@ instance_completer(const char* _text, const int state) {
 		matches.clear();
 		// automatically prepend working directory for context
 		parser::complete_instance_names(_text,
-			*instance_completion_module, 
+			instance_completion_module->get_footprint(), 
 			instance_completion_dirs, matches);
 		i = matches.begin();
 		e = matches.end();
