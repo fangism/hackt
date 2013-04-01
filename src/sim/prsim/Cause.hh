@@ -37,7 +37,8 @@ struct EventCause {
 	 */
 	bool
 	operator < (const EventCause& e) const {
-		return node < e.node || val < e.val;
+		return (node < e.node) ||
+			((node == e.node) && (val < e.val));
 	}
 
 	ostream&
