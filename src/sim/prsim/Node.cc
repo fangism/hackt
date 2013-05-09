@@ -145,6 +145,11 @@ void
 NodeState::initialize(void) {
 	x_value_and_cause();
 	tcount = 0;
+#if PRSIM_TRACK_LAST_EDGE_TIME
+	last_edge_time[LOGIC_LOW] = -1.0;
+	last_edge_time[LOGIC_HIGH] = -1.0;
+	last_edge_time[LOGIC_OTHER] = -1.0;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -430,10 +435,11 @@ NodeState::load_state(istream& i) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 NodeState::dump_checkpoint_state_header(ostream& o) {
-	return o << "value\tflags\tcause\ttcount";
+	o << "value\tflags\tcause\ttcount";
 #if PRSIM_TRACK_LAST_EDGE_TIME
-// TODO: last switch times?
+	o << "\ttime(0,1,X)";
 #endif
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -453,10 +459,13 @@ if (h) {
 	dump_value(o) << "\t0x" << std::hex << size_t(state_flags) <<
 		'\t';
 	causes.dump_checkpoint_state(o);
-	return o << '\t' << tcount;
-#if PRSIM_TRACK_CAUSE_TIME
-// TODO: last switch times?
+	o << '\t' << tcount;
+#if PRSIM_TRACK_LAST_EDGE_TIME
+	o << "\t(" << last_edge_time[LOGIC_LOW] << ',' 
+		<< last_edge_time[LOGIC_HIGH] << ',' 
+		<< last_edge_time[LOGIC_OTHER] << ')';
 #endif
+	return o;
 }
 
 //=============================================================================
