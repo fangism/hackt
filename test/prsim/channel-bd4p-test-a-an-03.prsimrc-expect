@@ -34,8 +34,8 @@ channel	W (.data) : 0 @ 10
 	20	W.a : 1	[by W.n:=0]
 W : bundled-4p .a(init:0) .n x8 unsigned sink,watch, timing: after=10
 	count: 0, unknowns: 0
-event    : `W.a' : 1
-caused by: `W.n' : 0
+event    : `W.a' : 1 @ 20
+caused by: `W.n' : 0 @ 10
 (no cycle)
 ------------------------------------ 
 resetting data rail 
@@ -43,8 +43,8 @@ resetting data rail
 	30	W.a : 0	[by W.n:=1]
 W : bundled-4p .a(init:0) .n x8 unsigned sink,watch, timing: after=10
 	count: 0, unknowns: 0
-event    : `W.a' : 0
-caused by: `W.n' : 1
+event    : `W.a' : 0 @ 30
+caused by: `W.n' : 1 @ 20
 (no cycle)
 ------------------------------------ 
 setting data rail, new value 
@@ -55,8 +55,8 @@ channel	W (.data) : 6 @ 30
 	40	W.a : 1	[by W.n:=0]
 W : bundled-4p .a(init:0) .n x8 unsigned sink,watch, timing: after=10
 	count: 2, unknowns: 0
-event    : `W.a' : 1
-caused by: `W.n' : 0
+event    : `W.a' : 1 @ 40
+caused by: `W.n' : 0 @ 30
 (no cycle)
 ------------------------------------ 
 resetting data rail 
@@ -64,6 +64,6 @@ resetting data rail
 	50	W.a : 0	[by W.n:=1]
 W : bundled-4p .a(init:0) .n x8 unsigned sink,watch, timing: after=10
 	count: 2, unknowns: 0
-event    : `W.a' : 0
-caused by: `W.n' : 1
+event    : `W.a' : 0 @ 50
+caused by: `W.n' : 1 @ 40
 (no cycle)

@@ -34,8 +34,8 @@ channel	Y (.data) : 0 @ 10
 	20	Y.a : 1	[by Y.v:=1]
 Y : bundled-4p .a(init:0) .v x8 unsigned sink,watch, timing: after=10
 	count: 0, unknowns: 0
-event    : `Y.a' : 1
-caused by: `Y.v' : 1
+event    : `Y.a' : 1 @ 20
+caused by: `Y.v' : 1 @ 10
 (no cycle)
 ------------------------------------ 
 resetting data rail 
@@ -43,8 +43,8 @@ resetting data rail
 	30	Y.a : 0	[by Y.v:=0]
 Y : bundled-4p .a(init:0) .v x8 unsigned sink,watch, timing: after=10
 	count: 0, unknowns: 0
-event    : `Y.a' : 0
-caused by: `Y.v' : 0
+event    : `Y.a' : 0 @ 30
+caused by: `Y.v' : 0 @ 20
 (no cycle)
 ------------------------------------ 
 setting data rail, new value 
@@ -55,8 +55,8 @@ channel	Y (.data) : 6 @ 30
 	40	Y.a : 1	[by Y.v:=1]
 Y : bundled-4p .a(init:0) .v x8 unsigned sink,watch, timing: after=10
 	count: 2, unknowns: 0
-event    : `Y.a' : 1
-caused by: `Y.v' : 1
+event    : `Y.a' : 1 @ 40
+caused by: `Y.v' : 1 @ 30
 (no cycle)
 ------------------------------------ 
 resetting data rail 
@@ -64,6 +64,6 @@ resetting data rail
 	50	Y.a : 0	[by Y.v:=0]
 Y : bundled-4p .a(init:0) .v x8 unsigned sink,watch, timing: after=10
 	count: 2, unknowns: 0
-event    : `Y.a' : 0
-caused by: `Y.v' : 0
+event    : `Y.a' : 0 @ 50
+caused by: `Y.v' : 0 @ 40
 (no cycle)

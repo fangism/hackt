@@ -1,5 +1,5 @@
 frame-cache: (1 * 140 B/entry) = 140 B
-node-state: (260503 * 128 B/node) = 33344384 B
+node-state: (260503 * 160 B/node) = 41680480 B
 node::fanout: (207200 * 4 B/FO) = 828800 B
 unique-process: (11 * 96 B/type) = 1056 B
 	exprs+graph_nodes: (11 *(16+16) B/expr) = 352 B

@@ -39,8 +39,8 @@ channel	C (.data) : 0 @ 10
 	20	C.a : 0	[by C.r:=1]
 C : bundled-2p .e:1 .v:0 x8 unsigned sink,watch, timing: after=10
 	count: 0, unknowns: 0
-event    : `C.a' : 0
-caused by: `C.r' : 1
+event    : `C.a' : 0 @ 20
+caused by: `C.r' : 1 @ 10
 (no cycle)
 ------------------------------------ 
 second token 
@@ -49,8 +49,8 @@ channel	C (.data) : 0 @ 20
 	30	C.a : 1	[by C.r:=0]
 C : bundled-2p .e:1 .v:0 x8 unsigned sink,watch, timing: after=10
 	count: 0, unknowns: 0
-event    : `C.a' : 1
-caused by: `C.r' : 0
+event    : `C.a' : 1 @ 30
+caused by: `C.r' : 0 @ 20
 (no cycle)
 ------------------------------------ 
 third token, new value 
@@ -61,8 +61,8 @@ channel	C (.data) : 12 @ 30
 	40	C.a : 0	[by C.r:=1]
 C : bundled-2p .e:1 .v:0 x8 unsigned sink,watch, timing: after=10
 	count: 2, unknowns: 0
-event    : `C.a' : 0
-caused by: `C.r' : 1
+event    : `C.a' : 0 @ 40
+caused by: `C.r' : 1 @ 30
 (no cycle)
 ------------------------------------ 
 fourth token, same value 
@@ -71,6 +71,6 @@ channel	C (.data) : 12 @ 40
 	50	C.a : 1	[by C.r:=0]
 C : bundled-2p .e:1 .v:0 x8 unsigned sink,watch, timing: after=10
 	count: 2, unknowns: 0
-event    : `C.a' : 1
-caused by: `C.r' : 0
+event    : `C.a' : 1 @ 50
+caused by: `C.r' : 0 @ 40
 (no cycle)

@@ -1709,7 +1709,11 @@ private:
 
 #if PRSIM_SIMPLE_EVENT_QUEUE
 	break_type
-	flush_updated_nodes(cause_arg_type);
+	flush_updated_nodes(cause_arg_type
+#if PRSIM_TRACK_LAST_EDGE_TIME && !PRSIM_TRACK_CAUSE_TIME
+		, const time_type&
+#endif
+		);
 #else
 	void
 	enqueue_pending(const event_index_type);

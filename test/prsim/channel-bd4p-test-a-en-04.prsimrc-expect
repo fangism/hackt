@@ -53,10 +53,10 @@ channel	Z (.data) : 0 @ 20
 	20	Z.n : 0	[by Z.e:=1]
 Z : bundled-4p .e(init:1) .n x8 unsigned source,watch, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @1
 	count: 0, unknowns: 0
-event    : `Z.d[0]' : 0
+event    : `Z.d[0]' : 0 @ 10
 (no cycle)
-event    : `Z.n' : 0
-caused by: `Z.e' : 1
+event    : `Z.n' : 0 @ 20
+caused by: `Z.e' : 1 @ 10
 (no cycle)
 - - - - - - - - - - - - - - - - - - 
 	20	Z.e : 0

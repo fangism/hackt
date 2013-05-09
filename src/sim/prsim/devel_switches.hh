@@ -56,6 +56,17 @@
 #define	PRSIM_TRACK_CAUSE_TIME				0
 
 /**
+	Keep track of time of last edge change for every node (per value).
+	Goal: ?
+	Might not be that useful.  Leave off for now.
+	Can't be used for doing timed backtrace because a causing node
+	may have already switched at query time.
+	Time would need to be embedded in causality chain.  
+ */
+#define PRSIM_TRACK_LAST_EDGE_TIME			1
+
+
+/**
 	Define to 1 to enable tracing, recording event history.  
 	Application: post-mortem analysis, performance analysis, 
 	bug root-causing, possible rewinding (time machine!).

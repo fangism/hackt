@@ -51,14 +51,14 @@ o:1
           z[2]:0
             z[1]:1
               i:0, input
-event    : `o' : 1
-caused by: `z[6]' : 0
-caused by: `z[5]' : 1
-caused by: `z[4]' : 0
-caused by: `z[3]' : 1
-caused by: `z[2]' : 0
-caused by: `z[1]' : 1
-caused by: `i' : 0
+event    : `o' : 1 @ 70
+caused by: `z[6]' : 0 @ 60
+caused by: `z[5]' : 1 @ 50
+caused by: `z[4]' : 0 @ 40
+caused by: `z[3]' : 1 @ 30
+caused by: `z[2]' : 0 @ 20
+caused by: `z[1]' : 1 @ 10
+caused by: `i' : 0 @ 0
 (no cycle)
 o:0
   z[6]:1
@@ -76,12 +76,12 @@ o:0
           z[2]:1
             z[1]:0
               i:1, input
-event    : `o' : 0
-caused by: `z[6]' : 1
-caused by: `z[5]' : 0
-caused by: `z[4]' : 1
-caused by: `z[3]' : 0
-caused by: `z[2]' : 1
-caused by: `z[1]' : 0
-caused by: `i' : 1
+event    : `o' : 0 @ 140
+caused by: `z[6]' : 1 @ 130
+caused by: `z[5]' : 0 @ 120
+caused by: `z[4]' : 1 @ 110
+caused by: `z[3]' : 0 @ 100
+caused by: `z[2]' : 1 @ 90
+caused by: `z[1]' : 0 @ 80
+caused by: `i' : 1 @ 70
 (no cycle)

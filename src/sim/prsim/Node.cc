@@ -381,6 +381,11 @@ NodeState::save_state(ostream& o) const {
 	write_value(o, state_flags);
 //	omit event index, which is reconstructed
 	causes.save_state(o);
+#if PRSIM_TRACK_LAST_EDGE_TIME
+	write_value(o, last_edge_time[0]);
+	write_value(o, last_edge_time[1]);
+	write_value(o, last_edge_time[2]);
+#endif
 	write_value(o, tcount);
 #if NODE_ALIGN_MARKERS
 	static const char dd = 0xDD;
@@ -411,6 +416,11 @@ NodeState::load_state(istream& i) {
 //	omit event index, which is reconstructed
 	INVARIANT(event_index == INVALID_EVENT_INDEX);
 	causes.load_state(i);
+#if PRSIM_TRACK_LAST_EDGE_TIME
+	read_value(i, last_edge_time[0]);
+	read_value(i, last_edge_time[1]);
+	read_value(i, last_edge_time[2]);
+#endif
 	read_value(i, tcount);
 #if NODE_ALIGN_MARKERS
 	read_value(i, dd);
@@ -421,6 +431,9 @@ NodeState::load_state(istream& i) {
 ostream&
 NodeState::dump_checkpoint_state_header(ostream& o) {
 	return o << "value\tflags\tcause\ttcount";
+#if PRSIM_TRACK_LAST_EDGE_TIME
+// TODO: last switch times?
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -441,6 +454,9 @@ if (h) {
 		'\t';
 	causes.dump_checkpoint_state(o);
 	return o << '\t' << tcount;
+#if PRSIM_TRACK_CAUSE_TIME
+// TODO: last switch times?
+#endif
 }
 
 //=============================================================================

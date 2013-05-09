@@ -4,43 +4,43 @@ event    : `_Reset' : X
 (no cycle)
 X nodes:
 
-event    : `R.x[0]' : 1
-caused by: `_Reset' : 0
+event    : `R.x[0]' : 1 @ 10
+caused by: `_Reset' : 0 @ 0
 (no cycle)
-event    : `R.x[12]' : 1
-caused by: `R.x[11]' : 0
-caused by: `R.x[10]' : 1
-caused by: `R.x[9]' : 0
-caused by: `R.x[8]' : 1
-caused by: `R.x[7]' : 0
-caused by: `R.x[6]' : 1
-caused by: `R.x[5]' : 0
-caused by: `R.x[4]' : 1
-caused by: `R.x[3]' : 0
-caused by: `R.x[2]' : 1
-caused by: `R.x[1]' : 0
-caused by: `R.x[0]' : 1
-caused by: `_Reset' : 0
+event    : `R.x[12]' : 1 @ 130
+caused by: `R.x[11]' : 0 @ 120
+caused by: `R.x[10]' : 1 @ 110
+caused by: `R.x[9]' : 0 @ 100
+caused by: `R.x[8]' : 1 @ 90
+caused by: `R.x[7]' : 0 @ 80
+caused by: `R.x[6]' : 1 @ 70
+caused by: `R.x[5]' : 0 @ 60
+caused by: `R.x[4]' : 1 @ 50
+caused by: `R.x[3]' : 0 @ 40
+caused by: `R.x[2]' : 1 @ 30
+caused by: `R.x[1]' : 0 @ 20
+caused by: `R.x[0]' : 1 @ 10
+caused by: `_Reset' : 0 @ 0
 (no cycle)
 expect no cycles so far 
-event    : `R.x[0]' : 1
-caused by: `R.x[12]' : 0
-caused by: `R.x[11]' : 1
-caused by: `R.x[10]' : 0
-caused by: `R.x[9]' : 1
-caused by: `R.x[8]' : 0
-caused by: `R.x[7]' : 1
-caused by: `R.x[6]' : 0
-caused by: `R.x[5]' : 1
-caused by: `R.x[4]' : 0
-caused by: `R.x[3]' : 1
-caused by: `R.x[2]' : 0
-caused by: `R.x[1]' : 1
-caused by: `R.x[0]' : 0
-caused by: `R.x[12]' : 1
-caused by: `R.x[11]' : 0
-caused by: `R.x[10]' : 1
-caused by: `R.x[9]' : 0
+event    : `R.x[0]' : 1 @ 1050
+caused by: `R.x[12]' : 0 @ 1040
+caused by: `R.x[11]' : 1 @ 1030
+caused by: `R.x[10]' : 0 @ 1020
+caused by: `R.x[9]' : 1 @ 1010
+caused by: `R.x[8]' : 0 @ 1000
+caused by: `R.x[7]' : 1 @ 990
+caused by: `R.x[6]' : 0 @ 980
+caused by: `R.x[5]' : 1 @ 970
+caused by: `R.x[4]' : 0 @ 960
+caused by: `R.x[3]' : 1 @ 950
+caused by: `R.x[2]' : 0 @ 940
+caused by: `R.x[1]' : 1 @ 930
+caused by: `R.x[0]' : 0 @ 920
+caused by: `R.x[12]' : 1 @ 910
+caused by: `R.x[11]' : 0 @ 900
+caused by: `R.x[10]' : 1 @ 890
+caused by: `R.x[9]' : 0 @ 880
 caused by: `R.x[8]' : 1
 caused by: `R.x[7]' : 0
 caused by: `R.x[6]' : 1

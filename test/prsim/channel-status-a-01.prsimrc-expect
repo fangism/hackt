@@ -22,8 +22,8 @@ channel	X (.data) : 0 @ 20
 channel X: data is valid (0), waiting for receiver to ack
 	30	X.e : 0	[by X.d[0]:=1]
 channel X: data is valid (0), waiting for sender to remove data
-event    : `X.e' : 0
-caused by: `X.d[0]' : 1
+event    : `X.e' : 0 @ 30
+caused by: `X.d[0]' : 1 @ 20
 (no cycle)
 ------------------------------------ 
 resetting data rail 
@@ -31,8 +31,8 @@ resetting data rail
 channel X: data is neutral, waiting for receiver to neg-ack
 	40	X.e : 1	[by X.d[0]:=0]
 channel X: data is neutral, waiting for sender to produce data
-event    : `X.e' : 1
-caused by: `X.d[0]' : 0
+event    : `X.e' : 1 @ 40
+caused by: `X.d[0]' : 0 @ 30
 (no cycle)
 ------------------------------------ 
 setting data rail 
@@ -41,8 +41,8 @@ channel	X (.data) : 1 @ 40
 channel X: data is valid (1), waiting for receiver to ack
 	50	X.e : 0	[by X.d[1]:=1]
 channel X: data is valid (1), waiting for sender to remove data
-event    : `X.e' : 0
-caused by: `X.d[1]' : 1
+event    : `X.e' : 0 @ 50
+caused by: `X.d[1]' : 1 @ 40
 (no cycle)
 ------------------------------------ 
 resetting data rail 
@@ -50,6 +50,6 @@ resetting data rail
 channel X: data is neutral, waiting for receiver to neg-ack
 	60	X.e : 1	[by X.d[1]:=0]
 channel X: data is neutral, waiting for sender to produce data
-event    : `X.e' : 1
-caused by: `X.d[1]' : 0
+event    : `X.e' : 1 @ 60
+caused by: `X.d[1]' : 0 @ 50
 (no cycle)

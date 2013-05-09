@@ -108,8 +108,16 @@ public:
 			critical_trace_event(INVALID_TRACE_INDEX) { }
 
 		cause_type(const node_index_type n, const value_enum v, 
+#if PRSIM_TRACK_CAUSE_TIME
+			const rule_time_type& tm,
+#endif
 			const trace_index_type t = INVALID_TRACE_INDEX) :
-			EventCause(n, v), critical_trace_event(t) { }
+#if PRSIM_TRACK_CAUSE_TIME
+			EventCause(n, v, tm),
+#else
+			EventCause(n, v),
+#endif
+			critical_trace_event(t) { }
 
 	};	// end struct cause_type
 #else

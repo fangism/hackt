@@ -33,8 +33,8 @@ channel X has value 0, as expected.
 channel X is waiting for the sender, as expected.
 X : .e(init:0)  1x1of2 sink,watch, timing: global
 	count: 1, unknowns: 0
-event    : `X.e' : 0
-caused by: `X.d[0]' : 1
+event    : `X.e' : 0 @ 30
+caused by: `X.d[0]' : 1 @ 20
 (no cycle)
 ------------------------------------ 
 resetting data rail 
@@ -47,8 +47,8 @@ channel X is neutral, as expected.
 channel X is waiting for the sender, as expected.
 X : .e(init:0)  1x1of2 sink,watch, timing: global
 	count: 0, unknowns: 0
-event    : `X.e' : 1
-caused by: `X.d[0]' : 0
+event    : `X.e' : 1 @ 40
+caused by: `X.d[0]' : 0 @ 30
 (no cycle)
 ------------------------------------ 
 setting data rail 
@@ -64,8 +64,8 @@ channel X has value 1, as expected.
 channel X is waiting for the sender, as expected.
 X : .e(init:0)  1x1of2 sink,watch, timing: global
 	count: 1, unknowns: 0
-event    : `X.e' : 0
-caused by: `X.d[1]' : 1
+event    : `X.e' : 0 @ 50
+caused by: `X.d[1]' : 1 @ 40
 (no cycle)
 ------------------------------------ 
 resetting data rail 

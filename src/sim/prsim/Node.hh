@@ -402,6 +402,9 @@ protected:
 		at a loss of some cause-tracking capabilities.  
 	 */
 	LastCause				causes;
+#if PRSIM_TRACK_LAST_EDGE_TIME
+	event_time_type				last_edge_time[3];
+#endif
 
 public:
 	/**
@@ -425,7 +428,13 @@ public:
 		state_flags(NODE_INITIAL_STATE_FLAGS),
 		event_index(INVALID_EVENT_INDEX), 
 		causes(), 
-		tcount(0) { }
+		tcount(0) {
+#if PRSIM_TRACK_LAST_EDGE_TIME
+		last_edge_time[0] =
+		last_edge_time[1] =
+		last_edge_time[2] = -1.0;
+#endif
+	}
 
 	/// count on compiler to optimize zero comparison
 	bool
@@ -570,10 +579,24 @@ public:
 	}
 
 	void
-	set_value_and_cause(const value_enum c, const event_cause_type& e) {
+	set_value_and_cause(const value_enum c, const event_cause_type& e
+#if PRSIM_TRACK_LAST_EDGE_TIME
+		, const event_time_type& t
+#endif
+		) {
 		value = c;
 		causes.set_cause(c, e);
+#if PRSIM_TRACK_LAST_EDGE_TIME
+		last_edge_time[size_t(c)] = t;
+#endif
 	}
+
+#if PRSIM_TRACK_LAST_EDGE_TIME
+	const event_time_type&
+	get_last_edge_time(const value_enum c) const {
+		return last_edge_time[size_t(c)];
+	}
+#endif
 
 	void
 	x_value_and_cause(void);

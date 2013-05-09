@@ -49,6 +49,11 @@ LastCause::save_state(ostream& o) const {
 	write_value(o, caused_by_value[1]);
 	write_value(o, caused_by_value[2]);
 	write_value(o, caused_by_value[3]);	// unused
+#if 0 && PRSIM_TRACK_CAUSE_TIME
+	write_value(o, cause_time[0]);
+	write_value(o, cause_time[1]);
+	write_value(o, cause_time[2]);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -61,6 +66,11 @@ LastCause::load_state(istream& i) {
 	read_value(i, caused_by_value[1]);
 	read_value(i, caused_by_value[2]);
 	read_value(i, caused_by_value[3]);	// unused
+#if 0 && PRSIM_TRACK_CAUSE_TIME
+	read_value(i, cause_time[0]);
+	read_value(i, cause_time[1]);
+	read_value(i, cause_time[2]);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

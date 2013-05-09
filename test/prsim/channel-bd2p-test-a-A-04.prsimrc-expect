@@ -53,9 +53,9 @@ channel	A (.data) : 0 @ 20
 	20	A.r : 1
 A : bundled-2p .e:0 .v:0 x8 unsigned source,watch, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @1
 	count: 0, unknowns: 0
-event    : `A.d[0]' : 0
+event    : `A.d[0]' : 0 @ 10
 (no cycle)
-event    : `A.r' : 1
+event    : `A.r' : 1 @ 20
 (no cycle)
 channel A: channel is full (0), waiting for receiver ack
 ----------------------------------- 

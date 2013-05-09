@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2013-05-08	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-86-52b-prsim-timing-backannot-01:
+	  Nodes now keep track of times of last edge ->0,1,X.
+	  Backtrace dumps now include times while the trace is
+		monotonically decreasing.
+
+
 2013-04-01	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-86-52b:

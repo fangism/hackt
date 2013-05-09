@@ -629,8 +629,8 @@ State::__initialize_state(const bool startup, const bool reset_count) {
 	cycle();
 	// make sure time has not advanced!
 #else
-	node_pool[gi].set_value_and_cause(LOGIC_LOW, null);
-	node_pool[vi].set_value_and_cause(LOGIC_HIGH, null);
+	node_pool[gi].set_value_and_cause(LOGIC_LOW, null, current_time);
+	node_pool[vi].set_value_and_cause(LOGIC_HIGH, null, current_time);
 #endif
 #endif
 	// keep connected channels up-to-date with X values of nodes
@@ -844,7 +844,11 @@ bool
 State::reset_channel(channel& chan) {
 	vector<env_event_type> temp;
 	chan.reset(temp);
+#if PRSIM_TRACK_CAUSE_TIME
+	const event_cause_type c(INVALID_NODE_INDEX, LOGIC_OTHER, current_time);
+#else
 	const event_cause_type c(INVALID_NODE_INDEX, LOGIC_OTHER);
+#endif
 	flush_channel_events(temp, c);
 	return false;
 }
@@ -853,7 +857,11 @@ bool
 State::reset_channel(const string& cn) {
 	vector<env_event_type> temp;
 	if (_channel_manager.reset_channel(cn, temp))	return true;
+#if PRSIM_TRACK_CAUSE_TIME
+	const event_cause_type c(INVALID_NODE_INDEX, LOGIC_OTHER, current_time);
+#else
 	const event_cause_type c(INVALID_NODE_INDEX, LOGIC_OTHER);
+#endif
 	flush_channel_events(temp, c);
 	return false;
 }
@@ -869,7 +877,11 @@ void
 State::reset_all_channels(void) {
 	vector<env_event_type> temp;
 	_channel_manager.reset_all_channels(temp);
+#if PRSIM_TRACK_CAUSE_TIME
+	const event_cause_type c(INVALID_NODE_INDEX, LOGIC_OTHER, current_time);
+#else
 	const event_cause_type c(INVALID_NODE_INDEX, LOGIC_OTHER);
+#endif
 	flush_channel_events(temp, c);
 }
 
@@ -883,7 +895,11 @@ bool
 State::resume_channel(channel& chan) {
 	vector<env_event_type> temp;
 	chan.resume(*this, temp);
+#if PRSIM_TRACK_CAUSE_TIME
+	const event_cause_type c(INVALID_NODE_INDEX, LOGIC_OTHER, current_time);
+#else
 	const event_cause_type c(INVALID_NODE_INDEX, LOGIC_OTHER);
+#endif
 	flush_channel_events(temp, c);
 	return false;
 }
@@ -892,7 +908,11 @@ bool
 State::resume_channel(const string& cn) {
 	vector<env_event_type> temp;
 	if (_channel_manager.resume_channel(*this, cn, temp))	return true;
+#if PRSIM_TRACK_CAUSE_TIME
+	const event_cause_type c(INVALID_NODE_INDEX, LOGIC_OTHER, current_time);
+#else
 	const event_cause_type c(INVALID_NODE_INDEX, LOGIC_OTHER);
+#endif
 	flush_channel_events(temp, c);
 	return false;
 }
@@ -907,7 +927,11 @@ void
 State::resume_all_channels(void) {
 	vector<env_event_type> temp;
 	_channel_manager.resume_all_channels(*this, temp);
+#if PRSIM_TRACK_CAUSE_TIME
+	const event_cause_type c(INVALID_NODE_INDEX, LOGIC_OTHER, current_time);
+#else
 	const event_cause_type c(INVALID_NODE_INDEX, LOGIC_OTHER);
+#endif
 	flush_channel_events(temp, c);
 }
 
@@ -1047,10 +1071,26 @@ State::backtrace_node(ostream& o, const node_index_type ni,
 	typedef	set<node_cause_type>		event_set_type;
 	// start from the current value of the referenced node
 	const node_type* n(&get_node(ni));
+#if PRSIM_TRACK_CAUSE_TIME
+	node_cause_type e(ni, v, current_time);	// or last_edge_time
+	time_type min = e.time;
+#elif PRSIM_TRACK_LAST_EDGE_TIME
+	// last_edge_time may not be the time of the cause
+	bool decr = true;
+	time_type tt = n->get_last_edge_time(v);
 	node_cause_type e(ni, v);
+#else
+	node_cause_type e(ni, v);
+#endif
 	// TODO: could look at critical event index if tracing...
 	dump_node_canonical_name(o << "event    : `", ni) <<
-		"\' : " << node_type::value_to_char[size_t(v)] << endl;
+		"\' : " << node_type::value_to_char[size_t(v)];
+#if PRSIM_TRACK_LAST_EDGE_TIME
+	if (tt >= 0.0) {
+		o << " @ " << tt;
+	}
+#endif
+	o << endl;
 	event_set_type l;
 	bool cyc = l.insert(e).second;	// return true if actually inserted
 	ISE_INVARIANT(cyc);	// not already in collection
@@ -1061,9 +1101,33 @@ State::backtrace_node(ostream& o, const node_index_type ni,
 		n = &get_node(e.node);
 		e = n->get_cause(e.val);
 		if (e.node) {
+#if PRSIM_TRACK_LAST_EDGE_TIME
+			const node_type& cn(get_node(e.node));
+			const time_type ntt = cn.get_last_edge_time(e.val);
+			const bool vt = (ntt >= 0.0);	// valid time
+			// test for monotinic decrease in time, going backwards
+			if (vt) {
+				if (ntt > tt) { decr = false; }
+				tt = ntt;
+			} else {
+				decr = false;
+			}
+#endif
 			dump_node_canonical_name(o << "caused by: `", e.node)
 				<< "\' : " <<
-				node_type::value_to_char[size_t(e.val)] << endl;
+				node_type::value_to_char[size_t(e.val)];
+#if PRSIM_TRACK_CAUSE_TIME
+			if (e.time <= min) {
+			// only show event times as they monotonically decrease
+				o << " @ " << e.time;
+				min = e.time;
+			}
+#elif PRSIM_TRACK_LAST_EDGE_TIME
+			if (decr && vt) {
+				o << " @ " << ntt;
+			}
+#endif
+			o << endl;
 			cyc = l.insert(e).second;
 		} else {
 			cyc = false;		// break
@@ -2494,7 +2558,11 @@ for ( ; i!=e; ++i) {
 	dequeuing events.  
  */
 State::break_type
-State::flush_updated_nodes(cause_arg_type c) {
+State::flush_updated_nodes(cause_arg_type c
+#if PRSIM_TRACK_LAST_EDGE_TIME && !PRSIM_TRACK_CAUSE_TIME
+		, const time_type& et
+#endif
+		) {
 	STACKTRACE_VERBOSE_STEP;
 #if PRSIM_MK_EXCL_BLOCKING_SET
 	if (c.val != LOGIC_OTHER) {
@@ -2658,7 +2726,11 @@ for ( ; i!=e; ++i) {
 			DEBUG_STEP_PRINT("already X (cancel)" << endl);
 			kill_event(prevevent, ni);
 			// update cause, even though X is vacuous
+#if PRSIM_TRACK_LAST_EDGE_TIME && !PRSIM_TRACK_CAUSE_TIME
+			n.set_value_and_cause(LOGIC_OTHER, c, et);
+#else
 			n.set_value_and_cause(LOGIC_OTHER, c);
+#endif
 		} else {
 			DEBUG_STEP_PRINT("overwrite to X." << endl);
 			pe.val = LOGIC_OTHER;
@@ -2767,7 +2839,11 @@ for ( ; i!=e; ++i) {
 				DEBUG_STEP_PRINT("already X (cancel)" << endl);
 				kill_event(prevevent, ni);
 				// update cause, even though X is vacuous
+#if PRSIM_TRACK_LAST_EDGE_TIME && !PRSIM_TRACK_CAUSE_TIME
+				n.set_value_and_cause(LOGIC_OTHER, c, et);
+#else
 				n.set_value_and_cause(LOGIC_OTHER, c);
+#endif
 			} else {
 				DEBUG_STEP_PRINT("overwrite to X." << endl);
 				pe.val = LOGIC_OTHER;
@@ -3680,15 +3756,30 @@ State::generic_exception::inspect(const State& s, ostream& o) const {
 struct State::auto_flush_queues {
 	State&				state;
 	const event_cause_type&		cause;
+#if PRSIM_TRACK_LAST_EDGE_TIME && !PRSIM_TRACK_CAUSE_TIME
+	const event_time_type		time;
+#endif
 
 	explicit
-	auto_flush_queues(State& s, const event_cause_type& c) :
-		state(s), cause(c) { }
+	auto_flush_queues(State& s, const event_cause_type& c
+#if PRSIM_TRACK_LAST_EDGE_TIME && !PRSIM_TRACK_CAUSE_TIME
+		, const event_time_type& t
+#endif
+		) :
+		state(s), cause(c)
+#if PRSIM_TRACK_LAST_EDGE_TIME && !PRSIM_TRACK_CAUSE_TIME
+		, time(t)
+#endif
+		{ }
 
 	~auto_flush_queues() {
 		// check and flush pending queue, spawn fanout events
 #if PRSIM_SIMPLE_EVENT_QUEUE
+#if PRSIM_TRACK_LAST_EDGE_TIME && !PRSIM_TRACK_CAUSE_TIME
+		const break_type E(state.flush_updated_nodes(cause, time));
+#else
 		const break_type E(state.flush_updated_nodes(cause));
+#endif
 #else
 		const break_type E(state.flush_pending_queue());
 #endif
@@ -3943,7 +4034,11 @@ State::execute_immediately(
 		}
 	}
 	// only set the cause of the node when we change its value
+#if PRSIM_TRACK_LAST_EDGE_TIME && !PRSIM_TRACK_CAUSE_TIME
+	n.set_value_and_cause(pe.val, cause, ept);
+#else
 	n.set_value_and_cause(pe.val, cause);
+#endif
 	// count transition only if new value is not X
 	if (pe.val != LOGIC_OTHER) {
 		++n.tcount;
@@ -3955,13 +4050,25 @@ State::execute_immediately(
 	// could scope the reference to prevent it...
 	const value_enum next = n.current_value();
 	// value propagation...
+#if PRSIM_TRACK_CAUSE_TIME
+#if PRSIM_TRACE_GENERATION
+	const event_cause_type new_cause(ni, next, ept, critical);
+#else
+	const event_cause_type new_cause(ni, next, ept);
+#endif
+#else
 #if PRSIM_TRACE_GENERATION
 	const event_cause_type new_cause(ni, next, critical);
 #else
 	const event_cause_type new_cause(ni, next);
 #endif
+#endif
 {	// scoping for auto-flush
+#if PRSIM_TRACK_LAST_EDGE_TIME && !PRSIM_TRACK_CAUSE_TIME
+	const auto_flush_queues __auto_flush(*this, new_cause, ept);
+#else
 	const auto_flush_queues __auto_flush(*this, new_cause);
+#endif
 {
 	// evaluate fanout in some order
 	typedef	node_type::const_fanout_iterator	const_iterator;
