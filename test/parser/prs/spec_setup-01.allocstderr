@@ -1,0 +1,15 @@
+globID	super		localID	canonical	footprint-frame
+[global process entries]
+1	(top)	-	1	belly[0]	flop<>
+	bool: 1,2,3,4,5
+2	(top)	-	2	belly[1]	flop<>
+	bool: 1,2,6,4,7
+[global bool entries]
+1	(top)	-	1	!GND	 @[ supply_low ]
+2	(top)	-	2	!Vdd	 @[ supply_high ]
+3	(top)	-	3	d1	
+4	(top)	-	4	clk	
+5	(top)	-	5	q1	
+6	(top)	-	6	d2	
+7	(top)	-	7	q2	
+

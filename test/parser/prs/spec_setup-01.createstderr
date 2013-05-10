@@ -1,0 +1,188 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	20
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	29
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	27
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
+	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
+	9	##ADDR##	procdefn	0	#HEAD#	#TAIL#	137
+	10	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	11	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	12	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	27
+	13	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	14	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	15	##ADDR##	portscop	0	#HEAD#	#TAIL#	32
+	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
+	18	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	19	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
+	22	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	25	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	28	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	29	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	32	##ADDR##	SPCdrctv	0	#HEAD#	#TAIL#	49
+	33	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	34	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	SPCdrctv	0	#HEAD#	#TAIL#	49
+	37	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	38	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	39	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	40	##ADDR##	footprnt	0	#HEAD#	#TAIL#	462
+	41	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
+	42	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
+	43	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	44	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
+	45	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	46	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	47	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	48	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	49	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	50	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	51	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	52	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	53	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	54	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	55	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	56	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	57	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	58	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
+	59	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	60	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	61	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	62	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	63	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	36
+	64	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	65	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	66	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	67	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	68	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	69	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	70	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	36
+	71	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	72	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	73	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	74	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	75	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	76	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	77	##ADDR##	footprnt	0	#HEAD#	#TAIL#	783
+	78	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  8 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    flop = process-definition (defined) flop(
+        bool<> !GND
+        bool<> !Vdd
+        bool<> d
+        bool<> clk
+        bool<> q
+      )
+      In definition "flop", we have: {
+      Instances:
+        !GND = bool<> flop::!GND
+        !Vdd = bool<> flop::!Vdd
+        clk = bool<> flop::clk
+        d = bool<> flop::d
+        q = bool<> flop::q
+      unroll sequence: 
+        ports: (
+          bool<> !GND
+          bool<> !Vdd
+          bool<> d
+          bool<> clk
+          bool<> q
+        )
+        !GND@[supply=0]
+        !Vdd@[supply=1]
+      spec:
+        setup_pos<40>(d,clk)
+        setup_neg<20>(d,clk)
+      footprint: {
+        !GND = bool^0 = flop<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = flop<>::!Vdd (2) @[ supply_high port-alias ] 
+        clk = bool^0 = flop<>::clk (4) @[ port-alias ] 
+        d = bool^0 = flop<>::d (3) @[ port-alias ] 
+        q = bool^0 = flop<>::q (5) @[ port-alias ] 
+        Created state:
+        bool instance pool: (5 ports, 0 local, 0 mapped)
+        1	flop<>::!GND @[ supply_low port-alias ]	
+        2	flop<>::!Vdd @[ supply_high port-alias ]	
+        3	flop<>::d @[ port-alias ]	
+        4	flop<>::clk @[ port-alias ]	
+        5	flop<>::q @[ port-alias ]	
+        resolved specs:
+        setup_pos<40>(d,clk)
+        setup_neg<20>(d,clk)
+      }
+      }
+
+  Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
+    belly = flop<> belly^1
+    clk = bool<> clk
+    d1 = bool<> d1
+    d2 = bool<> d2
+    q1 = bool<> q1
+    q2 = bool<> q2
+}
+
+footprint: {
+  !GND = bool^0 = !GND (1) @[ supply_low ] 
+  !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
+  belly = process flop<>^1
+    {
+      [0] = belly[0] (1) (
+        !GND = bool^0 = !GND (1) @[ supply_low ] 
+        !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
+        d = bool^0 = d1 (3) 
+        clk = bool^0 = clk (4) 
+        q = bool^0 = q1 (5) 
+      )
+      [1] = belly[1] (2) (
+        !GND = bool^0 = !GND (1) @[ supply_low ] 
+        !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
+        d = bool^0 = d2 (6) 
+        clk = bool^0 = clk (4) 
+        q = bool^0 = q2 (7) 
+      )
+    }
+  clk = bool^0 = clk (4) 
+  d1 = bool^0 = d1 (3) 
+  d2 = bool^0 = d2 (6) 
+  q1 = bool^0 = q1 (5) 
+  q2 = bool^0 = q2 (7) 
+  Created state:
+  process instance pool: (0 ports, 2 local, 0 mapped)
+  1	belly[0]	flop<>
+    bool: 1,2,3,4,5
+  2	belly[1]	flop<>
+    bool: 1,2,6,4,7
+  bool instance pool: (0 ports, 7 local, 0 mapped)
+  1	!GND @[ supply_low ]	
+  2	!Vdd @[ supply_high ]	
+  3	d1	
+  4	clk	
+  5	q1	
+  6	d2	
+  7	q2	
+}

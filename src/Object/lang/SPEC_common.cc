@@ -529,6 +529,50 @@ RunModeStatic::__check_node_args(const char* name, const node_args_type& a) {
 }
 
 //-----------------------------------------------------------------------------
+// {setup,hold}_{pos,neg} method definitions
+
+DEFINE_SPEC_DIRECTIVE_META_TYPE(setup_pos, bool_tag)
+DEFINE_SPEC_DIRECTIVE_META_TYPE(setup_neg, bool_tag)
+DEFINE_SPEC_DIRECTIVE_META_TYPE(hold_pos, bool_tag)
+DEFINE_SPEC_DIRECTIVE_META_TYPE(hold_neg, bool_tag)
+
+#define	DEFINE_CHECK_PARAMS_NODES(d)					\
+good_bool								\
+d::__check_num_params(const char* name, const size_t s) {		\
+	return exact_num_params(name, 1, s);				\
+}									\
+good_bool								\
+d::__check_num_nodes(const char* name, const size_t s) {		\
+	return exact_num_nodes(name, 2, s);				\
+}
+
+DEFINE_CHECK_PARAMS_NODES(setup_pos)
+DEFINE_CHECK_PARAMS_NODES(setup_neg)
+DEFINE_CHECK_PARAMS_NODES(hold_pos)
+DEFINE_CHECK_PARAMS_NODES(hold_neg)
+#undef	DEFINE_CHECK_PARAMS_NODES
+
+DEFINE_DEFAULT_SPEC_DIRECTIVE_CHECK_PARAMS(setup_pos)
+DEFINE_DEFAULT_SPEC_DIRECTIVE_CHECK_PARAMS(setup_neg)
+DEFINE_DEFAULT_SPEC_DIRECTIVE_CHECK_PARAMS(hold_pos)
+DEFINE_DEFAULT_SPEC_DIRECTIVE_CHECK_PARAMS(hold_neg)
+
+/**
+	TODO: check that both node arguments are not aliased to each other
+ */
+#define	DEFINE_CHECK_NODE_ARGS(d)					\
+good_bool								\
+d::__check_node_args(const char* name, const node_args_type& a) {	\
+	return good_bool(true);						\
+}
+
+DEFINE_CHECK_NODE_ARGS(setup_pos)
+DEFINE_CHECK_NODE_ARGS(setup_neg)
+DEFINE_CHECK_NODE_ARGS(hold_pos)
+DEFINE_CHECK_NODE_ARGS(hold_neg)
+#undef	DEFINE_CHECK_NODE_ARGS
+
+//-----------------------------------------------------------------------------
 }	// end namespace directives
 }	// end namespace PRS
 }	// end namespace entity
