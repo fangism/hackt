@@ -1,0 +1,12 @@
+// "startup-set.hac"
+
+bool foo;
+bool GND;
+bool Vdd1, Vdd2, Vdd3;
+bool G1, G2, G3, G4;
+prs {
+	Vdd1	=> G1-
+	Vdd2	=> G2-
+	Vdd3	=> G3-
+	foo	=> G4-
+}

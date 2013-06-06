@@ -1,0 +1,36 @@
+$start of simulation 
+prsim:	0	foo : 0
+at time   0.000, observed back 0
+at time   0.000, observed in 0
+prsim:	5	GND : 0
+prsim:	5	Vdd1 : 1
+prsim:	5	Vdd2 : 1
+prsim:	5	Vdd3 : 1
+event queue:
+	10	G4 : 1	[from foo:=0]
+	15	G1 : 0	[from Vdd1:=1]
+	15	G2 : 0	[from Vdd2:=1]
+	15	G3 : 0	[from Vdd3:=1]
+at time   5.000, observed g1 0
+at time   5.000, observed g2 0
+at time   5.000, observed probe 1
+prsim:	10	G4 : 1	[by foo:=0]
+prsim:	12	foo : 1
+at time  12.000, observed back 1
+at time  12.000, observed in 1
+prsim:	15	G1 : 0	[by Vdd1:=1]
+prsim:	15	G2 : 0	[by Vdd2:=1]
+prsim:	15	G3 : 0	[by Vdd3:=1]
+prsim:	22	G4 : 0	[by foo:=1]
+prsim:	22	foo : 0
+at time  22.000, observed back 0
+at time  22.000, observed in 0
+prsim:	32	G4 : 1	[by foo:=0]
+prsim:	32	foo : 1
+at time  32.000, observed back 1
+at time  32.000, observed in 1
+prsim:	42	G4 : 0	[by foo:=1]
+prsim:	42	foo : 0
+at time  42.000, observed back 0
+at time  42.000, observed in 0
+$finish at simulation time    0.0 ns

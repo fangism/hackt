@@ -15,6 +15,8 @@ HACKT_PRSIMRC_TEST_SUBJECTS = inverters \
 	channel-ledr-source-sink \
 	celem \
 	startup \
+	startup-set \
+	fast-forward-test \
 	and_tree and_template_tree \
 	and_tree_reverse and_template_tree_reverse \
 	inverters-separate \
@@ -29,6 +31,8 @@ HACKT_VPI_TEST_SCRIPTS_PASSES = \
 	inverters-watch inverters-watch2 \
 	initial-value \
 	startup \
+	startup-set \
+	fast-forward-test \
 	interleave-a interleave-b interleave-c \
 	oscillator-fanout \
 	independent-01 \
@@ -89,12 +93,20 @@ standard-ports.v: standard.v
 standard-reverse.v: standard.v
 	{ $(ECHO) "// @verilog-wrap-flags@ -v reverse=1 -v wrapper_ports=1" ; \
 		$(CAT) $< ;} > $@
+# needed by tests that source scripts from srcdir
+addpath_srcdir.v:
+	echo '$$prsim_cmd("addpath $(srcdir)");' > $@
+CLEANFILES += addpath_srcdir.v
 
 and_tree.vx: standard.v-wrap pli.tab
 and_template_tree.vx: standard.v-wrap pli.tab
 and_tree_reverse.vx: standard-reverse.v-wrap pli.tab
 and_template_tree_reverse.vx: standard-reverse.v-wrap pli.tab
 startup.vx: pli.tab
+startup-set.vx: pli.tab addpath_srcdir.v
+startup-set.vx-out: startup-set.prsimrc
+fast-forward-test.vx: pli.tab addpath_srcdir.v
+fast-forward-test.vx-out: fast-forward-test.prsimrc
 flop_it.vx: standard.v-wrap pli.tab
 flop_it-b.vx: standard.v-wrap pli.tab
 flop_it-c.vx: standard.v-wrap pli.tab
@@ -131,6 +143,8 @@ EXAMPLE_DATA_FILES = example.mk clkgen.v \
 	channel-source-sink-b.v channel-source-sink-c.v \
 	channel-ledr-source-sink.hac channel-ledr-source-sink.v \
 	and_tree.hac and_tree.v standard.v startup.v startup.hac \
+	startup-set.v startup-set.hac startup-set.prsimrc \
+	fast-forward-test.v fast-forward-test.hac fast-forward-test.prsimrc \
 	and_tree_reverse.hac and_tree_reverse.v standard-reverse.v \
 	and_template_tree.hac and_template_tree.v \
 	and_template_tree_reverse.hac and_template_tree_reverse.v \

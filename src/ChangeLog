@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2013-06-05	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-86-53:
+	  vpi-prsim.cc: fix inconsistency where __advance_prsim failed
+		to fast-forward prsim time in cases where no events
+		are pending, or next event is beyond the advance time.
+
+
 2013-04-01	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-86-52b:
