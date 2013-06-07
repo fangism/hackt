@@ -1,0 +1,7 @@
+// "fast-forward-test.hac"
+
+bool Vdd, GND;
+bool foo, bar;
+prs {
+	foo	=> bar-
+}

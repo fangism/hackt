@@ -1,0 +1,4 @@
+# "startup-set.prsimrc"
+watchall
+set GND 0
+set Vdd 1

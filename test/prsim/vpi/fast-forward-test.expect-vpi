@@ -1,0 +1,10 @@
+$start of simulation 
+prsim:	0	foo : 0
+at time   0.000, observed in 0
+prsim:	5	GND : 0
+prsim:	5	Vdd : 1
+event queue:
+	10	bar : 1	[from foo:=0]
+prsim:	10	bar : 1	[by foo:=0]
+at time  10.000, observed back 1
+$finish at simulation time    0.0 ns
