@@ -3873,6 +3873,7 @@ State::execute_immediately(
 	// be resheduled, e.g. pulse
 	if (dequeue_unstable_events()) {
 		if (UNLIKELY(prev == pe.val)) {
+			DEBUG_STEP_PRINT("vacuous event dequeued" << endl);
 			// Q: or is it better to catch this before enqueuing?
 			// then just silence this event
 #if 0
@@ -3939,6 +3940,7 @@ State::execute_immediately(
 		}
 	}
 	// only set the cause of the node when we change its value
+	DEBUG_STEP_PRINT("committing value change to node" << endl);
 	n.set_value_and_cause(pe.val, cause);
 	// count transition only if new value is not X
 	if (pe.val != LOGIC_OTHER) {
@@ -3946,6 +3948,7 @@ State::execute_immediately(
 	}
 }
 }
+	DEBUG_STEP_PRINT("evaluating fanouts" << endl);
 	// note: pe is invalid, deallocated beyond this point, could scope it
 	// reminder: do not reference pe beyond this point (deallocated)
 	// could scope the reference to prevent it...
@@ -4032,6 +4035,7 @@ if (eval_ordering_is_random()) {
 }
 	// Q: is this the best place to handle this?
 if (n.in_channel()) {
+	DEBUG_STEP_PRINT("channels reacting to node" << endl);
 	// predicate may not filter precisely
 	// channel manager should 'ignore' irrelevant nodes
 	vector<env_event_type> env_events;
@@ -4227,7 +4231,7 @@ if (n.in_channel()) {
 		// __keeper_check_candidates.clear();
 	}
 	return return_type(ni, _ci);
-}	// end method step()
+}	// end method execute_immediately()
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if PRSIM_AGGREGATE_EXCEPTIONS
