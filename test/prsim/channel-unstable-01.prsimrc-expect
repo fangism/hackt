@@ -23,6 +23,8 @@ mode:
 	on assert-fail: fatal
 	on channel-expect-fail: fatal
 	on keeper-check-fail: ignore
+	on setup-timing-violation: fatal
+	on hold-timing-violation: fatal
 we will manually toggle the enable 
 	0	X.e : 0
 	10	X.d[0] : 0

@@ -373,6 +373,7 @@ simulated production rules and contain no stateful information.
 @include cmd/allrings-mk.texi
 @include cmd/rings-chk.texi
 @include cmd/allrings-chk.texi
+@include cmd/timing-constraints-process.texi
 @include cmd/what.texi
 @include cmd/who.texi
 @include cmd/ls.texi
@@ -480,6 +481,8 @@ The use of weak-rules can be globally enabled or disabled.
 @include cmd/channel-expect-fail.texi
 @include cmd/checkexcl-fail.texi
 @include cmd/keeper-check-fail.texi
+@include cmd/setup-violation.texi
+@include cmd/hold-violation.texi
 @include cmd/mode.texi
 
 Two additional commands control the behavior of unstable rules.  

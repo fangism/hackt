@@ -27,6 +27,8 @@ assert-fail (bool) policy: fatal
 channel-expect-fail policy: fatal
 exclusion-fail policy: fatal
 keeper-check policy: ignore
+setup-violation policy: warn
+hold-violation policy: break
 timing mode: 1
 dump flags: {
 hide definition owner

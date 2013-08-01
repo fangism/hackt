@@ -276,10 +276,11 @@ ExprAlloc::ExprAlloc(state_type& _s,
 		power_supply(0),
 		at_source(false),
 #endif
-		flags(f), expr_free_list()
+		flags(f), expr_free_list(),
 #if PRSIM_PRECHARGE_INVARIANTS
-		, netlists(NULL)
+		netlists(NULL), 
 #endif
+		unique_pass(false)
 		{
 }
 
@@ -296,10 +297,8 @@ ExprAlloc::visit_rules_and_directives(const footprint& f) {
 	STACKTRACE_VERBOSE;
 	const entity::PRS::footprint& pfp(f.get_prs_footprint());
 	pfp.accept(*this);
-	// TODO: implement spec directives hierarchically
-#if 0
+	// some spec directives are done hierarchically now
 	f.get_spec_footprint().accept(*this);
-#endif
 
 #if 0
 	typedef footprint::invariant_pool_type::const_iterator
@@ -399,6 +398,7 @@ ExprAlloc::visit(const footprint& f) {
 void
 ExprAlloc::visit(const entity::PRS::footprint& pfp) {
 	STACKTRACE_VERBOSE;
+	INVARIANT(unique_pass);
 #if 0
 	state.unique_process_pool.push_back(unique_process_subgraph());
 	unique_process_subgraph& u(state.unique_process_pool.back());
@@ -500,6 +500,7 @@ for ( ; mi!=me; ++mi) {
 void
 ExprAlloc::visit(const state_instance<bool_tag>& b) {
 	STACKTRACE_VERBOSE;
+	INVARIANT(!unique_pass);
 #if ENABLE_STACKTRACE
 	topfp->dump_canonical_name<bool_tag>(
 		STACKTRACE_INDENT_PRINT("unique bool: "),
@@ -523,10 +524,12 @@ ExprAlloc::visit(const state_instance<bool_tag>& b) {
 size_t
 ExprAlloc::auto_create_unique_process_graph(const footprint& gpfp) {
 	STACKTRACE_VERBOSE;
+	INVARIANT(!unique_pass);
 	typedef	process_footprint_map_type::const_iterator	const_iterator;
 	size_t type_index;	// unique process type index
 	const const_iterator f(process_footprint_map.find(&gpfp));
 if (f == process_footprint_map.end()) {
+	const value_saver<bool> __u(unique_pass, true);
 	type_index = state.unique_process_pool.size();
 	STACKTRACE_INDENT_PRINT("first time with this type, assigned id " << type_index << endl);
 	process_footprint_map[&gpfp] = type_index;
@@ -580,6 +583,7 @@ if (f == process_footprint_map.end()) {
 void
 ExprAlloc::visit(const state_instance<process_tag>& gp) {
 	STACKTRACE_VERBOSE;
+	INVARIANT(!unique_pass);
 	const size_t lpid = gp.get_back_ref()->instance_index;
 	const value_saver<size_t>
 		__pi__(current_process_index,
@@ -623,8 +627,9 @@ ExprAlloc::visit(const state_instance<process_tag>& gp) {
 	// append-allocate new state, based on type
 	// now, allocate state for instance of this process type
 	const size_t type_index = auto_create_unique_process_graph(gpfp);
-	const unique_process_subgraph&
-		ptemplate(state.unique_process_pool[type_index]);
+	unique_process_subgraph&
+		_ptemplate(state.unique_process_pool[type_index]);
+	const unique_process_subgraph& ptemplate(_ptemplate);
 	// TODO: ALERT! if (pxs == 0) this will still cost to 
 	// lookup empty process with binary search through process_state_array
 	process_sim_state& ps(state.process_state_array[current_process_index]);
@@ -642,7 +647,10 @@ ExprAlloc::visit(const state_instance<process_tag>& gp) {
 #endif
 	update_expr_maps(ptemplate, node_pool_size, bmap, ps.get_offset());
 try {
-	// problem: spec directives are still global, not per-process
+	// some spec directives are global, others are per-type (local)
+#if PRSIM_SETUP_HOLD
+	const value_saver<unique_process_subgraph*> _t_(g, &_ptemplate);
+#endif
 	const entity::SPEC::footprint& sfp(fp->get_spec_footprint());
 	sfp.accept(*this);
 } catch (...) {
@@ -869,6 +877,7 @@ void
 ExprAlloc::visit(const footprint_rule& r) {
 	STACKTRACE_VERBOSE;
 //	STACKTRACE("ExprAlloc::visit(footprint_rule&)");
+	INVARIANT(unique_pass);
 try {
 	rule_type dummy_rule;
 	dummy_rule.set_direction(r.dir);
@@ -1278,6 +1287,7 @@ ExprAlloc::denormalize_negation(const expr_index_type _e) {
 void
 ExprAlloc::visit(const footprint_expr_node& e) {
 	STACKTRACE("ExprAlloc::visit(footprint_expr_node&)");
+	INVARIANT(unique_pass);
 	const size_t sz = e.size();
 	const char type = e.get_type();
 	// NOTE: 1-indexed
@@ -1357,6 +1367,7 @@ switch (type) {
 void
 ExprAlloc::visit_and_expr(const footprint_expr_node& e) {
 	STACKTRACE_INDENT_PRINT("and" << endl);
+	INVARIANT(unique_pass);
 	const entity::PRS::footprint::expr_pool_type& expr_pool(
 		get_current_footprint().get_prs_footprint().get_expr_pool());
 	const size_t sz = e.size();
@@ -1404,6 +1415,7 @@ ExprAlloc::visit_and_expr(const footprint_expr_node& e) {
 void
 ExprAlloc::visit_or_expr(const footprint_expr_node& e) {
 	STACKTRACE_INDENT_PRINT("or" << endl);
+	INVARIANT(unique_pass);
 	const entity::PRS::footprint::expr_pool_type& expr_pool(
 		get_current_footprint().get_prs_footprint().get_expr_pool());
 	const size_t sz = e.size();
@@ -1447,6 +1459,7 @@ ExprAlloc::visit_or_expr(const footprint_expr_node& e) {
 void
 ExprAlloc::visit(const footprint_macro& m) {
 	STACKTRACE_VERBOSE;
+	INVARIANT(unique_pass);
 	const ExprAlloc_macro_registry_type::const_iterator
 		mi(ExprAlloc_macro_registry.find(m.name));
 if (mi != ExprAlloc_macro_registry.end()) {
@@ -1469,6 +1482,7 @@ if (mi != ExprAlloc_macro_registry.end()) {
 void
 ExprAlloc::visit(const footprint_directive& s) {
 	STACKTRACE_VERBOSE;
+//	INVARIANT(!unique_pass);		// will have both!
 	const ExprAlloc_spec_registry_type::const_iterator
 		mi(ExprAlloc_spec_registry.find(s.name));
 if (mi != ExprAlloc_spec_registry.end()) {
@@ -1710,6 +1724,25 @@ ExprAlloc::__visit_current_path_graph_node_logic_output_down(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #endif	// PRSIM_PRECHARGE_INVARIANTS
 
+#if PRSIM_SETUP_HOLD
+void
+ExprAlloc::add_global_setup_constraint(const node_index_type l1) const {
+	const node_index_type lt = lookup_local_bool_id(l1);
+	const node_index_type gt = lookup_global_bool_id(l1);
+	state.setup_check_map[gt][current_process_index].insert(lt);
+	state.__get_node(gt).flag_setup_check();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+ExprAlloc::add_global_hold_constraint(const node_index_type l1) const {
+	const node_index_type lt = lookup_local_bool_id(l1);
+	const node_index_type gt = lookup_global_bool_id(l1);
+	state.hold_check_map[gt][current_process_index].insert(lt);
+	state.__get_node(gt).flag_hold_check();
+}
+#endif
+
 //=============================================================================
 /**
 	Local namespace for prsim rule attributes.  
@@ -1735,6 +1768,7 @@ DECLARE_AND_DEFINE_PRSIM_RULE_ATTRIBUTE_CLASS(After, "after")
 void
 After::main(visitor_type& v, const values_type& a) {
 	typedef	visitor_type::rule_type	rule_type;
+	INVARIANT(v.in_unique_pass());
 	rule_type& r(v.get_temp_rule());
 	const values_type::value_type& d(a.front());
 	// assert type cast, b/c already checked
@@ -1759,6 +1793,7 @@ check_after_min_max(const State::rule_type& r) {
 
 void
 AfterMin::main(visitor_type& v, const values_type& a) {
+	INVARIANT(v.in_unique_pass());
 	typedef	visitor_type::rule_type	rule_type;
 	rule_type& r(v.get_temp_rule());
 	const values_type::value_type& d(a.front());
@@ -1772,6 +1807,7 @@ AfterMin::main(visitor_type& v, const values_type& a) {
 
 void
 AfterMax::main(visitor_type& v, const values_type& a) {
+	INVARIANT(v.in_unique_pass());
 	typedef	visitor_type::rule_type	rule_type;
 	rule_type& r(v.get_temp_rule());
 	const values_type::value_type& d(a.front());
@@ -1794,6 +1830,7 @@ DECLARE_AND_DEFINE_PRSIM_RULE_ATTRIBUTE_CLASS(Always_Random, "always_random")
 void
 Always_Random::main(visitor_type& v, const values_type& a) {
 	typedef visitor_type::rule_type rule_type;
+	INVARIANT(v.in_unique_pass());
 	rule_type& r(v.get_temp_rule());
 if (a.size()) {
 	const values_type::value_type& w(a.front());
@@ -1816,6 +1853,7 @@ DECLARE_AND_DEFINE_PRSIM_RULE_ATTRIBUTE_CLASS(Weak, "weak")
 void
 Weak::main(visitor_type& v, const values_type& a) {
 	typedef	visitor_type::rule_type	rule_type;
+	INVARIANT(v.in_unique_pass());
 	rule_type& r(v.get_temp_rule());
 if (a.size()) {
 	const values_type::value_type& w(a.front());
@@ -1838,6 +1876,7 @@ DECLARE_AND_DEFINE_PRSIM_RULE_ATTRIBUTE_CLASS(Unstab, "unstab")
 void
 Unstab::main(visitor_type& v, const values_type& a) {
 	typedef	visitor_type::rule_type	rule_type;
+	INVARIANT(v.in_unique_pass());
 	rule_type& r(v.get_temp_rule());
 if (a.size()) {
 	const values_type::value_type& w(a.front());
@@ -1873,6 +1912,7 @@ DECLARE_AND_DEFINE_PRSIM_RULE_ATTRIBUTE_CLASS(IsKeeper, "iskeeper")
  */
 void
 IsKeeper::main(visitor_type& v, const values_type& a) {
+	INVARIANT(v.in_unique_pass());
 	if (a.empty()) {
 		// default when no value given
 		v.suppress_keeper_rule = true;
@@ -1924,6 +1964,7 @@ DECLARE_AND_DEFINE_PRSIM_RULE_ATTRIBUTE_CLASS(Diode, "diode")
  */
 void
 Diode::main(visitor_type& v, const values_type& a) {
+	INVARIANT(v.in_unique_pass());
 	if (a.empty()) {
 		// default when no value given
 		v.suppress_keeper_rule = true;
@@ -2011,6 +2052,7 @@ void
 PassN::main(visitor_type& v, const param_args_type& params,
 		const node_args_type& nodes) {
 	STACKTRACE_VERBOSE;
+	INVARIANT(v.in_unique_pass());
 	const expr_index_type g =
 		v.allocate_new_literal_expr(
 			v.lookup_local_bool_id(*nodes[0].begin()));
@@ -2048,6 +2090,7 @@ void
 PassP::main(visitor_type& v, const param_args_type& params,
 		const node_args_type& nodes) {
 	STACKTRACE_VERBOSE;
+	INVARIANT(v.in_unique_pass());
 	const expr_index_type g =
 		v.allocate_new_literal_expr(
 			v.lookup_local_bool_id(*nodes[0].begin()));
@@ -2096,12 +2139,14 @@ DECLARE_AND_DEFINE_PRSIM_SPEC_DIRECTIVE_CLASS(UnAliased, "unaliased")
 void
 UnAliased::main(visitor_type& v, const param_args_type& params, 
 		const node_args_type& nodes) {
+if (!v.in_unique_pass()) {
 	if (!__main(v, nodes).good) {
 		cerr << "Error: detected aliased nodes during "
 			"processing of \'unaliased\' directive."
 			<< endl;
 		THROW_EXIT;
 	}
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2126,6 +2171,7 @@ DECLARE_AND_DEFINE_PRSIM_SPEC_DIRECTIVE_CLASS(LVS_exclhi, "exclhi")
 void
 LVS_exclhi::main(visitor_type& v, const param_args_type& params, 
 		const node_args_type& nodes) {
+if (!v.in_unique_pass()) {
 	typedef	node_args_type::const_iterator		const_iterator;
 	typedef	visitor_type::state_type::ring_set_type	ring_set_type;
 	ring_set_type temp;
@@ -2144,6 +2190,7 @@ LVS_exclhi::main(visitor_type& v, const param_args_type& params,
 		v.state.append_check_exclhi_ring(temp);
 	}
 }
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DECLARE_AND_DEFINE_PRSIM_SPEC_DIRECTIVE_CLASS(LVS_excllo, "excllo")
@@ -2157,6 +2204,7 @@ DECLARE_AND_DEFINE_PRSIM_SPEC_DIRECTIVE_CLASS(LVS_excllo, "excllo")
 void
 LVS_excllo::main(visitor_type& v, const param_args_type& params, 
 		const node_args_type& nodes) {
+if (!v.in_unique_pass()) {
 	typedef	node_args_type::const_iterator		const_iterator;
 	typedef	visitor_type::state_type::ring_set_type	ring_set_type;
 	ring_set_type temp;
@@ -2175,6 +2223,7 @@ LVS_excllo::main(visitor_type& v, const param_args_type& params,
 		v.state.append_check_excllo_ring(temp);
 	}
 }
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DECLARE_AND_DEFINE_PRSIM_SPEC_DIRECTIVE_CLASS(SIM_force_exclhi, "mk_exclhi")
@@ -2189,6 +2238,7 @@ DECLARE_AND_DEFINE_PRSIM_SPEC_DIRECTIVE_CLASS(SIM_force_exclhi, "mk_exclhi")
 void
 SIM_force_exclhi::main(visitor_type& v, const param_args_type& params, 
 		const node_args_type& nodes) {
+if (!v.in_unique_pass()) {
 	typedef	node_args_type::const_iterator		const_iterator;
 	typedef	visitor_type::state_type::ring_set_type	ring_set_type;
 	const_iterator i(nodes.begin()), e(nodes.end());
@@ -2216,6 +2266,7 @@ SIM_force_exclhi::main(visitor_type& v, const param_args_type& params,
 	v.state.append_mk_exclhi_ring(r);
 	INVARIANT(r.empty());
 }
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DECLARE_AND_DEFINE_PRSIM_SPEC_DIRECTIVE_CLASS(SIM_force_excllo, "mk_excllo")
@@ -2230,6 +2281,7 @@ DECLARE_AND_DEFINE_PRSIM_SPEC_DIRECTIVE_CLASS(SIM_force_excllo, "mk_excllo")
 void
 SIM_force_excllo::main(visitor_type& v, const param_args_type& params, 
 		const node_args_type& nodes) {
+if (!v.in_unique_pass()) {
 	typedef	node_args_type::const_iterator		const_iterator;
 	typedef	visitor_type::state_type::ring_set_type	ring_set_type;
 	ring_set_type r;
@@ -2257,6 +2309,7 @@ SIM_force_excllo::main(visitor_type& v, const param_args_type& params,
 	v.state.append_mk_excllo_ring(r);
 	INVARIANT(r.empty());
 }
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // TODO:
@@ -2281,6 +2334,107 @@ RunModeStatic::main(visitor_type& v, const param_args_type& params,
 	// ignore
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_DEFINE_PRSIM_SPEC_DIRECTIVE_CLASS(setup_pos, "setup_pos")
+DECLARE_AND_DEFINE_PRSIM_SPEC_DIRECTIVE_CLASS(setup_neg, "setup_neg")
+DECLARE_AND_DEFINE_PRSIM_SPEC_DIRECTIVE_CLASS(hold_pos, "hold_pos")
+DECLARE_AND_DEFINE_PRSIM_SPEC_DIRECTIVE_CLASS(hold_neg, "hold_neg")
+
+static
+void
+__setup_main(ExprAlloc& v,
+		const entity::SPEC::directives::param_args_type& params,
+		const entity::SPEC::directives::node_args_type& nodes,
+		const bool dir) {
+	STACKTRACE_VERBOSE;
+if (!v.in_unique_pass()) {
+	// do this once per-type
+	STACKTRACE_INDENT_PRINT("unique pass" << endl);
+	NEVER_NULL(v.g);
+	setup_constraint_entry c;
+	// reference node (in the past)
+	c.ref_node = v.lookup_local_bool_id(*nodes[0].begin());
+	// trigger node (usually a clock, just fired hi)
+	const unique_process_subgraph::setup_constraint_key_type
+		k(v.lookup_local_bool_id(*nodes[1].begin()), dir);
+	c.time = params[0].is_a<const pint_const>()->static_constant_value();
+	// TODO: also allow real values (reusable function)
+	// allocate constraint in current process graph
+	v.g->setup_constraints[k].push_back(c);
+
+// do this per-instance
+} else {
+	STACKTRACE_INDENT_PRINT("instance pass" << endl);
+	// global node also needs to track global pid of the process
+	// that owns this constraint
+	v.add_global_setup_constraint(*nodes[1].begin());
+}
+}
+
+/**
+	Check setup constraint, check on posedge of clock/signal.
+ */
+void
+setup_pos::main(visitor_type& v, const param_args_type& params,
+		const node_args_type& nodes) {
+	__setup_main(v, params, nodes, true);
+}
+
+void
+setup_neg::main(visitor_type& v, const param_args_type& params,
+		const node_args_type& nodes) {
+	__setup_main(v, params, nodes, false);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+static
+void
+__hold_main(ExprAlloc& v,
+		const entity::SPEC::directives::param_args_type& params,
+		const entity::SPEC::directives::node_args_type& nodes,
+		const bool dir) {
+	STACKTRACE_VERBOSE;
+if (!v.in_unique_pass()) {
+	STACKTRACE_INDENT_PRINT("unique pass" << endl);
+	NEVER_NULL(v.g);
+// do this once per-type
+	hold_constraint_entry c;
+	// reference node (in the past, usually clk)
+	c.ref_node = v.lookup_local_bool_id(*nodes[0].begin());
+	// trigger node (data)
+	const unique_process_subgraph::hold_constraint_key_type
+		k = v.lookup_local_bool_id(*nodes[1].begin());
+	c.time = params[0].is_a<const pint_const>()->static_constant_value();
+	c.dir = dir;
+	// TODO: also allow real values (reusable function)
+	// allocate constraint in current process graph
+	v.g->hold_constraints[k].push_back(c);
+
+// do this per-instance
+} else {
+	STACKTRACE_INDENT_PRINT("instance pass" << endl);
+	// global node also needs to track global pid of the process
+	// that owns this constraint
+	v.add_global_hold_constraint(*nodes[1].begin());
+}
+}
+
+/**
+	Check hold constraint, check on posedge of clock/signal.
+ */
+void
+hold_pos::main(visitor_type& v, const param_args_type& params,
+		const node_args_type& nodes) {
+	__hold_main(v, params, nodes, true);
+}
+
+void
+hold_neg::main(visitor_type& v, const param_args_type& params,
+		const node_args_type& nodes) {
+	__hold_main(v, params, nodes, false);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #undef	DECLARE_AND_DEFINE_PRSIM_SPEC_DIRECTIVE_CLASS
 }	// end namespace prsim_spec_directives
 

@@ -137,6 +137,13 @@
  */
 #define	PRSIM_AGGREGATE_EXCEPTIONS			1
 
+/**
+	Define to 1 to enable setup/hold time checks.
+	Complete this before doing timing back-annotation.
+	Goal: 1
+ */
+#define	PRSIM_SETUP_HOLD		(1 && PRSIM_TRACK_LAST_EDGE_TIME && PRSIM_AGGREGATE_EXCEPTIONS)
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Eliminate pre-translated, allocated top-level expressions in favor

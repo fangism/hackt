@@ -407,6 +407,10 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 #endif
 		check_exhi_ring_pool(1), check_exlo_ring_pool(1), 
 		check_exhi(), check_exlo(), 
+#if PRSIM_SETUP_HOLD
+		setup_check_map(),
+		hold_check_map(),
+#endif
 		current_time(0), 
 		uniform_delay(time_traits::default_delay), 
 		default_after_min(time_traits::zero), 
@@ -443,6 +447,10 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 		channel_expect_fail_policy(E(CHANNEL_EXPECT_FAIL)),
 		excl_check_fail_policy(E(EXCL_CHECK_FAIL)),
 		keeper_check_fail_policy(E(KEEPER_CHECK)),
+#if PRSIM_SETUP_HOLD
+		setup_violation_policy(E(SETUP_VIOLATION)),
+		hold_violation_policy(E(HOLD_VIOLATION)),
+#endif
 #undef	E
 		autosave_name("autosave.prsimckpt"),
 		timing_mode(TIMING_DEFAULT),
@@ -974,6 +982,10 @@ State::reset(void) {
 	channel_expect_fail_policy = E(CHANNEL_EXPECT_FAIL);
 	excl_check_fail_policy = E(EXCL_CHECK_FAIL);
 	keeper_check_fail_policy = E(KEEPER_CHECK);
+#if PRSIM_SETUP_HOLD
+	setup_violation_policy = E(SETUP_VIOLATION);
+	hold_violation_policy = E(HOLD_VIOLATION);
+#endif
 #undef	E
 	timing_mode = TIMING_DEFAULT;
 	unwatch_all_nodes();
@@ -1016,6 +1028,10 @@ State::set_mode_fatal(void) {
 	}
 		cerr << "  keeper-check-fail policy unmodified" << endl;
 	}
+#if PRSIM_SETUP_HOLD
+	setup_violation_policy = ERROR_FATAL;
+	hold_violation_policy = ERROR_FATAL;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2137,6 +2153,10 @@ State::dump_mode(ostream& o) const {
 		error_policy_string(channel_expect_fail_policy) << endl;
 	o << "\ton keeper-check-fail: " <<
 		error_policy_string(keeper_check_fail_policy) << endl;
+	o << "\ton setup-timing-violation: " <<
+		error_policy_string(setup_violation_policy) << endl;
+	o << "\ton hold-timing-violation: " <<
+		error_policy_string(hold_violation_policy) << endl;
 	return o;
 }
 
@@ -3749,6 +3769,37 @@ State::generic_exception::inspect(const State& s, ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_SETUP_HOLD
+/**
+	Prints information about setup/hold time violations.  
+ */
+error_policy_enum
+State::timing_exception::inspect(const State& s, ostream& o) const {
+//	const node_type& tn(s.get_node(node_id));
+	const node_type& rn(s.get_node(reference));
+	const string tname(s.get_node_canonical_name(node_id));
+	o << ((policy == ERROR_WARN) ? "Warning: " : "Error: ");
+	if (tvalue == LOGIC_OTHER || rn.current_value() == LOGIC_OTHER)
+		o << "possible ";
+	o << (is_setup ? "setup" : "hold") << " time violation on node `"
+		<< tname << "' -> " << node_type::value_to_char[size_t(tvalue)]
+		<< " in process `";
+	s.dump_process_canonical_name(o, pid) << "':\n";
+	o << "\ttime( ";
+	s.dump_node_canonical_name(o, reference);
+	if (!is_setup) o << (dir ? '+' : '-');
+	o << " -> " << tname;
+	if (is_setup) o << (dir ? '+' : '-');
+	o << " ) >= " << min_delay;
+	// assume current_time has not advanced
+	const time_type t1 = rn.get_last_transition_time();
+	const time_type t2 = s.time();
+	o << ", but got: (" << t2 << " - " << t1 << ") = " << t2-t1 << endl;
+	return policy;
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	For the sake of exception safety, 
 	Upon destruction, flush intermediate event queues.  
@@ -4034,6 +4085,15 @@ State::execute_immediately(
 		}	// end switch
 		}
 	}
+#if PRSIM_SETUP_HOLD
+	// TODO: decide what to do if node is X
+	if (UNLIKELY(n.has_setup_check())) {
+		do_setup_check(ni, pe.val);
+	}
+	if (UNLIKELY(n.has_hold_check())) {
+		do_hold_check(ni, pe.val);
+	}
+#endif	// PRSIM_SETUP_HOLD
 	// only set the cause of the node when we change its value
 	DEBUG_STEP_PRINT("committing value change to node" << endl);
 #if PRSIM_TRACK_LAST_EDGE_TIME && !PRSIM_TRACK_CAUSE_TIME
@@ -4343,6 +4403,158 @@ if (n.in_channel()) {
 	}
 	return return_type(ni, _ci);
 }	// end method execute_immediately()
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_SETUP_HOLD
+void
+State::do_setup_check(const node_index_type ni, const value_enum nv) {
+	STACKTRACE_INDENT_PRINT("there is setup check on node" << endl);
+	const timing_constraint_process_map_type::const_iterator
+		f(setup_check_map.find(ni));
+if (f != setup_check_map.end()) {
+	STACKTRACE_INDENT_PRINT("found processes with setup constraints" << endl);
+	bool rise_fall[2];
+	rise_fall[1] = nv != LOGIC_LOW;	// maybe rising
+	rise_fall[0] = nv != LOGIC_HIGH;	// maybe falling
+	const map<process_index_type, local_node_ids_type>&
+		m(f->second);
+	map<process_index_type, local_node_ids_type>::const_iterator
+		i(m.begin()), e(m.end());
+for ( ; i!=e; ++i) {
+	// processes that own a setup constraint
+	// on this node
+	const process_index_type pid = i->first;
+	STACKTRACE_INDENT_PRINT("  process id " << pid << endl);
+	const process_sim_state& ps(get_process_state(pid));
+	const unique_process_subgraph& pg(ps.type());
+	// possible multiple local occurrences
+	local_node_ids_type::const_iterator
+		li(i->second.begin()), le(i->second.end());
+	for ( ; li!=le; ++li) {
+		const node_index_type lni = *li;
+		STACKTRACE_INDENT_PRINT("    local node id " << lni << endl);
+		bool dir = false;
+	do {
+		STACKTRACE_INDENT_PRINT("    check dir = " << dir << endl);
+	if (rise_fall[dir]) {
+		const unique_process_subgraph::setup_constraint_key_type
+			c(lni, dir);	// trigger node direction
+		const unique_process_subgraph::setup_constraint_set_type::const_iterator
+			cf(pg.setup_constraints.find(c));
+	if (cf != pg.setup_constraints.end()) {
+		STACKTRACE_INDENT_PRINT("      found local setup constraint" << endl);
+		const vector<setup_constraint_entry>& sc(cf->second);
+		vector<setup_constraint_entry>::const_iterator
+			si(sc.begin()), se(sc.end());
+		for ( ; si!=se; ++si) {
+			// local nodes to check
+			STACKTRACE_INDENT_PRINT("        local reference node "
+				<< si->ref_node << endl);
+			const node_index_type gri = translate_to_global_node(pid, si->ref_node);
+			const time_type rt = get_node(gri).get_last_transition_time();
+			STACKTRACE_INDENT_PRINT("        changed at time "
+				<< rt << endl);
+			const time_type d = current_time -rt;
+			if (rt >= 0.0 && (d < si->time)) {
+#define	E	setup_violation_policy
+			if (E > ERROR_IGNORE) {
+				const timing_exception
+					tex(gri, ni, nv, dir, true, pid, si->time, E);
+			if (E >= ERROR_BREAK) {
+				stop();
+			if (E >= ERROR_INTERACTIVE) {
+				record_exception(exception_ptr_type(
+					new timing_exception(tex)));
+			}
+			} else {
+				// break or warning, print now
+				tex.inspect(*this, cout);
+			}
+			}
+#undef	E
+			}
+		}	// end for local reference nodes
+	}	// end if setup_constraints.find
+	}	// end if rise_fall[dir]
+		dir = !dir;
+	} while (dir);	// 2x: once per direction
+	}	// end for local node references
+}	// end for processes
+}	// end if check_setup_map
+}	// end do_setup_check
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+State::do_hold_check(const node_index_type ni, const value_enum nv) {
+	STACKTRACE_INDENT_PRINT("there is hold check on node" << endl);
+	const timing_constraint_process_map_type::const_iterator
+		f(hold_check_map.find(ni));
+if (f != hold_check_map.end()) {
+	STACKTRACE_INDENT_PRINT("found processes with hold constraints" << endl);
+	bool rise_fall[2];
+	rise_fall[1] = nv != LOGIC_LOW;	// maybe rising
+	rise_fall[0] = nv != LOGIC_HIGH;	// maybe falling
+	const map<process_index_type, local_node_ids_type>&
+		m(f->second);
+	map<process_index_type, local_node_ids_type>::const_iterator
+		i(m.begin()), e(m.end());
+for ( ; i!=e; ++i) {
+	// processes that own a hold constraint
+	// on this node
+	const process_index_type pid = i->first;
+	STACKTRACE_INDENT_PRINT("  process id " << pid << endl);
+	const process_sim_state& ps(get_process_state(pid));
+	const unique_process_subgraph& pg(ps.type());
+	// possible multiple local occurrences
+	local_node_ids_type::const_iterator
+		li(i->second.begin()), le(i->second.end());
+	for ( ; li!=le; ++li) {
+		const node_index_type lni = *li;
+		STACKTRACE_INDENT_PRINT("    local node id " << lni << endl);
+		const unique_process_subgraph::hold_constraint_key_type
+			c = lni;
+		const unique_process_subgraph::hold_constraint_set_type::const_iterator
+			cf(pg.hold_constraints.find(c));
+	if (cf != pg.hold_constraints.end()) {
+		STACKTRACE_INDENT_PRINT("      found local hold constraint" << endl);
+		const vector<hold_constraint_entry>& sc(cf->second);
+		vector<hold_constraint_entry>::const_iterator
+			si(sc.begin()), se(sc.end());
+		for ( ; si!=se; ++si) {
+			// local nodes to check
+			STACKTRACE_INDENT_PRINT("        local reference node "
+				<< si->ref_node << endl);
+			const node_index_type gri = translate_to_global_node(pid, si->ref_node);
+			const time_type rt = get_node(gri).get_last_edge_time(
+				si->dir ? LOGIC_HIGH : LOGIC_LOW);
+			STACKTRACE_INDENT_PRINT("        changed at time "
+				<< rt << endl);
+			const time_type d = current_time -rt;
+			if (rt >= 0.0 && (d < si->time)) {
+#define	E	hold_violation_policy
+			if (E > ERROR_IGNORE) {
+				const timing_exception
+					tex(gri, ni, nv, si->dir, false, pid, si->time, E);
+			if (E >= ERROR_BREAK) {
+				stop();
+			if (E >= ERROR_INTERACTIVE) {
+				record_exception(exception_ptr_type(
+					new timing_exception(tex)));
+			}
+			} else {
+				// break or warning, print now
+				tex.inspect(*this, cout);
+			}
+			}
+#undef	E
+			}
+		}	// end for local reference nodes
+	}	// end if hold_constraints.find
+	}	// end for local node references
+}	// end for processes
+}	// end if check_hold_map
+}	// end do_hold_check
+#endif	// PRSIM_SETUP_HOLD
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if PRSIM_AGGREGATE_EXCEPTIONS
@@ -6771,6 +6983,14 @@ State::dump_all_rules(ostream& o, const bool v) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_SETUP_HOLD
+ostream&
+State::dump_timing_constraints(ostream& o, const process_index_type pid) const {
+	return process_state_array[pid].dump_timing_constraints(o, *this);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Prints why a node is X.
  */
@@ -8276,6 +8496,10 @@ State::save_checkpoint(ostream& o) const {
 	write_value(o, channel_expect_fail_policy);
 	write_value(o, excl_check_fail_policy);
 	write_value(o, keeper_check_fail_policy);
+#if PRSIM_SETUP_HOLD
+	write_value(o, setup_violation_policy);
+	write_value(o, hold_violation_policy);
+#endif
 //	write_value(o, autosave_name);		// don't preserve
 	write_value(o, timing_mode);
 	_dump_flags.write_object(o);
@@ -8505,6 +8729,10 @@ try {
 	read_value(i, channel_expect_fail_policy);
 	read_value(i, excl_check_fail_policy);
 	read_value(i, keeper_check_fail_policy);
+#if PRSIM_SETUP_HOLD
+	read_value(i, setup_violation_policy);
+	read_value(i, hold_violation_policy);
+#endif
 //	read_value(i, autosave_name);	// ignore the name of checkpoint
 	read_value(i, timing_mode);
 	_dump_flags.load_object(i);
@@ -8682,6 +8910,12 @@ State::dump_checkpoint(ostream& o, istream& i) {
 	o << "exclusion-fail policy: " << error_policy_string(p) << endl;
 	read_value(i, p);
 	o << "keeper-check policy: " << error_policy_string(p) << endl;
+#if PRSIM_SETUP_HOLD
+	read_value(i, p);
+	o << "setup-violation policy: " << error_policy_string(p) << endl;
+	read_value(i, p);
+	o << "hold-violation policy: " << error_policy_string(p) << endl;
+#endif
 }
 #if 0
 {	// ignore the name of checkpoint

@@ -1,0 +1,13 @@
+// "pseudo-flop-a.hac"
+// just checks timing constraints
+
+defproc pos_flop (bool? clk, d; bool! q) {
+spec {
+	setup_pos<15>(d, clk)
+	hold_pos<10>(clk, d)
+}
+}
+
+bool clk, d, q;
+pos_flop F(clk, d, q);
+

@@ -48,7 +48,11 @@ USING_UTIL_COMPOSE
 unique_process_subgraph::unique_process_subgraph() :
 		expr_pool(), expr_graph_node_pool(),
 		rule_pool(), rule_map(), invariant_map(), 
-		local_faninout_map() {
+		local_faninout_map()
+#if PRSIM_SETUP_HOLD
+		, setup_constraints(), hold_constraints()
+#endif
+		{
 	// local types are allowed to start at 0 index
 }
 
@@ -403,6 +407,45 @@ unique_process_subgraph::dump_struct_dot(ostream& o,
 }
 	return o;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_SETUP_HOLD
+// TODO: print local node names, not just IDs
+// see also process_sim_state::dump_timing_constraints
+ostream&
+unique_process_subgraph::dump_timing_constraints(ostream& o) const {
+{
+	o << "# Setup constraints:" << endl;
+	setup_constraint_set_type::const_iterator
+		i(setup_constraints.begin()), e(setup_constraints.end());
+	for ( ; i!=e; ++i) {
+		// node indices are local
+		o << "-> " << i->first.first <<
+			(i->first.second ? '+' : '-') << endl;
+		vector<setup_constraint_entry>::const_iterator
+			ci(i->second.begin()), ce(i->second.end());
+		for ( ; ci!=ce; ++ci) {
+			o << '\t' << ci->ref_node << ": " << ci->time << endl;	
+		}
+	}
+}{
+	o << "# Hold constraints:" << endl;
+	hold_constraint_set_type::const_iterator
+		i(hold_constraints.begin()), e(hold_constraints.end());
+	for ( ; i!=e; ++i) {
+		// node indices are local
+		o << "-> " << i->first << endl;
+		vector<hold_constraint_entry>::const_iterator
+			ci(i->second.begin()), ce(i->second.end());
+		for ( ; ci!=ce; ++ci) {
+			o << '\t' << ci->ref_node << (ci->dir ? '+' : '-')
+				<< ": " << ci->time << endl;	
+		}
+	}
+}
+	return o;
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

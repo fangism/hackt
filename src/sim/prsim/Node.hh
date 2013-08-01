@@ -169,6 +169,22 @@ struct Node {
 		,
 		NODE_MAY_INTERFERE = 0x0020,
 		NODE_MAY_WEAK_INTERFERE = 0x0040
+
+#if PRSIM_SETUP_HOLD
+		,
+		/**
+			Set if a transition on this node may trigger
+			a setup time check.
+			These are typically clock signals.
+		 */
+		NODE_CHECK_SETUP = 0x0100,
+		/**
+			Set if a transition on this node may trigger
+			a hold time check.
+			These are typically data signals.
+		 */
+		NODE_CHECK_HOLD = 0x0200
+#endif
 	} struct_flags_enum;
 
 	/**
@@ -274,6 +290,28 @@ public:
 
 	void
 	check_excllo(void) { struct_flags |= NODE_CHECK_EXCLLO; }
+
+#if PRSIM_SETUP_HOLD
+	void
+	flag_setup_check(void) {
+		struct_flags |= NODE_CHECK_SETUP;
+	}
+
+	void
+	flag_hold_check(void) {
+		struct_flags |= NODE_CHECK_HOLD;
+	}
+
+	bool
+	has_setup_check(void) {
+		return struct_flags & NODE_CHECK_SETUP;
+	}
+
+	bool
+	has_hold_check(void) {
+		return struct_flags & NODE_CHECK_HOLD;
+	}
+#endif
 
 	static
 	size_t
@@ -595,6 +633,11 @@ public:
 	const event_time_type&
 	get_last_edge_time(const value_enum c) const {
 		return last_edge_time[size_t(c)];
+	}
+
+	event_time_type
+	get_last_transition_time(void) const {
+		return get_last_edge_time(current_value());
 	}
 #endif
 

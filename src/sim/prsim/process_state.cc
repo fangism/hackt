@@ -710,6 +710,64 @@ process_sim_state::__collect_expr_literals(const expr_index_type ei,
 	}
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_SETUP_HOLD
+/**
+	TODO: option to show current status of each timing constraint
+	w.r.t. time of last transition of the participating nodes.
+	Also flag which ones are pending/active (difference is wrong sign).
+ */
+ostream&
+process_sim_state::dump_timing_constraints(ostream& o,
+		const State& st) const {
+	const unique_process_subgraph& pg(type());
+	// see unique_process_subgraph::dump_timing_constraints
+{
+	unique_process_subgraph::setup_constraint_set_type::const_iterator
+		i(pg.setup_constraints.begin()), e(pg.setup_constraints.end());
+	if (i!=e) {
+		o << "setup-time constraints:" << endl;
+	}
+	for ( ; i!=e; ++i) {
+		// translate local to global node indices
+		const string target(st.get_node_canonical_name(
+			st.translate_to_global_node(*this, i->first.first)));
+		vector<setup_constraint_entry>::const_iterator
+			ci(i->second.begin()), ce(i->second.end());
+		for ( ; ci!=ce; ++ci) {
+			const string ref(st.get_node_canonical_name(
+				st.translate_to_global_node(*this, ci->ref_node)));
+			o << "t( " << ref << " -> " << target <<
+				(i->first.second ? '+' : '-') <<
+				" ) >= " << ci->time << endl;
+		}
+	}
+}{
+	unique_process_subgraph::hold_constraint_set_type::const_iterator
+		i(pg.hold_constraints.begin()), e(pg.hold_constraints.end());
+	if (i!=e) {
+		o << "hold-time constraints:" << endl;
+	}
+	for ( ; i!=e; ++i) {
+		// translate local to global node indices
+		const string target(st.get_node_canonical_name(
+			st.translate_to_global_node(*this, i->first)));
+		vector<hold_constraint_entry>::const_iterator
+			ci(i->second.begin()), ce(i->second.end());
+		for ( ; ci!=ce; ++ci) {
+			const string ref(st.get_node_canonical_name(
+				st.translate_to_global_node(*this, ci->ref_node)));
+			o << "t( " << ref << (ci->dir ? '+' : '-') <<
+				" -> " << target <<
+				" ) >= " << ci->time << endl;
+		}
+	}
+
+}
+	return o;
+}	// end dump_timing_constraints
+#endif	// PRSIM_SETUP_HOLD
+
 //=============================================================================
 // explicit class template instantiations
 template struct RuleState<State::time_type>;

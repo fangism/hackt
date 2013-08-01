@@ -6651,6 +6651,36 @@ DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS(KeeperCheckFail,
 	"Set error-handling policy on missing keepers.",
 	keeper_check_fail)
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_SETUP_HOLD
+/***
+@texinfo cmd/setup-violation.texi
+@deffn Command setup-violation [mode]
+Set the error-handling policy for when there is a setup time violation.
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS(SetupViolation, 
+	"setup-violation", 
+	"set error-handling for setup time violation",
+	"Set error-handling on setup time violation.",
+	setup_violation)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/hold-violation.texi
+@deffn Command hold-violation [mode]
+Set the error-handling policy for when there is a hold time violation.
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS(HoldViolation, 
+	"hold-violation", 
+	"set error-handling for hold time violation",
+	"Set error-handling on hold time violation.",
+	hold_violation)
+#endif
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #undef	DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -6921,6 +6951,51 @@ AllInvariantsVerbose::main(State& s, const string_list& a) {
 
 void
 AllInvariantsVerbose::usage(ostream& o) { all_invariants_usage(o); }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+#if PRSIM_SETUP_HOLD
+/***
+@texinfo cmd/timing-constraints-process.texi
+@deffn Command timing-constraints-process-invariants proc
+Display timing constraints (setup, hold) that belong to the named process.
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(TimingConstraintsProcess,
+	"timing-constraints-process",
+	info, "display timing constraints for the process")
+
+int
+TimingConstraintsProcess::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	const process_index_type pid =
+		parse_process_to_index(a.back(), s.get_module()).index;
+	if (pid < s.get_num_processes()) {
+		if (pid) {
+			parse_name_to_what(cout, a.back(), s.get_module());
+		} else {
+			cout << "[top-level]" << endl;
+		}
+		s.dump_timing_constraints(cout, pid);	// TODO: verbose
+		return Command::NORMAL;
+	} else {
+		cerr << "Error: process not found." << endl;
+		return Command::BADARG;
+	}
+}
+}
+
+void
+TimingConstraintsProcess::usage(ostream& o) {
+	o << name << " <process>" << endl;
+o <<
+"Print all timing constraints associated with the named process."
+	<< endl;
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 /***

@@ -123,6 +123,29 @@ struct faninout_struct_type {
 
 };	// end struct faninout_struct_type
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_SETUP_HOLD
+struct timing_constraint_entry {
+	/**
+		Process-local index of the reference node of this constraint.  
+	 */
+	node_index_type				ref_node;
+	rule_time_type				time;
+
+	timing_constraint_entry() : ref_node(INVALID_NODE_INDEX), time(0) { }
+	timing_constraint_entry(const node_index_type n,
+		const rule_time_type t) :
+		ref_node(n), time(t) { }
+};	// end struct timing_constraing
+
+typedef	timing_constraint_entry			setup_constraint_entry;
+
+struct hold_constraint_entry : public timing_constraint_entry {
+	bool					dir;
+};	// end struct hold_constraint_entry
+
+#endif
+
 //=============================================================================
 /**
 	shared structures used per process type
@@ -219,6 +242,24 @@ struct unique_process_subgraph {
 	 */
 	faninout_map_type			local_faninout_map;
 
+#if PRSIM_SETUP_HOLD
+	/**
+		key: local target node index
+		value: sequence of local reference nodes and times
+		constraints are: (reference, target)
+		Any time a target node is queried, we will want
+		all of its constraints at once.
+	 */
+	typedef	pair<node_index_type, bool>	setup_constraint_key_type;
+	typedef	node_index_type			hold_constraint_key_type;
+	typedef	map<setup_constraint_key_type, vector<setup_constraint_entry> >
+						setup_constraint_set_type;
+	typedef	map<hold_constraint_key_type, vector<hold_constraint_entry> >
+						hold_constraint_set_type;
+	setup_constraint_set_type		setup_constraints;
+	hold_constraint_set_type		hold_constraints;
+#endif
+
 	struct memory_accumulator;
 
 	unique_process_subgraph();
@@ -264,6 +305,11 @@ struct unique_process_subgraph {
 
 	ostream&
 	dump_struct_dot(ostream&, const expr_index_type) const;
+
+#if PRSIM_SETUP_HOLD
+	ostream&
+	dump_timing_constraints(ostream&) const;
+#endif
 
 };	// end struct unique_process_subgraph
 

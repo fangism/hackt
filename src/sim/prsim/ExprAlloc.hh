@@ -137,6 +137,16 @@ protected:
 #if PRSIM_PRECHARGE_INVARIANTS
 	excl_ptr<netlist_generator>		netlists;
 #endif
+	/**
+		Define to true when the visitor is doing a 
+		once-per-type unique_process_subgraph pass.
+		Define to false when the visitor is doing a
+		once-per-process-instance pass for global information
+		construction.  
+		This is kind of kludgy, but needed because we have a mix
+		of information that is locally scoped and globally scoped.
+	 */
+	bool					unique_pass;
 public:
 
 	ExprAlloc(state_type&, 
@@ -163,6 +173,11 @@ public:
 
 	void
 	operator () (void);
+
+	bool
+	in_unique_pass(void) const {
+		return unique_pass;
+	}
 
 protected:
 	using cflat_visitor::visit;
@@ -307,6 +322,17 @@ private:
 	expr_index_type
 	__visit_current_path_graph_node_logic_output_down(
 		const current_path_graph&, const size_t, const size_t);
+#endif
+
+#if PRSIM_SETUP_HOLD
+public:
+	// really, only want to provide this interface to spec directives
+	// node argument is 1-based local index
+	void
+	add_global_setup_constraint(const node_index_type) const;
+
+	void
+	add_global_hold_constraint(const node_index_type) const;
 #endif
 
 private:

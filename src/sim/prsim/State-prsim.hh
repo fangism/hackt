@@ -250,6 +250,33 @@ public:
 
 	};	// end struct invariant_exception
 
+#if PRSIM_SETUP_HOLD
+	struct timing_exception : public generic_exception {
+		value_enum			tvalue;
+		node_index_type			reference;	// reference node
+		bool				dir;
+		/// type of timing violation (eventually enum)
+		bool				is_setup;	// else hold
+		process_index_type		pid;
+		time_type			min_delay;
+
+		timing_exception(const node_index_type r,
+			const node_index_type t, 
+			const value_enum v,
+			const bool d,
+			const bool type, const process_index_type p,
+			const time_type m,
+			const error_policy_enum e) : 
+			generic_exception(t, e), tvalue(v),
+			reference(r), dir(d),
+			is_setup(type), pid(p), min_delay(m) {
+		}
+
+		error_policy_enum
+		inspect(const State&, ostream&) const;
+	};	// end timing_exception
+#endif
+
 	typedef	generic_exception	interference_exception;
 	typedef	generic_exception	instability_exception;
 	typedef	generic_exception	keeper_fail_exception;
@@ -436,7 +463,12 @@ public:
 		ERROR_DEFAULT_ASSERT_FAIL = ERROR_FATAL,
 		ERROR_DEFAULT_CHANNEL_EXPECT_FAIL = ERROR_FATAL,
 		ERROR_DEFAULT_EXCL_CHECK_FAIL = ERROR_FATAL,
-		ERROR_DEFAULT_KEEPER_CHECK = ERROR_IGNORE
+		ERROR_DEFAULT_KEEPER_CHECK = ERROR_IGNORE,
+#if PRSIM_SETUP_HOLD
+		ERROR_DEFAULT_SETUP_VIOLATION = ERROR_WARN,
+		ERROR_DEFAULT_HOLD_VIOLATION = ERROR_BREAK,
+#endif
+		ERROR_DEFAULT_GENERIC = ERROR_BREAK	// unused
 	};
 
 private:
@@ -775,6 +807,19 @@ private:
 	check_excl_ring_map_type		check_exhi;
 	/// sparse set of node-associated lock sets
 	check_excl_ring_map_type		check_exlo;
+#if PRSIM_SETUP_HOLD
+	/**
+		key: index of node that triggers timing check(s)
+		value: set of processes that need to check the node
+			These should be unique and sorted.
+	 */
+	typedef	std::set<node_index_type>	local_node_ids_type;
+	typedef	std::map<node_index_type,
+			std::map<process_index_type, local_node_ids_type> >
+					timing_constraint_process_map_type;
+	timing_constraint_process_map_type	setup_check_map;
+	timing_constraint_process_map_type	hold_check_map;
+#endif
 	// current time, etc...
 	time_type				current_time;
 	time_type				uniform_delay;
@@ -842,6 +887,12 @@ private:
 	error_policy_enum			excl_check_fail_policy;
 	/// control handling/checking of keeper invariants
 	error_policy_enum			keeper_check_fail_policy;
+#if PRSIM_SETUP_HOLD
+	/// setup time violation policy
+	error_policy_enum			setup_violation_policy;
+	/// hold time violation policy
+	error_policy_enum			hold_violation_policy;
+#endif
 	/// name of automatically taken checkpoint
 	string					autosave_name;
 	/// timing mode
@@ -1257,6 +1308,12 @@ public:
 	DEFINE_POLICY_CONTROL_GET(channel_expect_fail)
 	DEFINE_POLICY_CONTROL_GET(excl_check_fail)
 	DEFINE_POLICY_CONTROL_GET(keeper_check_fail)
+#if PRSIM_SETUP_HOLD
+	DEFINE_POLICY_CONTROL_GET(setup_violation)
+	DEFINE_POLICY_CONTROL_GET(hold_violation)
+	DEFINE_POLICY_CONTROL_SET(setup_violation)
+	DEFINE_POLICY_CONTROL_SET(hold_violation)
+#endif
 
 #undef	DEFINE_POLICY_CONTROL_SET
 #undef	DEFINE_POLICY_CONTROL_GET
@@ -1702,6 +1759,14 @@ private:
 	flush_excllo_queue(void);
 #endif
 
+#if PRSIM_SETUP_HOLD
+	void
+	do_setup_check(const node_index_type, const value_enum);
+
+	void
+	do_hold_check(const node_index_type, const value_enum);
+#endif
+
 #if PRSIM_MK_EXCL_BLOCKING_SET
 	void
 	flush_blocked_excl_nodes(const value_enum);
@@ -1959,6 +2024,11 @@ public:
 
 	ostream&
 	dump_all_rules(ostream&, const bool) const;
+
+#if PRSIM_SETUP_HOLD
+	ostream&
+	dump_timing_constraints(ostream&, const process_index_type) const;
+#endif
 
 	ostream&
 	dump_node_why_X(ostream&, const node_index_type, 
