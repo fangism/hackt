@@ -1,0 +1,10 @@
+// "pseudo-flop-d.hac"
+// copy-modified from "pseudo-flop-b.hac"
+// just checks timing constraints, neg-edged
+
+bool clk, d, q;
+spec {
+	setup_neg<15>(d, clk)
+	hold_neg<10>(clk, d)
+}
+

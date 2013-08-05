@@ -108,7 +108,8 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	pcehb-test-b pcefb-test-b \
 	power-supplies-a power-supplies-b power-supplies-c power-supplies-d \
 	power-supplies-e power-supplies-f \
-	pseudo-flop-a pseudo-flop-b
+	pseudo-flop-a pseudo-flop-b \
+	pseudo-flop-c pseudo-flop-d
 
 # TODO: more cross-coupled test cases
 # SRAM cell
@@ -814,7 +815,9 @@ HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
 	channel-clocked-test-a-07 channel-clocked-test-a-07c \
 	channel-clocked-test-b-06 \
 	channel-clocked-test-b-07 \
-	reset-test-01
+	reset-test-01 \
+	pseudo-flop-c-01 \
+	pseudo-flop-d-01
 
 # KNOWN BUG (fails, but should not): cross-pulldown-01
 

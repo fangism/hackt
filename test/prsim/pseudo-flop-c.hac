@@ -1,0 +1,10 @@
+// "pseudo-flop-c.hac"
+// copy-modified from "pseudo-flop-a.hac"
+// just checks timing constraints at the top-level
+
+bool clk, d, q;
+spec {
+	setup_pos<15>(d, clk)
+	hold_pos<10>(clk, d)
+}
+

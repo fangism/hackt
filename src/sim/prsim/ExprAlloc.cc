@@ -298,7 +298,12 @@ ExprAlloc::visit_rules_and_directives(const footprint& f) {
 	const entity::PRS::footprint& pfp(f.get_prs_footprint());
 	pfp.accept(*this);
 	// some spec directives are done hierarchically now
+try {
 	f.get_spec_footprint().accept(*this);
+} catch (...) {
+	report_instantiation_error(cerr);
+	throw;
+}
 
 #if 0
 	typedef footprint::invariant_pool_type::const_iterator
@@ -2155,7 +2160,7 @@ DECLARE_AND_DEFINE_PRSIM_SPEC_DIRECTIVE_CLASS(Assert, "assert")
 void
 Assert::main(visitor_type& v, const param_args_type& params, 
 		const node_args_type& nodes) {
-	// does absolutely nothing
+	// does absolutely nothing, already checked earlier
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2350,7 +2355,7 @@ __setup_main(ExprAlloc& v,
 if (!v.in_unique_pass()) {
 	// do this once per-type
 	STACKTRACE_INDENT_PRINT("unique pass" << endl);
-	NEVER_NULL(v.g);
+if (v.g) {
 	setup_constraint_entry c;
 	// reference node (in the past)
 	c.ref_node = v.lookup_local_bool_id(*nodes[0].begin());
@@ -2361,13 +2366,18 @@ if (!v.in_unique_pass()) {
 	// TODO: also allow real values (reusable function)
 	// allocate constraint in current process graph
 	v.g->setup_constraints[k].push_back(c);
-
+} else {
+	cerr << "Warning: [unimplemented] Ignoring top-level timing directives.\n"
+		"Please invoke timing constraints inside a process for now." << endl;
+}
 // do this per-instance
 } else {
 	STACKTRACE_INDENT_PRINT("instance pass" << endl);
+if (v.g) {
 	// global node also needs to track global pid of the process
 	// that owns this constraint
 	v.add_global_setup_constraint(*nodes[1].begin());
+}	// else already warned unimplemented
 }
 }
 
@@ -2396,7 +2406,7 @@ __hold_main(ExprAlloc& v,
 	STACKTRACE_VERBOSE;
 if (!v.in_unique_pass()) {
 	STACKTRACE_INDENT_PRINT("unique pass" << endl);
-	NEVER_NULL(v.g);
+if (v.g) {
 // do this once per-type
 	hold_constraint_entry c;
 	// reference node (in the past, usually clk)
@@ -2409,13 +2419,18 @@ if (!v.in_unique_pass()) {
 	// TODO: also allow real values (reusable function)
 	// allocate constraint in current process graph
 	v.g->hold_constraints[k].push_back(c);
-
+} else {
+	cerr << "Warning: [unimplemented] Ignoring top-level timing directives.\n"
+		"Please invoke timing constraints inside a process for now." << endl;
+}
 // do this per-instance
 } else {
 	STACKTRACE_INDENT_PRINT("instance pass" << endl);
+if (v.g) {
 	// global node also needs to track global pid of the process
 	// that owns this constraint
 	v.add_global_hold_constraint(*nodes[1].begin());
+}	// else already warned unimplemented
 }
 }
 
