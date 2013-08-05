@@ -574,7 +574,7 @@ DEFINE_CHECK_NODE_ARGS(hold_neg)
 
 //-----------------------------------------------------------------------------
 }	// end namespace directives
-}	// end namespace PRS
+}	// end namespace SPEC
 }	// end namespace entity
 }	// end namespace HAC
 
