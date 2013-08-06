@@ -1,0 +1,5 @@
+# "flop-timing-b-01.prsimrc"
+# @haco@ flop-timing-b.haco-c
+
+source flop-timing-a-01.prsimrc
+

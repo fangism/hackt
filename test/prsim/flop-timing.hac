@@ -1,0 +1,81 @@
+// "flop-timing.hac"
+
+deftype clks_4p <: int<4> (bool p1, p2, _p1, _p2) {
+spec {
+	// non-overlapping
+	exclhi(p1, p2)
+	excllo(_p1, _p2)
+}
+}
+
+defproc latch(bool? phi, _phi, i; bool! _o) {
+spec {
+	setup_pos<25>(i, phi)
+	setup_neg<25>(i, _phi)
+	hold_pos<20>(phi, i)
+	hold_neg<20>(_phi, i)
+}
+prs {
+	phi & i		-> _o-
+	~_phi & ~i	-> _o+
+}
+}
+
+defproc dff(clks_4p? c; bool? d; bool! q) {
+bool _q;
+latch m(c.p1, c._p1, d, _q);
+latch s(c.p2, c._p2, _q, q);
+}
+
+template <><pint D>
+defproc inv(bool? i; bool! o) {
+prs {
+[after=D]	i		=> o-
+}
+}
+
+template <pint N><pint D>
+defproc inv_chain(bool? i; bool! o) {
+inv c[N];
+bool r[N+1];
+r[0] = i;
+r[N] = o;
+(;j:N:
+	c[j]<D>(r[j], r[j+1]);
+)
+}
+
+defproc nor(bool? a, b; bool! o) {
+prs {
+	a | b		=> o-
+}
+}
+
+defproc clkgen_4p(bool? clk; clks_4p! c) {
+bool phi1 = c.p1, phi2 = c.p2, _phi1 = c._p1, _phi2 = c._p2; // aliases
+bool _clk;
+inv ci<5>(clk, _clk);
+// nor1: generates phi1
+inv_chain<2><5> d1( , phi1);
+nor n1(clk, phi2, d1.i);
+inv o1<5>(phi1, _phi1);
+// nor2: generates phi2
+inv_chain<2><5> d2( , phi2);
+nor n2(_clk, phi1, d2.i);
+inv o2<5>(phi2, _phi2);
+}
+
+template <pint N, M>
+defproc dff_fifo(clks_4p? c; bool? d; bool! q) {
+dff f[N];
+inv_chain<M><20> z[N-1];
+(;i:N:
+	f[i](c, , );
+)
+	f[0].d = d;
+	f[N-1].q = q;
+(;i:N-1:
+	z[i](f[i].q, f[i+1].d);
+)
+}
+

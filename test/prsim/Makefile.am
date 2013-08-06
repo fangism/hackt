@@ -109,7 +109,8 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	power-supplies-a power-supplies-b power-supplies-c power-supplies-d \
 	power-supplies-e power-supplies-f \
 	pseudo-flop-a pseudo-flop-b \
-	pseudo-flop-c pseudo-flop-d
+	pseudo-flop-c pseudo-flop-d \
+	flop-timing flop-timing-a flop-timing-b
 
 # TODO: more cross-coupled test cases
 # SRAM cell
@@ -496,7 +497,9 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	power-supplies-e-01 power-supplies-f-01 \
 	x-all-01 x-all-02 x-all-03 x-all-04 x-all-05 \
 	pseudo-flop-a-01 \
-	pseudo-flop-b-01
+	pseudo-flop-b-01 \
+	flop-timing-a-01 flop-timing-a-02 \
+	flop-timing-b-01 flop-timing-b-02
 
 # subset of prsimrc test that we wish to compare traces against regressions
 HACKT_PRSIMTRACE_TEST_SUBJECTS = \

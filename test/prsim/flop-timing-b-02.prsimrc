@@ -1,0 +1,26 @@
+# "flop-timing-b-02.prsimrc"
+# copy-modified from "flop-timing-b-01.prsimrc"
+# @haco@ flop-timing-b.haco-c
+
+# watchall
+unstable warn
+unstable-dequeue
+channel-expect-fail warn
+setup-violation fatal
+hold-violation fatal
+clock-source cin:0 11
+channel-timing cin after 80
+channel-clocked ic c:0 d:0
+channel-clocked oc c:0 d:0
+channel-source-args ic 0 0 1 1 1 1 0 0 0 0 0
+channel-expect-args oc X X X 0 0 1 1 1 1 0 0
+confirm
+channel-watchall
+
+channel-reset-all
+cycle
+echo releaing clock channels
+channel-release-all
+cycle
+time
+

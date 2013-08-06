@@ -1,0 +1,55 @@
+Warning: channel validity is already being driven by source on channel `cin'.
+releaing clock channels 
+channel	ic (.data) : 0
+channel	oc (.data) : X
+WARNING: weak-interference `f.f[1].q'
+>> cause: `c._p2' (val: 0)
+WARNING: weak-interference `o'
+>> cause: `c._p2' (val: 0)
+channel	ic (.data) : 0
+channel	oc (.data) : X
+WARNING: weak-interference `f.f[1]._q'
+>> cause: `c._p1' (val: 0)
+WARNING: weak-interference `f.f[2]._q'
+>> cause: `c._p1' (val: 0)
+WARNING: weak-interference `o'
+>> cause: `c._p2' (val: 0)
+channel	ic (.data) : 1
+channel	oc (.data) : X
+WARNING: weak-interference `f.f[2]._q'
+>> cause: `c._p1' (val: 0)
+channel	ic (.data) : 1
+channel	oc (.data) : 0
+channel oc has value 0, as expected.
+WARNING: unstable `f.f[1]._q'-
+rule: [after 10]	c.p1:0 & f.f[1].d:1<0><0> -> f.f[1]._q-:1
+>> cause: `c.p1' (val: 0)
+channel	ic (.data) : 1
+channel	oc (.data) : 0
+channel oc has value 0, as expected.
+channel	ic (.data) : 1
+channel	oc (.data) : 0
+channel-assert: value assertion failed on channel oc, expected: 1, but got: 0
+ERROR: value assertion failed on channel `oc' at index [5].
+	expected: 1, got: 0
+WARNING: unstable `f.f[2]._q'-
+rule: [after 10]	c.p1:0 & f.f[2].d:1<0><0> -> f.f[2]._q-:1
+>> cause: `c.p1' (val: 0)
+channel	ic (.data) : 0
+channel	oc (.data) : 0
+channel-assert: value assertion failed on channel oc, expected: 1, but got: 0
+ERROR: value assertion failed on channel `oc' at index [6].
+	expected: 1, got: 0
+channel	ic (.data) : 0
+channel	oc (.data) : 1
+channel oc has value 1, as expected.
+channel	ic (.data) : 0
+channel	oc (.data) : 1
+channel oc has value 1, as expected.
+channel	ic (.data) : 0
+channel	oc (.data) : 0
+channel oc has value 0, as expected.
+channel	ic (.data) : 0
+channel	oc (.data) : 0
+channel oc has value 0, as expected.
+time: 2010
