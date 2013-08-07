@@ -498,6 +498,8 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	x-all-01 x-all-02 x-all-03 x-all-04 x-all-05 \
 	pseudo-flop-a-01 \
 	pseudo-flop-b-01 \
+	pseudo-flop-c-01 \
+	pseudo-flop-d-01 \
 	flop-timing-a-01 flop-timing-a-02 \
 	flop-timing-b-01 flop-timing-b-02
 
@@ -818,9 +820,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
 	channel-clocked-test-a-07 channel-clocked-test-a-07c \
 	channel-clocked-test-b-06 \
 	channel-clocked-test-b-07 \
-	reset-test-01 \
-	pseudo-flop-c-01 \
-	pseudo-flop-d-01
+	reset-test-01
 
 # KNOWN BUG (fails, but should not): cross-pulldown-01
 

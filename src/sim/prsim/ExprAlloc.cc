@@ -353,8 +353,13 @@ if (flags.auto_precharge_invariants) {
 
 	// process top type
 	const size_t ti = auto_create_unique_process_graph(*topfp);
-	const unique_process_subgraph&
-		ptemplate(state.unique_process_pool[ti]);
+	INVARIANT(!ti);	// top is always process id 0
+	unique_process_subgraph&
+		_ptemplate(state.unique_process_pool[ti]);
+	const unique_process_subgraph& ptemplate(_ptemplate);
+	// setting unique_process_subgraph here allows top-level 
+	// spec directives to work
+	const value_saver<unique_process_subgraph*> tmp(g, &_ptemplate);
 	process_sim_state& ps(state.process_state_array[current_process_index]);
 	ps.allocate_from_type(ptemplate, ti, total_exprs);
 	footprint_frame topff;
@@ -2355,7 +2360,7 @@ __setup_main(ExprAlloc& v,
 if (!v.in_unique_pass()) {
 	// do this once per-type
 	STACKTRACE_INDENT_PRINT("unique pass" << endl);
-if (v.g) {
+	NEVER_NULL(v.g);
 	setup_constraint_entry c;
 	// reference node (in the past)
 	c.ref_node = v.lookup_local_bool_id(*nodes[0].begin());
@@ -2366,18 +2371,12 @@ if (v.g) {
 	// TODO: also allow real values (reusable function)
 	// allocate constraint in current process graph
 	v.g->setup_constraints[k].push_back(c);
-} else {
-	cerr << "Warning: [unimplemented] Ignoring top-level timing directives.\n"
-		"Please invoke timing constraints inside a process for now." << endl;
-}
 // do this per-instance
 } else {
 	STACKTRACE_INDENT_PRINT("instance pass" << endl);
-if (v.g) {
 	// global node also needs to track global pid of the process
 	// that owns this constraint
 	v.add_global_setup_constraint(*nodes[1].begin());
-}	// else already warned unimplemented
 }
 }
 
@@ -2406,7 +2405,7 @@ __hold_main(ExprAlloc& v,
 	STACKTRACE_VERBOSE;
 if (!v.in_unique_pass()) {
 	STACKTRACE_INDENT_PRINT("unique pass" << endl);
-if (v.g) {
+	NEVER_NULL(v.g);
 // do this once per-type
 	hold_constraint_entry c;
 	// reference node (in the past, usually clk)
@@ -2419,18 +2418,12 @@ if (v.g) {
 	// TODO: also allow real values (reusable function)
 	// allocate constraint in current process graph
 	v.g->hold_constraints[k].push_back(c);
-} else {
-	cerr << "Warning: [unimplemented] Ignoring top-level timing directives.\n"
-		"Please invoke timing constraints inside a process for now." << endl;
-}
 // do this per-instance
 } else {
 	STACKTRACE_INDENT_PRINT("instance pass" << endl);
-if (v.g) {
 	// global node also needs to track global pid of the process
 	// that owns this constraint
 	v.add_global_hold_constraint(*nodes[1].begin());
-}	// else already warned unimplemented
 }
 }
 
