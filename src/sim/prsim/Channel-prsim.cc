@@ -3812,12 +3812,8 @@ channel::process_data(const State& s) throw (channel_exception) {
 			if (e == ERROR_WARN) {
 				ex.inspect(s, cout);
 			} else if (e > ERROR_WARN) {
-#if PRSIM_AGGREGATE_EXCEPTIONS
 				s.record_exception(State::exception_ptr_type(
 					new channel_exception(ex)));
-#else
-				throw ex;
-#endif
 			}
 		}
 		} else {	// cannot expect invalid value
@@ -3832,12 +3828,8 @@ channel::process_data(const State& s) throw (channel_exception) {
 			if (e == ERROR_WARN) {
 				ex.inspect(s, cout);
 			} else if (e > ERROR_WARN) {
-#if PRSIM_AGGREGATE_EXCEPTIONS
 				s.record_exception(State::exception_ptr_type(
 					new channel_exception(ex)));
-#else
-				throw ex;
-#endif
 			}
 		}
 		} else {	// else don't care

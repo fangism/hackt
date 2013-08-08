@@ -448,9 +448,7 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 		timing_mode(TIMING_DEFAULT),
 		_dump_flags(dump_flags::no_owners), 
 		time_fmt(cout),
-#if PRSIM_AGGREGATE_EXCEPTIONS
 		recent_exceptions(),
-#endif
 		__shuffle_indices(0) {
 #if PRSIM_MAP_FAST_ALLOCATOR
 	__initialize_updated_nodes_sentinel();
@@ -770,7 +768,7 @@ State::flush_channel_events(const vector<env_event_type>& env_events,
 				false,	// unrelated to excl
 #endif
 				ev);
-#if 0 && PRSIM_AGGREGATE_EXCEPTIONS
+#if 0
 			if (UNLIKELY(E >= ERROR_BREAK)) {
 				stop();
 			if (UNLIKELY(E >= ERROR_INTERACTIVE)) {
@@ -3697,16 +3695,9 @@ struct State::auto_flush_queues {
 		if (UNLIKELY(E >= ERROR_BREAK)) {
 			state.stop();		// set stop flag
 			if (UNLIKELY(E >= ERROR_INTERACTIVE)) {
-#if PRSIM_AGGREGATE_EXCEPTIONS
 				state.record_exception(exception_ptr_type(
 					new interference_exception(
 						cause.node, E)));
-#else
-				const interference_exception x(cause.node, E);
-				// this could be an instability exception
-				// as well, so use a generic exception for now
-				throw x;
-#endif
 			}
 		}
 	}
@@ -3797,9 +3788,7 @@ State::execute_immediately(
 	ISE_INVARIANT(excllo_queue.empty());
 #endif
 
-#if PRSIM_AGGREGATE_EXCEPTIONS
 	recent_exceptions.clear();
-#endif
 //	const event_index_type& ei(ep.event_index);
 #if 0
 	if (!ei) {
@@ -3927,15 +3916,11 @@ State::execute_immediately(
 				// enqueue_event(ep.time, ei);
 				enqueue_event(ept, pei);
 			}	// otherwise was not from queue, don't enqueue
-#if PRSIM_AGGREGATE_EXCEPTIONS
 			record_exception(
 				exception_ptr_type(new excl_exception(exex)));
 			// return immediately to keep event from executing
 			// early abort, keeping event in queue
 			return return_type(INVALID_NODE_INDEX, INVALID_NODE_INDEX);
-#else
-			throw exex;
-#endif
 		}	// end switch
 		}
 	}
@@ -3981,9 +3966,6 @@ if (eval_ordering_is_random()) {
 #if PRSIM_LAZY_INVARIANTS
 	__invariant_update_map.clear();
 #endif
-#if !PRSIM_AGGREGATE_EXCEPTIONS
-	break_type __throw__ = ERROR_NONE;
-#endif
 	for ( ; i!=e; ++i) {
 		// when evaluating a node as an expression, 
 		// is appropriate to interpret node value
@@ -3992,13 +3974,6 @@ if (eval_ordering_is_random()) {
 		propagate_evaluation(new_cause, *i, pull_enum(prev));
 		if (UNLIKELY(E >= ERROR_BREAK)) {
 			stop();
-#if !PRSIM_AGGREGATE_EXCEPTIONS
-			// just signal to break
-			// FATAL and INTERACTIVE are handled after this loop
-			if (E > __throw__) {
-				__throw__ = E;
-			}
-#endif
 		}
 	}
 #if PRSIM_LAZY_INVARIANTS
@@ -4012,24 +3987,11 @@ if (eval_ordering_is_random()) {
 				ii->second, new_cause.node, new_cause.val);
 		if (UNLIKELY(E >= ERROR_BREAK)) {
 			stop();
-#if PRSIM_AGGREGATE_EXCEPTIONS
 			if (UNLIKELY(E >= ERROR_INTERACTIVE)) {
 				record_exception(exception_ptr_type(
 					new invariant_exception(ni, E)));
 			}
-#else
-			if (E > __throw__) {
-				__throw__ = E;
-			}
-#endif
 		}
-	}
-#endif
-#if !PRSIM_AGGREGATE_EXCEPTIONS
-	// only throw after all fanouts have been processed
-	if (UNLIKELY(__throw__ >= ERROR_INTERACTIVE)) {
-		const invariant_exception invex(ni, __throw__);
-		throw invex;
 	}
 #endif
 }
@@ -4049,13 +4011,8 @@ if (n.in_channel()) {
 		stop();
 	if (UNLIKELY(E >= ERROR_INTERACTIVE)) {
 		// now catches FATAL and INTERACTIVE
-#if PRSIM_AGGREGATE_EXCEPTIONS
 		record_exception(exception_ptr_type(
 			new instability_exception(ni, E)));
-#else
-		const instability_exception unstabex(ni, E);
-		throw unstabex;
-#endif
 	}
 	}
 }
@@ -4216,14 +4173,8 @@ if (n.in_channel()) {
 				stop();
 			if (UNLIKELY(E >= ERROR_INTERACTIVE)) {
 				// can only throw one node, pick first one
-#if PRSIM_AGGREGATE_EXCEPTIONS
 				record_exception(exception_ptr_type(
 					new keeper_fail_exception(ni, E)));
-#else
-				const keeper_fail_exception
-					kx(ni, E);
-				throw kx;
-#endif
 			}
 			}
 		}
@@ -4234,7 +4185,6 @@ if (n.in_channel()) {
 }	// end method execute_immediately()
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PRSIM_AGGREGATE_EXCEPTIONS
 void
 State::record_exception(const exception_ptr_type& p) const {
 	recent_exceptions.push_back(p);
@@ -4257,7 +4207,6 @@ State::inspect_exceptions(void) const {
 	}
 	return ret;
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
@@ -5537,14 +5486,12 @@ State::__diagnose_violation(ostream& o, const pull_enum next,
 			} else {
 				DEBUG_STEP_PRINT("changing event to X" << endl);
 				e.val = LOGIC_OTHER;
-#if PRSIM_AGGREGATE_EXCEPTIONS
 				const error_policy_enum E = next == PULL_WEAK ?
 					weak_unstable_policy : unstable_policy;
 				if (E >= ERROR_INTERACTIVE) {
 					record_exception(exception_ptr_type(
 						new instability_exception(ni, E)));
 				}
-#endif
 			}
 		}
 #if PRSIM_SIMPLE_EVENT_QUEUE

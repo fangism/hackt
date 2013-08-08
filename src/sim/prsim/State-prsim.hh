@@ -54,9 +54,7 @@
 #if PRSIM_TRACE_GENERATION
 #include "util/memory/excl_ptr.hh"
 #endif
-#if PRSIM_AGGREGATE_EXCEPTIONS
 #include "util/memory/count_ptr.hh"
-#endif
 
 /**
 	Define to 1 to use a binary-searchable sorted linear array
@@ -111,9 +109,7 @@ using util::memory::excl_ptr;
 using util::memory::never_ptr;
 using SIM::INVALID_TRACE_INDEX;
 #endif
-#if PRSIM_AGGREGATE_EXCEPTIONS
 using util::memory::count_ptr;
-#endif
 using std::map;
 using entity::dump_flags;
 using entity::preal_value_type;
@@ -254,13 +250,9 @@ public:
 	typedef	generic_exception	instability_exception;
 	typedef	generic_exception	keeper_fail_exception;
 
-#if PRSIM_AGGREGATE_EXCEPTIONS
 	typedef	count_ptr<step_exception>	exception_ptr_type;
 #define	THROWS_STEP_EXCEPTION
 	// should be nothrow, or C++11 noexcept
-#else
-#define	THROWS_STEP_EXCEPTION	throw (const step_exception&)
-#endif
 private:
 	struct evaluate_return_type;
 
@@ -853,13 +845,11 @@ public:
 	// for formatting timestamps
 	util::numformat				time_fmt;
 private:
-#if PRSIM_AGGREGATE_EXCEPTIONS
 	/**
 		Multiple exceptions are kept here.
 		This is cleared every time a step() is begun.
 	 */
 	mutable vector<exception_ptr_type>	recent_exceptions;
-#endif
 	/**
 		set by the SIGINT signal handler
 		(is this redundant with the STOP flag?)
@@ -1353,20 +1343,14 @@ public:
 	step_return_type
 	cycle(void) THROWS_STEP_EXCEPTION;
 
-#if PRSIM_AGGREGATE_EXCEPTIONS
 	size_t
 	fatal_exceptions(void) const {
 		return recent_exceptions.size();
 	}
-#endif
 
 	bool
 	is_fatal(void) const {
-#if PRSIM_AGGREGATE_EXCEPTIONS
 		return recent_exceptions.size();
-#else
-		return false;
-#endif
 	}
 
 	void
@@ -2097,13 +2081,11 @@ public:
 		return !node_is_used(ni);
 	}
 
-#if PRSIM_AGGREGATE_EXCEPTIONS
 	void
 	record_exception(const exception_ptr_type&) const;
 
 	error_policy_enum
 	inspect_exceptions(void) const;
-#endif
 
 	ostream&
 	dump_memory_usage(ostream&) const;

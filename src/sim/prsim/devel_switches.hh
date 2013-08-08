@@ -123,8 +123,9 @@
 	Goal: 1
 	Rationale: much better diagnostics, safe execution, 
 		reduced risk of simulator incoherence after fatal errors.
+	Status: perm'd
  */
-#define	PRSIM_AGGREGATE_EXCEPTIONS			1
+// #define	PRSIM_AGGREGATE_EXCEPTIONS			1
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -210,10 +211,10 @@
 	Rationale: the code is unmaintainable and incomprehensible,
 		and full of dark corners where bugs lurk.
 		Rewrite will gain back performance, from simplicity.
-	Was never robust enough to simulate non-QDI circuits.  
+		Was never robust enough to simulate non-QDI circuits.  
 	Goal: 1
 	Priority: med-high
-	Status: just beginning
+	Status: complete
  */
 #define	PRSIM_SIMPLE_EVENT_QUEUE		1
 
