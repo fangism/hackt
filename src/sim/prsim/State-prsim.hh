@@ -51,9 +51,7 @@
  */
 #define	PRSIM_FCFS_UPDATED_NODES		(1 && PRSIM_SIMPLE_EVENT_QUEUE)
 
-#if PRSIM_TRACE_GENERATION
 #include "util/memory/excl_ptr.hh"
-#endif
 #include "util/memory/count_ptr.hh"
 
 /**
@@ -97,12 +95,10 @@ namespace entity {
 namespace SIM {
 namespace PRSIM {
 class ExprAlloc;
-#if PRSIM_TRACE_GENERATION
 class TraceManager;
 using util::memory::excl_ptr;
 using util::memory::never_ptr;
 using SIM::INVALID_TRACE_INDEX;
-#endif
 #if PRSIM_VCD_GENERATION
 class VCDManager;
 using util::memory::excl_ptr;
@@ -165,9 +161,7 @@ public:
 	typedef	NodeState			node_type;
 	typedef	Event				event_type;
 	typedef	EventPool			event_pool_type;
-#if PRSIM_TRACE_GENERATION
 	typedef	event_type::cause_type		event_cause_type;
-#endif
 	typedef	node_type::event_cause_type	node_cause_type;
 	/**
 		NOTE: pass by event_cause_type by reference.  
@@ -178,10 +172,8 @@ public:
 						expr_struct_type;
 	typedef	unique_process_subgraph::rule_type
 						rule_type;
-#if PRSIM_TRACE_GENERATION
 	typedef	size_t				trace_index_type;
 	typedef	TraceManager			trace_manager_type;
-#endif
 #if PRSIM_VCD_GENERATION
 	typedef	VCDManager			vcd_manager_type;
 #endif
@@ -348,13 +340,11 @@ private:
 		 */
 		FLAG_FROZEN_VERBOSE = 0x4000,
 #endif
-#if PRSIM_TRACE_GENERATION
 		/**
 			Set to true when events are being 
 			recorded to a prsim trace file.
 		 */
 		FLAG_TRACE_ON = 0x8000,
-#endif
 #if PRSIM_VCD_GENERATION
 		/**
 			Set to true when events are being traced, 
@@ -791,11 +781,11 @@ private:
 		Extension to manage channel environments and actions. 
 	 */
 	channel_manager				_channel_manager;
-#if PRSIM_TRACE_GENERATION
+	/// responsible for recording trace file
 	excl_ptr<trace_manager_type>		trace_manager;
+	/// controls frequency of trace flushing
 	trace_index_type			trace_flush_interval;
-#endif
-#if PRSIM_TRACE_GENERATION
+#if PRSIM_VCD_GENERATION
 	excl_ptr<vcd_manager_type>		vcd_manager;
 	double					vcd_timescale;
 #endif
@@ -1772,7 +1762,6 @@ private:
 	__report_cause(ostream&, cause_arg_type) const;
 
 public:
-#if PRSIM_TRACE_GENERATION
 	bool
 	is_tracing(void) const { return flags & FLAG_TRACE_ON; }
 
@@ -1806,7 +1795,7 @@ public:
 		INVARIANT(i);
 		trace_flush_interval = i;
 	}
-#endif
+
 #if PRSIM_VCD_GENERATION
 	bool
 	is_tracing_vcd(void) const { return flags & FLAG_VCD_ON; }

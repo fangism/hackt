@@ -23,9 +23,7 @@
 #include <set>
 #include "sim/prsim/State-prsim.tcc"
 #include "sim/prsim/ExprAlloc.hh"
-#if PRSIM_TRACE_GENERATION
 #include "sim/prsim/Trace-prsim.hh"
-#endif
 #if PRSIM_VCD_GENERATION
 #include "sim/prsim/VCDManager.hh"
 #endif
@@ -416,10 +414,8 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 		watch_list(), 
 #endif
 		_channel_manager(), 
-#if PRSIM_TRACE_GENERATION
 		trace_manager(),
 		trace_flush_interval(1L<<16),
-#endif
 #if PRSIM_VCD_GENERATION
 		vcd_manager(),
 		vcd_timescale(1.0),
@@ -518,9 +514,7 @@ State::~State() {
 	if ((flags & FLAG_AUTOSAVE) && autosave_name.size()) {
 		// always clear some flags before the automatic save?
 		// close traces before checkpointing
-#if PRSIM_TRACE_GENERATION
 		close_trace();
-#endif
 #if PRSIM_VCD_GENERATION
 		close_vcd();
 #endif
@@ -573,9 +567,7 @@ State::__initialize_time(void) {
 	current_time = 0;
 	// autosave? OK to keep
 	// trace file?
-#if PRSIM_TRACE_GENERATION
 	close_trace();	// close trace, else trace will be incoherent
-#endif
 #if PRSIM_VCD_GENERATION
 	close_vcd();	// close trace, else trace will be incoherent
 #endif
@@ -3805,7 +3797,6 @@ State::execute_immediately(
 	const value_enum prev = n.current_value();
 	node_index_type _ci;	// just a copy
 	trace_index_type critical = INVALID_TRACE_INDEX;
-#if PRSIM_TRACE_GENERATION
 	if (is_tracing()) {
 		critical = trace_manager->push_back_event(
 			state_trace_point(current_time, pe.cause_rule, 
@@ -3820,7 +3811,6 @@ State::execute_immediately(
 			trace_manager->flush();
 		}
 	}
-#endif
 #if PRSIM_VCD_GENERATION
 	// if both traces are on, assert that critical (event count) is the same
 	if (is_tracing_vcd()) {
@@ -3939,11 +3929,7 @@ State::execute_immediately(
 	// could scope the reference to prevent it...
 	const value_enum next = n.current_value();
 	// value propagation...
-#if PRSIM_TRACE_GENERATION
 	const event_cause_type new_cause(ni, next, critical);
-#else
-	const event_cause_type new_cause(ni, next);
-#endif
 {	// scoping for auto-flush
 	const auto_flush_queues __auto_flush(*this, new_cause);
 {
@@ -8306,13 +8292,11 @@ try {
 }
 	READ_ALIGN_MARKER		// sanity alignment check
 {
-#if PRSIM_TRACE_GENERATION
 	if (is_tracing()) {
 		close_trace();
 		cout << "Closing trace stream while loading checkpoint."
 			<< endl;
 	}
-#endif
 #if PRSIM_VCD_GENERATION
 	if (is_tracing_vcd()) {
 		close_vcd();
@@ -8550,7 +8534,6 @@ State::dump_checkpoint(ostream& o, istream& i) {
 #undef	READ_ALIGN_MARKER
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PRSIM_TRACE_GENERATION
 /**
 	\return true if result is successful/good.  
  */
@@ -8584,7 +8567,6 @@ if (trace_manager) {
 }
 	stop_trace();
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if PRSIM_VCD_GENERATION

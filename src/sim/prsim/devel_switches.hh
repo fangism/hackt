@@ -62,9 +62,9 @@
 	This could be a replacement for PRSIM_TRACE_CAUSE_TIME.
 	Goal: 1
 	Priority: high
-	Status: complete, tested, can probably perm.
+	Status: complete, tested, perm'd
  */
-#define	PRSIM_TRACE_GENERATION				1
+// #define	PRSIM_TRACE_GENERATION				1
 
 /**
 	Define to 1 to enable support for vector-change-dump (VCD)

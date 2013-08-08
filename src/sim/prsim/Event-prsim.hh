@@ -23,9 +23,7 @@
 #include "util/memory/free_list.hh"
 #include "sim/prsim/devel_switches.hh"
 #include "sim/prsim/Cause.hh"
-#if PRSIM_TRACE_GENERATION
 #include "sim/trace_common.hh"		// for trace_index_type
-#endif
 
 /**
 	Verbosely trace each item added and removed from pool free list.
@@ -62,10 +60,8 @@ using std::vector;
 using util::memory::index_pool;
 using util::memory::free_list_acquire;
 using util::memory::free_list_release;
-#if PRSIM_TRACE_GENERATION
 using SIM::trace_index_type;
 using SIM::INVALID_TRACE_INDEX;
-#endif
 
 //=============================================================================
 /**
@@ -88,7 +84,6 @@ public:
 		EVENT_WEAK_INTERFERENCE = EVENT_INTERFERENCE | EVENT_WEAK
 	} event_flags_enum;
 
-#if PRSIM_TRACE_GENERATION
 	/**
 		Extension of cause that includes trace index.  
 		This is a good place to keep track of the critical
@@ -112,9 +107,6 @@ public:
 			EventCause(n, v), critical_trace_event(t) { }
 
 	};	// end struct cause_type
-#else
-	typedef	EventCause		cause_type;
-#endif
 #if EVENT_INCLUDE_RULE_POINTER
 	typedef	Rule<rule_time_type>	rule_type;
 #endif

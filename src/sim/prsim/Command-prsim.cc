@@ -33,9 +33,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "sim/prsim/Command-prsim.hh"
 #include "sim/prsim/Command-prsim-export.hh"
 #include "sim/prsim/State-prsim.tcc"
-#if PRSIM_TRACE_GENERATION
 #include "sim/prsim/Trace-prsim.hh"
-#endif
 #if PRSIM_VCD_GENERATION
 #include "sim/prsim/VCDManager.hh"
 #endif
@@ -9576,7 +9574,6 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelAssert, "channel-assert",
 #endif
 
 //=============================================================================
-#if PRSIM_TRACE_GENERATION
 /***
 @texinfo cmd/trace.texi
 @deffn Command trace file
@@ -9651,7 +9648,6 @@ Produce textual dump of trace file contents in @var{file}.
 ***/
 typedef	TraceDump<State>			TraceDump;
 PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(TraceDump, tracing)
-#endif	// PRSIM_TRACE_GENERATION
 
 //=============================================================================
 #if PRSIM_VCD_GENERATION
