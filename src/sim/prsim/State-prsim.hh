@@ -99,12 +99,10 @@ class TraceManager;
 using util::memory::excl_ptr;
 using util::memory::never_ptr;
 using SIM::INVALID_TRACE_INDEX;
-#if PRSIM_VCD_GENERATION
 class VCDManager;
 using util::memory::excl_ptr;
 using util::memory::never_ptr;
 using SIM::INVALID_TRACE_INDEX;
-#endif
 using util::memory::count_ptr;
 using std::map;
 using entity::dump_flags;
@@ -174,9 +172,7 @@ public:
 						rule_type;
 	typedef	size_t				trace_index_type;
 	typedef	TraceManager			trace_manager_type;
-#if PRSIM_VCD_GENERATION
 	typedef	VCDManager			vcd_manager_type;
-#endif
 	typedef	EventPlaceholder<time_type>	event_placeholder_type;
 	typedef	EventQueue<event_placeholder_type>	event_queue_type;
 	typedef	vector<node_type>		node_pool_type;
@@ -345,13 +341,11 @@ private:
 			recorded to a prsim trace file.
 		 */
 		FLAG_TRACE_ON = 0x8000,
-#if PRSIM_VCD_GENERATION
 		/**
 			Set to true when events are being traced, 
 			and recorded to a vcd file.
 		 */
 		FLAG_VCD_ON = 0x10000,
-#endif
 #if PRSIM_MK_EXCL_BLOCKING_SET
 		/**
 			Set to true to treat instabilities that
@@ -391,9 +385,7 @@ private:
 			Flag states that should NOT be saved. 
 		 */
 		FLAGS_CHECKPOINT_MASK = ~(FLAG_AUTOSAVE | FLAG_TRACE_ON
-#if PRSIM_VCD_GENERATION
 			| FLAG_VCD_ON
-#endif
 			)
 	};
 	/**
@@ -785,10 +777,10 @@ private:
 	excl_ptr<trace_manager_type>		trace_manager;
 	/// controls frequency of trace flushing
 	trace_index_type			trace_flush_interval;
-#if PRSIM_VCD_GENERATION
+	/// responsible for recording vcd trace file
 	excl_ptr<vcd_manager_type>		vcd_manager;
+	/// scale factor for vcd timestamps
 	double					vcd_timescale;
-#endif
 #if CACHE_GLOBAL_FOOTPRINT_FRAMES
 public:
 	// parameters for managing module_state_base's footprint_frame cache
@@ -1762,6 +1754,7 @@ private:
 	__report_cause(ostream&, cause_arg_type) const;
 
 public:
+// prsim trace functions
 	bool
 	is_tracing(void) const { return flags & FLAG_TRACE_ON; }
 
@@ -1796,7 +1789,7 @@ public:
 		trace_flush_interval = i;
 	}
 
-#if PRSIM_VCD_GENERATION
+// vcd trace functions
 	bool
 	is_tracing_vcd(void) const { return flags & FLAG_VCD_ON; }
 
@@ -1829,7 +1822,7 @@ public:
 	set_vcd_timescale(const double& d) {
 		vcd_timescale = d;
 	}
-#endif
+
 
 	void
 	check_expr(const expr_index_type) const;

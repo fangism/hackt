@@ -34,9 +34,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "sim/prsim/Command-prsim-export.hh"
 #include "sim/prsim/State-prsim.tcc"
 #include "sim/prsim/Trace-prsim.hh"
-#if PRSIM_VCD_GENERATION
 #include "sim/prsim/VCDManager.hh"
-#endif
 #include "sim/command_base.tcc"
 #include "sim/command_registry.tcc"
 #include "sim/command_category.tcc"
@@ -9650,7 +9648,6 @@ typedef	TraceDump<State>			TraceDump;
 PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(TraceDump, tracing)
 
 //=============================================================================
-#if PRSIM_VCD_GENERATION
 /***
 @texinfo cmd/vcd.texi
 @deffn Command vcd file
@@ -9707,7 +9704,6 @@ VCD files are automatically flushed and closed when the simulator exits.
 ***/
 typedef	VCDClose<State>			VCDClose;
 PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(VCDClose, tracing)
-#endif	// PRSIM_VCD_GENERATION
 
 //=============================================================================
 #undef	DECLARE_AND_INITIALIZE_COMMAND_CLASS

@@ -24,9 +24,7 @@
 #include "sim/prsim/State-prsim.tcc"
 #include "sim/prsim/ExprAlloc.hh"
 #include "sim/prsim/Trace-prsim.hh"
-#if PRSIM_VCD_GENERATION
 #include "sim/prsim/VCDManager.hh"
-#endif
 #include "sim/event.tcc"
 #include "sim/prsim/util.tcc"
 #include "sim/random_time.hh"
@@ -416,10 +414,8 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 		_channel_manager(), 
 		trace_manager(),
 		trace_flush_interval(1L<<16),
-#if PRSIM_VCD_GENERATION
 		vcd_manager(),
 		vcd_timescale(1.0),
-#endif
 #if CACHE_GLOBAL_FOOTPRINT_FRAMES
 		cache_half_life(1024),
 		cache_countdown(cache_half_life),
@@ -515,9 +511,7 @@ State::~State() {
 		// always clear some flags before the automatic save?
 		// close traces before checkpointing
 		close_trace();
-#if PRSIM_VCD_GENERATION
 		close_vcd();
-#endif
 		ofstream o(autosave_name.c_str());
 		if (o) {
 		try {
@@ -568,9 +562,7 @@ State::__initialize_time(void) {
 	// autosave? OK to keep
 	// trace file?
 	close_trace();	// close trace, else trace will be incoherent
-#if PRSIM_VCD_GENERATION
 	close_vcd();	// close trace, else trace will be incoherent
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3811,14 +3803,12 @@ State::execute_immediately(
 			trace_manager->flush();
 		}
 	}
-#if PRSIM_VCD_GENERATION
 	// if both traces are on, assert that critical (event count) is the same
 	if (is_tracing_vcd()) {
 		critical = vcd_manager->record_event(current_time, ni, pe.val);
 		DEBUG_STEP_PRINT("prsim vcd event # " << critical << endl);
 		// no need to manage flushing
 	}
-#endif
 {
 	const event_cause_type& cause(pe.cause);
 	const node_index_type& ci(cause.node);
@@ -8297,13 +8287,11 @@ try {
 		cout << "Closing trace stream while loading checkpoint."
 			<< endl;
 	}
-#if PRSIM_VCD_GENERATION
 	if (is_tracing_vcd()) {
 		close_vcd();
 		cout << "Closing vcd stream while loading checkpoint."
 			<< endl;
 	}
-#endif
 	flags_type tmp;
 	read_value(i, tmp);
 	// preserve the auto-checkpointing, but not tracing
@@ -8569,7 +8557,6 @@ if (trace_manager) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PRSIM_VCD_GENERATION
 /**
 	\return true if result is successful/good.  
  */
@@ -8604,8 +8591,6 @@ if (vcd_manager) {
 }
 	stop_vcd();
 }
-
-#endif
 
 //=============================================================================
 #if !USE_WATCHPOINT_FLAG

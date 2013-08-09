@@ -72,9 +72,9 @@
 	Rationale: to view waveforms in 3rd party viewers that
 	support this standard format.
 	Priority: medium
-	Status: done, basically tested
+	Status: done, tested, perm'd
  */
-#define	PRSIM_VCD_GENERATION				1
+// #define	PRSIM_VCD_GENERATION				1
 
 /**
 	Define to 1 to support 'weak' flavored rules in prsim.
