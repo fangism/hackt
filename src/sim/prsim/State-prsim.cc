@@ -3938,10 +3938,11 @@ if (eval_ordering_is_random()) {
 	i = n.fanout.begin();
 	e = n.fanout.end();
 }
+{
+	// propagate_evaluation() may populate some structures for
+	// later re-evaluation.  These should start empty.
 	__keeper_check_candidates.clear();	// look for turned off rules
-#if PRSIM_LAZY_INVARIANTS
 	__invariant_update_map.clear();
-#endif
 	for ( ; i!=e; ++i) {
 		// when evaluating a node as an expression, 
 		// is appropriate to interpret node value
@@ -3952,7 +3953,6 @@ if (eval_ordering_is_random()) {
 			stop();
 		}
 	}
-#if PRSIM_LAZY_INVARIANTS
 	invariant_update_map_type::const_iterator
 		ii(__invariant_update_map.begin()),
 		ie(__invariant_update_map.end());
@@ -3969,7 +3969,7 @@ if (eval_ordering_is_random()) {
 			}
 		}
 	}
-#endif
+}
 }
 	// Q: is this the best place to handle this?
 if (n.in_channel()) {
@@ -4241,10 +4241,6 @@ State::evaluate(const node_index_type ni,
 		node_type::value_to_char[size_t(prev)] << " -> " <<
 		node_type::value_to_char[size_t(next)] << endl);
 	expr_state_type* u;
-#if !PRSIM_LAZY_INVARIANTS
-	const value_enum node_val = value_enum(next);	// yes, convert
-	// for invariant diagnostic
-#endif
 	// first, localize evaluation to a single process!
 	const expr_struct_type* s;
 	process_sim_state& ps(lookup_global_expr_process(gui));
@@ -4346,19 +4342,11 @@ if (!r.is_invariant()) {
 		&r, ps.global_expr_index(ri));
 } else {
 	// then this rule doesn't actually pull a node, is an invariant
-#if PRSIM_LAZY_INVARIANTS
 	// aggregate updates before diagnosing invariant violation
 	const rule_reference_type rr(pid, ri);
 	__invariant_update_map[rr] = next;
 	// only the last one will take effect
 	return evaluate_return_type();	// continue
-#else
-	const error_policy_enum err =
-		__diagnose_invariant(cerr, pid, ri, next, ni, node_val);
-	if (err != ERROR_IGNORE)
-		return evaluate_return_type(err);
-	else	return evaluate_return_type();
-#endif
 }
 #undef	STRUCT
 }	// end State::evaluate()

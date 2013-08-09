@@ -164,9 +164,9 @@
 	and not PRS rules that actually fire.
 	Goal: 1
 	Rationale: fix bug ACX-PR-2315
-	Status: done, tested
+	Status: done, tested, perm'd
  */
-#define	PRSIM_LAZY_INVARIANTS			1
+// #define	PRSIM_LAZY_INVARIANTS			1
 
 /**
 	Eventually unify the structures and enumerations between
@@ -240,6 +240,7 @@
 	Define to 1 to support modeling dynamic power supplies
 	in expression evaluation.
 	Goal: 1
+	Status: done, tested and working
  */
 #define	PRSIM_MODEL_POWER_SUPPLIES		1
 

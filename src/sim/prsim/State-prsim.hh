@@ -850,7 +850,8 @@ private:
 	 */
 	typedef	index_set_type			keeper_check_set_type;
 	keeper_check_set_type			__keeper_check_candidates;
-#if PRSIM_LAZY_INVARIANTS
+
+// for lazy invariants:
 	// using pair for built-in < comparison operator
 	typedef	pair<process_index_type, rule_index_type>
 						rule_reference_type;
@@ -864,7 +865,6 @@ private:
 		The contents of this map are short-lived are short-lived.
 	 */
 	invariant_update_map_type		__invariant_update_map;
-#endif
 public:
 	/**
 		Signal handler class that binds the State reference
