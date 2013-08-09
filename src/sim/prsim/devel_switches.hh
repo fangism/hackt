@@ -73,9 +73,9 @@
 	This could be a replacement for PRSIM_TRACE_CAUSE_TIME.
 	Goal: 1
 	Priority: high
-	Status: complete, tested, can probably perm.
+	Status: complete, tested, perm'd
  */
-#define	PRSIM_TRACE_GENERATION				1
+// #define	PRSIM_TRACE_GENERATION				1
 
 /**
 	Define to 1 to enable support for vector-change-dump (VCD)
@@ -83,9 +83,9 @@
 	Rationale: to view waveforms in 3rd party viewers that
 	support this standard format.
 	Priority: medium
-	Status: done, basically tested
+	Status: done, tested, perm'd
  */
-#define	PRSIM_VCD_GENERATION				1
+// #define	PRSIM_VCD_GENERATION				1
 
 /**
 	Define to 1 to support 'weak' flavored rules in prsim.
@@ -134,15 +134,16 @@
 	Goal: 1
 	Rationale: much better diagnostics, safe execution, 
 		reduced risk of simulator incoherence after fatal errors.
+	Status: perm'd
  */
-#define	PRSIM_AGGREGATE_EXCEPTIONS			1
+// #define	PRSIM_AGGREGATE_EXCEPTIONS			1
 
 /**
 	Define to 1 to enable setup/hold time checks.
 	Complete this before doing timing back-annotation.
 	Goal: 1
  */
-#define	PRSIM_SETUP_HOLD		(1 && PRSIM_TRACK_LAST_EDGE_TIME && PRSIM_AGGREGATE_EXCEPTIONS)
+#define	PRSIM_SETUP_HOLD		(1 && PRSIM_TRACK_LAST_EDGE_TIME)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -181,9 +182,9 @@
 	and not PRS rules that actually fire.
 	Goal: 1
 	Rationale: fix bug ACX-PR-2315
-	Status: done, tested
+	Status: done, tested, perm'd
  */
-#define	PRSIM_LAZY_INVARIANTS			1
+// #define	PRSIM_LAZY_INVARIANTS			1
 
 /**
 	Eventually unify the structures and enumerations between
@@ -228,10 +229,10 @@
 	Rationale: the code is unmaintainable and incomprehensible,
 		and full of dark corners where bugs lurk.
 		Rewrite will gain back performance, from simplicity.
-	Was never robust enough to simulate non-QDI circuits.  
+		Was never robust enough to simulate non-QDI circuits.  
 	Goal: 1
 	Priority: med-high
-	Status: just beginning
+	Status: complete
  */
 #define	PRSIM_SIMPLE_EVENT_QUEUE		1
 
@@ -257,6 +258,7 @@
 	Define to 1 to support modeling dynamic power supplies
 	in expression evaluation.
 	Goal: 1
+	Status: done, tested and working
  */
 #define	PRSIM_MODEL_POWER_SUPPLIES		1
 

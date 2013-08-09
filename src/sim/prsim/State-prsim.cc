@@ -23,12 +23,8 @@
 #include <set>
 #include "sim/prsim/State-prsim.tcc"
 #include "sim/prsim/ExprAlloc.hh"
-#if PRSIM_TRACE_GENERATION
 #include "sim/prsim/Trace-prsim.hh"
-#endif
-#if PRSIM_VCD_GENERATION
 #include "sim/prsim/VCDManager.hh"
-#endif
 #include "sim/event.tcc"
 #include "sim/prsim/util.tcc"
 #include "sim/random_time.hh"
@@ -420,14 +416,10 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 		watch_list(), 
 #endif
 		_channel_manager(), 
-#if PRSIM_TRACE_GENERATION
 		trace_manager(),
 		trace_flush_interval(1L<<16),
-#endif
-#if PRSIM_VCD_GENERATION
 		vcd_manager(),
 		vcd_timescale(1.0),
-#endif
 #if CACHE_GLOBAL_FOOTPRINT_FRAMES
 		cache_half_life(1024),
 		cache_countdown(cache_half_life),
@@ -456,9 +448,7 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 		timing_mode(TIMING_DEFAULT),
 		_dump_flags(dump_flags::no_owners), 
 		time_fmt(cout),
-#if PRSIM_AGGREGATE_EXCEPTIONS
 		recent_exceptions(),
-#endif
 		__shuffle_indices(0) {
 	STACKTRACE_VERBOSE;
 #if PRSIM_MAP_FAST_ALLOCATOR
@@ -530,12 +520,8 @@ State::~State() {
 	if ((flags & FLAG_AUTOSAVE) && autosave_name.size()) {
 		// always clear some flags before the automatic save?
 		// close traces before checkpointing
-#if PRSIM_TRACE_GENERATION
 		close_trace();
-#endif
-#if PRSIM_VCD_GENERATION
 		close_vcd();
-#endif
 		ofstream o(autosave_name.c_str());
 		if (o) {
 		try {
@@ -585,12 +571,8 @@ State::__initialize_time(void) {
 	current_time = 0;
 	// autosave? OK to keep
 	// trace file?
-#if PRSIM_TRACE_GENERATION
 	close_trace();	// close trace, else trace will be incoherent
-#endif
-#if PRSIM_VCD_GENERATION
 	close_vcd();	// close trace, else trace will be incoherent
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -782,7 +764,7 @@ State::flush_channel_events(const vector<env_event_type>& env_events,
 				false,	// unrelated to excl
 #endif
 				ev);
-#if 0 && PRSIM_AGGREGATE_EXCEPTIONS
+#if 0
 			if (UNLIKELY(E >= ERROR_BREAK)) {
 				stop();
 			if (UNLIKELY(E >= ERROR_INTERACTIVE)) {
@@ -3843,16 +3825,9 @@ struct State::auto_flush_queues {
 		if (UNLIKELY(E >= ERROR_BREAK)) {
 			state.stop();		// set stop flag
 			if (UNLIKELY(E >= ERROR_INTERACTIVE)) {
-#if PRSIM_AGGREGATE_EXCEPTIONS
 				state.record_exception(exception_ptr_type(
 					new interference_exception(
 						cause.node, E)));
-#else
-				const interference_exception x(cause.node, E);
-				// this could be an instability exception
-				// as well, so use a generic exception for now
-				throw x;
-#endif
 			}
 		}
 	}
@@ -3943,9 +3918,7 @@ State::execute_immediately(
 	ISE_INVARIANT(excllo_queue.empty());
 #endif
 
-#if PRSIM_AGGREGATE_EXCEPTIONS
 	recent_exceptions.clear();
-#endif
 //	const event_index_type& ei(ep.event_index);
 #if 0
 	if (!ei) {
@@ -3962,7 +3935,6 @@ State::execute_immediately(
 	const value_enum prev = n.current_value();
 	node_index_type _ci;	// just a copy
 	trace_index_type critical = INVALID_TRACE_INDEX;
-#if PRSIM_TRACE_GENERATION
 	if (is_tracing()) {
 		critical = trace_manager->push_back_event(
 			state_trace_point(current_time, pe.cause_rule, 
@@ -3977,15 +3949,12 @@ State::execute_immediately(
 			trace_manager->flush();
 		}
 	}
-#endif
-#if PRSIM_VCD_GENERATION
 	// if both traces are on, assert that critical (event count) is the same
 	if (is_tracing_vcd()) {
 		critical = vcd_manager->record_event(current_time, ni, pe.val);
 		DEBUG_STEP_PRINT("prsim vcd event # " << critical << endl);
 		// no need to manage flushing
 	}
-#endif
 {
 	const event_cause_type& cause(pe.cause);
 	const node_index_type& ci(cause.node);
@@ -4073,15 +4042,11 @@ State::execute_immediately(
 				// enqueue_event(ep.time, ei);
 				enqueue_event(ept, pei);
 			}	// otherwise was not from queue, don't enqueue
-#if PRSIM_AGGREGATE_EXCEPTIONS
 			record_exception(
 				exception_ptr_type(new excl_exception(exex)));
 			// return immediately to keep event from executing
 			// early abort, keeping event in queue
 			return return_type(INVALID_NODE_INDEX, INVALID_NODE_INDEX);
-#else
-			throw exex;
-#endif
 		}	// end switch
 		}
 	}
@@ -4114,17 +4079,9 @@ State::execute_immediately(
 	const value_enum next = n.current_value();
 	// value propagation...
 #if PRSIM_TRACK_CAUSE_TIME
-#if PRSIM_TRACE_GENERATION
 	const event_cause_type new_cause(ni, next, ept, critical);
 #else
-	const event_cause_type new_cause(ni, next, ept);
-#endif
-#else
-#if PRSIM_TRACE_GENERATION
 	const event_cause_type new_cause(ni, next, critical);
-#else
-	const event_cause_type new_cause(ni, next);
-#endif
 #endif
 {	// scoping for auto-flush
 #if PRSIM_TRACK_LAST_EDGE_TIME && !PRSIM_TRACK_CAUSE_TIME
@@ -4148,13 +4105,11 @@ if (eval_ordering_is_random()) {
 	i = n.fanout.begin();
 	e = n.fanout.end();
 }
+{
+	// propagate_evaluation() may populate some structures for
+	// later re-evaluation.  These should start empty.
 	__keeper_check_candidates.clear();	// look for turned off rules
-#if PRSIM_LAZY_INVARIANTS
 	__invariant_update_map.clear();
-#endif
-#if !PRSIM_AGGREGATE_EXCEPTIONS
-	break_type __throw__ = ERROR_NONE;
-#endif
 	for ( ; i!=e; ++i) {
 		// when evaluating a node as an expression, 
 		// is appropriate to interpret node value
@@ -4163,16 +4118,8 @@ if (eval_ordering_is_random()) {
 		propagate_evaluation(new_cause, *i, pull_enum(prev));
 		if (UNLIKELY(E >= ERROR_BREAK)) {
 			stop();
-#if !PRSIM_AGGREGATE_EXCEPTIONS
-			// just signal to break
-			// FATAL and INTERACTIVE are handled after this loop
-			if (E > __throw__) {
-				__throw__ = E;
-			}
-#endif
 		}
 	}
-#if PRSIM_LAZY_INVARIANTS
 	invariant_update_map_type::const_iterator
 		ii(__invariant_update_map.begin()),
 		ie(__invariant_update_map.end());
@@ -4183,26 +4130,13 @@ if (eval_ordering_is_random()) {
 				ii->second, new_cause.node, new_cause.val);
 		if (UNLIKELY(E >= ERROR_BREAK)) {
 			stop();
-#if PRSIM_AGGREGATE_EXCEPTIONS
 			if (UNLIKELY(E >= ERROR_INTERACTIVE)) {
 				record_exception(exception_ptr_type(
 					new invariant_exception(ni, E)));
 			}
-#else
-			if (E > __throw__) {
-				__throw__ = E;
-			}
-#endif
 		}
 	}
-#endif
-#if !PRSIM_AGGREGATE_EXCEPTIONS
-	// only throw after all fanouts have been processed
-	if (UNLIKELY(__throw__ >= ERROR_INTERACTIVE)) {
-		const invariant_exception invex(ni, __throw__);
-		throw invex;
-	}
-#endif
+}
 }
 	// Q: is this the best place to handle this?
 if (n.in_channel()) {
@@ -4220,13 +4154,8 @@ if (n.in_channel()) {
 		stop();
 	if (UNLIKELY(E >= ERROR_INTERACTIVE)) {
 		// now catches FATAL and INTERACTIVE
-#if PRSIM_AGGREGATE_EXCEPTIONS
 		record_exception(exception_ptr_type(
 			new instability_exception(ni, E)));
-#else
-		const instability_exception unstabex(ni, E);
-		throw unstabex;
-#endif
 	}
 	}
 }
@@ -4387,14 +4316,8 @@ if (n.in_channel()) {
 				stop();
 			if (UNLIKELY(E >= ERROR_INTERACTIVE)) {
 				// can only throw one node, pick first one
-#if PRSIM_AGGREGATE_EXCEPTIONS
 				record_exception(exception_ptr_type(
 					new keeper_fail_exception(ni, E)));
-#else
-				const keeper_fail_exception
-					kx(ni, E);
-				throw kx;
-#endif
 			}
 			}
 		}
@@ -4557,7 +4480,6 @@ for ( ; i!=e; ++i) {
 #endif	// PRSIM_SETUP_HOLD
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PRSIM_AGGREGATE_EXCEPTIONS
 void
 State::record_exception(const exception_ptr_type& p) const {
 	recent_exceptions.push_back(p);
@@ -4580,7 +4502,6 @@ State::inspect_exceptions(void) const {
 	}
 	return ret;
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
@@ -4639,10 +4560,6 @@ State::evaluate(const node_index_type ni,
 		node_type::value_to_char[size_t(prev)] << " -> " <<
 		node_type::value_to_char[size_t(next)] << endl);
 	expr_state_type* u;
-#if !PRSIM_LAZY_INVARIANTS
-	const value_enum node_val = value_enum(next);	// yes, convert
-	// for invariant diagnostic
-#endif
 	// first, localize evaluation to a single process!
 	const expr_struct_type* s;
 	process_sim_state& ps(lookup_global_expr_process(gui));
@@ -4744,19 +4661,11 @@ if (!r.is_invariant()) {
 		&r, ps.global_expr_index(ri));
 } else {
 	// then this rule doesn't actually pull a node, is an invariant
-#if PRSIM_LAZY_INVARIANTS
 	// aggregate updates before diagnosing invariant violation
 	const rule_reference_type rr(pid, ri);
 	__invariant_update_map[rr] = next;
 	// only the last one will take effect
 	return evaluate_return_type();	// continue
-#else
-	const error_policy_enum err =
-		__diagnose_invariant(cerr, pid, ri, next, ni, node_val);
-	if (err != ERROR_IGNORE)
-		return evaluate_return_type(err);
-	else	return evaluate_return_type();
-#endif
 }
 #undef	STRUCT
 }	// end State::evaluate()
@@ -5860,14 +5769,12 @@ State::__diagnose_violation(ostream& o, const pull_enum next,
 			} else {
 				DEBUG_STEP_PRINT("changing event to X" << endl);
 				e.val = LOGIC_OTHER;
-#if PRSIM_AGGREGATE_EXCEPTIONS
 				const error_policy_enum E = next == PULL_WEAK ?
 					weak_unstable_policy : unstable_policy;
 				if (E >= ERROR_INTERACTIVE) {
 					record_exception(exception_ptr_type(
 						new instability_exception(ni, E)));
 				}
-#endif
 			}
 		}
 #if PRSIM_SIMPLE_EVENT_QUEUE
@@ -8694,20 +8601,16 @@ try {
 }
 	READ_ALIGN_MARKER		// sanity alignment check
 {
-#if PRSIM_TRACE_GENERATION
 	if (is_tracing()) {
 		close_trace();
 		cout << "Closing trace stream while loading checkpoint."
 			<< endl;
 	}
-#endif
-#if PRSIM_VCD_GENERATION
 	if (is_tracing_vcd()) {
 		close_vcd();
 		cout << "Closing vcd stream while loading checkpoint."
 			<< endl;
 	}
-#endif
 	flags_type tmp;
 	read_value(i, tmp);
 	// preserve the auto-checkpointing, but not tracing
@@ -8948,7 +8851,6 @@ State::dump_checkpoint(ostream& o, istream& i) {
 #undef	READ_ALIGN_MARKER
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PRSIM_TRACE_GENERATION
 /**
 	\return true if result is successful/good.  
  */
@@ -8982,10 +8884,8 @@ if (trace_manager) {
 }
 	stop_trace();
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PRSIM_VCD_GENERATION
 /**
 	\return true if result is successful/good.  
  */
@@ -9020,8 +8920,6 @@ if (vcd_manager) {
 }
 	stop_vcd();
 }
-
-#endif
 
 //=============================================================================
 #if !USE_WATCHPOINT_FLAG

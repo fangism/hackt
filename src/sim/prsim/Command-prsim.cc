@@ -33,12 +33,8 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "sim/prsim/Command-prsim.hh"
 #include "sim/prsim/Command-prsim-export.hh"
 #include "sim/prsim/State-prsim.tcc"
-#if PRSIM_TRACE_GENERATION
 #include "sim/prsim/Trace-prsim.hh"
-#endif
-#if PRSIM_VCD_GENERATION
 #include "sim/prsim/VCDManager.hh"
-#endif
 #include "sim/command_base.tcc"
 #include "sim/command_registry.tcc"
 #include "sim/command_category.tcc"
@@ -859,9 +855,6 @@ if (a.size() > 2) {
 	s.resume();
 	time_type time = s.time();
 	// could check s.pending_events()
-#if !PRSIM_AGGREGATE_EXCEPTIONS
-	try {
-#endif
 	while (!s.stopped_or_fatal() && i && GET_NODE((ni = s.step()))) {
 		// if time actually advanced, decrement steps-remaining
 		// NB: may need specialization for real-valued (float) time.  
@@ -915,15 +908,9 @@ if (a.size() > 2) {
 #endif
 		}
 	}	// end while
-#if PRSIM_AGGREGATE_EXCEPTIONS
 	if (s.is_fatal()) {
 		return error_policy_to_status(s.inspect_exceptions());
 	}
-#else
-	} catch (const step_exception& exex) {
-		return error_policy_to_status(exex.inspect(s, cerr));
-	}	// no other exceptions
-#endif
 	return Command::NORMAL;
 }
 }	// end Step::main()
@@ -963,9 +950,6 @@ int
 step_event_main(State& s, size_t i) {
 	s.resume();
 	// could check s.pending_events()
-#if !PRSIM_AGGREGATE_EXCEPTIONS
-	try {
-#endif
 	State::step_return_type ni;	// also stores the cause of the event
 	while (!s.stopped_or_fatal() && i && GET_NODE((ni = s.step()))) {
 		--i;
@@ -1017,15 +1001,9 @@ step_event_main(State& s, size_t i) {
 #endif
 		}
 	}	// end while
-#if PRSIM_AGGREGATE_EXCEPTIONS
 	if (s.is_fatal()) {
 		return error_policy_to_status(s.inspect_exceptions());
 	}
-#else
-	} catch (const step_exception& exex) {
-		return error_policy_to_status(exex.inspect(s, cerr));
-	}	// no other exceptions
-#endif
 	return Command::NORMAL;
 }
 
@@ -1127,9 +1105,6 @@ if (a.size() != 1) {
 } else {
 	State::step_return_type ni;
 	s.resume();	// clear STOP flag
-#if !PRSIM_AGGREGATE_EXCEPTIONS
-	try {
-#endif
 	while (!s.stopped_or_fatal() && GET_NODE((ni = s.step()))) {
 		if (!GET_NODE(ni))
 			return Command::NORMAL;
@@ -1177,15 +1152,9 @@ if (a.size() != 1) {
 #endif
 		}
 	}	// end while (!s.stopped_or_fatal())
-#if PRSIM_AGGREGATE_EXCEPTIONS
 	if (s.is_fatal()) {
 		return error_policy_to_status(s.inspect_exceptions());
 	}
-#else
-	} catch (const step_exception& exex) {
-		return error_policy_to_status(exex.inspect(s, cerr));
-	}	// no other exceptions
-#endif
 	return Command::NORMAL;
 }	// end if
 }	// end Cycle::main()
@@ -1386,11 +1355,9 @@ if (asz != 3) {
 		}
 		// ignore breakpoints?
 		// handle exceptions
-#if PRSIM_AGGREGATE_EXCEPTIONS
 		if (s.is_fatal()) {
 			return error_policy_to_status(s.inspect_exceptions());
 		}
-#endif
 #if PRSIM_NODE_AGGREGATE_ARGUMENTS
 	}	// end for each node
 #endif
@@ -3067,7 +3034,6 @@ GetAll::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PRSIM_AGGREGATE_EXCEPTIONS
 /***
 @texinfo cmd/exceptions.texi
 @deffn Command exceptions
@@ -3096,8 +3062,8 @@ if (a.size() > 1) {
 
 void
 Exceptions::usage(ostream& o) {
+	o << name << '\n' << brief << endl;
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -9685,7 +9651,6 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(ChannelAssert, "channel-assert",
 #endif
 
 //=============================================================================
-#if PRSIM_TRACE_GENERATION
 /***
 @texinfo cmd/trace.texi
 @deffn Command trace file
@@ -9760,10 +9725,8 @@ Produce textual dump of trace file contents in @var{file}.
 ***/
 typedef	TraceDump<State>			TraceDump;
 PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(TraceDump, tracing)
-#endif	// PRSIM_TRACE_GENERATION
 
 //=============================================================================
-#if PRSIM_VCD_GENERATION
 /***
 @texinfo cmd/vcd.texi
 @deffn Command vcd file
@@ -9820,7 +9783,6 @@ VCD files are automatically flushed and closed when the simulator exits.
 ***/
 typedef	VCDClose<State>			VCDClose;
 PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(VCDClose, tracing)
-#endif	// PRSIM_VCD_GENERATION
 
 //=============================================================================
 #undef	DECLARE_AND_INITIALIZE_COMMAND_CLASS

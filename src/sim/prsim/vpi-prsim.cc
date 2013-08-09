@@ -884,10 +884,8 @@ static void __advance_prsim (const Time_t& vcstime, const int context)
   Time_t next_time;
   Time_t break_time = vcstime;		// may decrease only
   while (
-#if PRSIM_AGGREGATE_EXCEPTIONS
 	!prsim_state->is_fatal() &&
 	// not is_stopped_or_fatal(), results in infinite loop...
-#endif
 	prsim_state->pending_events() &&
 	(next_time = prsim_state->next_event_time(), 1) &&
 	(next_time <= vcstime) &&
@@ -940,13 +938,8 @@ if (_verbose_transport > 1) {
 }
 try {
 	__advance_prsim(vcstime, context);	// may throw
-#if PRSIM_AGGREGATE_EXCEPTIONS
 	if (prsim_state->is_fatal()) {
 		prsim_state->inspect_exceptions();
-#else
-} catch (const step_exception& exex) {
-	exex.inspect(*prsim_state, cerr);	// ignore return code?
-#endif
 	// no need to translate error_policy_to_status
 #if NICE_FINISH
 	cerr << "Terminating simulation early due to hacprsim exception."
@@ -956,9 +949,7 @@ try {
 	__destroy_globals();
 	THROW_EXIT;	// re-throw
 #endif
-#if PRSIM_AGGREGATE_EXCEPTIONS
 	}	// end if is_fatal
-#endif
 } catch (...) {
 	// catch all remaining exceptions here, destroy globals and rethrow
 	cerr << "hacprsim (VPI) encountered error, terminating..." << endl;
