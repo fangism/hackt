@@ -784,6 +784,8 @@ private:
 #if PRSIM_SETUP_HOLD
 	/**
 		key: index of node that triggers timing check(s)
+		PRSIM_FWD_POST_TIMING_CHECKS:0 -- key is the trigger node
+		PRSIM_FWD_POST_TIMING_CHECKS:1 -- key is the reference node
 		value: set of processes that need to check the node
 			These should be unique and sorted.
 	 */
@@ -1726,11 +1728,19 @@ private:
 #endif
 
 #if PRSIM_SETUP_HOLD
+#if PRSIM_FWD_POST_TIMING_CHECKS
+	void
+	post_setup_check(const node_index_type, const value_enum);
+
+	void
+	post_hold_check(const node_index_type, const value_enum);
+#else
 	void
 	do_setup_check(const node_index_type, const value_enum);
 
 	void
 	do_hold_check(const node_index_type, const value_enum);
+#endif
 #endif
 
 #if PRSIM_MK_EXCL_BLOCKING_SET

@@ -420,12 +420,22 @@ unique_process_subgraph::dump_timing_constraints(ostream& o) const {
 		i(setup_constraints.begin()), e(setup_constraints.end());
 	for ( ; i!=e; ++i) {
 		// node indices are local
+#if PRSIM_FWD_POST_TIMING_CHECKS
+		o << i->first << " ->" << endl;
+#else
 		o << "-> " << i->first.first <<
 			(i->first.second ? '+' : '-') << endl;
+#endif
 		vector<setup_constraint_entry>::const_iterator
 			ci(i->second.begin()), ce(i->second.end());
 		for ( ; ci!=ce; ++ci) {
-			o << '\t' << ci->ref_node << ": " << ci->time << endl;	
+			o << '\t' <<
+#if PRSIM_FWD_POST_TIMING_CHECKS
+				ci->trig_node << (ci->dir ? '+' : '-')
+#else
+				ci->ref_node
+#endif
+				<< ": " << ci->time << endl;	
 		}
 	}
 }{
@@ -434,18 +444,28 @@ unique_process_subgraph::dump_timing_constraints(ostream& o) const {
 		i(hold_constraints.begin()), e(hold_constraints.end());
 	for ( ; i!=e; ++i) {
 		// node indices are local
+#if PRSIM_FWD_POST_TIMING_CHECKS
+		o << i->first.first << (i->first.second ? '+' : '-')
+			<< " ->" << endl;
+#else
 		o << "-> " << i->first << endl;
+#endif
 		vector<hold_constraint_entry>::const_iterator
 			ci(i->second.begin()), ce(i->second.end());
 		for ( ; ci!=ce; ++ci) {
-			o << '\t' << ci->ref_node << (ci->dir ? '+' : '-')
+			o << '\t' <<
+#if PRSIM_FWD_POST_TIMING_CHECKS
+				ci->trig_node
+#else
+				ci->ref_node << (ci->dir ? '+' : '-')
+#endif
 				<< ": " << ci->time << endl;	
 		}
 	}
 }
 	return o;
 }
-#endif
+#endif	// PRSIM_SETUP_HOLD
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

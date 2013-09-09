@@ -145,6 +145,26 @@
  */
 #define	PRSIM_SETUP_HOLD		(1 && PRSIM_TRACK_LAST_EDGE_TIME)
 
+/**
+	Initial implementation of setup-hold timing checks triggered
+	checks when the target (latter) node fired.
+	Another scheme could schedule timing checks at reference time,
+	and expire them after the window of time elapses.
+	Current: 0 -- checks look backward from target transition
+	Goal: ?
+	Status: in development
+ */
+#if	PRSIM_SETUP_HOLD
+#define	PRSIM_FWD_POST_TIMING_CHECKS		0
+#endif
+
+/**
+	Define to 1 to enable timing-backannotation via min-delays (arcs)
+	sparsely specified in unique_process_subgraph.
+	Goal: 1
+ */
+#define	PRSIM_TIMING_BACKANNOTATE	(1 && PRSIM_TRACK_LAST_EDGE_TIME)
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Eliminate pre-translated, allocated top-level expressions in favor

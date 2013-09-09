@@ -658,9 +658,7 @@ ExprAlloc::visit(const state_instance<process_tag>& gp) {
 	update_expr_maps(ptemplate, node_pool_size, bmap, ps.get_offset());
 try {
 	// some spec directives are global, others are per-type (local)
-#if PRSIM_SETUP_HOLD
 	const value_saver<unique_process_subgraph*> _t_(g, &_ptemplate);
-#endif
 	const entity::SPEC::footprint& sfp(fp->get_spec_footprint());
 	sfp.accept(*this);
 } catch (...) {
@@ -2345,6 +2343,7 @@ RunModeStatic::main(visitor_type& v, const param_args_type& params,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_SETUP_HOLD
 DECLARE_AND_DEFINE_PRSIM_SPEC_DIRECTIVE_CLASS(setup_pos, "setup_pos")
 DECLARE_AND_DEFINE_PRSIM_SPEC_DIRECTIVE_CLASS(setup_neg, "setup_neg")
 DECLARE_AND_DEFINE_PRSIM_SPEC_DIRECTIVE_CLASS(hold_pos, "hold_pos")
@@ -2362,11 +2361,18 @@ if (!v.in_unique_pass()) {
 	STACKTRACE_INDENT_PRINT("unique pass" << endl);
 	NEVER_NULL(v.g);
 	setup_constraint_entry c;
+#if PRSIM_FWD_POST_TIMING_CHECKS
+	c.trig_node = v.lookup_local_bool_id(*nodes[1].begin());
+	c.dir = dir;
+	const unique_process_subgraph::setup_constraint_key_type
+		k = v.lookup_local_bool_id(*nodes[0].begin());
+#else
 	// reference node (in the past)
 	c.ref_node = v.lookup_local_bool_id(*nodes[0].begin());
 	// trigger node (usually a clock, just fired hi)
 	const unique_process_subgraph::setup_constraint_key_type
 		k(v.lookup_local_bool_id(*nodes[1].begin()), dir);
+#endif
 	c.time = params[0].is_a<const pint_const>()->static_constant_value();
 	// TODO: also allow real values (reusable function)
 	// allocate constraint in current process graph
@@ -2376,7 +2382,11 @@ if (!v.in_unique_pass()) {
 	STACKTRACE_INDENT_PRINT("instance pass" << endl);
 	// global node also needs to track global pid of the process
 	// that owns this constraint
+#if PRSIM_FWD_POST_TIMING_CHECKS
+	v.add_global_setup_constraint(*nodes[0].begin());
+#else
 	v.add_global_setup_constraint(*nodes[1].begin());
+#endif
 }
 }
 
@@ -2408,13 +2418,19 @@ if (!v.in_unique_pass()) {
 	NEVER_NULL(v.g);
 // do this once per-type
 	hold_constraint_entry c;
+#if PRSIM_FWD_POST_TIMING_CHECKS
+	c.trig_node = v.lookup_local_bool_id(*nodes[1].begin());
+	const unique_process_subgraph::hold_constraint_key_type
+		k(v.lookup_local_bool_id(*nodes[0].begin(), dir));
+#else
 	// reference node (in the past, usually clk)
 	c.ref_node = v.lookup_local_bool_id(*nodes[0].begin());
 	// trigger node (data)
 	const unique_process_subgraph::hold_constraint_key_type
 		k = v.lookup_local_bool_id(*nodes[1].begin());
-	c.time = params[0].is_a<const pint_const>()->static_constant_value();
 	c.dir = dir;
+#endif
+	c.time = params[0].is_a<const pint_const>()->static_constant_value();
 	// TODO: also allow real values (reusable function)
 	// allocate constraint in current process graph
 	v.g->hold_constraints[k].push_back(c);
@@ -2423,7 +2439,11 @@ if (!v.in_unique_pass()) {
 	STACKTRACE_INDENT_PRINT("instance pass" << endl);
 	// global node also needs to track global pid of the process
 	// that owns this constraint
+#if PRSIM_FWD_POST_TIMING_CHECKS
+	v.add_global_hold_constraint(*nodes[0].begin());
+#else
 	v.add_global_hold_constraint(*nodes[1].begin());
+#endif
 }
 }
 
@@ -2441,6 +2461,7 @@ hold_neg::main(visitor_type& v, const param_args_type& params,
 		const node_args_type& nodes) {
 	__hold_main(v, params, nodes, false);
 }
+#endif	// PRSIM_SETUP_HOLD
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #undef	DECLARE_AND_DEFINE_PRSIM_SPEC_DIRECTIVE_CLASS

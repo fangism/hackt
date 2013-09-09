@@ -730,16 +730,30 @@ process_sim_state::dump_timing_constraints(ostream& o,
 	}
 	for ( ; i!=e; ++i) {
 		// translate local to global node indices
+#if PRSIM_FWD_POST_TIMING_CHECKS
+		const string ref(st.get_node_canonical_name(
+			st.translate_to_global_node(*this, i->first)));
+#else
 		const string target(st.get_node_canonical_name(
 			st.translate_to_global_node(*this, i->first.first)));
+#endif
 		vector<setup_constraint_entry>::const_iterator
 			ci(i->second.begin()), ce(i->second.end());
 		for ( ; ci!=ce; ++ci) {
+#if PRSIM_FWD_POST_TIMING_CHECKS
+			const string target(st.get_node_canonical_name(
+				st.translate_to_global_node(*this, ci->trig_node)));
+#else
 			const string ref(st.get_node_canonical_name(
 				st.translate_to_global_node(*this, ci->ref_node)));
+#endif
 			o << "t( " << ref << " -> " << target <<
-				(i->first.second ? '+' : '-') <<
-				" ) >= " << ci->time << endl;
+#if PRSIM_FWD_POST_TIMING_CHECKS
+				(ci->dir ? '+' : '-')
+#else
+				(i->first.second ? '+' : '-')
+#endif
+				<< " ) >= " << ci->time << endl;
 		}
 	}
 }{
@@ -750,16 +764,30 @@ process_sim_state::dump_timing_constraints(ostream& o,
 	}
 	for ( ; i!=e; ++i) {
 		// translate local to global node indices
+#if PRSIM_FWD_POST_TIMING_CHECKS
+		const string ref(st.get_node_canonical_name(
+			st.translate_to_global_node(*this, i->first.first)));
+#else
 		const string target(st.get_node_canonical_name(
 			st.translate_to_global_node(*this, i->first)));
+#endif
 		vector<hold_constraint_entry>::const_iterator
 			ci(i->second.begin()), ce(i->second.end());
 		for ( ; ci!=ce; ++ci) {
+#if PRSIM_FWD_POST_TIMING_CHECKS
+			const string target(st.get_node_canonical_name(
+				st.translate_to_global_node(*this, ci->trig_node)));
+#else
 			const string ref(st.get_node_canonical_name(
 				st.translate_to_global_node(*this, ci->ref_node)));
-			o << "t( " << ref << (ci->dir ? '+' : '-') <<
-				" -> " << target <<
-				" ) >= " << ci->time << endl;
+#endif
+			o << "t( " << ref <<
+#if PRSIM_FWD_POST_TIMING_CHECKS
+				(i->first.second ? '+' : '-')
+#else
+				(ci->dir ? '+' : '-')
+#endif
+				<< " -> " << target << " ) >= " << ci->time << endl;
 		}
 	}
 

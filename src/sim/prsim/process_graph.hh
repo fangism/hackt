@@ -124,12 +124,16 @@ struct faninout_struct_type {
 };	// end struct faninout_struct_type
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PRSIM_SETUP_HOLD
+#if PRSIM_SETUP_HOLD || PRSIM_TIMING_BACKANNOTATE
 struct timing_constraint_entry {
 	/**
 		Process-local index of the reference node of this constraint.  
 	 */
+#if PRSIM_FWD_POST_TIMING_CHECKS
+	node_index_type				trig_node;
+#else
 	node_index_type				ref_node;
+#endif
 	rule_time_type				time;
 
 	timing_constraint_entry() : ref_node(INVALID_NODE_INDEX), time(0) { }
@@ -138,12 +142,22 @@ struct timing_constraint_entry {
 		ref_node(n), time(t) { }
 };	// end struct timing_constraing
 
+#if PRSIM_FWD_POST_TIMING_CHECKS
+typedef	timing_constraint_entry			hold_constraint_entry;
+struct setup_constraint_entry : public timing_constraint_entry {
+	bool					dir;
+};	// end struct setup_constraint_entry
+#else
 typedef	timing_constraint_entry			setup_constraint_entry;
 
 struct hold_constraint_entry : public timing_constraint_entry {
 	bool					dir;
 };	// end struct hold_constraint_entry
+#endif
 
+#endif
+#if PRSIM_TIMING_BACKANNOTATE
+typedef timing_constraint_entry			min_delay_entry;
 #endif
 
 //=============================================================================
@@ -244,20 +258,42 @@ struct unique_process_subgraph {
 
 #if PRSIM_SETUP_HOLD
 	/**
-		key: local target node index
+		key: local target trigger node index
 		value: sequence of local reference nodes and times
-		constraints are: (reference, target)
+		(for PRSIM_FWD_POST_TIMING_CHECKS,
+			key is the reference node index,
+			and value is the sequence of triggers)
+		constraints are: (reference, trigger-target)
 		Any time a target node is queried, we will want
 		all of its constraints at once.
 	 */
+#if PRSIM_FWD_POST_TIMING_CHECKS
+	typedef	node_index_type			setup_constraint_key_type;
+	typedef	pair<node_index_type, bool>	hold_constraint_key_type;
+#else
 	typedef	pair<node_index_type, bool>	setup_constraint_key_type;
 	typedef	node_index_type			hold_constraint_key_type;
+#endif
 	typedef	map<setup_constraint_key_type, vector<setup_constraint_entry> >
 						setup_constraint_set_type;
 	typedef	map<hold_constraint_key_type, vector<hold_constraint_entry> >
 						hold_constraint_set_type;
 	setup_constraint_set_type		setup_constraints;
 	hold_constraint_set_type		hold_constraints;
+#endif
+#if PRSIM_TIMING_BACKANNOTATE
+	// initially do just a simple any-to-any direction min delay
+	typedef	node_index_type			min_delay_key_type;
+	/**
+		key: target node
+		value: set of local timing (imn-delay) arcs,
+			relative to reference nodes
+		When target node events are scheduled, must consider the
+			max of min_delay times over all reference nodes.
+	 */
+	typedef	map<min_delay_key_type, vector<min_delay_entry> >
+						min_delay_set_type;
+	min_delay_set_type			min_delays;
 #endif
 
 	struct memory_accumulator;
@@ -309,6 +345,10 @@ struct unique_process_subgraph {
 #if PRSIM_SETUP_HOLD
 	ostream&
 	dump_timing_constraints(ostream&) const;
+#endif
+#if PRSIM_TIMING_BACKANNOTATE
+	ostream&
+	dump_backannotated_delays(ostream&) const;
 #endif
 
 };	// end struct unique_process_subgraph

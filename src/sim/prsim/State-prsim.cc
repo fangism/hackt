@@ -4051,6 +4051,8 @@ State::execute_immediately(
 		}
 	}
 #if PRSIM_SETUP_HOLD
+#if PRSIM_FWD_POST_TIMING_CHECKS
+#else
 	// TODO: decide what to do if node is X
 	if (UNLIKELY(n.has_setup_check())) {
 		do_setup_check(ni, pe.val);
@@ -4058,6 +4060,7 @@ State::execute_immediately(
 	if (UNLIKELY(n.has_hold_check())) {
 		do_hold_check(ni, pe.val);
 	}
+#endif
 #endif	// PRSIM_SETUP_HOLD
 	// only set the cause of the node when we change its value
 	DEBUG_STEP_PRINT("committing value change to node" << endl);
@@ -4329,6 +4332,24 @@ if (n.in_channel()) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if PRSIM_SETUP_HOLD
+#if PRSIM_FWD_POST_TIMING_CHECKS
+/**
+	Node ni is the reference node of a constraint.
+	Post a constraint check on the trigger node that expires
+	after an elapsed time dictated by the constraint.  
+ */
+void
+State::post_setup_check(const node_index_type ni, const value_enum nv) {
+	// pool-allocate a check to post
+	// schedule the new check ID at the trigger-node (map)
+	// insert same ID into check-expiration-queue,
+	//	on expiration, should dequeue, and remove from trigger-node
+}
+#else
+/**
+	Node ni is the trigger node of a constraint.
+	Look back at last time of transition of reference nodes.
+ */
 void
 State::do_setup_check(const node_index_type ni, const value_enum nv) {
 	STACKTRACE_INDENT_PRINT("there is setup check on node" << endl);
@@ -4344,8 +4365,7 @@ if (f != setup_check_map.end()) {
 	map<process_index_type, local_node_ids_type>::const_iterator
 		i(m.begin()), e(m.end());
 for ( ; i!=e; ++i) {
-	// processes that own a setup constraint
-	// on this node
+	// processes that own a setup constraint on this node
 	const process_index_type pid = i->first;
 	STACKTRACE_INDENT_PRINT("  process id " << pid << endl);
 	const process_sim_state& ps(get_process_state(pid));
@@ -4422,8 +4442,7 @@ if (f != hold_check_map.end()) {
 	map<process_index_type, local_node_ids_type>::const_iterator
 		i(m.begin()), e(m.end());
 for ( ; i!=e; ++i) {
-	// processes that own a hold constraint
-	// on this node
+	// processes that own a hold constraint on this node
 	const process_index_type pid = i->first;
 	STACKTRACE_INDENT_PRINT("  process id " << pid << endl);
 	const process_sim_state& ps(get_process_state(pid));
@@ -4477,6 +4496,7 @@ for ( ; i!=e; ++i) {
 }	// end for processes
 }	// end if check_hold_map
 }	// end do_hold_check
+#endif	// PRSIM_FWD_POST_TIMING_CHECKS
 #endif	// PRSIM_SETUP_HOLD
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
