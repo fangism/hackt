@@ -9,18 +9,14 @@
 	to avoid base-name conflict on dyld with chpsim's.  
  */
 
-#ifndef	__HAC_SIM_PRSIM_EVENT_H__
-#define	__HAC_SIM_PRSIM_EVENT_H__
+#ifndef	__HAC_SIM_PRSIM_EVENT_HH__
+#define	__HAC_SIM_PRSIM_EVENT_HH__
 
 #include <iosfwd>
 #include <vector>
 #include "sim/common.hh"
-#include "util/likely.h"
-#include "util/attributes.h"
-#include "util/macros.h"
 #include "util/utypes.h"
-#include "util/memory/index_pool.hh"
-#include "util/memory/free_list.hh"
+#include "util/memory/array_pool.hh"
 #include "sim/prsim/devel_switches.hh"
 #include "sim/prsim/Cause.hh"
 #include "sim/trace_common.hh"		// for trace_index_type
@@ -28,7 +24,7 @@
 /**
 	Verbosely trace each item added and removed from pool free list.
  */
-#define	DEBUG_EVENT_POOL_ALLOC				0
+#define	DEBUG_EVENT_POOL_ALLOC			DEBUG_ARRAY_POOL_ALLOC
 /**
 	Use a set for free-list to check for uniqueness.
 	I think a set<> (unpooled) will be slower than vector<>.
@@ -57,9 +53,7 @@ using std::istream;
 using std::ostream;
 using std::priority_queue;
 using std::vector;
-using util::memory::index_pool;
-using util::memory::free_list_acquire;
-using util::memory::free_list_release;
+using util::memory::array_pool;
 using SIM::trace_index_type;
 using SIM::INVALID_TRACE_INDEX;
 
@@ -328,80 +322,23 @@ public:
 } __ATTRIBUTE_ALIGNED__ ;	// end struct Event
 
 //=============================================================================
+typedef	array_pool<vector<Event>, 
+#if PARANOID_EVENT_FREE_LIST
+	std::set<event_index_type>
+#else
+	vector<event_index_type>
+#endif
+		>				EventPool_base_type;
 /**
 	Allocator for events.  
 	Returns indices instead of pointers.  
-	Could template this: combining pool_type with free_list type!
-	Can't you tell I love templates?
  */
-class EventPool {
+class EventPool : public EventPool_base_type {
+	typedef	EventPool_base_type		parent_type;
 public:
-	typedef	Event				event_type;
-	typedef	index_pool<vector<Event> >	event_allocator_type;
-	/**
-		TODO: use a more compact discrete_interval_set
-	 */
-#if PARANOID_EVENT_FREE_LIST
-	typedef	std::set<event_index_type>	free_list_type;
-#else
-	typedef	vector<event_index_type>	free_list_type;
-#endif
-private:
-	event_allocator_type			event_pool;
-	free_list_type				free_indices;
+	typedef	parent_type::value_type		event_type;
 public:
-	EventPool();
-	~EventPool();
-
-	const Event&
-	operator [] (const event_index_type i) const {
-		INVARIANT(i);
-		return event_pool[i];
-	}
-
-	Event&
-	operator [] (const event_index_type i) {
-		INVARIANT(i);
-		return event_pool[i];
-	}
-
-	bool
-	check_valid_empty(void) const;
-
-#if DEBUG_EVENT_POOL_ALLOC
-	event_index_type
-	allocate(const event_type& e);
-#else
-	event_index_type
-	allocate(const event_type& e) {
-		if (UNLIKELY(free_indices.empty())) {	// UNLIKELY
-			const event_index_type ret = event_pool.size();
-			event_pool.allocate(e);	// will realloc
-			INVARIANT(ret);
-			return ret;
-		} else {			// LIKELY
-			const event_index_type ret =
-				free_list_acquire(free_indices);
-			event_pool[ret] = e;
-			INVARIANT(ret);
-			return ret;
-		}
-	}
-#endif
-
-#if DEBUG_EVENT_POOL_ALLOC
-	void
-	deallocate(const event_index_type i);
-#else
-	void
-	deallocate(const event_index_type i) {
-		INVARIANT(i);
-		free_list_release(free_indices, i);
-	}
-#endif
-
-	void
-	clear(void);
+	// default inherited ctor/dtor
 
 	ostream&
 	dump_memory_usage(ostream&) const;
@@ -413,5 +350,5 @@ public:
 }	// end namespace SIM
 }	// end namespace HAC
 
-#endif	// __HAC_SIM_PRSIM_EVENT_H__
+#endif	// __HAC_SIM_PRSIM_EVENT_HH__
 

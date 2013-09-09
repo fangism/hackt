@@ -21,7 +21,7 @@
 #define	ENABLE_STACKTRACE			1
 #endif
 
-#include "util/memory/index_pool.tcc"
+#include "util/memory/array_pool.tcc"
 #include "util/IO_utils.tcc"
 #include "util/stacktrace.hh"
 
@@ -136,120 +136,7 @@ Event::dump_checkpoint_state(ostream& o, istream& i) {
 
 //=============================================================================
 // class EventPool method definitions
-/**
-	This always reserves the 0th entry as an invalid entry.  
-	Thus, 0 should never be in the freelist.  
- */
-EventPool::EventPool() : event_pool(), free_indices() {
-	STACKTRACE_VERBOSE;
-	STACKTRACE_INDENT_PRINT("this @0x" << this << endl);
-	const event_index_type zero __ATTRIBUTE_UNUSED__ =
-		event_pool.allocate();
-	INVARIANT(!zero);
-	// never add 0 to the free-list
-}
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-EventPool::~EventPool() {
-	STACKTRACE_VERBOSE;
-	INVARIANT(check_valid_empty());
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Strict paranoia checking.  
-	All resources returned properly to the pool, free-list
-		must be as big as the pool (minus sentinel).  
-	Note: for 2^k-bit architectures, this can easily overflow
-		if the free-list size, m, exceeds a number.
-		Overflow condition: m*(m+1)/2 > 2^k
-		Could be off by a sign bit, due to unsigned right shift!
-		Test case: quarantine/set-assert-02.prsimckpttest
- */
-bool
-EventPool::check_valid_empty(void) const {
-	bool die = false;
-	const size_t p = event_pool.size() -1;
-	const size_t m = free_indices.size();
-	if (p != m) {
-		cerr << "FATAL: event pool size is " << p <<
-			" while free-list size is " << m << endl;
-		die = true;
-	} else {
-		const size_t s = std::accumulate(
-			free_indices.begin(), free_indices.end(), size_t(0));
-			// explicit type-spec to prevent overflow
-#if 0
-		const size_t expect_sum = (m*(m+1))>>1; // triangular sum
-#else
-		// overflow-sign safe version, halve the even multiplicand
-		const size_t expect_sum = (m&1) ? m*((m+1)>>1) : (m>>1)*(m+1);
-		// result may overflow, but we just want modulo-2^k to match
-#endif
-		if (s != expect_sum) {
-			cerr << "FATAL: event pool free list sum "
-				"is not what\'s expected!" << endl;
-			cerr << "expected: " << expect_sum << ", but got: " <<
-				s << ", difference: " << expect_sum -s << endl;
-			die = true;
-		}
-	}
-	if (die) {
-		std::ostream_iterator<size_t> osi(cerr, ",");
-		cerr << "free-list: ";
-		copy(free_indices.begin(), free_indices.end(), osi);
-		cerr << endl;
-	}
-	return !die;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-EventPool::clear(void) {
-	free_indices.clear();
-	event_pool.clear();
-	const event_index_type zero __ATTRIBUTE_UNUSED__ =
-		event_pool.allocate();
-	INVARIANT(!zero);
-	// never add 0 to the free-list
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if DEBUG_EVENT_POOL_ALLOC
-/**
-	Keep this consistent with the inline definition.  
-	\return index to new event entry, never 0.
- */
-event_index_type
-EventPool::allocate(const event_type& e) {
-	STACKTRACE_VERBOSE;
-	if (UNLIKELY(free_indices.empty())) {   // UNLIKELY
-		const event_index_type ret = event_pool.size();
-		event_pool.allocate(e); // will realloc
-		INVARIANT(ret);
-		STACKTRACE_INDENT_PRINT("allocating entry: " << ret << endl);
-		return ret;
-	} else {                        // LIKELY
-		const event_index_type ret = free_list_acquire(free_indices);
-		event_pool[ret] = e;
-	STACKTRACE_INDENT_PRINT("allocating entry: " << ret << endl);
-		INVARIANT(ret);
-		return ret;
-	}
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	\param i event index to reclaim, never 0.
- */
-void
-EventPool::deallocate(const event_index_type i) {
-	STACKTRACE_VERBOSE;
-	STACKTRACE_INDENT_PRINT("deallocating entry: " << i << endl);
-	INVARIANT(i);
-	free_list_release(free_indices, i);
-}
-#endif  
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 EventPool::dump_memory_usage(ostream& o) const {
@@ -260,20 +147,20 @@ EventPool::dump_memory_usage(ostream& o) const {
 	static const size_t tree_node_base_size = (3*(sizeof(void*)) +1);
 #define	sizeof_tree_node(type)	(sizeof(type) +tree_node_base_size)
 #endif
-	const size_t s = event_pool.size();
+	const size_t s = this->pool_size();
 	o << "event-pool: (" << s << " * " << sizeof(event_type) <<
 		" B/event) = " << s * sizeof(event_type) << " B" << endl;
 #if PARANOID_EVENT_FREE_LIST
-	typedef	free_list_type::const_iterator::value_type	value_type;
+	typedef	free_list_type::const_iterator::value_type	fl_value_type;
 	const size_t l = free_indices.size();
 #define	SIZEOF(type)		sizeof_tree_node(type)
 #else
-	typedef	free_list_type::value_type			value_type;
+	typedef	free_list_type::value_type			fl_value_type;
 	const size_t l = free_indices.capacity();
 #define	SIZEOF(type)		sizeof(type)
 #endif
-	o << "event-free-list: (" << l << " * " << SIZEOF(value_type) <<
-		" B/free) = " << l * SIZEOF(value_type) << " B" << endl;
+	o << "event-free-list: (" << l << " * " << SIZEOF(fl_value_type) <<
+		" B/free) = " << l * SIZEOF(fl_value_type) << " B" << endl;
 	// is actually bigger in the case of std::_Rb_tree...
 	return o;
 }
@@ -284,4 +171,20 @@ EventPool::dump_memory_usage(ostream& o) const {
 //=============================================================================
 }	// end namespace SIM
 }	// end namespace HAC
+
+// explicit template instantiations
+namespace util {
+namespace memory {
+using HAC::SIM::PRSIM::Event;
+using HAC::SIM::event_index_type;
+template class array_pool<
+	std::vector<Event>,
+#if PARANOID_EVENT_FREE_LIST
+	std::set<event_index_type>
+#else
+	vector<event_index_type>
+#endif
+	>;
+}	// end namespace memory
+}	// end namespace util
 

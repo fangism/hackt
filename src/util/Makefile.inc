@@ -26,6 +26,8 @@ UTIL_TCC_FILES = \
 	util/hash_qmap.tcc \
 	util/list_vector.tcc \
 	util/memory/allocator_adaptor.tcc \
+	util/memory/array_pool.hh \
+	util/memory/array_pool.tcc \
 	util/memory/chunk_map_pool.tcc \
 	util/memory/destruction_policy.tcc \
 	util/memory/fixed_pool_chunk.tcc \
