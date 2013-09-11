@@ -236,14 +236,23 @@ public:
 
 #if PRSIM_SETUP_HOLD
 	struct timing_exception : public generic_exception {
+		/// value of trigger node
 		value_enum			tvalue;
+		/// reference node index
 		node_index_type			reference;	// reference node
+		/// direction of clock edge true:pos, false:neg
 		bool				dir;
 		/// type of timing violation (eventually enum)
 		bool				is_setup;	// else hold
+		/// process id that owns this constraint
 		process_index_type		pid;
+		/// min_delay value of constraint
 		time_type			min_delay;
 
+		timing_exception() :
+			generic_exception(INVALID_NODE_INDEX, ERROR_FATAL) {
+			/* uninitialized */
+		}
 		timing_exception(const node_index_type r,
 			const node_index_type t, 
 			const value_enum v,
@@ -251,7 +260,8 @@ public:
 			const bool type, const process_index_type p,
 			const time_type m,
 			const error_policy_enum e) : 
-			generic_exception(t, e), tvalue(v),
+			generic_exception(t, e),
+			tvalue(v),
 			reference(r), dir(d),
 			is_setup(type), pid(p), min_delay(m) {
 		}
@@ -795,7 +805,26 @@ private:
 					timing_constraint_process_map_type;
 	timing_constraint_process_map_type	setup_check_map;
 	timing_constraint_process_map_type	hold_check_map;
-#endif
+#if PRSIM_FWD_POST_TIMING_CHECKS
+	// can we use a timing_exception?
+	typedef	size_t				timing_check_index_type;
+	typedef	array_pool<vector<timing_exception>,
+			vector<timing_check_index_type> >
+						timing_check_pool_type;
+	typedef	pair<timing_check_index_type, node_index_type>
+						timing_check_queue_entry;
+	typedef	std::multimap<time_type, timing_check_queue_entry>
+						timing_check_queue_type;
+	typedef	map<node_index_type, set<timing_check_index_type> >
+						timing_check_map_type;
+	/// this owns the actual timing_exception objects
+	timing_check_pool_type			timing_check_pool;
+	/// time-ordered queue of pointers to active checks
+	timing_check_queue_type			timing_check_queue;
+	/// per-node set of active timing checks
+	timing_check_map_type			active_timing_check_map;
+#endif	// PRSIM_FWD_POST_TIMING_CHECKS
+#endif	// PRSIM_SETUP_HOLD
 	// current time, etc...
 	time_type				current_time;
 	time_type				uniform_delay;
@@ -1728,12 +1757,32 @@ private:
 #endif
 
 #if PRSIM_SETUP_HOLD
+	void
+	handle_timing_exception(const timing_exception&);
+
 #if PRSIM_FWD_POST_TIMING_CHECKS
 	void
 	post_setup_check(const node_index_type, const value_enum);
 
 	void
 	post_hold_check(const node_index_type, const value_enum);
+
+	void
+	expire_timing_checks(void);
+
+	void
+	destroy_timing_checks(void);
+
+	void
+	check_active_timing_constraints(const node_index_type, 
+		const value_enum);
+
+	// for checkpointing
+	void
+	save_active_timing_checks(ostream&) const;
+
+	void
+	load_active_timing_checks(istream&);
 #else
 	void
 	do_setup_check(const node_index_type, const value_enum);

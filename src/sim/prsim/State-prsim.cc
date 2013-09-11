@@ -47,7 +47,7 @@
 #include "util/attributes.h"
 #include "util/sstream.hh"
 #include "util/stacktrace.hh"
-#include "util/memory/index_pool.tcc"
+#include "util/memory/array_pool.tcc"
 #include "util/memory/count_ptr.tcc"
 #include "util/likely.h"
 #include "util/iterator_more.hh"
@@ -147,6 +147,7 @@ using std::find;
 using std::copy;
 using std::set_intersection;
 using std::bind2nd;
+using std::make_pair;
 using util::set_inserter;
 using util::strings::string_to_num;
 using util::read_value;
@@ -406,6 +407,11 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 #if PRSIM_SETUP_HOLD
 		setup_check_map(),
 		hold_check_map(),
+#if PRSIM_FWD_POST_TIMING_CHECKS
+		timing_check_pool(),
+		timing_check_queue(),
+		active_timing_check_map(),
+#endif
 #endif
 		current_time(0), 
 		uniform_delay(time_traits::default_delay), 
@@ -534,6 +540,9 @@ State::~State() {
 				"\' for saving checkpoint." << endl;
 		}
 	}
+#if PRSIM_FWD_POST_TIMING_CHECKS
+	destroy_timing_checks();
+#endif
 	// dequeue all events and check consistency with event pool 
 	// upon its destruction.
 	while (!event_queue.empty()) {
@@ -2534,7 +2543,7 @@ for ( ; i!=e; ++i) {
 			if (get_event(ei).val == val) {
 				node_update_info nui;
 				nui.excl_blocked = true;
-				updated_nodes.insert(std::make_pair(ni, nui));
+				updated_nodes.insert(make_pair(ni, nui));
 				// assert: insertion successful, was not found
 #if PRSIM_FCFS_UPDATED_NODES
 				updated_nodes_queue.push_back(ni);
@@ -3917,7 +3926,9 @@ State::execute_immediately(
 	ISE_INVARIANT(exclhi_queue.empty());
 	ISE_INVARIANT(excllo_queue.empty());
 #endif
-
+#if PRSIM_FWD_POST_TIMING_CHECKS
+	expire_timing_checks();
+#endif
 	recent_exceptions.clear();
 //	const event_index_type& ei(ep.event_index);
 #if 0
@@ -4052,6 +4063,15 @@ State::execute_immediately(
 	}
 #if PRSIM_SETUP_HOLD
 #if PRSIM_FWD_POST_TIMING_CHECKS
+	// forward-post timing checks if this is node participates
+	// as a reference node in some timing constraint.
+	if (UNLIKELY(n.has_setup_check())) {
+		post_setup_check(ni, pe.val);
+	}
+	if (UNLIKELY(n.has_hold_check())) {
+		post_hold_check(ni, pe.val);
+	}
+	check_active_timing_constraints(ni, pe.val);
 #else
 	// TODO: decide what to do if node is X
 	if (UNLIKELY(n.has_setup_check())) {
@@ -4332,6 +4352,21 @@ if (n.in_channel()) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if PRSIM_SETUP_HOLD
+void
+State::handle_timing_exception(const timing_exception& tex) {
+	const error_policy_enum E = tex.policy;
+	if (E >= ERROR_BREAK) {
+		stop();
+	if (E >= ERROR_INTERACTIVE) {
+		record_exception(exception_ptr_type(
+			new timing_exception(tex)));
+	}
+	} else {
+		// break or warning, print now
+		tex.inspect(*this, cout);
+	}
+}
+
 #if PRSIM_FWD_POST_TIMING_CHECKS
 /**
 	Node ni is the reference node of a constraint.
@@ -4340,12 +4375,210 @@ if (n.in_channel()) {
  */
 void
 State::post_setup_check(const node_index_type ni, const value_enum nv) {
-	// pool-allocate a check to post
-	// schedule the new check ID at the trigger-node (map)
-	// insert same ID into check-expiration-queue,
-	//	on expiration, should dequeue, and remove from trigger-node
+	STACKTRACE_INDENT_PRINT("there is setup check on node" << endl);
+	const timing_constraint_process_map_type::const_iterator
+		f(setup_check_map.find(ni));
+if (f != setup_check_map.end()) {
+	STACKTRACE_INDENT_PRINT("found processes with setup constraints" << endl);
+	const map<process_index_type, local_node_ids_type>& m(f->second);
+	map<process_index_type, local_node_ids_type>::const_iterator
+		i(m.begin()), e(m.end());
+for ( ; i!=e; ++i) {
+	// processes that own a setup constraint on this node
+	const process_index_type pid = i->first;
+	STACKTRACE_INDENT_PRINT("  process id " << pid << endl);
+	const process_sim_state& ps(get_process_state(pid));
+	const unique_process_subgraph& pg(ps.type());
+	// possible multiple local occurrences
+	local_node_ids_type::const_iterator
+		li(i->second.begin()), le(i->second.end());
+	for ( ; li!=le; ++li) {
+		const node_index_type lni = *li;
+		STACKTRACE_INDENT_PRINT("    local node id " << lni << endl);
+		const unique_process_subgraph::setup_constraint_key_type
+			c = lni;
+		const unique_process_subgraph::setup_constraint_set_type::const_iterator
+			cf(pg.setup_constraints.find(c));
+	if (cf != pg.setup_constraints.end()) {
+		STACKTRACE_INDENT_PRINT("      found local setup constraint" << endl);
+		const vector<setup_constraint_entry>& sc(cf->second);
+		vector<setup_constraint_entry>::const_iterator
+			si(sc.begin()), se(sc.end());
+		for ( ; si!=se; ++si) {
+			// local nodes to check
+			STACKTRACE_INDENT_PRINT("        local trigger node "
+				<< si->trig_node << endl);
+			const node_index_type gti = translate_to_global_node(pid, si->trig_node);
+
+			const time_type ft = current_time +si->time;
+			STACKTRACE_INDENT_PRINT("        should change no earlier than "
+				<< ft << endl);
+			// pool-allocate a check to post
+			const timing_exception tex(ni, gti, LOGIC_OTHER, si->dir, true,
+				pid, si->time, setup_violation_policy);
+			const timing_check_index_type ti = timing_check_pool.allocate(tex);
+			// schedule the new check ID at the trigger-node (map)
+			active_timing_check_map[gti].insert(ti);
+			// insert same ID into check-expiration-queue,
+			//	on expiration, should dequeue, and remove from trigger-node
+			timing_check_queue.insert(make_pair(ft, make_pair(ti, gti)));
+		}	// end for local reference nodes
+	}	// end if hold_constraints.find
+	}	// end for-all constraints with common reference node
+}	// end for-all involved processes
 }
-#else
+}	// end post_setup_check
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Node ni is the reference node of a constraint.
+	Post a constraint check on the trigger node that expires
+	after an elapsed time dictated by the constraint.  
+ */
+void
+State::post_hold_check(const node_index_type ni, const value_enum nv) {
+	STACKTRACE_INDENT_PRINT("there is hold check on node" << endl);
+	const timing_constraint_process_map_type::const_iterator
+		f(hold_check_map.find(ni));
+if (f != hold_check_map.end()) {
+	STACKTRACE_INDENT_PRINT("found processes with hold constraints" << endl);
+	bool rise_fall[2];
+	rise_fall[1] = nv != LOGIC_LOW;	// maybe rising
+	rise_fall[0] = nv != LOGIC_HIGH;	// maybe falling
+	const map<process_index_type, local_node_ids_type>& m(f->second);
+	map<process_index_type, local_node_ids_type>::const_iterator
+		i(m.begin()), e(m.end());
+for ( ; i!=e; ++i) {
+	// processes that own a hold constraint on this node
+	const process_index_type pid = i->first;
+	STACKTRACE_INDENT_PRINT("  process id " << pid << endl);
+	const process_sim_state& ps(get_process_state(pid));
+	const unique_process_subgraph& pg(ps.type());
+	// possible multiple local occurrences
+	local_node_ids_type::const_iterator
+		li(i->second.begin()), le(i->second.end());
+	for ( ; li!=le; ++li) {
+		const node_index_type lni = *li;
+		STACKTRACE_INDENT_PRINT("    local node id " << lni << endl);
+		bool dir = false;
+	do {
+		STACKTRACE_INDENT_PRINT("    check dir = " << dir << endl);
+	if (rise_fall[dir]) {
+		const unique_process_subgraph::hold_constraint_key_type
+			c(lni, dir);
+		const unique_process_subgraph::hold_constraint_set_type::const_iterator
+			cf(pg.hold_constraints.find(c));
+	if (cf != pg.hold_constraints.end()) {
+		STACKTRACE_INDENT_PRINT("      found local hold constraint" << endl);
+		const vector<hold_constraint_entry>& sc(cf->second);
+		vector<hold_constraint_entry>::const_iterator
+			si(sc.begin()), se(sc.end());
+		for ( ; si!=se; ++si) {
+			// local nodes to check
+			STACKTRACE_INDENT_PRINT("        local trigger node "
+				<< si->trig_node << endl);
+			const node_index_type gti = translate_to_global_node(pid, si->trig_node);
+
+			const time_type ft = current_time +si->time;
+			STACKTRACE_INDENT_PRINT("        should change no earlier than "
+				<< ft << endl);
+			// pool-allocate a check to post
+			const timing_exception tex(ni, gti, LOGIC_OTHER, dir, false,
+				pid, si->time, hold_violation_policy);
+			const timing_check_index_type ti = timing_check_pool.allocate(tex);
+			// schedule the new check ID at the trigger-node (map)
+			active_timing_check_map[gti].insert(ti);
+			// insert same ID into check-expiration-queue,
+			//	on expiration, should dequeue, and remove from trigger-node
+			timing_check_queue.insert(make_pair(ft, make_pair(ti, gti)));
+		}	// end for local reference nodes
+	}	// end if hold_constraints.find
+	}	// end if check in this direction of reference node
+		dir = !dir;
+	} while (dir);	// 2x: once per direction
+	}	// end for-all constraints with common reference node
+}	// end for-all involved processes
+}
+}	// end post_hold_check
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Expire overdue timing checks (clear of violation window).
+ */
+void
+State::expire_timing_checks(void) {
+	STACKTRACE_BRIEF;
+	const timing_check_queue_type::const_iterator
+		e(timing_check_queue.upper_bound(current_time));
+	timing_check_queue_type::iterator i(timing_check_queue.begin());
+	for ( ; i!=e; ) {
+		STACKTRACE_INDENT_PRINT("expiring timing check at " <<
+			i->first << endl);
+		const timing_check_index_type tci = i->second.first;
+		const node_index_type tni = i->second.second;
+		active_timing_check_map[tni].erase(tci);
+		timing_check_pool.deallocate(tci);
+		const timing_check_queue_type::iterator j(i);
+		++i;
+		timing_check_queue.erase(j);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Destructor-time, return resources.
+ */
+void
+State::destroy_timing_checks(void) {
+	STACKTRACE_BRIEF;
+	const timing_check_queue_type::const_iterator
+		e(timing_check_queue.end());
+	timing_check_queue_type::iterator i(timing_check_queue.begin());
+	for ( ; i!=e; ) {
+		const timing_check_index_type tci = i->second.first;
+		const node_index_type tni = i->second.second;
+		active_timing_check_map[tni].erase(tci);
+		timing_check_pool.deallocate(tci);
+		const timing_check_queue_type::iterator j(i);
+		++i;
+		timing_check_queue.erase(j);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param tni trigger node to check for active constraints.
+	\param nv new value of trigger node
+ */
+void
+State::check_active_timing_constraints(const node_index_type tni,
+		const value_enum nv) {
+	timing_check_map_type::const_iterator
+		f(active_timing_check_map.find(tni));
+if (f != active_timing_check_map.end()) {
+	const set<timing_check_index_type>& active(f->second);
+	set<timing_check_index_type>::const_iterator
+		ai(active.begin()), ae(active.end());
+	for ( ; ai!=ae; ++ai) {
+		timing_exception tex(timing_check_pool[*ai]);	// yes, copy
+		tex.tvalue = nv;	// update trigger value
+		if (tex.is_setup) {
+			// is setup violation, trigger node is a clock
+			// check for direction match on clock edge
+			if (tex.dir ? (nv != LOGIC_LOW) : (nv != LOGIC_HIGH)) {
+				handle_timing_exception(tex);
+			}
+		} else {
+			// is hold time violation
+			// direction of trigger node doesn't matter
+			handle_timing_exception(tex);
+		}
+	}
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#else	// !PRSIM_FWD_POST_TIMING_CHECKS
 /**
 	Node ni is the trigger node of a constraint.
 	Look back at last time of transition of reference nodes.
@@ -4360,8 +4593,7 @@ if (f != setup_check_map.end()) {
 	bool rise_fall[2];
 	rise_fall[1] = nv != LOGIC_LOW;	// maybe rising
 	rise_fall[0] = nv != LOGIC_HIGH;	// maybe falling
-	const map<process_index_type, local_node_ids_type>&
-		m(f->second);
+	const map<process_index_type, local_node_ids_type>& m(f->second);
 	map<process_index_type, local_node_ids_type>::const_iterator
 		i(m.begin()), e(m.end());
 for ( ; i!=e; ++i) {
@@ -4403,19 +4635,9 @@ for ( ; i!=e; ++i) {
 			if (E > ERROR_IGNORE) {
 				const timing_exception
 					tex(gri, ni, nv, dir, true, pid, si->time, E);
-			if (E >= ERROR_BREAK) {
-				stop();
-			if (E >= ERROR_INTERACTIVE) {
-				record_exception(exception_ptr_type(
-					new timing_exception(tex)));
-			}
-			} else {
-				// break or warning, print now
-				tex.inspect(*this, cout);
-			}
+				handle_timing_exception(tex);
 			}
 #undef	E
-			}
 		}	// end for local reference nodes
 	}	// end if setup_constraints.find
 	}	// end if rise_fall[dir]
@@ -4434,11 +4656,7 @@ State::do_hold_check(const node_index_type ni, const value_enum nv) {
 		f(hold_check_map.find(ni));
 if (f != hold_check_map.end()) {
 	STACKTRACE_INDENT_PRINT("found processes with hold constraints" << endl);
-	bool rise_fall[2];
-	rise_fall[1] = nv != LOGIC_LOW;	// maybe rising
-	rise_fall[0] = nv != LOGIC_HIGH;	// maybe falling
-	const map<process_index_type, local_node_ids_type>&
-		m(f->second);
+	const map<process_index_type, local_node_ids_type>& m(f->second);
 	map<process_index_type, local_node_ids_type>::const_iterator
 		i(m.begin()), e(m.end());
 for ( ; i!=e; ++i) {
@@ -4477,19 +4695,9 @@ for ( ; i!=e; ++i) {
 			if (E > ERROR_IGNORE) {
 				const timing_exception
 					tex(gri, ni, nv, si->dir, false, pid, si->time, E);
-			if (E >= ERROR_BREAK) {
-				stop();
-			if (E >= ERROR_INTERACTIVE) {
-				record_exception(exception_ptr_type(
-					new timing_exception(tex)));
-			}
-			} else {
-				// break or warning, print now
-				tex.inspect(*this, cout);
-			}
+				handle_timing_exception(tex);
 			}
 #undef	E
-			}
 		}	// end for local reference nodes
 	}	// end if hold_constraints.find
 	}	// end for local node references

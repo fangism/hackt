@@ -2421,7 +2421,7 @@ if (!v.in_unique_pass()) {
 #if PRSIM_FWD_POST_TIMING_CHECKS
 	c.trig_node = v.lookup_local_bool_id(*nodes[1].begin());
 	const unique_process_subgraph::hold_constraint_key_type
-		k(v.lookup_local_bool_id(*nodes[0].begin(), dir));
+		k(v.lookup_local_bool_id(*nodes[0].begin()), dir);
 #else
 	// reference node (in the past, usually clk)
 	c.ref_node = v.lookup_local_bool_id(*nodes[0].begin());

@@ -155,7 +155,7 @@
 	Status: in development
  */
 #if	PRSIM_SETUP_HOLD
-#define	PRSIM_FWD_POST_TIMING_CHECKS		0
+#define	PRSIM_FWD_POST_TIMING_CHECKS		1
 #endif
 
 /**

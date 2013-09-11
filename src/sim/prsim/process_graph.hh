@@ -136,10 +136,21 @@ struct timing_constraint_entry {
 #endif
 	rule_time_type				time;
 
-	timing_constraint_entry() : ref_node(INVALID_NODE_INDEX), time(0) { }
+	timing_constraint_entry() :
+#if PRSIM_FWD_POST_TIMING_CHECKS
+		trig_node(INVALID_NODE_INDEX),
+#else
+		ref_node(INVALID_NODE_INDEX),
+#endif
+		time(0) { }
 	timing_constraint_entry(const node_index_type n,
 		const rule_time_type t) :
-		ref_node(n), time(t) { }
+#if PRSIM_FWD_POST_TIMING_CHECKS
+		trig_node(n),
+#else
+		ref_node(n),
+#endif
+		time(t) { }
 };	// end struct timing_constraing
 
 #if PRSIM_FWD_POST_TIMING_CHECKS
