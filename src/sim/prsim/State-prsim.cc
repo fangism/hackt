@@ -130,7 +130,6 @@
 #define	GET_CONTEXT_CACHE		module_state_base::
 #endif
 
-
 namespace HAC {
 namespace entity { }
 
@@ -3760,6 +3759,24 @@ State::generic_exception::inspect(const State& s, ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Support for saving exceptions across checkpoints.  
+ */
+void
+State::generic_exception::save(ostream& o) const {
+	write_value(o, node_id);
+	write_value(o, char(policy));
+}
+
+void
+State::generic_exception::load(istream& i) {
+	read_value(i, node_id);
+	char c;
+	read_value(i, c);
+	policy = error_policy_enum(c);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if PRSIM_SETUP_HOLD
 /**
 	Prints information about setup/hold time violations.  
@@ -4369,6 +4386,21 @@ State::handle_timing_exception(const timing_exception& tex) {
 
 #if PRSIM_FWD_POST_TIMING_CHECKS
 /**
+	Registers a single timing exception, keeping related structures consistent.
+ */
+void
+State::register_timing_check(const timing_exception& tex, const time_type& ft) {
+	const node_index_type gti = tex.node_id;
+	const timing_check_index_type ti = timing_check_pool.allocate(tex);
+	// schedule the new check ID at the trigger-node (map)
+	active_timing_check_map[gti].insert(ti);
+	// insert same ID into check-expiration-queue,
+	//	on expiration, should dequeue, and remove from trigger-node
+	timing_check_queue.insert(make_pair(ft, make_pair(ti, gti)));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Node ni is the reference node of a constraint.
 	Post a constraint check on the trigger node that expires
 	after an elapsed time dictated by the constraint.  
@@ -4416,12 +4448,16 @@ for ( ; i!=e; ++i) {
 			// pool-allocate a check to post
 			const timing_exception tex(ni, gti, LOGIC_OTHER, si->dir, true,
 				pid, si->time, setup_violation_policy);
+#if 0
 			const timing_check_index_type ti = timing_check_pool.allocate(tex);
 			// schedule the new check ID at the trigger-node (map)
 			active_timing_check_map[gti].insert(ti);
 			// insert same ID into check-expiration-queue,
 			//	on expiration, should dequeue, and remove from trigger-node
 			timing_check_queue.insert(make_pair(ft, make_pair(ti, gti)));
+#else
+			register_timing_check(tex, ft);
+#endif
 		}	// end for local reference nodes
 	}	// end if hold_constraints.find
 	}	// end for-all constraints with common reference node
@@ -4543,6 +4579,75 @@ State::destroy_timing_checks(void) {
 		++i;
 		timing_check_queue.erase(j);
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: it may be possible to reconstruct this information from 
+	the rest of the state, by examining times of last edges
+	on reference nodes.  
+ */
+void
+State::timing_exception::save(ostream& o) const {
+	generic_exception::save(o);
+	write_value(o, tvalue);
+	write_value(o, reference);
+	write_value(o, dir);
+	write_value(o, is_setup);
+	write_value(o, pid);
+	write_value(o, min_delay);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+State::timing_exception::load(istream& i) {
+	generic_exception::load(i);
+	read_value(i, tvalue);
+	read_value(i, reference);
+	read_value(i, dir);
+	read_value(i, is_setup);
+	read_value(i, pid);
+	read_value(i, min_delay);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/// for checkpointing
+void
+State::save_active_timing_checks(ostream& o) const {
+	// all we need is the timing_check_pool
+	// timing_check_queue and active_timing_check_map can be reconstructed
+// FIXME:
+#if 0
+	const size_t N = timing_check_queue.size();
+	write_value(o, N);
+	timing_check_queue_type::const_iterator
+		qi(timing_check_queue.begin()), qe(timing_check_queue.end());
+	for ( ; qi!=qe; ++qi) {
+		write_value(o, qi->first);
+//		timing_check_pool[qi->second.first].save(o);
+	}
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/// for checkpointing
+void
+State::load_active_timing_checks(istream& i) {
+// FIXME:
+#if 0
+	size_t N;
+	read_value(i, N);
+	size_t j = 0;
+	for ( ; j<N; ++j) {
+		time_type ft;
+		read_value(i, ft);
+#if 0
+		timing_exception tex;
+		tex.load(i);
+		register_timing_check(tex, ft);		// reconstruct
+#endif
+	}
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -8639,6 +8744,9 @@ State::save_checkpoint(ostream& o) const {
 	write_value(o, timing_mode);
 	_dump_flags.write_object(o);
 	time_fmt.write_object(o);
+#if PRSIM_FWD_POST_TIMING_CHECKS
+	save_active_timing_checks(o);
+#endif
 	if (_channel_manager.save_checkpoint(o)) return true;
 	// interrupted flag, just ignore
 	// trace_flush_interval: not saved
@@ -8868,6 +8976,9 @@ try {
 	read_value(i, timing_mode);
 	_dump_flags.load_object(i);
 	time_fmt.load_object(i);
+#if PRSIM_FWD_POST_TIMING_CHECKS
+	load_active_timing_checks(i);
+#endif
 	// interrupted flag, just ignore
 	// ifstreams? don't bother managing input stream stack.
 	// __scratch_expr_trace -- never needed, ignore
@@ -9066,7 +9177,11 @@ State::dump_checkpoint(ostream& o, istream& i) {
 	util::numformat tmp(cout);
 	tmp.load_object(i);
 	tmp.dump(o << "time-fmt flags: { ") << " }" << endl;
-}{
+}
+#if PRSIM_FWD_POST_TIMING_CHECKS
+	// dump_active_timing_checks
+#endif
+{
 	channel_manager tmp;
 	tmp.load_checkpoint(i);
 	tmp.dump_checkpoint_state(o) << endl;

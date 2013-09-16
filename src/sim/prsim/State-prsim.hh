@@ -218,6 +218,12 @@ public:
 			const error_policy_enum e) : 
 			node_id(n), policy(e) { }
 
+		void
+		save(ostream&) const;
+
+		void
+		load(istream&);
+
 	virtual	error_policy_enum
 		inspect(const State&, ostream&) const;
 	};	// end struct invariant_exception
@@ -265,6 +271,12 @@ public:
 			reference(r), dir(d),
 			is_setup(type), pid(p), min_delay(m) {
 		}
+
+		void
+		save(ostream&) const;
+
+		void
+		load(istream&);
 
 		error_policy_enum
 		inspect(const State&, ostream&) const;
@@ -1761,6 +1773,9 @@ private:
 	handle_timing_exception(const timing_exception&);
 
 #if PRSIM_FWD_POST_TIMING_CHECKS
+	void
+	register_timing_check(const timing_exception&, const time_type&);
+
 	void
 	post_setup_check(const node_index_type, const value_enum);
 
