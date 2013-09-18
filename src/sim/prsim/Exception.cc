@@ -4,26 +4,29 @@
 
 #include <iostream>
 #include "sim/prsim/Exception.hh"
-#include "sim/prsim/State.hh"
+#include "sim/prsim/State-prsim.hh"
+#include "util/IO_utils.tcc"
 
 namespace HAC {
 namespace SIM {
 namespace PRSIM {
 using std::endl;
+using util::write_value;
+using util::read_value;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Support for saving exceptions across checkpoints.  
  */
 void
-State::generic_exception::save(ostream& o) const {
+generic_exception::save(ostream& o) const {
 	write_value(o, node_id);
 	write_value(o, char(policy));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-State::generic_exception::load(istream& i) {
+generic_exception::load(istream& i) {
 	read_value(i, node_id);
 	char c;
 	read_value(i, c);

@@ -34,6 +34,9 @@
 #include "util/tokenize_fwd.hh"
 #include "util/numformat.hh"
 #include "Object/devel_switches.hh"
+#if PRSIM_SETUP_HOLD
+#include "sim/prsim/TimingChecker.hh"
+#endif
 
 #if	!PRSIM_SIMPLE_EVENT_QUEUE
 // define to 1 to use a unique-set container for pending queue
@@ -207,26 +210,7 @@ public:
 		inspect(const State&, ostream&) const;
 	};	// end struct excl_exception
 
-	/**
-		Minimalist generic exception.
-	 */
-	struct generic_exception : public step_exception {
-		node_index_type			node_id;
-		error_policy_enum		policy;
-
-		generic_exception(const node_index_type n, 
-			const error_policy_enum e) : 
-			node_id(n), policy(e) { }
-
-		void
-		save(ostream&) const;
-
-		void
-		load(istream&);
-
-	virtual	error_policy_enum
-		inspect(const State&, ostream&) const;
-	};	// end struct invariant_exception
+	// generic_exception relocated to sim/prsim/Exception.hh
 
 	/**
 		Exception type thrown when there is an invariant
@@ -241,46 +225,7 @@ public:
 	};	// end struct invariant_exception
 
 #if PRSIM_SETUP_HOLD
-	struct timing_exception : public generic_exception {
-		/// value of trigger node
-		value_enum			tvalue;
-		/// reference node index
-		node_index_type			reference;	// reference node
-		/// direction of clock edge true:pos, false:neg
-		bool				dir;
-		/// type of timing violation (eventually enum)
-		bool				is_setup;	// else hold
-		/// process id that owns this constraint
-		process_index_type		pid;
-		/// min_delay value of constraint
-		time_type			min_delay;
-
-		timing_exception() :
-			generic_exception(INVALID_NODE_INDEX, ERROR_FATAL) {
-			/* uninitialized */
-		}
-		timing_exception(const node_index_type r,
-			const node_index_type t, 
-			const value_enum v,
-			const bool d,
-			const bool type, const process_index_type p,
-			const time_type m,
-			const error_policy_enum e) : 
-			generic_exception(t, e),
-			tvalue(v),
-			reference(r), dir(d),
-			is_setup(type), pid(p), min_delay(m) {
-		}
-
-		void
-		save(ostream&) const;
-
-		void
-		load(istream&);
-
-		error_policy_enum
-		inspect(const State&, ostream&) const;
-	};	// end timing_exception
+	typedef	TimingChecker::timing_exception		timing_exception;
 #endif
 
 	typedef	generic_exception	interference_exception;
@@ -460,10 +405,6 @@ public:
 		ERROR_DEFAULT_CHANNEL_EXPECT_FAIL = ERROR_FATAL,
 		ERROR_DEFAULT_EXCL_CHECK_FAIL = ERROR_FATAL,
 		ERROR_DEFAULT_KEEPER_CHECK = ERROR_IGNORE,
-#if PRSIM_SETUP_HOLD
-		ERROR_DEFAULT_SETUP_VIOLATION = ERROR_WARN,
-		ERROR_DEFAULT_HOLD_VIOLATION = ERROR_BREAK,
-#endif
 		ERROR_DEFAULT_GENERIC = ERROR_BREAK	// unused
 	};
 
@@ -804,38 +745,8 @@ private:
 	/// sparse set of node-associated lock sets
 	check_excl_ring_map_type		check_exlo;
 #if PRSIM_SETUP_HOLD
-	/**
-		key: index of node that triggers timing check(s)
-		PRSIM_FWD_POST_TIMING_CHECKS:0 -- key is the trigger node
-		PRSIM_FWD_POST_TIMING_CHECKS:1 -- key is the reference node
-		value: set of processes that need to check the node
-			These should be unique and sorted.
-	 */
-	typedef	std::set<node_index_type>	local_node_ids_type;
-	typedef	std::map<node_index_type,
-			std::map<process_index_type, local_node_ids_type> >
-					timing_constraint_process_map_type;
-	timing_constraint_process_map_type	setup_check_map;
-	timing_constraint_process_map_type	hold_check_map;
-#if PRSIM_FWD_POST_TIMING_CHECKS
-	// can we use a timing_exception?
-	typedef	size_t				timing_check_index_type;
-	typedef	array_pool<vector<timing_exception>,
-			vector<timing_check_index_type> >
-						timing_check_pool_type;
-	typedef	pair<timing_check_index_type, node_index_type>
-						timing_check_queue_entry;
-	typedef	std::multimap<time_type, timing_check_queue_entry>
-						timing_check_queue_type;
-	typedef	map<node_index_type, set<timing_check_index_type> >
-						timing_check_map_type;
-	/// this owns the actual timing_exception objects
-	timing_check_pool_type			timing_check_pool;
-	/// time-ordered queue of pointers to active checks
-	timing_check_queue_type			timing_check_queue;
-	/// per-node set of active timing checks
-	timing_check_map_type			active_timing_check_map;
-#endif	// PRSIM_FWD_POST_TIMING_CHECKS
+	/// timing constraint checking subsystem
+	TimingChecker				timing_checker;
 #endif	// PRSIM_SETUP_HOLD
 	// current time, etc...
 	time_type				current_time;
@@ -904,12 +815,6 @@ private:
 	error_policy_enum			excl_check_fail_policy;
 	/// control handling/checking of keeper invariants
 	error_policy_enum			keeper_check_fail_policy;
-#if PRSIM_SETUP_HOLD
-	/// setup time violation policy
-	error_policy_enum			setup_violation_policy;
-	/// hold time violation policy
-	error_policy_enum			hold_violation_policy;
-#endif
 	/// name of automatically taken checkpoint
 	string					autosave_name;
 	/// timing mode
@@ -1287,6 +1192,18 @@ public:
 		return name##_policy;				\
 	}
 
+#define	DEFINE_POLICY_CONTROL_SET_MEM(mem, name)		\
+	void							\
+	set_##name##_policy(const error_policy_enum e) {	\
+		mem. name##_policy = e;				\
+	}
+
+#define	DEFINE_POLICY_CONTROL_GET_MEM(mem, name)		\
+	error_policy_enum					\
+	get_##name##_policy(void) const {			\
+		return mem. name##_policy;			\
+	}
+
 	bool
 	check_all_invariants(ostream&) const;
 
@@ -1324,10 +1241,10 @@ public:
 	DEFINE_POLICY_CONTROL_GET(excl_check_fail)
 	DEFINE_POLICY_CONTROL_GET(keeper_check_fail)
 #if PRSIM_SETUP_HOLD
-	DEFINE_POLICY_CONTROL_GET(setup_violation)
-	DEFINE_POLICY_CONTROL_GET(hold_violation)
-	DEFINE_POLICY_CONTROL_SET(setup_violation)
-	DEFINE_POLICY_CONTROL_SET(hold_violation)
+	DEFINE_POLICY_CONTROL_GET_MEM(timing_checker, setup_violation)
+	DEFINE_POLICY_CONTROL_GET_MEM(timing_checker, hold_violation)
+	DEFINE_POLICY_CONTROL_SET_MEM(timing_checker, setup_violation)
+	DEFINE_POLICY_CONTROL_SET_MEM(timing_checker, hold_violation)
 #endif
 
 #undef	DEFINE_POLICY_CONTROL_SET
@@ -1769,42 +1686,12 @@ private:
 #endif
 
 #if PRSIM_SETUP_HOLD
+public:
+	// for TimingChecker
 	void
 	handle_timing_exception(const timing_exception&);
 
-#if PRSIM_FWD_POST_TIMING_CHECKS
-	void
-	register_timing_check(const timing_exception&, const time_type&);
-
-	void
-	post_setup_check(const node_index_type, const value_enum);
-
-	void
-	post_hold_check(const node_index_type, const value_enum);
-
-	void
-	expire_timing_checks(void);
-
-	void
-	destroy_timing_checks(void);
-
-	void
-	check_active_timing_constraints(const node_index_type, 
-		const value_enum);
-
-	// for checkpointing
-	void
-	save_active_timing_checks(ostream&) const;
-
-	void
-	load_active_timing_checks(istream&);
-#else
-	void
-	do_setup_check(const node_index_type, const value_enum);
-
-	void
-	do_hold_check(const node_index_type, const value_enum);
-#endif
+private:
 #endif
 
 #if PRSIM_MK_EXCL_BLOCKING_SET

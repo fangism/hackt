@@ -320,43 +320,67 @@ TimingChecker::timing_exception::load(istream& i) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+TimingChecker::timing_exception::dump_checkpoint(ostream& o) const {
+	o << (is_setup ? "setup " : "hold ");
+	o << (dir ? "pos " : "neg ");
+	o << node_id << ":" << NodeState::translate_value_to_char(tvalue);
+	o << " -> " << reference;
+	o << ", pid: " << pid;
+	o << ", T > " << min_delay;
+	o << ", " << error_policy_string(policy);
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /// for checkpointing
 void
 TimingChecker::save_active_timing_checks(ostream& o) const {
 	// all we need is the timing_check_pool
 	// timing_check_queue and active_timing_check_map can be reconstructed
-// FIXME:
-#if 0
 	const size_t N = timing_check_queue.size();
 	write_value(o, N);
 	timing_check_queue_type::const_iterator
 		qi(timing_check_queue.begin()), qe(timing_check_queue.end());
 	for ( ; qi!=qe; ++qi) {
 		write_value(o, qi->first);
-//		timing_check_pool[qi->second.first].save(o);
+		timing_check_pool[qi->second.first].save(o);
 	}
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /// for checkpointing
 void
 TimingChecker::load_active_timing_checks(istream& i) {
-// FIXME:
-#if 0
 	size_t N;
 	read_value(i, N);
 	size_t j = 0;
 	for ( ; j<N; ++j) {
 		time_type ft;
 		read_value(i, ft);
-#if 0
 		timing_exception tex;
 		tex.load(i);
 		register_timing_check(tex, ft);		// reconstruct
-#endif
 	}
-#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+TimingChecker::dump_active_timing_checks(ostream& o, istream& i) {
+	size_t N;
+	read_value(i, N);
+	if (N) {
+	o << "active timing checks (" << N << "):" << endl;
+	size_t j = 0;
+	for ( ; j<N; ++j) {
+		time_type ft;
+		read_value(i, ft);
+		timing_exception tex;
+		tex.load(i);
+		tex.dump_checkpoint(o << '\t') << endl;
+	}
+	}
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -543,7 +567,9 @@ void
 TimingChecker::save_checkpoint(ostream& o) const {
 	write_value(o, setup_violation_policy);
 	write_value(o, hold_violation_policy);
-	// FIXME: finish me
+#if PRSIM_FWD_POST_TIMING_CHECKS
+	save_active_timing_checks(o);
+#endif
 }	// end TimingChecker::save_checkpoint
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -558,7 +584,9 @@ void
 TimingChecker::load_checkpoint(istream& i) {
 	read_value(i, setup_violation_policy);
 	read_value(i, hold_violation_policy);
-	// FIXME: finish me
+#if PRSIM_FWD_POST_TIMING_CHECKS
+	load_active_timing_checks(i);
+#endif
 }	// end TimingChecker::load_checkpoint
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -577,7 +605,9 @@ TimingChecker::dump_checkpoint(ostream& o, istream& i) {
         read_value(i, p);
         o << "hold-violation policy: " << error_policy_string(p) << endl;
 }
-	// FIXME: finish me
+#if PRSIM_FWD_POST_TIMING_CHECKS
+	dump_active_timing_checks(o, i);
+#endif
 	return o;
 }	// end TimingChecker::dump_checkpoint
 

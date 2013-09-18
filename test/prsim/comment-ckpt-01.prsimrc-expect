@@ -27,8 +27,6 @@ assert-fail (bool) policy: fatal
 channel-expect-fail policy: fatal
 exclusion-fail policy: fatal
 keeper-check policy: ignore
-setup-violation policy: warn
-hold-violation policy: break
 timing mode: 1
 dump flags: {
 hide definition owner
@@ -38,6 +36,8 @@ process member separatorr: .
 struct member separatorr: .
 }
 time-fmt flags: { flags:0x1002, w:0, p:6 }
+setup-violation policy: warn
+hold-violation policy: break
 channels:
 
 footer string: hackt-prsim-ckpt

@@ -1737,7 +1737,7 @@ void
 ExprAlloc::add_global_setup_constraint(const node_index_type l1) const {
 	const node_index_type lt = lookup_local_bool_id(l1);
 	const node_index_type gt = lookup_global_bool_id(l1);
-	state.setup_check_map[gt][current_process_index].insert(lt);
+	state.timing_checker.register_setup_check(gt, current_process_index, lt);
 	state.__get_node(gt).flag_setup_check();
 }
 
@@ -1746,7 +1746,7 @@ void
 ExprAlloc::add_global_hold_constraint(const node_index_type l1) const {
 	const node_index_type lt = lookup_local_bool_id(l1);
 	const node_index_type gt = lookup_global_bool_id(l1);
-	state.hold_check_map[gt][current_process_index].insert(lt);
+	state.timing_checker.register_hold_check(gt, current_process_index, lt);
 	state.__get_node(gt).flag_hold_check();
 }
 #endif

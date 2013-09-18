@@ -409,9 +409,10 @@ public:
 			NODE_IN_CHANNEL
 	} state_flags_enum;
 
-public:
+private:
 	// also use this as pull_to_char
 	static const uchar		value_to_char[3];
+public:
 	static const value_enum		invert_value[3];
 protected:
 	/**

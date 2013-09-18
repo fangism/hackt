@@ -151,8 +151,9 @@
 	Another scheme could schedule timing checks at reference time,
 	and expire them after the window of time elapses.
 	Current: 0 -- checks look backward from target transition
-	Goal: ?
-	Status: in development
+	Goal: ? -- both are valid, which is preferable: unknown
+		This serves as a proof-of-concept.
+	Status: in development, draft working
  */
 #if	PRSIM_SETUP_HOLD
 #define	PRSIM_FWD_POST_TIMING_CHECKS		1

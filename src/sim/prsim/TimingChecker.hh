@@ -68,6 +68,10 @@ public:
 
 		error_policy_enum
 		inspect(const State&, ostream&) const;
+
+		ostream&
+		dump_checkpoint(ostream&) const;
+
 	};	// end timing_exception
 
 private:
@@ -171,6 +175,10 @@ public:
 
 	void
 	load_active_timing_checks(istream&);
+
+	static
+	ostream&
+	dump_active_timing_checks(ostream&, istream&);
 #else
 	void
 	do_setup_check(State&, const node_index_type, const value_enum);

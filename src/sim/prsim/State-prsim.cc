@@ -404,12 +404,16 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 		check_exhi_ring_pool(1), check_exlo_ring_pool(1), 
 		check_exhi(), check_exlo(), 
 #if PRSIM_SETUP_HOLD
+#if 0
 		setup_check_map(),
 		hold_check_map(),
 #if PRSIM_FWD_POST_TIMING_CHECKS
 		timing_check_pool(),
 		timing_check_queue(),
 		active_timing_check_map(),
+#endif
+#else
+		timing_checker(*this),
 #endif
 #endif
 		current_time(0), 
@@ -444,7 +448,7 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 		channel_expect_fail_policy(E(CHANNEL_EXPECT_FAIL)),
 		excl_check_fail_policy(E(EXCL_CHECK_FAIL)),
 		keeper_check_fail_policy(E(KEEPER_CHECK)),
-#if PRSIM_SETUP_HOLD
+#if 0 && PRSIM_SETUP_HOLD
 		setup_violation_policy(E(SETUP_VIOLATION)),
 		hold_violation_policy(E(HOLD_VIOLATION)),
 #endif
@@ -539,9 +543,6 @@ State::~State() {
 				"\' for saving checkpoint." << endl;
 		}
 	}
-#if PRSIM_FWD_POST_TIMING_CHECKS
-	destroy_timing_checks();
-#endif
 	// dequeue all events and check consistency with event pool 
 	// upon its destruction.
 	while (!event_queue.empty()) {
@@ -973,8 +974,7 @@ State::reset(void) {
 	excl_check_fail_policy = E(EXCL_CHECK_FAIL);
 	keeper_check_fail_policy = E(KEEPER_CHECK);
 #if PRSIM_SETUP_HOLD
-	setup_violation_policy = E(SETUP_VIOLATION);
-	hold_violation_policy = E(HOLD_VIOLATION);
+	timing_checker.reset();
 #endif
 #undef	E
 	timing_mode = TIMING_DEFAULT;
@@ -1019,8 +1019,7 @@ State::set_mode_fatal(void) {
 		cerr << "  keeper-check-fail policy unmodified" << endl;
 	}
 #if PRSIM_SETUP_HOLD
-	setup_violation_policy = ERROR_FATAL;
-	hold_violation_policy = ERROR_FATAL;
+	timing_checker.set_mode_fatal();
 #endif
 }
 
@@ -1090,7 +1089,7 @@ State::backtrace_node(ostream& o, const node_index_type ni,
 #endif
 	// TODO: could look at critical event index if tracing...
 	dump_node_canonical_name(o << "event    : `", ni) <<
-		"\' : " << node_type::value_to_char[size_t(v)];
+		"\' : " << node_type::translate_value_to_char(v);
 #if PRSIM_TRACK_LAST_EDGE_TIME
 	if (tt >= 0.0) {
 		o << " @ " << tt;
@@ -1121,7 +1120,7 @@ State::backtrace_node(ostream& o, const node_index_type ni,
 #endif
 			dump_node_canonical_name(o << "caused by: `", e.node)
 				<< "\' : " <<
-				node_type::value_to_char[size_t(e.val)];
+				node_type::translate_value_to_char(e.val);
 #if PRSIM_TRACK_CAUSE_TIME
 			if (e.time <= min) {
 			// only show event times as they monotonically decrease
@@ -1816,7 +1815,7 @@ State::set_node_time(const node_index_type ni, const value_enum val,
 		const time_type t, const bool f) {
 	STACKTRACE_VERBOSE;
 	STACKTRACE_INDENT_PRINT("setting " << get_node_canonical_name(ni) <<
-		" to " << node_type::value_to_char[size_t(val)] <<
+		" to " << node_type::translate_value_to_char(val) <<
 		" at " << t << endl);
 	// we have ni = the canonically allocated index of the bool node
 	// just look it up in the node_pool
@@ -1834,8 +1833,8 @@ if (pending) {
 	const string objname(get_node_canonical_name(ni));
 	const event_type& pe(get_event(pending));
 	const value_enum pval = pe.val;
-	const char pc = node_type::value_to_char[pval];
-	const char nc = node_type::value_to_char[val];
+	const char pc = node_type::translate_value_to_char(pval);
+	const char nc = node_type::translate_value_to_char(val);
 	if (f) {
 		// doesn't matter what what last_val was, override it
 		// even if value is the same, reschedule it
@@ -1968,8 +1967,8 @@ if (!p.state_holding()) {
 			dump_node_canonical_name(
 			cerr << "Overriding pending event\'s value on node `",
 				ni) << "\' from " <<
-				node_type::value_to_char[e.val] << " to " <<
-				node_type::value_to_char[new_val] <<
+				node_type::translate_value_to_char(e.val) << " to " <<
+				node_type::translate_value_to_char(new_val) <<
 				", keeping the same event time." << endl;
 			e.val = new_val;
 		}
@@ -2143,10 +2142,12 @@ State::dump_mode(ostream& o) const {
 		error_policy_string(channel_expect_fail_policy) << endl;
 	o << "\ton keeper-check-fail: " <<
 		error_policy_string(keeper_check_fail_policy) << endl;
+#if PRSIM_SETUP_HOLD
 	o << "\ton setup-timing-violation: " <<
-		error_policy_string(setup_violation_policy) << endl;
+		error_policy_string(timing_checker.setup_violation_policy) << endl;
 	o << "\ton hold-timing-violation: " <<
-		error_policy_string(hold_violation_policy) << endl;
+		error_policy_string(timing_checker.hold_violation_policy) << endl;
+#endif
 	return o;
 }
 
@@ -3745,70 +3746,6 @@ State::excl_exception::inspect(const State& s, ostream& o) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Since we aggregate exceptions, there may now be duplicate 
-	messages on node-events that cause multiple exceptions.  
-	TODO: (low priority) fix duplicate node diagnostics
- */
-error_policy_enum
-State::generic_exception::inspect(const State& s, ostream& o) const {
-	if (policy >= ERROR_INTERACTIVE) {
-		o << "Halting on node: " <<
-			s.get_node_canonical_name(node_id) << endl;
-	}
-	return policy;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Support for saving exceptions across checkpoints.  
- */
-void
-State::generic_exception::save(ostream& o) const {
-	write_value(o, node_id);
-	write_value(o, char(policy));
-}
-
-void
-State::generic_exception::load(istream& i) {
-	read_value(i, node_id);
-	char c;
-	read_value(i, c);
-	policy = error_policy_enum(c);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PRSIM_SETUP_HOLD
-/**
-	Prints information about setup/hold time violations.  
- */
-error_policy_enum
-State::timing_exception::inspect(const State& s, ostream& o) const {
-//	const node_type& tn(s.get_node(node_id));
-	const node_type& rn(s.get_node(reference));
-	const string tname(s.get_node_canonical_name(node_id));
-	o << ((policy == ERROR_WARN) ? "Warning: " : "Error: ");
-	if (tvalue == LOGIC_OTHER || rn.current_value() == LOGIC_OTHER)
-		o << "possible ";
-	o << (is_setup ? "setup" : "hold") << " time violation on node `"
-		<< tname << "' -> " << node_type::value_to_char[size_t(tvalue)]
-		<< " in process `";
-	s.dump_process_canonical_name(o, pid) << "':\n";
-	o << "\ttime( ";
-	s.dump_node_canonical_name(o, reference);
-	if (!is_setup) o << (dir ? '+' : '-');
-	o << " -> " << tname;
-	if (is_setup) o << (dir ? '+' : '-');
-	o << " ) >= " << min_delay;
-	// assume current_time has not advanced
-	const time_type t1 = rn.get_last_transition_time();
-	const time_type t2 = s.time();
-	o << ", but got: (" << t2 << " - " << t1 << ") = " << t2-t1 << endl;
-	return policy;
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
 	For the sake of exception safety, 
 	Upon destruction, flush intermediate event queues.  
  */
@@ -3944,7 +3881,7 @@ State::execute_immediately(
 	ISE_INVARIANT(excllo_queue.empty());
 #endif
 #if PRSIM_FWD_POST_TIMING_CHECKS
-	expire_timing_checks();
+	timing_checker.expire_timing_checks();
 #endif
 	recent_exceptions.clear();
 //	const event_index_type& ei(ep.event_index);
@@ -4001,9 +3938,9 @@ State::execute_immediately(
 		ed.keep = true;
 	}
 	DEBUG_STEP_PRINT("former value: " <<
-		node_type::value_to_char[size_t(prev)] << endl);
+		node_type::translate_value_to_char(prev) << endl);
 	DEBUG_STEP_PRINT("new value: " <<
-		node_type::value_to_char[size_t(pe.val)] << endl);
+		node_type::translate_value_to_char(pe.val) << endl);
 	if (pe.val == LOGIC_OTHER &&
 		prev == LOGIC_OTHER) {
 		// node being set to X, but is already X, this could occur
@@ -4083,19 +4020,19 @@ State::execute_immediately(
 	// forward-post timing checks if this is node participates
 	// as a reference node in some timing constraint.
 	if (UNLIKELY(n.has_setup_check())) {
-		post_setup_check(ni, pe.val);
+		timing_checker.post_setup_check(ni, pe.val);
 	}
 	if (UNLIKELY(n.has_hold_check())) {
-		post_hold_check(ni, pe.val);
+		timing_checker.post_hold_check(ni, pe.val);
 	}
-	check_active_timing_constraints(ni, pe.val);
+	timing_checker.check_active_timing_constraints(*this, ni, pe.val);
 #else
 	// TODO: decide what to do if node is X
 	if (UNLIKELY(n.has_setup_check())) {
-		do_setup_check(ni, pe.val);
+		timing_checker.do_setup_check(*this, ni, pe.val);
 	}
 	if (UNLIKELY(n.has_hold_check())) {
-		do_hold_check(ni, pe.val);
+		timing_checker.do_hold_check(*this, ni, pe.val);
 	}
 #endif
 #endif	// PRSIM_SETUP_HOLD
@@ -4384,6 +4321,7 @@ State::handle_timing_exception(const timing_exception& tex) {
 	}
 }
 
+#if 0
 #if PRSIM_FWD_POST_TIMING_CHECKS
 /**
 	Registers a single timing exception, keeping related structures consistent.
@@ -4810,6 +4748,7 @@ for ( ; i!=e; ++i) {
 }	// end if check_hold_map
 }	// end do_hold_check
 #endif	// PRSIM_FWD_POST_TIMING_CHECKS
+#endif
 #endif	// PRSIM_SETUP_HOLD
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -4890,8 +4829,8 @@ State::evaluate(const node_index_type ni,
 		pull_enum prev, pull_enum next) {
 	STACKTRACE_VERBOSE_STEP;
 	DEBUG_STEP_PRINT("node " << ni << " from " <<
-		node_type::value_to_char[size_t(prev)] << " -> " <<
-		node_type::value_to_char[size_t(next)] << endl);
+		node_type::translate_value_to_char(prev) << " -> " <<
+		node_type::translate_value_to_char(next) << endl);
 	expr_state_type* u;
 	// first, localize evaluation to a single process!
 	const expr_struct_type* s;
@@ -5030,7 +4969,7 @@ State::__diagnose_invariant(ostream& o, const process_index_type pid,
 		const unique_process_subgraph& pg(ps.type());
 		ps.dump_subexpr(o, ri, *this, true);	// always verbose
 		dump_node_canonical_name(o << ") by node ", ni) << ':' <<
-			node_type::value_to_char[size_t(nval)];
+			node_type::translate_value_to_char(nval);
 		pg.dump_invariant_message(o, ri, ", \"", "\"") << endl;
 	}
 	return err;
@@ -6331,7 +6270,7 @@ ostream&
 State::print_status_nodes(ostream& o, const value_enum val,
 		const bool nl) const {
 	vector<node_index_type> nodes;
-	o << node_type::value_to_char[size_t(val)] << " nodes:" << endl;
+	o << node_type::translate_value_to_char(val) << " nodes:" << endl;
 	status_nodes(val, nodes);
 	print_nodes(o, nodes, false, nl ? "\n" : " ");
 	return o << endl;	// TODO: only if !nl, else flush
@@ -6677,11 +6616,11 @@ State::dump_event_force(ostream& o, const event_index_type ei,
 	if (!ev.killed() || force) {
 		format_ostream_ref(o << '\t', time_fmt) << t << '\t';
 		dump_node_canonical_name(o, ev.node) <<
-			" : " << node_type::value_to_char[ev.val];
+			" : " << node_type::translate_value_to_char(ev.val);
 		if (ev.cause.node) {
 			dump_node_canonical_name(o << '\t' << "[from ",
 				ev.cause.node) << ":=" <<
-			node_type::value_to_char[ev.cause.val] << "]";
+			node_type::translate_value_to_char(ev.cause.val) << "]";
 		}
 #if PRSIM_WEAK_RULES
 		if (ev.is_weak()) { o << '\t' << "(weak)"; }
@@ -7315,7 +7254,7 @@ if (y.second) {
 	const event_index_type pe = n.get_event();
 	if (pe) {
 		o << ", pending event -> " <<
-			node_type::value_to_char[size_t(get_event(pe).val)]
+			node_type::translate_value_to_char(get_event(pe).val)
 			<< endl;
 	} else {
 #if PRSIM_WEAK_RULES
@@ -7448,7 +7387,7 @@ if (y.second) {
 	if (pe) {
 		// if there is pending event, don't recurse
 		o << ", pending event -> " <<
-			node_type::value_to_char[size_t(get_event(pe).val)]
+			node_type::translate_value_to_char(get_event(pe).val)
 			<< endl;
 		// check that pending event's value matches
 	} else {
@@ -8736,7 +8675,7 @@ State::save_checkpoint(ostream& o) const {
 	write_value(o, channel_expect_fail_policy);
 	write_value(o, excl_check_fail_policy);
 	write_value(o, keeper_check_fail_policy);
-#if PRSIM_SETUP_HOLD
+#if 0 && PRSIM_SETUP_HOLD
 	write_value(o, setup_violation_policy);
 	write_value(o, hold_violation_policy);
 #endif
@@ -8744,8 +8683,8 @@ State::save_checkpoint(ostream& o) const {
 	write_value(o, timing_mode);
 	_dump_flags.write_object(o);
 	time_fmt.write_object(o);
-#if PRSIM_FWD_POST_TIMING_CHECKS
-	save_active_timing_checks(o);
+#if PRSIM_SETUP_HOLD
+	timing_checker.save_checkpoint(o);
 #endif
 	if (_channel_manager.save_checkpoint(o)) return true;
 	// interrupted flag, just ignore
@@ -8968,7 +8907,7 @@ try {
 	read_value(i, channel_expect_fail_policy);
 	read_value(i, excl_check_fail_policy);
 	read_value(i, keeper_check_fail_policy);
-#if PRSIM_SETUP_HOLD
+#if 0 && PRSIM_SETUP_HOLD
 	read_value(i, setup_violation_policy);
 	read_value(i, hold_violation_policy);
 #endif
@@ -8976,8 +8915,8 @@ try {
 	read_value(i, timing_mode);
 	_dump_flags.load_object(i);
 	time_fmt.load_object(i);
-#if PRSIM_FWD_POST_TIMING_CHECKS
-	load_active_timing_checks(i);
+#if PRSIM_SETUP_HOLD
+	timing_checker.load_checkpoint(i);
 #endif
 	// interrupted flag, just ignore
 	// ifstreams? don't bother managing input stream stack.
@@ -9152,7 +9091,7 @@ State::dump_checkpoint(ostream& o, istream& i) {
 	o << "exclusion-fail policy: " << error_policy_string(p) << endl;
 	read_value(i, p);
 	o << "keeper-check policy: " << error_policy_string(p) << endl;
-#if PRSIM_SETUP_HOLD
+#if 0 && PRSIM_SETUP_HOLD
 	read_value(i, p);
 	o << "setup-violation policy: " << error_policy_string(p) << endl;
 	read_value(i, p);
@@ -9178,8 +9117,8 @@ State::dump_checkpoint(ostream& o, istream& i) {
 	tmp.load_object(i);
 	tmp.dump(o << "time-fmt flags: { ") << " }" << endl;
 }
-#if PRSIM_FWD_POST_TIMING_CHECKS
-	// dump_active_timing_checks
+#if PRSIM_SETUP_HOLD
+	TimingChecker::dump_checkpoint(o, i);
 #endif
 {
 	channel_manager tmp;
