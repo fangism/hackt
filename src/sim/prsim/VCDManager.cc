@@ -122,7 +122,7 @@ VCDManager::record_event(const real_time& t, const node_index_type ni,
 		print_time(*trace_file) << '\n';
 	}
 	// format: all variables/wires are scalar for now
-	*trace_file << NodeState::value_to_char[size_t(v)];
+	*trace_file << NodeState::translate_value_to_char(v);
 	if (!mangled_vcd_ids) {
 		*trace_file << ' ';	// extra space for readability
 	}

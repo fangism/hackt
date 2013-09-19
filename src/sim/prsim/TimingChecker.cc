@@ -84,7 +84,8 @@ TimingChecker::timing_exception::inspect(const State& s, ostream& o) const {
 	if (tvalue == LOGIC_OTHER || rn.current_value() == LOGIC_OTHER)
 		o << "possible ";
 	o << (is_setup ? "setup" : "hold") << " time violation on node `"
-		<< tname << "' -> " << node_type::value_to_char[size_t(tvalue)]
+		<< tname << "' -> " <<
+		node_type::translate_value_to_char(tvalue)
 		<< " in process `";
 	s.dump_process_canonical_name(o, pid) << "':\n";
 	o << "\ttime( ";

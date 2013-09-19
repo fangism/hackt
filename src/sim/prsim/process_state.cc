@@ -361,7 +361,7 @@ process_sim_state::dump_rule(ostream& o, const rule_index_type lri,
 			(dir ? root_pull.up : root_pull.dn);
 		// rewritten this way because g++-3.3 ICEs-on-valid.
 		// was: (dir ? root_pull.up : root_pull.dn) STR_INDEX(w);
-		o << '<' << State::node_type::value_to_char[p] << '>';
+		o << '<' << State::node_type::translate_value_to_char(p) << '>';
 	}
 	st.dump_node_canonical_name(o << " -> ", gnr) << (dir ? '+' : '-');
 	if (v) {
@@ -668,9 +668,7 @@ process_sim_state::dump_subexpr(ostream& o, const expr_index_type ei,
 		// if verbose, and expression has more than one subexpr
 		// print pull-state
 		o << '<' <<
-			State::node_type::value_to_char[
-				size_t(es.pull_state(e))
-			]
+			State::node_type::translate_value_to_char(es.pull_state(e))
 			<< '>';
 	}
 	return o;

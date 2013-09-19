@@ -22,7 +22,7 @@ ostream&
 EventCause::dump_raw(ostream& o) const {
 	typedef	NodeState	node_type;
 	return o << "node: " << node << " -> val: " <<
-		node_type::value_to_char[size_t(val)];
+		node_type::translate_value_to_char(val);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -77,11 +77,11 @@ LastCause::load_state(istream& i) {
 ostream&
 LastCause::dump_checkpoint_state(ostream& o) const {
 	return o << '(' << caused_by_node[0] << ',' <<
-		NodeState::value_to_char[caused_by_value[0]] << "),(" <<
+		NodeState::translate_value_to_char(caused_by_value[0]) << "),(" <<
 		caused_by_node[1] << ',' <<
-		NodeState::value_to_char[caused_by_value[1]] << "),(" <<
+		NodeState::translate_value_to_char(caused_by_value[1]) << "),(" <<
 		caused_by_node[2] << ',' <<
-		NodeState::value_to_char[caused_by_value[2]] << ')';
+		NodeState::translate_value_to_char(caused_by_value[2]) << ')';
 }
 
 //=============================================================================

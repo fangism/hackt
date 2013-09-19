@@ -2702,11 +2702,11 @@ if (a.size() != 2) {
 		const pull_enum wd = n.get_pull_struct(false, WEAK_RULE).pull();
 #endif
 		cout << objname <<
-			" pulled up:" << node_type::value_to_char[u] <<
-			" dn:" << node_type::value_to_char[d] <<
+			" pulled up:" << node_type::translate_value_to_char(u) <<
+			" dn:" << node_type::translate_value_to_char(d) <<
 #if PRSIM_WEAK_RULES
-			" weak-up:" << node_type::value_to_char[wu] <<
-			" weak-dn:" << node_type::value_to_char[wd] <<
+			" weak-up:" << node_type::translate_value_to_char(wu) <<
+			" weak-dn:" << node_type::translate_value_to_char(wd) <<
 #endif
 				endl;
 #if PRSIM_NODE_AGGREGATE_ARGUMENTS
@@ -3115,7 +3115,7 @@ if (sz != 2 && sz != 3) {
 			s.filter_nodes(nodes,
 				bind2nd(mem_fun_ref(&node_type::match_value),
 					v));
-			cout << node_type::value_to_char[size_t(v)] <<
+			cout << node_type::translate_value_to_char(v) <<
 				" nodes in " << proc << ':' << endl;
 			s.print_nodes(cout, nodes, false, nl ? "\n" : " ");
 			cout << endl;
@@ -4401,7 +4401,7 @@ if (a.size() != 3) {
 			cout << "assert failed: expecting node `" << 
 				nonempty_abs_dir(objname) <<
 				"\' at " <<
-				node_type::value_to_char[size_t(val)] <<
+				node_type::translate_value_to_char(val) <<
 				", but got ";
 			n.dump_value(cout) << "." << endl;
 			}	// yes, actually allow suppression
@@ -4410,7 +4410,7 @@ if (a.size() != 3) {
 		} else if (s.confirm_asserts()) {
 			cout << "node `" << nonempty_abs_dir(objname)
 				<< "\' is " <<
-				node_type::value_to_char[size_t(val)] <<
+				node_type::translate_value_to_char(val) <<
 				", as expected." << endl;
 		}
 #if PRSIM_NODE_AGGREGATE_ARGUMENTS
@@ -4478,7 +4478,7 @@ if (a.size() != 3) {
 			cout << "assert failed: expecting node `" << 
 				nonempty_abs_dir(objname) <<
 				"\' not at " <<
-				node_type::value_to_char[size_t(val)] <<
+				node_type::translate_value_to_char(val) <<
 				", but got ";
 			n.dump_value(cout) << "." << endl;
 			}
@@ -4487,7 +4487,7 @@ if (a.size() != 3) {
 		} else if (s.confirm_asserts()) {
 			cout << "node `" << nonempty_abs_dir(objname)
 				<< "\' is not " <<
-				node_type::value_to_char[size_t(val)] <<
+				node_type::translate_value_to_char(val) <<
 				", as expected." << endl;
 		}
 #if PRSIM_NODE_AGGREGATE_ARGUMENTS
@@ -4557,16 +4557,16 @@ if (a.size() != 3) {
 			cout << "assert failed: expecting node `" << 
 				nonempty_abs_dir(objname) <<
 				"\' with drive-state " <<
-				node_type::value_to_char[size_t(val)] <<
+				node_type::translate_value_to_char(val) <<
 				", but got ";
-			cout << node_type::value_to_char[size_t(actual)]
+			cout << node_type::translate_value_to_char(actual)
 				<< "." << endl;
 			}	// yes, actually allow suppression
 			return error_policy_to_status(e);
 		} else if (s.confirm_asserts()) {
 			cout << "node `" << nonempty_abs_dir(objname)
 				<< "\' has drive-state " <<
-				node_type::value_to_char[size_t(val)] <<
+				node_type::translate_value_to_char(val) <<
 				", as expected." << endl;
 		}
 #if PRSIM_NODE_AGGREGATE_ARGUMENTS
