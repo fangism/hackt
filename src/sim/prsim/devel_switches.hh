@@ -153,10 +153,11 @@
 	Current: 0 -- checks look backward from target transition
 	Goal: ? -- both are valid, which is preferable: unknown
 		This serves as a proof-of-concept.
-	Status: in development, draft working
+	Status: tested, working, even with checkpointing
+		but left disabled for now.
  */
 #if	PRSIM_SETUP_HOLD
-#define	PRSIM_FWD_POST_TIMING_CHECKS		1
+#define	PRSIM_FWD_POST_TIMING_CHECKS		0
 #endif
 
 /**
