@@ -443,6 +443,7 @@ TYPEDEF		"typedef"
 CHP		"chp"
 HSE		"hse"
 PRS		"prs"
+RTE		"rte"
 SPEC		"spec"
 TREE		"tree"
 SUBCKT		"subckt"
@@ -693,6 +694,7 @@ EMBEDFILE	^#FILE
 {CHP}		{ KEYWORD_UPDATE(*hackt_lval, foo); return CHP_LANG; }
 {HSE}		{ KEYWORD_UPDATE(*hackt_lval, foo); return HSE_LANG; }
 {PRS}		{ KEYWORD_UPDATE(*hackt_lval, foo); return PRS_LANG; }
+{RTE}		{ KEYWORD_UPDATE(*hackt_lval, foo); return RTE_LANG; }
 {TREE}		{ KEYWORD_UPDATE(*hackt_lval, foo); return TREE_LANG; }
 {SUBCKT}	{ KEYWORD_UPDATE(*hackt_lval, foo); return SUBCKT_LANG; }
 {SPEC}		{ KEYWORD_UPDATE(*hackt_lval, foo); return SPEC_LANG; }

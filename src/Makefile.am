@@ -475,6 +475,7 @@ AST_CC_FILES = \
 	AST/CHP.cc \
 	AST/HSE.cc \
 	AST/PRS.cc \
+	AST/RTE.cc \
 	AST/SPEC.cc \
 	AST/type.cc \
 	AST/namespace.cc \
@@ -494,6 +495,7 @@ AST_HH_FILES = \
 	AST/CHP_fwd.hh \
 	AST/HSE_fwd.hh \
 	AST/PRS_fwd.hh \
+	AST/RTE_fwd.hh \
 	AST/SPEC_fwd.hh \
 	AST/AST.hh \
 	AST/common.hh \
