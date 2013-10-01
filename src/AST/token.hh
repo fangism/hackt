@@ -244,11 +244,15 @@ virtual	TYPE_BASE_CHECK_PROTO = 0;
  */
 class token_int_type : public token_datatype {
 	typedef	token_int_type		this_type;
+	bool				atomic;
 public:
 	explicit
 	token_int_type(const char* dt);
 
 	~token_int_type();
+
+	void
+	flag_atomic(void) { atomic = true; }	// eint
 
 	TYPE_BASE_CHECK_PROTO;
 
@@ -261,11 +265,15 @@ public:
  */
 class token_bool_type : public token_datatype {
 	typedef	token_bool_type		this_type;
+	bool				atomic;
 public:
 	explicit
 	token_bool_type(const char* dt);
 
 	~token_bool_type();
+
+	void
+	flag_atomic(void) { atomic = true; }	// ebool
 
 	TYPE_BASE_CHECK_PROTO;
 

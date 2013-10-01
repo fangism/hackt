@@ -271,6 +271,20 @@ BOOL_TYPE_UPDATE(YYSTYPE& hackt_lval, const lexer_state& foo) {
 }
 
 static inline void
+EINT_TYPE_UPDATE(YYSTYPE& hackt_lval, const lexer_state& foo) {
+	hackt_lval._token_int_type = new token_int_type(yytext);
+	hackt_lval._token_int_type->flag_atomic();
+	TOKEN_UPDATE(foo);
+}
+
+static inline void
+EBOOL_TYPE_UPDATE(YYSTYPE& hackt_lval, const lexer_state& foo) {
+	hackt_lval._token_bool_type = new token_bool_type(yytext);
+	hackt_lval._token_bool_type->flag_atomic();
+	TOKEN_UPDATE(foo);
+}
+
+static inline void
 PINT_TYPE_UPDATE(YYSTYPE& hackt_lval, const lexer_state& foo) {
 	hackt_lval._token_pint_type = new token_pint_type(yytext);
 	TOKEN_UPDATE(foo);
@@ -457,6 +471,8 @@ GET		"get"
 ENUM		"enum"
 INT_TYPE	"int"
 BOOL_TYPE	"bool"
+EINT_TYPE	"eint"
+EBOOL_TYPE	"ebool"
 PINT_TYPE	"pint"
 PBOOL_TYPE	"pbool"
 PREAL_TYPE	"preal"

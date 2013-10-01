@@ -660,7 +660,7 @@ token_paramtype::what(ostream& o) const {
 // class token_bool_type method definitions
 
 CONSTRUCTOR_INLINE
-token_bool_type::token_bool_type(const char* dt) : token_datatype(dt) { }
+token_bool_type::token_bool_type(const char* dt) : token_datatype(dt), atomic(false) { }
 
 DESTRUCTOR_INLINE
 token_bool_type::~token_bool_type() { }
@@ -668,6 +668,7 @@ token_bool_type::~token_bool_type() { }
 CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_bool_type)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// TODO: propagate atomic attribute
 type_base::return_type
 token_bool_type::check_definition(const context&) const {
 	STACKTRACE("token_bool_type::check_build()");
@@ -679,7 +680,7 @@ token_bool_type::check_definition(const context&) const {
 // class token_int_type method definitions
 
 CONSTRUCTOR_INLINE
-token_int_type::token_int_type(const char* dt) : token_datatype(dt) { }
+token_int_type::token_int_type(const char* dt) : token_datatype(dt), atomic(false) { }
 
 DESTRUCTOR_INLINE
 token_int_type::~token_int_type() { }
@@ -687,6 +688,7 @@ token_int_type::~token_int_type() { }
 CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_int_type)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// TODO: propagate atomic attribute
 type_base::return_type
 token_int_type::check_definition(const context&) const {
 	STACKTRACE("token_int_type::check_build()");
