@@ -30,6 +30,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/pint_const.hh"
 #include "Object/traits/value_traits.hh"
 #include "Object/traits/bool_traits.hh"
+#include "Object/traits/ebool_traits.hh"
 #include "Object/traits/int_traits.hh"
 #include "Object/traits/real_traits.hh"
 #include "Object/traits/string_traits.hh"
@@ -117,6 +118,10 @@ pstring_traits::built_in_type_ptr =
 const built_in_datatype_def
 bool_traits::built_in_definition = built_in_datatype_def(
 	never_ptr<const name_space>(&built_in_namespace), "bool");
+
+const built_in_datatype_def
+ebool_traits::built_in_definition = built_in_datatype_def(
+	never_ptr<const name_space>(&built_in_namespace), "ebool");
 
 /** built-in data int type definition initialization */
 // not really necessary, but this may make things cleaner in future

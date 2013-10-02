@@ -28,7 +28,10 @@ typedef	enum {
 	META_TYPE_PINT = 9,
 	META_TYPE_PREAL = 10,
 	META_TYPE_PSTRING = 11,
-	META_TYPES_ALL = 12		// use as a MAX size
+	// atomic variants
+	META_TYPE_EBOOL = 12,
+	META_TYPE_EINT = 13,
+	META_TYPES_ALL = 14		// use as a MAX size
 }	meta_type_tag_enum;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -54,6 +57,12 @@ struct meta_type_map<META_TYPE_BOOL> { typedef	bool_tag	type; };
 
 template <>
 struct meta_type_map<META_TYPE_INT> { typedef	int_tag		type; };
+
+template <>
+struct meta_type_map<META_TYPE_EBOOL> { typedef	ebool_tag	type; };
+
+template <>
+struct meta_type_map<META_TYPE_EINT> { typedef	eint_tag	type; };
 
 template <>
 struct meta_type_map<META_TYPE_ENUM> { typedef	enum_tag	type; };

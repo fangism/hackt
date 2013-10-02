@@ -19,6 +19,8 @@ struct class_traits;
 // forward declar specializations
 template <> struct class_traits<bool_tag>;
 template <> struct class_traits<int_tag>;
+template <> struct class_traits<ebool_tag>;
+template <> struct class_traits<eint_tag>;
 template <> struct class_traits<enum_tag>;
 template <> struct class_traits<real_tag>;
 template <> struct class_traits<node_tag>;
@@ -34,6 +36,8 @@ template <> struct class_traits<pstring_tag>;
 // These are defined in "Object/traits/*_traits.hh" as specializations.  
 typedef	class_traits<bool_tag>		bool_traits;
 typedef	class_traits<int_tag>		int_traits;
+typedef	class_traits<ebool_tag>		ebool_traits;
+typedef	class_traits<eint_tag>		eint_traits;
 typedef	class_traits<enum_tag>		enum_traits;
 typedef	class_traits<real_tag>		real_traits;
 typedef	class_traits<node_tag>		node_traits;

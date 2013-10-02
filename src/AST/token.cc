@@ -40,6 +40,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/traits/value_traits.hh"
 #include "Object/traits/int_traits.hh"
 #include "Object/traits/bool_traits.hh"
+#include "Object/traits/ebool_traits.hh"
 
 #include "common/TODO.hh"
 #include "util/what.hh"
@@ -101,6 +102,7 @@ using entity::pint_traits;
 using entity::preal_traits;
 using entity::pstring_traits;
 using entity::bool_traits;
+using entity::ebool_traits;
 using entity::int_traits;
 using entity::physical_instance_placeholder;
 using entity::param_value_placeholder;
@@ -668,12 +670,13 @@ token_bool_type::~token_bool_type() { }
 CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_bool_type)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// TODO: propagate atomic attribute
 type_base::return_type
 token_bool_type::check_definition(const context&) const {
 	STACKTRACE("token_bool_type::check_build()");
 	// safe to use never_ptr on address of statically allocated definition
-	return type_base::return_type(&bool_traits::built_in_definition);
+	return type_base::return_type(atomic ? 
+		&ebool_traits::built_in_definition :
+		&bool_traits::built_in_definition);
 }
 
 //=============================================================================
@@ -688,11 +691,14 @@ token_int_type::~token_int_type() { }
 CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_int_type)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// TODO: propagate atomic attribute
 type_base::return_type
 token_int_type::check_definition(const context&) const {
 	STACKTRACE("token_int_type::check_build()");
 	// safe to use never_ptr on address of statically allocated definition
+	if (atomic) {
+		// TODO: implement eint like ebool
+		FINISH_ME_EXIT(Fang);
+	}
 	return type_base::return_type(&int_traits::built_in_definition);
 }
 
