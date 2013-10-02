@@ -21,6 +21,7 @@
 			<item> chp </item>
 			<item> hse </item>
 			<item> prs </item>
+			<item> rte </item>
 			<item> spec </item>
 			<item> tree </item>
 			<item> subckt </item>
@@ -44,6 +45,8 @@
 			<item> e1of </item>
 			<item> bool </item>
 			<item> int </item>
+			<item> ebool </item>
+			<item> eint </item>
 			<item> pbool </item>
 			<item> pint </item>
 			<item> real </item>
