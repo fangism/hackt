@@ -12,7 +12,7 @@ syn match	hacImport  	"%}"
 syn keyword	cStatement  	template export open 
 " syn keyword	cLabel		case default
 syn keyword	cLabel		defproc deftype defchan namespace
-syn keyword	cLabel		spec chp prs hse
+syn keyword	cLabel		spec chp prs hse rte
 syn keyword	cConditional	else skip
 "syn keyword	cConditional	if else switch
 "syn keyword	cRepeat	  	for while	
@@ -139,7 +139,7 @@ syn match	cOperator	display "\.\."
 
 " syn keyword	cOperator	sizeof
 syn keyword	cType  		chan pint pbool preal pstring
-syn keyword	cType  		int bool real string
+syn keyword	cType  		int bool ebool eint real string
 " syn keyword	cOperator	typeof
 " syn keyword	cType		char void
 " syn keyword	cType		signed unsigned float double
