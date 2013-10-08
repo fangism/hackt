@@ -48,7 +48,7 @@ bool_connect_policy::attribute_names[] = {
 	"supply_high",
 	"reset_low",
 	"reset_high",
-	"RESERVED-11",
+	"atomic",
 	"RESERVED-12",
 	"RESERVED-13",
 	"RESERVED-14",
@@ -72,6 +72,46 @@ bool_connect_policy::attribute_names[] = {
 	"sub-FO+",
 	"sub-FI-",
 	"sub-FI+",
+};
+
+const char*
+bool_connect_policy::atomic_attribute_names[] = {
+	"RESERVED-0a",
+	"RESERVED-1a",
+	"RESERVED-2a",
+	"RESERVED-3a",
+	"RESERVED-4a",
+	"RESERVED-5a",
+	"RESERVED-6a",
+	"RESERVED-7a",
+
+	"RESERVED-8a",
+	"RESERVED-9a",
+	"RESERVED-10a",
+	"atomic",
+	"RESERVED-12a",
+	"RESERVED-13a",
+	"RESERVED-14a",
+	"RESERVED-15a",
+
+	"RESERVED-16a",
+	"RESERVED-17a",
+	"RESERVED-18a",
+	"RESERVED-19a",
+	"port?",
+	"port!",
+	"RESERVED-22a",
+// this range is reserved for implicit attributes
+	"port-alias",
+
+	"loc-use",
+	"RESERVED-25a",
+	"loc-def",
+	"RESERVED-27a",
+	"sub-use",
+	"RESERVED-29a",
+	"sub-def",
+	"RESERVED-31a",
 };
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -167,6 +207,10 @@ bool_connect_policy::declare_direction(const direction_type d) {
 good_bool
 bool_connect_policy::synchronize_flags(this_type& l, this_type& r) {
 	STACKTRACE_VERBOSE;
+	if (l.is_atomic() ^ r.is_atomic()) {
+		cerr << "Error: cannot alias atomic and non-atomic bools." << endl;
+		return good_bool(false);
+	}
 	l.attributes |= r.attributes;
 	r.attributes = l.attributes;
 	// TODO: handle direction checking!
@@ -230,6 +274,26 @@ bool_connect_policy::set_reset(const bool t) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+bool_connect_policy::set_atomic(const bool t) {
+	// must make sure non-atomic attributes have not been set (sanity)
+	if (attributes & BOOL_EXPLICIT_NONATOMIC_ATTRIBUTES_MASK) {
+		cerr <<
+"Error: cannot declare a bool atomic after it has other non-atomic attributes."
+			<< endl;
+		THROW_EXIT;
+	}
+	if (attributes & BOOL_CONNECTIVITY_OR_MASK) {
+		cerr <<
+"Error: cannot declare a bool atomic if it participates in production rules."
+			<< endl;
+		THROW_EXIT;
+	}
+	attributes |= BOOL_ATOMIC_INIT_MASK;	// or = (assign)?
+	// want to retain attributes like BOOL_IS_ALIASED_TO_PORT
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if BOOL_PRS_CONNECTIVITY_CHECKING && BOOL_CONNECTIVITY_CHECKING
 /**
 	Only allow connection to fanin if node is not marked as read-only '?'.
@@ -289,8 +353,9 @@ ostream&
 bool_connect_policy::dump_flat_attributes(ostream& o,
 		const bool implicit) const {
 	connection_flags_type temp = attributes;	// better be unsigned!
-	const char** p = attribute_names;
-while (temp && p < attribute_names +num_display_attributes(implicit)) {
+	const char** const anames = get_attribute_names_set();
+	const char** p = anames;
+while (temp && p < anames +num_display_attributes(implicit)) {
 	// b/c upper bits are connectivity
 	if (temp & 1) {
 		o << ' ' << *p;
@@ -309,8 +374,9 @@ ostream&
 bool_connect_policy::dump_split_attributes(ostream& o, const string& n, 
 		const bool implicit) const {
 	connection_flags_type temp = attributes;	// better be unsigned!
-	const char** p = attribute_names;
-while (temp && p < attribute_names +num_display_attributes(implicit)) {
+	const char** const anames = get_attribute_names_set();
+	const char** p = anames;
+while (temp && p < anames +num_display_attributes(implicit)) {
 	// b/c upper bits are connectivity
 	if (temp & 1) {
 		o << "@ " << n << ' ' << *p << endl;

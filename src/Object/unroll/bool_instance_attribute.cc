@@ -222,6 +222,28 @@ Reset::main(visitor_type& a, const values_type& v) {
 }
 
 //=============================================================================
+DECLARE_AND_DEFINE_BOOL_INSTANCE_ATTRIBUTE_CLASS(Atomic, "atomic")
+
+/***
+@texinfo attrib/bool-atomic.texi
+@defmac atomic [b]
+Flags this boolean variable as a atomic run-time expression bool, e.k.a. ebool.
+ebools cannot be connected to bools.
+See the chapter on run-time expressions.  
+@end defmac
+@end texinfo
+***/
+void
+Atomic::main(visitor_type& a, const values_type& v) {
+	pint_value_type b = 1;		// default unspecified value
+	if (v.size()) {
+		const pint_const& pi(*v[0].is_a<const pint_const>());
+		b = pi.static_constant_value();
+	}
+	a.set_atomic(b);
+}
+
+//=============================================================================
 }	// end namespace bool_attributes_impl
 }	// end namespace entity
 }	// end namespace HAC

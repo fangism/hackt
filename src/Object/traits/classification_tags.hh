@@ -122,20 +122,6 @@ struct int_tag : public datatype_tag {
 };	// end struct int_tag
 
 /**
-	Basic building block unit of data: a single node.  
- */
-struct ebool_tag : public datatype_tag {
-	typedef	datatype_tag		parent_tag;
-};	// end struct ebool_tag
-
-/**
-	Integer interpreted data.  
- */
-struct eint_tag : public datatype_tag {
-	typedef	datatype_tag		parent_tag;
-};	// end struct eint_tag
-
-/**
 	Real-valued interpreted data.  
  */
 struct real_tag : public datatype_tag {

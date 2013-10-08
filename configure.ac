@@ -613,6 +613,7 @@ AC_CONFIG_FILES([
 	test/parser/typedef/Makefile
 	test/parser/connect/Makefile
 	test/parser/flow/Makefile
+	test/parser/rte/Makefile
 	test/prsim/Makefile
 	test/prsim/vpi/Makefile
 	test/chpsim/Makefile

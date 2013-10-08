@@ -12,9 +12,7 @@ namespace entity {
 
 struct datatype_tag;
 struct bool_tag;
-struct ebool_tag;
 struct int_tag;
-struct eint_tag;
 struct enum_tag;
 struct real_tag;
 struct datastruct_tag;

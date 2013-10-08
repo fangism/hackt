@@ -4,7 +4,7 @@
 include $(top_srcdir)/test/Make.test-head
 
 SUBDIRS = basic namespace param array process datatype flow \
-	template typedef connect prs channel chp
+	template typedef connect prs channel chp rte
 
 include $(top_srcdir)/test/Make.test-tail
 

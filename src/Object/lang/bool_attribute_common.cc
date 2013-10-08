@@ -85,6 +85,12 @@ IsRVC3::__check_vals(const char* name, const values_type& v) {
 }
 
 //=============================================================================
+good_bool
+Atomic::__check_vals(const char* name, const values_type& v) {
+	return check_optional_integer(name, v);
+}
+
+//=============================================================================
 }	// end namespace bool_attributes
 }	// end namespace entity
 }	// end namespace HAC

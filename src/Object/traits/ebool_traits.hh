@@ -49,19 +49,22 @@ struct class_traits<ebool_tag> : public class_traits<bool_tag> {
 			template value_array<D>::type		type;
 	};
 	enum { instance_pool_chunk_size = 1024 };
-
+#endif
+	// yes, use bool, not ebool
 	typedef	bool_instance_collection	instance_collection_generic_type;
 	typedef	datatype_instance_collection	instance_collection_parent_type;
 	typedef	datatype_instance_placeholder
 					instance_placeholder_parent_type;
-	typedef	bool_instance_placeholder	instance_placeholder_type;
-	typedef	null_collection_type_manager<tag_type>
+	typedef	ebool_instance_placeholder	instance_placeholder_type;
+	typedef	null_collection_type_manager<bool_tag>
 					collection_type_manager_parent_type;
 	template <size_t D>
 	struct instance_array {
-		typedef	entity::instance_array<tag_type,D>	type;
+		// yes, use bool_tag
+		typedef	entity::instance_array<bool_tag,D>	type;
 	};
 
+#if 0
 	// TODO: proper subtyping with specialization
 	typedef	instantiation_statement_base	instantiation_statement_parent_type;
 	typedef	data_instantiation_statement	instantiation_statement_type;

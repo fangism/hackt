@@ -1,0 +1,5 @@
+// "rte/001b.hac" -- expect fail, perhaps at create-time
+bool x;
+x @[atomic];
+bool y;
+x = y;		// error: invalid alias

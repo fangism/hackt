@@ -115,6 +115,12 @@ class bool_connect_policy {
 	typedef	bool_connect_policy		this_type;
 	/// strings for names of flags
 	static const char*			attribute_names[];
+	// the atomic attribute overloads the bitfields
+	static const char*		atomic_attribute_names[];
+
+	const char** get_attribute_names_set(void) const {
+		return is_atomic() ? atomic_attribute_names : attribute_names;
+	}
 protected:
 	/**
 		The way boolean node attributes are propagated is
@@ -150,15 +156,26 @@ protected:
 	// reset attributes
 		BOOL_RESET_LOW		= 0x00000200,
 		BOOL_RESET_HIGH		= 0x00000400,
+	/**
+		run-time atomic expression 'ebool'
+		If this is true, many other bitfields are overloaded
+		to different meanings.
+	 */
+		BOOL_ATOMIC		= 0x00000800,
+		BOOL_ATOMIC_INIT_MASK = BOOL_ATOMIC,
+
 	// all attributes that are explicitly written
-		BOOL_EXPLICIT_ATTRIBUTES_MASK =
+		BOOL_EXPLICIT_NONATOMIC_ATTRIBUTES_MASK =
 			BOOL_IS_COMBINATIONAL |
 			BOOL_NO_AUTOKEEPER |
 			BOOL_IS_RVC1 | BOOL_IS_RVC2 | BOOL_IS_RVC3 |
 			BOOL_MAY_INTERFERE | BOOL_MAY_WEAK_INTERFERE |
 			BOOL_SUPPLY_LOW | BOOL_SUPPLY_HIGH |
 			BOOL_RESET_LOW | BOOL_RESET_HIGH,
+		BOOL_EXPLICIT_ATTRIBUTES_MASK =
+			BOOL_EXPLICIT_NONATOMIC_ATTRIBUTES_MASK | BOOL_ATOMIC,
 #if BOOL_CONNECTIVITY_CHECKING
+		// these keep their meaning as atomic ebools
 		// port is marked with '?'
 		BOOL_PORT_FORMAL_INPUT = 0x00100000,
 		// port is marked with '!'
@@ -260,9 +277,11 @@ protected:
 		BOOL_CONNECTIVITY_OR_MASK	=
 			BOOL_LOCAL_PRS_MASK | BOOL_SUBSTRUCT_PRS_MASK,
 #endif	// BOOL_PRS_CONNECTIVITY_CHECKING
-		BOOL_IMPLICIT_ATTRIBUTES_MASK = 
+		BOOL_IMPLICIT_NONATOMIC_ATTRIBUTES_MASK = 
 			BOOL_SUBSTRUCT_FANOUT |
 			BOOL_SUBSTRUCT_FANIN,
+		BOOL_IMPLICIT_ATTRIBUTES_MASK = 
+			BOOL_IMPLICIT_NONATOMIC_ATTRIBUTES_MASK,
 	/// mask for attributes to distinguish from connectivity fields
 	// both implicit and explicit attributes should be preserved
 		BOOL_ATTRIBUTES_MASK	=
@@ -274,7 +293,7 @@ protected:
 	};
 	enum {
 		// TODO: keep this in sync with above list!
-		BOOL_NUM_EXPLICIT_ATTRIBUTES = 11,
+		BOOL_NUM_EXPLICIT_ATTRIBUTES = 12,
 		// overall number of attributes, explicit and implicit
 		BOOL_NUM_ATTRIBUTES = sizeof(connection_flags_type) << 3
 	};
@@ -374,6 +393,12 @@ public:
 
 	void
 	set_reset(const bool);
+
+	void
+	set_atomic(const bool);
+
+	bool
+	is_atomic(void) const { return attributes & BOOL_ATOMIC; }
 
 #if BOOL_PRS_CONNECTIVITY_CHECKING
 	bool
