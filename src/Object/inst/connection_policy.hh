@@ -344,47 +344,65 @@ public:
 	}
 
 	void
+	nonatomic_only_attribute(void) const;
+
+	void
+	atomic_only_attribute(void) const;
+
+	void
+	nonatomic_only_prs_literal(void) const;
+
+	void
 	set_may_interfere(void) {
+		nonatomic_only_attribute();
 		attributes |= BOOL_MAY_INTERFERE;
 	}
 
 	void
 	set_may_weak_interfere(void) {
+		nonatomic_only_attribute();
 		attributes |= BOOL_MAY_WEAK_INTERFERE;
 	}
 
 	bool
 	may_interfere(void) const {
+		nonatomic_only_attribute();
 		return attributes & BOOL_MAY_INTERFERE;
 	}
 
 	bool
 	may_weak_interfere(void) const {
+		nonatomic_only_attribute();
 		return attributes & BOOL_MAY_WEAK_INTERFERE;
 	}
 
 	void
 	set_is_comb(void) {
+		nonatomic_only_attribute();
 		attributes |= BOOL_IS_COMBINATIONAL;
 	}
 
 	void
 	set_no_autokeeper(void) {
+		nonatomic_only_attribute();
 		attributes |= BOOL_NO_AUTOKEEPER;
 	}
 
 	void
 	set_is_rvc1(void) {
+		nonatomic_only_attribute();
 		attributes |= BOOL_IS_RVC1;
 	}
 
 	void
 	set_is_rvc2(void) {
+		nonatomic_only_attribute();
 		attributes |= BOOL_IS_RVC2;
 	}
 
 	void
 	set_is_rvc3(void) {
+		nonatomic_only_attribute();
 		attributes |= BOOL_IS_RVC3;
 	}
 
@@ -414,6 +432,7 @@ public:
 	// always considered safe to fanout arbitrarily
 	void
 	prs_fanout(const bool dir) {
+		nonatomic_only_prs_literal();
 		attributes |= dir ?
 			BOOL_LOCAL_PRS_FANOUT_PULL_UP :
 			BOOL_LOCAL_PRS_FANOUT_PULL_DN;
@@ -425,6 +444,7 @@ public:
 #else
 	void
 	prs_fanin(const bool dir) {
+		nonatomic_only_prs_literal();
 		attributes |= dir ?
 			BOOL_LOCAL_PRS_FANIN_PULL_UP :
 			BOOL_LOCAL_PRS_FANIN_PULL_DN;

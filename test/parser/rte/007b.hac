@@ -1,0 +1,5 @@
+// "rte/007b.hac"
+bool x;
+x @ [atomic];
+x @ [reset=1];	// should error out: conflicting attributes
+bool y;

@@ -4,7 +4,7 @@ include $(top_srcdir)/test/Make.test-head
 
 # These test cases use 'ebool' instead of @[atomic].
 # Once this syntactic layer is implemented, revisit these tests.
-EBOOL_TEST_CASES = 000 001 002 003 004
+EBOOL_TEST_CASES = 000 001 002 003 004 006
 srcdir_EXTRA_DIST += $(EBOOL_TEST_CASES:=.hac)
 
 HACKT_PARSE_TEST_FAILURES =
@@ -12,15 +12,18 @@ HACKT_PARSE_TEST_FAILURES =
 HACKT_PARSE_TEST_WARNINGS =
 
 HACKT_PARSE_TEST_PASSES = \
-	000b 001b 005b
+	000b 001b 002b 005b 006b 007b 008b 009b \
+	010b 011b 012b 013b 014b 015b 016b
 
 srcdir_EXTRA_DIST +=
 
 HACKT_CREATE_TEST_PASSES = \
-	000b
+	000b 002b 006b \
+	012b 014b 015b
 
 HACKT_CREATE_TEST_FAILURES = \
-	001b 005b
+	001b 005b 007b 008b 009b \
+	010b 011b 013b 016b
 
 # known defect reports: unresolved language issues
 # dealing with empty loops and negative ranges...

@@ -228,6 +228,34 @@ bool_connect_policy::has_nondefault_attributes(const bool implicit) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+bool_connect_policy::atomic_only_attribute(void) const {
+	if (!is_atomic()) {
+		cerr << "Error: cannot apply atomic attribute to non-atomic bool." << endl;
+		THROW_EXIT;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+bool_connect_policy::nonatomic_only_attribute(void) const {
+	if (is_atomic()) {
+		cerr << "Error: cannot apply non-atomic attribute to atomic bool." << endl;
+		THROW_EXIT;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+bool_connect_policy::nonatomic_only_prs_literal(void) const {
+	if (is_atomic()) {
+		cerr <<
+"Error: atomic bools cannot participate in production rules." << endl;
+		THROW_EXIT;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	TODO: diagnostic with node name please.
  */
@@ -235,6 +263,7 @@ void
 bool_connect_policy::set_supply(const bool t) {
 	static const char err_msg[] =
 		"Error: a node cannot be both supply-high and supply-low.";
+	nonatomic_only_attribute();
 	if (t) {
 		attributes |= BOOL_SUPPLY_HIGH;
 		if (attributes & BOOL_SUPPLY_LOW) {
@@ -258,6 +287,7 @@ void
 bool_connect_policy::set_reset(const bool t) {
 	static const char err_msg[] =
 		"Error: a node cannot be both reset-high and reset-low.";
+	nonatomic_only_attribute();
 	if (t) {
 		attributes |= BOOL_RESET_HIGH;
 		if (attributes & BOOL_RESET_LOW) {
@@ -300,6 +330,7 @@ bool_connect_policy::set_atomic(const bool t) {
  */
 good_bool
 bool_connect_policy::prs_fanin(const bool dir) {
+	nonatomic_only_prs_literal();
 	attributes |= dir ?
 		BOOL_LOCAL_PRS_FANIN_PULL_UP :
 		BOOL_LOCAL_PRS_FANIN_PULL_DN;

@@ -1,0 +1,6 @@
+// "012b.hac"
+defproc foo(bool in_expr, out) {
+in_expr @ [atomic];
+}
+
+foo bar;
