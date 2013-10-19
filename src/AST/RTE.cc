@@ -30,7 +30,7 @@
 #include "Object/expr/pstring_expr.hh"
 #include "Object/expr/meta_range_expr.hh"
 #include "Object/expr/meta_index_list.hh"
-// #include "Object/lang/RTE.hh"
+#include "Object/lang/RTE.hh"
 #include "Object/inst/pint_value_collection.hh"
 #include "Object/traits/bool_traits.hh"
 #include "Object/ref/meta_instance_reference_base.hh"
@@ -90,7 +90,7 @@ using std::mem_fun_ref;
 //=============================================================================
 // class body_item method definitions
 
-#define	CHECK_RULE_THROW	THROW_EXIT
+#define	CHECK_ASSIGN_THROW	THROW_EXIT
 #define	GUARDED_RTE_THROW	THROW_EXIT
 
 body_item::body_item() { }
@@ -127,12 +127,27 @@ assignment::rightmost(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	See CHP::binary_assignment::__check_action() for reference.
+	See PRS::rule::check_rule() for reference.
  */
 body_item::return_type
 assignment::check_assignment(context& c) const {
 	STACKTRACE_VERBOSE;
-	// FIXME:
+	INVARIANT(c.inside_atomic_rte());
+	// TODO: change prs to rte types
+	rte_expr_return_type r(rvalue->check_rte_expr(c));
+		// make this work for RTE as well
+	if (!r) {
+		cerr << "ERROR in atomic run-time expression at " <<
+			where(*rvalue) << "." << endl;
+		THROW_EXIT;
+	}
+	rte_lvalue_ptr_type l(lvalue->check_rte_lvalue(c));
+	if (!l) {
+		cerr << "ERROR in run-time expression lvalue at " <<
+			where(*lvalue) << "." << endl;
+		THROW_EXIT;
+	}
+	FINISH_ME(Fang);
 }
 
 //=============================================================================
@@ -272,7 +287,7 @@ guarded_body::check_clause(context& c) const {
 	NEVER_NULL(rs);
 	rs->append_guarded_clause(bg);
 	const context::rte_body_frame _pbf(c, 
-		never_ptr<entity::RTE::rule_set_base>(&rs->get_last_clause()));
+		never_ptr<entity::RTE::assignment_set_base>(&rs->get_last_clause()));
 	STACKTRACE_INDENT_PRINT("current rule set: " <<
 		&rs->get_last_clause() << endl);
 	// code below mostly ripped from loop::check_assignment()
@@ -391,6 +406,14 @@ if (assignments) {
 	const never_ptr<process_definition> pd(d.is_a<process_definition>());
 	// if !pd, then rte is in a top-level scope (outside definition)
 
+	using entity::RTE::assignment_set;
+	excl_ptr<assignment_set> ret(new assignment_set());
+	NEVER_NULL(ret);
+	const never_ptr<assignment_set> retc(ret);
+	entity::RTE::assignment_set_base& rb(c.get_current_rte_body());
+	rb.append_assignment(ret);
+
+	const context::rte_body_frame rf(c, retc);
 	if (!__check_assignments(c)) {
 		cerr << "ERROR: at least one error in RTE body."
 			<< endl;
@@ -410,7 +433,7 @@ body::check_assignment(context& c) const {
 	if (!__check_assignments(c)) {
 		cerr << "ERROR: at least one error in RTE rule-nest.  "
 			<< where(*assignments) << endl;
-		CHECK_RULE_THROW;
+		CHECK_ASSIGN_THROW;
 	}
 }
 

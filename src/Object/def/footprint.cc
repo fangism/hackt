@@ -70,6 +70,7 @@
 #include "Object/inst/preal_instance.hh"
 #include "Object/inst/pstring_instance.hh"
 #include "Object/lang/PRS_footprint.hh"
+#include "Object/lang/RTE_footprint.hh"
 #include "Object/lang/SPEC_footprint.hh"
 #include "Object/lang/CHP.hh"
 #include "Object/lang/CHP_event_alloc.hh"

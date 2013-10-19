@@ -54,10 +54,10 @@ bool_connect_policy::attribute_names[] = {
 	"RESERVED-14",
 	"RESERVED-15",
 
-	"RESERVED-16",
-	"RESERVED-17",
-	"RESERVED-18",
-	"RESERVED-19",
+	"loc-use",
+	"loc-def",
+	"sub-use",
+	"sub-def",
 	"port?",
 	"port!",
 	"RESERVED-22",
@@ -74,6 +74,7 @@ bool_connect_policy::attribute_names[] = {
 	"sub-FI+",
 };
 
+#if 0
 const char*
 bool_connect_policy::atomic_attribute_names[] = {
 	"RESERVED-0a",
@@ -113,6 +114,7 @@ bool_connect_policy::atomic_attribute_names[] = {
 	"sub-def",
 	"RESERVED-31a",
 };
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

@@ -22,6 +22,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/lang/PRS_attribute_registry.hh"
 #include "Object/lang/PRS_macro_common.hh"
 #include "Object/lang/PRS_macro_registry.tcc"
+#include "Object/lang/RTE_footprint.hh"
 #include "Object/lang/SPEC_common.hh"
 #include "Object/lang/SPEC_registry.tcc"
 #include "Object/lang/SPEC_footprint.hh"
@@ -1709,6 +1710,25 @@ ExprAlloc::__visit_current_path_graph_node_logic_output_down(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #endif	// PRSIM_PRECHARGE_INVARIANTS
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// run-time atomic expression support
+void
+ExprAlloc::visit(const entity::RTE::footprint&) {
+	FINISH_ME(Fang);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+ExprAlloc::visit(const entity::RTE::footprint_assignment&) {
+	FINISH_ME(Fang);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+ExprAlloc::visit(const entity::RTE::footprint_expr_node&) {
+	FINISH_ME(Fang);
+}
 
 //=============================================================================
 /**

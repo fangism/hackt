@@ -471,6 +471,22 @@ if (cfopts.show_channel_terminals) {
 }
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+cflat_prs_printer::visit(const RTE::footprint&) {
+	FINISH_ME(Fang);
+}
+
+void
+cflat_prs_printer::visit(const RTE::footprint_assignment&) {
+	FINISH_ME(Fang);
+}
+
+void
+cflat_prs_printer::visit(const RTE::footprint_expr_node&) {
+	FINISH_ME(Fang);
+}
+
 //=============================================================================
 }	// end namespace PRS
 }	// end namespace entity

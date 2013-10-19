@@ -56,6 +56,9 @@ namespace PRS {
 namespace SPEC {
 	class directives_set;
 }
+namespace RTE {
+	class assignment_set_base;
+}
 }	// end namespace entity
 
 namespace parser {
@@ -234,6 +237,11 @@ private:
 		may be top-level, in definition, conditional, or loop.  
 	 */
 	never_ptr<entity::SPEC::directives_set>	current_spec_body;
+	/**
+		The current scope of atomic run-time-expressions to add,
+		which can be top-level, or in conditional or loop. 
+	 */
+	never_ptr<entity::RTE::assignment_set_base>	current_rte_body;
 	/**
 		Stupid implementation of switching between
 		strict and relaxed template parameters. 
@@ -584,6 +592,11 @@ public:
 			&context::current_spec_body>
 						spec_body_frame;
 
+	typedef	util::member_saver<context, 
+		never_ptr<entity::RTE::assignment_set_base>, 
+			&context::current_rte_body>
+						rte_body_frame;
+
 	bool
 	inside_conditional(void) const {
 		return in_conditional_scope;
@@ -605,6 +618,15 @@ public:
 		// NEVER_NULL(current_spec_body);
 		return *current_spec_body;
 	}
+
+	entity::RTE::assignment_set_base&
+	get_current_rte_body(void) const {
+		// NEVER_NULL(current_rte_body);
+		return *current_rte_body;
+	}
+
+	bool
+	inside_atomic_rte(void) const { return current_rte_body; }
 
 	struct file_stack_frame {
 		context&			_context;

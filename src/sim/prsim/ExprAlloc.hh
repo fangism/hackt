@@ -3,8 +3,8 @@
 	$Id: ExprAlloc.hh,v 1.19 2010/09/29 00:13:42 fang Exp $
  */
 
-#ifndef	__HAC_SIM_PRSIM_EXPRALLOC_H__
-#define	__HAC_SIM_PRSIM_EXPRALLOC_H__
+#ifndef	__HAC_SIM_PRSIM_EXPRALLOC_HH__
+#define	__HAC_SIM_PRSIM_EXPRALLOC_HH__
 
 #include <queue>
 #include <map>
@@ -188,6 +188,15 @@ protected:
 	visit(const footprint_expr_node&);
 
 	void
+	visit(const entity::RTE::footprint&);
+
+	void
+	visit(const entity::RTE::footprint_assignment&);
+
+	void
+	visit(const entity::RTE::footprint_expr_node&);
+
+	void
 	visit_and_expr(const footprint_expr_node&);
 
 	void
@@ -321,5 +330,5 @@ private:
 }	// end namespace SIM
 }	// end namespace HAC
 
-#endif	// __HAC_SIM_PRSIM_EXPRALLOC_H__
+#endif	// __HAC_SIM_PRSIM_EXPRALLOC_HH__
 

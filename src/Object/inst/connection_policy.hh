@@ -116,10 +116,11 @@ class bool_connect_policy {
 	/// strings for names of flags
 	static const char*			attribute_names[];
 	// the atomic attribute overloads the bitfields
-	static const char*		atomic_attribute_names[];
+//	static const char*		atomic_attribute_names[];
 
 	const char** get_attribute_names_set(void) const {
-		return is_atomic() ? atomic_attribute_names : attribute_names;
+//		return is_atomic() ? atomic_attribute_names : attribute_names;
+		return attribute_names;
 	}
 protected:
 	/**
@@ -174,6 +175,7 @@ protected:
 			BOOL_RESET_LOW | BOOL_RESET_HIGH,
 		BOOL_EXPLICIT_ATTRIBUTES_MASK =
 			BOOL_EXPLICIT_NONATOMIC_ATTRIBUTES_MASK | BOOL_ATOMIC,
+
 #if BOOL_CONNECTIVITY_CHECKING
 		// these keep their meaning as atomic ebools
 		// port is marked with '?'
@@ -182,6 +184,21 @@ protected:
 		BOOL_PORT_FORMAL_OUTPUT = 0x00200000,
 #endif
 #if BOOL_PRS_CONNECTIVITY_CHECKING
+	/**
+		atomic run-time expression def/use attributes (implicit)
+	 */
+		BOOL_LOCAL_RTE_FANOUT = 0x00010000,
+		BOOL_LOCAL_RTE_FANIN = 0x00020000,
+		BOOL_SUBSTRUCT_RTE_FANOUT = 0x00040000,
+		BOOL_SUBSTRUCT_RTE_FANIN = 0x00080000,
+		BOOL_LOCAL_RTE_MASK =
+			BOOL_LOCAL_RTE_FANOUT | BOOL_LOCAL_RTE_FANIN,
+		BOOL_SUBSTRUCT_RTE_MASK =
+			BOOL_SUBSTRUCT_RTE_FANOUT | BOOL_SUBSTRUCT_RTE_FANIN,
+		BOOL_ANY_RTE_FANOUT =
+			BOOL_LOCAL_RTE_FANOUT | BOOL_SUBSTRUCT_RTE_FANOUT,
+		BOOL_ANY_RTE_FANIN =
+			BOOL_LOCAL_RTE_FANIN | BOOL_SUBSTRUCT_RTE_FANIN,
 	/**
 		This is NOT an attribute, is an intrinsic property
 		automatically updated during connections.
@@ -280,8 +297,11 @@ protected:
 		BOOL_IMPLICIT_NONATOMIC_ATTRIBUTES_MASK = 
 			BOOL_SUBSTRUCT_FANOUT |
 			BOOL_SUBSTRUCT_FANIN,
+		BOOL_IMPLICIT_ATOMIC_ATTRIBUTES_MASK = 
+			BOOL_SUBSTRUCT_RTE_MASK,
 		BOOL_IMPLICIT_ATTRIBUTES_MASK = 
-			BOOL_IMPLICIT_NONATOMIC_ATTRIBUTES_MASK,
+			BOOL_IMPLICIT_NONATOMIC_ATTRIBUTES_MASK |
+			BOOL_IMPLICIT_ATOMIC_ATTRIBUTES_MASK,
 	/// mask for attributes to distinguish from connectivity fields
 	// both implicit and explicit attributes should be preserved
 		BOOL_ATTRIBUTES_MASK	=
@@ -450,6 +470,16 @@ public:
 			BOOL_LOCAL_PRS_FANIN_PULL_DN;
 	}
 #endif
+
+	void
+	rte_fanout(void) {
+		// can be either atomic or non-atomic
+		attributes |= BOOL_LOCAL_RTE_FANOUT;
+	}
+
+	// bool is attached to an expression (defined)
+	void
+	rte_fanin(void);
 #endif
 
 #if BOOL_CONNECTIVITY_CHECKING

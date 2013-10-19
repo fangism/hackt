@@ -69,6 +69,7 @@
 #include "Object/expr/expr_dump_context.hh"
 #include "Object/common/namespace.hh"
 #include "Object/lang/PRS.hh"
+#include "Object/lang/RTE.hh"
 #include "Object/type/template_actuals.hh"
 #include "Object/traits/bool_traits.hh"
 #include "Object/traits/int_traits.hh"
@@ -227,6 +228,16 @@ expr::check_prs_expr(context& c) const {
 	return prs_expr_return_type();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Temporary placeholder, never really supposed to be called.  
+ */
+rte_expr_return_type
+expr::check_rte_expr(context& c) const {
+	cerr << "Fang, unimplemented expr::check_rte_expr!" << endl;
+	return rte_expr_return_type();
+}
+
 //=============================================================================
 // class inst_ref_expr method definitions
 
@@ -333,6 +344,39 @@ inst_ref_expr::check_prs_literal(const context& c) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	After checking an meta_instance_reference, this checks to make sure
+	that a bool is referenced, appropriate for RTE.  
+	RTE allows both atomic and non-atomic bools to be referenced.
+ */
+rte_lvalue_ptr_type
+inst_ref_expr::check_rte_lvalue(const context& c) const {
+	STACKTRACE_VERBOSE;
+	meta_return_type ref(check_meta_reference(c));
+	count_ptr<simple_bool_meta_instance_reference>
+		bool_ref(ref.inst_ref().is_a<simple_bool_meta_instance_reference>());
+	if (bool_ref) {
+		ref.inst_ref().abandon();	// reduce ref-count to 1
+		INVARIANT(bool_ref.refs() == 1);
+		if (bool_ref->dimensions()) {
+			cerr << "ERROR: bool reference at " << where(*this) <<
+				" does not refer to a scalar instance." << endl;
+			return rte_lvalue_ptr_type(NULL);
+		} else {
+			// shared to exclusive ownership
+			entity::RTE::literal_base_ptr_type
+				lit(bool_ref.exclusive_release());
+			return rte_lvalue_ptr_type(
+				new entity::RTE::literal(lit));
+		}
+	} else {
+		cerr << "ERROR: expression at " << where(*this) <<
+			" does not reference a bool." << endl;
+		return rte_lvalue_ptr_type(NULL);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	A more relaxed version of check_prs_literal where the result is
 	allowed to reference a group of bools, which need not be a 
 	scalar reference.  
@@ -388,6 +432,13 @@ prs_expr_return_type
 inst_ref_expr::check_prs_expr(context& c) const {
 	// now virtual
 	return check_prs_literal(c);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+rte_expr_return_type
+inst_ref_expr::check_rte_expr(context& c) const {
+	// now virtual
+	return check_rte_lvalue(c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -758,6 +758,8 @@ OBJECT_CC_FILES = \
 	Object/lang/PRS_literal_attribute_registry.cc \
 	Object/lang/PRS_macro_common.cc \
 	Object/lang/PRS_macro_registry.cc \
+	Object/lang/RTE.cc \
+	Object/lang/RTE_footprint.cc \
 	Object/lang/CHP.cc \
 	Object/lang/CHP_event.cc \
 	Object/lang/CHP_event_alloc.cc \
@@ -978,7 +980,9 @@ OBJECT_HH_FILES = $(OBJECT_CC_FILES:.cc=.hh) \
 	Object/unroll/template_type_completion.hh \
 	Object/lang/PRS_fwd.hh \
 	Object/lang/PRS_base.hh \
+	Object/lang/PRS_dump_context.hh \
 	Object/lang/PRS_literal_unroller.hh \
+	Object/lang/RTE_base.hh \
 	Object/lang/CHP_base.hh \
 	Object/lang/SPEC_fwd.hh
 

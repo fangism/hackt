@@ -1383,6 +1383,24 @@ netlist_generator::visit(const entity::SPEC::footprint_directive&) {
 	// nothing... yet
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+netlist_generator::visit(const entity::RTE::footprint&) {
+	// nothing... ever
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+netlist_generator::visit(const entity::RTE::footprint_assignment&) {
+	// nothing... ever
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+netlist_generator::visit(const entity::RTE::footprint_expr_node&) {
+	// nothing... ever
+}
+
 //=============================================================================
 }	// end namespace NET
 }	// end namespace HAC

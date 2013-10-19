@@ -36,6 +36,10 @@ namespace PRS {
 	struct footprint_rule;
 	class cflat_visitor;
 }
+namespace RTE {
+	class footprint;
+	struct footprint_assignment;
+}
 namespace SPEC {
 	class footprint;
 }
@@ -225,6 +229,13 @@ private:
 		Privatized implementation.  
 	 */
 	excl_ptr<PRS::footprint>		prs_footprint;
+	/**
+		The set of unrolled atomic expression assignments, 
+		local to this scope.  
+		This is populated during the create phase.  
+		Privatized implementation.  
+	 */
+	excl_ptr<RTE::footprint>		rte_footprint;
 	/**
 		The CHP footprint type is the same as the source tree's
 		IR, but with meta-parameter dependencies resolved
@@ -480,6 +491,12 @@ public:
 
 	const PRS::footprint&
 	get_prs_footprint(void) const { return *prs_footprint; }
+
+	RTE::footprint&
+	get_rte_footprint(void) { return *rte_footprint; }
+
+	const RTE::footprint&
+	get_rte_footprint(void) const { return *rte_footprint; }
 
 	chp_footprint_type&
 	get_chp_footprint(void);
