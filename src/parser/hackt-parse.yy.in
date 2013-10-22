@@ -2684,7 +2684,10 @@ rte_body_item
 
 rte_assignment
 	: member_index_expr '=' expr ';'
-		{ $$ = new RTE::assignment($1, $3); }
+		{ $$ = new RTE::assignment($1, $3);
+			DELETE_TOKEN($2);
+			DELETE_TOKEN($4);
+		}
 	;
 
 /******************************************************************************
