@@ -152,7 +152,7 @@ Persistent Object Manager text dump:
 	143	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
 	144	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	145	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
-	146	##ADDR##	footprnt	0	#HEAD#	#TAIL#	895
+	146	##ADDR##	footprnt	0	#HEAD#	#TAIL#	867
 	147	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	148	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	149	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12

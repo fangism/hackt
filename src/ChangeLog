@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2013-10-23	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-86-53-run-time-expressions-01:
+	  footprint: language body pointers (PRS/CHP/RTE/SPEC) are now
+		only allocated on-first-use by the middle-end.
+		Binary object format updated to v.11.
+
+
 2013-06-05	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-86-53:

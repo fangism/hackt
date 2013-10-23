@@ -63,7 +63,7 @@ Persistent Object Manager text dump:
 	59	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	32
 	60	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	61	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	62	##ADDR##	footprnt	0	#HEAD#	#TAIL#	646
+	62	##ADDR##	footprnt	0	#HEAD#	#TAIL#	618
 	63	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	64	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 

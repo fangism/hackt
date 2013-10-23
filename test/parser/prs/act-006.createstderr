@@ -94,7 +94,7 @@ Persistent Object Manager text dump:
 	90	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	91	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
 	92	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	93	##ADDR##	footprnt	0	#HEAD#	#TAIL#	660
+	93	##ADDR##	footprnt	0	#HEAD#	#TAIL#	632
 	94	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 
 In module created from: ##FILE## (unrolled) (created)

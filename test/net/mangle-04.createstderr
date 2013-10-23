@@ -54,7 +54,7 @@ Persistent Object Manager text dump:
 	50	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	51	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	52	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	53	##ADDR##	footprnt	0	#HEAD#	#TAIL#	408
+	53	##ADDR##	footprnt	0	#HEAD#	#TAIL#	380
 	54	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	55	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	56	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
@@ -235,12 +235,12 @@ Persistent Object Manager text dump:
 	231	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	232	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
 	233	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	234	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1097
+	234	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1069
 	235	##ADDR##	cnstpic_	0	#HEAD#	#TAIL#	24
 	236	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	237	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
 	238	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	239	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1305
+	239	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1277
 	240	##ADDR##	cnstpic_	0	#HEAD#	#TAIL#	24
 	241	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	242	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
@@ -305,7 +305,7 @@ Persistent Object Manager text dump:
 	301	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	20
 	302	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	303	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	304	##ADDR##	footprnt	0	#HEAD#	#TAIL#	3720
+	304	##ADDR##	footprnt	0	#HEAD#	#TAIL#	3692
 	305	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	32
 	306	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	307	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
@@ -331,7 +331,7 @@ Persistent Object Manager text dump:
 	327	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
 	328	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	329	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	330	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1593
+	330	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1565
 	331	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 
 In module created from: ##FILE## (unrolled) (created)

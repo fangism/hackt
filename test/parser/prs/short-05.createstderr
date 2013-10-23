@@ -249,7 +249,7 @@ Persistent Object Manager text dump:
 	245	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	32
 	246	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	247	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	248	##ADDR##	footprnt	0	#HEAD#	#TAIL#	935
+	248	##ADDR##	footprnt	0	#HEAD#	#TAIL#	907
 	249	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	250	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	251	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16

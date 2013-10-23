@@ -487,13 +487,16 @@ private:
 
 public:
 	PRS::footprint&
-	get_prs_footprint(void) { return *prs_footprint; }
+	get_prs_footprint(void);	// { return *prs_footprint; }
 
 	const PRS::footprint&
 	get_prs_footprint(void) const { return *prs_footprint; }
 
+	bool
+	has_prs_footprint(void) const { return prs_footprint; }
+
 	RTE::footprint&
-	get_rte_footprint(void) { return *rte_footprint; }
+	get_rte_footprint(void);
 
 	const RTE::footprint&
 	get_rte_footprint(void) const { return *rte_footprint; }
@@ -514,10 +517,13 @@ public:
 	get_chp_event_footprint(void) const { return chp_event_footprint; }
 
 	SPEC::footprint&
-	get_spec_footprint(void) { return *spec_footprint; }
+	get_spec_footprint(void);
 
 	const SPEC::footprint&
 	get_spec_footprint(void) const { return *spec_footprint; }
+
+	bool
+	has_spec_footprint(void) const { return spec_footprint; }
 
 	template <class Tag>
 	size_t

@@ -295,8 +295,10 @@ ExprAlloc::~ExprAlloc() { }
 void
 ExprAlloc::visit_rules_and_directives(const footprint& f) {
 	STACKTRACE_VERBOSE;
+if (f.has_prs_footprint()) {
 	const entity::PRS::footprint& pfp(f.get_prs_footprint());
 	pfp.accept(*this);
+}
 	// TODO: implement spec directives hierarchically
 #if 0
 	f.get_spec_footprint().accept(*this);
@@ -368,8 +370,10 @@ if (flags.auto_precharge_invariants) {
 	update_expr_maps(ptemplate, node_pool_size, bmap, ps.get_offset());
 	// problem: spec directives are still global, not per-process
 try {
-	const entity::SPEC::footprint& sfp(topfp->get_spec_footprint());
-	sfp.accept(*this);
+	if (topfp->has_spec_footprint()) {
+		const entity::SPEC::footprint& sfp(topfp->get_spec_footprint());
+		sfp.accept(*this);
+	}
 } catch (...) {
 	report_instantiation_error(cerr);
 	throw;
@@ -644,8 +648,10 @@ ExprAlloc::visit(const state_instance<process_tag>& gp) {
 	update_expr_maps(ptemplate, node_pool_size, bmap, ps.get_offset());
 try {
 	// problem: spec directives are still global, not per-process
-	const entity::SPEC::footprint& sfp(fp->get_spec_footprint());
-	sfp.accept(*this);
+	if (fp->has_spec_footprint()) {
+		const entity::SPEC::footprint& sfp(fp->get_spec_footprint());
+		sfp.accept(*this);
+	}
 } catch (...) {
 	report_instantiation_error(cerr);
 	throw;

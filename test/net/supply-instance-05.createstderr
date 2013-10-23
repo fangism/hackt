@@ -122,7 +122,7 @@ Persistent Object Manager text dump:
 	118	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	119	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	32
 	120	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	121	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1739
+	121	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1711
 	122	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	123	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	124	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12

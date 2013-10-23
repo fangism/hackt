@@ -257,8 +257,10 @@ footprint::footprint() :
 	value_footprint_base<pint_tag>(), 
 	value_footprint_base<preal_tag>(), 
 	value_footprint_base<pstring_tag>(), 
-	prs_footprint(new PRS::footprint), 
-	spec_footprint(new SPEC::footprint),
+	prs_footprint(NULL),
+	rte_footprint(NULL), 
+	chp_footprint(NULL), 
+	spec_footprint(NULL),
 #if FOOTPRINT_OWNS_CONTEXT_CACHE
 	context_cache(NULL),
 #endif
@@ -328,18 +330,19 @@ footprint::footprint(const const_param_expr_list& p,
 	// maybe even quarter-size...
 	scope_aliases(), 
 	port_aliases(),
-	prs_footprint(new PRS::footprint), 
+	prs_footprint(NULL),
+	rte_footprint(NULL), 	// allocate when we actually need it
 	chp_footprint(NULL), 	// allocate when we actually need it
 	chp_event_footprint(), 
-	spec_footprint(new SPEC::footprint), 
+	spec_footprint(NULL), 
 #if FOOTPRINT_OWNS_CONTEXT_CACHE
 	context_cache(NULL),
 #endif
 	warning_count(0),
 	lock_state(false) {
 	STACKTRACE_CTOR_VERBOSE;
-	NEVER_NULL(prs_footprint);
-	NEVER_NULL(spec_footprint);
+//	NEVER_NULL(prs_footprint);
+//	NEVER_NULL(spec_footprint);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -363,10 +366,11 @@ footprint::footprint(const temp_footprint_tag_type&) :
 	instance_collection_map(), 
 	scope_aliases(), 
 	port_aliases(),
-	prs_footprint(new PRS::footprint), 
+	prs_footprint(NULL),
+	rte_footprint(NULL), 	// allocate when we actually need it
 	chp_footprint(NULL), 	// allocate when we actually need it
 	chp_event_footprint(), 
-	spec_footprint(new SPEC::footprint),
+	spec_footprint(NULL),
 #if FOOTPRINT_OWNS_CONTEXT_CACHE
 	context_cache(NULL),
 #endif
@@ -403,14 +407,15 @@ footprint::footprint(const footprint& t) :
 	// maybe even quarter-size...
 	scope_aliases(), 
 	port_aliases(),
-	prs_footprint(new PRS::footprint), 
+	prs_footprint(NULL),
+	rte_footprint(NULL), 	// allocate when we actually need it
 	chp_footprint(NULL), 	// allocate when we actually need it
 	chp_event_footprint(), 
-	spec_footprint(new SPEC::footprint), 
+	spec_footprint(NULL), 
 	lock_state(false) {
-	NEVER_NULL(prs_footprint);
-	NEVER_NULL(spec_footprint);
 	STACKTRACE_CTOR_VERBOSE;
+//	NEVER_NULL(prs_footprint);
+//	NEVER_NULL(spec_footprint);
 	INVARIANT(t.instance_collection_map.empty());
 }
 
@@ -515,12 +520,19 @@ footprint::dump_with_collections(ostream& o, const dump_flags& df,
 		// kind of want this for top-level footprint printing
 		scope_aliases.dump(o);
 #endif
-		prs_footprint->dump(o, *this);
+		if (rte_footprint) {
+			rte_footprint->dump(o, *this);
+		}
+		if (prs_footprint) {
+			prs_footprint->dump(o, *this);
+		}
 		if (chp_footprint) {
 			chp_footprint->dump(o, *this, dc);
 		}
 		chp_event_footprint.dump(o, dc);
-		spec_footprint->dump(o, *this);
+		if (spec_footprint) {
+			spec_footprint->dump(o, *this);
+		}
 	}	// end if is_created
 	}	// end if collection_map is not empty
 	return o;
@@ -703,6 +715,34 @@ footprint::operator [] (const collection_map_entry_type& e) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Now allocate the PRS footprint on-demand.
+ */
+PRS::footprint&
+footprint::get_prs_footprint(void) {
+	if (!prs_footprint) {
+		prs_footprint =
+			excl_ptr<PRS::footprint>(new PRS::footprint);
+		NEVER_NULL(prs_footprint);
+	}
+	return *prs_footprint;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Now allocate the RTE footprint on-demand.
+ */
+RTE::footprint&
+footprint::get_rte_footprint(void) {
+	if (!rte_footprint) {
+		rte_footprint =
+			excl_ptr<RTE::footprint>(new RTE::footprint);
+		NEVER_NULL(rte_footprint);
+	}
+	return *rte_footprint;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Now allocate the CHP_event_footprint on-demand.
  */
 footprint::chp_footprint_type&
@@ -713,6 +753,20 @@ footprint::get_chp_footprint(void) {
 		NEVER_NULL(chp_footprint);
 	}
 	return *chp_footprint;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Now allocate the spec_footprint on-demand.
+ */
+SPEC::footprint&
+footprint::get_spec_footprint(void) {
+	if (!spec_footprint) {
+		spec_footprint =
+			excl_ptr<SPEC::footprint>(new SPEC::footprint);
+		NEVER_NULL(spec_footprint);
+	}
+	return *spec_footprint;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1768,7 +1822,12 @@ footprint::collect_transient_info_base(persistent_object_manager& m) const {
 	footprint_base<int_tag>::collect_transient_info_base(m);
 	footprint_base<bool_tag>::collect_transient_info_base(m);
 	// value_footprint_bases don't have pointers
-	prs_footprint->collect_transient_info_base(m);
+	if (rte_footprint) {
+		rte_footprint->collect_transient_info_base(m);
+	}
+	if (prs_footprint) {
+		prs_footprint->collect_transient_info_base(m);
+	}
 	// now we need to register it because locally allocated events
 	// may now contain a live pointer to the top-concurrent-actions
 	if (chp_footprint) {
@@ -1777,7 +1836,9 @@ footprint::collect_transient_info_base(persistent_object_manager& m) const {
 	// alternative is to hack an exception... not worth it
 	// this *shouldn't* be necessary, but also performs sanity check
 	chp_event_footprint.collect_transient_info_base(m);
-	spec_footprint->collect_transient_info_base(m);
+	if (spec_footprint) {
+		spec_footprint->collect_transient_info_base(m);
+	}
 	// scope/port alias_sets don't have pointers
 }
 
@@ -1833,13 +1894,24 @@ footprint::write_object_base(const persistent_object_manager& m,
 	port_aliases.write_object_base(*this, o);
 	scope_aliases.write_object_base(*this, o);
 #endif
-
-	prs_footprint->write_object_base(m, o);
+	// TODO: compact or generalize this into a single bitfield
+	write_value<bool>(o, rte_footprint);
+	write_value<bool>(o, prs_footprint);
+	write_value<bool>(o, chp_footprint);	// redundant with write_pointer
+	write_value<bool>(o, spec_footprint);
+	if (rte_footprint) {
+		rte_footprint->write_object_base(m, o);
+	}
+	if (prs_footprint) {
+		prs_footprint->write_object_base(m, o);
+	}
 	m.write_pointer(o, chp_footprint);
 	// persistent_object_manager will pick up chp_footprint
 	chp_event_footprint.write_object_base(m, o);
 	// alternative: re-construct event footprint upon loading?
-	spec_footprint->write_object_base(m, o);
+	if (spec_footprint) {
+		spec_footprint->write_object_base(m, o);
+	}
 	// ignore context_cache
 }
 
@@ -1924,12 +1996,24 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 	port_aliases.load_object_base(*this, i);
 	scope_aliases.load_object_base(*this, i);
 #endif
-
-	prs_footprint->load_object_base(m, i);
+	// TODO: compact this into bitfield
+	bool have_rte, have_prs, have_chp, have_spec;
+	read_value<bool>(i, have_rte);
+	read_value<bool>(i, have_prs);
+	read_value<bool>(i, have_chp);	// redundant, always read_pointer()
+	read_value<bool>(i, have_spec);
+	if (have_rte) {
+		get_rte_footprint().load_object_base(m, i);	// auto-alloc
+	}
+	if (have_prs) {
+		get_prs_footprint().load_object_base(m, i);
+	}
 	m.read_pointer(i, chp_footprint);
 	// alternative: re-construct event footprint upon loading?
 	chp_event_footprint.load_object_base(m, i);
-	spec_footprint->load_object_base(m, i);
+	if (have_spec) {
+		get_spec_footprint().load_object_base(m, i);
+	}
 	// ignore context_cache
 	lock_state = false;
 }

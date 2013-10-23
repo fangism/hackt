@@ -38,10 +38,10 @@ Persistent Object Manager text dump:
 	34	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	35	##ADDR##	SPCdrctv	0	#HEAD#	#TAIL#	37
 	36	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	37	##ADDR##	footprnt	0	#HEAD#	#TAIL#	469
+	37	##ADDR##	footprnt	0	#HEAD#	#TAIL#	445
 	38	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	39	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	40	##ADDR##	footprnt	0	#HEAD#	#TAIL#	432
+	40	##ADDR##	footprnt	0	#HEAD#	#TAIL#	404
 	41	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	42	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	43	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
@@ -61,7 +61,7 @@ Persistent Object Manager text dump:
 	57	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	58	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
 	59	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
-	60	##ADDR##	footprnt	0	#HEAD#	#TAIL#	512
+	60	##ADDR##	footprnt	0	#HEAD#	#TAIL#	484
 	61	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
 	62	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
 
