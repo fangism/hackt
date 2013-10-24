@@ -6,8 +6,8 @@
 	$Id: parse_context.hh,v 1.26 2010/08/24 21:05:38 fang Exp $
  */
 
-#ifndef __AST_PARSE_CONTEXT_H__
-#define __AST_PARSE_CONTEXT_H__
+#ifndef __AST_PARSE_CONTEXT_HH__
+#define __AST_PARSE_CONTEXT_HH__
 
 #include "util/string_fwd.hh"
 #include <stack>
@@ -233,15 +233,15 @@ private:
 	 */
 	never_ptr<entity::PRS::rule_set_base>	current_prs_body;
 	/**
-		The current scope of spec directives to add, 
-		may be top-level, in definition, conditional, or loop.  
-	 */
-	never_ptr<entity::SPEC::directives_set>	current_spec_body;
-	/**
 		The current scope of atomic run-time-expressions to add,
 		which can be top-level, or in conditional or loop. 
 	 */
 	never_ptr<entity::RTE::assignment_set_base>	current_rte_body;
+	/**
+		The current scope of spec directives to add, 
+		may be top-level, in definition, conditional, or loop.  
+	 */
+	never_ptr<entity::SPEC::directives_set>	current_spec_body;
 	/**
 		Stupid implementation of switching between
 		strict and relaxed template parameters. 
@@ -609,19 +609,19 @@ public:
 
 	entity::PRS::rule_set_base&
 	get_current_prs_body(void) const {
-		// NEVER_NULL(current_prs_body);
+		NEVER_NULL(current_prs_body);
 		return *current_prs_body;
 	}
 
 	entity::SPEC::directives_set&
 	get_current_spec_body(void) const {
-		// NEVER_NULL(current_spec_body);
+		NEVER_NULL(current_spec_body);
 		return *current_spec_body;
 	}
 
 	entity::RTE::assignment_set_base&
 	get_current_rte_body(void) const {
-		// NEVER_NULL(current_rte_body);
+		NEVER_NULL(current_rte_body);
 		return *current_rte_body;
 	}
 
@@ -658,5 +658,5 @@ private:
 }	// end namespace parser
 }	// end namespace HAC
 
-#endif	// __AST_PARSE_CONTEXT_H__
+#endif	// __AST_PARSE_CONTEXT_HH__
 

@@ -147,7 +147,11 @@ assignment::check_assignment(context& c) const {
 			where(*lvalue) << "." << endl;
 		THROW_EXIT;
 	}
-	FINISH_ME(Fang);
+	excl_ptr<entity::RTE::assignment>
+		ret(new entity::RTE::assignment(r, *l));
+	NEVER_NULL(ret);
+	c.get_current_rte_body().append_assignment(ret);
+	// need to return value?
 }
 
 //=============================================================================
@@ -410,8 +414,10 @@ if (assignments) {
 	excl_ptr<assignment_set> ret(new assignment_set());
 	NEVER_NULL(ret);
 	const never_ptr<assignment_set> retc(ret);
+	NEVER_NULL(retc);
 	entity::RTE::assignment_set_base& rb(c.get_current_rte_body());
 	rb.append_assignment(ret);
+	MUST_BE_NULL(ret);
 
 	const context::rte_body_frame rf(c, retc);
 	if (!__check_assignments(c)) {

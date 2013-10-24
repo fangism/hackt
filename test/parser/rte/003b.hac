@@ -1,0 +1,12 @@
+// "rte/003.hac"
+bool x, y, w;
+x @[atomic];
+y @[atomic];
+w @[atomic];
+bool z;
+rte {
+x = y && z;		// valid alias, but should only define one of them
+// x = y & z;
+// x = y ^ z;
+w = z || y;
+}

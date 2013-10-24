@@ -373,6 +373,9 @@ public:
 	nonatomic_only_prs_literal(void) const;
 
 	void
+	atomic_only_rte_literal(void) const;
+
+	void
 	set_may_interfere(void) {
 		nonatomic_only_attribute();
 		attributes |= BOOL_MAY_INTERFERE;
@@ -478,7 +481,7 @@ public:
 	}
 
 	// bool is attached to an expression (defined)
-	void
+	good_bool
 	rte_fanin(void);
 #endif
 

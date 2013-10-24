@@ -332,14 +332,11 @@ protected:
 	load_object_base(const persistent_object_manager&, istream&);
 
 };	// end struct expr_loop_base
+#endif
 
 //=============================================================================
-typedef	precharge_expr				precharge_type;
-typedef	std::vector<precharge_type>		precharge_array_type;
-#endif
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Logical AND expression, or OR, or XOR.  
+	Boolean logical AND expression, or OR, or XOR.  
  */
 class binop_expr : public rte_expr, public rte_expr::expr_sequence_type {
 	typedef	binop_expr			this_type;
@@ -354,10 +351,12 @@ public:
 	typedef	expr_sequence_type::const_reference	const_reference;
 	binop_expr();
 
-	explicit
-	binop_expr(const_reference);
+	binop_expr(const_reference, const char);
 
 	~binop_expr();
+
+	char
+	get_op(void) const { return op; }
 
 	ostream&
 	what(ostream&) const;

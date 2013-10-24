@@ -2760,7 +2760,6 @@ logical_expr::check_prs_expr(context& c) const {
 		THROW_EXIT;		// for now
 		return prs_expr_return_type(NULL);
 	}
-	// TODO: process precharge
 	entity::PRS::precharge_expr precharge;	// default
 	if (pchg) {
 		precharge = pchg->check_prs_expr(c);
@@ -2838,6 +2837,75 @@ logical_expr::check_prs_expr(context& c) const {
 		return prs_expr_return_type(NULL);
 	}
 }	// end method logical_expr::check_prs_expr
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Don't forget to check for cases of PRS loop expressions. 
+ */
+rte_expr_return_type
+logical_expr::check_rte_expr(context& c) const {
+	STACKTRACE("parser::RTE::logical_expr::check_rte_expr()");
+	const rte_expr_return_type lo(l->check_rte_expr(c));
+	const rte_expr_return_type ro(r->check_rte_expr(c));
+	if (!ro || !lo) {
+		static const char err_str[] = "ERROR building RTE-expr at ";
+		if (!lo)
+			cerr << err_str << where(*l) << endl;
+		if (!ro)
+			cerr << err_str << where(*r) << endl;
+		THROW_EXIT;		// for now
+		return rte_expr_return_type(NULL);
+	}
+#if 0
+	lo->check();
+	ro->check();
+#endif
+	const char op_char = op->text[0];
+	const char op_char2 = op->text[1];
+	if ((op_char == '&' && op_char2 == '&') ||
+		(op_char == '|' && op_char2 == '|')) {
+		typedef	entity::RTE::binop_expr::iterator	iterator;
+		typedef	entity::RTE::binop_expr::const_iterator	const_iterator;
+		const count_ptr<entity::RTE::binop_expr>
+			l_and(lo.is_a<entity::RTE::binop_expr>());
+		const count_ptr<entity::RTE::binop_expr>
+			r_and(ro.is_a<entity::RTE::binop_expr>());
+		// assumes operator associativity
+		if (l_and && l_and->get_op() == op_char
+#if 0
+			&& !l_and.is_a<entity::RTE::binop_expr_loop>()
+#endif
+				) {
+			if (r_and) {
+				copy(r_and->begin(), r_and->end(), 
+					back_inserter(*l_and));
+			} else {
+				l_and->push_back(ro);
+			}
+			return l_and;
+		} else if (r_and && r_and->get_op() == op_char
+#if 0
+				&& !r_and.is_a<entity::RTE::binop_expr_loop>()
+#endif
+				) {
+			r_and->push_front(lo);
+			return r_and;
+		} else {
+			const count_ptr<entity::RTE::binop_expr>
+				ret(new entity::RTE::binop_expr(lo, op_char));
+			ret->push_back(ro);
+//			ret->check();	// paranoia
+			return ret;
+		}
+	} else {
+		ICE(cerr, 
+			cerr << "FATAL: Invalid RTE operator: \'" << op_char <<
+				"\' at " << where(*op) <<
+				".  Aborting... have a nice day." << endl;
+		);
+		return rte_expr_return_type(NULL);
+	}
+}	// end method logical_expr::check_rte_expr
 
 //=============================================================================
 // class loop_operation method definitions

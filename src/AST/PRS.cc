@@ -528,6 +528,7 @@ rule::check_rule(context& c) const {
 		}
 	}
 	c.get_current_prs_body().append_rule(ret);
+	// FIXME: missing return? shouldn't compiler warn?
 }
 
 //=============================================================================

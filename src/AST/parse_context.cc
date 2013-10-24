@@ -86,6 +86,7 @@ context::context(module& m, const parse_options& o) :
 		loop_var_stack(), 
 		global_namespace(m.get_global_namespace()), 
 		current_prs_body(&m.get_prs()),
+		current_rte_body(&m.get_rte()),
 		current_spec_body(&m.get_spec_directives_set()),
 		strict_template_mode(true), 
 		in_conditional_scope(false), 
@@ -133,6 +134,7 @@ context::context(const module& m, const parse_options& o, const bool _pub) :
 		loop_var_stack(), 
 		global_namespace(m.get_global_namespace()), 
 		current_prs_body(NULL),	// not adding any PRS
+		current_rte_body(NULL),	// not adding any RTE
 		current_spec_body(NULL),	// not adding any spec
 		strict_template_mode(true), 
 		in_conditional_scope(false), 

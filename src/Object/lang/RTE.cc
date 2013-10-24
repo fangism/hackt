@@ -431,9 +431,14 @@ if (output.is_internal()) {
 	state_instance<bool_tag>::pool_type&
 		bp(tfp.get_instance_pool<bool_tag>());
 	// kludge: get_back_ref only returns const ptr ...
-	// exception: diodes do not count as fanin
 #if BOOL_CONNECTIVITY_CHECKING
-	good_bool fig(true);
+	const good_bool fig(const_cast<instance_alias_info<bool_tag>&>(
+		*bp[output_node_index -1].get_back_ref()).find()->rte_fanin());
+	if (!fig.good) {
+		cerr << "Attempting to define: ";
+		output.dump(cerr, assignment_dump_context()) << endl;
+		return good_bool(false);
+	}
 #endif
 	std::set<size_t> f;	// node_index_type
 	pfp.collect_literal_indices(f, guard_expr_index);
@@ -444,13 +449,6 @@ if (output.is_internal()) {
 			*bp[*i -1].get_back_ref()).find()->rte_fanout();
 		// pool is 0-indexed
 	}
-#if BOOL_CONNECTIVITY_CHECKING
-	if (!fig.good) {
-		cerr << "Attempting to drive: ";
-		output.dump(cerr, assignment_dump_context()) << endl;
-		return good_bool(false);
-	}
-#endif
 }
 #endif
 	pfp.push_back_assignment(guard_expr_index, output_node_index);
@@ -897,8 +895,8 @@ expr_loop_base::load_object_base(const persistent_object_manager& m,
 binop_expr::binop_expr() : rte_expr(), sequence_type() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-binop_expr::binop_expr(expr_sequence_type::const_reference l) : 
-	rte_expr(), sequence_type() {
+binop_expr::binop_expr(expr_sequence_type::const_reference l, const char o) : 
+	rte_expr(), sequence_type(), op(o) {
 	sequence_type::push_back(l);
 }
 
@@ -926,9 +924,9 @@ binop_expr::dump(ostream& o, const expr_dump_context& c) const {
 	if (paren) o << '(';
 	(*i)->dump(o, cc);
 	for (++i; i!=e; ++i) {
-		o << " &";	// FIXME: change this operator
+		o << ' ' << op << ' ';
 		NEVER_NULL(*i);
-		(*i)->dump(o << ' ', cc);
+		(*i)->dump(o, cc);
 	}
 	if (paren) o << ')';
 	return o;
@@ -1011,8 +1009,8 @@ binop_expr::unroll(const unroll_context& c) const {
 	RTE::footprint& pfp(c.get_target_footprint().get_rte_footprint());
 	RTE::footprint::expr_node&
 		new_expr(pfp.push_back_expr(
-// FIXME: depends on operator, of course
-			PRS::PRS_AND_EXPR_TYPE_ENUM,
+			op == '&' ? PRS::PRS_AND_EXPR_TYPE_ENUM :
+			PRS::PRS_OR_EXPR_TYPE_ENUM,
 			expr_indices.size()));
 	const size_t ret = pfp.current_expr_index();
 	copy(expr_indices.begin(), expr_indices.end(), &new_expr[1]);
@@ -1076,6 +1074,7 @@ if (!m.register_transient_object(this,
  */
 void
 binop_expr::write_object(const persistent_object_manager& m, ostream& o) const {
+	write_value(o, op);
 	m.write_pointer_list(o, *this);
 #if 0
 	// save precharge info sparsely
@@ -1106,6 +1105,7 @@ binop_expr::write_object(const persistent_object_manager& m, ostream& o) const {
  */
 void
 binop_expr::load_object(const persistent_object_manager& m, istream& i) {
+	read_value(i, op);
 	m.read_pointer_list(i, *this);
 #if 0
 	size_t j, s;

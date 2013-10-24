@@ -258,6 +258,16 @@ bool_connect_policy::nonatomic_only_prs_literal(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+bool_connect_policy::atomic_only_rte_literal(void) const {
+	if (!is_atomic()) {
+		cerr <<
+"Error: only atomic bools can be defined with atomic expressions." << endl;
+		THROW_EXIT;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	TODO: diagnostic with node name please.
  */
@@ -341,6 +351,22 @@ bool_connect_policy::prs_fanin(const bool dir) {
 "Error: driving a read-only (input) port with a production rule is forbidden."
 			<< endl;
 		// THROW_EXIT;
+		return good_bool(false);
+	}
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+bool_connect_policy::rte_fanin(void) {
+	atomic_only_rte_literal();
+	attributes |= BOOL_LOCAL_RTE_FANIN;
+	if (is_input_port()) {
+		cerr <<
+"Error: a read-only (atomic) port cannot be re-defined."
+			<< endl;
+		// THROW_EXIT;
+// TODO: diagnose undefined output atomic ports
 		return good_bool(false);
 	}
 	return good_bool(true);
