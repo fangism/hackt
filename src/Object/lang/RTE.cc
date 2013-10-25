@@ -395,26 +395,6 @@ assignment::unroll(const unroll_context& c) const {
 	}
 	// TODO: assert attributes on output (must be atomic)
 
-#if 0
-if (output.is_internal()) {
-	// we have an internal-node definition
-	// resolve indices (if any) to constant.
-	const node_literal_ptr_type
-		nref(output.unroll_node_reference(c));
-	if (!nref) {
-		cerr << "Error resolving internal node reference: ";
-		output.dump(cerr, assignment_dump_context()) << endl;
-		return good_bool(false);
-	}
-	// register guard expression
-	std::ostringstream oss;
-	nref->dump_local(oss);
-	if (!pfp.register_internal_node_expr(
-			oss.str(), guard_expr_index).good) {
-		return good_bool(false);
-	}
-} else {
-#endif
 	const size_t output_node_index = output.unroll_base(c);
 	if (!output_node_index) {
 		output.dump(cerr <<
@@ -452,9 +432,6 @@ if (output.is_internal()) {
 }
 #endif
 	pfp.push_back_assignment(guard_expr_index, output_node_index);
-#if 0
-}	// end if output.is_internal()
-#endif
 	return good_bool(true);
 }	// end assignment::unroll_base
 
@@ -482,144 +459,6 @@ assignment::load_object(const persistent_object_manager& m, istream& i) {
 	m.read_pointer(i, guard);
 	output.load_object_base(m, i);
 }
-
-//=============================================================================
-#if 0
-// class pull_up method definitions
-
-pull_up::pull_up() : assignment() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-pull_up::pull_up(const rte_expr_ptr_type& g, 
-		const bool_literal& o, const char c) :
-		assignment(g, o, c) {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-pull_up::pull_up(const rte_expr_ptr_type& g, const bool_literal& o,
-		const assignment_attribute_list_type& l) :
-		assignment(g, o, l) {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-pull_up::~pull_up() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(pull_up)
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pull_up)
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ostream&
-pull_up::dump(ostream& o, const assignment_dump_context& c) const {
-	return dump_base(o, c, '+');
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Unrolls a production rule into a footprint template form.  
-	\param c the context in which this production rule is unrolled.
-	\param np the node pool from which to lookup unique local nodes.  
-	\param pfp the production rule footprint in which to add
-		newly resolved production rules.  
-	TODO: check for complement bit
- */
-good_bool
-pull_up::unroll(const unroll_context& c) const {
-	STACKTRACE_VERBOSE;
-	return unroll_base(c, true);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-pull_up::collect_transient_info(persistent_object_manager& m) const {
-if (!m.register_transient_object(this, 
-		persistent_traits<this_type>::type_key)) {
-	collect_transient_info_base(m);
-}
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-pull_up::write_object(const persistent_object_manager& m, ostream& o) const {
-	write_object_base(m, o);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-pull_up::load_object(const persistent_object_manager& m, istream& i) {
-	load_object_base(m, i);
-}
-
-//=============================================================================
-// class pull_dn method definitions
-
-pull_dn::pull_dn() : assignment() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-pull_dn::pull_dn(const rte_expr_ptr_type& g, 
-		const bool_literal& o, const char c) :
-		assignment(g, o, c) {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-pull_dn::pull_dn(const rte_expr_ptr_type& g, const bool_literal& o,
-		const assignment_attribute_list_type& l) :
-		assignment(g, o, l) {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-pull_dn::~pull_dn() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(pull_dn)
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pull_dn)
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ostream&
-pull_dn::dump(ostream& o, const assignment_dump_context& c) const {
-	return dump_base(o, c, '-');
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Unrolls a production rule into a footprint template form.  
-	\param c the context in which this production rule is unrolled.
-	\param np the node pool from which to lookup unique local nodes.  
-	\param pfp the production rule footprint in which to add
-		newly resolved production rules.  
-	TODO: check for complement bit
- */
-good_bool
-pull_dn::unroll(const unroll_context& c) const {
-	STACKTRACE_VERBOSE;
-	return unroll_base(c, false);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-pull_dn::collect_transient_info(persistent_object_manager& m) const {
-if (!m.register_transient_object(this, 
-		persistent_traits<this_type>::type_key)) {
-	collect_transient_info_base(m);
-}
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-pull_dn::write_object(const persistent_object_manager& m, ostream& o) const {
-	write_object_base(m, o);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-pull_dn::load_object(const persistent_object_manager& m, istream& i) {
-	load_object_base(m, i);
-}
-#endif
 
 //=============================================================================
 // class rte_expr method definitions
@@ -915,6 +754,8 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(binop_expr)
  */
 ostream&
 binop_expr::dump(ostream& o, const expr_dump_context& c) const {
+	const int print_stamp = ((op == '&') ? PRS::PRS_AND_EXPR_TYPE_ENUM
+		: PRS::PRS_OR_EXPR_TYPE_ENUM);
 	const bool paren = c.expr_stamp && (c.expr_stamp != print_stamp);
 	expr_dump_context cc(c);
 	cc.expr_stamp = print_stamp;
@@ -945,45 +786,8 @@ binop_expr::push_front(const_reference e) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	More expensive push_front emulation, hopefully infrequent.
- */
-void
-binop_expr::push_front(const_reference e) {
-	// first expression can't have precharge
-	if (!sequence_type::empty()) {
-		precharge_array_type temp;
-		temp.push_back(precharge_type());	// NULL
-		copy(precharge_array.begin(), precharge_array.end(),
-			back_inserter(temp));
-		precharge_array.swap(temp);
-	}
-	sequence_type temp;
-	temp.push_back(e);
-	copy(begin(), end(), back_inserter(temp));
-	this->swap(temp);
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-void
-binop_expr::push_back(const_reference e, const precharge_type& p) {
-	sequence_type::push_back(e);
-	precharge_array.push_back(p);
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 binop_expr::push_back(const_reference e) {
-#if 0
-	// first expression can't have precharge
-	if (!sequence_type::empty()) {
-		precharge_array.push_back(precharge_type());	// NULL
-	}
-#endif
 	sequence_type::push_back(e);
 }
 
@@ -1067,58 +871,17 @@ if (!m.register_transient_object(this,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-/**
-	saves memory on precharge array by writing a sparse map, 
-	which is the common case.
- */
 void
 binop_expr::write_object(const persistent_object_manager& m, ostream& o) const {
 	write_value(o, op);
 	m.write_pointer_list(o, *this);
-#if 0
-	// save precharge info sparsely
-	typedef	std::map<size_t, precharge_array_type::const_iterator>
-						precharge_map_type;
-	precharge_map_type temp;
-	size_t j = 0;
-	precharge_array_type::const_iterator
-		i(precharge_array.begin()), e(precharge_array.end());
-	for ( ; i!=e; ++i, ++j) {
-		if (*i) {
-			temp.insert(precharge_map_type::value_type(j, i));
-		}
-	}
-	write_value(o, temp.size());
-	precharge_map_type::const_iterator
-		mi(temp.begin()), me(temp.end());
-	for ( ; mi != me ; ++mi) {
-		write_value(o, mi->first);
-		mi->second->write_object_base(m, o);
-	}
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Restore precharge list from sparse array.
- */
 void
 binop_expr::load_object(const persistent_object_manager& m, istream& i) {
 	read_value(i, op);
 	m.read_pointer_list(i, *this);
-#if 0
-	size_t j, s;
-	INVARIANT(this->size());
-	precharge_array.resize(this->size() -1);
-	// default construct array first
-	read_value(i, s);
-	for (j=0; j<s; ++j) {
-		size_t ind;
-		read_value(i, ind);
-		precharge_array[ind].load_object_base(m, i);
-	}
-#endif
 }
 
 //=============================================================================
@@ -1201,210 +964,6 @@ binop_expr_loop::write_object(const persistent_object_manager& m,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 binop_expr_loop::load_object(const persistent_object_manager& m, istream& i) {
-	expr_loop_base::load_object_base(m, i);
-}
-#endif
-
-//=============================================================================
-#if 0
-// class or_expr method definitions
-
-or_expr::or_expr() : rte_expr(), sequence_type() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-or_expr::~or_expr() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(or_expr)
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(or_expr)
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ostream&
-or_expr::dump(ostream& o, const expr_dump_context& c) const {
-	const bool paren = c.expr_stamp && (c.expr_stamp != print_stamp);
-	expr_dump_context cc(c);
-	cc.expr_stamp = print_stamp;
-	const_iterator i(begin());
-	const const_iterator e(end());
-	NEVER_NULL(*i);
-	if (paren) o << '(';
-	(*i)->dump(o, cc);
-	for (i++; i!=e; i++) {
-		NEVER_NULL(*i);
-		(*i)->dump(o << " | ", cc);
-	}
-	if (paren) o << ')';
-	return o;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-or_expr::check(void) const {
-	STACKTRACE("or_expr::check()");
-	for_each(begin(), end(), rte_expr::checker());
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Constructs expressions bottom-up.  
-	\return index > 0 if successful, else 0.
- */
-size_t
-or_expr::unroll(const unroll_context& c) const {
-	STACKTRACE_VERBOSE;
-	list<size_t> expr_indices;
-	transform(begin(), end(), back_inserter(expr_indices), 
-		rte_expr::unroller(c ));
-	RTE::footprint& pfp(c.get_target_footprint().get_rte_footprint());
-	RTE::footprint::expr_node&
-		new_expr(pfp.push_back_expr(
-			RTE_OR_EXPR_TYPE_ENUM, expr_indices.size()));
-	copy(expr_indices.begin(), expr_indices.end(), &new_expr[1]);
-	// find index of first error (1-indexed)
-	const size_t err = new_expr.first_node_error();
-	if (err) {
-		cerr << "Error resolving production rule expression at:"
-			<< endl;
-		return 0;
-	} else {
-		return pfp.current_expr_index();
-	}
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Resolves into an expression with resolved local references.  
-	\return copy of self resolved (may be same)
- */
-rte_expr_ptr_type
-or_expr::unroll_copy(const unroll_context& c,
-		const rte_expr_ptr_type& e) const {
-	STACKTRACE_VERBOSE;
-	INVARIANT(e == this);
-	const count_ptr<this_type> ret(new this_type);
-	transform(begin(), end(), back_inserter(*ret), 
-		rte_expr::unroll_copier(c));
-	// find index of first error (1-indexed), if any
-	if (find(ret->begin(), ret->end(), rte_expr_ptr_type(NULL))
-			!= ret->end()) {
-		cerr << "Error resolving production rule expression: ";
-		this->dump(cerr, expr_dump_context()) << endl;
-		return rte_expr_ptr_type(NULL);
-	}
-	if (std::equal(begin(), end(), ret->begin())) {
-		return e;
-	} else {
-		return ret;
-	}
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-or_expr::collect_transient_info_base(persistent_object_manager& m) const {
-	m.collect_pointer_list(*this);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-or_expr::collect_transient_info(persistent_object_manager& m) const {
-if (!m.register_transient_object(this, 
-		persistent_traits<this_type>::type_key)) {
-	collect_transient_info_base(m);
-}
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-or_expr::write_object(const persistent_object_manager& m, ostream& o) const {
-	m.write_pointer_list(o, *this);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-or_expr::load_object(const persistent_object_manager& m, istream& i) {
-	m.read_pointer_list(i, *this);
-}
-#endif
-
-//=============================================================================
-#if 0
-// class or_expr_loop method definitions
-
-or_expr_loop::or_expr_loop() : parent_type(), expr_loop_base() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-or_expr_loop::or_expr_loop(const ind_var_ptr_type& i,
-		const range_ptr_type& r) :
-		parent_type(), expr_loop_base(i, r) {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-or_expr_loop::or_expr_loop(const ind_var_ptr_type& i,
-		const range_ptr_type& r, const rte_expr_ptr_type& e) :
-		parent_type(), expr_loop_base(i, r, e) {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-or_expr_loop::~or_expr_loop() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(or_expr_loop)
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ostream&
-or_expr_loop::dump(ostream& o, const expr_dump_context& c) const {
-	expr_dump_context cc(c);
-	cc.expr_stamp = RTE_LITERAL_TYPE_ENUM;
-	return expr_loop_base::dump(o, cc, '|');
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-or_expr_loop::check(void) const {
-	body_expr->check();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Unrolls into compile-time expanded meta expression.  
-	\return index of newly created expression if successful (1-indexed), 
-		else return 0.
- */
-size_t
-or_expr_loop::unroll(const unroll_context& c) const {
-	STACKTRACE_VERBOSE;
-	return expr_loop_base::unroll_base(c, RTE_OR_EXPR_TYPE_ENUM);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-rte_expr_ptr_type
-or_expr_loop::unroll_copy(const unroll_context&, 
-		const rte_expr_ptr_type&) const {
-	FINISH_ME(Fang);
-	return rte_expr_ptr_type(NULL);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-or_expr_loop::collect_transient_info(persistent_object_manager& m) const {
-if (!m.register_transient_object(this, 
-		persistent_traits<this_type>::type_key)) {
-	expr_loop_base::collect_transient_info_base(m);
-}
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-or_expr_loop::write_object(const persistent_object_manager& m, 
-		ostream& o) const {
-	expr_loop_base::write_object_base(m, o);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-or_expr_loop::load_object(const persistent_object_manager& m, istream& i) {
 	expr_loop_base::load_object_base(m, i);
 }
 #endif
@@ -1565,6 +1124,7 @@ literal::check(void) const {
  */
 size_t
 literal::unroll_node(const unroll_context& c) const {
+	STACKTRACE_VERBOSE;
 	NEVER_NULL(var);
 	const size_t ret = unroll_base(c);
 	if (!ret) {
@@ -1581,35 +1141,12 @@ literal::unroll_node(const unroll_context& c) const {
 	Has code in common with pull_up/pull_dn...
 	\return the index of the new expression represented by this
 		literal reference, else 0 if error occurs.  
-	TODO: adjust for internal node
  */
 size_t
 literal::unroll(const unroll_context& c) const {
+	STACKTRACE_VERBOSE;
 	RTE::footprint::expr_node* new_expr = NULL;
 	RTE::footprint& pfp(c.get_target_footprint().get_rte_footprint());
-#if 0
-if (is_internal()) {
-	const node_literal_ptr_type
-		nref(unroll_node_reference(c));
-	if (!nref) {
-		cerr << "Error resolving internal node reference: ";
-		dump(cerr, assignment_dump_context()) << endl;
-		return 0;
-	}
-	std::ostringstream oss;
-	nref->dump_local(oss);
-	size_t guard_index;
-	try {
-		guard_index = pfp.lookup_internal_node_expr(
-			oss.str(), !is_negated());
-	} catch (...) {
-		// already have error message
-		return 0;
-	}
-	new_expr = &(pfp.push_back_expr(RTE_NODE_TYPE_ENUM, 1));
-	(*new_expr)[1] = guard_index;
-} else {
-#endif
 	const size_t node_index = unroll_node(c);
 	if (!node_index) {
 		// already have error message
@@ -1617,27 +1154,6 @@ if (is_internal()) {
 	}
 	new_expr = &(pfp.push_back_expr(PRS::PRS_LITERAL_TYPE_ENUM, 1));
 	(*new_expr)[1] = node_index;
-#if 0
-}	// end if int_node
-#endif
-#if 0
-	// TODO: should attributes even apply to internal nodes?
-	const size_t perr = bool_directive_source::unroll_params(params, c,
-			new_expr->params);
-	if (perr) {
-		cerr << "Error resolving rule literal parameter " << perr
-			<< " in rule." << endl;
-		return 0;
-	}
-	INVARIANT(params.size() <= 2);
-	INVARIANT(new_expr->params.size() <= 2);
-	if (!unroll_check_attributes(attr, new_expr->attributes, c, 
-			cflat_literal_attribute_registry).good) {
-		// already have some error message
-		cerr << "Error resolving literal attribute." << endl;
-		return 0;
-	}
-#endif
 	return pfp.current_expr_index();
 }
 
@@ -1652,37 +1168,7 @@ literal::unroll_copy(const unroll_context& c,
 		this->dump(cerr, expr_dump_context()) << endl;
 		return rte_expr_ptr_type(NULL);
 	}
-#if 0
-	// copied from above
-	directive_base_params_type crpar;
-	literal_params_type rpar;
-	const size_t perr =
-		bool_directive_source::unroll_params(params, c, crpar);
-	if (perr) {
-		cerr << "Error resolving rule literal parameter " << perr
-			<< " in rule." << endl;
-		return rte_expr_ptr_type(NULL);
-	}
-	copy(crpar.begin(), crpar.end(), back_inserter(rpar));
-#endif
-#if 0
-	resolved_attribute_list_type rat;
-	if (!unroll_check_attributes(attr, rat, c, 
-			cflat_literal_attribute_registry).good) {
-		// already have some error message
-		cerr << "Error resolving literal attribute." << endl;
-		return rte_expr_ptr_type(NULL);
-	}
-	if ((lref == *this) &&
-		std::equal(params.begin(), params.end(), rpar.begin()) && 
-		std::equal(attr.begin(), attr.end(), rat.begin())) {
-		return e;
-	} else {
-		return rte_expr_ptr_type(new literal(lref, rpar, rat));
-	}
-#else
 	return rte_expr_ptr_type(new literal(lref));
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

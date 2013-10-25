@@ -342,7 +342,7 @@ class binop_expr : public rte_expr, public rte_expr::expr_sequence_type {
 	typedef	binop_expr			this_type;
 	typedef	rte_expr::expr_sequence_type	sequence_type;
 private:
-	enum { print_stamp = PRS::PRS_AND_EXPR_TYPE_ENUM };
+//	enum { print_stamp = PRS::PRS_AND_EXPR_TYPE_ENUM };
 private:
 	using expr_sequence_type::push_back;	// hide
 	using expr_sequence_type::push_front;	// hide
@@ -393,8 +393,9 @@ public:
 class binop_expr_loop : public rte_expr, public expr_loop_base {
 	typedef	binop_expr_loop			this_type;
 	typedef	rte_expr			parent_type;
+	char					op;
 private:
-	enum { print_stamp = PRS::PRS_AND_EXPR_TYPE_ENUM };
+//	enum { print_stamp = PRS::PRS_AND_EXPR_TYPE_ENUM };
 public:
 	binop_expr_loop();
 
@@ -420,79 +421,6 @@ public:
 	PERSISTENT_METHODS_DECLARATIONS
 	// CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
 };	// end class binop_expr_loop
-#endif
-
-//=============================================================================
-#if 0
-/**
-	Logical OR expression.  
- */
-class or_expr : public rte_expr, public rte_expr::expr_sequence_type {
-	typedef	or_expr				this_type;
-	typedef	rte_expr::expr_sequence_type	sequence_type;
-private:
-	enum { print_stamp = PRS::PRS_OR_EXPR_TYPE_ENUM };
-public:
-	or_expr();
-	~or_expr();
-
-	ostream&
-	what(ostream&) const;
-
-	ostream&
-	dump(ostream&, const expr_dump_context&) const;
-
-	void
-	check(void) const;
-
-	RTE_UNROLL_EXPR_PROTO;
-	RTE_UNROLL_COPY_PROTO;
-
-protected:
-	void
-	collect_transient_info_base(persistent_object_manager&) const;
-
-public:
-	PERSISTENT_METHODS_DECLARATIONS
-	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
-};	// end class or_expr_loop
-#endif
-
-//-----------------------------------------------------------------------------
-#if 0
-/**
-	Logical OR loop.  
- */
-class or_expr_loop : public rte_expr, public expr_loop_base {
-	typedef	or_expr_loop			this_type;
-	typedef	rte_expr			parent_type;
-private:
-	enum { print_stamp = PRS::PRS_OR_EXPR_TYPE_ENUM };
-public:
-	or_expr_loop();
-
-	or_expr_loop(const ind_var_ptr_type&, const range_ptr_type&);
-
-	or_expr_loop(const ind_var_ptr_type&, const range_ptr_type&, 
-		const rte_expr_ptr_type&);
-
-	~or_expr_loop();
-
-	ostream&
-	what(ostream&) const;
-
-	ostream&
-	dump(ostream&, const expr_dump_context&) const;
-
-	void
-	check(void) const;
-
-	RTE_UNROLL_EXPR_PROTO;
-	RTE_UNROLL_COPY_PROTO;
-
-	PERSISTENT_METHODS_DECLARATIONS
-	// CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
-};	// end class or_expr_loop
 #endif
 
 //=============================================================================

@@ -2934,6 +2934,7 @@ process_definition::dump(ostream& o) const {
 				const PRS::rule_dump_context rdc(*this);
 				spec.dump(o, rdc);	// << endl;
 			}
+			// subinstances
 			if (footprint_map.size()) {
 				footprint_map.dump(
 					o << auto_indent, dc) << endl;
