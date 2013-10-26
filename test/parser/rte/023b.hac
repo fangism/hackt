@@ -1,0 +1,14 @@
+// "022b.hac"
+// cannot connect/alias atomic/nonatomic bool
+
+defproc foo(bool! x; bool? y) {
+x @[atomic];
+y @[atomic];
+rte {
+	x = y;
+}
+}
+
+foo bar;
+bool z;
+bar.y = z;		// not ok

@@ -211,6 +211,7 @@ bool_connect_policy::synchronize_flags(this_type& l, this_type& r) {
 	STACKTRACE_VERBOSE;
 	if (l.is_atomic() ^ r.is_atomic()) {
 		cerr << "Error: cannot alias atomic and non-atomic bools." << endl;
+		// TODO: caller needs to print diagnostic details
 		return good_bool(false);
 	}
 	l.attributes |= r.attributes;
@@ -360,7 +361,6 @@ bool_connect_policy::prs_fanin(const bool dir) {
 good_bool
 bool_connect_policy::rte_fanin(void) {
 	atomic_only_rte_literal();
-	attributes |= BOOL_LOCAL_RTE_FANIN;
 	if (is_input_port()) {
 		cerr <<
 "Error: a read-only (atomic) port cannot be re-defined."
@@ -368,7 +368,13 @@ bool_connect_policy::rte_fanin(void) {
 		// THROW_EXIT;
 // TODO: diagnose undefined output atomic ports
 		return good_bool(false);
+	} else if (attributes & BOOL_ANY_RTE_FANIN) {
+		cerr <<
+"Error: atomic bool is already defined and cannot be re-defined."
+			<< endl;
+		return good_bool(false);
 	}
+	attributes |= BOOL_LOCAL_RTE_FANIN;
 	return good_bool(true);
 }
 #endif
