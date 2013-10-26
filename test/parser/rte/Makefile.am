@@ -13,17 +13,22 @@ HACKT_PARSE_TEST_WARNINGS =
 
 HACKT_PARSE_TEST_PASSES = \
 	000b 001b 002b 003b 004b 005b 006b 007b 008b 009b \
-	010b 011b 012b 013b 014b 015b 016b 017b
+	010b 011b 012b 013b 014b 015b 016b 017b 018b 019b \
+	020b
 
 srcdir_EXTRA_DIST +=
 
 HACKT_CREATE_TEST_PASSES = \
 	000b 002b 003b 004b 006b \
-	012b 014b 015b 017b
+	012b 014b 015b 017b 018b \
+	020b
+
+# expects warnings:
+# 020b
 
 HACKT_CREATE_TEST_FAILURES = \
 	001b 005b 007b 008b 009b \
-	010b 011b 013b 016b
+	010b 011b 013b 016b 019b
 
 # known defect reports: unresolved language issues
 # dealing with empty loops and negative ranges...
