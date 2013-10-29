@@ -1,5 +1,7 @@
 Error: cannot alias two non-sharing consumers of type channel.
 	got: Y.X
 	and: Z.Y
+Error connecting: B
+	and:  Z.Y
 Error encountered during module::create.
 ERROR in creating.  Aborting.

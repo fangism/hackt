@@ -1,6 +1,8 @@
 Error: cannot alias two non-sharing consumers of type channel.
 	got: bar<>::F.B
 	and: bar<>::G.B
+Error connecting: bar<>::X
+	and:  bar<>::G.B
 Instantiated from: bar<>
 Error encountered during module::create.
 ERROR in creating.  Aborting.
