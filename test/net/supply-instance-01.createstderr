@@ -14,7 +14,7 @@ Persistent Object Manager text dump:
 	10	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	11	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	12	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	13	##ADDR##	procdefn	0	#HEAD#	#TAIL#	124
+	13	##ADDR##	procdefn	0	#HEAD#	#TAIL#	128
 	14	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	15	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	16	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25

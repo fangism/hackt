@@ -17,7 +17,7 @@ Persistent Object Manager text dump:
 	13	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
 	14	##ADDR##	procplch	0	#HEAD#	#TAIL#	26
 	15	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	16	##ADDR##	procdefn	0	#HEAD#	#TAIL#	141
+	16	##ADDR##	procdefn	0	#HEAD#	#TAIL#	145
 	17	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	18	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	19	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
@@ -59,7 +59,7 @@ Persistent Object Manager text dump:
 	55	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
 	56	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
 	57	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
-	58	##ADDR##	procdefn	0	#HEAD#	#TAIL#	142
+	58	##ADDR##	procdefn	0	#HEAD#	#TAIL#	146
 	59	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	60	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	61	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
@@ -99,7 +99,7 @@ Persistent Object Manager text dump:
 	95	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
 	96	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
 	97	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
-	98	##ADDR##	procdefn	0	#HEAD#	#TAIL#	219
+	98	##ADDR##	procdefn	0	#HEAD#	#TAIL#	223
 	99	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	100	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	101	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
@@ -209,7 +209,7 @@ Persistent Object Manager text dump:
 	205	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	206	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
 	207	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	208	##ADDR##	procdefn	0	#HEAD#	#TAIL#	140
+	208	##ADDR##	procdefn	0	#HEAD#	#TAIL#	144
 	209	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	210	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	211	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
@@ -238,7 +238,7 @@ Persistent Object Manager text dump:
 	234	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
 	235	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
 	236	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
-	237	##ADDR##	procdefn	0	#HEAD#	#TAIL#	144
+	237	##ADDR##	procdefn	0	#HEAD#	#TAIL#	148
 	238	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	239	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	240	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
@@ -283,7 +283,7 @@ Persistent Object Manager text dump:
 	279	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
 	280	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
 	281	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
-	282	##ADDR##	procdefn	0	#HEAD#	#TAIL#	162
+	282	##ADDR##	procdefn	0	#HEAD#	#TAIL#	166
 	283	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	284	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	285	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
@@ -340,7 +340,7 @@ Persistent Object Manager text dump:
 	336	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
 	337	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
 	338	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	339	##ADDR##	procdefn	0	#HEAD#	#TAIL#	183
+	339	##ADDR##	procdefn	0	#HEAD#	#TAIL#	187
 	340	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	341	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	342	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
@@ -419,7 +419,7 @@ Persistent Object Manager text dump:
 	415	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
 	416	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
 	417	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
-	418	##ADDR##	procdefn	0	#HEAD#	#TAIL#	168
+	418	##ADDR##	procdefn	0	#HEAD#	#TAIL#	172
 	419	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	420	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	421	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
@@ -490,7 +490,7 @@ Persistent Object Manager text dump:
 	486	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
 	487	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
 	488	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
-	489	##ADDR##	procdefn	0	#HEAD#	#TAIL#	173
+	489	##ADDR##	procdefn	0	#HEAD#	#TAIL#	177
 	490	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	491	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	492	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25

@@ -12,7 +12,7 @@ Persistent Object Manager text dump:
 	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	30
-	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	132
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	136
 	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
@@ -38,7 +38,7 @@ Persistent Object Manager text dump:
 	29	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	30	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
 	31	##ADDR##	footprnt	0	#HEAD#	#TAIL#	352
-	32	##ADDR##	procdefn	0	#HEAD#	#TAIL#	138
+	32	##ADDR##	procdefn	0	#HEAD#	#TAIL#	142
 	33	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	34	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	35	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
@@ -67,7 +67,7 @@ Persistent Object Manager text dump:
 	58	##ADDR##	dbooldir	0	#HEAD#	#TAIL#	13
 	59	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	60	##ADDR##	footprnt	0	#HEAD#	#TAIL#	352
-	61	##ADDR##	procdefn	0	#HEAD#	#TAIL#	132
+	61	##ADDR##	procdefn	0	#HEAD#	#TAIL#	136
 	62	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	63	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	64	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
@@ -95,7 +95,7 @@ Persistent Object Manager text dump:
 	86	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	87	##ADDR##	footprnt	0	#HEAD#	#TAIL#	352
 	88	##ADDR##	procplch	0	#HEAD#	#TAIL#	30
-	89	##ADDR##	procdefn	0	#HEAD#	#TAIL#	132
+	89	##ADDR##	procdefn	0	#HEAD#	#TAIL#	136
 	90	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	91	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	92	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
@@ -124,7 +124,7 @@ Persistent Object Manager text dump:
 	115	##ADDR##	footprnt	0	#HEAD#	#TAIL#	352
 	116	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
 	117	##ADDR##	procplch	0	#HEAD#	#TAIL#	29
-	118	##ADDR##	procdefn	0	#HEAD#	#TAIL#	130
+	118	##ADDR##	procdefn	0	#HEAD#	#TAIL#	134
 	119	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	120	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	121	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
@@ -149,7 +149,7 @@ Persistent Object Manager text dump:
 	140	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	141	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
 	142	##ADDR##	footprnt	0	#HEAD#	#TAIL#	352
-	143	##ADDR##	procdefn	0	#HEAD#	#TAIL#	136
+	143	##ADDR##	procdefn	0	#HEAD#	#TAIL#	140
 	144	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	145	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	146	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26

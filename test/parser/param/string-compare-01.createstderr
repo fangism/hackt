@@ -17,7 +17,7 @@ Persistent Object Manager text dump:
 	13	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	14	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	15	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	16	##ADDR##	procdefn	0	#HEAD#	#TAIL#	128
+	16	##ADDR##	procdefn	0	#HEAD#	#TAIL#	132
 	17	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	18	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	19	##ADDR##	pboolplh	0	#HEAD#	#TAIL#	29
