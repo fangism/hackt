@@ -1,3 +1,5 @@
 Error: cannot alias atomic and non-atomic bools.
+Error connecting: x
+	and:  y
 Error encountered during module::create.
 ERROR in creating.  Aborting.
