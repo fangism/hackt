@@ -1,0 +1,6 @@
+// "rte/027b.hac"
+// copy-modified from "rte/006b.hac"
+defproc foo(bool x[2][3]) {
+x @[atomic];	// should apply to whole array
+}
+foo bar;

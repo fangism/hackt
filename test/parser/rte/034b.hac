@@ -1,0 +1,10 @@
+// "034b.hac"
+// copy-modified from "010b.hac"
+defproc foo(bool x) {
+x @[atomic];
+bool y;
+prs {
+	y	-> x-	// atomic bool cannot participate in prs
+}
+}
+foo bar;
