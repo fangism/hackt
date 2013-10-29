@@ -43,33 +43,6 @@
 #endif
 
 //=============================================================================
-// i/o specializations
-#if 0
-namespace util {
-using namespace HAC::entity::RTE;
-using std::ostream;
-using std::istream;
-
-template <>
-void
-write_value(ostream& os, const footprint::resource_map_entry& r) {
-	write_value(os, r.rules);
-	write_value(os, r.macros);
-	write_value(os, r.int_nodes);
-}
-
-template <>
-void
-read_value(istream& is, footprint::resource_map_entry& r) {
-	read_value(is, r.rules);
-	read_value(is, r.macros);
-	read_value(is, r.int_nodes);
-}
-
-}	// end namespace util
-#endif
-
-//=============================================================================
 namespace HAC {
 namespace entity {
 namespace RTE {
@@ -83,26 +56,6 @@ using util::write_sequence;
 using util::read_value;
 using util::read_sequence_prealloc;
 using util::read_sequence_resize;
-
-//=============================================================================
-#if 0
-void
-footprint::node_expr_type::write_object_base(
-		const persistent_object_manager& m, ostream& o) const {
-	write_value(o, name);
-	write_value(o, first);
-	write_value(o, second);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-footprint::node_expr_type::load_object_base(
-		const persistent_object_manager& m, istream& i) {
-	read_value(i, name);
-	read_value(i, first);
-	read_value(i, second);
-}
-#endif
 
 //=============================================================================
 // class footprint method definitions
@@ -160,13 +113,6 @@ footprint::dump_expr(const expr_node& e, ostream& o,
 			if (paren) o << '(';
 			if (e.size()) {
 				dump_expr(ep[e.only()], o, fp, type);
-#if 0
-				// also print precharges
-				const footprint_expr_node::precharge_map_type&
-					pm(e.get_precharges());
-				footprint_expr_node::precharge_map_type::const_iterator
-					pi(pm.begin()), pe(pm.end());
-#endif
 				const char* const op = 
 					(type == PRS::PRS_AND_EXPR_TYPE_ENUM) ?
 						" &" : " |";
@@ -174,40 +120,12 @@ footprint::dump_expr(const expr_node& e, ostream& o,
 				const size_t s = e.size();
 				for ( ; i<=s; ++i) {
 					o << op;
-#if 0
-					if (pi != pe && i-2 == pi->first) {
-						o << '{' <<
-						(pi->second.second ? '+' : '-');
-						dump_expr(ep[pi->second.first], 
-							o, fp, 
-							PRS_NODE_TYPE_ENUM);
-						// type doesn't really matter?
-						o << '}';
-						++pi;
-					}
-#endif
 					dump_expr(ep[e[i]], o << ' ', fp, type);
 				}
 			}
 			if (paren) o << ')';
 			break;
 		}
-#if 0
-		case RTE_NODE_TYPE_ENUM: {
-			STACKTRACE_DUMP_PRINT("Node ");
-			INVARIANT(one == 1);
-#if 0
-			// expand internal node
-			dump_expr(ep[e.only()], o, fp, type);
-#else
-			// print the name of the internal node only
-			const internal_node_pool_type::const_iterator
-				f(find_internal_node(e.only()));
-			o << '@' << f->name;
-#endif
-			break;
-		}
-#endif
 		default:
 			ICE(cerr, 
 			cerr << "Invalid RTE expr type enumeration: "
@@ -239,54 +157,6 @@ footprint::dump_assignment(const assignment& r, ostream& o,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	Macro must have at least one argument.  
-	TODO: dump_node_group to support wrapper/delimiter string arguments.  
- */
-ostream&
-footprint::dump_macro(const macro& m, ostream& o,
-		const entity::footprint& fp) const {
-	const node_pool_type& np(fp.get_instance_pool<bool_tag>());
-	o << m.name;
-	o << '(';
-	typedef	macro::nodes_type::const_iterator const_iterator;
-	const_iterator i(m.nodes.begin());
-	const const_iterator e(m.nodes.end());
-	INVARIANT(i!=e);
-	bool_directive_base::dump_node_group(*i, o, np);
-	for (++i; i!=e; ++i) {
-		bool_directive_base::dump_node_group(*i, o << ',', np);
-	}
-	return o << ')';
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	Convenience printer.
- */
-ostream&
-footprint::print_range(ostream& o, const index_range& r) {
-	INVARIANT(r.first <= r.second);
-	if (r.first != r.second) {
-		o << r.first << ".." << r.second -1;
-	} else {
-		o << "none";
-	}
-	return o;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ostream&
-footprint::resource_map_entry::dump(ostream& o) const {
-	print_range(o, assignments);
-	return o;
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Need the footprint, which contains the node pool information.  
  */
@@ -301,65 +171,6 @@ if (assignment_pool.size()) {
 		dump_assignment(*i, o << auto_indent, f) << endl;
 	}
 }
-#if 0
-if (macro_pool.size()) {
-	o << auto_indent << "resolved macros:" << endl;
-	typedef	macro_pool_type::const_iterator	const_macro_iterator;
-	const_macro_iterator i(macro_pool.begin());
-	const const_macro_iterator e(macro_pool.end());
-	for ( ; i!=e; i++) {
-		dump_macro(*i, o << auto_indent, f) << endl;
-	}
-}
-if (internal_node_expr_map.size()) {
-	o << auto_indent << "internal node exprs: " << endl;
-	typedef	internal_node_expr_map_type::const_iterator
-					const_map_iterator;
-	const_map_iterator i(internal_node_expr_map.begin());
-	const const_map_iterator e(internal_node_expr_map.end());
-	for ( ; i!=e; ++i) {
-		// is this dump format acceptable?
-		const string& name(i->first);
-		const node_index_type int_node_index = i->second;
-		const node_expr_type&
-			int_node(internal_node_pool[int_node_index]);
-		const bool dir = int_node.second;
-		const expr_index_type ex = int_node.first;
-		o << auto_indent << '@' << name;
-		o << (dir ? '+' : '-') << " <- ";
-		const footprint_expr_node& en(expr_pool[ex]);
-		const resolved_attribute_list_type&
-		dump_expr(en, o, f, RTE_LITERAL_TYPE_ENUM);
-		o << endl;
-	}
-}
-if (invariant_pool.size()) {
-	o << auto_indent << "invariant exprs: " << endl;
-	typedef	invariant_pool_type::const_iterator	const_iterator;
-	const_iterator i(invariant_pool.begin()), e(invariant_pool.end());
-	for ( ; i!=e; ++i) {
-		o << auto_indent << "$(";
-#if INVARIANT_BACK_REFS
-		dump_expr(expr_pool[i->first], o, f, RTE_LITERAL_TYPE_ENUM);
-#else
-		dump_expr(expr_pool[*i], o, f, RTE_LITERAL_TYPE_ENUM);
-#endif
-	// TODO: print the associated string if any
-		o << ')' << endl;
-	}
-}
-if (subcircuit_map.size()) {
-	// print name of subcircuit?
-	assignment_index_type j = 1;		// 1-indexed
-	o << auto_indent << "subcircuit (rules, macros, @nodes): " << endl;
-	typedef	subcircuit_map_type::const_iterator	const_iterator;
-	const_iterator i(subcircuit_map.begin()), e(subcircuit_map.end());
-	for ( ; i!=e; ++i, ++j) {
-		o << auto_indent << j << ": ";
-		i->dump(o) << ' ' << i->get_name() << endl;
-	}
-}
-#endif
 	return o;
 }
 
@@ -389,15 +200,6 @@ footprint::push_back_assignment(const int e, const int o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-footprint::macro&
-footprint::push_back_macro(const string& s) {
-	macro_pool.push_back(macro(s));
-	return macro_pool.back();
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Gather all node indices that appear in the expression's literals.
 	\param ret return set of unique indices
@@ -417,79 +219,6 @@ footprint::collect_literal_indices(set<node_index_type>& ret,
 		}
 	}
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	\param k name of internal node (identifier)
-	\param eid root id of the expression that defines the internal node
-	\param dir direction that internal node is pulled (1:up, 0:dn)
- */
-good_bool
-footprint::register_internal_node_expr(const string& k, 
-		const expr_index_type eid, const bool dir) {
-	typedef	internal_node_expr_map_type::const_iterator
-						const_iterator;
-	const_iterator f(internal_node_expr_map.find(k));
-	if (f != internal_node_expr_map.end()) {
-		cerr << "Error: internal node rule for `" << k <<
-			"\' already registered." << endl;
-		return good_bool(false);
-	} else {
-		const node_index_type i = internal_node_pool.size();
-		internal_node_pool.push_back(node_expr_type(eid, dir, k));
-		internal_node_expr_map[k] = i;
-		return good_bool(true);
-	}
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	\return index of expression representing internal node, 
-		or throw exception to signal error or not found.
- */
-footprint::expr_index_type
-footprint::lookup_internal_node_expr(const string& k, const bool dir) const {
-	typedef	internal_node_expr_map_type::const_iterator
-						const_iterator;
-	const_iterator f(internal_node_expr_map.find(k));
-	if (f != internal_node_expr_map.end()) {
-		const bool ndir = 
-			internal_node_pool[f->second].second;
-		if (ndir == dir) {
-			return internal_node_pool[f->second].first;
-		} else {
-			cerr << "Error: internal node `" << k <<
-				"\' is used in the wrong sense." << endl;
-			THROW_EXIT;	// no return
-		}
-	} else {
-		cerr << "Error: undefined internal node rule: " << k << endl;
-		THROW_EXIT;	// no return
-	}
-	return 0;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Linear search through internal node pool to find
-	node that matches the given expression index ei.  
- */
-footprint::internal_node_pool_type::const_iterator
-footprint::find_internal_node(const expr_index_type ei) const {
-	typedef	internal_node_pool_type::const_iterator	const_iterator;
-	const const_iterator b(internal_node_pool.begin()),
-		e(internal_node_pool.end());
-	const_iterator i(b);
-	for ( ;i!=e; ++i) {
-		if (i->first == ei) {
-			return i;
-		}
-	}
-	INVARIANT(i != e);
-	return i;		// match not found
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -553,15 +282,6 @@ footprint_expr_node::footprint_expr_node(const char t, const size_t s) :
 		type(t), nodes(s) { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-void
-footprint_expr_node::push_back_precharge(const size_t i, 
-		const expr_index_type e, const bool d) {
-	precharge_map.push_back(make_pair(i, make_pair(e, d)));
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\return the index of the first zero entry, if any, 
 		indicating where an error occurred.  
@@ -587,15 +307,6 @@ void
 footprint_expr_node::collect_transient_info_base(
 		persistent_object_manager&) const {
 // no pointers
-#if 0
-	STACKTRACE_PERSISTENT_VERBOSE;
-	if (type == RTE_LITERAL_TYPE_ENUM) {
-		m.collect_pointer_list(params);
-	} else	INVARIANT(params.empty());
-	if (type == RTE_LITERAL_TYPE_ENUM) {
-		attributes.collect_transient_info_base(m);
-	}
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -610,17 +321,6 @@ footprint_expr_node::write_object_base(const persistent_object_manager& m,
 	STACKTRACE_PERSISTENT_VERBOSE;
 	write_value(o, type);
 	write_array(o, nodes);
-#if 0
-	if (type == RTE_LITERAL_TYPE_ENUM) {
-		m.write_pointer_list(o, params);
-	} else	INVARIANT(params.empty());
-	if (type == RTE_LITERAL_TYPE_ENUM) {
-		attributes.write_object_base(m, o);
-	}
-	if (type == RTE_AND_EXPR_TYPE_ENUM) {
-		write_sequence(o, precharge_map);
-	} else	INVARIANT(precharge_map.empty());
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -632,17 +332,6 @@ footprint_expr_node::load_object_base(const persistent_object_manager& m,
 	read_sequence_prealloc(i, nodes);
 	STACKTRACE_PERSISTENT_PRINT("at " << this << ":" << endl);
 	STACKTRACE_PERSISTENT_PRINT("nodes size = " << nodes.size() << endl);
-#if 0
-	if (type == RTE_LITERAL_TYPE_ENUM) {
-		m.read_pointer_list(i, params);
-	}
-	if (type == RTE_LITERAL_TYPE_ENUM) {
-		attributes.load_object_base(m, i);
-	}
-	if (type == RTE_AND_EXPR_TYPE_ENUM) {
-		read_sequence_resize(i, precharge_map);
-	}
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -654,22 +343,6 @@ footprint_expr_node::accept(cflat_visitor& v) const {
 //=============================================================================
 // class footprint_assignment method defintions
 
-#if 0
-void
-footprint_assignment::push_back(const footprint_assignment_attribute& a) {
-	attributes.push_back(a);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-footprint_assignment::collect_transient_info_base(
-		persistent_object_manager& m) const {
-	STACKTRACE_PERSISTENT_VERBOSE;
-	// no-op
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 footprint_assignment::write_object_base(const persistent_object_manager& m, 
 		ostream& o) const {
