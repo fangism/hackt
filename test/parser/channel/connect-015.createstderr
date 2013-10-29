@@ -1,6 +1,8 @@
 Error: cannot alias two non-sharing producers of type channel.
 	got: receivers<>::a
 	and: receivers<>::b
+Error connecting: receivers<>::x
+	and:  receivers<>::y
 Instantiated from: receivers<>
 Error encountered during module::create.
 ERROR in creating.  Aborting.

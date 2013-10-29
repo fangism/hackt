@@ -1,5 +1,7 @@
 Error: cannot alias two non-sharing producers of type channel.
 	got: a.a
 	and: b.a
+Error connecting: x
+	and:  b.a
 Error encountered during module::create.
 ERROR in creating.  Aborting.

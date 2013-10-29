@@ -3,5 +3,7 @@ Warnings found (1) while creating complete type sink<>.
 Error: cannot alias two non-sharing consumers of type channel.
 	got: Y.X
 	and: Z.X
+Error connecting: B
+	and:  Z.X
 Error encountered during module::create.
 ERROR in creating.  Aborting.

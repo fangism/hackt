@@ -1,5 +1,7 @@
 Error: cannot alias two non-sharing producers of type process.
 	got: ruple.globals
 	and: tuple.globals
+Error connecting: shoes
+	and:  tuple.globals
 Error encountered during module::create.
 ERROR in creating.  Aborting.
