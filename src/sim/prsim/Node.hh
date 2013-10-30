@@ -162,13 +162,20 @@ struct Node {
 			Whether or not this node belongs to at least one
 			checked exclusive high ring.  
 		 */
-		NODE_CHECK_EXCLLO = 0x0010
+		NODE_CHECK_EXCLLO = 0x0010,
 		/**
 			Whether or not to report interference on this node.
 		 */
-		,
 		NODE_MAY_INTERFERE = 0x0020,
-		NODE_MAY_WEAK_INTERFERE = 0x0040
+		NODE_MAY_WEAK_INTERFERE = 0x0040,
+		/**
+			Atomic nodes should continue to propagate
+			immediately, rather than scheduling event though queue.
+			Also, atomic nodes do not pull-up/dn, they are assigned
+			the value of the expression.
+			Think of always combinational, with complementary pull.  
+		 */
+		NODE_IS_ATOMIC = 0x0080
 	} struct_flags_enum;
 
 	/**
@@ -235,6 +242,9 @@ private:
 		struct_flags |= NODE_MAY_WEAK_INTERFERE;
 	}
 
+	void
+	mark_atomic(void) { struct_flags |= NODE_IS_ATOMIC; }
+
 public:
 	bool
 	may_interfere(void) const { return struct_flags & NODE_MAY_INTERFERE; }
@@ -243,6 +253,9 @@ public:
 	may_weak_interfere(void) const {
 		return struct_flags & NODE_MAY_WEAK_INTERFERE;
 	}
+
+	bool
+	is_atomic(void) const { return struct_flags & NODE_IS_ATOMIC; }
 
 	void
 	import_attributes(const bool_connect_policy&);

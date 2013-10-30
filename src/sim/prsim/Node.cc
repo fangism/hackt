@@ -54,7 +54,9 @@ Node::~Node() { }
  */
 void
 Node::import_attributes(const bool_connect_policy& b) {
-if (!b.is_atomic()) {
+if (b.is_atomic()) {
+	mark_atomic();
+} else {
 	// the only attributes we care about:
 	if (b.may_weak_interfere())	allow_weak_interference();
 	if (b.may_interfere())		allow_interference();
