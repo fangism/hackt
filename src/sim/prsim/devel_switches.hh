@@ -214,9 +214,9 @@
 		Was never robust enough to simulate non-QDI circuits.  
 	Goal: 1
 	Priority: med-high
-	Status: complete
+	Status: complete, perm'd
  */
-#define	PRSIM_SIMPLE_EVENT_QUEUE		1
+// #define	PRSIM_SIMPLE_EVENT_QUEUE		1
 
 /**
 	Define to 1 to use new force-excl queue scheme.
@@ -231,7 +231,7 @@
 		be suppressed, or if already in event queue,
 		then dequeued/cancelled.
  */
-#define	PRSIM_MK_EXCL_BLOCKING_SET			(1 && PRSIM_SIMPLE_EVENT_QUEUE)
+#define	PRSIM_MK_EXCL_BLOCKING_SET			1
 
 // TODO: prsim-guile interface
 
