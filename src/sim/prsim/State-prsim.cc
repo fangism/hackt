@@ -4340,6 +4340,7 @@ State::evaluate(
 		pull_enum prev, pull_enum next) {
 	STACKTRACE_VERBOSE_STEP;
 	evaluate_return_type ret;	// intended for only non-atomic nodes
+	// note: prev, next are modified by *reference*
 	const eval_info ei(evaluate_kernel(gui, prev, next));
 	const node_index_type ui = ei.root_node;
 	const bool terminate_propagation = ei.terminate_propagation;
@@ -4364,26 +4365,25 @@ if (!r.is_invariant()) {
 #if PRSIM_SIMPLE_EVENT_QUEUE
 	const pull_set ops(n, weak_rules_enabled());
 #endif
+	const bool dir = r.direction();
+#if PRSIM_WEAK_RULES
+	const bool is_weak = r.is_weak();
+#endif
 if (UNLIKELY(n.is_atomic())) {
 	// atomic nodes are only defined by pull-up
+	INVARIANT(dir);
+#if PRSIM_WEAK_RULES
+	INVARIANT(!is_weak);
+#endif
 	// the (nonexistent) pull-dn is effectively the opposite of pull-up
 	// when one is on, the other is off, and vice versa
 	// iterate over fanout here and enqueue into worklist
 	// update this node's value immediately and evaluate its fanouts
-	const event_cause_type null;	// TODO: track causality?
 	// yes, interpret pull_enum as value_enum
-	n.set_value_and_cause(value_enum(next), null);
-	typedef	node_type::const_fanout_iterator	const_iterator;
-	const_iterator i(n.fanout.begin()), e(n.fanout.end());
-	for ( ; i!=e; ++i) {
-//		const eval_info atev(evaluate_kernel(*i, n.current_value(), next));
-	}
-	FINISH_ME(Fang);
-} else {
-	const bool dir = r.direction();
+}
 	fanin_state_type& fs(n.get_pull_struct(dir
 #if PRSIM_WEAK_RULES
-		, r.is_weak()
+		, is_weak
 #endif
 		));
 	// root rules of a node are disjunctive (OR-combination)
@@ -4410,8 +4410,7 @@ if (UNLIKELY(n.is_atomic())) {
 #endif
 			&r, ps.global_expr_index(ri));
 	}
-}	// n !is_atomic
-} else {
+} else {	// else this is an invariant
 	// then this rule doesn't actually pull a node, is an invariant
 	// aggregate updates before diagnosing invariant violation
 	const rule_reference_type rr(pid, ri);
@@ -4419,7 +4418,7 @@ if (UNLIKELY(n.is_atomic())) {
 	// only the last one will take effect
 }
 #undef	STRUCT
-}	// end if STRUCT->is_root()
+}	// end if !terminate_propagation
 // else propagation did not reach root, just stop
 
 	return ret;
