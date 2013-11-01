@@ -29,6 +29,11 @@ enum pull_enum {
 //-----------------------------------------------------------------------------
 /**
 	Values that a node can take.  
+	This enum cannot be arbitrarily changed, it is coupled to pull_enum:
+		LOGIC_LOW == PULL_OFF
+		LOGIC_HIGH == PULL_ON
+		LOGIC_OTHER == PULL_WEAK
+	Evaluation of atomic_expressions depends on this consistency.
  */
 enum value_enum {
 	LOGIC_LOW = 0x00,		// 0

@@ -1710,10 +1710,15 @@ private:
 	pull_enum
 	get_pull(const expr_index_type ei) const;	// define in .cc file
 
+	struct eval_info;
+
+	eval_info
+	evaluate_kernel(const expr_index_type, pull_enum&, pull_enum&);
+
 	evaluate_return_type
 	evaluate(
 		// const node_index_type,	// not needed
-		expr_index_type, 
+		const expr_index_type, 
 		pull_enum prev, pull_enum next);
 
 	break_type

@@ -859,6 +859,7 @@ State::reset_all_channels(void) {
 #if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
 bool
 State::resume_channel(channel& chan) {
+	// TODO: could make this static local, and clear() to re-use space
 	vector<env_event_type> temp;
 	chan.resume(*this, temp);
 	const event_cause_type c(INVALID_NODE_INDEX, LOGIC_OTHER);
@@ -868,6 +869,7 @@ State::resume_channel(channel& chan) {
 #else
 bool
 State::resume_channel(const string& cn) {
+	// TODO: could make this static local, and clear() to re-use space
 	vector<env_event_type> temp;
 	if (_channel_manager.resume_channel(*this, cn, temp))	return true;
 	const event_cause_type c(INVALID_NODE_INDEX, LOGIC_OTHER);
@@ -883,6 +885,7 @@ State::resume_channel(const string& cn) {
  */
 void
 State::resume_all_channels(void) {
+	// TODO: could make this static local, and clear() to re-use space
 	vector<env_event_type> temp;
 	_channel_manager.resume_all_channels(*this, temp);
 	const event_cause_type c(INVALID_NODE_INDEX, LOGIC_OTHER);
@@ -4221,39 +4224,46 @@ void
 __debug_print_node_change(const node_index_type ni,
 		const pull_enum prev, const pull_enum next) {
 	DEBUG_STEP_PRINT("node " << ni << " from " <<
-		node_type::value_to_char[size_t(prev)] << " -> " <<
-		node_type::value_to_char[size_t(next)] << endl);
+		State::node_type::value_to_char[size_t(prev)] << " -> " <<
+		State::node_type::value_to_char[size_t(next)] << endl);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+struct State::eval_info {
+	// process state corresponding to global expr index
+	process_sim_state*			ps;
+	// if this is NULL, then propagation stopped before root reached
+	node_index_type				root_node;
+	expr_index_type				root_expr;
+	const expr_struct_type*			root_struct;
+	bool					terminate_propagation;
+	eval_info() : ps(NULL), root_node(INVALID_NODE_INDEX), 
+		root_expr(INVALID_EXPR_INDEX), root_struct(NULL),
+		terminate_propagation(false) { }
+};
+
 /**
-	Evaluates expression changes without propagating/generating events.  
-	Useful for expression state reconstruction from checkpoint.  
-	\return pair(root expression, new pull value) if event propagated
-		to the root, else (INVALID_NODE_INDEX, whatever)
-	\param ui the expression id used to traverse up tree.  
-	\param prev previous value of node.
-		Locally used as old pull state of subexpression.  
-	\param next new value of node.
-		Locally used as new pull state of subexpression.  
-	Side effect (sort of): trace of expressions visited is in
-		the __scratch_expr_trace array.  
-	CAUTION: distinguish between expression value and pull-state!
+	When propagation reaches a node,
+	root_node refers the updated node,
+	root_expr refers the the rule/expr that pulls that node.
  */
 // inline
-State::evaluate_return_type
-State::evaluate(
-		// const node_index_type ni,
-		expr_index_type gui, 
-		pull_enum prev, pull_enum next) {
-	STACKTRACE_VERBOSE_STEP;
+State::eval_info
+State::evaluate_kernel(const expr_index_type gui, 
+		pull_enum& prev, pull_enum& next) {
+//	STACKTRACE_VERBOSE_STEP;
+	eval_info ret;
+	const expr_struct_type*& s(ret.root_struct);
+	node_index_type& ui(ret.root_node);
+	expr_index_type& ri(ret.root_expr);	// lags behind ui by 1 iteration
 	expr_state_type* u;
-	// first, localize evaluation to a single process!
-	const expr_struct_type* s;
 	process_sim_state& ps(lookup_global_expr_process(gui));
-	expr_index_type ui = ps.local_expr_index(gui);
+	ret.ps = &ps;
+	ui = ps.local_expr_index(gui);
+	// evaluation always happens local to a process
 	const unique_process_subgraph& pg(ps.type());
-	expr_index_type ri;
+
 #define	STRUCT	s
 do {
 	pull_enum old_pull, new_pull;	// pulling state of the subexpression
@@ -4293,7 +4303,8 @@ do {
 	if (old_pull == new_pull) {
 		// then the pull-state did not change.
 		DEBUG_STEP_PRINT("end of propagation." << endl);
-		return evaluate_return_type();
+		ret.terminate_propagation = true;
+		return ret;	// break
 	}
 	// already accounted for negation in pull_state()
 	// NOTE: cannot equate pull with value!
@@ -4302,6 +4313,42 @@ do {
 	ri = ui;		// save previous index
 	ui = STRUCT->parent;
 } while (!STRUCT->is_root());
+	// if this is reached, we made it to a root rule
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Evaluates expression changes without propagating/generating events.  
+	Useful for expression state reconstruction from checkpoint.  
+	\return pair(root expression, new pull value) if event propagated
+		to the root, else (INVALID_NODE_INDEX, whatever)
+	\param ui the expression id used to traverse up tree.  
+	\param prev previous value of node.
+		Locally used as old pull state of subexpression.  
+	\param next new value of node.
+		Locally used as new pull state of subexpression.  
+	Side effect (sort of): trace of expressions visited is in
+		the __scratch_expr_trace array.  
+	CAUTION: distinguish between expression value and pull-state!
+ */
+// inline
+State::evaluate_return_type
+State::evaluate(
+		// const node_index_type ni,
+		const expr_index_type gui, 
+		pull_enum prev, pull_enum next) {
+	STACKTRACE_VERBOSE_STEP;
+	evaluate_return_type ret;	// intended for only non-atomic nodes
+	const eval_info ei(evaluate_kernel(gui, prev, next));
+	const node_index_type ui = ei.root_node;
+	const bool terminate_propagation = ei.terminate_propagation;
+if (!terminate_propagation) {
+	const process_sim_state& ps(*ei.ps);
+	const unique_process_subgraph& pg(ps.type());
+	const expr_index_type ri = ei.root_expr;
+	const expr_struct_type* s = ei.root_struct;
+	// need to check because of 'break' above
 	DEBUG_STEP_PRINT("propagated to root rule" << endl);
 	// made it to root
 	// negation already accounted for
@@ -4317,6 +4364,22 @@ if (!r.is_invariant()) {
 #if PRSIM_SIMPLE_EVENT_QUEUE
 	const pull_set ops(n, weak_rules_enabled());
 #endif
+if (UNLIKELY(n.is_atomic())) {
+	// atomic nodes are only defined by pull-up
+	// the (nonexistent) pull-dn is effectively the opposite of pull-up
+	// when one is on, the other is off, and vice versa
+	// iterate over fanout here and enqueue into worklist
+	// update this node's value immediately and evaluate its fanouts
+	const event_cause_type null;	// TODO: track causality?
+	// yes, interpret pull_enum as value_enum
+	n.set_value_and_cause(value_enum(next), null);
+	typedef	node_type::const_fanout_iterator	const_iterator;
+	const_iterator i(n.fanout.begin()), e(n.fanout.end());
+	for ( ; i!=e; ++i) {
+//		const eval_info atev(evaluate_kernel(*i, n.current_value(), next));
+	}
+	FINISH_ME(Fang);
+} else {
 	const bool dir = r.direction();
 	fanin_state_type& fs(n.get_pull_struct(dir
 #if PRSIM_WEAK_RULES
@@ -4339,23 +4402,27 @@ if (!r.is_invariant()) {
 	if (old_pull == new_pull) {
 		// then the pull-state did not change.
 		DEBUG_STEP_PRINT("end of propagation." << endl);
-		return evaluate_return_type();
-	}
-	next = fs.pull();
-	return evaluate_return_type(oni, STRUCT, next,
+	} else {
+		next = fs.pull();
+		ret = evaluate_return_type(oni, STRUCT, next,
 #if PRSIM_SIMPLE_EVENT_QUEUE
-		ops, 
+			ops, 
 #endif
-		&r, ps.global_expr_index(ri));
+			&r, ps.global_expr_index(ri));
+	}
+}	// n !is_atomic
 } else {
 	// then this rule doesn't actually pull a node, is an invariant
 	// aggregate updates before diagnosing invariant violation
 	const rule_reference_type rr(pid, ri);
 	__invariant_update_map[rr] = next;
 	// only the last one will take effect
-	return evaluate_return_type();	// continue
 }
 #undef	STRUCT
+}	// end if STRUCT->is_root()
+// else propagation did not reach root, just stop
+
+	return ret;
 }	// end State::evaluate()
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
