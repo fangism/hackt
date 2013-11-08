@@ -74,6 +74,7 @@ using util::value_saver;
 #define	REF_RULE_MAP(g,i)		g->rule_pool[g->rule_map[i]]
 
 typedef	entity::PRS::footprint		prs_footprint;
+typedef	entity::RTE::footprint		rte_footprint;
 
 //=============================================================================
 // ExprAllocFlags method definitions
@@ -277,6 +278,7 @@ ExprAlloc::ExprAlloc(state_type& _s,
 		power_supply(0),
 		at_source(false),
 #endif
+		in_atomic(false),
 		flags(f), expr_free_list()
 #if PRSIM_PRECHARGE_INVARIANTS
 		, netlists(NULL)
@@ -296,12 +298,18 @@ void
 ExprAlloc::visit_rules_and_directives(const footprint& f) {
 	STACKTRACE_VERBOSE;
 if (f.has_prs_footprint()) {
-	const entity::PRS::footprint& pfp(f.get_prs_footprint());
+	const prs_footprint& pfp(f.get_prs_footprint());
 	pfp.accept(*this);
+}
+if (f.has_rte_footprint()) {
+	const rte_footprint& rfp(f.get_rte_footprint());
+	rfp.accept(*this);
 }
 	// TODO: implement spec directives hierarchically
 #if 0
+if (f.has_spec_footprint()) {
 	f.get_spec_footprint().accept(*this);
+}
 #endif
 
 #if 0
@@ -402,7 +410,7 @@ ExprAlloc::visit(const footprint& f) {
 	Only visit once per type!
  */
 void
-ExprAlloc::visit(const entity::PRS::footprint& pfp) {
+ExprAlloc::visit(const prs_footprint& pfp) {
 	STACKTRACE_VERBOSE;
 #if 0
 	state.unique_process_pool.push_back(unique_process_subgraph());
@@ -416,14 +424,13 @@ ExprAlloc::visit(const entity::PRS::footprint& pfp) {
 	{
 	// handle invariants separately
 	using entity::PRS::PRS_footprint_expr_pool_type;
-	using entity::PRS::footprint;
-	typedef footprint::invariant_pool_type::const_iterator
+	typedef prs_footprint::invariant_pool_type::const_iterator
 						const_iterator;
 	// const expr_type_setter tmp(*this, PRS_LITERAL_TYPE_ENUM);
-	const footprint::invariant_pool_type& ip(pfp.get_invariant_pool());
+	const prs_footprint::invariant_pool_type& ip(pfp.get_invariant_pool());
 	const PRS_footprint_expr_pool_type& ep(pfp.get_expr_pool());
 	const_iterator i(ip.begin()), e(ip.end());
-	size_t j = 0;	// footprint's invariant_pool index
+	size_t j = 0;	// prs_footprint's invariant_pool index
 	for ( ; i!=e; ++i, ++j) {
 		// construct invariant expression
 	//	ep[*i].accept(*this);
@@ -907,7 +914,7 @@ if (suppress_keeper_rule) {
 #if ENABLE_STACKTRACE
 	cfp.dump_type(STACKTRACE_INDENT_PRINT("In type: ")) << endl;
 #endif
-	const entity::PRS::footprint::expr_pool_type&
+	const prs_footprint::expr_pool_type&
 		expr_pool(cpfp.get_expr_pool());
 	STACKTRACE_INDENT_PRINT("expr_pool.size = " << expr_pool.size() << endl);
 	STACKTRACE_INDENT_PRINT("r.expr_index = " << r.expr_index << endl);
@@ -917,7 +924,7 @@ if (suppress_keeper_rule) {
 	// need to identify the supply
 	const rule_index_type rule_index =
 		std::distance(&cpfp.get_rule_pool().front(), &r);
-	const entity::PRS::footprint::supply_map_type::const_iterator
+	const prs_footprint::supply_map_type::const_iterator
 		si(cpfp.lookup_rule_supply(rule_index));
 	// need 0-based index
 	const node_index_type source =
@@ -1364,7 +1371,7 @@ switch (type) {
 void
 ExprAlloc::visit_and_expr(const footprint_expr_node& e) {
 	STACKTRACE_INDENT_PRINT("and" << endl);
-	const entity::PRS::footprint::expr_pool_type& expr_pool(
+	const prs_footprint::expr_pool_type& expr_pool(
 		get_current_footprint().get_prs_footprint().get_expr_pool());
 	const size_t sz = e.size();
 	const expr_index_type last =
@@ -1411,7 +1418,7 @@ ExprAlloc::visit_and_expr(const footprint_expr_node& e) {
 void
 ExprAlloc::visit_or_expr(const footprint_expr_node& e) {
 	STACKTRACE_INDENT_PRINT("or" << endl);
-	const entity::PRS::footprint::expr_pool_type& expr_pool(
+	const prs_footprint::expr_pool_type& expr_pool(
 		get_current_footprint().get_prs_footprint().get_expr_pool());
 	const size_t sz = e.size();
 	const expr_index_type last =
@@ -1447,6 +1454,36 @@ ExprAlloc::visit_or_expr(const footprint_expr_node& e) {
 	if (flags.is_denormalize_negations()) {
 		denormalize_negation(last);
 	}	// end if is_denormalize_negations()
+	ret_ex_index = last;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+ExprAlloc::visit_atomic_expr(const entity::RTE::footprint_expr_node& e) {
+	STACKTRACE_INDENT_PRINT("or" << endl);
+	const rte_footprint::expr_pool_type& expr_pool(
+		get_current_footprint().get_rte_footprint().get_expr_pool());
+	const size_t sz = e.size();
+	const expr_index_type last =
+		allocate_new_Nary_expr(e.get_type(), sz);
+	size_t i = 1;
+	for ( ; i<=sz; i++) {
+		// reminder: e is 1-indexed while 
+		// ExprGraphNode::children is 0-indexed
+		expr_pool[e[i]].accept(*this);
+		const size_t sub_ex_index = ret_ex_index;
+		link_child_expr(last, sub_ex_index, i-1);
+	}
+	// for now, don't bother normalizing/optimizing
+#if 0
+	// welcome to graph surgery!
+	if (flags.is_fold_literals()) {
+		fold_literal(last);
+	}	// end if is_fold_literals()
+	if (flags.is_denormalize_negations()) {
+		denormalize_negation(last);
+	}	// end if is_denormalize_negations()
+#endif
 	ret_ex_index = last;
 }
 
@@ -1720,20 +1757,129 @@ ExprAlloc::__visit_current_path_graph_node_logic_output_down(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // run-time atomic expression support
 void
-ExprAlloc::visit(const entity::RTE::footprint&) {
-	FINISH_ME(Fang);
+ExprAlloc::visit(const rte_footprint& rfp) {
+	STACKTRACE_BRIEF;
+	const value_saver<bool> _t(in_atomic, true);
+	cflat_visitor::visit(rfp);	// visit assignments
+	// no precharges or invariants to handle
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Emulate assignment as a pull-up only rule with
+	an assumed complement (thus, always driven).
+	Implementation similar to visit(entity::PRS_footprint_rule&)
+ */
 void
-ExprAlloc::visit(const entity::RTE::footprint_assignment&) {
-	FINISH_ME(Fang);
+ExprAlloc::visit(const entity::RTE::footprint_assignment& r) {
+	STACKTRACE_VERBOSE;
+try {
+	static const bool dir = true;		// treat like pull-up
+	rule_type dummy_rule;
+	dummy_rule.set_direction(dir);	// treat like pull-up
+	// there are no attributes to apply
+	INVARIANT(!suppress_keeper_rule);	// not even relevant
+	const footprint& cfp(get_current_footprint());
+	const rte_footprint& cpfp(cfp.get_rte_footprint());
+#if ENABLE_STACKTRACE
+	cfp.dump_type(STACKTRACE_INDENT_PRINT("In type: ")) << endl;
+#endif
+	const rte_footprint::expr_pool_type& expr_pool(cpfp.get_expr_pool());
+	STACKTRACE_INDENT_PRINT("expr_pool.size = " << expr_pool.size() << endl);
+	STACKTRACE_INDENT_PRINT("r.expr_index = " << r.expr_index << endl);
+	INVARIANT(size_t(r.expr_index) <= expr_pool.size());
+	expr_pool[r.expr_index].accept(*this);
+	const size_t top_ex_index = ret_ex_index;
+	// r.output_index gives the local unique ID,
+	// which needs to be translated to global ID.
+	// bfm[...] refers to a state_instance<bool_tag> (1-indexed)
+	// const size_t j = bfm[r.output_index-1];
+	const size_t ni = lookup_local_bool_id(r.output_index);
+
+	// ignored: state.expr_expr_graph_node_pool[top_ex_index].offset
+	// not computing node fanin?  this would be the place to do it...
+	// can always compute it (cacheable) offline
+	STACKTRACE_INDENT_PRINT("expr " << top_ex_index << " assigns node " <<
+		ni << endl);
+	// need to process attributes BEFORE linking to node
+	// because depends on weak attribute
+#if ENABLE_STACKTRACE
+	g->dump_struct(cerr) << endl;
+#endif
+	INVARIANT(top_ex_index == ret_ex_index);	// sanity check
+	// following order matters b/c of rule_map access
+	link_node_to_root_expr(ni, top_ex_index, dir, dummy_rule
+#if PRSIM_WEAK_RULES
+		, NORMAL_RULE
+#endif
+		);
+	// REF_RULE_MAP(g, ret_ex_index) = dummy_rule;	// copy over temporary
+} catch (...) {
+	cerr << "FATAL: error during atomic assignment allocation." << endl;
+#if 0
+	// botched attempt to print error message
+	typedef	entity::PRS::cflat_prs_printer	cflat_prs_printer;
+	cflat_options cfo;
+	cfo.primary_tool = cflat_options::TOOL_PRSIM;
+	entity::PRS::cflat_prs_printer pp(cerr, cfo);
+	const cflat_prs_printer::module_setter mtmp(pp, *this);
+	const cflat_prs_printer::footprint_frame_setter ftmp(pp, *this);
+	const cflat_prs_printer::expr_pool_setter etmp(pp, *this);
+	r.accept(pp);	// do we guarantee that cflat doesn't throw?
+#endif
+	throw;
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Re-use PRS::footprint_expr_node (base-class)
+	by creating a temporary.
+ */
 void
-ExprAlloc::visit(const entity::RTE::footprint_expr_node&) {
-	FINISH_ME(Fang);
+ExprAlloc::visit(const entity::RTE::footprint_expr_node& e) {
+//	const entity::PRS::footprint_expr_node pe(re);
+	STACKTRACE("ExprAlloc::visit(RTE::footprint_expr_node&)");
+	const size_t sz = e.size();
+	const char type = e.get_type();
+	// NOTE: 1-indexed
+	const rte_footprint& pfp(get_current_footprint().get_rte_footprint());
+	const rte_footprint::expr_pool_type& expr_pool(pfp.get_expr_pool());
+switch (type) {
+	// enumerations from "Object/lang/PRS_enum.h"
+	case entity::PRS::PRS_LITERAL_TYPE_ENUM: {
+		STACKTRACE_INDENT_PRINT("literal" << endl);
+		// leaf node
+		INVARIANT(sz == 1);
+		const node_index_type ni = lookup_local_bool_id(e.only());
+		ret_ex_index = allocate_new_literal_expr(ni);
+		break;
+	}
+	case entity::PRS::PRS_NOT_EXPR_TYPE_ENUM: {
+		STACKTRACE_INDENT_PRINT("not" << endl);
+		INVARIANT(sz == 1);
+		expr_pool[e.only()].accept(*this);
+		const expr_index_type sub_ex_index = ret_ex_index;
+		ret_ex_index = allocate_new_not_expr(sub_ex_index);
+		break;
+	}
+	case entity::PRS::PRS_AND_EXPR_TYPE_ENUM:
+	case entity::PRS::PRS_OR_EXPR_TYPE_ENUM:
+		visit_atomic_expr(e);
+		break;
+	case entity::PRS::PRS_NODE_TYPE_ENUM: 	// fall-through
+		cerr <<
+		"FATAL: internal nodes not supported in atomic expressions."
+			<< endl;
+		// fall-through
+	default:
+		THROW_EXIT;
+		break;
+}	// end switch
+	// 'return' the index of the expr just allocated in ret_ex_index
+#if 0 && ENABLE_STACKTRACE
+	g->dump_struct(cerr) << endl;
+#endif
 }
 
 //=============================================================================

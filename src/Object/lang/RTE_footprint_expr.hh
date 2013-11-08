@@ -57,6 +57,7 @@ class footprint_literal_node : public cflat_visitee {
 		See -O1 options in hacprsim.  
  */
 class footprint_expr_node : public cflat_visitee {
+protected:
 	/**
 		Why int and not size_t?
 		Might consider making this a int-bool pair, 
@@ -69,7 +70,7 @@ class footprint_expr_node : public cflat_visitee {
 	typedef	int				node_value_type;
 #endif
 	typedef	std::valarray<node_value_type>	node_array_type;
-private:
+protected:
 	/**
 		Whether or not this is AND or OR, NOT, literal....  
 		This uses the enumerations according to

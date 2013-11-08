@@ -1455,6 +1455,8 @@ State::enqueue_event(const time_type t, const event_index_type ei) {
 	const node_type& n(get_node(ni));
 	ISE_INVARIANT(n.pending_event());
 	ISE_INVARIANT(n.get_event() == ei);
+	// atomic node updates never go through event queue
+	ISE_INVARIANT(!n.is_atomic());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1703,6 +1705,12 @@ State::set_node_time(const node_index_type ni, const value_enum val,
 	// we have ni = the canonically allocated index of the bool node
 	// just look it up in the node_pool
 	node_type& n(__get_node(ni));
+	if (n.is_atomic()) {
+		const string objname(get_node_canonical_name(ni));
+		cout << "Warning: ignoring attempt to set an atomic node `"
+			<< objname << "\'." << endl;
+		return ENQUEUE_REJECT;
+	}
 	const event_index_type pending = n.get_event();
 	const value_enum last_val = n.current_value();
 	const bool unchanged = (val == last_val);
@@ -1780,12 +1788,15 @@ if (!n.is_frozen() || f) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Without going through the event queue, set the value of the node
-	now.
+	Without going through the event queue, set the value of the node now.
+	Cause will be null, b/c comes from user.
+	Note: this can now be called for atomic node updates.
+	FIXME: needs to be re-entrant!
  */
 State::step_return_type
 State::set_node_immediately(const node_index_type ni, const value_enum val,
 		const bool force) {
+	STACKTRACE_BRIEF;
 	event_type e;	// default construct
 	e.node = ni;
 	e.val = val;
@@ -1803,7 +1814,13 @@ State::set_node_immediately(const node_index_type ni, const value_enum val,
 void
 State::freeze_node(const node_index_type ni) {
 	// Q: should nodes driven by channels be allowed to freeze?
-	__get_node(ni).freeze();
+	node_type& n(__get_node(ni));
+	if (!n.is_atomic()) {
+		n.freeze();
+	} else {
+		cerr << "Warning: atomic nodes cannot be frozen.  Ignoring."
+			<< endl;
+	}
 }
 #endif
 
@@ -3416,6 +3433,7 @@ State::step_return_type
 State::execute_immediately(
 		const event_type& pe,
 		const time_type& ept) THROWS_STEP_EXCEPTION {
+	// FIXME: this needs to be re-entrant, due to atomic updates!
 	typedef	State::step_return_type		return_type;
 	STACKTRACE_VERBOSE;
 	ISE_INVARIANT(updated_nodes.empty());
@@ -3428,8 +3446,6 @@ State::execute_immediately(
 	ISE_INVARIANT(exclhi_queue.empty());
 	ISE_INVARIANT(excllo_queue.empty());
 #endif
-
-	recent_exceptions.clear();
 //	const event_index_type& ei(ep.event_index);
 #if 0
 	if (!ei) {
@@ -3441,6 +3457,11 @@ State::execute_immediately(
 	const bool force = pe.forced();
 	const node_index_type ni = pe.node;
 	node_type& n(__get_node(ni));
+if (!n.is_atomic()) {
+	// FIXME: don't want atomic node propagation to clear exceptions
+	// cause by non-atomic nodes
+	recent_exceptions.clear();
+}
 //	ISE_INVARIANT(n.pending_event());	// must have been pending
 //	ISE_INVARIANT(n.get_event() == ei);	// must be consistent!
 	const value_enum prev = n.current_value();
@@ -4241,6 +4262,15 @@ State::propagate_evaluation(
 		size_t(next) << endl);
 	// frozen nodes will not switch when expressions propagate to their root
 	break_type err = ERROR_NONE;
+	if (n.is_atomic()) {
+		// yes, interpret pull_enum as value_enum
+		const step_return_type
+			sr(set_node_immediately(ui, value_enum(next), false));
+		// ignore return value?
+		// TODO: how to handle multiple atomic updates in a single step?
+		// especially for watching nodes?
+		return err;
+	}
 #if PRSIM_UPSET_NODES
 	if (n.is_frozen()) {
 		// even if new pull_state is off

@@ -125,6 +125,8 @@ protected:
 	 */
 	bool					at_source;
 #endif
+	/// true when in run-time-expressions environment (atomic)
+	bool					in_atomic;
 	/**
 		Set of optimization flags.  
 	 */
@@ -201,6 +203,9 @@ protected:
 
 	void
 	visit_or_expr(const footprint_expr_node&);
+
+	void
+	visit_atomic_expr(const entity::RTE::footprint_expr_node&);
 
 	void
 	visit(const footprint_macro&);

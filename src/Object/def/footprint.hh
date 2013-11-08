@@ -501,6 +501,9 @@ public:
 	const RTE::footprint&
 	get_rte_footprint(void) const { return *rte_footprint; }
 
+	bool
+	has_rte_footprint(void) const { return rte_footprint; }
+
 	chp_footprint_type&
 	get_chp_footprint(void);
 

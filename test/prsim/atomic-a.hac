@@ -1,0 +1,7 @@
+// "atomic-a.hac"
+
+bool x, y, z;
+z @[atomic];
+rte {
+	z = x || y;
+}

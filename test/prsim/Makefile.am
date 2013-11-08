@@ -107,7 +107,8 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	pchb-test-b pcfb-test-b \
 	pcehb-test-b pcefb-test-b \
 	power-supplies-a power-supplies-b power-supplies-c power-supplies-d \
-	power-supplies-e power-supplies-f
+	power-supplies-e power-supplies-f \
+	atomic-a
 
 # TODO: more cross-coupled test cases
 # SRAM cell
@@ -492,7 +493,8 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	power-supplies-b-01 power-supplies-b-02 \
 	power-supplies-c-01 power-supplies-d-01 \
 	power-supplies-e-01 power-supplies-f-01 \
-	x-all-01 x-all-02 x-all-03 x-all-04 x-all-05
+	x-all-01 x-all-02 x-all-03 x-all-04 x-all-05 \
+	atomic-a-03
 
 # subset of prsimrc test that we wish to compare traces against regressions
 HACKT_PRSIMTRACE_TEST_SUBJECTS = \
@@ -811,7 +813,8 @@ HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
 	channel-clocked-test-a-07 channel-clocked-test-a-07c \
 	channel-clocked-test-b-06 \
 	channel-clocked-test-b-07 \
-	reset-test-01
+	reset-test-01 \
+	atomic-a-01 atomic-a-02 atomic-a-04
 
 # KNOWN BUG (fails, but should not): cross-pulldown-01
 

@@ -241,7 +241,7 @@ private:
 	/**
 		Return codes for set_node_time.  
 	 */
-	enum {
+	enum enqueue_status {
 		ENQUEUE_ACCEPT = 0,
 		ENQUEUE_WARNING = 1,
 		ENQUEUE_REJECT = 2,

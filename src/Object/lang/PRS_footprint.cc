@@ -844,11 +844,27 @@ footprint_expr_node::footprint_expr_node() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 footprint_expr_node::footprint_expr_node(const char t) :
-		type(t), nodes(), params() { }
+#if REUSE_RTE_FOOTPRINT_EXPR
+		parent_type(t),
+#else
+		type(t), nodes(),
+#endif
+		params() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 footprint_expr_node::footprint_expr_node(const char t, const size_t s) :
-		type(t), nodes(s), params() { }
+#if REUSE_RTE_FOOTPRINT_EXPR
+		parent_type(t, s),
+#else
+		type(t), nodes(s),
+#endif
+		params() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0 && REUSE_RTE_FOOTPRINT_EXPR
+footprint_expr_node::footprint_expr_node(const parent_type& p) :
+		parent_type(p), params() { }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -883,6 +899,9 @@ void
 footprint_expr_node::collect_transient_info_base(
 		persistent_object_manager& m) const {
 	STACKTRACE_PERSISTENT_VERBOSE;
+#if REUSE_RTE_FOOTPRINT_EXPR
+	parent_type::collect_transient_info_base(m);	// no-op
+#endif
 	if (type == PRS_LITERAL_TYPE_ENUM) {
 		m.collect_pointer_list(params);
 	} else	INVARIANT(params.empty());
@@ -905,8 +924,12 @@ void
 footprint_expr_node::write_object_base(const persistent_object_manager& m,
 		ostream& o) const {
 	STACKTRACE_PERSISTENT_VERBOSE;
+#if REUSE_RTE_FOOTPRINT_EXPR
+	parent_type::write_object_base(m, o);
+#else
 	write_value(o, type);
 	write_array(o, nodes);
+#endif
 	if (type == PRS_LITERAL_TYPE_ENUM) {
 		m.write_pointer_list(o, params);
 	} else	INVARIANT(params.empty());
@@ -927,10 +950,14 @@ void
 footprint_expr_node::load_object_base(const persistent_object_manager& m,
 		istream& i) {
 	STACKTRACE_PERSISTENT_VERBOSE;
+#if REUSE_RTE_FOOTPRINT_EXPR
+	parent_type::load_object_base(m, i);
+#else
 	read_value(i, type);
 	read_sequence_prealloc(i, nodes);
 	STACKTRACE_PERSISTENT_PRINT("at " << this << ":" << endl);
 	STACKTRACE_PERSISTENT_PRINT("nodes size = " << nodes.size() << endl);
+#endif
 	if (type == PRS_LITERAL_TYPE_ENUM) {
 		m.read_pointer_list(i, params);
 	}
