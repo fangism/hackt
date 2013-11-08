@@ -1,0 +1,15 @@
+Fanins of node `z':
+(from [top-level]):
+	z = x | y
+Fanins of node `z':
+(from [top-level]):
+	z:X = x:X | y:X<X>
+Fanins of node `z':
+(from [top-level]):
+	z:X = x:0 | y:X<X>
+Fanins of node `z':
+(from [top-level]):
+	z:1 = x:1 | y:X<1>
+Fanins of node `z':
+(from [top-level]):
+	z:0 = x:0 | y:0<0>
