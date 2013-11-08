@@ -1634,6 +1634,38 @@ prefix_expr::check_prs_expr(context& c) const {
 	return prs_expr_return_type(new entity::PRS::not_expr(pe));
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Checks for logical-NOT for RTE.  
+ */
+rte_expr_return_type
+prefix_expr::check_rte_expr(context& c) const {
+	rte_expr_return_type pe(e->check_rte_expr(c));
+	if (!pe) {
+		cerr << "ERROR resolving atomic expr at " << where(*e) <<
+			"." << endl;
+		THROW_EXIT;		// for now
+	}
+	if (op->text[0] != '!') {
+		ICE(cerr, 
+			cerr << "FATAL: Invalid unary operator: \'" <<
+			op->text[0] << "\' at " << where(*op) <<
+			".  Aborting... have a nice day." << endl;
+		);
+	}
+	// intercept internal node
+	typedef	entity::RTE::literal		literal_type;
+	const count_ptr<literal_type>
+		lit(pe.is_a<literal_type>());
+	if (lit) {
+		if (lit->is_internal()) {
+			lit->negate_node();
+			return lit;
+		}
+	}
+	return rte_expr_return_type(new entity::RTE::not_expr(pe));
+}
+
 //=============================================================================
 // class member_expr method definitions
 
