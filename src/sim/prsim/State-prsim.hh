@@ -241,7 +241,7 @@ private:
 	/**
 		Return codes for set_node_time.  
 	 */
-	enum {
+	enum enqueue_status {
 		ENQUEUE_ACCEPT = 0,
 		ENQUEUE_WARNING = 1,
 		ENQUEUE_REJECT = 2,
@@ -252,7 +252,7 @@ private:
 		Simulation flags, bit fields, corresponding the
 		the flags member.  
 	 */
-	enum {
+	enum simulation_flags {
 		/**
 			Allow unstable events to be dropped off queue
 			instead of propagating unknowns.  
@@ -413,7 +413,7 @@ private:
 	 */
 	typedef	error_policy_enum			break_type;
 
-	enum {
+	enum timing_enum {
 		/**
 			Uses per-rule after-delays.  
 			These can be manually annotated or
