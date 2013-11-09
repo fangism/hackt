@@ -70,6 +70,63 @@ print_watched_node(ostream& o, const State& s,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Actions to print feedback after an event.  
+	\param ni node that just changed in event.
+	\param i number of steps remaining, or 0 if not applicable.
+	\return true if node was a breakpoint.
+ */
+bool
+post_event_messages(ostream& o, const State& s, 
+		const step_return_type& ni, const size_t i) {
+	const time_type ct(s.time());
+	const node_type& n(s.get_node(GET_NODE(ni)));
+	/***
+		The following code should be consistent with
+		Cycle::main() and Advance::main().
+		tracing stuff here later...
+	***/
+	if (s.watching_all_nodes()
+#if USE_WATCHPOINT_FLAG
+		|| n.is_watchpoint()
+#endif
+		) {
+		format_ostream_ref(o << '\t', s.time_fmt)
+			<< ct << '\t';
+		print_watched_node(o, s, ni);
+	}
+if (n.is_breakpoint()) {
+#if !USE_WATCHPOINT_FLAG
+	// this includes watchpoints
+	const bool w = s.is_watching_node(GET_NODE(ni));
+	if (w) {
+	if (!s.watching_all_nodes()) {
+		print_watched_node(o << '\t' << ct << '\t',
+			s, ni);
+	}       // else already have message from before
+	}
+	// channel support
+	if (!w) {
+#endif
+		const string nodename(s.get_node_canonical_name(GET_NODE(ni)));
+		// node is plain breakpoint
+		o << "\t*** break, ";
+		if (i) {
+			o << i << " steps left: ";
+		}
+		o << "`" << nodename << "\' became ";
+		format_ostream_ref(
+		n.dump_value(o) << " at time ", s.time_fmt)
+			<< ct << endl;
+		return true;
+#if !USE_WATCHPOINT_FLAG
+	}
+#endif
+}
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	\param s the simulator state
 	\param stop_time the max time to stop and return
 	\param show_break true to print extra breakpoint message

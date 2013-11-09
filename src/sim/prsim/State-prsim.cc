@@ -22,6 +22,7 @@
 #include <string>
 #include <set>
 #include "sim/prsim/State-prsim.tcc"
+#include "sim/prsim/Command-prsim-export.hh"
 #include "sim/prsim/ExprAlloc.hh"
 #include "sim/prsim/Trace-prsim.hh"
 #include "sim/prsim/VCDManager.hh"
