@@ -810,21 +810,12 @@ if (re_entry) {
 	const value_enum val = n.current_value();
 	if ((!init || (val != LOGIC_OTHER)) &&
 		(prsim_state->watching_all_nodes()
-#if USE_WATCHPOINT_FLAG
 			|| prsim_state->is_watching_node(GET_NODE(nr))
-#endif
 			)) {
 		format_time(cout << "prsim:\t") << prsim_time << '\t';
 		print_watched_node(cout, *prsim_state, nr);
 	}
     if (n.is_breakpoint()) {
-#if !USE_WATCHPOINT_FLAG
-	if (prsim_state->is_watching_node(GET_NODE(nr)) &&
-			!prsim_state->watching_all_nodes()) {
-		format_time(cout << "prsim:\t") << prsim_time << '\t';
-		print_watched_node(cout, *prsim_state, nr);
-	}
-#endif
     if (n_space != n_end) {
 	STACKTRACE("breakpt && registered");
 	STACKTRACE_INDENT_PRINT("node: " <<

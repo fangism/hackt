@@ -399,9 +399,6 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 		default_after_min(time_traits::zero), 
 		default_after_max(time_traits::zero), 
 		timing_probability(0.5),
-#if !USE_WATCHPOINT_FLAG
-		watch_list(), 
-#endif
 		_channel_manager(), 
 		trace_manager(),
 		trace_flush_interval(1L<<16),
@@ -1960,22 +1957,9 @@ State::dump_breakpoints(ostream& o) const {
 	for (++i; i!=e; ++i) {
 	if (i->is_breakpoint()) {
 		const node_index_type ni = distance(b, i);
-#if USE_WATCHPOINT_FLAG
 		if (i->is_breakpoint()) {
 			dump_node_canonical_name(o, ni) << ' ';
 		}
-#else
-		const watch_list_type::const_iterator
-			f(watch_list.find(ni));
-		/**
-			If not found in the watchlist, or
-			is found and also flagged as breakpoint, 
-			then we have a true breakpoint.  
-		 */
-		if (f == watch_list.end() || f->second.breakpoint) {
-			dump_node_canonical_name(o, ni) << ' ';
-		}
-#endif
 	}	// end if is_breakpoint
 	}	// end for-all nodes
 	return o << endl;
@@ -4600,14 +4584,7 @@ void
 State::watch_node(const node_index_type ni) {
 	// this will create an entry if doesn't already exist
 	node_type& n(__get_node(ni));
-#if USE_WATCHPOINT_FLAG
 	n.set_watchpoint();
-#else
-	watch_entry& w(watch_list[ni]);
-	// remember whether or not this is a breakpoint or a watchpoint
-	w.breakpoint = n.is_breakpoint();
-	n.set_breakpoint();
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -4618,32 +4595,14 @@ State::watch_node(const node_index_type ni) {
  */
 void
 State::unwatch_node(const node_index_type ni) {
-#if USE_WATCHPOINT_FLAG
 	node_type& n(__get_node(ni));
 	n.clear_watchpoint();
-#else
-	typedef	watch_list_type::iterator		iterator;
-	iterator i(watch_list.find(ni));	// won't add an element
-	if (i != watch_list.end()) {
-		node_type& n(__get_node(ni));
-		if (i->second.breakpoint) {
-			n.set_breakpoint();
-		} else {
-			n.clear_breakpoint();
-		}
-		watch_list.erase(i);
-	}
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 State::is_watching_node(const node_index_type ni) const {
-#if USE_WATCHPOINT_FLAG
 	return get_node(ni).is_watchpoint();
-#else
-	return (watch_list.find(ni) != watch_list.end());
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -4652,25 +4611,11 @@ State::is_watching_node(const node_index_type ni) const {
  */
 void
 State::unwatch_all_nodes(void) {
-#if USE_WATCHPOINT_FLAG
 	typedef	node_pool_type::iterator		iterator;
 	iterator i(node_pool.begin()), e(node_pool.end());
 	for (++i; i!=e; ++i) {
 		i->clear_watchpoint();
 	}
-#else
-	typedef	watch_list_type::const_iterator		const_iterator;
-	const_iterator i(watch_list.begin()), e(watch_list.end());
-	for ( ; i!=e; ++i) {
-		node_type& n(__get_node(i->first));
-		if (i->second.breakpoint) {
-			n.set_breakpoint();
-		} else {
-			n.clear_breakpoint();
-		}
-	}
-	watch_list.clear();
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -4682,7 +4627,6 @@ State::unwatch_all_nodes(void) {
 ostream&
 State::dump_watched_nodes(ostream& o) const {
 	o << "watched nodes: ";
-#if USE_WATCHPOINT_FLAG
 	typedef	node_pool_type::const_iterator		const_iterator;
 	const_iterator i(node_pool.begin()), e(node_pool.end());
 	for (++i; i!=e; ++i) {
@@ -4690,13 +4634,6 @@ State::dump_watched_nodes(ostream& o) const {
 		dump_node_canonical_name(o, *i) << ' ';
 	}
 	}
-#else
-	typedef	watch_list_type::const_iterator		const_iterator;
-	const_iterator i(watch_list.begin()), e(watch_list.end());
-	for (; i!=e; ++i) {
-		dump_node_canonical_name(o, i->first) << ' ';
-	}
-#endif
 	return o << endl;
 }
 
@@ -6952,14 +6889,6 @@ State::dump_memory_usage(ostream& o) const {
 	o << "chk-excllo::nodes: (" << lc << " * " << sizeof(node_index_type) <<
 		" B/node) = " << lc * sizeof(node_index_type) << " B" << endl;
 }{
-#if !USE_WATCHPOINT_FLAG
-	typedef	watch_list_type::value_type		value_type;
-	const size_t ws = watch_list.size();
-	o << "watch-list: ("  << ws << " * " <<
-		sizeof_tree_node(value_type) << " B/node) = " <<
-		ws * sizeof_tree_node(value_type) << " B" << endl;
-#endif
-}{
 	// smaller stuff
 	// expr_trace_type __scratch_expr_trace
 	// fanout_array_type __shuffle_indices
@@ -7069,18 +6998,6 @@ State::save_checkpoint(ostream& o) const {
 	write_value(o, default_after_max);
 	write_value(o, timing_probability);
 	WRITE_ALIGN_MARKER
-{
-#if !USE_WATCHPOINT_FLAG
-	// watch_list? yes, because needs to be kept consistent with nodes
-	typedef	watch_list_type::const_iterator		const_iterator;
-	write_value(o, watch_list.size());
-	const_iterator i(watch_list.begin()), e(watch_list.end());
-	for ( ; i!=e; ++i) {
-		write_value(o, i->first);
-		i->second.save_state(o);
-	}
-#endif
-}
 	WRITE_ALIGN_MARKER
 	write_value(o, flags_type(flags & FLAGS_CHECKPOINT_MASK));
 	write_value(o, unstable_policy);
@@ -7273,18 +7190,6 @@ try {
 	read_value(i, default_after_max);
 	read_value(i, timing_probability);
 	READ_ALIGN_MARKER
-{
-#if !USE_WATCHPOINT_FLAG
-	// watch_list? yes, because needs to be kept consistent with nodes
-	size_t s;
-	read_value(i, s);
-	for ( ; s; --s) {
-		watch_list_type::key_type k;
-		read_value(i, k);
-		watch_list[k].load_state(i);
-	}
-#endif
-}
 	READ_ALIGN_MARKER		// sanity alignment check
 {
 	if (is_tracing()) {
@@ -7450,20 +7355,6 @@ State::dump_checkpoint(ostream& o, istream& i) {
 	o << "default after max: " << default_after_max << endl;
 	o << "binary timing probability: " << timing_probability << endl;
 	READ_ALIGN_MARKER
-{
-#if !USE_WATCHPOINT_FLAG
-	// watch_list? yes, because needs to be kept consistent with nodes
-	size_t s;
-	read_value(i, s);
-	o << "Have " << s << " nodes in watch-list:" << endl;
-	for ( ; s; --s) {
-		watch_list_type::key_type k;
-		read_value(i, k);
-		o << k << '\t';
-		watch_entry::dump_checkpoint_state(o, i) << endl;
-	}
-#endif
-}
 	READ_ALIGN_MARKER		// sanity alignment check
 	flags_type flags;
 	read_value(i, flags);
@@ -7596,30 +7487,6 @@ if (vcd_manager) {
 }
 	stop_vcd();
 }
-
-//=============================================================================
-#if !USE_WATCHPOINT_FLAG
-// struct watch_entry method definitions
-
-void
-watch_entry::save_state(ostream& o) const {
-	write_value(o, breakpoint);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-watch_entry::load_state(istream& i) {
-	read_value(i, breakpoint);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ostream&
-watch_entry::dump_checkpoint_state(ostream& o, istream& i) {
-	char breakpoint;
-	read_value(i, breakpoint);
-	return o << size_t(breakpoint);
-}
-#endif
 
 //=============================================================================
 // explicit class template instantiations

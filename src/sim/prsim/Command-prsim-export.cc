@@ -85,28 +85,12 @@ post_event_messages(ostream& o, const State& s,
 		Cycle::main() and Advance::main().
 		tracing stuff here later...
 	***/
-	if (s.watching_all_nodes()
-#if USE_WATCHPOINT_FLAG
-		|| n.is_watchpoint()
-#endif
-		) {
+	if (s.watching_all_nodes() || n.is_watchpoint()) {
 		format_ostream_ref(o << '\t', s.time_fmt)
 			<< ct << '\t';
 		print_watched_node(o, s, ni);
 	}
-if (n.is_breakpoint()) {
-#if !USE_WATCHPOINT_FLAG
-	// this includes watchpoints
-	const bool w = s.is_watching_node(GET_NODE(ni));
-	if (w) {
-	if (!s.watching_all_nodes()) {
-		print_watched_node(o << '\t' << ct << '\t',
-			s, ni);
-	}       // else already have message from before
-	}
-	// channel support
-	if (!w) {
-#endif
+	if (n.is_breakpoint()) {
 		const string nodename(s.get_node_canonical_name(GET_NODE(ni)));
 		// node is plain breakpoint
 		o << "\t*** break, ";
@@ -118,10 +102,7 @@ if (n.is_breakpoint()) {
 		n.dump_value(o) << " at time ", s.time_fmt)
 			<< ct << endl;
 		return true;
-#if !USE_WATCHPOINT_FLAG
 	}
-#endif
-}
 	return false;
 }
 
@@ -146,30 +127,13 @@ while (!s.stopped_or_fatal() && s.pending_events() &&
 		Cycle::main() and Step::main().
 		TODO: factor this out for maintainability.  
 	***/
-	if (s.watching_all_nodes()
-#if USE_WATCHPOINT_FLAG
-		|| n.is_watchpoint()
-#endif
-			) {
+	if (s.watching_all_nodes() || n.is_watchpoint()) {
 		format_ostream_ref(cout << '\t', s.time_fmt)
 			<< s.time() << '\t';
 		print_watched_node(cout, s, ni);
 	}
 	if (n.is_breakpoint()) {
-#if !USE_WATCHPOINT_FLAG
-		// this includes watchpoints
-		const bool w = s.is_watching_node(GET_NODE(ni));
-		if (w) {
-		if (!s.watching_all_nodes()) {
-			format_ostream_ref(cout << '\t', s.time_fmt)
-				<< s.time() << '\t';
-			print_watched_node(cout, s, ni);
-		}	// else already have message from before
-		}
-		// channel support
-		if (!w) {
-#endif
-			// node is plain breakpoint
+		// node is plain breakpoint
 		if (show_break) {
 			const string nodename(s.get_node_canonical_name(
 				GET_NODE(ni)));
@@ -180,9 +144,6 @@ while (!s.stopped_or_fatal() && s.pending_events() &&
 		}
 			return Command::NORMAL;
 			// or Command::BREAK; ?
-#if !USE_WATCHPOINT_FLAG
-		}
-#endif
 	}
 }	// end while
 	if (!s.stopped() && (s.time() < stop_time)) {
