@@ -284,6 +284,7 @@ react_to_node_event(const State::step_return_type nr, const bool init);
 
 /**
 	Wrapper around set_node, depending on implementation.
+	\param init is true if setting node is happening during initial connection
 	\throw step_exception
  */
 static
@@ -784,6 +785,7 @@ if (cv != vv) {
 	Handles node transition and possible transport back to vcs
 	Also handles printing of watched nodes.
 	if it is a registered breakpoint.
+	\param init is true if setting node is happening during initial connection
 	\return true if hit a breakpoint.
  */
 bool
@@ -802,29 +804,20 @@ if (re_entry) {
 	INVARIANT(ni);
 	const node_type& n(prsim_state->get_node(ni));
 	// const node_index_type m = GET_CAUSE(nr);
-	const vpiHandleMapType::const_iterator
-		n_space(vpiHandleMap.find(ni)),
-		n_end(vpiHandleMap.end());
 	// "n_space" in honor of the abuse of a certain void* PrsNode::*space
 	const Time_t prsim_time = prsim_state->time();
 	const value_enum val = n.current_value();
 	if ((!init || (val != LOGIC_OTHER)) &&
 		(prsim_state->watching_all_nodes()
-#if USE_WATCHPOINT_FLAG
 			|| prsim_state->is_watching_node(GET_NODE(nr))
-#endif
 			)) {
 		format_time(cout << "prsim:\t") << prsim_time << '\t';
 		print_watched_node(cout, *prsim_state, nr);
 	}
     if (n.is_breakpoint()) {
-#if !USE_WATCHPOINT_FLAG
-	if (prsim_state->is_watching_node(GET_NODE(nr)) &&
-			!prsim_state->watching_all_nodes()) {
-		format_time(cout << "prsim:\t") << prsim_time << '\t';
-		print_watched_node(cout, *prsim_state, nr);
-	}
-#endif
+	const vpiHandleMapType::const_iterator
+		n_space(vpiHandleMap.find(ni)),
+		n_end(vpiHandleMap.end());
     if (n_space != n_end) {
 	STACKTRACE("breakpt && registered");
 	STACKTRACE_INDENT_PRINT("node: " <<

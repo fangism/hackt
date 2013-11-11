@@ -23,7 +23,7 @@
 	for force/freeze nodes to certain values.  
 	Goal: 1
 	Rationale: simulate single event upsets.
-	Status: begun
+	Status: begun, tested, stable
  */
 #define	PRSIM_UPSET_NODES		1
 /**
@@ -33,7 +33,7 @@
 	Rationale: fixes bug where breakpoints are masked by watchpoints.
 	Status: done, tested, should be permanent.
  */
-#define	USE_WATCHPOINT_FLAG		1
+// #define	USE_WATCHPOINT_FLAG		1
 
 namespace HAC {
 namespace entity {
@@ -330,12 +330,10 @@ public:
 			This includes watching state.  
 		 */
 		NODE_BREAKPOINT = 0x01,
-#if USE_WATCHPOINT_FLAG
 		/**
 			Flag is set true if this node is being watched.
 		 */
 		NODE_WATCHPOINT = 0x02,
-#endif
 #if !PRSIM_MK_EXCL_BLOCKING_SET
 		/**
 			Whether or not this node is currently in
@@ -500,7 +498,6 @@ public:
 	void
 	clear_event(void) { event_index = INVALID_EVENT_INDEX; }
 
-#if USE_WATCHPOINT_FLAG
 	bool
 	is_watchpoint(void) const { return state_flags & NODE_WATCHPOINT; }
 
@@ -509,7 +506,6 @@ public:
 
 	void
 	clear_watchpoint(void) { state_flags &= ~NODE_WATCHPOINT; }
-#endif
 
 	bool
 	is_breakpoint(void) const { return state_flags & NODE_BREAKPOINT; }

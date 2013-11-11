@@ -861,49 +861,9 @@ if (a.size() > 2) {
 			--i;
 			time = ct;
 		}
-		const node_type& n(s.get_node(GET_NODE(ni)));
-		/***
-			The following code should be consistent with
-			Cycle::main() and Advance::main().
-			tracing stuff here later...
-		***/
-		if (s.watching_all_nodes()
-#if USE_WATCHPOINT_FLAG
-			|| n.is_watchpoint()
-#endif
-			) {
-			format_ostream_ref(cout << '\t', s.time_fmt)
-				<< ct << '\t';
-			print_watched_node(cout, s, ni);
-		}
-		if (n.is_breakpoint()) {
-#if !USE_WATCHPOINT_FLAG
-			// this includes watchpoints
-			const bool w = s.is_watching_node(GET_NODE(ni));
-			if (w) {
-			if (!s.watching_all_nodes()) {
-				print_watched_node(cout << '\t' << ct << '\t',
-					s, ni);
-			}	// else already have message from before
-			}
-			// channel support
-			if (!w) {
-#endif
-				const string nodename(
-					s.get_node_canonical_name(GET_NODE(ni)));
-				// node is plain breakpoint
-				cout << "\t*** break, " << i <<
-					" steps left: `" << nodename <<
-					"\' became ";
-				format_ostream_ref(
-				n.dump_value(cout) <<
-					" at time ", s.time_fmt)
-						<< s.time() << endl;
-				return Command::NORMAL;
-				// or Command::BREAK; ?
-#if !USE_WATCHPOINT_FLAG
-			}
-#endif
+		if (post_event_messages(cout, s, ni, i)) {
+			return Command::NORMAL;
+			// break?
 		}
 	}	// end while
 	if (s.is_fatal()) {
@@ -951,52 +911,8 @@ step_event_main(State& s, size_t i) {
 	State::step_return_type ni;	// also stores the cause of the event
 	while (!s.stopped_or_fatal() && i && GET_NODE((ni = s.step()))) {
 		--i;
-		// NB: may need specialization for real-valued (float) time.  
-		const time_type ct(s.time());
-		const node_type& n(s.get_node(GET_NODE(ni)));
-		/***
-			The following code should be consistent with
-			Cycle::main() and Advance::main().
-			tracing stuff here later...
-		***/
-		if (s.watching_all_nodes()
-#if USE_WATCHPOINT_FLAG
-			|| n.is_watchpoint()
-#endif
-				) {
-			format_ostream_ref(cout << '\t', s.time_fmt)
-				<< ct << '\t';
-			print_watched_node(cout, s, ni);
-		}
-		if (n.is_breakpoint()) {
-#if !USE_WATCHPOINT_FLAG
-			// this includes watchpoints
-			const bool w = s.is_watching_node(GET_NODE(ni));
-			if (w) {
-			if (!s.watching_all_nodes()) {
-				format_ostream_ref(cout << '\t', s.time_fmt)
-					<< ct << '\t';
-				print_watched_node(cout, s, ni);
-			}	// else already have message from before
-			}
-			// channel support
-			if (!w) {
-#endif
-				const string nodename(
-					s.get_node_canonical_name(GET_NODE(ni)));
-				// node is plain breakpoint
-				cout << "\t*** break, " << i <<
-					" steps left: `" << nodename <<
-					"\' became ";
-				format_ostream_ref(
-				n.dump_value(cout) <<
-					" at time ", s.time_fmt)
-						<< s.time() << endl;
-				return Command::NORMAL;
-				// or Command::BREAK; ?
-#if !USE_WATCHPOINT_FLAG
-			}
-#endif
+		if (post_event_messages(cout, s, ni, i)) {
+			return Command::NORMAL;
 		}
 	}	// end while
 	if (s.is_fatal()) {
@@ -1106,48 +1022,8 @@ if (a.size() != 1) {
 	while (!s.stopped_or_fatal() && GET_NODE((ni = s.step()))) {
 		if (!GET_NODE(ni))
 			return Command::NORMAL;
-		const node_type& n(s.get_node(GET_NODE(ni)));
-		/***
-			The following code should be consistent with
-			Step::main() and Advance::main().
-		***/
-		if (s.watching_all_nodes()
-#if USE_WATCHPOINT_FLAG
-			|| n.is_watchpoint()
-#endif
-				) {
-			format_ostream_ref(cout << '\t', s.time_fmt)
-				<< s.time() << '\t';
-			print_watched_node(cout, s, ni);
-		}
-		if (n.is_breakpoint()) {
-#if !USE_WATCHPOINT_FLAG
-			// this includes watchpoints
-			const bool w = s.is_watching_node(GET_NODE(ni));
-			if (w) {
-			if (!s.watching_all_nodes()) {
-				format_ostream_ref(cout << '\t', s.time_fmt)
-					<< s.time() << '\t';
-				print_watched_node(cout, s, ni);
-			}	// else already have message from before
-			}
-			// channel support
-			if (!w) {
-#endif
-				const string nodename(s.get_node_canonical_name(
-					GET_NODE(ni)));
-				// node is plain breakpoint
-				cout << "\t*** break, `" << nodename <<
-					"\' became ";
-				format_ostream_ref(
-				n.dump_value(cout) <<
-					" at time ", s.time_fmt)
-						<< s.time() << endl;
-				return Command::NORMAL;
-				// or Command::BREAK; ?
-#if !USE_WATCHPOINT_FLAG
-			}
-#endif
+		if (post_event_messages(cout, s, ni, 0)) {
+			return Command::NORMAL;
 		}
 	}	// end while (!s.stopped_or_fatal())
 	if (s.is_fatal()) {
@@ -1342,21 +1218,7 @@ if (asz != 3) {
 		}
 		const State::step_return_type
 			r(s.set_node_immediately(ni, val, false));
-		const node_type& n(s.get_node(GET_NODE(r)));
-		/***
-			The following code should be consistent with
-			Cycle::main() and Advance::main().
-			tracing stuff here later...
-		***/
-		if (s.watching_all_nodes()
-#if USE_WATCHPOINT_FLAG
-			|| n.is_watchpoint()
-#endif
-			) {
-			format_ostream_ref(cout << '\t', s.time_fmt)
-				<< s.time() << '\t';
-			print_watched_node(cout, s, r);
-		}
+		post_event_messages(cout, s, r, 0);
 		// ignore breakpoints?
 		// handle exceptions
 		if (s.is_fatal()) {
