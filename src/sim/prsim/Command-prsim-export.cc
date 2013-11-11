@@ -15,7 +15,14 @@ namespace HAC {
 namespace SIM {
 namespace PRSIM {
 #include "util/using_ostream.hh"
-using util::format_ostream_ref;
+
+// for convenient time formatting
+static
+inline
+util::format_ostream_ref
+format_time(ostream& o, const State& s) {
+        return util::format_ostream_ref(o, s.time_fmt);
+}
 
 /**
 	Yeah, I know looking up already looked up node, but we don't
@@ -86,8 +93,7 @@ post_event_messages(ostream& o, const State& s,
 		tracing stuff here later...
 	***/
 	if (s.watching_all_nodes() || n.is_watchpoint()) {
-		format_ostream_ref(o << '\t', s.time_fmt)
-			<< ct << '\t';
+		format_time(o << '\t', s) << ct << '\t';
 		print_watched_node(o, s, ni);
 	}
 	if (n.is_breakpoint()) {
@@ -98,9 +104,7 @@ post_event_messages(ostream& o, const State& s,
 			o << i << " steps left: ";
 		}
 		o << "`" << nodename << "\' became ";
-		format_ostream_ref(
-		n.dump_value(o) << " at time ", s.time_fmt)
-			<< ct << endl;
+		format_time(n.dump_value(o) << " at time ", s) << ct << endl;
 		return true;
 	}
 	return false;
@@ -128,8 +132,7 @@ while (!s.stopped_or_fatal() && s.pending_events() &&
 		TODO: factor this out for maintainability.  
 	***/
 	if (s.watching_all_nodes() || n.is_watchpoint()) {
-		format_ostream_ref(cout << '\t', s.time_fmt)
-			<< s.time() << '\t';
+		format_time(cout << '\t', s) << s.time() << '\t';
 		print_watched_node(cout, s, ni);
 	}
 	if (n.is_breakpoint()) {
@@ -137,7 +140,7 @@ while (!s.stopped_or_fatal() && s.pending_events() &&
 		if (show_break) {
 			const string nodename(s.get_node_canonical_name(
 				GET_NODE(ni)));
-			format_ostream_ref(cout << "\t*** break, ", s.time_fmt)
+			format_time(cout << "\t*** break, ", s)
 				<< (stop_time -s.time()) <<
 				" time left: `" << nodename << "\' became ";
 			n.dump_value(cout) << endl;
