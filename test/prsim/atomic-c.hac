@@ -1,0 +1,35 @@
+// "atomic-c.hac"
+defproc atomic_xor(bool? a, b; bool! c) {
+a @ [atomic];
+b @ [atomic];
+c @ [atomic];
+rte {
+c = (a && !b) || (!a && b);
+}
+}
+
+template <pint N>
+defproc atomic_xor_chain(bool? x, y; bool! z) {
+x @[atomic];
+y @[atomic];
+z @[atomic];
+atomic_xor H[N];
+bool t[N+1];
+t @[atomic];
+t[0] = x;
+t[N] = z;
+(;i:N:
+	H[i](t[i], y, t[i+1]);
+)
+}
+
+bool x, y, z;
+x @[atomic];
+y @[atomic];
+z @[atomic];
+atomic_xor_chain<2> C(x, y, z);
+bool a, b;
+rte {
+	x = a;
+	y = b;
+}

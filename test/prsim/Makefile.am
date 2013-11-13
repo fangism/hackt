@@ -108,7 +108,7 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	pcehb-test-b pcefb-test-b \
 	power-supplies-a power-supplies-b power-supplies-c power-supplies-d \
 	power-supplies-e power-supplies-f \
-	atomic-a atomic-b
+	atomic-a atomic-b atomic-c
 
 # TODO: more cross-coupled test cases
 # SRAM cell

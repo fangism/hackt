@@ -146,10 +146,10 @@ footprint: {
   bar = process foo<>^0 = bar (1) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    x = bool^0 = bar.x (3) @[ atomic ] 
-    y = bool^0 = bar.y (4) @[ atomic ] 
-    w = bool^0 = bar.w (5) @[ atomic ] 
-    z = bool^0 = bar.z (6) 
+    x = bool^0 = bar.x (3) @[ atomic sub-def ] 
+    y = bool^0 = bar.y (4) @[ atomic sub-use ] 
+    w = bool^0 = bar.w (5) @[ atomic sub-def ] 
+    z = bool^0 = bar.z (6) @[ sub-use ] 
   )
   Created state:
   process instance pool: (0 ports, 1 local, 0 mapped)
@@ -158,8 +158,8 @@ footprint: {
   bool instance pool: (0 ports, 6 local, 0 mapped)
   1	!GND @[ supply_low ]	
   2	!Vdd @[ supply_high ]	
-  3	bar.x @[ atomic ]	
-  4	bar.y @[ atomic ]	
-  5	bar.w @[ atomic ]	
-  6	bar.z	
+  3	bar.x @[ atomic sub-def ]	
+  4	bar.y @[ atomic sub-use ]	
+  5	bar.w @[ atomic sub-def ]	
+  6	bar.z @[ sub-use ]	
 }

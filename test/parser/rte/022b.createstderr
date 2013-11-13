@@ -145,16 +145,16 @@ footprint: {
   bar = process foo<>^0 = bar (1) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    x = bool^0 = bar.x (3) @[ atomic ] 
-    y = bool^0 = w (4) @[ atomic loc-def ] 
+    x = bool^0 = bar.x (3) @[ atomic sub-use sub-def ] 
+    y = bool^0 = w (4) @[ atomic loc-def sub-use ] 
   )
   baz = process foo<>^0 = baz (2) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-    x = bool^0 = baz.x (5) @[ atomic ] 
-    y = bool^0 = bar.x (3) @[ atomic ] 
+    x = bool^0 = baz.x (5) @[ atomic sub-def ] 
+    y = bool^0 = bar.x (3) @[ atomic sub-use sub-def ] 
   )
-  w = bool^0 = w (4) @[ atomic loc-def ] 
+  w = bool^0 = w (4) @[ atomic loc-def sub-use ] 
   z = bool^0 = z (6) @[ loc-use ] 
   Created state:
   process instance pool: (0 ports, 2 local, 0 mapped)
@@ -165,9 +165,9 @@ footprint: {
   bool instance pool: (0 ports, 6 local, 0 mapped)
   1	!GND @[ supply_low ]	
   2	!Vdd @[ supply_high ]	
-  3	bar.x @[ atomic ]	
-  4	w @[ atomic loc-def ]	
-  5	baz.x @[ atomic ]	
+  3	bar.x @[ atomic sub-use sub-def ]	
+  4	w @[ atomic loc-def sub-use ]	
+  5	baz.x @[ atomic sub-def ]	
   6	z @[ loc-use ]	
   resolved rte:
   w = z

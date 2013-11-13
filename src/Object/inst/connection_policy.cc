@@ -141,6 +141,11 @@ bool_connect_policy::initialize_actual_direction(const this_type& t) {
 		attributes |= BOOL_SUBSTRUCT_FANIN_PULL_DN;
 	if (t.attributes & BOOL_ANY_FANIN_PULL_UP)
 		attributes |= BOOL_SUBSTRUCT_FANIN_PULL_UP;
+	// for atomic attributes
+	if (t.attributes & BOOL_ANY_RTE_FANOUT)
+		attributes |= BOOL_SUBSTRUCT_RTE_FANOUT;
+	if (t.attributes & BOOL_ANY_RTE_FANIN)
+		attributes |= BOOL_SUBSTRUCT_RTE_FANIN;
 #if ENABLE_STACKTRACE
 	dump_raw_attributes(STACKTRACE_INDENT_PRINT("after: ")) << endl;
 #endif
