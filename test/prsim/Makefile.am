@@ -108,7 +108,7 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	pcehb-test-b pcefb-test-b \
 	power-supplies-a power-supplies-b power-supplies-c power-supplies-d \
 	power-supplies-e power-supplies-f \
-	atomic-a
+	atomic-a atomic-b
 
 # TODO: more cross-coupled test cases
 # SRAM cell
@@ -494,7 +494,8 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	power-supplies-c-01 power-supplies-d-01 \
 	power-supplies-e-01 power-supplies-f-01 \
 	x-all-01 x-all-02 x-all-03 x-all-04 x-all-05 \
-	atomic-a-03 atomic-a-05
+	atomic-a-03 atomic-a-05 \
+	atomic-b-01
 
 # subset of prsimrc test that we wish to compare traces against regressions
 HACKT_PRSIMTRACE_TEST_SUBJECTS = \
@@ -538,7 +539,8 @@ HACKT_PRSIMTRACE_TEST_SUBJECTS = \
 	SRAM-d-01 SRAM-d-02 \
 	stuck-bug-a-01 \
 	unstable-a-01 unstable-b-01 \
-	x-all-01
+	x-all-01 \
+	atomic-b-01
 
 # prsimtrace test crashes: FIXME!!!
 # logic-defs-a-01 logic-defs-b-01

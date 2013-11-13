@@ -814,6 +814,9 @@ if (re_entry) {
 		format_time(cout << "prsim:\t") << prsim_time << '\t';
 		print_watched_node(cout, *prsim_state, nr);
 	}
+    if (prsim_state->have_atomic_updates()) {
+	prsim_state->print_watched_atomic_updated_nodes(cout);
+    } 
     if (n.is_breakpoint()) {
 	const vpiHandleMapType::const_iterator
 		n_space(vpiHandleMap.find(ni)),

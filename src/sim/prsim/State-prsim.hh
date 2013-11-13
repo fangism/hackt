@@ -515,7 +515,7 @@ protected:
 	 */
 	typedef	std::map<event_index_type, time_type>
 						mk_excl_queue_type;
-public:
+protected:
 	struct node_update_info {
 		rule_index_type			rule_index;
 #if EVENT_INCLUDE_RULE_POINTER
@@ -546,6 +546,15 @@ public:
 	typedef	map<node_index_type, node_update_info>
 #endif
 						updated_nodes_type;
+protected:
+	/**
+		key: (possibly) updated node index
+		value: old value
+		If the old value matches new value, don't print.
+		This can happen if atomic updates form a DAG.
+	 */
+	typedef	map<node_index_type, value_enum>	
+						atomic_updated_nodes_type;
 protected:
 #if PRSIM_FCFS_UPDATED_NODES
 	/**
@@ -772,6 +781,15 @@ public:
 	// for formatting timestamps
 	util::numformat				time_fmt;
 private:
+	/**
+		For aggregating multiple atomic updated nodes b/c
+		a single step may result in multiple atomic updates.
+		This is really intended for printing watched nodes.
+		FIXME: this is currently un-ordered.
+		To reconstruct a causality-preserving ordering,
+		we'd need to traverse the update-DAG.
+	 */
+	atomic_updated_nodes_type		__atomic_updated_nodes;
 	/**
 		Multiple exceptions are kept here.
 		This is cleared every time a step() is begun.
@@ -1386,6 +1404,14 @@ public:
 	ostream&
 	print_status_frozen(ostream&, const bool) const;
 #endif
+
+	bool
+	have_atomic_updates(void) const {
+		return !__atomic_updated_nodes.empty();
+	}
+
+	ostream&
+	print_watched_atomic_updated_nodes(ostream&) const;
 
 	bool
 	dequeue_unstable_events(void) const {

@@ -428,6 +428,7 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 		timing_mode(TIMING_DEFAULT),
 		_dump_flags(dump_flags::no_owners), 
 		time_fmt(cout),
+		__atomic_updated_nodes(),
 		recent_exceptions(),
 		__shuffle_indices(0) {
 #if PRSIM_MAP_FAST_ALLOCATOR
@@ -3363,6 +3364,7 @@ State::step_return_type
 State::step(void) THROWS_STEP_EXCEPTION {
 	typedef	State::step_return_type		return_type;
 	STACKTRACE_VERBOSE;
+	__atomic_updated_nodes.clear();
 	if (event_queue.empty()) {
 		return return_type(INVALID_NODE_INDEX, INVALID_NODE_INDEX);
 	}
@@ -3953,6 +3955,9 @@ if (UNLIKELY(n.is_atomic())) {
 	// iterate over fanout here and enqueue into worklist
 	// update this node's value immediately and evaluate its fanouts
 	// yes, interpret pull_enum as value_enum
+	__atomic_updated_nodes.insert(std::make_pair(oni, n.current_value()));
+	// ignore return value, first old-value is the correct one,
+	// in case multiple paths lead to updating the same node.
 }
 	fanin_state_type& fs(n.get_pull_struct(dir
 #if PRSIM_WEAK_RULES
@@ -4853,6 +4858,40 @@ State::print_status_frozen(ostream& o, const bool v) const {
 	return o << std::flush;
 }
 #endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+State::print_watched_atomic_updated_nodes(ostream& o) const {
+	atomic_updated_nodes_type::const_iterator
+		i(__atomic_updated_nodes.begin()),
+		e(__atomic_updated_nodes.end());
+for ( ; i!=e; ++i) {
+	const node_type& n(get_node(i->first));
+	if (n.is_watchpoint() || watching_all_nodes()) {
+	if (n.current_value() != i->second) {
+		const string nodename(get_node_canonical_name(i->first));
+		format_ostream_ref(o << '\t', time_fmt) << time() << '\t';
+		n.dump_value(o << nodename << " : ");
+	// FIXME: causality tracking for atomic nodes and expressions
+#if 0
+		const node_index_type ci = GET_CAUSE(r);
+		if (ci && s.show_cause()) {
+			const string causename(s.get_node_canonical_name(ci));
+			const State::node_type& c(s.get_node(ci));
+			c.dump_value(o << "\t[by " << causename << ":=") << ']';
+		}
+		if (s.show_tcounts()) {
+			o << "\t(" << n.tcount << " T)";
+		}
+#else
+		o << "\t<atomic>";
+#endif
+		o << endl;
+	}
+	}
+}
+	return o;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

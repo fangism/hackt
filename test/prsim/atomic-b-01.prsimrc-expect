@@ -1,0 +1,65 @@
+--------- 
+	0	a : 0
+	0	d : 0	<atomic>
+	0	f : 1	<atomic>
+--------- 
+	0	a : 1
+	0	c : 1	<atomic>
+	0	d : X	<atomic>
+	0	e : 0	<atomic>
+	0	f : X	<atomic>
+--------- 
+	0	a : X
+	0	c : X	<atomic>
+	0	e : X	<atomic>
+--------- 
+	0	b : 1
+	0	c : 1	<atomic>
+	0	e : 0	<atomic>
+--------- 
+	0	b : 0
+	0	c : X	<atomic>
+	0	d : 0	<atomic>
+	0	e : X	<atomic>
+	0	f : 1	<atomic>
+--------- 
+	0	b : X
+	0	d : X	<atomic>
+	0	f : X	<atomic>
+========= 
+	0	a : 0
+	0	d : 0	<atomic>
+	0	f : 1	<atomic>
+	0	b : 0
+	0	c : 0	<atomic>
+	0	e : 1	<atomic>
+	0	g : 1	<atomic>
+	0	h : 0	<atomic>
+--------- 
+	0	b : 1
+	0	c : 1	<atomic>
+	0	e : 0	<atomic>
+	0	g : 0	<atomic>
+	0	h : 1	<atomic>
+--------- 
+	0	a : 1
+	0	d : 1	<atomic>
+	0	f : 0	<atomic>
+	0	g : 1	<atomic>
+	0	h : 0	<atomic>
+--------- 
+	0	b : 0
+	0	d : 0	<atomic>
+	0	f : 1	<atomic>
+	0	g : 0	<atomic>
+	0	h : 1	<atomic>
+--------- 
+	0	b : X
+	0	d : X	<atomic>
+	0	f : X	<atomic>
+	0	g : X	<atomic>
+	0	h : X	<atomic>
+	0	a : X
+	0	c : X	<atomic>
+	0	e : X	<atomic>
+--------- 
