@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2013-11-13	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-86-53-run-time-expressions-02:
+	  Implemented why-analysis on atomic-nodes.
+	  Querying why an atomic node is X is the same as querying
+		why-not ~X, due to combinational behavior of atomics.  
+	  previous commits: got atomic node update propagation working.
+		Also able to print atomic updates with watch/watchall.
+
+
 2013-10-23	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-86-53-run-time-expressions-01:

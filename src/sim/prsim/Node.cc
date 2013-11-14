@@ -136,6 +136,7 @@ fanin_state_type::dump_state(ostream& o) const {
 const uchar
 NodeState::value_to_char[3] = { '0', '1', 'X' };
 
+// also used for inverting pull state
 const value_enum
 NodeState::invert_value[3] = { LOGIC_HIGH, LOGIC_LOW, LOGIC_OTHER };
 

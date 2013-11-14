@@ -385,6 +385,7 @@ public:
 public:
 	// also use this as pull_to_char
 	static const uchar		value_to_char[3];
+	// also used for inverting pull state
 	static const value_enum		invert_value[3];
 protected:
 	/**
@@ -756,7 +757,10 @@ struct pull_set {
 	explicit
 	pull_set(const NodeState& n, const bool w) :
 		up(n.pull_up_state STR_INDEX(NORMAL_RULE).pull()),
-		dn(n.pull_dn_state STR_INDEX(NORMAL_RULE).pull())
+		// atomic nodes are implicitly combinational
+		dn(n.is_atomic() ?
+			pull_enum(NodeState::invert_value[up])
+			: n.pull_dn_state STR_INDEX(NORMAL_RULE).pull())
 #if PRSIM_WEAK_RULES
 		, wup(w ? n.pull_up_state STR_INDEX(WEAK_RULE).pull()
 			: PULL_OFF)

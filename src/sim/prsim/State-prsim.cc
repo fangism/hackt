@@ -201,7 +201,7 @@ struct State::evaluate_return_type {
 
 	evaluate_return_type(const node_index_type ni,
 		const root_ex_type* const e, const pull_enum p, 
-		const pull_set ps, 
+		const pull_set& ps, 
 		const rule_type* const r, const rule_index_type ri) :
 		node_index(ni), root_ex(e), root_pull(p)
 			, root_rule(r), root_rule_index(ri)
@@ -5869,7 +5869,11 @@ do {
 /**
 	Why is a node not a certain value?
 	Q: X nodes are not followed?
-	\param d if true, ask why node isn't pulled up, else ... why not down
+	\param dir is value.
+		if true, ask why node isn't pulled up, else ... why not down
+		This is irrelevant to atomic nodes.
+	\param why_not is true if query is negated (why *isn't* node at value?)
+		This is irrelevant to atomic nodes.
 	\param u the current stack of visited nodes, for cycle detection, 
 		is pushed and popped like a stack.
 	\param v the set of all visited nodes, for cross-referencing
@@ -5888,6 +5892,8 @@ State::__node_why_not(ostream& o, const node_index_type ni,
 	n.dump_value(o << auto_indent << nn << ":");
 if (p.second) {
 if (y.second) {
+	// only consider pull-ups for atomics
+//	const bool dir = _dir || n.is_atomic();
 	// inserted uniquely
 	// inspect pull state (and event queue)
 	const event_index_type pe = n.get_event();
@@ -5902,7 +5908,6 @@ if (y.second) {
 			<< endl;
 		// check that pending event's value matches
 	} else {
-		const pull_enum pull_query = why_not ?  PULL_OFF : PULL_ON;
 		const indent __ind_nd(o, verbose ? "." : "  ");
 		// only check for the side that is off
 		const pull_set pp(n, weak_rules_enabled());
@@ -5919,7 +5924,9 @@ if (y.second) {
 			const bool from_channel =
 				node_is_driven_by_channel(ni);
 			if (n.has_fanin() || from_channel) {
-			if (!why_not && !from_channel) {
+			if (n.is_atomic()) {
+				o << ", atomic";
+			} else if (!why_not && !from_channel) {
 				o << ", state-holding";
 			}
 			} else {
@@ -5934,6 +5941,15 @@ if (y.second) {
 		// can't use pi, wpi
 		// unroll fanin rules: iterate over all relevant rules
 		if (!frozen) {
+		const pull_enum pull_query = why_not ? PULL_OFF : PULL_ON;
+		if (n.is_atomic()) {
+		if (ps == pull_query) {
+			// always query the pull-up
+			// for pull-dn query, negate why_not
+			__root_expr_why_not(o, ni, true, NORMAL_RULE, limit,
+				why_not ^ !dir, verbose, u, v);
+		}
+		} else {
 		if (ps == pull_query) {
 			__root_expr_why_not(o, ni, dir, NORMAL_RULE, limit, why_not, verbose, u, v);
 		}
@@ -5942,6 +5958,7 @@ if (y.second) {
 			__root_expr_why_not(o, ni, dir, WEAK_RULE, limit, why_not, verbose, u, v);
 		}
 #endif
+		}	// end if n.is_atomic()
 		if (n.in_channel()) {
 			// ask channel why it has not driven the node
 			_channel_manager.__node_why_not(*this, o, 

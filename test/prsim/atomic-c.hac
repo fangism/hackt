@@ -27,7 +27,7 @@ bool x, y, z;
 x @[atomic];
 y @[atomic];
 z @[atomic];
-atomic_xor_chain<2> C(x, y, z);
+atomic_xor_chain<4> C(x, y, z);
 bool a, b;
 rte {
 	x = a;

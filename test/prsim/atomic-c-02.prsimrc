@@ -1,0 +1,32 @@
+# "atomic-c-02.prsimrc"
+# @haco@ atomic-c.haco-c
+
+watchall
+echo ----------
+why-x-verbose z
+echo ----------
+set a 0
+cycle
+echo ----------
+why-x-verbose z
+echo ----------
+set a X
+set b 0
+cycle
+echo ----------
+why-x-verbose z
+echo ----------
+set a 0
+cycle
+echo ----------
+why-not-verbose z
+echo ----------
+why-verbose z
+echo ----------
+set a 1
+cycle
+echo ----------
+why-not-verbose z
+echo ----------
+why-verbose z
+echo ----------

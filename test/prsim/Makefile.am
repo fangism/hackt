@@ -495,7 +495,8 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	power-supplies-e-01 power-supplies-f-01 \
 	x-all-01 x-all-02 x-all-03 x-all-04 x-all-05 \
 	atomic-a-03 atomic-a-05 \
-	atomic-b-01
+	atomic-b-01 \
+	atomic-c-01 atomic-c-02
 
 # subset of prsimrc test that we wish to compare traces against regressions
 HACKT_PRSIMTRACE_TEST_SUBJECTS = \

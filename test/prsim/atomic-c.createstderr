@@ -138,7 +138,7 @@ Persistent Object Manager text dump:
 	134	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
 	135	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	136	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	137	##ADDR##	footprnt	0	#HEAD#	#TAIL#	809
+	137	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1219
 	138	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	139	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	140	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
@@ -288,49 +288,71 @@ In namespace "", we have: {
           H[$i] ( , , t[$i], y, t[$i+1]);
         )
       footprint collection: {
-        <2> {
-          !GND = bool^0 = atomic_xor_chain<2>::!GND (1) @[ supply_low port-alias ] 
-          !Vdd = bool^0 = atomic_xor_chain<2>::!Vdd (2) @[ supply_high port-alias ] 
+        <4> {
+          !GND = bool^0 = atomic_xor_chain<4>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = atomic_xor_chain<4>::!Vdd (2) @[ supply_high port-alias ] 
           H = process atomic_xor<>^1
             {
-              [0] = atomic_xor_chain<2>::H[0] (1) (
-                !GND = bool^0 = atomic_xor_chain<2>::!GND (1) @[ supply_low port-alias ] 
-                !Vdd = bool^0 = atomic_xor_chain<2>::!Vdd (2) @[ supply_high port-alias ] 
-                a = bool^0 = atomic_xor_chain<2>::x (3) @[ atomic sub-use port? port-alias ] 
-                b = bool^0 = atomic_xor_chain<2>::y (4) @[ atomic sub-use port? port-alias ] 
-                c = bool^0 = atomic_xor_chain<2>::t[1] (6) @[ atomic sub-use sub-def ] 
+              [0] = atomic_xor_chain<4>::H[0] (1) (
+                !GND = bool^0 = atomic_xor_chain<4>::!GND (1) @[ supply_low port-alias ] 
+                !Vdd = bool^0 = atomic_xor_chain<4>::!Vdd (2) @[ supply_high port-alias ] 
+                a = bool^0 = atomic_xor_chain<4>::x (3) @[ atomic sub-use port? port-alias ] 
+                b = bool^0 = atomic_xor_chain<4>::y (4) @[ atomic sub-use port? port-alias ] 
+                c = bool^0 = atomic_xor_chain<4>::t[1] (6) @[ atomic sub-use sub-def ] 
               )
-              [1] = atomic_xor_chain<2>::H[1] (2) (
-                !GND = bool^0 = atomic_xor_chain<2>::!GND (1) @[ supply_low port-alias ] 
-                !Vdd = bool^0 = atomic_xor_chain<2>::!Vdd (2) @[ supply_high port-alias ] 
-                a = bool^0 = atomic_xor_chain<2>::t[1] (6) @[ atomic sub-use sub-def ] 
-                b = bool^0 = atomic_xor_chain<2>::y (4) @[ atomic sub-use port? port-alias ] 
-                c = bool^0 = atomic_xor_chain<2>::z (5) @[ atomic sub-def port! port-alias ] 
+              [1] = atomic_xor_chain<4>::H[1] (2) (
+                !GND = bool^0 = atomic_xor_chain<4>::!GND (1) @[ supply_low port-alias ] 
+                !Vdd = bool^0 = atomic_xor_chain<4>::!Vdd (2) @[ supply_high port-alias ] 
+                a = bool^0 = atomic_xor_chain<4>::t[1] (6) @[ atomic sub-use sub-def ] 
+                b = bool^0 = atomic_xor_chain<4>::y (4) @[ atomic sub-use port? port-alias ] 
+                c = bool^0 = atomic_xor_chain<4>::t[2] (7) @[ atomic sub-use sub-def ] 
+              )
+              [2] = atomic_xor_chain<4>::H[2] (3) (
+                !GND = bool^0 = atomic_xor_chain<4>::!GND (1) @[ supply_low port-alias ] 
+                !Vdd = bool^0 = atomic_xor_chain<4>::!Vdd (2) @[ supply_high port-alias ] 
+                a = bool^0 = atomic_xor_chain<4>::t[2] (7) @[ atomic sub-use sub-def ] 
+                b = bool^0 = atomic_xor_chain<4>::y (4) @[ atomic sub-use port? port-alias ] 
+                c = bool^0 = atomic_xor_chain<4>::t[3] (8) @[ atomic sub-use sub-def ] 
+              )
+              [3] = atomic_xor_chain<4>::H[3] (4) (
+                !GND = bool^0 = atomic_xor_chain<4>::!GND (1) @[ supply_low port-alias ] 
+                !Vdd = bool^0 = atomic_xor_chain<4>::!Vdd (2) @[ supply_high port-alias ] 
+                a = bool^0 = atomic_xor_chain<4>::t[3] (8) @[ atomic sub-use sub-def ] 
+                b = bool^0 = atomic_xor_chain<4>::y (4) @[ atomic sub-use port? port-alias ] 
+                c = bool^0 = atomic_xor_chain<4>::z (5) @[ atomic sub-def port! port-alias ] 
               )
             }
-          N = pint^0 value: 2
+          N = pint^0 value: 4
           t = bool^1
             {
-              [0] = atomic_xor_chain<2>::x (3) @[ atomic sub-use port? port-alias ] 
-              [1] = atomic_xor_chain<2>::t[1] (6) @[ atomic sub-use sub-def ] 
-              [2] = atomic_xor_chain<2>::z (5) @[ atomic sub-def port! port-alias ] 
+              [0] = atomic_xor_chain<4>::x (3) @[ atomic sub-use port? port-alias ] 
+              [1] = atomic_xor_chain<4>::t[1] (6) @[ atomic sub-use sub-def ] 
+              [2] = atomic_xor_chain<4>::t[2] (7) @[ atomic sub-use sub-def ] 
+              [3] = atomic_xor_chain<4>::t[3] (8) @[ atomic sub-use sub-def ] 
+              [4] = atomic_xor_chain<4>::z (5) @[ atomic sub-def port! port-alias ] 
             }
-          x = bool^0 = atomic_xor_chain<2>::x (3) @[ atomic sub-use port? port-alias ] 
-          y = bool^0 = atomic_xor_chain<2>::y (4) @[ atomic sub-use port? port-alias ] 
-          z = bool^0 = atomic_xor_chain<2>::z (5) @[ atomic sub-def port! port-alias ] 
+          x = bool^0 = atomic_xor_chain<4>::x (3) @[ atomic sub-use port? port-alias ] 
+          y = bool^0 = atomic_xor_chain<4>::y (4) @[ atomic sub-use port? port-alias ] 
+          z = bool^0 = atomic_xor_chain<4>::z (5) @[ atomic sub-def port! port-alias ] 
           Created state:
-          process instance pool: (0 ports, 2 local, 0 mapped)
-          1	atomic_xor_chain<2>::H[0]	atomic_xor<>
+          process instance pool: (0 ports, 4 local, 0 mapped)
+          1	atomic_xor_chain<4>::H[0]	atomic_xor<>
             bool: 1,2,3,4,6
-          2	atomic_xor_chain<2>::H[1]	atomic_xor<>
-            bool: 1,2,6,4,5
-          bool instance pool: (5 ports, 1 local, 0 mapped)
-          1	atomic_xor_chain<2>::!GND @[ supply_low port-alias ]	
-          2	atomic_xor_chain<2>::!Vdd @[ supply_high port-alias ]	
-          3	atomic_xor_chain<2>::x @[ atomic sub-use port? port-alias ]	
-          4	atomic_xor_chain<2>::y @[ atomic sub-use port? port-alias ]	
-          5	atomic_xor_chain<2>::z @[ atomic sub-def port! port-alias ]	
-          6	atomic_xor_chain<2>::t[1] @[ atomic sub-use sub-def ]	
+          2	atomic_xor_chain<4>::H[1]	atomic_xor<>
+            bool: 1,2,6,4,7
+          3	atomic_xor_chain<4>::H[2]	atomic_xor<>
+            bool: 1,2,7,4,8
+          4	atomic_xor_chain<4>::H[3]	atomic_xor<>
+            bool: 1,2,8,4,5
+          bool instance pool: (5 ports, 3 local, 0 mapped)
+          1	atomic_xor_chain<4>::!GND @[ supply_low port-alias ]	
+          2	atomic_xor_chain<4>::!Vdd @[ supply_high port-alias ]	
+          3	atomic_xor_chain<4>::x @[ atomic sub-use port? port-alias ]	
+          4	atomic_xor_chain<4>::y @[ atomic sub-use port? port-alias ]	
+          5	atomic_xor_chain<4>::z @[ atomic sub-def port! port-alias ]	
+          6	atomic_xor_chain<4>::t[1] @[ atomic sub-use sub-def ]	
+          7	atomic_xor_chain<4>::t[2] @[ atomic sub-use sub-def ]	
+          8	atomic_xor_chain<4>::t[3] @[ atomic sub-use sub-def ]	
         }
       }
       }
@@ -338,7 +360,7 @@ In namespace "", we have: {
   Instances:
     !GND = bool<> !GND
     !Vdd = bool<> !Vdd
-    C = atomic_xor_chain<2> C
+    C = atomic_xor_chain<4> C
     a = bool<> a
     b = bool<> b
     x = bool<> x
@@ -349,7 +371,7 @@ In namespace "", we have: {
 footprint: {
   !GND = bool^0 = !GND (1) @[ supply_low ] 
   !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
-  C = process atomic_xor_chain<2>^0 = C (1) (
+  C = process atomic_xor_chain<4>^0 = C (1) (
     !GND = bool^0 = !GND (1) @[ supply_low ] 
     !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
     x = bool^0 = x (3) @[ atomic loc-def sub-use ] 
@@ -362,13 +384,13 @@ footprint: {
   y = bool^0 = y (4) @[ atomic loc-def sub-use ] 
   z = bool^0 = z (5) @[ atomic sub-def ] 
   Created state:
-  process instance pool: (0 ports, 1 local, 2 mapped)
-  1	C	atomic_xor_chain<2>
+  process instance pool: (0 ports, 1 local, 4 mapped)
+  1	C	atomic_xor_chain<4>
     bool: 1,2,3,4,5
   private sub-process index map:
     (1 -> 0)
-    (2 -> 2)
-  bool instance pool: (0 ports, 7 local, 1 mapped)
+    (2 -> 4)
+  bool instance pool: (0 ports, 7 local, 3 mapped)
   1	!GND @[ supply_low ]	
   2	!Vdd @[ supply_high ]	
   3	x @[ atomic loc-def sub-use ]	
@@ -378,7 +400,7 @@ footprint: {
   7	b @[ loc-use ]	
   private sub-bool index map:
     (1 -> 0)
-    (2 -> 1)
+    (2 -> 3)
   resolved rte:
   x = a
   y = b
