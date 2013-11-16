@@ -49,7 +49,7 @@ HACKT_COMPILE_ERROR_FILTER = $(AWK) \
 HACKT_COMPILE_SETUP = \
 	depbase=`$(ECHO) $@ | $(SED) 's/\.haco$$//g'` && \
 	log="$$depbase.compiledump" && \
-	flags=`$(CAT) $< | $(EXTRACT_HACO_FLAGS_PIPE)`
+	flags=`$(EXTRACT_HACO_FLAGS_PIPE) < $<`
 
 HACKT_COMPILE_TEST_DEFAULT_SCRIPT = \
 	$(HACKT_COMPILE_SETUP) && \
@@ -66,10 +66,10 @@ HACKT_COMPILE_TEST_DEFAULT_SCRIPT = \
 HACKT_COMPILE_TEST_STDIN_SCRIPT = \
 	$(HACKT_COMPILE_SETUP) && \
 	flags="$$flags -p" && \
-	$(ECHO) "$(HACKT_COMPILE_EXE) $(HACO_FLAGS) $$flags -M $$depbase.depend $@ < $<" && \
-	if $(HACKT_COMPILE_EXE) $(HACO_FLAGS) $$flags -M "$$depbase.tmpd" $@ < $< > "$$log" 2>&1 ; \
-	then $(CAT) "$$depbase.tmpd" | \
-		$(HAC_DEPEND_FILTER) > "$$depbase.depend" ; \
+	cmd="$(HACKT_COMPILE_EXE) $(HACO_FLAGS) $$flags -M $$depbase.depend $@" && \
+	$(ECHO) "$$cmd < $<" && \
+	if $$cmd < $< > "$$log" 2>&1 ; \
+	then $(HAC_DEPEND_FILTER) < "$$depbase.tmpd" > "$$depbase.depend" ; \
 		$(RM) "$$depbase.tmpd" ; \
 	else $(RM) "$$depbase.tmpd" ; exit 1 ; \
 	fi
@@ -90,6 +90,7 @@ HACKT_CPP_MKDEP_FLAGS = -M -MP
 # NOTE: -MP doesn't generate phony targets with just -M [:S]
 .hac-cpp.hac:
 #	$(CPP_TRADITIONAL) $(HACKT_CPP_FLAGS) $< > $@
+	$(SET_PIPEFAIL) ; \
 	$(CPP_TRADITIONAL) $(HACKT_CPP_FLAGS) $< | \
 		$(GREP) -v "^#pragma" > $@ && \
 	$(CPP_TRADITIONAL) $(HACKT_CPP_FLAGS) $(HACKT_CPP_MKDEP_FLAGS) $< | \
@@ -106,6 +107,7 @@ HACKT_CPP_MKDEP_FLAGS = -M -MP
 
 hac-cpp.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
+	$(SET_PIPEFAIL) ; \
 	$(ECHO) "$(HACKT_CPP_PARSE_TEST_SUBJECTS)" | \
 		$(SPACES_TO_NEWLINE) | $(SORT) -u | \
 		$(AWK) '/.+/ {print "-include " $$1 ".hacdepend"; }' > $@ ; \
@@ -124,7 +126,7 @@ endif
 .hac.compiledump:
 	-@obj=`$(ECHO) $@ | $(SED) 's/\.compiledump$$/.haco/g'` ; \
 	$(ECHO_COMPILEDUMP_COMMAND) ; \
-	flags=`$(CAT) $< | $(EXTRACT_HACO_FLAGS_PIPE)` ; \
+	flags=`$(EXTRACT_HACO_FLAGS_PIPE) < $<` ; \
 	cmd="$(HACKT_COMPILE_EXE) $(HACO_FLAGS) $$flags $< $$obj" ; \
 	$(ECHO) "$$cmd" ; \
 	$$cmd > $@ 2>&1
@@ -140,7 +142,7 @@ endif
 
 .hac.outdump:
 	@depbase=`$(ECHO) $@ | $(SED) 's/\.outdump$$//g'` ; \
-	flags=`$(CAT) $< | $(EXTRACT_HACO_FLAGS_PIPE)` ; \
+	flags=`$(EXTRACT_HACO_FLAGS_PIPE) < $<` ; \
 	$(ECHO_OUTDUMP_COMMAND) ; \
 	$(HACKT_COMPILE_EXE) -d -fdump-object-header $(HACO_FLAGS) $$flags \
 		$< "$$depbase".hacod > $@ 2>&1
@@ -150,11 +152,11 @@ endif
 
 # or just filter out all text before the persistence header
 .outdump.outdump-filter:
-	@$(CAT) $< | $(HACKT_OBJ_DIFF_FILTER) | $(GREP) -v -i "^WARNING" > $@ ; \
+	@$(HACKT_OBJ_DIFF_FILTER) < $< | $(GREP) -v -i "^WARNING" > $@ ; \
 	$(ECHO_FILTERED)
 
 .indump.indump-filter:
-	@$(CAT) $< | $(HACKT_OBJ_DIFF_FILTER) > $@ ; \
+	@$(HACKT_OBJ_DIFF_FILTER) < $< > $@ ; \
 	$(ECHO_FILTERED)
 
 .haco.haco-dump:
@@ -180,6 +182,7 @@ endif
 
 compileobjdiff.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
+	$(SET_PIPEFAIL) ; \
 	$(ECHO) "$(HACKT_OBJ_TEST_SUBJECTS)" | \
 		$(SPACES_TO_NEWLINE) | $(SORT) -u | \
 		$(AWK) '/.+/ {print $$1 ".compileobjdiff: " $$1 ".outdump-filter"; }' > $@ ; \
@@ -239,6 +242,7 @@ endif
 
 compilewarntest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
+	$(SET_PIPEFAIL) ; \
 	$(ECHO) "$(HACKT_PARSE_TEST_WARNINGS)" | \
 		$(SPACES_TO_NEWLINE) | $(SORT) -u | \
 		$(AWK) '/.+/ {print $$1 ".compilewarndiff: $$(srcdir)/" $$1 ".stderr"; }' > $@ ; \
@@ -297,6 +301,7 @@ endif
 
 compilefailtest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
+	$(SET_PIPEFAIL) ; \
 	$(ECHO) "$(HACKT_PARSE_TEST_FAILURES) $(HACKT_CPP_PARSE_TEST_FAILURES)" | \
 		$(SPACES_TO_NEWLINE) | $(SORT) -u | \
 		$(AWK) '/.+/ {print $$1 ".compilefaildiff: $$(srcdir)/" $$1 ".stderr"; }' > $@ ; \
