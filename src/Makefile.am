@@ -319,7 +319,8 @@ BUILT_SOURCES += parser/hackt-parse.output.hh \
 	parser/type-parse.output.hh
 
 cvstag.h: ChangeLog
-	@{ $(ECHO) "#ifndef	CVSTAG" ; \
+	@{ $(SET_PIPEFAIL) ; \
+	$(ECHO) "#ifndef	CVSTAG" ; \
 	tag=`$(HEAD) -n 10 $< | $(GREP) "^	[*].*:" | \
 		$(HEAD) -n 1 | $(SED) 's/:.*$$//g' | $(CUT) -d\  -f 2` ; \
 		$(ECHO) "#define	CVSTAG		\"$$tag\"" ; \
@@ -327,7 +328,8 @@ cvstag.h: ChangeLog
 
 # we assume the config-params string is wrapped in quotes, and we strip them
 config_params.h: $(top_builddir)/config.status
-	@{ $(ECHO) "#ifndef	CONFIG_PARAMS" ; \
+	@{ $(SET_PIPEFAIL) ; \
+	$(ECHO) "#ifndef	CONFIG_PARAMS" ; \
 	value=`cd $(top_builddir) && $(SHELL) ./config.status --version | \
 		$(GREP) options | \
 		$(SED) -e 's/^[^"]*["]//g' -e 's/["]$$//g'` ; \
@@ -1422,6 +1424,7 @@ SED_CONST_CHAR_P = $(AWK) -f $(srcdir)/parser/yacc_const_char.awk
 
 # requires shell variable 'basename'
 MAKE_PARSE_PREFIX_HEADER_SCRIPT = \
+	$(SET_PIPEFAIL) ; \
 	$(SED_srcdir_strip_setup) ; \
 	$(AWK) -f $< -v PREFIX=$$basename -v keep_common=1 < /dev/null > \
 		`$(ECHO) $@ | $(SED_srcdir_strip_fast)`
@@ -1457,15 +1460,15 @@ CLEANFILES += $(LEXYACC_PREFIX_H_FILES)
 
 PARSER_HACK_PIPE =
 if HAVE_BISON
-PARSER_HACK_PIPE += $(AWK) -f $(srcdir)/parser/try_lex_catch.awk | \
+PARSER_HACK_PIPE += { $(AWK) -f $(srcdir)/parser/try_lex_catch.awk | \
 	$(AWK) -f $(srcdir)/parser/nls_bison_hack.awk | \
 	$(AWK) -f $(srcdir)/parser/yyerror_bison_hack.awk | \
 	$(AWK) -f $(srcdir)/parser/purify_flex.awk | \
 	$(SED_CXX_REFERENCE) | \
-	$(GREP) -v "^YYSTYPE yylval;"
+	$(GREP) -v "^YYSTYPE yylval;" ;}
 endif
 if HAVE_BYACC
-PARSER_HACK_PIPE += $(AWK) -f $(srcdir)/parser/try_lex_catch.awk | \
+PARSER_HACK_PIPE += { $(AWK) -f $(srcdir)/parser/try_lex_catch.awk | \
 	$(AWK) -f $(srcdir)/parser/yyerror_bison_hack.awk | \
 	$(AWK) -f $(srcdir)/parser/purify_yacc.awk | \
 	$(AWK) -f $(srcdir)/parser/purify_flex.awk | \
@@ -1473,17 +1476,17 @@ PARSER_HACK_PIPE += $(AWK) -f $(srcdir)/parser/try_lex_catch.awk | \
 	$(SED_CXX_REFERENCE) | \
 	$(SED_CONST_CHAR_P) | \
 	$(SED_YACC_YYPARSE) | \
-	$(AWK) -f $(srcdir)/parser/patch_byacc.awk
+	$(AWK) -f $(srcdir)/parser/patch_byacc.awk ;}
 endif
 if HAVE_YACC
-PARSER_HACK_PIPE += $(AWK) -f $(srcdir)/parser/try_lex_catch.awk | \
+PARSER_HACK_PIPE += { $(AWK) -f $(srcdir)/parser/try_lex_catch.awk | \
 	$(AWK) -f $(srcdir)/parser/yyerror_bison_hack.awk | \
 	$(AWK) -f $(srcdir)/parser/purify_yacc.awk | \
 	$(AWK) -f $(srcdir)/parser/purify_flex.awk | \
 	$(AWK) -f $(srcdir)/parser/yygrowstack_yacc_hack.awk | \
 	$(SED_CXX_REFERENCE) | \
 	$(SED_CONST_CHAR_P) | \
-	$(SED_YACC_YYPARSE)
+	$(SED_YACC_YYPARSE) ;}
 endif
 
 # FLEX_COMMON_PATCH = lexer/flex_common_marker.patch
@@ -1492,10 +1495,10 @@ EXTRA_DIST += $(FLEX_COMMON_PATCH)
 
 # keep only common symbols, give them external linkage
 EXTRACT_FLEX_COMMON_PIPE = \
-	$(AWK) -f $(srcdir)/lexer/grab-cpp-if.awk -v marker=KEEP_FLEX_COMMON | \
+	{ $(AWK) -f $(srcdir)/lexer/grab-cpp-if.awk -v marker=KEEP_FLEX_COMMON | \
 	$(SED) -e '/^[ ]*static/s/^[ ]*static[ ]*//' \
 	  -e '/\#ifndef.*YY_INPUT/,/\#endif/s|size_t n;|int n;|' | \
-	$(GREP) -v '^\#include.*prefix\.h'
+	$(GREP) -v '^\#include.*prefix\.h' ;}
 #	  -e '/for.*max_size/s/max_size/size_t(max_size)/'
 # first sed substitution turns global static variables into class members
 # second sed substitution works around signed comparison warning 
@@ -1507,19 +1510,19 @@ EXTRACT_FLEX_COMMON_PIPE = \
 # the other preceeding scripts shouldn't matter in their order
 parser/$(HACKT_PARSE_ROOT)-real.cc: parser/$(HACKT_PARSE_ROOT).cc \
 		parser/$(HACKT_PARSE_ROOT).output.hh
-	$(CAT) $< | $(PARSER_HACK_PIPE) > $@
+	$(SET_PIPEFAIL) ; $(PARSER_HACK_PIPE) < $< > $@
 
 parser/$(INSTREF_PARSE_ROOT)-real.cc: parser/$(INSTREF_PARSE_ROOT).cc \
 		parser/$(INSTREF_PARSE_ROOT).output.hh
-	$(CAT) $< | $(PARSER_HACK_PIPE) > $@
+	$(SET_PIPEFAIL) ; $(PARSER_HACK_PIPE) < $< > $@
 
 parser/$(TYPE_PARSE_ROOT)-real.cc: parser/$(TYPE_PARSE_ROOT).cc \
 		parser/$(TYPE_PARSE_ROOT).output.hh
-	$(CAT) $< | $(PARSER_HACK_PIPE) > $@
+	$(SET_PIPEFAIL) ; $(PARSER_HACK_PIPE) < $< > $@
 
 parser/$(SPICE_PARSE_ROOT)-real.cc: parser/$(SPICE_PARSE_ROOT).cc \
 		parser/$(SPICE_PARSE_ROOT).output.hh
-	$(CAT) $< | $(PARSER_HACK_PIPE) > $@
+	$(SET_PIPEFAIL) ; $(PARSER_HACK_PIPE) < $< > $@
 
 if YLWRAP_CC2HH
 # ylwrap already produces .hh from .cc
@@ -1547,6 +1550,7 @@ endif
 
 # requires shell variable 'basename'
 MAKE_REAL_PARSER_HEADER_SCRIPT = \
+	$(SET_PIPEFAIL) ; \
 	$(SED_srcdir_strip_setup) ; \
 	{ $(ECHO) "\#include \"parser/$$basename-prefix.h\"" ; \
 	$(ECHO) "\#include \"parser/$$basename-union.hh\"" ; \
@@ -1577,8 +1581,8 @@ parser/$(SPICE_PARSE_ROOT)-real.hh: parser/$(SPICE_PARSE_ROOT).hh \
 	basename="spice" ; \
 	$(MAKE_REAL_PARSER_HEADER_SCRIPT)
 
-PURIFY_LEXER_PIPE = $(AWK) -f $(srcdir)/lexer/purify_flex.awk | \
-	$(SED) 's/REFERENCE/\&/g'
+PURIFY_LEXER_PIPE = { $(AWK) -f $(srcdir)/lexer/purify_flex.awk | \
+	$(SED) 's/REFERENCE/\&/g' ;}
 
 # requires shell variable 'basename'
 # flex scanner purification eliminates need to rename most variables
@@ -1586,12 +1590,12 @@ PURIFY_LEXER_PIPE = $(AWK) -f $(srcdir)/lexer/purify_flex.awk | \
 #	$(CP) $< $@.tmp && \
 #	$(SED) '1,3s|FILENAME|$@.tmp|' $(srcdir)/$(FLEX_COMMON_PATCH) | \
 #		$(PATCH) -l -u -p0
-MAKE_REAL_LEXER_SCRIPT = $(AWK) -f $(srcdir)/$(FLEX_COMMON_PATCH) $< > $@.tmp
+MAKE_REAL_LEXER_SCRIPT = $(SET_PIPEFAIL) ; $(AWK) -f $(srcdir)/$(FLEX_COMMON_PATCH) $< > $@.tmp
 
 MAKE_REAL_LEXER_SCRIPT += && \
 	{ $(ECHO) "\#include \"parser/$$basename-prefix.h\"" && \
 	$(ECHO) "\#include \"lexer/flex_lexer_state.hh\"" && \
-	$(CAT) $@.tmp | $(PURIFY_LEXER_PIPE) ;} > $@ && \
+	$(PURIFY_LEXER_PIPE) < $@.tmp ;} > $@ && \
 	$(RM) $@.tmp $@.tmp.orig
 
 # need to include prefix header because the lexer-generated code
@@ -1633,20 +1637,22 @@ lexer/$(SPICE_LEX_ROOT)-real.cc: lexer/$(SPICE_LEX_ROOT).cc \
 # actually, not quite, there's a difference depending on whether lexer
 # uses BOL (beginning-of-line) in match patterns.
 lexer/flex_lexer_common.cc: lexer/$(HACKT_LEX_ROOT)-real.cc
+	$(SET_PIPEFAIL) ; \
 	{ $(ECHO) "// \"$@\" -- automatically generated, do not modify" ; \
-	cmd="$(CAT) $< | $(EXTRACT_FLEX_COMMON_PIPE)" ; \
+	cmd="$(EXTRACT_FLEX_COMMON_PIPE) < $<" ; \
 	$(ECHO) "// produced by: $$cmd" ; \
 	$(ECHO) "#include \"lexer/flex_lexer_state.hh\"" ; \
 	$(ECHO) "#include \"lexer/flex_buffer_state.hh\"" ; \
 	$(ECHO) "#define FLEX_STRUCT_BUFFER_STATE" ; \
 	$(ECHO) "#define KEEP_FLEX_COMMON	1" ; \
 	$(ECHO) "#define YY_ALWAYS_INTERACTIVE	0" ; \
-	$(CAT) $< | $(EXTRACT_FLEX_COMMON_PIPE) ; } > $@
+	$(EXTRACT_FLEX_COMMON_PIPE) < $< ; } > $@
 
 # generated header, extracting struct definition
 lexer/flex_lexer_state.cc: lexer/flex_buffer_state.hh
 
 lexer/flex_buffer_state.hh: lexer/$(HACKT_LEX_ROOT)-real.cc
+	$(SET_PIPEFAIL) ; \
 	$(SED_srcdir_strip_setup) ; \
 	{ $(ECHO) "// \"$@\" -- automatically generated, do not modify" ; \
 	$(ECHO) "#ifndef	__LEXER_FLEX_BUFFER_STATE_H__" ; \
@@ -1670,6 +1676,7 @@ PARSE_OUTPUT_TO_HEADER_PIPE = { $(AWK) -f $(YACC_OUTPUT_H_SCRIPT) \
 
 # Oddly, the targets sometimes get mistakenly generated in the srcdir...
 PARSE_OUTPUT_HEADER_SCRIPT = \
+	$(SET_PIPEFAIL) ; \
 	if $(GREP) "conflict" $< ; then exit 1; fi ; \
 	$(SED_srcdir_strip_setup) ; \
 	$(PARSE_OUTPUT_TO_HEADER_PIPE) < $< > \
@@ -1726,26 +1733,27 @@ $(SPICE_PARSE_OUTPUT): $(CONFIGHEADERS) parser/yacc_version.h
 
 # why didn't this work?
 # fixed: need to escape the '#' character
-PARSER_TYPES_PIPE = $(GREP) -v "\#include" | $(CPP_TRADITIONAL) -P | \
-	$(GREP) -v pragma | \
-		$(SED) -e '/^%start/,$$d' -e '/%{/,/%}/d' -e '/^[ \t]*$$/d'
+PARSER_TYPES_PIPE = { $(GREP) -v "\#include" | $(CPP_TRADITIONAL) -P | \
+	{ $(GREP) -v pragma || : ;} | \
+		$(SED) -e '/^%start/,$$d' -e '/%{/,/%}/d' -e '/^[ \t]*$$/d' ;}
 
 parser/hackt.types: parser/$(HACKT_PARSE_ROOT).yy
-	$(CAT) $< | $(PARSER_TYPES_PIPE) > $@
+	$(SET_PIPEFAIL) ; $(PARSER_TYPES_PIPE) < $< > $@
 
 parser/instref.types: parser/$(INSTREF_PARSE_ROOT).yy
-	$(CAT) $< | $(PARSER_TYPES_PIPE) > $@
+	$(SET_PIPEFAIL) ; $(PARSER_TYPES_PIPE) < $< > $@
 
 parser/type.types: parser/$(TYPE_PARSE_ROOT).yy
-	$(CAT) $< | $(PARSER_TYPES_PIPE) > $@
+	$(SET_PIPEFAIL) ; $(PARSER_TYPES_PIPE) < $< > $@
 
 parser/spice.types: parser/$(SPICE_PARSE_ROOT).yy
-	$(CAT) $< | $(PARSER_TYPES_PIPE) > $@
+	$(SET_PIPEFAIL) ; $(PARSER_TYPES_PIPE) < $< > $@
 
 # extract num: first matched line, 3rd space-delimited field (#define foo bar)
 # "cut" is not a good idea, if # define is separated... :(
 # the last awk pipe eliminate extraneous whitespace not filtered by sed
 GET_START_TOKEN_ENUM = \
+	$(SET_PIPEFAIL) ; \
 	$(GREP) "define.*MINIMUM_BOGOSITY" parser/$(HACKT_PARSE_ROOT).h | \
 		$(HEAD) -n1 | $(SED) 's/^.*MINIMUM_BOGOSITY[ \t]*//g' | \
 		$(AWK) '/.*/{printf($$1);}'
