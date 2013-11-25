@@ -412,10 +412,12 @@ class type_completion_statement : public instance_management {
 protected:
 	const excl_ptr<const inst_ref_expr>	inst_ref;
 	const excl_ptr<const expr_list>		args;
-	const excl_ptr<const generic_attribute_list>	attribs;
+	const count_ptr<const generic_attribute_list>	attribs;
 public:
 	type_completion_statement(const inst_ref_expr*, const expr_list*, 
 		const generic_attribute_list* = NULL);
+	type_completion_statement(const inst_ref_expr*, const expr_list*, 
+		const count_ptr<const generic_attribute_list>&);
 virtual	~type_completion_statement();
 
 virtual	ostream&

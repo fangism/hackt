@@ -3,6 +3,12 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2013-11-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-86-53-run-time-expressions-03:
+	  Allow ebool declarations to implicitly attach attribute atomic.
+
+
 2013-11-13	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-86-53-run-time-expressions-02:

@@ -139,6 +139,9 @@ public:
 	void
 	set_chan_dir(const char_punctuation_type*);
 
+	bool
+	is_atomic(void) const;
+
 	ostream&
 	what(ostream& o) const;
 

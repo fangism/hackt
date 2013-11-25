@@ -661,7 +661,7 @@ token_paramtype::what(ostream& o) const {
 
 CONSTRUCTOR_INLINE
 token_bool_type::token_bool_type(const char* dt) : token_datatype(dt)
-//	, atomic(false)
+	, atomic(false)
 	{ }
 
 DESTRUCTOR_INLINE
@@ -682,7 +682,7 @@ token_bool_type::check_definition(const context&) const {
 
 CONSTRUCTOR_INLINE
 token_int_type::token_int_type(const char* dt) : token_datatype(dt)
-// , atomic(false)
+	, atomic(false)
 	{ }
 
 DESTRUCTOR_INLINE

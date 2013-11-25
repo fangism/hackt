@@ -2,11 +2,6 @@
 
 include $(top_srcdir)/test/Make.test-head
 
-# These test cases use 'ebool' instead of @[atomic].
-# Once this syntactic layer is implemented, revisit these tests.
-EBOOL_TEST_CASES = 000 001 002 003 004 006
-srcdir_EXTRA_DIST += $(EBOOL_TEST_CASES:=.hac)
-
 HACKT_PARSE_TEST_FAILURES =
 
 HACKT_PARSE_TEST_WARNINGS =
@@ -15,14 +10,21 @@ HACKT_PARSE_TEST_PASSES = \
 	000b 001b 002b 003b 004b 005b 006b 007b 008b 009b \
 	010b 011b 012b 013b 014b 015b 016b 017b 018b 019b \
 	020b 021b 022b 023b 024b 025b 026b 027b 028b 029b \
-	030b 031b 032b 033b 034b
+	030b 031b 032b 033b 034b \
+	000 001 002 003 004 005 006 007 008 009 \
+	010 011 012 013 014 015 016 017 018 019 \
+	020 021 022 023 024 025 026 027 028 029 \
+	030 031 032 033 034
 
 srcdir_EXTRA_DIST +=
 
 HACKT_CREATE_TEST_PASSES = \
 	000b 002b 003b 004b 006b \
 	012b 014b 015b 017b 018b \
-	020b 022b 026b 027b 029b
+	020b 022b 026b 027b 029b \
+	000 002 003 004 006 \
+	012 014 015 017 018 \
+	020 022 026 027 029
 
 # expects warnings:
 # 020b
@@ -31,7 +33,11 @@ HACKT_CREATE_TEST_FAILURES = \
 	001b 005b 007b 008b 009b \
 	010b 011b 013b 016b 019b \
 	021b 023b 024b 025b 028b \
-	030b 031b 032b 033b 034b
+	030b 031b 032b 033b 034b \
+	001 005 007 008 009 \
+	010 011 013 016 019 \
+	021 023 024 025 028 \
+	030 031 032 033 034
 
 # known defect reports: unresolved language issues
 # dealing with empty loops and negative ranges...

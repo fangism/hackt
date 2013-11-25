@@ -1,0 +1,4 @@
+Error: atomic bools cannot participate in production rules.
+Error creating type: foo<>
+Error encountered during module::create.
+ERROR in creating.  Aborting.

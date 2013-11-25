@@ -620,6 +620,7 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_generic_attribute>	generic_attribute
 %type	<_generic_attribute_list>	generic_attribute_list
 %type	<_generic_attribute_list>	generic_attribute_list_in_brackets
+%type	<_generic_attribute_list>	generic_attribute_list_in_brackets_optional
 /* %type	<_instance_alias>	instance_alias	*/
 %type	<_alias_list>	alias_list nonempty_alias_list
 %type	<_expr_list>	connection_actuals_list
@@ -1167,8 +1168,8 @@ port_formal_id_list
 port_formal_id
 	/** update port formals: only dense arrays allowed, no sparse ranges */
 	/** forbid use of relaxed template arguments in port formals list? **/
-	: ID optional_dense_range_list
-		{ $$ = new port_formal_id($1, $2); }
+	: ID optional_dense_range_list generic_attribute_list_in_brackets_optional
+		{ $$ = new port_formal_id($1, $2, $3); }
 	;
 
 port_generic_type_ref
@@ -1714,13 +1715,11 @@ generic_attribute_list_in_brackets
 		{ $$ = $2; WRAP_LIST($1, $2, $3); }
 	;
 
-/**
 generic_attribute_list_in_brackets_optional
-	: '@' generic_attributes_list_in_brackets
+	: '@' generic_attribute_list_in_brackets
 		{ DELETE_TOKEN($1); $$ = $2; }
 	| { $$ = NULL; }
 	;
-**/
 
 /* note: lvalue excludes member references, thus restricting to local scope */
 /* completing the relaxed template arguments of an instance */

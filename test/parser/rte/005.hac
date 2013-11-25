@@ -1,0 +1,4 @@
+// "rte/005.hac"
+ebool x;
+x @ [reset=1];
+bool y;

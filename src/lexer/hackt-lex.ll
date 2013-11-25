@@ -273,14 +273,14 @@ BOOL_TYPE_UPDATE(YYSTYPE& hackt_lval, const lexer_state& foo) {
 static inline void
 EINT_TYPE_UPDATE(YYSTYPE& hackt_lval, const lexer_state& foo) {
 	hackt_lval._token_int_type = new token_int_type(yytext);
-//	hackt_lval._token_int_type->flag_atomic();
+	hackt_lval._token_int_type->flag_atomic();
 	TOKEN_UPDATE(foo);
 }
 
 static inline void
 EBOOL_TYPE_UPDATE(YYSTYPE& hackt_lval, const lexer_state& foo) {
 	hackt_lval._token_bool_type = new token_bool_type(yytext);
-//	hackt_lval._token_bool_type->flag_atomic();
+	hackt_lval._token_bool_type->flag_atomic();
 	TOKEN_UPDATE(foo);
 }
 
@@ -473,11 +473,6 @@ INT_TYPE	"int"
 BOOL_TYPE	"bool"
 EINT_TYPE	"eint"
 EBOOL_TYPE	"ebool"
-/**
-// TODO: add these back later, after implementing the 'ebool' shortcut/macro.
-{EINT_TYPE}	{ EINT_TYPE_UPDATE(*hackt_lval, foo); return EINT_TYPE; }
-{EBOOL_TYPE}	{ EBOOL_TYPE_UPDATE(*hackt_lval, foo); return EBOOL_TYPE; }
-**/
 PINT_TYPE	"pint"
 PBOOL_TYPE	"pbool"
 PREAL_TYPE	"preal"
@@ -729,6 +724,8 @@ EMBEDFILE	^#FILE
 {CHANNEL}	{ KEYWORD_UPDATE(*hackt_lval, foo); return CHANNEL; }
 {INT_TYPE}	{ INT_TYPE_UPDATE(*hackt_lval, foo); return INT_TYPE; }
 {BOOL_TYPE}	{ BOOL_TYPE_UPDATE(*hackt_lval, foo); return BOOL_TYPE; }
+{EINT_TYPE}	{ EINT_TYPE_UPDATE(*hackt_lval, foo); return EINT_TYPE; }
+{EBOOL_TYPE}	{ EBOOL_TYPE_UPDATE(*hackt_lval, foo); return EBOOL_TYPE; }
 {PINT_TYPE}	{ PINT_TYPE_UPDATE(*hackt_lval, foo); return PINT_TYPE; }
 {PBOOL_TYPE}	{ PBOOL_TYPE_UPDATE(*hackt_lval, foo); return PBOOL_TYPE; }
 {PREAL_TYPE}	{ PREAL_TYPE_UPDATE(*hackt_lval, foo); return PREAL_TYPE; }

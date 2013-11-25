@@ -193,7 +193,7 @@ private:
 	 */
 	count_ptr<const fundamental_type_reference>
 						current_fundamental_type;
-
+	bool					atomic_type_variant;
 
 	/**
 		Since loop and conditional contexts may be nested, 
@@ -442,7 +442,8 @@ public:
 		context&		_context;
 	public:
 		fundamental_type_frame(context&,
-			const count_ptr<const fundamental_type_reference>&);
+			const count_ptr<const fundamental_type_reference>&, 
+			const bool atomic);
 		~fundamental_type_frame();
 	} __ATTRIBUTE_UNUSED__;
 

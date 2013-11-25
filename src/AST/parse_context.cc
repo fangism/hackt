@@ -19,6 +19,12 @@
 #include "AST/parse_context.tcc"
 #include "AST/token_string.hh"
 #include "AST/identifier.hh"
+
+// these were added for creating on-the-fly atomic attribute statement
+#include "AST/globals.hh"
+#include "AST/reference.hh"
+#include "AST/instance.hh"
+
 #include "Object/expr/meta_range_list.hh"
 #include "Object/expr/dynamic_param_expr_list.hh"
 #include "Object/expr/pint_const.hh"
@@ -82,6 +88,7 @@ context::context(module& m, const parse_options& o) :
 		open_definition_stack(), 
 		current_prototype(NULL), 
 		current_fundamental_type(NULL), 
+		atomic_type_variant(false),
 		sequential_scope_stack(), 
 		loop_var_stack(), 
 		global_namespace(m.get_global_namespace()), 
@@ -130,6 +137,7 @@ context::context(const module& m, const parse_options& o, const bool _pub) :
 		open_definition_stack(), 
 		current_prototype(NULL), 
 		current_fundamental_type(NULL), 
+		atomic_type_variant(false),
 		sequential_scope_stack(), 
 		loop_var_stack(), 
 		global_namespace(m.get_global_namespace()), 
@@ -870,6 +878,12 @@ context::add_instance(const token_identifier& id,
 
 	NEVER_NULL(get_current_sequential_scope());
 	get_current_sequential_scope()->push_back(inst_stmt);
+	if (atomic_type_variant) {
+		// attach attribute, effectively: id @ [atomic]
+		const type_completion_statement ats(new id_expr(id), NULL,
+			get_implicit_atomic_attribute());
+		ats.check_build(*this);
+	}
 	return inst_base;
 }
 
@@ -1014,6 +1028,12 @@ context::add_port_formal(const token_identifier& id,
 	NEVER_NULL(seq_scope);
 	seq_scope->push_back(inst_stmt);
 #endif	// SEQUENTIAL_SCOPE_INCLUDES_FORMALS
+	if (atomic_type_variant) {
+		// attach attribute, effectively: id @ [atomic]
+		const type_completion_statement ats(new id_expr(id), NULL,
+			get_implicit_atomic_attribute());
+		ats.check_build(*this);
+	}
 	return inst_base;
 }	// end context::add_port_formal()
 
@@ -1108,10 +1128,16 @@ context::namespace_frame::~namespace_frame() {
 //=============================================================================
 // class context::fundamental_type_frame method definitions
 
+/**
+	\invariant not re-entrant
+ */
 context::fundamental_type_frame::fundamental_type_frame(context& c, 
-		const count_ptr<const fundamental_type_reference>& t) :
+		const count_ptr<const fundamental_type_reference>& t, 
+		const bool atomic) :
 		_context(c) {
 	_context.set_current_fundamental_type(t);
+	INVARIANT(!_context.atomic_type_variant);
+	_context.atomic_type_variant = atomic;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1119,6 +1145,7 @@ context::fundamental_type_frame::~fundamental_type_frame() {
 	// if there was no error
 	if (_context.get_current_fundamental_type())
 		_context.reset_current_fundamental_type();
+	_context.atomic_type_variant = false;
 }
 
 //=============================================================================

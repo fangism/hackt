@@ -10,6 +10,7 @@
 namespace HAC {
 namespace parser {
 using util::memory::count_ptr;
+struct generic_attribute;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 extern
@@ -23,13 +24,18 @@ get_implicit_globals(void);
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 extern
-const count_ptr<const type_completion_statement>
+const count_ptr<const type_completion_statement>&
 get_GND_attributes(void);
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 extern
-const count_ptr<const type_completion_statement>
+const count_ptr<const type_completion_statement>&
 get_Vdd_attributes(void);
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+extern
+const count_ptr<const generic_attribute_list>&
+get_implicit_atomic_attribute(void);
 
 //=============================================================================
 }	// end namespace parser

@@ -1,0 +1,20 @@
+// "022b.hac"
+
+defproc foo(bool! x; bool? y) {
+x @[atomic];
+y @[atomic];
+rte {
+	x = y;
+}
+}
+
+// chained dependency ok
+foo bar, baz;
+bar.x = baz.y;
+bool z, w;
+w @[atomic];
+rte {
+	w = z;
+}
+bar.y = w;		// ok
+// bar.y = z;		// not ok

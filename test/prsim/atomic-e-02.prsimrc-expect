@@ -1,0 +1,185 @@
+---------- 
+z:X, unknown-pull up
++-+
++ |-+
++ | & C.t[3]:X, unknown-pull up
++ | & +-+
++ | & + |-+
++ | & + | & C.t[2]:X, unknown-pull up
++ | & + | & +-+
++ | & + | & + |-+
++ | & + | & + | & C.t[1]:X, unknown-pull up
++ | & + | & + | & +-+
++ | & + | & + | & + |-+
++ | & + | & + | & + | & x:X, unknown-pull up
++ | & + | & + | & + | & + a:X, pull up/dn undriven, no fanin
++ | & + | & + | & + | & ~y:X, unknown-pull up
++ | & + | & + | & + | & ~+ b:X, pull up/dn undriven, no fanin
++ | & + | & + | & + |-+
++ | & + | & + | & + | & ~x:X, (visited before, see above)
++ | & + | & + | & + | & y:X, (visited before, see above)
++ | & + | & + | & ~y:X, (visited before, see above)
++ | & + | & + |-+
++ | & + | & + | & ~C.t[1]:X, (visited before, see above)
++ | & + | & + | & y:X, (visited before, see above)
++ | & + | & ~y:X, (visited before, see above)
++ | & + |-+
++ | & + | & ~C.t[2]:X, (visited before, see above)
++ | & + | & y:X, (visited before, see above)
++ | & ~y:X, (visited before, see above)
++ |-+
++ | & ~C.t[3]:X, (visited before, see above)
++ | & y:X, (visited before, see above)
+---------- 
+	0	a : 0
+	0	x : 0	<atomic>
+---------- 
+z:X, unknown-pull up
++-+
++ |-+
++ | & C.t[3]:X, unknown-pull up
++ | & +-+
++ | & + |-+
++ | & + | & C.t[2]:X, unknown-pull up
++ | & + | & +-+
++ | & + | & + |-+
++ | & + | & + | & C.t[1]:X, unknown-pull up
++ | & + | & + | & +-+
++ | & + | & + | & + |-+
++ | & + | & + | & + | & y:X, unknown-pull up
++ | & + | & + | & + | & + b:X, pull up/dn undriven, no fanin
++ | & + | & + | & ~y:X, (visited before, see above)
++ | & + | & + |-+
++ | & + | & + | & ~C.t[1]:X, (visited before, see above)
++ | & + | & + | & y:X, (visited before, see above)
++ | & + | & ~y:X, (visited before, see above)
++ | & + |-+
++ | & + | & ~C.t[2]:X, (visited before, see above)
++ | & + | & y:X, (visited before, see above)
++ | & ~y:X, (visited before, see above)
++ |-+
++ | & ~C.t[3]:X, (visited before, see above)
++ | & y:X, (visited before, see above)
+---------- 
+	0	a : X
+	0	x : X	<atomic>
+	0	b : 0
+	0	y : 0	<atomic>
+---------- 
+z:X, unknown-pull up
++-+
++ |-+
++ | & C.t[3]:X, unknown-pull up
++ | & +-+
++ | & + |-+
++ | & + | & C.t[2]:X, unknown-pull up
++ | & + | & +-+
++ | & + | & + |-+
++ | & + | & + | & C.t[1]:X, unknown-pull up
++ | & + | & + | & +-+
++ | & + | & + | & + |-+
++ | & + | & + | & + | & x:X, unknown-pull up
++ | & + | & + | & + | & + a:X, pull up/dn undriven, no fanin
+---------- 
+	0	a : 0
+	0	x : 0	<atomic>
+	0	z : 0	<atomic>
+	0	C.t[1] : 0	<atomic>
+	0	C.t[2] : 0	<atomic>
+	0	C.t[3] : 0	<atomic>
+---------- 
+z:0, atomic
+.-+
+. |-+
+. | & C.t[3]:0, atomic
+. | & .-+
+. | & . |-+
+. | & . | & C.t[2]:0, atomic
+. | & . | & .-+
+. | & . | & . |-+
+. | & . | & . | & C.t[1]:0, atomic
+. | & . | & . | & .-+
+. | & . | & . | & . |-+
+. | & . | & . | & . | & x:0, atomic
+. | & . | & . | & . | & . a:0, input
+. | & . | & . | & . |-+
+. | & . | & . | & . | & y:0, atomic
+. | & . | & . | & . | & . b:0, input
+. | & . | & . |-+
+. | & . | & . | & y:0, (visited before, see above)
+. | & . |-+
+. | & . | & y:0, (visited before, see above)
+. |-+
+. | & y:0, (visited before, see above)
+---------- 
+z:0
+.-+
+. |-+
+. | & C.t[3]:0, atomic
+. | & .-+
+. | & . |-+
+. | & . | & C.t[2]:0, atomic
+. | & . | & .-+
+. | & . | & . |-+
+. | & . | & . | & C.t[1]:0, atomic
+. | & . | & . | & .-+
+. | & . | & . | & . |-+
+. | & . | & . | & . | & x:0, atomic
+. | & . | & . | & . | & . a:0, input
+. | & . | & . | & . |-+
+. | & . | & . | & . | & y:0, atomic
+. | & . | & . | & . | & . b:0, input
+. | & . | & . |-+
+. | & . | & . | & y:0, (visited before, see above)
+. | & . |-+
+. | & . | & y:0, (visited before, see above)
+. |-+
+. | & y:0, (visited before, see above)
+---------- 
+	0	a : 1
+	0	x : 1	<atomic>
+	0	z : 1	<atomic>
+	0	C.t[1] : 1	<atomic>
+	0	C.t[2] : 1	<atomic>
+	0	C.t[3] : 1	<atomic>
+---------- 
+z:1, atomic
+.-+
+. |-+
+. | & C.t[3]:1
+. | & .-+
+. | & . |-+
+. | & . | & C.t[2]:1
+. | & . | & .-+
+. | & . | & . |-+
+. | & . | & . | & C.t[1]:1
+. | & . | & . | & .-+
+. | & . | & . | & . |-+
+. | & . | & . | & . | & x:1
+. | & . | & . | & . | & . a:1, input
+. | & . | & . | & . | & ~y:0
+. | & . | & . | & . | & ~. b:0, input
+. | & . | & . | & ~y:0, (visited before, see above)
+. | & . | & ~y:0, (visited before, see above)
+. | & ~y:0, (visited before, see above)
+---------- 
+z:1
+.-+
+. |-+
+. | & C.t[3]:1
+. | & .-+
+. | & . |-+
+. | & . | & C.t[2]:1
+. | & . | & .-+
+. | & . | & . |-+
+. | & . | & . | & C.t[1]:1
+. | & . | & . | & .-+
+. | & . | & . | & . |-+
+. | & . | & . | & . | & x:1
+. | & . | & . | & . | & . a:1, input
+. | & . | & . | & . | & ~y:0
+. | & . | & . | & . | & ~. b:0, input
+. | & . | & . | & ~y:0, (visited before, see above)
+. | & . | & ~y:0, (visited before, see above)
+. | & ~y:0, (visited before, see above)
+---------- 
