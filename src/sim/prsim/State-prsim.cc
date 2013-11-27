@@ -57,6 +57,7 @@
 #include "util/binders.hh"
 #include "util/utypes.h"
 #include "util/indent.hh"
+#include "util/swap_saver.hh"
 #include "util/tokenize.hh"
 #include "util/numformat.tcc"
 #if PRSIM_SET_FAST_ALLOCATOR
@@ -3423,7 +3424,7 @@ State::execute_immediately(
 	// FIXME: this needs to be re-entrant, due to atomic updates!
 	typedef	State::step_return_type		return_type;
 	STACKTRACE_VERBOSE;
-	ISE_INVARIANT(updated_nodes.empty());
+	ISE_INVARIANT(updated_nodes.empty());	// b/c of auto_flush_queues
 #if PRSIM_FCFS_UPDATED_NODES
 	ISE_INVARIANT(updated_nodes_queue.empty());
 #endif
@@ -4253,6 +4254,12 @@ State::propagate_evaluation(
 	// frozen nodes will not switch when expressions propagate to their root
 	break_type err = ERROR_NONE;
 	if (n.is_atomic()) {
+		// possible that updated_nodes/queue is !empty, due to fanout
+		// so we must save it aside, restore it after done with atomic update
+		const util::swap_saver<updated_nodes_type> swp1(updated_nodes);
+#if PRSIM_FCFS_UPDATED_NODES
+		const util::swap_saver<updated_nodes_queue_type> swp2(updated_nodes_queue);
+#endif
 		// yes, interpret pull_enum as value_enum
 		const step_return_type
 			sr(set_node_immediately(ui, value_enum(next), false));
