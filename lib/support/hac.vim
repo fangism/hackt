@@ -136,6 +136,7 @@ syntax match	cCommentStartError display "/\*"me=e-1 contained
 syn match	cOperator	display "->\|=>\|#>"
 syn match	cOperator	display "&\||\|\~"
 syn match	cOperator	display "\.\."
+syn match	cOperator	display "\\$"
 
 " syn keyword	cOperator	sizeof
 syn keyword	cType  		chan pint pbool preal pstring

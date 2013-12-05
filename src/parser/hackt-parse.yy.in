@@ -488,6 +488,7 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %token	<_node_position>	INSERT EXTRACT
 %token	<_node_position>	PLUSPLUS MINUSMINUS
 %token	<_node_position>	ASSIGN
+%token	<_node_position>	DOLLARDOLLAR
 %type	<_node_position>	loop_assoc_op
 
 /* _token_keyword: convert most of these to _keyword_position */
@@ -2622,6 +2623,13 @@ spec_invariant
 	/* does string ever need to be a more general string expr? */
 	| '$' '(' prs_expr ',' string ')'
 		{ $$ = new SPEC::invariant($3, $5); 
+		DELETE_TOKEN($1); DELETE_TOKEN($2); DELETE_TOKEN($4);
+		DELETE_TOKEN($6); }
+	| DOLLARDOLLAR '(' expr ')'
+		{ $$ = new SPEC::invariant($3, NULL, true); 
+		DELETE_TOKEN($1); DELETE_TOKEN($2); DELETE_TOKEN($4); }
+	| DOLLARDOLLAR '(' expr ',' string ')'
+		{ $$ = new SPEC::invariant($3, $5, true); 
 		DELETE_TOKEN($1); DELETE_TOKEN($2); DELETE_TOKEN($4);
 		DELETE_TOKEN($6); }
 	;

@@ -159,6 +159,7 @@ using util::auto_indent;
 using util::indent;
 using util::tokenize_char;
 using util::format_ostream_ref;
+using util::swap_saver;
 using entity::state_manager;
 using entity::global_entry_pool;
 using entity::bool_tag;
@@ -3608,6 +3609,9 @@ if (eval_ordering_is_random()) {
 	// propagate_evaluation() may populate some structures for
 	// later re-evaluation.  These should start empty.
 	__keeper_check_candidates.clear();	// look for turned off rules
+	// atomic expressions never participte in keeper-checks
+	// however, they do participate in invariants, so the following 
+	const swap_saver<invariant_update_map_type> tmp(__invariant_update_map);
 	__invariant_update_map.clear();
 	for ( ; i!=e; ++i) {
 		// when evaluating a node as an expression, 
@@ -3619,22 +3623,7 @@ if (eval_ordering_is_random()) {
 			stop();
 		}
 	}
-	invariant_update_map_type::const_iterator
-		ii(__invariant_update_map.begin()),
-		ie(__invariant_update_map.end());
-	for ( ; ii!=ie; ++ii) {
-		const break_type E =
-			__diagnose_invariant(cerr,
-				ii->first.first, ii->first.second, 
-				ii->second, new_cause.node, new_cause.val);
-		if (UNLIKELY(E >= ERROR_BREAK)) {
-			stop();
-			if (UNLIKELY(E >= ERROR_INTERACTIVE)) {
-				record_exception(exception_ptr_type(
-					new invariant_exception(ni, E)));
-			}
-		}
-	}
+	handle_invariants(new_cause);
 }
 }
 	// Q: is this the best place to handle this?
@@ -3699,6 +3688,14 @@ if (n.in_channel()) {
 }	// auto-flush of pending queue happens here
 	// optional keeper check
 	if (keeper_check_fail_policy > ERROR_IGNORE) {
+		handle_keeper_checks(ni);
+	}
+	return return_type(ni, _ci);
+}	// end method execute_immediately()
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+State::handle_keeper_checks(const node_index_type ni) {
 //		cout << "checking floating..." << endl;
 		size_t first_thrown_node = INVALID_NODE_INDEX;
 		set<node_index_type>::const_iterator
@@ -3737,10 +3734,29 @@ if (n.in_channel()) {
 		}
 #undef E
 		// __keeper_check_candidates.clear();
-	}
-	return return_type(ni, _ci);
-}	// end method execute_immediately()
+}
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+State::handle_invariants(const event_cause_type& new_cause) {
+	const node_index_type ni = new_cause.node;
+	invariant_update_map_type::const_iterator
+		ii(__invariant_update_map.begin()),
+		ie(__invariant_update_map.end());
+	for ( ; ii!=ie; ++ii) {
+		const break_type E =
+			__diagnose_invariant(cerr,
+				ii->first.first, ii->first.second, 
+				ii->second, new_cause.node, new_cause.val);
+		if (UNLIKELY(E >= ERROR_BREAK)) {
+			stop();
+			if (UNLIKELY(E >= ERROR_INTERACTIVE)) {
+				record_exception(exception_ptr_type(
+					new invariant_exception(ni, E)));
+			}
+		}
+	}
+}
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 State::record_exception(const exception_ptr_type& p) const {
@@ -3987,6 +4003,7 @@ if (UNLIKELY(n.is_atomic())) {
 			ops, &r, ps.global_expr_index(ri));
 	}
 } else {	// else this is an invariant
+	DEBUG_STEP_PRINT("participating in invariant" << endl);
 	// then this rule doesn't actually pull a node, is an invariant
 	// aggregate updates before diagnosing invariant violation
 	const rule_reference_type rr(pid, ri);
@@ -4256,9 +4273,9 @@ State::propagate_evaluation(
 	if (n.is_atomic()) {
 		// possible that updated_nodes/queue is !empty, due to fanout
 		// so we must save it aside, restore it after done with atomic update
-		const util::swap_saver<updated_nodes_type> swp1(updated_nodes);
+		const swap_saver<updated_nodes_type> swp1(updated_nodes);
 #if PRSIM_FCFS_UPDATED_NODES
-		const util::swap_saver<updated_nodes_queue_type> swp2(updated_nodes_queue);
+		const swap_saver<updated_nodes_queue_type> swp2(updated_nodes_queue);
 #endif
 		// yes, interpret pull_enum as value_enum
 		const step_return_type

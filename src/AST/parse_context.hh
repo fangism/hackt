@@ -266,6 +266,10 @@ private:
 		private member references, so we allow such exceptions.
 	 */
 	bool					view_all_publicly;
+	/**
+		Temporarily switch syntax mode for expressions.
+	 */
+	bool					rte_mode;
 public:
 	/**
 		User-controlled parse-check options.
@@ -305,6 +309,10 @@ public:
 	typedef	util::member_saver<context, 
 		bool, &context::view_all_publicly>
 						private_member_accessor;
+
+	typedef	util::member_saver<context, 
+		bool, &context::rte_mode>
+						rte_mode_accessor;
 
 private:
 	void
@@ -649,6 +657,9 @@ public:
 
 	bool
 	is_publicly_viewable(void) const { return view_all_publicly; }
+
+	bool
+	is_rte_syntax_mode(void) const { return rte_mode; }
 
 private:
 	void

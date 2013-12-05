@@ -418,6 +418,7 @@ FWDSLASH	"\\"
 LOGICAL_AND	"&&"
 LOGICAL_OR	"||"
 ASSIGN		":="
+DOLLARDOLLAR	"$$"
 
 /** syntactic sugar tokens, value is not important, return _node_position */
 BEGINLOOP	"*["
@@ -529,6 +530,7 @@ EMBEDFILE	^#FILE
 {INSERT}	{ NODE_POSITION_UPDATE(*hackt_lval, foo); return INSERT; }
 {EXTRACT}	{ NODE_POSITION_UPDATE(*hackt_lval, foo); return EXTRACT; }
 {ASSIGN}	{ NODE_POSITION_UPDATE(*hackt_lval, foo); return ASSIGN; }
+{DOLLARDOLLAR}	{ NODE_POSITION_UPDATE(*hackt_lval, foo); return DOLLARDOLLAR; }
 
 {BEGINLOOP}	{ NODE_POSITION_UPDATE(*hackt_lval, foo); return BEGINLOOP; }
 {BEGINPROB}	{ NODE_POSITION_UPDATE(*hackt_lval, foo); return BEGINPROB; }

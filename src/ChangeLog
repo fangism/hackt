@@ -3,6 +3,15 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2013-12-04	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-86-53-run-time-expressions-04:
+	  Allow spec invariants to take $$(atomic expressions).
+		Also implemented in hacprsim.
+	  hacprsim: save-and-restore updated invariant list around
+		set-immediate-node (re-entrant).
+
+
 2013-11-25	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-86-53-run-time-expressions-03:

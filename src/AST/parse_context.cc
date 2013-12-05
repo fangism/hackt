@@ -98,6 +98,7 @@ context::context(module& m, const parse_options& o) :
 		strict_template_mode(true), 
 		in_conditional_scope(false), 
 		view_all_publicly(false), 
+		rte_mode(false),
 		parse_opts(o)
 		{
 
@@ -147,6 +148,7 @@ context::context(const module& m, const parse_options& o, const bool _pub) :
 		strict_template_mode(true), 
 		in_conditional_scope(false), 
 		view_all_publicly(_pub), 
+		rte_mode(false),
 		parse_opts(o)
 		{
 	namespace_stack.push(global_namespace);

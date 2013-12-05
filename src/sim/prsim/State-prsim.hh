@@ -1682,6 +1682,12 @@ private:
 		value_enum prev, value_enum next);
 #endif
 
+	void
+	handle_keeper_checks(const node_index_type);
+
+	void
+	handle_invariants(const event_cause_type&);
+
 	error_policy_enum
 	__diagnose_invariant(ostream&, const process_index_type, 
 		const rule_index_type, const pull_enum,

@@ -201,8 +201,9 @@ default:
 //=============================================================================
 // class invariant method definitions
 
-invariant::invariant(const expr* const e, const token_string* const m) :
-		directive_base(), _expr(e), _msg(m) {
+invariant::invariant(const expr* const e, const token_string* const m,
+		const bool rm) :
+		directive_base(), _expr(e), _msg(m), rte_mode(rm) {
 	NEVER_NULL(_expr);
 	// _msg is optional
 }
@@ -227,6 +228,7 @@ invariant::rightmost(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 invariant::return_type
 invariant::check_spec(context& c) const {
+	const context::rte_mode_accessor _tmp(c, rte_mode);
 	const prs_expr_return_type p(_expr->check_prs_expr(c));
 	if (!p) {
 		cerr << "Error checking invariant expression at "

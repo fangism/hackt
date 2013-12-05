@@ -1614,7 +1614,8 @@ prefix_expr::check_prs_expr(context& c) const {
 			"." << endl;
 		THROW_EXIT;		// for now
 	}
-	if (op->text[0] != '~') {
+	if ((c.is_rte_syntax_mode() && (op->text[0] != '!'))
+		|| (!c.is_rte_syntax_mode() && (op->text[0] != '~'))) {
 		ICE(cerr, 
 			cerr << "FATAL: Invalid unary operator: \'" <<
 			op->text[0] << "\' at " << where(*op) <<
@@ -2807,6 +2808,7 @@ logical_expr::check_prs_expr(context& c) const {
 	ro->check();
 #endif
 	const char op_char = op->text[0];
+	// also works for RTE syntax
 	if (op_char == '&') {
 		typedef	entity::PRS::and_expr::iterator		iterator;
 		typedef	entity::PRS::and_expr::const_iterator	const_iterator;
@@ -2834,6 +2836,7 @@ logical_expr::check_prs_expr(context& c) const {
 //			ret->check();	// paranoia
 			return ret;
 		}
+	// also works for RTE syntax
 	} else if (op_char == '|') {
 		typedef	entity::PRS::or_expr::iterator		iterator;
 		typedef	entity::PRS::or_expr::const_iterator	const_iterator;

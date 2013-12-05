@@ -1,0 +1,31 @@
+# "invariant-01.prsimrc"
+# @haco@ invariant-01.haco-c
+
+invariant-fail warn
+watchall
+set c 0
+set d 0
+set e 0
+set f 0
+cycle
+echo ---------
+set c 1
+cycle
+echo ---------
+set e 1
+cycle
+echo ---------
+set d 1
+cycle
+echo ---------
+set d 0
+cycle
+echo ---------
+set f 1
+cycle
+echo ---------
+set e 0
+cycle
+echo ---------
+check-invariants
+echo expect no violations
