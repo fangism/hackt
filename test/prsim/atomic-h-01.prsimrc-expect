@@ -1,0 +1,6 @@
+Error: Atomic nodes may not participate in mk_excl rings.  (ribs.B.Z.x)
+Instantiated from type: foo<>
+Instantiated from type: bar<>
+Instantiated from type: bq<>
+Instantiated from -TOP-: 
+Caught exception during construction of simulator state.

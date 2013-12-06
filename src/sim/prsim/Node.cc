@@ -51,16 +51,23 @@ Node::~Node() { }
 /**
 	This grabs instance attributes from the canonical bools
 	in the instance hierarchy.
+	\return true on error
  */
-void
+bool
 Node::import_attributes(const bool_connect_policy& b) {
 if (b.is_atomic()) {
+	if (has_mk_exclhi() || has_mk_excllo()) {
+		cerr << "Atomic nodes may not participate in mk_excl rings."
+			<< endl;
+		return true;
+	}
 	mark_atomic();
 } else {
 	// the only attributes we care about:
 	if (b.may_weak_interfere())	allow_weak_interference();
 	if (b.may_interfere())		allow_interference();
 }
+	return false;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,0 +1,6 @@
+// "atomic-g.hac"
+ebool x; 
+bool y;
+spec {
+	mk_exclhi(x, y)
+}

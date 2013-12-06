@@ -108,7 +108,7 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	pcehb-test-b pcefb-test-b \
 	power-supplies-a power-supplies-b power-supplies-c power-supplies-d \
 	power-supplies-e power-supplies-f \
-	atomic-a atomic-b atomic-c atomic-d atomic-e atomic-f
+	atomic-a atomic-b atomic-c atomic-d atomic-e atomic-f atomic-g atomic-h
 
 # TODO: more cross-coupled test cases
 # SRAM cell
@@ -822,7 +822,8 @@ HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
 	channel-clocked-test-b-06 \
 	channel-clocked-test-b-07 \
 	reset-test-01 \
-	atomic-a-01 atomic-a-02 atomic-a-04
+	atomic-a-01 atomic-a-02 atomic-a-04 \
+	atomic-g-01 atomic-h-01
 
 # KNOWN BUG (fails, but should not): cross-pulldown-01
 

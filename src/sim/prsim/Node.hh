@@ -257,7 +257,7 @@ public:
 	bool
 	is_atomic(void) const { return struct_flags & NODE_IS_ATOMIC; }
 
-	void
+	bool
 	import_attributes(const bool_connect_policy&);
 
 	bool

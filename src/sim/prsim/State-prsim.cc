@@ -1087,7 +1087,15 @@ State::append_mk_exclhi_ring(ring_set_type& r) {
 	const_iterator i(r.begin()), e(r.end());
 	for ( ; i!=e; ++i) {
 		const node_index_type ni = *i;
-		__get_node(ni).make_exclhi();
+		node_type& n(__get_node(ni));
+		if (n.is_atomic()) {
+			// this check occurs too early, never caught
+			// Q: could this be checked earlier, at create-time?
+			cerr << "Error: Atomic nodes may not participate in mk_excl rings.  ("
+				<< get_node_canonical_name(ni) << ')' << endl;
+			THROW_EXIT;
+		}
+		n.make_exclhi();
 #if PRSIM_MK_EXCL_BLOCKING_SET
 		mk_exhi_counter_map[ni].push_back(j);
 #endif
@@ -1118,7 +1126,15 @@ State::append_mk_excllo_ring(ring_set_type& r) {
 	const_iterator i(r.begin()), e(r.end());
 	for ( ; i!=e; ++i) {
 		const node_index_type ni = *i;
-		__get_node(ni).make_excllo();
+		node_type& n(__get_node(ni));
+		if (n.is_atomic()) {
+			// this check occurs too early, never caught
+			// Q: could this be checked earlier, at create-time?
+			cerr << "Error: Atomic nodes may not participate in mk_excl rings.  ("
+				<< get_node_canonical_name(ni) << ')' << endl;
+			THROW_EXIT;
+		}
+		n.make_excllo();
 #if PRSIM_MK_EXCL_BLOCKING_SET
 		mk_exlo_counter_map[ni].push_back(j);
 #endif

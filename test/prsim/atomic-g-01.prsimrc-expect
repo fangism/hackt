@@ -1,0 +1,4 @@
+Atomic nodes may not participate in mk_excl rings.
+	got: x
+Instantiated from -TOP-: 
+Caught exception during construction of simulator state.

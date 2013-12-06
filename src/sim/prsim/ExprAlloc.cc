@@ -524,7 +524,12 @@ ExprAlloc::visit(const state_instance<bool_tag>& b) {
 	NEVER_NULL(bref);
 	const size_t lbi = bref->instance_index;
 	const size_t gbi = lookup_global_id<bool_tag>(lbi);
-	state.node_pool[gbi].import_attributes(*bref);
+	if (state.node_pool[gbi].import_attributes(*bref)) {
+		bref->dump_hierarchical_name(cerr << "\tgot: ")
+			// << state.get_node_canonical_name(gbi)
+			<< endl;
+		THROW_EXIT;
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
