@@ -1,0 +1,19 @@
+// "atomic-j.hac"
+defproc foo(ebool x; bool y) {
+spec {
+	exclhi(x, y)
+}
+}
+
+defproc bar(ebool a; bool b) {
+	foo Z(a, b);
+}
+
+defproc bq(ebool p; bool q) {
+	bar B(p, q);
+}
+
+ebool j;
+bool k;
+rte { j = k; }
+bq ribs(j, k);

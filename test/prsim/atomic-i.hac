@@ -1,0 +1,7 @@
+// "atomic-i.hac"
+ebool x; 
+bool y;
+rte { x = y; }
+spec {
+	exclhi(x, y)
+}
