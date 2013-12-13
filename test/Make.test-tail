@@ -68,7 +68,7 @@ POM_HEADER_FILTER = $(AWK) -f $(TEST_BUILDDIR)/POM-header-filter.awk
 POM_INDEX_FILTER = $(AWK) -f $(TEST_SRCDIR)/POM-index-filter.awk
 POM_SIZE_FILTER = $(AWK) -f $(TEST_SRCDIR)/POM-size-filter.awk
 HEX_ADDRESS_FILTER = $(SED) -f $(TEST_SRCDIR)/address_filter.sed
-HACKT_OBJ_DIFF_FILTER = $(POM_HEADER_FILTER) | $(GREP) -v "finish writing"
+HACKT_OBJ_DIFF_FILTER = { $(POM_HEADER_FILTER) | $(GREP) -v "finish writing" ;}
 ANALYZE_DIFF_AWK = $(AWK) -f $(TEST_SRCDIR)/analyze-dump-diff.awk
 CHPSIM_TRACE_BINARY_FILTER = $(AWK) -f $(TEST_SRCDIR)/chpsim-binary-size-filter.awk
 # happens to be close enough to be reusable!
@@ -119,7 +119,7 @@ HAC_DEPEND_SCRIPT = \
 	if test -x $(HACKT_COMPILE_EXE) ; then \
 		$(ECHO) "Generating automatic dependencies $@ ..." && \
 		$(HACKT_COMPILE_EXE) $(HACO_FLAGS) -M $@-tmp $< && \
-		$(CAT) $@-tmp | $(HAC_DEPEND_FILTER) > $@ && \
+		$(HAC_DEPEND_FILTER) < $@-tmp > $@ && \
 		$(RM) $@-tmp ; \
 	fi
 
@@ -137,29 +137,29 @@ endif
 # This rule should deduce the input object from the source script.  
 
 # to apply different compile flags to the same source file
-EXTRACT_HACO_FLAGS_PIPE = $(GREP) "@haco-flags@" | $(HEAD) -n1 | \
-	$(SED) 's/^.*@haco-flags@[ ]*//g'
-EXTRACT_HACPP_FLAGS_PIPE = $(GREP) "@hacpp-flags@" | $(HEAD) -n1 | \
-	$(SED) 's/^.*@hacpp-flags@[ ]*//g'
-EXTRACT_HFLAT_FLAGS_PIPE = $(GREP) "@hflat-flags@" | $(HEAD) -n1 | \
-	$(SED) 's/^.*@hflat-flags@[ ]*//g'
+EXTRACT_HACO_FLAGS_PIPE = { $(GREP) "@haco-flags@" | $(HEAD) -n1 | \
+	$(SED) 's/^.*@haco-flags@[ ]*//g' ;}
+EXTRACT_HACPP_FLAGS_PIPE = { $(GREP) "@hacpp-flags@" | $(HEAD) -n1 | \
+	$(SED) 's/^.*@hacpp-flags@[ ]*//g' ;}
+EXTRACT_HFLAT_FLAGS_PIPE = { $(GREP) "@hflat-flags@" | $(HEAD) -n1 | \
+	$(SED) 's/^.*@hflat-flags@[ ]*//g' ;}
 
 # useful for extracting object file name from a source script
 # EXTRACT_HACO_PIPE = $(GREP) "^\#" ...
-EXTRACT_HACO_PIPE = $(GREP) "@haco@" | $(HEAD) -n1 | \
-	$(SED) 's/^.*@haco@[ ]*//'
+EXTRACT_HACO_PIPE = { $(GREP) "@haco@" | $(HEAD) -n1 | \
+	$(SED) 's/^.*@haco@[ ]*//' ;}
 #	$(AWK) '{ntok=split($$0, toks); print toks[ntok]; }'
 
 # This analogously extracts the name of a tracefile from source.
-EXTRACT_CHPSIMTRACE_PIPE = $(GREP) "@chpsimtrace@" | $(HEAD) -n1 | \
-	$(AWK) '{ntok=split($$0, toks); print toks[ntok]; }'
+EXTRACT_CHPSIMTRACE_PIPE = { $(GREP) "@chpsimtrace@" | $(HEAD) -n1 | \
+	$(AWK) '{ntok=split($$0, toks); print toks[ntok]; }' ;}
 
 # General script for extracting additional dependencies from source files.
-EXTRACT_DEPS_PIPE = $(GREP) "@deps@" | $(SED) 's/^.*@deps@[ ]*//g'
+EXTRACT_DEPS_PIPE = { $(GREP) "@deps@" | $(SED) 's/^.*@deps@[ ]*//g' ;}
 
 # General script for extracting additional anti-dependencies from source files.
 # Useful for automatically cleaning side-effect files.
-EXTRACT_ANTIDEPS_PIPE = $(GREP) "@antideps@" | $(SED) 's/^.*@antideps@[ ]*//g'
+EXTRACT_ANTIDEPS_PIPE = { $(GREP) "@antideps@" | $(SED) 's/^.*@antideps@[ ]*//g' ;}
 
 
 # This mechanism could be generalized to produce extra dependencies
@@ -255,6 +255,7 @@ HAC_OBJECT_DEPS = $(ALL_OBJECT_TESTS:=.depend)
 # source dependencies
 test.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
+	$(SET_PIPEFAIL) ; \
 	$(ECHO) "$(ALL_OBJECT_TESTS)" | $(SPACES_TO_NEWLINE) | $(SORT) -u | \
 		$(AWK) '/.+/ {print "-include " $$1 ".depend"; }' > $@ ; \
 	$(TOUCH) $@

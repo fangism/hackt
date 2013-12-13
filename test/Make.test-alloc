@@ -46,9 +46,9 @@ DEFAULT_ALLOCDUMP_SCRIPT = objdumpflags=$(ALLOCDUMP_FLAGS) && $(DEFAULT_OBJDUMP_
 	$(DEFAULT_ALLOCDUMP_SCRIPT)
 
 if VERBOSE_CHECK
-ALLOCDUMP_FILTER_SCRIPT = $(CAT) $< | $(ALLOC_FILTER) > $@
+ALLOCDUMP_FILTER_SCRIPT = $(ALLOC_FILTER) < $< > $@
 else
-ALLOCDUMP_FILTER_SCRIPT = @$(CAT) $< | $(ALLOC_FILTER) > $@
+ALLOCDUMP_FILTER_SCRIPT = @$(ALLOC_FILTER) < $< > $@
 endif
 
 .allocdump.allocdump-filter:
@@ -77,6 +77,7 @@ endif
 
 alloctest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
+	$(SET_PIPEFAIL) ; \
 	$(ECHO) "$(HACKT_ALLOC_TEST_PASSES)" | \
 		$(SPACES_TO_NEWLINE) | $(SORT) -u | \
 		$(AWK) '/.+/ {print $$1 ".allocdiff: $$(srcdir)/" $$1 ".allocstderr"; }' > $@ ; \
@@ -128,7 +129,7 @@ alloctest.autodepend: Makefile
 #	$(DEFAULT_ALLOCDUMP_SCRIPT)
 
 # .alloc-from-haco-dump.alloc-from-haco-dump-filter:
-#	@$(CAT) $< | $(ALLOC_FILTER) > $@ ; \
+#	@$(ALLOC_FILTER) < $< > $@ ; \
 #	$(ECHO_FILTERED)
 
 # if VERBOSE_CHECK

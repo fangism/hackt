@@ -51,7 +51,7 @@ AUTO_IGNORE += $(HACKT_FLATTEN_CLEAN_IGNORE_PATTERNS)
 # TODO: enable dependency tracking by default (see compile script)
 
 HACKT_FLATTEN_TEST_DEFAULT_SCRIPT = \
-	flags=`$(CAT) $< | $(EXTRACT_HACPP_FLAGS_PIPE)` && \
+	flags=`$(EXTRACT_HACPP_FLAGS_PIPE) < $<` && \
 	cmd="$(HACKT_FLATTEN_EXE) $$flags $(HACO_FLAGS) $<" && \
 	$(ECHO) "$$cmd > $@" && \
 	$$cmd > $@ && \
@@ -60,15 +60,14 @@ HACKT_FLATTEN_TEST_DEFAULT_SCRIPT = \
 #	log="$$depbase.compiledump" ; \
 #	$(ECHO) "$(HACKT_COMPILE_EXE) $(HACO_FLAGS) -M $$depbase.depend $< $@" ; \
 #	if $(HACKT_COMPILE_EXE) $(HACO_FLAGS) -M "$$depbase.tmpd" $< $@ > "$$log" 2>&1 ; \
-#	then $(CAT) "$$depbase.tmpd" | \
-#		$(HAC_DEPEND_FILTER) > "$$depbase.depend" ; \
+#	then $(HAC_DEPEND_FILTER) < "$$depbase.tmpd" > "$$depbase.depend" ; \
 #		$(RM) "$$depbase.tmpd" ; \
 #	else $(RM) "$$depbase.tmpd" ; exit 1 ; \
 #	fi
 
 # use this variant when piping stdin
 HACKT_FLATTEN_TEST_STDIN_SCRIPT = \
-	flags=`$(CAT) $< | $(EXTRACT_HACPP_FLAGS_PIPE)` && \
+	flags=`$(EXTRACT_HACPP_FLAGS_PIPE) < $<` && \
 	cmd="$(HACKT_FLATTEN_EXE) $$flags $(HACO_FLAGS)" && \
 	$(ECHO) "$$cmd < $< > $@" && \
 	$$cmd < $< > $@ && \
@@ -78,7 +77,7 @@ HACKT_FLATTEN_TEST_STDIN_SCRIPT = \
 	@$(HACKT_FLATTEN_TEST_DEFAULT_SCRIPT)
 
 .hacf.hacf-filter:
-	@$(CAT) $< | $(HACKT_FLATTEN_ERROR_FILTER) > $@
+	@$(HACKT_FLATTEN_ERROR_FILTER) < $< > $@
 
 if VERBOSE_CHECK
 ECHO_FLATTEN_DIFF_COMMAND = $(ECHO) "$(DIFF) -bu $$expect $<"
@@ -103,6 +102,7 @@ endif
 
 hacflattest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
+	$(SET_PIPEFAIL) ; \
 	$(ECHO) "$(HACKT_FLATTEN_TEST_PASSES)" | \
 		$(SPACES_TO_NEWLINE) | $(SORT) -u | \
 		$(AWK) '/.+/ {print $$1 ".hacf-diff: $$(srcdir)/" $$1 ".hacf-expect"; }' > $@ ; \
@@ -124,7 +124,7 @@ hacflattest.autodepend: Makefile
 
 # additional sed filter fakes the file name as if it were the original source
 .findump.findump-filter:
-	@$(CAT) $< | $(HACKT_OBJ_DIFF_FILTER) | \
+	@$(HACKT_OBJ_DIFF_FILTER) < $< | \
 	$(SED) -e '/^In module/s|$*.hacf|$(srcdir)/$*.hac|' \
 		-e '/^In module/s| \./| |' > $@ ; \
 	$(ECHO_FILTERED)
@@ -145,6 +145,7 @@ hacflattest.autodepend: Makefile
 
 hacfobjdifftest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
+	$(SET_PIPEFAIL) ; \
 	$(ECHO) "$(HACKT_FLATTEN_PARSE_TEST_PASSES)" | \
 		$(SPACES_TO_NEWLINE) | $(SORT) -u | \
 		$(AWK) '/.+/ {print $$1 ".hacfobjdiff: " $$1 ".indump-filter"; }' > $@ ; \
@@ -170,7 +171,7 @@ COMPILEFLATDUMP_EXTRA_FILTER = $(SED) -e '/^At:/s/\.hacf/.hac/' \
 # 3) compensates for parse errors placement of import decl.
 
 .compileflatdump.compileflatdump-filter:
-	@$(CAT) $< | $(HACKT_COMPILE_ERROR_FILTER) | \
+	@$(HACKT_COMPILE_ERROR_FILTER) < $< | \
 		$(COMPILEFLATDUMP_EXTRA_FILTER) > $@
 
 .compileflatdump-filter.compileflatdump-diff:
@@ -180,7 +181,7 @@ COMPILEFLATDUMP_EXTRA_FILTER = $(SED) -e '/^At:/s/\.hacf/.hac/' \
 	  $(ECHO_FLATTEN_DIFF_COMMAND) ; \
 	  $(DIFF) -bu "$$expect" $< > $@ ; \
 	  if test -s $@ ; then \
-	    $(CAT) "$$expect" | $(COMPILEFLATDUMP_EXTRA_FILTER) > "$$expect"-tmp ; \
+	    $(COMPILEFLATDUMP_EXTRA_FILTER) < "$$expect" > "$$expect"-tmp ; \
 	    $(DIFF) -bu "$$expect"-tmp $< > $@ ; \
 	    if test -s $@ ; then \
 	      $(ECHO) "Differences in $@!" ; \
@@ -195,6 +196,7 @@ COMPILEFLATDUMP_EXTRA_FILTER = $(SED) -e '/^At:/s/\.hacf/.hac/' \
 
 compileflattest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
+	$(SET_PIPEFAIL) ; \
 	$(ECHO) "$(HACKT_FLATTEN_PARSE_TEST_FAILURES)" | \
 		$(SPACES_TO_NEWLINE) | $(SORT) -u | \
 		$(AWK) '/.+/ {print $$1 ".compileflatdump-diff: " $$1 ".compiledump-filter"; }' > $@ ; \
@@ -211,7 +213,7 @@ AUTO_DEPENDS += compileflattest.autodepend
 
 
 .hacf-fail.hacf-fail-filter:
-	@$(CAT) $< | $(HACKT_FLATTEN_ERROR_FILTER) > $@
+	@$(HACKT_FLATTEN_ERROR_FILTER) < $< > $@
 
 .hacf-fail-filter.hacf-fail-diff:
 	@stderr=`$(ECHO) $@ | $(SED) 's/\.hacf-fail-diff$$/.hacf-expect/g'` ; \
@@ -230,6 +232,7 @@ AUTO_DEPENDS += compileflattest.autodepend
 
 hacflatfailtest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
+	$(SET_PIPEFAIL) ; \
 	$(ECHO) "$(HACKT_FLATTEN_TEST_FAILURES)" | \
 		$(SPACES_TO_NEWLINE) | $(SORT) -u | \
 		$(AWK) '/.+/ {print $$1 ".hacf-fail-diff: $$(srcdir)/" $$1 ".hacf-expect"; }' > $@ ; \

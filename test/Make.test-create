@@ -60,11 +60,11 @@ CREATE_OBJDUMP_SCRIPT = \
 
 # using HEX_ADDRESS_FILTER when debugging
 .createdump.createdump-filter:
-	@$(CAT) $< | $(HACKT_OBJ_DIFF_FILTER) > $@ ; \
+	@$(HACKT_OBJ_DIFF_FILTER) < $< > $@ ; \
 	$(ECHO_FILTERED)
 
 .haco-c-dump.haco-c-dump-filter:
-	@$(CAT) $< | $(HACKT_OBJ_DIFF_FILTER) > $@ ; \
+	@$(HACKT_OBJ_DIFF_FILTER) < $< > $@ ; \
 	$(ECHO_FILTERED)
 
 HACKT_CREATE_TEST_DIFF = $(DIFF) -buw
@@ -83,15 +83,15 @@ else
 CREATE_HEADER_DIFF_SCRIPT_PART2 = \
 	filtered2=`$(ECHO) $@ | $(SED) 's/\.creatediff$$/.createstderr-nosize/g'` ; \
 	diffout2=`$(ECHO) $@ | $(SED) 's/\.creatediff$$/.creatediff-nosize/g'` ; \
-	$(CAT) "$$expect" | $(POM_SIZE_FILTER) > "$$filtered2" ; \
-	$(CAT) $< | $(POM_SIZE_FILTER) > $<-nosize ; \
+	$(POM_SIZE_FILTER) < "$$expect" > "$$filtered2" ; \
+	$(POM_SIZE_FILTER) < $< > $<-nosize ; \
 	$(HACKT_CREATE_TEST_DIFF) "$$filtered2" $<-nosize > "$$diffout2" 2>&1 ; \
 	$(ANALYZE_DIFF_AWK) -v quiet=0 "$$diffout2" ; \
 	$(MV) $@ $@-orig ; \
 	$(CP) "$$diffout2" $@
 endif
-#	$(CAT) "$$filtered" | $(POM_SIZE_FILTER) > "$$filtered2" ; \
-#	$(CAT) $<-noindex | $(POM_SIZE_FILTER) > $<-nosize ;
+#	$(POM_SIZE_FILTER) < "$$filtered" > "$$filtered2" ; \
+#	$(POM_SIZE_FILTER) < $<-noindex > $<-nosize ;
 
 .createdump-filter.creatediff:
 	@stderr=`$(ECHO) $@ | $(SED) 's/\.creatediff$$/.createstderr/g'` ; \
@@ -106,8 +106,8 @@ endif
 	    if $(GREP) "OK" $@-anal ; then \
 	      filtered=`$(ECHO) $@ | $(SED) 's/\.creatediff$$/.createstderr-noindex/g'` ; \
 	      diffout=`$(ECHO) $@ | $(SED) 's/\.creatediff$$/.creatediff-noindex/g'` ; \
-	      $(CAT) "$$expect" | $(POM_INDEX_FILTER) > $$filtered ; \
-	      $(CAT) $< | $(POM_INDEX_FILTER) > $<-noindex ; \
+	      $(POM_INDEX_FILTER) < "$$expect" > $$filtered ; \
+	      $(POM_INDEX_FILTER) < $< > $<-noindex ; \
 	      $(HACKT_CREATE_TEST_DIFF) "$$filtered" $<-noindex > "$$diffout" 2>&1 ; \
 	      $(ANALYZE_DIFF_AWK) -v quiet=0 "$$diffout" ; \
 	    fi ; \
@@ -123,6 +123,7 @@ endif
 
 createtest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
+	$(SET_PIPEFAIL) ; \
 	$(ECHO) "$(HACKT_CREATE_TEST_PASSES)" | \
 		$(SPACES_TO_NEWLINE) | $(SORT) -u | \
 		$(AWK) '/.+/ {print $$1 ".creatediff: $$(srcdir)/" $$1 ".createstderr"; print $$1 ".createdump: " $$1 ".haco-c-err" ; }' > $@ ; \
@@ -164,6 +165,7 @@ endif
 
 createfailtest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
+	$(SET_PIPEFAIL) ; \
 	$(ECHO) "$(HACKT_CREATE_TEST_FAILURES)" | \
 		$(SPACES_TO_NEWLINE) | $(SORT) -u | \
 		$(AWK) '/.+/ {print $$1 ".createfaildiff: $$(srcdir)/" $$1 ".createstderr"; }' > $@ ; \

@@ -218,5 +218,5 @@ srcdir_EXTRA_DIST += README \
 include $(top_srcdir)/test/Make.test-tail
 
 # additional filtering out
-PRSIMRC_FILTER_AWK += | $(GREP) -v "^default after"
+PRSIMRC_FILTER_HOOK = | $(GREP) -v "^default after"
 

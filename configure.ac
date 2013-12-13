@@ -29,6 +29,8 @@ AM_INIT_AUTOMAKE([1.9 -Wall -Werror])
 # AM_MAINTAINER_MODE
 
 AC_CANONICAL_HOST
+
+dnl may need to readlink to dereference sym-links
 if test "$AWK" = "mawk" ; then
   AC_MSG_ERROR([mawk is known to reject valid input, please try any other awk!
 You can override the tool by passing AWK=... to the configure options.
@@ -42,6 +44,8 @@ AC_CHECK_PROG([SH], sh, sh)
 AC_PATH_PROG(SH_PATH, sh)
 dnl AM_TRUE is always true, needed to fake conditional Makefile
 AM_CONDITIONAL(ALWAYS_TRUE, true)
+
+HACKT_SHELL_PIPEFAIL
 
 # CALLMAKE is intended for shell scripts' invocations of make
 # NOT intended for direct use in configured Makefiles, because
