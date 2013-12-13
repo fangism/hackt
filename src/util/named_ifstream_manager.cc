@@ -80,7 +80,7 @@ named_ifstream_stack::push(const string& fp) {
 	INVARIANT(fp.length());
 if ((fp != named_ifstream::dev_stdin)) {
 #endif
-	const bool ret = _registry.push(fp);
+	const bool ret = !_registry.push(fp).second;
 	const named_ifstream dummy;
 	_files.push_back(dummy);	// uses fake copy ctor
 	_files.back().open(fp);
@@ -207,7 +207,7 @@ ifstream_manager::__open_ifstream(const string& fs) {
 #else
 		fs != named_ifstream::dev_stdin
 #endif
-			? _names.push_back(fs) : false);
+			? !_names.push_back(fs).second : false);
 #endif
 	// don't register stdin with a file name in the named_ifstream_stack
 	// but is ok to register it with the cycle-detection _names stack.

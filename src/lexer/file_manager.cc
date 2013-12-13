@@ -46,7 +46,7 @@ file_position_stack::~file_position_stack() {
 bool
 file_position_stack::push(const file_position& fp) {
 	if (fp.name.length()) {
-		if (_registry.push(fp.name)) {
+		if (!_registry.push(fp.name).second) {
 			return true;
 		} else {
 			_files.push_back(fp);
@@ -187,7 +187,7 @@ file_manager::open_FILE(const char* fs, FILE* f) {
 	INVARIANT(f);
 	// don't register stdin with a file name in the file_position_stack
 	// but is ok to register it with the cycle-detection _names stack.
-	const bool cyc = _names.push_back(fs ? fs : _stdin_);
+	const bool cyc = !_names.push_back(fs ? fs : _stdin_).second;
 	file_status::status s;		// whether or not was already included
 	if (cyc) {
 		// then must also already have been on _fstack
