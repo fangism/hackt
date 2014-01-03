@@ -119,6 +119,11 @@ public:
 		}
 	}
 
+	bool
+	contains(const_reference n) const {
+		return this->find(n) != this->end();
+	}
+
 protected:
 	iterator
 	find(const_reference n) {
@@ -193,10 +198,24 @@ public:
 		_sequence.pop_front();
 	}
 
-	/// defaults to back operation
-	void
+	std::pair<typename set_type::iterator, bool>
+	move_back(const_reference n) {
+		erase(n);
+		return push_back(n);
+	}
+
+	std::pair<typename set_type::iterator, bool>
+	move_front(const_reference n) {
+		erase(n);
+		return push_front(n);
+	}
+
+	/// defaults to pop_back operation
+	value_type
 	pop(void) {
+		const value_type ret = back();
 		pop_back();
+		return ret;
 	}
 
 	/**
