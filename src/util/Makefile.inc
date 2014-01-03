@@ -135,6 +135,7 @@ UTIL_CXX_HEADER_FILES = \
 	util/for_all.hh \
 	util/format_IO.hh \
 	util/function_traits.hh \
+	util/graph/bare_digraph.hh \
 	util/hash_qmap_fwd.hh \
 	util/hash_specializations.hh \
 	util/ifthenelse.hh \
@@ -264,6 +265,7 @@ UTIL_CC_FILES = \
 	util/tokenize.cc \
 	util/stream_ptr.cc \
 	util/uninitialized.cc \
+	util/graph/bare_digraph.cc \
 	util/memory/deallocation_policy.cc \
 	util/memory/thread_lock.cc \
 	util/memory/ref_count_pool.cc \

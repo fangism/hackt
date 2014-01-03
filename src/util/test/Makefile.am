@@ -134,7 +134,8 @@ noinst_PROGRAMS = \
 	ring_node_test \
 	union_find_test \
 	sparse_collection_test \
-	collection_pool_test
+	collection_pool_test \
+	digraph_SCC_test
 
 AUTO_DEPENDS += exec.autodepend
 # rules for creating .out from executables
@@ -169,6 +170,7 @@ AUTO_STDERR_FILES = multikey_set_derived_test.stderr
 
 BUILT_SOURCES = stacktrace.cc static_trace.cc thread_lock.cc \
 	ref_count_pool.cc bitset.cc nibble_tables.cc \
+	bare_digraph.cc \
 	$(EMPTY_STDERR_FILES) $(AUTO_STDERR_FILES)
 
 pointer_classes_test_SOURCES = pointer_classes_test.cc var.hh func.hh
@@ -248,9 +250,12 @@ sparse_collection_test_SOURCES = sparse_collection_test.cc
 sparse_collection_test_LDADD = libfangutil.la
 collection_pool_test_SOURCES = collection_pool_test.cc
 collection_pool_test_LDADD = libfangutil.la
+digraph_SCC_test_SOURCES = digraph_SCC_test.cc
+digraph_SCC_test_LDADD = libfangutil.la
 
 libfangutil_la_SOURCES = stacktrace.cc static_trace.cc thread_lock.cc \
-	ref_count_pool.cc bitset.cc nibble_tables.cc string.cc tokenize.cc
+	ref_count_pool.cc bitset.cc nibble_tables.cc string.cc tokenize.cc \
+	bare_digraph.cc
 libbogusutil_la_SOURCES = bogus_stacktrace.cc bogus_stacktrace.hh static_trace.cc
 libpooled_la_SOURCES = \
 	pool_module_a.cc pool_module_b.cc pool_module_a.hh pool_module_b.hh
@@ -302,6 +307,9 @@ tokenize.cc: ../tokenize.cc
 	$(LN_SF) $? $@
 
 nibble_tables.cc: ../numeric/nibble_tables.cc
+	$(LN_SF) $? $@
+
+bare_digraph.cc: ../graph/bare_digraph.cc
 	$(LN_SF) $? $@
 
 friend_function_formal_bug.stderr:
