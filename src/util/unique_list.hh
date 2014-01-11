@@ -180,22 +180,26 @@ public:
 	/**
 		Removes back entry.  
 	 */
-	void
+	value_type
 	pop_back(void) {
 		const typename set_type::iterator
 			probe(_set.find(_sequence.back()));
 		INVARIANT(probe != _set.end());
+		const value_type ret = *probe->second;
 		_set.erase(probe);
 		_sequence.pop_back();
+		return ret;
 	}
 
-	void
+	value_type
 	pop_front(void) {
 		const typename set_type::iterator
-			probe(_set.find(_sequence.back()));
+			probe(_set.find(_sequence.front()));
 		INVARIANT(probe != _set.end());
+		const value_type ret = *probe->second;
 		_set.erase(probe);
 		_sequence.pop_front();
+		return ret;
 	}
 
 	std::pair<typename set_type::iterator, bool>
@@ -213,9 +217,7 @@ public:
 	/// defaults to pop_back operation
 	value_type
 	pop(void) {
-		const value_type ret = back();
-		pop_back();
-		return ret;
+		return this->pop_back();
 	}
 
 	/**
