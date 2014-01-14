@@ -8,6 +8,7 @@
 #define	__HAC_OBJECT_LANG_RTE_BASE_HH__
 
 #include <list>
+#include <set>
 #include "util/memory/excl_ptr.hh"
 #include "util/memory/count_ptr.hh"
 #include "util/persistent.hh"
@@ -54,6 +55,7 @@ typedef	count_ptr<const rte_expr>		const_rte_expr_ptr_type;
 
 typedef	state_instance<bool_tag>		bool_instance_type;
 typedef	instance_pool<bool_instance_type>	node_pool_type;
+typedef	size_t					node_index_type;
 
 //=============================================================================
 /**
@@ -182,9 +184,10 @@ virtual	ostream&
 virtual	void
 	check(void) const = 0;
 
+// accumulate set of used node indices
 #define	RTE_UNROLL_EXPR_PROTO						\
 	size_t								\
-	unroll(const unroll_context&) const
+	unroll(const unroll_context&, std::set<node_index_type>&) const
 
 virtual	RTE_UNROLL_EXPR_PROTO = 0;
 

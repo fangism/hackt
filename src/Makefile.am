@@ -704,6 +704,7 @@ OBJECT_CC_FILES = \
 	Object/expr/meta_func_call.cc \
 	Object/expr/meta_func_lib.cc \
 	Object/expr/meta_call_traits.cc \
+	Object/def/atomic_update_graph.cc \
 	Object/def/template_formals_manager.cc \
 	Object/def/port_formals_manager.cc \
 	Object/def/footprint.cc \

@@ -100,6 +100,7 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 namespace HAC {
 namespace entity {
 namespace RTE {
+using std::set;
 using std::copy;
 using std::transform;
 using std::back_inserter;
@@ -159,14 +160,16 @@ struct rte_expr::checker {
  */
 struct rte_expr::unroller {
 	const unroll_context& _context;
+	set<node_index_type>& _used;
 
 	explicit
-	unroller(const unroll_context& c) : _context(c) { }
+	unroller(const unroll_context& c, set<node_index_type>& u) :
+		_context(c), _used(u) { }
 
 	size_t
 	operator () (const rte_expr_ptr_type& e) const {
 		NEVER_NULL(e);
-		return e->unroll(_context);
+		return e->unroll(_context, _used);
 	}
 
 };	// end struct unroller
@@ -386,7 +389,12 @@ assignment::unroll(const unroll_context& c) const {
 	STACKTRACE_VERBOSE;
 	// resolve guard expression
 	RTE::footprint& pfp(c.get_target_footprint().get_rte_footprint());
-	const size_t guard_expr_index = guard->unroll(c);
+
+	// track atomic node dependencies
+	// Q: or could this be directly from atomic_update_DAG?
+	// would need output_node_index first...
+	std::set<node_index_type> used_nodes;
+	const size_t guard_expr_index = guard->unroll(c, used_nodes);
 	if (!guard_expr_index) {
 		this->dump(cerr << "Error unrolling atomic expression: "
 			<< endl << '\t', assignment_dump_context()) << endl;
@@ -403,6 +411,15 @@ assignment::unroll(const unroll_context& c) const {
 			<< endl;
 		return good_bool(false);
 	}
+	// update atomic update graph
+	atomic_update_graph&
+		ug(c.get_target_footprint().get_local_atomic_update_graph());
+	std::set<node_index_type>::const_iterator
+		ui(used_nodes.begin()), ue(used_nodes.end());
+	for ( ; ui != ue; ++ui) {
+		ug.add_edge(*ui, output_node_index);
+	}
+
 	// make sure node is not already defined
 #if BOOL_PRS_CONNECTIVITY_CHECKING
 	// doing this at unroll-time, but we could do it in a later pass...
@@ -805,11 +822,11 @@ binop_expr::check(void) const {
 		else return 0.
  */
 size_t
-binop_expr::unroll(const unroll_context& c) const {
+binop_expr::unroll(const unroll_context& c, set<node_index_type>& used) const {
 	STACKTRACE_VERBOSE;
 	list<size_t> expr_indices;
 	transform(begin(), end(), back_inserter(expr_indices), 
-		rte_expr::unroller(c));
+		rte_expr::unroller(c, used));
 	RTE::footprint& pfp(c.get_target_footprint().get_rte_footprint());
 	RTE::footprint::expr_node&
 		new_expr(pfp.push_back_expr(
@@ -1009,10 +1026,9 @@ not_expr::check(void) const {
 	Unrolls a production rule expression.  
  */
 size_t
-not_expr::unroll(const unroll_context& c
-		) const {
+not_expr::unroll(const unroll_context& c, set<node_index_type>& used) const {
 	STACKTRACE_VERBOSE;
-	const size_t expr_ind = var->unroll(c);
+	const size_t expr_ind = var->unroll(c, used);
 	if (!expr_ind) {
 		cerr << "Error unrolling production rule expression." << endl;
 		var->dump(cerr << '\t') << endl;
@@ -1143,7 +1159,7 @@ literal::unroll_node(const unroll_context& c) const {
 		literal reference, else 0 if error occurs.  
  */
 size_t
-literal::unroll(const unroll_context& c) const {
+literal::unroll(const unroll_context& c, set<node_index_type>& used) const {
 	STACKTRACE_VERBOSE;
 	RTE::footprint::expr_node* new_expr = NULL;
 	RTE::footprint& pfp(c.get_target_footprint().get_rte_footprint());
@@ -1152,6 +1168,7 @@ literal::unroll(const unroll_context& c) const {
 		// already have error message
 		return 0;
 	}
+	used.insert(node_index);	// track dependencies
 	new_expr = &(pfp.push_back_expr(PRS::PRS_LITERAL_TYPE_ENUM, 1));
 	(*new_expr)[1] = node_index;
 	return pfp.current_expr_index();

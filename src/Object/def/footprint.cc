@@ -261,6 +261,8 @@ footprint::footprint() :
 	rte_footprint(NULL), 
 	chp_footprint(NULL), 
 	spec_footprint(NULL),
+	local_atomic_update_DAG(),
+	exported_atomic_update_DAG(),
 #if FOOTPRINT_OWNS_CONTEXT_CACHE
 	context_cache(NULL),
 #endif
@@ -335,6 +337,8 @@ footprint::footprint(const const_param_expr_list& p,
 	chp_footprint(NULL), 	// allocate when we actually need it
 	chp_event_footprint(), 
 	spec_footprint(NULL), 
+	local_atomic_update_DAG(),
+	exported_atomic_update_DAG(),
 #if FOOTPRINT_OWNS_CONTEXT_CACHE
 	context_cache(NULL),
 #endif
@@ -371,6 +375,8 @@ footprint::footprint(const temp_footprint_tag_type&) :
 	chp_footprint(NULL), 	// allocate when we actually need it
 	chp_event_footprint(), 
 	spec_footprint(NULL),
+	local_atomic_update_DAG(),
+	exported_atomic_update_DAG(),
 #if FOOTPRINT_OWNS_CONTEXT_CACHE
 	context_cache(NULL),
 #endif
@@ -412,6 +418,11 @@ footprint::footprint(const footprint& t) :
 	chp_footprint(NULL), 	// allocate when we actually need it
 	chp_event_footprint(), 
 	spec_footprint(NULL), 
+	local_atomic_update_DAG(),
+	exported_atomic_update_DAG(),
+#if FOOTPRINT_OWNS_CONTEXT_CACHE
+	context_cache(NULL),
+#endif
 	lock_state(false) {
 	STACKTRACE_CTOR_VERBOSE;
 //	NEVER_NULL(prs_footprint);
@@ -1425,6 +1436,23 @@ if (sift) {
 	scope_aliases.dump(cerr << "footprint::scope_aliases (after): " << endl) << endl;
 	scope_aliases.dump(cerr << "footprint::port_aliases (after): " << endl) << endl;
 #endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Preserve a copy of the local atomic update graph that projects
+	onto the ports.  First, must compute transitive closure of the 
+	local atomic update graph.
+ */
+void
+footprint::export_atomic_update_graph(void) {
+	// transitive closure, computed on a copy
+	atomic_update_graph G(local_atomic_update_DAG);
+	G.transitive_closure();
+	// port projection
+	atomic_update_graph
+		H(G, get_instance_pool<bool_tag>().port_entries() +1);
+	exported_atomic_update_DAG.swap(H);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

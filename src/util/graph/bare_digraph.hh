@@ -43,6 +43,14 @@ public:
 	void
 	resize(const size_t N) { nodes.resize(N); }
 
+	size_t
+	size(void) const { return nodes.size(); }
+
+	const out_edges_type&
+	get_node(const node_index_type i) const {
+		return nodes[i];
+	}
+
 	void
 	__add_edge(const node_index_type i, const node_index_type j) {
 		// unsafe, bounds should be checked by caller a priori
