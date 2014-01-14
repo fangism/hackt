@@ -3411,7 +3411,7 @@ State::execute_immediately(
 	ISE_INVARIANT(excllo_queue.empty());
 #endif
 
-	recent_exceptions.clear();
+	clear_exceptions();
 //	const event_index_type& ei(ep.event_index);
 #if 0
 	if (!ei) {
@@ -3717,6 +3717,7 @@ if (n.in_channel()) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 State::record_exception(const exception_ptr_type& p) const {
+	STACKTRACE_BRIEF;
 	recent_exceptions.push_back(p);
 }
 
@@ -3726,6 +3727,7 @@ State::record_exception(const exception_ptr_type& p) const {
  */
 error_policy_enum
 State::inspect_exceptions(void) const {
+	STACKTRACE_BRIEF;
 	error_policy_enum ret = ERROR_NONE;
 	vector<exception_ptr_type>::const_iterator
 		i(recent_exceptions.begin()), e(recent_exceptions.end());

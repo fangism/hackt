@@ -8,8 +8,8 @@
 	to avoid object name collision in shared libraries.  
  */
 
-#ifndef	__HAC_SIM_PRSIM_STATE_H__
-#define	__HAC_SIM_PRSIM_STATE_H__
+#ifndef	__HAC_SIM_PRSIM_STATE_HH__
+#define	__HAC_SIM_PRSIM_STATE_HH__
 
 // enable additional sanity checking in "sim/event.hh" for event queue
 // can be disabled when not debugging
@@ -1263,6 +1263,11 @@ private:
 	execute_immediately(const event_type&, const time_type&)
 		THROWS_STEP_EXCEPTION;
 
+	void
+	clear_exceptions(void) {
+		recent_exceptions.clear();
+	}
+
 public:
 	step_return_type
 	step(void) THROWS_STEP_EXCEPTION;
@@ -1296,6 +1301,7 @@ public:
 	resume(void) {
 		flags &= ~FLAG_STOP_SIMULATION;
 		interrupted = false;
+		clear_exceptions();
 	}
 
 	bool
@@ -2079,5 +2085,5 @@ private:
 }	// end namespace SIM
 }	// end namespace HAC
 
-#endif	// __HAC_SIM_PRSIM_STATE_H__
+#endif	// __HAC_SIM_PRSIM_STATE_HH__
 
