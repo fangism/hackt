@@ -167,4 +167,9 @@ footprint: {
   $(~(e & f))
   $(~(x & d))
   $(~(e & b))
+  Atomic dependency graph:
+    3 -> {}
+    4 -> {}
+    5 -> {}
+    6 -> {}
 }

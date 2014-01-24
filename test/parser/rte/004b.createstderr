@@ -60,4 +60,6 @@ footprint: {
   4	z @[ loc-use ]	
   resolved rte:
   x = z
+  Atomic dependency graph:
+    3 -> {}
 }

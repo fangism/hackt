@@ -74,6 +74,12 @@ extern const temp_footprint_tag_type	temp_footprint_tag;
 
 #define	DECLARE_TEMPORARY_FOOTPRINT(f)	entity::footprint f(temp_footprint_tag)
 
+/**
+	Define to 1 to enable hierarchical atomic update cycle detection.
+	Goal: 1
+ */
+#define	DETECT_ATOMIC_UPDATE_CYCLES			1
+
 //=============================================================================
 /**
 	Manages the unroll and creation information for a particular
@@ -264,6 +270,7 @@ private:
 		Privatized implementation.  
 	 */
 	excl_ptr<SPEC::footprint>		spec_footprint;
+#if DETECT_ATOMIC_UPDATE_CYCLES
 	/**
 		Graph that represents atomic expression dependencies.
 		Must that that graph is acyclic across hierarchies.
@@ -278,6 +285,7 @@ private:
 		This summary is used in upward hierarchical propagation.  
 	 */
 	atomic_update_graph			exported_atomic_update_DAG;
+#endif
 #if FOOTPRINT_OWNS_CONTEXT_CACHE
 	/**
 		Hierarchical tree cache of footprint frames and offsets
@@ -500,9 +508,13 @@ private:
 	void
 	evaluate_scope_aliases(const bool sift);
 
+#if DETECT_ATOMIC_UPDATE_CYCLES
 	void
-	export_atomic_update_graph(void);
+	import_subprocess_atomic_update_graphs(void);
 
+	size_t
+	check_atomic_update_cycles(void) const;
+#endif
 public:
 	PRS::footprint&
 	get_prs_footprint(void);	// { return *prs_footprint; }
@@ -546,7 +558,7 @@ public:
 	bool
 	has_spec_footprint(void) const { return spec_footprint; }
 
-
+#if DETECT_ATOMIC_UPDATE_CYCLES
 	atomic_update_graph&
 	get_local_atomic_update_graph(void) { return local_atomic_update_DAG; }
 
@@ -559,6 +571,13 @@ public:
 	get_exported_atomic_update_graph(void) const {
 		return exported_atomic_update_DAG;
 	}
+
+	void
+	export_atomic_update_graph(void);
+
+	void
+	reconstruct_local_atomic_update_graph(void);
+#endif
 
 	template <class Tag>
 	size_t

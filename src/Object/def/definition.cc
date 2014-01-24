@@ -3243,6 +3243,8 @@ process_definition::unroll_lang(const unroll_context& c) const {
 	f.allocate_chp_events();
 	// need to propagate flags after connectivity processing!
 	f.synchronize_alias_flags();
+	// after RTE processed and subprocess evaluated
+	f.reconstruct_local_atomic_update_graph();
 #if ENABLE_STACKTRACE
 	STACKTRACE_INDENT_PRINT("in process_definition::unroll_lang()");
 	const port_alias_tracker& st(f.get_scope_alias_tracker());
@@ -3301,18 +3303,27 @@ try {
 		// since alias sets were computed before connectivity
 		// we may need to re-synchronize...
 		// however, skip some checks for top-level instantiations
-		f.connection_diagnostics(&top == &f);	// returns good_bool
+		const error_count ec(f.connection_diagnostics(&top == &f));
 		// f.mark_created();	// ?
 		// count warnings
-		if (f.warnings()) {
-			cerr << "Warnings found (" << f.warnings() <<
-				") while creating complete type ";
+		if (f.warnings() || ec.errors) {
+			if (ec.errors) {
+				cerr << "Errors found (" << ec.errors << ")";
+			}
+			if (f.warnings()) {
+				if (ec.errors) cerr << ", ";
+				cerr << "Warnings found (" << f.warnings() << ")";
+			}
+			cerr << " while creating complete type ";
 			if (&f == &top) {
 				cerr << "<top-level>";
 			} else {
 				f.dump_type(cerr);
 			}
 			cerr << "." << endl;
+			if (ec.errors) {
+				return good_bool(false);
+			}
 		}
 	}
 	return good_bool(true);

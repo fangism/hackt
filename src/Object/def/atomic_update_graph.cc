@@ -4,16 +4,26 @@
 
 #include <algorithm>
 #include <iterator>
-// #include <stack>
+
+#define	ENABLE_STACKTRACE			0
+#define	STACKTRACE_IOS				(0 && ENABLE_STACKTRACE)
 
 #include "Object/def/atomic_update_graph.hh"
+#include "Object/def/footprint.hh"
 #include "Object/global_entry.hh"
 #include "util/graph/bare_digraph.hh"
 #include "util/unique_list.tcc"		// for worklist
 #include "util/iterator_more.hh"	// for set_inserter
+#include "util/IO_utils.tcc"
+#include "util/indent.hh"
+#include "util/stacktrace.hh"
 
 namespace HAC {
 namespace entity {
+#include "util/using_ostream.hh"
+using util::write_value;
+using util::read_value;
+using util::auto_indent;
 
 //=============================================================================
 // class atomic_update_graph method definitions
@@ -40,16 +50,35 @@ atomic_update_graph::atomic_update_graph(const atomic_update_graph& G,
 	Translate graph of formal nodes (definition) to graph of 
 	actual nodes (instance).
  */
-atomic_update_graph::atomic_update_graph(const atomic_update_graph& G, 
-		const footprint_frame& ff) : nodes() {
+atomic_update_graph::atomic_update_graph(const footprint_frame& ff) : nodes() {
+	const atomic_update_graph&
+		G(ff._footprint->get_exported_atomic_update_graph());
+#if ENABLE_STACKTRACE
+	cerr << "exported atomic deps:" << endl;
+	G.dump(cerr);
+	cerr << endl;
+#endif
 	const footprint_frame_transformer fft(ff.get_frame_map<bool_tag>());
-	nodes_type::const_iterator
-		i(G.nodes.begin()), e(G.nodes.end());
+	nodes_type::const_iterator i(G.nodes.begin()), e(G.nodes.end());
 	for ( ; i!=e; ++i) {
 		out_edges_type::const_iterator
 			ei(i->second.begin()), ee(i->second.end());
 		for ( ; ei!=ee; ++ei) {
 			add_edge(fft(i->first), fft(*ei));
+		}
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+atomic_update_graph::import(const atomic_update_graph& G) {
+	STACKTRACE_VERBOSE;
+	nodes_type::const_iterator i(G.nodes.begin()), e(G.nodes.end());
+	for ( ; i!=e; ++i) {
+		out_edges_type::const_iterator
+			ei(i->second.begin()), ee(i->second.end());
+		for ( ; ei!=ee; ++ei) {
+			add_edge(i->first, *ei);
 		}
 	}
 }
@@ -62,6 +91,7 @@ atomic_update_graph::atomic_update_graph(const atomic_update_graph& G,
 void
 atomic_update_graph::export_bare_digraph(bare_digraph& F,
 		vector<node_index_type>& rmap) const {
+	STACKTRACE_VERBOSE;
 	// map is ordered, thus so will rmap
 	rmap.clear();
 	rmap.reserve(nodes.size());
@@ -94,6 +124,7 @@ atomic_update_graph::export_bare_digraph(bare_digraph& F,
 void
 atomic_update_graph::reverse_translate_SCCs(const vector<node_index_type>& r,
 	const SCC_type& S, SCC_type& T) {
+	STACKTRACE_VERBOSE;
 	T.resize(S.size());
 	SCC_type::const_iterator i(S.begin()), e(S.end());
 	SCC_type::iterator j(T.begin());
@@ -109,6 +140,7 @@ atomic_update_graph::reverse_translate_SCCs(const vector<node_index_type>& r,
 void
 atomic_update_graph::reverse_translate_digraph(const vector<node_index_type>& r,
 		const bare_digraph& G) {
+	STACKTRACE_VERBOSE;
 	size_t i = 0;
 	for ( ; i<G.size(); ++i) {
 		const vector<node_index_type>& n(G.get_node(i));
@@ -128,12 +160,25 @@ atomic_update_graph::reverse_translate_digraph(const vector<node_index_type>& r,
 void
 atomic_update_graph::strongly_connected_components(
 		SCC_type& sccs) const {
+	STACKTRACE_VERBOSE;
 	sccs.clear();
 	bare_digraph G;
 	vector<node_index_type> rmap;
 	export_bare_digraph(G, rmap);
+#if ENABLE_STACKTRACE
+	cerr << "G: " << endl;
+	G.dump(cerr) << endl;
+	cerr << "rmap: ";
+	copy(rmap.begin(), rmap.end(),
+		std::ostream_iterator<node_index_type>(cerr, ","));
+#endif
 	SCC_type S;
 	G.strongly_connected_components(S);
+#if ENABLE_STACKTRACE
+	cerr << "SCCs: " << endl;
+	util::graph::dump_SCCs(cerr, S);
+	cerr << endl;
+#endif
 	// translate S back to node indices
 	reverse_translate_SCCs(rmap, S, sccs);
 }
@@ -146,10 +191,25 @@ atomic_update_graph::strongly_connected_components(
  */
 void
 atomic_update_graph::transitive_closure(void) {
+	STACKTRACE_VERBOSE;
 	bare_digraph G;
 	vector<node_index_type> rmap;
 	export_bare_digraph(G, rmap);
+#if ENABLE_STACKTRACE
+	cerr << "this: " << endl;
+	this->dump(cerr) << endl;
+	cerr << "G: " << endl;
+	G.dump(cerr) << endl;
+	cerr << "rmap: ";
+	copy(rmap.begin(), rmap.end(),
+		std::ostream_iterator<node_index_type>(cerr, ","));
+	cerr << endl;
+#endif
 	G.transitive_closure();
+#if ENABLE_STACKTRACE
+	cerr << "G+: " << endl;
+	G.dump(cerr) << endl;
+#endif
 	reverse_translate_digraph(rmap, G);
 }
 
@@ -186,8 +246,45 @@ atomic_update_graph::propagate_reachability(void) {
 	}
 }
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #endif
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+atomic_update_graph::dump(ostream& o) const {
+	nodes_type::const_iterator i(nodes.begin()), e(nodes.end());
+	for ( ; i!=e; ++i) {
+		o << auto_indent << i->first << " -> {";
+		copy(i->second.begin(), i->second.end(),
+			std::ostream_iterator<node_index_type>(o, ","));
+		o << '}' << endl;
+	}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+atomic_update_graph::write_object(ostream& o) const {
+//	util::write_map(o, nodes);	// doesn't work with set<>
+	nodes_type::const_iterator i(nodes.begin()), e(nodes.end());
+	write_value(o, nodes.size());
+	for ( ; i!=e; ++i) {
+		write_value(o, i->first);
+		util::write_sequence(o, i->second);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+atomic_update_graph::load_object(istream& i) {
+//	util::read_map(i, nodes);	// doesn't work with set<>
+	size_t s;
+	read_value(i, s);
+	size_t j = 0;
+	for ( ; j<s; ++j) {
+		node_index_type k;
+		read_value(i, k);
+		util::read_sequence_set_insert(i, nodes[k]);
+	}
+}
 
 //=============================================================================
 }	// end namespace entity

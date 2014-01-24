@@ -131,6 +131,10 @@ In namespace "", we have: {
         resolved rte:
         x = y & z
         w = z | y
+        Atomic dependency graph:
+          3 -> {4,}
+          4 -> {}
+          5 -> {4,}
       }
       }
 
@@ -162,4 +166,8 @@ footprint: {
   4	bar.y @[ atomic sub-use ]	
   5	bar.w @[ atomic sub-def ]	
   6	bar.z @[ sub-use ]	
+  Atomic dependency graph:
+    3 -> {4,}
+    4 -> {}
+    5 -> {4,}
 }

@@ -85,4 +85,8 @@ footprint: {
   resolved rte:
   x = y & z
   w = z | y
+  Atomic dependency graph:
+    3 -> {4,}
+    4 -> {}
+    5 -> {4,}
 }

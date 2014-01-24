@@ -8,7 +8,6 @@
 #define	__HAC_OBJECT_LANG_RTE_BASE_HH__
 
 #include <list>
-#include <set>
 #include "util/memory/excl_ptr.hh"
 #include "util/memory/count_ptr.hh"
 #include "util/persistent.hh"
@@ -187,7 +186,7 @@ virtual	void
 // accumulate set of used node indices
 #define	RTE_UNROLL_EXPR_PROTO						\
 	size_t								\
-	unroll(const unroll_context&, std::set<node_index_type>&) const
+	unroll(const unroll_context&) const
 
 virtual	RTE_UNROLL_EXPR_PROTO = 0;
 

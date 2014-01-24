@@ -458,6 +458,7 @@ read_pair(istream& f, pair<K, T>& p) {
 template <class M>
 void
 write_map(ostream& f, const M& m) {
+	STACKTRACE_IO_VERBOSE;
 	typedef	M	map_type;
 	typedef	typename map_type::key_type	key_type;
 	typedef	typename map_type::mapped_type	mapped_type;
@@ -491,6 +492,7 @@ write_map(ostream& f, const M& m) {
 template <class M>
 void
 read_map(istream& f, M& m) {
+	STACKTRACE_IO_VERBOSE;
 	typedef	M	map_type;
 	typedef	typename map_type::key_type	key_type;
 	typedef	typename map_type::mapped_type	mapped_type;

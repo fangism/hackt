@@ -6,8 +6,6 @@
 #define	__HAC_OBJECT_DEF_ATOMIC_UPDATE_GRAPH_HH__
 
 #include <map>
-#include <set>
-#include <vector>
 #include "util/graph/bare_digraph_fwd.hh"
 
 namespace HAC {
@@ -16,11 +14,19 @@ class footprint_frame;
 using std::vector;
 using util::graph::bare_digraph;
 using util::graph::SCC_type;
+using std::ostream;
+using std::istream;
 
-// directed graph
+/**
+	Directed graph representation of atomic update dependencies.
+ */
 class atomic_update_graph {
 	typedef	size_t				node_index_type;
 	typedef	std::set<node_index_type>	out_edges_type;
+	/**
+		key: node
+		value: list of fanout nodes (anti-deps)
+	 */
 	typedef	std::map<node_index_type, out_edges_type>
 						nodes_type;
 	nodes_type				nodes;
@@ -34,8 +40,10 @@ public:
 	atomic_update_graph(const atomic_update_graph&, 
 		const node_index_type max);
 	// translate formal summary to local instance actuals
-	atomic_update_graph(const atomic_update_graph&, 
-		const footprint_frame&);
+	atomic_update_graph(const footprint_frame&);
+
+	bool
+	empty(void) const { return nodes.empty(); }
 
 	void
 	swap(atomic_update_graph& G) {
@@ -48,6 +56,15 @@ public:
 		nodes[i].insert(j);
 	}
 
+	void
+	import(const atomic_update_graph&);
+
+	out_edges_type&
+	operator [] (const node_index_type n) {
+		return nodes[n];
+	}
+
+private:
 	// also saves reverse map
 	void
 	export_bare_digraph(bare_digraph&, vector<node_index_type>&) const;
@@ -61,6 +78,7 @@ public:
 	reverse_translate_digraph(const vector<node_index_type>&, 
 		const bare_digraph&);
 
+public:
 #if 0
 	// reverse directed graph
 	void
@@ -80,6 +98,15 @@ private:
 	void
 	propagate_reachability(void);
 #endif
+
+	ostream&
+	dump(ostream&) const;
+
+	void
+	write_object(ostream&) const;
+
+	void
+	load_object(istream&);
 
 };	// end class atomic_update_graph
 

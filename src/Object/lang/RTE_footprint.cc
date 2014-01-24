@@ -200,6 +200,72 @@ footprint::push_back_assignment(const int e, const int o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+footprint::collect_atomic_dependencies(const node_pool_type& np, 
+		atomic_update_graph& G) const {
+	// compute dependency graph
+	typedef	assignment_pool_type::const_iterator	const_assignment_iterator;
+	const_assignment_iterator i(assignment_pool.begin());
+	const const_assignment_iterator e(assignment_pool.end());
+	for ( ; i!=e; ++i) {
+		__collect_atomic_dependencies_assign(np, *i, G);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+footprint::__collect_atomic_dependencies_assign(const node_pool_type& np,
+		const assignment& r, atomic_update_graph& G) const {
+	set<node_index_type>& deps(G[r.output_index]);
+	__collect_atomic_dependencies_expr(np, expr_pool[r.expr_index], deps);
+	// take all dependencies, and make sure they have their own entry
+	set<node_index_type>::const_iterator i(deps.begin()), e(deps.end());
+	for ( ; i!=e; ++i) {
+		G[*i];	// create if doesn't yet exist
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+footprint::__collect_atomic_dependencies_expr(const node_pool_type& np,
+		const expr_node& e, set<node_index_type>& deps) const {
+	const expr_pool_type& ep(expr_pool);
+	const char type = e.get_type();
+	switch (type) {
+	case PRS::PRS_LITERAL_TYPE_ENUM: {
+		const size_t only = e.only();
+		INVARIANT(only);
+		// don't bother with non-atomic deps
+		if (np[only-1].get_back_ref()->is_atomic()) {
+			deps.insert(only);
+		}
+		break;
+	}
+	case PRS::PRS_NOT_EXPR_TYPE_ENUM: {
+		__collect_atomic_dependencies_expr(np, ep[e.only()], deps);
+		break;
+	}
+	case PRS::PRS_AND_EXPR_TYPE_ENUM:
+		// yes, fall-through
+	case PRS::PRS_OR_EXPR_TYPE_ENUM: {
+		const size_t s = e.size();
+	if (s) {
+		size_t i = 1;
+		for ( ; i<=s; ++i) {
+			__collect_atomic_dependencies_expr(np, ep[e[i]], deps);
+		}
+	}
+		break;
+	}
+	default:
+		ICE(cerr, 
+		cerr << "Invalid RTE expr type enumeration: "
+			<< type << endl;
+		)
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Gather all node indices that appear in the expression's literals.
 	\param ret return set of unique indices

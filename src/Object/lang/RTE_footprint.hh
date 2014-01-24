@@ -30,6 +30,7 @@ namespace entity {
 class footprint;
 struct bool_tag;
 class state_manager;
+class atomic_update_graph;
 
 template <class Tag>
 class state_instance;
@@ -123,6 +124,19 @@ public:
 	void
 	collect_literal_indices(std::set<node_index_type>&, // node_index_type
 		const expr_index_type) const;	// should be expr_index_type
+
+	void
+	collect_atomic_dependencies(const node_pool_type&,
+		atomic_update_graph&) const;
+
+private:
+	void
+	__collect_atomic_dependencies_assign(const node_pool_type&,
+		const assignment&, atomic_update_graph&) const;
+
+	void
+	__collect_atomic_dependencies_expr(const node_pool_type&,
+		const expr_node&, std::set<node_index_type>&) const;
 
 public:
 	void

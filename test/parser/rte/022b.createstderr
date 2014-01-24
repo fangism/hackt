@@ -127,6 +127,9 @@ In namespace "", we have: {
         4	foo<>::y @[ atomic loc-use port? port-alias ]	
         resolved rte:
         x = y
+        Atomic dependency graph:
+          3 -> {4,}
+          4 -> {}
       }
       }
 
@@ -171,4 +174,8 @@ footprint: {
   6	z @[ loc-use ]	
   resolved rte:
   w = z
+  Atomic dependency graph:
+    3 -> {4,}
+    4 -> {}
+    5 -> {3,}
 }
