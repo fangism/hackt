@@ -1,9 +1,6 @@
 // "rte/017.hac"
 // copy-modified from 003.hac
-defproc foo (bool x, y, w, z) {
-x @[atomic];
-y @[atomic];
-w @[atomic];
+defproc foo (ebool x, y, w; bool z) {
 rte {
 x = y && z;
 w = z || y;

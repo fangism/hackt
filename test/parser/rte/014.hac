@@ -1,6 +1,5 @@
-// "014b.hac"
-defproc foo(bool in_expr, out) {
-in_expr @ [atomic];
+// "014.hac"
+defproc foo(ebool in_expr; bool out) {
 }
 
 foo bar;

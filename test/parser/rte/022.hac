@@ -1,8 +1,6 @@
 // "022b.hac"
 
-defproc foo(bool! x; bool? y) {
-x @[atomic];
-y @[atomic];
+defproc foo(ebool! x; ebool? y) {
 rte {
 	x = y;
 }
@@ -11,8 +9,8 @@ rte {
 // chained dependency ok
 foo bar, baz;
 bar.x = baz.y;
-bool z, w;
-w @[atomic];
+bool z;
+ebool w;
 rte {
 	w = z;
 }
