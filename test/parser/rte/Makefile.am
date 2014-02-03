@@ -16,7 +16,7 @@ HACKT_PARSE_TEST_PASSES = \
 	010 011 012 013 014 015 016 017 018 019 \
 	020 021 022 023 024 025 026 027 028 029 \
 	030 031 032 033 034 035 036 037 038 039 \
-	040 \
+	040 041 042 043 044 045 046 047 048 \
 	invariant-01
 
 srcdir_EXTRA_DIST +=
@@ -29,6 +29,7 @@ HACKT_CREATE_TEST_PASSES = \
 	012 014 015 017 018 \
 	020 022 026 027 029 \
 	035 036 037 038 \
+	044 \
 	invariant-01
 
 # expects warnings:
@@ -43,7 +44,7 @@ HACKT_CREATE_TEST_FAILURES = \
 	010 011 013 016 019 \
 	021 023 024 025 028 \
 	030 031 032 033 034 039 \
-	040
+	040 041 042 043 045 046 047 048
 
 # known defect reports: unresolved language issues
 # dealing with empty loops and negative ranges...

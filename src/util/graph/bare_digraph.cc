@@ -60,6 +60,15 @@ struct bare_digraph::scc_state {
 };
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+bare_digraph::contains_edge(const node_index_type i,
+		const node_index_type j) const {
+	if (i >= nodes.size() || j >= nodes.size())
+		return false;
+	return std::binary_search(nodes[i].begin(), nodes[i].end(), j);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Tarjan's SCC algorithm.
  */
@@ -98,11 +107,19 @@ compact_SCCs(SCC_type& s) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-SCCs_filter_cycles(const SCC_type& S, SCC_type& T) {
+bare_digraph::SCCs_filter_cycles(const SCC_type& S, SCC_type& T) const {
 	SCC_type::const_iterator i(S.begin()), e(S.end());
 	for ( ; i!=e; ++i) {
-		if (i->size() > 1)
+		const size_t s = i->size();
+		if (s > 1)
 			T.push_back(*i);
+		else if (s == 1) {
+		// check for self-edge in singleton case!
+			const size_t lone = *i->begin();
+			if (contains_self_edge(lone)) {
+				T.push_back(*i);
+			}
+		}
 	}
 }
 

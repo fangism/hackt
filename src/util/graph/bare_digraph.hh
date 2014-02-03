@@ -22,10 +22,6 @@ void
 dump_SCCs(ostream&, const SCC_type&);
 
 extern
-void
-SCCs_filter_cycles(const SCC_type&, SCC_type&);
-
-extern
 bool
 SCCs_contains_cycles(const SCC_type&);
 
@@ -58,12 +54,23 @@ public:
 		nodes[i].push_back(j);
 	}
 
+	bool
+	contains_edge(const node_index_type i, const node_index_type j) const;
+
+	bool
+	contains_self_edge(const node_index_type i) const {
+		return contains_edge(i, i);
+	}
+
 	void
 	reverse(const bare_digraph&);
 
 	// return-type?
 	void
 	strongly_connected_components(SCC_type&) const;
+
+	void
+	SCCs_filter_cycles(const SCC_type&, SCC_type&) const;
 
 	void
 	transitive_closure(void);

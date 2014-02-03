@@ -1,0 +1,7 @@
+Atomic update cycles found!
+strongly connected component 1:
+	foo<>::b
+Errors found (1) while creating complete type foo<>.
+Instantiated from: foo<>
+Error encountered during module::create.
+ERROR in creating.  Aborting.

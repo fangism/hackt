@@ -5,7 +5,7 @@
  */
 
 #define	ENABLE_STACKTRACE			0
-#define	STACKTRACE_PERSISTENTS			(0 && ENABLE_STACKTRACE)
+#define	STACKTRACE_PERSISTENTS			(1 && ENABLE_STACKTRACE)
 
 #include <algorithm>
 #include <iterator>
@@ -1494,16 +1494,13 @@ size_t
 footprint::check_atomic_update_cycles(void) const {
 	STACKTRACE_VERBOSE;
 	using util::graph::SCC_type;
-	SCC_type sccs, cycles;
+	SCC_type cycles;
 #if ENABLE_STACKTRACE
 	STACKTRACE_INDENT_PRINT("local graph:" << endl);
 	local_atomic_update_DAG.dump(cerr);
 #endif
-	local_atomic_update_DAG.strongly_connected_components(sccs);
-	util::graph::SCCs_filter_cycles(sccs, cycles);
+	local_atomic_update_DAG.strongly_connected_components_filtered(cycles);
 #if ENABLE_STACKTRACE
-	STACKTRACE_INDENT_PRINT("SCCs:" << endl);
-	util::graph::dump_SCCs(cerr, sccs);
 	STACKTRACE_INDENT_PRINT("Cycles:" << endl);
 	util::graph::dump_SCCs(cerr, cycles);
 #endif
@@ -1541,6 +1538,8 @@ footprint::import_subprocess_atomic_update_graphs(void) {
 		const state_instance<Tag>& sp(_pool[i]);
 		const atomic_update_graph H(sp._frame);
 #if ENABLE_STACKTRACE
+		cerr << "frame:" << endl;
+		sp._frame.dump_frame(cerr) << endl;
 		cerr << "frame-substituted: " << endl;
 		H.dump(cerr);
 		cerr << endl;
@@ -1550,6 +1549,9 @@ footprint::import_subprocess_atomic_update_graphs(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\pre local footprint frames (subprocesses) must already be reconstructed
+ */
 void
 footprint::reconstruct_local_atomic_update_graph(void) {
 	STACKTRACE_VERBOSE;

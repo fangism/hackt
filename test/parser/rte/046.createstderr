@@ -1,0 +1,6 @@
+Atomic update cycles found!
+strongly connected component 1:
+	z
+Errors found (1) while creating complete type <top-level>.
+Error encountered during module::create.
+ERROR in creating.  Aborting.

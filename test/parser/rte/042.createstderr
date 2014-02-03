@@ -1,0 +1,12 @@
+Atomic update cycles found!
+strongly connected component 1:
+	blah<>::bar.x
+	blah<>::bar.y
+	blah<>::bar.w
+	blah<>::bar.z
+	blah<>::bq.x
+	blah<>::bq.w
+Errors found (1) while creating complete type blah<>.
+Instantiated from: blah<>
+Error encountered during module::create.
+ERROR in creating.  Aborting.

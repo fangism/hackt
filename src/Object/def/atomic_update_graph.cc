@@ -35,10 +35,10 @@ using util::auto_indent;
 atomic_update_graph::atomic_update_graph(const atomic_update_graph& G, 
 		const node_index_type max) : nodes() {
 	nodes_type::const_iterator
-		i(G.nodes.begin()), e(G.nodes.upper_bound(max));
+		i(G.nodes.begin()), e(G.nodes.lower_bound(max));
 	for ( ; i!=e; ++i) {
 		out_edges_type::const_iterator
-			ei(i->second.begin()), ee(i->second.upper_bound(max));
+			ei(i->second.begin()), ee(i->second.lower_bound(max));
 		for ( ; ei!=ee; ++ei) {
 			add_edge(i->first, *ei);
 		}
@@ -58,8 +58,12 @@ atomic_update_graph::atomic_update_graph(const footprint_frame& ff) : nodes() {
 	G.dump(cerr);
 	cerr << endl;
 #endif
-	const footprint_frame_transformer fft(ff.get_frame_map<bool_tag>());
+	const footprint_frame_map_type& ffm(ff.get_frame_map<bool_tag>());
 	nodes_type::const_iterator i(G.nodes.begin()), e(G.nodes.end());
+#if 0
+	if (ffm.size()) {
+#endif
+	const footprint_frame_transformer fft(ffm);
 	for ( ; i!=e; ++i) {
 		out_edges_type::const_iterator
 			ei(i->second.begin()), ee(i->second.end());
@@ -67,6 +71,13 @@ atomic_update_graph::atomic_update_graph(const footprint_frame& ff) : nodes() {
 			add_edge(fft(i->first), fft(*ei));
 		}
 	}
+#if 0
+	} else {
+		// top-level uses empty frame, should be identity transformation
+		STACKTRACE_INDENT_PRINT("empty frame (top-level?)" << endl);
+		*this = G;
+	}
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -181,6 +192,38 @@ atomic_update_graph::strongly_connected_components(
 #endif
 	// translate S back to node indices
 	reverse_translate_SCCs(rmap, S, sccs);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Same as above, but filtered to include cycles of size>1
+	and singleton cycles with self-edges.  
+ */
+void
+atomic_update_graph::strongly_connected_components_filtered(
+		SCC_type& sccs) const {
+	STACKTRACE_VERBOSE;
+	sccs.clear();
+	bare_digraph G;
+	vector<node_index_type> rmap;
+	export_bare_digraph(G, rmap);
+#if ENABLE_STACKTRACE
+	cerr << "G: " << endl;
+	G.dump(cerr) << endl;
+	cerr << "rmap: ";
+	copy(rmap.begin(), rmap.end(),
+		std::ostream_iterator<node_index_type>(cerr, ","));
+#endif
+	SCC_type S, T;
+	G.strongly_connected_components(S);
+	G.SCCs_filter_cycles(S, T);
+#if ENABLE_STACKTRACE
+	cerr << "SCCs: " << endl;
+	util::graph::dump_SCCs(cerr, T);
+	cerr << endl;
+#endif
+	// translate S back to node indices
+	reverse_translate_SCCs(rmap, T, sccs);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

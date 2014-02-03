@@ -88,9 +88,11 @@ public:
 	void
 	transitive_closure(void);
 
-	// return-type?
 	void
 	strongly_connected_components(SCC_type&) const;
+
+	void
+	strongly_connected_components_filtered(SCC_type&) const;
 
 #if 0
 private:

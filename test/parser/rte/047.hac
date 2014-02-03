@@ -1,0 +1,10 @@
+// "rte/047.hac"
+defproc foo(ebool in) {
+ebool local;
+rte {
+	in = !local;
+	local = !in;
+}
+}
+
+foo selfie;

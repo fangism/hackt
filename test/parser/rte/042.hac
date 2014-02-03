@@ -1,0 +1,21 @@
+// "rte/042.hac"
+// copy-modified from 041.hac
+defproc foo (ebool x, y, w, z) {
+rte {
+x = y && z;
+w = z || y;
+}
+}
+
+defproc blah() {
+foo bar, bq;
+// create a cycle
+bar.x = bq.y;
+bar.w = bq.z;
+rte {
+bar.z = bq.x;
+bar.y = bq.w;
+}
+}
+
+blah bittyblah;
