@@ -82,6 +82,7 @@ Permission is hereby granted to ...
 * CHP::
 * PRS::
 * SPEC Directives::
+* Run-time atomic expressions::
 * Keywords::
 * Grammar::
 * Function Index::
@@ -107,6 +108,7 @@ Permission is hereby granted to ...
 @include chapters/CHP.texi
 @include chapters/PRS.texi
 @include chapters/SPEC.texi
+@include chapters/RTE.texi
 @include grammar/keywords.texi
 @include grammar/grammar.texi
 
