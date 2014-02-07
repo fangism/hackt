@@ -945,6 +945,9 @@ OBJECT_HH_FILES = $(OBJECT_CC_FILES:.cc=.hh) \
 	Object/lang/PRS_footprint_expr_pool_fwd.hh \
 	Object/lang/PRS_footprint_macro.hh \
 	Object/lang/PRS_footprint_rule.hh \
+	Object/lang/RTE_footprint_assignment.hh \
+	Object/lang/RTE_footprint_expr.hh \
+	Object/lang/RTE_footprint_expr_pool_fwd.hh \
 	Object/type/type_fwd.hh \
 	Object/type/builtin_channel_type_reference.hh \
 	Object/type/channel_direction_enum.hh \
