@@ -3,11 +3,9 @@
  */
 #define	ENABLE_STACKTRACE		0
 
-#if ENABLE_STACKTRACE
 #include <iostream>
 #include <iterator>
 #include <algorithm>
-#endif
 
 #include "util/graph/bare_digraph.hh"
 #include "util/unique_list.tcc"		// for worklist
@@ -17,10 +15,8 @@
 
 namespace util {
 namespace graph {
-using std::ostream;
-#if ENABLE_STACKTRACE
+using std::set;
 #include "util/using_ostream.hh"
-#endif
 
 //=============================================================================
 // class bare_digraph method definitions
@@ -41,6 +37,7 @@ struct bare_digraph::scc_node_info {
 	}
 };
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 struct bare_digraph::scc_state {
 	vector<scc_node_info>	node_info;
 	// needs fast lookup (membership) access
@@ -62,6 +59,16 @@ struct bare_digraph::scc_state {
 	}
 };
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+bare_digraph::contains_edge(const node_index_type i,
+		const node_index_type j) const {
+	if (i >= nodes.size() || j >= nodes.size())
+		return false;
+	return std::binary_search(nodes[i].begin(), nodes[i].end(), j);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Tarjan's SCC algorithm.
  */
@@ -81,6 +88,7 @@ bare_digraph::strongly_connected_components(SCC_type& sccs) const {
 	compact_SCCs(sccs);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 compact_SCCs(SCC_type& s) {
 	// compaction: remove empty SCCs, using swap!
@@ -97,10 +105,40 @@ compact_SCCs(SCC_type& s) {
 	s.swap(t);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+bare_digraph::SCCs_filter_cycles(const SCC_type& S, SCC_type& T) const {
+	SCC_type::const_iterator i(S.begin()), e(S.end());
+	for ( ; i!=e; ++i) {
+		const size_t s = i->size();
+		if (s > 1)
+			T.push_back(*i);
+		else if (s == 1) {
+		// check for self-edge in singleton case!
+			const size_t lone = *i->begin();
+			if (contains_self_edge(lone)) {
+				T.push_back(*i);
+			}
+		}
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+SCCs_contains_cycles(const SCC_type& S) {
+	SCC_type::const_iterator i(S.begin()), e(S.end());
+	for ( ; i!=e; ++i) {
+		if (i->size() > 1)
+			return true;
+	}
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // recursive
 void
 bare_digraph::__strong_connect(SCC_type& sccs,
-		scc_state& st, const size_t v) const {
+		scc_state& st, const node_index_type v) const {
 	STACKTRACE_BRIEF;
 	STACKTRACE_INDENT_PRINT("visiting " << v << endl);
 	scc_node_info& n(st.node_info[v]);
@@ -127,7 +165,7 @@ bare_digraph::__strong_connect(SCC_type& sccs,
 	out_edges_type::const_iterator
 		oi(nodes[v].begin()), oe(nodes[v].end());
 	for ( ; oi!=oe; ++oi) {
-		const size_t& w(*oi);
+		const node_index_type& w(*oi);
 		scc_node_info& m(st.node_info[w]);
 		if (m.undefined()) {
 			__strong_connect(sccs, st, w);
@@ -150,12 +188,128 @@ bare_digraph::__strong_connect(SCC_type& sccs,
 	if (n.is_root()) {
 		STACKTRACE_INDENT_PRINT("node " << v << " is root" << endl);
 //	if (!st._stack.empty()) {
-		size_t w;
+		node_index_type w;
 		do {
 			w = st._stack.pop();
 			current_scc.insert(w);
 		} while (v != w); // ( && !st._stack.empty());
 //	}
+	}
+}
+
+//-----------------------------------------------------------------------------
+/**
+	Reverse all edges.
+	Set this graph to be the reverse digraph of G.
+ */
+void
+bare_digraph::reverse(const bare_digraph& G) {
+	nodes.clear();
+	nodes.resize(G.nodes.size());
+{
+	nodes_type::const_iterator i(G.nodes.begin()), e(G.nodes.end());
+	node_index_type j = 0;
+	for ( ; i!=e; ++i, ++j) {
+		out_edges_type::const_iterator ii(i->begin()), ie(i->end());
+		for ( ; ii!=ie; ++ii) {
+			__add_edge(*ii, j);
+		}
+	}
+}{
+	nodes_type::iterator i(nodes.begin()), e(nodes.end());
+	for ( ; i!=e; ++i) {
+		std::sort(i->begin(), i->end());
+	}
+}
+}
+
+//-----------------------------------------------------------------------------
+/**
+	Compute G+ without bothering with SCCs first.
+	Algorithm: worklisted back-propagation.
+ */
+void
+bare_digraph::transitive_closure(void) {
+	STACKTRACE_BRIEF;
+//	bare_digraph R;
+//	R.reverse(*this);
+	// workspace: use sets, then convert back
+	// TODO: consider using vector<bool> or std::bitset
+	typedef	set<node_index_type> edge_set_type;
+	vector<edge_set_type> W(nodes.size());
+	vector<edge_set_type> R(nodes.size());
+	// initialize worklist
+	unique_list<node_index_type> worklist;
+	node_index_type i = 0;
+	for ( ; i<nodes.size(); ++i) {
+		out_edges_type::const_iterator
+			j(nodes[i].begin()), e(nodes[i].end());
+		W[i].insert(j, e);	// copy forward edges
+		for ( ; j!=e; ++j) {
+			R[*j].insert(i);	// create reverse edges
+		}
+		worklist.push(i);
+	}
+	while (!worklist.empty()) {
+		// propagate the successors of this node to its predecessors
+		// also update reverse graph R
+		// for each predecessor, if its #succ increased,
+		// re-queue it in worklist.
+		const node_index_type x = worklist.pop_front();
+		STACKTRACE_INDENT_PRINT("considering node " << x << endl);
+		edge_set_type::const_iterator pi(R[x].begin()), pe(R[x].end());
+		for ( ; pi!=pe; ++pi) {
+			STACKTRACE_INDENT_PRINT("  pred " << *pi << endl);
+			edge_set_type& f(W[*pi]);
+			const size_t ps = f.size();
+			edge_set_type::const_iterator
+				j(W[x].begin()), e(W[x].end());
+			f.insert(j, e);	// set-union
+			const size_t ns = f.size();
+#if 0
+			// It's s trap!
+			// updating reverse edges at the same time may
+			// seem clever, but this might invalidate R iterators!
+			for ( ; j!=e; ++i) {
+				R[*j].insert(*pi);
+			}
+#endif
+			if (ns > ps) {
+				STACKTRACE_INDENT_PRINT("    was updated" << endl);
+				worklist.move_back(*pi);
+			}
+		}
+	}
+	// translate sets (W) back to compact form
+	for (i=0; i<nodes.size(); ++i) {
+		nodes[i].clear();
+		copy(W[i].begin(), W[i].end(), back_inserter(nodes[i]));
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+bare_digraph::dump(ostream& o) const {
+	size_t i = 0;
+	for ( ; i<nodes.size(); ++i) {
+		o << i << ": {";
+		copy(nodes[i].begin(), nodes[i].end(),
+			std::ostream_iterator<node_index_type>(o, ","));
+		o << '}' << endl;
+	}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+dump_SCCs(ostream& o, const SCC_type& sccs) {
+	SCC_type::const_iterator i(sccs.begin()), e(sccs.end());
+	size_t j = 0;
+	for ( ; i!=e; ++i, ++j) {
+		o << "SCC[" << j << "]: {";
+		std::copy(i->begin(), i->end(),
+			std::ostream_iterator<size_t>(o, ","));
+		o << '}' << endl;
 	}
 }
 

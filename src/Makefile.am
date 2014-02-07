@@ -477,6 +477,7 @@ AST_CC_FILES = \
 	AST/CHP.cc \
 	AST/HSE.cc \
 	AST/PRS.cc \
+	AST/RTE.cc \
 	AST/SPEC.cc \
 	AST/type.cc \
 	AST/namespace.cc \
@@ -496,6 +497,7 @@ AST_HH_FILES = \
 	AST/CHP_fwd.hh \
 	AST/HSE_fwd.hh \
 	AST/PRS_fwd.hh \
+	AST/RTE_fwd.hh \
 	AST/SPEC_fwd.hh \
 	AST/AST.hh \
 	AST/common.hh \
@@ -702,6 +704,7 @@ OBJECT_CC_FILES = \
 	Object/expr/meta_func_call.cc \
 	Object/expr/meta_func_lib.cc \
 	Object/expr/meta_call_traits.cc \
+	Object/def/atomic_update_graph.cc \
 	Object/def/template_formals_manager.cc \
 	Object/def/port_formals_manager.cc \
 	Object/def/footprint.cc \
@@ -758,6 +761,8 @@ OBJECT_CC_FILES = \
 	Object/lang/PRS_literal_attribute_registry.cc \
 	Object/lang/PRS_macro_common.cc \
 	Object/lang/PRS_macro_registry.cc \
+	Object/lang/RTE.cc \
+	Object/lang/RTE_footprint.cc \
 	Object/lang/CHP.cc \
 	Object/lang/CHP_event.cc \
 	Object/lang/CHP_event_alloc.cc \
@@ -940,6 +945,9 @@ OBJECT_HH_FILES = $(OBJECT_CC_FILES:.cc=.hh) \
 	Object/lang/PRS_footprint_expr_pool_fwd.hh \
 	Object/lang/PRS_footprint_macro.hh \
 	Object/lang/PRS_footprint_rule.hh \
+	Object/lang/RTE_footprint_assignment.hh \
+	Object/lang/RTE_footprint_expr.hh \
+	Object/lang/RTE_footprint_expr_pool_fwd.hh \
 	Object/type/type_fwd.hh \
 	Object/type/builtin_channel_type_reference.hh \
 	Object/type/channel_direction_enum.hh \
@@ -978,7 +986,9 @@ OBJECT_HH_FILES = $(OBJECT_CC_FILES:.cc=.hh) \
 	Object/unroll/template_type_completion.hh \
 	Object/lang/PRS_fwd.hh \
 	Object/lang/PRS_base.hh \
+	Object/lang/PRS_dump_context.hh \
 	Object/lang/PRS_literal_unroller.hh \
+	Object/lang/RTE_base.hh \
 	Object/lang/CHP_base.hh \
 	Object/lang/SPEC_fwd.hh
 

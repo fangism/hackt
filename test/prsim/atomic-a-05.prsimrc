@@ -1,0 +1,18 @@
+# "atomic-a-05.prsimrc"
+# @haco@ atomic-a.haco-c
+
+fanin z
+fanin-get z
+set x 0
+cycle
+fanin-get z
+assert z X
+set x 1
+cycle
+fanin-get z
+assert z 1
+set x 0
+set y 0
+cycle
+fanin-get z
+assert z 0

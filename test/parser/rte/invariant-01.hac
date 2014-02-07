@@ -1,0 +1,22 @@
+// "invariant-01.hac"
+ebool x, y, a, b;
+bool c, d, e, f;
+rte {
+	x = c;
+	y = d;
+	a = e;
+	b = f;
+}
+spec {
+// can take any bool, atomic or not
+	$(~(x & y))
+//	$(~(x && y))	// rejects
+	$$(!(a && b))
+
+	$(~(c & d))
+	$$(!(e && f))
+
+// can mix
+	$(~(x & d))
+	$$(!(e && b))
+}

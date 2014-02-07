@@ -1,0 +1,7 @@
+// "013b.hac" -- expect fail
+defproc foo(bool in_expr, out) {
+in_expr @ [atomic];
+}
+
+bool a, b;
+foo bar(a, b);		// error: a is not atomic

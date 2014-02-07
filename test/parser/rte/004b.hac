@@ -1,0 +1,7 @@
+// "rte/004.hac"
+bool x;
+x @ [atomic];
+bool z;
+rte {
+x = z;		// valid assignment
+}

@@ -1,0 +1,10 @@
+// "rte/020.hac"
+// copy-modified from 018.hac
+defproc foo (bool! x, w; bool? y, z) {
+x @[atomic];
+y @[atomic];
+w @[atomic];
+// expect warning on x, w being undefined
+}
+
+foo bar;

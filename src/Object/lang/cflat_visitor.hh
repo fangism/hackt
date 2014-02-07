@@ -3,8 +3,8 @@
 	$Id: cflat_visitor.hh,v 1.11 2010/04/07 00:12:50 fang Exp $
  */
 
-#ifndef	__HAC_OBJECT_LANG_CFLAT_VISITOR_H__
-#define	__HAC_OBJECT_LANG_CFLAT_VISITOR_H__
+#ifndef	__HAC_OBJECT_LANG_CFLAT_VISITOR_HH__
+#define	__HAC_OBJECT_LANG_CFLAT_VISITOR_HH__
 
 #include "util/NULL.h"
 #include "util/size_t.h"
@@ -30,6 +30,11 @@ struct instance_exception {
 	instance_exception(const size_t p) : pid(p) { }
 };
 
+namespace RTE {
+class footprint;
+class footprint_expr_node;
+struct footprint_assignment;
+}
 namespace PRS {
 // forward declarations of all the visitable types in this hierarchy
 class footprint;
@@ -64,7 +69,12 @@ virtual	void
 	visit(const SPEC::footprint&);
 virtual	void
 	visit(const SPEC::footprint_directive&) = 0;
-
+virtual	void
+	visit(const RTE::footprint&);
+virtual	void
+	visit(const RTE::footprint_assignment&) = 0;
+virtual	void
+	visit(const RTE::footprint_expr_node&) = 0;
 private:
 	template <class Tag>
 	void __default_visit(const state_instance<Tag>&);
@@ -76,5 +86,5 @@ private:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __HAC_OBJECT_LANG_CFLAT_VISITOR_H__
+#endif	// __HAC_OBJECT_LANG_CFLAT_VISITOR_HH__
 

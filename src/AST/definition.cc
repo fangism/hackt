@@ -878,10 +878,15 @@ process_def::check_build(context& c) const {
 		_pb(c, never_ptr<entity::PRS::rule_set_base>(
 			&c.get_current_definition<process_definition>()
 			->get_prs()));
+	const context::rte_body_frame
+		_rb(c, never_ptr<entity::RTE::assignment_set_base>(
+			&c.get_current_definition<process_definition>()
+			->get_rte()));
 	const context::spec_body_frame
 		_sb(c, never_ptr<entity::SPEC::directives_set>(
 			&c.get_current_definition<process_definition>()
 			->get_spec_directives_set()));
+	// doesn't CHP have its own frame??
 	body->check_build(c);
 	// useless return value, would've exited upon error already
 	const error_policy p(c.parse_opts.case_collision_policy);

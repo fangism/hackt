@@ -118,7 +118,7 @@ __supply_tok(void) {
 }
 
 // effectively: !GND @ [supply=0];
-const count_ptr<const type_completion_statement>
+const count_ptr<const type_completion_statement>&
 get_GND_attributes(void) {
 	static const count_ptr<const type_completion_statement>
 	__GND_attributes(new type_completion_statement(
@@ -130,7 +130,7 @@ get_GND_attributes(void) {
 }
 
 // effectively: !Vdd @ [supply=1];
-const count_ptr<const type_completion_statement>
+const count_ptr<const type_completion_statement>&
 get_Vdd_attributes(void) {
 	static const count_ptr<const type_completion_statement>
 	__Vdd_attributes(new type_completion_statement(
@@ -139,6 +139,16 @@ get_Vdd_attributes(void) {
 		new generic_attribute_list(new generic_attribute(
 			__supply_tok(), new expr_list(new token_int(1))))));
 	return __Vdd_attributes;
+}
+
+//=============================================================================
+const count_ptr<const generic_attribute_list>&
+get_implicit_atomic_attribute(void) {
+	static const count_ptr<const generic_attribute_list>
+		__att(new generic_attribute_list(
+			new generic_attribute(
+				new token_identifier("atomic"), NULL)));
+	return __att;
 }
 
 //=============================================================================

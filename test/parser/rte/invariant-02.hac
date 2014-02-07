@@ -1,0 +1,13 @@
+// "invariant-02.hac"
+ebool x, y, a, b;
+bool c, d, e, f;
+rte {
+	x = c;
+	y = d;
+	a = e;
+	b = f;
+}
+spec {
+	$$(!(x & y))	// rejects syntax (should be &&)
+	// in RTE, & is reserved for bitwise-AND
+}

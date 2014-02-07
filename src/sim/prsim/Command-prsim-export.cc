@@ -96,6 +96,9 @@ post_event_messages(ostream& o, const State& s,
 		format_time(o << '\t', s) << ct << '\t';
 		print_watched_node(o, s, ni);
 	}
+	if (s.have_atomic_updates()) {
+		s.print_watched_atomic_updated_nodes(o);
+	}
 	if (n.is_breakpoint()) {
 		const string nodename(s.get_node_canonical_name(GET_NODE(ni)));
 		// node is plain breakpoint

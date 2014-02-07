@@ -1,0 +1,3 @@
+// "012.hac"
+defproc foo(ebool in_expr; bool out) { }
+foo bar;

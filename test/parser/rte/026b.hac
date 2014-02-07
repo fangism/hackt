@@ -1,0 +1,9 @@
+// "rte/026b.hac"
+// copy-modified from "rte/002b.hac"
+defproc foo(bool x) {
+bool y;
+x @[atomic];
+y @[atomic];
+x = y;		// valid alias, but should only define one of them
+}
+foo bar;

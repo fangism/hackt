@@ -57,10 +57,12 @@ void
 cflat_prs_printer::__visit(const entity::footprint& f) {
 	STACKTRACE_VERBOSE;
 	// visit rules and spec directives, locally
-if (cfopts.include_prs) {
+if (cfopts.include_prs && f.has_prs_footprint()) {
 	f.get_prs_footprint().accept(*this);
 }
+if (f.has_spec_footprint()) {
 	f.get_spec_footprint().accept(*this);
+}
 	// f.get_chp_footprint().accept(*this);
 	parent_type::visit(f);	// visit_recursive
 	visit_local<bool_tag>(f, at_top());	// for bool attributes
@@ -469,6 +471,22 @@ if (cfopts.show_channel_terminals) {
 		}
 	}
 }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+cflat_prs_printer::visit(const RTE::footprint&) {
+	FINISH_ME(Fang);
+}
+
+void
+cflat_prs_printer::visit(const RTE::footprint_assignment&) {
+	FINISH_ME(Fang);
+}
+
+void
+cflat_prs_printer::visit(const RTE::footprint_expr_node&) {
+	FINISH_ME(Fang);
 }
 
 //=============================================================================

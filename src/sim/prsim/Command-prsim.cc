@@ -1199,7 +1199,13 @@ if (asz != 3) {
 	} // else
 #endif
 		// TODO: support force overrides
-		if (s.get_node(ni).get_event()) {
+		const node_type& _n(s.get_node(ni));
+		if (_n.is_atomic()) {
+			cerr << "Cannot set atomic node `" << objname
+				<< "'." << endl;
+			return Command::BADARG;
+		}
+		if (_n.get_event()) {
 			cerr << "There is already event pending on node `"
 				<< objname << "'.  Ignoring set-now." << endl;
 			return Command::BADARG;

@@ -40,7 +40,7 @@ Persistent Object Manager text dump:
 	36	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
 	37	##ADDR##	nbnotex_	0	#HEAD#	#TAIL#	12
 	38	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	39	##ADDR##	footprnt	0	#HEAD#	#TAIL#	478
+	39	##ADDR##	footprnt	0	#HEAD#	#TAIL#	450
 	40	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
 	41	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
 	42	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24

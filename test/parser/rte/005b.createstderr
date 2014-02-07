@@ -1,0 +1,3 @@
+Error: cannot declare a bool atomic after it has other non-atomic attributes.
+Error encountered during module::create.
+ERROR in creating.  Aborting.

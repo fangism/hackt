@@ -123,6 +123,15 @@ if (a.is_aliased_to_port()) {
 #endif
 	if (a.is_output_port()) {
 		// allow route-through ports to have no fanin
+	if (a.is_atomic()) {
+		if (!((a.attributes & BOOL_ANY_RTE_FANIN) || a.is_input_port())) {
+			a.dump_hierarchical_name(oss);
+			const string& n(oss.str());
+			cerr << "Warning: output atomic expression for " << n <<
+				" is undefined." << endl;
+			++ret.warnings;
+		}
+	} else {
 		if (!(any_fanin || a.is_input_port())) {
 			// don't evaluate name unless diagnostic is printed
 			a.dump_hierarchical_name(oss);
@@ -131,6 +140,7 @@ if (a.is_aliased_to_port()) {
 				" has no PRS fanin." << endl;
 			++ret.warnings;
 		}
+	}
 	}
 #endif
 } else {

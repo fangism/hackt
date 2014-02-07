@@ -1,0 +1,37 @@
+# "atomic-f-01.prsimrc"
+# @haco@ atomic-f.haco-c
+
+watchall
+attributes msel[0]
+getall msel
+echo --------
+set s[0] 0
+set s[1] 0
+cycle
+assert msel[0] 1
+assert msel[1] 0
+assert msel[2] 0
+assert msel[3] 0
+echo --------
+set s[0] 1
+cycle
+assert msel[0] 0
+assert msel[1] 1
+assert msel[2] 0
+assert msel[3] 0
+echo --------
+set s[1] 1
+cycle
+assert msel[0] 0
+assert msel[1] 0
+assert msel[2] 0
+assert msel[3] 1
+echo --------
+set s[0] 0
+cycle
+assert msel[0] 0
+assert msel[1] 0
+assert msel[2] 1
+assert msel[3] 0
+echo --------
+

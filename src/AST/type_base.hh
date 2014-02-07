@@ -59,6 +59,9 @@ virtual	line_position
 		parameter, data, channel, or process.  
 	 */
 virtual	TYPE_BASE_CHECK_PROTO = 0;
+
+virtual	bool
+	is_atomic(void) const;
 };	// end class type_base
 
 //=============================================================================
@@ -77,6 +80,9 @@ virtual ~concrete_type_ref() { }
 
 virtual return_type
 	check_type(const context&) const = 0;
+
+virtual	bool
+	is_atomic(void) const;
 };      // end class concrete_type_ref
 
 //=============================================================================

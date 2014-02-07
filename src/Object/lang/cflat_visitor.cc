@@ -10,6 +10,7 @@
 #include "Object/lang/cflat_visitor.hh"
 #include "Object/lang/CHP_visitor.hh"
 #include "Object/lang/PRS_footprint.hh"
+#include "Object/lang/RTE_footprint.hh"
 #include "Object/lang/SPEC_footprint.hh"
 #include "Object/global_entry.tcc"
 #include "Object/global_channel_entry.hh"
@@ -59,6 +60,14 @@ cflat_visitor::visit(const footprint& f) {
 #else
 	// defer invariant expression visiting to subclasses
 #endif
+}
+
+//=============================================================================
+void
+cflat_visitor::visit(const RTE::footprint& f) {
+	STACKTRACE_VERBOSE;
+	for_each(f.assignment_pool.begin(), f.assignment_pool.end(),
+		visitor_ref(*this));
 }
 
 //=============================================================================

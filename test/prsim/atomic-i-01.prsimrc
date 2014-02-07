@@ -1,0 +1,10 @@
+# "atomic-i-01.prsimrc"
+# @haco@ atomic-i.haco-c
+
+watchall
+set y 0
+cycle
+echo - - - - -
+set y 1
+cycle
+echo expect-fail

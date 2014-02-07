@@ -1,0 +1,6 @@
+# "atomic-a-03.prsimrc"
+# @haco@ atomic-a.haco-c
+
+# should fail:
+freeze z
+thaw z

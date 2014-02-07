@@ -1,0 +1,8 @@
+// "rte/048.hac"
+defproc foo(ebool b) {
+rte {
+	b = !b;
+}
+}
+
+foo tobeornottobe;

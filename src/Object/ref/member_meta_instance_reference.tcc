@@ -233,15 +233,15 @@ MEMBER_INSTANCE_REFERENCE_CLASS::lookup_locally_allocated_index(
 	}
 #endif
 //	const size_t pp = tmp.gpid;	// unused
-#if ENABLE_STACKTRACE
-	tmp.frame.dump_frame(STACKTRACE_INDENT_PRINT("parent frame:")) << endl;
-#endif
 	const footprint_frame* const fpf = &tmp.get_frame();
 	if (!fpf) {
 		// TODO: better error message
 		cerr << "Failure resolving parent instance reference" << endl;
 		return 0;
 	}
+#if ENABLE_STACKTRACE
+	fpf->dump_frame(STACKTRACE_INDENT_PRINT("parent frame:")) << endl;
+#endif
 	const footprint* const fp = fpf->_footprint;
 	NEVER_NULL(fp);
 	const string& member_name(this->get_inst_base()->get_name());
@@ -480,15 +480,15 @@ MEMBER_INSTANCE_REFERENCE_CLASS::unroll_subindices_packed(
 	}
 #endif
 //	const size_t ppid = ff.gpid;	// unused
+	const footprint_frame& fpf(ff.get_frame());
 #if ENABLE_STACKTRACE
 	c.dump_context(STACKTRACE_STREAM << "global_entry_context c:" << endl)
 		<< endl;
-	ff.frame.dump_frame(STACKTRACE_STREAM) << endl;
+	fpf.dump_frame(STACKTRACE_STREAM) << endl;
 //	STACKTRACE_STREAM << go << endl;
 //	STACKTRACE_STREAM << tmpg << endl;
 #endif
 	alias_collection_type local_aliases;
-	const footprint_frame& fpf(ff.get_frame());
 	NEVER_NULL(fpf._footprint);
 	const footprint& pfp(*fpf._footprint);
 	// lookup footprint-local aliases

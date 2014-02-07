@@ -70,6 +70,10 @@ DECLARE_BOOL_ATTRIBIBUTE_COMMON_STRUCT(IsRVC2)
 DECLARE_BOOL_ATTRIBIBUTE_COMMON_STRUCT(IsRVC3)
 
 //=============================================================================
+// subclass of bools for atomic run-time expressions
+DECLARE_BOOL_ATTRIBIBUTE_COMMON_STRUCT(Atomic)
+
+//=============================================================================
 }	// end namespace attributes
 }	// end namespace entity
 }	// end namespace HAC

@@ -4,8 +4,8 @@
 	$Id: footprint.hh,v 1.43 2011/02/08 22:32:46 fang Exp $
  */
 
-#ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
-#define	__HAC_OBJECT_DEF_FOOTPRINT_H__
+#ifndef	__HAC_OBJECT_DEF_FOOTPRINT_HH__
+#define	__HAC_OBJECT_DEF_FOOTPRINT_HH__
 
 #include <iosfwd>
 #include <set>
@@ -17,6 +17,7 @@
 #include "Object/inst/collection_index_entry.hh"
 #include "Object/expr/const_param_expr_list.hh"
 #include "Object/lang/CHP_footprint.hh"
+#include "Object/def/atomic_update_graph.hh"
 #include "Object/ref/reference_enum.hh"
 #include "util/tokenize_fwd.hh"		// for string_list
 
@@ -35,6 +36,10 @@ namespace PRS {
 	class footprint;
 	struct footprint_rule;
 	class cflat_visitor;
+}
+namespace RTE {
+	class footprint;
+	struct footprint_assignment;
 }
 namespace SPEC {
 	class footprint;
@@ -68,6 +73,12 @@ struct temp_footprint_tag_type { };
 extern const temp_footprint_tag_type	temp_footprint_tag;
 
 #define	DECLARE_TEMPORARY_FOOTPRINT(f)	entity::footprint f(temp_footprint_tag)
+
+/**
+	Define to 1 to enable hierarchical atomic update cycle detection.
+	Goal: 1
+ */
+#define	DETECT_ATOMIC_UPDATE_CYCLES			1
 
 //=============================================================================
 /**
@@ -226,6 +237,13 @@ private:
 	 */
 	excl_ptr<PRS::footprint>		prs_footprint;
 	/**
+		The set of unrolled atomic expression assignments, 
+		local to this scope.  
+		This is populated during the create phase.  
+		Privatized implementation.  
+	 */
+	excl_ptr<RTE::footprint>		rte_footprint;
+	/**
 		The CHP footprint type is the same as the source tree's
 		IR, but with meta-parameter dependencies resolved
 		and substituted.  
@@ -252,6 +270,22 @@ private:
 		Privatized implementation.  
 	 */
 	excl_ptr<SPEC::footprint>		spec_footprint;
+#if DETECT_ATOMIC_UPDATE_CYCLES
+	/**
+		Graph that represents atomic expression dependencies.
+		Must that that graph is acyclic across hierarchies.
+		Should capture dependency information from RTE body
+		and sub-process instances.
+		This information is not likely to be used after 
+		it is constructed.  It could be erased to save memory.
+	 */
+	atomic_update_graph			local_atomic_update_DAG;
+	/**
+		The same local atomic graph projected onto ports subset.
+		This summary is used in upward hierarchical propagation.  
+	 */
+	atomic_update_graph			exported_atomic_update_DAG;
+#endif
 #if FOOTPRINT_OWNS_CONTEXT_CACHE
 	/**
 		Hierarchical tree cache of footprint frames and offsets
@@ -474,12 +508,31 @@ private:
 	void
 	evaluate_scope_aliases(const bool sift);
 
+#if DETECT_ATOMIC_UPDATE_CYCLES
+	void
+	import_subprocess_atomic_update_graphs(void);
+
+	size_t
+	check_atomic_update_cycles(void) const;
+#endif
 public:
 	PRS::footprint&
-	get_prs_footprint(void) { return *prs_footprint; }
+	get_prs_footprint(void);	// { return *prs_footprint; }
 
 	const PRS::footprint&
 	get_prs_footprint(void) const { return *prs_footprint; }
+
+	bool
+	has_prs_footprint(void) const { return prs_footprint; }
+
+	RTE::footprint&
+	get_rte_footprint(void);
+
+	const RTE::footprint&
+	get_rte_footprint(void) const { return *rte_footprint; }
+
+	bool
+	has_rte_footprint(void) const { return rte_footprint; }
 
 	chp_footprint_type&
 	get_chp_footprint(void);
@@ -497,10 +550,34 @@ public:
 	get_chp_event_footprint(void) const { return chp_event_footprint; }
 
 	SPEC::footprint&
-	get_spec_footprint(void) { return *spec_footprint; }
+	get_spec_footprint(void);
 
 	const SPEC::footprint&
 	get_spec_footprint(void) const { return *spec_footprint; }
+
+	bool
+	has_spec_footprint(void) const { return spec_footprint; }
+
+#if DETECT_ATOMIC_UPDATE_CYCLES
+	atomic_update_graph&
+	get_local_atomic_update_graph(void) { return local_atomic_update_DAG; }
+
+	const atomic_update_graph&
+	get_local_atomic_update_graph(void) const {
+		return local_atomic_update_DAG;
+	}
+
+	const atomic_update_graph&
+	get_exported_atomic_update_graph(void) const {
+		return exported_atomic_update_DAG;
+	}
+
+	void
+	export_atomic_update_graph(void);
+
+	void
+	reconstruct_local_atomic_update_graph(void);
+#endif
 
 	template <class Tag>
 	size_t
@@ -644,5 +721,5 @@ private:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __HAC_OBJECT_DEF_FOOTPRINT_H__
+#endif	// __HAC_OBJECT_DEF_FOOTPRINT_HH__
 

@@ -1,0 +1,4 @@
+Error: atomic bool is already defined and cannot be re-defined.
+Attempting to define: x
+Error encountered during module::create.
+ERROR in creating.  Aborting.

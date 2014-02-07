@@ -115,6 +115,13 @@ class bool_connect_policy {
 	typedef	bool_connect_policy		this_type;
 	/// strings for names of flags
 	static const char*			attribute_names[];
+	// the atomic attribute overloads the bitfields
+//	static const char*		atomic_attribute_names[];
+
+	const char** get_attribute_names_set(void) const {
+//		return is_atomic() ? atomic_attribute_names : attribute_names;
+		return attribute_names;
+	}
 protected:
 	/**
 		The way boolean node attributes are propagated is
@@ -150,21 +157,48 @@ protected:
 	// reset attributes
 		BOOL_RESET_LOW		= 0x00000200,
 		BOOL_RESET_HIGH		= 0x00000400,
+	/**
+		run-time atomic expression 'ebool'
+		If this is true, many other bitfields are overloaded
+		to different meanings.
+	 */
+		BOOL_ATOMIC		= 0x00000800,
+		BOOL_ATOMIC_INIT_MASK = BOOL_ATOMIC,
+
 	// all attributes that are explicitly written
-		BOOL_EXPLICIT_ATTRIBUTES_MASK =
+		BOOL_EXPLICIT_NONATOMIC_ATTRIBUTES_MASK =
 			BOOL_IS_COMBINATIONAL |
 			BOOL_NO_AUTOKEEPER |
 			BOOL_IS_RVC1 | BOOL_IS_RVC2 | BOOL_IS_RVC3 |
 			BOOL_MAY_INTERFERE | BOOL_MAY_WEAK_INTERFERE |
 			BOOL_SUPPLY_LOW | BOOL_SUPPLY_HIGH |
 			BOOL_RESET_LOW | BOOL_RESET_HIGH,
+		BOOL_EXPLICIT_ATTRIBUTES_MASK =
+			BOOL_EXPLICIT_NONATOMIC_ATTRIBUTES_MASK | BOOL_ATOMIC,
+
 #if BOOL_CONNECTIVITY_CHECKING
+		// these keep their meaning as atomic ebools
 		// port is marked with '?'
 		BOOL_PORT_FORMAL_INPUT = 0x00100000,
 		// port is marked with '!'
 		BOOL_PORT_FORMAL_OUTPUT = 0x00200000,
 #endif
 #if BOOL_PRS_CONNECTIVITY_CHECKING
+	/**
+		atomic run-time expression def/use attributes (implicit)
+	 */
+		BOOL_LOCAL_RTE_FANOUT = 0x00010000,
+		BOOL_LOCAL_RTE_FANIN = 0x00020000,
+		BOOL_SUBSTRUCT_RTE_FANOUT = 0x00040000,
+		BOOL_SUBSTRUCT_RTE_FANIN = 0x00080000,
+		BOOL_LOCAL_RTE_MASK =
+			BOOL_LOCAL_RTE_FANOUT | BOOL_LOCAL_RTE_FANIN,
+		BOOL_SUBSTRUCT_RTE_MASK =
+			BOOL_SUBSTRUCT_RTE_FANOUT | BOOL_SUBSTRUCT_RTE_FANIN,
+		BOOL_ANY_RTE_FANOUT =
+			BOOL_LOCAL_RTE_FANOUT | BOOL_SUBSTRUCT_RTE_FANOUT,
+		BOOL_ANY_RTE_FANIN =
+			BOOL_LOCAL_RTE_FANIN | BOOL_SUBSTRUCT_RTE_FANIN,
 	/**
 		This is NOT an attribute, is an intrinsic property
 		automatically updated during connections.
@@ -260,9 +294,14 @@ protected:
 		BOOL_CONNECTIVITY_OR_MASK	=
 			BOOL_LOCAL_PRS_MASK | BOOL_SUBSTRUCT_PRS_MASK,
 #endif	// BOOL_PRS_CONNECTIVITY_CHECKING
-		BOOL_IMPLICIT_ATTRIBUTES_MASK = 
+		BOOL_IMPLICIT_NONATOMIC_ATTRIBUTES_MASK = 
 			BOOL_SUBSTRUCT_FANOUT |
 			BOOL_SUBSTRUCT_FANIN,
+		BOOL_IMPLICIT_ATOMIC_ATTRIBUTES_MASK = 
+			BOOL_SUBSTRUCT_RTE_MASK,
+		BOOL_IMPLICIT_ATTRIBUTES_MASK = 
+			BOOL_IMPLICIT_NONATOMIC_ATTRIBUTES_MASK |
+			BOOL_IMPLICIT_ATOMIC_ATTRIBUTES_MASK,
 	/// mask for attributes to distinguish from connectivity fields
 	// both implicit and explicit attributes should be preserved
 		BOOL_ATTRIBUTES_MASK	=
@@ -274,7 +313,7 @@ protected:
 	};
 	enum {
 		// TODO: keep this in sync with above list!
-		BOOL_NUM_EXPLICIT_ATTRIBUTES = 11,
+		BOOL_NUM_EXPLICIT_ATTRIBUTES = 12,
 		// overall number of attributes, explicit and implicit
 		BOOL_NUM_ATTRIBUTES = sizeof(connection_flags_type) << 3
 	};
@@ -325,47 +364,68 @@ public:
 	}
 
 	void
+	nonatomic_only_attribute(void) const;
+
+	void
+	atomic_only_attribute(void) const;
+
+	void
+	nonatomic_only_prs_literal(void) const;
+
+	void
+	atomic_only_rte_literal(void) const;
+
+	void
 	set_may_interfere(void) {
+		nonatomic_only_attribute();
 		attributes |= BOOL_MAY_INTERFERE;
 	}
 
 	void
 	set_may_weak_interfere(void) {
+		nonatomic_only_attribute();
 		attributes |= BOOL_MAY_WEAK_INTERFERE;
 	}
 
 	bool
 	may_interfere(void) const {
+		nonatomic_only_attribute();
 		return attributes & BOOL_MAY_INTERFERE;
 	}
 
 	bool
 	may_weak_interfere(void) const {
+		nonatomic_only_attribute();
 		return attributes & BOOL_MAY_WEAK_INTERFERE;
 	}
 
 	void
 	set_is_comb(void) {
+		nonatomic_only_attribute();
 		attributes |= BOOL_IS_COMBINATIONAL;
 	}
 
 	void
 	set_no_autokeeper(void) {
+		nonatomic_only_attribute();
 		attributes |= BOOL_NO_AUTOKEEPER;
 	}
 
 	void
 	set_is_rvc1(void) {
+		nonatomic_only_attribute();
 		attributes |= BOOL_IS_RVC1;
 	}
 
 	void
 	set_is_rvc2(void) {
+		nonatomic_only_attribute();
 		attributes |= BOOL_IS_RVC2;
 	}
 
 	void
 	set_is_rvc3(void) {
+		nonatomic_only_attribute();
 		attributes |= BOOL_IS_RVC3;
 	}
 
@@ -374,6 +434,12 @@ public:
 
 	void
 	set_reset(const bool);
+
+	void
+	set_atomic(const bool);
+
+	bool
+	is_atomic(void) const { return attributes & BOOL_ATOMIC; }
 
 #if BOOL_PRS_CONNECTIVITY_CHECKING
 	bool
@@ -389,6 +455,7 @@ public:
 	// always considered safe to fanout arbitrarily
 	void
 	prs_fanout(const bool dir) {
+		nonatomic_only_prs_literal();
 		attributes |= dir ?
 			BOOL_LOCAL_PRS_FANOUT_PULL_UP :
 			BOOL_LOCAL_PRS_FANOUT_PULL_DN;
@@ -400,11 +467,22 @@ public:
 #else
 	void
 	prs_fanin(const bool dir) {
+		nonatomic_only_prs_literal();
 		attributes |= dir ?
 			BOOL_LOCAL_PRS_FANIN_PULL_UP :
 			BOOL_LOCAL_PRS_FANIN_PULL_DN;
 	}
 #endif
+
+	void
+	rte_fanout(void) {
+		// can be either atomic or non-atomic
+		attributes |= BOOL_LOCAL_RTE_FANOUT;
+	}
+
+	// bool is attached to an expression (defined)
+	good_bool
+	rte_fanin(void);
 #endif
 
 #if BOOL_CONNECTIVITY_CHECKING

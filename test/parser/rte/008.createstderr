@@ -1,0 +1,3 @@
+Error: atomic bools cannot participate in production rules.
+Error encountered during module::create.
+ERROR in creating.  Aborting.

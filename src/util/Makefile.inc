@@ -136,6 +136,7 @@ UTIL_CXX_HEADER_FILES = \
 	util/format_IO.hh \
 	util/function_traits.hh \
 	util/graph/bare_digraph.hh \
+	util/graph/bare_digraph_fwd.hh \
 	util/hash_qmap_fwd.hh \
 	util/hash_specializations.hh \
 	util/ifthenelse.hh \

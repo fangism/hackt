@@ -311,6 +311,15 @@
 #define	PRS_LITERAL_TYPE_KEY					"PRSlitrl"
 #define	PRS_MACRO_TYPE_KEY					"PRSmacro"
 
+#define	RTE_ASSIGNMENT_TYPE_KEY					"RTEassgn"
+#define	RTE_ASSIGNMENT_LOOP_TYPE_KEY				"RTEaloop"
+#define	RTE_NESTED_ASSIGNMENTS_TYPE_KEY				"RTEanest"
+#define	RTE_ASSIGNMENT_COND_TYPE_KEY				"RTEacond"
+#define	RTE_BINOP_TYPE_KEY					"RTEbinop"
+#define	RTE_BINOP_LOOP_TYPE_KEY					"RTEoplop"
+#define	RTE_NOT_TYPE_KEY					"RTEnot--"
+#define	RTE_LITERAL_TYPE_KEY					"RTElitrl"
+
 #define	CHP_SEQUENCE_TYPE_KEY					"CHPseqnc"
 #define	CHP_CONCURRENT_TYPE_KEY					"CHPconcr"
 #define	CHP_GUARDED_ACTION_TYPE_KEY				"CHPguard"

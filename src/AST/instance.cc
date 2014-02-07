@@ -820,7 +820,7 @@ instance_declaration::check_build(context& c) const {
 			<< where(*type) << endl;
 	}
 }
-	const context::fundamental_type_frame _ftf(c, ftr);
+	const context::fundamental_type_frame _ftf(c, ftr, type->is_atomic());
 
 	if (ftr) {
 		ids->check_build(c);		// return value?
@@ -1348,6 +1348,14 @@ conditional_instantiation::check_build(context& c) const {
 
 type_completion_statement::type_completion_statement(const inst_ref_expr* ir, 
 		const expr_list* ta, const generic_attribute_list* at) :
+		inst_ref(ir), args(ta), attribs(at) {
+	NEVER_NULL(inst_ref);
+	// NEVER_NULL(args);
+}
+
+type_completion_statement::type_completion_statement(const inst_ref_expr* ir, 
+		const expr_list* ta,
+		const count_ptr<const generic_attribute_list>& at) :
 		inst_ref(ir), args(ta), attribs(at) {
 	NEVER_NULL(inst_ref);
 	// NEVER_NULL(args);

@@ -31,7 +31,7 @@ Persistent Object Manager text dump:
 	23	##ADDR##	chnalias	0	#HEAD#	#TAIL#	20
 	24	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
 	25	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
-	26	##ADDR##	footprnt	0	#HEAD#	#TAIL#	372
+	26	##ADDR##	footprnt	0	#HEAD#	#TAIL#	344
 	27	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	21
 	28	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 

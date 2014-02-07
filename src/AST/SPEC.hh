@@ -77,10 +77,13 @@ public:
 class invariant : public directive_base {
 	const excl_ptr<const expr>			_expr;
 	const excl_ptr<const token_string>		_msg;
+	/// if true, use RTE syntax, else use PRS syntax
+	bool						rte_mode;
 public:
 	typedef	directive_base::return_type		return_type;
 
-	invariant(const expr* const, const token_string* const);
+	invariant(const expr* const, const token_string* const s = NULL, 
+		const bool rm = false);
 	~invariant();
 
 	ostream&

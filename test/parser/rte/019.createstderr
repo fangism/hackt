@@ -1,0 +1,5 @@
+Error: a read-only (atomic) port cannot be re-defined.
+Attempting to define: foo::x
+Instantiated from: foo<>
+Error encountered during module::create.
+ERROR in creating.  Aborting.

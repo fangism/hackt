@@ -1,0 +1,137 @@
+@c "chapters/RTE.texi"
+
+@node Run-time atomic expressions
+@chapter Run-time atomic expressions
+@cindex run-time expressions
+@cindex atomic expressions
+
+This chapter describes syntax and semantics of 
+run-time atomic expressions, or RTE.
+RTE is a way of expressing relationships among 
+run-time values of nodes.  
+RTE expressions can only read the state of nodes;
+they cannot participate in any logic that drives nodes.
+They may participate in invariant expressions (SPEC language).
+(In fact, SPEC invariants can be implemented using RTE internals.)
+
+@menu
+* Atomic expression introduction::
+* Atomic expression evaluation::
+* Atomic expression syntax::
+* Atomic expression applications::
+@end menu
+
+@node Atomic expression introduction
+@section Atomic expression introduction
+
+Atomic nodes are declared as @t{ebool}, just like @t{bool}.  
+So far, only boolean run-time variables have been implemented.  
+@t{ebool} and @t{bool} are treated as distinct types; they may not be aliased.
+However, both @t{ebool}s and @t{bools} may appear on the right-hand side
+(rvalues) of atomic assignments, while only @t{ebool} may appear on the 
+left-hand side (lvalue).  
+
+For example:
+@example
+bool x;
+ebool y;
+rte @{
+  y = x;
+@}
+@end example
+@noindent
+value assignment is legal, but:
+@example
+bool x;
+ebool y;
+y = x;
+@end example
+aliasing is illegal.
+Atomic assignment is the only way to pass a value from a physical node
+to an atomic expression.  
+
+Atomic instances such as @t{ebool} do not translate to physical 
+nodes or wires, 
+they represent abstract logical values.
+They should never affect static back-ends such as netlist generation.
+They may, however, affect run-time behavior or diagnostics in simulators.  
+
+
+Every @t{ebool} must be defined exactly once; undefined and multiply defined
+@t{ebool} are diagnosed as errors at instantiation time.  
+@t{ebool} may be direction-annotated, just like @t{bool}s.  
+@t{ebool?} declares use-only values, 
+and @t{ebool!} denotes that the local scope defines these values.  
+
+@example
+defproc atomic_inv(ebool? in; ebool! out) @{
+rte @{
+  out = !in;
+@}
+@}
+@end example
+
+@node Atomic expression evaluation
+@section Atomic expression evaluation
+
+Similar to production rule guard expression evaluation, 
+the RHS of an assignment is always evaluated and updated
+atomically; no intermediate states are observable at any time.
+For production rules, outputs fire at some finite time after
+the guard expressions become true, so there exist states
+during which the output does not reflect the value of the guards.  
+Unlike production rules, however, atomic expressions' lvalues are assigned 
+@emph{immediately} following the evaluation of the RHS.  
+Run-time expressions are truly atomic.
+
+In the following example, at no time is @t{c} not equal to @t{a}.
+@example
+rte @{
+  b = a;
+  c = b;
+@}
+@end example
+
+Cyclic dependencies among atomic values is forbidden, 
+and must be diagnosed by instantiation-time.  
+It is possible to form cyclic dependencies across multiple levels
+of hierarchy, so cycles must be checked across hierarchies.  
+Fortunately, such checks are algorithmically inexpensive.  
+Each process only needs to export the its atomic dependency graph
+as projected onto its public ports.  
+At each level of hierarchy, the compiler checks for strongly
+connected components, including self-edges.  
+@cindex strongly connected components
+
+@node Atomic expression syntax
+@section Atomic expression syntax
+
+Unlike production rules, atomic expressions use C-like operators
+for syntax, consistent with meta-parameter expressions.
+
+@example
+rte @{
+  z = !((x || y) && w);
+@}
+@end example
+
+In the future, there may be support for integer-valued atomic expressions.
+
+@node Atomic expression applications
+@section Atomic expression applications
+
+This section describes some applications of run-time atomic expressions.
+The first application of atomic expressions is in run-time checking
+of invariants or assertions.  
+The advantage of atomic expressions over production rule guards 
+is that expressions need not be limited to the local scope;
+expressions can effectively span hierarchies. 
+
+In circuits that undergo a static configuration,
+one may wish to 
+exercise some control over run-time behavior (except logic), 
+using atomic expressions.
+They can potentially be used to control timing, 
+or fine-grain diagnostics, 
+or specifying exceptions such as false timing paths.  
+

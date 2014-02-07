@@ -1,0 +1,16 @@
+// "atomic-h.hac"
+defproc foo(ebool x; bool y) {
+spec {
+	mk_exclhi(x, y)
+}
+}
+
+defproc bar() {
+	foo Z;
+}
+
+defproc bq() {
+	bar B;
+}
+
+bq ribs;

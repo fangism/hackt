@@ -2808,7 +2808,7 @@ process_definition::process_definition() :
 		parent(), 
 		meta_type(META_TYPE_PROCESS),	// don't care
 		port_formals(), 
-		prs(), chp(), 
+		prs(), rte(), chp(), 
 		footprint_map() {
 	// no null check: because of partial reconstruction
 }
@@ -2827,7 +2827,7 @@ process_definition::process_definition(const string& s) :
 		parent(), 
 		meta_type(META_TYPE_PROCESS),	// top-type is a process
 		port_formals(), 
-		prs(), chp(), 
+		prs(), rte(), chp(), 
 		footprint_map(0, *this) {
 }
 
@@ -2849,7 +2849,7 @@ process_definition::process_definition(
 		parent(o), 
 		meta_type(t), 
 		port_formals(), 
-		prs(), chp(), 
+		prs(), rte(), chp(), 
 		footprint_map() {
 	// fill me in...
 	NEVER_NULL(o);
@@ -2907,6 +2907,13 @@ process_definition::dump(ostream& o) const {
 			{	INDENT_SECTION(o);
 				sequential_scope::dump(o, dc);
 			}
+			// RTE
+			if (!rte.empty()) {
+				o << auto_indent << "rte:" << endl;
+				INDENT_SECTION(o);
+				const RTE::assignment_dump_context rdc(*this);
+				rte.dump(o, rdc);	// << endl;
+			}
 			// PRS
 			if (!prs.empty()) {
 				o << auto_indent << "prs:" << endl;
@@ -2927,6 +2934,7 @@ process_definition::dump(ostream& o) const {
 				const PRS::rule_dump_context rdc(*this);
 				spec.dump(o, rdc);	// << endl;
 			}
+			// subinstances
 			if (footprint_map.size()) {
 				footprint_map.dump(
 					o << auto_indent, dc) << endl;
@@ -3214,6 +3222,10 @@ process_definition::unroll_lang(const unroll_context& c) const {
 	footprint& f(c.get_target_footprint());
 	// after all aliases have been successfully assigned local IDs
 	// then process the PRS and CHP bodies
+	if ((meta_type == META_TYPE_PROCESS) && !rte.unroll(c).good) {
+		// already have error message
+		return good_bool(false);
+	}
 	if ((meta_type == META_TYPE_PROCESS) && !prs.unroll(c).good) {
 		// already have error message
 		return good_bool(false);
@@ -3231,6 +3243,8 @@ process_definition::unroll_lang(const unroll_context& c) const {
 	f.allocate_chp_events();
 	// need to propagate flags after connectivity processing!
 	f.synchronize_alias_flags();
+	// after RTE processed and subprocess evaluated
+	f.reconstruct_local_atomic_update_graph();
 #if ENABLE_STACKTRACE
 	STACKTRACE_INDENT_PRINT("in process_definition::unroll_lang()");
 	const port_alias_tracker& st(f.get_scope_alias_tracker());
@@ -3289,18 +3303,27 @@ try {
 		// since alias sets were computed before connectivity
 		// we may need to re-synchronize...
 		// however, skip some checks for top-level instantiations
-		f.connection_diagnostics(&top == &f);	// returns good_bool
+		const error_count ec(f.connection_diagnostics(&top == &f));
 		// f.mark_created();	// ?
 		// count warnings
-		if (f.warnings()) {
-			cerr << "Warnings found (" << f.warnings() <<
-				") while creating complete type ";
+		if (f.warnings() || ec.errors) {
+			if (ec.errors) {
+				cerr << "Errors found (" << ec.errors << ")";
+			}
+			if (f.warnings()) {
+				if (ec.errors) cerr << ", ";
+				cerr << "Warnings found (" << f.warnings() << ")";
+			}
+			cerr << " while creating complete type ";
 			if (&f == &top) {
 				cerr << "<top-level>";
 			} else {
 				f.dump_type(cerr);
 			}
 			cerr << "." << endl;
+			if (ec.errors) {
+				return good_bool(false);
+			}
 		}
 	}
 	return good_bool(true);
@@ -3357,6 +3380,7 @@ process_definition::collect_transient_info_base(
 #endif
 	// PRS
 	prs.collect_transient_info_base(m);
+	rte.collect_transient_info_base(m);
 	chp.collect_transient_info_base(m);
 	spec.collect_transient_info_base(m);
 	footprint_map.collect_transient_info_base(m);
@@ -3391,6 +3415,7 @@ process_definition::write_object_base(
 // if (meta_type == META_TYPE_PROCESS) {
 	// PRS
 	prs.write_object_base(m, f);
+	rte.write_object_base(m, f);
 	chp.write_object_base(m, f);
 // }
 	spec.write_object_base(m, f);
@@ -3420,6 +3445,7 @@ process_definition::load_object_base(
 // if (meta_type == META_TYPE_PROCESS) {
 	// PRS
 	prs.load_object_base(m, f);
+	rte.load_object_base(m, f);
 	chp.load_object_base(m, f);
 // }
 	spec.load_object_base(m, f);

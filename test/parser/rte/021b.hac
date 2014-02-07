@@ -1,0 +1,10 @@
+// "021b.hac"
+// expect-fail on attempt to redefine
+
+bool x, y, z;
+x @[atomic];
+y @[atomic];
+rte {
+	x = y;
+	x = z;		// error: redefined
+}

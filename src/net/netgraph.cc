@@ -1220,6 +1220,7 @@ netlist::__bind_footprint(const footprint& f, const netlist_options& nopt) {
 	fp = &f;
 	// pre-allocate, using same indexing and mapping as original pool
 	// null index initially, and default owner is not subcircuit
+if (f.has_prs_footprint()) {
 	const prs_footprint& pfp(f.get_prs_footprint());
 	internal_node_map.resize(pfp.get_internal_node_pool().size(),
 		internal_node_entry_type(0, 0));
@@ -1244,6 +1245,7 @@ netlist::__bind_footprint(const footprint& f, const netlist_options& nopt) {
 			++subs_count;
 		}
 	}
+}
 	const size_t bs = f.get_instance_pool<bool_tag>().local_entries();
 	const size_t ps = f.get_instance_pool<process_tag>().local_entries();
 	named_node_map.resize(bs);
@@ -1619,6 +1621,7 @@ netlist::create_internal_node(const index_type ni, const index_type ei,
 		const netlist_options& opt) {
 	STACKTRACE_VERBOSE;
 	node n(ni, node::internal_node_tag);
+	INVARIANT(fp->has_prs_footprint());
 	n.name = fp->get_prs_footprint().get_internal_node(ni).name;
 	opt.mangle_instance(n.name);
 	// @node names are simple identifiers, but may contain underscores
@@ -2428,16 +2431,20 @@ netlist::dump_raw(ostream& o) const {
 	o << "internal node map (footprint-index -> netlist-node-index):" << endl;
 	typedef	internal_node_map_type::const_iterator	const_iterator;
 	const_iterator i(internal_node_map.begin()), e(internal_node_map.end());
+	const entity::PRS::footprint* fpr =
+		(fp->has_prs_footprint() ? &fp->get_prs_footprint() : NULL);
+	if (fpr) {
 	size_t j = 0;
 	for ( ; i!=e; ++i) {
 		const prs_footprint::node_expr_type&
-			n(fp->get_prs_footprint().get_internal_node(j));
+			n(fpr->get_internal_node(j));
 		o << "  @" << j << " -> [" << i->first << ']' <<
 			(n.second ? '+' : '-');
 		if (i->second) {
 			o << " in subckt{" << i->second -1 << "}";
 		}
 		o << endl;
+	}
 	}
 }{
 	o << "instances:" << endl;

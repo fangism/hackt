@@ -415,13 +415,14 @@ log:
 8: process directionality flags, direction_declaration types
 9: added direction enum to data_type_reference
 10: added pstring_relational_expr type for string comparison operators
+11: footprint now conditionally writes prs/chp/spec/rte footprint pointers
 ?: support for member nonmeta instance/value references
  */
 static const size_t
 #if NONMETA_MEMBER_REFERENCES
-object_file_format_version = 10;
-#else
 object_file_format_version = 11;
+#else
+object_file_format_version = 12;
 #endif
 
 //=============================================================================

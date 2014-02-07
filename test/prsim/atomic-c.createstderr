@@ -1,0 +1,407 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	60
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	procdefn	0	#HEAD#	#TAIL#	155
+	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	10	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	11	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	12	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	13	##ADDR##	portscop	0	#HEAD#	#TAIL#	32
+	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
+	16	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
+	20	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
+	23	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	24	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	27	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	28	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	31	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	32	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	34	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	36	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	RTEanest	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	RTEassgn	0	#HEAD#	#TAIL#	16
+	39	##ADDR##	RTEbinop	0	#HEAD#	#TAIL#	21
+	40	##ADDR##	RTEbinop	0	#HEAD#	#TAIL#	21
+	41	##ADDR##	RTElitrl	0	#HEAD#	#TAIL#	12
+	42	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	43	##ADDR##	RTEnot--	0	#HEAD#	#TAIL#	12
+	44	##ADDR##	RTElitrl	0	#HEAD#	#TAIL#	12
+	45	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	46	##ADDR##	RTEbinop	0	#HEAD#	#TAIL#	21
+	47	##ADDR##	RTEnot--	0	#HEAD#	#TAIL#	12
+	48	##ADDR##	RTElitrl	0	#HEAD#	#TAIL#	12
+	49	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	50	##ADDR##	RTElitrl	0	#HEAD#	#TAIL#	12
+	51	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	52	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	53	##ADDR##	footprnt	0	#HEAD#	#TAIL#	461
+	54	##ADDR##	procdefn	0	#HEAD#	#TAIL#	201
+	55	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	56	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	57	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	58	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	59	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	60	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	61	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	62	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	63	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	64	##ADDR##	portscop	0	#HEAD#	#TAIL#	32
+	65	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	66	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
+	67	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	68	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	69	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
+	70	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	71	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	72	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
+	73	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	74	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	75	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	76	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	77	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	78	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	79	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	80	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	81	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	82	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	83	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	84	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	85	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	86	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	87	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	88	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	89	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	90	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	91	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	92	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	93	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	94	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	95	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	96	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
+	97	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	98	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	99	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	100	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	101	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	102	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	103	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	104	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	105	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	106	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	107	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	108	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	109	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	110	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	111	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	112	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	113	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	114	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	115	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	116	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	117	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
+	118	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	119	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	120	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	121	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	122	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	123	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	124	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	36
+	125	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	126	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	127	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	128	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	129	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	130	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	131	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	132	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	133	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	134	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	135	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	136	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	137	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1219
+	138	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	139	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	140	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	141	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	142	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	143	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	144	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	145	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
+	146	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	147	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	148	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	149	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	150	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	151	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	152	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	153	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	154	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	155	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	156	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
+	157	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	158	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	159	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	160	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	161	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	162	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	163	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	164	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	165	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	166	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	167	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	168	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	36
+	169	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	170	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	171	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	172	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	173	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	174	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
+	175	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	176	##ADDR##	RTEanest	0	#HEAD#	#TAIL#	20
+	177	##ADDR##	RTEassgn	0	#HEAD#	#TAIL#	16
+	178	##ADDR##	RTElitrl	0	#HEAD#	#TAIL#	12
+	179	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	180	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	181	##ADDR##	RTEassgn	0	#HEAD#	#TAIL#	16
+	182	##ADDR##	RTElitrl	0	#HEAD#	#TAIL#	12
+	183	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	184	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	185	##ADDR##	footprnt	0	#HEAD#	#TAIL#	610
+	186	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  8 instantiation-collections
+  0 sub-namespaces
+  2 definitions
+  0 typedefs
+  Definitions:
+    atomic_xor = process-definition (defined) atomic_xor(
+        bool<> !GND
+        bool<> !Vdd
+        bool<>? a
+        bool<>? b
+        bool<>! c
+      )
+      In definition "atomic_xor", we have: {
+      Instances:
+        !GND = bool<> atomic_xor::!GND
+        !Vdd = bool<> atomic_xor::!Vdd
+        a = bool<>? atomic_xor::a
+        b = bool<>? atomic_xor::b
+        c = bool<>! atomic_xor::c
+      unroll sequence: 
+        ports: (
+          bool<> !GND
+          bool<> !Vdd
+          bool<>? a
+          bool<>? b
+          bool<>! c
+        )
+        !GND@[supply=0]
+        !Vdd@[supply=1]
+        a@[atomic]
+        b@[atomic]
+        c@[atomic]
+      rte:
+        {
+        c = (a & ~b) | (~a & b)
+        }
+      footprint: {
+        !GND = bool^0 = atomic_xor<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = atomic_xor<>::!Vdd (2) @[ supply_high port-alias ] 
+        a = bool^0 = atomic_xor<>::a (3) @[ atomic loc-use port? port-alias ] 
+        b = bool^0 = atomic_xor<>::b (4) @[ atomic loc-use port? port-alias ] 
+        c = bool^0 = atomic_xor<>::c (5) @[ atomic loc-def port! port-alias ] 
+        Created state:
+        bool instance pool: (5 ports, 0 local, 0 mapped)
+        1	atomic_xor<>::!GND @[ supply_low port-alias ]	
+        2	atomic_xor<>::!Vdd @[ supply_high port-alias ]	
+        3	atomic_xor<>::a @[ atomic loc-use port? port-alias ]	
+        4	atomic_xor<>::b @[ atomic loc-use port? port-alias ]	
+        5	atomic_xor<>::c @[ atomic loc-def port! port-alias ]	
+        resolved rte:
+        c = (a & ~b) | (~a & b)
+      }
+      }
+
+    atomic_xor_chain = process-definition (defined) atomic_xor_chain<
+      pint<> N
+      >(
+        bool<> !GND
+        bool<> !Vdd
+        bool<>? x
+        bool<>? y
+        bool<>! z
+      )
+      In definition "atomic_xor_chain", we have: {
+      Parameters:
+        N = pint<> atomic_xor_chain::N
+      Instances:
+        !GND = bool<> atomic_xor_chain::!GND
+        !Vdd = bool<> atomic_xor_chain::!Vdd
+        H = atomic_xor<> atomic_xor_chain::H^1
+        t = bool<> atomic_xor_chain::t^1
+        x = bool<>? atomic_xor_chain::x
+        y = bool<>? atomic_xor_chain::y
+        z = bool<>! atomic_xor_chain::z
+      unroll sequence: 
+        ports: (
+          bool<> !GND
+          bool<> !Vdd
+          bool<>? x
+          bool<>? y
+          bool<>! z
+        )
+        !GND@[supply=0]
+        !Vdd@[supply=1]
+        x@[atomic]
+        y@[atomic]
+        z@[atomic]
+        atomic_xor<> H[0..N-1]
+        bool<> t[0..N+1-1]
+        t@[atomic]
+        t[0] = x;
+        t[N] = z;
+        (;i:[0..N-1]:
+          H[$i] ( , , t[$i], y, t[$i+1]);
+        )
+      footprint collection: {
+        <4> {
+          !GND = bool^0 = atomic_xor_chain<4>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = atomic_xor_chain<4>::!Vdd (2) @[ supply_high port-alias ] 
+          H = process atomic_xor<>^1
+            {
+              [0] = atomic_xor_chain<4>::H[0] (1) (
+                !GND = bool^0 = atomic_xor_chain<4>::!GND (1) @[ supply_low port-alias ] 
+                !Vdd = bool^0 = atomic_xor_chain<4>::!Vdd (2) @[ supply_high port-alias ] 
+                a = bool^0 = atomic_xor_chain<4>::x (3) @[ atomic sub-use port? port-alias ] 
+                b = bool^0 = atomic_xor_chain<4>::y (4) @[ atomic sub-use port? port-alias ] 
+                c = bool^0 = atomic_xor_chain<4>::t[1] (6) @[ atomic sub-use sub-def ] 
+              )
+              [1] = atomic_xor_chain<4>::H[1] (2) (
+                !GND = bool^0 = atomic_xor_chain<4>::!GND (1) @[ supply_low port-alias ] 
+                !Vdd = bool^0 = atomic_xor_chain<4>::!Vdd (2) @[ supply_high port-alias ] 
+                a = bool^0 = atomic_xor_chain<4>::t[1] (6) @[ atomic sub-use sub-def ] 
+                b = bool^0 = atomic_xor_chain<4>::y (4) @[ atomic sub-use port? port-alias ] 
+                c = bool^0 = atomic_xor_chain<4>::t[2] (7) @[ atomic sub-use sub-def ] 
+              )
+              [2] = atomic_xor_chain<4>::H[2] (3) (
+                !GND = bool^0 = atomic_xor_chain<4>::!GND (1) @[ supply_low port-alias ] 
+                !Vdd = bool^0 = atomic_xor_chain<4>::!Vdd (2) @[ supply_high port-alias ] 
+                a = bool^0 = atomic_xor_chain<4>::t[2] (7) @[ atomic sub-use sub-def ] 
+                b = bool^0 = atomic_xor_chain<4>::y (4) @[ atomic sub-use port? port-alias ] 
+                c = bool^0 = atomic_xor_chain<4>::t[3] (8) @[ atomic sub-use sub-def ] 
+              )
+              [3] = atomic_xor_chain<4>::H[3] (4) (
+                !GND = bool^0 = atomic_xor_chain<4>::!GND (1) @[ supply_low port-alias ] 
+                !Vdd = bool^0 = atomic_xor_chain<4>::!Vdd (2) @[ supply_high port-alias ] 
+                a = bool^0 = atomic_xor_chain<4>::t[3] (8) @[ atomic sub-use sub-def ] 
+                b = bool^0 = atomic_xor_chain<4>::y (4) @[ atomic sub-use port? port-alias ] 
+                c = bool^0 = atomic_xor_chain<4>::z (5) @[ atomic sub-def port! port-alias ] 
+              )
+            }
+          N = pint^0 value: 4
+          t = bool^1
+            {
+              [0] = atomic_xor_chain<4>::x (3) @[ atomic sub-use port? port-alias ] 
+              [1] = atomic_xor_chain<4>::t[1] (6) @[ atomic sub-use sub-def ] 
+              [2] = atomic_xor_chain<4>::t[2] (7) @[ atomic sub-use sub-def ] 
+              [3] = atomic_xor_chain<4>::t[3] (8) @[ atomic sub-use sub-def ] 
+              [4] = atomic_xor_chain<4>::z (5) @[ atomic sub-def port! port-alias ] 
+            }
+          x = bool^0 = atomic_xor_chain<4>::x (3) @[ atomic sub-use port? port-alias ] 
+          y = bool^0 = atomic_xor_chain<4>::y (4) @[ atomic sub-use port? port-alias ] 
+          z = bool^0 = atomic_xor_chain<4>::z (5) @[ atomic sub-def port! port-alias ] 
+          Created state:
+          process instance pool: (0 ports, 4 local, 0 mapped)
+          1	atomic_xor_chain<4>::H[0]	atomic_xor<>
+            bool: 1,2,3,4,6
+          2	atomic_xor_chain<4>::H[1]	atomic_xor<>
+            bool: 1,2,6,4,7
+          3	atomic_xor_chain<4>::H[2]	atomic_xor<>
+            bool: 1,2,7,4,8
+          4	atomic_xor_chain<4>::H[3]	atomic_xor<>
+            bool: 1,2,8,4,5
+          bool instance pool: (5 ports, 3 local, 0 mapped)
+          1	atomic_xor_chain<4>::!GND @[ supply_low port-alias ]	
+          2	atomic_xor_chain<4>::!Vdd @[ supply_high port-alias ]	
+          3	atomic_xor_chain<4>::x @[ atomic sub-use port? port-alias ]	
+          4	atomic_xor_chain<4>::y @[ atomic sub-use port? port-alias ]	
+          5	atomic_xor_chain<4>::z @[ atomic sub-def port! port-alias ]	
+          6	atomic_xor_chain<4>::t[1] @[ atomic sub-use sub-def ]	
+          7	atomic_xor_chain<4>::t[2] @[ atomic sub-use sub-def ]	
+          8	atomic_xor_chain<4>::t[3] @[ atomic sub-use sub-def ]	
+        }
+      }
+      }
+
+  Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
+    C = atomic_xor_chain<4> C
+    a = bool<> a
+    b = bool<> b
+    x = bool<> x
+    y = bool<> y
+    z = bool<> z
+}
+
+footprint: {
+  !GND = bool^0 = !GND (1) @[ supply_low ] 
+  !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
+  C = process atomic_xor_chain<4>^0 = C (1) (
+    !GND = bool^0 = !GND (1) @[ supply_low ] 
+    !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
+    x = bool^0 = x (3) @[ atomic loc-def sub-use ] 
+    y = bool^0 = y (4) @[ atomic loc-def sub-use ] 
+    z = bool^0 = z (5) @[ atomic sub-def ] 
+  )
+  a = bool^0 = a (6) @[ loc-use ] 
+  b = bool^0 = b (7) @[ loc-use ] 
+  x = bool^0 = x (3) @[ atomic loc-def sub-use ] 
+  y = bool^0 = y (4) @[ atomic loc-def sub-use ] 
+  z = bool^0 = z (5) @[ atomic sub-def ] 
+  Created state:
+  process instance pool: (0 ports, 1 local, 4 mapped)
+  1	C	atomic_xor_chain<4>
+    bool: 1,2,3,4,5
+  private sub-process index map:
+    (1 -> 0)
+    (2 -> 4)
+  bool instance pool: (0 ports, 7 local, 3 mapped)
+  1	!GND @[ supply_low ]	
+  2	!Vdd @[ supply_high ]	
+  3	x @[ atomic loc-def sub-use ]	
+  4	y @[ atomic loc-def sub-use ]	
+  5	z @[ atomic sub-def ]	
+  6	a @[ loc-use ]	
+  7	b @[ loc-use ]	
+  private sub-bool index map:
+    (1 -> 0)
+    (2 -> 3)
+  resolved rte:
+  x = a
+  y = b
+}

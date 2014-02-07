@@ -37,6 +37,10 @@ namespace PRS {
 	class prs_expr;
 	class literal;
 }
+namespace RTE {
+	class rte_expr;
+	class literal;
+}
 }	// end namespace entity
 
 using std::ostream;
@@ -64,8 +68,10 @@ typedef	count_ptr<entity::data_nonmeta_instance_reference>
 						data_ref_nonmeta_return_type;
 
 typedef	count_ptr<entity::PRS::prs_expr>	prs_expr_return_type;
+typedef	count_ptr<entity::RTE::rte_expr>	rte_expr_return_type;
 
 typedef	count_ptr<entity::PRS::literal>		prs_literal_ptr_type;
+typedef	count_ptr<entity::RTE::literal>		rte_lvalue_ptr_type;
 
 typedef	count_ptr<entity::param_expr>		meta_expr_return_type;
 
@@ -137,6 +143,12 @@ virtual	CHECK_GENERIC_PROTO;
 
 virtual	CHECK_PRS_EXPR_PROTO;
 
+#define	CHECK_RTE_EXPR_PROTO						\
+	rte_expr_return_type						\
+	check_rte_expr(context& c) const
+
+virtual	CHECK_RTE_EXPR_PROTO;
+
 };	// end class expr
 
 //=============================================================================
@@ -190,6 +202,10 @@ virtual CHECK_NONMETA_REFERENCE_PROTO = 0;
 virtual	prs_literal_ptr_type
 	check_prs_literal(const context&) const;
 
+	// overridden only by RTE::literal
+virtual	rte_lvalue_ptr_type
+	check_rte_lvalue(const context&) const;
+
 	// overridden only by reference_group_construction
 virtual	bool
 	check_grouped_literals(checked_bool_group_type&, const context&) const;
@@ -197,6 +213,7 @@ virtual	bool
 	check_grouped_literals(checked_proc_group_type&, const context&) const;
 
 	CHECK_PRS_EXPR_PROTO;
+	CHECK_RTE_EXPR_PROTO;
 
 #define	EXPAND_CONST_REFERENCE_PROTO					\
 	int								\

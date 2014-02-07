@@ -69,6 +69,7 @@
 #include "Object/expr/expr_dump_context.hh"
 #include "Object/common/namespace.hh"
 #include "Object/lang/PRS.hh"
+#include "Object/lang/RTE.hh"
 #include "Object/type/template_actuals.hh"
 #include "Object/traits/bool_traits.hh"
 #include "Object/traits/int_traits.hh"
@@ -227,6 +228,16 @@ expr::check_prs_expr(context& c) const {
 	return prs_expr_return_type();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Temporary placeholder, never really supposed to be called.  
+ */
+rte_expr_return_type
+expr::check_rte_expr(context& c) const {
+	cerr << "Fang, unimplemented expr::check_rte_expr!" << endl;
+	return rte_expr_return_type();
+}
+
 //=============================================================================
 // class inst_ref_expr method definitions
 
@@ -333,6 +344,39 @@ inst_ref_expr::check_prs_literal(const context& c) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	After checking an meta_instance_reference, this checks to make sure
+	that a bool is referenced, appropriate for RTE.  
+	RTE allows both atomic and non-atomic bools to be referenced.
+ */
+rte_lvalue_ptr_type
+inst_ref_expr::check_rte_lvalue(const context& c) const {
+	STACKTRACE_VERBOSE;
+	meta_return_type ref(check_meta_reference(c));
+	count_ptr<simple_bool_meta_instance_reference>
+		bool_ref(ref.inst_ref().is_a<simple_bool_meta_instance_reference>());
+	if (bool_ref) {
+		ref.inst_ref().abandon();	// reduce ref-count to 1
+		INVARIANT(bool_ref.refs() == 1);
+		if (bool_ref->dimensions()) {
+			cerr << "ERROR: bool reference at " << where(*this) <<
+				" does not refer to a scalar instance." << endl;
+			return rte_lvalue_ptr_type(NULL);
+		} else {
+			// shared to exclusive ownership
+			entity::RTE::literal_base_ptr_type
+				lit(bool_ref.exclusive_release());
+			return rte_lvalue_ptr_type(
+				new entity::RTE::literal(lit));
+		}
+	} else {
+		cerr << "ERROR: expression at " << where(*this) <<
+			" does not reference a bool." << endl;
+		return rte_lvalue_ptr_type(NULL);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	A more relaxed version of check_prs_literal where the result is
 	allowed to reference a group of bools, which need not be a 
 	scalar reference.  
@@ -388,6 +432,13 @@ prs_expr_return_type
 inst_ref_expr::check_prs_expr(context& c) const {
 	// now virtual
 	return check_prs_literal(c);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+rte_expr_return_type
+inst_ref_expr::check_rte_expr(context& c) const {
+	// now virtual
+	return check_rte_lvalue(c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1563,7 +1614,8 @@ prefix_expr::check_prs_expr(context& c) const {
 			"." << endl;
 		THROW_EXIT;		// for now
 	}
-	if (op->text[0] != '~') {
+	if ((c.is_rte_syntax_mode() && (op->text[0] != '!'))
+		|| (!c.is_rte_syntax_mode() && (op->text[0] != '~'))) {
 		ICE(cerr, 
 			cerr << "FATAL: Invalid unary operator: \'" <<
 			op->text[0] << "\' at " << where(*op) <<
@@ -1581,6 +1633,38 @@ prefix_expr::check_prs_expr(context& c) const {
 		}
 	}
 	return prs_expr_return_type(new entity::PRS::not_expr(pe));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Checks for logical-NOT for RTE.  
+ */
+rte_expr_return_type
+prefix_expr::check_rte_expr(context& c) const {
+	rte_expr_return_type pe(e->check_rte_expr(c));
+	if (!pe) {
+		cerr << "ERROR resolving atomic expr at " << where(*e) <<
+			"." << endl;
+		THROW_EXIT;		// for now
+	}
+	if (op->text[0] != '!') {
+		ICE(cerr, 
+			cerr << "FATAL: Invalid unary operator: \'" <<
+			op->text[0] << "\' at " << where(*op) <<
+			".  Aborting... have a nice day." << endl;
+		);
+	}
+	// intercept internal node
+	typedef	entity::RTE::literal		literal_type;
+	const count_ptr<literal_type>
+		lit(pe.is_a<literal_type>());
+	if (lit) {
+		if (lit->is_internal()) {
+			lit->negate_node();
+			return lit;
+		}
+	}
+	return rte_expr_return_type(new entity::RTE::not_expr(pe));
 }
 
 //=============================================================================
@@ -2709,7 +2793,6 @@ logical_expr::check_prs_expr(context& c) const {
 		THROW_EXIT;		// for now
 		return prs_expr_return_type(NULL);
 	}
-	// TODO: process precharge
 	entity::PRS::precharge_expr precharge;	// default
 	if (pchg) {
 		precharge = pchg->check_prs_expr(c);
@@ -2725,6 +2808,7 @@ logical_expr::check_prs_expr(context& c) const {
 	ro->check();
 #endif
 	const char op_char = op->text[0];
+	// also works for RTE syntax
 	if (op_char == '&') {
 		typedef	entity::PRS::and_expr::iterator		iterator;
 		typedef	entity::PRS::and_expr::const_iterator	const_iterator;
@@ -2752,6 +2836,7 @@ logical_expr::check_prs_expr(context& c) const {
 //			ret->check();	// paranoia
 			return ret;
 		}
+	// also works for RTE syntax
 	} else if (op_char == '|') {
 		typedef	entity::PRS::or_expr::iterator		iterator;
 		typedef	entity::PRS::or_expr::const_iterator	const_iterator;
@@ -2787,6 +2872,75 @@ logical_expr::check_prs_expr(context& c) const {
 		return prs_expr_return_type(NULL);
 	}
 }	// end method logical_expr::check_prs_expr
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Don't forget to check for cases of PRS loop expressions. 
+ */
+rte_expr_return_type
+logical_expr::check_rte_expr(context& c) const {
+	STACKTRACE("parser::RTE::logical_expr::check_rte_expr()");
+	const rte_expr_return_type lo(l->check_rte_expr(c));
+	const rte_expr_return_type ro(r->check_rte_expr(c));
+	if (!ro || !lo) {
+		static const char err_str[] = "ERROR building RTE-expr at ";
+		if (!lo)
+			cerr << err_str << where(*l) << endl;
+		if (!ro)
+			cerr << err_str << where(*r) << endl;
+		THROW_EXIT;		// for now
+		return rte_expr_return_type(NULL);
+	}
+#if 0
+	lo->check();
+	ro->check();
+#endif
+	const char op_char = op->text[0];
+	const char op_char2 = op->text[1];
+	if ((op_char == '&' && op_char2 == '&') ||
+		(op_char == '|' && op_char2 == '|')) {
+		typedef	entity::RTE::binop_expr::iterator	iterator;
+		typedef	entity::RTE::binop_expr::const_iterator	const_iterator;
+		const count_ptr<entity::RTE::binop_expr>
+			l_and(lo.is_a<entity::RTE::binop_expr>());
+		const count_ptr<entity::RTE::binop_expr>
+			r_and(ro.is_a<entity::RTE::binop_expr>());
+		// assumes operator associativity
+		if (l_and && l_and->get_op() == op_char
+#if 0
+			&& !l_and.is_a<entity::RTE::binop_expr_loop>()
+#endif
+				) {
+			if (r_and) {
+				copy(r_and->begin(), r_and->end(), 
+					back_inserter(*l_and));
+			} else {
+				l_and->push_back(ro);
+			}
+			return l_and;
+		} else if (r_and && r_and->get_op() == op_char
+#if 0
+				&& !r_and.is_a<entity::RTE::binop_expr_loop>()
+#endif
+				) {
+			r_and->push_front(lo);
+			return r_and;
+		} else {
+			const count_ptr<entity::RTE::binop_expr>
+				ret(new entity::RTE::binop_expr(lo, op_char));
+			ret->push_back(ro);
+//			ret->check();	// paranoia
+			return ret;
+		}
+	} else {
+		ICE(cerr, 
+			cerr << "FATAL: Invalid RTE operator: \'" << op_char <<
+				"\' at " << where(*op) <<
+				".  Aborting... have a nice day." << endl;
+		);
+		return rte_expr_return_type(NULL);
+	}
+}	// end method logical_expr::check_rte_expr
 
 //=============================================================================
 // class loop_operation method definitions

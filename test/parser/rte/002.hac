@@ -1,0 +1,3 @@
+// "rte/002.hac"
+ebool x, y;
+x = y;		// valid alias, but should only define one of them

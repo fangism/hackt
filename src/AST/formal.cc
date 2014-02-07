@@ -28,6 +28,7 @@
 #include "AST/type.hh"
 #include "AST/node_list.tcc"
 #include "AST/parse_context.hh"
+#include "AST/attribute.hh"
 
 #include "Object/type/fundamental_type_reference.hh"
 #include "Object/inst/instance_placeholder_base.hh"
@@ -183,7 +184,7 @@ data_param_decl::check_build(context& c) const {
 	const count_ptr<const fundamental_type_reference>
 		ftr(type->check_type(c));
 	// make sure is data-type!
-	const context::fundamental_type_frame _ftf(c, ftr);
+	const context::fundamental_type_frame _ftf(c, ftr, false);
 	if (ftr) {
 		ids->check_build(c);
 		// always returns NULL
@@ -223,14 +224,16 @@ check_data_ports(const data_param_decl_list& p, context& c) {
 
 CONSTRUCTOR_INLINE
 port_formal_id::port_formal_id(const token_identifier* n,
-		const dense_range_list* d) : name(n), dim(d) {
+		const dense_range_list* d,
+		const generic_attribute_list* a) : name(n), dim(d), attrs(a) {
 	NEVER_NULL(name);
 	// dim may be NULL
 }
 
 CONSTRUCTOR_INLINE
 port_formal_id::port_formal_id(const count_ptr<const token_identifier>& n,
-		const dense_range_list* d) : name(n), dim(d) {
+		const dense_range_list* d, 
+		const generic_attribute_list* a) : name(n), dim(d), attrs(a) {
 	NEVER_NULL(name);
 	// dim may be NULL
 }
@@ -304,6 +307,9 @@ port_formal_id::check_build(context& c) const {
 	} else {
 		t = c.add_port_formal(*name);
 	}
+	if (attrs) {
+		cerr << "Warning: port formal attributes not yet implemented." << endl;
+	}
 	return t;
 }
 
@@ -352,7 +358,7 @@ port_formal_decl::check_build(context& c) const {
 	const count_ptr<const fundamental_type_reference>
 		ftr(type->check_type(c));
 	// make sure is data-type!
-	const context::fundamental_type_frame _ftf(c, ftr);
+	const context::fundamental_type_frame _ftf(c, ftr, type->is_atomic());
 	if (ftr) {
 		ids->check_build(c);
 		// always returns NULL
@@ -489,7 +495,8 @@ template_formal_decl::rightmost(void) const {
 never_ptr<const object>
 template_formal_decl::check_build(context& c) const {
 	STACKTRACE("template_formal_decl::check_build()");
-	const context::fundamental_type_frame _ftf(c, type->check_type(c));
+	const context::fundamental_type_frame
+		_ftf(c, type->check_type(c), false);
 	const never_ptr<const definition_base>
 		def(c.get_current_fundamental_type()->get_base_def());
 		// don't anticipate any problems here...

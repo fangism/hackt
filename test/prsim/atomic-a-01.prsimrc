@@ -1,0 +1,5 @@
+# "atomic-a-01.prsimrc"
+# @haco@ atomic-a.haco-c
+
+# should fail:
+set z 1

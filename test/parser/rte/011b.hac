@@ -1,0 +1,7 @@
+// "011b.hac"
+bool x;
+bool y;
+prs {
+	y	-> x-	// atomic bool cannot participate in prs
+}
+x @[atomic];

@@ -1,0 +1,18 @@
+// "atomic-b.hac"
+// a large fanout-DAG of atomic expressions
+bool a, b, c, d, e, f, g, h;
+c @ [atomic];
+d @ [atomic];
+e @ [atomic];
+f @ [atomic];
+g @ [atomic];
+h @ [atomic];
+rte {
+	c = a || b;
+	d = a && b;
+	e = !(a || b);
+	f = !(a && b);
+	g = d || e;
+	h = c && f;
+}
+

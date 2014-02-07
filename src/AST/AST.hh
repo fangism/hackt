@@ -25,6 +25,7 @@
 #include "AST/instance.hh"
 
 #include "AST/PRS.hh"
+#include "AST/RTE.hh"
 #include "AST/CHP.hh"
 #include "AST/HSE.hh"
 #include "AST/SPEC.hh"

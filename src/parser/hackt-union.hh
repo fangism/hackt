@@ -12,6 +12,7 @@
 
 #include "AST/AST_fwd.hh"
 #include "AST/PRS_fwd.hh"
+#include "AST/RTE_fwd.hh"
 #include "AST/HSE_fwd.hh"
 #include "AST/CHP_fwd.hh"
 #include "AST/SPEC_fwd.hh"

@@ -192,6 +192,14 @@ private:
 	visit(const entity::SPEC::footprint_directive&);	// do nothing
 
 private:
+// RTE (atomic expressions) are ignored for netlist generation
+	void
+	visit(const entity::RTE::footprint&);
+	void
+	visit(const entity::RTE::footprint_assignment&);
+	void
+	visit(const entity::RTE::footprint_expr_node&);
+
 	void
 	visit(const footprint_expr_node::precharge_pull_type&);
 

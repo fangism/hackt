@@ -1,0 +1,8 @@
+// "rte/024b.hac" -- expect fail, perhaps at create-time
+// based on "rte/001b.hac"
+defproc foo(bool x, y) {
+x @[atomic];
+x = y;		// error: invalid alias
+}
+
+foo bar;
