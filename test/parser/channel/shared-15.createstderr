@@ -3,5 +3,7 @@ Warnings found (1) while creating complete type source<>.
 Error: cannot alias two non-sharing producers of type channel.
 	got: S.X
 	and: T.X
+Error connecting: Y
+	and:  T.X
 Error encountered during module::create.
 ERROR in creating.  Aborting.

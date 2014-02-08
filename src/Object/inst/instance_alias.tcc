@@ -722,8 +722,12 @@ INSTANCE_ALIAS_INFO_CLASS::unite(this_type& r, const unroll_context& c) {
 	lc->next = rc;
 	// synchronize direction_connection_flags
 		// commutative
-	if (!direction_connection_policy::synchronize_flags(*lc, *rc).good)
+	if (!direction_connection_policy::synchronize_flags(*lc, *rc).good) {
+		cerr << "Error connecting: ";
+		this->dump_hierarchical_name(cerr) << endl;
+		r.dump_hierarchical_name(cerr << "\tand:  ") << endl;
 		return good_bool(false);
+	}
 		// symmetric
 	const good_bool
 		ret(actuals_parent_type::synchronize_actuals(*lc, *rc, c));

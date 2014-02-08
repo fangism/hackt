@@ -4806,13 +4806,22 @@ State::kill_evaluation(const node_index_type ni, expr_index_type ui,
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+static
+inline
+void
+__debug_print_node_change(const node_index_type ni,
+		const pull_enum prev, const pull_enum next) {
+	DEBUG_STEP_PRINT("node " << ni << " from " <<
+		node_type::value_to_char[size_t(prev)] << " -> " <<
+		node_type::value_to_char[size_t(next)] << endl);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Evaluates expression changes without propagating/generating events.  
 	Useful for expression state reconstruction from checkpoint.  
 	\return pair(root expression, new pull value) if event propagated
 		to the root, else (INVALID_NODE_INDEX, whatever)
-	\param ni index of the node that changed value, 
-		not really needed, only used for diagnostic.  
 	\param ui the expression id used to traverse up tree.  
 	\param prev previous value of node.
 		Locally used as old pull state of subexpression.  
@@ -4824,7 +4833,8 @@ State::kill_evaluation(const node_index_type ni, expr_index_type ui,
  */
 // inline
 State::evaluate_return_type
-State::evaluate(const node_index_type ni,
+State::evaluate(
+		// const node_index_type ni,
 		expr_index_type gui, 
 		pull_enum prev, pull_enum next) {
 	STACKTRACE_VERBOSE_STEP;
@@ -5163,8 +5173,10 @@ State::propagate_evaluation(
 	STACKTRACE_VERBOSE_STEP;
 	const node_index_type& ni(c.node);
 	// when evaluating node as expression, interpret value as pull
+	const pull_enum nextval = pull_enum(c.val);
+	__debug_print_node_change(ni, prev, nextval);
 	const evaluate_return_type
-		ev_result(evaluate(ni, exi, prev, pull_enum(c.val)));
+		ev_result(evaluate(exi, prev, nextval));
 	if (ev_result.invariant_break >= ERROR_BREAK) {
 		// then violation is not a result of a real rule
 		// thus, there can be no change or addition of events
@@ -8788,8 +8800,9 @@ try {
 			const expr_index_type nj(distance(nb, ni));
 			for ( ; fi!=fe; ++fi) {
 				// interpret node value as pull-value
-				evaluate(nj, *fi,
+				__debug_print_node_change(nj,
 					pull_enum(prev), pull_enum(next));
+				evaluate(*fi, pull_enum(prev), pull_enum(next));
 				// evaluate does not modify any queues
 				// just updates expression states
 			}

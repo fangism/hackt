@@ -1,5 +1,7 @@
 Error: cannot alias two non-sharing consumers of type channel.
 	got: play.in
 	and: work.in
+Error connecting: play.in
+	and:  work.in
 Error encountered during module::create.
 ERROR in creating.  Aborting.
