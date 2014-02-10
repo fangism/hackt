@@ -38,12 +38,6 @@
 #include "sim/prsim/TimingChecker.hh"
 #endif
 
-#if	!PRSIM_SIMPLE_EVENT_QUEUE
-// define to 1 to use a unique-set container for pending queue
-// a wee bit slower, but saner
-#define	UNIQUE_PENDING_QUEUE			1
-#endif
-
 /**
 	First-come-first-serve ordering of updated nodes.
 	Define to 1 for best-attempt to preserve original event
@@ -52,7 +46,7 @@
 	This is accomplished by preserving the order in-which 
 	fanouts were propagated.
  */
-#define	PRSIM_FCFS_UPDATED_NODES		(1 && PRSIM_SIMPLE_EVENT_QUEUE)
+#define	PRSIM_FCFS_UPDATED_NODES			1
 
 #include "util/memory/excl_ptr.hh"
 #include "util/memory/count_ptr.hh"
@@ -546,7 +540,6 @@ protected:
 	typedef	std::map<event_index_type, time_type>
 						mk_excl_queue_type;
 public:
-#if PRSIM_SIMPLE_EVENT_QUEUE
 	struct node_update_info {
 		rule_index_type			rule_index;
 #if EVENT_INCLUDE_RULE_POINTER
@@ -583,16 +576,6 @@ protected:
 		Preserve the order in which fanouts were processed.
 	 */
 	typedef vector<node_index_type>		updated_nodes_queue_type;
-#endif
-#else
-	/**
-		invariant: no event should be in pending queue more than once.
-	 */
-#if UNIQUE_PENDING_QUEUE
-	typedef	std::set<event_index_type>	pending_queue_type;
-#else
-	typedef	vector<event_index_type>	pending_queue_type;
-#endif
 #endif
 	typedef	vector<event_queue_type::value_type>
 						temp_queue_type;
@@ -727,14 +710,9 @@ private:
 	/// coerced exclusive-low logic queue
 	mk_excl_queue_type			excllo_queue;
 #endif
-#if PRSIM_SIMPLE_EVENT_QUEUE
 	updated_nodes_type			updated_nodes;
 #if PRSIM_FCFS_UPDATED_NODES
 	updated_nodes_queue_type		updated_nodes_queue;
-#endif
-#else
-	/// pending queue
-	pending_queue_type			pending_queue;
 #endif
 	/// pool of exclusive-hi checking locks
 	check_excl_lock_pool_type		check_exhi_ring_pool;
@@ -1699,32 +1677,12 @@ private:
 	flush_blocked_excl_nodes(const value_enum);
 #endif
 
-#if PRSIM_SIMPLE_EVENT_QUEUE
 	break_type
 	flush_updated_nodes(cause_arg_type
 #if PRSIM_TRACK_LAST_EDGE_TIME && !PRSIM_TRACK_CAUSE_TIME
 		, const time_type&
 #endif
 		);
-#else
-	void
-	enqueue_pending(const event_index_type);
-
-	break_type
-	flush_pending_queue(void);
-
-	void
-	__flush_pending_event_with_interference(
-		node_type&, const event_index_type, event_type&);
-
-	void
-	__flush_pending_event_no_interference(
-		node_type&, const event_index_type, event_type&);
-
-	void
-	__flush_pending_event_replacement(
-		node_type&, const event_index_type, event_type&);
-#endif
 
 	struct auto_flush_queues;
 

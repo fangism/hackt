@@ -183,10 +183,8 @@ struct State::evaluate_return_type {
 	const rule_type*		root_rule;
 	/// root rule index
 	rule_index_type			root_rule_index;
-#if PRSIM_SIMPLE_EVENT_QUEUE
 	/// previous pull-state, complete
 	pull_set			prev_pull;
-#endif
 	/// true signals that simulation should halt, e.g. if there is error
 	error_policy_enum		invariant_break;
 
@@ -202,15 +200,11 @@ struct State::evaluate_return_type {
 
 	evaluate_return_type(const node_index_type ni,
 		const root_ex_type* const e, const pull_enum p, 
-#if PRSIM_SIMPLE_EVENT_QUEUE
 		const pull_set ps, 
-#endif
 		const rule_type* const r, const rule_index_type ri) :
 		node_index(ni), root_ex(e), root_pull(p)
 			, root_rule(r), root_rule_index(ri)
-#if PRSIM_SIMPLE_EVENT_QUEUE
 			, prev_pull(ps)
-#endif
 			, invariant_break(ERROR_NONE)
 			{ }
 };	// end struct evaluate_return_type
@@ -393,13 +387,9 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 		mk_exhi(), mk_exlo(), 
 		exclhi_queue(), excllo_queue(), 
 #endif
-#if PRSIM_SIMPLE_EVENT_QUEUE
 		updated_nodes(), 
 #if PRSIM_FCFS_UPDATED_NODES
 		updated_nodes_queue(),
-#endif
-#else
-		pending_queue(), 
 #endif
 		check_exhi_ring_pool(1), check_exlo_ring_pool(1), 
 		check_exhi(), check_exlo(), 
@@ -1721,25 +1711,6 @@ State::enqueue_excllo(const time_type t, const event_index_type ei) {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !PRSIM_SIMPLE_EVENT_QUEUE
-/**
-	Registers event in the pending queue.  
-	(I think this is an unordered worklist.)
- */
-void
-State::enqueue_pending(const event_index_type ei) {
-	DEBUG_STEP_PRINT("enqueuing pending ID " << ei << endl);
-#if UNIQUE_PENDING_QUEUE
-	typedef	pending_queue_type::iterator	iterator;
-	const pair<iterator, bool> p(pending_queue.insert(ei));
-	INVARIANT(p.second);		// was inserted uniquely
-#else
-	pending_queue.push_back(ei);
-#endif
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Fetches next event from the priority queue.  
 	Automatically skips and deallocates killed events.  
@@ -2559,7 +2530,6 @@ for ( ; i!=e; ++i) {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PRSIM_SIMPLE_EVENT_QUEUE
 /**
 	updated_nodes contains set of all nodes whose pull-states were
 	updated by expression propagation.
@@ -2905,314 +2875,6 @@ for ( ; i!=e; ++i) {
 #endif
 	return err;
 }	// end flush_updated_nodes()
-
-#else	// PRSIM_SIMPLE_EVENT_QUEUE
-/**
-	As rules are evaluated and propagated, events may be enqueued
-	onto the pending queue.
-	This subroutine processes the pending queue events until cleared.  
-	Only called by step() member function.  
- */
-State::break_type
-State::flush_pending_queue(void) {
-	typedef	pending_queue_type::const_iterator	const_iterator;
-	STACKTRACE_VERBOSE_STEP;
-	break_type err = ERROR_NONE;
-	const_iterator i(pending_queue.begin()), e(pending_queue.end());
-for ( ; i!=e; ++i) {
-	const event_index_type ne = *i;
-	DEBUG_STEP_PRINT("checking pending event ID: " << ne << endl);
-	event_type& ev(get_event(ne));
-	// firings may get killed while on pending queue
-	// so just drop event, deallocate here
-	if (ev.killed()) {
-		__deallocate_pending_interference_event(ne);
-		continue;
-	}
-	const node_index_type& _ni(ev.node);
-	DEBUG_STEP_PRINT("... on node " <<
-		get_node_canonical_name(_ni) << endl);
-	node_type& _n(__get_node(_ni));
-	const pull_set p(_n, weak_rules_enabled());
-	// check strong (normal) rules first
-	if (p.possible_interference_strong()) {
-	/***
-		There is interference.  If there is weak interference,
-		suppress report unless explicitly requested.  
-		weak = (X && T) or (T && X);
-	***/
-		DEBUG_STEP_PRINT("some interference." << endl);
-		const bool pending_weak = p.normal_pulling_x();
-			// not XOR (^), see pending_weak table in prs.c
-		// issue diagnostic
-		if ((weak_interference_policy != ERROR_IGNORE) ||
-				!pending_weak) {
-			const break_type E =
-			__report_interference(cout, pending_weak, _ni, ev.cause);
-			if (E > err) err = E;
-		}
-		if (ev.pending_interference()) {
-			DEBUG_STEP_PRINT("immediate -> X." << endl);
-			// ISE_INVARIANT(_n.pending_event());
-			// might have been dequeued due to unstable-dequeue
-			// in which case, enqueue this event
-			const bool still_pending = _n.pending_event();
-		if (still_pending) {
-			// always set the cause and new value together
-			event_type& pe(get_event(_n.get_event()));
-			pe.val = LOGIC_OTHER;
-			pe.cause.node = ev.cause.node;
-			pe.cause.val = ev.cause.val;
-			__deallocate_pending_interference_event(ne);
-		} else {
-			// INVARIANT(dequeue_unstable_events());
-			/**
-				This can happen b/c pending_queue may
-				contain duplicates for the node, 
-				from interference and evaluation ordering.  
-			**/
-			DEBUG_STEP_PRINT("re-queue to X." << endl);
-			ev.val = LOGIC_OTHER;
-			__flush_pending_event_with_interference(_n, ne, ev);
-		}	// end if still_pending
-		} else {
-			DEBUG_STEP_PRINT("overwrite to X." << endl);
-			ev.val = LOGIC_OTHER;
-			__flush_pending_event_with_interference(_n, ne, ev);
-		}	// end if pending_interference
-#if PRSIM_WEAK_RULES
-	} else if (weak_rules_enabled() && p.possible_interference_weak()) {
-	/***
-		There is interference between weak rules. 
-		Rest of the code in this clause is copied from above.
-	***/
-		DEBUG_STEP_PRINT("some interference (weak rules)." << endl);
-		const bool pending_weak = p.weak_pulling_x();
-			// not XOR (^), see pending_weak table in prs.c
-		// issue diagnostic
-		if ((weak_interference_policy != ERROR_IGNORE) ||
-				!pending_weak) {
-			const break_type E =
-			__report_interference(cout, pending_weak, _ni, ev.cause);
-			if (E > err) err = E;
-		}
-		if (ev.pending_interference()) {
-			DEBUG_STEP_PRINT("immediate -> X." << endl);
-			// ISE_INVARIANT(_n.pending_event());
-			// might have been dequeued due to unstable-dequeue
-			// in which case, enqueue this event
-			const bool still_pending = _n.pending_event();
-		if (still_pending) {
-			// always set the cause and new value together
-			event_type& pe(get_event(_n.get_event()));
-			pe.val = LOGIC_OTHER;
-			pe.cause.node = ev.cause.node;
-			pe.cause.val = ev.cause.val;
-			__deallocate_pending_interference_event(ne);
-		} else {
-			INVARIANT(dequeue_unstable_events());
-			DEBUG_STEP_PRINT("re-queue to X." << endl);
-			ev.val = LOGIC_OTHER;
-			__flush_pending_event_with_interference(_n, ne, ev);
-		}	// end if still_pending
-		} else {
-			DEBUG_STEP_PRINT("overwrite to X." << endl);
-			ev.val = LOGIC_OTHER;
-			__flush_pending_event_with_interference(_n, ne, ev);
-		}	// end if pending_interference
-#endif	// PRSIM_WEAK_RULES
-	} else {
-		// should also cover overpowered weak-rules
-		DEBUG_STEP_PRINT("no interference." << endl);
-		const event_index_type pe = _n.get_event();
-		DEBUG_STEP_PRINT("prior enqueued event on this node (possibly killed): " <<
-			pe << endl);
-		// weak_wins
-		const bool weak_wins = p.weak_wins_any();
-		if (weak_wins) {
-			ev.set_weak(true);
-		}
-		
-		if (pe && UNLIKELY(pe != ne)) {
-			// then one of these events must be tossed!
-			// this arises as a result of instabilities
-			// and the need to cancel events
-			DEBUG_STEP_PRINT("node has enqueued different event "
-				<< pe << " vs. this one " << ne << endl);
-			event_type& pv(get_event(pe));
-			// sanity: referring to same node
-			ISE_INVARIANT(pv.node == _ni);
-			// walk event_queue, find delay of the former event?
-			// inspect event values?
-			if (dequeue_unstable_events()) {
-			DEBUG_STEP_PRINT("replacing original event" << endl);
-				// new behavior: cancel the original event
-				// which was updated to X
-				_n.clear_event();
-#if 1
-				if (UNLIKELY(!pv.killed())) {
-				cerr << "former event: (pe)" << endl;
-				dump_event(cerr, pe, 0.0) << endl;
-				cerr << "new event: (ne)" << endl;
-				dump_event(cerr, ne, 0.0) << endl;
-				}
-#endif
-				ISE_INVARIANT(pv.killed());
-				// FAILED ONCE: 20071217, since weak rules
-				// FIXED ONCE: ACX-PR-6376 (possibly same)
-				// FAILED AGAIN: ACX-PR-6718, due to non-atomic
-				//	expression evaluation
-				__flush_pending_event_replacement(_n, ne, ev);
-			} else {
-			DEBUG_STEP_PRINT("keeping original event" << endl);
-				// original behavior: drop new event
-				// b/c original event updated to value X
-				__deallocate_pending_interference_event(ne);
-				// leave original event alone
-			}
-		} else {	// LIKELY(pe == ne)
-			__flush_pending_event_no_interference(_n, ne, ev);
-		}	// end if (pe != ne)
-	}	// end if may_be_pulled ...
-}	// end for all in pending_queue
-	pending_queue.clear();	// or .resize(0), same thing
-	return err;
-}	// end method flush_pending_queue
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	For the sake of shortening long code.  
-	\param ev pending event, corresponds to index...
-	\param ne index of the pending event.
- */
-// inline
-void
-State::__flush_pending_event_with_interference(node_type& _n, 
-		const event_index_type ne, event_type& ev) {
-	STACKTRACE_VERBOSE_STEP;
-	switch (_n.current_value()) {
-	case LOGIC_LOW:
-	DEBUG_STEP_PRINT("moving - event to event queue" << endl);
-		_n.set_event_consistent(ne);	// not necessarily linked yet
-		enqueue_event(get_delay_dn(ev), ne);
-		break;
-	case LOGIC_HIGH:
-	DEBUG_STEP_PRINT("moving + event to event queue" << endl);
-		_n.set_event_consistent(ne);	// not necessarily linked yet
-		enqueue_event(get_delay_up(ev), ne);
-		break;
-	case LOGIC_OTHER:
-	DEBUG_STEP_PRINT("cancelling new event" << endl);
-		_n.clear_excl_queue();
-		if (_n.get_event() == ne) {
-			__deallocate_event(_n, ne);
-		} else {
-			__deallocate_pending_interference_event(ne);
-		}
-		// difference: n.clear_event()
-		break;
-	default:
-		ISE(cerr, 
-			cerr << "Invalid logic value." << endl;
-		);
-	}	// end switch
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	For the sake of shortening long code.  
- */
-// inline
-void
-State::__flush_pending_event_no_interference(node_type& _n, 
-		const event_index_type ne, event_type& ev) {
-	STACKTRACE_VERBOSE_STEP;
-	INVARIANT(!ev.killed());
-	// if event is weak rule, require the opposing pull to be off
-	if (_n.current_value() != ev.val) {
-#if PRSIM_WEAK_RULES
-		const bool w = ev.is_weak();
-#endif
-		// not necessarily linked yet
-		_n.set_event_consistent(ne);
-		const pull_set p(_n, weak_rules_enabled());
-		if (ev.val == LOGIC_HIGH) {
-		DEBUG_STEP_PRINT("moving + event to event queue" << endl);
-#if PRSIM_WEAK_RULES
-			// the opposing strong pull:
-			const pull_enum opp = p.dn;
-			if (!w || (opp == PULL_OFF)) {
-#endif	// PRSIM_WEAK_RULES
-			enqueue_event(get_delay_up(ev), ne);
-			return;
-#if PRSIM_WEAK_RULES
-			}
-#endif
-		} else {
-		DEBUG_STEP_PRINT("moving - event to event queue" << endl);
-#if PRSIM_WEAK_RULES
-			// the opposing strong pull:
-			const pull_enum opp = p.up;
-			if (!w || (opp == PULL_OFF)) {
-#endif	// PRSIM_WEAK_RULES
-			enqueue_event(get_delay_dn(ev), ne);
-			return;
-#if PRSIM_WEAK_RULES
-			}
-#endif
-		}
-	}
-	// fall-through
-	{
-		DEBUG_STEP_PRINT("cancelling event" << endl);
-		// no change in value, just cancel
-		_n.clear_excl_queue();
-	// fixed? copied from above, with interference
-	// TODO: need test case to reach this code
-	if (_n.get_event() == ne) {
-		__deallocate_event(_n, ne);
-	} else {
-		__deallocate_pending_interference_event(ne);
-	}
-		// difference: n.clear_event()
-	}	// end switch
-}	// end method __flush_pending_event_no_interference
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Replaces the event on a node.  
-	For the sake of shortening long code.  
- */
-// inline
-void
-State::__flush_pending_event_replacement(node_type& _n, 
-		const event_index_type ne, event_type& ev) {
-	STACKTRACE_VERBOSE_STEP;
-	_n.set_event(ne);
-	switch (ev.val) {
-	case LOGIC_LOW:
-	DEBUG_STEP_PRINT("moving - event to event queue" << endl);
-		enqueue_event(get_delay_dn(ev), ne);
-		break;
-	case LOGIC_HIGH:
-	DEBUG_STEP_PRINT("moving + event to event queue" << endl);
-		enqueue_event(get_delay_up(ev), ne);
-		break;
-	case LOGIC_OTHER:
-	DEBUG_STEP_PRINT("don't know what to do!" << endl);
-		// should depend on pull up or down...
-		FINISH_ME(Fang);
-		enqueue_event(get_delay_up(ev), ne);
-		// _n.clear_excl_queue();
-		// __deallocate_event(_n, ne);
-		break;
-	default:
-		ISE(cerr, 
-			cerr << "Invalid logic value." << endl;
-		);
-	}	// end switch
-}
-#endif	// PRSIM_SIMPLE_EVENT_QUEUE
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if !PRSIM_MK_EXCL_BLOCKING_SET
@@ -3770,14 +3432,10 @@ struct State::auto_flush_queues {
 
 	~auto_flush_queues() {
 		// check and flush pending queue, spawn fanout events
-#if PRSIM_SIMPLE_EVENT_QUEUE
 #if PRSIM_TRACK_LAST_EDGE_TIME && !PRSIM_TRACK_CAUSE_TIME
 		const break_type E(state.flush_updated_nodes(cause, time));
 #else
 		const break_type E(state.flush_updated_nodes(cause));
-#endif
-#else
-		const break_type E(state.flush_pending_queue());
 #endif
 #if !PRSIM_MK_EXCL_BLOCKING_SET
 		// can anything go wrong here?
@@ -3866,13 +3524,9 @@ State::execute_immediately(
 		const time_type& ept) THROWS_STEP_EXCEPTION {
 	typedef	State::step_return_type		return_type;
 	STACKTRACE_VERBOSE;
-#if PRSIM_SIMPLE_EVENT_QUEUE
 	ISE_INVARIANT(updated_nodes.empty());
 #if PRSIM_FCFS_UPDATED_NODES
 	ISE_INVARIANT(updated_nodes_queue.empty());
-#endif
-#else
-	ISE_INVARIANT(pending_queue.empty());
 #endif
 #if PRSIM_MK_EXCL_BLOCKING_SET
 	ISE_INVARIANT(__mk_excl_blocking_set.empty());
@@ -4136,91 +3790,6 @@ if (n.in_channel()) {
 	}
 	}
 }
-#if !PRSIM_SIMPLE_EVENT_QUEUE
-	/***
-		If an event is forced (say, by user), then check node's own
-		guards to determine whether or not a new event needs to
-		be registered on this node.  
-		FIXME: prs.c checks for !n->queue
-	***/
-	if (force && n.get_event()) {
-		DEBUG_STEP_PRINT("detected a forced event vs. pending event" << endl);
-#if PRSIM_WEAK_RULES
-	// the opposing strong pull:
-	const pull_enum nup = n.pull_up_state[NORMAL_RULE].pull();
-	const pull_enum ndn = n.pull_dn_state[NORMAL_RULE].pull();
-	size_t w = NORMAL_RULE;		// 0
-	do {
-#endif
-		cout << "THIS CODE HAS NEVER BEEN REACHED?" << endl;
-#if 0
-		// The following code looks wrong...
-		const event_index_type ui = n.pull_up_index STR_INDEX(w);
-		const event_index_type di = n.pull_dn_index STR_INDEX(w);
-		const event_type* up_rule = ui ? &get_event(ui) : NULL;
-		const event_type* dn_rule = di ? &get_event(di) : NULL;
-#else
-		const pull_enum pup = n.pull_up_state STR_INDEX(w).pull();
-		const pull_enum pdn = n.pull_dn_state STR_INDEX(w).pull();
-#endif
-		const bool possible_up = pup == PULL_ON
-				&& next != LOGIC_HIGH
-#if PRSIM_WEAK_RULES
-				// check opposition
-				&& (!w || (ndn == PULL_OFF))
-#endif
-				;
-		const bool possible_dn = pdn == PULL_ON
-				&& next != LOGIC_LOW
-#if PRSIM_WEAK_RULES
-				// check opposition
-				&& (!w || (nup == PULL_OFF))
-#endif
-				;
-		if (possible_up) {
-			DEBUG_STEP_PRINT("force pull-up" << endl);
-			const event_index_type _ne =
-				__allocate_event(n, ni, EMPTY_CAUSE, 
-					INVALID_RULE_INDEX, // ui, // cause?
-#if EVENT_INCLUDE_RULE_POINTER
-					NULL,
-#endif
-					LOGIC_HIGH
-#if PRSIM_WEAK_RULES
-					, w	// rule_strength
-#endif
-					);
-			enqueue_pending(_ne);
-#if PRSIM_WEAK_RULES
-			break;
-#endif
-		}
-		else if (possible_dn) {
-			DEBUG_STEP_PRINT("force pull-dn" << endl);
-			const event_index_type _ne =
-				__allocate_event(n, ni, EMPTY_CAUSE, 
-					INVALID_RULE_INDEX, // di, // cause?
-#if EVENT_INCLUDE_RULE_POINTER
-					NULL,
-#endif
-					LOGIC_LOW
-#if PRSIM_WEAK_RULES
-					, w	// rule_strength
-#endif
-					);
-			enqueue_pending(_ne);
-#if PRSIM_WEAK_RULES
-			break;
-#endif
-		}
-#if PRSIM_WEAK_RULES
-		// above strong pulls take precedence over weak pulls
-		++w;
-	} while (weak_rules_enabled() && w<2);
-#endif
-	}	// end if forced && pending event
-#endif	// PRSIM_SIMPLE_EVENT_QUEUE
-
 #if PRSIM_MK_EXCL_BLOCKING_SET
 	// update excl lock counters
 	if (n.has_mk_exclhi()) {
@@ -4908,9 +4477,7 @@ if (!r.is_invariant()) {
 	const node_index_type oni = translate_to_global_node(pid, ui);
 	// local -> global node
 	node_type& n(__get_node(oni));
-#if PRSIM_SIMPLE_EVENT_QUEUE
 	const pull_set ops(n, weak_rules_enabled());
-#endif
 	const bool dir = r.direction();
 	fanin_state_type& fs(n.get_pull_struct(dir
 #if PRSIM_WEAK_RULES
@@ -4937,10 +4504,7 @@ if (!r.is_invariant()) {
 	}
 	next = fs.pull();
 	return evaluate_return_type(oni, STRUCT, next,
-#if PRSIM_SIMPLE_EVENT_QUEUE
-		ops, 
-#endif
-		&r, ps.global_expr_index(ri));
+		ops, &r, ps.global_expr_index(ri));
 } else {
 	// then this rule doesn't actually pull a node, is an invariant
 	// aggregate updates before diagnosing invariant violation
@@ -5188,9 +4752,7 @@ State::propagate_evaluation(
 		return ERROR_NONE;
 		// return false;
 	}
-#if PRSIM_SIMPLE_EVENT_QUEUE
 	const pull_set& ops(ev_result.prev_pull);
-#endif
 	const pull_enum next = ev_result.root_pull;
 	const node_index_type ui = ev_result.node_index;
 	// we delay the root rule search until here to reduce the amount
@@ -5304,7 +4866,6 @@ if (n.pending_event()) {
 #endif	// PRSIM_WEAK_RULES
 if (dir) {
 	// pull-up
-#if PRSIM_SIMPLE_EVENT_QUEUE
 	// re-evaluate queue
 	node_update_info nui;
 	nui.rule_index = root_rule;
@@ -5337,248 +4898,8 @@ if (dir) {
 		pp.first->second.old_pull_set = ops;
 	}
 #endif
-#else
-/***
-	The node is either T, F, or X. Either way, it's a change.
-	If the node is T or X, insert into pending Q.
-	If the guard becomes false, this could be an instability.  It is
-	an instability IF the output would have been turned on by the guard.
-***/
-if (!n.pending_event()) {
-	DEBUG_STEP_PRINT("no pending event on this node being pulled up."
-		<< endl);
-	// no former event pending, ok to enqueue
-	if ((next == PULL_ON &&
-			n.current_value() != LOGIC_HIGH) ||
-		(next == PULL_WEAK &&
-			(n.current_value() == LOGIC_LOW
-			|| p.dn != PULL_OFF))) {
-		/***
-			if (PULL_ON and wasn't already HIGH ||
-				PULL_WEAK and was LOW before ||
-				weak-interference)
-			then we enqueue the event somewhere.
-		***/
-		DEBUG_STEP_PRINT("pulling up (on or weak)" << endl);
-		const event_index_type pe =
-			__allocate_event(n, ui, c,
-				root_rule,
-#if EVENT_INCLUDE_RULE_POINTER
-				ev_result.root_rule,
-#endif
-				next == PULL_ON ? LOGIC_HIGH : LOGIC_OTHER
-#if PRSIM_WEAK_RULES
-//				, weak_wins
-				, is_weak
-#endif
-				);
-		const event_type& e(get_event(pe));
-		// pe->cause = root
-		if (n.has_mk_exclhi()) {
-			// insert into exclhi queue
-			enqueue_exclhi(get_delay_up(e), pe);
-		} else {
-			// not sure why: checking against non-weak only:
-			if (n.pull_dn_state STR_INDEX(NORMAL_RULE).any()
-#if PRSIM_WEAK_RULES
-				|| (weak_rules_enabled() &&
-					n.pull_dn_state STR_INDEX(WEAK_RULE).any())
-#endif
-				)
-			{
-				enqueue_pending(pe);
-			} else {
-				enqueue_event(get_delay_up(e), pe);
-			}
-		}
-	}
-	// "Is this right??" expr_pool[n.pull_dn_index] 
-	// might not have been updated yet...
-	else if (next == PULL_OFF) {
-	DEBUG_STEP_PRINT("pull-up turned off" << endl);
-	if (p.dn == PULL_ON
-#if PRSIM_WEAK_RULES
-		|| (
-			p.wdn == PULL_ON &&
-			p.wup == PULL_OFF)
-		|| (p.wdn == PULL_WEAK &&
-			p.wup != PULL_OFF &&
-			n.current_value() != LOGIC_OTHER)
-#endif
-		) {
-		// n->dn->val == PRS_VAL_T
-		/***
-			if (PULL_OFF and opposing pull-down is ON)
-			then enqueue the pull-down event.  
-		***/
-		DEBUG_STEP_PRINT("yielding to opposing pull-down." << endl);
-		const event_index_type pe =
-			__allocate_event(n, ui, c,
-				root_rule,
-#if EVENT_INCLUDE_RULE_POINTER
-				ev_result.root_rule,
-#endif
-#if PRSIM_WEAK_RULES
-				// logic low only if not weakly pulled to X
-				p.pulling_dn() ? LOGIC_LOW : LOGIC_OTHER,
-				// if cause is the rule that turned off
-				// , is_weak
-				// if cause is the opposition that was on
-				(p.dn == PULL_OFF)
-				// important for interference checking
-#else
-				LOGIC_LOW 
-#endif
-				);
-		// pe->cause = root
-		if (n.has_mk_excllo()) {
-			const event_type& e(get_event(pe));
-			enqueue_excllo(get_delay_up(e), pe);
-		} else {
-			enqueue_pending(pe);
-		}
-	}
-	}	// end if next is PULL_OFF
-} else if (!n.in_excl_queue()) {
-	DEBUG_STEP_PRINT("pending, but not excl event on this node." << endl);
-	// there is a pending event, not in an exclusive queue
-	event_type& e(get_event(ei));
-	DEBUG_STEP_PRINT("next = " << size_t(next) << endl);
-	DEBUG_STEP_PRINT("pull-dn = " << size_t(p.dn) << endl);
-	DEBUG_STEP_PRINT("e.val = " << size_t(e.val) << endl);
-	DEBUG_STEP_PRINT("n.val = " << size_t(n.current_value()) << endl);
-	const bool weak_rule_interf = weak_rules_enabled() && is_weak &&
-		p.__possible_interference_weak();
-	if (next == PULL_OFF && 
-		p.pulling_dn() &&
-		e.val == LOGIC_OTHER &&
-		n.current_value() != LOGIC_LOW) {
-		/***
-			if (pull-up is PULL_OFF, opposing pull-down is ON and
-			the pending event's value is X and
-			the current node value is NOT LOW)
-			The pending X should be cancelled and replaced
-			with a pending LOW (keeping the same time).
-		***/
-		DEBUG_STEP_PRINT("changing pending X to 0 in queue." << endl);
-		e.val = LOGIC_LOW;
-		e.set_cause_node(ni);
-#if PRSIM_WEAK_RULES
-		e.set_weak(p.wdn != PULL_OFF && p.dn == PULL_OFF);	// weak_wins_dn
-#endif
-#if PRSIM_ALLOW_OVERTAKE_EVENTS
-	} else if (dequeue_unstable_events() &&
-		next == PULL_ON && 
-		p.dn == PULL_OFF &&
-		!weak_rule_interf &&
-		e.val == LOGIC_OTHER &&
-		n.current_value() == LOGIC_LOW
-		// n.current_value() != LOGIC_HIGH
-		// NOTE: weak rules accounted for by pre-filter above
-		) {
-		/***
-			Terrible overload of the dequeue-unstable mode.
-			If (pull-up is ON, opposing pull-dn is OFF, 
-			and pending event's value is X, 
-			and node's current value is low, monotonic)
-			Either:
-			1) replace the previous event with new value 1,
-				using the same time, or
-			2) cancel previous event, and re-insert new event
-				with new time.
-		***/
-		DEBUG_STEP_PRINT("changing pending X to 1 in queue (unstable-dequeue)." << endl);
-		e.val = LOGIC_HIGH;
-		e.set_cause_node(ni);
-	} else if (dequeue_unstable_events() &&
-		next == PULL_OFF && 
-		(p.dn == PULL_ON ||
-			n.current_value() == LOGIC_LOW) &&
-		e.val == LOGIC_OTHER) {
-		if (n.current_value() == LOGIC_LOW) {
-			// already low, just kill pending X
-			kill_event(ei, ui);
-		} else {
-		/***
-			Terrible overload of the dequeue-unstable mode.
-			If (pull-up is OFF, opposing pull-dn is ON, 
-			and pending event's value is X, 
-			and node's current value is high, monotonic)
-			Either:
-			1) replace the previous event with new value 0,
-				using the same time, or
-			2) cancel previous event, and re-insert new event
-				with new time.
-		***/
-		DEBUG_STEP_PRINT("changing pending X to 0 in queue (unstable-dequeue)." << endl);
-		e.val = LOGIC_LOW;
-		e.set_cause_node(ni);
-		}
-	} else if (dequeue_unstable_events() && !is_weak &&
-		next == PULL_OFF && 
-		p.wup == PULL_OFF &&
-		p.wdn == PULL_ON) {
-		/***
-			Strong rule turning off, yielding to weak rule 
-			pulling in opposite direction.
-			TODO: kill pending event and re-enqueue.
-			Really doesn't make sense to use the same delay
-			if changing to opposite direction.  
-		***/
-		DEBUG_STEP_PRINT("changing pending 1 to 0 in queue." << endl);
-		// for now, out of laziness, overwrite the pending event
-		const break_type E =
-		__report_instability(cout, false, true, e);
-		if (E > err) err = E;
-		e.val = LOGIC_LOW;
-		e.set_cause_node(ni);
-#if PRSIM_WEAK_RULES
-		e.set_weak(true);
-#endif
-#if PRSIM_WEAK_RULES
-	} else if (next != PULL_ON && 
-		p.cutoff_dn() &&
-		p.wup == PULL_ON &&
-		e.val == LOGIC_HIGH) {
-		DEBUG_STEP_PRINT("downgrading pending 1 to weak." << endl);
-		// technically, is this unstable?
-		// instability is masked because weak-rule continues to pull...
-		// everything but weak pull-up is off
-		// then keep event in queue
-		// change node cause?
-		e.set_cause_node(ni);
-		e.set_weak(true);
-	} else if (next != PULL_ON && 
-		p.cutoff_dn() &&
-		p.up == PULL_ON &&
-		e.val == LOGIC_HIGH) {
-		DEBUG_STEP_PRINT("upgrading pending 1 to strong." << endl);
-		// technically, is this unstable?
-		// instability is masked because strong-rule still pulls...
-		// strong event was vacuous, as masked by pending weak event
-		// then keep event in queue
-		// change node cause?
-		e.set_cause_node(ni);
-		e.set_weak(false);
-#endif
-#endif	// PRSIM_ALLOW_OVERTAKE_EVENTS
-	} else {
-		DEBUG_STEP_PRINT("checking for upguard anomaly: guard=" <<
-			size_t(next) << ", val=" << size_t(e.val) << endl);
-		const break_type E =
-		__diagnose_violation(cout, next, ei, e, ui, n, 
-			c, dir
-#if PRSIM_WEAK_RULES
-			, is_weak
-#endif
-			);
-		if (E > err) err = E;
-	}	// end if diagnostic
-}	// end if (!n.ex_queue)
-#endif	// PRSIM_SIMPLE_EVENT_QUEUE
 } else {
 	// pull-dn
-#if PRSIM_SIMPLE_EVENT_QUEUE
 	// re-evaluate queue
 	node_update_info nui;
 	nui.rule_index = root_rule;
@@ -5607,243 +4928,6 @@ if (!n.pending_event()) {
 		pp.first->second.old_pull_set = ops;
 	}
 #endif
-#else
-if (!n.pending_event()) {
-	DEBUG_STEP_PRINT("no pending event on this node being pulled down."
-		<< endl);
-	// no former event pending, ok to enqueue
-	if ((next == PULL_ON &&
-			n.current_value() != LOGIC_LOW) ||
-		(next == PULL_WEAK &&
-			(n.current_value() == LOGIC_HIGH
-			|| p.up != PULL_OFF))) {
-		/***
-			if (PULL_ON and wasn't already LOW ||
-				PULL_WEAK and was HIGH before ||
-				weak-interference)
-			then we enqueue the event somewhere.
-		***/
-		DEBUG_STEP_PRINT("pulling down (on or weak)" << endl);
-		const event_index_type pe =
-			__allocate_event(n, ui, c, 
-				root_rule, 
-#if EVENT_INCLUDE_RULE_POINTER
-				ev_result.root_rule,
-#endif
-				next == PULL_ON ? LOGIC_LOW : LOGIC_OTHER
-#if PRSIM_WEAK_RULES
-				, is_weak
-#endif
-				);
-		const event_type& e(get_event(pe));
-		// pe->cause = root
-		if (n.has_mk_excllo()) {
-			// insert into exclhi queue
-			enqueue_excllo(get_delay_dn(e), pe);
-		} else {
-			// not sure why: checking against non-weak only:
-			if (n.pull_up_state STR_INDEX(NORMAL_RULE).any()
-#if PRSIM_WEAK_RULES
-				|| (weak_rules_enabled() &&
-					n.pull_up_state STR_INDEX(WEAK_RULE).any())
-#endif
-				)
-			{
-#if 0 && PRSIM_WEAK_RULES
-				if (wup_pull != PULL_OFF) {
-					get_event(pe).pending_interference(true);
-				}
-#endif
-				enqueue_pending(pe);
-			} else {
-				enqueue_event(get_delay_dn(e), pe);
-			}
-		}
-	}
-	// "Is this right??" expr_pool[n.pull_dn_index] 
-	// might not have been updated yet...
-	else if (next == PULL_OFF) {
-	DEBUG_STEP_PRINT("pull-down turned off" << endl);
-	if (p.up == PULL_ON
-#if PRSIM_WEAK_RULES
-		|| (// !is_weak &&
-			p.wup == PULL_ON &&
-			p.wdn == PULL_OFF)
-		|| (p.wup == PULL_WEAK &&
-			p.wdn != PULL_OFF &&
-			n.current_value() != LOGIC_OTHER)
-#endif
-		) {
-		// n->up->val == PRS_VAL_T
-		/***
-			if (PULL_OFF and opposing pull-up is ON)
-			then enqueue the pull-up event.  
-		***/
-		DEBUG_STEP_PRINT("yielding to opposing pull-up." << endl);
-		const event_index_type pe =
-			__allocate_event(n, ui, c,
-				root_rule,
-#if EVENT_INCLUDE_RULE_POINTER
-				ev_result.root_rule,
-#endif
-#if PRSIM_WEAK_RULES
-				// logic low only if not weakly pulled to X
-				p.pulling_up() ? LOGIC_HIGH : LOGIC_OTHER,
-				// if cause is the rule that turned off
-				// , is_weak
-				// if cause is the opposition that was on
-				(p.up == PULL_OFF)
-				// important for interference checking
-#else
-				LOGIC_HIGH
-#endif
-				);
-		// pe->cause = root
-		if (n.has_mk_exclhi()) {
-			const event_type& e(get_event(pe));
-			enqueue_exclhi(get_delay_dn(e), pe);
-		} else {
-			enqueue_pending(pe);
-		}
-	}
-	}	// end if next is PULL_OFF
-} else if (!n.in_excl_queue()) {
-	DEBUG_STEP_PRINT("pending, but not excl event on this node." << endl);
-	// there is a pending event, not in an exclusive queue
-	event_type& e(get_event(ei));
-	DEBUG_STEP_PRINT("next = " << size_t(next) << endl);
-	DEBUG_STEP_PRINT("pull-up = " << size_t(p.up) << endl);
-	DEBUG_STEP_PRINT("e.val = " << size_t(e.val) << endl);
-	DEBUG_STEP_PRINT("n.val = " << size_t(n.current_value()) << endl);
-	const bool weak_rule_interf = weak_rules_enabled() && is_weak &&
-		p.__possible_interference_weak();
-	if (next == PULL_OFF &&
-		p.pulling_up() &&
-		e.val == LOGIC_OTHER &&
-		n.current_value() != LOGIC_HIGH) {
-		/***
-			if (pull-dn is PULL_OFF, opposing pull-up is ON and
-			the pending event's value is X and
-			the current node value is NOT HIGH)
-			The pending X should be cancelled and replaced
-			with a pending HIGH (keeping the same time).
-		***/
-		DEBUG_STEP_PRINT("changing pending X to 1 in queue." << endl);
-		e.val = LOGIC_HIGH;
-		e.set_cause_node(ni);
-#if PRSIM_WEAK_RULES
-		e.set_weak(p.wup != PULL_OFF && p.up == PULL_OFF);	// weak_wins_up
-#endif
-#if PRSIM_ALLOW_OVERTAKE_EVENTS
-	} else if (dequeue_unstable_events() &&
-		next == PULL_ON &&
-		p.up == PULL_OFF &&
-		!weak_rule_interf &&
-		e.val == LOGIC_OTHER &&
-		n.current_value() == LOGIC_HIGH
-		// n.current_value() != LOGIC_LOW
-		// NOTE: weak rules accounted for by pre-filter above
-		) {
-		/***
-			Terrible overload of the dequeue-unstable mode.
-			If (pull-dn is ON, opposing pull-up is OFF, 
-			and pending event's value is X, 
-			and node's current value is HIGH, monotonic)
-			Either:
-			1) replace the previous event with new value 0,
-				using the same time, or
-			2) cancel previous event, and re-insert new event
-				with new time.
-		***/
-		DEBUG_STEP_PRINT("changing pending X to 0 in queue (unstable-dequeue)." << endl);
-		e.val = LOGIC_LOW;
-		e.set_cause_node(ni);
-	} else if (dequeue_unstable_events() &&
-		next == PULL_OFF &&
-		(p.up == PULL_ON ||
-			n.current_value() == LOGIC_HIGH) &&
-		e.val == LOGIC_OTHER) {
-		if (n.current_value() == LOGIC_HIGH) {
-			// kill pending X, node is already high
-			kill_event(ei, ui);
-		} else {
-		/***
-			Terrible overload of the dequeue-unstable mode.
-			If (pull-dn is ON, opposing pull-up is OFF, 
-			and pending event's value is X, 
-			and node's current value is HIGH, monotonic)
-			Either:
-			1) replace the previous event with new value 0,
-				using the same time, or
-			2) cancel previous event, and re-insert new event
-				with new time.
-		***/
-		DEBUG_STEP_PRINT("changing pending X to 1 in queue (unstable-dequeue)." << endl);
-		e.val = LOGIC_HIGH;
-		e.set_cause_node(ni);
-		}
-	} else if (dequeue_unstable_events() && !is_weak &&
-		next == PULL_OFF && 
-		p.wdn == PULL_OFF &&
-		p.wup == PULL_ON) {
-		/***
-			Strong rule turning off, yielding to weak rule 
-			pulling in opposite direction.
-			TODO: kill pending event and re-enqueue.
-			Really doesn't make sense to use the same delay
-			if changing to opposite direction.  
-		***/
-		DEBUG_STEP_PRINT("changing pending 0 to 1 in queue." << endl);
-		// for now, out of laziness, overwrite the pending event
-		const break_type E =
-		__report_instability(cout, false, false, e);
-		if (E > err) err = E;
-		e.val = LOGIC_HIGH;
-		e.set_cause_node(ni);
-#if PRSIM_WEAK_RULES
-		e.set_weak(true);
-#endif
-#if PRSIM_WEAK_RULES
-	} else if (next != PULL_ON && 
-		p.cutoff_up() &&
-		p.wdn == PULL_ON &&
-		e.val == LOGIC_LOW) {
-		DEBUG_STEP_PRINT("downgrading pending 0 to weak." << endl);
-		// technically, is this unstable?
-		// instability is masked because weak-rule continues to pull...
-		// everything but weak pull-up is off
-		// then keep event in queue
-		// change node cause?
-		e.set_cause_node(ni);
-		e.set_weak(true);
-	} else if (next != PULL_ON && 
-		p.cutoff_up() &&
-		p.dn == PULL_ON &&
-		e.val == LOGIC_LOW) {
-		DEBUG_STEP_PRINT("upgrading pending 0 to strong." << endl);
-		// technically, is this unstable?
-		// instability is masked because strong-rule still pulls...
-		// strong event was vacuous, as masked by pending weak event
-		// then keep event in queue
-		// change node cause?
-		e.set_cause_node(ni);
-		e.set_weak(false);
-#endif
-#endif	// PRSIM_ALLOW_OVERTAKE_EVENTS
-	} else {
-		DEBUG_STEP_PRINT("checking for dnguard anomaly: guard=" <<
-			size_t(next) << ", val=" << size_t(e.val) << endl);
-		const break_type E =
-		__diagnose_violation(cout, next, ei, e, ui, n, 
-			c, dir
-#if PRSIM_WEAK_RULES
-			, is_weak
-#endif
-			);
-		if (E > err) err = E;
-	}	// end if diagonstic
-}	// end if (!n.ex_queue)
-#endif	// PRSIM_SIMPLE_EVENT_QUEUE
 }	// end if (u->direction())
 	return err;
 }	// end method propagate_evaluation
@@ -5999,22 +5083,6 @@ State::__diagnose_violation(ostream& o, const pull_enum next,
 			// and this new event is weak
 #endif
 			;
-#if !PRSIM_SIMPLE_EVENT_QUEUE
-		/***
-			This last condition !unstab violates exact exclusion 
-			between unstable and interference!
-			Do not use this undocumented feature, it is not 
-			expected to work as presently coded.  
-		***/
-		const bool interference =
-			eu & event_type::EVENT_INTERFERENCE
-#if PRSIM_WEAK_RULES
-			&& !(weak && !e.is_weak())
-			// is not interference if original event was strong
-			// and this new event is weak
-#endif
-			;
-#endif
 		const string cause_name(get_node_canonical_name(ni));
 		const string out_name(get_node_canonical_name(ui));
 
@@ -6061,28 +5129,7 @@ State::__diagnose_violation(ostream& o, const pull_enum next,
 				}
 			}
 		}
-#if PRSIM_SIMPLE_EVENT_QUEUE
 		// check for interference when processing updated nodes
-#else
-		if (interference) {
-			DEBUG_STEP_PRINT("some interference" << endl);
-			/***
-				Q: may actually be an instability, 
-				so we insert the event into pending-queue
-				to check, and punt the setting to X.  
-			***/
-			const event_index_type pe =
-				__allocate_pending_interference_event(
-					n, ui, c, 
-					dir ? LOGIC_HIGH :
-						LOGIC_LOW
-#if PRSIM_WEAK_RULES
-						, NORMAL_RULE	// not weak
-#endif
-						);
-			enqueue_pending(pe);
-		}
-#endif
 		// diagnostic message
 		// suppress message for interferences until pending queue
 		if (instability) {
@@ -6113,26 +5160,7 @@ State::__diagnose_violation(ostream& o, const pull_enum next,
 	} else {
 		// end if !vacuous
 		DEBUG_STEP_PRINT("vacuous" << endl);
-#if PRSIM_SIMPLE_EVENT_QUEUE
 		// check for interference when processing updated nodes
-#else
-		// HACK: to fix bug ACX-PR-6650
-		// check for weak vs. weak rule interference
-	const node_type& _n(get_node(e.node));
-	const pull_set p(_n, weak_rules_enabled());
-	if (weak_rules_enabled() && p.possible_interference_weak()) {
-			const event_index_type pe =
-				__allocate_pending_interference_event(
-					n, ui, c, 
-					dir ? LOGIC_HIGH :
-						LOGIC_LOW
-#if PRSIM_WEAK_RULES
-						, NORMAL_RULE	// not weak
-#endif
-						);
-			enqueue_pending(pe);
-	}
-#endif	// PRSIM_SIMPLE_EVENT_QUEUE
 	}
 	// else vacuous is OK
 	return err;
@@ -8460,7 +7488,6 @@ State::dump_memory_usage(ostream& o) const {
 		<< " B/event) = " << ls * sizeof_tree_node(value_type)
 		<< " B" << endl;
 #endif
-#if PRSIM_SIMPLE_EVENT_QUEUE
 	const size_t ps = updated_nodes.size();
 	o << "updated-nodes: ("  << ps << " * " <<
 		sizeof_tree_node(node_index_type) << " B/node) = " <<
@@ -8469,19 +7496,6 @@ State::dump_memory_usage(ostream& o) const {
 	o << "updated-nodes-queue: ("  << ps << " * " <<
 		sizeof(node_index_type) << " B/node) = " <<
 		ps * sizeof(node_index_type) << " B" << endl;
-#endif
-#else
-#if UNIQUE_PENDING_QUEUE
-	const size_t ps = pending_queue.size();
-	o << "pending-queue: ("  << ps << " * " <<
-		sizeof_tree_node(event_index_type) << " B/event) = " <<
-		ps * sizeof_tree_node(event_index_type) << " B" << endl;
-#else
-	const size_t ps = pending_queue.capacity();	// reserved
-	o << "pending-queue: ("  << ps << " * " << sizeof(event_index_type) <<
-		" B/event) = " << ps * sizeof(event_index_type)
-		<< " B" << endl;
-#endif
 #endif
 }
 {
@@ -8646,13 +7660,9 @@ State::save_checkpoint(ostream& o) const {
 	ISE_INVARIANT(exclhi_queue.empty());
 	ISE_INVARIANT(excllo_queue.empty());
 #endif
-#if PRSIM_SIMPLE_EVENT_QUEUE
 	ISE_INVARIANT(updated_nodes.empty());
 #if PRSIM_FCFS_UPDATED_NODES
 	ISE_INVARIANT(updated_nodes_queue.empty());
-#endif
-#else
-	ISE_INVARIANT(pending_queue.empty());
 #endif
 	write_value(o, current_time);
 	write_value(o, uniform_delay);
@@ -8861,13 +7871,9 @@ try {
 	ISE_INVARIANT(exclhi_queue.empty());
 	ISE_INVARIANT(excllo_queue.empty());
 #endif
-#if PRSIM_SIMPLE_EVENT_QUEUE
 	ISE_INVARIANT(updated_nodes.empty());
 #if PRSIM_FCFS_UPDATED_NODES
 	ISE_INVARIANT(updated_nodes_queue.empty());
-#endif
-#else
-	ISE_INVARIANT(pending_queue.empty());
 #endif
 	read_value(i, current_time);
 	read_value(i, uniform_delay);
