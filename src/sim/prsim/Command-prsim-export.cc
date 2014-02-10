@@ -15,7 +15,14 @@ namespace HAC {
 namespace SIM {
 namespace PRSIM {
 #include "util/using_ostream.hh"
-using util::format_ostream_ref;
+
+// for convenient time formatting
+static
+inline
+util::format_ostream_ref
+format_time(ostream& o, const State& s) {
+        return util::format_ostream_ref(o, s.time_fmt);
+}
 
 /**
 	Yeah, I know looking up already looked up node, but we don't
@@ -70,6 +77,41 @@ print_watched_node(ostream& o, const State& s,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Actions to print feedback after an event.  
+	\param ni node that just changed in event.
+	\param i number of steps remaining, or 0 if not applicable.
+	\return true if node was a breakpoint.
+ */
+bool
+post_event_messages(ostream& o, const State& s, 
+		const step_return_type& ni, const size_t i) {
+	const time_type ct(s.time());
+	const node_type& n(s.get_node(GET_NODE(ni)));
+	/***
+		The following code should be consistent with
+		Cycle::main() and Advance::main().
+		tracing stuff here later...
+	***/
+	if (s.watching_all_nodes() || n.is_watchpoint()) {
+		format_time(o << '\t', s) << ct << '\t';
+		print_watched_node(o, s, ni);
+	}
+	if (n.is_breakpoint()) {
+		const string nodename(s.get_node_canonical_name(GET_NODE(ni)));
+		// node is plain breakpoint
+		o << "\t*** break, ";
+		if (i) {
+			o << i << " steps left: ";
+		}
+		o << "`" << nodename << "\' became ";
+		format_time(n.dump_value(o) << " at time ", s) << ct << endl;
+		return true;
+	}
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	\param s the simulator state
 	\param stop_time the max time to stop and return
 	\param show_break true to print extra breakpoint message
@@ -89,43 +131,22 @@ while (!s.stopped_or_fatal() && s.pending_events() &&
 		Cycle::main() and Step::main().
 		TODO: factor this out for maintainability.  
 	***/
-	if (s.watching_all_nodes()
-#if USE_WATCHPOINT_FLAG
-		|| n.is_watchpoint()
-#endif
-			) {
-		format_ostream_ref(cout << '\t', s.time_fmt)
-			<< s.time() << '\t';
+	if (s.watching_all_nodes() || n.is_watchpoint()) {
+		format_time(cout << '\t', s) << s.time() << '\t';
 		print_watched_node(cout, s, ni);
 	}
 	if (n.is_breakpoint()) {
-#if !USE_WATCHPOINT_FLAG
-		// this includes watchpoints
-		const bool w = s.is_watching_node(GET_NODE(ni));
-		if (w) {
-		if (!s.watching_all_nodes()) {
-			format_ostream_ref(cout << '\t', s.time_fmt)
-				<< s.time() << '\t';
-			print_watched_node(cout, s, ni);
-		}	// else already have message from before
-		}
-		// channel support
-		if (!w) {
-#endif
-			// node is plain breakpoint
+		// node is plain breakpoint
 		if (show_break) {
 			const string nodename(s.get_node_canonical_name(
 				GET_NODE(ni)));
-			format_ostream_ref(cout << "\t*** break, ", s.time_fmt)
+			format_time(cout << "\t*** break, ", s)
 				<< (stop_time -s.time()) <<
 				" time left: `" << nodename << "\' became ";
 			n.dump_value(cout) << endl;
 		}
 			return Command::NORMAL;
 			// or Command::BREAK; ?
-#if !USE_WATCHPOINT_FLAG
-		}
-#endif
 	}
 }	// end while
 	if (!s.stopped() && (s.time() < stop_time)) {

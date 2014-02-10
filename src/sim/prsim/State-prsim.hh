@@ -106,32 +106,6 @@ using entity::dump_flags;
 using entity::preal_value_type;
 
 //=============================================================================
-#if !USE_WATCHPOINT_FLAG
-/**
-	Watch list entry.  
-	Node index not included because it will be the first
-	value of the mapped pair.  
- */
-struct watch_entry {
-	/// true if node is also a breakpoint
-	char	breakpoint;
-	// TODO: if is also a member of vector
-	watch_entry() : breakpoint(0) { }
-
-	void
-	save_state(ostream&) const;
-
-	void
-	load_state(istream&);
-
-	static
-	ostream&
-	dump_checkpoint_state(ostream&, istream&);
-
-} __ATTRIBUTE_ALIGNED__ ;
-#endif
-
-//=============================================================================
 /**
 	The prsim simulation state.
 		(modeled after old prsim's struct Prs)
@@ -173,9 +147,6 @@ public:
 	typedef	EventPlaceholder<time_type>	event_placeholder_type;
 	typedef	EventQueue<event_placeholder_type>	event_queue_type;
 	typedef	vector<node_type>		node_pool_type;
-#if !USE_WATCHPOINT_FLAG
-	typedef	map<node_index_type, watch_entry>	watch_list_type;
-#endif
 	/**
 		The first node index is the one that just changed, 
 		the second index refers to the node that caused it, 
@@ -235,7 +206,7 @@ private:
 	/**
 		Return codes for set_node_time.  
 	 */
-	enum {
+	enum enqueue_status {
 		ENQUEUE_ACCEPT = 0,
 		ENQUEUE_WARNING = 1,
 		ENQUEUE_REJECT = 2,
@@ -246,7 +217,7 @@ private:
 		Simulation flags, bit fields, corresponding the
 		the flags member.  
 	 */
-	enum {
+	enum simulation_flags {
 		/**
 			Allow unstable events to be dropped off queue
 			instead of propagating unknowns.  
@@ -408,7 +379,7 @@ private:
 	 */
 	typedef	error_policy_enum			break_type;
 
-	enum {
+	enum timing_enum {
 		/**
 			Uses per-rule after-delays.  
 			These can be manually annotated or
@@ -741,10 +712,6 @@ public:	// too lazy to write accessors
 	 */
 	preal_value_type			timing_probability;
 private:
-#if !USE_WATCHPOINT_FLAG
-	// watched nodes
-	watch_list_type				watch_list;
-#endif
 	// vectors
 	/**
 		Extension to manage channel environments and actions. 

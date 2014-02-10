@@ -3,8 +3,8 @@
 	$Id: Command-prsim-export.hh,v 1.2 2008/03/17 23:02:55 fang Exp $
  */
 
-#ifndef	__HAC_SIM_PRSIM_COMMAND_PRSIM_EXPORTED_H__
-#define	__HAC_SIM_PRSIM_COMMAND_PRSIM_EXPORTED_H__
+#ifndef	__HAC_SIM_PRSIM_COMMAND_PRSIM_EXPORTED_HH__
+#define	__HAC_SIM_PRSIM_COMMAND_PRSIM_EXPORTED_HH__
 
 #include "sim/prsim/State-prsim.hh"
 
@@ -45,6 +45,11 @@ ostream&
 print_watched_node(ostream&, const State&, 
 	const step_return_type&, const string&);
 
+bool
+post_event_messages(ostream&, const State&, const step_return_type&,
+	const size_t);
+
+
 int
 prsim_advance(State&, const time_type stop_time, bool show_break);
 
@@ -53,5 +58,5 @@ prsim_advance(State&, const time_type stop_time, bool show_break);
 }	// end namepsace SIM
 }	// end namespace HC
 
-#endif	// __HAC_SIM_PRSIM_COMMAND_PRSIM_EXPORTED_H__
+#endif	// __HAC_SIM_PRSIM_COMMAND_PRSIM_EXPORTED_HH__
 
