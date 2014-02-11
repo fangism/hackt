@@ -63,7 +63,7 @@ HACKT_GUILE_ENV_EXE = $(HACSCM_TEST_ENV) $(HACKT_GUILE_EXE)
 HACSCM_TEST_SCRIPT =
 if HAVE_LIBGUILE
 HACSCM_TEST_SCRIPT += \
-	obj=`$(CAT) $< | $(EXTRACT_HACO_PIPE)` ; \
+	obj=`$(EXTRACT_HACO_PIPE) < $<` ; \
 	$(ECHO) "$(HACKT_GUILE_ENV_EXE) -b $$obj < $< > $@" ; \
 	$(HACKT_GUILE_ENV_EXE) -b "$$obj" < $< 2>&1 | $(HACSCM_OUTPUT_FILTER) > $@
 else
@@ -155,13 +155,14 @@ endif
 
 hacscm-out.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
+	$(SET_PIPEFAIL) ; \
 	$(RM) $@ ; \
 	list='$(HACKT_GUILE_TEST_SCRIPTS_PASSES)' ; \
 	exts='hacscm-out' ; \
 	test -z "$$list" || \
 	for d in $$list ; do \
 	  src=$(srcdir)/$$d.hacscm ; \
-	  obj=`$(CAT) "$$src" | $(EXTRACT_HACO_PIPE)` ; \
+	  obj=`$(EXTRACT_HACO_PIPE) < "$$src"` ; \
 	  for e in $$exts ; do \
 	    target=$$d.$$e ; \
 	    $(PRINTF) "$$target " ; \
@@ -175,13 +176,14 @@ AUTO_DEPENDS += hacscm-out.autodepend
 
 hacscmfail-out.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
+	$(SET_PIPEFAIL) ; \
 	$(RM) $@ ; \
 	list='$(HACKT_GUILE_TEST_SCRIPTS_FAILURES)' ; \
 	exts='hacscmfail-out' ; \
 	test -z "$$list" || \
 	for d in $$list ; do \
 	  src=$(srcdir)/$$d.hacscm ; \
-	  obj=`$(CAT) "$$src" | $(EXTRACT_HACO_PIPE)` ; \
+	  obj=`$(EXTRACT_HACO_PIPE) < "$$src"` ; \
 	  for e in $$exts ; do \
 	    target=$$d.$$e ; \
 	    $(PRINTF) "$$target " ; \
@@ -195,6 +197,7 @@ AUTO_DEPENDS += hacscmfail-out.autodepend
 
 hacscmtest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
+	$(SET_PIPEFAIL) ; \
 	$(ECHO) "$(HACKT_GUILE_TEST_SCRIPTS_PASSES)" | \
 	  $(SPACES_TO_NEWLINE) | $(SORT) -u | \
 	  $(AWK) '/.+/ {print $$1 ".hacscm-diff: $$(srcdir)/" $$1 ".hacscm-expect"; }' > $@ ; \
@@ -206,6 +209,7 @@ AUTO_DEPENDS += hacscmtest.autodepend
 
 hacscmfailtest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
+	$(SET_PIPEFAIL) ; \
 	$(ECHO) "$(HACKT_GUILE_TEST_SCRIPTS_FAILURES)" | \
 	  $(SPACES_TO_NEWLINE) | $(SORT) -u | \
 	  $(AWK) '/.+/ {print $$1 ".hacscmfail-diff: $$(srcdir)/" $$1 ".hacscm-expect"; }' > $@ ; \
@@ -224,7 +228,7 @@ HACKT_CHPSIM_GUILE_ENV_EXE = \
 HACCHPSIMSCM_TEST_SCRIPT =
 if HAVE_LIBGUILE
 HACCHPSIMSCM_TEST_SCRIPT += \
-	obj=`$(CAT) $< | $(EXTRACT_HACO_PIPE)` ; \
+	obj=`$(EXTRACT_HACO_PIPE) < $<` ; \
 	$(ECHO) "$(HACKT_CHPSIM_GUILE_ENV_EXE) -b $$obj < $< > $@" ; \
 	$(HACKT_CHPSIM_GUILE_ENV_EXE) -b "$$obj" < $< > $@ 2>&1
 else
@@ -256,8 +260,8 @@ CHPSIM_GUILE_TRACE_DUMP_FILTER_SCRIPT = \
 	$(ECHO) "Filtering out binary trace differences in $@ ..." ; \
 	filtered=`$(ECHO) $@ | $(SED) 's/\.hacchpsimscm-diff$$/.hacchpsimscm-expect-nosize/g'` ; \
 	diffout=`$(ECHO) $@ | $(SED) 's/\.hacchpsimscm-diff$$/.hacchpsimscm-diff-nosize/g'` ; \
-	$(CAT) "$$expect" | $(CHPSIM_TRACE_BINARY_FILTER) > "$$filtered" ; \
-	$(CAT) $< | $(CHPSIM_TRACE_BINARY_FILTER) > $<-nosize ; \
+	$(CHPSIM_TRACE_BINARY_FILTER) < "$$expect" > "$$filtered" ; \
+	$(CHPSIM_TRACE_BINARY_FILTER) < $< > $<-nosize ; \
 	$(HACCHPSIMSCM_TEST_DIFF) "$$filtered" $<-nosize > "$$diffout" 2>&1 ; \
 	if test -s "$$diffout" ; then \
 	  $(ECHO) "Non-trace differences remain!" ; \
@@ -331,6 +335,7 @@ endif
 # NOTE: optional extra dependence on generated tracefile from other test
 hacchpsimscm-out.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
+	$(SET_PIPEFAIL) ; \
 	$(RM) $@ ; \
 	rlist='$(HACKT_CHPSIM_GUILE_RANDOM_TEST_SCRIPTS_PASSES)' ; \
 	list='$(HACKT_CHPSIM_GUILE_TEST_SCRIPTS_PASSES)'" $$rlist" ; \
@@ -338,8 +343,8 @@ hacchpsimscm-out.autodepend: Makefile
 	test -z "$$list" || \
 	for d in $$list ; do \
 	  src=$(srcdir)/$$d.hacchpsimscm ; \
-	  obj=`$(CAT) "$$src" | $(EXTRACT_HACO_PIPE)` ; \
-	  obj="$$obj "`$(CAT) "$$src" | $(EXTRACT_CHPSIMTRACE_PIPE)` ; \
+	  obj=`$(EXTRACT_HACO_PIPE) < "$$src"` ; \
+	  obj="$$obj "`$(EXTRACT_CHPSIMTRACE_PIPE) < "$$src"` ; \
 	  for e in $$exts ; do \
 	    target=$$d.$$e ; \
 	    $(PRINTF) "$$target " ; \
@@ -353,6 +358,7 @@ AUTO_DEPENDS += hacchpsimscm-out.autodepend
 
 hacchpsimscmfail-out.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
+	$(SET_PIPEFAIL) ; \
 	$(RM) $@ ; \
 	rlist='$(HACKT_CHPSIM_GUILE_RANDOM_TEST_SCRIPTS_FAILURES)' ; \
 	list='$(HACKT_CHPSIM_GUILE_TEST_SCRIPTS_FAILURES)'" $$rlist" ; \
@@ -360,8 +366,8 @@ hacchpsimscmfail-out.autodepend: Makefile
 	test -z "$$list" || \
 	for d in $$list ; do \
 	  src=$(srcdir)/$$d.hacchpsimscm ; \
-	  obj=`$(CAT) "$$src" | $(EXTRACT_HACO_PIPE)` ; \
-	  obj="$$obj "`$(CAT) "$$src" | $(EXTRACT_CHPSIMTRACE_PIPE)` ; \
+	  obj=`"$$src" | $(EXTRACT_HACO_PIPE) < "$$src"` ; \
+	  obj="$$obj "`$(EXTRACT_CHPSIMTRACE_PIPE) < "$$src"` ; \
 	  for e in $$exts ; do \
 	    target=$$d.$$e ; \
 	    $(PRINTF) "$$target " ; \
@@ -375,6 +381,7 @@ AUTO_DEPENDS += hacchpsimscmfail-out.autodepend
 
 hacchpsimscmtest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
+	$(SET_PIPEFAIL) ; \
 	{ $(ECHO) "$(HACKT_CHPSIM_GUILE_RANDOM_TEST_SCRIPTS_PASSES)" ; \
 	  $(ECHO) "$(HACKT_CHPSIM_GUILE_TEST_SCRIPTS_PASSES)" ;} | \
 	  $(SPACES_TO_NEWLINE) | $(SORT) -u | \
@@ -387,6 +394,7 @@ AUTO_DEPENDS += hacchpsimscmtest.autodepend
 
 hacchpsimscmfailtest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
+	$(SET_PIPEFAIL) ; \
 	{ $(ECHO) "$(HACKT_CHPSIM_GUILE_RANDOM_TEST_SCRIPTS_FAILURES)" ; \
 	  $(ECHO) "$(HACKT_CHPSIM_GUILE_TEST_SCRIPTS_FAILURES)" ;} | \
 	  $(SPACES_TO_NEWLINE) | $(SORT) -u | \

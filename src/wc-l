@@ -2,5 +2,5 @@
 # NOTE: this script only works on the source directory
 #	$Id: wc-l,v 1.8 2010/04/07 00:12:26 fang Exp $
 
-wc -l {common,main,AST,util{,/memory,/STL,/numeric,/lang},Object{,/common,/def,/expr,/inst,/lang,/ref,/traits,/type,/unroll},sim{,/prsim,/chpsim},guile,net}/*.{cc,tcc,h} lexer/*.ll parser/*.{yy.in,awk} scm/*/*.scm
+wc -l {common,main,AST,util{,/memory,/STL,/numeric,/lang},Object{,/common,/def,/expr,/inst,/lang,/ref,/traits,/type,/unroll},sim{,/prsim,/chpsim},guile,net,PR}/*.{cc,tcc,h,hh} lexer/*.ll parser/*.{yy.in,awk} scm/*/*.scm
 

@@ -113,14 +113,15 @@ SPICE_TO_HAC = $(AWK) -f $(top_srcdir)/lib/scripts/spice-to-hac.awk
 # beware of race between -O0 and -O1 tests that produce the same files!
 hacknet.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
+	$(SET_PIPEFAIL) ; \
 	$(RM) $@ ; \
 	{ list='$(HACKNET_TEST_SCRIPTS_BASES)' ; \
 	exts='spice spice-fail' ; \
 	test -z "$$list" || \
 	for d in $$list ; do \
 	  src=$(srcdir)/$$d.hac ; \
-	  obj=`$(CAT) "$$src" | $(EXTRACT_HACO_PIPE)` ; \
-	  deps=`$(CAT) "$$src" | $(EXTRACT_DEPS_PIPE)` ; \
+	  obj=`$(EXTRACT_HACO_PIPE) < "$$src"` ; \
+	  deps=`$(EXTRACT_DEPS_PIPE) < "$$src"` ; \
 	  for e in $$exts ; do \
 	    target=$$d.$$e ; \
 	    $(PRINTF) "$$target " ; \
@@ -133,6 +134,7 @@ hacknet.autodepend: Makefile
 
 hacverilog.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
+	$(SET_PIPEFAIL) ; \
 	$(RM) $@ ; \
 	{ list='$(HACVERILOG_TEST_SCRIPTS_BASES)' ; \
 	exts='hv hv-fail' ; \
@@ -215,6 +217,7 @@ HACKNET_COMMON_DIFF_SCRIPT = \
 # for both passes and failures
 hacknettest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
+	$(SET_PIPEFAIL) ; \
 	$(ECHO) "$(HACKNET_TEST_SCRIPTS_PASSES)" | \
 	  $(SPACES_TO_NEWLINE) | $(SORT) -u | \
 	  $(AWK) '/.+/ {print $$1 ".spice-diff: $$(srcdir)/" $$1 ".spice-expect"; }' > $@ ; \
@@ -222,6 +225,7 @@ hacknettest.autodepend: Makefile
 
 hacknetfailtest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
+	$(SET_PIPEFAIL) ; \
 	$(ECHO) "$(HACKNET_TEST_SCRIPTS_FAILURES)" | \
 	  $(SPACES_TO_NEWLINE) | $(SORT) -u | \
 	  $(AWK) '/.+/ {print $$1 ".spice-fail-diff: $$(srcdir)/" $$1 ".spice-expect"; }' > $@ ; \
@@ -232,6 +236,7 @@ hacknetfailtest.autodepend: Makefile
 
 hvtest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
+	$(SET_PIPEFAIL) ; \
 	$(ECHO) "$(HACVERILOG_TEST_SCRIPTS_PASSES)" | \
 	  $(SPACES_TO_NEWLINE) | $(SORT) -u | \
 	  $(AWK) '/.+/ {print $$1 ".hv-diff: $$(srcdir)/" $$1 ".hv-expect"; }' > $@ ; \
@@ -239,6 +244,7 @@ hvtest.autodepend: Makefile
 
 hvfailtest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
+	$(SET_PIPEFAIL) ; \
 	$(ECHO) "$(HACVERILOG_TEST_SCRIPTS_FAILURES)" | \
 	  $(SPACES_TO_NEWLINE) | $(SORT) -u | \
 	  $(AWK) '/.+/ {print $$1 ".hv-fail-diff: $$(srcdir)/" $$1 ".hv-expect"; }' > $@ ; \

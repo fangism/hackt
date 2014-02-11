@@ -78,9 +78,10 @@ AUTO_IGNORE += $(HACKT_CFLAT_CLEAN_IGNORE_PATTERNS)
 
 # compute flags, -t <type> is always last for now (doesn't matter)
 DEDUCE_HFLAT_VARIANT = \
+	$(SET_PIPEFAIL) ; \
 	srcfile=$(srcdir)/$*.hac ; \
-	flags=`$(CAT) $$srcfile | $(EXTRACT_HFLAT_FLAGS_PIPE)` ; \
-	type=`$(CAT) $$srcfile | $(GREP) "@hflat-type@" | $(HEAD) -n1 | \
+	flags=`$(EXTRACT_HFLAT_FLAGS_PIPE) < $$srcfile` ; \
+	type=`$(GREP) "@hflat-type@" $$srcfile | $(HEAD) -n1 | \
 		$(SED) -e 's/^.*-type@[ \t]*//g' -e 's/\"//g'` ; \
 	if test -n "$$type" ; then \
 		flags="$$flags -t $$type" ; \
@@ -270,6 +271,7 @@ endif
 
 cflatlvstest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
+	$(SET_PIPEFAIL) ; \
 	$(ECHO) "$(HACKT_CFLAT_LVS_TEST_PASSES)" | \
 	  $(SPACES_TO_NEWLINE) | $(SORT) -u | \
 	  $(AWK) '/.+/ {print $$1 ".lvsprsdiff: " $$1 ".lvsprs"; print $$1 ".lvsprsdiff-sort: " $$1 ".lvsprs-sort"; }' > $@ ; \
@@ -277,6 +279,7 @@ cflatlvstest.autodepend: Makefile
 
 cflatlvsfailtest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
+	$(SET_PIPEFAIL) ; \
 	$(ECHO) "$(HACKT_CFLAT_LVS_TEST_FAILURES)" | \
 	  $(SPACES_TO_NEWLINE) | $(SORT) -u | \
 	  $(AWK) '/.+/ {print $$1 ".lvsfaildiff: " $$1 ".lvsfail"; }' > $@ ; \
@@ -334,6 +337,7 @@ endif
 
 cflatprsseutest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
+	$(SET_PIPEFAIL) ; \
 	$(ECHO) "$(HACKT_CFLAT_SEU_TEST_SUBJECTS)" | \
 	  $(SPACES_TO_NEWLINE) | $(SORT) -u | \
 	  $(AWK) '/.+/ {print $$1 ".prsseudiff: " $$1 ".prsseu"; print $$1 ".prsseudiff-sort: " $$1 ".prsseu-sort"; }' > $@ ; \
@@ -397,6 +401,7 @@ endif
 
 cflatsprstest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
+	$(SET_PIPEFAIL) ; \
 	$(ECHO) "$(HACKT_CFLAT_SPRS_TEST_SUBJECTS)" | \
 	  $(SPACES_TO_NEWLINE) | $(SORT) -u | \
 	  $(AWK) '/.+/ {print $$1 ".sprsdiff: " $$1 ".sprs"; print $$1 ".sprsdiff-sort: " $$1 ".sprs-sort"; }' > $@ ; \
@@ -441,6 +446,7 @@ endif
 
 hflatvcdhtest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
+	$(SET_PIPEFAIL) ; \
 	$(ECHO) "$(HACKT_CFLAT_VCDH_TEST_SUBJECTS)" | \
 	  $(SPACES_TO_NEWLINE) | $(SORT) -u | \
 	  $(AWK) '/.+/ {print $$1 ".vcdhdiff: " $$1 ".vcdh";}' > $@ ; \

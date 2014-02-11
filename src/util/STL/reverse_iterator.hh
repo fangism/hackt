@@ -51,5 +51,14 @@ operator != (const reverse_iterator<Iter1>& x,
 }	// end namespace std
 #endif	// HAVE_STL_REVERSE_ITERATOR_COMPARISONS
 
+namespace util {
+template <class Iter>
+std::reverse_iterator<Iter>
+make_reverse_iterator(const Iter& i) {
+	return std::reverse_iterator<Iter>(i);
+}
+
+}	// end namespace util
+
 #endif	// __UTIL_STL_REVERSE_ITERATOR_H__
 

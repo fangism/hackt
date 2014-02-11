@@ -6,14 +6,14 @@
 	$Id: unique_list.hh,v 1.8 2006/11/15 00:09:08 fang Exp $
  */
 
-#ifndef __UTIL_UNIQUE_LIST__
-#define __UTIL_UNIQUE_LIST__
+#ifndef __UTIL_UNIQUE_LIST_HH__
+#define __UTIL_UNIQUE_LIST_HH__
 
 #include "util/macros.h"
 #include "util/STL/list_fwd.hh"
-#include "util/STL/set_fwd.hh"
+#include "util/STL/map_fwd.hh"
 #include <list>
-#include <set>
+#include <map>
 #include <algorithm>		// for find
 
 namespace util {
@@ -27,15 +27,15 @@ template <class T, class List, class Set>
 class unique_list;
 
 template <class T, class List = typename std::default_list<T>::type,
-		class Set = typename std::default_set<T>::type >
+	class Set = typename std::default_map<T, typename List::iterator>::type >
 class unique_list;
 
 //=============================================================================
 /**
-        Uses a set to track uniqueness.  
+        Uses a map of list-iterators to track uniqueness.  
         Consider using extensible vector for speed, instead of list.  
 	Can also use slist for list for forward-only iteration.
-	__gnu_cxx::hash_set provides constant time hashing.  
+	Alternate implementation: use a set and a list of set-iterators.
  */
 UNIQUE_LIST_TEMPLATE_SIGNATURE
 class unique_list {
@@ -49,6 +49,7 @@ public:
 	typedef List				sequence_type;
 	typedef typename sequence_type::const_iterator	const_iterator;
 private:
+	typedef typename sequence_type::iterator	iterator;
 	set_type				_set;
 	sequence_type				_sequence;
 public:
@@ -108,58 +109,70 @@ public:
 		return _sequence.front();
 	}
 
+	const_iterator
+	find(const_reference n) const {
+		const typename set_type::const_iterator f(_set.find(n));
+		if (f != _set.end()) {
+			return f->second;
+		} else {
+			return this->end();
+		}
+	}
+
+	bool
+	contains(const_reference n) const {
+		return this->find(n) != this->end();
+	}
+
+protected:
+	iterator
+	find(const_reference n) {
+		const typename set_type::iterator f(_set.find(n));
+		if (f != _set.end()) {
+			return f->second;
+		} else {
+			return this->end();
+		}
+	}
+
+public:
 	/**
 		Appends a value to end of list (and set) 
 		if it's not already in list.  
-		\return true if last addition was ignored, already included.  
+		\return true if last addition was inserted
 	 */
-	bool
+	std::pair<typename set_type::iterator, bool>
 	push_back(const_reference n) {
-#if 0
-		const typename set_type::const_iterator probe(_set.find(n));
-		// if not found, add
-		if (probe == _set.end()) {
-			const bool b = _set.insert(n).second;
-			INVARIANT(b);
-			_sequence.push_back(n);
-			return false;
-		} else	return true;
-		// else ignore
-#else
-		if (_set.insert(n).second) {
+		typename set_type::value_type p(n, iterator());
+		const std::pair<typename set_type::iterator, bool>
+			r(_set.insert(p));
+		if (r.second) {
 			// if successfully inserted into set
 			_sequence.push_back(n);
-			return false;
-		} else	return true;
-#endif
+			// typename sequence_type::iterator e(--_sequence.end());
+			r.first->second = --_sequence.end();
+		}
+		return r;
 	}
 
 	/**
-		\return true if last addition was ignored, already included.  
+		\return true if last addition was inserted
 	 */
-	bool
+	std::pair<typename set_type::iterator, bool>
 	push_front(const_reference n) {
-#if 0
-		const typename set_type::const_iterator probe(_set.find(n));
-		// if not found, add
-		if (probe == _set.end()) {
-			const bool b = _set.insert(n).second;
-			INVARIANT(b);
-			_sequence.push_front(n);
-			return false;
-		} else	return true;
-		// else ignore
-#else
-		if (_set.insert(n).second) {
+		typename set_type::value_type p(n, iterator());
+		const std::pair<typename set_type::iterator, bool>
+			r(_set.insert(p));
+		if (r.second) {
 			// if successfully inserted into set
 			_sequence.push_front(n);
-			return false;
-		} else return true;
-#endif
+			r.first->second = _sequence.begin();
+		}
+		return r;
 	}
 
 	/// defaults to back operation
-	bool
+	std::pair<typename set_type::iterator, bool>
 	push(const_reference n) {
 		return push_back(n);
 	}
@@ -185,10 +198,24 @@ public:
 		_sequence.pop_front();
 	}
 
-	/// defaults to back operation
-	void
+	std::pair<typename set_type::iterator, bool>
+	move_back(const_reference n) {
+		erase(n);
+		return push_back(n);
+	}
+
+	std::pair<typename set_type::iterator, bool>
+	move_front(const_reference n) {
+		erase(n);
+		return push_front(n);
+	}
+
+	/// defaults to pop_back operation
+	value_type
 	pop(void) {
+		const value_type ret = back();
 		pop_back();
+		return ret;
 	}
 
 	/**
@@ -207,11 +234,7 @@ public:
 	erase(const_reference n) {
 		const typename set_type::iterator probe(_set.find(n));
 		if (probe != _set.end()) {
-			const typename sequence_type::iterator
-				l_probe(find(_sequence.begin(),
-					_sequence.end(), n));
-			INVARIANT(l_probe != _sequence.end());
-			_sequence.erase(l_probe);
+			_sequence.erase(probe->second);
 			_set.erase(probe);
 		}
 		// else not already in set
@@ -228,5 +251,5 @@ public:
 //=============================================================================
 }	// end namespace util
 
-#endif	// __UTIL_UNIQUE_LIST__
+#endif	// __UTIL_UNIQUE_LIST_HH__
 
