@@ -1,0 +1,10 @@
+# "atomic-j-01.prsimrc"
+# @haco@ atomic-j.haco-c
+
+watchall
+set k 0
+cycle
+echo - - - - -
+set k 1
+cycle
+echo expect exclhi violation

@@ -1,0 +1,18 @@
+At: "invariant-03.hac":11:
+parse error: syntax error
+parser stacks:
+state	value
+#STATE#	(null) 
+#STATE#	list<(root_item)>: (instance-decl) ... [2:1--9:1]
+#STATE#	keyword: spec [10:1..4]
+#STATE#	{ [10:6]
+#STATE#	$ [11:2]
+#STATE#	( [11:3]
+#STATE#	~ [11:4]
+#STATE#	( [11:5]
+#STATE#	(prs-literal) [11:6]
+#STATE#	&& [11:8]
+in state #STATE#, possible rules are:
+	prs_paren_expr: '(' prs_expr . ')'  (#RULE#)
+acceptable tokens are: 
+	')' (shift)

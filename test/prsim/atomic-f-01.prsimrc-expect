@@ -1,0 +1,60 @@
+Node msel[0] attributes:
+All subnodes of 'msel':
+msel[0] : X
+msel[1] : X
+msel[2] : X
+msel[3] : X
+-------- 
+	0	s[0] : 0
+	0	msel[1] : 0	<atomic>
+	0	msel[3] : 0	<atomic>
+	0	M.m00.in_sel[0] : 1	<atomic>
+	0	M.m00.in_sel[1] : 0	<atomic>
+	0	M.m01.in_sel[0] : 1	<atomic>
+	0	M.m01.in_sel[1] : 0	<atomic>
+	0	s[1] : 0
+	0	msel[0] : 1	<atomic>
+	0	msel[2] : 0	<atomic>
+	0	M.m1.in_sel[0] : 1	<atomic>
+	0	M.m1.in_sel[1] : 0	<atomic>
+	10	M.m00.sel_ : 1	[by s[0]:=0]
+	10	M.m01.sel_ : 1	[by s[0]:=0]
+	10	M.m1.sel_ : 1	[by s[1]:=0]
+-------- 
+	10	s[0] : 1
+	10	msel[0] : 0	<atomic>
+	10	msel[1] : 1	<atomic>
+	10	M.m00.in_sel[0] : 0	<atomic>
+	10	M.m00.in_sel[1] : 1	<atomic>
+	10	M.m01.in_sel[0] : 0	<atomic>
+	10	M.m01.in_sel[1] : 1	<atomic>
+WARNING: weak-interference `M.m00._o'
+>> cause: `M.m00.sel_' (val: 0)
+	20	M.m00.sel_ : 0	[by s[0]:=1]
+WARNING: weak-interference `M.m01._o'
+>> cause: `M.m01.sel_' (val: 0)
+	20	M.m01.sel_ : 0	[by s[0]:=1]
+-------- 
+	20	s[1] : 1
+	20	msel[1] : 0	<atomic>
+	20	msel[3] : 1	<atomic>
+	20	M.m1.in_sel[0] : 0	<atomic>
+	20	M.m1.in_sel[1] : 1	<atomic>
+WARNING: weak-interference `M.m1._o'
+>> cause: `M.m1.sel_' (val: 0)
+	30	M.m1.sel_ : 0	[by s[1]:=1]
+-------- 
+	30	s[0] : 0
+	30	msel[2] : 1	<atomic>
+	30	msel[3] : 0	<atomic>
+	30	M.m00.in_sel[0] : 1	<atomic>
+	30	M.m00.in_sel[1] : 0	<atomic>
+	30	M.m01.in_sel[0] : 1	<atomic>
+	30	M.m01.in_sel[1] : 0	<atomic>
+WARNING: weak-interference `M.m00._o'
+>> cause: `M.m00.sel_' (val: 1)
+	40	M.m00.sel_ : 1	[by s[0]:=0]
+WARNING: weak-interference `M.m01._o'
+>> cause: `M.m01.sel_' (val: 1)
+	40	M.m01.sel_ : 1	[by s[0]:=0]
+-------- 

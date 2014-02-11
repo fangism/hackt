@@ -1,0 +1,12 @@
+	0	y : 0
+	0	x : 0	<atomic>
+- - - - - 
+	0	y : 1
+ERROR: exclhi violation detected!
+ring-state:
+	x : 0
+	y : 1
+but node `x' tried to become 1.
+The simulator's excl-check-lock state is no longer coherent; do not bother trying to continue the simulation, but you may further inspect the state.
+You probably want to disable excl-checking with `nocheckexcl' if you wish to continue the simulation.
+... at line 9

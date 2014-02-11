@@ -1,0 +1,29 @@
+// "045.hac"
+// copy-modified from "044.hac"
+
+defproc inv(ebool? in; ebool! out) {
+rte {
+	out = !in;
+}
+}
+
+defproc or(ebool? in[2]; ebool! out) {
+rte {
+	out = in[0] || in[1];
+}
+}
+
+defproc net_dag(ebool x, y, z; 
+	ebool! f, g) {
+	ebool a, b, c, d, e;
+	or o1({x, y}, a);
+	or o2({x, z}, b);
+	or o3({y, z}, c);
+	inv i1(b, d);
+	inv i2(c, e);
+	or o4({a, d}, f);
+	or o5({a, e}, g);
+}
+
+ebool p, q, r, s;
+net_dag G(p, q, r, s, p);

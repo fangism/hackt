@@ -93,7 +93,7 @@ Persistent Object Manager text dump:
 	89	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	20
 	90	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	91	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	92	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1236
+	92	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1208
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

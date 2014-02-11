@@ -33,7 +33,7 @@ Persistent Object Manager text dump:
 	29	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
 	30	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	31	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	32	##ADDR##	footprnt	0	#HEAD#	#TAIL#	414
+	32	##ADDR##	footprnt	0	#HEAD#	#TAIL#	386
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

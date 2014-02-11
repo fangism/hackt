@@ -103,6 +103,12 @@ default: {}
 
 
 //=============================================================================
+bool
+type_base::is_atomic(void) const {
+	return false;
+}
+
+//=============================================================================
 // class type_id method definitions
 
 /**
@@ -239,6 +245,14 @@ chan_type::check_type(const context& c) const {
 }
 
 //=============================================================================
+// class concrete_type_ref method definitions
+
+bool
+concrete_type_ref::is_atomic(void) const {
+	return false;
+}
+
+//=============================================================================
 // class generic_type_ref method definitions
 
 CONSTRUCTOR_INLINE
@@ -281,6 +295,11 @@ generic_type_ref::get_temp_spec(void) const {
 void
 generic_type_ref::set_chan_dir(const char_punctuation_type* d) {
 	chan_dir = excl_ptr<const char_punctuation_type>(d);
+}
+
+bool
+generic_type_ref::is_atomic(void) const {
+	return base->is_atomic();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

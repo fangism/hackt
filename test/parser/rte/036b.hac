@@ -1,0 +1,15 @@
+// "rte/036.hac"
+// copy-modified from 035.hac
+defproc foo (bool x, y, w, z) {
+x @[atomic];
+y @[atomic];
+w @[atomic];
+rte {
+x = y && z;
+w = z || y;
+}
+}
+
+foo bar, bq, ick;
+bar.y = bq.y = ick.y;
+bar.z = bq.z = ick.z;

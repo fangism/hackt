@@ -1,0 +1,6 @@
+// "rte/003.hac"
+ebool x;
+bool z;
+rte {
+x = z;		// valid assignment
+}

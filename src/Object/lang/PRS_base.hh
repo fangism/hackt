@@ -12,6 +12,7 @@
 #include "util/memory/count_ptr.hh"
 #include "util/persistent.hh"
 #include "util/boolean_types.hh"
+#include "Object/lang/PRS_dump_context.hh"
 #include "Object/inst/instance_pool_fwd.hh"
 
 /**
@@ -57,47 +58,6 @@ typedef	count_ptr<const prs_expr>		const_prs_expr_ptr_type;
 
 typedef	state_instance<bool_tag>		bool_instance_type;
 typedef	instance_pool<bool_instance_type>	node_pool_type;
-
-//=============================================================================
-/**
-	Dump modifier for PRS rules.  
- */
-struct rule_dump_context {
-	never_ptr<const scopespace>		parent_scope;
-
-	rule_dump_context() : parent_scope(NULL) { }
-
-	explicit
-	rule_dump_context(const scopespace& s) : parent_scope(&s) { }
-
-	explicit
-	rule_dump_context(const never_ptr<const scopespace> s) :
-		parent_scope(s) { }
-
-	// default copy-constructor
-
-};	// end struct rule_dump_context
-
-//-----------------------------------------------------------------------------
-/**
-	Helper class for controlling PRS and expression dumps.  
- */
-struct expr_dump_context : public rule_dump_context {
-	int					expr_stamp;
-
-	expr_dump_context() : rule_dump_context(), expr_stamp(0) { }
-
-	explicit
-	expr_dump_context(const never_ptr<const scopespace> s) :
-		rule_dump_context(s), expr_stamp(0) { }
-
-	// implicit OK
-	expr_dump_context(const rule_dump_context& r) :
-		rule_dump_context(r), expr_stamp(0) { }
-
-	// default copy constructor
-
-};	// end struct expr_dump_context
 
 //=============================================================================
 /**

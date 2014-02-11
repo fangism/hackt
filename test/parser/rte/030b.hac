@@ -1,0 +1,12 @@
+// "rte/030b.hac"
+// copy-modified from "rte/007b.hac"
+defproc foo(bool x) {
+x @ [atomic];
+}
+defproc bar(bool y) {
+y @ [reset=1];
+}
+
+foo _f;
+bar _b;
+_f.x = _b.y;	// should error out: conflicting attributes

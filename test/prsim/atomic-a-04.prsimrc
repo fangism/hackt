@@ -1,0 +1,5 @@
+# "atomic-a-04.prsimrc"
+# @haco@ atomic-a.haco-c
+
+# should fail:
+upset z 0

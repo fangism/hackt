@@ -1,0 +1,4 @@
+// "rte/000b.hac"
+bool x;
+x @ [atomic];
+bool y;

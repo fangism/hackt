@@ -104,7 +104,7 @@ template <class T>
 good_bool
 instance_collection_pool_wrapper<T>::create_dependent_types(
 		const footprint& f) {
-	STACKTRACE_VERBOSE;
+//	STACKTRACE_VERBOSE;
 	const iterator b(this->pool.begin()), e(this->pool.end());
 	return for_each(b, e, dependent_creator(f)).g;
 }
@@ -113,7 +113,7 @@ instance_collection_pool_wrapper<T>::create_dependent_types(
 template <class T>
 good_bool
 instance_collection_pool_wrapper<T>::allocate_local_instance_ids(footprint& f) {
-	STACKTRACE_VERBOSE;
+//	STACKTRACE_VERBOSE;
 	const iterator b(this->pool.begin()), e(this->pool.end());
 	return for_each(b, e, index_allocator(f)).g;
 }
@@ -123,7 +123,7 @@ template <class T>
 void
 instance_collection_pool_wrapper<T>::collect_scope_aliases(
 		port_alias_tracker& pt) const {
-	STACKTRACE_VERBOSE;
+//	STACKTRACE_VERBOSE;
 	const const_iterator b(this->pool.begin()), e(this->pool.end());
 	for_each(b, e, scope_alias_collector(pt));
 }
@@ -149,7 +149,7 @@ template <class Tag>
 good_bool
 instance_collection_pool_bundle<Tag>::create_dependent_types(
 		const footprint& f) {
-	STACKTRACE_VERBOSE;
+//	STACKTRACE_VERBOSE;
 	return good_bool(
 		instance_collection_pool_wrapper<instance_array<Tag, 0> >
 			::create_dependent_types(f).good &&
@@ -173,7 +173,7 @@ template <class Tag>
 good_bool
 instance_collection_pool_bundle<Tag>::allocate_local_instance_ids(
 		footprint& f) {
-	STACKTRACE_VERBOSE;
+//	STACKTRACE_VERBOSE;
 	return good_bool(
 		instance_collection_pool_wrapper<instance_array<Tag, 0> >
 			::allocate_local_instance_ids(f).good &&
@@ -202,7 +202,7 @@ template <class Tag>
 void
 instance_collection_pool_bundle<Tag>::collect_scope_aliases(
 		port_alias_tracker& spt) const {
-	STACKTRACE_VERBOSE;
+//	STACKTRACE_VERBOSE;
 	instance_collection_pool_wrapper<instance_array<Tag, 0> >
 		::collect_scope_aliases(spt);
 	instance_collection_pool_wrapper<instance_array<Tag, 1> >

@@ -4,8 +4,8 @@
 	$Id: cflat_printer.hh,v 1.19 2011/05/02 21:27:18 fang Exp $
  */
 
-#ifndef	__HAC_OBJECT_LANG_CFLAT_PRINTER_H__
-#define	__HAC_OBJECT_LANG_CFLAT_PRINTER_H__
+#ifndef	__HAC_OBJECT_LANG_CFLAT_PRINTER_HH__
+#define	__HAC_OBJECT_LANG_CFLAT_PRINTER_HH__
 
 #include "Object/lang/cflat_context_visitor.hh"
 #include "Object/lang/cflat_visitor.hh"
@@ -122,6 +122,15 @@ protected:
 	void
 	visit(const SPEC::footprint_directive&);
 
+	void
+        visit(const RTE::footprint&);
+
+	void
+        visit(const RTE::footprint_assignment&);
+
+	void
+        visit(const RTE::footprint_expr_node&);
+
 };	// end struct cflat_prs_printer
 
 //=============================================================================
@@ -129,5 +138,5 @@ protected:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __HAC_OBJECT_LANG_CFLAT_PRINTER_H__
+#endif	// __HAC_OBJECT_LANG_CFLAT_PRINTER_HH__
 

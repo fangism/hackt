@@ -1,0 +1,9 @@
+// "016b.hac"
+defproc foo(bool in_expr, out) {
+in_expr @ [atomic];
+}
+
+foo bar;
+foo baz;
+bar.in_expr = baz.out;	// error: atomic cannot connect to non-atomic
+

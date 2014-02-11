@@ -21,3 +21,5 @@ acceptable tokens are:
 	CHANNEL (shift)
 	INT_TYPE (shift)
 	BOOL_TYPE (shift)
+	EINT_TYPE (shift)
+	EBOOL_TYPE (shift)

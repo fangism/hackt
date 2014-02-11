@@ -341,9 +341,6 @@ process_sim_state::dump_rule(ostream& o, const rule_index_type lri,
 	const unique_process_subgraph& pg(type());
 	const rule_type* const r = pg.lookup_rule(lri);
 	NEVER_NULL(r);
-	r->dump(o << '[') << "]\t";	// moved here from dump_subexpr
-	dump_subexpr(o, lri, st, v, expr_struct_type::EXPR_ROOT, true);
-		// or pass (!v) to proot to parenthesize in verbose mode
 	const expr_struct_type& e(pg.expr_pool[lri]);
 	ISE_INVARIANT(e.is_root());
 	const bool dir = r->direction();
@@ -353,7 +350,19 @@ process_sim_state::dump_rule(ostream& o, const rule_index_type lri,
 	const State::node_type& n(st.get_node(gnr));
 	const pull_set root_pull(n, true);	// st.weak_rules_enabled();
 	// repetitive waste for fanin...
-	if (v && (multi_fi || 
+if (n.is_atomic()) {
+	st.dump_node_canonical_name(o << '\t', gnr);
+	if (v) {
+		st.get_node(gnr).dump_value(o << ':');
+	}
+	o << " = ";
+} else {
+	r->dump(o << '[') << "]\t";	// moved here from dump_subexpr
+}
+	dump_subexpr(o, lri, st, v, expr_struct_type::EXPR_ROOT, true);
+		// or pass (!v) to proot to parenthesize in verbose mode
+	// atomic nodes only have single-fanin
+	if (!n.is_atomic() && v && (multi_fi || 
 		(pg.expr_graph_node_pool[lri].children.size() > 1))) {
 		const bool w = r->is_weak();
 		const pull_enum p = w ?
@@ -363,10 +372,12 @@ process_sim_state::dump_rule(ostream& o, const rule_index_type lri,
 		// was: (dir ? root_pull.up : root_pull.dn) STR_INDEX(w);
 		o << '<' << State::node_type::translate_value_to_char(p) << '>';
 	}
+if (!n.is_atomic()) {
 	st.dump_node_canonical_name(o << " -> ", gnr) << (dir ? '+' : '-');
 	if (v) {
 		st.get_node(gnr).dump_value(o << ':');
 	}
+}
 	return o;
 }
 

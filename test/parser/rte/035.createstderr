@@ -1,0 +1,216 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	20
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	6	##ADDR##	procplch	0	#HEAD#	#TAIL#	26
+	7	##ADDR##	procdefn	0	#HEAD#	#TAIL#	144
+	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	10	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	11	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	12	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	13	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	14	##ADDR##	portscop	0	#HEAD#	#TAIL#	48
+	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
+	17	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
+	21	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	22	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	25	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	28	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
+	31	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	32	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	35	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	36	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	39	##ADDR##	RTEanest	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	RTEassgn	0	#HEAD#	#TAIL#	16
+	41	##ADDR##	RTEbinop	0	#HEAD#	#TAIL#	21
+	42	##ADDR##	RTElitrl	0	#HEAD#	#TAIL#	12
+	43	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	44	##ADDR##	RTElitrl	0	#HEAD#	#TAIL#	12
+	45	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	46	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	47	##ADDR##	RTEassgn	0	#HEAD#	#TAIL#	16
+	48	##ADDR##	RTEbinop	0	#HEAD#	#TAIL#	21
+	49	##ADDR##	RTElitrl	0	#HEAD#	#TAIL#	12
+	50	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	51	##ADDR##	RTElitrl	0	#HEAD#	#TAIL#	12
+	52	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	53	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	54	##ADDR##	footprnt	0	#HEAD#	#TAIL#	456
+	55	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	56	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	57	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
+	58	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	59	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	60	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	61	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	62	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	63	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	64	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	65	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	66	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	67	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	68	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	69	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	70	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	71	##ADDR##	footprnt	0	#HEAD#	#TAIL#	925
+	72	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	73	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	74	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  5 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    foo = process-definition (defined) foo(
+        bool<> !GND
+        bool<> !Vdd
+        bool<> x
+        bool<> y
+        bool<> w
+        bool<> z
+      )
+      In definition "foo", we have: {
+      Instances:
+        !GND = bool<> foo::!GND
+        !Vdd = bool<> foo::!Vdd
+        w = bool<> foo::w
+        x = bool<> foo::x
+        y = bool<> foo::y
+        z = bool<> foo::z
+      unroll sequence: 
+        ports: (
+          bool<> !GND
+          bool<> !Vdd
+          bool<> x
+          x@[atomic]
+          bool<> y
+          y@[atomic]
+          bool<> w
+          w@[atomic]
+          bool<> z
+        )
+        !GND@[supply=0]
+        !Vdd@[supply=1]
+      rte:
+        {
+        x = y & z
+        w = z | y
+        }
+      footprint: {
+        !GND = bool^0 = foo<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high port-alias ] 
+        w = bool^0 = foo<>::w (5) @[ atomic loc-def port-alias ] 
+        x = bool^0 = foo<>::x (3) @[ atomic loc-def port-alias ] 
+        y = bool^0 = foo<>::y (4) @[ atomic loc-use port-alias ] 
+        z = bool^0 = foo<>::z (6) @[ loc-use port-alias ] 
+        Created state:
+        bool instance pool: (6 ports, 0 local, 0 mapped)
+        1	foo<>::!GND @[ supply_low port-alias ]	
+        2	foo<>::!Vdd @[ supply_high port-alias ]	
+        3	foo<>::x @[ atomic loc-def port-alias ]	
+        4	foo<>::y @[ atomic loc-use port-alias ]	
+        5	foo<>::w @[ atomic loc-def port-alias ]	
+        6	foo<>::z @[ loc-use port-alias ]	
+        resolved rte:
+        x = y & z
+        w = z | y
+        Atomic dependency graph:
+          3 -> {4,}
+          4 -> {}
+          5 -> {4,}
+      }
+      }
+
+  Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
+    bar = foo<> bar
+    bq = foo<> bq
+    ick = foo<> ick
+}
+
+footprint: {
+  !GND = bool^0 = !GND (1) @[ supply_low ] 
+  !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
+  bar = process foo<>^0 = bar (1) (
+    !GND = bool^0 = !GND (1) @[ supply_low ] 
+    !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
+    x = bool^0 = bar.x (3) @[ atomic sub-def ] 
+    y = bool^0 = bar.y (4) @[ atomic sub-use ] 
+    w = bool^0 = bar.w (5) @[ atomic sub-def ] 
+    z = bool^0 = bar.z (6) @[ sub-use ] 
+  )
+  bq = process foo<>^0 = bq (2) (
+    !GND = bool^0 = !GND (1) @[ supply_low ] 
+    !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
+    x = bool^0 = bq.x (7) @[ atomic sub-def ] 
+    y = bool^0 = bq.y (8) @[ atomic sub-use ] 
+    w = bool^0 = bq.w (9) @[ atomic sub-def ] 
+    z = bool^0 = bq.z (10) @[ sub-use ] 
+  )
+  ick = process foo<>^0 = ick (3) (
+    !GND = bool^0 = !GND (1) @[ supply_low ] 
+    !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
+    x = bool^0 = ick.x (11) @[ atomic sub-def ] 
+    y = bool^0 = ick.y (12) @[ atomic sub-use ] 
+    w = bool^0 = ick.w (13) @[ atomic sub-def ] 
+    z = bool^0 = ick.z (14) @[ sub-use ] 
+  )
+  Created state:
+  process instance pool: (0 ports, 3 local, 0 mapped)
+  1	bar	foo<>
+    bool: 1,2,3,4,5,6
+  2	bq	foo<>
+    bool: 1,2,7,8,9,10
+  3	ick	foo<>
+    bool: 1,2,11,12,13,14
+  bool instance pool: (0 ports, 14 local, 0 mapped)
+  1	!GND @[ supply_low ]	
+  2	!Vdd @[ supply_high ]	
+  3	bar.x @[ atomic sub-def ]	
+  4	bar.y @[ atomic sub-use ]	
+  5	bar.w @[ atomic sub-def ]	
+  6	bar.z @[ sub-use ]	
+  7	bq.x @[ atomic sub-def ]	
+  8	bq.y @[ atomic sub-use ]	
+  9	bq.w @[ atomic sub-def ]	
+  10	bq.z @[ sub-use ]	
+  11	ick.x @[ atomic sub-def ]	
+  12	ick.y @[ atomic sub-use ]	
+  13	ick.w @[ atomic sub-def ]	
+  14	ick.z @[ sub-use ]	
+  Atomic dependency graph:
+    3 -> {4,}
+    4 -> {}
+    5 -> {4,}
+    7 -> {8,}
+    8 -> {}
+    9 -> {8,}
+    11 -> {12,}
+    12 -> {}
+    13 -> {12,}
+}

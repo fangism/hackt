@@ -5,7 +5,7 @@
  */
 
 #define	ENABLE_STACKTRACE			0
-#define	STACKTRACE_PERSISTENTS			(0 && ENABLE_STACKTRACE)
+#define	STACKTRACE_PERSISTENTS			(1 && ENABLE_STACKTRACE)
 
 #include <algorithm>
 #include <iterator>
@@ -70,6 +70,7 @@
 #include "Object/inst/preal_instance.hh"
 #include "Object/inst/pstring_instance.hh"
 #include "Object/lang/PRS_footprint.hh"
+#include "Object/lang/RTE_footprint.hh"
 #include "Object/lang/SPEC_footprint.hh"
 #include "Object/lang/CHP.hh"
 #include "Object/lang/CHP_event_alloc.hh"
@@ -86,6 +87,7 @@
 #include "common/TODO.hh"
 #include "main/cflat_options.hh"
 
+#include "util/graph/bare_digraph.hh"
 #include "util/compose.hh"
 #include "util/stacktrace.hh"
 #include "util/persistent_object_manager.tcc"
@@ -256,8 +258,14 @@ footprint::footprint() :
 	value_footprint_base<pint_tag>(), 
 	value_footprint_base<preal_tag>(), 
 	value_footprint_base<pstring_tag>(), 
-	prs_footprint(new PRS::footprint), 
-	spec_footprint(new SPEC::footprint),
+	prs_footprint(NULL),
+	rte_footprint(NULL), 
+	chp_footprint(NULL), 
+	spec_footprint(NULL),
+#if DETECT_ATOMIC_UPDATE_CYCLES
+	local_atomic_update_DAG(),
+	exported_atomic_update_DAG(),
+#endif
 #if FOOTPRINT_OWNS_CONTEXT_CACHE
 	context_cache(NULL),
 #endif
@@ -327,18 +335,23 @@ footprint::footprint(const const_param_expr_list& p,
 	// maybe even quarter-size...
 	scope_aliases(), 
 	port_aliases(),
-	prs_footprint(new PRS::footprint), 
+	prs_footprint(NULL),
+	rte_footprint(NULL), 	// allocate when we actually need it
 	chp_footprint(NULL), 	// allocate when we actually need it
 	chp_event_footprint(), 
-	spec_footprint(new SPEC::footprint), 
+	spec_footprint(NULL), 
+#if DETECT_ATOMIC_UPDATE_CYCLES
+	local_atomic_update_DAG(),
+	exported_atomic_update_DAG(),
+#endif
 #if FOOTPRINT_OWNS_CONTEXT_CACHE
 	context_cache(NULL),
 #endif
 	warning_count(0),
 	lock_state(false) {
 	STACKTRACE_CTOR_VERBOSE;
-	NEVER_NULL(prs_footprint);
-	NEVER_NULL(spec_footprint);
+//	NEVER_NULL(prs_footprint);
+//	NEVER_NULL(spec_footprint);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -362,10 +375,15 @@ footprint::footprint(const temp_footprint_tag_type&) :
 	instance_collection_map(), 
 	scope_aliases(), 
 	port_aliases(),
-	prs_footprint(new PRS::footprint), 
+	prs_footprint(NULL),
+	rte_footprint(NULL), 	// allocate when we actually need it
 	chp_footprint(NULL), 	// allocate when we actually need it
 	chp_event_footprint(), 
-	spec_footprint(new SPEC::footprint),
+	spec_footprint(NULL),
+#if DETECT_ATOMIC_UPDATE_CYCLES
+	local_atomic_update_DAG(),
+	exported_atomic_update_DAG(),
+#endif
 #if FOOTPRINT_OWNS_CONTEXT_CACHE
 	context_cache(NULL),
 #endif
@@ -402,14 +420,22 @@ footprint::footprint(const footprint& t) :
 	// maybe even quarter-size...
 	scope_aliases(), 
 	port_aliases(),
-	prs_footprint(new PRS::footprint), 
+	prs_footprint(NULL),
+	rte_footprint(NULL), 	// allocate when we actually need it
 	chp_footprint(NULL), 	// allocate when we actually need it
 	chp_event_footprint(), 
-	spec_footprint(new SPEC::footprint), 
+	spec_footprint(NULL), 
+#if DETECT_ATOMIC_UPDATE_CYCLES
+	local_atomic_update_DAG(),
+	exported_atomic_update_DAG(),
+#endif
+#if FOOTPRINT_OWNS_CONTEXT_CACHE
+	context_cache(NULL),
+#endif
 	lock_state(false) {
-	NEVER_NULL(prs_footprint);
-	NEVER_NULL(spec_footprint);
 	STACKTRACE_CTOR_VERBOSE;
+//	NEVER_NULL(prs_footprint);
+//	NEVER_NULL(spec_footprint);
 	INVARIANT(t.instance_collection_map.empty());
 }
 
@@ -526,12 +552,30 @@ footprint::dump_with_collections(ostream& o, const dump_flags& df,
 		// kind of want this for top-level footprint printing
 		scope_aliases.dump(o);
 #endif
-		prs_footprint->dump(o, *this);
+		if (rte_footprint) {
+			rte_footprint->dump(o, *this);
+		}
+		if (prs_footprint) {
+			prs_footprint->dump(o, *this);
+		}
 		if (chp_footprint) {
 			chp_footprint->dump(o, *this, dc);
 		}
 		chp_event_footprint.dump(o, dc);
-		spec_footprint->dump(o, *this);
+		if (spec_footprint) {
+			spec_footprint->dump(o, *this);
+		}
+#if DETECT_ATOMIC_UPDATE_CYCLES
+		if (!local_atomic_update_DAG.empty()) {
+			o << auto_indent << "Atomic dependency graph:" << endl;
+			INDENT_SECTION(o);
+			local_atomic_update_DAG.dump(o);
+#if 0
+			o << auto_indent << "Exported atomic update graph:" << endl;
+			exported_atomic_update_DAG.dump(o);
+#endif
+		}
+#endif
 	}	// end if is_created
 	}	// end if collection_map is not empty
 	return o;
@@ -649,14 +693,12 @@ footprint::export_instance_names(vector<string>& v) const {
  */
 footprint::instance_collection_ptr_type
 footprint::operator [] (const string& k) const {
-#if ENABLE_STACKTRACE
-	STACKTRACE_VERBOSE;
+//	STACKTRACE_VERBOSE;
 	STACKTRACE_INDENT_PRINT("footprint looking up: " << k << endl);
 #if 0
 	dump_with_collections(cerr << "we have: " << endl,
 		dump_flags::default_value, expr_dump_context::default_value);
 
-#endif
 #endif
 	const const_instance_map_iterator
 		e(instance_collection_map.end()),
@@ -714,6 +756,34 @@ footprint::operator [] (const collection_map_entry_type& e) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Now allocate the PRS footprint on-demand.
+ */
+PRS::footprint&
+footprint::get_prs_footprint(void) {
+	if (!prs_footprint) {
+		prs_footprint =
+			excl_ptr<PRS::footprint>(new PRS::footprint);
+		NEVER_NULL(prs_footprint);
+	}
+	return *prs_footprint;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Now allocate the RTE footprint on-demand.
+ */
+RTE::footprint&
+footprint::get_rte_footprint(void) {
+	if (!rte_footprint) {
+		rte_footprint =
+			excl_ptr<RTE::footprint>(new RTE::footprint);
+		NEVER_NULL(rte_footprint);
+	}
+	return *rte_footprint;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Now allocate the CHP_event_footprint on-demand.
  */
 footprint::chp_footprint_type&
@@ -724,6 +794,20 @@ footprint::get_chp_footprint(void) {
 		NEVER_NULL(chp_footprint);
 	}
 	return *chp_footprint;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Now allocate the spec_footprint on-demand.
+ */
+SPEC::footprint&
+footprint::get_spec_footprint(void) {
+	if (!spec_footprint) {
+		spec_footprint =
+			excl_ptr<SPEC::footprint>(new SPEC::footprint);
+		NEVER_NULL(spec_footprint);
+	}
+	return *spec_footprint;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -814,6 +898,8 @@ try {
 	partition_local_instance_pool();
 	expand_unique_subinstances();
 	construct_private_entry_map();
+
+//	export_atomic_update_graph();	// too early
 
 	// for all structures with private subinstances (processes)
 	//	publicly reachable local processes that are aliased to a port
@@ -1226,7 +1312,7 @@ implicit_supply_connector::__auto_connect_port(const alias_type& cp,
 		const unroll_context& c, 
 		const physical_instance_placeholder& a, node_type& n) {
 	typedef	port_actual_collection<bool_tag>	bool_port;
-	STACKTRACE_VERBOSE;
+//	STACKTRACE_VERBOSE;
 	// problem: if alias is not canonical, 
 	// not guaranteed to have complete type
 	const subinstance_manager::entry_value_type
@@ -1392,6 +1478,114 @@ if (sift) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if DETECT_ATOMIC_UPDATE_CYCLES
+/**
+	Preserve a copy of the local atomic update graph that projects
+	onto the ports.  First, must compute transitive closure of the 
+	local atomic update graph.
+ */
+void
+footprint::export_atomic_update_graph(void) {
+	STACKTRACE_VERBOSE;
+	// transitive closure, computed on a copy
+	atomic_update_graph G(local_atomic_update_DAG);
+	G.transitive_closure();
+#if ENABLE_STACKTRACE
+	cerr << "TC of local graph: " << endl;
+	G.dump(cerr);
+#endif
+	// port projection
+	atomic_update_graph
+		H(G, get_instance_pool<bool_tag>().port_entries() +1);
+	exported_atomic_update_DAG.swap(H);
+#if ENABLE_STACKTRACE
+	cerr << "projected onto ports: " << endl;
+	exported_atomic_update_DAG.dump(cerr);
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Checks this process (and everything below) for atomic-update
+	cycles, which are illegal.  
+ */
+size_t
+footprint::check_atomic_update_cycles(void) const {
+	STACKTRACE_VERBOSE;
+	using util::graph::SCC_type;
+	SCC_type cycles;
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT_PRINT("local graph:" << endl);
+	local_atomic_update_DAG.dump(cerr);
+#endif
+	local_atomic_update_DAG.strongly_connected_components_filtered(cycles);
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT_PRINT("Cycles:" << endl);
+	util::graph::dump_SCCs(cerr, cycles);
+#endif
+	if (cycles.size()) {
+		cerr << "Atomic update cycles found!" << endl;
+		// diagnose and name cycles
+		SCC_type::const_iterator i(cycles.begin()), e(cycles.end());
+		size_t j = 1;
+		for ( ; i!=e; ++i, ++j) {
+			cerr << "strongly connected component " << j << ":\n";
+			set<size_t>::const_iterator
+				ci(i->begin()), ce(i->end());
+			for ( ; ci!=ce; ++ci) {
+				const state_instance<bool_tag>&
+					b(get_instance_pool<bool_tag>()[*ci-1]);
+				b.get_back_ref()->dump_hierarchical_name(
+					cerr << '\t') << endl;
+			}
+		}
+		return 1;
+	}
+	else return 0;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+footprint::import_subprocess_atomic_update_graphs(void) {
+	STACKTRACE_VERBOSE;
+	typedef	process_tag		Tag;
+	size_t i = 0;
+	const state_instance<Tag>::pool_type&
+		_pool(get_instance_pool<Tag>());
+	const size_t s = _pool.local_entries();
+	for ( ; i<s; ++i) {
+		const state_instance<Tag>& sp(_pool[i]);
+		const atomic_update_graph H(sp._frame);
+#if ENABLE_STACKTRACE
+		cerr << "frame:" << endl;
+		sp._frame.dump_frame(cerr) << endl;
+		cerr << "frame-substituted: " << endl;
+		H.dump(cerr);
+		cerr << endl;
+#endif
+		local_atomic_update_DAG.import(H);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\pre local footprint frames (subprocesses) must already be reconstructed
+ */
+void
+footprint::reconstruct_local_atomic_update_graph(void) {
+	STACKTRACE_VERBOSE;
+	// order doesn't matter
+	import_subprocess_atomic_update_graphs();
+	// process RTE footprint
+	if (rte_footprint)
+		rte_footprint->collect_atomic_dependencies(
+			get_instance_pool<bool_tag>(),
+			local_atomic_update_DAG);
+	export_atomic_update_graph();
+}
+#endif	// DETECT_ATOMIC_UPDATE_CYCLES
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Perform local allocation of unique resources.
 	\pre instance indices and pool sizes (from scope_aliases) frozen.
@@ -1440,6 +1634,9 @@ footprint::expand_unique_subinstances(void) {
 				).good
 #endif
 	);
+#if DETECT_ATOMIC_UPDATE_CYCLES
+	import_subprocess_atomic_update_graphs();
+#endif
 #if BUILTIN_CHANNEL_FOOTPRINTS
 	if (!b.good)	return b;
 	// assign channel footprints after global allocation is complete
@@ -1463,6 +1660,7 @@ footprint::expand_unique_subinstances(void) {
  */
 error_count
 footprint::connection_diagnostics(const bool top) const {
+	STACKTRACE_VERBOSE;
 	error_count ret(scope_aliases.check_channel_connections());
 	if (!top) {
 #if BOOL_PRS_CONNECTIVITY_CHECKING
@@ -1472,6 +1670,9 @@ footprint::connection_diagnostics(const bool top) const {
 		ret += scope_aliases.check_process_connections();
 #endif
 	}
+#if DETECT_ATOMIC_UPDATE_CYCLES
+	ret.errors += check_atomic_update_cycles();
+#endif
 	warning_count += ret.warnings;
 	return ret;
 }
@@ -1786,7 +1987,12 @@ footprint::collect_transient_info_base(persistent_object_manager& m) const {
 	footprint_base<int_tag>::collect_transient_info_base(m);
 	footprint_base<bool_tag>::collect_transient_info_base(m);
 	// value_footprint_bases don't have pointers
-	prs_footprint->collect_transient_info_base(m);
+	if (rte_footprint) {
+		rte_footprint->collect_transient_info_base(m);
+	}
+	if (prs_footprint) {
+		prs_footprint->collect_transient_info_base(m);
+	}
 	// now we need to register it because locally allocated events
 	// may now contain a live pointer to the top-concurrent-actions
 	if (chp_footprint) {
@@ -1795,7 +2001,9 @@ footprint::collect_transient_info_base(persistent_object_manager& m) const {
 	// alternative is to hack an exception... not worth it
 	// this *shouldn't* be necessary, but also performs sanity check
 	chp_event_footprint.collect_transient_info_base(m);
-	spec_footprint->collect_transient_info_base(m);
+	if (spec_footprint) {
+		spec_footprint->collect_transient_info_base(m);
+	}
 	// scope/port alias_sets don't have pointers
 }
 
@@ -1851,13 +2059,29 @@ footprint::write_object_base(const persistent_object_manager& m,
 	port_aliases.write_object_base(*this, o);
 	scope_aliases.write_object_base(*this, o);
 #endif
-
-	prs_footprint->write_object_base(m, o);
+	// TODO: compact or generalize this into a single bitfield
+	write_value<bool>(o, rte_footprint);
+	write_value<bool>(o, prs_footprint);
+	write_value<bool>(o, chp_footprint);	// redundant with write_pointer
+	write_value<bool>(o, spec_footprint);
+	if (rte_footprint) {
+		rte_footprint->write_object_base(m, o);
+	}
+	if (prs_footprint) {
+		prs_footprint->write_object_base(m, o);
+	}
 	m.write_pointer(o, chp_footprint);
 	// persistent_object_manager will pick up chp_footprint
 	chp_event_footprint.write_object_base(m, o);
 	// alternative: re-construct event footprint upon loading?
-	spec_footprint->write_object_base(m, o);
+	if (spec_footprint) {
+		spec_footprint->write_object_base(m, o);
+	}
+#if 0 && DETECT_ATOMIC_UPDATE_CYCLES
+	local_atomic_update_DAG.write_object(o);
+	// exported_atomic_update_DAG.write_object(o);
+#endif
+	// atomic_update_graphs are no longer written; they can be reconstructed
 	// ignore context_cache
 }
 
@@ -1942,12 +2166,34 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 	port_aliases.load_object_base(*this, i);
 	scope_aliases.load_object_base(*this, i);
 #endif
-
-	prs_footprint->load_object_base(m, i);
+	// TODO: compact this into bitfield
+	bool have_rte, have_prs, have_chp, have_spec;
+	read_value<bool>(i, have_rte);
+	read_value<bool>(i, have_prs);
+	read_value<bool>(i, have_chp);	// redundant, always read_pointer()
+	read_value<bool>(i, have_spec);
+	if (have_rte) {
+		get_rte_footprint().load_object_base(m, i);	// auto-alloc
+	}
+	if (have_prs) {
+		get_prs_footprint().load_object_base(m, i);
+	}
 	m.read_pointer(i, chp_footprint);
 	// alternative: re-construct event footprint upon loading?
 	chp_event_footprint.load_object_base(m, i);
-	spec_footprint->load_object_base(m, i);
+	if (have_spec) {
+		get_spec_footprint().load_object_base(m, i);
+	}
+#if DETECT_ATOMIC_UPDATE_CYCLES
+#if 0
+	// alternatively, reconstruct from subprocesses and RTE
+	local_atomic_update_DAG.load_object(i);
+	// exported_atomic_update_DAG.load_object(i);
+	export_atomic_update_graph();	// reconstruct, not reload
+#else
+	reconstruct_local_atomic_update_graph();
+#endif
+#endif
 	// ignore context_cache
 	lock_state = false;
 }

@@ -23,7 +23,7 @@ Persistent Object Manager text dump:
 	19	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
 	20	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	21	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	22	##ADDR##	footprnt	0	#HEAD#	#TAIL#	342
+	22	##ADDR##	footprnt	0	#HEAD#	#TAIL#	314
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

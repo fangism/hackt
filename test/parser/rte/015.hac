@@ -1,0 +1,10 @@
+// "015.hac"
+defproc foo(ebool in_expr; bool out) {
+}
+
+foo bar;
+foo baz;
+foo goo;
+bar.in_expr = baz.in_expr;
+baz.out = goo.out;
+

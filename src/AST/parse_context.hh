@@ -6,8 +6,8 @@
 	$Id: parse_context.hh,v 1.26 2010/08/24 21:05:38 fang Exp $
  */
 
-#ifndef __AST_PARSE_CONTEXT_H__
-#define __AST_PARSE_CONTEXT_H__
+#ifndef __AST_PARSE_CONTEXT_HH__
+#define __AST_PARSE_CONTEXT_HH__
 
 #include "util/string_fwd.hh"
 #include <stack>
@@ -56,6 +56,9 @@ namespace PRS {
 }
 namespace SPEC {
 	class directives_set;
+}
+namespace RTE {
+	class assignment_set_base;
 }
 }	// end namespace entity
 
@@ -194,7 +197,7 @@ private:
 	 */
 	count_ptr<const fundamental_type_reference>
 						current_fundamental_type;
-
+	bool					atomic_type_variant;
 
 	/**
 		Since loop and conditional contexts may be nested, 
@@ -234,6 +237,11 @@ private:
 	 */
 	never_ptr<entity::PRS::rule_set_base>	current_prs_body;
 	/**
+		The current scope of atomic run-time-expressions to add,
+		which can be top-level, or in conditional or loop. 
+	 */
+	never_ptr<entity::RTE::assignment_set_base>	current_rte_body;
+	/**
 		The current scope of spec directives to add, 
 		may be top-level, in definition, conditional, or loop.  
 	 */
@@ -253,6 +261,19 @@ private:
 	 */
 	bool					in_conditional_scope;
 
+	/**
+		This turns off accessibility checks in all contexts, 
+		which is useful for other tools that need to read 
+		the pre-compiled objects.  
+		Default: false, enforcing port visibility only.  
+		Some compile-time checks however, do allow
+		private member references, so we allow such exceptions.
+	 */
+	bool					view_all_publicly;
+	/**
+		Temporarily switch syntax mode for expressions.
+	 */
+	bool					rte_mode;
 public:
 	/**
 		User-controlled parse-check options.  Copied.
@@ -285,6 +306,18 @@ public:
 		namespace_frame(context&, const token_identifier&);
 		~namespace_frame();
 	} __ATTRIBUTE_UNUSED__;
+
+	/**
+		As an exception, allow private member references
+		in certain cases.  
+	 */
+	typedef	util::member_saver<context, 
+		bool, &context::view_all_publicly>
+						private_member_accessor;
+
+	typedef	util::member_saver<context, 
+		bool, &context::rte_mode>
+						rte_mode_accessor;
 
 private:
 	void
@@ -428,7 +461,8 @@ public:
 		context&		_context;
 	public:
 		fundamental_type_frame(context&,
-			const count_ptr<const fundamental_type_reference>&);
+			const count_ptr<const fundamental_type_reference>&, 
+			const bool atomic);
 		~fundamental_type_frame();
 	} __ATTRIBUTE_UNUSED__;
 
@@ -584,6 +618,11 @@ public:
 			&context::current_spec_body>
 						spec_body_frame;
 
+	typedef	util::member_saver<context, 
+		never_ptr<entity::RTE::assignment_set_base>, 
+			&context::current_rte_body>
+						rte_body_frame;
+
 	bool
 	inside_conditional(void) const {
 		return in_conditional_scope;
@@ -596,15 +635,24 @@ public:
 
 	entity::PRS::rule_set_base&
 	get_current_prs_body(void) const {
-		// NEVER_NULL(current_prs_body);
+		NEVER_NULL(current_prs_body);
 		return *current_prs_body;
 	}
 
 	entity::SPEC::directives_set&
 	get_current_spec_body(void) const {
-		// NEVER_NULL(current_spec_body);
+		NEVER_NULL(current_spec_body);
 		return *current_spec_body;
 	}
+
+	entity::RTE::assignment_set_base&
+	get_current_rte_body(void) const {
+		NEVER_NULL(current_rte_body);
+		return *current_rte_body;
+	}
+
+	bool
+	inside_atomic_rte(void) const { return current_rte_body; }
 
 	struct file_stack_frame {
 		context&			_context;
@@ -627,6 +675,9 @@ public:
 	bool
 	is_publicly_viewable(void) const { return parse_opts.view_all_publicly; }
 
+	bool
+	is_rte_syntax_mode(void) const { return rte_mode; }
+
 private:
 	void
 	close_current_definition(void);
@@ -636,5 +687,5 @@ private:
 }	// end namespace parser
 }	// end namespace HAC
 
-#endif	// __AST_PARSE_CONTEXT_H__
+#endif	// __AST_PARSE_CONTEXT_HH__
 

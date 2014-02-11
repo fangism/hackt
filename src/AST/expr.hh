@@ -68,6 +68,7 @@ public:
 	CHECK_META_EXPR_PROTO;
 	CHECK_NONMETA_EXPR_PROTO;
 	CHECK_PRS_EXPR_PROTO;
+	CHECK_RTE_EXPR_PROTO;
 };	// end class prefix_expr
 
 //=============================================================================
@@ -168,6 +169,7 @@ public:
 	CHECK_META_EXPR_PROTO;
 	CHECK_NONMETA_EXPR_PROTO;
 	CHECK_PRS_EXPR_PROTO;
+	CHECK_RTE_EXPR_PROTO;
 };	// end class logical_expr
 
 //-----------------------------------------------------------------------------

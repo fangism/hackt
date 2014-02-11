@@ -1,0 +1,4 @@
+// "rte/001.hac" -- expect fail
+ebool x;
+bool y;
+x = y;		// error: invalid alias

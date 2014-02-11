@@ -91,13 +91,16 @@ class port_formal_id {
 protected:
 	const count_ptr<const token_identifier>	name;	///< formal name
 	const excl_ptr<const dense_range_list>	dim;	///< optional dimensions
+	const excl_ptr<const generic_attribute_list>	attrs;
 public:
 	explicit
 	port_formal_id(const token_identifier* n,
-		const dense_range_list* d = NULL);
+		const dense_range_list* d = NULL, 
+		const generic_attribute_list* a = NULL);
 	explicit
 	port_formal_id(const count_ptr<const token_identifier>& n,
-		const dense_range_list* d = NULL);
+		const dense_range_list* d = NULL, 
+		const generic_attribute_list* a = NULL);
 	~port_formal_id();
 
 	ostream&

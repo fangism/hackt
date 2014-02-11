@@ -519,7 +519,8 @@ data_type_reference::make_instance_collection(
 			return return_type(
 				new int_instance_placeholder(*s, id, d));
 		} else {
-			DIE;	// WTF!?
+			ICE(cerr,
+			cerr << "Expecting known built-in type pointer." << endl;)
 			return return_type(NULL);
 		}
 	}

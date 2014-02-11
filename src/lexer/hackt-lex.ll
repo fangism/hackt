@@ -271,6 +271,20 @@ BOOL_TYPE_UPDATE(YYSTYPE& hackt_lval, const lexer_state& foo) {
 }
 
 static inline void
+EINT_TYPE_UPDATE(YYSTYPE& hackt_lval, const lexer_state& foo) {
+	hackt_lval._token_int_type = new token_int_type(yytext);
+	hackt_lval._token_int_type->flag_atomic();
+	TOKEN_UPDATE(foo);
+}
+
+static inline void
+EBOOL_TYPE_UPDATE(YYSTYPE& hackt_lval, const lexer_state& foo) {
+	hackt_lval._token_bool_type = new token_bool_type(yytext);
+	hackt_lval._token_bool_type->flag_atomic();
+	TOKEN_UPDATE(foo);
+}
+
+static inline void
 PINT_TYPE_UPDATE(YYSTYPE& hackt_lval, const lexer_state& foo) {
 	hackt_lval._token_pint_type = new token_pint_type(yytext);
 	TOKEN_UPDATE(foo);
@@ -404,6 +418,7 @@ FWDSLASH	"\\"
 LOGICAL_AND	"&&"
 LOGICAL_OR	"||"
 ASSIGN		":="
+DOLLARDOLLAR	"$$"
 
 /** syntactic sugar tokens, value is not important, return _node_position */
 BEGINLOOP	"*["
@@ -443,6 +458,7 @@ TYPEDEF		"typedef"
 CHP		"chp"
 HSE		"hse"
 PRS		"prs"
+RTE		"rte"
 SPEC		"spec"
 TREE		"tree"
 SUBCKT		"subckt"
@@ -456,6 +472,8 @@ GET		"get"
 ENUM		"enum"
 INT_TYPE	"int"
 BOOL_TYPE	"bool"
+EINT_TYPE	"eint"
+EBOOL_TYPE	"ebool"
 PINT_TYPE	"pint"
 PBOOL_TYPE	"pbool"
 PREAL_TYPE	"preal"
@@ -512,6 +530,7 @@ EMBEDFILE	^#FILE
 {INSERT}	{ NODE_POSITION_UPDATE(*hackt_lval, foo); return INSERT; }
 {EXTRACT}	{ NODE_POSITION_UPDATE(*hackt_lval, foo); return EXTRACT; }
 {ASSIGN}	{ NODE_POSITION_UPDATE(*hackt_lval, foo); return ASSIGN; }
+{DOLLARDOLLAR}	{ NODE_POSITION_UPDATE(*hackt_lval, foo); return DOLLARDOLLAR; }
 
 {BEGINLOOP}	{ NODE_POSITION_UPDATE(*hackt_lval, foo); return BEGINLOOP; }
 {BEGINPROB}	{ NODE_POSITION_UPDATE(*hackt_lval, foo); return BEGINPROB; }
@@ -693,6 +712,7 @@ EMBEDFILE	^#FILE
 {CHP}		{ KEYWORD_UPDATE(*hackt_lval, foo); return CHP_LANG; }
 {HSE}		{ KEYWORD_UPDATE(*hackt_lval, foo); return HSE_LANG; }
 {PRS}		{ KEYWORD_UPDATE(*hackt_lval, foo); return PRS_LANG; }
+{RTE}		{ KEYWORD_UPDATE(*hackt_lval, foo); return RTE_LANG; }
 {TREE}		{ KEYWORD_UPDATE(*hackt_lval, foo); return TREE_LANG; }
 {SUBCKT}	{ KEYWORD_UPDATE(*hackt_lval, foo); return SUBCKT_LANG; }
 {SPEC}		{ KEYWORD_UPDATE(*hackt_lval, foo); return SPEC_LANG; }
@@ -706,6 +726,8 @@ EMBEDFILE	^#FILE
 {CHANNEL}	{ KEYWORD_UPDATE(*hackt_lval, foo); return CHANNEL; }
 {INT_TYPE}	{ INT_TYPE_UPDATE(*hackt_lval, foo); return INT_TYPE; }
 {BOOL_TYPE}	{ BOOL_TYPE_UPDATE(*hackt_lval, foo); return BOOL_TYPE; }
+{EINT_TYPE}	{ EINT_TYPE_UPDATE(*hackt_lval, foo); return EINT_TYPE; }
+{EBOOL_TYPE}	{ EBOOL_TYPE_UPDATE(*hackt_lval, foo); return EBOOL_TYPE; }
 {PINT_TYPE}	{ PINT_TYPE_UPDATE(*hackt_lval, foo); return PINT_TYPE; }
 {PBOOL_TYPE}	{ PBOOL_TYPE_UPDATE(*hackt_lval, foo); return PBOOL_TYPE; }
 {PREAL_TYPE}	{ PREAL_TYPE_UPDATE(*hackt_lval, foo); return PREAL_TYPE; }

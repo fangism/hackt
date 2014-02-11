@@ -18,6 +18,7 @@
 #endif
 #include "Object/unroll/sequential_scope.hh"
 #include "Object/lang/PRS_base.hh"
+#include "Object/lang/RTE_base.hh"
 #include "Object/lang/SPEC.hh"
 #include "Object/def/port_formals_manager.hh"
 #include "Object/def/footprint_manager.hh"
@@ -69,6 +70,7 @@ protected:
 	list of rule_set_base (polymorphic).  Meh.
  */
 	PRS::rule_set_base			prs;
+	RTE::assignment_set_base		rte;
 	CHP::concurrent_actions			chp;
 	SPEC::directives_set			spec;
 	mutable footprint_manager		footprint_map;
@@ -148,6 +150,9 @@ PD_VIRTUAL
 
 	void
 	compact_prs_references(void);
+
+	RTE::assignment_set_base&
+	get_rte(void) { return rte; }
 
 	using scopespace::add_node_instance_idempotent;
 

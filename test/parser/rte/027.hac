@@ -1,0 +1,5 @@
+// "rte/027b.hac"
+// copy-modified from "rte/006b.hac"
+defproc foo(ebool x[2][3]) {
+}
+foo bar;

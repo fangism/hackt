@@ -1,0 +1,4 @@
+// "rte/007.hac"
+ebool x;
+x @ [reset=1];	// should error out: conflicting attributes
+bool y;

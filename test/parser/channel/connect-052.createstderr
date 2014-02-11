@@ -50,7 +50,7 @@ Persistent Object Manager text dump:
 	41	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
 	42	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
 	43	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	44	##ADDR##	footprnt	0	#HEAD#	#TAIL#	456
+	44	##ADDR##	footprnt	0	#HEAD#	#TAIL#	428
 	45	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	21
 	46	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	47	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	21

@@ -16,6 +16,14 @@
 #include "Object/lang/generic_attribute.hh"
 #include "util/memory/count_ptr.hh"
 
+/**
+	RTE is a primitive subset.
+ */
+#define	REUSE_RTE_FOOTPRINT_EXPR		1
+#if REUSE_RTE_FOOTPRINT_EXPR
+#include "Object/lang/RTE_footprint_expr.hh"
+#endif
+
 #include "sim/prsim/devel_switches.hh"
 #if PRSIM_UNIFY_GRAPH_STRUCTURES
 #include "sim/common.hh"
@@ -68,7 +76,16 @@ class footprint_literal_node : public cflat_visitee {
 	Q: should this netlist be "optimized" as it is constructed?
 		See -O1 options in hacprsim.  
  */
-class footprint_expr_node : public cflat_visitee {
+class footprint_expr_node :
+#if REUSE_RTE_FOOTPRINT_EXPR
+		public RTE::footprint_expr_node
+#else
+		public cflat_visitee
+#endif
+{
+#if REUSE_RTE_FOOTPRINT_EXPR
+	typedef	RTE::footprint_expr_node	parent_type;
+#else
 	/**
 		Why int and not size_t?
 		Might consider making this a int-bool pair, 
@@ -81,6 +98,7 @@ class footprint_expr_node : public cflat_visitee {
 	typedef	int				node_value_type;
 #endif
 	typedef	std::valarray<node_value_type>	node_array_type;
+#endif
 	typedef	directive_base_params_type	params_type;
 public:
 	/**
@@ -96,6 +114,7 @@ public:
 	 */
 	typedef	std::pair<size_t, precharge_pull_type>	precharge_ref_type;
 	typedef	std::vector<precharge_ref_type>		precharge_map_type;
+#if !REUSE_RTE_FOOTPRINT_EXPR
 private:
 	/**
 		Whether or not this is AND or OR, NOT, literal....  
@@ -136,6 +155,7 @@ private:
 		This now has the role of SIM::PRSIM::ExprGraphNode::children.
 	 */
 	node_array_type			nodes;
+#endif
 	/**
 		Precharge expressions only apply to ANDs.
 	 */
@@ -163,6 +183,12 @@ public:
 	footprint_expr_node(const char);
 
 	footprint_expr_node(const char t, const size_t s);
+
+#if 0 && REUSE_RTE_FOOTPRINT_EXPR
+	// for the sake of reusing PRS::footprint_expr_node during ExprAlloc
+	explicit
+	footprint_expr_node(const parent_type&);
+#endif
 
 	char
 	get_type(void) const { return type; }

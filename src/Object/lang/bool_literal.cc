@@ -130,6 +130,10 @@ bool_literal::unroll_base(const unroll_context& c) const {
 	STACKTRACE_VERBOSE;
 	bool_instance_alias_collection_type bc;
 	NEVER_NULL(var);
+#if ENABLE_STACKTRACE
+	var->dump(STACKTRACE_INDENT_PRINT(""), PRS::expr_dump_context())
+		<< std::endl;
+#endif
 	if (var->unroll_references_packed(c, bc).bad) {
 		return 0;		// INVALID_NODE_INDEX
 	}

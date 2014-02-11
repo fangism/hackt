@@ -9,7 +9,7 @@ Persistent Object Manager text dump:
 	5	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	6	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	7	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	8	##ADDR##	procdefn	0	#HEAD#	#TAIL#	120
+	8	##ADDR##	procdefn	0	#HEAD#	#TAIL#	124
 	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	10	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	11	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
@@ -21,7 +21,7 @@ Persistent Object Manager text dump:
 	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	18	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	19	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
-	20	##ADDR##	procdefn	0	#HEAD#	#TAIL#	128
+	20	##ADDR##	procdefn	0	#HEAD#	#TAIL#	132
 	21	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	22	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	23	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
@@ -38,9 +38,9 @@ Persistent Object Manager text dump:
 	34	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	35	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	36	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	37	##ADDR##	footprnt	0	#HEAD#	#TAIL#	342
+	37	##ADDR##	footprnt	0	#HEAD#	#TAIL#	314
 	38	##ADDR##	cnstpic_	0	#HEAD#	#TAIL#	24
-	39	##ADDR##	footprnt	0	#HEAD#	#TAIL#	342
+	39	##ADDR##	footprnt	0	#HEAD#	#TAIL#	314
 	40	##ADDR##	cnstpic_	0	#HEAD#	#TAIL#	24
 	41	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	42	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
@@ -56,7 +56,7 @@ Persistent Object Manager text dump:
 	52	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	53	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	54	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	55	##ADDR##	footprnt	0	#HEAD#	#TAIL#	512
+	55	##ADDR##	footprnt	0	#HEAD#	#TAIL#	484
 	56	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	57	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	58	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
@@ -106,7 +106,7 @@ Persistent Object Manager text dump:
 	102	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	32
 	103	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	104	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	105	##ADDR##	footprnt	0	#HEAD#	#TAIL#	924
+	105	##ADDR##	footprnt	0	#HEAD#	#TAIL#	896
 	106	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	107	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	108	##ADDR##	cnstpic_	0	#HEAD#	#TAIL#	24

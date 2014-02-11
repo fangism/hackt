@@ -1,0 +1,5 @@
+// "rte/002b.hac"
+bool x, y;
+x @[atomic];
+y @[atomic];
+x = y;		// valid alias, but should only define one of them

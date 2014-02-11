@@ -1,0 +1,2 @@
+// "rte/006b.hac"
+ebool x[2][3];	// @[atomic] should apply to whole array

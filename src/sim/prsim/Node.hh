@@ -162,14 +162,20 @@ struct Node {
 			Whether or not this node belongs to at least one
 			checked exclusive high ring.  
 		 */
-		NODE_CHECK_EXCLLO = 0x0010
+		NODE_CHECK_EXCLLO = 0x0010,
 		/**
 			Whether or not to report interference on this node.
 		 */
-		,
 		NODE_MAY_INTERFERE = 0x0020,
-		NODE_MAY_WEAK_INTERFERE = 0x0040
-
+		NODE_MAY_WEAK_INTERFERE = 0x0040,
+		/**
+			Atomic nodes should continue to propagate
+			immediately, rather than scheduling event though queue.
+			Also, atomic nodes do not pull-up/dn, they are assigned
+			the value of the expression.
+			Think of always combinational, with complementary pull.  
+		 */
+		NODE_IS_ATOMIC = 0x0080
 #if PRSIM_SETUP_HOLD
 		,
 		/**
@@ -251,6 +257,9 @@ private:
 		struct_flags |= NODE_MAY_WEAK_INTERFERE;
 	}
 
+	void
+	mark_atomic(void) { struct_flags |= NODE_IS_ATOMIC; }
+
 public:
 	bool
 	may_interfere(void) const { return struct_flags & NODE_MAY_INTERFERE; }
@@ -260,7 +269,10 @@ public:
 		return struct_flags & NODE_MAY_WEAK_INTERFERE;
 	}
 
-	void
+	bool
+	is_atomic(void) const { return struct_flags & NODE_IS_ATOMIC; }
+
+	bool
 	import_attributes(const bool_connect_policy&);
 
 	bool
@@ -411,6 +423,7 @@ private:
 	// also use this as pull_to_char
 	static const uchar		value_to_char[3];
 public:
+	// also used for inverting pull state
 	static const value_enum		invert_value[3];
 protected:
 	/**
@@ -810,7 +823,10 @@ struct pull_set {
 	explicit
 	pull_set(const NodeState& n, const bool w) :
 		up(n.pull_up_state STR_INDEX(NORMAL_RULE).pull()),
-		dn(n.pull_dn_state STR_INDEX(NORMAL_RULE).pull())
+		// atomic nodes are implicitly combinational
+		dn(n.is_atomic() ?
+			pull_enum(NodeState::invert_value[up])
+			: n.pull_dn_state STR_INDEX(NORMAL_RULE).pull())
 #if PRSIM_WEAK_RULES
 		, wup(w ? n.pull_up_state STR_INDEX(WEAK_RULE).pull()
 			: PULL_OFF)

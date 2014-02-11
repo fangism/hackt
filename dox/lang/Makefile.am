@@ -44,6 +44,7 @@ hac_info_INCLUDES = \
 	chapters/CHP.texi \
 	chapters/PRS.texi \
 	chapters/SPEC.texi \
+	chapters/RTE.texi \
 	grammar/keywords.texi \
 	grammar/grammar.texi \
 	$(srcdir)/$(GRAMMAR_TEXI)

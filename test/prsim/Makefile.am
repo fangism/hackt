@@ -110,7 +110,9 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	power-supplies-e power-supplies-f \
 	pseudo-flop-a pseudo-flop-b \
 	pseudo-flop-c pseudo-flop-d \
-	flop-timing flop-timing-a flop-timing-b
+	flop-timing flop-timing-a flop-timing-b \
+	atomic-a atomic-b atomic-c atomic-d atomic-e atomic-f atomic-g \
+	atomic-h atomic-i atomic-i2 atomic-j
 
 # TODO: more cross-coupled test cases
 # SRAM cell
@@ -501,7 +503,13 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	pseudo-flop-c-01 \
 	pseudo-flop-d-01 \
 	flop-timing-a-01 flop-timing-a-02 \
-	flop-timing-b-01 flop-timing-b-02
+	flop-timing-b-01 flop-timing-b-02 \
+	atomic-a-03 atomic-a-05 \
+	atomic-b-01 \
+	atomic-c-01 atomic-c-02 \
+	atomic-d-01 \
+	atomic-e-01 atomic-e-02 \
+	atomic-f-01
 
 # subset of prsimrc test that we wish to compare traces against regressions
 HACKT_PRSIMTRACE_TEST_SUBJECTS = \
@@ -545,7 +553,10 @@ HACKT_PRSIMTRACE_TEST_SUBJECTS = \
 	SRAM-d-01 SRAM-d-02 \
 	stuck-bug-a-01 \
 	unstable-a-01 unstable-b-01 \
-	x-all-01
+	x-all-01 \
+	atomic-b-01 \
+	atomic-d-01 \
+	atomic-f-01
 
 # prsimtrace test crashes: FIXME!!!
 # logic-defs-a-01 logic-defs-b-01
@@ -820,7 +831,10 @@ HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
 	channel-clocked-test-a-07 channel-clocked-test-a-07c \
 	channel-clocked-test-b-06 \
 	channel-clocked-test-b-07 \
-	reset-test-01
+	reset-test-01 \
+	atomic-a-01 atomic-a-02 atomic-a-04 \
+	atomic-g-01 atomic-h-01 \
+	atomic-i-01 atomic-i2-01 atomic-j-01
 
 # KNOWN BUG (fails, but should not): cross-pulldown-01
 

@@ -237,6 +237,7 @@ META_INSTANCE_REFERENCE_CLASS::unroll_references_packed_helper(
 #if ENABLE_STACKTRACE
 	_inst.dump(STACKTRACE_INDENT_PRINT("looking up: "),
 		dump_flags::default_value) << endl;
+	c.dump(cerr) << endl;
 #endif
 	const never_ptr<physical_instance_collection>
 		inst_p(c.lookup_instance_collection(_inst));

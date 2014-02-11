@@ -1,0 +1,36 @@
+// "atomic-f.hac"
+
+defproc mux(bool? in[2], sel; bool! out; ebool! in_sel[2]) {
+	bool sel_;
+	bool _o;
+prs {
+	sel			=> sel_-
+	in[0] & sel_		-> _o-
+	~in[0] & ~sel		-> _o+
+	in[1] & sel		-> _o-
+	~in[1] & ~sel_		-> _o+
+	_o			=> out-
+}
+rte {
+	in_sel[0] = !sel;
+	in_sel[1] = sel;
+}
+}
+
+defproc mux4(bool? in[4], sel[2]; bool! out; ebool! in_sel[4]) {
+	bool m[2];
+	mux
+		m00(in[0..1], sel[0], m[0], ),
+		m01(in[2..3], sel[0], m[1], ),
+		m1(m, sel[1], out, );
+rte {
+	in_sel[0] = m1.in_sel[0] && m00.in_sel[0];
+	in_sel[1] = m1.in_sel[0] && m00.in_sel[1];
+	in_sel[2] = m1.in_sel[1] && m01.in_sel[0];
+	in_sel[3] = m1.in_sel[1] && m01.in_sel[1];
+}
+}
+
+bool x[4], s[2], out;
+ebool msel[4];
+mux4 M(x, s, out, msel);

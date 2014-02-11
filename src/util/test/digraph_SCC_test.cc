@@ -34,14 +34,10 @@ compute_and_print_SCCs(const size_t N, const edges_type& E, ostream& o) {
 	}
 }
 	G.strongly_connected_components(sccs);
-	SCC_type::const_iterator i(sccs.begin()), e(sccs.end());
-	size_t j = 0;
-	for ( ; i!=e; ++i, ++j) {
-		o << "SCC[" << j << "]: {";
-		std::copy(i->begin(), i->end(), 
-			std::ostream_iterator<size_t>(o, ","));
-		o << '}' << endl;
-	}
+	util::graph::dump_SCCs(o, sccs);
+	G.transitive_closure();	// modifies G
+	o << "G+:" << endl;
+	G.dump(o);
 }
 
 int
@@ -56,8 +52,8 @@ main(int, char*[]) {
 	cout << endl;
 }{
 	edges_type E;
-	compute_and_print_SCCs(2, E, cout);
 	E.push_back(make_pair(1, 0));
+	compute_and_print_SCCs(2, E, cout);
 	cout << endl;
 }{
 	edges_type E;

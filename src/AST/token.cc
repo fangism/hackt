@@ -676,7 +676,9 @@ token_paramtype::what(ostream& o) const {
 // class token_bool_type method definitions
 
 CONSTRUCTOR_INLINE
-token_bool_type::token_bool_type(const char* dt) : token_datatype(dt) { }
+token_bool_type::token_bool_type(const char* dt) : token_datatype(dt)
+	, atomic(false)
+	{ }
 
 DESTRUCTOR_INLINE
 token_bool_type::~token_bool_type() { }
@@ -695,7 +697,9 @@ token_bool_type::check_definition(const context&) const {
 // class token_int_type method definitions
 
 CONSTRUCTOR_INLINE
-token_int_type::token_int_type(const char* dt) : token_datatype(dt) { }
+token_int_type::token_int_type(const char* dt) : token_datatype(dt)
+	, atomic(false)
+	{ }
 
 DESTRUCTOR_INLINE
 token_int_type::~token_int_type() { }
@@ -707,6 +711,12 @@ type_base::return_type
 token_int_type::check_definition(const context&) const {
 	STACKTRACE("token_int_type::check_build()");
 	// safe to use never_ptr on address of statically allocated definition
+#if 0
+	if (atomic) {
+		// TODO: implement eint like ebool
+		FINISH_ME_EXIT(Fang);
+	}
+#endif
 	return type_base::return_type(&int_traits::built_in_definition);
 }
 

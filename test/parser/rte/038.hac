@@ -1,0 +1,17 @@
+// "rte/038.hac"
+// copy-modified from 037.hac
+defproc foo (ebool x, y, w, z) {
+rte {
+x = y && z;
+w = z || y;
+}
+}
+
+foo bar, bq, ick;
+// create a chain
+rte {
+bq.y = bar.x;
+bq.z = bar.w;
+ick.z = bq.x;
+ick.y = bq.w;
+}

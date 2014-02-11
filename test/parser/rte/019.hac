@@ -1,0 +1,14 @@
+// "rte/019.hac"
+// copy-modified from 018.hac
+defproc foo (bool? x, w; bool! y, z) {
+x @[atomic];
+y @[atomic];
+w @[atomic];
+rte {
+// should error: x, w are read-only, defined externally
+x = y && z;
+w = z || y;
+}
+}
+
+foo bar;

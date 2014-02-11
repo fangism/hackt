@@ -382,6 +382,11 @@ extern const char* const yyrule[];
 	PRS::guarded_prs_list*	_prs_guarded_list;
 	PRS::macro*		_prs_macro;
 
+	RTE::body*		_rte_body;
+	RTE::body_item*		_rte_body_item;
+	RTE::assignment_list*	_rte_assignment_list;
+	RTE::assignment*	_rte_assignment;
+
 	SPEC::body*		_spec_body;
 	SPEC::directive_base*	_spec_directive_base;
 	SPEC::directive*	_spec_directive;
@@ -483,13 +488,14 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %token	<_node_position>	INSERT EXTRACT
 %token	<_node_position>	PLUSPLUS MINUSMINUS
 %token	<_node_position>	ASSIGN
+%token	<_node_position>	DOLLARDOLLAR
 %type	<_node_position>	loop_assoc_op
 
 /* _token_keyword: convert most of these to _keyword_position */
 %token	<_keyword_position>	NAMESPACE
 %token	<_keyword_position>	OPEN
 %token	<_keyword_position>	AS
-%token	<_keyword_position>	CHP_LANG HSE_LANG PRS_LANG SPEC_LANG
+%token	<_keyword_position>	CHP_LANG HSE_LANG PRS_LANG RTE_LANG SPEC_LANG
 %token	<_keyword_position>	TREE_LANG SUBCKT_LANG
 %token	<_keyword_position>	SKIP
 /* %token	<_keyword_position>	LOG	(deprecated) */
@@ -512,6 +518,8 @@ yyfreestacks(const short* yyss, const short* yyssp,
 /* _token_type */
 %token	<_token_int_type>	INT_TYPE
 %token	<_token_bool_type>	BOOL_TYPE
+%token	<_token_int_type>	EINT_TYPE
+%token	<_token_bool_type>	EBOOL_TYPE
 %token	<_token_pint_type>	PINT_TYPE
 %token	<_token_pbool_type>	PBOOL_TYPE
 %token	<_token_preal_type>	PREAL_TYPE
@@ -613,6 +621,7 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_generic_attribute>	generic_attribute
 %type	<_generic_attribute_list>	generic_attribute_list
 %type	<_generic_attribute_list>	generic_attribute_list_in_brackets
+%type	<_generic_attribute_list>	generic_attribute_list_in_brackets_optional
 /* %type	<_instance_alias>	instance_alias	*/
 %type	<_alias_list>	alias_list nonempty_alias_list
 %type	<_expr_list>	connection_actuals_list
@@ -692,6 +701,10 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_prs_guarded_body>	prs_else_clause
 /* %type	<_prs_guarded_body>	prs_else_clause_optional	*/
 %type	<_prs_macro>	prs_macro
+%type	<_rte_assignment_list>	rte_body_optional
+%type	<_rte_assignment_list>	rte_body
+%type	<_rte_body_item>	rte_body_item
+%type	<_rte_assignment>	rte_assignment
 %type	<_expr>	prs_expr prs_paren_expr prs_unary_expr
 %type	<_expr> prs_not prs_and prs_or
 %type	<_expr> prs_and_loop prs_or_loop
@@ -1156,8 +1169,8 @@ port_formal_id_list
 port_formal_id
 	/** update port formals: only dense arrays allowed, no sparse ranges */
 	/** forbid use of relaxed template arguments in port formals list? **/
-	: ID optional_dense_range_list
-		{ $$ = new port_formal_id($1, $2); }
+	: ID optional_dense_range_list generic_attribute_list_in_brackets_optional
+		{ $$ = new port_formal_id($1, $2, $3); }
 	;
 
 port_generic_type_ref
@@ -1296,6 +1309,10 @@ base_data_type
 	: INT_TYPE
 		{ $$ = $1; }
 	| BOOL_TYPE
+		{ $$ = $1; }
+	| EINT_TYPE
+		{ $$ = $1; }
+	| EBOOL_TYPE
 		{ $$ = $1; }
 	;
 
@@ -1482,9 +1499,6 @@ definition_body
 
 definition_body_item
 	: instance_item_extended { $$ = $1; }
-/** (moved to instance_item_extended)
-	| language_body { $$ = $1; }
- */
 	| type_alias { $$ = $1; }
 	;
 
@@ -1702,13 +1716,11 @@ generic_attribute_list_in_brackets
 		{ $$ = $2; WRAP_LIST($1, $2, $3); }
 	;
 
-/**
 generic_attribute_list_in_brackets_optional
-	: '@' generic_attributes_list_in_brackets
+	: '@' generic_attribute_list_in_brackets
 		{ DELETE_TOKEN($1); $$ = $2; }
 	| { $$ = NULL; }
 	;
-**/
 
 /* note: lvalue excludes member references, thus restricting to local scope */
 /* completing the relaxed template arguments of an instance */
@@ -1851,14 +1863,16 @@ language_body
 		{ WRAP_LIST($2, $3, $4); $$ = new CHP::body($1, $3); }
 	| HSE_LANG '{' hse_body_optional '}'
 		{ WRAP_LIST($2, $3, $4); $$ = new HSE::body($1, $3); }
-	| PRS_LANG member_index_expr_list_in_angles_optional 
-		'{' prs_body_optional '}'
-		{ WRAP_LIST($3, $4, $5); $$ = new PRS::body($1, $2, $4); }
 	/**
-		TODO: optional parameters are Vdd and GND replacements.
+		PRS: optional parameters are Vdd and GND replacements.
 		They won't be conventional template parameters, since
 		they reference bool instances, rather than values.
 	**/
+	| PRS_LANG member_index_expr_list_in_angles_optional 
+		'{' prs_body_optional '}'
+		{ WRAP_LIST($3, $4, $5); $$ = new PRS::body($1, $2, $4); }
+	| RTE_LANG '{' rte_body_optional '}'
+		{ WRAP_LIST($2, $3, $4); $$ = new RTE::body($1, $3); }
 	| lang_spec { $$ = $1; }
 	;
 
@@ -2330,8 +2344,6 @@ hse_assignment
 
 /*
 //--- Language: PRS ---
-// to do: add support for overriding default connection to Vdd, GND
-// for power/ground isolation, and other tricks, pass gating... <-> <+> <=>
 */
 
 prs_body_optional
@@ -2613,6 +2625,13 @@ spec_invariant
 		{ $$ = new SPEC::invariant($3, $5); 
 		DELETE_TOKEN($1); DELETE_TOKEN($2); DELETE_TOKEN($4);
 		DELETE_TOKEN($6); }
+	| DOLLARDOLLAR '(' expr ')'
+		{ $$ = new SPEC::invariant($3, NULL, true); 
+		DELETE_TOKEN($1); DELETE_TOKEN($2); DELETE_TOKEN($4); }
+	| DOLLARDOLLAR '(' expr ',' string ')'
+		{ $$ = new SPEC::invariant($3, $5, true); 
+		DELETE_TOKEN($1); DELETE_TOKEN($2); DELETE_TOKEN($4);
+		DELETE_TOKEN($6); }
 	;
 
 /* identical to prs_macro, but we call it a directive */
@@ -2644,6 +2663,38 @@ grouped_reference
 		{ $$ = new reference_group_construction($1, $2, $3); }
 	| member_index_expr
 		{ $$ = $1; }
+	;
+
+/*
+//--- Language: RTE ---
+*/
+
+rte_body_optional
+	: rte_body { $$ = $1; }
+	| { $$ = new RTE::assignment_list(); }
+	;
+
+rte_body
+	: rte_body rte_body_item
+		{ $$ = $1; $$->push_back($2); }
+	| rte_body_item
+		{ $$ = new RTE::assignment_list($1); }
+	;
+
+rte_body_item
+	: rte_assignment { $$ = $1; }
+/*
+	| rte_loop { $$ = $1; }
+	| rte_conditional { $$ = $1; }
+*/
+	;
+
+rte_assignment
+	: member_index_expr '=' expr ';'
+		{ $$ = new RTE::assignment($1, $3);
+			DELETE_TOKEN($2);
+			DELETE_TOKEN($4);
+		}
 	;
 
 /******************************************************************************

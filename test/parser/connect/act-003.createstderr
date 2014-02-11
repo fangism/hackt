@@ -43,7 +43,7 @@ Persistent Object Manager text dump:
 	39	##ADDR##	adimiref	0	#HEAD#	#TAIL#	17
 	40	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
 	41	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
-	42	##ADDR##	footprnt	0	#HEAD#	#TAIL#	552
+	42	##ADDR##	footprnt	0	#HEAD#	#TAIL#	524
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

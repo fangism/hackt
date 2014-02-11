@@ -237,7 +237,10 @@ if (&f == topfp) {	// at_top()
 #endif
 	visit_local<process_tag>(f, top_level);
 //	visit_local<bool_tag>(f, top_level);
-	f.get_prs_footprint().accept(*this);
+	if (f.has_prs_footprint()) {
+		f.get_prs_footprint().accept(*this);
+	}
+	nl->mark_used_nodes();	// have to do this even with no prs
 //	f.get_spec_footprint().accept(*this);	// ?
 
 #if NETLIST_CACHE_PARASITICS
@@ -508,7 +511,7 @@ netlist_generator::visit(const entity::PRS::footprint& r) {
 }
 }
 #endif	// NETLIST_INTERLEAVE_SUBCKT_RULES
-	current_netlist->mark_used_nodes();
+//	current_netlist->mark_used_nodes();		// moved to caller
 }	// end netlist_generator::visit(const PRS::footprint&)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1381,6 +1384,24 @@ netlist_generator::visit(const entity::SPEC::footprint&) {
 void
 netlist_generator::visit(const entity::SPEC::footprint_directive&) {
 	// nothing... yet
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+netlist_generator::visit(const entity::RTE::footprint&) {
+	// nothing... ever
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+netlist_generator::visit(const entity::RTE::footprint_assignment&) {
+	// nothing... ever
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+netlist_generator::visit(const entity::RTE::footprint_expr_node&) {
+	// nothing... ever
 }
 
 //=============================================================================

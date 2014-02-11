@@ -57,6 +57,7 @@
 #include "util/binders.hh"
 #include "util/utypes.h"
 #include "util/indent.hh"
+#include "util/swap_saver.hh"
 #include "util/tokenize.hh"
 #include "util/numformat.tcc"
 #if PRSIM_SET_FAST_ALLOCATOR
@@ -158,6 +159,7 @@ using util::auto_indent;
 using util::indent;
 using util::tokenize_char;
 using util::format_ostream_ref;
+using util::swap_saver;
 using entity::state_manager;
 using entity::global_entry_pool;
 using entity::bool_tag;
@@ -201,7 +203,7 @@ struct State::evaluate_return_type {
 
 	evaluate_return_type(const node_index_type ni,
 		const root_ex_type* const e, const pull_enum p, 
-		const pull_set ps, 
+		const pull_set& ps, 
 		const rule_type* const r, const rule_index_type ri) :
 		node_index(ni), root_ex(e), root_pull(p)
 			, root_rule(r), root_rule_index(ri)
@@ -445,6 +447,7 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 		timing_mode(TIMING_DEFAULT),
 		_dump_flags(dump_flags::no_owners), 
 		time_fmt(cout),
+		__atomic_updated_nodes(),
 		recent_exceptions(),
 		__shuffle_indices(0) {
 	STACKTRACE_VERBOSE;
@@ -880,6 +883,7 @@ State::reset_all_channels(void) {
 #if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
 bool
 State::resume_channel(channel& chan) {
+	// TODO: could make this static local, and clear() to re-use space
 	vector<env_event_type> temp;
 	chan.resume(*this, temp);
 #if PRSIM_TRACK_CAUSE_TIME
@@ -893,6 +897,7 @@ State::resume_channel(channel& chan) {
 #else
 bool
 State::resume_channel(const string& cn) {
+	// TODO: could make this static local, and clear() to re-use space
 	vector<env_event_type> temp;
 	if (_channel_manager.resume_channel(*this, cn, temp))	return true;
 #if PRSIM_TRACK_CAUSE_TIME
@@ -912,6 +917,7 @@ State::resume_channel(const string& cn) {
  */
 void
 State::resume_all_channels(void) {
+	// TODO: could make this static local, and clear() to re-use space
 	vector<env_event_type> temp;
 	_channel_manager.resume_all_channels(*this, temp);
 #if PRSIM_TRACK_CAUSE_TIME
@@ -1172,7 +1178,15 @@ State::append_mk_exclhi_ring(ring_set_type& r) {
 	const_iterator i(r.begin()), e(r.end());
 	for ( ; i!=e; ++i) {
 		const node_index_type ni = *i;
-		__get_node(ni).make_exclhi();
+		node_type& n(__get_node(ni));
+		if (n.is_atomic()) {
+			// this check occurs too early, never caught
+			// Q: could this be checked earlier, at create-time?
+			cerr << "Error: Atomic nodes may not participate in mk_excl rings.  ("
+				<< get_node_canonical_name(ni) << ')' << endl;
+			THROW_EXIT;
+		}
+		n.make_exclhi();
 #if PRSIM_MK_EXCL_BLOCKING_SET
 		mk_exhi_counter_map[ni].push_back(j);
 #endif
@@ -1203,7 +1217,15 @@ State::append_mk_excllo_ring(ring_set_type& r) {
 	const_iterator i(r.begin()), e(r.end());
 	for ( ; i!=e; ++i) {
 		const node_index_type ni = *i;
-		__get_node(ni).make_excllo();
+		node_type& n(__get_node(ni));
+		if (n.is_atomic()) {
+			// this check occurs too early, never caught
+			// Q: could this be checked earlier, at create-time?
+			cerr << "Error: Atomic nodes may not participate in mk_excl rings.  ("
+				<< get_node_canonical_name(ni) << ')' << endl;
+			THROW_EXIT;
+		}
+		n.make_excllo();
 #if PRSIM_MK_EXCL_BLOCKING_SET
 		mk_exlo_counter_map[ni].push_back(j);
 #endif
@@ -1541,6 +1563,8 @@ State::enqueue_event(const time_type t, const event_index_type ei) {
 	const node_type& n(get_node(ni));
 	ISE_INVARIANT(n.pending_event());
 	ISE_INVARIANT(n.get_event() == ei);
+	// atomic node updates never go through event queue
+	ISE_INVARIANT(!n.is_atomic());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1789,6 +1813,12 @@ State::set_node_time(const node_index_type ni, const value_enum val,
 	// we have ni = the canonically allocated index of the bool node
 	// just look it up in the node_pool
 	node_type& n(__get_node(ni));
+	if (n.is_atomic()) {
+		const string objname(get_node_canonical_name(ni));
+		cout << "Warning: ignoring attempt to set an atomic node `"
+			<< objname << "\'." << endl;
+		return ENQUEUE_REJECT;
+	}
 	const event_index_type pending = n.get_event();
 	const value_enum last_val = n.current_value();
 	const bool unchanged = (val == last_val);
@@ -1866,12 +1896,15 @@ if (!n.is_frozen() || f) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Without going through the event queue, set the value of the node
-	now.
+	Without going through the event queue, set the value of the node now.
+	Cause will be null, b/c comes from user.
+	Note: this can now be called for atomic node updates.
+	FIXME: needs to be re-entrant!
  */
 State::step_return_type
 State::set_node_immediately(const node_index_type ni, const value_enum val,
 		const bool force) {
+	STACKTRACE_BRIEF;
 	event_type e;	// default construct
 	e.node = ni;
 	e.val = val;
@@ -1889,7 +1922,13 @@ State::set_node_immediately(const node_index_type ni, const value_enum val,
 void
 State::freeze_node(const node_index_type ni) {
 	// Q: should nodes driven by channels be allowed to freeze?
-	__get_node(ni).freeze();
+	node_type& n(__get_node(ni));
+	if (!n.is_atomic()) {
+		n.freeze();
+	} else {
+		cerr << "Warning: atomic nodes cannot be frozen.  Ignoring."
+			<< endl;
+	}
 }
 #endif
 
@@ -3452,6 +3491,7 @@ State::step_return_type
 State::step(void) THROWS_STEP_EXCEPTION {
 	typedef	State::step_return_type		return_type;
 	STACKTRACE_VERBOSE;
+	__atomic_updated_nodes.clear();
 	if (event_queue.empty()) {
 		return return_type(INVALID_NODE_INDEX, INVALID_NODE_INDEX);
 	}
@@ -3507,9 +3547,10 @@ State::step_return_type
 State::execute_immediately(
 		const event_type& pe,
 		const time_type& ept) THROWS_STEP_EXCEPTION {
+	// FIXME: this needs to be re-entrant, due to atomic updates!
 	typedef	State::step_return_type		return_type;
 	STACKTRACE_VERBOSE;
-	ISE_INVARIANT(updated_nodes.empty());
+	ISE_INVARIANT(updated_nodes.empty());	// b/c of auto_flush_queues
 #if PRSIM_FCFS_UPDATED_NODES
 	ISE_INVARIANT(updated_nodes_queue.empty());
 #endif
@@ -3534,6 +3575,11 @@ State::execute_immediately(
 	const bool force = pe.forced();
 	const node_index_type ni = pe.node;
 	node_type& n(__get_node(ni));
+if (!n.is_atomic()) {
+	// FIXME: don't want atomic node propagation to clear exceptions
+	// cause by non-atomic nodes
+	recent_exceptions.clear();
+}
 //	ISE_INVARIANT(n.pending_event());	// must have been pending
 //	ISE_INVARIANT(n.get_event() == ei);	// must be consistent!
 	const value_enum prev = n.current_value();
@@ -3725,6 +3771,9 @@ if (eval_ordering_is_random()) {
 	// propagate_evaluation() may populate some structures for
 	// later re-evaluation.  These should start empty.
 	__keeper_check_candidates.clear();	// look for turned off rules
+	// atomic expressions never participte in keeper-checks
+	// however, they do participate in invariants, so the following 
+	const swap_saver<invariant_update_map_type> tmp(__invariant_update_map);
 	__invariant_update_map.clear();
 	for ( ; i!=e; ++i) {
 		// when evaluating a node as an expression, 
@@ -3736,22 +3785,7 @@ if (eval_ordering_is_random()) {
 			stop();
 		}
 	}
-	invariant_update_map_type::const_iterator
-		ii(__invariant_update_map.begin()),
-		ie(__invariant_update_map.end());
-	for ( ; ii!=ie; ++ii) {
-		const break_type E =
-			__diagnose_invariant(cerr,
-				ii->first.first, ii->first.second, 
-				ii->second, new_cause.node, new_cause.val);
-		if (UNLIKELY(E >= ERROR_BREAK)) {
-			stop();
-			if (UNLIKELY(E >= ERROR_INTERACTIVE)) {
-				record_exception(exception_ptr_type(
-					new invariant_exception(ni, E)));
-			}
-		}
-	}
+	handle_invariants(new_cause);
 }
 }
 	// Q: is this the best place to handle this?
@@ -3816,6 +3850,14 @@ if (n.in_channel()) {
 }	// auto-flush of pending queue happens here
 	// optional keeper check
 	if (keeper_check_fail_policy > ERROR_IGNORE) {
+		handle_keeper_checks(ni);
+	}
+	return return_type(ni, _ci);
+}	// end method execute_immediately()
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+State::handle_keeper_checks(const node_index_type ni) {
 //		cout << "checking floating..." << endl;
 		size_t first_thrown_node = INVALID_NODE_INDEX;
 		set<node_index_type>::const_iterator
@@ -3854,9 +3896,7 @@ if (n.in_channel()) {
 		}
 #undef E
 		// __keeper_check_candidates.clear();
-	}
-	return return_type(ni, _ci);
-}	// end method execute_immediately()
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if PRSIM_SETUP_HOLD
@@ -4307,6 +4347,27 @@ for ( ; i!=e; ++i) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
+State::handle_invariants(const event_cause_type& new_cause) {
+	const node_index_type ni = new_cause.node;
+	invariant_update_map_type::const_iterator
+		ii(__invariant_update_map.begin()),
+		ie(__invariant_update_map.end());
+	for ( ; ii!=ie; ++ii) {
+		const break_type E =
+			__diagnose_invariant(cerr,
+				ii->first.first, ii->first.second, 
+				ii->second, new_cause.node, new_cause.val);
+		if (UNLIKELY(E >= ERROR_BREAK)) {
+			stop();
+			if (UNLIKELY(E >= ERROR_INTERACTIVE)) {
+				record_exception(exception_ptr_type(
+					new invariant_exception(ni, E)));
+			}
+		}
+	}
+}
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
 State::record_exception(const exception_ptr_type& p) const {
 	STACKTRACE_BRIEF;
 	recent_exceptions.push_back(p);
@@ -4368,42 +4429,49 @@ void
 __debug_print_node_change(const node_index_type ni,
 		const pull_enum prev, const pull_enum next) {
 	DEBUG_STEP_PRINT("node " << ni << " from " <<
-		node_type::value_to_char[size_t(prev)] << " -> " <<
-		node_type::value_to_char[size_t(next)] << endl);
+		State::node_type::value_to_char[size_t(prev)] << " -> " <<
+		State::node_type::value_to_char[size_t(next)] << endl);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+struct State::eval_info {
+	// process state corresponding to global expr index
+	process_sim_state*			ps;
+	// if this is NULL, then propagation stopped before root reached
+	node_index_type				root_node;
+	expr_index_type				root_expr;
+	const expr_struct_type*			root_struct;
+	bool					terminate_propagation;
+	eval_info() : ps(NULL), root_node(INVALID_NODE_INDEX), 
+		root_expr(INVALID_EXPR_INDEX), root_struct(NULL),
+		terminate_propagation(false) { }
+};
+
 /**
-	Evaluates expression changes without propagating/generating events.  
-	Useful for expression state reconstruction from checkpoint.  
-	\return pair(root expression, new pull value) if event propagated
-		to the root, else (INVALID_NODE_INDEX, whatever)
-	\param ui the expression id used to traverse up tree.  
-	\param prev previous value of node.
-		Locally used as old pull state of subexpression.  
-	\param next new value of node.
-		Locally used as new pull state of subexpression.  
-	Side effect (sort of): trace of expressions visited is in
-		the __scratch_expr_trace array.  
-	CAUTION: distinguish between expression value and pull-state!
+	When propagation reaches a node,
+	root_node refers the updated node,
+	root_expr refers the the rule/expr that pulls that node.
  */
 // inline
-State::evaluate_return_type
-State::evaluate(
-		// const node_index_type ni,
-		expr_index_type gui, 
-		pull_enum prev, pull_enum next) {
-	STACKTRACE_VERBOSE_STEP;
+State::eval_info
+State::evaluate_kernel(const expr_index_type gui, 
+		pull_enum& prev, pull_enum& next) {
+//	STACKTRACE_VERBOSE_STEP;
 	DEBUG_STEP_PRINT("node " << ni << " from " <<
 		node_type::translate_value_to_char(prev) << " -> " <<
 		node_type::translate_value_to_char(next) << endl);
+	eval_info ret;
+	const expr_struct_type*& s(ret.root_struct);
+	node_index_type& ui(ret.root_node);
+	expr_index_type& ri(ret.root_expr);	// lags behind ui by 1 iteration
 	expr_state_type* u;
-	// first, localize evaluation to a single process!
-	const expr_struct_type* s;
 	process_sim_state& ps(lookup_global_expr_process(gui));
-	expr_index_type ui = ps.local_expr_index(gui);
+	ret.ps = &ps;
+	ui = ps.local_expr_index(gui);
+	// evaluation always happens local to a process
 	const unique_process_subgraph& pg(ps.type());
-	expr_index_type ri;
+
 #define	STRUCT	s
 do {
 	pull_enum old_pull, new_pull;	// pulling state of the subexpression
@@ -4443,7 +4511,8 @@ do {
 	if (old_pull == new_pull) {
 		// then the pull-state did not change.
 		DEBUG_STEP_PRINT("end of propagation." << endl);
-		return evaluate_return_type();
+		ret.terminate_propagation = true;
+		return ret;	// break
 	}
 	// already accounted for negation in pull_state()
 	// NOTE: cannot equate pull with value!
@@ -4452,6 +4521,43 @@ do {
 	ri = ui;		// save previous index
 	ui = STRUCT->parent;
 } while (!STRUCT->is_root());
+	// if this is reached, we made it to a root rule
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Evaluates expression changes without propagating/generating events.  
+	Useful for expression state reconstruction from checkpoint.  
+	\return pair(root expression, new pull value) if event propagated
+		to the root, else (INVALID_NODE_INDEX, whatever)
+	\param ui the expression id used to traverse up tree.  
+	\param prev previous value of node.
+		Locally used as old pull state of subexpression.  
+	\param next new value of node.
+		Locally used as new pull state of subexpression.  
+	Side effect (sort of): trace of expressions visited is in
+		the __scratch_expr_trace array.  
+	CAUTION: distinguish between expression value and pull-state!
+ */
+// inline
+State::evaluate_return_type
+State::evaluate(
+		// const node_index_type ni,
+		const expr_index_type gui, 
+		pull_enum prev, pull_enum next) {
+	STACKTRACE_VERBOSE_STEP;
+	evaluate_return_type ret;	// intended for only non-atomic nodes
+	// note: prev, next are modified by *reference*
+	const eval_info ei(evaluate_kernel(gui, prev, next));
+	const node_index_type ui = ei.root_node;
+	const bool terminate_propagation = ei.terminate_propagation;
+if (!terminate_propagation) {
+	const process_sim_state& ps(*ei.ps);
+	const unique_process_subgraph& pg(ps.type());
+	const expr_index_type ri = ei.root_expr;
+	const expr_struct_type* s = ei.root_struct;
+	// need to check because of 'break' above
 	DEBUG_STEP_PRINT("propagated to root rule" << endl);
 	// made it to root
 	// negation already accounted for
@@ -4466,9 +4572,27 @@ if (!r.is_invariant()) {
 	node_type& n(__get_node(oni));
 	const pull_set ops(n, weak_rules_enabled());
 	const bool dir = r.direction();
+#if PRSIM_WEAK_RULES
+	const bool is_weak = r.is_weak();
+#endif
+if (UNLIKELY(n.is_atomic())) {
+	// atomic nodes are only defined by pull-up
+	INVARIANT(dir);
+#if PRSIM_WEAK_RULES
+	INVARIANT(!is_weak);
+#endif
+	// the (nonexistent) pull-dn is effectively the opposite of pull-up
+	// when one is on, the other is off, and vice versa
+	// iterate over fanout here and enqueue into worklist
+	// update this node's value immediately and evaluate its fanouts
+	// yes, interpret pull_enum as value_enum
+	__atomic_updated_nodes.insert(std::make_pair(oni, n.current_value()));
+	// ignore return value, first old-value is the correct one,
+	// in case multiple paths lead to updating the same node.
+}
 	fanin_state_type& fs(n.get_pull_struct(dir
 #if PRSIM_WEAK_RULES
-		, r.is_weak()
+		, is_weak
 #endif
 		));
 	// root rules of a node are disjunctive (OR-combination)
@@ -4487,20 +4611,24 @@ if (!r.is_invariant()) {
 	if (old_pull == new_pull) {
 		// then the pull-state did not change.
 		DEBUG_STEP_PRINT("end of propagation." << endl);
-		return evaluate_return_type();
+	} else {
+		next = fs.pull();
+		ret = evaluate_return_type(oni, STRUCT, next,
+			ops, &r, ps.global_expr_index(ri));
 	}
-	next = fs.pull();
-	return evaluate_return_type(oni, STRUCT, next,
-		ops, &r, ps.global_expr_index(ri));
-} else {
+} else {	// else this is an invariant
+	DEBUG_STEP_PRINT("participating in invariant" << endl);
 	// then this rule doesn't actually pull a node, is an invariant
 	// aggregate updates before diagnosing invariant violation
 	const rule_reference_type rr(pid, ri);
 	__invariant_update_map[rr] = next;
 	// only the last one will take effect
-	return evaluate_return_type();	// continue
 }
 #undef	STRUCT
+}	// end if !terminate_propagation
+// else propagation did not reach root, just stop
+
+	return ret;
 }	// end State::evaluate()
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -4756,6 +4884,21 @@ State::propagate_evaluation(
 		size_t(next) << endl);
 	// frozen nodes will not switch when expressions propagate to their root
 	break_type err = ERROR_NONE;
+	if (n.is_atomic()) {
+		// possible that updated_nodes/queue is !empty, due to fanout
+		// so we must save it aside, restore it after done with atomic update
+		const swap_saver<updated_nodes_type> swp1(updated_nodes);
+#if PRSIM_FCFS_UPDATED_NODES
+		const swap_saver<updated_nodes_queue_type> swp2(updated_nodes_queue);
+#endif
+		// yes, interpret pull_enum as value_enum
+		const step_return_type
+			sr(set_node_immediately(ui, value_enum(next), false));
+		// ignore return value?
+		// TODO: how to handle multiple atomic updates in a single step?
+		// especially for watching nodes?
+		return err;
+	}
 #if PRSIM_UPSET_NODES
 	if (n.is_frozen()) {
 		// even if new pull_state is off
@@ -5353,6 +5496,40 @@ State::print_status_frozen(ostream& o, const bool v) const {
 	return o << std::flush;
 }
 #endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+State::print_watched_atomic_updated_nodes(ostream& o) const {
+	atomic_updated_nodes_type::const_iterator
+		i(__atomic_updated_nodes.begin()),
+		e(__atomic_updated_nodes.end());
+for ( ; i!=e; ++i) {
+	const node_type& n(get_node(i->first));
+	if (n.is_watchpoint() || watching_all_nodes()) {
+	if (n.current_value() != i->second) {
+		const string nodename(get_node_canonical_name(i->first));
+		format_ostream_ref(o << '\t', time_fmt) << time() << '\t';
+		n.dump_value(o << nodename << " : ");
+	// FIXME: causality tracking for atomic nodes and expressions
+#if 0
+		const node_index_type ci = GET_CAUSE(r);
+		if (ci && s.show_cause()) {
+			const string causename(s.get_node_canonical_name(ci));
+			const State::node_type& c(s.get_node(ci));
+			c.dump_value(o << "\t[by " << causename << ":=") << ']';
+		}
+		if (s.show_tcounts()) {
+			o << "\t(" << n.tcount << " T)";
+		}
+#else
+		o << "\t<atomic>";
+#endif
+		o << endl;
+	}
+	}
+}
+	return o;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -6338,7 +6515,11 @@ do {
 /**
 	Why is a node not a certain value?
 	Q: X nodes are not followed?
-	\param d if true, ask why node isn't pulled up, else ... why not down
+	\param dir is value.
+		if true, ask why node isn't pulled up, else ... why not down
+		This is irrelevant to atomic nodes.
+	\param why_not is true if query is negated (why *isn't* node at value?)
+		This is irrelevant to atomic nodes.
 	\param u the current stack of visited nodes, for cycle detection, 
 		is pushed and popped like a stack.
 	\param v the set of all visited nodes, for cross-referencing
@@ -6357,6 +6538,8 @@ State::__node_why_not(ostream& o, const node_index_type ni,
 	n.dump_value(o << auto_indent << nn << ":");
 if (p.second) {
 if (y.second) {
+	// only consider pull-ups for atomics
+//	const bool dir = _dir || n.is_atomic();
 	// inserted uniquely
 	// inspect pull state (and event queue)
 	const event_index_type pe = n.get_event();
@@ -6371,7 +6554,6 @@ if (y.second) {
 			<< endl;
 		// check that pending event's value matches
 	} else {
-		const pull_enum pull_query = why_not ?  PULL_OFF : PULL_ON;
 		const indent __ind_nd(o, verbose ? "." : "  ");
 		// only check for the side that is off
 		const pull_set pp(n, weak_rules_enabled());
@@ -6388,7 +6570,9 @@ if (y.second) {
 			const bool from_channel =
 				node_is_driven_by_channel(ni);
 			if (n.has_fanin() || from_channel) {
-			if (!why_not && !from_channel) {
+			if (n.is_atomic()) {
+				o << ", atomic";
+			} else if (!why_not && !from_channel) {
 				o << ", state-holding";
 			}
 			} else {
@@ -6403,6 +6587,15 @@ if (y.second) {
 		// can't use pi, wpi
 		// unroll fanin rules: iterate over all relevant rules
 		if (!frozen) {
+		const pull_enum pull_query = why_not ? PULL_OFF : PULL_ON;
+		if (n.is_atomic()) {
+		if (ps == pull_query) {
+			// always query the pull-up
+			// for pull-dn query, negate why_not
+			__root_expr_why_not(o, ni, true, NORMAL_RULE, limit,
+				why_not ^ !dir, verbose, u, v);
+		}
+		} else {
 		if (ps == pull_query) {
 			__root_expr_why_not(o, ni, dir, NORMAL_RULE, limit, why_not, verbose, u, v);
 		}
@@ -6411,6 +6604,7 @@ if (y.second) {
 			__root_expr_why_not(o, ni, dir, WEAK_RULE, limit, why_not, verbose, u, v);
 		}
 #endif
+		}	// end if n.is_atomic()
 		if (n.in_channel()) {
 			// ask channel why it has not driven the node
 			_channel_manager.__node_why_not(*this, o, 

@@ -1,0 +1,3 @@
+Error: cannot apply non-atomic attribute to atomic bool.
+Error encountered during module::create.
+ERROR in creating.  Aborting.

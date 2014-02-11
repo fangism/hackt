@@ -1,0 +1,5 @@
+Error: cannot alias atomic and non-atomic bools.
+Error connecting: y[0][0]
+	and:  bar.x[0][0]
+Error encountered during module::create.
+ERROR in creating.  Aborting.

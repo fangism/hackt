@@ -8,7 +8,7 @@ Persistent Object Manager text dump:
 	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	6	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	7	##ADDR##	procdefn	0	#HEAD#	#TAIL#	123
+	7	##ADDR##	procdefn	0	#HEAD#	#TAIL#	127
 	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	10	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
@@ -33,8 +33,8 @@ Persistent Object Manager text dump:
 	29	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
 	30	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	31	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	32	##ADDR##	footprnt	0	#HEAD#	#TAIL#	362
-	33	##ADDR##	procdefn	0	#HEAD#	#TAIL#	126
+	32	##ADDR##	footprnt	0	#HEAD#	#TAIL#	334
+	33	##ADDR##	procdefn	0	#HEAD#	#TAIL#	130
 	34	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	35	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	36	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	33
@@ -58,8 +58,8 @@ Persistent Object Manager text dump:
 	54	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
 	55	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	56	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	57	##ADDR##	footprnt	0	#HEAD#	#TAIL#	362
-	58	##ADDR##	procdefn	0	#HEAD#	#TAIL#	124
+	57	##ADDR##	footprnt	0	#HEAD#	#TAIL#	334
+	58	##ADDR##	procdefn	0	#HEAD#	#TAIL#	128
 	59	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	60	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
 	61	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
@@ -84,7 +84,7 @@ Persistent Object Manager text dump:
 	80	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	81	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
 	82	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	83	##ADDR##	footprnt	0	#HEAD#	#TAIL#	570
+	83	##ADDR##	footprnt	0	#HEAD#	#TAIL#	542
 	84	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	85	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	86	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
@@ -105,7 +105,7 @@ Persistent Object Manager text dump:
 	101	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	28
 	102	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	103	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	104	##ADDR##	footprnt	0	#HEAD#	#TAIL#	665
+	104	##ADDR##	footprnt	0	#HEAD#	#TAIL#	637
 	105	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	106	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
