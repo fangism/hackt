@@ -624,6 +624,8 @@ protected:
 					global_expr_process_id_map_type;
 #endif
 #endif
+	typedef map<const entity::footprint*, process_index_type>
+						process_footprint_map_type;
 	/**
 		Collection of unique process footprints.
 	 */
@@ -644,9 +646,15 @@ private:
 		Collection of node states.
 	 */
 	node_pool_type				node_pool;
+	/**
+		Translates unique prs_footprint to unique process index.  
+	 */
+	process_footprint_map_type		process_footprint_map;
 	// TODO: per process instance attributes!
 	/**
 		Collection of unique process footprints.  
+		This is contructed and populated by ExprAlloc,
+		but then preserved for lookup.
 	 */
 	unique_process_pool_type		unique_process_pool;
 #if PRSIM_SEPARATE_PROCESS_EXPR_MAP

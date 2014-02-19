@@ -375,6 +375,7 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 		module_state_base(m, "prsim> "), 
 		expr_alloc_flags(f),
 		node_pool(),
+		process_footprint_map(),
 		unique_process_pool(), 
 #if PRSIM_SEPARATE_PROCESS_EXPR_MAP
 		global_expr_process_id_map(), 

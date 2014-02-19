@@ -69,8 +69,6 @@ public:
 	typedef	state_type::expr_state_type		expr_state_type;
 	typedef	expr_struct_type			expr_type;
 	typedef	unique_process_subgraph			unique_type;
-	typedef	map<const entity::footprint*, process_index_type>
-						process_footprint_map_type;
 	typedef	unique_type::expr_pool_type		expr_pool_type;
 	typedef	unique_type::graph_node_type		graph_node_type;
 	typedef	unique_type::expr_graph_node_pool_type	graph_node_pool_type;
@@ -93,10 +91,6 @@ protected:
 		Running total of the number of global expressions.
 	 */
 	size_t					total_exprs;
-	/**
-		Translates unique prs_footprint to unique process index.  
-	 */
-	process_footprint_map_type		process_footprint_map;
 	/// the expression index last returned
 	expr_index_type				ret_ex_index;
 public:

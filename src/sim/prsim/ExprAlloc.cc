@@ -270,7 +270,6 @@ ExprAlloc::ExprAlloc(state_type& _s,
 		g(NULL), 
 		current_process_index(0), 	// to represent top-level
 		total_exprs(FIRST_VALID_GLOBAL_EXPR), 	// non-zero!
-		process_footprint_map(), 	// empty
 		ret_ex_index(INVALID_EXPR_INDEX), 
 		suppress_keeper_rule(false), 
 		temp_rule(NULL),
@@ -552,14 +551,15 @@ size_t
 ExprAlloc::auto_create_unique_process_graph(const footprint& gpfp) {
 	STACKTRACE_VERBOSE;
 	INVARIANT(!unique_pass);
-	typedef	process_footprint_map_type::const_iterator	const_iterator;
+	typedef	state_type::process_footprint_map_type::const_iterator
+						const_iterator;
 	size_t type_index;	// unique process type index
-	const const_iterator f(process_footprint_map.find(&gpfp));
-if (f == process_footprint_map.end()) {
+	const const_iterator f(state.process_footprint_map.find(&gpfp));
+if (f == state.process_footprint_map.end()) {
 	const value_saver<bool> __u(unique_pass, true);
 	type_index = state.unique_process_pool.size();
 	STACKTRACE_INDENT_PRINT("first time with this type, assigned id " << type_index << endl);
-	process_footprint_map[&gpfp] = type_index;
+	state.process_footprint_map[&gpfp] = type_index;
 
 	const state_instance<bool_tag>::pool_type&
 		bmap(gpfp.get_instance_pool<bool_tag>());
