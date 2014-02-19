@@ -75,6 +75,7 @@ DEFAULT_STATIC_TRACE
 #include "util/numformat.tcc"
 #include "util/libc.h"
 #include "util/memory/excl_malloc_ptr.hh"
+#include "util/STL/functional.hh"	// for ternary_function
 #include "util/stacktrace.hh"
 
 DEFAULT_STATIC_TRACE
@@ -156,11 +157,41 @@ using parser::process_index;
 using parser::bool_index;
 
 //=============================================================================
+// type stack features
+// new: ability to reference type-local instances
+typedef	std::stack<entity::footprint*>	type_stack_type;
+class type_scope_manager : public type_stack_type {
+public:
+
+	using type_stack_type::push;
+	using type_stack_type::pop;
+	using type_stack_type::top;
+	using type_stack_type::empty;
+
+	bool
+	in_local_type(void) const { return !empty(); }
+
+	entity::footprint&
+	current_type(void) const {
+		INVARIANT(!empty());
+		return *top();
+	}
+
+};	// end struct type_scope_manager
+
+// commands: pusht, popt, pwt, types (no ct)
+// context commands: ls, any stateless, scope-local query commands
+// forbidden commands: cd, anything that references global state
+
+static type_scope_manager		type_stack;
+
+//=============================================================================
 // directory features
 
 /**
 	Define to 1 to use directory scope features.
 	TODO: these functions could be shared, in sim/directory.{h,cc}
+	Status: has been working for long time
  */
 #define	AUTO_PREPEND_WORKING_DIR	1
 
@@ -183,6 +214,41 @@ nonempty_abs_dir(const string& s) {
 }
 
 #if AUTO_PREPEND_WORKING_DIR
+using std::ptr_fun;
+
+/**
+	These dispatch wrappers behavior depend on the current context,
+	whether or not we are in a local type scope.
+	For type-local contexts, ignore the 'current working directory'.
+	For global (top-level) scope, prepend 'cwd'.
+ */
+template <class F>	// f should be wrapped in ptr_fun
+typename F::result_type
+dispatch_parser(F f, const string& s, const entity::module& m, bool proc) {
+if (type_stack.in_local_type()) {
+	return f(s, type_stack.current_type());
+} else if (proc) {
+	return f(nonempty_abs_dir(s), m.get_footprint());
+} else {
+	// automatically prepend working directory
+	return f(CommandRegistry::prepend_working_dir(s), m.get_footprint());
+}
+}
+
+template <class F>	// f should be wrapped in ptr_fun
+typename F::result_type
+dispatch_parser(F f, const string& s, const entity::module& m, 
+		vector<size_t>& r, bool proc) {
+if (type_stack.in_local_type()) {
+	return f(s, type_stack.current_type(), r);
+} else if (proc) {
+	return f(nonempty_abs_dir(s), m.get_footprint(), r);
+} else {
+	// automatically prepend working directory
+	return f(CommandRegistry::prepend_working_dir(s), m.get_footprint(), r);
+}
+}
+
 // wrap around definitions in "parser/instref.h"
 static
 // bool_index
@@ -190,9 +256,8 @@ node_index_type
 parse_node_to_index(const string& s, const entity::module& m) {
 	STACKTRACE_VERBOSE;
 	STACKTRACE_INDENT_PRINT("Parsing node(s): " << s << endl);
-	// automatically prepend working directory
-	return parser::parse_node_to_index(
-		CommandRegistry::prepend_working_dir(s), m.get_footprint()).index;
+	return dispatch_parser(ptr_fun(parser::parse_node_to_index),
+		s, m, false).index;
 }
 
 #if PRSIM_NODE_AGGREGATE_ARGUMENTS
@@ -200,8 +265,8 @@ static
 bool
 parse_nodes_to_indices(const string& s, const entity::module& m, 
 		vector<node_index_type>& r) {
-	return parser::parse_nodes_to_indices(
-		CommandRegistry::prepend_working_dir(s), m.get_footprint(), r);
+	return dispatch_parser(ptr_fun(parser::parse_nodes_to_indices),
+		s, m, r, false);
 }
 #endif
 
@@ -209,9 +274,8 @@ static
 process_index
 parse_process_to_index(const string& s, const entity::module& m) {
 	STACKTRACE_VERBOSE;
-	// automatically prepend working directory
-	const string t(nonempty_abs_dir(s));
-	return parser::parse_process_to_index(t, m.get_footprint());
+	return dispatch_parser(ptr_fun(parser::parse_process_to_index),
+		s, m, true);
 }
 
 #if PRSIM_PROCESS_AGGREGATE_ARGUMENTS
@@ -219,8 +283,8 @@ static
 bool
 parse_processes_to_indices(const string& s, const entity::module& m, 
 		vector<process_index_type>& r) {
-	return parser::parse_processes_to_indices(
-		CommandRegistry::prepend_working_dir(s), m.get_footprint(), r);
+	return dispatch_parser(ptr_fun(parser::parse_processes_to_indices),
+		s, m, r, false);
 }
 #endif
 
@@ -228,16 +292,20 @@ static
 int
 parse_name_to_what(ostream& o, const string& s, const entity::module& m) {
 	STACKTRACE_VERBOSE;
+if (type_stack.in_local_type()) {
+	return parser::parse_name_to_what(o, s, type_stack.current_type());
+} else {
 	return parser::parse_name_to_what(o, 
 		CommandRegistry::prepend_working_dir(s), m.get_footprint());
+}
 }
 
 static
 entity::global_indexed_reference
 parse_global_reference(const string& s, const entity::module& m) {
 	STACKTRACE_VERBOSE;
-	return parser::parse_global_reference(
-		CommandRegistry::prepend_working_dir(s), m.get_footprint());
+	return dispatch_parser(ptr_fun(parser::parse_global_reference_default),
+		s, m, false);
 }
 
 #if 0
@@ -257,8 +325,8 @@ int
 parse_name_to_get_subnodes(const string& s, const entity::module& m,
 		vector<size_t>& v) {
 	STACKTRACE_VERBOSE;
-	const string t(nonempty_abs_dir(s));
-	return parser::parse_name_to_get_subnodes(t, m.get_footprint(), v);
+	return dispatch_parser(ptr_fun(parser::parse_name_to_get_subnodes),
+		s, m, v, true);
 }
 
 static

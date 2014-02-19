@@ -190,6 +190,12 @@ extern
 global_indexed_reference
 parse_global_reference(const string&, const footprint&);
 
+inline
+global_indexed_reference
+parse_global_reference_default(const string& s, const footprint& f) {
+	return parse_global_reference(s, f);
+}
+
 #if !REUSE_PARSE_GLOBAL_FOR_LOCAL
 extern
 global_indexed_reference
