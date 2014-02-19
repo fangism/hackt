@@ -49,6 +49,40 @@ struct _Select2nd : public unary_function<_Pair, typename _Pair::second_type> {
 #endif	// HAVE_STD__SELECT2ND
 
 //=============================================================================
+// well, I want a functor with 3 arguments!
+
+template <class _Arg1, class _Arg2, class _Arg3, class _Result>
+struct ternary_function {
+	typedef _Arg1 first_argument_type;
+	typedef _Arg2 second_argument_type;
+	typedef _Arg3 third_argument_type;
+	typedef _Result result_type;
+};
+
+template <class _Arg1, class _Arg2, class _Arg3, class _Result>
+class pointer_to_ternary_function
+	: public ternary_function<_Arg1, _Arg2, _Arg3, _Result> {
+protected:
+	_Result (*_M_ptr)(_Arg1, _Arg2, _Arg3);
+public:
+	pointer_to_ternary_function() {}
+
+	explicit
+	pointer_to_ternary_function(_Result (*__x)(_Arg1, _Arg2, _Arg3))
+	: _M_ptr(__x) {}
+
+	_Result
+	operator()(_Arg1 __x, _Arg2 __y, _Arg3 __z) const
+		{ return _M_ptr(__x, __y, __z); }
+};	// end struct ternary function
+
+template <class _Arg1, class _Arg2, class _Arg3, class _Result>
+inline pointer_to_ternary_function<_Arg1, _Arg2, _Arg3, _Result>
+ptr_fun(_Result (*__x)(_Arg1, _Arg2, _Arg3)) {
+	return pointer_to_ternary_function<_Arg1, _Arg2, _Arg3, _Result>(__x);
+}
+
+//=============================================================================
 }	// end namespace std
 
 #endif	// __UTIL_STL_FUNCTIONAL_H__
