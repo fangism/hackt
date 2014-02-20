@@ -553,25 +553,22 @@ ExprAlloc::auto_create_unique_process_graph(const footprint& gpfp) {
 	INVARIANT(!unique_pass);
 	typedef	state_type::process_footprint_map_type::const_iterator
 						const_iterator;
-	size_t type_index;	// unique process type index
-	const const_iterator f(state.process_footprint_map.find(&gpfp));
-if (f == state.process_footprint_map.end()) {
+	const pair<size_t, bool> f(state.allocate_unique_process_graph(&gpfp));
+	const size_t& type_index(f.first);	// unique process type index
+if (f.second) {		// then was newly allocated
 	const value_saver<bool> __u(unique_pass, true);
-	type_index = state.unique_process_pool.size();
 	STACKTRACE_INDENT_PRINT("first time with this type, assigned id " << type_index << endl);
-	state.process_footprint_map[&gpfp] = type_index;
 
 	const state_instance<bool_tag>::pool_type&
 		bmap(gpfp.get_instance_pool<bool_tag>());
 	const node_index_type node_pool_size = bmap.local_entries();
 	STACKTRACE_INDENT_PRINT("node_pool_size = " << node_pool_size << endl);
-		state.unique_process_pool.push_back(unique_process_subgraph());
+	// newly allocated is always at back()
 	unique_process_subgraph& u(state.unique_process_pool.back());
-	u._footprint = &gpfp;
+	u.local_faninout_map.resize(node_pool_size);
 	const value_saver<unique_process_subgraph*> tmp(g, &u);
 	// resize the faninout_struct array as if it were local nodes
 	// kludgy way of inferring the correct footprint
-	u.local_faninout_map.resize(node_pool_size);
 	// map is now sized without sentinel, will need index adjustment!
 	STACKTRACE_INDENT_PRINT("u.fan_map.size = " << u.local_faninout_map.size() << endl);
 	visit_rules_and_directives(gpfp);
@@ -587,7 +584,6 @@ if (f == state.process_footprint_map.end()) {
 	// auto-restore graph pointer
 } else {
 	// found existing type
-	type_index = f->second;
 	STACKTRACE_INDENT_PRINT("found existing type " <<
 		type_index << endl);
 }

@@ -52,6 +52,7 @@ The following commands pertain to command aliases.
 
 @c directoy commands
 @include cmd/directories.texi
+@include cmd/type-scope.texi
 
 Shell commands may be executed by prefixing a line with '!'.  
 For example, @samp{!whoami}.  

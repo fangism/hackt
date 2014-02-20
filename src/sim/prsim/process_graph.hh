@@ -5,8 +5,8 @@
 	of the same type.
  */
 
-#ifndef	__HAC_SIM_PRSIM_PROCESS_GRAPH_H__
-#define	__HAC_SIM_PRSIM_PROCESS_GRAPH_H__
+#ifndef	__HAC_SIM_PRSIM_PROCESS_GRAPH_HH__
+#define	__HAC_SIM_PRSIM_PROCESS_GRAPH_HH__
 
 #include <iosfwd>
 #include <map>
@@ -168,7 +168,12 @@ struct hold_constraint_entry : public timing_constraint_entry {
 
 #endif
 #if PRSIM_TIMING_BACKANNOTATE
-typedef timing_constraint_entry			min_delay_entry;
+struct min_delay_entry : public timing_constraint_entry	{
+	// if !null, predicate refers to bool/ebool that must be true
+	// for this min-delay constraint to apply.
+	// a null-predicate implies true; always applied
+	node_index_type				predicate;
+};	// end struct min_delay_entry
 #endif
 
 //=============================================================================
@@ -294,22 +299,27 @@ struct unique_process_subgraph {
 #endif
 #if PRSIM_TIMING_BACKANNOTATE
 	// initially do just a simple any-to-any direction min delay
+	// TODO: account for rise/fall/unate direction
 	typedef	node_index_type			min_delay_key_type;
 	/**
 		key: target node
-		value: set of local timing (imn-delay) arcs,
+		value: set of local timing (min-delay) arcs,
 			relative to reference nodes
 		When target node events are scheduled, must consider the
-			max of min_delay times over all reference nodes.
+			max of +min_delay times over all reference nodes.
 	 */
 	typedef	map<min_delay_key_type, vector<min_delay_entry> >
 						min_delay_set_type;
+	/**
+		Q: checkpoint?
+	 */
 	min_delay_set_type			min_delays;
 #endif
 
 	struct memory_accumulator;
 
-	unique_process_subgraph();
+	explicit
+	unique_process_subgraph(const entity::footprint* = NULL);
 	~unique_process_subgraph();
 
 	node_index_type
@@ -343,6 +353,14 @@ struct unique_process_subgraph {
 	void
 	has_not_local_fanin_map(vector<bool>&) const;
 
+#if PRSIM_TIMING_BACKANNOTATE
+	void
+	add_min_delay_constraint(const node_index_type ref,
+		const node_index_type tgt,
+		const rule_time_type del,
+		const node_index_type pred = INVALID_NODE_INDEX);
+#endif
+
 	ostream&
 	dump_invariant_message(ostream&, const expr_index_type, 
 		const char*, const char*) const;
@@ -369,5 +387,5 @@ struct unique_process_subgraph {
 }	// end namespace SIM
 }	// end namespace HAC
 
-#endif	// __HAC_SIM_PRSIM_PROCESS_GRAPH_H__
+#endif	// __HAC_SIM_PRSIM_PROCESS_GRAPH_HH__
 

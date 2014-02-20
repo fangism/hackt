@@ -665,6 +665,19 @@ State::initialize(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+pair<size_t, bool>
+State::allocate_unique_process_graph(const footprint* f) {
+	const pair<process_footprint_map_type::iterator, bool>
+		p(process_footprint_map.insert(
+			std::make_pair(f, unique_process_pool.size())));
+	if (p.second) {
+		unique_process_pool.push_back(
+			unique_process_subgraph(f));
+	}
+	return std::make_pair(p.first->second, p.second);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	A node is driven if it has fanin rule, or can be driven from channel.
 	Has nothing to do with the state of the node.

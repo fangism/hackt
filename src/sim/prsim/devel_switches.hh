@@ -164,6 +164,7 @@
 	Define to 1 to enable timing-backannotation via min-delays (arcs)
 	sparsely specified in unique_process_subgraph.
 	Goal: 1
+	Status: just begun
  */
 #define	PRSIM_TIMING_BACKANNOTATE	(1 && PRSIM_TRACK_LAST_EDGE_TIME)
 

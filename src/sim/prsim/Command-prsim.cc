@@ -68,6 +68,7 @@ static CommandCategory
 DEFAULT_STATIC_TRACE
 
 #include "parser/instref.hh"
+#include "parser/type.hh"
 #include "Object/module.hh"
 #include "Object/def/footprint.hh"
 
@@ -159,7 +160,7 @@ using parser::bool_index;
 //=============================================================================
 // type stack features
 // new: ability to reference type-local instances
-typedef	std::stack<entity::footprint*>	type_stack_type;
+typedef	std::stack<unique_process_subgraph*>	type_stack_type;
 class type_scope_manager : public type_stack_type {
 public:
 
@@ -171,7 +172,7 @@ public:
 	bool
 	in_local_type(void) const { return !empty(); }
 
-	entity::footprint&
+	unique_process_subgraph&
 	current_type(void) const {
 		INVARIANT(!empty());
 		return *top();
@@ -226,7 +227,7 @@ template <class F>	// f should be wrapped in ptr_fun
 typename F::result_type
 dispatch_parser(F f, const string& s, const entity::module& m, bool proc) {
 if (type_stack.in_local_type()) {
-	return f(s, type_stack.current_type());
+	return f(s, *type_stack.current_type()._footprint);
 } else if (proc) {
 	return f(nonempty_abs_dir(s), m.get_footprint());
 } else {
@@ -240,7 +241,7 @@ typename F::result_type
 dispatch_parser(F f, const string& s, const entity::module& m, 
 		vector<size_t>& r, bool proc) {
 if (type_stack.in_local_type()) {
-	return f(s, type_stack.current_type(), r);
+	return f(s, *type_stack.current_type()._footprint, r);
 } else if (proc) {
 	return f(nonempty_abs_dir(s), m.get_footprint(), r);
 } else {
@@ -293,7 +294,8 @@ int
 parse_name_to_what(ostream& o, const string& s, const entity::module& m) {
 	STACKTRACE_VERBOSE;
 if (type_stack.in_local_type()) {
-	return parser::parse_name_to_what(o, s, type_stack.current_type());
+	return parser::parse_name_to_what(o, s,
+		*type_stack.current_type()._footprint);
 } else {
 	return parser::parse_name_to_what(o, 
 		CommandRegistry::prepend_working_dir(s), m.get_footprint());
@@ -628,6 +630,110 @@ PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(WorkingDir, builtin)
 
 typedef	Dirs<State>				Dirs;
 PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(Dirs, builtin)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/type-scope.texi
+The following commands are used to change the current type scope.
+Initially, the type scope is null, the interpreter starts out
+in the top-level (global) instance scope.  
+Some commands are applicable to type-scopes and require a type-local context.
+
+@deffn Command pusht type
+Enter a new type scope, pushing previous onto stack.
+@end deffn
+
+@deffn Command popt
+Restore previous type scope from stack.
+@end deffn
+
+@deffn Command pwt
+Show name of current type scope.
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(PushType,
+	"pusht", builtin,
+	"change to type-local scope")
+int
+PushType::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	const string& ts(a.back());
+	const entity::footprint* f =
+		parser::parse_to_footprint(ts.c_str(), s.get_module());
+	if (f) {
+		unique_process_subgraph* g = s.lookup_unique_process_graph(f);
+// TODO: alter prompt?
+		if (g) {
+			type_stack.push(g);
+		} else {
+			cerr << "Error: unique type graph not found: "
+				<< ts << endl;
+			return Command::BADARG;
+		}
+	} else {
+		cerr << "Error: invalid type: " << ts << endl;
+		return Command::BADARG;
+	}
+	return Command::NORMAL;
+}
+}
+
+void
+PushType::usage(ostream& o) {
+	o << name << " <type>" << endl << brief << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(PopType,
+	"popt", builtin,
+	"restore previous type-local scope (if any)")
+int
+PopType::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	if (type_stack.in_local_type()) {
+		type_stack.pop();
+	} else {
+		cerr << "Warning: not currently inside any type scope." << endl;
+	}
+	return Command::NORMAL;
+}
+}
+
+void
+PopType::usage(ostream& o) {
+	o << name << endl << brief << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(WorkingType, "pwt", builtin,
+	"show current working type scope")
+
+int
+WorkingType::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	if (type_stack.in_local_type()) {
+		type_stack.current_type()._footprint->dump_type(cout) << endl;
+	} else {
+		cerr << "Not currently inside any type scope." << endl;
+	}
+	return Command::NORMAL;
+}
+}
+
+void
+WorkingType::usage(ostream& o) {
+	o << name << endl << brief << endl;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***

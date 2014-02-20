@@ -102,6 +102,7 @@ using util::memory::never_ptr;
 using SIM::INVALID_TRACE_INDEX;
 using util::memory::count_ptr;
 using std::map;
+using std::pair;
 using entity::dump_flags;
 using entity::preal_value_type;
 
@@ -152,7 +153,7 @@ public:
 		the second index refers to the node that caused it, 
 		deduced from some event queue.  
 	 */
-	typedef	std::pair<node_index_type, node_index_type>
+	typedef	pair<node_index_type, node_index_type>
 							step_return_type;
 	typedef	size_t				lock_index_type;
 	/**
@@ -900,6 +901,23 @@ public:
 	node_index_type
 	get_node_index(const node_type& n) const {
 		return node_index_type(std::distance(&node_pool[0], &n));
+	}
+
+private:	// only accessibly to ExprAlloc
+	/**
+		\return index to unique type, true if new.
+	 */
+	pair<size_t, bool>
+	allocate_unique_process_graph(const footprint* f); 
+
+public:
+	// unique_type lookup
+	unique_process_subgraph*
+	lookup_unique_process_graph(const footprint* f) {
+		process_footprint_map_type::const_iterator
+			g(process_footprint_map.find(f));	// const
+		return (g != process_footprint_map.end()) ?
+			&unique_process_pool[g->second] : NULL;
 	}
 
 public:

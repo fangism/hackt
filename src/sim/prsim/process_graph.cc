@@ -45,7 +45,8 @@ USING_UTIL_COMPOSE
 
 //=============================================================================
 // class unique_process_subgraph method definitions
-unique_process_subgraph::unique_process_subgraph() :
+unique_process_subgraph::unique_process_subgraph(const entity::footprint* f) :
+		_footprint(f), 
 		expr_pool(), expr_graph_node_pool(),
 		rule_pool(), rule_map(), invariant_map(), 
 		local_faninout_map()
