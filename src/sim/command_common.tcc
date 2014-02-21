@@ -771,15 +771,13 @@ LS<State>::main(state_type& s, const string_list& a) {
 if (a.size() > 2) {
 	usage(cerr << "usage: ");
 	return command_type::SYNTAX;
-} else if (a.size() == 1) {
-	string t(command_registry_type::working_dir());
-	if (t.empty()) {
-		t = ".";
-	}
-	parser::parse_name_to_members(cout, t, f);
-	return command_type::NORMAL;
 } else {
-	string t(command_registry_type::prepend_working_dir(a.back()));
+	string t;
+	if (a.size() == 1) {
+		t = command_registry_type::working_dir();
+	} else {
+		t = command_registry_type::prepend_working_dir(a.back());
+	}
 	if (t.empty()) {
 		t = ".";
 	}
