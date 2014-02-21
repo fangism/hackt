@@ -162,6 +162,9 @@ PD_VIRTUAL
 	SPEC::directives_set&
 	get_spec_directives_set(void) { return spec; }
 
+	const footprint*
+	lookup_footprint(const count_ptr<const const_param_expr_list>&) const;
+
 	const footprint&
 	get_footprint(const count_ptr<const const_param_expr_list>&) const;
 

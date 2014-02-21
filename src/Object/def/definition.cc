@@ -2310,7 +2310,7 @@ user_def_datatype::get_footprint(
 	STACKTRACE_VERBOSE;
 	// will create one, if necessary
 	// new footprints will not be unrolled until explicitly done
-	return footprint_map.lookup(p);
+	return *footprint_map.lookup(p);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3195,11 +3195,24 @@ process_definition::add_concurrent_chp_body(const count_ptr<CHP::action>& a) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const footprint*
+process_definition::lookup_footprint(
+		const count_ptr<const const_param_expr_list>& p) const {
+	STACKTRACE_VERBOSE;
+	return footprint_map.lookup(p);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This asserts that the sought footprint is found.  
+ */
 const footprint&
 process_definition::get_footprint(
 		const count_ptr<const const_param_expr_list>& p) const {
 	STACKTRACE_VERBOSE;
-	return footprint_map.lookup(p);
+	const footprint* f = lookup_footprint(p);
+	NEVER_NULL(f);
+	return *f;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3399,8 +3412,17 @@ process_definition::create_complete_type(
 		const footprint& top) const {
 	STACKTRACE_VERBOSE;
 if (defined) {
-	footprint* const f = &footprint_map.lookup(p);
-	return __create_complete_type(p, *f, top);
+	footprint* const f = footprint_map.lookup(p);
+	if (f) {
+		return __create_complete_type(p, *f, top);
+	} else {
+		cerr << "ERROR: looking up " << get_qualified_name();
+		if (p) {
+			p->dump(cerr << " with parameters: ");
+		}
+		cerr << endl;
+		return good_bool(false);
+	}
 } else {
 	cerr << "ERROR: cannot create undefined process " <<
 			get_qualified_name() << endl;

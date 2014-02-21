@@ -510,7 +510,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	atomic-d-01 \
 	atomic-e-01 atomic-e-02 \
 	atomic-f-01 \
-	type-scope-01
+	type-scope-01 type-scope-04
 
 # subset of prsimrc test that we wish to compare traces against regressions
 HACKT_PRSIMTRACE_TEST_SUBJECTS = \
@@ -836,7 +836,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
 	atomic-a-01 atomic-a-02 atomic-a-04 \
 	atomic-g-01 atomic-h-01 \
 	atomic-i-01 atomic-i2-01 atomic-j-01 \
-	type-scope-02 type-scope-03
+	type-scope-02 type-scope-03 type-scope-05
 
 # KNOWN BUG (fails, but should not): cross-pulldown-01
 

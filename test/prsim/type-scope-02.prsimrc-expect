@@ -1,4 +1,4 @@
 Not currently inside any type scope.
 concrete_type_ref: bad definition reference "nonexistent"!  ERROR! [1:1..11]
-Error: invalid type: nonexistent
+Error: invalid or uninstantiated type: nonexistent
 ... at line 5

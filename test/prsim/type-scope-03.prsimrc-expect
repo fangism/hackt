@@ -2,5 +2,5 @@ Not currently inside any type scope.
 ERROR: failed to make process_type_reference because template argument types do not match.
 ERROR making complete type reference.  [1:1..6]
 Some other error type-checking...
-Error: invalid type: inv<3>
+Error: invalid or uninstantiated type: inv<3>
 ... at line 5

@@ -2006,7 +2006,7 @@ process_type_reference::unroll_port_instances(
 const footprint*
 process_type_reference::lookup_footprint(void) const {
 	const canonical_process_type cpt(make_canonical_type());
-	return &cpt.get_base_def()->get_footprint(
+	return cpt.get_base_def()->lookup_footprint(
 		cpt.get_raw_template_params());
 }
 

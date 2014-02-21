@@ -675,7 +675,7 @@ if (a.size() != 2) {
 			return Command::BADARG;
 		}
 	} else {
-		cerr << "Error: invalid type: " << ts << endl;
+		cerr << "Error: invalid or uninstantiated type: " << ts << endl;
 		return Command::BADARG;
 	}
 	return Command::NORMAL;
