@@ -1105,6 +1105,7 @@ SIM_HH_FILES = $(SIM_CC_FILES:.cc=.hh) \
 	sim/common.hh \
 	sim/command_error_codes.hh \
 	sim/command_completion.hh \
+	sim/type_scope.hh \
 	sim/devel_switches.hh
 
 SIM_H_FILES = \

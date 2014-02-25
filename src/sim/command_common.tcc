@@ -21,7 +21,9 @@
 #include "sim/command_registry.hh"
 #include "sim/trace_common.hh"		// for trace_manager_base
 #include "parser/instref.hh"
+#include "parser/type.hh"
 #include "Object/expr/dlfunction.hh"
+#include "Object/def/footprint.hh"
 #include "Object/module.hh"
 #include "common/TODO.hh"
 #include "util/compose.hh"
@@ -758,6 +760,91 @@ void
 Dirs<State>::usage(ostream& o) {
 	o << "dirs" << endl;
 	o << "Prints entire directory stack." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(PushType, "pusht",
+	"change to type-local scope")
+
+template <class State>
+int
+PushType<State>::main(state_type& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return command_type::SYNTAX;
+} else {
+	const string& ts(a.back());
+	const entity::footprint* f =
+		parser::parse_to_footprint(ts.c_str(), s.get_module());
+	if (f) {
+		command_registry_type::push_type(f);
+	} else {
+		cerr << "Error: invalid or uninstantiated type: " << ts << endl;
+		return command_type::BADARG;
+	}
+	return command_type::NORMAL;
+}
+}
+
+template <class State>
+void
+PushType<State>::usage(ostream& o) {
+	o << name << " <type>" << endl;
+	o << brief << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(PopType, "popt",
+	"restore previous type-local scope (if any)")
+
+template <class State>
+int
+PopType<State>::main(state_type& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return command_type::SYNTAX;
+} else {
+	if (command_registry_type::in_local_type()) {
+		command_registry_type::pop_type();
+	} else {
+		cerr << "Warning: not currently inside any type scope." << endl;
+	}
+	return command_type::NORMAL;
+}
+}
+
+template <class State>
+void
+PopType<State>::usage(ostream& o) {
+	o << name << endl;
+	o << brief << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(WorkingType, "pwt",
+	"show current working type scope")
+
+template <class State>
+int
+WorkingType<State>::main(state_type& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return command_type::SYNTAX;
+} else {
+	if (command_registry_type::in_local_type()) {
+		command_registry_type::current_type().dump_type(cout) << endl;
+	} else {
+		cerr << "Not currently inside any type scope." << endl;
+	}
+	return command_type::NORMAL;
+}
+}
+
+template <class State>
+void
+WorkingType<State>::usage(ostream& o) {
+	o << name << endl;
+	o << brief << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

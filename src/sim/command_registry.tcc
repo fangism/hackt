@@ -91,6 +91,10 @@ directory_stack
 command_registry<Command>::dir_stack;
 
 template <class Command>
+type_scope_manager
+command_registry<Command>::type_stack;
+
+template <class Command>
 typename command_registry<Command>::history_type
 command_registry<Command>::history;
 
@@ -817,6 +821,7 @@ command_registry<Command>::command_generator(const char* _text, int state) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Master custom tab-completion for readline.
+	TODO: context-sensitive completion (e.g. type-local scope)
 	TODO: refactor this code into readline_wrapper library.
  */
 template <class Command>

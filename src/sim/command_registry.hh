@@ -3,14 +3,15 @@
 	$Id: command_registry.hh,v 1.16 2011/05/23 01:10:51 fang Exp $
  */
 
-#ifndef	__HAC_SIM_COMMAND_REGISTRY_H__
-#define	__HAC_SIM_COMMAND_REGISTRY_H__
+#ifndef	__HAC_SIM_COMMAND_REGISTRY_HH__
+#define	__HAC_SIM_COMMAND_REGISTRY_HH__
 
 #include <iosfwd>
 #include <vector>
 #include <string>
 #include <utility>
 #include <map>
+#include "sim/type_scope.hh"
 #include "util/macros.h"
 #include "util/tokenize_fwd.hh"
 #include "util/attributes.h"
@@ -134,6 +135,10 @@ private:
 		Directory stack state (to emulate cd, pushd, popd, ...).
 	 */
 	static directory_stack		dir_stack;
+	/**
+		Current type-scope context.
+	 */
+	static type_scope_manager	type_stack;
 	/**
 		Keep command history.
 	 */
@@ -312,6 +317,31 @@ public:
 	char**
 	completion(const char*, int, int);
 
+// type-scope commands
+	static
+	bool
+	in_local_type(void) {
+		return type_stack.in_local_type();
+	}
+
+	static
+	const entity::footprint&
+	current_type(void) {
+		return type_stack.current_type();
+	}
+
+	static
+	void
+	push_type(const entity::footprint* f) {
+		type_stack.push(f);
+	}
+
+	static
+	void
+	pop_type(void) {
+		type_stack.pop();
+	}
+
 private:
 	class interactive_mode;
 
@@ -341,5 +371,5 @@ display_hierarchical_matches_hook(char**, int, int);
 }	// end namespace SIM
 }	// end namespace HAC
 
-#endif	// __HAC_SIM_COMMAND_REGISTRY_H__
+#endif	// __HAC_SIM_COMMAND_REGISTRY_HH__
 
