@@ -157,37 +157,8 @@ using entity::META_TYPE_NONE;
 using parser::process_index;
 using parser::bool_index;
 
-//=============================================================================
-#if 0
-// type stack features
-// new: ability to reference type-local instances
-// typedef	std::stack<unique_process_subgraph*>	type_stack_type;
-typedef	std::stack<const entity::footprint*>	type_stack_type;
-class type_scope_manager : public type_stack_type {
-public:
-
-	using type_stack_type::push;
-	using type_stack_type::pop;
-	using type_stack_type::top;
-	using type_stack_type::empty;
-
-	bool
-	in_local_type(void) const { return !empty(); }
-
-	const entity::footprint&
-	current_type(void) const {
-		INVARIANT(!empty());
-		return *top();
-	}
-
-};	// end struct type_scope_manager
-
-// commands: pusht, popt, pwt, types (no ct)
-// context commands: ls, any stateless, scope-local query commands
-// forbidden commands: cd, anything that references global state
-
-static type_scope_manager		type_stack;
-#endif
+#define	TYPE_CONTEXT_INVALID_COMMAND					\
+	cerr << "Command is invalid within type context: " << name << endl
 
 //=============================================================================
 // directory features
@@ -1184,12 +1155,15 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(Set, "set", simulation,
 static
 int
 __set_main(State& s, const string_list& a, const bool force, 
-		void (*usage)(ostream&)) {
+		void (*usage)(ostream&), const char* name) {
 	STACKTRACE_VERBOSE;
 	const size_t asz = a.size();
 if (asz < 3 || asz > 4) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	// now I'm wishing string_list was string_vector... :) can do!
 	int err = 0;
@@ -1249,7 +1223,7 @@ if (asz < 3 || asz > 4) {
 
 int
 Set::main(State& s, const string_list& a) {
-	return __set_main(s, a, false, &Set::usage);
+	return __set_main(s, a, false, &Set::usage, name);
 }
 
 void
@@ -1367,6 +1341,9 @@ SetPairRandom::main(State& s, const string_list& a) {
 if (asz != 3) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	string_list::const_iterator ai(++a.begin());
 	const string& objname1(*ai++);	// node name
@@ -1414,7 +1391,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(SetF, "setf", simulation,
 
 int
 SetF::main(State& s, const string_list& a) {
-	return __set_main(s, a, true, &SetF::usage);
+	return __set_main(s, a, true, &SetF::usage, name);
 }
 
 void
@@ -1450,6 +1427,9 @@ UnSet::main(State& s, const string_list& a) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	const string& objname(a.back());
 #if PRSIM_NODE_AGGREGATE_ARGUMENTS
@@ -1535,11 +1515,14 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(Setr, "setr", simulation,
 static
 int
 __setrf_main(State& s, const string_list& a, const bool force, 
-		void (*usage)(ostream&)) {
+		void (*usage)(ostream&), const char* name) {
 	const size_t asz = a.size();
 if (asz != 3) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	// now I'm wishing string_list was string_vector... :) can do!
 	string_list::const_iterator ai(++a.begin());
@@ -1573,7 +1556,7 @@ if (asz != 3) {
 
 int
 Setr::main(State& s, const string_list& a) {
-	return __setrf_main(s, a, false, &Setr::usage);
+	return __setrf_main(s, a, false, &Setr::usage, name);
 }
 
 void
@@ -1615,6 +1598,9 @@ Freeze::main(State& s, const string_list& a) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	const string& objname(a.back());
 #if PRSIM_NODE_AGGREGATE_ARGUMENTS
@@ -1730,6 +1716,9 @@ const size_t sz = a.size();
 if (sz < 2 || sz > 3) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	string_list::const_iterator ai(++a.begin());
 	const string& objname(*ai++);	// node name
@@ -1795,7 +1784,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(SetrF, "setrf", simulation,
 
 int
 SetrF::main(State& s, const string_list& a) {
-	return __setrf_main(s, a, true, &SetrF::usage);
+	return __setrf_main(s, a, true, &SetrF::usage, name);
 }
 
 void
@@ -1833,6 +1822,9 @@ Dequeue::main(State& s, const string_list& a) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	const string& objname(a.back());
 #if PRSIM_NODE_AGGREGATE_ARGUMENTS
@@ -1904,10 +1896,13 @@ static
 int
 reschedule_main(State& s, const string_list& a,
 		bool (State::*smf)(const node_index_type, const time_type), 
-		void (usage)(ostream&)) {
+		void (usage)(ostream&), const char* name) {
 if (a.size() != 3) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	const string& objname(*++a.begin());
 	time_type t;
@@ -1941,6 +1936,9 @@ RescheduleNow::main(State& s, const string_list& a) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	const string& objname(a.back());
 #if PRSIM_NODE_AGGREGATE_ARGUMENTS
@@ -1966,17 +1964,17 @@ if (!ni) {
 
 int
 Reschedule::main(State& s, const string_list& a) {
-	return reschedule_main(s, a, &State::reschedule_event, usage);
+	return reschedule_main(s, a, &State::reschedule_event, usage, name);
 }
 
 int
 RescheduleFromNow::main(State& s, const string_list& a) {
-	return reschedule_main(s, a, &State::reschedule_event_future, usage);
+	return reschedule_main(s, a, &State::reschedule_event_future, usage, name);
 }
 
 int
 RescheduleRelative::main(State& s, const string_list& a) {
-	return reschedule_main(s, a, &State::reschedule_event_relative, usage);
+	return reschedule_main(s, a, &State::reschedule_event_relative, usage, name);
 }
 
 void
@@ -2024,6 +2022,9 @@ Execute::main(State& s, const string_list& a) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	const string& objname(a.back());
 	const node_index_type ni = parse_node_to_index(objname, s.get_module());
@@ -2069,6 +2070,9 @@ BreakPt::main(State& s, const string_list& a) {
 if (a.size() < 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	typedef string_list::const_iterator	const_iterator;
 	const_iterator i(++a.begin()), e(a.end());
@@ -2122,6 +2126,9 @@ NoBreakPt::main(State& s, const string_list& a) {
 if (a.size() < 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	typedef string_list::const_iterator	const_iterator;
 	const_iterator i(++a.begin()), e(a.end());
@@ -2350,6 +2357,9 @@ Pending::main(State& s, const string_list& a) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	const string& objname(a.back());
 	const node_index_type ni = parse_node_to_index(objname, s.get_module());
@@ -2382,6 +2392,9 @@ PendingDebug::main(State& s, const string_list& a) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	const string& objname(a.back());
 	const node_index_type ni = parse_node_to_index(objname, s.get_module());
@@ -2488,6 +2501,9 @@ DumpNode::main(State& s, const string_list& a) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	typedef	vector<node_index_type>		nodes_id_list_type;
 	const string& objname(a.back());
@@ -2525,6 +2541,9 @@ ProcessID::main(State& s, const string_list& a) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	const string& objname(a.back());
 	const module& m(s.get_module());
@@ -2560,6 +2579,9 @@ NodeID::main(State& s, const string_list& a) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	typedef	vector<node_index_type>		nodes_id_list_type;
 	const string& objname(a.back());
@@ -2600,6 +2622,9 @@ Get::main(State& s, const string_list& a) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	const string& objname(a.back());
 #if PRSIM_NODE_AGGREGATE_ARGUMENTS
@@ -2653,6 +2678,9 @@ GetDriven::main(State& s, const string_list& a) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	const string& objname(a.back());
 #if PRSIM_NODE_AGGREGATE_ARGUMENTS
@@ -2739,6 +2767,9 @@ GetPorts::main(State& s, const string_list& a) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	typedef	vector<node_index_type>		nodes_id_list_type;
 	const string& objname(a.back());
@@ -2764,6 +2795,9 @@ GetInPorts::main(State& s, const string_list& a) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	typedef	vector<node_index_type>		nodes_id_list_type;
 	const string& objname(a.back());
@@ -2798,6 +2832,9 @@ GetOutPorts::main(State& s, const string_list& a) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	typedef	vector<node_index_type>		nodes_id_list_type;
 	const string& objname(a.back());
@@ -2832,6 +2869,9 @@ GetCommonPorts::main(State& s, const string_list& a) {
 if (a.size() != 3) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	typedef	vector<node_index_type>		nodes_id_list_type;
 	string_list::const_iterator ai(a.begin());
@@ -2915,6 +2955,9 @@ GetLocal::main(State& s, const string_list& a) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	typedef	vector<node_index_type>		nodes_id_list_type;
 	const string& objname(a.back());
@@ -2961,6 +3004,9 @@ GetAll::main(State& s, const string_list& a) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	typedef	vector<node_index_type>		nodes_id_list_type;
 	const string& objname(a.back());
@@ -3893,10 +3939,13 @@ default_print_nodeinfo_main(const State& s, const string_list& a,
 			const bool) const,
 		const char* msg,
 		const bool v, 
-		void (usage)(ostream&)) {
+		void (usage)(ostream&), const char* name) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	const string& objname(a.back());
 #if PRSIM_NODE_AGGREGATE_ARGUMENTS
@@ -3923,7 +3972,7 @@ if (a.size() != 2) {
 int
 Fanin::main(State& s, const string_list& a) {
 	return default_print_nodeinfo_main(s, a, &State::dump_node_fanin,
-		"Fanins of node", false, usage);
+		"Fanins of node", false, usage, name);
 }
 
 void
@@ -3950,7 +3999,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(FaninGet, "fanin-get", info,
 int
 FaninGet::main(State& s, const string_list& a) {
 	return default_print_nodeinfo_main(s, a, &State::dump_node_fanin,
-		"Fanins of node", true, usage);
+		"Fanins of node", true, usage, name);
 }
 
 void
@@ -3978,7 +4027,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(Fanout, "fanout", info,
 int
 Fanout::main(State& s, const string_list& a) {
 	return default_print_nodeinfo_main(s, a, &State::dump_node_fanout_rules,
-		"Fanouts of node", false, usage);
+		"Fanouts of node", false, usage, name);
 }
 
 void
@@ -4004,7 +4053,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(FanoutGet, "fanout-get", info,
 int
 FanoutGet::main(State& s, const string_list& a) {
 	return default_print_nodeinfo_main(s, a, &State::dump_node_fanout_rules,
-		"Fanouts of node", true, usage);
+		"Fanouts of node", true, usage, name);
 }
 
 void
@@ -4037,13 +4086,13 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(FeedbackGet, "feedback-get", info,
 int
 Feedback::main(State& s, const string_list& a) {
 	return default_print_nodeinfo_main(s, a, &State::dump_node_feedback,
-		"Feedback of node", false, usage);
+		"Feedback of node", false, usage, name);
 }
 
 int
 FeedbackGet::main(State& s, const string_list& a) {
 	return default_print_nodeinfo_main(s, a, &State::dump_node_feedback,
-		"Feedback of node", true, usage);
+		"Feedback of node", true, usage, name);
 }
 
 void
@@ -4081,10 +4130,13 @@ default_print_node_rings(const State& s, const string_list& a,
 	const bool verbose,
 	ostream& (State::*memfn)(ostream&,
 		const node_index_type, const bool) const, 
-	void (usage)(ostream&)) {
+	void (usage)(ostream&), const char* name) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	const string& objname(a.back());
 	const node_index_type ni = parse_node_to_index(objname, s.get_module());
@@ -4101,13 +4153,13 @@ if (a.size() != 2) {
 int
 RingsMk::main(State& s, const string_list& a) {
 	return default_print_node_rings(s, a, false,
-		&State::dump_node_mk_excl_rings, usage);
+		&State::dump_node_mk_excl_rings, usage, name);
 }
 
 int
 RingsMkGet::main(State& s, const string_list& a) {
 	return default_print_node_rings(s, a, true,
-		&State::dump_node_mk_excl_rings, usage);
+		&State::dump_node_mk_excl_rings, usage, name);
 }
 
 void
@@ -4289,6 +4341,9 @@ Attributes::main(State& s, const string_list& a) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	const string& objname(a.back());
 #if PRSIM_NODE_AGGREGATE_ARGUMENTS
@@ -4345,6 +4400,9 @@ Assert::main(State& s, const string_list& a) {
 if (a.size() != 3) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	const string& objname(*++a.begin());
 	const string& _val(a.back());	// node value
@@ -4422,6 +4480,9 @@ AssertN::main(State& s, const string_list& a) {
 if (a.size() != 3) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	const string& objname(*++a.begin());
 	const string& _val(a.back());	// node value
@@ -4501,6 +4562,9 @@ AssertDriven::main(State& s, const string_list& a) {
 if (a.size() != 3) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	const string& objname(*++a.begin());
 	const string& _val(a.back());	// node value
@@ -4575,6 +4639,9 @@ AssertPending::main(State& s, const string_list& a) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	const string& objname(*++a.begin());
 #if PRSIM_NODE_AGGREGATE_ARGUMENTS
@@ -4634,6 +4701,9 @@ AssertNPending::main(State& s, const string_list& a) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	const string& objname(*++a.begin());
 #if PRSIM_NODE_AGGREGATE_ARGUMENTS
@@ -4765,6 +4835,9 @@ const size_t sz = a.size();
 if (sz != 2 && sz != 3) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	string_list::const_iterator ai(++a.begin());
 	const string& objname(*ai);
@@ -4878,6 +4951,9 @@ WhyX::main(State& s, const string_list& a) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	return why_X_main(s, a, size_t(-1), false);
 }
@@ -4888,6 +4964,9 @@ WhyXVerbose::main(State& s, const string_list& a) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	return why_X_main(s, a, size_t(-1), true);
 }
@@ -4898,6 +4977,9 @@ WhyX1::main(State& s, const string_list& a) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	return why_X_main(s, a, 1, false);
 }
@@ -4908,6 +4990,9 @@ WhyX1Verbose::main(State& s, const string_list& a) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	return why_X_main(s, a, 1, true);
 }
@@ -4918,6 +5003,9 @@ WhyXN::main(State& s, const string_list& a) {
 if (a.size() != 3) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	return why_X_N_main(s, a, false);
 }
@@ -4928,6 +5016,9 @@ WhyXNVerbose::main(State& s, const string_list& a) {
 if (a.size() != 3) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	return why_X_N_main(s, a, true);
 }
@@ -5116,11 +5207,14 @@ static
 int
 why_not_main(State& s, const string_list& a, const size_t limit, 
 		const bool why_not, const bool verbose, 
-		void (usage)(ostream&)) {
+		void (usage)(ostream&), const char* name) {
 const size_t a_s = a.size();
 if (a_s < 2 || a_s > 3) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	const string& objname(*++a.begin());
 	const node_index_type ni = parse_node_to_index(objname, s.get_module());
@@ -5133,11 +5227,14 @@ static
 int
 why_not_N_main(State& s, const string_list& a,
 		const bool why_not, const bool verbose, 
-		void (usage)(ostream&)) {
+		void (usage)(ostream&), const char* name) {
 const size_t a_s = a.size();
 if (a_s < 3 || a_s > 4) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	const string& objname(*++a.begin());
 	const node_index_type ni = parse_node_to_index(objname, s.get_module());
@@ -5154,62 +5251,62 @@ if (a_s < 3 || a_s > 4) {
 
 int
 Why::main(State& s, const string_list& a) {
-	return why_not_main(s, a, size_t(-1), false, false, usage);
+	return why_not_main(s, a, size_t(-1), false, false, usage, name);
 }
 
 int
 WhyVerbose::main(State& s, const string_list& a) {
-	return why_not_main(s, a, size_t(-1), false, true, usage);
+	return why_not_main(s, a, size_t(-1), false, true, usage, name);
 }
 
 int
 WhyNot::main(State& s, const string_list& a) {
-	return why_not_main(s, a, size_t(-1), true, false, usage);
+	return why_not_main(s, a, size_t(-1), true, false, usage, name);
 }
 
 int
 WhyNotVerbose::main(State& s, const string_list& a) {
-	return why_not_main(s, a, size_t(-1), true, true, usage);
+	return why_not_main(s, a, size_t(-1), true, true, usage, name);
 }
 
 int
 Why1::main(State& s, const string_list& a) {
-	return why_not_main(s, a, 1, false, false, usage);
+	return why_not_main(s, a, 1, false, false, usage, name);
 }
 
 int
 Why1Verbose::main(State& s, const string_list& a) {
-	return why_not_main(s, a, 1, false, true, usage);
+	return why_not_main(s, a, 1, false, true, usage, name);
 }
 
 int
 WhyNot1::main(State& s, const string_list& a) {
-	return why_not_main(s, a, 1, true, false, usage);
+	return why_not_main(s, a, 1, true, false, usage, name);
 }
 
 int
 WhyNot1Verbose::main(State& s, const string_list& a) {
-	return why_not_main(s, a, 1, true, true, usage);
+	return why_not_main(s, a, 1, true, true, usage, name);
 }
 
 int
 WhyN::main(State& s, const string_list& a) {
-	return why_not_N_main(s, a, false, false, usage);
+	return why_not_N_main(s, a, false, false, usage, name);
 }
 
 int
 WhyNVerbose::main(State& s, const string_list& a) {
-	return why_not_N_main(s, a, false, true, usage);
+	return why_not_N_main(s, a, false, true, usage, name);
 }
 
 int
 WhyNotN::main(State& s, const string_list& a) {
-	return why_not_N_main(s, a, true, false, usage);
+	return why_not_N_main(s, a, true, false, usage, name);
 }
 
 int
 WhyNotNVerbose::main(State& s, const string_list& a) {
-	return why_not_N_main(s, a, true, true, usage);
+	return why_not_N_main(s, a, true, true, usage, name);
 }
 
 static
@@ -5362,6 +5459,9 @@ Watch::main(State& s, const string_list& a) {
 if (a.size() < 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	typedef string_list::const_iterator	const_iterator;
 	const_iterator i(++a.begin()), e(a.end());
@@ -5417,6 +5517,9 @@ UnWatch::main(State& s, const string_list& a) {
 if (a.size() < 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	typedef string_list::const_iterator	const_iterator;
 	const_iterator i(++a.begin()), e(a.end());
@@ -5665,6 +5768,9 @@ TCount::main(State& s, const string_list& a) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	const string& objname(a.back());
 #if PRSIM_NODE_AGGREGATE_ARGUMENTS
@@ -6658,10 +6764,13 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(AllRulesVerbose, "allrules-verbose", info,
 static
 int
 rules_main(const State& s, const string_list& a, const bool verbose, 
-		void (usage)(ostream&)) {
+		void (usage)(ostream&), const char* name) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	const process_index_type pid =
 		parse_process_to_index(a.back(), s.get_module()).index;
@@ -6715,7 +6824,7 @@ all_rules_usage(ostream& o) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 int
 Rules::main(State& s, const string_list& a) {
-	return rules_main(s, a, false, usage);
+	return rules_main(s, a, false, usage, name);
 }
 
 void
@@ -6723,7 +6832,7 @@ Rules::usage(ostream& o) { rules_usage(o); }
 
 int
 RulesVerbose::main(State& s, const string_list& a) {
-	return rules_main(s, a, true, usage);
+	return rules_main(s, a, true, usage, name);
 }
 
 void
@@ -6908,6 +7017,10 @@ TimingConstraintsProcess::main(State& s, const string_list& a) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	// TODO: print per-type constraint information
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	const process_index_type pid =
 		parse_process_to_index(a.back(), s.get_module()).index;
@@ -7139,6 +7252,9 @@ Channel::main(State& s, const string_list& a) {
 if (a.size() != 5) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	string_list::const_iterator i(++a.begin());
 	const string& chan_name(*i);
@@ -7316,6 +7432,9 @@ ChannelLEDR::main(State& s, const string_list& a) {
 if (a.size() != 6) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	string_list::const_iterator i(++a.begin());
 	const string& chan_name(*i);
@@ -7483,6 +7602,9 @@ ChannelBD2P::main(State& s, const string_list& a) {
 if (a.size() != 5) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	string_list::const_iterator i(++a.begin());
 	const string& chan_name(*i);
@@ -7628,6 +7750,9 @@ ChannelBD4P::main(State& s, const string_list& a) {
 if (a.size() != 5) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	string_list::const_iterator i(++a.begin());
 	const string& chan_name(*i);
@@ -7787,6 +7912,9 @@ ClockSource::main(State& s, const string_list& a) {
 if (a.size() != 3) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	string_list::const_iterator i(++a.begin());
 	string clk_name(*i++);
@@ -7901,6 +8029,9 @@ ChannelClocked::main(State& s, const string_list& a) {
 if (a.size() != 4) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	string_list::const_iterator i(++a.begin());
 	const string& chan_name(*i);

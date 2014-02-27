@@ -1,0 +1,4 @@
+commands that reference state are invalid in a type-local context 
+a : X
+Command is invalid within type context: get
+... at line 7
