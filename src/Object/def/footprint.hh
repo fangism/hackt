@@ -397,6 +397,9 @@ public:
 	dump_member_list(ostream&) const;
 
 	ostream&
+	dump_type_members(ostream&) const;
+
+	ostream&
 	dump_rule(ostream&, const PRS::footprint_rule&) const;
 
 	void

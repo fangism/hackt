@@ -712,20 +712,19 @@ if (n == ".") {
 			<< n << endl;
 		return 1;
 	}
-	const footprint* f = NULL;
-	o << n << " (type: ";
 	switch (gref.first) {
-	case entity::META_TYPE_PROCESS:
-		f = get_process_footprint(gref.second, m);
-		f->dump_type(o);
+	case entity::META_TYPE_PROCESS: {
+		o << n << ' ';
+		const footprint* const f = get_process_footprint(gref.second, m);
+		f->dump_type_members(o);
 		break;
-	default:
-		r.inst_ref()->dump_type_size(o);
 	}
-	o << ") has members: " << endl;
-	if (f) {
-		f->dump_member_list(o);
-	} else {
+	default:	// is a terminal type
+		// could refactor this too
+		o << n << " (type: ";
+		r.inst_ref()->dump_type_size(o);
+		o << ") has members: " << endl;
+		// probably empty
 		const never_ptr<const definition_base>
 			def(r.inst_ref()->get_base_def());
 		NEVER_NULL(def);

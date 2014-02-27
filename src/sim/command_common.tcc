@@ -851,6 +851,7 @@ WorkingType<State>::usage(ostream& o) {
 DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(LS, "ls",
 	"list subinstances of the referenced instance")
 
+// TODO: change behavior if inside local type scope
 template <class State>
 int
 LS<State>::main(state_type& s, const string_list& a) {
@@ -860,6 +861,15 @@ if (a.size() > 2) {
 	return command_type::SYNTAX;
 } else {
 	string t;
+if (command_registry_type::in_local_type()) {
+	if (a.size() > 1) {
+//		t = a.back();
+		cerr << "Unimplemented: ls [instance] inside type context."
+			<< endl;
+	}
+	command_registry_type::current_type().dump_type_members(cout);
+	return command_type::NORMAL;
+} else {
 	if (a.size() == 1) {
 		t = command_registry_type::working_dir();
 	} else {
@@ -871,6 +881,7 @@ if (a.size() > 2) {
 	if (parser::parse_name_to_members(cout, t, f))
 		return command_type::BADARG;
 	else	return command_type::NORMAL;
+}
 }
 }
 

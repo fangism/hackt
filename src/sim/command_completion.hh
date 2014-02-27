@@ -32,8 +32,12 @@ extern
 char*
 instance_completer(const char*, const int);
 
+extern
+char*
+type_completer(const char*, const int);
+
 // defined in "sim/command_base.cc"
-// global variable needed by the instance_completer
+// global variable needed by the instance_completer and type_completer
 extern
 const entity::module* instance_completion_module;
 

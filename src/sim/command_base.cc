@@ -128,6 +128,7 @@ null_completer(const char*, const int) {
  */
 const entity::module* instance_completion_module = NULL;
 const directory_stack* instance_completion_dirs = NULL;
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // wants to pass by reference, but forms reference-to-reference
 static
@@ -174,6 +175,16 @@ instance_completer(const char* _text, const int state) {
 	}
 	return NULL;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// TODO: completion based on namespace root
+#if 0
+char*
+type_completer(const char* _text, const int state) {
+	NEVER_NULL(instance_completion_module);
+	NEVER_NULL(_text);
+}
+#endif
 
 //=============================================================================
 }	// end namespace SIM

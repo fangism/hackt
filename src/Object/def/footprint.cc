@@ -648,6 +648,16 @@ if (instance_list.size()) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+footprint::dump_type_members(ostream& o) const {
+	o << "(type: ";
+	dump_type(o);
+	o << ") has members: " << endl;
+	dump_member_list(o);
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\param r the rule which must belong to the member PRS footprint.
  */

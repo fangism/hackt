@@ -1,0 +1,14 @@
+# "type-scope-06.prsimrc"
+# @haco@ inv.haco-c
+
+echo top level:
+ls
+echo subdir:
+ls I
+echo now inside type inv:
+pusht inv
+ls
+echo back to top:
+popt
+ls
+
