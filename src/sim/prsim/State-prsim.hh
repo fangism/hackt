@@ -911,13 +911,28 @@ private:	// only accessibly to ExprAlloc
 	allocate_unique_process_graph(const footprint* f); 
 
 public:
+	const footprint*
+	parse_to_footprint(const string& t) const;
+
+	// unique_type lookup
+	process_index_type
+	lookup_unique_process_graph_id(const footprint* f) const {
+		process_footprint_map_type::const_iterator
+			g(process_footprint_map.find(f));	// const
+		return (g != process_footprint_map.end()) ? g->second : 0;
+	}
 	// unique_type lookup
 	unique_process_subgraph*
 	lookup_unique_process_graph(const footprint* f) {
-		process_footprint_map_type::const_iterator
-			g(process_footprint_map.find(f));	// const
-		return (g != process_footprint_map.end()) ?
-			&unique_process_pool[g->second] : NULL;
+		const process_index_type upid =
+			lookup_unique_process_graph_id(f);
+		return upid ? &unique_process_pool[upid] : NULL;
+	}
+
+	unique_process_subgraph*
+	lookup_unique_process_graph(const string& s) {
+		const footprint* f = parse_to_footprint(s);
+		return f ? lookup_unique_process_graph(f) : NULL;
 	}
 
 public:

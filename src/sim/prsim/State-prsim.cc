@@ -43,6 +43,7 @@
 #if IMPLICIT_SUPPLY_PORTS
 #include "parser/instref.hh"
 #endif
+#include "parser/type.hh"
 #include "sim/ISE.hh"
 #include "common/TODO.hh"
 #include "util/attributes.h"
@@ -675,6 +676,12 @@ State::allocate_unique_process_graph(const footprint* f) {
 			unique_process_subgraph(f));
 	}
 	return std::make_pair(p.first->second, p.second);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const footprint*
+State::parse_to_footprint(const string& t) const {
+	return parser::parse_to_footprint(t.c_str(), get_module());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
