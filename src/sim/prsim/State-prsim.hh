@@ -931,8 +931,11 @@ public:
 
 	unique_process_subgraph*
 	lookup_unique_process_graph(const string& s) {
-		const footprint* f = parse_to_footprint(s);
-		return f ? lookup_unique_process_graph(f) : NULL;
+		// pass empty string to get top-level footprint
+		if (s.length()) {
+			const footprint* f = parse_to_footprint(s);
+			return f ? lookup_unique_process_graph(f) : NULL;
+		} else	return &unique_process_pool[0];
 	}
 
 public:

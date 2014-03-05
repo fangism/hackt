@@ -59,6 +59,7 @@ static CommandCategory
 	simulation("simulation", "simulation commands"),
 	channels("channels", "channel commands"),
 	info("info", "information about simulated circuit"),
+//	timing("timing", "timing back-annotation"),
 	view("view", "instance to watch"),
 	tracing("tracing", "trace and checkpoint commands"), 
 	modes("modes", "timing model, error handling");
@@ -353,25 +354,6 @@ using parser::parse_name_to_what;
 using parser::parse_name_to_get_subnodes;
 using parser::parse_name_to_get_subnodes_local;
 using parser::parse_name_to_get_ports;
-#endif
-
-//=============================================================================
-#if 0
-// local static CommandCategories
-// feel free to add categories here
-
-DEFAULT_STATIC_TRACE
-static CommandCategory
-	builtin("builtin", "built-in commands"),
-	general("general", "general commands"),
-	debug("debug", "debugging internals"),
-	simulation("simulation", "simulation commands"),
-	channels("channels", "channel commands"),
-	info("info", "information about simulated circuit"),
-	view("view", "instance to watch"),
-	tracing("tracing", "trace and checkpoint commands"), 
-	modes("modes", "timing model, error handling");
-DEFAULT_STATIC_TRACE
 #endif
 
 //=============================================================================
@@ -2579,10 +2561,15 @@ NodeID::main(State& s, const string_list& a) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+#if 0
 } else if (CommandRegistry::in_local_type()) {
 	TYPE_CONTEXT_INVALID_COMMAND;
 	return Command::BADARG;
+#endif
 } else {
+	if (CommandRegistry::in_local_type()) {
+		cout << "note: ID is type-local." << endl;
+	}
 	typedef	vector<node_index_type>		nodes_id_list_type;
 	const string& objname(a.back());
 	const module& m(s.get_module());
@@ -7047,6 +7034,78 @@ o <<
 	<< endl;
 }
 #endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+#if PRSIM_TIMING_BACKANNOTATE
+/***
+@texinfo
+@deffn Command min-delay src dest delay [pred]
+Force the minimum delay between the most recent event on @var{src}
+to the next event on @var{dest} to be greater-than or equal-to
+@var{delay}.  
+If predicate @var{pred} is specified, only apply the min-delay if
+the predicate is true.
+@var{pred} can be any bool or ebool (atomic).  
+The minimum delay is enforced by postponing the event on @var{dst} to a
+time that meets all constraints; it will never cause an event to advance
+earlier than initially scheduled.  
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(TimingBAMinDelay, 
+	"min-delay", info,
+	"specify a min-delay constraint on a path")
+
+int
+TimingBAMinDelay::main(State& s, const string_list& a) {
+const size_t asz = a.size();
+if (asz < 4 || asz > 5) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	unique_process_subgraph* g;
+	if (CommandRegistry::in_local_type()) {
+		const entity::footprint& f(CommandRegistry::current_type());
+		g = s.lookup_unique_process_graph(&f);
+		INVARIANT(g->_footprint == &f);
+	} else {
+		g = s.lookup_unique_process_graph("");
+	}
+	NEVER_NULL(g);
+	NEVER_NULL(g->_footprint);
+#if 1
+	g->_footprint->dump_type(cout << "type: ") << endl;
+#endif
+	string_list::const_iterator ai(a.begin());
+	// note: parsing is sensitive to type-local context
+	++ai;
+	const node_index_type srcind = parse_node_to_index(*ai, s.get_module());
+	++ai;
+	const node_index_type dstind = parse_node_to_index(*ai, s.get_module());
+	++ai;
+	time_type min_delay;
+	string_to_num(*ai, min_delay);
+	size_t predind = INVALID_NODE_INDEX;
+	if (asz == 5) {
+		++ai;
+		predind = parse_node_to_index(*ai, s.get_module());
+	}
+#if 1
+	cout << "src=" << srcind << ", dst=" << dstind << ", t=" << min_delay
+		<< ", pred=" << predind << endl;
+#endif
+	return Command::NORMAL;
+}
+}
+
+void
+TimingBAMinDelay::usage(ostream& o) {
+	o << name << " <src> <dst> <min-delay> [predicate]" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// min-delay-reset-all -- reset all timing back-annotation
+
+#endif	// PRSIM_TIMING_BACKANNOTATE
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 /***
