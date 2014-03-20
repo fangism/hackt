@@ -874,7 +874,7 @@ static void __advance_prsim (const Time_t& vcstime, const int context)
   while ((heap_peek_minkey (P->eventQueue) <= vcstime) 
 	 && (n = prs_step_cause (P, &m, &seu)))
 #else
-  Time_t next_time;
+  Time_t next_time = 0;		// don't care about initial value
   Time_t break_time = vcstime;		// may decrease only
   while (
 	!prsim_state->is_fatal() &&
