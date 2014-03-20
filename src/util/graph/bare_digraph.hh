@@ -5,6 +5,7 @@
 #ifndef	__UTIL_GRAPH_BARE_DIGRAPH_HH__
 #define	__UTIL_GRAPH_BARE_DIGRAPH_HH__
 
+#include <iosfwd>
 #include "util/graph/bare_digraph_fwd.hh"
 
 namespace util {
