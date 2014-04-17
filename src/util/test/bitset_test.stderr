@@ -1,0 +1,69 @@
+util::bitset<128>::find_first tests
+128
+0
+0
+1
+1
+35
+32
+32
+64
+64
+99
+127
+util::bitset<128>::find_next test: set none, search from 0: 128
+util::bitset<128>::find_next test: set none, search from 31: 128
+util::bitset<128>::find_next test: set none, search from 32: 128
+util::bitset<128>::find_next test: set none, search from 63: 128
+util::bitset<128>::find_next test: set none, search from 64: 128
+util::bitset<128>::find_next test: set none, search from 92: 128
+util::bitset<128>::find_next test: set 0, search from 0: 128
+util::bitset<128>::find_next test: set 0, search from 1: 128
+util::bitset<128>::find_next test: set 1, search from 1: 128
+util::bitset<128>::find_next test: set 1, search from 0: 1
+util::bitset<128>::find_next test: set 15, search from 1: 15
+util::bitset<128>::find_next test: set 16, search from 1: 16
+util::bitset<128>::find_next test: set 16, search from 15: 16
+util::bitset<128>::find_next test: set 15, search from 16: 128
+util::bitset<128>::find_next test: set 33, search from 21: 33
+util::bitset<128>::find_next test: set 33, search from 33: 128
+util::bitset<128>::find_next test: set 33, search from 97: 128
+util::bitset<128>::find_next test: set 121, search from 33: 121
+util::bitset<128>::find_next test: set 121, search from 97: 121
+util::bitset<128>::find_next test: set 0 and 2, search from 0: 2
+util::bitset<128>::find_next test: set 1 and 2, search from 0: 1
+util::bitset<128>::find_next test: set 3 and 6, search from 1: 3
+util::bitset<128>::find_next test: set 3 and 34, search from 1: 3
+util::bitset<128>::find_next test: set 3 and 84, search from 1: 3
+util::bitset<128>::find_next test: set 23 and 84, search from 1: 23
+util::bitset<128>::find_next test: set 41 and 84, search from 2: 41
+util::bitset<128>::find_next test: set 71 and 84, search from 2: 71
+util::bitset<128>::find_next test: set 31 and 84, search from 31: 84
+util::bitset<128>::find_next test: set 31 and 84, search from 34: 84
+util::bitset<128>::find_next test: set 33 and 84, search from 34: 84
+util::bitset<128>::find_next test: set 34 and 84, search from 34: 84
+util::bitset<128>::find_next test: set 35 and 84, search from 34: 35
+util::bitset<128>::find_next test: set 35 and 84, search from 97: 128
+util::bitset<128>::find_next test: set 35 and 84, search from 77: 84
+util::bitset<128>::find_next test: set 35 and 84, search from 37: 84
+util::bitset<128>::find_next test: set 35 and 123, search from 37: 123
+util::bitset<128>::find_next test: set 39 and 123, search from 37: 39
+util::bitset<128>::find_next test: set 39 and 123, search from 41: 123
+find all: 128
+find all: 1, 128
+find all: 1, 111, 128
+find all: 1, 111, 115, 128
+find all: 77, 128
+find all: 44, 77, 128
+find all: 44, 45, 77, 128
+find all: 99, 128
+find all: 99, 111, 128
+find all: 11, 99, 111, 128
+find all: 31, 128
+find all: 31, 32, 128
+find all: 16, 31, 32, 128
+find all: 16, 31, 32, 100, 128
+find all: 63, 128
+find all: 63, 64, 128
+find all: 4, 63, 64, 128
+find all: 4, 63, 64, 114, 128

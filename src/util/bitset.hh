@@ -5,8 +5,8 @@
 	$Id: bitset.hh,v 1.6 2007/02/22 01:09:14 fang Exp $
  */
 
-#ifndef	__UTIL_BITSET_H__
-#define	__UTIL_BITSET_H__
+#ifndef	__UTIL_BITSET_HH__
+#define	__UTIL_BITSET_HH__
 
 #include <iosfwd>
 #include "config.h"		// detect bitset facilities (SGI extensions)
@@ -23,13 +23,32 @@ namespace util {
  */
 template <size_t NB>
 class bitset : public std::bitset<NB> {
+private:
+	// need to expose implementation details, unfortunately
+	// _GLIBCXX word type is unsigned long
+	typedef size_t			impl_word_type;
+	// normal iterator
+	typedef impl_word_type*		word_iterator;
+	typedef const impl_word_type*	const_word_iterator;
+	typedef std::reverse_iterator<word_iterator>
+					reverse_word_iterator;
+	typedef std::reverse_iterator<const_word_iterator>
+					const_reverse_word_iterator;
+
 public:
 	typedef	std::bitset<NB>		parent_type;
+	enum {
+		num_bits = NB,
+		num_words = (((NB-1) >> 3) / sizeof(impl_word_type)) +1,
+		bits_per_word = sizeof(impl_word_type) << 3
+	};
+
 	/**
 		Most likely unsigned long.  
 	 */
-//	typedef	typename parent_type::_WordT	word_type;
-	typedef	size_t			word_type;
+//	typedef	typename parent_type::_WordT	word_type;	// libstdc++
+//	typedef	typename parent_type::__storage_type	word_type;	// libc++
+	typedef	impl_word_type		word_type;
 
 	bitset() : parent_type() { }
 
@@ -49,6 +68,54 @@ public:
 		const size_t __pos, const size_t __n) : 
 		parent_type(__s, __pos, __n) { }
 
+private:
+	// need to access underlying representation (words)
+	const_word_iterator
+	word_begin(void) const {
+		return reinterpret_cast<const impl_word_type*>(this);
+	}
+
+	const_word_iterator
+	word_end(void) const {
+		return &this->word_begin()[num_words];
+	}
+
+	const_reverse_word_iterator
+	word_rbegin(void) const {
+		return const_reverse_word_iterator(this->word_end());
+	}
+
+	const_reverse_word_iterator
+	word_rend(void) const {
+		return const_reverse_word_iterator(this->word_begin());
+	}
+
+	// not bound checked
+	size_t
+	__which_word(const size_t b) const {
+		return b / bits_per_word;
+		// rely on compiler strength reduction
+		// or use numeric::divide_by_constant
+	}
+
+	// not bound checked
+	size_t
+	__which_bit(const size_t b) const {
+		return b % bits_per_word;
+		// rely on compiler strength reduction
+		// or use numeric::modulo_by_constant to mask
+	}
+
+	size_t
+	__get_word(const size_t w) const {
+		return *(this->word_begin() +w);
+	}
+
+	size_t
+	__find_next_from_whole_word(const size_t w) const;
+
+public:
+
 	bool
 	all(void) const {
 		// return this->count() == this->size();
@@ -57,23 +124,25 @@ public:
 
 	// TODO: test for SGI extensions and work-around
 	size_t
-	find_first() const {
+	find_first(void) const
 #if defined(HAVE_STD_BITSET_FIND_FIRST)
+	{
 		return parent_type::_Find_first();
-#else
-#error "TODO: write our own find_first(), using __builtin_clzl()."
-#endif
 	}
+#else
+	;
+#endif
 
 	// TODO: test for SGI extensions and work-around
 	size_t
-	find_next(size_t __prev ) const {
+	find_next(const size_t __prev ) const
 #if defined(HAVE_STD_BITSET_FIND_NEXT)
+	{
 		return parent_type::_Find_next(__prev);
-#else
-#error "TODO: write our own find_next()."
-#endif
 	}
+#else
+	;
+#endif
 
 
 };	// end class bitset
@@ -251,5 +320,5 @@ struct print_bits_hex<std::bitset<NB> > {
 //=============================================================================
 }	// end namespace util
 
-#endif	// __UTIL_BITSET_H__
+#endif	// __UTIL_BITSET_HH__
 
