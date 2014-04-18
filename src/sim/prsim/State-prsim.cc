@@ -4297,9 +4297,9 @@ State::propagate_evaluation(
 		const swap_saver<updated_nodes_queue_type> swp2(updated_nodes_queue);
 #endif
 		// yes, interpret pull_enum as value_enum
-		const step_return_type
-			sr(set_node_immediately(ui, value_enum(next), false));
 		// ignore return value?
+		// const step_return_type sr = 
+		set_node_immediately(ui, value_enum(next), false);
 		// TODO: how to handle multiple atomic updates in a single step?
 		// especially for watching nodes?
 		return err;
