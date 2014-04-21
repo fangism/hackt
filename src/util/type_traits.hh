@@ -158,46 +158,48 @@ struct is_pointer<T*> : public true_value { };
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // this could conceivably belong in "util/numeric/inttype_traits.h"...
+// NOTE: __is_integral and __is_floating_point (double-underscore) are reserved
+// thus, we use triple-underscore
 
 namespace detail {
 template <class T>
-struct __is_integral : public false_value { };
+struct ___is_integral : public false_value { };
 
 template <>
-struct __is_integral<char> : public true_value { };
+struct ___is_integral<char> : public true_value { };
 
 template <>
-struct __is_integral<unsigned char> : public true_value { };
+struct ___is_integral<unsigned char> : public true_value { };
 
 template <>
-struct __is_integral<short> : public true_value { };
+struct ___is_integral<short> : public true_value { };
 
 template <>
-struct __is_integral<unsigned short> : public true_value { };
+struct ___is_integral<unsigned short> : public true_value { };
 
 template <>
-struct __is_integral<int> : public true_value { };
+struct ___is_integral<int> : public true_value { };
 
 template <>
-struct __is_integral<unsigned int> : public true_value { };
+struct ___is_integral<unsigned int> : public true_value { };
 
 template <>
-struct __is_integral<long> : public true_value { };
+struct ___is_integral<long> : public true_value { };
 
 template <>
-struct __is_integral<unsigned long> : public true_value { };
+struct ___is_integral<unsigned long> : public true_value { };
 
 #if	SIZEOF_LONG_LONG
 template <>
-struct __is_integral<long long> : public true_value { };
+struct ___is_integral<long long> : public true_value { };
 
 template <>
-struct __is_integral<unsigned long long> : public true_value { };
+struct ___is_integral<unsigned long long> : public true_value { };
 #endif
 }	// end namespace detail
 
 template <class T>
-struct is_integral : public detail::__is_integral<
+struct is_integral : public detail::___is_integral<
 	typename remove_cv<typename remove_reference<T>::type>::type > { };
 
 // UTIL_STATIC_ASSERT(is_integral<size_t>::value)
@@ -206,23 +208,23 @@ struct is_integral : public detail::__is_integral<
 namespace detail {
 
 template <class T>
-struct __is_floating_point : public false_value { };
+struct ___is_floating_point : public false_value { };
 
 template <>
-struct __is_floating_point<float> : public true_value { };
+struct ___is_floating_point<float> : public true_value { };
 
 template <>
-struct __is_floating_point<double> : public true_value { };
+struct ___is_floating_point<double> : public true_value { };
 
 // better not use this for now, if we're issuing warnings about long-double
 #if	0 && SIZEOF_LONG_DOUBLE
 template <>
-struct __is_floating_point<long double> : public true_value { };
+struct ___is_floating_point<long double> : public true_value { };
 #endif
 }	// end namespace detail
 
 template <class T>
-struct is_floating_point : public detail::__is_floating_point<
+struct is_floating_point : public detail::___is_floating_point<
 	typename remove_cv<typename remove_reference<T>::type>::type > { };
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
