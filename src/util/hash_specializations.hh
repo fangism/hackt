@@ -52,7 +52,7 @@ struct hash<const T*> {
 #else
 #error	"I need an integer type with same size as pointer."
 #endif
-		register const __type y = reinterpret_cast<const __type>(x);
+		const __type y = reinterpret_cast<const __type>(x);
 		return hash<__type>()(y ^ (y >> 7));
 		// Apple g++-4.0.1 ICEs without explicit operator()...
 	}

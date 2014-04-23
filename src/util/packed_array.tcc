@@ -96,7 +96,7 @@ PACKED_ARRAY_CLASS::packed_array(const packed_array& a,
 	key_generator_type key_gen(l, u);
 	key_gen.initialize();
 	INVARIANT(values.size() == sizes_product(sizes));
-	register index_type i = 0;
+	index_type i = 0;
 	do {
 		// write valarray directly
 		values[i++] = a[key_gen++];
@@ -434,7 +434,7 @@ PACKED_ARRAY_GENERIC_CLASS::packed_array_generic(
 	key_generator_type key_gen(l, u);
 	key_gen.initialize();
 	INVARIANT(index_type(values.size()) == sizes_product(sizes));
-	register index_type i = 0;
+	index_type i = 0;
 	do {
 		// write valarray directly
 		values[i++] = a[key_gen];
