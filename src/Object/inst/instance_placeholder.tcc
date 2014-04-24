@@ -70,7 +70,7 @@
 namespace HAC {
 namespace entity {
 using std::string;
-using std::_Select1st;
+// using std::_Select1st;
 #include "util/using_ostream.hh"
 using util::multikey_generator;
 USING_UTIL_COMPOSE
