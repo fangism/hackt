@@ -4,15 +4,15 @@
 	$Id: list_fwd.hh,v 1.5 2006/04/23 07:37:29 fang Exp $
  */
 
-#ifndef	__UTIL_STL_LIST_FWD_H__
-#define	__UTIL_STL_LIST_FWD_H__
+#ifndef	__UTIL_STL_LIST_FWD_HH__
+#define	__UTIL_STL_LIST_FWD_HH__
 
 // may be overridden to just use the std::list without trying
 // to split declarations from definitions
 
 #include "util/STL/allocator_fwd.hh"
 
-namespace std {
+BEGIN_NAMESPACE_STD
 
 template <class T, class Alloc>
 class list;
@@ -25,7 +25,7 @@ struct default_list {
 	struct rebind : public default_list<T2> { };
 };
 
-}	// end namespace std
+END_NAMESPACE_STD
 
-#endif	// __UTIL_STL_LIST_FWD_H__
+#endif	// __UTIL_STL_LIST_FWD_HH__
 

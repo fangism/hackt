@@ -4,17 +4,17 @@
 	$Id: allocator_fwd.hh,v 1.3 2006/04/03 05:30:39 fang Exp $
  */
 
-#ifndef	__UTIL_STL_ALLOCATOR_FWD_H__
-#define	__UTIL_STL_ALLOCATOR_FWD_H__
+#ifndef	__UTIL_STL_ALLOCATOR_FWD_HH__
+#define	__UTIL_STL_ALLOCATOR_FWD_HH__
 
-#include "config.h"
+#include "util/STL/libconfig.hh"
 
-namespace std {
+BEGIN_NAMESPACE_STD
 
 template <class>
 class allocator;
 
-}
+END_NAMESPACE_STD
 
 #if	defined(HAVE_EXT_NEW_ALLOCATOR_H)
 #define	NEW_ALLOCATOR_NAMESPACE		__gnu_cxx
@@ -29,5 +29,5 @@ class new_allocator;
 
 #endif
 
-#endif	// __UTIL_STL_ALLOCATOR_FWD_H__
+#endif	// __UTIL_STL_ALLOCATOR_FWD_HH__
 

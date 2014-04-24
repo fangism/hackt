@@ -5,13 +5,13 @@
 	$Id: queue_fwd.hh,v 1.2 2006/04/18 18:42:45 fang Exp $
  */
 
-#ifndef	__UTIL_STL_QUEUE_FWD_H__
-#define	__UTIL_STL_QUEUE_FWD_H__
+#ifndef	__UTIL_STL_QUEUE_FWD_HH__
+#define	__UTIL_STL_QUEUE_FWD_HH__
 
 #include "util/STL/deque_fwd.hh"
 #include "util/STL/vector_fwd.hh"
 
-namespace std {
+BEGIN_NAMESPACE_STD
 
 template <typename>
 struct less;
@@ -56,7 +56,7 @@ struct default_priority_queue {
 	struct rebind : public default_priority_queue<T2> { };
 };	// end struct default_priority_queue
 
-}	// end namespace std
+END_NAMESPACE_STD
 
-#endif	// __UTIL_STL_QUEUE_FWD_H__
+#endif	// __UTIL_STL_QUEUE_FWD_HH__
 

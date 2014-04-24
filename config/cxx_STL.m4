@@ -890,3 +890,46 @@ AC_DEFINE(CXX_ISTREAM_NEGATIVE_UNSIGNED_FAILS, [],
 fi
 ])dnl
 
+dnl @synopsis FANG_CXXLIB_VERSIONED_NAMESPACE
+dnl
+dnl Checks to see whether or not C++ library is in versioned namespace.
+dnl At the time of writing GNU libstdc++ is not in a versioned namespace
+dnl while libc++ is, like std::__1.
+dnl
+dnl Defines CXXLIB_VERSIONED_NAMESPACE if successful.  
+dnl
+dnl @category Cxx
+dnl @version 2014-04-22
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
+dnl
+AC_DEFUN([FANG_CXXLIB_VERSIONED_NAMESPACE],
+[AC_REQUIRE([AC_PROG_CXX])
+AC_CACHE_CHECK(
+	[C++ standard library lives in a versioned namespace],
+	[fang_cv_cxx_stdlib_versioned_namespace],
+[AC_LANG_PUSH(C++)
+dnl default: assume standard-confirming behavior when cross-compiling
+AC_RUN_IFELSE(
+	AC_LANG_PROGRAM([[
+		#include <utility>
+		using std::pair;
+	]], [[
+#if defined(_LIBCPP_ABI_VERSION) && defined(_LIBCPP_NAMESPACE)
+		return 0;
+#else
+		return 1;
+#endif
+	]]),
+	[fang_cv_cxx_stdlib_versioned_namespace=yes],
+	[fang_cv_cxx_stdlib_versioned_namespace=no],
+	[fang_cv_cxx_stdlib_versioned_namespace=no]
+)
+AC_LANG_POP(C++)
+])
+if test "$fang_cv_cxx_stdlib_versioned_namespace" = yes ; then
+AC_DEFINE(CXXLIB_VERSIONED_NAMESPACE, [],
+	[Define if C++ library lives in a versioned namespace])
+fi
+])dnl
+
