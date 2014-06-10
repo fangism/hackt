@@ -26,11 +26,12 @@ HACKT_PRSIM_SUFFIXES = \
 HACKT_PRSIM_TEST_SUFFIXES = \
 	.prsimtest .prsimfailtest \
 	.hacktprsimexprtest \
+	.hacktprsimdottest \
 	.prsimtracetest \
 	.prsimvcdtest \
 	.prsimckpttest \
 	.prsimopttest \
-	.hacktprsdottest 
+	.hacktprsdumptest 
 SUFFIXES += $(HACKT_PRSIM_SUFFIXES) $(HACKT_PRSIM_TEST_SUFFIXES)
 BOGUS_SUFFIX_TARGETS += $(HACKT_PRSIM_SUFFIXES)
 
@@ -57,6 +58,7 @@ HACKT_PRSIM_CLEAN_IGNORE_PATTERNS = \
 	"*.prsimckpt-O1-dump" \
 	"*.prsimopt-diff" \
 	"*.prsimexpr-O1" \
+	"*.prs-dot" \
 	"*.prs-dot-O1" \
 	"*.prsimtrace" \
 	"*.prsimtrace-O1" \
@@ -95,22 +97,59 @@ EXTRACT_HACPRSIM_FLAGS_PIPE = { $(GREP) "@hacprsim-flags@" | $(HEAD) -n1 | \
 .haco-c.prs-dot-O1:
 	$(HACKT_PRSIM_EXE) -fno-run -fdump-dot-struct -O1 $< > $@
 
-.prsimexpr-O1.hacktprsdottest:
+.prsimexpr-O1.hacktprsdumptest:
 	@$(DUMMY_TEST_SCRIPT)
 
 # dummy test for when make variable is empty
-.hacktprsdottest:
+.hacktprsdumptest:
 	@$(DUMMY_TEST_SCRIPT)
 
-hacktprsdottest.autodepend: Makefile
+hacktprsdumptest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
 	$(SET_PIPEFAIL) ; \
-	$(ECHO) "$(HACKT_PRS_DOT_TEST_SUBJECTS)" | \
+	$(ECHO) "$(HACKT_PRS_DUMP_TEST_SUBJECTS)" | \
 	  $(SPACES_TO_NEWLINE) | $(SORT) -u | \
-	  $(AWK) '/.+/ {print $$1 ".hacktprsdottest: " $$1 ".prs-dot-O1"; }' > $@ ; \
+	  $(AWK) '/.+/ {print $$1 ".hacktprsdumptest: " $$1 ".prs-dot-O1"; }' > $@ ; \
 	$(TOUCH) $@
 
--include hacktprsdottest.autodepend
+-include hacktprsdumptest.autodepend
+
+if VERBOSE_CHECK
+ECHO_PRSIMDOT_DIFF_COMMAND = $(ECHO) "$(DIFF) -bu $$""(srcdir)/$$stderr $<"
+else
+ECHO_PRSIMDOT_DIFF_COMMAND = :
+endif
+
+.prs-dot.prs-dot-diff:
+	@stderr=`$(ECHO) $@ | $(SED) 's/\.prs-dot-diff$$/.expect-prs-dot/g'` ; \
+	expect=$(srcdir)/$$stderr ; \
+	$(RM) $@ ; \
+	if test -f "$$expect" ; then \
+	  $(ECHO_PRSIMDOT_DIFF_COMMAND) ; \
+	  $(DIFF) -bu "$$expect" $< > $@ 2>&1 ; \
+	  if test -s $@ ; then \
+	    $(ECHO) "$@ is non-empty!" ; \
+	  fi ; \
+	else $(ECHO) "Missing $$expect." | $(TEE) $@ ; \
+	fi ; \
+	$(TOUCH) $@
+
+prsimdottest.autodepend: Makefile
+	@$(ECHO) "Generating dependencies $@" ; \
+	$(SET_PIPEFAIL) ; \
+	$(ECHO) "$(HACKT_PRSIMDOT_TEST_SUBJECTS)" | \
+	  $(SPACES_TO_NEWLINE) | $(SORT) -u | \
+	  $(AWK) '/.+/ {print $$1 ".prs-dot-diff: $$(srcdir)/" $$1 ".expect-prs-dot"; }' > $@ ; \
+	$(TOUCH) $@
+
+-include prsimdottest.autodepend
+
+.prs-dot-diff.hacktprsimdottest:
+	@$(DEFAULT_DIFF_TEST_SCRIPT)
+
+.hacktprsimdottest:
+	@$(DUMMY_TEST_SCRIPT)
+
 
 if VERBOSE_CHECK
 ECHO_PRSIMEXPR_DIFF_COMMAND = $(ECHO) "$(DIFF) -bu $$""(srcdir)/$$stderr $<"
@@ -608,10 +647,11 @@ prsimopttest.autodepend: Makefile
 
 -include prsimopttest.autodepend
 
-AUTO_DEPENDS += hacktprsdottest.autodepend \
+AUTO_DEPENDS += hacktprsdumptest.autodepend \
 	prsimtracetest.autodepend \
 	prsimvcdtest.autodepend \
 	prsimexprtest.autodepend \
+	prsimdottest.autodepend \
 	prsimrc-out.autodepend \
 	prsimrcfail-out.autodepend \
 	prsimtest.autodepend \
@@ -620,7 +660,7 @@ AUTO_DEPENDS += hacktprsdottest.autodepend \
 	prsimopttest.autodepend
 
 
-BOGUS_TESTS += .hacktprsdottest .hacktprsimexprtest \
+BOGUS_TESTS += .hacktprsdumptest .hacktprsimexprtest .hacktprsimdottest \
 	.prsimtest .prsimfailtest .prsimtracetest .prsimvcdtest \
 	.prsimckpttest .prsimopttest
 
@@ -657,6 +697,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_BASES = \
 
 srcdir_EXTRA_DIST += \
 	$(HACKT_PRSIMEXPR_TEST_SUBJECTS:=.expect-prsimexpr) \
+	$(HACKT_PRSIMDOT_TEST_SUBJECTS:=.expect-prs-dot) \
 	$(HACKT_PRSIMRC_TEST_SUBJECTS:=.hac) \
 	$(HACKT_PRSIMRC_TEST_SCRIPTS_BASES:=.prsimrc) \
 	$(HACKT_PRSIMRC_TEST_SCRIPTS_BASES:=.prsimrc-expect) \
@@ -667,21 +708,22 @@ srcdir_EXTRA_DIST += \
 
 
 # all alloc tests and prsimrc tests are candidates for prs-dot tests
-HACKT_PRS_DOT_TEST_SUBJECTS =
-HACKT_PRS_DOT_TEST_SUBJECTS += $(HACKT_ALLOC_TEST_PASSES)
-HACKT_PRS_DOT_TEST_SUBJECTS += $(HACKT_PRSIMRC_TEST_PASSES)
+HACKT_PRS_DUMP_TEST_SUBJECTS =
+HACKT_PRS_DUMP_TEST_SUBJECTS += $(HACKT_ALLOC_TEST_PASSES)
+HACKT_PRS_DUMP_TEST_SUBJECTS += $(HACKT_PRSIMRC_TEST_PASSES)
 
 if CHECK_TESTS
 # TESTS += $(HACKT_PARSE_TEST_SUBJECTS:=.hacktcmpltest)
 TESTS += \
 	$(HACKT_PRSIMEXPR_TEST_SUBJECTS:=.hacktprsimexprtest) \
+	$(HACKT_PRSIMDOT_TEST_SUBJECTS:=.hacktprsimdottest) \
 	$(HACKT_PRSIMRC_TEST_SCRIPTS_PASSES:=.prsimtest) \
 	$(HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES:=.prsimfailtest) \
 	$(HACKT_PRSIMTRACE_TEST_SUBJECTS:=.prsimtracetest) \
 	$(HACKT_PRSIMVCD_TEST_SUBJECTS:=.prsimvcdtest) \
 	$(HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES:=.prsimckpttest) \
 	$(HACKT_PRSIM_OPT_TEST_SCRIPTS_BASES:=.prsimopttest) \
-	$(HACKT_PRS_DOT_TEST_SUBJECTS:=.hacktprsdottest)
+	$(HACKT_PRS_DUMP_TEST_SUBJECTS:=.hacktprsdumptest)
 endif
 
 HAC_COMPILE_OBJECT_TARGETS += $(HACKT_PRSIMRC_TEST_SUBJECTS:=.haco)
@@ -700,8 +742,9 @@ HACKT_PRSIM_PRODUCTS = \
 	$(HACKT_PRSIM_OPT_TEST_SCRIPTS_BASES:=.prsimckpt-O1) \
 	$(HACKT_PRSIM_OPT_TEST_SCRIPTS_BASES:=.prsimckpt-O1-err) \
 	$(HACKT_PRSIMEXPR_TEST_SUBJECTS:=.prsimexpr) \
-	$(HACKT_PRS_DOT_TEST_SUBJECTS:=.prsimexpr-O1) \
-	$(HACKT_PRS_DOT_TEST_SUBJECTS:=.prs-dot-O1)
+	$(HACKT_PRSIMDOT_TEST_SUBJECTS:=.prs-dot) \
+	$(HACKT_PRS_DUMP_TEST_SUBJECTS:=.prsimexpr-O1) \
+	$(HACKT_PRS_DUMP_TEST_SUBJECTS:=.prs-dot-O1)
 
 $(HACKT_PRSIM_PRODUCTS): $(HACKT_PRSIM_EXE)
 
@@ -725,6 +768,9 @@ build-check-local: \
 	$(HACKT_PRSIMEXPR_TEST_SUBJECTS:=.haco-c) \
 	$(HACKT_PRSIMEXPR_TEST_SUBJECTS:=.prsimexpr) \
 	$(HACKT_PRSIMEXPR_TEST_SUBJECTS:=.prsimexprdiff) \
+	$(HACKT_PRSIMDOT_TEST_SUBJECTS:=.haco-c) \
+	$(HACKT_PRSIMDOT_TEST_SUBJECTS:=.prs-dot) \
+	$(HACKT_PRSIMDOT_TEST_SUBJECTS:=.prs-dot-diff) \
 	$(HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES:=.prsimckpt) \
 	$(HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES:=.prsimckpt-outdump) \
 	$(HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES:=.prsimckpt-dupe) \
@@ -734,26 +780,37 @@ build-check-local: \
 	$(HACKT_PRSIM_OPT_TEST_SCRIPTS_BASES:=.prsimckpt-O1-err) \
 	$(HACKT_PRSIM_OPT_TEST_SCRIPTS_BASES:=.prsimckpt-O1) \
 	$(HACKT_PRSIM_OPT_TEST_SCRIPTS_BASES:=.prsimopt-diff) \
-	$(HACKT_PRS_DOT_TEST_SUBJECTS:=.prsimexpr-O1) \
-	$(HACKT_PRS_DOT_TEST_SUBJECTS:=.prs-dot-O1)
+	$(HACKT_PRS_DUMP_TEST_SUBJECTS:=.prsimexpr-O1) \
+	$(HACKT_PRS_DUMP_TEST_SUBJECTS:=.prs-dot) \
+	$(HACKT_PRS_DUMP_TEST_SUBJECTS:=.prs-dot-O1)
 
 
-ALL_PRSIMEXPR_DOT = $(HACKT_PRSIMEXPR_TEST_SUBJECTS:=.prs-dot) 
+ALL_PRSIMEXPR_DOT = \
+	$(HACKT_PRSIMDOT_TEST_SUBJECTS:=.prs-dot) \
+	$(HACKT_PRSIMEXPR_TEST_SUBJECTS:=.prs-dot) \
+	$(HACKT_PRSIMEXPR_TEST_SUBJECTS:=.prs-dot-O1) 
 ALL_PRS_DOT_PS = $(HACKT_PRSIMEXPR_TEST_SUBJECTS:=.prs-dot-ps) 
+ALL_PRS_DOT_PDF = $(HACKT_PRSIMEXPR_TEST_SUBJECTS:=.prs-dot-pdf) 
 
 all-prs-dot: $(ALL_PRSIMEXPR_DOT)
 
 all-prs-dot-ps: $(ALL_PRS_DOT_PS)
+all-prs-dot-pdf: $(ALL_PRS_DOT_PDF)
 
 clean-prs-dot: force
 	-$(RM) $(ALL_PRSIMEXPR_DOT)
 
 clean-prs-dot-ps: force
 	-$(RM) $(ALL_PRS_DOT_PS)
+clean-prs-dot-pdf: force
+	-$(RM) $(ALL_PRS_DOT_PDF)
 
 
 echo-prsimexpr-tests: force
 	@$(ECHO) $(HACKT_PRSIMEXPR_TEST_SUBJECTS)
+
+echo-prsimdot-tests: force
+	@$(ECHO) $(HACKT_PRSIMDOT_TEST_SUBJECTS)
 
 echo-prsimrc-passes: force
 	@$(ECHO) $(HACKT_PRSIMRC_TEST_SCRIPTS_PASSES)

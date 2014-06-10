@@ -384,7 +384,8 @@ unique_process_subgraph::dump_struct(ostream& o) const {
  */
 ostream&
 unique_process_subgraph::dump_struct_dot(ostream& o, 
-		const expr_index_type offset) const {
+		const expr_index_type offset, 
+		const footprint_frame_map_type& bfm) const {
 	STACKTRACE_VERBOSE;
 {
 	o << "# Expressions: " << endl;
@@ -397,6 +398,7 @@ unique_process_subgraph::dump_struct_dot(ostream& o,
 		const expr_struct_type& e(expr_pool[i]);
 		e.dump_type_dot_shape(o) << "];" << endl;
 		e.dump_parent_dot_edge(o << "EXPR_" << gi << " -> ",
+			bfm, offset,
 			(e.is_root() ? lookup_rule(i)->direction() : false)
 			) << ';'<< endl;
 	}

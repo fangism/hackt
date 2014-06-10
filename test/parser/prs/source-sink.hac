@@ -1,0 +1,18 @@
+// test case contributed by Ben Varkey
+defproc bool_source (bool?li; bool!lo){
+prs{
+~li -> lo+
+li -> lo-
+}
+}
+
+defproc bool_sink (bool?li; bool!lo){
+prs{
+li -> lo+
+~li -> lo-
+}
+}
+
+bool lreq, lack;
+bool_source SRC(lack, lreq);
+bool_sink SNK(lreq, lack);

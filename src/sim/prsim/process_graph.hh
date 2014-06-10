@@ -263,7 +263,8 @@ struct unique_process_subgraph {
 	dump_struct(ostream&) const;
 
 	ostream&
-	dump_struct_dot(ostream&, const expr_index_type) const;
+	dump_struct_dot(ostream&, const expr_index_type, 
+		const footprint_frame_map_type&) const;
 
 };	// end struct unique_process_subgraph
 
