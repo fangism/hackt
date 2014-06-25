@@ -1,0 +1,31 @@
+# "inv-min-delay-01.prsimrc"
+# @haco@ inv.haco-c
+
+pusht inv
+# no predicate
+min-delay a b 45
+popt
+# don't forget to do this after loading timing delays!
+echo top-level constraints
+min-delay-list .
+echo subprocess constraints
+min-delay-list inv
+echo all constraints
+min-delay-list-all
+min-delay-fanin-proc a
+min-delay-fanin-proc b
+min-delay-fanin-proc c
+
+echo applying timing delays
+min-delay-apply-all
+min-delay-fanin-proc a
+min-delay-fanin-proc b
+min-delay-fanin-proc c
+
+echo resetting delays
+min-delay-reset
+min-delay-list-all
+min-delay-fanin-proc a
+min-delay-fanin-proc b
+min-delay-fanin-proc c
+

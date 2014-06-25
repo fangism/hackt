@@ -13,11 +13,20 @@
 #include <iostream>
 #include <numeric>			// for accumulate
 #include <functional>
+#include <sstream>
 #include "sim/prsim/State-prsim.hh"
 #include "sim/prsim/util.tcc"
 #include "sim/prsim/Rule.tcc"
 #include "sim/ISE.hh"
 #include "Object/def/footprint.hh"
+
+#include "Object/inst/state_instance.hh"
+#include "Object/inst/instance_alias_info.hh"
+#include "Object/inst/alias_empty.hh"
+#include "Object/inst/instance_pool.hh"
+#include "Object/traits/bool_traits.hh"
+#include "Object/common/dump_flags.hh"
+
 #include "Object/lang/PRS_footprint.hh"
 #include "Object/lang/SPEC.hh"
 #include "util/stacktrace.hh"
@@ -42,6 +51,7 @@ namespace SIM {
 namespace PRSIM {
 #include "util/using_ostream.hh"
 USING_UTIL_COMPOSE
+using entity::bool_tag;
 
 //=============================================================================
 // class unique_process_subgraph method definitions
@@ -469,6 +479,76 @@ unique_process_subgraph::dump_timing_constraints(ostream& o) const {
 #endif	// PRSIM_SETUP_HOLD
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_TIMING_BACKANNOTATE
+
+static
+void
+__print_backannotated_delay_single(ostream& o,
+	const entity::state_instance<bool_tag>::pool_type& bp, 
+	const unique_process_subgraph::min_delay_set_type::value_type& mds) {
+	static const entity::dump_flags&
+		df(dump_flags::no_definition_owner_no_ns);
+	std::ostringstream oss;
+	const node_index_type tgt = mds.first;
+	INVARIANT(tgt);
+	bp[tgt -1].get_back_ref()->dump_hierarchical_name(oss, df);
+	vector<min_delay_entry>::const_iterator
+		si(mds.second.begin()), se(mds.second.end());
+	for ( ; si!=se; ++si) {
+		// TODO: use type-local names
+		// source -> destination
+		o << "\tt( ";
+		bp[si->ref_node -1].get_back_ref()
+			->dump_hierarchical_name(o, df) <<
+			" -> " << oss.str() << " ) >= " << si->time;
+		if (si->predicate) {
+			o << ", if (";
+			bp[si->predicate -1].get_back_ref()
+				->dump_hierarchical_name(o, df) << ')';
+		}
+		o << endl;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+unique_process_subgraph::dump_backannotated_delays(ostream& o) const {
+	NEVER_NULL(_footprint);
+	_footprint->dump_type(
+		o << "Min-delay bounds in type \'") << "\':" << endl;
+	const entity::state_instance<bool_tag>::pool_type&
+		bp(_footprint->get_instance_pool<bool_tag>());
+	min_delay_set_type::const_iterator
+		mdi(min_delays.begin()), mde(min_delays.end());
+	// print using type-local node names
+	for ( ; mdi != mde; ++mdi) {
+		__print_backannotated_delay_single(o, bp, *mdi);
+	}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+unique_process_subgraph::dump_backannotated_delays_targeting(
+		ostream& o, const vector<node_index_type>& t) const {
+	NEVER_NULL(_footprint);
+	_footprint->dump_type(
+		o << "Min-delay bounds in type \'") << "\':" << endl;
+	const entity::state_instance<bool_tag>::pool_type&
+		bp(_footprint->get_instance_pool<bool_tag>());
+	vector<node_index_type>::const_iterator ti(t.begin()), te(t.end());
+	// print using type-local node names
+	for ( ; ti != te; ++ti) {
+		INVARIANT(*ti);
+		min_delay_set_type::const_iterator
+			mdi(min_delays.find(*ti));
+		__print_backannotated_delay_single(o, bp, *mdi);
+	}
+	return o;
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\param index of a local expression
 	\return index of corresponding root expression, closest to node
@@ -523,6 +603,24 @@ unique_process_subgraph::has_not_local_fanin_map(vector<bool>& ret) const {
 		unary_compose(std::logical_not<bool>(),
 			std::mem_fun_ref(&faninout_struct_type::has_fanin)));
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_TIMING_BACKANNOTATE
+/**
+	Adds a timing constraint to unique graph, but doesn't
+	apply it globally to all instances.  
+ */
+void
+unique_process_subgraph::add_min_delay_constraint(const node_index_type ref,
+		const node_index_type tgt, const rule_time_type del,
+		const node_index_type pred) {
+	min_delay_entry md;
+	md.ref_node = ref;
+	md.time = del;
+	md.predicate = pred;
+	min_delays[tgt].push_back(md);
+}
+#endif
 
 //=============================================================================
 // explicit class template instantiations

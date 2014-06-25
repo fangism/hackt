@@ -37,6 +37,9 @@
 #if PRSIM_SETUP_HOLD
 #include "sim/prsim/TimingChecker.hh"
 #endif
+#if PRSIM_TIMING_BACKANNOTATE
+#include "sim/prsim/DelayBackAnnotation.hh"
+#endif
 
 /**
 	First-come-first-serve ordering of updated nodes.
@@ -715,6 +718,9 @@ private:
 	/// timing constraint checking subsystem
 	TimingChecker				timing_checker;
 #endif	// PRSIM_SETUP_HOLD
+#if PRSIM_TIMING_BACKANNOTATE
+	delay_back_annotation_manager		delay_annotation_manager;
+#endif
 	// current time, etc...
 	time_type				current_time;
 	time_type				uniform_delay;
@@ -921,6 +927,7 @@ public:
 			g(process_footprint_map.find(f));	// const
 		return (g != process_footprint_map.end()) ? g->second : 0;
 	}
+
 	// unique_type lookup
 	unique_process_subgraph*
 	lookup_unique_process_graph(const footprint* f) {
@@ -929,10 +936,26 @@ public:
 		return upid ? &unique_process_pool[upid] : NULL;
 	}
 
+	const unique_process_subgraph*
+	lookup_unique_process_graph(const footprint* f) const {
+		const process_index_type upid =
+			lookup_unique_process_graph_id(f);
+		return upid ? &unique_process_pool[upid] : NULL;
+	}
+
 	unique_process_subgraph*
 	lookup_unique_process_graph(const string& s) {
-		// pass empty string to get top-level footprint
-		if (s.length()) {
+		// pass empty string or . to get top-level footprint
+		if (s.length() && s != ".") {
+			const footprint* f = parse_to_footprint(s);
+			return f ? lookup_unique_process_graph(f) : NULL;
+		} else	return &unique_process_pool[0];
+	}
+
+	const unique_process_subgraph*
+	lookup_unique_process_graph(const string& s) const {
+		// pass empty string or . to get top-level footprint
+		if (s.length() && s != ".") {
 			const footprint* f = parse_to_footprint(s);
 			return f ? lookup_unique_process_graph(f) : NULL;
 		} else	return &unique_process_pool[0];
@@ -1057,6 +1080,28 @@ public:
 
 	void
 	norandom(void) { timing_mode = TIMING_UNIFORM; }
+
+#if PRSIM_TIMING_BACKANNOTATE
+	delay_back_annotation_manager&
+	get_delay_annotation_manager(void) {
+		return delay_annotation_manager;
+	}
+
+	void
+	reset_min_delays(void);
+
+	void
+	apply_all_min_delays(void);
+
+	bool
+	list_min_delays_type(ostream&, const string&) const;
+
+	void
+	list_all_min_delays(ostream&) const;
+
+	void
+	min_delay_fanin(ostream&, const node_index_type) const;
+#endif
 
 	bool
 	show_tcounts(void) const { return flags & FLAG_SHOW_TCOUNTS; }

@@ -399,17 +399,10 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 		check_exhi_ring_pool(1), check_exlo_ring_pool(1), 
 		check_exhi(), check_exlo(), 
 #if PRSIM_SETUP_HOLD
-#if 0
-		setup_check_map(),
-		hold_check_map(),
-#if PRSIM_FWD_POST_TIMING_CHECKS
-		timing_check_pool(),
-		timing_check_queue(),
-		active_timing_check_map(),
-#endif
-#else
 		timing_checker(*this),
 #endif
+#if PRSIM_TIMING_BACKANNOTATE
+		delay_annotation_manager(),
 #endif
 		current_time(0), 
 		uniform_delay(time_traits::default_delay), 
@@ -2461,6 +2454,137 @@ State::time_type
 State::get_delay_dn(const event_type& e) const {
 	return get_delay_up(e);		// is identical, actually
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_TIMING_BACKANNOTATE
+/**
+	Wipes entire state of delay-back annotation.
+ */
+void
+State::reset_min_delays(void) {
+	// reset all back-annotation bits on nodes
+	for_each(node_pool.begin(), node_pool.end(),
+		std::mem_fun_ref(&node_type::reset_min_delay_target));
+	// reset timing-fanin on all nodes
+	delay_annotation_manager.reset_timing_fanin();
+	// reset timing-constraints on all unique_process_graphs
+	for_each(unique_process_pool.begin(), unique_process_pool.end(),
+		std::mem_fun_ref(
+			&unique_process_subgraph::reset_delay_constraints));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Traverse every process instance, and apply per-type timing constraints,
+	flagging target nodes as having annotated delays applied and 
+	noting from which processes those delays have been applied 
+	(timing fanin).
+ */
+void
+State::apply_all_min_delays(void) {
+	process_index_type pid = 0;	// start at top-level pid, 0
+	for ( ; pid < process_state_array.size(); ++pid) {
+		const process_sim_state& s(process_state_array[pid]);
+		const unique_process_subgraph& g(s.type());
+		const footprint_frame_map_type&
+			bfm(get_footprint_frame_map(pid));
+		const unique_process_subgraph::min_delay_set_type&
+			md(g.min_delays);
+		unique_process_subgraph::min_delay_set_type::const_iterator
+			mdi(md.begin()), mde(md.end());
+		for ( ; mdi != mde; ++mdi) {
+			const node_index_type lt = mdi->first;
+			INVARIANT(lt);
+			const node_index_type gt = bfm[lt -1];
+#if 0
+			cout << "local target: " << lt << endl;
+			cout << "global target: " << gt << endl;
+#endif
+			__get_node(gt).flag_min_delay_target();
+#if 0
+			const vector<min_delay_entry>& lrefs(mdi->second);
+			vector<min_delay_entry>::const_iterator
+				di(lrefs.begin()), de(lrefs.end());
+			for ( ; di!=de; ++di) {
+				di->ref_node;
+			}
+#else
+// don't actually need to iterate through individual constraints
+// just need to flag node and note process timing fanin in database
+			delay_annotation_manager.add_timing_fanin(gt, pid);
+#endif
+		}
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+State::list_min_delays_type(ostream& o, const string& s) const {
+	const unique_process_subgraph* g = lookup_unique_process_graph(s);
+	if (g) {
+		g->dump_backannotated_delays(o);
+		return false;
+	} else {
+		o << "Error parsing type: " << s << endl;
+		return true;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Print delays per unique type.
+ */
+void
+State::list_all_min_delays(ostream& o) const {
+	vector<unique_process_subgraph>::const_iterator
+		i(unique_process_pool.begin()),
+		e(unique_process_pool.end());
+	for ( ; i!=e; ++i) {
+		i->dump_backannotated_delays(o);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+State::min_delay_fanin(ostream& o, const node_index_type ni) const {
+	o << "Timing arcs whose head is ";
+	dump_node_canonical_name(o, ni) << ": " << endl;
+	const process_timing_fanin_type* ptf =
+		delay_annotation_manager.lookup_process_timing_fanin(ni);
+if (ptf) {
+	process_timing_fanin_type::const_iterator
+		i(ptf->begin()), e(ptf->end());
+	for ( ; i!=e; ++i) {
+		const process_index_type pid = *i;
+		// for each process:
+		// find all the local nodes that map to
+		// the global node ni as a target.
+		// Possible that more than one local node
+		// maps to the same global node, due to 
+		// external connections.
+		// This requires an O(n) search.
+		const process_sim_state& s(process_state_array[pid]);
+		const unique_process_subgraph& g(s.type());
+		const footprint_frame_map_type&
+			bfm(get_footprint_frame_map(pid));
+		// FIXME: finish me
+		vector<node_index_type> m;
+		// m.reserve(8);
+		// find all local offsets that map to the global
+		size_t j = 0;
+		for ( ; j<bfm.size(); ++j) {
+		if (bfm[j] == ni) {
+			m.push_back(j+1);
+		}
+		}
+		// m is sorted
+		g.dump_backannotated_delays_targeting(o, m);
+	}
+}
+	// else no fanin found
+}
+
+#endif	// PRSIM_TIMING_BACKANNOTATE
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

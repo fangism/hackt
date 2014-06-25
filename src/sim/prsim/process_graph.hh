@@ -359,6 +359,11 @@ struct unique_process_subgraph {
 		const node_index_type tgt,
 		const rule_time_type del,
 		const node_index_type pred = INVALID_NODE_INDEX);
+
+	void
+	reset_delay_constraints(void) {
+		min_delays.clear();
+	}
 #endif
 
 	ostream&
@@ -378,6 +383,10 @@ struct unique_process_subgraph {
 #if PRSIM_TIMING_BACKANNOTATE
 	ostream&
 	dump_backannotated_delays(ostream&) const;
+
+	ostream&
+	dump_backannotated_delays_targeting(ostream&,
+		const vector<node_index_type>&) const;
 #endif
 
 };	// end struct unique_process_subgraph

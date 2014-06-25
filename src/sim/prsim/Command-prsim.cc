@@ -7038,7 +7038,7 @@ o <<
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 #if PRSIM_TIMING_BACKANNOTATE
 /***
-@texinfo
+@texinfo cmd/timing-min-delay.texi
 @deffn Command min-delay src dest delay [pred]
 Force the minimum delay between the most recent event on @var{src}
 to the next event on @var{dest} to be greater-than or equal-to
@@ -7049,6 +7049,7 @@ the predicate is true.
 The minimum delay is enforced by postponing the event on @var{dst} to a
 time that meets all constraints; it will never cause an event to advance
 earlier than initially scheduled.  
+@end deffn
 @end texinfo
 ***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(TimingBAMinDelay, 
@@ -7072,15 +7073,23 @@ if (asz < 4 || asz > 5) {
 	}
 	NEVER_NULL(g);
 	NEVER_NULL(g->_footprint);
-#if 1
+#if 0
 	g->_footprint->dump_type(cout << "type: ") << endl;
 #endif
 	string_list::const_iterator ai(a.begin());
 	// note: parsing is sensitive to type-local context
 	++ai;
 	const node_index_type srcind = parse_node_to_index(*ai, s.get_module());
+	if (!srcind) {
+		cerr << "Error finding node: " << *ai << endl;
+		return Command::BADARG;
+	}
 	++ai;
 	const node_index_type dstind = parse_node_to_index(*ai, s.get_module());
+	if (!dstind) {
+		cerr << "Error finding node: " << *ai << endl;
+		return Command::BADARG;
+	}
 	++ai;
 	time_type min_delay;
 	string_to_num(*ai, min_delay);
@@ -7088,11 +7097,16 @@ if (asz < 4 || asz > 5) {
 	if (asz == 5) {
 		++ai;
 		predind = parse_node_to_index(*ai, s.get_module());
+		if (!predind) {
+			cerr << "Error finding node: " << *ai << endl;
+			return Command::BADARG;
+		}
 	}
-#if 1
+#if 0
 	cout << "src=" << srcind << ", dst=" << dstind << ", t=" << min_delay
 		<< ", pred=" << predind << endl;
 #endif
+	g->add_min_delay_constraint(srcind, dstind, min_delay, predind);
 	return Command::NORMAL;
 }
 }
@@ -7100,14 +7114,144 @@ if (asz < 4 || asz > 5) {
 void
 TimingBAMinDelay::usage(ostream& o) {
 	o << name << " <src> <dst> <min-delay> [predicate]" << endl;
+o << "Note: delays are not applied globally until 'min-delay-apply-all' is run."
+	<< endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // min-delay-reset-all -- reset all timing back-annotation
+// clear all node flags
+// empty all graphs' constraints
+
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(TimingBAMinDelayReset, 
+	"min-delay-reset", info,
+	"clear all back-annotated timing-constraints")
+
+int
+TimingBAMinDelayReset::main(State& s, const string_list& a) {
+if (a.size() > 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.reset_min_delays();
+	return Command::NORMAL;
+}
+}
+
+void
+TimingBAMinDelayReset::usage(ostream& o) {
+	o << name << ": " << brief << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// min-delay-apply-all -- COMMIT: traverse all processes and apply
+// min-delay constraints from unique-graphs to instances
+
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(TimingBAMinDelayApplyAll, 
+	"min-delay-apply-all", info,
+	"apply per-type timing-constraints to all unique instances")
+
+int
+TimingBAMinDelayApplyAll::main(State& s, const string_list& a) {
+if (a.size() > 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.apply_all_min_delays();
+	return Command::NORMAL;
+}
+}
+
+void
+TimingBAMinDelayApplyAll::usage(ostream& o) {
+	o << name << ": " << brief << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// diagnostics and printing
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(TimingBAMinDelayList, 
+	"min-delay-list", info,
+	"show timing-constraints impose by type")
+
+// if no argument given, default to using current type context or top-level?
+int
+TimingBAMinDelayList::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	const string& objname(a.back());
+#if 0
+	const footprint* f = s.parse_to_footprint(objname.c_str());
+	if (!f) {
+		cerr << "Error: unknown type: " << objname << endl;
+		return Command::BADARG;
+	}
+#endif
+	if (s.list_min_delays_type(cout, objname)) {
+		cerr << "Error: unknown type: " << objname << endl;
+		return Command::BADARG;
+	}
+	return Command::NORMAL;
+}
+}
+
+void
+TimingBAMinDelayList::usage(ostream& o) {
+	o << name << ": " << brief << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(TimingBAMinDelayListAll, 
+	"min-delay-list-all", info,
+	"show timing-constraints imposed by all type")
+
+int
+TimingBAMinDelayListAll::main(State& s, const string_list& a) {
+if (a.size() > 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.list_all_min_delays(cout);
+	return Command::NORMAL;
+}
+}
+
+void
+TimingBAMinDelayListAll::usage(ostream& o) {
+	o << name << ": " << brief << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(TimingBAMinDelayFaninProc, 
+	"min-delay-fanin-proc", info,
+	"show timing-constraints imposed on the target node")
+
+int
+TimingBAMinDelayFaninProc::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	// FIXME:
+	const size_t ni = parse_node_to_index(a.back(), s.get_module());
+	if (!ni) {
+		cerr << "No such node found." << endl;
+		return Command::BADARG;
+	}
+	s.min_delay_fanin(cout, ni);
+	return Command::NORMAL;
+}
+}
+
+void
+TimingBAMinDelayFaninProc::usage(ostream& o) {
+	o << name << ": " << brief << endl;
+}
 
 #endif	// PRSIM_TIMING_BACKANNOTATE
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
 @texinfo cmd/check-invariants.texi
 @deffn Command check-invariants

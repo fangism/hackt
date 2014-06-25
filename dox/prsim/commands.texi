@@ -120,6 +120,10 @@ Rescheduling and cancelling pending events.
 @include cmd/reschedule.texi
 @include cmd/execute.texi
 
+Timing back-annotation.
+
+@include cmd/timing-min-delay.texi
+
 @c ----------------------------------------------------------------------------
 @node Channel Commands
 @section @t{channel} Commands

@@ -1061,6 +1061,7 @@ PRSIM_CC_FILES = \
 	sim/prsim/Command-prsim.cc \
 	sim/prsim/Command-prsim-export.cc \
 	sim/prsim/Cause.cc \
+	sim/prsim/DelayBackAnnotation.cc \
 	sim/prsim/Node.cc \
 	sim/prsim/Exception.cc \
 	sim/prsim/Expr.cc \

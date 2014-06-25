@@ -191,6 +191,16 @@ struct Node {
 		 */
 		NODE_CHECK_HOLD = 0x0200
 #endif
+#if PRSIM_TIMING_BACKANNOTATE
+		,
+		/**
+			Cached flag to indicate whether or not any
+			min-delay constraint has influence over this node.
+			True should imply that it has an entry in
+			the tming_annotation manager's timing fanin map.
+		 */
+		NODE_MIN_DELAY_TARGET = 0x0400
+#endif
 	} struct_flags_enum;
 
 	/**
@@ -322,6 +332,22 @@ public:
 	bool
 	has_hold_check(void) {
 		return struct_flags & NODE_CHECK_HOLD;
+	}
+#endif
+#if PRSIM_TIMING_BACKANNOTATE
+	void
+	flag_min_delay_target(void) {
+		struct_flags |= NODE_MIN_DELAY_TARGET;
+	}
+
+	bool
+	is_min_delay_target(void) const {
+		return struct_flags & NODE_MIN_DELAY_TARGET;
+	}
+
+	void
+	reset_min_delay_target(void) {
+		struct_flags &= ~NODE_MIN_DELAY_TARGET;
 	}
 #endif
 

@@ -510,7 +510,8 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	atomic-d-01 \
 	atomic-e-01 atomic-e-02 \
 	atomic-f-01 \
-	type-scope-01 type-scope-04 type-scope-06
+	type-scope-01 type-scope-04 type-scope-06 \
+	inv-min-delay-01 inv-min-delay-02 inv-min-delay-03
 
 # subset of prsimrc test that we wish to compare traces against regressions
 HACKT_PRSIMTRACE_TEST_SUBJECTS = \

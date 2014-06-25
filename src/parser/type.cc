@@ -123,11 +123,16 @@ parse_and_check_complete_type(const char* t, const entity::module& m) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Lookups up a process/definition footprint from the top-level module.
+	A "." refers to the top-level type's footprint, which may be unnamed.
 	\return NULL on error
  */
 const footprint*
 parse_to_footprint(const char* t, const module& m) {
 	STACKTRACE_VERBOSE;
+	NEVER_NULL(t);
+	if (std::string(t) == ".") {	// std::string_view
+		return &m.get_footprint();
+	}
 	// type parse already handles namespace
 	const count_ptr<const fundamental_type_reference>
 		tr(parse_and_check_complete_type(t, m));
