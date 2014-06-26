@@ -2496,23 +2496,10 @@ State::apply_all_min_delays(void) {
 			const node_index_type lt = mdi->first;
 			INVARIANT(lt);
 			const node_index_type gt = bfm[lt -1];
-#if 0
-			cout << "local target: " << lt << endl;
-			cout << "global target: " << gt << endl;
-#endif
 			__get_node(gt).flag_min_delay_target();
-#if 0
-			const vector<min_delay_entry>& lrefs(mdi->second);
-			vector<min_delay_entry>::const_iterator
-				di(lrefs.begin()), de(lrefs.end());
-			for ( ; di!=de; ++di) {
-				di->ref_node;
-			}
-#else
 // don't actually need to iterate through individual constraints
 // just need to flag node and note process timing fanin in database
 			delay_annotation_manager.add_timing_fanin(gt, pid);
-#endif
 		}
 	}
 }
