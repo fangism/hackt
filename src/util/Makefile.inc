@@ -166,6 +166,7 @@ UTIL_CXX_HEADER_FILES = \
 	util/memory/ref_count_pool.hh \
 	util/memory/ref_count_pool_anchor.hh \
 	util/memory/thread_lock.hh \
+	util/monotonic_vector.hh \
 	util/multidimensional_qmap_fwd.hh \
 	util/multidimensional_sparse_set_fwd.hh \
 	util/multikey_fwd.hh \

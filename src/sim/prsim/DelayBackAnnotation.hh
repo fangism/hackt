@@ -7,6 +7,7 @@
 #include <map>
 #include <set>
 #include "util/memory/index_pool.hh"
+#include "util/monotonic_vector.hh"
 #include "sim/common.hh"
 #include "sim/time.hh"
 
@@ -52,7 +53,9 @@ typedef	size_t					delay_index_type;
 typedef	node_index_type				pred_index_type;
 #endif
 // or use vector? like Node::process_fanin_type
-typedef	set<process_index_type>			process_timing_fanin_type;
+// typedef	set<process_index_type>			process_timing_fanin_type;
+typedef	util::monotonic_vector<process_index_type>
+						process_timing_fanin_type;
 
 // see TimingChecker for similar structures
 // predicate node index? (ebool unique ID)
@@ -96,6 +99,9 @@ class delay_back_annotation_manager {
 		key: target node index
 		value: processes that can delay the target node
 			with min-delay constraints.
+		TODO: replace this with a vector<pair> because
+			by construction this is grown monotonically,
+			so we can use push_back instead of insert.
 	 */
 	typedef	map<node_index_type, process_timing_fanin_type>
 						global_timing_fanin_map;

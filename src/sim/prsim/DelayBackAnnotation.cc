@@ -2,7 +2,9 @@
 	\file "sim/prsim/DelayBackAnnotation.cc"
  */
 
+
 #include "sim/prsim/DelayBackAnnotation.hh"
+#include "util/macros.h"
 
 namespace HAC {
 namespace SIM {
@@ -13,7 +15,10 @@ namespace PRSIM {
 void
 delay_back_annotation_manager::add_timing_fanin(const node_index_type ni,
 		const process_index_type pi) {
-	timing_fanin[ni].insert(pi);
+	process_timing_fanin_type& ptf(timing_fanin[ni]);
+//	INVARIANT(ptf.empty() || pi >= *(--ptf.end()));
+	// monotonic by construction
+	ptf.insert(pi);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
