@@ -1,0 +1,53 @@
+# "muxes-a-01.prsimrc"
+# @haco@ muxes-a.haco-c
+
+mode
+watchall
+
+echo first, with selects all X, inputs all 0
+set in[0..3] 0
+cycle
+assert Z 1
+echo then with selects all X, inputs all 1
+set in[0..3] 1
+cycle
+assert Z 0
+echo then with selects all X, inputs all 0
+set in[0..3] 0
+cycle
+assert Z 1
+
+echo then selecting in[0]
+set in[0..3] 0
+set sel[0].t 1
+set sel[0].f 0
+set sel[1].t 0
+set sel[1].f 1
+set sel[2].t 0
+set sel[2].f 1
+set sel[3].t 0
+set sel[3].f 1
+set in[0..3] 0
+cycle
+assert Z 1
+set in[0] 1
+cycle
+assert Z 0
+set in[0] 0
+cycle
+assert Z 1
+
+echo toggling in[0..3]
+set in[0..3] 0
+assert Z 1
+cycle
+set in[0..3] 1
+cycle
+assert Z 0
+set in[0..3] 0
+cycle
+assert Z 1
+set in[0..3] 1
+cycle
+assert Z 0
+

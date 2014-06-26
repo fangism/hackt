@@ -1,0 +1,123 @@
+mode: 
+	weak rules: off
+	unstable events propagate Xs
+	force-excl caused unstable events propagate Xs
+	on unstable: break
+	on weak-unstable: warn
+	on excl-unstable: break
+	on interference: break
+	on weak-interference: warn
+	checking exclusions: on
+	on exclusion-fail: fatal
+	on invariant-fail: break
+	on invariant-unknown: warn
+	on assert-fail: fatal
+	on channel-expect-fail: fatal
+	on keeper-check-fail: ignore
+first, with selects all X, inputs all 0 
+	0	in[0] : 0
+	0	in[1] : 0
+	0	in[2] : 0
+	0	in[3] : 0
+	10	L.a[0].NC : 0	[by in[1]:=0]
+	10	L.a[1].NC : 0	[by in[3]:=0]
+	20	L.zz[0] : 1	[by L.a[0].NC:=0]
+	20	L.zz[1] : 1	[by L.a[1].NC:=0]
+	30	L.b.NC : 1	[by L.zz[1]:=1]
+	40	L._z : 0	[by L.b.NC:=1]
+	50	Z : 1	[by L._z:=0]
+then with selects all X, inputs all 1 
+WARNING: weak-interference `L.a[0].NC'
+>> cause: `in[0]' (val: 1)
+	50	in[0] : 1
+	50	in[1] : 1
+WARNING: weak-interference `L.a[1].NC'
+>> cause: `in[2]' (val: 1)
+	50	in[2] : 1
+	50	in[3] : 1
+	60	L.a[0].NC : 1	[by in[1]:=1]
+	60	L.a[1].NC : 1	[by in[3]:=1]
+WARNING: weak-interference `L.b.NC'
+>> cause: `L.zz[0]' (val: 0)
+	70	L.zz[0] : 0	[by L.a[0].NC:=1]
+	70	L.zz[1] : 0	[by L.a[1].NC:=1]
+	80	L.b.NC : 0	[by L.zz[1]:=0]
+	90	L._z : 1	[by L.b.NC:=0]
+	100	Z : 0	[by L._z:=1]
+then with selects all X, inputs all 0 
+WARNING: weak-interference `L.a[0].NC'
+>> cause: `in[0]' (val: 0)
+	100	in[0] : 0
+	100	in[1] : 0
+WARNING: weak-interference `L.a[1].NC'
+>> cause: `in[2]' (val: 0)
+	100	in[2] : 0
+	100	in[3] : 0
+	110	L.a[0].NC : 0	[by in[1]:=0]
+	110	L.a[1].NC : 0	[by in[3]:=0]
+WARNING: weak-interference `L.b.NC'
+>> cause: `L.zz[0]' (val: 1)
+	120	L.zz[0] : 1	[by L.a[0].NC:=0]
+	120	L.zz[1] : 1	[by L.a[1].NC:=0]
+	130	L.b.NC : 1	[by L.zz[1]:=1]
+	140	L._z : 0	[by L.b.NC:=1]
+	150	Z : 1	[by L._z:=0]
+then selecting in[0] 
+	150	sel[0].t : 1
+	150	sel[0].f : 0
+	150	sel[1].t : 0
+	150	sel[1].f : 1
+	150	sel[2].t : 0
+	150	sel[2].f : 1
+	150	sel[3].t : 0
+	150	sel[3].f : 1
+	160	L.sela.t : 0	[by sel[3].t:=0]
+	160	L.selb.t : 0	[by sel[3].t:=0]
+	170	L.sela.f : 1	[by L.sela.t:=0]
+	170	L.selb.f : 1	[by L.selb.t:=0]
+	170	in[0] : 1
+	180	L.a[0].NC : 1	[by in[0]:=1]
+	190	L.zz[0] : 0	[by L.a[0].NC:=1]
+	200	L.b.NC : 0	[by L.zz[0]:=0]
+	210	L._z : 1	[by L.b.NC:=0]
+	220	Z : 0	[by L._z:=1]
+	220	in[0] : 0
+	230	L.a[0].NC : 0	[by in[0]:=0]
+	240	L.zz[0] : 1	[by L.a[0].NC:=0]
+	250	L.b.NC : 1	[by L.zz[0]:=1]
+	260	L._z : 0	[by L.b.NC:=1]
+	270	Z : 1	[by L._z:=0]
+toggling in[0..3] 
+	270	in[0] : 1
+	270	in[1] : 1
+	270	in[2] : 1
+	270	in[3] : 1
+	280	L.a[0].NC : 1	[by in[0]:=1]
+	280	L.a[1].NC : 1	[by in[2]:=1]
+	290	L.zz[0] : 0	[by L.a[0].NC:=1]
+	290	L.zz[1] : 0	[by L.a[1].NC:=1]
+	300	L.b.NC : 0	[by L.zz[0]:=0]
+	310	L._z : 1	[by L.b.NC:=0]
+	320	Z : 0	[by L._z:=1]
+	320	in[0] : 0
+	320	in[1] : 0
+	320	in[2] : 0
+	320	in[3] : 0
+	330	L.a[0].NC : 0	[by in[0]:=0]
+	330	L.a[1].NC : 0	[by in[2]:=0]
+	340	L.zz[0] : 1	[by L.a[0].NC:=0]
+	340	L.zz[1] : 1	[by L.a[1].NC:=0]
+	350	L.b.NC : 1	[by L.zz[0]:=1]
+	360	L._z : 0	[by L.b.NC:=1]
+	370	Z : 1	[by L._z:=0]
+	370	in[0] : 1
+	370	in[1] : 1
+	370	in[2] : 1
+	370	in[3] : 1
+	380	L.a[0].NC : 1	[by in[0]:=1]
+	380	L.a[1].NC : 1	[by in[2]:=1]
+	390	L.zz[0] : 0	[by L.a[0].NC:=1]
+	390	L.zz[1] : 0	[by L.a[1].NC:=1]
+	400	L.b.NC : 0	[by L.zz[0]:=0]
+	410	L._z : 1	[by L.b.NC:=0]
+	420	Z : 0	[by L._z:=1]

@@ -1,0 +1,8 @@
+// "muxes-a.hac"
+
+import "muxes.hac";
+
+bool in[4], Z;
+cbit sel[4];
+lmux4 L(in, Z, sel);
+
