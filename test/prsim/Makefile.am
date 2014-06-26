@@ -112,7 +112,8 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	pseudo-flop-c pseudo-flop-d \
 	flop-timing flop-timing-a flop-timing-b \
 	atomic-a atomic-b atomic-c atomic-d atomic-e atomic-f atomic-g \
-	atomic-h atomic-i atomic-i2 atomic-j
+	atomic-h atomic-i atomic-i2 atomic-j \
+	mux-delay
 
 # TODO: more cross-coupled test cases
 # SRAM cell
@@ -511,7 +512,9 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	atomic-e-01 atomic-e-02 \
 	atomic-f-01 \
 	type-scope-01 type-scope-04 type-scope-06 \
-	inv-min-delay-01 inv-min-delay-02 inv-min-delay-03
+	inv-min-delay-01 inv-min-delay-02 inv-min-delay-03 \
+	tree-min-delay-01 \
+	mux-delay-min-delay-01
 
 # subset of prsimrc test that we wish to compare traces against regressions
 HACKT_PRSIMTRACE_TEST_SUBJECTS = \

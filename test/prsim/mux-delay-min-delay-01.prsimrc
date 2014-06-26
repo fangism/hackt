@@ -1,0 +1,24 @@
+# "mux-delay-min-delay-01.prsimrc"
+# @haco@ mux-delay.haco-c
+
+pusht mux2
+min-delay in[0] out 40
+min-delay in[1] out 40
+min-delay sel[0] out 30
+min-delay sel[1] out 30
+popt
+
+pusht mux4
+min-delay in[0] o 60
+min-delay in[1] o 60
+min-delay in[2] o 60
+min-delay in[3] o 60
+popt
+
+min-delay-list-all
+
+echo applying timing delays
+min-delay-apply-all
+min-delay-fanin-proc z
+min-delay-fanin-proc q
+

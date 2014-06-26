@@ -1,0 +1,34 @@
+Min-delay bounds in type '<>':
+Min-delay bounds in type 'mux4<>':
+	t( in[0] -> o ) >= 60
+	t( in[1] -> o ) >= 60
+	t( in[2] -> o ) >= 60
+	t( in[3] -> o ) >= 60
+Min-delay bounds in type 'mux2<>':
+	t( in[0] -> out ) >= 40
+	t( in[1] -> out ) >= 40
+	t( sel[0] -> out ) >= 30
+	t( sel[1] -> out ) >= 30
+applying timing delays 
+Timing arcs whose head is z: 
+Min-delay bounds in type 'mux4<>':
+	t( in[0] -> o ) >= 60
+	t( in[1] -> o ) >= 60
+	t( in[2] -> o ) >= 60
+	t( in[3] -> o ) >= 60
+Min-delay bounds in type 'mux2<>':
+	t( in[0] -> out ) >= 40
+	t( in[1] -> out ) >= 40
+	t( sel[0] -> out ) >= 30
+	t( sel[1] -> out ) >= 30
+Timing arcs whose head is q: 
+Min-delay bounds in type 'mux4<>':
+	t( in[0] -> o ) >= 60
+	t( in[1] -> o ) >= 60
+	t( in[2] -> o ) >= 60
+	t( in[3] -> o ) >= 60
+Min-delay bounds in type 'mux2<>':
+	t( in[0] -> out ) >= 40
+	t( in[1] -> out ) >= 40
+	t( sel[0] -> out ) >= 30
+	t( sel[1] -> out ) >= 30
