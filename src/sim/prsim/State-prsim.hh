@@ -1774,6 +1774,17 @@ private:
 
 	struct auto_flush_queues;
 
+	/**
+		\pre event queue is not empty.
+	 */
+	event_placeholder_type
+	peek_next_event(void) const {
+		return event_queue.top();
+	}
+
+	void
+	flush_killed_events(void);
+
 	event_placeholder_type
 	dequeue_event(void);
 

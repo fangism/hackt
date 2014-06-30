@@ -1748,26 +1748,36 @@ State::enqueue_excllo(const time_type t, const event_index_type ei) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Flush killed events that are at the head of the event queue.
+ */
+void
+State::flush_killed_events(void) {
+	const event_placeholder_type ret(event_queue.top());
+	STACKTRACE_VERBOSE_STEP;
+	while (!event_queue.empty() &&
+			get_event(peek_next_event().event_index).killed()) {
+		__deallocate_killed_event(event_queue.pop().event_index);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Fetches next event from the priority queue.  
 	Automatically skips and deallocates killed events.  
 	NOTE: possible that last event in queue is killed, 
 		in which case, need to return a NULL placeholder.  
+	\pre event queue is not empty
  */
 State::event_placeholder_type
 State::dequeue_event(void) {
 	STACKTRACE_VERBOSE_STEP;
-	event_placeholder_type ret(event_queue.pop());
-//	n.clear_event();	???
-	while (get_event(ret.event_index).killed()) {
-		__deallocate_killed_event(ret.event_index);
-		if (event_queue.empty()) {
-			return event_placeholder_type(
-				current_time, INVALID_EVENT_INDEX);
-		} else {
-			ret = event_queue.pop();
-		}
-	};
-	return ret;
+	flush_killed_events();
+	if (event_queue.empty()) {
+		return event_placeholder_type(
+			current_time, INVALID_EVENT_INDEX);
+	} else {
+		return event_queue.pop();
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
