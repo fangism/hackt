@@ -7249,6 +7249,39 @@ TimingBAMinDelayFaninProc::usage(ostream& o) {
 	o << name << ": " << brief << endl;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(TimingBAMinDelayVerbose, 
+	"min-delay-verbose", info,
+	"show when min-delay constraints are applied in rescheduling")
+
+int
+TimingBAMinDelayVerbose::main(State& s, const string_list& a) {
+if (a.size() == 1) {
+	cout << "min-delay verbose: " << s.verbose_min_delays() << endl;
+} else if (a.size() == 2) {
+	bool b;
+	if (string_to_num(a.back(), b)) {
+		usage(cerr << "usage: ");
+		return Command::BADARG;
+	}
+	if (b) {
+		s.show_min_delays();
+	} else {
+		s.silent_min_delays();
+	}
+} else {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+}
+	return Command::NORMAL;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+TimingBAMinDelayVerbose::usage(ostream& o) {
+	o << name << " [01] : " << brief << endl;
+}
+
 #endif	// PRSIM_TIMING_BACKANNOTATE
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

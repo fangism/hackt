@@ -10,6 +10,7 @@ min-delay a c 70
 min-delay b c 40
 
 min-delay-apply-all
+min-delay-verbose 1
 
 watchall
 set a 0

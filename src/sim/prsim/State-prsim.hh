@@ -332,6 +332,14 @@ private:
 			accounts for possibly vacuous events.  
 		 */
 		FLAG_STOP_ON_VACUOUS = 0x40000,
+#if PRSIM_TIMING_BACKANNOTATE
+		/**
+			Set to true to print when min-delay constraint
+			is applied.  More useful for debugging than anything.
+			Default: false
+		 */
+		FLAG_MIN_DELAY_VERBOSE = 0x80000,
+#endif
 		/// initial flags
 		FLAGS_DEFAULT = FLAG_CHECK_EXCL | FLAG_SHOW_CAUSE,
 		/**
@@ -1564,6 +1572,23 @@ public:
 	stopping_on_vacuous_events(void) const {
 		return flags & FLAG_STOP_ON_VACUOUS;
 	}
+
+#if PRSIM_TIMING_BACKANNOTATE
+	void
+	show_min_delays(void) {
+		flags |= FLAG_MIN_DELAY_VERBOSE;
+	}
+
+	void
+	silent_min_delays(void) {
+		flags &= ~FLAG_MIN_DELAY_VERBOSE;
+	}
+
+	bool
+	verbose_min_delays(void) const {
+		return flags & FLAG_MIN_DELAY_VERBOSE;
+	}
+#endif
 
 	void
 	append_mk_exclhi_ring(ring_set_type&);

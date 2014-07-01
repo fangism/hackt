@@ -1783,12 +1783,22 @@ State::dequeue_event(void) {
 		// do not apply min-delays to X transitions (conservative)
 		const applied_min_delay_constraint
 			c(node_event_min_delay(ne.node));
-		if (c.delayed) {
+		if (c.delayed && (c.time > ep.time)) {
 			INVARIANT(c.time > current_time);
 			// then need to reschedule this next event for later
 			const bool err = reschedule_event(ne.node, c.time);
 			INVARIANT(!err);
+			if (verbose_min_delays()) {
+				cout << "note: event on ";
+				dump_node_canonical_name(cout, ne.node);
+				cout << " was delayed from " <<
+					ep.time << " until " <<
+					c.time << " by ";
+				dump_node_canonical_name(cout, c.ref) << endl;
+			}
+			// FIXME: update critical event!
 			current_time = ep.time;	// advance
+			// or is it better to return NULL event? like killed event?
 			// TODO: verbosity, diagnostic?
 			return dequeue_event();	// tail recursion, FIXME: rewrite
 		}

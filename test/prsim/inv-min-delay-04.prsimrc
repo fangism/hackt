@@ -7,6 +7,7 @@ min-delay a b 45
 popt
 # don't forget to do this after loading timing delays!
 min-delay-apply-all
+min-delay-verbose 1
 
 watchall
 set a 0
