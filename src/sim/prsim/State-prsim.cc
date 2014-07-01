@@ -1776,6 +1776,24 @@ State::dequeue_event(void) {
 		return event_placeholder_type(
 			current_time, INVALID_EVENT_INDEX);
 	} else {
+#if PRSIM_TIMING_BACKANNOTATE
+		const event_placeholder_type& ep(peek_next_event());
+		const event_type& ne(get_event(ep.event_index));
+		if (ne.val != LOGIC_OTHER) {
+		// do not apply min-delays to X transitions (conservative)
+		const applied_min_delay_constraint
+			c(node_event_min_delay(ne.node));
+		if (c.delayed) {
+			INVARIANT(c.time > current_time);
+			// then need to reschedule this next event for later
+			const bool err = reschedule_event(ne.node, c.time);
+			INVARIANT(!err);
+			current_time = ep.time;	// advance
+			// TODO: verbosity, diagnostic?
+			return dequeue_event();	// tail recursion, FIXME: rewrite
+		}
+		}
+#endif
 		return event_queue.pop();
 	}
 }
@@ -2564,7 +2582,6 @@ if (ptf) {
 		const unique_process_subgraph& g(s.type());
 		const footprint_frame_map_type&
 			bfm(get_footprint_frame_map(pid));
-		// FIXME: finish me
 		vector<node_index_type> m;
 		// m.reserve(8);
 		// find all local offsets that map to the global
@@ -2579,6 +2596,71 @@ if (ptf) {
 	}
 }
 	// else no fanin found
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Determine whether or not event on node ni should be further 
+	delayed by any of the min-delay constraints.
+ */
+State::applied_min_delay_constraint
+State::node_event_min_delay(const node_index_type ni) const {
+	applied_min_delay_constraint ret(current_time);
+	const node_type& n(get_node(ni));
+if (n.is_min_delay_target()) {
+	const process_timing_fanin_type* ptf =
+		delay_annotation_manager.lookup_process_timing_fanin(ni);
+	NEVER_NULL(ptf);
+	process_timing_fanin_type::const_iterator
+		i(ptf->begin()), e(ptf->end());
+for ( ; i!=e; ++i) {
+	const process_index_type pid = *i;
+	const process_sim_state& s(process_state_array[pid]);
+	const unique_process_subgraph& g(s.type());
+	const footprint_frame_map_type& bfm(get_footprint_frame_map(pid));
+	typedef	unique_process_subgraph::min_delay_set_type
+				min_delay_set_type;
+	typedef	min_delay_set_type::mapped_type
+				delay_fanin_set_type;
+	// indentify process-local aliases to the target node
+	// TODO: speedup lookup by caching global fanins
+	// otherwise this scan can be really slow
+	size_t j = 0;	// local index
+	for ( ; j<bfm.size(); ++j) {
+	if (bfm[j] == ni) {
+		const min_delay_set_type::const_iterator
+			f(g.min_delays.find(j+1));
+		INVARIANT(f != g.min_delays.end());
+		// by construction
+		delay_fanin_set_type::const_iterator
+			di(f->second.begin()), de(f->second.end());
+		for ( ; di!=de; ++di) {
+			const min_delay_entry& md(*di);
+			// suppress if predicate is false
+			bool apply = true;
+			if (md.predicate) {
+				const node_index_type gpr = bfm[md.predicate -1];
+				if (get_node(gpr).current_value() == LOGIC_LOW) {
+					apply = false;
+				}
+			}
+			if (apply) {
+				const node_index_type grr = bfm[md.ref_node -1];
+				const node_type& r(get_node(grr));
+				// right now, don't care about value
+				const time_type past = r.get_last_transition_time();
+				const time_type min_time = past +md.time;
+				// take argmax(t_ref +t_min_delay)
+				if (min_time > ret.time) {
+					ret.set(grr, min_time);
+				}
+			}
+		}
+	}
+	}	// end for
+}	// end for each process-timing-fanin
+}	// end if
+	return ret;
 }
 
 #endif	// PRSIM_TIMING_BACKANNOTATE

@@ -1724,6 +1724,36 @@ public:
 	bool
 	reschedule_event_relative(const node_index_type, const time_type);
 
+#if PRSIM_TIMING_BACKANNOTATE
+private:
+	/**
+		Representation of the constraint for the 
+		maximum of min-delays.  
+		Returned by iterating over active constraints.
+	 */
+	struct applied_min_delay_constraint {
+		bool			delayed;
+		// the last switched node that activated the constraint
+		// global index
+		node_index_type		ref;
+		time_type		time;
+
+		explicit
+		applied_min_delay_constraint(const time_type& t) :
+			delayed(false), ref(INVALID_NODE_INDEX), time(t) { }
+
+		void
+		set(const node_index_type r, const time_type& t) {
+			ref = r;
+			time = t;
+			delayed = true;
+		}
+	};	// end struct applied_min_delay_constraint
+
+	applied_min_delay_constraint
+	node_event_min_delay(const node_index_type) const;
+
+#endif
 private:
 #if PRSIM_MK_EXCL_BLOCKING_SET
 	void

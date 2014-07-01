@@ -1,0 +1,16 @@
+	0	a : 0
+	25	b : 1	[by a:=0]
+	70	c : 0	[by b:=1]
+	70	a : 1
+	95	b : 0	[by a:=1]
+	140	c : 1	[by b:=0]
+WARNING: weak-interference `b'
+>> cause: `a' (val: X)
+	140	a : X
+WARNING: weak-interference `c'
+>> cause: `b' (val: X)
+	150	b : X	[by a:=X]
+	160	c : X	[by b:=X]
+	160	a : 1
+	185	b : 0	[by a:=1]
+	230	c : 1	[by b:=0]
