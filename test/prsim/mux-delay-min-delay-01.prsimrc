@@ -2,8 +2,8 @@
 # @haco@ mux-delay.haco-c
 
 pusht mux2
-min-delay in[0] out 40
-min-delay in[1] out 40
+min-delay in[0] out 40 sel[0]
+min-delay in[1] out 40 sel[1]
 min-delay sel[0] out 30
 min-delay sel[1] out 30
 popt
