@@ -1,0 +1,132 @@
+# "mux-delay-min-delay-02.prsimrc"
+# @haco@ mux-delay.haco-c
+
+pusht mux2
+min-delay in[0] out 40 sel[0]
+min-delay in[1] out 40 sel[1]
+min-delay sel[0] out 30
+min-delay sel[1] out 30
+popt
+
+min-delay-list-all
+
+echo applying timing delays
+min-delay-apply-all
+watchall
+min-delay-verbose 1
+weak-interference ignore
+
+set s[0][0] 1
+set s[0][1] 0
+set s[1][0] 1
+set s[1][1] 0
+set x[0] 0
+set x[1] 0
+set x[2] 0
+set x[3] 0
+cycle
+
+echo ----------------
+set s[0][0] X
+set s[0][1] X
+set s[1][0] X
+set s[1][1] X
+set x[0] X
+set x[1] X
+set x[2] X
+set x[3] X
+cycle
+echo ----------------
+
+set s[0][0] 1
+set s[0][1] 0
+set s[1][0] 1
+set s[1][1] 0
+advance 5
+set x[0] 0
+set x[1] 0
+set x[2] 0
+set x[3] 0
+cycle
+
+echo ----------------
+set s[0][0] X
+set s[0][1] X
+set s[1][0] X
+set s[1][1] X
+set x[0] X
+set x[1] X
+set x[2] X
+set x[3] X
+cycle
+echo ----------------
+
+set x[0] 0
+set x[1] 0
+set x[2] 0
+set x[3] 0
+advance 5
+set s[0][0] 1
+set s[0][1] 0
+set s[1][0] 1
+set s[1][1] 0
+cycle
+
+echo ----------------
+set s[0][0] X
+set s[0][1] X
+set s[1][0] X
+set s[1][1] X
+set x[0] X
+set x[1] X
+set x[2] X
+set x[3] X
+cycle
+echo ----------------
+
+set s[0][0] 1
+set s[0][1] 0
+set s[1][0] 1
+set s[1][1] 0
+cycle
+set x[0] 0
+set x[1] 0
+set x[2] 0
+set x[3] 0
+cycle
+
+echo ----------------
+set s[0][0] X
+set s[0][1] X
+set s[1][0] X
+set s[1][1] X
+set x[0] X
+set x[1] X
+set x[2] X
+set x[3] X
+cycle
+echo ----------------
+
+set x[0] 0
+set x[1] 0
+set x[2] 0
+set x[3] 0
+cycle
+set s[0][0] 1
+set s[0][1] 0
+set s[1][0] 1
+set s[1][1] 0
+cycle
+
+echo ----------------
+set s[0][0] X
+set s[0][1] X
+set s[1][0] X
+set s[1][1] X
+set x[0] X
+set x[1] X
+set x[2] X
+set x[3] X
+cycle
+echo ----------------
+
