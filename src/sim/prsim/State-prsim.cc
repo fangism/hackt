@@ -1767,6 +1767,7 @@ State::flush_killed_events(void) {
 	NOTE: possible that last event in queue is killed, 
 		in which case, need to return a NULL placeholder.  
 	\pre event queue is not empty
+	\return next event (placeholder) if there is one, else a NULL event.
  */
 State::event_placeholder_type
 State::dequeue_event(void) {
@@ -1796,10 +1797,18 @@ State::dequeue_event(void) {
 					c.time << " by ";
 				dump_node_canonical_name(cout, c.ref) << endl;
 			}
-			// FIXME: update critical event!
 			current_time = ep.time;	// advance
+#if 0
+			// update critical event?
+			// problem: don't have trace index of the last
+			// event on the c.ref node
+			const node_type& r(get_node(c.ref));
+			ne.cause = event_type::cause_type(
+				c.ref, r.current_value(),
+				r.get_last_transition_time());
+				// critical_trace_event index?
+#endif
 			// or is it better to return NULL event? like killed event?
-			// TODO: verbosity, diagnostic?
 			return dequeue_event();	// tail recursion, FIXME: rewrite
 		}
 		}
