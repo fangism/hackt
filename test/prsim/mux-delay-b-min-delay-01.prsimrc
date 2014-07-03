@@ -1,17 +1,22 @@
-# "mux-delay-min-delay-02.prsimrc"
-# @haco@ mux-delay.haco-c
+# "mux-delay-b-min-delay-01.prsimrc"
+# @haco@ mux-delay-b.haco-c
 
-pusht mux2
-min-delay in[0] out 40 sel[0]
-min-delay in[1] out 40 sel[1]
-min-delay sel[0] out 30
-min-delay sel[1] out 30
+pusht mux4
+min-delay in[0] o 60 ms[0]
+min-delay in[1] o 60 ms[1]
+min-delay in[2] o 60 ms[2]
+min-delay in[3] o 60 ms[3]
+min-delay sel[0][0] o 45
+min-delay sel[0][1] o 45
+min-delay sel[1][0] o 25
+min-delay sel[1][1] o 25
 popt
 
 min-delay-list-all
 
 echo applying timing delays
 min-delay-apply-all
+min-delay-fanin-proc z
 watchall
 min-delay-verbose 1
 weak-interference ignore

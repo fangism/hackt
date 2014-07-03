@@ -39,6 +39,7 @@ note: event on z was delayed from 60 until 80 by m1.zz[0]
 	110	m1.b.loc : X	[by m1.zz[0]:=X]
 	120	z : X	[by m1.b.loc:=X]
 ---------------- 
+---------------- 
 	120	s[0][0] : 1
 	120	s[0][1] : 0
 	120	s[1][0] : 1
@@ -105,6 +106,7 @@ note: event on z was delayed from 305 until 325 by m1.zz[0]
 	355	m1.b.loc : X	[by m1.zz[0]:=X]
 	365	z : X	[by m1.b.loc:=X]
 ---------------- 
+---------------- 
 	365	s[0][0] : 1
 	365	s[0][1] : 0
 	365	s[1][0] : 1
@@ -170,4 +172,105 @@ note: event on z was delayed from 545 until 565 by m1.zz[0]
 	585	m1.zz[1] : X	[by m1.a[1].loc:=X]
 	595	m1.b.loc : X	[by m1.zz[0]:=X]
 	605	z : X	[by m1.b.loc:=X]
+---------------- 
+---------------- 
+	605	s[0][0] : 1
+	605	s[0][1] : 0
+	605	s[1][0] : 1
+	605	s[1][1] : 0
+	705	x[0] : 0
+	705	x[1] : 0
+	705	x[2] : 0
+	705	x[3] : 0
+	715	m1.a[0].loc : 0	[by x[0]:=0]
+	715	m1.a[1].loc : 0	[by x[2]:=0]
+note: event on m1.zz[0] was delayed from 725 until 745 by x[0]
+note: event on m1.zz[1] was delayed from 725 until 745 by x[2]
+	745	m1.zz[0] : 1	[by m1.a[0].loc:=0]
+	745	m1.zz[1] : 1	[by m1.a[1].loc:=0]
+	755	m1.b.loc : 1	[by m1.zz[0]:=1]
+note: event on z was delayed from 765 until 785 by m1.zz[0]
+	785	z : 0	[by m1.b.loc:=1]
+---------------- 
+	785	s[0][0] : X
+	785	s[0][1] : X
+	785	s[1][0] : X
+	785	s[1][1] : X
+	785	x[0] : X
+	785	x[1] : X
+	785	x[2] : X
+	785	x[3] : X
+	795	m1.a[0].loc : X	[by x[0]:=X]
+	795	m1.a[1].loc : X	[by x[2]:=X]
+	805	m1.zz[0] : X	[by m1.a[0].loc:=X]
+	805	m1.zz[1] : X	[by m1.a[1].loc:=X]
+	815	m1.b.loc : X	[by m1.zz[0]:=X]
+	825	z : X	[by m1.b.loc:=X]
+---------------- 
+	825	x[0] : 0
+	825	x[1] : 0
+	825	x[2] : 0
+	825	x[3] : 0
+	835	m1.a[0].loc : 0	[by x[1]:=0]
+	835	m1.a[1].loc : 0	[by x[3]:=0]
+note: event on m1.zz[0] was delayed from 845 until 865 by x[0]
+note: event on m1.zz[1] was delayed from 845 until 865 by x[2]
+	865	m1.zz[0] : 1	[by m1.a[0].loc:=0]
+	865	m1.zz[1] : 1	[by m1.a[1].loc:=0]
+	875	m1.b.loc : 1	[by m1.zz[1]:=1]
+note: event on z was delayed from 885 until 905 by m1.zz[0]
+	905	z : 0	[by m1.b.loc:=1]
+	1005	s[0][0] : 1
+	1005	s[0][1] : 0
+	1005	s[1][0] : 1
+	1005	s[1][1] : 0
+---------------- 
+	1005	s[0][0] : X
+	1005	s[0][1] : X
+	1005	s[1][0] : X
+	1005	s[1][1] : X
+	1005	x[0] : X
+	1005	x[1] : X
+	1005	x[2] : X
+	1005	x[3] : X
+	1015	m1.a[0].loc : X	[by x[0]:=X]
+	1015	m1.a[1].loc : X	[by x[2]:=X]
+	1025	m1.zz[0] : X	[by m1.a[0].loc:=X]
+	1025	m1.zz[1] : X	[by m1.a[1].loc:=X]
+	1035	m1.b.loc : X	[by m1.zz[0]:=X]
+	1045	z : X	[by m1.b.loc:=X]
+---------------- 
+---------------- 
+	1045	x[0] : 1
+	1045	x[1] : 0
+	1045	x[2] : 0
+	1045	x[3] : 1
+	1145	s[0][0] : 1
+	1145	s[0][1] : 0
+	1145	s[1][0] : 1
+	1145	s[1][1] : 0
+	1155	m1.a[1].loc : 0	[by s[0][0]:=1]
+	1155	m1.a[0].loc : 1	[by s[0][1]:=0]
+note: event on m1.zz[1] was delayed from 1165 until 1175 by s[0][0]
+note: event on m1.zz[0] was delayed from 1165 until 1175 by s[0][0]
+	1175	m1.zz[1] : 1	[by m1.a[1].loc:=0]
+	1175	m1.zz[0] : 0	[by m1.a[0].loc:=1]
+	1185	m1.b.loc : 0	[by m1.zz[0]:=0]
+note: event on z was delayed from 1195 until 1215 by m1.zz[0]
+	1215	z : 1	[by m1.b.loc:=0]
+---------------- 
+	1215	s[0][0] : X
+	1215	s[0][1] : X
+	1215	s[1][0] : X
+	1215	s[1][1] : X
+	1215	x[0] : X
+	1215	x[1] : X
+	1215	x[2] : X
+	1215	x[3] : X
+	1225	m1.a[1].loc : X	[by s[0][0]:=X]
+	1225	m1.a[0].loc : X	[by s[0][1]:=X]
+	1225	m1.b.loc : X	[by s[1][0]:=X]
+	1235	m1.zz[1] : X	[by m1.a[1].loc:=X]
+	1235	m1.zz[0] : X	[by m1.a[0].loc:=X]
+	1235	z : X	[by m1.b.loc:=X]
 ---------------- 
