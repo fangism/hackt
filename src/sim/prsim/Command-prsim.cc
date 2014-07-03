@@ -7119,10 +7119,14 @@ o << "Note: delays are not applied globally until 'min-delay-apply-all' is run."
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// min-delay-reset-all -- reset all timing back-annotation
-// clear all node flags
-// empty all graphs' constraints
-
+/***
+@texinfo cmd/timing-min-delay-reset-all.texi
+@deffn Command min-delay-reset-all
+This clears all timing back-annotations to the initial clean state.
+This command is useful between loading of different delay constraint sets.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(TimingBAMinDelayReset, 
 	"min-delay-reset", info,
 	"clear all back-annotated timing-constraints")
@@ -7144,8 +7148,16 @@ TimingBAMinDelayReset::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// min-delay-apply-all -- COMMIT: traverse all processes and apply
-// min-delay constraints from unique-graphs to instances
+/***
+@texinfo cmd/timing-min-delay-apply-all.texi
+@deffn Command timing-min-delay-apply-all
+After setting per-type delays this @emph{applies} delays to all
+instances of each type.
+This command is required for min-delay constraints to take effect.
+Do not forget it after loading delay sets.
+@end deffn
+@end texinfo
+***/
 
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(TimingBAMinDelayApplyAll, 
 	"min-delay-apply-all", info,
@@ -7168,7 +7180,13 @@ TimingBAMinDelayApplyAll::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// diagnostics and printing
+/***
+@texinfo cmd/timing-min-delay-list.texi
+@deffn Command min-delay-list type
+Prints the timing constraints associated with process @var{type}.
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(TimingBAMinDelayList, 
 	"min-delay-list", info,
 	"show timing-constraints impose by type")
@@ -7202,6 +7220,13 @@ TimingBAMinDelayList::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/timing-min-delay-list-all.texi
+@deffn Command min-delay-list-all
+Prints the timing constraints associated with every process.
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(TimingBAMinDelayListAll, 
 	"min-delay-list-all", info,
 	"show timing-constraints imposed by all type")
@@ -7223,6 +7248,13 @@ TimingBAMinDelayListAll::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/timing-min-delay-fanin-proc.texi
+@deffn Command min-delay-fanin-proc node
+Prints all sources of timing constraints that can delay @var{node}.
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(TimingBAMinDelayFaninProc, 
 	"min-delay-fanin-proc", info,
 	"show timing-constraints imposed on the target node")
@@ -7250,6 +7282,16 @@ TimingBAMinDelayFaninProc::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/timing-min-delay-verbose.texi
+@deffn Command min-delay-verbose [01]
+Set to 1 to enable messages that print when the schedule on a node
+is altered by min-delay constraints.  
+This is most useful for debugging and development of 
+min-delay constraints.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(TimingBAMinDelayVerbose, 
 	"min-delay-verbose", info,
 	"show when min-delay constraints are applied in rescheduling")

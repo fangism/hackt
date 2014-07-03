@@ -123,6 +123,12 @@ Rescheduling and cancelling pending events.
 Timing back-annotation.
 
 @include cmd/timing-min-delay.texi
+@include cmd/timing-min-delay-apply-all.texi
+@include cmd/timing-min-delay-reset-all.texi
+@include cmd/timing-min-delay-list.texi
+@include cmd/timing-min-delay-list-all.texi
+@include cmd/timing-min-delay-fanin-proc.texi
+@include cmd/timing-min-delay-verbose.texi
 
 @c ----------------------------------------------------------------------------
 @node Channel Commands
