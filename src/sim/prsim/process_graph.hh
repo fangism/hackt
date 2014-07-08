@@ -353,6 +353,19 @@ struct unique_process_subgraph {
 	void
 	has_not_local_fanin_map(vector<bool>&) const;
 
+	void
+	rules_matching_fanin(const node_index_type, const bool,
+		vector<rule_index_type>&) const;
+
+	void
+	rules_matching_fanout(const node_index_type,
+		vector<rule_index_type>&) const;
+
+	void
+	rules_matching_faninout(const node_index_type, 
+		const node_index_type, const bool, 
+		vector<rule_index_type>&) const;
+
 #if PRSIM_TIMING_BACKANNOTATE
 	void
 	add_min_delay_constraint(const node_index_type ref,

@@ -54,6 +54,27 @@ USING_UTIL_COMPOSE
 using entity::bool_tag;
 
 //=============================================================================
+// utility functions
+/**
+	Print footprint-local name of node.
+	Just a convenience function.
+	\param lni local node index, 1-based.
+ */
+static
+ostream&
+dump_node_local_name(ostream& o, 
+		const entity::state_instance<bool_tag>::pool_type& bp, 
+		const node_index_type lni) {
+	// default dump flags
+	static const entity::dump_flags&
+		df(dump_flags::no_definition_owner_no_ns);
+	INVARIANT(lni);
+	// convert 1-based to 0-based
+	bp[lni -1].get_back_ref()->dump_hierarchical_name(o, df);
+	return o;
+}
+
+//=============================================================================
 // class unique_process_subgraph method definitions
 unique_process_subgraph::unique_process_subgraph(const entity::footprint* f) :
 		_footprint(f), 
@@ -307,6 +328,61 @@ unique_process_subgraph::check_structure(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	\param lni match rules that drive this node.
+	\param dir pull-up (1) or pull-dn (0)
+	\return list of rule indices that match.
+	Weak rules are ignored.
+ */
+void
+unique_process_subgraph::rules_matching_fanin(const node_index_type lni,
+	const bool dir, vector<rule_index_type>& ret) const {
+	// see process_sim_state::dump_node_fanin
+	const faninout_struct_type& fia(local_faninout_map[lni]);
+	const size_t w = NORMAL_RULE;
+	ret = dir ? fia.pull_up STR_INDEX(w) : fia.pull_dn STR_INDEX(w);
+	// these expr_indices are also rule_indices
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param ni match rules that drive this node.
+	\return list of rule indices that match.
+	Weak rules are ignored.
+ */
+void
+unique_process_subgraph::rules_matching_fanout(const node_index_type lni,
+	vector<rule_index_type>& ret) const {
+	const fanout_array_type& foa(local_faninout_map[lni].fanout);
+	// expr_indices need to be translated and unique-sorted to rule indices
+	set<rule_index_type> s;
+	fanout_array_type::const_iterator i(foa.begin()), e(foa.end());
+	for ( ; i!=e; ++i) {
+		const rule_map_type::const_iterator f(rule_map.find(*i));
+		INVARIANT(f != rule_map.end());
+		s.insert(f->second);
+	}
+	ret.clear();
+	copy(s.begin(), s.end(), back_inserter(ret));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Match rules with lns in guard, and fan out to lnd, in direction ddir.
+ */
+void
+unique_process_subgraph::rules_matching_faninout(const node_index_type lns,
+	const node_index_type lnd, const bool ddir,
+	vector<rule_index_type>& ret) const {
+	vector<rule_index_type> tmp1, tmp2;
+	rules_matching_fanin(lnd, ddir, tmp1);
+	rules_matching_fanout(lns, tmp2);
+	ret.clear();
+	set_intersection(tmp1.begin(), tmp1.end(), tmp2.begin(), tmp2.end(), 
+		back_inserter(ret));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Prints invariant message if any.
 	\param ri root expression index.
  */
@@ -486,25 +562,21 @@ void
 __print_backannotated_delay_single(ostream& o,
 	const entity::state_instance<bool_tag>::pool_type& bp, 
 	const unique_process_subgraph::min_delay_set_type::value_type& mds) {
-	static const entity::dump_flags&
-		df(dump_flags::no_definition_owner_no_ns);
 	std::ostringstream oss;
 	const node_index_type tgt = mds.first;
 	INVARIANT(tgt);
-	bp[tgt -1].get_back_ref()->dump_hierarchical_name(oss, df);
+	dump_node_local_name(oss, bp, tgt);
 	vector<min_delay_entry>::const_iterator
 		si(mds.second.begin()), se(mds.second.end());
 	for ( ; si!=se; ++si) {
 		// TODO: use type-local names
 		// source -> destination
 		o << "\tt( ";
-		bp[si->ref_node -1].get_back_ref()
-			->dump_hierarchical_name(o, df) <<
+		dump_node_local_name(o, bp, si->ref_node) <<
 			" -> " << oss.str() << " ) >= " << si->time;
 		if (si->predicate) {
 			o << ", if (";
-			bp[si->predicate -1].get_back_ref()
-				->dump_hierarchical_name(o, df) << ')';
+			dump_node_local_name(o, bp, si->predicate) << ')';
 		}
 		o << endl;
 	}

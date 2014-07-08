@@ -280,7 +280,7 @@ do {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	TODO: Rajit's prsim suppreses weak rule fanins (copy?)
+	TODO: Rajit's prsim suppresses weak rule fanins (copy?)
 		For now, we print those as well.
 	\param v true if literal should be printed with its value.  
 		also print expression with pull-state.

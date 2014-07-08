@@ -7056,13 +7056,9 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(TimingBAMinDelay,
 	"min-delay", info,
 	"specify a min-delay constraint on a path")
 
-int
-TimingBAMinDelay::main(State& s, const string_list& a) {
-const size_t asz = a.size();
-if (asz < 4 || asz > 5) {
-	usage(cerr << "usage: ");
-	return Command::SYNTAX;
-} else {
+static
+unique_process_subgraph*
+__get_current_process_graph(State& s) {
 	unique_process_subgraph* g;
 	if (CommandRegistry::in_local_type()) {
 		const entity::footprint& f(CommandRegistry::current_type());
@@ -7073,6 +7069,17 @@ if (asz < 4 || asz > 5) {
 	}
 	NEVER_NULL(g);
 	NEVER_NULL(g->_footprint);
+	return g;
+}
+
+int
+TimingBAMinDelay::main(State& s, const string_list& a) {
+const size_t asz = a.size();
+if (asz < 4 || asz > 5) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	unique_process_subgraph* g = __get_current_process_graph(s);
 #if 0
 	g->_footprint->dump_type(cout << "type: ") << endl;
 #endif
