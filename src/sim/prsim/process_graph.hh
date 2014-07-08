@@ -67,8 +67,24 @@ struct faninout_struct_type {
 #endif
 	fanout_array_type		fanout;
 
+/**
+	if needed, extend this to a bit fields like Node::struct_flags_enum
+	not all of those fields are important.
+	is_atomic should be consistent with Node::is_atomic.
+	This is set during the ExprAlloc pass.
+	We maintain this information here to avoid having to lookup
+	Node information from the global state array.
+ */
+	bool				is_atomic;
+
 	struct counter;			// counter
-	// default ctor/dtor/copy
+
+	faninout_struct_type() : is_atomic(false) { }
+	// default dtor/copy
+
+	void
+	import_attributes(void);
+
 	fanin_array_type&
 	get_pull_expr(const bool b
 #if PRSIM_WEAK_RULES

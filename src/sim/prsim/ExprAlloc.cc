@@ -522,18 +522,19 @@ void
 ExprAlloc::visit(const state_instance<bool_tag>& b) {
 	STACKTRACE_VERBOSE;
 	INVARIANT(!unique_pass);
-#if ENABLE_STACKTRACE
-	topfp->dump_canonical_name<bool_tag>(
-		STACKTRACE_INDENT_PRINT("unique bool: "),
-		lookup_global_id<bool_tag>(
-			b.get_back_ref()->instance_index) -1, 
-			dump_flags::default_value) << endl;
-#endif
 	const never_ptr<const instance_alias_info<bool_tag> >
 		bref(b.get_back_ref());
 	NEVER_NULL(bref);
 	const size_t lbi = bref->instance_index;
+	INVARIANT(lbi);
+#if ENABLE_STACKTRACE
+	topfp->dump_canonical_name<bool_tag>(
+		STACKTRACE_INDENT_PRINT("unique bool: "),
+		lookup_global_id<bool_tag>(lbi) -1, 
+			dump_flags::default_value) << endl;
+#endif
 	const size_t gbi = lookup_global_id<bool_tag>(lbi);
+	INVARIANT(gbi);
 	if (state.node_pool[gbi].import_attributes(*bref)) {
 		bref->dump_hierarchical_name(cerr << "\tgot: ")
 			// << state.get_node_canonical_name(gbi)
@@ -566,6 +567,17 @@ if (f.second) {		// then was newly allocated
 	// newly allocated is always at back()
 	unique_process_subgraph& u(state.unique_process_pool.back());
 	u.local_faninout_map.resize(node_pool_size);
+{
+	// special: maintain atomicity information in local_faninout_maps
+	// atomic (ebool) is a distinct type from bool
+	// atomicity at any level implies atomicity at all levels
+	size_t i = 0;
+	for ( ; i<node_pool_size; ++i) {
+		if (bmap[i].get_back_ref()->is_atomic()) {
+			u.local_faninout_map[i].is_atomic = true;
+		}
+	}
+}
 	const value_saver<unique_process_subgraph*> tmp(g, &u);
 	// resize the faninout_struct array as if it were local nodes
 	// kludgy way of inferring the correct footprint

@@ -277,6 +277,9 @@ faninout_struct_type::dump_struct(ostream& o) const {
 	std::ostream_iterator<expr_index_type> osi(o, " ");
 	std::copy(fanout.begin(), fanout.end(), osi);
 	// std::copy(&fanout[0], &fanout[fanout.size()], osi);
+	if (is_atomic) {
+		o << " [atomic]";	// this node updates atomically
+	}
 	return o;
 }
 
@@ -425,7 +428,6 @@ unique_process_subgraph::dump_invariant_message(ostream& o,
 ostream&
 unique_process_subgraph::dump_struct(ostream& o) const {
 {
-{
 	// Technically, top-level should omit reserved local node 0...
 	o << "Local nodes: " << endl;
 	node_index_type i = FIRST_VALID_LOCAL_NODE;
@@ -460,7 +462,6 @@ unique_process_subgraph::dump_struct(ostream& o) const {
 	for ( ; ri!=re; ++ri, ++j) {
 		ri->dump(o << '[' << j << "]\t") << endl;
 	}
-}
 }
 	return o;
 }

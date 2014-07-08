@@ -3820,7 +3820,7 @@ State::execute_immediately(
 	node_type& n(__get_node(ni));
 if (!n.is_atomic()) {
 	// FIXME: don't want atomic node propagation to clear exceptions
-	// cause by non-atomic nodes
+	// caused by non-atomic nodes
 	recent_exceptions.clear();
 }
 //	ISE_INVARIANT(n.pending_event());	// must have been pending
