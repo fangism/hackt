@@ -380,6 +380,8 @@ simulated production rules and contain no stateful information.
 @include cmd/feedback.texi
 @include cmd/rules.texi
 @include cmd/allrules.texi
+@include cmd/local-rules.texi
+@include cmd/local-rules-matching.texi
 @include cmd/rings-mk.texi
 @include cmd/allrings-mk.texi
 @include cmd/rings-chk.texi

@@ -79,7 +79,7 @@ struct faninout_struct_type {
 
 	struct counter;			// counter
 
-	faninout_struct_type() : is_atomic(false) { }
+	faninout_struct_type() : pull_up(), pull_dn(), fanout(), is_atomic(false) { }
 	// default dtor/copy
 
 	void
@@ -359,8 +359,14 @@ struct unique_process_subgraph {
 	const rule_type*
 	lookup_rule(const expr_index_type) const;
 
+	expr_index_type
+	lookup_expr(const rule_index_type) const;
+
 	bool
 	is_rule_expr(const expr_index_type) const;
+
+	rule_index_type
+	follow_expr_to_root(const expr_index_type) const;
 
 	// are there local PRS that drive nodes?
 	void
@@ -382,6 +388,11 @@ struct unique_process_subgraph {
 		const node_index_type, const bool, 
 		vector<rule_index_type>&) const;
 
+	void
+	print_rules_matching_faninout(ostream&, const node_index_type, 
+		const node_index_type, const bool) const;
+
+
 #if PRSIM_TIMING_BACKANNOTATE
 	void
 	add_min_delay_constraint(const node_index_type ref,
@@ -394,6 +405,22 @@ struct unique_process_subgraph {
 		min_delays.clear();
 	}
 #endif
+
+	ostream&
+	dump_node_local_name(ostream&, const node_index_type) const;
+
+	ostream&
+	dump_subexpr(ostream&, const expr_index_type, 
+		const uchar, const bool = false) const;
+
+	ostream&
+	dump_rule(ostream&, const rule_index_type) const;
+
+	ostream&
+	dump_rules(ostream&, const vector<rule_index_type>&) const;
+
+	ostream&
+	dump_all_rules(ostream&) const;
 
 	ostream&
 	dump_invariant_message(ostream&, const expr_index_type, 
@@ -410,6 +437,10 @@ struct unique_process_subgraph {
 	dump_timing_constraints(ostream&) const;
 #endif
 #if PRSIM_TIMING_BACKANNOTATE
+	ostream&
+	print_backannotated_delay_single(ostream& o, 
+		const min_delay_set_type::value_type&) const;
+
 	ostream&
 	dump_backannotated_delays(ostream&) const;
 

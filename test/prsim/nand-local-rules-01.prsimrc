@@ -1,0 +1,21 @@
+# "nand-local-rules-01.prsimrc"
+# @haco@ nand.haco-c
+
+# top-level: nothing
+local-rules
+rules G
+pusht nand
+pwt
+local-rules
+local-rules-matching a c +
+local-rules-matching a c -
+local-rules-matching b c +
+local-rules-matching b c -
+local-rules-matching a b +
+local-rules-matching a b -
+local-rules-matching c b +
+local-rules-matching c b -
+local-rules-matching c a +
+local-rules-matching c a -
+popt
+

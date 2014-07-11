@@ -514,10 +514,12 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	type-scope-01 type-scope-04 type-scope-06 \
 	inv-min-delay-01 inv-min-delay-02 inv-min-delay-03 \
 	inv-min-delay-04 inv-min-delay-05 inv-min-delay-06 inv-min-delay-07 \
+	inv-local-rules-01 \
 	tree-min-delay-01 \
 	mux-delay-min-delay-01 mux-delay-min-delay-02 mux-delay-min-delay-03 \
 	mux-delay-b-min-delay-01 mux-delay-b-min-delay-02 \
-	nand-min-delay-01 nand-min-delay-02
+	nand-min-delay-01 nand-min-delay-02 \
+	nand-local-rules-01
 
 # subset of prsimrc test that we wish to compare traces against regressions
 HACKT_PRSIMTRACE_TEST_SUBJECTS = \

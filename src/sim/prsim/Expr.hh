@@ -350,6 +350,7 @@ struct ExprGraphNode {
 	/**
 		The second value can be interpreted as an index
 		to an expression or bool node.  
+		NOTE: as a bool node, the value is 0-based.
 		The first field indicates whether or not this is a 
 		(leaf) node.  
 	 */

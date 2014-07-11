@@ -1,0 +1,16 @@
+# "inv-local-rules-01.prsimrc"
+# @haco@ inv.haco-c
+
+# top-level: nothing
+local-rules
+pusht inv
+pwt
+local-rules
+local-rules-matching a a +
+local-rules-matching a a -
+local-rules-matching b b +
+local-rules-matching b b -
+local-rules-matching a b +
+local-rules-matching a b -
+popt
+

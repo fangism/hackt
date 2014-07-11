@@ -356,6 +356,24 @@ using parser::parse_name_to_get_subnodes_local;
 using parser::parse_name_to_get_ports;
 #endif
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/// get current type - unique_process_subgraph
+static
+unique_process_subgraph*
+__get_current_process_graph(State& s) {
+	unique_process_subgraph* g;
+	if (CommandRegistry::in_local_type()) {
+		const entity::footprint& f(CommandRegistry::current_type());
+		g = s.lookup_unique_process_graph(&f);
+		INVARIANT(g->_footprint == &f);
+	} else {
+		g = s.lookup_unique_process_graph("");
+	}
+	NEVER_NULL(g);
+	NEVER_NULL(g->_footprint);
+	return g;
+}
+
 //=============================================================================
 // command completion facilities
 
@@ -6841,6 +6859,109 @@ AllRulesVerbose::main(State& s, const string_list& a) {
 void
 AllRulesVerbose::usage(ostream& o) { all_rules_usage(o); }
 
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/local-rules.texi
+@deffn Command local-rules
+Print all (expanded) production rules local to the current type scope.
+The node names are local to current process type.
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(LocalRules, "local-rules", info, 
+	"print all rules belonging to current type")
+
+int
+LocalRules::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	unique_process_subgraph* g = __get_current_process_graph(s);
+	NEVER_NULL(g);
+	cout << "All rules local to type: ";
+	g->_footprint->dump_type(cout) << endl;
+	g->dump_all_rules(cout);
+	return Command::NORMAL;
+}
+}
+
+void
+LocalRules::usage(ostream& o) {
+	o << name << endl;
+	o << brief << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/local-rules-matching.texi
+@deffn Command local-rules in out dir
+Print production rules local to the current type scope
+that match @var{in} in the guard, @var{out} in the output
+in direction @var{dir}.
+The node names are local to current process type.
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(LocalRulesMatching,
+	"local-rules-matching", info, 
+	"print rules that involve specific nodes in current type")
+
+int
+LocalRulesMatching::main(State& s, const string_list& a) {
+if (a.size() != 4) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	string_list::const_iterator ai(a.begin());
+	++ai;
+	// indices are local
+	const node_index_type srcind = parse_node_to_index(*ai, s.get_module());
+	if (!srcind) {
+		cerr << "Error finding node: " << *ai << endl;
+		return Command::BADARG;
+	}
+	++ai;
+	const node_index_type dstind = parse_node_to_index(*ai, s.get_module());
+	if (!dstind) {
+		cerr << "Error finding node: " << *ai << endl;
+		return Command::BADARG;
+	}
+	++ai;
+	bool dir = false;	// pull-dn
+	if (ai->length() == 1) {
+		switch ((*ai)[0]) {
+		case '+': dir = true; break;
+		case '-': dir = false; break;
+		default:
+			cerr << "Error: expecting - or + (for rule direction)."
+				<< endl;
+			return Command::BADARG;
+		}
+	} else {
+		cerr << "Error: expecting - or + (for rule direction)." << endl;
+		return Command::BADARG;
+	}
+
+	unique_process_subgraph* g = __get_current_process_graph(s);
+	NEVER_NULL(g);
+	cout << "Rules local to type: ";
+	g->_footprint->dump_type(cout);
+	g->dump_node_local_name(cout << " [from ", srcind);
+	g->dump_node_local_name(cout << " to ", dstind);
+	cout << (dir ? '+' : '-') << " ]" << endl;
+	g->print_rules_matching_faninout(cout, srcind, dstind, dir);
+	return Command::NORMAL;
+}
+}
+
+void
+LocalRulesMatching::usage(ostream& o) {
+	o << name << " <fronNode> <toNode> <+->" << endl;
+	o << brief << endl;
+}
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
 @texinfo cmd/invariants.texi
@@ -7055,22 +7176,6 @@ earlier than initially scheduled.
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(TimingBAMinDelay, 
 	"min-delay", info,
 	"specify a min-delay constraint on a path")
-
-static
-unique_process_subgraph*
-__get_current_process_graph(State& s) {
-	unique_process_subgraph* g;
-	if (CommandRegistry::in_local_type()) {
-		const entity::footprint& f(CommandRegistry::current_type());
-		g = s.lookup_unique_process_graph(&f);
-		INVARIANT(g->_footprint == &f);
-	} else {
-		g = s.lookup_unique_process_graph("");
-	}
-	NEVER_NULL(g);
-	NEVER_NULL(g->_footprint);
-	return g;
-}
 
 int
 TimingBAMinDelay::main(State& s, const string_list& a) {

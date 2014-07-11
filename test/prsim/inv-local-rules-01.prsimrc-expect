@@ -1,0 +1,13 @@
+All rules local to type: <>
+inv<>
+All rules local to type: inv<>
+[after 10]	a -> b-
+[after 10]	~a -> b+
+Rules local to type: inv<> [from a to a+ ]
+Rules local to type: inv<> [from a to a- ]
+Rules local to type: inv<> [from b to b+ ]
+Rules local to type: inv<> [from b to b- ]
+Rules local to type: inv<> [from a to b+ ]
+[after 10]	~a -> b+
+Rules local to type: inv<> [from a to b- ]
+[after 10]	a -> b-

@@ -615,7 +615,7 @@ process_sim_state::__recurse_expr_why_X(ostream& o,
 	\param pi is the global process index to which expression belongs.
 	\param st is the global node state
 	\param v true if literal should be printed with its value.  
-	\param ptype the parent's expression type, only used if cp is true.
+	\param ptype the parent's expression type, only used if pr is true.
 	\param pr whether or not parent is root
 		(if so, ignore type comparison for parenthesization).  
  */
