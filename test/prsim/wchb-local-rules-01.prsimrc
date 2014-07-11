@@ -1,0 +1,52 @@
+# "wchb-local-rules-01.prsimrc"
+# @haco@ wchb-a.haco-c
+
+# top-level: nothing
+local-rules
+rules src
+rules buf
+rules bkt
+
+pusht rsource_e1of2
+pwt
+local-rules
+local-rules-matching r.e _r0 +
+local-rules-matching r.e _r0 -
+local-rules-matching r.e _r1 +
+local-rules-matching r.e _r1 -
+local-rules-matching _r0 r.f +
+local-rules-matching _r0 r.f -
+local-rules-matching _r1 r.t +
+local-rules-matching _r1 r.t -
+popt
+
+pusht bucket_e1of2_rl
+pwt
+local-rules
+local-rules-matching l.t _lv +
+local-rules-matching l.t _lv -
+local-rules-matching l.f _lv +
+local-rules-matching l.f _lv -
+local-rules-matching _lv l.e +
+local-rules-matching _lv l.e -
+popt
+
+pusht wchb
+pwt
+local-rules
+local-rules-matching l.t _r.t +
+local-rules-matching l.t _r.t -
+local-rules-matching l.f _r.f +
+local-rules-matching l.f _r.f -
+local-rules-matching r.e _r.f +
+local-rules-matching r.e _r.f -
+local-rules-matching _r.t rv +
+local-rules-matching _r.t rv -
+local-rules-matching _r.f rv +
+local-rules-matching _r.f rv -
+local-rules-matching _sReset rv +
+local-rules-matching _sReset rv -
+local-rules-matching rv l.e +
+local-rules-matching rv l.e -
+popt
+

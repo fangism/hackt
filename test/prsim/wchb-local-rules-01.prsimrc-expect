@@ -1,0 +1,119 @@
+All rules local to type: <>
+src refers to process-inst-ref rsource_e1of2<>
+rules:
+[after 10]	l.e -> src._r0-
+[after 10]	~l.e -> src._r0+
+[after 10]	l.e -> src._r1-
+[after 10]	~l.e -> src._r1+
+[after 10]	src._r0 -> l.d[0]-
+[after 10]	~src._r0 -> l.d[0]+
+[after 10]	src._r1 -> l.d[1]-
+[after 10]	~src._r1 -> l.d[1]+
+buf refers to process-inst-ref wchb<>
+rules:
+[after 10]	l.d[0] & r.e -> buf._r.d[0]-
+[after 10]	~l.d[0] & ~r.e -> buf._r.d[0]+
+[after 10]	buf._r.d[0] -> r.d[0]-
+[after 10]	~buf._r.d[0] -> r.d[0]+
+[after 10]	l.d[1] & r.e -> buf._r.d[1]-
+[after 10]	~l.d[1] & ~r.e -> buf._r.d[1]+
+[after 10]	buf._r.d[1] -> r.d[1]-
+[after 10]	~buf._r.d[1] -> r.d[1]+
+[after 10]	g._sReset & buf._r.d[1] & buf._r.d[0] -> buf.rv-
+[after 10]	~g._sReset | ~buf._r.d[1] | ~buf._r.d[0] -> buf.rv+
+[after 10]	buf.rv -> l.e-
+[after 10]	~buf.rv -> l.e+
+bkt refers to process-inst-ref bucket_e1of2_rl<>
+rules:
+[after 10]	r.d[1] | r.d[0] -> bkt._lv-
+[after 10]	~r.d[1] & ~r.d[0] -> bkt._lv+
+[after 10]	g._sReset & bkt._lv -> bkt.lv-
+[after 10]	~g._sReset | ~bkt._lv -> bkt.lv+
+[after 10]	~bkt.lv -> r.e+
+[after 10]	bkt.lv -> r.e-
+rsource_e1of2<>
+All rules local to type: rsource_e1of2<>
+[after 10]	r.e -> _r0-
+[after 10]	~r.e -> _r0+
+[after 10]	r.e -> _r1-
+[after 10]	~r.e -> _r1+
+[after 10]	_r0 -> r.d[0]-
+[after 10]	~_r0 -> r.d[0]+
+[after 10]	_r1 -> r.d[1]-
+[after 10]	~_r1 -> r.d[1]+
+Rules local to type: rsource_e1of2<> [from r.e to _r0+ ]
+[after 10]	~r.e -> _r0+
+Rules local to type: rsource_e1of2<> [from r.e to _r0- ]
+[after 10]	r.e -> _r0-
+Rules local to type: rsource_e1of2<> [from r.e to _r1+ ]
+[after 10]	~r.e -> _r1+
+Rules local to type: rsource_e1of2<> [from r.e to _r1- ]
+[after 10]	r.e -> _r1-
+Rules local to type: rsource_e1of2<> [from _r0 to r.d[0]+ ]
+[after 10]	~_r0 -> r.d[0]+
+Rules local to type: rsource_e1of2<> [from _r0 to r.d[0]- ]
+[after 10]	_r0 -> r.d[0]-
+Rules local to type: rsource_e1of2<> [from _r1 to r.d[1]+ ]
+[after 10]	~_r1 -> r.d[1]+
+Rules local to type: rsource_e1of2<> [from _r1 to r.d[1]- ]
+[after 10]	_r1 -> r.d[1]-
+bucket_e1of2_rl<>
+All rules local to type: bucket_e1of2_rl<>
+[after 10]	l.d[1] | l.d[0] -> _lv-
+[after 10]	~l.d[1] & ~l.d[0] -> _lv+
+[after 10]	_sReset & _lv -> lv-
+[after 10]	~_sReset | ~_lv -> lv+
+[after 10]	~lv -> l.e+
+[after 10]	lv -> l.e-
+Rules local to type: bucket_e1of2_rl<> [from l.d[1] to _lv+ ]
+[after 10]	~l.d[1] & ~l.d[0] -> _lv+
+Rules local to type: bucket_e1of2_rl<> [from l.d[1] to _lv- ]
+[after 10]	l.d[1] | l.d[0] -> _lv-
+Rules local to type: bucket_e1of2_rl<> [from l.d[0] to _lv+ ]
+[after 10]	~l.d[1] & ~l.d[0] -> _lv+
+Rules local to type: bucket_e1of2_rl<> [from l.d[0] to _lv- ]
+[after 10]	l.d[1] | l.d[0] -> _lv-
+Rules local to type: bucket_e1of2_rl<> [from _lv to l.e+ ]
+Rules local to type: bucket_e1of2_rl<> [from _lv to l.e- ]
+wchb<>
+All rules local to type: wchb<>
+[after 10]	l.d[0] & r.e -> _r.d[0]-
+[after 10]	~l.d[0] & ~r.e -> _r.d[0]+
+[after 10]	_r.d[0] -> r.d[0]-
+[after 10]	~_r.d[0] -> r.d[0]+
+[after 10]	l.d[1] & r.e -> _r.d[1]-
+[after 10]	~l.d[1] & ~r.e -> _r.d[1]+
+[after 10]	_r.d[1] -> r.d[1]-
+[after 10]	~_r.d[1] -> r.d[1]+
+[after 10]	_sReset & _r.d[1] & _r.d[0] -> rv-
+[after 10]	~_sReset | ~_r.d[1] | ~_r.d[0] -> rv+
+[after 10]	rv -> l.e-
+[after 10]	~rv -> l.e+
+Rules local to type: wchb<> [from l.d[1] to _r.d[1]+ ]
+[after 10]	~l.d[1] & ~r.e -> _r.d[1]+
+Rules local to type: wchb<> [from l.d[1] to _r.d[1]- ]
+[after 10]	l.d[1] & r.e -> _r.d[1]-
+Rules local to type: wchb<> [from l.d[0] to _r.d[0]+ ]
+[after 10]	~l.d[0] & ~r.e -> _r.d[0]+
+Rules local to type: wchb<> [from l.d[0] to _r.d[0]- ]
+[after 10]	l.d[0] & r.e -> _r.d[0]-
+Rules local to type: wchb<> [from r.e to _r.d[0]+ ]
+[after 10]	~l.d[0] & ~r.e -> _r.d[0]+
+Rules local to type: wchb<> [from r.e to _r.d[0]- ]
+[after 10]	l.d[0] & r.e -> _r.d[0]-
+Rules local to type: wchb<> [from _r.d[1] to rv+ ]
+[after 10]	~_sReset | ~_r.d[1] | ~_r.d[0] -> rv+
+Rules local to type: wchb<> [from _r.d[1] to rv- ]
+[after 10]	_sReset & _r.d[1] & _r.d[0] -> rv-
+Rules local to type: wchb<> [from _r.d[0] to rv+ ]
+[after 10]	~_sReset | ~_r.d[1] | ~_r.d[0] -> rv+
+Rules local to type: wchb<> [from _r.d[0] to rv- ]
+[after 10]	_sReset & _r.d[1] & _r.d[0] -> rv-
+Rules local to type: wchb<> [from _sReset to rv+ ]
+[after 10]	~_sReset | ~_r.d[1] | ~_r.d[0] -> rv+
+Rules local to type: wchb<> [from _sReset to rv- ]
+[after 10]	_sReset & _r.d[1] & _r.d[0] -> rv-
+Rules local to type: wchb<> [from rv to l.e+ ]
+[after 10]	~rv -> l.e+
+Rules local to type: wchb<> [from rv to l.e- ]
+[after 10]	rv -> l.e-
