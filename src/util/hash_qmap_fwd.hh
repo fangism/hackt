@@ -12,7 +12,7 @@
 
 // these class parameters are explained below
 #if	USING_UNORDERED_MAP
-// #include "util/STL/pair_fwd.hh"
+#include "util/STL/pair_fwd.hh"
 	#define HASH_QMAP_TEMPLATE_SIGNATURE				\
 	template <class K, class T, class H, class E, class A>
 	#define	HASH_QMAP_CLASS		hash_qmap<K, T, H, E, A>

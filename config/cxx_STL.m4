@@ -10,14 +10,16 @@ dnl source taken from "src/util/STL/reverse_iterator.hh"
 dnl known to be present in gcc-4.1 headers, 
 dnl but missing in all previous versions of gcc.  
 dnl Defines HAVE_STL_REVERSE_ITERATOR_COMPARISONS if present.  
+dnl Updated to account for versioned namespace checking in libc++.
 dnl
 dnl @category Cxx
-dnl @version 2006-05-08
+dnl @version 2014-07-11
 dnl @author David Fang <fangism@users.sourceforge.net>
 dnl @license AllPermissive
 dnl
 AC_DEFUN([FANG_CXX_STL_REVERSE_ITERATOR_COMPARISONS],
 [AC_REQUIRE([AC_PROG_CXX])
+AC_REQUIRE([FANG_CXXLIB_VERSIONED_NAMESPACE])
 AC_CACHE_CHECK(
 	[whether libstdc++ (STL) already contains reverse_iterator comparisons],
 [fang_cv_cxx_stl_reverse_iterator_comparisons],
@@ -26,15 +28,17 @@ dnl saved_CXXFLAGS=$CXXFLAGS
 dnl CXXFLAGS="$saved_CXXFLAGS $ANAL_FLAGS"
 AC_COMPILE_IFELSE(
 	AC_LANG_PROGRAM([[
+		#include "src/util/STL/libconfig.hh"
 		#include <iterator>
-		namespace std {
+		BEGIN_NAMESPACE_STD
 		template <class Iter1, class Iter2>
 		inline bool
 		operator == (const reverse_iterator<Iter1>& x,
 				const reverse_iterator<Iter2>& y) {
 			return x.base() == y.base();
 		}
-		}]], []
+		END_NAMESPACE_STD
+		]], []
 	),
 	[fang_cv_cxx_stl_reverse_iterator_comparisons=no],
 	[fang_cv_cxx_stl_reverse_iterator_comparisons=yes]
@@ -808,6 +812,7 @@ dnl @license AllPermissive
 dnl
 AC_DEFUN([FANG_CXX_STL_COPY_IF],
 [AC_REQUIRE([AC_PROG_CXX])
+AC_REQUIRE([FANG_CXXLIB_VERSIONED_NAMESPACE])
 AC_CACHE_CHECK(
 	[whether libstdc++ (STL) already contains copy_if algorithm],
 [fang_cv_cxx_stl_copy_if],
@@ -816,8 +821,9 @@ dnl saved_CXXFLAGS=$CXXFLAGS
 dnl CXXFLAGS="$saved_CXXFLAGS $ANAL_FLAGS"
 AC_COMPILE_IFELSE(
 	AC_LANG_PROGRAM([[
+		#include "src/util/STL/libconfig.hh"
 		#include <algorithm>
-		namespace std {
+		BEGIN_NAMESPACE_STD
 		template <class In, class Out, class Pred>
 		Out
 		copy_if(In first, In last, Out res, Pred p) {
@@ -829,7 +835,8 @@ AC_COMPILE_IFELSE(
 			}
 			return res;
 		}
-		}]], []
+		END_NAMESPACE_STD
+		]], []
 	),
 	[fang_cv_cxx_stl_copy_if=no],
 	[fang_cv_cxx_stl_copy_if=yes]
@@ -897,6 +904,9 @@ dnl At the time of writing GNU libstdc++ is not in a versioned namespace
 dnl while libc++ is, like std::__1.
 dnl
 dnl Defines CXXLIB_VERSIONED_NAMESPACE if successful.  
+dnl This is used in src/util/STL/libconfig.hh.
+dnl You may include that and use BEGIN/END_NAMESPACE_STD in other
+dnl C++ standard library tests in this file.
 dnl
 dnl @category Cxx
 dnl @version 2014-04-22
