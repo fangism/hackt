@@ -2346,11 +2346,6 @@ show-stacktrace-sources: force
 	-$(GREP) ENABLE_STACKTRACE */{,*}/*.{tcc,cc} | $(GREP) 1 | \
 		$(GREP) -v "util/test" | $(GREP) -v "util/stacktrace"
 
-echo-compile:
-	@$(ECHO) $(COMPILE)
-echo-cxxcompile:
-	@$(ECHO) $(CXXCOMPILE)
-
 help-local:
 	-@$(CALLMAKE) help-check-headers 2> /dev/null
 	@$(ECHO) "Local make targets:" ; \
