@@ -40,7 +40,7 @@ class hash_qmap;
 template <class K, class T, 
           class H = HASH_MAP_NAMESPACE::hash<K>,
           class E = std::equal_to<K>,
-          class A = std::allocator<T> >
+          class A = std::allocator<std::pair<const K, T> > >
 #elif	defined(HASH_MAP_SGI_STYLE)
 template <class K, class T, 
           class H = HASH_MAP_NAMESPACE::hash<K>,
@@ -60,7 +60,7 @@ template <class K, class T>
 struct default_hash_qmap {
 #if	USING_UNORDERED_MAP
 	typedef hash_qmap<K, T, HASH_MAP_NAMESPACE::hash<K>,
-		std::equal_to<K>, std::allocator<T> >
+		std::equal_to<K>, std::allocator<std::pair<const K, T> > >
 #elif	defined(HASH_MAP_SGI_STYLE)
 	typedef hash_qmap<K, T, HASH_MAP_NAMESPACE::hash<K>,
 		std::equal_to<K>, std::allocator<T> >
