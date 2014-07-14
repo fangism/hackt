@@ -1602,10 +1602,12 @@ PURIFY_LEXER_PIPE = { $(AWK) -f $(srcdir)/lexer/purify_flex.awk | \
 #		$(PATCH) -l -u -p0
 MAKE_REAL_LEXER_SCRIPT = $(SET_PIPEFAIL) ; $(AWK) -f $(srcdir)/$(FLEX_COMMON_PATCH) $< > $@.tmp
 
+# also remove 'register' storage class specifier, deprecated in C++11
 MAKE_REAL_LEXER_SCRIPT += && \
 	{ $(ECHO) "\#include \"parser/$$basename-prefix.h\"" && \
 	$(ECHO) "\#include \"lexer/flex_lexer_state.hh\"" && \
-	$(PURIFY_LEXER_PIPE) < $@.tmp ;} > $@ && \
+	$(PURIFY_LEXER_PIPE) < $@.tmp | \
+	$(SED) -e 's|register ||g' ;} > $@ && \
 	$(RM) $@.tmp $@.tmp.orig
 
 # need to include prefix header because the lexer-generated code
@@ -1646,7 +1648,6 @@ lexer/$(SPICE_LEX_ROOT)-real.cc: lexer/$(SPICE_LEX_ROOT).cc \
 # should be able to depend on *ANY* of the above processed lexer sources
 # actually, not quite, there's a difference depending on whether lexer
 # uses BOL (beginning-of-line) in match patterns.
-# also remove 'register' storage class specifier, deprecated in C++11
 lexer/flex_lexer_common.cc: lexer/$(HACKT_LEX_ROOT)-real.cc
 	$(SET_PIPEFAIL) ; \
 	{ $(ECHO) "// \"$@\" -- automatically generated, do not modify" ; \
