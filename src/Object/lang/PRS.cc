@@ -1624,7 +1624,7 @@ prs_expr_ptr_type
 and_expr::flip_literals(void) const {
 	STACKTRACE("and_expr::flip_literals()");
 	count_ptr<this_type> ret(new this_type);
-	transform(begin(), end(), back_inserter(*ret),
+	transform(begin(), end(), back_inserter(AS_A(expr_sequence_type&, *ret)),
 		prs_expr::literal_flipper());
 	return ret;
 }
@@ -1701,7 +1701,8 @@ and_expr::unroll_copy(const unroll_context& c,
 	STACKTRACE_VERBOSE;
 	INVARIANT(e == this);
 	const count_ptr<this_type> ret(new this_type);
-	transform(begin(), end(), back_inserter(*ret), 
+	transform(begin(), end(),
+		back_inserter(AS_A(expr_sequence_type&, *ret)), 
 		prs_expr::unroll_copier(c));
 	// find index of first error (1-indexed), if any
 	if (find(ret->begin(), ret->end(), prs_expr_ptr_type(NULL))
@@ -1770,7 +1771,7 @@ and_expr::write_object(const persistent_object_manager& m, ostream& o) const {
  */
 void
 and_expr::load_object(const persistent_object_manager& m, istream& i) {
-	m.read_pointer_list(i, *this);
+	m.read_pointer_list(i, AS_A(expr_sequence_type&, *this));
 	size_t j, s;
 	INVARIANT(this->size());
 	precharge_array.resize(this->size() -1);
@@ -1952,7 +1953,9 @@ prs_expr_ptr_type
 or_expr::negate(void) const {
 	STACKTRACE("or_expr::negate()");
 	const count_ptr<and_expr> ret(new and_expr);
-	transform(begin(), end(), back_inserter(*ret), prs_expr::negater());
+	transform(begin(), end(),
+		back_inserter(AS_A(expr_sequence_type&, *ret)),
+		prs_expr::negater());
 	return ret;
 }
 

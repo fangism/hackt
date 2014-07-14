@@ -856,7 +856,8 @@ binop_expr::unroll_copy(const unroll_context& c,
 	STACKTRACE_VERBOSE;
 	INVARIANT(e == this);
 	const count_ptr<this_type> ret(new this_type);
-	transform(begin(), end(), back_inserter(*ret), 
+	transform(begin(), end(),
+		back_inserter(AS_A(expr_sequence_type&, *ret)), 
 		rte_expr::unroll_copier(c));
 	// find index of first error (1-indexed), if any
 	if (find(ret->begin(), ret->end(), rte_expr_ptr_type(NULL))
@@ -898,7 +899,7 @@ binop_expr::write_object(const persistent_object_manager& m, ostream& o) const {
 void
 binop_expr::load_object(const persistent_object_manager& m, istream& i) {
 	read_value(i, op);
-	m.read_pointer_list(i, *this);
+	m.read_pointer_list(i, AS_A(expr_sequence_type&, *this));
 }
 
 //=============================================================================
