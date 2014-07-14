@@ -6,14 +6,15 @@
 	$Id: valarray_iterator.hh,v 1.2 2007/01/21 06:01:20 fang Exp $
  */
 
-#ifndef	__UTIL_STL_VALARRAY_ITERATOR_H__
-#define	__UTIL_STL_VALARRAY_ITERATOR_H__
+#ifndef	__UTIL_STL_VALARRAY_ITERATOR_HH__
+#define	__UTIL_STL_VALARRAY_ITERATOR_HH__
 
+#include "util/STL/libconfig.hh"
 #include <valarray>
 // #include "util/STL/container_iterator.hh"
 // doesn't work as I expect: helper function does not match the partial specialization...
 
-namespace std {
+BEGIN_NAMESPACE_STD
 template <class T>
 struct container_iterator;
 template <class T>
@@ -61,6 +62,7 @@ struct container_const_iterator<valarray<T> > {
 	}
 };
 
+#ifndef	HAVE_STL_VALARRAY_BEGIN_END
 template <class T>
 inline
 typename container_iterator<valarray<T> >::type
@@ -92,8 +94,9 @@ end(const valarray<T>& v) {
 	return container_const_iterator<valarray<T> >::end(v);
 	// return &v[v.size()];
 }
+#endif	// HAVE_STL_VALARRAY_BEGIN_END
 
-}
+END_NAMESPACE_STD
 
-#endif	// __UTIL_STL_VALARRAY_ITERATOR_H__
+#endif	// __UTIL_STL_VALARRAY_ITERATOR_HH__
 

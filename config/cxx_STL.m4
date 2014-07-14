@@ -52,6 +52,45 @@ AC_DEFINE(HAVE_STL_REVERSE_ITERATOR_COMPARISONS, [],
 fi
 ])dnl
 
+dnl @synopsis FANG_CXX_STL_VALARRAY_BEGIN_END
+dnl
+dnl Detect whether or not std::valarray has non-member begin/end functions.
+dnl Defines HAVE_STL_VALARRAY_BEGIN_END if present.  
+dnl
+dnl @category Cxx
+dnl @version 2014-07-14
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
+dnl
+AC_DEFUN([FANG_CXX_STL_VALARRAY_BEGIN_END],
+[AC_REQUIRE([AC_PROG_CXX])
+AC_CACHE_CHECK(
+	[whether std::valarray supports non-member begin/end functions],
+[fang_cv_cxx_stl_valarray_begin_end],
+[AC_LANG_PUSH(C++)
+dnl saved_CPPFLAGS=$CPPFLAGS
+dnl CPPFLAGS="$saved_CPPFLAGS -I$srcdir/src"
+AC_COMPILE_IFELSE(
+	AC_LANG_PROGRAM([[
+		#include <valarray>
+		#include <numeric>
+		]], [
+			std::valarray<int> a(99);
+			return std::accumulate(begin(a), end(a), 1);
+		]
+	),
+	[fang_cv_cxx_stl_valarray_begin_end=yes],
+	[fang_cv_cxx_stl_valarray_begin_end=no]
+)
+dnl CPPFLAGS=$saved_CPPFLAGS
+AC_LANG_POP(C++)
+])
+if test "$fang_cv_cxx_stl_valarray_begin_end" = "yes" ; then
+AC_DEFINE(HAVE_STL_VALARRAY_BEGIN_END, [],
+	[True if <valarray> provides non-member begin() and end()])
+fi
+])dnl
+
 dnl @synopsis FANG_CXX_STL_CONSTRUCT
 dnl
 dnl Check for certain declarations of libstdc++ internal function
