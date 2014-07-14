@@ -1,8 +1,9 @@
 /**
-	"util/STL/container_iterator.hh"
+	\file "util/STL/valarray_iterator.hh"
 	Not really part of the starndard, but oh so useful.  
 	Specializaes the begin(container) and end(container) interfaces
 	for valarray, which doesn't have its own iterators, but should IMHO.
+	Note: C++11 standard includes std::begin, std::end
 	$Id: valarray_iterator.hh,v 1.2 2007/01/21 06:01:20 fang Exp $
  */
 

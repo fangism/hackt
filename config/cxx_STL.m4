@@ -52,6 +52,49 @@ AC_DEFINE(HAVE_STL_REVERSE_ITERATOR_COMPARISONS, [],
 fi
 ])dnl
 
+dnl @synopsis FANG_CXX_STD_BEGIN_END
+dnl
+dnl Detect whether std::begin and std::end are provided by C++ library 
+dnl Defines HAVE_STD_BEGIN_END if present.  
+dnl
+dnl @category Cxx
+dnl @version 2014-07-14
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
+dnl
+AC_DEFUN([FANG_CXX_STD_BEGIN_END],
+[AC_REQUIRE([AC_PROG_CXX])
+AC_CACHE_CHECK(
+	[whether std::begin(),std::end() are provided by <iterator>],
+[fang_cv_cxx_std_begin_end],
+[AC_LANG_PUSH(C++)
+dnl saved_CPPFLAGS=$CPPFLAGS
+dnl CPPFLAGS="$saved_CPPFLAGS -I$srcdir/src"
+AC_COMPILE_IFELSE(
+	AC_LANG_PROGRAM([[
+		#include <vector>
+		#include <list>
+		#include <iterator>
+		#include <numeric>
+		]], [
+			std::vector<int> a(9);
+			std::list<float> b(9);
+			return std::accumulate(begin(a), end(a), 1)
+				+std::accumulate(begin(b), end(b), 1);
+		]
+	),
+	[fang_cv_cxx_std_begin_end=yes],
+	[fang_cv_cxx_std_begin_end=no]
+)
+dnl CPPFLAGS=$saved_CPPFLAGS
+AC_LANG_POP(C++)
+])
+if test "$fang_cv_cxx_std_begin_end" = "yes" ; then
+AC_DEFINE(HAVE_STD_BEGIN_END, [],
+	[True if <iterator> provides std::begin() and std::end()])
+fi
+])dnl
+
 dnl @synopsis FANG_CXX_STL_VALARRAY_BEGIN_END
 dnl
 dnl Detect whether or not std::valarray has non-member begin/end functions.
