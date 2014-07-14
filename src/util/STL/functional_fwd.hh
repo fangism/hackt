@@ -82,15 +82,15 @@ template <class O, class T>
 binder2nd<O>
 bind2nd(const O&, const T&);
 
-// may not be standard! see "util/STL/functional.h"
+// may not be standard! see "util/STL/functional.hh"
 template <class P>
 struct _Identity;
 
-// may not be standard! see "util/STL/functional.h"
+// may not be standard! see "util/STL/functional.hh"
 template <class P>
 struct _Select1st;
 
-// may not be standard! see "util/STL/functional.h"
+// may not be standard! see "util/STL/functional.hh"
 template <class P>
 struct _Select2nd;
 
