@@ -4,8 +4,8 @@
 	$Id: deallocation_policy.hh,v 1.4 2011/02/04 02:23:42 fang Exp $
  */
 
-#ifndef	__UTIL_MEMORY_DEALLOCATION_POLICY_H__
-#define	__UTIL_MEMORY_DEALLOCATION_POLICY_H__
+#ifndef	__UTIL_MEMORY_DEALLOCATION_POLICY_HH__
+#define	__UTIL_MEMORY_DEALLOCATION_POLICY_HH__
 
 #include <cassert>
 #include <iosfwd>
@@ -19,12 +19,14 @@ extern	int fclose(FILE*);
 extern	int pclose(FILE*);
 END_C_DECLS
 
+#if 0
 // forward declarations
-namespace std {
+BEGIN_NAMESPACE_STD
 extern istream cin;
 extern ostream cout;
 extern ostream cerr;
-}
+END_NAMESPACE_STD
+#endif
 
 namespace util {
 namespace memory {
@@ -166,5 +168,5 @@ struct custom_fun_ref_tag {
 }	// end namespace memory
 }	// end namespace util
 
-#endif	// __UTIL_MEMORY_DEALLOCATION_POLICY_H__
+#endif	// __UTIL_MEMORY_DEALLOCATION_POLICY_HH__
 
