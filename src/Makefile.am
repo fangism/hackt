@@ -1646,6 +1646,7 @@ lexer/$(SPICE_LEX_ROOT)-real.cc: lexer/$(SPICE_LEX_ROOT).cc \
 # should be able to depend on *ANY* of the above processed lexer sources
 # actually, not quite, there's a difference depending on whether lexer
 # uses BOL (beginning-of-line) in match patterns.
+# also remove 'register' storage class specifier, deprecated in C++11
 lexer/flex_lexer_common.cc: lexer/$(HACKT_LEX_ROOT)-real.cc
 	$(SET_PIPEFAIL) ; \
 	{ $(ECHO) "// \"$@\" -- automatically generated, do not modify" ; \
@@ -1656,7 +1657,8 @@ lexer/flex_lexer_common.cc: lexer/$(HACKT_LEX_ROOT)-real.cc
 	$(ECHO) "#define FLEX_STRUCT_BUFFER_STATE" ; \
 	$(ECHO) "#define KEEP_FLEX_COMMON	1" ; \
 	$(ECHO) "#define YY_ALWAYS_INTERACTIVE	0" ; \
-	$(EXTRACT_FLEX_COMMON_PIPE) < $< ; } > $@
+	$(EXTRACT_FLEX_COMMON_PIPE) < $< | \
+	$(SED) -e 's|register ||g' ; } > $@
 
 # generated header, extracting struct definition
 lexer/flex_lexer_state.cc: lexer/flex_buffer_state.hh
