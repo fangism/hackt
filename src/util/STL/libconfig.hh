@@ -5,7 +5,9 @@
 #ifndef	__UTIL_STL_LIBCONFIG_HH__
 #define	__UTIL_STL_LIBCONFIG_HH__
 
+#ifdef	HAVE_CONFIG_H
 #include "config.h"
+#endif
 
 // These are configuration files internal to libraries, and usually
 // not directly included.

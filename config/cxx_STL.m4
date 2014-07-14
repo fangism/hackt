@@ -24,11 +24,11 @@ AC_CACHE_CHECK(
 	[whether libstdc++ (STL) already contains reverse_iterator comparisons],
 [fang_cv_cxx_stl_reverse_iterator_comparisons],
 [AC_LANG_PUSH(C++)
-dnl saved_CXXFLAGS=$CXXFLAGS
-dnl CXXFLAGS="$saved_CXXFLAGS $ANAL_FLAGS"
+saved_CPPFLAGS=$CPPFLAGS
+CPPFLAGS="$saved_CPPFLAGS -I$srcdir/src"
 AC_COMPILE_IFELSE(
 	AC_LANG_PROGRAM([[
-		#include "src/util/STL/libconfig.hh"
+		#include "util/STL/libconfig.hh"
 		#include <iterator>
 		BEGIN_NAMESPACE_STD
 		template <class Iter1, class Iter2>
@@ -43,7 +43,7 @@ AC_COMPILE_IFELSE(
 	[fang_cv_cxx_stl_reverse_iterator_comparisons=no],
 	[fang_cv_cxx_stl_reverse_iterator_comparisons=yes]
 )
-dnl CXXFLAGS=$saved_CXXFLAGS
+CPPFLAGS=$saved_CPPFLAGS
 AC_LANG_POP(C++)
 ])
 if test "$fang_cv_cxx_stl_reverse_iterator_comparisons" = "yes" ; then
@@ -817,11 +817,11 @@ AC_CACHE_CHECK(
 	[whether libstdc++ (STL) already contains copy_if algorithm],
 [fang_cv_cxx_stl_copy_if],
 [AC_LANG_PUSH(C++)
-dnl saved_CXXFLAGS=$CXXFLAGS
-dnl CXXFLAGS="$saved_CXXFLAGS $ANAL_FLAGS"
+saved_CPPFLAGS=$CPPFLAGS
+CPPFLAGS="$saved_CPPFLAGS -I$srcdir/src"
 AC_COMPILE_IFELSE(
 	AC_LANG_PROGRAM([[
-		#include "src/util/STL/libconfig.hh"
+		#include "util/STL/libconfig.hh"
 		#include <algorithm>
 		BEGIN_NAMESPACE_STD
 		template <class In, class Out, class Pred>
@@ -841,7 +841,7 @@ AC_COMPILE_IFELSE(
 	[fang_cv_cxx_stl_copy_if=no],
 	[fang_cv_cxx_stl_copy_if=yes]
 )
-dnl CXXFLAGS=$saved_CXXFLAGS
+CPPFLAGS=$saved_CPPFLAGS
 AC_LANG_POP(C++)
 ])
 if test "$fang_cv_cxx_stl_copy_if" = "yes" ; then
