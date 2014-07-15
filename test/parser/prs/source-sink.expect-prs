@@ -1,0 +1,12 @@
+~"lack" -> "lreq"+
+"lack" -> "lreq"-
+"lreq" -> "lack"+
+~"lreq" -> "lack"-
+= "!GND" "SNK.!GND"
+= "!GND" "SRC.!GND"
+= "!Vdd" "SNK.!Vdd"
+= "!Vdd" "SRC.!Vdd"
+= "lack" "SNK.lo"
+= "lack" "SRC.li"
+= "lreq" "SNK.li"
+= "lreq" "SRC.lo"

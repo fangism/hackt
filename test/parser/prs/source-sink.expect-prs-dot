@@ -1,0 +1,30 @@
+digraph G {
+# nodes: 
+node [shape=box, fillcolor=white];
+NODE_1	[label="!GND"];
+
+NODE_2	[label="!Vdd"];
+
+NODE_3	[label="lack"];
+NODE_3 -> EXPR_1;
+NODE_3 -> EXPR_2;
+
+NODE_4	[label="lreq"];
+NODE_4 -> EXPR_3;
+NODE_4 -> EXPR_4;
+
+# Processes: 
+# [1]: SRC
+# Expressions: 
+EXPR_1	[label="1", shape=invtriangle];
+EXPR_1 -> NODE_4	[arrowhead=odot];
+EXPR_2	[label="2", shape=triangle];
+EXPR_2 -> NODE_4	[arrowhead=dot];
+# [2]: SNK
+# Expressions: 
+EXPR_3	[label="3", shape=triangle];
+EXPR_3 -> NODE_3	[arrowhead=odot];
+EXPR_4	[label="4", shape=invtriangle];
+EXPR_4 -> NODE_3	[arrowhead=dot];
+}
+

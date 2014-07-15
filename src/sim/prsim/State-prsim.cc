@@ -4363,7 +4363,7 @@ if (n.pending_event()) {
 		DEBUG_STEP_PRINT("new weak event dropped" << endl);
 		// previous event was strong and not off, overriding any
 		// new weak events -- just drop weak events
-		// HERE: is event already in main event queue? flush?
+		// Q: is event already in main event queue? flush?
 		return err;	// no error
 	} else {
 		DEBUG_STEP_PRINT("old weak event kept" << endl);
@@ -5154,10 +5154,15 @@ State::dump_struct_dot(ostream& o) const {
 	o << "# Processes: " << endl;
 	process_state_array_type::const_iterator
 		i(process_state_array.begin()), e(process_state_array.end());
-	for ( ; i!=e; ++i) {
+	size_t pid = 0;
+	for ( ; i!=e; ++i, ++pid) {
 		const unique_process_subgraph& pg(i->type());
 		if (pg.expr_pool.size()) {
-			pg.dump_struct_dot(o, i->get_offset());
+			const footprint_frame_map_type&
+				bfm(get_footprint_frame_map(pid));
+			dump_process_canonical_name(o << "# [" << pid << "]: ",
+				pid) << endl;
+			pg.dump_struct_dot(o, i->get_offset(), bfm);
 		}
 	}
 }
@@ -6417,7 +6422,6 @@ bool w = false;
 do {
 bool d = false;
 do {
-	// HERE
 	if (n.get_pull_struct(d
 #if PRSIM_WEAK_RULES
 		, w

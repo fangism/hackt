@@ -1,0 +1,55 @@
+Nodes: 
+node[1]: "!GND" fanin-processes:  fanout: 
+node[2]: "!Vdd" fanin-processes:  fanout: 
+node[3]: "lack" fanin-processes: 2,  fanout: 1, 2, 
+node[4]: "lreq" fanin-processes: 1,  fanout: 3, 4, 
+Unique processes: {
+type[0]: {
+Local nodes: 
+node[0]: up: - < - , dn: - < -  fanout: 
+node[1]: up: - < - , dn: - < -  fanout: 
+node[2]: up: - < - , dn: - < -  fanout: 
+node[3]: up: - < - , dn: - < -  fanout: 
+Local expressions: 
+Local expression -> rule map:
+
+Local rules:
+}
+type[1]: {
+Local nodes: 
+node[0]: up: - < - , dn: - < -  fanout: 
+node[1]: up: - < - , dn: - < -  fanout: 
+node[2]: up: - < - , dn: - < -  fanout: 0 1 
+node[3]: up: 0 < - , dn: 1 < -  fanout: 
+Local expressions: 
+expr[0]: type: nor<1> (pull-up: 3)
+	children: #2, offset: 0
+expr[1]: type: or<1> (pull-dn: 3)
+	children: #2, offset: 0
+Local expression -> rule map:
+(0,0) (1,1) 
+Local rules:
+[0]	after 10
+[1]	after 10
+}
+type[2]: {
+Local nodes: 
+node[0]: up: - < - , dn: - < -  fanout: 
+node[1]: up: - < - , dn: - < -  fanout: 
+node[2]: up: - < - , dn: - < -  fanout: 0 1 
+node[3]: up: 0 < - , dn: 1 < -  fanout: 
+Local expressions: 
+expr[0]: type: or<1> (pull-up: 3)
+	children: #2, offset: 0
+expr[1]: type: nor<1> (pull-dn: 3)
+	children: #2, offset: 0
+Local expression -> rule map:
+(0,0) (1,1) 
+Local rules:
+[0]	after 10
+[1]	after 10
+}
+}
+map: global-expr-id -> process-id
+(1,1) (3,2) (5,3) 
+

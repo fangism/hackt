@@ -101,14 +101,15 @@ Expr::dump_struct(ostream& o, const bool dir) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-Expr::dump_parent_dot_edge(ostream& o, const bool dir) const {
+Expr::dump_parent_dot_edge(ostream& o, const footprint_frame_map_type& bfm,
+		const expr_index_type offset, const bool dir) const {
 	if (is_root()) {
-		o << "NODE_" << parent << "\t[arrowhead=" <<
+		o << "NODE_" << bfm[parent] << "\t[arrowhead=" <<
 			(dir ? "odot" : "dot")
 			// (dir ? "normal" : "inv")
 			<< ']';
 	} else {
-		o << "EXPR_" << parent;
+		o << "EXPR_" << parent +offset;
 	}
 	return o;
 }
