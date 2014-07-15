@@ -206,7 +206,8 @@ iplfailtest.autodepend: Makefile
 -include iplfailtest.autodepend
 
 .iplrc-out.iplckpt-outdump:
-	@$(SED) '0,/^CHECKPOINT DUMP/d' $< > $@
+	@$(AWK) 'BEGIN{m=0;}{if(m)print;}/CHECKPOINT DUMP/{m=1;}' < $< > $@
+#	@$(SED) '0,/^CHECKPOINT DUMP/d' $< > $@
 
 # no-op: simultaneously produced target
 .iplrc-out.iplckpt:
