@@ -1923,7 +1923,8 @@ endif
 # YACC_PREFIX = -DYACC_PREFIX=hackt_yy
 # libhackt_la_CPPFLAGS = $(YACC_PREFIX) $(AM_CPPFLAGS)
 
-MORE_BOGUS_CPPFLAGS =
+# 'register' is deprecated as a storage-specifier [C++11]
+MORE_BOGUS_CPPFLAGS = -Dregister=
 MORE_BOGUS_CXXFLAGS =
 if HAVE_BYACC
 # we don't care about libbogus, whatever it takes to make it compile
