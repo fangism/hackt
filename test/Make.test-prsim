@@ -259,17 +259,16 @@ prsimrcfail-out.autodepend: Makefile
 -include prsimrcfail-out.autodepend
 
 VCD_MSG_FILTER = $(GREP) -v "Writing simulation vcd"
+
+# preserve boot-up time warnings
+DELETE_FROM_BEGINNING_TO_MATCH = $(AWK) 'BEGIN{m=0;}{if(m||match($$0,"[Ww]arning"))print;}/DELETE FROM HERE/{m=1;}'
+# sed '0,/DELETE FROM HERE/d' doesn't work in all cases :(
+DELETE_FROM_MATCH_TO_END = $(SED) -e '/DELETE TO HERE/,$$d'
 # semi-hackish way to conditionally filter random timing
 # HACK: if the file name has 'random' in it, then filter out timestamps
-# if vcd/tracing was disabled, don't expect vcd message
 PRSIMRC_TEST_FILTER_SCRIPT = \
-	startregex="^Writing simulation vcd" && \
-	if grep -q "$$startregex" $< ; \
-	then startregex="/$$startregex/" ; \
-	else startregex=0 ; \
-	fi && \
-	$(SED) -e "$$startregex"',/DELETE FROM HERE/d' \
-		-e '/DELETE TO HERE/,$$d' $< | \
+	$(DELETE_FROM_BEGINNING_TO_MATCH) $< | \
+		$(SED) -e '/DELETE TO HERE/,$$d' | \
 		$(PRSIMRC_FILTER_AWK) > $@ ; \
 	case $< in \
 	  *random*) $(PRSIMRC_TIME_FILTER_AWK) < $@ | \
