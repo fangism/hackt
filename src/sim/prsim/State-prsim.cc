@@ -2670,7 +2670,8 @@ for ( ; i!=e; ++i) {
 				const time_type past = r.get_last_transition_time();
 				const time_type min_time = past +md.time;
 				// take argmax(t_ref +t_min_delay)
-				if (min_time > ret.time) {
+				// ignore uninitialized transition times < 0
+				if (past >= 0.0 && min_time > ret.time) {
 					ret.set(grr, min_time);
 				}
 			}

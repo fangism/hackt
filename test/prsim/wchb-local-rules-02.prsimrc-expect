@@ -1,0 +1,32 @@
+now editing after delay values 
+All rules local to type: rsource_e1of2<>
+[after 22]	r.e -> _r0-
+[after 21]	~r.e -> _r0+
+[after 24]	r.e -> _r1-
+[after 23]	~r.e -> _r1+
+[after 10]	_r0 -> r.d[0]-
+[after 10]	~_r0 -> r.d[0]+
+[after 10]	_r1 -> r.d[1]-
+[after 10]	~_r1 -> r.d[1]+
+All rules local to type: bucket_e1of2_rl<>
+[after 34]	l.d[1] | l.d[0] -> _lv-
+[after 33]	~l.d[1] & ~l.d[0] -> _lv+
+[after 10]	_sReset & _lv -> lv-
+[after 10]	~_sReset | ~_lv -> lv+
+[after 10]	~lv -> l.e+
+[after 10]	lv -> l.e-
+	0	g._sReset : 0
+	0	g._pReset : 0
+	10	buf.rv : 1	[by g._sReset:=0]
+	10	bkt.lv : 1	[by g._sReset:=0]
+	20	l.e : 0	[by buf.rv:=1]
+	20	r.e : 0	[by bkt.lv:=1]
+	41	src._r0 : 1	[by l.e:=0]
+	43	src._r1 : 1	[by l.e:=0]
+	51	l.d[0] : 0	[by src._r0:=1]
+	53	l.d[1] : 0	[by src._r1:=1]
+	61	buf._r.d[0] : 1	[by l.d[0]:=0]
+	63	buf._r.d[1] : 1	[by l.d[1]:=0]
+	71	r.d[0] : 0	[by buf._r.d[0]:=1]
+	73	r.d[1] : 0	[by buf._r.d[1]:=1]
+	106	bkt._lv : 1	[by r.d[1]:=0]

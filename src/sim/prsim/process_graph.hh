@@ -12,6 +12,7 @@
 #include <map>
 #include <set>
 #include <valarray>
+#include <string>
 
 #include "util/STL/hash_map.hh"
 #include "sim/common.hh"
@@ -32,6 +33,7 @@ using std::map;
 using std::set;
 using HASH_MAP_NAMESPACE::hash_map;
 using std::valarray;
+using std::string;
 using entity::footprint;
 struct process_sim_state;
 using entity::footprint_frame_map_type;
@@ -392,6 +394,9 @@ struct unique_process_subgraph {
 	print_rules_matching_faninout(ostream&, const node_index_type, 
 		const node_index_type, const bool) const;
 
+	bool
+	edit_rule_property(const vector<rule_index_type>&,
+		const string&, const string&);
 
 #if PRSIM_TIMING_BACKANNOTATE
 	void

@@ -6964,6 +6964,84 @@ LocalRulesMatching::usage(ostream& o) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
+@texinfo cmd/local-rules-edit-attr.texi
+@deffn Command local-rules-edit-attr in out dir prop val
+Alters property values of type-local production rule(s)
+that match:
+@var{in} in the guard, @var{out} in the output
+in direction @var{dir}.
+@var{prop} is the name of the property, 
+and @var{val} is the new value.
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(LocalRulesEditAttr,
+	"local-rules-edit-attr", info, 
+	"alter attributes of matching production rules in current type")
+
+int
+LocalRulesEditAttr::main(State& s, const string_list& a) {
+if (a.size() != 6) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	string_list::const_iterator ai(a.begin());
+	++ai;
+	// indices are local
+	const node_index_type srcind = parse_node_to_index(*ai, s.get_module());
+	if (!srcind) {
+		cerr << "Error finding node: " << *ai << endl;
+		return Command::BADARG;
+	}
+	++ai;
+	const node_index_type dstind = parse_node_to_index(*ai, s.get_module());
+	if (!dstind) {
+		cerr << "Error finding node: " << *ai << endl;
+		return Command::BADARG;
+	}
+	++ai;
+	bool dir = false;	// pull-dn
+	if (ai->length() == 1) {
+		switch ((*ai)[0]) {
+		case '+': dir = true; break;
+		case '-': dir = false; break;
+		default:
+			cerr << "Error: expecting - or + (for rule direction)."
+				<< endl;
+			return Command::BADARG;
+		}
+	} else {
+		cerr << "Error: expecting - or + (for rule direction)." << endl;
+		return Command::BADARG;
+	}
+	++ai;
+	const string& attr_name(*ai);
+	++ai;
+	const string& attr_val(*ai);
+
+	unique_process_subgraph* g = __get_current_process_graph(s);
+	NEVER_NULL(g);
+	vector<rule_index_type> r;
+	g->rules_matching_faninout(srcind, dstind, dir, r);
+	if (g->edit_rule_property(r, attr_name, attr_val)) {
+		return Command::BADARG;
+	}
+	return Command::NORMAL;
+}
+}
+
+void
+LocalRulesEditAttr::usage(ostream& o) {
+	o << name << " <fromNode> <toNode> <+-> <prop> <value>" << endl;
+	o <<
+"In the current type context, find all rules that match:\n"
+"\t<fromNode> -> <toNode>+/-\n"
+"and change their <prop> property to the new value."
+	<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
 @texinfo cmd/invariants.texi
 @deffn Command invariants ref
 @deffnx Command invariants-verbose ref
@@ -7294,8 +7372,10 @@ TimingBAMinDelayApplyAll::usage(ostream& o) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
 @texinfo cmd/timing-min-delay-list.texi
-@deffn Command min-delay-list type
+@deffn Command min-delay-list [type]
 Prints the timing constraints associated with process @var{type}.
+If @var{type} is omitted, then use the current type context.
+The '.' type references the top-level type.  
 @end deffn
 @end texinfo
 ***/
@@ -7303,39 +7383,37 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(TimingBAMinDelayList,
 	"min-delay-list", info,
 	"show timing-constraints impose by type")
 
-// if no argument given, default to using current type context or top-level?
+// if no argument given, default to using current type context
 int
 TimingBAMinDelayList::main(State& s, const string_list& a) {
-if (a.size() != 2) {
+if (a.size() != 2 && a.size() != 1) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
+if (a.size() == 1) {
+	unique_process_subgraph* g = __get_current_process_graph(s);
+	g->dump_backannotated_delays(cout);
+} else {
 	const string& objname(a.back());
-#if 0
-	const footprint* f = s.parse_to_footprint(objname.c_str());
-	if (!f) {
-		cerr << "Error: unknown type: " << objname << endl;
-		return Command::BADARG;
-	}
-#endif
 	if (s.list_min_delays_type(cout, objname)) {
 		cerr << "Error: unknown type: " << objname << endl;
 		return Command::BADARG;
 	}
+}
 	return Command::NORMAL;
 }
 }
 
 void
 TimingBAMinDelayList::usage(ostream& o) {
-	o << name << ": " << brief << endl;
+	o << name << " [type] : " << brief << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
 @texinfo cmd/timing-min-delay-list-all.texi
 @deffn Command min-delay-list-all
-Prints the timing constraints associated with every process.
+Prints the timing constraints associated with every unique process type.
 @end deffn
 @end texinfo
 ***/

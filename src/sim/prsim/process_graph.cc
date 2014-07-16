@@ -454,6 +454,25 @@ unique_process_subgraph::print_rules_matching_faninout(ostream& o,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	\param r list of rule indices to rules to apply change.
+	\param prop name of property
+	\param val new value of property to set
+	\return true on error
+ */
+bool
+unique_process_subgraph::edit_rule_property(const vector<rule_index_type>& r,
+		const string& prop, const string& val) {
+	vector<rule_index_type>::const_iterator
+		ri(r.begin()), re(r.end());
+	for ( ; ri!=re; ++ri) {
+		if (rule_pool[*ri].edit_property(prop, val))
+			return true;
+	}
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Prints invariant message if any.
 	\param ri root expression index.
  */

@@ -8,14 +8,64 @@
 
 #include <iostream>
 #include "sim/prsim/Rule.hh"
+#include "util/string.hh"		// for string_to_num
 
 namespace HAC {
 namespace SIM {
 namespace PRSIM {
+using util::strings::string_to_num;
+#include "util/using_ostream.hh"
+
 //=============================================================================
 template <class Time>
 Time
 Rule<Time>::default_unspecified_delay = delay_policy<time_type>::default_delay;
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class Time>
+bool
+Rule<Time>::edit_property(const string& prop, const string& val) {
+	time_type t;
+	int i;
+	const bool t_err = string_to_num(val, t);
+	const bool i_err = string_to_num(val, i);
+	if (prop == "unstab") {
+		if (i_err) {
+			cerr << "Error: value should be 0 or 1." << endl;
+			return true;
+		} else {
+			if (i) {
+				this->set_unstable();
+			} else {
+				this->clear_unstable();
+			}
+		}
+	} else if (prop == "after") {
+		if (t_err) {
+			cerr << "Error: value should be floating-point." << endl;
+			return true;
+		} else {
+			this->after = t;
+		}
+#if PRSIM_AFTER_RANGE
+	} else if (prop == "after_min") {
+		if (t_err) {
+			cerr << "Error: value should be floating-point." << endl;
+			return true;
+		} else {
+			this->after_min = t;
+		}
+	} else if (prop == "after_max") {
+		if (t_err) {
+			cerr << "Error: value should be floating-point." << endl;
+			return true;
+		} else {
+			this->after_max = t;
+		}
+#endif
+	}
+	return false;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

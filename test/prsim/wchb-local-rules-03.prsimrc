@@ -1,0 +1,45 @@
+# "wchb-local-rules-03.prsimrc"
+# @haco@ wchb-a.haco-c
+
+# top-level: nothing
+
+echo now editing after delay values
+pusht rsource_e1of2
+local-rules-edit-attr r.e _r0 + after 21
+local-rules-edit-attr r.e _r0 - after 22
+local-rules-edit-attr r.e _r1 + after 23
+local-rules-edit-attr r.e _r1 - after 24
+local-rules
+min-delay-list
+popt
+
+pusht bucket_e1of2_rl
+local-rules-edit-attr l.t _lv + after 31
+local-rules-edit-attr l.t _lv - after 32
+local-rules-edit-attr l.f _lv + after 33
+local-rules-edit-attr l.f _lv - after 34
+local-rules-edit-attr _lv l.e + after 21
+local-rules-edit-attr _lv l.e - after 15
+min-delay l.t l.e 30
+min-delay l.f l.e 30
+local-rules
+min-delay-list
+popt
+
+echo ---------------
+echo starting reset
+min-delay-verbose 1
+min-delay-apply-all
+timing after
+# eval-order random
+watchall
+watchall-queue
+
+set g._sReset 0
+set g._pReset 0
+cycle
+
+# set g._sReset 1
+# set g._pReset 1
+# advance 300
+

@@ -117,3 +117,20 @@ Rules local to type: wchb<> [from rv to l.e+ ]
 [after 10]	~rv -> l.e+
 Rules local to type: wchb<> [from rv to l.e- ]
 [after 10]	rv -> l.e-
+now editing after delay values 
+All rules local to type: rsource_e1of2<>
+[after 22]	r.e -> _r0-
+[after 21]	~r.e -> _r0+
+[after 24]	r.e -> _r1-
+[after 23]	~r.e -> _r1+
+[after 10]	_r0 -> r.d[0]-
+[after 10]	~_r0 -> r.d[0]+
+[after 10]	_r1 -> r.d[1]-
+[after 10]	~_r1 -> r.d[1]+
+All rules local to type: bucket_e1of2_rl<>
+[after 34]	l.d[1] | l.d[0] -> _lv-
+[after 33]	~l.d[1] & ~l.d[0] -> _lv+
+[after 10]	_sReset & _lv -> lv-
+[after 10]	~_sReset | ~_lv -> lv+
+[after 10]	~lv -> l.e+
+[after 10]	lv -> l.e-

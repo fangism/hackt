@@ -520,8 +520,8 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	mux-delay-min-delay-01 mux-delay-min-delay-02 mux-delay-min-delay-03 \
 	mux-delay-b-min-delay-01 mux-delay-b-min-delay-02 \
 	nand-min-delay-01 nand-min-delay-02 \
-	nand-local-rules-01 \
-	wchb-local-rules-01
+	nand-local-rules-01 wchb-local-rules-02 wchb-local-rules-03 \
+	wchb-local-rules-04
 
 # subset of prsimrc test that we wish to compare traces against regressions
 HACKT_PRSIMTRACE_TEST_SUBJECTS = \
