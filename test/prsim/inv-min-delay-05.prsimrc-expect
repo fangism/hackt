@@ -1,12 +1,12 @@
 	0	a : 0
-note: event on b was delayed from 10 until 45 by a
+note: event on b+ was delayed from 10 until 45 by a:0
 	45	b : 1	[by a:=0]
-note: event on c was delayed from 55 until 90 by b
+note: event on c- was delayed from 55 until 90 by b:1
 	90	c : 0	[by b:=1]
 	90	a : 1
-note: event on b was delayed from 100 until 135 by a
+note: event on b- was delayed from 100 until 135 by a:1
 	135	b : 0	[by a:=1]
-note: event on c was delayed from 145 until 180 by b
+note: event on c+ was delayed from 145 until 180 by b:0
 	180	c : 1	[by b:=0]
 WARNING: weak-interference `b'
 >> cause: `a' (val: X)
@@ -16,7 +16,7 @@ WARNING: weak-interference `c'
 	190	b : X	[by a:=X]
 	200	c : X	[by b:=X]
 	200	a : 1
-note: event on b was delayed from 210 until 245 by a
+note: event on b- was delayed from 210 until 245 by a:1
 	245	b : 0	[by a:=1]
-note: event on c was delayed from 255 until 290 by b
+note: event on c+ was delayed from 255 until 290 by b:0
 	290	c : 1	[by b:=0]

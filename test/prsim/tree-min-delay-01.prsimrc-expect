@@ -2,13 +2,13 @@ Min-delay bounds in type '<>':
 Min-delay bounds in type 'ick<>':
 Min-delay bounds in type 'bar<>':
 Min-delay bounds in type 'foo<>':
-	t( a -> b ) >= 15
+	t( a* -> b* ) >= 15
 Timing arcs whose head is poo.p.x.b: 
 applying timing delays 
 Timing arcs whose head is poo.p.x.a: 
 Timing arcs whose head is poo.p.x.b: 
 Min-delay bounds in type 'foo<>':
-	t( a -> b ) >= 15
+	t( a* -> b* ) >= 15
 Timing arcs whose head is poo.p.y.b: 
 Min-delay bounds in type 'foo<>':
-	t( a -> b ) >= 15
+	t( a* -> b* ) >= 15

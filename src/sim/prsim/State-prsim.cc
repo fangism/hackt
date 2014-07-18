@@ -1783,7 +1783,7 @@ State::dequeue_event(void) {
 		if (ne.val != LOGIC_OTHER) {
 		// do not apply min-delays to X transitions (conservative)
 		const applied_min_delay_constraint
-			c(node_event_min_delay(ne.node));
+			c(node_event_min_delay(ne.node, ne.val));
 		if (c.delayed && (c.time > ep.time)) {
 			INVARIANT(c.time > current_time);
 			// then need to reschedule this next event for later
@@ -1792,10 +1792,12 @@ State::dequeue_event(void) {
 			if (verbose_min_delays()) {
 				cout << "note: event on ";
 				dump_node_canonical_name(cout, ne.node);
-				cout << " was delayed from " <<
+				cout << (ne.val == LOGIC_HIGH ? '+' : '-') <<
+					" was delayed from " <<
 					ep.time << " until " <<
 					c.time << " by ";
-				dump_node_canonical_name(cout, c.ref) << endl;
+				dump_node_canonical_name(cout, c.ref);
+				get_node(c.ref).dump_value(cout << ':') << endl;
 			}
 			current_time = ep.time;	// advance
 #if 0
@@ -2621,12 +2623,17 @@ if (ptf) {
 /**
 	Determine whether or not event on node ni should be further 
 	delayed by any of the min-delay constraints.
+	\param ni node that is about to switch.
+	\param nval the next value for the transitioning node.
  */
 State::applied_min_delay_constraint
-State::node_event_min_delay(const node_index_type ni) const {
+State::node_event_min_delay(const node_index_type ni, 
+		const value_enum nval) const {
 	applied_min_delay_constraint ret(current_time);
 	const node_type& n(get_node(ni));
-if (n.is_min_delay_target()) {
+// ignore min delay constraints when target node is -> X
+if (n.is_min_delay_target() && nval != LOGIC_OTHER) {
+	const bool tgt_dir = (nval == LOGIC_HIGH);
 	const process_timing_fanin_type* ptf =
 		delay_annotation_manager.lookup_process_timing_fanin(ni);
 	NEVER_NULL(ptf);
@@ -2655,20 +2662,28 @@ for ( ; i!=e; ++i) {
 			di(f->second.begin()), de(f->second.end());
 		for ( ; di!=de; ++di) {
 			const min_delay_entry& md(*di);
+			const node_index_type grr = bfm[md.ref_node -1];
+			const node_type& r(get_node(grr));
+			bool ref_dir = false;
+			switch (r.current_value()) {
+			case LOGIC_LOW: ref_dir = false; break;
+			case LOGIC_HIGH: ref_dir = true; break;
+			// ignore min-delay constraint when ref node is X
+			default: continue;
+			}
 			// suppress if predicate is false
 			bool apply = true;
-			if (md.predicate) {
-				const node_index_type gpr = bfm[md.predicate -1];
+			const node_index_type pni = md.predicate[ref_dir][tgt_dir];
+			if (pni) {
+				const node_index_type gpr = bfm[pni -1];
 				if (get_node(gpr).current_value() == LOGIC_LOW) {
 					apply = false;
 				}
 			}
 			if (apply) {
-				const node_index_type grr = bfm[md.ref_node -1];
-				const node_type& r(get_node(grr));
 				// right now, don't care about value
 				const time_type past = r.get_last_transition_time();
-				const time_type min_time = past +md.time;
+				const time_type min_time = past +md.time[ref_dir][tgt_dir];
 				// take argmax(t_ref +t_min_delay)
 				// ignore uninitialized transition times < 0
 				if (past >= 0.0 && min_time > ret.time) {

@@ -152,34 +152,36 @@ struct timing_constraint_entry {
 #else
 	node_index_type				ref_node;
 #endif
-	rule_time_type				time;
 
 	timing_constraint_entry() :
 #if PRSIM_FWD_POST_TIMING_CHECKS
-		trig_node(INVALID_NODE_INDEX),
+		trig_node(INVALID_NODE_INDEX)
 #else
-		ref_node(INVALID_NODE_INDEX),
+		ref_node(INVALID_NODE_INDEX)
 #endif
-		time(0) { }
+		{ }
 	timing_constraint_entry(const node_index_type n,
 		const rule_time_type t) :
 #if PRSIM_FWD_POST_TIMING_CHECKS
-		trig_node(n),
+		trig_node(n)
 #else
-		ref_node(n),
+		ref_node(n)
 #endif
-		time(t) { }
-};	// end struct timing_constraing
+		{ }
+};	// end struct timing_constraint
 
 #if PRSIM_FWD_POST_TIMING_CHECKS
-typedef	timing_constraint_entry			hold_constraint_entry;
-struct setup_constraint_entry : public timing_constraint_entry {
+struct hold_constraint_entry : public timing_constraint_entry {
+	rule_time_type				time;
+};	// end struct hold_constraint_entry
+struct setup_constraint_entry : public hold_constraint_entry {
 	bool					dir;
 };	// end struct setup_constraint_entry
 #else
-typedef	timing_constraint_entry			setup_constraint_entry;
-
-struct hold_constraint_entry : public timing_constraint_entry {
+struct setup_constraint_entry : public timing_constraint_entry {
+	rule_time_type				time;
+};	// end struct hold_constraint_entry
+struct hold_constraint_entry : public setup_constraint_entry {
 	bool					dir;
 };	// end struct hold_constraint_entry
 #endif
@@ -187,10 +189,32 @@ struct hold_constraint_entry : public timing_constraint_entry {
 #endif
 #if PRSIM_TIMING_BACKANNOTATE
 struct min_delay_entry : public timing_constraint_entry	{
+	// index is input direction, output direction
+	rule_time_type				time[2][2];
 	// if !null, predicate refers to bool/ebool that must be true
 	// for this min-delay constraint to apply.
 	// a null-predicate implies true; always applied
-	node_index_type				predicate;
+	node_index_type				predicate[2][2];
+	min_delay_entry() {
+		time[0][0] = 0;
+		time[1][0] = 0;
+		time[0][1] = 0;
+		time[1][1] = 0;
+		predicate[0][0] = INVALID_NODE_INDEX;
+		predicate[0][1] = INVALID_NODE_INDEX;
+		predicate[1][0] = INVALID_NODE_INDEX;
+		predicate[1][1] = INVALID_NODE_INDEX;
+	}
+
+	bool
+	is_uniform(void) const {
+		return (time[0][0] == time[0][1])
+			&& (time[0][0] == time[1][0])
+			&& (time[0][0] == time[1][1])
+			&& (predicate[0][0] == predicate[0][1])
+			&& (predicate[0][0] == predicate[1][0])
+			&& (predicate[0][0] == predicate[1][1]);
+	}
 };	// end struct min_delay_entry
 #endif
 
@@ -401,7 +425,9 @@ struct unique_process_subgraph {
 #if PRSIM_TIMING_BACKANNOTATE
 	void
 	add_min_delay_constraint(const node_index_type ref,
+		const char refdir,
 		const node_index_type tgt,
+		const char tgtdir,
 		const rule_time_type del,
 		const node_index_type pred = INVALID_NODE_INDEX);
 

@@ -7242,12 +7242,19 @@ o <<
 Force the minimum delay between the most recent event on @var{src}
 to the next event on @var{dest} to be greater-than or equal-to
 @var{delay}.  
+Node names @var{src} and @var{dst} may be optionally suffixed with + or -
+to indicate the direction with which the constraint is applied.
+Left unspecified, the constraint applies to both directions on each node.
 If predicate @var{pred} is specified, only apply the min-delay if
 the predicate is true.
 @var{pred} can be any bool or ebool (atomic).  
 The minimum delay is enforced by postponing the event on @var{dst} to a
 time that meets all constraints; it will never cause an event to advance
 earlier than initially scheduled.  
+There are 4 combinations of directions on contraints, and each combination
+may have its own predicate and delay value.
+For example if direction is omitted in both @var{src} and @var{dst}, then 
+the same delay and predicate will be applied to all 4 cases.  
 @end deffn
 @end texinfo
 ***/
@@ -7269,15 +7276,29 @@ if (asz < 4 || asz > 5) {
 	string_list::const_iterator ai(a.begin());
 	// note: parsing is sensitive to type-local context
 	++ai;
-	const node_index_type srcind = parse_node_to_index(*ai, s.get_module());
+	string rnode(*ai);	// copy
+	char rdir = *--rnode.end(); // string cannot be empty by tokenization
+	switch (rdir) {
+	case '+': // fall-through
+	case '-': rnode.resize(rnode.length()-1); break;
+	default: rdir = '*'; break;
+	}
+	const node_index_type srcind = parse_node_to_index(rnode, s.get_module());
 	if (!srcind) {
-		cerr << "Error finding node: " << *ai << endl;
+		cerr << "Error finding reference node: " << *ai << endl;
 		return Command::BADARG;
 	}
 	++ai;
-	const node_index_type dstind = parse_node_to_index(*ai, s.get_module());
+	string tnode(*ai);	// copy
+	char tdir = *--tnode.end(); // string cannot be empty by tokenization
+	switch (tdir) {
+	case '+': // fall-through
+	case '-': tnode.resize(tnode.length()-1); break;
+	default: tdir = '*'; break;
+	}
+	const node_index_type dstind = parse_node_to_index(tnode, s.get_module());
 	if (!dstind) {
-		cerr << "Error finding node: " << *ai << endl;
+		cerr << "Error finding target node: " << *ai << endl;
 		return Command::BADARG;
 	}
 	++ai;
@@ -7288,7 +7309,7 @@ if (asz < 4 || asz > 5) {
 		++ai;
 		predind = parse_node_to_index(*ai, s.get_module());
 		if (!predind) {
-			cerr << "Error finding node: " << *ai << endl;
+			cerr << "Error finding predicate node: " << *ai << endl;
 			return Command::BADARG;
 		}
 	}
@@ -7296,14 +7317,16 @@ if (asz < 4 || asz > 5) {
 	cout << "src=" << srcind << ", dst=" << dstind << ", t=" << min_delay
 		<< ", pred=" << predind << endl;
 #endif
-	g->add_min_delay_constraint(srcind, dstind, min_delay, predind);
+	g->add_min_delay_constraint(srcind, rdir, dstind, tdir, min_delay, predind);
 	return Command::NORMAL;
 }
 }
 
 void
 TimingBAMinDelay::usage(ostream& o) {
-	o << name << " <src> <dst> <min-delay> [predicate]" << endl;
+	o << name << " <src>[+-] <dst>[+-] <min-delay> [predicate]" << endl;
+o << "For src and dst, if the node name is suffixed with + or -, then the\n"
+"delay constraint is only applied in the specified directions." << endl;
 o << "Note: delays are not applied globally until 'min-delay-apply-all' is run."
 	<< endl;
 }

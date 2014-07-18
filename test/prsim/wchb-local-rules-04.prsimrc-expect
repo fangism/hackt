@@ -17,8 +17,8 @@ All rules local to type: bucket_e1of2_rl<>
 [after 10]	~lv -> l.e+
 [after 10]	lv -> l.e-
 Min-delay bounds in type 'bucket_e1of2_rl<>':
-	t( l.d[1] -> l.e ) >= 60
-	t( l.d[0] -> l.e ) >= 60
+	t( l.d[1]* -> l.e* ) >= 60
+	t( l.d[0]* -> l.e* ) >= 60
 --------------- 
 starting reset 
 enqueued:	0	g._sReset : 0
@@ -67,7 +67,7 @@ enqueued:	150	src._r1 : 0	[from l.e:=1]
 	126	l.e : 1	[by buf.rv:=0]
 killed  :	0	r.e : 1	[from bkt.lv:=0]
 enqueued:	133	r.e : 1	[from bkt.lv:=0]
-note: event on r.e was delayed from 126 until 133 by r.d[1]
+note: event on r.e+ was delayed from 126 until 133 by r.d[1]:0
 	133	r.e : 1	[by bkt.lv:=0]
 enqueued:	158	l.d[0] : 1	[from src._r0:=0]
 WARNING: excl-unstable `src._r1'-

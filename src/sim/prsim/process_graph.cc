@@ -776,15 +776,45 @@ unique_process_subgraph::print_backannotated_delay_single(ostream& o,
 	vector<min_delay_entry>::const_iterator
 		si(mds.second.begin()), se(mds.second.end());
 	for ( ; si!=se; ++si) {
+		// TODO: this printing is very verbose, often resulting
+		// in quadruplicate entries printed.
+		// Should find a more compact way to print these
+		// in the common case where they are all equal.
 		// source -> destination
+	if (si->is_uniform()) {
+		// fields are identical in all direction cases
 		o << "\tt( ";
-		dump_node_local_name(o, si->ref_node) <<
-			" -> " << oss.str() << " ) >= " << si->time;
-		if (si->predicate) {
+		dump_node_local_name(o, si->ref_node) << '*' <<
+			" -> " << oss.str() << '*' <<
+			" ) >= " << si->time[0][0];
+		if (si->predicate[0][0]) {
 			o << ", if (";
-			dump_node_local_name(o, si->predicate) << ')';
+			dump_node_local_name(o, si->predicate[0][0]) << ')';
 		}
 		o << endl;
+	} else {
+		bool rd = false;
+		do {
+		bool td = false;
+		do {
+		if (si->time[rd][td] > 0) {
+			o << "\tt( ";
+			dump_node_local_name(o, si->ref_node) <<
+				(rd ? '+' : '-') <<
+				" -> " << oss.str() <<
+				(td ? '+' : '-') <<
+				" ) >= " << si->time[rd][td];
+			if (si->predicate[rd][td]) {
+				o << ", if (";
+				dump_node_local_name(o, si->predicate[rd][td]) << ')';
+			}
+			o << endl;
+		}	// else don't print, as delta of 0 is no-op
+		td = !td;
+		} while (td);
+		rd = !rd;
+		} while (rd);
+	}
 	}
 	return o;
 }
@@ -884,15 +914,42 @@ unique_process_subgraph::has_not_local_fanin_map(vector<bool>& ret) const {
 /**
 	Adds a timing constraint to unique graph, but doesn't
 	apply it globally to all instances.  
+	\param ref the reference node (earlier)
+	\param refdir direction specifications to apply [+-*] to ref node
+	\param tgt the target node (later)
+	\param tgtdir direction specifications to apply [+-*] to tgt node
+	\param del min-delay value to apply
+	\param pred optional predicate, 0 to signal no predicate (always)
  */
 void
 unique_process_subgraph::add_min_delay_constraint(const node_index_type ref,
-		const node_index_type tgt, const rule_time_type del,
+		const char refdir,
+		const node_index_type tgt,
+		const char tgtdir,
+		const rule_time_type del,
 		const node_index_type pred) {
+	bool r_apply[2];
+	bool t_apply[2];
+	r_apply[0] = refdir != '+';
+	r_apply[1] = refdir != '-';
+	t_apply[0] = tgtdir != '+';
+	t_apply[1] = tgtdir != '-';
 	min_delay_entry md;
 	md.ref_node = ref;
-	md.time = del;
-	md.predicate = pred;
+	bool rd = false;
+	do {
+	if (r_apply[rd]) {
+		bool td = false;
+		do {
+		if (t_apply[td]) {
+			md.time[rd][td] = del;
+			md.predicate[rd][td] = pred;
+		}
+			td = !td;
+		} while (td);
+	}
+		rd = !rd;
+	} while (rd);
 	min_delays[tgt].push_back(md);
 }
 #endif

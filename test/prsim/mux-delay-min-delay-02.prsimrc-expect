@@ -1,10 +1,10 @@
 Min-delay bounds in type '<>':
 Min-delay bounds in type 'mux4<>':
 Min-delay bounds in type 'mux2<>':
-	t( in[0] -> out ) >= 40, if (sel[0])
-	t( in[1] -> out ) >= 40, if (sel[1])
-	t( sel[0] -> out ) >= 30
-	t( sel[1] -> out ) >= 30
+	t( in[0]* -> out* ) >= 40, if (sel[0])
+	t( in[1]* -> out* ) >= 40, if (sel[1])
+	t( sel[0]* -> out* ) >= 30
+	t( sel[1]* -> out* ) >= 30
 applying timing delays 
 	0	s[0][0] : 1
 	0	s[0][1] : 0
@@ -16,12 +16,12 @@ applying timing delays
 	0	x[3] : 0
 	10	m1.a[0].loc : 0	[by x[0]:=0]
 	10	m1.a[1].loc : 0	[by x[2]:=0]
-note: event on m1.zz[0] was delayed from 20 until 40 by x[0]
-note: event on m1.zz[1] was delayed from 20 until 40 by x[2]
+note: event on m1.zz[0]+ was delayed from 20 until 40 by x[0]:0
+note: event on m1.zz[1]+ was delayed from 20 until 40 by x[2]:0
 	40	m1.zz[0] : 1	[by m1.a[0].loc:=0]
 	40	m1.zz[1] : 1	[by m1.a[1].loc:=0]
 	50	m1.b.loc : 1	[by m1.zz[0]:=1]
-note: event on z was delayed from 60 until 80 by m1.zz[0]
+note: event on z- was delayed from 60 until 80 by m1.zz[0]:1
 	80	z : 0	[by m1.b.loc:=1]
 ---------------- 
 	80	s[0][0] : X
@@ -50,12 +50,12 @@ note: event on z was delayed from 60 until 80 by m1.zz[0]
 	125	x[3] : 0
 	135	m1.a[0].loc : 0	[by x[0]:=0]
 	135	m1.a[1].loc : 0	[by x[2]:=0]
-note: event on m1.zz[0] was delayed from 145 until 165 by x[0]
-note: event on m1.zz[1] was delayed from 145 until 165 by x[2]
+note: event on m1.zz[0]+ was delayed from 145 until 165 by x[0]:0
+note: event on m1.zz[1]+ was delayed from 145 until 165 by x[2]:0
 	165	m1.zz[0] : 1	[by m1.a[0].loc:=0]
 	165	m1.zz[1] : 1	[by m1.a[1].loc:=0]
 	175	m1.b.loc : 1	[by m1.zz[0]:=1]
-note: event on z was delayed from 185 until 205 by m1.zz[0]
+note: event on z- was delayed from 185 until 205 by m1.zz[0]:1
 	205	z : 0	[by m1.b.loc:=1]
 ---------------- 
 	205	s[0][0] : X
@@ -83,12 +83,12 @@ note: event on z was delayed from 185 until 205 by m1.zz[0]
 	250	s[1][1] : 0
 	255	m1.a[0].loc : 0	[by x[1]:=0]
 	255	m1.a[1].loc : 0	[by x[3]:=0]
-note: event on m1.zz[0] was delayed from 265 until 285 by x[0]
-note: event on m1.zz[1] was delayed from 265 until 285 by x[2]
+note: event on m1.zz[0]+ was delayed from 265 until 285 by x[0]:0
+note: event on m1.zz[1]+ was delayed from 265 until 285 by x[2]:0
 	285	m1.zz[0] : 1	[by m1.a[0].loc:=0]
 	285	m1.zz[1] : 1	[by m1.a[1].loc:=0]
 	295	m1.b.loc : 1	[by m1.zz[0]:=1]
-note: event on z was delayed from 305 until 325 by m1.zz[0]
+note: event on z- was delayed from 305 until 325 by m1.zz[0]:1
 	325	z : 0	[by m1.b.loc:=1]
 ---------------- 
 	325	s[0][0] : X
@@ -117,12 +117,12 @@ note: event on z was delayed from 305 until 325 by m1.zz[0]
 	365	x[3] : 0
 	375	m1.a[0].loc : 0	[by x[0]:=0]
 	375	m1.a[1].loc : 0	[by x[2]:=0]
-note: event on m1.zz[0] was delayed from 385 until 405 by x[0]
-note: event on m1.zz[1] was delayed from 385 until 405 by x[2]
+note: event on m1.zz[0]+ was delayed from 385 until 405 by x[0]:0
+note: event on m1.zz[1]+ was delayed from 385 until 405 by x[2]:0
 	405	m1.zz[0] : 1	[by m1.a[0].loc:=0]
 	405	m1.zz[1] : 1	[by m1.a[1].loc:=0]
 	415	m1.b.loc : 1	[by m1.zz[0]:=1]
-note: event on z was delayed from 425 until 445 by m1.zz[0]
+note: event on z- was delayed from 425 until 445 by m1.zz[0]:1
 	445	z : 0	[by m1.b.loc:=1]
 ---------------- 
 	445	s[0][0] : X
@@ -146,12 +146,12 @@ note: event on z was delayed from 425 until 445 by m1.zz[0]
 	485	x[3] : 0
 	495	m1.a[0].loc : 0	[by x[1]:=0]
 	495	m1.a[1].loc : 0	[by x[3]:=0]
-note: event on m1.zz[0] was delayed from 505 until 525 by x[0]
-note: event on m1.zz[1] was delayed from 505 until 525 by x[2]
+note: event on m1.zz[0]+ was delayed from 505 until 525 by x[0]:0
+note: event on m1.zz[1]+ was delayed from 505 until 525 by x[2]:0
 	525	m1.zz[0] : 1	[by m1.a[0].loc:=0]
 	525	m1.zz[1] : 1	[by m1.a[1].loc:=0]
 	535	m1.b.loc : 1	[by m1.zz[1]:=1]
-note: event on z was delayed from 545 until 565 by m1.zz[0]
+note: event on z- was delayed from 545 until 565 by m1.zz[0]:1
 	565	z : 0	[by m1.b.loc:=1]
 	565	s[0][0] : 1
 	565	s[0][1] : 0
@@ -184,12 +184,12 @@ note: event on z was delayed from 545 until 565 by m1.zz[0]
 	705	x[3] : 0
 	715	m1.a[0].loc : 0	[by x[0]:=0]
 	715	m1.a[1].loc : 0	[by x[2]:=0]
-note: event on m1.zz[0] was delayed from 725 until 745 by x[0]
-note: event on m1.zz[1] was delayed from 725 until 745 by x[2]
+note: event on m1.zz[0]+ was delayed from 725 until 745 by x[0]:0
+note: event on m1.zz[1]+ was delayed from 725 until 745 by x[2]:0
 	745	m1.zz[0] : 1	[by m1.a[0].loc:=0]
 	745	m1.zz[1] : 1	[by m1.a[1].loc:=0]
 	755	m1.b.loc : 1	[by m1.zz[0]:=1]
-note: event on z was delayed from 765 until 785 by m1.zz[0]
+note: event on z- was delayed from 765 until 785 by m1.zz[0]:1
 	785	z : 0	[by m1.b.loc:=1]
 ---------------- 
 	785	s[0][0] : X
@@ -213,12 +213,12 @@ note: event on z was delayed from 765 until 785 by m1.zz[0]
 	825	x[3] : 0
 	835	m1.a[0].loc : 0	[by x[1]:=0]
 	835	m1.a[1].loc : 0	[by x[3]:=0]
-note: event on m1.zz[0] was delayed from 845 until 865 by x[0]
-note: event on m1.zz[1] was delayed from 845 until 865 by x[2]
+note: event on m1.zz[0]+ was delayed from 845 until 865 by x[0]:0
+note: event on m1.zz[1]+ was delayed from 845 until 865 by x[2]:0
 	865	m1.zz[0] : 1	[by m1.a[0].loc:=0]
 	865	m1.zz[1] : 1	[by m1.a[1].loc:=0]
 	875	m1.b.loc : 1	[by m1.zz[1]:=1]
-note: event on z was delayed from 885 until 905 by m1.zz[0]
+note: event on z- was delayed from 885 until 905 by m1.zz[0]:1
 	905	z : 0	[by m1.b.loc:=1]
 	1005	s[0][0] : 1
 	1005	s[0][1] : 0
@@ -251,12 +251,12 @@ note: event on z was delayed from 885 until 905 by m1.zz[0]
 	1145	s[1][1] : 0
 	1155	m1.a[1].loc : 0	[by s[0][0]:=1]
 	1155	m1.a[0].loc : 1	[by s[0][1]:=0]
-note: event on m1.zz[1] was delayed from 1165 until 1175 by s[0][0]
-note: event on m1.zz[0] was delayed from 1165 until 1175 by s[0][0]
+note: event on m1.zz[1]+ was delayed from 1165 until 1175 by s[0][0]:1
+note: event on m1.zz[0]- was delayed from 1165 until 1175 by s[0][0]:1
 	1175	m1.zz[1] : 1	[by m1.a[1].loc:=0]
 	1175	m1.zz[0] : 0	[by m1.a[0].loc:=1]
 	1185	m1.b.loc : 0	[by m1.zz[0]:=0]
-note: event on z was delayed from 1195 until 1215 by m1.zz[0]
+note: event on z+ was delayed from 1195 until 1215 by m1.zz[0]:0
 	1215	z : 1	[by m1.b.loc:=0]
 ---------------- 
 	1215	s[0][0] : X

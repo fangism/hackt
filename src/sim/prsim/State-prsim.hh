@@ -1776,7 +1776,7 @@ private:
 	};	// end struct applied_min_delay_constraint
 
 	applied_min_delay_constraint
-	node_event_min_delay(const node_index_type) const;
+	node_event_min_delay(const node_index_type, const value_enum) const;
 
 #endif
 private:

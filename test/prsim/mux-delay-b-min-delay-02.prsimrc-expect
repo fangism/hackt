@@ -1,13 +1,13 @@
 Min-delay bounds in type '<>':
 Min-delay bounds in type 'mux4<>':
-	t( in[0] -> o ) >= 60, if (ms[0])
-	t( in[1] -> o ) >= 60, if (ms[1])
-	t( in[2] -> o ) >= 60, if (ms[2])
-	t( in[3] -> o ) >= 60, if (ms[3])
-	t( sel[0][0] -> o ) >= 45
-	t( sel[0][1] -> o ) >= 45
-	t( sel[1][0] -> o ) >= 25
-	t( sel[1][1] -> o ) >= 25
+	t( in[0]* -> o* ) >= 60, if (ms[0])
+	t( in[1]* -> o* ) >= 60, if (ms[1])
+	t( in[2]* -> o* ) >= 60, if (ms[2])
+	t( in[3]* -> o* ) >= 60, if (ms[3])
+	t( sel[0][0]* -> o* ) >= 45
+	t( sel[0][1]* -> o* ) >= 45
+	t( sel[1][0]* -> o* ) >= 25
+	t( sel[1][1]* -> o* ) >= 25
 Min-delay bounds in type 'mux2<>':
 applying timing delays 
 	0	s[0][0] : 1
@@ -27,20 +27,20 @@ applying timing delays
 	20	m1.zz[0] : 1	[by m1.a[0].loc:=0]
 	20	m1.zz[1] : 1	[by m1.a[1].loc:=0]
 	30	m1.b.loc : 1	[by m1.zz[0]:=1]
-note: event on z was delayed from 40 until 60 by x[0]
+note: event on z- was delayed from 40 until 60 by x[0]:0
 	60	z : 0	[by m1.b.loc:=1]
 ---------------- 
 	60	x[0] : 1
 	70	m1.a[0].loc : 1	[by x[0]:=1]
 	80	m1.zz[0] : 0	[by m1.a[0].loc:=1]
 	90	m1.b.loc : 0	[by m1.zz[0]:=0]
-note: event on z was delayed from 100 until 120 by x[0]
+note: event on z+ was delayed from 100 until 120 by x[0]:1
 	120	z : 1	[by m1.b.loc:=0]
 	120	x[0] : 0
 	130	m1.a[0].loc : 0	[by x[0]:=0]
 	140	m1.zz[0] : 1	[by m1.a[0].loc:=0]
 	150	m1.b.loc : 1	[by m1.zz[0]:=1]
-note: event on z was delayed from 160 until 180 by x[0]
+note: event on z- was delayed from 160 until 180 by x[0]:0
 	180	z : 0	[by m1.b.loc:=1]
 ---------------- 
 	180	x[0] : 1
@@ -48,14 +48,14 @@ note: event on z was delayed from 160 until 180 by x[0]
 	190	m1.a[0].loc : 1	[by x[0]:=1]
 	200	m1.zz[0] : 0	[by m1.a[0].loc:=1]
 	210	m1.b.loc : 0	[by m1.zz[0]:=0]
-note: event on z was delayed from 220 until 240 by x[0]
+note: event on z+ was delayed from 220 until 240 by x[0]:1
 	240	z : 1	[by m1.b.loc:=0]
 	240	x[0] : 0
 	245	x[1] : 0
 	250	m1.a[0].loc : 0	[by x[0]:=0]
 	260	m1.zz[0] : 1	[by m1.a[0].loc:=0]
 	270	m1.b.loc : 1	[by m1.zz[0]:=1]
-note: event on z was delayed from 280 until 300 by x[0]
+note: event on z- was delayed from 280 until 300 by x[0]:0
 	300	z : 0	[by m1.b.loc:=1]
 ---------------- 
 	300	x[0] : 1
@@ -65,7 +65,7 @@ note: event on z was delayed from 280 until 300 by x[0]
 	320	m1.a[1].loc : 1	[by x[2]:=1]
 	330	m1.b.loc : 0	[by m1.zz[0]:=0]
 	330	m1.zz[1] : 0	[by m1.a[1].loc:=1]
-note: event on z was delayed from 340 until 360 by x[0]
+note: event on z+ was delayed from 340 until 360 by x[0]:1
 	360	z : 1	[by m1.b.loc:=0]
 	360	x[0] : 0
 	370	m1.a[0].loc : 0	[by x[0]:=0]
@@ -74,7 +74,7 @@ note: event on z was delayed from 340 until 360 by x[0]
 	380	m1.a[1].loc : 0	[by x[2]:=0]
 	390	m1.b.loc : 1	[by m1.zz[0]:=1]
 	390	m1.zz[1] : 1	[by m1.a[1].loc:=0]
-note: event on z was delayed from 400 until 420 by x[0]
+note: event on z- was delayed from 400 until 420 by x[0]:0
 	420	z : 0	[by m1.b.loc:=1]
 ---------------- 
 change input 1 to 1 and select it 
@@ -86,7 +86,7 @@ change input 1 to 1 and select it
 	430	m1.a[0].loc : 1	[by s[0][0]:=0]
 	440	m1.zz[0] : 0	[by m1.a[0].loc:=1]
 	450	m1.b.loc : 0	[by m1.zz[0]:=0]
-note: event on z was delayed from 460 until 480 by x[1]
+note: event on z+ was delayed from 460 until 480 by x[1]:1
 	480	z : 1	[by m1.b.loc:=0]
 ---------------- 
 select input 3 
@@ -95,7 +95,7 @@ select input 3
 	480	s[1][1] : 1
 	480	m1.ms[3] : 1	<atomic>
 	490	m1.b.loc : 1	[by s[1][0]:=0]
-note: event on z was delayed from 500 until 505 by s[1][0]
+note: event on z- was delayed from 500 until 505 by s[1][0]:0
 	505	z : 0	[by m1.b.loc:=1]
 ---------------- 
 change input 2 to 1 and select it 
@@ -109,7 +109,7 @@ change input 2 to 1 and select it
 	525	m1.zz[1] : 0	[by m1.a[1].loc:=1]
 	525	m1.zz[0] : 1	[by m1.a[0].loc:=0]
 	535	m1.b.loc : 0	[by m1.zz[1]:=0]
-note: event on z was delayed from 545 until 565 by x[2]
+note: event on z+ was delayed from 545 until 565 by x[2]:1
 	565	z : 1	[by m1.b.loc:=0]
 ---------------- 
 ---------------- 
@@ -119,7 +119,7 @@ select input 0
 	565	s[1][0] : 1
 	565	m1.ms[0] : 1	<atomic>
 	575	m1.b.loc : 1	[by s[1][1]:=0]
-note: event on z was delayed from 585 until 590 by s[1][0]
+note: event on z- was delayed from 585 until 590 by s[1][0]:1
 	590	z : 0	[by m1.b.loc:=1]
 ---------------- 
 select input 2 
@@ -128,7 +128,7 @@ select input 2
 	590	s[1][1] : 1
 	590	m1.ms[2] : 1	<atomic>
 	600	m1.b.loc : 0	[by s[1][1]:=1]
-note: event on z was delayed from 610 until 615 by s[1][0]
+note: event on z+ was delayed from 610 until 615 by s[1][0]:0
 	615	z : 1	[by m1.b.loc:=0]
 ---------------- 
 select input 3 
@@ -141,7 +141,7 @@ select input 3
 	635	m1.zz[0] : 0	[by m1.a[0].loc:=1]
 	635	m1.zz[1] : 1	[by m1.a[1].loc:=0]
 	645	m1.b.loc : 1	[by m1.zz[1]:=1]
-note: event on z was delayed from 655 until 660 by s[0][0]
+note: event on z- was delayed from 655 until 660 by s[0][0]:0
 	660	z : 0	[by m1.b.loc:=1]
 ---------------- 
 select input 1 
@@ -150,7 +150,7 @@ select input 1
 	660	s[1][0] : 1
 	660	m1.ms[1] : 1	<atomic>
 	670	m1.b.loc : 0	[by s[1][0]:=1]
-note: event on z was delayed from 680 until 685 by s[1][0]
+note: event on z+ was delayed from 680 until 685 by s[1][0]:1
 	685	z : 1	[by m1.b.loc:=0]
 ---------------- 
 select input 0 
@@ -163,6 +163,6 @@ select input 0
 	705	m1.zz[1] : 0	[by m1.a[1].loc:=1]
 	705	m1.zz[0] : 1	[by m1.a[0].loc:=0]
 	715	m1.b.loc : 1	[by m1.zz[0]:=1]
-note: event on z was delayed from 725 until 730 by s[0][0]
+note: event on z- was delayed from 725 until 730 by s[0][0]:1
 	730	z : 0	[by m1.b.loc:=1]
 ---------------- 
