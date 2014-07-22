@@ -518,6 +518,8 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	inv-local-rules-01 \
 	tree-min-delay-01 \
 	mux-delay-min-delay-01 mux-delay-min-delay-02 mux-delay-min-delay-03 \
+	mux-delay-min-delay-04 mux-delay-min-delay-05 mux-delay-min-delay-06 \
+	mux-delay-min-delay-07 mux-delay-min-delay-08 mux-delay-min-delay-09 \
 	mux-delay-b-min-delay-01 mux-delay-b-min-delay-02 \
 	nand-min-delay-01 nand-min-delay-02 \
 	nand-local-rules-01 wchb-local-rules-02 wchb-local-rules-03 \

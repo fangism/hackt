@@ -1,13 +1,13 @@
 Min-delay bounds in type '<>':
 Min-delay bounds in type 'mux4<>':
-	t( in[0]* -> o* ) >= 60, if (ms[0])
-	t( in[1]* -> o* ) >= 60, if (ms[1])
-	t( in[2]* -> o* ) >= 60, if (ms[2])
-	t( in[3]* -> o* ) >= 60, if (ms[3])
-	t( sel[0][0]* -> o* ) >= 45
-	t( sel[0][1]* -> o* ) >= 45
 	t( sel[1][0]* -> o* ) >= 25
 	t( sel[1][1]* -> o* ) >= 25
+	t( in[0]* -> o* ) >= 60, if (ms[0])
+	t( in[1]* -> o* ) >= 60, if (ms[1])
+	t( sel[0][0]* -> o* ) >= 45
+	t( sel[0][1]* -> o* ) >= 45
+	t( in[2]* -> o* ) >= 60, if (ms[2])
+	t( in[3]* -> o* ) >= 60, if (ms[3])
 Min-delay bounds in type 'mux2<>':
 applying timing delays 
 	0	s[0][0] : 1

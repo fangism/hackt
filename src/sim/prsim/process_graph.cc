@@ -74,6 +74,15 @@ __dump_node_local_name(ostream& o,
 	return o;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+min_delay_entry::dump_raw(ostream& o) const {
+	return o << "{{{" << time[0][0] << ',' << time[0][1] << "},{" <<
+		time[1][0] << ',' << time[1][1] << "}},{{" <<
+		predicate[0][0] << ',' << predicate[0][1] << "},{" <<
+		predicate[1][0] << ',' << predicate[1][1] << "}}}";
+}
+
 //=============================================================================
 // class unique_process_subgraph method definitions
 unique_process_subgraph::unique_process_subgraph(const entity::footprint* f) :
@@ -773,23 +782,25 @@ unique_process_subgraph::print_backannotated_delay_single(ostream& o,
 	const node_index_type tgt = mds.first;
 	INVARIANT(tgt);
 	dump_node_local_name(oss, tgt);
-	vector<min_delay_entry>::const_iterator
+	min_delay_ref_set_type::const_iterator
 		si(mds.second.begin()), se(mds.second.end());
 	for ( ; si!=se; ++si) {
+		const node_index_type local_ref_node = si->first;
+		const min_delay_entry& m(si->second);
 		// TODO: this printing is very verbose, often resulting
 		// in quadruplicate entries printed.
 		// Should find a more compact way to print these
 		// in the common case where they are all equal.
 		// source -> destination
-	if (si->is_uniform()) {
+	if (m.is_uniform()) {
 		// fields are identical in all direction cases
 		o << "\tt( ";
-		dump_node_local_name(o, si->ref_node) << '*' <<
+		dump_node_local_name(o, local_ref_node) << '*' <<
 			" -> " << oss.str() << '*' <<
-			" ) >= " << si->time[0][0];
-		if (si->predicate[0][0]) {
+			" ) >= " << m.time[0][0];
+		if (m.predicate[0][0]) {
 			o << ", if (";
-			dump_node_local_name(o, si->predicate[0][0]) << ')';
+			dump_node_local_name(o, m.predicate[0][0]) << ')';
 		}
 		o << endl;
 	} else {
@@ -797,16 +808,16 @@ unique_process_subgraph::print_backannotated_delay_single(ostream& o,
 		do {
 		bool td = false;
 		do {
-		if (si->time[rd][td] > 0) {
+		if (m.time[rd][td] > 0) {
 			o << "\tt( ";
-			dump_node_local_name(o, si->ref_node) <<
+			dump_node_local_name(o, local_ref_node) <<
 				(rd ? '+' : '-') <<
 				" -> " << oss.str() <<
 				(td ? '+' : '-') <<
-				" ) >= " << si->time[rd][td];
-			if (si->predicate[rd][td]) {
+				" ) >= " << m.time[rd][td];
+			if (m.predicate[rd][td]) {
 				o << ", if (";
-				dump_node_local_name(o, si->predicate[rd][td]) << ')';
+				dump_node_local_name(o, m.predicate[rd][td]) << ')';
 			}
 			o << endl;
 		}	// else don't print, as delta of 0 is no-op
@@ -934,8 +945,8 @@ unique_process_subgraph::add_min_delay_constraint(const node_index_type ref,
 	r_apply[1] = refdir != '-';
 	t_apply[0] = tgtdir != '+';
 	t_apply[1] = tgtdir != '-';
-	min_delay_entry md;
-	md.ref_node = ref;
+	min_delay_entry& md(min_delays[tgt][ref]);
+	// initialize, if needed
 	bool rd = false;
 	do {
 	if (r_apply[rd]) {
@@ -950,7 +961,6 @@ unique_process_subgraph::add_min_delay_constraint(const node_index_type ref,
 	}
 		rd = !rd;
 	} while (rd);
-	min_delays[tgt].push_back(md);
 }
 #endif
 

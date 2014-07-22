@@ -188,7 +188,7 @@ struct hold_constraint_entry : public setup_constraint_entry {
 
 #endif
 #if PRSIM_TIMING_BACKANNOTATE
-struct min_delay_entry : public timing_constraint_entry	{
+struct min_delay_entry {
 	// index is input direction, output direction
 	rule_time_type				time[2][2];
 	// if !null, predicate refers to bool/ebool that must be true
@@ -215,6 +215,10 @@ struct min_delay_entry : public timing_constraint_entry	{
 			&& (predicate[0][0] == predicate[1][0])
 			&& (predicate[0][0] == predicate[1][1]);
 	}
+
+	ostream&
+	dump_raw(ostream&) const;
+
 };	// end struct min_delay_entry
 #endif
 
@@ -344,13 +348,20 @@ struct unique_process_subgraph {
 	// TODO: account for rise/fall/unate direction
 	typedef	node_index_type			min_delay_key_type;
 	/**
-		key: target node
+		key: reference node
 		value: set of local timing (min-delay) arcs,
 			relative to reference nodes
+	 */
+	typedef	map<min_delay_key_type, min_delay_entry>
+						min_delay_ref_set_type;
+	/**
+		key: target node
+		value: a set of set of timing delay arcs keyed to target node.
 		When target node events are scheduled, must consider the
 			max of +min_delay times over all reference nodes.
+		This is a map of maps.
 	 */
-	typedef	map<min_delay_key_type, vector<min_delay_entry> >
+	typedef	map<min_delay_key_type, min_delay_ref_set_type>
 						min_delay_set_type;
 	/**
 		Q: checkpoint?

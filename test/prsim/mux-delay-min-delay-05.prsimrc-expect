@@ -1,0 +1,167 @@
+Min-delay bounds in type '<>':
+Min-delay bounds in type 'mux4<>':
+Min-delay bounds in type 'mux2<>':
+	t( in[0]* -> out* ) >= 40, if (sel[0])
+	t( in[1]* -> out* ) >= 40, if (sel[1])
+	t( sel[0]- -> out- ) >= 30
+	t( sel[0]- -> out+ ) >= 30
+	t( sel[0]+ -> out- ) >= 25
+	t( sel[0]+ -> out+ ) >= 25
+	t( sel[1]- -> out- ) >= 30
+	t( sel[1]- -> out+ ) >= 30
+	t( sel[1]+ -> out- ) >= 25
+	t( sel[1]+ -> out+ ) >= 25
+applying timing delays 
+	0	s[0][0] : 1
+	0	s[0][1] : 0
+	0	s[1][0] : 1
+	0	s[1][1] : 0
+	0	x[0] : 0
+	0	x[1] : 0
+	0	x[2] : 0
+	0	x[3] : 0
+	10	m1.a[0].loc : 0	[by x[0]:=0]
+	10	m1.a[1].loc : 0	[by x[2]:=0]
+note: event on m1.zz[0]+ was delayed from 20 until 40 by x[0]:0
+note: event on m1.zz[1]+ was delayed from 20 until 40 by x[2]:0
+	40	m1.zz[0] : 1	[by m1.a[0].loc:=0]
+	40	m1.zz[1] : 1	[by m1.a[1].loc:=0]
+	50	m1.b.loc : 1	[by m1.zz[0]:=1]
+note: event on z- was delayed from 60 until 80 by m1.zz[0]:1
+	80	z : 0	[by m1.b.loc:=1]
+---------------- 
+	80	x[0] : 1
+	90	m1.a[0].loc : 1	[by x[0]:=1]
+note: event on m1.zz[0]- was delayed from 100 until 120 by x[0]:1
+	120	m1.zz[0] : 0	[by m1.a[0].loc:=1]
+	130	m1.b.loc : 0	[by m1.zz[0]:=0]
+note: event on z+ was delayed from 140 until 160 by m1.zz[0]:0
+	160	z : 1	[by m1.b.loc:=0]
+	160	x[0] : 0
+	170	m1.a[0].loc : 0	[by x[0]:=0]
+note: event on m1.zz[0]+ was delayed from 180 until 200 by x[0]:0
+	200	m1.zz[0] : 1	[by m1.a[0].loc:=0]
+	210	m1.b.loc : 1	[by m1.zz[0]:=1]
+note: event on z- was delayed from 220 until 240 by m1.zz[0]:1
+	240	z : 0	[by m1.b.loc:=1]
+---------------- 
+	240	x[0] : 1
+	245	x[1] : 1
+	250	m1.a[0].loc : 1	[by x[0]:=1]
+note: event on m1.zz[0]- was delayed from 260 until 280 by x[0]:1
+	280	m1.zz[0] : 0	[by m1.a[0].loc:=1]
+	290	m1.b.loc : 0	[by m1.zz[0]:=0]
+note: event on z+ was delayed from 300 until 320 by m1.zz[0]:0
+	320	z : 1	[by m1.b.loc:=0]
+	320	x[0] : 0
+	325	x[1] : 0
+	330	m1.a[0].loc : 0	[by x[0]:=0]
+note: event on m1.zz[0]+ was delayed from 340 until 360 by x[0]:0
+	360	m1.zz[0] : 1	[by m1.a[0].loc:=0]
+	370	m1.b.loc : 1	[by m1.zz[0]:=1]
+note: event on z- was delayed from 380 until 400 by m1.zz[0]:1
+	400	z : 0	[by m1.b.loc:=1]
+---------------- 
+	400	x[0] : 1
+	410	m1.a[0].loc : 1	[by x[0]:=1]
+	410	x[2] : 1
+note: event on m1.zz[0]- was delayed from 420 until 440 by x[0]:1
+	420	m1.a[1].loc : 1	[by x[2]:=1]
+note: event on m1.zz[1]- was delayed from 430 until 450 by x[2]:1
+	440	m1.zz[0] : 0	[by m1.a[0].loc:=1]
+	450	m1.zz[1] : 0	[by m1.a[1].loc:=1]
+	450	m1.b.loc : 0	[by m1.zz[0]:=0]
+note: event on z+ was delayed from 460 until 480 by m1.zz[0]:0
+	480	z : 1	[by m1.b.loc:=0]
+	480	x[0] : 0
+	490	m1.a[0].loc : 0	[by x[0]:=0]
+	490	x[2] : 0
+note: event on m1.zz[0]+ was delayed from 500 until 520 by x[0]:0
+	500	m1.a[1].loc : 0	[by x[2]:=0]
+note: event on m1.zz[1]+ was delayed from 510 until 530 by x[2]:0
+	520	m1.zz[0] : 1	[by m1.a[0].loc:=0]
+	530	m1.zz[1] : 1	[by m1.a[1].loc:=0]
+	530	m1.b.loc : 1	[by m1.zz[0]:=1]
+note: event on z- was delayed from 540 until 560 by m1.zz[0]:1
+	560	z : 0	[by m1.b.loc:=1]
+---------------- 
+change input 1 to 1 and select it 
+	560	x[1] : 1
+	560	s[0][0] : 0
+	560	s[0][1] : 1
+	570	m1.a[0].loc : 1	[by s[0][0]:=0]
+note: event on m1.zz[0]- was delayed from 580 until 600 by x[1]:1
+	600	m1.zz[0] : 0	[by m1.a[0].loc:=1]
+	610	m1.b.loc : 0	[by m1.zz[0]:=0]
+note: event on z+ was delayed from 620 until 640 by m1.zz[0]:0
+	640	z : 1	[by m1.b.loc:=0]
+---------------- 
+select input 3 
+	640	s[1][0] : 0
+	640	s[1][1] : 1
+	650	m1.b.loc : 1	[by s[1][0]:=0]
+note: event on z- was delayed from 660 until 670 by s[1][0]:0
+	670	z : 0	[by m1.b.loc:=1]
+---------------- 
+change input 2 to 1 and select it 
+	670	x[2] : 1
+	670	s[0][1] : 0
+	670	s[0][0] : 1
+	680	m1.a[1].loc : 1	[by s[0][1]:=0]
+	680	m1.a[0].loc : 0	[by s[0][0]:=1]
+note: event on m1.zz[1]- was delayed from 690 until 710 by x[2]:1
+note: event on m1.zz[0]+ was delayed from 690 until 700 by s[0][1]:0
+	700	m1.zz[0] : 1	[by m1.a[0].loc:=0]
+	710	m1.zz[1] : 0	[by m1.a[1].loc:=1]
+	720	m1.b.loc : 0	[by m1.zz[1]:=0]
+note: event on z+ was delayed from 730 until 750 by m1.zz[1]:0
+	750	z : 1	[by m1.b.loc:=0]
+---------------- 
+---------------- 
+select input 0 
+	750	s[1][1] : 0
+	750	s[1][0] : 1
+	760	m1.b.loc : 1	[by s[1][1]:=0]
+note: event on z- was delayed from 770 until 780 by s[1][1]:0
+	780	z : 0	[by m1.b.loc:=1]
+---------------- 
+select input 2 
+	780	s[1][0] : 0
+	780	s[1][1] : 1
+	790	m1.b.loc : 0	[by s[1][1]:=1]
+note: event on z+ was delayed from 800 until 810 by s[1][0]:0
+	810	z : 1	[by m1.b.loc:=0]
+---------------- 
+select input 3 
+	810	s[0][0] : 0
+	810	s[0][1] : 1
+	820	m1.a[0].loc : 1	[by s[0][0]:=0]
+	820	m1.a[1].loc : 0	[by s[0][1]:=1]
+note: event on m1.zz[0]- was delayed from 830 until 840 by s[0][0]:0
+note: event on m1.zz[1]+ was delayed from 830 until 840 by s[0][0]:0
+	840	m1.zz[0] : 0	[by m1.a[0].loc:=1]
+	840	m1.zz[1] : 1	[by m1.a[1].loc:=0]
+	850	m1.b.loc : 1	[by m1.zz[1]:=1]
+note: event on z- was delayed from 860 until 880 by m1.zz[1]:1
+	880	z : 0	[by m1.b.loc:=1]
+---------------- 
+select input 1 
+	880	s[1][1] : 0
+	880	s[1][0] : 1
+	890	m1.b.loc : 0	[by s[1][0]:=1]
+note: event on z+ was delayed from 900 until 910 by s[1][1]:0
+	910	z : 1	[by m1.b.loc:=0]
+---------------- 
+select input 0 
+	910	s[0][1] : 0
+	910	s[0][0] : 1
+	920	m1.a[1].loc : 1	[by s[0][1]:=0]
+	920	m1.a[0].loc : 0	[by s[0][0]:=1]
+note: event on m1.zz[1]- was delayed from 930 until 940 by s[0][1]:0
+note: event on m1.zz[0]+ was delayed from 930 until 940 by s[0][1]:0
+	940	m1.zz[1] : 0	[by m1.a[1].loc:=1]
+	940	m1.zz[0] : 1	[by m1.a[0].loc:=0]
+	950	m1.b.loc : 1	[by m1.zz[0]:=1]
+note: event on z- was delayed from 960 until 980 by m1.zz[0]:1
+	980	z : 0	[by m1.b.loc:=1]
+---------------- 

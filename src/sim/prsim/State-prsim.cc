@@ -2620,6 +2620,7 @@ if (ptf) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#define	DEBUG_MIN_DELAY			0
 /**
 	Determine whether or not event on node ni should be further 
 	delayed by any of the min-delay constraints.
@@ -2629,11 +2630,16 @@ if (ptf) {
 State::applied_min_delay_constraint
 State::node_event_min_delay(const node_index_type ni, 
 		const value_enum nval) const {
+	STACKTRACE_BRIEF;
 	applied_min_delay_constraint ret(current_time);
 	const node_type& n(get_node(ni));
 // ignore min delay constraints when target node is -> X
 if (n.is_min_delay_target() && nval != LOGIC_OTHER) {
 	const bool tgt_dir = (nval == LOGIC_HIGH);
+#if DEBUG_MIN_DELAY
+	dump_node_canonical_name(cerr << "target: ", ni)
+		<< (tgt_dir ? '+' : '-') << endl;
+#endif
 	const process_timing_fanin_type* ptf =
 		delay_annotation_manager.lookup_process_timing_fanin(ni);
 	NEVER_NULL(ptf);
@@ -2661,16 +2667,25 @@ for ( ; i!=e; ++i) {
 		delay_fanin_set_type::const_iterator
 			di(f->second.begin()), de(f->second.end());
 		for ( ; di!=de; ++di) {
-			const min_delay_entry& md(*di);
-			const node_index_type grr = bfm[md.ref_node -1];
+			const node_index_type ref_node = di->first;
+			const min_delay_entry& md(di->second);
+#if DEBUG_MIN_DELAY
+			md.dump_raw(cerr << "md: ") << endl;
+#endif
+			const node_index_type grr = bfm[ref_node -1];
 			const node_type& r(get_node(grr));
 			bool ref_dir = false;
-			switch (r.current_value()) {
+			const value_enum rv = r.current_value();
+			switch (rv) {
 			case LOGIC_LOW: ref_dir = false; break;
 			case LOGIC_HIGH: ref_dir = true; break;
 			// ignore min-delay constraint when ref node is X
 			default: continue;
 			}
+#if DEBUG_MIN_DELAY
+			dump_node_canonical_name(cerr << "reference: ", grr)
+				<< (ref_dir ? '+' : '-') << endl;
+#endif
 			// suppress if predicate is false
 			bool apply = true;
 			const node_index_type pni = md.predicate[ref_dir][tgt_dir];
@@ -2678,12 +2693,19 @@ for ( ; i!=e; ++i) {
 				const node_index_type gpr = bfm[pni -1];
 				if (get_node(gpr).current_value() == LOGIC_LOW) {
 					apply = false;
+#if DEBUG_MIN_DELAY
+					cerr << "predicate false." << endl;
+#endif
 				}
 			}
 			if (apply) {
 				// right now, don't care about value
-				const time_type past = r.get_last_transition_time();
+				const time_type past = r.get_last_edge_time(rv);
 				const time_type min_time = past +md.time[ref_dir][tgt_dir];
+#if DEBUG_MIN_DELAY
+				cerr << "comparing times... past = " << past <<
+					", min_time = " << min_time << endl;
+#endif
 				// take argmax(t_ref +t_min_delay)
 				// ignore uninitialized transition times < 0
 				if (past >= 0.0 && min_time > ret.time) {
