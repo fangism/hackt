@@ -33,30 +33,13 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "sim/command_common.tcc"
 #include "sim/command_macros.tcc"
 
-DEFAULT_STATIC_TRACE
 namespace HAC {
 namespace SIM {
+DEFAULT_STATIC_TRACE
 template class command_registry<CHPSIM::Command>;
 DEFAULT_STATIC_TRACE
-namespace CHPSIM {
-//=============================================================================
-// local static CommandCategories
-// declared here b/c clang screws up static initialization ordering otherwise
-// feel free to add categories here
-
-static CommandCategory
-	builtin("builtin", "built-in commands"),
-	general("general", "general commands"),
-	simulation("simulation", "simulation commands"),
-//	channel("channel", "channel commands"),
-	info("info", "information about simulated circuit"),
-	view("view", "instance to watch"),
-	tracing("tracing", "trace and checkpoint commands"), 
-	modes("modes", "timing model, error handling");
 }
 }
-}
-DEFAULT_STATIC_TRACE
 
 #include "parser/instref.hh"
 #include "common/TODO.hh"
@@ -85,13 +68,31 @@ using entity::global_indexed_reference;
 #if AUTO_PREPEND_WORKING_DIR
 static
 entity::global_indexed_reference
-parse_global_reference(const string& s, const entity::module& m) {
+parse_global_reference(const std::string& s, const entity::module& m) {
 	return parser::parse_global_reference(
 		CommandRegistry::prepend_working_dir(s), m);
 }
 #else
 using parser::parse_global_reference;
 #endif
+
+//=============================================================================
+// local static CommandCategories
+// declared here b/c clang screws up static initialization ordering otherwise
+// feel free to add categories here
+
+#define	DECLARE_COMMAND_CATEGORY(x, y)					\
+DECLARE_GENERIC_COMMAND_CATEGORY(CommandCategory, x, y)
+
+DECLARE_COMMAND_CATEGORY(builtin, "built-in commands")
+DECLARE_COMMAND_CATEGORY(general, "general commands")
+DECLARE_COMMAND_CATEGORY(simulation, "simulation commands")
+DECLARE_COMMAND_CATEGORY(info, "information about simulated circuit")
+DECLARE_COMMAND_CATEGORY(view, "instance to watch")
+DECLARE_COMMAND_CATEGORY(tracing, "trace and checkpoint commands")
+DECLARE_COMMAND_CATEGORY(modes, "timing model, error handling")
+
+#undef	DECLARE_COMMAND_CATEGORY
 
 //=============================================================================
 // command completion facilities
@@ -144,7 +145,7 @@ INSTANTIATE_COMMON_COMMAND_CLASS(CHPSIM, module_command_wrapper, _class, _cat)
 #define	INITIALIZE_COMMAND_CLASS(_class, _cmd, _category, _brief)	\
 const char _class::name[] = _cmd;					\
 const char _class::brief[] = _brief;					\
-CommandCategory& _class::category(_category);				\
+CommandCategory& (*_class::category)(void) = &__initialized_cat_ ## _category;	\
 const size_t _class::receipt_id = CommandRegistry::register_command<_class >();
 
 #define	DECLARE_AND_INITIALIZE_COMMAND_CLASS(_class, _cmd, _category, _brief) \
@@ -517,7 +518,7 @@ struct Step {
 public:
 	static const char               name[];
 	static const char               brief[];
-	static CommandCategory&         category;
+	static CommandCategory&         (*category)(void);
 	static int      main(State&, const string_list&);
 	static void     usage(ostream&);
 private:

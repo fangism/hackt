@@ -5,8 +5,8 @@
 	$Id: command_base.hh,v 1.6 2009/02/19 02:58:29 fang Exp $
  */
 
-#ifndef	__HAC_SIM_COMMAND_BASE_H__
-#define	__HAC_SIM_COMMAND_BASE_H__
+#ifndef	__HAC_SIM_COMMAND_BASE_HH__
+#define	__HAC_SIM_COMMAND_BASE_HH__
 
 #include <iosfwd>
 #include <string>
@@ -106,5 +106,5 @@ public:
 }	// end namespace SIM
 }	// end namespace HAC
 
-#endif	// __HAC_SIM_COMMAND_BASE_H__
+#endif	// __HAC_SIM_COMMAND_BASE_HH__
 

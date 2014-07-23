@@ -9,8 +9,8 @@
 	$Id: command_common.hh,v 1.14 2010/07/07 23:01:25 fang Exp $
  */
 
-#ifndef	__HAC_SIM_COMMAND_COMMON_H__
-#define	__HAC_SIM_COMMAND_COMMON_H__
+#ifndef	__HAC_SIM_COMMAND_COMMON_HH__
+#define	__HAC_SIM_COMMAND_COMMON_HH__
 
 #include <iosfwd>
 #include "util/size_t.h"
@@ -124,7 +124,8 @@ public:
 	typedef	command_registry<command_type>	command_registry_type;
 	static const char			name[];
 	static const char			brief[];
-	static command_category_type&		category;
+	typedef command_category_type&		(*category_fun_ptr)(void);
+	static category_fun_ptr			category;
 	static int	main(const string_list&);
 	static int	main(state_type&, const string_list&);
 	static void	usage(ostream&);
@@ -137,5 +138,5 @@ private:
 }	// end namespace SIM
 }	// end namespace HAC
 
-#endif	// __HAC_SIM_COMMAND_COMMON_H__
+#endif	// __HAC_SIM_COMMAND_COMMON_HH__
 
