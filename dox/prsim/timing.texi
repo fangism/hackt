@@ -1,0 +1,11 @@
+@c "hacprsim/timing.texi"
+@c $Id: execution.texi,v 1.1 2007/08/20 21:12:31 fang Exp $
+
+@node Timing Back-Annotation
+@chapter Timing Back-Annotation
+
+This chapter describes how the simulator can load and apply
+timing arcs from an external source.
+It is recommended to first understand @ref{Execution}.
+
+
