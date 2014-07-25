@@ -21,6 +21,8 @@ class_traits<int_tag>::tag_name[] = "int";
 
 const char
 class_traits<bool_tag>::tag_name[] = "bool";
+const meta_type_tag_enum
+class_traits<bool_tag>::type_tag_enum_value;
 
 const char
 class_traits<enum_tag>::tag_name[] = "enum";
