@@ -154,8 +154,10 @@ Any type of interference will schedule a @t{node -> X} event.
 
 @cindex OR-combination
 Since multiple rules may drive the same node in the same direction,
-the effective pull-state in a given direction is the 
+the effective pull-state in a given direction is the (parallel)
 OR-combination of all rules for that direction.
+However, since each rule may have its own set of attributes,
+the evaluation engine does keep track of which individual rule fired.  
 
 @c -----------------------------------------------------------------------------
 @node Expression evaluation
