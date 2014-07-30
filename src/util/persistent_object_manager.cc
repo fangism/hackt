@@ -1266,7 +1266,9 @@ persistent_object_manager::__load_object_once(
 	if (partially_loaded(i)) {
 		STACKTRACE_INDENT_PRINT("warning: partially loaded, skipping" << endl);
 	} else {
+#if ENABLE_STACKTRACE
 		const istream::pos_type start = i.tellg();
+#endif
 		STRIP_POINTER_INDEX(i, p);
 		STACKTRACE_INDENT_PRINT("calling p->load_object()..." << endl);
 #if ENABLE_STACKTRACE
@@ -1274,9 +1276,11 @@ persistent_object_manager::__load_object_once(
 #endif
 		p->load_object(*this, i);
 		STRIP_OBJECT_FOOTER(i);
+#if ENABLE_STACKTRACE
 		const istream::pos_type end = i.tellg();
 		const istream::pos_type size = end -start;
 		STACKTRACE_INDENT_PRINT("entry read " << size << " bytes." << endl);
+#endif
 		e.flag();
 	}
 	} else {
