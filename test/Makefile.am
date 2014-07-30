@@ -75,6 +75,22 @@ AUTO_IGNORE += POM-header-filter.awk
 
 all-local: POM-header-filter.awk
 
+check-summaries-archive: check-summaries.tar.bz2
+check-summaries.tar.bz2: check-summaries
+	tar cjvf tmp-$@ `find . -name '*diffs'` && \
+	tmpdir="check-summaries" && \
+	rm -rf $$tmpdir && \
+	mkdir $$tmpdir && \
+	pushd $$tmpdir && \
+	tar xjvf ../tmp-$@ && \
+	find . -type f -size 0 -exec rm {} \; && \
+	popd && \
+	rm -f tmp-$@ && \
+	tar cjvf $@ $$tmpdir && \
+	rm -rf $$tmpdir && \
+	echo "==== check summaries archived in $@ ===="
+CLEANFILES += check-summaries.tar.bz2
+
 DISTCLEANFILES += $(TESTS) $(POSTCONFIGURED_TESTSCRIPTS)
 
 EXTRA_DIST += ChangeLog README TODO test.cvsignore \
