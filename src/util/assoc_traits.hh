@@ -17,7 +17,7 @@
 // SGI's hash_set?
 
 //=============================================================================
-namespace std {
+BEGIN_NAMESPACE_STD
 // selectors (functors) used to select members (foward declarations)
 
 template <class T>
@@ -29,7 +29,7 @@ struct _Select2nd;
 template <class T>
 struct _Identity;
 
-}	// end namespace std
+END_NAMESPACE_STD
 //=============================================================================
 
 namespace util {

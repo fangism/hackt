@@ -1,0 +1,62 @@
+// "muxes.hac"
+deftype cbit <: bool (bool t, f) { }
+
+defproc lmux2(bool in[2], Z; cbit sel){
+        bool NC;
+        cbit sel0, sel1;
+        sel1.t=sel.t;
+        sel1.f=sel.f;
+        sel0.t=sel.f;
+        sel0.f=sel.t;
+
+prs {
+	NC => Z-
+	in[0] & in[1] -> NC+
+	~in[0] & ~in[1] -> NC-
+// cut-off opposing pull X to treat select as a don't care when inputs agree
+	~(~in[0] & ~in[1]) & ( in[0] & ~sel0.f |  in[1] & ~sel1.f) -> NC+
+	~( in[0] &  in[1]) & (~in[0] &  sel0.t | ~in[1] &  sel1.t) -> NC-
+
+}
+}
+
+// 2:1 mux implemented with tri-state inverters
+defproc lmux2t(bool in[2], Z; cbit sel){
+	Z @ [iscomb=1];
+prs {
+	in[0] & in[1] -> Z-
+	~in[0] & ~in[1] -> Z+
+// cut-off opposing pull X to treat select as a don't care when inputs agree
+	~( in[0] &  in[1]) & (~in[0] & ~sel.t | ~in[1] & ~sel.f)  -> Z+
+	~(~in[0] & ~in[1]) & ( in[0] &  sel.f |  in[1] &  sel.t)  -> Z-
+
+}
+}
+
+defproc lmux4(bool in[4], Z; cbit sel[4]){
+    lmux2 a[2], b;
+
+    // re-encode the select signals
+    cbit sela, selb;
+    bool zz[2], _z;
+
+    // sela is lsb
+    prs {
+      sel[1].t | sel[3].t => sela.t+
+      sel[2].t | sel[3].t => selb.t+
+
+      sela.t => sela.f-
+      selb.t => selb.f-
+    }
+
+    a[0](in[0..1], zz[0], sela);
+    a[1](in[2..3], zz[1], sela);
+
+    b(zz, _z, selb);
+
+    prs {
+      _z => Z-
+    }
+}
+
+

@@ -27,23 +27,6 @@ namespace SIM {
 DEFAULT_STATIC_TRACE
 template class command_registry<PR::Command>;
 }
-namespace PR {
-DEFAULT_STATIC_TRACE
-static
-CommandCategory
-	builtin("builtin", "built-in commands"),
-	general("general", "general commands"),
-//	debug("debug", "debugging internals"),
-	setup("setup", "constructing the constrained system"),
-	simulation("simulation", "simulation commands"),
-//	objects("objects", "object creation/manipulation commands"),
-	info("info", "information about objects"),
-	xport("export", "exporting positions to other formats"),
-//	physics("physics", "physical properties of the system"),
-//	parameters("parameters", "simulation control parameters"),
-	tracing("tracing", "checkpointing and tracing features");
-DEFAULT_STATIC_TRACE
-}
 }
 
 #include "common/TODO.hh"
@@ -64,6 +47,27 @@ using std::ofstream;
 // name/index translation features?
 
 // reference parsing features?
+
+//=============================================================================
+// command categories
+#define	DECLARE_COMMAND_CATEGORY(x, y)					\
+DECLARE_GENERIC_COMMAND_CATEGORY(CommandCategory, x, y)
+
+DEFAULT_STATIC_TRACE
+DECLARE_COMMAND_CATEGORY(builtin, "built-in commands")
+DECLARE_COMMAND_CATEGORY(general, "general commands")
+// DECLARE_COMMAND_CATEGORY(debug, "debugging internals")
+DECLARE_COMMAND_CATEGORY(setup, "constructing the constrained system")
+DECLARE_COMMAND_CATEGORY(simulation, "simulation commands")
+// DECLARE_COMMAND_CATEGORY(objects, "object creation/manipulation commands")
+DECLARE_COMMAND_CATEGORY(info, "information about objects")
+DECLARE_COMMAND_CATEGORY(xport, "exporting positions to other formats")
+// DECLARE_COMMAND_CATEGORY(physics, "physical properties of the system")
+// DECLARE_COMMAND_CATEGORY(parameters, "simulation control parameters")
+DECLARE_COMMAND_CATEGORY(tracing, "checkpointing and tracing features")
+DEFAULT_STATIC_TRACE
+
+#undef	DECLARE_COMMAND_CATEGORY
 
 //=============================================================================
 // command-line completion features
@@ -109,7 +113,7 @@ INSTANTIATE_COMMON_COMMAND_CLASS_SIM(PR, stateless_command_wrapper, _class, _cat
 #define	INITIALIZE_COMMAND_CLASS(_class, _cmd, _category, _brief)	\
 const char _class::name[] = _cmd;					\
 const char _class::brief[] = _brief;					\
-CommandCategory& _class::category(_category);				\
+CommandCategory& (*_class::category)(void) = &__initialized_cat_ ## _category;	\
 const size_t _class::receipt_id = CommandRegistry::register_command<_class >();
 
 /**

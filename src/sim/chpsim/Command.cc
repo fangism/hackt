@@ -33,30 +33,13 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "sim/command_common.tcc"
 #include "sim/command_macros.tcc"
 
-DEFAULT_STATIC_TRACE
 namespace HAC {
 namespace SIM {
+DEFAULT_STATIC_TRACE
 template class command_registry<CHPSIM::Command>;
 DEFAULT_STATIC_TRACE
-namespace CHPSIM {
-//=============================================================================
-// local static CommandCategories
-// declared here b/c clang screws up static initialization ordering otherwise
-// feel free to add categories here
-
-static CommandCategory
-	builtin("builtin", "built-in commands"),
-	general("general", "general commands"),
-	simulation("simulation", "simulation commands"),
-//	channel("channel", "channel commands"),
-	info("info", "information about simulated circuit"),
-	view("view", "instance to watch"),
-	tracing("tracing", "trace and checkpoint commands"), 
-	modes("modes", "timing model, error handling");
 }
 }
-}
-DEFAULT_STATIC_TRACE
 
 #include "parser/instref.hh"
 #include "common/TODO.hh"
@@ -85,13 +68,31 @@ using entity::global_indexed_reference;
 #if AUTO_PREPEND_WORKING_DIR
 static
 entity::global_indexed_reference
-parse_global_reference(const string& s, const entity::module& m) {
+parse_global_reference(const std::string& s, const entity::module& m) {
 	return parser::parse_global_reference(
 		CommandRegistry::prepend_working_dir(s), m.get_footprint());
 }
 #else
 using parser::parse_global_reference;
 #endif
+
+//=============================================================================
+// local static CommandCategories
+// declared here b/c clang screws up static initialization ordering otherwise
+// feel free to add categories here
+
+#define	DECLARE_COMMAND_CATEGORY(x, y)					\
+DECLARE_GENERIC_COMMAND_CATEGORY(CommandCategory, x, y)
+
+DECLARE_COMMAND_CATEGORY(builtin, "built-in commands")
+DECLARE_COMMAND_CATEGORY(general, "general commands")
+DECLARE_COMMAND_CATEGORY(simulation, "simulation commands")
+DECLARE_COMMAND_CATEGORY(info, "information about simulated circuit")
+DECLARE_COMMAND_CATEGORY(view, "instance to watch")
+DECLARE_COMMAND_CATEGORY(tracing, "trace and checkpoint commands")
+DECLARE_COMMAND_CATEGORY(modes, "timing model, error handling")
+
+#undef	DECLARE_COMMAND_CATEGORY
 
 //=============================================================================
 // command completion facilities
@@ -144,7 +145,7 @@ INSTANTIATE_COMMON_COMMAND_CLASS(CHPSIM, module_command_wrapper, _class, _cat)
 #define	INITIALIZE_COMMAND_CLASS(_class, _cmd, _category, _brief)	\
 const char _class::name[] = _cmd;					\
 const char _class::brief[] = _brief;					\
-CommandCategory& _class::category(_category);				\
+CommandCategory& (*_class::category)(void) = &__initialized_cat_ ## _category;	\
 const size_t _class::receipt_id = CommandRegistry::register_command<_class >();
 
 #define	DECLARE_AND_INITIALIZE_COMMAND_CLASS(_class, _cmd, _category, _brief) \
@@ -517,7 +518,7 @@ struct Step {
 public:
 	static const char               name[];
 	static const char               brief[];
-	static CommandCategory&         category;
+	static CommandCategory&         (*category)(void);
 	static int      main(State&, const string_list&);
 	static void     usage(ostream&);
 private:
@@ -2663,170 +2664,6 @@ Timing::usage(ostream& o) {
 	o << "if no mode is given, just reports the current mode." << endl;
 	State::help_timing(o);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(CheckExcl, "checkexcl", modes, 
-	"enable mutual exclusion checks")
-
-int
-CheckExcl::main(State& s, const string_list& a) {
-if (a.size() > 1) {
-	usage(cerr << "usage: ");
-	return Command::BADARG;
-} else {
-	s.check_excl();
-	return Command::NORMAL;
-}
-}
-
-void
-CheckExcl::usage(ostream& o) {
-	o << "checkexcl" << endl;
-	o << "Enables run-time mutual exclusion checks.  (default:on)"
-		<< endl;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoCheckExcl, "nocheckexcl", modes, 
-	"disable mutual exclusion checks")
-
-int
-NoCheckExcl::main(State& s, const string_list& a) {
-if (a.size() > 1) {
-	usage(cerr << "usage: ");
-	return Command::BADARG;
-} else {
-	s.nocheck_excl();
-	return Command::NORMAL;
-}
-}
-
-void
-NoCheckExcl::usage(ostream& o) {
-	o << "nocheckexcl" << endl;
-	o << "Disables run-time mutual exclusion checks." << endl;
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnstableUnknown, "unstable-unknown", 
-	modes, "rule instabilities propagate unknowns (default)")
-
-int
-UnstableUnknown::main(State& s, const string_list& a) {
-if (a.size() > 1) {
-	usage(cerr << "usage: ");
-	return Command::BADARG;
-} else {
-	s.dequeue_unstable_events(false);
-	return Command::NORMAL;
-}
-}
-
-void
-UnstableUnknown::usage(ostream& o) {
-	o << name << endl;
-	o << "Unstable events propagate X\'s during run-time." << endl;
-	o << "See also \'unstable-dequeue\'." << endl;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnstableDequeue, "unstable-dequeue", 
-	modes, "rule instabilities dequeue events")
-
-int
-UnstableDequeue::main(State& s, const string_list& a) {
-if (a.size() > 1) {
-	usage(cerr << "usage: ");
-	return Command::BADARG;
-} else {
-	s.dequeue_unstable_events(true);
-	return Command::NORMAL;
-}
-}
-
-void
-UnstableDequeue::usage(ostream& o) {
-	o << name << endl;
-	o << "Unstable events are dequeued during run-time." << endl;
-	o << "See also \'unstable-unknown\'." << endl;
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-static const char
-break_options[] = "[ignore|warn|notify|break]";
-
-static const char
-break_descriptions[] = 
-"\tignore: silently ignores violation\n"
-"\twarn: print warning without halting\n"
-"\tnotify: (same as warn)\n"
-"\tbreak: notify and halt";
-
-#define	DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS(class_name, command_key, \
-		brief_str, usage_str, func_name) 			\
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(class_name, command_key, 		\
-		modes, brief_str)					\
-									\
-int									\
-class_name::main(State& s, const string_list& a) {			\
-if (a.size() != 2) {							\
-	usage(cerr << "usage: ");					\
-	cerr << "current mode: " <<					\
-		State::error_policy_string(s.get_##func_name##_policy()) \
-		<< endl;						\
-	return Command::SYNTAX;						\
-} else {								\
-	const string& m(a.back());					\
-	State::error_policy_enum e = State::string_to_error_policy(m);	\
-	if (State::valid_error_policy(e)) {				\
-		s.set_##func_name##_policy(e);				\
-		return Command::NORMAL;					\
-	} else {							\
-		cerr << "bad mode: \'" << m << "\'." << endl;		\
-		usage(cerr << "usage: ");				\
-		return Command::BADARG;					\
-	}								\
-}									\
-}									\
-									\
-void									\
-class_name::usage(ostream& o) {						\
-	o << name << " " << break_options << endl;			\
-	o << usage_str << endl;						\
-	o << break_descriptions << endl;				\
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS(Unstable, "unstable", 
-	"alter simulation behavior on unstable", 
-	"Alters simulator behavior on an instability violation.",
-	unstable)
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS(WeakUnstable, "weak-unstable", 
-	"alter simulation behavior on weak-unstable",
-	"Alters simulator behavior on a weak-instability violation.", 
-	weak_unstable)
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS(Interference, "interference", 
-	"alter simulation behavior on interference",
-	"Alters simulator behavior on an interference violation.",
-	interference)
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS(WeakInterference, "weak-interference", 
-	"alter simulation behavior on weak-interference",
-	"Alters simulator behavior on a weak-interference violation.",
-	weak_interference)
-#endif
-
-#undef	DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***

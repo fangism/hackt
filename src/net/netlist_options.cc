@@ -21,6 +21,7 @@
 #include "util/cppcat.h"
 #include "util/optparse.tcc"
 #include "util/assoc_traits.hh"
+#include "util/STL/functional.hh"	// for std::_Select2nd
 
 namespace HAC {
 namespace NET {
@@ -1468,8 +1469,8 @@ DEFINE_OPTION_DEFAULT(node_ports, "node_ports",
 @defopt struct_ports (bool)
 If set to 1, include user-defined structs and channels in port lists
 for subcircuit definitions and instances.  
-This is enabled with @option{output_format=verilog}.
-Default: 0
+This is only meaningful with @option{output_format=verilog}.
+Default: 0 for non-verilog formats, 1 for verilog format
 @end defopt
 @end texinfo
 ***/

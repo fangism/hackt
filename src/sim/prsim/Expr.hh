@@ -15,6 +15,7 @@
 #include "util/macros.h"
 #include "util/attributes.h"
 #include "Object/lang/PRS_fwd.hh"	// for expr_count_type
+#include "Object/common/frame_map.hh"	// for footprint_frame_map_type
 #include "sim/prsim/devel_switches.hh"
 #include "sim/prsim/enums.hh"
 
@@ -32,6 +33,7 @@ using std::istream;
 using std::vector;
 using std::pair;
 using entity::PRS::expr_count_type;
+using entity::footprint_frame_map_type;
 
 //=============================================================================
 /**
@@ -198,7 +200,8 @@ public:
 	dump_type_dot_shape(ostream&) const;
 
 	ostream&
-	dump_parent_dot_edge(ostream&, const bool) const;
+	dump_parent_dot_edge(ostream&, const footprint_frame_map_type&,
+		const expr_index_type, const bool) const;
 
 #if 0
 private:

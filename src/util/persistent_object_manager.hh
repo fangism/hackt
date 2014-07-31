@@ -184,8 +184,13 @@ private:
 	/**
 		Map from of persistent type's key to allocator function.  
 	 */
+#if USING_UNORDERED_MAP
+	typedef HASH_MAP_NAMESPACE::hash_map<persistent::hash_key,
+			reconstructor_vector_type>
+#else
 	typedef HASH_MAP_NAMESPACE::default_hash_map<persistent::hash_key,
 			reconstructor_vector_type>::type
+#endif
 					reconstruction_function_map_type;
 
 private:

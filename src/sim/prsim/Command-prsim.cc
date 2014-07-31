@@ -41,32 +41,14 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "sim/command_macros.tcc"
 #include "sim/command_common.tcc"
 
-DEFAULT_STATIC_TRACE
 namespace HAC {
 namespace SIM {
+DEFAULT_STATIC_TRACE
 // must instantiate dependent class first!
 template class command_registry<PRSIM::Command>;
-namespace PRSIM {
 DEFAULT_STATIC_TRACE
-// local static CommandCategories
-// feel free to add categories here
-
-// initialize here to help clang with initialization ordering
-static CommandCategory
-	builtin("builtin", "built-in commands"),
-	general("general", "general commands"),
-	debug("debug", "debugging internals"),
-	simulation("simulation", "simulation commands"),
-	channels("channels", "channel commands"),
-	info("info", "information about simulated circuit"),
-//	timing("timing", "timing back-annotation"),
-	view("view", "instance to watch"),
-	tracing("tracing", "trace and checkpoint commands"), 
-	modes("modes", "timing model, error handling");
 }
 }
-}
-DEFAULT_STATIC_TRACE
 
 #include "parser/instref.hh"
 #include "parser/type.hh"
@@ -375,6 +357,26 @@ __get_current_process_graph(State& s) {
 }
 
 //=============================================================================
+// local static CommandCategories
+// feel free to add categories here
+#define	DECLARE_COMMAND_CATEGORY(x, y)					\
+DECLARE_GENERIC_COMMAND_CATEGORY(CommandCategory, x, y)
+
+DEFAULT_STATIC_TRACE
+DECLARE_COMMAND_CATEGORY(builtin, "built-in commands")
+DECLARE_COMMAND_CATEGORY(general, "general commands")
+DECLARE_COMMAND_CATEGORY(debug, "debugging internals")
+DECLARE_COMMAND_CATEGORY(simulation, "simulation commands")
+DECLARE_COMMAND_CATEGORY(channels, "channel commands")
+DECLARE_COMMAND_CATEGORY(info, "information about simulated circuit")
+// DECLARE_COMMAND_CATEGORY(timing, "timing back-annotation")
+DECLARE_COMMAND_CATEGORY(view, "instance to watch")
+DECLARE_COMMAND_CATEGORY(tracing, "trace and checkpoint commands")
+DECLARE_COMMAND_CATEGORY(modes, "timing model, error handling")
+DEFAULT_STATIC_TRACE
+#undef	DECLARE_COMMAND_CATEGORY
+
+//=============================================================================
 // command completion facilities
 
 /**
@@ -429,7 +431,7 @@ INSTANTIATE_COMMON_COMMAND_CLASS(PRSIM, module_command_wrapper, _class, _cat)
 #define	INITIALIZE_COMMAND_CLASS(_class, _cmd, _category, _brief)	\
 const char _class::name[] = _cmd;					\
 const char _class::brief[] = _brief;					\
-CommandCategory& _class::category(_category);				\
+CommandCategory& (*_class::category)(void) = &__initialized_cat_ ## _category;	\
 const size_t _class::receipt_id = CommandRegistry::register_command<_class >();
 
 /**

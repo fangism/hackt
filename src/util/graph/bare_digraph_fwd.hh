@@ -7,6 +7,7 @@
 
 #include <set>
 #include <vector>
+#include "util/size_t.h"
 
 namespace util {
 namespace graph {

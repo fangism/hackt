@@ -10,8 +10,8 @@
 		with dynamic shared library linking (conflict with CHPSIM).
  */
 
-#ifndef	__HAC_SIM_PRSIM_COMMAND_H__
-#define	__HAC_SIM_PRSIM_COMMAND_H__
+#ifndef	__HAC_SIM_PRSIM_COMMAND_HH__
+#define	__HAC_SIM_PRSIM_COMMAND_HH__
 
 #include <iosfwd>
 #include <string>
@@ -84,7 +84,7 @@ struct class_name {                                                     \
 public:                                                                 \
 	static const char		name[];				\
 	static const char		brief[];			\
-	static CommandCategory&		category;			\
+	static CommandCategory&		(*category)(void);		\
 	static int	main(State&, const string_list&);		\
 	static void	usage(ostream&);				\
 	static const command_completer	completer;			\
@@ -102,5 +102,5 @@ typedef	Help<State>			Help;
 }	// end namespace SIM
 }	// end namespace HAC
 
-#endif	// __HAC_SIM_PRSIM_COMMAND_H__
+#endif	// __HAC_SIM_PRSIM_COMMAND_HH__
 

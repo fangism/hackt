@@ -33,9 +33,11 @@ typedef	unsigned int			uint;
 typedef	unsigned long			ulong;
 #endif
 
+#ifdef	__cplusplus
 #if SIZEOF_LONG_LONG
 #if !SIZEOF_ULONGLONG
 typedef	unsigned long long		ulonglong;
+#endif
 #endif
 #endif
 

@@ -4,10 +4,12 @@
 	$Id: functional_fwd.hh,v 1.4 2006/04/27 00:17:23 fang Exp $
  */
 
-#ifndef	__UTIL_STL_FUNCTIONAL_FWD_H__
-#define	__UTIL_STL_FUNCTIONAL_FWD_H__
+#ifndef	__UTIL_STL_FUNCTIONAL_FWD_HH__
+#define	__UTIL_STL_FUNCTIONAL_FWD_HH__
 
-namespace std {
+#include "util/STL/libconfig.hh"
+
+BEGIN_NAMESPACE_STD
 
 template <class Arg, class Result>
 struct unary_function;
@@ -80,15 +82,15 @@ template <class O, class T>
 binder2nd<O>
 bind2nd(const O&, const T&);
 
-// may not be standard! see "util/STL/functional.h"
+// may not be standard! see "util/STL/functional.hh"
 template <class P>
 struct _Identity;
 
-// may not be standard! see "util/STL/functional.h"
+// may not be standard! see "util/STL/functional.hh"
 template <class P>
 struct _Select1st;
 
-// may not be standard! see "util/STL/functional.h"
+// may not be standard! see "util/STL/functional.hh"
 template <class P>
 struct _Select2nd;
 
@@ -162,7 +164,7 @@ template <class Ret, class T, class Arg>
 const_mem_fun1_ref_t<Ret,T,Arg>
 mem_fun_ref(Ret (T::*)(Arg) const);
 
-}
+END_NAMESPACE_STD
 
-#endif	// __UTIL_STL_FUNCTIONAL_FWD_H__
+#endif	// __UTIL_STL_FUNCTIONAL_FWD_HH__
 

@@ -4,12 +4,12 @@
 	$Id: set_fwd.hh,v 1.7 2006/04/27 00:17:23 fang Exp $
  */
 
-#ifndef	__UTIL_STL_SET_FWD_H__
-#define	__UTIL_STL_SET_FWD_H__
+#ifndef	__UTIL_STL_SET_FWD_HH__
+#define	__UTIL_STL_SET_FWD_HH__
 
 #include "util/STL/allocator_fwd.hh"
 
-namespace std {
+BEGIN_NAMESPACE_STD
 
 template <class K>
 struct less;
@@ -35,7 +35,7 @@ struct default_set {
 	struct rebind : public default_set<T> { };
 };
 
-}	// end namespace std
+END_NAMESPACE_STD
 
-#endif	// __UTIL_STL_SET_FWD_H__
+#endif	// __UTIL_STL_SET_FWD_HH__
 

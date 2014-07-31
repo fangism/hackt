@@ -141,12 +141,6 @@ This section describes the various statements that CHP supports.
 * CHP Wait::
 * Statement Composition::
 * CHP Skip::
-* CHP Loops::
-* CHP Guarded Commands::
-* CHP Deterministic Selection::
-* CHP Nondeterministic Selection::
-* CHP Do-While::
-* Function Calls::
 @end menu
 
 @c ----------------------------------------------------------------------------
@@ -288,7 +282,7 @@ the join-barrier.
 
 @c ----------------------------------------------------------------------------
 @node CHP Skip
-@subsection Skip
+@subsection CHP Skip
 @cindex skip statement
 
 Skipping this section... haha.
@@ -303,6 +297,14 @@ It may appear in-place of any @i{CHP-stmt-list}.
 @cindex flow control in CHP
 
 This section describes the various flow control statements available in CHP.  
+
+@menu
+* CHP Loops::
+* CHP Guarded Commands::
+* CHP Deterministic Selection::
+* CHP Nondeterministic Selection::
+* CHP Do-While::
+@end menu
 
 @c ----------------------------------------------------------------------------
 @node CHP Loops
@@ -475,6 +477,10 @@ New syntaces for compile-time expanded repetitive constructs:
 @c ----------------------------------------------------------------------------
 @node CHP Extensions
 @section Extensions
+
+@menu
+* Function Calls::
+@end menu
 
 @c ----------------------------------------------------------------------------
 @node Function Calls

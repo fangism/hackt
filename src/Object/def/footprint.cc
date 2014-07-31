@@ -2254,6 +2254,29 @@ ostream&
 footprint::dump_canonical_name<enum_tag>(ostream&, const size_t, 
 	const dump_flags&, const bool) const;
 
+
+template
+void
+footprint::collect_aliases_recursive<process_tag>(const size_t, 
+	const dump_flags&, set<string>&) const;
+template
+void
+footprint::collect_aliases_recursive<channel_tag>(const size_t, 
+	const dump_flags&, set<string>&) const;
+template
+void
+footprint::collect_aliases_recursive<bool_tag>(const size_t, 
+	const dump_flags&, set<string>&) const;
+template
+void
+footprint::collect_aliases_recursive<int_tag>(const size_t, 
+	const dump_flags&, set<string>&) const;
+template
+void
+footprint::collect_aliases_recursive<enum_tag>(const size_t, 
+	const dump_flags&, set<string>&) const;
+
+
 //=============================================================================
 }	// end namespace entity
 }	// end namespace HAC

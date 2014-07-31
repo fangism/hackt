@@ -198,6 +198,12 @@ echo-auto-ignore: force
 echo-config: force
 	cd $(top_builddir) && ./config.status --version
 
+echo-compile:
+	@$(ECHO) $(COMPILE)
+
+echo-cxxcompile:
+	@$(ECHO) $(CXXCOMPILE)
+
 echo-srcdir: force
 	@$(ECHO) $(srcdir)
 

@@ -1605,10 +1605,12 @@ PURIFY_LEXER_PIPE = { $(AWK) -f $(srcdir)/lexer/purify_flex.awk | \
 #		$(PATCH) -l -u -p0
 MAKE_REAL_LEXER_SCRIPT = $(SET_PIPEFAIL) ; $(AWK) -f $(srcdir)/$(FLEX_COMMON_PATCH) $< > $@.tmp
 
+# also remove 'register' storage class specifier, deprecated in C++11
 MAKE_REAL_LEXER_SCRIPT += && \
 	{ $(ECHO) "\#include \"parser/$$basename-prefix.h\"" && \
 	$(ECHO) "\#include \"lexer/flex_lexer_state.hh\"" && \
-	$(PURIFY_LEXER_PIPE) < $@.tmp ;} > $@ && \
+	$(PURIFY_LEXER_PIPE) < $@.tmp | \
+	$(SED) -e 's|register ||g' ;} > $@ && \
 	$(RM) $@.tmp $@.tmp.orig
 
 # need to include prefix header because the lexer-generated code
@@ -1659,7 +1661,8 @@ lexer/flex_lexer_common.cc: lexer/$(HACKT_LEX_ROOT)-real.cc
 	$(ECHO) "#define FLEX_STRUCT_BUFFER_STATE" ; \
 	$(ECHO) "#define KEEP_FLEX_COMMON	1" ; \
 	$(ECHO) "#define YY_ALWAYS_INTERACTIVE	0" ; \
-	$(EXTRACT_FLEX_COMMON_PIPE) < $< ; } > $@
+	$(EXTRACT_FLEX_COMMON_PIPE) < $< | \
+	$(SED) -e 's|register ||g' ; } > $@
 
 # generated header, extracting struct definition
 lexer/flex_lexer_state.cc: lexer/flex_buffer_state.hh
@@ -1923,7 +1926,8 @@ endif
 # YACC_PREFIX = -DYACC_PREFIX=hackt_yy
 # libhackt_la_CPPFLAGS = $(YACC_PREFIX) $(AM_CPPFLAGS)
 
-MORE_BOGUS_CPPFLAGS =
+# 'register' is deprecated as a storage-specifier [C++11]
+MORE_BOGUS_CPPFLAGS = -Dregister=
 MORE_BOGUS_CXXFLAGS =
 if HAVE_BYACC
 # we don't care about libbogus, whatever it takes to make it compile

@@ -587,10 +587,12 @@ class and_expr : public prs_expr, public prs_expr::expr_sequence_type {
 private:
 	enum { print_stamp = PRS_AND_EXPR_TYPE_ENUM };
 	precharge_array_type			precharge_array;
+#if 0
 private:
 	using expr_sequence_type::push_back;	// hide
+	// clang is unable to find public definition with this
 	using expr_sequence_type::push_front;	// hide
-
+#endif
 public:
 	typedef	expr_sequence_type::const_reference	const_reference;
 	/**

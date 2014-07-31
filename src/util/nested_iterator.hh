@@ -208,9 +208,9 @@ public:
 				std::distance(this->second, this->first->end());
 			if (n >= d) {
 				// need to advance first
-				register difference_type m = n -d;
+				difference_type m = n -d;
 				outer_iterator_type o(this->first +1);
-				register difference_type s = o->size();
+				difference_type s = o->size();
 				while (m >= s) {
 					m -= s;
 					o++;
@@ -235,10 +235,10 @@ public:
 				std::distance(this->first->begin(),
 					this->second);
 			if (d + n > 0) {
-				register difference_type m = n -d;
+				difference_type m = n -d;
 				outer_iterator_type o(this->first);
 				o--;	// move back one first
-				register difference_type s = o->size();
+				difference_type s = o->size();
 				while (m > s) {
 					m -= s;
 					o--;
@@ -269,10 +269,9 @@ public:
 				std::distance(this->second, this->first->end());
 			if (n >= d) {
 				// need to advance first
-				register difference_type m = n -d;
+				difference_type m = n -d;
 				this->first++;
-				register difference_type s =
-					this->first->size();
+				difference_type s = this->first->size();
 				while (m >= s) {
 					m -= s;
 					this->first++;
@@ -306,10 +305,9 @@ public:
 				std::distance(this->first->begin(),
 					this->second);
 			if (n > d) {
-				register difference_type m = n -d;
+				difference_type m = n -d;
 				this->first--;
-				register difference_type s =
-					this->first->size();
+				difference_type s = this->first->size();
 				while (m > s) {
 					m -= s;
 					this->first--;
@@ -501,9 +499,9 @@ public:
 					this->first->rend());
 			if (n >= d) {
 				// need to advance first
-				register difference_type m = n -d;
+				difference_type m = n -d;
 				outer_iterator_type o(this->first +1);
-				register difference_type s = o->size();
+				difference_type s = o->size();
 				while (m >= s) {
 					m -= s;
 					o++;
@@ -528,10 +526,10 @@ public:
 				std::distance(this->first->rbegin(),
 					this->second);
 			if (d + n > 0) {
-				register difference_type m = n -d;
+				difference_type m = n -d;
 				outer_iterator_type o(this->first);
 				o--;	// move back one first
-				register difference_type s = o->size();
+				difference_type s = o->size();
 				while (m > s) {
 					m -= s;
 					o--;
@@ -563,9 +561,9 @@ public:
 					this->first->rend());
 			if (n >= d) {
 				// need to advance first
-				register difference_type m = n -d;
+				difference_type m = n -d;
 				this->first++;
-				register difference_type s =
+				difference_type s =
 					this->first->size();
 				while (m >= s) {
 					m -= s;
@@ -600,9 +598,9 @@ public:
 				std::distance(this->first->rbegin(),
 					this->second);
 			if (n > d) {
-				register difference_type m = n -d;
+				difference_type m = n -d;
 				this->first--;
-				register difference_type s =
+				difference_type s =
 					this->first->size();
 				while (m > s) {
 					m -= s;

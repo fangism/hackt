@@ -6,6 +6,7 @@
 #define	__HAC_OBJECT_DEF_ATOMIC_UPDATE_GRAPH_HH__
 
 #include <map>
+#include <iosfwd>
 #include "util/graph/bare_digraph_fwd.hh"
 
 namespace HAC {

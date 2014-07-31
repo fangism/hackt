@@ -37,7 +37,8 @@ public:									\
 	typedef	command_registry<command_type>	command_registry_type;	\
 	static const char			name[];			\
 	static const char			brief[];		\
-	static command_category_type&		category;		\
+	typedef command_category_type& (*category_fun_ptr)(void);	\
+	static category_fun_ptr			category;		\
 	static int	main(state_type&, const string_list&);		\
 	static void	usage(ostream&);				\
 	static const command_completer		completer;		\
@@ -86,7 +87,8 @@ public:
 						command_category_type;
 /*	static const char			name[];		*/
 /*	static const char			brief[];	*/
-	static command_category_type&		category;
+	typedef command_category_type& (*category_fun_ptr)(void);
+	static category_fun_ptr			category;
 
 	static	int		main(state_type&, const string_list&);
 /*	using Com::usage;	*/
@@ -127,7 +129,8 @@ public:
 						command_category_type;
 /*	static const char			name[];		*/
 /*	static const char			brief[];	*/
-	static command_category_type&		category;
+	typedef command_category_type& (*category_fun_ptr)(void);
+	static category_fun_ptr			category;
 
 	static	int		main(state_type&, const string_list&);
 private:

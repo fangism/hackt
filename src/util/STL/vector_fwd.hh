@@ -4,12 +4,12 @@
 	$Id: vector_fwd.hh,v 1.6 2006/04/23 07:37:29 fang Exp $
  */
 
-#ifndef	__UTIL_STL_VECTOR_FWD_H__
-#define	__UTIL_STL_VECTOR_FWD_H__
+#ifndef	__UTIL_STL_VECTOR_FWD_HH__
+#define	__UTIL_STL_VECTOR_FWD_HH__
 
 #include "util/STL/allocator_fwd.hh"
 
-namespace std {
+BEGIN_NAMESPACE_STD
 
 template <class _Tp, class _Alloc>
 class vector;
@@ -22,7 +22,7 @@ struct default_vector {
 	struct rebind : public default_vector<S> { };
 };	// end struct default_vector
 
-}	// end namespace std
+END_NAMESPACE_STD
 
-#endif	// __UTIL_STL_VECTOR_FWD_H__
+#endif	// __UTIL_STL_VECTOR_FWD_HH__
 

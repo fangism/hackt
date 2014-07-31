@@ -10,6 +10,13 @@
 		to add/commit/reset/display delays.
 
 
+2014-06-09	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-86-54:
+	  hacprsim: fixed prs dot output to use suitable expression offsets
+		and global node index calculation.
+
+
 2014-01-24	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-86-53-prsim-timing-backannot-02:

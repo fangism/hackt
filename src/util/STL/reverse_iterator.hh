@@ -9,14 +9,14 @@
 #ifndef	__UTIL_STL_REVERSE_ITERATOR_H__
 #define	__UTIL_STL_REVERSE_ITERATOR_H__
 
-#include "config.h"
+#include "util/STL/libconfig.hh"
 #include <iterator>
 
 /**
 	These are missing before gcc-4.1.  
  */
 #ifndef	HAVE_STL_REVERSE_ITERATOR_COMPARISONS
-namespace std {
+BEGIN_NAMESPACE_STD
 
 /**
 	Equality between two reverse iterators of related type.  
@@ -48,7 +48,7 @@ operator != (const reverse_iterator<Iter1>& x,
 // later add relative comparison overloads...
 // see <bits/stl_iterator.h> for reference
 
-}	// end namespace std
+END_NAMESPACE_STD
 #endif	// HAVE_STL_REVERSE_ITERATOR_COMPARISONS
 
 namespace util {

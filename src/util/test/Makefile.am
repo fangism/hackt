@@ -97,6 +97,7 @@ noinst_PROGRAMS = \
 	friend_function_formal_bug \
 	link_test \
 	bitmanip_test \
+	bitset_test \
 	string_test \
 	tokenize_test \
 	priority_queue_test \
@@ -192,6 +193,8 @@ friend_function_formal_bug_SOURCES = friend_function_formal_bug.cc
 priority_queue_test_SOURCES = priority_queue_test.cc
 bitmanip_test_SOURCES = bitmanip_test.cc
 bitmanip_test_LDADD = libfangutil.la
+bitset_test_SOURCES = bitset_test.cc
+bitset_test_LDADD = libfangutil.la
 string_test_SOURCES = string_test.cc
 string_test_LDADD = libfangutil.la
 tokenize_test_SOURCES = tokenize_test.cc

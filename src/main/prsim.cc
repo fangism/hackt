@@ -6,6 +6,7 @@
 	$Id: prsim.cc,v 1.31 2011/05/03 19:20:53 fang Exp $
  */
 
+#define	ENABLE_STATIC_TRACE		0
 #define	ENABLE_STACKTRACE		0
 
 #include "util/static_trace.hh"

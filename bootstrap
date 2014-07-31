@@ -149,8 +149,7 @@ AC_ARG_VAR(ACLOCAL_FLAGS, [Additional aclocal flags, for bootstrap only.])' \
 	mv -f Makefile.in configure aclocal.m4 removed ; \
 	mv -f config.* install-sh ltmain.sh missing removed || : ; \
 	echo "moving m4/* to ../$PROJECT_MACROS ..." ; \
-	if test -d m4 ; then mv -f m4/*.m4 ../$PROJECT_MACROS ; \
-		rm -rf m4 ; fi ; \
+	if test -d m4 ; then mv -f m4/*.m4 ../$PROJECT_MACROS ; fi ; \
 	sed -i.bkp -e "/ACLOCAL_AMFLAGS/s|m4|../$PROJECT_MACROS \$(ACLOCAL_FLAGS)|" Makefile.am ; \
 	mv -f Makefile.am.bkp removed ; \
 	echo "cvsignore:" >> Makefile.am ; \

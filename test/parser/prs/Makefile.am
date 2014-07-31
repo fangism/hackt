@@ -224,7 +224,8 @@ HACKT_CREATE_TEST_PASSES = \
 	fanin-check-01-a fanin-check-01-b fanin-check-01-c fanin-check-01-d \
 	fanin-check-01-e fanin-check-01-f fanin-check-01-g \
 	diode-01 \
-	res-01
+	res-01 \
+	source-sink
 
 HACKT_CREATE_TEST_FAILURES = \
 	loop-01 loop-02 loop-03 \
@@ -304,7 +305,8 @@ HACKT_CFLAT_TEST_SUBJECTS = \
 	reset-01 reset-02 reset-03 reset-04 reset-05 \
 	supply-show-01 supply-show-02 \
 	diode-01 \
-	res-01
+	res-01 \
+	source-sink
 
 # TODO: after implementing supply annotation in hflat
 #	supply-01 supply-02 supply-03 supply-04 supply-05 supply-06
@@ -385,7 +387,11 @@ HACKT_CFLAT_SPRS_TEST_SUBJECTS = \
 # subset of HACKT_CFLAT_TEST_SUBJECTS
 HACKT_PRSIMEXPR_TEST_SUBJECTS = inv-14 \
 	celem-01 \
-	short-01 short-02 short-03 short-04 short-05
+	short-01 short-02 short-03 short-04 short-05 \
+	source-sink
+
+HACKT_PRSIMDOT_TEST_SUBJECTS = \
+	source-sink
 
 # expecting empty .prs
 EMPTY_CFLAT_PRS_TESTS += \

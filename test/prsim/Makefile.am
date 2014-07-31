@@ -106,6 +106,7 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	pcehb-test-a pcefb-test-a \
 	pchb-test-b pcfb-test-b \
 	pcehb-test-b pcefb-test-b \
+	muxes muxes-a \
 	power-supplies-a power-supplies-b power-supplies-c power-supplies-d \
 	power-supplies-e power-supplies-f \
 	pseudo-flop-a pseudo-flop-b \
@@ -495,6 +496,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	pcfb-test-b-01 \
 	pcehb-test-b-01 \
 	pcefb-test-b-01 \
+	muxes-a-01 \
 	power-supplies-a-01 power-supplies-a-02 power-supplies-a-03 \
 	power-supplies-b-01 power-supplies-b-02 \
 	power-supplies-c-01 power-supplies-d-01 \

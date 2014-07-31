@@ -10,41 +10,127 @@ dnl source taken from "src/util/STL/reverse_iterator.hh"
 dnl known to be present in gcc-4.1 headers, 
 dnl but missing in all previous versions of gcc.  
 dnl Defines HAVE_STL_REVERSE_ITERATOR_COMPARISONS if present.  
+dnl Updated to account for versioned namespace checking in libc++.
 dnl
 dnl @category Cxx
-dnl @version 2006-05-08
+dnl @version 2014-07-11
 dnl @author David Fang <fangism@users.sourceforge.net>
 dnl @license AllPermissive
 dnl
 AC_DEFUN([FANG_CXX_STL_REVERSE_ITERATOR_COMPARISONS],
 [AC_REQUIRE([AC_PROG_CXX])
+AC_REQUIRE([FANG_CXXLIB_VERSIONED_NAMESPACE])
 AC_CACHE_CHECK(
 	[whether libstdc++ (STL) already contains reverse_iterator comparisons],
 [fang_cv_cxx_stl_reverse_iterator_comparisons],
 [AC_LANG_PUSH(C++)
-dnl saved_CXXFLAGS=$CXXFLAGS
-dnl CXXFLAGS="$saved_CXXFLAGS $ANAL_FLAGS"
+saved_CPPFLAGS=$CPPFLAGS
+CPPFLAGS="$saved_CPPFLAGS -I$srcdir/src"
 AC_COMPILE_IFELSE(
 	AC_LANG_PROGRAM([[
+		#include "util/STL/libconfig.hh"
 		#include <iterator>
-		namespace std {
+		BEGIN_NAMESPACE_STD
 		template <class Iter1, class Iter2>
 		inline bool
 		operator == (const reverse_iterator<Iter1>& x,
 				const reverse_iterator<Iter2>& y) {
 			return x.base() == y.base();
 		}
-		}]], []
+		END_NAMESPACE_STD
+		]], []
 	),
 	[fang_cv_cxx_stl_reverse_iterator_comparisons=no],
 	[fang_cv_cxx_stl_reverse_iterator_comparisons=yes]
 )
-dnl CXXFLAGS=$saved_CXXFLAGS
+CPPFLAGS=$saved_CPPFLAGS
 AC_LANG_POP(C++)
 ])
 if test "$fang_cv_cxx_stl_reverse_iterator_comparisons" = "yes" ; then
 AC_DEFINE(HAVE_STL_REVERSE_ITERATOR_COMPARISONS, [],
 	[True if STL <iterator> header defines reverse_iterator comparisons])
+fi
+])dnl
+
+dnl @synopsis FANG_CXX_STD_BEGIN_END
+dnl
+dnl Detect whether std::begin and std::end are provided by C++ library 
+dnl Defines HAVE_STD_BEGIN_END if present.  
+dnl
+dnl @category Cxx
+dnl @version 2014-07-14
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
+dnl
+AC_DEFUN([FANG_CXX_STD_BEGIN_END],
+[AC_REQUIRE([AC_PROG_CXX])
+AC_CACHE_CHECK(
+	[whether std::begin(),std::end() are provided by <iterator>],
+[fang_cv_cxx_std_begin_end],
+[AC_LANG_PUSH(C++)
+dnl saved_CPPFLAGS=$CPPFLAGS
+dnl CPPFLAGS="$saved_CPPFLAGS -I$srcdir/src"
+AC_COMPILE_IFELSE(
+	AC_LANG_PROGRAM([[
+		#include <vector>
+		#include <list>
+		#include <iterator>
+		#include <numeric>
+		]], [
+			std::vector<int> a(9);
+			std::list<float> b(9);
+			return std::accumulate(begin(a), end(a), 1)
+				+std::accumulate(begin(b), end(b), 1);
+		]
+	),
+	[fang_cv_cxx_std_begin_end=yes],
+	[fang_cv_cxx_std_begin_end=no]
+)
+dnl CPPFLAGS=$saved_CPPFLAGS
+AC_LANG_POP(C++)
+])
+if test "$fang_cv_cxx_std_begin_end" = "yes" ; then
+AC_DEFINE(HAVE_STD_BEGIN_END, [],
+	[True if <iterator> provides std::begin() and std::end()])
+fi
+])dnl
+
+dnl @synopsis FANG_CXX_STL_VALARRAY_BEGIN_END
+dnl
+dnl Detect whether or not std::valarray has non-member begin/end functions.
+dnl Defines HAVE_STL_VALARRAY_BEGIN_END if present.  
+dnl
+dnl @category Cxx
+dnl @version 2014-07-14
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
+dnl
+AC_DEFUN([FANG_CXX_STL_VALARRAY_BEGIN_END],
+[AC_REQUIRE([AC_PROG_CXX])
+AC_CACHE_CHECK(
+	[whether std::valarray supports non-member begin/end functions],
+[fang_cv_cxx_stl_valarray_begin_end],
+[AC_LANG_PUSH(C++)
+dnl saved_CPPFLAGS=$CPPFLAGS
+dnl CPPFLAGS="$saved_CPPFLAGS -I$srcdir/src"
+AC_COMPILE_IFELSE(
+	AC_LANG_PROGRAM([[
+		#include <valarray>
+		#include <numeric>
+		]], [
+			std::valarray<int> a(99);
+			return std::accumulate(begin(a), end(a), 1);
+		]
+	),
+	[fang_cv_cxx_stl_valarray_begin_end=yes],
+	[fang_cv_cxx_stl_valarray_begin_end=no]
+)
+dnl CPPFLAGS=$saved_CPPFLAGS
+AC_LANG_POP(C++)
+])
+if test "$fang_cv_cxx_stl_valarray_begin_end" = "yes" ; then
+AC_DEFINE(HAVE_STL_VALARRAY_BEGIN_END, [],
+	[True if <valarray> provides non-member begin() and end()])
 fi
 ])dnl
 
@@ -808,16 +894,18 @@ dnl @license AllPermissive
 dnl
 AC_DEFUN([FANG_CXX_STL_COPY_IF],
 [AC_REQUIRE([AC_PROG_CXX])
+AC_REQUIRE([FANG_CXXLIB_VERSIONED_NAMESPACE])
 AC_CACHE_CHECK(
 	[whether libstdc++ (STL) already contains copy_if algorithm],
 [fang_cv_cxx_stl_copy_if],
 [AC_LANG_PUSH(C++)
-dnl saved_CXXFLAGS=$CXXFLAGS
-dnl CXXFLAGS="$saved_CXXFLAGS $ANAL_FLAGS"
+saved_CPPFLAGS=$CPPFLAGS
+CPPFLAGS="$saved_CPPFLAGS -I$srcdir/src"
 AC_COMPILE_IFELSE(
 	AC_LANG_PROGRAM([[
+		#include "util/STL/libconfig.hh"
 		#include <algorithm>
-		namespace std {
+		BEGIN_NAMESPACE_STD
 		template <class In, class Out, class Pred>
 		Out
 		copy_if(In first, In last, Out res, Pred p) {
@@ -829,12 +917,13 @@ AC_COMPILE_IFELSE(
 			}
 			return res;
 		}
-		}]], []
+		END_NAMESPACE_STD
+		]], []
 	),
 	[fang_cv_cxx_stl_copy_if=no],
 	[fang_cv_cxx_stl_copy_if=yes]
 )
-dnl CXXFLAGS=$saved_CXXFLAGS
+CPPFLAGS=$saved_CPPFLAGS
 AC_LANG_POP(C++)
 ])
 if test "$fang_cv_cxx_stl_copy_if" = "yes" ; then
@@ -887,6 +976,52 @@ AC_LANG_POP(C++)
 if test "$fang_cv_cxx_std_istream_negative_unsigned_fail" = yes ; then
 AC_DEFINE(CXX_ISTREAM_NEGATIVE_UNSIGNED_FAILS, [],
 	[Define if std::istream properly fails with reading -1 to an unsigned])
+fi
+])dnl
+
+dnl @synopsis FANG_CXXLIB_VERSIONED_NAMESPACE
+dnl
+dnl Checks to see whether or not C++ library is in versioned namespace.
+dnl At the time of writing GNU libstdc++ is not in a versioned namespace
+dnl while libc++ is, like std::__1.
+dnl
+dnl Defines CXXLIB_VERSIONED_NAMESPACE if successful.  
+dnl This is used in src/util/STL/libconfig.hh.
+dnl You may include that and use BEGIN/END_NAMESPACE_STD in other
+dnl C++ standard library tests in this file.
+dnl
+dnl @category Cxx
+dnl @version 2014-04-22
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
+dnl
+AC_DEFUN([FANG_CXXLIB_VERSIONED_NAMESPACE],
+[AC_REQUIRE([AC_PROG_CXX])
+AC_CACHE_CHECK(
+	[C++ standard library lives in a versioned namespace],
+	[fang_cv_cxx_stdlib_versioned_namespace],
+[AC_LANG_PUSH(C++)
+dnl default: assume standard-confirming behavior when cross-compiling
+AC_RUN_IFELSE(
+	AC_LANG_PROGRAM([[
+		#include <utility>
+		using std::pair;
+	]], [[
+#if defined(_LIBCPP_ABI_VERSION) && defined(_LIBCPP_NAMESPACE)
+		return 0;
+#else
+		return 1;
+#endif
+	]]),
+	[fang_cv_cxx_stdlib_versioned_namespace=yes],
+	[fang_cv_cxx_stdlib_versioned_namespace=no],
+	[fang_cv_cxx_stdlib_versioned_namespace=no]
+)
+AC_LANG_POP(C++)
+])
+if test "$fang_cv_cxx_stdlib_versioned_namespace" = yes ; then
+AC_DEFINE(CXXLIB_VERSIONED_NAMESPACE, [],
+	[Define if C++ library lives in a versioned namespace])
 fi
 ])dnl
 

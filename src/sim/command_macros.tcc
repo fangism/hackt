@@ -15,9 +15,16 @@
 
 namespace HAC {
 namespace SIM {
-//=============================================================================
-// class stateless_command_wrapper method definitions
-
+/**
+	\param name name of category as identifier and keyed string
+	\param desc descriptive string token (brief)
+ */
+#define	DECLARE_GENERIC_COMMAND_CATEGORY(cat_type, name, desc)		\
+static cat_type& __initialized_cat_ ## name (void) {			\
+	/* function-local static */					\
+	static cat_type name( STRINGIFY(name), desc);			\
+	return name;							\
+}
 
 /**
 	Use this macro to declare ordinary commands.
@@ -32,8 +39,8 @@ namespace SIM {
 
 #define	CATEGORIZE_COMMON_COMMAND_CLASS(_ns, _class, _category)		\
 template <>								\
-_ns::_class::command_category_type&					\
-_ns::_class::category(_category);
+_ns::_class::category_fun_ptr						\
+_ns::_class::category = &_ns::__initialized_cat_ ## _category;
 
 /**
 	\param _wrap is the wrapper class template
@@ -41,7 +48,7 @@ _ns::_class::category(_category);
  */
 #define INSTANTIATE_COMMON_COMMAND_CLASS(_ns, _wrap, _class, _cat)	\
 }	/* end namespace _ns */						\
-CATEGORIZE_COMMON_COMMAND_CLASS(_ns, _class, _ns::_cat)			\
+CATEGORIZE_COMMON_COMMAND_CLASS(_ns, _class, _cat)			\
 template class _wrap<_class, _ns::State>;				\
 namespace _ns {	/* re-open namespace */
 
@@ -51,7 +58,7 @@ namespace _ns {	/* re-open namespace */
 #define INSTANTIATE_COMMON_COMMAND_CLASS_SIM(_ns, _wrap, _class, _cat)	\
 }	/* end namespace _ns */						\
 namespace SIM {								\
-CATEGORIZE_COMMON_COMMAND_CLASS(_ns, _class, _ns::_cat)			\
+CATEGORIZE_COMMON_COMMAND_CLASS(_ns, _class, _cat)			\
 template class _wrap<_class, _ns::State>;				\
 }	/* end namespace SIM */						\
 namespace _ns {	/* re-open namespace */
@@ -64,7 +71,7 @@ namespace _ns {	/* re-open namespace */
  */
 #define INSTANTIATE_TRIVIAL_COMMAND_CLASS(_ns, _class, _cat)		\
 }	/* end namespace _ns */						\
-CATEGORIZE_COMMON_COMMAND_CLASS(_ns, _class, _ns::_cat)			\
+CATEGORIZE_COMMON_COMMAND_CLASS(_ns, _class, _cat)			\
 template class _class<_ns::State>;					\
 namespace _ns {	/* re-open namespace */
 
@@ -74,13 +81,15 @@ namespace _ns {	/* re-open namespace */
 #define INSTANTIATE_TRIVIAL_COMMAND_CLASS_SIM(_ns, _class, _cat)	\
 }	/* end namespace _ns */						\
 namespace SIM {								\
-CATEGORIZE_COMMON_COMMAND_CLASS(_ns, _class, _ns::_cat)			\
+CATEGORIZE_COMMON_COMMAND_CLASS(_ns, _class, _cat)			\
 template class _class<_ns::State>;					\
 }	/* end namespace SIM */						\
 namespace _ns {	/* re-open namespace */
 
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//=============================================================================
+// class stateless_command_wrapper method definitions
+
 /**
 	Wrapper that drops unused state reference argument.  
  */

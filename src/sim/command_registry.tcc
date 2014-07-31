@@ -159,8 +159,9 @@ size_t
 command_registry<Command>::register_command(void) {
 	STACKTRACE_VERBOSE;
 	typedef	C	command_class;
+	command_category_type& cat((*command_class::category)());
 	const Command temp(command_class::name, command_class::brief,
-		&command_class::category, &command_class::main, 
+		&cat, &command_class::main, 
 		&command_class::usage, &Completer<command_class>);
 	typedef	typename command_map_type::mapped_type		mapped_type;
 	typedef	typename command_map_type::value_type		value_type;
@@ -173,7 +174,7 @@ command_registry<Command>::register_command(void) {
 			"registered globally." << endl;
 		THROW_EXIT;
 	}
-	command_class::category.register_command(temp);
+	cat.register_command(temp);
 	return command_map.size();
 }
 

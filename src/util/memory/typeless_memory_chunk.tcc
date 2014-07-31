@@ -48,11 +48,11 @@ TYPELESS_MEMORY_CHUNK_CLASS::contains(const void* p) const {
 	const size_t
 		diff = reinterpret_cast<size_t>(p)
 			-reinterpret_cast<size_t>(&elements[0]);
-	register const size_t offset =
+	const size_t offset =
 		divide_by_constant<element_size, size_t>(diff);
 #else
 	// the more proper way, but relying on compiler to optimize
-	register const typename
+	const typename
 		std::iterator_traits<storage_type*>::difference_type
 		offset = std::distance(&elements[0],
 			reinterpret_cast<const storage_type*>(p));
@@ -79,7 +79,7 @@ TYPELESS_MEMORY_CHUNK_CLASS::__allocate(void) {
 	const bit_map_type alloc_bit = after_alloc ^ free_mask;
 	const bool v __ATTRIBUTE_UNUSED__ = any_bits<bit_map_type>()(alloc_bit);
 	INVARIANT(v);
-	register const size_t alloc_position =
+	const size_t alloc_position =
 #if	TYPELESS_MEMORY_CHUNK_USE_BITSET
 		alloc_bit.find_first();		// or LSB
 #else
@@ -108,11 +108,11 @@ TYPELESS_MEMORY_CHUNK_CLASS::__deallocate(void* p) {
 	const size_t
 		diff = reinterpret_cast<size_t>(p)
 			-reinterpret_cast<size_t>(&elements[0]);
-	register const size_t offset =
+	const size_t offset =
 		divide_by_constant<element_size, size_t>(diff);
 #else
 	// the more proper way, but relying on compiler to optimize
-	register const typename
+	const typename
 		std::iterator_traits<storage_type*>::difference_type
 		offset = std::distance(&elements[0],
 			reinterpret_cast<storage_type*>(p));

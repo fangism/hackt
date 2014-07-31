@@ -4,23 +4,50 @@
 	$Id: algorithm_fwd.hh,v 1.2 2006/04/12 08:53:22 fang Exp $
  */
 
-#ifndef	__UTIL_STL_ALGORITHM_FWD_H__
-#define	__UTIL_STL_ALGORITHM_FWD_H__
+#ifndef	__UTIL_STL_ALGORITHM_FWD_HH__
+#define	__UTIL_STL_ALGORITHM_FWD_HH__
 
 #include "util/STL/pair_fwd.hh"
 #include "util/STL/iterator_fwd.hh"
 
-namespace std {
+#if defined(_LIBCPP_VERSION) || defined(__GLIBCXX__)
+// needed for matching exception specifications
+#ifdef	HAVE_TYPE_TRAITS
+#include <type_traits>
+#elif	defined(HAVE_TR1_TYPE_TRAITS)
+#include <tr1/type_traits>
+#endif
+#endif
+
+BEGIN_NAMESPACE_STD
 //=============================================================================
 // swapping
 
+// ah, screw it.  libc++'s <type_traits> already defines swap/iter_swap
+#ifndef	_LIBCPP_VERSION
 template <typename FI1, typename FI2>
 void
-iter_swap(FI1, FI2);
+iter_swap(FI1, FI2)
+#if defined(_LIBCPP_VERSION)
+	_NOEXCEPT_(_NOEXCEPT_(swap(*_VSTD::declval<FI1>(),
+		*_VSTD::declval<FI2>())))
+#endif
+;
 
 template <typename T>
 void
-swap(T&, T&);
+swap(T&, T&)
+#if defined(_LIBCPP_VERSION)
+	_NOEXCEPT_(is_nothrow_move_constructible<T>::value &&
+		is_nothrow_move_assignable<T>::value)
+#elif defined(__GLIBCXX__)
+#if __cplusplus >= 201103L
+	noexcept(__and_<is_nothrow_move_constructible<T>,
+		is_nothrow_move_assignable<T>>::value)
+#endif
+#endif
+;
+#endif
 
 //-----------------------------------------------------------------------------
 // selection and comparison
@@ -428,7 +455,7 @@ OutIter
 set_symmetric_difference(InIter1, InIter1, InIter2, InIter2, OutIter, Comp);
 
 //=============================================================================
-}	// end namespace std
+END_NAMESPACE_STD
 
-#endif	// __UTIL_STL_ALGORITHM_FWD_H__
+#endif	// __UTIL_STL_ALGORITHM_FWD_HH__
 

@@ -196,7 +196,7 @@ size_t
 PORT_FORMAL_ARRAY_CLASS::lookup_index(const multikey_index_type& k) const {
 	STACKTRACE_VERBOSE;
 //	return this->value_array.key_to_index(k) +1;	// protected
-	return distance(this->begin(), const_iterator(&this->value_array[k])) +1;
+	return distance(this->begin(), this->value_array.find(k)) +1;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

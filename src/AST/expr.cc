@@ -2693,12 +2693,10 @@ if (lb && rb) {
 	static const char err_str[] =
 		"ERROR logical_expr expected a pbool, but got a ";
 	if (!lb) {
-		cerr << err_str << lo->what(cerr) <<
-			" at " << where(*l) << endl;
+		lo->what(cerr << err_str) << " at " << where(*l) << endl;
 	}
 	if (!rb) {
-		cerr << err_str << ro->what(cerr) <<
-			" at " << where(*r) << endl;
+		ro->what(cerr << err_str) << " at " << where(*r) << endl;
 	}
 	return return_type(NULL);
 }
@@ -2776,11 +2774,11 @@ if (lb && rb) {
 	static const char err_str[] =
 		"ERROR logical_expr expected a bool, but got a ";
 	if (!lb) {
-		cerr << err_str << lo->what(cerr) <<
+		lo->what(cerr << err_str) <<
 			" at " << where(*l) << endl;
 	}
 	if (!rb) {
-		cerr << err_str << ro->what(cerr) <<
+		ro->what(cerr << err_str) <<
 			" at " << where(*r) << endl;
 	}
 	return return_type(NULL);
