@@ -129,7 +129,8 @@ HACKT_PARSE_TEST_PASSES = \
 	fanin-check-01-a fanin-check-01-b fanin-check-01-c fanin-check-01-d \
 	fanin-check-01-e fanin-check-01-f fanin-check-01-g \
 	res-01 \
-	diode-01
+	diode-01 \
+	source-sink
 # pending (transistor type param): act-008 rule-type{01,02,03,04,05,06}
 
 srcdir_EXTRA_DIST += \
