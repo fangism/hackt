@@ -19,17 +19,18 @@ using util::maplikeset;
 using util::maplikeset_element;
 using util::maplikeset_element_derived;
 
-
 typedef	maplikeset<set<maplikeset_element<int, string> > >
 		test_set_type_1;
 typedef	maplikeset<set<maplikeset_element_derived<int, string> > >
 		test_set_type_2;
 
 // explicit instantiation
+namespace util {
 template class
 maplikeset<set<maplikeset_element<int, string> > >;
 template class
 maplikeset<set<maplikeset_element_derived<int, string> > >;
+}
 
 template <class E>
 ostream&

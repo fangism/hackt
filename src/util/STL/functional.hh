@@ -4,14 +4,13 @@
 	$Id: functional.hh,v 1.3 2006/05/06 22:08:40 fang Exp $
  */
 
-#ifndef	__UTIL_STL_FUNCTIONAL_H__
-#define	__UTIL_STL_FUNCTIONAL_H__
+#ifndef	__UTIL_STL_FUNCTIONAL_HH__
+#define	__UTIL_STL_FUNCTIONAL_HH__
 
-#include "config.h"
 #include "util/STL/functional_fwd.hh"
 #include <functional>
 
-namespace std {
+BEGIN_NAMESPACE_STD
 //=============================================================================
 // make up for possible deficiencies in <functional> header...
 
@@ -49,7 +48,7 @@ struct _Select2nd : public unary_function<_Pair, typename _Pair::second_type> {
 #endif	// HAVE_STD__SELECT2ND
 
 //=============================================================================
-}	// end namespace std
+END_NAMESPACE_STD
 
-#endif	// __UTIL_STL_FUNCTIONAL_H__
+#endif	// __UTIL_STL_FUNCTIONAL_HH__
 

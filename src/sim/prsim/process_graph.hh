@@ -13,7 +13,6 @@
 #include <set>
 #include <valarray>
 
-#include "util/STL/hash_map.hh"
 #include "sim/common.hh"
 #include "sim/prsim/devel_switches.hh"
 #include "sim/prsim/Rule.hh"
@@ -30,7 +29,6 @@ class ExprAlloc;
 struct ExprAllocFlags;
 using std::map;
 using std::set;
-using HASH_MAP_NAMESPACE::hash_map;
 using std::valarray;
 using entity::footprint;
 struct process_sim_state;
@@ -166,8 +164,10 @@ struct unique_process_subgraph {
 		which can support reverse-lookups.
 		ALERT: the trick is to keep it sorted by both keys
 		in the face of pool-compaction optimizations...
+		Don't use hash_map/unordered_map, dump ordering needs to
+		be consistent across libraries.
 	 */
-	typedef	hash_map<expr_index_type, rule_index_type>
+	typedef	map<expr_index_type, rule_index_type>
 						rule_map_type;
 	/**
 		key: graph's local expression index

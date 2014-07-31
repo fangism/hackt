@@ -470,6 +470,16 @@ public:
 		return (*this)[k];
 	}
 
+	iterator
+	find(const key_type& k) {
+		return this->begin() +key_to_index(k);
+	}
+
+	const_iterator
+	find(const key_type& k) const {
+		return this->begin() +key_to_index(k);
+	}
+
 	bool
 	operator == (const this_type& ) const;
 

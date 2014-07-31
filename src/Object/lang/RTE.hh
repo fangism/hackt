@@ -344,8 +344,11 @@ class binop_expr : public rte_expr, public rte_expr::expr_sequence_type {
 private:
 //	enum { print_stamp = PRS::PRS_AND_EXPR_TYPE_ENUM };
 private:
+#if 0
+	// clang is unable to find public definition with this
 	using expr_sequence_type::push_back;	// hide
 	using expr_sequence_type::push_front;	// hide
+#endif
 	char					op;
 public:
 	typedef	expr_sequence_type::const_reference	const_reference;

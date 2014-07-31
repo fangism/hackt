@@ -840,6 +840,12 @@ template void global_entry_context::visit_local<enum_tag>(const footprint&, cons
 template void global_entry_context::visit_local<int_tag>(const footprint&, const bool);
 template void global_entry_context::visit_local<bool_tag>(const footprint&, const bool);
 
+template size_t global_entry_context::lookup_global_id<process_tag>(const size_t) const;
+template size_t global_entry_context::lookup_global_id<channel_tag>(const size_t) const;
+template size_t global_entry_context::lookup_global_id<enum_tag>(const size_t) const;
+template size_t global_entry_context::lookup_global_id<int_tag>(const size_t) const;
+template size_t global_entry_context::lookup_global_id<bool_tag>(const size_t) const;
+
 //=============================================================================
 }	// end namespace entity
 }	// end namespace HAC

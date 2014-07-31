@@ -21,6 +21,7 @@
 #include "util/cppcat.h"
 #include "util/optparse.tcc"
 #include "util/assoc_traits.hh"
+#include "util/STL/functional.hh"	// for std::_Select2nd
 
 namespace HAC {
 namespace NET {

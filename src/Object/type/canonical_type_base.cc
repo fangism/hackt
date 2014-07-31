@@ -1,8 +1,9 @@
 /**
-	\file "Object/type/canonical_type_base.hh"
+	\file "Object/type/canonical_type_base.cc"
 	$Id: canonical_type_base.cc,v 1.9 2011/03/23 00:36:18 fang Exp $
  */
 
+#include <iostream>
 #include <algorithm>
 #include <iterator>
 #include "Object/type/canonical_type_base.hh"

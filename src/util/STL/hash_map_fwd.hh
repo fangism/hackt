@@ -5,8 +5,8 @@
 	$Id: hash_map_fwd.hh,v 1.12 2008/11/25 21:52:47 fang Exp $
  */
 
-#ifndef	__UTIL_STL_HASH_MAP_FWD_H__
-#define	__UTIL_STL_HASH_MAP_FWD_H__
+#ifndef	__UTIL_STL_HASH_MAP_FWD_HH__
+#define	__UTIL_STL_HASH_MAP_FWD_HH__
 
 #include "config.h"
 #include "util/STL/allocator_fwd.hh"
@@ -45,15 +45,20 @@
 #endif	// USING_ORDERED_MAP
 
 // because namespace foo::bar { ... } is not yet part of the standard :-/
-#if	USING_UNORDERED_MAP && defined(HAVE_TR1_UNORDERED_MAP) && !defined(HAVE_UNORDERED_MAP)
+#if	USING_UNORDERED_MAP
+#if defined(HAVE_UNORDERED_MAP)
+#define	BEGIN_HASH_MAP_NS	BEGIN_NAMESPACE_STD
+#define	END_HASH_MAP_NS		END_NAMESPACE_STD
+#elif defined(HAVE_TR1_UNORDERED_MAP)
 #define	BEGIN_HASH_MAP_NS	namespace std { namespace tr1 {
 #define	END_HASH_MAP_NS		} }
+#endif
 #else
 #define	BEGIN_HASH_MAP_NS	namespace HASH_MAP_NAMESPACE {
 #define	END_HASH_MAP_NS		}
 #endif
 
-namespace std {
+BEGIN_NAMESPACE_STD
 // forward declaration of default comparator
 template <class T>
 struct equal_to;
@@ -66,7 +71,7 @@ template <class K, class C>
 struct hash_compare;
 #endif
 
-}	// end namespace std
+END_NAMESPACE_STD
 
 BEGIN_HASH_MAP_NS
 
@@ -127,5 +132,5 @@ END_HASH_MAP_NS	// end namespace HASH_MAP_NAMESPACE
 #define	USING_HASH_MAP	using HASH_MAP_NAMESPACE::hash_map;
 
 
-#endif	// __UTIL_STL_HASH_MAP_FWD_H__
+#endif	// __UTIL_STL_HASH_MAP_FWD_HH__
 
