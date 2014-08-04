@@ -21,7 +21,8 @@ HACKT_PRSIM_SUFFIXES = \
 	.prsimtrace .prsimtrace-O1 \
 	.prsimtrace-dump .prsimtrace-O1-dump .prsimtrace-diff \
 	.prsimtrace-dump-filter .prsimtrace-O1-dump-filter \
-	.vcd .vcd-filter .vcd-diff
+	.vcd .vcd-filter .vcd-diff \
+	.prs-dot-diff
 
 HACKT_PRSIM_TEST_SUFFIXES = \
 	.prsimtest .prsimfailtest \
@@ -60,6 +61,7 @@ HACKT_PRSIM_CLEAN_IGNORE_PATTERNS = \
 	"*.prsimexpr-O1" \
 	"*.prs-dot" \
 	"*.prs-dot-O1" \
+	"*.prs-dot-diff" \
 	"*.prsimtrace" \
 	"*.prsimtrace-O1" \
 	"*.prsimtrace-dump" \
@@ -69,6 +71,7 @@ HACKT_PRSIM_CLEAN_IGNORE_PATTERNS = \
 	"*.prsimtrace-diff" \
 	"*.prsimtracetest" \
 	"*.hacktprsdumptest" \
+	"*.hacktprsimdottest" \
 	"*.vcd" \
 	"*.vcd-filter" \
 	"*.vcd-diff" \
