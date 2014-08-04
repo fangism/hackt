@@ -68,6 +68,7 @@ HACKT_PRSIM_CLEAN_IGNORE_PATTERNS = \
 	"*.prsimtrace-O1-dump-filter" \
 	"*.prsimtrace-diff" \
 	"*.prsimtracetest" \
+	"*.hacktprsdumptest" \
 	"*.vcd" \
 	"*.vcd-filter" \
 	"*.vcd-diff" \
