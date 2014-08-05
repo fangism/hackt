@@ -349,8 +349,10 @@ bitmanip_test.diff: bitmanip_test.out bitmanip_test.stderr
 
 # some tests require more than the default filtering
 MOREFILTER_TESTS = \
+	chunk_map_pool_test \
 	local_static_store_test \
-	multi_pool_module_test
+	multi_pool_module_test \
+	static_count_ptr_test
 
 PREFILTER_FILES = \
 	$(MOREFILTER_TESTS:=.stderr-orig) \
