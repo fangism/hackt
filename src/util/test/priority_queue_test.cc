@@ -1,6 +1,12 @@
 /**
 	\file "priority_queue_test.cc"
 	Proving whether or not order can be preserved.  
+	The order among equally keyed values depends on the
+	standard library's implementation of heapify() or make_heap(),
+	used by std::priority_queue.
+	Apparently, libstdc++ and libc++ differ.
+	The order is not dictated by the standard.
+	The test expect is based on libstdc++.
 	$Id: priority_queue_test.cc,v 1.2 2008/03/17 23:03:21 fang Exp $
  */
 

@@ -1,6 +1,17 @@
 "ChangeLog"
 #	$Id: ChangeLog,v 1.256 2011/05/03 19:20:32 fang Exp $
 
+2014-08-05	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-86-54:
+	  Merged clang34ification branch to address compatbility with
+		clang-3.4 and libc++ in std=c++11 mode (past)
+	  config/cxx_STL.m4: macros updated to account for 
+		libc++ differences like versioned std namespace.
+	  Make.stddef, Make.global: move some universally useful
+		definitions from test/Make.test-tail
+
+
 2013-11-15	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-86-53b:

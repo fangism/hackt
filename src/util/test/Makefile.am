@@ -339,6 +339,13 @@ static_count_ptr_test.out-filter: static_count_ptr_test.out
 	$(CAT) $< | $(SED) '/chunk/s/16\*[0-9]/16*4/g' | $(ADDRESS_FILTER) > $@
 endif
 
+if HAVE_LIBCXX
+# this test exposes a difference in heap-ification between libraries
+# the difference is safe, however (not guaranteed by standard)
+priority_queue_test.test: priority_queue_test.diff
+	$(SKIP_TEST_SCRIPT)
+endif
+
 # don't filter out hex
 bitmanip_test.diff: bitmanip_test.out bitmanip_test.stderr
 	-@out=`$(ECHO) $@ | $(SED) 's/\.diff$$/.out/g'` ; \

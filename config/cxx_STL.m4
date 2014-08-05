@@ -1023,5 +1023,6 @@ if test "$fang_cv_cxx_stdlib_versioned_namespace" = yes ; then
 AC_DEFINE(CXXLIB_VERSIONED_NAMESPACE, [],
 	[Define if C++ library lives in a versioned namespace])
 fi
+AM_CONDITIONAL(HAVE_LIBCXX, test "$fang_cv_cxx_stdlib_versioned_namespace" = yes)
 ])dnl
 

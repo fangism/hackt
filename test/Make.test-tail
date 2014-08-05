@@ -90,9 +90,6 @@ HAC_DEPEND_FILTER = $(SED) -e '/haco:/s|^$(srcdir)\/||g' \
 # the following works for VPATH, but need to test for srcdir = .
 # -e 's|$(srcdir)|$$(srcdir)|g'
 
-# arg, need to escape the friggin' hash!
-SHELL_INTERPRETER = "\#!$(SHELL)"
-
 NO_OP_SCRIPT = test -f $< && test -f $@
 
 DEFAULT_DIFF_TEST_SCRIPT = \
@@ -104,16 +101,6 @@ DEFAULT_DIFF_TEST_SCRIPT = \
 	  $(ECHO) "exit 1" ; \
 	fi ;} > $@ ; \
 	$(CHMOD) +x $@
-
-SKIP_TEST_SCRIPT = \
-	$(ECHO) "Skipping $@ ..." ; \
-	{ $(ECHO) $(SHELL_INTERPRETER) ; \
-	  $(ECHO) "\# \"$@\"" ; \
-	  $(ECHO) "exit 77" ;} > $@ ; \
-	$(CHMOD) +x $@
-
-
-DUMMY_TEST_SCRIPT = $(ECHO) "$(SHELL_INTERPRETER)" > $@ ; $(CHMOD) +x $@
 
 HAC_DEPEND_SCRIPT = \
 	if test -x $(HACKT_COMPILE_EXE) ; then \
