@@ -587,12 +587,20 @@ HACKT_PRSIMVCD_TEST_SUBJECTS = \
 	x-all-01
 
 # override defaults for non-matched architectures
+if HAVE_LIBCXX
+# skip these tests, sensitive to data structure size, depends on C++ library
+memstats64-inv.prsimtest: memstats64-inv.prsimrc
+	$(SKIP_TEST_SCRIPT)
+memstats32-inv.prsimtest: memstats32-inv.prsimrc
+	$(SKIP_TEST_SCRIPT)
+else
 if ABI_ILP32
 memstats64-inv.prsimtest: memstats64-inv.prsimrc
 	$(SKIP_TEST_SCRIPT)
 else
 memstats32-inv.prsimtest: memstats32-inv.prsimrc
 	$(SKIP_TEST_SCRIPT)
+endif
 endif
 
 # interactive tests:
