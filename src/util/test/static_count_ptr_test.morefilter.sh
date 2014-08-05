@@ -16,5 +16,5 @@ fi
 
 # any sed/awk madness goes here
 
-sed -e '/chunk/s|\*[0-9]*|*SIZE|' $source > $target
+sed -e '/chunk/s|\*[1-9][0-9]*|*SIZE|' $source > $target
 
