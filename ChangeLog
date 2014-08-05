@@ -3,6 +3,13 @@
 
 2014-08-05	David Fang	<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-86-55:
+	  Merged prsim-timing-backannot branch.
+	  configure.ac: bump date
+
+
+2014-08-05	David Fang	<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-86-54:
 	  Merged clang34ification branch to address compatbility with
 		clang-3.4 and libc++ in std=c++11 mode (past)

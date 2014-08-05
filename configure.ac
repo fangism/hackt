@@ -10,7 +10,7 @@
 
 AC_PREREQ(2.59)
 dnl also works with autoconf 2.60 now
-AC_INIT(hackt, 0.1.4-devel-20121018, fangism@users.sourceforge.net)
+AC_INIT(hackt, 0.1.4-devel-20140805, fangism@users.sourceforge.net)
 dnl prefer to push this into src directory, 
 dnl and have "src/config.h" wrap around this.  
 AC_CONFIG_HEADERS([src/__config__.h])

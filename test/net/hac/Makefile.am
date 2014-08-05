@@ -21,7 +21,10 @@ srcdir_EXTRA_DIST += \
 HACKT_PARSE_TEST_PASSES = \
 	level_shift
 
-level_shift.haco: level_shift.spice-hac
+# depends on a generated source, so we manually manage dependency
+level_shift.depend: level_shift.hac
+	$(TOUCH) $@
+level_shift.haco: level_shift.hac level_shift.spice-hac spice-primitives.hac
 
 HACKT_PARSE_TEST_FAILURES =
 
