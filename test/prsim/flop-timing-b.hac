@@ -1,0 +1,13 @@
+// "flop-timing-b.hac"
+// copy-modified from "flop-timing-a.hac"
+
+import "flop-timing.hac";
+
+defproc cchan(bool c, d) { }
+bool cin, i, o;
+cchan ic(cin, i);	// clocked channel
+cchan oc(cin, o);	// clocked channel
+clks_4p c;
+clkgen_4p cg(cin, c);
+dff_fifo<3,10> f(c, i, o);
+

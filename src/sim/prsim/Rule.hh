@@ -7,6 +7,7 @@
 #define	__HAC_SIM_PRSIM_RULE_H__
 
 #include <iosfwd>
+#include <string>
 #include "sim/time.hh"
 #include "util/attributes.h"
 #include "sim/prsim/devel_switches.hh"
@@ -24,6 +25,7 @@ namespace SIM {
 namespace PRSIM {
 using std::ostream;
 using std::istream;
+using std::string;
 
 /// can switch between integer and real-valued time
 // typedef      discrete_time                   rule_time_type;
@@ -127,6 +129,9 @@ public:
 
 	void
 	set_delay(const time_type t) { this->after = t; }
+
+	bool
+	edit_property(const string&, const string&);
 
 	ostream&
 	dump(ostream&) const;

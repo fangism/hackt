@@ -14,6 +14,8 @@ mode:
 	on assert-fail: fatal
 	on channel-expect-fail: fatal
 	on keeper-check-fail: ignore
+	on setup-timing-violation: warn
+	on hold-timing-violation: break
 	0	a : 1
 	0	b : 1
 	10	x : 0	[by a:=1]

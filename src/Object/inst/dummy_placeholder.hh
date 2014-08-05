@@ -106,8 +106,8 @@ private:
 	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO;
 
 public:
-	dummy_placeholder(const scopespace& o, const string& n, 
-		const size_t d);
+	dummy_placeholder(const typename parent_type::owner_ptr_raw_type& o,
+		const string& n, const size_t d);
 
 	~dummy_placeholder();
 

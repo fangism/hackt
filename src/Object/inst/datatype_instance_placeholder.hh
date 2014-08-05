@@ -39,8 +39,8 @@ protected:
 	explicit
 	datatype_instance_placeholder(const size_t d) : parent_type(d) { }
 
-	datatype_instance_placeholder(const scopespace& o, const string& n, 
-		const size_t d);
+	datatype_instance_placeholder(const parent_type::owner_ptr_raw_type& o,
+		const string& n, const size_t d);
 
 public:
 

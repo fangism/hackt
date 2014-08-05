@@ -282,11 +282,13 @@ HAC_GUILE_DEFINE(wrap_collect_reference_subinstances, FUNC_NAME, 1, 0, 0,
 		entry_collection e;
 		// parse to global_index_reference
 		// footprint::collect_subentries
+		const module& mod(AS_A(const module&, *obj_module));
 		const entity::global_indexed_reference
-			gref(parser::parse_global_reference(*ptr, *obj_module));
+			gref(parser::parse_global_reference(*ptr,
+				mod.get_footprint()));
 		if (!gref.second ||
 				parser::parse_name_to_get_subinstances(
-					gref, *obj_module, e)) {
+					gref, mod.get_footprint(), e)) {
 			return SCM_EOL;
 		}
 		global_references_set s;

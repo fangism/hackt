@@ -68,6 +68,8 @@ HACKT_PARSE_TEST_PASSES = \
 	spec_min_sep_proc-09 spec_min_sep_proc-10 spec_min_sep_proc-11 \
 	spec_min_sep_proc-12 spec_min_sep_proc-13 spec_min_sep_proc-14 \
 	spec_min_sep_proc-15 spec_min_sep_proc-16 \
+	spec_setup-01 \
+	spec_hold-01 \
 	bug-001 \
 	top-level-01 top-level-04 top-level-05 \
 	flat-type-01 flat-type-02 flat-type-03 \
@@ -127,7 +129,8 @@ HACKT_PARSE_TEST_PASSES = \
 	fanin-check-01-a fanin-check-01-b fanin-check-01-c fanin-check-01-d \
 	fanin-check-01-e fanin-check-01-f fanin-check-01-g \
 	res-01 \
-	diode-01
+	diode-01 \
+	source-sink
 # pending (transistor type param): act-008 rule-type{01,02,03,04,05,06}
 
 srcdir_EXTRA_DIST += \
@@ -166,6 +169,8 @@ HACKT_CREATE_TEST_PASSES = \
 	spec_min_sep_proc-09 spec_min_sep_proc-10 spec_min_sep_proc-11 \
 	spec_min_sep_proc-12 spec_min_sep_proc-13 spec_min_sep_proc-14 \
 	spec_min_sep_proc-15 spec_min_sep_proc-16 \
+	spec_setup-01 \
+	spec_hold-01 \
 	bug-001 \
 	top-level-01 top-level-04 top-level-05 \
 	flat-type-01 flat-type-02 flat-type-03 \
@@ -255,6 +260,8 @@ HACKT_CFLAT_TEST_SUBJECTS = \
 	macro-pass-05c macro-pass-07c \
 	after-02 after-03 \
 	spec-02 spec-04 spec-06 spec-07 spec-08 \
+	spec_setup-01 \
+	spec_hold-01 \
 	size-01 size-03 size-04 size-05 \
 	weak-01 weak-02 weak-03 \
 	bug-001 \

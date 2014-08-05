@@ -1,0 +1,16 @@
+# "tree-min-delay-01.prsimrc"
+# @haco@ tree.haco-c
+
+pusht foo
+min-delay a b 15
+popt
+
+min-delay-list-all
+min-delay-fanin-proc poo.p.x.b
+
+echo applying timing delays
+min-delay-apply-all
+min-delay-fanin-proc poo.p.x.a
+min-delay-fanin-proc poo.p.x.b
+min-delay-fanin-proc poo.p.y.b
+

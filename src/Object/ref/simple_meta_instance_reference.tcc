@@ -126,10 +126,10 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::dump(ostream& o,
 	if (c.parent_instance_name.size()) {
 		o << c.parent_instance_name << ".";
 		this->inst_collection_ref->dump_qualified_name(o,
-			dump_flags::no_definition_owner);
+			dump_flags::no_definition_owner_no_ns);
 	} else if (c.enclosing_scope) {
 		this->inst_collection_ref->dump_qualified_name(o,
-			dump_flags::no_definition_owner);
+			dump_flags::no_definition_owner_no_ns);
 	} else {
 		this->inst_collection_ref->dump_qualified_name(o,
 			dump_flags::default_value);

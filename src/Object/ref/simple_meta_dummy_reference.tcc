@@ -17,6 +17,10 @@
 #include "Object/expr/expr_dump_context.hh"
 #include "Object/expr/expr_visitor.hh"
 #include "Object/common/dump_flags.hh"
+#if PROCESS_DEFINITION_IS_NAMESPACE
+#include "Object/common/scopespace.hh"
+#include "Object/def/definition_base.hh"
+#endif
 #include "Object/unroll/unroll_context.hh"
 #include "Object/def/footprint.hh"
 #include "Object/type/fundamental_type_reference.hh"
@@ -136,7 +140,12 @@ SIMPLE_META_DUMMY_REFERENCE_CLASS::dump(ostream& o,
 SIMPLE_META_DUMMY_REFERENCE_TEMPLATE_SIGNATURE
 ostream&
 SIMPLE_META_DUMMY_REFERENCE_CLASS::dump_local(ostream& o) const {
-	const expr_dump_context edc(&*this->get_inst_base()->get_owner());
+	const expr_dump_context
+#if PROCESS_DEFINITION_IS_NAMESPACE
+		edc(&*this->get_inst_base()->get_owner().template is_a<const scopespace>());
+#else
+		edc(&*this->get_inst_base()->get_owner());
+#endif
 	return dump(o, edc);
 }
 

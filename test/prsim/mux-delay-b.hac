@@ -1,0 +1,37 @@
+// "mux-delay-b.hac"
+// copy-modified from "mux-delay.hac"
+
+defproc mux2(bool? in[2]; bool! out; bool? sel[2]){
+        bool loc;
+prs {
+	loc => out-
+	in[0] & in[1] -> loc+
+	~in[0] & ~in[1] -> loc-
+// cut-off opposing pull X to treat select as a don't care when inputs agree
+	~(~in[0] & ~in[1]) & ( in[0] & ~sel[1] |  in[1] & ~sel[0]) -> loc+
+	~( in[0] &  in[1]) & (~in[0] &  sel[0] | ~in[1] &  sel[1]) -> loc-
+}
+}
+
+defproc mux4(bool in[4], o; bool sel[2][2]){
+    mux2 a[2], b;
+    bool sela[2], selb[2];
+    bool zz[2];
+    a[0](in[0..1], zz[0], sel[0]);
+    a[1](in[2..3], zz[1], sel[0]);
+    b(zz, o, sel[1]);
+    ebool ms[4];	// predicates for min-delay constraints
+    rte {
+	ms[0] = sel[0][0] && sel[1][0];
+	ms[1] = sel[0][1] && sel[1][0];
+	ms[2] = sel[0][0] && sel[1][1];
+	ms[3] = sel[0][1] && sel[1][1];
+    }
+}
+
+bool x[4];
+bool z;
+bool s[2][2];
+mux4 m1;
+m1(x, z, s);
+

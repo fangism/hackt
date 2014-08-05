@@ -1,0 +1,38 @@
+enqueued:	0	a : 1
+enqueued:	0	b : 1
+	0	a : 1
+enqueued:	10	c : 0	[from b:=1]
+	0	b : 1
+killed  :	0	c : 0	[from b:=1]
+enqueued:	15	c : 0	[from b:=1]
+note: event on c- was delayed from 10 until 15 by a:1
+	15	c : 0	[by b:=1]
+enqueued:	15	a : 0
+enqueued:	15	b : 0
+enqueued:	25	c : 1	[from a:=0]
+	15	a : 0
+	15	b : 0
+killed  :	0	c : 1	[from a:=0]
+enqueued:	30	c : 1	[from a:=0]
+note: event on c+ was delayed from 25 until 30 by a:0
+	30	c : 1	[by a:=0]
+changing both inputs 
+enqueued:	30	b : 1
+	30	b : 1
+enqueued:	35	a : 1
+enqueued:	45	c : 0	[from a:=1]
+	35	a : 1
+killed  :	0	c : 0	[from a:=1]
+enqueued:	50	c : 0	[from a:=1]
+note: event on c- was delayed from 45 until 50 by a:1
+	50	c : 0	[by a:=1]
+changing both inputs 
+enqueued:	50	b : 0
+enqueued:	60	c : 1	[from b:=0]
+	50	b : 0
+enqueued:	55	a : 0
+	55	a : 0
+killed  :	0	c : 1	[from b:=0]
+enqueued:	70	c : 1	[from b:=0]
+note: event on c+ was delayed from 60 until 70 by a:0
+	70	c : 1	[by b:=0]

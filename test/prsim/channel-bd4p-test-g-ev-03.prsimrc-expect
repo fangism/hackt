@@ -34,8 +34,8 @@ channel	X (.data) : 0 @ 10
 	20	X.e : 0	[by X.v:=1]
 X : bundled-4p .e(init:1) .v ~x8 unsigned sink,watch, timing: after=10
 	count: 0, unknowns: 0
-event    : `X.e' : 0
-caused by: `X.v' : 1
+event    : `X.e' : 0 @ 20
+caused by: `X.v' : 1 @ 10
 (no cycle)
 ------------------------------------ 
 resetting data rail 
@@ -43,8 +43,8 @@ resetting data rail
 	30	X.e : 1	[by X.v:=0]
 X : bundled-4p .e(init:1) .v ~x8 unsigned sink,watch, timing: after=10
 	count: 0, unknowns: 0
-event    : `X.e' : 1
-caused by: `X.v' : 0
+event    : `X.e' : 1 @ 30
+caused by: `X.v' : 0 @ 20
 (no cycle)
 ------------------------------------ 
 setting data rail, new value 
@@ -55,8 +55,8 @@ channel	X (.data) : 6 @ 30
 	40	X.e : 0	[by X.v:=1]
 X : bundled-4p .e(init:1) .v ~x8 unsigned sink,watch, timing: after=10
 	count: 2, unknowns: 0
-event    : `X.e' : 0
-caused by: `X.v' : 1
+event    : `X.e' : 0 @ 40
+caused by: `X.v' : 1 @ 30
 (no cycle)
 ------------------------------------ 
 resetting data rail 
@@ -64,6 +64,6 @@ resetting data rail
 	50	X.e : 1	[by X.v:=0]
 X : bundled-4p .e(init:1) .v ~x8 unsigned sink,watch, timing: after=10
 	count: 2, unknowns: 0
-event    : `X.e' : 1
-caused by: `X.v' : 0
+event    : `X.e' : 1 @ 50
+caused by: `X.v' : 0 @ 40
 (no cycle)

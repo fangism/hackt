@@ -1,0 +1,71 @@
+// "wchb-a.hac"
+// copy-modified from "keeper-a.hac"
+
+deftype globals <: int<5>(bool Vdd, GND, _pReset, _sReset) {
+	set {}
+	get{}
+}
+
+defchan e1of2 <: chan(bool)(bool d[2]; bool t, f, e) {
+	d[0] = f;
+	d[1] = t;
+	spec { exclhi(f,t) }
+	send {}
+	recv{}
+}
+
+deftype _1of2 <: bool (bool d[2]; bool t, f) {
+	d[0] = f;
+	d[1] = t;
+	spec { excllo(f,t) }
+	set{}
+	get{}
+}
+
+defproc rsource_e1of2 (globals g; e1of2 r) {
+	bool _r0, _r1;
+	prs {
+		r.e => _r0-
+		r.e => _r1-
+		_r0 => r.f-
+		_r1 => r.t-
+	}
+	spec {
+		mk_excllo(_r0, _r1)
+	}
+}
+
+defproc bucket_e1of2_rl (globals g; e1of2 l)  {
+	bool _lv, lv;
+	bool _sReset = g._sReset;
+	prs {
+		l.t<20> | l.f<20> -> _lv-
+		~l.t<40> & ~l.f<40> -> _lv+
+		_sReset<50> & _lv<30> -> lv-
+		~_sReset<50> | ~_lv<30> -> lv+
+		~lv<40> -> l.e+
+		lv<80> -> l.e-
+	}
+}
+
+defproc wchb (globals g; e1of2 l, r) {
+	_1of2 _r;
+	bool rv;
+	bool _sReset = g._sReset;
+prs {
+	(:d:2:
+		l.d[d] & r.e -> _r.d[d]-
+		~l.d[d] & ~r.e -> _r.d[d]+
+		_r.d[d] => r.d[d]-
+	)
+
+	_sReset & _r.t & _r.f => rv-
+	rv => l.e-
+}
+}
+
+e1of2 l, r;
+globals g;
+rsource_e1of2 src(g, l);
+wchb buf(g, l, r);
+bucket_e1of2_rl bkt(g, r);

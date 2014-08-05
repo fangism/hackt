@@ -1,0 +1,9 @@
+# "type-scope-08.prsimrc"
+# @haco@ inv.haco-c
+
+echo commands that reference state are invalid in a type-local context
+set a 1
+pusht inv
+set a 0
+# FAIL
+popt

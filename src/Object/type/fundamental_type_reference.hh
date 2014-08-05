@@ -15,6 +15,7 @@
 #include "Object/type/type_reference_base.hh"
 #include "Object/common/util_types.hh"
 #include "Object/type/template_actuals.hh"
+#include "Object/devel_switches.hh"
 
 namespace HAC {
 namespace parser {
@@ -138,11 +139,13 @@ private:
 virtual	MAKE_INSTANTIATION_STATEMENT_PRIVATE_PROTO = 0;
 
 public:
+	typedef	scopespace			owner_ptr_raw_type;
 
 // rename macro and function name later after committing rework
 #define	MAKE_INSTANCE_COLLECTION_PROTO					\
 	excl_ptr<instance_placeholder_base>				\
-	make_instance_collection(const never_ptr<const scopespace> s, 	\
+	make_instance_collection(					\
+		const never_ptr<const owner_ptr_raw_type> s, 		\
 		const token_identifier& id, const size_t d) const
 
 virtual	MAKE_INSTANCE_COLLECTION_PROTO = 0;

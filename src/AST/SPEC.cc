@@ -311,7 +311,9 @@ body::check_build(context& c) const {
 	}
 if (directives) {
 	// TODO: access to private members should be granted per directive
-	const context::private_member_accessor _priv_(c, true);
+//	const context::private_member_accessor _priv_(c, true);
+	const util::value_saver<bool>
+		_priv_(c.parse_opts.view_all_publicly, true);
 	// this line should be relocated eventually
 
 	if (!__check_specs(c)) {

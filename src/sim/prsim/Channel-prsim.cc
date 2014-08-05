@@ -16,6 +16,7 @@
 #include "parser/instref.hh"
 #include "AST/expr_base.hh"
 #include "Object/ref/meta_reference_union.hh"
+#include "Object/module.hh"
 #include "util/iterator_more.hh"		// for set_inserter
 #include "util/copy_if.hh"
 #include "util/memory/count_ptr.tcc"
@@ -4195,7 +4196,7 @@ channel_manager::~channel_manager() { }
 	\return true if error
  */
 bool
-channel_manager::allocate_data_rails(State& state, const module& m,
+channel_manager::allocate_data_rails(State& state, const footprint& m,
 	const size_t key /* channel index */,
 	const string& bundle_name, const size_t _num_bundles,
 	const string& rail_name, const size_t _num_rails) {
@@ -4284,9 +4285,10 @@ channel_manager::new_channel(State& state, const string& _base,
 	STACKTRACE_VERBOSE;
 	// make sure base is a legitmate scalar channel name first
 	const entity::module& m(state.get_module());
+	const entity::footprint& topfp(m.get_footprint());
 #if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
 	parser::expanded_global_references_type refs;
-	if (parser::expand_global_references(_base, m, refs)) {
+	if (parser::expand_global_references(_base, topfp, refs)) {
 		return true;
 	}
 	parser::expanded_global_references_type::const_iterator
@@ -4301,7 +4303,7 @@ for ( ; ri!=re; ++ri) {
 #else
 	const string& base(_base);
 	const entity::global_indexed_reference
-		g(parser::parse_global_reference(base, m));
+		g(parser::parse_global_reference(base, topfp));
 #endif
 	if (g.first != entity::META_TYPE_PROCESS || !g.second) {
 		cerr << "Error: base reference is not a valid channel." << endl;
@@ -4323,7 +4325,7 @@ for ( ; ri!=re; ++ri) {
 	c.set_data_sense(active_low);
 #endif
 try {
-	if (allocate_data_rails(state, m, key, 
+	if (allocate_data_rails(state, topfp, key, 
 			bundle_name, _num_bundles, rail_name, _num_rails)) {
 		return true;
 	}
@@ -4351,7 +4353,7 @@ channel_manager::set_channel_2p_ack(State& state, const size_t key,
 	const string& a, const bool ack_init) {
 	channel& c(channel_pool[key]);
 	const node_index_type ni =
-		parse_node_to_index(a, state.get_module()).index;
+		parse_node_to_index(a, state.get_module().get_footprint()).index;
 	if (ni) {
 		c.ack_signal = ni;
 		state.__get_node(ni).set_in_channel();
@@ -4375,7 +4377,7 @@ channel_manager::set_channel_2p_req(State& state, const size_t key,
 	channel& c(channel_pool[key]);
 	// assign repeat rail (use validity signal)
 	const node_index_type ni =
-		parse_node_to_index(r, state.get_module()).index;
+		parse_node_to_index(r, state.get_module().get_footprint()).index;
 	if (ni) {
 		c.valid_signal = ni;	// doubles as repeat signal
 		state.__get_node(ni).set_in_channel();
@@ -4403,9 +4405,10 @@ channel_manager::new_channel_ledr(State& state, const string& _base,
 		const string& repeat_name, const bool repeat_init) {
 	STACKTRACE_VERBOSE;
 	const entity::module& m(state.get_module());
+	const entity::footprint& topfp(m.get_footprint());
 #if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
 	parser::expanded_global_references_type refs;
-	if (parser::expand_global_references(_base, m, refs)) {
+	if (parser::expand_global_references(_base, topfp, refs)) {
 		return true;
 	}
 	parser::expanded_global_references_type::const_iterator
@@ -4466,7 +4469,7 @@ if (i.second) {
 	dk[0] = 0;
 	dk[1] = 0;
 	const string n(base + "." + data_name);
-	const node_index_type ni = parse_node_to_index(n, m).index;
+	const node_index_type ni = parse_node_to_index(n, topfp).index;
 	if (ni) {
 		c.data[dk] = ni;
 		// flag node for consistency
@@ -4481,7 +4484,7 @@ if (i.second) {
 	}
 #else
 	// this doesn't account for repeat rail (yet)
-	if (allocate_data_rails(state, m, key, 
+	if (allocate_data_rails(state, topfp, key, 
 			"", 0, data_name, 0)) {
 		return true;
 	}
@@ -4515,9 +4518,10 @@ channel_manager::new_channel_bd4p(State& state, const string& _base,
 		const bool active_low) {
 	STACKTRACE_VERBOSE;
 	const entity::module& m(state.get_module());
+	const entity::footprint& topfp(m.get_footprint());
 #if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
 	parser::expanded_global_references_type refs;
-	if (parser::expand_global_references(_base, m, refs)) {
+	if (parser::expand_global_references(_base, topfp, refs)) {
 		return true;
 	}
 	parser::expanded_global_references_type::const_iterator
@@ -4545,7 +4549,7 @@ if (i.second) {
 #if PRSIM_CHANNEL_RAILS_INVERTED
 	c.set_data_sense(active_low);
 #endif
-	if (allocate_data_rails(state, m, key, 
+	if (allocate_data_rails(state, topfp, key, 
 			"", 0, data_name, _num_rails)) {
 		return true;
 	}
@@ -4574,9 +4578,10 @@ channel_manager::new_channel_bd2p(State& state, const string& _base,
 		const bool active_low) {
 	STACKTRACE_VERBOSE;
 	const entity::module& m(state.get_module());
+	const entity::footprint& topfp(m.get_footprint());
 #if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
 	parser::expanded_global_references_type refs;
-	if (parser::expand_global_references(_base, m, refs)) {
+	if (parser::expand_global_references(_base, topfp, refs)) {
 		return true;
 	}
 	parser::expanded_global_references_type::const_iterator
@@ -4610,7 +4615,7 @@ if (i.second) {
 #if PRSIM_CHANNEL_RAILS_INVERTED
 	c.set_data_sense(active_low);
 #endif
-	if (allocate_data_rails(state, m, key, 
+	if (allocate_data_rails(state, topfp, key, 
 			"", 0, data_name, _num_rails)) {
 		return true;
 	}
@@ -4640,9 +4645,10 @@ channel_manager::new_channel_clocked_1edge(State& state, const string& _base,
 		const bool active_low) {
 	STACKTRACE_VERBOSE;
 	const entity::module& m(state.get_module());
+	const entity::footprint& topfp(m.get_footprint());
 #if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
 	parser::expanded_global_references_type refs;
-	if (parser::expand_global_references(_base, m, refs)) {
+	if (parser::expand_global_references(_base, topfp, refs)) {
 		return true;
 	}
 	parser::expanded_global_references_type::const_iterator
@@ -4670,7 +4676,7 @@ if (i.second) {
 #if PRSIM_CHANNEL_RAILS_INVERTED
 	c.set_data_sense(active_low);
 #endif
-	if (allocate_data_rails(state, m, key, 
+	if (allocate_data_rails(state, topfp, key, 
 			"", 0, data_name, _num_rails)) {
 		return true;
 	}
@@ -4704,9 +4710,10 @@ channel_manager::new_channel_clocked_2edge(State& state, const string& _base,
 		const bool active_low) {
 	STACKTRACE_VERBOSE;
 	const entity::module& m(state.get_module());
+	const entity::footprint& topfp(m.get_footprint());
 #if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
 	parser::expanded_global_references_type refs;
-	if (parser::expand_global_references(_base, m, refs)) {
+	if (parser::expand_global_references(_base, topfp, refs)) {
 		return true;
 	}
 	parser::expanded_global_references_type::const_iterator
@@ -4734,7 +4741,7 @@ if (i.second) {
 #if PRSIM_CHANNEL_RAILS_INVERTED
 	c.set_data_sense(active_low);
 #endif
-	if (allocate_data_rails(state, m, key, 
+	if (allocate_data_rails(state, topfp, key, 
 			"", 0, data_name, _num_rails)) {
 		return true;
 	}
@@ -4766,9 +4773,10 @@ channel_manager::new_clock_source(State& state,
 		const int cycles) {
 	STACKTRACE_VERBOSE;
 	const entity::module& m(state.get_module());
+	const entity::footprint& topfp(m.get_footprint());
 #if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
 	parser::expanded_global_references_type refs;
-	if (parser::expand_global_references(clkname, m, refs)) {
+	if (parser::expand_global_references(clkname, topfp, refs)) {
 		return true;
 	}
 	parser::expanded_global_references_type::const_iterator
@@ -4781,7 +4789,7 @@ for ( ; ri!=re; ++ri) {
 	const string& base(clkname);
 #endif
 	const node_index_type vi =
-		parse_node_to_index(base, state.get_module()).index;
+		parse_node_to_index(base, state.get_module().get_footprint()).index;
 	if (!vi) {
 		cerr << "Error: no such node `" << base << "\'." << endl;
 		return true;
@@ -4867,7 +4875,7 @@ channel_manager::lookup(const string& name) const {
 	\return true on error
  */
 bool
-channel_manager::lookup_expand(const string& _base, const module& m, 
+channel_manager::lookup_expand(const string& _base, const footprint& m, 
 		vector<const channel*>& ret) const {
 	parser::expanded_global_references_type refs;
 	if (parser::expand_global_references(_base, m, refs)) {
@@ -4895,7 +4903,7 @@ for ( ; ri!=re; ++ri) {
 	\return ret array of modify-able channel pointers.  
  */
 bool
-channel_manager::lookup_expand(const string& _base, const module& m, 
+channel_manager::lookup_expand(const string& _base, const footprint& m, 
 		vector<channel*>& ret) {
 	parser::expanded_global_references_type refs;
 	if (parser::expand_global_references(_base, m, refs)) {
@@ -4978,12 +4986,13 @@ channel_manager::set_channel_ack_valid(State& state, const string& base,
 	const channel_index_type ci = get_channel_index(c);
 #endif
 	const entity::module& m(state.get_module());
+	const entity::footprint& topfp(m.get_footprint());
 if (have_ack) {
 	c.set_ack_active(ack_sense);
 	c.set_ack_init(ack_init);
 	// ack and enable rail names are hard-coded for now :(
 	const string ack_name(base + (ack_sense ? ".a" : ".e"));
-	const node_index_type ai = parse_node_to_index(ack_name, m).index;
+	const node_index_type ai = parse_node_to_index(ack_name, topfp).index;
 	if (!ai) {
 		cerr << "Error: no such node `" << ack_name <<
 			"\' in channel `" << base << "\'." << endl;
@@ -5002,7 +5011,7 @@ if (have_validity) {
 	c.set_valid_sense(validity_sense);
 	const string v_name((vname ? base +"." +vname :
 		base +(validity_sense ? ".v" : ".n")));
-	const node_index_type vi = parse_node_to_index(v_name, m).index;
+	const node_index_type vi = parse_node_to_index(v_name, topfp).index;
 	if (!vi) {
 		cerr << "Error: no such node `" << v_name <<
 			"\' in channel `" << base << "\'." << endl;
@@ -5033,7 +5042,7 @@ if (have_validity) {
  */
 #define	CHANNEL_FOR_EACH(T, name)					\
 	vector<T*> __tmp;						\
-	if (lookup_expand(name, s.get_module(), __tmp))			\
+	if (lookup_expand(name, s.get_module().get_footprint(), __tmp))	\
 		{ return true; }					\
 	vector<T*>::const_iterator					\
 		i(__tmp.begin()), e(__tmp.end());			\

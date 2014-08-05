@@ -1,0 +1,15 @@
+// "spec_setup-01.hac"
+// testing setup time directives
+
+defproc flop (bool d, clk, q) {
+spec {
+	setup_pos<40>(d, clk)
+	setup_neg<20>(d, clk)
+}
+}
+
+flop belly[2];
+bool clk, d1, d2, q1, q2;
+belly[0](d1, clk, q1);
+belly[1](d2, clk, q2);
+

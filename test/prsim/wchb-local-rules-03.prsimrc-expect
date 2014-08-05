@@ -1,0 +1,53 @@
+now editing after delay values 
+All rules local to type: rsource_e1of2<>
+[after 22]	r.e -> _r0-
+[after 21]	~r.e -> _r0+
+[after 24]	r.e -> _r1-
+[after 23]	~r.e -> _r1+
+[after 10]	_r0 -> r.d[0]-
+[after 10]	~_r0 -> r.d[0]+
+[after 10]	_r1 -> r.d[1]-
+[after 10]	~_r1 -> r.d[1]+
+Min-delay bounds in type 'rsource_e1of2<>':
+All rules local to type: bucket_e1of2_rl<>
+[after 34]	l.d[1] | l.d[0] -> _lv-
+[after 33]	~l.d[1] & ~l.d[0] -> _lv+
+[after 10]	_sReset & _lv -> lv-
+[after 10]	~_sReset | ~_lv -> lv+
+[after 10]	~lv -> l.e+
+[after 10]	lv -> l.e-
+Min-delay bounds in type 'bucket_e1of2_rl<>':
+	t( l.d[0]* -> l.e* ) >= 30
+	t( l.d[1]* -> l.e* ) >= 30
+--------------- 
+starting reset 
+enqueued:	0	g._sReset : 0
+enqueued:	0	g._pReset : 0
+enqueued:	10	buf.rv : 1	[from g._sReset:=0]
+enqueued:	10	bkt.lv : 1	[from g._sReset:=0]
+	0	g._sReset : 0
+	0	g._pReset : 0
+enqueued:	20	l.e : 0	[from buf.rv:=1]
+	10	buf.rv : 1	[by g._sReset:=0]
+enqueued:	20	r.e : 0	[from bkt.lv:=1]
+	10	bkt.lv : 1	[by g._sReset:=0]
+enqueued:	41	src._r0 : 1	[from l.e:=0]
+enqueued:	43	src._r1 : 1	[from l.e:=0]
+	20	l.e : 0	[by buf.rv:=1]
+	20	r.e : 0	[by bkt.lv:=1]
+enqueued:	51	l.d[0] : 0	[from src._r0:=1]
+	41	src._r0 : 1	[by l.e:=0]
+enqueued:	53	l.d[1] : 0	[from src._r1:=1]
+	43	src._r1 : 1	[by l.e:=0]
+enqueued:	61	buf._r.d[0] : 1	[from l.d[0]:=0]
+	51	l.d[0] : 0	[by src._r0:=1]
+enqueued:	63	buf._r.d[1] : 1	[from l.d[1]:=0]
+	53	l.d[1] : 0	[by src._r1:=1]
+enqueued:	71	r.d[0] : 0	[from buf._r.d[0]:=1]
+	61	buf._r.d[0] : 1	[by l.d[0]:=0]
+enqueued:	73	r.d[1] : 0	[from buf._r.d[1]:=1]
+	63	buf._r.d[1] : 1	[by l.d[1]:=0]
+	71	r.d[0] : 0	[by buf._r.d[0]:=1]
+enqueued:	106	bkt._lv : 1	[from r.d[1]:=0]
+	73	r.d[1] : 0	[by buf._r.d[1]:=1]
+	106	bkt._lv : 1	[by r.d[1]:=0]

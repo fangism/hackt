@@ -75,7 +75,7 @@ state_trace_point::read_value_only(istream& i) {
 ostream&
 state_trace_point::__dump(ostream& o) const {
 	return event_trace_point::__dump(o) << '\t' << node_index <<
-		'\t' << NodeState::value_to_char[size_t(new_value())];
+		'\t' << NodeState::translate_value_to_char(new_value());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -158,7 +158,7 @@ trace_chunk::dump(ostream& o, const trace_index_type previous_events,
 		} else if (ni) {
 			// just print (node:value)
 			s.dump_node_canonical_name(o << "\t(", ni) << ':' <<
-			NodeState::value_to_char[size_t(i->new_value())] << ')';
+			NodeState::translate_value_to_char(i->new_value()) << ')';
 		} else {
 			o << "\t(null)";
 		}

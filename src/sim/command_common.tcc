@@ -21,7 +21,10 @@
 #include "sim/command_registry.hh"
 #include "sim/trace_common.hh"		// for trace_manager_base
 #include "parser/instref.hh"
+#include "parser/type.hh"
 #include "Object/expr/dlfunction.hh"
+#include "Object/def/footprint.hh"
+#include "Object/module.hh"
 #include "common/TODO.hh"
 #include "util/compose.hh"
 #include "util/string.tcc"
@@ -620,7 +623,9 @@ if (a.size() > 2) {
 		const string newdir(command_registry_type::working_dir());
 		// optional: confirm and print new working dir
 		if (newdir != "" && 
-			parser::parse_process_to_index(newdir, s.get_module()).index == INVALID_PROCESS_INDEX) {
+			parser::parse_process_to_index(newdir,
+				s.get_module().get_footprint()).index
+					== INVALID_PROCESS_INDEX) {
 			cerr << "Invalid process/directory: " << newdir << endl;
 			command_registry_type::change_dir_abs(save);
 			return command_type::BADARG;
@@ -663,7 +668,9 @@ if (a.size() != 2) {
 	command_registry_type::push_dir(ac.back());
 	const string newdir(command_registry_type::working_dir());
 	if (newdir != "" && 
-		parser::parse_process_to_index(newdir, s.get_module()).index == INVALID_PROCESS_INDEX) {
+		parser::parse_process_to_index(newdir,
+			s.get_module().get_footprint()).index
+				== INVALID_PROCESS_INDEX) {
 		cerr << "Invalid process/directory: " << newdir << endl;
 		command_registry_type::pop_dir();
 		return command_type::BADARG;
@@ -756,30 +763,125 @@ Dirs<State>::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(LS, "ls",
-	"list subinstances of the referenced instance")
+DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(PushType, "pusht",
+	"change to type-local scope")
 
 template <class State>
 int
+PushType<State>::main(state_type& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return command_type::SYNTAX;
+} else {
+	const string& ts(a.back());
+	const entity::footprint* f =
+		parser::parse_to_footprint(ts.c_str(), s.get_module());
+	if (f) {
+		command_registry_type::push_type(f);
+	} else {
+		cerr << "Error: invalid or uninstantiated type: " << ts << endl;
+		return command_type::BADARG;
+	}
+	return command_type::NORMAL;
+}
+}
+
+template <class State>
+void
+PushType<State>::usage(ostream& o) {
+	o << name << " <type>" << endl;
+	o << brief << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(PopType, "popt",
+	"restore previous type-local scope (if any)")
+
+template <class State>
+int
+PopType<State>::main(state_type& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return command_type::SYNTAX;
+} else {
+	if (command_registry_type::in_local_type()) {
+		command_registry_type::pop_type();
+	} else {
+		cerr << "Warning: not currently inside any type scope." << endl;
+	}
+	return command_type::NORMAL;
+}
+}
+
+template <class State>
+void
+PopType<State>::usage(ostream& o) {
+	o << name << endl;
+	o << brief << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(WorkingType, "pwt",
+	"show current working type scope")
+
+template <class State>
+int
+WorkingType<State>::main(state_type& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return command_type::SYNTAX;
+} else {
+	if (command_registry_type::in_local_type()) {
+		command_registry_type::current_type().dump_type(cout) << endl;
+	} else {
+		cerr << "Not currently inside any type scope." << endl;
+	}
+	return command_type::NORMAL;
+}
+}
+
+template <class State>
+void
+WorkingType<State>::usage(ostream& o) {
+	o << name << endl;
+	o << brief << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(LS, "ls",
+	"list subinstances of the referenced instance")
+
+// TODO: change behavior if inside local type scope
+template <class State>
+int
 LS<State>::main(state_type& s, const string_list& a) {
+	const entity::footprint& f(s.get_module().get_footprint());
 if (a.size() > 2) {
 	usage(cerr << "usage: ");
 	return command_type::SYNTAX;
-} else if (a.size() == 1) {
-	string t(command_registry_type::working_dir());
-	if (t.empty()) {
-		t = ".";
+} else {
+	string t;
+if (command_registry_type::in_local_type()) {
+	if (a.size() > 1) {
+//		t = a.back();
+		cerr << "Unimplemented: ls [instance] inside type context."
+			<< endl;
 	}
-	parser::parse_name_to_members(cout, t, s.get_module());
+	command_registry_type::current_type().dump_type_members(cout);
 	return command_type::NORMAL;
 } else {
-	string t(command_registry_type::prepend_working_dir(a.back()));
+	if (a.size() == 1) {
+		t = command_registry_type::working_dir();
+	} else {
+		t = command_registry_type::prepend_working_dir(a.back());
+	}
 	if (t.empty()) {
 		t = ".";
 	}
-	if (parser::parse_name_to_members(cout, t, s.get_module()))
+	if (parser::parse_name_to_members(cout, t, f))
 		return command_type::BADARG;
 	else	return command_type::NORMAL;
+}
 }
 }
 
@@ -806,7 +908,7 @@ if (a.size() != 2) {
 } else {
 	if (parser::parse_name_to_what(cout,
 			command_registry_type::prepend_working_dir(a.back()),
-			s.get_module()))
+			s.get_module().get_footprint()))
 		return command_type::BADARG;
 	else	return command_type::NORMAL;
 }
@@ -833,8 +935,8 @@ if (a.size() != 2) {
 } else {
 	const string r(command_registry_type::prepend_working_dir(a.back()));
 	cout << "aliases of \"" << r << "\":" << endl;
-	if (parser::parse_name_to_aliases(cout, r, s.get_module(), 
-			s._dump_flags, " ")) {
+	if (parser::parse_name_to_aliases(cout, r, 
+			s.get_module().get_footprint(), s._dump_flags, " ")) {
 		return command_type::BADARG;
 	} else {
 		cout << endl;
@@ -865,7 +967,8 @@ if (a.size() != 2) {
 } else {
 	const string r(command_registry_type::prepend_working_dir(a.back()));
 	cout << "aliases of \"" << r << "\":" << endl;
-	if (parser::parse_name_to_aliases(cout, r, s.get_module(), 
+	if (parser::parse_name_to_aliases(cout, r,
+			s.get_module().get_footprint(), 
 			s._dump_flags, "\n")) {
 		return command_type::BADARG;
 	} else {

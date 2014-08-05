@@ -363,6 +363,7 @@ VALUE_ARRAY_CLASS::key_value_dumper::operator () (
 VALUE_ARRAY_TEMPLATE_SIGNATURE
 good_bool
 VALUE_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges) {
+	STACKTRACE_VERBOSE;
 	// now iterate through, unrolling one at a time...
 	// stop as soon as there is a conflict
 	multikey_generator<D, pint_value_type> key_gen;

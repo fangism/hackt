@@ -201,7 +201,7 @@ footprint_manager::insert(const key_type& k, const definition_base& d) {
 /**
 	This lookup uses find() to guarantee non-modification.
  */
-footprint_manager::mapped_type&
+footprint_manager::mapped_type*
 footprint_manager::lookup(const key_type& k) const {
 	INVARIANT(k.size() == _arity);
 	// ALERT: AVOID EXPENSIVE ALLOCATION OF TEMPORARY
@@ -210,11 +210,14 @@ footprint_manager::lookup(const key_type& k) const {
 		// kludge - deref NULL!
 	const parent_type::const_iterator f(find(temp));
 	// if inserted use new value, else use existing member
-	INVARIANT(f != parent_type::end());
-	NEVER_NULL(*f);
-	return const_cast<mapped_type&>(**f);	// unfortunate
-	// but remember that the param_key member which is used for
-	// comparison is immutable
+	if (f != parent_type::end()) {
+		NEVER_NULL(*f);
+		return &const_cast<mapped_type&>(**f);	// unfortunate
+		// but remember that the param_key member which is used for
+		// comparison is immutable
+	} else {
+		return NULL;
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -254,7 +257,7 @@ footprint_manager::insert(const count_ptr<const key_type>& k,
 /**
 	\pre must already have singleton footprint.
  */
-footprint_manager::mapped_type&
+footprint_manager::mapped_type*
 footprint_manager::lookup(const count_ptr<const key_type>& k) const {
 	if (k) {
 		INVARIANT(k->size() == arity());
@@ -262,7 +265,7 @@ footprint_manager::lookup(const count_ptr<const key_type>& k) const {
 	} else {
 		INVARIANT(size() == 1);
 		const footprint_entry& ret(*begin());
-		return *ret;
+		return &*ret;
 	}
 }
 

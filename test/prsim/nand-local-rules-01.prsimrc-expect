@@ -1,0 +1,23 @@
+All rules local to type: <>
+G refers to process-inst-ref nand<>
+rules:
+[after 10]	a & b -> c-
+[after 10]	~a | ~b -> c+
+nand<>
+All rules local to type: nand<>
+[after 10]	a & b -> c-
+[after 10]	~a | ~b -> c+
+Rules local to type: nand<> [from a to c+ ]
+[after 10]	~a | ~b -> c+
+Rules local to type: nand<> [from a to c- ]
+[after 10]	a & b -> c-
+Rules local to type: nand<> [from b to c+ ]
+[after 10]	~a | ~b -> c+
+Rules local to type: nand<> [from b to c- ]
+[after 10]	a & b -> c-
+Rules local to type: nand<> [from a to b+ ]
+Rules local to type: nand<> [from a to b- ]
+Rules local to type: nand<> [from c to b+ ]
+Rules local to type: nand<> [from c to b- ]
+Rules local to type: nand<> [from c to a+ ]
+Rules local to type: nand<> [from c to a- ]

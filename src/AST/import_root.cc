@@ -133,7 +133,7 @@ imported_root::check_build(context& c) const {
 			throw;
 		}
 	} else {
-		return c.top_namespace();
+		return c.top_namespace().is_a<const object>();
 	}
 }
 

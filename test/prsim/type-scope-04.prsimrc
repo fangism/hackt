@@ -1,0 +1,7 @@
+# "type-scope-04.prsimrc"
+# @haco@ oscillator.haco-c
+
+pusht ring_oscillator<13>
+pwt
+# ls
+popt

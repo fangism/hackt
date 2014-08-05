@@ -13,11 +13,20 @@
 #include <iostream>
 #include <numeric>			// for accumulate
 #include <functional>
+#include <sstream>
 #include "sim/prsim/State-prsim.hh"
 #include "sim/prsim/util.tcc"
 #include "sim/prsim/Rule.tcc"
 #include "sim/ISE.hh"
 #include "Object/def/footprint.hh"
+
+#include "Object/inst/state_instance.hh"
+#include "Object/inst/instance_alias_info.hh"
+#include "Object/inst/alias_empty.hh"
+#include "Object/inst/instance_pool.hh"
+#include "Object/traits/bool_traits.hh"
+#include "Object/common/dump_flags.hh"
+
 #include "Object/lang/PRS_footprint.hh"
 #include "Object/lang/SPEC.hh"
 #include "util/stacktrace.hh"
@@ -42,13 +51,49 @@ namespace SIM {
 namespace PRSIM {
 #include "util/using_ostream.hh"
 USING_UTIL_COMPOSE
+using entity::bool_tag;
+
+//=============================================================================
+// utility functions
+/**
+	Print footprint-local name of node.
+	Just a convenience function.
+	\param lni local node index, 1-based.
+ */
+static
+ostream&
+__dump_node_local_name(ostream& o, 
+		const entity::state_instance<bool_tag>::pool_type& bp, 
+		const node_index_type lni) {
+	// default dump flags
+	static const entity::dump_flags&
+		df(dump_flags::no_definition_owner_no_ns);
+	INVARIANT(lni);
+	// convert 1-based to 0-based
+	bp[lni -1].get_back_ref()->dump_hierarchical_name(o, df);
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+min_delay_entry::dump_raw(ostream& o) const {
+	return o << "{{{" << time[0][0] << ',' << time[0][1] << "},{" <<
+		time[1][0] << ',' << time[1][1] << "}},{{" <<
+		predicate[0][0] << ',' << predicate[0][1] << "},{" <<
+		predicate[1][0] << ',' << predicate[1][1] << "}}}";
+}
 
 //=============================================================================
 // class unique_process_subgraph method definitions
-unique_process_subgraph::unique_process_subgraph() :
+unique_process_subgraph::unique_process_subgraph(const entity::footprint* f) :
+		_footprint(f), 
 		expr_pool(), expr_graph_node_pool(),
 		rule_pool(), rule_map(), invariant_map(), 
-		local_faninout_map() {
+		local_faninout_map()
+#if PRSIM_SETUP_HOLD
+		, setup_constraints(), hold_constraints()
+#endif
+		{
 	// local types are allowed to start at 0 index
 }
 
@@ -241,6 +286,9 @@ faninout_struct_type::dump_struct(ostream& o) const {
 	std::ostream_iterator<expr_index_type> osi(o, " ");
 	std::copy(fanout.begin(), fanout.end(), osi);
 	// std::copy(&fanout[0], &fanout[fanout.size()], osi);
+	if (is_atomic) {
+		o << " [atomic]";	// this node updates atomically
+	}
 	return o;
 }
 
@@ -269,6 +317,29 @@ unique_process_subgraph::lookup_rule(const expr_index_type ei) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	FIXME: O(n) search for reverse map.
+	TODO: replace hash_map with vector<pair>
+	and use the fact that rule_map is maintained with monotonic
+	keys and values, so a reverse lookup is just a matter of binary_search.
+	\param ri a valid rule index
+	\return guard expression index corresponding to rule
+ */
+expr_index_type
+unique_process_subgraph::lookup_expr(const rule_index_type ri) const {
+	typedef	rule_map_type::const_iterator	rule_map_iterator;
+	rule_map_iterator i(rule_map.begin()), e(rule_map.end());
+	for ( ; i!=e; ++i) {
+		if (i->second == ri) {
+			return i->first;
+		}
+	}
+	// should be unreachable
+	DIE;
+	return 0;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 unique_process_subgraph::check_structure(void) const {
 	STACKTRACE_VERBOSE_CHECK;
@@ -288,6 +359,125 @@ unique_process_subgraph::check_structure(void) const {
 		check_node(i);
 	}
 }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Traces up the expression tree until a root is reached.
+	The root expression is guaranteed to map to a rule index.
+ */
+rule_index_type
+unique_process_subgraph::follow_expr_to_root(const expr_index_type _ei) const {
+	expr_index_type ei = _ei;
+	const expr_struct_type* ex = &expr_pool[ei];
+	// follow expressions' parents up to root
+	// see State::evaluate_kernel for similar impl
+	while (!ex->is_root()) {
+		ei = ex->parent;
+		ex = &expr_pool[ei];
+	}
+	// map root expr to rule index
+	const rule_map_type::const_iterator f(rule_map.find(ei));
+	INVARIANT(f != rule_map.end());
+	return f->second;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param lni match rules that drive this node (1-based).
+	\param dir pull-up (1) or pull-dn (0)
+	\return list of rule indices that match.
+	Weak rules are ignored.
+ */
+void
+unique_process_subgraph::rules_matching_fanin(const node_index_type lni,
+	const bool dir, vector<rule_index_type>& ret) const {
+	STACKTRACE_BRIEF;
+	// see process_sim_state::dump_node_fanin
+	INVARIANT(lni-1 < local_faninout_map.size());
+	const faninout_struct_type& fia(local_faninout_map[lni -1]);
+	const size_t w = NORMAL_RULE;
+//	fia.dump_struct(cerr);
+	const fanout_array_type&
+		fo(dir ? fia.pull_up STR_INDEX(w) : fia.pull_dn STR_INDEX(w));
+	// these expr_indices need to map to root rule indices
+	// unique-sort
+	set<rule_index_type> r;
+	fanout_array_type::const_iterator i(fo.begin()), e(fo.end());
+	for ( ; i!=e; ++i) {
+		r.insert(follow_expr_to_root(*i));
+	}
+	ret.clear();
+	copy(r.begin(), r.end(), back_inserter(ret));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param lni match rules that this node drives (1-based).
+	\return list of rule indices that match.
+	Weak rules are ignored.
+ */
+void
+unique_process_subgraph::rules_matching_fanout(const node_index_type lni,
+	vector<rule_index_type>& ret) const {
+	STACKTRACE_BRIEF;
+	INVARIANT(lni-1 < local_faninout_map.size());
+	const fanout_array_type& foa(local_faninout_map[lni -1].fanout);
+	// expr_indices need to be translated and unique-sorted to rule indices
+	set<rule_index_type> s;
+	fanout_array_type::const_iterator i(foa.begin()), e(foa.end());
+	for ( ; i!=e; ++i) {
+		s.insert(follow_expr_to_root(*i));
+	}
+	ret.clear();
+	copy(s.begin(), s.end(), back_inserter(ret));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Match rules with lns in guard, and fan out to lnd, in direction ddir.
+ */
+void
+unique_process_subgraph::rules_matching_faninout(const node_index_type lns,
+	const node_index_type lnd, const bool ddir,
+	vector<rule_index_type>& ret) const {
+	STACKTRACE_BRIEF;
+	vector<rule_index_type> tmp1, tmp2;
+	rules_matching_fanin(lnd, ddir, tmp1);
+	rules_matching_fanout(lns, tmp2);
+	ret.clear();
+	set_intersection(tmp1.begin(), tmp1.end(), tmp2.begin(), tmp2.end(), 
+		back_inserter(ret));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+unique_process_subgraph::print_rules_matching_faninout(ostream& o,
+		const node_index_type lns,
+		const node_index_type lnd, const bool ddir) const {
+	STACKTRACE_BRIEF;
+	vector<rule_index_type> r;
+	rules_matching_faninout(lns, lnd, ddir, r);
+	dump_rules(o, r);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param r list of rule indices to rules to apply change.
+	\param prop name of property
+	\param val new value of property to set
+	\return true on error
+ */
+bool
+unique_process_subgraph::edit_rule_property(const vector<rule_index_type>& r,
+		const string& prop, const string& val) {
+	vector<rule_index_type>::const_iterator
+		ri(r.begin()), re(r.end());
+	for ( ; ri!=re; ++ri) {
+		if (rule_pool[*ri].edit_property(prop, val))
+			return true;
+	}
+	return false;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -331,9 +521,116 @@ unique_process_subgraph::dump_invariant_message(ostream& o,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Implementation ripped from process_state::dump_subexpr().
+	Recursive expression printer.  
+	Should be modeled after cflat's expression printer.  
+	\param ei is the *LOCAL* expression index within the owning process.  
+	\param ptype the parent's expression type, only used if pr is true.
+	\param pr whether or not parent is root
+		(if so, ignore type comparison for parenthesization).  
+ */
+ostream&
+unique_process_subgraph::dump_subexpr(ostream& o, const expr_index_type ei, 
+		const uchar ptype, const bool pr) const {
+	ISE_INVARIANT(ei < expr_pool.size());
+	const expr_struct_type& e(expr_pool[ei]);
+	const graph_node_type& g(expr_graph_node_pool[ei]);
+	// can elaborate more on when parens are needed
+	const bool need_parens = e.parenthesize(ptype, pr);
+	const uchar _type = e.type;
+	// rule attribute printing has moved! (was here)
+	if (e.is_not()) {
+		o << '~';
+	}
+	const char* op = e.is_disjunctive() ? " | " : " & ";
+	typedef	graph_node_type::const_iterator		const_iterator;
+	const_iterator ci(g.begin()), ce(g.end());
+	if (need_parens) {
+		o << '(';
+	}
+	// peel out first iteration for infix printing
+	if (ci->first) {
+		// node is 0-indexed, convert to 1-based
+		dump_node_local_name(o, ci->second +1);
+	} else {
+		dump_subexpr(o, ci->second, _type);
+	}
+	if (g.children.size() >= 1) {
+	for (++ci; ci!=ce; ++ci) {
+		o << op;
+		if (ci->first) {
+			// node is 0-indexed, convert to 1-based
+			dump_node_local_name(o, ci->second +1);
+		} else {
+			if (e.is_or() && is_rule_expr(ci->second)) {
+				// to place each 'rule' on its own line
+				o << endl;
+			}
+			dump_subexpr(o, ci->second, _type);
+		}
+	}
+	}
+	if (need_parens) {
+		o << ')';
+	}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Implementation ripped from process_state::dump_rule().
+	\param lri local rule index, also doubles as an expr index.
+ */
+ostream&
+unique_process_subgraph::dump_rule(ostream& o,
+		const rule_index_type lri) const {
+	const rule_type& r(rule_pool[lri]);
+	const expr_index_type ei = lookup_expr(lri);
+	const expr_struct_type& e(expr_pool[ei]);
+	ISE_INVARIANT(e.is_root());
+	const bool dir = r.direction();
+	const node_index_type nr = e.parent;
+	const faninout_struct_type& n(local_faninout_map[nr]);
+if (n.is_atomic) {
+	// node is 0-indexed, convert to 1-based
+	dump_node_local_name(o << '\t', nr +1);
+	o << " = ";
+} else {
+	r.dump(o << '[') << "]\t";	// moved here from dump_subexpr
+}
+	dump_subexpr(o, ei, expr_struct_type::EXPR_ROOT, true);
+if (!n.is_atomic) {
+	// node is 0-indexed, convert to 1-based
+	dump_node_local_name(o << " -> ", nr +1) << (dir ? '+' : '-');
+}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+unique_process_subgraph::dump_rules(ostream& o,
+		const vector<rule_index_type>& r) const {
+	vector<rule_index_type>::const_iterator i(r.begin()), e(r.end());
+	for ( ; i!=e; ++i) {
+		dump_rule(o, *i) << endl;
+	}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+unique_process_subgraph::dump_all_rules(ostream& o) const {
+	size_t i = 0;
+	for ( ; i < rule_pool.size(); ++i) {
+		dump_rule(o, i) << endl;
+	}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 unique_process_subgraph::dump_struct(ostream& o) const {
-{
 {
 	// Technically, top-level should omit reserved local node 0...
 	o << "Local nodes: " << endl;
@@ -350,8 +647,7 @@ unique_process_subgraph::dump_struct(ostream& o) const {
 	expr_index_type i = FIRST_VALID_LOCAL_EXPR;
 	// is 0 valid? process-local?
 	for ( ; i<exprs; ++i) {
-		const expr_struct_type&
-			e(expr_pool[i]);
+		const expr_struct_type& e(expr_pool[i]);
 	if (!e.wiped()) {
 		e.dump_struct(o << "expr[" << i << "]: ",
 			(e.is_root() ? lookup_rule(i)->direction() : false)
@@ -369,7 +665,6 @@ unique_process_subgraph::dump_struct(ostream& o) const {
 	for ( ; ri!=re; ++ri, ++j) {
 		ri->dump(o << '[' << j << "]\t") << endl;
 	}
-}
 }
 	return o;
 }
@@ -405,6 +700,171 @@ unique_process_subgraph::dump_struct_dot(ostream& o,
 }
 	return o;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_SETUP_HOLD
+// TODO: print local node names, not just IDs
+// see also process_sim_state::dump_timing_constraints
+ostream&
+unique_process_subgraph::dump_timing_constraints(ostream& o) const {
+{
+	o << "# Setup constraints:" << endl;
+	setup_constraint_set_type::const_iterator
+		i(setup_constraints.begin()), e(setup_constraints.end());
+	for ( ; i!=e; ++i) {
+		// node indices are local
+#if PRSIM_FWD_POST_TIMING_CHECKS
+		o << i->first << " ->" << endl;
+#else
+		o << "-> " << i->first.first <<
+			(i->first.second ? '+' : '-') << endl;
+#endif
+		vector<setup_constraint_entry>::const_iterator
+			ci(i->second.begin()), ce(i->second.end());
+		for ( ; ci!=ce; ++ci) {
+			o << '\t' <<
+#if PRSIM_FWD_POST_TIMING_CHECKS
+				ci->trig_node << (ci->dir ? '+' : '-')
+#else
+				ci->ref_node
+#endif
+				<< ": " << ci->time << endl;	
+		}
+	}
+}{
+	o << "# Hold constraints:" << endl;
+	hold_constraint_set_type::const_iterator
+		i(hold_constraints.begin()), e(hold_constraints.end());
+	for ( ; i!=e; ++i) {
+		// node indices are local
+#if PRSIM_FWD_POST_TIMING_CHECKS
+		o << i->first.first << (i->first.second ? '+' : '-')
+			<< " ->" << endl;
+#else
+		o << "-> " << i->first << endl;
+#endif
+		vector<hold_constraint_entry>::const_iterator
+			ci(i->second.begin()), ce(i->second.end());
+		for ( ; ci!=ce; ++ci) {
+			o << '\t' <<
+#if PRSIM_FWD_POST_TIMING_CHECKS
+				ci->trig_node
+#else
+				ci->ref_node << (ci->dir ? '+' : '-')
+#endif
+				<< ": " << ci->time << endl;	
+		}
+	}
+}
+	return o;
+}
+#endif	// PRSIM_SETUP_HOLD
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Print a local node name.
+	\param lni local node index, 1-based.
+ */
+ostream&
+unique_process_subgraph::dump_node_local_name(ostream& o,
+		const node_index_type lni) const {
+	NEVER_NULL(_footprint);
+//	o << "(N" << lni << ')';	// debug only
+	const entity::state_instance<bool_tag>::pool_type&
+		bp(_footprint->get_instance_pool<bool_tag>());
+	return __dump_node_local_name(o, bp, lni);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_TIMING_BACKANNOTATE
+ostream&
+unique_process_subgraph::print_backannotated_delay_single(ostream& o,
+	const min_delay_set_type::value_type& mds) const {
+	std::ostringstream oss;
+	const node_index_type tgt = mds.first;
+	INVARIANT(tgt);
+	dump_node_local_name(oss, tgt);
+	min_delay_ref_set_type::const_iterator
+		si(mds.second.begin()), se(mds.second.end());
+	for ( ; si!=se; ++si) {
+		const node_index_type local_ref_node = si->first;
+		const min_delay_entry& m(si->second);
+		// TODO: this printing is very verbose, often resulting
+		// in quadruplicate entries printed.
+		// Should find a more compact way to print these
+		// in the common case where they are all equal.
+		// source -> destination
+	if (m.is_uniform()) {
+		// fields are identical in all direction cases
+		o << "\tt( ";
+		dump_node_local_name(o, local_ref_node) << '*' <<
+			" -> " << oss.str() << '*' <<
+			" ) >= " << m.time[0][0];
+		if (m.predicate[0][0]) {
+			o << ", if (";
+			dump_node_local_name(o, m.predicate[0][0]) << ')';
+		}
+		o << endl;
+	} else {
+		bool rd = false;
+		do {
+		bool td = false;
+		do {
+		if (m.time[rd][td] > 0) {
+			o << "\tt( ";
+			dump_node_local_name(o, local_ref_node) <<
+				(rd ? '+' : '-') <<
+				" -> " << oss.str() <<
+				(td ? '+' : '-') <<
+				" ) >= " << m.time[rd][td];
+			if (m.predicate[rd][td]) {
+				o << ", if (";
+				dump_node_local_name(o, m.predicate[rd][td]) << ')';
+			}
+			o << endl;
+		}	// else don't print, as delta of 0 is no-op
+		td = !td;
+		} while (td);
+		rd = !rd;
+		} while (rd);
+	}
+	}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+unique_process_subgraph::dump_backannotated_delays(ostream& o) const {
+	NEVER_NULL(_footprint);
+	_footprint->dump_type(
+		o << "Min-delay bounds in type \'") << "\':" << endl;
+	min_delay_set_type::const_iterator
+		mdi(min_delays.begin()), mde(min_delays.end());
+	// print using type-local node names
+	for ( ; mdi != mde; ++mdi) {
+		print_backannotated_delay_single(o, *mdi);
+	}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+unique_process_subgraph::dump_backannotated_delays_targeting(
+		ostream& o, const vector<node_index_type>& t) const {
+	NEVER_NULL(_footprint);
+	_footprint->dump_type(
+		o << "Min-delay bounds in type \'") << "\':" << endl;
+	vector<node_index_type>::const_iterator ti(t.begin()), te(t.end());
+	// print using type-local node names
+	for ( ; ti != te; ++ti) {
+		INVARIANT(*ti);
+		const min_delay_set_type::const_iterator
+			mdi(min_delays.find(*ti));
+		print_backannotated_delay_single(o, *mdi);
+	}
+	return o;
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -461,6 +921,50 @@ unique_process_subgraph::has_not_local_fanin_map(vector<bool>& ret) const {
 		unary_compose(std::logical_not<bool>(),
 			std::mem_fun_ref(&faninout_struct_type::has_fanin)));
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_TIMING_BACKANNOTATE
+/**
+	Adds a timing constraint to unique graph, but doesn't
+	apply it globally to all instances.  
+	\param ref the reference node (earlier)
+	\param refdir direction specifications to apply [+-*] to ref node
+	\param tgt the target node (later)
+	\param tgtdir direction specifications to apply [+-*] to tgt node
+	\param del min-delay value to apply
+	\param pred optional predicate, 0 to signal no predicate (always)
+ */
+void
+unique_process_subgraph::add_min_delay_constraint(const node_index_type ref,
+		const char refdir,
+		const node_index_type tgt,
+		const char tgtdir,
+		const rule_time_type del,
+		const node_index_type pred) {
+	bool r_apply[2];
+	bool t_apply[2];
+	r_apply[0] = refdir != '+';
+	r_apply[1] = refdir != '-';
+	t_apply[0] = tgtdir != '+';
+	t_apply[1] = tgtdir != '-';
+	min_delay_entry& md(min_delays[tgt][ref]);
+	// initialize, if needed
+	bool rd = false;
+	do {
+	if (r_apply[rd]) {
+		bool td = false;
+		do {
+		if (t_apply[td]) {
+			md.time[rd][td] = del;
+			md.predicate[rd][td] = pred;
+		}
+			td = !td;
+		} while (td);
+	}
+		rd = !rd;
+	} while (rd);
+}
+#endif
 
 //=============================================================================
 // explicit class template instantiations

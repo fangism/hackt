@@ -202,6 +202,11 @@ struct process_sim_state : public process_sim_state_base {
 		__collect_expr_literals(ri, st, ret);
 	}
 
+#if PRSIM_SETUP_HOLD
+	ostream&
+	dump_timing_constraints(ostream&, const State&) const;
+#endif
+
 };	// end struct process_sim_state
 
 //=============================================================================

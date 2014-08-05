@@ -7,6 +7,7 @@
 #include <iostream>
 #include "Object/common/dump_flags.hh"
 #include "util/IO_utils.hh"
+#include "Object/devel_switches.hh"
 
 namespace HAC {
 namespace entity {
@@ -19,6 +20,9 @@ using util::read_value;
 
 const dump_flags
 dump_flags::default_value = dump_flags();
+
+const dump_flags
+dump_flags::no_definition_owner_no_ns = dump_flags(false, false, true);
 
 const dump_flags
 dump_flags::no_definition_owner = dump_flags(false, true, true);
@@ -57,6 +61,15 @@ dump_flags::dump_flags(const bool _show_def_owner,
 		process_member_separator("."),
 		struct_member_separator(".")
 { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+dump_flags::dump_brief(ostream& o) const {
+        o << "[dump flags:" << (show_definition_owner ? "(def)" : "") <<
+                (show_namespace_owner ? "(ns)" : "") <<
+                (show_leading_scope ? "(::)]" : "]");
+	return o;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&

@@ -1,0 +1,3 @@
+commands that reference state are invalid in a type-local context 
+Command is invalid within type context: set
+... at line 7

@@ -1,0 +1,10 @@
+# "inv-min-delay-03.prsimrc"
+# @haco@ inv.haco-c
+
+echo all constraints (none)
+min-delay-list-all
+min-delay-apply-all
+min-delay-fanin-proc a
+min-delay-fanin-proc b
+min-delay-fanin-proc c
+

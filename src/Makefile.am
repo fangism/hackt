@@ -1061,11 +1061,14 @@ PRSIM_CC_FILES = \
 	sim/prsim/Command-prsim.cc \
 	sim/prsim/Command-prsim-export.cc \
 	sim/prsim/Cause.cc \
+	sim/prsim/DelayBackAnnotation.cc \
 	sim/prsim/Node.cc \
+	sim/prsim/Exception.cc \
 	sim/prsim/Expr.cc \
 	sim/prsim/ExprAlloc.cc \
 	sim/prsim/Event-prsim.cc \
 	sim/prsim/State-prsim.cc \
+	sim/prsim/TimingChecker.cc \
 	sim/prsim/Trace-prsim.cc \
 	sim/prsim/VCDManager.cc \
 	sim/prsim/process_graph.cc \
@@ -1103,6 +1106,7 @@ SIM_HH_FILES = $(SIM_CC_FILES:.cc=.hh) \
 	sim/common.hh \
 	sim/command_error_codes.hh \
 	sim/command_completion.hh \
+	sim/type_scope.hh \
 	sim/devel_switches.hh
 
 SIM_H_FILES = \
@@ -1112,7 +1116,6 @@ PRSIM_HH_FILES = $(PRSIM_CC_FILES:.cc=.hh) \
 	$(PRSIM_TCC_FILES:.tcc=.hh) \
 	sim/prsim/enums.hh \
 	sim/prsim/ExprAllocFlags.hh \
-	sim/prsim/Exception.hh \
 	main/prsim_options.hh \
 	sim/prsim/devel_switches.hh
 

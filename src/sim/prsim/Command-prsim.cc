@@ -51,6 +51,7 @@ DEFAULT_STATIC_TRACE
 }
 
 #include "parser/instref.hh"
+#include "parser/type.hh"
 #include "Object/module.hh"
 #include "Object/def/footprint.hh"
 
@@ -58,6 +59,7 @@ DEFAULT_STATIC_TRACE
 #include "util/numformat.tcc"
 #include "util/libc.h"
 #include "util/memory/excl_malloc_ptr.hh"
+#include "util/STL/functional.hh"	// for ternary_function
 #include "util/stacktrace.hh"
 
 DEFAULT_STATIC_TRACE
@@ -138,12 +140,16 @@ using entity::META_TYPE_NONE;
 using parser::process_index;
 using parser::bool_index;
 
+#define	TYPE_CONTEXT_INVALID_COMMAND					\
+	cerr << "Command is invalid within type context: " << name << endl
+
 //=============================================================================
 // directory features
 
 /**
 	Define to 1 to use directory scope features.
 	TODO: these functions could be shared, in sim/directory.{h,cc}
+	Status: has been working for long time
  */
 #define	AUTO_PREPEND_WORKING_DIR	1
 
@@ -166,6 +172,41 @@ nonempty_abs_dir(const string& s) {
 }
 
 #if AUTO_PREPEND_WORKING_DIR
+using std::ptr_fun;
+
+/**
+	These dispatch wrappers behavior depend on the current context,
+	whether or not we are in a local type scope.
+	For type-local contexts, ignore the 'current working directory'.
+	For global (top-level) scope, prepend 'cwd'.
+ */
+template <class F>	// f should be wrapped in ptr_fun
+typename F::result_type
+dispatch_parser(F f, const string& s, const entity::module& m, bool proc) {
+if (CommandRegistry::in_local_type()) {
+	return f(s, CommandRegistry::current_type());
+} else if (proc) {
+	return f(nonempty_abs_dir(s), m.get_footprint());
+} else {
+	// automatically prepend working directory
+	return f(CommandRegistry::prepend_working_dir(s), m.get_footprint());
+}
+}
+
+template <class F>	// f should be wrapped in ptr_fun
+typename F::result_type
+dispatch_parser(F f, const string& s, const entity::module& m, 
+		vector<size_t>& r, bool proc) {
+if (CommandRegistry::in_local_type()) {
+	return f(s, CommandRegistry::current_type(), r);
+} else if (proc) {
+	return f(nonempty_abs_dir(s), m.get_footprint(), r);
+} else {
+	// automatically prepend working directory
+	return f(CommandRegistry::prepend_working_dir(s), m.get_footprint(), r);
+}
+}
+
 // wrap around definitions in "parser/instref.h"
 static
 // bool_index
@@ -173,9 +214,8 @@ node_index_type
 parse_node_to_index(const string& s, const entity::module& m) {
 	STACKTRACE_VERBOSE;
 	STACKTRACE_INDENT_PRINT("Parsing node(s): " << s << endl);
-	// automatically prepend working directory
-	return parser::parse_node_to_index(
-		CommandRegistry::prepend_working_dir(s), m).index;
+	return dispatch_parser(ptr_fun(parser::parse_node_to_index),
+		s, m, false).index;
 }
 
 #if PRSIM_NODE_AGGREGATE_ARGUMENTS
@@ -183,8 +223,8 @@ static
 bool
 parse_nodes_to_indices(const string& s, const entity::module& m, 
 		vector<node_index_type>& r) {
-	return parser::parse_nodes_to_indices(
-		CommandRegistry::prepend_working_dir(s), m, r);
+	return dispatch_parser(ptr_fun(parser::parse_nodes_to_indices),
+		s, m, r, false);
 }
 #endif
 
@@ -192,9 +232,8 @@ static
 process_index
 parse_process_to_index(const string& s, const entity::module& m) {
 	STACKTRACE_VERBOSE;
-	// automatically prepend working directory
-	const string t(nonempty_abs_dir(s));
-	return parser::parse_process_to_index(t, m);
+	return dispatch_parser(ptr_fun(parser::parse_process_to_index),
+		s, m, true);
 }
 
 #if PRSIM_PROCESS_AGGREGATE_ARGUMENTS
@@ -202,8 +241,8 @@ static
 bool
 parse_processes_to_indices(const string& s, const entity::module& m, 
 		vector<process_index_type>& r) {
-	return parser::parse_processes_to_indices(
-		CommandRegistry::prepend_working_dir(s), m, r);
+	return dispatch_parser(ptr_fun(parser::parse_processes_to_indices),
+		s, m, r, false);
 }
 #endif
 
@@ -211,16 +250,21 @@ static
 int
 parse_name_to_what(ostream& o, const string& s, const entity::module& m) {
 	STACKTRACE_VERBOSE;
+if (CommandRegistry::in_local_type()) {
+	return parser::parse_name_to_what(o, s,
+		CommandRegistry::current_type());
+} else {
 	return parser::parse_name_to_what(o, 
-		CommandRegistry::prepend_working_dir(s), m);
+		CommandRegistry::prepend_working_dir(s), m.get_footprint());
+}
 }
 
 static
 entity::global_indexed_reference
 parse_global_reference(const string& s, const entity::module& m) {
 	STACKTRACE_VERBOSE;
-	return parser::parse_global_reference(
-		CommandRegistry::prepend_working_dir(s), m);
+	return dispatch_parser(ptr_fun(parser::parse_global_reference_default),
+		s, m, false);
 }
 
 #if 0
@@ -240,8 +284,8 @@ int
 parse_name_to_get_subnodes(const string& s, const entity::module& m,
 		vector<size_t>& v) {
 	STACKTRACE_VERBOSE;
-	const string t(nonempty_abs_dir(s));
-	return parser::parse_name_to_get_subnodes(t, m, v);
+	return dispatch_parser(ptr_fun(parser::parse_name_to_get_subnodes),
+		s, m, v, true);
 }
 
 static
@@ -251,7 +295,8 @@ parse_name_to_get_subnodes_local(const string& s, const entity::module& m,
 	STACKTRACE_VERBOSE;
 //	const string t(nonempty_abs_dir(s));
 	return parser::parse_name_to_get_subnodes_local(
-		parse_process_to_index(s, m), m, v);
+		parse_process_to_index(s, m),
+		m.get_footprint(), v);
 }
 
 #if 0
@@ -271,7 +316,8 @@ parse_name_to_get_ports(const string& s, const entity::module& m,
 	STACKTRACE_VERBOSE;
 //	const string t(nonempty_abs_dir(s));
 	return parser::parse_name_to_get_ports(
-		parse_process_to_index(s, m), m, v, pred);
+		parse_process_to_index(s, m),
+		m.get_footprint(), v, pred);
 }
 
 #else
@@ -292,8 +338,25 @@ using parser::parse_name_to_get_subnodes_local;
 using parser::parse_name_to_get_ports;
 #endif
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/// get current type - unique_process_subgraph
+static
+unique_process_subgraph*
+__get_current_process_graph(State& s) {
+	unique_process_subgraph* g;
+	if (CommandRegistry::in_local_type()) {
+		const entity::footprint& f(CommandRegistry::current_type());
+		g = s.lookup_unique_process_graph(&f);
+		INVARIANT(g->_footprint == &f);
+	} else {
+		g = s.lookup_unique_process_graph("");
+	}
+	NEVER_NULL(g);
+	NEVER_NULL(g->_footprint);
+	return g;
+}
+
 //=============================================================================
-#if 1
 // local static CommandCategories
 // feel free to add categories here
 #define	DECLARE_COMMAND_CATEGORY(x, y)					\
@@ -306,12 +369,12 @@ DECLARE_COMMAND_CATEGORY(debug, "debugging internals")
 DECLARE_COMMAND_CATEGORY(simulation, "simulation commands")
 DECLARE_COMMAND_CATEGORY(channels, "channel commands")
 DECLARE_COMMAND_CATEGORY(info, "information about simulated circuit")
+// DECLARE_COMMAND_CATEGORY(timing, "timing back-annotation")
 DECLARE_COMMAND_CATEGORY(view, "instance to watch")
 DECLARE_COMMAND_CATEGORY(tracing, "trace and checkpoint commands")
 DECLARE_COMMAND_CATEGORY(modes, "timing model, error handling")
 DEFAULT_STATIC_TRACE
 #undef	DECLARE_COMMAND_CATEGORY
-#endif
 
 //=============================================================================
 // command completion facilities
@@ -543,6 +606,37 @@ PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(WorkingDir, builtin)
 
 typedef	Dirs<State>				Dirs;
 PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(Dirs, builtin)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/type-scope.texi
+The following commands are used to change the current type scope.
+Initially, the type scope is null, the interpreter starts out
+in the top-level (global) instance scope.  
+Some commands are applicable to type-scopes and require a type-local context.
+
+@deffn Command pusht type
+Enter a new type scope, pushing previous onto stack.
+@end deffn
+
+@deffn Command popt
+Restore previous type scope from stack.
+@end deffn
+
+@deffn Command pwt
+Show name of current type scope.
+@end deffn
+@end texinfo
+***/
+typedef	PushType<State>				PushType;
+// PRSIM_OVERRIDE_TEMPLATE_COMPLETER_FWD(PushType, type_completer)
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(PushType, builtin)
+
+typedef	PopType<State>				PopType;
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(PopType, builtin)
+
+typedef	WorkingType<State>			WorkingType;
+PRSIM_INSTANTIATE_TRIVIAL_COMMAND_CLASS(WorkingType, builtin)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -1063,12 +1157,15 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(Set, "set", simulation,
 static
 int
 __set_main(State& s, const string_list& a, const bool force, 
-		void (*usage)(ostream&)) {
+		void (*usage)(ostream&), const char* name) {
 	STACKTRACE_VERBOSE;
 	const size_t asz = a.size();
 if (asz < 3 || asz > 4) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	// now I'm wishing string_list was string_vector... :) can do!
 	int err = 0;
@@ -1128,7 +1225,7 @@ if (asz < 3 || asz > 4) {
 
 int
 Set::main(State& s, const string_list& a) {
-	return __set_main(s, a, false, &Set::usage);
+	return __set_main(s, a, false, &Set::usage, name);
 }
 
 void
@@ -1246,6 +1343,9 @@ SetPairRandom::main(State& s, const string_list& a) {
 if (asz != 3) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	string_list::const_iterator ai(++a.begin());
 	const string& objname1(*ai++);	// node name
@@ -1293,7 +1393,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(SetF, "setf", simulation,
 
 int
 SetF::main(State& s, const string_list& a) {
-	return __set_main(s, a, true, &SetF::usage);
+	return __set_main(s, a, true, &SetF::usage, name);
 }
 
 void
@@ -1329,6 +1429,9 @@ UnSet::main(State& s, const string_list& a) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	const string& objname(a.back());
 #if PRSIM_NODE_AGGREGATE_ARGUMENTS
@@ -1414,11 +1517,14 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(Setr, "setr", simulation,
 static
 int
 __setrf_main(State& s, const string_list& a, const bool force, 
-		void (*usage)(ostream&)) {
+		void (*usage)(ostream&), const char* name) {
 	const size_t asz = a.size();
 if (asz != 3) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	// now I'm wishing string_list was string_vector... :) can do!
 	string_list::const_iterator ai(++a.begin());
@@ -1452,7 +1558,7 @@ if (asz != 3) {
 
 int
 Setr::main(State& s, const string_list& a) {
-	return __setrf_main(s, a, false, &Setr::usage);
+	return __setrf_main(s, a, false, &Setr::usage, name);
 }
 
 void
@@ -1494,6 +1600,9 @@ Freeze::main(State& s, const string_list& a) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	const string& objname(a.back());
 #if PRSIM_NODE_AGGREGATE_ARGUMENTS
@@ -1609,6 +1718,9 @@ const size_t sz = a.size();
 if (sz < 2 || sz > 3) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	string_list::const_iterator ai(++a.begin());
 	const string& objname(*ai++);	// node name
@@ -1674,7 +1786,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(SetrF, "setrf", simulation,
 
 int
 SetrF::main(State& s, const string_list& a) {
-	return __setrf_main(s, a, true, &SetrF::usage);
+	return __setrf_main(s, a, true, &SetrF::usage, name);
 }
 
 void
@@ -1712,6 +1824,9 @@ Dequeue::main(State& s, const string_list& a) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	const string& objname(a.back());
 #if PRSIM_NODE_AGGREGATE_ARGUMENTS
@@ -1783,10 +1898,13 @@ static
 int
 reschedule_main(State& s, const string_list& a,
 		bool (State::*smf)(const node_index_type, const time_type), 
-		void (usage)(ostream&)) {
+		void (usage)(ostream&), const char* name) {
 if (a.size() != 3) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	const string& objname(*++a.begin());
 	time_type t;
@@ -1820,6 +1938,9 @@ RescheduleNow::main(State& s, const string_list& a) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	const string& objname(a.back());
 #if PRSIM_NODE_AGGREGATE_ARGUMENTS
@@ -1845,17 +1966,17 @@ if (!ni) {
 
 int
 Reschedule::main(State& s, const string_list& a) {
-	return reschedule_main(s, a, &State::reschedule_event, usage);
+	return reschedule_main(s, a, &State::reschedule_event, usage, name);
 }
 
 int
 RescheduleFromNow::main(State& s, const string_list& a) {
-	return reschedule_main(s, a, &State::reschedule_event_future, usage);
+	return reschedule_main(s, a, &State::reschedule_event_future, usage, name);
 }
 
 int
 RescheduleRelative::main(State& s, const string_list& a) {
-	return reschedule_main(s, a, &State::reschedule_event_relative, usage);
+	return reschedule_main(s, a, &State::reschedule_event_relative, usage, name);
 }
 
 void
@@ -1903,6 +2024,9 @@ Execute::main(State& s, const string_list& a) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	const string& objname(a.back());
 	const node_index_type ni = parse_node_to_index(objname, s.get_module());
@@ -1948,6 +2072,9 @@ BreakPt::main(State& s, const string_list& a) {
 if (a.size() < 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	typedef string_list::const_iterator	const_iterator;
 	const_iterator i(++a.begin()), e(a.end());
@@ -2001,6 +2128,9 @@ NoBreakPt::main(State& s, const string_list& a) {
 if (a.size() < 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	typedef string_list::const_iterator	const_iterator;
 	const_iterator i(++a.begin()), e(a.end());
@@ -2229,6 +2359,9 @@ Pending::main(State& s, const string_list& a) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	const string& objname(a.back());
 	const node_index_type ni = parse_node_to_index(objname, s.get_module());
@@ -2261,6 +2394,9 @@ PendingDebug::main(State& s, const string_list& a) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	const string& objname(a.back());
 	const node_index_type ni = parse_node_to_index(objname, s.get_module());
@@ -2367,6 +2503,9 @@ DumpNode::main(State& s, const string_list& a) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	typedef	vector<node_index_type>		nodes_id_list_type;
 	const string& objname(a.back());
@@ -2404,6 +2543,9 @@ ProcessID::main(State& s, const string_list& a) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	const string& objname(a.back());
 	const module& m(s.get_module());
@@ -2439,7 +2581,15 @@ NodeID::main(State& s, const string_list& a) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+#if 0
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
+#endif
 } else {
+	if (CommandRegistry::in_local_type()) {
+		cout << "note: ID is type-local." << endl;
+	}
 	typedef	vector<node_index_type>		nodes_id_list_type;
 	const string& objname(a.back());
 	const module& m(s.get_module());
@@ -2479,6 +2629,9 @@ Get::main(State& s, const string_list& a) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	const string& objname(a.back());
 #if PRSIM_NODE_AGGREGATE_ARGUMENTS
@@ -2532,6 +2685,9 @@ GetDriven::main(State& s, const string_list& a) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	const string& objname(a.back());
 #if PRSIM_NODE_AGGREGATE_ARGUMENTS
@@ -2553,11 +2709,11 @@ if (a.size() != 2) {
 		const pull_enum wd = n.get_pull_struct(false, WEAK_RULE).pull();
 #endif
 		cout << objname <<
-			" pulled up:" << node_type::value_to_char[u] <<
-			" dn:" << node_type::value_to_char[d] <<
+			" pulled up:" << node_type::translate_value_to_char(u) <<
+			" dn:" << node_type::translate_value_to_char(d) <<
 #if PRSIM_WEAK_RULES
-			" weak-up:" << node_type::value_to_char[wu] <<
-			" weak-dn:" << node_type::value_to_char[wd] <<
+			" weak-up:" << node_type::translate_value_to_char(wu) <<
+			" weak-dn:" << node_type::translate_value_to_char(wd) <<
 #endif
 				endl;
 #if PRSIM_NODE_AGGREGATE_ARGUMENTS
@@ -2618,6 +2774,9 @@ GetPorts::main(State& s, const string_list& a) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	typedef	vector<node_index_type>		nodes_id_list_type;
 	const string& objname(a.back());
@@ -2643,6 +2802,9 @@ GetInPorts::main(State& s, const string_list& a) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	typedef	vector<node_index_type>		nodes_id_list_type;
 	const string& objname(a.back());
@@ -2656,7 +2818,8 @@ if (a.size() != 2) {
 	vector<bool> input_mask;
 	GET_CONTEXT_CACHE(s) get_global_context(p.index).value.frame._footprint
 		->has_not_sub_fanin_map(input_mask);
-	if (parser::parse_name_to_get_ports(p, m, nodes, &input_mask)) {
+	if (parser::parse_name_to_get_ports(p, m.get_footprint(),
+			nodes, &input_mask)) {
 		return Command::BADARG;
 	} else {
 		typedef	nodes_id_list_type::const_iterator	const_iterator;
@@ -2676,6 +2839,9 @@ GetOutPorts::main(State& s, const string_list& a) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	typedef	vector<node_index_type>		nodes_id_list_type;
 	const string& objname(a.back());
@@ -2689,7 +2855,8 @@ if (a.size() != 2) {
 	vector<bool> output_mask;
 	GET_CONTEXT_CACHE(s) get_global_context(p.index).value.frame._footprint
 		->has_sub_fanin_map(output_mask);
-	if (parser::parse_name_to_get_ports(p, m, nodes, &output_mask)) {
+	if (parser::parse_name_to_get_ports(p, m.get_footprint(),
+			nodes, &output_mask)) {
 		return Command::BADARG;
 	} else {
 		typedef	nodes_id_list_type::const_iterator	const_iterator;
@@ -2709,6 +2876,9 @@ GetCommonPorts::main(State& s, const string_list& a) {
 if (a.size() != 3) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	typedef	vector<node_index_type>		nodes_id_list_type;
 	string_list::const_iterator ai(a.begin());
@@ -2792,6 +2962,9 @@ GetLocal::main(State& s, const string_list& a) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	typedef	vector<node_index_type>		nodes_id_list_type;
 	const string& objname(a.back());
@@ -2838,6 +3011,9 @@ GetAll::main(State& s, const string_list& a) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	typedef	vector<node_index_type>		nodes_id_list_type;
 	const string& objname(a.back());
@@ -2964,7 +3140,7 @@ if (sz != 2 && sz != 3) {
 			s.filter_nodes(nodes,
 				bind2nd(mem_fun_ref(&node_type::match_value),
 					v));
-			cout << node_type::value_to_char[size_t(v)] <<
+			cout << node_type::translate_value_to_char(v) <<
 				" nodes in " << proc << ':' << endl;
 			s.print_nodes(cout, nodes, false, nl ? "\n" : " ");
 			cout << endl;
@@ -3770,10 +3946,13 @@ default_print_nodeinfo_main(const State& s, const string_list& a,
 			const bool) const,
 		const char* msg,
 		const bool v, 
-		void (usage)(ostream&)) {
+		void (usage)(ostream&), const char* name) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	const string& objname(a.back());
 #if PRSIM_NODE_AGGREGATE_ARGUMENTS
@@ -3800,7 +3979,7 @@ if (a.size() != 2) {
 int
 Fanin::main(State& s, const string_list& a) {
 	return default_print_nodeinfo_main(s, a, &State::dump_node_fanin,
-		"Fanins of node", false, usage);
+		"Fanins of node", false, usage, name);
 }
 
 void
@@ -3827,7 +4006,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(FaninGet, "fanin-get", info,
 int
 FaninGet::main(State& s, const string_list& a) {
 	return default_print_nodeinfo_main(s, a, &State::dump_node_fanin,
-		"Fanins of node", true, usage);
+		"Fanins of node", true, usage, name);
 }
 
 void
@@ -3855,7 +4034,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(Fanout, "fanout", info,
 int
 Fanout::main(State& s, const string_list& a) {
 	return default_print_nodeinfo_main(s, a, &State::dump_node_fanout_rules,
-		"Fanouts of node", false, usage);
+		"Fanouts of node", false, usage, name);
 }
 
 void
@@ -3881,7 +4060,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(FanoutGet, "fanout-get", info,
 int
 FanoutGet::main(State& s, const string_list& a) {
 	return default_print_nodeinfo_main(s, a, &State::dump_node_fanout_rules,
-		"Fanouts of node", true, usage);
+		"Fanouts of node", true, usage, name);
 }
 
 void
@@ -3914,13 +4093,13 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(FeedbackGet, "feedback-get", info,
 int
 Feedback::main(State& s, const string_list& a) {
 	return default_print_nodeinfo_main(s, a, &State::dump_node_feedback,
-		"Feedback of node", false, usage);
+		"Feedback of node", false, usage, name);
 }
 
 int
 FeedbackGet::main(State& s, const string_list& a) {
 	return default_print_nodeinfo_main(s, a, &State::dump_node_feedback,
-		"Feedback of node", true, usage);
+		"Feedback of node", true, usage, name);
 }
 
 void
@@ -3958,10 +4137,13 @@ default_print_node_rings(const State& s, const string_list& a,
 	const bool verbose,
 	ostream& (State::*memfn)(ostream&,
 		const node_index_type, const bool) const, 
-	void (usage)(ostream&)) {
+	void (usage)(ostream&), const char* name) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	const string& objname(a.back());
 	const node_index_type ni = parse_node_to_index(objname, s.get_module());
@@ -3978,13 +4160,13 @@ if (a.size() != 2) {
 int
 RingsMk::main(State& s, const string_list& a) {
 	return default_print_node_rings(s, a, false,
-		&State::dump_node_mk_excl_rings, usage);
+		&State::dump_node_mk_excl_rings, usage, name);
 }
 
 int
 RingsMkGet::main(State& s, const string_list& a) {
 	return default_print_node_rings(s, a, true,
-		&State::dump_node_mk_excl_rings, usage);
+		&State::dump_node_mk_excl_rings, usage, name);
 }
 
 void
@@ -4166,6 +4348,9 @@ Attributes::main(State& s, const string_list& a) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	const string& objname(a.back());
 #if PRSIM_NODE_AGGREGATE_ARGUMENTS
@@ -4222,6 +4407,9 @@ Assert::main(State& s, const string_list& a) {
 if (a.size() != 3) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	const string& objname(*++a.begin());
 	const string& _val(a.back());	// node value
@@ -4250,7 +4438,7 @@ if (a.size() != 3) {
 			cout << "assert failed: expecting node `" << 
 				nonempty_abs_dir(objname) <<
 				"\' at " <<
-				node_type::value_to_char[size_t(val)] <<
+				node_type::translate_value_to_char(val) <<
 				", but got ";
 			n.dump_value(cout) << "." << endl;
 			}	// yes, actually allow suppression
@@ -4259,7 +4447,7 @@ if (a.size() != 3) {
 		} else if (s.confirm_asserts()) {
 			cout << "node `" << nonempty_abs_dir(objname)
 				<< "\' is " <<
-				node_type::value_to_char[size_t(val)] <<
+				node_type::translate_value_to_char(val) <<
 				", as expected." << endl;
 		}
 #if PRSIM_NODE_AGGREGATE_ARGUMENTS
@@ -4299,6 +4487,9 @@ AssertN::main(State& s, const string_list& a) {
 if (a.size() != 3) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	const string& objname(*++a.begin());
 	const string& _val(a.back());	// node value
@@ -4327,7 +4518,7 @@ if (a.size() != 3) {
 			cout << "assert failed: expecting node `" << 
 				nonempty_abs_dir(objname) <<
 				"\' not at " <<
-				node_type::value_to_char[size_t(val)] <<
+				node_type::translate_value_to_char(val) <<
 				", but got ";
 			n.dump_value(cout) << "." << endl;
 			}
@@ -4336,7 +4527,7 @@ if (a.size() != 3) {
 		} else if (s.confirm_asserts()) {
 			cout << "node `" << nonempty_abs_dir(objname)
 				<< "\' is not " <<
-				node_type::value_to_char[size_t(val)] <<
+				node_type::translate_value_to_char(val) <<
 				", as expected." << endl;
 		}
 #if PRSIM_NODE_AGGREGATE_ARGUMENTS
@@ -4378,6 +4569,9 @@ AssertDriven::main(State& s, const string_list& a) {
 if (a.size() != 3) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	const string& objname(*++a.begin());
 	const string& _val(a.back());	// node value
@@ -4406,16 +4600,16 @@ if (a.size() != 3) {
 			cout << "assert failed: expecting node `" << 
 				nonempty_abs_dir(objname) <<
 				"\' with drive-state " <<
-				node_type::value_to_char[size_t(val)] <<
+				node_type::translate_value_to_char(val) <<
 				", but got ";
-			cout << node_type::value_to_char[size_t(actual)]
+			cout << node_type::translate_value_to_char(actual)
 				<< "." << endl;
 			}	// yes, actually allow suppression
 			return error_policy_to_status(e);
 		} else if (s.confirm_asserts()) {
 			cout << "node `" << nonempty_abs_dir(objname)
 				<< "\' has drive-state " <<
-				node_type::value_to_char[size_t(val)] <<
+				node_type::translate_value_to_char(val) <<
 				", as expected." << endl;
 		}
 #if PRSIM_NODE_AGGREGATE_ARGUMENTS
@@ -4452,6 +4646,9 @@ AssertPending::main(State& s, const string_list& a) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	const string& objname(*++a.begin());
 #if PRSIM_NODE_AGGREGATE_ARGUMENTS
@@ -4511,6 +4708,9 @@ AssertNPending::main(State& s, const string_list& a) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	const string& objname(*++a.begin());
 #if PRSIM_NODE_AGGREGATE_ARGUMENTS
@@ -4642,6 +4842,9 @@ const size_t sz = a.size();
 if (sz != 2 && sz != 3) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	string_list::const_iterator ai(++a.begin());
 	const string& objname(*ai);
@@ -4755,6 +4958,9 @@ WhyX::main(State& s, const string_list& a) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	return why_X_main(s, a, size_t(-1), false);
 }
@@ -4765,6 +4971,9 @@ WhyXVerbose::main(State& s, const string_list& a) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	return why_X_main(s, a, size_t(-1), true);
 }
@@ -4775,6 +4984,9 @@ WhyX1::main(State& s, const string_list& a) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	return why_X_main(s, a, 1, false);
 }
@@ -4785,6 +4997,9 @@ WhyX1Verbose::main(State& s, const string_list& a) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	return why_X_main(s, a, 1, true);
 }
@@ -4795,6 +5010,9 @@ WhyXN::main(State& s, const string_list& a) {
 if (a.size() != 3) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	return why_X_N_main(s, a, false);
 }
@@ -4805,6 +5023,9 @@ WhyXNVerbose::main(State& s, const string_list& a) {
 if (a.size() != 3) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	return why_X_N_main(s, a, true);
 }
@@ -4993,11 +5214,14 @@ static
 int
 why_not_main(State& s, const string_list& a, const size_t limit, 
 		const bool why_not, const bool verbose, 
-		void (usage)(ostream&)) {
+		void (usage)(ostream&), const char* name) {
 const size_t a_s = a.size();
 if (a_s < 2 || a_s > 3) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	const string& objname(*++a.begin());
 	const node_index_type ni = parse_node_to_index(objname, s.get_module());
@@ -5010,11 +5234,14 @@ static
 int
 why_not_N_main(State& s, const string_list& a,
 		const bool why_not, const bool verbose, 
-		void (usage)(ostream&)) {
+		void (usage)(ostream&), const char* name) {
 const size_t a_s = a.size();
 if (a_s < 3 || a_s > 4) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	const string& objname(*++a.begin());
 	const node_index_type ni = parse_node_to_index(objname, s.get_module());
@@ -5031,62 +5258,62 @@ if (a_s < 3 || a_s > 4) {
 
 int
 Why::main(State& s, const string_list& a) {
-	return why_not_main(s, a, size_t(-1), false, false, usage);
+	return why_not_main(s, a, size_t(-1), false, false, usage, name);
 }
 
 int
 WhyVerbose::main(State& s, const string_list& a) {
-	return why_not_main(s, a, size_t(-1), false, true, usage);
+	return why_not_main(s, a, size_t(-1), false, true, usage, name);
 }
 
 int
 WhyNot::main(State& s, const string_list& a) {
-	return why_not_main(s, a, size_t(-1), true, false, usage);
+	return why_not_main(s, a, size_t(-1), true, false, usage, name);
 }
 
 int
 WhyNotVerbose::main(State& s, const string_list& a) {
-	return why_not_main(s, a, size_t(-1), true, true, usage);
+	return why_not_main(s, a, size_t(-1), true, true, usage, name);
 }
 
 int
 Why1::main(State& s, const string_list& a) {
-	return why_not_main(s, a, 1, false, false, usage);
+	return why_not_main(s, a, 1, false, false, usage, name);
 }
 
 int
 Why1Verbose::main(State& s, const string_list& a) {
-	return why_not_main(s, a, 1, false, true, usage);
+	return why_not_main(s, a, 1, false, true, usage, name);
 }
 
 int
 WhyNot1::main(State& s, const string_list& a) {
-	return why_not_main(s, a, 1, true, false, usage);
+	return why_not_main(s, a, 1, true, false, usage, name);
 }
 
 int
 WhyNot1Verbose::main(State& s, const string_list& a) {
-	return why_not_main(s, a, 1, true, true, usage);
+	return why_not_main(s, a, 1, true, true, usage, name);
 }
 
 int
 WhyN::main(State& s, const string_list& a) {
-	return why_not_N_main(s, a, false, false, usage);
+	return why_not_N_main(s, a, false, false, usage, name);
 }
 
 int
 WhyNVerbose::main(State& s, const string_list& a) {
-	return why_not_N_main(s, a, false, true, usage);
+	return why_not_N_main(s, a, false, true, usage, name);
 }
 
 int
 WhyNotN::main(State& s, const string_list& a) {
-	return why_not_N_main(s, a, true, false, usage);
+	return why_not_N_main(s, a, true, false, usage, name);
 }
 
 int
 WhyNotNVerbose::main(State& s, const string_list& a) {
-	return why_not_N_main(s, a, true, true, usage);
+	return why_not_N_main(s, a, true, true, usage, name);
 }
 
 static
@@ -5239,6 +5466,9 @@ Watch::main(State& s, const string_list& a) {
 if (a.size() < 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	typedef string_list::const_iterator	const_iterator;
 	const_iterator i(++a.begin()), e(a.end());
@@ -5294,6 +5524,9 @@ UnWatch::main(State& s, const string_list& a) {
 if (a.size() < 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	typedef string_list::const_iterator	const_iterator;
 	const_iterator i(++a.begin()), e(a.end());
@@ -5542,6 +5775,9 @@ TCount::main(State& s, const string_list& a) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	const string& objname(a.back());
 #if PRSIM_NODE_AGGREGATE_ARGUMENTS
@@ -6466,6 +6702,36 @@ DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS(KeeperCheckFail,
 	"Set error-handling policy on missing keepers.",
 	keeper_check_fail)
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_SETUP_HOLD
+/***
+@texinfo cmd/setup-violation.texi
+@deffn Command setup-violation [mode]
+Set the error-handling policy for when there is a setup time violation.
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS(SetupViolation, 
+	"setup-violation", 
+	"set error-handling for setup time violation",
+	"Set error-handling on setup time violation.",
+	setup_violation)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/hold-violation.texi
+@deffn Command hold-violation [mode]
+Set the error-handling policy for when there is a hold time violation.
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS(HoldViolation, 
+	"hold-violation", 
+	"set error-handling for hold time violation",
+	"Set error-handling on hold time violation.",
+	hold_violation)
+#endif
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #undef	DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -6505,10 +6771,13 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(AllRulesVerbose, "allrules-verbose", info,
 static
 int
 rules_main(const State& s, const string_list& a, const bool verbose, 
-		void (usage)(ostream&)) {
+		void (usage)(ostream&), const char* name) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	const process_index_type pid =
 		parse_process_to_index(a.back(), s.get_module()).index;
@@ -6562,7 +6831,7 @@ all_rules_usage(ostream& o) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 int
 Rules::main(State& s, const string_list& a) {
-	return rules_main(s, a, false, usage);
+	return rules_main(s, a, false, usage, name);
 }
 
 void
@@ -6570,7 +6839,7 @@ Rules::usage(ostream& o) { rules_usage(o); }
 
 int
 RulesVerbose::main(State& s, const string_list& a) {
-	return rules_main(s, a, true, usage);
+	return rules_main(s, a, true, usage, name);
 }
 
 void
@@ -6591,6 +6860,187 @@ AllRulesVerbose::main(State& s, const string_list& a) {
 
 void
 AllRulesVerbose::usage(ostream& o) { all_rules_usage(o); }
+
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/local-rules.texi
+@deffn Command local-rules
+Print all (expanded) production rules local to the current type scope.
+The node names are local to current process type.
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(LocalRules, "local-rules", info, 
+	"print all rules belonging to current type")
+
+int
+LocalRules::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	unique_process_subgraph* g = __get_current_process_graph(s);
+	NEVER_NULL(g);
+	cout << "All rules local to type: ";
+	g->_footprint->dump_type(cout) << endl;
+	g->dump_all_rules(cout);
+	return Command::NORMAL;
+}
+}
+
+void
+LocalRules::usage(ostream& o) {
+	o << name << endl;
+	o << brief << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/local-rules-matching.texi
+@deffn Command local-rules in out dir
+Print production rules local to the current type scope
+that match @var{in} in the guard, @var{out} in the output
+in direction @var{dir}.
+The node names are local to current process type.
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(LocalRulesMatching,
+	"local-rules-matching", info, 
+	"print rules that involve specific nodes in current type")
+
+int
+LocalRulesMatching::main(State& s, const string_list& a) {
+if (a.size() != 4) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	string_list::const_iterator ai(a.begin());
+	++ai;
+	// indices are local
+	const node_index_type srcind = parse_node_to_index(*ai, s.get_module());
+	if (!srcind) {
+		cerr << "Error finding node: " << *ai << endl;
+		return Command::BADARG;
+	}
+	++ai;
+	const node_index_type dstind = parse_node_to_index(*ai, s.get_module());
+	if (!dstind) {
+		cerr << "Error finding node: " << *ai << endl;
+		return Command::BADARG;
+	}
+	++ai;
+	bool dir = false;	// pull-dn
+	if (ai->length() == 1) {
+		switch ((*ai)[0]) {
+		case '+': dir = true; break;
+		case '-': dir = false; break;
+		default:
+			cerr << "Error: expecting - or + (for rule direction)."
+				<< endl;
+			return Command::BADARG;
+		}
+	} else {
+		cerr << "Error: expecting - or + (for rule direction)." << endl;
+		return Command::BADARG;
+	}
+
+	unique_process_subgraph* g = __get_current_process_graph(s);
+	NEVER_NULL(g);
+	cout << "Rules local to type: ";
+	g->_footprint->dump_type(cout);
+	g->dump_node_local_name(cout << " [from ", srcind);
+	g->dump_node_local_name(cout << " to ", dstind);
+	cout << (dir ? '+' : '-') << " ]" << endl;
+	g->print_rules_matching_faninout(cout, srcind, dstind, dir);
+	return Command::NORMAL;
+}
+}
+
+void
+LocalRulesMatching::usage(ostream& o) {
+	o << name << " <fronNode> <toNode> <+->" << endl;
+	o << brief << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/local-rules-edit-attr.texi
+@deffn Command local-rules-edit-attr in out dir prop val
+Alters property values of type-local production rule(s)
+that match:
+@var{in} in the guard, @var{out} in the output
+in direction @var{dir}.
+@var{prop} is the name of the property, 
+and @var{val} is the new value.
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(LocalRulesEditAttr,
+	"local-rules-edit-attr", info, 
+	"alter attributes of matching production rules in current type")
+
+int
+LocalRulesEditAttr::main(State& s, const string_list& a) {
+if (a.size() != 6) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	string_list::const_iterator ai(a.begin());
+	++ai;
+	// indices are local
+	const node_index_type srcind = parse_node_to_index(*ai, s.get_module());
+	if (!srcind) {
+		cerr << "Error finding node: " << *ai << endl;
+		return Command::BADARG;
+	}
+	++ai;
+	const node_index_type dstind = parse_node_to_index(*ai, s.get_module());
+	if (!dstind) {
+		cerr << "Error finding node: " << *ai << endl;
+		return Command::BADARG;
+	}
+	++ai;
+	bool dir = false;	// pull-dn
+	if (ai->length() == 1) {
+		switch ((*ai)[0]) {
+		case '+': dir = true; break;
+		case '-': dir = false; break;
+		default:
+			cerr << "Error: expecting - or + (for rule direction)."
+				<< endl;
+			return Command::BADARG;
+		}
+	} else {
+		cerr << "Error: expecting - or + (for rule direction)." << endl;
+		return Command::BADARG;
+	}
+	++ai;
+	const string& attr_name(*ai);
+	++ai;
+	const string& attr_val(*ai);
+
+	unique_process_subgraph* g = __get_current_process_graph(s);
+	NEVER_NULL(g);
+	vector<rule_index_type> r;
+	g->rules_matching_faninout(srcind, dstind, dir, r);
+	if (g->edit_rule_property(r, attr_name, attr_val)) {
+		return Command::BADARG;
+	}
+	return Command::NORMAL;
+}
+}
+
+void
+LocalRulesEditAttr::usage(ostream& o) {
+	o << name << " <fromNode> <toNode> <+-> <prop> <value>" << endl;
+	o <<
+"In the current type context, find all rules that match:\n"
+"\t<fromNode> -> <toNode>+/-\n"
+"and change their <prop> property to the new value."
+	<< endl;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -6738,6 +7188,360 @@ void
 AllInvariantsVerbose::usage(ostream& o) { all_invariants_usage(o); }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+#if PRSIM_SETUP_HOLD
+/***
+@texinfo cmd/timing-constraints-process.texi
+@deffn Command timing-constraints-process-invariants proc
+Display timing constraints (setup, hold) that belong to the named process.
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(TimingConstraintsProcess,
+	"timing-constraints-process",
+	info, "display timing constraints for the process")
+
+int
+TimingConstraintsProcess::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	// TODO: print per-type constraint information
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
+} else {
+	const process_index_type pid =
+		parse_process_to_index(a.back(), s.get_module()).index;
+	if (pid < s.get_num_processes()) {
+		if (pid) {
+			parse_name_to_what(cout, a.back(), s.get_module());
+		} else {
+			cout << "[top-level]" << endl;
+		}
+		s.dump_timing_constraints(cout, pid);	// TODO: verbose
+		return Command::NORMAL;
+	} else {
+		cerr << "Error: process not found." << endl;
+		return Command::BADARG;
+	}
+}
+}
+
+void
+TimingConstraintsProcess::usage(ostream& o) {
+	o << name << " <process>" << endl;
+o <<
+"Print all timing constraints associated with the named process."
+	<< endl;
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+#if PRSIM_TIMING_BACKANNOTATE
+/***
+@texinfo cmd/timing-min-delay.texi
+@deffn Command min-delay src dest delay [pred]
+Force the minimum delay between the most recent event on @var{src}
+to the next event on @var{dest} to be greater-than or equal-to
+@var{delay}.  
+Node names @var{src} and @var{dst} may be optionally suffixed with + or -
+to indicate the direction with which the constraint is applied.
+Left unspecified, the constraint applies to both directions on each node.
+If predicate @var{pred} is specified, only apply the min-delay if
+the predicate is true.
+@var{pred} can be any bool or ebool (atomic).  
+The minimum delay is enforced by postponing the event on @var{dst} to a
+time that meets all constraints; it will never cause an event to advance
+earlier than initially scheduled.  
+There are 4 combinations of directions on contraints, and each combination
+may have its own predicate and delay value.
+For example if direction is omitted in both @var{src} and @var{dst}, then 
+the same delay and predicate will be applied to all 4 cases.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(TimingBAMinDelay, 
+	"min-delay", info,
+	"specify a min-delay constraint on a path")
+
+int
+TimingBAMinDelay::main(State& s, const string_list& a) {
+const size_t asz = a.size();
+if (asz < 4 || asz > 5) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	unique_process_subgraph* g = __get_current_process_graph(s);
+#if 0
+	g->_footprint->dump_type(cout << "type: ") << endl;
+#endif
+	string_list::const_iterator ai(a.begin());
+	// note: parsing is sensitive to type-local context
+	++ai;
+	string rnode(*ai);	// copy
+	char rdir = *--rnode.end(); // string cannot be empty by tokenization
+	switch (rdir) {
+	case '+': // fall-through
+	case '-': rnode.resize(rnode.length()-1); break;
+	default: rdir = '*'; break;
+	}
+	const node_index_type srcind = parse_node_to_index(rnode, s.get_module());
+	if (!srcind) {
+		cerr << "Error finding reference node: " << *ai << endl;
+		return Command::BADARG;
+	}
+	++ai;
+	string tnode(*ai);	// copy
+	char tdir = *--tnode.end(); // string cannot be empty by tokenization
+	switch (tdir) {
+	case '+': // fall-through
+	case '-': tnode.resize(tnode.length()-1); break;
+	default: tdir = '*'; break;
+	}
+	const node_index_type dstind = parse_node_to_index(tnode, s.get_module());
+	if (!dstind) {
+		cerr << "Error finding target node: " << *ai << endl;
+		return Command::BADARG;
+	}
+	++ai;
+	time_type min_delay;
+	string_to_num(*ai, min_delay);
+	size_t predind = INVALID_NODE_INDEX;
+	if (asz == 5) {
+		++ai;
+		predind = parse_node_to_index(*ai, s.get_module());
+		if (!predind) {
+			cerr << "Error finding predicate node: " << *ai << endl;
+			return Command::BADARG;
+		}
+	}
+#if 0
+	cout << "src=" << srcind << ", dst=" << dstind << ", t=" << min_delay
+		<< ", pred=" << predind << endl;
+#endif
+	g->add_min_delay_constraint(srcind, rdir, dstind, tdir, min_delay, predind);
+	return Command::NORMAL;
+}
+}
+
+void
+TimingBAMinDelay::usage(ostream& o) {
+	o << name << " <src>[+-] <dst>[+-] <min-delay> [predicate]" << endl;
+o << "For src and dst, if the node name is suffixed with + or -, then the\n"
+"delay constraint is only applied in the specified directions." << endl;
+o << "Note: delays are not applied globally until 'min-delay-apply-all' is run."
+	<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/timing-min-delay-reset-all.texi
+@deffn Command min-delay-reset-all
+This clears all timing back-annotations to the initial clean state.
+This command is useful between loading of different delay constraint sets.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(TimingBAMinDelayReset, 
+	"min-delay-reset", info,
+	"clear all back-annotated timing-constraints")
+
+int
+TimingBAMinDelayReset::main(State& s, const string_list& a) {
+if (a.size() > 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.reset_min_delays();
+	return Command::NORMAL;
+}
+}
+
+void
+TimingBAMinDelayReset::usage(ostream& o) {
+	o << name << ": " << brief << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/timing-min-delay-apply-all.texi
+@deffn Command timing-min-delay-apply-all
+After setting per-type delays this @emph{applies} delays to all
+instances of each type.
+This command is required for min-delay constraints to take effect.
+Do not forget it after loading delay sets.
+@end deffn
+@end texinfo
+***/
+
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(TimingBAMinDelayApplyAll, 
+	"min-delay-apply-all", info,
+	"apply per-type timing-constraints to all unique instances")
+
+int
+TimingBAMinDelayApplyAll::main(State& s, const string_list& a) {
+if (a.size() > 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.apply_all_min_delays();
+	return Command::NORMAL;
+}
+}
+
+void
+TimingBAMinDelayApplyAll::usage(ostream& o) {
+	o << name << ": " << brief << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/timing-min-delay-list.texi
+@deffn Command min-delay-list [type]
+Prints the timing constraints associated with process @var{type}.
+If @var{type} is omitted, then use the current type context.
+The '.' type references the top-level type.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(TimingBAMinDelayList, 
+	"min-delay-list", info,
+	"show timing-constraints impose by type")
+
+// if no argument given, default to using current type context
+int
+TimingBAMinDelayList::main(State& s, const string_list& a) {
+if (a.size() != 2 && a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+if (a.size() == 1) {
+	unique_process_subgraph* g = __get_current_process_graph(s);
+	g->dump_backannotated_delays(cout);
+} else {
+	const string& objname(a.back());
+	if (s.list_min_delays_type(cout, objname)) {
+		cerr << "Error: unknown type: " << objname << endl;
+		return Command::BADARG;
+	}
+}
+	return Command::NORMAL;
+}
+}
+
+void
+TimingBAMinDelayList::usage(ostream& o) {
+	o << name << " [type] : " << brief << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/timing-min-delay-list-all.texi
+@deffn Command min-delay-list-all
+Prints the timing constraints associated with every unique process type.
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(TimingBAMinDelayListAll, 
+	"min-delay-list-all", info,
+	"show timing-constraints imposed by all type")
+
+int
+TimingBAMinDelayListAll::main(State& s, const string_list& a) {
+if (a.size() > 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.list_all_min_delays(cout);
+	return Command::NORMAL;
+}
+}
+
+void
+TimingBAMinDelayListAll::usage(ostream& o) {
+	o << name << ": " << brief << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/timing-min-delay-fanin-proc.texi
+@deffn Command min-delay-fanin-proc node
+Prints all sources of timing constraints that can delay @var{node}.
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(TimingBAMinDelayFaninProc, 
+	"min-delay-fanin-proc", info,
+	"show timing-constraints imposed on the target node")
+
+int
+TimingBAMinDelayFaninProc::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	// FIXME:
+	const size_t ni = parse_node_to_index(a.back(), s.get_module());
+	if (!ni) {
+		cerr << "No such node found." << endl;
+		return Command::BADARG;
+	}
+	s.min_delay_fanin(cout, ni);
+	return Command::NORMAL;
+}
+}
+
+void
+TimingBAMinDelayFaninProc::usage(ostream& o) {
+	o << name << ": " << brief << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/timing-min-delay-verbose.texi
+@deffn Command min-delay-verbose [01]
+Set to 1 to enable messages that print when the schedule on a node
+is altered by min-delay constraints.  
+This is most useful for debugging and development of 
+min-delay constraints.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(TimingBAMinDelayVerbose, 
+	"min-delay-verbose", info,
+	"show when min-delay constraints are applied in rescheduling")
+
+int
+TimingBAMinDelayVerbose::main(State& s, const string_list& a) {
+if (a.size() == 1) {
+	cout << "min-delay verbose: " << s.verbose_min_delays() << endl;
+} else if (a.size() == 2) {
+	bool b;
+	if (string_to_num(a.back(), b)) {
+		usage(cerr << "usage: ");
+		return Command::BADARG;
+	}
+	if (b) {
+		s.show_min_delays();
+	} else {
+		s.silent_min_delays();
+	}
+} else {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+}
+	return Command::NORMAL;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+TimingBAMinDelayVerbose::usage(ostream& o) {
+	o << name << " [01] : " << brief << endl;
+}
+
+#endif	// PRSIM_TIMING_BACKANNOTATE
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
 @texinfo cmd/check-invariants.texi
 @deffn Command check-invariants
@@ -6941,6 +7745,9 @@ Channel::main(State& s, const string_list& a) {
 if (a.size() != 5) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	string_list::const_iterator i(++a.begin());
 	const string& chan_name(*i);
@@ -7118,6 +7925,9 @@ ChannelLEDR::main(State& s, const string_list& a) {
 if (a.size() != 6) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	string_list::const_iterator i(++a.begin());
 	const string& chan_name(*i);
@@ -7285,6 +8095,9 @@ ChannelBD2P::main(State& s, const string_list& a) {
 if (a.size() != 5) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	string_list::const_iterator i(++a.begin());
 	const string& chan_name(*i);
@@ -7430,6 +8243,9 @@ ChannelBD4P::main(State& s, const string_list& a) {
 if (a.size() != 5) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	string_list::const_iterator i(++a.begin());
 	const string& chan_name(*i);
@@ -7589,6 +8405,9 @@ ClockSource::main(State& s, const string_list& a) {
 if (a.size() != 3) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	string_list::const_iterator i(++a.begin());
 	string clk_name(*i++);
@@ -7703,6 +8522,9 @@ ChannelClocked::main(State& s, const string_list& a) {
 if (a.size() != 4) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
+} else if (CommandRegistry::in_local_type()) {
+	TYPE_CONTEXT_INVALID_COMMAND;
+	return Command::BADARG;
 } else {
 	string_list::const_iterator i(++a.begin());
 	const string& chan_name(*i);
@@ -7867,7 +8689,7 @@ ChannelReportTime::usage(ostream& o) {
 #define	CHANNEL_FOR_EACH(T, name)					\
 	channel_manager& cm(s.get_channel_manager());			\
 	vector<T*> __tmp;						\
-	if (cm.lookup_expand(name, s.get_module(), __tmp))		\
+	if (cm.lookup_expand(name, s.get_module().get_footprint(), __tmp))\
 		{ return Command::BADARG; }				\
 	vector<T*>::const_iterator					\
 		i(__tmp.begin()), e(__tmp.end());			\

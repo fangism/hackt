@@ -56,6 +56,17 @@
 #define	PRSIM_TRACK_CAUSE_TIME				0
 
 /**
+	Keep track of time of last edge change for every node (per value).
+	Goal: ?
+	Might not be that useful.  Leave off for now.
+	Can't be used for doing timed backtrace because a causing node
+	may have already switched at query time.
+	Time would need to be embedded in causality chain.  
+ */
+#define PRSIM_TRACK_LAST_EDGE_TIME			1
+
+
+/**
 	Define to 1 to enable tracing, recording event history.  
 	Application: post-mortem analysis, performance analysis, 
 	bug root-causing, possible rewinding (time machine!).
@@ -126,6 +137,36 @@
 	Status: perm'd
  */
 // #define	PRSIM_AGGREGATE_EXCEPTIONS			1
+
+/**
+	Define to 1 to enable setup/hold time checks.
+	Complete this before doing timing back-annotation.
+	Goal: 1
+ */
+#define	PRSIM_SETUP_HOLD		(1 && PRSIM_TRACK_LAST_EDGE_TIME)
+
+/**
+	Initial implementation of setup-hold timing checks triggered
+	checks when the target (latter) node fired.
+	Another scheme could schedule timing checks at reference time,
+	and expire them after the window of time elapses.
+	Current: 0 -- checks look backward from target transition
+	Goal: ? -- both are valid, which is preferable: unknown
+		This serves as a proof-of-concept.
+	Status: tested, working, even with checkpointing
+		but left disabled for now.
+ */
+#if	PRSIM_SETUP_HOLD
+#define	PRSIM_FWD_POST_TIMING_CHECKS		0
+#endif
+
+/**
+	Define to 1 to enable timing-backannotation via min-delays (arcs)
+	sparsely specified in unique_process_subgraph.
+	Goal: 1
+	Status: just begun
+ */
+#define	PRSIM_TIMING_BACKANNOTATE	(1 && PRSIM_TRACK_LAST_EDGE_TIME)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

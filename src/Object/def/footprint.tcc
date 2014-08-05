@@ -111,6 +111,9 @@ footprint::dump_canonical_name(ostream& o, const size_t gi,
 #if 0 && ENABLE_STACKTRACE
 	dump_type(o << "type:") << endl;
 #endif
+#if 0
+	df.dump_brief(o);
+#endif
 	typedef	typename state_instance<Tag>::pool_type	pool_type;
 	const pool_type& p(get_instance_pool<Tag>());
 	const size_t ports = is_top ? 0 : p.port_entries();

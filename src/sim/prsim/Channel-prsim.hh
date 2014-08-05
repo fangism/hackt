@@ -121,7 +121,7 @@ class ifstream_manager;
 }
 namespace HAC {
 namespace entity {
-class module;
+class footprint;
 }
 namespace SIM {
 namespace PRSIM {
@@ -132,7 +132,7 @@ using std::istream;
 using std::ofstream;
 using entity::int_value_type;
 using entity::preal_value_type;
-using entity::module;
+using entity::footprint;
 using util::memory::count_ptr;
 using util::packed_array;
 using util::string_list;
@@ -1205,7 +1205,7 @@ private:
 		const bool have_validity, const bool validity_sense);
 
 	bool
-	allocate_data_rails(State&, const module&, const size_t ci,
+	allocate_data_rails(State&, const footprint&, const size_t ci,
 		const string& bn, const size_t nb, 
 		const string& rn, const size_t nr);
 
@@ -1328,11 +1328,11 @@ public:
 
 #if PRSIM_CHANNEL_AGGREGATE_ARGUMENTS
 	bool
-	lookup_expand(const string&, const module&,
+	lookup_expand(const string&, const footprint&,
 		vector<const channel*>&) const;
 
 	bool
-	lookup_expand(const string&, const module&,
+	lookup_expand(const string&, const footprint&,
 		vector<channel*>&);
 #endif
 

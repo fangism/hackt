@@ -1,0 +1,66 @@
+[top-level]
+setup-time constraints:
+t( d -> clk- ) >= 15
+hold-time constraints:
+t( clk- -> d ) >= 10
+	100	clk : 1
+time: 100
+	150	d : 1
+	200	clk : 0
+	*** break, `clk' became 0 at time 200
+	250	d : 0
+	300	clk : 1	[by clk:=1]
+	*** break, `clk' became 1 at time 300
+	400	clk : 0	[by clk:=0]
+	*** break, `clk' became 0 at time 400
+	495	d : 1
+	500	clk : 1	[by clk:=1]
+	*** break, `clk' became 1 at time 500
+	595	d : 0
+Warning: setup time violation on node `clk' -> 0 in process `[top-level]':
+	time( d -> clk- ) >= 15, but got: (600 - 595) = 5
+	600	clk : 0	[by clk:=0]
+	*** break, `clk' became 0 at time 600
+	700	clk : 1	[by clk:=1]
+	*** break, `clk' became 1 at time 700
+	790	d : 1
+Warning: setup time violation on node `clk' -> 0 in process `[top-level]':
+	time( d -> clk- ) >= 15, but got: (800 - 790) = 10
+	800	clk : 0	[by clk:=0]
+	*** break, `clk' became 0 at time 800
+	900	clk : 1	[by clk:=1]
+	*** break, `clk' became 1 at time 900
+	992	d : X
+Warning: possible setup time violation on node `clk' -> 0 in process `[top-level]':
+	time( d -> clk- ) >= 15, but got: (1000 - 992) = 8
+	1000	clk : 0	[by clk:=0]
+	*** break, `clk' became 0 at time 1000
+	1100	clk : 1	[by clk:=1]
+	*** break, `clk' became 1 at time 1100
+	1100	d : 1
+	1200	clk : 0	[by clk:=0]
+	*** break, `clk' became 0 at time 1200
+Warning: hold time violation on node `d' -> 0 in process `[top-level]':
+	time( clk- -> d ) >= 10, but got: (1205 - 1200) = 5
+	1205	d : 0
+	1300	clk : 1	[by clk:=1]
+	*** break, `clk' became 1 at time 1300
+	1305	d : 1
+	1400	clk : 0	[by clk:=0]
+	*** break, `clk' became 0 at time 1400
+Warning: possible hold time violation on node `d' -> X in process `[top-level]':
+	time( clk- -> d ) >= 10, but got: (1406 - 1400) = 6
+	1406	d : X
+	1500	clk : 1	[by clk:=1]
+	*** break, `clk' became 1 at time 1500
+	1506	d : 0
+	1600	clk : 0	[by clk:=0]
+	*** break, `clk' became 0 at time 1600
+Warning: hold time violation on node `d' -> 1 in process `[top-level]':
+	time( clk- -> d ) >= 10, but got: (1607 - 1600) = 7
+	1607	d : 1
+	1700	clk : 1	[by clk:=1]
+	*** break, `clk' became 1 at time 1700
+	1707	d : X
+	1800	clk : 0	[by clk:=0]
+	*** break, `clk' became 0 at time 1800

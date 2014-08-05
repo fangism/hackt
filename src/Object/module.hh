@@ -45,10 +45,19 @@ friend class parser::context;
 	typedef	module				this_type;
 private:
 	typedef	process_definition		parent_type;
+#if PROCESS_DEFINITION_IS_NAMESPACE
+private:
+	string					module_name;
+#else
 protected:
+#endif
 	/**
 		The root namespace object contains information
 		for definitions, and nested namespaces.  
+		OBSOLETE: this is no longer used with
+		PROCESS_DEFINITION_IS_NAMESPACE:1.
+		This is only retained to minimize the change
+		in object file format.
 	 */
 	excl_ptr<name_space>			global_namespace;
 public:
@@ -70,9 +79,6 @@ public:
 
 	never_ptr<name_space>
 	get_global_namespace(void) const;
-
-	void
-	set_global_namespace(excl_ptr<name_space>& n);
 
 	void
 	collect_namespaces(namespace_collection_type&) const;

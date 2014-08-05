@@ -67,9 +67,10 @@ Permission is hereby granted to ...
 @menu
 * Introduction:: Introduction to PRSIM.
 * Usage:: Command-line summary.
-* Commands:: Interpreter commands.
 * Execution:: How execution works.
+* Commands:: Interpreter commands.
 * Diagnostics:: Diagnostic message from the simulator.
+* Timing Back-Annotation:: Customized timing.
 * Co-simulation:: Mixing with foreign simulators.
 * Tips:: Tips
 * Command Index:: Interpreter commands and interface functions.
@@ -80,9 +81,10 @@ Permission is hereby granted to ...
 @c ****************************** chapter *************************************
 @include intro.texi
 @include usage.texi
-@include commands.texi
 @include execution.texi
+@include commands.texi
 @include diagnostics.texi
+@include timing.texi
 @include cosim.texi
 @include tips.texi
 

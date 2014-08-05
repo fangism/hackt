@@ -72,8 +72,15 @@ public:
 	/**
 		Another common value for printing.  
 		Useful for context which can only refer to local names.  
+		Good for value/parameter references.
 	 */
 	static const dump_flags			no_definition_owner;
+	/**
+		Another common value for printing.  
+		Useful for context which can only refer to local names.  
+		Good for physical instance references (local only).
+	 */
+	static const dump_flags			no_definition_owner_no_ns;
 	/**
 		When show_namespace_owner or show_definition_owner is true, 
 		this disables show_leading_scope false, 
@@ -90,6 +97,9 @@ public:
 		Show everything verbosely.  
 	 */
 	static const dump_flags			verbose;
+
+	ostream&
+	dump_brief(ostream&) const;
 
 	ostream&
 	dump(ostream&) const;

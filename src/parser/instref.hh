@@ -20,14 +20,26 @@
 
 #define	INVALID_PROCESS_INDEX			size_t(-1)
 
+/**
+	Define to 1 to use the same functions for global and local
+	lookups of references, given footprint contexts.
+	Goal: 1
+ */
+#define	REUSE_PARSE_GLOBAL_FOR_LOCAL		1
+#if REUSE_PARSE_GLOBAL_FOR_LOCAL
+#define parse_local_reference		parse_global_reference
+#define parse_local_references		parse_global_references
+#endif
+
 namespace util {
 class directory_stack;
 }	// end namespace util
 
 namespace HAC {
 namespace entity {
-class module;
+class footprint;
 class meta_reference_union;
+class process_definition;
 struct entry_collection;
 struct dump_flags;
 }
@@ -37,7 +49,8 @@ namespace parser {
 using std::ostream;
 using std::vector;
 using std::string;
-using entity::module;
+using entity::process_definition;
+using entity::footprint;
 using entity::bool_tag;
 using entity::channel_tag;
 using entity::process_tag;
@@ -88,7 +101,7 @@ struct typed_indexed_reference {
 	explicit
 	typed_indexed_reference(const size_t i) : index(i) { }
 
-	typed_indexed_reference(const string&, const module&);
+	typed_indexed_reference(const string&, const footprint&);
 
 	bool
 	valid(void) const {
@@ -111,7 +124,7 @@ struct typed_indexed_references {
 	// default value is invalid
 	typed_indexed_references() : indices() { }
 
-	typed_indexed_references(const string&, const module&);
+	typed_indexed_references(const string&, const footprint&);
 
 	bool
 	valid(void) const {
@@ -131,7 +144,7 @@ parse_reference(const char*);
 
 extern
 meta_reference_union
-check_reference(const inst_ref_expr&, const module&);
+check_reference(const inst_ref_expr&, const process_definition&);
 
 extern
 int
@@ -140,77 +153,106 @@ expand_reference(const count_ptr<const inst_ref_expr>&,
 
 extern
 meta_reference_union
-parse_and_check_reference(const char*, const module&);
+parse_and_check_reference(const char*, const process_definition&);
 
 extern
 bool
-expand_global_references(const string&, const module&, 
+expand_global_references(const string&, const footprint&, 
 	expanded_global_references_type&);
 
 extern
 bool
-parse_nodes_to_indices(const string&, const module&, vector<size_t>&);
+parse_nodes_to_indices(const string&, const footprint&, vector<size_t>&);
 
 extern
 bool_index
-parse_node_to_index(const string&, const module&);
+parse_node_to_index(const string&, const footprint&);
 
 extern
 bool
-parse_processes_to_indices(const string&, const module&, vector<size_t>&);
+parse_processes_to_indices(const string&, const footprint&, vector<size_t>&);
 
 extern
 process_index
-parse_process_to_index(const string&, const module&);
+parse_process_to_index(const string&, const footprint&);
 
 extern
 global_indexed_reference
-parse_global_reference(const string&, const module&, ostream*);
+parse_global_reference(const string&, const footprint&, ostream*);
+
+#if !REUSE_PARSE_GLOBAL_FOR_LOCAL
+extern
+global_indexed_reference
+parse_local_reference(const string&, const footprint&, ostream*);
+#endif
 
 extern
 global_indexed_reference
-parse_global_reference(const string&, const module&);
+parse_global_reference(const string&, const footprint&);
+
+inline
+global_indexed_reference
+parse_global_reference_default(const string& s, const footprint& f) {
+	return parse_global_reference(s, f);
+}
+
+#if !REUSE_PARSE_GLOBAL_FOR_LOCAL
+extern
+global_indexed_reference
+parse_local_reference(const meta_reference_union&, const footprint&);
+#endif
 
 extern
 global_indexed_reference
-parse_global_reference(const meta_reference_union&,
-	const module&);
+parse_global_reference(const meta_reference_union&, const footprint&);
 
 extern
 int
-parse_global_references(const string&, const module&,
+parse_global_references(const string&, const footprint&,
 	global_reference_array_type&);
 
 extern
 int
 parse_global_references(const meta_reference_union&,
-	const module&, global_reference_array_type&);
+	const footprint&, global_reference_array_type&);
+
+#if !REUSE_PARSE_GLOBAL_FOR_LOCAL
+extern
+int
+parse_local_references(const string&, const footprint&,
+	global_reference_array_type&);
 
 extern
 int
-parse_name_to_what(ostream&, const string&, const module&);
+parse_local_references(const meta_reference_union&,
+	const footprint&, global_reference_array_type&);
+#endif
+
+extern
+int
+parse_name_to_what(ostream&, const string&, const footprint&);
 
 extern
 int
 parse_name_to_members(ostream&,
-	const string&, const module&);
+	const string&, const footprint&);
 
 extern
 int
 parse_name_to_get_subinstances(
-	const string&, const module&, 
+	const string&, const footprint&, 
 	entity::entry_collection&);
 
 extern
 int
 parse_name_to_get_subinstances(
-	const global_indexed_reference&, const module&, 
+	const global_indexed_reference&, const footprint&, 
 	entity::entry_collection&);
 
 extern
 int
 parse_name_to_get_subnodes(
-	const string&, const module&, 
+	const string&, const footprint&, 
 	vector<size_t>&);
 	// node_index_type
 
@@ -219,7 +261,7 @@ int
 parse_name_to_get_subnodes_local(
 	const process_index&,
 //	const string&,
-	const module&, 
+	const footprint&, 
 	vector<size_t>&);
 
 extern
@@ -227,23 +269,23 @@ int
 parse_name_to_get_ports(
 	const process_index&, 
 //	const string&,
-	const module&, 
+	const footprint&, 
 	vector<size_t>&, 
 	const vector<bool>* pred = NULL);
 
 extern
 int
 parse_name_to_aliases(string_set&, const string&, 
-	const module&, const dump_flags&);
+	const footprint&, const dump_flags&);
 
 extern
 int
 parse_name_to_aliases(ostream&, const string&, 
-	const module&, const dump_flags&, const char* sep);
+	const footprint&, const dump_flags&, const char* sep);
 
 extern
 void
-complete_instance_names(const char*, const module&, 
+complete_instance_names(const char*, const footprint&, 
 	const util::directory_stack*, vector<string>&);
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

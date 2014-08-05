@@ -1,0 +1,150 @@
+now editing after delay values 
+All rules local to type: rsource_e1of2<>
+[after 22]	r.e -> _r0-
+[after 21]	~r.e -> _r0+
+[after 24]	r.e -> _r1-
+[after 23]	~r.e -> _r1+
+[after 10]	_r0 -> r.d[0]-
+[after 10]	~_r0 -> r.d[0]+
+[after 10]	_r1 -> r.d[1]-
+[after 10]	~_r1 -> r.d[1]+
+Min-delay bounds in type 'rsource_e1of2<>':
+All rules local to type: bucket_e1of2_rl<>
+[after 34]	l.d[1] | l.d[0] -> _lv-
+[after 33]	~l.d[1] & ~l.d[0] -> _lv+
+[after 10]	_sReset & _lv -> lv-
+[after 10]	~_sReset | ~_lv -> lv+
+[after 10]	~lv -> l.e+
+[after 10]	lv -> l.e-
+Min-delay bounds in type 'bucket_e1of2_rl<>':
+	t( l.d[0]* -> l.e* ) >= 60
+	t( l.d[1]* -> l.e* ) >= 60
+--------------- 
+starting reset 
+enqueued:	0	g._sReset : 0
+enqueued:	0	g._pReset : 0
+enqueued:	10	buf.rv : 1	[from g._sReset:=0]
+enqueued:	10	bkt.lv : 1	[from g._sReset:=0]
+	0	g._sReset : 0
+	0	g._pReset : 0
+enqueued:	20	l.e : 0	[from buf.rv:=1]
+	10	buf.rv : 1	[by g._sReset:=0]
+enqueued:	20	r.e : 0	[from bkt.lv:=1]
+	10	bkt.lv : 1	[by g._sReset:=0]
+enqueued:	41	src._r0 : 1	[from l.e:=0]
+enqueued:	43	src._r1 : 1	[from l.e:=0]
+	20	l.e : 0	[by buf.rv:=1]
+	20	r.e : 0	[by bkt.lv:=1]
+enqueued:	51	l.d[0] : 0	[from src._r0:=1]
+	41	src._r0 : 1	[by l.e:=0]
+enqueued:	53	l.d[1] : 0	[from src._r1:=1]
+	43	src._r1 : 1	[by l.e:=0]
+enqueued:	61	buf._r.d[0] : 1	[from l.d[0]:=0]
+	51	l.d[0] : 0	[by src._r0:=1]
+enqueued:	63	buf._r.d[1] : 1	[from l.d[1]:=0]
+	53	l.d[1] : 0	[by src._r1:=1]
+enqueued:	71	r.d[0] : 0	[from buf._r.d[0]:=1]
+	61	buf._r.d[0] : 1	[by l.d[0]:=0]
+enqueued:	73	r.d[1] : 0	[from buf._r.d[1]:=1]
+	63	buf._r.d[1] : 1	[by l.d[1]:=0]
+	71	r.d[0] : 0	[by buf._r.d[0]:=1]
+enqueued:	106	bkt._lv : 1	[from r.d[1]:=0]
+	73	r.d[1] : 0	[by buf._r.d[1]:=1]
+	106	bkt._lv : 1	[by r.d[1]:=0]
+Releasing 
+enqueued:	106	g._sReset : 1
+enqueued:	106	g._pReset : 1
+enqueued:	116	buf.rv : 0	[from g._sReset:=1]
+enqueued:	116	bkt.lv : 0	[from g._sReset:=1]
+	106	g._sReset : 1
+	106	g._pReset : 1
+enqueued:	126	l.e : 1	[from buf.rv:=0]
+	116	buf.rv : 0	[by g._sReset:=1]
+enqueued:	126	r.e : 1	[from bkt.lv:=0]
+	116	bkt.lv : 0	[by g._sReset:=1]
+enqueued:	148	src._r0 : 0	[from l.e:=1]
+enqueued:	150	src._r1 : 0	[from l.e:=1]
+	126	l.e : 1	[by buf.rv:=0]
+killed  :	0	r.e : 1	[from bkt.lv:=0]
+enqueued:	133	r.e : 1	[from bkt.lv:=0]
+note: event on r.e+ was delayed from 126 until 133 by r.d[1]:0
+	133	r.e : 1	[by bkt.lv:=0]
+enqueued:	158	l.d[0] : 1	[from src._r0:=0]
+WARNING: excl-unstable `src._r1'-
+rule: [after 24]	l.e:1 -> src._r1-:1
+>> cause: `src._r0' (val: 0)
+	148	src._r0 : 0	[by l.e:=1]
+--------------- 
+RESETTING 
+enqueued:	148	g._sReset : 0
+enqueued:	148	g._pReset : 0
+enqueued:	158	buf.rv : 1	[from g._sReset:=0]
+enqueued:	158	bkt.lv : 1	[from g._sReset:=0]
+	148	g._sReset : 0
+	148	g._pReset : 0
+WARNING: weak-interference `l.d[1]'
+>> cause: `src._r1' (val: X)
+enqueued:	160	l.d[1] : X	[from src._r1:=X]
+	150	src._r1 : X	[by src._r0:=0]
+enqueued:	168	buf._r.d[0] : 0	[from l.d[0]:=1]
+	158	l.d[0] : 1	[by src._r0:=0]
+enqueued:	168	l.e : 0	[from buf.rv:=1]
+	158	buf.rv : 1	[by g._sReset:=0]
+enqueued:	168	r.e : 0	[from bkt.lv:=1]
+	158	bkt.lv : 1	[by g._sReset:=0]
+enqueued:	170	buf._r.d[1] : X	[from l.d[1]:=X]
+	160	l.d[1] : X	[by src._r1:=X]
+enqueued:	178	r.d[0] : 1	[from buf._r.d[0]:=0]
+	168	buf._r.d[0] : 0	[by l.d[0]:=1]
+enqueued:	189	src._r0 : 1	[from l.e:=0]
+enqueued:	191	src._r1 : 1	[from l.e:=0]
+	168	l.e : 0	[by buf.rv:=1]
+	168	r.e : 0	[by bkt.lv:=1]
+WARNING: weak-interference `r.d[1]'
+>> cause: `buf._r.d[1]' (val: X)
+enqueued:	180	r.d[1] : X	[from buf._r.d[1]:=X]
+	170	buf._r.d[1] : X	[by l.d[1]:=X]
+enqueued:	212	bkt._lv : 0	[from r.d[0]:=1]
+	178	r.d[0] : 1	[by buf._r.d[0]:=0]
+	180	r.d[1] : X	[by buf._r.d[1]:=X]
+enqueued:	199	l.d[0] : 0	[from src._r0:=1]
+	189	src._r0 : 1	[by l.e:=0]
+enqueued:	201	l.d[1] : 0	[from src._r1:=1]
+	191	src._r1 : 1	[by l.e:=0]
+enqueued:	209	buf._r.d[0] : 1	[from l.d[0]:=0]
+	199	l.d[0] : 0	[by src._r0:=1]
+enqueued:	211	buf._r.d[1] : 1	[from l.d[1]:=0]
+	201	l.d[1] : 0	[by src._r1:=1]
+enqueued:	219	r.d[0] : 0	[from buf._r.d[0]:=1]
+	209	buf._r.d[0] : 1	[by l.d[0]:=0]
+enqueued:	221	r.d[1] : 0	[from buf._r.d[1]:=1]
+	211	buf._r.d[1] : 1	[by l.d[1]:=0]
+	212	bkt._lv : 0	[by r.d[0]:=1]
+WARNING: weak-interference `bkt._lv'
+>> cause: `r.d[0]' (val: 0)
+enqueued:	252	bkt._lv : X	[from r.d[0]:=0]
+	219	r.d[0] : 0	[by buf._r.d[0]:=1]
+killed  :	0	bkt._lv : X	[from r.d[0]:=0]
+enqueued:	254	bkt._lv : 1	[from r.d[1]:=0]
+	221	r.d[1] : 0	[by buf._r.d[1]:=1]
+	254	bkt._lv : 1	[by r.d[1]:=0]
+Releasing 
+enqueued:	354	g._sReset : 1
+enqueued:	354	g._pReset : 1
+enqueued:	364	buf.rv : 0	[from g._sReset:=1]
+enqueued:	364	bkt.lv : 0	[from g._sReset:=1]
+	354	g._sReset : 1
+	354	g._pReset : 1
+enqueued:	374	l.e : 1	[from buf.rv:=0]
+	364	buf.rv : 0	[by g._sReset:=1]
+enqueued:	374	r.e : 1	[from bkt.lv:=0]
+	364	bkt.lv : 0	[by g._sReset:=1]
+enqueued:	396	src._r0 : 0	[from l.e:=1]
+enqueued:	398	src._r1 : 0	[from l.e:=1]
+	374	l.e : 1	[by buf.rv:=0]
+	374	r.e : 1	[by bkt.lv:=0]
+enqueued:	406	l.d[0] : 1	[from src._r0:=0]
+WARNING: excl-unstable `src._r1'-
+rule: [after 24]	l.e:1 -> src._r1-:1
+>> cause: `src._r0' (val: 0)
+	396	src._r0 : 0	[by l.e:=1]

@@ -109,8 +109,13 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	muxes muxes-a \
 	power-supplies-a power-supplies-b power-supplies-c power-supplies-d \
 	power-supplies-e power-supplies-f \
+	pseudo-flop-a pseudo-flop-b \
+	pseudo-flop-c pseudo-flop-d \
+	flop-timing flop-timing-a flop-timing-b \
 	atomic-a atomic-b atomic-c atomic-d atomic-e atomic-f atomic-g \
-	atomic-h atomic-i atomic-i2 atomic-j
+	atomic-h atomic-i atomic-i2 atomic-j \
+	mux-delay mux-delay-b \
+	wchb-a
 
 # TODO: more cross-coupled test cases
 # SRAM cell
@@ -497,12 +502,30 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	power-supplies-c-01 power-supplies-d-01 \
 	power-supplies-e-01 power-supplies-f-01 \
 	x-all-01 x-all-02 x-all-03 x-all-04 x-all-05 \
+	pseudo-flop-a-01 \
+	pseudo-flop-b-01 \
+	pseudo-flop-c-01 \
+	pseudo-flop-d-01 \
+	flop-timing-a-01 flop-timing-a-02 \
+	flop-timing-b-01 flop-timing-b-02 \
 	atomic-a-03 atomic-a-05 \
 	atomic-b-01 \
 	atomic-c-01 atomic-c-02 \
 	atomic-d-01 \
 	atomic-e-01 atomic-e-02 \
-	atomic-f-01
+	atomic-f-01 \
+	type-scope-01 type-scope-04 type-scope-06 \
+	inv-min-delay-01 inv-min-delay-02 inv-min-delay-03 \
+	inv-min-delay-04 inv-min-delay-05 inv-min-delay-06 inv-min-delay-07 \
+	inv-local-rules-01 \
+	tree-min-delay-01 \
+	mux-delay-min-delay-01 mux-delay-min-delay-02 mux-delay-min-delay-03 \
+	mux-delay-min-delay-04 mux-delay-min-delay-05 mux-delay-min-delay-06 \
+	mux-delay-min-delay-07 mux-delay-min-delay-08 mux-delay-min-delay-09 \
+	mux-delay-b-min-delay-01 mux-delay-b-min-delay-02 \
+	nand-min-delay-01 nand-min-delay-02 \
+	nand-local-rules-01 wchb-local-rules-02 wchb-local-rules-03 \
+	wchb-local-rules-04
 
 # subset of prsimrc test that we wish to compare traces against regressions
 HACKT_PRSIMTRACE_TEST_SUBJECTS = \
@@ -827,7 +850,8 @@ HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
 	reset-test-01 \
 	atomic-a-01 atomic-a-02 atomic-a-04 \
 	atomic-g-01 atomic-h-01 \
-	atomic-i-01 atomic-i2-01 atomic-j-01
+	atomic-i-01 atomic-i2-01 atomic-j-01 \
+	type-scope-02 type-scope-03 type-scope-05 type-scope-07 type-scope-08
 
 # KNOWN BUG (fails, but should not): cross-pulldown-01
 

@@ -32,6 +32,7 @@ class sublist {
 public:
 	typedef	typename std::default_list<T>::type	list_type;
 	typedef	typename list_type::size_type		size_type;
+	typedef	typename list_type::value_type		value_type;
 	typedef	typename list_type::iterator		iterator;
 	typedef	typename list_type::const_iterator	const_iterator;
 #if SUBLIST_INCLUDE_REVERSE_ITERATORS
@@ -73,6 +74,9 @@ public:
 
 	const_iterator
 	end(void) const { return tail; }
+
+	const value_type&
+	front(void) const { return *head; }
 
 #if SUBLIST_INCLUDE_REVERSE_ITERATORS
 	const_reverse_iterator

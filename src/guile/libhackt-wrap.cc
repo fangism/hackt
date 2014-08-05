@@ -205,7 +205,7 @@ HAC_GUILE_DEFINE(wrap_parse_global_reference, FUNC_NAME, 1, 0, 0,
 	// alternately string_to_locale_stringbuf
 	const module& mod(*obj_module);
 	const global_indexed_reference
-		ref(parser::parse_global_reference(peek, mod));
+		ref(parser::parse_global_reference(peek, mod.get_footprint()));
 	if (ref.first && ref.second) {
 		// would like to translate first (type)
 		// into a scm quoted tag, like 'bool-tag

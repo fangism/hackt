@@ -7,6 +7,8 @@
 #define	__HAC_PARSER_TYPE_H__
 
 #include <iosfwd>
+#include <string>
+#include <utility>
 #include "AST/type_base.hh"
 
 namespace HAC {
@@ -26,6 +28,14 @@ parse_and_check_complete_type(const char*, const module&);
 extern
 const footprint*
 parse_to_footprint(const char*, const module&);
+
+/**
+	Parses a reference of the form: type::instance
+	\returns owning footprint and local index.
+ */
+extern
+std::pair<const footprint*, size_t>
+parse_type_local_node(const std::string&, const module&);
 
 }	// end namespace parser
 }	// end namespace HAC

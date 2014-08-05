@@ -22,7 +22,7 @@ ostream&
 EventCause::dump_raw(ostream& o) const {
 	typedef	NodeState	node_type;
 	return o << "node: " << node << " -> val: " <<
-		node_type::value_to_char[size_t(val)];
+		node_type::translate_value_to_char(val);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -49,6 +49,11 @@ LastCause::save_state(ostream& o) const {
 	write_value(o, caused_by_value[1]);
 	write_value(o, caused_by_value[2]);
 	write_value(o, caused_by_value[3]);	// unused
+#if 0 && PRSIM_TRACK_CAUSE_TIME
+	write_value(o, cause_time[0]);
+	write_value(o, cause_time[1]);
+	write_value(o, cause_time[2]);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -61,17 +66,22 @@ LastCause::load_state(istream& i) {
 	read_value(i, caused_by_value[1]);
 	read_value(i, caused_by_value[2]);
 	read_value(i, caused_by_value[3]);	// unused
+#if 0 && PRSIM_TRACK_CAUSE_TIME
+	read_value(i, cause_time[0]);
+	read_value(i, cause_time[1]);
+	read_value(i, cause_time[2]);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 LastCause::dump_checkpoint_state(ostream& o) const {
 	return o << '(' << caused_by_node[0] << ',' <<
-		NodeState::value_to_char[caused_by_value[0]] << "),(" <<
+		NodeState::translate_value_to_char(caused_by_value[0]) << "),(" <<
 		caused_by_node[1] << ',' <<
-		NodeState::value_to_char[caused_by_value[1]] << "),(" <<
+		NodeState::translate_value_to_char(caused_by_value[1]) << "),(" <<
 		caused_by_node[2] << ',' <<
-		NodeState::value_to_char[caused_by_value[2]] << ')';
+		NodeState::translate_value_to_char(caused_by_value[2]) << ')';
 }
 
 //=============================================================================

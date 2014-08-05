@@ -77,7 +77,8 @@ using util::memory::count_ptr;
 class instance_placeholder_base : public object, public persistent {
 	typedef	instance_placeholder_base	this_type;
 public:
-	typedef	never_ptr<const scopespace>	owner_ptr_type;
+	typedef	scopespace			owner_ptr_raw_type;
+	typedef	never_ptr<const owner_ptr_raw_type>	owner_ptr_type;
 	// should be consistent with 
 	//	member_meta_instance_reference_base::base_inst_ptr_type
 	typedef	count_ptr<const meta_instance_reference_base>
@@ -153,7 +154,7 @@ protected:
 		dimensions(t.dimensions) { }
 
 	// o should be reference, not pointer
-	instance_placeholder_base(const scopespace& o, const string& n, 
+	instance_placeholder_base(const owner_ptr_raw_type& o, const string& n, 
 		const size_t d);
 
 public:

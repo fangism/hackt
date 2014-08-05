@@ -48,6 +48,7 @@ namespace CHP {
 	class concurrent_actions;
 }
 class definition_base;
+class process_definition;
 class instance_collection_base;
 class port_formals_manager;
 class scopespace;
@@ -345,6 +346,12 @@ public:
 	never_ptr<const definition_base>
 	get_owner_def(void) const { return owner_def; }
 
+	never_ptr<const process_definition>
+	get_owner_process_def(void) const;
+
+	never_ptr<const scopespace>
+	get_owner_scope(void) const;
+
 	meta_type_tag_enum
 	get_meta_type(void) const;
 
@@ -388,6 +395,9 @@ public:
 
 	ostream&
 	dump_member_list(ostream&) const;
+
+	ostream&
+	dump_type_members(ostream&) const;
 
 	ostream&
 	dump_rule(ostream&, const PRS::footprint_rule&) const;

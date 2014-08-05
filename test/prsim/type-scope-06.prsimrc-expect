@@ -1,0 +1,34 @@
+top level: 
+top-level instances: 
+Instances:
+  !GND = bool<> !GND
+  !Vdd = bool<> !Vdd
+  I = inv<> I
+  J = inv<> J
+  a = bool<> a
+  b = bool<> b
+  c = bool<> c
+subdir: 
+I (type: inv<>) has members: 
+Instances:
+  !GND = bool
+  !Vdd = bool
+  a = bool
+  b = bool
+now inside type inv: 
+(type: inv<>) has members: 
+Instances:
+  !GND = bool
+  !Vdd = bool
+  a = bool
+  b = bool
+back to top: 
+top-level instances: 
+Instances:
+  !GND = bool<> !GND
+  !Vdd = bool<> !Vdd
+  I = inv<> I
+  J = inv<> J
+  a = bool<> a
+  b = bool<> b
+  c = bool<> c

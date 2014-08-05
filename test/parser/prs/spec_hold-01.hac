@@ -1,0 +1,15 @@
+// "spec_hold-01.hac"
+// testing hold time directives
+
+defproc flop (bool d, clk, q) {
+spec {
+	hold_pos<40>(clk, d)
+	hold_neg<20>(clk, d)
+}
+}
+
+flop belly[2];
+bool clk, d1, d2, q1, q2;
+belly[0](d1, clk, q1);
+belly[1](d2, clk, q2);
+

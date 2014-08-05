@@ -1,1 +1,2 @@
+WARNING: new definition `a::b' will overshadow `b'.
 WARNING: new definition `::c' will overshadow `a::c'.

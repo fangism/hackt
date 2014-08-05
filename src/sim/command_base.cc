@@ -10,6 +10,7 @@
 #include <string>
 #include <cstring>			// for strdup
 #include "sim/command_base.hh"
+#include "Object/module.hh"
 #include "util/directory.hh"		// for directory_stack
 #include "util/string.hh"
 #include "util/NULL.h"
@@ -127,6 +128,7 @@ null_completer(const char*, const int) {
  */
 const entity::module* instance_completion_module = NULL;
 const directory_stack* instance_completion_dirs = NULL;
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // wants to pass by reference, but forms reference-to-reference
 static
@@ -154,7 +156,7 @@ instance_completer(const char* _text, const int state) {
 		matches.clear();
 		// automatically prepend working directory for context
 		parser::complete_instance_names(_text,
-			*instance_completion_module, 
+			instance_completion_module->get_footprint(), 
 			instance_completion_dirs, matches);
 		i = matches.begin();
 		e = matches.end();
@@ -173,6 +175,16 @@ instance_completer(const char* _text, const int state) {
 	}
 	return NULL;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// TODO: completion based on namespace root
+#if 0
+char*
+type_completer(const char* _text, const int state) {
+	NEVER_NULL(instance_completion_module);
+	NEVER_NULL(_text);
+}
+#endif
 
 //=============================================================================
 }	// end namespace SIM

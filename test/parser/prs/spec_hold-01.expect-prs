@@ -1,0 +1,14 @@
+hold_pos<40>("clk", "d1")
+hold_neg<20>("clk", "d1")
+hold_pos<40>("clk", "d2")
+hold_neg<20>("clk", "d2")
+= "!GND" "belly[0].!GND"
+= "!GND" "belly[1].!GND"
+= "!Vdd" "belly[0].!Vdd"
+= "!Vdd" "belly[1].!Vdd"
+= "d1" "belly[0].d"
+= "clk" "belly[0].clk"
+= "clk" "belly[1].clk"
+= "q1" "belly[0].q"
+= "d2" "belly[1].d"
+= "q2" "belly[1].q"

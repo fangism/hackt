@@ -17,6 +17,7 @@
 #include "Object/inst/substructure_alias_fwd.hh"
 #include "util/memory/excl_ptr.hh"
 #include "util/memory/count_ptr.hh"
+#include "Object/devel_switches.hh"
 
 namespace HAC {
 namespace entity {
@@ -68,7 +69,8 @@ using util::memory::count_ptr;
 class instance_collection_base {
 	typedef	instance_collection_base	this_type;
 public:
-	typedef	never_ptr<const scopespace>	owner_ptr_type;
+	typedef	scopespace			owner_ptr_raw_type;
+	typedef	never_ptr<const owner_ptr_raw_type>	owner_ptr_type;
 	// should be consistent with 
 	//	member_meta_instance_reference_base::base_inst_ptr_type
 	typedef	count_ptr<const meta_instance_reference_base>

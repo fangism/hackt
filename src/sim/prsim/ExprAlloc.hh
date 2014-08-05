@@ -69,8 +69,6 @@ public:
 	typedef	state_type::expr_state_type		expr_state_type;
 	typedef	expr_struct_type			expr_type;
 	typedef	unique_process_subgraph			unique_type;
-	typedef	map<const entity::footprint*, process_index_type>
-						process_footprint_map_type;
 	typedef	unique_type::expr_pool_type		expr_pool_type;
 	typedef	unique_type::graph_node_type		graph_node_type;
 	typedef	unique_type::expr_graph_node_pool_type	graph_node_pool_type;
@@ -93,10 +91,6 @@ protected:
 		Running total of the number of global expressions.
 	 */
 	size_t					total_exprs;
-	/**
-		Translates unique prs_footprint to unique process index.  
-	 */
-	process_footprint_map_type		process_footprint_map;
 	/// the expression index last returned
 	expr_index_type				ret_ex_index;
 public:
@@ -139,6 +133,16 @@ protected:
 #if PRSIM_PRECHARGE_INVARIANTS
 	excl_ptr<netlist_generator>		netlists;
 #endif
+	/**
+		Define to true when the visitor is doing a 
+		once-per-type unique_process_subgraph pass.
+		Define to false when the visitor is doing a
+		once-per-process-instance pass for global information
+		construction.  
+		This is kind of kludgy, but needed because we have a mix
+		of information that is locally scoped and globally scoped.
+	 */
+	bool					unique_pass;
 public:
 
 	ExprAlloc(state_type&, 
@@ -165,6 +169,11 @@ public:
 
 	void
 	operator () (void);
+
+	bool
+	in_unique_pass(void) const {
+		return unique_pass;
+	}
 
 protected:
 	using cflat_visitor::visit;
@@ -321,6 +330,17 @@ private:
 	expr_index_type
 	__visit_current_path_graph_node_logic_output_down(
 		const current_path_graph&, const size_t, const size_t);
+#endif
+
+#if PRSIM_SETUP_HOLD
+public:
+	// really, only want to provide this interface to spec directives
+	// node argument is 1-based local index
+	void
+	add_global_setup_constraint(const node_index_type) const;
+
+	void
+	add_global_hold_constraint(const node_index_type) const;
 #endif
 
 private:

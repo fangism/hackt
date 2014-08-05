@@ -1,0 +1,8 @@
+// "loop-alias-04b.hac"
+// copy-reduced from "loop-alias-04.hac"
+
+bool a[4], b[4];
+
+(;i:2:
+	a[i] = b[i];
+)

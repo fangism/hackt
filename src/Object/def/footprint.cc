@@ -468,6 +468,18 @@ footprint::initialize_context_cache(void) const {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+never_ptr<const process_definition>
+footprint::get_owner_process_def(void) const {
+	return owner_def.is_a<const process_definition>();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+never_ptr<const scopespace>
+footprint::get_owner_scope(void) const {
+	return get_owner_def().is_a<const scopespace>();	// cross-cast
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 meta_type_tag_enum
 footprint::get_meta_type(void) const {
 	return owner_def->get_meta_type();
@@ -636,6 +648,16 @@ if (instance_list.size()) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+footprint::dump_type_members(ostream& o) const {
+	o << "(type: ";
+	dump_type(o);
+	o << ") has members: " << endl;
+	dump_member_list(o);
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\param r the rule which must belong to the member PRS footprint.
  */
@@ -682,8 +704,8 @@ footprint::export_instance_names(vector<string>& v) const {
 footprint::instance_collection_ptr_type
 footprint::operator [] (const string& k) const {
 //	STACKTRACE_VERBOSE;
-#if 0 && ENABLE_STACKTRACE
 	STACKTRACE_INDENT_PRINT("footprint looking up: " << k << endl);
+#if 0
 	dump_with_collections(cerr << "we have: " << endl,
 		dump_flags::default_value, expr_dump_context::default_value);
 
@@ -1346,7 +1368,14 @@ footprint::__lookup_scalar_port_alias(const string& s) const {
 	const const_instance_map_iterator
 		f(instance_collection_map.find(s)),
 		e(instance_collection_map.end());
-	INVARIANT(f != e);
+	if (f != e) {
+		STACKTRACE_INDENT_PRINT("scalar port: " << s << endl);
+#if ENABLE_STACKTRACE
+		dump_with_collections(cerr << "instance_collection_map: ")
+			<< endl;
+#endif
+		INVARIANT(f != e);
+	}
 	return ((*this)[f->second].template is_a<instance_array<Tag, 0> >()
 		->get_the_instance());
 }

@@ -30,6 +30,8 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include <iostream>
 #include <sstream>
 #include <algorithm>			// for remove_copy_if
+#include "Object/def/footprint.hh"
+#include "Object/module.hh"
 #include "sim/prsim/State-prsim.hh"
 #include "sim/prsim/Command-prsim-export.hh"
 #include "sim/prsim/ExprAllocFlags.hh"
@@ -440,7 +442,8 @@ static
 node_index_type
 lookup_prsim_name(const char* prsim_name) {
   require_prsim_state(__FUNCTION__);
-  const node_index_type n = parse_node_to_index(prsim_name, *HAC_module).index;
+  const node_index_type n = parse_node_to_index(prsim_name,
+	AS_A(const module&, *HAC_module).get_footprint()).index;
   if (!n) {
 //  cerr << "Node `" << prsim_name << "\' not found in .prs file!" << endl;
     cerr << "Node `" << prsim_name << "\' not found in HAC hierarchy!" << endl;

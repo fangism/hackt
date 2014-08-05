@@ -12,12 +12,19 @@
 #include "Object/common/scopespace.hh"
 #include "Object/common/object_base.hh"
 #include "Object/common/util_types.hh"
+#include "Object/devel_switches.hh"
 
 // not worth pool-allocating these, so few objects
 #define	POOL_ALLOCATE_NAMESPACE			0
 #if POOL_ALLOCATE_NAMESPACE
 #include "util/memory/list_vector_pool_fwd.hh"
 #include "util/STL/construct_fwd.hh"
+#endif
+
+#if PROCESS_DEFINITION_IS_NAMESPACE
+#define	NS_VIRTUAL	virtual
+#else
+#define	NS_VIRTUAL
 #endif
 
 //=============================================================================
@@ -28,7 +35,7 @@ USING_CONSTRUCT
 /**
 	Namespace container class.  
  */
-class name_space : public object, public scopespace {
+class name_space : virtual public object, public scopespace {
 private:
 	typedef	name_space			this_type;
 	typedef	scopespace			parent_type;
@@ -88,7 +95,7 @@ protected:
 
 	// later introduce single symbol imports?
 	// i.e. using A::my_type;
-private:
+protected:
 	name_space();
 
 public:
@@ -97,6 +104,7 @@ public:
 
 	name_space(const string& n, never_ptr<const name_space>);
 
+	NS_VIRTUAL
 	~name_space();
 
 	const string&
@@ -105,9 +113,11 @@ public:
 	never_ptr<const scopespace>
 	get_parent(void) const;
 
+	NS_VIRTUAL
 	ostream&
 	what(ostream& o) const;
 
+	NS_VIRTUAL
 	ostream&
 	dump(ostream& o) const;
 
@@ -125,6 +135,7 @@ public:
 	dump_qualified_name(ostream&, const dump_flags&) const;
 
 	// horrible hack, overriding scopespace::'s
+	NS_VIRTUAL
 	bool
 	is_global_namespace(void) const;
 
@@ -144,9 +155,18 @@ public:
 	never_ptr<const name_space>
 	add_using_alias(const qualified_id& n, const string& a);
 
-	// overrides default
+#if PROCESS_DEFINITION_IS_NAMESPACE
 	never_ptr<const object>
-	lookup_member(const string&) const;
+	lookup_object(const string&, const lookup_parameters&) const;
+
+	never_ptr<const object>
+	lookup_object(const qualified_id_slice&,
+		const lookup_parameters&) const;
+
+private:
+	// for all others
+//	using scopespace::lookup_object;
+#endif
 
 private:
 	never_ptr<name_space>
@@ -157,7 +177,8 @@ public:
 	// do we really need to specialize adding definitions by class?
 	// to be used ONLY by the global namespace (???)
 	never_ptr<definition_base>
-	add_definition(excl_ptr<definition_base>& db);
+	add_definition(excl_ptr<definition_base>& db, 
+		const bool warn_shadow);
 
 // returns type if unique match found, else NULL
 	never_ptr<const scopespace>
@@ -218,7 +239,11 @@ public:
 // methods for object file I/O
 public:
 	FRIEND_PERSISTENT_TRAITS
+#if PROCESS_DEFINITION_IS_NAMESPACE
+	VIRTUAL_PERSISTENT_METHODS_DECLARATIONS
+#else
 	PERSISTENT_METHODS_DECLARATIONS
+#endif
 
 /** helper method for adding a variety of objects */
 	void
@@ -247,5 +272,7 @@ namespace util {
 #endif
 
 //=============================================================================
+#undef	NS_VIRTUAL
+
 #endif	// __HAC_OBJECT_COMMON_NAMESPACE_H__
 

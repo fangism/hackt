@@ -3,6 +3,9 @@
 // only searching namespaces from foo and below
 // fails ACT also for same reason
 
+// updated 2012-02-20, now passes with front-end rewrite
+// even if this differs from ACT...
+
 namespace std {
 namespace logic {
 

@@ -1,0 +1,127 @@
+# "mux-delay-min-delay-09.prsimrc"
+# copy-modified from "mux-delay-min-delay-03.prsimrc"
+# @haco@ mux-delay.haco-c
+
+pusht mux2
+min-delay in[0]+ out+ 40 sel[0]
+min-delay in[0]- out- 40 sel[0]
+min-delay in[1]+ out+ 40 sel[1]
+min-delay in[1]- out- 40 sel[1]
+min-delay sel[0] out 30
+min-delay sel[1] out 30
+popt
+
+min-delay-list-all
+
+echo applying timing delays
+min-delay-apply-all
+watchall
+min-delay-verbose 1
+weak-interference ignore
+
+set s[0][0] 1
+set s[0][1] 0
+set s[1][0] 1
+set s[1][1] 0
+set x[0] 0
+set x[1] 0
+set x[2] 0
+set x[3] 0
+cycle
+advance 30
+
+echo ----------------
+set x[0] 1
+cycle
+advance 40
+
+set x[0] 0
+cycle
+advance 40
+
+echo ----------------
+
+set x[0] 1
+advance 5
+set x[1] 1
+cycle
+advance 40
+
+set x[0] 0
+advance 5
+set x[1] 0
+cycle
+advance 40
+
+echo ----------------
+
+set x[0] 1
+advance 10
+set x[2] 1
+cycle
+advance 40
+
+set x[0] 0
+advance 10
+set x[2] 0
+cycle
+advance 40
+
+echo ----------------
+echo change input 1 to 1 and select it
+set x[1] 1
+cycle
+
+set s[0][0] 0
+set s[0][1] 1
+cycle
+advance 30
+
+echo ----------------
+echo select input 3
+set s[1][0] 0
+set s[1][1] 1
+cycle
+
+echo ----------------
+echo change input 2 to 1 and select it
+set x[2] 1
+cycle
+set s[0][1] 0
+set s[0][0] 1
+cycle
+advance 30
+
+echo ----------------
+echo ----------------
+echo select input 0
+set s[1][1] 0
+set s[1][0] 1
+cycle
+
+echo ----------------
+echo select input 2
+set s[1][0] 0
+set s[1][1] 1
+cycle
+
+echo ----------------
+echo select input 3
+set s[0][0] 0
+set s[0][1] 1
+cycle
+advance 20
+
+echo ----------------
+echo select input 1
+set s[1][1] 0
+set s[1][0] 1
+cycle
+
+echo ----------------
+echo select input 0
+set s[0][1] 0
+set s[0][0] 1
+cycle
+
+echo ----------------

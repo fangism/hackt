@@ -1,0 +1,33 @@
+top-level constraints 
+Min-delay bounds in type '<>':
+	t( a* -> c* ) >= 70
+	t( b* -> c* ) >= 40
+subprocess constraints 
+Min-delay bounds in type 'inv<>':
+	t( a* -> b* ) >= 45
+all constraints 
+Min-delay bounds in type '<>':
+	t( a* -> c* ) >= 70
+	t( b* -> c* ) >= 40
+Min-delay bounds in type 'inv<>':
+	t( a* -> b* ) >= 45
+Timing arcs whose head is a: 
+Timing arcs whose head is b: 
+Timing arcs whose head is c: 
+applying timing delays 
+Timing arcs whose head is a: 
+Timing arcs whose head is b: 
+Min-delay bounds in type 'inv<>':
+	t( a* -> b* ) >= 45
+Timing arcs whose head is c: 
+Min-delay bounds in type '<>':
+	t( a* -> c* ) >= 70
+	t( b* -> c* ) >= 40
+Min-delay bounds in type 'inv<>':
+	t( a* -> b* ) >= 45
+resetting delays 
+Min-delay bounds in type '<>':
+Min-delay bounds in type 'inv<>':
+Timing arcs whose head is a: 
+Timing arcs whose head is b: 
+Timing arcs whose head is c: 

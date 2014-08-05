@@ -101,7 +101,7 @@ context::context(module& m, const parse_options& o) :
 		rte_mode(false),
 		parse_opts(o)
 		{
-
+	STACKTRACE_VERBOSE;
 	// perhaps verify that g is indeed global?  can't be any namespace
 	namespace_stack.push(global_namespace);
 	// now using top-level as a process definition!
@@ -131,7 +131,8 @@ context::context(module& m, const parse_options& o) :
 	\param _pub pass true to be able to view all members publicly, 
 		lifting port-visibility restriction.  
  */
-context::context(const module& m, const parse_options& o, const bool _pub) :
+context::context(const process_definition& m,
+			const parse_options& o, const bool _pub) :
 		indent(0),		// reset formatting indentation
 		type_error_count(0), 	// type-check error count
 		namespace_stack(), 
@@ -141,7 +142,8 @@ context::context(const module& m, const parse_options& o, const bool _pub) :
 		atomic_type_variant(false),
 		sequential_scope_stack(), 
 		loop_var_stack(), 
-		global_namespace(m.get_global_namespace()), 
+//		global_namespace(m.get_global_namespace()), 
+		global_namespace(const_cast<process_definition*>(&m)), 
 		current_prs_body(NULL),	// not adding any PRS
 		current_rte_body(NULL),	// not adding any RTE
 		current_spec_body(NULL),	// not adding any spec
@@ -151,10 +153,13 @@ context::context(const module& m, const parse_options& o, const bool _pub) :
 		rte_mode(false),
 		parse_opts(o)
 		{
+	STACKTRACE_VERBOSE;
+	parse_opts.view_all_publicly = _pub;
 	namespace_stack.push(global_namespace);
 	// now using top-level as a process definition!
 	// load NULL because this is a read-only use of the module
-	open_definition_stack.push(never_ptr<definition_base>(NULL));
+	open_definition_stack.push(never_ptr<definition_base>(
+		const_cast<process_definition*>(&m)));
 	// NOTE: we don't bother loading the module's sequential scope
 	// because it should not be used in a read-only context.  
 	NEVER_NULL(get_current_namespace());	// make sure allocated properly
@@ -185,13 +190,17 @@ context::~context() {
  */
 void
 context::open_namespace(const token_identifier& id) {
+	STACKTRACE_VERBOSE;
 #if 0
 	cerr << "In context::open_namespace(\"" << id << "\"):" << endl;
 	cerr << "Before add_open_namespace(), " << endl;
 	current_namespace->dump(cerr) << endl;
 #endif
 	const never_ptr<name_space>
-		insub(namespace_stack.top()->add_open_namespace(id));
+		tns(get_current_namespace().is_a<name_space>());
+	NEVER_NULL(tns);
+	const never_ptr<name_space>
+		insub(tns->add_open_namespace(id));
 
 #if 0
 	cerr << "After add_open_namespace(), " << endl;
@@ -204,6 +213,7 @@ context::open_namespace(const token_identifier& id) {
 	// which means no need to leave it.  
 
 	if (insub) {
+		STACKTRACE_INDENT_PRINT("enter namespace: " << id << endl);
 		namespace_stack.push(insub);
 		indent++;
 	} else {
@@ -223,8 +233,13 @@ context::open_namespace(const token_identifier& id) {
  */
 void
 context::close_namespace(void) {
+	STACKTRACE_VERBOSE;
+	const never_ptr<name_space>
+		tns(get_current_namespace().is_a<name_space>());
+	NEVER_NULL(tns);
+	STACKTRACE_INDENT_PRINT("leave namespace: " << tns->get_key() << endl);
 	never_ptr<const name_space>
-		new_top(namespace_stack.top()->leave_namespace());
+		new_top(tns->leave_namespace());
 	indent--;
 	// null out member pointers to other sub structures: 
 	//	types, definitions...
@@ -297,8 +312,10 @@ cerr << "To allow them, pass -f namespace-instances to the compiler." << endl;
  */
 void
 context::using_namespace(const qualified_id& id) {
-	never_ptr<const name_space> ret =
-		namespace_stack.top()->add_using_directive(id);
+	const never_ptr<name_space>
+		tns(get_current_namespace().is_a<name_space>());
+	NEVER_NULL(tns);
+	const never_ptr<const name_space> ret(tns->add_using_directive(id));
 	if (!ret) {
 		type_error_count++;
 		cerr << where(id) << endl;
@@ -314,8 +331,11 @@ context::using_namespace(const qualified_id& id) {
  */
 void
 context::alias_namespace(const qualified_id& id, const string& a) {
+	const never_ptr<name_space>
+		tns(get_current_namespace().is_a<name_space>());
+	NEVER_NULL(tns);
 	const never_ptr<const name_space>
-		ret(namespace_stack.top()->add_using_alias(id, a));
+		ret(tns->add_using_alias(id, a));
 	if (!ret) {
 		type_error_count++;
 		cerr << where(id) << endl;
@@ -328,7 +348,7 @@ context::alias_namespace(const qualified_id& id, const string& a) {
 	Peeks at the top of the namespace stack.  
 	\return pointer at the top of the namespace stack.  
  */
-never_ptr<const name_space>
+never_ptr<const context::namespace_type>
 context::top_namespace(void) const {
 	return get_current_namespace();
 }
@@ -341,9 +361,18 @@ context::top_namespace(void) const {
  */
 never_ptr<definition_base>
 context::add_declaration(excl_ptr<definition_base>& d) {
+	STACKTRACE_VERBOSE;
+	const never_ptr<name_space>
+		tns(get_current_namespace().is_a<name_space>());
+	NEVER_NULL(tns);
+	STACKTRACE_INDENT_PRINT("parent scope name: " << tns->get_key() << endl);
+#if ENABLE_STACKTRACE
+	tns->dump_for_definitions(cerr) << endl;
+#endif
+	STACKTRACE_INDENT_PRINT("new declaration key: " << d->get_key() << endl);
 	// careful, passing by reference may breaks some invariant!
 	const never_ptr<definition_base>
-		ret(namespace_stack.top()->add_definition(d));
+		ret(tns->add_definition(d, true));	// warn shadow
 	if (!ret) {
 		// something went wrong
 		type_error_count++;
@@ -377,7 +406,13 @@ context::add_declaration(excl_ptr<definition_base>& d) {
 void
 context::open_enum_definition(const token_identifier& ename) {
 	const never_ptr<enum_datatype_def>
-		ed(get_current_namespace()->lookup_member_with_modify(ename)
+		ed(
+		get_current_namespace()->
+#if PROCESS_DEFINITION_IS_NAMESPACE
+		lookup_local_with_modify(ename)
+#else
+		lookup_member_with_modify(ename)
+#endif
 				.is_a<enum_datatype_def>());
 	if (ed) {
 		if (ed->is_defined()) {
@@ -443,6 +478,8 @@ context::close_enum_definition(void) {
 inline
 void
 context::close_current_definition(void) {
+	STACKTRACE_INDENT_PRINT("leaving definition: " <<
+		get_current_open_definition()->get_key() << endl);
 	open_definition_stack.pop();
 	indent--;
 }
@@ -453,6 +490,7 @@ context::close_current_definition(void) {
  */
 excl_ptr<definition_base>&
 context::get_current_prototype(void) {
+	STACKTRACE_VERBOSE;
 	return current_prototype;
 }
 
@@ -488,7 +526,9 @@ context::reset_current_fundamental_type(void) {
  */
 never_ptr<definition_base>
 context::set_current_prototype(excl_ptr<definition_base>& d) {
+	STACKTRACE_VERBOSE;
 	INVARIANT(!current_prototype);
+	STACKTRACE_INDENT_PRINT("set proto: " << d->get_key() << endl);
 	current_prototype = d;
 	return current_prototype;
 }
@@ -529,8 +569,13 @@ never_ptr<const object>
 context::lookup_object(const qualified_id& id) const {
 	typedef	never_ptr<const object>		return_type;
 	STACKTRACE_VERBOSE;
+	STACKTRACE_INDENT_PRINT("looking up (qualified): " << id << endl);
 	// automatically resolve object handles.  
+#if PROCESS_DEFINITION_IS_NAMESPACE
+	return_type o(get_current_named_scope()->lookup_qualified(id));
+#else
 	return_type o(get_current_named_scope()->lookup_object(id));
+#endif
 	while (o.is_a<const object_handle>())
 		o = return_type(&o->self());
 	return o;
@@ -542,12 +587,13 @@ context::lookup_object(const qualified_id& id) const {
 	Need to rewrite loop-scope stuff, using placeholders.  
 
 	Looks up an unqualified identifier.
-	Also checks loop contexts with unualified reference.  
+	Also checks loop contexts with unqualified reference.  
  */
 never_ptr<const object>
 context::lookup_object(const token_identifier& id) const {
 	typedef	never_ptr<const object>		return_type;
 	STACKTRACE_VERBOSE;
+	STACKTRACE_INDENT_PRINT("looking up (id): " << id << endl);
 	// aww shit, have to return a never_ptr when lookup count_ptr...
 	// could spell trouble later...
 	// fortunately, is only used locally by caller
@@ -559,7 +605,26 @@ context::lookup_object(const token_identifier& id) const {
 			return return_type(&**i);
 	}
 	// automatically resolve object handles.  
-	return_type o(get_current_named_scope()->lookup_object(id));
+	const never_ptr<const scopespace> ss(get_current_named_scope());
+#if PROCESS_DEFINITION_IS_NAMESPACE
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT_PRINT("scope name: " << ss->get_key() << endl);
+	ss->dump_for_definitions(cout);
+#endif
+	const never_ptr<const name_space> ns(ss.is_a<const name_space>());
+	return_type o;
+	if (ns) {
+		STACKTRACE_INDENT_PRINT("currently in namespace "
+			<< ns->get_key() << endl);
+		const entity::lookup_parameters lp(true, true);
+		o = ns->lookup_object(id, lp);
+	} else {
+		STACKTRACE_INDENT_PRINT("currently in a non-namespace" << endl);
+		o = ss->lookup_local(id);
+	}
+#else
+	return_type o(ss->lookup_object(id));
+#endif
 	while (o.is_a<const object_handle>())
 		o = return_type(&o->self());
 	return o;
@@ -667,6 +732,7 @@ context::__lookup_definition_return(const never_ptr<const object> o) const {
 never_ptr<const definition_base>
 context::lookup_definition(const token_identifier& id) const {
 	STACKTRACE_VERBOSE;
+	STACKTRACE_INDENT_PRINT("looking up (id): " << id << endl);
 	INVARIANT(get_current_namespace());
 	const never_ptr<const object> o(lookup_object(id));
 	return __lookup_definition_return(o);
@@ -682,6 +748,7 @@ context::lookup_definition(const token_identifier& id) const {
 never_ptr<const definition_base>
 context::lookup_definition(const qualified_id& id) const {
 	STACKTRACE_VERBOSE;
+	STACKTRACE_INDENT_PRINT("looking up (qualified): " << id << endl);
 	INVARIANT(get_current_namespace());
 	const never_ptr<const object> o(lookup_object(id));
 	return __lookup_definition_return(o);
@@ -737,24 +804,40 @@ context::lookup_internal_node(const token_identifier& id) const {
  */
 never_ptr<const scopespace>
 context::get_current_named_scope(void) const {
-	if (current_prototype)	// careful, is excl_ptr<>
+	STACKTRACE_VERBOSE;
+	if (current_prototype) {	// careful, is excl_ptr<>
+		STACKTRACE_INDENT_PRINT("in current prototype?" << endl);
 		// must be valid
 		return current_prototype.is_a<const scopespace>();
 		// return never_ptr<const definition_base>(current_prototype);
 			// .as_a<scopespace>();
-	else if (get_current_open_definition()) {
+	} else {
+		return get_current_named_scope_no_proto();
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+never_ptr<const scopespace>
+context::get_current_named_scope_no_proto(void) const {
+	// RE-ORDER!!!
+	if (get_current_open_definition()) {
+		STACKTRACE_INDENT_PRINT("in current open definition?" << endl);
 		// no longer a static cast
 		const never_ptr<const scopespace>
 			ret(get_current_open_definition()
 				.is_a<const scopespace>());
 		INVARIANT(ret);
+		STACKTRACE_INDENT_PRINT("ret->key = " << ret->get_key() << endl);
 		if (ret.is_a<const module>()) {
 			// top-level module does not count as a named scope
+			STACKTRACE_INDENT_PRINT("current open def is module" << endl);
 			return namespace_stack.top().as_a<scopespace>();
 		} else {
+			STACKTRACE_INDENT_PRINT("current open def is not module" << endl);
 			return ret;
 		}
 	} else {
+		STACKTRACE_INDENT_PRINT("in some namespace." << endl);
 		// This code can be reached only when calling parser
 		// using a read-only parse-context.  
 		// ICE(cerr, cerr << "Reached the unreachable code!" << endl;)
@@ -773,16 +856,20 @@ context::get_current_named_scope(void) const {
  */
 never_ptr<scopespace>
 context::get_current_named_scope(void) {
+	STACKTRACE_VERBOSE;
 	// what about current_prototype?
 	if (get_current_open_definition()) {
+		STACKTRACE_INDENT_PRINT("in current open definition?" << endl);
 		// used to be static cast
 		const never_ptr<scopespace>
 			ret(get_current_open_definition().is_a<scopespace>());
 		INVARIANT(ret);
 		if (ret.is_a<module>()) {
 			// top-level module does not count as a named scope
+			STACKTRACE_INDENT_PRINT("is top module" << endl);
 			return namespace_stack.top().as_a<scopespace>();
 		} else {
+			STACKTRACE_INDENT_PRINT("is not top module" << endl);
 			return ret;
 		}
 	} else {
@@ -898,6 +985,7 @@ context::add_instance(const token_identifier& id,
  */
 context::node_placeholder_ptr_type
 context::add_internal_node(const token_identifier& id, const size_t dim) {
+	STACKTRACE_VERBOSE;
 	// top-level is also considered a definition
 	const never_ptr<process_definition>
 		pd(get_current_open_definition().is_a<process_definition>());
@@ -1149,6 +1237,28 @@ context::fundamental_type_frame::~fundamental_type_frame() {
 		_context.reset_current_fundamental_type();
 	_context.atomic_type_variant = false;
 }
+
+//=============================================================================
+#if 0
+// struct context::prototype_frame method definitions
+
+/**
+	Pushes it onto the sequential scope stack.  
+ */
+context::prototype_frame::prototype_frame(context& c, 
+		excl_ptr<definition_base>& d) : _context(c) {
+	NEVER_NULL(d);
+	_context.set_current_prototype(d);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Sequential scope stack balancing destructor.  
+ */
+context::prototype_frame::~prototype_frame() {
+	_context.reset_current_prototype();
+}
+#endif
 
 //=============================================================================
 // struct context::sequence_frame method definitions

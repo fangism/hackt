@@ -100,10 +100,10 @@ public:
 	mapped_type&
 	insert(const count_ptr<const key_type>&, const definition_base&);
 
-	mapped_type&
+	mapped_type*
 	lookup(const key_type& k) const;
 
-	mapped_type&
+	mapped_type*
 	lookup(const count_ptr<const key_type>& k) const;
 
 	using parent_type::size;

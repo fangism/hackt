@@ -13,7 +13,7 @@
 #include <iterator>
 #include <numeric>
 #include "sim/prsim/Event-prsim.hh"
-#include "sim/prsim/Node.hh"		// for value_to_char
+#include "sim/prsim/Node.hh"		// for translate_value_to_char
 #include "sim/time.hh"
 
 // debug switch defined in this corresponding header file
@@ -106,7 +106,7 @@ ostream&
 Event::dump_raw(ostream& o) const {
 	typedef	NodeState	node_type;
 	o << "node: " << node << " -> val: " <<
-		node_type::value_to_char[size_t(val)] << ", ";
+		node_type::translate_value_to_char(val) << ", ";
 	cause.dump_raw(o << "(cause ");
 	o << "), cause-rule: " << cause_rule <<
 		", flags: " << size_t(flags);
@@ -128,9 +128,9 @@ Event::dump_checkpoint_state(ostream& o, istream& i) {
 	this_type temp;
 	temp.load_state(i);
 	return o << temp.node << "\t\t" << 
-		'(' << temp.cause.node << ',' << size_t(temp.cause.val) << ')'
-		// could use Node::value_to_char[]...
-		<< "\t\t" <<
+		'(' << temp.cause.node << ',' <<
+			NodeState::translate_value_to_char(temp.cause.val)
+			<< ')' << "\t\t" <<
 		temp.cause_rule << '\t' << size_t(temp.val);
 }
 

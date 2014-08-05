@@ -176,6 +176,31 @@ struct Node {
 			Think of always combinational, with complementary pull.  
 		 */
 		NODE_IS_ATOMIC = 0x0080
+#if PRSIM_SETUP_HOLD
+		,
+		/**
+			Set if a transition on this node may trigger
+			a setup time check.
+			These are typically clock signals.
+		 */
+		NODE_CHECK_SETUP = 0x0100,
+		/**
+			Set if a transition on this node may trigger
+			a hold time check.
+			These are typically data signals.
+		 */
+		NODE_CHECK_HOLD = 0x0200
+#endif
+#if PRSIM_TIMING_BACKANNOTATE
+		,
+		/**
+			Cached flag to indicate whether or not any
+			min-delay constraint has influence over this node.
+			True should imply that it has an entry in
+			the tming_annotation manager's timing fanin map.
+		 */
+		NODE_MIN_DELAY_TARGET = 0x0400
+#endif
 	} struct_flags_enum;
 
 	/**
@@ -288,6 +313,44 @@ public:
 	void
 	check_excllo(void) { struct_flags |= NODE_CHECK_EXCLLO; }
 
+#if PRSIM_SETUP_HOLD
+	void
+	flag_setup_check(void) {
+		struct_flags |= NODE_CHECK_SETUP;
+	}
+
+	void
+	flag_hold_check(void) {
+		struct_flags |= NODE_CHECK_HOLD;
+	}
+
+	bool
+	has_setup_check(void) {
+		return struct_flags & NODE_CHECK_SETUP;
+	}
+
+	bool
+	has_hold_check(void) {
+		return struct_flags & NODE_CHECK_HOLD;
+	}
+#endif
+#if PRSIM_TIMING_BACKANNOTATE
+	void
+	flag_min_delay_target(void) {
+		struct_flags |= NODE_MIN_DELAY_TARGET;
+	}
+
+	bool
+	is_min_delay_target(void) const {
+		return struct_flags & NODE_MIN_DELAY_TARGET;
+	}
+
+	void
+	reset_min_delay_target(void) {
+		struct_flags &= ~NODE_MIN_DELAY_TARGET;
+	}
+#endif
+
 	static
 	size_t
 	add_fanout_size(size_t sum, const Node& n) {
@@ -382,9 +445,10 @@ public:
 			NODE_IN_CHANNEL
 	} state_flags_enum;
 
-public:
+private:
 	// also use this as pull_to_char
 	static const uchar		value_to_char[3];
+public:
 	// also used for inverting pull state
 	static const value_enum		invert_value[3];
 protected:
@@ -414,6 +478,9 @@ protected:
 		at a loss of some cause-tracking capabilities.  
 	 */
 	LastCause				causes;
+#if PRSIM_TRACK_LAST_EDGE_TIME
+	event_time_type				last_edge_time[3];
+#endif
 
 public:
 	/**
@@ -437,7 +504,13 @@ public:
 		state_flags(NODE_INITIAL_STATE_FLAGS),
 		event_index(INVALID_EVENT_INDEX), 
 		causes(), 
-		tcount(0) { }
+		tcount(0) {
+#if PRSIM_TRACK_LAST_EDGE_TIME
+		last_edge_time[0] =
+		last_edge_time[1] =
+		last_edge_time[2] = -1.0;
+#endif
+	}
 
 	/// count on compiler to optimize zero comparison
 	bool
@@ -580,10 +653,29 @@ public:
 	}
 
 	void
-	set_value_and_cause(const value_enum c, const event_cause_type& e) {
+	set_value_and_cause(const value_enum c, const event_cause_type& e
+#if PRSIM_TRACK_LAST_EDGE_TIME
+		, const event_time_type& t
+#endif
+		) {
 		value = c;
 		causes.set_cause(c, e);
+#if PRSIM_TRACK_LAST_EDGE_TIME
+		last_edge_time[size_t(c)] = t;
+#endif
 	}
+
+#if PRSIM_TRACK_LAST_EDGE_TIME
+	const event_time_type&
+	get_last_edge_time(const value_enum c) const {
+		return last_edge_time[size_t(c)];
+	}
+
+	event_time_type
+	get_last_transition_time(void) const {
+		return get_last_edge_time(current_value());
+	}
+#endif
 
 	void
 	x_value_and_cause(void);

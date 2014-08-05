@@ -27,6 +27,7 @@ hacprsim_INCLUDES = \
 	commands.texi \
 	execution.texi \
 	diagnostics.texi \
+	timing.texi \
 	tips.texi \
 	cosim.texi
 

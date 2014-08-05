@@ -35,6 +35,7 @@ namespace entity {
 	class datatype_definition_base;
 	class channel_definition_base;
 	class process_definition_base;
+	class process_definition;
 	class fundamental_type_reference;
 	class sequential_scope;
 	class instance_placeholder_base;
@@ -82,6 +83,7 @@ using entity::definition_base;
 using entity::datatype_definition_base;
 using entity::channel_definition_base;
 using entity::process_definition_base;
+using entity::process_definition;
 using entity::fundamental_type_reference;
 using entity::sequential_scope;
 using entity::instance_placeholder_base;
@@ -141,6 +143,8 @@ public:
 						placeholder_ptr_type;
 	typedef	never_ptr<const node_instance_placeholder>
 						node_placeholder_ptr_type;
+//	typedef	name_space			namespace_type;
+	typedef	scopespace			namespace_type;
 private:
 // are we in some expression? what depth?
 // what language context are we in? global? prs, chp, hse?
@@ -164,7 +168,7 @@ private:
 		Remember, these name_space pointers are not owned, but 
 			are modifiable.  
 	 */
-	stack<never_ptr<name_space> >	namespace_stack;
+	stack<never_ptr<namespace_type> >	namespace_stack;
 
 	/**
 		Pointer to the current definition that is open for 
@@ -222,8 +226,8 @@ public:
 		Can this be modified inadvertently?
 		Need to be modifiable to access ordered lists...
 	 */
-	const never_ptr<name_space>		global_namespace;
-//	const never_ptr<const name_space>	global_namespace;
+	const never_ptr<namespace_type>		global_namespace;
+//	const never_ptr<const namespace_type>	global_namespace;
 
 
 private:
@@ -272,15 +276,16 @@ private:
 	bool					rte_mode;
 public:
 	/**
-		User-controlled parse-check options.
+		User-controlled parse-check options.  Copied.
 	 */
-	const parse_options&			parse_opts;
+	parse_options				parse_opts;
 public:
 	explicit
 	context(module&, const parse_options&);
 
 	explicit
-	context(const module&, const parse_options&, const bool _public);
+	context(const process_definition&,
+		const parse_options&, const bool _public);
 
 private:
 	// private undefined copy-constructor
@@ -328,7 +333,7 @@ public:
 	void
 	alias_namespace(const qualified_id& id, const string& a);
 
-	never_ptr<const name_space>
+	never_ptr<const namespace_type>
 	top_namespace(void) const;
 
 	never_ptr<definition_base>
@@ -399,11 +404,18 @@ public:
 	never_ptr<const scopespace>
 	get_current_named_scope(void) const;
 
+	never_ptr<const scopespace>
+	get_current_named_scope_no_proto(void) const;
+
 	never_ptr<scopespace>
 	get_current_named_scope(void);
 
-	never_ptr<const name_space>
+	never_ptr<const namespace_type>
 	get_current_namespace(void) const
+		{ return namespace_stack.top(); }
+
+	never_ptr<namespace_type>
+	get_current_namespace(void)
 		{ return namespace_stack.top(); }
 
 private:
@@ -420,7 +432,6 @@ public:
 
 	never_ptr<definition_base>
 	set_current_prototype(excl_ptr<definition_base>& d);
-// void	reset_current_prototype(void);
 
 /** destructive transfer return */
 	excl_ptr<definition_base>&
@@ -538,6 +549,12 @@ private:
 	pop_loop_var(void);
 
 public:
+	struct prototype_frame {
+		context&			_context;
+		prototype_frame(context&, excl_ptr<definition_base>&);
+		~prototype_frame();
+	} __ATTRIBUTE_UNUSED__;
+
 	struct sequence_frame {
 		context&			_context;
 		sequence_frame(context&, const never_ptr<sequential_scope>&);
@@ -656,7 +673,7 @@ public:
 	relaxed_template_parameters(void) { strict_template_mode = false; }
 
 	bool
-	is_publicly_viewable(void) const { return view_all_publicly; }
+	is_publicly_viewable(void) const { return parse_opts.view_all_publicly; }
 
 	bool
 	is_rte_syntax_mode(void) const { return rte_mode; }

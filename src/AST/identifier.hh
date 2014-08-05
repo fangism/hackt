@@ -124,6 +124,8 @@ protected:
 public:
  	typedef	parent_type::list_type::size_type
 				size_type;
+ 	typedef	parent_type::list_type::value_type
+				value_type;
  	typedef	parent_type::list_type::const_iterator
 				const_iterator;
 protected:
@@ -162,6 +164,9 @@ using parent::empty;
 
 	const_iterator
 	end(void) const { return parent.end(); }
+
+	const value_type&
+	front(void) const { return parent.front(); }
 
 	bool
 	empty(void) const { return parent.empty(); }

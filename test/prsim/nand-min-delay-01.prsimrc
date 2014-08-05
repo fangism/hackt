@@ -1,0 +1,35 @@
+# "nand-min-delay-01.prsimrc"
+# @haco@ nand.haco-c
+
+pusht nand
+min-delay a c 15
+min-delay b c 15
+popt
+
+min-delay-apply-all
+min-delay-verbose 1
+
+watchall
+watchall-queue
+
+set a 1
+set b 1
+cycle
+
+set a 0
+set b 0
+cycle
+
+echo changing both inputs
+set b 1
+advance 5
+set a 1
+cycle
+
+echo changing both inputs
+set b 0
+advance 5
+set a 0
+cycle
+
+

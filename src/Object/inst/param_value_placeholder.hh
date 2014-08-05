@@ -50,8 +50,8 @@ protected:
 	explicit
 	param_value_placeholder(const size_t d);
 
-	param_value_placeholder(const scopespace& o, const string& n, 
-		const size_t d);
+	param_value_placeholder(const parent_type::owner_ptr_raw_type& o,
+		const string& n, const size_t d);
 
 public:
 virtual	~param_value_placeholder();

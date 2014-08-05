@@ -1,0 +1,13 @@
+// "pseudo-flop-b.hac"
+// just checks timing constraints, neg-edged
+
+defproc neg_flop (bool? clk, d; bool! q) {
+spec {
+	setup_neg<15>(d, clk)
+	hold_neg<10>(clk, d)
+}
+}
+
+bool clk, d, q;
+neg_flop F(clk, d, q);
+

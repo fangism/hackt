@@ -1,0 +1,213 @@
+# "mux-delay-b-min-delay-01.prsimrc"
+# @haco@ mux-delay-b.haco-c
+
+pusht mux4
+min-delay in[0] o 60 ms[0]
+min-delay in[1] o 60 ms[1]
+min-delay in[2] o 60 ms[2]
+min-delay in[3] o 60 ms[3]
+min-delay sel[0][0] o 45
+min-delay sel[0][1] o 45
+min-delay sel[1][0] o 25
+min-delay sel[1][1] o 25
+popt
+
+min-delay-list-all
+
+echo applying timing delays
+min-delay-apply-all
+min-delay-fanin-proc z
+watchall
+min-delay-verbose 1
+weak-interference ignore
+
+set s[0][0] 1
+set s[0][1] 0
+set s[1][0] 1
+set s[1][1] 0
+set x[0] 0
+set x[1] 0
+set x[2] 0
+set x[3] 0
+cycle
+
+echo ----------------
+set s[0][0] X
+set s[0][1] X
+set s[1][0] X
+set s[1][1] X
+set x[0] X
+set x[1] X
+set x[2] X
+set x[3] X
+cycle
+echo ----------------
+echo ----------------
+
+set s[0][0] 1
+set s[0][1] 0
+set s[1][0] 1
+set s[1][1] 0
+advance 5
+set x[0] 0
+set x[1] 0
+set x[2] 0
+set x[3] 0
+cycle
+
+echo ----------------
+set s[0][0] X
+set s[0][1] X
+set s[1][0] X
+set s[1][1] X
+set x[0] X
+set x[1] X
+set x[2] X
+set x[3] X
+cycle
+echo ----------------
+
+set x[0] 0
+set x[1] 0
+set x[2] 0
+set x[3] 0
+advance 5
+set s[0][0] 1
+set s[0][1] 0
+set s[1][0] 1
+set s[1][1] 0
+cycle
+
+echo ----------------
+set s[0][0] X
+set s[0][1] X
+set s[1][0] X
+set s[1][1] X
+set x[0] X
+set x[1] X
+set x[2] X
+set x[3] X
+cycle
+echo ----------------
+echo ----------------
+
+set s[0][0] 1
+set s[0][1] 0
+set s[1][0] 1
+set s[1][1] 0
+cycle
+set x[0] 0
+set x[1] 0
+set x[2] 0
+set x[3] 0
+cycle
+
+echo ----------------
+set s[0][0] X
+set s[0][1] X
+set s[1][0] X
+set s[1][1] X
+set x[0] X
+set x[1] X
+set x[2] X
+set x[3] X
+cycle
+echo ----------------
+
+set x[0] 0
+set x[1] 0
+set x[2] 0
+set x[3] 0
+cycle
+set s[0][0] 1
+set s[0][1] 0
+set s[1][0] 1
+set s[1][1] 0
+cycle
+
+echo ----------------
+set s[0][0] X
+set s[0][1] X
+set s[1][0] X
+set s[1][1] X
+set x[0] X
+set x[1] X
+set x[2] X
+set x[3] X
+cycle
+echo ----------------
+echo ----------------
+
+set s[0][0] 1
+set s[0][1] 0
+set s[1][0] 1
+set s[1][1] 0
+cycle
+advance 100
+set x[0] 0
+set x[1] 0
+set x[2] 0
+set x[3] 0
+cycle
+
+echo ----------------
+set s[0][0] X
+set s[0][1] X
+set s[1][0] X
+set s[1][1] X
+set x[0] X
+set x[1] X
+set x[2] X
+set x[3] X
+cycle
+echo ----------------
+
+set x[0] 0
+set x[1] 0
+set x[2] 0
+set x[3] 0
+cycle
+advance 100
+set s[0][0] 1
+set s[0][1] 0
+set s[1][0] 1
+set s[1][1] 0
+cycle
+
+echo ----------------
+set s[0][0] X
+set s[0][1] X
+set s[1][0] X
+set s[1][1] X
+set x[0] X
+set x[1] X
+set x[2] X
+set x[3] X
+cycle
+echo ----------------
+echo ----------------
+
+set x[0] 1
+set x[1] 0
+set x[2] 0
+set x[3] 1
+cycle
+advance 100
+set s[0][0] 1
+set s[0][1] 0
+set s[1][0] 1
+set s[1][1] 0
+cycle
+
+echo ----------------
+set s[0][0] X
+set s[0][1] X
+set s[1][0] X
+set s[1][1] X
+set x[0] X
+set x[1] X
+set x[2] X
+set x[3] X
+cycle
+echo ----------------
+

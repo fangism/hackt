@@ -1,0 +1,65 @@
+# "pseudo-flop-b-01.prsimrc"
+# @haco@ pseudo-flop-b.haco-c
+
+watchall
+setup-violation warn
+hold-violation warn
+timing-constraints-process F
+clock-source ~clk:1 *
+channel-timing clk after 100
+channel-reset-all
+cycle
+channel-release-all
+time
+# 100
+breakpt clk
+advance 50
+set d 1
+cycle
+advance 50
+set d 0
+cycle
+cycle
+# violate setup time to both edges
+advance 95
+set d 1
+cycle
+advance 95
+set d 0
+cycle
+# caught here
+cycle
+advance 90
+set d 1
+cycle
+# and again
+cycle
+advance 92
+set d X
+cycle
+cycle
+set d 1
+cycle
+
+# testing hold violations
+advance 5
+set d 0
+cycle
+advance 5
+set d 1
+cycle
+
+advance 6
+set d X
+cycle
+advance 6
+set d 0
+cycle
+
+advance 7
+set d 1
+cycle
+advance 7
+set d X
+cycle
+

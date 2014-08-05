@@ -53,10 +53,10 @@ channel	X (.data) : 0 @ 20
 	20	X.v : 1	[by X.e:=1]
 X : bundled-4p .e(init:1) .v x8 unsigned source,watch, timing: after=10 {0,33,66,99,11,44,77,22,55,88,} @1
 	count: 0, unknowns: 0
-event    : `X.d[0]' : 0
+event    : `X.d[0]' : 0 @ 10
 (no cycle)
-event    : `X.v' : 1
-caused by: `X.e' : 1
+event    : `X.v' : 1 @ 20
+caused by: `X.e' : 1 @ 10
 (no cycle)
 - - - - - - - - - - - - - - - - - - 
 	20	X.e : 0

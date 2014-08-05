@@ -1,0 +1,230 @@
+@c "hacprsim/timing.texi"
+@c $Id: execution.texi,v 1.1 2007/08/20 21:12:31 fang Exp $
+
+@node Timing Back-Annotation
+@chapter Timing Back-Annotation
+
+This chapter describes how the simulator can load and apply
+timing arcs from an external source.
+It is recommended to first understand @ref{Execution}.
+
+@c rationale
+@cindex timing back-annotation
+The simulator is already capable of using @t{after} values 
+in production rules, which are bound at compile-time.  
+Why not just specify timing via @t{after} delays in the 
+production rules themselves?
+There are several advantages to @emph{run-time} modification
+of timing values.  
+
+@cindex process variation
+A single set of delays cannot capture the variation of timing
+at different process corners.  
+Delay values at a slow-slow corner can be drastically different 
+from values at a fast-fast corner.
+@cindex timing sensitivity
+The ability to alter delays at run-time is convenient for 
+performing delay-sensitivity experiments without having to
+edit and re-compile the source.  
+
+There are currently two methods for altering timing at run time:
+altering per-rule after delays, and specifying min-delay constraints.  
+Both methods alter properties that associated @emph{per type}, 
+so all instances of the same type see the same value changes.  
+Commands that alter a type's properties use the following
+structure of commands to enter a particular type scope:
+
+@example
+prsim> @kbd{pusht nand4}
+prsim> @kbd{... timing commands ...}
+prsim> @kbd{popt}
+@end example
+
+@noindent
+The following section describes timing commands that take
+effect within a type context.
+Although these commands are shown in an interactive setting, 
+like all commands, they may be @command{source}d as a script,
+or hierarchy of scripts.  
+
+@menu
+* Rule delay modification::
+* Min-delay constraints::
+* Selection of timing constraints::
+@end menu
+
+@c -----------------------------------------------------------------------------
+@node Rule delay modification
+@section Rule delay modification
+
+@cindex rule delay modification
+The structure of production rules and expressions is maintained
+uniquely per type, for memory efficiency.  
+Editing an attribute of a rule once will effectively apply
+the new value to all instances of the same type.  
+
+The @command{local-rules-edit-attr} command lets the user
+alter a property of a rule or rules.  
+Rules are referenced by matching fanin and fanout.  
+For example, 
+
+@example
+prsim> @kbd{pusht nand4}
+prsim> @kbd{local-rules-edit-attr a[0] _o + after 25}
+prsim> @kbd{popt}
+@end example
+
+@noindent
+The @t{after} delay value is set to 25 for all rules that
+have @code{a[0]} in the guard expression and pull @code{_o -> 1}
+as the event or action.  
+When there are multiple rules that match the criteria,
+@emph{all} of them will be modified alike.  
+
+There is currently no way to reset back to initial or default values,
+other than re-launching the simulator.  
+
+@c -----------------------------------------------------------------------------
+@node Min-delay constraints
+@section Min-delay constraints
+
+@cindex min-delay constraints
+Min-delay constraints specify a minimum time that must elapse between
+two events.
+The two events need not directly participate in the same rule, 
+they may represent any two end points of a path through multiples rules 
+or hierarchies.  
+The only rule is that the names referenced in a min-delay constraint
+must be publicly accessibly in the context of the enclosing
+type scope (same rules as what can be referenced in definition scope
+in the input language).
+We call the former event the @dfn{reference event}
+and the latter event the @dfn{target event}.
+
+@example
+prsim> @kbd{min-delay l.t l.e 60}
+@end example
+
+@noindent
+In the above example, @var{l} must be an instance of a structure
+or process in the definition scope with @var{t} and @var{e} 
+as public port members of the type of @var{l}.
+It states that the minimum delay from any event on the former
+to the latter (in any direction) must be at least 60.
+
+@c Unateness
+One can also limit the application of delay constraints by 
+specifying unateness, the direction of events.
+Each node referenced may be optionally suffixed with @t{-} or @t{+}.
+Left unspecified, both directions are assumed when referring
+to a node.  
+Consider the following examples:
+
+@example
+prsim> @kbd{min-delay a+ b+ 25}
+prsim> @kbd{min-delay a- b- 25}
+prsim> @kbd{min-delay c+ d  30}
+prsim> @kbd{min-delay e  f- 35}
+prsim> @kbd{min-delay g- h+ 40}
+prsim> @kbd{min-delay i+ j- 45}
+@end example
+
+@noindent
+Between @var{a} and @var{b}, the min-delay of 25 only applies
+to the rising-to-rising and falling-to-falling transition cases.
+@var{c}-rise to @var{d}-any has a min-delay of 30.
+@var{e}-any to @var{f}-fall has a min-delay of 35.
+@var{g}-any to @var{h}-rise has a min-delay of 40.
+@var{i}-rise to @var{j}-fall has a min-delay of 45.
+@cindex unateness
+This notation offers the flexibility of specifying delays with positive or
+negative unateness, and unequal delay values.  
+Think of every reference-target pair has having 4 distinct delay values, 
+and the direction modifiers as a means of addressing subsets of those
+delay values.  
+
+@c predicates
+@cindex predicate
+@cindex predication
+@command{min-delay} takes an optional fourth argument, the @emph{predicate}.
+When the predicate is omitted, the min-delay constraints is always in effect.
+The predicate is a run-time boolean value that can refer to a node (wire)
+or an atomic boolean value or @code{ebool}, which can represent
+arbitrary expressions on nodes.  
+
+@example
+prsim> @kbd{min-delay a[0] b 25 select[0]}
+prsim> @kbd{min-delay a[1] b 25 select[1]}
+@end example
+
+@noindent
+Above, the delay from @var{a[0]} to @var{b} is only applicable when
+@var{select[0]} is logic-high at run time.  
+This is particularly useful for logic that contains path-selection 
+elements like muxes (which can be static or dynamic).  
+Predication can be used to express the conditions under which
+there is a false timing path.  
+@cindex false timing path
+
+@c Enforcement
+Unlike rule delays, min-delay contraints do not participate
+at the time the initial event is scheduled.  
+Rules are still scheduled with a delay based on the current
+timing mode and per-rule delay (@t{after}) values.  
+However, when as an event is dequeued from the event queue, 
+it is checked all min-delay constraints that it participates in
+(also accounting for predicates). 
+An effective execution time @var{Texec} is computed by taking the maximum
+of @var{Treference+Tdelay}.  If @var{Texec} less than
+the current time, then the event is allowed to execute immediately, 
+otherwise it is postponed until @var{Texec}.  
+Min-delay constraints can only postpone events.
+
+Lastly, but most importantly, min-delay constraints to not take effect
+until after the @command{min-delay-apply-all} command.
+This tells the simulator to apply the current set of delay constraints
+over all types to all instances.  
+(This staged approach is due to the implementation maintaining
+a global sparse graph of timing constraints.)
+Do not forget the @command{min-delay-apply-all} command.
+
+
+@node Selection of timing constraints
+@section Selection of timing constraints
+
+When might one choose one method of timing constraint over the other?
+When the reference node and target node don't participate in
+any rules (as guard and event), min-delay constraints are the only option.
+The advantage of using per-rule delays is that they more accurately
+represent OR-causality of guard expressions.  
+@cindex OR-causality
+
+Consider the rule: @code{[after=10] x | y => z-} and the scenario where
+@code{x -> 1} at time 0, and @code{y -> 1} at time 5.
+(Equivalently, one could modify the @code{after} delay with
+@command{local-rules-edit-attr}.)
+As soon as @code{x} becomes 1, the rule fires, and @code{z-} is scheduled
+at time 10.  The re-firing of @code{z-} caused by @code{y -> 1} at time 5
+is vacuous, so the previous event is kept and executes at time 10.  
+
+If instead of the per-rule @code{after} delay, we used min-delay
+constraints:
+@example
+prsim> @kbd{min-delay x z 10}
+prsim> @kbd{min-delay y z 10}
+@end example
+@noindent
+Then with the same input timing of @code{x} and @code{y} as before,
+the constraint from @code{y} to @code{z} takes effect, even though
+@code{y} was not required for @code{z} to fire.  
+The event of @code{z-} is pessimistically delayed until time 15, 
+which compromises a little accuracy.  
+In summary, OR-causality is lost with min-delay constraints.  
+
+@cindex predicate
+Another difference is that per-rule delays cannot take predicates.  
+However, predicates can already be expressed in production rules to
+gate certain sub-expressions from firing.  
+
+[Future enhancements?]
+

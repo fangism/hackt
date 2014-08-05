@@ -1,0 +1,7 @@
+# "type-scope-04.prsimrc"
+# @haco@ oscillator.haco-c
+
+# was never instantiated
+pusht ring_oscillator<11>
+pwt
+popt

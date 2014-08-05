@@ -1,0 +1,69 @@
+# "wchb-local-rules-01.prsimrc"
+# @haco@ wchb-a.haco-c
+
+# top-level: nothing
+local-rules
+rules src
+rules buf
+rules bkt
+
+pusht rsource_e1of2
+pwt
+local-rules
+local-rules-matching r.e _r0 +
+local-rules-matching r.e _r0 -
+local-rules-matching r.e _r1 +
+local-rules-matching r.e _r1 -
+local-rules-matching _r0 r.f +
+local-rules-matching _r0 r.f -
+local-rules-matching _r1 r.t +
+local-rules-matching _r1 r.t -
+popt
+
+pusht bucket_e1of2_rl
+pwt
+local-rules
+local-rules-matching l.t _lv +
+local-rules-matching l.t _lv -
+local-rules-matching l.f _lv +
+local-rules-matching l.f _lv -
+local-rules-matching _lv l.e +
+local-rules-matching _lv l.e -
+popt
+
+pusht wchb
+pwt
+local-rules
+local-rules-matching l.t _r.t +
+local-rules-matching l.t _r.t -
+local-rules-matching l.f _r.f +
+local-rules-matching l.f _r.f -
+local-rules-matching r.e _r.f +
+local-rules-matching r.e _r.f -
+local-rules-matching _r.t rv +
+local-rules-matching _r.t rv -
+local-rules-matching _r.f rv +
+local-rules-matching _r.f rv -
+local-rules-matching _sReset rv +
+local-rules-matching _sReset rv -
+local-rules-matching rv l.e +
+local-rules-matching rv l.e -
+popt
+
+echo now editing after delay values
+pusht rsource_e1of2
+local-rules-edit-attr r.e _r0 + after 21
+local-rules-edit-attr r.e _r0 - after 22
+local-rules-edit-attr r.e _r1 + after 23
+local-rules-edit-attr r.e _r1 - after 24
+local-rules
+popt
+
+pusht bucket_e1of2_rl
+local-rules-edit-attr l.t _lv + after 31
+local-rules-edit-attr l.t _lv - after 32
+local-rules-edit-attr l.f _lv + after 33
+local-rules-edit-attr l.f _lv - after 34
+local-rules
+popt
+

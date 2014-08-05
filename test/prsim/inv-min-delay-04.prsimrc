@@ -1,0 +1,25 @@
+# "inv-min-delay-04.prsimrc"
+# @haco@ inv.haco-c
+
+pusht inv
+# no predicate
+min-delay a b 45
+popt
+# don't forget to do this after loading timing delays!
+min-delay-apply-all
+min-delay-verbose 1
+
+watchall
+set a 0
+cycle
+
+set a 1
+cycle
+
+# min delay doesn't apply to Xs
+set a X
+cycle
+
+set a 1
+cycle
+

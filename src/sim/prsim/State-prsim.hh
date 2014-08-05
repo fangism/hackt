@@ -34,6 +34,12 @@
 #include "util/tokenize_fwd.hh"
 #include "util/numformat.hh"
 #include "Object/devel_switches.hh"
+#if PRSIM_SETUP_HOLD
+#include "sim/prsim/TimingChecker.hh"
+#endif
+#if PRSIM_TIMING_BACKANNOTATE
+#include "sim/prsim/DelayBackAnnotation.hh"
+#endif
 
 /**
 	First-come-first-serve ordering of updated nodes.
@@ -99,6 +105,7 @@ using util::memory::never_ptr;
 using SIM::INVALID_TRACE_INDEX;
 using util::memory::count_ptr;
 using std::map;
+using std::pair;
 using entity::dump_flags;
 using entity::preal_value_type;
 
@@ -149,7 +156,7 @@ public:
 		the second index refers to the node that caused it, 
 		deduced from some event queue.  
 	 */
-	typedef	std::pair<node_index_type, node_index_type>
+	typedef	pair<node_index_type, node_index_type>
 							step_return_type;
 	typedef	size_t				lock_index_type;
 	/**
@@ -172,20 +179,7 @@ public:
 		inspect(const State&, ostream&) const;
 	};	// end struct excl_exception
 
-	/**
-		Minimalist generic exception.
-	 */
-	struct generic_exception : public step_exception {
-		node_index_type			node_id;
-		error_policy_enum		policy;
-
-		generic_exception(const node_index_type n, 
-			const error_policy_enum e) : 
-			node_id(n), policy(e) { }
-
-	virtual	error_policy_enum
-		inspect(const State&, ostream&) const;
-	};	// end struct invariant_exception
+	// generic_exception relocated to sim/prsim/Exception.hh
 
 	/**
 		Exception type thrown when there is an invariant
@@ -198,6 +192,10 @@ public:
 			generic_exception(n, e) { }
 
 	};	// end struct invariant_exception
+
+#if PRSIM_SETUP_HOLD
+	typedef	TimingChecker::timing_exception		timing_exception;
+#endif
 
 	typedef	generic_exception	interference_exception;
 	typedef	generic_exception	instability_exception;
@@ -334,6 +332,14 @@ private:
 			accounts for possibly vacuous events.  
 		 */
 		FLAG_STOP_ON_VACUOUS = 0x40000,
+#if PRSIM_TIMING_BACKANNOTATE
+		/**
+			Set to true to print when min-delay constraint
+			is applied.  More useful for debugging than anything.
+			Default: false
+		 */
+		FLAG_MIN_DELAY_VERBOSE = 0x80000,
+#endif
 		/// initial flags
 		FLAGS_DEFAULT = FLAG_CHECK_EXCL | FLAG_SHOW_CAUSE,
 		/**
@@ -375,7 +381,8 @@ public:
 		ERROR_DEFAULT_ASSERT_FAIL = ERROR_FATAL,
 		ERROR_DEFAULT_CHANNEL_EXPECT_FAIL = ERROR_FATAL,
 		ERROR_DEFAULT_EXCL_CHECK_FAIL = ERROR_FATAL,
-		ERROR_DEFAULT_KEEPER_CHECK = ERROR_IGNORE
+		ERROR_DEFAULT_KEEPER_CHECK = ERROR_IGNORE,
+		ERROR_DEFAULT_GENERIC = ERROR_BREAK	// unused
 	};
 
 private:
@@ -629,6 +636,8 @@ protected:
 					global_expr_process_id_map_type;
 #endif
 #endif
+	typedef map<const entity::footprint*, process_index_type>
+						process_footprint_map_type;
 	/**
 		Collection of unique process footprints.
 	 */
@@ -649,9 +658,15 @@ private:
 		Collection of node states.
 	 */
 	node_pool_type				node_pool;
+	/**
+		Translates unique prs_footprint to unique process index.  
+	 */
+	process_footprint_map_type		process_footprint_map;
 	// TODO: per process instance attributes!
 	/**
 		Collection of unique process footprints.  
+		This is contructed and populated by ExprAlloc,
+		but then preserved for lookup.
 	 */
 	unique_process_pool_type		unique_process_pool;
 #if PRSIM_SEPARATE_PROCESS_EXPR_MAP
@@ -707,6 +722,13 @@ private:
 	check_excl_ring_map_type		check_exhi;
 	/// sparse set of node-associated lock sets
 	check_excl_ring_map_type		check_exlo;
+#if PRSIM_SETUP_HOLD
+	/// timing constraint checking subsystem
+	TimingChecker				timing_checker;
+#endif	// PRSIM_SETUP_HOLD
+#if PRSIM_TIMING_BACKANNOTATE
+	delay_back_annotation_manager		delay_annotation_manager;
+#endif
 	// current time, etc...
 	time_type				current_time;
 	time_type				uniform_delay;
@@ -895,6 +917,58 @@ public:
 		return node_index_type(std::distance(&node_pool[0], &n));
 	}
 
+private:	// only accessibly to ExprAlloc
+	/**
+		\return index to unique type, true if new.
+	 */
+	pair<size_t, bool>
+	allocate_unique_process_graph(const footprint* f); 
+
+public:
+	const footprint*
+	parse_to_footprint(const string& t) const;
+
+	// unique_type lookup
+	process_index_type
+	lookup_unique_process_graph_id(const footprint* f) const {
+		process_footprint_map_type::const_iterator
+			g(process_footprint_map.find(f));	// const
+		return (g != process_footprint_map.end()) ? g->second : 0;
+	}
+
+	// unique_type lookup
+	unique_process_subgraph*
+	lookup_unique_process_graph(const footprint* f) {
+		const process_index_type upid =
+			lookup_unique_process_graph_id(f);
+		return upid ? &unique_process_pool[upid] : NULL;
+	}
+
+	const unique_process_subgraph*
+	lookup_unique_process_graph(const footprint* f) const {
+		const process_index_type upid =
+			lookup_unique_process_graph_id(f);
+		return upid ? &unique_process_pool[upid] : NULL;
+	}
+
+	unique_process_subgraph*
+	lookup_unique_process_graph(const string& s) {
+		// pass empty string or . to get top-level footprint
+		if (s.length() && s != ".") {
+			const footprint* f = parse_to_footprint(s);
+			return f ? lookup_unique_process_graph(f) : NULL;
+		} else	return &unique_process_pool[0];
+	}
+
+	const unique_process_subgraph*
+	lookup_unique_process_graph(const string& s) const {
+		// pass empty string or . to get top-level footprint
+		if (s.length() && s != ".") {
+			const footprint* f = parse_to_footprint(s);
+			return f ? lookup_unique_process_graph(f) : NULL;
+		} else	return &unique_process_pool[0];
+	}
+
 public:
 	ostream&
 	dump_node_canonical_name(ostream&, const node_index_type) const;
@@ -1014,6 +1088,28 @@ public:
 
 	void
 	norandom(void) { timing_mode = TIMING_UNIFORM; }
+
+#if PRSIM_TIMING_BACKANNOTATE
+	delay_back_annotation_manager&
+	get_delay_annotation_manager(void) {
+		return delay_annotation_manager;
+	}
+
+	void
+	reset_min_delays(void);
+
+	void
+	apply_all_min_delays(void);
+
+	bool
+	list_min_delays_type(ostream&, const string&) const;
+
+	void
+	list_all_min_delays(ostream&) const;
+
+	void
+	min_delay_fanin(ostream&, const node_index_type) const;
+#endif
 
 	bool
 	show_tcounts(void) const { return flags & FLAG_SHOW_TCOUNTS; }
@@ -1156,6 +1252,18 @@ public:
 		return name##_policy;				\
 	}
 
+#define	DEFINE_POLICY_CONTROL_SET_MEM(mem, name)		\
+	void							\
+	set_##name##_policy(const error_policy_enum e) {	\
+		mem. name##_policy = e;				\
+	}
+
+#define	DEFINE_POLICY_CONTROL_GET_MEM(mem, name)		\
+	error_policy_enum					\
+	get_##name##_policy(void) const {			\
+		return mem. name##_policy;			\
+	}
+
 	bool
 	check_all_invariants(ostream&) const;
 
@@ -1192,6 +1300,12 @@ public:
 	DEFINE_POLICY_CONTROL_GET(channel_expect_fail)
 	DEFINE_POLICY_CONTROL_GET(excl_check_fail)
 	DEFINE_POLICY_CONTROL_GET(keeper_check_fail)
+#if PRSIM_SETUP_HOLD
+	DEFINE_POLICY_CONTROL_GET_MEM(timing_checker, setup_violation)
+	DEFINE_POLICY_CONTROL_GET_MEM(timing_checker, hold_violation)
+	DEFINE_POLICY_CONTROL_SET_MEM(timing_checker, setup_violation)
+	DEFINE_POLICY_CONTROL_SET_MEM(timing_checker, hold_violation)
+#endif
 
 #undef	DEFINE_POLICY_CONTROL_SET
 #undef	DEFINE_POLICY_CONTROL_GET
@@ -1459,6 +1573,23 @@ public:
 		return flags & FLAG_STOP_ON_VACUOUS;
 	}
 
+#if PRSIM_TIMING_BACKANNOTATE
+	void
+	show_min_delays(void) {
+		flags |= FLAG_MIN_DELAY_VERBOSE;
+	}
+
+	void
+	silent_min_delays(void) {
+		flags &= ~FLAG_MIN_DELAY_VERBOSE;
+	}
+
+	bool
+	verbose_min_delays(void) const {
+		return flags & FLAG_MIN_DELAY_VERBOSE;
+	}
+#endif
+
 	void
 	append_mk_exclhi_ring(ring_set_type&);
 
@@ -1618,6 +1749,36 @@ public:
 	bool
 	reschedule_event_relative(const node_index_type, const time_type);
 
+#if PRSIM_TIMING_BACKANNOTATE
+private:
+	/**
+		Representation of the constraint for the 
+		maximum of min-delays.  
+		Returned by iterating over active constraints.
+	 */
+	struct applied_min_delay_constraint {
+		bool			delayed;
+		// the last switched node that activated the constraint
+		// global index
+		node_index_type		ref;
+		time_type		time;
+
+		explicit
+		applied_min_delay_constraint(const time_type& t) :
+			delayed(false), ref(INVALID_NODE_INDEX), time(t) { }
+
+		void
+		set(const node_index_type r, const time_type& t) {
+			ref = r;
+			time = t;
+			delayed = true;
+		}
+	};	// end struct applied_min_delay_constraint
+
+	applied_min_delay_constraint
+	node_event_min_delay(const node_index_type, const value_enum) const;
+
+#endif
 private:
 #if PRSIM_MK_EXCL_BLOCKING_SET
 	void
@@ -1645,15 +1806,39 @@ private:
 	flush_excllo_queue(void);
 #endif
 
+#if PRSIM_SETUP_HOLD
+public:
+	// for TimingChecker
+	void
+	handle_timing_exception(const timing_exception&);
+
+private:
+#endif
+
 #if PRSIM_MK_EXCL_BLOCKING_SET
 	void
 	flush_blocked_excl_nodes(const value_enum);
 #endif
 
 	break_type
-	flush_updated_nodes(cause_arg_type);
+	flush_updated_nodes(cause_arg_type
+#if PRSIM_TRACK_LAST_EDGE_TIME && !PRSIM_TRACK_CAUSE_TIME
+		, const time_type&
+#endif
+		);
 
 	struct auto_flush_queues;
+
+	/**
+		\pre event queue is not empty.
+	 */
+	event_placeholder_type
+	peek_next_event(void) const {
+		return event_queue.top();
+	}
+
+	void
+	flush_killed_events(void);
 
 	event_placeholder_type
 	dequeue_event(void);
@@ -1891,6 +2076,11 @@ public:
 
 	ostream&
 	dump_all_rules(ostream&, const bool) const;
+
+#if PRSIM_SETUP_HOLD
+	ostream&
+	dump_timing_constraints(ostream&, const process_index_type) const;
+#endif
 
 	ostream&
 	dump_node_why_X(ostream&, const node_index_type, 

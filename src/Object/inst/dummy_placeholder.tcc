@@ -77,7 +77,8 @@ DUMMY_PLACEHOLDER_CLASS::dummy_placeholder() :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DUMMY_PLACEHOLDER_TEMPLATE_SIGNATURE
-DUMMY_PLACEHOLDER_CLASS::dummy_placeholder(const scopespace& o, 
+DUMMY_PLACEHOLDER_CLASS::dummy_placeholder(
+		const typename parent_type::owner_ptr_raw_type& o, 
 		const string& n, const size_t d) :
 		parent_type(o, n, d) {
 }

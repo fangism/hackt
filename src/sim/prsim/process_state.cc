@@ -280,7 +280,7 @@ do {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	TODO: Rajit's prsim suppreses weak rule fanins (copy?)
+	TODO: Rajit's prsim suppresses weak rule fanins (copy?)
 		For now, we print those as well.
 	\param v true if literal should be printed with its value.  
 		also print expression with pull-state.
@@ -370,7 +370,7 @@ if (n.is_atomic()) {
 			(dir ? root_pull.up : root_pull.dn);
 		// rewritten this way because g++-3.3 ICEs-on-valid.
 		// was: (dir ? root_pull.up : root_pull.dn) STR_INDEX(w);
-		o << '<' << State::node_type::value_to_char[p] << '>';
+		o << '<' << State::node_type::translate_value_to_char(p) << '>';
 	}
 if (!n.is_atomic()) {
 	st.dump_node_canonical_name(o << " -> ", gnr) << (dir ? '+' : '-');
@@ -615,7 +615,7 @@ process_sim_state::__recurse_expr_why_X(ostream& o,
 	\param pi is the global process index to which expression belongs.
 	\param st is the global node state
 	\param v true if literal should be printed with its value.  
-	\param ptype the parent's expression type, only used if cp is true.
+	\param ptype the parent's expression type, only used if pr is true.
 	\param pr whether or not parent is root
 		(if so, ignore type comparison for parenthesization).  
  */
@@ -679,9 +679,7 @@ process_sim_state::dump_subexpr(ostream& o, const expr_index_type ei,
 		// if verbose, and expression has more than one subexpr
 		// print pull-state
 		o << '<' <<
-			State::node_type::value_to_char[
-				size_t(es.pull_state(e))
-			]
+			State::node_type::translate_value_to_char(es.pull_state(e))
 			<< '>';
 	}
 	return o;
@@ -720,6 +718,92 @@ process_sim_state::__collect_expr_literals(const expr_index_type ei,
 	}
 	}
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_SETUP_HOLD
+/**
+	TODO: option to show current status of each timing constraint
+	w.r.t. time of last transition of the participating nodes.
+	Also flag which ones are pending/active (difference is wrong sign).
+ */
+ostream&
+process_sim_state::dump_timing_constraints(ostream& o,
+		const State& st) const {
+	const unique_process_subgraph& pg(type());
+	// see unique_process_subgraph::dump_timing_constraints
+{
+	unique_process_subgraph::setup_constraint_set_type::const_iterator
+		i(pg.setup_constraints.begin()), e(pg.setup_constraints.end());
+	if (i!=e) {
+		o << "setup-time constraints:" << endl;
+	}
+	for ( ; i!=e; ++i) {
+		// translate local to global node indices
+#if PRSIM_FWD_POST_TIMING_CHECKS
+		const string ref(st.get_node_canonical_name(
+			st.translate_to_global_node(*this, i->first)));
+#else
+		const string target(st.get_node_canonical_name(
+			st.translate_to_global_node(*this, i->first.first)));
+#endif
+		vector<setup_constraint_entry>::const_iterator
+			ci(i->second.begin()), ce(i->second.end());
+		for ( ; ci!=ce; ++ci) {
+#if PRSIM_FWD_POST_TIMING_CHECKS
+			const string target(st.get_node_canonical_name(
+				st.translate_to_global_node(*this, ci->trig_node)));
+#else
+			const string ref(st.get_node_canonical_name(
+				st.translate_to_global_node(*this, ci->ref_node)));
+#endif
+			o << "t( " << ref << " -> " << target <<
+#if PRSIM_FWD_POST_TIMING_CHECKS
+				(ci->dir ? '+' : '-')
+#else
+				(i->first.second ? '+' : '-')
+#endif
+				<< " ) >= " << ci->time << endl;
+		}
+	}
+}{
+	unique_process_subgraph::hold_constraint_set_type::const_iterator
+		i(pg.hold_constraints.begin()), e(pg.hold_constraints.end());
+	if (i!=e) {
+		o << "hold-time constraints:" << endl;
+	}
+	for ( ; i!=e; ++i) {
+		// translate local to global node indices
+#if PRSIM_FWD_POST_TIMING_CHECKS
+		const string ref(st.get_node_canonical_name(
+			st.translate_to_global_node(*this, i->first.first)));
+#else
+		const string target(st.get_node_canonical_name(
+			st.translate_to_global_node(*this, i->first)));
+#endif
+		vector<hold_constraint_entry>::const_iterator
+			ci(i->second.begin()), ce(i->second.end());
+		for ( ; ci!=ce; ++ci) {
+#if PRSIM_FWD_POST_TIMING_CHECKS
+			const string target(st.get_node_canonical_name(
+				st.translate_to_global_node(*this, ci->trig_node)));
+#else
+			const string ref(st.get_node_canonical_name(
+				st.translate_to_global_node(*this, ci->ref_node)));
+#endif
+			o << "t( " << ref <<
+#if PRSIM_FWD_POST_TIMING_CHECKS
+				(i->first.second ? '+' : '-')
+#else
+				(ci->dir ? '+' : '-')
+#endif
+				<< " -> " << target << " ) >= " << ci->time << endl;
+		}
+	}
+
+}
+	return o;
+}	// end dump_timing_constraints
+#endif	// PRSIM_SETUP_HOLD
 
 //=============================================================================
 // explicit class template instantiations

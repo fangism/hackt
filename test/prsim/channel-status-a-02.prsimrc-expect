@@ -28,8 +28,8 @@ channel X: data is neutral, waiting for sender to produce data
 channel	X (.data) : 0 @ 20
 	20	X.d[0] : 1	[by X.e:=1]
 channel X: data is valid (0), waiting for receiver to ack
-event    : `X.d[0]' : 1
-caused by: `X.e' : 1
+event    : `X.d[0]' : 1 @ 20
+caused by: `X.e' : 1 @ 10
 (no cycle)
 - - - - - - - - - - - - - - - - - - 
 	20	X.e : 0

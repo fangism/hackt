@@ -70,9 +70,17 @@ DECLARE_SPEC_COMMON_STRUCT(SIM_force_excllo)
 DECLARE_SPEC_COMMON_STRUCT(layout_min_sep)
 DECLARE_SPEC_COMMON_STRUCT(layout_min_sep_proc)
 
-// intended to denot voltage domain crossing
+// intended to denote voltage domain crossing
 DECLARE_SPEC_COMMON_STRUCT(supply_x)
 DECLARE_SPEC_COMMON_STRUCT(RunModeStatic)
+
+// intended for timing constraint checks
+DECLARE_SPEC_COMMON_STRUCT(setup_pos)
+DECLARE_SPEC_COMMON_STRUCT(setup_neg)
+DECLARE_SPEC_COMMON_STRUCT(hold_pos)
+DECLARE_SPEC_COMMON_STRUCT(hold_neg)
+// DECLARE_SPEC_COMMON_STRUCT(width_hi)
+// DECLARE_SPEC_COMMON_STRUCT(width_low)
 
 #undef	DECLARE_SPEC_COMMON_STRUCT
 

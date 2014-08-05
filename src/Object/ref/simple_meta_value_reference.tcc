@@ -145,12 +145,15 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::dump(ostream& o,
 #endif
 	if (c.enclosing_scope) {
 		this->value_collection_ref->dump_qualified_name(o,
-			dump_flags::no_definition_owner);
+//			dump_flags::verbose
+			dump_flags::no_definition_owner
+			);
 	} else {
 		this->value_collection_ref->dump_qualified_name(o,
 			dump_flags::default_value);
 	}
-	return simple_meta_indexed_reference_base::dump_indices(o, c);
+	simple_meta_indexed_reference_base::dump_indices(o, c);
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

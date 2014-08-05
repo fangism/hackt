@@ -695,6 +695,42 @@ layout_min_sep_proc::main(cflat_prs_printer& p, const param_args_type& v,
 }
 
 }	// end namespace layout
+
+//-----------------------------------------------------------------------------
+// namespace for timing directives
+
+namespace timing {
+DECLARE_AND_DEFINE_CFLAT_SPEC_DIRECTIVE_CLASS(setup_pos, "setup_pos")
+DECLARE_AND_DEFINE_CFLAT_SPEC_DIRECTIVE_CLASS(setup_neg, "setup_neg")
+DECLARE_AND_DEFINE_CFLAT_SPEC_DIRECTIVE_CLASS(hold_pos, "hold_pos")
+DECLARE_AND_DEFINE_CFLAT_SPEC_DIRECTIVE_CLASS(hold_neg, "hold_neg")
+
+/**
+	For specifying setup time relative to a positive edge.
+ */
+#define	DEFINE_TIMING_MAIN(d)						\
+void									\
+d::main(cflat_prs_printer& p, const param_args_type& v, 		\
+		const node_args_type& a) {				\
+	STACKTRACE_VERBOSE;						\
+	switch (p.cfopts.primary_tool) {				\
+	case cflat_options::TOOL_PRSIM:					\
+		default_spec_output<this_type>(p, v, a) << endl;	\
+		break;							\
+	default:							\
+		break;							\
+	}								\
+}
+
+DEFINE_TIMING_MAIN(setup_pos)
+DEFINE_TIMING_MAIN(setup_neg)
+DEFINE_TIMING_MAIN(hold_pos)
+DEFINE_TIMING_MAIN(hold_neg)
+
+#undef	DEFINE_TIMING_MAIN
+
+}	// end namespace timing
+
 //-----------------------------------------------------------------------------
 #undef	DECLARE_AND_DEFINE_CFLAT_SPEC_DIRECTIVE_CLASS
 }	// end namespace cflat_specs

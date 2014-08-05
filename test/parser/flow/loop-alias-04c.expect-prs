@@ -1,0 +1,4 @@
+= "!GND" "bar.!GND"
+= "!Vdd" "bar.!Vdd"
+= "bar.a[0]" "bar.b[0]"
+= "bar.a[1]" "bar.b[1]"
