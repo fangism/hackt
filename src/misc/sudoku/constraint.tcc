@@ -6,8 +6,8 @@
 #ifndef	__SUDOKU_CONSTRAINT_TCC__
 #define	__SUDOKU_CONSTRAINT_TCC__
 
-#include "misc/sudoku/debug.h"
-#include "misc/sudoku/constraint.h"
+#include "misc/sudoku/debug.hh"
+#include "misc/sudoku/constraint.hh"
 
 namespace sudoku {
 //=============================================================================

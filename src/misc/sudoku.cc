@@ -3,10 +3,10 @@
 	$Id: sudoku.cc,v 1.3 2006/04/03 19:36:24 fang Exp $
  */
 
-#include "misc/sudoku.h"
 #include <iostream>
 #include <iomanip>
 #include <algorithm>
+#include "misc/sudoku.hh"
 
 // some handy compile-switches
 #define	DEBUG_LOAD		0

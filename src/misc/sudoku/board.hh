@@ -1,15 +1,15 @@
 /**
-	\file "misc/sudoku/board.h"
+	\file "misc/sudoku/board.hh"
 	$Id: board.h,v 1.2 2006/01/22 06:53:18 fang Exp $
  */
 
 #ifndef	__SUDOKU_BOARD_H__
 #define	__SUDOKU_BOARD_H__
 
-#include "misc/sudoku/debug.h"
-#include "misc/sudoku/inttypes.h"
-#include "misc/sudoku/move.h"
-#include "util/finite_vector.h"
+#include "misc/sudoku/debug.hh"
+#include "misc/sudoku/inttypes.hh"
+#include "misc/sudoku/move.hh"
+#include "util/finite_vector.hh"
 
 namespace sudoku {
 //=============================================================================

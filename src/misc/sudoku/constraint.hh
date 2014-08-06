@@ -1,5 +1,5 @@
 /**
-	\file "sudoku/constraint.h"
+	\file "sudoku/constraint.hh"
 	Each constraint defines a rule of the game.  
 	TODO: another idea use constraints to narrow down
 		the pivot point, with extra bookkeeping.  
@@ -17,8 +17,8 @@
 #ifndef	__SUDOKU_CONSTRAINT_H__
 #define	__SUDOKU_CONSTRAINT_H__
 
-#include "misc/sudoku/debug.h"
-#include "misc/sudoku/inttypes.h"
+#include "misc/sudoku/debug.hh"
+#include "misc/sudoku/inttypes.hh"
 
 namespace sudoku {
 //=============================================================================

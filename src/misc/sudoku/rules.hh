@@ -1,5 +1,5 @@
 /**
-	\file "misc/sudoku/rules.h"
+	\file "misc/sudoku/rules.hh"
 	Rules are a system of constraints.  
 	Each rule set adds constraints to board cells.  
 	$Id: rules.h,v 1.2 2006/01/22 06:53:22 fang Exp $
@@ -8,8 +8,8 @@
 #ifndef	__SUDOKU_RULES_H__
 #define	__SUDOKU_RULES_H__
 
-#include "misc/sudoku/constraint.h"
-#include "util/memory/pointer_traits.h"
+#include "misc/sudoku/constraint.hh"
+#include "util/memory/pointer_traits.hh"
 
 namespace sudoku {
 using util::memory::pointee;

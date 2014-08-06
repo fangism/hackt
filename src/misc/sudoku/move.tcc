@@ -6,7 +6,7 @@
 #ifndef	__SUDOKU_MOVE_TCC__
 #define	__SUDOKU_MOVE_TCC__
 
-#include "misc/sudoku/move.h"
+#include "misc/sudoku/move.hh"
 
 namespace sudoku {
 //=============================================================================

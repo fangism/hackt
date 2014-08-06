@@ -3,11 +3,11 @@
 	$Id: sudoku-solver.cc,v 1.2 2006/01/22 06:53:14 fang Exp $
  */
 
-#include "misc/sudoku.h"
-#include "misc/sudoku-solver.h"
 #include <iostream>
 #include <fstream>
-#include "main/program_registry.h"
+#include "misc/sudoku.hh"
+#include "misc/sudoku-solver.hh"
+#include "main/program_registry.hh"
 
 using std::list;
 using std::ifstream;

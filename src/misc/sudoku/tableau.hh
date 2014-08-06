@@ -1,5 +1,5 @@
 /**
-	\file "misc/sudoku/tableau.h"
+	\file "misc/sudoku/tableau.hh"
 	$Id: tableau.h,v 1.2 2006/01/22 06:53:23 fang Exp $
  */
 
@@ -28,7 +28,7 @@ public:
 	typedef	BoardType			board_type;
 	typedef	typename board_type::cell_type	cell_type;
 private:
-	/// defined in "misc/sudoku/solve.h"
+	/// defined in "misc/sudoku/solve.hh"
 	template <class SolutionType>
 	class subproblem_solver;
 private:

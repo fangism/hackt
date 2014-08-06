@@ -8,7 +8,7 @@
 #ifndef	__GUILE_LOGO_TORTOISE_WRAP_H__
 #define	__GUILE_LOGO_TORTOISE_WRAP_H__
 
-#include "util/libguile.h"
+#include "util/libguile.hh"
 
 namespace logo {
 namespace guile {

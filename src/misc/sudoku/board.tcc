@@ -6,7 +6,7 @@
 #ifndef	__SUDOKU_BOARD_TCC__
 #define	__SUDOKU_BOARD_TCC__
 
-#include "misc/sudoku/board.h"
+#include "misc/sudoku/board.hh"
 
 namespace sudoku {
 //=============================================================================

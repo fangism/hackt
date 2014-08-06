@@ -4,8 +4,8 @@
 	Wrapper implementation.  
  */
 
-#include "tortoise-wrap.h"
-#include "tortoise.h"
+#include "tortoise-wrap.hh"
+#include "tortoise.hh"
 
 namespace logo {
 namespace guile {

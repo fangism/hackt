@@ -6,8 +6,8 @@
 #include "config.h"
 #include <iostream>
 #include <fstream>
-#include "tortoise.h"
-#include "tortoise-wrap.h"
+#include "tortoise.hh"
+#include "tortoise-wrap.hh"
 
 // guile's <libguile/scmconfig.h> also defines this, arg...
 #ifdef	SIZEOF_LONG_LONG

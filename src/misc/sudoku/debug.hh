@@ -1,5 +1,5 @@
 /**
-	\file "misc/sudoku/debug.h"
+	\file "misc/sudoku/debug.hh"
 	Debugging macros.  
 	$Id: debug.h,v 1.2 2006/01/22 06:53:20 fang Exp $
  */

@@ -1,5 +1,5 @@
 /**
-	\file "misc/sudoku/inttypes.h"
+	\file "misc/sudoku/inttypes.hh"
 	$Id: inttypes.h,v 1.2 2006/01/22 06:53:20 fang Exp $
  */
 

@@ -7,5 +7,5 @@
 %ignore logo::tortoise_init_window(void);
  
 /* Parse the header file to generate wrappers */
-%include "tortoise.h"
+%include "tortoise.hh"
 

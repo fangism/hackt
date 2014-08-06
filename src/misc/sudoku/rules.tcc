@@ -6,11 +6,11 @@
 #ifndef	__SUDOKU_RULES_TCC__
 #define	__SUDOKU_RULES_TCC__
 
-#include "misc/sudoku/rules.h"
-#include "misc/sudoku/cell.h"
-#include "misc/sudoku/constraint.h"
-// #include "misc/sudoku/board.h"
-// #include "util/wtf.h"
+#include "misc/sudoku/rules.hh"
+#include "misc/sudoku/cell.hh"
+#include "misc/sudoku/constraint.hh"
+// #include "misc/sudoku/board.hh"
+// #include "util/wtf.hh"
 
 namespace sudoku {
 //=============================================================================

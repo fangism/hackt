@@ -1,5 +1,5 @@
 /**
-	\file "sudoku/cell.h"
+	\file "sudoku/cell.hh"
 	$Id: cell.h,v 1.2 2006/01/22 06:53:18 fang Exp $
  */
 
@@ -7,8 +7,8 @@
 #define	__SUDOKU_CELL_H__
 
 #include <stack>
-#include "misc/sudoku/inttypes.h"
-#include "util/memory/pointer_traits.h"
+#include "misc/sudoku/inttypes.hh"
+#include "util/memory/pointer_traits.hh"
 
 namespace sudoku {
 using util::memory::pointee;

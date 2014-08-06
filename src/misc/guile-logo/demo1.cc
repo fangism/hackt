@@ -6,7 +6,7 @@
  */
 /* Non-guiled version of the program */
 #include <unistd.h>
-#include "tortoise.h"
+#include "tortoise.hh"
 
 using namespace logo;
 

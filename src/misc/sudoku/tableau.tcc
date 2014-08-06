@@ -8,11 +8,11 @@
 
 #include <iostream>
 #include <algorithm>
-#include "misc/sudoku/board.h"
-#include "misc/sudoku/rules.h"
-#include "misc/sudoku/pivot.h"
-#include "misc/sudoku/solve.h"
-#include "util/finite_vector.h"
+#include "misc/sudoku/board.hh"
+#include "misc/sudoku/rules.hh"
+#include "misc/sudoku/pivot.hh"
+#include "misc/sudoku/solve.hh"
+#include "util/finite_vector.hh"
 
 namespace sudoku {
 using std::cerr;

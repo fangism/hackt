@@ -17,7 +17,7 @@ endif
 
 misc_guile_logo_libtortoise_la_SOURCES = \
 	misc/guile-logo/tortoise.cc \
-	misc/guile-logo/tortoise.h
+	misc/guile-logo/tortoise.hh
 
 GUILE_LOGO_CPPFLAGS = -I$(srcdir)/$(GUILE_LOGO_DIR)
 # GUILE_WARN_FLAGS defined in util/Makefile.inc
@@ -34,7 +34,7 @@ misc_guile_logo_demo1_LDADD = misc/guile-logo/libtortoise.la
 
 misc_guile_logo_libtortoise_guile_la_SOURCES = \
 	misc/guile-logo/tortoise-wrap.cc \
-	misc/guile-logo/tortoise-wrap.h
+	misc/guile-logo/tortoise-wrap.hh
 
 misc_guile_logo_libtortoise_guile_la_CPPFLAGS = \
 	$(AM_CPPFLAGS) $(GUILE_LOGO_CPPFLAGS) $(GUILE_CPPFLAGS)
@@ -71,9 +71,9 @@ misc_guile_logo_guile_logo_LDADD = misc/guile-logo/libtortoise-guile.la
 
 if WANT_LIBMISCFUN
 if HAVE_LIBGUILE
-ALL_HEADER_FILES += \
-	misc/guile-logo/tortoise.h \
-	misc/guile-logo/tortoise-wrap.h
+ALL_CXX_HEADER_FILES += \
+	misc/guile-logo/tortoise.hh \
+	misc/guile-logo/tortoise-wrap.hh
 endif
 endif
 

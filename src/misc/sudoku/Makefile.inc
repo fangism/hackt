@@ -26,26 +26,26 @@ LIBSUDOKU_TCC_FILES = \
 	misc/sudoku/tableau.tcc \
 	misc/sudoku/sudoku_IO.tcc
 
-LIBSUDOKU_H_FILES = \
-	$(LIBSUDOKU_TCC_FILES:.tcc=.h) \
-	$(LIBSUDOKU_CC_FILES:.cc=.h) \
-	misc/sudoku/debug.h \
-	misc/sudoku/inttypes.h \
-	misc/sudoku/pivot.h \
-	misc/sudoku/cell_state.h
+LIBSUDOKU_HH_FILES = \
+	$(LIBSUDOKU_TCC_FILES:.tcc=.hh) \
+	$(LIBSUDOKU_CC_FILES:.cc=.hh) \
+	misc/sudoku/debug.hh \
+	misc/sudoku/inttypes.hh \
+	misc/sudoku/pivot.hh \
+	misc/sudoku/cell_state.hh
 
 # this variable name needs to be consistent with the path to sources
 misc_sudoku_libsudoku_la_SOURCES = \
  	$(LIBSUDOKU_CC_FILES) \
  	$(LIBSUDOKU_TCC_FILES) \
- 	$(LIBSUDOKU_H_FILES)
+ 	$(LIBSUDOKU_HH_FILES)
 
 EXTRA_DIST +=
 
 CLEANFILES +=
 
 if WANT_LIBMISCFUN
-ALL_HEADER_FILES += $(LIBSUDOKU_H_FILES)
+ALL_CXX_HEADER_FILES += $(LIBSUDOKU_HH_FILES)
 ALL_TCC_FILES += $(LIBSUDOKU_TCC_FILES)
 endif
 

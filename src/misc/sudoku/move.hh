@@ -1,5 +1,5 @@
 /**
-	\file "misc/sudoku/move.h"
+	\file "misc/sudoku/move.hh"
 	$Id: move.h,v 1.2 2006/01/22 06:53:21 fang Exp $
  */
 

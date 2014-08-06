@@ -6,7 +6,7 @@
 #ifndef	__SUDOKU_SOLVER_H__
 #define	__SUDOKU_SOLVER_H__
 
-#include "main/hackt_fwd.h"
+#include "main/hackt_fwd.hh"
 
 namespace sudoku {
 

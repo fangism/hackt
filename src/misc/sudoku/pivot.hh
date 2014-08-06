@@ -1,13 +1,13 @@
 /**
-	\file "misc/sudoku/pivot.h"
+	\file "misc/sudoku/pivot.hh"
 	$Id: pivot.h,v 1.2 2006/01/22 06:53:21 fang Exp $
  */
 
 #ifndef	__SUDOKU_PIVOT_H__
 #define	__SUDOKU_PIVOT_H__
 
-#include "misc/sudoku/inttypes.h"
-#include "misc/sudoku/debug.h"
+#include "misc/sudoku/inttypes.hh"
+#include "misc/sudoku/debug.hh"
 
 namespace sudoku {
 //=============================================================================

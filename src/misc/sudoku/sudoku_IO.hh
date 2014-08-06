@@ -1,5 +1,5 @@
 /**
-	\file "misc/sudoku/sudoku_IO.h"
+	\file "misc/sudoku/sudoku_IO.hh"
 	Input and output related functions.  
 	$Id: sudoku_IO.h,v 1.2 2006/01/22 06:53:23 fang Exp $
  */
@@ -8,7 +8,7 @@
 #define	__SUDOKU_SUDOKU_IO_H__
 
 #include <iosfwd>
-#include "misc/sudoku/board.h"
+#include "misc/sudoku/board.hh"
 
 namespace sudoku {
 using std::istream;

@@ -7,7 +7,7 @@
 /* Non-guiled version of the program */
 #include <cmath>
 #include <unistd.h>
-#include "tortoise.h"
+#include "tortoise.hh"
 #include <X11/Xlib.h>
 
 namespace logo {

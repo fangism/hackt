@@ -8,8 +8,8 @@
 #ifndef	__SUDOKU_SUDOKU_IO_TCC__
 #define	__SUDOKU_SUDOKU_IO_TCC__
 
-#include "misc/sudoku/sudoku_IO.h"
-#include "misc/sudoku/board.h"
+#include "misc/sudoku/sudoku_IO.hh"
+#include "misc/sudoku/board.hh"
 
 namespace sudoku {
 using std::cerr;

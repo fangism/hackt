@@ -6,7 +6,7 @@
 #ifndef	__SUDOKU_SOLVE_TCC__
 #define	__SUDOKU_SOLVE_TCC__
 
-#include "misc/sudoku/solve.h"
+#include "misc/sudoku/solve.hh"
 
 namespace sudoku {
 //=============================================================================

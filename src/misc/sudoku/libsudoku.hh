@@ -1,19 +1,19 @@
 /**
-	\file "misc/sudoku/libsudoku.h"
+	\file "misc/sudoku/libsudoku.hh"
 	Typedefs for sudoku variations. 
 	$Id: libsudoku.h,v 1.2 2006/01/22 06:53:21 fang Exp $
  */
 
-#include "misc/sudoku/tableau.h"
-#include "misc/sudoku/solve.h"
-#include "misc/sudoku/cell.h"
-#include "misc/sudoku/cell_state.h"
-#include "misc/sudoku/board.h"
-#include "misc/sudoku/rules.h"
-#include "misc/sudoku/constraint.h"
-// #include "misc/sudoku/move.h"
-// #include "misc/sudoku/pivot.h"
-#include "util/finite_vector.h"
+#include "misc/sudoku/tableau.hh"
+#include "misc/sudoku/solve.hh"
+#include "misc/sudoku/cell.hh"
+#include "misc/sudoku/cell_state.hh"
+#include "misc/sudoku/board.hh"
+#include "misc/sudoku/rules.hh"
+#include "misc/sudoku/constraint.hh"
+// #include "misc/sudoku/move.hh"
+// #include "misc/sudoku/pivot.hh"
+#include "util/finite_vector.hh"
 
 namespace sudoku {
 using util::finite_vector_size_binder;

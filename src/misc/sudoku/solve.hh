@@ -1,5 +1,5 @@
 /**
-	\file "misc/sudoku/solve.h"
+	\file "misc/sudoku/solve.hh"
 	$Id: solve.h,v 1.2 2006/01/22 06:53:22 fang Exp $
  */
 
@@ -7,9 +7,9 @@
 #define	__SUDOKU_SOLVE_H__
 
 #include "util/size_t.h"
-#include "misc/sudoku/tableau.h"
-#include "misc/sudoku/move.h"
-#include "util/finite_vector.h"
+#include "misc/sudoku/tableau.hh"
+#include "misc/sudoku/move.hh"
+#include "util/finite_vector.hh"
 
 namespace sudoku {
 //=============================================================================

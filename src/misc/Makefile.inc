@@ -28,7 +28,7 @@ MISCFUN_CC_FILES = \
 	misc/sudoku-solver.cc \
 	misc/sudoku.cc
 
-MISCFUN_H_FILES = $(MISCFUN_CC_FILES:.cc=.h)
+MISCFUN_H_FILES = $(MISCFUN_CC_FILES:.cc=.hh)
 
 misc_libmiscfun_la_SOURCES = \
  	$(MISCFUN_CC_FILES) \
@@ -46,7 +46,7 @@ misc/sudoku-test.sh:
 CLEANFILES += misc/sudoku-test.sh
 
 if WANT_LIBMISCFUN
-ALL_HEADER_FILES += $(MISCFUN_H_FILES)
+ALL_CXX_HEADER_FILES += $(MISCFUN_H_FILES)
 endif
 
 SUBDIR_CVSIGNORE += $(srcdir)/misc/.cvsignore

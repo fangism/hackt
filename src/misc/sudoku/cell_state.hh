@@ -1,5 +1,5 @@
 /**
-	\file "misc/sudoko/cell_state.h"
+	\file "misc/sudoko/cell_state.hh"
 	The stateful data retained by a cell.  
 	$Id: cell_state.h,v 1.2 2006/01/22 06:53:20 fang Exp $
  */
@@ -7,8 +7,8 @@
 #ifndef	__SUDOKU_CELL_STATE_H__
 #define	__SUDOKU_CELL_STATE_H__
 
-#include "misc/sudoku/inttypes.h"
-// #include "misc/sudoku/constraint.h"
+#include "misc/sudoku/inttypes.hh"
+// #include "misc/sudoku/constraint.hh"
 
 namespace sudoku {
 //=============================================================================
