@@ -127,6 +127,7 @@ netlist_options::netlist_options() :
 		emit_node_caps(false),
 		emit_mangle_map(false),
 		emit_node_terminals(false),
+		stack_attributes_from_internal_footer(true),
 		auto_wrap_length(0)
 		{
 	// delayed mangling
@@ -1567,6 +1568,45 @@ Default: 0
 ***/
 DEFINE_OPTION_DEFAULT(emit_node_terminals, "emit_node_terminals",
 	"if true, emit node terminal graph (debug)")
+/***
+@texinfo config/stack_attributes_from_internal_footer.texi
+@defopt stack_attributes_from_internal_footer (bool)
+This option only applies to rules with internal nodes as footer nodes
+in guard expressions.
+If set to 1, the initial values of device width, length, and
+FET type are taken from the internal node connected in left-most position,
+otherwise, initial attributes are taken from the per-rule
+attribute list (if any).
+Default: 1
+
+Consider the following example with internal node @var{@@n1}:
+@example
+prs @{
+  [W=10] f -> @@n1-
+  [W=5] ~@@n1 & c -> out-
+@}
+@end example
+
+@noindent
+With this option set to 1, the resulting netlist is:
+
+@example
+M@@n1:dn:0 !GND f @@n1 !GND nch W=10u L=2u
+Mout:dn:0 @@n1 c out !GND nch W=10u L=2u
+@end example
+
+@noindent
+With this option set to 0, the resulting netlist is:
+@example
+M@@n1:dn:0 !GND f @@n1 !GND nch W=10u L=2u
+Mout:dn:0 @@n1 c out !GND nch W=5u L=2u
+@end example
+@end defopt
+@end texinfo
+***/
+DEFINE_OPTION_DEFAULT(stack_attributes_from_internal_footer,
+	"stack_attributes_from_internal_footer",
+	"FET W/L and type from internal footer node or rule")
 /***
 @texinfo config/auto_wrap_length.texi
 @defopt auto_wrap_length (int)

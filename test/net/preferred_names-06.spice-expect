@@ -62,6 +62,7 @@ preferred_names=thisGND,thisVdd
 print=1
 reserved_names=
 resistance_unit=
+stack_attributes_from_internal_footer=1
 stat_n_length=20
 stat_n_width=3
 stat_p_length=10

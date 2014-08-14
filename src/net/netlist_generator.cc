@@ -1254,9 +1254,24 @@ case PRS_OR_EXPR_TYPE_ENUM: {
 		if (left.get_type() == PRS_NODE_TYPE_ENUM) {
 			// left.only() is still an expression index, 
 			// but we need internal-node-index.
-			prev = register_internal_node(
-				current_netlist->lookup_internal_node(
-					left.only()));
+			STACKTRACE("lookup and register internal node");
+			if (opt.stack_attributes_from_internal_footer) {
+				// old original method (default)
+				prev = register_internal_node(
+					current_netlist->lookup_internal_node(
+						left.only()));
+			} else {
+				// more recently added
+				// otherwise take attributes from rule
+				// preserve geometries of this rule
+				const value_saver<char> _t5(fet_attr);
+				const value_saver<real_type>
+					__t6(current_width),
+					__t7(current_length);
+				prev = register_internal_node(
+					current_netlist->lookup_internal_node(
+						left.only()));
+			}
 			// confirm direction and sense of internal node
 			// already checked at create-phase.
 			// handle precharge
@@ -1305,7 +1320,6 @@ case PRS_OR_EXPR_TYPE_ENUM: {
 	break;
 }
 case PRS_NODE_TYPE_ENUM: {
-	// ERROR: unexpected internal node out of position
 	cerr << "ERROR: found internal node in unexpected position." << endl;
 	THROW_EXIT;
 	break;

@@ -313,6 +313,13 @@ struct netlist_options {
 	 */
 	bool				emit_node_terminals;
 	/**
+		For rules that use internal nodes, this determines
+		whether attributes like W/L and FET-type are initially
+		take from the rule or the footer.
+		Choice is a matter of style.
+	 */
+	bool				stack_attributes_from_internal_footer;
+	/**
 		Automatically wrap lines longer than length.
 		This can happen in port lists.
 		If 0, don't wrap at all.

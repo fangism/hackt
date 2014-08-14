@@ -1,0 +1,8 @@
+// "internal-15.hac"
+// copy-modified from internal-14.hac
+bool en, clk, n0;
+prs {
+	[W=24] en -> @gn1-
+	[W=16; hvt] ~@gn1 & clk -> n0-
+}
+

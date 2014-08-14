@@ -1,0 +1,5 @@
+// "fet-type-34b.hac"
+// @hacknet-flags@ -fstack_attributes_from_internal_footer=0
+
+import "fet-type-34.hac";
+

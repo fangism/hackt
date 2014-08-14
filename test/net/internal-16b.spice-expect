@@ -1,0 +1,3 @@
+M@gn1:dn:0 !GND en @gn1 !GND nch_hvt W=24u L=2u
+Mn0:dn:0 @gn1 clk n0 !GND nch W=16u L=2u
+

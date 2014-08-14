@@ -41,6 +41,7 @@ The following parameters affect emitted device sizes and units.
 @include config/max_p_width.texi
 @include config/max_n_width.texi
 @include config/fet_type_overrides.texi
+@include config/stack_attributes_from_internal_footer.texi
 
 The following options are related to transistor parasitics.  
 @cindex parasitics

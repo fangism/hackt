@@ -1,0 +1,18 @@
+// "internal-14.hac"
+// @hacknet-flags@ -T foo
+// reduced test case from ACX-PR-9667 (by Nikhil Shivaprasad)
+export
+defproc foo(bool? clk; bool! clkout; bool? en)
+{
+	bool n0;
+//	n0 @ [iscomb=1];
+	prs {
+		[W=24] en -> @gn1-
+		[W=16] ~@gn1 & clk -> n0-
+//		[W=12] ~clk -> n0+
+//		[W=12] ~en -> n0+
+//		[W=51] n0 -> clkout-
+//		[W=60] ~n0 -> clkout+
+	}
+}
+

@@ -30,6 +30,8 @@ HACKNET_TEST_SCRIPTS_PASSES = \
 	internal-05 internal-06 internal-07 internal-08 \
 	internal-09 internal-10 internal-11 internal-12 \
 	internal-13 \
+	internal-14 internal-14b internal-14c \
+	internal-15 internal-15b internal-16 internal-16b \
 	precharge-01 precharge-02 precharge-03 precharge-04 precharge-05 \
 	precharge-06 precharge-07 precharge-08 \
 	precharge-internal-01 precharge-internal-02 precharge-internal-03 \
@@ -66,11 +68,14 @@ HACKNET_TEST_SCRIPTS_PASSES = \
 	fet-type-05 fet-type-06 fet-type-07 fet-type-08 \
 	fet-type-09 fet-type-10 fet-type-11 fet-type-12 \
 	fet-type-13 fet-type-14 fet-type-15 fet-type-16 \
-	fet-type-17 fet-type-18 fet-type-19 fet-type-20 \
-	fet-type-21 fet-type-22 fet-type-23 fet-type-24 \
-	fet-type-25 fet-type-26 fet-type-27 fet-type-28 \
-	fet-type-29 fet-type-30 fet-type-31 fet-type-32 \
-	fet-type-33 fet-type-34 fet-type-35 fet-type-36 \
+	fet-type-17 fet-type-18 fet-type-18b fet-type-19 fet-type-20 \
+	fet-type-21 fet-type-22 fet-type-22b fet-type-23 fet-type-23b \
+	fet-type-24 \
+	fet-type-25 fet-type-26 fet-type-26b fet-type-27 fet-type-28 \
+	fet-type-28b \
+	fet-type-29 fet-type-30 fet-type-31 fet-type-31b fet-type-32 \
+	fet-type-33 fet-type-34 fet-type-34b fet-type-35 fet-type-36 \
+	fet-type-36b \
 	parasitics-01 \
 	aliases-01 aliases-02 aliases-03 aliases-04 \
 	route-through-01 \
@@ -155,11 +160,16 @@ HACKT_PARSE_TEST_PASSES = \
 	non-CMOS-06 subckt-02 subckt-08 \
 	fet-type-01 fet-type-02 fet-type-03 fet-type-04 \
 	fet-type-05 fet-type-06 fet-type-07 fet-type-08 \
-	fet-type-18 fet-type-19 fet-type-20 fet-type-21 \
-	fet-type-22 fet-type-23 fet-type-24 fet-type-25 \
-	fet-type-26 fet-type-27 fet-type-28 \
-	fet-type-29 fet-type-30 fet-type-31 fet-type-32 \
-	fet-type-33 fet-type-34 fet-type-35 fet-type-36 \
+	fet-type-18 fet-type-18b fet-type-19 fet-type-20 \
+	fet-type-21 fet-type-22 fet-type-22b fet-type-23 fet-type-23b \
+	fet-type-24 \
+	fet-type-25 fet-type-26 fet-type-26b fet-type-27 fet-type-28 \
+	fet-type-28b \
+	fet-type-29 fet-type-30 fet-type-31 fet-type-31b fet-type-32 \
+	fet-type-33 fet-type-34 fet-type-34b fet-type-35 fet-type-36 \
+	fet-type-36b \
+	internal-14 internal-14b internal-14c \
+	internal-15 internal-15b internal-16 internal-16b \
 	pass_gate-05 pass_gate-06 \
 	precharge-07 precharge-08 \
 	mangle-04 \
@@ -188,6 +198,8 @@ HACKT_CREATE_TEST_PASSES = \
 	dangling-01 dangling-02 \
 	route-through-01 \
 	subckt-01 subckt-08 subckt-10 subckt-11 \
+	internal-14 internal-14b internal-14c \
+	internal-15 internal-15b internal-16 internal-16b \
 	supply-pass-gate-01 supply-pass-gate-02 \
 	supply-instance-01 supply-instance-02 supply-instance-03 \
 	supply-instance-04 supply-instance-05 supply-instance-06 \

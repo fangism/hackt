@@ -1,0 +1,5 @@
+// "internal-15.hac"
+// @hacknet-flags@ -fstack_attributes_from_internal_footer=0
+
+import "internal-15.hac";
+

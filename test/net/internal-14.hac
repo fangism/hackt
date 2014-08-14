@@ -1,0 +1,8 @@
+// "internal-14.hac"
+// reduced test case from ACX-PR-9667 (by Nikhil Shivaprasad)
+bool n0, en, clk;
+prs {
+	[W=24] en -> @gn1-
+	[W=16] ~@gn1 & clk -> n0-
+}
+
