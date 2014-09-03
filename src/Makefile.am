@@ -1621,30 +1621,35 @@ lexer/$(HACKT_LEX_ROOT)-real.cc: lexer/$(HACKT_LEX_ROOT).cc \
 		$(FLEX_COMMON_PATCH)
 # need forward declaration for flex 2.5.31
 # need early declaration of flex::lexer_state needed for flex 2.5.{31,33}
+	$(SET_PIPEFAIL) ; \
 	basename="hackt" ; \
 	$(MAKE_REAL_LEXER_SCRIPT)
 
 lexer/$(INSTREF_LEX_ROOT)-real.cc: lexer/$(INSTREF_LEX_ROOT).cc \
 		parser/$(INSTREF_PARSE_ROOT)-real.hh \
 		$(FLEX_COMMON_PATCH)
+	$(SET_PIPEFAIL) ; \
 	basename="instref" ; \
 	$(MAKE_REAL_LEXER_SCRIPT)
 
 lexer/$(TYPE_LEX_ROOT)-real.cc: lexer/$(TYPE_LEX_ROOT).cc \
 		parser/$(TYPE_PARSE_ROOT)-real.hh \
 		$(FLEX_COMMON_PATCH)
+	$(SET_PIPEFAIL) ; \
 	basename="type" ; \
 	$(MAKE_REAL_LEXER_SCRIPT)
 
 lexer/$(HACFLAT_LEX_ROOT)-real.cc: lexer/$(HACFLAT_LEX_ROOT).cc \
 		parser/hacflat-prefix.h \
 		$(FLEX_COMMON_PATCH)
+	$(SET_PIPEFAIL) ; \
 	basename="hacflat" ; \
 	$(MAKE_REAL_LEXER_SCRIPT)
 
 lexer/$(SPICE_LEX_ROOT)-real.cc: lexer/$(SPICE_LEX_ROOT).cc \
 		parser/spice-prefix.h \
 		$(FLEX_COMMON_PATCH)
+	$(SET_PIPEFAIL) ; \
 	basename="spice" ; \
 	$(MAKE_REAL_LEXER_SCRIPT)
 
