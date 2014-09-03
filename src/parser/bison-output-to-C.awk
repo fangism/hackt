@@ -33,7 +33,7 @@ function transform_rule(str,
 }
 
 # main pattern matching body
-/^state [0-9]*/ {
+/^[Ss]tate [0-9]*/ {
 	print "/************************** " $0 " **************************/";
 # in bison's y.output, state section ends with two blank lines
 	rc = 0;
