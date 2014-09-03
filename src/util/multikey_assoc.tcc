@@ -297,7 +297,8 @@ multikey_assoc_compact_helper<1,K>::is_compact_slice(const A& a,
 		const key_list_type& l, const key_list_type& u) {
 	typedef key_list_pair_type      return_type;
 	typedef	typename A::const_iterator	const_iterator;
-	typedef	typename A::value_type		value_type;
+// unused typedefs:
+//	typedef	typename A::value_type		value_type;
 //	typedef	typename A::mapped_type		mapped_type;
 //	typedef	_Select1st<value_type>		key_selector;
 	STACKTRACE_MULTIKEY_ASSOC;
