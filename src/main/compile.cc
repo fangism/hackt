@@ -460,7 +460,7 @@ compile::main(const int argc, char* argv[], const global_options&) {
 int
 compile::parse_command_options(const int argc, char* argv[], options& opt) {
 	STACKTRACE_VERBOSE;
-	static const char* optstring = "+df:hI:M:o:pv";
+	static const char* optstring = "+df:hi:I:M:o:pv";
 	int c;
 	while ((c = getopt(argc, argv, optstring)) != -1) {
 	switch (c) {
@@ -592,6 +592,19 @@ Adds include path @var{path} for importing other source files (repeatable).
 		opt.include_paths.push_back(optarg);
 		break;
 /***
+@texinfo compile/option-i.texi
+@defopt -i file
+Import @var{file}(s) before processing the main top-level file (repeatable).
+All @option{-I} search paths take effect before any of these
+files are imported.
+@end defopt
+@end texinfo
+***/
+	case 'i':
+		// no need to check validity of paths yet
+		opt.prepend_files.push_back(optarg);
+		break;
+/***
 @texinfo compile/option-M-upper.texi
 @defopt -M depfile
 Emit import dependencies in file @var{depfile} as a side-effect.
@@ -689,7 +702,8 @@ compile::usage(void) {
 #endif
 }
 	cerr << "  -h: gives this usage messsage and exits" << endl <<
-		"  -I <path> : adds include path (repeatable)" << endl;
+		"  -I <path> : adds include path (repeatable)" << endl <<
+		"  -i <file> : prepends import file (repeatable)" << endl;
 	cerr << "  -M <dependfile> : produces make dependency to file" << endl;
 	cerr << "  -o <objfile> : option to name output object file" << endl;
 	cerr << "  -p : pipe in source from stdin" << endl;

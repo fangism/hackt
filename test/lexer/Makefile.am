@@ -52,7 +52,8 @@ HACKT_PARSE_TEST_PASSES = \
 	quad-01 \
 	flat-import-01 flat-import-02 \
 	pstring-01 pstring-02 \
-	escaped-id-001
+	escaped-id-001 \
+	prepend-01 prepend-01b prepend-02 prepend-03
 
 HACKT_FLATTEN_TEST_PASSES = \
 	badid-000 badid-001 \
@@ -63,7 +64,8 @@ HACKT_FLATTEN_TEST_PASSES = \
 	import-014-a import-014-b import-014-c \
 	import-015-t import-022 \
 	empty2 empty3 \
-	flat-import-01 flat-import-02
+	flat-import-01 flat-import-02 \
+	prepend-01 prepend-01b prepend-02 prepend-03
 
 # pass flattening and parsing
 HACKT_FLATTEN_PARSE_TEST_PASSES = \
@@ -103,6 +105,11 @@ import-010.hacflatfailtest:
 	@$(SKIP_TEST_SCRIPT)
 endif
 
+# these don't compile without -i (include), so let compile test overwrite
+prepend-02.depend:
+	@$(TOUCH) $@
+prepend-03.depend:
+	@$(TOUCH) $@
 
 # should be the subset of HACKT_PARSE_TEST_SUBJECTS that type-checks
 # HACKT_OBJ_TEST_SUBJECTS = $(HACKT_PARSE_TEST_PASSES)
@@ -110,7 +117,8 @@ endif
 HACKT_CREATE_TEST_PASSES = \
 	comment-010 \
 	pstring-01 pstring-02 \
-	escaped-id-001
+	escaped-id-001 \
+	prepend-02 prepend-03
 
 ###############################################################################
 # test for include path ordering

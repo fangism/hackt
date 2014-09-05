@@ -59,6 +59,7 @@ compile_options::write_object(ostream& o) const {
 	write_value(o, source_file);	// .hac
 	write_value(o, target_object);	// .haco
 	util::write_sequence(o, include_paths);
+	util::write_sequence(o, prepend_files);
 	parse_opts.write_object(o);
 	create_opts.write_object(o);
 }
@@ -72,6 +73,7 @@ compile_options::load_object(istream& i) {
 	read_value(i, source_file);	// .hac
 	read_value(i, target_object);	// .haco
 	util::read_sequence_back_insert(i, include_paths);
+	util::read_sequence_back_insert(i, prepend_files);
 	parse_opts.load_object(i);
 	create_opts.load_object(i);
 }

@@ -38,6 +38,7 @@ Options:
 
 @include compile/option-h.texi
 @include compile/option-I-upper.texi
+@include compile/option-i.texi
 @include compile/option-d.texi
 @include compile/option-f.texi
 @include compile/option-M-upper.texi
@@ -65,6 +66,9 @@ One nice feature is that the output (by default) preserves precise
 information about which files were imported, so compiling a flattened
 source file should result in the same error messages as compiling the
 original source file.  
+
+@t{hacpp} understands most of the same command-line options
+as @t{haco}.
 
 @c ----------------------------------------------------------------------------
 @node Create

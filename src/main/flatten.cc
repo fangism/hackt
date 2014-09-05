@@ -222,7 +222,7 @@ if (argc == 1) {
  */
 int
 flatten::parse_command_options(const int argc, char* argv[], options& opt) {
-	static const char* optstring = "+hI:M:Pv";
+	static const char* optstring = "+hi:I:M:Pv";
 	int c;
 	while ((c = getopt(argc, argv, optstring)) != -1) {
 	switch (c) {
@@ -231,6 +231,9 @@ flatten::parse_command_options(const int argc, char* argv[], options& opt) {
 	case 'I':
 		// no need to check validity of paths yet
 		opt.include_paths.push_back(optarg);
+		break;
+	case 'i':
+		opt.prepend_files.push_back(optarg);
 		break;
 	case 'M':
 		opt.make_depend = true;
@@ -282,7 +285,8 @@ flatten::usage(void) {
 }
 #endif
 	cerr << "\t-h : gives this usage messsage" << endl <<
-		"\t-I <path> : adds include path (repeatable)" << endl;
+		"\t-I <path> : adds include path (repeatable)" << endl <<
+		"\t-i <file> : prepends import file (repeatable)" << endl;
 	cerr << "\t-M <dependfile> : produces make dependency to file" << endl;
 //	cerr << "\t-p : pipe in source from stdin" << endl;
 	cerr << "\t-P : suppress #FILE hierarchical wrappers in output" << endl;

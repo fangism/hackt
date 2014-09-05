@@ -27,6 +27,7 @@ class file_manager;
 class compile_options {
 public:
 	typedef	list<string>			include_paths_type;
+	typedef	list<string>			prepend_files_type;
 	/// whether or not to dump the module after it is built and saved
 	bool					dump_module;
 	/// debugging switch to show include paths
@@ -57,6 +58,10 @@ public:
 	 */
 	include_paths_type			include_paths;
 	/**
+		Command-line list of files to pre-import.
+	 */
+	prepend_files_type			prepend_files;
+	/**
 		User-tweaked options for type checking.  
 	 */
 	parser::parse_options			parse_opts;
@@ -76,6 +81,7 @@ public:
 		source_file(), 
 		target_object(), 
 		include_paths(), 
+		prepend_files(),
 		parse_opts(), 
 		create_opts()
 		{ }

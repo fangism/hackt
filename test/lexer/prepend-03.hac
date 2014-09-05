@@ -1,0 +1,8 @@
+// "prepend-03.hac"
+// @hacpp-flags@ -i prepend-01b.hac
+// @haco-flags@ -i prepend-01b.hac
+
+bool x, y;
+[ truth_or_dare ->
+	x = y;
+]

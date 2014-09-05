@@ -348,25 +348,18 @@ IMPORT		"import"
 		// EMBEDFILE STRING BEGINFILE embedded_module ENDFILE
 		// TODO: maintain consistency with
 		//	"$(top_srcdir)/test/vpath_file_filter.awk"
-	if (!flatten_with_file_wrappers) {
-		cout << "// ";		// just comment out
-	}
-		cout << "#FILE \"" << pstr << "\" %{" << endl;
-		// cout << "// enter: \"" << pstr << "\"" << endl;
+		HAC::lexer::file_wrap_directive_printer
+			__fw(cout, pstr, true, !flatten_with_file_wrappers, false);
 		if (!__flatten_source(ym.get_file()).good) {
 			// presumably already have error message from callee
 #if 0
 			cerr << "From: \"" << pstr << "\":" <<
 				CURRENT.line << ':' << endl;
 #endif
+			__fw.disable();	// don't close intentionally
 			THROW_EXIT;
 		}
-	if (!flatten_with_file_wrappers) {
-		cout << "// ";		// just comment out
-	}
-		cout << "%}\t// #FILE \"" << pstr << "\"";	// << endl;
 		// the newline at the end of the import is already preserved
-		// cout << "// leave: \"" << pstr << "\"" << endl;
 		return HF_IMPORT;
 	}
 	case file_status::SEEN_FILE: {

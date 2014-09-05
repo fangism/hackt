@@ -392,6 +392,34 @@ file_manager::embed_manager::~embed_manager() {
 }
 
 //=============================================================================
+file_wrap_directive_printer::file_wrap_directive_printer(
+		ostream& o, const string& s, const bool e, const bool c, 
+		const bool t) :
+		os(o), filename(s), enable(e), comment_out(c),
+		trailing_newline(t) {
+if (enable) {
+	if (comment_out) {
+		os << "// ";		// just comment out
+	}
+	os << "#FILE \"" << filename << "\" %{" << endl;
+	// os << "// enter: \"" << filename << "\"" << endl;
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+file_wrap_directive_printer::~file_wrap_directive_printer() {
+if (enable) {
+	if (comment_out) {
+		os << "// ";		// just comment out
+	}
+	os << "%}\t// #FILE \"" << filename << "\"";
+	if (trailing_newline) os << endl;
+	// the newline at the end of the import is already preserved
+	// os << "// leave: \"" << filename << "\"" << endl;
+}
+}
+
+//=============================================================================
 }	// end namespace lexer
 }	// end namespace HAC
 

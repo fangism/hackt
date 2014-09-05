@@ -21,6 +21,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include <iostream>
 #include <fstream>
 #include <stack>
+#include <iterator>
 #include <cstdio>
 
 #include "util/macros.h"
@@ -201,6 +202,7 @@ parse_to_AST(FILE* yyin) {
 /**
 	Emit dependency file, based on seen and included files.
 	\return true on error.
+	\global hackt_parse_file_manager, which has accumulated seen files
  */
 static
 bool
@@ -231,14 +233,28 @@ parse_to_AST(const char* c, const compile_options& opt) {
 	typedef	count_ptr<root_body>		return_type;
 	STACKTRACE_VERBOSE;
 	YYSTYPE hackt_val;		// root token (was yyval)
-	hackt_val._root_body = NULL;
 	// error status
+	return_type ret;	// NULL
 	bool need_to_clean_up_file_manager = false;
-{
+// now support looping over top-level files
+	vector<string> top_files;
+	copy(opt.prepend_files.begin(), opt.prepend_files.end(), 
+		std::back_inserter(top_files));
+	// equivalent: stdin : NULL : empty string
+	if (c) top_files.push_back(c);
+	else top_files.push_back(string());
+	vector<string>::const_iterator
+		fi(top_files.begin()), fe(top_files.end());
+for ( ; fi != fe; ) {
+	hackt_val._root_body = NULL;	// reset
+	const char* _c = fi->length() ? fi->c_str() : NULL;
+	++fi;
+	// don't search include paths for the last (non-prepend) file
+	const bool last_file = (fi == fe);
 	// hackt_in WAS the global yyin FILE*.  
 	// now we let the file manager produce a valid FILE*
 	// and pass it to the modified yyparse().  
-	const yyin_manager ym(hackt_parse_file_manager, c, false);
+	const yyin_manager ym(hackt_parse_file_manager, _c, !last_file);
 	FILE* yyin = ym.get_file();
 	if (yyin) {
 	try {
@@ -248,16 +264,24 @@ parse_to_AST(const char* c, const compile_options& opt) {
 	} catch (...) {
 		// then it's possible that the file_manager is not balanced.  
 		need_to_clean_up_file_manager = true;
+		break;
 	}
 	} else {
 		return return_type(NULL);
 	}
+	// accumulate hackt_val._root_body
+	const return_type app(hackt_val._root_body);	// RAII
+	if (ret) {
+		copy(app->begin(), app->end(), std::back_inserter(*ret));
+	} else {
+		ret = app;
+	}
+}	// end for-all top level files
 	if (opt.make_depend &&
 			make_include_depends(opt.make_depend_target.c_str(), 
 			opt.target_object, opt.source_file)) {
 		return return_type(NULL);
 	}
-}
 	if (need_to_clean_up_file_manager) {
 		// clear the embedded file stack
 		while (!hackt_embedded_file_stack.empty()) {
@@ -266,7 +290,7 @@ parse_to_AST(const char* c, const compile_options& opt) {
 		hackt_parse_file_manager.reset();
 		return return_type(NULL);
 	}
-	return return_type(hackt_val._root_body);
+	return ret;
 }
 #endif
 
@@ -297,36 +321,55 @@ check_AST(const root_body& r, const char* name, const parse_options& po) {
 #if KEEP_PARSE_FUNCS
 /**
 	Prints flattened source (expanding imports) to stdout.  
-	NOTE: uses global hackt_parse_file_manager.  :/
 	TODO: move this to "lexer/hacflat-lex.ll"
 	NOTE: we don't use a parser because there is no grammar 
 		associated with preprocessing.  
+	\global hackt_parse_file_manager
 	\param name is name of file or NULL for using stdin
 	\param b pass true to use search paths, 
 		false to use path to file as is.  
+	\return error status
  */
 good_bool
 flatten_source(const char* name, const compile_options& opt) {
 	STACKTRACE_VERBOSE;
-	const yyin_manager ym(hackt_parse_file_manager, name, false);
+	bool need_to_clean_up_file_manager = false;
+// now support looping over top-level files
+	vector<string> top_files;
+	copy(opt.prepend_files.begin(), opt.prepend_files.end(), 
+		std::back_inserter(top_files));
+	// equivalent: stdin : NULL : empty string
+	if (name) top_files.push_back(name);
+	else top_files.push_back(string());
+	vector<string>::const_iterator
+		fi(top_files.begin()), fe(top_files.end());
+for ( ; fi != fe; ) {
+	const char* _c = fi->length() ? fi->c_str() : NULL;
+	++fi;
+	// don't search include paths for the last (non-prepend) file
+	const bool last_file = (fi == fe);
+	const yyin_manager ym(hackt_parse_file_manager, _c, !last_file);
 	FILE* yyin = ym.get_file();
 	if (yyin) {
-		const bool need_to_clean_up_file_manager =
+		lexer::file_wrap_directive_printer
+			__fw(cout, *(fi-1), top_files.size() > 1, false, true);
+		need_to_clean_up_file_manager =
 			!lexer::__flatten_source(yyin).good;
-		if (opt.make_depend &&
-				make_include_depends(
-				opt.make_depend_target.c_str(), 
-				opt.target_object, opt.source_file)) {
-			return good_bool(false);
-		}
-		if (need_to_clean_up_file_manager) {
-			// hackt_parse_file_manager.reset();
-			return good_bool(false);
-		}
-		return good_bool(true);
 	} else {
 		return good_bool(false);
 	}
+}	// end for-all top level files
+	if (opt.make_depend &&
+			make_include_depends(
+			opt.make_depend_target.c_str(), 
+			opt.target_object, opt.source_file)) {
+		return good_bool(false);
+	}
+	if (need_to_clean_up_file_manager) {
+		// hackt_parse_file_manager.reset();
+		return good_bool(false);
+	}
+	return good_bool(true);
 }
 
 //=============================================================================

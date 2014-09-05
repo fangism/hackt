@@ -1,0 +1,14 @@
+#FILE "prepend-01.hac" %{
+// "prepend-01.hac"
+pbool truth_or_dare = true;
+%}	// #FILE "prepend-01.hac"
+#FILE "prepend-02.hac" %{
+// "prepend-02.hac"
+// @hacpp-flags@ -i prepend-01.hac
+// @haco-flags@ -i prepend-01.hac
+
+bool x, y;
+[ truth_or_dare ->
+	x = y;
+]
+%}	// #FILE "prepend-02.hac"

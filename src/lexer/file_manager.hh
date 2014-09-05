@@ -5,8 +5,8 @@
 	$Id: file_manager.hh,v 1.10 2009/10/02 01:57:24 fang Exp $
  */
 
-#ifndef	__LEXER_FILE_MANAGER_H__
-#define	__LEXER_FILE_MANAGER_H__
+#ifndef	__LEXER_FILE_MANAGER_HH__
+#define	__LEXER_FILE_MANAGER_HH__
 
 #include <iosfwd>
 #include <string>
@@ -17,6 +17,7 @@
 // #include "util/unique_stack.hh"
 #include "lexer/hac_lex.hh"
 #include "util/macros.h"
+#include "util/attributes.h"
 #include "util/file_status.hh"
 #include "util/memory/pointer_classes_fwd.hh"
 
@@ -276,8 +277,31 @@ typedef	std::stack<util::memory::count_ptr<file_manager::embed_manager> >
 			embedded_file_stack_type;
 
 //=============================================================================
+class file_wrap_directive_printer {
+	ostream&				os;
+	string					filename;
+	bool					enable;
+	bool					comment_out;
+	/**
+		When called from lexer, want to suppress this b/c
+		the import statement's newline is already preserved.
+	 */
+	bool					trailing_newline;
+
+public:
+	file_wrap_directive_printer(ostream&, const string&, 
+		const bool e = true, const bool c = false,
+		const bool t = false);
+	~file_wrap_directive_printer();
+
+	void
+	disable(void) { enable = false; }
+
+} __ATTRIBUTE_UNUSED__ ;	// end class file_wrap_directive_printer
+
+//=============================================================================
 }	// end namespace lexer
 }	// end namespace HAC
 
-#endif	// __LEXER_FILE_MANAGER_H__
+#endif	// __LEXER_FILE_MANAGER_HH__
 
