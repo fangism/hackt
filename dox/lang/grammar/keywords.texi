@@ -11,24 +11,83 @@ The following are all special words recognized by the lexer.
 
 Terminals (tokens):
 
-@strong{TODO:} extract from @command{yacc} output file.
+@c @strong{TODO:} extract from @command{yacc} output file.
 
 Keywords:
 
 @table @t
 @item __FILE__
 A string that repesents the current file (absolute path).
+Generally not written by users.  
 @item __LINE__
 Compile-time integer (@pint{}) that holds the current line number
 in the input stream or file.  
-@item import
-The directive for including another source file.
-Automatically ignores the file if it was already read.  
-(implicit pragma-include-once)
+@t{import} directives recursively.  
+Allows a single file to behave as if sections were included hierarchically.
+@item as
+Used when creating namespace aliases
+@item bool,int,real
+Declare runtime (non-atomic) variables
+@item chan
+Declare a generic channel
+@item chp
+Opens Communicating Hardware Processes sub-language body
+@item defchan
+Define a new channel type
+@item defproc
+Define a module (or process)
+@item deftype
+Define a struct, a group of signals
+@item ebool,eint
+Declare runtime atomic variables
+@item else
+Beginning of catch-all clause where all predicates before have failed
+@item enum
+Declare a set of enumeral values
+@item export
+Declare a definition available to use in other namespaces
+@item false
+boolean 0
 @item #FILE
 Reserved, not intended for general use.  
 Embedded file directive, emitted by flattening a source file's
-@t{import} directives recursively.  
-Allows a single file to behave as if sections were included hierarchically.
+@item get
+unimplemented
+@item hse
+Opens handshaking environment sub-languate body
+@item import
+This is the directive for including another source file.
+The compiler automatically ignores the file if it was already read.  
+(implicit pragma-include-once)
+@item namespace
+Declares or opens a namespace
+@item open
+Makes exported symbols from another namespace available
+@item pbool,pint,preal,pstring
+Declare compile-time values or parameters
+@item prs
+Opens Production Rule Set sub-language body
+@item recv
+unimplemented
+@item rte
+Opens section for run-time atomic expressions
+@item send
+unimplemented
+@item set
+unimplemented
+@item skip
+a no-op statement, used in otherwise empty clauses
+@item spec
+Opens specification section
+@item subckt
+Declares a local subcircuit (within PRS)
+@item template
+Declares the following definition to take compile-time parameters
+@item tree
+unimplemented
+@item true
+boolean 1
+@item typedef
+Creates type name aliases
 @end table
 
