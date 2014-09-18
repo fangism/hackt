@@ -512,7 +512,7 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = wchb_e1of2<>::!GND (1) @[ supply_low port-alias ] 
         !Vdd = bool^0 = wchb_e1of2<>::!Vdd (2) @[ supply_high port-alias ] 
-        L = process e1of2<>^0 = wchb_e1of2<>::L (1) (
+        L = process e1of2<>^0 = wchb_e1of2<>::L (1) @[ port-alias ] (
           !GND = bool^0 = wchb_e1of2<>::!GND (1) @[ supply_low port-alias ] 
           !Vdd = bool^0 = wchb_e1of2<>::!Vdd (2) @[ supply_high port-alias ] 
           d = bool^1
@@ -522,7 +522,7 @@ In namespace "", we have: {
             }
           e = bool^0 = wchb_e1of2<>::L.e (5) @[ port-alias sub-FI- sub-FI+ ] 
         )
-        R = process e1of2<>^0 = wchb_e1of2<>::R (2) (
+        R = process e1of2<>^0 = wchb_e1of2<>::R (2) @[ port-alias ] (
           !GND = bool^0 = wchb_e1of2<>::!GND (1) @[ supply_low port-alias ] 
           !Vdd = bool^0 = wchb_e1of2<>::!Vdd (2) @[ supply_high port-alias ] 
           d = bool^1
@@ -579,9 +579,9 @@ In namespace "", we have: {
         rv = bool^0 = wchb_e1of2<>::rv (11) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
         Created state:
         process instance pool: (2 ports, 6 local, 0 mapped)
-        1	wchb_e1of2<>::L	e1of2<>
+        1	wchb_e1of2<>::L @[ port-alias ]	e1of2<>
           bool: 1,2,5,3,4
-        2	wchb_e1of2<>::R	e1of2<>
+        2	wchb_e1of2<>::R @[ port-alias ]	e1of2<>
           bool: 1,2,8,6,7
         3	wchb_e1of2<>::r0	inv<>
           bool: 1,2,9,6

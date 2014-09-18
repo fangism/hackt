@@ -127,13 +127,13 @@ In namespace "", we have: {
           a = bool^0 = bar<>::a.a (7) 
           b = bool^0 = bar<>::a.b (8) 
         )
-        x = process foo<>^0 = bar<>::x (1) (
+        x = process foo<>^0 = bar<>::x (1) @[ port-alias ] (
           !GND = bool^0 = bar<>::!GND (1) @[ supply_low port-alias ] 
           !Vdd = bool^0 = bar<>::!Vdd (2) @[ supply_high port-alias ] 
           a = bool^0 = bar<>::x.a (3) @[ port-alias ] 
           b = bool^0 = bar<>::x.b (4) @[ port-alias ] 
         )
-        y = process foo<>^0 = bar<>::y (2) (
+        y = process foo<>^0 = bar<>::y (2) @[ port-alias ] (
           !GND = bool^0 = bar<>::!GND (1) @[ supply_low port-alias ] 
           !Vdd = bool^0 = bar<>::!Vdd (2) @[ supply_high port-alias ] 
           a = bool^0 = bar<>::y.a (5) @[ port-alias ] 
@@ -141,9 +141,9 @@ In namespace "", we have: {
         )
         Created state:
         process instance pool: (2 ports, 1 local, 0 mapped)
-        1	bar<>::x	foo<>
+        1	bar<>::x @[ port-alias ]	foo<>
           bool: 1,2,3,4
-        2	bar<>::y	foo<>
+        2	bar<>::y @[ port-alias ]	foo<>
           bool: 1,2,5,6
         3	bar<>::a	foo<>
           bool: 1,2,7,8

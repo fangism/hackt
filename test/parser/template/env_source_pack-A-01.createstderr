@@ -318,7 +318,7 @@ In namespace "", we have: {
             unrolled index-value pairs: {
               0 = 0
             }
-          rr = process e1of<2>^0 = source_e<2, 1, {0}>::rr (1) (
+          rr = process e1of<2>^0 = source_e<2, 1, {0}>::rr (1) @[ port-alias ] (
             !GND = bool^0 = source_e<2, 1, {0}>::!GND (1) @[ supply_low port-alias ] 
             !Vdd = bool^0 = source_e<2, 1, {0}>::!Vdd (2) @[ supply_high port-alias ] 
             d = bool^1
@@ -330,7 +330,7 @@ In namespace "", we have: {
           )
           Created state:
           process instance pool: (1 ports, 0 local, 0 mapped)
-          1	source_e<2, 1, {0}>::rr	e1of<2>
+          1	source_e<2, 1, {0}>::rr @[ port-alias ]	e1of<2>
             bool: 1,2,5,3,4
           bool instance pool: (6 ports, 0 local, 0 mapped)
           1	source_e<2, 1, {0}>::!GND @[ supply_low port-alias ]	
@@ -353,7 +353,7 @@ In namespace "", we have: {
             unrolled index-value pairs: {
               0 = 1
             }
-          rr = process e1of<2>^0 = source_e<2, 1, {1}>::rr (1) (
+          rr = process e1of<2>^0 = source_e<2, 1, {1}>::rr (1) @[ port-alias ] (
             !GND = bool^0 = source_e<2, 1, {1}>::!GND (1) @[ supply_low port-alias ] 
             !Vdd = bool^0 = source_e<2, 1, {1}>::!Vdd (2) @[ supply_high port-alias ] 
             d = bool^1
@@ -365,7 +365,7 @@ In namespace "", we have: {
           )
           Created state:
           process instance pool: (1 ports, 0 local, 0 mapped)
-          1	source_e<2, 1, {1}>::rr	e1of<2>
+          1	source_e<2, 1, {1}>::rr @[ port-alias ]	e1of<2>
             bool: 1,2,5,3,4
           bool instance pool: (6 ports, 0 local, 0 mapped)
           1	source_e<2, 1, {1}>::!GND @[ supply_low port-alias ]	
@@ -416,7 +416,7 @@ In namespace "", we have: {
             [0]<1, {0}> = source_pack_test<>::Src[0] (3) (
               !GND = bool^0 = source_pack_test<>::!GND (1) @[ supply_low port-alias ] 
               !Vdd = bool^0 = source_pack_test<>::!Vdd (2) @[ supply_high port-alias ] 
-              rr = process e1of<2>^0 = source_pack_test<>::s[0] (1) (
+              rr = process e1of<2>^0 = source_pack_test<>::s[0] (1) @[ port-alias ] (
                 !GND = bool^0 = source_pack_test<>::!GND (1) @[ supply_low port-alias ] 
                 !Vdd = bool^0 = source_pack_test<>::!Vdd (2) @[ supply_high port-alias ] 
                 d = bool^1
@@ -431,7 +431,7 @@ In namespace "", we have: {
             [1]<1, {1}> = source_pack_test<>::Src[1] (4) (
               !GND = bool^0 = source_pack_test<>::!GND (1) @[ supply_low port-alias ] 
               !Vdd = bool^0 = source_pack_test<>::!Vdd (2) @[ supply_high port-alias ] 
-              rr = process e1of<2>^0 = source_pack_test<>::s[1] (2) (
+              rr = process e1of<2>^0 = source_pack_test<>::s[1] (2) @[ port-alias ] (
                 !GND = bool^0 = source_pack_test<>::!GND (1) @[ supply_low port-alias ] 
                 !Vdd = bool^0 = source_pack_test<>::!Vdd (2) @[ supply_high port-alias ] 
                 d = bool^1
@@ -447,7 +447,7 @@ In namespace "", we have: {
         _Reset = bool^0 = source_pack_test<>::_Reset (6) @[ port-alias ] 
         s = process e1of<2>^1
           {
-            [0] = source_pack_test<>::s[0] (1) (
+            [0] = source_pack_test<>::s[0] (1) @[ port-alias ] (
               !GND = bool^0 = source_pack_test<>::!GND (1) @[ supply_low port-alias ] 
               !Vdd = bool^0 = source_pack_test<>::!Vdd (2) @[ supply_high port-alias ] 
               d = bool^1
@@ -457,7 +457,7 @@ In namespace "", we have: {
                 }
               e = bool^0 = source_pack_test<>::s[0].e (5) @[ port-alias ] 
             )
-            [1] = source_pack_test<>::s[1] (2) (
+            [1] = source_pack_test<>::s[1] (2) @[ port-alias ] (
               !GND = bool^0 = source_pack_test<>::!GND (1) @[ supply_low port-alias ] 
               !Vdd = bool^0 = source_pack_test<>::!Vdd (2) @[ supply_high port-alias ] 
               d = bool^1
@@ -470,9 +470,9 @@ In namespace "", we have: {
           }
         Created state:
         process instance pool: (2 ports, 2 local, 0 mapped)
-        1	source_pack_test<>::s[0]	e1of<2>
+        1	source_pack_test<>::s[0] @[ port-alias ]	e1of<2>
           bool: 1,2,5,3,4
-        2	source_pack_test<>::s[1]	e1of<2>
+        2	source_pack_test<>::s[1] @[ port-alias ]	e1of<2>
           bool: 1,2,9,7,8
         3	source_pack_test<>::Src[0]<1, {0}>	source_e<2, 1, {0}>
           process: 1

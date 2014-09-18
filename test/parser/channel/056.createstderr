@@ -220,7 +220,7 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = sink<>::!GND (4) @[ supply_low port-alias ] 
         !Vdd = bool^0 = sink<>::!Vdd (5) @[ supply_high port-alias ] 
-        I = process e1of2<>^0 = sink<>::I (1) @[ port! PRS? ] (
+        I = process e1of2<>^0 = sink<>::I (1) @[ port? loc? port-alias ] (
           d = bool^1
             {
               [0] = sink<>::I.d[0] (1) @[ port-alias ] 
@@ -232,7 +232,7 @@ In namespace "", we have: {
         )
         Created state:
         process instance pool: (1 ports, 0 local, 0 mapped)
-        1	sink<>::I @[ port! PRS? ]	e1of2<>
+        1	sink<>::I @[ port? loc? port-alias ]	e1of2<>
           bool: 2,1,3
         bool instance pool: (5 ports, 0 local, 0 mapped)
         1	sink<>::I.d[0] @[ port-alias ]	
@@ -268,7 +268,7 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = source<>::!GND (4) @[ supply_low port-alias ] 
         !Vdd = bool^0 = source<>::!Vdd (5) @[ supply_high port-alias ] 
-        O = process e1of2<>^0 = source<>::O (1) @[ PRS! port? ] (
+        O = process e1of2<>^0 = source<>::O (1) @[ loc! port! port-alias ] (
           d = bool^1
             {
               [0] = source<>::O.d[0] (1) @[ port-alias ] 
@@ -280,7 +280,7 @@ In namespace "", we have: {
         )
         Created state:
         process instance pool: (1 ports, 0 local, 0 mapped)
-        1	source<>::O @[ PRS! port? ]	e1of2<>
+        1	source<>::O @[ loc! port! port-alias ]	e1of2<>
           bool: 2,1,3
         bool instance pool: (5 ports, 0 local, 0 mapped)
         1	source<>::O.d[0] @[ port-alias ]	
@@ -319,7 +319,7 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = wirebuf<>::!GND (4) @[ supply_low port-alias ] 
         !Vdd = bool^0 = wirebuf<>::!Vdd (5) @[ supply_high port-alias ] 
-        I = process e1of2<>^0 = wirebuf<>::I (1) @[ port! port? ] (
+        I = process e1of2<>^0 = wirebuf<>::I (1) @[ port? port! port-alias ] (
           d = bool^1
             {
               [0] = wirebuf<>::I.d[0] (1) @[ port-alias ] 
@@ -329,7 +329,7 @@ In namespace "", we have: {
           f = bool^0 = wirebuf<>::I.d[0] (1) @[ port-alias ] 
           e = bool^0 = wirebuf<>::I.e (3) @[ port-alias ] 
         )
-        O = process e1of2<>^0 = wirebuf<>::I (1) @[ port! port? ] (
+        O = process e1of2<>^0 = wirebuf<>::I (1) @[ port? port! port-alias ] (
           d = bool^1
             {
               [0] = wirebuf<>::I.d[0] (1) @[ port-alias ] 
@@ -341,7 +341,7 @@ In namespace "", we have: {
         )
         Created state:
         process instance pool: (1 ports, 0 local, 0 mapped)
-        1	wirebuf<>::I @[ port! port? ]	e1of2<>
+        1	wirebuf<>::I @[ port? port! port-alias ]	e1of2<>
           bool: 2,1,3
         bool instance pool: (5 ports, 0 local, 0 mapped)
         1	wirebuf<>::I.d[0] @[ port-alias ]	
@@ -350,7 +350,7 @@ In namespace "", we have: {
         4	wirebuf<>::!GND @[ supply_low port-alias ]	
         5	wirebuf<>::!Vdd @[ supply_high port-alias ]	
         process port aliases:
-        1: wirebuf<>::I = wirebuf<>::O @[ port! port? ]
+        1: wirebuf<>::I = wirebuf<>::O @[ port? port! port-alias ]
         bool port aliases:
         1: wirebuf<>::I.d[0] = wirebuf<>::I.f = wirebuf<>::O.d[0] = wirebuf<>::O.f @[ port-alias ]
         2: wirebuf<>::I.d[1] = wirebuf<>::I.t = wirebuf<>::O.d[1] = wirebuf<>::O.t @[ port-alias ]

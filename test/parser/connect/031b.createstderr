@@ -132,14 +132,14 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = basket<>::!GND (1) @[ supply_low port-alias ] 
         !Vdd = bool^0 = basket<>::!Vdd (2) @[ supply_high port-alias ] 
-        egg_array = process egg<>^0 = basket<>::egg_array (1) (
+        egg_array = process egg<>^0 = basket<>::egg_array (1) @[ port-alias ] (
           !GND = bool^0 = basket<>::!GND (1) @[ supply_low port-alias ] 
           !Vdd = bool^0 = basket<>::!Vdd (2) @[ supply_high port-alias ] 
           yolk = int<32>^0 = basket<>::egg_array.yolk (1) 
         )
         Created state:
         process instance pool: (1 ports, 0 local, 0 mapped)
-        1	basket<>::egg_array	egg<>
+        1	basket<>::egg_array @[ port-alias ]	egg<>
           int: 1
           bool: 1,2
         int instance pool: (1 ports, 0 local, 0 mapped)
@@ -174,10 +174,10 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = bundle<>::!GND (1) @[ supply_low port-alias ] 
         !Vdd = bool^0 = bundle<>::!Vdd (2) @[ supply_high port-alias ] 
-        c = process basket<>^0 = bundle<>::c (1) (
+        c = process basket<>^0 = bundle<>::c (1) @[ port-alias ] (
           !GND = bool^0 = bundle<>::!GND (1) @[ supply_low port-alias ] 
           !Vdd = bool^0 = bundle<>::!Vdd (2) @[ supply_high port-alias ] 
-          egg_array = process egg<>^0 = bundle<>::c.egg_array (2) (
+          egg_array = process egg<>^0 = bundle<>::c.egg_array (2) @[ port-alias ] (
             !GND = bool^0 = bundle<>::!GND (1) @[ supply_low port-alias ] 
             !Vdd = bool^0 = bundle<>::!Vdd (2) @[ supply_high port-alias ] 
             yolk = int<32>^0 = bundle<>::c.egg_array.yolk (1) 
@@ -185,11 +185,11 @@ In namespace "", we have: {
         )
         Created state:
         process instance pool: (2 ports, 0 local, 0 mapped)
-        1	bundle<>::c	basket<>
+        1	bundle<>::c @[ port-alias ]	basket<>
           process: 2
           int: 1
           bool: 1,2
-        2	bundle<>::c.egg_array	egg<>
+        2	bundle<>::c.egg_array @[ port-alias ]	egg<>
           int: 1
           bool: 1,2
         int instance pool: (1 ports, 0 local, 0 mapped)

@@ -214,14 +214,14 @@ In namespace "", we have: {
           !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high port-alias ] 
           x = bool^0 = foo<>::r.y (3) @[ port-alias ] 
         )
-        r = process ar<>^0 = foo<>::r (1) (
+        r = process ar<>^0 = foo<>::r (1) @[ port-alias ] (
           !GND = bool^0 = foo<>::!GND (1) @[ supply_low port-alias ] 
           !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high port-alias ] 
           y = bool^0 = foo<>::r.y (3) @[ port-alias ] 
         )
         Created state:
         process instance pool: (1 ports, 1 local, 0 mapped)
-        1	foo<>::r	ar<>
+        1	foo<>::r @[ port-alias ]	ar<>
           bool: 1,2,3
         2	foo<>::k	array<>
           bool: 1,2,3

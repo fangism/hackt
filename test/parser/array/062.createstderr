@@ -1,131 +1,131 @@
 ERROR: detected negative array indices: [-4]
 	with collection: process dualrail<>^1
   {
-    [0] = rotate_right_N_fb<32, 4>::out[0] (
+    [0] = rotate_right_N_fb<32, 4>::out[0] @[ port-alias ] (
       !GND = bool^0 = rotate_right_N_fb<32, 4>::out[0].!GND @[ supply_low port-alias ] 
       !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[0].!Vdd @[ supply_high port-alias ] 
     )
-    [1] = rotate_right_N_fb<32, 4>::out[1] (
+    [1] = rotate_right_N_fb<32, 4>::out[1] @[ port-alias ] (
       !GND = bool^0 = rotate_right_N_fb<32, 4>::out[1].!GND @[ supply_low port-alias ] 
       !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[1].!Vdd @[ supply_high port-alias ] 
     )
-    [2] = rotate_right_N_fb<32, 4>::out[2] (
+    [2] = rotate_right_N_fb<32, 4>::out[2] @[ port-alias ] (
       !GND = bool^0 = rotate_right_N_fb<32, 4>::out[2].!GND @[ supply_low port-alias ] 
       !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[2].!Vdd @[ supply_high port-alias ] 
     )
-    [3] = rotate_right_N_fb<32, 4>::out[3] (
+    [3] = rotate_right_N_fb<32, 4>::out[3] @[ port-alias ] (
       !GND = bool^0 = rotate_right_N_fb<32, 4>::out[3].!GND @[ supply_low port-alias ] 
       !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[3].!Vdd @[ supply_high port-alias ] 
     )
-    [4] = rotate_right_N_fb<32, 4>::out[4] (
+    [4] = rotate_right_N_fb<32, 4>::out[4] @[ port-alias ] (
       !GND = bool^0 = rotate_right_N_fb<32, 4>::out[4].!GND @[ supply_low port-alias ] 
       !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[4].!Vdd @[ supply_high port-alias ] 
     )
-    [5] = rotate_right_N_fb<32, 4>::out[5] (
+    [5] = rotate_right_N_fb<32, 4>::out[5] @[ port-alias ] (
       !GND = bool^0 = rotate_right_N_fb<32, 4>::out[5].!GND @[ supply_low port-alias ] 
       !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[5].!Vdd @[ supply_high port-alias ] 
     )
-    [6] = rotate_right_N_fb<32, 4>::out[6] (
+    [6] = rotate_right_N_fb<32, 4>::out[6] @[ port-alias ] (
       !GND = bool^0 = rotate_right_N_fb<32, 4>::out[6].!GND @[ supply_low port-alias ] 
       !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[6].!Vdd @[ supply_high port-alias ] 
     )
-    [7] = rotate_right_N_fb<32, 4>::out[7] (
+    [7] = rotate_right_N_fb<32, 4>::out[7] @[ port-alias ] (
       !GND = bool^0 = rotate_right_N_fb<32, 4>::out[7].!GND @[ supply_low port-alias ] 
       !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[7].!Vdd @[ supply_high port-alias ] 
     )
-    [8] = rotate_right_N_fb<32, 4>::out[8] (
+    [8] = rotate_right_N_fb<32, 4>::out[8] @[ port-alias ] (
       !GND = bool^0 = rotate_right_N_fb<32, 4>::out[8].!GND @[ supply_low port-alias ] 
       !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[8].!Vdd @[ supply_high port-alias ] 
     )
-    [9] = rotate_right_N_fb<32, 4>::out[9] (
+    [9] = rotate_right_N_fb<32, 4>::out[9] @[ port-alias ] (
       !GND = bool^0 = rotate_right_N_fb<32, 4>::out[9].!GND @[ supply_low port-alias ] 
       !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[9].!Vdd @[ supply_high port-alias ] 
     )
-    [10] = rotate_right_N_fb<32, 4>::out[10] (
+    [10] = rotate_right_N_fb<32, 4>::out[10] @[ port-alias ] (
       !GND = bool^0 = rotate_right_N_fb<32, 4>::out[10].!GND @[ supply_low port-alias ] 
       !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[10].!Vdd @[ supply_high port-alias ] 
     )
-    [11] = rotate_right_N_fb<32, 4>::out[11] (
+    [11] = rotate_right_N_fb<32, 4>::out[11] @[ port-alias ] (
       !GND = bool^0 = rotate_right_N_fb<32, 4>::out[11].!GND @[ supply_low port-alias ] 
       !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[11].!Vdd @[ supply_high port-alias ] 
     )
-    [12] = rotate_right_N_fb<32, 4>::out[12] (
+    [12] = rotate_right_N_fb<32, 4>::out[12] @[ port-alias ] (
       !GND = bool^0 = rotate_right_N_fb<32, 4>::out[12].!GND @[ supply_low port-alias ] 
       !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[12].!Vdd @[ supply_high port-alias ] 
     )
-    [13] = rotate_right_N_fb<32, 4>::out[13] (
+    [13] = rotate_right_N_fb<32, 4>::out[13] @[ port-alias ] (
       !GND = bool^0 = rotate_right_N_fb<32, 4>::out[13].!GND @[ supply_low port-alias ] 
       !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[13].!Vdd @[ supply_high port-alias ] 
     )
-    [14] = rotate_right_N_fb<32, 4>::out[14] (
+    [14] = rotate_right_N_fb<32, 4>::out[14] @[ port-alias ] (
       !GND = bool^0 = rotate_right_N_fb<32, 4>::out[14].!GND @[ supply_low port-alias ] 
       !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[14].!Vdd @[ supply_high port-alias ] 
     )
-    [15] = rotate_right_N_fb<32, 4>::out[15] (
+    [15] = rotate_right_N_fb<32, 4>::out[15] @[ port-alias ] (
       !GND = bool^0 = rotate_right_N_fb<32, 4>::out[15].!GND @[ supply_low port-alias ] 
       !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[15].!Vdd @[ supply_high port-alias ] 
     )
-    [16] = rotate_right_N_fb<32, 4>::out[16] (
+    [16] = rotate_right_N_fb<32, 4>::out[16] @[ port-alias ] (
       !GND = bool^0 = rotate_right_N_fb<32, 4>::out[16].!GND @[ supply_low port-alias ] 
       !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[16].!Vdd @[ supply_high port-alias ] 
     )
-    [17] = rotate_right_N_fb<32, 4>::out[17] (
+    [17] = rotate_right_N_fb<32, 4>::out[17] @[ port-alias ] (
       !GND = bool^0 = rotate_right_N_fb<32, 4>::out[17].!GND @[ supply_low port-alias ] 
       !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[17].!Vdd @[ supply_high port-alias ] 
     )
-    [18] = rotate_right_N_fb<32, 4>::out[18] (
+    [18] = rotate_right_N_fb<32, 4>::out[18] @[ port-alias ] (
       !GND = bool^0 = rotate_right_N_fb<32, 4>::out[18].!GND @[ supply_low port-alias ] 
       !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[18].!Vdd @[ supply_high port-alias ] 
     )
-    [19] = rotate_right_N_fb<32, 4>::out[19] (
+    [19] = rotate_right_N_fb<32, 4>::out[19] @[ port-alias ] (
       !GND = bool^0 = rotate_right_N_fb<32, 4>::out[19].!GND @[ supply_low port-alias ] 
       !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[19].!Vdd @[ supply_high port-alias ] 
     )
-    [20] = rotate_right_N_fb<32, 4>::out[20] (
+    [20] = rotate_right_N_fb<32, 4>::out[20] @[ port-alias ] (
       !GND = bool^0 = rotate_right_N_fb<32, 4>::out[20].!GND @[ supply_low port-alias ] 
       !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[20].!Vdd @[ supply_high port-alias ] 
     )
-    [21] = rotate_right_N_fb<32, 4>::out[21] (
+    [21] = rotate_right_N_fb<32, 4>::out[21] @[ port-alias ] (
       !GND = bool^0 = rotate_right_N_fb<32, 4>::out[21].!GND @[ supply_low port-alias ] 
       !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[21].!Vdd @[ supply_high port-alias ] 
     )
-    [22] = rotate_right_N_fb<32, 4>::out[22] (
+    [22] = rotate_right_N_fb<32, 4>::out[22] @[ port-alias ] (
       !GND = bool^0 = rotate_right_N_fb<32, 4>::out[22].!GND @[ supply_low port-alias ] 
       !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[22].!Vdd @[ supply_high port-alias ] 
     )
-    [23] = rotate_right_N_fb<32, 4>::out[23] (
+    [23] = rotate_right_N_fb<32, 4>::out[23] @[ port-alias ] (
       !GND = bool^0 = rotate_right_N_fb<32, 4>::out[23].!GND @[ supply_low port-alias ] 
       !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[23].!Vdd @[ supply_high port-alias ] 
     )
-    [24] = rotate_right_N_fb<32, 4>::out[24] (
+    [24] = rotate_right_N_fb<32, 4>::out[24] @[ port-alias ] (
       !GND = bool^0 = rotate_right_N_fb<32, 4>::out[24].!GND @[ supply_low port-alias ] 
       !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[24].!Vdd @[ supply_high port-alias ] 
     )
-    [25] = rotate_right_N_fb<32, 4>::out[25] (
+    [25] = rotate_right_N_fb<32, 4>::out[25] @[ port-alias ] (
       !GND = bool^0 = rotate_right_N_fb<32, 4>::out[25].!GND @[ supply_low port-alias ] 
       !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[25].!Vdd @[ supply_high port-alias ] 
     )
-    [26] = rotate_right_N_fb<32, 4>::out[26] (
+    [26] = rotate_right_N_fb<32, 4>::out[26] @[ port-alias ] (
       !GND = bool^0 = rotate_right_N_fb<32, 4>::out[26].!GND @[ supply_low port-alias ] 
       !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[26].!Vdd @[ supply_high port-alias ] 
     )
-    [27] = rotate_right_N_fb<32, 4>::out[27] (
+    [27] = rotate_right_N_fb<32, 4>::out[27] @[ port-alias ] (
       !GND = bool^0 = rotate_right_N_fb<32, 4>::out[27].!GND @[ supply_low port-alias ] 
       !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[27].!Vdd @[ supply_high port-alias ] 
     )
-    [28] = rotate_right_N_fb<32, 4>::out[28] (
+    [28] = rotate_right_N_fb<32, 4>::out[28] @[ port-alias ] (
       !GND = bool^0 = rotate_right_N_fb<32, 4>::out[28].!GND @[ supply_low port-alias ] 
       !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[28].!Vdd @[ supply_high port-alias ] 
     )
-    [29] = rotate_right_N_fb<32, 4>::out[29] (
+    [29] = rotate_right_N_fb<32, 4>::out[29] @[ port-alias ] (
       !GND = bool^0 = rotate_right_N_fb<32, 4>::out[29].!GND @[ supply_low port-alias ] 
       !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[29].!Vdd @[ supply_high port-alias ] 
     )
-    [30] = rotate_right_N_fb<32, 4>::out[30] (
+    [30] = rotate_right_N_fb<32, 4>::out[30] @[ port-alias ] (
       !GND = bool^0 = rotate_right_N_fb<32, 4>::out[30].!GND @[ supply_low port-alias ] 
       !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[30].!Vdd @[ supply_high port-alias ] 
     )
-    [31] = rotate_right_N_fb<32, 4>::out[31] (
+    [31] = rotate_right_N_fb<32, 4>::out[31] @[ port-alias ] (
       !GND = bool^0 = rotate_right_N_fb<32, 4>::out[31].!GND @[ supply_low port-alias ] 
       !Vdd = bool^0 = rotate_right_N_fb<32, 4>::out[31].!Vdd @[ supply_high port-alias ] 
     )

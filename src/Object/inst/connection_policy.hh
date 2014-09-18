@@ -802,6 +802,7 @@ public:
 			Analogous to CONNECTED_TO_SUBSTRUCT_PRODUCER.
 		 */
 		CONNECTED_TO_SUBSTRUCT_CONSUMER = 0x20,
+#if 0
 		/**
 			These flags are set when the local
 			process instance is connected (by PRS)
@@ -811,6 +812,16 @@ public:
 		 */
 		CONNECTED_PRS_PRODUCER = 0x04,
 		CONNECTED_PRS_CONSUMER = 0x40,
+#endif
+		/// don't have any explicit attributes yet
+		PROCESS_EXPLICIT_ATTRIBUTES_MASK = 0x0,
+		// port is marked with '?'
+		PROCESS_PORT_FORMAL_INPUT = 0x08,
+		// port is marked with '!'
+		PROCESS_PORT_FORMAL_OUTPUT = 0x80,
+#if 1
+		PROCESS_IS_ALIASED_TO_PORT = 0x0100,
+#endif
 #if 0
 		/**
 			Set if this channel is allowed to be connected
@@ -826,23 +837,40 @@ public:
 #endif
 		// derived values
 		CONNECTED_PORT_FORMAL_PRODUCER =
-			CONNECTED_TO_LOCAL_PRODUCER,
+			PROCESS_PORT_FORMAL_INPUT,
 		CONNECTED_PORT_FORMAL_CONSUMER =
-			CONNECTED_TO_LOCAL_CONSUMER,
+			PROCESS_PORT_FORMAL_OUTPUT,
 		CONNECTED_TO_NONPORT_PRODUCER = 
-			CONNECTED_PRS_PRODUCER |
+			CONNECTED_TO_LOCAL_PRODUCER |
 			CONNECTED_TO_SUBSTRUCT_PRODUCER,
 		CONNECTED_TO_NONPORT_CONSUMER = 
-			CONNECTED_PRS_CONSUMER |
+			CONNECTED_TO_LOCAL_CONSUMER |
 			CONNECTED_TO_SUBSTRUCT_CONSUMER,
 		CONNECTED_TO_ANY_PRODUCER = 
-			CONNECTED_TO_LOCAL_PRODUCER |
+			CONNECTED_PORT_FORMAL_PRODUCER |
 			CONNECTED_TO_NONPORT_PRODUCER,
 		CONNECTED_TO_ANY_CONSUMER = 
-			CONNECTED_TO_LOCAL_CONSUMER |
+			CONNECTED_PORT_FORMAL_CONSUMER |
 			CONNECTED_TO_NONPORT_CONSUMER,
+
+		PROCESS_IMPLICIT_ATTRIBUTES_MASK = 
+			CONNECTED_TO_SUBSTRUCT_PRODUCER |
+			CONNECTED_TO_SUBSTRUCT_CONSUMER,
+	/// mask for attributes to distinguish from connectivity fields
+	// both implicit and explicit attributes should be preserved
+		PROCESS_ATTRIBUTES_MASK	=
+			PROCESS_EXPLICIT_ATTRIBUTES_MASK |
+			PROCESS_IMPLICIT_ATTRIBUTES_MASK,
+		PROCESS_INIT_ATTRIBUTES_MASK	=
+			PROCESS_ATTRIBUTES_MASK
+#if 1
+			| PROCESS_IS_ALIASED_TO_PORT
+#endif
+			,
 		/// default value
-		DEFAULT_CONNECT_FLAGS = 0x00
+		DEFAULT_CONNECT_FLAGS = 0x00,
+		/// TODO: keep sync'd with above enums
+		PROCESS_NUM_ATTRIBUTES = 9
 	};
 protected:
 	static const char*			attribute_names[];
@@ -885,23 +913,37 @@ public:
 
 	bool
 	is_input_port(void) const {
-		return direction_flags & CONNECTED_PORT_FORMAL_PRODUCER;
+		return direction_flags & PROCESS_PORT_FORMAL_INPUT;
 	}
 
 	bool
 	is_output_port(void) const {
-		return direction_flags & CONNECTED_PORT_FORMAL_CONSUMER;
+		return direction_flags & PROCESS_PORT_FORMAL_OUTPUT;
 	}
 
 	bool
 	is_terminal_producer(void) const {
-		return direction_flags & CONNECTED_PRS_PRODUCER;
+//		return direction_flags & CONNECTED_PRS_PRODUCER;
+		return direction_flags & CONNECTED_TO_LOCAL_PRODUCER;
 	}
 
 	bool
 	is_terminal_consumer(void) const {
-		return direction_flags & CONNECTED_PRS_CONSUMER;
+//		return direction_flags & CONNECTED_PRS_CONSUMER;
+		return direction_flags & CONNECTED_TO_LOCAL_CONSUMER;
 	}
+
+#if 1
+	void
+	flag_port(void) {
+		direction_flags |= PROCESS_IS_ALIASED_TO_PORT;
+	}
+
+	bool
+	is_aliased_to_port(void) const {
+		return direction_flags & PROCESS_IS_ALIASED_TO_PORT;
+	}
+#endif
 
 protected:
 	template <class AliasType>

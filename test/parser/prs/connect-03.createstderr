@@ -101,7 +101,7 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = deep<>::!GND (1) @[ supply_low port-alias ] 
         !Vdd = bool^0 = deep<>::!Vdd (2) @[ supply_high port-alias ] 
-        x = process inv<>^0 = deep<>::x (1) (
+        x = process inv<>^0 = deep<>::x (1) @[ port-alias ] (
           !GND = bool^0 = deep<>::!GND (1) @[ supply_low port-alias ] 
           !Vdd = bool^0 = deep<>::!Vdd (2) @[ supply_high port-alias ] 
           a = bool^0 = deep<>::x.a (3) @[ port-alias ] 
@@ -113,7 +113,7 @@ In namespace "", we have: {
         )
         Created state:
         process instance pool: (1 ports, 1 local, 0 mapped)
-        1	deep<>::x	inv<>
+        1	deep<>::x @[ port-alias ]	inv<>
           bool: 1,2,3
         2	deep<>::y	inv<>
           bool: 1,2,4

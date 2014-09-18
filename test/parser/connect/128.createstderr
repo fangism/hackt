@@ -361,20 +361,20 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = pand<>::!GND (1) @[ supply_low port-alias ] 
         !Vdd = bool^0 = pand<>::!Vdd (2) @[ supply_high port-alias ] 
-        a = process e1of2<>^0 = pand<>::a (2) (
+        a = process e1of2<>^0 = pand<>::a (2) @[ port-alias ] (
           !GND = bool^0 = pand<>::!GND (1) @[ supply_low port-alias ] 
           !Vdd = bool^0 = pand<>::!Vdd (2) @[ supply_high port-alias ] 
           d = bool^0 = pand<>::a.d (3) @[ port-alias ] 
         )
-        g = process globals<>^0 = pand<>::g (1) (
+        g = process globals<>^0 = pand<>::g (1) @[ port-alias ] (
           !GND = bool^0 = pand<>::!GND (1) @[ supply_low port-alias ] 
           !Vdd = bool^0 = pand<>::!Vdd (2) @[ supply_high port-alias ] 
         )
         Created state:
         process instance pool: (2 ports, 0 local, 0 mapped)
-        1	pand<>::g	globals<>
+        1	pand<>::g @[ port-alias ]	globals<>
           bool: 1,2
-        2	pand<>::a	e1of2<>
+        2	pand<>::a @[ port-alias ]	e1of2<>
           bool: 1,2,3
         bool instance pool: (3 ports, 0 local, 0 mapped)
         1	pand<>::!GND @[ supply_low port-alias ]	
@@ -411,21 +411,21 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = pupcopy<>::!GND (1) @[ supply_low port-alias ] 
         !Vdd = bool^0 = pupcopy<>::!Vdd (2) @[ supply_high port-alias ] 
-        r = process e1of2<>^0 = pupcopy<>::r (1) (
+        r = process e1of2<>^0 = pupcopy<>::r (1) @[ port-alias ] (
           !GND = bool^0 = pupcopy<>::!GND (1) @[ supply_low port-alias ] 
           !Vdd = bool^0 = pupcopy<>::!Vdd (2) @[ supply_high port-alias ] 
           d = bool^0 = pupcopy<>::r.d (3) @[ port-alias ] 
         )
-        rp = process e1of2<>^0 = pupcopy<>::rp (2) (
+        rp = process e1of2<>^0 = pupcopy<>::rp (2) @[ port-alias ] (
           !GND = bool^0 = pupcopy<>::!GND (1) @[ supply_low port-alias ] 
           !Vdd = bool^0 = pupcopy<>::!Vdd (2) @[ supply_high port-alias ] 
           d = bool^0 = pupcopy<>::r.d (3) @[ port-alias ] 
         )
         Created state:
         process instance pool: (2 ports, 0 local, 0 mapped)
-        1	pupcopy<>::r	e1of2<>
+        1	pupcopy<>::r @[ port-alias ]	e1of2<>
           bool: 1,2,3
-        2	pupcopy<>::rp	e1of2<>
+        2	pupcopy<>::rp @[ port-alias ]	e1of2<>
           bool: 1,2,3
         bool instance pool: (3 ports, 0 local, 0 mapped)
         1	pupcopy<>::!GND @[ supply_low port-alias ]	

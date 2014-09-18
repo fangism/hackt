@@ -575,12 +575,12 @@ if (a.has_complete_type()) {
 		// leave as initial value
 	case CHANNEL_TYPE_RECEIVE:
 		if (formal) {
-			direction_flags |= CONNECTED_PORT_FORMAL_PRODUCER;
+			direction_flags |= PROCESS_PORT_FORMAL_INPUT;
 		}
 		break;
 	case CHANNEL_TYPE_SEND:
 		if (formal) {
-			direction_flags |= CONNECTED_PORT_FORMAL_CONSUMER;
+			direction_flags |= PROCESS_PORT_FORMAL_OUTPUT;
 		}
 		break;
 	default:
@@ -670,7 +670,7 @@ process_connect_policy::__check_connection(const AliasType& a) {
 	// if (!have_prod && !have_cons) // we don't care
 	// or better yet check the type, whether is actually user-defined chan
 // end if
-// }	// !aliased_to_port()
+// }	// !is_aliased_to_port()
 	return ret;
 }
 

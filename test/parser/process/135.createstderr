@@ -154,7 +154,7 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = bar<>::!GND (1) @[ supply_low port-alias ] 
         !Vdd = bool^0 = bar<>::!Vdd (2) @[ supply_high port-alias ] 
-        x = process foo<>^0 = bar<>::x (1) (
+        x = process foo<>^0 = bar<>::x (1) @[ port-alias ] (
           !GND = bool^0 = bar<>::!GND (1) @[ supply_low port-alias ] 
           !Vdd = bool^0 = bar<>::!Vdd (2) @[ supply_high port-alias ] 
           a = bool^0 = bar<>::x.a (3) @[ port-alias ] 
@@ -166,7 +166,7 @@ In namespace "", we have: {
         )
         Created state:
         process instance pool: (1 ports, 1 local, 0 mapped)
-        1	bar<>::x	foo<>
+        1	bar<>::x @[ port-alias ]	foo<>
           bool: 1,2,3
         2	bar<>::z	foo<>
           bool: 1,2,3
@@ -245,10 +245,10 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = ick<>::!GND (1) @[ supply_low port-alias ] 
         !Vdd = bool^0 = ick<>::!Vdd (2) @[ supply_high port-alias ] 
-        p = process bar<>^0 = ick<>::p (1) (
+        p = process bar<>^0 = ick<>::p (1) @[ port-alias ] (
           !GND = bool^0 = ick<>::!GND (1) @[ supply_low port-alias ] 
           !Vdd = bool^0 = ick<>::!Vdd (2) @[ supply_high port-alias ] 
-          x = process foo<>^0 = ick<>::p.x (2) (
+          x = process foo<>^0 = ick<>::p.x (2) @[ port-alias ] (
             !GND = bool^0 = ick<>::!GND (1) @[ supply_low port-alias ] 
             !Vdd = bool^0 = ick<>::!Vdd (2) @[ supply_high port-alias ] 
             a = bool^0 = ick<>::p.x.a (3) @[ port-alias ] 
@@ -257,7 +257,7 @@ In namespace "", we have: {
         q = process bar<>^0 = ick<>::q (3) (
           !GND = bool^0 = ick<>::!GND (1) @[ supply_low port-alias ] 
           !Vdd = bool^0 = ick<>::!Vdd (2) @[ supply_high port-alias ] 
-          x = process foo<>^0 = ick<>::p.x (2) (
+          x = process foo<>^0 = ick<>::p.x (2) @[ port-alias ] (
             !GND = bool^0 = ick<>::!GND (1) @[ supply_low port-alias ] 
             !Vdd = bool^0 = ick<>::!Vdd (2) @[ supply_high port-alias ] 
             a = bool^0 = ick<>::p.x.a (3) @[ port-alias ] 
@@ -265,10 +265,10 @@ In namespace "", we have: {
         )
         Created state:
         process instance pool: (2 ports, 1 local, 1 mapped)
-        1	ick<>::p	bar<>
+        1	ick<>::p @[ port-alias ]	bar<>
           process: 2
           bool: 1,2,3
-        2	ick<>::p.x	foo<>
+        2	ick<>::p.x @[ port-alias ]	foo<>
           bool: 1,2,3
         3	ick<>::q	bar<>
           process: 2

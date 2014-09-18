@@ -107,13 +107,13 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = quad<>::!GND (3) @[ supply_low port-alias ] 
         !Vdd = bool^0 = quad<>::!Vdd (4) @[ supply_high port-alias ] 
-        globals = process pair<>^0 = quad<>::globals (1) @[ port! PRS? ] (
+        globals = process pair<>^0 = quad<>::globals (1) @[ port? loc? port-alias ] (
           t = bool^0 = quad<>::globals.t (1) @[ port-alias ] 
           f = bool^0 = quad<>::globals.f (2) @[ port-alias ] 
         )
         Created state:
         process instance pool: (1 ports, 0 local, 0 mapped)
-        1	quad<>::globals @[ port! PRS? ]	pair<>
+        1	quad<>::globals @[ port? loc? port-alias ]	pair<>
           bool: 1,2
         bool instance pool: (4 ports, 0 local, 0 mapped)
         1	quad<>::globals.t @[ port-alias ]	

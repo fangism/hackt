@@ -230,11 +230,11 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = wire_copy_e1of1<>::!GND (4) @[ supply_low port-alias ] 
         !Vdd = bool^0 = wire_copy_e1of1<>::!Vdd (5) @[ supply_high port-alias ] 
-        I = process e1of1<>^0 = wire_copy_e1of1<>::I (1) (
+        I = process e1of1<>^0 = wire_copy_e1of1<>::I (1) @[ port-alias ] (
           d = bool^0 = wire_copy_e1of1<>::I.d (1) @[ port-alias ] 
           e = bool^0 = wire_copy_e1of1<>::I.e (2) @[ port-alias sub-FI- sub-FI+ ] 
         )
-        O = process e1of1<>^0 = wire_copy_e1of1<>::O (2) (
+        O = process e1of1<>^0 = wire_copy_e1of1<>::O (2) @[ port-alias ] (
           d = bool^0 = wire_copy_e1of1<>::I.d (1) @[ port-alias ] 
           e = bool^0 = wire_copy_e1of1<>::re (3) @[ port-alias sub-FO- sub-FO+ ] 
         )
@@ -247,9 +247,9 @@ In namespace "", we have: {
         re = bool^0 = wire_copy_e1of1<>::re (3) @[ port-alias sub-FO- sub-FO+ ] 
         Created state:
         process instance pool: (2 ports, 1 local, 0 mapped)
-        1	wire_copy_e1of1<>::I	e1of1<>
+        1	wire_copy_e1of1<>::I @[ port-alias ]	e1of1<>
           bool: 1,2
-        2	wire_copy_e1of1<>::O	e1of1<>
+        2	wire_copy_e1of1<>::O @[ port-alias ]	e1of1<>
           bool: 1,3
         3	wire_copy_e1of1<>::c	buf<>
           bool: 4,5,3,2

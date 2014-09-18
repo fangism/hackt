@@ -1,0 +1,14 @@
+// "052.hac"
+// copy-modified from "051.hac"
+// testing datatype connectivity checking
+
+deftype pair <: bool (bool t, f) { }
+
+defproc quad(pair? globals) {
+globals?;	// sink
+}
+
+pair g;
+quad ruple(g);
+g!;
+

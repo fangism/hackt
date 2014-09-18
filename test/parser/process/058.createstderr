@@ -96,7 +96,7 @@ In namespace "", we have: {
         !Vdd = bool^0 = bar<>::!Vdd (2) @[ supply_high port-alias ] 
         x = process foo<>^2
           {
-            [0][0] = bar<>::x[0][0] (1) (
+            [0][0] = bar<>::x[0][0] (1) @[ port-alias ] (
               !GND = bool^0 = bar<>::!GND (1) @[ supply_low port-alias ] 
               !Vdd = bool^0 = bar<>::!Vdd (2) @[ supply_high port-alias ] 
               a = bool^2
@@ -107,7 +107,7 @@ In namespace "", we have: {
                   [1][1] = bar<>::x[0][0].a[1][1] (6) @[ port-alias ] 
                 }
             )
-            [0][1] = bar<>::x[0][1] (2) (
+            [0][1] = bar<>::x[0][1] (2) @[ port-alias ] (
               !GND = bool^0 = bar<>::!GND (1) @[ supply_low port-alias ] 
               !Vdd = bool^0 = bar<>::!Vdd (2) @[ supply_high port-alias ] 
               a = bool^2
@@ -118,7 +118,7 @@ In namespace "", we have: {
                   [1][1] = bar<>::x[0][1].a[1][1] (10) @[ port-alias ] 
                 }
             )
-            [1][0] = bar<>::x[1][0] (3) (
+            [1][0] = bar<>::x[1][0] (3) @[ port-alias ] (
               !GND = bool^0 = bar<>::!GND (1) @[ supply_low port-alias ] 
               !Vdd = bool^0 = bar<>::!Vdd (2) @[ supply_high port-alias ] 
               a = bool^2
@@ -129,7 +129,7 @@ In namespace "", we have: {
                   [1][1] = bar<>::x[1][0].a[1][1] (14) @[ port-alias ] 
                 }
             )
-            [1][1] = bar<>::x[1][1] (4) (
+            [1][1] = bar<>::x[1][1] (4) @[ port-alias ] (
               !GND = bool^0 = bar<>::!GND (1) @[ supply_low port-alias ] 
               !Vdd = bool^0 = bar<>::!Vdd (2) @[ supply_high port-alias ] 
               a = bool^2
@@ -143,13 +143,13 @@ In namespace "", we have: {
           }
         Created state:
         process instance pool: (4 ports, 0 local, 0 mapped)
-        1	bar<>::x[0][0]	foo<>
+        1	bar<>::x[0][0] @[ port-alias ]	foo<>
           bool: 1,2,3,4,5,6
-        2	bar<>::x[0][1]	foo<>
+        2	bar<>::x[0][1] @[ port-alias ]	foo<>
           bool: 1,2,7,8,9,10
-        3	bar<>::x[1][0]	foo<>
+        3	bar<>::x[1][0] @[ port-alias ]	foo<>
           bool: 1,2,11,12,13,14
-        4	bar<>::x[1][1]	foo<>
+        4	bar<>::x[1][1] @[ port-alias ]	foo<>
           bool: 1,2,15,16,17,18
         bool instance pool: (18 ports, 0 local, 0 mapped)
         1	bar<>::!GND @[ supply_low port-alias ]	

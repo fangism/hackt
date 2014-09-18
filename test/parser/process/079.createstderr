@@ -161,7 +161,7 @@ In namespace "", we have: {
           N = pint^0 value: 2
           x = process foo<3>^1
             {
-              [0] = bar<3, 2>::x[0] (1) (
+              [0] = bar<3, 2>::x[0] (1) @[ port-alias ] (
                 !GND = bool^0 = bar<3, 2>::!GND (1) @[ supply_low port-alias ] 
                 !Vdd = bool^0 = bar<3, 2>::!Vdd (2) @[ supply_high port-alias ] 
                 a = bool^1
@@ -171,7 +171,7 @@ In namespace "", we have: {
                     [2] = bar<3, 2>::x[0].a[0] (3) @[ port-alias ] 
                   }
               )
-              [1] = bar<3, 2>::x[1] (2) (
+              [1] = bar<3, 2>::x[1] (2) @[ port-alias ] (
                 !GND = bool^0 = bar<3, 2>::!GND (1) @[ supply_low port-alias ] 
                 !Vdd = bool^0 = bar<3, 2>::!Vdd (2) @[ supply_high port-alias ] 
                 a = bool^1
@@ -184,9 +184,9 @@ In namespace "", we have: {
             }
           Created state:
           process instance pool: (2 ports, 0 local, 0 mapped)
-          1	bar<3, 2>::x[0]	foo<3>
+          1	bar<3, 2>::x[0] @[ port-alias ]	foo<3>
             bool: 1,2,3,4,3
-          2	bar<3, 2>::x[1]	foo<3>
+          2	bar<3, 2>::x[1] @[ port-alias ]	foo<3>
             bool: 1,2,3,5,3
           bool instance pool: (5 ports, 0 local, 0 mapped)
           1	bar<3, 2>::!GND @[ supply_low port-alias ]	

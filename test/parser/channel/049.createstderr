@@ -268,7 +268,7 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = sourcy<>::!GND (4) @[ supply_low port-alias ] 
         !Vdd = bool^0 = sourcy<>::!Vdd (5) @[ supply_high port-alias ] 
-        O = process e1of2<>^0 = sourcy<>::O (1) @[ PRS! port? ] (
+        O = process e1of2<>^0 = sourcy<>::O (1) @[ loc! port! port-alias ] (
           d = bool^1
             {
               [0] = sourcy<>::O.d[0] (1) @[ port-alias ] 
@@ -280,7 +280,7 @@ In namespace "", we have: {
         )
         Created state:
         process instance pool: (1 ports, 0 local, 0 mapped)
-        1	sourcy<>::O @[ PRS! port? ]	e1of2<>
+        1	sourcy<>::O @[ loc! port! port-alias ]	e1of2<>
           bool: 2,1,3
         bool instance pool: (5 ports, 0 local, 0 mapped)
         1	sourcy<>::O.d[0] @[ port-alias ]	
@@ -318,7 +318,7 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = thingy<>::!GND (1) @[ supply_low port-alias ] 
         !Vdd = bool^0 = thingy<>::!Vdd (2) @[ supply_high port-alias ] 
-        A = process e1of2<>^0 = thingy<>::A (1) @[ sub! PRS? ] (
+        A = process e1of2<>^0 = thingy<>::A (1) @[ sub! loc? ] (
           d = bool^1
             {
               [0] = thingy<>::A.d[0] (3) 
@@ -331,7 +331,7 @@ In namespace "", we have: {
         source = process sourcy<>^0 = thingy<>::source (2) (
           !GND = bool^0 = thingy<>::!GND (1) @[ supply_low port-alias ] 
           !Vdd = bool^0 = thingy<>::!Vdd (2) @[ supply_high port-alias ] 
-          O = process e1of2<>^0 = thingy<>::A (1) @[ sub! PRS? ] (
+          O = process e1of2<>^0 = thingy<>::A (1) @[ sub! loc? ] (
             d = bool^1
               {
                 [0] = thingy<>::A.d[0] (3) 
@@ -344,7 +344,7 @@ In namespace "", we have: {
         )
         Created state:
         process instance pool: (0 ports, 2 local, 0 mapped)
-        1	thingy<>::A @[ sub! PRS? ]	e1of2<>
+        1	thingy<>::A @[ sub! loc? ]	e1of2<>
           bool: 4,3,5
         2	thingy<>::source	sourcy<>
           process: 1

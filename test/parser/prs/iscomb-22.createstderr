@@ -153,13 +153,13 @@ In namespace "", we have: {
         !Vdd = bool^0 = multi_inv<>::!Vdd (2) @[ supply_high port-alias ] 
         x = process inv<>^1
           {
-            [0] = multi_inv<>::x[0] (1) (
+            [0] = multi_inv<>::x[0] (1) @[ port-alias ] (
               !GND = bool^0 = multi_inv<>::!GND (1) @[ supply_low port-alias ] 
               !Vdd = bool^0 = multi_inv<>::!Vdd (2) @[ supply_high port-alias ] 
               a = bool^0 = multi_inv<>::x[0].a (3) @[ iscomb !autokeeper port-alias ] 
               b = bool^0 = multi_inv<>::x[0].b (4) @[ iscomb !autokeeper port-alias ] 
             )
-            [1] = multi_inv<>::x[1] (2) (
+            [1] = multi_inv<>::x[1] (2) @[ port-alias ] (
               !GND = bool^0 = multi_inv<>::!GND (1) @[ supply_low port-alias ] 
               !Vdd = bool^0 = multi_inv<>::!Vdd (2) @[ supply_high port-alias ] 
               a = bool^0 = multi_inv<>::x[0].b (4) @[ iscomb !autokeeper port-alias ] 
@@ -168,9 +168,9 @@ In namespace "", we have: {
           }
         Created state:
         process instance pool: (2 ports, 0 local, 0 mapped)
-        1	multi_inv<>::x[0]	inv<>
+        1	multi_inv<>::x[0] @[ port-alias ]	inv<>
           bool: 1,2,3,4
-        2	multi_inv<>::x[1]	inv<>
+        2	multi_inv<>::x[1] @[ port-alias ]	inv<>
           bool: 1,2,4,3
         bool instance pool: (4 ports, 0 local, 0 mapped)
         1	multi_inv<>::!GND @[ supply_low port-alias ]	

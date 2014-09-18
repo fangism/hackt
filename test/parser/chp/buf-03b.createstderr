@@ -118,16 +118,16 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = buf2<>::!GND (1) @[ supply_low port-alias ] 
         !Vdd = bool^0 = buf2<>::!Vdd (2) @[ supply_high port-alias ] 
-        In = process vchan<>^0 = buf2<>::In (1) @[ port! port? ] 
-        Out = process vchan<>^0 = buf2<>::In (1) @[ port! port? ] 
+        In = process vchan<>^0 = buf2<>::In (1) @[ port? port! port-alias ] 
+        Out = process vchan<>^0 = buf2<>::In (1) @[ port? port! port-alias ] 
         Created state:
         process instance pool: (1 ports, 0 local, 0 mapped)
-        1	buf2<>::In @[ port! port? ]	vchan<>
+        1	buf2<>::In @[ port? port! port-alias ]	vchan<>
         bool instance pool: (2 ports, 0 local, 0 mapped)
         1	buf2<>::!GND @[ supply_low port-alias ]	
         2	buf2<>::!Vdd @[ supply_high port-alias ]	
         process port aliases:
-        1: buf2<>::In = buf2<>::Out @[ port! port? ]
+        1: buf2<>::In = buf2<>::Out @[ port? port! port-alias ]
       }
       }
 
@@ -158,17 +158,17 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = foo<>::!GND (1) @[ supply_low port-alias ] 
         !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high port-alias ] 
-        A = process vchan<>^0 = foo<>::A (1) @[ port! port? ] 
-        B = process vchan<>^0 = foo<>::A (1) @[ port! port? ] 
+        A = process vchan<>^0 = foo<>::A (1) @[ port? port! port-alias ] 
+        B = process vchan<>^0 = foo<>::A (1) @[ port? port! port-alias ] 
         x = process buf2<>^0 = foo<>::x (2) (
           !GND = bool^0 = foo<>::!GND (1) @[ supply_low port-alias ] 
           !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high port-alias ] 
-          In = process vchan<>^0 = foo<>::A (1) @[ port! port? ] 
-          Out = process vchan<>^0 = foo<>::A (1) @[ port! port? ] 
+          In = process vchan<>^0 = foo<>::A (1) @[ port? port! port-alias ] 
+          Out = process vchan<>^0 = foo<>::A (1) @[ port? port! port-alias ] 
         )
         Created state:
         process instance pool: (1 ports, 1 local, 0 mapped)
-        1	foo<>::A @[ port! port? ]	vchan<>
+        1	foo<>::A @[ port? port! port-alias ]	vchan<>
         2	foo<>::x	buf2<>
           process: 1
           bool: 1,2
@@ -176,7 +176,7 @@ In namespace "", we have: {
         1	foo<>::!GND @[ supply_low port-alias ]	
         2	foo<>::!Vdd @[ supply_high port-alias ]	
         process port aliases:
-        1: foo<>::A = foo<>::B @[ port! port? ]
+        1: foo<>::A = foo<>::B @[ port? port! port-alias ]
       }
       }
 

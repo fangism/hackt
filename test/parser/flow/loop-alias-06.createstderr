@@ -151,19 +151,19 @@ In namespace "", we have: {
           }
         pbint = process pbitint<>^1
           {
-            [0] = lut<>::pbint[0] (1) (
+            [0] = lut<>::pbint[0] (1) @[ port-alias ] (
               !GND = bool^0 = lut<>::!GND (1) @[ supply_low port-alias ] 
               !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high port-alias ] 
-              pb = process pbit<>^0 = lut<>::pbint[0].pb (2) (
+              pb = process pbit<>^0 = lut<>::pbint[0].pb (2) @[ port-alias ] (
                 !GND = bool^0 = lut<>::!GND (1) @[ supply_low port-alias ] 
                 !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high port-alias ] 
                 t = bool^0 = lut<>::p[0].t (3) @[ port-alias ] 
               )
             )
-            [1] = lut<>::pbint[1] (3) (
+            [1] = lut<>::pbint[1] (3) @[ port-alias ] (
               !GND = bool^0 = lut<>::!GND (1) @[ supply_low port-alias ] 
               !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high port-alias ] 
-              pb = process pbit<>^0 = lut<>::pbint[1].pb (4) (
+              pb = process pbit<>^0 = lut<>::pbint[1].pb (4) @[ port-alias ] (
                 !GND = bool^0 = lut<>::!GND (1) @[ supply_low port-alias ] 
                 !Vdd = bool^0 = lut<>::!Vdd (2) @[ supply_high port-alias ] 
                 t = bool^0 = lut<>::p[1].t (4) @[ port-alias ] 
@@ -172,15 +172,15 @@ In namespace "", we have: {
           }
         Created state:
         process instance pool: (4 ports, 2 local, 0 mapped)
-        1	lut<>::pbint[0]	pbitint<>
+        1	lut<>::pbint[0] @[ port-alias ]	pbitint<>
           process: 2
           bool: 1,2,3
-        2	lut<>::pbint[0].pb	pbit<>
+        2	lut<>::pbint[0].pb @[ port-alias ]	pbit<>
           bool: 1,2,3
-        3	lut<>::pbint[1]	pbitint<>
+        3	lut<>::pbint[1] @[ port-alias ]	pbitint<>
           process: 4
           bool: 1,2,4
-        4	lut<>::pbint[1].pb	pbit<>
+        4	lut<>::pbint[1].pb @[ port-alias ]	pbit<>
           bool: 1,2,4
         5	lut<>::p[0]	pbit<>
           bool: 1,2,3
@@ -248,14 +248,14 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = pbitint<>::!GND (1) @[ supply_low port-alias ] 
         !Vdd = bool^0 = pbitint<>::!Vdd (2) @[ supply_high port-alias ] 
-        pb = process pbit<>^0 = pbitint<>::pb (1) (
+        pb = process pbit<>^0 = pbitint<>::pb (1) @[ port-alias ] (
           !GND = bool^0 = pbitint<>::!GND (1) @[ supply_low port-alias ] 
           !Vdd = bool^0 = pbitint<>::!Vdd (2) @[ supply_high port-alias ] 
           t = bool^0 = pbitint<>::pb.t (3) @[ port-alias ] 
         )
         Created state:
         process instance pool: (1 ports, 0 local, 0 mapped)
-        1	pbitint<>::pb	pbit<>
+        1	pbitint<>::pb @[ port-alias ]	pbit<>
           bool: 1,2,3
         bool instance pool: (3 ports, 0 local, 0 mapped)
         1	pbitint<>::!GND @[ supply_low port-alias ]	

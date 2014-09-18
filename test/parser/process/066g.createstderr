@@ -122,46 +122,46 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = foo<>::!GND (1) @[ supply_low port-alias ] 
         !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high port-alias ] 
-        a = process ick<>^0 = foo<>::a (1) (
+        a = process ick<>^0 = foo<>::a (1) @[ port-alias ] (
           !GND = bool^0 = foo<>::!GND (1) @[ supply_low port-alias ] 
           !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high port-alias ] 
-          m = process oof<>^0 = foo<>::a.m (2) (
+          m = process oof<>^0 = foo<>::a.m (2) @[ port-alias ] (
             !GND = bool^0 = foo<>::!GND (1) @[ supply_low port-alias ] 
             !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high port-alias ] 
           )
-          n = process oof<>^0 = foo<>::a.n (3) (
+          n = process oof<>^0 = foo<>::a.n (3) @[ port-alias ] (
             !GND = bool^0 = foo<>::!GND (1) @[ supply_low port-alias ] 
             !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high port-alias ] 
           )
         )
-        b = process ick<>^0 = foo<>::a (1) (
+        b = process ick<>^0 = foo<>::a (1) @[ port-alias ] (
           !GND = bool^0 = foo<>::!GND (1) @[ supply_low port-alias ] 
           !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high port-alias ] 
-          m = process oof<>^0 = foo<>::a.m (2) (
+          m = process oof<>^0 = foo<>::a.m (2) @[ port-alias ] (
             !GND = bool^0 = foo<>::!GND (1) @[ supply_low port-alias ] 
             !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high port-alias ] 
           )
-          n = process oof<>^0 = foo<>::a.n (3) (
+          n = process oof<>^0 = foo<>::a.n (3) @[ port-alias ] (
             !GND = bool^0 = foo<>::!GND (1) @[ supply_low port-alias ] 
             !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high port-alias ] 
           )
         )
         Created state:
         process instance pool: (3 ports, 0 local, 0 mapped)
-        1	foo<>::a	ick<>
+        1	foo<>::a @[ port-alias ]	ick<>
           process: 2,3
           bool: 1,2
-        2	foo<>::a.m	oof<>
+        2	foo<>::a.m @[ port-alias ]	oof<>
           bool: 1,2
-        3	foo<>::a.n	oof<>
+        3	foo<>::a.n @[ port-alias ]	oof<>
           bool: 1,2
         bool instance pool: (2 ports, 0 local, 0 mapped)
         1	foo<>::!GND @[ supply_low port-alias ]	
         2	foo<>::!Vdd @[ supply_high port-alias ]	
         process port aliases:
-        1: foo<>::a = foo<>::b
-        2: foo<>::a.m = foo<>::b.m
-        3: foo<>::a.n = foo<>::b.n
+        1: foo<>::a = foo<>::b @[ port-alias ]
+        2: foo<>::a.m = foo<>::b.m @[ port-alias ]
+        3: foo<>::a.n = foo<>::b.n @[ port-alias ]
         bool port aliases:
         1: foo<>::a.!GND = foo<>::a.m.!GND = foo<>::a.n.!GND = foo<>::b.!GND = foo<>::b.m.!GND = foo<>::b.n.!GND = foo<>::!GND @[ supply_low port-alias ]
         2: foo<>::a.!Vdd = foo<>::a.m.!Vdd = foo<>::a.n.!Vdd = foo<>::b.!Vdd = foo<>::b.m.!Vdd = foo<>::b.n.!Vdd = foo<>::!Vdd @[ supply_high port-alias ]
@@ -192,19 +192,19 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = ick<>::!GND (1) @[ supply_low port-alias ] 
         !Vdd = bool^0 = ick<>::!Vdd (2) @[ supply_high port-alias ] 
-        m = process oof<>^0 = ick<>::m (1) (
+        m = process oof<>^0 = ick<>::m (1) @[ port-alias ] (
           !GND = bool^0 = ick<>::!GND (1) @[ supply_low port-alias ] 
           !Vdd = bool^0 = ick<>::!Vdd (2) @[ supply_high port-alias ] 
         )
-        n = process oof<>^0 = ick<>::n (2) (
+        n = process oof<>^0 = ick<>::n (2) @[ port-alias ] (
           !GND = bool^0 = ick<>::!GND (1) @[ supply_low port-alias ] 
           !Vdd = bool^0 = ick<>::!Vdd (2) @[ supply_high port-alias ] 
         )
         Created state:
         process instance pool: (2 ports, 0 local, 0 mapped)
-        1	ick<>::m	oof<>
+        1	ick<>::m @[ port-alias ]	oof<>
           bool: 1,2
-        2	ick<>::n	oof<>
+        2	ick<>::n @[ port-alias ]	oof<>
           bool: 1,2
         bool instance pool: (2 ports, 0 local, 0 mapped)
         1	ick<>::!GND @[ supply_low port-alias ]	

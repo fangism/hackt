@@ -137,13 +137,13 @@ In namespace "", we have: {
               1 = 1
             }
           N = pint^0 value: 2
-          x = process foo<4, {0,1,0,1}>^0 = bar<2, {0,1}>::x (1) (
+          x = process foo<4, {0,1,0,1}>^0 = bar<2, {0,1}>::x (1) @[ port-alias ] (
             !GND = bool^0 = bar<2, {0,1}>::!GND (1) @[ supply_low port-alias ] 
             !Vdd = bool^0 = bar<2, {0,1}>::!Vdd (2) @[ supply_high port-alias ] 
           )
           Created state:
           process instance pool: (1 ports, 0 local, 0 mapped)
-          1	bar<2, {0,1}>::x	foo<4, {0,1,0,1}>
+          1	bar<2, {0,1}>::x @[ port-alias ]	foo<4, {0,1,0,1}>
             bool: 1,2
           bool instance pool: (2 ports, 0 local, 0 mapped)
           1	bar<2, {0,1}>::!GND @[ supply_low port-alias ]	

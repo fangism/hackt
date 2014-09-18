@@ -176,13 +176,13 @@ In namespace "", we have: {
         !GND = bool^0 = aligner<>::!GND (2) @[ supply_low port-alias ] 
         !Vdd = bool^0 = aligner<>::!Vdd (3) @[ supply_high port-alias ] 
         _le = bool^0 = aligner<>::_le (4) @[ loc-FO- loc-FO+ ] 
-        l = process e1of2<>^0 = aligner<>::l (1) (
+        l = process e1of2<>^0 = aligner<>::l (1) @[ port-alias ] (
           e = bool^0 = aligner<>::le (1) @[ port-alias loc-FI- loc-FI+ ] 
         )
         le = bool^0 = aligner<>::le (1) @[ port-alias loc-FI- loc-FI+ ] 
         Created state:
         process instance pool: (1 ports, 0 local, 0 mapped)
-        1	aligner<>::l	e1of2<>
+        1	aligner<>::l @[ port-alias ]	e1of2<>
           bool: 1
         bool instance pool: (3 ports, 1 local, 0 mapped)
         1	aligner<>::le @[ port-alias loc-FI- loc-FI+ ]	
@@ -226,12 +226,12 @@ In namespace "", we have: {
         !GND = bool^0 = conv<>::!GND (2) @[ supply_low port-alias ] 
         !Vdd = bool^0 = conv<>::!Vdd (3) @[ supply_high port-alias ] 
         _r = bool^0 = conv<>::_r (4) @[ loc-FI- loc-FI+ ] 
-        r = process e1of2<>^0 = conv<>::r (1) (
+        r = process e1of2<>^0 = conv<>::r (1) @[ port-alias ] (
           e = bool^0 = conv<>::r.e (1) @[ port-alias loc-FO- loc-FO+ ] 
         )
         Created state:
         process instance pool: (1 ports, 0 local, 0 mapped)
-        1	conv<>::r	e1of2<>
+        1	conv<>::r @[ port-alias ]	e1of2<>
           bool: 1
         bool instance pool: (3 ports, 1 local, 0 mapped)
         1	conv<>::r.e @[ port-alias loc-FO- loc-FO+ ]	

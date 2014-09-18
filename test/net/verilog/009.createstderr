@@ -417,7 +417,7 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = buffer<>::!GND (7) @[ supply_low port-alias ] 
         !Vdd = bool^0 = buffer<>::!Vdd (8) @[ supply_high port-alias ] 
-        I = process e1of<2>^0 = buffer<>::I (1) @[ port! PRS? ] (
+        I = process e1of<2>^0 = buffer<>::I (1) @[ port? loc? port-alias ] (
           d = bool^1
             {
               [0] = buffer<>::I.d[0] (1) @[ port-alias ] 
@@ -425,7 +425,7 @@ In namespace "", we have: {
             }
           e = bool^0 = buffer<>::I.e (3) @[ port-alias ] 
         )
-        O = process e1of<2>^0 = buffer<>::O (2) @[ PRS! port? ] (
+        O = process e1of<2>^0 = buffer<>::O (2) @[ loc! port! port-alias ] (
           d = bool^1
             {
               [0] = buffer<>::O.d[0] (4) @[ port-alias ] 
@@ -435,9 +435,9 @@ In namespace "", we have: {
         )
         Created state:
         process instance pool: (2 ports, 0 local, 0 mapped)
-        1	buffer<>::I @[ port! PRS? ]	e1of<2>
+        1	buffer<>::I @[ port? loc? port-alias ]	e1of<2>
           bool: 3,1,2
-        2	buffer<>::O @[ PRS! port? ]	e1of<2>
+        2	buffer<>::O @[ loc! port! port-alias ]	e1of<2>
           bool: 6,4,5
         bool instance pool: (8 ports, 0 local, 0 mapped)
         1	buffer<>::I.d[0] @[ port-alias ]	
@@ -481,7 +481,7 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = curly<>::!GND (9) @[ supply_low port-alias ] 
         !Vdd = bool^0 = curly<>::!Vdd (10) @[ supply_high port-alias ] 
-        B__R = process e1of<2>^0 = curly<>::B__R (3) @[ sub! port? ] (
+        B__R = process e1of<2>^0 = curly<>::B__R (3) @[ sub! port! port-alias ] (
           d = bool^1
             {
               [0] = curly<>::B__R.d[0] (6) @[ port-alias ] 
@@ -489,7 +489,7 @@ In namespace "", we have: {
             }
           e = bool^0 = curly<>::B__R.e (8) @[ port-alias ] 
         )
-        F__D = process e1of<2>^0 = curly<>::F__D (2) @[ port! sub? ] (
+        F__D = process e1of<2>^0 = curly<>::F__D (2) @[ port? sub? port-alias ] (
           d = bool^1
             {
               [0] = curly<>::F__D.d[0] (3) @[ port-alias ] 
@@ -497,14 +497,14 @@ In namespace "", we have: {
             }
           e = bool^0 = curly<>::F__D.e (5) @[ port-alias ] 
         )
-        g = process globals<>^0 = curly<>::g (1) @[ port! ] (
+        g = process globals<>^0 = curly<>::g (1) @[ port? port-alias ] (
           _pReset = bool^0 = curly<>::g._pReset (1) @[ port-alias ] 
           _sReset = bool^0 = curly<>::g._sReset (2) @[ port-alias ] 
         )
         h = process fifo<3>^0 = curly<>::h (4) (
           !GND = bool^0 = curly<>::!GND (9) @[ supply_low port-alias ] 
           !Vdd = bool^0 = curly<>::!Vdd (10) @[ supply_high port-alias ] 
-          I = process e1of<2>^0 = curly<>::F__D (2) @[ port! sub? ] (
+          I = process e1of<2>^0 = curly<>::F__D (2) @[ port? sub? port-alias ] (
             d = bool^1
               {
                 [0] = curly<>::F__D.d[0] (3) @[ port-alias ] 
@@ -512,7 +512,7 @@ In namespace "", we have: {
               }
             e = bool^0 = curly<>::F__D.e (5) @[ port-alias ] 
           )
-          O = process e1of<2>^0 = curly<>::B__R (3) @[ sub! port? ] (
+          O = process e1of<2>^0 = curly<>::B__R (3) @[ sub! port! port-alias ] (
             d = bool^1
               {
                 [0] = curly<>::B__R.d[0] (6) @[ port-alias ] 
@@ -523,11 +523,11 @@ In namespace "", we have: {
         )
         Created state:
         process instance pool: (3 ports, 1 local, 5 mapped)
-        1	curly<>::g @[ port! ]	globals<>
+        1	curly<>::g @[ port? port-alias ]	globals<>
           bool: 1,2
-        2	curly<>::F__D @[ port! sub? ]	e1of<2>
+        2	curly<>::F__D @[ port? sub? port-alias ]	e1of<2>
           bool: 5,3,4
-        3	curly<>::B__R @[ sub! port? ]	e1of<2>
+        3	curly<>::B__R @[ sub! port! port-alias ]	e1of<2>
           bool: 8,6,7
         4	curly<>::h	fifo<3>
           process: 2,3
@@ -633,7 +633,7 @@ In namespace "", we have: {
         <1> {
           !GND = bool^0 = fifo<1>::!GND (7) @[ supply_low port-alias ] 
           !Vdd = bool^0 = fifo<1>::!Vdd (8) @[ supply_high port-alias ] 
-          I = process e1of<2>^0 = fifo<1>::I (1) @[ port! sub? ] (
+          I = process e1of<2>^0 = fifo<1>::I (1) @[ port? sub? port-alias ] (
             d = bool^1
               {
                 [0] = fifo<1>::I.d[0] (1) @[ port-alias ] 
@@ -643,7 +643,7 @@ In namespace "", we have: {
           )
           M = process e1of<2>^1
             {
-              [0] = fifo<1>::I (1) @[ port! sub? ] (
+              [0] = fifo<1>::I (1) @[ port? sub? port-alias ] (
                 d = bool^1
                   {
                     [0] = fifo<1>::I.d[0] (1) @[ port-alias ] 
@@ -651,7 +651,7 @@ In namespace "", we have: {
                   }
                 e = bool^0 = fifo<1>::I.e (3) @[ port-alias ] 
               )
-              [1] = fifo<1>::O (2) @[ sub! port? ] (
+              [1] = fifo<1>::O (2) @[ sub! port! port-alias ] (
                 d = bool^1
                   {
                     [0] = fifo<1>::O.d[0] (4) @[ port-alias ] 
@@ -661,7 +661,7 @@ In namespace "", we have: {
               )
             }
           N = pint^0 value: 1
-          O = process e1of<2>^0 = fifo<1>::O (2) @[ sub! port? ] (
+          O = process e1of<2>^0 = fifo<1>::O (2) @[ sub! port! port-alias ] (
             d = bool^1
               {
                 [0] = fifo<1>::O.d[0] (4) @[ port-alias ] 
@@ -674,7 +674,7 @@ In namespace "", we have: {
               [0] = fifo<1>::b[0] (3) (
                 !GND = bool^0 = fifo<1>::!GND (7) @[ supply_low port-alias ] 
                 !Vdd = bool^0 = fifo<1>::!Vdd (8) @[ supply_high port-alias ] 
-                I = process e1of<2>^0 = fifo<1>::I (1) @[ port! sub? ] (
+                I = process e1of<2>^0 = fifo<1>::I (1) @[ port? sub? port-alias ] (
                   d = bool^1
                     {
                       [0] = fifo<1>::I.d[0] (1) @[ port-alias ] 
@@ -682,7 +682,7 @@ In namespace "", we have: {
                     }
                   e = bool^0 = fifo<1>::I.e (3) @[ port-alias ] 
                 )
-                O = process e1of<2>^0 = fifo<1>::O (2) @[ sub! port? ] (
+                O = process e1of<2>^0 = fifo<1>::O (2) @[ sub! port! port-alias ] (
                   d = bool^1
                     {
                       [0] = fifo<1>::O.d[0] (4) @[ port-alias ] 
@@ -694,9 +694,9 @@ In namespace "", we have: {
             }
           Created state:
           process instance pool: (2 ports, 1 local, 0 mapped)
-          1	fifo<1>::I @[ port! sub? ]	e1of<2>
+          1	fifo<1>::I @[ port? sub? port-alias ]	e1of<2>
             bool: 3,1,2
-          2	fifo<1>::O @[ sub! port? ]	e1of<2>
+          2	fifo<1>::O @[ sub! port! port-alias ]	e1of<2>
             bool: 6,4,5
           3	fifo<1>::b[0]	buffer<>
             process: 1,2
@@ -714,7 +714,7 @@ In namespace "", we have: {
         <2> {
           !GND = bool^0 = fifo<2>::!GND (7) @[ supply_low port-alias ] 
           !Vdd = bool^0 = fifo<2>::!Vdd (8) @[ supply_high port-alias ] 
-          I = process e1of<2>^0 = fifo<2>::I (1) @[ port! sub? ] (
+          I = process e1of<2>^0 = fifo<2>::I (1) @[ port? sub? port-alias ] (
             d = bool^1
               {
                 [0] = fifo<2>::I.d[0] (1) @[ port-alias ] 
@@ -724,7 +724,7 @@ In namespace "", we have: {
           )
           M = process e1of<2>^1
             {
-              [0] = fifo<2>::I (1) @[ port! sub? ] (
+              [0] = fifo<2>::I (1) @[ port? sub? port-alias ] (
                 d = bool^1
                   {
                     [0] = fifo<2>::I.d[0] (1) @[ port-alias ] 
@@ -740,7 +740,7 @@ In namespace "", we have: {
                   }
                 e = bool^0 = fifo<2>::M[1].e (11) 
               )
-              [2] = fifo<2>::O (2) @[ sub! port? ] (
+              [2] = fifo<2>::O (2) @[ sub! port! port-alias ] (
                 d = bool^1
                   {
                     [0] = fifo<2>::O.d[0] (4) @[ port-alias ] 
@@ -750,7 +750,7 @@ In namespace "", we have: {
               )
             }
           N = pint^0 value: 2
-          O = process e1of<2>^0 = fifo<2>::O (2) @[ sub! port? ] (
+          O = process e1of<2>^0 = fifo<2>::O (2) @[ sub! port! port-alias ] (
             d = bool^1
               {
                 [0] = fifo<2>::O.d[0] (4) @[ port-alias ] 
@@ -763,7 +763,7 @@ In namespace "", we have: {
               [0] = fifo<2>::b[0] (4) (
                 !GND = bool^0 = fifo<2>::!GND (7) @[ supply_low port-alias ] 
                 !Vdd = bool^0 = fifo<2>::!Vdd (8) @[ supply_high port-alias ] 
-                I = process e1of<2>^0 = fifo<2>::I (1) @[ port! sub? ] (
+                I = process e1of<2>^0 = fifo<2>::I (1) @[ port? sub? port-alias ] (
                   d = bool^1
                     {
                       [0] = fifo<2>::I.d[0] (1) @[ port-alias ] 
@@ -791,7 +791,7 @@ In namespace "", we have: {
                     }
                   e = bool^0 = fifo<2>::M[1].e (11) 
                 )
-                O = process e1of<2>^0 = fifo<2>::O (2) @[ sub! port? ] (
+                O = process e1of<2>^0 = fifo<2>::O (2) @[ sub! port! port-alias ] (
                   d = bool^1
                     {
                       [0] = fifo<2>::O.d[0] (4) @[ port-alias ] 
@@ -803,9 +803,9 @@ In namespace "", we have: {
             }
           Created state:
           process instance pool: (2 ports, 3 local, 0 mapped)
-          1	fifo<2>::I @[ port! sub? ]	e1of<2>
+          1	fifo<2>::I @[ port? sub? port-alias ]	e1of<2>
             bool: 3,1,2
-          2	fifo<2>::O @[ sub! port? ]	e1of<2>
+          2	fifo<2>::O @[ sub! port! port-alias ]	e1of<2>
             bool: 6,4,5
           3	fifo<2>::M[1] @[ sub! sub? ]	e1of<2>
             bool: 11,9,10
@@ -831,7 +831,7 @@ In namespace "", we have: {
         <3> {
           !GND = bool^0 = fifo<3>::!GND (7) @[ supply_low port-alias ] 
           !Vdd = bool^0 = fifo<3>::!Vdd (8) @[ supply_high port-alias ] 
-          I = process e1of<2>^0 = fifo<3>::I (1) @[ port! sub? ] (
+          I = process e1of<2>^0 = fifo<3>::I (1) @[ port? sub? port-alias ] (
             d = bool^1
               {
                 [0] = fifo<3>::I.d[0] (1) @[ port-alias ] 
@@ -841,7 +841,7 @@ In namespace "", we have: {
           )
           M = process e1of<2>^1
             {
-              [0] = fifo<3>::I (1) @[ port! sub? ] (
+              [0] = fifo<3>::I (1) @[ port? sub? port-alias ] (
                 d = bool^1
                   {
                     [0] = fifo<3>::I.d[0] (1) @[ port-alias ] 
@@ -865,7 +865,7 @@ In namespace "", we have: {
                   }
                 e = bool^0 = fifo<3>::M[2].e (14) 
               )
-              [3] = fifo<3>::O (2) @[ sub! port? ] (
+              [3] = fifo<3>::O (2) @[ sub! port! port-alias ] (
                 d = bool^1
                   {
                     [0] = fifo<3>::O.d[0] (4) @[ port-alias ] 
@@ -875,7 +875,7 @@ In namespace "", we have: {
               )
             }
           N = pint^0 value: 3
-          O = process e1of<2>^0 = fifo<3>::O (2) @[ sub! port? ] (
+          O = process e1of<2>^0 = fifo<3>::O (2) @[ sub! port! port-alias ] (
             d = bool^1
               {
                 [0] = fifo<3>::O.d[0] (4) @[ port-alias ] 
@@ -888,7 +888,7 @@ In namespace "", we have: {
               [0] = fifo<3>::b[0] (5) (
                 !GND = bool^0 = fifo<3>::!GND (7) @[ supply_low port-alias ] 
                 !Vdd = bool^0 = fifo<3>::!Vdd (8) @[ supply_high port-alias ] 
-                I = process e1of<2>^0 = fifo<3>::I (1) @[ port! sub? ] (
+                I = process e1of<2>^0 = fifo<3>::I (1) @[ port? sub? port-alias ] (
                   d = bool^1
                     {
                       [0] = fifo<3>::I.d[0] (1) @[ port-alias ] 
@@ -936,7 +936,7 @@ In namespace "", we have: {
                     }
                   e = bool^0 = fifo<3>::M[2].e (14) 
                 )
-                O = process e1of<2>^0 = fifo<3>::O (2) @[ sub! port? ] (
+                O = process e1of<2>^0 = fifo<3>::O (2) @[ sub! port! port-alias ] (
                   d = bool^1
                     {
                       [0] = fifo<3>::O.d[0] (4) @[ port-alias ] 
@@ -948,9 +948,9 @@ In namespace "", we have: {
             }
           Created state:
           process instance pool: (2 ports, 5 local, 0 mapped)
-          1	fifo<3>::I @[ port! sub? ]	e1of<2>
+          1	fifo<3>::I @[ port? sub? port-alias ]	e1of<2>
             bool: 3,1,2
-          2	fifo<3>::O @[ sub! port? ]	e1of<2>
+          2	fifo<3>::O @[ sub! port! port-alias ]	e1of<2>
             bool: 6,4,5
           3	fifo<3>::M[1] @[ sub! sub? ]	e1of<2>
             bool: 11,9,10
@@ -1041,7 +1041,7 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = larry<>::!GND (9) @[ supply_low port-alias ] 
         !Vdd = bool^0 = larry<>::!Vdd (10) @[ supply_high port-alias ] 
-        I = process e1of<2>^0 = larry<>::I (2) @[ port! sub? ] (
+        I = process e1of<2>^0 = larry<>::I (2) @[ port? sub? port-alias ] (
           d = bool^1
             {
               [0] = larry<>::I.d[0] (3) @[ port-alias ] 
@@ -1049,7 +1049,7 @@ In namespace "", we have: {
             }
           e = bool^0 = larry<>::I.e (5) @[ port-alias ] 
         )
-        O = process e1of<2>^0 = larry<>::O (3) @[ sub! port? ] (
+        O = process e1of<2>^0 = larry<>::O (3) @[ sub! port! port-alias ] (
           d = bool^1
             {
               [0] = larry<>::O.d[0] (6) @[ port-alias ] 
@@ -1060,7 +1060,7 @@ In namespace "", we have: {
         f = process fifo<1>^0 = larry<>::f (4) (
           !GND = bool^0 = larry<>::!GND (9) @[ supply_low port-alias ] 
           !Vdd = bool^0 = larry<>::!Vdd (10) @[ supply_high port-alias ] 
-          I = process e1of<2>^0 = larry<>::I (2) @[ port! sub? ] (
+          I = process e1of<2>^0 = larry<>::I (2) @[ port? sub? port-alias ] (
             d = bool^1
               {
                 [0] = larry<>::I.d[0] (3) @[ port-alias ] 
@@ -1068,7 +1068,7 @@ In namespace "", we have: {
               }
             e = bool^0 = larry<>::I.e (5) @[ port-alias ] 
           )
-          O = process e1of<2>^0 = larry<>::O (3) @[ sub! port? ] (
+          O = process e1of<2>^0 = larry<>::O (3) @[ sub! port! port-alias ] (
             d = bool^1
               {
                 [0] = larry<>::O.d[0] (6) @[ port-alias ] 
@@ -1077,17 +1077,17 @@ In namespace "", we have: {
             e = bool^0 = larry<>::O.e (8) @[ port-alias ] 
           )
         )
-        g = process globals<>^0 = larry<>::g (1) @[ port! ] (
+        g = process globals<>^0 = larry<>::g (1) @[ port? port-alias ] (
           _pReset = bool^0 = larry<>::g._pReset (1) @[ port-alias ] 
           _sReset = bool^0 = larry<>::g._sReset (2) @[ port-alias ] 
         )
         Created state:
         process instance pool: (3 ports, 1 local, 1 mapped)
-        1	larry<>::g @[ port! ]	globals<>
+        1	larry<>::g @[ port? port-alias ]	globals<>
           bool: 1,2
-        2	larry<>::I @[ port! sub? ]	e1of<2>
+        2	larry<>::I @[ port? sub? port-alias ]	e1of<2>
           bool: 5,3,4
-        3	larry<>::O @[ sub! port? ]	e1of<2>
+        3	larry<>::O @[ sub! port! port-alias ]	e1of<2>
           bool: 8,6,7
         4	larry<>::f	fifo<1>
           process: 2,3
@@ -1140,7 +1140,7 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = moe<>::!GND (9) @[ supply_low port-alias ] 
         !Vdd = bool^0 = moe<>::!Vdd (10) @[ supply_high port-alias ] 
-        A = process e1of<2>^0 = moe<>::A (2) @[ port! sub? ] (
+        A = process e1of<2>^0 = moe<>::A (2) @[ port? sub? port-alias ] (
           d = bool^1
             {
               [0] = moe<>::A.d[0] (3) @[ port-alias ] 
@@ -1148,7 +1148,7 @@ In namespace "", we have: {
             }
           e = bool^0 = moe<>::A.e (5) @[ port-alias ] 
         )
-        B = process e1of<2>^0 = moe<>::B (3) @[ sub! port? ] (
+        B = process e1of<2>^0 = moe<>::B (3) @[ sub! port! port-alias ] (
           d = bool^1
             {
               [0] = moe<>::B.d[0] (6) @[ port-alias ] 
@@ -1156,14 +1156,14 @@ In namespace "", we have: {
             }
           e = bool^0 = moe<>::B.e (8) @[ port-alias ] 
         )
-        g = process globals<>^0 = moe<>::g (1) @[ port! ] (
+        g = process globals<>^0 = moe<>::g (1) @[ port? port-alias ] (
           _pReset = bool^0 = moe<>::g._pReset (1) @[ port-alias ] 
           _sReset = bool^0 = moe<>::g._sReset (2) @[ port-alias ] 
         )
         gee = process fifo<2>^0 = moe<>::gee (4) (
           !GND = bool^0 = moe<>::!GND (9) @[ supply_low port-alias ] 
           !Vdd = bool^0 = moe<>::!Vdd (10) @[ supply_high port-alias ] 
-          I = process e1of<2>^0 = moe<>::A (2) @[ port! sub? ] (
+          I = process e1of<2>^0 = moe<>::A (2) @[ port? sub? port-alias ] (
             d = bool^1
               {
                 [0] = moe<>::A.d[0] (3) @[ port-alias ] 
@@ -1171,7 +1171,7 @@ In namespace "", we have: {
               }
             e = bool^0 = moe<>::A.e (5) @[ port-alias ] 
           )
-          O = process e1of<2>^0 = moe<>::B (3) @[ sub! port? ] (
+          O = process e1of<2>^0 = moe<>::B (3) @[ sub! port! port-alias ] (
             d = bool^1
               {
                 [0] = moe<>::B.d[0] (6) @[ port-alias ] 
@@ -1182,11 +1182,11 @@ In namespace "", we have: {
         )
         Created state:
         process instance pool: (3 ports, 1 local, 3 mapped)
-        1	moe<>::g @[ port! ]	globals<>
+        1	moe<>::g @[ port? port-alias ]	globals<>
           bool: 1,2
-        2	moe<>::A @[ port! sub? ]	e1of<2>
+        2	moe<>::A @[ port? sub? port-alias ]	e1of<2>
           bool: 5,3,4
-        3	moe<>::B @[ sub! port? ]	e1of<2>
+        3	moe<>::B @[ sub! port! port-alias ]	e1of<2>
           bool: 8,6,7
         4	moe<>::gee	fifo<2>
           process: 2,3
@@ -1252,11 +1252,11 @@ In namespace "", we have: {
         C = process curly<>^0 = stooges<>::C (9) (
           !GND = bool^0 = stooges<>::!GND (3) @[ supply_low port-alias ] 
           !Vdd = bool^0 = stooges<>::!Vdd (4) @[ supply_high port-alias ] 
-          g = process globals<>^0 = stooges<>::g (1) @[ port! ] (
+          g = process globals<>^0 = stooges<>::g (1) @[ port? port-alias ] (
             _pReset = bool^0 = stooges<>::g._pReset (1) @[ port-alias ] 
             _sReset = bool^0 = stooges<>::g._sReset (2) @[ port-alias ] 
           )
-          F__D = process e1of<2>^0 = stooges<>::N[1] (4) @[ port! sub? ] (
+          F__D = process e1of<2>^0 = stooges<>::N[1] (4) @[ port? sub? port-alias ] (
             d = bool^1
               {
                 [0] = stooges<>::N[1].d[0] (11) @[ port-alias ] 
@@ -1264,7 +1264,7 @@ In namespace "", we have: {
               }
             e = bool^0 = stooges<>::N[1].e (13) @[ port-alias ] 
           )
-          B__R = process e1of<2>^0 = stooges<>::P[1] (5) @[ sub! port? ] (
+          B__R = process e1of<2>^0 = stooges<>::P[1] (5) @[ sub! port! port-alias ] (
             d = bool^1
               {
                 [0] = stooges<>::P[1].d[0] (14) @[ port-alias ] 
@@ -1276,11 +1276,11 @@ In namespace "", we have: {
         L = process larry<>^0 = stooges<>::L (7) (
           !GND = bool^0 = stooges<>::!GND (3) @[ supply_low port-alias ] 
           !Vdd = bool^0 = stooges<>::!Vdd (4) @[ supply_high port-alias ] 
-          g = process globals<>^0 = stooges<>::g (1) @[ port! ] (
+          g = process globals<>^0 = stooges<>::g (1) @[ port? port-alias ] (
             _pReset = bool^0 = stooges<>::g._pReset (1) @[ port-alias ] 
             _sReset = bool^0 = stooges<>::g._sReset (2) @[ port-alias ] 
           )
-          I = process e1of<2>^0 = stooges<>::N[0] (2) @[ port! sub? ] (
+          I = process e1of<2>^0 = stooges<>::N[0] (2) @[ port? sub? port-alias ] (
             d = bool^1
               {
                 [0] = stooges<>::N[0].d[0] (5) @[ port-alias ] 
@@ -1300,7 +1300,7 @@ In namespace "", we have: {
         M = process moe<>^0 = stooges<>::M (8) (
           !GND = bool^0 = stooges<>::!GND (3) @[ supply_low port-alias ] 
           !Vdd = bool^0 = stooges<>::!Vdd (4) @[ supply_high port-alias ] 
-          g = process globals<>^0 = stooges<>::g (1) @[ port! ] (
+          g = process globals<>^0 = stooges<>::g (1) @[ port? port-alias ] (
             _pReset = bool^0 = stooges<>::g._pReset (1) @[ port-alias ] 
             _sReset = bool^0 = stooges<>::g._sReset (2) @[ port-alias ] 
           )
@@ -1312,7 +1312,7 @@ In namespace "", we have: {
               }
             e = bool^0 = stooges<>::Z.e (19) 
           )
-          B = process e1of<2>^0 = stooges<>::P[0] (3) @[ sub! port? ] (
+          B = process e1of<2>^0 = stooges<>::P[0] (3) @[ sub! port! port-alias ] (
             d = bool^1
               {
                 [0] = stooges<>::P[0].d[0] (8) @[ port-alias ] 
@@ -1323,7 +1323,7 @@ In namespace "", we have: {
         )
         N = process e1of<2>^1
           {
-            [0] = stooges<>::N[0] (2) @[ port! sub? ] (
+            [0] = stooges<>::N[0] (2) @[ port? sub? port-alias ] (
               d = bool^1
                 {
                   [0] = stooges<>::N[0].d[0] (5) @[ port-alias ] 
@@ -1331,7 +1331,7 @@ In namespace "", we have: {
                 }
               e = bool^0 = stooges<>::N[0].e (7) @[ port-alias ] 
             )
-            [1] = stooges<>::N[1] (4) @[ port! sub? ] (
+            [1] = stooges<>::N[1] (4) @[ port? sub? port-alias ] (
               d = bool^1
                 {
                   [0] = stooges<>::N[1].d[0] (11) @[ port-alias ] 
@@ -1342,7 +1342,7 @@ In namespace "", we have: {
           }
         P = process e1of<2>^1
           {
-            [0] = stooges<>::P[0] (3) @[ sub! port? ] (
+            [0] = stooges<>::P[0] (3) @[ sub! port! port-alias ] (
               d = bool^1
                 {
                   [0] = stooges<>::P[0].d[0] (8) @[ port-alias ] 
@@ -1350,7 +1350,7 @@ In namespace "", we have: {
                 }
               e = bool^0 = stooges<>::P[0].e (10) @[ port-alias ] 
             )
-            [1] = stooges<>::P[1] (5) @[ sub! port? ] (
+            [1] = stooges<>::P[1] (5) @[ sub! port! port-alias ] (
               d = bool^1
                 {
                   [0] = stooges<>::P[1].d[0] (14) @[ port-alias ] 
@@ -1367,21 +1367,21 @@ In namespace "", we have: {
             }
           e = bool^0 = stooges<>::Z.e (19) 
         )
-        g = process globals<>^0 = stooges<>::g (1) @[ port! ] (
+        g = process globals<>^0 = stooges<>::g (1) @[ port? port-alias ] (
           _pReset = bool^0 = stooges<>::g._pReset (1) @[ port-alias ] 
           _sReset = bool^0 = stooges<>::g._sReset (2) @[ port-alias ] 
         )
         Created state:
         process instance pool: (5 ports, 4 local, 12 mapped)
-        1	stooges<>::g @[ port! ]	globals<>
+        1	stooges<>::g @[ port? port-alias ]	globals<>
           bool: 1,2
-        2	stooges<>::N[0] @[ port! sub? ]	e1of<2>
+        2	stooges<>::N[0] @[ port? sub? port-alias ]	e1of<2>
           bool: 7,5,6
-        3	stooges<>::P[0] @[ sub! port? ]	e1of<2>
+        3	stooges<>::P[0] @[ sub! port! port-alias ]	e1of<2>
           bool: 10,8,9
-        4	stooges<>::N[1] @[ port! sub? ]	e1of<2>
+        4	stooges<>::N[1] @[ port? sub? port-alias ]	e1of<2>
           bool: 13,11,12
-        5	stooges<>::P[1] @[ sub! port? ]	e1of<2>
+        5	stooges<>::P[1] @[ sub! port! port-alias ]	e1of<2>
           bool: 16,14,15
         6	stooges<>::Z @[ sub! sub? ]	e1of<2>
           bool: 19,17,18

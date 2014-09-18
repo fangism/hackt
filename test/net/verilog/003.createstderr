@@ -120,7 +120,7 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = buffer<>::!GND (7) @[ supply_low port-alias ] 
         !Vdd = bool^0 = buffer<>::!Vdd (8) @[ supply_high port-alias ] 
-        I = process e1of<2>^0 = buffer<>::I (1) @[ port! PRS? ] (
+        I = process e1of<2>^0 = buffer<>::I (1) @[ port? loc? port-alias ] (
           d = bool^1
             {
               [0] = buffer<>::I.d[0] (1) @[ port-alias ] 
@@ -128,7 +128,7 @@ In namespace "", we have: {
             }
           e = bool^0 = buffer<>::I.e (3) @[ port-alias ] 
         )
-        O = process e1of<2>^0 = buffer<>::O (2) @[ PRS! port? ] (
+        O = process e1of<2>^0 = buffer<>::O (2) @[ loc! port! port-alias ] (
           d = bool^1
             {
               [0] = buffer<>::O.d[0] (4) @[ port-alias ] 
@@ -138,9 +138,9 @@ In namespace "", we have: {
         )
         Created state:
         process instance pool: (2 ports, 0 local, 0 mapped)
-        1	buffer<>::I @[ port! PRS? ]	e1of<2>
+        1	buffer<>::I @[ port? loc? port-alias ]	e1of<2>
           bool: 3,1,2
-        2	buffer<>::O @[ PRS! port? ]	e1of<2>
+        2	buffer<>::O @[ loc! port! port-alias ]	e1of<2>
           bool: 6,4,5
         bool instance pool: (8 ports, 0 local, 0 mapped)
         1	buffer<>::I.d[0] @[ port-alias ]	

@@ -459,7 +459,7 @@ In namespace "", we have: {
         <2, 0> {
           !GND = bool^0 = wchb2_init_e1of<2, 0>::!GND (7) @[ supply_low port-alias ] 
           !Vdd = bool^0 = wchb2_init_e1of<2, 0>::!Vdd (8) @[ supply_high port-alias ] 
-          L = process e1of<2>^0 = wchb2_init_e1of<2, 0>::L (1) (
+          L = process e1of<2>^0 = wchb2_init_e1of<2, 0>::L (1) @[ port-alias ] (
             d = bool^1
               {
                 [0] = wchb2_init_e1of<2, 0>::L.d[0] (1) @[ port-alias sub-FO- sub-FO+ ] 
@@ -476,7 +476,7 @@ In namespace "", we have: {
             e = bool^0 = wchb2_init_e1of<2, 0>::M.e (11) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
           )
           N = pint^0 value: 2
-          R = process e1of<2>^0 = wchb2_init_e1of<2, 0>::R (2) (
+          R = process e1of<2>^0 = wchb2_init_e1of<2, 0>::R (2) @[ port-alias ] (
             d = bool^1
               {
                 [0] = wchb2_init_e1of<2, 0>::R.d[0] (4) @[ port-alias sub-FI- sub-FI+ ] 
@@ -496,7 +496,7 @@ In namespace "", we have: {
                 }
               e = bool^0 = wchb2_init_e1of<2, 0>::M.e (11) @[ sub-FO- sub-FO+ sub-FI- sub-FI+ ] 
             )
-            R = process e1of<2>^0 = wchb2_init_e1of<2, 0>::R (2) (
+            R = process e1of<2>^0 = wchb2_init_e1of<2, 0>::R (2) @[ port-alias ] (
               d = bool^1
                 {
                   [0] = wchb2_init_e1of<2, 0>::R.d[0] (4) @[ port-alias sub-FI- sub-FI+ ] 
@@ -508,7 +508,7 @@ In namespace "", we have: {
           fore = process wchb_init_fore_e1of<2, 0>^0 = wchb2_init_e1of<2, 0>::fore (4) (
             !GND = bool^0 = wchb2_init_e1of<2, 0>::!GND (7) @[ supply_low port-alias ] 
             !Vdd = bool^0 = wchb2_init_e1of<2, 0>::!Vdd (8) @[ supply_high port-alias ] 
-            L = process e1of<2>^0 = wchb2_init_e1of<2, 0>::L (1) (
+            L = process e1of<2>^0 = wchb2_init_e1of<2, 0>::L (1) @[ port-alias ] (
               d = bool^1
                 {
                   [0] = wchb2_init_e1of<2, 0>::L.d[0] (1) @[ port-alias sub-FO- sub-FO+ ] 
@@ -527,9 +527,9 @@ In namespace "", we have: {
           )
           Created state:
           process instance pool: (2 ports, 3 local, 2 mapped)
-          1	wchb2_init_e1of<2, 0>::L	e1of<2>
+          1	wchb2_init_e1of<2, 0>::L @[ port-alias ]	e1of<2>
             bool: 3,1,2
-          2	wchb2_init_e1of<2, 0>::R	e1of<2>
+          2	wchb2_init_e1of<2, 0>::R @[ port-alias ]	e1of<2>
             bool: 6,4,5
           3	wchb2_init_e1of<2, 0>::M	e1of<2>
             bool: 11,9,10
@@ -609,7 +609,7 @@ In namespace "", we have: {
         <2> {
           !GND = bool^0 = wchb_init_aft_e1of<2>::!GND (7) @[ supply_low port-alias ] 
           !Vdd = bool^0 = wchb_init_aft_e1of<2>::!Vdd (8) @[ supply_high port-alias ] 
-          L = process e1of<2>^0 = wchb_init_aft_e1of<2>::L (1) (
+          L = process e1of<2>^0 = wchb_init_aft_e1of<2>::L (1) @[ port-alias ] (
             d = bool^1
               {
                 [0] = wchb_init_aft_e1of<2>::L.d[0] (1) @[ port-alias loc-FO- loc-FO+ ] 
@@ -618,7 +618,7 @@ In namespace "", we have: {
             e = bool^0 = wchb_init_aft_e1of<2>::L.e (3) @[ port-alias loc-FI- loc-FI+ ] 
           )
           N = pint^0 value: 2
-          R = process e1of<2>^0 = wchb_init_aft_e1of<2>::R (2) (
+          R = process e1of<2>^0 = wchb_init_aft_e1of<2>::R (2) @[ port-alias ] (
             d = bool^1
               {
                 [0] = wchb_init_aft_e1of<2>::R.d[0] (4) @[ port-alias loc-FI- loc-FI+ ] 
@@ -636,9 +636,9 @@ In namespace "", we have: {
           rv = bool^0 = wchb_init_aft_e1of<2>::rv (11) @[ loc-FO- loc-FO+ loc-FI- loc-FI+ ] 
           Created state:
           process instance pool: (2 ports, 1 local, 0 mapped)
-          1	wchb_init_aft_e1of<2>::L	e1of<2>
+          1	wchb_init_aft_e1of<2>::L @[ port-alias ]	e1of<2>
             bool: 3,1,2
-          2	wchb_init_aft_e1of<2>::R	e1of<2>
+          2	wchb_init_aft_e1of<2>::R @[ port-alias ]	e1of<2>
             bool: 6,4,5
           3	wchb_init_aft_e1of<2>::_r	_c1of<2>
             bool: 9,10
@@ -721,7 +721,7 @@ In namespace "", we have: {
         <2, 0> {
           !GND = bool^0 = wchb_init_fore_e1of<2, 0>::!GND (7) @[ supply_low port-alias ] 
           !Vdd = bool^0 = wchb_init_fore_e1of<2, 0>::!Vdd (8) @[ supply_high port-alias ] 
-          L = process e1of<2>^0 = wchb_init_fore_e1of<2, 0>::L (1) (
+          L = process e1of<2>^0 = wchb_init_fore_e1of<2, 0>::L (1) @[ port-alias ] (
             d = bool^1
               {
                 [0] = wchb_init_fore_e1of<2, 0>::L.d[0] (1) @[ port-alias loc-FO- loc-FO+ ] 
@@ -730,7 +730,7 @@ In namespace "", we have: {
             e = bool^0 = wchb_init_fore_e1of<2, 0>::L.e (3) @[ port-alias loc-FI- loc-FI+ ] 
           )
           N = pint^0 value: 2
-          R = process e1of<2>^0 = wchb_init_fore_e1of<2, 0>::R (2) (
+          R = process e1of<2>^0 = wchb_init_fore_e1of<2, 0>::R (2) @[ port-alias ] (
             d = bool^1
               {
                 [0] = wchb_init_fore_e1of<2, 0>::R.d[0] (4) @[ port-alias loc-FI- loc-FI+ ] 
@@ -749,9 +749,9 @@ In namespace "", we have: {
           rv = bool^0 = wchb_init_fore_e1of<2, 0>::rv (11) @[ loc-FO- loc-FO+ loc-FI- loc-FI+ ] 
           Created state:
           process instance pool: (2 ports, 1 local, 0 mapped)
-          1	wchb_init_fore_e1of<2, 0>::L	e1of<2>
+          1	wchb_init_fore_e1of<2, 0>::L @[ port-alias ]	e1of<2>
             bool: 3,1,2
-          2	wchb_init_fore_e1of<2, 0>::R	e1of<2>
+          2	wchb_init_fore_e1of<2, 0>::R @[ port-alias ]	e1of<2>
             bool: 6,4,5
           3	wchb_init_fore_e1of<2, 0>::_r	_c1of<2>
             bool: 9,10

@@ -147,19 +147,19 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = bar<>::!GND (1) @[ supply_low port-alias ] 
         !Vdd = bool^0 = bar<>::!Vdd (2) @[ supply_high port-alias ] 
-        a = process foo<1>^0 = bar<>::a (1) (
+        a = process foo<1>^0 = bar<>::a (1) @[ port-alias ] (
           !GND = bool^0 = bar<>::!GND (1) @[ supply_low port-alias ] 
           !Vdd = bool^0 = bar<>::!Vdd (2) @[ supply_high port-alias ] 
         )
-        b = process foo<2>^0 = bar<>::b (2) (
+        b = process foo<2>^0 = bar<>::b (2) @[ port-alias ] (
           !GND = bool^0 = bar<>::!GND (1) @[ supply_low port-alias ] 
           !Vdd = bool^0 = bar<>::!Vdd (2) @[ supply_high port-alias ] 
         )
         Created state:
         process instance pool: (2 ports, 0 local, 0 mapped)
-        1	bar<>::a	foo<1>
+        1	bar<>::a @[ port-alias ]	foo<1>
           bool: 1,2
-        2	bar<>::b	foo<2>
+        2	bar<>::b @[ port-alias ]	foo<2>
           bool: 1,2
         bool instance pool: (2 ports, 0 local, 0 mapped)
         1	bar<>::!GND @[ supply_low port-alias ]	

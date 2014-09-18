@@ -142,19 +142,19 @@ In namespace "", we have: {
           X = pint^0 value: 3
           Y = pint^0 value: 4
           Z = pint^0 value: 2
-          a = process foo<2>^0<3> = bar<2, 3, 4>::a (1) (
+          a = process foo<2>^0<3> = bar<2, 3, 4>::a (1) @[ port-alias ] (
             !GND = bool^0 = bar<2, 3, 4>::!GND (1) @[ supply_low port-alias ] 
             !Vdd = bool^0 = bar<2, 3, 4>::!Vdd (2) @[ supply_high port-alias ] 
           )
-          b = process foo<2>^0<4> = bar<2, 3, 4>::b (2) (
+          b = process foo<2>^0<4> = bar<2, 3, 4>::b (2) @[ port-alias ] (
             !GND = bool^0 = bar<2, 3, 4>::!GND (1) @[ supply_low port-alias ] 
             !Vdd = bool^0 = bar<2, 3, 4>::!Vdd (2) @[ supply_high port-alias ] 
           )
           Created state:
           process instance pool: (2 ports, 0 local, 0 mapped)
-          1	bar<2, 3, 4>::a<3>	foo<2, 3>
+          1	bar<2, 3, 4>::a<3> @[ port-alias ]	foo<2, 3>
             bool: 1,2
-          2	bar<2, 3, 4>::b<4>	foo<2, 4>
+          2	bar<2, 3, 4>::b<4> @[ port-alias ]	foo<2, 4>
             bool: 1,2
           bool instance pool: (2 ports, 0 local, 0 mapped)
           1	bar<2, 3, 4>::!GND @[ supply_low port-alias ]	

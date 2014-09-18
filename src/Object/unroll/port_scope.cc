@@ -51,6 +51,11 @@ public:
 	void
 	visit(const instance_alias_info<bool_tag>&);
 
+#if 1
+	void
+	visit(const instance_alias_info<process_tag>&);
+#endif
+
 	using port_visitor::visit;
 };	// end class port_flagger
 
@@ -65,6 +70,14 @@ port_flagger::visit(const instance_alias_info<Tag>& a) {		\
 	const_cast<instance_alias_info<Tag>&>(a).flag_port();		\
 }
 
+#define	DEFINE_VISIT_FLAG_PORT_RECURSIVE(Tag)				\
+void									\
+port_flagger::visit(const instance_alias_info<Tag>& a) {		\
+	STACKTRACE_VERBOSE;						\
+	const_cast<instance_alias_info<Tag>&>(a).flag_port();		\
+	port_visitor::visit(a);						\
+}
+
 #if 0
 	// debug
 	STACKTRACE_INDENT_PRINT("bool: ");				\
@@ -73,6 +86,7 @@ port_flagger::visit(const instance_alias_info<Tag>& a) {		\
 #endif
 
 DEFINE_VISIT_FLAG_PORT(bool_tag)
+DEFINE_VISIT_FLAG_PORT_RECURSIVE(process_tag)
 
 #undef	DEFINE_VISIT_FLAG_PORT
 

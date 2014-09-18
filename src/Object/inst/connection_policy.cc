@@ -622,14 +622,15 @@ channel_connect_policy::read_flags(istream& i) {
 #if PROCESS_CONNECTIVITY_CHECKING
 const char*
 process_connect_policy::attribute_names[] = {
-	"port!",
+	"loc!",
 	"sub!",
-	"PRS!",
-	"RESERVED-3",
+	"RESERVED-02",
 	"port?",
+	"loc?",
 	"sub?",
-	"PRS?",
-	"RESERVED-7"
+	"RESERVED-06",
+	"port!",
+	"port-alias"
 };
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -669,7 +670,7 @@ process_connect_policy::declare_direction(const direction_type d) {
 				<< endl;
 			return good_bool(false);
 		}
-		direction_flags |= CONNECTED_PRS_PRODUCER;
+		direction_flags |= CONNECTED_TO_LOCAL_PRODUCER;
 		break;
 	case CHANNEL_TYPE_RECEIVE:
 		if (direction_flags & CONNECTED_TO_NONPORT_CONSUMER) {
@@ -682,7 +683,7 @@ process_connect_policy::declare_direction(const direction_type d) {
 				<< endl;
 			return good_bool(false);
 		}
-		direction_flags |= CONNECTED_PRS_CONSUMER;
+		direction_flags |= CONNECTED_TO_LOCAL_CONSUMER;
 		break;
 	default:
 		cerr << "Error: unsupported direction_type: " << int(d) << endl;
@@ -699,7 +700,7 @@ ostream&
 process_connect_policy::dump_flat_attributes(ostream& o) const {
 	connection_flags_type temp = direction_flags;	// better be unsigned!
 	const char** p = attribute_names;
-while (temp && p < attribute_names +8) {
+while (temp && p < attribute_names +PROCESS_NUM_ATTRIBUTES) {
 	// b/c upper bits are connectivity
 	if (temp & 1) {
 		o << ' ' << *p;

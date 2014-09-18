@@ -208,25 +208,25 @@ In namespace "", we have: {
         q = bool^0 = multi_inv<>::q (4) @[ port-alias sub-FI- sub-FI+ ] 
         x = process inv<>^1
           {
-            [0] = multi_inv<>::x[0] (1) (
+            [0] = multi_inv<>::x[0] (1) @[ port-alias ] (
               !GND = bool^0 = multi_inv<>::!GND (1) @[ supply_low port-alias ] 
               !Vdd = bool^0 = multi_inv<>::!Vdd (2) @[ supply_high port-alias ] 
               a = bool^0 = multi_inv<>::p (3) @[ iscomb port-alias sub-FO- sub-FO+ ] 
               b = bool^0 = multi_inv<>::q (4) @[ port-alias sub-FI- sub-FI+ ] 
             )
-            [1] = multi_inv<>::x[1] (2) (
+            [1] = multi_inv<>::x[1] (2) @[ port-alias ] (
               !GND = bool^0 = multi_inv<>::!GND (1) @[ supply_low port-alias ] 
               !Vdd = bool^0 = multi_inv<>::!Vdd (2) @[ supply_high port-alias ] 
               a = bool^0 = multi_inv<>::y (5) @[ iscomb !autokeeper port-alias sub-FO- sub-FO+ ] 
               b = bool^0 = multi_inv<>::x[1].b (6) @[ port-alias sub-FI- sub-FI+ ] 
             )
-            [2] = multi_inv<>::x[2] (3) (
+            [2] = multi_inv<>::x[2] (3) @[ port-alias ] (
               !GND = bool^0 = multi_inv<>::!GND (1) @[ supply_low port-alias ] 
               !Vdd = bool^0 = multi_inv<>::!Vdd (2) @[ supply_high port-alias ] 
               a = bool^0 = multi_inv<>::x[2].a (7) @[ iscomb port-alias sub-FO- sub-FO+ ] 
               b = bool^0 = multi_inv<>::z (8) @[ !autokeeper port-alias sub-FI- sub-FI+ ] 
             )
-            [3] = multi_inv<>::x[3] (4) (
+            [3] = multi_inv<>::x[3] (4) @[ port-alias ] (
               !GND = bool^0 = multi_inv<>::!GND (1) @[ supply_low port-alias ] 
               !Vdd = bool^0 = multi_inv<>::!Vdd (2) @[ supply_high port-alias ] 
               a = bool^0 = multi_inv<>::x[3].a (9) @[ iscomb port-alias sub-FO- sub-FO+ ] 
@@ -237,13 +237,13 @@ In namespace "", we have: {
         z = bool^0 = multi_inv<>::z (8) @[ !autokeeper port-alias sub-FI- sub-FI+ ] 
         Created state:
         process instance pool: (4 ports, 0 local, 0 mapped)
-        1	multi_inv<>::x[0]	inv<>
+        1	multi_inv<>::x[0] @[ port-alias ]	inv<>
           bool: 1,2,3,4
-        2	multi_inv<>::x[1]	inv<>
+        2	multi_inv<>::x[1] @[ port-alias ]	inv<>
           bool: 1,2,5,6
-        3	multi_inv<>::x[2]	inv<>
+        3	multi_inv<>::x[2] @[ port-alias ]	inv<>
           bool: 1,2,7,8
-        4	multi_inv<>::x[3]	inv<>
+        4	multi_inv<>::x[3] @[ port-alias ]	inv<>
           bool: 1,2,9,10
         bool instance pool: (10 ports, 0 local, 0 mapped)
         1	multi_inv<>::!GND @[ supply_low port-alias ]	

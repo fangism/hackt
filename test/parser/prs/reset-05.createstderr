@@ -148,7 +148,7 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = foo<>::!GND (3) @[ supply_low port-alias ] 
         !Vdd = bool^0 = foo<>::!Vdd (4) @[ supply_high port-alias ] 
-        g = process globals<>^0 = foo<>::g (1) (
+        g = process globals<>^0 = foo<>::g (1) @[ port-alias ] (
           Reset = bool^0 = foo<>::g.Reset (1) @[ reset_high port-alias ] 
           _Reset = bool^0 = foo<>::g._Reset (2) @[ reset_low port-alias loc-FO- loc-FO+ ] 
         )
@@ -156,7 +156,7 @@ In namespace "", we have: {
         y = bool^0 = foo<>::y (6) @[ port-alias loc-FI- loc-FI+ ] 
         Created state:
         process instance pool: (1 ports, 0 local, 0 mapped)
-        1	foo<>::g	globals<>
+        1	foo<>::g @[ port-alias ]	globals<>
           bool: 1,2
         bool instance pool: (6 ports, 0 local, 0 mapped)
         1	foo<>::g.Reset @[ reset_high port-alias ]	

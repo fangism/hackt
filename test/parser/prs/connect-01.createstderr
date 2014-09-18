@@ -142,7 +142,7 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = deep<>::!GND (1) @[ supply_low port-alias ] 
         !Vdd = bool^0 = deep<>::!Vdd (2) @[ supply_high port-alias ] 
-        x = process inv<>^0 = deep<>::x (1) (
+        x = process inv<>^0 = deep<>::x (1) @[ port-alias ] (
           !GND = bool^0 = deep<>::!GND (1) @[ supply_low port-alias ] 
           !Vdd = bool^0 = deep<>::!Vdd (2) @[ supply_high port-alias ] 
           a = bool^0 = deep<>::x.a (3) @[ port-alias ] 
@@ -154,7 +154,7 @@ In namespace "", we have: {
         )
         Created state:
         process instance pool: (1 ports, 1 local, 0 mapped)
-        1	deep<>::x	inv<>
+        1	deep<>::x @[ port-alias ]	inv<>
           bool: 1,2,3
         2	deep<>::y	inv<>
           bool: 1,2,4
@@ -192,10 +192,10 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = deeper<>::!GND (1) @[ supply_low port-alias ] 
         !Vdd = bool^0 = deeper<>::!Vdd (2) @[ supply_high port-alias ] 
-        d = process deep<>^0 = deeper<>::d (1) (
+        d = process deep<>^0 = deeper<>::d (1) @[ port-alias ] (
           !GND = bool^0 = deeper<>::!GND (1) @[ supply_low port-alias ] 
           !Vdd = bool^0 = deeper<>::!Vdd (2) @[ supply_high port-alias ] 
-          x = process inv<>^0 = deeper<>::d.x (2) (
+          x = process inv<>^0 = deeper<>::d.x (2) @[ port-alias ] (
             !GND = bool^0 = deeper<>::!GND (1) @[ supply_low port-alias ] 
             !Vdd = bool^0 = deeper<>::!Vdd (2) @[ supply_high port-alias ] 
             a = bool^0 = deeper<>::d.x.a (3) @[ port-alias ] 
@@ -212,10 +212,10 @@ In namespace "", we have: {
         )
         Created state:
         process instance pool: (2 ports, 2 local, 1 mapped)
-        1	deeper<>::d	deep<>
+        1	deeper<>::d @[ port-alias ]	deep<>
           process: 2
           bool: 1,2,3
-        2	deeper<>::d.x	inv<>
+        2	deeper<>::d.x @[ port-alias ]	inv<>
           bool: 1,2,3
         3	deeper<>::e	deep<>
           process: 4
@@ -260,13 +260,13 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = deepest<>::!GND (1) @[ supply_low port-alias ] 
         !Vdd = bool^0 = deepest<>::!Vdd (2) @[ supply_high port-alias ] 
-        y = process deeper<>^0 = deepest<>::y (1) (
+        y = process deeper<>^0 = deepest<>::y (1) @[ port-alias ] (
           !GND = bool^0 = deepest<>::!GND (1) @[ supply_low port-alias ] 
           !Vdd = bool^0 = deepest<>::!Vdd (2) @[ supply_high port-alias ] 
-          d = process deep<>^0 = deepest<>::y.d (2) (
+          d = process deep<>^0 = deepest<>::y.d (2) @[ port-alias ] (
             !GND = bool^0 = deepest<>::!GND (1) @[ supply_low port-alias ] 
             !Vdd = bool^0 = deepest<>::!Vdd (2) @[ supply_high port-alias ] 
-            x = process inv<>^0 = deepest<>::y.d.x (3) (
+            x = process inv<>^0 = deepest<>::y.d.x (3) @[ port-alias ] (
               !GND = bool^0 = deepest<>::!GND (1) @[ supply_low port-alias ] 
               !Vdd = bool^0 = deepest<>::!Vdd (2) @[ supply_high port-alias ] 
               a = bool^0 = deepest<>::y.d.x.a (3) @[ port-alias ] 
@@ -275,13 +275,13 @@ In namespace "", we have: {
         )
         Created state:
         process instance pool: (3 ports, 0 local, 0 mapped)
-        1	deepest<>::y	deeper<>
+        1	deepest<>::y @[ port-alias ]	deeper<>
           process: 2,3
           bool: 1,2,3
-        2	deepest<>::y.d	deep<>
+        2	deepest<>::y.d @[ port-alias ]	deep<>
           process: 3
           bool: 1,2,3
-        3	deepest<>::y.d.x	inv<>
+        3	deepest<>::y.d.x @[ port-alias ]	inv<>
           bool: 1,2,3
         bool instance pool: (3 ports, 0 local, 0 mapped)
         1	deepest<>::!GND @[ supply_low port-alias ]	

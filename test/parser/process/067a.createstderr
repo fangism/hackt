@@ -108,13 +108,13 @@ In namespace "", we have: {
         !Vdd = bool^0 = bar<>::!Vdd (2) @[ supply_high port-alias ] 
         x = process foo<>^1
           {
-            [0] = bar<>::x[0] (1) (
+            [0] = bar<>::x[0] (1) @[ port-alias ] (
               !GND = bool^0 = bar<>::!GND (1) @[ supply_low port-alias ] 
               !Vdd = bool^0 = bar<>::!Vdd (2) @[ supply_high port-alias ] 
               a = bool^0 = bar<>::x[0].a (3) @[ port-alias ] 
               b = bool^0 = bar<>::x[0].a (3) @[ port-alias ] 
             )
-            [1] = bar<>::x[0] (1) (
+            [1] = bar<>::x[0] (1) @[ port-alias ] (
               !GND = bool^0 = bar<>::!GND (1) @[ supply_low port-alias ] 
               !Vdd = bool^0 = bar<>::!Vdd (2) @[ supply_high port-alias ] 
               a = bool^0 = bar<>::x[0].a (3) @[ port-alias ] 
@@ -123,14 +123,14 @@ In namespace "", we have: {
           }
         Created state:
         process instance pool: (1 ports, 0 local, 0 mapped)
-        1	bar<>::x[0]	foo<>
+        1	bar<>::x[0] @[ port-alias ]	foo<>
           bool: 1,2,3
         bool instance pool: (3 ports, 0 local, 0 mapped)
         1	bar<>::!GND @[ supply_low port-alias ]	
         2	bar<>::!Vdd @[ supply_high port-alias ]	
         3	bar<>::x[0].a @[ port-alias ]	
         process port aliases:
-        1: bar<>::x[0] = bar<>::x[1]
+        1: bar<>::x[0] = bar<>::x[1] @[ port-alias ]
         bool port aliases:
         1: bar<>::x[0].!GND = bar<>::x[1].!GND = bar<>::!GND @[ supply_low port-alias ]
         2: bar<>::x[0].!Vdd = bar<>::x[1].!Vdd = bar<>::!Vdd @[ supply_high port-alias ]

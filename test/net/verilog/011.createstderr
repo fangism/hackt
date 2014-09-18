@@ -226,11 +226,11 @@ In namespace "", we have: {
             [0] = bar<>::f[0] (7) (
               !GND = bool^0 = bar<>::!GND (9) @[ supply_low port-alias ] 
               !Vdd = bool^0 = bar<>::!Vdd (10) @[ supply_high port-alias ] 
-              in = process pbit<>^0 = bar<>::x.a (2) @[ sub? ] (
+              in = process pbit<>^0 = bar<>::x.a (2) @[ sub? port-alias ] (
                 t = bool^0 = bar<>::x.a.t (1) @[ port-alias sub-FO- sub-FO+ ] 
                 f = bool^0 = bar<>::x.a.f (2) @[ port-alias ] 
               )
-              out = process pbit<>^0 = bar<>::y.a (5) @[ sub! ] (
+              out = process pbit<>^0 = bar<>::y.a (5) @[ sub! port-alias ] (
                 t = bool^0 = bar<>::y.a.t (5) @[ port-alias sub-FI- sub-FI+ ] 
                 f = bool^0 = bar<>::y.a.f (6) @[ port-alias sub-FI- sub-FI+ ] 
               )
@@ -238,51 +238,51 @@ In namespace "", we have: {
             [1] = bar<>::f[1] (8) (
               !GND = bool^0 = bar<>::!GND (9) @[ supply_low port-alias ] 
               !Vdd = bool^0 = bar<>::!Vdd (10) @[ supply_high port-alias ] 
-              in = process pbit<>^0 = bar<>::x.b (3) @[ sub? ] (
+              in = process pbit<>^0 = bar<>::x.b (3) @[ sub? port-alias ] (
                 t = bool^0 = bar<>::x.b.t (3) @[ port-alias sub-FO- sub-FO+ ] 
                 f = bool^0 = bar<>::x.b.f (4) @[ port-alias ] 
               )
-              out = process pbit<>^0 = bar<>::y.b (6) @[ sub! ] (
+              out = process pbit<>^0 = bar<>::y.b (6) @[ sub! port-alias ] (
                 t = bool^0 = bar<>::y.b.t (7) @[ port-alias sub-FI- sub-FI+ ] 
                 f = bool^0 = bar<>::y.b.f (8) @[ port-alias sub-FI- sub-FI+ ] 
               )
             )
           }
-        x = process pbit_pair<>^0 = bar<>::x (1) @[ port! PRS? ] (
-          a = process pbit<>^0 = bar<>::x.a (2) @[ sub? ] (
+        x = process pbit_pair<>^0 = bar<>::x (1) @[ port? loc? port-alias ] (
+          a = process pbit<>^0 = bar<>::x.a (2) @[ sub? port-alias ] (
             t = bool^0 = bar<>::x.a.t (1) @[ port-alias sub-FO- sub-FO+ ] 
             f = bool^0 = bar<>::x.a.f (2) @[ port-alias ] 
           )
-          b = process pbit<>^0 = bar<>::x.b (3) @[ sub? ] (
+          b = process pbit<>^0 = bar<>::x.b (3) @[ sub? port-alias ] (
             t = bool^0 = bar<>::x.b.t (3) @[ port-alias sub-FO- sub-FO+ ] 
             f = bool^0 = bar<>::x.b.f (4) @[ port-alias ] 
           )
         )
-        y = process pbit_pair<>^0 = bar<>::y (4) @[ PRS! port? ] (
-          a = process pbit<>^0 = bar<>::y.a (5) @[ sub! ] (
+        y = process pbit_pair<>^0 = bar<>::y (4) @[ loc! port! port-alias ] (
+          a = process pbit<>^0 = bar<>::y.a (5) @[ sub! port-alias ] (
             t = bool^0 = bar<>::y.a.t (5) @[ port-alias sub-FI- sub-FI+ ] 
             f = bool^0 = bar<>::y.a.f (6) @[ port-alias sub-FI- sub-FI+ ] 
           )
-          b = process pbit<>^0 = bar<>::y.b (6) @[ sub! ] (
+          b = process pbit<>^0 = bar<>::y.b (6) @[ sub! port-alias ] (
             t = bool^0 = bar<>::y.b.t (7) @[ port-alias sub-FI- sub-FI+ ] 
             f = bool^0 = bar<>::y.b.f (8) @[ port-alias sub-FI- sub-FI+ ] 
           )
         )
         Created state:
         process instance pool: (6 ports, 2 local, 0 mapped)
-        1	bar<>::x @[ port! PRS? ]	pbit_pair<>
+        1	bar<>::x @[ port? loc? port-alias ]	pbit_pair<>
           process: 2,3
           bool: 1,2,3,4
-        2	bar<>::x.a @[ sub? ]	pbit<>
+        2	bar<>::x.a @[ sub? port-alias ]	pbit<>
           bool: 1,2
-        3	bar<>::x.b @[ sub? ]	pbit<>
+        3	bar<>::x.b @[ sub? port-alias ]	pbit<>
           bool: 3,4
-        4	bar<>::y @[ PRS! port? ]	pbit_pair<>
+        4	bar<>::y @[ loc! port! port-alias ]	pbit_pair<>
           process: 5,6
           bool: 5,6,7,8
-        5	bar<>::y.a @[ sub! ]	pbit<>
+        5	bar<>::y.a @[ sub! port-alias ]	pbit<>
           bool: 5,6
-        6	bar<>::y.b @[ sub! ]	pbit<>
+        6	bar<>::y.b @[ sub! port-alias ]	pbit<>
           bool: 7,8
         7	bar<>::f[0]	foo<>
           process: 2,5
@@ -339,12 +339,12 @@ In namespace "", we have: {
             [0] = baz<>::g[0] (10) (
               !GND = bool^0 = baz<>::!GND (9) @[ supply_low port-alias ] 
               !Vdd = bool^0 = baz<>::!Vdd (10) @[ supply_high port-alias ] 
-              x = process pbit_pair<>^0 = baz<>::p (1) @[ port! sub? ] (
-                a = process pbit<>^0 = baz<>::p.a (2) @[ sub? ] (
+              x = process pbit_pair<>^0 = baz<>::p (1) @[ port? sub? port-alias ] (
+                a = process pbit<>^0 = baz<>::p.a (2) @[ sub? port-alias ] (
                   t = bool^0 = baz<>::p.a.t (1) @[ port-alias sub-FO- sub-FO+ ] 
                   f = bool^0 = baz<>::p.a.f (2) @[ port-alias ] 
                 )
-                b = process pbit<>^0 = baz<>::p.b (3) @[ sub? ] (
+                b = process pbit<>^0 = baz<>::p.b (3) @[ sub? port-alias ] (
                   t = bool^0 = baz<>::p.b.t (3) @[ port-alias sub-FO- sub-FO+ ] 
                   f = bool^0 = baz<>::p.b.f (4) @[ port-alias ] 
                 )
@@ -373,12 +373,12 @@ In namespace "", we have: {
                   f = bool^0 = baz<>::m.b.f (14) @[ sub-FI- sub-FI+ ] 
                 )
               )
-              y = process pbit_pair<>^0 = baz<>::q (4) @[ sub! port? ] (
-                a = process pbit<>^0 = baz<>::q.a (5) @[ sub! ] (
+              y = process pbit_pair<>^0 = baz<>::q (4) @[ sub! port! port-alias ] (
+                a = process pbit<>^0 = baz<>::q.a (5) @[ sub! port-alias ] (
                   t = bool^0 = baz<>::q.a.t (5) @[ port-alias sub-FI- sub-FI+ ] 
                   f = bool^0 = baz<>::q.a.f (6) @[ port-alias sub-FI- sub-FI+ ] 
                 )
-                b = process pbit<>^0 = baz<>::q.b (6) @[ sub! ] (
+                b = process pbit<>^0 = baz<>::q.b (6) @[ sub! port-alias ] (
                   t = bool^0 = baz<>::q.b.t (7) @[ port-alias sub-FI- sub-FI+ ] 
                   f = bool^0 = baz<>::q.b.f (8) @[ port-alias sub-FI- sub-FI+ ] 
                 )
@@ -395,41 +395,41 @@ In namespace "", we have: {
             f = bool^0 = baz<>::m.b.f (14) @[ sub-FI- sub-FI+ ] 
           )
         )
-        p = process pbit_pair<>^0 = baz<>::p (1) @[ port! sub? ] (
-          a = process pbit<>^0 = baz<>::p.a (2) @[ sub? ] (
+        p = process pbit_pair<>^0 = baz<>::p (1) @[ port? sub? port-alias ] (
+          a = process pbit<>^0 = baz<>::p.a (2) @[ sub? port-alias ] (
             t = bool^0 = baz<>::p.a.t (1) @[ port-alias sub-FO- sub-FO+ ] 
             f = bool^0 = baz<>::p.a.f (2) @[ port-alias ] 
           )
-          b = process pbit<>^0 = baz<>::p.b (3) @[ sub? ] (
+          b = process pbit<>^0 = baz<>::p.b (3) @[ sub? port-alias ] (
             t = bool^0 = baz<>::p.b.t (3) @[ port-alias sub-FO- sub-FO+ ] 
             f = bool^0 = baz<>::p.b.f (4) @[ port-alias ] 
           )
         )
-        q = process pbit_pair<>^0 = baz<>::q (4) @[ sub! port? ] (
-          a = process pbit<>^0 = baz<>::q.a (5) @[ sub! ] (
+        q = process pbit_pair<>^0 = baz<>::q (4) @[ sub! port! port-alias ] (
+          a = process pbit<>^0 = baz<>::q.a (5) @[ sub! port-alias ] (
             t = bool^0 = baz<>::q.a.t (5) @[ port-alias sub-FI- sub-FI+ ] 
             f = bool^0 = baz<>::q.a.f (6) @[ port-alias sub-FI- sub-FI+ ] 
           )
-          b = process pbit<>^0 = baz<>::q.b (6) @[ sub! ] (
+          b = process pbit<>^0 = baz<>::q.b (6) @[ sub! port-alias ] (
             t = bool^0 = baz<>::q.b.t (7) @[ port-alias sub-FI- sub-FI+ ] 
             f = bool^0 = baz<>::q.b.f (8) @[ port-alias sub-FI- sub-FI+ ] 
           )
         )
         Created state:
         process instance pool: (6 ports, 5 local, 4 mapped)
-        1	baz<>::p @[ port! sub? ]	pbit_pair<>
+        1	baz<>::p @[ port? sub? port-alias ]	pbit_pair<>
           process: 2,3
           bool: 1,2,3,4
-        2	baz<>::p.a @[ sub? ]	pbit<>
+        2	baz<>::p.a @[ sub? port-alias ]	pbit<>
           bool: 1,2
-        3	baz<>::p.b @[ sub? ]	pbit<>
+        3	baz<>::p.b @[ sub? port-alias ]	pbit<>
           bool: 3,4
-        4	baz<>::q @[ sub! port? ]	pbit_pair<>
+        4	baz<>::q @[ sub! port! port-alias ]	pbit_pair<>
           process: 5,6
           bool: 5,6,7,8
-        5	baz<>::q.a @[ sub! ]	pbit<>
+        5	baz<>::q.a @[ sub! port-alias ]	pbit<>
           bool: 5,6
-        6	baz<>::q.b @[ sub! ]	pbit<>
+        6	baz<>::q.b @[ sub! port-alias ]	pbit<>
           bool: 7,8
         7	baz<>::m @[ sub! sub? ]	pbit_pair<>
           process: 8,9
@@ -496,19 +496,19 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = foo<>::!GND (5) @[ supply_low port-alias ] 
         !Vdd = bool^0 = foo<>::!Vdd (6) @[ supply_high port-alias ] 
-        in = process pbit<>^0 = foo<>::in (1) @[ port! PRS? ] (
+        in = process pbit<>^0 = foo<>::in (1) @[ port? loc? port-alias ] (
           t = bool^0 = foo<>::in.t (1) @[ port-alias loc-FO- loc-FO+ ] 
           f = bool^0 = foo<>::in.f (2) @[ port-alias ] 
         )
-        out = process pbit<>^0 = foo<>::out (2) @[ PRS! port? ] (
+        out = process pbit<>^0 = foo<>::out (2) @[ loc! port! port-alias ] (
           t = bool^0 = foo<>::out.t (3) @[ port-alias loc-FI- loc-FI+ ] 
           f = bool^0 = foo<>::out.f (4) @[ port-alias loc-FI- loc-FI+ ] 
         )
         Created state:
         process instance pool: (2 ports, 0 local, 0 mapped)
-        1	foo<>::in @[ port! PRS? ]	pbit<>
+        1	foo<>::in @[ port? loc? port-alias ]	pbit<>
           bool: 1,2
-        2	foo<>::out @[ PRS! port? ]	pbit<>
+        2	foo<>::out @[ loc! port! port-alias ]	pbit<>
           bool: 3,4
         bool instance pool: (6 ports, 0 local, 0 mapped)
         1	foo<>::in.t @[ port-alias loc-FO- loc-FO+ ]	
@@ -557,19 +557,19 @@ In namespace "", we have: {
           pbit<> b
         )
       footprint: {
-        a = process pbit<>^0 = pbit_pair<>::a (1) (
+        a = process pbit<>^0 = pbit_pair<>::a (1) @[ port-alias ] (
           t = bool^0 = pbit_pair<>::a.t (1) @[ port-alias ] 
           f = bool^0 = pbit_pair<>::a.f (2) @[ port-alias ] 
         )
-        b = process pbit<>^0 = pbit_pair<>::b (2) (
+        b = process pbit<>^0 = pbit_pair<>::b (2) @[ port-alias ] (
           t = bool^0 = pbit_pair<>::b.t (3) @[ port-alias ] 
           f = bool^0 = pbit_pair<>::b.f (4) @[ port-alias ] 
         )
         Created state:
         process instance pool: (2 ports, 0 local, 0 mapped)
-        1	pbit_pair<>::a	pbit<>
+        1	pbit_pair<>::a @[ port-alias ]	pbit<>
           bool: 1,2
-        2	pbit_pair<>::b	pbit<>
+        2	pbit_pair<>::b @[ port-alias ]	pbit<>
           bool: 3,4
         bool instance pool: (4 ports, 0 local, 0 mapped)
         1	pbit_pair<>::a.t @[ port-alias ]	

@@ -367,7 +367,7 @@
 	Goal: 1
 	Priority: high
 	Rationale: many back-end tools need this.
-	Status: in progress
+	Status: works stably for a while
  */
 #define	BOOL_CONNECTIVITY_CHECKING		1
 

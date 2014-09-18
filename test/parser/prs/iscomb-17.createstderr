@@ -133,7 +133,7 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = multi_inv<>::!GND (1) @[ supply_low port-alias ] 
         !Vdd = bool^0 = multi_inv<>::!Vdd (2) @[ supply_high port-alias ] 
-        x = process inv<>^0 = multi_inv<>::x (1) (
+        x = process inv<>^0 = multi_inv<>::x (1) @[ port-alias ] (
           !GND = bool^0 = multi_inv<>::!GND (1) @[ supply_low port-alias ] 
           !Vdd = bool^0 = multi_inv<>::!Vdd (2) @[ supply_high port-alias ] 
           a = bool^0 = multi_inv<>::x.a (3) @[ iscomb port-alias ] 
@@ -141,7 +141,7 @@ In namespace "", we have: {
         )
         Created state:
         process instance pool: (1 ports, 0 local, 0 mapped)
-        1	multi_inv<>::x	inv<>
+        1	multi_inv<>::x @[ port-alias ]	inv<>
           bool: 1,2,3,4
         bool instance pool: (4 ports, 0 local, 0 mapped)
         1	multi_inv<>::!GND @[ supply_low port-alias ]	

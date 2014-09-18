@@ -281,7 +281,7 @@ In namespace "", we have: {
         <0> {
           !GND = bool^0 = fifo<0>::!GND (4) @[ supply_low port-alias ] 
           !Vdd = bool^0 = fifo<0>::!Vdd (5) @[ supply_high port-alias ] 
-          I = process e1of<2>^0 = fifo<0>::I (1) @[ port! port? ] (
+          I = process e1of<2>^0 = fifo<0>::I (1) @[ port? port! port-alias ] (
             d = bool^1
               {
                 [0] = fifo<0>::I.d[0] (1) @[ port-alias ] 
@@ -290,7 +290,7 @@ In namespace "", we have: {
             e = bool^0 = fifo<0>::I.e (3) @[ port-alias ] 
           )
           N = pint^0 value: 0
-          O = process e1of<2>^0 = fifo<0>::I (1) @[ port! port? ] (
+          O = process e1of<2>^0 = fifo<0>::I (1) @[ port? port! port-alias ] (
             d = bool^1
               {
                 [0] = fifo<0>::I.d[0] (1) @[ port-alias ] 
@@ -300,7 +300,7 @@ In namespace "", we have: {
           )
           Created state:
           process instance pool: (1 ports, 0 local, 0 mapped)
-          1	fifo<0>::I @[ port! port? ]	e1of<2>
+          1	fifo<0>::I @[ port? port! port-alias ]	e1of<2>
             bool: 3,1,2
           bool instance pool: (5 ports, 0 local, 0 mapped)
           1	fifo<0>::I.d[0] @[ port-alias ]	
@@ -309,7 +309,7 @@ In namespace "", we have: {
           4	fifo<0>::!GND @[ supply_low port-alias ]	
           5	fifo<0>::!Vdd @[ supply_high port-alias ]	
           process port aliases:
-          1: fifo<0>::I = fifo<0>::O @[ port! port? ]
+          1: fifo<0>::I = fifo<0>::O @[ port? port! port-alias ]
           bool port aliases:
           1: fifo<0>::I.d[0] = fifo<0>::O.d[0] @[ port-alias ]
           2: fifo<0>::I.d[1] = fifo<0>::O.d[1] @[ port-alias ]

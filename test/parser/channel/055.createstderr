@@ -170,7 +170,7 @@ In namespace "", we have: {
         !Vdd = bool^0 = thingy<>::!Vdd (14) @[ supply_high port-alias ] 
         I = process e1of2<>^1
           {
-            [0] = thingy<>::I[0] (1) @[ port! PRS? ] (
+            [0] = thingy<>::I[0] (1) @[ port? loc? port-alias ] (
               d = bool^1
                 {
                   [0] = thingy<>::I[0].d[0] (1) @[ port-alias ] 
@@ -180,7 +180,7 @@ In namespace "", we have: {
               f = bool^0 = thingy<>::I[0].d[0] (1) @[ port-alias ] 
               e = bool^0 = thingy<>::I[0].e (3) @[ port-alias ] 
             )
-            [1] = thingy<>::I[1] (2) @[ port! ] (
+            [1] = thingy<>::I[1] (2) @[ port? port-alias ] (
               d = bool^1
                 {
                   [0] = thingy<>::I[1].d[0] (4) @[ port-alias ] 
@@ -193,7 +193,7 @@ In namespace "", we have: {
           }
         O = process e1of2<>^1
           {
-            [0] = thingy<>::O[0] (3) @[ port? ] (
+            [0] = thingy<>::O[0] (3) @[ port! port-alias ] (
               d = bool^1
                 {
                   [0] = thingy<>::O[0].d[0] (7) @[ port-alias ] 
@@ -203,7 +203,7 @@ In namespace "", we have: {
               f = bool^0 = thingy<>::O[0].d[0] (7) @[ port-alias ] 
               e = bool^0 = thingy<>::O[0].e (9) @[ port-alias ] 
             )
-            [1] = thingy<>::O[1] (4) @[ PRS! port? ] (
+            [1] = thingy<>::O[1] (4) @[ loc! port! port-alias ] (
               d = bool^1
                 {
                   [0] = thingy<>::O[1].d[0] (10) @[ port-alias ] 
@@ -216,13 +216,13 @@ In namespace "", we have: {
           }
         Created state:
         process instance pool: (4 ports, 0 local, 0 mapped)
-        1	thingy<>::I[0] @[ port! PRS? ]	e1of2<>
+        1	thingy<>::I[0] @[ port? loc? port-alias ]	e1of2<>
           bool: 2,1,3
-        2	thingy<>::I[1] @[ port! ]	e1of2<>
+        2	thingy<>::I[1] @[ port? port-alias ]	e1of2<>
           bool: 5,4,6
-        3	thingy<>::O[0] @[ port? ]	e1of2<>
+        3	thingy<>::O[0] @[ port! port-alias ]	e1of2<>
           bool: 8,7,9
-        4	thingy<>::O[1] @[ PRS! port? ]	e1of2<>
+        4	thingy<>::O[1] @[ loc! port! port-alias ]	e1of2<>
           bool: 11,10,12
         bool instance pool: (14 ports, 0 local, 0 mapped)
         1	thingy<>::I[0].d[0] @[ port-alias ]	

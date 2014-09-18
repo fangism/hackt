@@ -156,10 +156,10 @@ In namespace "", we have: {
           cb<> c
         )
       footprint: {
-        c = process cb<>^0 = cp<>::c (1) 
+        c = process cb<>^0 = cp<>::c (1) @[ port-alias ] 
         Created state:
         process instance pool: (1 ports, 0 local, 0 mapped)
-        1	cp<>::c	cb<>
+        1	cp<>::c @[ port-alias ]	cb<>
       }
       }
 
@@ -186,54 +186,54 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = lcg<>::!GND (1) @[ supply_low port-alias ] 
         !Vdd = bool^0 = lcg<>::!Vdd (2) @[ supply_high port-alias ] 
-        p = process plg<>^0 = lcg<>::p (1) (
-          a = process pll<>^0 = lcg<>::p.a (2) (
-            cm = process cp<>^0 = lcg<>::p.a.cm (3) (
-              c = process cb<>^0 = lcg<>::p.a.cm.c (4) 
+        p = process plg<>^0 = lcg<>::p (1) @[ port-alias ] (
+          a = process pll<>^0 = lcg<>::p.a (2) @[ port-alias ] (
+            cm = process cp<>^0 = lcg<>::p.a.cm (3) @[ port-alias ] (
+              c = process cb<>^0 = lcg<>::p.a.cm.c (4) @[ port-alias ] 
             )
-            hlc = process phl<>^0 = lcg<>::p.a.hlc (5) (
-              ex = process cp<>^0 = lcg<>::p.a.cm (3) (
-                c = process cb<>^0 = lcg<>::p.a.cm.c (4) 
+            hlc = process phl<>^0 = lcg<>::p.a.hlc (5) @[ port-alias ] (
+              ex = process cp<>^0 = lcg<>::p.a.cm (3) @[ port-alias ] (
+                c = process cb<>^0 = lcg<>::p.a.cm.c (4) @[ port-alias ] 
               )
             )
           )
-          b = process pll<>^0 = lcg<>::p.b (6) (
-            cm = process cp<>^0 = lcg<>::p.b.cm (7) (
-              c = process cb<>^0 = lcg<>::p.b.cm.c (8) 
+          b = process pll<>^0 = lcg<>::p.b (6) @[ port-alias ] (
+            cm = process cp<>^0 = lcg<>::p.b.cm (7) @[ port-alias ] (
+              c = process cb<>^0 = lcg<>::p.b.cm.c (8) @[ port-alias ] 
             )
-            hlc = process phl<>^0 = lcg<>::p.b.hlc (9) (
-              ex = process cp<>^0 = lcg<>::p.b.cm (7) (
-                c = process cb<>^0 = lcg<>::p.b.cm.c (8) 
+            hlc = process phl<>^0 = lcg<>::p.b.hlc (9) @[ port-alias ] (
+              ex = process cp<>^0 = lcg<>::p.b.cm (7) @[ port-alias ] (
+                c = process cb<>^0 = lcg<>::p.b.cm.c (8) @[ port-alias ] 
               )
             )
           )
         )
         Created state:
         process instance pool: (9 ports, 0 local, 0 mapped)
-        1	lcg<>::p	plg<>
+        1	lcg<>::p @[ port-alias ]	plg<>
           process: 2,3,4,5,3,4,6,7,8,9,7,8
-        2	lcg<>::p.a	pll<>
+        2	lcg<>::p.a @[ port-alias ]	pll<>
           process: 3,4,5,3,4
-        3	lcg<>::p.a.cm	cp<>
+        3	lcg<>::p.a.cm @[ port-alias ]	cp<>
           process: 4
-        4	lcg<>::p.a.cm.c	cb<>
-        5	lcg<>::p.a.hlc	phl<>
+        4	lcg<>::p.a.cm.c @[ port-alias ]	cb<>
+        5	lcg<>::p.a.hlc @[ port-alias ]	phl<>
           process: 3,4
-        6	lcg<>::p.b	pll<>
+        6	lcg<>::p.b @[ port-alias ]	pll<>
           process: 7,8,9,7,8
-        7	lcg<>::p.b.cm	cp<>
+        7	lcg<>::p.b.cm @[ port-alias ]	cp<>
           process: 8
-        8	lcg<>::p.b.cm.c	cb<>
-        9	lcg<>::p.b.hlc	phl<>
+        8	lcg<>::p.b.cm.c @[ port-alias ]	cb<>
+        9	lcg<>::p.b.hlc @[ port-alias ]	phl<>
           process: 7,8
         bool instance pool: (2 ports, 0 local, 0 mapped)
         1	lcg<>::!GND @[ supply_low port-alias ]	
         2	lcg<>::!Vdd @[ supply_high port-alias ]	
         process port aliases:
-        3: lcg<>::p.a.cm = lcg<>::p.a.hlc.ex
-        4: lcg<>::p.a.cm.c = lcg<>::p.a.hlc.ex.c
-        7: lcg<>::p.b.cm = lcg<>::p.b.hlc.ex
-        8: lcg<>::p.b.cm.c = lcg<>::p.b.hlc.ex.c
+        3: lcg<>::p.a.cm = lcg<>::p.a.hlc.ex @[ port-alias ]
+        4: lcg<>::p.a.cm.c = lcg<>::p.a.hlc.ex.c @[ port-alias ]
+        7: lcg<>::p.b.cm = lcg<>::p.b.hlc.ex @[ port-alias ]
+        8: lcg<>::p.b.cm.c = lcg<>::p.b.hlc.ex.c @[ port-alias ]
       }
       }
 
@@ -266,12 +266,12 @@ In namespace "", we have: {
           pb<> hu
         )
       footprint: {
-        hu = process pb<>^0 = pcc<>::hu (1) (
+        hu = process pb<>^0 = pcc<>::hu (1) @[ port-alias ] (
           t = bool^0 = pcc<>::hu.t (1) @[ port-alias ] 
         )
         Created state:
         process instance pool: (1 ports, 0 local, 0 mapped)
-        1	pcc<>::hu	pb<>
+        1	pcc<>::hu @[ port-alias ]	pb<>
           bool: 1
         bool instance pool: (1 ports, 0 local, 0 mapped)
         1	pcc<>::hu.t @[ port-alias ]	
@@ -289,14 +289,14 @@ In namespace "", we have: {
           cp<> ex
         )
       footprint: {
-        ex = process cp<>^0 = phl<>::ex (1) (
-          c = process cb<>^0 = phl<>::ex.c (2) 
+        ex = process cp<>^0 = phl<>::ex (1) @[ port-alias ] (
+          c = process cb<>^0 = phl<>::ex.c (2) @[ port-alias ] 
         )
         Created state:
         process instance pool: (2 ports, 0 local, 0 mapped)
-        1	phl<>::ex	cp<>
+        1	phl<>::ex @[ port-alias ]	cp<>
           process: 2
-        2	phl<>::ex.c	cb<>
+        2	phl<>::ex.c @[ port-alias ]	cb<>
       }
       }
 
@@ -314,48 +314,48 @@ In namespace "", we have: {
           pll<> b
         )
       footprint: {
-        a = process pll<>^0 = plg<>::a (1) (
-          cm = process cp<>^0 = plg<>::a.cm (2) (
-            c = process cb<>^0 = plg<>::a.cm.c (3) 
+        a = process pll<>^0 = plg<>::a (1) @[ port-alias ] (
+          cm = process cp<>^0 = plg<>::a.cm (2) @[ port-alias ] (
+            c = process cb<>^0 = plg<>::a.cm.c (3) @[ port-alias ] 
           )
-          hlc = process phl<>^0 = plg<>::a.hlc (4) (
-            ex = process cp<>^0 = plg<>::a.hlc.ex (5) (
-              c = process cb<>^0 = plg<>::a.hlc.ex.c (6) 
+          hlc = process phl<>^0 = plg<>::a.hlc (4) @[ port-alias ] (
+            ex = process cp<>^0 = plg<>::a.hlc.ex (5) @[ port-alias ] (
+              c = process cb<>^0 = plg<>::a.hlc.ex.c (6) @[ port-alias ] 
             )
           )
         )
-        b = process pll<>^0 = plg<>::b (7) (
-          cm = process cp<>^0 = plg<>::b.cm (8) (
-            c = process cb<>^0 = plg<>::b.cm.c (9) 
+        b = process pll<>^0 = plg<>::b (7) @[ port-alias ] (
+          cm = process cp<>^0 = plg<>::b.cm (8) @[ port-alias ] (
+            c = process cb<>^0 = plg<>::b.cm.c (9) @[ port-alias ] 
           )
-          hlc = process phl<>^0 = plg<>::b.hlc (10) (
-            ex = process cp<>^0 = plg<>::b.hlc.ex (11) (
-              c = process cb<>^0 = plg<>::b.hlc.ex.c (12) 
+          hlc = process phl<>^0 = plg<>::b.hlc (10) @[ port-alias ] (
+            ex = process cp<>^0 = plg<>::b.hlc.ex (11) @[ port-alias ] (
+              c = process cb<>^0 = plg<>::b.hlc.ex.c (12) @[ port-alias ] 
             )
           )
         )
         Created state:
         process instance pool: (12 ports, 0 local, 0 mapped)
-        1	plg<>::a	pll<>
+        1	plg<>::a @[ port-alias ]	pll<>
           process: 2,3,4,5,6
-        2	plg<>::a.cm	cp<>
+        2	plg<>::a.cm @[ port-alias ]	cp<>
           process: 3
-        3	plg<>::a.cm.c	cb<>
-        4	plg<>::a.hlc	phl<>
+        3	plg<>::a.cm.c @[ port-alias ]	cb<>
+        4	plg<>::a.hlc @[ port-alias ]	phl<>
           process: 5,6
-        5	plg<>::a.hlc.ex	cp<>
+        5	plg<>::a.hlc.ex @[ port-alias ]	cp<>
           process: 6
-        6	plg<>::a.hlc.ex.c	cb<>
-        7	plg<>::b	pll<>
+        6	plg<>::a.hlc.ex.c @[ port-alias ]	cb<>
+        7	plg<>::b @[ port-alias ]	pll<>
           process: 8,9,10,11,12
-        8	plg<>::b.cm	cp<>
+        8	plg<>::b.cm @[ port-alias ]	cp<>
           process: 9
-        9	plg<>::b.cm.c	cb<>
-        10	plg<>::b.hlc	phl<>
+        9	plg<>::b.cm.c @[ port-alias ]	cb<>
+        10	plg<>::b.hlc @[ port-alias ]	phl<>
           process: 11,12
-        11	plg<>::b.hlc.ex	cp<>
+        11	plg<>::b.hlc.ex @[ port-alias ]	cp<>
           process: 12
-        12	plg<>::b.hlc.ex.c	cb<>
+        12	plg<>::b.hlc.ex.c @[ port-alias ]	cb<>
       }
       }
 
@@ -373,24 +373,24 @@ In namespace "", we have: {
           phl<> hlc
         )
       footprint: {
-        cm = process cp<>^0 = pll<>::cm (1) (
-          c = process cb<>^0 = pll<>::cm.c (2) 
+        cm = process cp<>^0 = pll<>::cm (1) @[ port-alias ] (
+          c = process cb<>^0 = pll<>::cm.c (2) @[ port-alias ] 
         )
-        hlc = process phl<>^0 = pll<>::hlc (3) (
-          ex = process cp<>^0 = pll<>::hlc.ex (4) (
-            c = process cb<>^0 = pll<>::hlc.ex.c (5) 
+        hlc = process phl<>^0 = pll<>::hlc (3) @[ port-alias ] (
+          ex = process cp<>^0 = pll<>::hlc.ex (4) @[ port-alias ] (
+            c = process cb<>^0 = pll<>::hlc.ex.c (5) @[ port-alias ] 
           )
         )
         Created state:
         process instance pool: (5 ports, 0 local, 0 mapped)
-        1	pll<>::cm	cp<>
+        1	pll<>::cm @[ port-alias ]	cp<>
           process: 2
-        2	pll<>::cm.c	cb<>
-        3	pll<>::hlc	phl<>
+        2	pll<>::cm.c @[ port-alias ]	cb<>
+        3	pll<>::hlc @[ port-alias ]	phl<>
           process: 4,5
-        4	pll<>::hlc.ex	cp<>
+        4	pll<>::hlc.ex @[ port-alias ]	cp<>
           process: 5
-        5	pll<>::hlc.ex.c	cb<>
+        5	pll<>::hlc.ex.c @[ port-alias ]	cb<>
       }
       }
 
@@ -408,61 +408,61 @@ In namespace "", we have: {
           pcc<> cc
         )
       footprint: {
-        cc = process pcc<>^0 = pr<>::cc (14) (
-          hu = process pb<>^0 = pr<>::cc.hu (15) (
+        cc = process pcc<>^0 = pr<>::cc (14) @[ port-alias ] (
+          hu = process pb<>^0 = pr<>::cc.hu (15) @[ port-alias ] (
             t = bool^0 = pr<>::cc.hu.t (1) @[ port-alias ] 
           )
         )
-        lcg = process plg<>^0 = pr<>::lcg (1) (
-          a = process pll<>^0 = pr<>::lcg.a (2) (
-            cm = process cp<>^0 = pr<>::lcg.a.cm (3) (
-              c = process cb<>^0 = pr<>::lcg.a.cm.c (4) 
+        lcg = process plg<>^0 = pr<>::lcg (1) @[ port-alias ] (
+          a = process pll<>^0 = pr<>::lcg.a (2) @[ port-alias ] (
+            cm = process cp<>^0 = pr<>::lcg.a.cm (3) @[ port-alias ] (
+              c = process cb<>^0 = pr<>::lcg.a.cm.c (4) @[ port-alias ] 
             )
-            hlc = process phl<>^0 = pr<>::lcg.a.hlc (5) (
-              ex = process cp<>^0 = pr<>::lcg.a.hlc.ex (6) (
-                c = process cb<>^0 = pr<>::lcg.a.hlc.ex.c (7) 
+            hlc = process phl<>^0 = pr<>::lcg.a.hlc (5) @[ port-alias ] (
+              ex = process cp<>^0 = pr<>::lcg.a.hlc.ex (6) @[ port-alias ] (
+                c = process cb<>^0 = pr<>::lcg.a.hlc.ex.c (7) @[ port-alias ] 
               )
             )
           )
-          b = process pll<>^0 = pr<>::lcg.b (8) (
-            cm = process cp<>^0 = pr<>::lcg.b.cm (9) (
-              c = process cb<>^0 = pr<>::lcg.b.cm.c (10) 
+          b = process pll<>^0 = pr<>::lcg.b (8) @[ port-alias ] (
+            cm = process cp<>^0 = pr<>::lcg.b.cm (9) @[ port-alias ] (
+              c = process cb<>^0 = pr<>::lcg.b.cm.c (10) @[ port-alias ] 
             )
-            hlc = process phl<>^0 = pr<>::lcg.b.hlc (11) (
-              ex = process cp<>^0 = pr<>::lcg.b.hlc.ex (12) (
-                c = process cb<>^0 = pr<>::lcg.b.hlc.ex.c (13) 
+            hlc = process phl<>^0 = pr<>::lcg.b.hlc (11) @[ port-alias ] (
+              ex = process cp<>^0 = pr<>::lcg.b.hlc.ex (12) @[ port-alias ] (
+                c = process cb<>^0 = pr<>::lcg.b.hlc.ex.c (13) @[ port-alias ] 
               )
             )
           )
         )
         Created state:
         process instance pool: (15 ports, 0 local, 0 mapped)
-        1	pr<>::lcg	plg<>
+        1	pr<>::lcg @[ port-alias ]	plg<>
           process: 2,3,4,5,6,7,8,9,10,11,12,13
-        2	pr<>::lcg.a	pll<>
+        2	pr<>::lcg.a @[ port-alias ]	pll<>
           process: 3,4,5,6,7
-        3	pr<>::lcg.a.cm	cp<>
+        3	pr<>::lcg.a.cm @[ port-alias ]	cp<>
           process: 4
-        4	pr<>::lcg.a.cm.c	cb<>
-        5	pr<>::lcg.a.hlc	phl<>
+        4	pr<>::lcg.a.cm.c @[ port-alias ]	cb<>
+        5	pr<>::lcg.a.hlc @[ port-alias ]	phl<>
           process: 6,7
-        6	pr<>::lcg.a.hlc.ex	cp<>
+        6	pr<>::lcg.a.hlc.ex @[ port-alias ]	cp<>
           process: 7
-        7	pr<>::lcg.a.hlc.ex.c	cb<>
-        8	pr<>::lcg.b	pll<>
+        7	pr<>::lcg.a.hlc.ex.c @[ port-alias ]	cb<>
+        8	pr<>::lcg.b @[ port-alias ]	pll<>
           process: 9,10,11,12,13
-        9	pr<>::lcg.b.cm	cp<>
+        9	pr<>::lcg.b.cm @[ port-alias ]	cp<>
           process: 10
-        10	pr<>::lcg.b.cm.c	cb<>
-        11	pr<>::lcg.b.hlc	phl<>
+        10	pr<>::lcg.b.cm.c @[ port-alias ]	cb<>
+        11	pr<>::lcg.b.hlc @[ port-alias ]	phl<>
           process: 12,13
-        12	pr<>::lcg.b.hlc.ex	cp<>
+        12	pr<>::lcg.b.hlc.ex @[ port-alias ]	cp<>
           process: 13
-        13	pr<>::lcg.b.hlc.ex.c	cb<>
-        14	pr<>::cc	pcc<>
+        13	pr<>::lcg.b.hlc.ex.c @[ port-alias ]	cb<>
+        14	pr<>::cc @[ port-alias ]	pcc<>
           process: 15
           bool: 1
-        15	pr<>::cc.hu	pb<>
+        15	pr<>::cc.hu @[ port-alias ]	pb<>
           bool: 1
         bool instance pool: (1 ports, 0 local, 0 mapped)
         1	pr<>::cc.hu.t @[ port-alias ]	

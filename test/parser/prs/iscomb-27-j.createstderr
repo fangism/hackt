@@ -183,23 +183,23 @@ In namespace "", we have: {
         t.a = a.t;
         e.a = a.e;
       footprint: {
-        a = process e1of2<>^0 = alt_e1of2<>::a (1) (
+        a = process e1of2<>^0 = alt_e1of2<>::a (1) @[ port-alias ] (
           t = bool^0 = alt_e1of2<>::a.t (1) @[ port-alias ] 
           e = bool^0 = alt_e1of2<>::a.e (2) @[ port-alias ] 
         )
-        e = process bp<>^0 = alt_e1of2<>::e (3) (
+        e = process bp<>^0 = alt_e1of2<>::e (3) @[ port-alias ] (
           a = bool^0 = alt_e1of2<>::a.e (2) @[ port-alias ] 
         )
-        t = process bp<>^0 = alt_e1of2<>::t (2) (
+        t = process bp<>^0 = alt_e1of2<>::t (2) @[ port-alias ] (
           a = bool^0 = alt_e1of2<>::a.t (1) @[ port-alias ] 
         )
         Created state:
         process instance pool: (3 ports, 0 local, 0 mapped)
-        1	alt_e1of2<>::a	e1of2<>
+        1	alt_e1of2<>::a @[ port-alias ]	e1of2<>
           bool: 1,2
-        2	alt_e1of2<>::t	bp<>
+        2	alt_e1of2<>::t @[ port-alias ]	bp<>
           bool: 1
-        3	alt_e1of2<>::e	bp<>
+        3	alt_e1of2<>::e @[ port-alias ]	bp<>
           bool: 2
         bool instance pool: (2 ports, 0 local, 0 mapped)
         1	alt_e1of2<>::a.t @[ port-alias ]	
@@ -236,19 +236,19 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = blah2<>::!GND (5) @[ supply_low port-alias ] 
         !Vdd = bool^0 = blah2<>::!Vdd (6) @[ supply_high port-alias ] 
-        l = process e1of2<>^0 = blah2<>::l (1) (
+        l = process e1of2<>^0 = blah2<>::l (1) @[ port-alias ] (
           t = bool^0 = blah2<>::l.t (1) @[ port-alias ] 
           e = bool^0 = blah2<>::l.e (2) @[ iscomb port-alias ] 
         )
-        r = process e1of2<>^0 = blah2<>::r (2) (
+        r = process e1of2<>^0 = blah2<>::r (2) @[ port-alias ] (
           t = bool^0 = blah2<>::r.t (3) @[ iscomb port-alias ] 
           e = bool^0 = blah2<>::r.e (4) @[ port-alias ] 
         )
         Created state:
         process instance pool: (2 ports, 0 local, 0 mapped)
-        1	blah2<>::l	e1of2<>
+        1	blah2<>::l @[ port-alias ]	e1of2<>
           bool: 1,2
-        2	blah2<>::r	e1of2<>
+        2	blah2<>::r @[ port-alias ]	e1of2<>
           bool: 3,4
         bool instance pool: (6 ports, 0 local, 0 mapped)
         1	blah2<>::l.t @[ port-alias ]	
@@ -290,65 +290,65 @@ In namespace "", we have: {
       footprint: {
         !GND = bool^0 = blah3<>::!GND (5) @[ supply_low port-alias ] 
         !Vdd = bool^0 = blah3<>::!Vdd (6) @[ supply_high port-alias ] 
-        in = process alt_e1of2<>^0 = blah3<>::in (1) (
-          a = process e1of2<>^0 = blah3<>::in_a (2) (
+        in = process alt_e1of2<>^0 = blah3<>::in (1) @[ port-alias ] (
+          a = process e1of2<>^0 = blah3<>::in_a (2) @[ port-alias ] (
             t = bool^0 = blah3<>::in_a.t (1) @[ port-alias ] 
             e = bool^0 = blah3<>::in_a.e (2) @[ iscomb port-alias ] 
           )
-          t = process bp<>^0 = blah3<>::in.t (3) (
+          t = process bp<>^0 = blah3<>::in.t (3) @[ port-alias ] (
             a = bool^0 = blah3<>::in_a.t (1) @[ port-alias ] 
           )
-          e = process bp<>^0 = blah3<>::in.e (4) (
+          e = process bp<>^0 = blah3<>::in.e (4) @[ port-alias ] (
             a = bool^0 = blah3<>::in_a.e (2) @[ iscomb port-alias ] 
           )
         )
-        in_a = process e1of2<>^0 = blah3<>::in_a (2) (
+        in_a = process e1of2<>^0 = blah3<>::in_a (2) @[ port-alias ] (
           t = bool^0 = blah3<>::in_a.t (1) @[ port-alias ] 
           e = bool^0 = blah3<>::in_a.e (2) @[ iscomb port-alias ] 
         )
         ma = process blah2<>^0 = blah3<>::ma (9) (
           !GND = bool^0 = blah3<>::!GND (5) @[ supply_low port-alias ] 
           !Vdd = bool^0 = blah3<>::!Vdd (6) @[ supply_high port-alias ] 
-          l = process e1of2<>^0 = blah3<>::in_a (2) (
+          l = process e1of2<>^0 = blah3<>::in_a (2) @[ port-alias ] (
             t = bool^0 = blah3<>::in_a.t (1) @[ port-alias ] 
             e = bool^0 = blah3<>::in_a.e (2) @[ iscomb port-alias ] 
           )
-          r = process e1of2<>^0 = blah3<>::out.a (6) (
+          r = process e1of2<>^0 = blah3<>::out.a (6) @[ port-alias ] (
             t = bool^0 = blah3<>::out.a.t (3) @[ iscomb port-alias ] 
             e = bool^0 = blah3<>::out.a.e (4) @[ port-alias ] 
           )
         )
-        out = process alt_e1of2<>^0 = blah3<>::out (5) (
-          a = process e1of2<>^0 = blah3<>::out.a (6) (
+        out = process alt_e1of2<>^0 = blah3<>::out (5) @[ port-alias ] (
+          a = process e1of2<>^0 = blah3<>::out.a (6) @[ port-alias ] (
             t = bool^0 = blah3<>::out.a.t (3) @[ iscomb port-alias ] 
             e = bool^0 = blah3<>::out.a.e (4) @[ port-alias ] 
           )
-          t = process bp<>^0 = blah3<>::out.t (7) (
+          t = process bp<>^0 = blah3<>::out.t (7) @[ port-alias ] (
             a = bool^0 = blah3<>::out.a.t (3) @[ iscomb port-alias ] 
           )
-          e = process bp<>^0 = blah3<>::out.e (8) (
+          e = process bp<>^0 = blah3<>::out.e (8) @[ port-alias ] (
             a = bool^0 = blah3<>::out.a.e (4) @[ port-alias ] 
           )
         )
         Created state:
         process instance pool: (8 ports, 1 local, 0 mapped)
-        1	blah3<>::in	alt_e1of2<>
+        1	blah3<>::in @[ port-alias ]	alt_e1of2<>
           process: 2,3,4
           bool: 1,2
-        2	blah3<>::in_a	e1of2<>
+        2	blah3<>::in_a @[ port-alias ]	e1of2<>
           bool: 1,2
-        3	blah3<>::in.t	bp<>
+        3	blah3<>::in.t @[ port-alias ]	bp<>
           bool: 1
-        4	blah3<>::in.e	bp<>
+        4	blah3<>::in.e @[ port-alias ]	bp<>
           bool: 2
-        5	blah3<>::out	alt_e1of2<>
+        5	blah3<>::out @[ port-alias ]	alt_e1of2<>
           process: 6,7,8
           bool: 3,4
-        6	blah3<>::out.a	e1of2<>
+        6	blah3<>::out.a @[ port-alias ]	e1of2<>
           bool: 3,4
-        7	blah3<>::out.t	bp<>
+        7	blah3<>::out.t @[ port-alias ]	bp<>
           bool: 3
-        8	blah3<>::out.e	bp<>
+        8	blah3<>::out.e @[ port-alias ]	bp<>
           bool: 4
         9	blah3<>::ma	blah2<>
           process: 2,6

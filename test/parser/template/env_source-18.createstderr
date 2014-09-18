@@ -291,7 +291,7 @@ In namespace "", we have: {
               0 = 0
               1 = 1
             }
-          rr = process e1of<2>^0 = source_e<2, 2, {0,1}>::rr (1) (
+          rr = process e1of<2>^0 = source_e<2, 2, {0,1}>::rr (1) @[ port-alias ] (
             !GND = bool^0 = source_e<2, 2, {0,1}>::!GND (1) @[ supply_low port-alias ] 
             !Vdd = bool^0 = source_e<2, 2, {0,1}>::!Vdd (2) @[ supply_high port-alias ] 
             d = bool^1
@@ -303,7 +303,7 @@ In namespace "", we have: {
           )
           Created state:
           process instance pool: (1 ports, 0 local, 0 mapped)
-          1	source_e<2, 2, {0,1}>::rr	e1of<2>
+          1	source_e<2, 2, {0,1}>::rr @[ port-alias ]	e1of<2>
             bool: 1,2,5,3,4
           bool instance pool: (6 ports, 0 local, 0 mapped)
           1	source_e<2, 2, {0,1}>::!GND @[ supply_low port-alias ]	
@@ -327,7 +327,7 @@ In namespace "", we have: {
               0 = 1
               1 = 0
             }
-          rr = process e1of<2>^0 = source_e<2, 2, {1,0}>::rr (1) (
+          rr = process e1of<2>^0 = source_e<2, 2, {1,0}>::rr (1) @[ port-alias ] (
             !GND = bool^0 = source_e<2, 2, {1,0}>::!GND (1) @[ supply_low port-alias ] 
             !Vdd = bool^0 = source_e<2, 2, {1,0}>::!Vdd (2) @[ supply_high port-alias ] 
             d = bool^1
@@ -339,7 +339,7 @@ In namespace "", we have: {
           )
           Created state:
           process instance pool: (1 ports, 0 local, 0 mapped)
-          1	source_e<2, 2, {1,0}>::rr	e1of<2>
+          1	source_e<2, 2, {1,0}>::rr @[ port-alias ]	e1of<2>
             bool: 1,2,5,3,4
           bool instance pool: (6 ports, 0 local, 0 mapped)
           1	source_e<2, 2, {1,0}>::!GND @[ supply_low port-alias ]	

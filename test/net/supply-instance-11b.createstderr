@@ -276,7 +276,7 @@ In namespace "", we have: {
           x = bool^0 = foo<>::in (5) @[ port-alias sub-FO- sub-FO+ ] 
           y = bool^0 = foo<>::out (6) @[ port-alias sub-FI- sub-FI+ ] 
         )
-        g = process globals<>^0 = foo<>::g (1) (
+        g = process globals<>^0 = foo<>::g (1) @[ port-alias ] (
           Vdd_1 = bool^0 = foo<>::g.Vdd_1 (1) @[ port-alias ] 
           GND_1 = bool^0 = foo<>::g.GND_1 (2) @[ port-alias ] 
           Vdd_2 = bool^0 = foo<>::a.!Vdd (3) @[ port-alias ] 
@@ -286,7 +286,7 @@ In namespace "", we have: {
         out = bool^0 = foo<>::out (6) @[ port-alias sub-FI- sub-FI+ ] 
         Created state:
         process instance pool: (1 ports, 1 local, 0 mapped)
-        1	foo<>::g	globals<>
+        1	foo<>::g @[ port-alias ]	globals<>
           bool: 1,2,3,4
         2	foo<>::a	inv<>
           bool: 4,3,5,6
