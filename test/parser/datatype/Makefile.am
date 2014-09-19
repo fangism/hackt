@@ -23,7 +23,8 @@ HACKT_PARSE_TEST_PASSES = \
 
 HACKT_CREATE_TEST_FAILURES = \
 	037 \
-	047
+	047 \
+	053
 
 # omitted tests are uninteresting
 HACKT_CREATE_TEST_PASSES = \

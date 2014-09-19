@@ -1,0 +1,4 @@
+Error: cannot send on a receive-only port.
+Instantiated from: quad<>
+Error encountered during module::create.
+ERROR in creating.  Aborting.
