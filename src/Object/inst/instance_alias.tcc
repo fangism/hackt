@@ -559,36 +559,6 @@ INSTANCE_ALIAS_INFO_CLASS::replay_connect_port(this_type& l, this_type& r) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	This version of connect is slightly asymmetric and tailored for
-	connecting aliases, called by alias_connection::unroll.  
-	This effectively checks for connectible-type-equivalence.  
-	optimization: any need to check for self-aliases? uncommon.
-	\param l is the (unchanging) leftmost instance reference, 
-		which always contains relaxed actuals IF anything in
-		the connection list has actuals.  
-	\param r is the varying instance alias referenced (iterating
-		along the list) and may inherit the actuals argument.
-	\param a the designated relaxed actuals pointer used to propagate
-		throughout the alias ring.  
- */
-INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
-good_bool
-INSTANCE_ALIAS_INFO_CLASS::checked_connect_alias(this_type& l, this_type& r,
-		const unroll_context& c) {
-	STACKTRACE_VERBOSE;
-	if (!l.must_match_type(r)) {
-		// already have error message
-		l.dump_hierarchical_name(cerr << "\tfrom: ") << endl;
-		r.dump_hierarchical_name(cerr << "\tand:  ") << endl;
-		return good_bool(false);
-	}
-	// checking of directions and relaxed actuals is done in unite()
-	return good_bool(l.unite(r, c).good &&
-		l.connect_port_aliases_recursive(r, c).good);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
 	Called by top-level.  
 	This reserves the space required by the footprint corresponding
 		to this instance's complete canonical type.

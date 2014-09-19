@@ -267,7 +267,7 @@ ALIAS_CONNECTION_CLASS::unroll(const unroll_context& c) const {
 			NEVER_NULL(connectee);
 			// all type-checking is done in this call:
 			// punt relaxed type checking until create
-			if (!instance_alias_info_type::checked_connect_alias(
+			if (!instance_alias_info_type::checked_connect_port(
 					*head, *connectee, c).good) {
 				// already have error message
 				return good_bool(false);

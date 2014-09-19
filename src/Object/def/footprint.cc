@@ -1345,7 +1345,7 @@ implicit_supply_connector::__auto_connect_port(const alias_type& cp,
 #if DEBUG_IMPLICIT_SUPPLY
 		lg.dump_hierarchical_name(cerr << "auto-connecting: ") << endl;
 #endif
-		if (!bool_instance_alias_info::checked_connect_alias(
+		if (!bool_instance_alias_info::checked_connect_port(
 			lg, n, c).good) {
 			return true;
 			// should never happen

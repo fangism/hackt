@@ -390,11 +390,6 @@ public:
 #endif
 #endif
 
-	// punting relaxed actuals checking until after unroll phase
-	static
-	good_bool
-	checked_connect_alias(this_type&, this_type&, const unroll_context&);
-
 	/// counterpart to load_next_connection
 	void
 	write_next_connection(const collection_pool_bundle_type&, 
