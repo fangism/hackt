@@ -1,0 +1,31 @@
+// "iscomb-28.hac"
+// BUG: missing node attribute up hierarchy, ACX-PR-2552
+// further reduced test case
+// @hflat-flags@ -fnode-attributes
+
+deftype bp <: bool (bool a) { }
+defchan e1of2 <: chan(bool) (bool t) { }
+defchan alt_e1of2 <: chan(bool) (e1of2 a; bp t) {
+	t.a = a.t;
+}
+
+defproc blah2 (e1of2 r) {
+	r.t @ [iscomb=1];
+}
+
+/**
+defproc blah3 (alt_e1of2 out) {
+	blah2 ma(out.a);
+}
+blah3 foo;
+**/
+
+/**
+alt_e1of2 out;
+blah2 ma(out.a);
+**/
+
+alt_e1of2 out;
+blah2 ma;
+ma.r = out.a;	// unexpected FAIL
+

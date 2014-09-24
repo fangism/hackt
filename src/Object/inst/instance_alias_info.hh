@@ -7,8 +7,8 @@
 	$Id: instance_alias_info.hh,v 1.30 2010/04/30 23:58:44 fang Exp $
  */
 
-#ifndef	__HAC_OBJECT_INST_INSTANCE_ALIAS_INFO_H__
-#define	__HAC_OBJECT_INST_INSTANCE_ALIAS_INFO_H__
+#ifndef	__HAC_OBJECT_INST_INSTANCE_ALIAS_INFO_HH__
+#define	__HAC_OBJECT_INST_INSTANCE_ALIAS_INFO_HH__
 
 #include "util/memory/excl_ptr.hh"
 #include "util/memory/count_ptr.hh"
@@ -207,6 +207,9 @@ public:
 	peek(void) const { return this->next; }
 
 protected:
+	void
+	reunite(this_type&);
+
 	good_bool
 	unite(this_type&, const unroll_context&);
 
@@ -373,7 +376,7 @@ private:
 
 public:
 	static
-	good_bool
+	void
 	replay_connect_port(this_type&, this_type&);
 
 	static
@@ -455,5 +458,5 @@ operator << (ostream&, const instance_alias_info<Tag>&);
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __HAC_OBJECT_INST_INSTANCE_ALIAS_INFO_H__
+#endif	// __HAC_OBJECT_INST_INSTANCE_ALIAS_INFO_HH__
 

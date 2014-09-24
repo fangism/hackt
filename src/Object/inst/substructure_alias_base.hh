@@ -187,6 +187,9 @@ protected:
 		return good_bool(true);
 	}
 
+	void
+	reconnect_port_aliases_recursive(const this_type&) const { }
+
 protected:
 	void
 	collect_transient_info_base(const persistent_object_manager&) const { }

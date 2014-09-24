@@ -409,8 +409,8 @@ if (has_nondefault_attributes(implicit)) {
 	dump_flat_attributes(o, implicit);
 	o << " ]";
 }
-#if 0
-	dump_raw_attributes(o << ' ');
+#if ENABLE_STACKTRACE
+	dump_raw_attributes(o << " <") << '>';		// for debug
 #endif
 	return o;
 }

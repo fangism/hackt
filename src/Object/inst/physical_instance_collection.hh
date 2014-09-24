@@ -81,10 +81,16 @@ virtual	ALLOCATE_LOCAL_INSTANCE_IDS_PROTO = 0;
 
 #define	CONNECT_PORT_ALIASES_RECURSIVE_PROTO				\
 	good_bool							\
-	connect_port_aliases_recursive(physical_instance_collection&, 	\
+	connect_port_aliases_recursive(physical_instance_collection&,	\
 		const unroll_context&)
 
 virtual	CONNECT_PORT_ALIASES_RECURSIVE_PROTO = 0;
+
+#define	RECONNECT_PORT_ALIASES_RECURSIVE_PROTO				\
+	void								\
+	reconnect_port_aliases_recursive(physical_instance_collection&)
+
+virtual	RECONNECT_PORT_ALIASES_RECURSIVE_PROTO = 0;
 
 #define	CREATE_DEPENDENT_TYPES_PROTO					\
 	good_bool							\

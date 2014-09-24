@@ -141,6 +141,9 @@ public:
 	connect_port_aliases_recursive(this_type&, const unroll_context&);
 
 	void
+	reconnect_port_aliases_recursive(this_type&);
+
+	void
 	allocate_subinstances(footprint&);
 
 	void

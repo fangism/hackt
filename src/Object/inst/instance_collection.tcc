@@ -900,6 +900,35 @@ INSTANCE_ARRAY_CLASS::connect_port_aliases_recursive(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	This is called to replay port aliases when instantiating
+	a process.  The port aliases do not need to be rechecked.
+	\param p subinstance collection to connect to this.  
+	\pre this has identical type to p
+ */
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+void
+INSTANCE_ARRAY_CLASS::reconnect_port_aliases_recursive(
+		physical_instance_collection& p) {
+	STACKTRACE_VERBOSE;
+	this_type& t(IS_A(this_type&, p));	// assert dynamic_cast
+	INVARIANT(this->collection.size() == t.collection.size());
+	iterator i(this->collection.begin());
+	iterator j(t.collection.begin());
+	const iterator e(this->collection.end());
+	for ( ; i!=e; ++i, ++j) {
+		// unfortunately, set iterators only return const refs
+		// we only intend to modify the value without modifying the key
+		element_type& ii(const_cast<element_type&>(
+			AS_A(const element_type&, *i)));
+		element_type& jj(const_cast<element_type&>(
+			AS_A(const element_type&, *j)));
+		// possibly redundant port type checking is unnecessary
+		element_type::replay_connect_port(ii, jj);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Walks the entire collection and create definition footprints of
 	constituent types.  
 	The call to internal_alias_policy::connect also replays the 
@@ -1621,6 +1650,20 @@ INSTANCE_SCALAR_CLASS::connect_port_aliases_recursive(
 	this_type& t(IS_A(this_type&, p));	// assert dynamic_cast
 	return instance_type::checked_connect_port(
 		this->the_instance, t.the_instance, c);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	For replaying established port aliases.
+ */
+INSTANCE_SCALAR_TEMPLATE_SIGNATURE
+void
+INSTANCE_SCALAR_CLASS::reconnect_port_aliases_recursive(
+		physical_instance_collection& p) {
+	STACKTRACE_VERBOSE;
+	this_type& t(IS_A(this_type&, p));	// assert dynamic_cast
+	return instance_type::replay_connect_port(
+		this->the_instance, t.the_instance);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

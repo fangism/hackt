@@ -215,10 +215,8 @@ alias_reference_set<Tag>::replay_internal_aliases(substructure_alias& s) const {
 	alias_type& head((*i)->trace_alias(s));
 	for (i++; i!=e; i++) {
 		alias_type& _inst((*i)->trace_alias(s));
-		// symmetric connection
-		if (!alias_type::replay_connect_port(head, _inst).good)
-			return good_bool(false);
 		// doesn't require unroll_context
+		alias_type::replay_connect_port(head, _inst);
 	}
 	return good_bool(true);
 }
@@ -235,10 +233,11 @@ alias_reference_set<Tag>::export_alias_properties(substructure_alias& s) const {
 	STACKTRACE_VERBOSE;
 	INVARIANT(!alias_array.empty());
 	// find a direct port alias in the set, if one exists
+	// actually, need to find ALL port aliases per set
 	const const_iterator e(alias_array.end());
-	const const_iterator f(std::find_if(alias_array.begin(), e, 
+	const_iterator f(std::find_if(alias_array.begin(), e, 
 		port_alias_predicate()));
-if (f != e) {
+while (f != e) {
 	const alias_type& a(**f);
 #if ENABLE_STACKTRACE
 	a.dump_hierarchical_name(STACKTRACE_INDENT_PRINT("name: ")) << endl;
@@ -251,7 +250,9 @@ if (f != e) {
 		// set of *scope* aliases which includes non-ports.
 		_inst.import_properties(a);
 		// FIXME: want directions initialized too!
-} else { STACKTRACE_INDENT_PRINT("is not port alias" << endl); }
+	f = std::find_if(f+1, e, port_alias_predicate());
+}
+// else { STACKTRACE_INDENT_PRINT("is not port alias" << endl); }
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -530,7 +531,7 @@ alias_reference_set<Tag>::load_object_base(
 template <class Tag>
 ostream&
 port_alias_tracker_base<Tag>::dump_map(ostream& o, const dump_flags& df) const {
-	STACKTRACE_VERBOSE;
+//	STACKTRACE_VERBOSE;
 if (!_ids.empty()) {
 	o << auto_indent << class_traits<Tag>::tag_name
 		<< " port aliases:" << endl;

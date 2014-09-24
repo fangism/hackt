@@ -42,6 +42,7 @@ HACKT_PARSE_TEST_PASSES = \
 	nor-01 xor-01 \
 	celem-01 celem-02 celem-03 celem-04 celem-05 celem-06 \
 	wchb-00 wchb-01 wchb-02 wchb-03 wchb-03b wchb-04 wchb-05 wchb-06 \
+	wchb-07 wchb-08 wchb-09 wchb-10 wchb-11 \
 	fifo-01 fifo-02 fifo-03 \
 	null-00 null-01 \
 	pal-01 pal-02 pal-03 \
@@ -98,6 +99,7 @@ HACKT_PARSE_TEST_PASSES = \
 	iscomb-27-f iscomb-27-g iscomb-27-h iscomb-27-i iscomb-27-j \
 	iscomb-27-k iscomb-27-l iscomb-27-m iscomb-27-n iscomb-27-o \
 	iscomb-27-p iscomb-27-q iscomb-27-r \
+	iscomb-28 iscomb-29 \
 	keeper-01 \
 	iskeeper-01 iskeeper-02 iskeeper-03 iskeeper-04 \
 	isckeeper-01 isckeeper-02 \
@@ -146,6 +148,7 @@ HACKT_CREATE_TEST_PASSES = \
 	celem-01 celem-02 celem-03 celem-04 celem-05 celem-06 \
 	nand-04 nand-05 nand-06 nand-07 \
 	wchb-00 wchb-01 wchb-02 wchb-03 wchb-03b wchb-04 wchb-05 wchb-06 \
+	wchb-07 wchb-08 wchb-09 wchb-10 wchb-11 \
 	fifo-01 fifo-02 \
 	null-00 \
 	pal-01 pal-02 pal-03 \
@@ -197,6 +200,7 @@ HACKT_CREATE_TEST_PASSES = \
 	iscomb-27-f iscomb-27-g iscomb-27-h iscomb-27-i iscomb-27-j \
 	iscomb-27-k iscomb-27-l iscomb-27-m iscomb-27-n iscomb-27-o \
 	iscomb-27-p iscomb-27-q iscomb-27-r \
+	iscomb-28 iscomb-29 \
 	keeper-01 \
 	iskeeper-01 iskeeper-02 iskeeper-03 iskeeper-04 \
 	isckeeper-01 isckeeper-02 \
@@ -245,6 +249,7 @@ HACKT_CFLAT_TEST_SUBJECTS = \
 	celem-01 celem-02 celem-03 celem-04 celem-05 celem-06 \
 	nand-04 nand-05 nand-06 nand-07 \
 	wchb-00 wchb-01 wchb-02 wchb-03 wchb-03b wchb-04 wchb-05 wchb-06 \
+	wchb-07 wchb-08 wchb-09 wchb-10 wchb-11 \
 	fifo-01 fifo-02 \
 	null-00 \
 	pal-01 pal-02 pal-03 \

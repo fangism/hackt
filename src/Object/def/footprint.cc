@@ -5,7 +5,7 @@
  */
 
 #define	ENABLE_STACKTRACE			0
-#define	STACKTRACE_PERSISTENTS			(1 && ENABLE_STACKTRACE)
+#define	STACKTRACE_PERSISTENTS			(0 && ENABLE_STACKTRACE)
 
 #include <algorithm>
 #include <iterator>
@@ -704,7 +704,7 @@ footprint::export_instance_names(vector<string>& v) const {
 footprint::instance_collection_ptr_type
 footprint::operator [] (const string& k) const {
 //	STACKTRACE_VERBOSE;
-	STACKTRACE_INDENT_PRINT("footprint looking up: " << k << endl);
+//	STACKTRACE_INDENT_PRINT("footprint looking up: " << k << endl);
 #if 0
 	dump_with_collections(cerr << "we have: " << endl,
 		dump_flags::default_value, expr_dump_context::default_value);
@@ -1371,7 +1371,7 @@ footprint::__lookup_scalar_port_alias(const string& s) const {
 	if (f != e) {
 		STACKTRACE_INDENT_PRINT("scalar port: " << s << endl);
 #if ENABLE_STACKTRACE
-		dump_with_collections(cerr << "instance_collection_map: ")
+		dump_with_collections(cerr << "instance_collection_map:\n")
 			<< endl;
 #endif
 		INVARIANT(f != e);

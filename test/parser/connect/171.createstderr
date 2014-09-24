@@ -1,0 +1,229 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	20
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	105
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	29
+	8	##ADDR##	portscop	0	#HEAD#	#TAIL#	16
+	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
+	11	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	12	##ADDR##	footprnt	0	#HEAD#	#TAIL#	280
+	13	##ADDR##	procdefn	0	#HEAD#	#TAIL#	124
+	14	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	15	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	16	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	30
+	17	##ADDR##	portscop	0	#HEAD#	#TAIL#	24
+	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
+	20	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
+	23	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	24	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	27	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	28	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	31	##ADDR##	dbooldir	0	#HEAD#	#TAIL#	13
+	32	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	footprnt	0	#HEAD#	#TAIL#	316
+	34	##ADDR##	procdefn	0	#HEAD#	#TAIL#	140
+	35	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	36	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	37	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	29
+	38	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	39	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
+	40	##ADDR##	portscop	0	#HEAD#	#TAIL#	28
+	41	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	42	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
+	43	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	44	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	45	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	46	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	47	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
+	48	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	49	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	50	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	51	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	52	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	53	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	54	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	55	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	56	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	57	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	58	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	59	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	60	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
+	61	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	62	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	63	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	64	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
+	65	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	66	##ADDR##	footprnt	0	#HEAD#	#TAIL#	502
+	67	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	68	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	69	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	70	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
+	71	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	72	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	73	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	74	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	75	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	76	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	77	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	78	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	79	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	80	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	81	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	82	##ADDR##	footprnt	0	#HEAD#	#TAIL#	486
+	83	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  3 instantiation-collections
+  0 sub-namespaces
+  3 definitions
+  0 typedefs
+  Definitions:
+    bundle_interface = process-definition (defined) bundle_interface(
+        bool<> _R_nb
+      )
+      In definition "bundle_interface", we have: {
+      Instances:
+        _R_nb = bool<> bundle_interface::_R_nb
+      unroll sequence: 
+        ports: (
+          bool<> _R_nb
+        )
+      footprint: {
+        _R_nb = bool^0 = bundle_interface<>::_R_nb (1) @[ port-alias ] 
+        Created state:
+        bool instance pool: (1 ports, 0 local, 0 mapped)
+        1	bundle_interface<>::_R_nb @[ port-alias ]	
+      }
+      }
+
+    drivers = process-definition (defined) drivers(
+        bool<> !GND
+        bool<> !Vdd
+        bool<>! _R_out
+      )
+      In definition "drivers", we have: {
+      Instances:
+        !GND = bool<> drivers::!GND
+        !Vdd = bool<> drivers::!Vdd
+        _R_out = bool<>! drivers::_R_out
+      unroll sequence: 
+        ports: (
+          bool<> !GND
+          bool<> !Vdd
+          bool<>! _R_out
+        )
+        !GND@[supply=0]
+        !Vdd@[supply=1]
+        _R_out!
+      footprint: {
+        !GND = bool^0 = drivers<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = drivers<>::!Vdd (2) @[ supply_high port-alias ] 
+        _R_out = bool^0 = drivers<>::_R_out (3) @[ port! port-alias loc-FI- loc-FI+ ] 
+        Created state:
+        bool instance pool: (3 ports, 0 local, 0 mapped)
+        1	drivers<>::!GND @[ supply_low port-alias ]	
+        2	drivers<>::!Vdd @[ supply_high port-alias ]	
+        3	drivers<>::_R_out @[ port! port-alias loc-FI- loc-FI+ ]	
+      }
+      }
+
+    foo = process-definition (defined) foo(
+        bool<> !GND
+        bool<> !Vdd
+        bundle_interface<> if_n
+        bool<>! _R_no
+      )
+      In definition "foo", we have: {
+      Instances:
+        !GND = bool<> foo::!GND
+        !Vdd = bool<> foo::!Vdd
+        _R_no = bool<>! foo::_R_no
+        drv = drivers<> foo::drv
+        if_n = bundle_interface<> foo::if_n
+      unroll sequence: 
+        ports: (
+          bool<> !GND
+          bool<> !Vdd
+          bundle_interface<> if_n
+          bool<>! _R_no
+        )
+        !GND@[supply=0]
+        !Vdd@[supply=1]
+        drivers<> drv
+        _R_no = drv._R_out;
+        _R_no = if_n._R_nb;
+      footprint: {
+        !GND = bool^0 = foo<>::!GND (2) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = foo<>::!Vdd (3) @[ supply_high port-alias ] 
+        _R_no = bool^0 = foo<>::_R_no (1) @[ port! port-alias sub-FI- sub-FI+ ] 
+        drv = process drivers<>^0 = foo<>::drv (2) (
+          !GND = bool^0 = foo<>::!GND (2) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = foo<>::!Vdd (3) @[ supply_high port-alias ] 
+          _R_out = bool^0 = foo<>::_R_no (1) @[ port! port-alias sub-FI- sub-FI+ ] 
+        )
+        if_n = process bundle_interface<>^0 = foo<>::if_n (1) @[ port-alias ] (
+          _R_nb = bool^0 = foo<>::_R_no (1) @[ port! port-alias sub-FI- sub-FI+ ] 
+        )
+        Created state:
+        process instance pool: (1 ports, 1 local, 0 mapped)
+        1	foo<>::if_n @[ port-alias ]	bundle_interface<>
+          bool: 1
+        2	foo<>::drv	drivers<>
+          bool: 2,3,1
+        bool instance pool: (3 ports, 0 local, 0 mapped)
+        1	foo<>::_R_no @[ port! port-alias sub-FI- sub-FI+ ]	
+        2	foo<>::!GND @[ supply_low port-alias ]	
+        3	foo<>::!Vdd @[ supply_high port-alias ]	
+        bool port aliases:
+        1: foo<>::if_n._R_nb = foo<>::_R_no @[ port! port-alias sub-FI- sub-FI+ ]
+      }
+      }
+
+  Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
+    bar = foo<> bar
+}
+
+footprint: {
+  !GND = bool^0 = !GND (1) @[ supply_low ] 
+  !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
+  bar = process foo<>^0 = bar (1) (
+    !GND = bool^0 = !GND (1) @[ supply_low ] 
+    !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
+    if_n = process bundle_interface<>^0 = bar.if_n (2) (
+      _R_nb = bool^0 = bar._R_no (3) @[ sub-FI- sub-FI+ ] 
+    )
+    _R_no = bool^0 = bar._R_no (3) @[ sub-FI- sub-FI+ ] 
+  )
+  Created state:
+  process instance pool: (0 ports, 2 local, 1 mapped)
+  1	bar	foo<>
+    process: 2
+    bool: 3,1,2
+  2	bar.if_n	bundle_interface<>
+    bool: 3
+  private sub-process index map:
+    (1 -> 0)
+    (3 -> 1)
+  bool instance pool: (0 ports, 3 local, 0 mapped)
+  1	!GND @[ supply_low ]	
+  2	!Vdd @[ supply_high ]	
+  3	bar._R_no @[ sub-FI- sub-FI+ ]	
+}

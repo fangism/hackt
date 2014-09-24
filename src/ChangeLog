@@ -3,6 +3,30 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2014-09-24	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-86-57:
+	  Bug fix for ACX-PR-10053: failure to propagate some attributes
+		on process/struct ports up the hierarchy.
+		This is related to the way port aliases are replayed.
+		Internal changes:
+		During replay of port aliases, attributes and actuals 
+		of aliased ports are *assumed* to already match
+		(as enforced when that type was created),
+		so now, just reconnect aliases' next pointers, and
+		assert that actuals and attributes match.
+		On instance-alias instantiate(), replay port aliases
+		as soon as type is complete.
+		There may still be a pass that does this redundantly,
+		but will clean that up later.
+		In export_alias_properties(), apply properties to
+		all aliases in each set, not just the canonical (top) one.
+	  TODO: replace current method of re-unrolling instances'
+		ports with a one-time per-type generated template,
+		that can be deep-copied and post-processed.
+		This would be essentially a copy of subinstance_manager info.
+
+
 2014-09-05	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-86-56:

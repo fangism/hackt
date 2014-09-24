@@ -1,5 +1,5 @@
 /**
-	\file "Object/inst/internal_alaises_policy.tcc"
+	\file "Object/inst/internal_aliases_policy.tcc"
 	$Id: internal_aliases_policy.tcc,v 1.7 2007/07/18 23:28:44 fang Exp $
  */
 
@@ -13,6 +13,7 @@
 #include "Object/type/canonical_type.hh"
 #include "Object/inst/instance_alias_info.hh"
 #include "Object/inst/collection_interface.hh"
+#include "Object/common/dump_flags.hh"
 #include "util/memory/excl_ptr.hh"
 #include "util/stacktrace.hh"
 
@@ -43,8 +44,7 @@ internal_aliases_policy<true>::connect(AliasType& _alias) {
 						definition_type;
 	STACKTRACE_VERBOSE;
 	const container_type& c(_alias.container->get_canonical_collection());
-	const canonical_type_type
-		_type(_alias.complete_type_actuals(c));
+	const canonical_type_type _type(_alias.complete_type_actuals(c));
 #if ENABLE_STACKTRACE
 	_type.dump(STACKTRACE_INDENT << "canonical-type: ") << endl;
 #endif
@@ -66,10 +66,14 @@ internal_aliases_policy<true>::connect(AliasType& _alias,
 	typedef	typename CanonicalType::const_param_list_ptr_type
 			param_list_ptr_type;
 	const param_list_ptr_type& p(_type.get_raw_template_params());
-	const footprint&
-		fp(def->get_footprint(p));
+	const footprint& fp(def->get_footprint(p));
 	const port_alias_tracker& pt(fp.get_port_alias_tracker());
-	return pt.replay_internal_aliases(_alias);
+	const good_bool ret(pt.replay_internal_aliases(_alias));
+#if ENABLE_STACKTRACE
+	_alias.dump_ports(STACKTRACE_INDENT_PRINT("ports after replay:\n"),
+		dump_flags::default_value) << endl;
+#endif
+	return ret;
 }
 
 //=============================================================================

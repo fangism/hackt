@@ -1,0 +1,14 @@
+// "172.hac" further reduced test case from "170.hac"
+// ref: ACX-PR-10053
+
+deftype reset <: bool () { }
+
+defproc foo (reset! _Ro1, _Ro2) {
+	_Ro1!;
+	_Ro2 = _Ro1;
+}
+
+// symptom: dies when replaying aliases of bar's ports
+// thinking that they are connected to different producers
+foo bar;
+

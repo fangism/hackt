@@ -155,6 +155,7 @@ INSTANCE_ALIAS_INFO_CLASS::check(const container_type* p) const {
 	when binding relaxed template parameters.  
 	\pre If container has relaxed type, then this alias has already
 		been bound to relaxed template parameters.  
+	Also called by alias_actuals::synchronize_actuals
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
@@ -171,13 +172,27 @@ if (!this->container->get_canonical_collection().has_relaxed_type()
 		// already have error message
 		THROW_EXIT;
 	}
-}
 #if 0
 	// did we forget this accidentally?
 	actuals_parent_type::copy_actuals(f);
 #endif
 	direction_connection_policy::initialize_direction(*this, c);
-	// FIXME: inherit direction flags?
+	// FIXME: replay port aliases as early as possible, here
+// if type is complete...
+	typedef	internal_aliases_policy<traits_type::can_internally_alias>
+				alias_traits;
+	const good_bool g(alias_traits::connect(*this));
+	if (!g.good) {
+		THROW_EXIT;
+	}
+} else {
+	direction_connection_policy::initialize_direction(*this, c);
+}
+#if ENABLE_STACKTRACE
+	this->dump_ports(STACKTRACE_INDENT_PRINT(
+		"ports after instantiate_actuals_only()\n"), 
+		dump_flags::default_value) << endl;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -188,7 +203,7 @@ if (!this->container->get_canonical_collection().has_relaxed_type()
 	\param c the unroll context for recursive instantiation
 	NOTE: instantiation can now also occur at the time when
 		relaxed template parameters are bound to an instance.  
-		See Object/unroll/template_type_completion.{h,tcc}.
+		See Object/unroll/template_type_completion.{hh,tcc}.
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
@@ -548,13 +563,23 @@ INSTANCE_ALIAS_INFO_CLASS::disconnect_implicit_port(void) {
 /**
 	Wrapper around checked_connect_port, shouldn't require a real
 	unroll_context because is only replaying internal alias.  
+	Similar to checked_connect_port(), but this asserts that
+	type and attributes already match.
+	See also relative: checked_connect_port()
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
-good_bool
+void
 INSTANCE_ALIAS_INFO_CLASS::replay_connect_port(this_type& l, this_type& r) {
+	STACKTRACE_VERBOSE;
+#if 0
 	const footprint* const f = NULL;
 	const unroll_context bogus(f, f);
 	return checked_connect_port(l, r, bogus);
+#else
+	INVARIANT(l.must_match_type(r));
+	l.reunite(r);
+	l.reconnect_port_aliases_recursive(r);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -706,6 +731,29 @@ INSTANCE_ALIAS_INFO_CLASS::unite(this_type& r, const unroll_context& c) {
 		r.dump_hierarchical_name(cerr << "\tand:  ") << endl;
 	}
 	return ret;
+	// will already have error message
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This is called to re-connect port aliases.
+	Instead of checking for attribute/flag compatibility,
+	this should really check that attributes/flags are already
+	*identical* -- they should have already been synchronized
+	when their types were completed.
+ */
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+void
+INSTANCE_ALIAS_INFO_CLASS::reunite(this_type& r) {
+	STACKTRACE_VERBOSE;
+	const pseudo_iterator lc(this->find());
+	this_type* const rc = &*r.find();
+	lc->next = rc;
+#if 1
+// FIXME:
+	INVARIANT(lc->matched_flags(*rc));
+	INVARIANT(lc->matched_actuals(*rc));
+#endif
 	// will already have error message
 }
 

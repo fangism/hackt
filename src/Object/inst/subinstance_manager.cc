@@ -244,7 +244,7 @@ if (*ri) {
 		so check whether or not this is expanded first.  
  */
 good_bool
-subinstance_manager::connect_port_aliases_recursive(this_type& r,
+subinstance_manager::connect_port_aliases_recursive(this_type& r, 
 		const unroll_context& c) {
 	STACKTRACE_VERBOSE;
 	INVARIANT(subinstance_array.size() == r.subinstance_array.size());
@@ -259,6 +259,26 @@ subinstance_manager::connect_port_aliases_recursive(this_type& r,
 		}	// else good to continue
 	}
 	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This is called to reconnect/replay port aliases, 
+	whose types and attributes have already been checked and
+	matched.
+	Follows same outline as connect_port_aliases_recursive().
+ */
+void
+subinstance_manager::reconnect_port_aliases_recursive(this_type& r) {
+	STACKTRACE_VERBOSE;
+	INVARIANT(subinstance_array.size() == r.subinstance_array.size());
+	iterator pi(subinstance_array.begin());	// instance_collection_type
+	iterator ri(r.subinstance_array.begin());
+	const iterator pe(subinstance_array.end());
+	for ( ; pi!=pe; ++pi, ++ri) {
+		NEVER_NULL(*ri);
+		(*ri)->reconnect_port_aliases_recursive(**pi);
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

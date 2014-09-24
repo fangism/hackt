@@ -219,6 +219,23 @@ bool_connect_policy::connection_flag_setter::operator () (AliasType& a) {
 	}
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class AliasType>
+bool
+bool_connect_policy::matched_flags(const AliasType& r) const {
+	const AliasType& l(AS_A(const AliasType&, *this));
+	if (attributes != r.attributes) {
+		cerr << "ll.flags = 0x" <<
+			std::hex << size_t(attributes) << endl;
+		cerr << "rr.flags = 0x" <<
+			std::hex << size_t(r.attributes) << endl;
+		l.dump_hierarchical_name(cerr << "l: ") << endl;
+		r.dump_hierarchical_name(cerr << "r: ") << endl;
+		return false;
+	}
+	return true;
+}
+
 //=============================================================================
 // class channel_connect_policy method definitions
 
@@ -589,7 +606,7 @@ if (a.has_complete_type()) {
 #endif	// PROCESS_CONNECTIVITY_CHECKING
 	// else type is relaxed, skip this until type is complete
 }
-}	// end process_connect_policy::initialize_actual_direction
+}	// end process_connect_policy::initialize_direction
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if PROCESS_CONNECTIVITY_CHECKING
@@ -690,6 +707,23 @@ template <class AliasType>
 void
 process_connect_policy::__update_flags(AliasType& a) {
 	this->direction_flags = a.find()->direction_flags;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class AliasType>
+bool
+process_connect_policy::matched_flags(const AliasType& r) const {
+	const AliasType& l(AS_A(const AliasType&, *this));
+	if (direction_flags != r.direction_flags) {
+		cerr << "ll.flags = 0x" <<
+			std::hex << size_t(direction_flags) << endl;
+		cerr << "rr.flags = 0x" <<
+			std::hex << size_t(r.direction_flags) << endl;
+		l.dump_hierarchical_name(cerr << "l: ") << endl;
+		r.dump_hierarchical_name(cerr << "r: ") << endl;
+		return false;
+	}
+	return true;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

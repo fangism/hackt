@@ -436,6 +436,27 @@ PORT_ACTUAL_COLLECTION_CLASS::connect_port_aliases_recursive(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
+void
+PORT_ACTUAL_COLLECTION_CLASS::reconnect_port_aliases_recursive(
+		physical_instance_collection& p) {
+	STACKTRACE_VERBOSE;
+	this_type& t(IS_A(this_type&, p));	// assert dynamic_cast
+	INVARIANT(this->value_array.size() == t.value_array.size());
+	iterator i(this->begin());
+	iterator j(t.begin());
+	const iterator e(this->end());
+	for ( ; i!=e; ++i, ++j) {
+		// unfortunately, set iterators only return const refs
+		// we only intend to modify the value without modifying the key
+		element_type& ii(*i);
+		element_type& jj(*j);
+		// possibly redundant port type checking is unnecessary
+		instance_alias_info_type::replay_connect_port(ii, jj);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Recursive creation of dependent types through public ports
 	of instance hierarchy.

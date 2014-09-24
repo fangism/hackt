@@ -79,6 +79,13 @@ public:
 	ostream&
 	dump_actuals(ostream& o) const;
 
+	bool
+	matched_actuals(const this_type& r) const {
+		// NOTE: this is a pointer comparison!
+		return (actuals == r.actuals) ||
+			compare_actuals(actuals, r.actuals).good;
+	}
+
 protected:
 	/**
 		\return true if actuals are new.

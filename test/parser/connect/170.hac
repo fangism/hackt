@@ -1,0 +1,22 @@
+// "170.hac" reduced test case from Jingqing Huang
+// ref: ACX-PR-10053
+
+deftype reset <: bool () { }
+
+defproc drivers(reset! _R_out) {
+	_R_out!;
+}
+
+deftype bundle_interface <: int(reset _R_nb) { }
+
+defproc foo (
+	bundle_interface if_n;
+	reset! _R_no
+) {
+	drivers drv;
+	_R_no = drv._R_out;
+	_R_no = if_n._R_nb;  // port alias
+}
+
+foo bar;
+

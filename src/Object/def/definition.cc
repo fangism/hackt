@@ -3329,10 +3329,20 @@ process_definition::__create_complete_type(
 		footprint& f, 
 		const footprint& top) const {
 	STACKTRACE_VERBOSE;
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT_PRINT("Creating process type: " <<
+		get_qualified_name());
+	if (p) {
+		p->dump(STACKTRACE_STREAM << '<',
+			expr_dump_context::default_value) << '>';
+	}
+	STACKTRACE_STREAM << endl;
+#endif
 try {
 	const footprint::create_lock LOCK(f);	// will catch recursion error
 	// will automatically unroll first if not already unrolled
 	if (!f.is_created()) {
+		STACKTRACE_INDENT_PRINT("unrolling type definition." << endl);
 		const unroll_context c(&f, &top);
 		// why not pass context?
 		if (!__unroll_complete_type(p, f, top).good) {
@@ -3389,6 +3399,11 @@ try {
 				return good_bool(false);
 			}
 		}
+#if ENABLE_STACKTRACE
+		f.dump_with_collections(cerr << "Final footprint: " << endl);
+#endif
+	} else {
+		STACKTRACE_INDENT_PRINT("already created" << endl);
 	}
 	return good_bool(true);
 } catch (...) {

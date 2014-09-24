@@ -1,0 +1,244 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	20
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	105
+	7	##ADDR##	procplch	0	#HEAD#	#TAIL#	29
+	8	##ADDR##	portscop	0	#HEAD#	#TAIL#	16
+	9	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	11	##ADDR##	procdefn	0	#HEAD#	#TAIL#	82
+	12	##ADDR##	footprnt	0	#HEAD#	#TAIL#	262
+	13	##ADDR##	footprnt	0	#HEAD#	#TAIL#	297
+	14	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	15	##ADDR##	procdefn	0	#HEAD#	#TAIL#	124
+	16	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	17	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	18	##ADDR##	procplch	0	#HEAD#	#TAIL#	30
+	19	##ADDR##	portscop	0	#HEAD#	#TAIL#	24
+	20	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
+	22	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	23	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	26	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	27	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	30	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	31	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	34	##ADDR##	procdird	0	#HEAD#	#TAIL#	13
+	35	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	footprnt	0	#HEAD#	#TAIL#	333
+	37	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	38	##ADDR##	procdefn	0	#HEAD#	#TAIL#	140
+	39	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	40	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	41	##ADDR##	procplch	0	#HEAD#	#TAIL#	29
+	42	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	43	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
+	44	##ADDR##	portscop	0	#HEAD#	#TAIL#	28
+	45	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	46	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
+	47	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	48	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	49	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	50	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	51	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	52	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	53	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	54	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	55	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	56	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	57	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	58	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	59	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	60	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	61	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	62	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	63	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	64	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
+	65	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	66	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	67	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	68	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
+	69	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	70	##ADDR##	footprnt	0	#HEAD#	#TAIL#	535
+	71	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	72	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	73	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	74	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	75	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
+	76	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	77	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	78	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	79	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	80	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	81	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	82	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	83	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	84	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	85	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	86	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	87	##ADDR##	footprnt	0	#HEAD#	#TAIL#	502
+	88	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  3 instantiation-collections
+  0 sub-namespaces
+  4 definitions
+  0 typedefs
+  Definitions:
+    bundle_interface = process-definition (defined) bundle_interface(
+        reset<> _R_nb
+      )
+      In definition "bundle_interface", we have: {
+      Instances:
+        _R_nb = reset<> bundle_interface::_R_nb
+      unroll sequence: 
+        ports: (
+          reset<> _R_nb
+        )
+      footprint: {
+        _R_nb = process reset<>^0 = bundle_interface<>::_R_nb (1) @[ port-alias ] 
+        Created state:
+        process instance pool: (1 ports, 0 local, 0 mapped)
+        1	bundle_interface<>::_R_nb @[ port-alias ]	reset<>
+      }
+      }
+
+    drivers = process-definition (defined) drivers(
+        bool<> !GND
+        bool<> !Vdd
+        reset<>! _R_out
+      )
+      In definition "drivers", we have: {
+      Instances:
+        !GND = bool<> drivers::!GND
+        !Vdd = bool<> drivers::!Vdd
+        _R_out = reset<>! drivers::_R_out
+      unroll sequence: 
+        ports: (
+          bool<> !GND
+          bool<> !Vdd
+          reset<>! _R_out
+        )
+        !GND@[supply=0]
+        !Vdd@[supply=1]
+        _R_out!
+      footprint: {
+        !GND = bool^0 = drivers<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = drivers<>::!Vdd (2) @[ supply_high port-alias ] 
+        _R_out = process reset<>^0 = drivers<>::_R_out (1) @[ loc! port! port-alias ] 
+        Created state:
+        process instance pool: (1 ports, 0 local, 0 mapped)
+        1	drivers<>::_R_out @[ loc! port! port-alias ]	reset<>
+        bool instance pool: (2 ports, 0 local, 0 mapped)
+        1	drivers<>::!GND @[ supply_low port-alias ]	
+        2	drivers<>::!Vdd @[ supply_high port-alias ]	
+      }
+      }
+
+    foo = process-definition (defined) foo(
+        bool<> !GND
+        bool<> !Vdd
+        bundle_interface<> if_n
+        reset<>! _R_no
+      )
+      In definition "foo", we have: {
+      Instances:
+        !GND = bool<> foo::!GND
+        !Vdd = bool<> foo::!Vdd
+        _R_no = reset<>! foo::_R_no
+        drv = drivers<> foo::drv
+        if_n = bundle_interface<> foo::if_n
+      unroll sequence: 
+        ports: (
+          bool<> !GND
+          bool<> !Vdd
+          bundle_interface<> if_n
+          reset<>! _R_no
+        )
+        !GND@[supply=0]
+        !Vdd@[supply=1]
+        drivers<> drv
+        _R_no = drv._R_out;
+        _R_no = if_n._R_nb;
+      footprint: {
+        !GND = bool^0 = foo<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high port-alias ] 
+        _R_no = process reset<>^0 = foo<>::_R_no (2) @[ sub! port! port-alias ] 
+        drv = process drivers<>^0 = foo<>::drv (3) (
+          !GND = bool^0 = foo<>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = foo<>::!Vdd (2) @[ supply_high port-alias ] 
+          _R_out = process reset<>^0 = foo<>::_R_no (2) @[ sub! port! port-alias ] 
+        )
+        if_n = process bundle_interface<>^0 = foo<>::if_n (1) @[ port-alias ] (
+          _R_nb = process reset<>^0 = foo<>::_R_no (2) @[ sub! port! port-alias ] 
+        )
+        Created state:
+        process instance pool: (2 ports, 1 local, 0 mapped)
+        1	foo<>::if_n @[ port-alias ]	bundle_interface<>
+          process: 2
+        2	foo<>::_R_no @[ sub! port! port-alias ]	reset<>
+        3	foo<>::drv	drivers<>
+          process: 2
+          bool: 1,2
+        bool instance pool: (2 ports, 0 local, 0 mapped)
+        1	foo<>::!GND @[ supply_low port-alias ]	
+        2	foo<>::!Vdd @[ supply_high port-alias ]	
+        process port aliases:
+        2: foo<>::if_n._R_nb = foo<>::_R_no @[ sub! port! port-alias ]
+      }
+      }
+
+    reset = process-definition (defined) reset(
+      )
+      In definition "reset", we have: {
+      unroll sequence: 
+      footprint: {
+      }
+      }
+
+  Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
+    bar = foo<> bar
+}
+
+footprint: {
+  !GND = bool^0 = !GND (1) @[ supply_low ] 
+  !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
+  bar = process foo<>^0 = bar (1) (
+    !GND = bool^0 = !GND (1) @[ supply_low ] 
+    !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
+    if_n = process bundle_interface<>^0 = bar.if_n (2) (
+      _R_nb = process reset<>^0 = bar._R_no (3) @[ sub! ] 
+    )
+    _R_no = process reset<>^0 = bar._R_no (3) @[ sub! ] 
+  )
+  Created state:
+  process instance pool: (0 ports, 3 local, 1 mapped)
+  1	bar	foo<>
+    process: 2,3
+    bool: 1,2
+  2	bar.if_n	bundle_interface<>
+    process: 3
+  3	bar._R_no @[ sub! ]	reset<>
+  private sub-process index map:
+    (1 -> 0)
+    (4 -> 1)
+  bool instance pool: (0 ports, 2 local, 0 mapped)
+  1	!GND @[ supply_low ]	
+  2	!Vdd @[ supply_high ]	
+}

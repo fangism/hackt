@@ -270,7 +270,7 @@ SPARSE_COLLECTION_CLASS::operator [] (const key_type& k) {
 SPARSE_COLLECTION_TEMPLATE_SIGNATURE
 const typename SPARSE_COLLECTION_CLASS::key_type&
 SPARSE_COLLECTION_CLASS::__lookup_key(const size_type i) const {
-	STACKTRACE_BRIEF;
+//	STACKTRACE_BRIEF;
 	INVARIANT(i < key_index_array.size());
 	return key_index_array[i]->first;
 }
@@ -296,7 +296,7 @@ SPARSE_COLLECTION_CLASS::lookup_key(const size_type i) const {
 SPARSE_COLLECTION_TEMPLATE_SIGNATURE
 const typename SPARSE_COLLECTION_CLASS::key_type&
 SPARSE_COLLECTION_CLASS::lookup_key(const value_type& v) const {
-	STACKTRACE_BRIEF;
+//	STACKTRACE_BRIEF;
 	const size_type i = this->lookup_index(v);
 	return this->lookup_key(i);
 }

@@ -1,0 +1,17 @@
+// "wchb-08.hac"
+// a reduced test case
+
+defchan e1of2 <: chan(bool) (bool d[2], e, t, f) { d[0] = f; d[1] = t; }
+// defproc e1of2 (bool d[2], e, t, f) { d[0] = f; d[1] = t; }
+
+defproc wchb (e1of2? l; e1of2! r) {
+prs {
+(:d:2:
+	l.d[d] => r.d[d]+
+)
+	r.e => l.e+
+}
+}
+
+wchb W;
+

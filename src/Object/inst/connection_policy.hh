@@ -55,6 +55,9 @@ protected:
 	initialize_actual_direction(const this_type&) const { }
 
 public:
+	bool
+	matched_flags(const this_type&) const { return true; }
+
 	good_bool
 	set_connection_flags(const connection_flags_type) const {
 		return good_bool(true);
@@ -329,6 +332,10 @@ protected:
 	static
 	good_bool
 	synchronize_flags(this_type& l, this_type& r);
+
+	template <class AliasType>
+	bool
+	matched_flags(const AliasType& r) const;
 
 	template <class AliasType>
 	void
@@ -698,7 +705,13 @@ protected:
 	good_bool
 	synchronize_flags(AliasType&, AliasType&);
 
+
 public:
+	bool
+	matched_flags(const this_type& r) const {
+		return direction_flags == r.direction_flags;
+	}
+
 	good_bool
 	set_connection_flags(const connection_flags_type);
 
@@ -900,6 +913,10 @@ protected:
 	initialize_actual_direction(const AliasType&);
 
 public:
+	template <class AliasType>
+	bool
+	matched_flags(const AliasType& r) const;
+
 	good_bool
 	set_connection_flags(const connection_flags_type);
 

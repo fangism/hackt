@@ -63,6 +63,9 @@ protected:
 #endif
 
 public:
+	bool
+	matched_actuals(const this_type&) const { return true; }
+
 	/**
 		Return NULL pointer to the actuals.  
 		Defined in "Object/art_object_instance_alias_actuals.cc".

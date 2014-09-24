@@ -1,0 +1,20 @@
+// "171.hac"
+// reduced test case, related to "170.hac"
+
+defproc drivers(bool! _R_out) {
+	_R_out!;
+}
+
+deftype bundle_interface <: int(bool _R_nb) { }
+
+defproc foo (
+	bundle_interface if_n;
+	bool! _R_no
+) {
+	drivers drv;
+	_R_no = drv._R_out;
+	_R_no = if_n._R_nb;  // port alias
+}
+
+foo bar;
+
