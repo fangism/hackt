@@ -83,10 +83,12 @@ protected:
 public:
 	subinstance_manager();
 
+protected:
 	// explicit custom copy constructor
 	explicit
 	subinstance_manager(const this_type&);
 
+public:
 	~subinstance_manager();
 
 	bool
