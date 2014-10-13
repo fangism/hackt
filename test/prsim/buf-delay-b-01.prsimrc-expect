@@ -1,0 +1,3 @@
+Error: `a.mid' is not a publicly accessible node in the current context.
+Error finding reference node: a.mid
+... at line 5

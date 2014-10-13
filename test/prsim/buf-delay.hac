@@ -1,0 +1,28 @@
+// "buf-delay.hac"
+
+defproc inv(bool? in; bool! out) {
+prs {
+	in	=> out-
+}
+}
+
+defproc buf(bool? in; bool! out) {
+	bool mid;
+	inv a(in, mid);
+	inv b(mid, out);
+}
+
+
+bool in, mid, out;
+buf a(in, mid);
+buf b(mid, out);
+
+/*
+defproc buf2(bool? in; bool! out) {
+	bool mid;
+	buf a(in, mid);
+	buf b(mid, out);
+}
+
+buf2 B;
+**/

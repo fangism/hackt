@@ -1,0 +1,15 @@
+# "buf-delay-01.prsimrc"
+# @haco@ buf-delay.haco-c
+
+min-delay a.mid b.mid 55
+# error: a.mid is not publicly accessible
+
+min-delay-apply-all
+min-delay-list-all
+
+watchall
+set in 0
+cycle
+set in 1
+cycle
+

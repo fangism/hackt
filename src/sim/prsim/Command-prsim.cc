@@ -54,6 +54,9 @@ DEFAULT_STATIC_TRACE
 #include "parser/type.hh"
 #include "Object/module.hh"
 #include "Object/def/footprint.hh"
+#include "Object/inst/state_instance.hh"
+#include "Object/inst/instance_pool.hh"
+#include "Object/traits/bool_traits.hh"
 
 #include "common/TODO.hh"
 #include "util/numformat.tcc"
@@ -139,6 +142,11 @@ using entity::META_TYPE_BOOL;
 using entity::META_TYPE_NONE;
 using parser::process_index;
 using parser::bool_index;
+using entity::instance_pool;
+using entity::state_instance;
+using entity::bool_tag;
+typedef	state_instance<bool_tag>::pool_type	bool_pool_type;
+
 
 #define	TYPE_CONTEXT_INVALID_COMMAND					\
 	cerr << "Command is invalid within type context: " << name << endl
@@ -207,6 +215,10 @@ if (CommandRegistry::in_local_type()) {
 }
 }
 
+static
+const bool_pool_type&
+__get_current_footprint_bool_pool(const State&);
+
 // wrap around definitions in "parser/instref.h"
 static
 // bool_index
@@ -216,6 +228,19 @@ parse_node_to_index(const string& s, const entity::module& m) {
 	STACKTRACE_INDENT_PRINT("Parsing node(s): " << s << endl);
 	return dispatch_parser(ptr_fun(parser::parse_node_to_index),
 		s, m, false).index;
+}
+
+static
+node_index_type
+parse_node_to_local_index(const string& s, const State& m) {
+	const node_index_type ret = parse_node_to_index(s, m.get_module());
+	if (ret > __get_current_footprint_bool_pool(m).local_entries()) {
+		cerr << "Error: `" << s <<
+"' is not a publicly accessible node in the current context."
+			<< endl;
+		return INVALID_NODE_INDEX;
+	}
+	return ret;
 }
 
 #if PRSIM_NODE_AGGREGATE_ARGUMENTS
@@ -354,6 +379,36 @@ __get_current_process_graph(State& s) {
 	NEVER_NULL(g);
 	NEVER_NULL(g->_footprint);
 	return g;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+static
+const unique_process_subgraph*
+__get_current_process_graph(const State& s) {
+	const unique_process_subgraph* g;
+	if (CommandRegistry::in_local_type()) {
+		const entity::footprint& f(CommandRegistry::current_type());
+		g = s.lookup_unique_process_graph(&f);
+		INVARIANT(g->_footprint == &f);
+	} else {
+		g = s.lookup_unique_process_graph("");
+	}
+	NEVER_NULL(g);
+	NEVER_NULL(g->_footprint);
+	return g;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+static
+const footprint&
+__get_current_footprint(const State& s) {
+	return *__get_current_process_graph(s)->_footprint;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const bool_pool_type&
+__get_current_footprint_bool_pool(const State& s) {
+	return __get_current_footprint(s).get_instance_pool<bool_tag>();
 }
 
 //=============================================================================
@@ -6919,13 +6974,13 @@ if (a.size() != 4) {
 	string_list::const_iterator ai(a.begin());
 	++ai;
 	// indices are local
-	const node_index_type srcind = parse_node_to_index(*ai, s.get_module());
+	const node_index_type srcind = parse_node_to_local_index(*ai, s);
 	if (!srcind) {
 		cerr << "Error finding node: " << *ai << endl;
 		return Command::BADARG;
 	}
 	++ai;
-	const node_index_type dstind = parse_node_to_index(*ai, s.get_module());
+	const node_index_type dstind = parse_node_to_local_index(*ai, s);
 	if (!dstind) {
 		cerr << "Error finding node: " << *ai << endl;
 		return Command::BADARG;
@@ -6990,13 +7045,13 @@ if (a.size() != 6) {
 	string_list::const_iterator ai(a.begin());
 	++ai;
 	// indices are local
-	const node_index_type srcind = parse_node_to_index(*ai, s.get_module());
+	const node_index_type srcind = parse_node_to_local_index(*ai, s);
 	if (!srcind) {
 		cerr << "Error finding node: " << *ai << endl;
 		return Command::BADARG;
 	}
 	++ai;
-	const node_index_type dstind = parse_node_to_index(*ai, s.get_module());
+	const node_index_type dstind = parse_node_to_local_index(*ai, s);
 	if (!dstind) {
 		cerr << "Error finding node: " << *ai << endl;
 		return Command::BADARG;
@@ -7285,7 +7340,7 @@ if (asz < 4 || asz > 5) {
 	case '-': rnode.resize(rnode.length()-1); break;
 	default: rdir = '*'; break;
 	}
-	const node_index_type srcind = parse_node_to_index(rnode, s.get_module());
+	const node_index_type srcind = parse_node_to_local_index(rnode, s);
 	if (!srcind) {
 		cerr << "Error finding reference node: " << *ai << endl;
 		return Command::BADARG;
@@ -7298,7 +7353,7 @@ if (asz < 4 || asz > 5) {
 	case '-': tnode.resize(tnode.length()-1); break;
 	default: tdir = '*'; break;
 	}
-	const node_index_type dstind = parse_node_to_index(tnode, s.get_module());
+	const node_index_type dstind = parse_node_to_local_index(tnode, s);
 	if (!dstind) {
 		cerr << "Error finding target node: " << *ai << endl;
 		return Command::BADARG;
@@ -7309,7 +7364,7 @@ if (asz < 4 || asz > 5) {
 	size_t predind = INVALID_NODE_INDEX;
 	if (asz == 5) {
 		++ai;
-		predind = parse_node_to_index(*ai, s.get_module());
+		predind = parse_node_to_local_index(*ai, s);
 		if (!predind) {
 			cerr << "Error finding predicate node: " << *ai << endl;
 			return Command::BADARG;
