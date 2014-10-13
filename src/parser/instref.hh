@@ -168,6 +168,10 @@ bool_index
 parse_node_to_index(const string&, const footprint&);
 
 extern
+bool_index
+parse_node_to_local_index(const string&, const footprint&);
+
+extern
 bool
 parse_processes_to_indices(const string&, const footprint&, vector<size_t>&);
 

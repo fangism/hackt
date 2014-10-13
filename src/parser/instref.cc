@@ -430,6 +430,23 @@ parse_nodes_to_indices(const string& n, const footprint& m,
 	return b.empty();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Further restricts that the referenced node must be publicly accessible.
+ */
+bool_index
+parse_node_to_local_index(const string& n, const footprint& f) {
+	STACKTRACE_VERBOSE;
+	bool_index ret(n, f);
+	if (ret.index > f.get_instance_pool<bool_tag>().local_entries()) {
+		cerr << "Error: `" << n <<
+			"' is not publicly accessible in the current context."
+			<< endl;
+		ret.index = INVALID_NODE_INDEX;
+	}
+	return ret;
+}
+
 //=============================================================================
 /**
 	\return globally allocated index of a named process, 
