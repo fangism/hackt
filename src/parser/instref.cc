@@ -487,27 +487,6 @@ must_be_scalar_inst(const checked_ref_type& r, ostream* o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !REUSE_PARSE_GLOBAL_FOR_LOCAL
-/**
-	\returns a (type, index)-pair that references the globally
-	allocated index.  
-	Optional error stream allows suppression of diagnostics.  
-	TODO: handle meta value references?
- */
-global_indexed_reference
-parse_local_reference(const string& n, const footprint& f, ostream* o) {
-	STACKTRACE_VERBOSE;
-	static const global_indexed_reference
-		err(META_TYPE_NONE, INVALID_NODE_INDEX);
-	const never_ptr<const process_definition>
-		pdef(f.get_owner_process_def());
-	const checked_ref_type r(parse_and_check_reference(n.c_str(), *pdef));
-	if (!must_be_scalar_inst(r, o)) { return err; }
-	return parse_local_reference(r, f);
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 global_indexed_reference
 parse_global_reference(const string& n, const footprint& f, ostream* o) {
 	STACKTRACE_VERBOSE;
@@ -540,15 +519,6 @@ parse_global_reference(const meta_reference_union& r, const footprint& topfp) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !REUSE_PARSE_GLOBAL_FOR_LOCAL
-global_indexed_reference
-parse_local_reference(const meta_reference_union& r, const footprint& f) {
-	INVARIANT(r.inst_ref());
-	return parse_global_reference(r, f);
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 int
 parse_global_references(const string& n, 
 		const footprint& m, global_reference_array_type& a) {
@@ -579,39 +549,6 @@ parse_global_references(const meta_reference_union& r,
 	const good_bool b(r.inst_ref()->lookup_top_level_references(gc, a));
 	return (b.good && a.size()) ? 0 : 1;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !REUSE_PARSE_GLOBAL_FOR_LOCAL
-int
-parse_local_references(const string& n, 
-		const footprint& m, global_reference_array_type& a) {
-	STACKTRACE_VERBOSE;
-	const checked_ref_type r(parse_and_check_reference(n.c_str(),
-		*m.get_owner_process_def()));
-	if (!r.inst_ref()) {
-		return 1;
-	}
-	// allow array references
-	return parse_local_references(r, m, a);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Parses an aggregate reference into a collection.
-	\return non-zero on error
- */
-int
-parse_local_references(const meta_reference_union& r, 
-		const footprint& topfp, global_reference_array_type& a) {
-	STACKTRACE_VERBOSE;
-	INVARIANT(r.inst_ref());
-	global_process_context gpc(topfp);
-	gpc.construct_top_global_context();
-	const global_entry_context gc(gpc);
-	const good_bool b(r.inst_ref()->lookup_top_level_references(gc, a));
-	return (b.good && a.size()) ? 0 : 1;
-}
-#endif
 
 //=============================================================================
 /**
