@@ -35,6 +35,14 @@ using util::persistent_object_manager;
 using util::memory::never_ptr;
 using util::good_bool;
 
+/**
+	Define to 1 to simplify port actual construction by splitting
+	allocation from initialization.
+	Goal: 1
+	Status: passes regressions
+ */
+#define	SIMPLE_ALLOCATE_PORT_COLLECTION				1
+
 //=============================================================================
 /**
 	Wrapper class for the sake of being able to reference a 
@@ -172,8 +180,13 @@ struct instance_collection_pool_bundle :
 // allocation
 	port_actual_collection<Tag>*
 	allocate_port_collection(
+#if SIMPLE_ALLOCATE_PORT_COLLECTION
+		void
+#else
 		const never_ptr<const instance_collection<Tag> >, 
-		const unroll_context&);
+		const unroll_context&
+#endif
+		);
 
 	instance_collection<Tag>*
 	allocate_port_formal(footprint&, 

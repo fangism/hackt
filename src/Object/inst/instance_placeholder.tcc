@@ -244,8 +244,21 @@ INSTANCE_PLACEHOLDER_CLASS::unroll_port_only(const unroll_context& c) const {
 	collection_pool_bundle_type&
 		pool(c.get_target_footprint().
 			template get_instance_collection_pool_bundle<Tag>());
+#if SIMPLE_ALLOCATE_PORT_COLLECTION
+	const never_ptr<port_collection_type>
+		ret(pool.allocate_port_collection());
+	// allocated, but uninitialized
+	try {
+		new (&*ret) port_collection_type(back_ref, c);
+		// placement construct
+		// can throw on error
+	} catch (...) {
+		return never_ptr<port_collection_type>(NULL);
+	}
+#else
 	const never_ptr<port_collection_type>
 		ret(pool.allocate_port_collection(back_ref, c));
+#endif
 #if 0
 	NEVER_NULL(ret);
 #else

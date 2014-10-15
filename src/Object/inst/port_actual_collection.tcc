@@ -10,6 +10,10 @@
 #define	ENABLE_STACKTRACE		0
 #endif
 
+#ifndef	STACKTRACE_PERSISTENTS
+#define	STACKTRACE_PERSISTENTS		(0 && ENABLE_STACKTRACE)
+#endif
+
 #include <iterator>
 #include <iostream>
 #include <algorithm>
@@ -49,6 +53,15 @@ using util::value_writer;
 PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
 PORT_ACTUAL_COLLECTION_CLASS::port_actual_collection() :
 		parent_type(), formal_collection(), value_array(0) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
+PORT_ACTUAL_COLLECTION_CLASS::port_actual_collection(const this_type& r) :
+		parent_type(),	// NULL super_instance, re-linked later
+		formal_collection(r.formal_collection),	// shallow pointer
+		value_array(r.value_array.size()) {
+		// value_array is sized, but uninitialized
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -302,6 +315,31 @@ PORT_ACTUAL_COLLECTION_CLASS::resolve_indices(const const_index_list& l) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0 && CACHE_SUBSTRUCTURES_IN_FOOTPRINT
+/**
+	Perform a deep-copy on an un-owned self and allocate new copy
+	into target footprint (owner).
+ */
+PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
+never_ptr<physical_instance_collection>
+PORT_ACTUAL_COLLECTION_CLASS::deep_copy(footprint& tf) const {
+	collection_pool_bundle_type&
+		pool(tf.template get_instance_collection_pool_bundle<Tag>());
+	const never_ptr<this_type>
+//		ret(pool.allocate_port_collection(this->formal_collection, c));
+		ret(pool.allocate_port_collection());
+	new (&*ret) port_actual_collection<Tag>(*this);
+	// recursive deep-copy value_array of aliases
+	const size_t n = this->value_array.size();
+	size_t i = 0;
+	for ( ; i<n; ++i) {
+		ret->value_array[i] = this->value_array[i]->deep_copy(tf);
+	}
+	return ret;
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // operator []
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -356,6 +394,7 @@ PORT_ACTUAL_COLLECTION_CLASS::lookup_instance_collection(
 	return true;
 #else
 	// TODO: finish me
+	FINISH_ME(Fang);
 	return false;
 #endif
 }
@@ -571,6 +610,9 @@ PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
 void
 PORT_ACTUAL_COLLECTION_CLASS::collect_transient_info_base(
 		persistent_object_manager& m) const {
+#if STACKTRACE_PERSISTENTS
+	STACKTRACE_VERBOSE;
+#endif
 	// since this is a port collection, there MUST be a super-instance.
 	NEVER_NULL(this->super_instance);
 //	parent_type::collect_transient_info_base(m);	// pure virt.
@@ -586,6 +628,9 @@ PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
 void
 PORT_ACTUAL_COLLECTION_CLASS::write_pointer(ostream& o, 
 		const collection_pool_bundle_type& pb) const {
+#if STACKTRACE_PERSISTENTS
+	STACKTRACE_VERBOSE;
+#endif
 	const unsigned char e = collection_traits<this_type>::ENUM_VALUE;
 	write_value(o, e);
 	const collection_index_entry::index_type index =
@@ -604,6 +649,9 @@ PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
 void
 PORT_ACTUAL_COLLECTION_CLASS::write_object(const footprint& fp, 
 		const persistent_object_manager& m, ostream& f) const {
+#if STACKTRACE_PERSISTENTS
+	STACKTRACE_VERBOSE;
+#endif
 	this->formal_collection->write_external_pointer(m, f);
 	// size is deduced from the formal_collection
 	const size_t k = this->formal_collection->collection_size();

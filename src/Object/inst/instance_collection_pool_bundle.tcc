@@ -266,14 +266,21 @@ instance_collection_pool_bundle<Tag>::read_pointer(istream& i) const {
 template <class Tag>
 port_actual_collection<Tag>*
 instance_collection_pool_bundle<Tag>::allocate_port_collection(
+#if SIMPLE_ALLOCATE_PORT_COLLECTION
+		void
+#else
 		const never_ptr<const instance_collection<Tag> > f, 
-		const unroll_context& c) {
+		const unroll_context& c
+#endif
+		) {
 	STACKTRACE_VERBOSE;
 	STACKTRACE_THIS
+	// pointer is pool-owned, so caller should not claim ownership
 	port_actual_collection<Tag>* const ret = 
 		instance_collection_pool_wrapper<port_actual_collection<Tag> >
 			::pool.allocate();	// already default constructed
 	ret->~port_actual_collection<Tag>();		// just in case...
+#if !SIMPLE_ALLOCATE_PORT_COLLECTION
 	try {
 		new (ret) port_actual_collection<Tag>(f, c);
 		// placement construct
@@ -281,6 +288,7 @@ instance_collection_pool_bundle<Tag>::allocate_port_collection(
 	} catch (...) {
 		return NULL;
 	}
+#endif
 	// does not need to register as named with footprint's collection_map
 	return ret;
 }

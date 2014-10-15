@@ -85,6 +85,12 @@ private:
 	array_type				value_array;
 public:
 	port_actual_collection();
+
+	// partial copy constructor (shallow) for use with deep_copy
+	// wants to be private-explicit,
+	// but made public so vector/pool allocator works
+	// explicit
+	port_actual_collection(const this_type&);
 public:
 	port_actual_collection(const formal_collection_ptr_type, 
 		const unroll_context&);
@@ -156,6 +162,7 @@ public:
 	CONNECT_PORT_ALIASES_RECURSIVE_PROTO;
 	RECONNECT_PORT_ALIASES_RECURSIVE_PROTO;
 	ALLOCATE_LOCAL_INSTANCE_IDS_PROTO;
+//	DEEP_COPY_STRUCTURE_PROTO;
 
 	instance_alias_info_ptr_type
 	lookup_instance(const multikey_index_type&) const;
