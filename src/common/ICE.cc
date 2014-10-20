@@ -5,6 +5,7 @@
  */
 
 #include <ostream>
+#include <iomanip>
 #include "common/ICE.hh"
 #include "config.h"
 #include "util/attributes.h"
@@ -29,7 +30,7 @@ static const char ICE_footer[] =
 //=============================================================================
 void
 __ICE_where(ostream& o, const char* fn, const char* file, const size_t line) {
-	o << ICE_greeting << fn << " at " << file << ':' << line
+	o << ICE_greeting << fn << " at " << file << ':' << std::dec << line
 		<< ": " << endl;
 }
 
