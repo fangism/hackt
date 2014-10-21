@@ -59,6 +59,7 @@ struct global_entry_context;
 class footprint_manager;
 struct entry_collection;
 class alias_visitor;
+class subinstance_manager;
 struct dump_flags;
 struct expr_dump_context;
 #if FOOTPRINT_OWNS_CONTEXT_CACHE
@@ -78,6 +79,7 @@ extern const temp_footprint_tag_type	temp_footprint_tag;
 /**
 	Define to 1 to enable hierarchical atomic update cycle detection.
 	Goal: 1
+	Status: done, can perm this
  */
 #define	DETECT_ATOMIC_UPDATE_CYCLES			1
 
@@ -287,6 +289,18 @@ private:
 	 */
 	atomic_update_graph			exported_atomic_update_DAG;
 #endif
+#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
+	/**
+		Every instance should expand its alias's ports
+		using this tree structure.
+		Note: aliases need to be replayed, 
+		this only contains actuals/flags information
+		in the hierarchy.  
+		This can be reconstructed by unroll_ports, 
+		don't write this object out, restore it instead.
+	 */
+	mutable excl_ptr<subinstance_manager>	substructure_template;
+#endif
 #if FOOTPRINT_OWNS_CONTEXT_CACHE
 	/**
 		Hierarchical tree cache of footprint frames and offsets
@@ -355,6 +369,9 @@ public:
 	meta_type_tag_enum
 	get_meta_type(void) const;
 
+	const footprint&
+	get_top_footprint(void) const;
+
 	size_t
 	map_size(void) const { return instance_collection_map.size(); }
 
@@ -419,6 +436,11 @@ public:
 	synchronize_alias_flags(void) {
 		scope_aliases.synchronize_flags();
 	}
+
+#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
+	const subinstance_manager&
+	get_port_template(void) const; 
+#endif
 
 	// index is 0-based
 	template <class Tag>

@@ -19,6 +19,7 @@ namespace entity {
 //=============================================================================
 // class subinstance_manager method definitions
 
+#if 1 || !CACHE_SUBSTRUCTURES_IN_FOOTPRINT
 /**
 	Expand this instance's ports into this subinstance_manager.  
 	NOTE: this class is granted friendship from instance_collection<>.
@@ -31,7 +32,12 @@ good_bool
 subinstance_manager::__unroll_port_instances(
 		const collection_interface<Tag>& inst, 
 		const relaxed_actuals_type& a,
-		const unroll_context& c) {
+#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
+		footprint& c
+#else
+		const unroll_context& c
+#endif
+		) {
 	typedef	collection_interface<Tag>	collection_type;
 	typedef	instance_collection<Tag>	canonical_collection_type;
 	typedef	typename canonical_collection_type::collection_type_manager_parent_type
@@ -71,6 +77,7 @@ subinstance_manager::__unroll_port_instances(
 #endif
 	return resolved_super_type.unroll_port_instances(c, *this);
 }
+#endif
 
 //=============================================================================
 }	// end namespace entity

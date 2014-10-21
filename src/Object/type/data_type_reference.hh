@@ -21,6 +21,7 @@
 namespace HAC {
 namespace entity {
 class datatype_definition_base;
+class footprint;
 class unroll_context;
 class data_expr;
 class data_nonmeta_instance_reference;
@@ -147,7 +148,12 @@ public:
 	unroll_port_instances(const never_ptr<const definition_type>, 
 //		const template_actuals&, 
 		const count_ptr<const const_param_expr_list>&, 
-		const unroll_context&, subinstance_manager&);
+#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
+		footprint&,
+#else
+		const unroll_context&,
+#endif
+		subinstance_manager&);
 
 //	UNROLL_PORT_INSTANCES_PROTO;
 

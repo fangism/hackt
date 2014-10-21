@@ -83,6 +83,7 @@
 #if FOOTPRINT_OWNS_CONTEXT_CACHE
 #include "Object/global_context_cache.hh"
 #endif
+#include "Object/module.hh"
 #include "Object/interfaces/VCDwriter.hh"	// should belong elsewhere
 #include "common/TODO.hh"
 #include "main/cflat_options.hh"
@@ -483,6 +484,21 @@ footprint::get_owner_scope(void) const {
 meta_type_tag_enum
 footprint::get_meta_type(void) const {
 	return owner_def->get_meta_type();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const footprint&
+footprint::get_top_footprint(void) const {
+	never_ptr<const scopespace> pd(get_owner_scope());
+	NEVER_NULL(pd);
+	never_ptr<const scopespace> pp;
+	do {
+		pp = pd;
+		pd = pd->get_parent();
+	} while (pd);
+	const never_ptr<const module> m(pp.is_a<const module>());
+	NEVER_NULL(m);
+	return m->get_footprint();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -909,7 +925,8 @@ try {
 	expand_unique_subinstances();
 	construct_private_entry_map();
 
-//	export_atomic_update_graph();	// too early
+	// too early here: haven't processed language bodies yet
+//	export_atomic_update_graph();
 
 	// for all structures with private subinstances (processes)
 	//	publicly reachable local processes that are aliased to a port
@@ -1184,7 +1201,11 @@ for ( ; i!=e; ++i) {
 struct implicit_supply_connector : public alias_visitor {
 	typedef	instance_alias_info<process_tag>	alias_type;
 	typedef	instance_alias_info<bool_tag>		node_type;
+#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
+	footprint&					c;
+#else
 	const unroll_context&				c;
+#endif
 #if VISIT_UNIQUE_PROCESS_ALIAS
 	std::set<const alias_type*>			visited;
 #endif
@@ -1196,7 +1217,12 @@ struct implicit_supply_connector : public alias_visitor {
 	bool						err;
 	// default GND
 	// default Vdd
-	implicit_supply_connector(const unroll_context& _c, 
+	implicit_supply_connector(
+#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
+		footprint& _c,
+#else
+		const unroll_context& _c, 
+#endif
 		node_type& g, node_type& v) : 
 		c(_c), 
 #if VISIT_UNIQUE_PROCESS_ALIAS
@@ -1209,7 +1235,12 @@ VISIT_INSTANCE_ALIAS_INFO_PROTOS(CPP_EMPTY)
 private:
 	static
 	bool
-	__auto_connect_port(const alias_type&, const unroll_context&, 
+	__auto_connect_port(const alias_type&,
+#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
+		footprint&,
+#else
+		const unroll_context&, 
+#endif
 		const physical_instance_placeholder&, node_type&);
 };	// end struct implicit_supply_connector
 
@@ -1319,7 +1350,11 @@ if (cp.has_complete_type()) {
  */
 bool
 implicit_supply_connector::__auto_connect_port(const alias_type& cp,
+#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
+		footprint& c,
+#else
 		const unroll_context& c, 
+#endif
 		const physical_instance_placeholder& a, node_type& n) {
 	typedef	port_actual_collection<bool_tag>	bool_port;
 //	STACKTRACE_VERBOSE;
@@ -1408,7 +1443,11 @@ footprint::connect_implicit_ports(const unroll_context& c) {
 		gp(__lookup_scalar_port_alias<bool_tag>("!GND"));
 	implicit_supply_connector::node_type&
 		vp(__lookup_scalar_port_alias<bool_tag>("!Vdd"));
+#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
+	implicit_supply_connector spc(c.get_target_footprint(), gp, vp);
+#else
 	implicit_supply_connector spc(c, gp, vp);
+#endif
 	// lookup the lone bool
 for ( ; mi!=me; ++mi) {
 	const never_ptr<instance_collection_base> b((*this)[mi->second]);
@@ -1425,6 +1464,40 @@ if (p) {
 }
 #undef	VISIT_UNIQUE_PROCESS_ALIAS
 #endif	// IMPLICIT_SUPPLY_PORTS
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
+/**
+	One-time construction of subinstance hierarchy (of public ports),
+	so that subsequent instantiations only need a simple deep-copy.
+ */
+const subinstance_manager&
+footprint::get_port_template(
+		void
+//		const unroll_context& ctop
+		) const {
+	STACKTRACE_VERBOSE;
+if (!substructure_template) {
+	STACKTRACE_INDENT_PRINT("creating port substructure template, then caching it" << endl);
+	// cached
+	substructure_template =
+		excl_ptr<subinstance_manager>(new subinstance_manager);
+	NEVER_NULL(substructure_template);
+	const never_ptr<const port_formals_manager>
+		pf(get_owner_def()->get_port_formals_manager());
+//	const unroll_context cc(this, ctop);
+	pf->unroll_ports(*this, substructure_template->get_array());
+	// shallow-copy of pointers, one-level
+	const never_ptr<substructure_alias> ss =
+		substructure_template.as_a<substructure_alias>();
+//	ss->restore_parent_child_links();
+//	not needed if shallow-copying
+} else {
+	STACKTRACE_INDENT_PRINT("re-using cached port template" << endl);
+}
+	return *substructure_template;
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

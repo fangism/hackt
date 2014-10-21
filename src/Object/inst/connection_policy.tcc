@@ -36,8 +36,7 @@ namespace entity {
 
 template <class AliasType>
 void
-bool_connect_policy::initialize_direction(const AliasType& a, 
-		const unroll_context&) {
+bool_connect_policy::initialize_direction(const AliasType& a) {
 	// TODO: use direction annotations like channels
 #if BOOL_CONNECTIVITY_CHECKING
 	typedef	typename AliasType::container_type	container_type;
@@ -347,8 +346,7 @@ channel_connect_policy::synchronize_flags(
  */
 template <class AliasType>
 void
-channel_connect_policy::initialize_direction(const AliasType& a, 
-		const unroll_context&) {
+channel_connect_policy::initialize_direction(const AliasType& a) {
 	typedef	typename AliasType::container_type	container_type;
 	typedef	container_type		collection_interface_type;
 	typedef	typename collection_interface_type::traits_type
@@ -540,13 +538,11 @@ channel_connect_policy::connection_flag_setter::operator () (
  */
 template <class AliasType>
 void
-process_connect_policy::initialize_direction(AliasType& a, 
-		const unroll_context& c) {
+process_connect_policy::initialize_direction(AliasType& a) {
 	STACKTRACE_VERBOSE;
 #if ENABLE_STACKTRACE
 	a.dump_hierarchical_name(cerr << "alias: ") << endl;
 	a.dump_ports(cerr, dump_flags::default_value) << endl;
-//	c.dump(cerr << "context: ") << endl;
 #endif
 	// check to make sure type is complete (no longer relaxed)
 	// lookup resolved type of the alias or its container

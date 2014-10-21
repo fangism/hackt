@@ -6,8 +6,8 @@
 	$Id: instance_array.hh,v 1.10 2010/04/07 00:12:40 fang Exp $
  */
 
-#ifndef	__HAC_OBJECT_INST_INSTANCE_ARRAY_H__
-#define	__HAC_OBJECT_INST_INSTANCE_ARRAY_H__
+#ifndef	__HAC_OBJECT_INST_INSTANCE_ARRAY_HH__
+#define	__HAC_OBJECT_INST_INSTANCE_ARRAY_HH__
 
 #include "Object/inst/instance_collection.hh"
 #include "Object/inst/sparse_collection.hh"
@@ -194,5 +194,5 @@ public:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __HAC_OBJECT_INST_INSTANCE_ARRAY_H__
+#endif	// __HAC_OBJECT_INST_INSTANCE_ARRAY_HH__
 

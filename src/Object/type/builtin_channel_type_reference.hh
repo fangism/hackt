@@ -104,7 +104,9 @@ public:
 	never_ptr<const builtin_channel_type_reference>
 	resolve_builtin_channel_type(void) const;
 
+#if !CACHE_SUBSTRUCTURES_IN_FOOTPRINT
 	UNROLL_PORT_INSTANCES_PROTO;
+#endif
 
 #if BUILTIN_CHANNEL_FOOTPRINTS
 	canonical_fundamental_chan_type

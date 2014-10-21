@@ -4,7 +4,7 @@
 	$Id: subinstance_manager.cc,v 1.31 2010/04/07 00:12:45 fang Exp $
  */
 
-#define	ENABLE_STACKTRACE		0
+#define	ENABLE_STACKTRACE			0
 
 #include <iostream>
 #include "Object/inst/subinstance_manager.hh"
@@ -55,6 +55,30 @@ subinstance_manager::subinstance_manager(const this_type& s) :
 subinstance_manager::~subinstance_manager() {
 	STACKTRACE_DTOR_VERBOSE;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
+/**
+	Reminder: subinstance_array's pointers are NOT owned, 
+	so we need access to the structure responsible for 
+	owning the new copies, which accessed as the 
+	target_footprint's instance_collection_pool_bundle.
+	See instance_placeholder::unroll_port_only().
+	FIXME: needs target footprint or context containing it.
+ */
+void
+subinstance_manager::deep_copy(const subinstance_manager& r, footprint& tf) {
+	subinstance_array.resize(r.subinstance_array.size());
+	// std::transform
+	iterator j(subinstance_array.begin());
+	const_iterator i(r.subinstance_array.begin());
+	const const_iterator e(r.subinstance_array.end());
+	for ( ; i!=e; ++i, ++j) {
+		*j = (*i)->deep_copy(tf);
+	}
+	// relink_super_instance_alias();
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -245,7 +269,12 @@ if (*ri) {
  */
 good_bool
 subinstance_manager::connect_port_aliases_recursive(this_type& r, 
-		const unroll_context& c) {
+#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
+		footprint& c
+#else
+		const unroll_context& c
+#endif
+		) {
 	STACKTRACE_VERBOSE;
 	INVARIANT(subinstance_array.size() == r.subinstance_array.size());
 	iterator pi(subinstance_array.begin());	// instance_collection_type

@@ -28,6 +28,11 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/inst/subinstance_manager.hh"
 #include "Object/ref/meta_instance_reference_base.hh"
 #include "Object/expr/expr_dump_context.hh"
+#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
+#include "Object/def/footprint.hh"
+#else
+#include "Object/unroll/unroll_context.hh"
+#endif
 #include "Object/common/dump_flags.hh"
 
 #include "util/memory/count_ptr.tcc"
@@ -253,11 +258,18 @@ port_formals_manager::equivalent_port_formals(
 /**
 	Unpacks each port formal into port-actual placeholders
 	in the subinstance_manager's port list.  
+	This should only be called by footprint::get_port_template()
 	TODO: in instance_collection implementations, 
 		use packed array representation for port formals collections.  
+	\param f footprint (context) in which to lookup local/port instances.
  */
 good_bool
-port_formals_manager::unroll_ports(const unroll_context& c, 
+port_formals_manager::unroll_ports(
+#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
+		const footprint& f,
+#else
+		const unroll_context& c, 
+#endif
 		vector<never_ptr<physical_instance_collection> >& sub) const {
 	STACKTRACE_VERBOSE;
 	INVARIANT(sub.empty());
@@ -268,6 +280,16 @@ port_formals_manager::unroll_ports(const unroll_context& c,
 	for ( ; i!=e; i++) {
 		const port_formals_value_type pcb(*i);
 		NEVER_NULL(pcb);
+#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
+		// shallow-pointer copy, lookup collection
+		const never_ptr<physical_instance_collection>
+			new_port(f[pcb->get_footprint_key()]
+				.is_a<physical_instance_collection>());
+//			new_port(c.lookup_instance_collection(*pcb));
+			// lookup_port_collection is const*
+		NEVER_NULL(new_port);
+		// *not recursive!
+#else
 		// supposed to return a new copy of instance-collection
 		const never_ptr<physical_instance_collection>
 			new_port(pcb->unroll_port_only(c));
@@ -276,6 +298,7 @@ port_formals_manager::unroll_ports(const unroll_context& c,
 			// there was an error unrolling the port
 			return good_bool(false);
 		}
+#endif
 #if ENABLE_STACKTRACE
 		new_port->dump(cerr << "new port: ",
 			dump_flags::default_value) << endl;

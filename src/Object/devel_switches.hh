@@ -13,8 +13,8 @@
 	$Id: devel_switches.h,v 1.63 2011/03/23 00:36:08 fang Exp $
  */
 
-#ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
-#define	__HAC_OBJECT_DEVEL_SWITCHES_H__
+#ifndef	__HAC_OBJECT_DEVEL_SWITCHES_HH__
+#define	__HAC_OBJECT_DEVEL_SWITCHES_HH__
 
 // if we want project-wide switches
 #if 0
@@ -440,7 +440,28 @@
  */
 #define	AUTO_CACHE_FOOTPRINT_SCOPE_ALIASES		1
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Define to 1 to unroll port structures once (owned per footprint)
+	and have subsequent instances just perform a deep-copy
+	on that structure, followed by replaying internal aliases).
+	Note: the pointer being deep-copied is owned by a footprint's
+	instance_collection_pool_bundle, so a target owner needs
+	to be passed through a context.
+	Note that the 'master' copies port_actual_collections
+	must be owned in-tree, so subinstance_manager (non-owning)
+	doesn't suffice; we need a self-owning class variant 
+	of subinstance_manager.  Call it subinstance_template.
+	Problem: aliases in collections are derived from
+	*non-owning* subinstance_managers.  
+	Perhaps instead of owning, we just use a thin layer of indirection
+	to point to already owned (local) collections.
+	A shallow-copy to top-level ports -- back to subinstance_manager.
+	Status: investigating
+ */
+#define CACHE_SUBSTRUCTURES_IN_FOOTPRINT		1
+
 //=============================================================================
 
-#endif	// __HAC_OBJECT_DEVEL_SWITCHES_H__
+#endif	// __HAC_OBJECT_DEVEL_SWITCHES_HH__
 

@@ -160,23 +160,30 @@ INSTANCE_ALIAS_INFO_CLASS::check(const container_type* p) const {
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
 INSTANCE_ALIAS_INFO_CLASS::instantiate_actuals_only(
-		const unroll_context& c) {
+#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
+		footprint& c
+#else
+		const unroll_context& c
+#endif
+		) {
 	STACKTRACE_VERBOSE;
 	NEVER_NULL(this->container);
 // only if type is complete, expand ports
 if (!this->container->get_canonical_collection().has_relaxed_type()
 		|| this->get_relaxed_actuals()) {
+#if 1 || !CACHE_SUBSTRUCTURES_IN_FOOTPRINT
 	if (!substructure_parent_type::unroll_port_instances(
 			*this->container, 
 			this->get_relaxed_actuals(), c).good) {
 		// already have error message
 		THROW_EXIT;
 	}
+#endif
 #if 0
 	// did we forget this accidentally?
 	actuals_parent_type::copy_actuals(f);
 #endif
-	direction_connection_policy::initialize_direction(*this, c);
+	direction_connection_policy::initialize_direction(*this);
 	// FIXME: replay port aliases as early as possible, here
 // if type is complete...
 	typedef	internal_aliases_policy<traits_type::can_internally_alias>
@@ -186,7 +193,7 @@ if (!this->container->get_canonical_collection().has_relaxed_type()
 		THROW_EXIT;
 	}
 } else {
-	direction_connection_policy::initialize_direction(*this, c);
+	direction_connection_policy::initialize_direction(*this);
 }
 #if ENABLE_STACKTRACE
 	this->dump_ports(STACKTRACE_INDENT_PRINT(
@@ -208,7 +215,12 @@ if (!this->container->get_canonical_collection().has_relaxed_type()
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
 INSTANCE_ALIAS_INFO_CLASS::instantiate(const container_ptr_type p, 
-		const unroll_context& c) {
+#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
+		footprint& c
+#else
+		const unroll_context& c
+#endif
+		) {
 	STACKTRACE_VERBOSE;
 	NEVER_NULL(p);
 	INVARIANT(!this->container);
@@ -244,11 +256,17 @@ INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
 INSTANCE_ALIAS_INFO_CLASS::instantiate_actual_from_formal(
 		const port_actuals_ptr_type p, 
-		const unroll_context& c, const this_type& f) {
+#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
+		footprint& c,
+#else
+		const unroll_context& c,
+#endif
+		const this_type& f) {
 	STACKTRACE_VERBOSE;
 	NEVER_NULL(p);
 	INVARIANT(!this->container);
 	this->container = p;
+#if 1 || !CACHE_SUBSTRUCTURES_IN_FOOTPRINT
 	// do we ever want to instantiate more than the ports? no
 	if (!substructure_parent_type::unroll_port_instances(
 			*this->container, 
@@ -257,6 +275,7 @@ INSTANCE_ALIAS_INFO_CLASS::instantiate_actual_from_formal(
 		// already have error message
 		THROW_EXIT;
 	}
+#endif
 	import_properties(f);
 }
 
@@ -405,6 +424,7 @@ INSTANCE_ALIAS_INFO_CLASS::trace_collection(
 		return *pp.lookup_port_instance(
 			*this->container->get_placeholder_base());
 	} else {
+		STACKTRACE_INDENT_PRINT("terminal alias" << endl);
 		// This case cannot be reached when this is 
 		// a subinstanceless type.
 		// then we are at top-most level, terminate recursion
@@ -513,8 +533,13 @@ INSTANCE_ALIAS_INFO_CLASS::dump_key(ostream& o) const {
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 good_bool
-INSTANCE_ALIAS_INFO_CLASS::checked_connect_port(this_type& l, this_type& r, 
-		const unroll_context& c) {
+INSTANCE_ALIAS_INFO_CLASS::checked_connect_port(this_type& l, this_type& r,
+#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
+		footprint& c
+#else
+		const unroll_context& c
+#endif
+		) {
 	STACKTRACE_VERBOSE;
 	if (!l.must_match_type(r)) {
 		// already have error message
@@ -710,7 +735,13 @@ INSTANCE_ALIAS_INFO_CLASS::dump_hierarchical_name(ostream& o) const {
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 good_bool
-INSTANCE_ALIAS_INFO_CLASS::unite(this_type& r, const unroll_context& c) {
+INSTANCE_ALIAS_INFO_CLASS::unite(this_type& r,
+#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
+		footprint& c
+#else
+		const unroll_context& c
+#endif
+		) {
 	STACKTRACE_VERBOSE;
 	const pseudo_iterator lc(this->find(c));
 	this_type* const rc = &*r.find(c);
@@ -787,7 +818,13 @@ INSTANCE_ALIAS_INFO_CLASS::find(void) {
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 typename INSTANCE_ALIAS_INFO_CLASS::pseudo_iterator
-INSTANCE_ALIAS_INFO_CLASS::find(const unroll_context& c) {
+INSTANCE_ALIAS_INFO_CLASS::find(
+#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
+		footprint& c
+#else
+		const unroll_context& c
+#endif
+		) {
 	STACKTRACE_VERBOSE;
 	STACKTRACE_INDENT_PRINT("this = " << this << endl);
 	NEVER_NULL(this->next);
@@ -813,8 +850,12 @@ INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
 INSTANCE_ALIAS_INFO_CLASS::finalize_find(const unroll_context& c) {
 	// flatten, attach actuals, instantiate, and connect as necessary
+#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
+	this->find(c.get_target_footprint());
+#else
 	this->find(c);
-	actuals_parent_type::__finalize_find(*this, c);
+#endif
+	actuals_parent_type::__finalize_find(*this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

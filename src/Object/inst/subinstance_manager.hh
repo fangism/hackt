@@ -3,8 +3,8 @@
 	$Id: subinstance_manager.hh,v 1.26 2010/04/07 00:12:45 fang Exp $
  */
 
-#ifndef	__HAC_OBJECT_INST_SUBINSTANCE_MANAGER_H__
-#define	__HAC_OBJECT_INST_SUBINSTANCE_MANAGER_H__
+#ifndef	__HAC_OBJECT_INST_SUBINSTANCE_MANAGER_HH__
+#define	__HAC_OBJECT_INST_SUBINSTANCE_MANAGER_HH__
 
 #include <iosfwd>
 #include <vector>
@@ -91,6 +91,9 @@ protected:
 public:
 	~subinstance_manager();
 
+	void
+	deep_copy(const subinstance_manager&, footprint&);
+
 	bool
 	empty(void) const { return subinstance_array.empty(); }
 
@@ -116,13 +119,20 @@ public:
 	value_type
 	lookup_port_instance(const lookup_arg_type&) const;
 
+#if 1 || !CACHE_SUBSTRUCTURES_IN_FOOTPRINT
 	// want to recursively expand ports when this is instantiated
 	template <class Tag>
 	good_bool
 	__unroll_port_instances(
 		const collection_interface<Tag>&, 
 		const relaxed_actuals_type&,
-		const unroll_context&);
+#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
+		footprint&
+#else
+		const unroll_context&
+#endif
+		);
+#endif
 
 #if RECURSE_COLLECT_ALIASES
 	void
@@ -140,7 +150,13 @@ public:
 #endif
 
 	good_bool
-	connect_port_aliases_recursive(this_type&, const unroll_context&);
+	connect_port_aliases_recursive(this_type&,
+#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
+		footprint&
+#else
+		const unroll_context&
+#endif
+	);
 
 	void
 	reconnect_port_aliases_recursive(this_type&);
@@ -170,5 +186,5 @@ public:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __HAC_OBJECT_INST_SUBINSTANCE_MANAGER_H__
+#endif	// __HAC_OBJECT_INST_SUBINSTANCE_MANAGER_HH__
 

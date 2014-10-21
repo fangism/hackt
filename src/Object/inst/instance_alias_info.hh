@@ -211,7 +211,13 @@ protected:
 	reunite(this_type&);
 
 	good_bool
-	unite(this_type&, const unroll_context&);
+	unite(this_type&,
+#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
+		footprint&
+#else
+		const unroll_context&
+#endif
+		);
 
 public:
 	pseudo_const_iterator
@@ -219,7 +225,11 @@ public:
 
 
 	pseudo_iterator
+#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
+	find(footprint&);
+#else
 	find(const unroll_context&);
+#endif
 
 	void
 	finalize_find(const unroll_context&);
@@ -238,14 +248,31 @@ public:
 			in instantiate_indices().
 	 */
 	void
-	instantiate_actuals_only(const unroll_context&);
+	instantiate_actuals_only(
+#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
+		footprint&
+#else
+		const unroll_context&
+#endif
+		);
 
 	void
-	instantiate(const container_ptr_type p, const unroll_context&);
+	instantiate(const container_ptr_type p,
+#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
+		footprint&
+#else
+		const unroll_context&
+#endif
+		);
 
 	void
 	instantiate_actual_from_formal(const port_actuals_ptr_type, 
-		const unroll_context&, const this_type&);
+#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
+		footprint&,
+#else
+		const unroll_context&,
+#endif
+		const this_type&);
 
 	void
 	import_properties(const this_type&);
@@ -381,7 +408,13 @@ public:
 
 	static
 	good_bool
-	checked_connect_port(this_type&, this_type&, const unroll_context&);
+	checked_connect_port(this_type&, this_type&,
+#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
+		footprint&
+#else
+		const unroll_context&
+#endif
+		);
 
 #if INSTANCE_SUPPLY_OVERRIDES
 	void

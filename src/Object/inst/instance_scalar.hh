@@ -6,8 +6,8 @@
 	$Id: instance_scalar.hh,v 1.10 2010/04/07 00:12:42 fang Exp $
  */
 
-#ifndef	__HAC_OBJECT_INST_INSTANCE_SCALAR_H__
-#define	__HAC_OBJECT_INST_INSTANCE_SCALAR_H__
+#ifndef	__HAC_OBJECT_INST_INSTANCE_SCALAR_HH__
+#define	__HAC_OBJECT_INST_INSTANCE_SCALAR_HH__
 
 #include "Object/inst/instance_collection.hh"
 
@@ -110,6 +110,9 @@ public:
 	RECONNECT_PORT_ALIASES_RECURSIVE_PROTO;
 
 	ALLOCATE_LOCAL_INSTANCE_IDS_PROTO;
+#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
+	DEEP_COPY_STRUCTURE_PROTO;
+#endif
 
 	instance_alias_info_ptr_type
 	lookup_instance(const multikey_index_type& l) const;
@@ -171,5 +174,5 @@ public:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __HAC_OBJECT_INST_INSTANCE_SCALAR_H__
+#endif	// __HAC_OBJECT_INST_INSTANCE_SCALAR_HH__
 

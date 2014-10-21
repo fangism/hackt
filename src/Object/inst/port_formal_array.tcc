@@ -21,6 +21,7 @@
 #include "Object/expr/const_index_list.hh"
 #include "Object/expr/const_range_list.hh"
 #include "Object/def/footprint.hh"
+#include "Object/unroll/unroll_context.hh"
 #include "common/ICE.hh"
 
 #include "util/stacktrace.hh"
@@ -268,7 +269,11 @@ PORT_FORMAL_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges,
 	this->value_array.resize(k);
 	iterator i(this->begin()), e(this->end());
 		for ( ; i!=e; ++i) {
+#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
+			i->instantiate(never_ptr<this_type>(this), c.get_target_footprint());
+#else
 			i->instantiate(never_ptr<this_type>(this), c);
+#endif
 		}
 	return good_bool(true);
 }
@@ -286,6 +291,22 @@ PORT_FORMAL_ARRAY_CLASS::allocate_local_instance_ids(footprint& f) {
 	}
 	return good_bool(true);
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
+PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
+never_ptr<physical_instance_collection>
+PORT_FORMAL_ARRAY_CLASS::deep_copy(footprint& tf) const {
+	collection_pool_bundle_type&
+		pool(tf.template get_instance_collection_pool_bundle<Tag>());
+	port_actuals_type* ret = pool.allocate_port_collection();
+	NEVER_NULL(ret);
+	// placement construct
+	new (ret) port_actuals_type(never_ptr<const this_type>(this));
+	instantiate_actuals_from_formals(*ret, tf);
+	return never_ptr<physical_instance_collection>(ret);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -436,7 +457,13 @@ PORT_FORMAL_ARRAY_CLASS::unroll_aliases(const multikey_index_type& l,
 PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
 good_bool
 PORT_FORMAL_ARRAY_CLASS::connect_port_aliases_recursive(
-		physical_instance_collection& p, const unroll_context& c) {
+		physical_instance_collection& p,
+#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
+		footprint& c
+#else
+		const unroll_context& c
+#endif
+		) {
 	STACKTRACE_VERBOSE;
 	this_type& t(IS_A(this_type&, p));	// assert dynamic_cast
 	INVARIANT(this->value_array.size() == t.value_array.size());
@@ -595,7 +622,13 @@ PORT_FORMAL_ARRAY_CLASS::set_alias_connection_flags(
 PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
 void
 PORT_FORMAL_ARRAY_CLASS::instantiate_actuals_from_formals(
-		port_actuals_type& p, const unroll_context& c) const {
+		port_actuals_type& p,
+#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
+		footprint& c
+#else
+		const unroll_context& c
+#endif
+		) const {
 	INVARIANT(p.collection_size() == this->collection_size());
 #if 0
 	if (!create_dependent_types(*c.get_top_footprint()).good) {

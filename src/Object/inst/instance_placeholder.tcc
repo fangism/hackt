@@ -218,6 +218,7 @@ INSTANCE_PLACEHOLDER_CLASS::get_initial_instantiation_indices(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !CACHE_SUBSTRUCTURES_IN_FOOTPRINT
 /**
 	\param c the unroll_context, whose (read-only) lookup footprint 
 		is that of the super-instance's type.  
@@ -270,6 +271,7 @@ INSTANCE_PLACEHOLDER_CLASS::unroll_port_only(const unroll_context& c) const {
 	// this may be done in the unrolling of the ports now.
 	return ret;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

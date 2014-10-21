@@ -300,13 +300,16 @@ CANONICAL_TYPE_CLASS::must_be_connectibly_type_equivalent(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 1 || !CACHE_SUBSTRUCTURES_IN_FOOTPRINT
 CANONICAL_TYPE_TEMPLATE_SIGNATURE
 good_bool
-CANONICAL_TYPE_CLASS::unroll_port_instances(const unroll_context& c, 
+CANONICAL_TYPE_CLASS::unroll_port_instances(
+		unroll_port_target_type& c, 
 		subinstance_manager& sub) const {
 	STACKTRACE_VERBOSE;
 	return unroll_port_instances_policy<DefType>()(*this, c, sub);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

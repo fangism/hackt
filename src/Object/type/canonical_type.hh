@@ -23,6 +23,12 @@ class state_manager;
 using util::memory::never_ptr;
 using util::good_bool;
 
+#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
+typedef	footprint			unroll_port_target_type;
+#else
+typedef	const unroll_context		unroll_port_target_type;
+#endif
+
 //=============================================================================
 
 #define	CANONICAL_TYPE_TEMPLATE_SIGNATURE	template <class DefType>
@@ -117,9 +123,11 @@ public:
 	ostream&
 	type_mismatch_error(ostream&, const this_type&, const this_type&);
 
+#if 1 || !CACHE_SUBSTRUCTURES_IN_FOOTPRINT
 	good_bool
-	unroll_port_instances(const unroll_context&,
+	unroll_port_instances(unroll_port_target_type&,
 		subinstance_manager&) const;
+#endif
 
 #if 0
 	// don't delete, useful for copying

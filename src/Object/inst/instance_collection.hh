@@ -6,8 +6,8 @@
 	$Id: instance_collection.hh,v 1.34 2010/04/07 00:12:40 fang Exp $
  */
 
-#ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
-#define	__HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
+#ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_HH__
+#define	__HAC_OBJECT_INST_INSTANCE_COLLECTION_HH__
 
 #include <iosfwd>
 
@@ -20,6 +20,7 @@
 #include "Object/common/multikey_index.hh"
 #include "Object/inst/collection_interface.hh"
 #include "Object/inst/connection_policy_fwd.hh"
+#include "Object/devel_switches.hh"
 #include "util/persistent_functor.hh"
 #include "util/memory/excl_ptr.hh"
 #include "util/memory/count_ptr.hh"
@@ -227,6 +228,9 @@ virtual	RECONNECT_PORT_ALIASES_RECURSIVE_PROTO = 0;
 
 protected:
 virtual	ALLOCATE_LOCAL_INSTANCE_IDS_PROTO = 0;
+#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
+virtual	DEEP_COPY_STRUCTURE_PROTO;
+#endif
 
 public:
 
@@ -266,10 +270,18 @@ virtual	GET_ALL_ALIASES_PROTO = 0;
 
 virtual	SET_ALIAS_CONNECTION_FLAGS_PROTO = 0;
 
+#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
+// target-footprint for instance_pool bundles for port-actuals
+#define	INSTANTIATE_ACTUALS_FROM_FORMALS_PROTO				\
+	void								\
+	instantiate_actuals_from_formals(port_actuals_type&, 		\
+		footprint&) const
+#else
 #define	INSTANTIATE_ACTUALS_FROM_FORMALS_PROTO				\
 	void								\
 	instantiate_actuals_from_formals(port_actuals_type&, 		\
 		const unroll_context&) const
+#endif
 virtual	INSTANTIATE_ACTUALS_FROM_FORMALS_PROTO = 0;
 
 public:
@@ -398,5 +410,5 @@ protected:
 // #undef	UNROLL_ALIASES_PROTO
 // #undef	INSTANTIATE_INDICES_PROTO
 
-#endif	// __HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
+#endif	// __HAC_OBJECT_INST_INSTANCE_COLLECTION_HH__
 

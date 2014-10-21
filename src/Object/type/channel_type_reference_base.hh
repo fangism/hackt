@@ -68,7 +68,9 @@ virtual	ostream&
 virtual	count_ptr<const this_type>
 	unroll_resolve(const unroll_context&) const = 0;
 
+#if !CACHE_SUBSTRUCTURES_IN_FOOTPRINT
 virtual	UNROLL_PORT_INSTANCES_PROTO = 0;
+#endif
 
 virtual	never_ptr<const builtin_channel_type_reference>
 	resolve_builtin_channel_type(void) const = 0;

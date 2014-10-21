@@ -14,6 +14,7 @@
 #include <iosfwd>
 #include "util/memory/count_ptr.hh"
 #include "Object/expr/const_param_expr_list.hh"
+#include "Object/devel_switches.hh"
 #include "util/persistent_fwd.hh"
 #include "util/boolean_types.hh"
 
@@ -106,18 +107,29 @@ protected:
 	template <class AliasType>
 	static
 	good_bool
-	synchronize_actuals(AliasType&, AliasType&, const unroll_context&);
+	synchronize_actuals(AliasType&, AliasType&,
+#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
+		footprint&
+#else
+		const unroll_context&
+#endif
+		);
 
 	template <class AliasType>
 	static
 	void
 	finalize_actuals_and_substructure_aliases(AliasType&, 
-			const unroll_context&);
+#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
+			footprint&
+#else
+			const unroll_context&
+#endif
+			);
 
 	template <class AliasType>
 	static
 	void
-	__finalize_find(AliasType&, const unroll_context&);
+	__finalize_find(AliasType&);
 
 	template <class AliasType>
 	static

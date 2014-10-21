@@ -107,6 +107,11 @@ template_type_completion<Tag>::unroll(const unroll_context& c) const {
 		return good_bool(false);
 	}
 
+#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
+	footprint& tgtf(c.get_target_footprint());
+#else
+	const unroll_context& tgtf(c);
+#endif
 	const footprint& topfp(*c.get_top_footprint());
 	typedef	typename alias_collection_type::const_iterator	const_iterator;
 	const_iterator i(aliases.begin()), e(aliases.end());
@@ -131,7 +136,7 @@ template_type_completion<Tag>::unroll(const unroll_context& c) const {
 	}
 	for ( ; i!=e; ++i) {
 		instance_alias_info<Tag>& a(**i);	// named
-		instance_alias_info<Tag>& ca(*a.find(c));	// canonical
+		instance_alias_info<Tag>& ca(*a.find(tgtf));	// canonical
 			// this find() performs path compression
 		// a may alias ca!
 		const bool alias = (&a == &ca);
@@ -171,9 +176,9 @@ template_type_completion<Tag>::unroll(const unroll_context& c) const {
 		// but parent collection already established.  
 		// see also instance_array::instantiate_indices()'s do-loop.
 		try {
-			a.instantiate_actuals_only(c);
+			a.instantiate_actuals_only(tgtf);
 			if (!alias) {
-				ca.instantiate_actuals_only(c);
+				ca.instantiate_actuals_only(tgtf);
 			}
 			// HACK (2007-07-14):
 			// what about aliases between this one and 
