@@ -17,6 +17,7 @@
 #include "Object/expr/dynamic_param_expr_list.hh"
 #include "Object/expr/expr_dump_context.hh"
 #include "Object/unroll/unroll_context.hh"
+#include "Object/unroll/target_context.hh"
 
 #include "common/TODO.hh"
 #include "util/persistent_object_manager.hh"
@@ -107,11 +108,7 @@ template_type_completion<Tag>::unroll(const unroll_context& c) const {
 		return good_bool(false);
 	}
 
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
-	footprint& tgtf(c.get_target_footprint());
-#else
-	const unroll_context& tgtf(c);
-#endif
+	target_context& tgtf(c.as_target_footprint());
 	const footprint& topfp(*c.get_top_footprint());
 	typedef	typename alias_collection_type::const_iterator	const_iterator;
 	const_iterator i(aliases.begin()), e(aliases.end());

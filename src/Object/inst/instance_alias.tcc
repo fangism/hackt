@@ -159,8 +159,7 @@ INSTANCE_ALIAS_INFO_CLASS::check(const container_type* p) const {
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
-INSTANCE_ALIAS_INFO_CLASS::instantiate_actuals_only(
-		target_context& c) {
+INSTANCE_ALIAS_INFO_CLASS::instantiate_actuals_only(target_context& c) {
 	STACKTRACE_VERBOSE;
 	NEVER_NULL(this->container);
 // only if type is complete, expand ports
@@ -816,11 +815,7 @@ INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
 INSTANCE_ALIAS_INFO_CLASS::finalize_find(const unroll_context& c) {
 	// flatten, attach actuals, instantiate, and connect as necessary
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
-	this->find(c.get_target_footprint());
-#else
-	this->find(c);
-#endif
+	this->find(c.as_target_footprint());
 	actuals_parent_type::__finalize_find(*this);
 }
 

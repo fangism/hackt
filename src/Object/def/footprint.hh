@@ -372,6 +372,13 @@ public:
 	const footprint&
 	get_top_footprint(void) const;
 
+#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
+	footprint&
+	as_target_footprint(void) {
+		return *this;
+	}
+#endif
+
 	size_t
 	map_size(void) const { return instance_collection_map.size(); }
 

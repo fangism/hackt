@@ -9,7 +9,7 @@
 #define	__HAC_OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_HH__
 
 #include "Object/inst/instance_collection_base.hh"
-#include "Object/devel_switches.hh"
+#include "Object/unroll/target_context.hh"
 #include "util/persistent_fwd.hh"
 
 namespace HAC {
@@ -91,7 +91,7 @@ virtual	DEEP_COPY_STRUCTURE_PROTO = 0;
 #define	CONNECT_PORT_ALIASES_RECURSIVE_PROTO				\
 	good_bool							\
 	connect_port_aliases_recursive(physical_instance_collection&,	\
-		footprint&)
+		target_context&)
 
 virtual	CONNECT_PORT_ALIASES_RECURSIVE_PROTO = 0;
 

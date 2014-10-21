@@ -21,9 +21,7 @@
 #include "Object/unroll/alias_connection.hh"
 #include "Object/ref/meta_instance_reference_subtypes.hh"
 #include "Object/expr/expr_dump_context.hh"
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
 #include "Object/unroll/unroll_context.hh"
-#endif
 
 #include "util/persistent_object_manager.tcc"
 // #include "util/packed_array.tcc"	// for alias_collection_type
@@ -272,12 +270,7 @@ ALIAS_CONNECTION_CLASS::unroll(const unroll_context& c) const {
 			// punt relaxed type checking until create
 			if (!instance_alias_info_type::checked_connect_port(
 					*head, *connectee,
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
-					c.get_target_footprint()
-#else
-					c
-#endif
-					).good) {
+					c.as_target_footprint()).good) {
 				// already have error message
 				return good_bool(false);
 			}

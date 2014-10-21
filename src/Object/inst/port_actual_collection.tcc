@@ -66,6 +66,10 @@ PORT_ACTUAL_COLLECTION_CLASS::port_actual_collection(const this_type& r) :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
+/**
+	Allocate one-level of copy of ports, but leave uninitialized.
+	Caller should instantiate actuals from formals.  
+ */
 PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
 PORT_ACTUAL_COLLECTION_CLASS::port_actual_collection(
 		const formal_collection_ptr_type f) :

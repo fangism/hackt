@@ -269,11 +269,8 @@ PORT_FORMAL_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges,
 	this->value_array.resize(k);
 	iterator i(this->begin()), e(this->end());
 		for ( ; i!=e; ++i) {
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
-			i->instantiate(never_ptr<this_type>(this), c.get_target_footprint());
-#else
-			i->instantiate(never_ptr<this_type>(this), c);
-#endif
+			i->instantiate(never_ptr<this_type>(this),
+				c.as_target_footprint());
 		}
 	return good_bool(true);
 }

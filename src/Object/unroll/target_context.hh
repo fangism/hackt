@@ -10,12 +10,12 @@
 namespace HAC {
 namespace entity {
 
-class footprint;
-class unroll_context;
 
 #if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
+class footprint;
 typedef	footprint			target_context;
 #else
+class unroll_context;
 typedef	const unroll_context		target_context;
 #endif
 

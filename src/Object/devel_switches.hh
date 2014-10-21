@@ -457,7 +457,7 @@
 	Perhaps instead of owning, we just use a thin layer of indirection
 	to point to already owned (local) collections.
 	A shallow-copy to top-level ports -- back to subinstance_manager.
-	Status: investigating
+	Status: works, intend to commit/merge/perm
  */
 #define CACHE_SUBSTRUCTURES_IN_FOOTPRINT		1
 

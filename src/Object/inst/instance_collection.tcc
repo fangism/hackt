@@ -641,13 +641,8 @@ INSTANCE_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges,
 			// only so if ports ever depend on relaxed parameters.  
 			// We've established that they do not, see NOTES.  
 			try {
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
 			new_elem->instantiate(never_ptr<const this_type>(this),
-				c.get_target_footprint());
-#else
-			new_elem->instantiate(
-				never_ptr<const this_type>(this), c);
-#endif
+				c.as_target_footprint());
 			// can throw!
 			} catch (...) {
 				err = true;
@@ -1556,12 +1551,8 @@ INSTANCE_SCALAR_CLASS::instantiate_indices(
 	}
 	// here we need an explicit instantiation (recursive)
 	try {
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
 	this->the_instance.instantiate(never_ptr<const this_type>(this),
-		c.get_target_footprint());
-#else
-	this->the_instance.instantiate(never_ptr<const this_type>(this), c);
-#endif
+		c.as_target_footprint());
 	} catch (...) {
 		return good_bool(false);
 	}
