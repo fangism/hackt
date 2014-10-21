@@ -3,11 +3,12 @@
 	$Id: canonical_type.hh,v 1.12 2010/04/07 00:12:57 fang Exp $
  */
 
-#ifndef	__HAC_OBJECT_TYPE_CANONICAL_TYPE_H__
-#define	__HAC_OBJECT_TYPE_CANONICAL_TYPE_H__
+#ifndef	__HAC_OBJECT_TYPE_CANONICAL_TYPE_HH__
+#define	__HAC_OBJECT_TYPE_CANONICAL_TYPE_HH__
 
 #include "Object/type/canonical_type_fwd.hh"
 #include "Object/type/canonical_type_base.hh"
+#include "Object/unroll/target_context.hh"
 #include "util/boolean_types.hh"
 #include "util/memory/excl_ptr.hh"
 
@@ -22,12 +23,6 @@ class footprint_frame;
 class state_manager;
 using util::memory::never_ptr;
 using util::good_bool;
-
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
-typedef	footprint			unroll_port_target_type;
-#else
-typedef	const unroll_context		unroll_port_target_type;
-#endif
 
 //=============================================================================
 
@@ -123,11 +118,9 @@ public:
 	ostream&
 	type_mismatch_error(ostream&, const this_type&, const this_type&);
 
-#if 1 || !CACHE_SUBSTRUCTURES_IN_FOOTPRINT
 	good_bool
-	unroll_port_instances(unroll_port_target_type&,
+	unroll_port_instances(target_context&,
 		subinstance_manager&) const;
-#endif
 
 #if 0
 	// don't delete, useful for copying
@@ -248,5 +241,5 @@ struct check_footprint_policy<user_def_datatype> {
 }	// end namespace HAC
 
 
-#endif	// __HAC_OBJECT_TYPE_CANONICAL_TYPE_H__
+#endif	// __HAC_OBJECT_TYPE_CANONICAL_TYPE_HH__
 

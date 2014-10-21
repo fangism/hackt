@@ -1201,11 +1201,7 @@ for ( ; i!=e; ++i) {
 struct implicit_supply_connector : public alias_visitor {
 	typedef	instance_alias_info<process_tag>	alias_type;
 	typedef	instance_alias_info<bool_tag>		node_type;
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
-	footprint&					c;
-#else
-	const unroll_context&				c;
-#endif
+	target_context&					c;
 #if VISIT_UNIQUE_PROCESS_ALIAS
 	std::set<const alias_type*>			visited;
 #endif
@@ -1217,12 +1213,7 @@ struct implicit_supply_connector : public alias_visitor {
 	bool						err;
 	// default GND
 	// default Vdd
-	implicit_supply_connector(
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
-		footprint& _c,
-#else
-		const unroll_context& _c, 
-#endif
+	implicit_supply_connector(target_context& _c,
 		node_type& g, node_type& v) : 
 		c(_c), 
 #if VISIT_UNIQUE_PROCESS_ALIAS
@@ -1235,12 +1226,7 @@ VISIT_INSTANCE_ALIAS_INFO_PROTOS(CPP_EMPTY)
 private:
 	static
 	bool
-	__auto_connect_port(const alias_type&,
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
-		footprint&,
-#else
-		const unroll_context&, 
-#endif
+	__auto_connect_port(const alias_type&, target_context&,
 		const physical_instance_placeholder&, node_type&);
 };	// end struct implicit_supply_connector
 
@@ -1350,11 +1336,7 @@ if (cp.has_complete_type()) {
  */
 bool
 implicit_supply_connector::__auto_connect_port(const alias_type& cp,
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
-		footprint& c,
-#else
-		const unroll_context& c, 
-#endif
+		target_context& c,
 		const physical_instance_placeholder& a, node_type& n) {
 	typedef	port_actual_collection<bool_tag>	bool_port;
 //	STACKTRACE_VERBOSE;

@@ -12,7 +12,7 @@
 #include "util/boolean_types.hh"
 #include "Object/inst/substructure_alias_fwd.hh"
 #include "Object/inst/alias_visitee.hh"
-#include "Object/devel_switches.hh"
+#include "Object/unroll/target_context.hh"
 #include "util/memory/excl_ptr.hh"
 
 namespace HAC {
@@ -119,20 +119,13 @@ public:
 	value_type
 	lookup_port_instance(const lookup_arg_type&) const;
 
-#if 1 || !CACHE_SUBSTRUCTURES_IN_FOOTPRINT
 	// want to recursively expand ports when this is instantiated
 	template <class Tag>
 	good_bool
 	__unroll_port_instances(
 		const collection_interface<Tag>&, 
 		const relaxed_actuals_type&,
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
-		footprint&
-#else
-		const unroll_context&
-#endif
-		);
-#endif
+		target_context&);
 
 #if RECURSE_COLLECT_ALIASES
 	void
@@ -150,13 +143,7 @@ public:
 #endif
 
 	good_bool
-	connect_port_aliases_recursive(this_type&,
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
-		footprint&
-#else
-		const unroll_context&
-#endif
-	);
+	connect_port_aliases_recursive(this_type&, target_context&);
 
 	void
 	reconnect_port_aliases_recursive(this_type&);

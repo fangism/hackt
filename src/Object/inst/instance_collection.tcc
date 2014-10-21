@@ -895,12 +895,7 @@ INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 good_bool
 INSTANCE_ARRAY_CLASS::connect_port_aliases_recursive(
 		physical_instance_collection& p, 
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
-		footprint& c
-#else
-		const unroll_contex& c
-#endif
-		) {
+		target_context& c) {
 	STACKTRACE_VERBOSE;
 	this_type& t(IS_A(this_type&, p));	// assert dynamic_cast
 	INVARIANT(this->collection.size() == t.collection.size());
@@ -1222,12 +1217,7 @@ INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 void
 INSTANCE_ARRAY_CLASS::instantiate_actuals_from_formals(
 		port_actuals_type&,
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
-		footprint&
-#else
-		const unroll_context&
-#endif
-		) const {
+		target_context&) const {
 	ICE_NEVER_CALL(cerr);
 }
 
@@ -1698,12 +1688,7 @@ INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 good_bool
 INSTANCE_SCALAR_CLASS::connect_port_aliases_recursive(
 		physical_instance_collection& p,
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
-		footprint& c
-#else
-		const unroll_contex& c
-#endif
-		) {
+		target_context& c) {
 	STACKTRACE_VERBOSE;
 	this_type& t(IS_A(this_type&, p));	// assert dynamic_cast
 	return instance_type::checked_connect_port(
@@ -1821,12 +1806,7 @@ INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 void
 INSTANCE_SCALAR_CLASS::instantiate_actuals_from_formals(
 		port_actuals_type& p,
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
-		footprint& c
-#else
-		const unroll_context& c
-#endif
-		) const {
+		target_context& c) const {
 	INVARIANT(p.collection_size() == 1);
 #if 0
 	if (!create_dependent_types(*c.get_top_footprint()).good) {

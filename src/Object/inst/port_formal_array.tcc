@@ -458,12 +458,7 @@ PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
 good_bool
 PORT_FORMAL_ARRAY_CLASS::connect_port_aliases_recursive(
 		physical_instance_collection& p,
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
-		footprint& c
-#else
-		const unroll_context& c
-#endif
-		) {
+		target_context& c) {
 	STACKTRACE_VERBOSE;
 	this_type& t(IS_A(this_type&, p));	// assert dynamic_cast
 	INVARIANT(this->value_array.size() == t.value_array.size());
@@ -623,12 +618,7 @@ PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
 void
 PORT_FORMAL_ARRAY_CLASS::instantiate_actuals_from_formals(
 		port_actuals_type& p,
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
-		footprint& c
-#else
-		const unroll_context& c
-#endif
-		) const {
+		target_context& c) const {
 	INVARIANT(p.collection_size() == this->collection_size());
 #if 0
 	if (!create_dependent_types(*c.get_top_footprint()).good) {

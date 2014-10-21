@@ -18,7 +18,7 @@
 #include "Object/traits/class_traits_fwd.hh"
 #include "Object/inst/internal_aliases_policy_fwd.hh"
 #include "Object/inst/connection_policy.hh"
-#include "Object/devel_switches.hh"
+#include "Object/unroll/target_context.hh"
 
 namespace HAC {
 namespace entity {
@@ -211,13 +211,7 @@ protected:
 	reunite(this_type&);
 
 	good_bool
-	unite(this_type&,
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
-		footprint&
-#else
-		const unroll_context&
-#endif
-		);
+	unite(this_type&, target_context&);
 
 public:
 	pseudo_const_iterator
@@ -225,11 +219,7 @@ public:
 
 
 	pseudo_iterator
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
-	find(footprint&);
-#else
-	find(const unroll_context&);
-#endif
+	find(target_context&);
 
 	void
 	finalize_find(const unroll_context&);
@@ -248,31 +238,14 @@ public:
 			in instantiate_indices().
 	 */
 	void
-	instantiate_actuals_only(
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
-		footprint&
-#else
-		const unroll_context&
-#endif
-		);
+	instantiate_actuals_only(target_context&);
 
 	void
-	instantiate(const container_ptr_type p,
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
-		footprint&
-#else
-		const unroll_context&
-#endif
-		);
+	instantiate(const container_ptr_type p, target_context&);
 
 	void
 	instantiate_actual_from_formal(const port_actuals_ptr_type, 
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
-		footprint&,
-#else
-		const unroll_context&,
-#endif
-		const this_type&);
+		target_context&, const this_type&);
 
 	void
 	import_properties(const this_type&);
@@ -409,12 +382,7 @@ public:
 	static
 	good_bool
 	checked_connect_port(this_type&, this_type&,
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
-		footprint&
-#else
-		const unroll_context&
-#endif
-		);
+		target_context&);
 
 #if INSTANCE_SUPPLY_OVERRIDES
 	void

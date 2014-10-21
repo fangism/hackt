@@ -269,12 +269,7 @@ if (*ri) {
  */
 good_bool
 subinstance_manager::connect_port_aliases_recursive(this_type& r, 
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
-		footprint& c
-#else
-		const unroll_context& c
-#endif
-		) {
+		target_context& c) {
 	STACKTRACE_VERBOSE;
 	INVARIANT(subinstance_array.size() == r.subinstance_array.size());
 	iterator pi(subinstance_array.begin());	// instance_collection_type

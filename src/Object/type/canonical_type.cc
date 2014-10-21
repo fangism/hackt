@@ -48,12 +48,11 @@ canonical_definition_load_policy<datatype_definition_base>::operator () (
 }
 
 //-----------------------------------------------------------------------------
-#if 1 || !CACHE_SUBSTRUCTURES_IN_FOOTPRINT
 template <>
 struct unroll_port_instances_policy<datatype_definition_base> {
 	good_bool
 	operator () (const canonical_generic_datatype& d, 
-			unroll_port_target_type& c,
+			target_context& c,
 			subinstance_manager& sub) const {
 		// temporary
 		// eventually will need template arguments
@@ -68,7 +67,7 @@ template <>
 struct unroll_port_instances_policy<user_def_datatype> {
 	good_bool
 	operator () (const canonical_user_def_data_type& d, 
-			unroll_port_target_type& c,
+			target_context& c,
 			subinstance_manager& sub) const {
 		// temporary
 		data_type_reference::unroll_port_instances(
@@ -83,7 +82,7 @@ template <>
 struct unroll_port_instances_policy<user_def_chan> {
 	good_bool
 	operator () (const canonical_user_def_chan_type& d, 
-			unroll_port_target_type& c,
+			target_context& c,
 			subinstance_manager& sub) const {
 		// temporary
 		FINISH_ME(Fang);
@@ -107,7 +106,7 @@ struct unroll_port_instances_policy<process_definition> {
 	 */
 	good_bool
 	operator () (const canonical_process_type& p, 
-			unroll_port_target_type& c,
+			target_context& c,
 			subinstance_manager& sub) const {
 		STACKTRACE_VERBOSE;
 #if !CACHE_SUBSTRUCTURES_IN_FOOTPRINT
@@ -180,7 +179,6 @@ struct unroll_port_instances_policy<process_definition> {
 	}
 	}
 };	// end struct unroll_port_instances_policy
-#endif
 
 //=============================================================================
 /**

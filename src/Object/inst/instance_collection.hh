@@ -20,7 +20,7 @@
 #include "Object/common/multikey_index.hh"
 #include "Object/inst/collection_interface.hh"
 #include "Object/inst/connection_policy_fwd.hh"
-#include "Object/devel_switches.hh"
+#include "Object/unroll/target_context.hh"
 #include "util/persistent_functor.hh"
 #include "util/memory/excl_ptr.hh"
 #include "util/memory/count_ptr.hh"
@@ -270,18 +270,12 @@ virtual	GET_ALL_ALIASES_PROTO = 0;
 
 virtual	SET_ALIAS_CONNECTION_FLAGS_PROTO = 0;
 
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
 // target-footprint for instance_pool bundles for port-actuals
 #define	INSTANTIATE_ACTUALS_FROM_FORMALS_PROTO				\
 	void								\
 	instantiate_actuals_from_formals(port_actuals_type&, 		\
-		footprint&) const
-#else
-#define	INSTANTIATE_ACTUALS_FROM_FORMALS_PROTO				\
-	void								\
-	instantiate_actuals_from_formals(port_actuals_type&, 		\
-		const unroll_context&) const
-#endif
+		target_context&) const
+
 virtual	INSTANTIATE_ACTUALS_FROM_FORMALS_PROTO = 0;
 
 public:

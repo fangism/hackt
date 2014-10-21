@@ -983,6 +983,7 @@ OBJECT_HH_FILES = $(OBJECT_CC_FILES:.cc=.hh) \
 	Object/unroll/port_connection.hh \
 	Object/unroll/process_instantiation_statement.hh \
 	Object/unroll/sequential_scope.hh \
+	Object/unroll/target_context.hh \
 	Object/unroll/template_type_completion.hh \
 	Object/lang/PRS_fwd.hh \
 	Object/lang/PRS_base.hh \

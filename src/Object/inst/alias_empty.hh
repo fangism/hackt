@@ -12,7 +12,7 @@
 #define	DEBUG_ALIAS_EMPTY		1
 
 #include <iosfwd>
-#include "Object/devel_switches.hh"
+#include "Object/unroll/target_context.hh"
 #include "util/memory/pointer_classes_fwd.hh"
 #include "util/persistent_fwd.hh"
 #include "util/boolean_types.hh"
@@ -24,9 +24,6 @@ class footprint;
 class footprint_frame;
 class state_manager;
 template <class> class instance_alias_info;
-#if !CACHE_SUBSTRUCTURES_IN_FOOTPRINT
-class unroll_context;
-#endif
 using std::istream;
 using std::ostream;
 using util::good_bool;
@@ -107,24 +104,14 @@ protected:
 	static
 	good_bool
 	synchronize_actuals(const this_type&, const this_type&,
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
-			const footprint&
-#else
-			const unroll_context&
-#endif
-			) {
+			const target_context&) {
 		return good_bool(true);
 	}
 
 	static
 	void
 	finalize_actuals_and_substructure_aliases(const this_type&, 
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
-			const footprint&
-#else
-			const unroll_context&
-#endif
-			) {
+			const target_context&) {
 		// do nothing
 	}
 

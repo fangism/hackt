@@ -160,25 +160,18 @@ INSTANCE_ALIAS_INFO_CLASS::check(const container_type* p) const {
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
 INSTANCE_ALIAS_INFO_CLASS::instantiate_actuals_only(
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
-		footprint& c
-#else
-		const unroll_context& c
-#endif
-		) {
+		target_context& c) {
 	STACKTRACE_VERBOSE;
 	NEVER_NULL(this->container);
 // only if type is complete, expand ports
 if (!this->container->get_canonical_collection().has_relaxed_type()
 		|| this->get_relaxed_actuals()) {
-#if 1 || !CACHE_SUBSTRUCTURES_IN_FOOTPRINT
 	if (!substructure_parent_type::unroll_port_instances(
 			*this->container, 
 			this->get_relaxed_actuals(), c).good) {
 		// already have error message
 		THROW_EXIT;
 	}
-#endif
 #if 0
 	// did we forget this accidentally?
 	actuals_parent_type::copy_actuals(f);
@@ -215,12 +208,7 @@ if (!this->container->get_canonical_collection().has_relaxed_type()
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
 INSTANCE_ALIAS_INFO_CLASS::instantiate(const container_ptr_type p, 
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
-		footprint& c
-#else
-		const unroll_context& c
-#endif
-		) {
+		target_context& c) {
 	STACKTRACE_VERBOSE;
 	NEVER_NULL(p);
 	INVARIANT(!this->container);
@@ -256,17 +244,12 @@ INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
 INSTANCE_ALIAS_INFO_CLASS::instantiate_actual_from_formal(
 		const port_actuals_ptr_type p, 
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
-		footprint& c,
-#else
-		const unroll_context& c,
-#endif
+		target_context& c,
 		const this_type& f) {
 	STACKTRACE_VERBOSE;
 	NEVER_NULL(p);
 	INVARIANT(!this->container);
 	this->container = p;
-#if 1 || !CACHE_SUBSTRUCTURES_IN_FOOTPRINT
 	// do we ever want to instantiate more than the ports? no
 	if (!substructure_parent_type::unroll_port_instances(
 			*this->container, 
@@ -275,7 +258,6 @@ INSTANCE_ALIAS_INFO_CLASS::instantiate_actual_from_formal(
 		// already have error message
 		THROW_EXIT;
 	}
-#endif
 	import_properties(f);
 }
 
@@ -534,12 +516,7 @@ INSTANCE_ALIAS_INFO_CLASS::dump_key(ostream& o) const {
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 good_bool
 INSTANCE_ALIAS_INFO_CLASS::checked_connect_port(this_type& l, this_type& r,
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
-		footprint& c
-#else
-		const unroll_context& c
-#endif
-		) {
+		target_context& c) {
 	STACKTRACE_VERBOSE;
 	if (!l.must_match_type(r)) {
 		// already have error message
@@ -736,12 +713,7 @@ INSTANCE_ALIAS_INFO_CLASS::dump_hierarchical_name(ostream& o) const {
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 good_bool
 INSTANCE_ALIAS_INFO_CLASS::unite(this_type& r,
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
-		footprint& c
-#else
-		const unroll_context& c
-#endif
-		) {
+		target_context& c) {
 	STACKTRACE_VERBOSE;
 	const pseudo_iterator lc(this->find(c));
 	this_type* const rc = &*r.find(c);
@@ -818,13 +790,7 @@ INSTANCE_ALIAS_INFO_CLASS::find(void) {
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 typename INSTANCE_ALIAS_INFO_CLASS::pseudo_iterator
-INSTANCE_ALIAS_INFO_CLASS::find(
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
-		footprint& c
-#else
-		const unroll_context& c
-#endif
-		) {
+INSTANCE_ALIAS_INFO_CLASS::find(target_context& c) {
 	STACKTRACE_VERBOSE;
 	STACKTRACE_INDENT_PRINT("this = " << this << endl);
 	NEVER_NULL(this->next);

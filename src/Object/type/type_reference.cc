@@ -675,7 +675,6 @@ data_type_reference::may_be_binop_type_equivalent(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 1 || !CACHE_SUBSTRUCTURES_IN_FOOTPRINT
 /**
 	Static helper function.
 	NOTE: data types cannot be relaxed; they must be strict.  
@@ -685,11 +684,7 @@ data_type_reference::unroll_port_instances(
 		const never_ptr<const definition_type> def, 
 //		const template_actuals& ta, 
 		const count_ptr<const const_param_expr_list>& ta, 
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
-		footprint& c,
-#else
-		const unroll_context& c,
-#endif
+		target_context& c,
 		subinstance_manager& sub) {
 	if (def == &bool_traits::built_in_definition) {
 		// do nothing!
@@ -720,7 +715,6 @@ data_type_reference::unroll_port_instances(
 	}
 	}
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0

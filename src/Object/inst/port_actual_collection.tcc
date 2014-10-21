@@ -466,12 +466,7 @@ PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
 good_bool
 PORT_ACTUAL_COLLECTION_CLASS::connect_port_aliases_recursive(
 		physical_instance_collection& p,
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
-		footprint& c
-#else
-		const unroll_context& c
-#endif
-		) {
+		target_context& c) {
 	STACKTRACE_VERBOSE;
 	this_type& t(IS_A(this_type&, p));	// assert dynamic_cast
 	INVARIANT(this->value_array.size() == t.value_array.size());

@@ -264,12 +264,7 @@ port_formals_manager::equivalent_port_formals(
 	\param f footprint (context) in which to lookup local/port instances.
  */
 good_bool
-port_formals_manager::unroll_ports(
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
-		const footprint& f,
-#else
-		const unroll_context& c, 
-#endif
+port_formals_manager::unroll_ports(const target_context& c,
 		vector<never_ptr<physical_instance_collection> >& sub) const {
 	STACKTRACE_VERBOSE;
 	INVARIANT(sub.empty());
@@ -283,7 +278,7 @@ port_formals_manager::unroll_ports(
 #if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
 		// shallow-pointer copy, lookup collection
 		const never_ptr<physical_instance_collection>
-			new_port(f[pcb->get_footprint_key()]
+			new_port(c[pcb->get_footprint_key()]
 				.is_a<physical_instance_collection>());
 //			new_port(c.lookup_instance_collection(*pcb));
 			// lookup_port_collection is const*

@@ -16,7 +16,7 @@
 
 #include "util/macros.h"
 #include "Object/common/util_types.hh"	// for checked_refs_type
-#include "Object/devel_switches.hh"
+#include "Object/unroll/target_context.hh"
 
 #include "util/boolean_types.hh"
 #include "util/persistent_fwd.hh"
@@ -140,12 +140,7 @@ public:
 	equivalent_port_formals(const port_formals_manager&) const;
 
 	good_bool
-	unroll_ports(
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
-		const footprint&,
-#else
-		const unroll_context&, 
-#endif
+	unroll_ports(const target_context&,
 		vector<never_ptr<physical_instance_collection> >&) const;
 
 public:
