@@ -57,14 +57,12 @@ subinstance_manager::~subinstance_manager() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
 /**
 	Reminder: subinstance_array's pointers are NOT owned, 
 	so we need access to the structure responsible for 
 	owning the new copies, which accessed as the 
 	target_footprint's instance_collection_pool_bundle.
 	See instance_placeholder::unroll_port_only().
-	FIXME: needs target footprint or context containing it.
  */
 void
 subinstance_manager::deep_copy(const subinstance_manager& r, footprint& tf) {
@@ -78,7 +76,6 @@ subinstance_manager::deep_copy(const subinstance_manager& r, footprint& tf) {
 	}
 	// relink_super_instance_alias();
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&

@@ -191,22 +191,6 @@ DUMMY_PLACEHOLDER_CLASS::get_initial_instantiation_indices(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !CACHE_SUBSTRUCTURES_IN_FOOTPRINT
-/**
-	\param c the unroll_context, whose (read-only) lookup footprint 
-		is that of the super-instance's type.  
-	\return pointer to new-allocated collection, that is memory-owned
-		by the managing (target) footprint.  
- */
-DUMMY_PLACEHOLDER_TEMPLATE_SIGNATURE
-never_ptr<physical_instance_collection>
-DUMMY_PLACEHOLDER_CLASS::unroll_port_only(const unroll_context& c) const {
-	ICE_NEVER_CALL(cerr);
-	return never_ptr<physical_instance_collection>(NULL);
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Just creates a simple instance_reference to this collection.  
 	If indexed, the index is set by the caller.  

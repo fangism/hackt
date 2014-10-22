@@ -164,10 +164,6 @@ public:
 		const nonmeta_ref_ptr_type&) const;
 #endif
 
-#if !CACHE_SUBSTRUCTURES_IN_FOOTPRINT
-	UNROLL_PORT_ONLY_PROTO;
-#endif
-
 	static
 	persistent*
 	construct_empty(const int);

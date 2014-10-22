@@ -289,7 +289,6 @@ private:
 	 */
 	atomic_update_graph			exported_atomic_update_DAG;
 #endif
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
 	/**
 		Every instance should expand its alias's ports
 		using this tree structure.
@@ -300,7 +299,6 @@ private:
 		don't write this object out, restore it instead.
 	 */
 	mutable excl_ptr<subinstance_manager>	substructure_template;
-#endif
 #if FOOTPRINT_OWNS_CONTEXT_CACHE
 	/**
 		Hierarchical tree cache of footprint frames and offsets
@@ -372,12 +370,10 @@ public:
 	const footprint&
 	get_top_footprint(void) const;
 
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
 	footprint&
 	as_target_footprint(void) {
 		return *this;
 	}
-#endif
 
 	size_t
 	map_size(void) const { return instance_collection_map.size(); }
@@ -444,10 +440,8 @@ public:
 		scope_aliases.synchronize_flags();
 	}
 
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
 	const subinstance_manager&
 	get_port_template(void) const; 
-#endif
 
 	// index is 0-based
 	template <class Tag>

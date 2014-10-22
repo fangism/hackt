@@ -109,18 +109,9 @@ struct unroll_port_instances_policy<process_definition> {
 			target_context& c,
 			subinstance_manager& sub) const {
 		STACKTRACE_VERBOSE;
-#if !CACHE_SUBSTRUCTURES_IN_FOOTPRINT
-		// modeled after process_type_reference::unroll_port_instances()
-		const port_formals_manager&
-			pf(p.canonical_definition_ptr->get_port_formals());
-#endif
 		// template formals/actuals included in footprint already
 		if (!p.create_definition_footprint(
-#if !CACHE_SUBSTRUCTURES_IN_FOOTPRINT
-				*
-#endif
-				c.get_top_footprint()
-				).good) {
+				c.get_top_footprint()).good) {
 			cerr << "Error instantiating process footprint: "
 				<< endl;
 			p.dump(cerr << "From canonical type: ") << endl;
@@ -140,13 +131,8 @@ struct unroll_port_instances_policy<process_definition> {
 		const footprint&
 			f(p.canonical_definition_ptr->get_footprint(
 				p.param_list_ptr));
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
 		sub.deep_copy(f.get_port_template(), c);
 		return good_bool(true);
-#else
-		const unroll_context cc(&f, c);
-		return pf.unroll_ports(cc, sub.get_array());
-#endif
 	} else {
 		STACKTRACE_INDENT_PRINT("have relaxed type." << endl);
 		// unroll temporary footprint using partial template params
@@ -156,20 +142,11 @@ struct unroll_port_instances_policy<process_definition> {
 		const params_ptr_type d(p.param_list_ptr->to_dynamic_list());
 		const template_actuals a(d, params_ptr_type(NULL));
 		DECLARE_TEMPORARY_FOOTPRINT(f);
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
 		const unroll_context cc(&f, &c);
-#else
-		const unroll_context
-			cc(&f, c, unroll_context::auxiliary_target_tag());
-#endif
 		if (p.canonical_definition_ptr->get_template_formals_manager()
 				.unroll_formal_parameters(cc, a).good) {
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
 			sub.deep_copy(f.get_port_template(), c);	// ???
 			return good_bool(true);
-#else
-			return pf.unroll_ports(cc, sub.get_array());
-#endif
 		} else {
 			cerr << "FATAL: unexpected error unrolling temporary "
 				"parameter-only footprint." << endl;

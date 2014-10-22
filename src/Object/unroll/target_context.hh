@@ -5,19 +5,14 @@
 #ifndef	__HAC_OBJECT_UNROLL_TARGET_CONTEXT_HH__
 #define	__HAC_OBJECT_UNROLL_TARGET_CONTEXT_HH__
 
-#include "Object/devel_switches.hh"
+// #include "Object/devel_switches.hh"
 
 namespace HAC {
 namespace entity {
 
-
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
 class footprint;
 typedef	footprint			target_context;
-#else
-class unroll_context;
-typedef	const unroll_context		target_context;
-#endif
+// used to be unroll_context.
 
 }	// end namespace entity
 }	// end namespace HAC

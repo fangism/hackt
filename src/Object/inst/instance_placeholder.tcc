@@ -218,62 +218,6 @@ INSTANCE_PLACEHOLDER_CLASS::get_initial_instantiation_indices(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !CACHE_SUBSTRUCTURES_IN_FOOTPRINT
-/**
-	\param c the unroll_context, whose (read-only) lookup footprint 
-		is that of the super-instance's type.  
-	\return pointer to new-allocated collection, that is memory-owned
-		by the managing (target) footprint.  
- */
-INSTANCE_PLACEHOLDER_TEMPLATE_SIGNATURE
-never_ptr<physical_instance_collection>
-INSTANCE_PLACEHOLDER_CLASS::unroll_port_only(const unroll_context& c) const {
-	STACKTRACE_VERBOSE;
-	INVARIANT(this->initial_instantiation_statement_ptr);
-	typedef	port_actual_collection<Tag>	port_collection_type;
-#if 0 && ENABLE_STACKTRACE
-	cerr << "looking up: " << this->key << endl;
-	c.dump(cerr << "context: ") << endl;
-#endif
-	const never_ptr<const physical_instance_collection>
-		b(c.lookup_port_collection(*this));
-	NEVER_NULL(b);
-	const never_ptr<const instance_collection_generic_type>
-		back_ref(b.template is_a<const instance_collection_generic_type>());
-	NEVER_NULL(back_ref);
-	// pass unroll_context to instantiate recursively
-	collection_pool_bundle_type&
-		pool(c.get_target_footprint().
-			template get_instance_collection_pool_bundle<Tag>());
-#if SIMPLE_ALLOCATE_PORT_COLLECTION
-	const never_ptr<port_collection_type>
-		ret(pool.allocate_port_collection());
-	// allocated, but uninitialized
-	try {
-		new (&*ret) port_collection_type(back_ref, c);
-		// placement construct
-		// can throw on error
-	} catch (...) {
-		return never_ptr<port_collection_type>(NULL);
-	}
-#else
-	const never_ptr<port_collection_type>
-		ret(pool.allocate_port_collection(back_ref, c));
-#endif
-#if 0
-	NEVER_NULL(ret);
-#else
-	if (!ret) {
-		cerr << "Error unrolling port." << endl;
-	}
-#endif
-	// TODO: attach relaxed parameters --
-	// this may be done in the unrolling of the ports now.
-	return ret;
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Just creates a simple instance_reference to this collection.  
 	If indexed, the index is set by the caller.  

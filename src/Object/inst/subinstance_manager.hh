@@ -13,6 +13,7 @@
 #include "Object/inst/substructure_alias_fwd.hh"
 #include "Object/inst/alias_visitee.hh"
 #include "Object/unroll/target_context.hh"
+#include "Object/devel_switches.hh"
 #include "util/memory/excl_ptr.hh"
 
 namespace HAC {

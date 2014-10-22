@@ -65,7 +65,6 @@ PORT_ACTUAL_COLLECTION_CLASS::port_actual_collection(const this_type& r) :
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
 /**
 	Allocate one-level of copy of ports, but leave uninitialized.
 	Caller should instantiate actuals from formals.  
@@ -79,31 +78,6 @@ PORT_ACTUAL_COLLECTION_CLASS::port_actual_collection(
 	// value_array allocated, but uninitialized
 	// caller should populate array via instantiate_actuals_from_formals
 }
-#else
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	TODO: re-write function as something other than constructor
-		to return instead of throw.
-	\throw exception if there is an error in unrolling ports.  
-	\pre if we're propagating connection information hierarchically, 
-		then the formal collection type must already be successfully
-		created.  We don't create here, to avoid exception handling
-		in this recursive constructor.  
- */
-PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
-PORT_ACTUAL_COLLECTION_CLASS::port_actual_collection(
-		const formal_collection_ptr_type f, 
-		const unroll_context& c) :
-		parent_type(), 
-		formal_collection(f), 
-		value_array(f->collection_size()) {
-	// pass the iterators (or this collection) to the formal collection 
-	// for initialization of the connected state
-	// this requires that summaries are already constructed
-	// by the formal collection (requires create pass)
-	this->formal_collection->instantiate_actuals_from_formals(*this, c);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
@@ -332,7 +306,6 @@ PORT_ACTUAL_COLLECTION_CLASS::resolve_indices(const const_index_list& l) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
 /**
 	Perform a deep-copy on an un-owned self and allocate new copy
 	into target footprint (owner).
@@ -354,7 +327,6 @@ PORT_ACTUAL_COLLECTION_CLASS::deep_copy(footprint& tf) const {
 	}
 	return ret;
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // operator []

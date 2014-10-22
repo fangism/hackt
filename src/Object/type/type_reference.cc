@@ -22,9 +22,7 @@
 #include "Object/def/datatype_definition_alias.hh"
 #include "Object/def/process_definition.hh"
 #include "Object/def/process_definition_alias.hh"
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
 #include "Object/def/footprint.hh"
-#endif
 #include "Object/type/data_type_reference.hh"
 #include "Object/type/channel_type_reference.hh"
 #include "Object/type/builtin_channel_type_reference.hh"
@@ -703,15 +701,7 @@ data_type_reference::unroll_port_instances(
 	{
 		STACKTRACE("local context");
 		const footprint& f(data_def->get_footprint(ta));
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
 		sub.deep_copy(f.get_port_template(), c);
-//		port_formals.unroll_ports(f, sub.get_array());
-#else
-		const port_formals_manager&
-			port_formals(data_def->get_port_formals());
-		const unroll_context cc(&f, c);
-		port_formals.unroll_ports(cc, sub.get_array());
-#endif
 	}
 	}
 }
@@ -1354,21 +1344,6 @@ builtin_channel_type_reference::make_canonical_type(
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !CACHE_SUBSTRUCTURES_IN_FOOTPRINT
-/**
-	Don't really know what to do, since built-in channel types 
-	are supposed to be abstract, right?
-	Interpret data-types as unnamed ports?
- */
-void
-builtin_channel_type_reference::unroll_port_instances(
-		const unroll_context& c, 
-		subinstance_manager& sub) const {
-	FINISH_ME(Fang);
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 builtin_channel_type_reference::collect_transient_info(
 		persistent_object_manager& m) const {
@@ -1643,16 +1618,6 @@ channel_type_reference::make_canonical_channel_type_reference(void) const {
 	}
 	return ret;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !CACHE_SUBSTRUCTURES_IN_FOOTPRINT
-void
-channel_type_reference::unroll_port_instances(
-		const unroll_context& c, 
-		subinstance_manager& sub) const {
-	FINISH_ME(Fang);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -1985,37 +1950,6 @@ process_type_reference::may_be_connectibly_type_equivalent(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !CACHE_SUBSTRUCTURES_IN_FOOTPRINT
-/**
-	Takes this type and expands its port subinstances.
-	\pre this type must be canonical and resolved to constants.  
-	\post the subinstance manager will be populated with
-		instance collections of the proper port types, 
-		according to the canonical definition.  
- */
-void
-process_type_reference::unroll_port_instances(
-		const unroll_context& c, subinstance_manager& sub) const {
-	STACKTRACE_VERBOSE;
-	INVARIANT(is_resolved());
-	INVARIANT(is_canonical());
-	const never_ptr<const process_definition>
-		proc_def(base_proc_def.is_a<const process_definition>());
-	NEVER_NULL(proc_def);
-	const port_formals_manager& port_formals(proc_def->get_port_formals());
-	{
-		STACKTRACE("local context");
-		const template_actuals
-			resolved_template_args(template_args.unroll_resolve(c));
-		const unroll_context& cc(c);
-		// should the contexts be chained?
-		// or can the actuals always be resolved one scope at a time?
-		port_formals.unroll_ports(cc, sub.get_array());
-	}
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\pre this type must only depend on constants (canonical).  
  */
@@ -2228,18 +2162,6 @@ bool
 param_type_reference::must_be_type_equivalent(const this_type& t) const {
 	return base_param_def == t.base_param_def;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !CACHE_SUBSTRUCTURES_IN_FOOTPRINT
-/**
-	This really should never be called.  
- */
-void
-param_type_reference::unroll_port_instances(
-		const unroll_context&, subinstance_manager&) const {
-	// no-op
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PERSISTENT_METHODS_DUMMY_IMPLEMENTATION(param_type_reference)

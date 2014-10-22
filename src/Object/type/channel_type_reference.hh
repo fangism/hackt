@@ -81,10 +81,6 @@ private:
 public:
 	TYPE_EQUIVALENT_PROTOS
 
-#if !CACHE_SUBSTRUCTURES_IN_FOOTPRINT
-	UNROLL_PORT_INSTANCES_PROTO;
-#endif
-
 	// helper function
 	count_ptr<const this_type>
 	make_canonical_channel_type_reference(void) const;

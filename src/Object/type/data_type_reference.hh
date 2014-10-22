@@ -7,12 +7,13 @@
  	$Id: data_type_reference.hh,v 1.15 2008/11/12 03:00:21 fang Exp $
  */
 
-#ifndef	__HAC_OBJECT_TYPE_DATA_TYPE_REFERENCE_H__
-#define	__HAC_OBJECT_TYPE_DATA_TYPE_REFERENCE_H__
+#ifndef	__HAC_OBJECT_TYPE_DATA_TYPE_REFERENCE_HH__
+#define	__HAC_OBJECT_TYPE_DATA_TYPE_REFERENCE_HH__
 
 #include "Object/type/fundamental_type_reference.hh"
 #include "Object/type/canonical_type_fwd.hh"
 #include "Object/expr/types.hh"
+#include "Object/unroll/target_context.hh"
 #include "Object/devel_switches.hh"
 #if BOOL_CONNECTIVITY_CHECKING
 #include "Object/type/channel_direction_enum.hh"
@@ -148,12 +149,7 @@ public:
 	unroll_port_instances(const never_ptr<const definition_type>, 
 //		const template_actuals&, 
 		const count_ptr<const const_param_expr_list>&, 
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
-		footprint&,
-#else
-		const unroll_context&,
-#endif
-		subinstance_manager&);
+		target_context&, subinstance_manager&);
 
 //	UNROLL_PORT_INSTANCES_PROTO;
 
@@ -179,5 +175,5 @@ public:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __HAC_OBJECT_TYPE_DATA_TYPE_REFERENCE_H__
+#endif	// __HAC_OBJECT_TYPE_DATA_TYPE_REFERENCE_HH__
 

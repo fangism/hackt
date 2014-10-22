@@ -1425,11 +1425,7 @@ footprint::connect_implicit_ports(const unroll_context& c) {
 		gp(__lookup_scalar_port_alias<bool_tag>("!GND"));
 	implicit_supply_connector::node_type&
 		vp(__lookup_scalar_port_alias<bool_tag>("!Vdd"));
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
-	implicit_supply_connector spc(c.get_target_footprint(), gp, vp);
-#else
-	implicit_supply_connector spc(c, gp, vp);
-#endif
+	implicit_supply_connector spc(c.as_target_footprint(), gp, vp);
 	// lookup the lone bool
 for ( ; mi!=me; ++mi) {
 	const never_ptr<instance_collection_base> b((*this)[mi->second]);
@@ -1448,16 +1444,12 @@ if (p) {
 #endif	// IMPLICIT_SUPPLY_PORTS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
 /**
 	One-time construction of subinstance hierarchy (of public ports),
 	so that subsequent instantiations only need a simple deep-copy.
  */
 const subinstance_manager&
-footprint::get_port_template(
-		void
-//		const unroll_context& ctop
-		) const {
+footprint::get_port_template(void) const {
 	STACKTRACE_VERBOSE;
 if (!substructure_template) {
 	STACKTRACE_INDENT_PRINT("creating port substructure template, then caching it" << endl);
@@ -1467,19 +1459,17 @@ if (!substructure_template) {
 	NEVER_NULL(substructure_template);
 	const never_ptr<const port_formals_manager>
 		pf(get_owner_def()->get_port_formals_manager());
-//	const unroll_context cc(this, ctop);
 	pf->unroll_ports(*this, substructure_template->get_array());
 	// shallow-copy of pointers, one-level
 	const never_ptr<substructure_alias> ss =
 		substructure_template.as_a<substructure_alias>();
 //	ss->restore_parent_child_links();
-//	not needed if shallow-copying
+//	not needed if just shallow-copying
 } else {
 	STACKTRACE_INDENT_PRINT("re-using cached port template" << endl);
 }
 	return *substructure_template;
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

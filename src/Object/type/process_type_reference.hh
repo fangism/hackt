@@ -108,10 +108,6 @@ public:
 	good_bool
 	must_be_valid(void) const;
 
-#if !CACHE_SUBSTRUCTURES_IN_FOOTPRINT
-	UNROLL_PORT_INSTANCES_PROTO;
-#endif
-
 private:
 	struct canonical_compare_result_type;
 public:

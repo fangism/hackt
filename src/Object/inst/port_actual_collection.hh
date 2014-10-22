@@ -93,13 +93,8 @@ public:
 	// explicit
 	port_actual_collection(const this_type&);
 public:
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
 	explicit
 	port_actual_collection(const formal_collection_ptr_type);
-#else
-	port_actual_collection(const formal_collection_ptr_type, 
-		const unroll_context&);
-#endif
 
 	~port_actual_collection();
 
@@ -168,9 +163,7 @@ public:
 	CONNECT_PORT_ALIASES_RECURSIVE_PROTO;
 	RECONNECT_PORT_ALIASES_RECURSIVE_PROTO;
 	ALLOCATE_LOCAL_INSTANCE_IDS_PROTO;
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
 	DEEP_COPY_STRUCTURE_PROTO;
-#endif
 
 	instance_alias_info_ptr_type
 	lookup_instance(const multikey_index_type&) const;

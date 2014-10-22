@@ -290,7 +290,10 @@ PORT_FORMAL_ARRAY_CLASS::allocate_local_instance_ids(footprint& f) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
+/**
+	Copy/instantiate substructure from template.
+	Allocate into target footprint.
+ */
 PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
 never_ptr<physical_instance_collection>
 PORT_FORMAL_ARRAY_CLASS::deep_copy(footprint& tf) const {
@@ -303,7 +306,6 @@ PORT_FORMAL_ARRAY_CLASS::deep_copy(footprint& tf) const {
 	instantiate_actuals_from_formals(*ret, tf);
 	return never_ptr<physical_instance_collection>(ret);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

@@ -126,11 +126,7 @@ public:
 
 	target_context&
 	as_target_footprint(void) const {
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
 		return get_target_footprint();
-#else
-		return *this;
-#endif
 	}
 
 	bool

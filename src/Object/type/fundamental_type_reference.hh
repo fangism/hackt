@@ -150,16 +150,6 @@ public:
 
 virtual	MAKE_INSTANCE_COLLECTION_PROTO = 0;
 
-#if !CACHE_SUBSTRUCTURES_IN_FOOTPRINT
-/**
-	This is no longer virtual.  
- */
-#define	UNROLL_PORT_INSTANCES_PROTO					\
-	void								\
-	unroll_port_instances(const unroll_context&, 			\
-		subinstance_manager&) const
-#endif
-
 public:
 virtual	bool
 	may_be_collectibly_type_equivalent(

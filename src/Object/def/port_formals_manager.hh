@@ -17,6 +17,7 @@
 #include "util/macros.h"
 #include "Object/common/util_types.hh"	// for checked_refs_type
 #include "Object/unroll/target_context.hh"
+#include "Object/devel_switches.hh"
 
 #include "util/boolean_types.hh"
 #include "util/persistent_fwd.hh"
@@ -32,7 +33,6 @@ class instance_placeholder_base;
 class physical_instance_placeholder;
 class physical_instance_collection;
 class footprint;
-class unroll_context;
 using std::string;
 using std::istream;
 using std::ostream;

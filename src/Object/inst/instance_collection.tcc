@@ -158,10 +158,9 @@ INSTANCE_COLLECTION_CLASS::get_canonical_collection(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
 /**
 	Only implemented by instance_scalar and port_formal_array
-	subclasses.
+	subclasses, which are legal port structures.
  */
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 never_ptr<physical_instance_collection>
@@ -169,7 +168,6 @@ INSTANCE_COLLECTION_CLASS::deep_copy(footprint&) const {
 	ICE_NEVER_CALL(cerr);
 	return never_ptr<physical_instance_collection>(NULL);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1509,7 +1507,9 @@ if (this->the_instance.container) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
+/**
+	Instantiate port actuals from a template of formals.
+ */
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 never_ptr<physical_instance_collection>
 INSTANCE_SCALAR_CLASS::deep_copy(footprint& tf) const {
@@ -1522,7 +1522,6 @@ INSTANCE_SCALAR_CLASS::deep_copy(footprint& tf) const {
 	instantiate_actuals_from_formals(*ret, tf);
 	return never_ptr<physical_instance_collection>(ret);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

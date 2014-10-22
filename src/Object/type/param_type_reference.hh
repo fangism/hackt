@@ -7,8 +7,8 @@
  	$Id: param_type_reference.hh,v 1.8 2006/10/18 21:38:49 fang Exp $
  */
 
-#ifndef	__HAC_OBJECT_TYPE_PARAM_TYPE_REFERENCE_H__
-#define	__HAC_OBJECT_TYPE_PARAM_TYPE_REFERENCE_H__
+#ifndef	__HAC_OBJECT_TYPE_PARAM_TYPE_REFERENCE_HH__
+#define	__HAC_OBJECT_TYPE_PARAM_TYPE_REFERENCE_HH__
 
 #include "Object/type/fundamental_type_reference.hh"
 
@@ -75,10 +75,6 @@ private:
 			
 	MAKE_INSTANCE_COLLECTION_PROTO;
 
-#if !CACHE_SUBSTRUCTURES_IN_FOOTPRINT
-	UNROLL_PORT_INSTANCES_PROTO;
-#endif
-
 private:
 	// dummy implementation, never called
 	PERSISTENT_METHODS_DECLARATIONS
@@ -89,5 +85,5 @@ private:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __HAC_OBJECT_TYPE_PARAM_TYPE_REFERENCE_H__
+#endif	// __HAC_OBJECT_TYPE_PARAM_TYPE_REFERENCE_HH__
 

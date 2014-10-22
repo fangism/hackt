@@ -80,13 +80,11 @@ virtual ostream&
 
 virtual	ALLOCATE_LOCAL_INSTANCE_IDS_PROTO = 0;
 
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
 #define	DEEP_COPY_STRUCTURE_PROTO					\
 	never_ptr<physical_instance_collection>				\
 	deep_copy(footprint&) const
 
 virtual	DEEP_COPY_STRUCTURE_PROTO = 0;
-#endif
 
 #define	CONNECT_PORT_ALIASES_RECURSIVE_PROTO				\
 	good_bool							\

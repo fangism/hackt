@@ -148,12 +148,10 @@ public:
 protected:
 	substructure_alias_base() : instance_index(0) { }
 
-#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
 public:
 	void
 	deep_copy(const this_type&, const footprint&) const { }
 protected:
-#endif
 	/**
 		No-op.
 	 */
