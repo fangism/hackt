@@ -3399,6 +3399,10 @@ try {
 				return good_bool(false);
 			}
 		}
+		// construct one-time port_template subinstances
+#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
+		f.get_port_template();	// cache it (optional)
+#endif
 #if ENABLE_STACKTRACE
 		f.dump_with_collections(cerr << "Final footprint: " << endl);
 #endif

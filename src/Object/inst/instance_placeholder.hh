@@ -5,8 +5,8 @@
 	$Id: instance_placeholder.hh,v 1.7 2011/02/25 23:19:30 fang Exp $
  */
 
-#ifndef	__HAC_OBJECT_INST_INSTANCE_PLACEHOLDER_H__
-#define	__HAC_OBJECT_INST_INSTANCE_PLACEHOLDER_H__
+#ifndef	__HAC_OBJECT_INST_INSTANCE_PLACEHOLDER_HH__
+#define	__HAC_OBJECT_INST_INSTANCE_PLACEHOLDER_HH__
 
 #include "Object/inst/physical_instance_placeholder.hh"	// for macros
 #include "Object/type/canonical_type_fwd.hh"	// for conditional
@@ -164,7 +164,9 @@ public:
 		const nonmeta_ref_ptr_type&) const;
 #endif
 
+#if !CACHE_SUBSTRUCTURES_IN_FOOTPRINT
 	UNROLL_PORT_ONLY_PROTO;
+#endif
 
 	static
 	persistent*
@@ -187,5 +189,5 @@ protected:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __HAC_OBJECT_INST_INSTANCE_PLACEHOLDER_H__
+#endif	// __HAC_OBJECT_INST_INSTANCE_PLACEHOLDER_HH__
 

@@ -5,10 +5,11 @@
 	$Id: physical_instance_collection.hh,v 1.21 2010/04/07 00:12:42 fang Exp $
  */
 
-#ifndef	__HAC_OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_H__
-#define	__HAC_OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_H__
+#ifndef	__HAC_OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_HH__
+#define	__HAC_OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_HH__
 
 #include "Object/inst/instance_collection_base.hh"
+#include "Object/unroll/target_context.hh"
 #include "util/persistent_fwd.hh"
 
 namespace HAC {
@@ -79,10 +80,18 @@ virtual ostream&
 
 virtual	ALLOCATE_LOCAL_INSTANCE_IDS_PROTO = 0;
 
+#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
+#define	DEEP_COPY_STRUCTURE_PROTO					\
+	never_ptr<physical_instance_collection>				\
+	deep_copy(footprint&) const
+
+virtual	DEEP_COPY_STRUCTURE_PROTO = 0;
+#endif
+
 #define	CONNECT_PORT_ALIASES_RECURSIVE_PROTO				\
 	good_bool							\
 	connect_port_aliases_recursive(physical_instance_collection&,	\
-		const unroll_context&)
+		target_context&)
 
 virtual	CONNECT_PORT_ALIASES_RECURSIVE_PROTO = 0;
 
@@ -118,5 +127,5 @@ virtual	void
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __HAC_OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_H__
+#endif	// __HAC_OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_HH__
 

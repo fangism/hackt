@@ -65,6 +65,22 @@ PORT_ACTUAL_COLLECTION_CLASS::port_actual_collection(const this_type& r) :
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
+/**
+	Allocate one-level of copy of ports, but leave uninitialized.
+	Caller should instantiate actuals from formals.  
+ */
+PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
+PORT_ACTUAL_COLLECTION_CLASS::port_actual_collection(
+		const formal_collection_ptr_type f) :
+		parent_type(), 
+		formal_collection(f), 
+		value_array(f->collection_size()) {
+	// value_array allocated, but uninitialized
+	// caller should populate array via instantiate_actuals_from_formals
+}
+#else
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	TODO: re-write function as something other than constructor
 		to return instead of throw.
@@ -87,6 +103,7 @@ PORT_ACTUAL_COLLECTION_CLASS::port_actual_collection(
 	// by the formal collection (requires create pass)
 	this->formal_collection->instantiate_actuals_from_formals(*this, c);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
@@ -315,7 +332,7 @@ PORT_ACTUAL_COLLECTION_CLASS::resolve_indices(const const_index_list& l) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0 && CACHE_SUBSTRUCTURES_IN_FOOTPRINT
+#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
 /**
 	Perform a deep-copy on an un-owned self and allocate new copy
 	into target footprint (owner).
@@ -333,7 +350,7 @@ PORT_ACTUAL_COLLECTION_CLASS::deep_copy(footprint& tf) const {
 	const size_t n = this->value_array.size();
 	size_t i = 0;
 	for ( ; i<n; ++i) {
-		ret->value_array[i] = this->value_array[i]->deep_copy(tf);
+		ret->value_array[i].deep_copy(this->value_array[i], tf);
 	}
 	return ret;
 }
@@ -452,7 +469,8 @@ PORT_ACTUAL_COLLECTION_CLASS::unroll_aliases(const multikey_index_type& l,
 PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
 good_bool
 PORT_ACTUAL_COLLECTION_CLASS::connect_port_aliases_recursive(
-		physical_instance_collection& p, const unroll_context& c) {
+		physical_instance_collection& p,
+		target_context& c) {
 	STACKTRACE_VERBOSE;
 	this_type& t(IS_A(this_type&, p));	// assert dynamic_cast
 	INVARIANT(this->value_array.size() == t.value_array.size());

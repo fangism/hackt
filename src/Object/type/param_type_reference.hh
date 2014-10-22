@@ -75,7 +75,9 @@ private:
 			
 	MAKE_INSTANCE_COLLECTION_PROTO;
 
+#if !CACHE_SUBSTRUCTURES_IN_FOOTPRINT
 	UNROLL_PORT_INSTANCES_PROTO;
+#endif
 
 private:
 	// dummy implementation, never called

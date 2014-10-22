@@ -302,7 +302,7 @@ CANONICAL_TYPE_CLASS::must_be_connectibly_type_equivalent(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 CANONICAL_TYPE_TEMPLATE_SIGNATURE
 good_bool
-CANONICAL_TYPE_CLASS::unroll_port_instances(const unroll_context& c, 
+CANONICAL_TYPE_CLASS::unroll_port_instances(target_context& c, 
 		subinstance_manager& sub) const {
 	STACKTRACE_VERBOSE;
 	return unroll_port_instances_policy<DefType>()(*this, c, sub);

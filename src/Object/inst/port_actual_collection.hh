@@ -3,8 +3,8 @@
 	$Id: port_actual_collection.hh,v 1.8 2010/04/07 00:12:43 fang Exp $
  */
 
-#ifndef	__HAC_OBJECT_INST_PORT_ACTUAL_COLLECTION_H__
-#define	__HAC_OBJECT_INST_PORT_ACTUAL_COLLECTION_H__
+#ifndef	__HAC_OBJECT_INST_PORT_ACTUAL_COLLECTION_HH__
+#define	__HAC_OBJECT_INST_PORT_ACTUAL_COLLECTION_HH__
 
 #include <valarray>
 #include "Object/inst/collection_interface.hh"
@@ -86,14 +86,20 @@ private:
 public:
 	port_actual_collection();
 
+
 	// partial copy constructor (shallow) for use with deep_copy
 	// wants to be private-explicit,
 	// but made public so vector/pool allocator works
 	// explicit
 	port_actual_collection(const this_type&);
 public:
+#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
+	explicit
+	port_actual_collection(const formal_collection_ptr_type);
+#else
 	port_actual_collection(const formal_collection_ptr_type, 
 		const unroll_context&);
+#endif
 
 	~port_actual_collection();
 
@@ -162,7 +168,9 @@ public:
 	CONNECT_PORT_ALIASES_RECURSIVE_PROTO;
 	RECONNECT_PORT_ALIASES_RECURSIVE_PROTO;
 	ALLOCATE_LOCAL_INSTANCE_IDS_PROTO;
-//	DEEP_COPY_STRUCTURE_PROTO;
+#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
+	DEEP_COPY_STRUCTURE_PROTO;
+#endif
 
 	instance_alias_info_ptr_type
 	lookup_instance(const multikey_index_type&) const;
@@ -225,5 +233,5 @@ public:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __HAC_OBJECT_INST_PORT_ACTUAL_COLLECTION_H__
+#endif	// __HAC_OBJECT_INST_PORT_ACTUAL_COLLECTION_HH__
 

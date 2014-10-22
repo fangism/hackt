@@ -3,8 +3,8 @@
 	$Id: subinstance_manager.hh,v 1.26 2010/04/07 00:12:45 fang Exp $
  */
 
-#ifndef	__HAC_OBJECT_INST_SUBINSTANCE_MANAGER_H__
-#define	__HAC_OBJECT_INST_SUBINSTANCE_MANAGER_H__
+#ifndef	__HAC_OBJECT_INST_SUBINSTANCE_MANAGER_HH__
+#define	__HAC_OBJECT_INST_SUBINSTANCE_MANAGER_HH__
 
 #include <iosfwd>
 #include <vector>
@@ -12,7 +12,7 @@
 #include "util/boolean_types.hh"
 #include "Object/inst/substructure_alias_fwd.hh"
 #include "Object/inst/alias_visitee.hh"
-#include "Object/devel_switches.hh"
+#include "Object/unroll/target_context.hh"
 #include "util/memory/excl_ptr.hh"
 
 namespace HAC {
@@ -91,6 +91,9 @@ protected:
 public:
 	~subinstance_manager();
 
+	void
+	deep_copy(const subinstance_manager&, footprint&);
+
 	bool
 	empty(void) const { return subinstance_array.empty(); }
 
@@ -122,7 +125,7 @@ public:
 	__unroll_port_instances(
 		const collection_interface<Tag>&, 
 		const relaxed_actuals_type&,
-		const unroll_context&);
+		target_context&);
 
 #if RECURSE_COLLECT_ALIASES
 	void
@@ -140,7 +143,7 @@ public:
 #endif
 
 	good_bool
-	connect_port_aliases_recursive(this_type&, const unroll_context&);
+	connect_port_aliases_recursive(this_type&, target_context&);
 
 	void
 	reconnect_port_aliases_recursive(this_type&);
@@ -170,5 +173,5 @@ public:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __HAC_OBJECT_INST_SUBINSTANCE_MANAGER_H__
+#endif	// __HAC_OBJECT_INST_SUBINSTANCE_MANAGER_HH__
 

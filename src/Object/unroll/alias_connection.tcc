@@ -21,6 +21,7 @@
 #include "Object/unroll/alias_connection.hh"
 #include "Object/ref/meta_instance_reference_subtypes.hh"
 #include "Object/expr/expr_dump_context.hh"
+#include "Object/unroll/unroll_context.hh"
 
 #include "util/persistent_object_manager.tcc"
 // #include "util/packed_array.tcc"	// for alias_collection_type
@@ -268,7 +269,8 @@ ALIAS_CONNECTION_CLASS::unroll(const unroll_context& c) const {
 			// all type-checking is done in this call:
 			// punt relaxed type checking until create
 			if (!instance_alias_info_type::checked_connect_port(
-					*head, *connectee, c).good) {
+					*head, *connectee,
+					c.as_target_footprint()).good) {
 				// already have error message
 				return good_bool(false);
 			}

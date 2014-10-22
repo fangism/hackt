@@ -64,11 +64,13 @@ virtual	ostream&
 	size_t
 	is_port_formal(void) const;
 
+#if !CACHE_SUBSTRUCTURES_IN_FOOTPRINT
 #define	UNROLL_PORT_ONLY_PROTO						\
 	never_ptr<physical_instance_collection>				\
 	unroll_port_only(const unroll_context&) const
 
 virtual	UNROLL_PORT_ONLY_PROTO = 0;
+#endif
 
 	bool
 	port_formal_equivalent(const this_type&) const;

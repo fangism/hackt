@@ -158,6 +158,20 @@ INSTANCE_COLLECTION_CLASS::get_canonical_collection(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
+/**
+	Only implemented by instance_scalar and port_formal_array
+	subclasses.
+ */
+INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
+never_ptr<physical_instance_collection>
+INSTANCE_COLLECTION_CLASS::deep_copy(footprint&) const {
+	ICE_NEVER_CALL(cerr);
+	return never_ptr<physical_instance_collection>(NULL);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Print qualified name using the footprint back-reference 
 	with complete type parameters.
@@ -627,8 +641,8 @@ INSTANCE_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges,
 			// only so if ports ever depend on relaxed parameters.  
 			// We've established that they do not, see NOTES.  
 			try {
-			new_elem->instantiate(
-				never_ptr<const this_type>(this), c);
+			new_elem->instantiate(never_ptr<const this_type>(this),
+				c.as_target_footprint());
 			// can throw!
 			} catch (...) {
 				err = true;
@@ -875,7 +889,8 @@ INSTANCE_ARRAY_CLASS::get_all_aliases(
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 good_bool
 INSTANCE_ARRAY_CLASS::connect_port_aliases_recursive(
-		physical_instance_collection& p, const unroll_context& c) {
+		physical_instance_collection& p, 
+		target_context& c) {
 	STACKTRACE_VERBOSE;
 	this_type& t(IS_A(this_type&, p));	// assert dynamic_cast
 	INVARIANT(this->collection.size() == t.collection.size());
@@ -1196,7 +1211,8 @@ INSTANCE_ARRAY_CLASS::set_alias_connection_flags(
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 void
 INSTANCE_ARRAY_CLASS::instantiate_actuals_from_formals(
-		port_actuals_type&, const unroll_context&) const {
+		port_actuals_type&,
+		target_context&) const {
 	ICE_NEVER_CALL(cerr);
 }
 
@@ -1493,6 +1509,22 @@ if (this->the_instance.container) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
+INSTANCE_SCALAR_TEMPLATE_SIGNATURE
+never_ptr<physical_instance_collection>
+INSTANCE_SCALAR_CLASS::deep_copy(footprint& tf) const {
+	collection_pool_bundle_type&
+		pool(tf.template get_instance_collection_pool_bundle<Tag>());
+	port_actuals_type* ret = pool.allocate_port_collection();
+	NEVER_NULL(ret);
+	// placement construct
+	new (ret) port_actuals_type(never_ptr<const this_type>(this));
+	instantiate_actuals_from_formals(*ret, tf);
+	return never_ptr<physical_instance_collection>(ret);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Instantiates the_instance of integer datatype.
 	Ideally, the error should never trigger because
@@ -1519,7 +1551,8 @@ INSTANCE_SCALAR_CLASS::instantiate_indices(
 	}
 	// here we need an explicit instantiation (recursive)
 	try {
-	this->the_instance.instantiate(never_ptr<const this_type>(this), c);
+	this->the_instance.instantiate(never_ptr<const this_type>(this),
+		c.as_target_footprint());
 	} catch (...) {
 		return good_bool(false);
 	}
@@ -1645,7 +1678,8 @@ INSTANCE_SCALAR_CLASS::unroll_aliases(const multikey_index_type&,
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 good_bool
 INSTANCE_SCALAR_CLASS::connect_port_aliases_recursive(
-		physical_instance_collection& p, const unroll_context& c) {
+		physical_instance_collection& p,
+		target_context& c) {
 	STACKTRACE_VERBOSE;
 	this_type& t(IS_A(this_type&, p));	// assert dynamic_cast
 	return instance_type::checked_connect_port(
@@ -1762,7 +1796,8 @@ INSTANCE_SCALAR_CLASS::set_alias_connection_flags(
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 void
 INSTANCE_SCALAR_CLASS::instantiate_actuals_from_formals(
-		port_actuals_type& p, const unroll_context& c) const {
+		port_actuals_type& p,
+		target_context& c) const {
 	INVARIANT(p.collection_size() == 1);
 #if 0
 	if (!create_dependent_types(*c.get_top_footprint()).good) {

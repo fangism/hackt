@@ -6,8 +6,8 @@
 	$Id: port_formals_manager.hh,v 1.13 2009/10/02 01:56:49 fang Exp $
  */
 
-#ifndef	__HAC_OBJECT_DEF_PORT_FORMALS_MANAGER_H__
-#define	__HAC_OBJECT_DEF_PORT_FORMALS_MANAGER_H__
+#ifndef	__HAC_OBJECT_DEF_PORT_FORMALS_MANAGER_HH__
+#define	__HAC_OBJECT_DEF_PORT_FORMALS_MANAGER_HH__
 
 #include <iosfwd>
 #include <vector>
@@ -16,7 +16,7 @@
 
 #include "util/macros.h"
 #include "Object/common/util_types.hh"	// for checked_refs_type
-#include "Object/devel_switches.hh"
+#include "Object/unroll/target_context.hh"
 
 #include "util/boolean_types.hh"
 #include "util/persistent_fwd.hh"
@@ -31,8 +31,8 @@ namespace entity {
 class instance_placeholder_base;
 class physical_instance_placeholder;
 class physical_instance_collection;
+class footprint;
 class unroll_context;
-class subinstance_manager;		// basically, the port_actuals
 using std::string;
 using std::istream;
 using std::ostream;
@@ -140,7 +140,7 @@ public:
 	equivalent_port_formals(const port_formals_manager&) const;
 
 	good_bool
-	unroll_ports(const unroll_context&, 
+	unroll_ports(const target_context&,
 		vector<never_ptr<physical_instance_collection> >&) const;
 
 public:
@@ -159,5 +159,5 @@ public:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __HAC_OBJECT_DEF_PORT_FORMALS_MANAGER_H__
+#endif	// __HAC_OBJECT_DEF_PORT_FORMALS_MANAGER_HH__
 

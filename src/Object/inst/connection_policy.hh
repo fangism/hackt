@@ -49,7 +49,7 @@ protected:
 
 	template <class AliasType>
 	void
-	initialize_direction(const AliasType&, const unroll_context&) const { }
+	initialize_direction(const AliasType&) const { }
 
 	void
 	initialize_actual_direction(const this_type&) const { }
@@ -339,7 +339,7 @@ protected:
 
 	template <class AliasType>
 	void
-	initialize_direction(const AliasType&, const unroll_context&);
+	initialize_direction(const AliasType&);
 
 	void
 	initialize_actual_direction(const this_type&);
@@ -725,7 +725,7 @@ public:
 protected:
 	template <class AliasType>
 	void
-	initialize_direction(const AliasType&, const unroll_context&);
+	initialize_direction(const AliasType&);
 
 	template <class AliasType>
 	void
@@ -899,7 +899,7 @@ protected:
 
 	template <class AliasType>
 	void
-	initialize_direction(AliasType&, const unroll_context&);
+	initialize_direction(AliasType&);
 
 #if PROCESS_CONNECTIVITY_CHECKING
 protected:

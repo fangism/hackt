@@ -6,12 +6,13 @@
 	$Id: alias_empty.hh,v 1.17 2010/04/07 00:12:37 fang Exp $
  */
 
-#ifndef	__HAC_OBJECT_INST_ALIAS_EMPTY_H__
-#define	__HAC_OBJECT_INST_ALIAS_EMPTY_H__
+#ifndef	__HAC_OBJECT_INST_ALIAS_EMPTY_HH__
+#define	__HAC_OBJECT_INST_ALIAS_EMPTY_HH__
 
 #define	DEBUG_ALIAS_EMPTY		1
 
 #include <iosfwd>
+#include "Object/unroll/target_context.hh"
 #include "util/memory/pointer_classes_fwd.hh"
 #include "util/persistent_fwd.hh"
 #include "util/boolean_types.hh"
@@ -23,7 +24,6 @@ class footprint;
 class footprint_frame;
 class state_manager;
 template <class> class instance_alias_info;
-class unroll_context;
 using std::istream;
 using std::ostream;
 using util::good_bool;
@@ -103,20 +103,21 @@ protected:
 
 	static
 	good_bool
-	synchronize_actuals(this_type&, this_type&, const unroll_context&) {
+	synchronize_actuals(const this_type&, const this_type&,
+			const target_context&) {
 		return good_bool(true);
 	}
 
 	static
 	void
 	finalize_actuals_and_substructure_aliases(const this_type&, 
-			const unroll_context&) {
+			const target_context&) {
 		// do nothing
 	}
 
 	static
 	void
-	__finalize_find(const this_type&, const unroll_context&) { }
+	__finalize_find(const this_type&) { }
 
 	static
 	bool
@@ -174,5 +175,5 @@ protected:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __HAC_OBJECT_INST_ALIAS_EMPTY_H__
+#endif	// __HAC_OBJECT_INST_ALIAS_EMPTY_HH__
 

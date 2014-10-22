@@ -5,10 +5,11 @@
 	$Id: unroll_context.hh,v 1.18 2007/06/08 03:21:29 fang Exp $
  */
 
-#ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_H__
-#define	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_H__
+#ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_HH__
+#define	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_HH__
 
 #include <iosfwd>
+#include "Object/unroll/target_context.hh"
 #include "util/memory/count_ptr.hh"
 #include "util/memory/excl_ptr.hh"
 
@@ -123,6 +124,15 @@ public:
 	footprint&
 	get_target_footprint(void) const;
 
+	target_context&
+	as_target_footprint(void) const {
+#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
+		return get_target_footprint();
+#else
+		return *this;
+#endif
+	}
+
 	bool
 	in_definition_context(void) const { return target_footprint; }
 
@@ -175,5 +185,5 @@ private:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __HAC_OBJECT_UNROLL_UNROLL_CONTEXT_H__
+#endif	// __HAC_OBJECT_UNROLL_UNROLL_CONTEXT_HH__
 

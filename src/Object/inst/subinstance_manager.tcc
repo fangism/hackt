@@ -31,7 +31,7 @@ good_bool
 subinstance_manager::__unroll_port_instances(
 		const collection_interface<Tag>& inst, 
 		const relaxed_actuals_type& a,
-		const unroll_context& c) {
+		target_context& c) {
 	typedef	collection_interface<Tag>	collection_type;
 	typedef	instance_collection<Tag>	canonical_collection_type;
 	typedef	typename canonical_collection_type::collection_type_manager_parent_type

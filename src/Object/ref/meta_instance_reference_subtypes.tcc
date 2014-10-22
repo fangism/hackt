@@ -433,7 +433,7 @@ META_INSTANCE_REFERENCE_CLASS::connect_port(
 		NEVER_NULL(lp);
 		NEVER_NULL(rp);
 		if (!instance_alias_info_type::checked_connect_port(
-				*lp, *rp, c).good) {
+				*lp, *rp, c.as_target_footprint()).good) {
 			// already have error message
 			return bad_bool(true);
 		}

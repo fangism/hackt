@@ -22,6 +22,9 @@
 #include "Object/def/datatype_definition_alias.hh"
 #include "Object/def/process_definition.hh"
 #include "Object/def/process_definition_alias.hh"
+#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
+#include "Object/def/footprint.hh"
+#endif
 #include "Object/type/data_type_reference.hh"
 #include "Object/type/channel_type_reference.hh"
 #include "Object/type/builtin_channel_type_reference.hh"
@@ -681,7 +684,8 @@ data_type_reference::unroll_port_instances(
 		const never_ptr<const definition_type> def, 
 //		const template_actuals& ta, 
 		const count_ptr<const const_param_expr_list>& ta, 
-		const unroll_context& c, subinstance_manager& sub) {
+		target_context& c,
+		subinstance_manager& sub) {
 	if (def == &bool_traits::built_in_definition) {
 		// do nothing!
 	} else if (def == &int_traits::built_in_definition) {
@@ -696,12 +700,18 @@ data_type_reference::unroll_port_instances(
 	const never_ptr<const user_def_datatype>
 		data_def(def.is_a<const user_def_datatype>());
 	NEVER_NULL(data_def);
-	const port_formals_manager& port_formals(data_def->get_port_formals());
 	{
 		STACKTRACE("local context");
 		const footprint& f(data_def->get_footprint(ta));
+#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
+		sub.deep_copy(f.get_port_template(), c);
+//		port_formals.unroll_ports(f, sub.get_array());
+#else
+		const port_formals_manager&
+			port_formals(data_def->get_port_formals());
 		const unroll_context cc(&f, c);
 		port_formals.unroll_ports(cc, sub.get_array());
+#endif
 	}
 	}
 }
@@ -1344,6 +1354,7 @@ builtin_channel_type_reference::make_canonical_type(
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !CACHE_SUBSTRUCTURES_IN_FOOTPRINT
 /**
 	Don't really know what to do, since built-in channel types 
 	are supposed to be abstract, right?
@@ -1355,6 +1366,7 @@ builtin_channel_type_reference::unroll_port_instances(
 		subinstance_manager& sub) const {
 	FINISH_ME(Fang);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -1633,12 +1645,14 @@ channel_type_reference::make_canonical_channel_type_reference(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !CACHE_SUBSTRUCTURES_IN_FOOTPRINT
 void
 channel_type_reference::unroll_port_instances(
 		const unroll_context& c, 
 		subinstance_manager& sub) const {
 	FINISH_ME(Fang);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -1971,6 +1985,7 @@ process_type_reference::may_be_connectibly_type_equivalent(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !CACHE_SUBSTRUCTURES_IN_FOOTPRINT
 /**
 	Takes this type and expands its port subinstances.
 	\pre this type must be canonical and resolved to constants.  
@@ -1998,6 +2013,7 @@ process_type_reference::unroll_port_instances(
 		port_formals.unroll_ports(cc, sub.get_array());
 	}
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -2214,6 +2230,7 @@ param_type_reference::must_be_type_equivalent(const this_type& t) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !CACHE_SUBSTRUCTURES_IN_FOOTPRINT
 /**
 	This really should never be called.  
  */
@@ -2222,6 +2239,7 @@ param_type_reference::unroll_port_instances(
 		const unroll_context&, subinstance_manager&) const {
 	// no-op
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PERSISTENT_METHODS_DUMMY_IMPLEMENTATION(param_type_reference)

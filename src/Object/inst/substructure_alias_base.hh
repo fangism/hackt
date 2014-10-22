@@ -58,22 +58,25 @@ virtual	~substructure_alias_base() { }
 
 	substructure_alias_base() : parent_type(), instance_index(0) { }
 
+public:
 	/**
 		Visits children of the subinstance manager and 
 		restores parent-child back-link.  
 		Just calls subinstance_manager::relink_super_instance_alias().
+		Made public to be callable by footprint.
 	 */
 	void
 	restore_parent_child_links(void) {
 		relink_super_instance_alias(*this);
 	}
 
+protected:
 	template <class Tag>
 	good_bool
 	unroll_port_instances(
 			const collection_interface<Tag>& p, 
 			const relaxed_actuals_type& a,
-			const unroll_context& c) {
+			target_context& c) {
 		if (parent_type::__unroll_port_instances(p, a, c).good) {
 			restore_parent_child_links();
 			return good_bool(true);
@@ -144,14 +147,23 @@ public:
 	size_t					instance_index;
 protected:
 	substructure_alias_base() : instance_index(0) { }
+
+#if CACHE_SUBSTRUCTURES_IN_FOOTPRINT
+public:
+	void
+	deep_copy(const this_type&, const footprint&) const { }
+protected:
+#endif
 	/**
 		No-op.
 	 */
 	template <class Tag>
 	good_bool
 	unroll_port_instances(const collection_interface<Tag>&, 
-		const relaxed_actuals_type&,
-		const unroll_context&) const { return good_bool(true); }
+			const relaxed_actuals_type&,
+			const target_context&) const {
+		return good_bool(true);
+	}
 
 	void
 	allocate_subinstances(footprint&) const { }
@@ -183,7 +195,8 @@ protected:
 
 	// has no substructure
 	good_bool
-	connect_port_aliases_recursive(this_type&, const unroll_context&) {
+	connect_port_aliases_recursive(const this_type&,
+			const target_context&) const {
 		return good_bool(true);
 	}
 

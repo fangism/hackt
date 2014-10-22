@@ -6,14 +6,15 @@
 	$Id: alias_actuals.hh,v 1.16 2010/04/07 00:12:36 fang Exp $
  */
 
-#ifndef	__HAC_OBJECT_INST_ALIAS_ACTUALS_H__
-#define	__HAC_OBJECT_INST_ALIAS_ACTUALS_H__
+#ifndef	__HAC_OBJECT_INST_ALIAS_ACTUALS_HH__
+#define	__HAC_OBJECT_INST_ALIAS_ACTUALS_HH__
 
 #define	DEBUG_ALIAS_ACTUALS		1
 
 #include <iosfwd>
 #include "util/memory/count_ptr.hh"
 #include "Object/expr/const_param_expr_list.hh"
+#include "Object/unroll/target_context.hh"
 #include "util/persistent_fwd.hh"
 #include "util/boolean_types.hh"
 
@@ -106,18 +107,18 @@ protected:
 	template <class AliasType>
 	static
 	good_bool
-	synchronize_actuals(AliasType&, AliasType&, const unroll_context&);
+	synchronize_actuals(AliasType&, AliasType&, target_context&);
 
 	template <class AliasType>
 	static
 	void
 	finalize_actuals_and_substructure_aliases(AliasType&, 
-			const unroll_context&);
+		target_context&);
 
 	template <class AliasType>
 	static
 	void
-	__finalize_find(AliasType&, const unroll_context&);
+	__finalize_find(AliasType&);
 
 	template <class AliasType>
 	static
@@ -167,5 +168,5 @@ protected:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __HAC_OBJECT_INST_ALIAS_ACTUALS_H__
+#endif	// __HAC_OBJECT_INST_ALIAS_ACTUALS_HH__
 

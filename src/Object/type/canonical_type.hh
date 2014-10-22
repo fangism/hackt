@@ -3,11 +3,12 @@
 	$Id: canonical_type.hh,v 1.12 2010/04/07 00:12:57 fang Exp $
  */
 
-#ifndef	__HAC_OBJECT_TYPE_CANONICAL_TYPE_H__
-#define	__HAC_OBJECT_TYPE_CANONICAL_TYPE_H__
+#ifndef	__HAC_OBJECT_TYPE_CANONICAL_TYPE_HH__
+#define	__HAC_OBJECT_TYPE_CANONICAL_TYPE_HH__
 
 #include "Object/type/canonical_type_fwd.hh"
 #include "Object/type/canonical_type_base.hh"
+#include "Object/unroll/target_context.hh"
 #include "util/boolean_types.hh"
 #include "util/memory/excl_ptr.hh"
 
@@ -118,7 +119,7 @@ public:
 	type_mismatch_error(ostream&, const this_type&, const this_type&);
 
 	good_bool
-	unroll_port_instances(const unroll_context&,
+	unroll_port_instances(target_context&,
 		subinstance_manager&) const;
 
 #if 0
@@ -240,5 +241,5 @@ struct check_footprint_policy<user_def_datatype> {
 }	// end namespace HAC
 
 
-#endif	// __HAC_OBJECT_TYPE_CANONICAL_TYPE_H__
+#endif	// __HAC_OBJECT_TYPE_CANONICAL_TYPE_HH__
 

@@ -138,7 +138,7 @@ instance_alias_info_actuals::dump_complete_type(const AliasType& _alias,
 template <class AliasType>
 good_bool
 instance_alias_info_actuals::synchronize_actuals(AliasType& l, AliasType& r, 
-		const unroll_context& c) {
+		target_context& c) {
 	STACKTRACE_VERBOSE;
 	if (l.actuals) {
 		if (r.actuals) {
@@ -162,7 +162,7 @@ instance_alias_info_actuals::synchronize_actuals(AliasType& l, AliasType& r,
 template <class AliasType>
 void
 instance_alias_info_actuals::finalize_actuals_and_substructure_aliases(
-		AliasType& _this, const unroll_context& c) {
+		AliasType& _this, target_context& c) {
 	STACKTRACE_VERBOSE;
 	if (_this.copy_actuals(*_this.next)) {
 		STACKTRACE_INDENT_PRINT("instantiating after copying actuals");
@@ -192,7 +192,7 @@ instance_alias_info_actuals::finalize_actuals_and_substructure_aliases(
 template <class AliasType>
 void
 instance_alias_info_actuals::__finalize_find(
-		AliasType& _this, const unroll_context&) {
+		AliasType& _this) {
 	__assert_complete_type(_this);
 }
 
