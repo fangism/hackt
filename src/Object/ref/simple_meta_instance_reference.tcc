@@ -314,7 +314,6 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_locally_allocated_index(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if AGGREGATE_PARENT_REFS
 /**
 	Collects a bunch of ids at once.
  */
@@ -335,7 +334,6 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_locally_allocated_indices(
 		instance_index_extractor());
 	return good_bool(true);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE

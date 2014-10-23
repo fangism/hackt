@@ -5,8 +5,8 @@
 	$Id: member_meta_instance_reference.hh,v 1.23 2011/05/17 21:19:53 fang Exp $
  */
 
-#ifndef	__HAC_OBJECT_REF_SIMPLE_MEMBER_META_INSTANCE_REFERENCE_H__
-#define	__HAC_OBJECT_REF_SIMPLE_MEMBER_META_INSTANCE_REFERENCE_H__
+#ifndef	__HAC_OBJECT_REF_SIMPLE_MEMBER_META_INSTANCE_REFERENCE_HH__
+#define	__HAC_OBJECT_REF_SIMPLE_MEMBER_META_INSTANCE_REFERENCE_HH__
 
 #include "Object/ref/simple_meta_instance_reference.hh"
 
@@ -126,7 +126,7 @@ public:
 	size_t
 	lookup_locally_allocated_index(const unroll_context&) const;
 
-#if 0 && AGGREGATE_PARENT_REFS
+#if 0
 	good_bool
 	lookup_locally_allocated_indices(const unroll_context&, 
 		std::vector<size_t>&) const;
@@ -159,5 +159,5 @@ public:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __HAC_OBJECT_REF_SIMPLE_MEMBER_META_INSTANCE_REFERENCE_H__
+#endif	// __HAC_OBJECT_REF_SIMPLE_MEMBER_META_INSTANCE_REFERENCE_HH__
 

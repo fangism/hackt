@@ -200,7 +200,6 @@ virtual	void
 		const simple_meta_instance_reference<Tag>&, 
 		const unroll_context* = NULL) const;
 
-#if AGGREGATE_PARENT_REFS
 	// \return true on error
 	static
 	bool
@@ -222,7 +221,6 @@ virtual	void
 		const meta_instance_reference_base&, 
 		const unroll_context&,
 		vector<context_result_type>&) const;
-#endif
 
 	static
 	bool
@@ -253,14 +251,12 @@ private:
 		const meta_instance_reference_base&, 
 		const unroll_context&) const;
 
-#if AGGREGATE_PARENT_REFS
 	bool
 	construct_global_footprint_frames(
 		vector<context_arg_type>&,
 		vector<context_result_type>&,
 		const meta_instance_reference_base&, 
 		const unroll_context&) const;
-#endif
 
 public:
 	// e.g. use this after a cache-lookup

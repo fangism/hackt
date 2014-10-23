@@ -216,7 +216,6 @@ MEMBER_INSTANCE_REFERENCE_CLASS::lookup_locally_allocated_index(
 	// TODO: have parent reference populate footprint_frame
 	typedef	global_entry_context::context_result_type
 							context_result_type;
-#if AGGREGATE_PARENT_REFS
 	vector<context_result_type> tmps;
 	if (global_entry_context::construct_global_footprint_frames(
 			top, _parent_inst_ref, tmps)) {
@@ -224,14 +223,6 @@ MEMBER_INSTANCE_REFERENCE_CLASS::lookup_locally_allocated_index(
 		return 0;
 	}
 	const context_result_type& tmp(tmps.front());
-#else
-	context_result_type tmp;
-	if (global_entry_context::construct_global_footprint_frame(
-			top, _parent_inst_ref, tmp)) {
-		STACKTRACE_INDENT_PRINT("member::lookup_local error." << endl);
-		return 0;
-	}
-#endif
 //	const size_t pp = tmp.gpid;	// unused
 	const footprint_frame* const fpf = &tmp.get_frame();
 	if (!fpf) {
@@ -295,27 +286,17 @@ MEMBER_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_indices(
 	typedef typename alias_collection_type::const_iterator  const_iterator;
 	typedef	global_entry_context::context_result_type
 							context_result_type;
-#if AGGREGATE_PARENT_REFS
 	vector<context_result_type> tmps;
 	if (global_entry_context::construct_global_footprint_frames(top,
 			*this->base_inst_ref, tmps)) {
 		return good_bool(false);
 	}
-#else
-	context_result_type tmp;
-	if (global_entry_context::construct_global_footprint_frame(top,
-			*this->base_inst_ref, tmp)) {
-		return good_bool(false);
-	}
-#endif
 //	const size_t gpid = tmp.gpid;	// unused
 //	STACKTRACE_INDENT_PRINT("gpid = " << gpid << endl);
-#if AGGREGATE_PARENT_REFS
 	vector<context_result_type>::const_iterator
 		fi(tmps.begin()), fe(tmps.end());
 for ( ; fi!=fe; ++fi) {
 	const context_result_type& tmp(*fi);
-#endif
 	// alias lookup needs to be inside loop because of possibility
 	// of heterogenous types due to relaxed templates
 	// TODO: optimize when strict type of array is known
@@ -329,12 +310,8 @@ for ( ; fi!=fe; ++fi) {
 		return good_bool(false);
 	}
 	const size_t asz = aliases.sizes_product();
-#if AGGREGATE_PARENT_REFS
 	const size_t nrefs = tmps.size() * asz;	// product: parents X locals
 	indices.reserve(nrefs +indices.size());
-#else
-	indices.reserve(asz +indices.size());
-#endif
 	const footprint_frame_transformer fft(tmp.get_frame(), Tag());
 #if 0
 	transform(aliases.begin(), aliases.end(), back_inserter(indices), 
@@ -348,9 +325,7 @@ for ( ; fi!=fe; ++fi) {
 		indices.push_back(fft((*i)->instance_index));
 	}
 #endif
-#if AGGREGATE_PARENT_REFS
 }	// end for
-#endif
 	return good_bool(true);
 }
 
@@ -460,7 +435,6 @@ MEMBER_INSTANCE_REFERENCE_CLASS::unroll_subindices_packed(
 	// resolve parent references first
 	typedef	global_entry_context::context_result_type
 							context_result_type;
-#if AGGREGATE_PARENT_REFS
 	vector<context_result_type> ffs;
 	if (c.construct_global_footprint_frames(*this->base_inst_ref, u, ffs)) {
 		return bad_bool(true);
@@ -473,12 +447,6 @@ MEMBER_INSTANCE_REFERENCE_CLASS::unroll_subindices_packed(
 		ffi(ffs.begin()), ffe(ffs.end());
 	for ( ; ffi!=ffe; ++ffi) {
 	const context_result_type& ff(*ffi);
-#else
-	context_result_type ff;
-	if (c.construct_global_footprint_frame(*this->base_inst_ref, u, ff)) {
-		return bad_bool(true);
-	}
-#endif
 //	const size_t ppid = ff.gpid;	// unused
 	const footprint_frame& fpf(ff.get_frame());
 #if ENABLE_STACKTRACE
@@ -511,7 +479,6 @@ MEMBER_INSTANCE_REFERENCE_CLASS::unroll_subindices_packed(
 		return bad_bool(true);
 	}
 	STACKTRACE_INDENT_PRINT("got local aliases." << endl);
-#if AGGREGATE_PARENT_REFS
 	if (!sized) {
 		// one-time sizing operation
 		// TODO: construct higher dimension arrays
@@ -533,20 +500,8 @@ MEMBER_INSTANCE_REFERENCE_CLASS::unroll_subindices_packed(
 	transform(local_indices.begin(), local_indices.end(), ai, 
 		footprint_frame_transformer(fpf, Tag()));
 	ai += asp;
-#else
-	// translate to local indices
-	a.resize(local_aliases.size());
-	transform(local_aliases.begin(), local_aliases.end(), a.begin(), 
-		instance_index_extractor());
-	STACKTRACE_INDENT_PRINT("got local indices." << endl);
-	// translate to global indices using parent footprint frame
-	transform(a.begin(), a.end(), a.begin(), 
-		footprint_frame_transformer(fpf, Tag()));
-#endif
 	STACKTRACE_INDENT_PRINT("got global indices." << endl);
-#if AGGREGATE_PARENT_REFS
 	}	// end for
-#endif
 	return bad_bool(false);
 }
 #endif

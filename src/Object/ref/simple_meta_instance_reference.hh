@@ -173,11 +173,9 @@ virtual	size_t
 virtual	size_t
 	lookup_locally_allocated_index(const unroll_context&) const;
 
-#if AGGREGATE_PARENT_REFS
 virtual	good_bool
 	lookup_locally_allocated_indices(const unroll_context&, 
 		std::vector<size_t>&) const;
-#endif
 
 virtual	void
 	accept(nonmeta_expr_visitor&) const;

@@ -303,8 +303,8 @@
 	Goal: 1
 	Rationale: more efficient lookups
 	Status: tested, massive speedup on quarantine tests, stable
- */
 #define	AGGREGATE_PARENT_REFS			1
+ */
 
 /**
 	Define to 1 if each footprint contains its own context cache.

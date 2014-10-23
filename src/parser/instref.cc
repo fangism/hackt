@@ -152,7 +152,6 @@ typed_indexed_references<Tag>::typed_indexed_references(
 		const string& n, const entity::footprint& m) {
 	STACKTRACE_VERBOSE;
 	typedef	entity::class_traits<Tag>		traits_type;
-#if AGGREGATE_PARENT_REFS
 	global_reference_array_type temp;
 	if (parse_local_references(n, m, temp)) {
 		cerr << "Error parsing reference(s): " << n << endl;
@@ -167,30 +166,6 @@ typed_indexed_references<Tag>::typed_indexed_references(
 	indices.resize(temp.size());
 	transform(temp.begin(), temp.end(), indices.begin(), 
 		util::member_select_ref(&global_indexed_reference::second));
-#else
-	expanded_global_references_type temp;
-	if (expand_global_references(n, m, temp))
-		return;
-	indices.reserve(temp.size());
-	expanded_global_references_type::const_iterator
-		i(temp.begin()), e(temp.end());
-for ( ; i!=e; ++i) {
-	const global_indexed_reference& gref(i->second);
-	if (gref.first != traits_type::type_tag_enum_value) {
-#if 1
-		// really should use expanded name
-		cerr << "Error: " << n << " does not reference a " <<
-			traits_type::tag_name << "." << endl;
-#else
-		// silent error, caller catches
-#endif
-		indices.clear();
-		return;
-	}
-	INVARIANT(gref.second);
-	indices.push_back(gref.second);
-}	// end for each reference
-#endif
 }
 
 template struct typed_indexed_references<bool_tag>;

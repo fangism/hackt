@@ -164,7 +164,6 @@ global_entry_context::construct_global_footprint_frame(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if AGGREGATE_PARENT_REFS
 /**
 	Wrapped call.
 	\return true on error
@@ -223,7 +222,6 @@ global_entry_context::construct_global_footprint_frames(
 	return construct_global_footprint_frames(
 		tmpo, retf, pr, uc);
 }
-#endif	// AGGREGATE_PARENT_REFS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -358,7 +356,6 @@ global_entry_context::construct_global_footprint_frame(
 }	// end global_entry_context::construct_global_footprint_frame
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if AGGREGATE_PARENT_REFS
 /**
 	Recursive implementation due to member instance reference structuring.
 	\param pr can be an aggregate process reference (can be hierarchical).
@@ -535,7 +532,6 @@ global_entry_context::construct_global_footprint_frames(
 	}
 	return false;
 }	// end construct_global_footprint_frames
-#endif	// AGGREGATE_PARENT_REFS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
