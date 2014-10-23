@@ -23,10 +23,8 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/unroll/meta_conditional.tcc"
 #include "Object/unroll/meta_loop.tcc"
 #include "Object/inst/connection_policy.hh"
-#if BOOL_PRS_CONNECTIVITY_CHECKING
 #include "Object/inst/instance_alias_info.hh"
 #include "Object/inst/alias_empty.hh"
-#endif
 #include "Object/inst/state_instance.hh"
 #include "Object/inst/instance_pool.hh"
 
@@ -710,7 +708,6 @@ if (output.is_internal()) {
 		return good_bool(false);
 	}
 	// check for auto-complement, and unroll it?
-#if BOOL_PRS_CONNECTIVITY_CHECKING
 	// doing this at unroll-time, but we could do it in a later pass...
 {
 	entity::footprint& tfp(c.get_target_footprint());
@@ -758,7 +755,6 @@ if (!is_diode) {
 		return good_bool(false);
 	}
 }
-#endif
 	footprint_rule&
 		r(pfp.push_back_rule(guard_expr_index, output_node_index, dir));
 #if PRS_INTERNAL_NODE_ATTRIBUTES
@@ -2592,7 +2588,6 @@ macro::unroll(const unroll_context& c) const {
 		// dump the literal?
 		return good_bool(false);
 	}
-#if BOOL_PRS_CONNECTIVITY_CHECKING
 	// HACK-ish: need to treat special macros like rules
 	// for connectivity checking, namely passn/passp
 if (name == "passn" || name == "passp") {
@@ -2611,7 +2606,6 @@ if (name == "passn" || name == "passp") {
 	const_cast<instance_alias_info<bool_tag>&>(
 		*bp[d].get_back_ref()).find()->prs_fanin(dir);
 }
-#endif
 	return good_bool(true);
 }
 

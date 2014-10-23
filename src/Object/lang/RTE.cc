@@ -21,10 +21,8 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/unroll/meta_loop.tcc"
 #endif
 #include "Object/inst/connection_policy.hh"
-#if BOOL_PRS_CONNECTIVITY_CHECKING
 #include "Object/inst/instance_alias_info.hh"
 #include "Object/inst/alias_empty.hh"
-#endif
 #include "Object/inst/state_instance.hh"
 #include "Object/inst/instance_pool.hh"
 #include "Object/def/footprint.hh"
@@ -421,7 +419,6 @@ assignment::unroll(const unroll_context& c) const {
 	}
 #endif
 	// make sure node is not already defined
-#if BOOL_PRS_CONNECTIVITY_CHECKING
 	// doing this at unroll-time, but we could do it in a later pass...
 {
 	entity::footprint& tfp(c.get_target_footprint());
@@ -445,7 +442,6 @@ assignment::unroll(const unroll_context& c) const {
 		// pool is 0-indexed
 	}
 }
-#endif
 	pfp.push_back_assignment(guard_expr_index, output_node_index);
 	return good_bool(true);
 }	// end assignment::unroll_base

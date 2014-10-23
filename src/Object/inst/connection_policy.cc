@@ -125,7 +125,6 @@ bool_connect_policy::atomic_attribute_names[] = {
 void
 bool_connect_policy::initialize_actual_direction(const this_type& t) {
 	STACKTRACE_VERBOSE;
-#if BOOL_PRS_CONNECTIVITY_CHECKING
 #if ENABLE_STACKTRACE
 	t.dump_raw_attributes(STACKTRACE_INDENT_PRINT("formal: ")) << endl;
 	dump_raw_attributes(STACKTRACE_INDENT_PRINT("init: ")) << endl;
@@ -149,9 +148,6 @@ bool_connect_policy::initialize_actual_direction(const this_type& t) {
 #if ENABLE_STACKTRACE
 	dump_raw_attributes(STACKTRACE_INDENT_PRINT("after: ")) << endl;
 #endif
-#else	// BOOL_PRS_CONNECTIVITY_CHECKING
-	attributes = t.attributes;
-#endif	// BOOL_PRS_CONNECTIVITY_CHECKING
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -342,7 +338,6 @@ bool_connect_policy::set_atomic(const bool t) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if BOOL_PRS_CONNECTIVITY_CHECKING
 /**
 	Only allow connection to fanin if node is not marked as read-only '?'.
  */
@@ -382,7 +377,6 @@ bool_connect_policy::rte_fanin(void) {
 	attributes |= BOOL_LOCAL_RTE_FANIN;
 	return good_bool(true);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

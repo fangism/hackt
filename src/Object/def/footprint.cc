@@ -1702,9 +1702,7 @@ footprint::connection_diagnostics(const bool top) const {
 	STACKTRACE_VERBOSE;
 	error_count ret(scope_aliases.check_channel_connections());
 	if (!top) {
-#if BOOL_PRS_CONNECTIVITY_CHECKING
 		ret += scope_aliases.check_bool_connections();
-#endif
 		ret += scope_aliases.check_process_connections();
 	}
 #if DETECT_ATOMIC_UPDATE_CYCLES

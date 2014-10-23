@@ -91,7 +91,6 @@ error_count
 bool_connect_policy::__check_connection(const AliasType& a) {
 	// TODO: check must/must-not directions!
 	error_count ret;
-#if BOOL_PRS_CONNECTIVITY_CHECKING
 	STACKTRACE_VERBOSE;
 	const bool any_fanout_dn = a.attributes & BOOL_ANY_FANOUT_PULL_DN;
 	const bool any_fanout_up = a.attributes & BOOL_ANY_FANOUT_PULL_UP;
@@ -197,7 +196,6 @@ if (warn) {
 	// never error out for now
 }
 }
-#endif
 	return ret;
 }
 

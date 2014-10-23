@@ -4,8 +4,8 @@
 	$Id: connection_policy.hh,v 1.22 2011/05/02 21:27:17 fang Exp $
  */
 
-#ifndef	__HAC_OBJECT_INST_CONNECTION_POLICY_H__
-#define	__HAC_OBJECT_INST_CONNECTION_POLICY_H__
+#ifndef	__HAC_OBJECT_INST_CONNECTION_POLICY_HH__
+#define	__HAC_OBJECT_INST_CONNECTION_POLICY_HH__
 
 #include "Object/inst/connection_policy_fwd.hh"
 #include "Object/type/channel_direction_enum.hh"
@@ -19,10 +19,10 @@
 	and direction checking.  
 	Goal: 1
 	Rationale: connectivity summary needed for netlist generation.
-	Status: done, fairly reliable, still testing though...
+	Status: done, fairly reliable, perm'd
 	The BOOL_CONNECTIVITY_CHECKING option is slightly different.
- */
 #define	BOOL_PRS_CONNECTIVITY_CHECKING		1
+ */
 
 namespace HAC {
 namespace entity {
@@ -184,7 +184,7 @@ protected:
 		BOOL_PORT_FORMAL_INPUT = 0x00100000,
 		// port is marked with '!'
 		BOOL_PORT_FORMAL_OUTPUT = 0x00200000,
-#if BOOL_PRS_CONNECTIVITY_CHECKING
+
 	/**
 		atomic run-time expression def/use attributes (implicit)
 	 */
@@ -294,7 +294,7 @@ protected:
 		 */
 		BOOL_CONNECTIVITY_OR_MASK	=
 			BOOL_LOCAL_PRS_MASK | BOOL_SUBSTRUCT_PRS_MASK,
-#endif	// BOOL_PRS_CONNECTIVITY_CHECKING
+
 		BOOL_IMPLICIT_NONATOMIC_ATTRIBUTES_MASK = 
 			BOOL_SUBSTRUCT_FANOUT |
 			BOOL_SUBSTRUCT_FANIN,
@@ -446,7 +446,6 @@ public:
 	bool
 	is_atomic(void) const { return attributes & BOOL_ATOMIC; }
 
-#if BOOL_PRS_CONNECTIVITY_CHECKING
 	bool
 	has_any_fanin(void) const {
 		return attributes & BOOL_ANY_FANIN;
@@ -478,7 +477,6 @@ public:
 	// bool is attached to an expression (defined)
 	good_bool
 	rte_fanin(void);
-#endif
 
 	bool
 	is_input_port(void) const {
@@ -983,6 +981,6 @@ protected:
 }	// end namesace entity
 }	// end namesace HAC
 
-#endif	// __HAC_OBJECT_INST_CONNECTION_POLICY_H__
+#endif	// __HAC_OBJECT_INST_CONNECTION_POLICY_HH__
 
 
