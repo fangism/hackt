@@ -327,10 +327,8 @@ public:
 		// never_ptr<const rule_set>		back_ref;
 		node_index_type			Vdd;
 		node_index_type			GND;
-#if PRS_SUBSTRATE_OVERRIDES
 		node_index_type			Vdd_substrate;
 		node_index_type			GND_substrate;
-#endif
 
 		void
 		write_object(const persistent_object_manager&, ostream&) const;
@@ -366,10 +364,8 @@ public:
 	 */
 	node_index_type				current_Vdd;
 	node_index_type				current_GND;
-#if PRS_SUBSTRATE_OVERRIDES
 	node_index_type				current_Vdd_substrate;
 	node_index_type				current_GND_substrate;
-#endif
 public:
 	footprint();
 	~footprint();

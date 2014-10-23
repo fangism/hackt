@@ -100,7 +100,6 @@ private:
 		Usually Vdd, used for precharge, and local prs override.
 	 */
 	index_type			high_supply;
-#if PRS_SUBSTRATE_OVERRIDES
 	/**
 		Substrate contact for NFETs.
 	 */
@@ -109,7 +108,6 @@ private:
 		Substrate contact for PFETs.
 	 */
 	index_type			high_substrate;
-#endif
 	/**
 		The base node (initially, Vdd/GND) to connect to the source
 		terminal of the next device/expression.  

@@ -324,12 +324,10 @@ public:
 	supply_node_ref_type			GND;	// supply
 	/// optional: Vdd override
 	supply_node_ref_type			Vdd;	// supply
-#if PRS_SUBSTRATE_OVERRIDES
 	// substrate contact override for NFETs
 	supply_node_ref_type			GND_substrate;
 	// substrate contact override for PFETs
 	supply_node_ref_type			Vdd_substrate;
-#endif
 
 public:
 	rule_set();

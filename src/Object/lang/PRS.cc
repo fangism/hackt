@@ -235,11 +235,8 @@ rule_set_base::rule_set_base() : parent_type() { }
 rule_set_base::~rule_set_base() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-rule_set::rule_set() : rule_set_base(), GND(), Vdd()
-#if PRS_SUBSTRATE_OVERRIDES
-	, GND_substrate(), Vdd_substrate()
-#endif
-	{ }
+rule_set::rule_set() : rule_set_base(), GND(), Vdd(),
+	GND_substrate(), Vdd_substrate() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 rule_set::~rule_set() { }
@@ -276,14 +273,12 @@ rule_set::dump(ostream& o, const rule_dump_context& c) const {
 		if (Vdd)	Vdd->dump(o << "!Vdd=", edc);
 		o << ',';
 		if (GND)	GND->dump(o << "!GND=", edc);
-#if PRS_SUBSTRATE_OVERRIDES
 		if (Vdd_substrate || GND_substrate) {
 		o << '|';
 		if (Vdd_substrate)	Vdd_substrate->dump(o << "!BVdd=", edc);
 		o << ',';
 		if (GND_substrate)	GND_substrate->dump(o << "!BGND=", edc);
 		}
-#endif
 		o << "> ";
 	}
 	o << '{' << endl;
@@ -417,11 +412,9 @@ rule_set::unroll(const unroll_context& c ) const {
 }
 	const value_saver<size_t>	// save on stack
 		__t1(pfp.current_Vdd), __t2(pfp.current_GND);
-#if PRS_SUBSTRATE_OVERRIDES
 	const value_saver<size_t>	// save on stack
 		__t3(pfp.current_Vdd_substrate),
 		__t4(pfp.current_GND_substrate);
-#endif
 	// since rule_sets are not nested (not self recursive)
 	// we can simplify the checking for Vdd, GND
 	if (Vdd) {
@@ -448,7 +441,8 @@ rule_set::unroll(const unroll_context& c ) const {
 	}
 	INVARIANT(pfp.current_Vdd);
 	INVARIANT(pfp.current_GND);
-#if PRS_SUBSTRATE_OVERRIDES
+
+	// substrate connections
 	if (Vdd_substrate) {
 		const bool_literal l(Vdd_substrate);
 		const size_t i = l.unroll_base(c);
@@ -473,7 +467,7 @@ rule_set::unroll(const unroll_context& c ) const {
 	}
 	INVARIANT(pfp.current_Vdd_substrate);
 	INVARIANT(pfp.current_GND_substrate);
-#endif
+
 	if (!rule_set_base::unroll(c).good) {
 		return good_bool(false);
 	}
@@ -497,12 +491,10 @@ rule_set::unroll(const unroll_context& c ) const {
 		e.GND = pfp.current_GND;
 		INVARIANT(e.Vdd);
 		INVARIANT(e.GND);
-#if PRS_SUBSTRATE_OVERRIDES
 		e.Vdd_substrate = pfp.current_Vdd_substrate;
 		e.GND_substrate = pfp.current_GND_substrate;
 		INVARIANT(e.Vdd_substrate);
 		INVARIANT(e.GND_substrate);
-#endif
 		m.push_back(e);
 	}
 }
@@ -527,12 +519,10 @@ if (!m.register_transient_object(this,
 		GND->collect_transient_info(m);
 	if (Vdd)
 		Vdd->collect_transient_info(m);
-#if PRS_SUBSTRATE_OVERRIDES
 	if (GND_substrate)
 		GND_substrate->collect_transient_info(m);
 	if (Vdd_substrate)
 		Vdd_substrate->collect_transient_info(m);
-#endif
 }
 }
 
@@ -552,10 +542,8 @@ rule_set::write_object(const persistent_object_manager& m,
 	write_object_base(m, o);
 	m.write_pointer(o, GND);
 	m.write_pointer(o, Vdd);
-#if PRS_SUBSTRATE_OVERRIDES
 	m.write_pointer(o, GND_substrate);
 	m.write_pointer(o, Vdd_substrate);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -574,10 +562,8 @@ rule_set::load_object(const persistent_object_manager& m,
 	load_object_base(m, i);
 	m.read_pointer(i, GND);
 	m.read_pointer(i, Vdd);
-#if PRS_SUBSTRATE_OVERRIDES
 	m.read_pointer(i, GND_substrate);
 	m.read_pointer(i, Vdd_substrate);
-#endif
 }
 
 //=============================================================================

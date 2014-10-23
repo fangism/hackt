@@ -161,12 +161,9 @@ footprint::footprint() : rule_pool(), expr_pool(), macro_pool(),
 		subcircuit_map(),
 		supply_map(),
 		current_Vdd(0),	// INVALID_NODE_INDEX
-		current_GND(0)	// INVALID_NODE_INDEX
-#if PRS_SUBSTRATE_OVERRIDES
-		,
+		current_GND(0),	// INVALID_NODE_INDEX
 		current_Vdd_substrate(0),	// INVALID_NODE_INDEX
 		current_GND_substrate(0)	// INVALID_NODE_INDEX
-#endif
 	{
 	// used to set_chunk_size of list_vector_pools here
 }
@@ -448,9 +445,7 @@ if (supply_map.size()) {
 		o << auto_indent;
 		i->dump(o) << " : ";
 		o << i->Vdd << ", " << i->GND;
-#if PRS_SUBSTRATE_OVERRIDES
 		o << " | " << i->Vdd_substrate << ", " << i->GND_substrate;
-#endif
 		o << endl;
 	}
 }
@@ -648,10 +643,8 @@ footprint::supply_override_entry::write_object(
 	write_value<resource_map_entry>(o, *this);
 	write_value(o, Vdd);
 	write_value(o, GND);
-#if PRS_SUBSTRATE_OVERRIDES
 	write_value(o, Vdd_substrate);
 	write_value(o, GND_substrate);
-#endif
 }
 
 void
@@ -660,10 +653,8 @@ footprint::supply_override_entry::load_object(
 	read_value<resource_map_entry>(i, *this);
 	read_value(i, Vdd);
 	read_value(i, GND);
-#if PRS_SUBSTRATE_OVERRIDES
 	read_value(i, Vdd_substrate);
 	read_value(i, GND_substrate);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

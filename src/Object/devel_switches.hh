@@ -256,9 +256,9 @@
 
 /**
 	Define to 1 to support substrate contact overriding.
-	Status: begun
- */
+	Status: begun, tested, perm'd
 #define	PRS_SUBSTRATE_OVERRIDES			1
+ */
 
 /**
 	Define to 1 enable means of overriding the implicit primary supplies
