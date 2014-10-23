@@ -6,13 +6,12 @@
 	Id: art_parser_instance.h,v 1.16.34.1 2005/12/11 00:45:08 fang Exp
  */
 
-#ifndef __HAC_AST_INSTANCE_H__
-#define __HAC_AST_INSTANCE_H__
+#ifndef __HAC_AST_INSTANCE_HH__
+#define __HAC_AST_INSTANCE_HH__
 
 #include "AST/common.hh"
 #include "AST/expr_list.hh"
 #include "AST/instance_base.hh"
-#include "Object/devel_switches.hh"	// for INSTANCE_SUPPLY_OVERRIDES
 #include "util/boolean_types.hh"
 #include "util/memory/count_ptr.hh"
 
@@ -106,10 +105,7 @@ protected:
 	rightmost(void) const;
 
 	good_bool
-	check_actuals(
-#if INSTANCE_SUPPLY_OVERRIDES
-		implicit_ports_type&,
-#endif
+	check_actuals(implicit_ports_type&,
 		explicit_ports_type&, context& c) const;
 
 	static
@@ -285,12 +281,10 @@ public:
 	make_port_connection(const explicit_ports_type&, 
                 const count_ptr<const inst_ref_arg_type>&);
 
-#if INSTANCE_SUPPLY_OVERRIDES
 	static
 	count_ptr<const result_type>
 	make_implicit_port_override(const implicit_ports_type&, 
                 const count_ptr<const inst_ref_arg_type>&);
-#endif
 
 };	// end class connection_statement
 
@@ -501,5 +495,5 @@ virtual	ROOT_CHECK_PROTO;
 }	// end namespace parser
 }	// end namespace HAC
 
-#endif	// __HAC_AST_INSTANCE_H__
+#endif	// __HAC_AST_INSTANCE_HH__
 

@@ -48,10 +48,8 @@
 #include "Object/unroll/loop_scope.hh"
 #include "Object/unroll/conditional_scope.hh"
 #include "Object/unroll/template_type_completion.hh"
-#if INSTANCE_SUPPLY_OVERRIDES
 #include "Object/unroll/implicit_port_override.hh"
 #include "Object/traits/bool_traits.hh"
-#endif
 #include "Object/traits/proc_traits.hh"
 #include "Object/ref/meta_instance_reference_subtypes.hh"
 #include "Object/ref/meta_instance_reference_base.hh"
@@ -145,9 +143,7 @@ using entity::pbool_expr;
 using entity::pbool_const;
 using entity::process_tag;
 using entity::template_type_completion;
-#if INSTANCE_SUPPLY_OVERRIDES
 using entity::implicit_port_override;
-#endif
 
 //=============================================================================
 // class instance_management method definitions
@@ -440,14 +436,10 @@ actuals_base::rightmost(void) const {
  */
 good_bool
 actuals_base::check_actuals(
-#if INSTANCE_SUPPLY_OVERRIDES
 		implicit_ports_type& impret,
-#endif
 		explicit_ports_type& ret,
 		context& c) const {
 	STACKTRACE_VERBOSE;
-	// TODO: check/resolve optional implicit global ports
-#if INSTANCE_SUPPLY_OVERRIDES
 if (actuals->implicit_ports) {
 	actuals->implicit_ports->postorder_check_bool_refs_optional(impret, c);
 	inst_ref_expr_list::checked_bool_refs_type::const_iterator
@@ -463,7 +455,6 @@ if (actuals->implicit_ports) {
 		}
 	}
 }
-#endif
 if (actuals->actual_ports) {
 	expr_list::checked_meta_generic_type temp;
 	actuals->actual_ports->postorder_check_meta_generic(temp, c);
@@ -515,22 +506,14 @@ actuals_base::add_instance_port_connections(
 		const count_ptr<
 			const connection_statement::inst_ref_arg_type>& iref, 
 		context& c) const {
-#if INSTANCE_SUPPLY_OVERRIDES
 	implicit_ports_type itemp;
-#endif
 	explicit_ports_type temp;
-	if (!check_actuals(
-#if INSTANCE_SUPPLY_OVERRIDES
-		itemp, 
-#endif
-		temp, c).good) {
+	if (!check_actuals(itemp, temp, c).good) {
 		cerr << "ERROR in object_list produced at "
 			<< where(*actuals) << endl;
 		return good_bool(false);
 	}
 
-#if INSTANCE_SUPPLY_OVERRIDES
-	// TODO: create implicit port connections
 if (has_implicit_overrides(itemp)) {
 	const count_ptr<const connection_statement::result_type>
 		ovr(connection_statement::make_implicit_port_override(
@@ -544,7 +527,6 @@ if (has_implicit_overrides(itemp)) {
 	}
 }
 	// else don't bother will null connection
-#endif
 if (actuals->actual_ports) {
 	const count_ptr<const connection_statement::result_type>
 		port_con(connection_statement::make_port_connection(
@@ -972,7 +954,6 @@ connection_statement::make_port_connection(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if INSTANCE_SUPPLY_OVERRIDES
 count_ptr<const connection_statement::result_type>
 connection_statement::make_implicit_port_override(
 		const implicit_ports_type& iports, 
@@ -1011,7 +992,6 @@ connection_statement::make_implicit_port_override(
 #endif
 	return ret;
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

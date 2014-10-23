@@ -137,11 +137,9 @@ public:
 	__connect_ports(const connection_references_type&,
 		const unroll_context&);
 
-#if INSTANCE_SUPPLY_OVERRIDES
 	good_bool
 	connect_implicit_ports(const connection_references_type&,
 		const unroll_context&);
-#endif
 
 	good_bool
 	connect_port_aliases_recursive(this_type&, target_context&);

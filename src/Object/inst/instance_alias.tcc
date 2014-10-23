@@ -529,7 +529,6 @@ INSTANCE_ALIAS_INFO_CLASS::checked_connect_port(this_type& l, this_type& r,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if INSTANCE_SUPPLY_OVERRIDES
 /**
 	Special connection for implicit ports.  
 	Can be disconnected!
@@ -557,7 +556,6 @@ INSTANCE_ALIAS_INFO_CLASS::disconnect_implicit_port(void) {
 	// this clobbers any former connection in the union find structure!
 	this->next = this;
 }
-#endif
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

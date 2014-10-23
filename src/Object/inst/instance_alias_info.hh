@@ -384,14 +384,12 @@ public:
 	checked_connect_port(this_type&, this_type&,
 		target_context&);
 
-#if INSTANCE_SUPPLY_OVERRIDES
 	void
 	connect_implicit_port(this_type&);
 
 #if INSTANCE_SUPPLY_DISCONNECT
 	void
 	disconnect_implicit_port(void);
-#endif
 #endif
 
 	/// counterpart to load_next_connection

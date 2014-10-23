@@ -443,7 +443,6 @@ META_INSTANCE_REFERENCE_CLASS::connect_port(
 }	// end method connect_port
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if INSTANCE_SUPPLY_OVERRIDES
 /**
 	This variant is to be used only for connecting implicit ports
 	which have different connection semantics than normal aliases.  
@@ -472,7 +471,6 @@ META_INSTANCE_REFERENCE_CLASS::connect_implicit_port(
 	rp->connect_implicit_port(*lp);
 	return bad_bool(false);
 }	// end method connect_implicit_port
-#endif	// INSTANCE_SUPPLY_OVERRIDES
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE

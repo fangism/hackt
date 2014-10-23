@@ -266,8 +266,8 @@
 	Will require syntax extension.  
 	Goal: 1
 	Status: done, tested, ready-to-perm
- */
 #define	INSTANCE_SUPPLY_OVERRIDES		1
+ */
 
 /**
 	Define to 1 to allow implicit supplies to be unconnected by
@@ -275,7 +275,7 @@
 	Goal: probably do not want (0)
 	Status: experimental
  */
-#define	INSTANCE_SUPPLY_DISCONNECT		(0 && INSTANCE_SUPPLY_OVERRIDES)
+#define	INSTANCE_SUPPLY_DISCONNECT		0
 
 /**
 	Define to 1 to allow the implicit ports to be declared 
@@ -287,7 +287,7 @@
 		to be consistent between prs and instance overrides.
 	Status: tested
  */
-#define	REVERSE_INSTANCE_SUPPLY_OVERRIDES	(1 && INSTANCE_SUPPLY_OVERRIDES)
+#define	REVERSE_INSTANCE_SUPPLY_OVERRIDES	1
 
 /**
 	Define to 1 to enable nonmeta-member instance/value references.

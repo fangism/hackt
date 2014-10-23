@@ -14,12 +14,10 @@
 #include "Object/type/fundamental_type_reference.hh"
 #include "Object/common/dump_flags.hh"
 #include "Object/inst/physical_instance_placeholder.hh"
-#if INSTANCE_SUPPLY_OVERRIDES
 #include "Object/inst/port_actual_collection.hh"
 #include "Object/inst/bool_instance_collection.hh"
 #include "Object/ref/simple_meta_instance_reference.hh"
 #include "Object/ref/meta_instance_reference_subtypes.hh"
-#endif
 #include "common/ICE.hh"
 #include "Object/def/footprint.hh"
 #include "util/IO_utils.hh"
@@ -192,7 +190,6 @@ subinstance_manager::__connect_ports(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if INSTANCE_SUPPLY_OVERRIDES
 /**
 	Here, we reverse the order so that the earliest implicit ports
 	are trailing defaults.  
@@ -253,7 +250,6 @@ if (*ri) {
 	// all connections good
 	return good_bool(true);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
