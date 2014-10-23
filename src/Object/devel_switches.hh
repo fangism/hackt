@@ -313,9 +313,9 @@
 	This should reduce the amount of passing around of structs.  
 	Goal: 1
 	Rationale: caching for speedup of reference lookups.
-	Status: tested, stable
- */
+	Status: tested, stable, perm'd
 #define	FOOTPRINT_OWNS_CONTEXT_CACHE		1
+ */
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -356,7 +356,7 @@
 
 /**
 	Same idea as above.  
-	This still feels dirty, but that's the way some like it.
+	This still feels dirty.
  */
 #define	DEFTYPE_LIKE_PROCESS			1
 

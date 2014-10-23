@@ -62,9 +62,7 @@ class alias_visitor;
 class subinstance_manager;
 struct dump_flags;
 struct expr_dump_context;
-#if FOOTPRINT_OWNS_CONTEXT_CACHE
 class global_context_cache;
-#endif
 
 using std::string;
 using util::memory::count_ptr;
@@ -299,14 +297,12 @@ private:
 		don't write this object out, restore it instead.
 	 */
 	mutable excl_ptr<subinstance_manager>	substructure_template;
-#if FOOTPRINT_OWNS_CONTEXT_CACHE
 	/**
 		Hierarchical tree cache of footprint frames and offsets
 		deep within the sub-hierarchy of this footprint.
 		Greatly accelerates top-level reference lookups.
 	 */
 	mutable excl_ptr<global_context_cache>	context_cache;
-#endif
 	/**
 		Only used during create-phase, count of local warnings.
 	 */
@@ -625,7 +621,6 @@ public:
 	void
 	zero_top_level_ports(void);
 
-#if FOOTPRINT_OWNS_CONTEXT_CACHE
 	bool
 	initialize_context_cache(void) const;
 
@@ -635,7 +630,6 @@ public:
 		NEVER_NULL(context_cache);
 		return *context_cache;
 	}
-#endif
 
 private:
 	good_bool

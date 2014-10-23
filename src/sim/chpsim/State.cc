@@ -191,11 +191,9 @@ struct State::recheck_transformer {
 		event_type& e(state.event_pool[ei]);
 		const size_t pid = state.get_process_id(ei);
 		STACKTRACE_INDENT_PRINT("in process " << pid << endl);
-		context.set_global_context(state.
-#if FOOTPRINT_OWNS_CONTEXT_CACHE
-			get_module().get_context_cache().
-#endif
-				get_global_context(pid).value);
+		context.set_global_context(state
+			.get_module().get_context_cache()
+				.get_global_context(pid).value);
 		// no need for global_offset
 		context.set_event(state, 
 			e, pid, state.get_offset_from_pid(pid));
@@ -625,11 +623,8 @@ do {
 	DEBUG_STEP_PRINT("in process " << pid << endl);
 	// pid could be one-past-the-end to represent the global spawn event
 	if (LIKELY(valid_process_id(pid))) {
-		c.set_global_context(
-#if FOOTPRINT_OWNS_CONTEXT_CACHE
-			get_module().get_context_cache().
-#endif
-			get_global_context(pid).value);
+		c.set_global_context(get_module().get_context_cache()
+			.get_global_context(pid).value);
 	}
 	// no need for global_offset
 #if ENABLE_STACKTRACE
@@ -1307,13 +1302,10 @@ State::make_process_dump_context(const node_index_type pid) const {
 	// global spawn event.
 	if (pid && valid_process_id(pid)) {
 		std::ostringstream canonical_name;
-#if FOOTPRINT_OWNS_CONTEXT_CACHE
-		get_module().get_context_cache().
-#endif
-		top_context.get_top_footprint().
-			dump_canonical_name<process_tag>(
-				canonical_name, pid -1, 
-				_dump_flags);
+		get_module().get_context_cache()
+			.top_context.get_top_footprint()
+			.dump_canonical_name<process_tag>(
+				canonical_name, pid -1, _dump_flags);
 		return expr_dump_context(canonical_name.str());
 	} else {
 		return expr_dump_context::default_value;

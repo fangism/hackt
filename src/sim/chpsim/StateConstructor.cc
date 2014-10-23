@@ -326,10 +326,7 @@ StateConstructor::visit(const do_while_loop& dw) {
 const entity::footprint&
 StateConstructor::get_process_footprint(void) const {
 	// 1-indexed process index, 0 for top-level
-	return *state.
-#if FOOTPRINT_OWNS_CONTEXT_CACHE
-		get_module().get_context_cache().
-#endif
+	return *state.get_module().get_context_cache().
 		get_global_context(current_process_index).value.frame._footprint;
 }
 

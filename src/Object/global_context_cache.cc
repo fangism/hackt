@@ -253,12 +253,10 @@ global_context_cache::dump_memory_usage(ostream& o) const {
 }
 
 //=============================================================================
-#if FOOTPRINT_OWNS_CONTEXT_CACHE
 global_process_context_ref::global_process_context_ref(const footprint& f) :
 	gpid(0), subcache(&f.get_context_cache().get_frame_cache()) {
 
 }
-#endif
 
 //=============================================================================
 }	// end namespace entity

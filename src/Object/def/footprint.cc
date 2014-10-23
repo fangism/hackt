@@ -80,9 +80,7 @@
 #include "Object/expr/expr_dump_context.hh"
 #endif
 #include "Object/unroll/unroll_context.hh"
-#if FOOTPRINT_OWNS_CONTEXT_CACHE
 #include "Object/global_context_cache.hh"
-#endif
 #include "Object/module.hh"
 #include "Object/interfaces/VCDwriter.hh"	// should belong elsewhere
 #include "common/TODO.hh"
@@ -267,9 +265,7 @@ footprint::footprint() :
 	local_atomic_update_DAG(),
 	exported_atomic_update_DAG(),
 #endif
-#if FOOTPRINT_OWNS_CONTEXT_CACHE
 	context_cache(NULL),
-#endif
 	warning_count(0), 
 	lock_state(false) { }
 // the other members, don't care, just placeholder ctor before loading object
@@ -345,9 +341,7 @@ footprint::footprint(const const_param_expr_list& p,
 	local_atomic_update_DAG(),
 	exported_atomic_update_DAG(),
 #endif
-#if FOOTPRINT_OWNS_CONTEXT_CACHE
 	context_cache(NULL),
-#endif
 	warning_count(0),
 	lock_state(false) {
 	STACKTRACE_CTOR_VERBOSE;
@@ -385,9 +379,7 @@ footprint::footprint(const temp_footprint_tag_type&) :
 	local_atomic_update_DAG(),
 	exported_atomic_update_DAG(),
 #endif
-#if FOOTPRINT_OWNS_CONTEXT_CACHE
 	context_cache(NULL),
-#endif
 	warning_count(0),
 	lock_state(false) {
 	STACKTRACE_CTOR_VERBOSE;
@@ -430,9 +422,7 @@ footprint::footprint(const footprint& t) :
 	local_atomic_update_DAG(),
 	exported_atomic_update_DAG(),
 #endif
-#if FOOTPRINT_OWNS_CONTEXT_CACHE
 	context_cache(NULL),
-#endif
 	lock_state(false) {
 	STACKTRACE_CTOR_VERBOSE;
 //	NEVER_NULL(prs_footprint);
@@ -446,7 +436,6 @@ footprint::~footprint() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if FOOTPRINT_OWNS_CONTEXT_CACHE
 /**
 	\return true on error.
  */
@@ -466,7 +455,6 @@ footprint::initialize_context_cache(void) const {
 		return true;
 	}
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_ptr<const process_definition>

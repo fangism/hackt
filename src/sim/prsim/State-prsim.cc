@@ -127,11 +127,7 @@
  */
 #define	EXTRA_ALIGN_MARKERS			0
 
-#if FOOTPRINT_OWNS_CONTEXT_CACHE
 #define	GET_CONTEXT_CACHE		get_module().get_context_cache().
-#else
-#define	GET_CONTEXT_CACHE		module_state_base::
-#endif
 
 namespace HAC {
 namespace entity { }
@@ -467,9 +463,7 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 	// got a walker? and prs_expr_visitor?
 	// see "ExprAlloc.h"
 
-#if FOOTPRINT_OWNS_CONTEXT_CACHE
 	m.get_context_cache();		// reference checks for NULL
-#endif
 	// NOTE: we're referencing 'this' during construction, however, we 
 	// are done constructing this State's members at this point.  
 	const entity::global_process_context gpc(topfp);

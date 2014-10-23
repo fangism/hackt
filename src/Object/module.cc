@@ -86,11 +86,7 @@ const count_ptr<const const_param_expr_list> null_module_params(NULL);
 module::module() :
 		process_definition(), 
 		global_namespace(NULL), 	// now unused, bogus
-		compile_opts()
-#if !FOOTPRINT_OWNS_CONTEXT_CACHE
-		, context_cache(NULL)
-#endif
-		{
+		compile_opts() {
 	STACKTRACE_VERBOSE;
 	STACKTRACE_INDENT_PRINT("this @ " << this << endl);
 }
@@ -104,11 +100,7 @@ module::module(const string& s) :
 		process_definition(s), 
 #endif
 		global_namespace(new name_space("")),	// now unused, bogus
-		compile_opts()
-#if !FOOTPRINT_OWNS_CONTEXT_CACHE
-		, context_cache(NULL)
-#endif
-		{
+		compile_opts() {
 	STACKTRACE_VERBOSE;
 	NEVER_NULL(global_namespace);
 }
@@ -290,9 +282,7 @@ module::create_unique(void) {
 			return good_bool(false);
 		}
 	}
-#if FOOTPRINT_OWNS_CONTEXT_CACHE
 	initialize_context_cache();
-#endif
 	return good_bool(true);
 }
 
@@ -481,29 +471,17 @@ module::__import_global_parameters(const module& m,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if FOOTPRINT_OWNS_CONTEXT_CACHE
 global_context_cache&
 module::get_context_cache(void) const {
 	return get_footprint().get_context_cache();
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 module::initialize_context_cache(void) const {
 	STACKTRACE_VERBOSE;
-	if (is_created()
-#if !FOOTPRINT_OWNS_CONTEXT_CACHE
-		&& !context_cache
-#endif
-		) {
-#if FOOTPRINT_OWNS_CONTEXT_CACHE
+	if (is_created()) {
 		get_footprint().initialize_context_cache();
-#else
-	STACKTRACE_INDENT_PRINT("creating global context cache" << endl);
-		context_cache = excl_ptr<global_context_cache>(
-			new global_context_cache(get_footprint()));
-#endif
 	}
 }
 

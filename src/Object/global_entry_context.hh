@@ -5,8 +5,8 @@
 	$Id: global_entry_context.hh,v 1.14 2011/05/17 21:19:52 fang Exp $
  */
 
-#ifndef	__HAC_OBJECT_GLOBAL_ENTRY_CONTEXT_H__
-#define	__HAC_OBJECT_GLOBAL_ENTRY_CONTEXT_H__
+#ifndef	__HAC_OBJECT_GLOBAL_ENTRY_CONTEXT_HH__
+#define	__HAC_OBJECT_GLOBAL_ENTRY_CONTEXT_HH__
 
 #include <iosfwd>
 #include <utility>
@@ -54,7 +54,7 @@ struct global_process_context_ref;	// from Object/global_context_cache.h
 	Goal: 1
 	Status: tested, regression free!
  */
-#define	CACHE_REFERENCE_LOOKUP_CONTEXTS		(1 && FOOTPRINT_OWNS_CONTEXT_CACHE)
+#define	CACHE_REFERENCE_LOOKUP_CONTEXTS		1
 
 //=============================================================================
 /**
@@ -200,15 +200,6 @@ virtual	void
 		const simple_meta_instance_reference<Tag>&, 
 		const unroll_context* = NULL) const;
 
-#if FOOTPRINT_OWNS_CONTEXT_CACHE
-// call global_context_cache::get_global_context() instead
-#else
-	void
-	construct_global_footprint_frame(
-		global_process_context&,
-		size_t gpid) const;
-#endif
-
 #if AGGREGATE_PARENT_REFS
 	// \return true on error
 	static
@@ -285,5 +276,5 @@ public:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __HAC_OBJECT_GLOBAL_ENTRY_CONTEXT_H__
+#endif	// __HAC_OBJECT_GLOBAL_ENTRY_CONTEXT_HH__
 

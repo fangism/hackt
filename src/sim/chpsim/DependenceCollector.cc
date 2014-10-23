@@ -98,12 +98,7 @@ dependence_collector_base<Tag>::~dependence_collector_base() { }
 
 DependenceSetCollector::DependenceSetCollector(const StateConstructor& s) : 
 		global_entry_context(
-			s.state.
-#if FOOTPRINT_OWNS_CONTEXT_CACHE
-			get_module().get_context_cache().
-#endif
-			top_context
-			),
+			s.state. get_module().get_context_cache().top_context),
 	 	// don't default to top-level
 		dependence_collector_base<bool_tag>(), 
 		dependence_collector_base<int_tag>(), 
@@ -116,11 +111,9 @@ DependenceSetCollector::DependenceSetCollector(const StateConstructor& s) :
 #error	"Caching of global footprint frames is required!"
 	// because a return by reference is necessary, not return by value
 #endif
-		fpf = &s.state.
-#if FOOTPRINT_OWNS_CONTEXT_CACHE
-			get_module().get_context_cache().
-#endif
-			get_global_context(s.current_process_index).value.frame;
+		fpf = &s.state.get_module().get_context_cache()
+			.get_global_context(
+				s.current_process_index).value.frame;
 		// do anything about global offset?
 		// probably don't need if process traversal is flat
 	}

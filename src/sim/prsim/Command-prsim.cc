@@ -103,11 +103,7 @@ DEFAULT_STATIC_TRACE
 	for ( ; niter!=nend; ++niter)
 #endif
 
-#if FOOTPRINT_OWNS_CONTEXT_CACHE
 #define	GET_CONTEXT_CACHE(x)	x.get_module().get_context_cache().
-#else
-#define	GET_CONTEXT_CACHE(x)	x.
-#endif
 
 namespace HAC {
 namespace SIM {

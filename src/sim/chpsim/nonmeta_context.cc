@@ -32,11 +32,7 @@ using entity::process_tag;
  */
 nonmeta_context::nonmeta_context(State& r) :
 		nonmeta_context_base(
-#if FOOTPRINT_OWNS_CONTEXT_CACHE
 			r.get_module().get_context_cache().top_context,
-#else
-			r.top_context,
-#endif
 			r.instances),
 		event(NULL), 
 		global_event_offset(0), 	// any invalid value

@@ -821,19 +821,12 @@ template struct global_entry<process_tag>;
 global_process_context::global_process_context(const footprint& m, 
 		const size_t gpid) : frame(), offset() {
 	STACKTRACE_VERBOSE;
-#if FOOTPRINT_OWNS_CONTEXT_CACHE
 	// always use context_cache for lookup
 	const global_process_context&
 		c(m.get_context_cache().get_global_context(gpid).value);
 	// copy to self
 	frame = c.frame;
 	offset = c.offset;
-#else
-	// uncached, does work from scratch, is expensive
-	const global_process_context gpc(m);
-	const global_entry_context gc(gpc);
-	gc.construct_global_footprint_frame(*this, gpid);
-#endif
 #if ENABLE_STACKTRACE
 	STACKTRACE_INDENT_PRINT("offset: " << offset) << endl;
 	frame.dump_frame(STACKTRACE_INDENT_PRINT("frame:")) << endl;

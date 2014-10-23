@@ -3,8 +3,8 @@
 	$Id: global_entry.hh,v 1.22 2010/08/07 00:00:01 fang Exp $
  */
 
-#ifndef	__HAC_OBJECT_GLOBAL_ENTRY_H__
-#define	__HAC_OBJECT_GLOBAL_ENTRY_H__
+#ifndef	__HAC_OBJECT_GLOBAL_ENTRY_HH__
+#define	__HAC_OBJECT_GLOBAL_ENTRY_HH__
 
 #include <iosfwd>
 #include "util/persistent_fwd.hh"
@@ -610,50 +610,8 @@ struct global_process_context {
 };	// end struct global_process_context
 
 //=============================================================================
-#if	!FOOTPRINT_OWNS_CONTEXT_CACHE
-/**
-	Same as above, but with extra global process id field.
-	This is useful as a return type from instance-reference lookups.
- */
-struct global_process_context_id : public global_process_context {
-	typedef	global_process_context		parent_type;
-	size_t					gpid;
-
-	// usually default ctor
-	global_process_context_id() : global_process_context(), gpid(0) { }
-
-	void
-	descend_frame(const global_process_context& gpc, 
-			const size_t lpid, const bool is_top) {
-		parent_type::descend_frame(gpc, lpid, is_top);
-		gpid = lpid;
-	}
-
-	void
-	descend_frame(const size_t lpid, const bool is_top) {
-		parent_type::descend_frame(*this, lpid, is_top);
-		gpid = lpid;
-	}
-
-	void
-	descend_port(const global_process_context& gpc, 
-			const size_t lpid) {
-		parent_type::descend_port(gpc, lpid);
-		gpid = lpid;
-	}
-
-	void
-	descend_port(const size_t lpid) {
-		parent_type::descend_port(*this, lpid);
-		gpid = lpid;
-	}
-
-};	// end struct global_process_context_id
-#endif
-
-//=============================================================================
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __HAC_OBJECT_GLOBAL_ENTRY_H__
+#endif	// __HAC_OBJECT_GLOBAL_ENTRY_HH__
 

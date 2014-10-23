@@ -4,8 +4,8 @@
 	$Id: module.hh,v 1.24 2010/08/05 18:25:24 fang Exp $
  */
 
-#ifndef	__HAC_OBJECT_MODULE_H__
-#define	__HAC_OBJECT_MODULE_H__
+#ifndef	__HAC_OBJECT_MODULE_HH__
+#define	__HAC_OBJECT_MODULE_HH__
 
 #include <string>
 #include "Object/common/util_types.hh"
@@ -62,9 +62,6 @@ protected:
 	excl_ptr<name_space>			global_namespace;
 public:
 	compile_options				compile_opts;
-#if !FOOTPRINT_OWNS_CONTEXT_CACHE
-	mutable excl_ptr<global_context_cache>		context_cache;
-#endif
 private:
 	module();
 
@@ -112,15 +109,7 @@ public:
 	reset(void);
 
 	global_context_cache&
-	get_context_cache(void) const
-#if FOOTPRINT_OWNS_CONTEXT_CACHE
-	;
-#else
-	{
-		NEVER_NULL(context_cache);
-		return *context_cache;
-	}
-#endif
+	get_context_cache(void) const;
 
 	void
 	initialize_context_cache(void) const;
@@ -205,5 +194,5 @@ public:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	//	__HAC_OBJECT_MODULE_H__
+#endif	//	__HAC_OBJECT_MODULE_HH__
 
