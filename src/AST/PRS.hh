@@ -16,7 +16,6 @@
 #include "AST/attribute.hh"
 #include "util/STL/pair_fwd.hh"
 #include "util/memory/count_ptr.hh"
-#include "Object/devel_switches.hh"	// for PRS_SUPPLY_OVERRIDES
 
 namespace HAC {
 namespace entity {
@@ -345,15 +344,11 @@ public:
  */
 class body : public language_body, public body_item {
 protected:
-#if PRS_SUPPLY_OVERRIDES
 	const excl_ptr<const inst_ref_expr_list>	supplies;
-#endif
 	const excl_ptr<const rule_list>		rules;
 public:
 	body(const generic_keyword_type* t, 
-#if PRS_SUPPLY_OVERRIDES
 		const inst_ref_expr_list*, 
-#endif
 		const rule_list* r);
 virtual	~body();
 

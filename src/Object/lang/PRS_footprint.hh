@@ -319,7 +319,7 @@ public:
 			lower_bound, upper_bound.  
 	 */
 	typedef	vector<subcircuit_map_entry>	subcircuit_map_type;
-#if PRS_SUPPLY_OVERRIDES
+
 	/**
 		Structure for tracking which supplies drive which rules.  
 	 */
@@ -342,7 +342,7 @@ public:
 		instead of per rule because this is usually coarse-grained.  
 	 */
 	typedef	vector<supply_override_entry>	supply_map_type;
-#endif
+
 	typedef	state_instance<bool_tag>	bool_instance_type;
 	typedef	instance_pool<bool_instance_type>
 						node_pool_type;
@@ -358,7 +358,6 @@ private:
 	internal_node_expr_map_type		internal_node_expr_map;
 	invariant_pool_type			invariant_pool;
 	subcircuit_map_type			subcircuit_map;
-#if PRS_SUPPLY_OVERRIDES
 	supply_map_type				supply_map;
 public:
 	/**
@@ -370,7 +369,6 @@ public:
 #if PRS_SUBSTRATE_OVERRIDES
 	node_index_type				current_Vdd_substrate;
 	node_index_type				current_GND_substrate;
-#endif
 #endif
 public:
 	footprint();
@@ -463,7 +461,6 @@ public:
 		return expr_pool.size();
 	}
 
-#if PRS_SUPPLY_OVERRIDES
 	const supply_map_type&
 	get_supply_map(void) const { return supply_map; }
 
@@ -502,7 +499,6 @@ public:
 
 	supply_map_type::const_iterator
 	lookup_internal_node_supply(const node_index_type) const;
-#endif
 
 	void
 	collect_literal_indices(std::set<node_index_type>&, // node_index_type

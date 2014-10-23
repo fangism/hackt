@@ -651,14 +651,8 @@ struct node_terminal {
  */
 struct node : public unique_common {
 	struct __logical_node_tag { };
-#if !PRS_SUPPLY_OVERRIDES
-	struct __supply_node_tag { };
-#endif
 	struct __internal_node_tag { };
 	struct __auxiliary_node_tag { };
-#if !PRS_SUPPLY_OVERRIDES
-	static const __supply_node_tag		supply_node_tag;
-#endif
 	static const __logical_node_tag		logical_node_tag;
 	static const __internal_node_tag	internal_node_tag;
 	static const __auxiliary_node_tag	auxiliary_node_tag;
@@ -674,11 +668,7 @@ struct node : public unique_common {
 		NODE_TYPE_LOGICAL = 0,
 		NODE_TYPE_INTERNAL = 1,
 		NODE_TYPE_AUXILIARY = 2
-#if PRS_SUPPLY_OVERRIDES
 		// NODE_TYPE_LOGICAL also applies to supply nodes
-#else
-		, NODE_TYPE_SUPPLY = 3
-#endif
 	};
 	// is_named -- if this was a named node in original source, 
 	//	otherwise is internal, auxiliary node.
@@ -732,13 +722,6 @@ struct node : public unique_common {
 #define	INIT_DEVICE_COUNT
 #endif
 
-#if !PRS_SUPPLY_OVERRIDES
-	node(const string& s, const __supply_node_tag&) : 
-		unique_common(s), 
-		type(NODE_TYPE_SUPPLY), used(false) 
-		INIT_DRIVEN	// shouldn't supplies be considered driven?
-		{ INIT_DEVICE_COUNT }
-#endif
 	node(const index_type i, const __logical_node_tag&) : 
 		unique_common(i),
 		type(NODE_TYPE_LOGICAL), used(false)
@@ -794,11 +777,7 @@ public:
 
 	bool
 	is_supply_node(void) const {
-#if PRS_SUPPLY_OVERRIDES
 		return false;
-#else
-		return type == NODE_TYPE_SUPPLY;
-#endif
 	}
 
 #if NETLIST_CHECK_CONNECTIVITY
@@ -1030,10 +1009,6 @@ class netlist : public netlist_common {
 public:
 // universal node indices to every subcircuit
 	static const node void_node;	// not a real node
-#if !PRS_SUPPLY_OVERRIDES
-	static const node GND_node;
-	static const node Vdd_node;
-#endif
 #if NETLIST_VERILOG
 	static const proc void_proc;
 #endif
@@ -1041,10 +1016,6 @@ public:
 	// these should correspond with the order of insertion in netlist's ctor
 	static const	index_type	void_index;
 	static const	index_type	first_node_index;
-#if !PRS_SUPPLY_OVERRIDES
-	static const	index_type	GND_index;
-	static const	index_type	Vdd_index;
-#endif
 
 friend class local_netlist;
 friend class netlist_generator;

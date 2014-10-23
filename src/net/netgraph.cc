@@ -571,11 +571,6 @@ case NODE_TYPE_AUXILIARY:
 		o << index;
 	}
 	break;
-#if !PRS_SUPPLY_OVERRIDES
-case NODE_TYPE_SUPPLY:
-	o << name;	// prefix with any designator? '$' or '!' ?
-	break;
-#endif
 default:
 	DIE;
 }
@@ -603,11 +598,6 @@ case NODE_TYPE_AUXILIARY:
 		o << index;
 	}
 	break;
-#if !PRS_SUPPLY_OVERRIDES
-case NODE_TYPE_SUPPLY:
-	o << '!' << name;
-	break;
-#endif
 default:
 	o << "???";
 }
@@ -1142,20 +1132,12 @@ transistor::parasitics::update(const transistor& t,
 
 // tag objects for convenience
 const node::__logical_node_tag	node::logical_node_tag = __logical_node_tag();
-#if !PRS_SUPPLY_OVERRIDES
-const node::__supply_node_tag	node::supply_node_tag = __supply_node_tag();
-#endif
 const node::__internal_node_tag	node::internal_node_tag = __internal_node_tag();
 const node::__auxiliary_node_tag	node::auxiliary_node_tag = __auxiliary_node_tag();
 
 // case sensitive?
 const node
-netlist::void_node("__VOID__", node::auxiliary_node_tag)
-#if !PRS_SUPPLY_OVERRIDES
-, netlist::GND_node("GND", node::supply_node_tag)
-, netlist::Vdd_node("Vdd", node::supply_node_tag)
-#endif
-;
+netlist::void_node("__VOID__", node::auxiliary_node_tag);
 
 #if NETLIST_VERILOG
 const proc
@@ -1166,14 +1148,7 @@ netlist::void_proc(0, NULL);
 // these should correspond with the order of insertion in netlist's ctor
 const	index_type
 netlist::void_index = 0,
-netlist::first_node_index = 1
-#if !PRS_SUPPLY_OVERRIDES
-// this must be kept consistent with ordering in "AST/globals.cc"
-// and auto-connections in "Object/def/footprint.cc"
-, netlist::GND_index = 1
-, netlist::Vdd_index = 2
-#endif
-;
+netlist::first_node_index = 1;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 netlist::netlist() : netlist_common(), name(), 
@@ -1198,10 +1173,6 @@ netlist::netlist() : netlist_common(), name(),
 		subs_count(0),
 		warning_count(0) {
 	// copy supply nodes
-#if !PRS_SUPPLY_OVERRIDES
-	node_pool.push_back(GND_node);
-	node_pool.push_back(Vdd_node);
-#endif
 #if NETLIST_VERILOG
 	proc_pool.push_back(void_proc);
 #endif
@@ -1408,18 +1379,6 @@ netlist::append_instance(const state_instance<process_tag>& subp,
 		INVARIANT(fn.used || fn.driven);
 #else
 		INVARIANT(fn.used);
-#endif
-#if !PRS_SUPPLY_OVERRIDES
-		if (fn.is_supply_node()) {
-			if (*fi == GND_index) {
-				np.node_actuals.push_back(GND_index);
-			} else if (*fi == Vdd_index) {
-				np.node_actuals.push_back(Vdd_index);
-			} else {
-				cerr << "ERROR: unknown supply port." << endl;
-				THROW_EXIT;
-			}
-		} else
 #endif
 		if (fn.is_logical_node()) {
 			const index_type fid = fn.index;
@@ -2539,14 +2498,6 @@ netlist::summarize_ports(
 		const netlist_options& opt) {
 	STACKTRACE_VERBOSE;
 	// could mark_used_nodes here instead?
-#if !PRS_SUPPLY_OVERRIDES
-	if (node_pool[GND_index].used) {
-		node_port_list.push_back(GND_index);
-	}
-	if (node_pool[Vdd_index].used) {
-		node_port_list.push_back(Vdd_index);
-	}
-#endif
 	// empty is initially false
 	bool MT = true;
 {

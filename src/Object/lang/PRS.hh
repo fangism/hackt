@@ -315,7 +315,6 @@ public:
 class rule_set : public rule, public nested_rules {
 	typedef	rule_set			this_type;
 public:
-#if PRS_SUPPLY_OVERRIDES
 	// for netlist generation purposes
 	// is bool_literal_base_ptr_type from "Object/lang/bool_literal.h"
 	typedef	bool_literal_base_ptr_type	supply_node_ref_type;
@@ -330,7 +329,6 @@ public:
 	supply_node_ref_type			GND_substrate;
 	// substrate contact override for PFETs
 	supply_node_ref_type			Vdd_substrate;
-#endif
 #endif
 
 public:

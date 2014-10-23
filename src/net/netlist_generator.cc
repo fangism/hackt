@@ -299,12 +299,6 @@ netlist_generator::visit(const entity::PRS::footprint& r) {
 	typedef	subckt_map_type::const_iterator		const_iterator;
 	// must be sorted ranges
 	const value_saver<const prs_footprint*> __prs(prs, &r);
-#if !PRS_SUPPLY_OVERRIDES
-	// for now, default supplies
-	const value_saver<index_type>
-		__s1(low_supply, netlist::GND_index),
-		__s2(high_supply, netlist::Vdd_index);
-#endif
 {
 	STACKTRACE_INDENT_PRINT("reserving internal nodes..." << endl);
 	// Internal node definitions may have a dependency ordering
@@ -521,7 +515,6 @@ netlist_generator::visit(const entity::PRS::footprint& r) {
 template <class RP>
 void
 netlist_generator::visit_rule(const RP& rpool, const index_type i) {
-#if PRS_SUPPLY_OVERRIDES
 	typedef	prs_footprint::supply_map_type::const_iterator	const_iterator;
 	const const_iterator f(prs->lookup_rule_supply(i));
 	// lookup supply in map
@@ -533,7 +526,6 @@ netlist_generator::visit_rule(const RP& rpool, const index_type i) {
 		__s3(low_substrate, register_named_node(f->GND_substrate)),
 		__s4(high_substrate, register_named_node(f->Vdd_substrate));
 #endif
-#endif
 	rpool[i].accept(*this);
 }
 
@@ -544,7 +536,6 @@ netlist_generator::visit_rule(const RP& rpool, const index_type i) {
 template <class MP>
 void
 netlist_generator::visit_macro(const MP& mpool, const index_type i) {
-#if PRS_SUPPLY_OVERRIDES
 	typedef	prs_footprint::supply_map_type::const_iterator	const_iterator;
 	const const_iterator f(prs->lookup_macro_supply(i));
 	// lookup supply in map
@@ -555,7 +546,6 @@ netlist_generator::visit_macro(const MP& mpool, const index_type i) {
 	const value_saver<index_type>
 		__s3(low_substrate, register_named_node(f->GND_substrate)),
 		__s4(high_substrate, register_named_node(f->Vdd_substrate));
-#endif
 #endif
 	mpool[i].accept(*this);
 }
@@ -909,7 +899,6 @@ netlist_generator::set_current_length(const real_type l) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PRS_SUPPLY_OVERRIDES
 /**
 	Errors out by throwing exception.
 	TODO: check for substrate domain differences?
@@ -936,7 +925,6 @@ const bool err = opt.internal_node_supply_mismatch_policy == OPTION_ERROR;
 	}
 }
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1028,7 +1016,7 @@ if (!n.used)
 	STACKTRACE_INDENT_PRINT("defining internal node..." << endl);
 	const bool dir = ret.second;
 	// else need to define internal node once only
-#if PRS_SUPPLY_OVERRIDES
+
 	// lookup supply associated with internal node's definition
 	typedef	prs_footprint::supply_map_type::const_iterator	const_iterator;
 	const const_iterator f(prs->lookup_internal_node_supply(nid));
@@ -1054,7 +1042,7 @@ if (!n.used)
 		__s3(low_substrate, bgi),
 		__s4(high_substrate, bvi);
 #endif
-#endif
+
 	const value_saver<index_type>
 		__t1(foot_node, (dir ? high_supply : low_supply)),
 		__t2(output_node, node_ind);

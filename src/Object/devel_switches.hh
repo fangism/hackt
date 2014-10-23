@@ -250,15 +250,15 @@
 	Define to 1 to allow prs bodies to override Vdd and GND.
 	Note: should allow declared internal nodes, not just regular nodes.
 	Goal: 1
-	Status: done, tested, ready-to-perm
- */
+	Status: done, tested, perm'd
 #define	PRS_SUPPLY_OVERRIDES			1
+ */
 
 /**
 	Define to 1 to support substrate contact overriding.
 	Status: begun
  */
-#define	PRS_SUBSTRATE_OVERRIDES			(1 && PRS_SUPPLY_OVERRIDES)
+#define	PRS_SUBSTRATE_OVERRIDES			1
 
 /**
 	Define to 1 enable means of overriding the implicit primary supplies

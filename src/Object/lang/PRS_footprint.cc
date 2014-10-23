@@ -158,15 +158,14 @@ footprint::subcircuit_map_entry::load_object(
 footprint::footprint() : rule_pool(), expr_pool(), macro_pool(), 
 		internal_node_pool(), 
 		internal_node_expr_map(), invariant_pool(),
-		subcircuit_map()
-#if PRS_SUPPLY_OVERRIDES
-		, supply_map()
-		, current_Vdd(0)	// INVALID_NODE_INDEX
-		, current_GND(0)	// INVALID_NODE_INDEX
+		subcircuit_map(),
+		supply_map(),
+		current_Vdd(0),	// INVALID_NODE_INDEX
+		current_GND(0)	// INVALID_NODE_INDEX
 #if PRS_SUBSTRATE_OVERRIDES
-		, current_Vdd_substrate(0)	// INVALID_NODE_INDEX
-		, current_GND_substrate(0)	// INVALID_NODE_INDEX
-#endif
+		,
+		current_Vdd_substrate(0),	// INVALID_NODE_INDEX
+		current_GND_substrate(0)	// INVALID_NODE_INDEX
 #endif
 	{
 	// used to set_chunk_size of list_vector_pools here
@@ -440,8 +439,8 @@ if (subcircuit_map.size()) {
 		i->dump(o) << ' ' << i->get_name() << endl;
 	}
 }
-#if PRS_SUPPLY_OVERRIDES
 if (supply_map.size()) {
+	// supply overrides
 	o << auto_indent << "rule supply map: (rules, macros, @nodes : Vdd, GND)" << endl;
 	typedef	supply_map_type::const_iterator	const_iterator;
 	const_iterator i(supply_map.begin()), e(supply_map.end());
@@ -455,7 +454,6 @@ if (supply_map.size()) {
 		o << endl;
 	}
 }
-#endif
 	return o;
 }
 
@@ -587,7 +585,6 @@ footprint::find_internal_node(const expr_index_type ei) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PRS_SUPPLY_OVERRIDES
 /**
 	Routines to lookup voltage supply in rule map.  
  */
@@ -625,7 +622,6 @@ footprint::lookup_internal_node_supply(const node_index_type i) const {
 	--f;
 	return f;
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -646,7 +642,6 @@ footprint::collect_transient_info_base(persistent_object_manager& m) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PRS_SUPPLY_OVERRIDES
 void
 footprint::supply_override_entry::write_object(
 		const persistent_object_manager&, ostream& o) const {
@@ -670,7 +665,6 @@ footprint::supply_override_entry::load_object(
 	read_value(i, GND_substrate);
 #endif
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -683,68 +677,19 @@ footprint::write_object_base(const persistent_object_manager& m,
 		ostream& o) const {
 	STACKTRACE_PERSISTENT_VERBOSE;
 {
-#if 0
-	typedef	rule_pool_type::const_iterator	const_iterator;
-	const rule_index_type s = rule_pool.size();
-	write_value(o, s);
-	const_iterator i(rule_pool.begin());
-	const const_iterator e(rule_pool.end());
-	for ( ; i!=e; ++i) {
-		i->write_object_base(m, o);
-	}
-#else
 	util::write_persistent_sequence(m, o, rule_pool);
-#endif
-}{
-#if 0
-	typedef	expr_pool_type::const_iterator	const_iterator;
-	const expr_index_type s = expr_pool.size();
-	write_value(o, s);
-	const_iterator i(expr_pool.begin());
-	const const_iterator e(expr_pool.end());
-	for ( ; i!=e; ++i) {
-		i->write_object_base(m, o);
-	}
-#else
 	util::write_persistent_sequence(m, o, expr_pool);
-#endif
-}{
-#if 0
-	typedef	macro_pool_type::const_iterator	const_iterator;
-	const macro_index_type s = macro_pool.size();
-	write_value(o, s);
-	const_iterator i(macro_pool.begin());
-	const const_iterator e(macro_pool.end());
-	for ( ; i!=e; ++i) {
-		i->write_object_base(m, o);
-	}
-#else
 	util::write_persistent_sequence(m, o, macro_pool);
-#endif
-}{
 	// only save non-redundant information from pool
-#if 0
-	typedef internal_node_pool_type::const_iterator		const_iterator;
-	write_value(o, internal_node_pool.size());
-	const_iterator i(internal_node_pool.begin()),
-		e(internal_node_pool.end());
-	for ( ; i!=e; ++i) {
-		i->write_object_base(m, o);
-	}
-#else
 	util::write_persistent_sequence(m, o, internal_node_pool);
-#endif
 	// ignore internal_node_expr_map, restore later...
-}{
 #if INVARIANT_BACK_REFS
 	util::write_persistent_sequence(m, o, invariant_pool);
 #else
 	util::write_sequence(o, invariant_pool);
 #endif
 	util::write_persistent_sequence(m, o, subcircuit_map);
-#if PRS_SUPPLY_OVERRIDES
 	util::write_persistent_sequence(m, o, supply_map);
-#endif
 	// ignore internal_node_expr_map, restore later...
 }
 }
@@ -758,57 +703,9 @@ void
 footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 	STACKTRACE_PERSISTENT_VERBOSE;
 {
-#if 0
-	rule_index_type s;
-	read_value(i, s);
-	rule_pool.reserve(s);
-	rule_index_type j = 0;
-	for ( ; j<s; ++j) {
-		rule_pool.push_back(rule());
-		rule_pool.back().load_object_base(m, i);
-	}
-#else
 	util::read_persistent_sequence_back_insert(m, i, rule_pool);
-#endif
-}{
-#if 0
-	expr_index_type s;
-	read_value(i, s);
-	expr_pool.reserve(s);
-	expr_index_type j = 0;
-	for ( ; j<s; ++j) {
-		expr_pool.push_back(expr_node());
-		expr_pool.back().load_object_base(m, i);
-	}
-#else
 	util::read_persistent_sequence_back_insert(m, i, expr_pool);
-#endif
-}{
-#if 0
-	macro_index_type s;
-	read_value(i, s);
-	macro_pool.reserve(s);
-	macro_index_type j = 0;
-	for ( ; j<s; ++j) {
-		macro_pool.push_back(macro());
-		macro_pool.back().load_object_base(m, i);
-	}
-#else
 	util::read_persistent_sequence_back_insert(m, i, macro_pool);
-#endif
-}{
-#if 0
-	node_index_type s;
-	read_value(i, s);
-	node_index_type j = 0;
-	internal_node_pool.reserve(s);
-	for ( ; j<s; ++j) {
-		node_expr_type n;
-		n.load_object_base(m, i);
-		internal_node_pool.push_back(n);
-		internal_node_expr_map[n.name] = j;	// reverse-map
-	}
-#else
 	util::read_persistent_sequence_back_insert(m, i, internal_node_pool);
 	const node_index_type s = internal_node_pool.size();
 	// reconstruct reverse-map
@@ -816,7 +713,6 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 	for ( ; j<s; ++j) {
 		internal_node_expr_map[internal_node_pool[j].name] = j;
 	}
-#endif
 	INVARIANT(internal_node_expr_map.size() == s);
 }{
 #if INVARIANT_BACK_REFS
@@ -825,9 +721,7 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 	util::read_sequence_resize(i, invariant_pool);
 #endif
 	util::read_persistent_sequence_resize(m, i, subcircuit_map);
-#if PRS_SUPPLY_OVERRIDES
 	util::read_persistent_sequence_resize(m, i, supply_map);
-#endif
 }
 }
 

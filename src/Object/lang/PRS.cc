@@ -235,12 +235,9 @@ rule_set_base::rule_set_base() : parent_type() { }
 rule_set_base::~rule_set_base() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-rule_set::rule_set() : rule_set_base()
-#if PRS_SUPPLY_OVERRIDES
-	, GND(), Vdd()
-#if PRS_SUPPLY_OVERRIDES
+rule_set::rule_set() : rule_set_base(), GND(), Vdd()
+#if PRS_SUBSTRATE_OVERRIDES
 	, GND_substrate(), Vdd_substrate()
-#endif
 #endif
 	{ }
 
@@ -273,7 +270,6 @@ rule_set_base::dump(ostream& o, const rule_dump_context& c) const {
  */
 ostream&
 rule_set::dump(ostream& o, const rule_dump_context& c) const {
-#if PRS_SUPPLY_OVERRIDES
 	if (GND || Vdd) {
 		expr_dump_context edc(c);
 		o << '<';
@@ -290,7 +286,6 @@ rule_set::dump(ostream& o, const rule_dump_context& c) const {
 #endif
 		o << "> ";
 	}
-#endif
 	o << '{' << endl;
 	rule_set_base::dump(o, c);
 	o << auto_indent << '}';
@@ -373,7 +368,6 @@ rule_set_base::expand_complements(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PRS_SUPPLY_OVERRIDES
 /**
 	For looking up default supplies.  
  */
@@ -383,7 +377,6 @@ __lookup_implicit_bool_port(const unroll_context& c, const char* n) {
 	const entity::footprint& f(c.get_target_footprint());
 	return f.lookup_implicit_bool_port(n);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
@@ -407,7 +400,6 @@ good_bool
 rule_set::unroll(const unroll_context& c ) const {
 	STACKTRACE_VERBOSE;
 	PRS::footprint& pfp(c.get_target_footprint().get_prs_footprint());
-#if PRS_SUPPLY_OVERRIDES
 	PRS::footprint::supply_map_type& m(pfp.get_supply_map());
 {
 	// checks to make make sure we don't nest rule_sets
@@ -482,11 +474,9 @@ rule_set::unroll(const unroll_context& c ) const {
 	INVARIANT(pfp.current_Vdd_substrate);
 	INVARIANT(pfp.current_GND_substrate);
 #endif
-#endif	// PRS_SUPPLY_OVERRIDES
 	if (!rule_set_base::unroll(c).good) {
 		return good_bool(false);
 	}
-#if PRS_SUPPLY_OVERRIDES
 {
 	// flush out previous range, if applicable
 	const size_t lr = pfp.get_rule_pool().size();
@@ -516,7 +506,6 @@ rule_set::unroll(const unroll_context& c ) const {
 		m.push_back(e);
 	}
 }
-#endif
 	return good_bool(true);
 }
 
@@ -534,7 +523,6 @@ rule_set::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
 	collect_transient_info_base(m);
-#if PRS_SUPPLY_OVERRIDES
 	if (GND)
 		GND->collect_transient_info(m);
 	if (Vdd)
@@ -544,7 +532,6 @@ if (!m.register_transient_object(this,
 		GND_substrate->collect_transient_info(m);
 	if (Vdd_substrate)
 		Vdd_substrate->collect_transient_info(m);
-#endif
 #endif
 }
 }
@@ -563,13 +550,11 @@ rule_set::write_object(const persistent_object_manager& m,
 		ostream& o) const {
 	STACKTRACE_PERSISTENT_VERBOSE;
 	write_object_base(m, o);
-#if PRS_SUPPLY_OVERRIDES
 	m.write_pointer(o, GND);
 	m.write_pointer(o, Vdd);
 #if PRS_SUBSTRATE_OVERRIDES
 	m.write_pointer(o, GND_substrate);
 	m.write_pointer(o, Vdd_substrate);
-#endif
 #endif
 }
 
@@ -587,13 +572,11 @@ rule_set::load_object(const persistent_object_manager& m,
 		istream& i) {
 	STACKTRACE_PERSISTENT_VERBOSE;
 	load_object_base(m, i);
-#if PRS_SUPPLY_OVERRIDES
 	m.read_pointer(i, GND);
 	m.read_pointer(i, Vdd);
 #if PRS_SUBSTRATE_OVERRIDES
 	m.read_pointer(i, GND_substrate);
 	m.read_pointer(i, Vdd_substrate);
-#endif
 #endif
 }
 

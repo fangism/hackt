@@ -724,14 +724,10 @@ conditional::check_rule(context& c) const {
 
 CONSTRUCTOR_INLINE
 body::body(const generic_keyword_type* t, 
-#if PRS_SUPPLY_OVERRIDES
 		const inst_ref_expr_list* s,
-#endif
 		const rule_list* r) :
 		language_body(t), 
-#if PRS_SUPPLY_OVERRIDES
 		supplies(s), 
-#endif
 		rules(r) {
 	if (r) NEVER_NULL(rules);
 }
@@ -758,8 +754,6 @@ body::rightmost(void) const {
 bool
 body::__check_rules(context& c) const {
 if (rules) {
-#if PRS_SUPPLY_OVERRIDES
-	// TODO: set current supplies
 	if (supplies) {
 		inst_ref_expr_list::checked_bool_refs_type temp;
 		if (supplies->postorder_check_bool_refs_optional(temp, c)) {
@@ -799,7 +793,6 @@ if (rules) {
 		// else	r.GND_substrate = r.GND;
 #endif
 	}
-#endif
 	try {
 		rules->check_list_void(&body_item::check_rule, c);
 	} catch (...) {
@@ -833,7 +826,6 @@ if (rules) {
 	const never_ptr<process_definition> pd(d.is_a<process_definition>());
 	// if !pd, then prs is in a top-level scope (outside definition)
 
-#if PRS_SUPPLY_OVERRIDES
 	// need to open a separate body because we only want supply overrides
 	// to apply to its own group of nodes
 	// copied from body::check_rule
@@ -844,17 +836,15 @@ if (rules) {
 	entity::PRS::rule_set_base& rb(c.get_current_prs_body());
 	rb.append_rule(ret);
 	const context::prs_body_frame prf(c, retc);
-#endif
+
 	if (!__check_rules(c)) {
 		cerr << "ERROR: at least one error in PRS body."
 			<< endl;
 		THROW_EXIT;
 	}
-#if PRS_SUPPLY_OVERRIDES
 	if (retc->empty()) {
 		rb.pop_back();
 	}
-#endif
 }
 	// else empty, no PRS to add
 	return never_ptr<const object>(NULL);
@@ -879,10 +869,7 @@ body::check_rule(context& c) const {
 
 subcircuit::subcircuit(const generic_keyword_type* k,
 		const expr_list* p, const rule_list* r) :
-		body(k, 
-#if PRS_SUPPLY_OVERRIDES
-		NULL, 	// no subcircuit supply overriding, use parent's
-#endif
+		body(k, NULL, 	// no subcircuit supply overriding, use parent's
 			r), params(p) {
 	// params may be optional
 }
