@@ -1,0 +1,14 @@
+// "134.hac"
+// testing dependence on relaxed template parameter
+
+template <><pbool C>
+defproc switch(bool? in; bool! out) {
+[C ->
+	in = out;
+]
+}
+
+bool a, b, c;
+switch x<true>(a, b);
+switch y<false>(b, c);
+

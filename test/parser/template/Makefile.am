@@ -36,7 +36,7 @@ HACKT_PARSE_TEST_PASSES = \
 	100 101 102 105 106 107 108 109 \
 	110 111 115 116 116b 117 117b 118 119 \
 	120 121 122 123 124 127 128 129 \
-	130 131 132 133 \
+	130 131 132 133 134 134b 135 \
 	env_source \
 	env_source-01 env_source-01a env_source-01b \
 	env_source-02 env_source-03 env_source-04 \
@@ -106,7 +106,7 @@ HACKT_CREATE_TEST_PASSES = \
 	100 101 102 106 107 \
 	110 111 116 116b 117 117b 118 119 \
 	120 122 123 124 127 128 \
-	130 131 132 133 \
+	130 131 132 133 134 134b 135 \
 	env_source-01 env_source-01a \
 	env_source-02 env_source-03 \
 	env_source-05 env_source-06 env_source-08 \
@@ -172,7 +172,7 @@ HACKT_ALLOC_TEST_PASSES = \
 	100 101 102 106 107 \
 	110 111 116 116b 117 117b 118 119 \
 	120 122 123 124 127 128 \
-	130 131 132 133 \
+	130 131 132 133 134 134b 135 \
 	env_source-01 env_source-01a \
 	env_source-02 env_source-03 \
 	env_source-05 env_source-06 \

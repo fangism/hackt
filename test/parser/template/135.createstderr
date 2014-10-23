@@ -1,0 +1,243 @@
+Warning: output port node switch<2, 0>::out[1] has no PRS fanin.
+Warnings found (1) while creating complete type switch<2, 0>.
+Warning: output port node switch<2, 1>::out[0] has no PRS fanin.
+Warnings found (1) while creating complete type switch<2, 1>.
+---- END CREATE WARNINGS ---
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	20
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	171
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	8	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	9	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	10	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	11	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	12	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
+	13	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	27
+	14	##ADDR##	portscop	0	#HEAD#	#TAIL#	28
+	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
+	17	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
+	21	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	24	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	25	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	27	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
+	29	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	32	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	33	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	35	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	36	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	39	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	40	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	41	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	42	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	43	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	44	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	45	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	46	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	47	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	48	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	49	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	50	##ADDR##	footprnt	0	#HEAD#	#TAIL#	426
+	51	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	52	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	53	##ADDR##	footprnt	0	#HEAD#	#TAIL#	426
+	54	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	55	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	56	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	57	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	58	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	59	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
+	60	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	61	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	62	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	63	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	64	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	65	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	66	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	67	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	68	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	69	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	70	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	71	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	72	##ADDR##	proctpcp	0	#HEAD#	#TAIL#	16
+	73	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	74	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	75	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	76	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	77	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	78	##ADDR##	proctpcp	0	#HEAD#	#TAIL#	16
+	79	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	80	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	81	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	82	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
+	83	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	84	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
+	85	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	86	##ADDR##	footprnt	0	#HEAD#	#TAIL#	688
+	87	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	88	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	89	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	90	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  4 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    switch = process-definition (defined) switch<
+      pint<> N
+      ><
+      pint<> C
+      >(
+        bool<> !GND
+        bool<> !Vdd
+        bool<>? in[0..N-1]
+        bool<>! out[0..N-1]
+      )
+      In definition "switch", we have: {
+      Parameters:
+        C = pint<> switch::C
+        N = pint<> switch::N
+      Instances:
+        !GND = bool<> switch::!GND
+        !Vdd = bool<> switch::!Vdd
+        in = bool<>? switch::in^1
+        out = bool<>! switch::out^1
+      unroll sequence: 
+        ports: (
+          bool<> !GND
+          bool<> !Vdd
+          bool<>? in[0..N-1]
+          bool<>! out[0..N-1]
+        )
+        !GND@[supply=0]
+        !Vdd@[supply=1]
+        in[C] = out[C];
+      footprint collection: {
+        <2, 0> {
+          !GND = bool^0 = switch<2, 0>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = switch<2, 0>::!Vdd (2) @[ supply_high port-alias ] 
+          C = pint^0 value: 0
+          N = pint^0 value: 2
+          in = bool^1
+            {
+              [0] = switch<2, 0>::in[0] (3) @[ port? port! port-alias ] 
+              [1] = switch<2, 0>::in[1] (4) @[ port? port-alias ] 
+            }
+          out = bool^1
+            {
+              [0] = switch<2, 0>::in[0] (3) @[ port? port! port-alias ] 
+              [1] = switch<2, 0>::out[1] (5) @[ port! port-alias ] 
+            }
+          Created state:
+          bool instance pool: (5 ports, 0 local, 0 mapped)
+          1	switch<2, 0>::!GND @[ supply_low port-alias ]	
+          2	switch<2, 0>::!Vdd @[ supply_high port-alias ]	
+          3	switch<2, 0>::in[0] @[ port? port! port-alias ]	
+          4	switch<2, 0>::in[1] @[ port? port-alias ]	
+          5	switch<2, 0>::out[1] @[ port! port-alias ]	
+          bool port aliases:
+          3: switch<2, 0>::in[0] = switch<2, 0>::out[0] @[ port? port! port-alias ]
+        }
+        <2, 1> {
+          !GND = bool^0 = switch<2, 1>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = switch<2, 1>::!Vdd (2) @[ supply_high port-alias ] 
+          C = pint^0 value: 1
+          N = pint^0 value: 2
+          in = bool^1
+            {
+              [0] = switch<2, 1>::in[0] (3) @[ port? port-alias ] 
+              [1] = switch<2, 1>::in[1] (4) @[ port? port! port-alias ] 
+            }
+          out = bool^1
+            {
+              [0] = switch<2, 1>::out[0] (5) @[ port! port-alias ] 
+              [1] = switch<2, 1>::in[1] (4) @[ port? port! port-alias ] 
+            }
+          Created state:
+          bool instance pool: (5 ports, 0 local, 0 mapped)
+          1	switch<2, 1>::!GND @[ supply_low port-alias ]	
+          2	switch<2, 1>::!Vdd @[ supply_high port-alias ]	
+          3	switch<2, 1>::in[0] @[ port? port-alias ]	
+          4	switch<2, 1>::in[1] @[ port? port! port-alias ]	
+          5	switch<2, 1>::out[0] @[ port! port-alias ]	
+          bool port aliases:
+          4: switch<2, 1>::in[1] = switch<2, 1>::out[1] @[ port? port! port-alias ]
+        }
+      }
+      }
+
+  Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
+    x = switch<2> x
+    y = switch<2> y
+}
+
+footprint: {
+  !GND = bool^0 = !GND (1) @[ supply_low ] 
+  !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
+  x = process switch<2>^0<0> = x (1) (
+    !GND = bool^0 = !GND (1) @[ supply_low ] 
+    !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
+    in = bool^1
+      {
+        [0] = x.in[0] (3) 
+        [1] = x.in[1] (4) 
+      }
+    out = bool^1
+      {
+        [0] = x.in[0] (3) 
+        [1] = x.out[1] (5) 
+      }
+  )
+  y = process switch<2>^0<1> = y (2) (
+    !GND = bool^0 = !GND (1) @[ supply_low ] 
+    !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
+    in = bool^1
+      {
+        [0] = x.in[0] (3) 
+        [1] = x.out[1] (5) 
+      }
+    out = bool^1
+      {
+        [0] = y.out[0] (6) 
+        [1] = x.out[1] (5) 
+      }
+  )
+  Created state:
+  process instance pool: (0 ports, 2 local, 0 mapped)
+  1	x<0>	switch<2, 0>
+    bool: 1,2,3,4,5
+  2	y<1>	switch<2, 1>
+    bool: 1,2,3,5,6
+  bool instance pool: (0 ports, 6 local, 0 mapped)
+  1	!GND @[ supply_low ]	
+  2	!Vdd @[ supply_high ]	
+  3	x.in[0]	
+  4	x.in[1]	
+  5	x.out[1]	
+  6	y.out[0]	
+}

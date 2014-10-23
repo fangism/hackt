@@ -1,0 +1,12 @@
+globID	super		localID	canonical	footprint-frame
+[global process entries]
+1	(top)	-	1	x	switch<><true>
+	bool: 1,2,3
+2	(top)	-	2	y	switch<><false>
+	bool: 1,2,3,4
+[global bool entries]
+1	(top)	-	1	!GND	 @[ supply_low ]
+2	(top)	-	2	!Vdd	 @[ supply_high ]
+3	(top)	-	3	a	
+4	(top)	-	4	c	
+

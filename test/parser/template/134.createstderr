@@ -1,0 +1,196 @@
+Warning: output port node switch<false>::out has no PRS fanin.
+Warnings found (1) while creating complete type switch<false>.
+---- END CREATE WARNINGS ---
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	20
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	8	##ADDR##	procdefn	0	#HEAD#	#TAIL#	155
+	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	10	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	11	##ADDR##	pboolplh	0	#HEAD#	#TAIL#	29
+	12	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
+	13	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
+	14	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	27
+	15	##ADDR##	portscop	0	#HEAD#	#TAIL#	28
+	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
+	18	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	19	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
+	22	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
+	24	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	25	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	28	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	29	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	32	##ADDR##	condscop	0	#HEAD#	#TAIL#	28
+	33	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	footprnt	0	#HEAD#	#TAIL#	343
+	38	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	39	##ADDR##	footprnt	0	#HEAD#	#TAIL#	343
+	40	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	41	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	42	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	43	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	44	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
+	45	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	46	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	47	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	48	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	49	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	50	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	51	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	52	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	53	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	54	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	55	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
+	56	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	57	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	58	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	59	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	60	##ADDR##	proctpcp	0	#HEAD#	#TAIL#	16
+	61	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	62	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	63	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	32
+	64	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	65	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	66	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	67	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	68	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	69	##ADDR##	proctpcp	0	#HEAD#	#TAIL#	16
+	70	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	71	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	72	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	32
+	73	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	74	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	75	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	76	##ADDR##	footprnt	0	#HEAD#	#TAIL#	654
+	77	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	78	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	79	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	80	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  7 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    switch = process-definition (defined) switch<>
+<
+      pbool<> C
+      >(
+        bool<> !GND
+        bool<> !Vdd
+        bool<>? in
+        bool<>! out
+      )
+      In definition "switch", we have: {
+      Parameters:
+        C = pbool<> switch::C
+      Instances:
+        !GND = bool<> switch::!GND
+        !Vdd = bool<> switch::!Vdd
+        in = bool<>? switch::in
+        out = bool<>! switch::out
+      unroll sequence: 
+        ports: (
+          bool<> !GND
+          bool<> !Vdd
+          bool<>? in
+          bool<>! out
+        )
+        !GND@[supply=0]
+        !Vdd@[supply=1]
+        [ C ->
+          in = out;
+        ]
+      footprint collection: {
+        <false> {
+          !GND = bool^0 = switch<false>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = switch<false>::!Vdd (2) @[ supply_high port-alias ] 
+          C = pbool^0 value: 0
+          in = bool^0 = switch<false>::in (3) @[ port? port-alias ] 
+          out = bool^0 = switch<false>::out (4) @[ port! port-alias ] 
+          Created state:
+          bool instance pool: (4 ports, 0 local, 0 mapped)
+          1	switch<false>::!GND @[ supply_low port-alias ]	
+          2	switch<false>::!Vdd @[ supply_high port-alias ]	
+          3	switch<false>::in @[ port? port-alias ]	
+          4	switch<false>::out @[ port! port-alias ]	
+        }
+        <true> {
+          !GND = bool^0 = switch<true>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = switch<true>::!Vdd (2) @[ supply_high port-alias ] 
+          C = pbool^0 value: 1
+          in = bool^0 = switch<true>::in (3) @[ port? port! port-alias ] 
+          out = bool^0 = switch<true>::in (3) @[ port? port! port-alias ] 
+          Created state:
+          bool instance pool: (3 ports, 0 local, 0 mapped)
+          1	switch<true>::!GND @[ supply_low port-alias ]	
+          2	switch<true>::!Vdd @[ supply_high port-alias ]	
+          3	switch<true>::in @[ port? port! port-alias ]	
+          bool port aliases:
+          3: switch<true>::in = switch<true>::out @[ port? port! port-alias ]
+        }
+      }
+      }
+
+  Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
+    a = bool<> a
+    b = bool<> b
+    c = bool<> c
+    x = switch<> x
+    y = switch<> y
+}
+
+footprint: {
+  !GND = bool^0 = !GND (1) @[ supply_low ] 
+  !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
+  a = bool^0 = a (3) 
+  b = bool^0 = a (3) 
+  c = bool^0 = c (4) 
+  x = process switch<>^0<true> = x (1) (
+    !GND = bool^0 = !GND (1) @[ supply_low ] 
+    !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
+    in = bool^0 = a (3) 
+    out = bool^0 = a (3) 
+  )
+  y = process switch<>^0<false> = y (2) (
+    !GND = bool^0 = !GND (1) @[ supply_low ] 
+    !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
+    in = bool^0 = a (3) 
+    out = bool^0 = c (4) 
+  )
+  Created state:
+  process instance pool: (0 ports, 2 local, 0 mapped)
+  1	x<true>	switch<true>
+    bool: 1,2,3
+  2	y<false>	switch<false>
+    bool: 1,2,3,4
+  bool instance pool: (0 ports, 4 local, 0 mapped)
+  1	!GND @[ supply_low ]	
+  2	!Vdd @[ supply_high ]	
+  3	a	
+  4	c	
+}
