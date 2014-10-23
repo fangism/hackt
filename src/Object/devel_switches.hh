@@ -367,7 +367,7 @@
 	Goal: 1
 	Priority: high
 	Rationale: many back-end tools need this.
-	Status: works stably for a while
+	Status: works stably for a while, perm'd
 #define	BOOL_CONNECTIVITY_CHECKING		1
  */
 
@@ -379,8 +379,9 @@
 	Priority: high
 	Rationale: many back-end tools need this.
 	Status: done, test cases added for user-defined channels/datatypes
- */
+		perm'd
 #define	PROCESS_CONNECTIVITY_CHECKING		1
+ */
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

@@ -3,8 +3,8 @@
 	$Id: canonical_generic_chan_type.hh,v 1.14 2011/03/23 00:36:17 fang Exp $
  */
 
-#ifndef	__HAC_OBJECT_TYPE_CANONICAL_GENERIC_CHAN_TYPE_H__
-#define	__HAC_OBJECT_TYPE_CANONICAL_GENERIC_CHAN_TYPE_H__
+#ifndef	__HAC_OBJECT_TYPE_CANONICAL_GENERIC_CHAN_TYPE_HH__
+#define	__HAC_OBJECT_TYPE_CANONICAL_GENERIC_CHAN_TYPE_HH__
 
 #include "Object/type/canonical_type_fwd.hh"
 #include <vector>
@@ -64,10 +64,6 @@ private:
 		are mutually exclusive.  
 	 */
 	datatype_list_type			datatype_list;
-#if !PROCESS_CONNECTIVITY_CHECKING
-	/// the channel direction
-	direction_type				direction;
-#endif
 public:
 	/// only called to signal an error
 	canonical_type();
@@ -107,15 +103,6 @@ public:
 
 	ostream&
 	dump(ostream&) const;
-
-#if !PROCESS_CONNECTIVITY_CHECKING
-	/// \param d is '!' or '?' or other
-	void
-	set_direction(const direction_type d) { direction = d; }
-
-	direction_type
-	get_direction(void) const { return direction; }
-#endif
 
 	count_ptr<const type_reference_type>
 	make_type_reference(void) const;
@@ -173,5 +160,5 @@ public:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __HAC_OBJECT_TYPE_CANONICAL_GENERIC_CHAN_TYPE_H__
+#endif	// __HAC_OBJECT_TYPE_CANONICAL_GENERIC_CHAN_TYPE_HH__
 

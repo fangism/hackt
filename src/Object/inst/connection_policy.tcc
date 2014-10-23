@@ -571,7 +571,6 @@ if (a.has_complete_type()) {
 	STACKTRACE_INDENT_PRINT("after inheriting alias properties: " << endl);
 	a.dump_ports(cerr, dump_flags::default_value) << endl;
 #endif
-#if PROCESS_CONNECTIVITY_CHECKING
 	// now apply declared port directions, type need not be complete!
 	const container_type& p(*a.container);
 	const bool formal = p.is_formal();
@@ -592,13 +591,11 @@ if (a.has_complete_type()) {
 	default:
 		ICE(cerr, cerr << "Invalid direction: " << d << endl;)
 	}	// end switch
-#endif	// PROCESS_CONNECTIVITY_CHECKING
 	// else type is relaxed, skip this until type is complete
 }
 }	// end process_connect_policy::initialize_direction
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PROCESS_CONNECTIVITY_CHECKING
 /**
 	Initialize flags based on attributes inherited from substructure.  
 	TODO: this fixed the wire-buf false-positive, should be applied
@@ -808,7 +805,6 @@ process_connect_policy::synchronize_flags(
 	return good_bool(good);
 }	// end process_connect_policy::synchronize_flags
 
-#endif	// PROCESS_CONNECTIVITY_CHECKING
 
 //=============================================================================
 }	// end namespace entity

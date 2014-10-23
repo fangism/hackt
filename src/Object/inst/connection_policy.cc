@@ -619,7 +619,6 @@ channel_connect_policy::read_flags(istream& i) {
 //=============================================================================
 // class process_connect_policy method definitions
 
-#if PROCESS_CONNECTIVITY_CHECKING
 const char*
 process_connect_policy::attribute_names[] = {
 	"loc!",
@@ -734,7 +733,6 @@ void
 process_connect_policy::read_flags(istream& i) {
 	read_value(i, direction_flags);
 }
-#endif	// PROCESS_CONNECTIVITY_CHECKING
 
 //=============================================================================
 }	// end namespace entity

@@ -863,9 +863,7 @@ ostream&
 channel_type_reference_base::dump_direction(ostream& o, 
 		const direction_type d) {
 switch (d) {
-#if PROCESS_CONNECTIVITY_CHECKING
 case CHANNEL_TYPE_NULL:			break;
-#endif
 case CHANNEL_TYPE_BIDIRECTIONAL:	break;
 case CHANNEL_TYPE_SEND:			return o << '!';
 case CHANNEL_TYPE_RECEIVE:		return o << '?';
@@ -1649,10 +1647,8 @@ channel_type_reference::load_object(const persistent_object_manager& m,
  */
 process_type_reference::process_type_reference() :
 		fundamental_type_reference(), 
-		base_proc_def(never_ptr<const process_definition_base>(NULL))
-#if PROCESS_CONNECTIVITY_CHECKING
-		, direction(PROCESS_DIRECTION_DEFAULT)
-#endif
+		base_proc_def(never_ptr<const process_definition_base>(NULL)),
+		direction(PROCESS_DIRECTION_DEFAULT)
 		{
 	// do not assert
 }
@@ -1661,11 +1657,8 @@ process_type_reference::process_type_reference() :
 process_type_reference::process_type_reference(
 		const never_ptr<const process_definition_base> pd) :
 		fundamental_type_reference(), 
-		base_proc_def(pd)
-#if PROCESS_CONNECTIVITY_CHECKING
-		, direction(PROCESS_DIRECTION_DEFAULT)
-#endif
-		{
+		base_proc_def(pd),
+		direction(PROCESS_DIRECTION_DEFAULT) {
 	NEVER_NULL(base_proc_def);
 }
 
@@ -1674,11 +1667,8 @@ process_type_reference::process_type_reference(
 		const never_ptr<const process_definition_base> pd, 
 		const template_actuals& pl) :
 		fundamental_type_reference(pl), 
-		base_proc_def(pd)
-#if PROCESS_CONNECTIVITY_CHECKING
-		, direction(PROCESS_DIRECTION_DEFAULT)
-#endif
-		{
+		base_proc_def(pd), 
+		direction(PROCESS_DIRECTION_DEFAULT) {
 	NEVER_NULL(base_proc_def);
 }
 
@@ -1689,11 +1679,8 @@ process_type_reference::process_type_reference(
 process_type_reference::process_type_reference(
 		const canonical_process_type& p) :
 		fundamental_type_reference(p.get_template_params()), 
-		base_proc_def(p.get_base_def())
-#if PROCESS_CONNECTIVITY_CHECKING
-		, direction(PROCESS_DIRECTION_DEFAULT)
-#endif
-		{
+		base_proc_def(p.get_base_def()),
+		direction(PROCESS_DIRECTION_DEFAULT) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1707,7 +1694,6 @@ process_type_reference::what(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PROCESS_CONNECTIVITY_CHECKING
 /**
 	Override the default by including direction.
  */
@@ -1716,7 +1702,6 @@ process_type_reference::dump(ostream& o) const {
 	return channel_type_reference_base::dump_direction(
 		parent_type::dump(o), direction);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_ptr<const definition_base>
@@ -1788,9 +1773,7 @@ process_type_reference::unroll_resolve(const unroll_context& c) const {
 			const return_type
 				ret(new this_type(base_proc_def, actuals));
 			NEVER_NULL(ret);
-#if PROCESS_CONNECTIVITY_CHECKING
 			ret->direction = direction;
-#endif
 			return (ret->must_be_valid().good ?
 				ret : return_type(NULL));
 		} else {
@@ -1801,9 +1784,7 @@ process_type_reference::unroll_resolve(const unroll_context& c) const {
 		// need to check must_be_valid?
 		const return_type ret(new this_type(base_proc_def));
 		INVARIANT(ret->must_be_valid().good);
-#if PROCESS_CONNECTIVITY_CHECKING
 		ret->direction = direction;
-#endif
 		return ret;
 	}
 }
@@ -1869,9 +1850,7 @@ process_type_reference::make_canonical_type(void) const {
 	STACKTRACE_VERBOSE;
 	canonical_process_type
 		ret(base_proc_def->make_canonical_type(template_args));
-#if PROCESS_CONNECTIVITY_CHECKING
 	ret.set_direction(direction);
-#endif
 	return ret;
 }
 
@@ -1880,9 +1859,7 @@ count_ptr<const process_type_reference>
 process_type_reference::make_canonical_process_type_reference(void) const {
 	return base_proc_def->make_canonical_fundamental_type_reference(
 		template_args);
-#if PROCESS_CONNECTIVITY_CHECKING
 //	ret.set_direction(direction);	//	???
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1971,10 +1948,8 @@ process_type_reference::write_object(const persistent_object_manager& m,
 		ostream& f) const {
 	m.write_pointer(f, base_proc_def);
 	parent_type::write_object_base(m, f);
-#if PROCESS_CONNECTIVITY_CHECKING
 	char d = direction;
 	write_value(f, d);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1983,11 +1958,9 @@ process_type_reference::load_object(const persistent_object_manager& m,
 		istream& f) {
 	m.read_pointer(f, base_proc_def);
 	parent_type::load_object_base(m, f);
-#if PROCESS_CONNECTIVITY_CHECKING
 	char d;
 	read_value(f, d);
 	direction = direction_type(d);
-#endif
 }
 
 //=============================================================================

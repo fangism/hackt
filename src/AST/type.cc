@@ -25,9 +25,7 @@
 #include "Object/type/data_type_reference.hh"
 #include "Object/type/builtin_channel_type_reference.hh"
 #include "Object/type/channel_type_reference.hh"
-#if PROCESS_CONNECTIVITY_CHECKING
 #include "Object/type/process_type_reference.hh"
-#endif
 #include "Object/expr/dynamic_param_expr_list.hh"
 
 #include "util/indent.hh"
@@ -358,10 +356,8 @@ generic_type_ref::check_type(const context& c) const {
 		STACKTRACE("have channel direction");
 		const count_ptr<channel_type_reference>
 			ctr(type_ref.is_a<channel_type_reference>());
-#if PROCESS_CONNECTIVITY_CHECKING
 		const count_ptr<process_type_reference>
 			ptr(type_ref.is_a<process_type_reference>());
-#endif
 		const count_ptr<data_type_reference>
 			dtr(type_ref.is_a<data_type_reference>());
 		const char dir(chan_dir->text[0]);
@@ -370,11 +366,9 @@ generic_type_ref::check_type(const context& c) const {
 	if (ctr) {
 		ctr->set_direction(
 			token_to_direction_type(dir, chan_dir->text[1]));
-#if PROCESS_CONNECTIVITY_CHECKING
 	} else if (ptr) {
 		ptr->set_direction(
 			token_to_direction_type(dir, chan_dir->text[1]));
-#endif
 	} else if (dtr) {
 		dtr->set_direction(
 			token_to_direction_type(dir, chan_dir->text[1]));

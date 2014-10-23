@@ -21,18 +21,14 @@ using std::back_inserter;
 //=============================================================================
 // class canonical_type_base method definitions
 
-canonical_type_base::canonical_type_base() : param_list_ptr(NULL)
-#if PROCESS_CONNECTIVITY_CHECKING
-		, direction(CHANNEL_DIRECTION_DEFAULT)	// not NULL
-#endif
+canonical_type_base::canonical_type_base() : param_list_ptr(NULL),
+		direction(CHANNEL_DIRECTION_DEFAULT)	// not NULL
 	{ }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - _
 canonical_type_base::canonical_type_base(const const_param_list_ptr_type& p) :
-		param_list_ptr(p)
-#if PROCESS_CONNECTIVITY_CHECKING
-		, direction(CHANNEL_DIRECTION_DEFAULT)	// not NULL
-#endif
+		param_list_ptr(p),
+		direction(CHANNEL_DIRECTION_DEFAULT)	// not NULL
 	{ }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - _
@@ -41,10 +37,8 @@ canonical_type_base::canonical_type_base(const const_param_list_ptr_type& p) :
  */
 canonical_type_base::canonical_type_base(const const_param_list_ptr_type& p, 
 		const const_param_list_ptr_type& r) :
-		param_list_ptr(p)
-#if PROCESS_CONNECTIVITY_CHECKING
-		, direction(CHANNEL_DIRECTION_DEFAULT)	// not NULL
-#endif
+		param_list_ptr(p),
+		direction(CHANNEL_DIRECTION_DEFAULT)	// not NULL
 		{
 	if (p && r) {
 		const param_list_ptr_type

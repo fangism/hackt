@@ -37,11 +37,7 @@ using util::read_value;
 
 canonical_generic_chan_type::canonical_type() :
 		base_type(), canonical_definition_ptr(NULL), 
-		datatype_list()
-#if !PROCESS_CONNECTIVITY_CHECKING
-		, direction()
-#endif
-		{
+		datatype_list() {
 	// what is direction? don't care
 }
 
@@ -49,16 +45,10 @@ canonical_generic_chan_type::canonical_type() :
 canonical_generic_chan_type::canonical_type(
 		const canonical_definition_ptr_type d, 
 		const direction_type dir) :
-		base_type(), canonical_definition_ptr(d), datatype_list()
-#if !PROCESS_CONNECTIVITY_CHECKING
-		, direction(dir)
-#endif
-		{
+		base_type(), canonical_definition_ptr(d), datatype_list() {
 	NEVER_NULL(canonical_definition_ptr);
 	INVARIANT(!canonical_definition_ptr.is_a<const typedef_base>());
-#if PROCESS_CONNECTIVITY_CHECKING
 	set_direction(dir);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -66,27 +56,17 @@ canonical_generic_chan_type::canonical_type(
 		const canonical_definition_ptr_type d,
 		const param_list_ptr_type& p, 
 		const direction_type dir) :
-		base_type(p), canonical_definition_ptr(d), datatype_list()
-#if !PROCESS_CONNECTIVITY_CHECKING
-		, direction(dir)
-#endif
-		{
+		base_type(p), canonical_definition_ptr(d), datatype_list() {
 	NEVER_NULL(canonical_definition_ptr);
 	INVARIANT(!canonical_definition_ptr.is_a<const typedef_base>());
-#if PROCESS_CONNECTIVITY_CHECKING
 	set_direction(dir);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 canonical_generic_chan_type::canonical_type(
 		const this_type& d,
 		const const_param_list_ptr_type& p) :
-		base_type(), canonical_definition_ptr(), datatype_list()
-#if !PROCESS_CONNECTIVITY_CHECKING
-		, direction()
-#endif
-		{
+		base_type(), canonical_definition_ptr(), datatype_list() {
 	ICE_NEVER_CALL(cerr);
 }
 
@@ -97,16 +77,10 @@ canonical_generic_chan_type::canonical_type(
 		const direction_type dir) :
 		base_type(p.make_const_param_list()),
 		canonical_definition_ptr(d),
-		datatype_list()
-#if !PROCESS_CONNECTIVITY_CHECKING
-		, direction(dir)
-#endif
-		{
+		datatype_list() {
 	NEVER_NULL(canonical_definition_ptr);
 	INVARIANT(!canonical_definition_ptr.is_a<const typedef_base>());
-#if PROCESS_CONNECTIVITY_CHECKING
 	set_direction(dir);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

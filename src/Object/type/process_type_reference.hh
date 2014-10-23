@@ -12,10 +12,7 @@
 
 #include "Object/type/fundamental_type_reference.hh"
 #include "Object/type/canonical_type_fwd.hh"
-#include "Object/devel_switches.hh"
-#if PROCESS_CONNECTIVITY_CHECKING
 #include "Object/type/channel_direction_enum.hh"
-#endif
 
 namespace HAC {
 namespace entity {
@@ -38,12 +35,10 @@ protected:
 // should be const?  reference to base definition shouldn't change...
 	typedef	never_ptr<const definition_type>	base_definition_ptr_type;
 	never_ptr<const process_definition_base>	base_proc_def;
-#if PROCESS_CONNECTIVITY_CHECKING
 	/**
 		Meaning is defined by the direction_type enumeration.  
 	 */
 	direction_type					direction;
-#endif
 private:
 	process_type_reference();
 public:
@@ -62,7 +57,6 @@ public:
 	ostream&
 	what(ostream& o) const;
 
-#if PROCESS_CONNECTIVITY_CHECKING
 	ostream&
 	dump(ostream&) const;
 
@@ -71,13 +65,6 @@ public:
 
 	direction_type
 	get_direction(void) const { return direction; }
-
-#if 0
-	static
-	ostream&
-	dump_direction(ostream&, const direction_type);
-#endif
-#endif
 
 	never_ptr<const definition_base>
 	get_base_def(void) const;

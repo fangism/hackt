@@ -335,10 +335,8 @@ CANONICAL_TYPE_CLASS::write_object_base(const persistent_object_manager& m,
 	STACKTRACE_PERSISTENT_VERBOSE;
 	m.write_pointer(o, canonical_definition_ptr);
 	m.write_pointer(o, param_list_ptr);
-#if PROCESS_CONNECTIVITY_CHECKING
 	const char d = direction;
 	util::write_value(o, d);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -354,11 +352,9 @@ CANONICAL_TYPE_CLASS::load_object_base(const persistent_object_manager& m,
 	STACKTRACE_PERSISTENT_VERBOSE;
 	m.read_pointer(i, canonical_definition_ptr);
 	m.read_pointer(i, param_list_ptr);
-#if PROCESS_CONNECTIVITY_CHECKING
 	char d;
 	util::read_value(i, d);
 	direction = direction_type(d);
-#endif
 	canonical_definition_load_policy<DefType>()
 		(m, canonical_definition_ptr);
 {

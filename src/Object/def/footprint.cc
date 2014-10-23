@@ -1721,9 +1721,7 @@ footprint::connection_diagnostics(const bool top) const {
 #if BOOL_PRS_CONNECTIVITY_CHECKING
 		ret += scope_aliases.check_bool_connections();
 #endif
-#if PROCESS_CONNECTIVITY_CHECKING
 		ret += scope_aliases.check_process_connections();
-#endif
 	}
 #if DETECT_ATOMIC_UPDATE_CYCLES
 	ret.errors += check_atomic_update_cycles();

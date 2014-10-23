@@ -3,8 +3,8 @@
  	$Id: channel_direction_enum.hh,v 1.3 2011/03/23 00:36:19 fang Exp $
  */
 
-#ifndef	__HAC_OBJECT_TYPE_CHANNEL_DIRECTION_ENUM_H__
-#define	__HAC_OBJECT_TYPE_CHANNEL_DIRECTION_ENUM_H__
+#ifndef	__HAC_OBJECT_TYPE_CHANNEL_DIRECTION_ENUM_HH__
+#define	__HAC_OBJECT_TYPE_CHANNEL_DIRECTION_ENUM_HH__
 
 #include "Object/devel_switches.hh"	// for ENABLE_SHARED_CHANNELS
 
@@ -34,14 +34,12 @@ enum direction_type {
 //	CHANNEL_TYPE_BIDIRECTIONAL_SHARED,
 #endif
 	CHANNEL_DIRECTION_DEFAULT = CHANNEL_TYPE_BIDIRECTIONAL,
-#if PROCESS_CONNECTIVITY_CHECKING
 	PROCESS_DIRECTION_DEFAULT = CHANNEL_TYPE_NULL
-#endif
 };
 
 //=============================================================================
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __HAC_OBJECT_TYPE_CHANNEL_DIRECTION_ENUM_H__
+#endif	// __HAC_OBJECT_TYPE_CHANNEL_DIRECTION_ENUM_HH__
 

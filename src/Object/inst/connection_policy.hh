@@ -769,16 +769,11 @@ public:
 /**
 	Mostly just redirects many calls to substructure, for recursion.
  */
-class process_connect_policy
-#if !PROCESS_CONNECTIVITY_CHECKING
-	: public null_connect_policy
-#endif
-{
+class process_connect_policy {
 // parent type is temporary as we gradually implement this...
 private:
 	typedef	process_connect_policy		this_type;
 public:
-#if PROCESS_CONNECTIVITY_CHECKING
 	enum direction_flags {
 		/**
 			Set if connected to a local port producer.  
@@ -876,18 +871,12 @@ protected:
 	connection_flags_type		direction_flags;
 public:
 	process_connect_policy() : direction_flags(DEFAULT_CONNECT_FLAGS) { }
-#endif	// PROCESS_CONNECTIVITY_CHECKING
-private:
-#if !PROCESS_CONNECTIVITY_CHECKING
-	using null_connect_policy::initialize_direction;
-#endif
 protected:
 
 	template <class AliasType>
 	void
 	initialize_direction(AliasType&);
 
-#if PROCESS_CONNECTIVITY_CHECKING
 protected:
 	template <class AliasType>
 	static
@@ -987,8 +976,6 @@ protected:
 
 	void
 	read_flags(istream&);
-
-#endif	// PROCESS_CONNECTIVITY_CHECKING
 
 };	// end struct process_connect_policy
 

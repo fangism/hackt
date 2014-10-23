@@ -3,17 +3,13 @@
 	$Id: canonical_type_base.hh,v 1.6 2011/03/23 00:36:18 fang Exp $
  */
 
-#ifndef	__HAC_OBJECT_TYPE_CANONICAL_TYPE_BASE_H__
-#define	__HAC_OBJECT_TYPE_CANONICAL_TYPE_BASE_H__
+#ifndef	__HAC_OBJECT_TYPE_CANONICAL_TYPE_BASE_HH__
+#define	__HAC_OBJECT_TYPE_CANONICAL_TYPE_BASE_HH__
 
 #include <iosfwd>
 #include "util/persistent_fwd.hh"
 #include "util/memory/count_ptr.hh"
-#include "Object/devel_switches.hh"	// for PROCESS_CONNECTIVITY_CHECKING
-
-#if PROCESS_CONNECTIVITY_CHECKING
 #include "Object/type/channel_direction_enum.hh"
-#endif
 
 namespace HAC {
 namespace entity {
@@ -50,9 +46,7 @@ public:
 						param_list_ptr_type;
 protected:
 	const_param_list_ptr_type			param_list_ptr;
-#if PROCESS_CONNECTIVITY_CHECKING
 	direction_type			direction;
-#endif
 public:
 	canonical_type_base();
 
@@ -66,14 +60,12 @@ public:
 
 	~canonical_type_base();
 
-#if PROCESS_CONNECTIVITY_CHECKING
 	/// \param d is '!' or '?' or other
 	void
 	set_direction(const direction_type d) { direction = d; }
 
 	direction_type
 	get_direction(void) const { return direction; }
-#endif
 
 	const const_param_list_ptr_type&
 	get_raw_template_params(void) const { return param_list_ptr; }
@@ -118,5 +110,5 @@ protected:
 }	// end namespace HAC
 
 
-#endif	// __HAC_OBJECT_TYPE_CANONICAL_TYPE_BASE_H__
+#endif	// __HAC_OBJECT_TYPE_CANONICAL_TYPE_BASE_HH__
 
