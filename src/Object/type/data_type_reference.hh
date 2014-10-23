@@ -14,10 +14,7 @@
 #include "Object/type/canonical_type_fwd.hh"
 #include "Object/expr/types.hh"
 #include "Object/unroll/target_context.hh"
-#include "Object/devel_switches.hh"
-#if BOOL_CONNECTIVITY_CHECKING
 #include "Object/type/channel_direction_enum.hh"
-#endif
 
 namespace HAC {
 namespace entity {
@@ -48,12 +45,10 @@ protected:
 		built-in type, enumeration, struct, or another typedef.  
 	 */
 	definition_ptr_type				base_type_def;
-#if BOOL_CONNECTIVITY_CHECKING
 	/**
 		Meaning is defined by the direction_type enumeration.  
 	 */
 	direction_type					direction;
-#endif
 private:
 	data_type_reference();
 public:
@@ -89,7 +84,6 @@ public:
 	bool
 	is_canonical(void) const;
 
-#if BOOL_CONNECTIVITY_CHECKING
 	ostream&
 	dump(ostream&) const;		// override base class
 
@@ -98,7 +92,6 @@ public:
 
 	direction_type
 	get_direction(void) const { return direction; }
-#endif
 
 	/// unroll-time type-resolution... arguments? return? context?
 	// need to be able to lookup parameters... update later...

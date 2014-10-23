@@ -179,13 +179,11 @@ protected:
 		BOOL_EXPLICIT_ATTRIBUTES_MASK =
 			BOOL_EXPLICIT_NONATOMIC_ATTRIBUTES_MASK | BOOL_ATOMIC,
 
-#if BOOL_CONNECTIVITY_CHECKING
 		// these keep their meaning as atomic ebools
 		// port is marked with '?'
 		BOOL_PORT_FORMAL_INPUT = 0x00100000,
 		// port is marked with '!'
 		BOOL_PORT_FORMAL_OUTPUT = 0x00200000,
-#endif
 #if BOOL_PRS_CONNECTIVITY_CHECKING
 	/**
 		atomic run-time expression def/use attributes (implicit)
@@ -468,18 +466,8 @@ public:
 			BOOL_LOCAL_PRS_FANOUT_PULL_DN;
 	}
 
-#if BOOL_CONNECTIVITY_CHECKING
 	good_bool
 	prs_fanin(const bool dir);
-#else
-	void
-	prs_fanin(const bool dir) {
-		nonatomic_only_prs_literal();
-		attributes |= dir ?
-			BOOL_LOCAL_PRS_FANIN_PULL_UP :
-			BOOL_LOCAL_PRS_FANIN_PULL_DN;
-	}
-#endif
 
 	void
 	rte_fanout(void) {
@@ -492,7 +480,6 @@ public:
 	rte_fanin(void);
 #endif
 
-#if BOOL_CONNECTIVITY_CHECKING
 	bool
 	is_input_port(void) const {
 		return attributes & BOOL_PORT_FORMAL_INPUT;
@@ -502,7 +489,6 @@ public:
 	is_output_port(void) const {
 		return attributes & BOOL_PORT_FORMAL_OUTPUT;
 	}
-#endif
 
 protected:
 	template <class AliasType>

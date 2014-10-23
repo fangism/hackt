@@ -766,14 +766,9 @@ if (output.is_internal()) {
 		// if repeated, last one should take effect
 	}
 }
-#if BOOL_CONNECTIVITY_CHECKING
 	good_bool fig(true);
-#endif
 if (!is_diode) {
-#if BOOL_CONNECTIVITY_CHECKING
-	fig =
-#endif
-	const_cast<instance_alias_info<bool_tag>&>(
+	fig = const_cast<instance_alias_info<bool_tag>&>(
 		*bp[output_node_index -1].get_back_ref())
 			.find()->prs_fanin(dir);
 		// pool is 0-indexed
@@ -787,14 +782,12 @@ if (!is_diode) {
 			*bp[*i -1].get_back_ref()).find()->prs_fanout(dir);
 		// pool is 0-indexed
 	}
-#if BOOL_CONNECTIVITY_CHECKING
 	if (!fig.good) {
 		cerr << "Attempting to drive: ";
 		output.dump(cerr, rule_dump_context())
 			<< (dir ? '+' : '-') << endl;
 		return good_bool(false);
 	}
-#endif
 }
 #endif
 	footprint_rule&

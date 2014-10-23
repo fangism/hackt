@@ -428,7 +428,6 @@ assignment::unroll(const unroll_context& c) const {
 	state_instance<bool_tag>::pool_type&
 		bp(tfp.get_instance_pool<bool_tag>());
 	// kludge: get_back_ref only returns const ptr ...
-#if BOOL_CONNECTIVITY_CHECKING
 	const good_bool fig(const_cast<instance_alias_info<bool_tag>&>(
 		*bp[output_node_index -1].get_back_ref()).find()->rte_fanin());
 	if (!fig.good) {
@@ -436,7 +435,6 @@ assignment::unroll(const unroll_context& c) const {
 		output.dump(cerr, assignment_dump_context()) << endl;
 		return good_bool(false);
 	}
-#endif
 	std::set<size_t> f;	// node_index_type
 	pfp.collect_literal_indices(f, guard_expr_index);
 	std::set<size_t>::const_iterator

@@ -481,49 +481,6 @@ alias_reference_set<Tag>::__import_port_aliases(const this_type& s) {
 }
 
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !AUTO_CACHE_FOOTPRINT_SCOPE_ALIASES
-#if 0
-template <class Tag>
-void
-alias_reference_set<Tag>::collect_transient_info_base(
-		persistent_object_manager& m) const {
-	// shouldn't have to do anything
-	// containers of aliases already belong to definition scopes
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-template <class Tag>
-void
-alias_reference_set<Tag>::write_object_base(
-		const collection_pool_bundle_type& m, 
-		ostream& o) const {
-	const size_t s = alias_array.size();
-	write_value(o, s);
-	size_t i = 0;
-	for ( ; i<s; i++) {
-		alias_array[i]->write_next_connection(m, o);
-	}
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-template <class Tag>
-void
-alias_reference_set<Tag>::load_object_base(
-		const collection_pool_bundle_type& m, 
-		istream& i) {
-	size_t s;
-	read_value(i, s);
-	size_t j = 0;
-	alias_array.reserve(s);
-	for ( ; j<s; j++) {
-		alias_array.push_back(alias_ptr_type(
-			&alias_type::load_alias_reference(m, i)));
-	}
-}
-#endif	// AUTO_CACHE_FOOTPRPINT_SCOPE_ALIASES
-
 //=============================================================================
 // class port_alias_tracker_base method definitions
 
@@ -837,54 +794,6 @@ port_alias_tracker_base<Tag>::__import_port_aliases(const this_type& t) {
 	for_each(i, e, port_alias_importer(*this));
 }
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !AUTO_CACHE_FOOTPRINT_SCOPE_ALIASES
-#if 0
-template <class Tag>
-void
-port_alias_tracker_base<Tag>::collect_map(persistent_object_manager& m) const {
-	const_iterator i(_ids.begin());
-	const const_iterator e(_ids.end());
-	for ( ; i!=e; i++) {
-		i->second.collect_transient_info_base(m);
-	}
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-template <class Tag>
-void
-port_alias_tracker_base<Tag>::write_map(const footprint& f, 
-		ostream& o) const {
-	const collection_pool_bundle_type&
-		m(f.template get_instance_collection_pool_bundle<Tag>());
-	write_value(o, _ids.size());
-	const_iterator i(_ids.begin());
-	const const_iterator e(_ids.end());
-	for ( ; i!=e; i++) {
-		write_value(o, i->first);
-		i->second.write_object_base(m, o);
-	}
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-template <class Tag>
-void
-port_alias_tracker_base<Tag>::load_map(const footprint& f, istream& i) {
-	const collection_pool_bundle_type&
-		m(f.template get_instance_collection_pool_bundle<Tag>());
-	size_t s;
-	read_value(i, s);
-	size_t j = 0;
-	for ( ; j<s; j++) {
-		typename map_type::key_type k;
-		read_value(i, k);
-		_ids[k].load_object_base(m, i);
-	}
-	INVARIANT(_ids.size() == s);
-}
-#endif	// AUTO_CACHE_FOOTPRINT_SCOPE_ALIASES
-
 //=============================================================================
 // class port_alias_tracker method definitions
 
@@ -1083,59 +992,6 @@ port_alias_tracker::assign_alias_frame(const substructure_alias& a,
 	port_alias_tracker_base<int_tag>::__assign_frame(a, ff);
 	port_alias_tracker_base<bool_tag>::__assign_frame(a, ff);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !AUTO_CACHE_FOOTPRINT_SCOPE_ALIASES
-#if 0
-void
-port_alias_tracker::collect_transient_info_base(
-		persistent_object_manager& m) const {
-	// these are all no-ops
-if (has_internal_aliases) {
-#if 0
-	port_alias_tracker_base<process_tag>::collect_map(m);
-	port_alias_tracker_base<channel_tag>::collect_map(m);
-	port_alias_tracker_base<datastruct_tag>::collect_map(m);
-	port_alias_tracker_base<enum_tag>::collect_map(m);
-	port_alias_tracker_base<int_tag>::collect_map(m);
-	port_alias_tracker_base<bool_tag>::collect_map(m);
-#endif
-}
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-port_alias_tracker::write_object_base(const footprint& m, ostream& o) const {
-	write_value(o, has_internal_aliases);
-if (has_internal_aliases) {
-	port_alias_tracker_base<process_tag>::write_map(m, o);
-	port_alias_tracker_base<channel_tag>::write_map(m, o);
-#if ENABLE_DATASTRUCTS
-	port_alias_tracker_base<datastruct_tag>::write_map(m, o);
-#endif
-	port_alias_tracker_base<enum_tag>::write_map(m, o);
-	port_alias_tracker_base<int_tag>::write_map(m, o);
-	port_alias_tracker_base<bool_tag>::write_map(m, o);
-}
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-port_alias_tracker::load_object_base(const footprint& m, istream& i) {
-	read_value(i, has_internal_aliases);
-if (has_internal_aliases) {
-	port_alias_tracker_base<process_tag>::load_map(m, i);
-	port_alias_tracker_base<channel_tag>::load_map(m, i);
-#if ENABLE_DATASTRUCTS
-	port_alias_tracker_base<datastruct_tag>::load_map(m, i);
-#endif
-	port_alias_tracker_base<enum_tag>::load_map(m, i);
-	port_alias_tracker_base<int_tag>::load_map(m, i);
-	port_alias_tracker_base<bool_tag>::load_map(m, i);
-}
-}
-#endif	// AUTO_CACHE_FOOTPRINT_SCOPE_ALIASES
 
 //=============================================================================
 // explicit template instantiations

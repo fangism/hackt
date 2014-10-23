@@ -5,8 +5,8 @@
 	$Id: port_alias_tracker.hh,v 1.27 2011/03/23 00:36:12 fang Exp $
  */
 
-#ifndef	__HAC_OBJECT_INST_PORT_ALIAS_TRACKER_H__
-#define	__HAC_OBJECT_INST_PORT_ALIAS_TRACKER_H__
+#ifndef	__HAC_OBJECT_INST_PORT_ALIAS_TRACKER_HH__
+#define	__HAC_OBJECT_INST_PORT_ALIAS_TRACKER_HH__
 
 #include <iosfwd>
 #include <map>
@@ -38,17 +38,11 @@ namespace entity {
 struct dump_flags;
 class footprint;
 class footprint_frame;
-#if !AUTO_CACHE_FOOTPRINT_SCOPE_ALIASES
-using std::istream;
-#endif
 using std::ostream;
 using std::vector;
 using std::set;
 using std::string;
 using util::good_bool;
-#if !AUTO_CACHE_FOOTPRINT_SCOPE_ALIASES
-using util::persistent_object_manager;
-#endif
 using util::memory::never_ptr;
 
 template <class>
@@ -178,18 +172,6 @@ public:
 
 	struct port_alias_predicate;
 
-#if !AUTO_CACHE_FOOTPRINT_SCOPE_ALIASES
-#if 0
-	void
-	collect_transient_info_base(persistent_object_manager&) const;
-#endif
-
-	void
-	write_object_base(const collection_pool_bundle_type&, ostream&) const;
-
-	void
-	load_object_base(const collection_pool_bundle_type&, istream&);
-#endif
 };	// end class alias_reference_set
 
 //=============================================================================
@@ -256,19 +238,6 @@ protected:
 
 	void
 	__assign_frame(const substructure_alias&, footprint_frame&) const;
-
-#if !AUTO_CACHE_FOOTPRINT_SCOPE_ALIASES
-#if 0
-	void
-	collect_map(persistent_object_manager&) const;
-#endif
-
-	void
-	write_map(const footprint&, ostream&) const;
-
-	void
-	load_map(const footprint&, istream&);
-#endif
 
 };	// end class port_alias_tracker_base
 
@@ -376,26 +345,11 @@ public:
 	void
 	import_port_aliases(const this_type&);
 
-public:
-
-#if !AUTO_CACHE_FOOTPRINT_SCOPE_ALIASES
-#if 0
-	void
-	collect_transient_info_base(persistent_object_manager&) const;
-#endif
-
-	void
-	write_object_base(const footprint&, ostream&) const;
-
-	void
-	load_object_base(const footprint&, istream&);
-#endif
-
 };	// end struct port_alias_tracker
 
 //=============================================================================
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __HAC_OBJECT_INST_PORT_ALIAS_TRACKER_H__
+#endif	// __HAC_OBJECT_INST_PORT_ALIAS_TRACKER_HH__
 

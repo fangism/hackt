@@ -342,7 +342,7 @@ bool_connect_policy::set_atomic(const bool t) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if BOOL_PRS_CONNECTIVITY_CHECKING && BOOL_CONNECTIVITY_CHECKING
+#if BOOL_PRS_CONNECTIVITY_CHECKING
 /**
 	Only allow connection to fanin if node is not marked as read-only '?'.
  */

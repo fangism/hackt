@@ -15,9 +15,7 @@
 #include "Object/type/channel_direction_enum.hh"	// for direction enum
 #include "Object/unroll/unroll_context.hh"
 #include "Object/type/canonical_type.hh"
-#if BOOL_CONNECTIVITY_CHECKING
 #include "Object/type/data_type_reference.hh"
-#endif
 #if	defined(ENABLE_STACKTRACE) && ENABLE_STACKTRACE
 #include "Object/type/channel_type_reference_base.hh"
 #endif
@@ -37,8 +35,6 @@ namespace entity {
 template <class AliasType>
 void
 bool_connect_policy::initialize_direction(const AliasType& a) {
-	// TODO: use direction annotations like channels
-#if BOOL_CONNECTIVITY_CHECKING
 	typedef	typename AliasType::container_type	container_type;
 	typedef	container_type		collection_interface_type;
 	typedef	typename collection_interface_type::traits_type
@@ -72,7 +68,6 @@ bool_connect_policy::initialize_direction(const AliasType& a) {
 		dump_flags::default_value) << endl;
 	STACKTRACE_INDENT_PRINT("attributes = 0x" <<
 		std::hex << size_t(attributes) << endl);
-#endif
 #endif
 }
 
@@ -108,7 +103,6 @@ bool_connect_policy::__check_connection(const AliasType& a) {
 	std::ostringstream oss;
 // (!a.is_port_alias())	// wrong: misses aliases to direct ports
 if (a.is_aliased_to_port()) {
-#if BOOL_CONNECTIVITY_CHECKING
 #if 0
 	// TODO: configurable warnings
 	if (a.is_input_port()) {
@@ -141,7 +135,6 @@ if (a.is_aliased_to_port()) {
 		}
 	}
 	}
-#endif
 } else {
 	// node is local-only
 	// only check local non-port aliases

@@ -368,8 +368,8 @@
 	Priority: high
 	Rationale: many back-end tools need this.
 	Status: works stably for a while
- */
 #define	BOOL_CONNECTIVITY_CHECKING		1
+ */
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -437,8 +437,8 @@
 	Status: done, tested, but not perm'd yet.  
 		Results in massive (factor of 2) savings on 
 		large objects, especially top-level hierarchy.
- */
 #define	AUTO_CACHE_FOOTPRINT_SCOPE_ALIASES		1
+ */
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

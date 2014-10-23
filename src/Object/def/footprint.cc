@@ -2110,10 +2110,8 @@ footprint::write_object_base(const persistent_object_manager& m,
 	value_footprint_base<preal_tag>::write_object_base(m, o);
 	value_footprint_base<pstring_tag>::write_object_base(m, o);
 
-#if !AUTO_CACHE_FOOTPRINT_SCOPE_ALIASES
-	port_aliases.write_object_base(*this, o);
-	scope_aliases.write_object_base(*this, o);
-#endif
+	// don't write port_aliases/scope_aliases, reconstruct them
+
 	// TODO: compact or generalize this into a single bitfield
 	write_value<bool>(o, rte_footprint);
 	write_value<bool>(o, prs_footprint);
@@ -2207,7 +2205,6 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 	value_footprint_base<pstring_tag>::load_object_base(m, i);
 	// \pre placeholders have aleady been loaded
 
-#if AUTO_CACHE_FOOTPRINT_SCOPE_ALIASES
 	// instead of writing redundant information, reconstruct it!
 	if (created) {
 		evaluate_scope_aliases(false);
@@ -2217,10 +2214,7 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 		expand_unique_subinstances();
 		construct_private_entry_map();
 	}
-#else
-	port_aliases.load_object_base(*this, i);
-	scope_aliases.load_object_base(*this, i);
-#endif
+
 	// TODO: compact this into bitfield
 	bool have_rte, have_prs, have_chp, have_spec;
 	read_value<bool>(i, have_rte);
