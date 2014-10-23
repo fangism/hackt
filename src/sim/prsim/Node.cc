@@ -18,7 +18,6 @@
 #include "util/STL/valarray_iterator.hh"
 #include "sim/prsim/process_graph.hh"	// for faninout_struct_type
 #include "Object/inst/connection_policy.hh"	// for bool_connect_policy
-#include "Object/devel_switches.hh"	// for IMPLICIT_SUPPLY_PORTS
 
 namespace HAC {
 namespace SIM {
@@ -419,11 +418,8 @@ NodeState::save_state(ostream& o) const {
  */
 void
 NodeState::load_state(istream& i) {
-#if IMPLICIT_SUPPLY_PORTS
 	// no longer true with global !GND and !Vdd
-#else
-	INVARIANT(value == LOGIC_OTHER);
-#endif
+	// INVARIANT(value == LOGIC_OTHER);
 #if NODE_ALIGN_MARKERS
 	char dd;
 	read_value(i, dd);

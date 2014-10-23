@@ -49,10 +49,8 @@
 #include "Object/expr/pstring_const.hh"
 #include "Object/def/user_def_datatype.hh"
 #include "Object/def/process_definition.hh"
-#if IMPLICIT_SUPPLY_PORTS
 #include "Object/inst/bool_instance_collection.hh"	// for bool_scalar
 #include "Object/type/process_type_reference.hh"
-#endif
 #include "Object/inst/general_collection_type_manager.hh"
 #include "Object/inst/parameterless_collection_type_manager.hh"
 #include "Object/inst/int_collection_type_manager.hh"
@@ -1166,7 +1164,6 @@ for ( ; i!=e; ++i) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if IMPLICIT_SUPPLY_PORTS
 /**
 	Define to 1 to check for unique canonical visits to 
 	process port aliases. 
@@ -1429,7 +1426,6 @@ if (p) {
 	return good_bool(true);
 }
 #undef	VISIT_UNIQUE_PROCESS_ALIAS
-#endif	// IMPLICIT_SUPPLY_PORTS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

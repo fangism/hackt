@@ -57,10 +57,8 @@ using std::distance;
 	Private empty constructor.
  */
 port_formals_manager::port_formals_manager() :
-		port_formals_list(), port_formals_map()
-#if IMPLICIT_SUPPLY_PORTS
-		, __implicit_ports(0), __explicit_ports(0)
-#endif
+		port_formals_list(), port_formals_map(),
+		__implicit_ports(0), __explicit_ports(0)
 		{
 }
 
@@ -138,11 +136,7 @@ port_formals_manager::lookup_port_formal_position(const string& id) const {
 good_bool
 port_formals_manager::certify_port_actuals(const checked_refs_type& ol) const {
 	typedef	checked_refs_type	refs_list_type;
-#if IMPLICIT_SUPPLY_PORTS
 	const size_t num_formals = __explicit_ports;
-#else
-	const size_t num_formals = port_formals_list.size();
-#endif
 	const size_t num_actuals = ol.size();
 	if (num_formals != ol.size()) {
 		cerr << "Number of port actuals (" << num_actuals <<
@@ -156,13 +150,11 @@ port_formals_manager::certify_port_actuals(const checked_refs_type& ol) const {
 		f_iter(port_formals_list.begin());
 	const port_formals_list_type::const_iterator
 		f_end(port_formals_list.end());
-#if IMPLICIT_SUPPLY_PORTS
 	// skip implicit ports, as they are never passed in ol
 	while ((f_iter != f_end) &&
 		(*f_iter)->get_name().find('!') != string::npos) {
 		++f_iter;
 	}
-#endif
 	size_t i = 1;
 	for ( ; f_iter!=f_end; f_iter++, a_iter++, i++) {
 		const count_ptr<const meta_instance_reference_base> a_iref(*a_iter);
@@ -205,14 +197,12 @@ port_formals_manager::add_port_formal(const port_formals_value_type pf) {
 	// since we already checked used_id_map, there cannot be a repeat
 	// in the port_formals_list!
 	const string& s(pf->get_name());
-#if IMPLICIT_SUPPLY_PORTS
 	if (s.find('!') == string::npos) {
 		++__explicit_ports;
 	} else {
 		++__implicit_ports;
 		INVARIANT(!__explicit_ports);
 	}
-#endif
 	port_formals_list.push_back(pf);
 	port_formals_map[s] = pf;
 }

@@ -40,10 +40,8 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "util/getopt_mapped.hh"
 #include "util/value_saver.hh"
 #include "util/persistent_object_manager.hh"
-#if IMPLICIT_SUPPLY_PORTS
 #include "AST/globals.hh"
 #include "AST/instance.hh"
-#endif
 
 #if KEEP_PARSE_FUNCS
 // forward declarations needed for YSTYPE
@@ -402,12 +400,10 @@ parse_and_check(const char* name, const compile_options& opt) {
 	const count_ptr<root_body> AST(parse_to_AST(name, opt));
 	if (!AST) return return_type(NULL);
 	// error message would be nice
-#if IMPLICIT_SUPPLY_PORTS
-	// push in reverse order
+	// push_front in reverse order
 	AST->push_front(get_Vdd_attributes());
 	AST->push_front(get_GND_attributes());
 	AST->push_front(get_implicit_globals());
-#endif
 	const count_ptr<module>
 		ret(check_AST(*AST, name ? name : dflt, opt.parse_opts));
 	// copy/preserve the options that were used to compile

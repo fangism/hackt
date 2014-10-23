@@ -520,7 +520,6 @@ public:
 	good_bool
 	create_dependent_types(const unroll_context&);
 
-#if IMPLICIT_SUPPLY_PORTS
 	good_bool
 	connect_implicit_ports(const unroll_context&);
 
@@ -531,7 +530,6 @@ private:
 public:
 	size_t
 	lookup_implicit_bool_port(const string&) const;
-#endif
 
 private:
 	void

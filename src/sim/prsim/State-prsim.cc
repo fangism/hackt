@@ -40,9 +40,7 @@
 #include "Object/inst/alias_empty.hh"
 #include "Object/traits/proc_traits.hh"	// for diagnostic
 #include "Object/global_entry.hh"
-#if IMPLICIT_SUPPLY_PORTS
 #include "parser/instref.hh"
-#endif
 #include "parser/type.hh"
 #include "sim/ISE.hh"
 #include "common/TODO.hh"
@@ -163,9 +161,7 @@ using entity::bool_tag;
 using entity::process_tag;
 using entity::footprint_frame_map_type;
 #include "util/using_ostream.hh"
-#if IMPLICIT_SUPPLY_PORTS
 using parser::parse_node_to_index;
-#endif
 
 //=============================================================================
 /**
@@ -590,7 +586,8 @@ State::__initialize_state(const bool startup, const bool reset_count) {
 	fill(check_exlo_ring_pool.begin(), check_exlo_ring_pool.end(), false);
 	// unwatchall()? no, preserved
 	// timing mode preserved
-#if IMPLICIT_SUPPLY_PORTS
+
+	// initialize implicit port supplies
 	const footprint& fp(mod.get_footprint());
 	const node_index_type gi = parse_node_to_index("!GND", fp).index;
 	const node_index_type vi = parse_node_to_index("!Vdd", fp).index;
@@ -610,7 +607,6 @@ State::__initialize_state(const bool startup, const bool reset_count) {
 #else
 	node_pool[gi].set_value_and_cause(LOGIC_LOW, null, current_time);
 	node_pool[vi].set_value_and_cause(LOGIC_HIGH, null, current_time);
-#endif
 #endif
 	// keep connected channels up-to-date with X values of nodes
 	// but this closes channel-log streams

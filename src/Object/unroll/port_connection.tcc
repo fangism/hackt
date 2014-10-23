@@ -13,9 +13,7 @@
 #include "Object/ref/simple_meta_instance_reference.hh"
 #include "Object/expr/expr_dump_context.hh"
 #include "Object/inst/substructure_alias_base.hh"
-#if IMPLICIT_SUPPLY_PORTS
 #include "Object/def/process_definition.hh"
-#endif
 
 #include "util/what.tcc"
 #include "util/memory/count_ptr.tcc"
@@ -48,7 +46,6 @@ PORT_CONNECTION_TEMPLATE_SIGNATURE
 PORT_CONNECTION_CLASS::port_connection(const ported_inst_ptr_type& i) :
 		parent_type(), ported_inst(i) {
 	NEVER_NULL(ported_inst);
-#if IMPLICIT_SUPPLY_PORTS
 	// prepend inst_list with a NULL pointer for each global port
 	// could do this based on meta-type only...
 	// or more slowly, but robustly, lookup the definition's port formals
@@ -57,6 +54,7 @@ PORT_CONNECTION_CLASS::port_connection(const ported_inst_ptr_type& i) :
 		d(ported_inst->get_base_def()
 			.template is_a<const process_definition_base>());
 if (d) {
+	// processes are given implicit supply ports
 	// must handle typedefs as well
 	const process_definition& pd(d->get_canonical_proc_def());
 	const size_t imp = pd.get_port_formals().implicit_ports();
@@ -64,7 +62,6 @@ if (d) {
 		this->inst_list.resize(imp);	// fill with NULL pointers
 	}
 }
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -3256,7 +3256,6 @@ process_definition::__unroll_complete_type(
 			// NOTE: nothing can be done with production rules
 			// until nodes have been assigned local ID numbers
 			// in the create phase, in create_complete_type, below.
-#if IMPLICIT_SUPPLY_PORTS
 		if (meta_type == META_TYPE_PROCESS) {
 			// Automatically collect implicit supply ports
 			if (!f.connect_implicit_ports(c).good) {
@@ -3266,7 +3265,6 @@ process_definition::__unroll_complete_type(
 			// This must be done after unrolling, but before
 			// and IDs are assigned by creating
 		}
-#endif
 		} else {
 		// already have partial error message
 			// cpt.dump(cerr << "Instantiated from ") << endl;

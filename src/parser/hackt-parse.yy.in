@@ -35,9 +35,7 @@
 #include "lexer/file_manager.hh"
 #include "Object/devel_switches.hh"	// for DEFCHAN_LIKE_PROCESS
 #include "Object/traits/type_tag_enum.hh"	// for META_TYPE_*
-#if IMPLICIT_SUPPLY_PORTS
 #include "AST/globals.hh"
-#endif
 #include "util/convert.hh"
 
 #define	ENABLE_STACKTRACE		0
@@ -1006,9 +1004,7 @@ declare_proc_proto
 	  optional_template_specification def_or_proc ID
 	  optional_port_formal_decl_list_in_parens
 		{
-#if IMPLICIT_SUPPLY_PORTS
 			$5->push_front(get_implicit_ports());
-#endif
 			$$ = new process_prototype($1, $2, $3, $4, $5,
 			HAC::entity::META_TYPE_PROCESS); }
 	;
@@ -1019,10 +1015,8 @@ defproc
 	/* optional_definition_body will always be valid, sometimes empty */
 		{
 		  WRAP_LIST($2, $3, $4);
-#if IMPLICIT_SUPPLY_PORTS
 		  $3->push_front(get_Vdd_attributes());
 		  $3->push_front(get_GND_attributes());
-#endif
 		  $$ = new process_def(*$1, $3, HAC::entity::META_TYPE_PROCESS);
 		  DELETE_TOKEN($1);	/* transferred ownership */
 		}

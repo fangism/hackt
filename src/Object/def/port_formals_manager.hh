@@ -86,13 +86,11 @@ public:
 protected:
 	port_formals_list_type			port_formals_list;
 	port_formals_map_type			port_formals_map;
-#if IMPLICIT_SUPPLY_PORTS
 private:
 	// cached counts of number of implicit ports (globals)
 	size_t					__implicit_ports;
 	// cached counts of number of explicit ports
 	size_t					__explicit_ports;
-#endif
 public:
 	port_formals_manager();
 	~port_formals_manager();
@@ -109,12 +107,10 @@ private:
 	size(void) const { return port_formals_list.size(); }
 
 public:
-#if IMPLICIT_SUPPLY_PORTS
 	size_t
 	implicit_ports(void) const { return __implicit_ports; }
 	size_t
 	explicit_ports(void) const { return __explicit_ports; }
-#endif
 
 	// note: these iterate over ALL ports, implicit and explicit
 	const_list_iterator

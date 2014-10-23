@@ -242,9 +242,9 @@
 	so the implicit ports are hidden from the list substructure, 
 	and only appear in the map.  
 	Goal: 1
-	Status: done, tested
- */
+	Status: done, tested, perm'd
 #define	IMPLICIT_SUPPLY_PORTS			1
+ */
 
 /**
 	Define to 1 to allow prs bodies to override Vdd and GND.
@@ -252,7 +252,7 @@
 	Goal: 1
 	Status: done, tested, ready-to-perm
  */
-#define	PRS_SUPPLY_OVERRIDES			(1 && IMPLICIT_SUPPLY_PORTS)
+#define	PRS_SUPPLY_OVERRIDES			1
 
 /**
 	Define to 1 to support substrate contact overriding.
@@ -267,7 +267,7 @@
 	Goal: 1
 	Status: done, tested, ready-to-perm
  */
-#define	INSTANCE_SUPPLY_OVERRIDES		(1 && IMPLICIT_SUPPLY_PORTS)
+#define	INSTANCE_SUPPLY_OVERRIDES		1
 
 /**
 	Define to 1 to allow implicit supplies to be unconnected by
