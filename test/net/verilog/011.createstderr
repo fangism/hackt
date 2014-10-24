@@ -1,10 +1,3 @@
-WARNING: process bar<>::x.a lacks connection to a producer.
-WARNING: process bar<>::x.b lacks connection to a producer.
-Warnings found (2) while creating complete type bar<>.
-WARNING: process baz<>::p.a lacks connection to a producer.
-WARNING: process baz<>::p.b lacks connection to a producer.
-Warnings found (2) while creating complete type baz<>.
----- END CREATE WARNINGS ---
 
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail	size

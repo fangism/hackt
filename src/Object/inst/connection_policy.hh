@@ -923,7 +923,6 @@ public:
 		return direction_flags & CONNECTED_TO_LOCAL_CONSUMER;
 	}
 
-#if 1
 	void
 	flag_port(void) {
 		direction_flags |= PROCESS_IS_ALIASED_TO_PORT;
@@ -933,7 +932,6 @@ public:
 	is_aliased_to_port(void) const {
 		return direction_flags & PROCESS_IS_ALIASED_TO_PORT;
 	}
-#endif
 
 protected:
 	template <class AliasType>

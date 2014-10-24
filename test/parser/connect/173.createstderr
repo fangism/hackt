@@ -1,0 +1,523 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	20
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	205
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	8	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	9	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	10	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
+	11	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
+	12	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
+	13	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
+	14	##ADDR##	procplch	0	#HEAD#	#TAIL#	30
+	15	##ADDR##	procplch	0	#HEAD#	#TAIL#	30
+	16	##ADDR##	portscop	0	#HEAD#	#TAIL#	44
+	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
+	19	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	20	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	23	##ADDR##	procdefn	0	#HEAD#	#TAIL#	102
+	24	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
+	25	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
+	26	##ADDR##	portscop	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	29	##ADDR##	procdefn	0	#HEAD#	#TAIL#	80
+	30	##ADDR##	footprnt	0	#HEAD#	#TAIL#	262
+	31	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	33	##ADDR##	footprnt	0	#HEAD#	#TAIL#	332
+	34	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	36	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	38	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	39	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	40	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	41	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	42	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	43	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	44	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	45	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	46	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	47	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	48	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	49	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	50	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	51	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	52	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	53	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	54	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	55	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	56	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
+	57	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	58	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	59	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	60	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
+	61	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	62	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	63	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	64	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
+	65	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	66	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	67	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	68	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
+	69	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	70	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	71	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	72	##ADDR##	procdefn	0	#HEAD#	#TAIL#	137
+	73	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	74	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	75	##ADDR##	procplch	0	#HEAD#	#TAIL#	26
+	76	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	77	##ADDR##	portscop	0	#HEAD#	#TAIL#	28
+	78	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	79	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
+	80	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	81	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	82	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	83	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	84	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	85	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	86	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	87	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	88	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	89	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	90	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	91	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	92	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	93	##ADDR##	procdird	0	#HEAD#	#TAIL#	13
+	94	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	95	##ADDR##	procdird	0	#HEAD#	#TAIL#	13
+	96	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	97	##ADDR##	footprnt	0	#HEAD#	#TAIL#	368
+	98	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	99	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	100	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	101	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	102	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	103	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
+	104	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	105	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	106	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	107	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
+	108	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	109	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	110	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	111	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	112	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
+	113	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	114	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	115	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	116	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
+	117	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	118	##ADDR##	footprnt	0	#HEAD#	#TAIL#	990
+	119	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	120	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	121	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	122	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	123	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	124	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	125	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	126	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	127	##ADDR##	procdefn	0	#HEAD#	#TAIL#	140
+	128	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	129	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	130	##ADDR##	procplch	0	#HEAD#	#TAIL#	29
+	131	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	132	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	133	##ADDR##	portscop	0	#HEAD#	#TAIL#	28
+	134	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	135	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
+	136	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	137	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	138	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	139	##ADDR##	procdefn	0	#HEAD#	#TAIL#	92
+	140	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	141	##ADDR##	portscop	0	#HEAD#	#TAIL#	16
+	142	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	143	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	144	##ADDR##	footprnt	0	#HEAD#	#TAIL#	371
+	145	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	146	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	147	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	148	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	149	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	150	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	151	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	152	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	153	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	154	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	155	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	156	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	157	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	158	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	159	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
+	160	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	161	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
+	162	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	163	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	164	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
+	165	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	166	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
+	167	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	168	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1053
+	169	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	170	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	171	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	172	##ADDR##	procplch	0	#HEAD#	#TAIL#	29
+	173	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	174	##ADDR##	datatprf	0	#HEAD#	#TAIL#	21
+	175	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	176	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	177	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	178	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	179	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	180	##ADDR##	dboolatt	0	#HEAD#	#TAIL#	30
+	181	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	182	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	183	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	184	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	185	##ADDR##	proctprf	0	#HEAD#	#TAIL#	21
+	186	##ADDR##	footprnt	0	#HEAD#	#TAIL#	687
+	187	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  3 instantiation-collections
+  0 sub-namespaces
+  6 definitions
+  0 typedefs
+  Definitions:
+    cdmt = process-definition (defined) cdmt(
+        bool<> !GND
+        bool<> !Vdd
+        mt_ns<> ifn
+        mt_ns<> ifs
+        svg<>? pqni
+        svg<>! pqno
+        svg<>? pqsi
+        svg<>! pqso
+      )
+      In definition "cdmt", we have: {
+      Instances:
+        !GND = bool<> cdmt::!GND
+        !Vdd = bool<> cdmt::!Vdd
+        ifn = mt_ns<> cdmt::ifn
+        ifs = mt_ns<> cdmt::ifs
+        pqni = svg<>? cdmt::pqni
+        pqno = svg<>! cdmt::pqno
+        pqsi = svg<>? cdmt::pqsi
+        pqso = svg<>! cdmt::pqso
+        res_nb = res_pack<> cdmt::res_nb
+        res_sb = res_pack<> cdmt::res_sb
+      unroll sequence: 
+        ports: (
+          bool<> !GND
+          bool<> !Vdd
+          mt_ns<> ifn
+          mt_ns<> ifs
+          svg<>? pqni
+          svg<>! pqno
+          svg<>? pqsi
+          svg<>! pqso
+        )
+        !GND@[supply=0]
+        !Vdd@[supply=1]
+        pqni = ifn.pqsb;
+        pqno = ifn.pqnb;
+        pqsi = ifs.pqnb;
+        pqso = ifs.pqsb;
+        res_pack<> res_nb
+        res_pack<> res_sb
+        res_nb.in = pqsi;
+        res_sb.in = pqni;
+        pqno = res_nb.out;
+        pqso = res_sb.out;
+      footprint: {
+        !GND = bool^0 = cdmt<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = cdmt<>::!Vdd (2) @[ supply_high port-alias ] 
+        ifn = process mt_ns<>^0 = cdmt<>::ifn (1) @[ port-alias ] (
+          pqsb = process svg<>^0 = cdmt<>::pqni (2) @[ port? sub? port-alias ] 
+          pqnb = process svg<>^0 = cdmt<>::pqno (3) @[ sub! port! port-alias ] 
+        )
+        ifs = process mt_ns<>^0 = cdmt<>::ifs (4) @[ port-alias ] (
+          pqsb = process svg<>^0 = cdmt<>::pqso (5) @[ sub! port! port-alias ] 
+          pqnb = process svg<>^0 = cdmt<>::pqsi (6) @[ port? sub? port-alias ] 
+        )
+        pqni = process svg<>^0 = cdmt<>::pqni (2) @[ port? sub? port-alias ] 
+        pqno = process svg<>^0 = cdmt<>::pqno (3) @[ sub! port! port-alias ] 
+        pqsi = process svg<>^0 = cdmt<>::pqsi (6) @[ port? sub? port-alias ] 
+        pqso = process svg<>^0 = cdmt<>::pqso (5) @[ sub! port! port-alias ] 
+        res_nb = process res_pack<>^0 = cdmt<>::res_nb (7) (
+          !GND = bool^0 = cdmt<>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = cdmt<>::!Vdd (2) @[ supply_high port-alias ] 
+          in = process svg<>^0 = cdmt<>::pqsi (6) @[ port? sub? port-alias ] 
+          out = process svg<>^0 = cdmt<>::pqno (3) @[ sub! port! port-alias ] 
+        )
+        res_sb = process res_pack<>^0 = cdmt<>::res_sb (8) (
+          !GND = bool^0 = cdmt<>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = cdmt<>::!Vdd (2) @[ supply_high port-alias ] 
+          in = process svg<>^0 = cdmt<>::pqni (2) @[ port? sub? port-alias ] 
+          out = process svg<>^0 = cdmt<>::pqso (5) @[ sub! port! port-alias ] 
+        )
+        Created state:
+        process instance pool: (6 ports, 2 local, 0 mapped)
+        1	cdmt<>::ifn @[ port-alias ]	mt_ns<>
+          process: 2,3
+        2	cdmt<>::pqni @[ port? sub? port-alias ]	svg<>
+        3	cdmt<>::pqno @[ sub! port! port-alias ]	svg<>
+        4	cdmt<>::ifs @[ port-alias ]	mt_ns<>
+          process: 5,6
+        5	cdmt<>::pqso @[ sub! port! port-alias ]	svg<>
+        6	cdmt<>::pqsi @[ port? sub? port-alias ]	svg<>
+        7	cdmt<>::res_nb	res_pack<>
+          process: 6,3
+          bool: 1,2
+        8	cdmt<>::res_sb	res_pack<>
+          process: 2,5
+          bool: 1,2
+        bool instance pool: (2 ports, 0 local, 0 mapped)
+        1	cdmt<>::!GND @[ supply_low port-alias ]	
+        2	cdmt<>::!Vdd @[ supply_high port-alias ]	
+        process port aliases:
+        2: cdmt<>::ifn.pqsb = cdmt<>::pqni @[ port? sub? port-alias ]
+        3: cdmt<>::ifn.pqnb = cdmt<>::pqno @[ sub! port! port-alias ]
+        5: cdmt<>::ifs.pqsb = cdmt<>::pqso @[ sub! port! port-alias ]
+        6: cdmt<>::ifs.pqnb = cdmt<>::pqsi @[ port? sub? port-alias ]
+      }
+      }
+
+    gdc = process-definition (defined) gdc(
+        bool<> !GND
+        bool<> !Vdd
+        gns<> ifn
+        gns<> ifs
+      )
+      In definition "gdc", we have: {
+      Instances:
+        !GND = bool<> gdc::!GND
+        !Vdd = bool<> gdc::!Vdd
+        CD_MT = cdmt<> gdc::CD_MT
+        ifn = gns<> gdc::ifn
+        ifs = gns<> gdc::ifs
+      unroll sequence: 
+        ports: (
+          bool<> !GND
+          bool<> !Vdd
+          gns<> ifn
+          gns<> ifs
+        )
+        !GND@[supply=0]
+        !Vdd@[supply=1]
+        cdmt<> CD_MT
+        CD_MT.ifn = ifn.xxy;
+        CD_MT.ifs = ifs.xxy;
+      footprint: {
+        !GND = bool^0 = gdc<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = gdc<>::!Vdd (2) @[ supply_high port-alias ] 
+        CD_MT = process cdmt<>^0 = gdc<>::CD_MT (9) (
+          !GND = bool^0 = gdc<>::!GND (1) @[ supply_low port-alias ] 
+          !Vdd = bool^0 = gdc<>::!Vdd (2) @[ supply_high port-alias ] 
+          ifn = process mt_ns<>^0 = gdc<>::ifn.xxy (2) @[ port-alias ] (
+            pqsb = process svg<>^0 = gdc<>::CD_MT.pqni (3) @[ sub? port-alias ] 
+            pqnb = process svg<>^0 = gdc<>::CD_MT.pqno (4) @[ sub! port-alias ] 
+          )
+          ifs = process mt_ns<>^0 = gdc<>::ifs.xxy (6) @[ port-alias ] (
+            pqsb = process svg<>^0 = gdc<>::CD_MT.pqso (7) @[ sub! port-alias ] 
+            pqnb = process svg<>^0 = gdc<>::CD_MT.pqsi (8) @[ sub? port-alias ] 
+          )
+          pqni = process svg<>^0 = gdc<>::CD_MT.pqni (3) @[ sub? port-alias ] 
+          pqno = process svg<>^0 = gdc<>::CD_MT.pqno (4) @[ sub! port-alias ] 
+          pqsi = process svg<>^0 = gdc<>::CD_MT.pqsi (8) @[ sub? port-alias ] 
+          pqso = process svg<>^0 = gdc<>::CD_MT.pqso (7) @[ sub! port-alias ] 
+        )
+        ifn = process gns<>^0 = gdc<>::ifn (1) @[ port-alias ] (
+          xxy = process mt_ns<>^0 = gdc<>::ifn.xxy (2) @[ port-alias ] (
+            pqsb = process svg<>^0 = gdc<>::CD_MT.pqni (3) @[ sub? port-alias ] 
+            pqnb = process svg<>^0 = gdc<>::CD_MT.pqno (4) @[ sub! port-alias ] 
+          )
+        )
+        ifs = process gns<>^0 = gdc<>::ifs (5) @[ port-alias ] (
+          xxy = process mt_ns<>^0 = gdc<>::ifs.xxy (6) @[ port-alias ] (
+            pqsb = process svg<>^0 = gdc<>::CD_MT.pqso (7) @[ sub! port-alias ] 
+            pqnb = process svg<>^0 = gdc<>::CD_MT.pqsi (8) @[ sub? port-alias ] 
+          )
+        )
+        Created state:
+        process instance pool: (8 ports, 1 local, 2 mapped)
+        1	gdc<>::ifn @[ port-alias ]	gns<>
+          process: 2,3,4
+        2	gdc<>::ifn.xxy @[ port-alias ]	mt_ns<>
+          process: 3,4
+        3	gdc<>::CD_MT.pqni @[ sub? port-alias ]	svg<>
+        4	gdc<>::CD_MT.pqno @[ sub! port-alias ]	svg<>
+        5	gdc<>::ifs @[ port-alias ]	gns<>
+          process: 6,7,8
+        6	gdc<>::ifs.xxy @[ port-alias ]	mt_ns<>
+          process: 7,8
+        7	gdc<>::CD_MT.pqso @[ sub! port-alias ]	svg<>
+        8	gdc<>::CD_MT.pqsi @[ sub? port-alias ]	svg<>
+        9	gdc<>::CD_MT	cdmt<>
+          process: 2,3,4,6,7,8
+          bool: 1,2
+        private sub-process index map:
+          (9 -> 0)
+          (10 -> 2)
+        bool instance pool: (2 ports, 0 local, 0 mapped)
+        1	gdc<>::!GND @[ supply_low port-alias ]	
+        2	gdc<>::!Vdd @[ supply_high port-alias ]	
+      }
+      }
+
+    gns = process-definition (defined) gns(
+        mt_ns<> xxy
+      )
+      In definition "gns", we have: {
+      Instances:
+        xxy = mt_ns<> gns::xxy
+      unroll sequence: 
+        ports: (
+          mt_ns<> xxy
+        )
+      footprint: {
+        xxy = process mt_ns<>^0 = gns<>::xxy (1) @[ port-alias ] (
+          pqsb = process svg<>^0 = gns<>::xxy.pqsb (2) @[ port-alias ] 
+          pqnb = process svg<>^0 = gns<>::xxy.pqnb (3) @[ port-alias ] 
+        )
+        Created state:
+        process instance pool: (3 ports, 0 local, 0 mapped)
+        1	gns<>::xxy @[ port-alias ]	mt_ns<>
+          process: 2,3
+        2	gns<>::xxy.pqsb @[ port-alias ]	svg<>
+        3	gns<>::xxy.pqnb @[ port-alias ]	svg<>
+      }
+      }
+
+    mt_ns = process-definition (defined) mt_ns(
+        svg<> pqsb
+        svg<> pqnb
+      )
+      In definition "mt_ns", we have: {
+      Instances:
+        pqnb = svg<> mt_ns::pqnb
+        pqsb = svg<> mt_ns::pqsb
+      unroll sequence: 
+        ports: (
+          svg<> pqsb
+          svg<> pqnb
+        )
+      footprint: {
+        pqnb = process svg<>^0 = mt_ns<>::pqnb (2) @[ port-alias ] 
+        pqsb = process svg<>^0 = mt_ns<>::pqsb (1) @[ port-alias ] 
+        Created state:
+        process instance pool: (2 ports, 0 local, 0 mapped)
+        1	mt_ns<>::pqsb @[ port-alias ]	svg<>
+        2	mt_ns<>::pqnb @[ port-alias ]	svg<>
+      }
+      }
+
+    res_pack = process-definition (defined) res_pack(
+        bool<> !GND
+        bool<> !Vdd
+        svg<>? in
+        svg<>! out
+      )
+      In definition "res_pack", we have: {
+      Instances:
+        !GND = bool<> res_pack::!GND
+        !Vdd = bool<> res_pack::!Vdd
+        in = svg<>? res_pack::in
+        out = svg<>! res_pack::out
+      unroll sequence: 
+        ports: (
+          bool<> !GND
+          bool<> !Vdd
+          svg<>? in
+          svg<>! out
+        )
+        !GND@[supply=0]
+        !Vdd@[supply=1]
+        in?
+        out!
+      footprint: {
+        !GND = bool^0 = res_pack<>::!GND (1) @[ supply_low port-alias ] 
+        !Vdd = bool^0 = res_pack<>::!Vdd (2) @[ supply_high port-alias ] 
+        in = process svg<>^0 = res_pack<>::in (1) @[ port? loc? port-alias ] 
+        out = process svg<>^0 = res_pack<>::out (2) @[ loc! port! port-alias ] 
+        Created state:
+        process instance pool: (2 ports, 0 local, 0 mapped)
+        1	res_pack<>::in @[ port? loc? port-alias ]	svg<>
+        2	res_pack<>::out @[ loc! port! port-alias ]	svg<>
+        bool instance pool: (2 ports, 0 local, 0 mapped)
+        1	res_pack<>::!GND @[ supply_low port-alias ]	
+        2	res_pack<>::!Vdd @[ supply_high port-alias ]	
+      }
+      }
+
+    svg = process-definition (defined) svg(
+      )
+      In definition "svg", we have: {
+      unroll sequence: 
+      footprint: {
+      }
+      }
+
+  Instances:
+    !GND = bool<> !GND
+    !Vdd = bool<> !Vdd
+    x_gdc = gdc<> x_gdc
+}
+
+footprint: {
+  !GND = bool^0 = !GND (1) @[ supply_low ] 
+  !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
+  x_gdc = process gdc<>^0 = x_gdc (1) (
+    !GND = bool^0 = !GND (1) @[ supply_low ] 
+    !Vdd = bool^0 = !Vdd (2) @[ supply_high ] 
+    ifn = process gns<>^0 = x_gdc.ifn (2) (
+      xxy = process mt_ns<>^0 = x_gdc.ifn.xxy (3) (
+        pqsb = process svg<>^0 = x_gdc.ifn.xxy.pqsb (4) @[ sub? ] 
+        pqnb = process svg<>^0 = x_gdc.ifn.xxy.pqnb (5) @[ sub! ] 
+      )
+    )
+    ifs = process gns<>^0 = x_gdc.ifs (6) (
+      xxy = process mt_ns<>^0 = x_gdc.ifs.xxy (7) (
+        pqsb = process svg<>^0 = x_gdc.ifs.xxy.pqsb (8) @[ sub! ] 
+        pqnb = process svg<>^0 = x_gdc.ifs.xxy.pqnb (9) @[ sub? ] 
+      )
+    )
+  )
+  Created state:
+  process instance pool: (0 ports, 9 local, 3 mapped)
+  1	x_gdc	gdc<>
+    process: 2,3,4,5,6,7,8,9
+    bool: 1,2
+  2	x_gdc.ifn	gns<>
+    process: 3,4,5
+  3	x_gdc.ifn.xxy	mt_ns<>
+    process: 4,5
+  4	x_gdc.ifn.xxy.pqsb @[ sub? ]	svg<>
+  5	x_gdc.ifn.xxy.pqnb @[ sub! ]	svg<>
+  6	x_gdc.ifs	gns<>
+    process: 7,8,9
+  7	x_gdc.ifs.xxy	mt_ns<>
+    process: 8,9
+  8	x_gdc.ifs.xxy.pqsb @[ sub! ]	svg<>
+  9	x_gdc.ifs.xxy.pqnb @[ sub? ]	svg<>
+  private sub-process index map:
+    (1 -> 0)
+    (10 -> 3)
+  bool instance pool: (0 ports, 2 local, 0 mapped)
+  1	!GND @[ supply_low ]	
+  2	!Vdd @[ supply_high ]	
+}

@@ -100,7 +100,6 @@ bool_connect_policy::__check_connection(const AliasType& a) {
 	const bool any_fanin = any_fanin_dn || any_fanin_up;
 //	const bool dead = !any_fanout && !any_fanin;
 	std::ostringstream oss;
-// (!a.is_port_alias())	// wrong: misses aliases to direct ports
 if (a.is_aliased_to_port()) {
 #if 0
 	// TODO: configurable warnings
@@ -634,7 +633,8 @@ process_connect_policy::__check_connection(const AliasType& a) {
 	typedef	typename AliasType::traits_type		traits_type;
 	STACKTRACE_VERBOSE;
 	error_count ret;
-// if (!a.is_aliased_to_port()) {
+	const bool port = a.is_aliased_to_port();
+// if (!p) {
 	const connection_flags_type f = a.direction_flags;
 // if is user-defined channel
 #if 0
@@ -644,13 +644,13 @@ process_connect_policy::__check_connection(const AliasType& a) {
 	const bool have_prod = (f & CONNECTED_TO_ANY_PRODUCER);
 	const bool have_cons = (f & CONNECTED_TO_ANY_CONSUMER);
 	// TODO: tag_name should reflect actualy meta-type
-	if (have_cons && !have_prod) {
+	if (have_cons && !have_prod && (!port || a.is_output_port())) {
 		a.dump_hierarchical_name(
 			cerr << "WARNING: " << traits_type::tag_name << " ")
 			<< " lacks connection to a producer." << endl;
 		++ret.warnings;
 	}
-	if (have_prod && !have_cons) {
+	if (have_prod && !have_cons && (!port || a.is_input_port())) {
 		typedef	typename AliasType::container_type
 							container_type;
 		typedef	typename traits_type::tag_type	tag_type;
@@ -672,6 +672,7 @@ process_connect_policy::__check_connection(const AliasType& a) {
 	// or better yet check the type, whether is actually user-defined chan
 // end if
 // }	// !is_aliased_to_port()
+	// else postpone producer-consumer checks until next hierarchy up
 	return ret;
 }
 

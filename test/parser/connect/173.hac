@@ -1,0 +1,51 @@
+// "173.hac" reduced test case from ACX-PR-10185
+export deftype svg <: bool () { }
+
+defproc res_pack (
+  svg? in;
+  svg! out
+  ) { 
+  in?;
+  out!;
+}
+
+deftype mt_ns <: int(
+	svg pqsb;
+	svg pqnb ){}
+
+deftype gns <: int(
+	mt_ns xxy ){}
+
+
+defproc cdmt (   
+	mt_ns ifn;
+	mt_ns ifs;
+	svg? pqni;
+	svg! pqno;
+	svg? pqsi;
+	svg! pqso
+
+) {
+	pqni = ifn.pqsb;
+	pqno = ifn.pqnb;
+	pqsi = ifs.pqnb;
+	pqso = ifs.pqsb;
+	res_pack res_nb;
+	res_pack res_sb;
+	res_nb.in = pqsi;
+	res_sb.in = pqni;
+	pqno = res_nb.out;
+	pqso = res_sb.out;
+}
+
+
+defproc gdc ( 
+	gns ifn;
+	gns ifs
+) {
+	cdmt CD_MT;
+	CD_MT.ifn = ifn.xxy;
+	CD_MT.ifs = ifs.xxy;
+}
+
+gdc x_gdc;

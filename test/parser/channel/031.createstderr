@@ -1,7 +1,3 @@
-WARNING: process thingy<>::I lacks connection to a producer.
-WARNING: process thingy<>::O lacks connection to a consumer.
-Warnings found (2) while creating complete type thingy<>.
----- END CREATE WARNINGS ---
 
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail	size
