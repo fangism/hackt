@@ -4,12 +4,43 @@
 @node Introduction
 @chapter Introduction
 
-@command{hacprsim} is a production rule simulator, 
+@hacprsim{} is a production rule simulator, 
 which is part of the HACKT tool set.  
-@command{hacprsim} simulates circuits at a digital level of abstraction.
+@hacprsim{} simulates circuits at a digital level of abstraction.
 It is based on older versions of @command{prsim}.  
 In the remainder of this document @command{prsim} will 
-refer to the new version @command{hacprsim}.  
+refer to the new version @hacprsim{}.  
 
-@strong{TODO:} examples and tutorials taken from test suite?
+This document is outlined as follows:
+
+@noindent
+@ref{Usage} describes command-line options when invoking @command{hacprsim}.
+
+@noindent
+@ref{Execution} describes the simulators event model, 
+and the basic rules under which events are scheduled and executed.  
+
+@noindent
+@ref{Commands} is a comprehensive command reference, organized by section.
+
+@noindent
+@ref{Diagnostics} describes some of the commonly encountered 
+simulation diagnostic messages.
+
+@noindent
+@ref{Timing Back-Annotation} provides means of altering
+timing delays between events at @emph{run-time}.
+
+@noindent
+@ref{Co-simulation} describes the general method of running
+@hacprsim{} with another Verilog host simulator.  
+
+@noindent
+@ref{Tips} gives some general advice on improving productivity
+with @hacprsim{}.  
+
+@noindent
+Readers interested in jumping straight into applications and 
+examples may skip to @ref{Applications}, which includes examples
+using the @HAC{} language.  
 

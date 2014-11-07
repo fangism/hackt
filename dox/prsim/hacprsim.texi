@@ -19,13 +19,13 @@
 
 @copying
 This manual describes the usage and operation of HACKT's @command{prsim} 
-simulator.  
+simulator, @hacprsim{}.  
 
 This document can also be found online at @homepagesubref{hacprsim}.
 
 The main project home page is @homepageref{}.
 
-Copyright @copyright{} 2007 Cornell University
+Copyright @copyright{} 2007-2014 Cornell University
 
 @quotation
 Published by ...
@@ -73,6 +73,7 @@ Permission is hereby granted to ...
 * Timing Back-Annotation:: Customized timing.
 * Co-simulation:: Mixing with foreign simulators.
 * Tips:: Tips
+* Applications:: Applications and Examples.
 * Command Index:: Interpreter commands and interface functions.
 @c * Variable Index:: Variables.
 * Concept Index:: Concepts and terms.
@@ -87,6 +88,7 @@ Permission is hereby granted to ...
 @include timing.texi
 @include cosim.texi
 @include tips.texi
+@include applications.texi
 
 @c ****************************** index ***************************************
 @node Command Index

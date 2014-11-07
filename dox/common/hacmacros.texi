@@ -11,6 +11,43 @@
 @url{http://www.csl.cornell.edu/~fang/hackt/\page\}
 @end macro
 
+@c ****************************** tools ***************************************
+
+@macro haco
+@command{haco}
+@end macro
+
+@macro haccreate
+@command{haccreate}
+@end macro
+
+@macro hacprsim
+@command{hacprsim}
+@end macro
+
+@macro hacchpsim
+@command{hacchpsim}
+@end macro
+
+@macro hacknet
+@command{hacknet}
+@end macro
+
+@c yes, trailing @c is needed to suppress extra blank line
+@macro shellkbd {p1}
+$ @kbd{\p1\}@c
+@end macro
+
+@macro prsimkbd {p1}
+@b{prsim>} @kbd{\p1\}@c
+@end macro
+
+@macro prsimkbd2 {p1}
+@b{prsim>>} @kbd{\p1\}@c
+@end macro
+
+@c consider bolding prompts?
+
 @c ****************************** macros **************************************
 @macro bool
 @t{bool}
@@ -18,6 +55,10 @@
 
 @macro Int
 @t{int}
+@end macro
+
+@macro ebool
+@t{pbool}
 @end macro
 
 @macro pbool

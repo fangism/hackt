@@ -1,0 +1,803 @@
+@c "hacprsim/intro.texi"
+@c $Id: intro.texi,v 1.1 2007/08/20 21:12:33 fang Exp $
+
+@node Applications
+@chapter Applications
+
+This chapter is devoted to giving examples of how to use
+@command{hacprsim}, with numerous examples of @HAC{} and simulation scripts.  
+This is arguably the most useful chapter for users.  
+
+@c @menu
+@c * Simulation vs. Netlist::
+@c @end menu
+
+@c -----------------------------------------------------------------------------
+@section Basic Demonstrations
+
+As every language has its "Hello, World!" example, so does @hacprsim{}.
+
+@subsection Basic Compile and Run
+To get started, write the following @HAC{} file:
+
+@example
+// "inv1.hac"
+bool a, b;
+prs @{
+   a -> b-
+  ~a -> b+
+@}
+@end example
+
+@noindent
+Compile it.
+
+@example
+@shellkbd{haco inv1.hac inv1.haco}
+@end example
+
+@noindent
+Run it.
+
+@example
+@shellkbd{hacprsim inv1.haco}
+@prsimkbd
+@end example
+
+@noindent
+You've succesfully loaded the simulation.
+The simulator awaits your commands.
+
+@example
+@prsimkbd{time}
+time: 0
+@prsimkbd{watchall}
+@prsimkbd{get a}
+a : X
+@prsimkbd{get b}
+b : X
+@end example
+
+@noindent
+Every node is initially @t{X}, unknown value.
+
+@example
+@prsimkbd{set a 0}
+@prsimkbd{get a}
+a : X
+@end example
+
+@noindent
+Wait, but didn't we just set @var{a}?
+@example
+@prsimkbd{why-x a}
+a:X, pending event -> 0
+@prsimkbd{pending a}
+queue:  0       a : 0
+@prsimkbd{queue}
+event queue:
+        0       a : 0
+@end example
+
+@noindent
+The @command{set} command doesn't change the value right away, 
+it only @emph{schedules} it right away.  
+Above, we see that a transition on a:0 is pending, in the event queue.
+To advance the simulation, we need to @command{step} or
+@command{cycle} (run until no events remain in queue).
+
+@example
+@prsimkbd{cycle}
+        0       a : 0
+        10      b : 1   [by a:=0]
+@prsimkbd{assert b 1}
+@prsimkbd{queue}
+event queue:
+@prsimkbd{time}
+time: 10
+@end example
+
+With the @command{watchall} at the beginning,
+the simulator reports every node transition as it happens.
+The change on @var{a} triggered an event on @var{b}, which then executed, 
+leaving the event queue empty at time 10.
+At any time, we can @command{assert} that nodes have the values we expect.
+
+@example
+@prsimkbd{set a 1}
+@prsimkbd{cycle}
+        10      a : 1
+        20      b : 0   [by a:=1]
+@prsimkbd{assert b 0}
+@end example
+
+@c -----------------------------------------------------------------------------
+@subsection Built-in Commands
+
+Let's take a minute to introduce the in-program help system, 
+along with other built-in commands.
+
+@example
+@prsimkbd{help}
+available categories: 
+        builtin --- built-in commands
+        channels --- channel commands
+        debug --- debugging internals
+        general --- general commands
+        info --- information about simulated circuit
+        modes --- timing model, error handling
+        simulation --- simulation commands
+        tracing --- trace and checkpoint commands
+        view --- instance to watch
+help: lists available commands and categories
+to get usage for a specific command or category, run: help <name>
+help all: lists all commands across all categories
+@end example
+
+@noindent
+Event the @command{help} command has a description.
+@example
+@prsimkbd{help help}
+help: lists available commands and categories
+to get usage for a specific command or category, run: help <name>
+help all: lists all commands across all categories
+@end example
+
+@noindent
+One can also list commands available by category (alphabetically):
+@example
+@prsimkbd{help builtin}
+Commands available in the 'builtin' category:
+        # -- comments are ignored
+        abort -- exits simulator with fatal status
+        alias -- defines alias to auto-expand by the interpreter
+        aliases -- show all registered command aliases
+        all -- show all commands
+        cd -- change current working instance/directory
+        comment -- comments are ignored
+        dirs -- print entire instance/directory stack
+        echo -- prints arguments back to stdout, space-delimited
+        ...
+@end example
+
+@noindent
+To see a comprehensive list of all commands (by category):
+@example
+@prsimkbd{help all}
+        ...
+@end example
+
+To see a history of commands we entered
+(useful for retracing your steps):
+@example
+@prsimkbd{history}
+history[0..3]:
+0       help
+1       help help
+2       help builtin
+3       help all
+@end example
+
+@noindent
+In scripts, sometimes you just want to print a message
+@example
+@prsimkbd{echo ---- YOU ARE HERE ----}
+---- YOU ARE HERE ----
+@end example
+
+@noindent
+Scripts may contain comments, which are ignored by the interpreter
+@example
+@prsimkbd{# I am a very useful comment, really.}
+@end example
+
+@noindent
+Should you find some commands too long to type, you may create 
+short-hand aliases.
+@example
+@prsimkbd{alias ? help}
+@prsimkbd{alias e echo}
+@prsimkbd{alias h history}
+@prsimkbd{alias a alias}
+@prsimkbd{a r repeat}
+@prsimkbd{? time}
+time
+shows the current time
+@prsimkbd{e hello}
+hello
+@prsimkbd{? aliases}
+aliases
+lists all active defined command aliases
+@prsimkbd{aliases}
+Command aliases:
+        ? -> help 
+        a -> alias 
+        e -> echo 
+        h -> history 
+        r -> repeat 
+@end example
+
+@noindent
+The interpreter always expands aliases (recursively) in prefix position.
+Aliases can be cancelled with the @command{unalias} command.
+
+Any command can be @command{repeat}ed with:
+@example
+@prsimkbd{repeat 3 echo I love this!}
+I love this!
+I love this!
+I love this!
+@prsimkbd{r 3 e I love this even more!}
+I love this even more!
+I love this even more!
+I love this even more!
+@end example
+
+Finally, the interactive environment can be exited with 
+@command{exit} or @command{quit} or Ctrl-D.
+
+@example
+@prsimkbd{exit}
+@shellkbd
+@end example
+
+@c -----------------------------------------------------------------------------
+@subsection Subcircuit Processes
+
+More interesting systems will be designed as a hierarchy of subcircuits.  
+Let us define an inverter:
+
+@example
+// "inv.hac"
+defproc inv(bool? a; bool! b) @{
+  prs @{
+     a -> b-
+    ~a -> b+
+  @}
+@}
+@end example
+
+@noindent
+Note that we specify direction on ports @var{a} and @var{b}.
+This is helpful enabling connectivity diagnostics at compile time.  
+
+Next, instantiate it a few times:
+@example
+// "inv-test.hac"
+import "inv.hac";    @i{// include used definitions}
+bool x, y, z;
+inv I(x, y);         @i{// instantiate with port connections}
+inv J(y, z);
+@end example
+
+@noindent
+Compile and run it.
+@example
+@shellkbd{haco inv-test.hac inv-test.haco}
+@shellkbd{hacprsim inv-test.haco}
+@prsimkbd{watchall}
+@end example
+
+@noindent
+Let us introduce some new commands.
+@example
+@prsimkbd{status X}
+X nodes:
+x y z
+@prsimkbd{status 0}
+0 nodes:
+!GND 
+@prsimkbd{status 1}
+1 nodes:
+!Vdd 
+@end example
+
+@noindent
+The @command{status} command lists all node with a particular value.
+@command{status-newline} reports the same information with each
+node on its own line.
+@t{!Vdd} and @t{!GND} are special implicit power supplies that
+are automatically connected through the hierarchy.
+
+We can query any node for its equivalent aliases with @command{who} or
+@command{who-newline}:
+@example
+@prsimkbd{who y}
+aliases of "y":
+I.b J.a y 
+@prsimkbd{who-newline y}
+aliases of "y":
+I.b
+J.a
+y
+@end example
+
+@cindex alias (node)
+@noindent
+Using any of these aliases in interactive commands will reference the
+same physical node.  
+
+@cindex directory view
+@cindex file-system view
+A very useful way of viewing the circuit hierarchy in
+the interpreter like a file system.
+Think of the top-level of the circuit like a "home directory."
+
+@example
+@prsimkbd{pwd}
+~
+@prsimkbd{ls}
+top-level instances: 
+Instances:
+  !GND = bool<> !GND
+  !Vdd = bool<> !Vdd
+  I = inv<> I
+  J = inv<> J
+  x = bool<> x
+  y = bool<> y
+  z = bool<> z
+@end example
+
+@noindent
+@bool{}s (or nodes) are like files, 
+and processes (subcircuits) are like directories.  
+You can get listings of names at any level of hierarchy using @command{ls}.
+
+@example
+@prsimkbd{ls I}
+I (type: inv<>) has members: 
+Instances:
+  !GND = bool
+  !Vdd = bool
+  a = bool
+  b = bool
+@end example
+
+@noindent
+One can descend into processes with directory commands.
+
+@example
+@prsimkbd{cd I}
+@prsimkbd{ls}
+I (type: inv<>) has members: 
+Instances:
+  !GND = bool
+  !Vdd = bool
+  a = bool
+  b = bool
+@prsimkbd{cd ..}
+@prsimkbd{pushd J}
+@prsimkbd{ls}
+J (type: inv<>) has members: 
+Instances:
+  !GND = bool
+  !Vdd = bool
+  a = bool
+  b = bool
+@prsimkbd{dirs}
+J ~ 
+@prsimkbd{cd ../I}
+@prsimkbd{dirs}
+I ~ 
+@prsimkbd{popd}
+@prsimkbd{pwd}
+~
+@end example
+
+@b{Productivity tip:}
+If the tools were compiled @option{--with-readline},
+you can also tab-complete names on many commands, 
+much like file-name completion.  
+
+Now we return to actually driving the circuit.
+@example
+@prsimkbd{set x 0}
+@prsimkbd{cycle}
+@end example
+
+@noindent
+Unless we enabled @command{watchall}, 
+we don't see any reports of transitions.
+We can still inspect the state of nodes:
+
+@example
+@prsimkbd{getlocal .}
+!GND : 0
+!Vdd : 1
+x : 0
+y : 1
+z : 0
+@end example
+
+@noindent
+The @command{getlocal} command reports the values of all nodes
+in the referenced scope (process).  Here, '.' refers to the current 
+working directory, which is the top-level.  
+We can also query a node for the series of recent events that
+led to its current value:
+
+@example
+@prsimkbd{backtrace z}
+event    : `z' : 0 @ 20
+caused by: `y' : 1 @ 10
+caused by: `x' : 0 @ 0
+(no cycle)
+@end example
+
+@noindent
+As the simulator executes events, it keeps track of the
+most recent event that @emph{caused} each transition to be scheduled.
+This forms a critical path causality chain.  
+This can be useful for debugging unexpected values
+or estimating delays on performance-critical paths.  
+
+@c -----------------------------------------------------------------------------
+@c @node Simulation vs. Netlist
+@section Simulation vs. Netlist
+
+The @HAC{} language was designed to allow a user to express
+circuit behavior and topology, however, there are instances when
+one needs to express equivalent circuits in different forms.
+In cases like these, the compilation of the @HAC{} will depend on the
+target backend tool.
+It is advised to minimize the number of places in a circuit description
+that diverge, as these are often error-prone and require thorough designer
+review.  
+
+Let's create two @HAC{} header files for the sake of tool selection.  
+
+@example
+// "tool-simulation.hac"
+pbool SIMULATION = true;
+pbool NETLIST = false;
+@end example
+
+@noindent
+and
+
+@example
+// "tool-netlist.hac"
+pbool SIMULATION = false;
+pbool NETLIST = true;
+@end example
+
+One of these files is to be passed to the @command{haco} compiler
+via the @option{-i} option, which prepends the named file before
+all input.  
+Instead of producing a generic @t{.haco} object file, 
+one should produce an object file for each back-end tool.
+
+@example
+@shellkbd{haco -i tool-simulation.hac circuit.hac circuit.haco-sim}
+@shellkbd{haco -i tool-netlist.hac circuit.hac circuit.haco-net}
+@end example
+
+@noindent
+This way it is clear which object file is intended for which tool.
+
+An alternative way of compiling is write a top-level source
+file that @t{import}s one of these header files, but most users
+find this more cumbersome than passing a single command-line option.  
+
+Note that @t{SIMULATION} and @t{NETLIST} are just variable names;
+they are not keywords with any special meaning to the compiler.  
+Another convention may choose to a single enumeral value instead
+of a set of boolean variables to specify the intended tool.  
+Follow the convention established in your project.  
+
+@c -----------------------------------------------------------------------------
+@subsection Wire
+
+As an example, let's take a simple wire.
+
+@example
+defproc long_wire(bool? in; bool! out) @{
+  in = out;
+@}
+@end example
+
+If one wishes to model propagation delay on @t{long_wire} in simulation, 
+one could rewrite this as:
+
+@example
+defproc long_wire(bool? in; bool! out) @{
+[ NETLIST ->
+  in = out;
+[] SIMULATION ->
+  prs @{
+     in -> out+
+    ~in -> out-
+  @}
+]
+@}
+@end example
+
+In @hacprsim{}, there will be some delay between @var{in} and @var{out}, 
+as modeled by the non-inverting rule, but the spice netlist will still
+show them as different names for the same wire.  
+
+As a reminder, @hacknet{} would error out if it tried to emit a netlist
+for non-CMOS-implementable rules like the above.
+CMOS-implementability requires pull-up rules to contain only
+negated literals, and pull-down rules to contain only non-negated literals.
+
+@c -----------------------------------------------------------------------------
+@subsection Staticizers
+
+@cindex staticizer
+@cindex keeper
+@cindex dynamic logic
+One of @HAC{}'s features is the ability to easily express 
+dynamic logic with distinct pull-up and pull-down rules.
+Dynamic logic, however, requires staticizers (or keepers)
+to maintain state on a node that is not actively driven.  
+
+In @hacprsim{}, all nodes behave as if they are staticized, that is, 
+their last set value remains until it is actively driven to another value.
+The @HAC{} language requires that users write explicit staticizers
+in circuit definitions for them to appear in netlists produced by 
+@hacknet{}.  
+The easiest way to declare a rule as part of a staticizer is with the
+@t{iskeeper} rule attribute.
+
+@cindex C-element
+Consider the following example of a C-element:
+
+@example
+bool a, b, _c, c;
+prs @{
+         a &  b  -> _c-
+        ~a & ~b  -> _c+
+        _c       => c-
+  [iskeeper=1] c => _c-
+@}
+@end example
+
+@noindent
+In the above example, the last rule is the feedback inverter
+that holds the state of @var{_c} when it is not pulled in either direction.  
+
+Alternatively, you can also write @t{[iskeeper]} for short, 
+or write the pull-up and pull-down rules separately.  
+
+@example
+  [iskeeper] ~c -> _c+
+  [iskeeper]  c -> _c-
+@end example
+
+How do @hacprsim{} and @hacknet{} treat the @t{iskeeper} attribute?
+By default, @hacprsim{} ignores all rules marked with @t{iskeeper}
+because every node is already treated as if it were staticized
+@footnote{There is a @option{-f fast-weak-keepers} option that does
+model keepers as zero-delay weak rules, but its use is discouraged.}.
+@hacknet{} will emit devices for rules marked @t{iskeeper}, 
+but named in a way that makes its purpose obvious.
+Note that with @t{iskeeper}, there is no need to conditionalize
+the circuit definition on variables like @t{SIMULATION} and @t{NETLIST}.  
+
+At the time of writing there is no automatic insertion
+of staticizers into netlists.  
+(Other tools can be used to check for missing or incorrect staticizers.)
+
+@c -----------------------------------------------------------------------------
+@subsection Combinational Feedback
+@cindex combinational feedback
+
+Worth mentioning is a common technique to turn dynamic logic
+into static logic: combinational feedback.
+Generally, the state-holding feedback circuit only turns on
+when it needs to hold state, to avoid relying on ratioed sizing
+to overpower feedback.
+
+@cindex C-element
+Here is our C-element example re-written with combinational feedback:
+
+@example
+bool a, b, _c, c;
+prs @{
+         a &  b  -> _c-
+        ~a & ~b  -> _c+
+        _c       => c-
+   c & ( a |  b) -> _c-    @i{// combinational feedback}
+  ~c & (~a | ~b) -> _c+    @i{// combinational feedback}
+@}
+@end example
+
+@noindent
+Suppose the initial state is @var{a}:0 @var{b}:0
+@var{_c}:1 @var{c}:0.
+In this state, the feedback pull-down on @var{_c} is cut-off.
+When @var{b} goes to 1, the pull-up on @var{_c} turns on, 
+actively holding the state.
+When @var{a} goes to 1, the pull-up on @var{_c} turns off, 
+letting the pull-down win without a fight.  
+In no state is @var{_c} undriven, making this a combinational circuit.
+
+Explicit combination feedback doesn't require any special handling
+in @hacprsim{} or @hacknet{}.  
+
+@c -----------------------------------------------------------------------------
+@subsection RAM Cell
+
+Memory cells require special treatment in @HAC{}.
+Consider a common 6T SRAM cell, accessed by wordline and bitlines:
+
+@example
+defproc sram_cell(bool bl, _bl; bool? wl) @{
+  bool f, t;
+  @i{// rules for netlist generation}
+  prs @{
+    @i{// cross-coupled inverters}
+    ~f -> t+
+     f -> t-
+    ~t -> f+
+     t -> f-
+
+    @i{// access transistors}
+    passn(wl,  bl, t)
+    passn(wl, _bl, f)
+  @}
+@}
+@end example
+
+@noindent
+The above definition will produce a valid spice netlist, but
+will not simulate properly in @hacprsim{} for several reasons:
+1) the access transistors written as pass-gates work in only one direction, 
+but they need to work for both reading and writing, and
+2) on writing, there is a fight between the access transistor
+and the opposing pull-up of the feedback inverter.
+
+Thus, the simulation version of the definition must be adjusted.
+To address concern 1) we need to replace the pass-gates with rules
+that operate in both directions.
+@cindex combinational feedback
+To address concern 2) we use combinational feedback.
+
+@example
+@i{// rules for simulation}
+prs @{
+  @i{// writing}
+    wl & ~bl        -> t-
+    wl & ~_bl       -> f-
+
+  @i{// reading}
+    [weak=1] t & wl -> _bl-
+    [weak=1] f & wl ->  bl-
+
+  @i{// state-holding}
+                  f -> t-
+                  t -> f-
+
+  @i{// combination feedback}
+  ~(wl & ~bl ) & ~f -> t+
+  ~(wl & ~_bl) & ~t -> f+
+@}
+@end example
+
+@noindent
+On writing @var{f-}, wordline @var{wl} is 1, and the bitline @var{_bl} is
+actively driven to 0,
+the combinational feedback for @var{f}+
+turns off to let @var{f} pull down, which in turn, 
+turns on the feedback for @var{t}+.
+During a read, the bitlines @var{bl} and @var{_bl} are precharged
+to 1, but are in an undriven state, which allows a
+@emph{weak-rule} to pull a bitline to 0 without a fight.
+@cindex weak rule
+In essence, this is how bidirectional bitlines are simulated.
+@cindex bidirectional bitline
+A @emph{weak-rule} 
+Normally in @hacprsim{}, weak rules are disabled, so to properly simulate
+reading from this SRAM cell, you'll need to enable them with
+
+@example
+@prsimkbd{weak-rules on}
+@end example
+
+@noindent
+The complete definition for an sram_cell will look like:
+
+@example
+defproc sram_cell(bool bl, _bl; bool? wl) @{
+[ NETLIST ->
+  @i{// rules for netlist generation}
+  ...
+[] SIMULATION ->
+  @i{// rules for simulation}
+  ...
+]
+@}
+@end example
+
+@noindent
+Not shown is the circuit definition for the bitline driver and reader.
+
+@noindent
+Suggested exercises:
+@itemize
+@item Design the bitline driver and reader that takes a 
+	read/write control signal
+@item Design the circuitry that pulses the wordline during a read or write
+@item Write a @hacprsim{} script that writes and reads
+	sequences of 0s and 1s to a single SRAM cell
+@end itemize
+
+@noindent
+Further discussion topics:
+@itemize
+@item Design SRAM cell with separate bitlines for 
+	reading and writing
+@item Design a multi-read/multi-write ported register cell
+@end itemize
+
+@subsection Ignored attributes
+
+The @HAC{} language allows specifying device attributes
+such as transistor sizes and threshold voltage.
+
+@example
+prs @{
+       a<20> & b<20>      -> c-
+  ~x<20;lvt> & ~y<20;lvt> -> z+
+@}
+@end example
+
+@noindent
+These are all ignored by @hacprsim{}.
+Only the @hacknet{} netlist generator will use these attributes.  
+As a design matures from purely digital to physical,
+more of these attributes will be used to fine-tune 
+the generated spice netlist (without affecting @hacprsim{} behavior).  
+
+
+@c -----------------------------------------------------------------------------
+@section Shared Internal Nodes
+
+@subsection Footed transistors
+
+@subsection Adders
+
+XOR and SUM
+
+@c -----------------------------------------------------------------------------
+@section Custom Power Supplies
+
+The default power supply model in @HAC{} and @hacprsim{} is very simple:
+circuits are globally powered by a single supply and ground.
+However, the language and tools allow a designer to take full control
+over power supply connectivity.  
+
+@c -----------------------------------------------------------------------------
+@section Debugging
+
+@subsection Interference
+
+@subsection Instability
+
+@subsection Deadlock
+
+@subsection X Cycles
+
+@subsection Counting Transition Cycles
+
+using @command{backtrace}
+
+@c -----------------------------------------------------------------------------
+@section Testing with Channels
+
+MUX4 example
+
+@c -----------------------------------------------------------------------------
+@section Defensive Design
+
+@subsection Invariants
+
+@subsection Exclusion Rings
+
+@c -----------------------------------------------------------------------------
+@section Workflow Examples
+
+Examples in this chapter make use of some of the Makefile templates
+provided by the @HACKT{} project.
+

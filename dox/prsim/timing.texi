@@ -35,9 +35,9 @@ Commands that alter a type's properties use the following
 structure of commands to enter a particular type scope:
 
 @example
-prsim> @kbd{pusht nand4}
-prsim> @kbd{... timing commands ...}
-prsim> @kbd{popt}
+@prsimkbd{pusht nand4}
+@prsimkbd{... timing commands ...}
+@prsimkbd{popt}
 @end example
 
 @noindent
@@ -69,9 +69,9 @@ Rules are referenced by matching fanin and fanout.
 For example, 
 
 @example
-prsim> @kbd{pusht nand4}
-prsim> @kbd{local-rules-edit-attr a[0] _o + after 25}
-prsim> @kbd{popt}
+@prsimkbd{pusht nand4}
+@prsimkbd{local-rules-edit-attr a[0] _o + after 25}
+@prsimkbd{popt}
 @end example
 
 @noindent
@@ -102,7 +102,7 @@ We call the former event the @dfn{reference event}
 and the latter event the @dfn{target event}.
 
 @example
-prsim> @kbd{min-delay l.t l.e 60}
+@prsimkbd{min-delay l.t l.e 60}
 @end example
 
 @noindent
@@ -121,12 +121,12 @@ to a node.
 Consider the following examples:
 
 @example
-prsim> @kbd{min-delay a+ b+ 25}
-prsim> @kbd{min-delay a- b- 25}
-prsim> @kbd{min-delay c+ d  30}
-prsim> @kbd{min-delay e  f- 35}
-prsim> @kbd{min-delay g- h+ 40}
-prsim> @kbd{min-delay i+ j- 45}
+@prsimkbd{min-delay a+ b+ 25}
+@prsimkbd{min-delay a- b- 25}
+@prsimkbd{min-delay c+ d  30}
+@prsimkbd{min-delay e  f- 35}
+@prsimkbd{min-delay g- h+ 40}
+@prsimkbd{min-delay i+ j- 45}
 @end example
 
 @noindent
@@ -153,13 +153,13 @@ or an atomic boolean value or @code{ebool}, which can represent
 arbitrary expressions on nodes.  
 
 @example
-prsim> @kbd{min-delay a[0] b 25 select[0]}
-prsim> @kbd{min-delay a[1] b 25 select[1]}
+@prsimkbd{min-delay a[0] b 25 select[0]}
+@prsimkbd{min-delay a[1] b 25 select[1]}
 @end example
 
 @noindent
-Above, the delay from @var{a[0]} to @var{b} is only applicable when
-@var{select[0]} is logic-high at run time.  
+Above, the delay from @var{a}[0] to @var{b} is only applicable when
+@var{select}[0] is logic-high at run time.  
 This is particularly useful for logic that contains path-selection 
 elements like muxes (which can be static or dynamic).  
 Predication can be used to express the conditions under which
@@ -210,8 +210,8 @@ is vacuous, so the previous event is kept and executes at time 10.
 If instead of the per-rule @code{after} delay, we used min-delay
 constraints:
 @example
-prsim> @kbd{min-delay x z 10}
-prsim> @kbd{min-delay y z 10}
+@prsimkbd{min-delay x z 10}
+@prsimkbd{min-delay y z 10}
 @end example
 @noindent
 Then with the same input timing of @code{x} and @code{y} as before,

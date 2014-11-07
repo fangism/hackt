@@ -725,18 +725,18 @@ and without redirecting a script through stdin.
 
 @example
 $ @kbd{hacprsim foo.haco}
-prsim> @kbd{!cat foo.prsimrc}
+@prsimkbd{!cat foo.prsimrc}
 # foo.prsimrc
 echo hello world
 interpret
 echo goodbye world
-prsim> @kbd{source foo.prsimrc}
+@prsimkbd{source foo.prsimrc}
 hello world
-prsim>> @kbd{echo where am I?}
+@prsimkbd2{echo where am I?}
 where am I?
-prsim>> @kbd{exit}
+@prsimkbd2{exit}
 goodbye world
-prsim> @kbd{exit}
+@prsimkbd{exit}
 $
 @end example
 @end deffn

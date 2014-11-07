@@ -29,7 +29,8 @@ hacprsim_INCLUDES = \
 	diagnostics.texi \
 	timing.texi \
 	tips.texi \
-	cosim.texi
+	cosim.texi \
+	applications.texi
 
 $(srcdir)/options.mk: usage.texi
 	{ $(PRINTF) "HACPRSIM_OPTIONS_TEXI = " ; \
