@@ -754,19 +754,237 @@ the generated spice netlist (without affecting @hacprsim{} behavior).
 @c -----------------------------------------------------------------------------
 @section Shared Internal Nodes
 
-@subsection Footed transistors
+@HAC{} also supports a syntax for describing shared internal nodes
+in tranistor networks.  
+This network description is syntactically translated by @hacknet{}, 
+but re-interpreted into equivalent production rules by @hacprsim{}.
 
-@subsection Adders
+@subsection Footed Transistors
 
-XOR and SUM
+The following example defines and uses a single internal node:
+
+@example
+prs @{
+  en & on       -> @@en_-  @i{// declares internal node, footed by @var{on}}
+  ~@@en_ & x & y -> a-     @i{// starts stack with internal node}
+  ~@@en_ & z & w -> b-     @i{// starts stack with internal node}
+@}
+@end example
+
+@noindent
+Internal nodes are declared and referenced with a prefix @t{@@} symbol.
+The resulting netlist has 6 transistors, with a common node shared
+betwen the transitors gated by @var{on}, @var{x}, and @var{z}.
+@hacprsim{} interprets the above by expanding the 
+shared nodes to their corresponding definition expressions:
+
+@example
+prs @{
+  @i{// equivalent rules}
+  en & on & x & y -> a-
+  en & on & z & w -> b-
+@}
+@end example
+
+@noindent
+The internal node features lets a designer express physical topology
+and logic in the same form, without resorting to 
+conditional compilation on tool variables.  
+
+@subsection Sum Logic in Adders
+
+@cindex sum logic
+@cindex parity logic
+The sum output of an adder is basically a parity operation
+on inputs.  Suppose our adder inputs come paired with their complements
+(as they would in dual-rail families):
+@var{a.t}, @var{a.f}, @var{b.t}, @var{b.f}, @var{ci.t}, @var{ci.f}.
+Let us also use a precharge family of logic, using @var{en}
+as the precharge/enable signal.
+Non-shared production rules simply follow the truth table:
+
+@example
+prs @{
+  en & (( a.f & b.f & ci.f ) |
+        ( a.f & b.t & ci.t ) |
+        ( a.t & b.f & ci.t ) |
+        ( a.t & b.t & ci.f ))  -> _s.f-
+  en & (( a.f & b.f & ci.t ) |
+        ( a.f & b.t & ci.f ) |
+        ( a.t & b.f & ci.f ) |
+        ( a.t & b.t & ci.t ))  -> _s.t-
+@end example
+
+@noindent
+This first version starts with 14 transistors.  
+The @var{_s} nodes are inverted into @var{s}, 
+which will remain the same throughout this example.
+
+@example
+prs @{
+  _s.f                         => s.f-
+  _s.t                         => s.t-
+@}
+@end example
+
+@noindent
+The first transformation we can apply is to share the (large) 
+transistor footed by @var{en}.
+
+@example
+prs @{
+  en                           -> @@en_-
+  ~@@en_ & (( a.f & b.f & ci.f ) |
+        ( a.f & b.t & ci.t ) |
+        ( a.t & b.f & ci.t ) |
+        ( a.t & b.t & ci.f ))  -> _s.f-
+  ~@@en_ & (( a.f & b.f & ci.t ) |
+        ( a.f & b.t & ci.f ) |
+        ( a.t & b.f & ci.f ) |
+        ( a.t & b.t & ci.t ))  -> _s.t-
+@}
+@end example
+
+@noindent
+This version has 13 transistors because @var{en} is shared.
+This is safe because the rest of the logic guarantees that there
+are no sneak paths between @var{_s.f} and @var{_s.t} through the 
+shared node network.
+Next, we can introduce pairs of partial-sum internal nodes 
+one input at a time.
+
+@example
+prs @{
+  en                            -> @@en_-
+  ~@@en_ & a.f                   -> @@p1f-
+  ~@@en_ & a.t                   -> @@p1t-
+  (~@@p1f & b.f) | (~@@p1t & b.t) -> @@p2f-
+  (~@@p1t & b.f) | (~@@p1f & b.t) -> @@p2t-
+  (~@@p2f & ci.f)|(~@@p2t & ci.t) -> _s.f-
+  (~@@p2t & ci.f)|(~@@p2f & ci.t) -> _s.t-
+@}
+@end example
+
+@noindent
+This final version has 11 transistors, 
+and is logically equivalent to the original version.
+
+@subsection Carry Logic in Adders
+
+@cindex carry-out logic
+@cindex majority logic
+@b{Exercise for the reader:}
+Implement the carry-out (majority) function with dual-rail
+inputs on @var{a}, @var{b}, and @var{ci}, and dual-rail output @var{co}.
+
 
 @c -----------------------------------------------------------------------------
 @section Custom Power Supplies
 
 The default power supply model in @HAC{} and @hacprsim{} is very simple:
-circuits are globally powered by a single supply and ground.
+all circuits are powered by a single, global supply and ground,
+named @var{!Vdd} and @var{!GND} at the top-level.
 However, the language and tools allow a designer to take full control
-over power supply connectivity.  
+over power supply connectivity everywhere in the hierarchy.  
+In @HAC{}, a designer can express explicit power-gating, 
+and separation of multiple power supplies.  
+
+@subsection Implicit Supplies
+
+Every process (defined by @t{defproc}) comes with two supply ports,
+@var{!Vdd} and @var{!GND}.
+By default, these are the supplies that are connected to 
+the netlist for the subcircuit (at both source and substrate terminals).  
+
+@subsection Overriding Supplies
+
+There are two ways of overriding supply connections.
+The first is to connect different supplies at the instance level:
+
+@example
+defproc inv(bool? in; bool! out) @{ ... @}
+
+bool myVdd, myGND, x, y;
+inv foo $(myVdd, myGND)(x, y);   @i{// override}
+@end example
+
+@noindent
+The @t{$(...)} list gives direct access to the @var{!Vdd} and @var{!GND} 
+ports of every process.
+When omitted, they simply connect to the current level's 
+implicit supplies @var{!Vdd} and @var{!GND}.
+
+The second way to override supplies is to provide custom supply ports
+and override the @t{prs} body.
+
+@example
+defproc inv(bool? V, G; bool? in; bool! out) @{
+  V @@[supply=1];
+  G @@[supply=0];
+  prs <V,G> @{ ... @}
+@}
+@end example
+
+@noindent
+@var{V} and @var{G} are declared as input ports and
+tagged with supply attributes.  (The attributes help the compiler
+check for misconnections between supplies and non-supplies.)
+The @t{<V,G>} tells the @hacknet{} to use the given nodes as supplies
+instead of @var{!Vdd} and @var{!GND}.
+In fact, unused ports @var{!Vdd} and @var{!GND} will be omitted
+from the subcircuit definition in the netlist.
+Users may prefer this style as it is more consistent
+with the rest of the language.
+
+A process definition may use multiple supplies in different @t{prs} blocks.
+
+@example
+  prs <V1,G1> @{ ... @}
+  prs <V2,G2> @{ ... @}
+  prs <V3,G3> @{ ... @}
+@end example
+
+In a few sections, we will discuss how these impact simulation.
+
+@subsection Overriding Substrate Contacts
+
+Substrate contacts can also be overridden.
+
+@example
+prs <Vsrc, Gsrc | Vsub, Gsub> @{ ... @}
+@end example
+
+Again, substrate connections only affect the netlist, 
+not simulator behavior.
+
+@subsection Modeling Dynamic Power Supplies
+
+Even with supplies, override, @hacprsim{} simulates all circuits
+as if they share the same single global poewr supply unless you use
+the one or more of the following command-line options at startup.
+
+@itemize
+@item @option{-f dynamic-power-supply}
+@item @option{-f dynamic-ground-supply}
+@end itemize
+
+With these options on, production rules are expanded as if
+the supplies participate in the rules (conjunctively).
+For example with @option{-f dynamic-power-supply}, when 
+you query the fanin of a rule you will see @var{!Vdd}
+(or whatever supply you connected):
+
+@example
+@prsimkbd{fanin c}
+Fanins of node `c':
+(from J):
+[after 10]      ~b & !Vdd -> c+
+[after 10]      b -> c-
+@end example
+
+@noindent
+This allows a user to dynamically enable or disable entire supply domains, 
+by @command{set} commands or other power-gating logic.  
 
 @c -----------------------------------------------------------------------------
 @section Debugging
@@ -784,14 +1002,19 @@ over power supply connectivity.
 using @command{backtrace}
 
 @c -----------------------------------------------------------------------------
-@section Testing with Channels
+@section Testing with Channels (synchronous)
 
 MUX4 example
+
+@c -----------------------------------------------------------------------------
+@section Testing with Channels (asynchronous)
 
 @c -----------------------------------------------------------------------------
 @section Defensive Design
 
 @subsection Invariants
+
+@subsection Using Atomic Expressions
 
 @subsection Exclusion Rings
 
