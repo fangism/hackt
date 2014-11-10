@@ -7,11 +7,11 @@
 # don't assume that hacpp was invoked with -P (suppress-file-import-directives)
 # output is redirected to stdout
 
-exec @SED@ -e 's|^#FILE.*{|// &|' -e 's|^}.*#FILE.*|// &|' | \
+exec @SED@ -e '/#FILE.*{/s|^|// |' -e '/}.*#FILE.*/s|^|// |' | \
 @CPP_TRADITIONAL@ -traditional-cpp -C -P | \
-@SED@ -e 's|^\/\/ \(.*#FILE.*\)|\1|'
+@SED@ -e '/^\/\/ .*#FILE/s|^\/\/ ||'
 
-# comment out #FILE directives
+# comment out #FILE directives (add one level)
 # cpp, preserving comments, -traditional-cpp preserve spaces/lines better
-# uncomment #FILE directives
+# uncomment #FILE directives (remove one level)
 
