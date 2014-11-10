@@ -30,14 +30,23 @@ prs @{
 @end example
 
 @noindent
-Compile it.
+This declares two rules for the opposing pull networks
+that make an inverter.
+The order in which rules are written does not matter;
+everything is concurrent.
+
+Compile it into an object file.
 
 @example
 @shellkbd{haco inv1.hac inv1.haco}
 @end example
 
 @noindent
-Run it.
+Object files are the primary inputs to all back end tools.
+They consist of internal hierarchical representations of the 
+described circuit.
+
+Run it, by loading the object file.
 
 @example
 @shellkbd{hacprsim inv1.haco}
@@ -46,7 +55,7 @@ Run it.
 
 @noindent
 You've succesfully loaded the simulation.
-The simulator awaits your commands.
+The simulator awaits your command.
 
 @example
 @prsimkbd{time}
@@ -82,7 +91,10 @@ event queue:
 @noindent
 The @command{set} command doesn't change the value right away, 
 it only @emph{schedules} it right away.  
-Above, we see that a transition on a:0 is pending, in the event queue.
+Above, the @command{why-x} command reports that a transition on a:0 is pending,
+in the event queue.
+@command{pending} reports whether a node has a pending transition in queue.
+@command{queue} prints the entire event queue.
 To advance the simulation, we need to @command{step} or
 @command{cycle} (run until no events remain in queue).
 
@@ -95,13 +107,21 @@ To advance the simulation, we need to @command{step} or
 event queue:
 @prsimkbd{time}
 time: 10
+@prsimkbd{get a}
+a : 0
+@prsimkbd{get b}
+b : 1   [by a:=0]
 @end example
 
 With the @command{watchall} at the beginning,
 the simulator reports every node transition as it happens.
 The change on @var{a} triggered an event on @var{b}, which then executed, 
 leaving the event queue empty at time 10.
+The @command{get} command simply prints the current value of a node.
 At any time, we can @command{assert} that nodes have the values we expect.
+Should an @command{assert}ion fail, the simulator will halt.
+A failed @command{assert}ion (or similar fatal error) in a script
+will terminate the simulator and return a non-zero exit status.
 
 @example
 @prsimkbd{set a 1}
@@ -110,6 +130,75 @@ At any time, we can @command{assert} that nodes have the values we expect.
         20      b : 0   [by a:=1]
 @prsimkbd{assert b 0}
 @end example
+
+@noindent
+We can also query the connectivity of rules and nodes, 
+which look like the written production rules.
+
+@example
+@prsimkbd{fanout a}
+Fanouts of node `a':
+(to [top-level]):
+[after 10]      a -> b-
+[after 10]      ~a -> b+
+@prsimkbd{fanout-get a}
+Fanouts of node `a':
+(to [top-level]):
+[after 10]      a:1 -> b-:0
+[after 10]      ~a:1 -> b+:0
+@prsimkbd{fanin b}
+Fanins of node `b':
+(from [top-level]):
+[after 10]      ~a -> b+
+[after 10]      a -> b-
+@prsimkbd{fanin-get b}
+Fanins of node `b':
+(from [top-level]):
+[after 10]      ~a:1 -> b+:0
+[after 10]      a:1 -> b-:0
+@prsimkbd{fanin a}
+Fanins of node `a':
+@prsimkbd{fanout b}
+Fanouts of node `b':
+@end example
+
+@noindent
+The @command{-get} variants of these commands print the current value
+of each node, following a @t{:} (colon).
+
+Compile and run the the following example, a NAND gate.
+
+@example
+bool a, b, _c;
+prs @{
+  a & b   => _c-
+@}
+@end example
+
+The @command{fanin-get} and @command{fanout-get} commands
+print more information about the values of subexpressions.
+
+@example
+@prsimkbd{set a 1}
+@prsimkbd{set b 1}
+@prsimkbd{cycle}
+@prsimkbd{fanin-get _c}
+Fanins of node `_c':
+(from [top-level]):
+[after 10]      ~a:1 | ~b:1<0><0> -> _c+:0
+[after 10]      a:1 & b:1<1><1> -> _c-:0
+@end example
+
+@noindent
+Expressions like @t{<0>} denote the value of the subexpression
+immediately to its left.  The @t{<0>} after @t{~a:1 | ~b:1} comes from
+the evaluation of @t{0|0}.  The very last @t{<0>} on the same line
+is the OR-combined value of all expressions in all rules that pull @t{_c} up,
+which in this case, is just the value of the only guard expression.
+
+You now know how to compile and run a circuit in @hacprsim{},
+set and query values, advance the simulation, and examine 
+the status of production rule fanin and fanout.  
 
 @c -----------------------------------------------------------------------------
 @subsection Built-in Commands
@@ -168,7 +257,7 @@ To see a comprehensive list of all commands (by category):
 @end example
 
 To see a history of commands we entered
-(useful for retracing your steps):
+(useful for retracing your steps, or saving scripts):
 @example
 @prsimkbd{history}
 history[0..3]:
@@ -271,7 +360,9 @@ inv J(y, z);
 @end example
 
 @noindent
-Compile and run it.
+It helps to separate definitions from top-level instances, 
+so that common files contain only definitions.  
+Compile and run @file{inv-test.hac}.
 @example
 @shellkbd{haco inv-test.hac inv-test.haco}
 @shellkbd{hacprsim inv-test.haco}
@@ -279,7 +370,21 @@ Compile and run it.
 @end example
 
 @noindent
-Let us introduce some new commands.
+Let us introduce some new information commands.
+When working with an unfamiliar circuit it helps to know what 
+a name refers to with the @command{what} command.
+
+@example
+@prsimkbd{what I}
+I refers to process-inst-ref inv<>
+@prsimkbd{what a}
+a refers to bool-inst-ref bool<>
+@end example
+
+@noindent
+During initialization or operation, we often want to 
+know what nodes still have unknown value.
+
 @example
 @prsimkbd{status X}
 X nodes:
@@ -352,6 +457,25 @@ Instances:
   a = bool
   b = bool
 @end example
+
+@noindent
+The @command{rules} command shows what production rules belong to a process.
+@example
+@prsimkbd{rules .}
+[top-level]
+rules:
+@prsimkbd{rules J}
+J refers to process-inst-ref inv<>
+rules:
+[after 10]      y -> z-
+[after 10]      ~y -> z+
+@end example
+
+@noindent
+Note that @command{rules} prints nodes using their @emph{global} names,
+rather than their subcircuit-local names.  
+@command{rules-verbose} prints production rules annotated
+with nodes' current values.  
 
 @noindent
 One can descend into processes with directory commands.
@@ -430,6 +554,15 @@ most recent event that @emph{caused} each transition to be scheduled.
 This forms a critical path causality chain.  
 This can be useful for debugging unexpected values
 or estimating delays on performance-critical paths.  
+@t{no cycle} means that the iterative query found no causing event,
+which is often the case with user-driven inputs.  
+The backtrace will report @t{cycle reached} if it encounters
+a transition a second time in the trace.  
+
+Now you have learned how to navigate the circuit hierarchy 
+in the simulator, and obtain more information about named
+nodes and subcircuits.  
+
 
 @c -----------------------------------------------------------------------------
 @c @node Simulation vs. Netlist
@@ -443,6 +576,51 @@ target backend tool.
 It is advised to minimize the number of places in a circuit description
 that diverge, as these are often error-prone and require thorough designer
 review.  
+
+@subsection Expression Ordering
+
+Production rules in @HAC{} serve two purposes: to specific digital logic
+behavior and transistor topology.
+It is important to understand how the production rules are 
+translated into netlists.
+
+@itemize
+@item The order in which instances are declared bears no consequence
+on logical behavior nor the spice netlist.
+@item The order in which rules are written also does not affect
+logical nor netlist behavior.
+@item The order of literals in guard expressions does not affect
+logical behavior, but it does affect the netlist.
+Series transistors start at the power supply and append
+towards the output node.
+In other words, the leftmost literal (in an AND expression)
+is closest to the supply, and the rightmost literal is closest
+to the output.  
+@end itemize
+
+@noindent
+Consider the following example, an OR-combination
+of two pull-down stacks:
+
+@example
+prs @{
+  a & b & c  -> o-
+  d & e & f  -> o-
+@}
+@end example
+
+@noindent
+The transistors gated by @var{a} and @var{d} have their
+sources connected to the ground supply.  
+The transistors gated by @var{c} and @var{f} have their
+drains connected to the output @var{o}.
+You can think of every @t{&}-operator as representing
+an unnamed internal node between two (or more) transistors.
+
+It is a good practice to mind transistor ordering when
+writing production rules.  
+
+@subsection Tool Selection Headers
 
 Let's create two @HAC{} header files for the sake of tool selection.  
 
@@ -879,6 +1057,87 @@ inputs on @var{a}, @var{b}, and @var{ci}, and dual-rail output @var{co}.
 
 
 @c -----------------------------------------------------------------------------
+@section Internal Precharges
+
+@cindex charge sharing
+@cindex precharge
+A designer may wish to add precharges to a netlist as a means of 
+mitigating charge sharing, and other internal node effects.  
+@HAC{}'s PRS sublanguage supports a syntax for specifying precharges.
+Precharge annotations have no impact on logical behavior
+in @hacprsim{}; they only affect @hacknet{}'s spice netlists.
+A precharge expression can be attached to any @t{&}-operator, 
+which represents an internal node.
+
+@example
+bool en, x, y, zx, zy;
+prs @{
+  en &@{+~en@} x  -> zx-
+  en &@{+~en@} y  -> zy-
+@}
+@end example
+
+@noindent
+The above example shows two stacks, each with its own PMOS precharge.
+The following example, uses a shared foot transistor on @var{en}:
+
+@example
+bool en, x, y, zx, zy;
+prs @{
+  en                -> @@en_-
+  ~@@en_ &@{+~en@} x   -> zx-
+  ~@@en_ & y         -> zy-
+@}
+@end example
+
+@noindent
+Note that the precharge expression @t{@{+~en@}} is only attached
+to one of the stacks, but both stacks share the same internal
+node @t{@@en_} and thus, benefit from the shared precharge.
+
+@itemize
+@item Stacks may have an arbitrary number of precharges.
+@item Pull-up stacks may also contain precharges.
+@item Precharges can also be expressions, not just single literals.  
+@item Pull-up and pull-down precharges can be used in either
+	pull-up or pull-down rules.
+@end itemize
+
+@subsection Precharge Invariants
+
+@cindex invariants
+@hacprsim{} has a built-in safety check for precharges.
+Everywhere a precharge is used, the simulator produces an invariant
+asserting that the precharge on an internal node does not
+cause a short between supplies.  
+For every precharge expression @var{P} attached to a node
+footed by expression @var{G},
+
+@example
+  G &@{+P@} & ... -> o-
+@end example
+
+@noindent
+the invariant expression @t{~(G & P)} must hold to prevent shorting, 
+because G pulls the internal node down, and P pulls the node up.  
+The following example produces simulator invariant:
+
+@example
+bool _Reset, Re, Le, Ld, _rd;
+prs @{
+  _Reset & Re & Le          -> @@_in-
+  ~@@_in &@{+~Re & ~Le@} Ld    -> _rd-
+@}
+@end example
+
+@example
+@prsimkbd{invariants .}
+[top-level]
+invariants:
+$(~((~Re & ~Le) & (_Reset & Re & Le)), "[auto] precharge interference")
+@end example
+
+@c -----------------------------------------------------------------------------
 @section Custom Power Supplies
 
 The default power supply model in @HAC{} and @hacprsim{} is very simple:
@@ -1012,7 +1271,30 @@ MUX4 example
 @c -----------------------------------------------------------------------------
 @section Defensive Design
 
+Subcircuits are often designed with assumptions about their environment,
+or limitations of operation.  
+@HAC{} SPEC sublanguage supports a syntax for expressions
+@emph{invariants}, expressions that should @emph{always} evaluate true.
+Good designs should be annotated with invariants that can be
+checked by various tools.  
+
 @subsection Invariants
+@cindex invariants
+
+The syntax for invariants inside a SPEC body is simply
+@itemize
+@item @code{$(prs-expr)}
+@item @code{$(prs-expr, "description")}
+@end itemize
+
+The following invariant asserts that @var{a} and @var{b} are never
+true at the same time:
+
+@example
+spec @{
+  $(~(a & b), "There can be only one.")
+@}
+@end example
 
 @subsection Using Atomic Expressions
 
