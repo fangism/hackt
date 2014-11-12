@@ -1110,7 +1110,7 @@ node @t{@@en_} and thus, benefit from the shared precharge.
 Everywhere a precharge is used, the simulator produces an invariant
 asserting that the precharge on an internal node does not
 cause a short between supplies.  
-For every precharge expression @var{P} attached to a node
+For every precharge expression @var{P} pulling up a node
 footed by expression @var{G},
 
 @example
@@ -1120,6 +1120,7 @@ footed by expression @var{G},
 @noindent
 the invariant expression @t{~(G & P)} must hold to prevent shorting, 
 because G pulls the internal node down, and P pulls the node up.  
+(Pull-down precharges are also allowed, denoted @t{-} instead of @t{+}.)
 The following example produces simulator invariant:
 
 @example
@@ -1213,8 +1214,13 @@ Substrate contacts can also be overridden.
 prs <Vsrc, Gsrc | Vsub, Gsub> @{ ... @}
 @end example
 
+Anytime the substrate connections need to differ from the
+supply sources, the two implicit supply ports will not suffice --
+you will have to pass in extra explicit supply ports, 
+and override them using @code{prs<...|...>}.  
+
 Again, substrate connections only affect the netlist, 
-not simulator behavior.
+not digital simulator behavior.
 
 @subsection Modeling Dynamic Power Supplies
 
@@ -1245,8 +1251,19 @@ Fanins of node `c':
 This allows a user to dynamically enable or disable entire supply domains, 
 by @command{set} commands or other power-gating logic.  
 
+@b{Caveat:} because of the state-holding nature of nodes in
+@hacprsim{}, turning off a power supply will not cause nodes
+under the supply's domain to go to @t{X}, they will continue to
+hold their old value.  
+This model does not seem honest and may change in the future.
+
 @c -----------------------------------------------------------------------------
 @section Debugging
+
+This section provides examples of debugging sessions featuring
+various encountered diagnostics and commands that helped find the root cause.
+
+@subsection Why X?
 
 @subsection Interference
 
@@ -1254,11 +1271,274 @@ by @command{set} commands or other power-gating logic.
 
 @subsection Deadlock
 
+@command{why-not}
+
 @subsection X Cycles
 
 @subsection Counting Transition Cycles
 
-using @command{backtrace}
+Using @command{backtrace}
+
+@c -----------------------------------------------------------------------------
+@section Checkpointing and Tracing
+
+@hacprsim{} supports checkpointing, the saving and restoring of simulator
+state. 
+The primary benefit of checkpointing is the ability to save away state 
+for later examination or continuation.
+With a checkpoint, one can immediately jump to a snapshot in time
+without having to re-run from the beginning.
+
+@subsection Manual Saving and Loading
+
+The @command{save} and @command{load} commands are used to create and restore 
+checkpoints and take a single file name argument.  
+
+@example
+# stuff happens ...
+@prsimkbd{save state1.prsimckpt}
+@end example
+
+@noindent
+After exiting @hacprsim{}, one can restart it (using the same object file), 
+and load the checkpoint:
+
+@example
+@prsimkbd{load state1.prsimckpt}
+# more stuff happens ...
+@end example
+
+@noindent
+and pick up exactly where it left off before.
+
+Perhaps obvious, but a particular checkpoint is only valid with the
+original object file from which the @hacprsim{} session was launched.  
+(There a few safety and sanity checks done at load time.)
+The majority of contents in the checkpoint is a flat array of node states,
+one for every unique node in the hierarchy, 
+no structural information is contained.
+The checkpoint file is relatively lightweight because it relies on the
+information in the associated object file for hierarchical mapping.
+
+There is no limit (other than space) on the number of checkpoints
+that can be saved.
+
+@example
+@prsimkbd{save pre-reset.prsimckpt}
+# apply resets and cycle
+@prsimkbd{save post-reset.prsimckpt}
+# load a configuration
+@prsimkbd{save post-configure.prsimckpt}
+# process a data packet
+@prsimkbd{save post-run-1.prsimckpt}
+# process another data packet
+@prsimkbd{save post-run-2.prsimckpt}
+...
+@end example
+
+@subsection Automatic Save-on-Exit
+
+One can rarely anticipate the times when a simulation checkpoint is desired,
+so a user can request for a checkpoint to be emitted on exiting @hacprsim{}.
+
+@example
+@prsimkbd{autosave on autosave.prsimckpt}
+# turn on maximum fatal diagnostics
+@prsimkbd{mode fatal}
+# do stuff with impunity ...
+@end example
+
+@noindent
+Alternatively, the auto-save checkpoint can be requested via the 
+@option{-a} command-line option, followed by any file name.
+
+@example
+@shellkbd{hacprsim -a saveme.prsimckpt test_device.haco}
+@end example
+
+@noindent
+Should the simulator terminate prematurely with an error status, 
+there will be a checkpoint saved at the time the error occurred.  
+The checkpoint can be loaded for post-mortem analysis, without having 
+to manually re-run.  
+
+@subsection Saving Trace
+
+@hacprsim{} supports a means of logging every event to a binary trace file.
+The trace file format is a compact format that only @hacprsim{} can read.
+Every entry in the trace contains:
+
+@itemize
+@item reference to node that changed (a global index)
+@item node's old value
+@item node's new value
+@item reference to last event that caused this node to change (if any)
+@end itemize
+
+@noindent
+Future plans for trace analysis intend to use this.
+
+@example
+@prsimkbd{trace record.prsimtrace}
+# normal interaction/script...
+@end example
+
+Normally, tracing continues until the simulator exits.
+To turn off tracing any time, use the @command{trace-close} command.
+
+@noindent
+To trace from the very beginning one can also use the @option{-r}
+command-line option:
+
+@example
+@shellkbd{hacprsim -r everything.prsimtrace test_device.haco}
+@end example
+
+@noindent
+A simulation can use both tracing and checkpointing.  
+
+@subsection Vector Change Dump
+
+Vector Change Dumps (or VCD) are an industry-standard format for 
+simulation traces.  
+To save a trace to VCD, use @command{vcd}.
+
+@example
+@prsimkbd{vcd record.prsimtrace}
+# normal interaction/script...
+@end example
+
+@noindent
+Currently, there is no command-line option to turn on vcd tracing
+at startup.
+Normally, VCD recording continues until the simulator exits.
+To VCD-tracing at any time, use the @command{vcd-close} command.
+
+Recording a @hacprsim{}-trace and VCD-trace at the same time is permitted.
+
+@c -----------------------------------------------------------------------------
+@section Diagnostic and Behavior Control
+
+@hacprsim{} offers users the ability to control diagnostic-handling
+policies globally.
+
+@subsection Mode Commands
+
+See @command{help modes} for list.
+
+@subsection Resetting and Weak-Interference
+
+Most circuits have some notion of "reset," a way to initialize the circuit
+to a known state.  
+Resetting is often considered an atypical operation
+where one may be less concerned with transient states, 
+and only concerned with reaching the settled state.  
+
+@cindex weak interference
+@hacprsim{} initial state (upon loading an object file)
+has every node at @t{X}, which also means that every guard expression
+pulling on every node is pulling @t{X} up and down.  
+By definition, every node is in a state of @emph{weak interference}, 
+specifically with @t{X} vs @t{X} opposing pulls.
+One can confirm this by running @command{status-weak-interference}
+at the start of any simulation.  
+
+Reset usually begins when a user @command{set}s a signal (or group of signals)
+that triggers a chain of events that drive nodes to @t{0} or @t{1}.
+During reset propagation, however there may be situations where
+a node undergoes a @emph{transient} @t{1} vs. @t{X} pull fight, 
+which would be reported as weak interference.  
+To suppress this warning during reset, you could reset like the following:
+
+@example
+@prsimkbd{weak-interference ignore}
+# set various reset signals...
+@prsimkbd{cycle}
+@prsimkbd{assertn-queue}
+@prsimkbd{status-interference}
+@prsimkbd{status-weak-interference}
+@prsimkbd{weak-interference warn}
+# de-assert various reset signals...
+@prsimkbd{cycle}
+@prsimkbd{...}
+@end example
+
+@noindent
+The @command{assertn-queue} command asserts that the event queue
+is empty, which is what one would expect upon return from a @command{cycle}.
+@command{status-interference} and @command{status-weak-interference}
+are used interactively to make sure no nodes are undergoing interference
+in the settled reset state.  
+(I don't have an @command{assert-} variation of those commands yet,
+but it would be easy to add one.)
+A more inclusive pair of commands is @command{mode run} and 
+@command{mode reset}.  These affect other diagnostic policies.
+
+@example
+@prsimkbd{mode reset}
+# set various reset signals...
+@prsimkbd{cycle}
+@prsimkbd{status-interference}
+@prsimkbd{status-weak-interference}
+@prsimkbd{assertn-queue}
+@prsimkbd{mode run}
+# de-assert various reset signals...
+@prsimkbd{cycle}
+@prsimkbd{...}
+@end example
+
+@noindent
+@command{mode paranoid} turns additional (default) warnings into breaks,
+and @command{mode fatal} turns all diagnostic warnings into fatal errors.
+
+@subsection Instabilities in Synchronous Circuits
+
+@cindex instability
+@hacprsim{} has its roots in asynchronous circuit development, 
+but is also well-suited for synchronous circuit design.
+Testing synchronous circuits with @hacprsim{} requires an understanding
+of instabilities.  
+
+Recall that an instability is when the guard for a production rule
+(whose output event is scheduled) becomes false before the 
+scheduled event executes.  
+This is forbidden in some families of asynchronous logic, 
+and the conservative behavior in such cases is to (after issuing a diagnostic)
+turn the affected output node to @t{X},  @emph{even if the new pull state
+of the node pulls it to 0 or 1},
+because the node value's stability is not guaranteed.  
+A glitch may or may not occur, due to timing variation -- 
+one cannot know without accurate timing.  
+This behavior in @hacprsim{} is made explicit by the commands:
+@example
+# for asynchronous circuits
+@prsimkbd{unstable break}
+@prsimkbd{unstable-unknown}
+@end example
+@noindent
+@command{unstable break} tells the simulator to interrupt event processing
+(from @command{cycle}) when an instability is encountered.
+@command{unstable-unknown} tells the simulator to turn the 
+output node to @t{X} on instability.  
+The intent of this behavior is to signal to the designer that
+this instability needs to be diagnosed and fixed before proceeding further.
+The @command{backtrace} and @command{why-}family of commands
+are vital instruments in debugging instabilities.  
+
+@cindex synchronous logic
+For synchronous circuits, we want to allow transient glitches and 
+instabilities because we only sample values on clock edges.  
+Use @command{unstable warn} or @command{unstable ignore} to downgrade the 
+diagnostic, allowing event processing to continue uninterrupted.
+Use @command{unstable dequeue} to simple dequeue an outstanding event in
+queue rather than marking the affected node as @t{X}, which effectively
+keeps the previous value on that node.  
+
+@example
+# for synchronous circuits
+@prsimkbd{unstable warn}
+@prsimkbd{unstable-dequeue}
+@end example
 
 @c -----------------------------------------------------------------------------
 @section Testing with Channels (synchronous)
@@ -1287,6 +1567,9 @@ The syntax for invariants inside a SPEC body is simply
 @item @code{$(prs-expr, "description")}
 @end itemize
 
+@noindent
+where @i{prs-expr} is any expression that can appear
+as a production rule guard.
 The following invariant asserts that @var{a} and @var{b} are never
 true at the same time:
 
@@ -1296,7 +1579,24 @@ spec @{
 @}
 @end example
 
+@noindent
+@b{Exercise:} write an invariant that asserts that either 1 or 2 out of 3 
+signals must be high.  (Hint: consider the negated case.)
+
 @subsection Using Atomic Expressions
+
+@cindex atomic expressions
+Invariants are often expressed in subexpressions that are
+used repeatedly.  To assist in constructing complex expressions,
+we can use @emph{atomic expressions} in the @HAC{} language.
+
+@cindex atomic variables
+Atomic bools represent boolean-valued expressions at run-time,
+but do not correspond to any physical node or wire.
+They are defined in the @t{rte} (run-time expression) language bodies,
+and can depend on atomic or non-atomic bools.  
+
+
 
 @subsection Exclusion Rings
 
