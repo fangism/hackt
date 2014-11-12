@@ -8474,7 +8474,7 @@ void
 ClockSource::usage(ostream& o) {
 	o << name << " <[~*]?node:init> <int|*>" << endl;
 	o << "node is the name of a wire signal.\n"
-"If node name is prefixed with ~, clock is active-lowa\n."
+"If node name is prefixed with ~, clock is active-low.\n"
 "If node name is prefixed with *, clock is double-edged.\n"
 "For double-edged clocks, init is the reset value.\n"
 "Number of cycles is an integer or * for infinite." << endl;

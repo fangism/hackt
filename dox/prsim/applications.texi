@@ -196,6 +196,34 @@ the evaluation of @t{0|0}.  The very last @t{<0>} on the same line
 is the OR-combined value of all expressions in all rules that pull @t{_c} up,
 which in this case, is just the value of the only guard expression.
 
+There is one optional compilation step that a user may wish to run:
+
+@example
+@shellkbd{haccreate inv1.haco inv1.haco-c}
+@end example
+
+@noindent
+@haccreate{} compiles the object file further by expanding
+instances in the hierarchy ('create') from the top-down, 
+and caching the expanded structures internally.  
+The result is a larger object file.  
+Many errors are not caught until this expansion is done, 
+for example, index-out-of-array-bounds errors.  
+It is advised to compile through the @haccreate{} phase
+in your workflow to catch errors as early as possible.
+All of @HACKT{}'s back-end tools like @hacprsim{} and @hacknet{}
+will accept either pre-created and post-created object files.
+The back-end tools will automatically invoke @haccreate{} (internally),
+before performing their function.
+
+@itemize
+@item @shellkbd{hacprsim inv1.haco}
+@item @shellkbd{hacprsim inv1.haco-c}
+@end itemize
+
+@noindent
+give the exact same behavior.
+
 You now know how to compile and run a circuit in @hacprsim{},
 set and query values, advance the simulation, and examine 
 the status of production rule fanin and fanout.  
@@ -793,6 +821,18 @@ In no state is @var{_c} undriven, making this a combinational circuit.
 
 Explicit combination feedback doesn't require any special handling
 in @hacprsim{} or @hacknet{}.  
+However, it may help other tools that read netlists to flag
+rules as belonging to combinational feedback:
+
+@example
+prs @{
+  [isckeeper]  c & ( a |  b) -> _c-
+  [isckeeper] ~c & (~a | ~b) -> _c+
+@}
+@end example
+
+@noindent
+This adds extra annotations to affected device names in the spice netlist.
 
 @c -----------------------------------------------------------------------------
 @subsection RAM Cell
@@ -1543,10 +1583,165 @@ keeps the previous value on that node.
 @c -----------------------------------------------------------------------------
 @section Testing with Channels (synchronous)
 
-MUX4 example
+This section provides some complete examples that demonstrate
+how to use clocked channel environments to test synchronous circuits.  
+Channel environments are a convenient way of driving a test circuit
+and checking its output values.
+
+@subsection Clocked Channels
+
+A clocked channel is simply a data bus or wire coupled to a
+clock signal.  
+The clock serves as a reference for when the data should change,
+or when the data should be sampled.  
+We define empty structures that pairs clock and data together:
+
+@example
+// "clocked_channel.hac"
+template <pint N>
+defchan cd <: chan(int<N>) (bool clk, d[N]) @{ @}
+defchan cd0 <: chan(int<1>) (bool clk, d) @{ @}
+@end example
+
+@noindent
+These definitions are also provided in the installed header,
+
+@noindent
+@file{$prefix/share/hackt/lib/channel_bd.hac}.
+
+@noindent
+However, the examples in this section can use just the above definitions.
+
+The names of these structure definitions is of no consequence, 
+but the names of the clock and data ports will be important
+when we bind these to @hacprsim{}'s channel environments.
+
+@subsection Testing Combinational Logic
+
+Consider the following prototype for a 4-to-1 MUX
+@example
+// "mux.hac"
+defproc mux4(bool? in[4], sel[2]; bool! out) @{ ... @}
+@end example
+
+@noindent
+and a test instantiation
+@example
+// "mux_test.hac"
+import "clocked_channel.hac";
+import "mux.hac";
+bool in[4], sel[2], out;
+mux4 M(in, sel, out);
+@end example
+
+@noindent
+Instead of using @command{set}, @command{cycle}, and @command{assert}
+commands (which can get tiresome), we will use clocked channels to
+drive and test.
+Append the following to @file{mux_test.hac}:
+
+@example
+@i{// --continued--}
+bool clk;
+cd<4> in_c(clk, in);
+cd<2> sel_c(clk, sel);
+cd0 out_c(clk, out);
+@end example
+
+@noindent
+We have declared a reference clock @var{clk}, and bound the input
+and output signals to the clock in channels.  
+This lets us refer to @var{in_c}, @var{sel_c}, and @var{out_c} as coherent 
+clock-data pairs in @hacprsim{}.
+The sole purpose for the clock signal is to signal when
+inputs should change and when outputs should be sampled.
+
+Load @file{mux_test.haco} into @hacprsim{}.
+
+@example
+@prsimkbd{watchall}
+@prsimkbd{channel-watchall}
+@end example
+@noindent
+In @hacprsim{}, channnels live in their namespace 
+and get their own @command{watchall} command.
+We turn it on for instructional purposes.
+@example
+@prsimkbd{clock-source clk:0 10}
+@prsimkbd{channel-timing clk after 100}
+@end example
+@noindent
+This declares that the environment will drive @var{clk}
+for 10 positive-edge cycles, one for every vector we will apply.
+On @command{channel-reset}, @var{clk} will be set to 0, initially.
+We have also configured the @emph{half-clock period} of @var{clk}
+to be 100, sufficient for logic to propagate and settle for this circuit.
+Next we describe the interpretation of our channel structures.  
+@example
+@prsimkbd{channel-clocked in_c ~clk:0 d:4}
+@prsimkbd{channel-clocked sel_c ~clk:0 d:2}
+@prsimkbd{channel-clocked out_c clk:0 d:0}
+@end example
+@noindent
+We intend to drive @var{in_c} and @var{sel_c} as inputs, 
+and we have chosen to change their values on the negative-edge 
+(indicated by the @t{~} prefix) of the clock,
+@var{in_c.clk}, which we've connected to the top-level @var{clk} signal.
+The @t{:0} after @t{clk} refers to an initial value, which is 
+irrelevant in this example, but needed syntactically.  
+The @var{d} in @t{d:N} refers to the name of member of type @t{cd<N>}
+that is interpreted as a bit-array of data.  
+@t{N} is the size of the data array, or 0 for a single bit wire.
+The LSB of (integer) values on these channels corresponds to bit @t{d[0]}.
+At this point, we've informed @hacprsim{} on the interpretation of 
+user-defined channel structures,
+and now we drive them with data.
+@example
+@prsimkbd{channel-source-args in_c 0xa 0xa 0x5 0x5 15 15 0 0 6 6}
+@prsimkbd{channel-source-args sel_c 0 1 2 3 0 1 2 3 0 1}
+@prsimkbd{channel-expect-args out_c 0 1 1 0 1 1 0 0 1 1}
+@end example
+@noindent
+We have given each channel ten values on the command-line.
+As seen in channel @var{in_c}'s, values can be in 
+decimal or hexadecimal (with a leading @t{0x}).
+On every cycle of @var{clk}, these channels will apply and advance
+one value.
+Channel values can also come from a file instead of the command-line, 
+using the @command{channel-source-file} and @command{channel-expect-file}
+command variants.  
+Since our input channels @var{in_c} and @var{sel_c} were configured
+as negative-edge sensitive, their data array will change
+value on the negative edge.
+The output channel @var{out_c} is configured to sample 
+values on the positive edge of @var{clk}.
+Once the value list is exhausted, a channel-source will remain at
+the last value until reconfigured, 
+and a channel-expect will stop checking values.
+
+To initialize the state of channels, we could reset individual channels
+with @command{channel-reset} or in most cases, just reset everything with
+
+@example
+@prsimkbd{channel-ignore-all}
+@prsimkbd{channel-reset-all}
+@end example
+
+@noindent
+...
 
 @c -----------------------------------------------------------------------------
 @section Testing with Channels (asynchronous)
+
+@subsection 4-phase Handshake Channels
+
+@subsection Bundled-Data Channels
+
+@subsection 2-phase Channels
+
+@subsection Level-Encoded Dual-Rail Channels
+
+@subsection Single-Track Channels
 
 @c -----------------------------------------------------------------------------
 @section Defensive Design
@@ -1581,7 +1776,9 @@ spec @{
 
 @noindent
 @b{Exercise:} write an invariant that asserts that either 1 or 2 out of 3 
-signals must be high.  (Hint: consider the negated case.)
+signals @var{a, b, c} must be high.  (Hint: consider the negated case.)
+
+@c Xs and invariants
 
 @subsection Using Atomic Expressions
 
