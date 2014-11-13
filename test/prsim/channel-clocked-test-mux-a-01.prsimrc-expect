@@ -1,0 +1,52 @@
+--- single clock source --- 
+--- channel declarations --- 
+--- sources and expects --- 
+--- resetting --- 
+	10	in[0] : 0
+	10	in[1] : 0
+	10	in[2] : 0
+	10	in[3] : 0
+	10	sel[0] : 0
+	10	sel[1] : 0
+	20	M._out : 1	[by sel[1]:=0]
+	30	out : 0	[by M._out:=1]
+	100	clk : 0
+--- releasing --- 
+	110	in[1] : 1
+	110	in[3] : 1
+channel	in_c (.data) : 10
+channel	sel_c (.data) : 0
+channel	out_c (.data) : 0
+channel out_c has value 0, as expected.
+	200	clk : 1
+	300	clk : 0	[by clk:=0]
+	310	sel[0] : 1	[by clk:=0]
+	320	M._out : 0	[by sel[0]:=1]
+	330	out : 1	[by M._out:=0]
+channel	in_c (.data) : 10
+channel	sel_c (.data) : 1
+channel	out_c (.data) : 1
+channel out_c has value 1, as expected.
+	400	clk : 1	[by clk:=1]
+	500	clk : 0	[by clk:=0]
+	510	in[0] : 1	[by clk:=0]
+	510	in[1] : 0	[by clk:=0]
+	510	in[2] : 1	[by clk:=0]
+	510	in[3] : 0	[by clk:=0]
+	510	sel[0] : 0	[by clk:=0]
+	510	sel[1] : 1	[by clk:=0]
+channel	in_c (.data) : 5
+channel	sel_c (.data) : 2
+channel	out_c (.data) : 1
+channel out_c has value 1, as expected.
+	600	clk : 1	[by clk:=1]
+	700	clk : 0	[by clk:=0]
+	710	sel[0] : 1	[by clk:=0]
+	720	M._out : 1	[by sel[0]:=1]
+	730	out : 0	[by M._out:=1]
+channel	in_c (.data) : 5
+channel	sel_c (.data) : 3
+channel	out_c (.data) : 0
+channel out_c has value 0, as expected.
+	800	clk : 1	[by clk:=1]
+	900	clk : 0	[by clk:=0]

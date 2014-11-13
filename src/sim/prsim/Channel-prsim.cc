@@ -5129,7 +5129,8 @@ channel_manager::check_source(const channel& c
 		) const {
 	// warn if channel happens to be connected in wrong direction
 	// TODO: check that data/validity are not driven by other sources!
-if (c.valid_signal) {
+if (c.valid_signal && !c.is_clocked()) {
+	// clocked channels expect clock to be driven externally.
 	STACKTRACE_VERBOSE;
 #if 0
 	__GET_NAMED_CHANNEL(chan_name)

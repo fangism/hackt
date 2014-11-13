@@ -48,6 +48,11 @@ $ @kbd{\p1\}@c
 
 @c consider bolding prompts?
 
+@macro exercise
+@noindent
+@b{Exercise:}
+@end macro
+
 @c ****************************** macros **************************************
 @macro bool
 @t{bool}

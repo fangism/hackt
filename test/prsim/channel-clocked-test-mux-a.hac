@@ -1,0 +1,27 @@
+// "channel-clocked-test-a.hac"
+
+import "../../lib/channel_bd.hac";
+
+defproc mux4(bool? in[4], sel[2]; bool! out) {
+// not CMOS implementable
+bool _out;
+prs {
+	_out		=> out-
+	 in[0] & ~sel[0] & ~sel[1]	-> _out-
+	~in[0] & ~sel[0] & ~sel[1]	-> _out+
+	 in[1] & sel[0] & ~sel[1]	-> _out-
+	~in[1] & sel[0] & ~sel[1]	-> _out+
+	 in[2] & ~sel[0] & sel[1]	-> _out-
+	~in[2] & ~sel[0] & sel[1]	-> _out+
+	 in[3] & sel[0] & sel[1]	-> _out-
+	~in[3] & sel[0] & sel[1]	-> _out+
+}
+}
+
+bool clk;
+bool in[4], sel[2], out;
+cd<4> in_c(clk, in);
+cd<2> sel_c(clk, sel);
+cd0 out_c(clk, out);
+mux4 M(in, sel, out);
+

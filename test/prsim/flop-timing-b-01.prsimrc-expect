@@ -1,4 +1,3 @@
-Warning: channel validity is already being driven by source on channel `cin'.
 releaing clock channels 
 channel	ic (.data) : 0
 channel	oc (.data) : X

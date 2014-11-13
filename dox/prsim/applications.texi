@@ -8,11 +8,23 @@ This chapter is devoted to giving examples of how to use
 @command{hacprsim}, with numerous examples of @HAC{} and simulation scripts.  
 This is arguably the most useful chapter for users.  
 
-@c @menu
-@c * Simulation vs. Netlist::
-@c @end menu
+@menu
+* Basic Demonstrations::
+* Simulation vs. Netlist::
+* Shared Internal Nodes::
+* Internal Precharges::
+* Custom Power Supplies::
+* Debugging::
+* Checkpointing and Tracing::
+* Diagnostic and Behavior Control::
+* Testing with Channels (synchronous)::
+* Testing with Channels (asynchronous)::
+* Defensive Design::
+* Workflow Examples::
+@end menu
 
 @c -----------------------------------------------------------------------------
+@node Basic Demonstrations
 @section Basic Demonstrations
 
 As every language has its "Hello, World!" example, so does @hacprsim{}.
@@ -594,6 +606,7 @@ nodes and subcircuits.
 
 @c -----------------------------------------------------------------------------
 @c @node Simulation vs. Netlist
+@node Simulation vs. Netlist
 @section Simulation vs. Netlist
 
 The @HAC{} language was designed to allow a user to express
@@ -970,6 +983,7 @@ the generated spice netlist (without affecting @hacprsim{} behavior).
 
 
 @c -----------------------------------------------------------------------------
+@node Shared Internal Nodes
 @section Shared Internal Nodes
 
 @HAC{} also supports a syntax for describing shared internal nodes
@@ -1091,12 +1105,12 @@ and is logically equivalent to the original version.
 
 @cindex carry-out logic
 @cindex majority logic
-@b{Exercise for the reader:}
-Implement the carry-out (majority) function with dual-rail
+@exercise{} Implement the carry-out (majority) function with dual-rail
 inputs on @var{a}, @var{b}, and @var{ci}, and dual-rail output @var{co}.
 
 
 @c -----------------------------------------------------------------------------
+@node Internal Precharges
 @section Internal Precharges
 
 @cindex charge sharing
@@ -1179,6 +1193,7 @@ $(~((~Re & ~Le) & (_Reset & Re & Le)), "[auto] precharge interference")
 @end example
 
 @c -----------------------------------------------------------------------------
+@node Custom Power Supplies
 @section Custom Power Supplies
 
 The default power supply model in @HAC{} and @hacprsim{} is very simple:
@@ -1298,6 +1313,7 @@ hold their old value.
 This model does not seem honest and may change in the future.
 
 @c -----------------------------------------------------------------------------
+@node Debugging
 @section Debugging
 
 This section provides examples of debugging sessions featuring
@@ -1320,6 +1336,7 @@ various encountered diagnostics and commands that helped find the root cause.
 Using @command{backtrace}
 
 @c -----------------------------------------------------------------------------
+@node Checkpointing and Tracing
 @section Checkpointing and Tracing
 
 @hacprsim{} supports checkpointing, the saving and restoring of simulator
@@ -1457,15 +1474,24 @@ To VCD-tracing at any time, use the @command{vcd-close} command.
 Recording a @hacprsim{}-trace and VCD-trace at the same time is permitted.
 
 @c -----------------------------------------------------------------------------
+@node Diagnostic and Behavior Control
 @section Diagnostic and Behavior Control
 
 @hacprsim{} offers users the ability to control diagnostic-handling
 policies globally.
 
+@menu
+* Mode Commands::
+* Resetting and Weak-Interference::
+* Instabilities in Synchronous Circuits::
+@end menu
+
+@node Mode Commands
 @subsection Mode Commands
 
 See @command{help modes} for list.
 
+@node Resetting and Weak-Interference
 @subsection Resetting and Weak-Interference
 
 Most circuits have some notion of "reset," a way to initialize the circuit
@@ -1531,6 +1557,7 @@ A more inclusive pair of commands is @command{mode run} and
 @command{mode paranoid} turns additional (default) warnings into breaks,
 and @command{mode fatal} turns all diagnostic warnings into fatal errors.
 
+@node Instabilities in Synchronous Circuits
 @subsection Instabilities in Synchronous Circuits
 
 @cindex instability
@@ -1581,6 +1608,7 @@ keeps the previous value on that node.
 @end example
 
 @c -----------------------------------------------------------------------------
+@node Testing with Channels (synchronous)
 @section Testing with Channels (synchronous)
 
 This section provides some complete examples that demonstrate
@@ -1621,8 +1649,23 @@ when we bind these to @hacprsim{}'s channel environments.
 Consider the following prototype for a 4-to-1 MUX
 @example
 // "mux.hac"
-defproc mux4(bool? in[4], sel[2]; bool! out) @{ ... @}
+defproc mux4(bool? in[4], sel[2]; bool! out) @{
+  @i{// not CMOS implementable}
+  bool _out;
+  prs @{
+         in[0] & ~sel[0] & ~sel[1]      -> _out-
+        ~in[0] & ~sel[0] & ~sel[1]      -> _out+
+         in[1] & sel[0] & ~sel[1]       -> _out-
+        ~in[1] & sel[0] & ~sel[1]       -> _out+
+         in[2] & ~sel[0] & sel[1]       -> _out-
+        ~in[2] & ~sel[0] & sel[1]       -> _out+
+         in[3] & sel[0] & sel[1]        -> _out-
+        ~in[3] & sel[0] & sel[1]        -> _out+
+        _out                            => out-
+  @}
+@}
 @end example
+@c from test/prsim/channel-clocked-test-mux-a.hac
 
 @noindent
 and a test instantiation
@@ -1658,14 +1701,6 @@ inputs should change and when outputs should be sampled.
 
 Load @file{mux_test.haco} into @hacprsim{}.
 
-@example
-@prsimkbd{watchall}
-@prsimkbd{channel-watchall}
-@end example
-@noindent
-In @hacprsim{}, channnels live in their namespace 
-and get their own @command{watchall} command.
-We turn it on for instructional purposes.
 @example
 @prsimkbd{clock-source clk:0 10}
 @prsimkbd{channel-timing clk after 100}
@@ -1703,7 +1738,7 @@ and now we drive them with data.
 @end example
 @noindent
 We have given each channel ten values on the command-line.
-As seen in channel @var{in_c}'s, values can be in 
+As seen in channel @var{in_c}, values can be in 
 decimal or hexadecimal (with a leading @t{0x}).
 On every cycle of @var{clk}, these channels will apply and advance
 one value.
@@ -1719,18 +1754,122 @@ Once the value list is exhausted, a channel-source will remain at
 the last value until reconfigured, 
 and a channel-expect will stop checking values.
 
-To initialize the state of channels, we could reset individual channels
-with @command{channel-reset} or in most cases, just reset everything with
+Before we advance the simulation, it helps to set some options
+for synchronous circuit simulation and observe what is happening,
+see @ref{Instabilities in Synchronous Circuits}.
 
 @example
-@prsimkbd{channel-ignore-all}
-@prsimkbd{channel-reset-all}
+# for simulating synchronous circuits
+@prsimkbd{unstable ignore}
+@prsimkbd{unstable-dequeue}
+# for informative feedback
+@prsimkbd{watchall}
+@prsimkbd{channel-watchall}
+@prsimkbd{confirm}
 @end example
 
 @noindent
+In @hacprsim{}, channel names live in their own namespace 
+and get their own @command{watchall} command.
+The @command{confirm} command prints a message every time a
+observed value matches its expected value on a @command{channel-expect},
+and with @command{assert}s.
+
+To initialize the state of channels, we could reset individual channels
+with @command{channel-reset} commands or in most cases, 
+just reset everything with
+
+@example
+@prsimkbd{channel-reset-all}
+@prsimkbd{cycle}
+        10      in[0] : 0
+        10      in[1] : 0
+        10      in[2] : 0
+        10      in[3] : 0
+        10      sel[0] : 0
+        10      sel[1] : 0
+        20      M._out : 1      [by sel[1]:=0]
+        30      out : 0 [by M._out:=1]
+        100     clk : 0
+@end example
+
+@noindent
+The @command{cycle} is important because @command{channel-reset-all}
+only schedules events in the queue.
+Note that the input channels all reset to the 0 value.
+After @command{channel-reset}, channels are in the @emph{stopped}
+state, i.e. they do not respond to any signal changes.  
+Finally, to start driving with our specified values,
+use @command{channel-release-all}:
+
+@example
+@prsimkbd{channel-release-all}
+@prsimkbd{cycle}
+        110     in[1] : 1
+        110     in[3] : 1
+channel in_c (.data) : 10
+channel sel_c (.data) : 0
+channel out_c (.data) : 0
+channel out_c has value 0, as expected.
+        200     clk : 1
+        300     clk : 0 [by clk:=0]
+        310     sel[0] : 1      [by clk:=0]
+        320     M._out : 0      [by sel[0]:=1]
+        330     out : 1 [by M._out:=0]
+channel in_c (.data) : 10
+channel sel_c (.data) : 1
+channel out_c (.data) : 1
+channel out_c has value 1, as expected.
+        400     clk : 1 [by clk:=1]
+        500     clk : 0 [by clk:=0]
+        510     in[0] : 1       [by clk:=0]
+        510     in[1] : 0       [by clk:=0]
+        510     in[2] : 1       [by clk:=0]
+        510     in[3] : 0       [by clk:=0]
+        510     sel[0] : 0      [by clk:=0]
+        510     sel[1] : 1      [by clk:=0]
+channel in_c (.data) : 5
+channel sel_c (.data) : 2
+channel out_c (.data) : 1
+channel out_c has value 1, as expected.
+        600     clk : 1 [by clk:=1]
+        700     clk : 0 [by clk:=0]
+        710     sel[0] : 1      [by clk:=0]
+        720     M._out : 1      [by sel[0]:=1]
+        730     out : 0 [by M._out:=1]
+channel in_c (.data) : 5
+channel sel_c (.data) : 3
+channel out_c (.data) : 0
+channel out_c has value 0, as expected.
+        800     clk : 1 [by clk:=1]
+        900     clk : 0 [by clk:=0]
 ...
+@end example
+
+@noindent
+We were at time 100 during release, so the first rising clock edge
+on @var{clk} occurs after a half-clock period, at time 200.
+We only specified a limited number of cycles on @var{clk}, 
+so it should stop toggling when it has hit that number.
+
+@exercise{} Copy the above commands into a script and run it
+non-interactively, like:
+
+@shellkbd{hacprsim -b test_mux.haco < test.prsimrc}
+
+@exercise{} Repeat the above example, but replace one of the middle expected
+values on @var{out_c} with an incorrect value (in script), 
+or change one of the input values.  
+Replace @code{watchall} with just @code{watch clk}, to reduce 
+the amount of output.
+Re-run the script.  What happens?
+
+@exercise{} Use the @command{channel-source-file} and 
+@command{channel-expect-file} commands to obtain values from 
+separate files, rather than on the command-line.  
 
 @c -----------------------------------------------------------------------------
+@node Testing with Channels (asynchronous)
 @section Testing with Channels (asynchronous)
 
 @subsection 4-phase Handshake Channels
@@ -1744,6 +1883,7 @@ with @command{channel-reset} or in most cases, just reset everything with
 @subsection Single-Track Channels
 
 @c -----------------------------------------------------------------------------
+@node Defensive Design
 @section Defensive Design
 
 Subcircuits are often designed with assumptions about their environment,
@@ -1775,8 +1915,9 @@ spec @{
 @end example
 
 @noindent
-@b{Exercise:} write an invariant that asserts that either 1 or 2 out of 3 
-signals @var{a, b, c} must be high.  (Hint: consider the negated case.)
+@exercise{} write an invariant that asserts that either 1 or 2 out of 3 
+signals @var{a}, @var{b}, and @var{c} must be high.  
+(Hint: consider the negated case.)
 
 @c Xs and invariants
 
@@ -1798,6 +1939,7 @@ and can depend on atomic or non-atomic bools.
 @subsection Exclusion Rings
 
 @c -----------------------------------------------------------------------------
+@node Workflow Examples
 @section Workflow Examples
 
 Examples in this chapter make use of some of the Makefile templates

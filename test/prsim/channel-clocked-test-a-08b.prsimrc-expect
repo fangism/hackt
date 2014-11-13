@@ -4,7 +4,6 @@ X : clocked-posedge x1 off
 X.clk : clock-source posedge source, timing: after=50 @0/6
 Y : clocked-negedge x1 off
 Z : clocked-anyedge:1 x2 off
-Warning: channel validity is already being driven by source on channel `X.clk'.
 X : clocked-posedge x1 source, timing: after=10 {0,1,1,0,0,1,1,1,0,0,0,} @0
 	count: 0, unknowns: 1
 X.clk : clock-source posedge source, timing: after=50 @0/6

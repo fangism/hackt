@@ -1,0 +1,30 @@
+# "channel-clocked-test-mux-a-01.prsimrc"
+# @haco@ channel-clocked-test-mux-a.haco-c
+
+echo --- single clock source ---
+clock-source clk:0 4
+channel-timing clk after 100
+
+echo --- channel declarations ---
+channel-clocked in_c clk:0 d:4
+channel-clocked sel_c clk:0 d:2
+channel-clocked out_c clk:0 d:0
+
+echo --- sources and expects ---
+channel-source-args in_c 0xa 0xa 0x5 0x5
+channel-source-args sel_c 0 1 2 3
+channel-expect-args out_c 0 1 1 0
+
+unstable ignore
+unstable-dequeue
+confirm
+watchall
+channel-watchall
+
+echo --- resetting ---
+channel-reset-all
+cycle
+
+echo --- releasing ---
+channel-release-all
+cycle

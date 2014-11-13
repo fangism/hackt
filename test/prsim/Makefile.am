@@ -76,6 +76,7 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	channel-bd2p-test-a \
 	channel-bd2p-test-b \
 	channel-clocked-test-a \
+	channel-clocked-test-mux-a \
 	clock-source-test-a \
 	eledr-buffer eledr-buffer-a eledr-buffer-b \
 	type-test-a type-test-b type-test-c type-test-d \
@@ -435,6 +436,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	channel-clocked-test-b-04 channel-clocked-test-b-04b \
 	channel-clocked-test-b-05 \
 	channel-clocked-test-b-08 \
+	channel-clocked-test-mux-a-01 \
 	clock-source-test-a-01 clock-source-test-a-02 clock-source-test-a-03 \
 	clock-source-test-a-04 \
 	eledr-buffer-a-01 eledr-buffer-a-02 eledr-buffer-a-03 \
