@@ -1713,15 +1713,18 @@ We have also configured the @emph{half-clock period} of @var{clk}
 to be 100, sufficient for logic to propagate and settle for this circuit.
 Next we describe the interpretation of our channel structures.  
 @example
-@prsimkbd{channel-clocked in_c ~clk:0 d:4}
-@prsimkbd{channel-clocked sel_c ~clk:0 d:2}
+@prsimkbd{channel-clocked in_c clk:0 d:4}
+@prsimkbd{channel-clocked sel_c clk:0 d:2}
 @prsimkbd{channel-clocked out_c clk:0 d:0}
 @end example
 @noindent
-We intend to drive @var{in_c} and @var{sel_c} as inputs, 
-and we have chosen to change their values on the negative-edge 
-(indicated by the @t{~} prefix) of the clock,
-@var{in_c.clk}, which we've connected to the top-level @var{clk} signal.
+We intend to drive @var{in_c} and @var{sel_c} as input channels, 
+and even though @var{in_c.clk} and @var{sel_c.clk} are 
+interpreted as positive-edged, 
+as sources they will change at the @emph{opposite edge}
+(negative) in order to @emph{set up} to the positive edge. 
+In other words, clocked input and output channels operating on the same 
+clock domain get a half-clock period to propagate.  
 The @t{:0} after @t{clk} refers to an initial value, which is 
 irrelevant in this example, but needed syntactically.  
 The @var{d} in @t{d:N} refers to the name of member of type @t{cd<N>}
@@ -1852,6 +1855,14 @@ on @var{clk} occurs after a half-clock period, at time 200.
 We only specified a limited number of cycles on @var{clk}, 
 so it should stop toggling when it has hit that number.
 
+Now you can test any synchronous circuit using the method demonstrated above.
+Note that the original circuit under test need not necessarily
+be clocked, in this case, we had pure combinational logic.
+We introduced a clock for the sake of testing, where the clock
+was fed into channels that we instructed @hacprsim{} to interpret and drive.
+A clocked circuit under test could connect to the same global clock
+that was used for testing.  
+
 @exercise{} Copy the above commands into a script and run it
 non-interactively, like:
 
@@ -1867,6 +1878,17 @@ Re-run the script.  What happens?
 @exercise{} Use the @command{channel-source-file} and 
 @command{channel-expect-file} commands to obtain values from 
 separate files, rather than on the command-line.  
+
+@exercise{} Design a toggling flip-flop whose input is only 
+a clock, and output changes value on every positive edge.
+You will probably want to support a reset signal for initialization.
+Write a simulation script to test its operation.  
+
+[Other examples]
+
+Negative-edged clocking.
+
+Double-edged clocking.
 
 @c -----------------------------------------------------------------------------
 @node Testing with Channels (asynchronous)
