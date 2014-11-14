@@ -29,6 +29,13 @@ This is arguably the most useful chapter for users.
 
 As every language has its "Hello, World!" example, so does @hacprsim{}.
 
+@menu
+* Basic Compile and Run::
+* Built-in Commands (a brief tour)::
+* Subcircuit Processes::
+@end menu
+
+@node Basic Compile and Run
 @subsection Basic Compile and Run
 To get started, write the following @HAC{} file:
 
@@ -236,12 +243,37 @@ before performing their function.
 @noindent
 give the exact same behavior.
 
+@cindex scripting
+@cindex tab-completion
+Finally, all interactive commands can be written in scripts and 
+run with the @command{source} command, or by input redirection.
+Paste the above commands into a script, @file{test.prsimrc}, 
+and run it (you should be able to tab-complete filenames):
+
+@example
+@shellkbd{hacprsim inv1.haco-c}
+@prsimkbd{source test.prsimrc}
+... same things happen ...
+@end example
+
+@noindent
+or
+
+@example
+@shellkbd{hacprsim -b inv1.haco-c < test.prsimrc}
+@end example
+
+@noindent
+The @option{-b} option (batch mode) suppresses the @prsimkbd{} prompt.
+Scripts may also @command{source} other scripts.  
+
 You now know how to compile and run a circuit in @hacprsim{},
 set and query values, advance the simulation, and examine 
 the status of production rule fanin and fanout.  
 
 @c -----------------------------------------------------------------------------
-@subsection Built-in Commands
+@node Built-in Commands (a brief tour)
+@subsection Built-in Commands (a brief tour)
 
 Let's take a minute to introduce the in-program help system, 
 along with other built-in commands.
@@ -371,6 +403,7 @@ Finally, the interactive environment can be exited with
 @end example
 
 @c -----------------------------------------------------------------------------
+@node Subcircuit Processes
 @subsection Subcircuit Processes
 
 More interesting systems will be designed as a hierarchy of subcircuits.  
@@ -548,10 +581,36 @@ I ~
 ~
 @end example
 
+@cindex tab-completion
 @b{Productivity tip:}
 If the tools were compiled @option{--with-readline},
-you can also tab-complete names on many commands, 
+you can also tab-complete process and signal names on many commands, 
 much like file-name completion.  
+
+@b{Productivity tip:}
+If you have commands that apply to a subcircuit 
+(of which there may be many instances in the hierarchy), 
+you can write a script using references @emph{local} to that subcircuit, 
+and surround calls to @command{source}-ing that script
+with @command{pushd}-@command{popd} pairs.
+
+@example
+# "dump-inv.prsimrc"
+get a
+get b
+@end example
+
+@noindent
+The above script could be called at different sites:
+
+@example
+@prsimkbd{pushd I}
+@prsimkbd{source dump-inv.prsimrc}
+@prsimkbd{popd}
+@prsimkbd{pushd J}
+@prsimkbd{source dump-inv.prsimrc}
+@prsimkbd{popd}
+@end example
 
 Now we return to actually driving the circuit.
 @example
@@ -618,6 +677,18 @@ It is advised to minimize the number of places in a circuit description
 that diverge, as these are often error-prone and require thorough designer
 review.  
 
+@menu
+* Expression Ordering::
+* Tool Selection Headers::
+* Wire::
+* Transmission Gates::
+* Staticizers::
+* Combinational Feedback::
+* RAM Cell::
+* Ignored attributes::
+@end menu
+
+@node Expression Ordering
 @subsection Expression Ordering
 
 Production rules in @HAC{} serve two purposes: to specific digital logic
@@ -661,6 +732,7 @@ an unnamed internal node between two (or more) transistors.
 It is a good practice to mind transistor ordering when
 writing production rules.  
 
+@node Tool Selection Headers
 @subsection Tool Selection Headers
 
 Let's create two @HAC{} header files for the sake of tool selection.  
@@ -705,6 +777,7 @@ of a set of boolean variables to specify the intended tool.
 Follow the convention established in your project.  
 
 @c -----------------------------------------------------------------------------
+@node Wire
 @subsection Wire
 
 As an example, let's take a simple wire.
@@ -741,6 +814,64 @@ CMOS-implementability requires pull-up rules to contain only
 negated literals, and pull-down rules to contain only non-negated literals.
 
 @c -----------------------------------------------------------------------------
+@node Transmission Gates
+@subsection Transmission Gates
+@cindex transmission gates
+@cindex pass gates
+
+@HAC{}'s PRS language provides macros for describing transmission gates.  
+
+@example
+prs @{
+  passn(gate, source, drain)  @i{// NMOS transistor}
+  passp(gate, source, drain)  @i{// PMOS transistor}
+@}
+@end example
+
+@noindent
+Digitally, these are modeled by @hacprsim{} like:
+
+@example
+  ~source &  gate -> drain-   @i{// interpretation of passn}
+   source & ~gate -> drain+   @i{// interpretation of passp}
+@end example
+
+@noindent
+It is important to note that @t{passn} and @t{passp} only pull
+values in @emph{one direction}, which is not exactly how they would
+function electrically; they are only modeled as @emph{unidirectional}
+in simulation.  
+@hacprsim{} doesn't support bidirectional pass-gates, 
+but it can model bidirectional wires (with caution).  
+
+@noindent
+The @t{passn} and @t{passp} macros are also used to
+emit a single transistor in netlists.
+A full pass gate could be defined as follows:
+
+@example
+defproc full_pass(bool? in, en, en_; bool! out) @{
+  prs @{
+    passn(in,  en, out)
+    passp(in, en_, out)
+  @}
+@}
+@end example
+
+For netlist generation, you can pass sizing and device type parameters
+to these macros, just like with expression literals,
+@xref{Ignored attributes}.  
+These parameters do not affect simulation.  
+
+@example
+  prs @{
+    passn<20,2;lvt>(in,  en, out)
+    passp<20;hvt>(in, en_, out)
+  @}
+@end example
+
+@c -----------------------------------------------------------------------------
+@node Staticizers
 @subsection Staticizers
 
 @cindex staticizer
@@ -799,6 +930,7 @@ of staticizers into netlists.
 (Other tools can be used to check for missing or incorrect staticizers.)
 
 @c -----------------------------------------------------------------------------
+@node Combinational Feedback
 @subsection Combinational Feedback
 @cindex combinational feedback
 
@@ -848,6 +980,7 @@ prs @{
 This adds extra annotations to affected device names in the spice netlist.
 
 @c -----------------------------------------------------------------------------
+@node RAM Cell
 @subsection RAM Cell
 
 Memory cells require special treatment in @HAC{}.
@@ -962,6 +1095,7 @@ Further discussion topics:
 @item Design a multi-read/multi-write ported register cell
 @end itemize
 
+@node Ignored attributes
 @subsection Ignored attributes
 
 The @HAC{} language allows specifying device attributes
@@ -1640,7 +1774,10 @@ These definitions are also provided in the installed header,
 @noindent
 However, the examples in this section can use just the above definitions.
 
-The names of these structure definitions is of no consequence, 
+The first definition, @t{cd}, is parameterized with data width @var{N}.
+(For a complete description on parameterized definitions, 
+see the @HAClangref{} chapter on Templates.)
+The names of these structure definitions (like @t{cd}) are of no consequence, 
 but the names of the clock and data ports will be important
 when we bind these to @hacprsim{}'s channel environments.
 
@@ -1711,7 +1848,10 @@ for 10 positive-edge cycles, one for every vector we will apply.
 On @command{channel-reset}, @var{clk} will be set to 0, initially.
 We have also configured the @emph{half-clock period} of @var{clk}
 to be 100, sufficient for logic to propagate and settle for this circuit.
+
 Next we describe the interpretation of our channel structures.  
+In this example, we will operate the circuit under test
+in a positive-edge clocked view:
 @example
 @prsimkbd{channel-clocked in_c clk:0 d:4}
 @prsimkbd{channel-clocked sel_c clk:0 d:2}
@@ -1729,8 +1869,13 @@ The @t{:0} after @t{clk} refers to an initial value, which is
 irrelevant in this example, but needed syntactically.  
 The @var{d} in @t{d:N} refers to the name of member of type @t{cd<N>}
 that is interpreted as a bit-array of data.  
-@t{N} is the size of the data array, or 0 for a single bit wire.
-The LSB of (integer) values on these channels corresponds to bit @t{d[0]}.
+@t{N} is the size of the data array, or 0 for a single bit wire (non-array).
+The LSB of integer values on these channels corresponds to bit @t{d[0]}.
+For negative-edged operation, we would have declared all channels
+with @code{~clk:1}, which would change inputs from channel sources 
+on the positive edge of @var{clk} to set up for negative-edge 
+sampling on @var{clk}.
+
 At this point, we've informed @hacprsim{} on the interpretation of 
 user-defined channel structures,
 and now we drive them with data.
@@ -1915,6 +2060,13 @@ or limitations of operation.
 Good designs should be annotated with invariants that can be
 checked by various tools.  
 
+@menu
+* Invariants::
+* Using Atomic Expressions::
+* Exclusion Rings::
+@end menu
+
+@node Invariants
 @subsection Invariants
 @cindex invariants
 
@@ -1943,6 +2095,7 @@ signals @var{a}, @var{b}, and @var{c} must be high.
 
 @c Xs and invariants
 
+@node Using Atomic Expressions
 @subsection Using Atomic Expressions
 
 @cindex atomic expressions
@@ -1958,6 +2111,7 @@ and can depend on atomic or non-atomic bools.
 
 
 
+@node Exclusion Rings
 @subsection Exclusion Rings
 
 @c -----------------------------------------------------------------------------

@@ -53,6 +53,10 @@ $ @kbd{\p1\}@c
 @b{Exercise:}
 @end macro
 
+@macro HAClangref
+@HAC{} Language Reference
+@end macro
+
 @c ****************************** macros **************************************
 @macro bool
 @t{bool}

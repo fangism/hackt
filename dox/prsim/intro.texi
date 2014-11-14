@@ -5,9 +5,11 @@
 @chapter Introduction
 
 @hacprsim{} is a production rule simulator, 
-which is part of the HACKT tool set.  
+which is part of the @HACKT{} tool set.  
 @hacprsim{} simulates circuits at a digital level of abstraction.
-It is based on older versions of @command{prsim}.  
+It is based on older versions of
+@command{prsim}@footnote{@command{prsim} originated from Caltech
+and Cornell University.}.  
 In the remainder of this document @command{prsim} will 
 refer to the new version @hacprsim{}.  
 
@@ -43,4 +45,32 @@ with @hacprsim{}.
 Readers interested in jumping straight into applications and 
 examples may skip to @ref{Applications}, which includes examples
 using the @HAC{} language.  
+For understanding @HAC{} examples, refer to the @HAClangref{} document.
+
+
+@section History
+
+Do you really want to know the origins of @hacprsim{}?
+
+The original @command{prsim} tool read in a flattened PRS file (text).
+
+@section The Present Implementation
+
+@hacprsim{} touts the ability to simulate extremely large-scale designs.  
+The scalability is attributed to @HAC{}'s hierarchical
+internal representation design -- structural information is maintained
+in as few places as possible and accessed indirectly. 
+By oeprating on hierarchical structures, the @HACKT{} tools
+avoid having to process large flattened files.  
+
+@section The Future
+
+Probably deserves its own chapter at the end.
+This is not really an appropriate place for listing major development plans.
+
+@itemize
+@item The simulator could use a full-fledged interpreter capable of
+	definition functions, variable evaluation, and flow control.
+	How does scheme (guile) sound?  python?
+@end itemize
 
