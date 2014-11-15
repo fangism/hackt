@@ -682,6 +682,7 @@ review.
 * Tool Selection Headers::
 * Wire::
 * Transmission Gates::
+* Weak Rules::
 * Staticizers::
 * Combinational Feedback::
 * RAM Cell::
@@ -869,6 +870,32 @@ These parameters do not affect simulation.
     passp<20;hvt>(in, en_, out)
   @}
 @end example
+
+@c -----------------------------------------------------------------------------
+@node Weak Rules
+@subsection Weak Rules
+
+Weak rules are productions rules with less than normal drive strength.
+They win against no opposing pull, and are overpowered by 
+normal strength pull (without diagnostic).
+Use of weak rules is @b{discouraged}; there is usually a better way to 
+get the desired effect, however they are supported for a reason.  
+
+@example
+prs @{
+         _out =>  out-   @i{// a forward inverter, standard strength}
+  [weak]  out => _out-   @i{// a feedback inverter}
+@}
+@end example
+
+@hacprsim{}, by default, does not simulate weak rules, it ignores them.  
+To explicitly enable them in simulation,
+
+@example
+@prsimkbd{weak-rules on}
+@end example
+
+The following section discusses staticizers.
 
 @c -----------------------------------------------------------------------------
 @node Staticizers
@@ -2093,6 +2120,19 @@ spec @{
 signals @var{a}, @var{b}, and @var{c} must be high.  
 (Hint: consider the negated case.)
 
+When an invariant expression is evaluated to @t{X}, 
+@hacprsim{} will issue a warning (by default), reporting a
+@emph{possible invariant} violation.  
+The transition to the reset state will often trigger this
+diagnostic, so to suppress those warnings,
+
+@example
+@prsimkbd{invariant-unknown ignore}
+@end example
+
+@noindent
+or just use @command{mode reset}, which includes this setting.  
+
 @c Xs and invariants
 
 @node Using Atomic Expressions
@@ -2109,10 +2149,59 @@ but do not correspond to any physical node or wire.
 They are defined in the @t{rte} (run-time expression) language bodies,
 and can depend on atomic or non-atomic bools.  
 
+@example
+ebool is_enabled;
+ebool is_safe;
+rte @{
+  is_enabled = a || b || c;
+  is_safe = ~(x && y);
+@}
+spec @{
+  $(is_enabled | is_safe, "is safely enabled or off")
+@}
+@end example
 
+@noindent
+Atomic bool expressions can be re-used to contruct more
+complex expressions. 
+Atomic bools may participate in invariant expressions.
 
 @node Exclusion Rings
 @subsection Exclusion Rings
+
+@HAC{} provides a macro for specifying that no more than one
+signal in a group can be high or low.
+This is just a specialized invariant, as a convenient shorthand.  
+
+@example
+spec @{
+  exclhi(a, b, c)    @i{// there can be only one (high)}
+  excllo(d, e, f)    @i{// there can be only one (low)}
+@}
+@end example
+
+@noindent
+Nodes in the ring at value @t{X} are ignored, and not counted
+towards the number of `active' values.  
+Triggering an exclusion violation will look like:
+
+@example
+ERROR: exclhi violation detected!
+ring-state:
+        x : 1
+        y : 0
+        z : 0
+but node `y' tried to become 1.
+The simulator's excl-check-lock state is no longer coherent;
+do not bother trying to continue the simulation, but you may
+further inspect the state.
+You probably want to disable excl-checking with `nocheckexcl'
+if you wish to continue the simulation.
+@end example
+
+Exclusion rings are a good tool for asserting that
+shared resources are being accessed without conflict, 
+or that programmable circuits are configured legally.
 
 @c -----------------------------------------------------------------------------
 @node Workflow Examples
