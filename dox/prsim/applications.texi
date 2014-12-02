@@ -394,6 +394,22 @@ I love this even more!
 I love this even more!
 @end example
 
+@noindent
+The interpreter also lets you run shell commands from within
+by prefixing with @code{!}:
+@example
+@prsimkbd{!rm -f messy-temporary-file.txt}
+@prsimkbd{!date -u}
+Sun Mar  7 05:22:35 UTC 2004
+@prsimkbd{!false}
+*** Exit 256
+@end example
+@c anyone care to guess the significance of that timestamp?
+
+@noindent
+A non-zero exit status from a system command (like the last one)
+will cause the script-interpreter to stop.
+
 Finally, the interactive environment can be exited with 
 @command{exit} or @command{quit} or Ctrl-D.
 

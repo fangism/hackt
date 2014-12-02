@@ -28,12 +28,14 @@ This document can also be found online at @homepagesubref{cast2hac}.
 
 The main project home page is @homepageref{}.
 
-Copyright @copyright{} 2007 Cornell University
+Source code for this document can be found at @sourcerepo{dox/cast2hac}.
+
+@copyrightnotice{2007}
 
 @quotation
 Published by ...
  
-Permission is hereby granted to ...
+Permission is hereby granted to distribute this document.
 @end quotation
 @end copying
 

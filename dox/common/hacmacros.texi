@@ -11,6 +11,14 @@
 @url{http://www.csl.cornell.edu/~fang/hackt/\page\}
 @end macro
 
+@macro sourcerepo{sub}
+@url{http://github.com/fangism/hackt/\sub\}
+@end macro
+
+@macro copyrightnotice{from}
+Copyright @copyright{} \from\-2014 Cornell University
+@end macro
+
 @c ****************************** tools ***************************************
 
 @macro haco

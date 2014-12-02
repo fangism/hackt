@@ -25,12 +25,14 @@ This document can also be found online at @homepagesubref{hacprsim}.
 
 The main project home page is @homepageref{}.
 
-Copyright @copyright{} 2007-2014 Cornell University
+Source code for this document can be found at @sourcerepo{dox/prsim}.
+
+@copyrightnotice{2004}
 
 @quotation
 Published by ...
  
-Permission is hereby granted to ...
+Permission is hereby granted to distribute this document.
 @end quotation
 @end copying
 
