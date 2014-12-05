@@ -10,7 +10,7 @@
 #	-v continuation=STRING	wrapping string
 #		uses "\n+ " line continuation by default
 #	-v comment=STRING	wrapping string
-#		uses "\n+ " comment continuation by default
+#		uses "\n* " comment continuation by default
 
 BEGIN {
 	if (length(wrap)) {

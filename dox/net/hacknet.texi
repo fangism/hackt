@@ -70,6 +70,7 @@ Permission is hereby granted to distribute this document.
 * Language Features:: Netlist features in the HAC language.
 * Usage:: Command-line summary.
 * Algorithms:: Internal implementation details.
+* Netlist Utilities:: Helper scripts.
 * Concept Index:: Concepts and terms.
 @end menu
 
@@ -79,6 +80,7 @@ Permission is hereby granted to distribute this document.
 @include lang.texi
 @include usage.texi
 @include algo.texi
+@include utilities.texi
 
 @c ****************************** index ***************************************
 @node Concept Index

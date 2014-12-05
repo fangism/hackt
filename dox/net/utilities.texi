@@ -1,0 +1,182 @@
+@c utilities.texi
+
+@node Netlist Utilities
+@chapter Netlist Utilities
+
+@hacknet{} also distributes a handful of scripts for working with 
+spice netlists.  
+The netlists need not necessarily come from @hacknet{}, 
+but they do expect a standard spice format.
+All of the scripts described in this chapter
+are named starting with @file{spice}, 
+and are installed in the @file{$bindir}.
+Many of these scripts are in @command{awk}.  
+Some of these scripts produce @file{.dot} files, 
+which are intended for Graphviz's @command{dot} tool to process.
+
+@section Line Join and Wrap
+
+Spice netlists produced by some tools may wrap long lines using 
+a line-continuation characted like @t{+}.  
+@file{spice_line_join.awk} is a tool to join wrapped lines.  
+To join all continued lines into a single line, run:
+
+@example
+@shellkbd{spice_line_join.awk file.spice > joined.spice}
+@end example
+
+@noindent
+The opposite operation is to wrap long lines, using 
+@file{spice-wrap.awk}.
+
+@example
+@shellkbd{spice-wrap.awk file.spice > wrapped.spice}
+@end example
+
+@noindent
+The default wrap length is 80, but can be overridden with 
+the @option{-v wrap=LENGTH} option.  
+The default continuation string is "\n+ ", but that can also
+be overridden with @option{-v continuation=STRING}.
+The default comment continuation string is "\n* ", but that can also
+be overridden with @option{-v comment=STRING}.
+
+@section Type Dependencies
+
+When working with spice netlists, it can be helpful to see the overall
+type-dependency graph, for the purpose of examining which
+subcircuits are upstream from one another, or even ordering some
+operations from the bottom-up in topological order.
+@file{spice_type_deps.awk} prints a line "@code{Y: X}" for every
+subcircuit Y that instantiates subcircuit X.
+There may be duplicate lines, so it is recommended to
+pipe the output through @command{sort -u} (unique-sort).
+
+@example
+@shellkbd{spice_type_deps.awk file.spice | sort -u > deps.txt}
+@end example
+
+The @file{spice_type_deps_to_pdf.sh}
+script takes this a step further and produces a @command{dot}
+file along with a PDF image:
+
+@example
+@shellkbd{spice_type_deps_to_pdf.sh file.spice}
+@shellkbd{xpdf file.spice-pdf}
+@end example
+
+Another application of dependencies is choosing
+an ordering that satisfies dependencies.  
+A spice subcircuit dependency graph is guaranteed to be 
+acyclic, so the directed-acyclic-graph (DAG) can be used
+to perform a topological sort (UNIX @command{tsort}).
+@file{spice_tsort.sh} is the script that does this.
+
+@example
+@shellkbd{spice_tsort.sh file.spice > order.txt}
+@end example
+
+@noindent
+Since @command{tsort} expects inputs edges in the form @i{tail head}
+where each edge is tail-to-head, the output of @command{spice_type_deps.awk}
+is column-swapped.  
+The output is an ordered list that satisfies the partial-ordering
+given by the dependencies.
+
+@section Cell Count
+
+@file{spice_cell_count.awk} is a utility for counting
+the number of occurrences of devices and subcircuits in a
+hierarchical circuit.
+It works by accumulating counts from the leaf cells
+all the way up to the top circuit or last subcircuit.
+
+@example
+@shellkbd{spice_cell_count.awk file.spice > cell-counts.txt}
+@end example
+
+@noindent
+The output is formatted into 3 columns:
+
+@enumerate
+@item super-circuit name
+@item sub-circuit name or device type
+@item instance count
+@end enumerate
+
+@noindent
+The output contains sub-cell counts for all subcircuits processed, 
+not just the last one.  
+
+@section Leaf Cells
+
+It is common in design to have subcircuits with 
+devices at lowest levels (leaf cells),
+and subcircuits that only contain other subcircuits
+at the middle and higher levels of hierarchy 
+(as with integration levels).
+
+@file{spice_unique_leaves.awk} prints the names 
+of subcircuits that contain any devices.
+
+@example
+@shellkbd{spice_unique_leaves.awk file.spice > leaf-cells.txt}
+@end example
+
+@section Instance Hierarchy
+
+@file{spice_instance_tree.awk} draws box-in-box style diagram
+of subcircuits to illustrate instance hierarchy.
+It supports the following options
+
+@itemize
+@item @option{-v subckt=TYPE,...} : list of types for which to print graphs
+@item @option{-v depth=N} : limits the depth of hierarchy to show
+@item @option{-v wirelabels=[0|1]} : enables or disables edges labels
+@item @option{-v cluster=[0|1]} : toggles subgraph clustering
+@end itemize
+
+@noindent
+The output is in Graphviz's @command{dot} format.
+
+@section Conversion to Other Languages
+
+Spice netlists can also be crudely converted into other formats.
+
+@subsection Conversion to HAC
+
+@file{spice-to-hac.awk} produces a @HAC{}-syntax output, 
+where every node is a bool.
+This script is not yet smart enough to infer signal directions
+for ports.  
+
+Options:
+@itemize
+@item @option{-v keep_card_prefix=[0|1]} : keep leading R, C, L, ...
+@item @option{-v passive_device_values=[0|1]} : maintain passive device parameters
+@end itemize
+
+Passive components like C, R, and L are translated as 
+@t{CAPACITOR}, @t{RESISTOR}, and @t{INDUCTOR}, respectively.  
+
+This script can be useful for extracting hierarchy from a foreign netlist.
+
+
+@subsection Conversion to Verilog
+
+@file{spice_to_verilog_quick.awk} produces a verilog-syntax output
+where subcircuits become modules, and nodes become wires.
+Unfortunately, port direction is not inferred.
+
+@section Graphical Visualization of Subcircuits
+
+@file{spice_to_dot.awk} is an attempt to automatically draw a graph
+of transistors and wires.
+It is not recommended for large circuits with lots of transistors.  
+@file{spice_to_pdf.sh} calls @file{spice_to_dot.awk} to produce
+a PDF file of the rendered graph, using Graphviz's @command{dot} program. 
+
+@example
+@shellkbd{spice_to_pdf.sh file.spice}
+@shellkbd{xpdf file.pdf}
+@end example

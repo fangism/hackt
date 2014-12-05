@@ -6,12 +6,60 @@
 @cindex introduction
 @pindex hacknet
 
-@command{hacknet} is a SPICE netlist generator for the @HACKT{} suite.  
+@hacknet{} is a SPICE netlist generator for the @HACKT{} suite.  
 The input is a @HAC{} file containing production rules, usually
 connected through instance hierarchy.  
 The output is a hierarchical netlist with devices, subcircuits, 
 and instances.  
 The output should be suitable for SPICE-like circuit simulators.  
 
-How it works...
+@section How It Works
+
+The translation of production rule sets (PRS) to spice netlists
+is mostly straightforward.  
+Production rule guard expressions are boolean expressions, 
+which lend themselves easily to syntax-directed translation
+into trees of transistors in series or in parallel.  
+
+@example
+prs @{
+  a & b & c -> o-
+  a | b | c -> p-
+@}
+@end example
+
+@section Production Rule Requirements
+@cindex CMOS-implementable
+
+CMOS transistors are inverting in nature.
+A PMOS transistor pulls its drain up when its gate is low, 
+and an NMOS transistor pulls its drain down when its gate is high.
+To produce a valid netlist from production rules, 
+the production rules must be written @emph{CMOS-implementably}, 
+that is, only negated literals may participate in pull-up guard expressions,
+and only non-negated literals may participate in pull-down guard expressions.
+
+The following examples are invalid:
+@example
+prs @{
+  a & b -> j+    @i{// error: non-inverting}
+  ~c    -> j-    @i{// error: non-inverting}
+@}
+@end example
+
+@noindent
+The following examples are valid:
+@example
+prs @{
+  a & b -> j-    @i{// inverting, OK}
+  ~c    -> j+    @i{// inverting, OK}
+@}
+@end example
+
+While non-CMOS-implementable rules are acceptable for digital
+modeling simulation, 
+@hacknet{} will report an error for any non-CMOS-implementable 
+production rules.
+It is advised to write CMOS-implementable production rules 
+as early as possible.
 

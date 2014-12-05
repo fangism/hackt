@@ -30,6 +30,7 @@ hacknet_INCLUDES = \
 	lang.texi \
 	usage.texi \
 	algo.texi \
+	utilities.texi \
 	config.texi
 
 # HACKNET_OPTIONS_TEXI = ...

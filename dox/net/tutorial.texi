@@ -11,15 +11,20 @@ A complete description of features and options follows
 in the next chapters.
 
 @menu
-* Top-level circuits::
+* Compiling and Running::
+* Transistor Ordering::
+* Transistor Sizing::
+* Transistor Attributes::
 * Subcircuits::
 * Configuration help::
 @end menu
 
 @c - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-@node Top-level circuits
-@section Top-level circuits
+@node Compiling and Running
+@section Compiling and Running
 
+In this section, you will compile an example of a top-level
+circuit into a spice netlist with @hacknet{}.
 Write the following HAC file, @file{inv-top.hac}:
 
 @example
@@ -33,18 +38,20 @@ prs @{
 Compile the source to an object file:
 
 @example
-$ haco inv-top.hac inv-top.haco
-$ haccreate inv-top.haco inv-top.haco-c
+@shellkbd{haco inv-top.hac inv-top.haco}
+@shellkbd{haccreate inv-top.haco inv-top.haco-c}
 @end example
 
 @noindent
 Generate a netlist:
 
 @example
-$ hacknet inv-top.haco-c > inv-top.spice
+@shellkbd{hacknet inv-top.haco-c > inv-top.spice}
 @end example
 
 @noindent
+@hacknet{} normally produces output to @t{stdout}, so its output
+should be redirected to a file.
 The resulting output should look like:
 
 @example
@@ -56,6 +63,33 @@ The resulting netlist produces a set of transistors at the top-level.
 The @t{!Vdd} and @t{!GND} nodes are implicit power supplies.
 The default device types are @t{nch} for NFETs and @t{pch} for PFETs.
 Default widths and lengths were chosen because none were specified.  
+
+@c - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+@node Transistor Ordering
+@section Transistor Ordering
+
+The netlist produced depends on how production rules are written.
+While the boolean operators @code{|} and @code{&} are logically
+commutative and associative, the ordering of terms around
+@code{&} determine the ordering of transistors between
+supply and output.  The leftmost term will be closest to the supply,
+and the rightmost term will be directly connected to the output node.
+Re-arranging terms around the @code{|} operator produces equivalent 
+netlists, though the order in which devices appear in the netlist may change.
+
+One may care about series term ordering for a number of reasons:
+performance, signal integrity, charge-sharing.  
+
+@c - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+@node Transistor Sizing
+@section Transistor Sizing
+
+The production rule sub-language has enhancements to allow annotation
+of netlist attributes.  
+
+@c - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+@node Transistor Attributes
+@section Transistor Attributes
 
 @c - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 @node Subcircuits

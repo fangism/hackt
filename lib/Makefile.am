@@ -53,6 +53,7 @@ dist_katesyn_DATA = \
 CLEANFILES += hac.vimrc
 
 dist_bin_SCRIPTS = \
+	scripts/deps_to_dot.awk \
 	scripts/hacspice-pp.sed \
 	scripts/prsim_timed_backtrace.awk \
 	scripts/prsim_timed_fwdtrace.awk \
@@ -64,6 +65,7 @@ dist_bin_SCRIPTS = \
 	scripts/spice_instance_tree.awk \
 	scripts/spice_line_join.awk \
 	scripts/spice-to-hac.awk \
+	scripts/spice_to_dot.awk \
 	scripts/spice_to_pdf.sh \
 	scripts/spice_to_verilog_quick.awk \
 	scripts/spice_tsort.sh \
