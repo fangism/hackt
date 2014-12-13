@@ -13,8 +13,12 @@ in the next chapters.
 @menu
 * Compiling and Running::
 * Transistor Ordering::
+* Dimensional Units::
 * Transistor Sizing::
 * Transistor Attributes::
+* Staticizers::
+* Transmission Gates::
+* Shared Internal Nodes::
 * Subcircuits::
 * Configuration help::
 @end menu
@@ -63,33 +67,6 @@ The resulting netlist produces a set of transistors at the top-level.
 The @t{!Vdd} and @t{!GND} nodes are implicit power supplies.
 The default device types are @t{nch} for NFETs and @t{pch} for PFETs.
 Default widths and lengths were chosen because none were specified.  
-
-@c - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-@node Transistor Ordering
-@section Transistor Ordering
-
-The netlist produced depends on how production rules are written.
-While the boolean operators @code{|} and @code{&} are logically
-commutative and associative, the ordering of terms around
-@code{&} determine the ordering of transistors between
-supply and output.  The leftmost term will be closest to the supply,
-and the rightmost term will be directly connected to the output node.
-Re-arranging terms around the @code{|} operator produces equivalent 
-netlists, though the order in which devices appear in the netlist may change.
-
-One may care about series term ordering for a number of reasons:
-performance, signal integrity, charge-sharing.  
-
-@c - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-@node Transistor Sizing
-@section Transistor Sizing
-
-The production rule sub-language has enhancements to allow annotation
-of netlist attributes.  
-
-@c - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-@node Transistor Attributes
-@section Transistor Attributes
 
 @c - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 @node Subcircuits
@@ -172,6 +149,188 @@ xbar !GND !Vdd bar.a bar.b bar.c foo<>
 @end example
 
 In this example, there is a top-level instance of type @t{foo} named @t{bar}.
+
+@c - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+@node Transistor Ordering
+@section Transistor Ordering
+
+The netlist produced depends on how production rules are written.
+While the boolean operators @code{|} and @code{&} are logically
+commutative and associative, the ordering of terms around
+@code{&} determine the ordering of transistors between
+supply and output.  The leftmost term will be closest to the supply,
+and the rightmost term will be directly connected to the output node.
+Re-arranging terms around the @code{|} operator produces equivalent 
+netlists, though the order in which devices appear in the netlist may change.
+
+One may care about series term ordering for a number of reasons:
+performance, signal integrity, charge-sharing.  
+
+@c - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+@node Dimensional Units
+@section Dimensional Units
+@cindex units
+
+Spice netlists can refer to geometric dimensions in 
+units like micros and nanometers.
+@hacknet{} internally operates @emph{unitlessly}, however, 
+there is a global scale factor called @emph{lambda}
+that translates written values into absolute sizes.  
+By default, @t{lambda}=1, and @t{length_unit=u} (for 1 micron).  
+The value of @t{lambda} should be set in a configuration file
+that corresponds to your process node and foundry.  
+@ref{Configuration Options} lists parameter values supported
+by @hacknet{}'s configuration files.  
+
+For the remaining examples in this section, 
+we will assume the default @t{lambda=1} and @t{length_unit=u}.
+
+@c - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+@node Transistor Sizing
+@section Transistor Sizing
+
+The production rule sub-language has enhancements to allow annotation
+of netlist attributes.  
+There are two ways of explicitly sizing devices: 
+using the @t{W} (width) rule attribute to apply to all literals, 
+or using a literal attribute to size a single device.
+The default width is 5 units.  
+
+The following examples illustrate variations in sizing devices.
+
+@example
+prs @{
+                           @i{// widths:}
+  [W=20] x & y -> ...      @i{// x=20; y=20}
+  [W=20] x & y<30> -> ...  @i{// x=20; y=30}
+  [W=25] x<20> & y -> ...  @i{// x=20; y=20}
+@}
+@end example
+
+@noindent
+The last example shows that after a sized literal, 
+literals that follow in series (@t{&}) get the same size, 
+unless explicitly resized.  
+Most of time transistor stacks will use a consistent width.  
+
+The default transistor length is 2 units.  
+Device lengths can also be specified, for longer channel devices.
+The rule attribute is @t{L} for length, and the literal 
+parameter is in second position.
+
+@example
+prs @{
+                               @i{// W,L}
+  [L=4] x & y -> ...           @i{// x=5,4; y=5,4}
+  x<6,3> & y<6,12> & z -> ...  @i{// x=6,3; y=6,12; z=6,12}
+@}
+@end example
+
+@c - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+@node Transistor Attributes
+@section Transistor Attributes
+
+@subsection @t{iskeeper}
+
+The @t{iskeeper} attribute is used to signify (by device naming) that
+a transistor or group participates in state-holding feedback.
+This may aid other tools that read netlists.  
+For @hacprsim{}, rules flagged @t{iskeeper} are not even simulated.  
+
+@example
+prs @{
+  [iskeeper]          x_ => x-
+  [iskeeper;W=4;L=10] y_ => y-  @i{// example with multiple attributes}
+@}
+@end example
+
+There is also a related attribute @t{isckeeper} to flag rules 
+as participating in combinational feedback.
+
+@subsection Voltage Threshold
+
+@hacknet{} supports three variants of voltage thresholds in devices.  
+The default is @t{svt} for a "standard" threshold.  
+The other two are @t{lvt} and @t{hvt} for "lower" and "higher" thresholds.
+
+@example
+prs @{
+  [hvt] _z        => z-      @i{// NMOS and PMOS of inverter are hvt}
+  x & y<;hvt> & z -> q-      @i{// only the y-gate is hvt}
+@}
+@end example
+
+@noindent
+The semicolon in @code{y<;hvt>} is needed to separate the implicit
+width and length parameters (omitted) from the list of attributes.
+
+@c - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+@node Transmission Gates
+@section Transmission Gates
+
+@cindex transmission gate
+@cindex pass gate
+@cindex macros
+
+@HAC{}'s PRS language uses the macros @t{passn} and @t{passp}
+to emit pass transistors (NMOS and PMOS).
+
+@example
+prs @{
+  passn(gate, source, drain)  @i{// NMOS transistor}
+  passp(gate, source, drain)  @i{// PMOS transistor}
+@}
+@end example
+
+@noindent
+While in @hacprsim{}, the pass gate is treated unidirectionally, 
+@hacknet{} just emits a single transistor that functions bidirectionally.
+
+The two complementary pass gates can be combined as follows:
+
+@example
+defproc full_pass (bool? in, en, en_; bool! out) @{
+  prs @{
+    passn(in,  en, out)
+    passp(in, en_, out)
+  @}
+@}
+@end example
+
+@noindent
+Pass gates also take width and length parameters and attributes, 
+just like expression literals:
+
+@example
+prs @{
+  passn<20,2;lvt>(in,  en, out)
+  passp<20;hvt>  (in, en_, out)
+@}
+@end example
+
+@c - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+@node Staticizers
+@section Staticizers
+
+@hacknet{} does not automatically emit staticizers (keepers) for
+dynamic nodes; it is the designer's resposibility.  
+@HAC{} does provide an attribute for labeling transistors from
+feedback rules as those participating in staticizing.
+
+@example
+prs @{
+  [iskeeper]          x_ => x-
+  [iskeeper] ~Reset & ~y -> y+
+@}
+@end example
+
+@noindent
+Tools that consume netlists with this annotation
+can treat such transistors differently when analyzing circuits.  
+
+@c - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+@node Shared Internal Nodes
+@section Shared Internal Nodes
 
 @c - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 @node Configuration help
