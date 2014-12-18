@@ -1440,7 +1440,7 @@ In a few sections, we will discuss how these impact simulation.
 
 @subsection Overriding Substrate Contacts
 
-Substrate contacts can also be overridden.
+Substrate contacts can also be overridden, independently from the supply ports.
 
 @example
 prs <Vsrc, Gsrc | Vsub, Gsub> @{ ... @}
@@ -1453,6 +1453,20 @@ and override them using @code{prs<...|...>}.
 
 Again, substrate connections only affect the netlist, 
 not digital simulator behavior.
+
+Definitions may be divided into multiple PRS blocks, each with
+different supply or substrate overrides.
+
+@example
+defproc foo(...) @{
+  @i{// default supplies and substrates, !Vdd and !GND}
+  prs @{ ... @}
+  @i{// default substrates, !Vdd and !GND}
+  prs <Vsrc1, Gsrc1> @{ ... @}
+  @i{// overriding all substrates and supplies}
+  prs <Vsrc2, Gsrc2 | Vsub, Gsub> @{ ... @}
+@}
+@end example
 
 @subsection Modeling Dynamic Power Supplies
 

@@ -66,8 +66,7 @@ Permission is hereby granted to distribute this document.
 @c @copying is recommended here as well
 @menu
 * Introduction:: Introduction to CHPSIM.
-* Tutorial:: Quickly getting started.
-* Language Features:: Netlist features in the HAC language.
+* Tutorial:: Tour of language features for controlling netlists.
 * Usage:: Command-line summary.
 * Algorithms:: Internal implementation details.
 * Netlist Utilities:: Helper scripts.

@@ -19,7 +19,11 @@ in the next chapters.
 * Staticizers::
 * Transmission Gates::
 * Shared Internal Nodes::
+* Internal Precharges::
 * Subcircuits::
+* PRS Supply Override::
+* Instance Supply Override::
+* Substrate Override::
 * Configuration help::
 @end menu
 
@@ -189,6 +193,14 @@ we will assume the default @t{lambda=1} and @t{length_unit=u}.
 @node Transistor Sizing
 @section Transistor Sizing
 
+Some features of the @HAC{} language were added specifically
+for the sake of netlist generation.  
+We briefly describe them here, but the reader is referred to
+the full @HAC{} language documentation, specifically
+chapters "Connections" and "PRS".
+
+@c link?
+
 The production rule sub-language has enhancements to allow annotation
 of netlist attributes.  
 There are two ways of explicitly sizing devices: 
@@ -331,23 +343,104 @@ can treat such transistors differently when analyzing circuits.
 @c - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 @node Shared Internal Nodes
 @section Shared Internal Nodes
+@cindex internal nodes
+@cindex shared nodes
 
-@c - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-@node Configuration help
-@section Configuration help
+With production rules, one can think of every @t{&} operator
+translating to an unnamed internal node.  
+@hacknet{} just assigns these nodes auto-enumerated names like
+@t{#0}, @t{#1}, etc.
 
-A quick way to list all of the known configuration options with their
-default values is:
+While standard production rules are adequate for expressing
+series and parallel transistors, a syntax extension is required for
+explicitly naming and referencing shared internal nodes.  
+In @HAC{}, internal node are named with @t{@@} prefixes.
 
 @example
-$ hacknet -d
+prs @{
+  a & b           -> @@_int1-    @i{// internal node declaration}
+  ~@@_int1 & c & d -> o-         @i{// internal node use}
+@}
 @end example
 
 @noindent
-The output can be pasted into a file for modification.
-To use a configuration file, pass the @option{-c} option:
+In this example, @t{@@_int1} is defined as the named internal node
+footed by @t{a&b}.  
+Then @t{@@_int1} is referenced in the @emph{negated} sense because
+it is considered `on' when it is pulled low.
+A pull-up PMOS stack with an internal node might look like the following:
 
 @example
-$ hacknet -c my.hacknet-conf inv.haco-c > inv.spice
+prs @{
+  ~a & ~b          -> @@_int2+    @i{// internal node declaration}
+  @@_int2 & ~c & ~d -> o+         @i{// internal node use}
+@}
 @end example
+
+The following example illustrates how internal nodes can be used to 
+describe a criss-cross topology found in the precharge evaluation
+of a full-adder's sum term.
+
+@example
+prs @{
+  en                            -> @@en_-
+  ~@@en_ & a.f                   -> @@p1f-
+  ~@@en_ & a.t                   -> @@p1t-
+  (~@@p1f & b.f) | (~@@p1t & b.t) -> @@p2f-
+  (~@@p1t & b.f) | (~@@p1f & b.t) -> @@p2t-
+  (~@@p2f & ci.f)|(~@@p2t & ci.t) -> _s.f-
+  (~@@p2t & ci.f)|(~@@p2f & ci.t) -> _s.t-
+@}
+@end example
+
+
+@c - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+@node Internal Precharges
+@section Internal Precharges
+
+@cindex charge sharing
+@cindex precharge
+
+A designer may wish to add precharges to a netlist as a means of
+mitigating charge sharing, and other internal node effects.
+@HAC{}'s PRS sublanguage supports a syntax for specifying precharges.
+@c Precharge annotations have no impact on logical behavior
+@c in @hacprsim{}; they only affect @hacknet{}'s spice netlists.
+A precharge expression can be attached to any @t{&}-operator,
+which represents an internal node.
+
+@example
+bool en, x, y, zx, zy;
+prs @{
+  en &@{+~en@} x  -> zx-
+  en &@{+~en@} y  -> zy-
+@}
+@end example
+
+@noindent
+The above example shows two stacks, each with its own PMOS precharge.
+The following example, uses a shared foot transistor on @var{en}:
+
+@example
+bool en, x, y, zx, zy;
+prs @{
+  en                -> @@en_-
+  ~@@en_ &@{+~en@} x   -> zx-
+  ~@@en_ & y         -> zy-
+@}
+@end example
+
+@noindent
+Note that the precharge expression @t{@{+~en@}} is only attached
+to one of the stacks, but both stacks share the same internal
+node @t{@@en_} and thus, benefit from the shared precharge.
+
+@itemize
+@item Stacks may have an arbitrary number of precharges.
+@item Pull-up stacks may also contain precharges.
+@item Precharges can also be expressions, not just single literals.
+@item Pull-up and pull-down precharges can be used in either
+        pull-up or pull-down rules.
+@end itemize
+
 
