@@ -1,0 +1,18 @@
+# "xor-tree-01.prsimrc"
+# @haco@ xor-tree.haco-c
+
+# watchall
+set in[0..15] 0
+cycle
+set in[5..13] 1
+cycle
+set in[7..9] 0
+cycle
+
+set in[6] X
+cycle
+
+get out
+why-x-N out 12
+why-x-N-verbose out 12
+

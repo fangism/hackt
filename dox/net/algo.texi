@@ -10,3 +10,37 @@ for netlist generation by @command{hacknet}.
 Hackers may find this informative for extending the functionality
 of netlist generation.  
 
+@section Hierarchical Scalability
+
+The key to @hacknet{}'s scalability to large circuits with deep hierarchies
+comes from the fact that subcircuits are re-used, not re-evaluated.  
+Recall that for every unique defproc (with unique set of template arguments),
+the internal representation holds a @emph{footprint} object 
+as its compiled and elaborated intermediate representation.
+@hacknet{} converts every footprint object into a netlist object.
+During conversion to netlist, when a subcircuit is encountered,
+the subcircuit's footprint object is converted to a netlist object.
+To avoid repeating the conversion work, netlist objects
+are maintained in a @emph{cache}.  
+Each unique subcircuit is converted only the first time it is encountered
+(a cache-miss),
+and each conversion saves a light-weight circuit summary that is used
+when instantiating that type (on cache-hit).  
+Though the conversion to netlist is driven from the top-most level,
+subcircuit netlists are generated and completed from the bottom-up,
+on-the-fly, and never repeated.  
+
+@example
+CREATE_SUBCKT(@var{footprint})
+1. convert local production rules of @var{footprint} to transistors
+2. for each local subcircuit instance @var{sub}
+3.   if !have_netlist(type_of(@var{sub}))
+4.     CREATE_SUBCKT(footprint_of(type_of(@var{sub})))
+5.     have_netlist(type_of(@var{sub})) := true
+6.   end if
+7.   convert summary_of(footprint_of(type_of(@var{sub})))
+       into local subcircuit instance
+8. end for
+end
+@end example
+

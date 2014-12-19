@@ -1,0 +1,42 @@
+// "xor-tree.hac"
+
+defproc xor_bare(bool? a, a_, b, b_; bool! o) {
+prs {
+  ~a_ & ~b	-> o+
+   ~a & ~b_	-> o+
+   a_ &  b_	-> o-
+    a &  b	-> o-
+}
+}
+
+defproc inv(bool? a; bool! b) {
+prs {
+  a		=> b-
+}
+}
+
+// recursive definition of a wide XOR
+// \param N must be power of 2
+template <pint N>
+defproc xor(bool? a[N]; bool! o) {
+[(N > 2) ->
+  pint H = N/2;
+  bool f[2];
+  xor<H> xs[2];
+  xs[0](a[0..H-1], f[0]);
+  xs[1](a[H..N-1], f[1]);
+  xor<2> y(f, o);
+[] else ->
+  bool a_[2];
+  inv ai[2];
+(;j:2:
+  ai[j](a[j], a_[j]);
+)
+  xor_bare xr(a[0], a_[0], a[1], a_[1], o);
+]
+}
+
+bool in[16];
+bool out;
+xor<16> test_xor(in, out);
+

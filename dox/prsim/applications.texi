@@ -1512,6 +1512,146 @@ various encountered diagnostics and commands that helped find the root cause.
 
 @subsection Why X?
 
+When the user encounters an unexpected @t{X}-valued node, the first question
+is often: @emph{why?}
+A reasonable initial query might be @command{fanin-get} on that node,
+to see which of its fanins is @t{X}.  
+For every @t{X} input, the user would repeat the query, until
+a culprit is found.  
+The @command{why-x} command automates this repeated querying
+by recursively visiting @t{X} fanins.  
+
+Consider the following @HAC{} circuit:
+
+@c test/prsim/xor-tree.hac
+@example
+defproc xor_bare(bool? a, a_, b, b_; bool! o) @{
+  prs @{
+    ~a_ & ~b      -> o+
+     ~a & ~b_     -> o+
+     a_ &  b_     -> o-
+      a &  b      -> o-
+  @}
+@}
+
+defproc inv(bool? a; bool! b) @{
+  prs @{
+    a             => b-
+  @}
+@}
+
+@i{// recursive definition of a wide XOR}
+@i{// \param N must be power of 2}
+template <pint N>
+defproc xor(bool? a[N]; bool! o) @{
+[(N > 2) ->
+  pint H = N/2;
+  bool f[2];
+  xor<H> xs[2];
+  xs[0](a[0..H-1], f[0]);
+  xs[1](a[H..N-1], f[1]);
+  xor<2> y(f, o);
+[] else ->
+  bool a_[2];
+  inv ai[2];
+  (;j:2:
+    ai[j](a[j], a_[j]);
+  )
+  xor_bare xr(a[0], a_[0], a[1], a_[1], o);
+]
+@}
+
+@i{// instantiate a 16-input XOR to test}
+bool in[16];
+bool out;
+xor<16> test_xor(in, out);
+@end example
+
+@noindent
+Compile the example into an object file, and load it into @hacprsim{}
+interactively.
+
+@c test/prsim/xor-tree-01.prsimrc
+@example
+# set some inputs, but leave one as X
+@prsimkbd{set in[0..15] 0}
+@prsimkbd{cycle}
+@prsimkbd{set in[5..13] 1}
+@prsimkbd{cycle}
+@prsimkbd{set in[7..9] 0}
+@prsimkbd{cycle}
+@prsimkbd{set in[6] X}
+@prsimkbd{cycle}
+# expect to see some weak-interference warnings
+@prsimkbd{get out}
+out : X [by test_xor.y.a_[0]:=X]
+@prsimkbd{why-x-N out 12}
+out:X, pull up/dn are both X
+  test_xor.y.a_[0]:X, pull up/dn are both X
+    test_xor.f[0]:X, pull up/dn are both X
+      test_xor.xs[0].y.a_[1]:X, pull up/dn are both X
+        test_xor.xs[0].f[1]:X, pull up/dn are both X
+          test_xor.xs[0].xs[1].f[1]:X, pull up/dn are both X
+            test_xor.xs[0].xs[1].xs[1].a_[0]:X, pull up/dn are both X
+              in[6]:X, pull up/dn undriven, no fanin
+              in[6]:X, (visited before, see above)
+            test_xor.xs[0].xs[1].xs[1].a_[0]:X, (visited before, see above)
+          test_xor.xs[0].xs[1].f[1]:X, (visited before, see above)
+        test_xor.xs[0].f[1]:X, (visited before, see above)
+      test_xor.xs[0].y.a_[1]:X, (visited before, see above)
+    test_xor.f[0]:X, (visited before, see above)
+  test_xor.y.a_[0]:X, (visited before, see above)
+@end example
+
+Each level of indentation corresponds to a level of fanin.  
+We quickly see that the query traces back to the input that was deliberately
+set to @t{X}, @var{in[6]}.  
+To reach this conclusion manually would have taken 
+many more commands.  
+It is generally a good idea to use the @command{why-x-N} command variant
+to limit the recursion depth.  
+A somewhat more verbose version @command{why-x-N-verbose} prints
+additional annotations about the subexpression structures
+where the @t{X}s propagate (AND vs. OR vs. NOT).
+
+@example
+@prsimkbd{why-x-N-verbose out 12}
+out:X, pull up/dn are both X
++-+
++ |-+
++ | & ~test_xor.y.a_[0]:X, pull up/dn are both X
++ | & ~+ ~test_xor.f[0]:X, pull up/dn are both X
++ | & ~+ ~+-+
++ | & ~+ ~+ |-+
++ | & ~+ ~+ | & ~test_xor.xs[0].y.a_[1]:X, pull up/dn are both X
++ | & ~+ ~+ | & ~+ ~test_xor.xs[0].f[1]:X, pull up/dn are both X
++ | & ~+ ~+ | & ~+ ~+-+
++ | & ~+ ~+ | & ~+ ~+ |-+
++ | & ~+ ~+ | & ~+ ~+ | & ~test_xor.xs[0].xs[1].f[1]:X, pull up/dn are both X
++ | & ~+ ~+ | & ~+ ~+ | & ~+-+
++ | & ~+ ~+ | & ~+ ~+ | & ~+ |-+
++ | & ~+ ~+ | & ~+ ~+ | & ~+ | & ~test_xor.xs[0].xs[1].xs[1].a_[0]:X, pull up/dn are both X
++ | & ~+ ~+ | & ~+ ~+ | & ~+ | & ~+ ~in[6]:X, pull up/dn undriven, no fanin
++ | & ~+ ~+ | & ~+ ~+ | & ~+ | & ~- in[6]:X, (visited before, see above)
++ | & ~+ ~+ | & ~+ ~+ | & ~--+
++ | & ~+ ~+ | & ~+ ~+ | & ~- |-+
++ | & ~+ ~+ | & ~+ ~+ | & ~- | & test_xor.xs[0].xs[1].xs[1].a_[0]:X, (visited before, see above)
++ | & ~+ ~+ | & ~+ ~--+
++ | & ~+ ~+ | & ~+ ~- |-+
++ | & ~+ ~+ | & ~+ ~- | & test_xor.xs[0].xs[1].f[1]:X, (visited before, see above)
++ | & ~+ ~+ | & ~- test_xor.xs[0].f[1]:X, (visited before, see above)
++ | & ~+ ~--+
++ | & ~+ ~- |-+
++ | & ~+ ~- | & test_xor.xs[0].y.a_[1]:X, (visited before, see above)
++ | & ~- test_xor.f[0]:X, (visited before, see above)
+--+
+- |-+
+- | & test_xor.y.a_[0]:X, (visited before, see above)
+@end example
+
+@noindent
+Admittedly, reading the verbose output takes some getting used to.
+
 @subsection Interference
 
 @subsection Instability

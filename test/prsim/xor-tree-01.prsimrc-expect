@@ -1,0 +1,63 @@
+WARNING: weak-interference `test_xor.xs[0].xs[1].xs[1].a_[0]'
+>> cause: `in[6]' (val: X)
+WARNING: weak-interference `test_xor.xs[0].xs[1].f[1]'
+>> cause: `test_xor.xs[0].xs[1].xs[1].a_[0]' (val: X)
+WARNING: weak-interference `test_xor.xs[0].f[1]'
+>> cause: `test_xor.xs[0].xs[1].f[1]' (val: X)
+WARNING: weak-interference `test_xor.xs[0].xs[1].y.a_[1]'
+>> cause: `test_xor.xs[0].xs[1].f[1]' (val: X)
+WARNING: weak-interference `test_xor.xs[0].y.a_[1]'
+>> cause: `test_xor.xs[0].f[1]' (val: X)
+WARNING: weak-interference `test_xor.f[0]'
+>> cause: `test_xor.xs[0].y.a_[1]' (val: X)
+WARNING: weak-interference `test_xor.y.a_[0]'
+>> cause: `test_xor.f[0]' (val: X)
+WARNING: weak-interference `out'
+>> cause: `test_xor.y.a_[0]' (val: X)
+out : X	[by test_xor.y.a_[0]:=X]
+out:X, pull up/dn are both X
+  test_xor.y.a_[0]:X, pull up/dn are both X
+    test_xor.f[0]:X, pull up/dn are both X
+      test_xor.xs[0].y.a_[1]:X, pull up/dn are both X
+        test_xor.xs[0].f[1]:X, pull up/dn are both X
+          test_xor.xs[0].xs[1].f[1]:X, pull up/dn are both X
+            test_xor.xs[0].xs[1].xs[1].a_[0]:X, pull up/dn are both X
+              in[6]:X, pull up/dn undriven, no fanin
+              in[6]:X, (visited before, see above)
+            test_xor.xs[0].xs[1].xs[1].a_[0]:X, (visited before, see above)
+          test_xor.xs[0].xs[1].f[1]:X, (visited before, see above)
+        test_xor.xs[0].f[1]:X, (visited before, see above)
+      test_xor.xs[0].y.a_[1]:X, (visited before, see above)
+    test_xor.f[0]:X, (visited before, see above)
+  test_xor.y.a_[0]:X, (visited before, see above)
+out:X, pull up/dn are both X
++-+
++ |-+
++ | & ~test_xor.y.a_[0]:X, pull up/dn are both X
++ | & ~+ ~test_xor.f[0]:X, pull up/dn are both X
++ | & ~+ ~+-+
++ | & ~+ ~+ |-+
++ | & ~+ ~+ | & ~test_xor.xs[0].y.a_[1]:X, pull up/dn are both X
++ | & ~+ ~+ | & ~+ ~test_xor.xs[0].f[1]:X, pull up/dn are both X
++ | & ~+ ~+ | & ~+ ~+-+
++ | & ~+ ~+ | & ~+ ~+ |-+
++ | & ~+ ~+ | & ~+ ~+ | & ~test_xor.xs[0].xs[1].f[1]:X, pull up/dn are both X
++ | & ~+ ~+ | & ~+ ~+ | & ~+-+
++ | & ~+ ~+ | & ~+ ~+ | & ~+ |-+
++ | & ~+ ~+ | & ~+ ~+ | & ~+ | & ~test_xor.xs[0].xs[1].xs[1].a_[0]:X, pull up/dn are both X
++ | & ~+ ~+ | & ~+ ~+ | & ~+ | & ~+ ~in[6]:X, pull up/dn undriven, no fanin
++ | & ~+ ~+ | & ~+ ~+ | & ~+ | & ~- in[6]:X, (visited before, see above)
++ | & ~+ ~+ | & ~+ ~+ | & ~--+
++ | & ~+ ~+ | & ~+ ~+ | & ~- |-+
++ | & ~+ ~+ | & ~+ ~+ | & ~- | & test_xor.xs[0].xs[1].xs[1].a_[0]:X, (visited before, see above)
++ | & ~+ ~+ | & ~+ ~--+
++ | & ~+ ~+ | & ~+ ~- |-+
++ | & ~+ ~+ | & ~+ ~- | & test_xor.xs[0].xs[1].f[1]:X, (visited before, see above)
++ | & ~+ ~+ | & ~- test_xor.xs[0].f[1]:X, (visited before, see above)
++ | & ~+ ~--+
++ | & ~+ ~- |-+
++ | & ~+ ~- | & test_xor.xs[0].y.a_[1]:X, (visited before, see above)
++ | & ~- test_xor.f[0]:X, (visited before, see above)
+--+
+- |-+
+- | & test_xor.y.a_[0]:X, (visited before, see above)
