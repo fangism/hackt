@@ -24,6 +24,7 @@ in the next chapters.
 * PRS Supply Override::
 * Instance Supply Override::
 * Substrate Override::
+* Ignored Language Features::
 * Configuration help::
 @end menu
 

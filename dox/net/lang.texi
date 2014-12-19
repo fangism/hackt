@@ -112,6 +112,18 @@ defproc foo(...) @{
 @end example
 
 @c - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+@node Ignored Language Features
+@section Ignored Language Features
+
+It is worth mentioning the features of the @HAC{} language
+that have no impact on netlist generation.
+
+@itemize
+@item atomic bool expressions
+@item CHP (sub-language)
+@end itemize
+
+@c - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 @node Configuration help
 @section Configuration help
 
@@ -129,4 +141,5 @@ To use a configuration file, pass the @option{-c} option:
 @example
 $ hacknet -c my.hacknet-conf inv.haco-c > inv.spice
 @end example
+
 
