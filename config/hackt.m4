@@ -399,8 +399,8 @@ AC_SUBST(VPI_INCLUDE)
 AC_SUBST(VPI_LDPATH)
 dnl check for vcs for running tests
 dnl TODO: check for other verilog compilers
-AC_CHECK_PROG([VCS], vcs, vcs)
-AM_CONDITIONAL(HAVE_VCS, test "$ac_cv_prog_VCS" = "vcs")
+AC_PATH_PROG([VCS], vcs)
+AM_CONDITIONAL(HAVE_VCS, test -n "$ac_cv_path_VCS")
 ])dnl
 
 dnl @synopsis HACKT_ARG_ENABLE_OBJECT_ALIGN_CHECKING

@@ -579,6 +579,7 @@ configuration summary:
 	guile config:	 	$GUILE_CONFIG_VERSION
 	guile CPPFLAGS: 	$GUILE_CPPFLAGS
 	guile LDFLAGS: 		$GUILE_LDFLAGS
+	VCS:			$VCS
 	vpi CPPFLAGS: 		$VPI_INCLUDE
 ACEOF
 
