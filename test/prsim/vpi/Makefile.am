@@ -73,6 +73,7 @@ endif
 Makefile.copy: example.mk Makefile
 	$(SED) -e 's|@pkgdatadir@|$(pkgdatadir)|g' \
 		-e 's|@install_bindir@|$(bindir)|g' \
+		-e 's|@vcs@|$(VCS)|g' \
 		-e 's|@vcs_flags@|$(INSTALLCHECK_VCS_FLAGS)|g' \
 		-e 's|@vpi_flags@|$(INSTALLCHECK_VCS_VPI_FLAGS)|g' \
 		-e 's|@vpi_env@|$(VPI_INSTALLCHECK_ENV)|g' \

@@ -9,7 +9,7 @@ bindir = @install_bindir@
 pkgdatadir = @pkgdatadir@
 
 # generic definitions
-VCS = vcs
+VCS = @vcs@
 VCS_ENV =
 VCS_FLAGS = @vcs_flags@
 VPI_FLAGS = @vpi_flags@
