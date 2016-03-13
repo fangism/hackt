@@ -45,7 +45,7 @@ function register_end_symbols() {
 }
 
 # main pattern matching body
-/^state [0-9]*/ {
+/^[Ss]tate [0-9]*/ {
 	print "/************************** " $0 " **************************/";
 	# state count
 	sc = 0;
