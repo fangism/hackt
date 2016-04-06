@@ -701,7 +701,7 @@ compile::usage(void) {
 	}
 #endif
 }
-	cerr << "  -h: gives this usage messsage and exits" << endl <<
+	cerr << "  -h: gives this usage message and exits" << endl <<
 		"  -I <path> : adds include path (repeatable)" << endl <<
 		"  -i <file> : prepends import file (repeatable)" << endl;
 	cerr << "  -M <dependfile> : produces make dependency to file" << endl;

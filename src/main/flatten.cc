@@ -284,7 +284,7 @@ flatten::usage(void) {
 	}
 }
 #endif
-	cerr << "\t-h : gives this usage messsage" << endl <<
+	cerr << "\t-h : gives this usage message" << endl <<
 		"\t-I <path> : adds include path (repeatable)" << endl <<
 		"\t-i <file> : prepends import file (repeatable)" << endl;
 	cerr << "\t-M <dependfile> : produces make dependency to file" << endl;
