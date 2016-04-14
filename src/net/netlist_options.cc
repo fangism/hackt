@@ -99,10 +99,18 @@ netlist_options::netlist_options() :
 		comment_prefix("* "),
 
 		lambda(1.0), 
-		min_width(4.0),			// in lambda
-		min_length(2.0),		// in lambda
-		max_p_width(0.0),		// in lambda
-		max_n_width(0.0),		// in lambda
+      /** additional parameters for finfet 
+          TODO: use more meaningful names for the variables
+       */
+      // defaults are set at 0
+      width_by_nfin(0),
+      fin_drawn_width(0),
+      fin_pitch(0),
+
+		min_width(4.0),         // in lambda
+		min_length(2.0),        // in lambda
+		max_p_width(0.0),       // in lambda
+		max_n_width(0.0),       // in lambda
 		fet_diff_overhang(6.0),
 		fet_spacing_diffonly(4.0),
 		reserved_names(), 
@@ -992,6 +1000,45 @@ Default: 1.0
 ***/
 DEFINE_OPTION_DEFAULT(lambda, "lambda",
 	"technology scaling factor for device lengths and widths")
+
+// new options added for width calculation for finfet technology: 
+//    width_by_nfin, fin_drawn_width, fin_pitch
+/***
+@texinfo config/width_by_nfin.texi
+@cindex width_by_nfin
+@defopt width_by_nfin (bool)
+Defines whether width will be dumped as a function of the no. of fins
+Default: 0
+@end defopt
+@end texinfo
+***/
+DEFINE_OPTION_DEFAULT(width_by_nfin, "width_by_nfin",
+	"Defines whether width will be dumped as a function of the no. of fins")
+
+/***
+@texinfo config/fin_drawn_width.texi
+@cindex fin_drawn_width
+@defopt fin_drawn_width (real)
+Process dependent drawn width of FIN's
+Default: 0 [forcing to provide values in .conf file]
+@end defopt
+@end texinfo
+***/
+DEFINE_OPTION_DEFAULT(fin_drawn_width, "fin_drawn_width",
+	"Process dependent drawn width of FIN's")
+
+/***
+@texinfo config/fin_pitch.texi
+@cindex fin_pitch
+@defopt fin_pitch (real)
+Process-dependent fin-pitch
+Default: 0 [forcing to provide values in .conf file]
+@end defopt
+@end texinfo
+***/
+DEFINE_OPTION_DEFAULT(fin_pitch, "fin_pitch",
+	"Process-dependent fin-pitch")
+
 
 /***
 @texinfo config/length_unit.texi

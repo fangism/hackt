@@ -179,6 +179,20 @@ struct netlist_options {
 		lambda, or unit scale factor multiplier.
 	 */
 	real_type			lambda;
+
+
+   /** addition for finfet effective-width estimation
+    New variables introduced:
+      1. width_by_nfin [boolean]
+      2. fin_drawn_width [real]
+      3. fin_pitch [real]
+    */
+   bool        width_by_nfin;
+   real_type   fin_drawn_width;
+   real_type   fin_pitch;
+
+
+
 	/**
 		Transistor size limits, all in lambda.
 	 */
