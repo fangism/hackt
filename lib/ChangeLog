@@ -1,6 +1,12 @@
 # "lib/ChangeLog"
 #	$Id: ChangeLog,v 1.70 2011/05/07 03:43:39 fang Exp $
 
+2016-04-26	David Fang	<fangism@google.com>
+
+	* HACKT-00-01-04-main-00-86-59:
+	  Makefile.am: add .prs and .chp to extension list for vimrc.
+
+
 2012-11-14	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-86-51b:

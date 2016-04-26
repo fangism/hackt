@@ -89,15 +89,15 @@ EXTRA_DIST += README \
 	support/hac.vim \
 	support/ChangeLog
 
+HAC_VIM_SUFFIXES = .hac .hacf .act .actf .actmx .prs .prsf .chp .chpf
+
 hac.vimrc: Makefile
 	{ $(ECHO) "\" source this from $$HOME/.vimrc to autoload hac syntax." ; \
 	$(ECHO) "\" .act* is for a close dialect, ACT" ; \
 	$(ECHO) "\" .*f is for sources preprocessed (flattened) with hacpp" ; \
-	$(ECHO) "au BufRead,BufNewFile *.hac set filetype=hac" ; \
-	$(ECHO) "au BufRead,BufNewFile *.hacf set filetype=hac" ; \
-	$(ECHO) "au BufRead,BufNewFile *.act set filetype=hac" ; \
-	$(ECHO) "au BufRead,BufNewFile *.actf set filetype=hac" ; \
-	$(ECHO) "au BufRead,BufNewFile *.actmx set filetype=hac" ; \
+	for e in $(HAC_VIM_SUFFIXES) ; \
+	do $(ECHO) "au BufRead,BufNewFile *.$$e set filetype=hac" ; \
+	done ; \
 	$(ECHO) "au! Syntax hac source $(vimdir)/hac.vim" ;} > $@
 
 #################### CHP function library section #############################
