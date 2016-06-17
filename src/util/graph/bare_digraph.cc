@@ -22,8 +22,8 @@ using std::set;
 // class bare_digraph method definitions
 
 struct bare_digraph::scc_node_info {
-	int	index;	// -1 is undefined
-	int	lowlink;
+	ssize_t	index;	// -1 is undefined
+	ssize_t	lowlink;
 	scc_node_info() : index(-1), lowlink(-1) { }
 
 	bool
