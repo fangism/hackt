@@ -2062,14 +2062,21 @@ prsim_cycle(PLI_BYTE8 *args) {
   STACKTRACE_BRIEF;
 }
 #endif
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+}	// end namespace PRSIM
+}	// end namespace SIM
+}	// end namespace HAC
 
 //=============================================================================
+BEGIN_C_DECLS
+using namespace HAC::SIM::PRSIM;
+
 struct funcs {
   const char *name;
-  PLI_INT32 (*f) (PLI_BYTE8 *);
+  PLI_INT32 (*func) (PLI_BYTE8 *);
 };
 
-static struct funcs f[] = {
+static struct funcs prsim_systf[] = {
   { "$to_prsim", to_prsim },
   { "$from_prsim", from_prsim },
   { "$prsim_options", prsim_command_options },
@@ -2090,11 +2097,10 @@ static struct funcs f[] = {
   { "$vpi_dump_queue", vpi_dump_queue_cmd }
 };
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /*
   Register prsim tasks
+  VPI bootstrap function
 */
-static
 void register_prsim (void)
 {
   STACKTRACE_BRIEF;
@@ -2102,14 +2108,14 @@ void register_prsim (void)
 	vpi_current_time.type = vpiSimTime;	// do once only
 	sync_vpi_time();		// should just be 0
 
-  s_vpi_systf_data s;
   size_t i;
-
   /* register tasks */
-  for (i=0; i < sizeof (f)/sizeof (f[0]); ++i) {
+  for (i=0; i < sizeof (prsim_systf)/sizeof (prsim_systf[0]); ++i) {
+    s_vpi_systf_data s;
     s.type = vpiSysTask;
-    s.tfname = const_cast<PLI_BYTE8*>(f[i].name);	// pffft...
-    s.calltf = f[i].f;
+    s.sysfunctype = 0;
+    s.tfname = const_cast<PLI_BYTE8*>(prsim_systf[i].name);	// pffft...
+    s.calltf = prsim_systf[i].func;
     s.compiletf = NULL;
     s.sizetf = NULL;
     s.user_data = NULL;
@@ -2117,17 +2123,11 @@ void register_prsim (void)
   }
 }
 
-}	// end namespace PRSIM
-}	// end namespace SIM
-}	// end namespace HAC
-
-//=============================================================================
-BEGIN_C_DECLS
 extern void (*vlog_startup_routines[]) (void);
 
 void (*vlog_startup_routines[]) (void) =
 {
-  &HAC::SIM::PRSIM::register_prsim,
+  &register_prsim,
   NULL
 };
 
