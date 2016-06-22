@@ -27,6 +27,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include <cstdarg>
 #include <map>
 #include <set>
+#include <limits> // for numeric_limits
 #include <iostream>
 #include <sstream>
 #include <algorithm>			// for remove_copy_if
@@ -56,8 +57,10 @@ DEFAULT_STATIC_TRACE_BEGIN
 // from either included sim/vpi_user.h or external: $(VPI_INCLUDE)
 #ifdef	EXTERNAL_VPI_USER_H
 #include "vpi_user.h"
+#include "veriuser.h"
 #else
 #include "sim/vpi_user.h"
+#include "sim/veriuser.h"
 #endif
 
 // use 64b time if there is 64b native integer available (some 32b platforms)
@@ -331,7 +334,7 @@ if (prsim_state->pending_events() && (prsim_state->next_event_time() < vcstime))
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // equivalent current time on verilog-side of simulation (host)
-static s_vpi_time vpi_current_time;
+static s_vpi_time vpi_current_time;  // initialized in register_prsim()
 static Time_t vpi_current_time_prs;
 
 /**
@@ -341,7 +344,8 @@ static
 void
 sync_vpi_time(void) {
 	STACKTRACE_BRIEF;
-//	vpi_current_time.type = vpiSimTime;	// do once only during init
+	STACKTRACE_INDENT_PRINT("vpi_get_time" << endl);
+	INVARIANT(vpi_current_time.type == vpiSimTime);
 	vpi_get_time(NULL, &vpi_current_time);
 	vcs_to_prstime(&vpi_current_time, &vpi_current_time_prs);
 	STACKTRACE_INDENT_PRINT("vcs time: " << vpi_current_time_prs << endl);
@@ -750,7 +754,9 @@ transport_value_from_prsim(const node_type& n,
 	// are processed before returning to VCS, as was introduced
 	// by $prsim_sync.
 	// vpi_free_object(vpi_put_value(net, &v, &tm, vpiPureTransportDelay));
-	vpi_free_object (vpi_put_value (net, &v, &tm, vpiNoDelay));
+	const vpiHandle hnd = vpi_put_value(net, &v, &tm, vpiNoDelay);
+        if (hnd)
+          vpi_free_object(hnd);
 	// Q: shouldn't control return immediately to VCS?
 	// experimenting shows that this makes no difference!? both work
 	// WHY?
@@ -1014,6 +1020,45 @@ static void _run_prsim (const Time_t& vcstime, const int context)
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+static
+bool
+vpi_next_event_time(s_vpi_time& vtime) {
+  STACKTRACE_BRIEF;
+  // ncsim does not support VPI access to vpiTimeQueue
+#define NEXT_EVENT_TIME_WITH_TF   1
+#define CHECK_NEXT_EVENT      1  // original: 0
+#if NEXT_EVENT_TIME_WITH_TF
+  const PLI_INT32 result = tf_getnextlongtime(
+      reinterpret_cast<PLI_INT32*>(&vtime.low),
+      reinterpret_cast<PLI_INT32*>(&vtime.high));
+  if (result == 0) {
+    // result is next scheduled event time
+    return true;
+  } else {  // result is 1 or 2
+    // no next event scheduled
+    return false;
+  }
+#elif CHECK_NEXT_EVENT
+  const vpiHandle tQh = vpi_iterate(vpiTimeQueue, NULL);
+  const vpiHandle tQi = vpi_scan(tQh);  // next event
+  if (tQi) {
+    vpi_get_time(tQi, &vtime);
+    vpi_free_object(tQi);	// vpi_get_time() allocates a s_vpi_time object
+  } else {
+    return false;
+  }
+#else
+  // TODO: cache vpiTimeQueue object handle?
+  const vpiHandle queue = vpi_handle(vpiTimeQueue, NULL);
+  vpi_get_time(queue, &vtime);
+  vpi_free_object(queue);	// vpi_get_time() allocates a s_vpi_time object
+  return true;
+#endif
+#undef CHECK_NEXT_EVENT
+#undef NEXT_EVENT_TIME_WITH_TF
+} // vpi_next_event_time
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 Expects no parameters (void).  
 @texinfo vpi/prsim_sync.texi
@@ -1029,19 +1074,17 @@ calls automatically re-synchronize the event queues, as a conservative measure.
 @end deffn
 @end texinfo
  */
-
 static
 void
 prsim_catch_up(void) {
 	STACKTRACE_BRIEF;
 	require_prsim_state(__FUNCTION__);
 	sync_vpi_time();
-	const vpiHandle queue = vpi_handle(vpiTimeQueue, NULL);
+	Time_t pq_time;
 	s_vpi_time queue_time;
 	queue_time.type = vpiSimTime;
-	vpi_get_time(queue, &queue_time);
-	Time_t pq_time;
-	vcs_to_prstime(&queue_time, &pq_time);
+	if (vpi_next_event_time(queue_time)) {
+          vcs_to_prstime(&queue_time, &pq_time);
 #if 0
 	cout << "VCS current time: " << current_time.low << endl;
 	cout << "VCS next event time: " << queue_time.low << endl;
@@ -1052,7 +1095,11 @@ prsim_catch_up(void) {
 		prsim_state->dump_event_queue(cout);
 	} else	cout << "(none)" << endl;
 #endif
-	vpi_free_object(queue);	// vpi_get_time() allocates a s_vpi_time object
+        } else {
+          // no next event from host simulator
+          STACKTRACE_INDENT_PRINT("No next event from host simulator." << endl);
+          pq_time = vpi_current_time_prs;
+        }
 	if (prsim_state->pending_events()) {
 		if (scheduled) {
 			// unschedule and reschedule
@@ -2106,7 +2153,7 @@ void register_prsim (void)
   STACKTRACE_BRIEF;
 	// do some one-time initializations here
 	vpi_current_time.type = vpiSimTime;	// do once only
-	sync_vpi_time();		// should just be 0
+	// sync_vpi_time();		// should just be 0
 
   size_t i;
   /* register tasks */

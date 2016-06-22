@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2016-06-22	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-86-59:
+	  Update vpi-prsim.cc to work with Cadence incisive.
+	  Fixed by calling tf_getnextlongtime() instead of directly accessing
+	  vpiTimeQueue.  Confirmed works with VCS.
+
+
 2014-10-24	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-86-58:
