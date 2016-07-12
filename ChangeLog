@@ -3,6 +3,10 @@
 
 2016-07-11	David Fang	<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-86-61:
+	  prsim: allow mk_excl rings to contain one node (and ignore)
+
+
 	* HACKT-00-01-04-main-00-86-60:
 	  Added random number generators to chpsim standard library.
 
