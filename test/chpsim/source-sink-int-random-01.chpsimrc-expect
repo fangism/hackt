@@ -1,0 +1,302 @@
+updated channel(s): 
+chan(int<8>) L = (22) [recvd]
+watch:	10	2	2	Z.B?(Z.b)
+updated channel(s): 
+chan(int<8>) L = (22) [empty]
+watch:	10	1	1	S.S!(int(lrand48())&255)
+updated channel(s): 
+chan(int<8>) L = (39) [sent]
+watch:	20	1	1	S.S!(int(lrand48())&255)
+updated channel(s): 
+chan(int<8>) L = (39) [empty]
+watch:	20	2	2	Z.B?(Z.b)
+updated channel(s): 
+chan(int<8>) L = (86) [recvd]
+watch:	30	2	2	Z.B?(Z.b)
+updated channel(s): 
+chan(int<8>) L = (86) [empty]
+watch:	30	1	1	S.S!(int(lrand48())&255)
+updated channel(s): 
+chan(int<8>) L = (180) [sent]
+watch:	40	1	1	S.S!(int(lrand48())&255)
+updated channel(s): 
+chan(int<8>) L = (180) [empty]
+watch:	40	2	2	Z.B?(Z.b)
+updated channel(s): 
+chan(int<8>) L = (77) [recvd]
+watch:	50	2	2	Z.B?(Z.b)
+updated channel(s): 
+chan(int<8>) L = (77) [empty]
+watch:	50	1	1	S.S!(int(lrand48())&255)
+updated channel(s): 
+chan(int<8>) L = (156) [sent]
+watch:	60	1	1	S.S!(int(lrand48())&255)
+updated channel(s): 
+chan(int<8>) L = (156) [empty]
+watch:	60	2	2	Z.B?(Z.b)
+updated channel(s): 
+chan(int<8>) L = (121) [recvd]
+watch:	70	2	2	Z.B?(Z.b)
+updated channel(s): 
+chan(int<8>) L = (121) [empty]
+watch:	70	1	1	S.S!(int(lrand48())&255)
+updated channel(s): 
+chan(int<8>) L = (241) [sent]
+watch:	80	1	1	S.S!(int(lrand48())&255)
+updated channel(s): 
+chan(int<8>) L = (241) [empty]
+watch:	80	2	2	Z.B?(Z.b)
+updated channel(s): 
+chan(int<8>) L = (105) [recvd]
+watch:	90	2	2	Z.B?(Z.b)
+updated channel(s): 
+chan(int<8>) L = (105) [empty]
+watch:	90	1	1	S.S!(int(lrand48())&255)
+updated channel(s): 
+chan(int<8>) L = (93) [sent]
+watch:	100	1	1	S.S!(int(lrand48())&255)
+updated channel(s): 
+chan(int<8>) L = (93) [empty]
+watch:	100	2	2	Z.B?(Z.b)
+updated channel(s): 
+chan(int<8>) L = (126) [recvd]
+watch:	110	2	2	Z.B?(Z.b)
+updated channel(s): 
+chan(int<8>) L = (126) [empty]
+watch:	110	1	1	S.S!(int(lrand48())&255)
+updated channel(s): 
+chan(int<8>) L = (223) [sent]
+watch:	120	1	1	S.S!(int(lrand48())&255)
+updated channel(s): 
+chan(int<8>) L = (223) [empty]
+watch:	120	2	2	Z.B?(Z.b)
+updated channel(s): 
+chan(int<8>) L = (49) [recvd]
+watch:	130	2	2	Z.B?(Z.b)
+updated channel(s): 
+chan(int<8>) L = (49) [empty]
+watch:	130	1	1	S.S!(int(lrand48())&255)
+updated channel(s): 
+chan(int<8>) L = (28) [sent]
+watch:	140	1	1	S.S!(int(lrand48())&255)
+updated channel(s): 
+chan(int<8>) L = (28) [empty]
+watch:	140	2	2	Z.B?(Z.b)
+updated channel(s): 
+chan(int<8>) L = (76) [recvd]
+watch:	150	2	2	Z.B?(Z.b)
+updated channel(s): 
+chan(int<8>) L = (76) [empty]
+watch:	150	1	1	S.S!(int(lrand48())&255)
+updated channel(s): 
+chan(int<8>) L = (225) [sent]
+watch:	160	1	1	S.S!(int(lrand48())&255)
+updated channel(s): 
+chan(int<8>) L = (225) [empty]
+watch:	160	2	2	Z.B?(Z.b)
+updated channel(s): 
+chan(int<8>) L = (158) [recvd]
+watch:	170	2	2	Z.B?(Z.b)
+updated channel(s): 
+chan(int<8>) L = (158) [empty]
+watch:	170	1	1	S.S!(int(lrand48())&255)
+updated channel(s): 
+chan(int<8>) L = (111) [sent]
+watch:	180	1	1	S.S!(int(lrand48())&255)
+updated channel(s): 
+chan(int<8>) L = (111) [empty]
+watch:	180	2	2	Z.B?(Z.b)
+updated channel(s): 
+chan(int<8>) L = (186) [recvd]
+watch:	190	2	2	Z.B?(Z.b)
+updated channel(s): 
+chan(int<8>) L = (186) [empty]
+watch:	190	1	1	S.S!(int(lrand48())&255)
+updated channel(s): 
+chan(int<8>) L = (2) [sent]
+watch:	200	1	1	S.S!(int(lrand48())&255)
+updated channel(s): 
+chan(int<8>) L = (2) [empty]
+watch:	200	2	2	Z.B?(Z.b)
+updated channel(s): 
+chan(int<8>) L = (24) [recvd]
+watch:	210	2	2	Z.B?(Z.b)
+updated channel(s): 
+chan(int<8>) L = (24) [empty]
+watch:	210	1	1	S.S!(int(lrand48())&255)
+updated channel(s): 
+chan(int<8>) L = (48) [sent]
+watch:	220	1	1	S.S!(int(lrand48())&255)
+updated channel(s): 
+chan(int<8>) L = (48) [empty]
+watch:	220	2	2	Z.B?(Z.b)
+updated channel(s): 
+chan(int<8>) L = (14) [recvd]
+watch:	230	2	2	Z.B?(Z.b)
+updated channel(s): 
+chan(int<8>) L = (14) [empty]
+watch:	230	1	1	S.S!(int(lrand48())&255)
+updated channel(s): 
+chan(int<8>) L = (138) [sent]
+watch:	240	1	1	S.S!(int(lrand48())&255)
+updated channel(s): 
+chan(int<8>) L = (138) [empty]
+watch:	240	2	2	Z.B?(Z.b)
+updated channel(s): 
+chan(int<8>) L = (78) [recvd]
+watch:	250	2	2	Z.B?(Z.b)
+updated channel(s): 
+chan(int<8>) L = (78) [empty]
+watch:	250	1	1	S.S!(int(lrand48())&255)
+updated channel(s): 
+chan(int<8>) L = (122) [sent]
+watch:	260	1	1	S.S!(int(lrand48())&255)
+updated channel(s): 
+chan(int<8>) L = (122) [empty]
+watch:	260	2	2	Z.B?(Z.b)
+updated channel(s): 
+chan(int<8>) L = (30) [recvd]
+watch:	270	2	2	Z.B?(Z.b)
+updated channel(s): 
+chan(int<8>) L = (30) [empty]
+watch:	270	1	1	S.S!(int(lrand48())&255)
+updated channel(s): 
+chan(int<8>) L = (113) [sent]
+watch:	280	1	1	S.S!(int(lrand48())&255)
+updated channel(s): 
+chan(int<8>) L = (113) [empty]
+watch:	280	2	2	Z.B?(Z.b)
+updated channel(s): 
+chan(int<8>) L = (201) [recvd]
+watch:	290	2	2	Z.B?(Z.b)
+updated channel(s): 
+chan(int<8>) L = (201) [empty]
+watch:	290	1	1	S.S!(int(lrand48())&255)
+updated channel(s): 
+chan(int<8>) L = (51) [sent]
+watch:	300	1	1	S.S!(int(lrand48())&255)
+updated channel(s): 
+chan(int<8>) L = (51) [empty]
+watch:	300	2	2	Z.B?(Z.b)
+updated channel(s): 
+chan(int<8>) L = (226) [recvd]
+watch:	310	2	2	Z.B?(Z.b)
+updated channel(s): 
+chan(int<8>) L = (226) [empty]
+watch:	310	1	1	S.S!(int(lrand48())&255)
+updated channel(s): 
+chan(int<8>) L = (156) [sent]
+watch:	320	1	1	S.S!(int(lrand48())&255)
+updated channel(s): 
+chan(int<8>) L = (156) [empty]
+watch:	320	2	2	Z.B?(Z.b)
+updated channel(s): 
+chan(int<8>) L = (114) [recvd]
+watch:	330	2	2	Z.B?(Z.b)
+updated channel(s): 
+chan(int<8>) L = (114) [empty]
+watch:	330	1	1	S.S!(int(lrand48())&255)
+updated channel(s): 
+chan(int<8>) L = (183) [sent]
+watch:	340	1	1	S.S!(int(lrand48())&255)
+updated channel(s): 
+chan(int<8>) L = (183) [empty]
+watch:	340	2	2	Z.B?(Z.b)
+updated channel(s): 
+chan(int<8>) L = (234) [recvd]
+watch:	350	2	2	Z.B?(Z.b)
+updated channel(s): 
+chan(int<8>) L = (234) [empty]
+watch:	350	1	1	S.S!(int(lrand48())&255)
+updated channel(s): 
+chan(int<8>) L = (208) [sent]
+watch:	360	1	1	S.S!(int(lrand48())&255)
+updated channel(s): 
+chan(int<8>) L = (208) [empty]
+watch:	360	2	2	Z.B?(Z.b)
+updated channel(s): 
+chan(int<8>) L = (101) [recvd]
+watch:	370	2	2	Z.B?(Z.b)
+updated channel(s): 
+chan(int<8>) L = (101) [empty]
+watch:	370	1	1	S.S!(int(lrand48())&255)
+updated channel(s): 
+chan(int<8>) L = (196) [sent]
+watch:	380	1	1	S.S!(int(lrand48())&255)
+updated channel(s): 
+chan(int<8>) L = (196) [empty]
+watch:	380	2	2	Z.B?(Z.b)
+updated channel(s): 
+chan(int<8>) L = (184) [recvd]
+watch:	390	2	2	Z.B?(Z.b)
+updated channel(s): 
+chan(int<8>) L = (184) [empty]
+watch:	390	1	1	S.S!(int(lrand48())&255)
+updated channel(s): 
+chan(int<8>) L = (128) [sent]
+watch:	400	1	1	S.S!(int(lrand48())&255)
+updated channel(s): 
+chan(int<8>) L = (128) [empty]
+watch:	400	2	2	Z.B?(Z.b)
+updated channel(s): 
+chan(int<8>) L = (154) [recvd]
+watch:	410	2	2	Z.B?(Z.b)
+updated channel(s): 
+chan(int<8>) L = (154) [empty]
+watch:	410	1	1	S.S!(int(lrand48())&255)
+updated channel(s): 
+chan(int<8>) L = (121) [sent]
+watch:	420	1	1	S.S!(int(lrand48())&255)
+updated channel(s): 
+chan(int<8>) L = (121) [empty]
+watch:	420	2	2	Z.B?(Z.b)
+updated channel(s): 
+chan(int<8>) L = (183) [recvd]
+watch:	430	2	2	Z.B?(Z.b)
+updated channel(s): 
+chan(int<8>) L = (183) [empty]
+watch:	430	1	1	S.S!(int(lrand48())&255)
+updated channel(s): 
+chan(int<8>) L = (174) [sent]
+watch:	440	1	1	S.S!(int(lrand48())&255)
+updated channel(s): 
+chan(int<8>) L = (174) [empty]
+watch:	440	2	2	Z.B?(Z.b)
+updated channel(s): 
+chan(int<8>) L = (233) [recvd]
+watch:	450	2	2	Z.B?(Z.b)
+updated channel(s): 
+chan(int<8>) L = (233) [empty]
+watch:	450	1	1	S.S!(int(lrand48())&255)
+updated channel(s): 
+chan(int<8>) L = (215) [sent]
+watch:	460	1	1	S.S!(int(lrand48())&255)
+updated channel(s): 
+chan(int<8>) L = (215) [empty]
+watch:	460	2	2	Z.B?(Z.b)
+updated channel(s): 
+chan(int<8>) L = (14) [recvd]
+watch:	470	2	2	Z.B?(Z.b)
+updated channel(s): 
+chan(int<8>) L = (14) [empty]
+watch:	470	1	1	S.S!(int(lrand48())&255)
+updated channel(s): 
+chan(int<8>) L = (63) [sent]
+watch:	480	1	1	S.S!(int(lrand48())&255)
+updated channel(s): 
+chan(int<8>) L = (63) [empty]
+watch:	480	2	2	Z.B?(Z.b)
+updated channel(s): 
+chan(int<8>) L = (67) [recvd]
+watch:	490	2	2	Z.B?(Z.b)
+updated channel(s): 
+chan(int<8>) L = (67) [empty]
+watch:	490	1	1	S.S!(int(lrand48())&255)
+updated channel(s): 
+chan(int<8>) L = (200) [sent]
+watch:	500	1	1	S.S!(int(lrand48())&255)
+event queue:
+	time	eid	pid	event
+	500	2	2	Z.B?(Z.b)
+check queue:
+	510	1	1	S.S!(int(lrand48())&255)

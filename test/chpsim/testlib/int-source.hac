@@ -18,6 +18,19 @@ chp {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
+	Sources random integer values.  
+
+	Requires stdchpfn library for lrand48().
+***/
+template <pint W><pint N>
+defproc int_source_random_once(chan!(int<W>) S) {
+chp {
+	  {;i:N: S!(lrand48() & ((1 << W) -1)) }
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
 	Cycles through finite sequence of int values.  
 ***/
 template <pint W><pint N; pint B[N]>
@@ -28,6 +41,19 @@ chp {
 		S!(B[i])
 	}
 ]
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+	Sources random integer values.  
+
+	Requires stdchpfn library for lrand48().
+***/
+template <pint W>
+defproc int_source_random(chan!(int<W>) S) {
+chp {
+	*[ S!(lrand48() & ((1 << W) -1)) ]
 }
 }
 

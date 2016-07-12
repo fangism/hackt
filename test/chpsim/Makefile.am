@@ -94,6 +94,8 @@ HACKT_CHPSIMRC_TEST_SUBJECTS = \
 	source-sink-peekbuf-a source-sink-peekbuf-b \
 	mux-test-flat \
 	source-sink-void-a \
+	source-sink-bool-random \
+	source-sink-int-random \
 	top-level-a \
 	missing_func-a missing_func-b missing_func-c missing_func-d \
 	greeting_func-a \
@@ -245,6 +247,8 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	source-sink-peekbuf-b-03 \
 	mux-test-flat-01 \
 	source-sink-void-a-01 source-sink-void-a-02 \
+	source-sink-bool-random-01 \
+	source-sink-int-random-01 \
 	gcd-func-a-01 gcd-func-b-01 gcd-func-c-01 \
 	gcd-func-a-06 gcd-func-a-08 gcd-func-a-09 \
 	gcd-func-a-10 gcd-func-a-12 gcd-func-a-13 gcd-func-a-14 \
@@ -311,6 +315,14 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_FAILURES = \
 # FIXME: ISEs on invalid, diagnostic needed
 #	gcd-func-a-02
 #	lib-assert-test-b-01 (assert-fail needs diagnostic)
+
+if RANDOM_TESTS
+else
+source-sink-bool-random-01.chpsimtest: source-sink-bool-random-01.chpsimrc
+	$(SKIP_TEST_SCRIPT)
+source-sink-int-random-01.chpsimtest: source-sink-int-random-01.chpsimrc
+	$(SKIP_TEST_SCRIPT)
+endif
 
 # quarantined test cases:
 srcdir_EXTRA_DIST += \

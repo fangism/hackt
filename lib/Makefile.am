@@ -155,6 +155,8 @@ libstdchpfn_la_SOURCES = \
 	libchpfn/OS.hh \
 	libchpfn/numeric.cc \
 	libchpfn/numeric.hh \
+	libchpfn/random.cc \
+	libchpfn/random.hh \
 	libchpfn/string.cc \
 	libchpfn/string.hh
 # libstdchpfn_la_LIBADD = ../src/libhackt.la
@@ -165,6 +167,7 @@ nobase_pkginclude_HEADERS = \
 	libchpfn/conditional.hh \
 	libchpfn/io.hh \
 	libchpfn/OS.hh \
+	libchpfn/random.hh \
 	libchpfn/string.hh
 
 # install a copy of the source for reference (is libdir appropriate?)

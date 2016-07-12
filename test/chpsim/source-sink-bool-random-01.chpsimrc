@@ -1,0 +1,8 @@
+# "source-sink-bool-random-01.chpsimrc"
+# @haco@ source-sink-bool-random.haco-c
+# @module@ -fno-ack-loaded-fns -L$(top_builddir)/lib -lstdchpfn
+
+watch-value L
+step 100
+queue
+
