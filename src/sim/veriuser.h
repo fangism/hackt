@@ -31,6 +31,10 @@ typedef char            PLI_BYTE8;
 typedef unsigned char   PLI_UBYTE8;
 #endif
 
+#ifndef WIN32
+#define WIN32 0
+#endif
+
 /* export a symbol */
 #if WIN32
 #ifndef PLI_DLLISPEC
