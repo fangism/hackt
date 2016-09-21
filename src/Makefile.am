@@ -1111,6 +1111,7 @@ SIM_HH_FILES = $(SIM_CC_FILES:.cc=.hh) \
 	sim/devel_switches.hh
 
 SIM_H_FILES = \
+	sim/veriuser.h \
 	sim/vpi_user.h
 
 PRSIM_HH_FILES = $(PRSIM_CC_FILES:.cc=.hh) \
