@@ -76,6 +76,7 @@ HACKNET_TEST_SCRIPTS_PASSES = \
 	fet-type-29 fet-type-30 fet-type-31 fet-type-31b fet-type-32 \
 	fet-type-33 fet-type-34 fet-type-34b fet-type-35 fet-type-36 \
 	fet-type-36b \
+	finfet-01 finfet-02 finfet-03 \
 	parasitics-01 \
 	aliases-01 aliases-02 aliases-03 aliases-04 \
 	route-through-01 \
@@ -154,7 +155,8 @@ srcdir_EXTRA_DIST += \
 	mangle-example-01.hacknet-conf \
 	mangle-example-02.hacknet-conf \
 	tsmc65.netgen-conf \
-	tsmc65-equiv.netgen-conf
+	tsmc65-equiv.netgen-conf \
+	finfet.hacknet-conf
 
 HACKT_PARSE_TEST_PASSES = \
 	non-CMOS-06 subckt-02 subckt-08 \

@@ -1,0 +1,15 @@
+// "finfet-01.hac"
+// testing finfet geometry features: nfin_by_width
+// @hacknet-flags@ -c finfet.hacknet-conf
+
+template <pint N>
+defproc celem_bare(bool? x[N]; bool! y) {
+prs {
+	[W=10*N] (&:i:N:  x[i] )		-> y-
+	[W=5*N] (&:i:N: ~x[i] )		-> y+
+}
+}
+
+celem_bare<1> inv;
+celem_bare<2> c2;
+celem_bare<3> c3;
