@@ -2456,9 +2456,10 @@ if (!v.in_unique_pass()) {
 		r.insert(ni);
 	}
 #endif
-	INVARIANT(r.size() > 1);
-	v.state.append_mk_exclhi_ring(r);
-	INVARIANT(r.empty());
+	if (r.size() > 1) {
+		v.state.append_mk_exclhi_ring(r);
+		INVARIANT(r.empty());
+	}
 }
 }
 
@@ -2499,9 +2500,10 @@ if (!v.in_unique_pass()) {
 		r.insert(ni);
 	}
 #endif
-	INVARIANT(r.size() > 1);
-	v.state.append_mk_excllo_ring(r);
-	INVARIANT(r.empty());
+	if (r.size() > 1) {
+		v.state.append_mk_excllo_ring(r);
+		INVARIANT(r.empty());
+	}
 }
 }
 

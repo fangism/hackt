@@ -45,6 +45,7 @@ available from the standard @command{chpsim} library.
 * String Library::
 * I/O Library::
 * OS Library::
+* Random Number Library::
 * Bitmanip Library::
 @end menu
 
@@ -121,6 +122,16 @@ once it reaches the end.
 System-related operations are also supported.
 
 @include fn/system.texi
+
+@node Random Number Library
+@subsection Random Number Library
+
+Functions related to random number generation.
+These functions call the corresponding C standard library functions.
+
+@include fn/srand48.texi
+@include fn/lrand48.texi
+@include fn/mrand48.texi
 
 @node Bitmanip Library
 @subsection Bit-manipulation Library

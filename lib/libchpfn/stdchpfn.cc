@@ -12,6 +12,7 @@
 #include "libchpfn/string.hh"
 #include "libchpfn/bitmanip.hh"
 #include "libchpfn/numeric.hh"
+#include "libchpfn/random.hh"
 #include "sim/chpsim/chpsim_dlfunction.hh"
 
 namespace HAC {
@@ -92,6 +93,11 @@ CHP_DLFUNCTION_LOAD_DEFAULT("ctz", ctz)
 CHP_DLFUNCTION_LOAD_DEFAULT("ffs", ffs)
 CHP_DLFUNCTION_LOAD_DEFAULT("msb", msb)
 CHP_DLFUNCTION_LOAD_DEFAULT("lsb", lsb)
+
+// from "libchpfn/random.hh"
+CHP_DLFUNCTION_LOAD_DEFAULT("srand48", srand48)
+CHP_DLFUNCTION_LOAD_DEFAULT("lrand48", lrand48)
+CHP_DLFUNCTION_LOAD_DEFAULT("mrand48", mrand48)
 
 // from "libchpfn/numeric.hh"
 CHP_DLFUNCTION_LOAD_DEFAULT("sign_extend", sign_extend)

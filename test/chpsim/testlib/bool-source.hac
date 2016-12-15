@@ -16,6 +16,19 @@ chp {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
+	Sources random bool values.  
+
+	Requires stdchpfn library for lrand48().
+***/
+template <><pint N>
+defproc bool_source_random_once(chan!(bool) S) {
+chp {
+	{;i:N: S!((lrand48() & 0x1) == 1) }
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
 	Cycles through finite sequence of bool values.  
 ***/
 template <><pint N; pbool B[N]>
@@ -24,6 +37,18 @@ chp {
 *[
 	{;i:N: S!(B[i]) }
 ]
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+	Sources random bool values.  
+
+	Requires stdchpfn library for lrand48().
+***/
+defproc bool_source_random(chan!(bool) S) {
+chp {
+	*[ S!((lrand48() & 0x1) == 1) ]
 }
 }
 

@@ -1,0 +1,10 @@
+// "source-sink-int-random.hac"
+
+import "testlib/int-source.hac";
+import "testlib/int-sink.hac";
+
+pint W = 8;
+chan(int<W>) L;
+int_source_random<W> S(L);
+int_sink<W> Z(L);
+

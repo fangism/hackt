@@ -40,22 +40,15 @@ in your installation path.
 
 The first step is to enable support for building a plug-in
 to be loaded into the VPI.  
-During the configure step, pass the option:
-@t{--with-vpi=@i{/path/to/vpi/development-files}}
+The source includes a copy of the @file{vpi_user.h} and @file{veriuser.h}
+standard headers, so there is no need to locate them in vendor tool
+installations.
 
-@example
-./configure --with-vpi=/usr/local/cad/synopsys/vcs
-@end example
-
-The path should point to one directory up from 
-where the C headers reside.
-(Basically exclude the @t{/include} from the path argument, 
-as it is automatically appended.)
-@t{configure} checks for @file{vpi_user.h} in the given path.  
-If it is found, then compilation will create a module for VCS's VPI,
+The installation includes the VPI application
 @file{vpihacprsim.la} (which is installed with the actual @t{.so/dll/dylib}
 shared library).  
-This configuration check also looks for @command{vcs} in the path;
+This configuration check also looks for (Synopsys VCS) @command{vcs}
+and (Cadence Incisive) @command{irun} in the path;
 @command{vcs} is used to compile Verilog into a simulation executable.  
 
 @strong{Disclaimer}: the following instructions are taken from the
@@ -63,11 +56,14 @@ author's trials, and do not necessary reflect the actual
 documented use.  
 Consult the vendor's VPI documentation for more information.  
 
+@subsection Synopsys VCS Commands
+@cindex VCS
+
 To enable VPI in the VCS compiler, pass @option{+vpi} to the @command{vcs}
 command.  
 
 To specify the prsim module, pass: 
-@option{-use_vpiobj /prefix/lib/hackt/vpihacprsim.so} and 
+@option{+vpi -use_vpiobj /prefix/lib/hackt/vpihacprsim.so} and 
 @option{-L/prefix/lib/hackt}.
 The @option{-L} flag is forwarded to the linker used by VCS
 in the final stage of compilation, and is @emph{also required} 
@@ -91,6 +87,20 @@ sh$ LD_LIBRARY_PATH=/prefix/lib/hackt:$LD_LIBRARY_PATH ./simv
 
 csh% env sh$ LD_LIBRARY_PATH=/prefix/lib/hackt:$LD_LIBRARY_PATH ./simv
 @end example
+
+@subsection Cadence Incisive Commands
+@cindex Incisive
+@cindex irun
+
+To enable VPI in the Incisive simulator, pass the following options
+to @command{irun}:
+@option{-loadvpi /prefix/lib/hackt/vpihacprsim.so:register_prsim}
+and @option{-access rw}.
+(@command{irun} compiles and runs simulation in one-step.)
+
+See the previous section on setting @code{LD_LIBRARY_PATH},
+to point your enviroment to dependent shared libraries.
+
 
 @c ----------------------------------------------------------------------------
 @node VPI Basics

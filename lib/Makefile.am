@@ -89,15 +89,15 @@ EXTRA_DIST += README \
 	support/hac.vim \
 	support/ChangeLog
 
+HAC_VIM_SUFFIXES = .hac .hacf .act .actf .actmx .prs .prsf .chp .chpf
+
 hac.vimrc: Makefile
 	{ $(ECHO) "\" source this from $$HOME/.vimrc to autoload hac syntax." ; \
 	$(ECHO) "\" .act* is for a close dialect, ACT" ; \
 	$(ECHO) "\" .*f is for sources preprocessed (flattened) with hacpp" ; \
-	$(ECHO) "au BufRead,BufNewFile *.hac set filetype=hac" ; \
-	$(ECHO) "au BufRead,BufNewFile *.hacf set filetype=hac" ; \
-	$(ECHO) "au BufRead,BufNewFile *.act set filetype=hac" ; \
-	$(ECHO) "au BufRead,BufNewFile *.actf set filetype=hac" ; \
-	$(ECHO) "au BufRead,BufNewFile *.actmx set filetype=hac" ; \
+	for e in $(HAC_VIM_SUFFIXES) ; \
+	do $(ECHO) "au BufRead,BufNewFile *.$$e set filetype=hac" ; \
+	done ; \
 	$(ECHO) "au! Syntax hac source $(vimdir)/hac.vim" ;} > $@
 
 #################### CHP function library section #############################
@@ -155,6 +155,8 @@ libstdchpfn_la_SOURCES = \
 	libchpfn/OS.hh \
 	libchpfn/numeric.cc \
 	libchpfn/numeric.hh \
+	libchpfn/random.cc \
+	libchpfn/random.hh \
 	libchpfn/string.cc \
 	libchpfn/string.hh
 # libstdchpfn_la_LIBADD = ../src/libhackt.la
@@ -165,6 +167,7 @@ nobase_pkginclude_HEADERS = \
 	libchpfn/conditional.hh \
 	libchpfn/io.hh \
 	libchpfn/OS.hh \
+	libchpfn/random.hh \
 	libchpfn/string.hh
 
 # install a copy of the source for reference (is libdir appropriate?)

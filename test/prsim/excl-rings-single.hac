@@ -1,0 +1,7 @@
+// "excl-rings-single.hac"
+
+bool x, y;
+spec {
+  mk_exclhi(x)
+  mk_excllo(y)
+}

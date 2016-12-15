@@ -1,0 +1,16 @@
+# "excl-rings-single-01.prsimrc"
+# @haco@ excl-rings-single.haco-c
+
+watchall
+allrings-mk
+
+set x 0
+cycle
+set x 1
+cycle
+
+set y 0
+cycle
+set y 1
+cycle
+

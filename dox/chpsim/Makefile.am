@@ -86,6 +86,7 @@ STDCHPFN_SRCS = \
 	$(CHPFN_SRCDIR)/conditional.cc \
 	$(CHPFN_SRCDIR)/io.cc \
 	$(CHPFN_SRCDIR)/OS.cc \
+	$(CHPFN_SRCDIR)/random.cc \
 	$(CHPFN_SRCDIR)/string.cc
 
 # just re-generate all of them when any one changes...

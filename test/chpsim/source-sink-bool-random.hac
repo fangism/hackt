@@ -1,0 +1,9 @@
+// "source-sink-bool-random.hac"
+
+import "testlib/bool-source.hac";
+import "testlib/bool-sink.hac";
+
+chan(bool) L;
+bool_source_random S(L);
+bool_sink Z(L);
+

@@ -1111,6 +1111,7 @@ SIM_HH_FILES = $(SIM_CC_FILES:.cc=.hh) \
 	sim/devel_switches.hh
 
 SIM_H_FILES = \
+	sim/veriuser.h \
 	sim/vpi_user.h
 
 PRSIM_HH_FILES = $(PRSIM_CC_FILES:.cc=.hh) \
@@ -1479,7 +1480,7 @@ PARSER_HACK_PIPE += { $(AWK) -f $(srcdir)/parser/try_lex_catch.awk | \
 	$(AWK) -f $(srcdir)/parser/yyerror_bison_hack.awk | \
 	$(AWK) -f $(srcdir)/parser/purify_flex.awk | \
 	$(SED_CXX_REFERENCE) | \
-	$(GREP) -v "^YYSTYPE yylval;" ;}
+	$(GREP) -v "^YYSTYPE yylval.*;" ;}
 endif
 if HAVE_BYACC
 PARSER_HACK_PIPE += { $(AWK) -f $(srcdir)/parser/try_lex_catch.awk | \

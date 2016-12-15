@@ -25,6 +25,7 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	celem-share after-celem-def after-celem after-celem-more \
 	celem-keeper \
 	pass-gates-def pass-gates excl-rings-def excl-rings \
+	excl-rings-single \
 	bad-pass-gate-a bad-pass-gate-b \
 	check-excl-rings-def check-excl-rings \
 	check-excl-rings-chan-def check-excl-rings-chan \
@@ -235,6 +236,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	after-celem-01 after-celem-02 after-celem-03 \
 	pass-gates-01 pass-gates-02 pass-gates-03 \
 	bad-pass-gate-a-01 bad-pass-gate-b-01 \
+	excl-rings-single-01 \
 	excl-rings-01 excl-rings-02 excl-rings-03 excl-rings-04 \
 	excl-rings-02b excl-rings-03b excl-rings-03c excl-rings-03d \
 	check-excl-rings-02 check-excl-rings-04 check-excl-rings-05 \

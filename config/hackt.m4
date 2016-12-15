@@ -361,13 +361,13 @@ dnl (without include/) for the externally provided library.
 dnl e.g. /usr/local/cad/synopsys/vcs/linux
 dnl which is expected to contain subdirs include/, lib/
 dnl Often times, this will be some architecture-dependent path.
-dnl Also checks for vcs compiler.
+dnl Also checks for Synopsys vcs compiler, and Cadence Incisive (irun) simulator.
 dnl
 dnl vpi_user.h is a standard interface, so we now ship a copy (sim/vpi_user.h)
 dnl By default the included copy is used.  This option lets the user override.
 dnl
 dnl @category ProjectSpecific
-dnl @version 2012-10-10
+dnl @version 2016-06-22
 dnl @author David Fang
 dnl @license AllPermissive
 dnl
@@ -397,10 +397,11 @@ fi
 dnl AM_CONDITIONAL(HAVE_VPI, test "$VPI_INCLUDE")
 AC_SUBST(VPI_INCLUDE)
 AC_SUBST(VPI_LDPATH)
-dnl check for vcs for running tests
-dnl TODO: check for other verilog compilers
+dnl check for various verilog compilers and simulators
 AC_PATH_PROG([VCS], vcs)
+AC_PATH_PROG([IRUN], irun)
 AM_CONDITIONAL(HAVE_VCS, test -n "$ac_cv_path_VCS")
+AM_CONDITIONAL(HAVE_IRUN, test -n "$ac_cv_path_IRUN")
 ])dnl
 
 dnl @synopsis HACKT_ARG_ENABLE_OBJECT_ALIGN_CHECKING
