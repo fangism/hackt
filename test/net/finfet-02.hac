@@ -1,0 +1,5 @@
+// "finfet-02.hac"
+// testing finfet geometry features: nfin_by_width
+// @hacknet-flags@ -c finfet.hacknet-conf -f fin_pitch=75
+
+import "finfet-01.hac";

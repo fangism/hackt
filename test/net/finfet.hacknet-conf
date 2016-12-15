@@ -1,0 +1,7 @@
+# testing width_by_nfin effective width computation
+lambda=30
+length_unit=n
+area_unit=a
+width_by_nfin=1
+fin_drawn_width=20
+fin_pitch=60
