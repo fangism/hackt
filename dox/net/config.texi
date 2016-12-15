@@ -43,6 +43,11 @@ The following parameters affect emitted device sizes and units.
 @include config/fet_type_overrides.texi
 @include config/stack_attributes_from_internal_footer.texi
 
+The following parameters are specific to FinFET processes:
+@include config/width_by_nfin.texi
+@include config/fin_drawn_width.texi
+@include config/fin_pitch.texi
+
 The following options are related to transistor parasitics.  
 @cindex parasitics
 

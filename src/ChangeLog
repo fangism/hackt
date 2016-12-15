@@ -3,6 +3,13 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2016-12-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-86-58-finfet-01:
+	  Reformatting deltas and updating documentation from hac_finfet
+		branch, by Joydip Das.
+
+
 2014-10-24	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-86-58:

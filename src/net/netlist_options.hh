@@ -180,19 +180,6 @@ struct netlist_options {
 	 */
 	real_type			lambda;
 
-
-   /** addition for finfet effective-width estimation
-    New variables introduced:
-      1. width_by_nfin [boolean]
-      2. fin_drawn_width [real]
-      3. fin_pitch [real]
-    */
-   bool        width_by_nfin;
-   real_type   fin_drawn_width;
-   real_type   fin_pitch;
-
-
-
 	/**
 		Transistor size limits, all in lambda.
 	 */
@@ -210,6 +197,19 @@ struct netlist_options {
 		Only relevant with emit_parasitic=1.
 	 */
 	real_type			fet_spacing_diffonly;
+
+	/**
+		For finfet effective-width estimation:
+		1. width_by_nfin [boolean] -- enables alternate calculation
+		2. fin_drawn_width [real] -- from process design geometry
+			in length unit (not scaled by lambda)
+		3. fin_pitch [real] -- from process design geometry
+			in length unit (not scaled by lambda)
+	*/
+	bool				width_by_nfin;
+	real_type			fin_drawn_width;
+	real_type			fin_pitch;
+
 	/**
 		Set of reserved names with special meanings to other 
 		back-end tools.

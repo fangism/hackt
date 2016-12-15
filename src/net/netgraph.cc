@@ -36,8 +36,6 @@
 #include "util/stacktrace.hh"
 #include "util/indent.hh"
 
-// local namespace for declaring finfet related variables
-
 namespace HAC {
 namespace NET {
 #include "util/using_ostream.hh"
@@ -1010,32 +1008,24 @@ transistor::emit(ostream& o, const index_type di,
 		o << ftype;
 	}
 
-   // ---------------------------------------------------------------------------------------------------
-   // We now have two options for estimating W_eff and L_eff for spice netlist.
-   //   boolean option 'width_by_nfin' will be used by hacknet to use either of these options
-   //   Old equation will be used for width_by_nfin=0 and new equation will be used for width_by_nfin=1
-   // ---------------------------------------------------------------------------------------------------
-
-   // effective width and effective length 
-   // Based on the boolean option width_by_nfin, new 
+	// option 'width_by_nfin' controls how W_eff is calculated.
 	// TODO: restrict lengths and widths, from tech/conf file
-   if (nopt.width_by_nfin) { 
-      real_type   num_fins;
-      real_type   width_eff;
+	if (nopt.width_by_nfin) { 
+		// assign width to num_fin
+		const real_type num_fins = width;
+		// calculate the effective-width
+		// note that lambda is not used as a scale factor here
+		const real_type width_eff = ((num_fins - 1) * nopt.fin_pitch)
+			+ nopt.fin_drawn_width;
+		// emit parameters
+		o << " NFIN=" << num_fins << 
+			" W=" << width_eff << nopt.length_unit;
+	} else {
+		// for non-FinFet processes
+		o << " W=" << width *nopt.lambda << nopt.length_unit;
+	}
 
-      // assign width to num_fin
-      num_fins = width;
-      // calculate the effective-width
-      width_eff = ((num_fins - 1) * nopt.fin_pitch) + nopt.fin_drawn_width;
-      // dump into netlist
-      o << " NFIN=" << num_fins << 
-            " W=" << width_eff << nopt.length_unit << 
-		      " L=" << length *nopt.lambda << nopt.length_unit;
-   } else { // for seneca or owasco
-	   o << " W=" << width *nopt.lambda << nopt.length_unit <<
-		      " L=" << length *nopt.lambda << nopt.length_unit;
-      
-   }
+	o << " L=" << length *nopt.lambda << nopt.length_unit;
 
 	if (nopt.emit_parasitics) {
 #if !NETLIST_CACHE_PARASITICS
