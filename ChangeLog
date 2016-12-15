@@ -1,6 +1,12 @@
 "ChangeLog"
 #	$Id: ChangeLog,v 1.256 2011/05/03 19:20:32 fang Exp $
 
+2016-12-15	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-86-62:
+	  Merged hac_finfet branch.
+
+
 2016-07-11	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-86-61:
