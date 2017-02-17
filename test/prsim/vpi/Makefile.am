@@ -21,7 +21,8 @@ HACKT_PRSIMRC_TEST_SUBJECTS = inverters \
 	and_tree_reverse and_template_tree_reverse \
 	inverters-separate \
 	unstable-vacuous \
-	flop_it
+	flop_it \
+	multidimensional-a
 
 # for .v verilog tests
 HACKT_VPI_TEST_SCRIPTS_PASSES = \
@@ -48,10 +49,14 @@ HACKT_VPI_TEST_SCRIPTS_PASSES = \
 	unstable-dequeue \
 	unstable-vacuous \
 	celem-test \
-	flop_it flop_it-b flop_it-c
+	flop_it flop_it-b flop_it-c \
+	unpacked_packed \
+	multidimensional-a
 
 HACKT_VWRAP_TEST_SCRIPTS_PASSES = \
 	standard standard-ports standard-reverse \
+	multidimensional multidimensional-ports multidimensional-reverse \
+	multidimensional-norepack \
 	param parse-test
 
 EXAMPLE_NAME = vpiprsim-inverters
@@ -94,6 +99,19 @@ standard-ports.v: standard.v
 standard-reverse.v: standard.v
 	{ $(ECHO) "// @verilog-wrap-flags@ -v reverse=1 -v wrapper_ports=1" ; \
 		$(CAT) $< ;} > $@
+
+multidimensional-ports.v: multidimensional.v
+	{ $(ECHO) "// @verilog-wrap-flags@ -v wrapper_ports=1" ; \
+		$(CAT) $< ;} > $@
+
+multidimensional-reverse.v: multidimensional.v
+	{ $(ECHO) "// @verilog-wrap-flags@ -v reverse=1 -v wrapper_ports=1" ; \
+		$(CAT) $< ;} > $@
+
+multidimensional-norepack.v: multidimensional.v
+	{ $(ECHO) "// @verilog-wrap-flags@ -v reverse=1 -v wrapper_ports=1 -v repack_arrays=0" ; \
+		$(CAT) $< ;} > $@
+
 # needed by tests that source scripts from srcdir
 addpath_srcdir.v:
 	echo '$$prsim_cmd("addpath $(srcdir)");' > $@
@@ -111,6 +129,7 @@ fast-forward-test.vx-out: fast-forward-test.prsimrc
 flop_it.vx: standard.v-wrap pli.tab
 flop_it-b.vx: standard.v-wrap pli.tab
 flop_it-c.vx: standard.v-wrap pli.tab
+multidimensional-a.vx: multidimensional-reverse.v-wrap pli.tab
 
 subdir/channel-values-X.txt:
 	mkdir -p subdir && \
@@ -135,7 +154,8 @@ inverters.vxi-subdir-out: Makefile.copy force
 	( cd $(EXAMPLE_NAME) && \
 		PATH=$(bindir)$(PATH_SEPARATOR)$$PATH $(MAKE) check ) > $@
 
-CLEANFILES += Makefile.copy pli.tab standard-ports.v standard-reverse.v
+CLEANFILES += Makefile.copy pli.tab standard-ports.v standard-reverse.v \
+	multidimensional-ports.v multidimensional-reverse.v
 
 EXAMPLE_DATA_FILES = example.mk clkgen.v \
 	inverters.hac inverters.v inverters-delay.v \
@@ -144,6 +164,7 @@ EXAMPLE_DATA_FILES = example.mk clkgen.v \
 	channel-source-sink-b.v channel-source-sink-c.v \
 	channel-ledr-source-sink.hac channel-ledr-source-sink.v \
 	and_tree.hac and_tree.v standard.v startup.v startup.hac \
+	multidimensional.v multidimensional-reverse.v \
 	startup-set.v startup-set.hac startup-set.prsimrc \
 	fast-forward-test.v fast-forward-test.hac fast-forward-test.prsimrc \
 	and_tree_reverse.hac and_tree_reverse.v standard-reverse.v \

@@ -1,0 +1,36 @@
+$start of simulation
+at time   0.000, observed clk = 0
+at time   0.000, observed z = 0
+at time  50.000, observed clk = 1
+at time  50.000, observed z = 1
+at time 100.000, observed clk = 0
+at time 100.000, observed z = 0
+at time 150.000, observed clk = 1
+at time 150.000, observed z = 1
+at time 200.000, observed clk = 0
+at time 200.000, observed z = 0
+at time 250.000, observed clk = 1
+at time 250.000, observed z = 1
+at time 300.000, observed clk = 0
+at time 300.000, observed z = 0
+at time 350.000, observed clk = 1
+at time 350.000, observed z = 1
+at time 400.000, observed clk = 0
+at time 400.000, observed z = 0
+at time 450.000, observed clk = 1
+at time 450.000, observed z = 1
+at time 500.000, observed clk = 0
+at time 500.000, observed z = 0
+at time 550.000, observed clk = 1
+at time 550.000, observed z = 1
+at time 600.000, observed clk = 0
+at time 600.000, observed z = 0
+at time 650.000, observed clk = 1
+at time 650.000, observed z = 1
+at time 700.000, observed clk = 0
+at time 700.000, observed z = 0
+at time 750.000, observed clk = 1
+at time 750.000, observed z = 1
+at time 800.000, observed clk = 0
+at time 800.000, observed z = 0
+$finish at simulation time    0.8 ns

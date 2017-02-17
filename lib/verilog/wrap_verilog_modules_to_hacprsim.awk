@@ -5,6 +5,7 @@
 # defines wrappers that automatically connect verilog to hacprsim
 
 # implemented as a crude verilog module parser
+# "Never parse Verilog with awk when death is on the line."
 
 # optional arguments:
 # -v options
@@ -17,6 +18,17 @@
 #	loopvar= name of auxiliary loop variable
 #	output_format= [verilog|hac]
 #		if hac, output an empty defproc with ports only
+#	repack_arrays= 0,1
+#		if 1, repack ports declared with trailing array dimensions into
+#		bus dimensions, so:
+#			input wire [x:0] in [y:0];
+#		would be connected bit-by-bit to a locally declared:
+#			wire [y:0][x:0] in;
+#		This is a workaround around a limitation that prevents trailing
+#		dimensions arrays from transporting values into prsim.
+
+# TODO(fangism): This drops ` in `macros, even though this script is spec'd
+#   to operate on a preprocessed source.
 
 BEGIN {
 	error = 0;
@@ -30,7 +42,7 @@ BEGIN {
 	}
 	# strtonum is not POSIX awk, but += 0 does the same thing
 	if (!length(max_strlen)) {
-		max_strlen = 64;
+		max_strlen = 256;
 	} else {
 		max_strlen += 0;
 	}
@@ -52,6 +64,9 @@ BEGIN {
 	if (!length(loopvar)) {
 		loopvar = "_i_";	# "i" is too common
 	}
+	if (!length(repack_arrays)) {
+		repack_arrays = 1;
+	}
 	if (!length(output_format)) {
 		output_format = "verilog";
 	}
@@ -65,7 +80,11 @@ BEGIN {
 	print "//\t-v debug=" debug;
 	print "//\t-v loopvar=" loopvar;
 	print "//\t-v output_format=" output_format;
+	print "//\t-v repack_arrays=" repack_arrays;
 	print "";
+	# global variables
+	dimensions_stack = "";
+	last_port_identifier = "";
 }
 
 function parse_error(str) {
@@ -107,6 +126,12 @@ function assert_token(tok, expect) {
 	}
 }
 
+function debug_print(str) {
+	if (debug) {
+		print "DEBUG: " str;
+	}
+}
+
 # print the parse stack
 function parse_debug(i) {
 	printf("stack: ");
@@ -126,6 +151,7 @@ function reset_globals() {
 	type_name = "";
 	param_index = 0;
 	port_index = 0;
+	any_repack = -1;
 	# clear the associative arrays
 	# delete ports;		# not POSIX
 	for (p in ports) {
@@ -140,23 +166,42 @@ function reset_globals() {
 	for (p in param_default_values) {
 		delete param_default_values[p];
 	}
-	for (p in dimensions) {
-		delete upper[p];
-		delete lower[p];
-		delete dimensions[p];
+	for (p in pre_dimensions) {
+		delete pre_dimensions[p];
+	}
+	for (p in post_dimensions) {
+		delete post_dimensions[p];
 	}
 }
 
 function begin_parse_range() {
-	range_first = "";
-	range_second = "";
+	# accumulate over multiple dimensions
+	dimensions_stack = dimensions_stack "[";	# global
 	parse_push("expect-range-first");
+}
+
+function first_of_range(range,
+	# local vars
+	toks) {
+	# extract X from "[X:Y]"
+	split(range, toks, ":");
+	return substr(toks[1], 2);  # strip off [
+}
+
+function second_of_range(range,
+	# local vars
+	toks, rb) {
+	# extract Y from "[X:Y]"
+	split(range, toks, ":");
+	rb = index(toks[2], "]");
+	return substr(toks[2], 1, rb-1);
 }
 
 # param in_port declaration is local to ports-list (true) or module-body (false)
 function set_port_dir(tok, dir, 
 	# local vars
-	in_port) {
+	in_port, id) {
+	debug_print("set_port_dir(): tok = " tok);
 if (tok == "[") {
 	begin_parse_range();
 } else if (tok == "wire") {
@@ -167,23 +212,34 @@ if (tok == "[") {
 	if (tok != ";") {
 	# permit declarations like "output reg ..."
 	if (tok != "," && tok != "reg" && tok != ")") {
+		# tok should be the identifier that names the port
+		last_port_identifier = tok;
 		# this may be parsed directly in the module-ports
 		if (in_port) {
 			ordered_ports[port_index] = tok;
 			port_index++;
 		}
-		if (length(range_first) && length(range_second)) {
-			upper[tok] = range_first;
-			lower[tok] = range_second;
-			dimensions[tok] = "[" range_first ":" range_second "]";
+		if (length(dimensions_stack)) {
+			pre_dimensions[tok] = dimensions_stack;
+			debug_print("pre_dim[" tok "] = " dimensions_stack);
 		}
 		ports[tok] = dir;
+		dimensions_stack = "";
 	} else if (tok == ")" || (tok == "," && in_port)) {
 		# yuck: context dependent handling of comma
+		id = last_port_identifier;
+		post_dimensions[id] = dimensions_stack;
+		dimensions_stack = "";
+		debug_print("dimensions[" id "]: " post_dimensions[id] pre_dimensions[id]);
 		parse_pop();
 		parse_expect("ports-list", tok);
 	} # else ignore
 	} else {
+		# check for trailing dimensions for multidimensional arrays
+		id = last_port_identifier;
+		post_dimensions[id] = dimensions_stack;
+		dimensions_stack = "";
+		debug_print("dimensions[" id "]: " post_dimensions[id] pre_dimensions[id]);
 		parse_pop();
 	}
 }
@@ -200,10 +256,8 @@ if (tok == "[") {
 		# this may be parsed directly in the module-ports
 		ordered_params[param_index] = tok;
 		param_index++;
-		if (length(range_first) && length(range_second)) {
-			upper[tok] = range_first;
-			lower[tok] = range_second;
-			dimensions[tok] = "[" range_first ":" range_second "]";
+		if (length(dimensions_stack)) {
+			pre_dimensions[tok] = dimensions_stack;
 		}
 	} else {		# with default value
 		rvalue = "";	# global variable:
@@ -246,8 +300,7 @@ if (state == "top") {
 	}
 } else if (state == "ports-list") {
 	# reset globals, yuck!
-	range_first = "";
-	range_second = "";
+	dimensions_stack = "";
 	if (tok != ")" && tok != ";") {
 	if (tok != ",") {
 		# ports can just be identifier or directional identifier
@@ -271,8 +324,7 @@ if (state == "top") {
 } else if (state == "module-body") {
 	# now look for input and output direction specs
 	# reset globals, yuck!
-	range_first = "";
-	range_second = "";
+	dimensions_stack = "";
 	if (tok == "input") {
 		parse_push("input-list");
 	} else if (tok == "output") {
@@ -297,16 +349,15 @@ if (state == "top") {
 		parse_expect("top", tok);
 	}
 } else if (state == "expect-range-first") {
+	dimensions_stack = dimensions_stack tok;
 	if (tok == ":") {
 		parse_replace("expect-range-second");
-	} else {
-		range_first = range_first tok;
 	}
 } else if (state == "expect-range-second") {
+	dimensions_stack = dimensions_stack tok;
 	if (tok == "]") {
+		dimensions_stack = dimensions_stack ",";
 		parse_pop();
-	} else {
-		range_second = range_second tok;
 	}
 } else if (state == "input-list") {
 	set_port_dir(tok, "in");
@@ -375,25 +426,231 @@ function verilog_strcat2(s1, s2) {
 }
 
 # string concatenation
-function emit_from_prsim(name) {
+function emit_from_prsim(name, vname) {
 	return "$from_prsim(" verilog_strcat2("prsim_name", name) \
-		", " verilog_strcat2("verilog_name", name) ");";
+		", " verilog_strcat2("verilog_name", vname) ");";
 }
 
 # register concatenation
-function emit_from_prsim_reg(name) {
+function emit_from_prsim_reg(name, vname) {
 	return "$from_prsim(" verilog_strcat2("prsim_name_reg", name) \
-		", " verilog_strcat2("verilog_name", name) ");";
+		", " verilog_strcat2("verilog_name", vname) ");";
 }
 
-function emit_to_prsim(name) {
-	return "$to_prsim(" verilog_strcat2("verilog_name", name) \
+function emit_to_prsim(name, vname) {
+	return "$to_prsim(" verilog_strcat2("verilog_name", vname) \
 		", " verilog_strcat2("prsim_name", name) ");";
+}
+
+function find_max_dimensions(dim, ndim, dim_toks) {
+	# local vars only
+	max_dimensions = 0;
+	for (p in ports) {
+		dim = post_dimensions[p] pre_dimensions[p];
+		ndim = split(dim, dim_toks, ",") -1;  # -1 because of trailing ,
+		if (ndim > max_dimensions)
+			max_dimensions = ndim;
+	}
+	return max_dimensions;
+}
+
+function loopvar_name(dim) {
+	# dim (integer) is the nth dimension, starting at 1
+	# don't bother with suffix for dim=1 (common case)
+	if (dim > 1) {
+		return loopvar dim;
+	} else {
+		return loopvar;
+	}
+}
+
+function genvar_name(dim) {
+	return "_g" loopvar_name(dim);
+}
+
+function connect_port(p, dir, ndim, dim_toks,
+	# p (string) is port name
+	# ndim is number of array dimensions
+	# dim_toks is an array of range strings split from pre/post_dimensions
+	# local vars:
+	d, format_indices, format_actuals, n, lv, vname) {
+	if (ndim > 0) {
+		format_indices = "";
+		format_actuals = "";
+		for (d=1; d<=ndim; ++d) {
+			format_indices = format_indices "[%d]";
+			format_actuals = format_actuals ", " loopvar_name(d);
+		}
+		for (d=1; d<=ndim; ++d) {
+			u = first_of_range(dim_toks[d]);
+			l = second_of_range(dim_toks[d]);
+			# Detect backward ranges and conditionally swap.
+			if (u == "0") {
+				n = u;
+				u = l;
+				l = n;
+			}
+			# TODO: nested-style indentation
+			lv = loopvar_name(d);
+			print "\tfor (" lv "=" l "; " lv "<=" u "; " lv "=" lv "+1) begin";
+		}
+		print "\t\t$sformat(tmp, \"." p format_indices "\"" format_actuals ");"
+		if (port_needs_repack(p)) {
+			print "\t\t$sformat(vtmp, \"." repack_name(p) format_indices "\"" format_actuals ");"
+			vname = "vtmp";
+		} else {
+			vname = "tmp";
+		}
+		print "\t\t" (dir ? emit_to_prsim("tmp", vname) : emit_from_prsim_reg("tmp", vname));
+		for (d=ndim; d>=1; --d) {
+			print "\tend // end for " loopvar_name(d);
+		}
+	} else {
+		n = enquote_mem_ref(p);
+		print "\t" (dir ? emit_to_prsim(n, n) : emit_from_prsim(n, n));
+	}
+}
+
+function port_needs_repack(p) {
+	return repack_arrays && (length(post_dimensions[p]) > 0);
+}
+
+function any_port_needs_repack() {
+	# cached result per module
+	if (!repack_arrays) {
+		return 0;
+	}
+	if (any_repack == -1) {
+		any_repack = 0;
+		for (p in ports) {
+			if (port_needs_repack(p)) {
+				any_repack = 1;
+				break;
+			}
+		}
+	}
+	return any_repack;
+}
+
+function instantiate_original_module(instance_name,
+	# local vars
+	i) {
+	# Then implementation is in verilog, so instantiate the original module.
+	printf("\t" type_name);	# global
+	if (param_index) {	# global
+		printf(" #(");
+	for (i=0; i<param_index; ++i) {
+		tmp = ordered_params[i];
+		printf(tmp (i+1 < param_index ? ", " : ""));
+	}
+		print ")";
+		printf("\t");
+	} else {
+		printf(" ");
+	}
+	print instance_name " (";
+	# order matters for port forwarding
+	for (i=0; i<port_index; ++i) {	# global
+		port = ordered_ports[i];
+# this style depends on port ordering
+#		print "\t\t" port (i+1 < port_index ? "," : "");
+# this style uses named port connections
+		print "\t\t." port " ( " port " )" (i+1 < port_index ? "," : "");
+	}
+	print "\t);";
+}
+
+function repack_name(p) {
+	return p "_repack_";
+}
+
+function auto_repack_name(p) {
+	if (port_needs_repack(p)) {
+		return repack_name(p);
+	} else {
+		return p;
+	}
+}
+
+function declare_local_repack_wires(i, p, dim) {	# all local vars
+	for (i=0; i<port_index; ++i) {
+		p = ordered_ports[i];
+		if (port_needs_repack(p)) {
+			# declare a repack array
+			dim = post_dimensions[p] pre_dimensions[p];
+			gsub(",", "", dim);
+			print "\twire " dim " " repack_name(p) ";";
+		}
+	}
+}
+
+function connect_repack_port(p, ndim, dim_toks,
+	# local vars
+	dir) {
+	dir = (ports[p] == "out");
+	if (ndim > 0) {
+		format_indices = "";
+		for (d=1; d<=ndim; ++d) {
+			format_indices = format_indices "[" genvar_name(d) "]";
+		}
+		for (d=1; d<=ndim; ++d) {
+			u = first_of_range(dim_toks[d]);
+			l = second_of_range(dim_toks[d]);
+			# Detect backward ranges and conditionally swap.
+			if (u == "0") {
+				n = u;
+				u = l;
+				l = n;
+			}
+			# TODO: nested-style indentation
+			lv = genvar_name(d);
+			print "\tfor (" lv "=" l "; " lv "<=" u "; " lv "=" lv "+1) begin";
+		}
+		if (dir) {
+			print "\t\tassign " repack_name(p) format_indices " = " p format_indices ";";
+		} else {
+			print "\t\tassign " p format_indices " = " repack_name(p) format_indices ";";
+		}
+		for (d=ndim; d>=1; --d) {
+			print "\tend // end for " genvar_name(d);
+		}
+	}
+	# else scalars never need repacking
+}
+
+function connect_repack_wires(i, p, dim, ndim, dim_toks) {	# all local vars
+	print "\tgenerate  // repacking arrays";
+	for (i=0; i<port_index; ++i) {	# global
+		p = ordered_ports[i];
+		if (port_needs_repack(p)) {
+			dim = post_dimensions[p] pre_dimensions[p];
+			ndim = split(dim, dim_toks, ",") -1;  # -1 because of trailing ,
+			connect_repack_port(p, ndim, dim_toks);
+		}
+	}
+	print "\tendgenerate  // repacking arrays";
+}
+
+function emit_wrapper_port_list(i, p, type, pre_dim, post_dim, endl, comment) {	# all local vars
+	for (i=0; i<port_index; ++i) {	# global
+		p = ordered_ports[i];
+		type = (wrapper_ports ? ports[p] "put" : "wire");
+		pre_dim = pre_dimensions[p];
+		post_dim = post_dimensions[p];
+		# strip out commas we used as dimension separators
+		gsub(",", "", pre_dim);
+		gsub(",", "", post_dim);
+		if (length(pre_dim)) pre_dim = pre_dim " ";	 # pad space
+		if (length(post_dim)) post_dim = " " post_dim;	# pad space
+		endl = (wrapper_ports ? (i+1 < port_index ? "," : "") : ";")
+		comment = (!wrapper_ports ? "  // " ports[p] "put" : "");
+		print "\t" type " " pre_dim p post_dim endl comment;
+	}
 }
 
 # emit wrapper function
 # no parameters, variables are only local
-function write_out_wrapper(tmp, i, u, l, n, type, dim, endl, loopvar) {
+function write_out_wrapper(tmp, d, i, u, l, n, p, type, dim, dim_toks, ndim, endl) {
 if (output_format == "verilog") {
 	print "module " wrapper_prefix "_" type_name (wrapper_ports ? " #(" : ";");
 	# might as well preserve original port order
@@ -410,46 +667,38 @@ if (output_format == "verilog") {
 		print ";";
 	}
 	print "// need not be reg with acc: wn:*";
-	for (i=0; i<port_index; ++i) {
-		p = ordered_ports[i];
-		type = (wrapper_ports ? ports[p] "put" : "wire");
-		tmp = dimensions[p];
-		dim = (length(tmp) ? tmp " " : "");
-		endl = (wrapper_ports ? (i+1 < port_index ? "," : "") : ";")
-		print "\t" type " " dim p endl;
-	}
+	emit_wrapper_port_list();
 	if (wrapper_ports) {
 		print ");";	# end of ports list
 	}
-#	print "\tparameter prsim_name=\"\";";
-	loopvar = "_i_";		# loop variable name
-	print "\tinteger " loopvar ";";
-	print "\treg [" max_strlen "*8:1] prsim_name_reg, verilog_name, tmp;";
-	# tmp is just local var for string manip
+
+	print "";
+	# declare one loopvar for each dimension
+	ndim = find_max_dimensions();
+	for (d=1; d<=ndim; d++) {
+		 # TODO: probably better as a genvar
+		print "\tinteger " loopvar_name(d) ";";
+		if (any_port_needs_repack()) {
+			print "\tgenvar " genvar_name(d) ";";
+		}
+	}
+
+	print "\treg [" max_strlen "*8:1] prsim_name_reg, verilog_name, tmp" (any_port_needs_repack() ? ", vtmp" : "") ";";
+	# tmp is just local var for string manipulation
+
+	if (any_port_needs_repack()) {
+		print "";
+		declare_local_repack_wires();
+		connect_repack_wires();
+	}
+
 if (!reverse) {
-	printf("\t" type_name);
-	if (param_index) {
-		printf(" #(");
-	for (i=0; i<param_index; ++i) {
-		tmp = ordered_params[i];
-		printf(tmp (i+1 < param_index ? ", " : ""));
-	}
-		print ")";
-		printf("\t");
-	} else {
-		printf(" ");
-	}
-	print "dummy (";
-	# order matters for port forwarding
-	for (i=0; i<port_index; ++i) {
-		port = ordered_ports[i];
-# this style depends on port ordering
-#		print "\t\t" port (i+1 < port_index ? "," : "");
-# this style uses named port connections
-		print "\t\t." port " ( " port " )" (i+1 < port_index ? "," : "");
-	}
-	print "\t);";
+	# Then implementation is in verilog, so instantiate the original module.
+	print "";
+	instantiate_original_module("dummy");
 }
+
+	print "";
 	print "initial begin";
 	print "#0\t// happens *after* initial";
 	print "\tif (prsim_name != \"\") begin";
@@ -460,47 +709,23 @@ if (!reverse) {
 for (i=0; i<port_index; ++i) {
 	p = ordered_ports[i];
 	type = ports[p];
-	u = upper[p];
-	l = lower[p];
+	dim = post_dimensions[p] pre_dimensions[p];
+	ndim = split(dim, dim_toks, ",") -1;  # -1 because of trailing ,
 	good = 0;
 	# ports may be "inout" bidirectional, so I'm guessing both to and from
 	if (match(type, "in")) {
 		good = 1;
-	if (length(u) && length(l)) {
-#	for ( ; l<=u; ++l) {
-#		n = p "[" l "]";
-#		print "\t" (reverse ? emit_to_prsim(n) : emit_from_prsim(n));
-#	}
-	print "\tfor (" loopvar "=" l "; " loopvar "<=" u "; " loopvar "=" loopvar "+1) begin";
-		print "\t\t$sformat(tmp, \"." p "[%d]\", " loopvar ");"
-		print "\t\t" (reverse ? emit_to_prsim("tmp") : emit_from_prsim_reg("tmp"));
-	print "\tend // end for";
-	} else {
-		n = enquote_mem_ref(p);
-		print "\t" (reverse ? emit_to_prsim(n) : emit_from_prsim(n));
-	}
+		connect_port(p, reverse, ndim, dim_toks);
 	}
 	if (match(type, "out")) {
 		good = 1;
-	if (length(u) && length(l)) {
-#	for ( ; l<=u; ++l) {
-#		n = enquote_mem_ref(p "[" l "]");
-#		print "\t" (reverse ? emit_from_prsim(n) : emit_to_prsim(n));
-#	}
-	print "\tfor (" loopvar "=" l "; " loopvar "<=" u "; " loopvar "=" loopvar "+1) begin";
-		print "\t\t$sformat(tmp, \"." p "[%d]\", " loopvar ");"
-		print "\t\t" (reverse ? emit_from_prsim_reg("tmp") : emit_to_prsim("tmp"));
-	print "\tend // end for";
-	} else {
-		n = enquote_mem_ref(p);
-		print "\t" (reverse ? emit_from_prsim(n) : emit_to_prsim(n));
-	}
+		connect_port(p, !reverse, ndim, dim_toks);
 	}
 	if (!good) {
 		print "Error: unknown port direction for " p;
 		exit(1);
 	}
-}
+}	# end for port_index
 	print "\tend // end if";
 	print "end // end initial";
 	print "endmodule";
@@ -526,11 +751,19 @@ for (i=0; i<port_index; ++i) {
 		p = ordered_ports[i];
 		# type = ports[p];
 		type = "bool";	# blech, hard-coded
-		u = upper[p];
-		l = lower[p];
+		dim = post_dimensions[p] pre_dimensions[p];
+		ndim = split(dim, dim_toks, ",") -1;  # -1 because of trailing ,
 		printf("\t" type " " p);
-		if (length(l) && length(u)) {
-			printf ("[" u-l+1 "]");
+		for (d=1; d<=ndim; ++d) {
+			u = first_of_range(dim_toks[d]);
+			l = second_of_range(dim_toks[d]);
+			# Detect backward ranges and conditionally swap.
+			if (u == "0") {
+				n = u;
+				u = l;
+				l = n;
+			}
+			printf ("[" u "-" l "+1]");
 		}
 		print (i+1 < port_index ? ";" : "");
 	}
@@ -585,7 +818,7 @@ for (i=0; i<port_index; ++i) {
 		} else {
 		if (debug) {
 			parse_debug();
-			print "token[:" NR "]: " next_tok;
+			print "token[line:" NR "][" i "]: " next_tok;
 		}
 		parse_it(next_tok);
 		}
