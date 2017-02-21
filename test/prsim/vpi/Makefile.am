@@ -45,6 +45,7 @@ HACKT_VPI_TEST_SCRIPTS_PASSES = \
 	channel-ledr-expect-fail \
 	and_tree and_template_tree \
 	and_tree_reverse and_template_tree_reverse \
+	and_tree_plusarg \
 	fatal-assert-fail \
 	unstable-dequeue \
 	unstable-vacuous \
@@ -118,6 +119,7 @@ addpath_srcdir.v:
 CLEANFILES += addpath_srcdir.v
 
 and_tree.vx: standard.v-wrap pli.tab
+and_tree_plusarg.vx: standard.v-wrap pli.tab
 and_template_tree.vx: standard.v-wrap pli.tab
 and_tree_reverse.vx: standard-reverse.v-wrap pli.tab
 and_template_tree_reverse.vx: standard-reverse.v-wrap pli.tab
@@ -164,6 +166,7 @@ EXAMPLE_DATA_FILES = example.mk clkgen.v \
 	channel-source-sink-b.v channel-source-sink-c.v \
 	channel-ledr-source-sink.hac channel-ledr-source-sink.v \
 	and_tree.hac and_tree.v standard.v startup.v startup.hac \
+	and_tree_plusarg.v \
 	multidimensional.v multidimensional-reverse.v \
 	startup-set.v startup-set.hac startup-set.prsimrc \
 	fast-forward-test.v fast-forward-test.hac fast-forward-test.prsimrc \
