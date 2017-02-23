@@ -66,6 +66,8 @@ BEGIN {
 	}
 	if (!length(repack_arrays)) {
 		repack_arrays = 1;
+	} else {
+		repack_arrays = int(repack_arrays);
 	}
 	if (!length(output_format)) {
 		output_format = "verilog";
@@ -586,8 +588,9 @@ function declare_local_repack_wires(i, p, dim) {	# all local vars
 
 function connect_repack_port(p, ndim, dim_toks,
 	# local vars
-	dir) {
-	dir = (ports[p] == "out");
+	dir, mo) {
+	mo = match(ports[p], "out");
+	dir = xor(mo, reverse);	 # global variable: reverse
 	if (ndim > 0) {
 		format_indices = "";
 		for (d=1; d<=ndim; ++d) {

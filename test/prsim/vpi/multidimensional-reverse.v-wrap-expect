@@ -43,22 +43,22 @@ module HAC_three_dee #(
 	for (_g_i_=0; _g_i_<=2; _g_i_=_g_i_+1) begin
 	for (_g_i_2=0; _g_i_2<=3; _g_i_2=_g_i_2+1) begin
 	for (_g_i_3=0; _g_i_3<=7; _g_i_3=_g_i_3+1) begin
-		assign A[_g_i_][_g_i_2][_g_i_3] = A_repack_[_g_i_][_g_i_2][_g_i_3];
+		assign A_repack_[_g_i_][_g_i_2][_g_i_3] = A[_g_i_][_g_i_2][_g_i_3];
 	end // end for _g_i_3
 	end // end for _g_i_2
 	end // end for _g_i_
 	for (_g_i_=0; _g_i_<=1; _g_i_=_g_i_+1) begin
 	for (_g_i_2=0; _g_i_2<=4; _g_i_2=_g_i_2+1) begin
 	for (_g_i_3=0; _g_i_3<=5; _g_i_3=_g_i_3+1) begin
-		assign B_repack_[_g_i_][_g_i_2][_g_i_3] = B[_g_i_][_g_i_2][_g_i_3];
+		assign B[_g_i_][_g_i_2][_g_i_3] = B_repack_[_g_i_][_g_i_2][_g_i_3];
 	end // end for _g_i_3
 	end // end for _g_i_2
 	end // end for _g_i_
 	for (_g_i_=0; _g_i_<=3; _g_i_=_g_i_+1) begin
-		assign E[_g_i_] = E_repack_[_g_i_];
+		assign E_repack_[_g_i_] = E[_g_i_];
 	end // end for _g_i_
 	for (_g_i_=0; _g_i_<=3; _g_i_=_g_i_+1) begin
-		assign F_repack_[_g_i_] = F[_g_i_];
+		assign F[_g_i_] = F_repack_[_g_i_];
 	end // end for _g_i_
 	endgenerate  // repacking arrays
 
@@ -155,22 +155,22 @@ module HAC_three_dee_alt #(
 	for (_g_i_=0; _g_i_<=2; _g_i_=_g_i_+1) begin
 	for (_g_i_2=0; _g_i_2<=3; _g_i_2=_g_i_2+1) begin
 	for (_g_i_3=0; _g_i_3<=7; _g_i_3=_g_i_3+1) begin
-		assign A[_g_i_][_g_i_2][_g_i_3] = A_repack_[_g_i_][_g_i_2][_g_i_3];
+		assign A_repack_[_g_i_][_g_i_2][_g_i_3] = A[_g_i_][_g_i_2][_g_i_3];
 	end // end for _g_i_3
 	end // end for _g_i_2
 	end // end for _g_i_
 	for (_g_i_=0; _g_i_<=1; _g_i_=_g_i_+1) begin
 	for (_g_i_2=0; _g_i_2<=4; _g_i_2=_g_i_2+1) begin
 	for (_g_i_3=0; _g_i_3<=5; _g_i_3=_g_i_3+1) begin
-		assign B_repack_[_g_i_][_g_i_2][_g_i_3] = B[_g_i_][_g_i_2][_g_i_3];
+		assign B[_g_i_][_g_i_2][_g_i_3] = B_repack_[_g_i_][_g_i_2][_g_i_3];
 	end // end for _g_i_3
 	end // end for _g_i_2
 	end // end for _g_i_
 	for (_g_i_=0; _g_i_<=3; _g_i_=_g_i_+1) begin
-		assign E[_g_i_] = E_repack_[_g_i_];
+		assign E_repack_[_g_i_] = E[_g_i_];
 	end // end for _g_i_
 	for (_g_i_=0; _g_i_<=3; _g_i_=_g_i_+1) begin
-		assign F_repack_[_g_i_] = F[_g_i_];
+		assign F[_g_i_] = F_repack_[_g_i_];
 	end // end for _g_i_
 	endgenerate  // repacking arrays
 
