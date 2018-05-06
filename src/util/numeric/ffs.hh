@@ -8,6 +8,7 @@
 #define	__UTIL_NUMERIC_FFS_H__
 
 #include "util/numeric/inttype_traits.hh"
+// #include "util/numeric/sign_traits.hh"  // might help with casting
 #if !defined(HAVE_BUILTIN_FFS)
 #include "util/numeric/nibble_tables.hh"
 #endif
@@ -65,7 +66,17 @@ const typename first_set_finder<U>::half_type
 first_set_finder<U>::half_mask = half_type(-1);
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// Specializes the signed and unsigned type
 #define	SPECIALIZE_FFS(type, func)					\
+template <>								\
+struct first_set_finder<unsigned type> {						\
+	typedef	unsigned type					arg_type;	\
+	char								\
+	operator () (const arg_type s) const {				\
+		/* technically, result is undefined when argument 0 */	\
+		return char(func(static_cast<type>(s)));					\
+	}								\
+};	\
 template <>								\
 struct first_set_finder<type> {						\
 	typedef	type					arg_type;	\
@@ -77,14 +88,14 @@ struct first_set_finder<type> {						\
 };	// end struct first_set_finder
 
 #ifdef HAVE_BUILTIN_FFS
-SPECIALIZE_FFS(unsigned short, __builtin_ffs)
-SPECIALIZE_FFS(unsigned int, __builtin_ffs)
+SPECIALIZE_FFS(short, __builtin_ffs)
+SPECIALIZE_FFS(int, __builtin_ffs)
 #endif
 #ifdef HAVE_BUILTIN_FFSL
-SPECIALIZE_FFS(unsigned long, __builtin_ffsl)
+SPECIALIZE_FFS(long, __builtin_ffsl)
 #endif
 #if SIZEOF_LONG_LONG && defined(HAVE_BUILTIN_FFSLL)
-SPECIALIZE_FFS(unsigned long long, __builtin_ffsll)
+SPECIALIZE_FFS(long long, __builtin_ffsll)
 #endif
 #undef	SPECIALIZE_FFS
 
