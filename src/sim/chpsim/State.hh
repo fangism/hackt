@@ -166,7 +166,11 @@ private:
 	/**
 		Various mode flags, settable by user.  
 	 */
-	enum {
+	enum simulation_flags
+#if __cplusplus >= 201103L
+    : unsigned long
+#endif
+	{
 		/**
 			Whether or not the simulation was halted for any 
 			reason, self-stopped on error, or interrupted.  
