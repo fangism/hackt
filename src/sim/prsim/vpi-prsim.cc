@@ -54,6 +54,9 @@ DEFAULT_STATIC_TRACE_BEGIN
 #define	WIN32	0
 #endif
 
+// Disable commpiler backward-compatibility definitions.
+#define PLI_EXTRAS
+
 // from either included sim/vpi_user.h or external: $(VPI_INCLUDE)
 #ifdef	EXTERNAL_VPI_USER_H
 #include "vpi_user.h"
