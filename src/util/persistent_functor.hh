@@ -7,7 +7,7 @@
 #define	__UTIL_PERSISTENT_FUNCTOR_H__
 
 #include <iosfwd>
-#include "util/STL/algorithm_fwd.hh"
+#include <algorithm>  // for std::for_each
 
 namespace util {
 // forward declaration is all that is needed

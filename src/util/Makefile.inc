@@ -88,7 +88,6 @@ UTIL_HEADER_FILES = \
 UTIL_CXX_HEADER_FILES = \
 	$(UTIL_TCC_FILES:.tcc=.hh) \
 	util/fig/xfig.hh \
-	util/STL/algorithm_fwd.hh \
 	util/STL/back_inserter.hh \
 	util/STL/allocator_fwd.hh \
 	util/STL/construct_fwd.hh \
