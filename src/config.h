@@ -24,7 +24,11 @@
 	virtual functions, detected by configure.
 	Works around differences between gcc and clang.
  */
-#define	OVERLOAD_VIRTUAL_USING	defined(OVERLOAD_VIRTUAL_USING_ALLOWED) && defined(OVERLOAD_VIRTUAL_USING_REQUIRED)
+#if	defined(OVERLOAD_VIRTUAL_USING_ALLOWED) && defined(OVERLOAD_VIRTUAL_USING_REQUIRED)
+#define	OVERLOAD_VIRTUAL_USING	1
+#else
+#define	OVERLOAD_VIRTUAL_USING	0
+#endif
 
 /**
 	Define this if friend function declarations in classes want
