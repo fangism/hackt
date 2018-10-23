@@ -375,7 +375,7 @@ PORT_FORMAL_ARRAY_CLASS::lookup_instance(const multikey_index_type& i) const {
 PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
 bool
 PORT_FORMAL_ARRAY_CLASS::lookup_instance_collection(
-		typename default_list<instance_alias_info_ptr_type>::type& l,
+		std::list<instance_alias_info_ptr_type>& l,
 		const const_range_list& r) const {
 	STACKTRACE_VERBOSE;
 	INVARIANT(!r.empty());

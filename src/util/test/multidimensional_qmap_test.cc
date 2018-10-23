@@ -23,10 +23,9 @@ using std::string;
 #include "util/multidimensional_qmap.tcc"
 
 using util::multidimensional_qmap;
-using util::default_multidimensional_qmap;
 using util::make_iter_range;
 
-typedef	default_multidimensional_qmap<3, int, string>::type	test_map3d_type;
+typedef	multidimensional_qmap<3, int, string, list<int> >::type	test_map3d_type;
 
 int
 main(int, char*[]) {

@@ -6,12 +6,12 @@
 #ifndef	__UTIL_TOKENIZE_FWD_H__
 #define	__UTIL_TOKENIZE_FWD_H__
 
-#include "util/STL/list_fwd.hh"
+#include <list>
 #include "util/string_fwd.hh"
 
 namespace util {
 
-typedef	std::default_list<std::string>::type		string_list;
+typedef	std::list<std::string>	string_list;
 
 }	// end namespace util
 

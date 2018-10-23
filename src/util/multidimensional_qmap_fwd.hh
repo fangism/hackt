@@ -8,7 +8,7 @@
 #ifndef	__UTIL_MULTIDIMENSIONAL_QMAP_FWD_H__
 #define	__UTIL_MULTIDIMENSIONAL_QMAP_FWD_H__
 
-#include "util/STL/list_fwd.hh"
+#include <list>
 #include "util/size_t.h"
 
 // full description in "multidimensional_qmap.hh"
@@ -28,29 +28,6 @@ class multidimensional_qmap;
 
 SPECIALIZED_MULTIDIMENSIONAL_QMAP_TEMPLATE_SIGNATURE
 class multidimensional_qmap<1,K,T,L>;
-
-template <size_t D, class K, class T>
-struct default_multidimensional_qmap {
-	/**
-		Note: definition expands ::type::type, so bare STL
-		container class templates will not work.
-		Use the util library's default_* wrapper policies instead.
-		e.g. default_list;
-	 */
-	template <template <class> class L>
-	struct rebind_default_list_type {
-		typedef	L<K>				wrapper_type;
-		typedef	typename wrapper_type::type	type;
-	};
-
-	typedef	typename rebind_default_list_type<std::default_list>::type
-							default_list_type;
-	typedef	multidimensional_qmap<D, K, T, default_list_type>
-							type;
-
-	template <size_t D2, class K2, class T2>
-	struct rebind : public default_multidimensional_qmap<D2, K2, T2> { };
-};	// end struct default_multidimensional_qmap
 
 //=============================================================================
 }	// end namespace util

@@ -195,10 +195,11 @@ null_stacktrace_stream = null_stacktrace_stream_type();
 #if ENABLE_STACKTRACE
 
 #include <iosfwd>
+#include <list>
+
 // #include "util/macros.h"
 #include "util/string_fwd.hh"
 
-#include "util/STL/list_fwd.hh"
 #include "util/STL/stack_fwd.hh"
 #include <stack>	// needed
 
@@ -224,7 +225,7 @@ using memory::count_ptr;
 class stacktrace {
 public:
 	/// the type of stack used to hold feedback text
-	typedef std::default_list<string>::type	stack_text_type;
+	typedef std::list<string>	stack_text_type;
 	/// the type of stack used to track on/off mode
 	typedef std::default_stack<int>::type	stack_echo_type;
 	/// the type of stack used to track stream redirections

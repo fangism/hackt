@@ -85,7 +85,7 @@ struct file_position {
 class file_position_stack {
 	typedef	unique_list<string>	registry_type;
 public:
-	typedef	std::default_list<file_position>::type	position_stack_type;
+	typedef	std::list<file_position>	position_stack_type;
 	typedef	position_stack_type::const_iterator	const_iterator;
 private:
 	/**

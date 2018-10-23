@@ -355,7 +355,7 @@ PORT_ACTUAL_COLLECTION_CLASS::lookup_instance(
 PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
 bool
 PORT_ACTUAL_COLLECTION_CLASS::lookup_instance_collection(
-		typename default_list<instance_alias_info_ptr_type>::type& /* l */,
+		std::list<instance_alias_info_ptr_type>& /* l */,
 		const const_range_list& /* r */) const {
 	STACKTRACE_VERBOSE;
 #if 0

@@ -8,7 +8,6 @@
 #define	__UTIL_SUBLIST_H__
 
 #include <list>
-#include "util/STL/list_fwd.hh"
 
 #define SUBLIST_TEMPLATE_SIGNATURE		template <class T>
 
@@ -25,12 +24,13 @@ namespace util {
 	Behaves like a const list.  
 	Really only needs to be an iterator pair, a range.  
 	Want to be able to pass truncated versions.  
+        TODO(fangism): this is really just an iterator range.
  */
 SUBLIST_TEMPLATE_SIGNATURE
 class sublist {
 	typedef	sublist<T>				this_type;
 public:
-	typedef	typename std::default_list<T>::type	list_type;
+	typedef	std::list<T>	list_type;
 	typedef	typename list_type::size_type		size_type;
 	typedef	typename list_type::value_type		value_type;
 	typedef	typename list_type::iterator		iterator;

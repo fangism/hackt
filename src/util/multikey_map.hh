@@ -8,8 +8,9 @@
 #ifndef	__UTIL_MULTIKEY_MAP_H__
 #define	__UTIL_MULTIKEY_MAP_H__
 
+#include <list>
+
 #include "util/macros.h"
-#include "util/STL/list_fwd.hh"
 #include "util/STL/pair_fwd.hh"
 
 #include "util/multikey_fwd.hh"
@@ -106,14 +107,14 @@ public:
 	 */
 	template <class Alloc>
 	T&
-	operator [] (const list<K,Alloc>& k);
+	operator [] (const std::list<K,Alloc>& k);
 
 	/**
 		Check length of list?
 	 */
 	template <class Alloc>
 	T
-	operator [] (const list<K,Alloc>& k) const;
+	operator [] (const std::list<K,Alloc>& k) const;
 
 public:
 	ostream&

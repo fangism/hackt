@@ -170,7 +170,7 @@ public:
 
 	bool
 	lookup_instance_collection(
-		typename default_list<instance_alias_info_ptr_type>::type&, 
+		std::list<instance_alias_info_ptr_type>&,
 		const const_range_list&) const;
 
 	const_index_list

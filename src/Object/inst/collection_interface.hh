@@ -8,11 +8,11 @@
 #define	__HAC_OBJECT_INST_COLLECTION_INTERFACE_H__
 
 #include <iosfwd>
+#include <list>
 
 #include "Object/traits/class_traits_fwd.hh"
 #include "Object/inst/physical_instance_collection.hh"	// for macros
 #include "Object/common/multikey_index.hh"
-#include "util/STL/list_fwd.hh"
 #include "util/memory/excl_ptr.hh"
 #include "util/memory/count_ptr.hh"
 #include "util/boolean_types.hh"
@@ -22,7 +22,6 @@
 namespace HAC {
 namespace entity {
 using std::list;
-using std::default_list;
 using std::istream;
 using std::ostream;
 using std::string;
@@ -165,7 +164,7 @@ virtual instance_alias_info_ptr_type
 
 virtual	bool
 	lookup_instance_collection(
-		typename default_list<instance_alias_info_ptr_type>::type&, 
+		std::list<instance_alias_info_ptr_type>&,
 		const const_range_list&) const = 0;
 
 virtual	const_index_list

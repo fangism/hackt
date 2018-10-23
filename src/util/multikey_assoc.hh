@@ -8,16 +8,16 @@
 #ifndef	__UTIL_MULTIKEY_ASSOC_H__
 #define	__UTIL_MULTIKEY_ASSOC_H__
 
+#include <list>
+
 #include "util/macros.h"
 #include "util/multikey_assoc_fwd.hh"
-#include "util/STL/list_fwd.hh"
 #include "util/STL/pair_fwd.hh"
 #include "util/array_traits.hh"
 
 namespace util {
 using std::pair;
 using std::list;
-using std::default_list;
 
 template <size_t, class>
 class multikey;
@@ -34,7 +34,7 @@ template <size_t D, class K>
 struct multikey_assoc_compact_helper {
 	typedef	multikey<D,K>				key_type;
 	typedef	typename key_type::value_type		index_type;
-	typedef	typename default_list<index_type>::type	key_list_type;
+	typedef	std::list<index_type>	key_list_type;
 	typedef	pair<key_list_type, key_list_type >	key_list_pair_type;
 	typedef	pair<key_type, key_type>		key_pair_type;
 
@@ -71,7 +71,7 @@ struct multikey_assoc_compact_helper<1,K> {
 	typedef	K					key_type;
 	typedef	key_type				index_type;
 //	typedef	typename key_type::simple_type		index_type;
-	typedef	typename default_list<index_type>::type	key_list_type;
+	typedef	std::list<index_type>	key_list_type;
 	typedef	pair<key_list_type, key_list_type >	key_list_pair_type;
 	typedef	pair<key_type, key_type>		key_pair_type;
 
@@ -139,7 +139,7 @@ public:
 
 	// this only works for maps... set::key_type == set::value_type :S
 	typedef	typename key_type::value_type		index_type;
-	typedef	typename default_list<index_type>::type	key_list_type;
+	typedef	std::list<index_type>	key_list_type;
 	typedef	pair<key_list_type, key_list_type >	key_list_pair_type;
 	typedef	pair<key_type, key_type>		key_pair_type;
 
@@ -344,7 +344,7 @@ public:
 	// only works for map's type:
 	typedef	key_type				index_type;
 //	typedef	typename key_type::simple_type		index_type;
-	typedef	typename default_list<index_type>::type	key_list_type;
+	typedef	std::list<index_type>	key_list_type;
 	typedef	pair<key_list_type, key_list_type >	key_list_pair_type;
 	typedef	pair<key_type, key_type>		key_pair_type;
 

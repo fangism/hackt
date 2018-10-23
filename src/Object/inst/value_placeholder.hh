@@ -8,8 +8,9 @@
 #define	__HAC_OBJECT_INST_VALUE_PLACEHOLDER_H__
 
 #include <iosfwd>
+#include <list>
+
 #include "util/string_fwd.hh"
-#include "util/STL/list_fwd.hh"
 #include "util/boolean_types.hh"
 #include "Object/inst/param_value_placeholder.hh"
 #include "Object/common/multikey_index.hh"

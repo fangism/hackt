@@ -781,7 +781,7 @@ INSTANCE_ARRAY_CLASS::lookup_instance(const multikey_index_type& i) const {
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 bool
 INSTANCE_ARRAY_CLASS::lookup_instance_collection(
-		typename default_list<instance_alias_info_ptr_type>::type& l,
+		std::list<instance_alias_info_ptr_type>& l,
 		const const_range_list& r) const {
 	INVARIANT(!r.empty());
 	key_generator_type key_gen;
@@ -1628,7 +1628,7 @@ INSTANCE_SCALAR_CLASS::lookup_instance(const multikey_index_type&) const {
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 bool
 INSTANCE_SCALAR_CLASS::lookup_instance_collection(
-		typename default_list<instance_alias_info_ptr_type>::type&,
+		std::list<instance_alias_info_ptr_type>&,
 		const const_range_list& r) const {
 	cerr << "WARNING: instance_array<Tag,0>::lookup_instance_collection(...) "
 		"should never be called." << endl;

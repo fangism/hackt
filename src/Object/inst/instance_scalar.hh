@@ -117,7 +117,7 @@ public:
 
 	bool
 	lookup_instance_collection(
-		typename default_list<instance_alias_info_ptr_type>::type& l, 
+		std::list<instance_alias_info_ptr_type>& l,
 		const const_range_list& r) const;
 
 	UNROLL_ALIASES_PROTO;

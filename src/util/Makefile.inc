@@ -101,7 +101,6 @@ UTIL_CXX_HEADER_FILES = \
 	util/STL/hash_map_utils.hh \
 	util/STL/iterator_fwd.hh \
 	util/STL/libconfig.hh \
-	util/STL/list_fwd.hh \
 	util/STL/map_fwd.hh \
 	util/STL/namespace.hh \
 	util/STL/pair_fwd.hh \

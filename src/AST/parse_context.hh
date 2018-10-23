@@ -14,7 +14,6 @@
 #include <list>
 #include <iosfwd>
 
-#include "util/STL/list_fwd.hh"
 #include "util/memory/excl_ptr.hh"
 #include "util/memory/count_ptr.hh"
 #include "AST/parse_options.hh"
