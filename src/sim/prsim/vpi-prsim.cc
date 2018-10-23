@@ -54,6 +54,9 @@ DEFAULT_STATIC_TRACE_BEGIN
 #define	WIN32	0
 #endif
 
+// Disable commpiler backward-compatibility definitions.
+#define PLI_EXTRAS
+
 // from either included sim/vpi_user.h or external: $(VPI_INCLUDE)
 #ifdef	EXTERNAL_VPI_USER_H
 #include "vpi_user.h"
@@ -474,7 +477,6 @@ lookup_vcs_name(const char* vcs_name) {
   const vpiHandle net =
 	vpi_handle_by_name (const_cast<PLI_BYTE8*>(vcs_name), NULL);
   if (!net) {
-//  cerr << "Net name `" << vcs_name << "' not found in .v file." << endl;
     cerr << "Net name `" << vcs_name << "' not found in Verilog!" << endl;
 	THROW_EXIT;
   }
@@ -1272,7 +1274,6 @@ void register_to_prsim (const char *vcs_name, const char *prsim_name)
 
   const string VCS_name(strip_spaces(vcs_name));
   const string PRSIM_name(strip_spaces(prsim_name));
-  // string vcs_name_stripped, prsim_name_stripped;
 
   cb_data.reason = cbValueChange;
   cb_data.cb_rtn = prsim_callback;
@@ -1478,7 +1479,8 @@ static PLI_INT32 to_prsim (PLI_BYTE8 *args)
   vpi_get_value (net2, &arg);
 
 #if VERBOSE_DEBUG
-  vpi_printf_c ("setup %s (vcs) -> %s (prsim)\n", arg1.c_str(), arg.value.str);
+  STACKTRACE_INDENT_PRINT("setup " << arg1 << " (vcs) -> "
+	<< arg.value.str << " (prsim)" << endl);
 #endif
 
   if (vpi_scan (h)) {

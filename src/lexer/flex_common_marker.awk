@@ -21,6 +21,7 @@ BEGIN {
 	buffer_count = 0;
 	patch_count = 0;
 	insert_mark_level = 0;
+	replace_static_extern = 0;
 
 # strings for marking the output
 	begin_keep_header = "#if\tdefined(KEEP_FLEX_COMMON) || 1";
@@ -98,7 +99,7 @@ function flush_saved_lines( \
 # patch section 3a, 3b begin:
 /void yyrestart.*;$/ {
 	print begin_keep_header;
-	print "#define\tstatic\textern";
+	replace_static_extern = 1;
 	patch_count += 2;
 	++insert_mark_level;
 }
@@ -120,7 +121,7 @@ function flush_saved_lines( \
 # patch section 6:
 /static int yy_get_next_buffer.*;$/ {
 	print begin_keep_header;
-	print "#define\tstatic\textern";
+	replace_static_extern = 1;
 	++patch_count;
 	++insert_mark_level;
 }
@@ -212,7 +213,13 @@ function flush_saved_lines( \
 	if (!cpp_nest_level && !curly_brace_level) {
 		flush_saved_lines();
 	}
-	print;
+	if (replace_static_extern) {
+		str = $0;
+		sub("static", "extern", str);
+		print str;
+	} else {
+		print;
+	}
 }
 
 /^#[ \t]*endif/ { --cpp_nest_level; }
@@ -241,14 +248,14 @@ function flush_saved_lines( \
 
 # patch section 3a end:
 /void yyfree.*;$/ {
-	print_or_save("#undef\tstatic");
+	replace_static_extern = 0;
 	++patch_count;
 }
 
 # patch section 3b end:
 /typedef.*YY_CHAR;$/ {
-	print_or_save("#undef\tstatic");
 	print_or_save(end_keep_header);
+	replace_static_extern = 0;
 	++patch_count;
 	--insert_mark_level;
 }
@@ -269,7 +276,7 @@ function flush_saved_lines( \
 
 # patch section 6 end:
 /static void yy_fatal_error.*;$/ {
-	print_or_save("#undef\tstatic");
+	replace_static_extern = 0;
 	print_or_save(end_keep_header);
 	++patch_count;
 	--insert_mark_level;

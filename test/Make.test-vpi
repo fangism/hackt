@@ -83,6 +83,8 @@ INSTALLCHECK_PLI_FLAGS =
 
 EXTRACT_VCS_FLAGS_PIPE = { $(GREP) "@vcs-flags@" | \
         $(SED) 's/^.*@vcs-flags@[ ]*//g' ;}
+EXTRACT_PLUSARGS_PIPE = { $(GREP) "@plusargs@" | \
+        $(SED) 's/^.*@plusargs@[ ]*//g' ;}
 
 # create simulation executable
 # '+' connects child make (vcs) to parent's jobserver
@@ -194,7 +196,10 @@ VPI_INSTALLCHECK_ENV = \
 
 .vx.vx-out:
 if HAVE_VCS
-	-$(VPI_TEST_ENV) ./$< > $@ 2>&1
+	-srcbase=`echo $< | sed 's|\.vx$$|.v|'` && \
+	srcfile="$(srcdir)/$$srcbase" && \
+	pflags=`$(EXTRACT_PLUSARGS_PIPE) < $$srcfile` && \
+	$(VPI_TEST_ENV) ./$< $$pflags > $@ 2>&1
 else
 	@$(ECHO) "VCS/VPI was not explicitly configured, so skipping." > $@
 endif

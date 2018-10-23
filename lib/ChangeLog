@@ -1,6 +1,23 @@
 # "lib/ChangeLog"
 #	$Id: ChangeLog,v 1.70 2011/05/07 03:43:39 fang Exp $
 
+2016-02-22	David Fang	<fangism@google.com>
+
+	* HACKT-00-01-04-main-00-86-64:
+	  wrap_verilog_modules_to_hacprsim.awk: fix bug where repacked arrays
+		of inputs were assigned in wrong direction.
+
+
+2016-02-17	David Fang	<fangism@google.com>
+
+	* HACKT-00-01-04-main-00-86-63:
+	  wrap_verilog_modules_to_hacprsim.awk: support multidimensional array of ports.
+		Also added workaround for input ports with trailing array dimensions
+		(like input X [1:0]) failing to transport values into prsim.
+		Workaround: repack array dimensions into bus dimensions
+		(like wire [1:0] X_repack_) and transport those into prsim.
+
+
 2016-07-11	David Fang	<fangism@google.com>
 
 	* HACKT-00-01-04-main-00-86-60:

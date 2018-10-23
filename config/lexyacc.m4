@@ -143,10 +143,15 @@ cat > conftest.y <<ACEOF
 %token	LAST_TOK
 %start top
 %%
-top: FIRST_TOK LAST_TOK
+top
+  : FIRST_TOK LAST_TOK
+  ;
 %%
 ACEOF
 dnl fake cache variable< should probably use different name prefix
+dnl NOTE: bison will produce conftest.tab.c, but in yacc-compatibility mode
+dnl will produce y.tab.c.  Bison usually provides a 'yacc' binary for
+dnl compatibility mode.
 ac_cv_prog_yacc_root="y.tab"
 ac_compile_yacc='$CC -c $CFLAGS $CPPFLAGS $ac_cv_prog_yacc_root.c >&5'
 

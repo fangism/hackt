@@ -1,0 +1,360 @@
+$start of simulation
+at time   0.000, observed z1 = z
+at time   0.000, observed z2 = z
+$to_prsim: TOP.f0.CLK -> foo_1.CLK
+$to_prsim: TOP.f0.A_repack_[0][0][0] -> foo_1.A[0][0][0]
+$to_prsim: TOP.f0.A_repack_[0][0][1] -> foo_1.A[0][0][1]
+$to_prsim: TOP.f0.A_repack_[0][0][2] -> foo_1.A[0][0][2]
+$to_prsim: TOP.f0.A_repack_[0][0][3] -> foo_1.A[0][0][3]
+$to_prsim: TOP.f0.A_repack_[0][0][4] -> foo_1.A[0][0][4]
+$to_prsim: TOP.f0.A_repack_[0][0][5] -> foo_1.A[0][0][5]
+$to_prsim: TOP.f0.A_repack_[0][0][6] -> foo_1.A[0][0][6]
+$to_prsim: TOP.f0.A_repack_[0][0][7] -> foo_1.A[0][0][7]
+$to_prsim: TOP.f0.A_repack_[0][1][0] -> foo_1.A[0][1][0]
+$to_prsim: TOP.f0.A_repack_[0][1][1] -> foo_1.A[0][1][1]
+$to_prsim: TOP.f0.A_repack_[0][1][2] -> foo_1.A[0][1][2]
+$to_prsim: TOP.f0.A_repack_[0][1][3] -> foo_1.A[0][1][3]
+$to_prsim: TOP.f0.A_repack_[0][1][4] -> foo_1.A[0][1][4]
+$to_prsim: TOP.f0.A_repack_[0][1][5] -> foo_1.A[0][1][5]
+$to_prsim: TOP.f0.A_repack_[0][1][6] -> foo_1.A[0][1][6]
+$to_prsim: TOP.f0.A_repack_[0][1][7] -> foo_1.A[0][1][7]
+$to_prsim: TOP.f0.A_repack_[0][2][0] -> foo_1.A[0][2][0]
+$to_prsim: TOP.f0.A_repack_[0][2][1] -> foo_1.A[0][2][1]
+$to_prsim: TOP.f0.A_repack_[0][2][2] -> foo_1.A[0][2][2]
+$to_prsim: TOP.f0.A_repack_[0][2][3] -> foo_1.A[0][2][3]
+$to_prsim: TOP.f0.A_repack_[0][2][4] -> foo_1.A[0][2][4]
+$to_prsim: TOP.f0.A_repack_[0][2][5] -> foo_1.A[0][2][5]
+$to_prsim: TOP.f0.A_repack_[0][2][6] -> foo_1.A[0][2][6]
+$to_prsim: TOP.f0.A_repack_[0][2][7] -> foo_1.A[0][2][7]
+$to_prsim: TOP.f0.A_repack_[0][3][0] -> foo_1.A[0][3][0]
+$to_prsim: TOP.f0.A_repack_[0][3][1] -> foo_1.A[0][3][1]
+$to_prsim: TOP.f0.A_repack_[0][3][2] -> foo_1.A[0][3][2]
+$to_prsim: TOP.f0.A_repack_[0][3][3] -> foo_1.A[0][3][3]
+$to_prsim: TOP.f0.A_repack_[0][3][4] -> foo_1.A[0][3][4]
+$to_prsim: TOP.f0.A_repack_[0][3][5] -> foo_1.A[0][3][5]
+$to_prsim: TOP.f0.A_repack_[0][3][6] -> foo_1.A[0][3][6]
+$to_prsim: TOP.f0.A_repack_[0][3][7] -> foo_1.A[0][3][7]
+$to_prsim: TOP.f0.A_repack_[1][0][0] -> foo_1.A[1][0][0]
+$to_prsim: TOP.f0.A_repack_[1][0][1] -> foo_1.A[1][0][1]
+$to_prsim: TOP.f0.A_repack_[1][0][2] -> foo_1.A[1][0][2]
+$to_prsim: TOP.f0.A_repack_[1][0][3] -> foo_1.A[1][0][3]
+$to_prsim: TOP.f0.A_repack_[1][0][4] -> foo_1.A[1][0][4]
+$to_prsim: TOP.f0.A_repack_[1][0][5] -> foo_1.A[1][0][5]
+$to_prsim: TOP.f0.A_repack_[1][0][6] -> foo_1.A[1][0][6]
+$to_prsim: TOP.f0.A_repack_[1][0][7] -> foo_1.A[1][0][7]
+$to_prsim: TOP.f0.A_repack_[1][1][0] -> foo_1.A[1][1][0]
+$to_prsim: TOP.f0.A_repack_[1][1][1] -> foo_1.A[1][1][1]
+$to_prsim: TOP.f0.A_repack_[1][1][2] -> foo_1.A[1][1][2]
+$to_prsim: TOP.f0.A_repack_[1][1][3] -> foo_1.A[1][1][3]
+$to_prsim: TOP.f0.A_repack_[1][1][4] -> foo_1.A[1][1][4]
+$to_prsim: TOP.f0.A_repack_[1][1][5] -> foo_1.A[1][1][5]
+$to_prsim: TOP.f0.A_repack_[1][1][6] -> foo_1.A[1][1][6]
+$to_prsim: TOP.f0.A_repack_[1][1][7] -> foo_1.A[1][1][7]
+$to_prsim: TOP.f0.A_repack_[1][2][0] -> foo_1.A[1][2][0]
+$to_prsim: TOP.f0.A_repack_[1][2][1] -> foo_1.A[1][2][1]
+$to_prsim: TOP.f0.A_repack_[1][2][2] -> foo_1.A[1][2][2]
+$to_prsim: TOP.f0.A_repack_[1][2][3] -> foo_1.A[1][2][3]
+$to_prsim: TOP.f0.A_repack_[1][2][4] -> foo_1.A[1][2][4]
+$to_prsim: TOP.f0.A_repack_[1][2][5] -> foo_1.A[1][2][5]
+$to_prsim: TOP.f0.A_repack_[1][2][6] -> foo_1.A[1][2][6]
+$to_prsim: TOP.f0.A_repack_[1][2][7] -> foo_1.A[1][2][7]
+$to_prsim: TOP.f0.A_repack_[1][3][0] -> foo_1.A[1][3][0]
+$to_prsim: TOP.f0.A_repack_[1][3][1] -> foo_1.A[1][3][1]
+$to_prsim: TOP.f0.A_repack_[1][3][2] -> foo_1.A[1][3][2]
+$to_prsim: TOP.f0.A_repack_[1][3][3] -> foo_1.A[1][3][3]
+$to_prsim: TOP.f0.A_repack_[1][3][4] -> foo_1.A[1][3][4]
+$to_prsim: TOP.f0.A_repack_[1][3][5] -> foo_1.A[1][3][5]
+$to_prsim: TOP.f0.A_repack_[1][3][6] -> foo_1.A[1][3][6]
+$to_prsim: TOP.f0.A_repack_[1][3][7] -> foo_1.A[1][3][7]
+$to_prsim: TOP.f0.A_repack_[2][0][0] -> foo_1.A[2][0][0]
+$to_prsim: TOP.f0.A_repack_[2][0][1] -> foo_1.A[2][0][1]
+$to_prsim: TOP.f0.A_repack_[2][0][2] -> foo_1.A[2][0][2]
+$to_prsim: TOP.f0.A_repack_[2][0][3] -> foo_1.A[2][0][3]
+$to_prsim: TOP.f0.A_repack_[2][0][4] -> foo_1.A[2][0][4]
+$to_prsim: TOP.f0.A_repack_[2][0][5] -> foo_1.A[2][0][5]
+$to_prsim: TOP.f0.A_repack_[2][0][6] -> foo_1.A[2][0][6]
+$to_prsim: TOP.f0.A_repack_[2][0][7] -> foo_1.A[2][0][7]
+$to_prsim: TOP.f0.A_repack_[2][1][0] -> foo_1.A[2][1][0]
+$to_prsim: TOP.f0.A_repack_[2][1][1] -> foo_1.A[2][1][1]
+$to_prsim: TOP.f0.A_repack_[2][1][2] -> foo_1.A[2][1][2]
+$to_prsim: TOP.f0.A_repack_[2][1][3] -> foo_1.A[2][1][3]
+$to_prsim: TOP.f0.A_repack_[2][1][4] -> foo_1.A[2][1][4]
+$to_prsim: TOP.f0.A_repack_[2][1][5] -> foo_1.A[2][1][5]
+$to_prsim: TOP.f0.A_repack_[2][1][6] -> foo_1.A[2][1][6]
+$to_prsim: TOP.f0.A_repack_[2][1][7] -> foo_1.A[2][1][7]
+$to_prsim: TOP.f0.A_repack_[2][2][0] -> foo_1.A[2][2][0]
+$to_prsim: TOP.f0.A_repack_[2][2][1] -> foo_1.A[2][2][1]
+$to_prsim: TOP.f0.A_repack_[2][2][2] -> foo_1.A[2][2][2]
+$to_prsim: TOP.f0.A_repack_[2][2][3] -> foo_1.A[2][2][3]
+$to_prsim: TOP.f0.A_repack_[2][2][4] -> foo_1.A[2][2][4]
+$to_prsim: TOP.f0.A_repack_[2][2][5] -> foo_1.A[2][2][5]
+$to_prsim: TOP.f0.A_repack_[2][2][6] -> foo_1.A[2][2][6]
+$to_prsim: TOP.f0.A_repack_[2][2][7] -> foo_1.A[2][2][7]
+$to_prsim: TOP.f0.A_repack_[2][3][0] -> foo_1.A[2][3][0]
+$to_prsim: TOP.f0.A_repack_[2][3][1] -> foo_1.A[2][3][1]
+$to_prsim: TOP.f0.A_repack_[2][3][2] -> foo_1.A[2][3][2]
+$to_prsim: TOP.f0.A_repack_[2][3][3] -> foo_1.A[2][3][3]
+$to_prsim: TOP.f0.A_repack_[2][3][4] -> foo_1.A[2][3][4]
+$to_prsim: TOP.f0.A_repack_[2][3][5] -> foo_1.A[2][3][5]
+$to_prsim: TOP.f0.A_repack_[2][3][6] -> foo_1.A[2][3][6]
+$to_prsim: TOP.f0.A_repack_[2][3][7] -> foo_1.A[2][3][7]
+$from_prsim: foo_1.B[0][0][0] -> TOP.f0.B_repack_[0][0][0]
+$from_prsim: foo_1.B[0][0][1] -> TOP.f0.B_repack_[0][0][1]
+$from_prsim: foo_1.B[0][0][2] -> TOP.f0.B_repack_[0][0][2]
+$from_prsim: foo_1.B[0][0][3] -> TOP.f0.B_repack_[0][0][3]
+$from_prsim: foo_1.B[0][0][4] -> TOP.f0.B_repack_[0][0][4]
+$from_prsim: foo_1.B[0][0][5] -> TOP.f0.B_repack_[0][0][5]
+$from_prsim: foo_1.B[0][1][0] -> TOP.f0.B_repack_[0][1][0]
+$from_prsim: foo_1.B[0][1][1] -> TOP.f0.B_repack_[0][1][1]
+$from_prsim: foo_1.B[0][1][2] -> TOP.f0.B_repack_[0][1][2]
+$from_prsim: foo_1.B[0][1][3] -> TOP.f0.B_repack_[0][1][3]
+$from_prsim: foo_1.B[0][1][4] -> TOP.f0.B_repack_[0][1][4]
+$from_prsim: foo_1.B[0][1][5] -> TOP.f0.B_repack_[0][1][5]
+$from_prsim: foo_1.B[0][2][0] -> TOP.f0.B_repack_[0][2][0]
+$from_prsim: foo_1.B[0][2][1] -> TOP.f0.B_repack_[0][2][1]
+$from_prsim: foo_1.B[0][2][2] -> TOP.f0.B_repack_[0][2][2]
+$from_prsim: foo_1.B[0][2][3] -> TOP.f0.B_repack_[0][2][3]
+$from_prsim: foo_1.B[0][2][4] -> TOP.f0.B_repack_[0][2][4]
+$from_prsim: foo_1.B[0][2][5] -> TOP.f0.B_repack_[0][2][5]
+$from_prsim: foo_1.B[0][3][0] -> TOP.f0.B_repack_[0][3][0]
+$from_prsim: foo_1.B[0][3][1] -> TOP.f0.B_repack_[0][3][1]
+$from_prsim: foo_1.B[0][3][2] -> TOP.f0.B_repack_[0][3][2]
+$from_prsim: foo_1.B[0][3][3] -> TOP.f0.B_repack_[0][3][3]
+$from_prsim: foo_1.B[0][3][4] -> TOP.f0.B_repack_[0][3][4]
+$from_prsim: foo_1.B[0][3][5] -> TOP.f0.B_repack_[0][3][5]
+$from_prsim: foo_1.B[0][4][0] -> TOP.f0.B_repack_[0][4][0]
+$from_prsim: foo_1.B[0][4][1] -> TOP.f0.B_repack_[0][4][1]
+$from_prsim: foo_1.B[0][4][2] -> TOP.f0.B_repack_[0][4][2]
+$from_prsim: foo_1.B[0][4][3] -> TOP.f0.B_repack_[0][4][3]
+$from_prsim: foo_1.B[0][4][4] -> TOP.f0.B_repack_[0][4][4]
+$from_prsim: foo_1.B[0][4][5] -> TOP.f0.B_repack_[0][4][5]
+$from_prsim: foo_1.B[1][0][0] -> TOP.f0.B_repack_[1][0][0]
+$from_prsim: foo_1.B[1][0][1] -> TOP.f0.B_repack_[1][0][1]
+$from_prsim: foo_1.B[1][0][2] -> TOP.f0.B_repack_[1][0][2]
+$from_prsim: foo_1.B[1][0][3] -> TOP.f0.B_repack_[1][0][3]
+$from_prsim: foo_1.B[1][0][4] -> TOP.f0.B_repack_[1][0][4]
+$from_prsim: foo_1.B[1][0][5] -> TOP.f0.B_repack_[1][0][5]
+$from_prsim: foo_1.B[1][1][0] -> TOP.f0.B_repack_[1][1][0]
+$from_prsim: foo_1.B[1][1][1] -> TOP.f0.B_repack_[1][1][1]
+$from_prsim: foo_1.B[1][1][2] -> TOP.f0.B_repack_[1][1][2]
+$from_prsim: foo_1.B[1][1][3] -> TOP.f0.B_repack_[1][1][3]
+$from_prsim: foo_1.B[1][1][4] -> TOP.f0.B_repack_[1][1][4]
+$from_prsim: foo_1.B[1][1][5] -> TOP.f0.B_repack_[1][1][5]
+$from_prsim: foo_1.B[1][2][0] -> TOP.f0.B_repack_[1][2][0]
+$from_prsim: foo_1.B[1][2][1] -> TOP.f0.B_repack_[1][2][1]
+$from_prsim: foo_1.B[1][2][2] -> TOP.f0.B_repack_[1][2][2]
+$from_prsim: foo_1.B[1][2][3] -> TOP.f0.B_repack_[1][2][3]
+$from_prsim: foo_1.B[1][2][4] -> TOP.f0.B_repack_[1][2][4]
+$from_prsim: foo_1.B[1][2][5] -> TOP.f0.B_repack_[1][2][5]
+$from_prsim: foo_1.B[1][3][0] -> TOP.f0.B_repack_[1][3][0]
+$from_prsim: foo_1.B[1][3][1] -> TOP.f0.B_repack_[1][3][1]
+$from_prsim: foo_1.B[1][3][2] -> TOP.f0.B_repack_[1][3][2]
+$from_prsim: foo_1.B[1][3][3] -> TOP.f0.B_repack_[1][3][3]
+$from_prsim: foo_1.B[1][3][4] -> TOP.f0.B_repack_[1][3][4]
+$from_prsim: foo_1.B[1][3][5] -> TOP.f0.B_repack_[1][3][5]
+$from_prsim: foo_1.B[1][4][0] -> TOP.f0.B_repack_[1][4][0]
+$from_prsim: foo_1.B[1][4][1] -> TOP.f0.B_repack_[1][4][1]
+$from_prsim: foo_1.B[1][4][2] -> TOP.f0.B_repack_[1][4][2]
+$from_prsim: foo_1.B[1][4][3] -> TOP.f0.B_repack_[1][4][3]
+$from_prsim: foo_1.B[1][4][4] -> TOP.f0.B_repack_[1][4][4]
+$from_prsim: foo_1.B[1][4][5] -> TOP.f0.B_repack_[1][4][5]
+$to_prsim: TOP.f0.C[0] -> foo_1.C[0]
+$to_prsim: TOP.f0.C[1] -> foo_1.C[1]
+$to_prsim: TOP.f0.C[2] -> foo_1.C[2]
+$from_prsim: foo_1.D[0] -> TOP.f0.D[0]
+$from_prsim: foo_1.D[1] -> TOP.f0.D[1]
+$from_prsim: foo_1.D[2] -> TOP.f0.D[2]
+$to_prsim: TOP.f0.E_repack_[0] -> foo_1.E[0]
+$to_prsim: TOP.f0.E_repack_[1] -> foo_1.E[1]
+$to_prsim: TOP.f0.E_repack_[2] -> foo_1.E[2]
+$to_prsim: TOP.f0.E_repack_[3] -> foo_1.E[3]
+$from_prsim: foo_1.F[0] -> TOP.f0.F_repack_[0]
+$from_prsim: foo_1.F[1] -> TOP.f0.F_repack_[1]
+$from_prsim: foo_1.F[2] -> TOP.f0.F_repack_[2]
+$from_prsim: foo_1.F[3] -> TOP.f0.F_repack_[3]
+$to_prsim: TOP.f0.G[0][0][0] -> foo_1.G[0][0][0]
+$to_prsim: TOP.f0.G[0][0][1] -> foo_1.G[0][0][1]
+$to_prsim: TOP.f0.G[0][1][0] -> foo_1.G[0][1][0]
+$to_prsim: TOP.f0.G[0][1][1] -> foo_1.G[0][1][1]
+$to_prsim: TOP.f0.G[0][2][0] -> foo_1.G[0][2][0]
+$to_prsim: TOP.f0.G[0][2][1] -> foo_1.G[0][2][1]
+$to_prsim: TOP.f0.G[1][0][0] -> foo_1.G[1][0][0]
+$to_prsim: TOP.f0.G[1][0][1] -> foo_1.G[1][0][1]
+$to_prsim: TOP.f0.G[1][1][0] -> foo_1.G[1][1][0]
+$to_prsim: TOP.f0.G[1][1][1] -> foo_1.G[1][1][1]
+$to_prsim: TOP.f0.G[1][2][0] -> foo_1.G[1][2][0]
+$to_prsim: TOP.f0.G[1][2][1] -> foo_1.G[1][2][1]
+$to_prsim: TOP.f0.G[2][0][0] -> foo_1.G[2][0][0]
+$to_prsim: TOP.f0.G[2][0][1] -> foo_1.G[2][0][1]
+$to_prsim: TOP.f0.G[2][1][0] -> foo_1.G[2][1][0]
+$to_prsim: TOP.f0.G[2][1][1] -> foo_1.G[2][1][1]
+$to_prsim: TOP.f0.G[2][2][0] -> foo_1.G[2][2][0]
+$to_prsim: TOP.f0.G[2][2][1] -> foo_1.G[2][2][1]
+$to_prsim: TOP.f0.G[3][0][0] -> foo_1.G[3][0][0]
+$to_prsim: TOP.f0.G[3][0][1] -> foo_1.G[3][0][1]
+$to_prsim: TOP.f0.G[3][1][0] -> foo_1.G[3][1][0]
+$to_prsim: TOP.f0.G[3][1][1] -> foo_1.G[3][1][1]
+$to_prsim: TOP.f0.G[3][2][0] -> foo_1.G[3][2][0]
+$to_prsim: TOP.f0.G[3][2][1] -> foo_1.G[3][2][1]
+$from_prsim: foo_1.H[0][0][0] -> TOP.f0.H[0][0][0]
+$from_prsim: foo_1.H[0][0][1] -> TOP.f0.H[0][0][1]
+$from_prsim: foo_1.H[0][1][0] -> TOP.f0.H[0][1][0]
+$from_prsim: foo_1.H[0][1][1] -> TOP.f0.H[0][1][1]
+$from_prsim: foo_1.H[0][2][0] -> TOP.f0.H[0][2][0]
+$from_prsim: foo_1.H[0][2][1] -> TOP.f0.H[0][2][1]
+$from_prsim: foo_1.H[1][0][0] -> TOP.f0.H[1][0][0]
+$from_prsim: foo_1.H[1][0][1] -> TOP.f0.H[1][0][1]
+$from_prsim: foo_1.H[1][1][0] -> TOP.f0.H[1][1][0]
+$from_prsim: foo_1.H[1][1][1] -> TOP.f0.H[1][1][1]
+$from_prsim: foo_1.H[1][2][0] -> TOP.f0.H[1][2][0]
+$from_prsim: foo_1.H[1][2][1] -> TOP.f0.H[1][2][1]
+$from_prsim: foo_1.H[2][0][0] -> TOP.f0.H[2][0][0]
+$from_prsim: foo_1.H[2][0][1] -> TOP.f0.H[2][0][1]
+$from_prsim: foo_1.H[2][1][0] -> TOP.f0.H[2][1][0]
+$from_prsim: foo_1.H[2][1][1] -> TOP.f0.H[2][1][1]
+$from_prsim: foo_1.H[2][2][0] -> TOP.f0.H[2][2][0]
+$from_prsim: foo_1.H[2][2][1] -> TOP.f0.H[2][2][1]
+$from_prsim: foo_1.H[3][0][0] -> TOP.f0.H[3][0][0]
+$from_prsim: foo_1.H[3][0][1] -> TOP.f0.H[3][0][1]
+$from_prsim: foo_1.H[3][1][0] -> TOP.f0.H[3][1][0]
+$from_prsim: foo_1.H[3][1][1] -> TOP.f0.H[3][1][1]
+$from_prsim: foo_1.H[3][2][0] -> TOP.f0.H[3][2][0]
+$from_prsim: foo_1.H[3][2][1] -> TOP.f0.H[3][2][1]
+[from vcs] signal foo_1.CLK changed @ time 0, val = 0
+prsim:	0	foo_1.CLK : 0
+[from vcs] signal foo_1.C[1] changed @ time 20, val = 0
+prsim:	20	foo_1.C[1] : 0
+[from vcs] signal foo_1.G[1][2][0] changed @ time 20, val = 0
+prsim:	20	foo_1.G[1][2][0] : 0
+at time  20.000, observed a = 0
+prsim:	30	foo_1.D[1] : 1	[by foo_1.C[1]:=0]
+[to vcs]   signal foo_1.D[1] changed @ time 30, val = 1
+prsim:	30	foo_1.H[1][2][0] : 1	[by foo_1.G[1][2][0]:=0]
+[to vcs]   signal foo_1.H[1][2][0] changed @ time 30, val = 1
+at time  30.000, observed z1 = 1
+at time  30.000, observed z2 = 1
+[from vcs] signal foo_1.CLK changed @ time 50, val = 1
+prsim:	50	foo_1.CLK : 1
+[from vcs] signal foo_1.CLK changed @ time 100, val = 0
+prsim:	100	foo_1.CLK : 0
+[from vcs] signal foo_1.CLK changed @ time 150, val = 1
+prsim:	150	foo_1.CLK : 1
+[from vcs] signal foo_1.CLK changed @ time 200, val = 0
+prsim:	200	foo_1.CLK : 0
+[from vcs] signal foo_1.CLK changed @ time 250, val = 1
+prsim:	250	foo_1.CLK : 1
+[from vcs] signal foo_1.CLK changed @ time 300, val = 0
+prsim:	300	foo_1.CLK : 0
+[from vcs] signal foo_1.CLK changed @ time 350, val = 1
+prsim:	350	foo_1.CLK : 1
+[from vcs] signal foo_1.CLK changed @ time 400, val = 0
+prsim:	400	foo_1.CLK : 0
+[from vcs] signal foo_1.C[1] changed @ time 420, val = 1
+prsim:	420	foo_1.C[1] : 1
+[from vcs] signal foo_1.G[1][2][0] changed @ time 420, val = 1
+prsim:	420	foo_1.G[1][2][0] : 1
+at time 420.000, observed a = 1
+prsim:	430	foo_1.D[1] : 0	[by foo_1.C[1]:=1]
+[to vcs]   signal foo_1.D[1] changed @ time 430, val = 0
+prsim:	430	foo_1.H[1][2][0] : 0	[by foo_1.G[1][2][0]:=1]
+[to vcs]   signal foo_1.H[1][2][0] changed @ time 430, val = 0
+at time 430.000, observed z1 = 0
+at time 430.000, observed z2 = 0
+[from vcs] signal foo_1.CLK changed @ time 450, val = 1
+prsim:	450	foo_1.CLK : 1
+[from vcs] signal foo_1.CLK changed @ time 500, val = 0
+prsim:	500	foo_1.CLK : 0
+[from vcs] signal foo_1.CLK changed @ time 550, val = 1
+prsim:	550	foo_1.CLK : 1
+[from vcs] signal foo_1.CLK changed @ time 600, val = 0
+prsim:	600	foo_1.CLK : 0
+[from vcs] signal foo_1.CLK changed @ time 650, val = 1
+prsim:	650	foo_1.CLK : 1
+[from vcs] signal foo_1.CLK changed @ time 700, val = 0
+prsim:	700	foo_1.CLK : 0
+[from vcs] signal foo_1.CLK changed @ time 750, val = 1
+prsim:	750	foo_1.CLK : 1
+[from vcs] signal foo_1.CLK changed @ time 800, val = 0
+prsim:	800	foo_1.CLK : 0
+[from vcs] signal foo_1.C[1] changed @ time 820, val = 0
+prsim:	820	foo_1.C[1] : 0
+[from vcs] signal foo_1.G[1][2][0] changed @ time 820, val = 0
+prsim:	820	foo_1.G[1][2][0] : 0
+at time 820.000, observed a = 0
+prsim:	830	foo_1.D[1] : 1	[by foo_1.C[1]:=0]
+[to vcs]   signal foo_1.D[1] changed @ time 830, val = 1
+prsim:	830	foo_1.H[1][2][0] : 1	[by foo_1.G[1][2][0]:=0]
+[to vcs]   signal foo_1.H[1][2][0] changed @ time 830, val = 1
+at time 830.000, observed z1 = 1
+at time 830.000, observed z2 = 1
+[from vcs] signal foo_1.CLK changed @ time 850, val = 1
+prsim:	850	foo_1.CLK : 1
+[from vcs] signal foo_1.CLK changed @ time 900, val = 0
+prsim:	900	foo_1.CLK : 0
+[from vcs] signal foo_1.C[1] changed @ time 920, val = 1
+prsim:	920	foo_1.C[1] : 1
+[from vcs] signal foo_1.G[1][2][0] changed @ time 920, val = 1
+prsim:	920	foo_1.G[1][2][0] : 1
+at time 920.000, observed a = 1
+prsim:	930	foo_1.D[1] : 0	[by foo_1.C[1]:=1]
+[to vcs]   signal foo_1.D[1] changed @ time 930, val = 0
+prsim:	930	foo_1.H[1][2][0] : 0	[by foo_1.G[1][2][0]:=1]
+[to vcs]   signal foo_1.H[1][2][0] changed @ time 930, val = 0
+at time 930.000, observed z1 = 0
+at time 930.000, observed z2 = 0
+[from vcs] signal foo_1.CLK changed @ time 950, val = 1
+prsim:	950	foo_1.CLK : 1
+[from vcs] signal foo_1.CLK changed @ time 1000, val = 0
+prsim:	1000	foo_1.CLK : 0
+[from vcs] signal foo_1.C[1] changed @ time 1020, val = 0
+prsim:	1020	foo_1.C[1] : 0
+[from vcs] signal foo_1.G[1][2][0] changed @ time 1020, val = 0
+prsim:	1020	foo_1.G[1][2][0] : 0
+at time 1020.000, observed a = 0
+prsim:	1030	foo_1.D[1] : 1	[by foo_1.C[1]:=0]
+[to vcs]   signal foo_1.D[1] changed @ time 1030, val = 1
+prsim:	1030	foo_1.H[1][2][0] : 1	[by foo_1.G[1][2][0]:=0]
+[to vcs]   signal foo_1.H[1][2][0] changed @ time 1030, val = 1
+at time 1030.000, observed z1 = 1
+at time 1030.000, observed z2 = 1
+[from vcs] signal foo_1.CLK changed @ time 1050, val = 1
+prsim:	1050	foo_1.CLK : 1
+[from vcs] signal foo_1.CLK changed @ time 1100, val = 0
+prsim:	1100	foo_1.CLK : 0
+[from vcs] signal foo_1.C[1] changed @ time 1120, val = 1
+prsim:	1120	foo_1.C[1] : 1
+[from vcs] signal foo_1.G[1][2][0] changed @ time 1120, val = 1
+prsim:	1120	foo_1.G[1][2][0] : 1
+at time 1120.000, observed a = 1
+prsim:	1130	foo_1.D[1] : 0	[by foo_1.C[1]:=1]
+[to vcs]   signal foo_1.D[1] changed @ time 1130, val = 0
+prsim:	1130	foo_1.H[1][2][0] : 0	[by foo_1.G[1][2][0]:=1]
+[to vcs]   signal foo_1.H[1][2][0] changed @ time 1130, val = 0
+at time 1130.000, observed z1 = 0
+at time 1130.000, observed z2 = 0
+[from vcs] signal foo_1.CLK changed @ time 1150, val = 1
+prsim:	1150	foo_1.CLK : 1
+[from vcs] signal foo_1.CLK changed @ time 1200, val = 0
+prsim:	1200	foo_1.CLK : 0
+[from vcs] signal foo_1.CLK changed @ time 1250, val = 1
+prsim:	1250	foo_1.CLK : 1
+[from vcs] signal foo_1.CLK changed @ time 1300, val = 0
+prsim:	1300	foo_1.CLK : 0
+[from vcs] signal foo_1.CLK changed @ time 1350, val = 1
+prsim:	1350	foo_1.CLK : 1
+[from vcs] signal foo_1.CLK changed @ time 1400, val = 0
+prsim:	1400	foo_1.CLK : 0
+[from vcs] signal foo_1.C[1] changed @ time 1420, val = 0
+prsim:	1420	foo_1.C[1] : 0
+[from vcs] signal foo_1.G[1][2][0] changed @ time 1420, val = 0
+prsim:	1420	foo_1.G[1][2][0] : 0
+at time 1420.000, observed a = 0
+prsim:	1430	foo_1.D[1] : 1	[by foo_1.C[1]:=0]
+[to vcs]   signal foo_1.D[1] changed @ time 1430, val = 1
+prsim:	1430	foo_1.H[1][2][0] : 1	[by foo_1.G[1][2][0]:=0]
+[to vcs]   signal foo_1.H[1][2][0] changed @ time 1430, val = 1
+at time 1430.000, observed z1 = 1
+at time 1430.000, observed z2 = 1
+[from vcs] signal foo_1.CLK changed @ time 1450, val = 1
+prsim:	1450	foo_1.CLK : 1
+$finish at simulation time    1.5 ns

@@ -221,7 +221,11 @@ private:
 		Simulation flags, bit fields, corresponding the
 		the flags member.  
 	 */
-	enum simulation_flags {
+	enum simulation_flags
+#if __cplusplus >= 201103L
+    : unsigned long
+#endif
+	{
 		/**
 			Allow unstable events to be dropped off queue
 			instead of propagating unknowns.  

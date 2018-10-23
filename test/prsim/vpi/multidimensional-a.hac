@@ -1,0 +1,4 @@
+import "multidimensional.hac";
+
+three_dee foo_1;
+

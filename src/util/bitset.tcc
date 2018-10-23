@@ -58,8 +58,8 @@ bitset<NB>::__find_next_from_whole_word(const size_t w) const {
 			bind2nd(std::not_equal_to<word_type>(), word_type(0))));
 	if (f != e) {
 		// found a non-zero word
-		return std::distance(b, f) * bits_per_word
-			+numeric::ctz(*f);
+		return size_t(std::distance(b, f)) * bits_per_word
+			+size_t(numeric::ctz(*f));
 	} else {
 		return NB;	// not found
 	}

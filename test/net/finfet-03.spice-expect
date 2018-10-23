@@ -1,0 +1,25 @@
+.subckt celem_bare<1> !GND !Vdd x[0] y
+My:dn:0 !GND x[0] y !GND nch NFIN=10 W=555n L=60n
+My:up:0 !Vdd x[0] y !Vdd pch NFIN=5 W=255n L=60n
+.ends
+
+.subckt celem_bare<2> !GND !Vdd x[0] x[1] y
+My:dn:0 !GND x[0] #0 !GND nch NFIN=20 W=1155n L=60n
+My:dn:1 #0 x[1] y !GND nch NFIN=20 W=1155n L=60n
+My:up:0 !Vdd x[0] #1 !Vdd pch NFIN=10 W=555n L=60n
+My:up:1 #1 x[1] y !Vdd pch NFIN=10 W=555n L=60n
+.ends
+
+.subckt celem_bare<3> !GND !Vdd x[0] x[1] x[2] y
+My:dn:0 !GND x[0] #0 !GND nch NFIN=30 W=1755n L=60n
+My:dn:1 #0 x[1] #1 !GND nch NFIN=30 W=1755n L=60n
+My:dn:2 #1 x[2] y !GND nch NFIN=30 W=1755n L=60n
+My:up:0 !Vdd x[0] #2 !Vdd pch NFIN=15 W=855n L=60n
+My:up:1 #2 x[1] #3 !Vdd pch NFIN=15 W=855n L=60n
+My:up:2 #3 x[2] y !Vdd pch NFIN=15 W=855n L=60n
+.ends
+
+xinv !GND !Vdd inv.x[0] inv.y celem_bare<1>
+xc2 !GND !Vdd c2.x[0] c2.x[1] c2.y celem_bare<2>
+xc3 !GND !Vdd c3.x[0] c3.x[1] c3.x[2] c3.y celem_bare<3>
+

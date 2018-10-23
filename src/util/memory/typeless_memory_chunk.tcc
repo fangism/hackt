@@ -52,14 +52,15 @@ TYPELESS_MEMORY_CHUNK_CLASS::contains(const void* p) const {
 		divide_by_constant<element_size, size_t>(diff);
 #else
 	// the more proper way, but relying on compiler to optimize
-	const typename
-		std::iterator_traits<storage_type*>::difference_type
+	typedef typename
+		std::iterator_traits<storage_type*>::difference_type difference_type;
+	const difference_type
 		offset = std::distance(&elements[0],
 			reinterpret_cast<const storage_type*>(p));
 #endif
 	if (offset >= chunk_size)
 		return false;
-	const bit_map_type dealloc_mask(bit_map_type(1) << offset);
+	const bit_map_type dealloc_mask(bit_map_type(1) << size_t(offset));
 	return any_bits<bit_map_type>()(free_mask & dealloc_mask);
 }
 

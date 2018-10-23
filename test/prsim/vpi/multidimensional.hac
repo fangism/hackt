@@ -1,0 +1,51 @@
+// "multidimensional.hac"
+// connects to definitions in "multidimensional.v" and "multidimensional-reverse.v"
+
+defproc three_dee(
+	bool?	CLK;
+	bool? 	A [3][4][8];
+	bool!	B [2][5][6];
+	bool? 	C [3];
+	bool!	D [3];
+	bool? 	E [4];
+	bool!	F [4];
+	bool? 	G [4][3][2];
+	bool!	H [4][3][2]
+) {
+prs {
+  (:i:2:
+  (:j:4:
+  (:k:6:
+	A[i][j][k]	=> B[i][j][k]-
+  )
+  )
+  )
+  (:i:3:
+	C[i]		=> D[i]-
+  )
+  (:i:4:
+	E[i]		=> F[i]-
+  )
+  (:i:4:
+  (:j:3:
+  (:k:2:
+	G[i][j][k]	=> H[i][j][k]-
+  )
+  )
+  )
+}
+}
+
+defproc three_dee_reverse(
+	bool!	CLK;
+	bool! 	A [3][4][8];
+	bool?	B [2][5][6];
+	bool! 	C [3];
+	bool?	D [3];
+	bool! 	E [4];
+	bool?	F [4];
+	bool! 	G [4][3][2];
+	bool?	H [4][3][2]
+) {
+	// empty
+}

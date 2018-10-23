@@ -81,7 +81,7 @@ state_trace_point::__dump(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 state_trace_point::dump(ostream& o) const {
-	return dump(o) << endl;
+	return event_trace_point::dump(o) << endl;
 }
 
 //=============================================================================

@@ -359,7 +359,7 @@ XXTERN PLI_INT32        tf_write_save PROTO_PARAMS((PLI_BYTE8 *blockptr, PLI_INT
 /*---------------------------------------------------------------------------*/
 
 PLI_VEXTERN PLI_DLLESPEC PLI_BYTE8 *veriuser_version_str;
-PLI_VEXTERN PLI_DLLESPEC PLI_INT32 (*endofcompile_routines[])(void);
+PLI_VEXTERN PLI_DLLESPEC PLI_INT32 (*endofcompile_routines[]) PROTO_PARAMS((void));
 
 #undef PLI_EXTERN
 #undef PLI_VEXTERN
