@@ -17,7 +17,11 @@
 #endif
 
 // condition under which we force use of unordered_map over hash_map
-#define	USING_UNORDERED_MAP	defined(HASH_MAP_DEPRECATED)
+#if	defined(HASH_MAP_DEPRECATED)
+#define	USING_UNORDERED_MAP	1
+#else
+#define	USING_UNORDERED_MAP	0
+#endif
 
 // compiler-version dependent location of hash_map
 #if	USING_UNORDERED_MAP

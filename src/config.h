@@ -31,7 +31,11 @@
 	the functions to be declared with their home namespaces.
 	Works around differences between gcc (various versions) and clang.
  */
-#define	FRIEND_FUNCTION_HOME_NAMESPACE	defined(FRIEND_FUNCTION_HOME_NAMESPACE_ALLOWED) && defined(FRIEND_FUNCTION_HOME_NAMESPACE_REQUIRED)
+#if	defined(FRIEND_FUNCTION_HOME_NAMESPACE_ALLOWED) && defined(FRIEND_FUNCTION_HOME_NAMESPACE_REQUIRED)
+#define	FRIEND_FUNCTION_HOME_NAMESPACE  1
+#else
+#define	FRIEND_FUNCTION_HOME_NAMESPACE  0
+#endif
 
 #ifdef	const
 #error	Detected preprocessor definition of const.  \
