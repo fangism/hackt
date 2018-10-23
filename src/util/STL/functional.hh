@@ -7,8 +7,8 @@
 #ifndef	__UTIL_STL_FUNCTIONAL_HH__
 #define	__UTIL_STL_FUNCTIONAL_HH__
 
-#include "util/STL/functional_fwd.hh"
 #include <functional>
+#include "util/STL/libconfig.hh"
 
 BEGIN_NAMESPACE_STD
 //=============================================================================

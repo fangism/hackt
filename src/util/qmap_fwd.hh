@@ -10,7 +10,7 @@
 
 #include "util/STL/pair_fwd.hh"
 #include "util/STL/allocator_fwd.hh"
-#include "util/STL/functional_fwd.hh"
+#include <functional>  // for std::less
 
 #define	QMAP_TEMPLATE_SIGNATURE						\
 template <class K, class T, typename C, typename A>

@@ -8,7 +8,7 @@
 #define	__UTIL_MAPLIKESET_H__
 
 #include <utility>		// for std::pair
-#include "util/STL/functional_fwd.hh"
+#include <functional>
 
 namespace util {
 //=============================================================================

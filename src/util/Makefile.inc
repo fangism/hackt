@@ -93,7 +93,6 @@ UTIL_CXX_HEADER_FILES = \
 	util/STL/construct_fwd.hh \
 	util/STL/container_iterator.hh \
 	util/STL/deque_fwd.hh \
-	util/STL/functional_fwd.hh \
 	util/STL/functional.hh \
 	util/STL/hash_map_fwd.hh \
 	util/STL/hash_map.hh \

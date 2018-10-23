@@ -10,7 +10,7 @@
 
 #include "util/STL/allocator_fwd.hh"		// for std::allocator
 #include "util/STL/pair_fwd.hh"			// for std::pair
-#include "util/STL/functional_fwd.hh"		// for std::less
+#include <functional>		// for std::less
 
 BEGIN_NAMESPACE_STD
 

@@ -50,7 +50,7 @@
 #define	EVENT_QUEUE_FAST_ALLOCATOR	0
 
 #if EVENT_QUEUE_FAST_ALLOCATOR
-#include "util/STL/functional_fwd.hh"		// for std::less
+#include <functional>		// for std::less
 #include "util/memory/chunk_map_pool.hh"
 #include "util/memory/allocator_adaptor.hh"
 #endif
