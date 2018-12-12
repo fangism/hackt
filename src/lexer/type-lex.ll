@@ -8,7 +8,9 @@
 %{
 /* scanner-specific header */
 
-#define	ENABLE_STACKTRACE		0 && !defined(LIBBOGUS)
+#ifndef LIBBOGUS
+#define	ENABLE_STACKTRACE		0
+#endif
 
 #include <iostream>
 #include <iomanip>
