@@ -8,7 +8,7 @@ clean-local:
 #	-$(RM) *.haco-u *.unrolldump
 	-$(RM) *.haco-c *.createdump
 	-$(RM) *.haco-a *.allocdump
-#	-$(RM) *.spice
+	-$(RM) *.spice
 	-$(RM) *.prs
 	-$(RM) *.lvsprs
 	-$(RM) *.lvssprs

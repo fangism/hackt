@@ -9,6 +9,7 @@
 #	RM, MV, SED
 # optional variables:
 #	HACO_FLAGS
+#	HACKNET_FLAGS
 # VPATH-builds will need "-I$(srcdir)"
 
 # with dependency tracking enabled by default
@@ -44,7 +45,7 @@
 
 # TODO: extract flags
 .haco-c.spice:
-	$(HACKNET_EXE) $< > $@
+	$(HACKNET_EXE) $(HACKNET_FLAGS) $< > $@
 
 # note: does not use optimization
 .haco-c.prsimexpr:
