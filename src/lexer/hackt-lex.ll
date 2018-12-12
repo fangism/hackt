@@ -62,7 +62,9 @@
 /* scanner-specific header */
 
 #define	ENABLE_STATIC_TRACE		0
-#define	ENABLE_STACKTRACE		(0 && !defined(LIBBOGUS))
+#ifndef LIBBOGUS
+#define	ENABLE_STACKTRACE		0
+#endif
 
 #include "util/static_trace.hh"
 
