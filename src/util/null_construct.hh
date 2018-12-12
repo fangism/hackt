@@ -10,7 +10,6 @@
 
 #include "util/NULL.h"
 
-// #include "util/STL/construct_fwd.hh"
 #include "util/memory/pointer_traits.hh"
 
 namespace util {
@@ -25,7 +24,6 @@ template <class T>
 T
 __null_construct(not_a_pointer_tag) {
 	return T();
-//	return std::_Construct<T>();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

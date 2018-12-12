@@ -396,7 +396,7 @@ persistent_object_manager::read_pointer_list(istream& f, L& l) const {
 	util::reserve(l, s);
 	size_type i = 0;
 	for ( ; i<s; i++) {
-		// this should work for sticky pointer! through std::_Construct
+		// this should work for sticky_ptr.
 		l.push_back(pointer_type());
 		read_pointer(f, l.back());		// in-place
 	}

@@ -13,6 +13,8 @@
 	Be able to attach pointer to allocator? oooooo....
 	Be able to pass pointers between regions?  maybe not...
 
+TODO: replace this with std::unique_ptr.
+
 	$Id: excl_ptr.hh,v 1.15 2008/03/17 23:03:10 fang Exp $
  */
 // all methods in this file are to be defined here, to be inlined
@@ -33,7 +35,6 @@
 #include "util/memory/pointer_classes_fwd.hh"
 #include "util/memory/pointer_manipulator.hh"
 #include "util/memory/deallocation_policy_fwd.hh"
-#include "util/STL/construct_fwd.hh"
 
 //=============================================================================
 // debugging stuff
@@ -474,6 +475,7 @@ public:
 	will not complain about it, it will only manifest
 	as a run-time error when you try to use a pointer copy
 	that don't expect to be NULL.  
+	TODO: use a const unique_ptr for this.
  */
 template <class T, class Dealloc>
 class sticky_ptr {
@@ -601,12 +603,6 @@ public:
 	}
 
 	// TODO: finish me...
-
-// friends for special cases
-template <class _T1, class _T2, class _DA >
-friend
-void
-std::_Construct(sticky_ptr<_T1, _DA>*, const sticky_ptr<_T2, _DA>& );
 
 	/**
 		We tentatively disallow rebinding of the allocator policy.
@@ -1289,37 +1285,6 @@ SPECIALIZE_ALL_POINTER_TRAITS_2(sticky_ptr)
 }	// end namespace util
 
 //=============================================================================
-namespace std {
-using util::memory::sticky_ptr;
-
-// just a declaration before definition
-template <class _T1, class _T2, class Dealloc>
-void
-_Construct(sticky_ptr<_T1,Dealloc>*, const sticky_ptr<_T2,Dealloc>&);
-
-/**
-	Attempt to specialize/overload std::_Construct for special-case
-	behavior when placement-constructing sticky pointers.  
-	This gives standard containers destructive copy semantics.  
- */
-// don't allow conversions by default, this also also causes
-// amibugity w.r.t. the next specialization...
-template <class _T1, class _T2, class Dealloc>
-// inline
-void
-_Construct(sticky_ptr<_T1,Dealloc>* __p,
-		const sticky_ptr<_T2,Dealloc>& __value) {
-	typedef	sticky_ptr<_T1,Dealloc>		ptr1_type;
-	typedef	sticky_ptr<_T2,Dealloc>		ptr2_type;
-	new (static_cast<void*>(__p))
-		ptr1_type(const_cast<ptr2_type&>(__value).release());
-}
-
-#define	INSTANTIATE_STD_CONSTRUCT_STICKY_PTR_2(T1, T2, D)		\
-template void _Construct(sticky_ptr<T1,D>*, const sticky_ptr<T2,D>&);
-
-//=============================================================================
-}	// end namespace std
 
 #undef	EXCL_PTR_TEMPLATE_SIGNATURE
 #undef	EXCL_PTR_TEMPLATE_CLASS

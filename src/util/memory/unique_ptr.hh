@@ -33,7 +33,6 @@
 #include "util/memory/pointer_classes_fwd.hh"
 #include "util/memory/pointer_manipulator.hh"
 #include "util/memory/deallocation_policy_fwd.hh"
-#include "util/STL/construct_fwd.hh"
 
 //=============================================================================
 // debugging stuff

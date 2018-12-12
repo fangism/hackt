@@ -14,11 +14,9 @@
 #include <list>
 #include <stack>
 #include <utility>			// for std::pair
+
 #include "config.h"
-#if 0
-#include "util/STL/construct_fwd.hh"
-#include "util/STL/allocator_fwd.hh"
-#endif
+
 #include "util/unique_list.hh"
 #include "util/macros.h"
 #include "util/attributes.h"

@@ -18,7 +18,6 @@
 #define	POOL_ALLOCATE_NAMESPACE			0
 #if POOL_ALLOCATE_NAMESPACE
 #include "util/memory/list_vector_pool_fwd.hh"
-#include "util/STL/construct_fwd.hh"
 #endif
 
 #if PROCESS_DEFINITION_IS_NAMESPACE
@@ -30,7 +29,6 @@
 //=============================================================================
 namespace HAC {
 namespace entity {
-USING_CONSTRUCT
 
 /**
 	Namespace container class.  

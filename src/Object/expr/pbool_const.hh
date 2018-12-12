@@ -18,7 +18,6 @@
 namespace HAC {
 namespace entity {
 class const_range_list;
-USING_CONSTRUCT
 
 //=============================================================================
 /**

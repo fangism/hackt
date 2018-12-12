@@ -60,8 +60,6 @@
 
 namespace util {
 namespace memory {
-using std::_Construct;
-using std::_Destroy;
 #include "util/using_ostream.hh"
 #if DEBUG_LIST_VECTOR_POOL_USING_WHAT
 using util::what;
@@ -304,7 +302,7 @@ list_vector_pool<T,Threaded>::construct(pointer p, const T& val) {
 		" @ " << p;
 #endif	// VERBOSE_ALLOC
 //	lazy_destroy(p, list_vector_pool_destruction_policy<T>());
-	_Construct(p, val);	// new(p) T(val);
+        util::memory::construct(p, val);	// new(p) T(val);
 #if VERBOSE_ALLOC
 	cerr << " ... constructed." << endl;
 #endif
@@ -329,8 +327,8 @@ list_vector_pool<T,Threaded>::destroy(pointer p) {
 #endif
 #if 0
 	// DO NOT DESTROY only, the vector will bulk destroy
-	_Destroy(p);
-	_Construct(p);		// must reconstruct to prevent double_deletion
+        util::memory::destroy(p);
+        util::memory::construct(p);		// must reconstruct to prevent double_deletion
 #elif 0
 	eager_destroy(p, list_vector_pool_destruction_policy<T>());
 #endif

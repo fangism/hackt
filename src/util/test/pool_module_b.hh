@@ -11,7 +11,6 @@
 #include "util/memory/list_vector_pool_fwd.hh"
 #include "util/what.hh"
 
-USING_CONSTRUCT
 using util::what;
 using namespace util::memory;
 
@@ -26,7 +25,7 @@ public:
 	foo(void) const;
 
 public:
-	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
+	// LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
 	LIST_VECTOR_POOL_ROBUST_STATIC_DECLARATIONS
 
 };	// end class twiddle_dee

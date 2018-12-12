@@ -8,7 +8,7 @@
 #define	__UTIL_MEMORY_CHUNK_MAP_POOL_FWD_H__
 
 #include "util/size_t.h"
-#include "util/STL/construct_fwd.hh"
+#include "util/memory/construct.hh"
 
 /**
 	Declare this in a class to overload its new and delete operators.  
@@ -46,9 +46,10 @@ public:									\
 	get_pool(void);
 
 #define	CHUNK_MAP_POOL_CTOR_FRIENDS					\
-	friend void _Construct<this_type>(this_type* __p);		\
-	friend void _Construct<this_type, this_type>(			\
+	friend void util::memory::construct<this_type>(this_type* __p);		\
+	friend void util::memory::construct<this_type, this_type>(			\
 		this_type* __p, const this_type& __value);
+
 /**
 	Friend declarations needed if default constructor is private.
  */

@@ -29,7 +29,6 @@
 namespace HAC {
 namespace entity {
 class pint_const;
-USING_CONSTRUCT
 using std::pair;
 // using util::persistent_object_manager;	// forward declared
 
@@ -179,7 +178,6 @@ public:
 
 public:
 	PERSISTENT_METHODS_DECLARATIONS
-//	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS	// not needed, ctors are public
 	LIST_VECTOR_POOL_DEFAULT_STATIC_DECLARATIONS
 	// don't need robust declarations, unless dynamically allocating
 	// during global static initialization.

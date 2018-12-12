@@ -94,7 +94,6 @@ noinst_PROGRAMS = \
 	what_test \
 	pretty_function_test \
 	stacktrace_test \
-	friend_function_formal_bug \
 	link_test \
 	bitmanip_test \
 	bitset_test \
@@ -162,7 +161,7 @@ noinst_HEADERS = multikey_qmap_type_helper.hh
 LIBS = 
 
 # but is included in distribution, EXTRA_DIST? don't bother cleaning?
-EMPTY_STDERR_FILES = friend_function_formal_bug.stderr \
+EMPTY_STDERR_FILES = \
 	link_test.stderr excl_ptr_variant_test.stderr \
 	count_ptr_variant_test.stderr \
 	hash_map_iterator_O2_bug_test.stderr
@@ -189,7 +188,6 @@ hash_map_iterator_O2_bug_test_SOURCES = hash_map_iterator_O2_bug_test.cc
 hash_qmap_test_SOURCES = hash_qmap_test.cc
 free_list_test_SOURCES = free_list_test.cc
 free_list_test_LDADD = libfangutil.la
-friend_function_formal_bug_SOURCES = friend_function_formal_bug.cc
 priority_queue_test_SOURCES = priority_queue_test.cc
 bitmanip_test_SOURCES = bitmanip_test.cc
 bitmanip_test_LDADD = libfangutil.la
@@ -314,9 +312,6 @@ nibble_tables.cc: ../numeric/nibble_tables.cc
 
 bare_digraph.cc: ../graph/bare_digraph.cc
 	$(LN_SF) $? $@
-
-friend_function_formal_bug.stderr:
-	$(TOUCH) $@
 
 link_test.stderr:
 	$(TOUCH) $@

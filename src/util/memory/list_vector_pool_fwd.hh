@@ -8,10 +8,8 @@
 #ifndef	__UTIL_MEMORY_LIST_VECTOR_POOL_FWD_H__
 #define	__UTIL_MEMORY_LIST_VECTOR_POOL_FWD_H__
 
-#include "util/STL/construct_fwd.hh"
-
 /**
-	These are the enw and delete operators required when
+	These are the new and delete operators required when
 	allocating with a list_vector_pool.  
 	This declaration should appear only inside a class!
 	The class should contain a typedef named `this_type'
@@ -21,7 +19,7 @@
 	The first new operator will be defined to call allocate().
 	The second new operator is just a placement constructor, no-op
 		-- this should really be private and inline when defined, 
-		-- it needs to be accessible to std::_Construct.
+		-- it needs to be accessible to util::memory::construct.
 	The delete operator will be defined to call deallocate().  
 	The pool_type and pool declarations will always appear in the 
 	private section, so remember that subsequent declarations will
@@ -80,23 +78,17 @@ public:									\
 
 /**
 	Friends needed only if default constructor is private.
-	NOTE: the formal parameters identifiers for the _Construct 
+NOTE: the formal parameters identifiers for the util::memory::construct 
 	friend declarations (__p, __value) are kept to work around a 
 	major lookup bug in gcc-3.3.
 	Otherwise, it would be better off without it.  
 	Fortunately, there's no harm in keeping them; only the definition's
 	formal parameters matter -- it's just an eyesore to see them here.  
-
-	NOTE: doesn't like std::_Construct in friend declaration.
-	NOTE: newer compilers (clang) don't like un-namespace-qualified 
-		_Construct, it might be time to move past gcc-3.3.
-
-	See "util/test/friend_function_formal_bug.cc" for example.  
  */
 #define	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS				\
 	friend class util::memory::list_vector_pool<this_type>;		\
-	friend void FRIEND_NAMESPACE_STD_CONSTRUCT _Construct<this_type>(this_type* __p);		\
-	friend void FRIEND_NAMESPACE_STD_CONSTRUCT _Construct<this_type, this_type>(		\
+	friend void util::memory::construct<this_type>(this_type* __p);		\
+	friend void util::memory::construct<this_type, this_type>(		\
 		this_type* __p, const this_type& __value);
 
 namespace util {

@@ -11,21 +11,19 @@
 
 #ifndef	EXTERN_TEMPLATE_UTIL_MEMORY_DESTRUCTION_POLICY
 
-#include "util/STL/construct_fwd.hh"
+#include "util/memory/construct.hh"
 
 namespace util {
 namespace memory {
-USING_CONSTRUCT
-USING_DESTROY
 
 //-----------------------------------------------------------------------------
 template <class T>
 inline
 void
 eager_destroy(T* const p, const eager_destruction_tag) {
-	_Destroy(p);            // p->~T();
+	destroy(p);            // p->~T();
 	// construct empty, else will double destruct!
-	_Construct(p);
+	construct(p);
 }
 
 template <class T>
@@ -46,7 +44,7 @@ template <class T>
 inline
 void
 lazy_destroy(T* const p, const lazy_destruction_tag) {
-	_Destroy(p);            // p->~T();
+	destroy(p);            // p->~T();
 	// no need to construct
 }
 
@@ -67,7 +65,7 @@ template <class T>
 inline
 void
 lazy_construct(T* const p, const eager_destruction_tag) {
-	_Construct(p);
+	construct(p);
 }
 
 template <class T>

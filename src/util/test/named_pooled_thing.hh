@@ -21,7 +21,7 @@ using std::string;
 using util::memory::never_ptr;
 using util::memory::excl_ptr;
 using util::memory::count_ptr;
-USING_CONSTRUCT
+// USING_CONSTRUCT
 
 #if 1
 class named_thing {
@@ -34,7 +34,7 @@ public:
 
 #if ENABLE_POOL
 	// needed by gcc-3.3, but not 3.4
-	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
+	// LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
 
 	LIST_VECTOR_POOL_ROBUST_STATIC_DECLARATIONS
 #endif
@@ -50,7 +50,7 @@ public:
 	named_thing(const named_thing& n);
 	~named_thing();
 #if ENABLE_POOL
-	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
+	// LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
 	LIST_VECTOR_POOL_ROBUST_STATIC_DECLARATIONS
 #endif
 };
@@ -67,7 +67,7 @@ public:
 	named_thing(const named_thing& n);
 	~named_thing();
 #if ENABLE_POOL
-	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
+	// LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
 	LIST_VECTOR_POOL_ROBUST_STATIC_DECLARATIONS
 #endif
 };	// end class named_thing

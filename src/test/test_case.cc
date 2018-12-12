@@ -83,23 +83,23 @@ event_construct_test(void) {
 	Event e;
 	const Event e2(e);
 	Event e3, e4;
-	std::_Construct(&e3, e);
-	std::_Construct(&e4, e2);
+	util::memory::construct(&e3, e);
+	util::memory::construct(&e4, e2);
 	Event e5;
 	::new(static_cast<void*>(&e5)) Event(e);
 {
 	Event ea[4];
 	::new(static_cast<void*>(&ea[0])) Event(e);
 	::new(static_cast<void*>(&ea[1])) Event(e2);
-	std::_Construct(&ea[2], e);
-	std::_Construct(&ea[3], e2);
+	util::memory::construct(&ea[2], e);
+	util::memory::construct(&ea[3], e2);
 }{
 	vector<Event> ea;
 	ea.resize(4);
 	::new(static_cast<void*>(&ea[0])) Event(e);
 	::new(static_cast<void*>(&ea[1])) Event(e2);
-	std::_Construct(&ea[2], e);
-	std::_Construct(&ea[3], e2);
+	util::memory::construct(&ea[2], e);
+	util::memory::construct(&ea[3], e2);
 }
 }
 

@@ -90,7 +90,6 @@ UTIL_CXX_HEADER_FILES = \
 	util/fig/xfig.hh \
 	util/STL/back_inserter.hh \
 	util/STL/allocator_fwd.hh \
-	util/STL/construct_fwd.hh \
 	util/STL/container_iterator.hh \
 	util/STL/deque_fwd.hh \
 	util/STL/functional.hh \
@@ -147,6 +146,7 @@ UTIL_CXX_HEADER_FILES = \
 	util/member_saver_fwd.hh \
 	util/member_saver.hh \
 	util/member_select.hh \
+	util/memory/construct.hh \
 	util/memory/deallocation_policy_fwd.hh \
 	util/memory/deallocation_policy.hh \
 	util/memory/deep_copy.hh \

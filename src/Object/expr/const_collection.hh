@@ -12,12 +12,10 @@
 #include <iosfwd>
 #include "Object/expr/types.hh"
 #include "Object/traits/class_traits_fwd.hh"
-#include "util/STL/construct_fwd.hh"
 #include "util/packed_array.hh"
 #include "util/persistent.hh"
 #include "util/memory/count_ptr.hh"
 #include "util/boolean_types.hh"
-// #include "util/memory/chunk_map_pool_fwd.hh"
 
 //=============================================================================
 namespace HAC {
@@ -32,7 +30,6 @@ struct expr_dump_context;
 class template_formals_manager;
 class dynamic_param_expr_list;
 class nonmeta_expr_visitor;
-USING_CONSTRUCT
 using std::ostream;
 using std::istream;
 using util::good_bool;

@@ -1,5 +1,7 @@
 /**
 	\file "friend_function_namespace-conftest.h"
+ * This tests for the presence of an internal function in some STL libraries.
+ * Moral: don't rely on this.
  */
 
 #include "config.h"
