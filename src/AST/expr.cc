@@ -577,9 +577,9 @@ meta_expr_return_type
 expr_list::make_aggregate_value_reference(const checked_meta_exprs_type& ex, 
 		const bool cat) {
 	typedef	meta_expr_return_type		return_type;
-	typedef	checked_meta_exprs_type::const_iterator	const_iterator;
+	typedef	checked_meta_exprs_type::const_iterator	const_expr_iterator;
 	INVARIANT(ex.size());
-	const_iterator i(ex.begin()), e(ex.end());
+	const_expr_iterator i(ex.begin()), e(ex.end());
 	const meta_expr_return_type bi(*i);
 	if (!bi) {
 		cerr << "Error in first subreference, cannot construct "
