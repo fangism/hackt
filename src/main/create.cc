@@ -19,6 +19,7 @@
 #include "main/main_funcs.hh"
 #include "main/global_options.hh"
 #include "util/persistent_object_manager.hh"
+#include "util/memory/count_ptr.tcc"
 
 namespace HAC {
 
