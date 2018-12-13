@@ -104,7 +104,6 @@ UTIL_CXX_HEADER_FILES = \
 	util/STL/set_fwd.hh \
 	util/STL/valarray_fwd.hh \
 	util/STL/valarray_iterator.hh \
-	util/STL/vector_fwd.hh \
 	util/IO_utils_fwd.hh \
 	util/addressof.hh \
 	util/algorithm.hh \

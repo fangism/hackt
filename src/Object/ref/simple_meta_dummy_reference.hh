@@ -14,7 +14,6 @@
 #include "Object/traits/class_traits_fwd.hh"
 // #include "util/packed_array_fwd.hh"
 // #include "Object/ref/inst_ref_implementation_fwd.hh"
-// #include "util/STL/vector_fwd.hh"
 
 namespace HAC {
 namespace entity {

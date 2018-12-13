@@ -7,8 +7,9 @@
 #ifndef	__UTIL_RESERVE_H__
 #define	__UTIL_RESERVE_H__
 
+#include <vector>
+
 #include "util/size_t.h"
-#include "util/STL/vector_fwd.hh"
 
 namespace util {
 //=============================================================================

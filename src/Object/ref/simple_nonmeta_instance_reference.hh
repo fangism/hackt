@@ -9,12 +9,12 @@
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_H__
 #define	__HAC_OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_H__
 
+#include <vector>
 #include "Object/ref/simple_nonmeta_instance_reference_base.hh"
 #include "Object/inst/instance_collection_base.hh"
 #include "Object/traits/class_traits_fwd.hh"
 #include "Object/devel_switches.hh"
 #include "util/packed_array_fwd.hh"
-#include "util/STL/vector_fwd.hh"
 
 namespace HAC {
 namespace entity {
@@ -116,7 +116,7 @@ virtual	count_ptr<const this_type>
 virtual	good_bool
 	lookup_may_reference_global_indices(
 		const global_entry_context&, 
-		std::default_vector<size_t>::type&) const;
+		std::vector<size_t>&) const;
 
 virtual	size_t
 	lookup_nonmeta_global_index(const nonmeta_context_base&) const;

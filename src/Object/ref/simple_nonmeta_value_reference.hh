@@ -9,6 +9,8 @@
 #ifndef __HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_H__
 #define __HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_H__
 
+#include <vector>
+
 #include "util/boolean_types.hh"
 #include "Object/common/multikey_index.hh"
 #include "Object/expr/data_expr.hh"
@@ -18,7 +20,6 @@
 #include "Object/devel_switches.hh"
 #include "util/memory/excl_ptr.hh"
 #include "util/memory/count_ptr.hh"
-#include "util/STL/vector_fwd.hh"
 
 //=============================================================================
 namespace HAC {
@@ -170,7 +171,7 @@ virtual	count_ptr<const const_param>
 virtual	good_bool
 	lookup_may_reference_global_indices(
 		const global_entry_context&, 
-		std::default_vector<size_t>::type&) const;
+		std::vector<size_t>&) const;
 
 virtual	size_t
 	lookup_nonmeta_global_index(const nonmeta_context_base&) const;
