@@ -7,9 +7,9 @@
 #ifndef	__HAC_MAIN_FLATTEN_H__
 #define	__HAC_MAIN_FLATTEN_H__
 
+#include <map>
 #include "main/hackt_fwd.hh"
 #include "util/boolean_types.hh"
-#include "util/STL/map_fwd.hh"
 #include "util/string_fwd.hh"
 
 namespace HAC {
@@ -26,7 +26,7 @@ public:
 	typedef	util::good_bool (*options_modifier)(options&);
 private:
 	struct options_modifier_info;
-	typedef	std::default_map<std::string, options_modifier_info>::type
+	typedef	std::map<std::string, options_modifier_info>
 						options_modifier_map_type;
 	static const options_modifier_map_type	options_modifier_map;
 public:

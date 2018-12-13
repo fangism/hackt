@@ -6,7 +6,7 @@
 #ifndef	__HAC_OBJECT_LANG_PRS_MACRO_REGISTRY_H__
 #define	__HAC_OBJECT_LANG_PRS_MACRO_REGISTRY_H__
 
-#include "util/STL/map_fwd.hh"
+#include <map>
 #include "Object/lang/directive_definition.hh"
 
 namespace HAC {
@@ -61,7 +61,7 @@ public:
 typedef	macro_visitor_entry<PRS::cflat_prs_printer>
 						cflat_macro_definition_entry;
 
-typedef	std::default_map<string, cflat_macro_definition_entry>::type
+typedef	std::map<string, cflat_macro_definition_entry>
 						cflat_macro_registry_type;
 
 extern const cflat_macro_registry_type&		cflat_macro_registry;

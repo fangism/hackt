@@ -7,9 +7,9 @@
 #ifndef	__HAC_OBJECT_LANG_PRS_ATTRIBUTE_REGISTRY_H__
 #define	__HAC_OBJECT_LANG_PRS_ATTRIBUTE_REGISTRY_H__
 
+#include <map>
 #include "Object/lang/attribute_visitor_entry.hh"
 #include "util/size_t.h"
-#include "util/STL/map_fwd.hh"
 
 namespace HAC {
 namespace entity {
@@ -25,7 +25,7 @@ typedef	attribute_visitor_entry<cflat_prs_printer>
 /**
 	The global map type for attributes.
  */
-typedef	std::default_map<string, cflat_rule_attribute_definition_entry>::type
+typedef	std::map<string, cflat_rule_attribute_definition_entry>
 					cflat_rule_attribute_registry_type;
 
 /**

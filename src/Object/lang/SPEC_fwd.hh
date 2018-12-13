@@ -7,9 +7,9 @@
 #ifndef	__HAC_OBJECT_LANG_SPEC_FWD_H__
 #define	__HAC_OBJECT_LANG_SPEC_FWD_H__
 
+#include <set>
 #include <vector>
 #include "util/size_t.h"
-#include "util/STL/set_fwd.hh"
 #include "Object/inst/instance_pool_fwd.hh"
 #include "util/memory/pointer_classes_fwd.hh"
 
@@ -32,7 +32,7 @@ typedef std::vector<directive_source_group_type>
 typedef	std::vector<util::memory::count_ptr<const param_expr> >
 						directive_source_params_type;
 // unrolled types (resolved parameters)
-typedef	std::default_set<size_t>::type		directive_node_group_type;
+typedef	std::set<size_t>		directive_node_group_type;
 /**
 	Vector of sets is needed for support for grouped nodes.  
  */

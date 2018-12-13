@@ -10,7 +10,6 @@
 #define __UTIL_UNIQUE_LIST_HH__
 
 #include "util/macros.h"
-#include "util/STL/map_fwd.hh"
 #include <list>
 #include <map>
 #include <algorithm>		// for find
@@ -26,7 +25,7 @@ template <class T, class List, class Set>
 class unique_list;
 
 template <class T, class List = std::list<T>,
-	class Set = typename std::default_map<T, typename List::iterator>::type >
+	class Set = std::map<T, typename List::iterator> >
 class unique_list;
 
 //=============================================================================

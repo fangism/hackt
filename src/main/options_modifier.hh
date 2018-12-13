@@ -10,7 +10,6 @@
 #include <iosfwd>
 #include <map>
 #include "util/string_fwd.hh"
-#include "util/STL/map_fwd.hh"
 
 namespace HAC {
 
@@ -33,8 +32,7 @@ public:
 	typedef	OptionsType			options_type;
 	typedef Modifier			modifier_type;
 	class options_modifier_info;
-	typedef	typename std::default_map<std::string,
-			options_modifier_info>::type
+	typedef	typename std::map<std::string, options_modifier_info>
 					options_modifier_map_type;
 	typedef	typename options_modifier_map_type::const_iterator
 					options_modifier_map_iterator;

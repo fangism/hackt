@@ -6,7 +6,7 @@
 #ifndef	__HAC_OBJECT_LANG_SPEC_REGISTRY_H__
 #define	__HAC_OBJECT_LANG_SPEC_REGISTRY_H__
 
-#include "util/STL/map_fwd.hh"
+#include <map>
 #include "Object/lang/directive_definition.hh"
 #include "Object/traits/type_tag_enum.hh"
 
@@ -75,7 +75,7 @@ public:
 
 typedef	spec_visitor_entry<cflat_prs_printer>	cflat_spec_definition_entry;
 
-typedef	std::default_map<string, cflat_spec_definition_entry>::type
+typedef	std::map<string, cflat_spec_definition_entry>
 						cflat_spec_registry_type;
 
 extern const cflat_spec_registry_type&		cflat_spec_registry;
