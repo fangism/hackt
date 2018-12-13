@@ -200,8 +200,7 @@ null_stacktrace_stream = null_stacktrace_stream_type();
 // #include "util/macros.h"
 #include "util/string_fwd.hh"
 
-#include "util/STL/stack_fwd.hh"
-#include <stack>	// needed
+#include <stack>
 
 // need count pointer to be able to guarantee proper initialization
 // across modules during static construction debugging
@@ -227,9 +226,9 @@ public:
 	/// the type of stack used to hold feedback text
 	typedef std::list<string>	stack_text_type;
 	/// the type of stack used to track on/off mode
-	typedef std::default_stack<int>::type	stack_echo_type;
+	typedef std::stack<int>	stack_echo_type;
 	/// the type of stack used to track stream redirections
-	typedef std::default_stack<std::ostream*>::type	stack_streams_type;
+	typedef std::stack<std::ostream*>	stack_streams_type;
 
 public:
 	class manager;

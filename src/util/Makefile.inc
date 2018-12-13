@@ -91,7 +91,6 @@ UTIL_CXX_HEADER_FILES = \
 	util/STL/back_inserter.hh \
 	util/STL/allocator_fwd.hh \
 	util/STL/container_iterator.hh \
-	util/STL/deque_fwd.hh \
 	util/STL/functional.hh \
 	util/STL/hash_map_fwd.hh \
 	util/STL/hash_map.hh \
@@ -101,10 +100,8 @@ UTIL_CXX_HEADER_FILES = \
 	util/STL/map_fwd.hh \
 	util/STL/namespace.hh \
 	util/STL/pair_fwd.hh \
-	util/STL/queue_fwd.hh \
 	util/STL/reverse_iterator.hh \
 	util/STL/set_fwd.hh \
-	util/STL/stack_fwd.hh \
 	util/STL/valarray_fwd.hh \
 	util/STL/valarray_iterator.hh \
 	util/STL/vector_fwd.hh \
