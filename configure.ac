@@ -155,8 +155,6 @@ dnl need ltdl: dlopen-ing plug-ins and module shared objects/libraries
 dnl - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 m4_ifdef([LT_INIT],[
 dnl libtool-2.x setup
-dnl AC_CONFIG_MACRO_DIR([libltdl/m4])	dnl had trouble with this
-AC_CONFIG_MACRO_DIR([config])
 LT_INIT([dlopen])
 AC_LIBLTDL_INSTALLABLE
 AC_DISABLE_STATIC
