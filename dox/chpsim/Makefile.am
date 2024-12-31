@@ -181,17 +181,10 @@ built-figs $(srcdir)/hacchpsim.info: $(XFIG_PNG)
 .PHONY: built-figs
 
 
-$(srcdir)/figs/.cvsignore: $(srcdir)/.cvsignore
+$(srcdir)/figs/.gitignore: $(srcdir)/.gitignore
 	$(CP) $< $@
 
-$(srcdir)/cmd/.gitignore: $(srcdir)/cmd/.cvsignore
-	$(GITIGNORE_TEXI_SCRIPT)
-$(srcdir)/fn/.gitignore: $(srcdir)/fn/.cvsignore
-	$(GITIGNORE_TEXI_SCRIPT)
-$(srcdir)/options/.gitignore: $(srcdir)/options/.cvsignore
-	$(GITIGNORE_TEXI_SCRIPT)
-
-cvsignore-local: \
+gitignore-local: \
 	$(srcdir)/cmd/.gitignore \
 	$(srcdir)/fn/.gitignore \
 	$(srcdir)/options/.gitignore

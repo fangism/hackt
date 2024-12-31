@@ -70,14 +70,14 @@ EXTRA_DIST += \
 	Make.stddef \
 	Make.global \
 	installdirs.mk \
-	local.cvsignore \
+	local.gitignore \
 	bootstrap \
 	BOUNTY \
 	BRANCHES \
 	BUILDS \
 	CLEANUP \
 	CONTRIBUTORS \
-	README.CVS \
+	README.git \
 	README.maintainer \
 	$(DOXYGEN_CONFIG).in \
 	hackt-config.in \
@@ -91,7 +91,7 @@ EXTRA_DIST += \
 	pkg/hackt-cvs-deps.info \
 	pkg/hackt-dist-deps.info
 # don't bother:
-#	libltdl/README.CVS
+#	libltdl/README.git
 
 if HAVE_DOT
 DevelopmentPlan.ps: DevelopmentPlan.dot
@@ -124,9 +124,9 @@ distcheck.log: force
 	@$(ECHO) Tests finished `$(DATE)` >> $@
 	$(TAIL) -n 6 $@
 
-# don't include CVS directories in distribution
+# don't include git directories in distribution
 dist-hook:
-	$(RM) -r `$(FIND) $(distdir) -name CVS -type d`
+	$(RM) -r `$(FIND) $(distdir) -name .git -type d`
 
 if INSTALL_TESTS
 installcheck-local:
@@ -146,13 +146,6 @@ endif
 
 # .NOTPARALLEL: install
 .NOTPARALLEL: commit
-if HAVE_CVS
-commit: cvsdiffs distcheck
-	$(CVS) commit
-else
-commit:
-	@$(ECHO) "Sorry, no 'cvs' found in path."
-endif
 
 help-local:
 	@$(ECHO) "Local make targets:" ; \
@@ -165,7 +158,7 @@ help-local:
 	$(ECHO) "    maintainer-clean: removes bootstrap targets and distcleans" ; \
 	$(ECHO) "    libtool: regenerates the configured libtool script" ; \
 	$(ECHO) "    DevelopmentPlan.ps: visualize development plan using dot" ; \
-	$(ECHO) "    commit: distcheck followed by CVS commit" ; \
+	$(ECHO) "    commit: distcheck followed by git commit" ; \
 	$(ECHO) "    docs: builds Doxygen source documentation (SLOW)"
 
 include $(top_srcdir)/Make.global

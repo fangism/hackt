@@ -23,7 +23,6 @@ CP = cp -f
 # not gcc -E
 CPP_TRADITIONAL = @CPP_TRADITIONAL@
 CUT = @CUT@
-CVS = @CVS@
 DATE = @DATE@
 DIFF = @DIFF@
 # -B: ignore blank line diffs
@@ -101,7 +100,7 @@ DISTHOOK_CLEANFILES =
 # SPACES_TO_NEWLINE = $(AWK) '{gsub("[ \t]+","\n"); print;}'
 SPACES_TO_NEWLINE = $(TR) '[:blank:]' '\n'
 
-# to accumulate and generate automatic .cvsignore
+# to accumulate and generate automatic .gitignore
 # we've provided some project wide definitions in Make.global
 # NOTE: only directory and file names here
 # Wild-cards like "*.foo*" must be wrapped in quotes when listed

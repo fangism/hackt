@@ -139,18 +139,7 @@ hac.pdf hac.dvi hac.html $(srcdir)/hac.info: $(hac_info_DEPS)
 
 EXTRA_DIST += $(hac_info_DEPS)
 
-$(srcdir)/attrib/.gitignore: $(srcdir)/attrib/.cvsignore
-	$(GITIGNORE_TEXI_SCRIPT)
-$(srcdir)/fn/.gitignore: $(srcdir)/fn/.cvsignore
-	$(GITIGNORE_TEXI_SCRIPT)
-$(srcdir)/grammar/.gitignore: $(srcdir)/grammar/.cvsignore
-	$(GITIGNORE_TEXI_SCRIPT)
-$(srcdir)/prs/.gitignore: $(srcdir)/prs/.cvsignore
-	$(GITIGNORE_TEXI_SCRIPT)
-$(srcdir)/spec/.gitignore: $(srcdir)/spec/.cvsignore
-	$(GITIGNORE_TEXI_SCRIPT)
-
-cvsignore-local: \
+gitignore-local: \
 	$(srcdir)/attrib/.gitignore \
 	$(srcdir)/fn/.gitignore \
 	$(srcdir)/grammar/.gitignore \

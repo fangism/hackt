@@ -3,12 +3,12 @@
 #	$Id: Make.dox-tail,v 1.17 2009/06/05 16:28:01 fang Exp $
 #	vim: ft=automake
 
-if AUTO_CVSIGNORE
-local.cvsignore: $(top_srcdir)/dox/local.cvsignore
+if AUTO_GITIGNORE
+local.gitignore: $(top_srcdir)/dox/local.gitignore
 	$(CP) $< $@
 
-AUTO_IGNORE += local.cvsignore
-DISTCLEANFILES += local.cvsignore
+AUTO_IGNORE += local.gitignore
+DISTCLEANFILES += local.gitignore
 endif
 
 ######## HTML install hooks ###################################################

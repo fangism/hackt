@@ -22,7 +22,7 @@ SUBDIRS = util/test . scm
 AUTOHEADERS =
 BUILT_SOURCES =
 CLEANSUBDIRS =
-SUBDIR_CVSIGNORE =
+SUBDIR_GITIGNORE =
 EXTRA_LTLIBRARIES =
 nobase_pkginclude_HEADERS =
 
@@ -2016,8 +2016,8 @@ CLEANFILES += ../libltdl/ltdl.hchk
 # __config__.hchk: __config__.h
 #	@$(TOUCH) $@
 
-EXTRA_DIST += local.cvsignore \
-	parser/local.cvsignore \
+EXTRA_DIST += local.gitignore \
+	parser/local.gitignore \
 	parser/lexyacc-prefix.awk \
 	parser/bison-output-to-C.awk \
 	parser/common-output-to-C.awk \
@@ -2038,10 +2038,10 @@ EXTRA_DIST += local.cvsignore \
 	parser/yyerror.cc \
 	parser/NOTES \
 	parser/hackt-parse.yy.in \
-	lexer/local.cvsignore \
+	lexer/local.gitignore \
 	lexer/grab-cpp-if.awk \
 	lexer/purify_flex.awk \
-	test/local.cvsignore \
+	test/local.gitignore \
 	test/header_test.cc \
 	test/getopt_test.sh \
 	test/getopt_test.stderr \
@@ -2256,82 +2256,82 @@ clean-local: clean-AST clean-Object clean-lexer clean-parser clean-sim \
 		$(RM) $$d/*.loT ; \
 	done
 
-# cvsignore targets
-if AUTO_CVSIGNORE
-$(srcdir)/lexer/.cvsignore: $(srcdir)/.cvsignore lexer/local.cvsignore
-	$(CAT) $(srcdir)/.cvsignore $(srcdir)/lexer/local.cvsignore > $@
-$(srcdir)/parser/.cvsignore: $(srcdir)/.cvsignore parser/local.cvsignore
-	$(CAT) $(srcdir)/.cvsignore $(srcdir)/parser/local.cvsignore > $@
-$(srcdir)/common/.cvsignore: $(srcdir)/.cvsignore
+# gitignore targets
+if AUTO_GITIGNORE
+$(srcdir)/lexer/.gitignore: $(srcdir)/.gitignore lexer/local.gitignore
+	$(CAT) $(srcdir)/.gitignore $(srcdir)/lexer/local.gitignore > $@
+$(srcdir)/parser/.gitignore: $(srcdir)/.gitignore parser/local.gitignore
+	$(CAT) $(srcdir)/.gitignore $(srcdir)/parser/local.gitignore > $@
+$(srcdir)/common/.gitignore: $(srcdir)/.gitignore
 	$(CP) $< $@
-$(srcdir)/Object/.cvsignore: $(srcdir)/.cvsignore
+$(srcdir)/Object/.gitignore: $(srcdir)/.gitignore
 	$(CP) $< $@
-$(srcdir)/Object/common/.cvsignore: $(srcdir)/.cvsignore
+$(srcdir)/Object/common/.gitignore: $(srcdir)/.gitignore
 	$(CP) $< $@
-$(srcdir)/Object/def/.cvsignore: $(srcdir)/.cvsignore
+$(srcdir)/Object/def/.gitignore: $(srcdir)/.gitignore
 	$(CP) $< $@
-$(srcdir)/Object/expr/.cvsignore: $(srcdir)/.cvsignore
+$(srcdir)/Object/expr/.gitignore: $(srcdir)/.gitignore
 	$(CP) $< $@
-$(srcdir)/Object/inst/.cvsignore: $(srcdir)/.cvsignore
+$(srcdir)/Object/inst/.gitignore: $(srcdir)/.gitignore
 	$(CP) $< $@
-$(srcdir)/Object/lang/.cvsignore: $(srcdir)/.cvsignore
+$(srcdir)/Object/lang/.gitignore: $(srcdir)/.gitignore
 	$(CP) $< $@
-$(srcdir)/Object/ref/.cvsignore: $(srcdir)/.cvsignore
+$(srcdir)/Object/ref/.gitignore: $(srcdir)/.gitignore
 	$(CP) $< $@
-$(srcdir)/Object/traits/.cvsignore: $(srcdir)/.cvsignore
+$(srcdir)/Object/traits/.gitignore: $(srcdir)/.gitignore
 	$(CP) $< $@
-$(srcdir)/Object/type/.cvsignore: $(srcdir)/.cvsignore
+$(srcdir)/Object/type/.gitignore: $(srcdir)/.gitignore
 	$(CP) $< $@
-$(srcdir)/Object/unroll/.cvsignore: $(srcdir)/.cvsignore
+$(srcdir)/Object/unroll/.gitignore: $(srcdir)/.gitignore
 	$(CP) $< $@
-$(srcdir)/AST/.cvsignore: $(srcdir)/.cvsignore
+$(srcdir)/AST/.gitignore: $(srcdir)/.gitignore
 	$(CP) $< $@
-$(srcdir)/main/.cvsignore: $(srcdir)/.cvsignore
+$(srcdir)/main/.gitignore: $(srcdir)/.gitignore
 	$(CP) $< $@
-$(srcdir)/sim/.cvsignore: $(srcdir)/.cvsignore
+$(srcdir)/sim/.gitignore: $(srcdir)/.gitignore
 	$(CP) $< $@
-$(srcdir)/sim/prsim/.cvsignore: $(srcdir)/.cvsignore
+$(srcdir)/sim/prsim/.gitignore: $(srcdir)/.gitignore
 	$(CP) $< $@
-$(srcdir)/sim/chpsim/.cvsignore: $(srcdir)/.cvsignore
+$(srcdir)/sim/chpsim/.gitignore: $(srcdir)/.gitignore
 	$(CP) $< $@
-$(srcdir)/guile/.cvsignore: $(srcdir)/.cvsignore
+$(srcdir)/guile/.gitignore: $(srcdir)/.gitignore
 	$(CP) $< $@
-$(srcdir)/test/.cvsignore: $(srcdir)/.cvsignore test/local.cvsignore
-	@$(CAT) $(srcdir)/.cvsignore $(srcdir)/test/local.cvsignore > $@
+$(srcdir)/test/.gitignore: $(srcdir)/.gitignore test/local.gitignore
+	@$(CAT) $(srcdir)/.gitignore $(srcdir)/test/local.gitignore > $@
 
 # files to ignore in subdirectories
 # can we generate this from suffix appending?
-SUBDIR_CVSIGNORE += \
-	$(srcdir)/lexer/.cvsignore \
-	$(srcdir)/parser/.cvsignore \
-	$(srcdir)/common/.cvsignore \
-	$(srcdir)/Object/.cvsignore \
-	$(srcdir)/Object/common/.cvsignore \
-	$(srcdir)/Object/def/.cvsignore \
-	$(srcdir)/Object/expr/.cvsignore \
-	$(srcdir)/Object/inst/.cvsignore \
-	$(srcdir)/Object/lang/.cvsignore \
-	$(srcdir)/Object/ref/.cvsignore \
-	$(srcdir)/Object/traits/.cvsignore \
-	$(srcdir)/Object/type/.cvsignore \
-	$(srcdir)/Object/unroll/.cvsignore \
-	$(srcdir)/AST/.cvsignore \
-	$(srcdir)/main/.cvsignore \
-	$(srcdir)/sim/.cvsignore \
-	$(srcdir)/sim/prsim/.cvsignore \
-	$(srcdir)/sim/chpsim/.cvsignore \
-	$(srcdir)/guile/.cvsignore \
-	$(srcdir)/test/.cvsignore
+SUBDIR_GITIGNORE += \
+	$(srcdir)/lexer/.gitignore \
+	$(srcdir)/parser/.gitignore \
+	$(srcdir)/common/.gitignore \
+	$(srcdir)/Object/.gitignore \
+	$(srcdir)/Object/common/.gitignore \
+	$(srcdir)/Object/def/.gitignore \
+	$(srcdir)/Object/expr/.gitignore \
+	$(srcdir)/Object/inst/.gitignore \
+	$(srcdir)/Object/lang/.gitignore \
+	$(srcdir)/Object/ref/.gitignore \
+	$(srcdir)/Object/traits/.gitignore \
+	$(srcdir)/Object/type/.gitignore \
+	$(srcdir)/Object/unroll/.gitignore \
+	$(srcdir)/AST/.gitignore \
+	$(srcdir)/main/.gitignore \
+	$(srcdir)/sim/.gitignore \
+	$(srcdir)/sim/prsim/.gitignore \
+	$(srcdir)/sim/chpsim/.gitignore \
+	$(srcdir)/guile/.gitignore \
+	$(srcdir)/test/.gitignore
 
-cvsignore: $(SUBDIR_CVSIGNORE)
+gitignore: $(SUBDIR_GITIGNORE)
 
-clean-cvsignore: clean-cvsignore-subdirs
+clean-gitignore: clean-gitignore-subdirs
 
-clean-cvsignore-subdirs:
-	-$(RM) $(SUBDIR_CVSIGNORE)
+clean-gitignore-subdirs:
+	-$(RM) $(SUBDIR_GITIGNORE)
 endif
 # Make.global already has:
-# all: cvsignore
+# all: gitignore
 
 clean-libs:
 	-$(RM) $(LTLIBRARIES) $(EXTRA_LTLIBRARIES)
@@ -2341,7 +2341,7 @@ CLEANFILES += $(EXTRA_LTLIBRARIES)
 clean-scripts:
 	-$(RM) $(SCRIPTS)
 
-DISTCLEANFILES += $(SUBDIR_CVSIGNORE) $(CONFIG_PARSERS)
+DISTCLEANFILES += $(SUBDIR_GITIGNORE) $(CONFIG_PARSERS)
 DISTCLEANDIRS += $(DEPDIR)
 
 distclean-local: clean-parser clean-lexer distclean-deps

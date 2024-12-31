@@ -139,16 +139,10 @@ CLEANFILES += $(BUILT_FIGS)
 # .PHONY: built-figs
 
 
-$(srcdir)/figs/.cvsignore: $(srcdir)/.cvsignore
+$(srcdir)/figs/.gitignore: $(srcdir)/.gitignore
 	$(CP) $< $@
 
-$(srcdir)/cmd/.gitignore: $(srcdir)/cmd/.cvsignore
-	$(GITIGNORE_TEXI_SCRIPT)
-$(srcdir)/config/.gitignore: $(srcdir)/config/.cvsignore
-	$(GITIGNORE_TEXI_SCRIPT)
-$(srcdir)/opt/.gitignore: $(srcdir)/opt/.cvsignore
-	$(GITIGNORE_TEXI_SCRIPT)
-cvsignore-local: \
+gitignore-local: \
 	$(srcdir)/cmd/.gitignore \
 	$(srcdir)/config/.gitignore \
 	$(srcdir)/opt/.gitignore

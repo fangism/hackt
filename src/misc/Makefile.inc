@@ -49,9 +49,9 @@ if WANT_LIBMISCFUN
 ALL_CXX_HEADER_FILES += $(MISCFUN_H_FILES)
 endif
 
-SUBDIR_CVSIGNORE += $(srcdir)/misc/.cvsignore
+SUBDIR_GITIGNORE += $(srcdir)/misc/.gitignore
 
-$(srcdir)/misc/.cvsignore: $(srcdir)/.cvsignore
+$(srcdir)/misc/.gitignore: $(srcdir)/.gitignore
 	$(CP) $< $@
 
 

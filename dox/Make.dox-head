@@ -88,7 +88,7 @@ TEXI_CLEANFILES =
 EXTRA_DIST += $(DVIS)
 # distribute generated texi files
 EXTRA_DIST += $(AUTO_TEXINFO_DEPS)
-# CVS ignore generated texi files
+# git ignore generated texi files
 AUTO_IGNORE += $(AUTO_TEXINFO_DEPS)
 MAINTAINERCLEANFILES = $(AUTO_TEXINFO_DEPS)
 MAINTAINERCLEANFILES += $(TEXI_CLEANFILES)

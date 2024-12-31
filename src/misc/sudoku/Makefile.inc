@@ -49,8 +49,8 @@ ALL_CXX_HEADER_FILES += $(LIBSUDOKU_HH_FILES)
 ALL_TCC_FILES += $(LIBSUDOKU_TCC_FILES)
 endif
 
-SUBDIR_CVSIGNORE += $(srcdir)/misc/sudoku/.cvsignore
+SUBDIR_GITIGNORE += $(srcdir)/misc/sudoku/.gitignore
 
-$(srcdir)/misc/sudoku/.cvsignore: .cvsignore
+$(srcdir)/misc/sudoku/.gitignore: .gitignore
 	$(CP) $< $@
 

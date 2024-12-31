@@ -1,4 +1,4 @@
-.cvsignore
+.gitignore
 *.swp
 *.core
 core.*

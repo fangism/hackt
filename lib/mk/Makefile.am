@@ -124,10 +124,10 @@ hackt-lt-rules.am: hackt-progs.mk hackt-lt-progs.mk \
 #	$(CAT) $(srcdir)/hackt-clean.mk ;
 #	$(CAT) $(srcdir)/hackt-lt-clean.mk ;
 
-local.cvsignore:
+local.gitignore:
 	$(TOUCH) $@
 
-DISTCLEANFILES += local.cvsignore
+DISTCLEANFILES += local.gitignore
 # will automatically pickup in AUTOIGNORE
 
 include $(top_srcdir)/Make.global

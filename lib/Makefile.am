@@ -182,10 +182,10 @@ stdchpfn_la_LDFLAGS = -module
 
 ###############################################################################
 
-local.cvsignore:
+local.gitignore:
 	$(TOUCH) $@
 
-DISTCLEANFILES += local.cvsignore
+DISTCLEANFILES += local.gitignore
 # will automatically pickup in AUTOIGNORE
 
 include $(top_srcdir)/Make.global
