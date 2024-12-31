@@ -44,7 +44,11 @@ namespace std {
 	modulus operations, by forwarding to the standard library fmodf.  
  */
 template <>
-struct modulus<float> : public binary_function<float,float,float> {
+struct modulus<float>
+#if __cplusplus < 201103L
+: public std::binary_function<float,float,float>
+#endif
+{
 	modulus() { }
 	float
 	operator () (const float& x, const float& y) const {
@@ -66,7 +70,11 @@ struct modulus<float> : public binary_function<float,float,float> {
 	modulus operations, by forwarding to the standard library fmod.  
  */
 template <>
-struct modulus<double> : public binary_function<double,double,double> {
+struct modulus<double>
+#if __cplusplus < 201103L
+: public std::binary_function<double,double,double>
+#endif
+{
 	modulus() { }
 	double
 	operator () (const double& x, const double& y) const {
@@ -91,7 +99,11 @@ namespace util {
 		arithmetic operations are defined.
  */
 template <class R = int, class A = R>
-struct binary_arithmetic_operation : public std::binary_function<A,A,R> {
+struct binary_arithmetic_operation
+#if __cplusplus < 201103L
+: public std::binary_function<A,A,R>
+#endif
+{
 /**
 	Required by gcc4 with -W.
 	... even if we never delete subclass objects through these pointers.  

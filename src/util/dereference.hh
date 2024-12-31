@@ -19,8 +19,11 @@ USING_UTIL_MEMORY_POINTER_TRAITS
 	Is already appropriately given by the pointer type.  
  */
 template <class P>
-class dereference_t :
-	public std::unary_function<P, typename internal_reference<P>::type> {
+class dereference_t
+#if __cplusplus < 201103L
+	: public std::unary_function<P, typename internal_reference<P>::type>
+#endif
+{
 public:
 	typedef	typename internal_reference<P>::type	reference;
 
