@@ -43,21 +43,25 @@ AC_ARG_VAR(LIBTOOL_FLAGS, [Additional ./libtool flags, e.g. --silent])
 LIBTOOL="$LIBTOOL "'$'"(LIBTOOL_FLAGS)"
 ])
 
-dnl @synopsis HACKT_SHELL_PIPEFAIL
+dnl @synopsis HACKT_MAKE_SHELL_PIPEFAIL
 dnl
-dnl if shell supports "set -o pipefail", then define SET_PIPEFAIL
-dnl if it fails, define to no-op :
+dnl The 'make' program default to /bin/sh as its command interpreter.
+dnl if this shell supports "set -o pipefail",
+dnl then define SET_PIPEFAIL.
+dnl if this test fails, define to no-op :
+dnl Note that the shell used by 'make' is not necessarily the same
+dnl as the shell used by 'configure'.
 dnl
 dnl @category ProjectSpecific
-dnl @version 2013-11-15
+dnl @version 2024-01-02
 dnl @author David Fang <fangism@users.sourceforge.net>
 dnl @license AllPermissive
 dnl
-AC_DEFUN([HACKT_SHELL_PIPEFAIL], 
-[AC_MSG_CHECKING([whether $CONFIG_SHELL supports pipefail])
+AC_DEFUN([HACKT_MAKE_SHELL_PIPEFAIL], 
+[AC_MSG_CHECKING([whether make's default shell /bin/sh supports pipefail])
 shell_pipefail=no
 SET_PIPEFAIL="set -o pipefail"
-( $CONFIG_SHELL -c "$SET_PIPEFAIL" ) >/dev/null 2>&1 && shell_pipefail=yes
+( /bin/sh -c "$SET_PIPEFAIL" ) >/dev/null 2>&1 && shell_pipefail=yes
 AC_MSG_RESULT([$shell_pipefail])
 test "x$shell_pipefail" = xyes || SET_PIPEFAIL=:
 AC_SUBST([SET_PIPEFAIL])

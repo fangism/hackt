@@ -45,7 +45,7 @@ AC_PATH_PROG(SH_PATH, sh)
 dnl AM_TRUE is always true, needed to fake conditional Makefile
 AM_CONDITIONAL(ALWAYS_TRUE, true)
 
-HACKT_SHELL_PIPEFAIL
+HACKT_MAKE_SHELL_PIPEFAIL
 
 # CALLMAKE is intended for shell scripts' invocations of make
 # NOT intended for direct use in configured Makefiles, because
