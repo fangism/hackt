@@ -6,6 +6,13 @@
 #define	ENABLE_STACKTRACE				0
 
 #include "Object/inst/alias_printer.hh"
+
+#include <sstream>
+
+#include "Object/inst/alias_empty.hh"
+#include "Object/inst/instance_alias_info.hh"
+#include "Object/inst/physical_instance_collection.hh"
+#include "Object/inst/physical_instance_placeholder.hh"
 #include "Object/traits/bool_traits.hh"
 #if BUILTIN_CHANNEL_FOOTPRINTS
 #include "Object/global_channel_entry.hh"
@@ -14,14 +21,16 @@
 #include "Object/traits/proc_traits.hh"
 #include "Object/common/dump_flags.hh"
 #include "Object/common/alias_string_cache.hh"
-#include "Object/common/cflat_args.tcc"
+#include "Object/common/cflat_args.hh"
+#include "Object/def/footprint.tcc"
 #include "main/cflat.hh"
 #include "main/cflat_options.hh"
 #include "util/swap_saver.hh"
-
+#include "util/stacktrace.hh"
 
 namespace HAC {
 namespace entity {
+using std::ostringstream;
 using util::value_saver;
 using util::swap_saver;
 
@@ -194,7 +203,7 @@ if (!cf.check_prs) {
 	// exclude publicly reachable aliases, as those will be covered
 	// by parent/owner process.
 	// exclude local bool private aliases that are aliased to port
-	if (// accept_deep_alias(a, f)
+	if (
 		is_top || 
 		(!a.get_supermost_collection()->get_placeholder_base()->is_port_formal()
 		&& (!((a.instance_index <=

@@ -63,44 +63,10 @@ while (ss) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	If a bool is reachable through public port alias (hierarchical),
-	exclude it.  
-	Also applies to any terminal type (basically non-process).
-	if the supermost (process) collection of a bool is not aliased 
-	to a process-port, also exclude it.
- */
-template <class Tag>
-static
-inline
-bool
-__accept_deep_alias(const instance_alias_info<Tag>& a, const footprint& f) {
-	typedef	class_traits<Tag>		traits_type;
-#if ENABLE_STACKTRACE
-	static const char* tag_name = traits_type::tag_name;
-#endif
-	const bool reachable = a.get_supermost_collection()
-		->get_placeholder_base()->is_port_formal();
-	STACKTRACE_INDENT_PRINT(tag_name << (reachable ? " is" : " is not")
-		<< " reachable." << endl);
-	if (reachable)
-		return false;
-	if (a.is_port_alias())
-		return false;
-	// and NO hierarchical parents are already aliased to process port
-	return !any_hierarchical_parent_is_aliased_to_port(a, f);
-}
-
-// Specialization for process_tag, defined in .cc unit.
-template <>
-bool
-__accept_deep_alias(const instance_alias_info<process_tag>&, const footprint&);
-
+// private to Object/common/cflat_args.cc
 template <class Tag>
 bool
-accept_deep_alias(const instance_alias_info<Tag>& a, const footprint& f) {
-	return __accept_deep_alias(a, f);
-}
+accept_deep_alias(const instance_alias_info<Tag>& a, const footprint& f);
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
