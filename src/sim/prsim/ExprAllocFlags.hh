@@ -108,7 +108,7 @@ struct ExprAllocFlags {
 
 	bool
 	any_optimize(void) const {
-		return flags | OPTIMIZE_FLAGS;
+		return flags & OPTIMIZE_FLAGS;
 	}
 
 	void
