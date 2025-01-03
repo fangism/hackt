@@ -76,9 +76,11 @@
 #include "util/what.hh"
 #include "util/stacktrace.hh"
 #include "util/static_trace.hh"
+#if __cplusplus < 201103L
 #include "util/compose.hh"
 #include "util/binders.hh"
 #include "util/dereference.hh"
+#endif
 
 #if ENABLE_STACKTRACE
 #include <iterator>
@@ -89,14 +91,16 @@
 namespace HAC {
 namespace entity {
 using std::string;
+#if __cplusplus < 201103L
 using std::_Select1st;
 using std::for_each;
-#include "util/using_ostream.hh"
-using util::multikey_generator;
 USING_UTIL_COMPOSE
 using util::dereference;
 using std::mem_fun_ref;
 using util::bind2nd_argval;
+#endif
+#include "util/using_ostream.hh"
+using util::multikey_generator;
 using util::multikey;
 using util::value_writer;
 using util::value_reader;
@@ -557,8 +561,15 @@ INSTANCE_ARRAY_CLASS::dump_unrolled_instances(ostream& o,
 		(df.show_namespace_owner ? "(ns) " : " ") <<
 		(df.show_leading_scope ? "(::)]" : "]");
 #endif
+#if __cplusplus >= 201103L
+        typename parent_type::key_dumper d(o, df);
+        for (const auto& elem : this->collection) {
+          d(elem);
+        }
+#else
 	for_each(this->collection.begin(), this->collection.end(),
 		typename parent_type::key_dumper(o, df));
+#endif
 	return o;
 }
 
@@ -705,6 +716,12 @@ INSTANCE_ARRAY_CLASS::resolve_indices(const const_index_list& l) const {
 	}
 	// else construct slice
 	list<pint_value_type> lower_list, upper_list;
+#if __cplusplus >= 201103L
+        for (const auto& index : l) {
+          lower_list.push_back(index->lower_bound());
+          upper_list.push_back(index->upper_bound());
+        }
+#else
 	transform(l.begin(), l.end(), back_inserter(lower_list),
 		unary_compose(
 			mem_fun_ref(&const_index::lower_bound),
@@ -717,6 +734,7 @@ INSTANCE_ARRAY_CLASS::resolve_indices(const const_index_list& l) const {
 			dereference<const_index_list::value_type>()
 		)
 	);
+#endif
 	return const_index_list(l,
 		compact_helper_type::is_compact_slice(
 			this->collection.get_key_index_map(), 
@@ -1031,9 +1049,16 @@ INSTANCE_ARRAY_CLASS::collect_port_aliases(port_alias_tracker& t) const {
 #endif
 	}
 #else
+#if __cplusplus >= 201103L
+        typename parent_type::scope_alias_collector c(t);
+        for (const auto& elem : collection) {
+          c(elem);
+        }
+#else
 	// mmm... functional
 	for_each(collection.begin(), collection.end(), 
 		typename parent_type::scope_alias_collector(t));
+#endif
 #endif
 }
 
@@ -1197,8 +1222,16 @@ INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 good_bool
 INSTANCE_ARRAY_CLASS::set_alias_connection_flags(
 		const connection_flags_type f) {
+#if __cplusplus >= 201103L
+        typename element_type::connection_flag_setter s(f);
+        for (auto& elem : this->collection) {
+          s(elem);
+        }
+        return s.status;
+#else
 	return for_each(this->collection.begin(), this->collection.end(), 
 		typename element_type::connection_flag_setter(f)).status;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

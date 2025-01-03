@@ -57,9 +57,11 @@
 #include "util/what.hh"
 #include "util/stacktrace.hh"
 #include "util/static_trace.hh"
+#if __cplusplus < 201103L
 #include "util/compose.hh"
 #include "util/binders.hh"
 #include "util/dereference.hh"
+#endif
 
 #if ENABLE_STACKTRACE
 #include <iterator>
@@ -73,10 +75,12 @@ using std::string;
 // using std::_Select1st;
 #include "util/using_ostream.hh"
 using util::multikey_generator;
+#if __cplusplus < 201103L
 USING_UTIL_COMPOSE
 using util::dereference;
 using std::mem_fun_ref;
 using util::bind2nd_argval;
+#endif
 using util::multikey;
 using util::value_writer;
 using util::value_reader;

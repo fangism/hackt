@@ -277,9 +277,17 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_top_level_references(
 	const footprint& fp(fpf ? *fpf->_footprint : top);
 	if (this->lookup_globally_allocated_indices(fp, tmp).good) {
 		ret.reserve(tmp.size());
+#if __cplusplus >= 201103L
+                for (const auto& elem : tmp) {
+                  ret.push_back(make_global_reference(
+                      size_t(traits_type::type_tag_enum_value),
+                      elem));
+                }
+#else
 		transform(tmp.begin(), tmp.end(), back_inserter(ret), 
 			std::bind1st(std::ptr_fun(&make_global_reference),
 				size_t(traits_type::type_tag_enum_value)));
+#endif
 		return good_bool(true);
 	} else {
 		return good_bool(false);

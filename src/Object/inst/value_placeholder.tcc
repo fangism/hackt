@@ -60,9 +60,11 @@
 #include "util/what.hh"
 #include "util/multikey_qmap.tcc"		// include "qmap.tcc"
 #include "util/persistent_object_manager.tcc"
+#if __cplusplus < 201103L
 #include "util/compose.hh"
 #include "util/binders.hh"
 #include "util/dereference.hh"
+#endif
 #include "util/indent.hh"
 #include "util/stacktrace.hh"
 
@@ -70,9 +72,11 @@
 namespace HAC {
 namespace entity {
 #include "util/using_ostream.hh"
+#if __cplusplus < 201103L
 USING_UTIL_COMPOSE
 using util::dereference;
 using std::mem_fun_ref;
+#endif
 using util::indent;
 using util::auto_indent;
 using util::write_value;

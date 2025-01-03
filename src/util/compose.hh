@@ -16,6 +16,10 @@
 #ifndef	__UTIL_COMPOSE_H__
 #define	__UTIL_COMPOSE_H__
 
+#if __cplusplus >= 201103L
+#error "Do not use this header in C++11 or newer.  Rewrite the code."
+#endif
+
 // #include "config.h"
 #include <functional>
 // note: <ext/functional> contains SGI extensions for some of these...

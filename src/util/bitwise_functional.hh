@@ -12,32 +12,50 @@
 // was debating injecting these into the std namespace...
 namespace util {
 //=============================================================================
+#if __cplusplus < 201103L
 using std::unary_function;
 using std::binary_function;
+#endif
 
 template <class _Tp>
-struct bitwise_and : public binary_function<_Tp, _Tp, _Tp> {
+struct bitwise_and
+#if __cplusplus < 201103L
+: public binary_function<_Tp, _Tp, _Tp>
+#endif
+{
 	_Tp
 	operator() (const _Tp& __x, const _Tp& __y) const
 		{ return __x & __y; }
 };	// end struct bitwise_and
 
 template <class _Tp>
-struct bitwise_or : public binary_function<_Tp, _Tp, _Tp> {
+struct bitwise_or
+#if __cplusplus < 201103L
+: public binary_function<_Tp, _Tp, _Tp>
+#endif
+{
 	_Tp
 	operator() (const _Tp& __x, const _Tp& __y) const
 		{ return __x | __y; }
 };	// end struct bitwise_or
 
 template <class _Tp>
-struct bitwise_xor : public binary_function<_Tp, _Tp, _Tp> {
+struct bitwise_xor
+#if __cplusplus < 201103L
+: public binary_function<_Tp, _Tp, _Tp>
+#endif
+{
 	_Tp
 	operator() (const _Tp& __x, const _Tp& __y) const
 		{ return __x ^ __y; }
 };	// end struct bitwise_xor
 
 template <class _Tp>
-struct bitwise_not : public unary_function<_Tp, _Tp> {
+struct bitwise_not
+#if __cplusplus < 201103L
+: public unary_function<_Tp, _Tp>
+#endif
+{
 	_Tp
 	operator() (const _Tp& __x) const
 		{ return ~__x; }

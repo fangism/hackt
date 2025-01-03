@@ -29,18 +29,22 @@
 #include "util/packed_array.tcc"
 #include "Object/inst/collection_traits.hh"
 #include "Object/inst/collection_pool.tcc"	// for lookup_index
+#if __cplusplus < 201103L
 #include "util/compose.hh"
 #include "util/dereference.hh"
+#endif
 #include "util/indent.hh"
 
 namespace HAC {
 namespace entity {
 #include "util/using_ostream.hh"
+#if __cplusplus < 201103L
 using std::transform;
 using std::mem_fun_ref;
 using std::back_inserter;
 USING_UTIL_COMPOSE
 using util::dereference;
+#endif
 using util::write_value;
 using util::read_value;
 using util::value_writer;
@@ -246,10 +250,17 @@ PORT_FORMAL_ARRAY_CLASS::get_corresponding_element(
  */
 PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
 ostream&
-PORT_FORMAL_ARRAY_CLASS::dump_unrolled_instances(ostream& o, 
+PORT_FORMAL_ARRAY_CLASS::dump_unrolled_instances(ostream& o,
 		const dump_flags& df) const {
-	for_each(this->begin(), this->end(), 
+#if __cplusplus >= 201103L
+  typename parent_type::key_dumper d(o, df);
+  for (const auto& elem : *this) {
+    d(elem);
+  }
+#else
+	for_each(this->begin(), this->end(),
 		typename parent_type::key_dumper(o, df));
+#endif
 	return o;
 }
 
@@ -326,6 +337,12 @@ PORT_FORMAL_ARRAY_CLASS::resolve_indices(const const_index_list& l) const {
 	// TODO: factor out value-independent code from template class
 	// else construct slice
 	list<pint_value_type> lower_list, upper_list;
+#if __cplusplus >= 201103L
+        for (const auto& index : l) {
+          lower_list.push_back(index->lower_bound());
+          upper_list.push_back(index->upper_bound());
+        }
+#else
 	transform(l.begin(), l.end(), back_inserter(lower_list),
 		unary_compose(
 			mem_fun_ref(&const_index::lower_bound),
@@ -338,6 +355,7 @@ PORT_FORMAL_ARRAY_CLASS::resolve_indices(const const_index_list& l) const {
 			dereference<const_index_list::value_type>()
 		)
 	);
+#endif
 	// first key is always all zeros in port packed arrays
 	const key_type lk(this->value_array.last_key());
 	size_t j = l_size;
@@ -562,9 +580,16 @@ PORT_FORMAL_ARRAY_CLASS::collect_port_aliases(port_alias_tracker& t) const {
 #endif
 	}
 #else
+#if __cplusplus >= 201103L
+        typename parent_type::scope_alias_collector collect(t);
+        for (const auto& elem : *this) {
+          collect(elem);
+        }
+#else
 	// mmm... functional
 	for_each(this->begin(), this->end(), 
 		typename parent_type::scope_alias_collector(t));
+#endif
 #endif
 }
 
@@ -600,8 +625,16 @@ PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
 good_bool
 PORT_FORMAL_ARRAY_CLASS::set_alias_connection_flags(
 		const connection_flags_type f) {
+#if __cplusplus >= 201103L
+  typename element_type::connection_flag_setter s(f);
+  for (auto& elem : *this) {
+    s(elem);
+  }
+  return s.status;
+#else
 	return for_each(this->begin(), this->end(),
 		typename element_type::connection_flag_setter(f)).status;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -643,8 +676,14 @@ PORT_FORMAL_ARRAY_CLASS::instantiate_actuals_from_formals(
 PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
 void
 PORT_FORMAL_ARRAY_CLASS::accept(alias_visitor& v) const {
+#if __cplusplus >= 201103L
+  for (const auto& elem : *this) {
+    elem.accept(v);
+  }
+#else
 	for_each(this->begin(), this->end(),
 		bind2nd_argval(mem_fun_ref(&element_type::accept), v));
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -653,8 +692,15 @@ void
 PORT_FORMAL_ARRAY_CLASS::collect_transient_info_base(
 		persistent_object_manager& m) const {
 	parent_type::collect_transient_info_base(m);
+#if __cplusplus >= 201103L
+        typename parent_type::element_collector c(m);
+        for (const auto& elem : *this) {
+          c(elem);
+        }
+#else
 	for_each(this->begin(), this->end(),
 		typename parent_type::element_collector(m));
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -683,8 +729,15 @@ PORT_FORMAL_ARRAY_CLASS::write_object(const footprint& fp,
 	const key_type& k(this->value_array.size());
 	value_writer<key_type> write_key(f);
 	write_key(k);
+#if __cplusplus >= 201103L
+	typename parent_type::element_writer w(fp, m, f);
+        for (const auto& elem : *this) {
+          w(elem);
+        }
+#else
 	const const_iterator b(this->begin()), e(this->end());
 	for_each(b, e, typename parent_type::element_writer(fp, m, f));
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -692,8 +745,15 @@ PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
 void
 PORT_FORMAL_ARRAY_CLASS::write_connections(
 		const collection_pool_bundle_type& m, ostream& f) const {
+#if __cplusplus >= 201103L
+        typename parent_type::connection_writer c(m, f);
+        for (const auto& elem : *this) {
+          c(elem);
+        }
+#else
 	for_each(this->begin(), this->end(), 
 		typename parent_type::connection_writer(m, f));
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -714,9 +774,16 @@ PORT_FORMAL_ARRAY_CLASS::load_object(footprint& fp,
 	read_key(k);
 	this->value_array.resize(k);
 }
+#if __cplusplus >= 201103L
+	typename parent_type::element_loader l(fp, m, f, never_ptr<const this_type>(this));
+        for (auto& elem : *this) {
+          l(elem);
+        }
+#else
 	const iterator b(this->begin()), e(this->end());
 	for_each(b, e, typename parent_type::element_loader(
 			fp, m, f, never_ptr<const this_type>(this)));
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -724,8 +791,15 @@ PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
 void
 PORT_FORMAL_ARRAY_CLASS::load_connections(
 		const collection_pool_bundle_type& m, istream& f) {
+#if __cplusplus >= 201103L
+        typename parent_type::connection_loader l(m, f);
+        for (auto& elem : *this) {
+          l(elem);
+        }
+#else
 	for_each(this->begin(), this->end(), 
 		typename parent_type::connection_loader(m, f));
+#endif
 }
 
 //=============================================================================

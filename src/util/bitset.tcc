@@ -55,7 +55,14 @@ bitset<NB>::__find_next_from_whole_word(const size_t w) const {
 	const const_word_iterator b(this->word_begin()), e(this->word_end());
 	const const_word_iterator
 		f(std::find_if(b +w, e,
-			bind2nd(std::not_equal_to<word_type>(), word_type(0))));
+#if __cplusplus >= 201103L
+                        [](const word_type& w) {
+                          return w != word_type(0);
+                        }
+#else
+			bind2nd(std::not_equal_to<word_type>(), word_type(0))
+#endif
+                        ));
 	if (f != e) {
 		// found a non-zero word
 		return size_t(std::distance(b, f)) * bits_per_word

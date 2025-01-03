@@ -7,6 +7,10 @@
 #ifndef	__UTIL_DEREFERENCE_H__
 #define	__UTIL_DEREFERENCE_H__
 
+#if __cplusplus >= 201103L
+#error "Do not use this header in C++11 or newer.  Rewrite the code."
+#endif
+
 #include <functional>
 #include "util/memory/pointer_traits.hh"
 

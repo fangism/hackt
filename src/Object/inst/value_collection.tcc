@@ -59,9 +59,11 @@
 #include "util/what.hh"
 #include "util/multikey_map.tcc"
 #include "util/persistent_object_manager.tcc"
+#if __cplusplus < 201103L
 #include "util/compose.hh"
 #include "util/binders.hh"
 #include "util/dereference.hh"
+#endif
 #include "util/indent.hh"
 #include "util/stacktrace.hh"
 
@@ -69,9 +71,11 @@
 namespace HAC {
 namespace entity {
 #include "util/using_ostream.hh"
+#if __cplusplus < 201103L
 USING_UTIL_COMPOSE
 using util::dereference;
 using std::mem_fun_ref;
+#endif
 using util::indent;
 using util::auto_indent;
 using util::write_value;
@@ -343,7 +347,14 @@ VALUE_ARRAY_CLASS::is_partially_unrolled(void) const {
 VALUE_ARRAY_TEMPLATE_SIGNATURE
 ostream&
 VALUE_ARRAY_CLASS::dump_unrolled_values(ostream& o) const {
+#if __cplusplus >= 201103L
+	key_value_dumper d(o);
+        for (const auto& elem : collection) {
+          d(elem);
+        }
+#else
 	for_each(collection.begin(), collection.end(), key_value_dumper(o));
+#endif
 	return o;
 }
 
@@ -417,6 +428,12 @@ VALUE_ARRAY_CLASS::resolve_indices(const const_index_list& l) const {
 	}
 	// else construct slice
 	list<pint_value_type> lower_list, upper_list;
+#if __cplusplus >= 201103L
+        for (const auto& index : l) {
+          lower_list.push_back(index->lower_bound());
+          upper_list.push_back(index->upper_bound());
+        }
+#else
 	transform(l.begin(), l.end(), back_inserter(lower_list), 
 		unary_compose(
 			mem_fun_ref(&const_index::lower_bound), 
@@ -429,6 +446,7 @@ VALUE_ARRAY_CLASS::resolve_indices(const const_index_list& l) const {
 			dereference<count_ptr<const const_index> >()
 		)
 	);
+#endif
 	return const_index_list(l, 
 		collection.is_compact_slice(lower_list, upper_list));
 }
