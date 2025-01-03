@@ -94,7 +94,7 @@ context::definition_frame<DefType>::definition_frame(context& c,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class DefType>
-context::definition_frame<DefType>::~definition_frame() {
+context::definition_frame<DefType>::~definition_frame<DefType>() {
 	_context.close_definition<DefType>();
 }
 
