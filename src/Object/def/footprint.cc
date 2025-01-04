@@ -192,8 +192,6 @@ footprint_base<Tag>::__append_private_map_entry(const this_type& f,
 template <class Tag>
 good_bool
 footprint_base<Tag>::__set_channel_footprints(void) {
-	typedef	global_entry_pool<Tag>		global_pool_type;
-	// typedef	typename global_pool_type::iterator	pool_iterator;
 	STACKTRACE_VERBOSE;
 {
 	// this covers top-level channels only

@@ -196,7 +196,7 @@ clean-header-deps:
 echo-header-depbases: force
 	@$(ECHO) $(HEADER_TCC_DEPBASES)
 
-# cvsignore targets
+# gitignore targets
 AUTO_IGNORE += headers_deps.make
 
 # output becomes mangled...

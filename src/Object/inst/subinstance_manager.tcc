@@ -32,18 +32,9 @@ subinstance_manager::__unroll_port_instances(
 		const collection_interface<Tag>& inst, 
 		const relaxed_actuals_type& a,
 		target_context& c) {
-	typedef	collection_interface<Tag>	collection_type;
 	typedef	instance_collection<Tag>	canonical_collection_type;
-	typedef	typename canonical_collection_type::collection_type_manager_parent_type
-						type_manager_type;
-	typedef	typename canonical_collection_type::instance_collection_parameter_type
-					instance_collection_parameter_type;
-	typedef	typename canonical_collection_type::type_ref_ptr_type
-						type_ref_ptr_type;
 	typedef	typename canonical_collection_type::resolved_type_ref_type
 						resolved_type_ref_type;
-	typedef	typename type_ref_ptr_type::element_type
-						type_ref_pointee_type;
 	STACKTRACE_VERBOSE;
 	if (!this->empty()) {
 		cerr << "Error: ports have already been instantiated!" << endl;

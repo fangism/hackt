@@ -57,7 +57,6 @@ template <class Command>
 size_t
 command_category<Command>::register_command(const Command& c) {
 	STACKTRACE_VERBOSE;
-	typedef	typename command_map_type::mapped_type	mapped_type;
 	typedef	typename command_map_type::value_type	value_type;
 	typedef	typename command_map_type::iterator	iterator;
 	const std::pair<iterator, bool>

@@ -136,7 +136,6 @@ template <class Command>
 size_t
 command_registry<Command>::register_category(command_category_type& c) {
 	STACKTRACE_VERBOSE;
-	typedef	typename category_map_type::mapped_type		mapped_type;
 	typedef	typename category_map_type::value_type		value_type;
 	typedef	typename category_map_type::iterator		iterator;
 	const std::pair<iterator, bool>
@@ -163,7 +162,6 @@ command_registry<Command>::register_command(void) {
 	const Command temp(command_class::name, command_class::brief,
 		&cat, &command_class::main, 
 		&command_class::usage, &Completer<command_class>);
-	typedef	typename command_map_type::mapped_type		mapped_type;
 	typedef	typename command_map_type::value_type		value_type;
 	typedef	typename command_map_type::iterator		iterator;
 	const string& s(command_class::name);
@@ -200,7 +198,6 @@ command_registry<Command>::list_categories(ostream& o) {
 template <class Command>
 void
 command_registry<Command>::list_commands(ostream& o) {
-	typedef	typename category_map_type::const_iterator	const_iterator;
 	o << "available commands, by category: " << endl;
 	category_iterator i(category_map.begin());
 	const category_iterator e(category_map.end());
@@ -828,7 +825,6 @@ command_registry<Command>::command_generator(const char* _text, int state) {
 template <class Command>
 char**
 command_registry<Command>::completion(const char* text, int start, int end) {
-	typedef	typename command_map_type::const_iterator	const_iterator;
 #if 0
 	// for debugging/development
 	cout << "[text=" << text << ", start=" << start <<

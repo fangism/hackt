@@ -384,21 +384,21 @@ CLEANSUBDIRS += $(UTIL_DIRS)
 # oddly, this dir gets missed during distclean
 DISTCLEANDIRS += util/progs/$(LTDL_OBJDIR)
 
-util/.cvsignore: .cvsignore
+util/.gitignore: .gitignore
 	$(CP) $? $@
-util/STL/.cvsignore: util/.cvsignore
+util/STL/.gitignore: util/.gitignore
 	$(CP) $? $@
-util/lang/.cvsignore: util/.cvsignore
+util/lang/.gitignore: util/.gitignore
 	$(CP) $? $@
-util/lang/lexyacc/.cvsignore: util/.cvsignore
+util/lang/lexyacc/.gitignore: util/.gitignore
 	$(CP) $? $@
-util/lang/CX/.cvsignore: util/.cvsignore
+util/lang/CX/.gitignore: util/.gitignore
 	$(CP) $? $@
-util/memory/.cvsignore: util/.cvsignore
+util/memory/.gitignore: util/.gitignore
 	$(CP) $? $@
-util/numeric/.cvsignore: util/.cvsignore
+util/numeric/.gitignore: util/.gitignore
 	$(CP) $? $@
-util/progs/.cvsignore: util/.cvsignore
+util/progs/.gitignore: util/.gitignore
 	$(CP) $? $@
 
 util/lang/CX/cx-parse.yy: util/lang/CX/cx-parse.yy.in
@@ -406,10 +406,10 @@ util/lang/CX/cx-parse.yy: util/lang/CX/cx-parse.yy.in
 
 # files to ignore in subdirectories
 # can we generate this from suffix appending?
-SUBDIR_CVSIGNORE += \
-	util/.cvsignore util/STL/.cvsignore \
-	util/lang/.cvsignore util/lang/lexyacc/.cvsignore \
-	util/lang/CX/.cvsignore \
-	util/memory/.cvsignore util/numeric/.cvsignore \
-	util/progs/.cvsignore
+SUBDIR_GITIGNORE += \
+	util/.gitignore util/STL/.gitignore \
+	util/lang/.gitignore util/lang/lexyacc/.gitignore \
+	util/lang/CX/.gitignore \
+	util/memory/.gitignore util/numeric/.gitignore \
+	util/progs/.gitignore
 

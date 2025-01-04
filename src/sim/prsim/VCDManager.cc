@@ -16,7 +16,7 @@
 #include "Object/def/footprint.hh"
 #include "Object/global_entry.hh"
 #include "Object/interfaces/VCDwriter.hh"
-#include "cvstag.h"
+#include "gitrev.h"
 #include "util/indent.hh"
 #include "util/stacktrace.hh"
 
@@ -51,7 +51,7 @@ if (!good()) {
 	std::time(&tm);
 	*trace_file << "$date\n\t" << std::ctime(&tm) << "$end\n" <<
 		"$version\n\thacprsim " << PACKAGE_VERSION
-		<< " (" << CVSTAG << ")\n$end\n" <<
+		<< " (" << GITREV << ")\n$end\n" <<
 		"$timescale\n\t1ps\n$end\n";
 }
 	// need to wrap everything in a top-level module to get

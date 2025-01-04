@@ -34,8 +34,6 @@ nonmeta_context_base::lookup_nonmeta_reference_global_index(
 		const reference_type& r) const {
 	typedef	typename reference_type::traits_type	traits_type;
 	typedef	typename traits_type::tag_type		Tag;
-	typedef	typename traits_type::instance_collection_generic_type
-					instance_collection_generic_type;
 	// FIXME: this assumes is not a member reference!
 	STACKTRACE_VERBOSE;
 #if !NONMETA_MEMBER_REFERENCES

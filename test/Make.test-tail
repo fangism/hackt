@@ -268,11 +268,11 @@ echo-hackt: force
 CLEANFILES += $(CHECK_SUMMARIES)
 
 
-DISTCLEANFILES += local.cvsignore
+DISTCLEANFILES += local.gitignore
 
 ALL_LOCAL =
-if AUTO_CVSIGNORE
-ALL_LOCAL += $(srcdir)/.cvsignore
+if AUTO_GITIGNORE
+ALL_LOCAL += $(srcdir)/.gitignore
 endif
 
 all-local: $(ALL_LOCAL)
@@ -280,16 +280,16 @@ all-local: $(ALL_LOCAL)
 DISTHOOK_CLEANFILES += $(EMPTY_CFLAT_PRS)
 
 # consider using CLEANFILES
-AUTO_IGNORE += local.cvsignore \
+AUTO_IGNORE += local.gitignore \
 	$(CHECK_SUMMARIES)
 
-if AUTO_CVSIGNORE
-# we generate all the local.cvsignore's in the test directories
-local.cvsignore: $(TEST_SRCDIR)/test.cvsignore
+if AUTO_GITIGNORE
+# we generate all the local.gitignore's in the test directories
+local.gitignore: $(TEST_SRCDIR)/test.gitignore
 	$(CP) $? $@
 
 # additional dependence
-$(srcdir)/.cvsignore: $(TEST_SRCDIR)/Make.test-tail
+$(srcdir)/.gitignore: $(TEST_SRCDIR)/Make.test-tail
 endif
 
 # clean tests only

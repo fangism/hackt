@@ -264,8 +264,6 @@ META_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_indices(
 		const footprint& top, 
 		vector<size_t>& indices) const {
 	STACKTRACE_VERBOSE;
-	typedef	vector<size_t>				indices_type;
-	typedef	typename alias_collection_type::const_iterator	const_iterator;
 	alias_collection_type aliases;
 	const unroll_context dummy(&top, &top);
 	// reminder: call to unroll_references_packed is virtual

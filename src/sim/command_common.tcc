@@ -116,7 +116,6 @@ if (a.size() < 3) {
 	usage(cerr << "usage: ");
 	return command_type::SYNTAX;
 } else {
-	typedef	string_list::const_iterator	const_iterator;
 	string_list ac(a);
 	ac.pop_front();		// drop the command
 	const string al(ac.front());
@@ -613,7 +612,6 @@ if (a.size() > 2) {
 	usage(cerr << "usage: ");
 	return command_type::SYNTAX;
 } else {
-	typedef	string_list::const_iterator	const_iterator;
 	string_list ac(a);
 	ac.pop_front();		// drop the command
 	// verify that directory is valid, else undo cd
@@ -660,7 +658,6 @@ if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return command_type::SYNTAX;
 } else {
-	typedef	string_list::const_iterator	const_iterator;
 	string_list ac(a);
 	ac.pop_front();		// drop the command
 	// verify that directory is valid, else undo cd

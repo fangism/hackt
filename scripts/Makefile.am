@@ -4,7 +4,7 @@
 include $(top_srcdir)/Make.stddef
 
 # empty
-local.cvsignore:
+local.gitignore:
 	$(TOUCH) $@
 
 PRECONFIGURED_TESTSCRIPTS = \
@@ -14,7 +14,7 @@ POSTCONFIGURED_TESTSCRIPTS = \
 	$(PRECONFIGURED_TESTSCRIPTS:.in=)
 
 CLEANFILES +=
-DISTCLEANFILES += local.cvsignore $(POSTCONFIGURED_TESTSCRIPTS)
+DISTCLEANFILES += local.gitignore $(POSTCONFIGURED_TESTSCRIPTS)
 AUTO_IGNORE += $(DISTCLEANFILES)
 EXTRA_DIST += $(PRECONFIGURED_TESTSCRIPTS) \
 	configure-gcc4.sh \

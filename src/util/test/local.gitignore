@@ -1,4 +1,4 @@
-.cvsignore
+.gitignore
 .deps
 .libs
 .gdb_history

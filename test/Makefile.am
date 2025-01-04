@@ -93,7 +93,7 @@ CLEANFILES += check-summaries.tar.bz2
 
 DISTCLEANFILES += $(TESTS) $(POSTCONFIGURED_TESTSCRIPTS)
 
-EXTRA_DIST += ChangeLog README TODO test.cvsignore \
+EXTRA_DIST += ChangeLog README TODO test.gitignore \
 	Make.test-head Make.test-tail
 
 # automatically distributed, via configure sources:

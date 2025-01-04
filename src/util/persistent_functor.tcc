@@ -25,7 +25,6 @@ using std::for_each;
 template <class P, class T>
 void
 write_persistent_sequence(const P& m, ostream& o, const T& t) {
-	typedef	typename T::value_type		value_type;
 	const size_t s = t.size();
 	write_value(o, s);
 	for_each(t.begin(), t.end(), foreign_persistent_writer_ref<P>(m, o));
@@ -38,7 +37,6 @@ write_persistent_sequence(const P& m, ostream& o, const T& t) {
 template <class P, class T>
 void
 write_persistent_array(const P& m, ostream& o, const T& t) {
-	typedef	typename T::value_type		value_type;
 	const size_t s = t.size();
 	write_value(o, s);
 	size_t i = 0;
@@ -60,7 +58,6 @@ read_persistent_sequence_in_place(const P& m, istream& i, T& t) {
 	size_t s = 0;
 	read_value(i, s);
 	INVARIANT(t.size() >= s);
-	typedef	typename T::value_type		value_type;
 	typedef	typename T::iterator		iterator;
 	iterator j(t.begin());
 	size_t k = 0;
@@ -104,7 +101,6 @@ read_persistent_sequence_prealloc(const persistent_object_manager& m,
 template <class P, class T>
 void
 read_persistent_sequence_resize(const P& m, istream& i, T& t) {
-	typedef	typename T::value_type		value_type;
 	size_t s;
 	read_value(i, s);
 	t.resize(s);

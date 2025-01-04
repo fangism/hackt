@@ -393,7 +393,6 @@ collection_index_entry
 lookup_collection_pool_index_entry(
 		const collection_pool<Value>& p, const Value& v) {
 	typedef	Value			value_type;
-	typedef	collection_pool<value_type>	pool_type;
 	collection_index_entry ret;
 	ret.meta_type = value_type::traits_type::type_tag_enum_value;
 	ret.pool_type = collection_traits<value_type>::ENUM_VALUE;

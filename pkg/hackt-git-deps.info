@@ -1,7 +1,7 @@
-Package: hackt-cvs-deps
-Version: 20100105
+Package: hackt-git-deps
+Version: 20250103
 Revision: 1
-Description: Build-deps for HACKT (CVS)
+Description: Build-deps for HACKT (git)
 Type: bundle
 Maintainer: David Fang <fangism@users.sourceforge.net>
 
@@ -20,15 +20,15 @@ BuildDepends: <<
   tetex		(>= 3.0-1)
 <<
 
-Homepage: http://www.csl.cornell.edu/~fang/hackt/
+Homepage: http://github.com/fangism/hackt/
 DescDetail: <<
 Installing this bundle will install all prerequisites for building HACKT
-from a CVS checkout.  
+from a git checkout.  
 Dependencies are a strict super-set of hackt-dist-deps.
 <<
 
 DescPackaging: <<
-Fink bundle package based on version tagged HACKT-00-01-04-main-00-81-41.  
+Fink bundle package based on git revisions after 2024.
 Maintainence: since build-deps are not recursive, keep this synchronized
 with the hackt-dist-deps.
 <<

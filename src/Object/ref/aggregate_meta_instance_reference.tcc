@@ -198,11 +198,6 @@ AGGREGATE_META_INSTANCE_REFERENCE_CLASS::unroll_references_packed(
 	typedef	typename coll_coll_type::iterator	coll_coll_iterator;
 	typedef	typename coll_coll_type::const_iterator
 						const_coll_coll_iterator;
-	typedef	typename alias_collection_type::key_type
-							key_type;
-		// should be multikey_index_type
-	typedef	typename alias_collection_type::iterator
-							target_iterator;
 	typedef typename alias_collection_type::value_type
 							alias_ptr_type;
 	// collect the collection of alias-collections from sub-references

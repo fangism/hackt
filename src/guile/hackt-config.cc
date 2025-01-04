@@ -36,10 +36,10 @@ HAC_GUILE_DEFINE(wrap_package_string, FUNC_NAME, 0, 0, 0, (void),
 #undef	FUNC_NAME
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#define	FUNC_NAME "cvs-tag"
-HAC_GUILE_DEFINE(wrap_cvstag, FUNC_NAME, 0, 0, 0, (void), 
-"Returns the CVS tag of the build.") {
-	return make_scm(config::cvstag);
+#define	FUNC_NAME "git-rev"
+HAC_GUILE_DEFINE(wrap_gitrev, FUNC_NAME, 0, 0, 0, (void), 
+"Returns the git revision of the build.") {
+	return make_scm(config::gitrev);
 }
 #undef	FUNC_NAME
 

@@ -496,7 +496,6 @@ read_map(istream& f, M& m) {
 	typedef	M	map_type;
 	typedef	typename map_type::key_type	key_type;
 	typedef	typename map_type::mapped_type	mapped_type;
-	typedef	typename map_type::const_iterator	const_iterator;
 	typedef	pair<key_type, mapped_type>	pair_type;
 	// NOTE: pair_type removed const on key_type
 	INVARIANT(f.good());

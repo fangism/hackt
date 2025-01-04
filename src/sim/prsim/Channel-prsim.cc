@@ -2091,7 +2091,6 @@ struct __node_setter :
 void
 channel::reset(vector<env_event_type>& events) {
 	STACKTRACE_VERBOSE;
-	typedef	State::node_type		node_type;
 	if (is_sourcing()) {
 		// reset data rails to all 0s (arbitrary), just not X.
 		// even for bundled-data
@@ -2842,9 +2841,7 @@ channel::__node_why_not(const State& s, ostream& o, const node_index_type ni,
 		const size_t limit, const bool dir, 
 		const bool why_not, const bool verbose, 
 		node_set_type& u, node_set_type& v) const {
-	typedef	State::node_type		node_type;
 	const indent __ind_outer(o, verbose ? " " : "");
-	// const node_type& n(s.get_node(ni));
 if (is_sourcing()) {
 	if (stopped()) {
 	o << auto_indent << "(channel " << name << " is stopped.)" << endl;
@@ -3053,7 +3050,6 @@ ostream&
 channel::__node_why_X(const State& s, ostream& o, const node_index_type ni, 
 		const size_t limit, const bool verbose, 
 		node_set_type& u, node_set_type& v) const {
-	typedef	State::node_type		node_type;
 	const indent __ind_outer(o, verbose ? " " : "");
 if (stopped()) {
 	// TODO: this should really only be printed in cases below
@@ -3107,7 +3103,6 @@ channel::__node_why_X_data_rails(const State& s, ostream& o,
 		const bool active, 
 		const size_t limit, const bool verbose, 
 		node_set_type& u, node_set_type& v) const {
-	typedef	State::node_type		node_type;
 	const size_t _bundles = bundles();
 	const size_t _radix = radix();
 	string ind_str(verbose ? "" : "  ");
@@ -3294,7 +3289,6 @@ channel::process_node(const State& s, const node_index_type ni,
 		const value_enum prev, const value_enum next, 
 		vector<env_event_type>& new_events) throw(channel_exception) {
 	STACKTRACE_BRIEF;
-	typedef	State::node_type	node_type;
 #if ENABLE_STACKTRACE
 	cout << s.get_node_canonical_name(ni) << " : " << size_t(prev) << 
 		" -> " << size_t(next) << endl;
@@ -3919,7 +3913,6 @@ if (is_sinking()) {
 void
 channel::resume(const State& s, vector<env_event_type>& events) {
 	STACKTRACE_VERBOSE;
-	typedef	State::node_type		node_type;
 	flags &= ~CHANNEL_STOPPED;
 	static const char ambiguous_data[] = 
 "Warning: the current state of data rails is neither valid nor neutral, "

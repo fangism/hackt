@@ -370,9 +370,6 @@ if (this->_is_concatenation) {
 		INVARIANT(sub.back()->dimensions() == this->dimensions());
 	}
 	// evaluate trailing dimensions (after 1st must match)
-	// typedef	typename const_collection_type::key_type	array_size_type;
-	// typedef	vector<array_size_type>			size_array_type;
-	typedef	size_array_type::const_iterator	size_iterator;
 	typedef	typename sub_type::const_iterator	const_sub_iterator;
 	size_array_type sub_sizes;
 	const const_sub_iterator sb(sub.begin()), se(sub.end());
@@ -456,8 +453,6 @@ if (this->_is_concatenation) {
 	}
 	// all dimensions must match for array construction
 	typedef	typename const_collection_type::key_type	array_size_type;
-	// typedef	vector<array_size_type>			size_array_type;
-	typedef	typename size_array_type::const_iterator	size_iterator;
 	typedef	typename sub_type::const_iterator	const_sub_iterator;
 	size_array_type sub_sizes;
 	const const_sub_iterator sb(sub.begin()), se(sub.end());
@@ -513,11 +508,6 @@ AGGREGATE_META_VALUE_REFERENCE_CLASS::unroll_lvalue_references(
 	typedef	typename coll_coll_type::iterator	coll_coll_iterator;
 	typedef	typename coll_coll_type::const_iterator
 						const_coll_coll_iterator;
-	typedef	typename value_reference_collection_type::key_type
-							key_type;
-		// should be multikey_index_type
-	typedef	typename value_reference_collection_type::iterator
-							target_iterator;
 	coll_coll_type temp(subreferences.size());
 {
 	coll_coll_iterator ci(temp.begin());
@@ -618,7 +608,6 @@ AGGREGATE_META_VALUE_REFERENCE_CLASS::substitute_default_positional_parameters(
 		const template_formals_manager& f, 
 		const dynamic_param_expr_list& e, 
 		const count_ptr<const expr_base_type>& p) const {
-	typedef	count_ptr<const expr_base_type>		return_type;
 	INVARIANT(p == this);
 	const count_ptr<this_type> temp(new this_type);
 	NEVER_NULL(temp);

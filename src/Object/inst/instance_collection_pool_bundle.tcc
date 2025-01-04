@@ -252,7 +252,6 @@ instance_collection_pool_bundle<Tag>::lookup_collection(
 template <class Tag>
 typename instance_collection_pool_bundle<Tag>::collection_interface_type*
 instance_collection_pool_bundle<Tag>::read_pointer(istream& i) const {
-	typedef	collection_interface_type*	return_type;
 	STACKTRACE_VERBOSE;
 	STACKTRACE_THIS
 	unsigned char ct;

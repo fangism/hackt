@@ -12,7 +12,7 @@
 #include "config.h"
 
 // various configure-generated and make-generated headers
-#include "cvstag.h"
+#include "gitrev.h"
 #include "builddate.h"
 #include "cxx_version.h"
 #include "cxxflags.h"
@@ -37,7 +37,7 @@ using util::readline_wrapper;
 // static global strings
 
 const char config::package_string[] = PACKAGE_STRING;
-const char config::cvstag[] = CVSTAG;
+const char config::gitrev[] = GITREV;
 const char config::cxx_version[] = CXX_VERSION;
 const char config::am_cppflags[] = AM_CPPFLAGS;
 const char config::am_cxxflags[] = AM_CXXFLAGS;
@@ -62,8 +62,8 @@ config::package(ostream& o) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-config::cvs(ostream& o) {
-	return o << "CVS Tag: " << cvstag;
+config::git(ostream& o) {
+	return o << "git revision: " << gitrev;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -145,7 +145,7 @@ config::guile(ostream& o) {
 ostream&
 config::dump_all(ostream& o) {
 	package(o) << endl;
-	cvs(o) << endl;
+	git(o) << endl;
 	configure_params(o) << endl;
 	buildhost(o) << endl;
 	cxx(o) << endl;

@@ -393,8 +393,6 @@ PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
 bad_bool
 PORT_ACTUAL_COLLECTION_CLASS::unroll_aliases(const multikey_index_type& l, 
 		const multikey_index_type& u, alias_collection_type& a) const {
-	typedef	typename alias_collection_type::key_type
-						collection_key_type;
 	typedef	typename alias_collection_type::iterator
 						alias_collection_iterator;
 	typedef	multikey_index_type 		key_type;

@@ -439,8 +439,6 @@ bad_bool
 PORT_FORMAL_ARRAY_CLASS::unroll_aliases(const multikey_index_type& l, 
 		const multikey_index_type& u, alias_collection_type& a) const {
 	STACKTRACE_VERBOSE;
-	typedef	typename alias_collection_type::key_type
-						collection_key_type;
 	typedef	typename alias_collection_type::iterator
 						alias_collection_iterator;
 	const key_type lower(l), upper(u);

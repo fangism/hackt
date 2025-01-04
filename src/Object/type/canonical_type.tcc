@@ -145,7 +145,6 @@ if (canonical_definition_ptr) {
 CANONICAL_TYPE_TEMPLATE_SIGNATURE
 count_ptr<const typename CANONICAL_TYPE_CLASS::type_reference_type>
 CANONICAL_TYPE_CLASS::make_type_reference(void) const {
-	typedef	count_ptr<const type_reference_type>	return_type;
 	return canonical_definition_ptr->
 		make_canonical_fundamental_type_reference(
 			this->get_template_params())

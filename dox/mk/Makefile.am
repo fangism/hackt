@@ -9,10 +9,10 @@ include $(top_srcdir)/Make.stddef
 EXTRA_DIST += Make.latex scantexdepend.awk \
 	updatefig.awk updatefig.mk
 
-AUTO_IGNORE += local.cvsignore
-DISTCLEANFILES += local.cvsignore
+AUTO_IGNORE += local.gitignore
+DISTCLEANFILES += local.gitignore
 
-local.cvsignore: $(srcdir)/../local.cvsignore
+local.gitignore: $(srcdir)/../local.gitignore
 	$(CP) $< $@
 
 include $(top_srcdir)/Make.global

@@ -539,7 +539,7 @@ if (a.size() > 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
-	typedef	State::time_type		time_type;
+	// typedef	State::time_type		time_type;
 	size_t i;		// the number of events to advance
 		// not necessarily == the number of discrete events
 	if (a.size() == 2) {
@@ -740,7 +740,7 @@ if (a.size() != 1) {
 	return Command::SYNTAX;
 } else {
 //	typedef	State::node_type		node_type;
-	typedef	State::time_type		time_type;
+//	typedef	State::time_type		time_type;
 //	time_type time = s.time();		// unused
 	s.resume();	// clear STOP flag
 	try {

@@ -40,8 +40,8 @@ static
 inline
 bool
 __accept_deep_alias(const instance_alias_info<Tag>& a, const footprint& f) {
-        typedef class_traits<Tag>               traits_type;
 #if ENABLE_STACKTRACE
+        typedef class_traits<Tag>               traits_type;
         static const char* tag_name = traits_type::tag_name;
 #endif
         const bool reachable = a.get_supermost_collection()

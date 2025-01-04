@@ -36,7 +36,7 @@ if test "$AWK" = "mawk" ; then
 You can override the tool by passing AWK=... to the configure options.
   ])
 fi
-HACKT_AUTO_CVSIGNORE
+HACKT_AUTO_GITIGNORE
 dnl true if building in srcdir
 AM_CONDITIONAL(SRCDIR_BUILD, test "$srcdir" = ".")
 
@@ -45,7 +45,7 @@ AC_PATH_PROG(SH_PATH, sh)
 dnl AM_TRUE is always true, needed to fake conditional Makefile
 AM_CONDITIONAL(ALWAYS_TRUE, true)
 
-HACKT_SHELL_PIPEFAIL
+HACKT_MAKE_SHELL_PIPEFAIL
 
 # CALLMAKE is intended for shell scripts' invocations of make
 # NOT intended for direct use in configured Makefiles, because
@@ -57,9 +57,7 @@ AC_PROG_LN_S
 AC_CHECK_PROG([CAT], cat, cat)
 AC_CHECK_PROG([CPP_TRADITIONAL], cpp, cpp)
 AC_CHECK_PROG([CHMOD], chmod, chmod)
-# CVS is not required, but will enable some handy targets
-AC_CHECK_PROG([CVS], cvs, cvs)
-AM_CONDITIONAL(HAVE_CVS, test -n "$CVS")
+# git is not required, but will enable some handy targets
 AC_CHECK_PROG([GIT], git, git)
 AM_CONDITIONAL(HAVE_GIT, test -n "$GIT")
 AC_CHECK_PROG([DATE], date, date)

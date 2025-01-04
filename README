@@ -20,12 +20,11 @@ from the root directory to run the test suite on the built executables.
 ===============================================================================
 Requirements and Portability:
 
-To maximize compatibility, the HACKT project is build with the strictest
-compiler settings: strictly conforming to the ISO C++ 1998 standard (c++98), 
+To maximize compatibility, the HACKT project is build with strict
+compiler settings: strictly conforming to the ISO C++ 2011 standard (c++11), 
 in particular, GNU extensions are rejected by the -pedantic-error flag.  
-In the future, we may decided to upgrade the standard to the C++0x
-standard, which is currently in review.  (Update: we have successfully built 
-against g++-4.3 -std=c++0x, which is experimental.)
+In the future, we expect to gradually migrate to newer revisions
+of the standard C++.
 
 The following compilers are known to DIE a horrible death and should NOT
 be used to compile this project:

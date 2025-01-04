@@ -40,8 +40,6 @@ internal_aliases_policy<true>::connect(AliasType& _alias) {
 						container_type;
 	typedef	typename container_type::instance_collection_parameter_type
 						canonical_type_type;
-	typedef	typename canonical_type_type::canonical_definition_type
-						definition_type;
 	STACKTRACE_VERBOSE;
 	const container_type& c(_alias.container->get_canonical_collection());
 	const canonical_type_type _type(_alias.complete_type_actuals(c));

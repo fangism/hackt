@@ -23,7 +23,7 @@ EXTRA_DIST += README \
 	TODO
 
 # just re-use parent srcdir's template
-local.cvsignore: $(srcdir)/../local.cvsignore
+local.gitignore: $(srcdir)/../local.gitignore
 	$(LN_SF) $< $@
 
 include $(top_srcdir)/Make.global

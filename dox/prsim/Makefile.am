@@ -86,14 +86,7 @@ EXTRA_DIST += $(hacprsim_info_DEPS)
 hacprsim.dvi hacprsim.pdf hacprsim.html $(srcdir)/hacprsim.info: \
 	$(hacprsim_info_DEPS)
 
-$(srcdir)/cmd/.gitignore: $(srcdir)/cmd/.cvsignore
-	$(GITIGNORE_TEXI_SCRIPT)
-$(srcdir)/opt/.gitignore: $(srcdir)/opt/.cvsignore
-	$(GITIGNORE_TEXI_SCRIPT)
-$(srcdir)/vpi/.gitignore: $(srcdir)/vpi/.cvsignore
-	$(GITIGNORE_TEXI_SCRIPT)
-
-cvsignore-local: \
+gitignore-local: \
 	$(srcdir)/cmd/.gitignore \
 	$(srcdir)/opt/.gitignore \
 	$(srcdir)/vpi/.gitignore

@@ -844,8 +844,6 @@ INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 bad_bool
 INSTANCE_ARRAY_CLASS::unroll_aliases(const multikey_index_type& l, 
 		const multikey_index_type& u, alias_collection_type& a) const {
-	typedef	typename alias_collection_type::key_type
-						collection_key_type;
 	typedef	typename alias_collection_type::iterator
 						alias_collection_iterator;
 	STACKTRACE_VERBOSE;

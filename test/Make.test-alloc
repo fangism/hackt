@@ -20,7 +20,7 @@ HACKT_ALLOC_TEST_SUFFIXES = .hacktalloctest
 SUFFIXES += $(HACKT_ALLOC_SUFFIXES) $(HACKT_ALLOC_TEST_SUFFIXES)
 BOGUS_SUFFIX_TARGETS += $(HACKT_ALLOC_SUFFIXES)
 
-# clean and cvsignore: list most suffixes, but protected in quotes
+# clean and gitignore: list most suffixes, but protected in quotes
 HACKT_ALLOC_CLEAN_IGNORE_PATTERNS = \
 	"*.haco-a" \
 	"*.hacktalloctest" \

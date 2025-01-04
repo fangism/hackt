@@ -34,7 +34,7 @@ DIE=0
 
 ($AUTOCONF --version) < /dev/null > /dev/null 2>&1 || {
         echo
-        echo "You must have autoconf installed to bootstrap $PROJECT from CVS."
+        echo "You must have autoconf installed to bootstrap $PROJECT from git."
         echo "Download the appropriate package for your distribution,"
         echo "or get the source tarball at: "
 	echo "	http://ftp.gnu.org/gnu/autoconf/autoconf-2.63.tar.gz"
@@ -43,7 +43,7 @@ DIE=0
 
 ($LIBTOOLIZE --version) < /dev/null > /dev/null 2>&1 || {
         echo
-        echo "You must have libtool installed to bootstrap $PROJECT from CVS."
+        echo "You must have libtool installed to bootstrap $PROJECT from git."
 	echo "Get either of the following:"
 	echo "	ftp://ftp.gnu.org/gnu/libtool/libtool-1.5.26.tar.gz"
 	echo "	ftp://ftp.gnu.org/gnu/libtool/libtool-2.2.6.tar.gz"
@@ -53,7 +53,7 @@ DIE=0
 
 ($AUTOMAKE --version) < /dev/null > /dev/null 2>&1 || {
         echo
-        echo "You must have automake installed to bootstrap $PROJECT from CVS."
+        echo "You must have automake installed to bootstrap $PROJECT from git."
 	echo "Get any of the following:"
         echo "	http://ftp.gnu.org/gnu/automake/automake-1.9.6.tar.gz"
         echo "	http://ftp.gnu.org/gnu/automake/automake-1.10.2.tar.gz"
@@ -152,7 +152,7 @@ AC_ARG_VAR(ACLOCAL_FLAGS, [Additional aclocal flags, for bootstrap only.])' \
 	if test -d m4 ; then mv -f m4/*.m4 ../$PROJECT_MACROS ; fi ; \
 	sed -i.bkp -e "/ACLOCAL_AMFLAGS/s|m4|../$PROJECT_MACROS \$(ACLOCAL_FLAGS)|" Makefile.am ; \
 	mv -f Makefile.am.bkp removed ; \
-	echo "cvsignore:" >> Makefile.am ; \
+	echo "gitignore:" >> Makefile.am ; \
 	regen )
 
 # back to top_srcdir, should regenerate libltdl's files, recursively
