@@ -135,8 +135,6 @@ ALIAS_CONNECTION_CLASS::unroll(const unroll_context& c) const {
 	typedef	vector<alias_collection_type>	alias_collection_array_type;
 	typedef	vector<typename alias_collection_type::iterator>
 					alias_collection_iterator_array_type;
-	typedef	vector<typename alias_collection_type::const_iterator>
-				alias_collection_const_iterator_array_type;
 	STACKTRACE_VERBOSE;
 	STACKTRACE_INDENT_PRINT("&c = " << &c << endl);
 /***
@@ -220,6 +218,8 @@ ALIAS_CONNECTION_CLASS::unroll(const unroll_context& c) const {
 	);
 #if 0
 	// just testing...
+	typedef	vector<typename alias_collection_type::const_iterator>
+				alias_collection_const_iterator_array_type;
 	alias_collection_const_iterator_array_type
 		ref_end_array(num_refs);	// all default values
 	transform(ref_array.begin(), ref_array.end(), ref_end_array.begin(), 
@@ -240,8 +240,6 @@ ALIAS_CONNECTION_CLASS::unroll(const unroll_context& c) const {
 	do {
 		// convenient scope-local typedef
 		typedef	typename alias_collection_type::iterator iterator_type;
-		typedef	typename alias_collection_type::const_iterator
-							const_iterator_type;
 		typedef	typename alias_collection_iterator_array_type::iterator
 						iter_iter_type;
 		// ref_iter_head is the element in the

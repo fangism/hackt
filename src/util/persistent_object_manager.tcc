@@ -196,7 +196,6 @@ inline
 persistent_object_manager::visit_info*
 persistent_object_manager::__read_pointer(istream& f, 
 		const P& ptr, const raw_pointer_tag) const {
-	typedef	persistent_object_manager::visit_info*	return_type;
 	typedef typename pointer_traits<P>::pointer	pointer_type;
 	size_t i;
 	read_value(f, i);
@@ -210,9 +209,7 @@ persistent_object_manager::__read_pointer(istream& f,
 	// for this to work, pointer_type must be a raw_pointer
 	const_cast<P&>(ptr) = dynamic_cast<pointer_type>(o);
 	if (o) NEVER_NULL(ptr);
-#if 1
 	return pv.second;
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

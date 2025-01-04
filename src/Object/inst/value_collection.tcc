@@ -520,8 +520,6 @@ bad_bool
 VALUE_ARRAY_CLASS::unroll_lvalue_references(const multikey_index_type& l, 
 		const multikey_index_type& u,
 		value_reference_collection_type& a) const {
-	typedef typename value_reference_collection_type::key_type
-						collection_key_type;
 	typedef typename value_reference_collection_type::iterator
 						reference_collection_iterator;
 	typedef	typename util::multikey<D, pint_value_type>::generator_type

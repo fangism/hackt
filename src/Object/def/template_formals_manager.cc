@@ -487,17 +487,17 @@ template_formals_manager::__unroll_formal_parameters(
 		const unroll_context& c, 
 		const template_formals_list_type& formals, 
 		const template_actuals::const_arg_list_ptr_type& v) {
-	typedef	template_actuals::const_arg_list_ptr_type
-			actual_values_ptr_type;
-	// typedef	actual_values_ptr_type::element_type::const_iterator
-	//			const_actual_iterator;
-	typedef	template_formals_list_type::const_iterator
-				const_formal_iterator;
 	STACKTRACE_VERBOSE;
 	bool good = true;
 	if (v) {
 		return v->unroll_assign_formal_parameters(c, formals);
 #if 0
+		typedef	template_actuals::const_arg_list_ptr_type
+				actual_values_ptr_type;
+		// typedef	actual_values_ptr_type::element_type::const_iterator
+		//			const_actual_iterator;
+		typedef	template_formals_list_type::const_iterator
+					const_formal_iterator;
 		const_formal_iterator iter(formals.begin()), end(formals.end());
 		// const_actual_iterator a_iter(v->begin()), a_end(v->end());
 		for ( ; iter!=end; ++iter, ++a_iter) {

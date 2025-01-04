@@ -177,7 +177,6 @@ INSTANTIATION_STATEMENT_CLASS::get_type_ref_subtype(void) const {
 INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
 good_bool
 INSTANTIATION_STATEMENT_CLASS::unroll(const unroll_context& c) const {
-	typedef	typename type_ref_ptr_type::element_type	element_type;
 	STACKTRACE_VERBOSE;
 #if ENABLE_STACKTRACE
 	this->dump(STACKTRACE_INDENT << "statement: ",

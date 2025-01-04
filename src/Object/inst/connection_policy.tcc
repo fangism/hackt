@@ -541,8 +541,6 @@ process_connect_policy::initialize_direction(AliasType& a) {
 	typedef	typename AliasType::container_type	container_type;
 	typedef	typename container_type::instance_collection_parameter_type
 						complete_type_type;
-	typedef	typename complete_type_type::canonical_definition_type
-						canonical_definition_type;
 	// ordering issue: cannot complete type actuals if collection
 	// was declared relaxed, so this work will have to be punted
 if (a.has_complete_type()) {

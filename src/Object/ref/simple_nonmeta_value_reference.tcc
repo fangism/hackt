@@ -146,7 +146,6 @@ static
 const_return_type
 nonmeta_resolve_rvalue(const reference_type& _this,
 		const nonmeta_context_base& c, const return_type&) {
-	typedef	reference_type				this_type;
 	STACKTRACE_VERBOSE;
 	const size_t global_index =
 		c.lookup_nonmeta_reference_global_index(_this);
@@ -401,7 +400,6 @@ static
 const_return_type
 nonmeta_resolve_rvalue(const reference_type& _this,
 		const nonmeta_context_base& c, const return_type&) {
-	typedef	reference_type				this_type;
 	STACKTRACE_VERBOSE;
 	const const_return_type error(NULL);
 	const unroll_context
@@ -700,7 +698,6 @@ count_ptr<const typename SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::data_expr_base_ty
 SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::unroll_resolve_copy(
 		const unroll_context& c, 
 		const count_ptr<const data_expr_base_type>& p) const {
-	typedef	count_ptr<const data_expr_base_type>	return_type;
 	STACKTRACE_VERBOSE;
 	INVARIANT(p == this);
 	return nonmeta_unroll_resolve_copy_policy<Tag,
@@ -714,7 +711,6 @@ count_ptr<const typename SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::const_expr_type>
 SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::__nonmeta_resolve_rvalue(
 		const nonmeta_context_base& c, 
 		const count_ptr<const data_expr_base_type>& p) const {
-	typedef	count_ptr<const const_expr_type>	return_type;
 	STACKTRACE_VERBOSE;
 	INVARIANT(p == this);
 	return nonmeta_unroll_resolve_copy_policy<Tag,

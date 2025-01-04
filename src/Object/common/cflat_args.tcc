@@ -75,8 +75,8 @@ static
 inline
 bool
 __accept_deep_alias(const instance_alias_info<Tag>& a, const footprint& f) {
-	typedef	class_traits<Tag>		traits_type;
 #if ENABLE_STACKTRACE
+	typedef	class_traits<Tag>		traits_type;
 	static const char* tag_name = traits_type::tag_name;
 #endif
 	const bool reachable = a.get_supermost_collection()
@@ -114,8 +114,8 @@ cflat_aliases_arg_type::collect_local_aliases(const footprint& f,
 		alias_set_type& local_aliases) const {
 	STACKTRACE_VERBOSE;
 	typedef	process_tag			Tag;
-	typedef	class_traits<SubTag>		traits_type;
 #if ENABLE_STACKTRACE
+	typedef	class_traits<SubTag>		traits_type;
 	static const char* tag_name = traits_type::tag_name;
 #endif
 	const state_instance<Tag>::pool_type&

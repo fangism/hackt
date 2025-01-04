@@ -282,7 +282,6 @@ MEMBER_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_indices(
 		const footprint& top,
 		vector<size_t>& indices) const {
 	STACKTRACE_VERBOSE;
-	typedef vector<size_t>				indices_type;
 	typedef typename alias_collection_type::const_iterator  const_iterator;
 	typedef	global_entry_context::context_result_type
 							context_result_type;
