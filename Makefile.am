@@ -88,7 +88,7 @@ EXTRA_DIST += \
 	DevelopmentPlan.dot \
 	pkg/README \
 	pkg/hackt.info \
-	pkg/hackt-cvs-deps.info \
+	pkg/hackt-git-deps.info \
 	pkg/hackt-dist-deps.info
 # don't bother:
 #	libltdl/README.git

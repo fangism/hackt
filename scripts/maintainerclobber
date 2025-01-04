@@ -6,16 +6,15 @@
 # "maintainer-clean" should invoke "make distclean"
 # Any .tar.* distribution tarballs will not be deleted by this script.  
 
-# even though we've migrated to git, we still keep around .cvsignore files
-# and copy them over to .gitignore files.  
-
 usage () {
 cat << EOF
-$0: script to remove all files not in CVS, like a maintainerclean.
+$0: script to remove all files not tracked by git, like a maintainerclean.
+Alternatively, look at 'git status' to find untracked files and clean them.
+
 usage: $0 [options]
 options:
 	-h : print usage and exit
-	-k : keep .cvsignore files, even if they are generated
+	-k : keep .gitignore files, even if they are generated
 	-n : dry-run print files that would be removed without removing
 	-v : verbose mode
 EOF
@@ -25,7 +24,7 @@ args=`getopt "hknv" $*`
 test $? = 0 || { usage; exit 2; }
 set -- $args
 
-keep_cvsignore=0
+keep_gitignore=0
 verbose=0
 dry_run=0
 
@@ -34,7 +33,7 @@ do
 case "$i"
 in
 	-h) usage; exit ;;
-	-k) keep_cvsignore=1 ; shift ;;
+	-k) keep_gitignore=1 ; shift ;;
 	-n) dry_run=1 ; shift ;;
 	-v) verbose=1 ; shift ;;
 	--) shift; break ;;
@@ -44,32 +43,29 @@ done
 # Nah, allow this script to be run from anywhere
 # test -f configure.ac || { echo "You must run this script from the top source directory." ; exit 1 ;}
 
-if test $keep_cvsignore = 1
+if test $keep_gitignore = 1
 then
-	filt_cvsignore="grep -v -e ^\.cvsignore -e \.gitignore"
+	filt_gitignore="grep -v -e \.gitignore"
 else
-	filt_cvsignore=cat
+	filt_gitignore=cat
 fi
 
-# read the .cvsignore to determine what to delete
-cvs_clobber () {
-# traverse flat list if subdirs
-# cvsdirs=`find . -type d -name CVS`
-cvsdirs=`find . -type d`
-for d in $cvsdirs
+# read the .gitignore files to determine what to delete
+git_clobber () {
+# traverse flat list of subdirs
+srcdirs=`find . -type d`
+for d in $srcdirs
 do
 case $d in
-./.git*) ;;
-*/CVS*) ;;
+./.git*) ;;  # skip
 *)
-#	p=`echo $d | sed 's|/CVS$||'`
 	p=$d
 	echo "-------- clobbering in $p"
 	pushd $p > /dev/null 2>&1
-	if test -f .cvsignore
+	if test -f .gitignore
 	then
 		# only remove things that belong to this directory
-		clean=`grep . .cvsignore | sed 's|^\./||' | grep -v '/' | $filt_cvsignore`
+		clean=`grep . .gitignore | sed 's|^\./||' | grep -v '/' | $filt_gitignore`
 		# in case command line is too long
 		for f in $clean
 		do
@@ -81,10 +77,10 @@ case $d in
 esac
 done
 echo "-------- done clobbering `pwd`"
-test $keep_cvsignore != 1 || echo "All .cvsignore and .gitignore files were kept."
+test $keep_gitignore != 1 || echo "All .gitignore files were kept."
 }
 
-cvs_clobber
+git_clobber
 
 # to see what's left:
 # ls -R

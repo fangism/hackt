@@ -6,7 +6,7 @@
 
 #include <ostream>
 #include "sim/ISE.hh"
-#include "cvstag.h"	// generated
+#include "gitrev.h"	// generated
 
 namespace HAC {
 namespace SIM {
@@ -17,7 +17,7 @@ using std::endl;
 static const char ISE_greeting[] = "Internal simulator error: in ";
 static const char ISE_footer[] =
 "*** Please submit a bug report including version \n"
-"*** \"" PACKAGE_STRING ", " CVSTAG "\",\n"
+"*** \"" PACKAGE_STRING ", " GITREV "\",\n"
 "*** (preferably reduced) test case, steps to reproduce, and configuration,\n"
 "*** if appropriate, to <" PACKAGE_BUGREPORT ">.\n"
 "*** This program will now self-destruct.  Thank you, and have a nice day.";

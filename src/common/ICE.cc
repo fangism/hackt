@@ -9,7 +9,7 @@
 #include "common/ICE.hh"
 #include "config.h"
 #include "util/attributes.h"
-#include "cvstag.h"	// generated
+#include "gitrev.h"	// generated
 
 namespace HAC {
 using std::ostream;
@@ -22,7 +22,7 @@ const char ICE_never_call[] = "... is never supposed to be called.";
 static const char ICE_greeting[] = "Internal compiler error: in ";
 static const char ICE_footer[] =
 "*** Please submit a bug report including version \n"
-"*** \"" PACKAGE_STRING ", " CVSTAG "\",\n"
+"*** \"" PACKAGE_STRING ", " GITREV "\",\n"
 "*** (preferably reduced) test case, steps to reproduce, and configuration,\n"
 "*** if appropriate, to <" PACKAGE_BUGREPORT ">.\n"
 "*** This program will now self-destruct.  Thank you, and have a nice day.";

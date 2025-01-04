@@ -18,7 +18,7 @@ using std::ostream;
  */
 struct config {
 	static const char		package_string[];
-	static const char		cvstag[];
+	static const char		gitrev[];
 	static const char		cxx_version[];
 	static const char		am_cppflags[];
 	static const char		am_cxxflags[];
@@ -41,7 +41,7 @@ struct config {
 
 	static
 	ostream&
-	cvs(ostream&);
+	git(ostream&);
 
 	static
 	ostream&

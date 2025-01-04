@@ -134,7 +134,7 @@ Language: "HAC" (see hac.{info,pdf,html})
 <<
 DescPackaging: <<
 Maintainence: since build-deps are not recursive, keep this synchronized
-with the hackt-{dist,cvs}-deps.
+with the hackt-{dist,git}-deps.
 We use Apple's yacc as the parser generator, but bison (>= 1.875) works.
 guile-1.6 is actually sufficient, but guile-1.8 is preferred.
 Building against fink's libtool2, instead of own convenience library.
