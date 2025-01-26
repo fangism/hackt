@@ -3,6 +3,7 @@
 # Load one library from command-lin, other from this script
 # @haco@ greeting_func-a.haco-c
 # @module@ -lgreeting
+# @hacchpsim-flags@ -L .
 # @deps@ greeting.la gcd.la
 
 dlopen gcd

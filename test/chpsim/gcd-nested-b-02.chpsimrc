@@ -3,6 +3,7 @@
 # Yes, use THIS object file
 # @haco@ gcd-nested-b.haco-c
 # @module@ -lbad_gcd1
+# @hacchpsim-flags@ -L .
 # @deps@ bad_gcd1.la
 
 watchall-events

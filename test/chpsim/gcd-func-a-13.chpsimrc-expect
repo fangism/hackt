@@ -1,3 +1,3 @@
-dlopen search paths: /nowhere/lib
-dlopen search paths: /nowhere/lib:/down/south/lib
+dlopen search paths: .:/nowhere/lib
+dlopen search paths: .:/nowhere/lib:/down/south/lib
 loaded function: `my_gcd'.

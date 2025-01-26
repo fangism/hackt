@@ -1,6 +1,6 @@
-dlopen search paths: <empty>
-dlopen search paths: /nowhere/lib
-dlopen search paths: /nowhere/lib:/mytown/lib
+dlopen search paths: .
+dlopen search paths: .:/nowhere/lib
+dlopen search paths: .:/nowhere/lib:/mytown/lib
 loaded function: `my_gcd'.
 	0	0	5	null
 	10	1	1	

@@ -3,6 +3,7 @@
 # load both function libraries from command-line
 # @haco@ greeting_func-a.haco-c
 # @module@ -lgreeting -lgcd
+# @hacchpsim-flags@ -L .
 # @deps@ greeting.la gcd.la
 
 watchall-events

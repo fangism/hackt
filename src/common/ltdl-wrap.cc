@@ -118,7 +118,7 @@ ltdl_open_append(const string& mname) {
 			// so for sake of test cases, we craft our own message.
 #if USE_LT_DLERROR
 			// don't permanently remove, this can come in handy for
-			// diagnosing unexpected prblems on various platforms.
+			// diagnosing unexpected problems on various platforms.
 			cerr << lt_dlerror() << endl;
 #else
 			cerr << mname <<

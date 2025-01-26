@@ -3,6 +3,7 @@
 # Yes, use THIS object file
 # @haco@ missing_func-a.haco-c
 # @module@ -lgcd
+# @hacchpsim-flags@ -L .
 # @deps@ gcd.la
 
 dlassertfunc my_gcd
