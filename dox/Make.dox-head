@@ -64,9 +64,9 @@ HTML_HOOKS =
 EXTRACT_TEXINFO_SRCDIR_BATCH_SCRIPT = \
 	(cd $(srcdir) && \
 	for s in $^ ; do \
-	  f="$(top_builddir)"`$(ECHO) $$s | $(SED) 's|$(top_srcdir)||'` ; \
+	  f="$(top_builddir)"`$(ECHO) $$s | $(SED) 's|$(top_srcdir)||'` && \
 	  if (test -f $$f && test -r $$f) ; then \
-	    $(ECHO) "Extracting Texinfo from $$f ..." ; \
+	    $(ECHO) "Extracting Texinfo from $$f ..." && \
 	    $(EXTRACT_TEXINFO_IN_SRCDIR) $$f ; \
 	  fi ; \
 	done )

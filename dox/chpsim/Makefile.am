@@ -184,10 +184,7 @@ built-figs $(srcdir)/hacchpsim.info: $(XFIG_PNG)
 $(srcdir)/figs/.gitignore: $(srcdir)/.gitignore
 	$(CP) $< $@
 
-gitignore-local: \
-	$(srcdir)/cmd/.gitignore \
-	$(srcdir)/fn/.gitignore \
-	$(srcdir)/options/.gitignore
+AUTO_IGNORE += cmd fn options
 
 include $(top_srcdir)/dox/Make.dox-tail
 
