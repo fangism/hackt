@@ -86,11 +86,7 @@ EXTRA_DIST += $(hacprsim_info_DEPS)
 hacprsim.dvi hacprsim.pdf hacprsim.html $(srcdir)/hacprsim.info: \
 	$(hacprsim_info_DEPS)
 
-gitignore-local: \
-	$(srcdir)/cmd/.gitignore \
-	$(srcdir)/opt/.gitignore \
-	$(srcdir)/vpi/.gitignore
-
+AUTO_IGNORE += cmd opt vpi
 
 include $(top_srcdir)/dox/Make.dox-tail
 

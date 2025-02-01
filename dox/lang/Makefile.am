@@ -139,12 +139,7 @@ hac.pdf hac.dvi hac.html $(srcdir)/hac.info: $(hac_info_DEPS)
 
 EXTRA_DIST += $(hac_info_DEPS)
 
-gitignore-local: \
-	$(srcdir)/attrib/.gitignore \
-	$(srcdir)/fn/.gitignore \
-	$(srcdir)/grammar/.gitignore \
-	$(srcdir)/prs/.gitignore \
-	$(srcdir)/spec/.gitignore
+AUTO_IGNORE += attrib fn grammar prs spec
 
 ###############################################################################
 EXTRA_DIST += \

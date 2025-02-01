@@ -6,4 +6,4 @@ loaded function: `my_gcd'.
 function `my_gcd': bound.
 ERROR: symbol `bogus' not found in presently loaded modules.
 function `bogus': unbound.
-... at line 11
+... at line 12

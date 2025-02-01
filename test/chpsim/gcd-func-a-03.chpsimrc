@@ -3,6 +3,7 @@
 # Yes, use THIS object file
 # @haco@ missing_func-a.haco-c
 # @module@ -lbad_gcd2
+# @hacchpsim-flags@ -L .
 # @deps@ bad_gcd2.la
 
 watchall-events

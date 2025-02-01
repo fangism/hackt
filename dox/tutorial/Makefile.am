@@ -73,9 +73,7 @@ hackt.dvi hackt.pdf hackt.html $(srcdir)/hackt.info: $(hackt_info_DEPS)
 
 EXTRA_DIST += README ChangeLog
 
-gitignore-local: \
-	$(srcdir)/cflat/.gitignore \
-	$(srcdir)/compile/.gitignore
+AUTO_IGNORE += cflat compile
 
 include $(top_srcdir)/dox/Make.dox-tail
 

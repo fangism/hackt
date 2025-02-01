@@ -142,10 +142,7 @@ CLEANFILES += $(BUILT_FIGS)
 $(srcdir)/figs/.gitignore: $(srcdir)/.gitignore
 	$(CP) $< $@
 
-gitignore-local: \
-	$(srcdir)/cmd/.gitignore \
-	$(srcdir)/config/.gitignore \
-	$(srcdir)/opt/.gitignore
+AUTO_IGNORE += cmd config opt
 
 include $(top_srcdir)/dox/Make.dox-tail
 

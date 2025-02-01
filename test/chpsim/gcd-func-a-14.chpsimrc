@@ -4,6 +4,7 @@
 # Yes, use THIS object file
 # @haco@ missing_func-a.haco-c
 # @module@ -lgcdwrap
+# @hacchpsim-flags@ -L .
 # @deps@ gcdwrap.la
 
 watchall-events

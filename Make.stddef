@@ -130,8 +130,8 @@ RECONFIGURE = cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
 
 # script to extract texinfo documentation from source:
 # invokable after cd $(srcdir):
-EXTRACT_TEXINFO_IN_SRCDIR = $(AWK) -f $(top_builddir)/scripts/extract_texinfo.awk
+EXTRACT_TEXINFO_IN_SRCDIR = $(top_builddir)/scripts/extract_texinfo.sh
 # invokable from any subdir:
-EXTRACT_TEXINFO = $(AWK) -f $(top_srcdir)/scripts/extract_texinfo.awk
+EXTRACT_TEXINFO = $(top_srcdir)/scripts/extract_texinfo.sh
 
 # end "Make.stddef"
