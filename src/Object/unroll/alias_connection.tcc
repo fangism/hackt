@@ -27,9 +27,11 @@
 // #include "util/packed_array.tcc"	// for alias_collection_type
 #include "util/stacktrace.hh"
 #include "util/what.hh"
+#if __cplusplus < 201103L
 #include "util/binders.hh"
 #include "util/compose.hh"
 #include "util/dereference.hh"
+#endif
 #include "util/memory/count_ptr.tcc"
 #include "util/reserve.hh"
 
@@ -44,10 +46,12 @@ using util::persistent_traits;
 #include "util/using_ostream.hh"
 using std::mem_fun_ref;
 using std::transform;
+#if __cplusplus < 201103L
 using std::find_if;
 using util::dereference;
-using util::memory::never_ptr;
 USING_UTIL_COMPOSE
+#endif
+using util::memory::never_ptr;
 
 //=============================================================================
 // class alias_connection method definitions
@@ -209,6 +213,13 @@ ALIAS_CONNECTION_CLASS::unroll(const unroll_context& c) const {
 	collection's begin().  
 ***/
 	alias_collection_iterator_array_type ref_iter_array(num_refs);
+#if __cplusplus >= 201103L
+        auto refs_iter = ref_iter_array.begin();
+        for (auto& ref : ref_array) {
+          *refs_iter = ref.begin();
+          ++refs_iter;
+        }
+#else
 	transform(ref_array.begin(), ref_array.end(), ref_iter_array.begin(), 
 		// explicit arguments help template argument deduction
 		// otherwise, may accidentally use begin() const, 
@@ -216,6 +227,7 @@ ALIAS_CONNECTION_CLASS::unroll(const unroll_context& c) const {
 		mem_fun_ref<typename alias_collection_type::iterator, 
 			alias_collection_type>(&alias_collection_type::begin)
 	);
+#endif
 #if 0
 	// just testing...
 	typedef	vector<typename alias_collection_type::const_iterator>
@@ -273,11 +285,17 @@ ALIAS_CONNECTION_CLASS::unroll(const unroll_context& c) const {
 				return good_bool(false);
 			}
 		}
+#if __cplusplus >= 201103L
+                for (auto& ref_it : ref_iter_array) {
+                  ++ref_it;
+                }
+#else
 		for_each(ref_iter_head, ref_iter_end, 
 			// ambiguous, postfix or prefix (doesn't matter)
 			// returning iterator_type& forces prefix version
 			mem_fun_ref<iterator_type&>(&iterator_type::operator++)
 		);
+#endif
 	} while (ref_iter_array.front() != ref_array.front().end());
 	return good_bool(true);
 }	// end alias_connection::unroll()
@@ -291,11 +309,17 @@ if (!m.register_transient_object(this,
 		persistent_traits<this_type>::type_key)) {
 	STACKTRACE_PERSISTENT("alias_connection<>::collect_transients()");
 #if 1
+#if  __cplusplus >= 201103L
+	for (const auto& elem : inst_list) {
+		elem->collect_transient_info(m);
+	}
+#else
 	const_iterator iter(inst_list.begin());
 	const const_iterator end(inst_list.end());
 	for ( ; iter!=end; iter++) {
 		(*iter)->collect_transient_info(m);
 	}
+#endif
 #else
 	for_each(inst_list.begin(), inst_list.end(),
 	unary_compose_void(

@@ -18,7 +18,9 @@
 #include "util/what.tcc"
 #include "util/stacktrace.hh"
 #include "util/type_traits.hh"
+#if __cplusplus < 201103L
 // #include "util/binders.h"
+#endif
 #include "util/memory/count_ptr.tcc"
 
 // DO NOT INCLUDE THIS FILE IN OTHER HEADER FILES
@@ -55,11 +57,13 @@ namespace HAC {
 namespace parser {
 class context;
 using util::what;
+#if __cplusplus < 201103L
 using std::transform;
 // using std::bind2nd;
 // using util::bind2nd_argval;
 using std::mem_fun;
 using std::mem_fun_ref;
+#endif
 #if ENABLE_STACKTRACE
 using std::string;
 #endif
@@ -172,12 +176,19 @@ void
 node_list<T>::check_list(R& r, 
 		typename R::value_type (T::*f)(A&) const, A& a) const {
 	INVARIANT(r.empty());
+#if __cplusplus >= 201103L
+	for (const auto& elem : *this) {
+		NEVER_NULL(elem);
+		r.push_back(std::mem_fn(f)(*elem, a));
+	}
+#else
 	const_iterator i(this->begin());
 	const const_iterator e(this->end());
 	for ( ; i!=e; ++i) {
 		NEVER_NULL(*i);
 		r.push_back(mem_fun_ref(f)(**i, a));
 	}
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -189,6 +200,13 @@ NODE_LIST_TEMPLATE_SIGNATURE
 template <class A>
 void
 node_list<T>::check_list_void(void (T::*f)(A&) const, A& a) const {
+#if __cplusplus >= 201103L
+	for (const auto& elem : *this) {
+		if (elem) {
+			std::mem_fn(f)(*elem, a);
+		}
+	}
+#else
 	const_iterator i(this->begin());
 	const const_iterator e(this->end());
 	for ( ; i!=e; ++i) {
@@ -196,6 +214,7 @@ node_list<T>::check_list_void(void (T::*f)(A&) const, A& a) const {
 			mem_fun_ref(f)(**i, a);
 		}
 	}
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

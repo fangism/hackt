@@ -1144,14 +1144,20 @@ try {
 	}
 #endif
 }
-	const_iterator i(checked_refs.begin());
-	const const_iterator e(checked_refs.end());
 	// need to dynamic cast the list into simple_nonmeta_datatype_value_refs
 	typedef vector<count_ptr<lref_type> >	val_refs_type;
 	val_refs_type val_refs;
+#if __cplusplus >= 201103L
+        for (const auto& ref : checked_refs) {
+          val_refs.push_back(ref.is_a<lref_type>());
+        }
+#else
+	const_iterator i(checked_refs.begin());
+	const const_iterator e(checked_refs.end());
 	transform(i, e, back_inserter(val_refs), 
 		mem_fun_ref(&count_ptr<checked_element_type>::is_a<lref_type>)
 	);
+#endif
 #if 0
 	if (find(val_refs.begin(), val_refs.end(), val_refs_type::value_type())
 			!= val_refs.end()) {

@@ -8,6 +8,7 @@
 #define	STACKTRACE_PERSISTENTS			(0 && ENABLE_STACKTRACE)
 
 #include <algorithm>
+#include <functional>
 #include <iterator>
 #include "util/hash_specializations.hh"
 #include "Object/devel_switches.hh"
@@ -85,7 +86,9 @@
 #include "main/cflat_options.hh"
 
 #include "util/graph/bare_digraph.hh"
+#if __cplusplus < 201103L
 #include "util/compose.hh"
+#endif
 #include "util/stacktrace.hh"
 #include "util/persistent_object_manager.tcc"
 #include "util/memory/count_ptr.tcc"
@@ -105,7 +108,9 @@ using util::read_value;
 using util::auto_indent;
 using std::ostream_iterator;
 using std::copy;
+#if __cplusplus < 201103L
 USING_UTIL_COMPOSE
+#endif
 
 //=============================================================================
 // class footprint_base method definitions
@@ -1833,10 +1838,16 @@ footprint::has_sub_fanin_map(vector<bool>& ret) const {
 	const state_instance<bool_tag>::pool_type&
 		bp(get_instance_pool<bool_tag>());
         ret.reserve(bp.local_entries());
+#if __cplusplus >= 201103L
+        for (const auto& elem : bp) {
+          ret.push_back(bool_has_sub_fanin(elem));
+        }
+#else
         transform(bp.begin(), bp.end(),
                 back_inserter(ret),
 	// g++/libstdc++ 4.4.4 c++0x mode chokes on back_inserter [PR 44963]
                 std::ptr_fun(&bool_has_sub_fanin));
+#endif
 }
 
 /**
@@ -1848,10 +1859,16 @@ footprint::has_not_sub_fanin_map(vector<bool>& ret) const {
 	const state_instance<bool_tag>::pool_type&
 		bp(get_instance_pool<bool_tag>());
         ret.reserve(bp.local_entries());
+#if __cplusplus >= 201103L
+        for (const auto& elem : bp) {
+          ret.push_back(bool_has_not_sub_fanin(elem));
+        }
+#else
         transform(bp.begin(), bp.end(),
                 back_inserter(ret),
 	// g++/libstdc++ 4.4.4 c++0x mode chokes on back_inserter [PR 44963]
 		std::ptr_fun(&bool_has_not_sub_fanin));
+#endif
 #if 0
 // debug only
 	state_instance<bool_tag>::pool_type::const_iterator

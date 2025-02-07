@@ -44,9 +44,11 @@
 #include "util/persistent_object_manager.tcc"
 #include "util/packed_array.tcc"
 #include "util/stacktrace.hh"
+#if __cplusplus < 201103L
 // #include "util/binders.hh"
 // #include "util/compose.hh"
 // #include "util/dereference.hh"
+#endif
 #include "util/reserve.hh"
 
 //=============================================================================
@@ -106,9 +108,11 @@ USING_IO_UTILS
 using std::vector;
 using util::persistent_traits;
 #include "util/using_ostream.hh"
+#if __cplusplus < 201103L
 using std::mem_fun_ref;
 using util::dereference;
 USING_UTIL_COMPOSE
+#endif
 
 //=============================================================================
 // class meta_instance_reference_connection method definitions

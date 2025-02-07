@@ -22,10 +22,12 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include <string>
 #include <typeinfo>		// for std::bad_cast
 
+#if __cplusplus < 201103L
 #include "util/STL/functional.hh"
 #include "util/ptrs_functional.hh"
 #include "util/compose.hh"
 #include "util/binders.hh"
+#endif
 #include "util/conditional.hh"
 
 // CAUTION on ordering of the following two include files!
@@ -110,12 +112,14 @@ namespace entity {
 
 #include "util/using_ostream.hh"
 using parser::scope;
+#if __cplusplus < 201103L
 using std::_Select1st;
 using std::_Select2nd;
 using std::bind1st;
 using util::mem_fun;
 using std::not1;
 USING_UTIL_COMPOSE
+#endif
 using util::indent;
 using util::auto_indent;
 using util::disable_indent;
@@ -337,10 +341,16 @@ if (id.size() <= 1) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 scopespace::__dump_map_keys(ostream& o, const used_id_map_type& m) {
+#if __cplusplus >= 201103L
+        for (const auto& elem : m) {
+          o << elem.first << "\n";
+        }
+#else
 	std::ostream_iterator<string> osi(o, "\n");
 	std::transform(m.begin(), m.end(), osi, 
 		_Select1st<used_id_map_type::value_type>()
 	);
+#endif
 	return o;
 }
 
@@ -354,12 +364,20 @@ scopespace::dump_for_definitions(ostream& o) const {
 	// to canonicalize the dump, we bin and sort into maps
 	const_bin_sort bins;
 	const_bin_sort& bins_ref(bins);
-	bins_ref =
 #if 1
+#if __cplusplus >= 201103L
+	for (const auto& id : used_id_map) {
+          if (!this->exclude_object_val(id)) {
+            bins_ref(id);
+          }
+        }
+#else
+	bins_ref =
 	for_each_if(used_id_map.begin(), used_id_map.end(), 
 		not1(bind1st(mem_fun(&scopespace::exclude_object_val), this)),
 		bins_ref	// explicitly pass by REFERENCE not VALUE
 	);
+#endif
 #else
 	// unpredicated
 	for_each(used_id_map.begin(), used_id_map.end(), bins_ref);
@@ -373,6 +391,11 @@ scopespace::dump_for_definitions(ostream& o) const {
 	if (!bins.param_bin.empty()) {
 		o << auto_indent << "Parameters:" << endl;
 		INDENT_SECTION(o);
+#if __cplusplus >= 201103L
+		for (const auto& param : bins.param_bin) {
+                  param.second->pair_dump(o);
+                }
+#else
 		for_each(bins.param_bin.begin(), bins.param_bin.end(), 
 		unary_compose(
 			bind2nd_argval(
@@ -382,6 +405,7 @@ scopespace::dump_for_definitions(ostream& o) const {
 			_Select2nd<const_bin_sort::param_bin_type::value_type>()
 		)
 		);
+#endif
 	}
 #if 0	
 	// consider nested typedefs later...
@@ -402,6 +426,11 @@ scopespace::dump_for_definitions(ostream& o) const {
 	if (!bins.inst_bin.empty()) {
 		o << auto_indent << "Instances:" << endl;
 		INDENT_SECTION(o);
+#if __cplusplus >= 201103L
+                for (const auto& inst : bins.inst_bin) {
+                  inst.second->pair_dump(o);
+                }
+#else
 		for_each(bins.inst_bin.begin(), bins.inst_bin.end(), 
 		unary_compose(
 			bind2nd_argval(
@@ -411,6 +440,7 @@ scopespace::dump_for_definitions(ostream& o) const {
 			_Select2nd<const_bin_sort::inst_bin_type::value_type>()
 		)
 		);
+#endif
 	}
 	return o;
 }
@@ -756,8 +786,14 @@ scopespace::exclude_object_val(const used_id_map_type::value_type i) const {
  */
 size_t
 scopespace::exclude_population(void) const {
-	return count_if(used_id_map.begin(), used_id_map.end(), 
+	return std::count_if(used_id_map.begin(), used_id_map.end(), 
+#if __cplusplus >= 201103L
+                             [this](const used_id_map_type::value_type& obj) -> bool {
+                               return this->exclude_object_val(obj);
+                             }
+#else
 		bind1st(mem_fun(&scopespace::exclude_object_val), this)
+#endif
 	);
 }
 
@@ -1211,11 +1247,19 @@ name_space::dump(ostream& o) const {
 	// to canonicalize the dump, we bin and sort into maps
 	const_bin_sort bins;
 	const_bin_sort& bins_ref(bins);
+#if __cplusplus >= 201103L
+	for (const auto& id : used_id_map) {
+          if (!this->exclude_object_val(id)) {
+            bins_ref(id);
+          }
+        }
+#else
 	bins_ref =
 	for_each_if(used_id_map.begin(), used_id_map.end(), 
 		not1(bind1st(mem_fun(&name_space::exclude_object_val), this)),
 		bins_ref	// explicitly pass by REFERENCE not VALUE
 	);
+#endif
 
 	o << auto_indent <<
 		"In namespace \"" << key << "\", we have: {" << endl;
@@ -1228,6 +1272,11 @@ name_space::dump(ostream& o) const {
 	if (!bins.param_bin.empty()) {
 		o << auto_indent << "Parameters:" << endl;
 		INDENT_SECTION(o);
+#if __cplusplus >= 201103L
+                for (const auto& param : bins.param_bin) {
+                  param.second->pair_dump(o);
+                }
+#else
 		for_each(bins.param_bin.begin(), bins.param_bin.end(), 
 		unary_compose(
 			bind2nd_argval(
@@ -1237,11 +1286,17 @@ name_space::dump(ostream& o) const {
 			_Select2nd<const_bin_sort::param_bin_type::value_type>()
 		)
 		);
+#endif
 	}
 
 	if (!bins.ns_bin.empty()) {
 		o << auto_indent << "Namespaces:" << endl;
 		INDENT_SECTION(o);
+#if __cplusplus >= 201103L
+                for (const auto& ns : bins.ns_bin) {
+                  ns.second->pair_dump(o);
+                }
+#else
 		for_each(bins.ns_bin.begin(), bins.ns_bin.end(), 
 		unary_compose(
 			bind2nd_argval(
@@ -1254,11 +1309,17 @@ name_space::dump(ostream& o) const {
 //			o << "  " << i->first << " = ";
 //			i->second->dump(o) << endl;
 		);
+#endif
 	}
 	
 	if (!bins.def_bin.empty()) {
 		o << auto_indent << "Definitions:" << endl;
 		INDENT_SECTION(o);
+#if __cplusplus >= 201103L
+                for (const auto& def : bins.def_bin) {
+                  def.second->pair_dump(o);
+                }
+#else
 		for_each(bins.def_bin.begin(), bins.def_bin.end(), 
 		unary_compose(
 			bind2nd_argval(
@@ -1268,11 +1329,17 @@ name_space::dump(ostream& o) const {
 			_Select2nd<const_bin_sort::def_bin_type::value_type>()
 		)
 		);
+#endif
 	}
 	
 	if (!bins.alias_bin.empty()) {
 		o << auto_indent << "Typedefs:" << endl;
 		INDENT_SECTION(o);
+#if __cplusplus >= 201103L
+                for (const auto& alias : bins.alias_bin) {
+                  alias.second->pair_dump(o);
+                }
+#else
 		for_each(bins.alias_bin.begin(), bins.alias_bin.end(), 
 		unary_compose(
 			bind2nd_argval(
@@ -1282,12 +1349,18 @@ name_space::dump(ostream& o) const {
 			_Select2nd<const_bin_sort::alias_bin_type::value_type>()
 		)
 		);
+#endif
 	}
 	// would like to show instance names prefixed with "::"
 	// to clarify the absolute name of top-level instances
 	if (!bins.inst_bin.empty()) {
 		o << auto_indent << "Instances:" << endl;
 		INDENT_SECTION(o);
+#if __cplusplus >= 201103L
+                for (const auto& inst : bins.inst_bin) {
+                  inst.second->pair_dump(o);
+                }
+#else
 		for_each(bins.inst_bin.begin(), bins.inst_bin.end(), 
 		unary_compose(
 			bind2nd_argval(
@@ -1297,6 +1370,7 @@ name_space::dump(ostream& o) const {
 			_Select2nd<const_bin_sort::inst_bin_type::value_type>()
 		)
 		);
+#endif
 	}
 }	// end of indentation scope
 	return o << auto_indent << "}" << endl;

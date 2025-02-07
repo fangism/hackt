@@ -29,9 +29,11 @@
 #include "Object/def/footprint.hh"
 
 #include "util/what.tcc"
+#if __cplusplus < 201103L
 #include "util/binders.hh"
 #include "util/compose.hh"
 #include "util/dereference.hh"
+#endif
 #include "util/stacktrace.hh"
 #include "util/packed_array.tcc"	// for ~value_reference_collection_type
 
@@ -39,10 +41,12 @@
 namespace HAC {
 namespace entity {
 #include "util/using_ostream.hh"
+#if __cplusplus < 201103L
 USING_UTIL_COMPOSE
 using std::mem_fun_ref;
 using util::dereference;
 using util::bind2nd_argval;
+#endif
 using util::persistent_traits;
 
 //=============================================================================
@@ -385,6 +389,11 @@ EXPRESSION_ASSIGNMENT_CLASS::collect_transient_info(
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
 	this->src->collect_transient_info(m);
+#if __cplusplus >= 201103L
+        for (const auto& dest : this->dests) {
+          dest->collect_transient_info(m);
+        }
+#else
 	for_each(this->dests.begin(), this->dests.end(), 
 	unary_compose(
 		bind2nd_argval(mem_fun_ref(
@@ -392,6 +401,7 @@ if (!m.register_transient_object(this,
 		dereference<count_ptr<const value_reference_type> >()
 	)
 	);
+#endif
 }
 // else already visited
 }

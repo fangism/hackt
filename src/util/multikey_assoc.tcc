@@ -17,8 +17,10 @@
 #include <algorithm>
 #include <iterator>
 #include <numeric>			// for std::accumlate
+#if __cplusplus < 201103L
 #include "util/STL/functional.hh"
 // consider using util::member_select instead of _Select...
+#endif
 
 #ifndef	DEBUG_MULTIKEY_ASSOC_SLICE
 #define	DEBUG_MULTIKEY_ASSOC_SLICE		0
@@ -35,8 +37,10 @@ namespace util {
 #include "util/using_ostream.hh"
 using std::pair;
 using std::distance;
+#if __cplusplus < 201103L
 using std::_Select1st;
 using std::_Select2nd;
+#endif
 using std::numeric_limits;
 using std::list;
 using std::copy;

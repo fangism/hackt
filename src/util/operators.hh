@@ -125,7 +125,11 @@ virtual	bool is_associative(void) const = 0;
 		relational operations are defined.
  */
 template <class R = bool, class A = R>
-struct binary_relational_operation : public std::binary_function<A,A,R> {
+struct binary_relational_operation
+#if __cplusplus < 201103L
+: public std::binary_function<A,A,R>
+#endif
+{
 /**
 	Required by gcc4 with -W.
 	... even if we never delete subclass objects through these pointers.  
@@ -146,7 +150,11 @@ virtual	R operator () (const A& a, const A& b) const = 0;
 		logical operations are defined.
  */
 template <class R = bool, class A = R>
-struct binary_logical_operation : public std::binary_function<A,A,R> {
+struct binary_logical_operation
+#if __cplusplus < 201103L
+: public std::binary_function<A,A,R>
+#endif
+{
 /**
 	Required by gcc4 with -W.
 	... even if we never delete subclass objects through these pointers.  
