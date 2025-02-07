@@ -163,7 +163,13 @@ case META_TYPE_BOOL: {
 	checked_bools_type temp;
 	args->postorder_check_grouped_bool_refs(temp, c);
 	const const_iterator i(temp.begin()), e(temp.end());
-	if (find_if(i, e, mem_fun_ref(&value_type::empty)) != e) {
+	if (find_if(i, e,
+#if __cplusplus >= 201103L
+                    [](const value_type& v) -> bool { return v.empty(); }
+#else
+                    mem_fun_ref(&value_type::empty)
+#endif
+                    ) != e) {
 		cerr << "Error checking spec arguments in " << where(*args)
 			<< endl;
 		SPEC_THROW_ERROR;
@@ -182,7 +188,13 @@ case META_TYPE_PROCESS: {
 	checked_procs_type temp;
 	args->postorder_check_grouped_proc_refs(temp, c);
 	const const_iterator i(temp.begin()), e(temp.end());
-	if (find_if(i, e, mem_fun_ref(&value_type::empty)) != e) {
+	if (find_if(i, e,
+#if __cplusplus >= 201103L
+                    [](const value_type& v) -> bool { return v.empty(); }
+#else
+                    mem_fun_ref(&value_type::empty)
+#endif
+                    ) != e) {
 		cerr << "Error checking spec arguments in " << where(*args)
 			<< endl;
 		SPEC_THROW_ERROR;

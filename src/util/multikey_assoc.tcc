@@ -61,13 +61,19 @@ multikey_assoc_compact_helper<D,K>::index_extremities(const A& a) {
 	typedef	typename A::const_iterator	const_iterator;
 	typedef	typename A::value_type		value_type;
 	typedef key_list_pair_type		return_type;
+#if __cplusplus < 201103L
 	typedef	_Select1st<value_type>		key_selector;
+#endif
 	STACKTRACE_MULTIKEY_ASSOC;
 	if (a.empty())
 		return return_type();
 	const const_iterator iter(a.begin()), t_end(a.end());
+#if __cplusplus >= 201103L
+	const key_type& start(iter->first);
+#else
 	// gcc-3.3 needs help parsing forwarding operators with ctors
 	const key_type& start(key_selector().operator()(*iter));
+#endif
 	key_pair_type ext(start, start);
 	ext = std::accumulate(iter, t_end, ext,
 		typename key_type::accumulate_extremities());
@@ -209,7 +215,9 @@ multikey_assoc_compact_helper<D,K>::__is_dense_subslice(
 	typedef	typename key_type::value_type	key_value_type;
 	typedef	typename A::value_type		value_type;
 	typedef	typename A::const_iterator	const_iterator;
+#if __cplusplus < 201103L
 	typedef	_Select1st<value_type>		key_selector;
+#endif
 	STACKTRACE_MULTIKEY_ASSOC;
 	const size_t l_size = l.size();
 	INVARIANT(l_size);
@@ -234,11 +242,19 @@ multikey_assoc_compact_helper<D,K>::__is_dense_subslice(
 #if DEBUG_MULTIKEY_ASSOC_SLICE
 	cerr << "distance (lb,ub) = " << distance(lb, ub) << endl;
 #endif
+#if __cplusplus >= 201103L
+	const key_value_type next_min = lb->first[l_size];
+#else
 	const key_value_type next_min = key_selector()(*lb)[l_size];
+#endif
 	key_value_type next_max = next_min;
 	// check for contiguity
 	for ( ; lb != ub; ++lb) {
+#if __cplusplus >= 201103L
+		const key_value_type n = lb->first[l_size];
+#else
 		const key_value_type n = key_selector()(*lb)[l_size];
+#endif
 		INVARIANT(n >= 0);	// monotonicity
 		if (n - next_max > 1) {
 			// then we have a break in the sequence
@@ -350,8 +366,10 @@ multikey_assoc_compact_helper<1,K>::is_compact(const A& a) {
 	typedef	typename A::const_iterator	const_iterator;
 	typedef	typename A::value_type		value_type;
 //	typedef	typename A::mapped_type		mapped_type;
+#if __cplusplus < 201103L
 	typedef	_Select1st<value_type>		key_selector;
 //	typedef	_Select2nd<value_type>		value_selector;
+#endif
 	STACKTRACE_MULTIKEY_ASSOC;
 	if (a.empty()) {
 		return return_type();
@@ -381,15 +399,24 @@ multikey_assoc_compact_helper<1,K>::is_compact(const A& a) {
 	ret.second.push_back(key_selector()(*last));
 	return ret;
 #else
+#if __cplusplus >= 201103L
+	const index_type j = first->first, k = last->first;
+#else
 	const index_type j = key_selector()(*first),
 		k = key_selector()(*last);
+#endif
 	INVARIANT(j <= k);
 	const const_iterator lf(a.find(j)), uf(a.find(k));
 	if (lf != this_end && uf != this_end && 
 			distance(lf, uf) == k-j) {
 		return_type ret;
+#if __cplusplus >= 201103L
+		ret.first.push_back(first->first);
+		ret.second.push_back(last->first);
+#else
 		ret.first.push_back(key_selector()(*first));
 		ret.second.push_back(key_selector()(*last));
+#endif
 		return ret;
 	} else {
 		return return_type();

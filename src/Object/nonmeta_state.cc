@@ -22,16 +22,20 @@
 #include "Object/inst/instance_pool.hh"
 #include "Object/type/canonical_fundamental_chan_type.hh"
 #include "common/TODO.hh"
+#if __cplusplus < 201103L
 #include "util/binders.hh"
+#endif
 #include "util/IO_utils.hh"
 #include "util/stacktrace.hh"
 
 namespace HAC {
 namespace entity {
 #include "util/using_ostream.hh"
-using std::mem_fun_ref;
 using std::for_each;
+#if __cplusplus < 201103L
+using std::mem_fun_ref;
 using util::bind2nd_argval;
+#endif
 using util::write_value;
 using util::read_value;
 
@@ -59,7 +63,13 @@ nonmeta_state_base<Tag>::~nonmeta_state_base() { }
 template <class Tag>
 void
 nonmeta_state_base<Tag>::reset() {
+#if __cplusplus >= 201103L
+	for (auto& inst : pool) {
+		inst.reset();
+	}
+#else
 	for_each(pool.begin(), pool.end(), mem_fun_ref(&instance_type::reset));
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -110,9 +120,15 @@ bool
 nonmeta_state_base<Tag>::save_checkpoint(ostream& o) const {
 	const size_t s = pool.size();
 	write_value(o, s);
+#if __cplusplus >= 201103L
+	for (const auto& inst : pool) {
+		inst.write(o);
+	}
+#else
 	for_each(pool.begin(), pool.end(), 
 		bind2nd_argval(mem_fun_ref(&instance_type::write), o)
 	);
+#endif
 	return !o;
 }
 
@@ -126,9 +142,15 @@ nonmeta_state_base<Tag>::load_checkpoint(istream& i) {
 	size_t s;
 	read_value(i, s);
 	pool.resize(s);
+#if __cplusplus >= 201103L
+	for (auto& inst : pool) {
+		inst.read(i);
+	}
+#else
 	for_each(pool.begin(), pool.end(), 
 		bind2nd_argval(mem_fun_ref(&instance_type::read), i)
 	);
+#endif
 	return !i;
 }
 

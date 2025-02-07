@@ -60,9 +60,11 @@
 
 #include "util/what.hh"
 #include "util/stacktrace.hh"
+#if __cplusplus < 201103L
 #include "util/dereference.hh"
 #include "util/compose.hh"
 #include "util/binders.hh"
+#endif
 #include "util/memory/count_ptr.tcc"
 
 // enable or disable constructor inlining, undefined at the end of file
@@ -115,11 +117,13 @@ template class count_ptr<const direction_statement>;
 namespace HAC {
 namespace parser {
 #include "util/using_ostream.hh"
+#if __cplusplus < 201103L
 using util::dereference;
 using std::transform;
 using std::mem_fun_ref;
 using ADS::unary_compose;
 using util::bind2nd_argval;
+#endif
 using std::accumulate;
 // using std::_Select1st;
 // using std::_Select2nd;

@@ -1138,7 +1138,13 @@ if (params->attrs) {
 	INVARIANT(args->size());
 	args->postorder_check_grouped_bool_refs(temp, c);
 	const const_iterator i(temp.begin()), e(temp.end());
-	if (find_if(i, e, mem_fun_ref(&value_type::empty)) != e) {
+	if (find_if(i, e,
+#if __cplusplus >= 201103L
+                    [](const value_type& v) -> bool { return v.empty(); }
+#else
+                    mem_fun_ref(&value_type::empty)
+#endif
+                    ) != e) {
 		cerr << "Error checking macro arguments in " << where(*args)
 			<< endl;
 		CHECK_RULE_THROW;

@@ -16,7 +16,9 @@
 #include <algorithm>
 #include <limits>				// for numeric_limits
 #include <iterator>
+#if __cplusplus < 201103L
 #include "util/STL/functional.hh"		// for _Select{1st,2nd}
+#endif
 
 #include "AST/token.hh"
 #include "AST/token_char.hh"
@@ -135,8 +137,10 @@ using std::copy;
 using std::back_inserter;
 using std::transform;
 using std::distance;
+#if __cplusplus < 201103L
 using std::_Select1st;		// TODO: configure check wrap this
 using std::_Select2nd;		// TODO: configure check wrap this
+#endif
 using util::back_insert_assigner;
 using entity::expr_dump_context;
 using entity::aggregate_meta_value_reference_base;
@@ -553,9 +557,15 @@ expr_list::select_checked_meta_exprs(const checked_meta_generic_type& src,
 		checked_meta_exprs_type& dst) {
 	STACKTRACE_VERBOSE;
 	INVARIANT(dst.empty());
+#if __cplusplus >= 201103L
+        for (const auto& s : src) {
+          dst.push_back(s.first);
+        }
+#else
 	transform(src.begin(), src.end(), back_inserter(dst),
 		_Select1st<checked_meta_generic_type::value_type>()
 	);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -564,9 +574,15 @@ expr_list::select_checked_meta_refs(const checked_meta_generic_type& src,
 		checked_meta_refs_type& dst) {
 	STACKTRACE_VERBOSE;
 	INVARIANT(dst.empty());
+#if __cplusplus >= 201103L
+        for (const auto& s : src) {
+          dst.push_back(s.second);
+        }
+#else
 	transform(src.begin(), src.end(), back_inserter(dst),
 		_Select2nd<checked_meta_generic_type::value_type>()
 	);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
