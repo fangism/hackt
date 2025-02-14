@@ -22,9 +22,11 @@
 
 #include "common/ICE.hh"
 
+#if __cplusplus < 201103L
 #include "util/compose.hh"
 #include "util/dereference.hh"
 #include "util/member_select.hh"
+#endif
 #include "util/stacktrace.hh"
 
 #if ENABLE_STACKTRACE
@@ -38,10 +40,12 @@ namespace entity {
 #include "util/using_ostream.hh"
 using std::transform;
 using std::copy;
+#if __cplusplus < 201103L
 using ADS::unary_compose;
 using util::member_select;
 using util::member_select_ref;
 using util::dereference;
+#endif
 
 //=============================================================================
 /**
@@ -102,6 +106,11 @@ __nonmeta_instance_lookup_may_reference_indices_impl(
 			STACKTRACE_INDENT_PRINT("footprint-framed" << endl);
 			// need to translate local to global
 			transform(i, e, back_inserter(indices),
+#if __cplusplus >= 201103L
+                                  [&ff](const instance_alias_info_ptr_type& a){
+                                    return footprint_frame_transformer(*ff, Tag())(a->instance_index);
+                                  }
+#else
 				unary_compose(
 				footprint_frame_transformer(*ff, Tag()), 
 				unary_compose(
@@ -109,7 +118,9 @@ __nonmeta_instance_lookup_may_reference_indices_impl(
 						&instance_alias_info_type::instance_index),
 					dereference<instance_alias_info_ptr_type>()
 				)
-				));
+				)
+#endif
+                                );
 #if ENABLE_STACKTRACE
 			STACKTRACE_INDENT_PRINT("global indices = ");
 			copy(indices.begin(), indices.end(), 
@@ -121,11 +132,17 @@ __nonmeta_instance_lookup_may_reference_indices_impl(
 			// local indices -1 == global indices
 			// copy(i, e, back_inserter(indices));	// WRONG
 			transform(i, e, back_inserter(indices), 
+#if __cplusplus >= 201103L
+                                  [](const instance_alias_info_ptr_type& a){
+                                    return a->instance_index;
+                                  }
+#else
 				unary_compose(
 					member_select_ref(
 						&instance_alias_info_type::instance_index),
 					dereference<instance_alias_info_ptr_type>()
 				)
+#endif
 			);
 		}
 		return good_bool(true);

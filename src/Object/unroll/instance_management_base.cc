@@ -21,9 +21,11 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/unroll/sequential_scope.hh"
 
 #include "util/memory/count_ptr.tcc"
+#if __cplusplus < 201103L
 #include "util/dereference.hh"
 #include "util/compose.hh"
 #include "util/binders.hh"
+#endif
 #include "util/static_assert.hh"
 #include "util/type_traits.hh"
 #include "util/persistent_object_manager.tcc"
@@ -40,12 +42,14 @@ DEFAULT_STATIC_TRACE_BEGIN
 namespace HAC {
 namespace entity {
 using util::is_same;
-using util::dereference;
 using util::auto_indent;
 using std::istream;
 using std::for_each;
 #include "util/using_ostream.hh"
+#if __cplusplus < 201103L
+using util::dereference;
 USING_UTIL_COMPOSE
+#endif
 
 //=============================================================================
 // class instance_management_base method definitions
@@ -96,6 +100,13 @@ sequential_scope::unroll(const unroll_context& c) const {
 	)
 	);
 #else
+#if __cplusplus >= 201103L
+	for (const auto& elem : *this) {
+          if (!elem->unroll(c).good) {
+            return good_bool(false);
+          }
+	}
+#else
 	const_iterator i(begin());
 	const const_iterator e(end());
 	for ( ; i!=e; i++) {
@@ -108,6 +119,7 @@ sequential_scope::unroll(const unroll_context& c) const {
 #endif
 	}
 #endif
+#endif
 	return good_bool(true);
 }
 
@@ -119,6 +131,15 @@ good_bool
 sequential_scope::unroll_if(const unroll_context& c, 
 		bool (*pred)(const instance_management_base*)) const {
 	STACKTRACE("sequential_scope::unroll()");
+#if __cplusplus >= 201103L
+	for (const auto& elem : *this) {
+		if (elem && (*pred)(&*elem)) {
+			if (!elem->unroll(c).good) {
+				return good_bool(false);
+			}
+		}
+	}
+#else
 	const_iterator i(begin());
 	const const_iterator e(end());
 	for ( ; i!=e; i++) {
@@ -128,6 +149,7 @@ sequential_scope::unroll_if(const unroll_context& c,
 			}
 		}
 	}
+#endif
 	return good_bool(true);
 }
 

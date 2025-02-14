@@ -23,7 +23,9 @@
 #include "Object/global_entry.tcc"
 #include "Object/global_context_cache.hh"
 #include "util/memory/count_ptr.tcc"
+#if __cplusplus < 201103L
 #include "util/compose.hh"
+#endif
 #include "util/stacktrace.hh"
 #include "common/ICE.hh"
 
@@ -34,7 +36,9 @@ namespace entity {
 using util::write_value;
 using util::read_value;
 using util::persistent_traits;
+#if __cplusplus < 201103L
 USING_UTIL_COMPOSE
+#endif
 
 //=============================================================================
 // class member_meta_instance_reference method definitions
@@ -312,6 +316,13 @@ for ( ; fi!=fe; ++fi) {
 	const size_t nrefs = tmps.size() * asz;	// product: parents X locals
 	indices.reserve(nrefs +indices.size());
 	const footprint_frame_transformer fft(tmp.get_frame(), Tag());
+#if __cplusplus >= 201103L
+	for (const auto& alias : aliases) {
+		// don't bother checking for duplicates
+		// (easy: just use std::set instead of vector)
+		indices.push_back(fft(alias->instance_index));
+	}
+#else
 #if 0
 	transform(aliases.begin(), aliases.end(), back_inserter(indices), 
 		ADS::unary_compose(fft, instance_index_extractor()));
@@ -323,6 +334,7 @@ for ( ; fi!=fe; ++fi) {
 		// (easy: just use std::set instead of vector)
 		indices.push_back(fft((*i)->instance_index));
 	}
+#endif
 #endif
 }	// end for
 	return good_bool(true);

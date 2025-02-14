@@ -7,7 +7,9 @@
 #ifndef	__UTIL_CONST_ASSOC_QUERY_TCC__
 #define	__UTIL_CONST_ASSOC_QUERY_TCC__
 
+#if __cplusplus < 201103L
 #include "util/STL/functional.hh"	// in case _Select is missing
+#endif
 #include "util/const_assoc_query.hh"
 #include "util/assoc_traits.hh"		// contains STL specializations
 #include "util/null_construct.hh"

@@ -26,7 +26,9 @@
 #include "Object/def/footprint.hh"
 #include "Object/module.hh"
 #include "common/TODO.hh"
+#if __cplusplus < 201103L
 #include "util/compose.hh"
+#endif
 #include "util/string.tcc"
 #include "util/utypes.h"
 #include "util/timer.hh"
@@ -41,7 +43,9 @@ using std::ptr_fun;
 using std::mem_fun_ref;
 using util::strings::string_to_num;
 #include "util/using_ostream.hh"
+#if __cplusplus < 201103L
 USING_UTIL_COMPOSE
+#endif
 
 //=============================================================================
 DESCRIBE_COMMON_COMMAND_CLASS_TEMPLATE(Help, "help",

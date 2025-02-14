@@ -57,7 +57,9 @@
 #include "util/directory.hh"
 #include "util/memory/count_ptr.tcc"
 #include "util/packed_array.hh"		// for alias_collection_type
+#if __cplusplus < 201103L
 #include "util/member_select.hh"
+#endif
 #include "util/copy_if.hh"		// for transform_if algo
 #include "util/iterator_more.hh"		// for set_inserter
 
@@ -101,7 +103,9 @@ using std::vector;
 using std::copy;
 using std::string;
 using std::ostream_iterator;
+#if __cplusplus < 201103L
 using std::bind1st;
+#endif
 using util::set_inserter;
 using util::value_saver;
 using util::string_list;
@@ -165,7 +169,14 @@ typed_indexed_references<Tag>::typed_indexed_references(
 	// TODO: copy indices
 	indices.resize(temp.size());
 	transform(temp.begin(), temp.end(), indices.begin(), 
-		util::member_select_ref(&global_indexed_reference::second));
+#if __cplusplus >= 201103L
+                  [](const global_indexed_reference& ref) {
+                    return ref.second;
+                  }
+#else
+		util::member_select_ref(&global_indexed_reference::second)
+#endif
+                );
 }
 
 template struct typed_indexed_references<bool_tag>;
@@ -1086,12 +1097,26 @@ complete_instance_names(const char* _text, const footprint& topfp,
 		const vector<string>::const_iterator
 			f(lower_bound(temp.begin(), temp.end(), child)),
 			l(lower_bound(temp.begin(), temp.end(), child2));
-		transform(f, l, back_inserter(matches), 
-			bind1st(std::plus<string>(), root));
+		transform(f, l, back_inserter(matches),
+#if __cplusplus >= 201103L
+                          [&root](const string& s) -> string {
+                            return root + s;
+                          }
+#else
+			bind1st(std::plus<string>(), root)
+#endif
+                    );
 	} else {
 		// all matches
 		transform(temp.begin(), temp.end(), back_inserter(matches), 
-			bind1st(std::plus<string>(), root));
+#if __cplusplus >= 201103L
+                          [&root](const string& s) -> string {
+                            return root + s;
+                          }
+#else
+			bind1st(std::plus<string>(), root)
+#endif
+                        );
 	}
 #if DEBUG_COMPLETION
 	cout << "<MATCHES:";
