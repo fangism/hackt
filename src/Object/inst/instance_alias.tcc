@@ -68,10 +68,11 @@
 #include "util/what.hh"
 #include "util/stacktrace.hh"
 #include "util/static_trace.hh"
+#if __cplusplus < 201103L
 #include "util/compose.hh"
 #include "util/binders.hh"
 #include "util/dereference.hh"
-
+#endif
 
 namespace HAC {
 namespace entity {
@@ -80,8 +81,10 @@ using std::ostringstream;
 // using std::_Select1st;
 #include "util/using_ostream.hh"
 using util::multikey_generator;
+#if __cplusplus < 201103L
 USING_UTIL_COMPOSE
 using util::dereference;
+#endif
 using util::multikey;
 using util::value_writer;
 using util::value_reader;
