@@ -85,13 +85,21 @@ UTIL_HEADER_FILES = \
 	util/utypes.h \
 	util/xdr.h
 
+# These headers are not to be used after C++11, and will be deleted.
+DEPRECATED_UTIL_CXX_HEADER_FILES = \
+	util/STL/functional.hh \
+	util/dereference.hh \
+	util/member_select.hh \
+	util/binders.hh \
+	util/compose.hh \
+	util/ptrs_functional.hh
+
 UTIL_CXX_HEADER_FILES = \
 	$(UTIL_TCC_FILES:.tcc=.hh) \
 	util/fig/xfig.hh \
 	util/STL/back_inserter.hh \
 	util/STL/allocator_fwd.hh \
 	util/STL/container_iterator.hh \
-	util/STL/functional.hh \
 	util/STL/hash_map_fwd.hh \
 	util/STL/hash_map.hh \
 	util/STL/hash_map_utils.hh \
@@ -119,7 +127,6 @@ UTIL_CXX_HEADER_FILES = \
 	util/copy_if.hh \
 	util/counter.hh \
 	util/convert.hh \
-	util/dereference.hh \
 	util/directory.hh \
 	util/dirent.hh \
 	util/discrete_interval_set_fwd.hh \
@@ -141,7 +148,6 @@ UTIL_CXX_HEADER_FILES = \
 	util/maplikeset.hh \
 	util/member_saver_fwd.hh \
 	util/member_saver.hh \
-	util/member_select.hh \
 	util/memory/construct.hh \
 	util/memory/deallocation_policy_fwd.hh \
 	util/memory/deallocation_policy.hh \
@@ -233,10 +239,7 @@ UTIL_CXX_HEADER_FILES = \
 	util/visitor_functor.hh \
 	util/what_fwd.hh \
 	util/wtf.hh \
-	util/binders.hh \
-	util/compose.hh \
-	util/conditional.hh \
-	util/ptrs_functional.hh
+	util/conditional.hh
 
 UTIL_CC_FILES = \
 	util/IO_utils.cc \
