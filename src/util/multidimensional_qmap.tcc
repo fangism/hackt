@@ -13,6 +13,7 @@
 #ifndef	EXTERN_TEMPLATE_UTIL_MULTIDIMENSIONAL_QMAP
 
 #include <iostream>
+#include <map>
 #include <numeric>		// for accumulate
 #include "util/sstream.hh"
 
@@ -20,8 +21,6 @@
 #ifdef	EXCLUDE_DEPENDENT_TEMPLATES_MULTIDIMENSIONAL_QMAP
 #define	EXTERN_TEMPLATE_UTIL_QMAP
 #endif
-
-#include "util/qmap.tcc"
 
 namespace util {
 using std::accumulate;

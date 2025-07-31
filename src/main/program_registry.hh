@@ -8,10 +8,11 @@
 #define	__HAC_MAIN_PROGRAM_REGISTRY_H__
 
 #include <iosfwd>
-#include "main/hackt_fwd.hh"
+#include <map>
 #include <string>
+
+#include "main/hackt_fwd.hh"
 #include "util/macros.h"
-#include "util/qmap.hh"
 #include "util/memory/count_ptr.hh"
 
 /**
@@ -29,7 +30,6 @@ namespace HAC {
 using std::string;
 using std::ostream;
 using util::memory::count_ptr;
-using util::default_qmap;
 
 //=============================================================================
 /**
@@ -95,8 +95,7 @@ public:
 			whereas hash_map performs a proper 
 			hash on const char*.  
 	 */
-	typedef	default_qmap<string, program_entry>::type
-						program_registry_type;
+	typedef	std::map<string, program_entry>	program_registry_type;
 
 	typedef	count_ptr<program_registry_type>
 						program_registry_ptr_type;

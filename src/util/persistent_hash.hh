@@ -9,7 +9,6 @@
 
 #include "util/persistent.hh"
 #include "util/string_fwd.hh"
-#include "util/STL/hash_map_fwd.hh"
 
 //=============================================================================
 namespace util {
@@ -81,21 +80,19 @@ public:
 }	// end namespace util
 
 //=============================================================================
-BEGIN_HASH_MAP_NS
-using util::persistent;
-
+namespace std {
 /**
 	Since hash_key::key is not null-terminated, don't use 
 	standard char* hash, use precomputed hash member.
  */
 template <>
-struct hash<persistent::hash_key> {
+struct hash<util::persistent::hash_key> {
 	size_t
-	operator () (const persistent::hash_key& k) const
+	operator () (const util::persistent::hash_key& k) const
 		{ return k.get_hash(); }
 };	// end struct hash
 
-END_HASH_MAP_NS	// end namespace HASH_MAP_NAMESPACE
+}  // end namespace std
 
 //=============================================================================
 

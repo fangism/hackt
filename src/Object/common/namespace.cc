@@ -128,7 +128,7 @@ using util::read_value;
 using util::write_string;
 using util::read_string;
 using util::persistent_traits;
-using HASH_MAP_NAMESPACE::copy_map_reverse_bucket;
+using util::copy_map_reverse_bucket;
 
 //=============================================================================
 // general non-member function definitions

@@ -8,10 +8,10 @@
 #ifndef	__UTIL_MULTIKEY_MAP_H__
 #define	__UTIL_MULTIKEY_MAP_H__
 
+#include <iosfwd>
 #include <list>
 
 #include "util/macros.h"
-#include "util/STL/pair_fwd.hh"
 
 #include "util/multikey_fwd.hh"
 #include "util/multikey_map_fwd.hh"
@@ -23,8 +23,6 @@
 namespace util {
 using std::ostream;
 using std::istream;
-using std::pair;
-using std::list;
 
 //=============================================================================
 /**

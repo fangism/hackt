@@ -9,7 +9,8 @@
 #define	__UTIL_MULTIDIMENSIONAL_SPARSE_SET_FWD_H__
 
 #include <list>
-#include "util/STL/pair_fwd.hh"
+#include <utility>  // for std::pair
+
 #include "util/size_t.h"
 
 #define MULTIDIMENSIONAL_SPARSE_SET_TEMPLATE_SIGNATURE			\

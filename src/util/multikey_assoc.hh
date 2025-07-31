@@ -8,16 +8,15 @@
 #ifndef	__UTIL_MULTIKEY_ASSOC_H__
 #define	__UTIL_MULTIKEY_ASSOC_H__
 
+#include "util/multikey_assoc_fwd.hh"
+
 #include <list>
+#include <utility>  // for std::pair
 
 #include "util/macros.h"
-#include "util/multikey_assoc_fwd.hh"
-#include "util/STL/pair_fwd.hh"
 #include "util/array_traits.hh"
 
 namespace util {
-using std::pair;
-using std::list;
 
 template <size_t, class>
 class multikey;
@@ -35,8 +34,8 @@ struct multikey_assoc_compact_helper {
 	typedef	multikey<D,K>				key_type;
 	typedef	typename key_type::value_type		index_type;
 	typedef	std::list<index_type>	key_list_type;
-	typedef	pair<key_list_type, key_list_type >	key_list_pair_type;
-	typedef	pair<key_type, key_type>		key_pair_type;
+	typedef	std::pair<key_list_type, key_list_type >	key_list_pair_type;
+	typedef	std::pair<key_type, key_type>		key_pair_type;
 
 	template <class A>
 	static
@@ -72,8 +71,8 @@ struct multikey_assoc_compact_helper<1,K> {
 	typedef	key_type				index_type;
 //	typedef	typename key_type::simple_type		index_type;
 	typedef	std::list<index_type>	key_list_type;
-	typedef	pair<key_list_type, key_list_type >	key_list_pair_type;
-	typedef	pair<key_type, key_type>		key_pair_type;
+	typedef	std::pair<key_list_type, key_list_type >	key_list_pair_type;
+	typedef	std::pair<key_type, key_type>		key_pair_type;
 
 	template <class A>
 	static
@@ -98,7 +97,7 @@ struct multikey_assoc_compact_helper<1,K> {
 	This class provides facilities for querying
 	the compactness and existence of multidimensional slices.  
 
-	\param D is the dimension.  Technically, this icould be inferred
+	\param D is the dimension.  Technically, this could be inferred
 		from deep within the container's class typedefs, 
 		but we also use it to partially specialize.  
 	\param C is the container of multidimensionally indexed elements.  
@@ -140,8 +139,8 @@ public:
 	// this only works for maps... set::key_type == set::value_type :S
 	typedef	typename key_type::value_type		index_type;
 	typedef	std::list<index_type>	key_list_type;
-	typedef	pair<key_list_type, key_list_type >	key_list_pair_type;
-	typedef	pair<key_type, key_type>		key_pair_type;
+	typedef	std::pair<key_list_type, key_list_type >	key_list_pair_type;
+	typedef	std::pair<key_type, key_type>		key_pair_type;
 
 protected:
 	typedef	multikey_assoc_compact_helper<D, index_type>
@@ -345,8 +344,8 @@ public:
 	typedef	key_type				index_type;
 //	typedef	typename key_type::simple_type		index_type;
 	typedef	std::list<index_type>	key_list_type;
-	typedef	pair<key_list_type, key_list_type >	key_list_pair_type;
-	typedef	pair<key_type, key_type>		key_pair_type;
+	typedef	std::pair<key_list_type, key_list_type >	key_list_pair_type;
+	typedef	std::pair<key_type, key_type>		key_pair_type;
 
 	// for array_traits<>
 	enum { dim = 1 };

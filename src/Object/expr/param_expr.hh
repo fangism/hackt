@@ -10,6 +10,7 @@
 #ifndef __HAC_OBJECT_EXPR_PARAM_EXPR_H__
 #define __HAC_OBJECT_EXPR_PARAM_EXPR_H__
 
+#include "util/size_t.h"
 #include "util/persistent.hh"
 #include "util/memory/pointer_classes_fwd.hh"
 

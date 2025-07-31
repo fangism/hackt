@@ -11,7 +11,6 @@
 #include "util/macros.h"
 #include "util/multikey_fwd.hh"
 
-#include "util/STL/reverse_iterator.hh"
 #include <valarray>
 #include <iosfwd>
 #include "util/IO_utils_fwd.hh"

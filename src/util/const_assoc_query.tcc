@@ -7,6 +7,10 @@
 #ifndef	__UTIL_CONST_ASSOC_QUERY_TCC__
 #define	__UTIL_CONST_ASSOC_QUERY_TCC__
 
+#if __cplusplus >= 201103L
+#error "Do not use this header in C++11 or newer.  Rewrite the code."
+#endif
+
 #if __cplusplus < 201103L
 #include "util/STL/functional.hh"	// in case _Select is missing
 #endif

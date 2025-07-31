@@ -374,6 +374,7 @@ public:
 
 //=============================================================================
 
+#if __cplusplus < 201103L
 namespace std {
 using util::maplikeset_element_derived;
 
@@ -410,6 +411,7 @@ struct _Select2nd<maplikeset_element_derived<K,V> > :
 };	// end struct _Select2nd
 
 }	// end namespace std
+#endif
 
 //=============================================================================
 

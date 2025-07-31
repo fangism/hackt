@@ -8,6 +8,7 @@
 #ifndef	__HAC_OBJECT_UNROLL_ALIASES_CONNECTION_BASE_H__
 #define	__HAC_OBJECT_UNROLL_ALIASES_CONNECTION_BASE_H__
 
+#include "util/size_t.h"
 #include "Object/unroll/meta_instance_reference_connection.hh"
 
 namespace HAC {

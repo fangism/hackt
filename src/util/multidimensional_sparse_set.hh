@@ -14,7 +14,6 @@
 #include "util/array_traits.hh"
 #include "util/multidimensional_sparse_set_fwd.hh"	// forward declarations
 #include "util/discrete_interval_set.hh"
-#include "util/qmap.hh"		// queryable maps
 #include "util/memory/count_ptr.hh"
 #include "util/static_assert.hh"
 #include "util/type_traits.hh"
@@ -92,7 +91,7 @@ protected:
 	typedef multidimensional_sparse_set<D-1,T,R,L>	child_type;
 	/** need count_ptr to be copy-constructable */
 	typedef	memory::count_ptr<child_type>		map_value_type;
-	typedef	typename default_qmap<T, map_value_type>::type	map_type;
+	typedef	std::map<T, map_value_type>		map_type;
 	typedef	multidimensional_sparse_set_traits<T,R,L>	traits_type;
 public:
 	typedef	typename traits_type::range_type	range_type;

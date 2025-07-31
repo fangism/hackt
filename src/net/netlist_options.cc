@@ -17,10 +17,11 @@
 #include "util/stacktrace.hh"
 #include "util/attributes.h"
 #include "util/iterator_more.hh"
+#if __cplusplus < 201103L
 #include "util/assoc_traits.hh"
+#endif
 #include "util/cppcat.h"
 #include "util/optparse.tcc"
-#include "util/assoc_traits.hh"
 #include "util/STL/functional.hh"	// for std::_Select2nd
 
 namespace HAC {
@@ -38,7 +39,9 @@ using util::file_status;
 using util::named_ifstream;
 using util::set_inserter;
 using util::strings::string_tolower;
+#if __cplusplus < 201103L
 using util::assoc_traits;
+#endif
 
 //=============================================================================
 // class netlist_options method definitions
@@ -709,6 +712,7 @@ __print_member_default(ostream& o, const options_struct_type& n_opt,
 /**
 	Always print the case-preserved string, even when checking for
 	case-collisions.
+	Prints elements joined by a comma, without the trailing comma.
  */
 // specialization
 static
@@ -726,7 +730,12 @@ __print_member_sequence(ostream& o, const options_struct_type& n_opt,
 #endif
 		const_iterator i(s.begin()), l(--s.end());
 		transform(i, l, std::ostream_iterator<value_type>(o, ","), 
-			assoc_traits<string_set_type>::value_selector());
+#if __cplusplus >= 201103L
+			[](const value_type& v) { return v.second; }
+#else
+			assoc_traits<string_set_type>::value_selector()
+#endif
+		);
 		o << l->second;
 	}
 	return o;
@@ -1936,7 +1945,12 @@ ostream&
 netlist_options::dump_preferred_names(ostream& o) const {
 	std::transform(preferred_names.begin(), preferred_names.end(), 
 		ostream_iterator<string>(o, ","), 
-		util::assoc_traits<string_set_type>::key_selector());
+#if __cplusplus >= 201103L
+		[](const string_set_type::value_type& v) { return v.first; }
+#else
+		util::assoc_traits<string_set_type>::key_selector()
+#endif
+	);
 	return o;
 }
 

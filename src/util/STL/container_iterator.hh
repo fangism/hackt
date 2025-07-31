@@ -11,7 +11,12 @@
 #ifndef	__UTIL_STL_CONTAINER_ITERATOR_HH__
 #define	__UTIL_STL_CONTAINER_ITERATOR_HH__
 
-#include "util/STL/valarray_fwd.hh"
+#if __cplusplus >= 201103L
+#error "Do not use this header in C++11 or newer.  Rewrite the code."
+// C++11 supports std::begin/end overloads of valarray
+#endif
+
+#include <valarray>
 
 BEGIN_NAMESPACE_STD
 // forward declarations
@@ -23,10 +28,10 @@ struct container_const_iterator;
 
 // specialization declarations (THIS IS NOT WORKING AS I EXPECT...)
 template <class T>
-struct container_iterator<valarray<T> >;
+struct container_iterator<std::valarray<T> >;
 
 template <class T>
-struct container_const_iterator<valarray<T> >;
+struct container_const_iterator<std::valarray<T> >;
 
 //=============================================================================
 template <class C>

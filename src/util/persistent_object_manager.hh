@@ -11,12 +11,13 @@
 #include <list>
 #include <vector>
 #include <map>
+#include <unordered_map>
+
 #include "util/list_vector.hh"
 #include "util/persistent.hh"
 
 #include "util/nullary_function_fwd.hh"
 
-#include "util/STL/hash_map.hh"
 #include "util/memory/count_ptr.hh"
 #include "util/IO_utils.hh"		// for read and write to streams
 
@@ -159,12 +160,8 @@ private:
 		Every pointer will be mapped to an auxiliary index.  
 		Is the reverse map of reconstruction_table_type.
 	 */
-#if USING_UNORDERED_MAP
-	typedef	HASH_MAP_NAMESPACE::hash_map<const void*, Long>
+	typedef	std::unordered_map<const void*, Long>
 	// is actually unordered_map
-#else
-	typedef	HASH_MAP_NAMESPACE::default_hash_map<const void*, Long>::type
-#endif
 						addr_to_index_map_type;
 
 	/**
@@ -179,18 +176,13 @@ private:
 	/**
 		Collection of constructor functors mapped per hash_key.
 	 */
-	typedef	vector<reconstruct_function_ptr_type>
+	typedef	std::vector<reconstruct_function_ptr_type>
 					reconstructor_vector_type;
 	/**
 		Map from of persistent type's key to allocator function.  
 	 */
-#if USING_UNORDERED_MAP
-	typedef HASH_MAP_NAMESPACE::hash_map<persistent::hash_key,
+	typedef std::unordered_map<persistent::hash_key,
 			reconstructor_vector_type>
-#else
-	typedef HASH_MAP_NAMESPACE::default_hash_map<persistent::hash_key,
-			reconstructor_vector_type>::type
-#endif
 					reconstruction_function_map_type;
 
 private:

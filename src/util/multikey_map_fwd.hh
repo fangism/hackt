@@ -7,7 +7,8 @@
 #ifndef	__UTIL_MULTIKEY_MAP_FWD_H__
 #define	__UTIL_MULTIKEY_MAP_FWD_H__
 
-#include "util/STL/map_fwd.hh"
+#include <map>
+
 #include "util/size_t.h"
 #include "util/multikey_fwd.hh"
 
@@ -38,7 +39,7 @@ struct default_multikey_map {
 		typedef	typename wrapper_type::type		type;
 	};
 
-	typedef	typename rebind_default_map_type<std::default_map>::type
+	typedef	typename rebind_default_map_type<std::map>::type
 						default_map_type;
 
 	typedef	multikey_map<D, K, T, default_map_type>		type;

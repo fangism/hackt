@@ -7,6 +7,10 @@
 #ifndef	__UTIL_STL_SET_FWD_HH__
 #define	__UTIL_STL_SET_FWD_HH__
 
+#if __cplusplus >= 201103L
+#error "Do not use this header in C++11 or newer.  Rewrite the code."
+#endif
+
 #include "util/STL/allocator_fwd.hh"
 
 BEGIN_NAMESPACE_STD

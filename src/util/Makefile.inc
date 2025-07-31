@@ -14,16 +14,20 @@ util-libs: $(UTILLIBS)
 
 # SUBDIRS += util/test
 
+DEPRECATED_UTIL_TCC_FILES = \
+	util/const_assoc_query.tcc \
+	util/hash_qmap.tcc \
+	util/multikey_qmap.tcc \
+	util/qmap.tcc
+
 # template definition header files
 UTIL_TCC_FILES = \
 	util/IO_utils.tcc \
 	util/array.tcc \
 	util/bitarray.tcc \
 	util/bitset.tcc \
-	util/const_assoc_query.tcc \
 	util/discrete_interval_set.tcc \
 	util/getopt_mapped.tcc \
-	util/hash_qmap.tcc \
 	util/list_vector.tcc \
 	util/memory/allocator_adaptor.tcc \
 	util/memory/array_pool.hh \
@@ -42,7 +46,6 @@ UTIL_TCC_FILES = \
 	util/multikey.tcc \
 	util/multikey_assoc.tcc \
 	util/multikey_map.tcc \
-	util/multikey_qmap.tcc \
 	util/multikey_set.tcc \
 	util/new_functor.tcc \
 	util/numformat.tcc \
@@ -50,7 +53,6 @@ UTIL_TCC_FILES = \
 	util/packed_array.tcc \
 	util/persistent_object_manager.tcc \
 	util/persistent_functor.tcc \
-	util/qmap.tcc \
 	util/ring_node.tcc \
 	util/string.tcc \
 	util/sublist.tcc \
@@ -87,38 +89,44 @@ UTIL_HEADER_FILES = \
 
 # These headers are not to be used after C++11, and will be deleted.
 DEPRECATED_UTIL_CXX_HEADER_FILES = \
-	util/STL/functional.hh \
-	util/dereference.hh \
-	util/member_select.hh \
-	util/binders.hh \
-	util/compose.hh \
-	util/ptrs_functional.hh
-
-UTIL_CXX_HEADER_FILES = \
-	$(UTIL_TCC_FILES:.tcc=.hh) \
-	util/fig/xfig.hh \
-	util/STL/back_inserter.hh \
 	util/STL/allocator_fwd.hh \
 	util/STL/container_iterator.hh \
+	util/STL/functional.hh \
 	util/STL/hash_map_fwd.hh \
 	util/STL/hash_map.hh \
-	util/STL/hash_map_utils.hh \
 	util/STL/iterator_fwd.hh \
-	util/STL/libconfig.hh \
 	util/STL/map_fwd.hh \
-	util/STL/namespace.hh \
 	util/STL/pair_fwd.hh \
 	util/STL/reverse_iterator.hh \
 	util/STL/set_fwd.hh \
 	util/STL/valarray_fwd.hh \
 	util/STL/valarray_iterator.hh \
+	util/assoc_traits_fwd.hh \
+	util/assoc_traits.hh \
+	util/dereference.hh \
+	util/hash_specializations.hh \
+	util/member_select.hh \
+	util/binders.hh \
+	util/compose.hh \
+	util/ptrs_functional.hh
+
+DERPRECATED_UTIL_CXX_HEADER_FILES = \
+	util/hash_qmap_fwd.hh \
+	util/multikey_qmap_fwd.hh \
+	util/qmap_fwd.hh
+
+UTIL_CXX_HEADER_FILES = \
+	$(UTIL_TCC_FILES:.tcc=.hh) \
+	util/fig/xfig.hh \
+	util/STL/back_inserter.hh \
+	util/STL/hash_map_utils.hh \
+	util/STL/libconfig.hh \
+	util/STL/namespace.hh \
 	util/IO_utils_fwd.hh \
 	util/addressof.hh \
 	util/algorithm.hh \
 	util/array_indexer.hh \
 	util/array_traits.hh \
-	util/assoc_traits_fwd.hh \
-	util/assoc_traits.hh \
 	util/bitmanip.hh \
 	util/bitwise_functional.hh \
 	util/boolean_types.hh \
@@ -137,8 +145,6 @@ UTIL_CXX_HEADER_FILES = \
 	util/function_traits.hh \
 	util/graph/bare_digraph.hh \
 	util/graph/bare_digraph_fwd.hh \
-	util/hash_qmap_fwd.hh \
-	util/hash_specializations.hh \
 	util/ifthenelse.hh \
 	util/indent.hh \
 	util/index_functor.hh \
@@ -172,7 +178,6 @@ UTIL_CXX_HEADER_FILES = \
 	util/multikey_fwd.hh \
 	util/multikey_assoc_fwd.hh \
 	util/multikey_map_fwd.hh \
-	util/multikey_qmap_fwd.hh \
 	util/multikey_set_fwd.hh \
 	util/named_ifstream_manager.hh \
 	util/nested_iterator.hh \
@@ -205,7 +210,6 @@ UTIL_CXX_HEADER_FILES = \
 	util/persistent_fwd.hh \
 	util/persistent.hh \
 	util/persistent_hash.hh \
-	util/qmap_fwd.hh \
 	util/readline_wrap.hh \
 	util/rebinder.hh \
 	util/reference_wrapper.hh \

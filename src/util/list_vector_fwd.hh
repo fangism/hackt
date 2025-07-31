@@ -9,21 +9,18 @@
 #define	__UTIL_LIST_VECTOR_FWD_H__
 
 #include <vector>
-#include "util/STL/allocator_fwd.hh"
 
 #define LIST_VECTOR_TEMPLATE_SIGNATURE					\
 template <class T, class ValAlloc, class VecAlloc>
 
 namespace util {
-using std::allocator;
-using std::vector;
 
 LIST_VECTOR_TEMPLATE_SIGNATURE
 class list_vector;
 
 // re-forward-declaration with default arguments
 template <class T, class ValAlloc = std::allocator<T>,
-	class VecAlloc = std::allocator<vector<T> > >
+	class VecAlloc = std::allocator<std::vector<T> > >
 class list_vector;
 
 }	// end namespace util

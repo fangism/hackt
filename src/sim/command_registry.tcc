@@ -857,7 +857,7 @@ command_registry<Command>::completion(const char* text, int start, int end) {
 			// shell command, fallback to filename completion
 			return NULL;
 		}
-		const const_iterator f(command_map.find(key));
+		const command_iterator f(command_map.find(key));
 		if (f == command_map.end()) {
 			// invalid command
 			cerr << "\nNo such command: " << key << endl;

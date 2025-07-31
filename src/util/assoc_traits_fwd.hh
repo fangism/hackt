@@ -10,6 +10,11 @@
 #ifndef	__UTIL_ASSOC_TRAITS_FWD_H__
 #define	__UTIL_ASSOC_TRAITS_FWD_H__
 
+#if __cplusplus >= 201103L
+#error "Do not use this header in C++11 or newer.  Rewrite the code."
+// Recomend: using lambdas instead of functors.
+#endif
+
 namespace util {
 //=============================================================================
 /**

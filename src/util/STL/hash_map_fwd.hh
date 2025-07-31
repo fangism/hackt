@@ -8,6 +8,10 @@
 #ifndef	__UTIL_STL_HASH_MAP_FWD_HH__
 #define	__UTIL_STL_HASH_MAP_FWD_HH__
 
+#if __cplusplus >= 201103L
+#error "Do not use this header in C++11 or newer.  Rewrite the code."
+#endif
+
 #include "config.h"
 #include "util/STL/allocator_fwd.hh"
 

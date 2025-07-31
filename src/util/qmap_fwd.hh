@@ -8,9 +8,13 @@
 #ifndef	__UTIL_QMAP_FWD_H__
 #define	__UTIL_QMAP_FWD_H__
 
-#include "util/STL/pair_fwd.hh"
-#include "util/STL/allocator_fwd.hh"
+#if __cplusplus >= 201103L
+#error "Do not use this header in C++11 or newer.  Rewrite the code."
+#endif
+
 #include <functional>  // for std::less
+#include <memory>  // for std::allocator
+#include <utility>  // for std::pair
 
 #define	QMAP_TEMPLATE_SIGNATURE						\
 template <class K, class T, typename C, typename A>

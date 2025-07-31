@@ -11,7 +11,6 @@
 #include "AST/RTE_fwd.hh"
 #include "AST/expr_base.hh"
 #include "AST/lang.hh"
-#include "util/STL/pair_fwd.hh"
 #include "util/memory/count_ptr.hh"
 
 namespace HAC {

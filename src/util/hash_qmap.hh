@@ -4,16 +4,20 @@
 	$Id: hash_qmap.hh,v 1.10 2006/04/27 00:16:53 fang Exp $
  */
 
-#ifndef	__UTIL_HASH_QMAP_H__
-#define	__UTIL_HASH_QMAP_H__
+#ifndef	__UTIL_HASH_QMAP_HH__
+#define	__UTIL_HASH_QMAP_HH__
+
+#if __cplusplus >= 201103L
+#error "Do not use this header in C++11 or newer.  Rewrite the code."
+#endif
+
+#include <unordered_map>
 
 #include "util/macros.h"
-#include "util/STL/hash_map.hh"
 #include "util/hash_qmap_fwd.hh"		// forward declarations only
 #include "util/const_assoc_query.hh"
 
 namespace util {
-using std::pair;
 
 //-----------------------------------------------------------------------------
 /**
@@ -27,14 +31,14 @@ using std::pair;
 	\param E the equal_to comparator function.
 	\param A the allocator.  
  */
-HASH_QMAP_TEMPLATE_SIGNATURE
+template <class K, class T, class H, class E, class A>
 class hash_qmap :
-	public const_assoc_query<HASH_MAP_NAMESPACE::HASH_MAP_CLASS > {
+	public const_assoc_query<std::unordered_map<K,T,H,E,A> > {
 	// EVERYTHING inherited
 };
 
 //-----------------------------------------------------------------------------
 }	// end namespace util
 
-#endif	//	__UTIL_HASH_QMAP_H__
+#endif	//	__UTIL_HASH_QMAP_HH__
 

@@ -7,6 +7,7 @@
 #define	__PR_PR_UTILS_H__
 
 #include <iosfwd>
+#include "util/size_t.h"
 #include "util/IO_utils_fwd.hh"
 
 namespace HAC {

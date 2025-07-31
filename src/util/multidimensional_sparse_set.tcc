@@ -13,7 +13,7 @@
 #ifndef	EXTERN_TEMPLATE_UTIL_MULTIDIMENSIONAL_SPARSE_SET
 
 #include <iostream>
-#include "util/sstream.hh"		// used by the dumo method
+#include "util/sstream.hh"		// used by the dump method
 #include "util/memory/count_ptr.tcc"
 
 #ifdef	EXCLUDE_DEPENDENT_TEMPLATES_UTIL_MULTIDIMENSIONAL_SPARSE_SET
@@ -21,7 +21,6 @@
 #define	EXTERN_TEMPLATE_UTIL_DISCRETE_INTERVAL_SET
 #endif
 
-#include "util/qmap.tcc"
 #include "util/discrete_interval_set.tcc"
 
 namespace util {

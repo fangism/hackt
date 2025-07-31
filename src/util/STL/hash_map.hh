@@ -7,6 +7,10 @@
 #ifndef	__UTIL_STL_HASH_MAP_H__
 #define	__UTIL_STL_HASH_MAP_H__
 
+#if __cplusplus >= 201103L
+#error "Do not use this header in C++11 or newer.  Use <unordred_map>."
+#endif
+
 #include "util/STL/hash_map_fwd.hh"
 
 #if USING_UNORDERED_MAP

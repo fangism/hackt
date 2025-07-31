@@ -24,8 +24,6 @@
 #define	LIST_VECTOR_CLASS	list_vector<T,ValAlloc,VecAlloc>
 
 namespace util {
-using std::list;
-using std::vector;
 using std::ostream;
 
 //=============================================================================
@@ -69,8 +67,8 @@ public:
 	typedef	const T&			const_reference;
 private:
 	// implementation details
-	typedef	vector<value_type, ValAlloc>	vector_type;
-	typedef	list<vector_type, VecAlloc>	list_type;
+	typedef	std::vector<value_type, ValAlloc>	vector_type;
+	typedef	std::list<vector_type, VecAlloc>	list_type;
 	typedef	typename list_type::iterator		list_iterator;
 	typedef	typename list_type::const_iterator	const_list_iterator;
 	typedef	typename list_type::reverse_iterator	reverse_list_iterator;

@@ -58,7 +58,6 @@
 #include "util/memory/chunk_map_pool.tcc"
 #include "util/memory/count_ptr.tcc"
 #include "util/what.hh"
-#include "util/multikey_qmap.tcc"		// include "qmap.tcc"
 #include "util/persistent_object_manager.tcc"
 #if __cplusplus < 201103L
 #include "util/compose.hh"

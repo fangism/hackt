@@ -9,6 +9,7 @@
 #define	__UTIL_MULTIDIMENSIONAL_QMAP_H__
 
 #include <iosfwd>
+#include <map>
 
 #include "util/macros.h"
 
@@ -16,7 +17,6 @@
 #include "util/multidimensional_qmap_fwd.hh"
 	// includes <list>
 #include "util/array_traits.hh"
-#include "util/qmap.hh"
 #include "util/static_assert.hh"
 #include "util/type_traits.hh"
 
@@ -139,8 +139,7 @@ public:
 	typedef	typename key_list_type::const_iterator	const_list_iterator;
 	typedef	pair<const_list_iterator, const_list_iterator>
 							index_arg_type;
-	typedef	typename default_qmap<K, map_value_type>::type
-							map_type;
+	typedef	typename std::map<K, map_value_type>	map_type;
 	typedef	typename map_type::size_type		size_type;
 	typedef	typename map_type::iterator		map_iterator;
 	typedef	typename map_type::const_iterator	const_map_iterator;
@@ -265,7 +264,7 @@ public:
 	typedef	typename key_list_type::const_iterator	const_list_iterator;
 	typedef	pair<const_list_iterator, const_list_iterator>
 							index_arg_type;
-	typedef	typename default_qmap<K,T>::type	map_type;
+	typedef	typename std::map<K,T>			map_type;
 	typedef	typename map_type::size_type		size_type;
 	typedef	typename map_type::iterator		map_iterator;
 	typedef	typename map_type::const_iterator	const_map_iterator;

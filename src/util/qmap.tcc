@@ -7,6 +7,10 @@
 #ifndef	__UTIL_QMAP_TCC__
 #define	__UTIL_QMAP_TCC__
 
+#if __cplusplus >= 201103L
+#error "Do not use this header in C++11 or newer.  Rewrite the code."
+#endif
+
 #include "util/qmap.hh"
 
 // predefine to suppress template definition

@@ -9,7 +9,7 @@
 #define	__UTIL_STL_BACK_INSERTER_H__
 
 #include <iterator>
-#include "util/STL/valarray_fwd.hh"
+#include <valarray>
 
 namespace std {
 //=============================================================================
@@ -18,10 +18,10 @@ namespace std {
 	operation on valarrays.  
  */
 template <class T>
-class back_insert_iterator<valarray<T> > :
+class back_insert_iterator<std::valarray<T> > :
 	public iterator<output_iterator_tag, void, void, void, void> {
 public:
-	typedef valarray<T>			container_type;
+	typedef std::valarray<T>		container_type;
 protected:
 	container_type*				container;
 public:

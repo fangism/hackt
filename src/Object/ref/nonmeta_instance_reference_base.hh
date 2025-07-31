@@ -9,6 +9,7 @@
 #ifndef	__HAC_OBJECT_REF_NONMETA_INSTANCE_REFERENCE_BASE_H__
 #define	__HAC_OBJECT_REF_NONMETA_INSTANCE_REFERENCE_BASE_H__
 
+#include "util/size_t.h"
 #include "util/persistent.hh"
 #if 0
 #include "util/memory/excl_ptr.hh"

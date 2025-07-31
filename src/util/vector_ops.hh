@@ -17,7 +17,6 @@
 #include <functional>
 #include <algorithm>
 #include <numeric>
-#include "util/STL/container_iterator.hh"
 #include "util/macros.h"
 #include "util/numeric/zero.hh"
 
@@ -245,8 +244,7 @@ template <class C>
 inline
 void
 min_swap_elements(C& c1, C& c2) {
-	typename std::container_iterator<C>::type
-		b1(std::begin(c1)), e1(std::end(c1)),
+	auto b1(std::begin(c1)), e1(std::end(c1)),
 		b2(std::begin(c2)), e2(std::end(c2));
 	for ( ; b1!=e1; ++b1, ++b2) {
 		if (*b1 > *b2) {
@@ -264,10 +262,8 @@ template <class C>
 inline
 void
 min_clamp_elements(C& c1, const C& c2) {
-	typename std::container_iterator<C>::type
-		b1(std::begin(c1)), e1(std::end(c1));
-	typename std::container_const_iterator<C>::type
-		b2(std::begin(c2)), e2(std::end(c2));
+	auto b1(std::begin(c1)), e1(std::end(c1));
+	auto b2(std::begin(c2)), e2(std::end(c2));
 	for ( ; b1!=e1; ++b1, ++b2) {
 		if (*b1 < *b2) {
 			*b1 = *b2;
@@ -284,10 +280,8 @@ template <class C>
 inline
 void
 max_clamp_elements(C& c1, const C& c2) {
-	typename std::container_iterator<C>::type
-		b1(std::begin(c1)), e1(std::end(c1));
-	typename std::container_const_iterator<C>::type
-		b2(std::begin(c2)), e2(std::end(c2));
+	auto b1(std::begin(c1)), e1(std::end(c1));
+	auto b2(std::begin(c2)), e2(std::end(c2));
 	for ( ; b1!=e1; ++b1, ++b2) {
 		if (*b1 > *b2) {
 			*b1 = *b2;

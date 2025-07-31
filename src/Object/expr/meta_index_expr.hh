@@ -9,6 +9,7 @@
 #ifndef __HAC_OBJECT_EXPR_META_INDEX_EXPR_H__
 #define __HAC_OBJECT_EXPR_META_INDEX_EXPR_H__
 
+#include "util/size_t.h"
 #include "Object/expr/nonmeta_index_expr_base.hh"
 #include "util/memory/pointer_classes_fwd.hh"
 

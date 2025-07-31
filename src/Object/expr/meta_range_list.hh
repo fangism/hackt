@@ -9,6 +9,7 @@
 #ifndef __HAC_OBJECT_EXPR_META_RANGE_LIST_H__
 #define __HAC_OBJECT_EXPR_META_RANGE_LIST_H__
 
+#include "util/size_t.h"
 #include "util/persistent.hh"
 #include "util/boolean_types.hh"
 

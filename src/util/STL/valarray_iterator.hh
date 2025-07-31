@@ -10,6 +10,11 @@
 #ifndef	__UTIL_STL_VALARRAY_ITERATOR_HH__
 #define	__UTIL_STL_VALARRAY_ITERATOR_HH__
 
+#if __cplusplus >= 201103L
+#error "Do not use this header in C++11 or newer.  Rewrite the code."
+// C++11 supports std::begin/end overloads of valarray
+#endif
+
 #include "util/STL/libconfig.hh"
 #include <valarray>
 // #include "util/STL/container_iterator.hh"

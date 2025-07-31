@@ -9,8 +9,8 @@
 #ifndef __HAC_OBJECT_EXPR_CONST_INDEX_LIST_H__
 #define __HAC_OBJECT_EXPR_CONST_INDEX_LIST_H__
 
-#include "util/STL/pair_fwd.hh"
 #include <list>
+#include <utility>   // for std::pair
 #include <vector>
 #include "Object/expr/meta_index_list.hh"
 #include "Object/common/multikey_index.hh"
@@ -23,7 +23,6 @@ class const_index;
 class const_range_list;
 using std::list;
 using std::vector;
-using std::pair;
 using util::multikey_generic;
 using util::multikey_generator;
 using util::memory::count_ptr;
@@ -57,7 +56,7 @@ public:
 
 	// consider templating this...
 	const_index_list(const const_index_list& l, 
-		const pair<list<pint_value_type>, list<pint_value_type> >& f);
+		const std::pair<list<pint_value_type>, list<pint_value_type> >& f);
 
 	~const_index_list();
 

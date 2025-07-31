@@ -10,11 +10,16 @@
 #ifndef	__UTIL_ASSOC_TRAITS_H__
 #define	__UTIL_ASSOC_TRAITS_H__
 
+#if __cplusplus >= 201103L
+#error "Do not use this header in C++11 or newer.  Rewrite the code."
+// Recomend: using lambdas instead of functors.
+#endif
+
+#include <map>
+#include <set>
+#include <unordered_map>
+
 #include "util/assoc_traits_fwd.hh"
-#include "util/STL/map_fwd.hh"
-#include "util/STL/hash_map_fwd.hh"
-#include "util/STL/set_fwd.hh"
-// SGI's hash_set?
 
 //=============================================================================
 BEGIN_NAMESPACE_STD

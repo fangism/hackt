@@ -12,11 +12,11 @@
 #include <iosfwd>
 #include <vector>
 #include <string>
+#include <unordered_map>
 
 #include "util/macros.h"
 #include "util/boolean_types.hh"
 #include "util/persistent_fwd.hh"	// for persistent object interface
-#include "util/STL/hash_map.hh"
 #include "util/memory/excl_ptr.hh"
 #include "util/memory/count_ptr.hh"
 
@@ -71,7 +71,7 @@ public:
 	typedef	never_ptr<const placeholder_type>
 					template_formals_value_type;
 	// double-maintenance...
-	typedef	HASH_MAP_NAMESPACE::hash_map<string,
+	typedef	std::unordered_map<string,
 			template_formals_value_type>
 					template_formals_map_type;
 

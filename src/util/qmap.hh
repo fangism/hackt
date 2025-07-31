@@ -9,14 +9,16 @@
 #ifndef	__UTIL_QMAP_H__
 #define	__UTIL_QMAP_H__
 
+#if __cplusplus >= 201103L
+#error "Do not use this header in C++11 or newer.  Rewrite the code."
+#endif
+
 #include "util/macros.h"
 #include "util/qmap_fwd.hh"		// forward declarations only
 #include <map>
 #include "util/const_assoc_query.hh"
 
 namespace util {
-using std::map;
-using std::pair;
 
 /**
 	Extension of Standard Template Library's map container.  
@@ -25,9 +27,9 @@ using std::pair;
 	Useful for maps of pointers and pointer classes.  
  */
 QMAP_TEMPLATE_SIGNATURE
-class qmap : public const_assoc_query<map<K,T,C,A> > {
+class qmap : public const_assoc_query<std::map<K,T,C,A> > {
 private:
-	typedef	map<K,T,C,A>				parent_type;
+	typedef	std::map<K,T,C,A>			parent_type;
 	typedef	const_assoc_query<parent_type>		impl_type;
 public:
 	// convenient types used in clean(), all other inherited naturally

@@ -7,10 +7,11 @@
 #ifndef __UTIL_IO_UTILS_H__
 #define __UTIL_IO_UTILS_H__
 
+#include <string>
+#include <utility>  // for std::pair
+#include <valarray>
+
 #include "util/IO_utils_fwd.hh"
-#include "util/string_fwd.hh"
-#include "util/STL/pair_fwd.hh"
-#include "util/STL/valarray_fwd.hh"
 
 #define	USING_IO_UTILS							\
 using util::value_writer;						\

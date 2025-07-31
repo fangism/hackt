@@ -9,9 +9,9 @@
 #ifndef __HAC_AST_EXPR_BASE_H__
 #define __HAC_AST_EXPR_BASE_H__
 
+#include <utility>  // for std::pair
 #include <vector>
 #include "AST/common.hh"
-#include "util/STL/pair_fwd.hh"
 #include "Object/ref/references_fwd.hh"
 
 namespace HAC {
@@ -44,7 +44,6 @@ namespace RTE {
 }	// end namespace entity
 
 using std::ostream;
-using std::pair;
 using entity::object;
 using entity::simple_bool_meta_instance_reference;
 using util::memory::excl_ptr;
@@ -125,7 +124,7 @@ public:
 		If both are non-NULL, they point to the same object, 
 		just that each is statically cast to a different subtype.  
 	 */
-	typedef	pair<expr::meta_return_type, inst_ref_meta_return_type>
+	typedef	std::pair<expr::meta_return_type, inst_ref_meta_return_type>
 						generic_meta_return_type;
 
 #define	CHECK_GENERIC_PROTO						\

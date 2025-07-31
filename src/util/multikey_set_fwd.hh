@@ -7,7 +7,8 @@
 #ifndef	__UTIL_MULTIKEY_SET_FWD_H__
 #define	__UTIL_MULTIKEY_SET_FWD_H__
 
-#include "util/STL/set_fwd.hh"
+#include <set>
+
 #include "util/size_t.h"
 
 /**
@@ -35,8 +36,7 @@ class multikey_set_element_derived;
  */
 template <size_t D, class T>
 struct default_multikey_set {
-	typedef	multikey_set<D, T, typename std::default_set<T>::type>
-							type;
+	typedef	multikey_set<D, T, std::set<T> >	type;
 
 	template <size_t D2, class T2>
 	struct rebind : public default_multikey_set<D2, T2> { };

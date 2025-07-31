@@ -9,6 +9,11 @@
 #ifndef	__UTIL_HASH_SPECIALIZATIONS_H__
 #define	__UTIL_HASH_SPECIALIZATIONS_H__
 
+#if __cplusplus >= 201103L
+#error "Do not use this header in C++11 or newer.  Rewrite the code."
+// C++11 provides std::hash<std::string> already.
+#endif
+
 #include "config.h"
 
 #if 	defined(HASH_MAP_SGI_STYLE)

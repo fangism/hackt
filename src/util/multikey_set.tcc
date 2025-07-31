@@ -37,6 +37,8 @@ MULTIKEY_SET_TEMPLATE_SIGNATURE
 multikey_set<D,T,S>::~multikey_set() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+// this class is deprecated
 MULTIKEY_SET_TEMPLATE_SIGNATURE
 void
 multikey_set<D,T,S>::clean(void) {
@@ -73,6 +75,7 @@ multikey_set<D,T,S>::dump(ostream& o) const {
 			std::_Select2nd<value_type>()(*i) << endl;
 	return o;
 }
+#endif
 
 //=============================================================================
 }	// end namespace util

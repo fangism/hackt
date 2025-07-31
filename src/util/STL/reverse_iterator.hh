@@ -9,6 +9,11 @@
 #ifndef	__UTIL_STL_REVERSE_ITERATOR_H__
 #define	__UTIL_STL_REVERSE_ITERATOR_H__
 
+#if __cplusplus >= 201103L
+#error "Do not use this header in C++11 or newer.  Rewrite the code."
+// C++11 already contains reverse_iterator operators
+#endif
+
 #include "util/STL/libconfig.hh"
 #include <iterator>
 

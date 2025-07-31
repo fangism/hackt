@@ -7,6 +7,10 @@
 #ifndef	__UTIL_MULTIKEY_QMAP_FWD_H__
 #define	__UTIL_MULTIKEY_QMAP_FWD_H__
 
+#if __cplusplus >= 201103L
+#error "Do not use this header in C++11 or newer.  Rewrite the code."
+#endif
+
 #include "util/qmap_fwd.hh"
 #include "util/multikey_map_fwd.hh"
 

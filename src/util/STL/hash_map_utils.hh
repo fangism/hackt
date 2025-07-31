@@ -8,30 +8,25 @@
 #ifndef	__UTIL_STL_HASH_MAP_UTILS_H__
 #define	__UTIL_STL_HASH_MAP_UTILS_H__
 
-#include "util/STL/hash_map.hh"
-#include "util/hash_qmap.hh"
+#include <unordered_map>
 
-BEGIN_HASH_MAP_NS
+namespace util {
 //=============================================================================
 // just declaration
-HASH_MAP_TEMPLATE_SIGNATURE
+template <typename M>
 void
-hash_map_copy_reverse_buckets(const HASH_MAP_CLASS&, HASH_MAP_CLASS&);
+hash_map_copy_reverse_buckets(const M&, M&);
 
 /**
 	Slow sequential copying of from source hash_map to destination, 
 	which effectively reverses the order within each bucket.
  */
-HASH_MAP_TEMPLATE_SIGNATURE
+template <typename M>
 void
-hash_map_copy_reverse_buckets(const HASH_MAP_CLASS& s, HASH_MAP_CLASS& d) {
-	typedef	typename HASH_MAP_CLASS::const_iterator	const_iterator;
+hash_map_copy_reverse_buckets(const M& s, M& d) {
+	typedef	typename M::const_iterator	const_iterator;
 	d.clear();
-#if USING_UNORDERED_MAP
 	d.rehash(s.bucket_count());
-#else
-	d.resize(s.bucket_count());
-#endif
 	const const_iterator e(s.end());
 	const_iterator i(s.begin());
 	for ( ; i!=e; ++i) {
@@ -53,9 +48,9 @@ struct copy_map_reverse_bucket_t {
 /**
 	Specialization for hash_maps.  
  */
-HASH_MAP_TEMPLATE_SIGNATURE
-struct copy_map_reverse_bucket_t<HASH_MAP_CLASS > {
-	typedef	HASH_MAP_CLASS			argument_type;
+template <class K, class T, class H, class E, class A>
+struct copy_map_reverse_bucket_t<std::unordered_map<K,T,H,E,A> > {
+	typedef	std::unordered_map<K,T,H,E,A>		argument_type;
 	void
 	operator () (const argument_type& s, argument_type& d) const {
 		hash_map_copy_reverse_buckets(s, d);
@@ -63,17 +58,19 @@ struct copy_map_reverse_bucket_t<HASH_MAP_CLASS > {
 };
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Specialization for hash_qmaps.  
  */
-HASH_QMAP_TEMPLATE_SIGNATURE
-struct copy_map_reverse_bucket_t<util::HASH_QMAP_CLASS > {
-	typedef	util::HASH_QMAP_CLASS		argument_type;
+template <class K, class T, class H, class E, class A>
+struct copy_map_reverse_bucket_t<util::hash_qmap<K,T,H,E,A> > {
+	typedef	util::hash_qmap<K,T,H,E,A>		argument_type;
 	void
 	operator () (const argument_type& s, argument_type& d) const {
 		hash_map_copy_reverse_buckets(s, d);
 	}
 };
+#endif
 
 //-----------------------------------------------------------------------------
 /**
@@ -89,7 +86,7 @@ copy_map_reverse_bucket(const T& s, T& d) {
 }
 
 //=============================================================================
-END_HASH_MAP_NS	// end namespace HASH_MAP_NAMESPACE
+}  // end namespace util
 
 #endif	// __UTIL_STL_HASH_MAP_UTILS_H__
 

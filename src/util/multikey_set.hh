@@ -178,6 +178,7 @@ public:
 //=============================================================================
 }	// end namespace util
 
+#if __cplusplus < 201103L
 namespace std {
 using util::multikey_set_element_derived;
 
@@ -214,6 +215,7 @@ struct _Select2nd<multikey_set_element_derived<D,K,T> > :
 };      // end struct _Select2nd
 
 }	// end namespace std
+#endif
 
 #endif	// __UTIL_MULTIKEY_SET_H__
 

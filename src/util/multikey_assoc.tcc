@@ -35,7 +35,6 @@
 
 namespace util {
 #include "util/using_ostream.hh"
-using std::pair;
 using std::distance;
 #if __cplusplus < 201103L
 using std::_Select1st;
@@ -112,7 +111,7 @@ multikey_assoc_compact_helper<D,K>::is_compact_slice(const A& a,
 	{       // check for consistency
 		typedef typename key_list_type::const_iterator	list_iterator;
 		INVARIANT(l_size == u.size());
-		const pair<list_iterator, list_iterator>
+		const std::pair<list_iterator, list_iterator>
 			mm(mismatch(l.begin(), l.end(), u.begin(),
 				std::less_equal<index_type>()));
 		INVARIANT(mm.first == l.end() && mm.second == u.end());

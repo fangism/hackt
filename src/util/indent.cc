@@ -11,7 +11,6 @@
 #include <stack>
 
 #include <map>
-#include "util/hash_specializations.hh"
 #include "util/indent.hh"
 
 namespace util {
