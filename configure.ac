@@ -23,7 +23,9 @@ AC_CONFIG_SRCDIR([src/main/main_funcs.cc])
 dnl AC_CONFIG_SUBDIRS()
 
 # Propagate the make warning flags recursively
-AM_INIT_AUTOMAKE([1.9 -Wall -Werror])
+# Removed -Werror to tolerate "escaping \# comment markers is not portable",
+# because I can't find an adequate workaround for it.
+AM_INIT_AUTOMAKE([1.9 -Wall])
 
 # Enable or disable automatic reconfiguring.  
 # AM_MAINTAINER_MODE
