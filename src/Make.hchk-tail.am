@@ -78,6 +78,7 @@ H_CHECK_TEST_SCRIPT += \
 endif
 
 .h.hchk:
+	@$(mkdir_p) `dirname $@`
 	@$(ECHO) "Validating $< ... " ; \
 	$(H_CHECK_TEST_SCRIPT)
 
@@ -101,6 +102,7 @@ HH_CHECK_TEST_SCRIPT += \
 	$(CXXCOMPILE) $(FORCE_LANG_CXX) -I$(srcdir) $$more_hchk_flags -include $$src -c $(EMPTY_CXX_SOURCE) -o $@
 endif
 .hh.hhchk:
+	@$(mkdir_p) `dirname $@`
 	@$(ECHO) "Validating $< ... " ; \
 	$(HH_CHECK_TEST_SCRIPT)
 
@@ -124,6 +126,7 @@ TCC_CHECK_TEST_SCRIPT += \
 	$(CXXCOMPILE) $(FORCE_LANG_CXX) -I$(srcdir) $$more_hchk_flags -include $$src -c $(EMPTY_CXX_SOURCE) -o $@
 endif
 .tcc.tccchk:
+	@$(mkdir_p) `dirname $@`
 	@$(ECHO) "Validating $< ... " ; \
 	$(TCC_CHECK_TEST_SCRIPT)
 
