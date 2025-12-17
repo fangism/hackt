@@ -139,6 +139,10 @@ AC_DEFUN([HACKT_ARG_VAR_YACC],
 [AC_REQUIRE([AC_PROG_YACC])
 AC_ARG_VAR(YACC, [parser generator, requires LALR(1), such as yacc/bison])
 cat > conftest.y <<ACEOF
+%{
+extern int yylex (void);
+extern void yyerror (const char *);
+%}
 %token	FIRST_TOK
 %token	LAST_TOK
 %start top
@@ -149,14 +153,30 @@ top
 %%
 ACEOF
 dnl fake cache variable< should probably use different name prefix
-dnl NOTE: bison will produce conftest.tab.c, but in yacc-compatibility mode
-dnl will produce y.tab.c.  Bison usually provides a 'yacc' binary for
-dnl compatibility mode.
-ac_cv_prog_yacc_root="y.tab"
-ac_compile_yacc='$CC -c $CFLAGS $CPPFLAGS $ac_cv_prog_yacc_root.c >&5'
+dnl NOTE: modern bison produces output files based on the input file name
+dnl (e.g. conftest.tab.c), while older yacc or compatibility modes may
+dnl produce a fixed "y.tab.c". We will try to detect which is being used.
+ac_compile_succeeded=no
+if $YACC -d -t -v conftest.y; then
+  if test -f conftest.tab.c; then
+    ac_cv_prog_yacc_root="conftest.tab"
+    ac_compile_yacc='echo "int yylex(void) { return 0; } void yyerror(const char* s) { (void)s; }" > conftest_main.c && $CC -c $CFLAGS $CPPFLAGS conftest.tab.c conftest_main.c >&5'
+    if eval "$ac_compile_yacc"; then
+      ac_compile_succeeded=yes
+    fi
+  fi
+  dnl If the modern name didn't work or wasn't found, try the legacy name.
+  if test "$ac_compile_succeeded" = no && test -f y.tab.c; then
+    ac_cv_prog_yacc_root="y.tab"
+    ac_compile_yacc='echo "int yylex(void) { return 0; } void yyerror(const char* s) { (void)s; }" > conftest_main.c && $CC -c $CFLAGS $CPPFLAGS y.tab.c conftest_main.c >&5'
+    if eval "$ac_compile_yacc"; then
+      ac_compile_succeeded=yes
+    fi
+  fi
+fi
 
 dnl test 1: find the enumeral value of the first token
-if $YACC -d -t -v conftest.y && eval "$ac_compile_yacc"
+if test "$ac_compile_succeeded" = yes
 then
 if ! test -f $ac_cv_prog_yacc_root.c
 then AC_MSG_ERROR([$YACC does not produce $ac_cv_prog_yacc_root.c.])
@@ -165,6 +185,8 @@ if ! test -f $ac_cv_prog_yacc_root.h
 then AC_MSG_ERROR([$YACC does not produce $ac_cv_prog_yacc_root.h.])
 fi
 YACC_FIRST_TOKEN_ENUM=`grep "^#define.*FIRST_TOK" $ac_cv_prog_yacc_root.h | cut -d\  -f3`
+else
+  AC_MSG_ERROR([Bison/Yacc check failed. Could not generate or compile parser source.])
 fi
 AC_SUBST(YACC_FIRST_TOKEN_ENUM)
 dnl cp $ac_cv_prog_yacc_root.c saved.$ac_cv_prog_yacc_root.c
